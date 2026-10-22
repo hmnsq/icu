@@ -25,16 +25,16 @@
 // We use the Resource prefix for C++ classes, as usual.
 // The UResource prefix would be used for C types.
 
-#include "unicode/utypes.h"
-#include "unicode/unistr.h"
-#include "unicode/ures.h"
-#include "restrace.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/unistr.h"
+#شامل "unicode/ures.h"
+#شامل "restrace.h"
 
-struct ResourceData;
+ساختار ResourceData;
 
 U_NAMESPACE_BEGIN
 
-class ResourceValue;
+class Resource_مقدار;
 
 // Note: In C++, we use const char * pointers for keys,
 // rather than an abstraction like Java UResource.Key.
@@ -43,33 +43,33 @@ class ResourceValue;
  * Interface for iterating over a resource bundle array resource.
  */
 class U_COMMON_API ResourceArray {
-public:
+عمومی:
     /** Constructs an empty array object. */
     ResourceArray() : items16(nullptr), items32(nullptr), length(0) {}
 
     /** Only for implementation use. @internal */
-    ResourceArray(const uint16_t *i16, const uint32_t *i32, int32_t len,
-                  const ResourceTracer& traceInfo) :
+    ResourceArray(ثابت uint16_t *i16, ثابت uint32_t *i32, int32_t len,
+                  ثابت ResourceTracer& traceInfo) :
             items16(i16), items32(i32), length(len),
             fTraceInfo(traceInfo) {}
 
     /**
      * @return The number of items in the array resource.
      */
-    int32_t getSize() const { return length; }
+    int32_t getSize() ثابت { بازگشت length; }
     /**
      * @param i Array item index.
      * @param value Output-only, receives the value of the i'th item.
      * @return true if i is non-negative and less than getSize().
      */
-    UBool getValue(int32_t i, ResourceValue &value) const;
+    UBool get_مقدار(int32_t i, Resource_مقدار &مقدار_2) ثابت;
 
     /** Only for implementation use. @internal */
-    uint32_t internalGetResource(const ResourceData *pResData, int32_t i) const;
+    uint32_t internalGetResource(ثابت ResourceData *pResData, int32_t i) ثابت;
 
-private:
-    const uint16_t *items16;
-    const uint32_t *items32;
+خصوصی:
+    ثابت uint16_t *items16;
+    ثابت uint32_t *items32;
     int32_t length;
     ResourceTracer fTraceInfo;
 };
@@ -78,41 +78,41 @@ private:
  * Interface for iterating over a resource bundle table resource.
  */
 class U_COMMON_API ResourceTable {
-public:
+عمومی:
     /** Constructs an empty table object. */
     ResourceTable() : keys16(nullptr), keys32(nullptr), items16(nullptr), items32(nullptr), length(0) {}
 
     /** Only for implementation use. @internal */
-    ResourceTable(const uint16_t *k16, const int32_t *k32,
-                  const uint16_t *i16, const uint32_t *i32, int32_t len,
-                  const ResourceTracer& traceInfo) :
+    ResourceTable(ثابت uint16_t *k16, ثابت int32_t *k32,
+                  ثابت uint16_t *i16, ثابت uint32_t *i32, int32_t len,
+                  ثابت ResourceTracer& traceInfo) :
             keys16(k16), keys32(k32), items16(i16), items32(i32), length(len),
             fTraceInfo(traceInfo) {}
 
     /**
      * @return The number of items in the array resource.
      */
-    int32_t getSize() const { return length; }
+    int32_t getSize() ثابت { بازگشت length; }
     /**
      * @param i Table item index.
      * @param key Output-only, receives the key of the i'th item.
      * @param value Output-only, receives the value of the i'th item.
      * @return true if i is non-negative and less than getSize().
      */
-    UBool getKeyAndValue(int32_t i, const char *&key, ResourceValue &value) const;
+    UBool get_کلید_And_مقدار(int32_t i, ثابت نویسه *&کلید, Resource_مقدار &مقدار_2) ثابت;
 
     /**
      * @param key Key string to find in the table.
      * @param value Output-only, receives the value of the item with that key.
      * @return true if the table contains the key.
      */
-    UBool findValue(const char *key, ResourceValue &value) const;
+    UBool find_مقدار(ثابت نویسه *کلید, Resource_مقدار &مقدار_2) ثابت;
 
-private:
-    const uint16_t *keys16;
-    const int32_t *keys32;
-    const uint16_t *items16;
-    const uint32_t *items32;
+خصوصی:
+    ثابت uint16_t *keys16;
+    ثابت int32_t *keys32;
+    ثابت uint16_t *items16;
+    ثابت uint32_t *items32;
     int32_t length;
     ResourceTracer fTraceInfo;
 };
@@ -122,37 +122,37 @@ private:
  * Avoids object creations as much as possible.
  * Mutable, not thread-safe.
  */
-class U_COMMON_API ResourceValue : public UObject {
-public:
-    virtual ~ResourceValue();
+class U_COMMON_API Resource_مقدار : عمومی UObject {
+عمومی:
+    مجازی ~Resource_مقدار();
 
     /**
      * @return ICU resource type, for example, URES_STRING
      */
-    virtual UResType getType() const = 0;
+    مجازی UResType getType() ثابت = 0;
 
     /**
      * Sets U_RESOURCE_TYPE_MISMATCH if this is not a string resource.
      *
      * @see ures_getString()
      */
-    virtual const char16_t *getString(int32_t &length, UErrorCode &errorCode) const = 0;
+    مجازی ثابت char16_t *getString(int32_t &length, UErrorCode &errorCode) ثابت = 0;
 
-    inline UnicodeString getUnicodeString(UErrorCode &errorCode) const {
+    درونخطی UnicodeString getUnicodeString(UErrorCode &errorCode) ثابت {
         int32_t len = 0;
-        const char16_t *r = getString(len, errorCode);
-        return UnicodeString(true, r, len);
+        ثابت char16_t *r = getString(len, errorCode);
+        بازگشت UnicodeString(true, r, len);
     }
 
     /**
      * Sets U_RESOURCE_TYPE_MISMATCH if this is not an alias resource.
      */
-    virtual const char16_t *getAliasString(int32_t &length, UErrorCode &errorCode) const = 0;
+    مجازی ثابت char16_t *getAliasString(int32_t &length, UErrorCode &errorCode) ثابت = 0;
 
-    inline UnicodeString getAliasUnicodeString(UErrorCode &errorCode) const {
+    درونخطی UnicodeString getAliasUnicodeString(UErrorCode &errorCode) ثابت {
         int32_t len = 0;
-        const char16_t *r = getAliasString(len, errorCode);
-        return UnicodeString(true, r, len);
+        ثابت char16_t *r = getAliasString(len, errorCode);
+        بازگشت UnicodeString(true, r, len);
     }
 
     /**
@@ -160,38 +160,38 @@ public:
      *
      * @see ures_getInt()
      */
-    virtual int32_t getInt(UErrorCode &errorCode) const = 0;
+    مجازی int32_t getInt(UErrorCode &errorCode) ثابت = 0;
 
     /**
      * Sets U_RESOURCE_TYPE_MISMATCH if this is not an integer resource.
      *
      * @see ures_getUInt()
      */
-    virtual uint32_t getUInt(UErrorCode &errorCode) const = 0;
+    مجازی uint32_t getUInt(UErrorCode &errorCode) ثابت = 0;
 
     /**
      * Sets U_RESOURCE_TYPE_MISMATCH if this is not an intvector resource.
      *
      * @see ures_getIntVector()
      */
-    virtual const int32_t *getIntVector(int32_t &length, UErrorCode &errorCode) const = 0;
+    مجازی ثابت int32_t *getIntVector(int32_t &length, UErrorCode &errorCode) ثابت = 0;
 
     /**
      * Sets U_RESOURCE_TYPE_MISMATCH if this is not a binary-blob resource.
      *
      * @see ures_getBinary()
      */
-    virtual const uint8_t *getBinary(int32_t &length, UErrorCode &errorCode) const = 0;
+    مجازی ثابت uint8_t *get_دودویی(int32_t &length, UErrorCode &errorCode) ثابت = 0;
 
     /**
      * Sets U_RESOURCE_TYPE_MISMATCH if this is not an array resource
      */
-    virtual ResourceArray getArray(UErrorCode &errorCode) const = 0;
+    مجازی ResourceArray getArray(UErrorCode &errorCode) ثابت = 0;
 
     /**
      * Sets U_RESOURCE_TYPE_MISMATCH if this is not a table resource
      */
-    virtual ResourceTable getTable(UErrorCode &errorCode) const = 0;
+    مجازی ResourceTable getTable(UErrorCode &errorCode) ثابت = 0;
 
     /**
      * Is this a no-fallback/no-inheritance marker string?
@@ -201,7 +201,7 @@ public:
      *
      * @return true if this is a no-inheritance marker string
      */
-    virtual UBool isNoInheritanceMarker() const = 0;
+    مجازی UBool isNoInheritanceMarker() ثابت = 0;
 
     /**
      * Sets the dest strings from the string values in this array resource.
@@ -212,8 +212,8 @@ public:
      * Sets U_RESOURCE_TYPE_MISMATCH if this is not an array resource
      *     or if any of the array items is not a string
      */
-    virtual int32_t getStringArray(UnicodeString *dest, int32_t capacity,
-                                   UErrorCode &errorCode) const = 0;
+    مجازی int32_t getStringArray(UnicodeString *dest, int32_t capacity,
+                                   UErrorCode &errorCode) ثابت = 0;
 
     /**
      * Same as
@@ -230,8 +230,8 @@ public:
      * @see getString()
      * @see getStringArray()
      */
-    virtual int32_t getStringArrayOrStringAsArray(UnicodeString *dest, int32_t capacity,
-                                                  UErrorCode &errorCode) const = 0;
+    مجازی int32_t getStringArrayOrStringAsArray(UnicodeString *dest, int32_t capacity,
+                                                  UErrorCode &errorCode) ثابت = 0;
 
     /**
      * Same as
@@ -248,23 +248,23 @@ public:
      * @see getString()
      * @see getStringArray()
      */
-    virtual UnicodeString getStringOrFirstOfArray(UErrorCode &errorCode) const = 0;
+    مجازی UnicodeString getStringOrFirstOfArray(UErrorCode &errorCode) ثابت = 0;
 
-protected:
-    ResourceValue() {}
+محافظتشده:
+    Resource_مقدار() {}
 
-private:
-    ResourceValue(const ResourceValue &);  // no copy constructor
-    ResourceValue &operator=(const ResourceValue &);  // no assignment operator
+خصوصی:
+    Resource_مقدار(ثابت Resource_مقدار &);  // no copy constructor
+    Resource_مقدار &operator=(ثابت Resource_مقدار &);  // no assignment operator
 };
 
 /**
  * Sink for ICU resource bundle contents.
  */
-class U_COMMON_API ResourceSink : public UObject {
-public:
+class U_COMMON_API ResourceSink : عمومی UObject {
+عمومی:
     ResourceSink() {}
-    virtual ~ResourceSink();
+    مجازی ~ResourceSink();
 
     /**
      * Called once for each bundle (child-parent-...-root).
@@ -282,12 +282,12 @@ public:
      *     that is, its top-level table has the nofallback attribute,
      *     or it is the root bundle of a locale tree.
      */
-    virtual void put(const char *key, ResourceValue &value, UBool noFallback,
+    مجازی تهی put(ثابت نویسه *کلید, Resource_مقدار &مقدار_2, UBool noFallback,
                      UErrorCode &errorCode) = 0;
 
-private:
-    ResourceSink(const ResourceSink &) = delete;  // no copy constructor
-    ResourceSink &operator=(const ResourceSink &) = delete;  // no assignment operator
+خصوصی:
+    ResourceSink(ثابت ResourceSink &) = delete;  // no copy constructor
+    ResourceSink &operator=(ثابت ResourceSink &) = delete;  // no assignment operator
 };
 
 U_NAMESPACE_END

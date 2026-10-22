@@ -25,16 +25,16 @@
  *                 header and for related definitions.
  */
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#اگر U_SHOW_CPLUSPLUS_API
 
 // Workaround for a libstdc++ bug before libstdc++4.6 (2011).
 // https://bugs.llvm.org/show_bug.cgi?id=13364
-#if defined(__GLIBCXX__)
+#اگر defined(__GLIBCXX__)
 namespace std { class type_info; }
 #endif
-#include <string>
+#شامل <string>
 
 #endif /* U_SHOW_CPLUSPLUS_API */
 

@@ -14,34 +14,34 @@
 *   created by: George Rhoten
 */
 
-#include "unicode/utypes.h"
-#include "unicode/icuplug.h"
-#include "unicode/uclean.h"
-#include "cmemory.h"
-#include "icuplugimp.h"
-#include "ucln_cmn.h"
-#include "ucnv_io.h"
-#include "umutex.h"
-#include "utracimp.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/icuplug.h"
+#شامل "unicode/uclean.h"
+#شامل "cmemory.h"
+#شامل "icuplugimp.h"
+#شامل "ucln_cmn.h"
+#شامل "ucnv_io.h"
+#شامل "umutex.h"
+#شامل "utracimp.h"
 
 U_NAMESPACE_BEGIN
 
-static UInitOnce gICUInitOnce {};
+ایستا UInitOnce gICUInitOnce {};
 
-static UBool U_CALLCONV uinit_cleanup() {
+ایستا UBool U_CALLCONV uinit_cleanup() {
     gICUInitOnce.reset();
-    return true;
+    بازگشت درست;
 }
 
-static void U_CALLCONV
+ایستا تهی U_CALLCONV
 initData(UErrorCode &status)
 {
-#if UCONFIG_ENABLE_PLUGINS
+#اگر UCONFIG_ENABLE_PLUGINS
     /* initialize plugins */
     uplug_init(&status);
 #endif
 
-#if !UCONFIG_NO_CONVERSION
+#اگر !UCONFIG_NO_CONVERSION
     /*
      * 2005-may-02
      *
@@ -54,7 +54,7 @@ initData(UErrorCode &status)
      * for errors there, to make sure that the actual items they need are
      * available.
      */
-    ucnv_io_countKnownConverters(&status);
+    ucnv_io_شمار_Known_Converters(&status);
 #endif
     ucln_common_registerCleanup(UCLN_COMMON_UINIT, uinit_cleanup);
 }
@@ -66,7 +66,7 @@ U_NAMESPACE_USE
 /*
  * ICU Initialization Function. Need not be called.
  */
-U_CAPI void U_EXPORT2
+U_CAPI تهی U_EXPORT2
 u_init(UErrorCode *status) {
     UTRACE_ENTRY_OC(UTRACE_U_INIT);
     umtx_initOnce(gICUInitOnce, &initData, *status);

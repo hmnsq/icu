@@ -19,17 +19,17 @@
 #ifndef UCNV_BLD_H
 #define UCNV_BLD_H
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#اگر !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/ucnv_err.h"
-#include "unicode/utf16.h"
-#include "ucnv_cnv.h"
-#include "ucnvmbcs.h"
-#include "ucnv_ext.h"
-#include "udataswp.h"
+#شامل "unicode/ucnv.h"
+#شامل "unicode/ucnv_err.h"
+#شامل "unicode/utf16.h"
+#شامل "ucnv_cnv.h"
+#شامل "ucnvmbcs.h"
+#شامل "ucnv_ext.h"
+#شامل "udataswp.h"
 
 /* size of the overflow buffers in UConverter, enough for escaping callbacks */
 #define UCNV_ERROR_BUFFER_LENGTH 32
@@ -51,23 +51,23 @@ U_CDECL_BEGIN /* We must declare the following as 'extern "C"' so that if ucnv
                  work.
               */
 
-union UConverterTable {
+اجتماع UConverterTable {
     UConverterMBCSTable mbcs;
 };
 
-typedef union UConverterTable UConverterTable;
+تعریفنوع اجتماع UConverterTable UConverterTable;
 
-struct UConverterImpl;
-typedef struct UConverterImpl UConverterImpl;
+ساختار UConverterImpl;
+تعریفنوع ساختار UConverterImpl UConverterImpl;
 
 /** values for the unicodeMask */
 #define UCNV_HAS_SUPPLEMENTARY 1
 #define UCNV_HAS_SURROGATES    2
 
-typedef struct UConverterStaticData {   /* +offset: size */
+تعریفنوع ساختار UConverterStaticData {   /* +offset: size */
     uint32_t structSize;                /* +0: 4 Size of this structure */
 
-    char name
+    نویسه name
       [UCNV_MAX_CONVERTER_NAME_LENGTH]; /* +4: 60  internal name of the converter- invariant chars */
 
     int32_t codepage;               /* +64: 4 codepage # (now IBM-$codepage) */
@@ -93,19 +93,19 @@ typedef struct UConverterStaticData {   /* +offset: size */
  * Defines the UConverterSharedData struct,
  * the immutable, shared part of UConverter.
  */
-struct UConverterSharedData {
+ساختار UConverterSharedData {
     uint32_t structSize;            /* Size of this structure */
     uint32_t referenceCounter;      /* used to count number of clients, unused for static/immutable SharedData */
 
-    const void *dataMemory;         /* from udata_openChoice() - for cleanup */
+    ثابت تهی *dataMemory;         /* from udata_openChoice() - for cleanup */
 
-    const UConverterStaticData *staticData; /* pointer to the static (non changing) data. */
+    ثابت UConverterStaticData *staticData; /* pointer to the static (non changing) data. */
 
     UBool                sharedDataCached;   /* true:  shared data is in cache, don't destroy on ucnv_close() if 0 ref.  false: shared data isn't in the cache, do attempt to clean it up if the ref is 0 */
     /** If false, then referenceCounter is not used. Must not change after initialization. */
     UBool isReferenceCounted;
 
-    const UConverterImpl *impl;     /* vtable-style struct of mostly function pointers */
+    ثابت UConverterImpl *impl;     /* vtable-style struct of mostly function pointers */
 
     /*initial values of some members of the mutable part of object */
     uint32_t toUnicodeStatus;
@@ -127,21 +127,21 @@ struct UConverterSharedData {
 /** UConverterSharedData initializer for static, non-reference-counted converters. */
 #define UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(pStaticData, pImpl) \
     { \
-        sizeof(UConverterSharedData), ~((uint32_t)0), \
-        NULL, pStaticData, false, false, pImpl, \
+        اندازه(UConverterSharedData), ~((uint32_t)0), \
+        پوچ, pStaticData, false, false, pImpl, \
         0, UCNV_MBCS_TABLE_INITIALIZER \
     }
 
 /* Defines a UConverter, the lightweight mutable part the user sees */
 
-struct UConverter {
+ساختار UConverter {
     /*
      * Error function pointer called when conversion issues
      * occur during a ucnv_fromUnicode call
      */
-    void (U_EXPORT2 *fromUCharErrorBehaviour) (const void *context,
+    تهی (U_EXPORT2 *fromUCharErrorBehaviour) (ثابت تهی *context,
                                      UConverterFromUnicodeArgs *args,
-                                     const UChar *codeUnits,
+                                     ثابت UChar *codeUnits,
                                      int32_t length,
                                      UChar32 codePoint,
                                      UConverterCallbackReason reason,
@@ -150,9 +150,9 @@ struct UConverter {
      * Error function pointer called when conversion issues
      * occur during a ucnv_toUnicode call
      */
-    void (U_EXPORT2 *fromCharErrorBehaviour) (const void *context,
+    تهی (U_EXPORT2 *fromCharErrorBehaviour) (ثابت تهی *context,
                                     UConverterToUnicodeArgs *args,
-                                    const char *codeUnits,
+                                    ثابت نویسه *codeUnits,
                                     int32_t length,
                                     UConverterCallbackReason reason,
                                     UErrorCode *);
@@ -161,10 +161,10 @@ struct UConverter {
      * Pointer to additional data that depends on the converter type.
      * Used by ISO 2022, SCSU, GB 18030 converters, possibly more.
      */
-    void *extraInfo;
+    تهی *extraInfo;
 
-    const void *fromUContext;
-    const void *toUContext;
+    ثابت تهی *fromUContext;
+    ثابت تهی *toUContext;
 
     /*
      * Pointer to charset bytes for substitution string if subCharLen>0,
@@ -220,7 +220,7 @@ struct UConverter {
 
     uint8_t subChar1;                                   /* single-byte substitution character if different from subChar */
     UBool useSubChar1;
-    char invalidCharBuffer[UCNV_MAX_CHAR_LEN];          /* bytes from last error/callback situation */
+    نویسه invalidCharBuffer[UCNV_MAX_CHAR_LEN];          /* bytes from last error/callback situation */
     uint8_t charErrorBuffer[UCNV_ERROR_BUFFER_LENGTH];  /* codepage output from Error functions */
     UChar subUChars[UCNV_MAX_SUBCHAR_LEN/U_SIZEOF_UCHAR]; /* see subChars documentation */
 
@@ -232,7 +232,7 @@ struct UConverter {
     /* store previous UChars/chars to continue partial matches */
     UChar32 preFromUFirstCP;                /* >=0: partial match */
     UChar preFromU[UCNV_EXT_MAX_UCHARS];
-    char preToU[UCNV_EXT_MAX_BYTES];
+    نویسه preToU[UCNV_EXT_MAX_BYTES];
     int8_t preFromULength, preToULength;    /* negative: replay */
     int8_t preToUFirstLength;               /* length of first character */
 
@@ -251,7 +251,7 @@ U_CDECL_END /* end of UConverter */
  * @return the number of all converter names
  */
 U_CFUNC uint16_t
-ucnv_bld_countAvailableConverters(UErrorCode *pErrorCode);
+ucnv_bld_شمار_Available_Converters(UErrorCode *pErrorCode);
 
 /**
  * Return the (n)th converter name in mixed case, or NULL
@@ -261,7 +261,7 @@ ucnv_bld_countAvailableConverters(UErrorCode *pErrorCode);
  * @param pErrorCode The error code
  * @return the (n)th converter name in mixed case, or NULL if there is none.
  */
-U_CFUNC const char *
+U_CFUNC ثابت نویسه *
 ucnv_bld_getAvailableConverter(uint16_t n, UErrorCode *pErrorCode);
 
 /**
@@ -276,7 +276,7 @@ ucnv_load(UConverterLoadArgs *pArgs, UErrorCode *err);
  * It must be sharedData->isReferenceCounted
  * and this function must be called inside umtx_lock(&cnvCacheMutex).
  */
-U_CAPI void
+U_CAPI تهی
 ucnv_unload(UConverterSharedData *sharedData);
 
 /**
@@ -284,12 +284,12 @@ ucnv_unload(UConverterSharedData *sharedData);
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-ucnv_swap(const UDataSwapper *ds,
-          const void *inData, int32_t length, void *outData,
+ucnv_swap(ثابت UDataSwapper *ds,
+          ثابت تهی *inData, int32_t length, تهی *outData,
           UErrorCode *pErrorCode);
 
-U_CAPI void U_EXPORT2
-ucnv_enableCleanup(void);
+U_CAPI تهی U_EXPORT2
+ucnv_enableCleanup(تهی);
 
 #endif
 

@@ -21,23 +21,23 @@
 #ifndef __UDATAMEM_H__
 #define __UDATAMEM_H__
 
-#include "unicode/udata.h"
-#include "ucmndata.h"
+#شامل "unicode/udata.h"
+#شامل "ucmndata.h"
 
-struct UDataMemory {
-    const commonDataFuncs  *vFuncs;      /* Function Pointers for accessing TOC             */
+ساختار UDataMemory {
+    ثابت commonDataFuncs  *vFuncs;      /* Function Pointers for accessing TOC             */
 
-    const DataHeader *pHeader;     /* Header of the memory being described by this    */
+    ثابت DataHeader *pHeader;     /* Header of the memory being described by this    */
                                    /*   UDataMemory object.                           */
-    const void       *toc;         /* For common memory, table of contents for        */
+    ثابت تهی       *toc;         /* For common memory, table of contents for        */
                                    /*   the pieces within.                            */
     UBool             heapAllocated;  /* True if this UDataMemory Object is on the    */
                                    /*  heap and thus needs to be deleted when closed. */
 
-    void             *mapAddr;     /* For mapped or allocated memory, the start addr. */
+    تهی             *mapAddr;     /* For mapped or allocated memory, the start addr. */
                                    /* Only non-null if a close operation should unmap */
                                    /*  the associated data.                           */
-    void             *map;         /* Handle, or other data, OS dependent.            */
+    تهی             *map;         /* Handle, or other data, OS dependent.            */
                                    /* Only non-null if a close operation should unmap */
                                    /*  the associated data, and additional info       */
                                    /*   beyond the mapAddr is needed to do that.      */
@@ -45,17 +45,17 @@ struct UDataMemory {
 };
 
 U_CAPI  UDataMemory* U_EXPORT2 UDataMemory_createNewInstance(UErrorCode *pErr);
-U_CFUNC void         UDatamemory_assign  (UDataMemory *dest, UDataMemory *source);
-U_CFUNC void         UDataMemory_init    (UDataMemory *This);
-U_CFUNC UBool        UDataMemory_isLoaded(const UDataMemory *This);
-U_CFUNC void         UDataMemory_setData (UDataMemory *This, const void *dataAddr);
+U_CFUNC تهی         UDatamemory_assign  (UDataMemory *dest, UDataMemory *source);
+U_CFUNC تهی         UDataMemory_init    (UDataMemory *This);
+U_CFUNC UBool        UDataMemory_isLoaded(ثابت UDataMemory *This);
+U_CFUNC تهی         UDataMemory_setData (UDataMemory *This, ثابت تهی *dataAddr);
 
-U_CFUNC const DataHeader* UDataMemory_normalizeDataPointer(const void* p U_LIFETIME_BOUND);
+U_CFUNC ثابت DataHeader* UDataMemory_normalizeDataPointer(ثابت تهی* p U_LIFETIME_BOUND);
 
 U_CAPI int32_t U_EXPORT2
-udata_getLength(const UDataMemory *pData);
+udata_getLength(ثابت UDataMemory *pData);
 
-U_CAPI const void* U_EXPORT2
-udata_getRawMemory(const UDataMemory* pData U_LIFETIME_BOUND);
+U_CAPI ثابت تهی* U_EXPORT2
+udata_getRawMemory(ثابت UDataMemory* pData U_LIFETIME_BOUND);
 
 #endif

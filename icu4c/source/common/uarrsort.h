@@ -21,7 +21,7 @@
 #ifndef __UARRSORT_H__
 #define __UARRSORT_H__
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
 U_CDECL_BEGIN
 /**
@@ -38,8 +38,8 @@ U_CDECL_BEGIN
  *
  * @internal
  */
-typedef int32_t U_CALLCONV
-UComparator(const void *context, const void *left, const void *right);
+تعریفنوع int32_t U_CALLCONV
+UComparator(ثابت تهی *context, ثابت تهی *چپ, ثابت تهی *راست);
 U_CDECL_END
 
 /**
@@ -57,9 +57,9 @@ U_CDECL_END
  *
  * @internal
  */
-U_CAPI void U_EXPORT2
-uprv_sortArray(void *array, int32_t length, int32_t itemSize,
-               UComparator *cmp, const void *context,
+U_CAPI تهی U_EXPORT2
+uprv_sortArray(تهی *array, int32_t length, int32_t itemSize,
+               UComparator *cmp, ثابت تهی *context,
                UBool sortStable, UErrorCode *pErrorCode);
 
 /**
@@ -67,21 +67,21 @@ uprv_sortArray(void *array, int32_t length, int32_t itemSize,
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uprv_uint16Comparator(const void *context, const void *left, const void *right);
+uprv_uint16Comparator(ثابت تهی *context, ثابت تهی *چپ, ثابت تهی *راست);
 
 /**
  * Convenience UComparator implementation for int32_t arrays.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uprv_int32Comparator(const void *context, const void *left, const void *right);
+uprv_int32Comparator(ثابت تهی *context, ثابت تهی *چپ, ثابت تهی *راست);
 
 /**
  * Convenience UComparator implementation for uint32_t arrays.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uprv_uint32Comparator(const void *context, const void *left, const void *right);
+uprv_uint32Comparator(ثابت تهی *context, ثابت تهی *چپ, ثابت تهی *راست);
 
 /**
  * Much like Java Collections.binarySearch(list, key, comparator).
@@ -97,7 +97,7 @@ uprv_uint32Comparator(const void *context, const void *left, const void *right);
  *         or the index<0 for inserting the item at ~index in sorted order
  */
 U_CAPI int32_t U_EXPORT2
-uprv_stableBinarySearch(char *array, int32_t length, void *item, int32_t itemSize,
-                        UComparator *cmp, const void *context);
+uprv_stable_دودویی_جستجو(نویسه *array, int32_t length, تهی *item, int32_t itemSize,
+                        UComparator *cmp, ثابت تهی *context);
 
 #endif

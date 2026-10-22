@@ -16,10 +16,10 @@
 #ifndef UVECTOR64_H
 #define UVECTOR64_H
 
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "uhash.h"
-#include "uassert.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/uobject.h"
+#شامل "uhash.h"
+#شامل "uassert.h"
 
 U_NAMESPACE_BEGIN
 
@@ -57,9 +57,9 @@ U_NAMESPACE_BEGIN
  * <p>Improve the handling of index out of bounds errors.
  *
  */
-class U_COMMON_API UVector64 : public UObject {
-private:
-    int32_t   count;
+class U_COMMON_API UVector64 : عمومی UObject {
+خصوصی:
+    int32_t   شمار;
 
     int32_t   capacity;
     
@@ -67,46 +67,46 @@ private:
 
     int64_t*  elements;
 
-public:
+عمومی:
     UVector64(UErrorCode &status);
 
     UVector64(int32_t initialCapacity, UErrorCode &status);
 
-    virtual ~UVector64();
+    مجازی ~UVector64();
 
     /**
      * Assign this object to another (make this a copy of 'other').
      * Use the 'assign' function to assign each element.
      */
-    void assign(const UVector64& other, UErrorCode &ec);
+    تهی assign(ثابت UVector64& other, UErrorCode &ec);
 
     /**
      * Compare this vector with another.  They will be considered
      * equal if they are of the same size and all elements are equal,
      * as compared using this object's comparer.
      */
-    bool operator==(const UVector64& other);
+    bool operator==(ثابت UVector64& other);
 
     /**
      * Equivalent to !operator==()
      */
-    inline bool operator!=(const UVector64& other);
+    درونخطی bool operator!=(ثابت UVector64& other);
 
     //------------------------------------------------------------
     // subset of java.util.Vector API
     //------------------------------------------------------------
 
-    inline void addElement(int64_t elem, UErrorCode &status);
+    درونخطی تهی addElement(int64_t elem, UErrorCode &status);
 
-    void setElementAt(int64_t elem, int32_t index);
+    تهی setElementAt(int64_t elem, int32_t index);
 
-    void insertElementAt(int64_t elem, int32_t index, UErrorCode &status);
+    تهی درج_Element_At(int64_t elem, int32_t index, UErrorCode &status);
     
-    inline int64_t elementAti(int32_t index) const;
+    درونخطی int64_t elementAti(int32_t index) ثابت;
 
     //UBool equals(const UVector64 &other) const;
 
-    inline int64_t lastElementi() const;
+    درونخطی int64_t lastElementi() ثابت;
 
     //int32_t indexOf(int64_t elem, int32_t startIndex = 0) const;
 
@@ -120,14 +120,14 @@ public:
 
     //void removeElementAt(int32_t index);
 
-    void removeAllElements();
+    تهی removeAllElements();
 
-    inline int32_t size() const;
+    درونخطی int32_t size() ثابت;
 
-    inline UBool isEmpty() const { return count == 0; }
+    درونخطی UBool isEmpty() ثابت { بازگشت شمار == 0; }
 
     // Inline.  Use this one for speedy size check.
-    inline UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
+    درونخطی UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
 
     // Out-of-line, handles actual growth.  Called by ensureCapacity() when necessary.
     UBool expandCapacity(int32_t minimumCapacity, UErrorCode &status);
@@ -138,7 +138,7 @@ public:
      * elements for i >= newSize.  If newSize is larger, grow the
      * array, filling in new slows with zero.
      */
-    void setSize(int32_t newSize);
+    تهی setSize(int32_t newSize);
 
     //------------------------------------------------------------
     // New API
@@ -152,7 +152,7 @@ public:
     /**
      * Returns a pointer to the internal array holding the vector.
      */
-    inline int64_t *getBuffer() const;
+    درونخطی int64_t *getBuffer() ثابت;
 
     /**
      * Set the maximum allowed buffer capacity for this vector/stack.
@@ -160,118 +160,118 @@ public:
      * A Limit of zero means unlimited capacity.
      * Units are vector elements (64 bits each), not bytes.
      */
-    void setMaxCapacity(int32_t limit);
+    تهی setMaxCapacity(int32_t limit);
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    ایستا UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      */
-    virtual UClassID getDynamicClassID() const override;
+    مجازی UClassID getDynamicClassID() ثابت override;
 
-private:
-    void _init(int32_t initialCapacity, UErrorCode &status);
-
-    // Disallow
-    UVector64(const UVector64&) = delete;
+خصوصی:
+    تهی _init(int32_t initialCapacity, UErrorCode &status);
 
     // Disallow
-    UVector64& operator=(const UVector64&) = delete;
+    UVector64(ثابت UVector64&) = delete;
+
+    // Disallow
+    UVector64& operator=(ثابت UVector64&) = delete;
 
 
     //  API Functions for Stack operations.
     //  In the original UVector, these were in a separate derived class, UStack.
     //  Here in UVector64, they are all together.
-public:
+عمومی:
     //UBool empty() const;   // TODO:  redundant, same as empty().  Remove it?
 
     //int64_t peeki() const;
     
-    inline int64_t popi();
+    درونخطی int64_t popi();
     
-    inline int64_t push(int64_t i, UErrorCode &status);
+    درونخطی int64_t افزودن(int64_t i, UErrorCode &status);
 
-    inline int64_t *reserveBlock(int32_t size, UErrorCode &status);
-    inline int64_t *popFrame(int32_t size);
+    درونخطی int64_t *reserveBlock(int32_t size, UErrorCode &status);
+    درونخطی int64_t *برداشت_Frame(int32_t size);
 };
 
 
 // UVector64 inlines
 
-inline UBool UVector64::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
-    if ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
-        return true;
-    } else {
-        return expandCapacity(minimumCapacity, status);
+درونخطی UBool UVector64::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
+    اگر ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
+        بازگشت true;
+    } وگرنه {
+        بازگشت expandCapacity(minimumCapacity, status);
     }
 }
 
-inline int64_t UVector64::elementAti(int32_t index) const {
-    return (0 <= index && index < count) ? elements[index] : 0;
+درونخطی int64_t UVector64::elementAti(int32_t index) ثابت {
+    بازگشت (0 <= index && index < شمار) ? elements[index] : 0;
 }
 
 
-inline void UVector64::addElement(int64_t elem, UErrorCode &status) {
-    if (ensureCapacity(count + 1, status)) {
-        elements[count] = elem;
-        count++;
+درونخطی تهی UVector64::addElement(int64_t elem, UErrorCode &status) {
+    اگر (ensureCapacity(شمار + 1, status)) {
+        elements[شمار] = elem;
+        شمار++;
     }
 }
 
-inline int64_t *UVector64::reserveBlock(int32_t size, UErrorCode &status) {
-    if (ensureCapacity(count+size, status) == false) {
-        return nullptr;
+درونخطی int64_t *UVector64::reserveBlock(int32_t size, UErrorCode &status) {
+    اگر (ensureCapacity(شمار+size, status) == false) {
+        بازگشت nullptr;
     }
-    int64_t  *rp = elements+count;
-    count += size;
-    return rp;
+    int64_t  *rp = elements+شمار;
+    شمار += size;
+    بازگشت rp;
 }
 
-inline int64_t *UVector64::popFrame(int32_t size) {
-    U_ASSERT(count >= size);
-    count -= size;
-    if (count < 0) {
-        count = 0;
+درونخطی int64_t *UVector64::برداشت_Frame(int32_t size) {
+    U_ASSERT(شمار >= size);
+    شمار -= size;
+    اگر (شمار < 0) {
+        شمار = 0;
     }
-    return elements+count-size;
+    بازگشت elements+شمار-size;
 }
 
 
 
-inline int32_t UVector64::size() const {
-    return count;
+درونخطی int32_t UVector64::size() ثابت {
+    بازگشت شمار;
 }
 
-inline int64_t UVector64::lastElementi() const {
-    return elementAti(count-1);
+درونخطی int64_t UVector64::lastElementi() ثابت {
+    بازگشت elementAti(شمار-1);
 }
 
-inline bool UVector64::operator!=(const UVector64& other) {
-    return !operator==(other);
+درونخطی bool UVector64::operator!=(ثابت UVector64& other) {
+    بازگشت !operator==(other);
 }
 
-inline int64_t *UVector64::getBuffer() const {
-    return elements;
+درونخطی int64_t *UVector64::getBuffer() ثابت {
+    بازگشت elements;
 }
 
 
 // UStack inlines
 
-inline int64_t UVector64::push(int64_t i, UErrorCode &status) {
+درونخطی int64_t UVector64::افزودن(int64_t i, UErrorCode &status) {
     addElement(i, status);
-    return i;
+    بازگشت i;
 }
 
-inline int64_t UVector64::popi() {
+درونخطی int64_t UVector64::popi() {
     int64_t result = 0;
-    if (count > 0) {
-        count--;
-        result = elements[count];
+    اگر (شمار > 0) {
+        شمار--;
+        result = elements[شمار];
     }
-    return result;
+    بازگشت result;
 }
 
 U_NAMESPACE_END

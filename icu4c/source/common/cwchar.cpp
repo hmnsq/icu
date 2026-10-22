@@ -16,39 +16,39 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if !U_HAVE_WCSCPY
+#اگر !U_HAVE_WCSCPY
 
-#include "cwchar.h"
+#شامل "cwchar.h"
 
-U_CAPI wchar_t *uprv_wcscat(wchar_t *dst, const wchar_t *src) {
+U_CAPI wchar_t *uprv_wcscat(wchar_t *dst, ثابت wchar_t *src) {
     wchar_t *start=dst;
-    while(*dst!=0) {
+    وقتی(*dst!=0) {
         ++dst;
     }
-    while((*dst=*src)!=0) {
+    وقتی((*dst=*src)!=0) {
         ++dst;
         ++src;
     }
-    return start;
+    بازگشت start;
 }
 
-U_CAPI wchar_t *uprv_wcscpy(wchar_t *dst, const wchar_t *src) {
+U_CAPI wchar_t *uprv_wcscpy(wchar_t *dst, ثابت wchar_t *src) {
     wchar_t *start=dst;
-    while((*dst=*src)!=0) {
+    وقتی((*dst=*src)!=0) {
         ++dst;
         ++src;
     }
-    return start;
+    بازگشت start;
 }
 
-U_CAPI size_t uprv_wcslen(const wchar_t *src) {
-    const wchar_t *start=src;
-    while(*src!=0) {
+U_CAPI size_t uprv_wcslen(ثابت wchar_t *src) {
+    ثابت wchar_t *start=src;
+    وقتی(*src!=0) {
         ++src;
     }
-    return src-start;
+    بازگشت src-start;
 }
 
 #endif

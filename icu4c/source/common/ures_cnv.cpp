@@ -18,61 +18,61 @@
 *   Character conversion functions moved here from uresbund.c
 */
 
-#include "unicode/utypes.h"
-#include "unicode/putil.h"
-#include "unicode/ustring.h"
-#include "unicode/ucnv.h"
-#include "unicode/ures.h"
-#include "uinvchar.h"
-#include "ustr_cnv.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/putil.h"
+#شامل "unicode/ustring.h"
+#شامل "unicode/ucnv.h"
+#شامل "unicode/ures.h"
+#شامل "uinvchar.h"
+#شامل "ustr_cnv.h"
 
 U_CAPI UResourceBundle * U_EXPORT2
-ures_openU(const char16_t *myPath,
-           const char *localeID, 
+ures_openU(ثابت char16_t *myPath,
+           ثابت نویسه *localeID, 
            UErrorCode *status)
 {
-    char pathBuffer[1024];
+    نویسه pathBuffer[1024];
     int32_t length;
-    char *path = pathBuffer;
+    نویسه *path = pathBuffer;
 
-    if(status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    اگر(status==nullptr || U_FAILURE(*status)) {
+        بازگشت nullptr;
     }
-    if(myPath==nullptr) {
+    اگر(myPath==nullptr) {
         path = nullptr;
     }
-    else {
+    وگرنه {
         length=u_strlen(myPath);
-        if(length>=(int32_t)sizeof(pathBuffer)) {
+        اگر(length>=(int32_t)اندازه(pathBuffer)) {
             *status=U_ILLEGAL_ARGUMENT_ERROR;
-            return nullptr;
-        } else if(uprv_isInvariantUString(myPath, length)) {
+            بازگشت nullptr;
+        } وگرنه اگر(uprv_isInvariantUString(myPath, length)) {
             /*
              * the invariant converter is sufficient for package and tree names
              * and is more efficient
              */
             u_UCharsToChars(myPath, path, length+1); /* length+1 to include the NUL */
-        } else {
-#if !UCONFIG_NO_CONVERSION
+        } وگرنه {
+#اگر !UCONFIG_NO_CONVERSION
             /* use the default converter to support variant-character paths */
             UConverter *cnv=u_getDefaultConverter(status);
-            length=ucnv_fromUChars(cnv, path, (int32_t)sizeof(pathBuffer), myPath, length, status);
+            length=ucnv_fromUChars(cnv, path, (int32_t)اندازه(pathBuffer), myPath, length, status);
             u_releaseDefaultConverter(cnv);
-            if(U_FAILURE(*status)) {
-                return nullptr;
+            اگر(U_FAILURE(*status)) {
+                بازگشت nullptr;
             }
-            if(length>=(int32_t)sizeof(pathBuffer)) {
+            اگر(length>=(int32_t)اندازه(pathBuffer)) {
                 /* not NUL-terminated - path too long */
                 *status=U_ILLEGAL_ARGUMENT_ERROR;
-                return nullptr;
+                بازگشت nullptr;
             }
-#else
+#وگرنه
             /* the default converter is not available */
             *status=U_UNSUPPORTED_ERROR;
-            return nullptr;
+            بازگشت nullptr;
 #endif
         }
     }
 
-    return ures_open(path, localeID, status);
+    بازگشت ures_open(path, localeID, status);
 }

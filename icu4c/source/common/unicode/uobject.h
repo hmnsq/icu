@@ -19,11 +19,11 @@
 #ifndef __UOBJECT_H__
 #define __UOBJECT_H__
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#اگر U_SHOW_CPLUSPLUS_API
 
-#include "unicode/platform.h"
+#شامل "unicode/platform.h"
 
 /**
  * \file
@@ -93,7 +93,7 @@
  * \endcode
  * @stable ICU 2.0
  */
-typedef void* UClassID;
+تعریفنوع تهی* UClassID;
 
 U_NAMESPACE_BEGIN
 
@@ -113,16 +113,16 @@ U_NAMESPACE_BEGIN
  * @stable ICU 2.4
  */
 class U_COMMON_API UMemory {
-public:
+عمومی:
 
 /* test versions for debugging shaper heap memory problems */
 #ifdef SHAPER_MEMORY_DEBUG  
-    static void * NewArray(int size, int count);
-    static void * GrowArray(void * array, int newSize );
-    static void   FreeArray(void * array );
+    ایستا تهی * NewArray(صحیح size, صحیح شمار);
+    ایستا تهی * GrowArray(تهی * array, صحیح newSize );
+    ایستا تهی   FreeArray(تهی * array );
 #endif
 
-#if U_OVERRIDE_CXX_ALLOCATION
+#اگر U_OVERRIDE_CXX_ALLOCATION
     /**
      * Override for ICU4C C++ memory management.
      * simple, non-class types are allocated using the macros in common/cmemory.h
@@ -131,14 +131,14 @@ public:
      * for ICU4C C++ classes
      * @stable ICU 2.4
      */
-    static void * U_EXPORT2 operator new(size_t size) noexcept;
+    ایستا تهی * U_EXPORT2 operator new(size_t size) noexcept;
 
     /**
      * Override for ICU4C C++ memory management.
      * See new().
      * @stable ICU 2.4
      */
-    static void * U_EXPORT2 operator new[](size_t size) noexcept;
+    ایستا تهی * U_EXPORT2 operator new[](size_t size) noexcept;
 
     /**
      * Override for ICU4C C++ memory management.
@@ -148,30 +148,30 @@ public:
      * for ICU4C C++ classes
      * @stable ICU 2.4
      */
-    static void U_EXPORT2 operator delete(void *p) noexcept;
+    ایستا تهی U_EXPORT2 operator delete(تهی *p) noexcept;
 
     /**
      * Override for ICU4C C++ memory management.
      * See delete().
      * @stable ICU 2.4
      */
-    static void U_EXPORT2 operator delete[](void *p) noexcept;
+    ایستا تهی U_EXPORT2 operator delete[](تهی *p) noexcept;
 
     /**
      * Override for ICU4C C++ memory management for STL.
      * See new().
      * @stable ICU 2.6
      */
-    static inline void * U_EXPORT2 operator new(size_t, void *ptr) noexcept { return ptr; }
+    ایستا درونخطی تهی * U_EXPORT2 operator new(size_t, تهی *ptr) noexcept { بازگشت ptr; }
 
     /**
      * Override for ICU4C C++ memory management for STL.
      * See delete().
      * @stable ICU 2.6
      */
-    static inline void U_EXPORT2 operator delete(void *, void *) noexcept {}
+    ایستا درونخطی تهی U_EXPORT2 operator delete(تهی *, تهی *) noexcept {}
 
-#if U_HAVE_DEBUG_LOCATION_NEW
+#اگر U_HAVE_DEBUG_LOCATION_NEW
     /**
       * This method overrides the MFC debug version of the operator new
       * 
@@ -179,7 +179,7 @@ public:
       * @param file   The file where the allocation was requested
       * @param line   The line where the allocation was requested 
       */ 
-    static void * U_EXPORT2 operator new(size_t size, const char* file, int line) noexcept;
+    ایستا تهی * U_EXPORT2 operator new(size_t size, ثابت نویسه* file, صحیح سطر) noexcept;
     /**
       * This method provides a matching delete for the MFC debug new
       * 
@@ -187,7 +187,7 @@ public:
       * @param file   The file where the allocation was requested
       * @param line   The line where the allocation was requested 
       */ 
-    static void U_EXPORT2 operator delete(void* p, const char* file, int line) noexcept;
+    ایستا تهی U_EXPORT2 operator delete(تهی* p, ثابت نویسه* file, صحیح سطر) noexcept;
 #endif /* U_HAVE_DEBUG_LOCATION_NEW */
 #endif /* U_OVERRIDE_CXX_ALLOCATION */
 
@@ -219,14 +219,14 @@ public:
  *
  * @stable ICU 2.2
  */
-class U_COMMON_API UObject : public UMemory {
-public:
+class U_COMMON_API UObject : عمومی UMemory {
+عمومی:
     /**
      * Destructor.
      *
      * @stable ICU 2.2
      */
-    virtual ~UObject();
+    مجازی ~UObject();
 
     /**
      * ICU4C "poor man's RTTI", returns a UClassID for the actual ICU class.
@@ -237,9 +237,9 @@ public:
      *
      * @stable ICU 2.2
      */
-    virtual UClassID getDynamicClassID() const;
+    مجازی UClassID getDynamicClassID() ثابت;
 
-protected:
+محافظتشده:
     // the following functions are protected to prevent instantiation and
     // direct use of UObject itself
 
@@ -249,7 +249,7 @@ protected:
     // copy constructor
     // inline UObject(const UObject &other) {}
 
-#if 0
+#اگر 0
     // TODO Sometime in the future. Implement operator==().
     // (This comment inserted in 2.2)
     // some or all of the following "boilerplate" functions may be made public
@@ -261,8 +261,8 @@ protected:
     // UObject &operator=(const UObject &other) { return *this; }
 
     // comparison operators
-    virtual inline bool operator==(const UObject &other) const { return this==&other; }
-    inline bool operator!=(const UObject &other) const { return !operator==(other); }
+    مجازی درونخطی bool operator==(ثابت UObject &other) ثابت { بازگشت this==&other; }
+    درونخطی bool operator!=(ثابت UObject &other) ثابت { بازگشت !operator==(other); }
 
     // clone() commented out from the base class:
     // some compilers do not support co-variant return types
@@ -293,11 +293,11 @@ protected:
  */
 #define UOBJECT_DEFINE_RTTI_IMPLEMENTATION(myClass) \
     UClassID U_EXPORT2 myClass::getStaticClassID() { \
-        static char classID = 0; \
-        return (UClassID)&classID; \
+        ایستا نویسه classID = 0; \
+        بازگشت (UClassID)&classID; \
     } \
-    UClassID myClass::getDynamicClassID() const \
-    { return myClass::getStaticClassID(); }
+    UClassID myClass::getDynamicClassID() ثابت \
+    { بازگشت myClass::getStaticClassID(); }
 
 
 /**
@@ -310,8 +310,8 @@ protected:
  */
 #define UOBJECT_DEFINE_ABSTRACT_RTTI_IMPLEMENTATION(myClass) \
     UClassID U_EXPORT2 myClass::getStaticClassID() { \
-        static char classID = 0; \
-        return (UClassID)&classID; \
+        ایستا نویسه classID = 0; \
+        بازگشت (UClassID)&classID; \
     }
 
 #endif  /* U_HIDE_INTERNAL_API */

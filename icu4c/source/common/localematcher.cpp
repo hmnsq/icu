@@ -4,24 +4,24 @@
 // localematcher.cpp
 // created: 2019may08 Markus W. Scherer
 
-#include <optional>
+#شامل <optional>
 
-#include "unicode/utypes.h"
-#include "unicode/localebuilder.h"
-#include "unicode/localematcher.h"
-#include "unicode/locid.h"
-#include "unicode/stringpiece.h"
-#include "unicode/uloc.h"
-#include "unicode/uobject.h"
-#include "cstring.h"
-#include "localeprioritylist.h"
-#include "loclikelysubtags.h"
-#include "locdistance.h"
-#include "lsr.h"
-#include "uassert.h"
-#include "uhash.h"
-#include "ustr_imp.h"
-#include "uvector.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/localebuilder.h"
+#شامل "unicode/localematcher.h"
+#شامل "unicode/locid.h"
+#شامل "unicode/stringpiece.h"
+#شامل "unicode/uloc.h"
+#شامل "unicode/uobject.h"
+#شامل "cstring.h"
+#شامل "localeprioritylist.h"
+#شامل "loclikelysubtags.h"
+#شامل "locdistance.h"
+#شامل "lsr.h"
+#شامل "uassert.h"
+#شامل "uhash.h"
+#شامل "ustr_imp.h"
+#شامل "uvector.h"
 
 #define UND_LSR LSR("und", "", "", LSR::EXPLICIT_LSR)
 
@@ -30,7 +30,7 @@
  *
  * @draft ICU 65
  */
-enum ULocMatchLifetime {
+شمارش ULocMatchLifetime {
     /**
      * Locale objects are temporary.
      * The matcher will make a copy of a locale that will be used beyond one function call.
@@ -48,7 +48,7 @@ enum ULocMatchLifetime {
     ULOCMATCH_STORED_LOCALES  // TODO: permanent? cached? clone?
 };
 #ifndef U_IN_DOXYGEN
-typedef enum ULocMatchLifetime ULocMatchLifetime;
+تعریفنوع شمارش ULocMatchLifetime ULocMatchLifetime;
 #endif
 
 U_NAMESPACE_BEGIN
@@ -59,22 +59,22 @@ LocaleMatcher::Result::Result(LocaleMatcher::Result &&src) noexcept :
         desiredIndex(src.desiredIndex),
         supportedIndex(src.supportedIndex),
         desiredIsOwned(src.desiredIsOwned) {
-    if (desiredIsOwned) {
+    اگر (desiredIsOwned) {
         src.desiredLocale = nullptr;
         src.desiredIndex = -1;
-        src.desiredIsOwned = false;
+        src.desiredIsOwned = نادرست;
     }
 }
 
 LocaleMatcher::Result::~Result() {
-    if (desiredIsOwned) {
+    اگر (desiredIsOwned) {
         delete desiredLocale;
     }
 }
 
 LocaleMatcher::Result&
 LocaleMatcher::Result::operator=(LocaleMatcher::Result&& src) noexcept U_LIFETIME_BOUND {
-    this->~Result();
+    این->~Result();
 
     desiredLocale = src.desiredLocale;
     supportedLocale = src.supportedLocale;
@@ -82,36 +82,36 @@ LocaleMatcher::Result::operator=(LocaleMatcher::Result&& src) noexcept U_LIFETIM
     supportedIndex = src.supportedIndex;
     desiredIsOwned = src.desiredIsOwned;
 
-    if (desiredIsOwned) {
+    اگر (desiredIsOwned) {
         src.desiredLocale = nullptr;
         src.desiredIndex = -1;
-        src.desiredIsOwned = false;
+        src.desiredIsOwned = نادرست;
     }
-    return *this;
+    بازگشت *این;
 }
 
-Locale LocaleMatcher::Result::makeResolvedLocale(UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode) || supportedLocale == nullptr) {
-        return Locale::getRoot();
+Locale LocaleMatcher::Result::makeResolvedLocale(UErrorCode &errorCode) ثابت {
+    اگر (U_FAILURE(errorCode) || supportedLocale == nullptr) {
+        بازگشت Locale::get_ریشه();
     }
-    const Locale *bestDesired = getDesiredLocale();
-    if (bestDesired == nullptr || *supportedLocale == *bestDesired) {
-        return *supportedLocale;
+    ثابت Locale *bestDesired = getDesiredLocale();
+    اگر (bestDesired == nullptr || *supportedLocale == *bestDesired) {
+        بازگشت *supportedLocale;
     }
     LocaleBuilder b;
     b.setLocale(*supportedLocale);
 
     // Copy the region from bestDesired, if there is one.
-    const char *region = bestDesired->getCountry();
-    if (*region != 0) {
+    ثابت نویسه *region = bestDesired->getCountry();
+    اگر (*region != 0) {
         b.setRegion(region);
     }
 
     // Copy the variants from bestDesired, if there are any.
     // Note that this will override any supportedLocale variants.
     // For example, "sco-ulster-fonipa" + "...-fonupa" => "sco-fonupa" (replacing ulster).
-    const char *variants = bestDesired->getVariant();
-    if (*variants != 0) {
+    ثابت نویسه *variants = bestDesired->getVariant();
+    اگر (*variants != 0) {
         b.setVariant(variants);
     }
 
@@ -122,7 +122,7 @@ Locale LocaleMatcher::Result::makeResolvedLocale(UErrorCode &errorCode) const {
     // For example, "th-u-nu-latn-ca-buddhist" + "...-u-nu-native" => "th-u-nu-native"
     // (replacing calendar).
     b.copyExtensionsFrom(*bestDesired, errorCode);
-    return b.build(errorCode);
+    بازگشت b.build(errorCode);
 }
 
 LocaleMatcher::Builder::Builder(LocaleMatcher::Builder &&src) noexcept :
@@ -147,7 +147,7 @@ LocaleMatcher::Builder::~Builder() {
 
 LocaleMatcher::Builder&
 LocaleMatcher::Builder::operator=(LocaleMatcher::Builder&& src) noexcept U_LIFETIME_BOUND {
-    this->~Builder();
+    این->~Builder();
 
     errorCode_ = src.errorCode_;
     supportedLocales_ = src.supportedLocales_;
@@ -160,123 +160,123 @@ LocaleMatcher::Builder::operator=(LocaleMatcher::Builder&& src) noexcept U_LIFET
 
     src.supportedLocales_ = nullptr;
     src.defaultLocale_ = nullptr;
-    return *this;
+    بازگشت *این;
 }
 
-void LocaleMatcher::Builder::clearSupportedLocales() {
-    if (supportedLocales_ != nullptr) {
+تهی LocaleMatcher::Builder::clearSupportedLocales() {
+    اگر (supportedLocales_ != nullptr) {
         supportedLocales_->removeAllElements();
     }
 }
 
-bool LocaleMatcher::Builder::ensureSupportedLocaleVector() {
-    if (U_FAILURE(errorCode_)) { return false; }
-    if (supportedLocales_ != nullptr) { return true; }
-    LocalPointer<UVector> lpSupportedLocales(new UVector(uprv_deleteUObject, nullptr, errorCode_), errorCode_);
-    if (U_FAILURE(errorCode_)) { return false; }
+منطقی LocaleMatcher::Builder::ensureSupportedLocaleVector() {
+    اگر (U_FAILURE(errorCode_)) { بازگشت نادرست; }
+    اگر (supportedLocales_ != nullptr) { بازگشت درست; }
+    LocalPointer<UVector> lpSupportedLocales(جدید UVector(uprv_deleteUObject, nullptr, errorCode_), errorCode_);
+    اگر (U_FAILURE(errorCode_)) { بازگشت نادرست; }
     supportedLocales_ = lpSupportedLocales.orphan();
-    return true;
+    بازگشت درست;
 }
 
 LocaleMatcher::Builder&
 LocaleMatcher::Builder::setSupportedLocalesFromListString(StringPiece locales) U_LIFETIME_BOUND {
     LocalePriorityList list(locales, errorCode_);
-    if (U_FAILURE(errorCode_)) { return *this; }
+    اگر (U_FAILURE(errorCode_)) { بازگشت *این; }
     clearSupportedLocales();
-    if (!ensureSupportedLocaleVector()) { return *this; }
+    اگر (!ensureSupportedLocaleVector()) { بازگشت *این; }
     int32_t length = list.getLengthIncludingRemoved();
-    for (int32_t i = 0; i < length; ++i) {
+    برای (int32_t i = 0; i < length; ++i) {
         Locale *locale = list.orphanLocaleAt(i);
-        if (locale == nullptr) { continue; }
+        اگر (locale == nullptr) { ادامه; }
         supportedLocales_->adoptElement(locale, errorCode_);
-        if (U_FAILURE(errorCode_)) {
-            break;
+        اگر (U_FAILURE(errorCode_)) {
+            بشکن;
         }
     }
-    return *this;
+    بازگشت *این;
 }
 
 LocaleMatcher::Builder&
 LocaleMatcher::Builder::setSupportedLocales(Locale::Iterator& locales) U_LIFETIME_BOUND {
-    if (ensureSupportedLocaleVector()) {
+    اگر (ensureSupportedLocaleVector()) {
         clearSupportedLocales();
-        while (locales.hasNext() && U_SUCCESS(errorCode_)) {
-            const Locale &locale = locales.next();
+        وقتی (locales.hasNext() && U_SUCCESS(errorCode_)) {
+            ثابت Locale &locale = locales.next();
             LocalPointer<Locale> clone (locale.clone(), errorCode_);
             supportedLocales_->adoptElement(clone.orphan(), errorCode_);
         }
     }
-    return *this;
+    بازگشت *این;
 }
 
 LocaleMatcher::Builder&
-LocaleMatcher::Builder::addSupportedLocale(const Locale& locale) U_LIFETIME_BOUND {
-    if (ensureSupportedLocaleVector()) {
+LocaleMatcher::Builder::addSupportedLocale(ثابت Locale& locale) U_LIFETIME_BOUND {
+    اگر (ensureSupportedLocaleVector()) {
         LocalPointer<Locale> clone(locale.clone(), errorCode_);
         supportedLocales_->adoptElement(clone.orphan(), errorCode_);
     }
-    return *this;
+    بازگشت *این;
 }
 
 LocaleMatcher::Builder& LocaleMatcher::Builder::setNoDefaultLocale() U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode_)) { return *this; }
+    اگر (U_FAILURE(errorCode_)) { بازگشت *این; }
     delete defaultLocale_;
     defaultLocale_ = nullptr;
-    withDefault_ = false;
-    return *this;
+    withDefault_ = نادرست;
+    بازگشت *این;
 }
 
 LocaleMatcher::Builder&
-LocaleMatcher::Builder::setDefaultLocale(const Locale* defaultLocale) U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode_)) { return *this; }
+LocaleMatcher::Builder::setDefaultLocale(ثابت Locale* defaultLocale) U_LIFETIME_BOUND {
+    اگر (U_FAILURE(errorCode_)) { بازگشت *این; }
     Locale *clone = nullptr;
-    if (defaultLocale != nullptr) {
+    اگر (defaultLocale != nullptr) {
         clone = defaultLocale->clone();
-        if (clone == nullptr) {
+        اگر (clone == nullptr) {
             errorCode_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+            بازگشت *این;
         }
     }
     delete defaultLocale_;
     defaultLocale_ = clone;
-    withDefault_ = true;
-    return *this;
+    withDefault_ = درست;
+    بازگشت *این;
 }
 
 LocaleMatcher::Builder&
 LocaleMatcher::Builder::setFavorSubtag(ULocMatchFavorSubtag subtag) U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode_)) { return *this; }
+    اگر (U_FAILURE(errorCode_)) { بازگشت *این; }
     favor_ = subtag;
-    return *this;
+    بازگشت *این;
 }
 
 LocaleMatcher::Builder&
 LocaleMatcher::Builder::setDemotionPerDesiredLocale(ULocMatchDemotion demotion) U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode_)) { return *this; }
+    اگر (U_FAILURE(errorCode_)) { بازگشت *این; }
     demotion_ = demotion;
-    return *this;
+    بازگشت *این;
 }
 
 LocaleMatcher::Builder&
-LocaleMatcher::Builder::setMaxDistance(const Locale& desired,
-                                       const Locale& supported) U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode_)) { return *this; }
+LocaleMatcher::Builder::setMaxDistance(ثابت Locale& desired,
+                                       ثابت Locale& supported) U_LIFETIME_BOUND {
+    اگر (U_FAILURE(errorCode_)) { بازگشت *این; }
     Locale *desiredClone = desired.clone();
     Locale *supportedClone = supported.clone();
-    if (desiredClone == nullptr || supportedClone == nullptr) {
+    اگر (desiredClone == nullptr || supportedClone == nullptr) {
         delete desiredClone;  // in case only one could not be allocated
         delete supportedClone;
         errorCode_ = U_MEMORY_ALLOCATION_ERROR;
-        return *this;
+        بازگشت *این;
     }
     delete maxDistanceDesired_;
     delete maxDistanceSupported_;
     maxDistanceDesired_ = desiredClone;
     maxDistanceSupported_ = supportedClone;
-    return *this;
+    بازگشت *این;
 }
 
-#if 0
+#اگر 0
 /**
  * <i>Internal only!</i>
  *
@@ -287,67 +287,67 @@ LocaleMatcher::Builder::setMaxDistance(const Locale& desired,
  */
 @Deprecated
 LocaleMatcher::Builder &LocaleMatcher::Builder::internalSetThresholdDistance(int32_t thresholdDistance) {
-    if (U_FAILURE(errorCode_)) { return *this; }
-    if (thresholdDistance > 100) {
+    اگر (U_FAILURE(errorCode_)) { بازگشت *این; }
+    اگر (thresholdDistance > 100) {
         thresholdDistance = 100;
     }
     thresholdDistance_ = thresholdDistance;
-    return *this;
+    بازگشت *این;
 }
 #endif
 
-UBool LocaleMatcher::Builder::copyErrorTo(UErrorCode &outErrorCode) const {
-    if (U_FAILURE(outErrorCode)) { return true; }
-    if (U_SUCCESS(errorCode_)) { return false; }
+UBool LocaleMatcher::Builder::copyErrorTo(UErrorCode &outErrorCode) ثابت {
+    اگر (U_FAILURE(outErrorCode)) { بازگشت درست; }
+    اگر (U_SUCCESS(errorCode_)) { بازگشت نادرست; }
     outErrorCode = errorCode_;
-    return true;
+    بازگشت درست;
 }
 
-LocaleMatcher LocaleMatcher::Builder::build(UErrorCode &errorCode) const {
-    if (U_SUCCESS(errorCode) && U_FAILURE(errorCode_)) {
+LocaleMatcher LocaleMatcher::Builder::build(UErrorCode &errorCode) ثابت {
+    اگر (U_SUCCESS(errorCode) && U_FAILURE(errorCode_)) {
         errorCode = errorCode_;
     }
-    return LocaleMatcher(*this, errorCode);
+    بازگشت LocaleMatcher(*این, errorCode);
 }
 
-namespace {
+فضاینام {
 
-LSR getMaximalLsrOrUnd(const LikelySubtags &likelySubtags, const Locale &locale,
+LSR getMaximalLsrOrUnd(ثابت LikelySubtags &likelySubtags, ثابت Locale &locale,
                        UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode) || locale.isBogus() || *locale.getName() == 0 /* "und" */) {
-        return UND_LSR;
-    } else {
-        return likelySubtags.makeMaximizedLsrFrom(locale, false, errorCode);
+    اگر (U_FAILURE(errorCode) || locale.isBogus() || *locale.getName() == 0 /* "und" */) {
+        بازگشت UND_LSR;
+    } وگرنه {
+        بازگشت likelySubtags.makeMaximizedLsrFrom(locale, نادرست, errorCode);
     }
 }
 
-int32_t hashLSR(const UHashTok token) {
-    const LSR *lsr = static_cast<const LSR *>(token.pointer);
-    return lsr->hashCode;
+int32_t hashLSR(ثابت UHashTok token) {
+    ثابت LSR *lsr = static_cast<ثابت LSR *>(token.pointer);
+    بازگشت lsr->hashCode;
 }
 
-UBool compareLSRs(const UHashTok t1, const UHashTok t2) {
-    const LSR *lsr1 = static_cast<const LSR *>(t1.pointer);
-    const LSR *lsr2 = static_cast<const LSR *>(t2.pointer);
-    return *lsr1 == *lsr2;
+UBool compareLSRs(ثابت UHashTok t1, ثابت UHashTok t2) {
+    ثابت LSR *lsr1 = static_cast<ثابت LSR *>(t1.pointer);
+    ثابت LSR *lsr2 = static_cast<ثابت LSR *>(t2.pointer);
+    بازگشت *lsr1 == *lsr2;
 }
 
 }  // namespace
 
-int32_t LocaleMatcher::putIfAbsent(const LSR &lsr, int32_t i, int32_t suppLength,
+int32_t LocaleMatcher::putIfAbsent(ثابت LSR &lsr, int32_t i, int32_t suppLength,
                                    UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return suppLength; }
-    if (!uhash_containsKey(supportedLsrToIndex, &lsr)) {
+    اگر (U_FAILURE(errorCode)) { بازگشت suppLength; }
+    اگر (!uhash_contains_کلید(supportedLsrToIndex, &lsr)) {
         uhash_putiAllowZero(supportedLsrToIndex, const_cast<LSR *>(&lsr), i, &errorCode);
-        if (U_SUCCESS(errorCode)) {
+        اگر (U_SUCCESS(errorCode)) {
             supportedLSRs[suppLength] = &lsr;
             supportedIndexes[suppLength++] = i;
         }
     }
-    return suppLength;
+    بازگشت suppLength;
 }
 
-LocaleMatcher::LocaleMatcher(const Builder &builder, UErrorCode &errorCode) :
+LocaleMatcher::LocaleMatcher(ثابت Builder &builder, UErrorCode &errorCode) :
         likelySubtags(*LikelySubtags::getSingleton(errorCode)),
         localeDistance(*LocaleDistance::getSingleton(errorCode)),
         thresholdDistance(builder.thresholdDistance_),
@@ -358,50 +358,50 @@ LocaleMatcher::LocaleMatcher(const Builder &builder, UErrorCode &errorCode) :
         supportedLsrToIndex(nullptr),
         supportedLSRs(nullptr), supportedIndexes(nullptr), supportedLSRsLength(0),
         ownedDefaultLocale(nullptr), defaultLocale(nullptr) {
-    if (U_FAILURE(errorCode)) { return; }
-    const Locale *def = builder.defaultLocale_;
+    اگر (U_FAILURE(errorCode)) { بازگشت; }
+    ثابت Locale *def = builder.defaultLocale_;
     LSR builderDefaultLSR;
-    const LSR *defLSR = nullptr;
-    if (def != nullptr) {
+    ثابت LSR *defLSR = nullptr;
+    اگر (def != nullptr) {
         ownedDefaultLocale = def->clone();
-        if (ownedDefaultLocale == nullptr) {
+        اگر (ownedDefaultLocale == nullptr) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return;
+            بازگشت;
         }
         def = ownedDefaultLocale;
         builderDefaultLSR = getMaximalLsrOrUnd(likelySubtags, *def, errorCode);
-        if (U_FAILURE(errorCode)) { return; }
+        اگر (U_FAILURE(errorCode)) { بازگشت; }
         defLSR = &builderDefaultLSR;
     }
     supportedLocalesLength = builder.supportedLocales_ != nullptr ?
         builder.supportedLocales_->size() : 0;
-    if (supportedLocalesLength > 0) {
+    اگر (supportedLocalesLength > 0) {
         // Store the supported locales in input order,
         // so that when different types are used (e.g., language tag strings)
         // we can return those by parallel index.
-        supportedLocales = static_cast<const Locale **>(
-            uprv_malloc(supportedLocalesLength * sizeof(const Locale *)));
+        supportedLocales = static_cast<ثابت Locale **>(
+            uprv_malloc(supportedLocalesLength * اندازه(ثابت Locale *)));
         // Supported LRSs in input order.
         // In C++, we store these permanently to simplify ownership management
         // in the hash tables. Duplicate LSRs (if any) are unused overhead.
-        lsrs = new LSR[supportedLocalesLength];
-        if (supportedLocales == nullptr || lsrs == nullptr) {
+        lsrs = جدید LSR[supportedLocalesLength];
+        اگر (supportedLocales == nullptr || lsrs == nullptr) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return;
+            بازگشت;
         }
         // If the constructor fails partway, we need null pointers for destructibility.
-        uprv_memset(supportedLocales, 0, supportedLocalesLength * sizeof(const Locale *));
-        for (int32_t i = 0; i < supportedLocalesLength; ++i) {
-            const Locale &locale = *static_cast<Locale *>(builder.supportedLocales_->elementAt(i));
+        uprv_memset(supportedLocales, 0, supportedLocalesLength * اندازه(ثابت Locale *));
+        برای (int32_t i = 0; i < supportedLocalesLength; ++i) {
+            ثابت Locale &locale = *static_cast<Locale *>(builder.supportedLocales_->elementAt(i));
             supportedLocales[i] = locale.clone();
-            if (supportedLocales[i] == nullptr) {
+            اگر (supportedLocales[i] == nullptr) {
                 errorCode = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                بازگشت;
             }
-            const Locale &supportedLocale = *supportedLocales[i];
+            ثابت Locale &supportedLocale = *supportedLocales[i];
             LSR &lsr = lsrs[i] = getMaximalLsrOrUnd(likelySubtags, supportedLocale, errorCode);
             lsr.setHashCode();
-            if (U_FAILURE(errorCode)) { return; }
+            اگر (U_FAILURE(errorCode)) { بازگشت; }
         }
 
         // We need an unordered map from LSR to first supported locale with that LSR,
@@ -412,52 +412,52 @@ LocaleMatcher::LocaleMatcher(const Builder &builder, UErrorCode &errorCode) :
         // 3. Remaining locales in builder order.
         supportedLsrToIndex = uhash_openSize(hashLSR, compareLSRs, uhash_compareLong,
                                              supportedLocalesLength, &errorCode);
-        if (U_FAILURE(errorCode)) { return; }
-        supportedLSRs = static_cast<const LSR **>(
-            uprv_malloc(supportedLocalesLength * sizeof(const LSR *)));
+        اگر (U_FAILURE(errorCode)) { بازگشت; }
+        supportedLSRs = static_cast<ثابت LSR **>(
+            uprv_malloc(supportedLocalesLength * اندازه(ثابت LSR *)));
         supportedIndexes = static_cast<int32_t *>(
-            uprv_malloc(supportedLocalesLength * sizeof(int32_t)));
-        if (supportedLSRs == nullptr || supportedIndexes == nullptr) {
+            uprv_malloc(supportedLocalesLength * اندازه(int32_t)));
+        اگر (supportedLSRs == nullptr || supportedIndexes == nullptr) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return;
+            بازگشت;
         }
         int32_t suppLength = 0;
         // Determine insertion order.
         // Add locales immediately that are equivalent to the default.
-        MaybeStackArray<int8_t, 100> order(supportedLocalesLength, errorCode);
-        if (U_FAILURE(errorCode)) { return; }
-        int32_t numParadigms = 0;
-        for (int32_t i = 0; i < supportedLocalesLength; ++i) {
-            const Locale &locale = *supportedLocales[i];
-            const LSR &lsr = lsrs[i];
-            if (defLSR == nullptr && builder.withDefault_) {
+        Maybe_پشته_Array<int8_t, 100> order(supportedLocalesLength, errorCode);
+        اگر (U_FAILURE(errorCode)) { بازگشت; }
+        int32_t رقم_Paradigms = 0;
+        برای (int32_t i = 0; i < supportedLocalesLength; ++i) {
+            ثابت Locale &locale = *supportedLocales[i];
+            ثابت LSR &lsr = lsrs[i];
+            اگر (defLSR == nullptr && builder.withDefault_) {
                 // Implicit default locale = first supported locale, if not turned off.
                 U_ASSERT(i == 0);
                 def = &locale;
                 defLSR = &lsr;
                 order[i] = 1;
                 suppLength = putIfAbsent(lsr, 0, suppLength, errorCode);
-            } else if (defLSR != nullptr && lsr.isEquivalentTo(*defLSR)) {
+            } وگرنه اگر (defLSR != nullptr && lsr.isEquivalentTo(*defLSR)) {
                 order[i] = 1;
                 suppLength = putIfAbsent(lsr, i, suppLength, errorCode);
-            } else if (localeDistance.isParadigmLSR(lsr)) {
+            } وگرنه اگر (localeDistance.isParadigmLSR(lsr)) {
                 order[i] = 2;
-                ++numParadigms;
-            } else {
+                ++رقم_Paradigms;
+            } وگرنه {
                 order[i] = 3;
             }
-            if (U_FAILURE(errorCode)) { return; }
+            اگر (U_FAILURE(errorCode)) { بازگشت; }
         }
         // Add supported paradigm locales.
-        int32_t paradigmLimit = suppLength + numParadigms;
-        for (int32_t i = 0; i < supportedLocalesLength && suppLength < paradigmLimit; ++i) {
-            if (order[i] == 2) {
+        int32_t paradigmLimit = suppLength + رقم_Paradigms;
+        برای (int32_t i = 0; i < supportedLocalesLength && suppLength < paradigmLimit; ++i) {
+            اگر (order[i] == 2) {
                 suppLength = putIfAbsent(lsrs[i], i, suppLength, errorCode);
             }
         }
         // Add remaining supported locales.
-        for (int32_t i = 0; i < supportedLocalesLength; ++i) {
-            if (order[i] == 3) {
+        برای (int32_t i = 0; i < supportedLocalesLength; ++i) {
+            اگر (order[i] == 3) {
                 suppLength = putIfAbsent(lsrs[i], i, suppLength, errorCode);
             }
         }
@@ -469,26 +469,26 @@ LocaleMatcher::LocaleMatcher(const Builder &builder, UErrorCode &errorCode) :
 
     defaultLocale = def;
 
-    if (builder.demotion_ == ULOCMATCH_DEMOTION_REGION) {
+    اگر (builder.demotion_ == ULOCMATCH_DEMOTION_REGION) {
         demotionPerDesiredLocale = localeDistance.getDefaultDemotionPerDesiredLocale();
     }
 
-    if (thresholdDistance >= 0) {
+    اگر (thresholdDistance >= 0) {
         // already copied
-    } else if (builder.maxDistanceDesired_ != nullptr) {
+    } وگرنه اگر (builder.maxDistanceDesired_ != nullptr) {
         LSR suppLSR = getMaximalLsrOrUnd(likelySubtags, *builder.maxDistanceSupported_, errorCode);
-        const LSR *pSuppLSR = &suppLSR;
+        ثابت LSR *pSuppLSR = &suppLSR;
         int32_t indexAndDistance = localeDistance.getBestIndexAndDistance(
                 getMaximalLsrOrUnd(likelySubtags, *builder.maxDistanceDesired_, errorCode),
                 &pSuppLSR, 1,
                 LocaleDistance::shiftDistance(100), favorSubtag, direction);
-        if (U_SUCCESS(errorCode)) {
+        اگر (U_SUCCESS(errorCode)) {
             // +1 for an exclusive threshold from an inclusive max.
             thresholdDistance = LocaleDistance::getDistanceFloor(indexAndDistance) + 1;
-        } else {
+        } وگرنه {
             thresholdDistance = 0;
         }
-    } else {
+    } وگرنه {
         thresholdDistance = localeDistance.getDefaultScriptDistance();
     }
 }
@@ -519,7 +519,7 @@ LocaleMatcher::LocaleMatcher(LocaleMatcher &&src) noexcept :
 }
 
 LocaleMatcher::~LocaleMatcher() {
-    for (int32_t i = 0; i < supportedLocalesLength; ++i) {
+    برای (int32_t i = 0; i < supportedLocalesLength; ++i) {
         delete supportedLocales[i];
     }
     uprv_free(supportedLocales);
@@ -531,7 +531,7 @@ LocaleMatcher::~LocaleMatcher() {
 }
 
 LocaleMatcher& LocaleMatcher::operator=(LocaleMatcher&& src) noexcept U_LIFETIME_BOUND {
-    this->~LocaleMatcher();
+    این->~LocaleMatcher();
 
     thresholdDistance = src.thresholdDistance;
     demotionPerDesiredLocale = src.demotionPerDesiredLocale;
@@ -556,198 +556,198 @@ LocaleMatcher& LocaleMatcher::operator=(LocaleMatcher&& src) noexcept U_LIFETIME
     src.supportedLSRsLength = 0;
     src.ownedDefaultLocale = nullptr;
     src.defaultLocale = nullptr;
-    return *this;
+    بازگشت *این;
 }
 
-class LocaleLsrIterator {
-public:
-    LocaleLsrIterator(const LikelySubtags &likelySubtags, Locale::Iterator &locales,
+رده LocaleLsrIterator {
+عمومی:
+    LocaleLsrIterator(ثابت LikelySubtags &likelySubtags, Locale::Iterator &locales,
                       ULocMatchLifetime lifetime) :
             likelySubtags(likelySubtags), locales(locales), lifetime(lifetime) {}
 
     ~LocaleLsrIterator() {
-        if (lifetime == ULOCMATCH_TEMPORARY_LOCALES) {
+        اگر (lifetime == ULOCMATCH_TEMPORARY_LOCALES) {
             delete remembered;
         }
     }
 
-    bool hasNext() const {
-        return locales.hasNext();
+    منطقی hasNext() ثابت {
+        بازگشت locales.hasNext();
     }
 
     LSR next(UErrorCode &errorCode) {
         current = &locales.next();
-        return getMaximalLsrOrUnd(likelySubtags, *current, errorCode);
+        بازگشت getMaximalLsrOrUnd(likelySubtags, *current, errorCode);
     }
 
-    void rememberCurrent(int32_t desiredIndex, UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return; }
+    تهی rememberCurrent(int32_t desiredIndex, UErrorCode &errorCode) {
+        اگر (U_FAILURE(errorCode)) { بازگشت; }
         bestDesiredIndex = desiredIndex;
-        if (lifetime == ULOCMATCH_STORED_LOCALES) {
+        اگر (lifetime == ULOCMATCH_STORED_LOCALES) {
             remembered = current;
-        } else {
+        } وگرنه {
             // ULOCMATCH_TEMPORARY_LOCALES
             delete remembered;
-            remembered = new Locale(*current);
-            if (remembered == nullptr) {
+            remembered = جدید Locale(*current);
+            اگر (remembered == nullptr) {
                 errorCode = U_MEMORY_ALLOCATION_ERROR;
             }
         }
     }
 
-    const Locale *orphanRemembered() {
-        const Locale *rem = remembered;
+    ثابت Locale *orphanRemembered() {
+        ثابت Locale *rem = remembered;
         remembered = nullptr;
-        return rem;
+        بازگشت rem;
     }
 
-    int32_t getBestDesiredIndex() const {
-        return bestDesiredIndex;
+    int32_t getBestDesiredIndex() ثابت {
+        بازگشت bestDesiredIndex;
     }
 
-private:
-    const LikelySubtags &likelySubtags;
+خصوصی:
+    ثابت LikelySubtags &likelySubtags;
     Locale::Iterator &locales;
     ULocMatchLifetime lifetime;
-    const Locale *current = nullptr, *remembered = nullptr;
+    ثابت Locale *current = nullptr, *remembered = nullptr;
     int32_t bestDesiredIndex = -1;
 };
 
-const Locale* LocaleMatcher::getBestMatch(const Locale& desiredLocale,
-                                          UErrorCode& errorCode) const U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode)) { return nullptr; }
+ثابت Locale* LocaleMatcher::getBestMatch(ثابت Locale& desiredLocale,
+                                          UErrorCode& errorCode) ثابت U_LIFETIME_BOUND {
+    اگر (U_FAILURE(errorCode)) { بازگشت nullptr; }
     std::optional<int32_t> suppIndex = getBestSuppIndex(
         getMaximalLsrOrUnd(likelySubtags, desiredLocale, errorCode),
         nullptr, errorCode);
-    return U_SUCCESS(errorCode) && suppIndex.has_value() ? supportedLocales[*suppIndex]
+    بازگشت U_SUCCESS(errorCode) && suppIndex.has_value() ? supportedLocales[*suppIndex]
                                                          : defaultLocale;
 }
 
-const Locale* LocaleMatcher::getBestMatch(Locale::Iterator& desiredLocales,
-                                          UErrorCode& errorCode) const U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    if (!desiredLocales.hasNext()) {
-        return defaultLocale;
+ثابت Locale* LocaleMatcher::getBestMatch(Locale::Iterator& desiredLocales,
+                                          UErrorCode& errorCode) ثابت U_LIFETIME_BOUND {
+    اگر (U_FAILURE(errorCode)) { بازگشت nullptr; }
+    اگر (!desiredLocales.hasNext()) {
+        بازگشت defaultLocale;
     }
     LocaleLsrIterator lsrIter(likelySubtags, desiredLocales, ULOCMATCH_TEMPORARY_LOCALES);
     std::optional<int32_t> suppIndex = getBestSuppIndex(lsrIter.next(errorCode), &lsrIter, errorCode);
-    return U_SUCCESS(errorCode) && suppIndex.has_value() ? supportedLocales[*suppIndex]
+    بازگشت U_SUCCESS(errorCode) && suppIndex.has_value() ? supportedLocales[*suppIndex]
                                                          : defaultLocale;
 }
 
-const Locale*
+ثابت Locale*
 LocaleMatcher::getBestMatchForListString(StringPiece desiredLocaleList,
-                                         UErrorCode& errorCode) const U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode)) { return nullptr; }
+                                         UErrorCode& errorCode) ثابت U_LIFETIME_BOUND {
+    اگر (U_FAILURE(errorCode)) { بازگشت nullptr; }
     LocalePriorityList list(desiredLocaleList, errorCode);
     LocalePriorityList::Iterator iter = list.iterator();
-    return getBestMatch(iter, errorCode);
+    بازگشت getBestMatch(iter, errorCode);
 }
 
 LocaleMatcher::Result
-LocaleMatcher::getBestMatchResult(const Locale& desiredLocale U_LIFETIME_BOUND,
-                                  UErrorCode& errorCode) const U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode)) {
-        return Result(nullptr, defaultLocale, -1, -1, false);
+LocaleMatcher::getBestMatchResult(ثابت Locale& desiredLocale U_LIFETIME_BOUND,
+                                  UErrorCode& errorCode) ثابت U_LIFETIME_BOUND {
+    اگر (U_FAILURE(errorCode)) {
+        بازگشت Result(nullptr, defaultLocale, -1, -1, نادرست);
     }
     std::optional<int32_t> suppIndex = getBestSuppIndex(
         getMaximalLsrOrUnd(likelySubtags, desiredLocale, errorCode),
         nullptr, errorCode);
-    if (U_FAILURE(errorCode) || !suppIndex.has_value()) {
-        return Result(nullptr, defaultLocale, -1, -1, false);
-    } else {
-        return Result(&desiredLocale, supportedLocales[*suppIndex], 0, *suppIndex, false);
+    اگر (U_FAILURE(errorCode) || !suppIndex.has_value()) {
+        بازگشت Result(nullptr, defaultLocale, -1, -1, نادرست);
+    } وگرنه {
+        بازگشت Result(&desiredLocale, supportedLocales[*suppIndex], 0, *suppIndex, نادرست);
     }
 }
 
 LocaleMatcher::Result
 LocaleMatcher::getBestMatchResult(Locale::Iterator& desiredLocales,
-                                  UErrorCode& errorCode) const U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode) || !desiredLocales.hasNext()) {
-        return Result(nullptr, defaultLocale, -1, -1, false);
+                                  UErrorCode& errorCode) ثابت U_LIFETIME_BOUND {
+    اگر (U_FAILURE(errorCode) || !desiredLocales.hasNext()) {
+        بازگشت Result(nullptr, defaultLocale, -1, -1, نادرست);
     }
     LocaleLsrIterator lsrIter(likelySubtags, desiredLocales, ULOCMATCH_TEMPORARY_LOCALES);
     std::optional<int32_t> suppIndex = getBestSuppIndex(lsrIter.next(errorCode), &lsrIter, errorCode);
-    if (U_FAILURE(errorCode) || !suppIndex.has_value()) {
-        return Result(nullptr, defaultLocale, -1, -1, false);
-    } else {
-        return Result(lsrIter.orphanRemembered(), supportedLocales[*suppIndex],
-                      lsrIter.getBestDesiredIndex(), *suppIndex, true);
+    اگر (U_FAILURE(errorCode) || !suppIndex.has_value()) {
+        بازگشت Result(nullptr, defaultLocale, -1, -1, نادرست);
+    } وگرنه {
+        بازگشت Result(lsrIter.orphanRemembered(), supportedLocales[*suppIndex],
+                      lsrIter.getBestDesiredIndex(), *suppIndex, درست);
     }
 }
 
 std::optional<int32_t> LocaleMatcher::getBestSuppIndex(LSR desiredLSR,
                                                        LocaleLsrIterator *remainingIter,
-                                                       UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return std::nullopt; }
+                                                       UErrorCode &errorCode) ثابت {
+    اگر (U_FAILURE(errorCode)) { بازگشت std::nullopt; }
     int32_t desiredIndex = 0;
     int32_t bestSupportedLsrIndex = -1;
-    for (int32_t bestShiftedDistance = LocaleDistance::shiftDistance(thresholdDistance);;) {
+    برای (int32_t bestShiftedDistance = LocaleDistance::shiftDistance(thresholdDistance);;) {
         // Quick check for exact maximized LSR.
-        if (supportedLsrToIndex != nullptr) {
+        اگر (supportedLsrToIndex != nullptr) {
             desiredLSR.setHashCode();
-            UBool found = false;
+            UBool found = نادرست;
             int32_t suppIndex = uhash_getiAndFound(supportedLsrToIndex, &desiredLSR, &found);
-            if (found) {
-                if (remainingIter != nullptr) {
+            اگر (found) {
+                اگر (remainingIter != nullptr) {
                     remainingIter->rememberCurrent(desiredIndex, errorCode);
                 }
-                return suppIndex;
+                بازگشت suppIndex;
             }
         }
         int32_t bestIndexAndDistance = localeDistance.getBestIndexAndDistance(
                 desiredLSR, supportedLSRs, supportedLSRsLength,
                 bestShiftedDistance, favorSubtag, direction);
-        if (bestIndexAndDistance >= 0) {
+        اگر (bestIndexAndDistance >= 0) {
             bestShiftedDistance = LocaleDistance::getShiftedDistance(bestIndexAndDistance);
-            if (remainingIter != nullptr) {
+            اگر (remainingIter != nullptr) {
                 remainingIter->rememberCurrent(desiredIndex, errorCode);
-                if (U_FAILURE(errorCode)) { return std::nullopt; }
+                اگر (U_FAILURE(errorCode)) { بازگشت std::nullopt; }
             }
             bestSupportedLsrIndex = LocaleDistance::getIndex(bestIndexAndDistance);
         }
-        if ((bestShiftedDistance -= LocaleDistance::shiftDistance(demotionPerDesiredLocale)) <= 0) {
-            break;
+        اگر ((bestShiftedDistance -= LocaleDistance::shiftDistance(demotionPerDesiredLocale)) <= 0) {
+            بشکن;
         }
-        if (remainingIter == nullptr || !remainingIter->hasNext()) {
-            break;
+        اگر (remainingIter == nullptr || !remainingIter->hasNext()) {
+            بشکن;
         }
         desiredLSR = remainingIter->next(errorCode);
-        if (U_FAILURE(errorCode)) { return std::nullopt; }
+        اگر (U_FAILURE(errorCode)) { بازگشت std::nullopt; }
         ++desiredIndex;
     }
-    if (bestSupportedLsrIndex < 0) {
+    اگر (bestSupportedLsrIndex < 0) {
         // no good match
-        return std::nullopt;
+        بازگشت std::nullopt;
     }
-    return supportedIndexes[bestSupportedLsrIndex];
+    بازگشت supportedIndexes[bestSupportedLsrIndex];
 }
 
-UBool LocaleMatcher::isMatch(const Locale &desired, const Locale &supported,
-                             UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return false; }
+UBool LocaleMatcher::isMatch(ثابت Locale &desired, ثابت Locale &supported,
+                             UErrorCode &errorCode) ثابت {
+    اگر (U_FAILURE(errorCode)) { بازگشت نادرست; }
     LSR suppLSR = getMaximalLsrOrUnd(likelySubtags, supported, errorCode);
-    if (U_FAILURE(errorCode)) { return false; }
-    const LSR *pSuppLSR = &suppLSR;
+    اگر (U_FAILURE(errorCode)) { بازگشت نادرست; }
+    ثابت LSR *pSuppLSR = &suppLSR;
     int32_t indexAndDistance = localeDistance.getBestIndexAndDistance(
             getMaximalLsrOrUnd(likelySubtags, desired, errorCode),
             &pSuppLSR, 1,
             LocaleDistance::shiftDistance(thresholdDistance), favorSubtag, direction);
-    return indexAndDistance >= 0;
+    بازگشت indexAndDistance >= 0;
 }
 
-double LocaleMatcher::internalMatch(const Locale &desired, const Locale &supported, UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return 0.; }
+دوگانه LocaleMatcher::internalMatch(ثابت Locale &desired, ثابت Locale &supported, UErrorCode &errorCode) ثابت {
+    اگر (U_FAILURE(errorCode)) { بازگشت 0.; }
     // Returns the inverse of the distance: That is, 1-distance(desired, supported).
     LSR suppLSR = getMaximalLsrOrUnd(likelySubtags, supported, errorCode);
-    if (U_FAILURE(errorCode)) { return 0.; }
-    const LSR *pSuppLSR = &suppLSR;
+    اگر (U_FAILURE(errorCode)) { بازگشت 0.; }
+    ثابت LSR *pSuppLSR = &suppLSR;
     int32_t indexAndDistance = localeDistance.getBestIndexAndDistance(
             getMaximalLsrOrUnd(likelySubtags, desired, errorCode),
             &pSuppLSR, 1,
             LocaleDistance::shiftDistance(thresholdDistance), favorSubtag, direction);
-    double distance = LocaleDistance::getDistanceDouble(indexAndDistance);
-    return (100.0 - distance) / 100.0;
+    دوگانه distance = LocaleDistance::getDistanceDouble(indexAndDistance);
+    بازگشت (100.0 - distance) / 100.0;
 }
 
 U_NAMESPACE_END
@@ -756,91 +756,91 @@ U_NAMESPACE_END
 
 U_NAMESPACE_USE
 
-namespace {
+فضاینام {
 
-class LocaleFromTag {
-public:
-    LocaleFromTag() : locale(Locale::getRoot()) {}
-    const Locale& operator()(const char* tag) U_LIFETIME_BOUND { return locale = Locale(tag); }
+رده LocaleFromTag {
+عمومی:
+    LocaleFromTag() : locale(Locale::get_ریشه()) {}
+    ثابت Locale& operator()(ثابت نویسه* tag) U_LIFETIME_BOUND { بازگشت locale = Locale(tag); }
 
-private:
+خصوصی:
     // Store the locale in the converter, rather than return a reference to a temporary,
     // or a value which could go out of scope with the caller's reference to it.
     Locale locale;
 };
 
 int32_t acceptLanguage(UEnumeration &supportedLocales, Locale::Iterator &desiredLocales,
-                       char *dest, int32_t capacity, UAcceptResult *acceptResult,
+                       نویسه *dest, int32_t capacity, UAcceptResult *acceptResult,
                        UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return 0; }
+    اگر (U_FAILURE(errorCode)) { بازگشت 0; }
     LocaleMatcher::Builder builder;
-    const char *locString;
-    while ((locString = uenum_next(&supportedLocales, nullptr, &errorCode)) != nullptr) {
+    ثابت نویسه *locString;
+    وقتی ((locString = uenum_next(&supportedLocales, nullptr, &errorCode)) != nullptr) {
         Locale loc(locString);
-        if (loc.isBogus()) {
+        اگر (loc.isBogus()) {
             errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-            return 0;
+            بازگشت 0;
         }
         builder.addSupportedLocale(loc);
     }
     LocaleMatcher matcher = builder.build(errorCode);
     LocaleMatcher::Result result = matcher.getBestMatchResult(desiredLocales, errorCode);
-    if (U_FAILURE(errorCode)) { return 0; }
-    if (result.getDesiredIndex() >= 0) {
-        if (acceptResult != nullptr) {
+    اگر (U_FAILURE(errorCode)) { بازگشت 0; }
+    اگر (result.getDesiredIndex() >= 0) {
+        اگر (acceptResult != nullptr) {
             *acceptResult = *result.getDesiredLocale() == *result.getSupportedLocale() ?
                 ULOC_ACCEPT_VALID : ULOC_ACCEPT_FALLBACK;
         }
-        const char *bestStr = result.getSupportedLocale()->getName();
+        ثابت نویسه *bestStr = result.getSupportedLocale()->getName();
         int32_t bestLength = static_cast<int32_t>(uprv_strlen(bestStr));
-        if (bestLength <= capacity) {
+        اگر (bestLength <= capacity) {
             uprv_memcpy(dest, bestStr, bestLength);
         }
-        return u_terminateChars(dest, capacity, bestLength, &errorCode);
-    } else {
-        if (acceptResult != nullptr) {
+        بازگشت u_terminateChars(dest, capacity, bestLength, &errorCode);
+    } وگرنه {
+        اگر (acceptResult != nullptr) {
             *acceptResult = ULOC_ACCEPT_FAILED;
         }
-        return u_terminateChars(dest, capacity, 0, &errorCode);
+        بازگشت u_terminateChars(dest, capacity, 0, &errorCode);
     }
 }
 
 }  // namespace
 
 U_CAPI int32_t U_EXPORT2
-uloc_acceptLanguage(char *result, int32_t resultAvailable,
+uloc_acceptLanguage(نویسه *result, int32_t resultAvailable,
                     UAcceptResult *outResult,
-                    const char **acceptList, int32_t acceptListCount,
+                    ثابت نویسه **acceptList, int32_t accept_List_شمار,
                     UEnumeration *availableLocales,
                     UErrorCode *status) {
-    if (U_FAILURE(*status)) { return 0; }
-    if ((result == nullptr ? resultAvailable != 0 : resultAvailable < 0) ||
-            (acceptList == nullptr ? acceptListCount != 0 : acceptListCount < 0) ||
+    اگر (U_FAILURE(*status)) { بازگشت 0; }
+    اگر ((result == nullptr ? resultAvailable != 0 : resultAvailable < 0) ||
+            (acceptList == nullptr ? accept_List_شمار != 0 : accept_List_شمار < 0) ||
             availableLocales == nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        بازگشت 0;
     }
     LocaleFromTag converter;
-    Locale::ConvertingIterator<const char **, LocaleFromTag> desiredLocales(
-        acceptList, acceptList + acceptListCount, converter);
-    return acceptLanguage(*availableLocales, desiredLocales,
+    Locale::ConvertingIterator<ثابت نویسه **, LocaleFromTag> desiredLocales(
+        acceptList, acceptList + accept_List_شمار, converter);
+    بازگشت acceptLanguage(*availableLocales, desiredLocales,
                           result, resultAvailable, outResult, *status);
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_acceptLanguageFromHTTP(char *result, int32_t resultAvailable,
+uloc_acceptLanguageFromHTTP(نویسه *result, int32_t resultAvailable,
                             UAcceptResult *outResult,
-                            const char *httpAcceptLanguage,
+                            ثابت نویسه *httpAcceptLanguage,
                             UEnumeration *availableLocales,
                             UErrorCode *status) {
-    if (U_FAILURE(*status)) { return 0; }
-    if ((result == nullptr ? resultAvailable != 0 : resultAvailable < 0) ||
+    اگر (U_FAILURE(*status)) { بازگشت 0; }
+    اگر ((result == nullptr ? resultAvailable != 0 : resultAvailable < 0) ||
             httpAcceptLanguage == nullptr || availableLocales == nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        بازگشت 0;
     }
     LocalePriorityList list(httpAcceptLanguage, *status);
     LocalePriorityList::Iterator desiredLocales = list.iterator();
-    return acceptLanguage(*availableLocales, desiredLocales,
+    بازگشت acceptLanguage(*availableLocales, desiredLocales,
                           result, resultAvailable, outResult, *status);
 }

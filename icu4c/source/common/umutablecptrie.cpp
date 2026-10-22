@@ -9,14 +9,14 @@
 #   include <stdio.h>
 #endif
 
-#include "unicode/utypes.h"
-#include "unicode/ucptrie.h"
-#include "unicode/umutablecptrie.h"
-#include "unicode/uobject.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "uassert.h"
-#include "ucptrie_impl.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/ucptrie.h"
+#شامل "unicode/umutablecptrie.h"
+#شامل "unicode/uobject.h"
+#شامل "unicode/utf16.h"
+#شامل "cmemory.h"
+#شامل "uassert.h"
+#شامل "ucptrie_impl.h"
 
 // ICU-20235 In case Microsoft math.h has defined this, undefine it.
 #ifdef OVERFLOW
@@ -25,7 +25,7 @@
 
 U_NAMESPACE_BEGIN
 
-namespace {
+فضاینام {
 
 constexpr int32_t MAX_UNICODE = 0x10ffff;
 
@@ -64,39 +64,39 @@ constexpr uint8_t I3_18 = 3;
 
 constexpr int32_t INDEX_3_18BIT_BLOCK_LENGTH = UCPTRIE_INDEX_3_BLOCK_LENGTH + UCPTRIE_INDEX_3_BLOCK_LENGTH / 8;
 
-class AllSameBlocks;
-class MixedBlocks;
+رده AllSameBlocks;
+رده MixedBlocks;
 
-class MutableCodePointTrie : public UMemory {
-public:
-    MutableCodePointTrie(uint32_t initialValue, uint32_t errorValue, UErrorCode &errorCode);
-    MutableCodePointTrie(const MutableCodePointTrie &other, UErrorCode &errorCode);
-    MutableCodePointTrie(const MutableCodePointTrie &other) = delete;
+رده MutableCodePointTrie : عمومی UMemory {
+عمومی:
+    MutableCodePointTrie(uint32_t initial_مقدار, uint32_t error_مقدار, UErrorCode &errorCode);
+    MutableCodePointTrie(ثابت MutableCodePointTrie &other, UErrorCode &errorCode);
+    MutableCodePointTrie(ثابت MutableCodePointTrie &other) = delete;
     ~MutableCodePointTrie();
 
-    MutableCodePointTrie &operator=(const MutableCodePointTrie &other) = delete;
+    MutableCodePointTrie &operator=(ثابت MutableCodePointTrie &other) = delete;
 
-    static MutableCodePointTrie *fromUCPMap(const UCPMap *map, UErrorCode &errorCode);
-    static MutableCodePointTrie *fromUCPTrie(const UCPTrie *trie, UErrorCode &errorCode);
+    ایستا MutableCodePointTrie *fromUCPMap(ثابت UCPMap *map, UErrorCode &errorCode);
+    ایستا MutableCodePointTrie *fromUCPTrie(ثابت UCPTrie *trie, UErrorCode &errorCode);
 
-    uint32_t get(UChar32 c) const;
-    int32_t getRange(UChar32 start, UCPMapValueFilter *filter, const void *context,
-                     uint32_t *pValue) const;
+    uint32_t get(UChar32 c) ثابت;
+    int32_t getRange(UChar32 start, UCPMap_مقدار_Filter *filter, ثابت تهی *context,
+                     uint32_t *p_مقدار) ثابت;
 
-    void set(UChar32 c, uint32_t value, UErrorCode &errorCode);
-    void setRange(UChar32 start, UChar32 end, uint32_t value, UErrorCode &errorCode);
+    تهی set(UChar32 c, uint32_t value, UErrorCode &errorCode);
+    تهی setRange(UChar32 start, UChar32 end, uint32_t value, UErrorCode &errorCode);
 
-    UCPTrie *build(UCPTrieType type, UCPTrieValueWidth valueWidth, UErrorCode &errorCode);
+    UCPTrie *build(UCPTrieType type, UCPTrie_مقدار_Width مقدار_Width, UErrorCode &errorCode);
 
-private:
-    void clear();
+خصوصی:
+    تهی clear();
 
-    bool ensureHighStart(UChar32 c);
+    منطقی ensure_بالا_Start(UChar32 c);
     int32_t allocDataBlock(int32_t blockLength);
     int32_t getDataBlock(int32_t i);
 
-    void maskValues(uint32_t mask);
-    UChar32 findHighStart() const;
+    تهی mask_مقادیر(uint32_t mask);
+    UChar32 find_بالا_Start() ثابت;
     int32_t compactWholeDataBlocks(int32_t fastILimit, AllSameBlocks &allSameBlocks);
     int32_t compactData(
             int32_t fastILimit, uint32_t *newData, int32_t newDataCapacity,
@@ -112,61 +112,61 @@ private:
     int32_t dataLength = 0;
     int32_t dataNullOffset = -1;
 
-    uint32_t origInitialValue;
-    uint32_t initialValue;
-    uint32_t errorValue;
-    UChar32 highStart;
-    uint32_t highValue;
+    uint32_t orig_Initial_مقدار;
+    uint32_t initial_مقدار;
+    uint32_t error_مقدار;
+    UChar32 بالا_Start;
+    uint32_t بالا_مقدار;
 #ifdef UCPTRIE_DEBUG
-public:
-    const char *name;
+عمومی:
+    ثابت نویسه *name;
 #endif
-private:
+خصوصی:
     /** Temporary array while building the final data. */
     uint16_t *index16 = nullptr;
     uint8_t flags[UNICODE_LIMIT >> UCPTRIE_SHIFT_3];
 };
 
-MutableCodePointTrie::MutableCodePointTrie(uint32_t iniValue, uint32_t errValue, UErrorCode &errorCode) :
-        origInitialValue(iniValue), initialValue(iniValue), errorValue(errValue),
-        highStart(0), highValue(initialValue)
+MutableCodePointTrie::MutableCodePointTrie(uint32_t ini_مقدار, uint32_t err_مقدار, UErrorCode &errorCode) :
+        orig_Initial_مقدار(ini_مقدار), initial_مقدار(ini_مقدار), error_مقدار(err_مقدار),
+        بالا_Start(0), بالا_مقدار(initial_مقدار)
 #ifdef UCPTRIE_DEBUG
         , name("open")
 #endif
         {
-    if (U_FAILURE(errorCode)) { return; }
+    اگر (U_FAILURE(errorCode)) { بازگشت; }
     index = static_cast<uint32_t*>(uprv_malloc(BMP_I_LIMIT * 4));
     data = static_cast<uint32_t*>(uprv_malloc(INITIAL_DATA_LENGTH * 4));
-    if (index == nullptr || data == nullptr) {
+    اگر (index == nullptr || data == nullptr) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        بازگشت;
     }
     indexCapacity = BMP_I_LIMIT;
     dataCapacity = INITIAL_DATA_LENGTH;
 }
 
-MutableCodePointTrie::MutableCodePointTrie(const MutableCodePointTrie &other, UErrorCode &errorCode) :
+MutableCodePointTrie::MutableCodePointTrie(ثابت MutableCodePointTrie &other, UErrorCode &errorCode) :
         index3NullOffset(other.index3NullOffset),
         dataNullOffset(other.dataNullOffset),
-        origInitialValue(other.origInitialValue), initialValue(other.initialValue),
-        errorValue(other.errorValue),
-        highStart(other.highStart), highValue(other.highValue)
+        orig_Initial_مقدار(other.orig_Initial_مقدار), initial_مقدار(other.initial_مقدار),
+        error_مقدار(other.error_مقدار),
+        بالا_Start(other.بالا_Start), بالا_مقدار(other.بالا_مقدار)
 #ifdef UCPTRIE_DEBUG
         , name("mutable clone")
 #endif
         {
-    if (U_FAILURE(errorCode)) { return; }
-    int32_t iCapacity = highStart <= BMP_LIMIT ? BMP_I_LIMIT : I_LIMIT;
+    اگر (U_FAILURE(errorCode)) { بازگشت; }
+    int32_t iCapacity = بالا_Start <= BMP_LIMIT ? BMP_I_LIMIT : I_LIMIT;
     index = static_cast<uint32_t*>(uprv_malloc(iCapacity * 4));
     data = static_cast<uint32_t*>(uprv_malloc(other.dataCapacity * 4));
-    if (index == nullptr || data == nullptr) {
+    اگر (index == nullptr || data == nullptr) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        بازگشت;
     }
     indexCapacity = iCapacity;
     dataCapacity = other.dataCapacity;
 
-    int32_t iLimit = highStart >> UCPTRIE_SHIFT_3;
+    int32_t iLimit = بالا_Start >> UCPTRIE_SHIFT_3;
     uprv_memcpy(flags, other.flags, iLimit);
     uprv_memcpy(index, other.index, iLimit * 4);
     uprv_memcpy(data, other.data, (size_t)other.dataLength * 4);
@@ -180,255 +180,255 @@ MutableCodePointTrie::~MutableCodePointTrie() {
     uprv_free(index16);
 }
 
-MutableCodePointTrie *MutableCodePointTrie::fromUCPMap(const UCPMap *map, UErrorCode &errorCode) {
+MutableCodePointTrie *MutableCodePointTrie::fromUCPMap(ثابت UCPMap *map, UErrorCode &errorCode) {
     // Use the highValue as the initialValue to reduce the highStart.
-    uint32_t errorValue = ucpmap_get(map, -1);
-    uint32_t initialValue = ucpmap_get(map, 0x10ffff);
+    uint32_t error_مقدار = ucpmap_get(map, -1);
+    uint32_t initial_مقدار = ucpmap_get(map, 0x10ffff);
     LocalPointer<MutableCodePointTrie> mutableTrie(
-        new MutableCodePointTrie(initialValue, errorValue, errorCode),
+        جدید MutableCodePointTrie(initial_مقدار, error_مقدار, errorCode),
         errorCode);
-    if (U_FAILURE(errorCode)) {
-        return nullptr;
+    اگر (U_FAILURE(errorCode)) {
+        بازگشت nullptr;
     }
     UChar32 start = 0, end;
     uint32_t value;
-    while ((end = ucpmap_getRange(map, start, UCPMAP_RANGE_NORMAL, 0,
+    وقتی ((end = ucpmap_getRange(map, start, UCPMAP_RANGE_NORMAL, 0,
                                   nullptr, nullptr, &value)) >= 0) {
-        if (value != initialValue) {
-            if (start == end) {
+        اگر (value != initial_مقدار) {
+            اگر (start == end) {
                 mutableTrie->set(start, value, errorCode);
-            } else {
+            } وگرنه {
                 mutableTrie->setRange(start, end, value, errorCode);
             }
         }
         start = end + 1;
     }
-    if (U_SUCCESS(errorCode)) {
-        return mutableTrie.orphan();
-    } else {
-        return nullptr;
+    اگر (U_SUCCESS(errorCode)) {
+        بازگشت mutableTrie.orphan();
+    } وگرنه {
+        بازگشت nullptr;
     }
 }
 
-MutableCodePointTrie *MutableCodePointTrie::fromUCPTrie(const UCPTrie *trie, UErrorCode &errorCode) {
+MutableCodePointTrie *MutableCodePointTrie::fromUCPTrie(ثابت UCPTrie *trie, UErrorCode &errorCode) {
     // Use the highValue as the initialValue to reduce the highStart.
-    uint32_t errorValue;
-    uint32_t initialValue;
-    switch (trie->valueWidth) {
-    case UCPTRIE_VALUE_BITS_16:
-        errorValue = trie->data.ptr16[trie->dataLength - UCPTRIE_ERROR_VALUE_NEG_DATA_OFFSET];
-        initialValue = trie->data.ptr16[trie->dataLength - UCPTRIE_HIGH_VALUE_NEG_DATA_OFFSET];
-        break;
-    case UCPTRIE_VALUE_BITS_32:
-        errorValue = trie->data.ptr32[trie->dataLength - UCPTRIE_ERROR_VALUE_NEG_DATA_OFFSET];
-        initialValue = trie->data.ptr32[trie->dataLength - UCPTRIE_HIGH_VALUE_NEG_DATA_OFFSET];
-        break;
-    case UCPTRIE_VALUE_BITS_8:
-        errorValue = trie->data.ptr8[trie->dataLength - UCPTRIE_ERROR_VALUE_NEG_DATA_OFFSET];
-        initialValue = trie->data.ptr8[trie->dataLength - UCPTRIE_HIGH_VALUE_NEG_DATA_OFFSET];
-        break;
-    default:
+    uint32_t error_مقدار;
+    uint32_t initial_مقدار;
+    انتخاب (trie->مقدار_Width) {
+    حالت UCPTRIE_مقدار_BITS_16:
+        error_مقدار = trie->data.ptr16[trie->dataLength - UCPTRIE_ERROR_مقدار_NEG_DATA_OFFSET];
+        initial_مقدار = trie->data.ptr16[trie->dataLength - UCPTRIE_بالا_مقدار_NEG_DATA_OFFSET];
+        بشکن;
+    حالت UCPTRIE_مقدار_BITS_32:
+        error_مقدار = trie->data.ptr32[trie->dataLength - UCPTRIE_ERROR_مقدار_NEG_DATA_OFFSET];
+        initial_مقدار = trie->data.ptr32[trie->dataLength - UCPTRIE_بالا_مقدار_NEG_DATA_OFFSET];
+        بشکن;
+    حالت UCPTRIE_مقدار_BITS_8:
+        error_مقدار = trie->data.ptr8[trie->dataLength - UCPTRIE_ERROR_مقدار_NEG_DATA_OFFSET];
+        initial_مقدار = trie->data.ptr8[trie->dataLength - UCPTRIE_بالا_مقدار_NEG_DATA_OFFSET];
+        بشکن;
+    پیشفرض:
         // Unreachable if the trie is properly initialized.
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        بازگشت nullptr;
     }
     LocalPointer<MutableCodePointTrie> mutableTrie(
-        new MutableCodePointTrie(initialValue, errorValue, errorCode),
+        جدید MutableCodePointTrie(initial_مقدار, error_مقدار, errorCode),
         errorCode);
-    if (U_FAILURE(errorCode)) {
-        return nullptr;
+    اگر (U_FAILURE(errorCode)) {
+        بازگشت nullptr;
     }
     UChar32 start = 0, end;
     uint32_t value;
-    while ((end = ucptrie_getRange(trie, start, UCPMAP_RANGE_NORMAL, 0,
+    وقتی ((end = ucptrie_getRange(trie, start, UCPMAP_RANGE_NORMAL, 0,
                                    nullptr, nullptr, &value)) >= 0) {
-        if (value != initialValue) {
-            if (start == end) {
+        اگر (value != initial_مقدار) {
+            اگر (start == end) {
                 mutableTrie->set(start, value, errorCode);
-            } else {
+            } وگرنه {
                 mutableTrie->setRange(start, end, value, errorCode);
             }
         }
         start = end + 1;
     }
-    if (U_SUCCESS(errorCode)) {
-        return mutableTrie.orphan();
-    } else {
-        return nullptr;
+    اگر (U_SUCCESS(errorCode)) {
+        بازگشت mutableTrie.orphan();
+    } وگرنه {
+        بازگشت nullptr;
     }
 }
 
-void MutableCodePointTrie::clear() {
+تهی MutableCodePointTrie::clear() {
     index3NullOffset = dataNullOffset = -1;
     dataLength = 0;
-    highValue = initialValue = origInitialValue;
-    highStart = 0;
+    بالا_مقدار = initial_مقدار = orig_Initial_مقدار;
+    بالا_Start = 0;
     uprv_free(index16);
     index16 = nullptr;
 }
 
-uint32_t MutableCodePointTrie::get(UChar32 c) const {
-    if (static_cast<uint32_t>(c) > MAX_UNICODE) {
-        return errorValue;
+uint32_t MutableCodePointTrie::get(UChar32 c) ثابت {
+    اگر (static_cast<uint32_t>(c) > MAX_UNICODE) {
+        بازگشت error_مقدار;
     }
-    if (c >= highStart) {
-        return highValue;
+    اگر (c >= بالا_Start) {
+        بازگشت بالا_مقدار;
     }
     int32_t i = c >> UCPTRIE_SHIFT_3;
-    if (flags[i] == ALL_SAME) {
-        return index[i];
-    } else {
-        return data[index[i] + (c & UCPTRIE_SMALL_DATA_MASK)];
+    اگر (flags[i] == ALL_SAME) {
+        بازگشت index[i];
+    } وگرنه {
+        بازگشت data[index[i] + (c & UCPTRIE_SMALL_DATA_MASK)];
     }
 }
 
-inline uint32_t maybeFilterValue(uint32_t value, uint32_t initialValue, uint32_t nullValue,
-                                 UCPMapValueFilter *filter, const void *context) {
-    if (value == initialValue) {
-        value = nullValue;
-    } else if (filter != nullptr) {
+درونخطی uint32_t maybe_Filter_مقدار(uint32_t value, uint32_t initial_مقدار, uint32_t null_مقدار,
+                                 UCPMap_مقدار_Filter *filter, ثابت تهی *context) {
+    اگر (value == initial_مقدار) {
+        value = null_مقدار;
+    } وگرنه اگر (filter != nullptr) {
         value = filter(context, value);
     }
-    return value;
+    بازگشت value;
 }
 
 UChar32 MutableCodePointTrie::getRange(
-        UChar32 start, UCPMapValueFilter *filter, const void *context,
-        uint32_t *pValue) const {
-    if (static_cast<uint32_t>(start) > MAX_UNICODE) {
-        return U_SENTINEL;
+        UChar32 start, UCPMap_مقدار_Filter *filter, ثابت تهی *context,
+        uint32_t *p_مقدار) ثابت {
+    اگر (static_cast<uint32_t>(start) > MAX_UNICODE) {
+        بازگشت U_SENTINEL;
     }
-    if (start >= highStart) {
-        if (pValue != nullptr) {
-            uint32_t value = highValue;
-            if (filter != nullptr) { value = filter(context, value); }
-            *pValue = value;
+    اگر (start >= بالا_Start) {
+        اگر (p_مقدار != nullptr) {
+            uint32_t value = بالا_مقدار;
+            اگر (filter != nullptr) { value = filter(context, value); }
+            *p_مقدار = value;
         }
-        return MAX_UNICODE;
+        بازگشت MAX_UNICODE;
     }
-    uint32_t nullValue = initialValue;
-    if (filter != nullptr) { nullValue = filter(context, nullValue); }
+    uint32_t null_مقدار = initial_مقدار;
+    اگر (filter != nullptr) { null_مقدار = filter(context, null_مقدار); }
     UChar32 c = start;
-    uint32_t trieValue, value;
-    bool haveValue = false;
+    uint32_t trie_مقدار, value;
+    منطقی have_مقدار = نادرست;
     int32_t i = c >> UCPTRIE_SHIFT_3;
-    do {
-        if (flags[i] == ALL_SAME) {
+    انجامبده {
+        اگر (flags[i] == ALL_SAME) {
             uint32_t trieValue2 = index[i];
-            if (haveValue) {
-                if (trieValue2 != trieValue) {
-                    if (filter == nullptr ||
-                            maybeFilterValue(trieValue2, initialValue, nullValue,
+            اگر (have_مقدار) {
+                اگر (trieValue2 != trie_مقدار) {
+                    اگر (filter == nullptr ||
+                            maybe_Filter_مقدار(trieValue2, initial_مقدار, null_مقدار,
                                              filter, context) != value) {
-                        return c - 1;
+                        بازگشت c - 1;
                     }
-                    trieValue = trieValue2;  // may or may not help
+                    trie_مقدار = trieValue2;  // may or may not help
                 }
-            } else {
-                trieValue = trieValue2;
-                value = maybeFilterValue(trieValue2, initialValue, nullValue, filter, context);
-                if (pValue != nullptr) { *pValue = value; }
-                haveValue = true;
+            } وگرنه {
+                trie_مقدار = trieValue2;
+                value = maybe_Filter_مقدار(trieValue2, initial_مقدار, null_مقدار, filter, context);
+                اگر (p_مقدار != nullptr) { *p_مقدار = value; }
+                have_مقدار = درست;
             }
             c = (c + UCPTRIE_SMALL_DATA_BLOCK_LENGTH) & ~UCPTRIE_SMALL_DATA_MASK;
-        } else /* MIXED */ {
+        } وگرنه /* MIXED */ {
             int32_t di = index[i] + (c & UCPTRIE_SMALL_DATA_MASK);
             uint32_t trieValue2 = data[di];
-            if (haveValue) {
-                if (trieValue2 != trieValue) {
-                    if (filter == nullptr ||
-                            maybeFilterValue(trieValue2, initialValue, nullValue,
+            اگر (have_مقدار) {
+                اگر (trieValue2 != trie_مقدار) {
+                    اگر (filter == nullptr ||
+                            maybe_Filter_مقدار(trieValue2, initial_مقدار, null_مقدار,
                                              filter, context) != value) {
-                        return c - 1;
+                        بازگشت c - 1;
                     }
-                    trieValue = trieValue2;  // may or may not help
+                    trie_مقدار = trieValue2;  // may or may not help
                 }
-            } else {
-                trieValue = trieValue2;
-                value = maybeFilterValue(trieValue2, initialValue, nullValue, filter, context);
-                if (pValue != nullptr) { *pValue = value; }
-                haveValue = true;
+            } وگرنه {
+                trie_مقدار = trieValue2;
+                value = maybe_Filter_مقدار(trieValue2, initial_مقدار, null_مقدار, filter, context);
+                اگر (p_مقدار != nullptr) { *p_مقدار = value; }
+                have_مقدار = درست;
             }
-            while ((++c & UCPTRIE_SMALL_DATA_MASK) != 0) {
+            وقتی ((++c & UCPTRIE_SMALL_DATA_MASK) != 0) {
                 trieValue2 = data[++di];
-                if (trieValue2 != trieValue) {
-                    if (filter == nullptr ||
-                            maybeFilterValue(trieValue2, initialValue, nullValue,
+                اگر (trieValue2 != trie_مقدار) {
+                    اگر (filter == nullptr ||
+                            maybe_Filter_مقدار(trieValue2, initial_مقدار, null_مقدار,
                                              filter, context) != value) {
-                        return c - 1;
+                        بازگشت c - 1;
                     }
                 }
-                trieValue = trieValue2;  // may or may not help
+                trie_مقدار = trieValue2;  // may or may not help
             }
         }
         ++i;
-    } while (c < highStart);
-    U_ASSERT(haveValue);
-    if (maybeFilterValue(highValue, initialValue, nullValue,
+    } وقتی (c < بالا_Start);
+    U_ASSERT(have_مقدار);
+    اگر (maybe_Filter_مقدار(بالا_مقدار, initial_مقدار, null_مقدار,
                          filter, context) != value) {
-        return c - 1;
-    } else {
-        return MAX_UNICODE;
+        بازگشت c - 1;
+    } وگرنه {
+        بازگشت MAX_UNICODE;
     }
 }
 
-void
+تهی
 writeBlock(uint32_t *block, uint32_t value) {
     uint32_t *limit = block + UCPTRIE_SMALL_DATA_BLOCK_LENGTH;
-    while (block < limit) {
+    وقتی (block < limit) {
         *block++ = value;
     }
 }
 
-bool MutableCodePointTrie::ensureHighStart(UChar32 c) {
-    if (c >= highStart) {
+منطقی MutableCodePointTrie::ensure_بالا_Start(UChar32 c) {
+    اگر (c >= بالا_Start) {
         // Round up to a UCPTRIE_CP_PER_INDEX_2_ENTRY boundary to simplify compaction.
         c = (c + UCPTRIE_CP_PER_INDEX_2_ENTRY) & ~(UCPTRIE_CP_PER_INDEX_2_ENTRY - 1);
-        int32_t i = highStart >> UCPTRIE_SHIFT_3;
+        int32_t i = بالا_Start >> UCPTRIE_SHIFT_3;
         int32_t iLimit = c >> UCPTRIE_SHIFT_3;
-        if (iLimit > indexCapacity) {
+        اگر (iLimit > indexCapacity) {
             uint32_t* newIndex = static_cast<uint32_t*>(uprv_malloc(I_LIMIT * 4));
-            if (newIndex == nullptr) { return false; }
+            اگر (newIndex == nullptr) { بازگشت نادرست; }
             uprv_memcpy(newIndex, index, i * 4);
             uprv_free(index);
             index = newIndex;
             indexCapacity = I_LIMIT;
         }
-        do {
+        انجامبده {
             flags[i] = ALL_SAME;
-            index[i] = initialValue;
-        } while(++i < iLimit);
-        highStart = c;
+            index[i] = initial_مقدار;
+        } وقتی(++i < iLimit);
+        بالا_Start = c;
     }
-    return true;
+    بازگشت درست;
 }
 
 int32_t MutableCodePointTrie::allocDataBlock(int32_t blockLength) {
     int32_t newBlock = dataLength;
-    int32_t newTop = newBlock + blockLength;
-    if (newTop > dataCapacity) {
+    int32_t new_بالاترین = newBlock + blockLength;
+    اگر (new_بالاترین > dataCapacity) {
         int32_t capacity;
-        if (dataCapacity < MEDIUM_DATA_LENGTH) {
+        اگر (dataCapacity < MEDIUM_DATA_LENGTH) {
             capacity = MEDIUM_DATA_LENGTH;
-        } else if (dataCapacity < MAX_DATA_LENGTH) {
+        } وگرنه اگر (dataCapacity < MAX_DATA_LENGTH) {
             capacity = MAX_DATA_LENGTH;
-        } else {
+        } وگرنه {
             // Should never occur.
             // Either MAX_DATA_LENGTH is incorrect,
             // or the code writes more values than should be possible.
-            return -1;
+            بازگشت -1;
         }
         uint32_t* newData = static_cast<uint32_t*>(uprv_malloc(capacity * 4));
-        if (newData == nullptr) {
-            return -1;
+        اگر (newData == nullptr) {
+            بازگشت -1;
         }
         uprv_memcpy(newData, data, (size_t)dataLength * 4);
         uprv_free(data);
         data = newData;
         dataCapacity = capacity;
     }
-    dataLength = newTop;
-    return newBlock;
+    dataLength = new_بالاترین;
+    بازگشت newBlock;
 }
 
 /**
@@ -438,90 +438,90 @@ int32_t MutableCodePointTrie::allocDataBlock(int32_t blockLength) {
  * @internal
  */
 int32_t MutableCodePointTrie::getDataBlock(int32_t i) {
-    if (flags[i] == MIXED) {
-        return index[i];
+    اگر (flags[i] == MIXED) {
+        بازگشت index[i];
     }
-    if (i < BMP_I_LIMIT) {
+    اگر (i < BMP_I_LIMIT) {
         int32_t newBlock = allocDataBlock(UCPTRIE_FAST_DATA_BLOCK_LENGTH);
-        if (newBlock < 0) { return newBlock; }
+        اگر (newBlock < 0) { بازگشت newBlock; }
         int32_t iStart = i & ~(SMALL_DATA_BLOCKS_PER_BMP_BLOCK -1);
         int32_t iLimit = iStart + SMALL_DATA_BLOCKS_PER_BMP_BLOCK;
-        do {
+        انجامبده {
             U_ASSERT(flags[iStart] == ALL_SAME);
             writeBlock(data + newBlock, index[iStart]);
             flags[iStart] = MIXED;
             index[iStart++] = newBlock;
             newBlock += UCPTRIE_SMALL_DATA_BLOCK_LENGTH;
-        } while (iStart < iLimit);
-        return index[i];
-    } else {
+        } وقتی (iStart < iLimit);
+        بازگشت index[i];
+    } وگرنه {
         int32_t newBlock = allocDataBlock(UCPTRIE_SMALL_DATA_BLOCK_LENGTH);
-        if (newBlock < 0) { return newBlock; }
+        اگر (newBlock < 0) { بازگشت newBlock; }
         writeBlock(data + newBlock, index[i]);
         flags[i] = MIXED;
         index[i] = newBlock;
-        return newBlock;
+        بازگشت newBlock;
     }
 }
 
-void MutableCodePointTrie::set(UChar32 c, uint32_t value, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) {
-        return;
+تهی MutableCodePointTrie::set(UChar32 c, uint32_t value, UErrorCode &errorCode) {
+    اگر (U_FAILURE(errorCode)) {
+        بازگشت;
     }
-    if (static_cast<uint32_t>(c) > MAX_UNICODE) {
+    اگر (static_cast<uint32_t>(c) > MAX_UNICODE) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        بازگشت;
     }
 
     int32_t block;
-    if (!ensureHighStart(c) || (block = getDataBlock(c >> UCPTRIE_SHIFT_3)) < 0) {
+    اگر (!ensure_بالا_Start(c) || (block = getDataBlock(c >> UCPTRIE_SHIFT_3)) < 0) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        بازگشت;
     }
 
     data[block + (c & UCPTRIE_SMALL_DATA_MASK)] = value;
 }
 
-void
+تهی
 fillBlock(uint32_t *block, UChar32 start, UChar32 limit, uint32_t value) {
     uint32_t *pLimit = block + limit;
     block += start;
-    while (block < pLimit) {
+    وقتی (block < pLimit) {
         *block++ = value;
     }
 }
 
-void MutableCodePointTrie::setRange(UChar32 start, UChar32 end, uint32_t value, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) {
-        return;
+تهی MutableCodePointTrie::setRange(UChar32 start, UChar32 end, uint32_t value, UErrorCode &errorCode) {
+    اگر (U_FAILURE(errorCode)) {
+        بازگشت;
     }
-    if (static_cast<uint32_t>(start) > MAX_UNICODE || static_cast<uint32_t>(end) > MAX_UNICODE || start > end) {
+    اگر (static_cast<uint32_t>(start) > MAX_UNICODE || static_cast<uint32_t>(end) > MAX_UNICODE || start > end) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        بازگشت;
     }
-    if (!ensureHighStart(end)) {
+    اگر (!ensure_بالا_Start(end)) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        بازگشت;
     }
 
     UChar32 limit = end + 1;
-    if (start & UCPTRIE_SMALL_DATA_MASK) {
+    اگر (start & UCPTRIE_SMALL_DATA_MASK) {
         // Set partial block at [start..following block boundary[.
         int32_t block = getDataBlock(start >> UCPTRIE_SHIFT_3);
-        if (block < 0) {
+        اگر (block < 0) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return;
+            بازگشت;
         }
 
         UChar32 nextStart = (start + UCPTRIE_SMALL_DATA_MASK) & ~UCPTRIE_SMALL_DATA_MASK;
-        if (nextStart <= limit) {
+        اگر (nextStart <= limit) {
             fillBlock(data + block, start & UCPTRIE_SMALL_DATA_MASK, UCPTRIE_SMALL_DATA_BLOCK_LENGTH,
                       value);
             start = nextStart;
-        } else {
+        } وگرنه {
             fillBlock(data + block, start & UCPTRIE_SMALL_DATA_MASK, limit & UCPTRIE_SMALL_DATA_MASK,
                       value);
-            return;
+            بازگشت;
         }
     }
 
@@ -532,22 +532,22 @@ void MutableCodePointTrie::setRange(UChar32 start, UChar32 end, uint32_t value, 
     limit &= ~UCPTRIE_SMALL_DATA_MASK;
 
     // Iterate over all-value blocks.
-    while (start < limit) {
+    وقتی (start < limit) {
         int32_t i = start >> UCPTRIE_SHIFT_3;
-        if (flags[i] == ALL_SAME) {
+        اگر (flags[i] == ALL_SAME) {
             index[i] = value;
-        } else /* MIXED */ {
+        } وگرنه /* MIXED */ {
             fillBlock(data + index[i], 0, UCPTRIE_SMALL_DATA_BLOCK_LENGTH, value);
         }
         start += UCPTRIE_SMALL_DATA_BLOCK_LENGTH;
     }
 
-    if (rest > 0) {
+    اگر (rest > 0) {
         // Set partial block at [last block boundary..limit[.
         int32_t block = getDataBlock(start >> UCPTRIE_SHIFT_3);
-        if (block < 0) {
+        اگر (block < 0) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return;
+            بازگشت;
         }
 
         fillBlock(data + block, 0, rest, value);
@@ -556,72 +556,72 @@ void MutableCodePointTrie::setRange(UChar32 start, UChar32 end, uint32_t value, 
 
 /* compaction --------------------------------------------------------------- */
 
-void MutableCodePointTrie::maskValues(uint32_t mask) {
-    initialValue &= mask;
-    errorValue &= mask;
-    highValue &= mask;
-    int32_t iLimit = highStart >> UCPTRIE_SHIFT_3;
-    for (int32_t i = 0; i < iLimit; ++i) {
-        if (flags[i] == ALL_SAME) {
+تهی MutableCodePointTrie::mask_مقادیر(uint32_t mask) {
+    initial_مقدار &= mask;
+    error_مقدار &= mask;
+    بالا_مقدار &= mask;
+    int32_t iLimit = بالا_Start >> UCPTRIE_SHIFT_3;
+    برای (int32_t i = 0; i < iLimit; ++i) {
+        اگر (flags[i] == ALL_SAME) {
             index[i] &= mask;
         }
     }
-    for (int32_t i = 0; i < dataLength; ++i) {
+    برای (int32_t i = 0; i < dataLength; ++i) {
         data[i] &= mask;
     }
 }
 
 template<typename UIntA, typename UIntB>
-bool equalBlocks(const UIntA *s, const UIntB *t, int32_t length) {
-    while (length > 0 && *s == *t) {
+منطقی equalBlocks(ثابت UIntA *s, ثابت UIntB *t, int32_t length) {
+    وقتی (length > 0 && *s == *t) {
         ++s;
         ++t;
         --length;
     }
-    return length == 0;
+    بازگشت length == 0;
 }
 
-bool allValuesSameAs(const uint32_t *p, int32_t length, uint32_t value) {
-    const uint32_t *pLimit = p + length;
-    while (p < pLimit && *p == value) { ++p; }
-    return p == pLimit;
+منطقی all_مقادیر_Same_As(ثابت uint32_t *p, int32_t length, uint32_t value) {
+    ثابت uint32_t *pLimit = p + length;
+    وقتی (p < pLimit && *p == value) { ++p; }
+    بازگشت p == pLimit;
 }
 
 /** Search for an identical block. */
-int32_t findSameBlock(const uint16_t *p, int32_t pStart, int32_t length,
-                      const uint16_t *q, int32_t qStart, int32_t blockLength) {
+int32_t findSameBlock(ثابت uint16_t *p, int32_t pStart, int32_t length,
+                      ثابت uint16_t *q, int32_t qStart, int32_t blockLength) {
     // Ensure that we do not even partially get past length.
     length -= blockLength;
 
     q += qStart;
-    while (pStart <= length) {
-        if (equalBlocks(p + pStart, q, blockLength)) {
-            return pStart;
+    وقتی (pStart <= length) {
+        اگر (equalBlocks(p + pStart, q, blockLength)) {
+            بازگشت pStart;
         }
         ++pStart;
     }
-    return -1;
+    بازگشت -1;
 }
 
-int32_t findAllSameBlock(const uint32_t *p, int32_t start, int32_t limit,
+int32_t findAllSameBlock(ثابت uint32_t *p, int32_t start, int32_t limit,
                          uint32_t value, int32_t blockLength) {
     // Ensure that we do not even partially get past limit.
     limit -= blockLength;
 
-    for (int32_t block = start; block <= limit; ++block) {
-        if (p[block] == value) {
-            for (int32_t i = 1;; ++i) {
-                if (i == blockLength) {
-                    return block;
+    برای (int32_t block = start; block <= limit; ++block) {
+        اگر (p[block] == value) {
+            برای (int32_t i = 1;; ++i) {
+                اگر (i == blockLength) {
+                    بازگشت block;
                 }
-                if (p[block + i] != value) {
+                اگر (p[block + i] != value) {
                     block += i;
-                    break;
+                    بشکن;
                 }
             }
         }
     }
-    return -1;
+    بازگشت -1;
 }
 
 /**
@@ -629,172 +629,172 @@ int32_t findAllSameBlock(const uint32_t *p, int32_t start, int32_t limit,
  * with the previous, adjacent block.
  */
 template<typename UIntA, typename UIntB>
-int32_t getOverlap(const UIntA *p, int32_t length,
-                   const UIntB *q, int32_t qStart, int32_t blockLength) {
+int32_t getOverlap(ثابت UIntA *p, int32_t length,
+                   ثابت UIntB *q, int32_t qStart, int32_t blockLength) {
     int32_t overlap = blockLength - 1;
     U_ASSERT(overlap <= length);
     q += qStart;
-    while (overlap > 0 && !equalBlocks(p + (length - overlap), q, overlap)) {
+    وقتی (overlap > 0 && !equalBlocks(p + (length - overlap), q, overlap)) {
         --overlap;
     }
-    return overlap;
+    بازگشت overlap;
 }
 
-int32_t getAllSameOverlap(const uint32_t *p, int32_t length, uint32_t value,
+int32_t getAllSameOverlap(ثابت uint32_t *p, int32_t length, uint32_t value,
                           int32_t blockLength) {
     int32_t min = length - (blockLength - 1);
     int32_t i = length;
-    while (min < i && p[i - 1] == value) { --i; }
-    return length - i;
+    وقتی (min < i && p[i - 1] == value) { --i; }
+    بازگشت length - i;
 }
 
-bool isStartOfSomeFastBlock(uint32_t dataOffset, const uint32_t index[], int32_t fastILimit) {
-    for (int32_t i = 0; i < fastILimit; i += SMALL_DATA_BLOCKS_PER_BMP_BLOCK) {
-        if (index[i] == dataOffset) {
-            return true;
+منطقی isStartOfSomeFastBlock(uint32_t dataOffset, ثابت uint32_t index[], int32_t fastILimit) {
+    برای (int32_t i = 0; i < fastILimit; i += SMALL_DATA_BLOCKS_PER_BMP_BLOCK) {
+        اگر (index[i] == dataOffset) {
+            بازگشت درست;
         }
     }
-    return false;
+    بازگشت نادرست;
 }
 
 /**
  * Finds the start of the last range in the trie by enumerating backward.
  * Indexes for code points higher than this will be omitted.
  */
-UChar32 MutableCodePointTrie::findHighStart() const {
-    int32_t i = highStart >> UCPTRIE_SHIFT_3;
-    while (i > 0) {
-        bool match;
-        if (flags[--i] == ALL_SAME) {
-            match = index[i] == highValue;
-        } else /* MIXED */ {
-            const uint32_t *p = data + index[i];
-            for (int32_t j = 0;; ++j) {
-                if (j == UCPTRIE_SMALL_DATA_BLOCK_LENGTH) {
-                    match = true;
-                    break;
+UChar32 MutableCodePointTrie::find_بالا_Start() ثابت {
+    int32_t i = بالا_Start >> UCPTRIE_SHIFT_3;
+    وقتی (i > 0) {
+        منطقی match;
+        اگر (flags[--i] == ALL_SAME) {
+            match = index[i] == بالا_مقدار;
+        } وگرنه /* MIXED */ {
+            ثابت uint32_t *p = data + index[i];
+            برای (int32_t j = 0;; ++j) {
+                اگر (j == UCPTRIE_SMALL_DATA_BLOCK_LENGTH) {
+                    match = درست;
+                    بشکن;
                 }
-                if (p[j] != highValue) {
-                    match = false;
-                    break;
+                اگر (p[j] != بالا_مقدار) {
+                    match = نادرست;
+                    بشکن;
                 }
             }
         }
-        if (!match) {
-            return (i + 1) << UCPTRIE_SHIFT_3;
+        اگر (!match) {
+            بازگشت (i + 1) << UCPTRIE_SHIFT_3;
         }
     }
-    return 0;
+    بازگشت 0;
 }
 
-class AllSameBlocks {
-public:
-    static constexpr int32_t NEW_UNIQUE = -1;
-    static constexpr int32_t OVERFLOW = -2;
+رده AllSameBlocks {
+عمومی:
+    ایستا constexpr int32_t NEW_UNIQUE = -1;
+    ایستا constexpr int32_t OVERFLOW = -2;
 
     AllSameBlocks() : length(0), mostRecent(-1) {}
 
     int32_t findOrAdd(int32_t index, int32_t count, uint32_t value) {
-        if (mostRecent >= 0 && values[mostRecent] == value) {
+        اگر (mostRecent >= 0 && مقادیر[mostRecent] == value) {
             refCounts[mostRecent] += count;
-            return indexes[mostRecent];
+            بازگشت indexes[mostRecent];
         }
-        for (int32_t i = 0; i < length; ++i) {
-            if (values[i] == value) {
+        برای (int32_t i = 0; i < length; ++i) {
+            اگر (مقادیر[i] == value) {
                 mostRecent = i;
                 refCounts[i] += count;
-                return indexes[i];
+                بازگشت indexes[i];
             }
         }
-        if (length == CAPACITY) {
-            return OVERFLOW;
+        اگر (length == CAPACITY) {
+            بازگشت OVERFLOW;
         }
         mostRecent = length;
         indexes[length] = index;
-        values[length] = value;
+        مقادیر[length] = value;
         refCounts[length++] = count;
-        return NEW_UNIQUE;
+        بازگشت NEW_UNIQUE;
     }
 
     /** Replaces the block which has the lowest reference count. */
-    void add(int32_t index, int32_t count, uint32_t value) {
+    تهی add(int32_t index, int32_t count, uint32_t value) {
         U_ASSERT(length == CAPACITY);
         int32_t least = -1;
-        int32_t leastCount = I_LIMIT;
-        for (int32_t i = 0; i < length; ++i) {
-            U_ASSERT(values[i] != value);
-            if (refCounts[i] < leastCount) {
+        int32_t least_شمار = I_LIMIT;
+        برای (int32_t i = 0; i < length; ++i) {
+            U_ASSERT(مقادیر[i] != value);
+            اگر (refCounts[i] < least_شمار) {
                 least = i;
-                leastCount = refCounts[i];
+                least_شمار = refCounts[i];
             }
         }
         U_ASSERT(least >= 0);
         mostRecent = least;
         indexes[least] = index;
-        values[least] = value;
+        مقادیر[least] = value;
         refCounts[least] = count;
     }
 
-    int32_t findMostUsed() const {
-        if (length == 0) { return -1; }
+    int32_t findMostUsed() ثابت {
+        اگر (length == 0) { بازگشت -1; }
         int32_t max = -1;
-        int32_t maxCount = 0;
-        for (int32_t i = 0; i < length; ++i) {
-            if (refCounts[i] > maxCount) {
+        int32_t max_شمار = 0;
+        برای (int32_t i = 0; i < length; ++i) {
+            اگر (refCounts[i] > max_شمار) {
                 max = i;
-                maxCount = refCounts[i];
+                max_شمار = refCounts[i];
             }
         }
-        return indexes[max];
+        بازگشت indexes[max];
     }
 
-private:
-    static constexpr int32_t CAPACITY = 32;
+خصوصی:
+    ایستا constexpr int32_t CAPACITY = 32;
 
     int32_t length;
     int32_t mostRecent;
 
     int32_t indexes[CAPACITY];
-    uint32_t values[CAPACITY];
+    uint32_t مقادیر[CAPACITY];
     int32_t refCounts[CAPACITY];
 };
 
 // Custom hash table for mixed-value blocks to be found anywhere in the
 // compacted data or index so far.
-class MixedBlocks {
-public:
+رده MixedBlocks {
+عمومی:
     MixedBlocks() {}
     ~MixedBlocks() {
         uprv_free(table);
     }
 
-    bool init(int32_t maxLength, int32_t newBlockLength) {
+    منطقی init(int32_t maxLength, int32_t newBlockLength) {
         // We store actual data indexes + 1 to reserve 0 for empty entries.
         int32_t maxDataIndex = maxLength - newBlockLength + 1;
         int32_t newLength;
-        if (maxDataIndex <= 0xfff) {  // 4k
+        اگر (maxDataIndex <= 0xfff) {  // 4k
             newLength = 6007;
             shift = 12;
             mask = 0xfff;
-        } else if (maxDataIndex <= 0x7fff) {  // 32k
+        } وگرنه اگر (maxDataIndex <= 0x7fff) {  // 32k
             newLength = 50021;
             shift = 15;
             mask = 0x7fff;
-        } else if (maxDataIndex <= 0x1ffff) {  // 128k
+        } وگرنه اگر (maxDataIndex <= 0x1ffff) {  // 128k
             newLength = 200003;
             shift = 17;
             mask = 0x1ffff;
-        } else {
+        } وگرنه {
             // maxDataIndex up to around MAX_DATA_LENGTH, ca. 1.1M
             newLength = 1500007;
             shift = 21;
             mask = 0x1fffff;
         }
-        if (newLength > capacity) {
+        اگر (newLength > capacity) {
             uprv_free(table);
             table = static_cast<uint32_t*>(uprv_malloc(newLength * 4));
-            if (table == nullptr) {
-                return false;
+            اگر (table == nullptr) {
+                بازگشت نادرست;
             }
             capacity = newLength;
         }
@@ -802,113 +802,113 @@ public:
         uprv_memset(table, 0, length * 4);
 
         blockLength = newBlockLength;
-        return true;
+        بازگشت درست;
     }
 
     template<typename UInt>
-    void extend(const UInt *data, int32_t minStart, int32_t prevDataLength, int32_t newDataLength) {
+    تهی extend(ثابت UInt *data, int32_t minStart, int32_t prevDataLength, int32_t newDataLength) {
         int32_t start = prevDataLength - blockLength;
-        if (start >= minStart) {
+        اگر (start >= minStart) {
             ++start;  // Skip the last block that we added last time.
-        } else {
+        } وگرنه {
             start = minStart;  // Begin with the first full block.
         }
-        for (int32_t end = newDataLength - blockLength; start <= end; ++start) {
+        برای (int32_t end = newDataLength - blockLength; start <= end; ++start) {
             uint32_t hashCode = makeHashCode(data, start);
             addEntry(data, start, hashCode, start);
         }
     }
 
     template<typename UIntA, typename UIntB>
-    int32_t findBlock(const UIntA *data, const UIntB *blockData, int32_t blockStart) const {
+    int32_t findBlock(ثابت UIntA *data, ثابت UIntB *blockData, int32_t blockStart) ثابت {
         uint32_t hashCode = makeHashCode(blockData, blockStart);
         int32_t entryIndex = findEntry(data, blockData, blockStart, hashCode);
-        if (entryIndex >= 0) {
-            return (table[entryIndex] & mask) - 1;
-        } else {
-            return -1;
+        اگر (entryIndex >= 0) {
+            بازگشت (table[entryIndex] & mask) - 1;
+        } وگرنه {
+            بازگشت -1;
         }
     }
 
-    int32_t findAllSameBlock(const uint32_t *data, uint32_t blockValue) const {
-        uint32_t hashCode = makeHashCode(blockValue);
-        int32_t entryIndex = findEntry(data, blockValue, hashCode);
-        if (entryIndex >= 0) {
-            return (table[entryIndex] & mask) - 1;
-        } else {
-            return -1;
+    int32_t findAllSameBlock(ثابت uint32_t *data, uint32_t block_مقدار) ثابت {
+        uint32_t hashCode = makeHashCode(block_مقدار);
+        int32_t entryIndex = findEntry(data, block_مقدار, hashCode);
+        اگر (entryIndex >= 0) {
+            بازگشت (table[entryIndex] & mask) - 1;
+        } وگرنه {
+            بازگشت -1;
         }
     }
 
-private:
+خصوصی:
     template<typename UInt>
-    uint32_t makeHashCode(const UInt *blockData, int32_t blockStart) const {
+    uint32_t makeHashCode(ثابت UInt *blockData, int32_t blockStart) ثابت {
         int32_t blockLimit = blockStart + blockLength;
         uint32_t hashCode = blockData[blockStart++];
-        do {
+        انجامبده {
             hashCode = 37 * hashCode + blockData[blockStart++];
-        } while (blockStart < blockLimit);
-        return hashCode;
+        } وقتی (blockStart < blockLimit);
+        بازگشت hashCode;
     }
 
-    uint32_t makeHashCode(uint32_t blockValue) const {
-        uint32_t hashCode = blockValue;
-        for (int32_t i = 1; i < blockLength; ++i) {
-            hashCode = 37 * hashCode + blockValue;
+    uint32_t makeHashCode(uint32_t block_مقدار) ثابت {
+        uint32_t hashCode = block_مقدار;
+        برای (int32_t i = 1; i < blockLength; ++i) {
+            hashCode = 37 * hashCode + block_مقدار;
         }
-        return hashCode;
+        بازگشت hashCode;
     }
 
     template<typename UInt>
-    void addEntry(const UInt *data, int32_t blockStart, uint32_t hashCode, int32_t dataIndex) {
+    تهی addEntry(ثابت UInt *data, int32_t blockStart, uint32_t hashCode, int32_t dataIndex) {
         U_ASSERT(0 <= dataIndex && dataIndex < (int32_t)mask);
         int32_t entryIndex = findEntry(data, data, blockStart, hashCode);
-        if (entryIndex < 0) {
+        اگر (entryIndex < 0) {
             table[~entryIndex] = (hashCode << shift) | (dataIndex + 1);
         }
     }
 
     template<typename UIntA, typename UIntB>
-    int32_t findEntry(const UIntA *data, const UIntB *blockData, int32_t blockStart,
-                      uint32_t hashCode) const {
+    int32_t findEntry(ثابت UIntA *data, ثابت UIntB *blockData, int32_t blockStart,
+                      uint32_t hashCode) ثابت {
         uint32_t shiftedHashCode = hashCode << shift;
         int32_t initialEntryIndex = (hashCode % (length - 1)) + 1;  // 1..length-1
-        for (int32_t entryIndex = initialEntryIndex;;) {
+        برای (int32_t entryIndex = initialEntryIndex;;) {
             uint32_t entry = table[entryIndex];
-            if (entry == 0) {
-                return ~entryIndex;
+            اگر (entry == 0) {
+                بازگشت ~entryIndex;
             }
-            if ((entry & ~mask) == shiftedHashCode) {
+            اگر ((entry & ~mask) == shiftedHashCode) {
                 int32_t dataIndex = (entry & mask) - 1;
-                if (equalBlocks(data + dataIndex, blockData + blockStart, blockLength)) {
-                    return entryIndex;
+                اگر (equalBlocks(data + dataIndex, blockData + blockStart, blockLength)) {
+                    بازگشت entryIndex;
                 }
             }
             entryIndex = nextIndex(initialEntryIndex, entryIndex);
         }
     }
 
-    int32_t findEntry(const uint32_t *data, uint32_t blockValue, uint32_t hashCode) const {
+    int32_t findEntry(ثابت uint32_t *data, uint32_t block_مقدار, uint32_t hashCode) ثابت {
         uint32_t shiftedHashCode = hashCode << shift;
         int32_t initialEntryIndex = (hashCode % (length - 1)) + 1;  // 1..length-1
-        for (int32_t entryIndex = initialEntryIndex;;) {
+        برای (int32_t entryIndex = initialEntryIndex;;) {
             uint32_t entry = table[entryIndex];
-            if (entry == 0) {
-                return ~entryIndex;
+            اگر (entry == 0) {
+                بازگشت ~entryIndex;
             }
-            if ((entry & ~mask) == shiftedHashCode) {
+            اگر ((entry & ~mask) == shiftedHashCode) {
                 int32_t dataIndex = (entry & mask) - 1;
-                if (allValuesSameAs(data + dataIndex, blockLength, blockValue)) {
-                    return entryIndex;
+                اگر (all_مقادیر_Same_As(data + dataIndex, blockLength, block_مقدار)) {
+                    بازگشت entryIndex;
                 }
             }
             entryIndex = nextIndex(initialEntryIndex, entryIndex);
         }
     }
 
-    inline int32_t nextIndex(int32_t initialEntryIndex, int32_t entryIndex) const {
+    درونخطی int32_t nextIndex(int32_t initialEntryIndex, int32_t entryIndex) ثابت {
         // U_ASSERT(0 < initialEntryIndex && initialEntryIndex < length);
-        return (entryIndex + initialEntryIndex) % length;
+        بازگشت (entryIndex + initialEntryIndex) % length;
     }
 
     // Hash table.
@@ -926,7 +926,7 @@ private:
 
 int32_t MutableCodePointTrie::compactWholeDataBlocks(int32_t fastILimit, AllSameBlocks &allSameBlocks) {
 #ifdef UCPTRIE_DEBUG
-    bool overflow = false;
+    منطقی overflow = نادرست;
 #endif
 
     // ASCII data will be stored as a linear table, even if the following code
@@ -937,132 +937,132 @@ int32_t MutableCodePointTrie::compactWholeDataBlocks(int32_t fastILimit, AllSame
     newDataCapacity += UCPTRIE_SMALL_DATA_BLOCK_LENGTH;
     // Add room for special values (errorValue, highValue) and padding.
     newDataCapacity += 4;
-    int32_t iLimit = highStart >> UCPTRIE_SHIFT_3;
+    int32_t iLimit = بالا_Start >> UCPTRIE_SHIFT_3;
     int32_t blockLength = UCPTRIE_FAST_DATA_BLOCK_LENGTH;
     int32_t inc = SMALL_DATA_BLOCKS_PER_BMP_BLOCK;
-    for (int32_t i = 0; i < iLimit; i += inc) {
-        if (i == fastILimit) {
+    برای (int32_t i = 0; i < iLimit; i += inc) {
+        اگر (i == fastILimit) {
             blockLength = UCPTRIE_SMALL_DATA_BLOCK_LENGTH;
             inc = 1;
         }
         uint32_t value = index[i];
-        if (flags[i] == MIXED) {
+        اگر (flags[i] == MIXED) {
             // Really mixed?
-            const uint32_t *p = data + value;
+            ثابت uint32_t *p = data + value;
             value = *p;
-            if (allValuesSameAs(p + 1, blockLength - 1, value)) {
+            اگر (all_مقادیر_Same_As(p + 1, blockLength - 1, value)) {
                 flags[i] = ALL_SAME;
                 index[i] = value;
                 // Fall through to ALL_SAME handling.
-            } else {
+            } وگرنه {
                 newDataCapacity += blockLength;
-                continue;
+                ادامه;
             }
-        } else {
+        } وگرنه {
             U_ASSERT(flags[i] == ALL_SAME);
-            if (inc > 1) {
+            اگر (inc > 1) {
                 // Do all of the fast-range data block's ALL_SAME parts have the same value?
-                bool allSame = true;
+                منطقی allSame = درست;
                 int32_t next_i = i + inc;
-                for (int32_t j = i + 1; j < next_i; ++j) {
+                برای (int32_t j = i + 1; j < next_i; ++j) {
                     U_ASSERT(flags[j] == ALL_SAME);
-                    if (index[j] != value) {
-                        allSame = false;
-                        break;
+                    اگر (index[j] != value) {
+                        allSame = نادرست;
+                        بشکن;
                     }
                 }
-                if (!allSame) {
+                اگر (!allSame) {
                     // Turn it into a MIXED block.
-                    if (getDataBlock(i) < 0) {
-                        return -1;
+                    اگر (getDataBlock(i) < 0) {
+                        بازگشت -1;
                     }
                     newDataCapacity += blockLength;
-                    continue;
+                    ادامه;
                 }
             }
         }
         // Is there another ALL_SAME block with the same value?
         int32_t other = allSameBlocks.findOrAdd(i, inc, value);
-        if (other == AllSameBlocks::OVERFLOW) {
+        اگر (other == AllSameBlocks::OVERFLOW) {
             // The fixed-size array overflowed. Slow check for a duplicate block.
 #ifdef UCPTRIE_DEBUG
-            if (!overflow) {
+            اگر (!overflow) {
                 puts("UCPTrie AllSameBlocks overflow");
-                overflow = true;
+                overflow = درست;
             }
 #endif
             int32_t jInc = SMALL_DATA_BLOCKS_PER_BMP_BLOCK;
-            for (int32_t j = 0;; j += jInc) {
-                if (j == i) {
+            برای (int32_t j = 0;; j += jInc) {
+                اگر (j == i) {
                     allSameBlocks.add(i, inc, value);
-                    break;
+                    بشکن;
                 }
-                if (j == fastILimit) {
+                اگر (j == fastILimit) {
                     jInc = 1;
                 }
-                if (flags[j] == ALL_SAME && index[j] == value) {
+                اگر (flags[j] == ALL_SAME && index[j] == value) {
                     allSameBlocks.add(j, jInc + inc, value);
                     other = j;
-                    break;
+                    بشکن;
                     // We could keep counting blocks with the same value
                     // before we add the first one, which may improve compaction in rare cases,
                     // but it would make it slower.
                 }
             }
         }
-        if (other >= 0) {
+        اگر (other >= 0) {
             flags[i] = SAME_AS;
             index[i] = other;
-        } else {
+        } وگرنه {
             // New unique same-value block.
             newDataCapacity += blockLength;
         }
     }
-    return newDataCapacity;
+    بازگشت newDataCapacity;
 }
 
 #ifdef UCPTRIE_DEBUG
-#   define DEBUG_DO(expr) expr
-#else
-#   define DEBUG_DO(expr)
+#   define DEBUG_DO(عبارت) عبارت
+#وگرنه
+#   define DEBUG_DO(عبارت)
 #endif
 
 #ifdef UCPTRIE_DEBUG
 // Braille symbols: U+28xx = UTF-8 E2 A0 80..E2 A3 BF
-int32_t appendValue(char s[], int32_t length, uint32_t value) {
+int32_t append_مقدار(نویسه s[], int32_t length, uint32_t value) {
     value ^= value >> 16;
     value ^= value >> 8;
     s[length] = 0xE2;
-    s[length + 1] = (char)(0xA0 + ((value >> 6) & 3));
-    s[length + 2] = (char)(0x80 + (value & 0x3F));
-    return length + 3;
+    s[length + 1] = (نویسه)(0xA0 + ((value >> 6) & 3));
+    s[length + 2] = (نویسه)(0x80 + (value & 0x3F));
+    بازگشت length + 3;
 }
 
-void printBlock(const uint32_t *block, int32_t blockLength, uint32_t value,
-                UChar32 start, int32_t overlap, uint32_t initialValue) {
-    char s[UCPTRIE_FAST_DATA_BLOCK_LENGTH * 3 + 3];
+تهی printBlock(ثابت uint32_t *block, int32_t blockLength, uint32_t value,
+                UChar32 start, int32_t overlap, uint32_t initial_مقدار) {
+    نویسه s[UCPTRIE_FAST_DATA_BLOCK_LENGTH * 3 + 3];
     int32_t length = 0;
     int32_t i;
-    for (i = 0; i < overlap; ++i) {
-        length = appendValue(s, length, 0);  // Braille blank
+    برای (i = 0; i < overlap; ++i) {
+        length = append_مقدار(s, length, 0);  // Braille blank
     }
     s[length++] = '|';
-    for (; i < blockLength; ++i) {
-        if (block != nullptr) {
+    برای (; i < blockLength; ++i) {
+        اگر (block != nullptr) {
             value = block[i];
         }
-        if (value == initialValue) {
+        اگر (value == initial_مقدار) {
             value = 0x40;  // Braille lower left dot
         }
-        length = appendValue(s, length, value);
+        length = append_مقدار(s, length, value);
     }
     s[length] = 0;
     start += overlap;
-    if (start <= 0xffff) {
+    اگر (start <= 0xffff) {
         printf("    %04lX  %s|\n", (long)start, s);
-    } else if (start <= 0xfffff) {
+    } وگرنه اگر (start <= 0xfffff) {
         printf("   %5lX  %s|\n", (long)start, s);
-    } else {
+    } وگرنه {
         printf("  %6lX  %s|\n", (long)start, s);
     }
 }
@@ -1083,46 +1083,46 @@ int32_t MutableCodePointTrie::compactData(
         int32_t fastILimit, uint32_t *newData, int32_t newDataCapacity,
         int32_t dataNullIndex, MixedBlocks &mixedBlocks, UErrorCode &errorCode) {
 #ifdef UCPTRIE_DEBUG
-    int32_t countSame=0, sumOverlaps=0;
-    bool printData = dataLength == 29088 /* line.brk */ ||
+    int32_t شمار_Same=0, sumOverlaps=0;
+    منطقی printData = dataLength == 29088 /* line.brk */ ||
         // dataLength == 30048 /* CanonIterData */ ||
         dataLength == 50400 /* zh.txt~stroke */;
 #endif
 
     // The linear ASCII data has been copied into newData already.
     int32_t newDataLength = 0;
-    for (int32_t i = 0; newDataLength < ASCII_LIMIT;
+    برای (int32_t i = 0; newDataLength < ASCII_LIMIT;
             newDataLength += UCPTRIE_FAST_DATA_BLOCK_LENGTH, i += SMALL_DATA_BLOCKS_PER_BMP_BLOCK) {
         index[i] = newDataLength;
 #ifdef UCPTRIE_DEBUG
-        if (printData) {
-            printBlock(newData + newDataLength, UCPTRIE_FAST_DATA_BLOCK_LENGTH, 0, newDataLength, 0, initialValue);
+        اگر (printData) {
+            printBlock(newData + newDataLength, UCPTRIE_FAST_DATA_BLOCK_LENGTH, 0, newDataLength, 0, initial_مقدار);
         }
 #endif
     }
 
     int32_t blockLength = UCPTRIE_FAST_DATA_BLOCK_LENGTH;
-    if (!mixedBlocks.init(newDataCapacity, blockLength)) {
+    اگر (!mixedBlocks.init(newDataCapacity, blockLength)) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return 0;
+        بازگشت 0;
     }
     mixedBlocks.extend(newData, 0, 0, newDataLength);
 
-    int32_t iLimit = highStart >> UCPTRIE_SHIFT_3;
+    int32_t iLimit = بالا_Start >> UCPTRIE_SHIFT_3;
     int32_t inc = SMALL_DATA_BLOCKS_PER_BMP_BLOCK;
     int32_t fastLength = 0;
-    for (int32_t i = ASCII_I_LIMIT; i < iLimit; i += inc) {
-        if (i == fastILimit) {
+    برای (int32_t i = ASCII_I_LIMIT; i < iLimit; i += inc) {
+        اگر (i == fastILimit) {
             blockLength = UCPTRIE_SMALL_DATA_BLOCK_LENGTH;
             inc = 1;
             fastLength = newDataLength;
-            if (!mixedBlocks.init(newDataCapacity, blockLength)) {
+            اگر (!mixedBlocks.init(newDataCapacity, blockLength)) {
                 errorCode = U_MEMORY_ALLOCATION_ERROR;
-                return 0;
+                بازگشت 0;
             }
             mixedBlocks.extend(newData, 0, 0, newDataLength);
         }
-        if (flags[i] == ALL_SAME) {
+        اگر (flags[i] == ALL_SAME) {
             uint32_t value = index[i];
             // Find an earlier part of the data array of length blockLength
             // that is filled with this value.
@@ -1134,51 +1134,51 @@ int32_t MutableCodePointTrie::compactData(
             // and not all of the rest of the fast block is filled with this value.
             // Otherwise trie.getRange() would detect that the fast block starts at
             // dataNullOffset and assume incorrectly that it is filled with the null value.
-            while (n >= 0 && i == dataNullIndex && i >= fastILimit && n < fastLength &&
+            وقتی (n >= 0 && i == dataNullIndex && i >= fastILimit && n < fastLength &&
                     isStartOfSomeFastBlock(n, index, fastILimit)) {
                 n = findAllSameBlock(newData, n + 1, newDataLength, value, blockLength);
             }
-            if (n >= 0) {
-                DEBUG_DO(++countSame);
+            اگر (n >= 0) {
+                DEBUG_DO(++شمار_Same);
                 index[i] = n;
-            } else {
+            } وگرنه {
                 n = getAllSameOverlap(newData, newDataLength, value, blockLength);
                 DEBUG_DO(sumOverlaps += n);
 #ifdef UCPTRIE_DEBUG
-                if (printData) {
-                    printBlock(nullptr, blockLength, value, i << UCPTRIE_SHIFT_3, n, initialValue);
+                اگر (printData) {
+                    printBlock(nullptr, blockLength, value, i << UCPTRIE_SHIFT_3, n, initial_مقدار);
                 }
 #endif
                 index[i] = newDataLength - n;
                 int32_t prevDataLength = newDataLength;
-                while (n < blockLength) {
+                وقتی (n < blockLength) {
                     newData[newDataLength++] = value;
                     ++n;
                 }
                 mixedBlocks.extend(newData, 0, prevDataLength, newDataLength);
             }
-        } else if (flags[i] == MIXED) {
-            const uint32_t *block = data + index[i];
+        } وگرنه اگر (flags[i] == MIXED) {
+            ثابت uint32_t *block = data + index[i];
             int32_t n = mixedBlocks.findBlock(newData, block, 0);
-            if (n >= 0) {
-                DEBUG_DO(++countSame);
+            اگر (n >= 0) {
+                DEBUG_DO(++شمار_Same);
                 index[i] = n;
-            } else {
+            } وگرنه {
                 n = getOverlap(newData, newDataLength, block, 0, blockLength);
                 DEBUG_DO(sumOverlaps += n);
 #ifdef UCPTRIE_DEBUG
-                if (printData) {
-                    printBlock(block, blockLength, 0, i << UCPTRIE_SHIFT_3, n, initialValue);
+                اگر (printData) {
+                    printBlock(block, blockLength, 0, i << UCPTRIE_SHIFT_3, n, initial_مقدار);
                 }
 #endif
                 index[i] = newDataLength - n;
                 int32_t prevDataLength = newDataLength;
-                while (n < blockLength) {
+                وقتی (n < blockLength) {
                     newData[newDataLength++] = block[n++];
                 }
                 mixedBlocks.extend(newData, 0, prevDataLength, newDataLength);
             }
-        } else /* SAME_AS */ {
+        } وگرنه /* SAME_AS */ {
             uint32_t j = index[i];
             index[i] = index[j];
         }
@@ -1187,49 +1187,49 @@ int32_t MutableCodePointTrie::compactData(
 #ifdef UCPTRIE_DEBUG
     /* we saved some space */
     printf("compacting UCPTrie: count of 32-bit data words %lu->%lu  countSame=%ld  sumOverlaps=%ld\n",
-            (long)dataLength, (long)newDataLength, (long)countSame, (long)sumOverlaps);
+            (long)dataLength, (long)newDataLength, (long)شمار_Same, (long)sumOverlaps);
 #endif
-    return newDataLength;
+    بازگشت newDataLength;
 }
 
 int32_t MutableCodePointTrie::compactIndex(int32_t fastILimit, MixedBlocks &mixedBlocks,
                                            UErrorCode &errorCode) {
     int32_t fastIndexLength = fastILimit >> (UCPTRIE_FAST_SHIFT - UCPTRIE_SHIFT_3);
-    if ((highStart >> UCPTRIE_FAST_SHIFT) <= fastIndexLength) {
+    اگر ((بالا_Start >> UCPTRIE_FAST_SHIFT) <= fastIndexLength) {
         // Only the linear fast index, no multi-stage index tables.
         index3NullOffset = UCPTRIE_NO_INDEX3_NULL_OFFSET;
-        return fastIndexLength;
+        بازگشت fastIndexLength;
     }
 
     // Condense the fast index table.
     // Also, does it contain an index-3 block with all dataNullOffset?
     uint16_t fastIndex[UCPTRIE_BMP_INDEX_LENGTH];  // fastIndexLength
     int32_t i3FirstNull = -1;
-    for (int32_t i = 0, j = 0; i < fastILimit; ++j) {
+    برای (int32_t i = 0, j = 0; i < fastILimit; ++j) {
         uint32_t i3 = index[i];
         fastIndex[j] = static_cast<uint16_t>(i3);
-        if (i3 == static_cast<uint32_t>(dataNullOffset)) {
-            if (i3FirstNull < 0) {
+        اگر (i3 == static_cast<uint32_t>(dataNullOffset)) {
+            اگر (i3FirstNull < 0) {
                 i3FirstNull = j;
-            } else if (index3NullOffset < 0 &&
+            } وگرنه اگر (index3NullOffset < 0 &&
                     (j - i3FirstNull + 1) == UCPTRIE_INDEX_3_BLOCK_LENGTH) {
                 index3NullOffset = i3FirstNull;
             }
-        } else {
+        } وگرنه {
             i3FirstNull = -1;
         }
         // Set the index entries that compactData() skipped.
         // Needed when the multi-stage index covers the fast index range as well.
         int32_t iNext = i + SMALL_DATA_BLOCKS_PER_BMP_BLOCK;
-        while (++i < iNext) {
+        وقتی (++i < iNext) {
             i3 += UCPTRIE_SMALL_DATA_BLOCK_LENGTH;
             index[i] = i3;
         }
     }
 
-    if (!mixedBlocks.init(fastIndexLength, UCPTRIE_INDEX_3_BLOCK_LENGTH)) {
+    اگر (!mixedBlocks.init(fastIndexLength, UCPTRIE_INDEX_3_BLOCK_LENGTH)) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return 0;
+        بازگشت 0;
     }
     mixedBlocks.extend(fastIndex, 0, 0, fastIndexLength);
 
@@ -1243,49 +1243,49 @@ int32_t MutableCodePointTrie::compactIndex(int32_t fastILimit, MixedBlocks &mixe
     // Also determine an upper limit for the index-3 table length.
     int32_t index3Capacity = 0;
     i3FirstNull = index3NullOffset;
-    bool hasLongI3Blocks = false;
+    منطقی hasLongI3Blocks = نادرست;
     // If the fast index covers the whole BMP, then
     // the multi-stage index is only for supplementary code points.
     // Otherwise, the multi-stage index covers all of Unicode.
     int32_t iStart = fastILimit < BMP_I_LIMIT ? 0 : BMP_I_LIMIT;
-    int32_t iLimit = highStart >> UCPTRIE_SHIFT_3;
-    for (int32_t i = iStart; i < iLimit;) {
+    int32_t iLimit = بالا_Start >> UCPTRIE_SHIFT_3;
+    برای (int32_t i = iStart; i < iLimit;) {
         int32_t j = i;
         int32_t jLimit = i + UCPTRIE_INDEX_3_BLOCK_LENGTH;
         uint32_t oredI3 = 0;
-        bool isNull = true;
-        do {
+        منطقی isNull = درست;
+        انجامبده {
             uint32_t i3 = index[j];
             oredI3 |= i3;
-            if (i3 != static_cast<uint32_t>(dataNullOffset)) {
-                isNull = false;
+            اگر (i3 != static_cast<uint32_t>(dataNullOffset)) {
+                isNull = نادرست;
             }
-        } while (++j < jLimit);
-        if (isNull) {
+        } وقتی (++j < jLimit);
+        اگر (isNull) {
             flags[i] = I3_NULL;
-            if (i3FirstNull < 0) {
-                if (oredI3 <= 0xffff) {
+            اگر (i3FirstNull < 0) {
+                اگر (oredI3 <= 0xffff) {
                     index3Capacity += UCPTRIE_INDEX_3_BLOCK_LENGTH;
-                } else {
+                } وگرنه {
                     index3Capacity += INDEX_3_18BIT_BLOCK_LENGTH;
-                    hasLongI3Blocks = true;
+                    hasLongI3Blocks = درست;
                 }
                 i3FirstNull = 0;
             }
-        } else {
-            if (oredI3 <= 0xffff) {
+        } وگرنه {
+            اگر (oredI3 <= 0xffff) {
                 int32_t n = mixedBlocks.findBlock(fastIndex, index, i);
-                if (n >= 0) {
+                اگر (n >= 0) {
                     flags[i] = I3_BMP;
                     index[i] = n;
-                } else {
+                } وگرنه {
                     flags[i] = I3_16;
                     index3Capacity += UCPTRIE_INDEX_3_BLOCK_LENGTH;
                 }
-            } else {
+            } وگرنه {
                 flags[i] = I3_18;
                 index3Capacity += INDEX_3_18BIT_BLOCK_LENGTH;
-                hasLongI3Blocks = true;
+                hasLongI3Blocks = درست;
             }
         }
         i = j;
@@ -1300,21 +1300,21 @@ int32_t MutableCodePointTrie::compactIndex(int32_t fastILimit, MixedBlocks &mixe
     // +1 for possible index table padding.
     int32_t index16Capacity = fastIndexLength + index1Length + index3Capacity + index2Capacity + 1;
     index16 = static_cast<uint16_t*>(uprv_malloc(index16Capacity * 2));
-    if (index16 == nullptr) {
+    اگر (index16 == nullptr) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return 0;
+        بازگشت 0;
     }
     uprv_memcpy(index16, fastIndex, fastIndexLength * 2);
 
-    if (!mixedBlocks.init(index16Capacity, UCPTRIE_INDEX_3_BLOCK_LENGTH)) {
+    اگر (!mixedBlocks.init(index16Capacity, UCPTRIE_INDEX_3_BLOCK_LENGTH)) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return 0;
+        بازگشت 0;
     }
     MixedBlocks longI3Blocks;
-    if (hasLongI3Blocks) {
-        if (!longI3Blocks.init(index16Capacity, INDEX_3_18BIT_BLOCK_LENGTH)) {
+    اگر (hasLongI3Blocks) {
+        اگر (!longI3Blocks.init(index16Capacity, INDEX_3_18BIT_BLOCK_LENGTH)) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return 0;
+            بازگشت 0;
         }
     }
 
@@ -1324,48 +1324,48 @@ int32_t MutableCodePointTrie::compactIndex(int32_t fastILimit, MixedBlocks &mixe
     i3FirstNull = index3NullOffset;
     int32_t index3Start = fastIndexLength + index1Length;
     int32_t indexLength = index3Start;
-    for (int32_t i = iStart; i < iLimit; i += UCPTRIE_INDEX_3_BLOCK_LENGTH) {
+    برای (int32_t i = iStart; i < iLimit; i += UCPTRIE_INDEX_3_BLOCK_LENGTH) {
         int32_t i3;
         uint8_t f = flags[i];
-        if (f == I3_NULL && i3FirstNull < 0) {
+        اگر (f == I3_NULL && i3FirstNull < 0) {
             // First index-3 null block. Write & overlap it like a normal block, then remember it.
             f = dataNullOffset <= 0xffff ? I3_16 : I3_18;
             i3FirstNull = 0;
         }
-        if (f == I3_NULL) {
+        اگر (f == I3_NULL) {
             i3 = index3NullOffset;
-        } else if (f == I3_BMP) {
+        } وگرنه اگر (f == I3_BMP) {
             i3 = index[i];
-        } else if (f == I3_16) {
+        } وگرنه اگر (f == I3_16) {
             int32_t n = mixedBlocks.findBlock(index16, index, i);
-            if (n >= 0) {
+            اگر (n >= 0) {
                 i3 = n;
-            } else {
-                if (indexLength == index3Start) {
+            } وگرنه {
+                اگر (indexLength == index3Start) {
                     // No overlap at the boundary between the index-1 and index-3 tables.
                     n = 0;
-                } else {
+                } وگرنه {
                     n = getOverlap(index16, indexLength,
                                    index, i, UCPTRIE_INDEX_3_BLOCK_LENGTH);
                 }
                 i3 = indexLength - n;
                 int32_t prevIndexLength = indexLength;
-                while (n < UCPTRIE_INDEX_3_BLOCK_LENGTH) {
+                وقتی (n < UCPTRIE_INDEX_3_BLOCK_LENGTH) {
                     index16[indexLength++] = index[i + n++];
                 }
                 mixedBlocks.extend(index16, index3Start, prevIndexLength, indexLength);
-                if (hasLongI3Blocks) {
+                اگر (hasLongI3Blocks) {
                     longI3Blocks.extend(index16, index3Start, prevIndexLength, indexLength);
                 }
             }
-        } else {
+        } وگرنه {
             U_ASSERT(f == I3_18);
             U_ASSERT(hasLongI3Blocks);
             // Encode an index-3 block that contains one or more data indexes exceeding 16 bits.
             int32_t j = i;
             int32_t jLimit = i + UCPTRIE_INDEX_3_BLOCK_LENGTH;
             int32_t k = indexLength;
-            do {
+            انجامبده {
                 ++k;
                 uint32_t v = index[j++];
                 uint32_t upperBits = (v & 0x30000) >> 2;
@@ -1392,35 +1392,35 @@ int32_t MutableCodePointTrie::compactIndex(int32_t fastILimit, MixedBlocks &mixe
                 upperBits |= (v & 0x30000) >> 16;
                 index16[k++] = v;
                 index16[k - 9] = upperBits;
-            } while (j < jLimit);
+            } وقتی (j < jLimit);
             int32_t n = longI3Blocks.findBlock(index16, index16, indexLength);
-            if (n >= 0) {
+            اگر (n >= 0) {
                 i3 = n | 0x8000;
-            } else {
-                if (indexLength == index3Start) {
+            } وگرنه {
+                اگر (indexLength == index3Start) {
                     // No overlap at the boundary between the index-1 and index-3 tables.
                     n = 0;
-                } else {
+                } وگرنه {
                     n = getOverlap(index16, indexLength,
                                    index16, indexLength, INDEX_3_18BIT_BLOCK_LENGTH);
                 }
                 i3 = (indexLength - n) | 0x8000;
                 int32_t prevIndexLength = indexLength;
-                if (n > 0) {
+                اگر (n > 0) {
                     int32_t start = indexLength;
-                    while (n < INDEX_3_18BIT_BLOCK_LENGTH) {
+                    وقتی (n < INDEX_3_18BIT_BLOCK_LENGTH) {
                         index16[indexLength++] = index16[start + n++];
                     }
-                } else {
+                } وگرنه {
                     indexLength += INDEX_3_18BIT_BLOCK_LENGTH;
                 }
                 mixedBlocks.extend(index16, index3Start, prevIndexLength, indexLength);
-                if (hasLongI3Blocks) {
+                اگر (hasLongI3Blocks) {
                     longI3Blocks.extend(index16, index3Start, prevIndexLength, indexLength);
                 }
             }
         }
-        if (index3NullOffset < 0 && i3FirstNull >= 0) {
+        اگر (index3NullOffset < 0 && i3FirstNull >= 0) {
             index3NullOffset = i3;
         }
         // Set the index-2 table entry.
@@ -1429,14 +1429,14 @@ int32_t MutableCodePointTrie::compactIndex(int32_t fastILimit, MixedBlocks &mixe
     U_ASSERT(i2Length == index2Capacity);
     U_ASSERT(indexLength <= index3Start + index3Capacity);
 
-    if (index3NullOffset < 0) {
+    اگر (index3NullOffset < 0) {
         index3NullOffset = UCPTRIE_NO_INDEX3_NULL_OFFSET;
     }
-    if (indexLength >= (UCPTRIE_NO_INDEX3_NULL_OFFSET + UCPTRIE_INDEX_3_BLOCK_LENGTH)) {
+    اگر (indexLength >= (UCPTRIE_NO_INDEX3_NULL_OFFSET + UCPTRIE_INDEX_3_BLOCK_LENGTH)) {
         // The index-3 offsets exceed 15 bits, or
         // the last one cannot be distinguished from the no-null-block value.
         errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        بازگشت 0;
     }
 
     // Compact the index-2 table and write the index-1 table.
@@ -1444,31 +1444,31 @@ int32_t MutableCodePointTrie::compactIndex(int32_t fastILimit, MixedBlocks &mixe
                   "must re-init mixedBlocks");
     int32_t blockLength = UCPTRIE_INDEX_2_BLOCK_LENGTH;
     int32_t i1 = fastIndexLength;
-    for (int32_t i = 0; i < i2Length; i += blockLength) {
+    برای (int32_t i = 0; i < i2Length; i += blockLength) {
         int32_t n;
-        if ((i2Length - i) >= blockLength) {
+        اگر ((i2Length - i) >= blockLength) {
             // normal block
             U_ASSERT(blockLength == UCPTRIE_INDEX_2_BLOCK_LENGTH);
             n = mixedBlocks.findBlock(index16, index2, i);
-        } else {
+        } وگرنه {
             // highStart is inside the last index-2 block. Shorten it.
             blockLength = i2Length - i;
             n = findSameBlock(index16, index3Start, indexLength,
                               index2, i, blockLength);
         }
         int32_t i2;
-        if (n >= 0) {
+        اگر (n >= 0) {
             i2 = n;
-        } else {
-            if (indexLength == index3Start) {
+        } وگرنه {
+            اگر (indexLength == index3Start) {
                 // No overlap at the boundary between the index-1 and index-3/2 tables.
                 n = 0;
-            } else {
+            } وگرنه {
                 n = getOverlap(index16, indexLength, index2, i, blockLength);
             }
             i2 = indexLength - n;
             int32_t prevIndexLength = indexLength;
-            while (n < blockLength) {
+            وقتی (n < blockLength) {
                 index16[indexLength++] = index2[i + n++];
             }
             mixedBlocks.extend(index16, index3Start, prevIndexLength, indexLength);
@@ -1485,40 +1485,40 @@ int32_t MutableCodePointTrie::compactIndex(int32_t fastILimit, MixedBlocks &mixe
             (long)iLimit, (long)indexLength);
 #endif
 
-    return indexLength;
+    بازگشت indexLength;
 }
 
 int32_t MutableCodePointTrie::compactTrie(int32_t fastILimit, UErrorCode &errorCode) {
     // Find the real highStart and round it up.
-    U_ASSERT((highStart & (UCPTRIE_CP_PER_INDEX_2_ENTRY - 1)) == 0);
-    highValue = get(MAX_UNICODE);
-    int32_t realHighStart = findHighStart();
-    realHighStart = (realHighStart + (UCPTRIE_CP_PER_INDEX_2_ENTRY - 1)) &
+    U_ASSERT((بالا_Start & (UCPTRIE_CP_PER_INDEX_2_ENTRY - 1)) == 0);
+    بالا_مقدار = get(MAX_UNICODE);
+    int32_t real_بالا_Start = find_بالا_Start();
+    real_بالا_Start = (real_بالا_Start + (UCPTRIE_CP_PER_INDEX_2_ENTRY - 1)) &
         ~(UCPTRIE_CP_PER_INDEX_2_ENTRY - 1);
-    if (realHighStart == UNICODE_LIMIT) {
-        highValue = initialValue;
+    اگر (real_بالا_Start == UNICODE_LIMIT) {
+        بالا_مقدار = initial_مقدار;
     }
 
 #ifdef UCPTRIE_DEBUG
     printf("UCPTrie: highStart U+%06lx  highValue 0x%lx  initialValue 0x%lx\n",
-            (long)realHighStart, (long)highValue, (long)initialValue);
+            (long)real_بالا_Start, (long)بالا_مقدار, (long)initial_مقدار);
 #endif
 
     // We always store indexes and data values for the fast range.
     // Pin highStart to the top of that range while building.
     UChar32 fastLimit = fastILimit << UCPTRIE_SHIFT_3;
-    if (realHighStart < fastLimit) {
-        for (int32_t i = (realHighStart >> UCPTRIE_SHIFT_3); i < fastILimit; ++i) {
+    اگر (real_بالا_Start < fastLimit) {
+        برای (int32_t i = (real_بالا_Start >> UCPTRIE_SHIFT_3); i < fastILimit; ++i) {
             flags[i] = ALL_SAME;
-            index[i] = highValue;
+            index[i] = بالا_مقدار;
         }
-        highStart = fastLimit;
-    } else {
-        highStart = realHighStart;
+        بالا_Start = fastLimit;
+    } وگرنه {
+        بالا_Start = real_بالا_Start;
     }
 
     uint32_t asciiData[ASCII_LIMIT];
-    for (int32_t i = 0; i < ASCII_LIMIT; ++i) {
+    برای (int32_t i = 0; i < ASCII_LIMIT; ++i) {
         asciiData[i] = get(i);
     }
 
@@ -1527,197 +1527,197 @@ int32_t MutableCodePointTrie::compactTrie(int32_t fastILimit, UErrorCode &errorC
     // and get an upper bound for the necessary data array length.
     AllSameBlocks allSameBlocks;
     int32_t newDataCapacity = compactWholeDataBlocks(fastILimit, allSameBlocks);
-    if (newDataCapacity < 0) {
+    اگر (newDataCapacity < 0) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return 0;
+        بازگشت 0;
     }
     uint32_t* newData = static_cast<uint32_t*>(uprv_malloc(newDataCapacity * 4));
-    if (newData == nullptr) {
+    اگر (newData == nullptr) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return 0;
+        بازگشت 0;
     }
-    uprv_memcpy(newData, asciiData, sizeof(asciiData));
+    uprv_memcpy(newData, asciiData, اندازه(asciiData));
 
     int32_t dataNullIndex = allSameBlocks.findMostUsed();
 
     MixedBlocks mixedBlocks;
     int32_t newDataLength = compactData(fastILimit, newData, newDataCapacity,
                                         dataNullIndex, mixedBlocks, errorCode);
-    if (U_FAILURE(errorCode)) { return 0; }
+    اگر (U_FAILURE(errorCode)) { بازگشت 0; }
     U_ASSERT(newDataLength <= newDataCapacity);
     uprv_free(data);
     data = newData;
     dataCapacity = newDataCapacity;
     dataLength = newDataLength;
-    if (dataLength > (0x3ffff + UCPTRIE_SMALL_DATA_BLOCK_LENGTH)) {
+    اگر (dataLength > (0x3ffff + UCPTRIE_SMALL_DATA_BLOCK_LENGTH)) {
         // The offset of the last data block is too high to be stored in the index table.
         errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        بازگشت 0;
     }
 
-    if (dataNullIndex >= 0) {
+    اگر (dataNullIndex >= 0) {
         dataNullOffset = index[dataNullIndex];
 #ifdef UCPTRIE_DEBUG
-        if (data[dataNullOffset] != initialValue) {
+        اگر (data[dataNullOffset] != initial_مقدار) {
             printf("UCPTrie initialValue %lx -> more common nullValue %lx\n",
-                   (long)initialValue, (long)data[dataNullOffset]);
+                   (long)initial_مقدار, (long)data[dataNullOffset]);
         }
 #endif
-        initialValue = data[dataNullOffset];
-    } else {
+        initial_مقدار = data[dataNullOffset];
+    } وگرنه {
         dataNullOffset = UCPTRIE_NO_DATA_NULL_OFFSET;
     }
 
     int32_t indexLength = compactIndex(fastILimit, mixedBlocks, errorCode);
-    highStart = realHighStart;
-    return indexLength;
+    بالا_Start = real_بالا_Start;
+    بازگشت indexLength;
 }
 
-UCPTrie *MutableCodePointTrie::build(UCPTrieType type, UCPTrieValueWidth valueWidth, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) {
-        return nullptr;
+UCPTrie *MutableCodePointTrie::build(UCPTrieType type, UCPTrie_مقدار_Width مقدار_Width, UErrorCode &errorCode) {
+    اگر (U_FAILURE(errorCode)) {
+        بازگشت nullptr;
     }
-    if (type < UCPTRIE_TYPE_FAST || UCPTRIE_TYPE_SMALL < type ||
-            valueWidth < UCPTRIE_VALUE_BITS_16 || UCPTRIE_VALUE_BITS_8 < valueWidth) {
+    اگر (type < UCPTRIE_TYPE_FAST || UCPTRIE_TYPE_SMALL < type ||
+            مقدار_Width < UCPTRIE_مقدار_BITS_16 || UCPTRIE_مقدار_BITS_8 < مقدار_Width) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        بازگشت nullptr;
     }
 
     // The mutable trie always stores 32-bit values.
     // When we build a UCPTrie for a smaller value width, we first mask off unused bits
     // before compacting the data.
-    switch (valueWidth) {
-    case UCPTRIE_VALUE_BITS_32:
-        break;
-    case UCPTRIE_VALUE_BITS_16:
-        maskValues(0xffff);
-        break;
-    case UCPTRIE_VALUE_BITS_8:
-        maskValues(0xff);
-        break;
-    default:
-        break;
+    انتخاب (مقدار_Width) {
+    حالت UCPTRIE_مقدار_BITS_32:
+        بشکن;
+    حالت UCPTRIE_مقدار_BITS_16:
+        mask_مقادیر(0xffff);
+        بشکن;
+    حالت UCPTRIE_مقدار_BITS_8:
+        mask_مقادیر(0xff);
+        بشکن;
+    پیشفرض:
+        بشکن;
     }
 
     UChar32 fastLimit = type == UCPTRIE_TYPE_FAST ? BMP_LIMIT : UCPTRIE_SMALL_LIMIT;
     int32_t indexLength = compactTrie(fastLimit >> UCPTRIE_SHIFT_3, errorCode);
-    if (U_FAILURE(errorCode)) {
+    اگر (U_FAILURE(errorCode)) {
         clear();
-        return nullptr;
+        بازگشت nullptr;
     }
 
     // Ensure data table alignment: The index length must be even for uint32_t data.
-    if (valueWidth == UCPTRIE_VALUE_BITS_32 && (indexLength & 1) != 0) {
+    اگر (مقدار_Width == UCPTRIE_مقدار_BITS_32 && (indexLength & 1) != 0) {
         index16[indexLength++] = 0xffee;  // arbitrary value
     }
 
     // Make the total trie structure length a multiple of 4 bytes by padding the data table,
     // and store special values as the last two data values.
     int32_t length = indexLength * 2;
-    if (valueWidth == UCPTRIE_VALUE_BITS_16) {
-        if (((indexLength ^ dataLength) & 1) != 0) {
+    اگر (مقدار_Width == UCPTRIE_مقدار_BITS_16) {
+        اگر (((indexLength ^ dataLength) & 1) != 0) {
             // padding
-            data[dataLength++] = errorValue;
+            data[dataLength++] = error_مقدار;
         }
-        if (data[dataLength - 1] != errorValue || data[dataLength - 2] != highValue) {
-            data[dataLength++] = highValue;
-            data[dataLength++] = errorValue;
+        اگر (data[dataLength - 1] != error_مقدار || data[dataLength - 2] != بالا_مقدار) {
+            data[dataLength++] = بالا_مقدار;
+            data[dataLength++] = error_مقدار;
         }
         length += dataLength * 2;
-    } else if (valueWidth == UCPTRIE_VALUE_BITS_32) {
+    } وگرنه اگر (مقدار_Width == UCPTRIE_مقدار_BITS_32) {
         // 32-bit data words never need padding to a multiple of 4 bytes.
-        if (data[dataLength - 1] != errorValue || data[dataLength - 2] != highValue) {
-            if (data[dataLength - 1] != highValue) {
-                data[dataLength++] = highValue;
+        اگر (data[dataLength - 1] != error_مقدار || data[dataLength - 2] != بالا_مقدار) {
+            اگر (data[dataLength - 1] != بالا_مقدار) {
+                data[dataLength++] = بالا_مقدار;
             }
-            data[dataLength++] = errorValue;
+            data[dataLength++] = error_مقدار;
         }
         length += dataLength * 4;
-    } else {
+    } وگرنه {
         int32_t and3 = (length + dataLength) & 3;
-        if (and3 == 0 && data[dataLength - 1] == errorValue && data[dataLength - 2] == highValue) {
+        اگر (and3 == 0 && data[dataLength - 1] == error_مقدار && data[dataLength - 2] == بالا_مقدار) {
             // all set
-        } else if(and3 == 3 && data[dataLength - 1] == highValue) {
-            data[dataLength++] = errorValue;
-        } else {
-            while (and3 != 2) {
-                data[dataLength++] = highValue;
+        } وگرنه اگر(and3 == 3 && data[dataLength - 1] == بالا_مقدار) {
+            data[dataLength++] = error_مقدار;
+        } وگرنه {
+            وقتی (and3 != 2) {
+                data[dataLength++] = بالا_مقدار;
                 and3 = (and3 + 1) & 3;
             }
-            data[dataLength++] = highValue;
-            data[dataLength++] = errorValue;
+            data[dataLength++] = بالا_مقدار;
+            data[dataLength++] = error_مقدار;
         }
         length += dataLength;
     }
 
     // Calculate the total length of the UCPTrie as a single memory block.
-    length += sizeof(UCPTrie);
+    length += اندازه(UCPTrie);
     U_ASSERT((length & 3) == 0);
 
     uint8_t* bytes = static_cast<uint8_t*>(uprv_malloc(length));
-    if (bytes == nullptr) {
+    اگر (bytes == nullptr) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
         clear();
-        return nullptr;
+        بازگشت nullptr;
     }
     UCPTrie *trie = reinterpret_cast<UCPTrie *>(bytes);
-    uprv_memset(trie, 0, sizeof(UCPTrie));
+    uprv_memset(trie, 0, اندازه(UCPTrie));
     trie->indexLength = indexLength;
     trie->dataLength = dataLength;
 
-    trie->highStart = highStart;
+    trie->بالا_Start = بالا_Start;
     // Round up shifted12HighStart to a multiple of 0x1000 for easy testing from UTF-8 lead bytes.
     // Runtime code needs to then test for the real highStart as well.
-    trie->shifted12HighStart = (highStart + 0xfff) >> 12;
+    trie->shifted12_بالا_Start = (بالا_Start + 0xfff) >> 12;
     trie->type = type;
-    trie->valueWidth = valueWidth;
+    trie->مقدار_Width = مقدار_Width;
 
     trie->index3NullOffset = index3NullOffset;
     trie->dataNullOffset = dataNullOffset;
-    trie->nullValue = initialValue;
+    trie->null_مقدار = initial_مقدار;
 
-    bytes += sizeof(UCPTrie);
+    bytes += اندازه(UCPTrie);
 
     // Fill the index and data arrays.
     uint16_t* dest16 = reinterpret_cast<uint16_t*>(bytes);
     trie->index = dest16;
 
-    if (highStart <= fastLimit) {
+    اگر (بالا_Start <= fastLimit) {
         // Condense only the fast index from the mutable-trie index.
-        for (int32_t i = 0, j = 0; j < indexLength; i += SMALL_DATA_BLOCKS_PER_BMP_BLOCK, ++j) {
+        برای (int32_t i = 0, j = 0; j < indexLength; i += SMALL_DATA_BLOCKS_PER_BMP_BLOCK, ++j) {
             *dest16++ = static_cast<uint16_t>(index[i]); // dest16[j]
         }
-    } else {
+    } وگرنه {
         uprv_memcpy(dest16, index16, indexLength * 2);
         dest16 += indexLength;
     }
     bytes += indexLength * 2;
 
     // Write the data array.
-    const uint32_t *p = data;
-    switch (valueWidth) {
-    case UCPTRIE_VALUE_BITS_16:
+    ثابت uint32_t *p = data;
+    انتخاب (مقدار_Width) {
+    حالت UCPTRIE_مقدار_BITS_16:
         // Write 16-bit data values.
         trie->data.ptr16 = dest16;
-        for (int32_t i = dataLength; i > 0; --i) {
+        برای (int32_t i = dataLength; i > 0; --i) {
             *dest16++ = static_cast<uint16_t>(*p++);
         }
-        break;
-    case UCPTRIE_VALUE_BITS_32:
+        بشکن;
+    حالت UCPTRIE_مقدار_BITS_32:
         // Write 32-bit data values.
         trie->data.ptr32 = reinterpret_cast<uint32_t*>(bytes);
         uprv_memcpy(bytes, p, (size_t)dataLength * 4);
-        break;
-    case UCPTRIE_VALUE_BITS_8:
+        بشکن;
+    حالت UCPTRIE_مقدار_BITS_8:
         // Write 8-bit data values.
         trie->data.ptr8 = bytes;
-        for (int32_t i = dataLength; i > 0; --i) {
+        برای (int32_t i = dataLength; i > 0; --i) {
             *bytes++ = static_cast<uint8_t>(*p++);
         }
-        break;
-    default:
+        بشکن;
+    پیشفرض:
         // Will not occur, valueWidth checked at the beginning.
-        break;
+        بشکن;
     }
 
 #ifdef UCPTRIE_DEBUG
@@ -1727,7 +1727,7 @@ UCPTrie *MutableCodePointTrie::build(UCPTrieType type, UCPTrieValueWidth valueWi
 #endif
 
     clear();
-    return trie;
+    بازگشت trie;
 }
 
 }  // namespace
@@ -1737,116 +1737,116 @@ U_NAMESPACE_END
 U_NAMESPACE_USE
 
 U_CAPI UMutableCPTrie * U_EXPORT2
-umutablecptrie_open(uint32_t initialValue, uint32_t errorValue, UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+umutablecptrie_open(uint32_t initial_مقدار, uint32_t error_مقدار, UErrorCode *pErrorCode) {
+    اگر (U_FAILURE(*pErrorCode)) {
+        بازگشت nullptr;
     }
     LocalPointer<MutableCodePointTrie> trie(
-        new MutableCodePointTrie(initialValue, errorValue, *pErrorCode), *pErrorCode);
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+        جدید MutableCodePointTrie(initial_مقدار, error_مقدار, *pErrorCode), *pErrorCode);
+    اگر (U_FAILURE(*pErrorCode)) {
+        بازگشت nullptr;
     }
-    return reinterpret_cast<UMutableCPTrie *>(trie.orphan());
+    بازگشت reinterpret_cast<UMutableCPTrie *>(trie.orphan());
 }
 
 U_CAPI UMutableCPTrie * U_EXPORT2
-umutablecptrie_clone(const UMutableCPTrie *other, UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+umutablecptrie_clone(ثابت UMutableCPTrie *other, UErrorCode *pErrorCode) {
+    اگر (U_FAILURE(*pErrorCode)) {
+        بازگشت nullptr;
     }
-    if (other == nullptr) {
-        return nullptr;
+    اگر (other == nullptr) {
+        بازگشت nullptr;
     }
     LocalPointer<MutableCodePointTrie> clone(
-        new MutableCodePointTrie(*reinterpret_cast<const MutableCodePointTrie *>(other), *pErrorCode), *pErrorCode);
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+        جدید MutableCodePointTrie(*reinterpret_cast<ثابت MutableCodePointTrie *>(other), *pErrorCode), *pErrorCode);
+    اگر (U_FAILURE(*pErrorCode)) {
+        بازگشت nullptr;
     }
-    return reinterpret_cast<UMutableCPTrie *>(clone.orphan());
+    بازگشت reinterpret_cast<UMutableCPTrie *>(clone.orphan());
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI تهی U_EXPORT2
 umutablecptrie_close(UMutableCPTrie *trie) {
     delete reinterpret_cast<MutableCodePointTrie *>(trie);
 }
 
 U_CAPI UMutableCPTrie * U_EXPORT2
-umutablecptrie_fromUCPMap(const UCPMap *map, UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+umutablecptrie_fromUCPMap(ثابت UCPMap *map, UErrorCode *pErrorCode) {
+    اگر (U_FAILURE(*pErrorCode)) {
+        بازگشت nullptr;
     }
-    if (map == nullptr) {
+    اگر (map == nullptr) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        بازگشت nullptr;
     }
-    return reinterpret_cast<UMutableCPTrie *>(MutableCodePointTrie::fromUCPMap(map, *pErrorCode));
+    بازگشت reinterpret_cast<UMutableCPTrie *>(MutableCodePointTrie::fromUCPMap(map, *pErrorCode));
 }
 
 U_CAPI UMutableCPTrie * U_EXPORT2
-umutablecptrie_fromUCPTrie(const UCPTrie *trie, UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+umutablecptrie_fromUCPTrie(ثابت UCPTrie *trie, UErrorCode *pErrorCode) {
+    اگر (U_FAILURE(*pErrorCode)) {
+        بازگشت nullptr;
     }
-    if (trie == nullptr) {
+    اگر (trie == nullptr) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        بازگشت nullptr;
     }
-    return reinterpret_cast<UMutableCPTrie *>(MutableCodePointTrie::fromUCPTrie(trie, *pErrorCode));
+    بازگشت reinterpret_cast<UMutableCPTrie *>(MutableCodePointTrie::fromUCPTrie(trie, *pErrorCode));
 }
 
 U_CAPI uint32_t U_EXPORT2
-umutablecptrie_get(const UMutableCPTrie *trie, UChar32 c) {
-    return reinterpret_cast<const MutableCodePointTrie *>(trie)->get(c);
+umutablecptrie_get(ثابت UMutableCPTrie *trie, UChar32 c) {
+    بازگشت reinterpret_cast<ثابت MutableCodePointTrie *>(trie)->get(c);
 }
 
-namespace {
+فضاینام {
 
-UChar32 getRange(const void *trie, UChar32 start,
-                 UCPMapValueFilter *filter, const void *context, uint32_t *pValue) {
-    return reinterpret_cast<const MutableCodePointTrie *>(trie)->
-        getRange(start, filter, context, pValue);
+UChar32 getRange(ثابت تهی *trie, UChar32 start,
+                 UCPMap_مقدار_Filter *filter, ثابت تهی *context, uint32_t *p_مقدار) {
+    بازگشت reinterpret_cast<ثابت MutableCodePointTrie *>(trie)->
+        getRange(start, filter, context, p_مقدار);
 }
 
 }  // namespace
 
 U_CAPI UChar32 U_EXPORT2
-umutablecptrie_getRange(const UMutableCPTrie *trie, UChar32 start,
-                        UCPMapRangeOption option, uint32_t surrogateValue,
-                        UCPMapValueFilter *filter, const void *context, uint32_t *pValue) {
-    return ucptrie_internalGetRange(getRange, trie, start,
-                                    option, surrogateValue,
-                                    filter, context, pValue);
+umutablecptrie_getRange(ثابت UMutableCPTrie *trie, UChar32 start,
+                        UCPMapRangeOption option, uint32_t surrogate_مقدار,
+                        UCPMap_مقدار_Filter *filter, ثابت تهی *context, uint32_t *p_مقدار) {
+    بازگشت ucptrie_internalGetRange(getRange, trie, start,
+                                    option, surrogate_مقدار,
+                                    filter, context, p_مقدار);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI تهی U_EXPORT2
 umutablecptrie_set(UMutableCPTrie *trie, UChar32 c, uint32_t value, UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return;
+    اگر (U_FAILURE(*pErrorCode)) {
+        بازگشت;
     }
     reinterpret_cast<MutableCodePointTrie *>(trie)->set(c, value, *pErrorCode);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI تهی U_EXPORT2
 umutablecptrie_setRange(UMutableCPTrie *trie, UChar32 start, UChar32 end,
                    uint32_t value, UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return;
+    اگر (U_FAILURE(*pErrorCode)) {
+        بازگشت;
     }
     reinterpret_cast<MutableCodePointTrie *>(trie)->setRange(start, end, value, *pErrorCode);
 }
 
 /* Compact and internally serialize the trie. */
 U_CAPI UCPTrie * U_EXPORT2
-umutablecptrie_buildImmutable(UMutableCPTrie *trie, UCPTrieType type, UCPTrieValueWidth valueWidth,
+umutablecptrie_buildImmutable(UMutableCPTrie *trie, UCPTrieType type, UCPTrie_مقدار_Width مقدار_Width,
                               UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    اگر (U_FAILURE(*pErrorCode)) {
+        بازگشت nullptr;
     }
-    return reinterpret_cast<MutableCodePointTrie *>(trie)->build(type, valueWidth, *pErrorCode);
+    بازگشت reinterpret_cast<MutableCodePointTrie *>(trie)->build(type, مقدار_Width, *pErrorCode);
 }
 
 #ifdef UCPTRIE_DEBUG
-U_CFUNC void umutablecptrie_setName(UMutableCPTrie *trie, const char *name) {
+U_CFUNC تهی umutablecptrie_setName(UMutableCPTrie *trie, ثابت نویسه *name) {
     reinterpret_cast<MutableCodePointTrie *>(trie)->name = name;
 }
 #endif

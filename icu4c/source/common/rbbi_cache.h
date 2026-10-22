@@ -6,14 +6,14 @@
 #ifndef RBBI_CACHE_H
 #define RBBI_CACHE_H
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#اگر !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/rbbi.h"
-#include "unicode/uobject.h"
+#شامل "unicode/rbbi.h"
+#شامل "unicode/uobject.h"
 
-#include "uvectr32.h"
+#شامل "uvectr32.h"
 
 U_NAMESPACE_BEGIN
 
@@ -31,12 +31,12 @@ U_NAMESPACE_BEGIN
  *                 The boundaries are stored in a simple ArrayList (vector), with the
  *                 assumption that they will be accessed sequentially.
  */                 
-class RuleBasedBreakIterator::DictionaryCache: public UMemory {
-  public:
+class RuleBasedBreakIterator::DictionaryCache: عمومی UMemory {
+  عمومی:
      DictionaryCache(RuleBasedBreakIterator *bi, UErrorCode &status);
      ~DictionaryCache();
 
-     void reset();
+     تهی reset();
 
      UBool following(int32_t fromPos, int32_t *pos, int32_t *statusIndex);
      UBool preceding(int32_t fromPos, int32_t *pos, int32_t *statusIndex);
@@ -49,7 +49,7 @@ class RuleBasedBreakIterator::DictionaryCache: public UMemory {
      * @param otherRuleStatus The rule status index that applies to boundaries other than startPos
      * @internal
      */
-    void populateDictionary(int32_t startPos, int32_t endPos,
+    تهی populateDictionary(int32_t startPos, int32_t endPos,
                          int32_t firstRuleStatus, int32_t otherRuleStatus);
 
 
@@ -90,14 +90,14 @@ class RuleBasedBreakIterator::DictionaryCache: public UMemory {
  * size of the circular cache buffer.
  */
 
-class RuleBasedBreakIterator::BreakCache: public UMemory {
-  public:
+class RuleBasedBreakIterator::BreakCache: عمومی UMemory {
+  عمومی:
                 BreakCache(RuleBasedBreakIterator *bi, UErrorCode &status);
-    virtual     ~BreakCache();
-    void        reset(int32_t pos = 0, int32_t ruleStatus = 0);
-    void        next() {    if (fBufIdx == fEndBufIdx) {
+    مجازی     ~BreakCache();
+    تهی        reset(int32_t pos = 0, int32_t ruleStatus = 0);
+    تهی        next() {    اگر (fBufIdx == fEndBufIdx) {
                                 nextOL();
-                            } else {
+                            } وگرنه {
                                 fBufIdx = modChunkSize(fBufIdx + 1);
                                 fTextIdx = fBI->fPosition = fBoundaries[fBufIdx];
                                 fBI->fRuleStatusIndex = fStatuses[fBufIdx];
@@ -105,14 +105,14 @@ class RuleBasedBreakIterator::BreakCache: public UMemory {
                 }
 
 
-    void        nextOL();
-    void        previous(UErrorCode &status);
+    تهی        nextOL();
+    تهی        previous(UErrorCode &status);
 
     // Move the iteration state to the position following the startPosition.
     // Input position must be pinned to the input length.
-    void        following(int32_t startPosition, UErrorCode &status);
+    تهی        following(int32_t startPosition, UErrorCode &status);
 
-    void        preceding(int32_t startPosition, UErrorCode &status);
+    تهی        preceding(int32_t startPosition, UErrorCode &status);
 
     /*
      * Update the state of the public BreakIterator (fBI) to reflect the
@@ -151,7 +151,7 @@ class RuleBasedBreakIterator::BreakCache: public UMemory {
      */
     UBool populatePreceding(UErrorCode &status);
 
-    enum UpdatePositionValues {
+    شمارش Update_Position_مقادیر {
         RetainCachePosition = 0,
         UpdateCachePosition = 1
     };
@@ -161,7 +161,7 @@ class RuleBasedBreakIterator::BreakCache: public UMemory {
      * The current position can be left as it was, or changed to the newly added boundary,
      * as specified by the update parameter.
      */
-    void addFollowing(int32_t position, int32_t ruleStatusIdx, UpdatePositionValues update);
+    تهی addFollowing(int32_t position, int32_t ruleStatusIdx, Update_Position_مقادیر update);
 
 
     /*
@@ -169,7 +169,7 @@ class RuleBasedBreakIterator::BreakCache: public UMemory {
      * The current position can be left as it was, or changed to the newly added boundary,
      * as specified by the update parameter.
      */
-    bool addPreceding(int32_t position, int32_t ruleStatusIdx, UpdatePositionValues update);
+    bool addPreceding(int32_t position, int32_t ruleStatusIdx, Update_Position_مقادیر update);
 
     /**
      *  Set the cache position to the specified position, or, if the position
@@ -182,12 +182,12 @@ class RuleBasedBreakIterator::BreakCache: public UMemory {
      */
     UBool                   seek(int32_t startPosition);
 
-    void dumpCache();
+    تهی dumpCache();
 
-  private:
-    static inline int32_t   modChunkSize(int index) { return index & (CACHE_SIZE - 1); }
+  خصوصی:
+    ایستا درونخطی int32_t   modChunkSize(صحیح index) { بازگشت index & (CACHE_SIZE - 1); }
 
-    static constexpr int32_t CACHE_SIZE = 128;
+    ایستا constexpr int32_t CACHE_SIZE = 128;
     static_assert((CACHE_SIZE & (CACHE_SIZE-1)) == 0, "CACHE_SIZE must be power of two.");
 
     RuleBasedBreakIterator *fBI;

@@ -5,37 +5,37 @@
  * others. All Rights Reserved.
  */
 
-#include "unicode/unistr.h"
-#include "charstr.h"
-#include "cstring.h"
-#include "pluralmap.h"
+#شامل "unicode/unistr.h"
+#شامل "charstr.h"
+#شامل "cstring.h"
+#شامل "pluralmap.h"
 
 U_NAMESPACE_BEGIN
 
-static const char * const gPluralForms[] = {
+ایستا ثابت نویسه * ثابت gPluralForms[] = {
         "other", "zero", "one", "two", "few", "many"};
 
 PluralMapBase::Category
-PluralMapBase::toCategory(const char *pluralForm) {
-    for (int32_t i = 0; i < UPRV_LENGTHOF(gPluralForms); ++i) {
-        if (uprv_strcmp(pluralForm, gPluralForms[i]) == 0) {
-            return static_cast<Category>(i);
+PluralMapBase::toCategory(ثابت نویسه *pluralForm) {
+    برای (int32_t i = 0; i < UPRV_LENGTHOF(gPluralForms); ++i) {
+        اگر (uprv_strcmp(pluralForm, gPluralForms[i]) == 0) {
+            بازگشت static_cast<Category>(i);
         }
     }
-    return NONE;
+    بازگشت NONE;
 }
 
 PluralMapBase::Category
-PluralMapBase::toCategory(const UnicodeString &pluralForm) {
+PluralMapBase::toCategory(ثابت UnicodeString &pluralForm) {
     CharString cCategory;
     UErrorCode status = U_ZERO_ERROR;
     cCategory.appendInvariantChars(pluralForm, status);    
-    return U_FAILURE(status) ? NONE : toCategory(cCategory.data());
+    بازگشت U_FAILURE(status) ? NONE : toCategory(cCategory.data());
 }
 
-const char *PluralMapBase::getCategoryName(Category c) {
+ثابت نویسه *PluralMapBase::getCategoryName(Category c) {
     int32_t index = c;
-    return (index < 0 || index >= UPRV_LENGTHOF(gPluralForms)) ?
+    بازگشت (index < 0 || index >= UPRV_LENGTHOF(gPluralForms)) ?
             nullptr : gPluralForms[index];
 }
 

@@ -7,58 +7,58 @@
 **********************************************************************
 */
 
-#include <optional>
-#include <string_view>
-#include <utility>
+#شامل <optional>
+#شامل <string_view>
+#شامل <utility>
 
-#include "unicode/bytestream.h"
-#include "unicode/utypes.h"
-#include "unicode/ures.h"
-#include "unicode/localpointer.h"
-#include "unicode/putil.h"
-#include "unicode/uenum.h"
-#include "unicode/uloc.h"
-#include "bytesinkutil.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "putilimp.h"
-#include "uinvchar.h"
-#include "ulocimp.h"
-#include "uassert.h"
+#شامل "unicode/bytestream.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/ures.h"
+#شامل "unicode/localpointer.h"
+#شامل "unicode/putil.h"
+#شامل "unicode/uenum.h"
+#شامل "unicode/uloc.h"
+#شامل "bytesinkutil.h"
+#شامل "charstr.h"
+#شامل "cmemory.h"
+#شامل "cstring.h"
+#شامل "putilimp.h"
+#شامل "uinvchar.h"
+#شامل "ulocimp.h"
+#شامل "uassert.h"
 
-namespace {
+فضاینام {
 
 /* struct holding a single variant */
-typedef struct VariantListEntry : public icu::UMemory {
-    const char              *variant;
-    struct VariantListEntry *next;
+تعریفنوع ساختار VariantListEntry : عمومی icu::UMemory {
+    ثابت نویسه              *variant;
+    ساختار VariantListEntry *next;
 } VariantListEntry;
 
 /* struct holding a single attribute value */
-struct AttributeListEntry : public icu::UMemory {
-    const char              *attribute;
-    struct AttributeListEntry *next;
+ساختار AttributeListEntry : عمومی icu::UMemory {
+    ثابت نویسه              *attribute;
+    ساختار AttributeListEntry *next;
 };
 
 /* struct holding a single extension */
-struct ExtensionListEntry : public icu::UMemory {
-    const char                  *key;
-    const char                  *value;
-    struct ExtensionListEntry   *next;
+ساختار ExtensionListEntry : عمومی icu::UMemory {
+    ثابت نویسه                  *کلید;
+    ثابت نویسه                  *value;
+    ساختار ExtensionListEntry   *next;
 };
 
 #define MAXEXTLANG 3
-typedef struct ULanguageTag {
-    char                *buf;   /* holding parsed subtags */
-    const char          *language;
-    const char          *extlang[MAXEXTLANG];
-    const char          *script;
-    const char          *region;
+تعریفنوع ساختار ULanguageTag {
+    نویسه                *buf;   /* holding parsed subtags */
+    ثابت نویسه          *language;
+    ثابت نویسه          *extlang[MAXEXTLANG];
+    ثابت نویسه          *script;
+    ثابت نویسه          *region;
     VariantListEntry    *variants;
     ExtensionListEntry  *extensions;
-    const char          *privateuse;
-    const char          *legacy;
+    ثابت نویسه          *privateuse;
+    ثابت نویسه          *legacy;
 } ULanguageTag;
 
 #define MINLEN 2
@@ -69,20 +69,20 @@ typedef struct ULanguageTag {
 #define LOCALE_SEP '_'
 #define LOCALE_EXT_SEP '@'
 #define LOCALE_KEYWORD_SEP ';'
-#define LOCALE_KEY_TYPE_SEP '='
+#define LOCALE_کلید_TYPE_SEP '='
 
 constexpr auto ISALPHA = uprv_isASCIILetter;
-inline bool ISNUMERIC(char c) { return c >= '0' && c <= '9'; }
+درونخطی منطقی ISNUMERIC(نویسه c) { بازگشت c >= '0' && c <= '9'; }
 
-constexpr char EMPTY[] = "";
-constexpr char LANG_UND[] = "und";
-constexpr char PRIVATEUSE_KEY[] = "x";
-constexpr char _POSIX[] = "_POSIX";
-constexpr char POSIX_KEY[] = "va";
-constexpr char POSIX_VALUE[] = "posix";
-constexpr char LOCALE_ATTRIBUTE_KEY[] = "attribute";
-constexpr char PRIVUSE_VARIANT_PREFIX[] = "lvariant";
-constexpr char LOCALE_TYPE_YES[] = "yes";
+constexpr نویسه EMPTY[] = "";
+constexpr نویسه LANG_UND[] = "und";
+constexpr نویسه PRIVATEUSE_کلید[] = "x";
+constexpr نویسه _POSIX[] = "_POSIX";
+constexpr نویسه POSIX_کلید[] = "va";
+constexpr نویسه POSIX_مقدار[] = "posix";
+constexpr نویسه LOCALE_ATTRIBUTE_کلید[] = "attribute";
+constexpr نویسه PRIVUSE_VARIANT_PREFIX[] = "lvariant";
+constexpr نویسه LOCALE_TYPE_YES[] = "yes";
 
 #define LANG_UND_LEN 3
 
@@ -106,7 +106,7 @@ constexpr char LOCALE_TYPE_YES[] = "yes";
  values. They may have to be removed for the strict BCP 47 compliance.
 
 */
-constexpr const char* LEGACY[] = {
+constexpr ثابت نویسه* LEGACY[] = {
 /*  legacy          preferred */
     "art-lojban",   "jbo",
     "en-gb-oed",    "en-gb-oxendict",
@@ -155,7 +155,7 @@ constexpr const char* LEGACY[] = {
  a variant tag 'hepburn-heploc' has the preferred subtag, 'alaic97'.
 */
 
-constexpr const char* REDUNDANT[] = {
+constexpr ثابت نویسه* REDUNDANT[] = {
 //  redundant       preferred
     "sgn-br",       "bzs",
     "sgn-co",       "csn",
@@ -197,7 +197,7 @@ constexpr const char* REDUNDANT[] = {
 
   Make sure that 2-letter language subtags come before 3-letter subtags.
 */
-constexpr char DEPRECATEDLANGS[][4] = {
+constexpr نویسه DEPRECATEDLANGS[][4] = {
 /*  deprecated  new */
     "in",       "id",
     "iw",       "he",
@@ -287,7 +287,7 @@ constexpr char DEPRECATEDLANGS[][4] = {
   grep -B1 'Preferred' | \
   awk -n '/Subtag/ {printf("    \"%s\",       ", $2);} /Preferred/ {printf("\"%s\",\n", $2);}'
 */
-constexpr char DEPRECATEDREGIONS[][3] = {
+constexpr نویسه DEPRECATEDREGIONS[][3] = {
 /*  deprecated  new */
     "BU",       "MM",
     "DD",       "DE",
@@ -306,52 +306,52 @@ constexpr char DEPRECATEDREGIONS[][3] = {
 */
 
 ULanguageTag*
-ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& status);
+ultag_parse(ثابت نویسه* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& status);
 
-void
+تهی
 ultag_close(ULanguageTag* langtag);
 
-const char*
-ultag_getLanguage(const ULanguageTag* langtag U_LIFETIME_BOUND);
+ثابت نویسه*
+ultag_getLanguage(ثابت ULanguageTag* langtag U_LIFETIME_BOUND);
 
-#if 0
-const char*
-ultag_getJDKLanguage(const ULanguageTag* langtag);
+#اگر 0
+ثابت نویسه*
+ultag_getJDKLanguage(ثابت ULanguageTag* langtag);
 #endif
 
-const char*
-ultag_getExtlang(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
+ثابت نویسه*
+ultag_getExtlang(ثابت ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
 
 int32_t
-ultag_getExtlangSize(const ULanguageTag* langtag);
+ultag_getExtlangSize(ثابت ULanguageTag* langtag);
 
-const char*
-ultag_getScript(const ULanguageTag* langtag U_LIFETIME_BOUND);
+ثابت نویسه*
+ultag_getScript(ثابت ULanguageTag* langtag U_LIFETIME_BOUND);
 
-const char*
-ultag_getRegion(const ULanguageTag* langtag U_LIFETIME_BOUND);
+ثابت نویسه*
+ultag_getRegion(ثابت ULanguageTag* langtag U_LIFETIME_BOUND);
 
-const char*
-ultag_getVariant(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
-
-int32_t
-ultag_getVariantsSize(const ULanguageTag* langtag);
-
-const char*
-ultag_getExtensionKey(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
-
-const char*
-ultag_getExtensionValue(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
+ثابت نویسه*
+ultag_getVariant(ثابت ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
 
 int32_t
-ultag_getExtensionsSize(const ULanguageTag* langtag);
+ultag_getVariantsSize(ثابت ULanguageTag* langtag);
 
-const char*
-ultag_getPrivateUse(const ULanguageTag* langtag U_LIFETIME_BOUND);
+ثابت نویسه*
+ultag_get_Extension_کلید(ثابت ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
 
-#if 0
-const char*
-ultag_getLegacy(const ULanguageTag* langtag);
+ثابت نویسه*
+ultag_get_Extension_مقدار(ثابت ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
+
+int32_t
+ultag_getExtensionsSize(ثابت ULanguageTag* langtag);
+
+ثابت نویسه*
+ultag_getPrivateUse(ثابت ULanguageTag* langtag U_LIFETIME_BOUND);
+
+#اگر 0
+ثابت نویسه*
+ultag_getLegacy(ثابت ULanguageTag* langtag);
 #endif
 
 }  // namespace
@@ -379,191 +379,191 @@ U_NAMESPACE_END
 * -------------------------------------------------
 */
 
-namespace {
+فضاینام {
 
-bool
-_isAlphaString(const char* s, int32_t len) {
+منطقی
+_isAlphaString(ثابت نویسه* s, int32_t len) {
     int32_t i;
-    for (i = 0; i < len; i++) {
-        if (!ISALPHA(*(s + i))) {
-            return false;
+    برای (i = 0; i < len; i++) {
+        اگر (!ISALPHA(*(s + i))) {
+            بازگشت نادرست;
         }
     }
-    return true;
+    بازگشت درست;
 }
 
-bool
-_isNumericString(const char* s, int32_t len) {
+منطقی
+_isNumericString(ثابت نویسه* s, int32_t len) {
     int32_t i;
-    for (i = 0; i < len; i++) {
-        if (!ISNUMERIC(*(s + i))) {
-            return false;
+    برای (i = 0; i < len; i++) {
+        اگر (!ISNUMERIC(*(s + i))) {
+            بازگشت نادرست;
         }
     }
-    return true;
+    بازگشت درست;
 }
 
-bool
-_isAlphaNumericString(const char* s, int32_t len) {
+منطقی
+_isAlphaNumericString(ثابت نویسه* s, int32_t len) {
     int32_t i;
-    for (i = 0; i < len; i++) {
-        if (!ISALPHA(*(s + i)) && !ISNUMERIC(*(s + i))) {
-            return false;
+    برای (i = 0; i < len; i++) {
+        اگر (!ISALPHA(*(s + i)) && !ISNUMERIC(*(s + i))) {
+            بازگشت نادرست;
         }
     }
-    return true;
+    بازگشت درست;
 }
 
-bool
-_isAlphaNumericStringLimitedLength(const char* s, int32_t len, int32_t min, int32_t max) {
-    if (len < 0) {
+منطقی
+_isAlphaNumericStringLimitedLength(ثابت نویسه* s, int32_t len, int32_t min, int32_t max) {
+    اگر (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len >= min && len <= max && _isAlphaNumericString(s, len)) {
-        return true;
+    اگر (len >= min && len <= max && _isAlphaNumericString(s, len)) {
+        بازگشت درست;
     }
-    return false;
+    بازگشت نادرست;
 }
 
 }  // namespace
 
-bool
-ultag_isLanguageSubtag(const char* s, int32_t len) {
+منطقی
+ultag_isLanguageSubtag(ثابت نویسه* s, int32_t len) {
     /*
      * unicode_language_subtag = alpha{2,3} | alpha{5,8};
      * NOTE: Per ICUTC 2019/01/23- accepting alpha 4
      * See ICU-20372
      */
-    if (len < 0) {
+    اگر (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len >= 2 && len <= 8 && _isAlphaString(s, len)) {
-        return true;
+    اگر (len >= 2 && len <= 8 && _isAlphaString(s, len)) {
+        بازگشت درست;
     }
-    return false;
+    بازگشت نادرست;
 }
 
-namespace {
+فضاینام {
 
-bool
-_isExtlangSubtag(const char* s, int32_t len) {
+منطقی
+_isExtlangSubtag(ثابت نویسه* s, int32_t len) {
     /*
      * extlang       = 3ALPHA              ; selected ISO 639 codes
      *                 *2("-" 3ALPHA)      ; permanently reserved
      */
-    if (len < 0) {
+    اگر (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 3 && _isAlphaString(s, len)) {
-        return true;
+    اگر (len == 3 && _isAlphaString(s, len)) {
+        بازگشت درست;
     }
-    return false;
+    بازگشت نادرست;
 }
 
 }  // namespace
 
-bool
-ultag_isScriptSubtag(const char* s, int32_t len) {
+منطقی
+ultag_isScriptSubtag(ثابت نویسه* s, int32_t len) {
     /*
      * script        = 4ALPHA              ; ISO 15924 code
      */
-    if (len < 0) {
+    اگر (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 4 && _isAlphaString(s, len)) {
-        return true;
+    اگر (len == 4 && _isAlphaString(s, len)) {
+        بازگشت درست;
     }
-    return false;
+    بازگشت نادرست;
 }
 
-bool
-ultag_isRegionSubtag(const char* s, int32_t len) {
+منطقی
+ultag_isRegionSubtag(ثابت نویسه* s, int32_t len) {
     /*
      * region        = 2ALPHA              ; ISO 3166-1 code
      *               / 3DIGIT              ; UN M.49 code
      */
-    if (len < 0) {
+    اگر (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 2 && _isAlphaString(s, len)) {
-        return true;
+    اگر (len == 2 && _isAlphaString(s, len)) {
+        بازگشت درست;
     }
-    if (len == 3 && _isNumericString(s, len)) {
-        return true;
+    اگر (len == 3 && _isNumericString(s, len)) {
+        بازگشت درست;
     }
-    return false;
+    بازگشت نادرست;
 }
 
-namespace {
+فضاینام {
 
-bool
-_isVariantSubtag(const char* s, int32_t len) {
+منطقی
+_isVariantSubtag(ثابت نویسه* s, int32_t len) {
     /*
      * variant       = 5*8alphanum         ; registered variants
      *               / (DIGIT 3alphanum)
      */
-    if (len < 0) {
+    اگر (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (_isAlphaNumericStringLimitedLength(s, len, 5, 8)) {
-        return true;
+    اگر (_isAlphaNumericStringLimitedLength(s, len, 5, 8)) {
+        بازگشت درست;
     }
-    if (len == 4 && ISNUMERIC(*s) && _isAlphaNumericString(s + 1, 3)) {
-        return true;
+    اگر (len == 4 && ISNUMERIC(*s) && _isAlphaNumericString(s + 1, 3)) {
+        بازگشت درست;
     }
-    return false;
+    بازگشت نادرست;
 }
 
-bool
-_isSepListOf(bool (*test)(const char*, int32_t), const char* s, int32_t len) {
-    const char *p = s;
-    const char *pSubtag = nullptr;
+منطقی
+_isSepListOf(منطقی (*test)(ثابت نویسه*, int32_t), ثابت نویسه* s, int32_t len) {
+    ثابت نویسه *p = s;
+    ثابت نویسه *pSubtag = nullptr;
 
-    if (len < 0) {
+    اگر (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
 
-    while ((p - s) < len) {
-        if (*p == SEP) {
-            if (pSubtag == nullptr) {
-                return false;
+    وقتی ((p - s) < len) {
+        اگر (*p == SEP) {
+            اگر (pSubtag == nullptr) {
+                بازگشت نادرست;
             }
-            if (!test(pSubtag, static_cast<int32_t>(p - pSubtag))) {
-                return false;
+            اگر (!test(pSubtag, static_cast<int32_t>(p - pSubtag))) {
+                بازگشت نادرست;
             }
             pSubtag = nullptr;
-        } else if (pSubtag == nullptr) {
+        } وگرنه اگر (pSubtag == nullptr) {
             pSubtag = p;
         }
         p++;
     }
-    if (pSubtag == nullptr) {
-        return false;
+    اگر (pSubtag == nullptr) {
+        بازگشت نادرست;
     }
-    return test(pSubtag, static_cast<int32_t>(p - pSubtag));
+    بازگشت test(pSubtag, static_cast<int32_t>(p - pSubtag));
 }
 
 }  // namespace
 
-bool
-ultag_isVariantSubtags(const char* s, int32_t len) {
-    return _isSepListOf(&_isVariantSubtag, s, len);
+منطقی
+ultag_isVariantSubtags(ثابت نویسه* s, int32_t len) {
+    بازگشت _isSepListOf(&_isVariantSubtag, s, len);
 }
 
-namespace {
+فضاینام {
 
 // This is for the ICU-specific "lvariant" handling.
-bool
-_isPrivateuseVariantSubtag(const char* s, int32_t len) {
+منطقی
+_isPrivateuseVariantSubtag(ثابت نویسه* s, int32_t len) {
     /*
      * variant       = 1*8alphanum         ; registered variants
      *               / (DIGIT 3alphanum)
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 1, 8);
+    بازگشت _isAlphaNumericStringLimitedLength(s, len , 1, 8);
 }
 
-bool
-_isExtensionSingleton(const char* s, int32_t len) {
+منطقی
+_isExtensionSingleton(ثابت نویسه* s, int32_t len) {
     /*
      * extension     = singleton 1*("-" (2*8alphanum))
      *
@@ -573,292 +573,292 @@ _isExtensionSingleton(const char* s, int32_t len) {
      *               / %x61-77             ; a - w
      *               / %x79-7A             ; y - z
      */
-    if (len < 0) {
+    اگر (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 1 && (ISALPHA(*s) || ISNUMERIC(*s)) && (uprv_tolower(*s) != PRIVATEUSE)) {
-        return true;
+    اگر (len == 1 && (ISALPHA(*s) || ISNUMERIC(*s)) && (uprv_tolower(*s) != PRIVATEUSE)) {
+        بازگشت درست;
     }
-    return false;
+    بازگشت نادرست;
 }
 
-bool
-_isExtensionSubtag(const char* s, int32_t len) {
+منطقی
+_isExtensionSubtag(ثابت نویسه* s, int32_t len) {
     /*
      * extension     = singleton 1*("-" (2*8alphanum))
      */
-    return _isAlphaNumericStringLimitedLength(s, len, 2, 8);
+    بازگشت _isAlphaNumericStringLimitedLength(s, len, 2, 8);
 }
 
 }  // namespace
 
-bool
-ultag_isExtensionSubtags(const char* s, int32_t len) {
-    return _isSepListOf(&_isExtensionSubtag, s, len);
+منطقی
+ultag_isExtensionSubtags(ثابت نویسه* s, int32_t len) {
+    بازگشت _isSepListOf(&_isExtensionSubtag, s, len);
 }
 
-namespace {
+فضاینام {
 
-bool
-_isPrivateuseValueSubtag(const char* s, int32_t len) {
+منطقی
+is_Privateuse_مقدار_Subtag(ثابت نویسه* s, int32_t len) {
     /*
      * privateuse    = "x" 1*("-" (1*8alphanum))
      */
-    return _isAlphaNumericStringLimitedLength(s, len, 1, 8);
+    بازگشت _isAlphaNumericStringLimitedLength(s, len, 1, 8);
 }
 
 }  // namespace
 
-bool
-ultag_isPrivateuseValueSubtags(const char* s, int32_t len) {
-    return _isSepListOf(&_isPrivateuseValueSubtag, s, len);
+منطقی
+ultag_is_Privateuse_مقدار_Subtags(ثابت نویسه* s, int32_t len) {
+    بازگشت _isSepListOf(&is_Privateuse_مقدار_Subtag, s, len);
 }
 
-bool
-ultag_isUnicodeLocaleAttribute(const char* s, int32_t len) {
+منطقی
+ultag_isUnicodeLocaleAttribute(ثابت نویسه* s, int32_t len) {
     /*
      * attribute = alphanum{3,8} ;
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 3, 8);
+    بازگشت _isAlphaNumericStringLimitedLength(s, len , 3, 8);
 }
 
-bool
-ultag_isUnicodeLocaleAttributes(const char* s, int32_t len) {
-    return _isSepListOf(&ultag_isUnicodeLocaleAttribute, s, len);
+منطقی
+ultag_isUnicodeLocaleAttributes(ثابت نویسه* s, int32_t len) {
+    بازگشت _isSepListOf(&ultag_isUnicodeLocaleAttribute, s, len);
 }
 
-bool
-ultag_isUnicodeLocaleKey(const char* s, int32_t len) {
+منطقی
+ultag_is_Unicode_Locale_کلید(ثابت نویسه* s, int32_t len) {
     /*
      * key = alphanum alpha ;
      */
-    if (len < 0) {
+    اگر (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 2 && (ISALPHA(*s) || ISNUMERIC(*s)) && ISALPHA(s[1])) {
-        return true;
+    اگر (len == 2 && (ISALPHA(*s) || ISNUMERIC(*s)) && ISALPHA(s[1])) {
+        بازگشت درست;
     }
-    return false;
+    بازگشت نادرست;
 }
 
-bool
-_isUnicodeLocaleTypeSubtag(const char*s, int32_t len) {
+منطقی
+_isUnicodeLocaleTypeSubtag(ثابت نویسه*s, int32_t len) {
     /*
      * alphanum{3,8}
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 3, 8);
+    بازگشت _isAlphaNumericStringLimitedLength(s, len , 3, 8);
 }
 
-bool
-ultag_isUnicodeLocaleType(const char*s, int32_t len) {
+منطقی
+ultag_isUnicodeLocaleType(ثابت نویسه*s, int32_t len) {
     /*
      * type = alphanum{3,8} (sep alphanum{3,8})* ;
      */
-    return _isSepListOf(&_isUnicodeLocaleTypeSubtag, s, len);
+    بازگشت _isSepListOf(&_isUnicodeLocaleTypeSubtag, s, len);
 }
 
-namespace {
+فضاینام {
 
-bool
-_isTKey(const char* s, int32_t len)
+منطقی
+_isTKey(ثابت نویسه* s, int32_t len)
 {
     /*
      * tkey = alpha digit ;
      */
-    if (len < 0) {
+    اگر (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 2 && ISALPHA(*s) && ISNUMERIC(*(s + 1))) {
-        return true;
+    اگر (len == 2 && ISALPHA(*s) && ISNUMERIC(*(s + 1))) {
+        بازگشت درست;
     }
-    return false;
+    بازگشت نادرست;
 }
 
 }  // namespace
 
-const char*
-ultag_getTKeyStart(const char* localeID U_LIFETIME_BOUND) {
-    const char *result = localeID;
-    const char *sep;
-    while((sep = uprv_strchr(result, SEP)) != nullptr) {
-        if (_isTKey(result, static_cast<int32_t>(sep - result))) {
-            return result;
+ثابت نویسه*
+ultag_getTKeyStart(ثابت نویسه* localeID U_LIFETIME_BOUND) {
+    ثابت نویسه *result = localeID;
+    ثابت نویسه *sep;
+    وقتی((sep = uprv_strchr(result, SEP)) != nullptr) {
+        اگر (_isTKey(result, static_cast<int32_t>(sep - result))) {
+            بازگشت result;
         }
         result = ++sep;
     }
-    if (_isTKey(result, -1)) {
-        return result;
+    اگر (_isTKey(result, -1)) {
+        بازگشت result;
     }
-    return nullptr;
+    بازگشت nullptr;
 }
 
-namespace {
+فضاینام {
 
-bool
-_isTValue(const char* s, int32_t len)
+منطقی
+_isTValue(ثابت نویسه* s, int32_t len)
 {
     /*
      * tvalue = (sep alphanum{3,8})+ ;
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 3, 8);
+    بازگشت _isAlphaNumericStringLimitedLength(s, len , 3, 8);
 }
 
-bool
-_isTransformedExtensionSubtag(int32_t& state, const char* s, int32_t len)
+منطقی
+_isTransformedExtensionSubtag(int32_t& state, ثابت نویسه* s, int32_t len)
 {
-    const int32_t kStart = 0;       // Start, wait for unicode_language_subtag, tkey or end
-    const int32_t kGotLanguage = 1; // Got unicode_language_subtag, wait for unicode_script_subtag,
+    ثابت int32_t kStart = 0;       // Start, wait for unicode_language_subtag, tkey or end
+    ثابت int32_t kGotLanguage = 1; // Got unicode_language_subtag, wait for unicode_script_subtag,
                                     // unicode_region_subtag, unicode_variant_subtag, tkey or end
-    const int32_t kGotScript = 2;   // Got unicode_script_subtag, wait for unicode_region_subtag,
+    ثابت int32_t kGotScript = 2;   // Got unicode_script_subtag, wait for unicode_region_subtag,
                                     // unicode_variant_subtag, tkey, or end
-    const int32_t kGotRegion = 3;   // Got unicode_region_subtag, wait for unicode_variant_subtag,
+    ثابت int32_t kGotRegion = 3;   // Got unicode_region_subtag, wait for unicode_variant_subtag,
                                     // tkey, or end.
-    const int32_t kGotVariant = 4;  // Got unicode_variant_subtag, wait for unicode_variant_subtag
+    ثابت int32_t kGotVariant = 4;  // Got unicode_variant_subtag, wait for unicode_variant_subtag
                                     // tkey or end.
-    const int32_t kGotTKey = -1;    // Got tkey, wait for tvalue. ERROR if stop here.
-    const int32_t kGotTValue = 6;   // Got tvalue, wait for tkey, tvalue or end
+    ثابت int32_t kGotTKey = -1;    // Got tkey, wait for tvalue. ERROR if stop here.
+    ثابت int32_t kGotTValue = 6;   // Got tvalue, wait for tkey, tvalue or end
 
 
-    if (len < 0) {
+    اگر (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    switch (state) {
-        case kStart:
-            if (ultag_isLanguageSubtag(s, len) && len != 4) {
+    انتخاب (state) {
+        حالت kStart:
+            اگر (ultag_isLanguageSubtag(s, len) && len != 4) {
                 state = kGotLanguage;
-                return true;
+                بازگشت درست;
             }
-            if (_isTKey(s, len)) {
+            اگر (_isTKey(s, len)) {
                 state = kGotTKey;
-                return true;
+                بازگشت درست;
             }
-            return false;
-        case kGotLanguage:
-            if (ultag_isScriptSubtag(s, len)) {
+            بازگشت نادرست;
+        حالت kGotLanguage:
+            اگر (ultag_isScriptSubtag(s, len)) {
                 state = kGotScript;
-                return true;
+                بازگشت درست;
             }
             U_FALLTHROUGH;
-        case kGotScript:
-            if (ultag_isRegionSubtag(s, len)) {
+        حالت kGotScript:
+            اگر (ultag_isRegionSubtag(s, len)) {
                 state = kGotRegion;
-                return true;
+                بازگشت درست;
             }
             U_FALLTHROUGH;
-        case kGotRegion:
+        حالت kGotRegion:
             U_FALLTHROUGH;
-        case kGotVariant:
-            if (_isVariantSubtag(s, len)) {
+        حالت kGotVariant:
+            اگر (_isVariantSubtag(s, len)) {
                 state = kGotVariant;
-                return true;
+                بازگشت درست;
             }
-            if (_isTKey(s, len)) {
+            اگر (_isTKey(s, len)) {
                 state = kGotTKey;
-                return true;
+                بازگشت درست;
             }
-            return false;
-        case kGotTKey:
-            if (_isTValue(s, len)) {
+            بازگشت نادرست;
+        حالت kGotTKey:
+            اگر (_isTValue(s, len)) {
                 state = kGotTValue;
-                return true;
+                بازگشت درست;
             }
-            return false;
-        case kGotTValue:
-            if (_isTKey(s, len)) {
+            بازگشت نادرست;
+        حالت kGotTValue:
+            اگر (_isTKey(s, len)) {
                 state = kGotTKey;
-                return true;
+                بازگشت درست;
             }
-            if (_isTValue(s, len)) {
-                return true;
+            اگر (_isTValue(s, len)) {
+                بازگشت درست;
             }
-            return false;
+            بازگشت نادرست;
     }
-    return false;
+    بازگشت نادرست;
 }
 
-bool
-_isUnicodeExtensionSubtag(int32_t& state, const char* s, int32_t len)
+منطقی
+_isUnicodeExtensionSubtag(int32_t& state, ثابت نویسه* s, int32_t len)
 {
-    const int32_t kStart = 0;         // Start, wait for a key or attribute or end
-    const int32_t kGotKey = 1;        // Got a key, wait for type or key or end
-    const int32_t kGotType = 2;       // Got a type, wait for key or end
+    ثابت int32_t kStart = 0;         // Start, wait for a key or attribute or end
+    ثابت int32_t k_Got_کلید = 1;        // Got a key, wait for type or key or end
+    ثابت int32_t kGotType = 2;       // Got a type, wait for key or end
 
-    switch (state) {
-        case kStart:
-            if (ultag_isUnicodeLocaleKey(s, len)) {
-                state = kGotKey;
-                return true;
+    انتخاب (state) {
+        حالت kStart:
+            اگر (ultag_is_Unicode_Locale_کلید(s, len)) {
+                state = k_Got_کلید;
+                بازگشت درست;
             }
-            if (ultag_isUnicodeLocaleAttribute(s, len)) {
-                return true;
+            اگر (ultag_isUnicodeLocaleAttribute(s, len)) {
+                بازگشت درست;
             }
-            return false;
-        case kGotKey:
-            if (ultag_isUnicodeLocaleKey(s, len)) {
-                return true;
+            بازگشت نادرست;
+        حالت k_Got_کلید:
+            اگر (ultag_is_Unicode_Locale_کلید(s, len)) {
+                بازگشت درست;
             }
-            if (_isUnicodeLocaleTypeSubtag(s, len)) {
+            اگر (_isUnicodeLocaleTypeSubtag(s, len)) {
                 state = kGotType;
-                return true;
+                بازگشت درست;
             }
-            return false;
-        case kGotType:
-            if (ultag_isUnicodeLocaleKey(s, len)) {
-                state = kGotKey;
-                return true;
+            بازگشت نادرست;
+        حالت kGotType:
+            اگر (ultag_is_Unicode_Locale_کلید(s, len)) {
+                state = k_Got_کلید;
+                بازگشت درست;
             }
-            if (_isUnicodeLocaleTypeSubtag(s, len)) {
-                return true;
+            اگر (_isUnicodeLocaleTypeSubtag(s, len)) {
+                بازگشت درست;
             }
-            return false;
+            بازگشت نادرست;
     }
-    return false;
+    بازگشت نادرست;
 }
 
-bool
-_isStatefulSepListOf(bool (*test)(int32_t&, const char*, int32_t), const char* s, int32_t len)
+منطقی
+_isStatefulSepListOf(منطقی (*test)(int32_t&, ثابت نویسه*, int32_t), ثابت نویسه* s, int32_t len)
 {
     int32_t state = 0;
-    const char* p;
-    const char* start = s;
+    ثابت نویسه* p;
+    ثابت نویسه* start = s;
     int32_t subtagLen = 0;
 
-    if (len < 0) {
+    اگر (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
 
-    for (p = s; len > 0; p++, len--) {
-        if (*p == SEP) {
-            if (!test(state, start, subtagLen)) {
-                return false;
+    برای (p = s; len > 0; p++, len--) {
+        اگر (*p == SEP) {
+            اگر (!test(state, start, subtagLen)) {
+                بازگشت نادرست;
             }
             subtagLen = 0;
             start = p + 1;
-        } else {
+        } وگرنه {
             subtagLen++;
         }
     }
 
-    if (test(state, start, subtagLen) && state >= 0) {
-        return true;
+    اگر (test(state, start, subtagLen) && state >= 0) {
+        بازگشت درست;
     }
-    return false;
+    بازگشت نادرست;
 }
 
 }  // namespace
 
-bool
-ultag_isTransformedExtensionSubtags(const char* s, int32_t len)
+منطقی
+ultag_isTransformedExtensionSubtags(ثابت نویسه* s, int32_t len)
 {
-    return _isStatefulSepListOf(&_isTransformedExtensionSubtag, s, len);
+    بازگشت _isStatefulSepListOf(&_isTransformedExtensionSubtag, s, len);
 }
 
-bool
-ultag_isUnicodeExtensionSubtags(const char* s, int32_t len) {
-    return _isStatefulSepListOf(&_isUnicodeExtensionSubtag, s, len);
+منطقی
+ultag_isUnicodeExtensionSubtags(ثابت نویسه* s, int32_t len) {
+    بازگشت _isStatefulSepListOf(&_isUnicodeExtensionSubtag, s, len);
 }
 
-namespace {
+فضاینام {
 
 /*
 * -------------------------------------------------
@@ -868,167 +868,167 @@ namespace {
 * -------------------------------------------------
 */
 
-bool
+منطقی
 _addVariantToList(VariantListEntry **first, icu::LocalPointer<VariantListEntry> var) {
-    if (*first == nullptr) {
+    اگر (*first == nullptr) {
         var->next = nullptr;
         *first = var.orphan();
-    } else {
+    } وگرنه {
         VariantListEntry *prev, *cur;
         int32_t cmp;
 
         /* variants order should be preserved */
         prev = nullptr;
         cur = *first;
-        while (true) {
-            if (cur == nullptr) {
+        وقتی (درست) {
+            اگر (cur == nullptr) {
                 var->next = nullptr;
                 prev->next = var.orphan();
-                break;
+                بشکن;
             }
 
             /* Checking for duplicate variant */
             cmp = uprv_compareInvCharsAsAscii(var->variant, cur->variant);
-            if (cmp == 0) {
+            اگر (cmp == 0) {
                 /* duplicated variant */
-                return false;
+                بازگشت نادرست;
             }
             prev = cur;
             cur = cur->next;
         }
     }
 
-    return true;
+    بازگشت درست;
 }
 
-bool
+منطقی
 _addAttributeToList(AttributeListEntry **first, AttributeListEntry *attr) {
-    bool bAdded = true;
+    منطقی bAdded = درست;
 
-    if (*first == nullptr) {
+    اگر (*first == nullptr) {
         attr->next = nullptr;
         *first = attr;
-    } else {
+    } وگرنه {
         AttributeListEntry *prev, *cur;
         int32_t cmp;
 
         /* reorder variants in alphabetical order */
         prev = nullptr;
         cur = *first;
-        while (true) {
-            if (cur == nullptr) {
+        وقتی (درست) {
+            اگر (cur == nullptr) {
                 prev->next = attr;
                 attr->next = nullptr;
-                break;
+                بشکن;
             }
             cmp = uprv_compareInvCharsAsAscii(attr->attribute, cur->attribute);
-            if (cmp < 0) {
-                if (prev == nullptr) {
+            اگر (cmp < 0) {
+                اگر (prev == nullptr) {
                     *first = attr;
-                } else {
+                } وگرنه {
                     prev->next = attr;
                 }
                 attr->next = cur;
-                break;
+                بشکن;
             }
-            if (cmp == 0) {
+            اگر (cmp == 0) {
                 /* duplicated variant */
-                bAdded = false;
-                break;
+                bAdded = نادرست;
+                بشکن;
             }
             prev = cur;
             cur = cur->next;
         }
     }
 
-    return bAdded;
+    بازگشت bAdded;
 }
 
-bool
-_addExtensionToList(ExtensionListEntry **first, ExtensionListEntry *ext, bool localeToBCP) {
-    bool bAdded = true;
+منطقی
+_addExtensionToList(ExtensionListEntry **first, ExtensionListEntry *ext, منطقی localeToBCP) {
+    منطقی bAdded = درست;
 
-    if (*first == nullptr) {
+    اگر (*first == nullptr) {
         ext->next = nullptr;
         *first = ext;
-    } else {
+    } وگرنه {
         ExtensionListEntry *prev, *cur;
         int32_t cmp;
 
         /* reorder variants in alphabetical order */
         prev = nullptr;
         cur = *first;
-        while (true) {
-            if (cur == nullptr) {
+        وقتی (درست) {
+            اگر (cur == nullptr) {
                 prev->next = ext;
                 ext->next = nullptr;
-                break;
+                بشکن;
             }
-            if (localeToBCP) {
+            اگر (localeToBCP) {
                 /* special handling for locale to bcp conversion */
                 int32_t len, curlen;
 
-                len = static_cast<int32_t>(uprv_strlen(ext->key));
-                curlen = static_cast<int32_t>(uprv_strlen(cur->key));
+                len = static_cast<int32_t>(uprv_strlen(ext->کلید));
+                curlen = static_cast<int32_t>(uprv_strlen(cur->کلید));
 
-                if (len == 1 && curlen == 1) {
-                    if (*(ext->key) == *(cur->key)) {
+                اگر (len == 1 && curlen == 1) {
+                    اگر (*(ext->کلید) == *(cur->کلید)) {
                         cmp = 0;
-                    } else if (*(ext->key) == PRIVATEUSE) {
+                    } وگرنه اگر (*(ext->کلید) == PRIVATEUSE) {
                         cmp = 1;
-                    } else if (*(cur->key) == PRIVATEUSE) {
+                    } وگرنه اگر (*(cur->کلید) == PRIVATEUSE) {
                         cmp = -1;
-                    } else {
-                        cmp = *(ext->key) - *(cur->key);
+                    } وگرنه {
+                        cmp = *(ext->کلید) - *(cur->کلید);
                     }
-                } else if (len == 1) {
-                    cmp = *(ext->key) - LDMLEXT; 
-                } else if (curlen == 1) {
-                    cmp = LDMLEXT - *(cur->key);
-                } else {
-                    cmp = uprv_compareInvCharsAsAscii(ext->key, cur->key);
+                } وگرنه اگر (len == 1) {
+                    cmp = *(ext->کلید) - LDMLEXT; 
+                } وگرنه اگر (curlen == 1) {
+                    cmp = LDMLEXT - *(cur->کلید);
+                } وگرنه {
+                    cmp = uprv_compareInvCharsAsAscii(ext->کلید, cur->کلید);
                     /* Both are u extension keys - we need special handling for 'attribute' */
-                    if (cmp != 0) {
-                        if (uprv_strcmp(cur->key, LOCALE_ATTRIBUTE_KEY) == 0) {
+                    اگر (cmp != 0) {
+                        اگر (uprv_strcmp(cur->کلید, LOCALE_ATTRIBUTE_کلید) == 0) {
                             cmp = 1;
-                        } else if (uprv_strcmp(ext->key, LOCALE_ATTRIBUTE_KEY) == 0) {
+                        } وگرنه اگر (uprv_strcmp(ext->کلید, LOCALE_ATTRIBUTE_کلید) == 0) {
                             cmp = -1;
                         }
                     }
                 }
-            } else {
-                cmp = uprv_compareInvCharsAsAscii(ext->key, cur->key);
+            } وگرنه {
+                cmp = uprv_compareInvCharsAsAscii(ext->کلید, cur->کلید);
             }
-            if (cmp < 0) {
-                if (prev == nullptr) {
+            اگر (cmp < 0) {
+                اگر (prev == nullptr) {
                     *first = ext;
-                } else {
+                } وگرنه {
                     prev->next = ext;
                 }
                 ext->next = cur;
-                break;
+                بشکن;
             }
-            if (cmp == 0) {
+            اگر (cmp == 0) {
                 /* duplicated extension key */
-                bAdded = false;
-                break;
+                bAdded = نادرست;
+                بشکن;
             }
             prev = cur;
             cur = cur->next;
         }
     }
 
-    return bAdded;
+    بازگشت bAdded;
 }
 
-void
+تهی
 _initializeULanguageTag(ULanguageTag* langtag) {
     int32_t i;
 
     langtag->buf = nullptr;
 
     langtag->language = EMPTY;
-    for (i = 0; i < MAXEXTLANG; i++) {
+    برای (i = 0; i < MAXEXTLANG; i++) {
         langtag->extlang[i] = nullptr;
     }
 
@@ -1042,112 +1042,112 @@ _initializeULanguageTag(ULanguageTag* langtag) {
     langtag->privateuse = EMPTY;
 }
 
-void
-_appendLanguageToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, UErrorCode& status) {
+تهی
+_appendLanguageToLanguageTag(std::string_view localeID, icu::ByteSink& sink, منطقی strict, UErrorCode& status) {
     UErrorCode tmpStatus = U_ZERO_ERROR;
 
-    if (U_FAILURE(status)) {
-        return;
+    اگر (U_FAILURE(status)) {
+        بازگشت;
     }
 
     icu::CharString buf = ulocimp_getLanguage(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
+    اگر (U_FAILURE(tmpStatus)) {
+        اگر (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            بازگشت;
         }
     }
 
     /* Note: returned language code is in lower case letters */
 
-    if (buf.isEmpty()) {
+    اگر (buf.isEmpty()) {
         sink.Append(LANG_UND, LANG_UND_LEN);
-    } else if (!ultag_isLanguageSubtag(buf.data(), buf.length())) {
+    } وگرنه اگر (!ultag_isLanguageSubtag(buf.data(), buf.length())) {
             /* invalid language code */
-        if (strict) {
+        اگر (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            بازگشت;
         }
         sink.Append(LANG_UND, LANG_UND_LEN);
-    } else {
+    } وگرنه {
         /* resolve deprecated */
-        for (int32_t i = 0; i < UPRV_LENGTHOF(DEPRECATEDLANGS); i += 2) {
+        برای (int32_t i = 0; i < UPRV_LENGTHOF(DEPRECATEDLANGS); i += 2) {
             // 2-letter deprecated subtags are listede before 3-letter
             // ones in DEPRECATEDLANGS[]. Get out of loop on coming
             // across the 1st 3-letter subtag, if the input is a 2-letter code.
             // to avoid continuing to try when there's no match.
-            if (buf.length() < static_cast<int32_t>(uprv_strlen(DEPRECATEDLANGS[i]))) break;
-            if (uprv_compareInvCharsAsAscii(buf.data(), DEPRECATEDLANGS[i]) == 0) {
-                const char* const resolved = DEPRECATEDLANGS[i + 1];
+            اگر (buf.length() < static_cast<int32_t>(uprv_strlen(DEPRECATEDLANGS[i]))) بشکن;
+            اگر (uprv_compareInvCharsAsAscii(buf.data(), DEPRECATEDLANGS[i]) == 0) {
+                ثابت نویسه* ثابت resolved = DEPRECATEDLANGS[i + 1];
                 sink.Append(resolved, static_cast<int32_t>(uprv_strlen(resolved)));
-                return;
+                بازگشت;
             }
         }
         sink.Append(buf.data(), buf.length());
     }
 }
 
-void
-_appendScriptToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, UErrorCode& status) {
+تهی
+_appendScriptToLanguageTag(std::string_view localeID, icu::ByteSink& sink, منطقی strict, UErrorCode& status) {
     UErrorCode tmpStatus = U_ZERO_ERROR;
 
-    if (U_FAILURE(status)) {
-        return;
+    اگر (U_FAILURE(status)) {
+        بازگشت;
     }
 
     icu::CharString buf = ulocimp_getScript(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
+    اگر (U_FAILURE(tmpStatus)) {
+        اگر (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return;
+        بازگشت;
     }
 
-    if (!buf.isEmpty()) {
-        if (!ultag_isScriptSubtag(buf.data(), buf.length())) {
+    اگر (!buf.isEmpty()) {
+        اگر (!ultag_isScriptSubtag(buf.data(), buf.length())) {
             /* invalid script code */
-            if (strict) {
+            اگر (strict) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
             }
-            return;
-        } else {
+            بازگشت;
+        } وگرنه {
             sink.Append("-", 1);
             sink.Append(buf.data(), buf.length());
         }
     }
 }
 
-void
-_appendRegionToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, UErrorCode& status) {
+تهی
+_appendRegionToLanguageTag(std::string_view localeID, icu::ByteSink& sink, منطقی strict, UErrorCode& status) {
     UErrorCode tmpStatus = U_ZERO_ERROR;
 
-    if (U_FAILURE(status)) {
-        return;
+    اگر (U_FAILURE(status)) {
+        بازگشت;
     }
 
     icu::CharString buf = ulocimp_getRegion(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
+    اگر (U_FAILURE(tmpStatus)) {
+        اگر (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return;
+        بازگشت;
     }
 
-    if (!buf.isEmpty()) {
-        if (!ultag_isRegionSubtag(buf.data(), buf.length())) {
+    اگر (!buf.isEmpty()) {
+        اگر (!ultag_isRegionSubtag(buf.data(), buf.length())) {
             /* invalid region code */
-            if (strict) {
+            اگر (strict) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
             }
-            return;
-        } else {
+            بازگشت;
+        } وگرنه {
             sink.Append("-", 1);
             /* resolve deprecated */
-            for (int32_t i = 0; i < UPRV_LENGTHOF(DEPRECATEDREGIONS); i += 2) {
-                if (uprv_compareInvCharsAsAscii(buf.data(), DEPRECATEDREGIONS[i]) == 0) {
-                    const char* const resolved = DEPRECATEDREGIONS[i + 1];
+            برای (int32_t i = 0; i < UPRV_LENGTHOF(DEPRECATEDREGIONS); i += 2) {
+                اگر (uprv_compareInvCharsAsAscii(buf.data(), DEPRECATEDREGIONS[i]) == 0) {
+                    ثابت نویسه* ثابت resolved = DEPRECATEDREGIONS[i + 1];
                     sink.Append(resolved, static_cast<int32_t>(uprv_strlen(resolved)));
-                    return;
+                    بازگشت;
                 }
             }
             sink.Append(buf.data(), buf.length());
@@ -1155,12 +1155,12 @@ _appendRegionToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool 
     }
 }
 
-void _sortVariants(VariantListEntry* first) {
-    for (VariantListEntry* var1 = first; var1 != nullptr; var1 = var1->next) {
-        for (VariantListEntry* var2 = var1->next; var2 != nullptr; var2 = var2->next) {
+تهی _sortVariants(VariantListEntry* first) {
+    برای (VariantListEntry* var1 = first; var1 != nullptr; var1 = var1->next) {
+        برای (VariantListEntry* var2 = var1->next; var2 != nullptr; var2 = var2->next) {
             // Swap var1->variant and var2->variant.
-            if (uprv_compareInvCharsAsAscii(var1->variant, var2->variant) > 0) {
-                const char* temp = var1->variant;
+            اگر (uprv_compareInvCharsAsAscii(var1->variant, var2->variant) > 0) {
+                ثابت نویسه* temp = var1->variant;
                 var1->variant = var2->variant;
                 var2->variant = temp;
             }
@@ -1168,85 +1168,85 @@ void _sortVariants(VariantListEntry* first) {
     }
 }
 
-void
-_appendVariantsToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, bool& hadPosix, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+تهی
+_appendVariantsToLanguageTag(std::string_view localeID, icu::ByteSink& sink, منطقی strict, منطقی& hadPosix, UErrorCode& status) {
+    اگر (U_FAILURE(status)) { بازگشت; }
 
     UErrorCode tmpStatus = U_ZERO_ERROR;
     icu::CharString buf = ulocimp_getVariant(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus) || tmpStatus == U_STRING_NOT_TERMINATED_WARNING) {
-        if (strict) {
+    اگر (U_FAILURE(tmpStatus) || tmpStatus == U_STRING_NOT_TERMINATED_WARNING) {
+        اگر (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return;
+        بازگشت;
     }
 
-    if (!buf.isEmpty()) {
-        char *p, *pVar;
-        bool bNext = true;
+    اگر (!buf.isEmpty()) {
+        نویسه *p, *pVar;
+        منطقی bNext = درست;
         VariantListEntry *varFirst = nullptr;
 
         pVar = nullptr;
         p = buf.data();
-        while (bNext) {
-            if (*p == SEP || *p == LOCALE_SEP || *p == 0) {
-                if (*p == 0) {
-                    bNext = false;
-                } else {
+        وقتی (bNext) {
+            اگر (*p == SEP || *p == LOCALE_SEP || *p == 0) {
+                اگر (*p == 0) {
+                    bNext = نادرست;
+                } وگرنه {
                     *p = 0; /* terminate */
                 }
-                if (pVar == nullptr) {
-                    if (strict) {
+                اگر (pVar == nullptr) {
+                    اگر (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
+                        بشکن;
                     }
                     /* ignore empty variant */
-                } else {
+                } وگرنه {
                     /* ICU uses upper case letters for variants, but
                        the canonical format is lowercase in BCP47 */
-                    for (int32_t i = 0; *(pVar + i) != 0; i++) {
+                    برای (int32_t i = 0; *(pVar + i) != 0; i++) {
                         *(pVar + i) = uprv_tolower(*(pVar + i));
                     }
 
                     /* validate */
-                    if (_isVariantSubtag(pVar, -1)) {
-                        if (uprv_strcmp(pVar, POSIX_VALUE) || buf.length() != static_cast<int32_t>(uprv_strlen(POSIX_VALUE))) {
+                    اگر (_isVariantSubtag(pVar, -1)) {
+                        اگر (uprv_strcmp(pVar, POSIX_مقدار) || buf.length() != static_cast<int32_t>(uprv_strlen(POSIX_مقدار))) {
                             /* emit the variant to the list */
-                            icu::LocalPointer<VariantListEntry> var(new VariantListEntry, status);
-                            if (U_FAILURE(status)) {
-                                break;
+                            icu::LocalPointer<VariantListEntry> var(جدید VariantListEntry, status);
+                            اگر (U_FAILURE(status)) {
+                                بشکن;
                             }
                             var->variant = pVar;
-                            if (!_addVariantToList(&varFirst, std::move(var))) {
+                            اگر (!_addVariantToList(&varFirst, std::move(var))) {
                                 /* duplicated variant */
-                                if (strict) {
+                                اگر (strict) {
                                     status = U_ILLEGAL_ARGUMENT_ERROR;
-                                    break;
+                                    بشکن;
                                 }
                             }
-                        } else {
+                        } وگرنه {
                             /* Special handling for POSIX variant, need to remember that we had it and then */
                             /* treat it like an extension later. */
-                            hadPosix = true;
+                            hadPosix = درست;
                         }
-                    } else if (strict) {
+                    } وگرنه اگر (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
-                    } else if (_isPrivateuseValueSubtag(pVar, -1)) {
+                        بشکن;
+                    } وگرنه اگر (is_Privateuse_مقدار_Subtag(pVar, -1)) {
                         /* Handle private use subtags separately */
-                        break;
+                        بشکن;
                     }
                 }
                 /* reset variant starting position */
                 pVar = nullptr;
-            } else if (pVar == nullptr) {
+            } وگرنه اگر (pVar == nullptr) {
                 pVar = p;
             }
             p++;
         }
 
-        if (U_SUCCESS(status)) {
-            if (varFirst != nullptr) {
+        اگر (U_SUCCESS(status)) {
+            اگر (varFirst != nullptr) {
                 int32_t varLen;
 
                 /* per UTS35, we should sort the variants */
@@ -1254,7 +1254,7 @@ _appendVariantsToLanguageTag(std::string_view localeID, icu::ByteSink& sink, boo
 
                 /* write out validated/normalized variants to the target */
                 VariantListEntry* var = varFirst;
-                while (var != nullptr) {
+                وقتی (var != nullptr) {
                     sink.Append("-", 1);
                     varLen = static_cast<int32_t>(uprv_strlen(var->variant));
                     sink.Append(var->variant, varLen);
@@ -1264,138 +1264,138 @@ _appendVariantsToLanguageTag(std::string_view localeID, icu::ByteSink& sink, boo
         }
 
         /* clean up */
-        for (VariantListEntry* var = varFirst; var != nullptr; ) {
+        برای (VariantListEntry* var = varFirst; var != nullptr; ) {
             VariantListEntry *tmpVar = var->next;
             delete var;
             var = tmpVar;
         }
 
-        if (U_FAILURE(status)) {
-            return;
+        اگر (U_FAILURE(status)) {
+            بازگشت;
         }
     }
 }
 
-void
-_appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool strict, bool hadPosix, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+تهی
+_appendKeywordsToLanguageTag(ثابت نویسه* localeID, icu::ByteSink& sink, منطقی strict, منطقی hadPosix, UErrorCode& status) {
+    اگر (U_FAILURE(status)) { بازگشت; }
 
     icu::MemoryPool<AttributeListEntry> attrPool;
     icu::MemoryPool<ExtensionListEntry> extPool;
     icu::MemoryPool<icu::CharString> strPool;
 
     icu::LocalUEnumerationPointer keywordEnum(uloc_openKeywords(localeID, &status));
-    if (U_FAILURE(status) && !hadPosix) {
-        return;
+    اگر (U_FAILURE(status) && !hadPosix) {
+        بازگشت;
     }
-    if (keywordEnum.isValid() || hadPosix) {
+    اگر (keywordEnum.isValid() || hadPosix) {
         /* reorder extensions */
         int32_t len;
-        const char *key;
+        ثابت نویسه *کلید;
         ExtensionListEntry *firstExt = nullptr;
         ExtensionListEntry *ext;
         AttributeListEntry *firstAttr = nullptr;
         AttributeListEntry *attr;
         icu::MemoryPool<icu::CharString> extBufPool;
-        const char *bcpKey=nullptr, *bcpValue=nullptr;
+        ثابت نویسه *bcp_کلید=nullptr, *bcp_مقدار=nullptr;
         UErrorCode tmpStatus = U_ZERO_ERROR;
         int32_t keylen;
-        bool isBcpUExt;
+        منطقی isBcpUExt;
 
-        while (true) {
-            key = uenum_next(keywordEnum.getAlias(), nullptr, &status);
-            if (key == nullptr) {
-                break;
+        وقتی (درست) {
+            کلید = uenum_next(keywordEnum.getAlias(), nullptr, &status);
+            اگر (کلید == nullptr) {
+                بشکن;
             }
 
-            icu::CharString buf = ulocimp_getKeywordValue(localeID, key, tmpStatus);
+            icu::CharString buf = ulocimp_get_Keyword_مقدار(localeID, کلید, tmpStatus);
             len = buf.length();
 
-            if (U_FAILURE(tmpStatus)) {
-                if (tmpStatus == U_MEMORY_ALLOCATION_ERROR) {
+            اگر (U_FAILURE(tmpStatus)) {
+                اگر (tmpStatus == U_MEMORY_ALLOCATION_ERROR) {
                     status = U_MEMORY_ALLOCATION_ERROR;
-                    break;
+                    بشکن;
                 }
-                if (strict) {
+                اگر (strict) {
                     status = U_ILLEGAL_ARGUMENT_ERROR;
-                    break;
+                    بشکن;
                 }
                 /* ignore this keyword */
                 tmpStatus = U_ZERO_ERROR;
-                continue;
+                ادامه;
             }
 
-            keylen = static_cast<int32_t>(uprv_strlen(key));
+            keylen = static_cast<int32_t>(uprv_strlen(کلید));
             isBcpUExt = (keylen > 1);
 
             /* special keyword used for representing Unicode locale attributes */
-            if (uprv_strcmp(key, LOCALE_ATTRIBUTE_KEY) == 0) {
-                if (len > 0) {
+            اگر (uprv_strcmp(کلید, LOCALE_ATTRIBUTE_کلید) == 0) {
+                اگر (len > 0) {
                     int32_t i = 0;
-                    while (true) {
+                    وقتی (درست) {
                         icu::CharString attrBuf;
-                        for (; i < len; i++) {
-                            if (buf[i] != '-') {
+                        برای (; i < len; i++) {
+                            اگر (buf[i] != '-') {
                                 attrBuf.append(buf[i], status);
-                            } else {
+                            } وگرنه {
                                 i++;
-                                break;
+                                بشکن;
                             }
                         }
-                        if (U_FAILURE(status)) {
-                            return;
+                        اگر (U_FAILURE(status)) {
+                            بازگشت;
                         }
-                        if (attrBuf.isEmpty() && i >= len) {
-                            break;
+                        اگر (attrBuf.isEmpty() && i >= len) {
+                            بشکن;
                         }
 
                         /* create AttributeListEntry */
                         attr = attrPool.create();
-                        if (attr == nullptr) {
+                        اگر (attr == nullptr) {
                             status = U_MEMORY_ALLOCATION_ERROR;
-                            break;
+                            بشکن;
                         }
-                        if (icu::CharString* str =
+                        اگر (icu::CharString* str =
                                 strPool.create(std::move(attrBuf), status)) {
-                            if (U_FAILURE(status)) { break; }
+                            اگر (U_FAILURE(status)) { بشکن; }
                             attr->attribute = str->data();
-                        } else {
+                        } وگرنه {
                             status = U_MEMORY_ALLOCATION_ERROR;
-                            break;
+                            بشکن;
                         }
 
-                        if (!_addAttributeToList(&firstAttr, attr)) {
-                            if (strict) {
+                        اگر (!_addAttributeToList(&firstAttr, attr)) {
+                            اگر (strict) {
                                 status = U_ILLEGAL_ARGUMENT_ERROR;
-                                break;
+                                بشکن;
                             }
                         }
                     }
                     /* for a place holder ExtensionListEntry */
-                    bcpKey = LOCALE_ATTRIBUTE_KEY;
-                    bcpValue = nullptr;
+                    bcp_کلید = LOCALE_ATTRIBUTE_کلید;
+                    bcp_مقدار = nullptr;
                 }
-            } else if (isBcpUExt) {
-                std::optional<std::string_view> optBcpKey = ulocimp_toBcpKeyWithFallback(key);
-                if (!optBcpKey.has_value()) {
-                    if (strict) {
+            } وگرنه اگر (isBcpUExt) {
+                std::optional<std::string_view> opt_Bcp_کلید = ulocimp_to_Bcp_کلید_With_Fallback(کلید);
+                اگر (!opt_Bcp_کلید.has_value()) {
+                    اگر (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
+                        بشکن;
                     }
-                    continue;
+                    ادامه;
                 }
-                bcpKey = optBcpKey->data();
+                bcp_کلید = opt_Bcp_کلید->data();
 
-                std::optional<std::string_view> optBcpValue =
-                    ulocimp_toBcpTypeWithFallback(key, buf.toStringPiece());
-                if (!optBcpValue.has_value()) {
-                    if (strict) {
+                std::optional<std::string_view> opt_Bcp_مقدار =
+                    ulocimp_toBcpTypeWithFallback(کلید, buf.toStringPiece());
+                اگر (!opt_Bcp_مقدار.has_value()) {
+                    اگر (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
+                        بشکن;
                     }
-                    continue;
+                    ادامه;
                 }
-                if (optBcpValue->data() == buf.data()) {
+                اگر (opt_Bcp_مقدار->data() == buf.data()) {
                     /*
                     When ulocimp_toBcpTypeWithFallback(key, buf) returns the
                     input value as is, the value is well-formed, but has
@@ -1404,106 +1404,106 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool str
                     */
                     icu::CharString* extBuf = extBufPool.create(buf, tmpStatus);
 
-                    if (extBuf == nullptr) {
+                    اگر (extBuf == nullptr) {
                         status = U_MEMORY_ALLOCATION_ERROR;
-                        break;
+                        بشکن;
                     }
-                    if (U_FAILURE(tmpStatus)) {
+                    اگر (U_FAILURE(tmpStatus)) {
                         status = tmpStatus;
-                        break;
+                        بشکن;
                     }
 
                     T_CString_toLowerCase(extBuf->data());
-                    bcpValue = extBuf->data();
-                } else {
-                    bcpValue = optBcpValue->data();
+                    bcp_مقدار = extBuf->data();
+                } وگرنه {
+                    bcp_مقدار = opt_Bcp_مقدار->data();
                 }
-            } else {
-                if (*key == PRIVATEUSE) {
-                    if (!ultag_isPrivateuseValueSubtags(buf.data(), len)) {
-                        if (strict) {
+            } وگرنه {
+                اگر (*کلید == PRIVATEUSE) {
+                    اگر (!ultag_is_Privateuse_مقدار_Subtags(buf.data(), len)) {
+                        اگر (strict) {
                             status = U_ILLEGAL_ARGUMENT_ERROR;
-                            break;
+                            بشکن;
                         }
-                        continue;
+                        ادامه;
                     }
-                } else {
-                    if (!_isExtensionSingleton(key, keylen) || !ultag_isExtensionSubtags(buf.data(), len)) {
-                        if (strict) {
+                } وگرنه {
+                    اگر (!_isExtensionSingleton(کلید, keylen) || !ultag_isExtensionSubtags(buf.data(), len)) {
+                        اگر (strict) {
                             status = U_ILLEGAL_ARGUMENT_ERROR;
-                            break;
+                            بشکن;
                         }
-                        continue;
+                        ادامه;
                     }
                 }
-                bcpKey = key;
+                bcp_کلید = کلید;
                 icu::CharString* extBuf =
                     extBufPool.create(buf.data(), len, tmpStatus);
-                if (extBuf == nullptr) {
+                اگر (extBuf == nullptr) {
                     status = U_MEMORY_ALLOCATION_ERROR;
-                    break;
+                    بشکن;
                 }
-                if (U_FAILURE(tmpStatus)) {
+                اگر (U_FAILURE(tmpStatus)) {
                     status = tmpStatus;
-                    break;
+                    بشکن;
                 }
-                bcpValue = extBuf->data();
+                bcp_مقدار = extBuf->data();
             }
 
             /* create ExtensionListEntry */
             ext = extPool.create();
-            if (ext == nullptr) {
+            اگر (ext == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                break;
+                بشکن;
             }
-            ext->key = bcpKey;
-            ext->value = bcpValue;
+            ext->کلید = bcp_کلید;
+            ext->value = bcp_مقدار;
 
-            if (!_addExtensionToList(&firstExt, ext, true)) {
-                if (strict) {
+            اگر (!_addExtensionToList(&firstExt, ext, درست)) {
+                اگر (strict) {
                     status = U_ILLEGAL_ARGUMENT_ERROR;
-                    break;
+                    بشکن;
                 }
             }
         }
 
         /* Special handling for POSIX variant - add the keywords for POSIX */
-        if (hadPosix) {
+        اگر (hadPosix) {
             /* create ExtensionListEntry for POSIX */
             ext = extPool.create();
-            if (ext == nullptr) {
+            اگر (ext == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                بازگشت;
             }
-            ext->key = POSIX_KEY;
-            ext->value = POSIX_VALUE;
+            ext->کلید = POSIX_کلید;
+            ext->value = POSIX_مقدار;
 
-            if (!_addExtensionToList(&firstExt, ext, true)) {
+            اگر (!_addExtensionToList(&firstExt, ext, درست)) {
                 // Silently ignore errors.
             }
         }
 
-        if (U_SUCCESS(status) && (firstExt != nullptr || firstAttr != nullptr)) {
-            bool startLDMLExtension = false;
-            for (ext = firstExt; ext; ext = ext->next) {
-                if (!startLDMLExtension && uprv_strlen(ext->key) > 1) {
+        اگر (U_SUCCESS(status) && (firstExt != nullptr || firstAttr != nullptr)) {
+            منطقی startLDMLExtension = نادرست;
+            برای (ext = firstExt; ext; ext = ext->next) {
+                اگر (!startLDMLExtension && uprv_strlen(ext->کلید) > 1) {
                     /* first LDML u singlton extension */
                    sink.Append("-u", 2);
-                   startLDMLExtension = true;
+                   startLDMLExtension = درست;
                 }
 
                 /* write out the sorted BCP47 attributes, extensions and private use */
-                if (uprv_strcmp(ext->key, LOCALE_ATTRIBUTE_KEY) == 0) {
+                اگر (uprv_strcmp(ext->کلید, LOCALE_ATTRIBUTE_کلید) == 0) {
                     /* write the value for the attributes */
-                    for (attr = firstAttr; attr; attr = attr->next) {
+                    برای (attr = firstAttr; attr; attr = attr->next) {
                         sink.Append("-", 1);
                         sink.Append(
                                 attr->attribute, static_cast<int32_t>(uprv_strlen(attr->attribute)));
                     }
-                } else {
+                } وگرنه {
                     sink.Append("-", 1);
-                    sink.Append(ext->key, static_cast<int32_t>(uprv_strlen(ext->key)));
-                    if (uprv_strcmp(ext->value, "true") != 0 &&
+                    sink.Append(ext->کلید, static_cast<int32_t>(uprv_strlen(ext->کلید)));
+                    اگر (uprv_strcmp(ext->value, "true") != 0 &&
                         uprv_strcmp(ext->value, "yes") != 0) {
                       sink.Append("-", 1);
                       sink.Append(ext->value, static_cast<int32_t>(uprv_strlen(ext->value)));
@@ -1519,13 +1519,13 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool str
  * e.g. "u-ca-gregory-co-trad" -> {calendar = gregorian} {collation = traditional}
  * Note: char* buf is used for storing keywords
  */
-void
-_appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendTo, icu::MemoryPool<ExtensionListEntry>& extPool, icu::MemoryPool<icu::CharString>& kwdBuf, bool& posixVariant, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+تهی
+_appendLDMLExtensionAsKeywords(ثابت نویسه* ldmlext, ExtensionListEntry** appendTo, icu::MemoryPool<ExtensionListEntry>& extPool, icu::MemoryPool<icu::CharString>& kwdBuf, منطقی& posixVariant, UErrorCode& status) {
+    اگر (U_FAILURE(status)) { بازگشت; }
 
-    const char *pTag;   /* beginning of current subtag */
-    const char *pKwds;  /* beginning of key-type pairs */
-    bool variantExists = posixVariant;
+    ثابت نویسه *pTag;   /* beginning of current subtag */
+    ثابت نویسه *pKwds;  /* beginning of key-type pairs */
+    منطقی variantExists = posixVariant;
 
     ExtensionListEntry *kwdFirst = nullptr;    /* first LDML keyword */
     ExtensionListEntry *kwd, *nextKwd;
@@ -1533,7 +1533,7 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
     int32_t len;
 
     /* Reset the posixVariant value */
-    posixVariant = false;
+    posixVariant = نادرست;
 
     pTag = ldmlext;
     pKwds = nullptr;
@@ -1546,28 +1546,28 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
         icu::MemoryPool<AttributeListEntry> attrPool;
 
         /* Iterate through u extension attributes */
-        while (*pTag) {
+        وقتی (*pTag) {
             /* locate next separator char */
-            for (len = 0; *(pTag + len) && *(pTag + len) != SEP; len++);
+            برای (len = 0; *(pTag + len) && *(pTag + len) != SEP; len++);
 
-            if (ultag_isUnicodeLocaleKey(pTag, len)) {
+            اگر (ultag_is_Unicode_Locale_کلید(pTag, len)) {
                 pKwds = pTag;
-                break;
+                بشکن;
             }
 
             /* add this attribute to the list */
             attr = attrPool.create();
-            if (attr == nullptr) {
+            اگر (attr == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                بازگشت;
             }
 
-            if (icu::CharString* str = strPool.create(pTag, len, status)) {
-                if (U_FAILURE(status)) { return; }
+            اگر (icu::CharString* str = strPool.create(pTag, len, status)) {
+                اگر (U_FAILURE(status)) { بازگشت; }
                 attr->attribute = str->data();
-            } else {
+            } وگرنه {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                بازگشت;
             }
 
             // duplicate attribute is ignored, causes no error.
@@ -1575,84 +1575,84 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
 
             /* next tag */
             pTag += len;
-            if (*pTag) {
+            اگر (*pTag) {
                 /* next to the separator */
                 pTag++;
             }
         }
 
-        if (attrFirst) {
+        اگر (attrFirst) {
             /* emit attributes as an LDML keyword, e.g. attribute=attr1-attr2 */
 
             kwd = extPool.create();
-            if (kwd == nullptr) {
+            اگر (kwd == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                بازگشت;
             }
 
             icu::CharString* value = kwdBuf.create();
-            if (value == nullptr) {
+            اگر (value == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                بازگشت;
             }
 
             /* attribute subtags sorted in alphabetical order as type */
             attr = attrFirst;
-            while (attr != nullptr) {
+            وقتی (attr != nullptr) {
                 nextAttr = attr->next;
-                if (attr != attrFirst) {
+                اگر (attr != attrFirst) {
                     value->append('-', status);
                 }
                 value->append(attr->attribute, status);
                 attr = nextAttr;
             }
-            if (U_FAILURE(status)) {
-                return;
+            اگر (U_FAILURE(status)) {
+                بازگشت;
             }
 
-            kwd->key = LOCALE_ATTRIBUTE_KEY;
+            kwd->کلید = LOCALE_ATTRIBUTE_کلید;
             kwd->value = value->data();
 
-            if (!_addExtensionToList(&kwdFirst, kwd, false)) {
+            اگر (!_addExtensionToList(&kwdFirst, kwd, نادرست)) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
-                return;
+                بازگشت;
             }
         }
     }
 
-    if (pKwds) {
-        const char *pBcpKey = nullptr;     /* u extension key subtag */
-        const char *pBcpType = nullptr;    /* beginning of u extension type subtag(s) */
-        int32_t bcpKeyLen = 0;
+    اگر (pKwds) {
+        ثابت نویسه *p_Bcp_کلید = nullptr;     /* u extension key subtag */
+        ثابت نویسه *pBcpType = nullptr;    /* beginning of u extension type subtag(s) */
+        int32_t bcp_کلید_Len = 0;
         int32_t bcpTypeLen = 0;
-        bool isDone = false;
+        منطقی isDone = نادرست;
 
         pTag = pKwds;
         /* BCP47 representation of LDML key/type pairs */
-        while (!isDone) {
-            const char *pNextBcpKey = nullptr;
-            int32_t nextBcpKeyLen = 0;
-            bool emitKeyword = false;
+        وقتی (!isDone) {
+            ثابت نویسه *p_Next_Bcp_کلید = nullptr;
+            int32_t next_Bcp_کلید_Len = 0;
+            منطقی emitKeyword = نادرست;
 
-            if (*pTag) {
+            اگر (*pTag) {
                 /* locate next separator char */
-                for (len = 0; *(pTag + len) && *(pTag + len) != SEP; len++);
+                برای (len = 0; *(pTag + len) && *(pTag + len) != SEP; len++);
 
-                if (ultag_isUnicodeLocaleKey(pTag, len)) {
-                    if (pBcpKey) {
-                        emitKeyword = true;
-                        pNextBcpKey = pTag;
-                        nextBcpKeyLen = len;
-                    } else {
-                        pBcpKey = pTag;
-                        bcpKeyLen = len;
+                اگر (ultag_is_Unicode_Locale_کلید(pTag, len)) {
+                    اگر (p_Bcp_کلید) {
+                        emitKeyword = درست;
+                        p_Next_Bcp_کلید = pTag;
+                        next_Bcp_کلید_Len = len;
+                    } وگرنه {
+                        p_Bcp_کلید = pTag;
+                        bcp_کلید_Len = len;
                     }
-                } else {
-                    U_ASSERT(pBcpKey != nullptr);
+                } وگرنه {
+                    U_ASSERT(p_Bcp_کلید != nullptr);
                     /* within LDML type subtags */
-                    if (pBcpType) {
+                    اگر (pBcpType) {
                         bcpTypeLen += (len + 1);
-                    } else {
+                    } وگرنه {
                         pBcpType = pTag;
                         bcpTypeLen = len;
                     }
@@ -1660,109 +1660,109 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
 
                 /* next tag */
                 pTag += len;
-                if (*pTag) {
+                اگر (*pTag) {
                     /* next to the separator */
                     pTag++;
                 }
-            } else {
+            } وگرنه {
                 /* processing last one */
-                emitKeyword = true;
-                isDone = true;
+                emitKeyword = درست;
+                isDone = درست;
             }
 
-            if (emitKeyword) {
-                const char *pKey = nullptr;    /* LDML key */
-                const char *pType = nullptr;   /* LDML type */
+            اگر (emitKeyword) {
+                ثابت نویسه *p_کلید = nullptr;    /* LDML key */
+                ثابت نویسه *pType = nullptr;   /* LDML type */
 
-                U_ASSERT(pBcpKey != nullptr);
+                U_ASSERT(p_Bcp_کلید != nullptr);
 
                 /* BCP key length is always 2 for now */
-                if (bcpKeyLen != 2) {
+                اگر (bcp_کلید_Len != 2) {
                     /* the BCP key is invalid */
                     status = U_ILLEGAL_ARGUMENT_ERROR;
-                    return;
+                    بازگشت;
                 }
 
                 /* u extension key to LDML key */
-                std::optional<std::string_view> legacyKey = ulocimp_toLegacyKeyWithFallback(
-                    {pBcpKey, static_cast<std::string_view::size_type>(bcpKeyLen)});
-                if (!legacyKey.has_value()) {
+                std::optional<std::string_view> legacy_کلید_2 = ulocimp_to_Legacy_کلید_With_Fallback(
+                    {p_Bcp_کلید, static_cast<std::string_view::size_type>(bcp_کلید_Len)});
+                اگر (!legacy_کلید_2.has_value()) {
                     status = U_ILLEGAL_ARGUMENT_ERROR;
-                    return;
+                    بازگشت;
                 }
-                if (legacyKey->data() == pBcpKey) {
+                اگر (legacy_کلید_2->data() == p_Bcp_کلید) {
                     /*
                     The key returned by toLegacyKey points to the input buffer.
                     We normalize the result key to lower case.
                     */
-                    icu::CharString* key = kwdBuf.create(pBcpKey, bcpKeyLen, status);
-                    if (key == nullptr) {
+                    icu::CharString* کلید = kwdBuf.create(p_Bcp_کلید, bcp_کلید_Len, status);
+                    اگر (کلید == nullptr) {
                         status = U_MEMORY_ALLOCATION_ERROR;
-                        return;
+                        بازگشت;
                     }
-                    if (U_FAILURE(status)) {
-                        return;
+                    اگر (U_FAILURE(status)) {
+                        بازگشت;
                     }
-                    T_CString_toLowerCase(key->data());
-                    pKey = key->data();
-                } else {
-                    pKey = legacyKey->data();
+                    T_CString_toLowerCase(کلید->data());
+                    p_کلید = کلید->data();
+                } وگرنه {
+                    p_کلید = legacy_کلید_2->data();
                 }
 
-                if (pBcpType) {
+                اگر (pBcpType) {
                     /* BCP type to locale type */
                     std::optional<std::string_view> legacyType = ulocimp_toLegacyTypeWithFallback(
-                        pKey, {pBcpType, static_cast<std::string_view::size_type>(bcpTypeLen)});
-                    if (!legacyType.has_value()) {
+                        p_کلید, {pBcpType, static_cast<std::string_view::size_type>(bcpTypeLen)});
+                    اگر (!legacyType.has_value()) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        return;
+                        بازگشت;
                     }
-                    if (legacyType->data() == pBcpType) {
+                    اگر (legacyType->data() == pBcpType) {
                         /*
                         The type returned by toLegacyType points to the input buffer.
                         We normalize the result type to lower case.
                         */
                         icu::CharString* type = kwdBuf.create(pBcpType, bcpTypeLen, status);
-                        if (type == nullptr) {
+                        اگر (type == nullptr) {
                             status = U_MEMORY_ALLOCATION_ERROR;
-                            return;
+                            بازگشت;
                         }
-                        if (U_FAILURE(status)) {
-                            return;
+                        اگر (U_FAILURE(status)) {
+                            بازگشت;
                         }
                         T_CString_toLowerCase(type->data());
                         pType = type->data();
-                    } else {
+                    } وگرنه {
                         pType = legacyType->data();
                     }
-                } else {
+                } وگرنه {
                     /* typeless - default type value is "yes" */
                     pType = LOCALE_TYPE_YES;
                 }
 
                 /* Special handling for u-va-posix, since we want to treat this as a variant, 
                    not as a keyword */
-                if (!variantExists && !uprv_strcmp(pKey, POSIX_KEY) && !uprv_strcmp(pType, POSIX_VALUE) ) {
-                    posixVariant = true;
-                } else {
+                اگر (!variantExists && !uprv_strcmp(p_کلید, POSIX_کلید) && !uprv_strcmp(pType, POSIX_مقدار) ) {
+                    posixVariant = درست;
+                } وگرنه {
                     /* create an ExtensionListEntry for this keyword */
                     kwd = extPool.create();
-                    if (kwd == nullptr) {
+                    اگر (kwd == nullptr) {
                         status = U_MEMORY_ALLOCATION_ERROR;
-                        return;
+                        بازگشت;
                     }
 
-                    kwd->key = pKey;
+                    kwd->کلید = p_کلید;
                     kwd->value = pType;
 
-                    if (!_addExtensionToList(&kwdFirst, kwd, false)) {
+                    اگر (!_addExtensionToList(&kwdFirst, kwd, نادرست)) {
                         // duplicate keyword is allowed, Only the first
                         // is honored.
                     }
                 }
 
-                pBcpKey = pNextBcpKey;
-                bcpKeyLen = pNextBcpKey != nullptr ? nextBcpKeyLen : 0;
+                p_Bcp_کلید = p_Next_Bcp_کلید;
+                bcp_کلید_Len = p_Next_Bcp_کلید != nullptr ? next_Bcp_کلید_Len : 0;
                 pBcpType = nullptr;
                 bcpTypeLen = 0;
             }
@@ -1770,68 +1770,68 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
     }
 
     kwd = kwdFirst;
-    while (kwd != nullptr) {
+    وقتی (kwd != nullptr) {
         nextKwd = kwd->next;
-        _addExtensionToList(appendTo, kwd, false);
+        _addExtensionToList(appendTo, kwd, نادرست);
         kwd = nextKwd;
     }
 }
 
-void
+تهی
 _appendKeywords(ULanguageTag* langtag, icu::ByteSink& sink, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    اگر (U_FAILURE(status)) { بازگشت; }
 
     int32_t i, n;
     int32_t len;
     ExtensionListEntry *kwdFirst = nullptr;
     ExtensionListEntry *kwd;
-    const char *key, *type;
+    ثابت نویسه *کلید, *type;
     icu::MemoryPool<ExtensionListEntry> extPool;
     icu::MemoryPool<icu::CharString> kwdBuf;
-    bool posixVariant = false;
+    منطقی posixVariant = نادرست;
 
     n = ultag_getExtensionsSize(langtag);
 
     /* resolve locale keywords and reordering keys */
-    for (i = 0; i < n; i++) {
-        key = ultag_getExtensionKey(langtag, i);
-        type = ultag_getExtensionValue(langtag, i);
-        if (*key == LDMLEXT) {
+    برای (i = 0; i < n; i++) {
+        کلید = ultag_get_Extension_کلید(langtag, i);
+        type = ultag_get_Extension_مقدار(langtag, i);
+        اگر (*کلید == LDMLEXT) {
             /* Determine if variants already exists */
-            if (ultag_getVariantsSize(langtag)) {
-                posixVariant = true;
+            اگر (ultag_getVariantsSize(langtag)) {
+                posixVariant = درست;
             }
 
             _appendLDMLExtensionAsKeywords(type, &kwdFirst, extPool, kwdBuf, posixVariant, status);
-            if (U_FAILURE(status)) {
-                break;
+            اگر (U_FAILURE(status)) {
+                بشکن;
             }
-        } else {
+        } وگرنه {
             kwd = extPool.create();
-            if (kwd == nullptr) {
+            اگر (kwd == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                break;
+                بشکن;
             }
-            kwd->key = key;
+            kwd->کلید = کلید;
             kwd->value = type;
-            if (!_addExtensionToList(&kwdFirst, kwd, false)) {
+            اگر (!_addExtensionToList(&kwdFirst, kwd, نادرست)) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
-                break;
+                بشکن;
             }
         }
     }
 
-    if (U_SUCCESS(status)) {
+    اگر (U_SUCCESS(status)) {
         type = ultag_getPrivateUse(langtag);
-        if (static_cast<int32_t>(uprv_strlen(type)) > 0) {
+        اگر (static_cast<int32_t>(uprv_strlen(type)) > 0) {
             /* add private use as a keyword */
             kwd = extPool.create();
-            if (kwd == nullptr) {
+            اگر (kwd == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-            } else {
-                kwd->key = PRIVATEUSE_KEY;
+            } وگرنه {
+                kwd->کلید = PRIVATEUSE_کلید;
                 kwd->value = type;
-                if (!_addExtensionToList(&kwdFirst, kwd, false)) {
+                اگر (!_addExtensionToList(&kwdFirst, kwd, نادرست)) {
                     status = U_ILLEGAL_ARGUMENT_ERROR;
                 }
             }
@@ -1840,26 +1840,26 @@ _appendKeywords(ULanguageTag* langtag, icu::ByteSink& sink, UErrorCode& status) 
 
     /* If a POSIX variant was in the extensions, write it out before writing the keywords. */
 
-    if (U_SUCCESS(status) && posixVariant) {
+    اگر (U_SUCCESS(status) && posixVariant) {
         len = static_cast<int32_t>(uprv_strlen(_POSIX));
         sink.Append(_POSIX, len);
     }
 
-    if (U_SUCCESS(status) && kwdFirst != nullptr) {
+    اگر (U_SUCCESS(status) && kwdFirst != nullptr) {
         /* write out the sorted keywords */
-        bool firstValue = true;
+        منطقی first_مقدار = درست;
         kwd = kwdFirst;
-        do {
-            if (firstValue) {
+        انجامبده {
+            اگر (first_مقدار) {
                 sink.Append("@", 1);
-                firstValue = false;
-            } else {
+                first_مقدار = نادرست;
+            } وگرنه {
                 sink.Append(";", 1);
             }
 
-            /* key */
-            len = static_cast<int32_t>(uprv_strlen(kwd->key));
-            sink.Append(kwd->key, len);
+            /*کلید*/
+            len = static_cast<int32_t>(uprv_strlen(kwd->کلید));
+            sink.Append(kwd->کلید, len);
             sink.Append("=", 1);
 
             /* type */
@@ -1867,70 +1867,70 @@ _appendKeywords(ULanguageTag* langtag, icu::ByteSink& sink, UErrorCode& status) 
             sink.Append(kwd->value, len);
 
             kwd = kwd->next;
-        } while (kwd);
+        } وقتی (kwd);
     }
 }
 
-void
-_appendPrivateuseToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, bool /*hadPosix*/, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+تهی
+_appendPrivateuseToLanguageTag(std::string_view localeID, icu::ByteSink& sink, منطقی strict, منطقی /*hadPosix*/, UErrorCode& status) {
+    اگر (U_FAILURE(status)) { بازگشت; }
 
     UErrorCode tmpStatus = U_ZERO_ERROR;
     icu::CharString buf = ulocimp_getVariant(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
+    اگر (U_FAILURE(tmpStatus)) {
+        اگر (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return;
+        بازگشت;
     }
 
-    if (!buf.isEmpty()) {
-        char *p, *pPriv;
-        bool bNext = true;
-        bool firstValue = true;
-        bool writeValue;
+    اگر (!buf.isEmpty()) {
+        نویسه *p, *pPriv;
+        منطقی bNext = درست;
+        منطقی first_مقدار = درست;
+        منطقی write_مقدار;
 
         pPriv = nullptr;
         p = buf.data();
-        while (bNext) {
-            writeValue = false;
-            if (*p == SEP || *p == LOCALE_SEP || *p == 0) {
-                if (*p == 0) {
-                    bNext = false;
-                } else {
+        وقتی (bNext) {
+            write_مقدار = نادرست;
+            اگر (*p == SEP || *p == LOCALE_SEP || *p == 0) {
+                اگر (*p == 0) {
+                    bNext = نادرست;
+                } وگرنه {
                     *p = 0; /* terminate */
                 }
-                if (pPriv != nullptr) {
+                اگر (pPriv != nullptr) {
                     /* Private use in the canonical format is lowercase in BCP47 */
-                    for (int32_t i = 0; *(pPriv + i) != 0; i++) {
+                    برای (int32_t i = 0; *(pPriv + i) != 0; i++) {
                         *(pPriv + i) = uprv_tolower(*(pPriv + i));
                     }
 
                     /* validate */
-                    if (_isPrivateuseValueSubtag(pPriv, -1)) {
-                        if (firstValue) {
-                            if (!_isVariantSubtag(pPriv, -1)) {
-                                writeValue = true;
+                    اگر (is_Privateuse_مقدار_Subtag(pPriv, -1)) {
+                        اگر (first_مقدار) {
+                            اگر (!_isVariantSubtag(pPriv, -1)) {
+                                write_مقدار = درست;
                             }
-                        } else {
-                            writeValue = true;
+                        } وگرنه {
+                            write_مقدار = درست;
                         }
-                    } else if (strict) {
+                    } وگرنه اگر (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
-                    } else {
-                        break;
+                        بشکن;
+                    } وگرنه {
+                        بشکن;
                     }
 
-                    if (writeValue) {
+                    اگر (write_مقدار) {
                         sink.Append("-", 1);
 
-                        if (firstValue) {
-                            sink.Append(PRIVATEUSE_KEY, UPRV_LENGTHOF(PRIVATEUSE_KEY) - 1);
+                        اگر (first_مقدار) {
+                            sink.Append(PRIVATEUSE_کلید, UPRV_LENGTHOF(PRIVATEUSE_کلید) - 1);
                             sink.Append("-", 1);
                             sink.Append(PRIVUSE_VARIANT_PREFIX, UPRV_LENGTHOF(PRIVUSE_VARIANT_PREFIX) - 1);
                             sink.Append("-", 1);
-                            firstValue = false;
+                            first_مقدار = نادرست;
                         }
 
                         int32_t len = static_cast<int32_t>(uprv_strlen(pPriv));
@@ -1939,7 +1939,7 @@ _appendPrivateuseToLanguageTag(std::string_view localeID, icu::ByteSink& sink, b
                 }
                 /* reset private use starting position */
                 pPriv = nullptr;
-            } else if (pPriv == nullptr) {
+            } وگرنه اگر (pPriv == nullptr) {
                 pPriv = p;
             }
             p++;
@@ -1971,59 +1971,59 @@ _appendPrivateuseToLanguageTag(std::string_view localeID, icu::ByteSink& sink, b
  * This work-around should be removed once the following versions of Visual Studio are no
  * longer supported: All versions of VS2015/VS2017, and versions of VS2019 below 16.4.
  */
-#if defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
+#اگر defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
 #pragma optimize( "", off )
 #endif
 
 ULanguageTag*
-ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& status) {
-    if (U_FAILURE(status)) { return nullptr; }
+ultag_parse(ثابت نویسه* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& status) {
+    اگر (U_FAILURE(status)) { بازگشت nullptr; }
 
-    char *tagBuf;
+    نویسه *tagBuf;
     int16_t next;
-    char *pSubtag, *pNext, *pLastGoodPosition;
+    نویسه *pSubtag, *pNext, *pLastGoodPosition;
     int32_t subtagLen;
     int32_t extlangIdx;
     icu::LocalPointer<ExtensionListEntry> pExtension;
-    char *pExtValueSubtag, *pExtValueSubtagEnd;
+    نویسه *p_Ext_مقدار_Subtag, *p_Ext_مقدار_Subtag_End;
     int32_t i;
-    bool privateuseVar = false;
+    منطقی privateuseVar = نادرست;
     int32_t legacyLen = 0;
 
-    if (parsedLen != nullptr) {
+    اگر (parsedLen != nullptr) {
         *parsedLen = 0;
     }
 
-    if (tagLen < 0) {
+    اگر (tagLen < 0) {
         tagLen = static_cast<int32_t>(uprv_strlen(tag));
     }
 
     /* copy the entire string */
-    tagBuf = static_cast<char*>(uprv_malloc(tagLen + 1));
-    if (tagBuf == nullptr) {
+    tagBuf = static_cast<نویسه*>(uprv_malloc(tagLen + 1));
+    اگر (tagBuf == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        بازگشت nullptr;
     }
     
-    if (tagLen > 0) {
+    اگر (tagLen > 0) {
         uprv_memcpy(tagBuf, tag, tagLen);
     }
     *(tagBuf + tagLen) = 0;
 
     /* create a ULanguageTag */
     icu::LocalULanguageTagPointer t(
-            static_cast<ULanguageTag*>(uprv_malloc(sizeof(ULanguageTag))));
-    if (t.isNull()) {
+            static_cast<ULanguageTag*>(uprv_malloc(اندازه(ULanguageTag))));
+    اگر (t.isNull()) {
         uprv_free(tagBuf);
         status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        بازگشت nullptr;
     }
     _initializeULanguageTag(t.getAlias());
     t->buf = tagBuf;
 
-    if (tagLen < MINLEN) {
+    اگر (tagLen < MINLEN) {
         /* the input tag is too short - return empty ULanguageTag */
-        return t.orphan();
+        بازگشت t.orphan();
     }
 
     size_t parsedLenDelta = 0;
@@ -2031,70 +2031,70 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
     // script and region such as art-DE-lojban or art-Latn-lojban won't be
     // matched.
     /* check if the tag is legacy */
-    for (i = 0; i < UPRV_LENGTHOF(LEGACY); i += 2) {
+    برای (i = 0; i < UPRV_LENGTHOF(LEGACY); i += 2) {
         int32_t checkLegacyLen = static_cast<int32_t>(uprv_strlen(LEGACY[i]));
-        if (tagLen < checkLegacyLen) {
-            continue;
+        اگر (tagLen < checkLegacyLen) {
+            ادامه;
         }
-        if (tagLen > checkLegacyLen && tagBuf[checkLegacyLen] != '-') {
+        اگر (tagLen > checkLegacyLen && tagBuf[checkLegacyLen] != '-') {
             // make sure next char is '-'.
-            continue;
+            ادامه;
         }
-        if (uprv_strnicmp(LEGACY[i], tagBuf, checkLegacyLen) == 0) {
+        اگر (uprv_strnicmp(LEGACY[i], tagBuf, checkLegacyLen) == 0) {
             int32_t newTagLength;
 
             legacyLen = checkLegacyLen;  /* back up for output parsedLen */
             int32_t replacementLen = static_cast<int32_t>(uprv_strlen(LEGACY[i+1]));
             newTagLength = replacementLen + tagLen - checkLegacyLen;
             int32_t oldTagLength = tagLen;
-            if (tagLen < newTagLength) {
+            اگر (tagLen < newTagLength) {
                 uprv_free(tagBuf);
                 // Change t->buf after the free and before return to avoid the second double free in
                 // the destructor of t when t is out of scope.
-                t->buf = tagBuf = static_cast<char*>(uprv_malloc(newTagLength + 1));
-                if (tagBuf == nullptr) {
+                t->buf = tagBuf = static_cast<نویسه*>(uprv_malloc(newTagLength + 1));
+                اگر (tagBuf == nullptr) {
                     status = U_MEMORY_ALLOCATION_ERROR;
-                    return nullptr;
+                    بازگشت nullptr;
                 }
                 tagLen = newTagLength;
             }
             parsedLenDelta = checkLegacyLen - replacementLen;
             uprv_strcpy(t->buf, LEGACY[i + 1]);
-            if (checkLegacyLen != tagLen) {
+            اگر (checkLegacyLen != tagLen) {
                 uprv_memcpy(t->buf + replacementLen, tag + checkLegacyLen,
                             oldTagLength - checkLegacyLen);
                 // NUL-terminate after memcpy().
                 t->buf[replacementLen + oldTagLength - checkLegacyLen] = 0;
             }
-            break;
+            بشکن;
         }
     }
 
-    if (legacyLen == 0) {
-        for (i = 0; i < UPRV_LENGTHOF(REDUNDANT); i += 2) {
-            const char* redundantTag = REDUNDANT[i];
+    اگر (legacyLen == 0) {
+        برای (i = 0; i < UPRV_LENGTHOF(REDUNDANT); i += 2) {
+            ثابت نویسه* redundantTag = REDUNDANT[i];
             size_t redundantTagLen = uprv_strlen(redundantTag);
             // The preferred tag for a redundant tag is always shorter than redundant
             // tag. A redundant tag may or may not be followed by other subtags.
             // (i.e. "zh-yue" or "zh-yue-u-co-pinyin").
-            if (uprv_strnicmp(redundantTag, tagBuf, static_cast<uint32_t>(redundantTagLen)) == 0) {
-                const char* redundantTagEnd = tagBuf + redundantTagLen;
-                if (*redundantTagEnd  == '\0' || *redundantTagEnd == SEP) {
-                    const char* preferredTag = REDUNDANT[i + 1];
+            اگر (uprv_strnicmp(redundantTag, tagBuf, static_cast<uint32_t>(redundantTagLen)) == 0) {
+                ثابت نویسه* redundantTagEnd = tagBuf + redundantTagLen;
+                اگر (*redundantTagEnd  == '\0' || *redundantTagEnd == SEP) {
+                    ثابت نویسه* preferredTag = REDUNDANT[i + 1];
                     size_t preferredTagLen = uprv_strlen(preferredTag);
                     uprv_memcpy(t->buf, preferredTag, preferredTagLen);
-                    if (*redundantTagEnd == SEP) {
+                    اگر (*redundantTagEnd == SEP) {
                         uprv_memmove(tagBuf + preferredTagLen,
                                      redundantTagEnd,
                                      tagLen - redundantTagLen + 1);
-                    } else {
+                    } وگرنه {
                         tagBuf[preferredTagLen] = '\0';
                     }
                     // parsedLen should be the length of the input
                     // before redundantTag is replaced by preferredTag.
                     // Save the delta to add it back later.
                     parsedLenDelta = redundantTagLen - preferredTagLen;
-                    break;
+                    بشکن;
                 }
             }
         }
@@ -2112,67 +2112,67 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
     next = LANG | PRIV;
     pNext = pLastGoodPosition = tagBuf;
     extlangIdx = 0;
-    pExtValueSubtag = nullptr;
-    pExtValueSubtagEnd = nullptr;
+    p_Ext_مقدار_Subtag = nullptr;
+    p_Ext_مقدار_Subtag_End = nullptr;
 
-    while (pNext) {
-        char *pSep;
+    وقتی (pNext) {
+        نویسه *pSep;
 
         pSubtag = pNext;
 
         /* locate next separator char */
         pSep = pSubtag;
-        while (*pSep) {
-            if (*pSep == SEP) {
-                break;
+        وقتی (*pSep) {
+            اگر (*pSep == SEP) {
+                بشکن;
             }
             pSep++;
         }
-        if (*pSep == 0) {
+        اگر (*pSep == 0) {
             /* last subtag */
             pNext = nullptr;
-        } else {
+        } وگرنه {
             pNext = pSep + 1;
         }
         subtagLen = static_cast<int32_t>(pSep - pSubtag);
 
-        if (next & LANG) {
-            if (ultag_isLanguageSubtag(pSubtag, subtagLen)) {
+        اگر (next & LANG) {
+            اگر (ultag_isLanguageSubtag(pSubtag, subtagLen)) {
                 *pSep = 0;  /* terminate */
                 // TODO: move deprecated language code handling here.
                 t->language = T_CString_toLowerCase(pSubtag);
 
                 pLastGoodPosition = pSep;
                 next = SCRT | REGN | VART | EXTS | PRIV;
-                if (subtagLen <= 3)
+                اگر (subtagLen <= 3)
                   next |= EXTL;
-                continue;
+                ادامه;
             }
         }
-        if (next & EXTL) {
-            if (_isExtlangSubtag(pSubtag, subtagLen)) {
+        اگر (next & EXTL) {
+            اگر (_isExtlangSubtag(pSubtag, subtagLen)) {
                 *pSep = 0;
                 t->extlang[extlangIdx++] = T_CString_toLowerCase(pSubtag);
 
                 pLastGoodPosition = pSep;
-                if (extlangIdx < 3) {
+                اگر (extlangIdx < 3) {
                     next = EXTL | SCRT | REGN | VART | EXTS | PRIV;
-                } else {
+                } وگرنه {
                     next = SCRT | REGN | VART | EXTS | PRIV;
                 }
-                continue;
+                ادامه;
             }
         }
-        if (next & SCRT) {
-            if (ultag_isScriptSubtag(pSubtag, subtagLen)) {
-                char *p = pSubtag;
+        اگر (next & SCRT) {
+            اگر (ultag_isScriptSubtag(pSubtag, subtagLen)) {
+                نویسه *p = pSubtag;
 
                 *pSep = 0;
 
                 /* to title case */
                 *p = uprv_toupper(*p);
                 p++;
-                for (; *p; p++) {
+                برای (; *p; p++) {
                     *p = uprv_tolower(*p);
                 }
 
@@ -2180,232 +2180,232 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
 
                 pLastGoodPosition = pSep;
                 next = REGN | VART | EXTS | PRIV;
-                continue;
+                ادامه;
             }
         }
-        if (next & REGN) {
-            if (ultag_isRegionSubtag(pSubtag, subtagLen)) {
+        اگر (next & REGN) {
+            اگر (ultag_isRegionSubtag(pSubtag, subtagLen)) {
                 *pSep = 0;
                 // TODO: move deprecated region code handling here.
                 t->region = T_CString_toUpperCase(pSubtag);
 
                 pLastGoodPosition = pSep;
                 next = VART | EXTS | PRIV;
-                continue;
+                ادامه;
             }
         }
-        if (next & VART) {
-            if (_isVariantSubtag(pSubtag, subtagLen) ||
+        اگر (next & VART) {
+            اگر (_isVariantSubtag(pSubtag, subtagLen) ||
                (privateuseVar && _isPrivateuseVariantSubtag(pSubtag, subtagLen))) {
-                icu::LocalPointer<VariantListEntry> var(new VariantListEntry, status);
-                if (U_FAILURE(status)) {
-                    return nullptr;
+                icu::LocalPointer<VariantListEntry> var(جدید VariantListEntry, status);
+                اگر (U_FAILURE(status)) {
+                    بازگشت nullptr;
                 }
                 *pSep = 0;
                 var->variant = T_CString_toUpperCase(pSubtag);
-                if (!_addVariantToList(&(t->variants), std::move(var))) {
+                اگر (!_addVariantToList(&(t->variants), std::move(var))) {
                     /* duplicated variant entry */
-                    break;
+                    بشکن;
                 }
                 pLastGoodPosition = pSep;
                 next = VART | EXTS | PRIV;
-                continue;
+                ادامه;
             }
         }
-        if (next & EXTS) {
-            if (_isExtensionSingleton(pSubtag, subtagLen)) {
-                if (pExtension.isValid()) {
-                    if (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
+        اگر (next & EXTS) {
+            اگر (_isExtensionSingleton(pSubtag, subtagLen)) {
+                اگر (pExtension.isValid()) {
+                    اگر (p_Ext_مقدار_Subtag == nullptr || p_Ext_مقدار_Subtag_End == nullptr) {
                         /* the previous extension is incomplete */
                         delete pExtension.orphan();
-                        break;
+                        بشکن;
                     }
 
                     /* terminate the previous extension value */
-                    *pExtValueSubtagEnd = 0;
-                    pExtension->value = T_CString_toLowerCase(pExtValueSubtag);
+                    *p_Ext_مقدار_Subtag_End = 0;
+                    pExtension->value = T_CString_toLowerCase(p_Ext_مقدار_Subtag);
 
                     /* insert the extension to the list */
-                    if (_addExtensionToList(&(t->extensions), pExtension.getAlias(), false)) {
+                    اگر (_addExtensionToList(&(t->extensions), pExtension.getAlias(), نادرست)) {
                         pExtension.orphan();
-                        pLastGoodPosition = pExtValueSubtagEnd;
-                    } else {
+                        pLastGoodPosition = p_Ext_مقدار_Subtag_End;
+                    } وگرنه {
                         /* stop parsing here */
                         delete pExtension.orphan();
-                        break;
+                        بشکن;
                     }
                 }
 
                 /* create a new extension */
-                pExtension.adoptInsteadAndCheckErrorCode(new ExtensionListEntry, status);
-                if (U_FAILURE(status)) {
-                    return nullptr;
+                pExtension.adoptInsteadAndCheckErrorCode(جدید ExtensionListEntry, status);
+                اگر (U_FAILURE(status)) {
+                    بازگشت nullptr;
                 }
                 *pSep = 0;
-                pExtension->key = T_CString_toLowerCase(pSubtag);
+                pExtension->کلید = T_CString_toLowerCase(pSubtag);
                 pExtension->value = nullptr;   /* will be set later */
 
                 /*
                  * reset the start and the end location of extension value
                  * subtags for this extension
                  */
-                pExtValueSubtag = nullptr;
-                pExtValueSubtagEnd = nullptr;
+                p_Ext_مقدار_Subtag = nullptr;
+                p_Ext_مقدار_Subtag_End = nullptr;
 
                 next = EXTV;
-                continue;
+                ادامه;
             }
         }
-        if (next & EXTV) {
-            if (_isExtensionSubtag(pSubtag, subtagLen)) {
-                if (pExtValueSubtag == nullptr) {
+        اگر (next & EXTV) {
+            اگر (_isExtensionSubtag(pSubtag, subtagLen)) {
+                اگر (p_Ext_مقدار_Subtag == nullptr) {
                     /* if the start position of this extension's value is not yet,
                         this one is the first value subtag */
-                    pExtValueSubtag = pSubtag;
+                    p_Ext_مقدار_Subtag = pSubtag;
                 }
 
                 /* Mark the end of this subtag */
-                pExtValueSubtagEnd = pSep;
+                p_Ext_مقدار_Subtag_End = pSep;
                 next = EXTS | EXTV | PRIV;
 
-                continue;
+                ادامه;
             }
         }
-        if (next & PRIV) {
-            if (uprv_tolower(*pSubtag) == PRIVATEUSE && subtagLen == 1) {
-                char *pPrivuseVal;
+        اگر (next & PRIV) {
+            اگر (uprv_tolower(*pSubtag) == PRIVATEUSE && subtagLen == 1) {
+                نویسه *pPrivuseVal;
 
-                if (pExtension.isValid()) {
+                اگر (pExtension.isValid()) {
                     /* Process the last extension */
-                    if (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
+                    اگر (p_Ext_مقدار_Subtag == nullptr || p_Ext_مقدار_Subtag_End == nullptr) {
                         /* the previous extension is incomplete */
                         delete pExtension.orphan();
-                        break;
-                    } else {
+                        بشکن;
+                    } وگرنه {
                         /* terminate the previous extension value */
-                        *pExtValueSubtagEnd = 0;
-                        pExtension->value = T_CString_toLowerCase(pExtValueSubtag);
+                        *p_Ext_مقدار_Subtag_End = 0;
+                        pExtension->value = T_CString_toLowerCase(p_Ext_مقدار_Subtag);
 
                         /* insert the extension to the list */
-                        if (_addExtensionToList(&(t->extensions), pExtension.getAlias(), false)) {
+                        اگر (_addExtensionToList(&(t->extensions), pExtension.getAlias(), نادرست)) {
                             pExtension.orphan();
-                            pLastGoodPosition = pExtValueSubtagEnd;
-                        } else {
+                            pLastGoodPosition = p_Ext_مقدار_Subtag_End;
+                        } وگرنه {
                         /* stop parsing here */
                             delete pExtension.orphan();
-                            break;
+                            بشکن;
                         }
                     }
                 }
 
                 /* The rest of part will be private use value subtags */
-                if (pNext == nullptr) {
+                اگر (pNext == nullptr) {
                     /* empty private use subtag */
-                    break;
+                    بشکن;
                 }
                 /* back up the private use value start position */
                 pPrivuseVal = pNext;
 
                 /* validate private use value subtags */
-                while (pNext) {
+                وقتی (pNext) {
                     pSubtag = pNext;
                     pSep = pSubtag;
-                    while (*pSep) {
-                        if (*pSep == SEP) {
-                            break;
+                    وقتی (*pSep) {
+                        اگر (*pSep == SEP) {
+                            بشکن;
                         }
                         pSep++;
                     }
-                    if (*pSep == 0) {
+                    اگر (*pSep == 0) {
                         /* last subtag */
                         pNext = nullptr;
-                    } else {
+                    } وگرنه {
                         pNext = pSep + 1;
                     }
                     subtagLen = static_cast<int32_t>(pSep - pSubtag);
 
-                    if (uprv_strncmp(pSubtag, PRIVUSE_VARIANT_PREFIX, uprv_strlen(PRIVUSE_VARIANT_PREFIX)) == 0) {
+                    اگر (uprv_strncmp(pSubtag, PRIVUSE_VARIANT_PREFIX, uprv_strlen(PRIVUSE_VARIANT_PREFIX)) == 0) {
                         *pSep = 0;
                         next = VART;
-                        privateuseVar = true;
-                        break;
-                    } else if (_isPrivateuseValueSubtag(pSubtag, subtagLen)) {
+                        privateuseVar = درست;
+                        بشکن;
+                    } وگرنه اگر (is_Privateuse_مقدار_Subtag(pSubtag, subtagLen)) {
                         pLastGoodPosition = pSep;
-                    } else {
-                        break;
+                    } وگرنه {
+                        بشکن;
                     }
                 }
 
-                if (next == VART) {
-                    continue;
+                اگر (next == VART) {
+                    ادامه;
                 }
 
-                if (pLastGoodPosition - pPrivuseVal > 0) {
+                اگر (pLastGoodPosition - pPrivuseVal > 0) {
                     *pLastGoodPosition = 0;
                     t->privateuse = T_CString_toLowerCase(pPrivuseVal);
                 }
                 /* No more subtags, exiting the parse loop */
-                break;
+                بشکن;
             }
-            break;
+            بشکن;
         }
 
         /* If we fell through here, it means this subtag is illegal - quit parsing */
-        break;
+        بشکن;
     }
 
-    if (pExtension.isValid()) {
+    اگر (pExtension.isValid()) {
         /* Process the last extension */
-        if (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
+        اگر (p_Ext_مقدار_Subtag == nullptr || p_Ext_مقدار_Subtag_End == nullptr) {
             /* the previous extension is incomplete */
             delete pExtension.orphan();
-        } else {
+        } وگرنه {
             /* terminate the previous extension value */
-            *pExtValueSubtagEnd = 0;
-            pExtension->value = T_CString_toLowerCase(pExtValueSubtag);
+            *p_Ext_مقدار_Subtag_End = 0;
+            pExtension->value = T_CString_toLowerCase(p_Ext_مقدار_Subtag);
             /* insert the extension to the list */
-            if (_addExtensionToList(&(t->extensions), pExtension.getAlias(), false)) {
+            اگر (_addExtensionToList(&(t->extensions), pExtension.getAlias(), نادرست)) {
                 pExtension.orphan();
-                pLastGoodPosition = pExtValueSubtagEnd;
-            } else {
+                pLastGoodPosition = p_Ext_مقدار_Subtag_End;
+            } وگرنه {
                 delete pExtension.orphan();
             }
         }
     }
 
-    if (parsedLen != nullptr) {
+    اگر (parsedLen != nullptr) {
         *parsedLen = static_cast<int32_t>(pLastGoodPosition - t->buf + parsedLenDelta);
     }
 
-    return t.orphan();
+    بازگشت t.orphan();
 }
 
 // Ticket #12705 - Turn optimization back on.
-#if defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
+#اگر defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
 #pragma optimize( "", on )
 #endif
 
-void
+تهی
 ultag_close(ULanguageTag* langtag) {
 
-    if (langtag == nullptr) {
-        return;
+    اگر (langtag == nullptr) {
+        بازگشت;
     }
 
     uprv_free(langtag->buf);
 
-    if (langtag->variants) {
+    اگر (langtag->variants) {
         VariantListEntry *curVar = langtag->variants;
-        while (curVar) {
+        وقتی (curVar) {
             VariantListEntry *nextVar = curVar->next;
             delete curVar;
             curVar = nextVar;
         }
     }
 
-    if (langtag->extensions) {
+    اگر (langtag->extensions) {
         ExtensionListEntry *curExt = langtag->extensions;
-        while (curExt) {
+        وقتی (curExt) {
             ExtensionListEntry *nextExt = curExt->next;
             delete curExt;
             curExt = nextExt;
@@ -2415,139 +2415,139 @@ ultag_close(ULanguageTag* langtag) {
     uprv_free(langtag);
 }
 
-const char*
-ultag_getLanguage(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->language;
+ثابت نویسه*
+ultag_getLanguage(ثابت ULanguageTag* langtag U_LIFETIME_BOUND) {
+    بازگشت langtag->language;
 }
 
-#if 0
-const char*
-ultag_getJDKLanguage(const ULanguageTag* langtag) {
+#اگر 0
+ثابت نویسه*
+ultag_getJDKLanguage(ثابت ULanguageTag* langtag) {
     int32_t i;
-    for (i = 0; DEPRECATEDLANGS[i] != nullptr; i += 2) {
-        if (uprv_compareInvCharsAsAscii(DEPRECATEDLANGS[i], langtag->language) == 0) {
-            return DEPRECATEDLANGS[i + 1];
+    برای (i = 0; DEPRECATEDLANGS[i] != nullptr; i += 2) {
+        اگر (uprv_compareInvCharsAsAscii(DEPRECATEDLANGS[i], langtag->language) == 0) {
+            بازگشت DEPRECATEDLANGS[i + 1];
         }
     }
-    return langtag->language;
+    بازگشت langtag->language;
 }
 #endif
 
-const char*
-ultag_getExtlang(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
-    if (idx >= 0 && idx < MAXEXTLANG) {
-        return langtag->extlang[idx];
+ثابت نویسه*
+ultag_getExtlang(ثابت ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
+    اگر (idx >= 0 && idx < MAXEXTLANG) {
+        بازگشت langtag->extlang[idx];
     }
-    return nullptr;
+    بازگشت nullptr;
 }
 
 int32_t
-ultag_getExtlangSize(const ULanguageTag* langtag) {
+ultag_getExtlangSize(ثابت ULanguageTag* langtag) {
     int32_t size = 0;
     int32_t i;
-    for (i = 0; i < MAXEXTLANG; i++) {
-        if (langtag->extlang[i]) {
+    برای (i = 0; i < MAXEXTLANG; i++) {
+        اگر (langtag->extlang[i]) {
             size++;
         }
     }
-    return size;
+    بازگشت size;
 }
 
-const char*
-ultag_getScript(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->script;
+ثابت نویسه*
+ultag_getScript(ثابت ULanguageTag* langtag U_LIFETIME_BOUND) {
+    بازگشت langtag->script;
 }
 
-const char*
-ultag_getRegion(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->region;
+ثابت نویسه*
+ultag_getRegion(ثابت ULanguageTag* langtag U_LIFETIME_BOUND) {
+    بازگشت langtag->region;
 }
 
-const char*
-ultag_getVariant(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
-    const char *var = nullptr;
+ثابت نویسه*
+ultag_getVariant(ثابت ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
+    ثابت نویسه *var = nullptr;
     VariantListEntry *cur = langtag->variants;
     int32_t i = 0;
-    while (cur) {
-        if (i == idx) {
+    وقتی (cur) {
+        اگر (i == idx) {
             var = cur->variant;
-            break;
+            بشکن;
         }
         cur = cur->next;
         i++;
     }
-    return var;
+    بازگشت var;
 }
 
 int32_t
-ultag_getVariantsSize(const ULanguageTag* langtag) {
+ultag_getVariantsSize(ثابت ULanguageTag* langtag) {
     int32_t size = 0;
     VariantListEntry *cur = langtag->variants;
-    while (true) {
-        if (cur == nullptr) {
-            break;
+    وقتی (درست) {
+        اگر (cur == nullptr) {
+            بشکن;
         }
         size++;
         cur = cur->next;
     }
-    return size;
+    بازگشت size;
 }
 
-const char*
-ultag_getExtensionKey(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
-    const char *key = nullptr;
+ثابت نویسه*
+ultag_get_Extension_کلید(ثابت ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
+    ثابت نویسه *کلید = nullptr;
     ExtensionListEntry *cur = langtag->extensions;
     int32_t i = 0;
-    while (cur) {
-        if (i == idx) {
-            key = cur->key;
-            break;
+    وقتی (cur) {
+        اگر (i == idx) {
+            کلید = cur->کلید;
+            بشکن;
         }
         cur = cur->next;
         i++;
     }
-    return key;
+    بازگشت کلید;
 }
 
-const char*
-ultag_getExtensionValue(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
-    const char *val = nullptr;
+ثابت نویسه*
+ultag_get_Extension_مقدار(ثابت ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
+    ثابت نویسه *val = nullptr;
     ExtensionListEntry *cur = langtag->extensions;
     int32_t i = 0;
-    while (cur) {
-        if (i == idx) {
+    وقتی (cur) {
+        اگر (i == idx) {
             val = cur->value;
-            break;
+            بشکن;
         }
         cur = cur->next;
         i++;
     }
-    return val;
+    بازگشت val;
 }
 
 int32_t
-ultag_getExtensionsSize(const ULanguageTag* langtag) {
+ultag_getExtensionsSize(ثابت ULanguageTag* langtag) {
     int32_t size = 0;
     ExtensionListEntry *cur = langtag->extensions;
-    while (true) {
-        if (cur == nullptr) {
-            break;
+    وقتی (درست) {
+        اگر (cur == nullptr) {
+            بشکن;
         }
         size++;
         cur = cur->next;
     }
-    return size;
+    بازگشت size;
 }
 
-const char*
-ultag_getPrivateUse(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->privateuse;
+ثابت نویسه*
+ultag_getPrivateUse(ثابت ULanguageTag* langtag U_LIFETIME_BOUND) {
+    بازگشت langtag->privateuse;
 }
 
-#if 0
-const char*
-ultag_getLegacy(const ULanguageTag* langtag) {
-    return langtag->legacy;
+#اگر 0
+ثابت نویسه*
+ultag_getLegacy(ثابت ULanguageTag* langtag) {
+    بازگشت langtag->legacy;
 }
 #endif
 
@@ -2561,12 +2561,12 @@ ultag_getLegacy(const ULanguageTag* langtag) {
 * -------------------------------------------------
 */
 U_CAPI int32_t U_EXPORT2
-uloc_toLanguageTag(const char* localeID,
-                   char* langtag,
+uloc_toLanguageTag(ثابت نویسه* localeID,
+                   نویسه* langtag,
                    int32_t langtagCapacity,
                    UBool strict,
                    UErrorCode* status) {
-    return icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
+    بازگشت icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
         langtag, langtagCapacity,
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_toLanguageTag(localeID, sink, strict, status);
@@ -2575,72 +2575,72 @@ uloc_toLanguageTag(const char* localeID,
 }
 
 U_EXPORT icu::CharString
-ulocimp_toLanguageTag(const char* localeID,
-                      bool strict,
+ulocimp_toLanguageTag(ثابت نویسه* localeID,
+                      منطقی strict,
                       UErrorCode& status) {
-    return icu::ByteSinkUtil::viaByteSinkToCharString(
+    بازگشت icu::ByteSinkUtil::viaByteSinkToCharString(
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_toLanguageTag(localeID, sink, strict, status);
         },
         status);
 }
 
-U_EXPORT void
-ulocimp_toLanguageTag(const char* localeID,
+U_EXPORT تهی
+ulocimp_toLanguageTag(ثابت نویسه* localeID,
                       icu::ByteSink& sink,
-                      bool strict,
+                      منطقی strict,
                       UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    اگر (U_FAILURE(status)) { بازگشت; }
 
     UErrorCode tmpStatus = U_ZERO_ERROR;
-    bool hadPosix = false;
-    const char* pKeywordStart;
+    منطقی hadPosix = نادرست;
+    ثابت نویسه* pKeywordStart;
 
-    if (localeID == nullptr) {
+    اگر (localeID == nullptr) {
         localeID = uloc_getDefault();
     }
     /* Note: uloc_canonicalize returns "en_US_POSIX" for input locale ID "".  See #6835 */
     icu::CharString canonical = ulocimp_canonicalize(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
+    اگر (U_FAILURE(tmpStatus)) {
         status = tmpStatus;
-        return;
+        بازگشت;
     }
 
     /* For handling special case - private use only tag */
     pKeywordStart = locale_getKeywordsStart(canonical.toStringPiece());
-    if (pKeywordStart == canonical.data()) {
-        int kwdCnt = 0;
-        bool done = false;
+    اگر (pKeywordStart == canonical.data()) {
+        صحیح kwdCnt = 0;
+        منطقی done = نادرست;
 
         icu::LocalUEnumerationPointer kwdEnum(uloc_openKeywords(canonical.data(), &tmpStatus));
-        if (U_SUCCESS(tmpStatus)) {
-            kwdCnt = uenum_count(kwdEnum.getAlias(), &tmpStatus);
-            if (kwdCnt == 1) {
-                const char *key;
+        اگر (U_SUCCESS(tmpStatus)) {
+            kwdCnt = uenum_شمار(kwdEnum.getAlias(), &tmpStatus);
+            اگر (kwdCnt == 1) {
+                ثابت نویسه *کلید;
                 int32_t len = 0;
 
-                key = uenum_next(kwdEnum.getAlias(), &len, &tmpStatus);
-                if (len == 1 && *key == PRIVATEUSE) {
-                    icu::CharString buf = ulocimp_getKeywordValue(localeID, key, tmpStatus);
-                    if (U_SUCCESS(tmpStatus)) {
-                        if (ultag_isPrivateuseValueSubtags(buf.data(), buf.length())) {
+                کلید = uenum_next(kwdEnum.getAlias(), &len, &tmpStatus);
+                اگر (len == 1 && *کلید == PRIVATEUSE) {
+                    icu::CharString buf = ulocimp_get_Keyword_مقدار(localeID, کلید, tmpStatus);
+                    اگر (U_SUCCESS(tmpStatus)) {
+                        اگر (ultag_is_Privateuse_مقدار_Subtags(buf.data(), buf.length())) {
                             /* return private use only tag */
                             sink.Append("und-x-", 6);
                             sink.Append(buf.data(), buf.length());
-                            done = true;
-                        } else if (strict) {
+                            done = درست;
+                        } وگرنه اگر (strict) {
                             status = U_ILLEGAL_ARGUMENT_ERROR;
-                            done = true;
+                            done = درست;
                         }
                         /* if not strict mode, then "und" will be returned */
-                    } else {
+                    } وگرنه {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        done = true;
+                        done = درست;
                     }
                 }
             }
-            if (done) {
-                return;
+            اگر (done) {
+                بازگشت;
             }
         }
     }
@@ -2655,12 +2655,12 @@ ulocimp_toLanguageTag(const char* localeID,
 
 
 U_CAPI int32_t U_EXPORT2
-uloc_forLanguageTag(const char* langtag,
-                    char* localeID,
+uloc_forLanguageTag(ثابت نویسه* langtag,
+                    نویسه* localeID,
                     int32_t localeIDCapacity,
                     int32_t* parsedLength,
                     UErrorCode* status) {
-    return icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
+    بازگشت icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
         localeID, localeIDCapacity,
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_forLanguageTag(langtag, -1, sink, parsedLength, status);
@@ -2669,55 +2669,55 @@ uloc_forLanguageTag(const char* langtag,
 }
 
 U_EXPORT icu::CharString
-ulocimp_forLanguageTag(const char* langtag,
+ulocimp_forLanguageTag(ثابت نویسه* langtag,
                        int32_t tagLen,
                        int32_t* parsedLength,
                        UErrorCode& status) {
-    return icu::ByteSinkUtil::viaByteSinkToCharString(
+    بازگشت icu::ByteSinkUtil::viaByteSinkToCharString(
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_forLanguageTag(langtag, tagLen, sink, parsedLength, status);
         },
         status);
 }
 
-U_EXPORT void
-ulocimp_forLanguageTag(const char* langtag,
+U_EXPORT تهی
+ulocimp_forLanguageTag(ثابت نویسه* langtag,
                        int32_t tagLen,
                        icu::ByteSink& sink,
                        int32_t* parsedLength,
                        UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    اگر (U_FAILURE(status)) { بازگشت; }
 
-    bool isEmpty = true;
-    const char *subtag, *p;
+    منطقی isEmpty = درست;
+    ثابت نویسه *subtag, *p;
     int32_t len;
     int32_t i, n;
-    bool noRegion = true;
+    منطقی noRegion = درست;
 
     icu::LocalULanguageTagPointer lt(ultag_parse(langtag, tagLen, parsedLength, status));
-    if (U_FAILURE(status)) {
-        return;
+    اگر (U_FAILURE(status)) {
+        بازگشت;
     }
 
     /* language */
     subtag = ultag_getExtlangSize(lt.getAlias()) > 0 ? ultag_getExtlang(lt.getAlias(), 0) : ultag_getLanguage(lt.getAlias());
-    if (uprv_compareInvCharsAsAscii(subtag, LANG_UND) != 0) {
+    اگر (uprv_compareInvCharsAsAscii(subtag, LANG_UND) != 0) {
         len = static_cast<int32_t>(uprv_strlen(subtag));
-        if (len > 0) {
+        اگر (len > 0) {
             sink.Append(subtag, len);
-            isEmpty = false;
+            isEmpty = نادرست;
         }
     }
 
     /* script */
     subtag = ultag_getScript(lt.getAlias());
     len = static_cast<int32_t>(uprv_strlen(subtag));
-    if (len > 0) {
+    اگر (len > 0) {
         sink.Append("_", 1);
-        isEmpty = false;
+        isEmpty = نادرست;
 
         /* write out the script in title case */
-        char c = uprv_toupper(*subtag);
+        نویسه c = uprv_toupper(*subtag);
         sink.Append(&c, 1);
         sink.Append(subtag + 1, len - 1);
     }
@@ -2725,37 +2725,37 @@ ulocimp_forLanguageTag(const char* langtag,
     /* region */
     subtag = ultag_getRegion(lt.getAlias());
     len = static_cast<int32_t>(uprv_strlen(subtag));
-    if (len > 0) {
+    اگر (len > 0) {
         sink.Append("_", 1);
-        isEmpty = false;
+        isEmpty = نادرست;
 
         /* write out the region in upper case */
         p = subtag;
-        while (*p) {
-            char c = uprv_toupper(*p);
+        وقتی (*p) {
+            نویسه c = uprv_toupper(*p);
             sink.Append(&c, 1);
             p++;
         }
-        noRegion = false;
+        noRegion = نادرست;
     }
 
     /* variants */
     _sortVariants(lt.getAlias()->variants);
     n = ultag_getVariantsSize(lt.getAlias());
-    if (n > 0) {
-        if (noRegion) {
+    اگر (n > 0) {
+        اگر (noRegion) {
             sink.Append("_", 1);
-            isEmpty = false;
+            isEmpty = نادرست;
         }
 
-        for (i = 0; i < n; i++) {
+        برای (i = 0; i < n; i++) {
             subtag = ultag_getVariant(lt.getAlias(), i);
             sink.Append("_", 1);
 
             /* write out the variant in upper case */
             p = subtag;
-            while (*p) {
-                char c = uprv_toupper(*p);
+            وقتی (*p) {
+                نویسه c = uprv_toupper(*p);
                 sink.Append(&c, 1);
                 p++;
             }
@@ -2765,8 +2765,8 @@ ulocimp_forLanguageTag(const char* langtag,
     /* keywords */
     n = ultag_getExtensionsSize(lt.getAlias());
     subtag = ultag_getPrivateUse(lt.getAlias());
-    if (n > 0 || uprv_strlen(subtag) > 0) {
-        if (isEmpty && n > 0) {
+    اگر (n > 0 || uprv_strlen(subtag) > 0) {
+        اگر (isEmpty && n > 0) {
             /* need a language */
             sink.Append(LANG_UND, LANG_UND_LEN);
         }

@@ -4,23 +4,23 @@
 #ifndef LSTMBE_H
 #define LSTMBE_H
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#اگر !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/uniset.h"
-#include "unicode/ures.h"
-#include "unicode/utext.h"
-#include "unicode/utypes.h"
+#شامل "unicode/uniset.h"
+#شامل "unicode/ures.h"
+#شامل "unicode/utext.h"
+#شامل "unicode/utypes.h"
 
-#include "brkeng.h"
-#include "dictbe.h"
-#include "uvectr32.h"
+#شامل "brkeng.h"
+#شامل "dictbe.h"
+#شامل "uvectr32.h"
 
 U_NAMESPACE_BEGIN
 
 class Vectorizer;
-struct LSTMData;
+ساختار LSTMData;
 
 /*******************************************************************
  * LSTMBreakEngine
@@ -33,21 +33,21 @@ struct LSTMData;
  * <p>After it is constructed a LSTMBreakEngine may be shared between
  * threads without synchronization.</p>
  */
-class LSTMBreakEngine : public DictionaryBreakEngine {
-public:
+class LSTMBreakEngine : عمومی DictionaryBreakEngine {
+عمومی:
     /**
      * <p>Constructor.</p>
      */
-    LSTMBreakEngine(const LSTMData* data, const UnicodeSet& set, UErrorCode &status);
+    LSTMBreakEngine(ثابت LSTMData* data, ثابت UnicodeSet& set, UErrorCode &status);
 
     /**
      * <p>Virtual destructor.</p>
      */
-    virtual ~LSTMBreakEngine();
+    مجازی ~LSTMBreakEngine();
 
-    virtual const char16_t* name() const;
+    مجازی ثابت char16_t* name() ثابت;
 
-protected:
+محافظتشده:
     /**
      * <p>Divide up a range of known dictionary characters handled by this break engine.</p>
      *
@@ -58,28 +58,28 @@ protected:
      * @param status Information on any errors encountered.
      * @return The number of breaks found
      */
-     virtual int32_t divideUpDictionaryRange(UText *text,
+     مجازی int32_t divideUpDictionaryRange(UText *text,
                                              int32_t rangeStart,
                                              int32_t rangeEnd,
                                              UVector32 &foundBreaks,
                                              UBool isPhraseBreaking,
-                                             UErrorCode& status) const override;
-private:
-    const LSTMData* fData;
-    const Vectorizer* fVectorizer;
+                                             UErrorCode& status) ثابت override;
+خصوصی:
+    ثابت LSTMData* fData;
+    ثابت Vectorizer* fVectorizer;
 };
 
-U_CAPI const LanguageBreakEngine* U_EXPORT2 CreateLSTMBreakEngine(
-    UScriptCode script, const LSTMData* data, UErrorCode& status);
+U_CAPI ثابت LanguageBreakEngine* U_EXPORT2 CreateLSTMBreakEngine(
+    UScriptCode script, ثابت LSTMData* data, UErrorCode& status);
 
-U_CAPI const LSTMData* U_EXPORT2 CreateLSTMData(
+U_CAPI ثابت LSTMData* U_EXPORT2 CreateLSTMData(
     UResourceBundle* rb, UErrorCode& status);
 
-U_CAPI const LSTMData* U_EXPORT2 CreateLSTMDataForScript(
+U_CAPI ثابت LSTMData* U_EXPORT2 CreateLSTMDataForScript(
     UScriptCode script, UErrorCode& status);
 
-U_CAPI void U_EXPORT2 DeleteLSTMData(const LSTMData* data);
-U_CAPI const char16_t* U_EXPORT2 LSTMDataName(const LSTMData* data);
+U_CAPI تهی U_EXPORT2 DeleteLSTMData(ثابت LSTMData* data);
+U_CAPI ثابت char16_t* U_EXPORT2 LSTMDataName(ثابت LSTMData* data);
 
 U_NAMESPACE_END
 

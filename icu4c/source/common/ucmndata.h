@@ -27,31 +27,31 @@
 #ifndef __UCMNDATA_H__
 #define __UCMNDATA_H__
 
-#include "unicode/udata.h"
-#include "umapfile.h"
+#شامل "unicode/udata.h"
+#شامل "umapfile.h"
 
 
 #define COMMON_DATA_NAME U_ICUDATA_NAME
 
-typedef struct  {
+تعریفنوع ساختار  {
     uint16_t    headerSize;
     uint8_t     magic1;
     uint8_t     magic2;
 } MappedData;
 
 
-typedef struct  {
+تعریفنوع ساختار  {
     MappedData  dataHeader;
     UDataInfo   info;
 } DataHeader;
 
-typedef struct {
+تعریفنوع ساختار {
     uint32_t nameOffset;
     uint32_t dataOffset;
 } UDataOffsetTOCEntry;
 
-typedef struct {
-    uint32_t count;
+تعریفنوع ساختار {
+    uint32_t شمار;
     /**
      * Variable-length array declared with length 1 to disable bounds checkers.
      * The actual array length is in the count field.
@@ -66,7 +66,7 @@ typedef struct {
  * @internal
  */
 U_CFUNC uint16_t
-udata_getHeaderSize(const DataHeader *udh);
+udata_getHeaderSize(ثابت DataHeader *udh);
 
 /**
  * Get the UDataInfo.size from a const UDataInfo *info.
@@ -75,7 +75,7 @@ udata_getHeaderSize(const DataHeader *udh);
  * @internal
  */
 U_CFUNC uint16_t
-udata_getInfoSize(const UDataInfo *info);
+udata_getInfoSize(ثابت UDataInfo *info);
 
 U_CDECL_BEGIN
 /*
@@ -85,20 +85,20 @@ U_CDECL_BEGIN
  *          (I sure do wish this was written in C++, not C)
  */
 
-typedef const DataHeader *
-(U_CALLCONV * LookupFn)(const UDataMemory *pData,
-                        const char *tocEntryName,
+تعریفنوع ثابت DataHeader *
+(U_CALLCONV * LookupFn)(ثابت UDataMemory *pData,
+                        ثابت نویسه *tocEntryName,
                         int32_t *pLength,
                         UErrorCode *pErrorCode);
 
-typedef uint32_t
-(U_CALLCONV * NumEntriesFn)(const UDataMemory *pData);
+تعریفنوع uint32_t
+(U_CALLCONV * رقم_Entries_Fn)(ثابت UDataMemory *pData);
 
 U_CDECL_END
 
-typedef struct {
+تعریفنوع ساختار {
     LookupFn      Lookup;
-    NumEntriesFn  NumEntries; 
+    رقم_Entries_Fn  رقم_Entries; 
 } commonDataFuncs;
 
 
@@ -112,6 +112,6 @@ typedef struct {
  *     otherwise
  *         set an errorcode.
  */
-U_CFUNC void udata_checkCommonData(UDataMemory *pData, UErrorCode *pErrorCode);
+U_CFUNC تهی udata_checkCommonData(UDataMemory *pData, UErrorCode *pErrorCode);
 
 #endif

@@ -17,9 +17,9 @@
 #ifndef ENUMSET_H
 #define ENUMSET_H
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#اگر U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -30,35 +30,35 @@ U_NAMESPACE_BEGIN
  * @internal
  * \cond
  */
-template<typename T, uint32_t minValue, uint32_t limitValue>
+template<typename T, uint32_t min_مقدار, uint32_t limit_مقدار>
 class EnumSet {
-public:
-    inline EnumSet() : fBools(0) {}
-    inline EnumSet(const EnumSet<T,minValue,limitValue>& other) : fBools(other.fBools) {}
-    inline ~EnumSet() {}
+عمومی:
+    درونخطی EnumSet() : fBools(0) {}
+    درونخطی EnumSet(ثابت EnumSet<T,min_مقدار,limit_مقدار>& other) : fBools(other.fBools) {}
+    درونخطی ~EnumSet() {}
 #ifndef U_HIDE_INTERNAL_API
-    inline void clear() { fBools=0; }
-    inline void add(T toAdd) { set(toAdd, 1); }
-    inline void remove(T toRemove) { set(toRemove, 0); }
-    inline int32_t contains(T toCheck) const { return get(toCheck); }
-    inline void set(T toSet, int32_t v) { fBools=(fBools&(~flag(toSet)))|(v?(flag(toSet)):0); }
-    inline int32_t get(T toCheck) const { return (fBools & flag(toCheck))?1:0; }
-    inline UBool isValidEnum(T toCheck) const {  return (toCheck>=minValue&&toCheck<limitValue); }
-    inline UBool isValidValue(int32_t v) const { return (v==0||v==1); }
-    inline const EnumSet<T, minValue, limitValue>&
-    operator=(const EnumSet<T, minValue, limitValue>& other) U_LIFETIME_BOUND {
+    درونخطی تهی clear() { fBools=0; }
+    درونخطی تهی add(T toAdd) { set(toAdd, 1); }
+    درونخطی تهی remove(T toRemove) { set(toRemove, 0); }
+    درونخطی int32_t contains(T toCheck) ثابت { بازگشت get(toCheck); }
+    درونخطی تهی set(T toSet, int32_t v) { fBools=(fBools&(~flag(toSet)))|(v?(flag(toSet)):0); }
+    درونخطی int32_t get(T toCheck) ثابت { بازگشت (fBools & flag(toCheck))?1:0; }
+    درونخطی UBool isValidEnum(T toCheck) ثابت {  بازگشت (toCheck>=min_مقدار&&toCheck<limit_مقدار); }
+    درونخطی UBool is_Valid_مقدار(int32_t v) ثابت { بازگشت (v==0||v==1); }
+    درونخطی ثابت EnumSet<T, min_مقدار, limit_مقدار>&
+    operator=(ثابت EnumSet<T, min_مقدار, limit_مقدار>& other) U_LIFETIME_BOUND {
         fBools = other.fBools;
-        return *this;
+        بازگشت *this;
     }
   
-    inline uint32_t getAll() const {
-        return fBools; 
+    درونخطی uint32_t getAll() ثابت {
+        بازگشت fBools; 
     }
 #endif /* U_HIDE_INTERNAL_API */
 
-private:
-    inline uint32_t flag(T toCheck) const { return (1<<(toCheck-minValue)); }
-private:
+خصوصی:
+    درونخطی uint32_t flag(T toCheck) ثابت { بازگشت (1<<(toCheck-min_مقدار)); }
+خصوصی:
     uint32_t fBools;
 };
 

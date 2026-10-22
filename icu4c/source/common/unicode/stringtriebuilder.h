@@ -17,11 +17,11 @@
 #ifndef __STRINGTRIEBUILDER_H__
 #define __STRINGTRIEBUILDER_H__
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#اگر U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#شامل "unicode/uobject.h"
 
 /**
  * \file
@@ -30,15 +30,15 @@
 
 // Forward declaration.
 /// \cond
-struct UHashtable;
-typedef struct UHashtable UHashtable;
+ساختار UHashtable;
+تعریفنوع ساختار UHashtable UHashtable;
 /// \endcond
 
 /**
  * Build options for BytesTrieBuilder and CharsTrieBuilder.
  * @stable ICU 4.8
  */
-enum UStringTrieBuildOption {
+شمارش UStringTrieBuildOption {
     /**
      * Builds a trie quickly.
      * @stable ICU 4.8
@@ -65,48 +65,48 @@ U_NAMESPACE_BEGIN
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API StringTrieBuilder : public UObject {
-public:
+class U_COMMON_API StringTrieBuilder : عمومی UObject {
+عمومی:
 #ifndef U_HIDE_INTERNAL_API
     /** @internal */
-    static int32_t hashNode(const void *node);
+    ایستا int32_t hash_گره(ثابت تهی *گره);
     /** @internal */
-    static UBool equalNodes(const void *left, const void *right);
+    ایستا UBool equalNodes(ثابت تهی *چپ, ثابت تهی *راست);
 #endif  /* U_HIDE_INTERNAL_API */
 
-protected:
+محافظتشده:
     // Do not enclose the protected default constructor with #ifndef U_HIDE_INTERNAL_API
     // or else the compiler will create a public default constructor.
     /** @internal */
     StringTrieBuilder();
     /** @internal */
-    virtual ~StringTrieBuilder();
+    مجازی ~StringTrieBuilder();
 
 #ifndef U_HIDE_INTERNAL_API
     /** @internal */
-    void createCompactBuilder(int32_t sizeGuess, UErrorCode &errorCode);
+    تهی createCompactBuilder(int32_t sizeGuess, UErrorCode &errorCode);
     /** @internal */
-    void deleteCompactBuilder();
+    تهی deleteCompactBuilder();
 
     /** @internal */
-    void build(UStringTrieBuildOption buildOption, int32_t elementsLength, UErrorCode &errorCode);
+    تهی build(UStringTrieBuildOption buildOption, int32_t elementsLength, UErrorCode &errorCode);
 
     /** @internal */
-    int32_t writeNode(int32_t start, int32_t limit, int32_t unitIndex);
+    int32_t write_گره(int32_t start, int32_t limit, int32_t unitIndex);
     /** @internal */
-    int32_t writeBranchSubNode(int32_t start, int32_t limit, int32_t unitIndex, int32_t length);
+    int32_t write_Branch_Sub_گره(int32_t start, int32_t limit, int32_t unitIndex, int32_t length);
 #endif  /* U_HIDE_INTERNAL_API */
 
-    class Node;
+    class گره_2;
 
 #ifndef U_HIDE_INTERNAL_API
     /** @internal */
-    Node* makeNode(int32_t start,
+    گره_2* make_گره(int32_t start,
                    int32_t limit,
                    int32_t unitIndex,
                    UErrorCode& errorCode) U_LIFETIME_BOUND;
     /** @internal */
-    Node* makeBranchSubNode(int32_t start,
+    گره_2* make_Branch_Sub_گره(int32_t start,
                             int32_t limit,
                             int32_t unitIndex,
                             int32_t length,
@@ -114,44 +114,44 @@ protected:
 #endif  /* U_HIDE_INTERNAL_API */
 
     /** @internal */
-    virtual int32_t getElementStringLength(int32_t i) const = 0;
+    مجازی int32_t getElementStringLength(int32_t i) ثابت = 0;
     /** @internal */
-    virtual char16_t getElementUnit(int32_t i, int32_t unitIndex) const = 0;
+    مجازی char16_t getElementUnit(int32_t i, int32_t unitIndex) ثابت = 0;
     /** @internal */
-    virtual int32_t getElementValue(int32_t i) const = 0;
+    مجازی int32_t get_Element_مقدار(int32_t i) ثابت = 0;
 
     // Finds the first unit index after this one where
     // the first and last element have different units again.
     /** @internal */
-    virtual int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) const = 0;
+    مجازی int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) ثابت = 0;
 
     // Number of different units at unitIndex.
     /** @internal */
-    virtual int32_t countElementUnits(int32_t start, int32_t limit, int32_t unitIndex) const = 0;
+    مجازی int32_t شمار_Element_Units(int32_t start, int32_t limit, int32_t unitIndex) ثابت = 0;
     /** @internal */
-    virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t count) const = 0;
+    مجازی int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t شمار) ثابت = 0;
     /** @internal */
-    virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) const = 0;
+    مجازی int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) ثابت = 0;
 
     /** @internal */
-    virtual UBool matchNodesCanHaveValues() const = 0;
+    مجازی UBool match_Nodes_Can_Have_مقادیر() ثابت = 0;
 
     /** @internal */
-    virtual int32_t getMaxBranchLinearSubNodeLength() const = 0;
+    مجازی int32_t get_Max_Branch_Linear_Sub_گره_Length() ثابت = 0;
     /** @internal */
-    virtual int32_t getMinLinearMatch() const = 0;
+    مجازی int32_t getMinLinearMatch() ثابت = 0;
     /** @internal */
-    virtual int32_t getMaxLinearMatchLength() const = 0;
+    مجازی int32_t getMaxLinearMatchLength() ثابت = 0;
 
 #ifndef U_HIDE_INTERNAL_API
     // max(BytesTrie::kMaxBranchLinearSubNodeLength, UCharsTrie::kMaxBranchLinearSubNodeLength).
     /** @internal */
-    static const int32_t kMaxBranchLinearSubNodeLength=5;
+    ایستا ثابت int32_t k_Max_Branch_Linear_Sub_گره_Length=5;
 
     // Maximum number of nested split-branch levels for a branch on all 2^16 possible char16_t units.
     // log2(2^16/kMaxBranchLinearSubNodeLength) rounded up.
     /** @internal */
-    static const int32_t kMaxSplitBranchLevels=14;
+    ایستا ثابت int32_t kMaxSplitBranchLevels=14;
 
     /**
      * Makes sure that there is only one unique node registered that is
@@ -163,7 +163,7 @@ protected:
      *         an equivalent node if newNode is a duplicate.
      * @internal
      */
-    Node* registerNode(Node* newNode, UErrorCode& errorCode) U_LIFETIME_BOUND;
+    گره_2* register_گره(گره_2* new_گره, UErrorCode& errorCode) U_LIFETIME_BOUND;
     /**
      * Makes sure that there is only one unique FinalValueNode registered
      * with this value.
@@ -174,7 +174,7 @@ protected:
      * @return A FinalValueNode with the given value.
      * @internal
      */
-    Node* registerFinalValue(int32_t value, UErrorCode& errorCode) U_LIFETIME_BOUND;
+    گره_2* register_Final_مقدار(int32_t مقدار_2, UErrorCode& errorCode) U_LIFETIME_BOUND;
 #endif  /* U_HIDE_INTERNAL_API */
 
     /*
@@ -203,15 +203,15 @@ protected:
      * @internal
      * \cond
      */
-    class Node : public UObject {
-    public:
-        Node(int32_t initialHash) : hash(initialHash), offset(0) {}
-        inline int32_t hashCode() const { return hash; }
+    class گره_2 : عمومی UObject {
+    عمومی:
+        گره_2(int32_t initialHash) : hash(initialHash), offset(0) {}
+        درونخطی int32_t hashCode() ثابت { بازگشت hash; }
         // Handles node==nullptr.
-        static inline int32_t hashCode(const Node *node) { return node==nullptr ? 0 : node->hashCode(); }
+        ایستا درونخطی int32_t hashCode(ثابت گره_2 *گره) { بازگشت گره==nullptr ? 0 : گره->hashCode(); }
         // Base class operator==() compares the actual class types.
-        virtual bool operator==(const Node &other) const;
-        inline bool operator!=(const Node &other) const { return !operator==(other); }
+        مجازی bool operator==(ثابت گره_2 &other) ثابت;
+        درونخطی bool operator!=(ثابت گره_2 &other) ثابت { بازگشت !operator==(other); }
         /**
          * Traverses the Node graph and numbers branch edges, with rightmost edges first.
          * This is to avoid writing a duplicate node twice.
@@ -239,23 +239,23 @@ protected:
          * @return An edge number that is at least the maximum-negative
          *         of the input edge number and the numbers of this node and all of its sub-nodes.
          */
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber);
+        مجازی int32_t mark_راست_Edges_First(int32_t edge_عدد);
         // write() must set the offset to a positive value.
-        virtual void write(StringTrieBuilder &builder) = 0;
+        مجازی تهی اكتب(StringTrieBuilder &builder) = 0;
         // See markRightEdgesFirst.
-        inline void writeUnlessInsideRightEdge(int32_t firstRight, int32_t lastRight,
+        درونخطی تهی write_Unless_Inside_راست_Edge(int32_t first_راست, int32_t last_راست,
                                                StringTrieBuilder &builder) {
             // Note: Edge numbers are negative, lastRight<=firstRight.
             // If offset>0 then this node and its sub-nodes have been written already
             // and we need not write them again.
             // If this node is part of the unwritten right branch edge,
             // then we wait until that is written.
-            if(offset<0 && (offset<lastRight || firstRight<offset)) {
-                write(builder);
+            اگر(offset<0 && (offset<last_راست || first_راست<offset)) {
+                اكتب(builder);
             }
         }
-        inline int32_t getOffset() const { return offset; }
-    protected:
+        درونخطی int32_t getOffset() ثابت { بازگشت offset; }
+    محافظتشده:
         int32_t hash;
         int32_t offset;
     };
@@ -268,13 +268,13 @@ protected:
     // !Node::operator==(other) used inside FinalValueNode::operator==(other)
     // will be false if the typeid's are different.
     /** @internal */
-    class FinalValueNode : public Node {
-    public:
-        FinalValueNode(int32_t v) : Node(0x111111u*37u+v), value(v) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
-        int32_t value;
+    class Final_مقدار_گره : عمومی گره_2 {
+    عمومی:
+        Final_مقدار_گره(int32_t v) : گره_2(0x111111u*37u+v), مقدار_2(v) {}
+        مجازی bool operator==(ثابت گره_2 &other) ثابت override;
+        مجازی تهی اكتب(StringTrieBuilder &builder) override;
+    محافظتشده:
+        int32_t مقدار_2;
     };
 #endif  /* U_HIDE_INTERNAL_API */
 
@@ -283,33 +283,33 @@ protected:
     /**
      * @internal 
      */
-    class ValueNode : public Node {
-    public:
-        ValueNode(int32_t initialHash) : Node(initialHash), hasValue(false), value(0) {}
-        virtual bool operator==(const Node &other) const override;
-        void setValue(int32_t v) {
-            hasValue=true;
-            value=v;
+    class مقدار_گره : عمومی گره_2 {
+    عمومی:
+        مقدار_گره(int32_t initialHash) : گره_2(initialHash), has_مقدار(false), مقدار_2(0) {}
+        مجازی bool operator==(ثابت گره_2 &other) ثابت override;
+        تهی set_مقدار(int32_t v) {
+            has_مقدار=true;
+            مقدار_2=v;
             hash=hash*37u+v;
         }
-    protected:
-        UBool hasValue;
-        int32_t value;
+    محافظتشده:
+        UBool has_مقدار;
+        int32_t مقدار_2;
     };
 
 #ifndef U_HIDE_INTERNAL_API
     /** 
      * @internal 
      */
-    class IntermediateValueNode : public ValueNode {
-    public:
-        IntermediateValueNode(int32_t v, Node *nextNode)
-                : ValueNode(0x222222u*37u+hashCode(nextNode)), next(nextNode) { setValue(v); }
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
-        Node *next;
+    class Intermediate_مقدار_گره : عمومی مقدار_گره {
+    عمومی:
+        Intermediate_مقدار_گره(int32_t v, گره_2 *next_گره)
+                : مقدار_گره(0x222222u*37u+hashCode(next_گره)), next(next_گره) { set_مقدار(v); }
+        مجازی bool operator==(ثابت گره_2 &other) ثابت override;
+        مجازی int32_t mark_راست_Edges_First(int32_t edge_عدد) override;
+        مجازی تهی اكتب(StringTrieBuilder &builder) override;
+    محافظتشده:
+        گره_2 *next;
     };
 #endif  /* U_HIDE_INTERNAL_API */
 
@@ -318,111 +318,111 @@ protected:
     /**
      * @internal 
      */
-    class LinearMatchNode : public ValueNode {
-    public:
-        LinearMatchNode(int32_t len, Node *nextNode)
-                : ValueNode((0x333333u*37u+len)*37u+hashCode(nextNode)),
-                  length(len), next(nextNode) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-    protected:
+    class Linear_Match_گره : عمومی مقدار_گره {
+    عمومی:
+        Linear_Match_گره(int32_t len, گره_2 *next_گره)
+                : مقدار_گره((0x333333u*37u+len)*37u+hashCode(next_گره)),
+                  length(len), next(next_گره) {}
+        مجازی bool operator==(ثابت گره_2 &other) ثابت override;
+        مجازی int32_t mark_راست_Edges_First(int32_t edge_عدد) override;
+    محافظتشده:
         int32_t length;
-        Node *next;
+        گره_2 *next;
     };
 
 #ifndef U_HIDE_INTERNAL_API
     /**
      * @internal 
      */
-    class BranchNode : public Node {
-    public:
-        BranchNode(int32_t initialHash) : Node(initialHash) {}
-    protected:
-        int32_t firstEdgeNumber;
+    class Branch_گره : عمومی گره_2 {
+    عمومی:
+        Branch_گره(int32_t initialHash) : گره_2(initialHash) {}
+    محافظتشده:
+        int32_t first_Edge_عدد;
     };
 
     /**
      * @internal 
      */
-    class ListBranchNode : public BranchNode {
-    public:
-        ListBranchNode() : BranchNode(0x444444), length(0) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
+    class List_Branch_گره : عمومی Branch_گره {
+    عمومی:
+        List_Branch_گره() : Branch_گره(0x444444), length(0) {}
+        مجازی bool operator==(ثابت گره_2 &other) ثابت override;
+        مجازی int32_t mark_راست_Edges_First(int32_t edge_عدد) override;
+        مجازی تهی اكتب(StringTrieBuilder &builder) override;
         // Adds a unit with a final value.
-        void add(int32_t c, int32_t value) {
+        تهی add(int32_t c, int32_t مقدار_2) {
             units[length] = static_cast<char16_t>(c);
             equal[length]=nullptr;
-            values[length]=value;
+            مقادیر[length]=مقدار_2;
             ++length;
-            hash=(hash*37u+c)*37u+value;
+            hash=(hash*37u+c)*37u+مقدار_2;
         }
         // Adds a unit which leads to another match node.
-        void add(int32_t c, Node *node) {
+        تهی add(int32_t c, گره_2 *گره) {
             units[length] = static_cast<char16_t>(c);
-            equal[length]=node;
-            values[length]=0;
+            equal[length]=گره;
+            مقادیر[length]=0;
             ++length;
-            hash=(hash*37u+c)*37u+hashCode(node);
+            hash=(hash*37u+c)*37u+hashCode(گره);
         }
-    protected:
-        Node *equal[kMaxBranchLinearSubNodeLength];  // nullptr means "has final value".
+    محافظتشده:
+        گره_2 *equal[k_Max_Branch_Linear_Sub_گره_Length];  // nullptr means "has final value".
         int32_t length;
-        int32_t values[kMaxBranchLinearSubNodeLength];
-        char16_t units[kMaxBranchLinearSubNodeLength];
+        int32_t مقادیر[k_Max_Branch_Linear_Sub_گره_Length];
+        char16_t units[k_Max_Branch_Linear_Sub_گره_Length];
     };
 
     /**
      * @internal 
      */
-    class SplitBranchNode : public BranchNode {
-    public:
-        SplitBranchNode(char16_t middleUnit, Node *lessThanNode, Node *greaterOrEqualNode)
-                : BranchNode(((0x555555u*37u+middleUnit)*37u+
-                              hashCode(lessThanNode))*37u+hashCode(greaterOrEqualNode)),
-                  unit(middleUnit), lessThan(lessThanNode), greaterOrEqual(greaterOrEqualNode) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
+    class Split_Branch_گره : عمومی Branch_گره {
+    عمومی:
+        Split_Branch_گره(char16_t میانه_Unit, گره_2 *less_Than_گره, گره_2 *greater_Or_Equal_گره)
+                : Branch_گره(((0x555555u*37u+میانه_Unit)*37u+
+                              hashCode(less_Than_گره))*37u+hashCode(greater_Or_Equal_گره)),
+                  unit(میانه_Unit), lessThan(less_Than_گره), greaterOrEqual(greater_Or_Equal_گره) {}
+        مجازی bool operator==(ثابت گره_2 &other) ثابت override;
+        مجازی int32_t mark_راست_Edges_First(int32_t edge_عدد) override;
+        مجازی تهی اكتب(StringTrieBuilder &builder) override;
+    محافظتشده:
         char16_t unit;
-        Node *lessThan;
-        Node *greaterOrEqual;
+        گره_2 *lessThan;
+        گره_2 *greaterOrEqual;
     };
 
     // Branch head node, for writing the actual node lead unit.
     /** @internal */
-    class BranchHeadNode : public ValueNode {
-    public:
-        BranchHeadNode(int32_t len, Node *subNode)
-                : ValueNode((0x666666u*37u+len)*37u+hashCode(subNode)),
-                  length(len), next(subNode) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
+    class Branch_Head_گره : عمومی مقدار_گره {
+    عمومی:
+        Branch_Head_گره(int32_t len, گره_2 *sub_گره)
+                : مقدار_گره((0x666666u*37u+len)*37u+hashCode(sub_گره)),
+                  length(len), next(sub_گره) {}
+        مجازی bool operator==(ثابت گره_2 &other) ثابت override;
+        مجازی int32_t mark_راست_Edges_First(int32_t edge_عدد) override;
+        مجازی تهی اكتب(StringTrieBuilder &builder) override;
+    محافظتشده:
         int32_t length;
-        Node *next;  // A branch sub-node.
+        گره_2 *next;  // A branch sub-node.
     };
 
 #endif  /* U_HIDE_INTERNAL_API */
     /// \endcond
 
     /** @internal */
-    virtual Node *createLinearMatchNode(int32_t i, int32_t unitIndex, int32_t length,
-                                        Node *nextNode) const = 0;
+    مجازی گره_2 *create_Linear_Match_گره(int32_t i, int32_t unitIndex, int32_t length,
+                                        گره_2 *next_گره) ثابت = 0;
 
     /** @internal */
-    virtual int32_t write(int32_t unit) = 0;
+    مجازی int32_t اكتب(int32_t unit) = 0;
     /** @internal */
-    virtual int32_t writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) = 0;
+    مجازی int32_t writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) = 0;
     /** @internal */
-    virtual int32_t writeValueAndFinal(int32_t i, UBool isFinal) = 0;
+    مجازی int32_t write_مقدار_And_Final(int32_t i, UBool isFinal) = 0;
     /** @internal */
-    virtual int32_t writeValueAndType(UBool hasValue, int32_t value, int32_t node) = 0;
+    مجازی int32_t write_مقدار_And_Type(UBool has_مقدار, int32_t مقدار_2, int32_t گره) = 0;
     /** @internal */
-    virtual int32_t writeDeltaTo(int32_t jumpTarget) = 0;
+    مجازی int32_t writeDeltaTo(int32_t jumpTarget) = 0;
 };
 
 U_NAMESPACE_END

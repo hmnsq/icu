@@ -7,49 +7,49 @@
 #ifndef __LOCLIKELYSUBTAGS_H__
 #define __LOCLIKELYSUBTAGS_H__
 
-#include <utility>
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/locid.h"
-#include "unicode/stringpiece.h"
-#include "unicode/uobject.h"
-#include "unicode/ures.h"
-#include "charstrmap.h"
-#include "lsr.h"
+#شامل <utility>
+#شامل "unicode/utypes.h"
+#شامل "unicode/bytestrie.h"
+#شامل "unicode/locid.h"
+#شامل "unicode/stringpiece.h"
+#شامل "unicode/uobject.h"
+#شامل "unicode/ures.h"
+#شامل "charstrmap.h"
+#شامل "lsr.h"
 
 U_NAMESPACE_BEGIN
 
-struct LikelySubtagsData;
+ساختار LikelySubtagsData;
 
-struct LocaleDistanceData {
-    LocaleDistanceData() = default;
+ساختار LocaleDistanceData {
+    LocaleDistanceData() = پیشفرض;
     LocaleDistanceData(LocaleDistanceData &&data);
     ~LocaleDistanceData();
 
-    const uint8_t *distanceTrieBytes = nullptr;
-    const uint8_t *regionToPartitions = nullptr;
-    const char **partitions = nullptr;
-    const LSR *paradigms = nullptr;
+    ثابت uint8_t *distanceTrieBytes = nullptr;
+    ثابت uint8_t *regionToPartitions = nullptr;
+    ثابت نویسه **partitions = nullptr;
+    ثابت LSR *paradigms = nullptr;
     int32_t paradigmsLength = 0;
-    const int32_t *distances = nullptr;
+    ثابت int32_t *distances = nullptr;
 
-private:
-    LocaleDistanceData &operator=(const LocaleDistanceData &) = delete;
+خصوصی:
+    LocaleDistanceData &operator=(ثابت LocaleDistanceData &) = delete;
 };
 
-class LikelySubtags final : public UMemory {
-public:
+class LikelySubtags final : عمومی UMemory {
+عمومی:
     ~LikelySubtags();
 
-    static constexpr int32_t SKIP_SCRIPT = 1;
+    ایستا constexpr int32_t SKIP_SCRIPT = 1;
 
     // VisibleForTesting
-    static const LikelySubtags *getSingleton(UErrorCode &errorCode);
+    ایستا ثابت LikelySubtags *getSingleton(UErrorCode &errorCode);
 
     // VisibleForTesting
-    LSR makeMaximizedLsrFrom(const Locale &locale,
-                             bool returnInputIfUnmatch,
-                             UErrorCode &errorCode) const;
+    LSR makeMaximizedLsrFrom(ثابت Locale &locale,
+                             bool return_درون_داد_If_Unmatch,
+                             UErrorCode &errorCode) ثابت;
 
     /**
      * Tests whether lsr is "more likely" than other.
@@ -61,42 +61,42 @@ public:
      * with bit 0 set if lsr is "more likely".
      * The initial value of likelyInfo must be negative.
      */
-    int32_t compareLikely(const LSR &lsr, const LSR &other, int32_t likelyInfo) const;
+    int32_t compareLikely(ثابت LSR &lsr, ثابت LSR &other, int32_t likelyInfo) ثابت;
 
     LSR minimizeSubtags(StringPiece language, StringPiece script, StringPiece region,
                         bool favorScript,
-                        UErrorCode &errorCode) const;
+                        UErrorCode &errorCode) ثابت;
 
     // visible for LocaleDistance
-    const LocaleDistanceData& getDistanceData() const U_LIFETIME_BOUND { return distanceData; }
+    ثابت LocaleDistanceData& getDistanceData() ثابت U_LIFETIME_BOUND { بازگشت distanceData; }
 
-private:
+خصوصی:
     LikelySubtags(LikelySubtagsData &data);
-    LikelySubtags(const LikelySubtags &other) = delete;
-    LikelySubtags &operator=(const LikelySubtags &other) = delete;
+    LikelySubtags(ثابت LikelySubtags &other) = delete;
+    LikelySubtags &operator=(ثابت LikelySubtags &other) = delete;
 
-    static void initLikelySubtags(UErrorCode &errorCode);
+    ایستا تهی initLikelySubtags(UErrorCode &errorCode);
 
-    LSR makeMaximizedLsr(const char *language, const char *script, const char *region,
-                         const char *variant,
-                         bool returnInputIfUnmatch,
-                         UErrorCode &errorCode) const;
+    LSR makeMaximizedLsr(ثابت نویسه *language, ثابت نویسه *script, ثابت نویسه *region,
+                         ثابت نویسه *variant,
+                         bool return_درون_داد_If_Unmatch,
+                         UErrorCode &errorCode) ثابت;
 
     /**
      * Raw access to addLikelySubtags. Input must be in canonical format, eg "en", not "eng" or "EN".
      */
-    LSR maximize(const char *language, const char *script, const char *region,
-                 bool returnInputIfUnmatch,
-                 UErrorCode &errorCode) const;
+    LSR maximize(ثابت نویسه *language, ثابت نویسه *script, ثابت نویسه *region,
+                 bool return_درون_داد_If_Unmatch,
+                 UErrorCode &errorCode) ثابت;
     LSR maximize(StringPiece language, StringPiece script, StringPiece region,
-                 bool returnInputIfUnmatch,
-                 UErrorCode &errorCode) const;
+                 bool return_درون_داد_If_Unmatch,
+                 UErrorCode &errorCode) ثابت;
 
-    int32_t getLikelyIndex(const char *language, const char *script) const;
-    bool isMacroregion(StringPiece& region, UErrorCode &errorCode) const;
+    int32_t getLikelyIndex(ثابت نویسه *language, ثابت نویسه *script) ثابت;
+    bool isMacroregion(StringPiece& region, UErrorCode &errorCode) ثابت;
 
-    static int32_t trieNext(BytesTrie &iter, const char *s, int32_t i);
-    static int32_t trieNext(BytesTrie &iter, StringPiece s, int32_t i);
+    ایستا int32_t trieNext(BytesTrie &iter, ثابت نویسه *s, int32_t i);
+    ایستا int32_t trieNext(BytesTrie &iter, StringPiece s, int32_t i);
 
     UResourceBundle *langInfoBundle;
     // We could store the strings by value, except that if there were few enough strings,
@@ -114,8 +114,8 @@ private:
     uint64_t trieUndZzzzState;
     int32_t defaultLsrIndex;
     uint64_t trieFirstLetterStates[26];
-    const LSR *lsrs;
-#if U_DEBUG
+    ثابت LSR *lsrs;
+#اگر U_DEBUG
     int32_t lsrsLength;
 #endif
 

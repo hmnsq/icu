@@ -17,7 +17,7 @@
 #ifndef __UCLEAN_H__
 #define __UCLEAN_H__
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 /**
  * \file
  * \brief C API: Initialize and clean up ICU
@@ -49,7 +49,7 @@
  *
  * @stable ICU 2.6
  */  
-U_CAPI void U_EXPORT2 
+U_CAPI تهی U_EXPORT2 
 u_init(UErrorCode *status);
 
 #ifndef U_HIDE_SYSTEM_API
@@ -98,8 +98,8 @@ u_init(UErrorCode *status);
  * @stable ICU 2.0
  * @system
  */
-U_CAPI void U_EXPORT2 
-u_cleanup(void);
+U_CAPI تهی U_EXPORT2 
+u_cleanup(تهی);
 
 U_CDECL_BEGIN
 /**
@@ -110,7 +110,7 @@ U_CDECL_BEGIN
   *  @stable ICU 2.8
   *  @system
   */
-typedef void *U_CALLCONV UMemAllocFn(const void *context, size_t size);
+تعریفنوع تهی *U_CALLCONV UMemAllocFn(ثابت تهی *context, size_t size);
 /**
   *  Pointer type for a user supplied memory re-allocation function.
   *  @param context user supplied value, obtained from u_setMemoryFunctions().
@@ -120,7 +120,7 @@ typedef void *U_CALLCONV UMemAllocFn(const void *context, size_t size);
   *  @stable ICU 2.8
   *  @system
   */
-typedef void *U_CALLCONV UMemReallocFn(const void *context, void *mem, size_t size);
+تعریفنوع تهی *U_CALLCONV UMemReallocFn(ثابت تهی *context, تهی *mem, size_t size);
 /**
   *  Pointer type for a user supplied memory free  function.  Behavior should be
   *  similar the standard C library free().
@@ -129,7 +129,7 @@ typedef void *U_CALLCONV UMemReallocFn(const void *context, void *mem, size_t si
   *  @stable ICU 2.8
   *  @system
   */
-typedef void  U_CALLCONV UMemFreeFn (const void *context, void *mem);
+تعریفنوع تهی  U_CALLCONV UMemFreeFn (ثابت تهی *context, تهی *mem);
 
 /**
  *  Set the functions that ICU will use for memory allocation.
@@ -147,8 +147,8 @@ typedef void  U_CALLCONV UMemFreeFn (const void *context, void *mem);
  *  @stable ICU 2.8
  *  @system
  */  
-U_CAPI void U_EXPORT2 
-u_setMemoryFunctions(const void *context, UMemAllocFn * U_CALLCONV_FPTR a, UMemReallocFn * U_CALLCONV_FPTR r, UMemFreeFn * U_CALLCONV_FPTR f, 
+U_CAPI تهی U_EXPORT2 
+u_setMemoryFunctions(ثابت تهی *context, UMemAllocFn * U_CALLCONV_FPTR a, UMemReallocFn * U_CALLCONV_FPTR r, UMemFreeFn * U_CALLCONV_FPTR f, 
                     UErrorCode *status);
 
 U_CDECL_END
@@ -170,7 +170,7 @@ U_CDECL_END
   * @deprecated ICU 52. This type is no longer supported.
   * @system
   */
-typedef void *UMTX;
+تعریفنوع تهی *UMTX;
 
 U_CDECL_BEGIN
 /**
@@ -189,7 +189,7 @@ U_CDECL_BEGIN
   *  @deprecated ICU 52. This function is no longer supported.
   *  @system
   */
-typedef void U_CALLCONV UMtxInitFn (const void *context, UMTX  *mutex, UErrorCode* status);
+تعریفنوع تهی U_CALLCONV UMtxInitFn (ثابت تهی *context, UMTX  *mutex, UErrorCode* status);
 
 
 /**
@@ -201,7 +201,7 @@ typedef void U_CALLCONV UMtxInitFn (const void *context, UMTX  *mutex, UErrorCod
   *  @deprecated ICU 52. This function is no longer supported.
   *  @system
   */
-typedef void U_CALLCONV UMtxFn   (const void *context, UMTX  *mutex);
+تعریفنوع تهی U_CALLCONV UMtxFn   (ثابت تهی *context, UMTX  *mutex);
 U_CDECL_END
 
 /**
@@ -221,8 +221,8 @@ U_CDECL_END
   *  @deprecated ICU 52. This function is no longer supported.
   *  @system
   */  
-U_DEPRECATED void U_EXPORT2 
-u_setMutexFunctions(const void *context, UMtxInitFn *init, UMtxFn *destroy, UMtxFn *lock, UMtxFn *unlock,
+U_DEPRECATED تهی U_EXPORT2 
+u_setMutexFunctions(ثابت تهی *context, UMtxInitFn *init, UMtxFn *destroy, UMtxFn *lock, UMtxFn *unlock,
                     UErrorCode *status);
 
 
@@ -234,7 +234,7 @@ u_setMutexFunctions(const void *context, UMtxInitFn *init, UMtxFn *destroy, UMtx
   *  @deprecated ICU 52. This function is no longer supported.
   *  @system
   */
-typedef int32_t U_CALLCONV UMtxAtomicFn(const void *context, int32_t *p);
+تعریفنوع int32_t U_CALLCONV UMtxAtomicFn(ثابت تهی *context, int32_t *p);
 
 /**
  *  Set the functions that ICU will use for atomic increment and decrement of int32_t values.
@@ -251,8 +251,8 @@ typedef int32_t U_CALLCONV UMtxAtomicFn(const void *context, int32_t *p);
  *  @deprecated ICU 52. This function is no longer supported.
  *  @system
  */  
-U_DEPRECATED void U_EXPORT2 
-u_setAtomicIncDecFunctions(const void *context, UMtxAtomicFn *inc, UMtxAtomicFn *dec,
+U_DEPRECATED تهی U_EXPORT2 
+u_setAtomicIncDecFunctions(ثابت تهی *context, UMtxAtomicFn *inc, UMtxAtomicFn *dec,
                     UErrorCode *status);
 
 #endif  /* U_HIDE_DEPRECATED_API */

@@ -29,15 +29,15 @@
 #ifndef __USET_H__
 #define __USET_H__
 
-#include "unicode/utypes.h"
-#include "unicode/uchar.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/uchar.h"
 
-#if U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
-#include <string>
-#include <string_view>
-#include "unicode/char16ptr.h"
-#include "unicode/localpointer.h"
-#include "unicode/utf16.h"
+#اگر U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
+#شامل <string>
+#شامل <string_view>
+#شامل "unicode/char16ptr.h"
+#شامل "unicode/localpointer.h"
+#شامل "unicode/utf16.h"
 #endif
 
 #ifndef USET_DEFINED
@@ -51,7 +51,7 @@
  * uset_open*, and destroy with uset_close.
  * @stable ICU 2.4
  */
-typedef struct USet USet;
+تعریفنوع ساختار USet USet;
 #endif
 
 /**
@@ -65,7 +65,7 @@ typedef struct USet USet;
  *
  * @stable ICU 2.4
  */
-enum {
+شمارش {
     /**
      * Ignore white space within patterns unless quoted or escaped.
      * @stable ICU 2.4
@@ -183,7 +183,7 @@ enum {
  *
  * @stable ICU 3.8
  */
-typedef enum USetSpanCondition {
+تعریفنوع شمارش USetSpanCondition {
     /**
      * Continues a span() while there is no set element at the current position.
      * Increments by one code point at a time.
@@ -237,11 +237,11 @@ typedef enum USetSpanCondition {
      * One more than the last span condition.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    USET_SPAN_CONDITION_COUNT
+    USET_SPAN_CONDITION_شمار
 #endif  // U_HIDE_DEPRECATED_API
 } USetSpanCondition;
 
-enum {
+شمارش {
     /**
      * Capacity of USerializedSet::staticArray.
      * Enough for any single-code point set.
@@ -256,12 +256,12 @@ enum {
  * possible directly on a serialized set.  See below.
  * @stable ICU 2.4
  */
-typedef struct USerializedSet {
+تعریفنوع ساختار USerializedSet {
     /**
      * The serialized Unicode Set.
      * @stable ICU 2.4
      */
-    const uint16_t *array;
+    ثابت uint16_t *array;
     /**
      * The length of the array that contains BMP characters.
      * @stable ICU 2.4
@@ -291,7 +291,7 @@ typedef struct USerializedSet {
  * @stable ICU 4.2
  */
 U_CAPI USet* U_EXPORT2
-uset_openEmpty(void);
+uset_openEmpty(تهی);
 
 /**
  * Creates a USet object that contains the range of characters
@@ -316,7 +316,7 @@ uset_open(UChar32 start, UChar32 end);
  * @stable ICU 2.4
  */
 U_CAPI USet* U_EXPORT2
-uset_openPattern(const UChar* pattern, int32_t patternLength,
+uset_openPattern(ثابت UChar* pattern, int32_t patternLength,
                  UErrorCode* ec);
 
 /**
@@ -333,7 +333,7 @@ uset_openPattern(const UChar* pattern, int32_t patternLength,
  * @stable ICU 2.4
  */
 U_CAPI USet* U_EXPORT2
-uset_openPatternOptions(const UChar* pattern, int32_t patternLength,
+uset_openPatternOptions(ثابت UChar* pattern, int32_t patternLength,
                  uint32_t options,
                  UErrorCode* ec);
 
@@ -343,10 +343,10 @@ uset_openPatternOptions(const UChar* pattern, int32_t patternLength,
  * @param set the object to dispose of
  * @stable ICU 2.4
  */
-U_CAPI void U_EXPORT2
+U_CAPI تهی U_EXPORT2
 uset_close(USet* set);
 
-#if U_SHOW_CPLUSPLUS_API
+#اگر U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -375,7 +375,7 @@ U_NAMESPACE_END
  * @stable ICU 3.8
  */
 U_CAPI USet * U_EXPORT2
-uset_clone(const USet *set);
+uset_clone(ثابت USet *set);
 
 /**
  * Determines whether the set has been frozen (made immutable) or not.
@@ -387,7 +387,7 @@ uset_clone(const USet *set);
  * @stable ICU 3.8
  */
 U_CAPI UBool U_EXPORT2
-uset_isFrozen(const USet *set);
+uset_isFrozen(ثابت USet *set);
 
 /**
  * Freeze the set (make it immutable).
@@ -402,7 +402,7 @@ uset_isFrozen(const USet *set);
  * @see uset_cloneAsThawed
  * @stable ICU 3.8
  */
-U_CAPI void U_EXPORT2
+U_CAPI تهی U_EXPORT2
 uset_freeze(USet *set);
 
 /**
@@ -416,7 +416,7 @@ uset_freeze(USet *set);
  * @stable ICU 3.8
  */
 U_CAPI USet * U_EXPORT2
-uset_cloneAsThawed(const USet *set);
+uset_cloneAsThawed(ثابت USet *set);
 
 /**
  * Causes the USet object to represent the range <code>start - end</code>.
@@ -427,7 +427,7 @@ uset_cloneAsThawed(const USet *set);
  * @param end last character in the set, inclusive
  * @stable ICU 3.2
  */
-U_CAPI void U_EXPORT2
+U_CAPI تهی U_EXPORT2
 uset_set(USet* set,
          UChar32 start, UChar32 end);
 
@@ -457,7 +457,7 @@ uset_set(USet* set,
  */
 U_CAPI int32_t U_EXPORT2 
 uset_applyPattern(USet *set,
-                  const UChar *pattern, int32_t patternLength,
+                  ثابت UChar *pattern, int32_t patternLength,
                   uint32_t options,
                   UErrorCode *status);
 
@@ -483,9 +483,9 @@ uset_applyPattern(USet *set,
  *
  * @stable ICU 3.2
  */
-U_CAPI void U_EXPORT2
-uset_applyIntPropertyValue(USet* set,
-                           UProperty prop, int32_t value, UErrorCode* ec);
+U_CAPI تهی U_EXPORT2
+uset_apply_Int_Property_مقدار(USet* set,
+                           UProperty prop, int32_t مقدار_2, UErrorCode* ec);
 
 /**
  * Modifies the set to contain those code points which have the
@@ -522,10 +522,10 @@ uset_applyIntPropertyValue(USet* set,
  *
  * @stable ICU 3.2
  */
-U_CAPI void U_EXPORT2
+U_CAPI تهی U_EXPORT2
 uset_applyPropertyAlias(USet* set,
-                        const UChar *prop, int32_t propLength,
-                        const UChar *value, int32_t valueLength,
+                        ثابت UChar *prop, int32_t propLength,
+                        ثابت UChar *مقدار_2, int32_t مقدار_Length,
                         UErrorCode* ec);
 
 /**
@@ -538,7 +538,7 @@ uset_applyPropertyAlias(USet* set,
  * @stable ICU 3.2
  */
 U_CAPI UBool U_EXPORT2
-uset_resemblesPattern(const UChar *pattern, int32_t patternLength,
+uset_resemblesPattern(ثابت UChar *pattern, int32_t patternLength,
                       int32_t pos);
 
 /**
@@ -557,7 +557,7 @@ uset_resemblesPattern(const UChar *pattern, int32_t patternLength,
  * @stable ICU 2.4
  */
 U_CAPI int32_t U_EXPORT2
-uset_toPattern(const USet* set,
+uset_toPattern(ثابت USet* set,
                UChar* result, int32_t resultCapacity,
                UBool escapeUnprintable,
                UErrorCode* ec);
@@ -570,7 +570,7 @@ uset_toPattern(const USet* set,
  * @param c the character to add
  * @stable ICU 2.4
  */
-U_CAPI void U_EXPORT2
+U_CAPI تهی U_EXPORT2
 uset_add(USet* set, UChar32 c);
 
 /**
@@ -585,8 +585,8 @@ uset_add(USet* set, UChar32 c);
  * @param additionalSet the source set whose elements are to be added to this set.
  * @stable ICU 2.6
  */
-U_CAPI void U_EXPORT2
-uset_addAll(USet* set, const USet *additionalSet);
+U_CAPI تهی U_EXPORT2
+uset_addAll(USet* set, ثابت USet *additionalSet);
 
 /**
  * Adds the given range of characters to the given USet.  After this call,
@@ -597,7 +597,7 @@ uset_addAll(USet* set, const USet *additionalSet);
  * @param end the last character of the range to add, inclusive
  * @stable ICU 2.2
  */
-U_CAPI void U_EXPORT2
+U_CAPI تهی U_EXPORT2
 uset_addRange(USet* set, UChar32 start, UChar32 end);
 
 /**
@@ -609,8 +609,8 @@ uset_addRange(USet* set, UChar32 start, UChar32 end);
  * @param strLen the length of the string or -1 if null terminated.
  * @stable ICU 2.4
  */
-U_CAPI void U_EXPORT2
-uset_addString(USet* set, const UChar* str, int32_t strLen);
+U_CAPI تهی U_EXPORT2
+uset_addString(USet* set, ثابت UChar* str, int32_t strLen);
 
 /**
  * Adds each of the characters in this string to the set. Note: "ch" => {"c", "h"}
@@ -621,8 +621,8 @@ uset_addString(USet* set, const UChar* str, int32_t strLen);
  * @param strLen the length of the string or -1 if null terminated.
  * @stable ICU 3.4
  */
-U_CAPI void U_EXPORT2
-uset_addAllCodePoints(USet* set, const UChar *str, int32_t strLen);
+U_CAPI تهی U_EXPORT2
+uset_addAllCodePoints(USet* set, ثابت UChar *str, int32_t strLen);
 
 /**
  * Removes the given character from the given USet.  After this call,
@@ -632,7 +632,7 @@ uset_addAllCodePoints(USet* set, const UChar *str, int32_t strLen);
  * @param c the character to remove
  * @stable ICU 2.4
  */
-U_CAPI void U_EXPORT2
+U_CAPI تهی U_EXPORT2
 uset_remove(USet* set, UChar32 c);
 
 /**
@@ -644,7 +644,7 @@ uset_remove(USet* set, UChar32 c);
  * @param end the last character of the range to remove, inclusive
  * @stable ICU 2.2
  */
-U_CAPI void U_EXPORT2
+U_CAPI تهی U_EXPORT2
 uset_removeRange(USet* set, UChar32 start, UChar32 end);
 
 /**
@@ -656,8 +656,8 @@ uset_removeRange(USet* set, UChar32 start, UChar32 end);
  * @param strLen the length of the string or -1 if null terminated.
  * @stable ICU 2.4
  */
-U_CAPI void U_EXPORT2
-uset_removeString(USet* set, const UChar* str, int32_t strLen);
+U_CAPI تهی U_EXPORT2
+uset_removeString(USet* set, ثابت UChar* str, int32_t strLen);
 
 /**
  * Removes EACH of the characters in this string. Note: "ch" == {"c", "h"}
@@ -668,8 +668,8 @@ uset_removeString(USet* set, const UChar* str, int32_t strLen);
  * @param length the length of the string, or -1 if NUL-terminated
  * @stable ICU 69
  */
-U_CAPI void U_EXPORT2
-uset_removeAllCodePoints(USet *set, const UChar *str, int32_t length);
+U_CAPI تهی U_EXPORT2
+uset_removeAllCodePoints(USet *set, ثابت UChar *str, int32_t length);
 
 /**
  * Removes from this set all of its elements that are contained in the
@@ -682,8 +682,8 @@ uset_removeAllCodePoints(USet *set, const UChar *str, int32_t length);
  * removed from this set
  * @stable ICU 3.2
  */
-U_CAPI void U_EXPORT2
-uset_removeAll(USet* set, const USet* removeSet);
+U_CAPI تهی U_EXPORT2
+uset_removeAll(USet* set, ثابت USet* removeSet);
 
 /**
  * Retain only the elements in this set that are contained in the
@@ -697,7 +697,7 @@ uset_removeAll(USet* set, const USet* removeSet);
  * @param end last character, inclusive, of range
  * @stable ICU 3.2
  */
-U_CAPI void U_EXPORT2
+U_CAPI تهی U_EXPORT2
 uset_retain(USet* set, UChar32 start, UChar32 end);
 
 /**
@@ -711,8 +711,8 @@ uset_retain(USet* set, UChar32 start, UChar32 end);
  * @param length the length of the string, or -1 if NUL-terminated
  * @stable ICU 69
  */
-U_CAPI void U_EXPORT2
-uset_retainString(USet *set, const UChar *str, int32_t length);
+U_CAPI تهی U_EXPORT2
+uset_retainString(USet *set, ثابت UChar *str, int32_t length);
 
 /**
  * Retains EACH of the characters in this string. Note: "ch" == {"c", "h"}
@@ -723,8 +723,8 @@ uset_retainString(USet *set, const UChar *str, int32_t length);
  * @param length the length of the string, or -1 if NUL-terminated
  * @stable ICU 69
  */
-U_CAPI void U_EXPORT2
-uset_retainAllCodePoints(USet *set, const UChar *str, int32_t length);
+U_CAPI تهی U_EXPORT2
+uset_retainAllCodePoints(USet *set, ثابت UChar *str, int32_t length);
 
 /**
  * Retains only the elements in this set that are contained in the
@@ -738,8 +738,8 @@ uset_retainAllCodePoints(USet *set, const UChar *str, int32_t length);
  * @param retain set that defines which elements this set will retain
  * @stable ICU 3.2
  */
-U_CAPI void U_EXPORT2
-uset_retainAll(USet* set, const USet* retain);
+U_CAPI تهی U_EXPORT2
+uset_retainAll(USet* set, ثابت USet* retain);
 
 /**
  * Reallocate this objects internal structures to take up the least
@@ -749,7 +749,7 @@ uset_retainAll(USet* set, const USet* retain);
  * @param set the object on which to perform the compact
  * @stable ICU 3.2
  */
-U_CAPI void U_EXPORT2
+U_CAPI تهی U_EXPORT2
 uset_compact(USet* set);
 
 /**
@@ -765,7 +765,7 @@ uset_compact(USet* set);
  * @param set the set
  * @stable ICU 2.4
  */
-U_CAPI void U_EXPORT2
+U_CAPI تهی U_EXPORT2
 uset_complement(USet* set);
 
 /**
@@ -781,7 +781,7 @@ uset_complement(USet* set);
  * @param end last character, inclusive, of range
  * @stable ICU 69
  */
-U_CAPI void U_EXPORT2
+U_CAPI تهی U_EXPORT2
 uset_complementRange(USet *set, UChar32 start, UChar32 end);
 
 /**
@@ -794,8 +794,8 @@ uset_complementRange(USet *set, UChar32 start, UChar32 end);
  * @param length the length of the string, or -1 if NUL-terminated
  * @stable ICU 69
  */
-U_CAPI void U_EXPORT2
-uset_complementString(USet *set, const UChar *str, int32_t length);
+U_CAPI تهی U_EXPORT2
+uset_complementString(USet *set, ثابت UChar *str, int32_t length);
 
 /**
  * Complements EACH of the characters in this string. Note: "ch" == {"c", "h"}
@@ -806,8 +806,8 @@ uset_complementString(USet *set, const UChar *str, int32_t length);
  * @param length the length of the string, or -1 if NUL-terminated
  * @stable ICU 69
  */
-U_CAPI void U_EXPORT2
-uset_complementAllCodePoints(USet *set, const UChar *str, int32_t length);
+U_CAPI تهی U_EXPORT2
+uset_complementAllCodePoints(USet *set, ثابت UChar *str, int32_t length);
 
 /**
  * Complements in this set all elements contained in the specified
@@ -820,8 +820,8 @@ uset_complementAllCodePoints(USet *set, const UChar *str, int32_t length);
  * from this set.
  * @stable ICU 3.2
  */
-U_CAPI void U_EXPORT2
-uset_complementAll(USet* set, const USet* complement);
+U_CAPI تهی U_EXPORT2
+uset_complementAll(USet* set, ثابت USet* complement);
 
 /**
  * Removes all of the elements from this set.  This set will be
@@ -830,7 +830,7 @@ uset_complementAll(USet* set, const USet* complement);
  * @param set the set
  * @stable ICU 2.4
  */
-U_CAPI void U_EXPORT2
+U_CAPI تهی U_EXPORT2
 uset_clear(USet* set);
 
 /**
@@ -861,7 +861,7 @@ uset_clear(USet* set);
  * Unrelated options bits are ignored.
  * @stable ICU 4.2
  */
-U_CAPI void U_EXPORT2
+U_CAPI تهی U_EXPORT2
 uset_closeOver(USet* set, int32_t attributes);
 
 /**
@@ -870,7 +870,7 @@ uset_closeOver(USet* set, int32_t attributes);
  * @param set the set
  * @stable ICU 4.2
  */
-U_CAPI void U_EXPORT2
+U_CAPI تهی U_EXPORT2
 uset_removeAllStrings(USet* set);
 
 /**
@@ -881,7 +881,7 @@ uset_removeAllStrings(USet* set);
  * @stable ICU 2.4
  */
 U_CAPI UBool U_EXPORT2
-uset_isEmpty(const USet* set);
+uset_isEmpty(ثابت USet* set);
 
 /**
  * @param set the set
@@ -889,7 +889,7 @@ uset_isEmpty(const USet* set);
  * @stable ICU 70
  */
 U_CAPI UBool U_EXPORT2
-uset_hasStrings(const USet *set);
+uset_hasStrings(ثابت USet *set);
 
 /**
  * Returns true if the given USet contains the given character.
@@ -900,7 +900,7 @@ uset_hasStrings(const USet *set);
  * @stable ICU 2.4
  */
 U_CAPI UBool U_EXPORT2
-uset_contains(const USet* set, UChar32 c);
+uset_contains(ثابت USet* set, UChar32 c);
 
 /**
  * Returns true if the given USet contains all characters c
@@ -912,7 +912,7 @@ uset_contains(const USet* set, UChar32 c);
  * @stable ICU 2.2
  */
 U_CAPI UBool U_EXPORT2
-uset_containsRange(const USet* set, UChar32 start, UChar32 end);
+uset_containsRange(ثابت USet* set, UChar32 start, UChar32 end);
 
 /**
  * Returns true if the given USet contains the given string.
@@ -923,7 +923,7 @@ uset_containsRange(const USet* set, UChar32 start, UChar32 end);
  * @stable ICU 2.4
  */
 U_CAPI UBool U_EXPORT2
-uset_containsString(const USet* set, const UChar* str, int32_t strLen);
+uset_containsString(ثابت USet* set, ثابت UChar* str, int32_t strLen);
 
 /**
  * Returns the index of the given character within this set, where
@@ -936,7 +936,7 @@ uset_containsString(const USet* set, const UChar* str, int32_t strLen);
  * @stable ICU 3.2
  */
 U_CAPI int32_t U_EXPORT2
-uset_indexOf(const USet* set, UChar32 c);
+uset_indexOf(ثابت USet* set, UChar32 c);
 
 /**
  * Returns the character at the given index within this set, where
@@ -954,7 +954,7 @@ uset_indexOf(const USet* set, UChar32 c);
  * @stable ICU 3.2
  */
 U_CAPI UChar32 U_EXPORT2
-uset_charAt(const USet* set, int32_t charIndex);
+uset_charAt(ثابت USet* set, int32_t charIndex);
 
 /**
  * Returns the number of characters and strings contained in this set.
@@ -972,7 +972,7 @@ uset_charAt(const USet* set, int32_t charIndex);
  * @see uset_getItemCount
  */
 U_CAPI int32_t U_EXPORT2
-uset_size(const USet* set);
+uset_size(ثابت USet* set);
 
 /**
  * @param set the set
@@ -984,7 +984,7 @@ uset_size(const USet* set);
  * @see uset_size
  */
 U_CAPI int32_t U_EXPORT2
-uset_getRangeCount(const USet *set);
+uset_get_Range_شمار(ثابت USet *set);
 
 /**
  * @param set the set
@@ -995,7 +995,7 @@ uset_getRangeCount(const USet *set);
  * @see uset_size
  */
 U_CAPI int32_t U_EXPORT2
-uset_getStringCount(const USet *set);
+uset_get_String_شمار(ثابت USet *set);
 
 /**
  * Returns the index-th string (empty or multi-character) in the set.
@@ -1009,8 +1009,8 @@ uset_getStringCount(const USet *set);
  * @stable ICU 76
  * @see uset_getStringCount
  */
-U_CAPI const UChar* U_EXPORT2
-uset_getString(const USet* set U_LIFETIME_BOUND, int32_t index, int32_t* pLength);
+U_CAPI ثابت UChar* U_EXPORT2
+uset_getString(ثابت USet* set U_LIFETIME_BOUND, int32_t index, int32_t* pLength);
 
 /**
  * Returns the number of items in this set.  An item is either a range
@@ -1023,7 +1023,7 @@ uset_getString(const USet* set U_LIFETIME_BOUND, int32_t index, int32_t* pLength
  * @see uset_getStringCount
  */
 U_CAPI int32_t U_EXPORT2
-uset_getItemCount(const USet* set);
+uset_get_Item_شمار(ثابت USet* set);
 
 /**
  * Returns an item of this set.  An item is either a range of
@@ -1056,7 +1056,7 @@ uset_getItemCount(const USet* set);
  * @see uset_getString
  */
 U_CAPI int32_t U_EXPORT2
-uset_getItem(const USet* set, int32_t itemIndex,
+uset_getItem(ثابت USet* set, int32_t itemIndex,
              UChar32* start, UChar32* end,
              UChar* str, int32_t strCapacity,
              UErrorCode* ec);
@@ -1070,7 +1070,7 @@ uset_getItem(const USet* set, int32_t itemIndex,
  * @stable ICU 3.2
  */
 U_CAPI UBool U_EXPORT2
-uset_containsAll(const USet* set1, const USet* set2);
+uset_containsAll(ثابت USet* set1, ثابت USet* set2);
 
 /**
  * Returns true if this set contains all the characters
@@ -1083,7 +1083,7 @@ uset_containsAll(const USet* set1, const USet* set2);
  * @stable ICU 3.4
  */
 U_CAPI UBool U_EXPORT2
-uset_containsAllCodePoints(const USet* set, const UChar *str, int32_t strLen);
+uset_containsAllCodePoints(ثابت USet* set, ثابت UChar *str, int32_t strLen);
 
 /**
  * Returns true if set1 contains none of the characters and strings
@@ -1094,7 +1094,7 @@ uset_containsAllCodePoints(const USet* set, const UChar *str, int32_t strLen);
  * @stable ICU 3.2
  */
 U_CAPI UBool U_EXPORT2
-uset_containsNone(const USet* set1, const USet* set2);
+uset_containsNone(ثابت USet* set1, ثابت USet* set2);
 
 /**
  * Returns true if set1 contains some of the characters and strings
@@ -1105,7 +1105,7 @@ uset_containsNone(const USet* set1, const USet* set2);
  * @stable ICU 3.2
  */
 U_CAPI UBool U_EXPORT2
-uset_containsSome(const USet* set1, const USet* set2);
+uset_containsSome(ثابت USet* set1, ثابت USet* set2);
 
 /**
  * Returns the length of the initial substring of the input string which
@@ -1127,7 +1127,7 @@ uset_containsSome(const USet* set1, const USet* set2);
  * @see USetSpanCondition
  */
 U_CAPI int32_t U_EXPORT2
-uset_span(const USet *set, const UChar *s, int32_t length, USetSpanCondition spanCondition);
+uset_span(ثابت USet *set, ثابت UChar *s, int32_t length, USetSpanCondition spanCondition);
 
 /**
  * Returns the start of the trailing substring of the input string which
@@ -1148,7 +1148,7 @@ uset_span(const USet *set, const UChar *s, int32_t length, USetSpanCondition spa
  * @see USetSpanCondition
  */
 U_CAPI int32_t U_EXPORT2
-uset_spanBack(const USet *set, const UChar *s, int32_t length, USetSpanCondition spanCondition);
+uset_spanBack(ثابت USet *set, ثابت UChar *s, int32_t length, USetSpanCondition spanCondition);
 
 /**
  * Returns the length of the initial substring of the input string which
@@ -1170,7 +1170,7 @@ uset_spanBack(const USet *set, const UChar *s, int32_t length, USetSpanCondition
  * @see USetSpanCondition
  */
 U_CAPI int32_t U_EXPORT2
-uset_spanUTF8(const USet *set, const char *s, int32_t length, USetSpanCondition spanCondition);
+uset_spanUTF8(ثابت USet *set, ثابت نویسه *s, int32_t length, USetSpanCondition spanCondition);
 
 /**
  * Returns the start of the trailing substring of the input string which
@@ -1191,7 +1191,7 @@ uset_spanUTF8(const USet *set, const char *s, int32_t length, USetSpanCondition 
  * @see USetSpanCondition
  */
 U_CAPI int32_t U_EXPORT2
-uset_spanBackUTF8(const USet *set, const char *s, int32_t length, USetSpanCondition spanCondition);
+uset_spanBackUTF8(ثابت USet *set, ثابت نویسه *s, int32_t length, USetSpanCondition spanCondition);
 
 /**
  * Returns true if set1 contains all of the characters and strings
@@ -1202,7 +1202,7 @@ uset_spanBackUTF8(const USet *set, const char *s, int32_t length, USetSpanCondit
  * @stable ICU 3.2
  */
 U_CAPI UBool U_EXPORT2
-uset_equals(const USet* set1, const USet* set2);
+uset_equals(ثابت USet* set1, ثابت USet* set2);
 
 /*********************************************************************
  * Serialized set API
@@ -1258,7 +1258,7 @@ uset_equals(const USet* set1, const USet* set2);
  * @stable ICU 2.4
  */
 U_CAPI int32_t U_EXPORT2
-uset_serialize(const USet* set, uint16_t* dest, int32_t destCapacity, UErrorCode* pErrorCode);
+uset_serialize(ثابت USet* set, uint16_t* dest, int32_t destCapacity, UErrorCode* pErrorCode);
 
 /**
  * Given a serialized array, fill in the given serialized set object.
@@ -1269,7 +1269,7 @@ uset_serialize(const USet* set, uint16_t* dest, int32_t destCapacity, UErrorCode
  * @stable ICU 2.4
  */
 U_CAPI UBool U_EXPORT2
-uset_getSerializedSet(USerializedSet* fillSet, const uint16_t* src, int32_t srcLength);
+uset_getSerializedSet(USerializedSet* fillSet, ثابت uint16_t* src, int32_t srcLength);
 
 /**
  * Set the USerializedSet to contain the given character (and nothing
@@ -1278,7 +1278,7 @@ uset_getSerializedSet(USerializedSet* fillSet, const uint16_t* src, int32_t srcL
  * @param c The codepoint to set
  * @stable ICU 2.4
  */
-U_CAPI void U_EXPORT2
+U_CAPI تهی U_EXPORT2
 uset_setSerializedToOne(USerializedSet* fillSet, UChar32 c);
 
 /**
@@ -1290,7 +1290,7 @@ uset_setSerializedToOne(USerializedSet* fillSet, UChar32 c);
  * @stable ICU 2.4
  */
 U_CAPI UBool U_EXPORT2
-uset_serializedContains(const USerializedSet* set, UChar32 c);
+uset_serializedContains(ثابت USerializedSet* set, UChar32 c);
 
 /**
  * Returns the number of disjoint ranges of characters contained in
@@ -1302,7 +1302,7 @@ uset_serializedContains(const USerializedSet* set, UChar32 c);
  * @stable ICU 2.4
  */
 U_CAPI int32_t U_EXPORT2
-uset_getSerializedRangeCount(const USerializedSet* set);
+uset_get_Serialized_Range_شمار(ثابت USerializedSet* set);
 
 /**
  * Returns a range of characters contained in the given serialized
@@ -1318,10 +1318,10 @@ uset_getSerializedRangeCount(const USerializedSet* set);
  * @stable ICU 2.4
  */
 U_CAPI UBool U_EXPORT2
-uset_getSerializedRange(const USerializedSet* set, int32_t rangeIndex,
+uset_getSerializedRange(ثابت USerializedSet* set, int32_t rangeIndex,
                         UChar32* pStart, UChar32* pEnd);
 
-#if U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
+#اگر U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
 
 namespace U_HEADER_ONLY_NAMESPACE {
 
@@ -1333,72 +1333,72 @@ namespace U_HEADER_ONLY_NAMESPACE {
  * @stable ICU 76
  */
 class USetCodePointIterator {
-public:
+عمومی:
     /** @stable ICU 76 */
-    USetCodePointIterator(const USetCodePointIterator &other) = default;
+    USetCodePointIterator(ثابت USetCodePointIterator &other) = پیشفرض;
 
     /** @stable ICU 76 */
-    bool operator==(const USetCodePointIterator &other) const {
+    bool operator==(ثابت USetCodePointIterator &other) ثابت {
         // No need to compare rangeCount & end given private constructor
         // and assuming we don't compare iterators across the set being modified.
         // And comparing rangeIndex is redundant with comparing c.
         // We might even skip comparing uset.
         // Unless we want operator==() to be "correct" for more than iteration.
-        return uset == other.uset && c == other.c;
+        بازگشت uset == other.uset && c == other.c;
     }
 
     /** @stable ICU 76 */
-    bool operator!=(const USetCodePointIterator &other) const { return !operator==(other); }
+    bool operator!=(ثابت USetCodePointIterator &other) ثابت { بازگشت !operator==(other); }
 
     /** @stable ICU 76 */
-    UChar32 operator*() const { return c; }
+    UChar32 operator*() ثابت { بازگشت c; }
 
     /**
      * Pre-increment.
      * @stable ICU 76
      */
     USetCodePointIterator& operator++() U_LIFETIME_BOUND {
-        if (c < end) {
+        اگر (c < end) {
             ++c;
-        } else if (rangeIndex < rangeCount) {
+        } وگرنه اگر (rangeIndex < range_شمار) {
             UErrorCode errorCode = U_ZERO_ERROR;
             int32_t result = uset_getItem(uset, rangeIndex, &c, &end, nullptr, 0, &errorCode);
-            if (U_SUCCESS(errorCode) && result == 0) {
+            اگر (U_SUCCESS(errorCode) && result == 0) {
                 ++rangeIndex;
-            } else {
+            } وگرنه {
                 c = end = U_SENTINEL;
             }
-        } else {
+        } وگرنه {
             c = end = U_SENTINEL;
         }
-        return *this;
+        بازگشت *this;
     }
 
     /**
      * Post-increment.
      * @stable ICU 76
      */
-    USetCodePointIterator operator++(int) {
+    USetCodePointIterator operator++(صحیح) {
         USetCodePointIterator result(*this);
         operator++();
-        return result;
+        بازگشت result;
     }
 
-private:
+خصوصی:
     friend class USetCodePoints;
 
-    USetCodePointIterator(const USet* pUset U_LIFETIME_BOUND,
+    USetCodePointIterator(ثابت USet* pUset U_LIFETIME_BOUND,
                           int32_t nRangeIndex,
-                          int32_t nRangeCount)
-            : uset(pUset), rangeIndex(nRangeIndex), rangeCount(nRangeCount),
+                          int32_t n_Range_شمار)
+            : uset(pUset), rangeIndex(nRangeIndex), range_شمار(n_Range_شمار),
                 c(U_SENTINEL), end(U_SENTINEL) {
         // Fetch the first range.
         operator++();
     }
 
-    const USet *uset;
+    ثابت USet *uset;
     int32_t rangeIndex;
-    int32_t rangeCount;
+    int32_t range_شمار;
     UChar32 c, end;
 };
 
@@ -1421,30 +1421,30 @@ private:
  * @see USetElements
  */
 class USetCodePoints {
-public:
+عمومی:
     /**
      * Constructs a C++ "range" object over the code points of the USet.
      * @stable ICU 76
      */
-    USetCodePoints(const USet* pUset U_LIFETIME_BOUND)
-            : uset(pUset), rangeCount(uset_getRangeCount(pUset)) {}
+    USetCodePoints(ثابت USet* pUset U_LIFETIME_BOUND)
+            : uset(pUset), range_شمار(uset_get_Range_شمار(pUset)) {}
 
     /** @stable ICU 76 */
-    USetCodePoints(const USetCodePoints &other) = default;
+    USetCodePoints(ثابت USetCodePoints &other) = پیشفرض;
 
     /** @stable ICU 76 */
-    USetCodePointIterator begin() const {
-        return USetCodePointIterator(uset, 0, rangeCount);
+    USetCodePointIterator begin() ثابت {
+        بازگشت USetCodePointIterator(uset, 0, range_شمار);
     }
 
     /** @stable ICU 76 */
-    USetCodePointIterator end() const {
-        return USetCodePointIterator(uset, rangeCount, rangeCount);
+    USetCodePointIterator end() ثابت {
+        بازگشت USetCodePointIterator(uset, range_شمار, range_شمار);
     }
 
-private:
-    const USet *uset;
-    int32_t rangeCount;
+خصوصی:
+    ثابت USet *uset;
+    int32_t range_شمار;
 };
 
 /**
@@ -1454,19 +1454,19 @@ private:
  * (end() returns an iterator corresponding to rangeEnd+1.)
  * @stable ICU 76
  */
-struct CodePointRange {
+ساختار CodePointRange {
     /** @stable ICU 76 */
-    struct iterator {
+    ساختار iterator {
         /** @stable ICU 76 */
         iterator(UChar32 aC) : c(aC) {}
 
         /** @stable ICU 76 */
-        bool operator==(const iterator &other) const { return c == other.c; }
+        bool operator==(ثابت iterator &other) ثابت { بازگشت c == other.c; }
         /** @stable ICU 76 */
-        bool operator!=(const iterator &other) const { return !operator==(other); }
+        bool operator!=(ثابت iterator &other) ثابت { بازگشت !operator==(other); }
 
         /** @stable ICU 76 */
-        UChar32 operator*() const { return c; }
+        UChar32 operator*() ثابت { بازگشت c; }
 
         /**
          * Pre-increment.
@@ -1474,15 +1474,15 @@ struct CodePointRange {
          */
         iterator& operator++() U_LIFETIME_BOUND {
             ++c;
-            return *this;
+            بازگشت *this;
         }
 
         /**
          * Post-increment.
          * @stable ICU 76
          */
-        iterator operator++(int) {
-            return c++;
+        iterator operator++(صحیح) {
+            بازگشت c++;
         }
 
         /**
@@ -1495,13 +1495,13 @@ struct CodePointRange {
     /** @stable ICU 76 */
     CodePointRange(UChar32 start, UChar32 end) : rangeStart(start), rangeEnd(end) {}
     /** @stable ICU 76 */
-    CodePointRange(const CodePointRange &other) = default;
+    CodePointRange(ثابت CodePointRange &other) = پیشفرض;
     /** @stable ICU 76 */
-    size_t size() const { return (rangeEnd + 1) - rangeStart; }
+    size_t size() ثابت { بازگشت (rangeEnd + 1) - rangeStart; }
     /** @stable ICU 76 */
-    iterator begin() const { return rangeStart; }
+    iterator begin() ثابت { بازگشت rangeStart; }
     /** @stable ICU 76 */
-    iterator end() const { return rangeEnd + 1; }
+    iterator end() ثابت { بازگشت rangeEnd + 1; }
 
     /**
      * Start of a USet/UnicodeSet range of code points.
@@ -1520,33 +1520,33 @@ struct CodePointRange {
  * @stable ICU 76
  */
 class USetRangeIterator {
-public:
+عمومی:
     /** @stable ICU 76 */
-    USetRangeIterator(const USetRangeIterator &other) = default;
+    USetRangeIterator(ثابت USetRangeIterator &other) = پیشفرض;
 
     /** @stable ICU 76 */
-    bool operator==(const USetRangeIterator &other) const {
+    bool operator==(ثابت USetRangeIterator &other) ثابت {
         // No need to compare rangeCount given private constructor
         // and assuming we don't compare iterators across the set being modified.
         // We might even skip comparing uset.
         // Unless we want operator==() to be "correct" for more than iteration.
-        return uset == other.uset && rangeIndex == other.rangeIndex;
+        بازگشت uset == other.uset && rangeIndex == other.rangeIndex;
     }
 
     /** @stable ICU 76 */
-    bool operator!=(const USetRangeIterator &other) const { return !operator==(other); }
+    bool operator!=(ثابت USetRangeIterator &other) ثابت { بازگشت !operator==(other); }
 
     /** @stable ICU 76 */
-    CodePointRange operator*() const {
-        if (rangeIndex < rangeCount) {
+    CodePointRange operator*() ثابت {
+        اگر (rangeIndex < range_شمار) {
             UChar32 start, end;
             UErrorCode errorCode = U_ZERO_ERROR;
             int32_t result = uset_getItem(uset, rangeIndex, &start, &end, nullptr, 0, &errorCode);
-            if (U_SUCCESS(errorCode) && result == 0) {
-                return CodePointRange(start, end);
+            اگر (U_SUCCESS(errorCode) && result == 0) {
+                بازگشت CodePointRange(start, end);
             }
         }
-        return CodePointRange(U_SENTINEL, U_SENTINEL);
+        بازگشت CodePointRange(U_SENTINEL, U_SENTINEL);
     }
 
     /**
@@ -1555,28 +1555,28 @@ public:
      */
     USetRangeIterator& operator++() U_LIFETIME_BOUND {
         ++rangeIndex;
-        return *this;
+        بازگشت *this;
     }
 
     /**
      * Post-increment.
      * @stable ICU 76
      */
-    USetRangeIterator operator++(int) {
+    USetRangeIterator operator++(صحیح) {
         USetRangeIterator result(*this);
         ++rangeIndex;
-        return result;
+        بازگشت result;
     }
 
-private:
+خصوصی:
     friend class USetRanges;
 
-    USetRangeIterator(const USet* pUset U_LIFETIME_BOUND, int32_t nRangeIndex, int32_t nRangeCount)
-            : uset(pUset), rangeIndex(nRangeIndex), rangeCount(nRangeCount) {}
+    USetRangeIterator(ثابت USet* pUset U_LIFETIME_BOUND, int32_t nRangeIndex, int32_t n_Range_شمار)
+            : uset(pUset), rangeIndex(nRangeIndex), range_شمار(n_Range_شمار) {}
 
-    const USet *uset;
+    ثابت USet *uset;
     int32_t rangeIndex;
-    int32_t rangeCount;
+    int32_t range_شمار;
 };
 
 /**
@@ -1603,30 +1603,30 @@ private:
  * @see USetElements
  */
 class USetRanges {
-public:
+عمومی:
     /**
      * Constructs a C++ "range" object over the code point ranges of the USet.
      * @stable ICU 76
      */
-    USetRanges(const USet* pUset U_LIFETIME_BOUND)
-            : uset(pUset), rangeCount(uset_getRangeCount(pUset)) {}
+    USetRanges(ثابت USet* pUset U_LIFETIME_BOUND)
+            : uset(pUset), range_شمار(uset_get_Range_شمار(pUset)) {}
 
     /** @stable ICU 76 */
-    USetRanges(const USetRanges &other) = default;
+    USetRanges(ثابت USetRanges &other) = پیشفرض;
 
     /** @stable ICU 76 */
-    USetRangeIterator begin() const {
-        return USetRangeIterator(uset, 0, rangeCount);
+    USetRangeIterator begin() ثابت {
+        بازگشت USetRangeIterator(uset, 0, range_شمار);
     }
 
     /** @stable ICU 76 */
-    USetRangeIterator end() const {
-        return USetRangeIterator(uset, rangeCount, rangeCount);
+    USetRangeIterator end() ثابت {
+        بازگشت USetRangeIterator(uset, range_شمار, range_شمار);
     }
 
-private:
-    const USet *uset;
-    int32_t rangeCount;
+خصوصی:
+    ثابت USet *uset;
+    int32_t range_شمار;
 };
 
 /**
@@ -1634,31 +1634,31 @@ private:
  * @stable ICU 76
  */
 class USetStringIterator {
-public:
+عمومی:
     /** @stable ICU 76 */
-    USetStringIterator(const USetStringIterator &other) = default;
+    USetStringIterator(ثابت USetStringIterator &other) = پیشفرض;
 
     /** @stable ICU 76 */
-    bool operator==(const USetStringIterator &other) const {
+    bool operator==(ثابت USetStringIterator &other) ثابت {
         // No need to compare count given private constructor
         // and assuming we don't compare iterators across the set being modified.
         // We might even skip comparing uset.
         // Unless we want operator==() to be "correct" for more than iteration.
-        return uset == other.uset && index == other.index;
+        بازگشت uset == other.uset && index == other.index;
     }
 
     /** @stable ICU 76 */
-    bool operator!=(const USetStringIterator &other) const { return !operator==(other); }
+    bool operator!=(ثابت USetStringIterator &other) ثابت { بازگشت !operator==(other); }
 
     /** @stable ICU 76 */
-    std::u16string_view operator*() const {
-        if (index < count) {
+    std::u16string_view operator*() ثابت {
+        اگر (index < شمار) {
             int32_t length;
-            const UChar *uchars = uset_getString(uset, index, &length);
+            ثابت UChar *uchars = uset_getString(uset, index, &length);
             // assert uchars != nullptr;
-            return {uprv_char16PtrFromUChar(uchars), static_cast<size_t>(length)};
+            بازگشت {uprv_char16PtrFromUChar(uchars), static_cast<size_t>(length)};
         }
-        return {};
+        بازگشت {};
     }
 
     /**
@@ -1667,28 +1667,28 @@ public:
      */
     USetStringIterator& operator++() U_LIFETIME_BOUND {
         ++index;
-        return *this;
+        بازگشت *this;
     }
 
     /**
      * Post-increment.
      * @stable ICU 76
      */
-    USetStringIterator operator++(int) {
+    USetStringIterator operator++(صحیح) {
         USetStringIterator result(*this);
         ++index;
-        return result;
+        بازگشت result;
     }
 
-private:
+خصوصی:
     friend class USetStrings;
 
-    USetStringIterator(const USet* pUset U_LIFETIME_BOUND, int32_t nIndex, int32_t nCount)
-            : uset(pUset), index(nIndex), count(nCount) {}
+    USetStringIterator(ثابت USet* pUset U_LIFETIME_BOUND, int32_t nIndex, int32_t n_شمار)
+            : uset(pUset), index(nIndex), شمار(n_شمار) {}
 
-    const USet *uset;
+    ثابت USet *uset;
     int32_t index;
-    int32_t count;
+    int32_t شمار;
 };
 
 /**
@@ -1714,30 +1714,30 @@ private:
  * @see USetElements
  */
 class USetStrings {
-public:
+عمومی:
     /**
      * Constructs a C++ "range" object over the strings of the USet.
      * @stable ICU 76
      */
-    USetStrings(const USet* pUset U_LIFETIME_BOUND)
-            : uset(pUset), count(uset_getStringCount(pUset)) {}
+    USetStrings(ثابت USet* pUset U_LIFETIME_BOUND)
+            : uset(pUset), شمار(uset_get_String_شمار(pUset)) {}
 
     /** @stable ICU 76 */
-    USetStrings(const USetStrings &other) = default;
+    USetStrings(ثابت USetStrings &other) = پیشفرض;
 
     /** @stable ICU 76 */
-    USetStringIterator begin() const {
-        return USetStringIterator(uset, 0, count);
+    USetStringIterator begin() ثابت {
+        بازگشت USetStringIterator(uset, 0, شمار);
     }
 
     /** @stable ICU 76 */
-    USetStringIterator end() const {
-        return USetStringIterator(uset, count, count);
+    USetStringIterator end() ثابت {
+        بازگشت USetStringIterator(uset, شمار, شمار);
     }
 
-private:
-    const USet *uset;
-    int32_t count;
+خصوصی:
+    ثابت USet *uset;
+    int32_t شمار;
 };
 
 /**
@@ -1745,35 +1745,35 @@ private:
  * @stable ICU 77
  */
 class USetElementIterator {
-public:
+عمومی:
     /** @stable ICU 77 */
-    USetElementIterator(const USetElementIterator &other) = default;
+    USetElementIterator(ثابت USetElementIterator &other) = پیشفرض;
 
     /** @stable ICU 77 */
-    bool operator==(const USetElementIterator &other) const {
+    bool operator==(ثابت USetElementIterator &other) ثابت {
         // No need to compare rangeCount & end given private constructor
         // and assuming we don't compare iterators across the set being modified.
         // We might even skip comparing uset.
         // Unless we want operator==() to be "correct" for more than iteration.
-        return uset == other.uset && c == other.c && index == other.index;
+        بازگشت uset == other.uset && c == other.c && index == other.index;
     }
 
     /** @stable ICU 77 */
-    bool operator!=(const USetElementIterator &other) const { return !operator==(other); }
+    bool operator!=(ثابت USetElementIterator &other) ثابت { بازگشت !operator==(other); }
 
     /** @stable ICU 77 */
-    std::u16string operator*() const {
-        if (c >= 0) {
-            return c <= 0xffff ?
+    std::u16string operator*() ثابت {
+        اگر (c >= 0) {
+            بازگشت c <= 0xffff ?
                 std::u16string({static_cast<char16_t>(c)}) :
                 std::u16string({U16_LEAD(c), U16_TRAIL(c)});
-        } else if (index < totalCount) {
+        } وگرنه اگر (index < total_شمار) {
             int32_t length;
-            const UChar *uchars = uset_getString(uset, index - rangeCount, &length);
+            ثابت UChar *uchars = uset_getString(uset, index - range_شمار, &length);
             // assert uchars != nullptr;
-            return {uprv_char16PtrFromUChar(uchars), static_cast<size_t>(length)};
-        } else {
-            return {};
+            بازگشت {uprv_char16PtrFromUChar(uchars), static_cast<size_t>(length)};
+        } وگرنه {
+            بازگشت {};
         }
     }
 
@@ -1782,56 +1782,56 @@ public:
      * @stable ICU 77
      */
     USetElementIterator& operator++() U_LIFETIME_BOUND {
-        if (c < end) {
+        اگر (c < end) {
             ++c;
-        } else if (index < rangeCount) {
+        } وگرنه اگر (index < range_شمار) {
             UErrorCode errorCode = U_ZERO_ERROR;
             int32_t result = uset_getItem(uset, index, &c, &end, nullptr, 0, &errorCode);
-            if (U_SUCCESS(errorCode) && result == 0) {
+            اگر (U_SUCCESS(errorCode) && result == 0) {
                 ++index;
-            } else {
+            } وگرنه {
                 c = end = U_SENTINEL;
             }
-        } else if (c >= 0) {
+        } وگرنه اگر (c >= 0) {
             // assert index == rangeCount;
             // Switch from the last range to the first string.
             c = end = U_SENTINEL;
-        } else {
+        } وگرنه {
             ++index;
         }
-        return *this;
+        بازگشت *this;
     }
 
     /**
      * Post-increment.
      * @stable ICU 77
      */
-    USetElementIterator operator++(int) {
+    USetElementIterator operator++(صحیح) {
         USetElementIterator result(*this);
         operator++();
-        return result;
+        بازگشت result;
     }
 
-private:
+خصوصی:
     friend class USetElements;
 
-    USetElementIterator(const USet* pUset U_LIFETIME_BOUND,
+    USetElementIterator(ثابت USet* pUset U_LIFETIME_BOUND,
                         int32_t nIndex,
-                        int32_t nRangeCount,
-                        int32_t nTotalCount)
-            : uset(pUset), index(nIndex), rangeCount(nRangeCount), totalCount(nTotalCount),
+                        int32_t n_Range_شمار,
+                        int32_t n_Total_شمار)
+            : uset(pUset), index(nIndex), range_شمار(n_Range_شمار), total_شمار(n_Total_شمار),
                 c(U_SENTINEL), end(U_SENTINEL) {
-        if (index < rangeCount) {
+        اگر (index < range_شمار) {
             // Fetch the first range.
             operator++();
         }
         // Otherwise don't move beyond the (index - rangeCount)-th string.
     }
 
-    const USet *uset;
+    ثابت USet *uset;
     int32_t index;
     /** Number of UnicodeSet/USet code point ranges. */
-    int32_t rangeCount;
+    int32_t range_شمار;
     /**
      * Number of code point ranges plus number of strings.
      * index starts from 0, counts ranges while less than rangeCount,
@@ -1841,7 +1841,7 @@ private:
      * smaller than the number of elements returned by this iterator
      * because we return each code point of each range.
      */
-    int32_t totalCount;
+    int32_t total_شمار;
     UChar32 c, end;
 };
 
@@ -1873,31 +1873,31 @@ private:
  * @see USetStrings
  */
 class USetElements {
-public:
+عمومی:
     /**
      * Constructs a C++ "range" object over all of the elements of the USet.
      * @stable ICU 77
      */
-    USetElements(const USet* pUset U_LIFETIME_BOUND)
-        : uset(pUset), rangeCount(uset_getRangeCount(pUset)),
-            stringCount(uset_getStringCount(pUset)) {}
+    USetElements(ثابت USet* pUset U_LIFETIME_BOUND)
+        : uset(pUset), range_شمار(uset_get_Range_شمار(pUset)),
+            string_شمار(uset_get_String_شمار(pUset)) {}
 
     /** @stable ICU 77 */
-    USetElements(const USetElements &other) = default;
+    USetElements(ثابت USetElements &other) = پیشفرض;
 
     /** @stable ICU 77 */
-    USetElementIterator begin() const {
-        return USetElementIterator(uset, 0, rangeCount, rangeCount + stringCount);
+    USetElementIterator begin() ثابت {
+        بازگشت USetElementIterator(uset, 0, range_شمار, range_شمار + string_شمار);
     }
 
     /** @stable ICU 77 */
-    USetElementIterator end() const {
-        return USetElementIterator(uset, rangeCount + stringCount, rangeCount, rangeCount + stringCount);
+    USetElementIterator end() ثابت {
+        بازگشت USetElementIterator(uset, range_شمار + string_شمار, range_شمار, range_شمار + string_شمار);
     }
 
-private:
-    const USet *uset;
-    int32_t rangeCount, stringCount;
+خصوصی:
+    ثابت USet *uset;
+    int32_t range_شمار, string_شمار;
 };
 
 }  // namespace U_HEADER_ONLY_NAMESPACE

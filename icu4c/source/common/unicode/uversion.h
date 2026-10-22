@@ -27,10 +27,10 @@
 #ifndef UVERSION_H
 #define UVERSION_H
 
-#include "unicode/umachine.h"
+#شامل "unicode/umachine.h"
 
 /* Actual version info lives in uvernum.h */
-#include "unicode/uvernum.h"
+#شامل "unicode/uvernum.h"
 
 /** Maximum length of the copyright string.
  *  @stable ICU 2.4
@@ -56,7 +56,7 @@
  *  To compare two versions, use memcmp(v1,v2,sizeof(UVersionInfo)).
  *  @stable ICU 2.4
  */
-typedef uint8_t UVersionInfo[U_MAX_VERSION_LENGTH];
+تعریفنوع uint8_t UVersionInfo[U_MAX_VERSION_LENGTH];
 
 /*===========================================================================*/
 /* C++ namespace if supported. Versioned unless versioning is disabled.      */
@@ -98,10 +98,10 @@ typedef uint8_t UVersionInfo[U_MAX_VERSION_LENGTH];
  * @stable ICU 2.4
  */
 
-#   if U_DISABLE_RENAMING
+#   اگر U_DISABLE_RENAMING
 #       define U_ICU_NAMESPACE icu
         namespace U_ICU_NAMESPACE { }
-#   else
+#   وگرنه
 #       define U_ICU_NAMESPACE U_ICU_ENTRY_POINT_RENAME(icu)
         namespace U_ICU_NAMESPACE { }
         namespace icu = U_ICU_NAMESPACE;
@@ -113,15 +113,15 @@ typedef uint8_t UVersionInfo[U_MAX_VERSION_LENGTH];
 #   define U_NAMESPACE_QUALIFIER U_ICU_NAMESPACE::
 
 #   ifndef U_USING_ICU_NAMESPACE
-#       if defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || \
+#       اگر defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || \
                 defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION) || \
                 defined(U_LAYOUTEX_IMPLEMENTATION) || defined(U_TOOLUTIL_IMPLEMENTATION)
 #           define U_USING_ICU_NAMESPACE 0
-#       else
+#       وگرنه
 #           define U_USING_ICU_NAMESPACE 0
 #       endif
 #   endif
-#   if U_USING_ICU_NAMESPACE
+#   اگر U_USING_ICU_NAMESPACE
         U_NAMESPACE_USE
 #   endif
 
@@ -160,18 +160,18 @@ typedef uint8_t UVersionInfo[U_MAX_VERSION_LENGTH];
  */
 
 // The first test is the same as for defining U_EXPORT for Windows.
-#if defined(_MSC_VER) || (UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllexport__) && \
+#اگر defined(_MSC_VER) || (UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllexport__) && \
                           UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllimport__))
 #   define U_HEADER_NESTED_NAMESPACE header
 #   define U_ICU_NAMESPACE_OR_INTERNAL U_ICU_NAMESPACE
-#elif defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || \
+#وگرنهاگر defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || \
         defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION) || \
         defined(U_LAYOUTEX_IMPLEMENTATION) || defined(U_TOOLUTIL_IMPLEMENTATION)
 #   define U_HEADER_NESTED_NAMESPACE internal
 #   define U_ICU_NAMESPACE_OR_INTERNAL U_ICU_NAMESPACE::internal
     namespace U_ICU_NAMESPACE_OR_INTERNAL {}
     using namespace U_ICU_NAMESPACE_OR_INTERNAL;
-#else
+#وگرنه
 #   define U_HEADER_NESTED_NAMESPACE header
 #   define U_ICU_NAMESPACE_OR_INTERNAL U_ICU_NAMESPACE
 #endif
@@ -197,8 +197,8 @@ namespace U_HEADER_ONLY_NAMESPACE {}
  *                      values of up to 255 each.
  * @stable ICU 2.4
  */
-U_CAPI void U_EXPORT2
-u_versionFromString(UVersionInfo versionArray, const char *versionString);
+U_CAPI تهی U_EXPORT2
+u_versionFromString(UVersionInfo versionArray, ثابت نویسه *versionString);
 
 /**
  * Parse a Unicode string with dotted-decimal version information and
@@ -211,8 +211,8 @@ u_versionFromString(UVersionInfo versionArray, const char *versionString);
  *                      fields with values of up to 255 each.
  * @stable ICU 4.2
  */
-U_CAPI void U_EXPORT2
-u_versionFromUString(UVersionInfo versionArray, const UChar *versionString);
+U_CAPI تهی U_EXPORT2
+u_versionFromUString(UVersionInfo versionArray, ثابت UChar *versionString);
 
 
 /**
@@ -227,8 +227,8 @@ u_versionFromUString(UVersionInfo versionArray, const UChar *versionString);
  *                      The buffer size must be at least U_MAX_VERSION_STRING_LENGTH.
  * @stable ICU 2.4
  */
-U_CAPI void U_EXPORT2
-u_versionToString(const UVersionInfo versionArray, char *versionString);
+U_CAPI تهی U_EXPORT2
+u_versionToString(ثابت UVersionInfo versionArray, نویسه *versionString);
 
 /**
  * Gets the ICU release version.  The version array stores the version information
@@ -238,6 +238,6 @@ u_versionToString(const UVersionInfo versionArray, char *versionString);
  * @param versionArray the version # information, the result will be filled in
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
+U_CAPI تهی U_EXPORT2
 u_getVersion(UVersionInfo versionArray);
 #endif

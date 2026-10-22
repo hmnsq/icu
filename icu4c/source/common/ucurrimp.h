@@ -10,10 +10,10 @@
 #ifndef _UCURR_IMP_H_
 #define _UCURR_IMP_H_
 
-#include "unicode/utypes.h"
-#include "unicode/unistr.h"
-#include "unicode/parsepos.h"
-#include "unicode/uniset.h"
+#شامل "unicode/utypes.h"
+#شامل "unicode/unistr.h"
+#شامل "unicode/parsepos.h"
+#شامل "unicode/uniset.h"
 
 /**
  * Internal method.  Given a currency ISO code and a locale, return
@@ -25,8 +25,8 @@
  * This is used for backward compatibility with old currency logic in
  * DecimalFormat and DecimalFormatSymbols.
  */
-U_CAPI void
-uprv_getStaticCurrencyName(const UChar* iso, const char* loc,
+U_CAPI تهی
+uprv_getStaticCurrencyName(ثابت UChar* iso, ثابت نویسه* loc,
                            icu::UnicodeString& result, UErrorCode& ec);
 
 /**
@@ -53,9 +53,9 @@ uprv_getStaticCurrencyName(const UChar* iso, const char* loc,
  *
  * @internal
  */
-U_CAPI void
-uprv_parseCurrency(const char* locale,
-                   const icu::UnicodeString& text,
+U_CAPI تهی
+uprv_parseCurrency(ثابت نویسه* locale,
+                   ثابت icu::UnicodeString& text,
                    icu::ParsePosition& pos,
                    int8_t type,
                    int32_t* partialMatchLen,
@@ -69,7 +69,7 @@ uprv_parseCurrency(const char* locale,
  * @param locale the locale of the display names of interest
  * @param result the UnicodeSet to which to add the starting characters
  */
-void uprv_currencyLeads(const char* locale, icu::UnicodeSet& result, UErrorCode& ec);
+تهی uprv_currencyLeads(ثابت نویسه* locale, icu::UnicodeSet& result, UErrorCode& ec);
 
 
 

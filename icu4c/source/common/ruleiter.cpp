@@ -10,19 +10,19 @@
 * Since: ICU 2.8
 **********************************************************************
 */
-#include "ruleiter.h"
-#include "unicode/parsepos.h"
-#include "unicode/symtable.h"
-#include "unicode/unistr.h"
-#include "unicode/utf16.h"
-#include "patternprops.h"
+#شامل "ruleiter.h"
+#شامل "unicode/parsepos.h"
+#شامل "unicode/symtable.h"
+#شامل "unicode/unistr.h"
+#شامل "unicode/utf16.h"
+#شامل "patternprops.h"
 
 /* \U87654321 or \ud800\udc00 */
 #define MAX_U_NOTATION_LEN 12
 
 U_NAMESPACE_BEGIN
 
-RuleCharacterIterator::RuleCharacterIterator(const UnicodeString& theText, const SymbolTable* theSym,
+RuleCharacterIterator::RuleCharacterIterator(ثابت UnicodeString& theText, ثابت نماد_Table* theSym,
                       ParsePosition& thePos) :
     text(theText),
     pos(thePos),
@@ -31,98 +31,98 @@ RuleCharacterIterator::RuleCharacterIterator(const UnicodeString& theText, const
     bufPos(0)
 {}
 
-UBool RuleCharacterIterator::atEnd() const {
-    return buf == nullptr && pos.getIndex() == text.length();
+UBool RuleCharacterIterator::atEnd() ثابت {
+    بازگشت buf == nullptr && pos.getIndex() == text.length();
 }
 
 UChar32 RuleCharacterIterator::next(int32_t options, UBool& isEscaped, UErrorCode& ec) {
-    if (U_FAILURE(ec)) return DONE;
+    اگر (U_FAILURE(ec)) بازگشت DONE;
 
     UChar32 c = DONE;
-    isEscaped = false;
+    isEscaped = نادرست;
 
-    for (;;) {
+    برای (;;) {
         c = _current();
         _advance(U16_LENGTH(c));
 
-        if (c == SymbolTable::SYMBOL_REF && buf == nullptr &&
+        اگر (c == نماد_Table::نماد_REF && buf == nullptr &&
             (options & PARSE_VARIABLES) != 0 && sym != nullptr) {
             UnicodeString name = sym->parseReference(text, pos, text.length());
             // If name is empty there was an isolated SYMBOL_REF;
             // return it.  Caller must be prepared for this.
-            if (name.length() == 0) {
-                break;
+            اگر (name.length() == 0) {
+                بشکن;
             }
             bufPos = 0;
             buf = sym->lookup(name);
-            if (buf == nullptr) {
+            اگر (buf == nullptr) {
                 ec = U_UNDEFINED_VARIABLE;
-                return DONE;
+                بازگشت DONE;
             }
             // Handle empty variable value
-            if (buf->length() == 0) {
+            اگر (buf->length() == 0) {
                 buf = nullptr;
             }
-            continue;
+            ادامه;
         }
 
-        if ((options & SKIP_WHITESPACE) != 0 && PatternProps::isWhiteSpace(c)) {
-            continue;
+        اگر ((options & SKIP_WHITESPACE) != 0 && PatternProps::isWhiteSpace(c)) {
+            ادامه;
         }
 
-        if (c == 0x5C /*'\\'*/ && (options & PARSE_ESCAPES) != 0) {
+        اگر (c == 0x5C /*'\\'*/ && (options & PARSE_ESCAPES) != 0) {
             UnicodeString tempEscape;
             int32_t offset = 0;
             c = lookahead(tempEscape, MAX_U_NOTATION_LEN).unescapeAt(offset);
             jumpahead(offset);
-            isEscaped = true;
-            if (c < 0) {
+            isEscaped = درست;
+            اگر (c < 0) {
                 ec = U_MALFORMED_UNICODE_ESCAPE;
-                return DONE;
+                بازگشت DONE;
             }
         }
 
-        break;
+        بشکن;
     }
 
-    return c;
+    بازگشت c;
 }
 
-void RuleCharacterIterator::getPos(RuleCharacterIterator::Pos& p) const {
+تهی RuleCharacterIterator::getPos(RuleCharacterIterator::Pos& p) ثابت {
     p.buf = buf;
     p.pos = pos.getIndex();
     p.bufPos = bufPos;
 }
 
-void RuleCharacterIterator::setPos(const RuleCharacterIterator::Pos& p) {
+تهی RuleCharacterIterator::setPos(ثابت RuleCharacterIterator::Pos& p) {
     buf = p.buf;
     pos.setIndex(p.pos);
     bufPos = p.bufPos;
 }
 
-void RuleCharacterIterator::skipIgnored(int32_t options) {
-    if ((options & SKIP_WHITESPACE) != 0) {
-        for (;;) {
+تهی RuleCharacterIterator::skipIgnored(int32_t options) {
+    اگر ((options & SKIP_WHITESPACE) != 0) {
+        برای (;;) {
             UChar32 a = _current();
-            if (!PatternProps::isWhiteSpace(a)) break;
+            اگر (!PatternProps::isWhiteSpace(a)) بشکن;
             _advance(U16_LENGTH(a));
         }
     }
 }
 
-UnicodeString& RuleCharacterIterator::lookahead(UnicodeString& result, int32_t maxLookAhead) const {
-    if (maxLookAhead < 0) {
+UnicodeString& RuleCharacterIterator::lookahead(UnicodeString& result, int32_t maxLookAhead) ثابت {
+    اگر (maxLookAhead < 0) {
         maxLookAhead = 0x7FFFFFFF;
     }
-    if (buf != nullptr) {
+    اگر (buf != nullptr) {
         buf->extract(bufPos, maxLookAhead, result);
-    } else {
+    } وگرنه {
         text.extract(pos.getIndex(), maxLookAhead, result);
     }
-    return result;
+    بازگشت result;
 }
 
-void RuleCharacterIterator::jumpahead(int32_t count) {
+تهی RuleCharacterIterator::jumpahead(int32_t count) {
     _advance(count);
 }
 
@@ -134,24 +134,24 @@ UnicodeString& RuleCharacterIterator::toString(UnicodeString& result) const {
 }
 */
 
-UChar32 RuleCharacterIterator::_current() const {
-    if (buf != nullptr) {
-        return buf->char32At(bufPos);
-    } else {
-        int i = pos.getIndex();
-        return (i < text.length()) ? text.char32At(i) : static_cast<UChar32>(DONE);
+UChar32 RuleCharacterIterator::_current() ثابت {
+    اگر (buf != nullptr) {
+        بازگشت buf->char32At(bufPos);
+    } وگرنه {
+        صحیح i = pos.getIndex();
+        بازگشت (i < text.length()) ? text.char32At(i) : static_cast<UChar32>(DONE);
     }
 }
 
-void RuleCharacterIterator::_advance(int32_t count) {
-    if (buf != nullptr) {
+تهی RuleCharacterIterator::_advance(int32_t count) {
+    اگر (buf != nullptr) {
         bufPos += count;
-        if (bufPos == buf->length()) {
+        اگر (bufPos == buf->length()) {
             buf = nullptr;
         }
-    } else {
+    } وگرنه {
         pos.setIndex(pos.getIndex() + count);
-        if (pos.getIndex() > text.length()) {
+        اگر (pos.getIndex() > text.length()) {
             pos.setIndex(text.length());
         }
     }

@@ -22,13 +22,13 @@
 #ifndef __BYTESTRIEBUILDER_H__
 #define __BYTESTRIEBUILDER_H__
 
-#include "unicode/utypes.h"
+#شامل "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#اگر U_SHOW_CPLUSPLUS_API
 
-#include "unicode/bytestrie.h"
-#include "unicode/stringpiece.h"
-#include "unicode/stringtriebuilder.h"
+#شامل "unicode/bytestrie.h"
+#شامل "unicode/stringpiece.h"
+#شامل "unicode/stringtriebuilder.h"
 
 class BytesTrieTest;
 
@@ -42,8 +42,8 @@ class CharString;
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API BytesTrieBuilder : public StringTrieBuilder {
-public:
+class U_COMMON_API BytesTrieBuilder : عمومی StringTrieBuilder {
+عمومی:
     /**
      * Constructs an empty builder.
      * @param errorCode Standard ICU error code.
@@ -55,7 +55,7 @@ public:
      * Destructor.
      * @stable ICU 4.8
      */
-    virtual ~BytesTrieBuilder();
+    مجازی ~BytesTrieBuilder();
 
     /**
      * Adds a (byte sequence, value) pair.
@@ -71,7 +71,7 @@ public:
      * @return *this
      * @stable ICU 4.8
      */
-    BytesTrieBuilder& add(StringPiece s, int32_t value, UErrorCode& errorCode) U_LIFETIME_BOUND;
+    BytesTrieBuilder& add(StringPiece s, int32_t مقدار_2, UErrorCode& errorCode) U_LIFETIME_BOUND;
 
     /**
      * Builds a BytesTrie for the add()ed data.
@@ -127,50 +127,50 @@ public:
      */
     BytesTrieBuilder& clear() U_LIFETIME_BOUND;
 
-private:
+خصوصی:
     friend class ::BytesTrieTest;
 
-    BytesTrieBuilder(const BytesTrieBuilder &other) = delete;  // no copy constructor
-    BytesTrieBuilder &operator=(const BytesTrieBuilder &other) = delete;  // no assignment operator
+    BytesTrieBuilder(ثابت BytesTrieBuilder &other) = delete;  // no copy constructor
+    BytesTrieBuilder &operator=(ثابت BytesTrieBuilder &other) = delete;  // no assignment operator
 
-    void buildBytes(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
+    تهی buildBytes(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
 
-    virtual int32_t getElementStringLength(int32_t i) const override;
-    virtual char16_t getElementUnit(int32_t i, int32_t byteIndex) const override;
-    virtual int32_t getElementValue(int32_t i) const override;
+    مجازی int32_t getElementStringLength(int32_t i) ثابت override;
+    مجازی char16_t getElementUnit(int32_t i, int32_t byteIndex) ثابت override;
+    مجازی int32_t get_Element_مقدار(int32_t i) ثابت override;
 
-    virtual int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t byteIndex) const override;
+    مجازی int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t byteIndex) ثابت override;
 
-    virtual int32_t countElementUnits(int32_t start, int32_t limit, int32_t byteIndex) const override;
-    virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t byteIndex, int32_t count) const override;
-    virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t byteIndex, char16_t byte) const override;
+    مجازی int32_t شمار_Element_Units(int32_t start, int32_t limit, int32_t byteIndex) ثابت override;
+    مجازی int32_t skipElementsBySomeUnits(int32_t i, int32_t byteIndex, int32_t شمار) ثابت override;
+    مجازی int32_t indexOfElementWithNextUnit(int32_t i, int32_t byteIndex, char16_t byte) ثابت override;
 
-    virtual UBool matchNodesCanHaveValues() const override { return false; }
+    مجازی UBool match_Nodes_Can_Have_مقادیر() ثابت override { بازگشت false; }
 
-    virtual int32_t getMaxBranchLinearSubNodeLength() const override { return BytesTrie::kMaxBranchLinearSubNodeLength; }
-    virtual int32_t getMinLinearMatch() const override { return BytesTrie::kMinLinearMatch; }
-    virtual int32_t getMaxLinearMatchLength() const override { return BytesTrie::kMaxLinearMatchLength; }
+    مجازی int32_t get_Max_Branch_Linear_Sub_گره_Length() ثابت override { بازگشت BytesTrie::k_Max_Branch_Linear_Sub_گره_Length; }
+    مجازی int32_t getMinLinearMatch() ثابت override { بازگشت BytesTrie::kMinLinearMatch; }
+    مجازی int32_t getMaxLinearMatchLength() ثابت override { بازگشت BytesTrie::kMaxLinearMatchLength; }
 
-    class BTLinearMatchNode : public LinearMatchNode {
-    public:
-        BTLinearMatchNode(const char *units, int32_t len, Node *nextNode);
-        virtual bool operator==(const Node &other) const override;
-        virtual void write(StringTrieBuilder &builder) override;
-    private:
-        const char *s;
+    class BTLinear_Match_گره : عمومی Linear_Match_گره {
+    عمومی:
+        BTLinear_Match_گره(ثابت نویسه *units, int32_t len, گره_2 *next_گره);
+        مجازی bool operator==(ثابت گره_2 &other) ثابت override;
+        مجازی تهی اكتب(StringTrieBuilder &builder) override;
+    خصوصی:
+        ثابت نویسه *s;
     };
     
-    virtual Node *createLinearMatchNode(int32_t i, int32_t byteIndex, int32_t length,
-                                        Node *nextNode) const override;
+    مجازی گره_2 *create_Linear_Match_گره(int32_t i, int32_t byteIndex, int32_t length,
+                                        گره_2 *next_گره) ثابت override;
 
     UBool ensureCapacity(int32_t length);
-    virtual int32_t write(int32_t byte) override;
-    int32_t write(const char *b, int32_t length);
-    virtual int32_t writeElementUnits(int32_t i, int32_t byteIndex, int32_t length) override;
-    virtual int32_t writeValueAndFinal(int32_t i, UBool isFinal) override;
-    virtual int32_t writeValueAndType(UBool hasValue, int32_t value, int32_t node) override;
-    virtual int32_t writeDeltaTo(int32_t jumpTarget) override;
-    static int32_t internalEncodeDelta(int32_t i, char intBytes[]);
+    مجازی int32_t اكتب(int32_t byte) override;
+    int32_t اكتب(ثابت نویسه *b, int32_t length);
+    مجازی int32_t writeElementUnits(int32_t i, int32_t byteIndex, int32_t length) override;
+    مجازی int32_t write_مقدار_And_Final(int32_t i, UBool isFinal) override;
+    مجازی int32_t write_مقدار_And_Type(UBool has_مقدار, int32_t مقدار_2, int32_t گره) override;
+    مجازی int32_t writeDeltaTo(int32_t jumpTarget) override;
+    ایستا int32_t internalEncodeDelta(int32_t i, نویسه intBytes[]);
 
     CharString *strings;  // Pointer not object so we need not #include internal charstr.h.
     BytesTrieElement *elements;
@@ -179,7 +179,7 @@ private:
 
     // Byte serialization of the trie.
     // Grows from the back: bytesLength measures from the end of the buffer!
-    char *bytes;
+    نویسه *bytes;
     int32_t bytesCapacity;
     int32_t bytesLength;
 };

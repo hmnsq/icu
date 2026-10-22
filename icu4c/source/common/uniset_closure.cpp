@@ -21,17 +21,17 @@
 *   code also builds UnicodeSets from patterns and needs uniset_props.
 */
 
-#include "unicode/brkiter.h"
-#include "unicode/locid.h"
-#include "unicode/parsepos.h"
-#include "unicode/uniset.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "ruleiter.h"
-#include "ucase.h"
-#include "uprops.h"
-#include "util.h"
-#include "uvector.h"
+#شامل "unicode/brkiter.h"
+#شامل "unicode/locid.h"
+#شامل "unicode/parsepos.h"
+#شامل "unicode/uniset.h"
+#شامل "unicode/utf16.h"
+#شامل "cmemory.h"
+#شامل "ruleiter.h"
+#شامل "ucase.h"
+#شامل "uprops.h"
+#شامل "util.h"
+#شامل "uvector.h"
 
 U_NAMESPACE_BEGIN
 
@@ -44,88 +44,88 @@ U_NAMESPACE_BEGIN
 // Constructors &c
 //----------------------------------------------------------------
 
-UnicodeSet::UnicodeSet(const UnicodeString& pattern,
+UnicodeSet::UnicodeSet(ثابت UnicodeString& pattern,
                        uint32_t options,
-                       const SymbolTable* symbols,
+                       ثابت نماد_Table* symbols,
                        UErrorCode& status) {
     applyPattern(pattern, options, symbols, status);
-    _dbgct(this);
+    _dbgct(این);
 }
 
-UnicodeSet::UnicodeSet(const UnicodeString& pattern, ParsePosition& pos,
+UnicodeSet::UnicodeSet(ثابت UnicodeString& pattern, ParsePosition& pos,
                        uint32_t options,
-                       const SymbolTable* symbols,
+                       ثابت نماد_Table* symbols,
                        UErrorCode& status) {
     applyPattern(pattern, pos, options, symbols, status);
-    _dbgct(this);
+    _dbgct(این);
 }
 
 //----------------------------------------------------------------
 // Public API
 //----------------------------------------------------------------
 
-UnicodeSet& UnicodeSet::applyPattern(const UnicodeString& pattern,
+UnicodeSet& UnicodeSet::applyPattern(ثابت UnicodeString& pattern,
                                      uint32_t options,
-                                     const SymbolTable* symbols,
+                                     ثابت نماد_Table* symbols,
                                      UErrorCode& status) U_LIFETIME_BOUND {
     ParsePosition pos(0);
     applyPattern(pattern, pos, options, symbols, status);
-    if (U_FAILURE(status)) return *this;
+    اگر (U_FAILURE(status)) بازگشت *این;
 
     int32_t i = pos.getIndex();
 
-    if (options & USET_IGNORE_SPACE) {
+    اگر (options & USET_IGNORE_SPACE) {
         // Skip over trailing whitespace
-        ICU_Utility::skipWhitespace(pattern, i, true);
+        ICU_Utility::skipWhitespace(pattern, i, درست);
     }
 
-    if (i != pattern.length()) {
+    اگر (i != pattern.length()) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
     }
-    return *this;
+    بازگشت *این;
 }
 
-UnicodeSet& UnicodeSet::applyPattern(const UnicodeString& pattern,
+UnicodeSet& UnicodeSet::applyPattern(ثابت UnicodeString& pattern,
                                      ParsePosition& pos,
                                      uint32_t options,
-                                     const SymbolTable* symbols,
+                                     ثابت نماد_Table* symbols,
                                      UErrorCode& status) U_LIFETIME_BOUND {
-    if (U_FAILURE(status)) {
-        return *this;
+    اگر (U_FAILURE(status)) {
+        بازگشت *این;
     }
-    if (isFrozen()) {
+    اگر (isFrozen()) {
         status = U_NO_WRITE_PERMISSION;
-        return *this;
+        بازگشت *این;
     }
     // Need to build the pattern in a temporary string because
     // _applyPattern calls add() etc., which set pat to empty.
     UnicodeString rebuiltPat;
     RuleCharacterIterator chars(pattern, symbols, pos);
     applyPattern(pattern, pos, chars, symbols, rebuiltPat, options, &UnicodeSet::closeOver, status);
-    if (U_FAILURE(status)) return *this;
-    if (chars.inVariable()) {
+    اگر (U_FAILURE(status)) بازگشت *این;
+    اگر (chars.inVariable()) {
         // syntaxError(chars, "Extra chars in variable value");
         status = U_MALFORMED_SET;
-        return *this;
+        بازگشت *این;
     }
     setPattern(rebuiltPat);
-    return *this;
+    بازگشت *این;
 }
 
 // USetAdder implementation
 // Does not use uset.h to reduce code dependencies
-static void U_CALLCONV
+ایستا تهی U_CALLCONV
 _set_add(USet *set, UChar32 c) {
     reinterpret_cast<UnicodeSet*>(set)->add(c);
 }
 
-static void U_CALLCONV
+ایستا تهی U_CALLCONV
 _set_addRange(USet *set, UChar32 start, UChar32 end) {
     reinterpret_cast<UnicodeSet*>(set)->add(start, end);
 }
 
-static void U_CALLCONV
-_set_addString(USet *set, const char16_t *str, int32_t length) {
+ایستا تهی U_CALLCONV
+_set_addString(USet *set, ثابت char16_t *str, int32_t length) {
     reinterpret_cast<UnicodeSet*>(set)->add(UnicodeString(static_cast<UBool>(length < 0), str, length));
 }
 
@@ -135,15 +135,15 @@ _set_addString(USet *set, const char16_t *str, int32_t length) {
 
 // add the result of a full case mapping to the set
 // use str as a temporary string to avoid constructing one
-static inline void
-addCaseMapping(UnicodeSet &set, int32_t result, const char16_t *full, UnicodeString &str) {
-    if(result >= 0) {
-        if(result > UCASE_MAX_STRING_LENGTH) {
+ایستا درونخطی تهی
+addCaseMapping(UnicodeSet &set, int32_t result, ثابت char16_t *full, UnicodeString &str) {
+    اگر(result >= 0) {
+        اگر(result > UCASE_MAX_STRING_LENGTH) {
             // add a single-code point case mapping
             set.add(result);
-        } else {
+        } وگرنه {
             // add a string case mapping from full with length result
-            str.setTo(static_cast<UBool>(false), full, result);
+            str.setTo(static_cast<UBool>(نادرست), full, result);
             set.add(str);
         }
     }
@@ -151,98 +151,98 @@ addCaseMapping(UnicodeSet &set, int32_t result, const char16_t *full, UnicodeStr
     // see ucase.h
 }
 
-namespace {
+فضاینام {
 
 /** For case closure on a large set, look only at code points with relevant properties. */
-const UnicodeSet &maybeOnlyCaseSensitive(const UnicodeSet &src U_LIFETIME_BOUND,
+ثابت UnicodeSet &maybeOnlyCaseSensitive(ثابت UnicodeSet &src U_LIFETIME_BOUND,
                                          UnicodeSet &subset U_LIFETIME_BOUND) {
     // The subset must have been constructed with all code points,
     // so that the retainAll() intersection effectively copies all single code points from src.
     U_ASSERT(subset.contains(0, 0x10ffff));
-    if (src.size() < 30) {
-        return src;
+    اگر (src.size() < 30) {
+        بازگشت src;
     }
     // Return the intersection of the src code points with Case_Sensitive ones.
     UErrorCode errorCode = U_ZERO_ERROR;
-    const UnicodeSet *sensitive =
-        CharacterProperties::getBinaryPropertySet(UCHAR_CASE_SENSITIVE, errorCode);
-    if (U_FAILURE(errorCode)) {
-        return src;
+    ثابت UnicodeSet *sensitive =
+        CharacterProperties::get_دودویی_Property_Set(UCHAR_CASE_SENSITIVE, errorCode);
+    اگر (U_FAILURE(errorCode)) {
+        بازگشت src;
     }
     // Start by copying the "smaller" set.
     // (We "copy" by intersecting all Unicode *code points* with the first set,
     // which omits any strings.)
-    if (src.getRangeCount() > sensitive->getRangeCount()) {
+    اگر (src.get_Range_شمار() > sensitive->get_Range_شمار()) {
         subset.retainAll(*sensitive);
         subset.retainAll(src);
-    } else {
+    } وگرنه {
         subset.retainAll(src);
         subset.retainAll(*sensitive);
     }
-    return subset;
+    بازگشت subset;
 }
 
 // Per-character scf = Simple_Case_Folding of a string.
 // (Normally when we case-fold a string we use full case foldings.)
-bool scfString(const UnicodeString &s, UnicodeString &scf) {
+منطقی scfString(ثابت UnicodeString &s, UnicodeString &scf) {
     // Iterate over the raw buffer for best performance.
-    const char16_t *p = s.getBuffer();
+    ثابت char16_t *p = s.getBuffer();
     int32_t length = s.length();
     // Loop while not needing modification.
-    for (int32_t i = 0; i < length;) {
+    برای (int32_t i = 0; i < length;) {
         UChar32 c;
         U16_NEXT(p, i, length, c);  // post-increments i
         UChar32 scfChar = u_foldCase(c, U_FOLD_CASE_DEFAULT);
-        if (scfChar != c) {
+        اگر (scfChar != c) {
             // Copy the characters before c.
             scf.setTo(p, i - U16_LENGTH(c));
             // Loop over the rest of the string and keep case-folding.
-            for (;;) {
+            برای (;;) {
                 scf.append(scfChar);
-                if (i == length) {
-                    return true;
+                اگر (i == length) {
+                    بازگشت درست;
                 }
                 U16_NEXT(p, i, length, c);  // post-increments i
                 scfChar = u_foldCase(c, U_FOLD_CASE_DEFAULT);
             }
         }
     }
-    return false;
+    بازگشت نادرست;
 }
 
 }  // namespace
 
 UnicodeSet& UnicodeSet::closeOver(int32_t attribute) U_LIFETIME_BOUND {
-    if (isFrozen() || isBogus()) {
-        return *this;
+    اگر (isFrozen() || isBogus()) {
+        بازگشت *این;
     }
-    switch (attribute & USET_CASE_MASK) {
-    case 0:
-        break;
-    case USET_CASE_INSENSITIVE:
-        closeOverCaseInsensitive(/* simple= */ false);
-        break;
-    case USET_ADD_CASE_MAPPINGS:
+    انتخاب (attribute & USET_CASE_MASK) {
+    حالت 0:
+        بشکن;
+    حالت USET_CASE_INSENSITIVE:
+        closeOverCaseInsensitive(/* simple= */ نادرست);
+        بشکن;
+    حالت USET_ADD_CASE_MAPPINGS:
         closeOverAddCaseMappings();
-        break;
-    case USET_SIMPLE_CASE_INSENSITIVE:
-        closeOverCaseInsensitive(/* simple= */ true);
-        break;
-    default:
+        بشکن;
+    حالت USET_SIMPLE_CASE_INSENSITIVE:
+        closeOverCaseInsensitive(/* simple= */ درست);
+        بشکن;
+    پیشفرض:
         // bad option (unreachable)
-        break;
+        بشکن;
     }
-    return *this;
+    بازگشت *این;
 }
 
-void UnicodeSet::closeOverCaseInsensitive(bool simple) {
+تهی UnicodeSet::closeOverCaseInsensitive(منطقی simple) {
     // Start with input set to guarantee inclusion.
-    UnicodeSet foldSet(*this);
+    UnicodeSet foldSet(*این);
     // Full case mappings closure:
     // Remove strings because the strings will actually be reduced (folded);
     // therefore, start with no strings and add only those needed.
     // Do this before processing code points, because they may add strings.
-    if (!simple && foldSet.hasStrings()) {
+    اگر (!simple && foldSet.hasStrings()) {
         foldSet.strings_->removeAllElements();
     }
 
@@ -256,104 +256,104 @@ void UnicodeSet::closeOverCaseInsensitive(bool simple) {
     };
 
     UnicodeSet subset(0, 0x10ffff);
-    const UnicodeSet &codePoints = maybeOnlyCaseSensitive(*this, subset);
+    ثابت UnicodeSet &codePoints = maybeOnlyCaseSensitive(*این, subset);
 
     // Iterate over the ranges of single code points. Nested loop for each code point.
-    int32_t n = codePoints.getRangeCount();
+    int32_t n = codePoints.get_Range_شمار();
 
-    for (int32_t i=0; i<n; ++i) {
+    برای (int32_t i=0; i<n; ++i) {
         UChar32 start = codePoints.getRangeStart(i);
         UChar32 end   = codePoints.getRangeEnd(i);
 
-        if (simple) {
-            for (UChar32 cp=start; cp<=end; ++cp) {
+        اگر (simple) {
+            برای (UChar32 cp=start; cp<=end; ++cp) {
                 ucase_addSimpleCaseClosure(cp, &sa);
             }
-        } else {
-            for (UChar32 cp=start; cp<=end; ++cp) {
+        } وگرنه {
+            برای (UChar32 cp=start; cp<=end; ++cp) {
                 ucase_addCaseClosure(cp, &sa);
             }
         }
     }
-    if (hasStrings()) {
+    اگر (hasStrings()) {
         UnicodeString str;
-        for (int32_t j=0; j<strings_->size(); ++j) {
-            const UnicodeString* pStr = static_cast<const UnicodeString*>(strings_->elementAt(j));
-            if (simple) {
-                if (scfString(*pStr, str)) {
+        برای (int32_t j=0; j<strings_->size(); ++j) {
+            ثابت UnicodeString* pStr = static_cast<ثابت UnicodeString*>(strings_->elementAt(j));
+            اگر (simple) {
+                اگر (scfString(*pStr, str)) {
                     foldSet.remove(*pStr).add(str);
                 }
-            } else {
+            } وگرنه {
                 str = *pStr;
                 str.foldCase();
-                if(!ucase_addStringCaseClosure(str.getBuffer(), str.length(), &sa)) {
+                اگر(!ucase_addStringCaseClosure(str.getBuffer(), str.length(), &sa)) {
                     foldSet.add(str); // does not map to code points: add the folded string itself
                 }
             }
         }
     }
-    *this = foldSet;
+    *این = foldSet;
 }
 
-void UnicodeSet::closeOverAddCaseMappings() {
+تهی UnicodeSet::closeOverAddCaseMappings() {
     // Start with input set to guarantee inclusion.
-    UnicodeSet foldSet(*this);
+    UnicodeSet foldSet(*این);
 
     UnicodeSet subset(0, 0x10ffff);
-    const UnicodeSet &codePoints = maybeOnlyCaseSensitive(*this, subset);
+    ثابت UnicodeSet &codePoints = maybeOnlyCaseSensitive(*این, subset);
 
     // Iterate over the ranges of single code points. Nested loop for each code point.
-    int32_t n = codePoints.getRangeCount();
+    int32_t n = codePoints.get_Range_شمار();
     UChar32 result;
-    const char16_t *full;
+    ثابت char16_t *full;
     UnicodeString str;
 
-    for (int32_t i=0; i<n; ++i) {
+    برای (int32_t i=0; i<n; ++i) {
         UChar32 start = codePoints.getRangeStart(i);
         UChar32 end   = codePoints.getRangeEnd(i);
 
         // add case mappings
         // (does not add long s for regular s, or Kelvin for k, for example)
-        for (UChar32 cp=start; cp<=end; ++cp) {
-            result = ucase_toFullLower(cp, nullptr, nullptr, &full, UCASE_LOC_ROOT);
+        برای (UChar32 cp=start; cp<=end; ++cp) {
+            result = ucase_toFullLower(cp, nullptr, nullptr, &full, UCASE_LOC_ریشه);
             addCaseMapping(foldSet, result, full, str);
 
-            result = ucase_toFullTitle(cp, nullptr, nullptr, &full, UCASE_LOC_ROOT);
+            result = ucase_toFullTitle(cp, nullptr, nullptr, &full, UCASE_LOC_ریشه);
             addCaseMapping(foldSet, result, full, str);
 
-            result = ucase_toFullUpper(cp, nullptr, nullptr, &full, UCASE_LOC_ROOT);
+            result = ucase_toFullUpper(cp, nullptr, nullptr, &full, UCASE_LOC_ریشه);
             addCaseMapping(foldSet, result, full, str);
 
             result = ucase_toFullFolding(cp, &full, 0);
             addCaseMapping(foldSet, result, full, str);
         }
     }
-    if (hasStrings()) {
-        Locale root("");
-#if !UCONFIG_NO_BREAK_ITERATION
+    اگر (hasStrings()) {
+        Locale ریشه("");
+#اگر !UCONFIG_NO_BREAK_ITERATION
         UErrorCode status = U_ZERO_ERROR;
-        BreakIterator *bi = BreakIterator::createWordInstance(root, status);
-        if (U_SUCCESS(status)) {
+        BreakIterator *bi = BreakIterator::createWordInstance(ریشه, status);
+        اگر (U_SUCCESS(status)) {
 #endif
-            for (int32_t j=0; j<strings_->size(); ++j) {
-                const UnicodeString* pStr = static_cast<const UnicodeString*>(strings_->elementAt(j));
-                (str = *pStr).toLower(root);
+            برای (int32_t j=0; j<strings_->size(); ++j) {
+                ثابت UnicodeString* pStr = static_cast<ثابت UnicodeString*>(strings_->elementAt(j));
+                (str = *pStr).toLower(ریشه);
                 foldSet.add(str);
-#if !UCONFIG_NO_BREAK_ITERATION
-                (str = *pStr).toTitle(bi, root);
+#اگر !UCONFIG_NO_BREAK_ITERATION
+                (str = *pStr).toTitle(bi, ریشه);
                 foldSet.add(str);
 #endif
-                (str = *pStr).toUpper(root);
+                (str = *pStr).toUpper(ریشه);
                 foldSet.add(str);
                 (str = *pStr).foldCase();
                 foldSet.add(str);
             }
-#if !UCONFIG_NO_BREAK_ITERATION
+#اگر !UCONFIG_NO_BREAK_ITERATION
         }
         delete bi;
 #endif
     }
-    *this = foldSet;
+    *این = foldSet;
 }
 
 U_NAMESPACE_END
