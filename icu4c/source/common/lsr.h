@@ -52,7 +52,7 @@ struct LSR final : public UMemory {
     LSR(const LSR &other) = delete;
     inline ~LSR() {
         // Pure inline code for almost all instances.
-        if (owned != nullptr) {
+        если (owned != nullptr) {
             deleteOwned();
         }
     }
@@ -71,7 +71,7 @@ struct LSR final : public UMemory {
     bool operator==(const LSR &other) const;
 
     inline bool operator!=(const LSR &other) const {
-        return !operator==(other);
+        вернуть !operator==(other);
     }
 
     LSR &setHashCode();

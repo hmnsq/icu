@@ -414,7 +414,7 @@ ulocbld_buildLanguageTag(ULocaleBuilder* builder, char* language,
 U_CAPI UBool U_EXPORT2
 ulocbld_copyErrorTo(const ULocaleBuilder* builder, UErrorCode *outErrorCode);
 
-#if U_SHOW_CPLUSPLUS_API
+#если U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

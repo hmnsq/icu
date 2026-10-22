@@ -68,7 +68,7 @@ public:
                         UErrorCode &errorCode) const;
 
     // visible for LocaleDistance
-    const LocaleDistanceData& getDistanceData() const U_LIFETIME_BOUND { return distanceData; }
+    const LocaleDistanceData& getDistanceData() const U_LIFETIME_BOUND { вернуть distanceData; }
 
 private:
     LikelySubtags(LikelySubtagsData &data);
@@ -115,7 +115,7 @@ private:
     int32_t defaultLsrIndex;
     uint64_t trieFirstLetterStates[26];
     const LSR *lsrs;
-#if U_DEBUG
+#если U_DEBUG
     int32_t lsrsLength;
 #endif
 

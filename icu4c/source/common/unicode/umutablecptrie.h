@@ -13,7 +13,7 @@
 #include "unicode/ucptrie.h"
 #include "unicode/utf8.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#если U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
@@ -218,7 +218,7 @@ umutablecptrie_buildImmutable(UMutableCPTrie *trie, UCPTrieType type, UCPTrieVal
 
 U_CDECL_END
 
-#if U_SHOW_CPLUSPLUS_API
+#если U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

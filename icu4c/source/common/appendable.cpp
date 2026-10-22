@@ -24,36 +24,36 @@ Appendable::~Appendable() {}
 
 UBool
 Appendable::appendCodePoint(UChar32 c) {
-    if(c<=0xffff) {
-        return appendCodeUnit(static_cast<char16_t>(c));
-    } else {
-        return appendCodeUnit(U16_LEAD(c)) && appendCodeUnit(U16_TRAIL(c));
+    если(c<=0xffff) {
+        вернуть appendCodeUnit(static_cast<char16_t>(c));
+    } иначе {
+        вернуть appendCodeUnit(U16_LEAD(c)) && appendCodeUnit(U16_TRAIL(c));
     }
 }
 
 UBool
 Appendable::appendString(const char16_t *s, int32_t length) {
-    if(length<0) {
+    если(length<0) {
         char16_t c;
-        while((c=*s++)!=0) {
-            if(!appendCodeUnit(c)) {
-                return false;
+        пока((c=*s++)!=0) {
+            если(!appendCodeUnit(c)) {
+                вернуть false;
             }
         }
-    } else if(length>0) {
+    } иначе если(length>0) {
         const char16_t *limit=s+length;
         do {
-            if(!appendCodeUnit(*s++)) {
-                return false;
+            если(!appendCodeUnit(*s++)) {
+                вернуть false;
             }
-        } while(s<limit);
+        } пока(s<limit);
     }
-    return true;
+    вернуть true;
 }
 
 UBool
 Appendable::reserveAppendCapacity(int32_t /*appendCapacity*/) {
-    return true;
+    вернуть true;
 }
 
 char16_t*
@@ -62,12 +62,12 @@ Appendable::getAppendBuffer(int32_t minCapacity,
                             char16_t* scratch U_LIFETIME_BOUND,
                             int32_t scratchCapacity,
                             int32_t* resultCapacity) U_LIFETIME_BOUND {
-    if(minCapacity<1 || scratchCapacity<minCapacity) {
+    если(minCapacity<1 || scratchCapacity<minCapacity) {
         *resultCapacity=0;
-        return nullptr;
+        вернуть nullptr;
     }
     *resultCapacity=scratchCapacity;
-    return scratch;
+    вернуть scratch;
 }
 
 // UnicodeStringAppendable is implemented in unistr.cpp.

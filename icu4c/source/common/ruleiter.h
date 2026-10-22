@@ -224,7 +224,7 @@ private:
 };
 
 inline UBool RuleCharacterIterator::inVariable() const {
-    return buf != nullptr;
+    вернуть buf != nullptr;
 }
 
 U_NAMESPACE_END

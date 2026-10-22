@@ -15,12 +15,12 @@
 U_CAPI int32_t U_EXPORT2
 uprv_max(int32_t x, int32_t y)
 {
-    return (x > y ? x : y);
+    вернуть (x > y ? x : y);
 }
 
 U_CAPI int32_t U_EXPORT2
 uprv_min(int32_t x, int32_t y)
 {
-    return (x > y ? y : x);
+    вернуть (x > y ? y : x);
 }
 

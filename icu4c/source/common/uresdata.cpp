@@ -76,30 +76,30 @@ _res_findTableItem(const ResourceData *pResData, const uint16_t *keyOffsets, int
                    const char *key, const char **realKey) {
     const char *tableKey;
     int32_t mid, start, limit;
-    int result;
+    целое result;
 
     /* do a binary search for the key */
     start=0;
     limit=length;
-    while(start<limit) {
+    пока(start<limit) {
         mid = (start + limit) / 2;
         tableKey = RES_GET_KEY16(pResData, keyOffsets[mid]);
-        if (pResData->useNativeStrcmp) {
+        если (pResData->useNativeStrcmp) {
             result = uprv_strcmp(key, tableKey);
-        } else {
+        } иначе {
             result = uprv_compareInvCharsAsAscii(key, tableKey);
         }
-        if (result < 0) {
+        если (result < 0) {
             limit = mid;
-        } else if (result > 0) {
+        } иначе если (result > 0) {
             start = mid + 1;
-        } else {
+        } иначе {
             /* We found it! */
             *realKey=tableKey;
-            return mid;
+            вернуть mid;
         }
     }
-    return URESDATA_ITEM_NOT_FOUND;  /* not found or table is empty. */
+    вернуть URESDATA_ITEM_NOT_FOUND;  /* not found or table is empty. */
 }
 
 static int32_t
@@ -107,30 +107,30 @@ _res_findTable32Item(const ResourceData *pResData, const int32_t *keyOffsets, in
                      const char *key, const char **realKey) {
     const char *tableKey;
     int32_t mid, start, limit;
-    int result;
+    целое result;
 
     /* do a binary search for the key */
     start=0;
     limit=length;
-    while(start<limit) {
+    пока(start<limit) {
         mid = (start + limit) / 2;
         tableKey = RES_GET_KEY32(pResData, keyOffsets[mid]);
-        if (pResData->useNativeStrcmp) {
+        если (pResData->useNativeStrcmp) {
             result = uprv_strcmp(key, tableKey);
-        } else {
+        } иначе {
             result = uprv_compareInvCharsAsAscii(key, tableKey);
         }
-        if (result < 0) {
+        если (result < 0) {
             limit = mid;
-        } else if (result > 0) {
+        } иначе если (result > 0) {
             start = mid + 1;
-        } else {
+        } иначе {
             /* We found it! */
             *realKey=tableKey;
-            return mid;
+            вернуть mid;
         }
     }
-    return URESDATA_ITEM_NOT_FOUND;  /* not found or table is empty. */
+    вернуть URESDATA_ITEM_NOT_FOUND;  /* not found or table is empty. */
 }
 
 /* helper for res_load() ---------------------------------------------------- */
@@ -140,7 +140,7 @@ isAcceptable(void *context,
              const char * /*type*/, const char * /*name*/,
              const UDataInfo *pInfo) {
     uprv_memcpy(context, pInfo->formatVersion, 4);
-    return
+    вернуть
         pInfo->size>=20 &&
         pInfo->isBigEndian==U_IS_BIG_ENDIAN &&
         pInfo->charsetFamily==U_CHARSET_FAMILY &&
@@ -166,50 +166,50 @@ res_init(ResourceData *pResData,
     pResData->p16BitUnits=&gEmpty16;
 
     /* formatVersion 1.1 must have a root item and at least 5 indexes */
-    if(length>=0 && (length/4)<((formatVersion[0]==1 && formatVersion[1]==0) ? 1 : 1+5)) {
+    если(length>=0 && (length/4)<((formatVersion[0]==1 && formatVersion[1]==0) ? 1 : 1+5)) {
         *errorCode=U_INVALID_FORMAT_ERROR;
         res_unload(pResData);
-        return;
+        вернуть;
     }
 
     /* currently, we accept only resources that have a Table as their roots */
     rootType = static_cast<UResType>(RES_GET_TYPE(pResData->rootRes));
-    if(!URES_IS_TABLE(rootType)) {
+    если(!URES_IS_TABLE(rootType)) {
         *errorCode=U_INVALID_FORMAT_ERROR;
         res_unload(pResData);
-        return;
+        вернуть;
     }
 
-    if(formatVersion[0]==1 && formatVersion[1]==0) {
+    если(formatVersion[0]==1 && formatVersion[1]==0) {
         pResData->localKeyLimit=0x10000;  /* greater than any 16-bit key string offset */
-    } else {
+    } иначе {
         /* bundles with formatVersion 1.1 and later contain an indexes[] array */
         const int32_t *indexes=pResData->pRoot+1;
         int32_t indexLength=indexes[URES_INDEX_LENGTH]&0xff;
-        if(indexLength<=URES_INDEX_MAX_TABLE_LENGTH) {
+        если(indexLength<=URES_INDEX_MAX_TABLE_LENGTH) {
             *errorCode=U_INVALID_FORMAT_ERROR;
             res_unload(pResData);
-            return;
+            вернуть;
         }
-        if( length>=0 &&
+        если( length>=0 &&
             (length<((1+indexLength)<<2) ||
              length<(indexes[URES_INDEX_BUNDLE_TOP]<<2))
         ) {
             *errorCode=U_INVALID_FORMAT_ERROR;
             res_unload(pResData);
-            return;
+            вернуть;
         }
-        if(indexes[URES_INDEX_KEYS_TOP]>(1+indexLength)) {
+        если(indexes[URES_INDEX_KEYS_TOP]>(1+indexLength)) {
             pResData->localKeyLimit=indexes[URES_INDEX_KEYS_TOP]<<2;
         }
-        if(formatVersion[0]>=3) {
+        если(formatVersion[0]>=3) {
             // In formatVersion 1, the indexLength took up this whole int.
             // In version 2, bits 31..8 were reserved and always 0.
             // In version 3, they contain bits 23..0 of the poolStringIndexLimit.
             // Bits 27..24 are in indexes[URES_INDEX_ATTRIBUTES] bits 15..12.
             pResData->poolStringIndexLimit = static_cast<int32_t>(static_cast<uint32_t>(indexes[URES_INDEX_LENGTH]) >> 8);
         }
-        if(indexLength>URES_INDEX_ATTRIBUTES) {
+        если(indexLength>URES_INDEX_ATTRIBUTES) {
             int32_t att=indexes[URES_INDEX_ATTRIBUTES];
             pResData->noFallback = static_cast<UBool>(att & URES_ATT_NO_FALLBACK);
             pResData->isPoolBundle = static_cast<UBool>((att & URES_ATT_IS_POOL_BUNDLE) != 0);
@@ -217,19 +217,19 @@ res_init(ResourceData *pResData,
             pResData->poolStringIndexLimit|=(att&0xf000)<<12;  // bits 15..12 -> 27..24
             pResData->poolStringIndex16Limit = static_cast<int32_t>(static_cast<uint32_t>(att) >> 16);
         }
-        if((pResData->isPoolBundle || pResData->usesPoolBundle) && indexLength<=URES_INDEX_POOL_CHECKSUM) {
+        если((pResData->isPoolBundle || pResData->usesPoolBundle) && indexLength<=URES_INDEX_POOL_CHECKSUM) {
             *errorCode=U_INVALID_FORMAT_ERROR;
             res_unload(pResData);
-            return;
+            вернуть;
         }
-        if( indexLength>URES_INDEX_16BIT_TOP &&
+        если( indexLength>URES_INDEX_16BIT_TOP &&
             indexes[URES_INDEX_16BIT_TOP]>indexes[URES_INDEX_KEYS_TOP]
         ) {
             pResData->p16BitUnits = reinterpret_cast<const uint16_t*>(pResData->pRoot + indexes[URES_INDEX_KEYS_TOP]);
         }
     }
 
-    if(formatVersion[0]==1 || U_CHARSET_FAMILY==U_ASCII_FAMILY) {
+    если(formatVersion[0]==1 || U_CHARSET_FAMILY==U_ASCII_FAMILY) {
         /*
          * formatVersion 1: compare key strings in native-charset order
          * formatVersion 2 and up: compare key strings in ASCII order
@@ -245,12 +245,12 @@ res_read(ResourceData *pResData,
     UVersionInfo formatVersion;
 
     uprv_memset(pResData, 0, sizeof(ResourceData));
-    if(U_FAILURE(*errorCode)) {
-        return;
+    если(U_FAILURE(*errorCode)) {
+        вернуть;
     }
-    if(!isAcceptable(formatVersion, nullptr, nullptr, pInfo)) {
+    если(!isAcceptable(formatVersion, nullptr, nullptr, pInfo)) {
         *errorCode=U_INVALID_FORMAT_ERROR;
-        return;
+        вернуть;
     }
     res_init(pResData, formatVersion, inBytes, length, errorCode);
 }
@@ -264,8 +264,8 @@ res_load(ResourceData *pResData,
 
     /* load the ResourceBundle file */
     pResData->data=udata_openChoice(path, "res", name, isAcceptable, formatVersion, errorCode);
-    if(U_FAILURE(*errorCode)) {
-        return;
+    если(U_FAILURE(*errorCode)) {
+        вернуть;
     }
 
     /* get its memory and initialize *pResData */
@@ -274,7 +274,7 @@ res_load(ResourceData *pResData,
 
 U_CFUNC void
 res_unload(ResourceData *pResData) {
-    if(pResData->data!=nullptr) {
+    если(pResData->data!=nullptr) {
         udata_close(pResData->data);
         pResData->data=nullptr;
     }
@@ -304,7 +304,7 @@ static const int8_t gPublicTypes[URES_LIMIT] = {
 
 U_CAPI UResType U_EXPORT2
 res_getPublicType(Resource res) {
-    return (UResType)gPublicTypes[RES_GET_TYPE(res)];
+    вернуть (UResType)gPublicTypes[RES_GET_TYPE(res)];
 }
 
 U_CAPI const char16_t * U_EXPORT2
@@ -312,38 +312,38 @@ res_getStringNoTrace(const ResourceData *pResData, Resource res, int32_t *pLengt
     const char16_t *p;
     uint32_t offset=RES_GET_OFFSET(res);
     int32_t length;
-    if(RES_GET_TYPE(res)==URES_STRING_V2) {
+    если(RES_GET_TYPE(res)==URES_STRING_V2) {
         int32_t first;
-        if((int32_t)offset<pResData->poolStringIndexLimit) {
+        если((int32_t)offset<pResData->poolStringIndexLimit) {
             p=(const char16_t *)pResData->poolBundleStrings+offset;
-        } else {
+        } иначе {
             p=(const char16_t *)pResData->p16BitUnits+(offset-pResData->poolStringIndexLimit);
         }
         first=*p;
-        if(!U16_IS_TRAIL(first)) {
+        если(!U16_IS_TRAIL(first)) {
             length=u_strlen(p);
-        } else if(first<0xdfef) {
+        } иначе если(first<0xdfef) {
             length=first&0x3ff;
             ++p;
-        } else if(first<0xdfff) {
+        } иначе если(first<0xdfff) {
             length=((first-0xdfef)<<16)|p[1];
             p+=2;
-        } else {
+        } иначе {
             length=((int32_t)p[1]<<16)|p[2];
             p+=3;
         }
-    } else if(res==offset) /* RES_GET_TYPE(res)==URES_STRING */ {
+    } иначе если(res==offset) /* RES_GET_TYPE(res)==URES_STRING */ {
         const int32_t *p32= res==0 ? &gEmptyString.length : pResData->pRoot+res;
         length=*p32++;
         p=(const char16_t *)p32;
-    } else {
+    } иначе {
         p=nullptr;
         length=0;
     }
-    if(pLength) {
+    если(pLength) {
         *pLength=length;
     }
-    return p;
+    вернуть p;
 }
 
 namespace {
@@ -356,62 +356,62 @@ namespace {
  */
 UBool isNoInheritanceMarker(const ResourceData *pResData, Resource res) {
     uint32_t offset=RES_GET_OFFSET(res);
-    if (offset == 0) {
+    если (offset == 0) {
         // empty string
-    } else if (res == offset) {
+    } иначе если (res == offset) {
         const int32_t *p32=pResData->pRoot+res;
         int32_t length=*p32;
         const char16_t* p = reinterpret_cast<const char16_t*>(p32);
-        return length == 3 && p[2] == 0x2205 && p[3] == 0x2205 && p[4] == 0x2205;
-    } else if (RES_GET_TYPE(res) == URES_STRING_V2) {
+        вернуть length == 3 && p[2] == 0x2205 && p[3] == 0x2205 && p[4] == 0x2205;
+    } иначе если (RES_GET_TYPE(res) == URES_STRING_V2) {
         const char16_t *p;
-        if (static_cast<int32_t>(offset) < pResData->poolStringIndexLimit) {
+        если (static_cast<int32_t>(offset) < pResData->poolStringIndexLimit) {
             p = reinterpret_cast<const char16_t*>(pResData->poolBundleStrings) + offset;
-        } else {
+        } иначе {
             p = reinterpret_cast<const char16_t*>(pResData->p16BitUnits) + (offset - pResData->poolStringIndexLimit);
         }
         int32_t first=*p;
-        if (first == 0x2205) {  // implicit length
-            return p[1] == 0x2205 && p[2] == 0x2205 && p[3] == 0;
-        } else if (first == 0xdc03) {  // explicit length 3 (should not occur)
-            return p[1] == 0x2205 && p[2] == 0x2205 && p[3] == 0x2205;
-        } else {
+        если (first == 0x2205) {  // implicit length
+            вернуть p[1] == 0x2205 && p[2] == 0x2205 && p[3] == 0;
+        } иначе если (first == 0xdc03) {  // explicit length 3 (should not occur)
+            вернуть p[1] == 0x2205 && p[2] == 0x2205 && p[3] == 0x2205;
+        } иначе {
             // Assume that the string has not been stored with more length units than necessary.
-            return false;
+            вернуть false;
         }
     }
-    return false;
+    вернуть false;
 }
 
 int32_t getStringArray(const ResourceData *pResData, const icu::ResourceArray &array,
                        icu::UnicodeString *dest, int32_t capacity,
                        UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    если(U_FAILURE(errorCode)) {
+        вернуть 0;
     }
-    if(dest == nullptr ? capacity != 0 : capacity < 0) {
+    если(dest == nullptr ? capacity != 0 : capacity < 0) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        вернуть 0;
     }
     int32_t length = array.getSize();
-    if(length == 0) {
-        return 0;
+    если(length == 0) {
+        вернуть 0;
     }
-    if(length > capacity) {
+    если(length > capacity) {
         errorCode = U_BUFFER_OVERFLOW_ERROR;
-        return length;
+        вернуть length;
     }
-    for(int32_t i = 0; i < length; ++i) {
+    для(int32_t i = 0; i < length; ++i) {
         int32_t sLength;
         // No tracing: handled by the caller
         const char16_t *s = res_getStringNoTrace(pResData, array.internalGetResource(pResData, i), &sLength);
-        if(s == nullptr) {
+        если(s == nullptr) {
             errorCode = U_RESOURCE_TYPE_MISMATCH;
-            return 0;
+            вернуть 0;
         }
         dest[i].setTo(true, s, sLength);
     }
-    return length;
+    вернуть length;
 }
 
 }  // namespace
@@ -421,18 +421,18 @@ res_getAlias(const ResourceData *pResData, Resource res, int32_t *pLength) {
     const char16_t *p;
     uint32_t offset=RES_GET_OFFSET(res);
     int32_t length;
-    if(RES_GET_TYPE(res)==URES_ALIAS) {
+    если(RES_GET_TYPE(res)==URES_ALIAS) {
         const int32_t *p32= offset==0 ? &gEmptyString.length : pResData->pRoot+offset;
         length=*p32++;
         p=(const char16_t *)p32;
-    } else {
+    } иначе {
         p=nullptr;
         length=0;
     }
-    if(pLength) {
+    если(pLength) {
         *pLength=length;
     }
-    return p;
+    вернуть p;
 }
 
 U_CAPI const uint8_t * U_EXPORT2
@@ -440,18 +440,18 @@ res_getBinaryNoTrace(const ResourceData *pResData, Resource res, int32_t *pLengt
     const uint8_t *p;
     uint32_t offset=RES_GET_OFFSET(res);
     int32_t length;
-    if(RES_GET_TYPE(res)==URES_BINARY) {
+    если(RES_GET_TYPE(res)==URES_BINARY) {
         const int32_t *p32= offset==0 ? (const int32_t*)&gEmpty32 : pResData->pRoot+offset;
         length=*p32++;
         p=(const uint8_t *)p32;
-    } else {
+    } иначе {
         p=nullptr;
         length=0;
     }
-    if(pLength) {
+    если(pLength) {
         *pLength=length;
     }
-    return p;
+    вернуть p;
 }
 
 
@@ -460,17 +460,17 @@ res_getIntVectorNoTrace(const ResourceData *pResData, Resource res, int32_t *pLe
     const int32_t *p;
     uint32_t offset=RES_GET_OFFSET(res);
     int32_t length;
-    if(RES_GET_TYPE(res)==URES_INT_VECTOR) {
+    если(RES_GET_TYPE(res)==URES_INT_VECTOR) {
         p= offset==0 ? (const int32_t *)&gEmpty32 : pResData->pRoot+offset;
         length=*p++;
-    } else {
+    } иначе {
         p=nullptr;
         length=0;
     }
-    if(pLength) {
+    если(pLength) {
         *pLength=length;
     }
-    return p;
+    вернуть p;
 }
 
 U_CAPI int32_t U_EXPORT2
@@ -483,17 +483,17 @@ res_countArrayItems(const ResourceData *pResData, Resource res) {
     case URES_ALIAS:
     case URES_INT:
     case URES_INT_VECTOR:
-        return 1;
+        вернуть 1;
     case URES_ARRAY:
     case URES_TABLE32:
-        return offset==0 ? 0 : *(pResData->pRoot+offset);
+        вернуть offset==0 ? 0 : *(pResData->pRoot+offset);
     case URES_TABLE:
-        return offset==0 ? 0 : *((const uint16_t *)(pResData->pRoot+offset));
+        вернуть offset==0 ? 0 : *((const uint16_t *)(pResData->pRoot+offset));
     case URES_ARRAY16:
     case URES_TABLE16:
-        return pResData->p16BitUnits[offset];
+        вернуть pResData->p16BitUnits[offset];
     default:
-        return 0;
+        вернуть 0;
     }
 }
 
@@ -502,76 +502,76 @@ U_NAMESPACE_BEGIN
 ResourceDataValue::~ResourceDataValue() {}
 
 UResType ResourceDataValue::getType() const {
-    return res_getPublicType(res);
+    вернуть res_getPublicType(res);
 }
 
 const char16_t *ResourceDataValue::getString(int32_t &length, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+    если(U_FAILURE(errorCode)) {
+        вернуть nullptr;
     }
     const char16_t *s = res_getString(fTraceInfo, &getData(), res, &length);
-    if(s == nullptr) {
+    если(s == nullptr) {
         errorCode = U_RESOURCE_TYPE_MISMATCH;
     }
-    return s;
+    вернуть s;
 }
 
 const char16_t *ResourceDataValue::getAliasString(int32_t &length, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+    если(U_FAILURE(errorCode)) {
+        вернуть nullptr;
     }
     const char16_t *s = res_getAlias(&getData(), res, &length);
-    if(s == nullptr) {
+    если(s == nullptr) {
         errorCode = U_RESOURCE_TYPE_MISMATCH;
     }
-    return s;
+    вернуть s;
 }
 
 int32_t ResourceDataValue::getInt(UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    если(U_FAILURE(errorCode)) {
+        вернуть 0;
     }
-    if(RES_GET_TYPE(res) != URES_INT) {
+    если(RES_GET_TYPE(res) != URES_INT) {
         errorCode = U_RESOURCE_TYPE_MISMATCH;
     }
-    return res_getInt(fTraceInfo, res);
+    вернуть res_getInt(fTraceInfo, res);
 }
 
 uint32_t ResourceDataValue::getUInt(UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    если(U_FAILURE(errorCode)) {
+        вернуть 0;
     }
-    if(RES_GET_TYPE(res) != URES_INT) {
+    если(RES_GET_TYPE(res) != URES_INT) {
         errorCode = U_RESOURCE_TYPE_MISMATCH;
     }
-    return res_getUInt(fTraceInfo, res);
+    вернуть res_getUInt(fTraceInfo, res);
 }
 
 const int32_t *ResourceDataValue::getIntVector(int32_t &length, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+    если(U_FAILURE(errorCode)) {
+        вернуть nullptr;
     }
     const int32_t *iv = res_getIntVector(fTraceInfo, &getData(), res, &length);
-    if(iv == nullptr) {
+    если(iv == nullptr) {
         errorCode = U_RESOURCE_TYPE_MISMATCH;
     }
-    return iv;
+    вернуть iv;
 }
 
 const uint8_t *ResourceDataValue::getBinary(int32_t &length, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+    если(U_FAILURE(errorCode)) {
+        вернуть nullptr;
     }
     const uint8_t *b = res_getBinary(fTraceInfo, &getData(), res, &length);
-    if(b == nullptr) {
+    если(b == nullptr) {
         errorCode = U_RESOURCE_TYPE_MISMATCH;
     }
-    return b;
+    вернуть b;
 }
 
 ResourceArray ResourceDataValue::getArray(UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return {};
+    если(U_FAILURE(errorCode)) {
+        вернуть {};
     }
     const uint16_t *items16 = nullptr;
     const Resource *items32 = nullptr;
@@ -579,7 +579,7 @@ ResourceArray ResourceDataValue::getArray(UErrorCode &errorCode) const {
     int32_t length = 0;
     switch(RES_GET_TYPE(res)) {
     case URES_ARRAY:
-        if (offset!=0) {  // empty if offset==0
+        если (offset!=0) {  // empty if offset==0
             items32 = reinterpret_cast<const Resource*>(getData().pRoot) + offset;
             length = *items32++;
         }
@@ -590,14 +590,14 @@ ResourceArray ResourceDataValue::getArray(UErrorCode &errorCode) const {
         break;
     default:
         errorCode = U_RESOURCE_TYPE_MISMATCH;
-        return {};
+        вернуть {};
     }
-    return ResourceArray(items16, items32, length, fTraceInfo);
+    вернуть ResourceArray(items16, items32, length, fTraceInfo);
 }
 
 ResourceTable ResourceDataValue::getTable(UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return {};
+    если(U_FAILURE(errorCode)) {
+        вернуть {};
     }
     const uint16_t *keys16 = nullptr;
     const int32_t *keys32 = nullptr;
@@ -607,7 +607,7 @@ ResourceTable ResourceDataValue::getTable(UErrorCode &errorCode) const {
     int32_t length = 0;
     switch(RES_GET_TYPE(res)) {
     case URES_TABLE:
-        if (offset != 0) {  // empty if offset==0
+        если (offset != 0) {  // empty if offset==0
             keys16 = reinterpret_cast<const uint16_t*>(getData().pRoot + offset);
             length = *keys16++;
             items32 = reinterpret_cast<const Resource*>(keys16 + length + (~length & 1));
@@ -619,7 +619,7 @@ ResourceTable ResourceDataValue::getTable(UErrorCode &errorCode) const {
         items16 = keys16 + length;
         break;
     case URES_TABLE32:
-        if (offset != 0) {  // empty if offset==0
+        если (offset != 0) {  // empty if offset==0
             keys32 = getData().pRoot+offset;
             length = *keys32++;
             items32 = reinterpret_cast<const Resource*>(keys32) + length;
@@ -627,85 +627,85 @@ ResourceTable ResourceDataValue::getTable(UErrorCode &errorCode) const {
         break;
     default:
         errorCode = U_RESOURCE_TYPE_MISMATCH;
-        return {};
+        вернуть {};
     }
-    return ResourceTable(keys16, keys32, items16, items32, length, fTraceInfo);
+    вернуть ResourceTable(keys16, keys32, items16, items32, length, fTraceInfo);
 }
 
 UBool ResourceDataValue::isNoInheritanceMarker() const {
-    return ::isNoInheritanceMarker(&getData(), res);
+    вернуть ::isNoInheritanceMarker(&getData(), res);
 }
 
 int32_t ResourceDataValue::getStringArray(UnicodeString *dest, int32_t capacity,
                                           UErrorCode &errorCode) const {
-    return ::getStringArray(&getData(), getArray(errorCode), dest, capacity, errorCode);
+    вернуть ::getStringArray(&getData(), getArray(errorCode), dest, capacity, errorCode);
 }
 
 int32_t ResourceDataValue::getStringArrayOrStringAsArray(UnicodeString *dest, int32_t capacity,
                                                          UErrorCode &errorCode) const {
-    if(URES_IS_ARRAY(res)) {
-        return ::getStringArray(&getData(), getArray(errorCode), dest, capacity, errorCode);
+    если(URES_IS_ARRAY(res)) {
+        вернуть ::getStringArray(&getData(), getArray(errorCode), dest, capacity, errorCode);
     }
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    если(U_FAILURE(errorCode)) {
+        вернуть 0;
     }
-    if(dest == nullptr ? capacity != 0 : capacity < 0) {
+    если(dest == nullptr ? capacity != 0 : capacity < 0) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        вернуть 0;
     }
-    if(capacity < 1) {
+    если(capacity < 1) {
         errorCode = U_BUFFER_OVERFLOW_ERROR;
-        return 1;
+        вернуть 1;
     }
     int32_t sLength;
     const char16_t *s = res_getString(fTraceInfo, &getData(), res, &sLength);
-    if(s != nullptr) {
+    если(s != nullptr) {
         dest[0].setTo(true, s, sLength);
-        return 1;
+        вернуть 1;
     }
     errorCode = U_RESOURCE_TYPE_MISMATCH;
-    return 0;
+    вернуть 0;
 }
 
 UnicodeString ResourceDataValue::getStringOrFirstOfArray(UErrorCode &errorCode) const {
     UnicodeString us;
-    if(U_FAILURE(errorCode)) {
-        return us;
+    если(U_FAILURE(errorCode)) {
+        вернуть us;
     }
     int32_t sLength;
     const char16_t *s = res_getString(fTraceInfo, &getData(), res, &sLength);
-    if(s != nullptr) {
+    если(s != nullptr) {
         us.setTo(true, s, sLength);
-        return us;
+        вернуть us;
     }
     ResourceArray array = getArray(errorCode);
-    if(U_FAILURE(errorCode)) {
-        return us;
+    если(U_FAILURE(errorCode)) {
+        вернуть us;
     }
-    if(array.getSize() > 0) {
+    если(array.getSize() > 0) {
         // Tracing is already performed above (unimportant for trace that this is an array)
         s = res_getStringNoTrace(&getData(), array.internalGetResource(&getData(), 0), &sLength);
-        if(s != nullptr) {
+        если(s != nullptr) {
             us.setTo(true, s, sLength);
-            return us;
+            вернуть us;
         }
     }
     errorCode = U_RESOURCE_TYPE_MISMATCH;
-    return us;
+    вернуть us;
 }
 
 U_NAMESPACE_END
 
 static Resource
 makeResourceFrom16(const ResourceData *pResData, int32_t res16) {
-    if(res16<pResData->poolStringIndex16Limit) {
+    если(res16<pResData->poolStringIndex16Limit) {
         // Pool string, nothing to do.
-    } else {
+    } иначе {
         // Local string, adjust the 16-bit offset to a regular one,
         // with a larger pool string index limit.
         res16=res16-pResData->poolStringIndex16Limit+pResData->poolStringIndexLimit;
     }
-    return URES_MAKE_RESOURCE(URES_STRING_V2, res16);
+    вернуть URES_MAKE_RESOURCE(URES_STRING_V2, res16);
 }
 
 U_CAPI Resource U_EXPORT2
@@ -714,18 +714,18 @@ res_getTableItemByKey(const ResourceData *pResData, Resource table,
     uint32_t offset=RES_GET_OFFSET(table);
     int32_t length;
     int32_t idx;
-    if(key == nullptr || *key == nullptr) {
-        return RES_BOGUS;
+    если(key == nullptr || *key == nullptr) {
+        вернуть RES_BOGUS;
     }
     switch(RES_GET_TYPE(table)) {
     case URES_TABLE: {
-        if (offset!=0) { /* empty if offset==0 */
+        если (offset!=0) { /* empty if offset==0 */
             const uint16_t *p= (const uint16_t *)(pResData->pRoot+offset);
             length=*p++;
             *indexR=idx=_res_findTableItem(pResData, p, length, *key, key);
-            if(idx>=0) {
+            если(idx>=0) {
                 const Resource *p32=(const Resource *)(p+length+(~length&1));
-                return p32[idx];
+                вернуть p32[idx];
             }
         }
         break;
@@ -734,18 +734,18 @@ res_getTableItemByKey(const ResourceData *pResData, Resource table,
         const uint16_t *p=pResData->p16BitUnits+offset;
         length=*p++;
         *indexR=idx=_res_findTableItem(pResData, p, length, *key, key);
-        if(idx>=0) {
-            return makeResourceFrom16(pResData, p[length+idx]);
+        если(idx>=0) {
+            вернуть makeResourceFrom16(pResData, p[length+idx]);
         }
         break;
     }
     case URES_TABLE32: {
-        if (offset!=0) { /* empty if offset==0 */
+        если (offset!=0) { /* empty if offset==0 */
             const int32_t *p= pResData->pRoot+offset;
             length=*p++;
             *indexR=idx=_res_findTable32Item(pResData, p, length, *key, key);
-            if(idx>=0) {
-                return (Resource)p[length+idx];
+            если(idx>=0) {
+                вернуть (Resource)p[length+idx];
             }
         }
         break;
@@ -753,7 +753,7 @@ res_getTableItemByKey(const ResourceData *pResData, Resource table,
     default:
         break;
     }
-    return RES_BOGUS;
+    вернуть RES_BOGUS;
 }
 
 U_CAPI Resource U_EXPORT2
@@ -761,20 +761,20 @@ res_getTableItemByIndex(const ResourceData *pResData, Resource table,
                         int32_t indexR, const char **key) {
     uint32_t offset=RES_GET_OFFSET(table);
     int32_t length;
-    if (indexR < 0) {
-        return RES_BOGUS;
+    если (indexR < 0) {
+        вернуть RES_BOGUS;
     }
     switch(RES_GET_TYPE(table)) {
     case URES_TABLE: {
-        if (offset != 0) { /* empty if offset==0 */
+        если (offset != 0) { /* empty if offset==0 */
             const uint16_t *p= (const uint16_t *)(pResData->pRoot+offset);
             length=*p++;
-            if(indexR<length) {
+            если(indexR<length) {
                 const Resource *p32=(const Resource *)(p+length+(~length&1));
-                if(key!=nullptr) {
+                если(key!=nullptr) {
                     *key=RES_GET_KEY16(pResData, p[indexR]);
                 }
-                return p32[indexR];
+                вернуть p32[indexR];
             }
         }
         break;
@@ -782,23 +782,23 @@ res_getTableItemByIndex(const ResourceData *pResData, Resource table,
     case URES_TABLE16: {
         const uint16_t *p=pResData->p16BitUnits+offset;
         length=*p++;
-        if(indexR<length) {
-            if(key!=nullptr) {
+        если(indexR<length) {
+            если(key!=nullptr) {
                 *key=RES_GET_KEY16(pResData, p[indexR]);
             }
-            return makeResourceFrom16(pResData, p[length+indexR]);
+            вернуть makeResourceFrom16(pResData, p[length+indexR]);
         }
         break;
     }
     case URES_TABLE32: {
-        if (offset != 0) { /* empty if offset==0 */
+        если (offset != 0) { /* empty if offset==0 */
             const int32_t *p= pResData->pRoot+offset;
             length=*p++;
-            if(indexR<length) {
-                if(key!=nullptr) {
+            если(indexR<length) {
+                если(key!=nullptr) {
                     *key=RES_GET_KEY32(pResData, p[indexR]);
                 }
-                return (Resource)p[length+indexR];
+                вернуть (Resource)p[length+indexR];
             }
         }
         break;
@@ -806,30 +806,30 @@ res_getTableItemByIndex(const ResourceData *pResData, Resource table,
     default:
         break;
     }
-    return RES_BOGUS;
+    вернуть RES_BOGUS;
 }
 
 U_CAPI Resource U_EXPORT2
 res_getResource(const ResourceData *pResData, const char *key) {
     const char *realKey=key;
     int32_t idx;
-    return res_getTableItemByKey(pResData, pResData->rootRes, &idx, &realKey);
+    вернуть res_getTableItemByKey(pResData, pResData->rootRes, &idx, &realKey);
 }
 
 
 UBool icu::ResourceTable::getKeyAndValue(int32_t i,
                                          const char *&key, icu::ResourceValue &value) const {
-    if(0 <= i && i < length) {
+    если(0 <= i && i < length) {
         icu::ResourceDataValue &rdValue = static_cast<icu::ResourceDataValue &>(value);
-        if (keys16 != nullptr) {
+        если (keys16 != nullptr) {
             key = RES_GET_KEY16(&rdValue.getData(), keys16[i]);
-        } else {
+        } иначе {
             key = RES_GET_KEY32(&rdValue.getData(), keys32[i]);
         }
         Resource res;
-        if (items16 != nullptr) {
+        если (items16 != nullptr) {
             res = makeResourceFrom16(&rdValue.getData(), items16[i]);
-        } else {
+        } иначе {
             res = items32[i];
         }
         // Note: the ResourceTracer keeps a reference to the field of this
@@ -837,73 +837,73 @@ UBool icu::ResourceTable::getKeyAndValue(int32_t i,
         // alive for the duration that fields are being read from it
         // (including nested fields).
         rdValue.setResource(res, ResourceTracer(fTraceInfo, key));
-        return true;
+        вернуть true;
     }
-    return false;
+    вернуть false;
 }
 
 UBool icu::ResourceTable::findValue(const char *key, ResourceValue &value) const {
     icu::ResourceDataValue &rdValue = static_cast<icu::ResourceDataValue &>(value);
     const char *realKey = nullptr;
     int32_t i;
-    if (keys16 != nullptr) {
+    если (keys16 != nullptr) {
         i = _res_findTableItem(&rdValue.getData(), keys16, length, key, &realKey);
-    } else {
+    } иначе {
         i = _res_findTable32Item(&rdValue.getData(), keys32, length, key, &realKey);
     }
-    if (i >= 0) {
+    если (i >= 0) {
         Resource res;
-        if (items16 != nullptr) {
+        если (items16 != nullptr) {
             res = makeResourceFrom16(&rdValue.getData(), items16[i]);
-        } else {
+        } иначе {
             res = items32[i];
         }
         // Same note about lifetime as in getKeyAndValue().
         rdValue.setResource(res, ResourceTracer(fTraceInfo, key));
-        return true;
+        вернуть true;
     }
-    return false;
+    вернуть false;
 }
 
 U_CAPI Resource U_EXPORT2
 res_getArrayItem(const ResourceData *pResData, Resource array, int32_t indexR) {
     uint32_t offset=RES_GET_OFFSET(array);
-    if (indexR < 0) {
-        return RES_BOGUS;
+    если (indexR < 0) {
+        вернуть RES_BOGUS;
     }
     switch(RES_GET_TYPE(array)) {
     case URES_ARRAY: {
-        if (offset!=0) { /* empty if offset==0 */
+        если (offset!=0) { /* empty if offset==0 */
             const int32_t *p= pResData->pRoot+offset;
-            if(indexR<*p) {
-                return (Resource)p[1+indexR];
+            если(indexR<*p) {
+                вернуть (Resource)p[1+indexR];
             }
         }
         break;
     }
     case URES_ARRAY16: {
         const uint16_t *p=pResData->p16BitUnits+offset;
-        if(indexR<*p) {
-            return makeResourceFrom16(pResData, p[1+indexR]);
+        если(indexR<*p) {
+            вернуть makeResourceFrom16(pResData, p[1+indexR]);
         }
         break;
     }
     default:
         break;
     }
-    return RES_BOGUS;
+    вернуть RES_BOGUS;
 }
 
 uint32_t icu::ResourceArray::internalGetResource(const ResourceData *pResData, int32_t i) const {
-    if (items16 != nullptr) {
-        return makeResourceFrom16(pResData, items16[i]);
-    } else {
-        return items32[i];
+    если (items16 != nullptr) {
+        вернуть makeResourceFrom16(pResData, items16[i]);
+    } иначе {
+        вернуть items32[i];
     }
 }
 
 UBool icu::ResourceArray::getValue(int32_t i, icu::ResourceValue &value) const {
-    if(0 <= i && i < length) {
+    если(0 <= i && i < length) {
         icu::ResourceDataValue &rdValue = static_cast<icu::ResourceDataValue &>(value);
         // Note: the ResourceTracer keeps a reference to the field of this
         // ResourceArray. This is OK because the ResourceArray should remain
@@ -912,9 +912,9 @@ UBool icu::ResourceArray::getValue(int32_t i, icu::ResourceValue &value) const {
         rdValue.setResource(
             internalGetResource(&rdValue.getData(), i),
             ResourceTracer(fTraceInfo, i));
-        return true;
+        вернуть true;
     }
-    return false;
+    вернуть false;
 }
 
 U_CFUNC Resource
@@ -927,16 +927,16 @@ res_findResource(const ResourceData *pResData, Resource r, char** path, const ch
   UResType type = (UResType)RES_GET_TYPE(t1);
 
   /* if you come in with an empty path, you'll be getting back the same resource */
-  if(!uprv_strlen(pathP)) {
-      return r;
+  если(!uprv_strlen(pathP)) {
+      вернуть r;
   }
 
   /* one needs to have an aggregate resource in order to search in it */
-  if(!URES_IS_CONTAINER(type)) {
-      return RES_BOGUS;
+  если(!URES_IS_CONTAINER(type)) {
+      вернуть RES_BOGUS;
   }
   
-  while(nextSepP && *pathP && t1 != RES_BOGUS && URES_IS_CONTAINER(type)) {
+  пока(nextSepP && *pathP && t1 != RES_BOGUS && URES_IS_CONTAINER(type)) {
     /* Iteration stops if: the path has been consumed, we found a non-existing
      * resource (t1 == RES_BOGUS) or we found a scalar resource (including alias)
      */
@@ -944,31 +944,31 @@ res_findResource(const ResourceData *pResData, Resource r, char** path, const ch
     /* if there are more separators, terminate string 
      * and set path to the remaining part of the string
      */
-    if(nextSepP != nullptr) {
-      if(nextSepP == pathP) {
+    если(nextSepP != nullptr) {
+      если(nextSepP == pathP) {
         // Empty key string.
-        return RES_BOGUS;
+        вернуть RES_BOGUS;
       }
       *nextSepP = 0; /* overwrite the separator with a NUL to terminate the key */
       *path = nextSepP+1;
-    } else {
+    } иначе {
       *path = uprv_strchr(pathP, 0);
     }
 
     /* if the resource is a table */
     /* try the key based access */
-    if(URES_IS_TABLE(type)) {
+    если(URES_IS_TABLE(type)) {
       *key = pathP;
       t2 = res_getTableItemByKey(pResData, t1, &indexR, key);
-    } else if(URES_IS_ARRAY(type)) {
+    } иначе если(URES_IS_ARRAY(type)) {
       indexR = uprv_strtol(pathP, &closeIndex, 10);
-      if(indexR >= 0 && *closeIndex == 0) {
+      если(indexR >= 0 && *closeIndex == 0) {
         t2 = res_getArrayItem(pResData, t1, indexR);
-      } else {
+      } иначе {
         t2 = RES_BOGUS; /* have an array, but don't have a valid index */
       }
       *key = nullptr;
-    } else { /* can't do much here, except setting t2 to bogus */
+    } иначе { /* can't do much here, except setting t2 to bogus */
       t2 = RES_BOGUS;
     }
     t1 = t2;
@@ -977,7 +977,7 @@ res_findResource(const ResourceData *pResData, Resource r, char** path, const ch
     pathP = *path;
   }
 
-  return t1;
+  вернуть t1;
 }
 
 /* resource bundle swapping ------------------------------------------------- */
@@ -1020,7 +1020,7 @@ typedef struct Row {
 static int32_t U_CALLCONV
 ures_compareRows(const void *context, const void *left, const void *right) {
     const char* keyChars = static_cast<const char*>(context);
-    return static_cast<int32_t>(uprv_strcmp(keyChars + static_cast<const Row*>(left)->keyIndex,
+    вернуть static_cast<int32_t>(uprv_strcmp(keyChars + static_cast<const Row*>(left)->keyIndex,
                                             keyChars + static_cast<const Row*>(right)->keyIndex));
 }
 
@@ -1040,7 +1040,7 @@ enum {
 /* The table item key string is not locally available. */
 static const char *const gUnknownKey="";
 
-#if !UCONFIG_NO_COLLATION
+#если !UCONFIG_NO_COLLATION
 // resource table key for collation binaries
 static const char16_t gCollationBinKey[]=u"%%CollationBin";
 #endif
@@ -1065,21 +1065,21 @@ ures_swapResource(const UDataSwapper *ds,
     case URES_INT:
     case URES_ARRAY16:
         /* integer, or points to 16-bit units, nothing to do here */
-        return;
+        вернуть;
     default:
         break;
     }
 
     /* all other types use an offset to point to their data */
     offset = static_cast<int32_t>(RES_GET_OFFSET(res));
-    if(offset==0) {
+    если(offset==0) {
         /* special offset indicating an empty item */
-        return;
+        вернуть;
     }
-    if (pTempTable->resFlags[offset >> 5] & (static_cast<uint32_t>(1) << (offset & 0x1f))) {
+    если (pTempTable->resFlags[offset >> 5] & (static_cast<uint32_t>(1) << (offset & 0x1f))) {
         /* we already swapped this resource item */
-        return;
-    } else {
+        вернуть;
+    } иначе {
         /* mark it as swapped now */
         pTempTable->resFlags[offset >> 5] |= static_cast<uint32_t>(1) << (offset & 0x1f);
     }
@@ -1105,8 +1105,8 @@ ures_swapResource(const UDataSwapper *ds,
         /* no need to swap or copy bytes - ures_swap() copied them all */
 
         /* swap known formats */
-#if !UCONFIG_NO_COLLATION
-        if( key!=nullptr &&  /* the binary is in a table */
+#если !UCONFIG_NO_COLLATION
+        если( key!=nullptr &&  /* the binary is in a table */
             (key!=gUnknownKey ?
                 /* its table key string is "%%CollationBin" */
                 0==ds->compareInvChars(ds, key, -1,
@@ -1130,7 +1130,7 @@ ures_swapResource(const UDataSwapper *ds,
             Resource item;
             int32_t i, oldIndex;
 
-            if(RES_GET_TYPE(res)==URES_TABLE) {
+            если(RES_GET_TYPE(res)==URES_TABLE) {
                 /* get table item count */
                 pKey16 = reinterpret_cast<const uint16_t*>(p);
                 qKey16 = reinterpret_cast<uint16_t*>(q);
@@ -1142,7 +1142,7 @@ ures_swapResource(const UDataSwapper *ds,
                 ds->swapArray16(ds, pKey16++, 2, qKey16++, pErrorCode);
 
                 offset+=((1+count)+1)/2;
-            } else {
+            } иначе {
                 /* get table item count */
                 pKey32 = reinterpret_cast<const int32_t*>(p);
                 qKey32 = reinterpret_cast<int32_t*>(q);
@@ -1156,7 +1156,7 @@ ures_swapResource(const UDataSwapper *ds,
                 offset+=1+count;
             }
 
-            if(count==0) {
+            если(count==0) {
                 break;
             }
 
@@ -1164,34 +1164,34 @@ ures_swapResource(const UDataSwapper *ds,
             q=outBundle+offset;
 
             /* recurse */
-            for(i=0; i<count; ++i) {
+            для(i=0; i<count; ++i) {
                 const char *itemKey=gUnknownKey;
-                if(pKey16!=nullptr) {
+                если(pKey16!=nullptr) {
                     int32_t keyOffset=ds->readUInt16(pKey16[i]);
-                    if(keyOffset<pTempTable->localKeyLimit) {
+                    если(keyOffset<pTempTable->localKeyLimit) {
                         itemKey = reinterpret_cast<const char*>(outBundle) + keyOffset;
                     }
-                } else {
+                } иначе {
                     int32_t keyOffset=udata_readInt32(ds, pKey32[i]);
-                    if(keyOffset>=0) {
+                    если(keyOffset>=0) {
                         itemKey = reinterpret_cast<const char*>(outBundle) + keyOffset;
                     }
                 }
                 item=ds->readUInt32(p[i]);
                 ures_swapResource(ds, inBundle, outBundle, item, itemKey, pTempTable, pErrorCode);
-                if(U_FAILURE(*pErrorCode)) {
+                если(U_FAILURE(*pErrorCode)) {
                     udata_printError(ds, "ures_swapResource(table res=%08x)[%d].recurse(%08x) failed\n",
                                      res, i, item);
-                    return;
+                    вернуть;
                 }
             }
 
-            if(pTempTable->majorFormatVersion>1 || ds->inCharset==ds->outCharset) {
+            если(pTempTable->majorFormatVersion>1 || ds->inCharset==ds->outCharset) {
                 /* no need to sort, just swap the offset/value arrays */
-                if(pKey16!=nullptr) {
+                если(pKey16!=nullptr) {
                     ds->swapArray16(ds, pKey16, count*2, qKey16, pErrorCode);
                     ds->swapArray32(ds, p, count*4, q, pErrorCode);
-                } else {
+                } иначе {
                     /* swap key offsets and items as one array */
                     ds->swapArray32(ds, pKey32, count*2*4, qKey32, pErrorCode);
                 }
@@ -1206,13 +1206,13 @@ ures_swapResource(const UDataSwapper *ds,
              * sorting indexes and sort that.
              * Then we permutate and copy/swap the actual values.
              */
-            if(pKey16!=nullptr) {
-                for(i=0; i<count; ++i) {
+            если(pKey16!=nullptr) {
+                для(i=0; i<count; ++i) {
                     pTempTable->rows[i].keyIndex=ds->readUInt16(pKey16[i]);
                     pTempTable->rows[i].sortIndex=i;
                 }
-            } else {
-                for(i=0; i<count; ++i) {
+            } иначе {
+                для(i=0; i<count; ++i) {
                     pTempTable->rows[i].keyIndex=udata_readInt32(ds, pKey32[i]);
                     pTempTable->rows[i].sortIndex=i;
                 }
@@ -1220,10 +1220,10 @@ ures_swapResource(const UDataSwapper *ds,
             uprv_sortArray(pTempTable->rows, count, sizeof(Row),
                            ures_compareRows, pTempTable->keyChars,
                            false, pErrorCode);
-            if(U_FAILURE(*pErrorCode)) {
+            если(U_FAILURE(*pErrorCode)) {
                 udata_printError(ds, "ures_swapResource(table res=%08x).uprv_sortArray(%d items) failed\n",
                                  res, count);
-                return;
+                вернуть;
             }
 
             /*
@@ -1234,34 +1234,34 @@ ures_swapResource(const UDataSwapper *ds,
              * before the results are copied to the outBundle.
              */
             /* keys */
-            if(pKey16!=nullptr) {
+            если(pKey16!=nullptr) {
                 uint16_t *rKey16;
 
-                if(pKey16!=qKey16) {
+                если(pKey16!=qKey16) {
                     rKey16=qKey16;
-                } else {
+                } иначе {
                     rKey16 = reinterpret_cast<uint16_t*>(pTempTable->resort);
                 }
-                for(i=0; i<count; ++i) {
+                для(i=0; i<count; ++i) {
                     oldIndex=pTempTable->rows[i].sortIndex;
                     ds->swapArray16(ds, pKey16+oldIndex, 2, rKey16+i, pErrorCode);
                 }
-                if(qKey16!=rKey16) {
+                если(qKey16!=rKey16) {
                     uprv_memcpy(qKey16, rKey16, 2*count);
                 }
-            } else {
+            } иначе {
                 int32_t *rKey32;
 
-                if(pKey32!=qKey32) {
+                если(pKey32!=qKey32) {
                     rKey32=qKey32;
-                } else {
+                } иначе {
                     rKey32=pTempTable->resort;
                 }
-                for(i=0; i<count; ++i) {
+                для(i=0; i<count; ++i) {
                     oldIndex=pTempTable->rows[i].sortIndex;
                     ds->swapArray32(ds, pKey32+oldIndex, 4, rKey32+i, pErrorCode);
                 }
-                if(qKey32!=rKey32) {
+                если(qKey32!=rKey32) {
                     uprv_memcpy(qKey32, rKey32, 4*count);
                 }
             }
@@ -1271,16 +1271,16 @@ ures_swapResource(const UDataSwapper *ds,
                 Resource *r;
 
 
-                if(p!=q) {
+                если(p!=q) {
                     r=q;
-                } else {
+                } иначе {
                     r = reinterpret_cast<Resource*>(pTempTable->resort);
                 }
-                for(i=0; i<count; ++i) {
+                для(i=0; i<count; ++i) {
                     oldIndex=pTempTable->rows[i].sortIndex;
                     ds->swapArray32(ds, p+oldIndex, 4, r+i, pErrorCode);
                 }
-                if(q!=r) {
+                если(q!=r) {
                     uprv_memcpy(q, r, 4*count);
                 }
             }
@@ -1296,13 +1296,13 @@ ures_swapResource(const UDataSwapper *ds,
             ds->swapArray32(ds, p++, 4, q++, pErrorCode);
 
             /* recurse */
-            for(i=0; i<count; ++i) {
+            для(i=0; i<count; ++i) {
                 item=ds->readUInt32(p[i]);
                 ures_swapResource(ds, inBundle, outBundle, item, nullptr, pTempTable, pErrorCode);
-                if(U_FAILURE(*pErrorCode)) {
+                если(U_FAILURE(*pErrorCode)) {
                     udata_printError(ds, "ures_swapResource(array res=%08x)[%d].recurse(%08x) failed\n",
                                      res, i, item);
-                    return;
+                    вернуть;
                 }
             }
 
@@ -1342,13 +1342,13 @@ ures_swap(const UDataSwapper *ds,
 
     /* udata_swapDataHeader checks the arguments */
     headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    если(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        вернуть 0;
     }
 
     /* check data format and format version */
     pInfo=(const UDataInfo *)((const char *)inData+4);
-    if(!(
+    если(!(
         pInfo->dataFormat[0]==0x52 &&   /* dataFormat="ResB" */
         pInfo->dataFormat[1]==0x65 &&
         pInfo->dataFormat[2]==0x73 &&
@@ -1362,22 +1362,22 @@ ures_swap(const UDataSwapper *ds,
                          pInfo->dataFormat[2], pInfo->dataFormat[3],
                          pInfo->formatVersion[0], pInfo->formatVersion[1]);
         *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+        вернуть 0;
     }
     tempTable.majorFormatVersion=pInfo->formatVersion[0];
 
     /* a resource bundle must contain at least one resource item */
-    if(length<0) {
+    если(length<0) {
         bundleLength=-1;
-    } else {
+    } иначе {
         bundleLength=(length-headerSize)/4;
 
         /* formatVersion 1.1 must have a root item and at least 5 indexes */
-        if(bundleLength<(1+5)) {
+        если(bundleLength<(1+5)) {
             udata_printError(ds, "ures_swap(): too few bytes (%d after header) for a resource bundle\n",
                              length-headerSize);
             *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            вернуть 0;
         }
     }
 
@@ -1388,34 +1388,34 @@ ures_swap(const UDataSwapper *ds,
     inIndexes=(const int32_t *)(inBundle+1);
 
     indexLength=udata_readInt32(ds, inIndexes[URES_INDEX_LENGTH])&0xff;
-    if(indexLength<=URES_INDEX_MAX_TABLE_LENGTH) {
+    если(indexLength<=URES_INDEX_MAX_TABLE_LENGTH) {
         udata_printError(ds, "ures_swap(): too few indexes for a 1.1+ resource bundle\n");
         *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        вернуть 0;
     }
     keysBottom=1+indexLength;
     keysTop=udata_readInt32(ds, inIndexes[URES_INDEX_KEYS_TOP]);
-    if(indexLength>URES_INDEX_16BIT_TOP) {
+    если(indexLength>URES_INDEX_16BIT_TOP) {
         resBottom=udata_readInt32(ds, inIndexes[URES_INDEX_16BIT_TOP]);
-    } else {
+    } иначе {
         resBottom=keysTop;
     }
     top=udata_readInt32(ds, inIndexes[URES_INDEX_BUNDLE_TOP]);
     maxTableLength=udata_readInt32(ds, inIndexes[URES_INDEX_MAX_TABLE_LENGTH]);
 
-    if(0<=bundleLength && bundleLength<top) {
+    если(0<=bundleLength && bundleLength<top) {
         udata_printError(ds, "ures_swap(): resource top %d exceeds bundle length %d\n",
                          top, bundleLength);
         *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        вернуть 0;
     }
-    if(keysTop>(1+indexLength)) {
+    если(keysTop>(1+indexLength)) {
         tempTable.localKeyLimit=keysTop<<2;
-    } else {
+    } иначе {
         tempTable.localKeyLimit=0;
     }
 
-    if(length>=0) {
+    если(length>=0) {
         Resource *outBundle=(Resource *)((char *)outData+headerSize);
 
         /* track which resources we have already swapped */
@@ -1432,76 +1432,76 @@ ures_swap(const UDataSwapper *ds,
          */
         resFlagsLength=(length+31)>>5;          /* number of bytes needed */
         resFlagsLength=(resFlagsLength+3)&~3;   /* multiple of 4 bytes for uint32_t */
-        if(resFlagsLength<=(int32_t)sizeof(stackResFlags)) {
+        если(resFlagsLength<=(int32_t)sizeof(stackResFlags)) {
             tempTable.resFlags=stackResFlags;
-        } else {
+        } иначе {
             tempTable.resFlags=(uint32_t *)uprv_malloc(resFlagsLength);
-            if(tempTable.resFlags==nullptr) {
+            если(tempTable.resFlags==nullptr) {
                 udata_printError(ds, "ures_swap(): unable to allocate memory for tracking resources\n");
                 *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                return 0;
+                вернуть 0;
             }
         }
         uprv_memset(tempTable.resFlags, 0, resFlagsLength);
 
         /* copy the bundle for binary and inaccessible data */
-        if(inData!=outData) {
+        если(inData!=outData) {
             uprv_memcpy(outBundle, inBundle, 4*top);
         }
 
         /* swap the key strings, but not the padding bytes (0xaa) after the last string and its NUL */
         udata_swapInvStringBlock(ds, inBundle+keysBottom, 4*(keysTop-keysBottom),
                                     outBundle+keysBottom, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
+        если(U_FAILURE(*pErrorCode)) {
             udata_printError(ds, "ures_swap().udata_swapInvStringBlock(keys[%d]) failed\n", 4*(keysTop-keysBottom));
-            if(tempTable.resFlags!=stackResFlags) {
+            если(tempTable.resFlags!=stackResFlags) {
                 uprv_free(tempTable.resFlags);
             }
-            return 0;
+            вернуть 0;
         }
 
         /* swap the 16-bit units (strings, table16, array16) */
-        if(keysTop<resBottom) {
+        если(keysTop<resBottom) {
             ds->swapArray16(ds, inBundle+keysTop, (resBottom-keysTop)*4, outBundle+keysTop, pErrorCode);
-            if(U_FAILURE(*pErrorCode)) {
+            если(U_FAILURE(*pErrorCode)) {
                 udata_printError(ds, "ures_swap().swapArray16(16-bit units[%d]) failed\n", 2*(resBottom-keysTop));
-                if(tempTable.resFlags!=stackResFlags) {
+                если(tempTable.resFlags!=stackResFlags) {
                     uprv_free(tempTable.resFlags);
                 }
-                return 0;
+                вернуть 0;
             }
         }
 
         /* allocate the temporary table for sorting resource tables */
         tempTable.keyChars=(const char *)outBundle; /* sort by outCharset */
-        if(tempTable.majorFormatVersion>1 || maxTableLength<=STACK_ROW_CAPACITY) {
+        если(tempTable.majorFormatVersion>1 || maxTableLength<=STACK_ROW_CAPACITY) {
             tempTable.rows=rows;
             tempTable.resort=resort;
-        } else {
+        } иначе {
             tempTable.rows=(Row *)uprv_malloc(maxTableLength*sizeof(Row)+maxTableLength*4);
-            if(tempTable.rows==nullptr) {
+            если(tempTable.rows==nullptr) {
                 udata_printError(ds, "ures_swap(): unable to allocate memory for sorting tables (max length: %d)\n",
                                  maxTableLength);
                 *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                if(tempTable.resFlags!=stackResFlags) {
+                если(tempTable.resFlags!=stackResFlags) {
                     uprv_free(tempTable.resFlags);
                 }
-                return 0;
+                вернуть 0;
             }
             tempTable.resort=(int32_t *)(tempTable.rows+maxTableLength);
         }
 
         /* swap the resources */
         ures_swapResource(ds, inBundle, outBundle, rootRes, nullptr, &tempTable, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
+        если(U_FAILURE(*pErrorCode)) {
             udata_printError(ds, "ures_swapResource(root res=%08x) failed\n",
                              rootRes);
         }
 
-        if(tempTable.rows!=rows) {
+        если(tempTable.rows!=rows) {
             uprv_free(tempTable.rows);
         }
-        if(tempTable.resFlags!=stackResFlags) {
+        если(tempTable.resFlags!=stackResFlags) {
             uprv_free(tempTable.resFlags);
         }
 
@@ -1509,5 +1509,5 @@ ures_swap(const UDataSwapper *ds,
         ds->swapArray32(ds, inBundle, keysBottom*4, outBundle, pErrorCode);
     }
 
-    return headerSize+4*top;
+    вернуть headerSize+4*top;
 }

@@ -30,7 +30,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION
+#если !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION
 
 #include "unicode/ucnv.h"
 #include "unicode/uset.h"
@@ -77,7 +77,7 @@
  */
 #endif
 
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#если !UCONFIG_ONLY_HTML_CONVERSION
 static const char SHIFT_IN_STR[]  = "\x0F";
 // static const char SHIFT_OUT_STR[] = "\x0E";
 #endif
@@ -156,9 +156,9 @@ typedef enum  {
 } StateEnum;
 
 /* is the StateEnum charset value for a DBCS charset? */
-#if UCONFIG_ONLY_HTML_CONVERSION
+#если UCONFIG_ONLY_HTML_CONVERSION
 #define IS_JP_DBCS(cs) (JISX208==(cs))
-#else
+#иначе
 #define IS_JP_DBCS(cs) (JISX208<=(cs) && (cs)<=KSC5601)
 #endif
 
@@ -173,14 +173,14 @@ typedef enum  {
  *   all versions, not just JIS7 and JIS8.
  * - ICU does not distinguish between different versions of JIS X 0208.
  */
-#if UCONFIG_ONLY_HTML_CONVERSION
+#если UCONFIG_ONLY_HTML_CONVERSION
 enum { MAX_JA_VERSION=0 };
-#else
+#иначе
 enum { MAX_JA_VERSION=4 };
 #endif
 static const uint16_t jpCharsetMasks[MAX_JA_VERSION+1]={
     CSM(ASCII)|CSM(JISX201)|CSM(JISX208)|CSM(HWKANA_7BIT),
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#если !UCONFIG_ONLY_HTML_CONVERSION
     CSM(ASCII)|CSM(JISX201)|CSM(JISX208)|CSM(HWKANA_7BIT)|CSM(JISX212),
     CSM(ASCII)|CSM(JISX201)|CSM(JISX208)|CSM(HWKANA_7BIT)|CSM(JISX212)|CSM(GB2312)|CSM(KSC5601)|CSM(ISO8859_1)|CSM(ISO8859_7),
     CSM(ASCII)|CSM(JISX201)|CSM(JISX208)|CSM(HWKANA_7BIT)|CSM(JISX212)|CSM(GB2312)|CSM(KSC5601)|CSM(ISO8859_1)|CSM(ISO8859_7),
@@ -378,7 +378,7 @@ typedef enum{
     ISO_2022=0,
 #endif
     ISO_2022_JP=1,
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#если !UCONFIG_ONLY_HTML_CONVERSION
     ISO_2022_KR=2,
     ISO_2022_CN=3
 #endif
@@ -418,7 +418,7 @@ namespace {
 /*const UConverterSharedData _ISO2022Data;*/
 extern const UConverterSharedData _ISO2022JPData;
 
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#если !UCONFIG_ONLY_HTML_CONVERSION
 extern const UConverterSharedData _ISO2022KRData;
 extern const UConverterSharedData _ISO2022CNData;
 #endif
@@ -445,7 +445,7 @@ fromUWriteUInt8(UConverter *cnv,
 
 static inline void
 setInitialStateToUnicodeKR(UConverter* /*converter*/, UConverterDataISO2022 *myConverterData){
-    if(myConverterData->version == 1) {
+    если(myConverterData->version == 1) {
         UConverter *cnv = myConverterData->currentConverter;
 
         cnv->toUnicodeStatus=0;     /* offset */
@@ -459,7 +459,7 @@ setInitialStateFromUnicodeKR(UConverter* converter,UConverterDataISO2022 *myConv
    /* in ISO-2022-KR the designator sequence appears only once
     * in a file so we append it only once
     */
-    if( converter->charErrorBufferLength==0){
+    если( converter->charErrorBufferLength==0){
 
         converter->charErrorBufferLength = 4;
         converter->charErrorBuffer[0] = 0x1b;
@@ -467,7 +467,7 @@ setInitialStateFromUnicodeKR(UConverter* converter,UConverterDataISO2022 *myConv
         converter->charErrorBuffer[2] = 0x29;
         converter->charErrorBuffer[3] = 0x43;
     }
-    if(myConverterData->version == 1) {
+    если(myConverterData->version == 1) {
         UConverter *cnv = myConverterData->currentConverter;
 
         cnv->fromUChar32=0;
@@ -481,7 +481,7 @@ _ISO2022Open(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode){
     char myLocale[7]={' ',' ',' ',' ',' ',' ', '\0'};
 
     cnv->extraInfo = uprv_malloc (sizeof (UConverterDataISO2022));
-    if(cnv->extraInfo != nullptr) {
+    если(cnv->extraInfo != nullptr) {
         UConverterNamePieces stackPieces;
         UConverterLoadArgs stackArgs=UCNV_LOAD_ARGS_INITIALIZER;
         UConverterDataISO2022* myConverterData = static_cast<UConverterDataISO2022*>(cnv->extraInfo);
@@ -492,37 +492,37 @@ _ISO2022Open(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode){
         uprv_memset(myConverterData, 0, sizeof(UConverterDataISO2022));
         myConverterData->currentType = ASCII1;
         cnv->fromUnicodeStatus =false;
-        if(pArgs->locale){
+        если(pArgs->locale){
             uprv_strncpy(myLocale, pArgs->locale, sizeof(myLocale)-1);
         }
         version = pArgs->options & UCNV_OPTIONS_VERSION_MASK;
         myConverterData->version = version;
-        if(myLocale[0]=='j' && (myLocale[1]=='a'|| myLocale[1]=='p') &&
+        если(myLocale[0]=='j' && (myLocale[1]=='a'|| myLocale[1]=='p') &&
             (myLocale[2]=='_' || myLocale[2]=='\0'))
         {
             /* open the required converters and cache them */
-            if(version>MAX_JA_VERSION) {
+            если(version>MAX_JA_VERSION) {
                 // ICU 55 fails to open a converter for an unsupported version.
                 // Previously, it fell back to version 0, but that would yield
                 // unexpected behavior.
                 *errorCode = U_MISSING_RESOURCE_ERROR;
-                return;
+                вернуть;
             }
-            if(jpCharsetMasks[version]&CSM(ISO8859_7)) {
+            если(jpCharsetMasks[version]&CSM(ISO8859_7)) {
                 myConverterData->myConverterArray[ISO8859_7] =
                     ucnv_loadSharedData("ISO8859_7", &stackPieces, &stackArgs, errorCode);
             }
             myConverterData->myConverterArray[JISX208] =
                 ucnv_loadSharedData("Shift-JIS", &stackPieces, &stackArgs, errorCode);
-            if(jpCharsetMasks[version]&CSM(JISX212)) {
+            если(jpCharsetMasks[version]&CSM(JISX212)) {
                 myConverterData->myConverterArray[JISX212] =
                     ucnv_loadSharedData("jisx-212", &stackPieces, &stackArgs, errorCode);
             }
-            if(jpCharsetMasks[version]&CSM(GB2312)) {
+            если(jpCharsetMasks[version]&CSM(GB2312)) {
                 myConverterData->myConverterArray[GB2312] =
                     ucnv_loadSharedData("ibm-5478", &stackPieces, &stackArgs, errorCode);   /* gb_2312_80-1 */
             }
-            if(jpCharsetMasks[version]&CSM(KSC5601)) {
+            если(jpCharsetMasks[version]&CSM(KSC5601)) {
                 myConverterData->myConverterArray[KSC5601] =
                     ucnv_loadSharedData("ksc_5601", &stackPieces, &stackArgs, errorCode);
             }
@@ -533,44 +533,44 @@ _ISO2022Open(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode){
 
             (void)uprv_strcpy(myConverterData->name,"ISO_2022,locale=ja,version=");
             size_t len = uprv_strlen(myConverterData->name);
-            myConverterData->name[len] = static_cast<char>(myConverterData->version + static_cast<int>('0'));
+            myConverterData->name[len] = static_cast<char>(myConverterData->version + static_cast<целое>('0'));
             myConverterData->name[len+1]='\0';
         }
-#if !UCONFIG_ONLY_HTML_CONVERSION
-        else if(myLocale[0]=='k' && (myLocale[1]=='o'|| myLocale[1]=='r') &&
+#если !UCONFIG_ONLY_HTML_CONVERSION
+        иначе если(myLocale[0]=='k' && (myLocale[1]=='o'|| myLocale[1]=='r') &&
             (myLocale[2]=='_' || myLocale[2]=='\0'))
         {
-            if(version>1) {
+            если(version>1) {
                 // ICU 55 fails to open a converter for an unsupported version.
                 // Previously, it fell back to version 0, but that would yield
                 // unexpected behavior.
                 *errorCode = U_MISSING_RESOURCE_ERROR;
-                return;
+                вернуть;
             }
             const char *cnvName;
-            if(version==1) {
+            если(version==1) {
                 cnvName="icu-internal-25546";
-            } else {
+            } иначе {
                 cnvName="ibm-949";
                 myConverterData->version=version=0;
             }
-            if(pArgs->onlyTestIsLoadable) {
+            если(pArgs->onlyTestIsLoadable) {
                 ucnv_canCreateConverter(cnvName, errorCode);  /* errorCode carries result */
                 uprv_free(cnv->extraInfo);
                 cnv->extraInfo=nullptr;
-                return;
-            } else {
+                вернуть;
+            } иначе {
                 myConverterData->currentConverter=ucnv_open(cnvName, errorCode);
-                if (U_FAILURE(*errorCode)) {
+                если (U_FAILURE(*errorCode)) {
                     _ISO2022Close(cnv);
-                    return;
+                    вернуть;
                 }
 
-                if(version==1) {
+                если(version==1) {
                     (void)uprv_strcpy(myConverterData->name,"ISO_2022,locale=ko,version=1");
                     uprv_memcpy(cnv->subChars, myConverterData->currentConverter->subChars, 4);
                     cnv->subCharLen = myConverterData->currentConverter->subCharLen;
-                }else{
+                }иначе{
                     (void)uprv_strcpy(myConverterData->name,"ISO_2022,locale=ko,version=0");
                 }
 
@@ -583,21 +583,21 @@ _ISO2022Open(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode){
                 uprv_strcpy(myConverterData->locale,"ko");
             }
         }
-        else if(((myLocale[0]=='z' && myLocale[1]=='h') || (myLocale[0]=='c'&& myLocale[1]=='n'))&&
+        иначе если(((myLocale[0]=='z' && myLocale[1]=='h') || (myLocale[0]=='c'&& myLocale[1]=='n'))&&
             (myLocale[2]=='_' || myLocale[2]=='\0'))
         {
-            if(version>2) {
+            если(version>2) {
                 // ICU 55 fails to open a converter for an unsupported version.
                 // Previously, it fell back to version 0, but that would yield
                 // unexpected behavior.
                 *errorCode = U_MISSING_RESOURCE_ERROR;
-                return;
+                вернуть;
             }
 
             /* open the required converters and cache them */
             myConverterData->myConverterArray[GB2312_1] =
                 ucnv_loadSharedData("ibm-5478", &stackPieces, &stackArgs, errorCode);
-            if(version>=1) {
+            если(version>=1) {
                 myConverterData->myConverterArray[ISO_IR_165] =
                     ucnv_loadSharedData("iso-ir-165", &stackPieces, &stackArgs, errorCode);
             }
@@ -609,19 +609,19 @@ _ISO2022Open(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode){
             cnv->sharedData = const_cast<UConverterSharedData*>(&_ISO2022CNData);
             uprv_strcpy(myConverterData->locale,"cn");
 
-            if (version==0){
+            если (version==0){
                 myConverterData->version = 0;
                 (void)uprv_strcpy(myConverterData->name,"ISO_2022,locale=zh,version=0");
-            }else if (version==1){
+            }иначе если (version==1){
                 myConverterData->version = 1;
                 (void)uprv_strcpy(myConverterData->name,"ISO_2022,locale=zh,version=1");
-            }else {
+            }иначе {
                 myConverterData->version = 2;
                 (void)uprv_strcpy(myConverterData->name,"ISO_2022,locale=zh,version=2");
             }
         }
 #endif  // !UCONFIG_ONLY_HTML_CONVERSION
-        else{
+        иначе{
 #ifdef U_ENABLE_GENERIC_ISO_2022
             myConverterData->isFirstBuffer = true;
 
@@ -634,20 +634,20 @@ _ISO2022Open(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode){
             cnv->sharedData=(UConverterSharedData*)&_ISO2022Data;
             /* initialize the state variables */
             uprv_strcpy(myConverterData->name,"ISO_2022");
-#else
+#иначе
             *errorCode = U_MISSING_RESOURCE_ERROR;
             // Was U_UNSUPPORTED_ERROR but changed in ICU 55 to a more standard
             // data loading error code.
-            return;
+            вернуть;
 #endif
         }
 
         cnv->maxBytesPerUChar=cnv->sharedData->staticData->maxBytesPerChar;
 
-        if(U_FAILURE(*errorCode) || pArgs->onlyTestIsLoadable) {
+        если(U_FAILURE(*errorCode) || pArgs->onlyTestIsLoadable) {
             _ISO2022Close(cnv);
         }
-    } else {
+    } иначе {
         *errorCode = U_MEMORY_ALLOCATION_ERROR;
     }
 }
@@ -659,17 +659,17 @@ _ISO2022Close(UConverter *converter) {
     UConverterSharedData **array = myData->myConverterArray;
     int32_t i;
 
-    if (converter->extraInfo != nullptr) {
+    если (converter->extraInfo != nullptr) {
         /*close the array of converter pointers and free the memory*/
-        for (i=0; i<UCNV_2022_MAX_CONVERTERS; i++) {
-            if(array[i]!=nullptr) {
+        для (i=0; i<UCNV_2022_MAX_CONVERTERS; i++) {
+            если(array[i]!=nullptr) {
                 ucnv_unloadSharedDataIfReady(array[i]);
             }
         }
 
         ucnv_close(myData->currentConverter);
 
-        if(!converter->isExtraLocal){
+        если(!converter->isExtraLocal){
             uprv_free (converter->extraInfo);
             converter->extraInfo = nullptr;
         }
@@ -679,26 +679,26 @@ _ISO2022Close(UConverter *converter) {
 static void U_CALLCONV
 _ISO2022Reset(UConverter *converter, UConverterResetChoice choice) {
     UConverterDataISO2022* myConverterData = static_cast<UConverterDataISO2022*>(converter->extraInfo);
-    if(choice<=UCNV_RESET_TO_UNICODE) {
+    если(choice<=UCNV_RESET_TO_UNICODE) {
         uprv_memset(&myConverterData->toU2022State, 0, sizeof(ISO2022State));
         myConverterData->key = 0;
         myConverterData->isEmptySegment = false;
     }
-    if(choice!=UCNV_RESET_TO_UNICODE) {
+    если(choice!=UCNV_RESET_TO_UNICODE) {
         uprv_memset(&myConverterData->fromU2022State, 0, sizeof(ISO2022State));
     }
 #ifdef U_ENABLE_GENERIC_ISO_2022
-    if(myConverterData->locale[0] == 0){
-        if(choice<=UCNV_RESET_TO_UNICODE) {
+    если(myConverterData->locale[0] == 0){
+        если(choice<=UCNV_RESET_TO_UNICODE) {
             myConverterData->isFirstBuffer = true;
             myConverterData->key = 0;
-            if (converter->mode == UCNV_SO){
+            если (converter->mode == UCNV_SO){
                 ucnv_close (myConverterData->currentConverter);
                 myConverterData->currentConverter=nullptr;
             }
             converter->mode = UCNV_SI;
         }
-        if(choice!=UCNV_RESET_TO_UNICODE) {
+        если(choice!=UCNV_RESET_TO_UNICODE) {
             /* re-append UTF-8 escape sequence */
             converter->charErrorBufferLength = 3;
             converter->charErrorBuffer[0] = 0x1b;
@@ -706,15 +706,15 @@ _ISO2022Reset(UConverter *converter, UConverterResetChoice choice) {
             converter->charErrorBuffer[2] = 0x42;
         }
     }
-    else
+    иначе
 #endif
     {
         /* reset the state variables */
-        if(myConverterData->locale[0] == 'k'){
-            if(choice<=UCNV_RESET_TO_UNICODE) {
+        если(myConverterData->locale[0] == 'k'){
+            если(choice<=UCNV_RESET_TO_UNICODE) {
                 setInitialStateToUnicodeKR(converter, myConverterData);
             }
-            if(choice!=UCNV_RESET_TO_UNICODE) {
+            если(choice!=UCNV_RESET_TO_UNICODE) {
                 setInitialStateFromUnicodeKR(converter, myConverterData);
             }
         }
@@ -725,11 +725,11 @@ U_CDECL_BEGIN
 
 static const char * U_CALLCONV
 _ISO2022getName(const UConverter* cnv){
-    if(cnv->extraInfo){
+    если(cnv->extraInfo){
         UConverterDataISO2022* myData= (UConverterDataISO2022*)cnv->extraInfo;
-        return myData->name;
+        вернуть myData->name;
     }
-    return nullptr;
+    вернуть nullptr;
 }
 
 U_CDECL_END
@@ -761,7 +761,7 @@ static const int8_t nextStateToUnicodeJP[MAX_STATES_2022]= {
     ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE
 };
 
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#если !UCONFIG_ONLY_HTML_CONVERSION
 /*************** to unicode *******************/
 static const int8_t nextStateToUnicodeCN[MAX_STATES_2022]= {
 /*      0                1               2               3               4               5               6               7               8               9    */
@@ -785,31 +785,31 @@ getKey_2022(char c,int32_t* key,int32_t* offset){
     int32_t oldmid=0;
 
     togo = normalize_esq_chars_2022[static_cast<uint8_t>(c)];
-    if(togo == 0) {
+    если(togo == 0) {
         /* not a valid character anywhere in an escape sequence */
         *key = 0;
         *offset = 0;
-        return INVALID_2022;
+        вернуть INVALID_2022;
     }
     togo = (*key << 5) + togo;
 
-    while (hi != low)  /*binary search*/{
+    пока (hi != low)  /*binary search*/{
 
         int32_t mid = (hi+low) >> 1; /*Finds median*/
 
-        if (mid == oldmid)
+        если (mid == oldmid)
             break;
 
-        if (escSeqStateTable_Key_2022[mid] > togo){
+        если (escSeqStateTable_Key_2022[mid] > togo){
             hi = mid;
         }
-        else if (escSeqStateTable_Key_2022[mid] < togo){
+        иначе если (escSeqStateTable_Key_2022[mid] < togo){
             low = mid;
         }
-        else /*we found it*/{
+        иначе /*we found it*/{
             *key = togo;
             *offset = mid;
-            return static_cast<UCNV_TableStates_2022>(escSeqStateTable_Value_2022[mid]);
+            вернуть static_cast<UCNV_TableStates_2022>(escSeqStateTable_Value_2022[mid]);
         }
         oldmid = mid;
 
@@ -817,7 +817,7 @@ getKey_2022(char c,int32_t* key,int32_t* offset){
 
     *key = 0;
     *offset = 0;
-    return INVALID_2022;
+    вернуть INVALID_2022;
 }
 
 /*runs through a state machine to determine the escape sequence - codepage correspondence
@@ -836,7 +836,7 @@ changeState_2022(UConverter* _this,
     char c;
 
     value = VALID_NON_TERMINAL_2022;
-    while (*source < sourceLimit) {
+    пока (*source < sourceLimit) {
         c = *(*source)++;
         _this->toUBytes[_this->toULength++] = static_cast<uint8_t>(c);
         value = getKey_2022(c, reinterpret_cast<int32_t*>(&key), &offset);
@@ -857,7 +857,7 @@ changeState_2022(UConverter* _this,
         case VALID_MAYBE_TERMINAL_2022:
 #ifdef U_ENABLE_GENERIC_ISO_2022
             /* ESC ( B is ambiguous only for ISO_2022 itself */
-            if(var == ISO_2022) {
+            если(var == ISO_2022) {
                 /* discard toUBytes[] for ESC ( B because this sequence is correct and complete */
                 _this->toULength = 0;
 
@@ -866,7 +866,7 @@ changeState_2022(UConverter* _this,
                 /* continue with the loop */
                 value = VALID_NON_TERMINAL_2022;
                 break;
-            } else
+            } иначе
 #endif
             {
                 /* not ISO_2022 itself, finish here */
@@ -880,28 +880,28 @@ changeState_2022(UConverter* _this,
 DONE:
     myData2022->key = key;
 
-    if (value == VALID_NON_TERMINAL_2022) {
+    если (value == VALID_NON_TERMINAL_2022) {
         /* indicate that the escape sequence is incomplete: key!=0 */
-        return;
-    } else if (value == INVALID_2022 ) {
+        вернуть;
+    } иначе если (value == INVALID_2022 ) {
         *err = U_ILLEGAL_ESCAPE_SEQUENCE;
-    } else /* value == VALID_TERMINAL_2022 */ {
+    } иначе /* value == VALID_TERMINAL_2022 */ {
         switch(var){
 #ifdef U_ENABLE_GENERIC_ISO_2022
         case ISO_2022:
         {
             const char *chosenConverterName = escSeqStateTable_Result_2022[offset];
-            if(chosenConverterName == nullptr) {
+            если(chosenConverterName == nullptr) {
                 /* SS2 or SS3 */
                 *err = U_UNSUPPORTED_ESCAPE_SEQUENCE;
                 _this->toUCallbackReason = UCNV_UNASSIGNED;
-                return;
+                вернуть;
             }
 
             _this->mode = UCNV_SI;
             ucnv_close(myData2022->currentConverter);
             myData2022->currentConverter = myUConverter = ucnv_open(chosenConverterName, err);
-            if(U_SUCCESS(*err)) {
+            если(U_SUCCESS(*err)) {
                 myUConverter->fromCharErrorBehaviour = UCNV_TO_U_CALLBACK_STOP;
                 _this->mode = UCNV_SO;
             }
@@ -916,12 +916,12 @@ DONE:
                     *err = U_UNSUPPORTED_ESCAPE_SEQUENCE;
                     break;
                 case SS2_STATE:
-                    if(myData2022->toU2022State.cs[2]!=0) {
-                        if(myData2022->toU2022State.g<2) {
+                    если(myData2022->toU2022State.cs[2]!=0) {
+                        если(myData2022->toU2022State.g<2) {
                             myData2022->toU2022State.prevG=myData2022->toU2022State.g;
                         }
                         myData2022->toU2022State.g=2;
-                    } else {
+                    } иначе {
                         /* illegal to have SS2 before a matching designator */
                         *err = U_ILLEGAL_ESCAPE_SEQUENCE;
                     }
@@ -929,17 +929,17 @@ DONE:
                 /* case SS3_STATE: not used in ISO-2022-JP-x */
                 case ISO8859_1:
                 case ISO8859_7:
-                    if((jpCharsetMasks[myData2022->version] & CSM(tempState)) == 0) {
+                    если((jpCharsetMasks[myData2022->version] & CSM(tempState)) == 0) {
                         *err = U_UNSUPPORTED_ESCAPE_SEQUENCE;
-                    } else {
+                    } иначе {
                         /* G2 charset for SS2 */
                         myData2022->toU2022State.cs[2] = static_cast<int8_t>(tempState);
                     }
                     break;
                 default:
-                    if((jpCharsetMasks[myData2022->version] & CSM(tempState)) == 0) {
+                    если((jpCharsetMasks[myData2022->version] & CSM(tempState)) == 0) {
                         *err = U_UNSUPPORTED_ESCAPE_SEQUENCE;
-                    } else {
+                    } иначе {
                         /* G0 charset */
                         myData2022->toU2022State.cs[0] = static_cast<int8_t>(tempState);
                     }
@@ -947,7 +947,7 @@ DONE:
                 }
             }
             break;
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#если !UCONFIG_ONLY_HTML_CONVERSION
         case ISO_2022_CN:
             {
                 StateEnum tempState = static_cast<StateEnum>(nextStateToUnicodeCN[offset]);
@@ -956,29 +956,29 @@ DONE:
                     *err = U_UNSUPPORTED_ESCAPE_SEQUENCE;
                     break;
                 case SS2_STATE:
-                    if(myData2022->toU2022State.cs[2]!=0) {
-                        if(myData2022->toU2022State.g<2) {
+                    если(myData2022->toU2022State.cs[2]!=0) {
+                        если(myData2022->toU2022State.g<2) {
                             myData2022->toU2022State.prevG=myData2022->toU2022State.g;
                         }
                         myData2022->toU2022State.g=2;
-                    } else {
+                    } иначе {
                         /* illegal to have SS2 before a matching designator */
                         *err = U_ILLEGAL_ESCAPE_SEQUENCE;
                     }
                     break;
                 case SS3_STATE:
-                    if(myData2022->toU2022State.cs[3]!=0) {
-                        if(myData2022->toU2022State.g<2) {
+                    если(myData2022->toU2022State.cs[3]!=0) {
+                        если(myData2022->toU2022State.g<2) {
                             myData2022->toU2022State.prevG=myData2022->toU2022State.g;
                         }
                         myData2022->toU2022State.g=3;
-                    } else {
+                    } иначе {
                         /* illegal to have SS3 before a matching designator */
                         *err = U_ILLEGAL_ESCAPE_SEQUENCE;
                     }
                     break;
                 case ISO_IR_165:
-                    if(myData2022->version==0) {
+                    если(myData2022->version==0) {
                         *err = U_UNSUPPORTED_ESCAPE_SEQUENCE;
                         break;
                     }
@@ -993,9 +993,9 @@ DONE:
                     break;
                 default:
                     /* other CNS 11643 planes */
-                    if(myData2022->version==0) {
+                    если(myData2022->version==0) {
                         *err = U_UNSUPPORTED_ESCAPE_SEQUENCE;
-                    } else {
+                    } иначе {
                         myData2022->toU2022State.cs[3] = static_cast<int8_t>(tempState);
                     }
                     break;
@@ -1003,9 +1003,9 @@ DONE:
             }
             break;
         case ISO_2022_KR:
-            if(offset==0x30){
+            если(offset==0x30){
                 /* nothing to be done, just accept this one escape sequence */
-            } else {
+            } иначе {
                 *err = U_UNSUPPORTED_ESCAPE_SEQUENCE;
             }
             break;
@@ -1016,10 +1016,10 @@ DONE:
             break;
         }
     }
-    if(U_SUCCESS(*err)) {
+    если(U_SUCCESS(*err)) {
         _this->toULength = 0;
-    } else if(*err==U_ILLEGAL_ESCAPE_SEQUENCE) {
-        if(_this->toULength>1) {
+    } иначе если(*err==U_ILLEGAL_ESCAPE_SEQUENCE) {
+        если(_this->toULength>1) {
             /*
              * Ticket 5691: consistent illegal sequences:
              * - We include at least the first byte (ESC) in the illegal sequence.
@@ -1034,10 +1034,10 @@ DONE:
             /* Back out some bytes. */
             int8_t backOutDistance=_this->toULength-1;
             int8_t bytesFromThisBuffer=_this->toULength-initialToULength;
-            if(backOutDistance<=bytesFromThisBuffer) {
+            если(backOutDistance<=bytesFromThisBuffer) {
                 /* same as initialToULength<=1 */
                 *source-=backOutDistance;
-            } else {
+            } иначе {
                 /* Back out bytes from the previous buffer: Need to replay them. */
                 _this->preToULength = static_cast<int8_t>(bytesFromThisBuffer - backOutDistance);
                 /* same as -(initialToULength-1) */
@@ -1047,12 +1047,12 @@ DONE:
             }
             _this->toULength=1;
         }
-    } else if(*err==U_UNSUPPORTED_ESCAPE_SEQUENCE) {
+    } иначе если(*err==U_UNSUPPORTED_ESCAPE_SEQUENCE) {
         _this->toUCallbackReason = UCNV_UNASSIGNED;
     }
 }
 
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#если !UCONFIG_ONLY_HTML_CONVERSION
 /*Checks the characters of the buffer against valid 2022 escape sequences
 *if the match we return a pointer to the initial start of the sequence otherwise
 *we return sourceLimit
@@ -1069,12 +1069,12 @@ getEndOfBuffer_2022(const char** source,
     const char* mySource = *source;
 
 #ifdef U_ENABLE_GENERIC_ISO_2022
-    if (*source >= sourceLimit)
-        return sourceLimit;
+    если (*source >= sourceLimit)
+        вернуть sourceLimit;
 
     do{
 
-        if (*mySource == ESC_2022){
+        если (*mySource == ESC_2022){
             int8_t i;
             int32_t key = 0;
             int32_t offset;
@@ -1086,25 +1086,25 @@ getEndOfBuffer_2022(const char** source,
             * is it possible to have an ESC character in a ISO2022
             * byte stream which is valid in a code page? Is it legal?
             */
-            for (i=0;
+            для (i=0;
             (mySource+i < sourceLimit)&&(value == VALID_NON_TERMINAL_2022);
             i++) {
                 value =  getKey_2022(*(mySource+i), &key, &offset);
             }
-            if (value > 0 || *mySource==ESC_2022)
-                return mySource;
+            если (value > 0 || *mySource==ESC_2022)
+                вернуть mySource;
 
-            if ((value == VALID_NON_TERMINAL_2022)&&(!flush) )
-                return sourceLimit;
+            если ((value == VALID_NON_TERMINAL_2022)&&(!flush) )
+                вернуть sourceLimit;
         }
-    }while (++mySource < sourceLimit);
+    }пока (++mySource < sourceLimit);
 
-    return sourceLimit;
-#else
-    while(mySource < sourceLimit && *mySource != ESC_2022) {
+    вернуть sourceLimit;
+#иначе
+    пока(mySource < sourceLimit && *mySource != ESC_2022) {
         ++mySource;
     }
-    return mySource;
+    вернуть mySource;
 #endif
 }
 #endif
@@ -1118,7 +1118,7 @@ MBCS_FROM_UCHAR32_ISO2022(UConverterSharedData* sharedData,
                                          UChar32 c,
                                          uint32_t* value,
                                          UBool useFallback,
-                                         int outputType)
+                                         целое outputType)
 {
     const int32_t *cx;
     const uint16_t *table;
@@ -1132,51 +1132,51 @@ MBCS_FROM_UCHAR32_ISO2022(UConverterSharedData* sharedData,
      * else U_INTERNAL_PROGRAM_ERROR.
      */
     /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
-    if(c<0x10000 || (sharedData->mbcs.unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
+    если(c<0x10000 || (sharedData->mbcs.unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
         table=sharedData->mbcs.fromUnicodeTable;
         stage2Entry=MBCS_STAGE_2_FROM_U(table, c);
         /* get the bytes and the length for the output */
-        if(outputType==MBCS_OUTPUT_2){
+        если(outputType==MBCS_OUTPUT_2){
             myValue=MBCS_VALUE_2_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
-            if(myValue<=0xff) {
+            если(myValue<=0xff) {
                 length=1;
-            } else {
+            } иначе {
                 length=2;
             }
-        } else /* outputType==MBCS_OUTPUT_3 */ {
+        } иначе /* outputType==MBCS_OUTPUT_3 */ {
             p=MBCS_POINTER_3_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
             myValue = (static_cast<uint32_t>(*p) << 16) | (static_cast<uint32_t>(p[1]) << 8) | p[2];
-            if(myValue<=0xff) {
+            если(myValue<=0xff) {
                 length=1;
-            } else if(myValue<=0xffff) {
+            } иначе если(myValue<=0xffff) {
                 length=2;
-            } else {
+            } иначе {
                 length=3;
             }
         }
         /* is this code point assigned, or do we use fallbacks? */
-        if((stage2Entry&(1<<(16+(c&0xf))))!=0) {
+        если((stage2Entry&(1<<(16+(c&0xf))))!=0) {
             /* assigned */
             *value=myValue;
-            return length;
-        } else if(FROM_U_USE_FALLBACK(useFallback, c) && myValue!=0) {
+            вернуть length;
+        } иначе если(FROM_U_USE_FALLBACK(useFallback, c) && myValue!=0) {
             /*
              * We allow a 0 byte output if the "assigned" bit is set for this entry.
              * There is no way with this data structure for fallback output
              * to be a zero byte.
              */
             *value=myValue;
-            return -length;
+            вернуть -length;
         }
     }
 
     cx=sharedData->mbcs.extIndexes;
-    if(cx!=nullptr) {
-        return ucnv_extSimpleMatchFromU(cx, c, value, useFallback);
+    если(cx!=nullptr) {
+        вернуть ucnv_extSimpleMatchFromU(cx, c, value, useFallback);
     }
 
     /* unassigned */
-    return 0;
+    вернуть 0;
 }
 
 /* This inline function replicates code in _MBCSSingleFromUChar32() function in ucnvmbcs.c
@@ -1193,8 +1193,8 @@ MBCS_SINGLE_FROM_UCHAR32(UConverterSharedData* sharedData,
     const uint16_t *table;
     int32_t value;
     /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
-    if(c>=0x10000 && !(sharedData->mbcs.unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
-        return 0;
+    если(c>=0x10000 && !(sharedData->mbcs.unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
+        вернуть 0;
     }
     /* convert the Unicode code point in c into codepage bytes (same as in _MBCSFromUnicodeWithOffsets) */
     table=sharedData->mbcs.fromUnicodeTable;
@@ -1202,12 +1202,12 @@ MBCS_SINGLE_FROM_UCHAR32(UConverterSharedData* sharedData,
     value=MBCS_SINGLE_RESULT_FROM_U(table, (uint16_t *)sharedData->mbcs.fromUnicodeBytes, c);
     /* is this code point assigned, or do we use fallbacks? */
     *retval = static_cast<uint32_t>(value & 0xff);
-    if(value>=0xf00) {
-        return 1;  /* roundtrip */
-    } else if(useFallback ? value>=0x800 : value>=0xc00) {
-        return -1;  /* fallback taken */
-    } else {
-        return 0;  /* no mapping */
+    если(value>=0xf00) {
+        вернуть 1;  /* roundtrip */
+    } иначе если(useFallback ? value>=0x800 : value>=0xc00) {
+        вернуть -1;  /* fallback taken */
+    } иначе {
+        вернуть 0;  /* no mapping */
     }
 }
 
@@ -1219,16 +1219,16 @@ MBCS_SINGLE_FROM_UCHAR32(UConverterSharedData* sharedData,
  */
 static inline uint32_t
 _2022FromGR94DBCS(uint32_t value) {
-    if (static_cast<uint16_t>(value - 0xa1a1) <= (0xfefe - 0xa1a1) &&
+    если (static_cast<uint16_t>(value - 0xa1a1) <= (0xfefe - 0xa1a1) &&
         static_cast<uint8_t>(value - 0xa1) <= (0xfe - 0xa1)
     ) {
-        return value - 0x8080;  /* shift down to 21..7e byte range */
-    } else {
-        return 0;  /* not valid for ISO 2022 */
+        вернуть value - 0x8080;  /* shift down to 21..7e byte range */
+    } иначе {
+        вернуть 0;  /* not valid for ISO 2022 */
     }
 }
 
-#if 0 /* 5691: Call sites now check for validity. They can just += 0x8080 after that. */
+#если 0 /* 5691: Call sites now check for validity. They can just += 0x8080 after that. */
 /*
  * This method does the reverse of _2022FromGR94DBCS(). Given the 2022 code point, it returns the
  * 2 byte value that is in the range A1..FE for each byte. Otherwise it returns the 2022 code point
@@ -1237,11 +1237,11 @@ _2022FromGR94DBCS(uint32_t value) {
 static inline uint32_t
 _2022ToGR94DBCS(uint32_t value) {
     uint32_t returnValue = value + 0x8080;
-    if( (uint16_t)(returnValue - 0xa1a1) <= (0xfefe - 0xa1a1) &&
+    если( (uint16_t)(returnValue - 0xa1a1) <= (0xfefe - 0xa1a1) &&
         (uint8_t)(returnValue - 0xa1) <= (0xfe - 0xa1)) {
-        return returnValue;
-    } else {
-        return value;
+        вернуть returnValue;
+    } иначе {
+        вернуть value;
     }
 }
 #endif
@@ -1268,16 +1268,16 @@ T_UConverter_toUnicode_ISO_2022_OFFSETS_LOGIC(UConverterToUnicodeArgs* args,
     myData=((UConverterDataISO2022*)(saveThis->extraInfo));
 
     realSourceLimit = args->sourceLimit;
-    while (args->source < realSourceLimit) {
-        if(myData->key == 0) { /* are we in the middle of an escape sequence? */
+    пока (args->source < realSourceLimit) {
+        если(myData->key == 0) { /* are we in the middle of an escape sequence? */
             /*Find the end of the buffer e.g : Next Escape Seq | end of Buffer*/
             mySourceLimit = getEndOfBuffer_2022(&(args->source), realSourceLimit, args->flush);
 
-            if(args->source < mySourceLimit) {
-                if(myData->currentConverter==nullptr) {
+            если(args->source < mySourceLimit) {
+                если(myData->currentConverter==nullptr) {
                     myData->currentConverter = ucnv_open("ASCII",err);
-                    if(U_FAILURE(*err)){
-                        return;
+                    если(U_FAILURE(*err)){
+                        вернуть;
                     }
 
                     myData->currentConverter->fromCharErrorBehaviour = UCNV_TO_U_CALLBACK_STOP;
@@ -1299,16 +1299,16 @@ T_UConverter_toUnicode_ISO_2022_OFFSETS_LOGIC(UConverterToUnicodeArgs* args,
                     err);
                 args->converter = saveThis;
 
-                if (*err == U_BUFFER_OVERFLOW_ERROR) {
+                если (*err == U_BUFFER_OVERFLOW_ERROR) {
                     /* move the overflow buffer */
                     length = saveThis->UCharErrorBufferLength = myData->currentConverter->UCharErrorBufferLength;
                     myData->currentConverter->UCharErrorBufferLength = 0;
-                    if(length > 0) {
+                    если(length > 0) {
                         uprv_memcpy(saveThis->UCharErrorBuffer,
                                     myData->currentConverter->UCharErrorBuffer,
                                     length*U_SIZEOF_UCHAR);
                     }
-                    return;
+                    вернуть;
                 }
 
                 /*
@@ -1320,27 +1320,27 @@ T_UConverter_toUnicode_ISO_2022_OFFSETS_LOGIC(UConverterToUnicodeArgs* args,
                  *
                  * or else we just stopped at an ESC byte and continue with changeState_2022()
                  */
-                if (U_FAILURE(*err) ||
+                если (U_FAILURE(*err) ||
                     (args->source == realSourceLimit) ||
                     (args->offsets != nullptr && (args->target != myTargetStart || args->source != sourceStart) ||
                     (mySourceLimit < realSourceLimit && myData->currentConverter->toULength > 0))
                 ) {
                     /* copy partial or error input for truncated detection and error handling */
-                    if(U_FAILURE(*err)) {
+                    если(U_FAILURE(*err)) {
                         length = saveThis->invalidCharLength = myData->currentConverter->invalidCharLength;
-                        if(length > 0) {
+                        если(length > 0) {
                             uprv_memcpy(saveThis->invalidCharBuffer, myData->currentConverter->invalidCharBuffer, length);
                         }
-                    } else {
+                    } иначе {
                         length = saveThis->toULength = myData->currentConverter->toULength;
-                        if(length > 0) {
+                        если(length > 0) {
                             uprv_memcpy(saveThis->toUBytes, myData->currentConverter->toUBytes, length);
-                            if(args->source < mySourceLimit) {
+                            если(args->source < mySourceLimit) {
                                 *err = U_TRUNCATED_CHAR_FOUND; /* truncated input before ESC */
                             }
                         }
                     }
-                    return;
+                    вернуть;
                 }
             }
         }
@@ -1351,9 +1351,9 @@ T_UConverter_toUnicode_ISO_2022_OFFSETS_LOGIC(UConverterToUnicodeArgs* args,
                realSourceLimit,
                ISO_2022,
                err);
-        if (U_FAILURE(*err) || (args->source != sourceStart && args->offsets != nullptr)) {
+        если (U_FAILURE(*err) || (args->source != sourceStart && args->offsets != nullptr)) {
             /* let the ucnv.c code update its current offset */
-            return;
+            вернуть;
         }
     }
 }
@@ -1367,20 +1367,20 @@ static void
 toUnicodeCallback(UConverter *cnv,
                   const uint32_t sourceChar, const uint32_t targetUniChar,
                   UErrorCode* err){
-    if(sourceChar>0xff){
+    если(sourceChar>0xff){
         cnv->toUBytes[0] = static_cast<uint8_t>(sourceChar >> 8);
         cnv->toUBytes[1] = static_cast<uint8_t>(sourceChar);
         cnv->toULength = 2;
     }
-    else{
+    иначе{
         cnv->toUBytes[0] = static_cast<char>(sourceChar);
         cnv->toULength = 1;
     }
 
-    if(targetUniChar == (missingCharMarker-1/*0xfffe*/)){
+    если(targetUniChar == (missingCharMarker-1/*0xfffe*/)){
         *err = U_INVALID_CHAR_FOUND;
     }
-    else{
+    иначе{
         *err = U_ILLEGAL_CHAR_FOUND;
     }
 }
@@ -1488,30 +1488,30 @@ static  const int8_t escSeqCharsLen[] ={
 /* Map 00..7F to Unicode according to JIS X 0201. */
 static inline uint32_t
 jisx201ToU(uint32_t value) {
-    if(value < 0x5c) {
-        return value;
-    } else if(value == 0x5c) {
-        return 0xa5;
-    } else if(value == 0x7e) {
-        return 0x203e;
-    } else /* value <= 0x7f */ {
-        return value;
+    если(value < 0x5c) {
+        вернуть value;
+    } иначе если(value == 0x5c) {
+        вернуть 0xa5;
+    } иначе если(value == 0x7e) {
+        вернуть 0x203e;
+    } иначе /* value <= 0x7f */ {
+        вернуть value;
     }
 }
 
 /* Map Unicode to 00..7F according to JIS X 0201. Return U+FFFE if unmappable. */
 static inline uint32_t
 jisx201FromU(uint32_t value) {
-    if(value<=0x7f) {
-        if(value!=0x5c && value!=0x7e) {
-            return value;
+    если(value<=0x7f) {
+        если(value!=0x5c && value!=0x7e) {
+            вернуть value;
         }
-    } else if(value==0xa5) {
-        return 0x5c;
-    } else if(value==0x203e) {
-        return 0x7e;
+    } иначе если(value==0xa5) {
+        вернуть 0x5c;
+    } иначе если(value==0x203e) {
+        вернуть 0x7e;
     }
-    return 0xfffe;
+    вернуть 0xfffe;
 }
 
 /*
@@ -1523,31 +1523,31 @@ static inline uint32_t
 _2022FromSJIS(uint32_t value) {
     uint8_t trail;
 
-    if(value > 0xEFFC) {
-        return 0;  /* beyond JIS X 0208 */
+    если(value > 0xEFFC) {
+        вернуть 0;  /* beyond JIS X 0208 */
     }
 
     trail = static_cast<uint8_t>(value);
 
     value &= 0xff00;  /* lead byte */
-    if(value <= 0x9f00) {
+    если(value <= 0x9f00) {
         value -= 0x7000;
-    } else /* 0xe000 <= value <= 0xef00 */ {
+    } иначе /* 0xe000 <= value <= 0xef00 */ {
         value -= 0xb000;
     }
     value <<= 1;
 
-    if(trail <= 0x9e) {
+    если(trail <= 0x9e) {
         value -= 0x100;
-        if(trail <= 0x7e) {
+        если(trail <= 0x7e) {
             value |= trail - 0x1f;
-        } else {
+        } иначе {
             value |= trail - 0x20;
         }
-    } else /* trail <= 0xfc */ {
+    } иначе /* trail <= 0xfc */ {
         value |= trail - 0x7e;
     }
-    return value;
+    вернуть value;
 }
 
 /*
@@ -1559,28 +1559,28 @@ _2022FromSJIS(uint32_t value) {
  */
 static inline void
 _2022ToSJIS(uint8_t c1, uint8_t c2, char bytes[2]) {
-    if(c1&1) {
+    если(c1&1) {
         ++c1;
-        if(c2 <= 0x5f) {
+        если(c2 <= 0x5f) {
             c2 += 0x1f;
-        } else if(c2 <= 0x7e) {
+        } иначе если(c2 <= 0x7e) {
             c2 += 0x20;
-        } else {
+        } иначе {
             c2 = 0;  /* invalid */
         }
-    } else {
-        if (static_cast<uint8_t>(c2 - 0x21) <= ((0x7e) - 0x21)) {
+    } иначе {
+        если (static_cast<uint8_t>(c2 - 0x21) <= ((0x7e) - 0x21)) {
             c2 += 0x7e;
-        } else {
+        } иначе {
             c2 = 0;  /* invalid */
         }
     }
     c1 >>= 1;
-    if(c1 <= 0x2f) {
+    если(c1 <= 0x2f) {
         c1 += 0x70;
-    } else if(c1 <= 0x3f) {
+    } иначе если(c1 <= 0x3f) {
         c1 += 0xb0;
-    } else {
+    } иначе {
         c1 = 0;  /* invalid */
     }
     bytes[0] = static_cast<char>(c1);
@@ -1688,41 +1688,41 @@ UConverter_fromUnicode_ISO_2022_JP_OFFSETS_LOGIC(UConverterFromUnicodeArgs* args
     choiceCount = 0;
 
     /* check if the last codepoint of previous buffer was a lead surrogate*/
-    if((sourceChar = cnv->fromUChar32)!=0 && target< targetLimit) {
+    если((sourceChar = cnv->fromUChar32)!=0 && target< targetLimit) {
         goto getTrail;
     }
 
-    while(source < sourceLimit) {
-        if(target < targetLimit) {
+    пока(source < sourceLimit) {
+        если(target < targetLimit) {
 
             sourceChar  = *(source++);
             /*check if the char is a First surrogate*/
-            if(U16_IS_SURROGATE(sourceChar)) {
-                if(U16_IS_SURROGATE_LEAD(sourceChar)) {
+            если(U16_IS_SURROGATE(sourceChar)) {
+                если(U16_IS_SURROGATE_LEAD(sourceChar)) {
 getTrail:
                     /*look ahead to find the trail surrogate*/
-                    if(source < sourceLimit) {
+                    если(source < sourceLimit) {
                         /* test the following code unit */
                         char16_t trail = *source;
-                        if(U16_IS_TRAIL(trail)) {
+                        если(U16_IS_TRAIL(trail)) {
                             source++;
                             sourceChar=U16_GET_SUPPLEMENTARY(sourceChar, trail);
                             cnv->fromUChar32=0x00;
                             /* convert this supplementary code point */
                             /* exit this condition tree */
-                        } else {
+                        } иначе {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
                             *err=U_ILLEGAL_CHAR_FOUND;
                             cnv->fromUChar32=sourceChar;
                             break;
                         }
-                    } else {
+                    } иначе {
                         /* no more input */
                         cnv->fromUChar32=sourceChar;
                         break;
                     }
-                } else {
+                } иначе {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
                     *err=U_ILLEGAL_CHAR_FOUND;
@@ -1732,7 +1732,7 @@ getTrail:
             }
 
             /* do not convert SO/SI/ESC */
-            if(IS_2022_CONTROL(sourceChar)) {
+            если(IS_2022_CONTROL(sourceChar)) {
                 /* callback(illegal) */
                 *err=U_ILLEGAL_CHAR_FOUND;
                 cnv->fromUChar32=sourceChar;
@@ -1741,7 +1741,7 @@ getTrail:
 
             /* do the conversion */
 
-            if(choiceCount == 0) {
+            если(choiceCount == 0) {
                 uint16_t csm;
 
                 /*
@@ -1752,7 +1752,7 @@ getTrail:
                 choiceCount = 0;
 
                 /* JIS7/8: try single-byte half-width Katakana before JISX208 */
-                if(converterData->version == 3 || converterData->version == 4) {
+                если(converterData->version == 3 || converterData->version == 4) {
                     choices[choiceCount++] = static_cast<int8_t>(HWKANA_7BIT);
                 }
                 /* Do not try single-byte half-width Katakana for other versions. */
@@ -1763,15 +1763,15 @@ getTrail:
                 csm &= ~CSM(cs);
 
                 /* try the current G2 charset */
-                if((cs = pFromU2022State->cs[2]) != 0) {
+                если((cs = pFromU2022State->cs[2]) != 0) {
                     choices[choiceCount++] = cs;
                     csm &= ~CSM(cs);
                 }
 
                 /* try all the other possible charsets */
-                for(i = 0; i < UPRV_LENGTHOF(jpCharsetPref); ++i) {
+                для(i = 0; i < UPRV_LENGTHOF(jpCharsetPref); ++i) {
                     cs = static_cast<int8_t>(jpCharsetPref[i]);
-                    if(CSM(cs) & csm) {
+                    если(CSM(cs) & csm) {
                         choices[choiceCount++] = cs;
                         csm &= ~CSM(cs);
                     }
@@ -1793,13 +1793,13 @@ getTrail:
              */
             useFallback = cnv->useFallback;
 
-            for(i = 0; i < choiceCount && len <= 0; ++i) {
+            для(i = 0; i < choiceCount && len <= 0; ++i) {
                 uint32_t value;
                 int32_t len2;
                 int8_t cs0 = choices[i];
                 switch(cs0) {
                 case ASCII:
-                    if(sourceChar <= 0x7f) {
+                    если(sourceChar <= 0x7f) {
                         targetValue = static_cast<uint32_t>(sourceChar);
                         len = 1;
                         cs = cs0;
@@ -1807,7 +1807,7 @@ getTrail:
                     }
                     break;
                 case ISO8859_1:
-                    if(GR96_START <= sourceChar && sourceChar <= GR96_END) {
+                    если(GR96_START <= sourceChar && sourceChar <= GR96_END) {
                         targetValue = static_cast<uint32_t>(sourceChar) - 0x80;
                         len = 1;
                         cs = cs0;
@@ -1815,22 +1815,22 @@ getTrail:
                     }
                     break;
                 case HWKANA_7BIT:
-                    if (static_cast<uint32_t>(sourceChar - HWKANA_START) <= (HWKANA_END - HWKANA_START)) {
-                        if(converterData->version==3) {
+                    если (static_cast<uint32_t>(sourceChar - HWKANA_START) <= (HWKANA_END - HWKANA_START)) {
+                        если(converterData->version==3) {
                             /* JIS7: use G1 (SO) */
                             /* Shift U+FF61..U+FF9F to bytes 21..5F. */
                             targetValue = static_cast<uint32_t>(sourceChar - (HWKANA_START - 0x21));
                             len = 1;
                             pFromU2022State->cs[1] = cs = cs0; /* do not output an escape sequence */
                             g = 1;
-                        } else if(converterData->version==4) {
+                        } иначе если(converterData->version==4) {
                             /* JIS8: use 8-bit bytes with any single-byte charset, see escape sequence output below */
                             /* Shift U+FF61..U+FF9F to bytes A1..DF. */
                             targetValue = static_cast<uint32_t>(sourceChar - (HWKANA_START - 0xa1));
                             len = 1;
 
                             cs = pFromU2022State->cs[0];
-                            if(IS_JP_DBCS(cs)) {
+                            если(IS_JP_DBCS(cs)) {
                                 /* switch from a DBCS charset to JISX201 */
                                 cs = static_cast<int8_t>(JISX201);
                             }
@@ -1843,7 +1843,7 @@ getTrail:
                 case JISX201:
                     /* G0 SBCS */
                     value = jisx201FromU(sourceChar);
-                    if(value <= 0x7f) {
+                    если(value <= 0x7f) {
                         targetValue = value;
                         len = 1;
                         cs = cs0;
@@ -1857,16 +1857,16 @@ getTrail:
                                 converterData->myConverterArray[cs0],
                                 sourceChar, &value,
                                 useFallback, MBCS_OUTPUT_2);
-                    if(len2 == 2 || (len2 == -2 && len == 0)) {  /* only accept DBCS: abs(len)==2 */
+                    если(len2 == 2 || (len2 == -2 && len == 0)) {  /* only accept DBCS: abs(len)==2 */
                         value = _2022FromSJIS(value);
-                        if(value != 0) {
+                        если(value != 0) {
                             targetValue = value;
                             len = len2;
                             cs = cs0;
                             g = 0;
                             useFallback = false;
                         }
-                    } else if(len == 0 && useFallback &&
+                    } иначе если(len == 0 && useFallback &&
                               static_cast<uint32_t>(sourceChar - HWKANA_START) <= (HWKANA_END - HWKANA_START)) {
                         targetValue = hwkana_fb[sourceChar - HWKANA_START];
                         len = -2;
@@ -1881,7 +1881,7 @@ getTrail:
                                 converterData->myConverterArray[cs0],
                                 sourceChar, &value,
                                 useFallback);
-                    if(len2 != 0 && !(len2 < 0 && len != 0) && GR96_START <= value && value <= GR96_END) {
+                    если(len2 != 0 && !(len2 < 0 && len != 0) && GR96_START <= value && value <= GR96_END) {
                         targetValue = value - 0x80;
                         len = len2;
                         cs = cs0;
@@ -1895,15 +1895,15 @@ getTrail:
                                 converterData->myConverterArray[cs0],
                                 sourceChar, &value,
                                 useFallback, MBCS_OUTPUT_2);
-                    if(len2 == 2 || (len2 == -2 && len == 0)) {  /* only accept DBCS: abs(len)==2 */
-                        if(cs0 == KSC5601) {
+                    если(len2 == 2 || (len2 == -2 && len == 0)) {  /* only accept DBCS: abs(len)==2 */
+                        если(cs0 == KSC5601) {
                             /*
                              * Check for valid bytes for the encoding scheme.
                              * This is necessary because the sub-converter (windows-949)
                              * has a broader encoding scheme than is valid for 2022.
                              */
                             value = _2022FromGR94DBCS(value);
-                            if(value == 0) {
+                            если(value == 0) {
                                 break;
                             }
                         }
@@ -1917,20 +1917,20 @@ getTrail:
                 }
             }
 
-            if(len != 0) {
-                if(len < 0) {
+            если(len != 0) {
+                если(len < 0) {
                     len = -len;  /* fallback */
                 }
                 outLen = 0; /* count output bytes */
 
                 /* write SI if necessary (only for JIS7) */
-                if(pFromU2022State->g == 1 && g == 0) {
+                если(pFromU2022State->g == 1 && g == 0) {
                     buffer[outLen++] = UCNV_SI;
                     pFromU2022State->g = 0;
                 }
 
                 /* write the designation sequence if necessary */
-                if(cs != pFromU2022State->cs[g]) {
+                если(cs != pFromU2022State->cs[g]) {
                     int32_t escLen = escSeqCharsLen[cs];
                     uprv_memcpy(buffer + outLen, escSeqChars[cs], escLen);
                     outLen += escLen;
@@ -1941,7 +1941,7 @@ getTrail:
                 }
 
                 /* write the shift sequence if necessary */
-                if(g != pFromU2022State->g) {
+                если(g != pFromU2022State->g) {
                     switch(g) {
                     /* case 0 handled before writing escapes */
                     case 1:
@@ -1957,13 +1957,13 @@ getTrail:
                 }
 
                 /* write the output bytes */
-                if(len == 1) {
+                если(len == 1) {
                     buffer[outLen++] = static_cast<char>(targetValue);
-                } else /* len == 2 */ {
+                } иначе /* len == 2 */ {
                     buffer[outLen++] = static_cast<char>(targetValue >> 8);
                     buffer[outLen++] = static_cast<char>(targetValue);
                 }
-            } else {
+            } иначе {
                 /*
                  * if we cannot find the character after checking all codepages
                  * then this is an error
@@ -1973,39 +1973,39 @@ getTrail:
                 break;
             }
 
-            if(sourceChar == CR || sourceChar == LF) {
+            если(sourceChar == CR || sourceChar == LF) {
                 /* reset the G2 state at the end of a line (conversion got us into ASCII or JISX201 already) */
                 pFromU2022State->cs[2] = 0;
                 choiceCount = 0;
             }
 
             /* output outLen>0 bytes in buffer[] */
-            if(outLen == 1) {
+            если(outLen == 1) {
                 *target++ = buffer[0];
-                if(offsets) {
+                если(offsets) {
                     *offsets++ = static_cast<int32_t>(source - args->source - 1); /* -1: known to be ASCII */
                 }
-            } else if(outLen == 2 && (target + 2) <= targetLimit) {
+            } иначе если(outLen == 2 && (target + 2) <= targetLimit) {
                 *target++ = buffer[0];
                 *target++ = buffer[1];
-                if(offsets) {
+                если(offsets) {
                     int32_t sourceIndex = static_cast<int32_t>(source - args->source - U16_LENGTH(sourceChar));
                     *offsets++ = sourceIndex;
                     *offsets++ = sourceIndex;
                 }
-            } else {
+            } иначе {
                 fromUWriteUInt8(
                     cnv,
                     buffer, outLen,
                     &target, reinterpret_cast<const char*>(targetLimit),
                     &offsets, static_cast<int32_t>(source - args->source - U16_LENGTH(sourceChar)),
                     err);
-                if(U_FAILURE(*err)) {
+                если(U_FAILURE(*err)) {
                     break;
                 }
             }
         } /* end if(myTargetIndex<myTargetLength) */
-        else{
+        иначе{
             *err =U_BUFFER_OVERFLOW_ERROR;
             break;
         }
@@ -2022,7 +2022,7 @@ getTrail:
      *   in SO mode or not in ASCII mode
      *   end of input and no truncated input
      */
-    if( U_SUCCESS(*err) &&
+    если( U_SUCCESS(*err) &&
         (pFromU2022State->g!=0 || pFromU2022State->cs[0]!=ASCII) &&
         args->flush && source>=sourceLimit && cnv->fromUChar32==0
     ) {
@@ -2030,12 +2030,12 @@ getTrail:
 
         outLen = 0;
 
-        if(pFromU2022State->g != 0) {
+        если(pFromU2022State->g != 0) {
             buffer[outLen++] = UCNV_SI;
             pFromU2022State->g = 0;
         }
 
-        if(pFromU2022State->cs[0] != ASCII) {
+        если(pFromU2022State->cs[0] != ASCII) {
             int32_t escLen = escSeqCharsLen[ASCII];
             uprv_memcpy(buffer + outLen, escSeqChars[ASCII], escLen);
             outLen += escLen;
@@ -2051,14 +2051,14 @@ getTrail:
          * trail surrogate that is alone in the last buffer of the text stream
          */
         sourceIndex = static_cast<int32_t>(source - args->source);
-        if(sourceIndex>0) {
+        если(sourceIndex>0) {
             --sourceIndex;
-            if( U16_IS_TRAIL(args->source[sourceIndex]) &&
+            если( U16_IS_TRAIL(args->source[sourceIndex]) &&
                 (sourceIndex==0 || U16_IS_LEAD(args->source[sourceIndex-1]))
             ) {
                 --sourceIndex;
             }
-        } else {
+        } иначе {
             sourceIndex=-1;
         }
 
@@ -2094,10 +2094,10 @@ UConverter_toUnicode_ISO_2022_JP_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
     myData = static_cast<UConverterDataISO2022*>(args->converter->extraInfo);
     pToU2022State = &myData->toU2022State;
 
-    if(myData->key != 0) {
+    если(myData->key != 0) {
         /* continue with a partial escape sequence */
         goto escape;
-    } else if(args->converter->toULength == 1 && mySource < mySourceLimit && myTarget < args->targetLimit) {
+    } иначе если(args->converter->toULength == 1 && mySource < mySourceLimit && myTarget < args->targetLimit) {
         /* continue with a partial double-byte character */
         mySourceChar = args->converter->toUBytes[0];
         args->converter->toULength = 0;
@@ -2106,32 +2106,32 @@ UConverter_toUnicode_ISO_2022_JP_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
         goto getTrailByte;
     }
 
-    while(mySource < mySourceLimit){
+    пока(mySource < mySourceLimit){
 
         targetUniChar =missingCharMarker;
 
-        if(myTarget < args->targetLimit){
+        если(myTarget < args->targetLimit){
 
             mySourceChar = static_cast<unsigned char>(*mySource++);
 
             switch(mySourceChar) {
             case UCNV_SI:
-                if(myData->version==3) {
+                если(myData->version==3) {
                     pToU2022State->g=0;
                     continue;
-                } else {
+                } иначе {
                     /* only JIS7 uses SI/SO, not ISO-2022-JP-x */
                     myData->isEmptySegment = false;	/* reset this, we have a different error */
                     break;
                 }
 
             case UCNV_SO:
-                if(myData->version==3) {
+                если(myData->version==3) {
                     /* JIS7: switch to G1 half-width Katakana */
                     pToU2022State->cs[1] = static_cast<int8_t>(HWKANA_7BIT);
                     pToU2022State->g=1;
                     continue;
-                } else {
+                } иначе {
                     /* only JIS7 uses SI/SO, not ISO-2022-JP-x */
                     myData->isEmptySegment = false;	/* reset this, we have a different error */
                     break;
@@ -2148,7 +2148,7 @@ escape:
                         mySourceLimit, ISO_2022_JP,err);
 
                     /* If in ISO-2022-JP only and we successfully completed an escape sequence, but previous segment was empty, create an error */
-                    if(myData->version==0 && myData->key==0 && U_SUCCESS(*err) && myData->isEmptySegment) {
+                    если(myData->version==0 && myData->key==0 && U_SUCCESS(*err) && myData->isEmptySegment) {
                         *err = U_ILLEGAL_ESCAPE_SEQUENCE;
                         args->converter->toUCallbackReason = UCNV_IRREGULAR;
                         args->converter->toULength = static_cast<int8_t>(toULengthBefore + (mySource - mySourceBefore));
@@ -2156,14 +2156,14 @@ escape:
                 }
 
                 /* invalid or illegal escape sequence */
-                if(U_FAILURE(*err)){
+                если(U_FAILURE(*err)){
                     args->target = myTarget;
                     args->source = mySource;
                     myData->isEmptySegment = false;	/* Reset to avoid future spurious errors */
-                    return;
+                    вернуть;
                 }
                 /* If we successfully completed an escape sequence, we begin a new segment, empty so far */
-                if(myData->key==0) {
+                если(myData->key==0) {
                     myData->isEmptySegment = true;
                 }
                 continue;
@@ -2173,7 +2173,7 @@ escape:
             case CR:
             case LF:
                 /* automatically reset to single-byte mode */
-                if (static_cast<StateEnum>(pToU2022State->cs[0]) != ASCII &&
+                если (static_cast<StateEnum>(pToU2022State->cs[0]) != ASCII &&
                     static_cast<StateEnum>(pToU2022State->cs[0]) != JISX201) {
                     pToU2022State->cs[0] = static_cast<int8_t>(ASCII);
                 }
@@ -2184,31 +2184,31 @@ escape:
                 /* convert one or two bytes */
                 myData->isEmptySegment = false;
                 cs = static_cast<StateEnum>(pToU2022State->cs[pToU2022State->g]);
-                if (static_cast<uint8_t>(mySourceChar - 0xa1) <= (0xdf - 0xa1) && myData->version == 4 &&
+                если (static_cast<uint8_t>(mySourceChar - 0xa1) <= (0xdf - 0xa1) && myData->version == 4 &&
                     !IS_JP_DBCS(cs)
                 ) {
                     /* 8-bit halfwidth katakana in any single-byte mode for JIS8 */
                     targetUniChar = mySourceChar + (HWKANA_START - 0xa1);
 
                     /* return from a single-shift state to the previous one */
-                    if(pToU2022State->g >= 2) {
+                    если(pToU2022State->g >= 2) {
                         pToU2022State->g=pToU2022State->prevG;
                     }
-                } else switch(cs) {
+                } иначе switch(cs) {
                 case ASCII:
-                    if(mySourceChar <= 0x7f) {
+                    если(mySourceChar <= 0x7f) {
                         targetUniChar = mySourceChar;
                     }
                     break;
                 case ISO8859_1:
-                    if(mySourceChar <= 0x7f) {
+                    если(mySourceChar <= 0x7f) {
                         targetUniChar = mySourceChar + 0x80;
                     }
                     /* return from a single-shift state to the previous one */
                     pToU2022State->g=pToU2022State->prevG;
                     break;
                 case ISO8859_7:
-                    if(mySourceChar <= 0x7f) {
+                    если(mySourceChar <= 0x7f) {
                         /* convert mySourceChar+0x80 to use a normal 8-bit table */
                         targetUniChar =
                             _MBCS_SINGLE_SIMPLE_GET_NEXT_BMP(
@@ -2219,20 +2219,20 @@ escape:
                     pToU2022State->g=pToU2022State->prevG;
                     break;
                 case JISX201:
-                    if(mySourceChar <= 0x7f) {
+                    если(mySourceChar <= 0x7f) {
                         targetUniChar = jisx201ToU(mySourceChar);
                     }
                     break;
                 case HWKANA_7BIT:
-                    if (static_cast<uint8_t>(mySourceChar - 0x21) <= (0x5f - 0x21)) {
+                    если (static_cast<uint8_t>(mySourceChar - 0x21) <= (0x5f - 0x21)) {
                         /* 7-bit halfwidth Katakana */
                         targetUniChar = mySourceChar + (HWKANA_START - 0x21);
                     }
                     break;
                 default:
                     /* G0 DBCS */
-                    if(mySource < mySourceLimit) {
-                        int leadIsOk, trailIsOk;
+                    если(mySource < mySourceLimit) {
+                        целое leadIsOk, trailIsOk;
                         uint8_t trailByte;
 getTrailByte:
                         trailByte = static_cast<uint8_t>(*mySource);
@@ -2248,29 +2248,29 @@ getTrailByte:
                          */
                         leadIsOk = static_cast<uint8_t>(mySourceChar - 0x21) <= (0x7e - 0x21);
                         trailIsOk = static_cast<uint8_t>(trailByte - 0x21) <= (0x7e - 0x21);
-                        if (leadIsOk && trailIsOk) {
+                        если (leadIsOk && trailIsOk) {
                             ++mySource;
                             tmpSourceChar = (mySourceChar << 8) | trailByte;
-                            if(cs == JISX208) {
+                            если(cs == JISX208) {
                                 _2022ToSJIS(static_cast<uint8_t>(mySourceChar), trailByte, tempBuf);
                                 mySourceChar = tmpSourceChar;
-                            } else {
+                            } иначе {
                                 /* Copy before we modify tmpSourceChar so toUnicodeCallback() sees the correct bytes. */
                                 mySourceChar = tmpSourceChar;
-                                if (cs == KSC5601) {
+                                если (cs == KSC5601) {
                                     tmpSourceChar += 0x8080;  /* = _2022ToGR94DBCS(tmpSourceChar) */
                                 }
                                 tempBuf[0] = static_cast<char>(tmpSourceChar >> 8);
                                 tempBuf[1] = static_cast<char>(tmpSourceChar);
                             }
                             targetUniChar = ucnv_MBCSSimpleGetNextUChar(myData->myConverterArray[cs], tempBuf, 2, false);
-                        } else if (!(trailIsOk || IS_2022_CONTROL(trailByte))) {
+                        } иначе если (!(trailIsOk || IS_2022_CONTROL(trailByte))) {
                             /* report a pair of illegal bytes if the second byte is not a DBCS starter */
                             ++mySource;
                             /* add another bit so that the code below writes 2 bytes in case of error */
                             mySourceChar = 0x10000 | (mySourceChar << 8) | trailByte;
                         }
-                    } else {
+                    } иначе {
                         args->converter->toUBytes[0] = static_cast<uint8_t>(mySourceChar);
                         args->converter->toULength = 1;
                         goto endloop;
@@ -2278,39 +2278,39 @@ getTrailByte:
                 }  /* End of inner switch */
                 break;
             }  /* End of outer switch */
-            if(targetUniChar < (missingCharMarker-1/*0xfffe*/)){
-                if(args->offsets){
+            если(targetUniChar < (missingCharMarker-1/*0xfffe*/)){
+                если(args->offsets){
                     args->offsets[myTarget - args->target] = static_cast<int32_t>(mySource - args->source - (mySourceChar <= 0xff ? 1 : 2));
                 }
                 *(myTarget++) = static_cast<char16_t>(targetUniChar);
             }
-            else if(targetUniChar > missingCharMarker){
+            иначе если(targetUniChar > missingCharMarker){
                 /* disassemble the surrogate pair and write to output*/
                 targetUniChar-=0x0010000;
                 *myTarget = static_cast<char16_t>(0xd800 + static_cast<char16_t>(targetUniChar >> 10));
-                if(args->offsets){
+                если(args->offsets){
                     args->offsets[myTarget - args->target] = static_cast<int32_t>(mySource - args->source - (mySourceChar <= 0xff ? 1 : 2));
                 }
                 ++myTarget;
-                if(myTarget< args->targetLimit){
+                если(myTarget< args->targetLimit){
                     *myTarget = static_cast<char16_t>(0xdc00 + static_cast<char16_t>(targetUniChar & 0x3ff));
-                    if(args->offsets){
+                    если(args->offsets){
                         args->offsets[myTarget - args->target] = static_cast<int32_t>(mySource - args->source - (mySourceChar <= 0xff ? 1 : 2));
                     }
                     ++myTarget;
-                }else{
+                }иначе{
                     args->converter->UCharErrorBuffer[args->converter->UCharErrorBufferLength++]=
                                     static_cast<char16_t>(0xdc00 + static_cast<char16_t>(targetUniChar & 0x3ff));
                 }
 
             }
-            else{
+            иначе{
                 /* Call the callback function*/
                 toUnicodeCallback(args->converter,mySourceChar,targetUniChar,err);
                 break;
             }
         }
-        else{    /* goes with "if(myTarget < args->targetLimit)"  way up near top of function */
+        иначе{    /* goes with "if(myTarget < args->targetLimit)"  way up near top of function */
             *err =U_BUFFER_OVERFLOW_ERROR;
             break;
         }
@@ -2321,7 +2321,7 @@ endloop:
 }
 
 
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#если !UCONFIG_ONLY_HTML_CONVERSION
 /***************************************************************
 *   Rules for ISO-2022-KR encoding
 *   i) The KSC5601 designator sequence should appear only once in a file,
@@ -2341,8 +2341,8 @@ UConverter_fromUnicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(UConverterFromUnicodeArgs* 
     ucnv_MBCSFromUnicodeWithOffsets(args,err);
     saveConv->fromUChar32 = myConverterData->currentConverter->fromUChar32;
 
-    if(*err == U_BUFFER_OVERFLOW_ERROR) {
-        if(myConverterData->currentConverter->charErrorBufferLength > 0) {
+    если(*err == U_BUFFER_OVERFLOW_ERROR) {
+        если(myConverterData->currentConverter->charErrorBufferLength > 0) {
             uprv_memcpy(
                 saveConv->charErrorBuffer,
                 myConverterData->currentConverter->charErrorBuffer,
@@ -2376,9 +2376,9 @@ UConverter_fromUnicode_ISO_2022_KR_OFFSETS_LOGIC(UConverterFromUnicodeArgs* args
      * conversion with ibm-25546 pass the arguments to
      * MBCS converter and return
      */
-    if(converterData->version==1){
+    если(converterData->version==1){
         UConverter_fromUnicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(args,err);
-        return;
+        вернуть;
     }
 
     /* initialize data */
@@ -2388,18 +2388,18 @@ UConverter_fromUnicode_ISO_2022_KR_OFFSETS_LOGIC(UConverterFromUnicodeArgs* args
     oldIsTargetByteDBCS = isTargetByteDBCS;
 
     isTargetByteDBCS = static_cast<UBool>(args->converter->fromUnicodeStatus);
-    if((sourceChar = args->converter->fromUChar32)!=0 && target <targetLimit) {
+    если((sourceChar = args->converter->fromUChar32)!=0 && target <targetLimit) {
         goto getTrail;
     }
-    while(source < sourceLimit){
+    пока(source < sourceLimit){
 
         targetByteUnit = missingCharMarker;
 
-        if(target < (unsigned char*) args->targetLimit){
+        если(target < (unsigned char*) args->targetLimit){
             sourceChar = *source++;
 
             /* do not convert SO/SI/ESC */
-            if(IS_2022_CONTROL(sourceChar)) {
+            если(IS_2022_CONTROL(sourceChar)) {
                 /* callback(illegal) */
                 *err=U_ILLEGAL_CHAR_FOUND;
                 args->converter->fromUChar32=sourceChar;
@@ -2407,12 +2407,12 @@ UConverter_fromUnicode_ISO_2022_KR_OFFSETS_LOGIC(UConverterFromUnicodeArgs* args
             }
 
             length = MBCS_FROM_UCHAR32_ISO2022(sharedData,sourceChar,&targetByteUnit,useFallback,MBCS_OUTPUT_2);
-            if(length < 0) {
+            если(length < 0) {
                 length = -length;  /* fallback */
             }
             /* only DBCS or SBCS characters are expected*/
             /* DB characters with high bit set to 1 are expected */
-            if( length > 2 || length==0 ||
+            если( length > 2 || length==0 ||
                 (length == 1 && targetByteUnit > 0x7f) ||
                 (length == 2 &&
                     (static_cast<uint16_t>(targetByteUnit - 0xa1a1) > (0xfefe - 0xa1a1) ||
@@ -2420,48 +2420,48 @@ UConverter_fromUnicode_ISO_2022_KR_OFFSETS_LOGIC(UConverterFromUnicodeArgs* args
             ) {
                 targetByteUnit=missingCharMarker;
             }
-            if (targetByteUnit != missingCharMarker){
+            если (targetByteUnit != missingCharMarker){
 
                 oldIsTargetByteDBCS = isTargetByteDBCS;
                 isTargetByteDBCS = static_cast<UBool>(targetByteUnit > 0x00FF);
                   /* append the shift sequence */
-                if (oldIsTargetByteDBCS != isTargetByteDBCS ){
+                если (oldIsTargetByteDBCS != isTargetByteDBCS ){
 
-                    if (isTargetByteDBCS)
+                    если (isTargetByteDBCS)
                         *target++ = UCNV_SO;
-                    else
+                    иначе
                         *target++ = UCNV_SI;
-                    if(offsets)
+                    если(offsets)
                         *(offsets++) = static_cast<int32_t>(source - args->source - 1);
                 }
                 /* write the targetUniChar  to target */
-                if(targetByteUnit <= 0x00FF){
-                    if( target < targetLimit){
+                если(targetByteUnit <= 0x00FF){
+                    если( target < targetLimit){
                         *(target++) = static_cast<unsigned char>(targetByteUnit);
-                        if(offsets){
+                        если(offsets){
                             *(offsets++) = static_cast<int32_t>(source - args->source - 1);
                         }
 
-                    }else{
+                    }иначе{
                         args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = static_cast<unsigned char>(targetByteUnit);
                         *err = U_BUFFER_OVERFLOW_ERROR;
                     }
-                }else{
-                    if(target < targetLimit){
+                }иначе{
+                    если(target < targetLimit){
                         *(target++) = static_cast<unsigned char>((targetByteUnit >> 8) - 0x80);
-                        if(offsets){
+                        если(offsets){
                             *(offsets++) = static_cast<int32_t>(source - args->source - 1);
                         }
-                        if(target < targetLimit){
+                        если(target < targetLimit){
                             *(target++) = static_cast<unsigned char>(targetByteUnit - 0x80);
-                            if(offsets){
+                            если(offsets){
                                 *(offsets++) = static_cast<int32_t>(source - args->source - 1);
                             }
-                        }else{
+                        }иначе{
                             args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = static_cast<unsigned char>(targetByteUnit - 0x80);
                             *err = U_BUFFER_OVERFLOW_ERROR;
                         }
-                    }else{
+                    }иначе{
                         args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = static_cast<unsigned char>((targetByteUnit >> 8) - 0x80);
                         args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = static_cast<unsigned char>(targetByteUnit - 0x80);
                         *err = U_BUFFER_OVERFLOW_ERROR;
@@ -2469,40 +2469,40 @@ UConverter_fromUnicode_ISO_2022_KR_OFFSETS_LOGIC(UConverterFromUnicodeArgs* args
                 }
 
             }
-            else{
+            иначе{
                 /* oops.. the code point is unassingned
                  * set the error and reason
                  */
 
                 /*check if the char is a First surrogate*/
-                if(U16_IS_SURROGATE(sourceChar)) {
-                    if(U16_IS_SURROGATE_LEAD(sourceChar)) {
+                если(U16_IS_SURROGATE(sourceChar)) {
+                    если(U16_IS_SURROGATE_LEAD(sourceChar)) {
 getTrail:
                         /*look ahead to find the trail surrogate*/
-                        if(source <  sourceLimit) {
+                        если(source <  sourceLimit) {
                             /* test the following code unit */
                             char16_t trail = *source;
-                            if(U16_IS_TRAIL(trail)) {
+                            если(U16_IS_TRAIL(trail)) {
                                 source++;
                                 sourceChar=U16_GET_SUPPLEMENTARY(sourceChar, trail);
                                 *err = U_INVALID_CHAR_FOUND;
                                 /* convert this surrogate code point */
                                 /* exit this condition tree */
-                            } else {
+                            } иначе {
                                 /* this is an unmatched lead code unit (1st surrogate) */
                                 /* callback(illegal) */
                                 *err=U_ILLEGAL_CHAR_FOUND;
                             }
-                        } else {
+                        } иначе {
                             /* no more input */
                             *err = U_ZERO_ERROR;
                         }
-                    } else {
+                    } иначе {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
                         *err=U_ILLEGAL_CHAR_FOUND;
                     }
-                } else {
+                } иначе {
                     /* callback(unassigned) for a BMP code point */
                     *err = U_INVALID_CHAR_FOUND;
                 }
@@ -2511,7 +2511,7 @@ getTrail:
                 break;
             }
         } /* end if(myTargetIndex<myTargetLength) */
-        else{
+        иначе{
             *err =U_BUFFER_OVERFLOW_ERROR;
             break;
         }
@@ -2528,7 +2528,7 @@ getTrail:
      *   not in ASCII mode
      *   end of input and no truncated input
      */
-    if( U_SUCCESS(*err) &&
+    если( U_SUCCESS(*err) &&
         isTargetByteDBCS &&
         args->flush && source>=sourceLimit && args->converter->fromUChar32==0
     ) {
@@ -2546,14 +2546,14 @@ getTrail:
          * trail surrogate that is alone in the last buffer of the text stream
          */
         sourceIndex = static_cast<int32_t>(source - args->source);
-        if(sourceIndex>0) {
+        если(sourceIndex>0) {
             --sourceIndex;
-            if( U16_IS_TRAIL(args->source[sourceIndex]) &&
+            если( U16_IS_TRAIL(args->source[sourceIndex]) &&
                 (sourceIndex==0 || U16_IS_LEAD(args->source[sourceIndex-1]))
             ) {
                 --sourceIndex;
             }
-        } else {
+        } иначе {
             sourceIndex=-1;
         }
 
@@ -2583,9 +2583,9 @@ UConverter_toUnicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(UConverterToUnicodeArgs *args
     int32_t minArgsSize;
 
     /* set up the subconverter arguments */
-    if(args->size<sizeof(UConverterToUnicodeArgs)) {
+    если(args->size<sizeof(UConverterToUnicodeArgs)) {
         minArgsSize = args->size;
-    } else {
+    } иначе {
         minArgsSize = static_cast<int32_t>(sizeof(UConverterToUnicodeArgs));
     }
 
@@ -2596,16 +2596,16 @@ UConverter_toUnicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(UConverterToUnicodeArgs *args
     /* remember the original start of the input for offsets */
     sourceStart = args->source;
 
-    if(myData->key != 0) {
+    если(myData->key != 0) {
         /* continue with a partial escape sequence */
         goto escape;
     }
 
-    while(U_SUCCESS(*err) && args->source < args->sourceLimit) {
+    пока(U_SUCCESS(*err) && args->source < args->sourceLimit) {
         /*Find the end of the buffer e.g : Next Escape Seq | end of Buffer*/
         subArgs.source = args->source;
         subArgs.sourceLimit = getEndOfBuffer_2022(&(args->source), args->sourceLimit, args->flush);
-        if(subArgs.source != subArgs.sourceLimit) {
+        если(subArgs.source != subArgs.sourceLimit) {
             /*
              * get the current partial byte sequence
              *
@@ -2613,7 +2613,7 @@ UConverter_toUnicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(UConverterToUnicodeArgs *args
              * so that the conversion framework, which only sees the public
              * converter, can handle truncated and illegal input etc.
              */
-            if(args->converter->toULength > 0) {
+            если(args->converter->toULength > 0) {
                 uprv_memcpy(subArgs.converter->toUBytes, args->converter->toUBytes, args->converter->toULength);
             }
             subArgs.converter->toULength = args->converter->toULength;
@@ -2625,13 +2625,13 @@ UConverter_toUnicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(UConverterToUnicodeArgs *args
              */
             ucnv_MBCSToUnicodeWithOffsets(&subArgs, err);
 
-            if(args->offsets != nullptr && sourceStart != args->source) {
+            если(args->offsets != nullptr && sourceStart != args->source) {
                 /* update offsets to base them on the actual start of the input */
                 int32_t *offsets = args->offsets;
                 char16_t *target = args->target;
                 int32_t delta = static_cast<int32_t>(args->source - sourceStart);
-                while(target < subArgs.target) {
-                    if(*offsets >= 0) {
+                пока(target < subArgs.target) {
+                    если(*offsets >= 0) {
                         *offsets += delta;
                     }
                     ++offsets;
@@ -2643,13 +2643,13 @@ UConverter_toUnicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(UConverterToUnicodeArgs *args
             args->offsets = subArgs.offsets;
 
             /* copy input/error/overflow buffers */
-            if(subArgs.converter->toULength > 0) {
+            если(subArgs.converter->toULength > 0) {
                 uprv_memcpy(args->converter->toUBytes, subArgs.converter->toUBytes, subArgs.converter->toULength);
             }
             args->converter->toULength = subArgs.converter->toULength;
 
-            if(*err == U_BUFFER_OVERFLOW_ERROR) {
-                if(subArgs.converter->UCharErrorBufferLength > 0) {
+            если(*err == U_BUFFER_OVERFLOW_ERROR) {
+                если(subArgs.converter->UCharErrorBufferLength > 0) {
                     uprv_memcpy(args->converter->UCharErrorBuffer, subArgs.converter->UCharErrorBuffer,
                                 subArgs.converter->UCharErrorBufferLength);
                 }
@@ -2658,8 +2658,8 @@ UConverter_toUnicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(UConverterToUnicodeArgs *args
             }
         }
 
-        if (U_FAILURE(*err) || (args->source == args->sourceLimit)) {
-            return;
+        если (U_FAILURE(*err) || (args->source == args->sourceLimit)) {
+            вернуть;
         }
 
 escape:
@@ -2685,34 +2685,34 @@ UConverter_toUnicode_ISO_2022_KR_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
     UBool useFallback;
 
     myData = static_cast<UConverterDataISO2022*>(args->converter->extraInfo);
-    if(myData->version==1){
+    если(myData->version==1){
         UConverter_toUnicode_ISO_2022_KR_OFFSETS_LOGIC_IBM(args,err);
-        return;
+        вернуть;
     }
 
     /* initialize state */
     sharedData = myData->currentConverter->sharedData;
     useFallback = args->converter->useFallback;
 
-    if(myData->key != 0) {
+    если(myData->key != 0) {
         /* continue with a partial escape sequence */
         goto escape;
-    } else if(args->converter->toULength == 1 && mySource < mySourceLimit && myTarget < args->targetLimit) {
+    } иначе если(args->converter->toULength == 1 && mySource < mySourceLimit && myTarget < args->targetLimit) {
         /* continue with a partial double-byte character */
         mySourceChar = args->converter->toUBytes[0];
         args->converter->toULength = 0;
         goto getTrailByte;
     }
 
-    while(mySource< mySourceLimit){
+    пока(mySource< mySourceLimit){
 
-        if(myTarget < args->targetLimit){
+        если(myTarget < args->targetLimit){
 
             mySourceChar = static_cast<unsigned char>(*mySource++);
 
-            if(mySourceChar==UCNV_SI){
+            если(mySourceChar==UCNV_SI){
                 myData->toU2022State.g = 0;
-                if (myData->isEmptySegment) {
+                если (myData->isEmptySegment) {
                     myData->isEmptySegment = false;	/* we are handling it, reset to avoid future spurious errors */
                     *err = U_ILLEGAL_ESCAPE_SEQUENCE;
                     args->converter->toUCallbackReason = UCNV_IRREGULAR;
@@ -2720,33 +2720,33 @@ UConverter_toUnicode_ISO_2022_KR_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
                     args->converter->toULength = 1;
                     args->target = myTarget;
                     args->source = mySource;
-                    return;
+                    вернуть;
                 }
                 /*consume the source */
                 continue;
-            }else if(mySourceChar==UCNV_SO){
+            }иначе если(mySourceChar==UCNV_SO){
                 myData->toU2022State.g = 1;
                 myData->isEmptySegment = true;	/* Begin a new segment, empty so far */
                 /*consume the source */
                 continue;
-            }else if(mySourceChar==ESC_2022){
+            }иначе если(mySourceChar==ESC_2022){
                 mySource--;
 escape:
                 myData->isEmptySegment = false;	/* Any invalid ESC sequences will be detected separately, so just reset this */
                 changeState_2022(args->converter,&(mySource),
                                 mySourceLimit, ISO_2022_KR, err);
-                if(U_FAILURE(*err)){
+                если(U_FAILURE(*err)){
                     args->target = myTarget;
                     args->source = mySource;
-                    return;
+                    вернуть;
                 }
                 continue;
             }
 
             myData->isEmptySegment = false;	/* Any invalid char errors will be detected separately, so just reset this */
-            if(myData->toU2022State.g == 1) {
-                if(mySource < mySourceLimit) {
-                    int leadIsOk, trailIsOk;
+            если(myData->toU2022State.g == 1) {
+                если(mySource < mySourceLimit) {
+                    целое leadIsOk, trailIsOk;
                     uint8_t trailByte;
 getTrailByte:
                     targetUniChar = missingCharMarker;
@@ -2763,42 +2763,42 @@ getTrailByte:
                      */
                     leadIsOk = static_cast<uint8_t>(mySourceChar - 0x21) <= (0x7e - 0x21);
                     trailIsOk = static_cast<uint8_t>(trailByte - 0x21) <= (0x7e - 0x21);
-                    if (leadIsOk && trailIsOk) {
+                    если (leadIsOk && trailIsOk) {
                         ++mySource;
                         tempBuf[0] = static_cast<char>(mySourceChar + 0x80);
                         tempBuf[1] = static_cast<char>(trailByte + 0x80);
                         targetUniChar = ucnv_MBCSSimpleGetNextUChar(sharedData, tempBuf, 2, useFallback);
                         mySourceChar = (mySourceChar << 8) | trailByte;
-                    } else if (!(trailIsOk || IS_2022_CONTROL(trailByte))) {
+                    } иначе если (!(trailIsOk || IS_2022_CONTROL(trailByte))) {
                         /* report a pair of illegal bytes if the second byte is not a DBCS starter */
                         ++mySource;
                         /* add another bit so that the code below writes 2 bytes in case of error */
                         mySourceChar = static_cast<char16_t>(0x10000 | (mySourceChar << 8) | trailByte);
                     }
-                } else {
+                } иначе {
                     args->converter->toUBytes[0] = static_cast<uint8_t>(mySourceChar);
                     args->converter->toULength = 1;
                     break;
                 }
             }
-            else if(mySourceChar <= 0x7f) {
+            иначе если(mySourceChar <= 0x7f) {
                 targetUniChar = ucnv_MBCSSimpleGetNextUChar(sharedData, mySource - 1, 1, useFallback);
-            } else {
+            } иначе {
                 targetUniChar = 0xffff;
             }
-            if(targetUniChar < 0xfffe){
-                if(args->offsets) {
+            если(targetUniChar < 0xfffe){
+                если(args->offsets) {
                     args->offsets[myTarget - args->target] = static_cast<int32_t>(mySource - args->source - (mySourceChar <= 0xff ? 1 : 2));
                 }
                 *(myTarget++) = static_cast<char16_t>(targetUniChar);
             }
-            else {
+            иначе {
                 /* Call the callback function*/
                 toUnicodeCallback(args->converter,mySourceChar,targetUniChar,err);
                 break;
             }
         }
-        else{
+        иначе{
             *err =U_BUFFER_OVERFLOW_ERROR;
             break;
         }
@@ -2938,41 +2938,41 @@ UConverter_fromUnicode_ISO_2022_CN_OFFSETS_LOGIC(UConverterFromUnicodeArgs* args
     choiceCount = 0;
 
     /* check if the last codepoint of previous buffer was a lead surrogate*/
-    if((sourceChar = cnv->fromUChar32)!=0 && target< targetLimit) {
+    если((sourceChar = cnv->fromUChar32)!=0 && target< targetLimit) {
         goto getTrail;
     }
 
-    while( source < sourceLimit){
-        if(target < targetLimit){
+    пока( source < sourceLimit){
+        если(target < targetLimit){
 
             sourceChar  = *(source++);
             /*check if the char is a First surrogate*/
-             if(U16_IS_SURROGATE(sourceChar)) {
-                if(U16_IS_SURROGATE_LEAD(sourceChar)) {
+             если(U16_IS_SURROGATE(sourceChar)) {
+                если(U16_IS_SURROGATE_LEAD(sourceChar)) {
 getTrail:
                     /*look ahead to find the trail surrogate*/
-                    if(source < sourceLimit) {
+                    если(source < sourceLimit) {
                         /* test the following code unit */
                         char16_t trail = *source;
-                        if(U16_IS_TRAIL(trail)) {
+                        если(U16_IS_TRAIL(trail)) {
                             source++;
                             sourceChar=U16_GET_SUPPLEMENTARY(sourceChar, trail);
                             cnv->fromUChar32=0x00;
                             /* convert this supplementary code point */
                             /* exit this condition tree */
-                        } else {
+                        } иначе {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
                             *err=U_ILLEGAL_CHAR_FOUND;
                             cnv->fromUChar32=sourceChar;
                             break;
                         }
-                    } else {
+                    } иначе {
                         /* no more input */
                         cnv->fromUChar32=sourceChar;
                         break;
                     }
-                } else {
+                } иначе {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
                     *err=U_ILLEGAL_CHAR_FOUND;
@@ -2982,9 +2982,9 @@ getTrail:
             }
 
             /* do the conversion */
-            if(sourceChar <= 0x007f ){
+            если(sourceChar <= 0x007f ){
                 /* do not convert SO/SI/ESC */
-                if(IS_2022_CONTROL(sourceChar)) {
+                если(IS_2022_CONTROL(sourceChar)) {
                     /* callback(illegal) */
                     *err=U_ILLEGAL_CHAR_FOUND;
                     cnv->fromUChar32=sourceChar;
@@ -2992,48 +2992,48 @@ getTrail:
                 }
 
                 /* US-ASCII */
-                if(pFromU2022State->g == 0) {
+                если(pFromU2022State->g == 0) {
                     buffer[0] = static_cast<char>(sourceChar);
                     len = 1;
-                } else {
+                } иначе {
                     buffer[0] = UCNV_SI;
                     buffer[1] = static_cast<char>(sourceChar);
                     len = 2;
                     pFromU2022State->g = 0;
                     choiceCount = 0;
                 }
-                if(sourceChar == CR || sourceChar == LF) {
+                если(sourceChar == CR || sourceChar == LF) {
                     /* reset the state at the end of a line */
                     uprv_memset(pFromU2022State, 0, sizeof(ISO2022State));
                     choiceCount = 0;
                 }
             }
-            else{
+            иначе{
                 /* convert U+0080..U+10ffff */
                 int32_t i;
                 int8_t cs, g;
 
-                if(choiceCount == 0) {
+                если(choiceCount == 0) {
                     /* try the current SO/G1 converter first */
                     choices[0] = pFromU2022State->cs[1];
 
                     /* default to GB2312_1 if none is designated yet */
-                    if(choices[0] == 0) {
+                    если(choices[0] == 0) {
                         choices[0] = GB2312_1;
                     }
 
-                    if(converterData->version == 0) {
+                    если(converterData->version == 0) {
                         /* ISO-2022-CN */
 
                         /* try the other SO/G1 converter; a CNS_11643_1 lookup may result in any plane */
-                        if(choices[0] == GB2312_1) {
+                        если(choices[0] == GB2312_1) {
                             choices[1] = static_cast<int8_t>(CNS_11643_1);
-                        } else {
+                        } иначе {
                             choices[1] = static_cast<int8_t>(GB2312_1);
                         }
 
                         choiceCount = 2;
-                    } else if (converterData->version == 1) {
+                    } иначе если (converterData->version == 1) {
                         /* ISO-2022-CN-EXT */
 
                         /* try one of the other converters */
@@ -3053,7 +3053,7 @@ getTrail:
                         }
 
                         choiceCount = 3;
-                    } else {
+                    } иначе {
                         choices[0] = static_cast<int8_t>(CNS_11643_1);
                         choices[1] = static_cast<int8_t>(GB2312_1);
                     }
@@ -3074,39 +3074,39 @@ getTrail:
                  */
                 useFallback = cnv->useFallback;
 
-                for(i = 0; i < choiceCount && len <= 0; ++i) {
+                для(i = 0; i < choiceCount && len <= 0; ++i) {
                     int8_t cs0 = choices[i];
-                    if(cs0 > 0) {
+                    если(cs0 > 0) {
                         uint32_t value;
                         int32_t len2;
-                        if(cs0 >= CNS_11643_0) {
+                        если(cs0 >= CNS_11643_0) {
                             len2 = MBCS_FROM_UCHAR32_ISO2022(
                                         converterData->myConverterArray[CNS_11643],
                                         sourceChar,
                                         &value,
                                         useFallback,
                                         MBCS_OUTPUT_3);
-                            if(len2 == 3 || (len2 == -3 && len == 0)) {
+                            если(len2 == 3 || (len2 == -3 && len == 0)) {
                                 targetValue = value;
                                 cs = static_cast<int8_t>(CNS_11643_0 + (value >> 16) - 0x80);
-                                if(len2 >= 0) {
+                                если(len2 >= 0) {
                                     len = 2;
-                                } else {
+                                } иначе {
                                     len = -2;
                                     useFallback = false;
                                 }
-                                if(cs == CNS_11643_1) {
+                                если(cs == CNS_11643_1) {
                                     g = 1;
-                                } else if(cs == CNS_11643_2) {
+                                } иначе если(cs == CNS_11643_2) {
                                     g = 2;
-                                } else /* plane 3..7 */ if(converterData->version == 1) {
+                                } иначе /* plane 3..7 */ если(converterData->version == 1) {
                                     g = 3;
-                                } else {
+                                } иначе {
                                     /* ISO-2022-CN (without -EXT) does not support plane 3..7 */
                                     len = 0;
                                 }
                             }
-                        } else {
+                        } иначе {
                             /* GB2312_1 or ISO-IR-165 */
                             U_ASSERT(cs0<UCNV_2022_MAX_CONVERTERS);
                             len2 = MBCS_FROM_UCHAR32_ISO2022(
@@ -3115,7 +3115,7 @@ getTrail:
                                         &value,
                                         useFallback,
                                         MBCS_OUTPUT_2);
-                            if(len2 == 2 || (len2 == -2 && len == 0)) {
+                            если(len2 == 2 || (len2 == -2 && len == 0)) {
                                 targetValue = value;
                                 len = len2;
                                 cs = cs0;
@@ -3126,27 +3126,27 @@ getTrail:
                     }
                 }
 
-                if(len != 0) {
+                если(len != 0) {
                     len = 0; /* count output bytes; it must have been abs(len) == 2 */
 
                     /* write the designation sequence if necessary */
-                    if(cs != pFromU2022State->cs[g]) {
-                        if(cs < CNS_11643) {
+                    если(cs != pFromU2022State->cs[g]) {
+                        если(cs < CNS_11643) {
                             uprv_memcpy(buffer, escSeqCharsCN[cs], 4);
-                        } else {
+                        } иначе {
                             U_ASSERT(cs >= CNS_11643_1);
                             uprv_memcpy(buffer, escSeqCharsCN[CNS_11643 + (cs - CNS_11643_1)], 4);
                         }
                         len = 4;
                         pFromU2022State->cs[g] = cs;
-                        if(g == 1) {
+                        если(g == 1) {
                             /* changing the SO/G1 charset invalidates the choices[] */
                             choiceCount = 0;
                         }
                     }
 
                     /* write the shift sequence if necessary */
-                    if(g != pFromU2022State->g) {
+                    если(g != pFromU2022State->g) {
                         switch(g) {
                         case 1:
                             buffer[len++] = UCNV_SO;
@@ -3168,7 +3168,7 @@ getTrail:
                     /* write the two output bytes */
                     buffer[len++] = static_cast<char>(targetValue >> 8);
                     buffer[len++] = static_cast<char>(targetValue);
-                } else {
+                } иначе {
                     /* if we cannot find the character after checking all codepages
                      * then this is an error
                      */
@@ -3179,32 +3179,32 @@ getTrail:
             }
 
             /* output len>0 bytes in buffer[] */
-            if(len == 1) {
+            если(len == 1) {
                 *target++ = buffer[0];
-                if(offsets) {
+                если(offsets) {
                     *offsets++ = static_cast<int32_t>(source - args->source - 1); /* -1: known to be ASCII */
                 }
-            } else if(len == 2 && (target + 2) <= targetLimit) {
+            } иначе если(len == 2 && (target + 2) <= targetLimit) {
                 *target++ = buffer[0];
                 *target++ = buffer[1];
-                if(offsets) {
+                если(offsets) {
                     int32_t sourceIndex = static_cast<int32_t>(source - args->source - U16_LENGTH(sourceChar));
                     *offsets++ = sourceIndex;
                     *offsets++ = sourceIndex;
                 }
-            } else {
+            } иначе {
                 fromUWriteUInt8(
                     cnv,
                     buffer, len,
                     &target, reinterpret_cast<const char*>(targetLimit),
                     &offsets, static_cast<int32_t>(source - args->source - U16_LENGTH(sourceChar)),
                     err);
-                if(U_FAILURE(*err)) {
+                если(U_FAILURE(*err)) {
                     break;
                 }
             }
         } /* end if(myTargetIndex<myTargetLength) */
-        else{
+        иначе{
             *err =U_BUFFER_OVERFLOW_ERROR;
             break;
         }
@@ -3221,7 +3221,7 @@ getTrail:
      *   not in ASCII mode
      *   end of input and no truncated input
      */
-    if( U_SUCCESS(*err) &&
+    если( U_SUCCESS(*err) &&
         pFromU2022State->g!=0 &&
         args->flush && source>=sourceLimit && cnv->fromUChar32==0
     ) {
@@ -3239,14 +3239,14 @@ getTrail:
          * trail surrogate that is alone in the last buffer of the text stream
          */
         sourceIndex = static_cast<int32_t>(source - args->source);
-        if(sourceIndex>0) {
+        если(sourceIndex>0) {
             --sourceIndex;
-            if( U16_IS_TRAIL(args->source[sourceIndex]) &&
+            если( U16_IS_TRAIL(args->source[sourceIndex]) &&
                 (sourceIndex==0 || U16_IS_LEAD(args->source[sourceIndex-1]))
             ) {
                 --sourceIndex;
             }
-        } else {
+        } иначе {
             sourceIndex=-1;
         }
 
@@ -3279,10 +3279,10 @@ UConverter_toUnicode_ISO_2022_CN_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
     myData = static_cast<UConverterDataISO2022*>(args->converter->extraInfo);
     pToU2022State = &myData->toU2022State;
 
-    if(myData->key != 0) {
+    если(myData->key != 0) {
         /* continue with a partial escape sequence */
         goto escape;
-    } else if(args->converter->toULength == 1 && mySource < mySourceLimit && myTarget < args->targetLimit) {
+    } иначе если(args->converter->toULength == 1 && mySource < mySourceLimit && myTarget < args->targetLimit) {
         /* continue with a partial double-byte character */
         mySourceChar = args->converter->toUBytes[0];
         args->converter->toULength = 0;
@@ -3290,18 +3290,18 @@ UConverter_toUnicode_ISO_2022_CN_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
         goto getTrailByte;
     }
 
-    while(mySource < mySourceLimit){
+    пока(mySource < mySourceLimit){
 
         targetUniChar =missingCharMarker;
 
-        if(myTarget < args->targetLimit){
+        если(myTarget < args->targetLimit){
 
             mySourceChar = static_cast<unsigned char>(*mySource++);
 
             switch(mySourceChar){
             case UCNV_SI:
                 pToU2022State->g=0;
-                if (myData->isEmptySegment) {
+                если (myData->isEmptySegment) {
                     myData->isEmptySegment = false;	/* we are handling it, reset to avoid future spurious errors */
                     *err = U_ILLEGAL_ESCAPE_SEQUENCE;
                     args->converter->toUCallbackReason = UCNV_IRREGULAR;
@@ -3309,16 +3309,16 @@ UConverter_toUnicode_ISO_2022_CN_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
                     args->converter->toULength = 1;
                     args->target = myTarget;
                     args->source = mySource;
-                    return;
+                    вернуть;
                 }
                 continue;
 
             case UCNV_SO:
-                if(pToU2022State->cs[1] != 0) {
+                если(pToU2022State->cs[1] != 0) {
                     pToU2022State->g=1;
                     myData->isEmptySegment = true;	/* Begin a new segment, empty so far */
                     continue;
-                } else {
+                } иначе {
                     /* illegal to have SO before a matching designator */
                     myData->isEmptySegment = false;	/* Handling a different error, reset this to avoid future spurious errs */
                     break;
@@ -3335,7 +3335,7 @@ escape:
                         mySourceLimit, ISO_2022_CN,err);
 
                     /* After SO there must be at least one character before a designator (designator error handled separately) */
-                    if(myData->key==0 && U_SUCCESS(*err) && myData->isEmptySegment) {
+                    если(myData->key==0 && U_SUCCESS(*err) && myData->isEmptySegment) {
                         *err = U_ILLEGAL_ESCAPE_SEQUENCE;
                         args->converter->toUCallbackReason = UCNV_IRREGULAR;
                         args->converter->toULength = static_cast<int8_t>(toULengthBefore + (mySource - mySourceBefore));
@@ -3343,11 +3343,11 @@ escape:
                 }
 
                 /* invalid or illegal escape sequence */
-                if(U_FAILURE(*err)){
+                если(U_FAILURE(*err)){
                     args->target = myTarget;
                     args->source = mySource;
                     myData->isEmptySegment = false;	/* Reset to avoid future spurious errors */
-                    return;
+                    вернуть;
                 }
                 continue;
 
@@ -3360,12 +3360,12 @@ escape:
             default:
                 /* convert one or two bytes */
                 myData->isEmptySegment = false;
-                if(pToU2022State->g != 0) {
-                    if(mySource < mySourceLimit) {
+                если(pToU2022State->g != 0) {
+                    если(mySource < mySourceLimit) {
                         UConverterSharedData *cnv;
                         StateEnum tempState;
                         int32_t tempBufLen;
-                        int leadIsOk, trailIsOk;
+                        целое leadIsOk, trailIsOk;
                         uint8_t trailByte;
 getTrailByte:
                         trailByte = static_cast<uint8_t>(*mySource);
@@ -3381,17 +3381,17 @@ getTrailByte:
                          */
                         leadIsOk = static_cast<uint8_t>(mySourceChar - 0x21) <= (0x7e - 0x21);
                         trailIsOk = static_cast<uint8_t>(trailByte - 0x21) <= (0x7e - 0x21);
-                        if (leadIsOk && trailIsOk) {
+                        если (leadIsOk && trailIsOk) {
                             ++mySource;
                             tempState = static_cast<StateEnum>(pToU2022State->cs[pToU2022State->g]);
-                            if(tempState >= CNS_11643_0) {
+                            если(tempState >= CNS_11643_0) {
                                 cnv = myData->myConverterArray[CNS_11643];
                                 tempBuf[0] = static_cast<char>(0x80 + (tempState - CNS_11643_0));
                                 tempBuf[1] = static_cast<char>(mySourceChar);
                                 tempBuf[2] = static_cast<char>(trailByte);
                                 tempBufLen = 3;
 
-                            }else{
+                            }иначе{
                                 U_ASSERT(tempState<UCNV_2022_MAX_CONVERTERS);
                                 cnv = myData->myConverterArray[tempState];
                                 tempBuf[0] = static_cast<char>(mySourceChar);
@@ -3400,62 +3400,62 @@ getTrailByte:
                             }
                             targetUniChar = ucnv_MBCSSimpleGetNextUChar(cnv, tempBuf, tempBufLen, false);
                             mySourceChar = (mySourceChar << 8) | trailByte;
-                        } else if (!(trailIsOk || IS_2022_CONTROL(trailByte))) {
+                        } иначе если (!(trailIsOk || IS_2022_CONTROL(trailByte))) {
                             /* report a pair of illegal bytes if the second byte is not a DBCS starter */
                             ++mySource;
                             /* add another bit so that the code below writes 2 bytes in case of error */
                             mySourceChar = 0x10000 | (mySourceChar << 8) | trailByte;
                         }
-                        if(pToU2022State->g>=2) {
+                        если(pToU2022State->g>=2) {
                             /* return from a single-shift state to the previous one */
                             pToU2022State->g=pToU2022State->prevG;
                         }
-                    } else {
+                    } иначе {
                         args->converter->toUBytes[0] = static_cast<uint8_t>(mySourceChar);
                         args->converter->toULength = 1;
                         goto endloop;
                     }
                 }
-                else{
-                    if(mySourceChar <= 0x7f) {
+                иначе{
+                    если(mySourceChar <= 0x7f) {
                         targetUniChar = static_cast<char16_t>(mySourceChar);
                     }
                 }
                 break;
             }
-            if(targetUniChar < (missingCharMarker-1/*0xfffe*/)){
-                if(args->offsets){
+            если(targetUniChar < (missingCharMarker-1/*0xfffe*/)){
+                если(args->offsets){
                     args->offsets[myTarget - args->target] = static_cast<int32_t>(mySource - args->source - (mySourceChar <= 0xff ? 1 : 2));
                 }
                 *(myTarget++) = static_cast<char16_t>(targetUniChar);
             }
-            else if(targetUniChar > missingCharMarker){
+            иначе если(targetUniChar > missingCharMarker){
                 /* disassemble the surrogate pair and write to output*/
                 targetUniChar-=0x0010000;
                 *myTarget = static_cast<char16_t>(0xd800 + static_cast<char16_t>(targetUniChar >> 10));
-                if(args->offsets){
+                если(args->offsets){
                     args->offsets[myTarget - args->target] = static_cast<int32_t>(mySource - args->source - (mySourceChar <= 0xff ? 1 : 2));
                 }
                 ++myTarget;
-                if(myTarget< args->targetLimit){
+                если(myTarget< args->targetLimit){
                     *myTarget = static_cast<char16_t>(0xdc00 + static_cast<char16_t>(targetUniChar & 0x3ff));
-                    if(args->offsets){
+                    если(args->offsets){
                         args->offsets[myTarget - args->target] = static_cast<int32_t>(mySource - args->source - (mySourceChar <= 0xff ? 1 : 2));
                     }
                     ++myTarget;
-                }else{
+                }иначе{
                     args->converter->UCharErrorBuffer[args->converter->UCharErrorBufferLength++]=
                                     static_cast<char16_t>(0xdc00 + static_cast<char16_t>(targetUniChar & 0x3ff));
                 }
 
             }
-            else{
+            иначе{
                 /* Call the callback function*/
                 toUnicodeCallback(args->converter,mySourceChar,targetUniChar,err);
                 break;
             }
         }
-        else{
+        иначе{
             *err =U_BUFFER_OVERFLOW_ERROR;
             break;
         }
@@ -3484,14 +3484,14 @@ _ISO_2022_WriteSub(UConverterFromUnicodeArgs *args, int32_t offsetIndex, UErrorC
         {
             int8_t cs;
 
-            if(pFromU2022State->g == 1) {
+            если(pFromU2022State->g == 1) {
                 /* JIS7: switch from G1 to G0 */
                 pFromU2022State->g = 0;
                 *p++ = UCNV_SI;
             }
 
             cs = pFromU2022State->cs[0];
-            if(cs != ASCII && cs != JISX201) {
+            если(cs != ASCII && cs != JISX201) {
                 /* not in ASCII or JIS X 0201: switch to ASCII */
                 pFromU2022State->cs[0] = static_cast<int8_t>(ASCII);
                 *p++ = '\x1b';
@@ -3503,7 +3503,7 @@ _ISO_2022_WriteSub(UConverterFromUnicodeArgs *args, int32_t offsetIndex, UErrorC
             break;
         }
     case 'c':
-        if(pFromU2022State->g != 0) {
+        если(pFromU2022State->g != 0) {
             /* not in ASCII mode: switch to ASCII */
             pFromU2022State->g = 0;
             *p++ = UCNV_SI;
@@ -3511,16 +3511,16 @@ _ISO_2022_WriteSub(UConverterFromUnicodeArgs *args, int32_t offsetIndex, UErrorC
         *p++ = subchar[0];
         break;
     case 'k':
-        if(myConverterData->version == 0) {
-            if(length == 1) {
-                if(args->converter->fromUnicodeStatus) {
+        если(myConverterData->version == 0) {
+            если(length == 1) {
+                если(args->converter->fromUnicodeStatus) {
                     /* in DBCS mode: switch to SBCS */
                     args->converter->fromUnicodeStatus = 0;
                     *p++ = UCNV_SI;
                 }
                 *p++ = subchar[0];
-            } else /* length == 2*/ {
-                if(!args->converter->fromUnicodeStatus) {
+            } иначе /* length == 2*/ {
+                если(!args->converter->fromUnicodeStatus) {
                     /* in SBCS mode: switch to DBCS */
                     args->converter->fromUnicodeStatus = 1;
                     *p++ = UCNV_SO;
@@ -3529,7 +3529,7 @@ _ISO_2022_WriteSub(UConverterFromUnicodeArgs *args, int32_t offsetIndex, UErrorC
                 *p++ = subchar[1];
             }
             break;
-        } else {
+        } иначе {
             /* save the subconverter's substitution string */
             uint8_t *currentSubChars = myConverterData->currentConverter->subChars;
             int8_t currentSubCharLen = myConverterData->currentConverter->subCharLen;
@@ -3549,8 +3549,8 @@ _ISO_2022_WriteSub(UConverterFromUnicodeArgs *args, int32_t offsetIndex, UErrorC
             myConverterData->currentConverter->subChars = currentSubChars;
             myConverterData->currentConverter->subCharLen = currentSubCharLen;
 
-            if(*err == U_BUFFER_OVERFLOW_ERROR) {
-                if(myConverterData->currentConverter->charErrorBufferLength > 0) {
+            если(*err == U_BUFFER_OVERFLOW_ERROR) {
+                если(myConverterData->currentConverter->charErrorBufferLength > 0) {
                     uprv_memcpy(
                         cnv->charErrorBuffer,
                         myConverterData->currentConverter->charErrorBuffer,
@@ -3559,7 +3559,7 @@ _ISO_2022_WriteSub(UConverterFromUnicodeArgs *args, int32_t offsetIndex, UErrorC
                 cnv->charErrorBufferLength = myConverterData->currentConverter->charErrorBufferLength;
                 myConverterData->currentConverter->charErrorBufferLength = 0;
             }
-            return;
+            вернуть;
         }
     default:
         /* not expected */
@@ -3594,13 +3594,13 @@ _ISO_2022_SafeClone(
     UConverterDataISO2022 *cnvData;
     int32_t i, size;
 
-    if (U_FAILURE(*status)){
-        return nullptr;
+    если (U_FAILURE(*status)){
+        вернуть nullptr;
     }
 
-    if (*pBufferSize == 0) { /* 'preflighting' request - set needed size into *pBufferSize */
+    если (*pBufferSize == 0) { /* 'preflighting' request - set needed size into *pBufferSize */
         *pBufferSize = (int32_t)sizeof(struct cloneStruct);
-        return nullptr;
+        вернуть nullptr;
     }
 
     cnvData = (UConverterDataISO2022 *)cnv->extraInfo;
@@ -3614,24 +3614,24 @@ _ISO_2022_SafeClone(
 
     /* share the subconverters */
 
-    if(cnvData->currentConverter != nullptr) {
+    если(cnvData->currentConverter != nullptr) {
         size = (int32_t)sizeof(UConverter);
         localClone->mydata.currentConverter =
             ucnv_safeClone(cnvData->currentConverter,
                             &localClone->currentConverter,
                             &size, status);
-        if(U_FAILURE(*status)) {
-            return nullptr;
+        если(U_FAILURE(*status)) {
+            вернуть nullptr;
         }
     }
 
-    for(i=0; i<UCNV_2022_MAX_CONVERTERS; ++i) {
-        if(cnvData->myConverterArray[i] != nullptr) {
+    для(i=0; i<UCNV_2022_MAX_CONVERTERS; ++i) {
+        если(cnvData->myConverterArray[i] != nullptr) {
             ucnv_incrementRefCount(cnvData->myConverterArray[i]);
         }
     }
 
-    return &localClone->cnv;
+    вернуть &localClone->cnv;
 }
 
 U_CDECL_END
@@ -3645,15 +3645,15 @@ _ISO_2022_GetUnicodeSet(const UConverter *cnv,
     int32_t i;
     UConverterDataISO2022* cnvData;
 
-    if (U_FAILURE(*pErrorCode)) {
-        return;
+    если (U_FAILURE(*pErrorCode)) {
+        вернуть;
     }
 #ifdef U_ENABLE_GENERIC_ISO_2022
-    if (cnv->sharedData == &_ISO2022Data) {
+    если (cnv->sharedData == &_ISO2022Data) {
         /* We use UTF-8 in this case */
         sa->addRange(sa->set, 0, 0xd7FF);
         sa->addRange(sa->set, 0xE000, 0x10FFFF);
-        return;
+        вернуть;
     }
 #endif
 
@@ -3665,14 +3665,14 @@ _ISO_2022_GetUnicodeSet(const UConverter *cnv,
         /* include JIS X 0201 which is hardcoded */
         sa->add(sa->set, 0xa5);
         sa->add(sa->set, 0x203e);
-        if(jpCharsetMasks[cnvData->version]&CSM(ISO8859_1)) {
+        если(jpCharsetMasks[cnvData->version]&CSM(ISO8859_1)) {
             /* include Latin-1 for some variants of JP */
             sa->addRange(sa->set, 0, 0xff);
-        } else {
+        } иначе {
             /* include ASCII for JP */
             sa->addRange(sa->set, 0, 0x7f);
         }
-        if(cnvData->version==3 || cnvData->version==4 || which==UCNV_ROUNDTRIP_AND_FALLBACK_SET) {
+        если(cnvData->version==3 || cnvData->version==4 || which==UCNV_ROUNDTRIP_AND_FALLBACK_SET) {
             /*
              * Do not test (jpCharsetMasks[cnvData->version]&CSM(HWKANA_7BIT))!=0
              * because the bit is on for all JP versions although only versions 3 & 4 (JIS7 & JIS8)
@@ -3690,7 +3690,7 @@ _ISO_2022_GetUnicodeSet(const UConverter *cnv,
             sa->addRange(sa->set, HWKANA_START, HWKANA_END);
         }
         break;
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#если !UCONFIG_ONLY_HTML_CONVERSION
     case 'c':
     case 'z':
         /* include ASCII for CN */
@@ -3707,8 +3707,8 @@ _ISO_2022_GetUnicodeSet(const UConverter *cnv,
         break;
     }
 
-#if 0  /* Replaced by ucnv_MBCSGetFilteredUnicodeSetForUnicode() until we implement ucnv_getUnicodeSet() with reverse fallbacks. */
-            if( (cnvData->locale[0]=='c' || cnvData->locale[0]=='z') &&
+#если 0  /* Replaced by ucnv_MBCSGetFilteredUnicodeSetForUnicode() until we implement ucnv_getUnicodeSet() with reverse fallbacks. */
+            если( (cnvData->locale[0]=='c' || cnvData->locale[0]=='z') &&
                 cnvData->version==0 && i==CNS_11643
             ) {
                 /* special handling for non-EXT ISO-2022-CN: add only code points for CNS planes 1 and 2 */
@@ -3720,17 +3720,17 @@ _ISO_2022_GetUnicodeSet(const UConverter *cnv,
             }
 #endif
 
-    for (i=0; i<UCNV_2022_MAX_CONVERTERS; i++) {
+    для (i=0; i<UCNV_2022_MAX_CONVERTERS; i++) {
         UConverterSetFilter filter;
-        if(cnvData->myConverterArray[i]!=nullptr) {
-            if(cnvData->locale[0]=='j' && i==JISX208) {
+        если(cnvData->myConverterArray[i]!=nullptr) {
+            если(cnvData->locale[0]=='j' && i==JISX208) {
                 /*
                  * Only add code points that map to Shift-JIS codes
                  * corresponding to JIS X 0208.
                  */
                 filter=UCNV_SET_FILTER_SJIS;
-#if !UCONFIG_ONLY_HTML_CONVERSION
-            } else if( (cnvData->locale[0]=='c' || cnvData->locale[0]=='z') &&
+#если !UCONFIG_ONLY_HTML_CONVERSION
+            } иначе если( (cnvData->locale[0]=='c' || cnvData->locale[0]=='z') &&
                        cnvData->version==0 && i==CNS_11643) {
                 /*
                  * Version-specific for CN:
@@ -3740,14 +3740,14 @@ _ISO_2022_GetUnicodeSet(const UConverter *cnv,
                  * The two versions create different Unicode sets.
                  */
                 filter=UCNV_SET_FILTER_2022_CN;
-            } else if(i==KSC5601) {
+            } иначе если(i==KSC5601) {
                 /*
                  * Some of the KSC 5601 tables (convrtrs.txt has this aliases on multiple tables)
                  * are broader than GR94.
                  */
                 filter=UCNV_SET_FILTER_GR94DBCS;
 #endif
-            } else {
+            } иначе {
                 filter=UCNV_SET_FILTER_NONE;
             }
             ucnv_MBCSGetFilteredUnicodeSetForUnicode(cnvData->myConverterArray[i], sa, which, filter, pErrorCode);
@@ -3782,7 +3782,7 @@ static const UConverterImpl _ISO2022Impl={
     T_UConverter_toUnicode_ISO_2022_OFFSETS_LOGIC,
     ucnv_fromUnicode_UTF8,
     ucnv_fromUnicode_UTF8_OFFSETS_LOGIC,
-#else
+#иначе
     nullptr,
     nullptr,
     nullptr,
@@ -3868,7 +3868,7 @@ const UConverterSharedData _ISO2022JPData=
 
 }  // namespace
 
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#если !UCONFIG_ONLY_HTML_CONVERSION
 /************* KR ***************/
 static const UConverterImpl _ISO2022KRImpl={
     UCNV_ISO_2022,

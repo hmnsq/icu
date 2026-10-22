@@ -19,7 +19,7 @@
 #include "unicode/uscript.h"
 #include "unicode/udisplaycontext.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#если U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
@@ -54,7 +54,7 @@ struct ULocaleDisplayNames;
  */
 typedef struct ULocaleDisplayNames ULocaleDisplayNames;  
 
-#if !UCONFIG_NO_FORMATTING
+#если !UCONFIG_NO_FORMATTING
 
 /**
  * Returns an instance of LocaleDisplayNames that returns names
@@ -81,7 +81,7 @@ uldn_open(const char * locale,
 U_CAPI void U_EXPORT2
 uldn_close(ULocaleDisplayNames *ldn);
 
-#if U_SHOW_CPLUSPLUS_API
+#если U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

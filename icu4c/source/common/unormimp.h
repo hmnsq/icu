@@ -21,7 +21,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#если !UCONFIG_NO_NORMALIZATION
 
 #include "udataswp.h"
 

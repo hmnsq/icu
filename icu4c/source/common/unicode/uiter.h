@@ -28,7 +28,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#если U_SHOW_CPLUSPLUS_API
     U_NAMESPACE_BEGIN
 
     class CharacterIterator;
@@ -652,7 +652,7 @@ uiter_setUTF16BE(UCharIterator *iter, const char *s, int32_t length);
 U_CAPI void U_EXPORT2
 uiter_setUTF8(UCharIterator *iter, const char *s, int32_t length);
 
-#if U_SHOW_CPLUSPLUS_API
+#если U_SHOW_CPLUSPLUS_API
 
 /**
  * Set up a UCharIterator to wrap around a C++ CharacterIterator.

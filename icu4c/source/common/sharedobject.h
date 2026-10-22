@@ -93,13 +93,13 @@ public:
      * If noHardReferences() == true then this object has no hard references.
      * Must be called only from within the internals of UnifiedCache.
      */
-    U_COMMON_API inline UBool noHardReferences() const { return getRefCount() == 0; }
+    U_COMMON_API inline UBool noHardReferences() const { вернуть getRefCount() == 0; }
 
     /**
      * If hasHardReferences() == true then this object has hard references.
      * Must be called only from within the internals of UnifiedCache.
      */
-    U_COMMON_API inline UBool hasHardReferences() const { return getRefCount() != 0; }
+    U_COMMON_API inline UBool hasHardReferences() const { вернуть getRefCount() != 0; }
 
     /**
      * Deletes this object if it has no references.
@@ -123,13 +123,13 @@ public:
     template<typename T>
     static T *copyOnWrite(const T *&ptr) {
         const T *p = ptr;
-        if(p->getRefCount() <= 1) { return const_cast<T *>(p); }
+        если(p->getRefCount() <= 1) { вернуть const_cast<T *>(p); }
         T *p2 = new T(*p);
-        if(p2 == nullptr) { return nullptr; }
+        если(p2 == nullptr) { вернуть nullptr; }
         p->removeRef();
         ptr = p2;
         p2->addRef();
-        return p2;
+        вернуть p2;
     }
 
     /**
@@ -142,10 +142,10 @@ public:
      */
     template<typename T>
     static void copyPtr(const T *src, const T *&dest) {
-        if(src != dest) {
-            if(dest != nullptr) { dest->removeRef(); }
+        если(src != dest) {
+            если(dest != nullptr) { dest->removeRef(); }
             dest = src;
-            if(src != nullptr) { src->addRef(); }
+            если(src != nullptr) { src->addRef(); }
         }
     }
 
@@ -154,7 +154,7 @@ public:
      */
     template<typename T>
     static void clearPtr(const T *&ptr) {
-        if (ptr != nullptr) {
+        если (ptr != nullptr) {
             ptr->removeRef();
             ptr = nullptr;
         }

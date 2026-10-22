@@ -31,39 +31,39 @@ int32_t ICU_Utility::parseInteger(const UnicodeString& rule, int32_t& pos, int32
     int32_t p = pos;
     int8_t radix = 10;
 
-    if (p < limit && rule.charAt(p) == 48 /*0*/) {
-        if (p+1 < limit && (rule.charAt(p+1) == 0x78 /*x*/ || rule.charAt(p+1) == 0x58 /*X*/)) {
+    если (p < limit && rule.charAt(p) == 48 /*0*/) {
+        если (p+1 < limit && (rule.charAt(p+1) == 0x78 /*x*/ || rule.charAt(p+1) == 0x58 /*X*/)) {
             p += 2;
             radix = 16;
         }
-        else {
+        иначе {
             p++;
             count = 1;
             radix = 8;
         }
     }
 
-    while (p < limit) {
+    пока (p < limit) {
         int32_t d = u_digit(rule.charAt(p++), radix);
-        if (d < 0) {
+        если (d < 0) {
             --p;
             break;
         }
         ++count;
         int32_t v = (value * radix) + d;
-        if (v <= value) {
+        если (v <= value) {
             // If there are too many input digits, at some point
             // the value will go negative, e.g., if we have seen
             // "0x8000000" already and there is another '0', when
             // we parse the next 0 the value will go negative.
-            return 0;
+            вернуть 0;
         }
         value = v;
     }
-    if (count > 0) {
+    если (count > 0) {
         pos = p;
     }
-    return value;
+    вернуть value;
 }
 
 /**
@@ -90,17 +90,17 @@ int32_t ICU_Utility::parsePattern(const UnicodeString& rule, int32_t pos, int32_
     // TODO Update this to handle surrogates
     int32_t p;
     int32_t intCount = 0; // number of integers parsed
-    for (int32_t i=0; i<pattern.length(); ++i) {
+    для (int32_t i=0; i<pattern.length(); ++i) {
         char16_t cpat = pattern.charAt(i);
         char16_t c;
         switch (cpat) {
         case 32 /*' '*/:
-            if (pos >= limit) {
-                return -1;
+            если (pos >= limit) {
+                вернуть -1;
             }
             c = rule.charAt(pos++);
-            if (!PatternProps::isWhiteSpace(c)) {
-                return -1;
+            если (!PatternProps::isWhiteSpace(c)) {
+                вернуть -1;
             }
             // FALL THROUGH to skipWhitespace
             U_FALLTHROUGH;
@@ -110,24 +110,24 @@ int32_t ICU_Utility::parsePattern(const UnicodeString& rule, int32_t pos, int32_
         case 35 /*'#'*/:
             p = pos;
             parsedInts[intCount++] = parseInteger(rule, p, limit);
-            if (p == pos) {
+            если (p == pos) {
                 // Syntax error; failed to parse integer
-                return -1;
+                вернуть -1;
             }
             pos = p;
             break;
         default:
-            if (pos >= limit) {
-                return -1;
+            если (pos >= limit) {
+                вернуть -1;
             }
             c = static_cast<char16_t>(u_tolower(rule.charAt(pos++)));
-            if (c != cpat) {
-                return -1;
+            если (c != cpat) {
+                вернуть -1;
             }
             break;
         }
     }
-    return pos;
+    вернуть pos;
 }
 
 /**
@@ -146,27 +146,27 @@ int32_t ICU_Utility::parsePattern(const UnicodeString& rule, int32_t pos, int32_
 UnicodeString ICU_Utility::parseUnicodeIdentifier(const UnicodeString& str, int32_t& pos) {
     // assert(pos < str.length());
     UnicodeString buf;
-    int p = pos;
-    while (p < str.length()) {
+    целое p = pos;
+    пока (p < str.length()) {
         UChar32 ch = str.char32At(p);
-        if (buf.length() == 0) {
-            if (u_isIDStart(ch)) {
+        если (buf.length() == 0) {
+            если (u_isIDStart(ch)) {
                 buf.append(ch);
-            } else {
+            } иначе {
                 buf.truncate(0);
-                return buf;
+                вернуть buf;
             }
-        } else {
-            if (u_isIDPart(ch)) {
+        } иначе {
+            если (u_isIDPart(ch)) {
                 buf.append(ch);
-            } else {
+            } иначе {
                 break;
             }
         }
         p += U16_LENGTH(ch);
     }
     pos = p;
-    return buf;
+    вернуть buf;
 }
 
 /**
@@ -192,24 +192,24 @@ int32_t ICU_Utility::parseNumber(const UnicodeString& text,
     // assert(radix <= 36);
     int32_t n = 0;
     int32_t p = pos;
-    while (p < text.length()) {
+    пока (p < text.length()) {
         UChar32 ch = text.char32At(p);
         int32_t d = u_digit(ch, radix);
-        if (d < 0) {
+        если (d < 0) {
             break;
         }
         int64_t update = radix*static_cast<int64_t>(n) + d;
-        if (update > INT32_MAX) {
-            return -1;
+        если (update > INT32_MAX) {
+            вернуть -1;
         }
         n = static_cast<int32_t>(update);
         ++p;
     }
-    if (p == pos) {
-        return -1;
+    если (p == pos) {
+        вернуть -1;
     }
     pos = p;
-    return n;
+    вернуть n;
 }
 
 U_NAMESPACE_END

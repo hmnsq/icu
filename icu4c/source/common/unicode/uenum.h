@@ -21,7 +21,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#если U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 
 U_NAMESPACE_BEGIN
@@ -53,7 +53,7 @@ typedef struct UEnumeration UEnumeration;
 U_CAPI void U_EXPORT2
 uenum_close(UEnumeration* en);
 
-#if U_SHOW_CPLUSPLUS_API
+#если U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -160,7 +160,7 @@ uenum_next(UEnumeration* en U_LIFETIME_BOUND,
 U_CAPI void U_EXPORT2
 uenum_reset(UEnumeration* en, UErrorCode* status);
 
-#if U_SHOW_CPLUSPLUS_API
+#если U_SHOW_CPLUSPLUS_API
 
 /**
  * Given a StringEnumeration, wrap it in a UEnumeration.  The

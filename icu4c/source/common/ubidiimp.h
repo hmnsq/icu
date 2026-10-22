@@ -410,46 +410,46 @@ typedef union {
 
 /* Macros for initial checks at function entry */
 #define RETURN_IF_NULL_OR_FAILING_ERRCODE(pErrcode, retvalue) UPRV_BLOCK_MACRO_BEGIN { \
-    if((pErrcode)==NULL || U_FAILURE(*pErrcode)) return retvalue; \
+    если((pErrcode)==NULL || U_FAILURE(*pErrcode)) вернуть retvalue; \
 } UPRV_BLOCK_MACRO_END
 #define RETURN_IF_NOT_VALID_PARA(bidi, errcode, retvalue) UPRV_BLOCK_MACRO_BEGIN { \
-    if(!IS_VALID_PARA(bidi)) { \
+    если(!IS_VALID_PARA(bidi)) { \
         errcode=U_INVALID_STATE_ERROR; \
-        return retvalue; \
+        вернуть retvalue; \
     } \
 } UPRV_BLOCK_MACRO_END
 #define RETURN_IF_NOT_VALID_PARA_OR_LINE(bidi, errcode, retvalue) UPRV_BLOCK_MACRO_BEGIN { \
-    if(!IS_VALID_PARA_OR_LINE(bidi)) { \
+    если(!IS_VALID_PARA_OR_LINE(bidi)) { \
         errcode=U_INVALID_STATE_ERROR; \
-        return retvalue; \
+        вернуть retvalue; \
     } \
 } UPRV_BLOCK_MACRO_END
 #define RETURN_IF_BAD_RANGE(arg, start, limit, errcode, retvalue) UPRV_BLOCK_MACRO_BEGIN { \
-    if((arg)<(start) || (arg)>=(limit)) { \
+    если((arg)<(start) || (arg)>=(limit)) { \
         (errcode)=U_ILLEGAL_ARGUMENT_ERROR; \
-        return retvalue; \
+        вернуть retvalue; \
     } \
 } UPRV_BLOCK_MACRO_END
 
 #define RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(pErrcode) UPRV_BLOCK_MACRO_BEGIN { \
-    if((pErrcode)==NULL || U_FAILURE(*pErrcode)) return; \
+    если((pErrcode)==NULL || U_FAILURE(*pErrcode)) вернуть; \
 } UPRV_BLOCK_MACRO_END
 #define RETURN_VOID_IF_NOT_VALID_PARA(bidi, errcode) UPRV_BLOCK_MACRO_BEGIN { \
-    if(!IS_VALID_PARA(bidi)) { \
+    если(!IS_VALID_PARA(bidi)) { \
         errcode=U_INVALID_STATE_ERROR; \
-        return; \
+        вернуть; \
     } \
 } UPRV_BLOCK_MACRO_END
 #define RETURN_VOID_IF_NOT_VALID_PARA_OR_LINE(bidi, errcode) UPRV_BLOCK_MACRO_BEGIN { \
-    if(!IS_VALID_PARA_OR_LINE(bidi)) { \
+    если(!IS_VALID_PARA_OR_LINE(bidi)) { \
         errcode=U_INVALID_STATE_ERROR; \
-        return; \
+        вернуть; \
     } \
 } UPRV_BLOCK_MACRO_END
 #define RETURN_VOID_IF_BAD_RANGE(arg, start, limit, errcode) UPRV_BLOCK_MACRO_BEGIN { \
-    if((arg)<(start) || (arg)>=(limit)) { \
+    если((arg)<(start) || (arg)>=(limit)) { \
         (errcode)=U_ILLEGAL_ARGUMENT_ERROR; \
-        return; \
+        вернуть; \
     } \
 } UPRV_BLOCK_MACRO_END
 

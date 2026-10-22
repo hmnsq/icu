@@ -10,7 +10,7 @@
  */
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#если !UCONFIG_NO_SERVICE
 
 #include "unicode/resbund.h"
 #include "uresimp.h"
@@ -46,42 +46,42 @@ LocaleKeyFactory::~LocaleKeyFactory() {
 
 UObject*
 LocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const {
-    if (handlesKey(key, status)) {
+    если (handlesKey(key, status)) {
         const LocaleKey& lkey = static_cast<const LocaleKey&>(key);
         int32_t kind = lkey.kind();
         Locale loc;
         lkey.currentLocale(loc);
 
-        return handleCreate(loc, kind, service, status);
+        вернуть handleCreate(loc, kind, service, status);
     }
-    return nullptr;
+    вернуть nullptr;
 }
 
 UBool
 LocaleKeyFactory::handlesKey(const ICUServiceKey& key, UErrorCode& status) const {
     const Hashtable* supported = getSupportedIDs(status);
-    if (supported) {
+    если (supported) {
         UnicodeString id;
         key.currentID(id);
-        return supported->get(id) != nullptr;
+        вернуть supported->get(id) != nullptr;
     }
-    return false;
+    вернуть false;
 }
 
 void
 LocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const {
     const Hashtable* supported = getSupportedIDs(status);
-    if (supported) {
+    если (supported) {
         UBool visible = (_coverage & 0x1) == 0;
         const UHashElement* elem = nullptr;
         int32_t pos = UHASH_FIRST;
-        while ((elem = supported->nextElement(pos)) != nullptr) {
+        пока ((elem = supported->nextElement(pos)) != nullptr) {
             const UnicodeString& id = *static_cast<const UnicodeString*>(elem->key.pointer);
-            if (!visible) {
+            если (!visible) {
                 result.remove(id);
-            } else {
+            } иначе {
                 result.put(id, (void*)this, status); // this is dummy non-void marker used for set semantics
-                if (U_FAILURE(status)) {
+                если (U_FAILURE(status)) {
                     break;
                 }
             }
@@ -91,17 +91,17 @@ LocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const 
 
 UnicodeString&
 LocaleKeyFactory::getDisplayName(const UnicodeString& id, const Locale& locale, UnicodeString& result) const {
-    if ((_coverage & 0x1) == 0) {
+    если ((_coverage & 0x1) == 0) {
         //UErrorCode status = U_ZERO_ERROR;
         // assume if this is called on us, we support some fallback of this id
         // if (isSupportedID(id, status)) {
             Locale loc;
             LocaleUtility::initLocaleFromName(id, loc);
-            return loc.getDisplayName(locale, result);
+            вернуть loc.getDisplayName(locale, result);
         // }
     }
     result.setToBogus();
-    return result;
+    вернуть result;
 }
 
 UObject*
@@ -109,7 +109,7 @@ LocaleKeyFactory::handleCreate(const Locale& /* loc */,
                    int32_t /* kind */, 
                    const ICUService* /* service */, 
                    UErrorCode& /* status */) const {
-    return nullptr;
+    вернуть nullptr;
 }
 
 //UBool
@@ -120,7 +120,7 @@ LocaleKeyFactory::handleCreate(const Locale& /* loc */,
 
 const Hashtable*
 LocaleKeyFactory::getSupportedIDs(UErrorCode& /* status */) const {
-    return nullptr;
+    вернуть nullptr;
 }
 
 #ifdef SERVICE_DEBUG
@@ -132,13 +132,13 @@ LocaleKeyFactory::debug(UnicodeString& result) const
     result.append(_name);
     result.append((UnicodeString)", coverage: ");
     result.append(_coverage);
-    return result;
+    вернуть result;
 }
 
 UnicodeString&
 LocaleKeyFactory::debugClass(UnicodeString& result) const
 {
-  return result.append((UnicodeString)"LocaleKeyFactory");
+  вернуть result.append((UnicodeString)"LocaleKeyFactory");
 }
 #endif
 

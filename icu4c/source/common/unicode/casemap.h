@@ -9,7 +9,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#если U_SHOW_CPLUSPLUS_API
 
 #include "unicode/stringpiece.h"
 #include "unicode/uobject.h"
@@ -104,7 +104,7 @@ public:
             char16_t *dest, int32_t destCapacity, Edits *edits,
             UErrorCode &errorCode);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#если !UCONFIG_NO_BREAK_ITERATION
 
     /**
      * Titlecases a UTF-16 string and optionally records edits.
@@ -249,7 +249,7 @@ public:
             StringPiece src, ByteSink &sink, Edits *edits,
             UErrorCode &errorCode);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#если !UCONFIG_NO_BREAK_ITERATION
 
     /**
      * Titlecases a UTF-8 string and optionally records edits.
@@ -392,7 +392,7 @@ public:
             char *dest, int32_t destCapacity, Edits *edits,
             UErrorCode &errorCode);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#если !UCONFIG_NO_BREAK_ITERATION
 
     /**
      * Titlecases a UTF-8 string and optionally records edits.

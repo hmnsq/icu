@@ -393,9 +393,9 @@ enum {
 #define UCASE_MAX_DELTA     0xff
 #define UCASE_MIN_DELTA     (-UCASE_MAX_DELTA-1)
 
-#if U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
+#если U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
 #   define UCASE_GET_DELTA(props) ((int16_t)(props)>>UCASE_DELTA_SHIFT)
-#else
+#иначе
 #   define UCASE_GET_DELTA(props) (int16_t)(((props)&0x8000) ? (((props)>>UCASE_DELTA_SHIFT)|0xfe00) : ((uint16_t)(props)>>UCASE_DELTA_SHIFT))
 #endif
 

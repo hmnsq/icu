@@ -28,8 +28,8 @@ U_NAMESPACE_BEGIN
 UnicodeString& 
 UnicodeString::trim() U_LIFETIME_BOUND
 {
-  if(isBogus()) {
-    return *this;
+  если(isBogus()) {
+    вернуть *this;
   }
 
   char16_t *array = getArrayStart();
@@ -38,40 +38,40 @@ UnicodeString::trim() U_LIFETIME_BOUND
   int32_t i = oldLength, length;
 
   // first cut off trailing white space
-  for(;;) {
+  для(;;) {
     length = i;
-    if(i <= 0) {
+    если(i <= 0) {
       break;
     }
     U16_PREV(array, 0, i, c);
-    if(!(c == 0x20 || u_isWhitespace(c))) {
+    если(!(c == 0x20 || u_isWhitespace(c))) {
       break;
     }
   }
-  if(length < oldLength) {
+  если(length < oldLength) {
     setLength(length);
   }
 
   // find leading white space
   int32_t start;
   i = 0;
-  for(;;) {
+  для(;;) {
     start = i;
-    if(i >= length) {
+    если(i >= length) {
       break;
     }
     U16_NEXT(array, i, length, c);
-    if(!(c == 0x20 || u_isWhitespace(c))) {
+    если(!(c == 0x20 || u_isWhitespace(c))) {
       break;
     }
   }
 
   // move string forward over leading white space
-  if(start > 0) {
+  если(start > 0) {
     doReplace(0, start, nullptr, 0, 0);
   }
 
-  return *this;
+  вернуть *this;
 }
 
 U_NAMESPACE_END

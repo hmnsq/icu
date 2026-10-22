@@ -24,7 +24,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#если U_SHOW_CPLUSPLUS_API
 
 #include "unicode/bytestrie.h"
 #include "unicode/stringpiece.h"
@@ -145,11 +145,11 @@ private:
     virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t byteIndex, int32_t count) const override;
     virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t byteIndex, char16_t byte) const override;
 
-    virtual UBool matchNodesCanHaveValues() const override { return false; }
+    virtual UBool matchNodesCanHaveValues() const override { вернуть false; }
 
-    virtual int32_t getMaxBranchLinearSubNodeLength() const override { return BytesTrie::kMaxBranchLinearSubNodeLength; }
-    virtual int32_t getMinLinearMatch() const override { return BytesTrie::kMinLinearMatch; }
-    virtual int32_t getMaxLinearMatchLength() const override { return BytesTrie::kMaxLinearMatchLength; }
+    virtual int32_t getMaxBranchLinearSubNodeLength() const override { вернуть BytesTrie::kMaxBranchLinearSubNodeLength; }
+    virtual int32_t getMinLinearMatch() const override { вернуть BytesTrie::kMinLinearMatch; }
+    virtual int32_t getMaxLinearMatchLength() const override { вернуть BytesTrie::kMaxLinearMatchLength; }
 
     class BTLinearMatchNode : public LinearMatchNode {
     public:

@@ -36,14 +36,14 @@ static void ulist_addFirstItem(UList *list, UListNode *newItem);
 U_CAPI UList *U_EXPORT2 ulist_createEmptyList(UErrorCode *status) {
     UList *newList = nullptr;
     
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    если (U_FAILURE(*status)) {
+        вернуть nullptr;
     }
     
     newList = (UList *)uprv_malloc(sizeof(UList));
-    if (newList == nullptr) {
+    если (newList == nullptr) {
         *status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        вернуть nullptr;
     }
     
     newList->curr = nullptr;
@@ -51,7 +51,7 @@ U_CAPI UList *U_EXPORT2 ulist_createEmptyList(UErrorCode *status) {
     newList->tail = nullptr;
     newList->size = 0;
     
-    return newList;
+    вернуть newList;
 }
 
 /*
@@ -66,23 +66,23 @@ static void ulist_addFirstItem(UList *list, UListNode *newItem) {
 }
 
 static void ulist_removeItem(UList *list, UListNode *p) {
-    if (p->previous == nullptr) {
+    если (p->previous == nullptr) {
         // p is the list head.
         list->head = p->next;
-    } else {
+    } иначе {
         p->previous->next = p->next;
     }
-    if (p->next == nullptr) {
+    если (p->next == nullptr) {
         // p is the list tail.
         list->tail = p->previous;
-    } else {
+    } иначе {
         p->next->previous = p->previous;
     }
-    if (p == list->curr) {
+    если (p == list->curr) {
         list->curr = p->next;
     }
     --list->size;
-    if (p->forceDelete) {
+    если (p->forceDelete) {
         uprv_free(p->data);
     }
     uprv_free(p);
@@ -91,27 +91,27 @@ static void ulist_removeItem(UList *list, UListNode *p) {
 U_CAPI void U_EXPORT2 ulist_addItemEndList(UList *list, const void *data, UBool forceDelete, UErrorCode *status) {
     UListNode *newItem = nullptr;
     
-    if (U_FAILURE(*status) || list == nullptr || data == nullptr) {
-        if (forceDelete) {
+    если (U_FAILURE(*status) || list == nullptr || data == nullptr) {
+        если (forceDelete) {
             uprv_free((void *)data);
         }
-        return;
+        вернуть;
     }
     
     newItem = (UListNode *)uprv_malloc(sizeof(UListNode));
-    if (newItem == nullptr) {
-        if (forceDelete) {
+    если (newItem == nullptr) {
+        если (forceDelete) {
             uprv_free((void *)data);
         }
         *status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        вернуть;
     }
     newItem->data = (void *)(data);
     newItem->forceDelete = forceDelete;
     
-    if (list->size == 0) {
+    если (list->size == 0) {
         ulist_addFirstItem(list, newItem);
-    } else {
+    } иначе {
         newItem->next = nullptr;
         newItem->previous = list->tail;
         list->tail->next = newItem;
@@ -124,27 +124,27 @@ U_CAPI void U_EXPORT2 ulist_addItemEndList(UList *list, const void *data, UBool 
 U_CAPI void U_EXPORT2 ulist_addItemBeginList(UList *list, const void *data, UBool forceDelete, UErrorCode *status) {
     UListNode *newItem = nullptr;
     
-    if (U_FAILURE(*status) || list == nullptr || data == nullptr) {
-        if (forceDelete) {
+    если (U_FAILURE(*status) || list == nullptr || data == nullptr) {
+        если (forceDelete) {
             uprv_free((void *)data);
         }
-        return;
+        вернуть;
     }
     
     newItem = (UListNode *)uprv_malloc(sizeof(UListNode));
-    if (newItem == nullptr) {
-        if (forceDelete) {
+    если (newItem == nullptr) {
+        если (forceDelete) {
             uprv_free((void *)data);
         }
         *status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        вернуть;
     }
     newItem->data = (void *)(data);
     newItem->forceDelete = forceDelete;
     
-    if (list->size == 0) {
+    если (list->size == 0) {
         ulist_addFirstItem(list, newItem);
-    } else {
+    } иначе {
         newItem->previous = nullptr;
         newItem->next = list->head;
         list->head->previous = newItem;
@@ -155,56 +155,56 @@ U_CAPI void U_EXPORT2 ulist_addItemBeginList(UList *list, const void *data, UBoo
 }
 
 U_CAPI UBool U_EXPORT2 ulist_containsString(const UList *list, const char *data, int32_t length) {
-    if (list != nullptr) {
+    если (list != nullptr) {
         const UListNode *pointer;
-        for (pointer = list->head; pointer != nullptr; pointer = pointer->next) {
-            if (length == (int32_t)uprv_strlen((const char *)pointer->data)) {
-                if (uprv_memcmp(data, pointer->data, length) == 0) {
-                    return true;
+        для (pointer = list->head; pointer != nullptr; pointer = pointer->next) {
+            если (length == (int32_t)uprv_strlen((const char *)pointer->data)) {
+                если (uprv_memcmp(data, pointer->data, length) == 0) {
+                    вернуть true;
                 }
             }
         }
     }
-    return false;
+    вернуть false;
 }
 
 U_CAPI UBool U_EXPORT2 ulist_removeString(UList *list, const char *data) {
-    if (list != nullptr) {
+    если (list != nullptr) {
         UListNode *pointer;
-        for (pointer = list->head; pointer != nullptr; pointer = pointer->next) {
-            if (uprv_strcmp(data, (const char *)pointer->data) == 0) {
+        для (pointer = list->head; pointer != nullptr; pointer = pointer->next) {
+            если (uprv_strcmp(data, (const char *)pointer->data) == 0) {
                 ulist_removeItem(list, pointer);
                 // Remove only the first occurrence, like Java LinkedList.remove(Object).
-                return true;
+                вернуть true;
             }
         }
     }
-    return false;
+    вернуть false;
 }
 
 U_CAPI void *U_EXPORT2 ulist_getNext(UList *list) {
     UListNode *curr = nullptr;
     
-    if (list == nullptr || list->curr == nullptr) {
-        return nullptr;
+    если (list == nullptr || list->curr == nullptr) {
+        вернуть nullptr;
     }
     
     curr = list->curr;
     list->curr = curr->next;
     
-    return curr->data;
+    вернуть curr->data;
 }
 
 U_CAPI int32_t U_EXPORT2 ulist_getListSize(const UList *list) {
-    if (list != nullptr) {
-        return list->size;
+    если (list != nullptr) {
+        вернуть list->size;
     }
     
-    return -1;
+    вернуть -1;
 }
 
 U_CAPI void U_EXPORT2 ulist_resetList(UList *list) {
-    if (list != nullptr) {
+    если (list != nullptr) {
         list->curr = list->head;
     }
 }
@@ -212,12 +212,12 @@ U_CAPI void U_EXPORT2 ulist_resetList(UList *list) {
 U_CAPI void U_EXPORT2 ulist_deleteList(UList *list) {
     UListNode *listHead = nullptr;
 
-    if (list != nullptr) {
+    если (list != nullptr) {
         listHead = list->head;
-        while (listHead != nullptr) {
+        пока (listHead != nullptr) {
             UListNode *listPointer = listHead->next;
 
-            if (listHead->forceDelete) {
+            если (listHead->forceDelete) {
                 uprv_free(listHead->data);
             }
 
@@ -230,41 +230,41 @@ U_CAPI void U_EXPORT2 ulist_deleteList(UList *list) {
 }
 
 U_CAPI void U_EXPORT2 ulist_close_keyword_values_iterator(UEnumeration *en) {
-    if (en != nullptr) {
+    если (en != nullptr) {
         ulist_deleteList((UList *)(en->context));
         uprv_free(en);
     }
 }
 
 U_CAPI int32_t U_EXPORT2 ulist_count_keyword_values(UEnumeration *en, UErrorCode *status) {
-    if (U_FAILURE(*status)) {
-        return -1;
+    если (U_FAILURE(*status)) {
+        вернуть -1;
     }
     
-    return ulist_getListSize((UList *)(en->context));
+    вернуть ulist_getListSize((UList *)(en->context));
 }
 
 U_CAPI const char * U_EXPORT2 ulist_next_keyword_value(UEnumeration *en, int32_t *resultLength, UErrorCode *status) {
     const char *s;
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    если (U_FAILURE(*status)) {
+        вернуть nullptr;
     }
 
     s = (const char *)ulist_getNext((UList *)(en->context));
-    if (s != nullptr && resultLength != nullptr) {
+    если (s != nullptr && resultLength != nullptr) {
         *resultLength = static_cast<int32_t>(uprv_strlen(s));
     }
-    return s;
+    вернуть s;
 }
 
 U_CAPI void U_EXPORT2 ulist_reset_keyword_values_iterator(UEnumeration *en, UErrorCode *status) {
-    if (U_FAILURE(*status)) {
-        return ;
+    если (U_FAILURE(*status)) {
+        вернуть ;
     }
     
     ulist_resetList((UList *)(en->context));
 }
 
 U_CAPI UList * U_EXPORT2 ulist_getListFromEnum(UEnumeration *en) {
-    return (UList *)(en->context);
+    вернуть (UList *)(en->context);
 }

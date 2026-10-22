@@ -16,7 +16,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#если !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/uobject.h"
 #include "unicode/rbbi.h"
@@ -151,7 +151,7 @@ public:
     void     printStates();
     void     printRuleStatusTable();
     void     printReverseTable();
-#else
+#иначе
     #define  printSet(s)
     #define  printPosSets(n)
     #define  printStates()
@@ -206,7 +206,7 @@ public:
                                            //   contents is int index of dest state
                                            //   in RBBITableBuilder.fDStates
 
-    RBBIStateDescriptor(int maxInputSymbol,  UErrorCode *fStatus);
+    RBBIStateDescriptor(целое maxInputSymbol,  UErrorCode *fStatus);
     ~RBBIStateDescriptor();
 
 private:

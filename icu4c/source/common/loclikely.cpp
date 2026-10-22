@@ -74,33 +74,33 @@ createTagStringWithAlternates(
     int32_t trailingLength,
     icu::ByteSink& sink,
     UErrorCode& err) {
-    if (U_FAILURE(err)) {
-        return;
+    если (U_FAILURE(err)) {
+        вернуть;
     }
 
-    if (langLength >= ULOC_LANG_CAPACITY ||
+    если (langLength >= ULOC_LANG_CAPACITY ||
             scriptLength >= ULOC_SCRIPT_CAPACITY ||
             regionLength >= ULOC_COUNTRY_CAPACITY) {
         err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        вернуть;
     }
 
-    if (langLength > 0) {
+    если (langLength > 0) {
         sink.Append(lang, langLength);
     }
 
-    if (scriptLength > 0) {
+    если (scriptLength > 0) {
         sink.Append("_", 1);
         sink.Append(script, scriptLength);
     }
 
-    if (regionLength > 0) {
+    если (regionLength > 0) {
         sink.Append("_", 1);
         sink.Append(region, regionLength);
     }
 
-    if (variantLength > 0) {
-        if (regionLength == 0) {
+    если (variantLength > 0) {
+        если (regionLength == 0) {
             /* extra separator is required */
             sink.Append("_", 1);
         }
@@ -108,7 +108,7 @@ createTagStringWithAlternates(
         sink.Append(variant, variantLength);
     }
 
-    if (trailingLength > 0) {
+    если (trailingLength > 0) {
         /*
          * Copy the trailing data into the supplied buffer.
          */
@@ -118,29 +118,29 @@ createTagStringWithAlternates(
 
 bool CHECK_TRAILING_VARIANT_SIZE(const char* variant, int32_t variantLength) {
     int32_t count = 0;
-    for (int32_t i = 0; i < variantLength; i++) {
-        if (_isIDSeparator(variant[i])) {
+    для (int32_t i = 0; i < variantLength; i++) {
+        если (_isIDSeparator(variant[i])) {
             count = 0;
-        } else if (count == 8) {
-            return false;
-        } else {
+        } иначе если (count == 8) {
+            вернуть false;
+        } иначе {
             count++;
         }
     }
-    return true;
+    вернуть true;
 }
 
 void
 _uloc_addLikelySubtags(const char* localeID,
                        icu::ByteSink& sink,
                        UErrorCode& err) {
-    if (U_FAILURE(err)) {
-        return;
+    если (U_FAILURE(err)) {
+        вернуть;
     }
 
-    if (localeID == nullptr) {
+    если (localeID == nullptr) {
         err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        вернуть;
     }
 
     icu::CharString lang;
@@ -149,47 +149,47 @@ _uloc_addLikelySubtags(const char* localeID,
     icu::CharString variant;
     const char* trailing = nullptr;
     ulocimp_getSubtags(localeID, &lang, &script, &region, &variant, &trailing, err);
-    if (U_FAILURE(err)) {
-        return;
+    если (U_FAILURE(err)) {
+        вернуть;
     }
 
-    if (!CHECK_TRAILING_VARIANT_SIZE(variant.data(), variant.length())) {
+    если (!CHECK_TRAILING_VARIANT_SIZE(variant.data(), variant.length())) {
         err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        вернуть;
     }
 
-    if (lang.length() == 4) {
-        if (script.isEmpty()) {
+    если (lang.length() == 4) {
+        если (script.isEmpty()) {
             script = std::move(lang);
             lang.clear();
-        } else {
+        } иначе {
             err = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            вернуть;
         }
-    } else if (lang.length() > 8) {
+    } иначе если (lang.length() > 8) {
         err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        вернуть;
     }
 
     int32_t trailingLength = static_cast<int32_t>(uprv_strlen(trailing));
 
     const icu::LikelySubtags* likelySubtags = icu::LikelySubtags::getSingleton(err);
-    if (U_FAILURE(err)) {
-        return;
+    если (U_FAILURE(err)) {
+        вернуть;
     }
     // We need to keep l on the stack because lsr may point into internal
     // memory of l.
     icu::Locale l = icu::Locale::createFromName(localeID);
-    if (l.isBogus()) {
+    если (l.isBogus()) {
         err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        вернуть;
     }
     icu::LSR lsr = likelySubtags->makeMaximizedLsrFrom(l, true, err);
-    if (U_FAILURE(err)) {
-        return;
+    если (U_FAILURE(err)) {
+        вернуть;
     }
     const char* language = lsr.language;
-    if (uprv_strcmp(language, "und") == 0) {
+    если (uprv_strcmp(language, "und") == 0) {
         language = "";
     }
     createTagStringWithAlternates(
@@ -212,13 +212,13 @@ _uloc_minimizeSubtags(const char* localeID,
                       icu::ByteSink& sink,
                       bool favorScript,
                       UErrorCode& err) {
-    if (U_FAILURE(err)) {
-        return;
+    если (U_FAILURE(err)) {
+        вернуть;
     }
 
-    if (localeID == nullptr) {
+    если (localeID == nullptr) {
         err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        вернуть;
     }
 
     icu::CharString lang;
@@ -227,20 +227,20 @@ _uloc_minimizeSubtags(const char* localeID,
     icu::CharString variant;
     const char* trailing = nullptr;
     ulocimp_getSubtags(localeID, &lang, &script, &region, &variant, &trailing, err);
-    if (U_FAILURE(err)) {
-        return;
+    если (U_FAILURE(err)) {
+        вернуть;
     }
 
-    if (!CHECK_TRAILING_VARIANT_SIZE(variant.data(), variant.length())) {
+    если (!CHECK_TRAILING_VARIANT_SIZE(variant.data(), variant.length())) {
         err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        вернуть;
     }
 
     int32_t trailingLength = static_cast<int32_t>(uprv_strlen(trailing));
 
     const icu::LikelySubtags* likelySubtags = icu::LikelySubtags::getSingleton(err);
-    if (U_FAILURE(err)) {
-        return;
+    если (U_FAILURE(err)) {
+        вернуть;
     }
     icu::LSR lsr = likelySubtags->minimizeSubtags(
         lang.toStringPiece(),
@@ -248,11 +248,11 @@ _uloc_minimizeSubtags(const char* localeID,
         region.toStringPiece(),
         favorScript,
         err);
-    if (U_FAILURE(err)) {
-        return;
+    если (U_FAILURE(err)) {
+        вернуть;
     }
     const char* language = lsr.language;
-    if (uprv_strcmp(language, "und") == 0) {
+    если (uprv_strcmp(language, "und") == 0) {
         language = "";
     }
     createTagStringWithAlternates(
@@ -277,7 +277,7 @@ uloc_addLikelySubtags(const char* localeID,
                       char* maximizedLocaleID,
                       int32_t maximizedLocaleIDCapacity,
                       UErrorCode* status) {
-    return icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
+    вернуть icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
         maximizedLocaleID, maximizedLocaleIDCapacity,
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_addLikelySubtags(localeID, sink, status);
@@ -288,7 +288,7 @@ uloc_addLikelySubtags(const char* localeID,
 U_EXPORT icu::CharString
 ulocimp_addLikelySubtags(const char* localeID,
                          UErrorCode& status) {
-    return icu::ByteSinkUtil::viaByteSinkToCharString(
+    вернуть icu::ByteSinkUtil::viaByteSinkToCharString(
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_addLikelySubtags(localeID, sink, status);
         },
@@ -299,8 +299,8 @@ U_EXPORT void
 ulocimp_addLikelySubtags(const char* localeID,
                          icu::ByteSink& sink,
                          UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
-    if (localeID == nullptr) {
+    если (U_FAILURE(status)) { вернуть; }
+    если (localeID == nullptr) {
         localeID = uloc_getDefault();
     }
     icu::CharString localeBuffer = ulocimp_canonicalize(localeID, status);
@@ -312,7 +312,7 @@ uloc_minimizeSubtags(const char* localeID,
                      char* minimizedLocaleID,
                      int32_t minimizedLocaleIDCapacity,
                      UErrorCode* status) {
-    return icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
+    вернуть icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
         minimizedLocaleID, minimizedLocaleIDCapacity,
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_minimizeSubtags(localeID, sink, false, status);
@@ -324,7 +324,7 @@ U_EXPORT icu::CharString
 ulocimp_minimizeSubtags(const char* localeID,
                         bool favorScript,
                         UErrorCode& status) {
-    return icu::ByteSinkUtil::viaByteSinkToCharString(
+    вернуть icu::ByteSinkUtil::viaByteSinkToCharString(
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_minimizeSubtags(localeID, sink, favorScript, status);
         },
@@ -336,8 +336,8 @@ ulocimp_minimizeSubtags(const char* localeID,
                         icu::ByteSink& sink,
                         bool favorScript,
                         UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
-    if (localeID == nullptr) {
+    если (U_FAILURE(status)) { вернуть; }
+    если (localeID == nullptr) {
         localeID = uloc_getDefault();
     }
     icu::CharString localeBuffer = ulocimp_canonicalize(localeID, status);
@@ -358,15 +358,15 @@ uloc_isRightToLeft(const char *locale) {
     ulocimp_getSubtags(
         locale == nullptr ? uloc_getDefault() : locale,
         &lang, &script, nullptr, nullptr, nullptr, errorCode);
-    if (U_FAILURE(errorCode) || script.isEmpty()) {
+    если (U_FAILURE(errorCode) || script.isEmpty()) {
         // Fastpath: We know the likely scripts and their writing direction
         // for some common languages.
-        if (!lang.isEmpty()) {
+        если (!lang.isEmpty()) {
             const char* langPtr = uprv_strstr(LANG_DIR_STRING, lang.data());
-            if (langPtr != nullptr) {
+            если (langPtr != nullptr) {
                 switch (langPtr[lang.length()]) {
-                case '-': return false;
-                case '+': return true;
+                case '-': вернуть false;
+                case '+': вернуть true;
                 default: break;  // partial match of a longer code
                 }
             }
@@ -374,23 +374,23 @@ uloc_isRightToLeft(const char *locale) {
         // Otherwise, find the likely script.
         errorCode = U_ZERO_ERROR;
         icu::CharString likely = ulocimp_addLikelySubtags(locale, errorCode);
-        if (U_FAILURE(errorCode)) {
-            return false;
+        если (U_FAILURE(errorCode)) {
+            вернуть false;
         }
         ulocimp_getSubtags(likely.toStringPiece(), nullptr, &script, nullptr, nullptr, nullptr, errorCode);
-        if (U_FAILURE(errorCode) || script.isEmpty()) {
-            return false;
+        если (U_FAILURE(errorCode) || script.isEmpty()) {
+            вернуть false;
         }
     }
     UScriptCode scriptCode = (UScriptCode)u_getPropertyValueEnum(UCHAR_SCRIPT, script.data());
-    return uscript_isRightToLeft(scriptCode);
+    вернуть uscript_isRightToLeft(scriptCode);
 }
 
 U_NAMESPACE_BEGIN
 
 UBool
 Locale::isRightToLeft() const {
-    return uloc_isRightToLeft(getBaseName());
+    вернуть uloc_isRightToLeft(getBaseName());
 }
 
 U_NAMESPACE_END
@@ -415,45 +415,45 @@ GetRegionFromKey(const char* localeID, std::string_view key, UErrorCode& status)
     // unicode_subdivision_id = alpha{2} alphanum{1,4}
     //
     // and only need to accept/reject the code based on the alpha{2} and the length.
-    if (U_SUCCESS(status) && len >= 3 && len <= 6 &&
+    если (U_SUCCESS(status) && len >= 3 && len <= 6 &&
         uprv_isASCIILetter(kw[0]) && uprv_isASCIILetter(kw[1])) {
         // Additional Check
         icu::RegionValidateMap valid;
         const char region[] = {kw[0], kw[1], '\0'};
-        if (valid.isSet(region)) {
+        если (valid.isSet(region)) {
             result.append(uprv_toupper(kw[0]), status);
             result.append(uprv_toupper(kw[1]), status);
         }
     }
-    return result;
+    вернуть result;
 }
 }  // namespace
 
 U_EXPORT icu::CharString
 ulocimp_getRegionForSupplementalData(const char *localeID, bool inferRegion,
                                      UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return {};
+    если (U_FAILURE(status)) {
+        вернуть {};
     }
     icu::CharString rgBuf = GetRegionFromKey(localeID, "rg", status);
-    if (U_SUCCESS(status) && rgBuf.isEmpty()) {
+    если (U_SUCCESS(status) && rgBuf.isEmpty()) {
         // No valid rg keyword value, try for unicode_region_subtag
         rgBuf = ulocimp_getRegion(localeID == nullptr ? uloc_getDefault() : localeID, status);
-        if (U_SUCCESS(status) && rgBuf.isEmpty() && inferRegion) {
+        если (U_SUCCESS(status) && rgBuf.isEmpty() && inferRegion) {
             // Second check for sd keyword value
             rgBuf = GetRegionFromKey(localeID, "sd", status);
-            if (U_SUCCESS(status) && rgBuf.isEmpty()) {
+            если (U_SUCCESS(status) && rgBuf.isEmpty()) {
                 // no unicode_region_subtag but inferRegion true, try likely subtags
                 UErrorCode rgStatus = U_ZERO_ERROR;
                 icu::CharString locBuf = ulocimp_addLikelySubtags(localeID, rgStatus);
-                if (U_SUCCESS(rgStatus)) {
+                если (U_SUCCESS(rgStatus)) {
                     rgBuf = ulocimp_getRegion(locBuf.toStringPiece(), status);
                 }
             }
         }
     }
 
-    return rgBuf;
+    вернуть rgBuf;
 }
 
 namespace {
@@ -482,14 +482,14 @@ RegionValidateMap::~RegionValidateMap() {
 
 bool RegionValidateMap::isSet(const char* region) const {
     int32_t index = value(region);
-    if (index < 0) {
-        return false;
+    если (index < 0) {
+        вернуть false;
     }
-    return 0 != (map[index / 32] & (1L << (index % 32)));
+    вернуть 0 != (map[index / 32] & (1L << (index % 32)));
 }
 
 bool RegionValidateMap::equals(const RegionValidateMap& that) const {
-    return uprv_memcmp(map, that.map, sizeof(map)) == 0;
+    вернуть uprv_memcmp(map, that.map, sizeof(map)) == 0;
 }
 
 // The code transform two letter a-z to a integer valued between -1, 26x26.
@@ -498,12 +498,12 @@ bool RegionValidateMap::equals(const RegionValidateMap& that) const {
 // the bigmap in map. The map is an array of 22 int32_t.
 // since 32x21 < 676/32 < 32x22 we store this 676 bits bitmap into 22 int32_t.
 int32_t RegionValidateMap::value(const char* region) const {
-    if (uprv_isASCIILetter(region[0]) && uprv_isASCIILetter(region[1]) &&
+    если (uprv_isASCIILetter(region[0]) && uprv_isASCIILetter(region[1]) &&
         region[2] == '\0') {
-        return (uprv_toupper(region[0])-'A') * 26 +
+        вернуть (uprv_toupper(region[0])-'A') * 26 +
                (uprv_toupper(region[1])-'A');
     }
-    return -1;
+    вернуть -1;
 }
 
 U_NAMESPACE_END

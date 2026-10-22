@@ -28,12 +28,12 @@
  * By changing the definition here, the assert behavior for ICU can be changed
  * without affecting other non - ICU uses of the C library assert().
 */
-#if U_DEBUG
+#если U_DEBUG
 #   include <assert.h>
 #   define U_ASSERT(exp) assert(exp)
 #elif U_CPLUSPLUS_VERSION
 #   define U_ASSERT(exp) (void)0
-#else
+#иначе
 #   define U_ASSERT(exp)
 #endif
 
@@ -46,14 +46,14 @@
  * with UPRV_UNREACHABLE_EXIT.
  * @internal
 */
-#if defined(UPRV_UNREACHABLE_ASSERT)
+#если defined(UPRV_UNREACHABLE_ASSERT)
     // Use the predefined value.
 #elif U_DEBUG
 #   include <assert.h>
 #   define UPRV_UNREACHABLE_ASSERT assert(false)
 #elif U_CPLUSPLUS_VERSION
 #   define UPRV_UNREACHABLE_ASSERT (void)0
-#else
+#иначе
 #   define UPRV_UNREACHABLE_ASSERT
 #endif
 
@@ -62,9 +62,9 @@
  * This macro is used to unconditionally abort if unreachable code is ever executed.
  * @internal
 */
-#if defined(UPRV_UNREACHABLE_EXIT)
+#если defined(UPRV_UNREACHABLE_EXIT)
     // Use the predefined value.
-#else
+#иначе
 #   define UPRV_UNREACHABLE_EXIT abort()
 #endif
 

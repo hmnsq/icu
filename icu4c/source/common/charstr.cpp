@@ -35,248 +35,248 @@ CharString& CharString::operator=(CharString&& src) noexcept {
     buffer = std::move(src.buffer);
     len = src.len;
     src.len = 0;  // not strictly necessary because we make no guarantees on the source string
-    return *this;
+    вернуть *this;
 }
 
 char *CharString::cloneData(UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return nullptr; }
+    если (U_FAILURE(errorCode)) { вернуть nullptr; }
     char *p = static_cast<char *>(uprv_malloc(len + 1));
-    if (p == nullptr) {
+    если (p == nullptr) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        вернуть nullptr;
     }
     uprv_memcpy(p, buffer.getAlias(), len + 1);
-    return p;
+    вернуть p;
 }
 
 int32_t CharString::extract(char *dest, int32_t capacity, UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return len; }
-    if (capacity < 0 || (capacity > 0 && dest == nullptr)) {
+    если (U_FAILURE(errorCode)) { вернуть len; }
+    если (capacity < 0 || (capacity > 0 && dest == nullptr)) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return len;
+        вернуть len;
     }
     const char *src = buffer.getAlias();
-    if (0 < len && len <= capacity && src != dest) {
+    если (0 < len && len <= capacity && src != dest) {
         uprv_memcpy(dest, src, len);
     }
-    return u_terminateChars(dest, capacity, len, &errorCode);
+    вернуть u_terminateChars(dest, capacity, len, &errorCode);
 }
 
 CharString &CharString::copyFrom(const CharString &s, UErrorCode &errorCode) {
-    if(U_SUCCESS(errorCode) && this!=&s && ensureCapacity(s.len+1, 0, errorCode)) {
+    если(U_SUCCESS(errorCode) && this!=&s && ensureCapacity(s.len+1, 0, errorCode)) {
         len=s.len;
         uprv_memcpy(buffer.getAlias(), s.buffer.getAlias(), len+1);
     }
-    return *this;
+    вернуть *this;
 }
 
 CharString &CharString::copyFrom(StringPiece s, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) {
-        return *this;
+    если (U_FAILURE(errorCode)) {
+        вернуть *this;
     }
     len = 0;
     append(s, errorCode);
-    return *this;
+    вернуть *this;
 }
 
 int32_t CharString::lastIndexOf(char c) const {
-    for(int32_t i=len; i>0;) {
-        if(buffer[--i]==c) {
-            return i;
+    для(int32_t i=len; i>0;) {
+        если(buffer[--i]==c) {
+            вернуть i;
         }
     }
-    return -1;
+    вернуть -1;
 }
 
 bool CharString::contains(StringPiece s) const {
-    if (s.empty()) { return false; }
+    если (s.empty()) { вернуть false; }
     const char *p = buffer.getAlias();
     int32_t lastStart = len - s.length();
-    for (int32_t i = 0; i <= lastStart; ++i) {
-        if (uprv_memcmp(p + i, s.data(), s.length()) == 0) {
-            return true;
+    для (int32_t i = 0; i <= lastStart; ++i) {
+        если (uprv_memcmp(p + i, s.data(), s.length()) == 0) {
+            вернуть true;
         }
     }
-    return false;
+    вернуть false;
 }
 
 CharString &CharString::truncate(int32_t newLength) {
-    if(newLength<0) {
+    если(newLength<0) {
         newLength=0;
     }
-    if(newLength<len) {
+    если(newLength<len) {
         buffer[len=newLength]=0;
     }
-    return *this;
+    вернуть *this;
 }
 
 CharString &CharString::append(char c, UErrorCode &errorCode) {
-    if(ensureCapacity(len+2, 0, errorCode)) {
+    если(ensureCapacity(len+2, 0, errorCode)) {
         buffer[len++]=c;
         buffer[len]=0;
     }
-    return *this;
+    вернуть *this;
 }
 
 CharString &CharString::append(const char *s, int32_t sLength, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return *this;
+    если(U_FAILURE(errorCode)) {
+        вернуть *this;
     }
-    if(sLength<-1 || (s==nullptr && sLength!=0)) {
+    если(sLength<-1 || (s==nullptr && sLength!=0)) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        вернуть *this;
     }
-    if(sLength<0) {
+    если(sLength<0) {
         sLength= static_cast<int32_t>(uprv_strlen(s));
     }
-    if(sLength>0) {
-        if(s==(buffer.getAlias()+len)) {
+    если(sLength>0) {
+        если(s==(buffer.getAlias()+len)) {
             // The caller wrote into the getAppendBuffer().
-            if(sLength>=(buffer.getCapacity()-len)) {
+            если(sLength>=(buffer.getCapacity()-len)) {
                 // The caller wrote too much.
                 errorCode=U_INTERNAL_PROGRAM_ERROR;
-            } else {
+            } иначе {
                 buffer[len+=sLength]=0;
             }
-        } else if(buffer.getAlias()<=s && s<(buffer.getAlias()+len) &&
+        } иначе если(buffer.getAlias()<=s && s<(buffer.getAlias()+len) &&
                   sLength>=(buffer.getCapacity()-len)
         ) {
             // (Part of) this string is appended to itself which requires reallocation,
             // so we have to make a copy of the substring and append that.
-            return append(CharString(s, sLength, errorCode), errorCode);
-        } else if(ensureCapacity(len+sLength+1, 0, errorCode)) {
+            вернуть append(CharString(s, sLength, errorCode), errorCode);
+        } иначе если(ensureCapacity(len+sLength+1, 0, errorCode)) {
             uprv_memcpy(buffer.getAlias()+len, s, sLength);
             buffer[len+=sLength]=0;
         }
     }
-    return *this;
+    вернуть *this;
 }
 
 CharString &CharString::appendNumber(int64_t number, UErrorCode &status) {
-    if (number < 0) {
+    если (number < 0) {
         this->append('-', status);
-        if (U_FAILURE(status)) {
-            return *this;
+        если (U_FAILURE(status)) {
+            вернуть *this;
         }
     }
 
-    if (number == 0) {
+    если (number == 0) {
         this->append('0', status);
-        return *this;
+        вернуть *this;
     }
 
     int32_t numLen = 0;
-    while (number != 0) {
+    пока (number != 0) {
         int32_t residue = number % 10;
         number /= 10;
         this->append(std::abs(residue) + '0', status);
         numLen++;
-        if (U_FAILURE(status)) {
-            return *this;
+        если (U_FAILURE(status)) {
+            вернуть *this;
         }
     }
 
     int32_t start = this->length() - numLen, end = this->length() - 1;
-    while(start < end) {
+    пока(start < end) {
         std::swap(this->data()[start++], this->data()[end--]);
     }
 
-    return *this;
+    вернуть *this;
 }
 
 char *CharString::getAppendBuffer(int32_t minCapacity,
                                   int32_t desiredCapacityHint,
                                   int32_t &resultCapacity,
                                   UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
+    если(U_FAILURE(errorCode)) {
         resultCapacity=0;
-        return nullptr;
+        вернуть nullptr;
     }
     int32_t appendCapacity=buffer.getCapacity()-len-1;  // -1 for NUL
-    if(appendCapacity>=minCapacity) {
+    если(appendCapacity>=minCapacity) {
         resultCapacity=appendCapacity;
-        return buffer.getAlias()+len;
+        вернуть buffer.getAlias()+len;
     }
-    if(ensureCapacity(len+minCapacity+1, len+desiredCapacityHint+1, errorCode)) {
+    если(ensureCapacity(len+minCapacity+1, len+desiredCapacityHint+1, errorCode)) {
         resultCapacity=buffer.getCapacity()-len-1;
-        return buffer.getAlias()+len;
+        вернуть buffer.getAlias()+len;
     }
     resultCapacity=0;
-    return nullptr;
+    вернуть nullptr;
 }
 
 CharString &CharString::appendInvariantChars(const UnicodeString &s, UErrorCode &errorCode) {
-    return appendInvariantChars(s.getBuffer(), s.length(), errorCode);
+    вернуть appendInvariantChars(s.getBuffer(), s.length(), errorCode);
 }
 
 CharString &CharString::appendInvariantChars(const char16_t* uchars, int32_t ucharsLen, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return *this;
+    если(U_FAILURE(errorCode)) {
+        вернуть *this;
     }
-    if (!uprv_isInvariantUString(uchars, ucharsLen)) {
+    если (!uprv_isInvariantUString(uchars, ucharsLen)) {
         errorCode = U_INVARIANT_CONVERSION_ERROR;
-        return *this;
+        вернуть *this;
     }
-    if(ensureCapacity(len+ucharsLen+1, 0, errorCode)) {
+    если(ensureCapacity(len+ucharsLen+1, 0, errorCode)) {
         u_UCharsToChars(uchars, buffer.getAlias()+len, ucharsLen);
         len += ucharsLen;
         buffer[len] = 0;
     }
-    return *this;
+    вернуть *this;
 }
 
 UBool CharString::ensureCapacity(int32_t capacity,
                                  int32_t desiredCapacityHint,
                                  UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return false;
+    если(U_FAILURE(errorCode)) {
+        вернуть false;
     }
-    if(capacity>buffer.getCapacity()) {
-        if(desiredCapacityHint==0) {
+    если(capacity>buffer.getCapacity()) {
+        если(desiredCapacityHint==0) {
             desiredCapacityHint=capacity+buffer.getCapacity();
         }
-        if( (desiredCapacityHint<=capacity || buffer.resize(desiredCapacityHint, len+1)==nullptr) &&
+        если( (desiredCapacityHint<=capacity || buffer.resize(desiredCapacityHint, len+1)==nullptr) &&
             buffer.resize(capacity, len+1)==nullptr
         ) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return false;
+            вернуть false;
         }
     }
-    return true;
+    вернуть true;
 }
 
 CharString &CharString::appendPathPart(StringPiece s, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return *this;
+    если(U_FAILURE(errorCode)) {
+        вернуть *this;
     }
-    if(s.length()==0) {
-        return *this;
+    если(s.length()==0) {
+        вернуть *this;
     }
     char c;
-    if(len>0 && (c=buffer[len-1])!=U_FILE_SEP_CHAR && c!=U_FILE_ALT_SEP_CHAR) {
+    если(len>0 && (c=buffer[len-1])!=U_FILE_SEP_CHAR && c!=U_FILE_ALT_SEP_CHAR) {
         append(getDirSepChar(), errorCode);
     }
     append(s, errorCode);
-    return *this;
+    вернуть *this;
 }
 
 CharString &CharString::ensureEndsWithFileSeparator(UErrorCode &errorCode) {
     char c;
-    if(U_SUCCESS(errorCode) && len>0 &&
+    если(U_SUCCESS(errorCode) && len>0 &&
             (c=buffer[len-1])!=U_FILE_SEP_CHAR && c!=U_FILE_ALT_SEP_CHAR) {
         append(getDirSepChar(), errorCode);
     }
-    return *this;
+    вернуть *this;
 }
 
 char CharString::getDirSepChar() const {
     char dirSepChar = U_FILE_SEP_CHAR;
-#if (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
+#если (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
     // We may need to return a different directory separator when building for Cygwin or MSYS2.
-    if(len>0 && !uprv_strchr(data(), U_FILE_SEP_CHAR) && uprv_strchr(data(), U_FILE_ALT_SEP_CHAR))
+    если(len>0 && !uprv_strchr(data(), U_FILE_SEP_CHAR) && uprv_strchr(data(), U_FILE_ALT_SEP_CHAR))
         dirSepChar = U_FILE_ALT_SEP_CHAR;
 #endif
-    return dirSepChar;
+    вернуть dirSepChar;
 }
 
 U_NAMESPACE_END

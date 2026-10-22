@@ -6,7 +6,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#если !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/uniset.h"
 #include "unicode/ures.h"

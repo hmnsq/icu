@@ -72,9 +72,9 @@ typedef uint32_t Resource;
 /* get signed and unsigned integer values directly from the Resource handle
  * NOTE: For proper logging, please use the res_getInt() constexpr
  */
-#if U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
+#если U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
 #   define RES_GET_INT_NO_TRACE(res) (((int32_t)((res)<<4L))>>4L)
-#else
+#иначе
 #   define RES_GET_INT_NO_TRACE(res) (int32_t)(((res)&0x08000000) ? (res)|0xf0000000 : (res)&0x07ffffff)
 #endif
 
@@ -485,29 +485,29 @@ U_NAMESPACE_BEGIN
 inline const char16_t* res_getString(const ResourceTracer& traceInfo,
         const ResourceData *pResData, Resource res, int32_t *pLength) {
     traceInfo.trace("string");
-    return res_getStringNoTrace(pResData, res, pLength);
+    вернуть res_getStringNoTrace(pResData, res, pLength);
 }
 
 inline const uint8_t* res_getBinary(const ResourceTracer& traceInfo,
         const ResourceData *pResData, Resource res, int32_t *pLength) {
     traceInfo.trace("binary");
-    return res_getBinaryNoTrace(pResData, res, pLength);
+    вернуть res_getBinaryNoTrace(pResData, res, pLength);
 }
 
 inline const int32_t* res_getIntVector(const ResourceTracer& traceInfo,
         const ResourceData *pResData, Resource res, int32_t *pLength) {
     traceInfo.trace("intvector");
-    return res_getIntVectorNoTrace(pResData, res, pLength);
+    вернуть res_getIntVectorNoTrace(pResData, res, pLength);
 }
 
 inline int32_t res_getInt(const ResourceTracer& traceInfo, Resource res) {
     traceInfo.trace("int");
-    return RES_GET_INT_NO_TRACE(res);
+    вернуть RES_GET_INT_NO_TRACE(res);
 }
 
 inline uint32_t res_getUInt(const ResourceTracer& traceInfo, Resource res) {
     traceInfo.trace("uint");
-    return RES_GET_UINT_NO_TRACE(res);
+    вернуть RES_GET_UINT_NO_TRACE(res);
 }
 
 class ResourceDataValue : public ResourceValue {
@@ -532,9 +532,9 @@ public:
         fTraceInfo = traceInfo;
     }
 
-    const ResourceData &getData() const { return *pResData; }
-    UResourceDataEntry *getValidLocaleDataEntry() const { return validLocaleDataEntry; }
-    Resource getResource() const { return res; }
+    const ResourceData &getData() const { вернуть *pResData; }
+    UResourceDataEntry *getValidLocaleDataEntry() const { вернуть validLocaleDataEntry; }
+    Resource getResource() const { вернуть res; }
     virtual UResType getType() const override;
     virtual const char16_t *getString(int32_t &length, UErrorCode &errorCode) const override;
     virtual const char16_t *getAliasString(int32_t &length, UErrorCode &errorCode) const override;

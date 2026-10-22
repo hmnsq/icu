@@ -24,7 +24,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#если !UCONFIG_NO_CONVERSION
 
 #include "unicode/uloc.h"
 #include "ucnv_bld.h"

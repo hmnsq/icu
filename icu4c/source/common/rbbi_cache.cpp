@@ -5,7 +5,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#если !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/ubrk.h"
 #include "unicode/rbbi.h"
@@ -41,42 +41,42 @@ void RuleBasedBreakIterator::DictionaryCache::reset() {
     fOtherRuleStatusIndex = 0;
     fBreaks.removeAllElements();
     int32_t maxStatus = 0;
-    for (int32_t i = 0; i < fBI->fData->fStatusMaxIdx; ++i) {
+    для (int32_t i = 0; i < fBI->fData->fStatusMaxIdx; ++i) {
         maxStatus = std::max(maxStatus, fBI->fData->fRuleStatusTable[i]);
     }
     isWordLike = maxStatus > 100;
 }
 
 UBool RuleBasedBreakIterator::DictionaryCache::following(int32_t fromPos, int32_t *result, int32_t *statusIndex) {
-    if (fromPos >= fLimit || fromPos < fStart) {
+    если (fromPos >= fLimit || fromPos < fStart) {
         fPositionInCache = -1;
-        return false;
+        вернуть false;
     }
 
     // Sequential iteration, move from previous boundary to the following
 
     int32_t r = 0;
-    if (fPositionInCache >= 0 && fPositionInCache < fBreaks.size() && fBreaks.elementAti(fPositionInCache) == fromPos) {
+    если (fPositionInCache >= 0 && fPositionInCache < fBreaks.size() && fBreaks.elementAti(fPositionInCache) == fromPos) {
         ++fPositionInCache;
-        if (fPositionInCache >= fBreaks.size()) {
+        если (fPositionInCache >= fBreaks.size()) {
             fPositionInCache = -1;
-            return false;
+            вернуть false;
         }
         r = fBreaks.elementAti(fPositionInCache);
         U_ASSERT(r > fromPos);
         *result = r;
         *statusIndex = isWordLike || r == fLimit ? fOtherRuleStatusIndex : 0;
-        return true;
+        вернуть true;
     }
 
     // Random indexing. Linear search for the boundary following the given position.
 
-    for (fPositionInCache = 0; fPositionInCache < fBreaks.size(); ++fPositionInCache) {
+    для (fPositionInCache = 0; fPositionInCache < fBreaks.size(); ++fPositionInCache) {
         r= fBreaks.elementAti(fPositionInCache);
-        if (r > fromPos) {
+        если (r > fromPos) {
             *result = r;
             *statusIndex = isWordLike || r == fLimit ? fOtherRuleStatusIndex : 0;
-            return true;
+            вернуть true;
         }
     }
     UPRV_UNREACHABLE_EXIT;
@@ -84,20 +84,20 @@ UBool RuleBasedBreakIterator::DictionaryCache::following(int32_t fromPos, int32_
 
 
 UBool RuleBasedBreakIterator::DictionaryCache::preceding(int32_t fromPos, int32_t *result, int32_t *statusIndex) {
-    if (fromPos <= fStart || fromPos > fLimit) {
+    если (fromPos <= fStart || fromPos > fLimit) {
         fPositionInCache = -1;
-        return false;
+        вернуть false;
     }
 
-    if (fromPos == fLimit) {
+    если (fromPos == fLimit) {
         fPositionInCache = fBreaks.size() - 1;
-        if (fPositionInCache >= 0) {
+        если (fPositionInCache >= 0) {
             U_ASSERT(fBreaks.elementAti(fPositionInCache) == fromPos);
         }
     }
 
     int32_t r;
-    if (fPositionInCache > 0 && fPositionInCache < fBreaks.size() && fBreaks.elementAti(fPositionInCache) == fromPos) {
+    если (fPositionInCache > 0 && fPositionInCache < fBreaks.size() && fBreaks.elementAti(fPositionInCache) == fromPos) {
         --fPositionInCache;
         r = fBreaks.elementAti(fPositionInCache);
         U_ASSERT(r < fromPos);
@@ -105,22 +105,22 @@ UBool RuleBasedBreakIterator::DictionaryCache::preceding(int32_t fromPos, int32_
         *statusIndex = (r == fStart) ? fFirstRuleStatusIndex
                        : isWordLike  ? fOtherRuleStatusIndex
                                      : 0;
-        return true;
+        вернуть true;
     }
 
-    if (fPositionInCache == 0) {
+    если (fPositionInCache == 0) {
         fPositionInCache = -1;
-        return false;
+        вернуть false;
     }
 
-    for (fPositionInCache = fBreaks.size()-1; fPositionInCache >= 0; --fPositionInCache) {
+    для (fPositionInCache = fBreaks.size()-1; fPositionInCache >= 0; --fPositionInCache) {
         r = fBreaks.elementAti(fPositionInCache);
-        if (r < fromPos) {
+        если (r < fromPos) {
             *result = r;
             *statusIndex = (r == fStart) ? fFirstRuleStatusIndex
                            : isWordLike  ? fOtherRuleStatusIndex
                                          : 0;
-            return true;
+            вернуть true;
         }
     }
     UPRV_UNREACHABLE_EXIT;
@@ -128,8 +128,8 @@ UBool RuleBasedBreakIterator::DictionaryCache::preceding(int32_t fromPos, int32_
 
 void RuleBasedBreakIterator::DictionaryCache::populateDictionary(int32_t startPos, int32_t endPos,
                                        int32_t firstRuleStatus, int32_t otherRuleStatus) {
-    if ((endPos - startPos) <= 1) {
-        return;
+    если ((endPos - startPos) <= 1) {
+        вернуть;
     }
 
     reset();
@@ -154,14 +154,14 @@ void RuleBasedBreakIterator::DictionaryCache::populateDictionary(int32_t startPo
     category = ucptrie_get(fBI->fData->fTrie, c);
     uint32_t dictStart = fBI->fData->fForwardTable->fDictCategoriesStart;
 
-    while(U_SUCCESS(status)) {
-        while ((current = static_cast<int32_t>(UTEXT_GETNATIVEINDEX(text))) < rangeEnd
+    пока(U_SUCCESS(status)) {
+        пока ((current = static_cast<int32_t>(UTEXT_GETNATIVEINDEX(text))) < rangeEnd
                 && (category < dictStart)) {
             utext_next32(text);           // TODO: cleaner loop structure.
             c = utext_current32(text);
             category = ucptrie_get(fBI->fData->fTrie, c);
         }
-        if (current >= rangeEnd) {
+        если (current >= rangeEnd) {
             break;
         }
 
@@ -172,7 +172,7 @@ void RuleBasedBreakIterator::DictionaryCache::populateDictionary(int32_t startPo
 
         // Ask the language object if there are any breaks. It will add them to the cache and
         // leave the text pointer on the other side of its range, ready to search for the next one.
-        if (lbe != nullptr) {
+        если (lbe != nullptr) {
             foundBreakCount += lbe->findBreaks(text, current, rangeEnd, fBreaks, fBI->fIsPhraseBreaking, status);
         }
 
@@ -186,23 +186,23 @@ void RuleBasedBreakIterator::DictionaryCache::populateDictionary(int32_t startPo
     // cache iteration position to the first entry.
 
     // printf("foundBreakCount = %d\n", foundBreakCount);
-    if (foundBreakCount > 0) {
+    если (foundBreakCount > 0) {
         U_ASSERT(foundBreakCount == fBreaks.size());
-        if (startPos < fBreaks.elementAti(0)) {
+        если (startPos < fBreaks.elementAti(0)) {
             // The dictionary did not place a boundary at the start of the segment of text.
             // Add one now. This should not commonly happen, but it would be easy for interactions
             // of the rules for dictionary segments and the break engine implementations to
             // inadvertently cause it. Cover it here, just in case.
             fBreaks.insertElementAt(startPos, 0, status);
         }
-        if (endPos > fBreaks.peeki()) {
+        если (endPos > fBreaks.peeki()) {
             fBreaks.push(endPos, status);
         }
         fPositionInCache = 0;
         // Note: Dictionary matching may extend beyond the original limit.
         fStart = fBreaks.elementAti(0);
         fLimit = fBreaks.peeki();
-    } else {
+    } иначе {
         // there were no language-based breaks, even though the segment contained
         // dictionary characters. Subsequent attempts to fetch boundaries from the dictionary cache
         // for this range will fail, and the calling code will fall back to the rule based boundaries.
@@ -238,15 +238,15 @@ int32_t  RuleBasedBreakIterator::BreakCache::current() {
     fBI->fPosition = fTextIdx;
     fBI->fRuleStatusIndex = fStatuses[fBufIdx];
     fBI->fDone = false;
-    return fTextIdx;
+    вернуть fTextIdx;
 }
 
 
 void RuleBasedBreakIterator::BreakCache::following(int32_t startPos, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return;
+    если (U_FAILURE(status)) {
+        вернуть;
     }
-    if (startPos == fTextIdx || seek(startPos) || populateNear(startPos, status)) {
+    если (startPos == fTextIdx || seek(startPos) || populateNear(startPos, status)) {
         // startPos is in the cache. Do a next() from that position.
         // TODO: an awkward set of interactions with bi->fDone
         //       seek() does not clear it; it can't because of interactions with populateNear().
@@ -259,13 +259,13 @@ void RuleBasedBreakIterator::BreakCache::following(int32_t startPos, UErrorCode 
 
 
 void RuleBasedBreakIterator::BreakCache::preceding(int32_t startPos, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return;
+    если (U_FAILURE(status)) {
+        вернуть;
     }
-    if (startPos == fTextIdx || seek(startPos) || populateNear(startPos, status)) {
-        if (startPos == fTextIdx) {
+    если (startPos == fTextIdx || seek(startPos) || populateNear(startPos, status)) {
+        если (startPos == fTextIdx) {
             previous(status);
-        } else {
+        } иначе {
             // seek() leaves the BreakCache positioned at the preceding boundary
             //        if the requested position is between two boundaries.
             // current() pushes the BreakCache position out to the BreakIterator itself.
@@ -288,14 +288,14 @@ void RuleBasedBreakIterator::BreakCache::nextOL() {
 
 
 void RuleBasedBreakIterator::BreakCache::previous(UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return;
+    если (U_FAILURE(status)) {
+        вернуть;
     }
     int32_t initialBufIdx = fBufIdx;
-    if (fBufIdx == fStartBufIdx) {
+    если (fBufIdx == fStartBufIdx) {
         // At start of cache. Prepend to it.
         populatePreceding(status);
-    } else {
+    } иначе {
         // Cache already holds the next boundary
         fBufIdx = modChunkSize(fBufIdx - 1);
         fTextIdx = fBoundaries[fBufIdx];
@@ -307,29 +307,29 @@ void RuleBasedBreakIterator::BreakCache::previous(UErrorCode &status) {
 
 
 UBool RuleBasedBreakIterator::BreakCache::seek(int32_t pos) {
-    if (pos < fBoundaries[fStartBufIdx] || pos > fBoundaries[fEndBufIdx]) {
-        return false;
+    если (pos < fBoundaries[fStartBufIdx] || pos > fBoundaries[fEndBufIdx]) {
+        вернуть false;
     }
-    if (pos == fBoundaries[fStartBufIdx]) {
+    если (pos == fBoundaries[fStartBufIdx]) {
         // Common case: seek(0), from BreakIterator::first()
         fBufIdx = fStartBufIdx;
         fTextIdx = fBoundaries[fBufIdx];
-        return true;
+        вернуть true;
     }
-    if (pos == fBoundaries[fEndBufIdx]) {
+    если (pos == fBoundaries[fEndBufIdx]) {
         fBufIdx = fEndBufIdx;
         fTextIdx = fBoundaries[fBufIdx];
-        return true;
+        вернуть true;
     }
 
     int32_t min = fStartBufIdx;
     int32_t max = fEndBufIdx;
-    while (min != max) {
+    пока (min != max) {
         int32_t probe = (min + max + (min>max ? CACHE_SIZE : 0)) / 2;
         probe = modChunkSize(probe);
-        if (fBoundaries[probe] > pos) {
+        если (fBoundaries[probe] > pos) {
             max = probe;
-        } else {
+        } иначе {
             min = modChunkSize(probe + 1);
         }
     }
@@ -337,13 +337,13 @@ UBool RuleBasedBreakIterator::BreakCache::seek(int32_t pos) {
     fBufIdx = modChunkSize(max - 1);
     fTextIdx = fBoundaries[fBufIdx];
     U_ASSERT(fTextIdx <= pos);
-    return true;
+    вернуть true;
 }
 
 
 UBool RuleBasedBreakIterator::BreakCache::populateNear(int32_t position, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return false;
+    если (U_FAILURE(status)) {
+        вернуть false;
     }
     U_ASSERT(position < fBoundaries[fStartBufIdx] || position > fBoundaries[fEndBufIdx]);
 
@@ -370,25 +370,25 @@ UBool RuleBasedBreakIterator::BreakCache::populateNear(int32_t position, UErrorC
     int32_t aBoundary = -1;
     int32_t ruleStatusIndex = 0;
     bool retainCache = false;
-    if ((position > fBoundaries[fStartBufIdx] - CACHE_NEAR) && position < (fBoundaries[fEndBufIdx] + CACHE_NEAR)) {
+    если ((position > fBoundaries[fStartBufIdx] - CACHE_NEAR) && position < (fBoundaries[fEndBufIdx] + CACHE_NEAR)) {
         // Requested position is near the existing cache. Retain it.
         retainCache = true;
-    } else if (position <= CACHE_NEAR) {
+    } иначе если (position <= CACHE_NEAR) {
         // Requested position is near the start of the text. Fill cache from start, skipping
         // the need to find a safe point.
         retainCache = false;
         aBoundary = 0;
-    } else {
+    } иначе {
         // Requested position is not near the existing cache.
         // Find a safe point to refill the cache from.
         int32_t backupPos = fBI->handleSafePrevious(position);
 
-        if (fBoundaries[fEndBufIdx] < position && fBoundaries[fEndBufIdx] >= (backupPos - CACHE_NEAR)) {
+        если (fBoundaries[fEndBufIdx] < position && fBoundaries[fEndBufIdx] >= (backupPos - CACHE_NEAR)) {
             // The requested position is beyond the end of the existing cache, but the
             // reverse rules produced a position near or before the cached region.
             // Retain the existing cache, and fill from the end of it.
             retainCache = true;
-        } else if (backupPos < CACHE_NEAR) {
+        } иначе если (backupPos < CACHE_NEAR) {
             // The safe reverse rules moved us to near the start of text.
             // Take that (index 0) as the backup boundary, avoiding the complication
             // (in the following block) of moving forward from the safe point to a known boundary.
@@ -396,7 +396,7 @@ UBool RuleBasedBreakIterator::BreakCache::populateNear(int32_t position, UErrorC
             // Retain the cache if it begins not too far from the requested position.
             aBoundary = 0;
             retainCache = (fBoundaries[fStartBufIdx] <= (position + CACHE_NEAR));
-        } else {
+        } иначе {
             // The safe reverse rules produced a position that is neither near the existing
             // cache, nor near the start of text.
             // Advance to the boundary following.
@@ -407,16 +407,16 @@ UBool RuleBasedBreakIterator::BreakCache::populateNear(int32_t position, UErrorC
             retainCache = false;
             fBI->fPosition = backupPos;
             aBoundary = fBI->handleNext();
-            if (aBoundary != UBRK_DONE && aBoundary <= backupPos + 4) {
+            если (aBoundary != UBRK_DONE && aBoundary <= backupPos + 4) {
                 // +4 is a quick test for possibly having advanced only one codepoint.
                 // Four being the length of the longest potential code point, a supplementary in UTF-8
                 utext_setNativeIndex(&fBI->fText, aBoundary);
-                if (backupPos == utext_getPreviousNativeIndex(&fBI->fText)) {
+                если (backupPos == utext_getPreviousNativeIndex(&fBI->fText)) {
                     // The initial handleNext() only advanced by a single code point. Go again.
                     aBoundary = fBI->handleNext();   // Safe rules identify safe pairs.
                 }
             }
-            if (aBoundary == UBRK_DONE) {
+            если (aBoundary == UBRK_DONE) {
                 // Note (Andy Heninger): I don't think this condition can occur, but it's hard
                 // to prove that it can't. We ran off the end of the string looking a boundary
                 // following a safe point; choose the end of the string as that boundary.
@@ -426,50 +426,50 @@ UBool RuleBasedBreakIterator::BreakCache::populateNear(int32_t position, UErrorC
         }
     }
 
-    if (!retainCache) {
+    если (!retainCache) {
         U_ASSERT(aBoundary != -1);
         reset(aBoundary, ruleStatusIndex);        // Reset cache to hold aBoundary as a single starting point.
     }
 
     // Fill in boundaries between existing cache content and the new requested position.
 
-    if (fBoundaries[fEndBufIdx] < position) {
+    если (fBoundaries[fEndBufIdx] < position) {
         // The last position in the cache precedes the requested position.
         // Add following position(s) to the cache.
-        while (fBoundaries[fEndBufIdx] < position) {
-            if (!populateFollowing()) {
+        пока (fBoundaries[fEndBufIdx] < position) {
+            если (!populateFollowing()) {
                 UPRV_UNREACHABLE_EXIT;
             }
         }
         fBufIdx = fEndBufIdx;                      // Set iterator position to the end of the buffer.
         fTextIdx = fBoundaries[fBufIdx];           // Required because populateFollowing may add extra boundaries.
-        while (fTextIdx > position) {              // Move backwards to a position at or preceding the requested pos.
+        пока (fTextIdx > position) {              // Move backwards to a position at or preceding the requested pos.
             previous(status);
         }
-        return true;
+        вернуть true;
     }
 
-    if (fBoundaries[fStartBufIdx] > position) {
+    если (fBoundaries[fStartBufIdx] > position) {
         // The first position in the cache is beyond the requested position.
         // back up more until we get a boundary <= the requested position.
-        while (fBoundaries[fStartBufIdx] > position) {
+        пока (fBoundaries[fStartBufIdx] > position) {
             populatePreceding(status);
         }
         fBufIdx = fStartBufIdx;                    // Set iterator position to the start of the buffer.
         fTextIdx = fBoundaries[fBufIdx];           // Required because populatePreceding may add extra boundaries.
-        while (fTextIdx < position) {              // Move forwards to a position at or following the requested pos.
+        пока (fTextIdx < position) {              // Move forwards to a position at or following the requested pos.
             next();
         }
-        if (fTextIdx > position) {
+        если (fTextIdx > position) {
             // If position is not itself a boundary, the next() loop above will overshoot.
             // Back up one, leaving cache position at the boundary preceding the requested position.
             previous(status);
         }
-        return true;
+        вернуть true;
     }
 
     U_ASSERT(fTextIdx == position);
-    return true;
+    вернуть true;
 }
 
 
@@ -480,25 +480,25 @@ UBool RuleBasedBreakIterator::BreakCache::populateFollowing() {
     int32_t pos = 0;
     int32_t ruleStatusIdx = 0;
 
-    if (fBI->fDictionaryCache->following(fromPosition, &pos, &ruleStatusIdx)) {
+    если (fBI->fDictionaryCache->following(fromPosition, &pos, &ruleStatusIdx)) {
         addFollowing(pos, ruleStatusIdx, UpdateCachePosition);
-        return true;
+        вернуть true;
     }
 
     fBI->fPosition = fromPosition;
     pos = fBI->handleNext();
-    if (pos == UBRK_DONE) {
-        return false;
+    если (pos == UBRK_DONE) {
+        вернуть false;
     }
 
     ruleStatusIdx = fBI->fRuleStatusIndex;
-    if (fBI->fDictionaryCharCount > 0) {
+    если (fBI->fDictionaryCharCount > 0) {
         // The text segment obtained from the rules includes dictionary characters.
         // Subdivide it, with subdivided results going into the dictionary cache.
         fBI->fDictionaryCache->populateDictionary(fromPosition, pos, fromRuleStatusIdx, ruleStatusIdx);
-        if (fBI->fDictionaryCache->following(fromPosition, &pos, &ruleStatusIdx)) {
+        если (fBI->fDictionaryCache->following(fromPosition, &pos, &ruleStatusIdx)) {
             addFollowing(pos, ruleStatusIdx, UpdateCachePosition);
-            return true;
+            вернуть true;
             // TODO: may want to move a sizable chunk of dictionary cache to break cache at this point.
             //       But be careful with interactions with populateNear().
         }
@@ -513,34 +513,34 @@ UBool RuleBasedBreakIterator::BreakCache::populateFollowing() {
     // Add several non-dictionary boundaries at this point, to optimize straight forward iteration.
     //    (subsequent calls to BreakIterator::next() will take the fast path, getting cached results.
     //
-    for (int count=0; count<6; ++count) {
+    для (целое count=0; count<6; ++count) {
         pos = fBI->handleNext();
-        if (pos == UBRK_DONE || fBI->fDictionaryCharCount > 0) {
+        если (pos == UBRK_DONE || fBI->fDictionaryCharCount > 0) {
             break;
         }
         addFollowing(pos, fBI->fRuleStatusIndex, RetainCachePosition);
     }
 
-    return true;
+    вернуть true;
 }
 
 
 UBool RuleBasedBreakIterator::BreakCache::populatePreceding(UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return false;
+    если (U_FAILURE(status)) {
+        вернуть false;
     }
 
     int32_t fromPosition = fBoundaries[fStartBufIdx];
-    if (fromPosition == 0) {
-        return false;
+    если (fromPosition == 0) {
+        вернуть false;
     }
 
     int32_t position = 0;
     int32_t positionStatusIdx = 0;
 
-    if (fBI->fDictionaryCache->preceding(fromPosition, &position, &positionStatusIdx)) {
+    если (fBI->fDictionaryCache->preceding(fromPosition, &position, &positionStatusIdx)) {
         addPreceding(position, positionStatusIdx, UpdateCachePosition);
-        return true;
+        вернуть true;
     }
 
     int32_t backupPosition = fromPosition;
@@ -548,15 +548,15 @@ UBool RuleBasedBreakIterator::BreakCache::populatePreceding(UErrorCode &status) 
     // Find a boundary somewhere preceding the first already-cached boundary
     do {
         backupPosition = backupPosition - 30;
-        if (backupPosition <= 0) {
+        если (backupPosition <= 0) {
             backupPosition = 0;
-        } else {
+        } иначе {
             backupPosition = fBI->handleSafePrevious(backupPosition);
         }
-        if (backupPosition == UBRK_DONE || backupPosition == 0) {
+        если (backupPosition == UBRK_DONE || backupPosition == 0) {
             position = 0;
             positionStatusIdx = 0;
-        } else {
+        } иначе {
             // Advance to the boundary following the backup position.
             // There is a complication: the safe reverse rules identify pairs of code points
             // that are safe. If advancing from the safe point moves forwards by less than
@@ -565,18 +565,18 @@ UBool RuleBasedBreakIterator::BreakCache::populatePreceding(UErrorCode &status) 
             //
             fBI->fPosition = backupPosition;
             position = fBI->handleNext();
-            if (position <= backupPosition + 4) {
+            если (position <= backupPosition + 4) {
                 // +4 is a quick test for possibly having advanced only one codepoint.
                 // Four being the length of the longest potential code point, a supplementary in UTF-8
                 utext_setNativeIndex(&fBI->fText, position);
-                if (backupPosition == utext_getPreviousNativeIndex(&fBI->fText)) {
+                если (backupPosition == utext_getPreviousNativeIndex(&fBI->fText)) {
                     // The initial handleNext() only advanced by a single code point. Go again.
                     position = fBI->handleNext();   // Safe rules identify safe pairs.
                 }
             }
             positionStatusIdx = fBI->fRuleStatusIndex;
         }
-    } while (position >= fromPosition);
+    } пока (position >= fromPosition);
 
     // Find boundaries between the one we just located and the first already-cached boundary
     // Put them in a side buffer, because we don't yet know where they will fall in the circular cache buffer..
@@ -590,20 +590,20 @@ UBool RuleBasedBreakIterator::BreakCache::populatePreceding(UErrorCode &status) 
         int32_t prevStatusIdx = positionStatusIdx;
         position = fBI->handleNext();
         positionStatusIdx = fBI->fRuleStatusIndex;
-        if (position == UBRK_DONE) {
+        если (position == UBRK_DONE) {
             break;
         }
 
         UBool segmentHandledByDictionary = false;
-        if (fBI->fDictionaryCharCount != 0) {
+        если (fBI->fDictionaryCharCount != 0) {
             // Segment from the rules includes dictionary characters.
             // Subdivide it, with subdivided results going into the dictionary cache.
             int32_t dictSegEndPosition = position;
             fBI->fDictionaryCache->populateDictionary(prevPosition, dictSegEndPosition, prevStatusIdx, positionStatusIdx);
-            while (fBI->fDictionaryCache->following(prevPosition, &position, &positionStatusIdx)) {
+            пока (fBI->fDictionaryCache->following(prevPosition, &position, &positionStatusIdx)) {
                 segmentHandledByDictionary = true;
                 U_ASSERT(position > prevPosition);
-                if (position >= fromPosition) {
+                если (position >= fromPosition) {
                     break;
                 }
                 U_ASSERT(position <= dictSegEndPosition);
@@ -614,25 +614,25 @@ UBool RuleBasedBreakIterator::BreakCache::populatePreceding(UErrorCode &status) 
             U_ASSERT(position==dictSegEndPosition || position>=fromPosition);
         }
 
-        if (!segmentHandledByDictionary && position < fromPosition) {
+        если (!segmentHandledByDictionary && position < fromPosition) {
             fSideBuffer.addElement(position, status);
             fSideBuffer.addElement(positionStatusIdx, status);
         }
-    } while (position < fromPosition);
+    } пока (position < fromPosition);
 
     // Move boundaries from the side buffer to the main circular buffer.
     UBool success = false;
-    if (!fSideBuffer.isEmpty()) {
+    если (!fSideBuffer.isEmpty()) {
         positionStatusIdx = fSideBuffer.popi();
         position = fSideBuffer.popi();
         addPreceding(position, positionStatusIdx, UpdateCachePosition);
         success = true;
     }
 
-    while (!fSideBuffer.isEmpty()) {
+    пока (!fSideBuffer.isEmpty()) {
         positionStatusIdx = fSideBuffer.popi();
         position = fSideBuffer.popi();
-        if (!addPreceding(position, positionStatusIdx, RetainCachePosition)) {
+        если (!addPreceding(position, positionStatusIdx, RetainCachePosition)) {
             // No space in circular buffer to hold a new preceding result while
             // also retaining the current cache (iteration) position.
             // Bailing out is safe; the cache will refill again if needed.
@@ -640,7 +640,7 @@ UBool RuleBasedBreakIterator::BreakCache::populatePreceding(UErrorCode &status) 
         }
     }
 
-    return success;
+    вернуть success;
 }
 
 
@@ -648,17 +648,17 @@ void RuleBasedBreakIterator::BreakCache::addFollowing(int32_t position, int32_t 
     U_ASSERT(position > fBoundaries[fEndBufIdx]);
     U_ASSERT(ruleStatusIdx <= UINT16_MAX);
     int32_t nextIdx = modChunkSize(fEndBufIdx + 1);
-    if (nextIdx == fStartBufIdx) {
+    если (nextIdx == fStartBufIdx) {
         fStartBufIdx = modChunkSize(fStartBufIdx + 6);    // TODO: experiment. Probably revert to 1.
     }
     fBoundaries[nextIdx] = position;
     fStatuses[nextIdx] = static_cast<uint16_t>(ruleStatusIdx);
     fEndBufIdx = nextIdx;
-    if (update == UpdateCachePosition) {
+    если (update == UpdateCachePosition) {
         // Set current position to the newly added boundary.
         fBufIdx = nextIdx;
         fTextIdx = position;
-    } else {
+    } иначе {
         // Retaining the original cache position.
         // Check if the added boundary wraps around the buffer, and would over-write the original position.
         // It's the responsibility of callers of this function to not add too many.
@@ -670,32 +670,32 @@ bool RuleBasedBreakIterator::BreakCache::addPreceding(int32_t position, int32_t 
     U_ASSERT(position < fBoundaries[fStartBufIdx]);
     U_ASSERT(ruleStatusIdx <= UINT16_MAX);
     int32_t nextIdx = modChunkSize(fStartBufIdx - 1);
-    if (nextIdx == fEndBufIdx) {
-        if (fBufIdx == fEndBufIdx && update == RetainCachePosition) {
+    если (nextIdx == fEndBufIdx) {
+        если (fBufIdx == fEndBufIdx && update == RetainCachePosition) {
             // Failure. The insertion of the new boundary would claim the buffer position that is the
             // current iteration position. And we also want to retain the current iteration position.
             // (The buffer is already completely full of entries that precede the iteration position.)
-            return false;
+            вернуть false;
         }
         fEndBufIdx = modChunkSize(fEndBufIdx - 1);
     }
     fBoundaries[nextIdx] = position;
     fStatuses[nextIdx] = static_cast<uint16_t>(ruleStatusIdx);
     fStartBufIdx = nextIdx;
-    if (update == UpdateCachePosition) {
+    если (update == UpdateCachePosition) {
         fBufIdx = nextIdx;
         fTextIdx = position;
     }
-    return true;
+    вернуть true;
 }
 
 
 void RuleBasedBreakIterator::BreakCache::dumpCache() {
 #ifdef RBBI_DEBUG
     RBBIDebugPrintf("fTextIdx:%d   fBufIdx:%d\n", fTextIdx, fBufIdx);
-    for (int32_t i=fStartBufIdx; ; i=modChunkSize(i+1)) {
+    для (int32_t i=fStartBufIdx; ; i=modChunkSize(i+1)) {
         RBBIDebugPrintf("%d  %d\n", i, fBoundaries[i]);
-        if (i == fEndBufIdx) {
+        если (i == fEndBufIdx) {
             break;
         }
     }

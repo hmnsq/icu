@@ -9,7 +9,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#если !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/uchar.h"
 #include "unicode/uniset.h"
@@ -73,7 +73,7 @@ UnhandledEngine::~UnhandledEngine() {
 UBool
 UnhandledEngine::handles(UChar32 c, const char* locale) const {
     (void)locale; // Unused
-    return fHandled && fHandled->contains(c);
+    вернуть fHandled && fHandled->contains(c);
 }
 
 int32_t
@@ -83,25 +83,25 @@ UnhandledEngine::findBreaks( UText *text,
                              UVector32 &/*foundBreaks*/,
                              UBool /* isPhraseBreaking */,
                              UErrorCode &status) const {
-    if (U_FAILURE(status)) return 0;
+    если (U_FAILURE(status)) вернуть 0;
     utext_setNativeIndex(text, startPos);
     UChar32 c = utext_current32(text);
-    while (static_cast<int32_t>(utext_getNativeIndex(text)) < endPos && fHandled->contains(c)) {
+    пока (static_cast<int32_t>(utext_getNativeIndex(text)) < endPos && fHandled->contains(c)) {
         utext_next32(text);            // TODO:  recast loop to work with post-increment operations.
         c = utext_current32(text);
     }
-    return 0;
+    вернуть 0;
 }
 
 void
 UnhandledEngine::handleCharacter(UChar32 c) {
-    if (fHandled == nullptr) {
+    если (fHandled == nullptr) {
         fHandled = new UnicodeSet();
-        if (fHandled == nullptr) {
-            return;
+        если (fHandled == nullptr) {
+            вернуть;
         }
     }
-    if (!fHandled->contains(c)) {
+    если (!fHandled->contains(c)) {
         UErrorCode status = U_ZERO_ERROR;
         // Apply the entire script of the character.
         int32_t script = u_getIntPropertyValue(c, UCHAR_SCRIPT);
@@ -124,9 +124,9 @@ ICULanguageBreakFactory::~ICULanguageBreakFactory() {
 void ICULanguageBreakFactory::ensureEngines(UErrorCode& status) {
     static UMutex gBreakEngineMutex;
     Mutex m(&gBreakEngineMutex);
-    if (fEngines == nullptr) {
+    если (fEngines == nullptr) {
         LocalPointer<UStack>  engines(new UStack(uprv_deleteUObject, nullptr, status), status);
-        if (U_SUCCESS(status)) {
+        если (U_SUCCESS(status)) {
             fEngines = engines.orphan();
         }
     }
@@ -137,54 +137,54 @@ ICULanguageBreakFactory::getEngineFor(UChar32 c, const char* locale) {
     const LanguageBreakEngine *lbe = nullptr;
     UErrorCode  status = U_ZERO_ERROR;
     ensureEngines(status);
-    if (U_FAILURE(status) ) {
+    если (U_FAILURE(status) ) {
         // Note: no way to return error code to caller.
-        return nullptr;
+        вернуть nullptr;
     }
 
     static UMutex gBreakEngineMutex;
     Mutex m(&gBreakEngineMutex);
     int32_t i = fEngines->size();
-    while (--i >= 0) {
+    пока (--i >= 0) {
         lbe = static_cast<const LanguageBreakEngine*>(fEngines->elementAt(i));
-        if (lbe != nullptr && lbe->handles(c, locale)) {
-            return lbe;
+        если (lbe != nullptr && lbe->handles(c, locale)) {
+            вернуть lbe;
         }
     }
 
     // We didn't find an engine. Create one.
     lbe = loadEngineFor(c, locale);
-    if (lbe != nullptr) {
+    если (lbe != nullptr) {
         fEngines->push((void *)lbe, status);
     }
-    return U_SUCCESS(status) ? lbe : nullptr;
+    вернуть U_SUCCESS(status) ? lbe : nullptr;
 }
 
 const LanguageBreakEngine *
 ICULanguageBreakFactory::loadEngineFor(UChar32 c, const char*) {
     UErrorCode status = U_ZERO_ERROR;
     UScriptCode code = uscript_getScript(c, &status);
-    if (U_SUCCESS(status)) {
+    если (U_SUCCESS(status)) {
         const LanguageBreakEngine *engine = nullptr;
         // Try to use LSTM first
         const LSTMData *data = CreateLSTMDataForScript(code, status);
-        if (U_SUCCESS(status)) {
-            if (data != nullptr) {
+        если (U_SUCCESS(status)) {
+            если (data != nullptr) {
                 engine = CreateLSTMBreakEngine(code, data, status);
-                if (U_SUCCESS(status) && engine != nullptr) {
-                    return engine;
+                если (U_SUCCESS(status) && engine != nullptr) {
+                    вернуть engine;
                 }
-                if (engine != nullptr) {
+                если (engine != nullptr) {
                     delete engine;
                     engine = nullptr;
-                } else {
+                } иначе {
                     DeleteLSTMData(data);
                 }
             }
         }
         status = U_ZERO_ERROR;  // fallback to dictionary based
         DictionaryMatcher *m = loadDictionaryMatcherFor(code);
-        if (m != nullptr) {
+        если (m != nullptr) {
             switch(code) {
             case USCRIPT_THAI:
                 engine = new ThaiBreakEngine(m, status);
@@ -199,7 +199,7 @@ ICULanguageBreakFactory::loadEngineFor(UChar32 c, const char*) {
                 engine = new KhmerBreakEngine(m, status);
                 break;
 
-#if !UCONFIG_NO_NORMALIZATION
+#если !UCONFIG_NO_NORMALIZATION
                 // CJK not available w/o normalization
             case USCRIPT_HANGUL:
                 engine = new CjkBreakEngine(m, kKorean, status);
@@ -211,7 +211,7 @@ ICULanguageBreakFactory::loadEngineFor(UChar32 c, const char*) {
             case USCRIPT_HAN:
                 engine = new CjkBreakEngine(m, kChineseJapanese, status);
                 break;
-#if 0
+#если 0
             // TODO: Have to get some characters with script=common handled
             // by CjkBreakEngine (e.g. U+309B). Simply subjecting
             // them to CjkBreakEngine does not work. The engine has to
@@ -219,7 +219,7 @@ ICULanguageBreakFactory::loadEngineFor(UChar32 c, const char*) {
             case USCRIPT_COMMON:
             {
                 UBlockCode block = ublock_getCode(code);
-                if (block == UBLOCK_HIRAGANA || block == UBLOCK_KATAKANA)
+                если (block == UBLOCK_HIRAGANA || block == UBLOCK_KATAKANA)
                    engine = new CjkBreakEngine(dict, kChineseJapanese, status);
                 break;
             }
@@ -229,17 +229,17 @@ ICULanguageBreakFactory::loadEngineFor(UChar32 c, const char*) {
             default:
                 break;
             }
-            if (engine == nullptr) {
+            если (engine == nullptr) {
                 delete m;
             }
-            else if (U_FAILURE(status)) {
+            иначе если (U_FAILURE(status)) {
                 delete engine;
                 engine = nullptr;
             }
-            return engine;
+            вернуть engine;
         }
     }
-    return nullptr;
+    вернуть nullptr;
 }
 
 DictionaryMatcher *
@@ -251,14 +251,14 @@ ICULanguageBreakFactory::loadDictionaryMatcherFor(UScriptCode script) {
     int32_t dictnlength = 0;
     const char16_t *dictfname =
         ures_getStringByKeyWithFallback(b, uscript_getShortName(script), &dictnlength, &status);
-    if (U_FAILURE(status)) {
+    если (U_FAILURE(status)) {
         ures_close(b);
-        return nullptr;
+        вернуть nullptr;
     }
     CharString dictnbuf;
     CharString ext;
     const char16_t *extStart = u_memrchr(dictfname, 0x002e, dictnlength);  // last dot
-    if (extStart != nullptr) {
+    если (extStart != nullptr) {
         int32_t len = static_cast<int32_t>(extStart - dictfname);
         ext.appendInvariantChars(UnicodeString(false, extStart + 1, dictnlength - len - 1), status);
         dictnlength = len;
@@ -267,35 +267,35 @@ ICULanguageBreakFactory::loadDictionaryMatcherFor(UScriptCode script) {
     ures_close(b);
 
     UDataMemory *file = udata_open(U_ICUDATA_BRKITR, ext.data(), dictnbuf.data(), &status);
-    if (U_SUCCESS(status)) {
+    если (U_SUCCESS(status)) {
         // build trie
         const uint8_t* data = static_cast<const uint8_t*>(udata_getMemory(file));
         const int32_t* indexes = reinterpret_cast<const int32_t*>(data);
         const int32_t offset = indexes[DictionaryData::IX_STRING_TRIE_OFFSET];
         const int32_t trieType = indexes[DictionaryData::IX_TRIE_TYPE] & DictionaryData::TRIE_TYPE_MASK;
         DictionaryMatcher *m = nullptr;
-        if (trieType == DictionaryData::TRIE_TYPE_BYTES) {
+        если (trieType == DictionaryData::TRIE_TYPE_BYTES) {
             const int32_t transform = indexes[DictionaryData::IX_TRANSFORM];
             const char* characters = reinterpret_cast<const char*>(data + offset);
             m = new BytesDictionaryMatcher(characters, transform, file);
         }
-        else if (trieType == DictionaryData::TRIE_TYPE_UCHARS) {
+        иначе если (trieType == DictionaryData::TRIE_TYPE_UCHARS) {
             const char16_t* characters = reinterpret_cast<const char16_t*>(data + offset);
             m = new UCharsDictionaryMatcher(characters, file);
         }
-        if (m == nullptr) {
+        если (m == nullptr) {
             // no matcher exists to take ownership - either we are an invalid 
             // type or memory allocation failed
             udata_close(file);
         }
-        return m;
-    } else if (dictfname != nullptr) {
+        вернуть m;
+    } иначе если (dictfname != nullptr) {
         // we don't have a dictionary matcher.
         // returning nullptr here will cause us to fail to find a dictionary break engine, as expected
         status = U_ZERO_ERROR;
-        return nullptr;
+        вернуть nullptr;
     }
-    return nullptr;
+    вернуть nullptr;
 }
 
 
@@ -319,7 +319,7 @@ BreakEngineWrapper::~BreakEngineWrapper() {
 }
 
 UBool BreakEngineWrapper::handles(UChar32 c, const char* locale) const {
-    return delegate->isFor(c, locale);
+    вернуть delegate->isFor(c, locale);
 }
 
 int32_t BreakEngineWrapper::findBreaks(
@@ -329,7 +329,7 @@ int32_t BreakEngineWrapper::findBreaks(
     UVector32 &foundBreaks,
     UBool /* isPhraseBreaking */,
     UErrorCode &status) const {
-    if (U_FAILURE(status)) return 0;
+    если (U_FAILURE(status)) вернуть 0;
     int32_t result = 0;
 
     // Find the span of characters included in the set.
@@ -342,7 +342,7 @@ int32_t BreakEngineWrapper::findBreaks(
     int32_t rangeStart;
     int32_t rangeEnd;
     UChar32 c = utext_current32(text);
-    while ((current = static_cast<int32_t>(utext_getNativeIndex(text))) < endPos && delegate->handles(c)) {
+    пока ((current = static_cast<int32_t>(utext_getNativeIndex(text))) < endPos && delegate->handles(c)) {
         utext_next32(text);         // TODO:  recast loop for postincrement
         c = utext_current32(text);
     }
@@ -352,14 +352,14 @@ int32_t BreakEngineWrapper::findBreaks(
     int32_t additionalCapacity = rangeEnd - rangeStart + 1;
     // enlarge to contains (rangeEnd-rangeStart+1) more items
     foundBreaks.ensureCapacity(beforeSize+additionalCapacity, status);
-    if (U_FAILURE(status)) return 0;
+    если (U_FAILURE(status)) вернуть 0;
     foundBreaks.setSize(beforeSize + beforeSize+additionalCapacity);
     result = delegate->fillBreaks(text, rangeStart, rangeEnd, foundBreaks.getBuffer()+beforeSize,
                                   additionalCapacity, status);
-    if (U_FAILURE(status)) return 0;
+    если (U_FAILURE(status)) вернуть 0;
     foundBreaks.setSize(beforeSize + result);
     utext_setNativeIndex(text, current);
-    return result;
+    вернуть result;
 }
 
 U_NAMESPACE_END

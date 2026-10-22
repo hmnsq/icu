@@ -875,11 +875,11 @@ utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
     { \
         uint16_t __c2; \
         (c)=*(src)++; \
-        if(!U16_IS_LEAD(c)) { \
+        если(!U16_IS_LEAD(c)) { \
             (result)=_UTRIE2_GET_FROM_U16_SINGLE_LEAD(trie, data, c); \
-        } else if((src)==(limit) || !U16_IS_TRAIL(__c2=*(src))) { \
+        } иначе если((src)==(limit) || !U16_IS_TRAIL(__c2=*(src))) { \
             (result)=(trie)->data[_UTRIE2_INDEX_FROM_LSCP((trie)->index, c)]; \
-        } else { \
+        } иначе { \
             ++(src); \
             (c)=U16_GET_SUPPLEMENTARY((c), __c2); \
             (result)=_UTRIE2_GET_FROM_SUPP((trie), data, (c)); \
@@ -892,9 +892,9 @@ utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
     { \
         uint16_t __c2; \
         (c)=*--(src); \
-        if(!U16_IS_TRAIL(c) || (src)==(start) || !U16_IS_LEAD(__c2=*((src)-1))) { \
+        если(!U16_IS_TRAIL(c) || (src)==(start) || !U16_IS_LEAD(__c2=*((src)-1))) { \
             (result)=(trie)->data[_UTRIE2_INDEX_FROM_BMP((trie)->index, c)]; \
-        } else { \
+        } иначе { \
             --(src); \
             (c)=U16_GET_SUPPLEMENTARY(__c2, (c)); \
             (result)=_UTRIE2_GET_FROM_SUPP((trie), data, (c)); \
@@ -905,11 +905,11 @@ utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
 /** Internal UTF-8 next-post-increment: get the next code point's data. */
 #define _UTRIE2_U8_NEXT(trie, ascii, data, src, limit, result) UPRV_BLOCK_MACRO_BEGIN { \
     uint8_t __lead=(uint8_t)*(src)++; \
-    if(U8_IS_SINGLE(__lead)) { \
+    если(U8_IS_SINGLE(__lead)) { \
         (result)=(trie)->ascii[__lead]; \
-    } else { \
+    } иначе { \
         uint8_t __t1, __t2; \
-        if( /* handle U+0800..U+FFFF inline */ \
+        если( /* handle U+0800..U+FFFF inline */ \
             0xe0<=__lead && __lead<0xf0 && ((src)+1)<(limit) && \
             U8_IS_VALID_LEAD3_AND_T1(__lead, __t1=(uint8_t)*(src)) && \
             (__t2=(uint8_t)(*((src)+1)-0x80))<= 0x3f \
@@ -920,7 +920,7 @@ utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
                                          ((__t1&0x3f)<<(6-UTRIE2_SHIFT_2))+(__t2>>UTRIE2_SHIFT_2)]) \
                 <<UTRIE2_INDEX_SHIFT)+ \
                 (__t2&UTRIE2_DATA_MASK)]; \
-        } else if( /* handle U+0080..U+07FF inline */ \
+        } иначе если( /* handle U+0080..U+07FF inline */ \
             __lead<0xe0 && __lead>=0xc2 && (src)<(limit) && \
             (__t1=(uint8_t)(*(src)-0x80))<=0x3f \
         ) { \
@@ -928,7 +928,7 @@ utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
             (result)=(trie)->data[ \
                 (trie)->index[(UTRIE2_UTF8_2B_INDEX_2_OFFSET-0xc0)+__lead]+ \
                 __t1]; \
-        } else { \
+        } иначе { \
             int32_t __index=utrie2_internalU8NextIndex((trie), __lead, (const uint8_t *)(src), \
                                                                        (const uint8_t *)(limit)); \
             (src)+=__index&7; \
@@ -940,9 +940,9 @@ utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
 /** Internal UTF-8 pre-decrement-previous: get the previous code point's data. */
 #define _UTRIE2_U8_PREV(trie, ascii, data, start, src, result) UPRV_BLOCK_MACRO_BEGIN { \
     uint8_t __b=(uint8_t)*--(src); \
-    if(U8_IS_SINGLE(__b)) { \
+    если(U8_IS_SINGLE(__b)) { \
         (result)=(trie)->ascii[__b]; \
-    } else { \
+    } иначе { \
         int32_t __index=utrie2_internalU8PrevIndex((trie), __b, (const uint8_t *)(start), \
                                                                 (const uint8_t *)(src)); \
         (src)-=__index&7; \

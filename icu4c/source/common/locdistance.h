@@ -27,25 +27,25 @@ public:
     static const LocaleDistance *getSingleton(UErrorCode &errorCode);
 
     static int32_t shiftDistance(int32_t distance) {
-        return distance << DISTANCE_SHIFT;
+        вернуть distance << DISTANCE_SHIFT;
     }
 
     static int32_t getShiftedDistance(int32_t indexAndDistance) {
-        return indexAndDistance & DISTANCE_MASK;
+        вернуть indexAndDistance & DISTANCE_MASK;
     }
 
     static double getDistanceDouble(int32_t indexAndDistance) {
         double shiftedDistance = getShiftedDistance(indexAndDistance);
-        return shiftedDistance / (1 << DISTANCE_SHIFT);
+        вернуть shiftedDistance / (1 << DISTANCE_SHIFT);
     }
 
     static int32_t getDistanceFloor(int32_t indexAndDistance) {
-        return (indexAndDistance & DISTANCE_MASK) >> DISTANCE_SHIFT;
+        вернуть (indexAndDistance & DISTANCE_MASK) >> DISTANCE_SHIFT;
     }
 
     static int32_t getIndex(int32_t indexAndDistance) {
         // assert indexAndDistance >= 0;
-        return indexAndDistance >> INDEX_SHIFT;
+        вернуть indexAndDistance >> INDEX_SHIFT;
     }
 
     /**
@@ -65,11 +65,11 @@ public:
     bool isParadigmLSR(const LSR &lsr) const;
 
     int32_t getDefaultScriptDistance() const {
-        return defaultScriptDistance;
+        вернуть defaultScriptDistance;
     }
 
     int32_t getDefaultDemotionPerDesiredLocale() const {
-        return defaultDemotionPerDesiredLocale;
+        вернуть defaultDemotionPerDesiredLocale;
     }
 
 private:
@@ -92,7 +92,7 @@ private:
     bool isMatch(const LSR &desired, const LSR &supported,
                  int32_t shiftedThreshold, ULocMatchFavorSubtag favorSubtag) const {
         const LSR *pSupp = &supported;
-        return getBestIndexAndDistance(
+        вернуть getBestIndexAndDistance(
             desired, &pSupp, 1,
             shiftedThreshold, favorSubtag, ULOCMATCH_DIRECTION_WITH_ONE_WAY) >= 0;
     }
@@ -112,11 +112,11 @@ private:
     const char *partitionsForRegion(const LSR &lsr) const {
         // ill-formed region -> one non-matching string
         int32_t pIndex = regionToPartitionsIndex[lsr.regionIndex];
-        return partitionArrays[pIndex];
+        вернуть partitionArrays[pIndex];
     }
 
     int32_t getDefaultRegionDistance() const {
-        return defaultRegionDistance;
+        вернуть defaultRegionDistance;
     }
 
     const LikelySubtags &likelySubtags;
