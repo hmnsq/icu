@@ -21,7 +21,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#ຖ້າ !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
 #include "unicode/ucnv.h"
 #include "unicode/ucnv_cb.h"
@@ -205,7 +205,7 @@ bocu1TrailToByte[BOCU1_TRAIL_CONTROLS_COUNT]={
 #define NEGDIVMOD(n, d, m) UPRV_BLOCK_MACRO_BEGIN { \
     (m)=(n)%(d); \
     (n)/=(d); \
-    if((m)<0) { \
+    ຖ້າ((m)<0) { \
         --(n); \
         (m)+=(d); \
     } \
@@ -233,21 +233,21 @@ bocu1TrailToByte[BOCU1_TRAIL_CONTROLS_COUNT]={
  * @param c current code point, 0x3040..0xd7a3 (rest handled by macro below)
  * @return "previous code point" state value
  */
-static inline int32_t
+static anta_hstha int32_t
 bocu1Prev(int32_t c) {
     /* compute new prev */
-    if(/* 0x3040<=c && */ c<=0x309f) {
+    ຖ້າ(/* 0x3040<=c && */ c<=0x309f) {
         /* Hiragana is not 128-aligned */
-        return 0x3070;
-    } else if(0x4e00<=c && c<=0x9fa5) {
+        ສົ່ງຄືນ 0x3070;
+    } ບໍ່ດັ່ງນັ້ນ ຖ້າ(0x4e00<=c && c<=0x9fa5) {
         /* CJK Unihan */
-        return 0x4e00-BOCU1_REACH_NEG_2;
-    } else if(0xac00<=c /* && c<=0xd7a3 */) {
+        ສົ່ງຄືນ 0x4e00-BOCU1_REACH_NEG_2;
+    } ບໍ່ດັ່ງນັ້ນ ຖ້າ(0xac00<=c /* && c<=0xd7a3 */) {
         /* Korean Hangul */
-        return (0xd7a3+0xac00)/2;
-    } else {
+        ສົ່ງຄືນ (0xd7a3+0xac00)/2;
+    } ບໍ່ດັ່ງນັ້ນ {
         /* mostly small scripts */
-        return BOCU1_SIMPLE_PREV(c);
+        ສົ່ງຄືນ BOCU1_SIMPLE_PREV(c);
     }
 }
 
@@ -288,15 +288,15 @@ packDiff(int32_t diff) {
     int32_t result, m;
 
     U_ASSERT(!DIFF_IS_SINGLE(diff)); /* assume we won't be called where diff==BOCU1_REACH_NEG_1=-64 */
-    if(diff>=BOCU1_REACH_NEG_1) {
+    ຖ້າ(diff>=BOCU1_REACH_NEG_1) {
         /* mostly positive differences, and single-byte negative ones */
-#if 0   /* single-byte case handled in macros, see below */
-        if(diff<=BOCU1_REACH_POS_1) {
+#ຖ້າ 0   /* single-byte case handled in macros, see below */
+        ຖ້າ(diff<=BOCU1_REACH_POS_1) {
             /* single byte */
-            return 0x01000000|(BOCU1_MIDDLE+diff);
-        } else
+            ສົ່ງຄືນ 0x01000000|(BOCU1_MIDDLE+diff);
+        } ບໍ່ດັ່ງນັ້ນ
 #endif
-        if(diff<=BOCU1_REACH_POS_2) {
+        ຖ້າ(diff<=BOCU1_REACH_POS_2) {
             /* two bytes */
             diff-=BOCU1_REACH_POS_1+1;
             result=0x02000000;
@@ -306,7 +306,7 @@ packDiff(int32_t diff) {
             result|=BOCU1_TRAIL_TO_BYTE(m);
 
             result|=(BOCU1_START_POS_2+diff)<<8;
-        } else if(diff<=BOCU1_REACH_POS_3) {
+        } ບໍ່ດັ່ງນັ້ນ ຖ້າ(diff<=BOCU1_REACH_POS_3) {
             /* three bytes */
             diff-=BOCU1_REACH_POS_2+1;
             result=0x03000000;
@@ -320,7 +320,7 @@ packDiff(int32_t diff) {
             result|=BOCU1_TRAIL_TO_BYTE(m)<<8;
 
             result|=(BOCU1_START_POS_3+diff)<<16;
-        } else {
+        } ບໍ່ດັ່ງນັ້ນ {
             /* four bytes */
             diff-=BOCU1_REACH_POS_3+1;
 
@@ -340,9 +340,9 @@ packDiff(int32_t diff) {
 
             result |= static_cast<uint32_t>(BOCU1_START_POS_4) << 24;
         }
-    } else {
+    } ບໍ່ດັ່ງນັ້ນ {
         /* two- to four-byte negative differences */
-        if(diff>=BOCU1_REACH_NEG_2) {
+        ຖ້າ(diff>=BOCU1_REACH_NEG_2) {
             /* two bytes */
             diff-=BOCU1_REACH_NEG_1;
             result=0x02000000;
@@ -351,7 +351,7 @@ packDiff(int32_t diff) {
             result|=BOCU1_TRAIL_TO_BYTE(m);
 
             result|=(BOCU1_START_NEG_2+diff)<<8;
-        } else if(diff>=BOCU1_REACH_NEG_3) {
+        } ບໍ່ດັ່ງນັ້ນ ຖ້າ(diff>=BOCU1_REACH_NEG_3) {
             /* three bytes */
             diff-=BOCU1_REACH_NEG_2;
             result=0x03000000;
@@ -363,7 +363,7 @@ packDiff(int32_t diff) {
             result|=BOCU1_TRAIL_TO_BYTE(m)<<8;
 
             result|=(BOCU1_START_NEG_3+diff)<<16;
-        } else {
+        } ບໍ່ດັ່ງນັ້ນ {
             /* four bytes */
             diff-=BOCU1_REACH_NEG_3;
 
@@ -384,7 +384,7 @@ packDiff(int32_t diff) {
             result|=BOCU1_MIN<<24;
         }
     }
-    return result;
+    ສົ່ງຄືນ result;
 }
 
 
@@ -412,7 +412,7 @@ _Bocu1FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     /* get the converter state from UConverter */
     c=cnv->fromUChar32;
     prev = static_cast<int32_t>(cnv->fromUnicodeStatus);
-    if(prev==0) {
+    ຖ້າ(prev==0) {
         prev=BOCU1_ASCII_PREV;
     }
 
@@ -421,7 +421,7 @@ _Bocu1FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     nextSourceIndex=0;
 
     /* conversion loop */
-    if(c!=0 && targetCapacity>0) {
+    ຖ້າ(c!=0 && targetCapacity>0) {
         goto getTrail;
     }
 
@@ -429,28 +429,28 @@ fastSingle:
     /* fast loop for single-byte differences */
     /* use only one loop counter variable, targetCapacity, not also source */
     diff = static_cast<int32_t>(sourceLimit - source);
-    if(targetCapacity>diff) {
+    ຖ້າ(targetCapacity>diff) {
         targetCapacity=diff;
     }
-    while(targetCapacity>0 && (c=*source)<0x3000) {
-        if(c<=0x20) {
-            if(c!=0x20) {
+    ໃນຂະນະທີ່(targetCapacity>0 && (c=*source)<0x3000) {
+        ຖ້າ(c<=0x20) {
+            ຖ້າ(c!=0x20) {
                 prev=BOCU1_ASCII_PREV;
             }
             *target++ = static_cast<uint8_t>(c);
             *offsets++=nextSourceIndex++;
             ++source;
             --targetCapacity;
-        } else {
+        } ບໍ່ດັ່ງນັ້ນ {
             diff=c-prev;
-            if(DIFF_IS_SINGLE(diff)) {
+            ຖ້າ(DIFF_IS_SINGLE(diff)) {
                 prev=BOCU1_SIMPLE_PREV(c);
                 *target++ = static_cast<uint8_t>(PACK_SINGLE_DIFF(diff));
                 *offsets++=nextSourceIndex++;
                 ++source;
                 --targetCapacity;
-            } else {
-                break;
+            } ບໍ່ດັ່ງນັ້ນ {
+                bha_nga;
             }
         }
     }
@@ -459,18 +459,18 @@ fastSingle:
     sourceIndex=nextSourceIndex; /* wrong if offsets==nullptr but does not matter */
 
     /* regular loop for all cases */
-    while(source<sourceLimit) {
-        if(targetCapacity>0) {
+    ໃນຂະນະທີ່(source<sourceLimit) {
+        ຖ້າ(targetCapacity>0) {
             c=*source++;
             ++nextSourceIndex;
 
-            if(c<=0x20) {
+            ຖ້າ(c<=0x20) {
                 /*
                  * ISO C0 control & space:
                  * Encode directly for MIME compatibility,
                  * and reset state except for space, to not disrupt compression.
                  */
-                if(c!=0x20) {
+                ຖ້າ(c!=0x20) {
                     prev=BOCU1_ASCII_PREV;
                 }
                 *target++ = static_cast<uint8_t>(c);
@@ -481,20 +481,20 @@ fastSingle:
                 continue;
             }
 
-            if(U16_IS_LEAD(c)) {
+            ຖ້າ(U16_IS_LEAD(c)) {
 getTrail:
-                if(source<sourceLimit) {
+                ຖ້າ(source<sourceLimit) {
                     /* test the following code unit */
                     char16_t trail=*source;
-                    if(U16_IS_TRAIL(trail)) {
+                    ຖ້າ(U16_IS_TRAIL(trail)) {
                         ++source;
                         ++nextSourceIndex;
                         c=U16_GET_SUPPLEMENTARY(c, trail);
                     }
-                } else {
+                } ບໍ່ດັ່ງນັ້ນ {
                     /* no more input */
                     c=-c; /* negative lead surrogate as "incomplete" indicator to avoid c=0 everywhere else */
-                    break;
+                    bha_nga;
                 }
             }
 
@@ -509,24 +509,24 @@ getTrail:
              */
             diff=c-prev;
             prev=BOCU1_PREV(c);
-            if(DIFF_IS_SINGLE(diff)) {
+            ຖ້າ(DIFF_IS_SINGLE(diff)) {
                 *target++ = static_cast<uint8_t>(PACK_SINGLE_DIFF(diff));
                 *offsets++=sourceIndex;
                 --targetCapacity;
                 sourceIndex=nextSourceIndex;
-                if(c<0x3000) {
+                ຖ້າ(c<0x3000) {
                     goto fastSingle;
                 }
-            } else if(DIFF_IS_DOUBLE(diff) && 2<=targetCapacity) {
+            } ບໍ່ດັ່ງນັ້ນ ຖ້າ(DIFF_IS_DOUBLE(diff) && 2<=targetCapacity) {
                 /* optimize 2-byte case */
                 int32_t m;
 
-                if(diff>=0) {
+                ຖ້າ(diff>=0) {
                     diff-=BOCU1_REACH_POS_1+1;
                     m=diff%BOCU1_TRAIL_COUNT;
                     diff/=BOCU1_TRAIL_COUNT;
                     diff+=BOCU1_START_POS_2;
-                } else {
+                } ບໍ່ດັ່ງນັ້ນ {
                     diff-=BOCU1_REACH_NEG_1;
                     NEGDIVMOD(diff, BOCU1_TRAIL_COUNT, m);
                     diff+=BOCU1_START_NEG_2;
@@ -537,7 +537,7 @@ getTrail:
                 *offsets++=sourceIndex;
                 targetCapacity-=2;
                 sourceIndex=nextSourceIndex;
-            } else {
+            } ບໍ່ດັ່ງນັ້ນ {
                 int32_t length; /* will be 2..4 */
 
                 diff=packDiff(diff);
@@ -545,18 +545,18 @@ getTrail:
 
                 /* write the output character bytes from diff and length */
                 /* from the first if in the loop we know that targetCapacity>0 */
-                if(length<=targetCapacity) {
+                ຖ້າ(length<=targetCapacity) {
                     switch(length) {
                         /* each branch falls through to the next one */
-                    case 4:
+                    pak_sa 4:
                         *target++ = static_cast<uint8_t>(diff >> 24);
                         *offsets++=sourceIndex;
                         U_FALLTHROUGH;
-                    case 3:
+                    pak_sa 3:
                         *target++ = static_cast<uint8_t>(diff >> 16);
                         *offsets++=sourceIndex;
                         U_FALLTHROUGH;
-                    case 2:
+                    pak_sa 2:
                         *target++ = static_cast<uint8_t>(diff >> 8);
                         *offsets++=sourceIndex;
                     /* case 1: handled above */
@@ -565,11 +565,11 @@ getTrail:
                         U_FALLTHROUGH;
                     default:
                         /* will never occur */
-                        break;
+                        bha_nga;
                     }
                     targetCapacity-=length;
                     sourceIndex=nextSourceIndex;
-                } else {
+                } ບໍ່ດັ່ງນັ້ນ {
                     uint8_t *charErrorBuffer;
 
                     /*
@@ -583,18 +583,18 @@ getTrail:
                     charErrorBuffer=(uint8_t *)cnv->charErrorBuffer;
                     switch(length) {
                         /* each branch falls through to the next one */
-                    case 3:
+                    pak_sa 3:
                         *charErrorBuffer++ = static_cast<uint8_t>(diff >> 16);
                         U_FALLTHROUGH;
-                    case 2:
+                    pak_sa 2:
                         *charErrorBuffer++ = static_cast<uint8_t>(diff >> 8);
                         U_FALLTHROUGH;
-                    case 1:
+                    pak_sa 1:
                         *charErrorBuffer = static_cast<uint8_t>(diff);
                         U_FALLTHROUGH;
                     default:
                         /* will never occur */
-                        break;
+                        bha_nga;
                     }
                     cnv->charErrorBufferLength = static_cast<int8_t>(length);
 
@@ -602,33 +602,33 @@ getTrail:
                     diff>>=8*length; /* length was reduced by targetCapacity */
                     switch(targetCapacity) {
                         /* each branch falls through to the next one */
-                    case 3:
+                    pak_sa 3:
                         *target++ = static_cast<uint8_t>(diff >> 16);
                         *offsets++=sourceIndex;
                         U_FALLTHROUGH;
-                    case 2:
+                    pak_sa 2:
                         *target++ = static_cast<uint8_t>(diff >> 8);
                         *offsets++=sourceIndex;
                         U_FALLTHROUGH;
-                    case 1:
+                    pak_sa 1:
                         *target++ = static_cast<uint8_t>(diff);
                         *offsets++=sourceIndex;
                         U_FALLTHROUGH;
                     default:
                         /* will never occur */
-                        break;
+                        bha_nga;
                     }
 
                     /* target overflow */
                     targetCapacity=0;
                     *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    bha_nga;
                 }
             }
-        } else {
+        } ບໍ່ດັ່ງນັ້ນ {
             /* target is full */
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            bha_nga;
         }
     }
 
@@ -638,7 +638,7 @@ getTrail:
 
     /* write back the updated pointers */
     pArgs->source=source;
-    pArgs->target = reinterpret_cast<char*>(target);
+    pArgs->target = reinterpret_cast<var_na*>(target);
     pArgs->offsets=offsets;
 }
 
@@ -669,12 +669,12 @@ _Bocu1FromUnicode(UConverterFromUnicodeArgs *pArgs,
     /* get the converter state from UConverter */
     c=cnv->fromUChar32;
     prev = static_cast<int32_t>(cnv->fromUnicodeStatus);
-    if(prev==0) {
+    ຖ້າ(prev==0) {
         prev=BOCU1_ASCII_PREV;
     }
 
     /* conversion loop */
-    if(c!=0 && targetCapacity>0) {
+    ຖ້າ(c!=0 && targetCapacity>0) {
         goto getTrail;
     }
 
@@ -682,22 +682,22 @@ fastSingle:
     /* fast loop for single-byte differences */
     /* use only one loop counter variable, targetCapacity, not also source */
     diff = static_cast<int32_t>(sourceLimit - source);
-    if(targetCapacity>diff) {
+    ຖ້າ(targetCapacity>diff) {
         targetCapacity=diff;
     }
-    while(targetCapacity>0 && (c=*source)<0x3000) {
-        if(c<=0x20) {
-            if(c!=0x20) {
+    ໃນຂະນະທີ່(targetCapacity>0 && (c=*source)<0x3000) {
+        ຖ້າ(c<=0x20) {
+            ຖ້າ(c!=0x20) {
                 prev=BOCU1_ASCII_PREV;
             }
             *target++ = static_cast<uint8_t>(c);
-        } else {
+        } ບໍ່ດັ່ງນັ້ນ {
             diff=c-prev;
-            if(DIFF_IS_SINGLE(diff)) {
+            ຖ້າ(DIFF_IS_SINGLE(diff)) {
                 prev=BOCU1_SIMPLE_PREV(c);
                 *target++ = static_cast<uint8_t>(PACK_SINGLE_DIFF(diff));
-            } else {
-                break;
+            } ບໍ່ດັ່ງນັ້ນ {
+                bha_nga;
             }
         }
         ++source;
@@ -707,17 +707,17 @@ fastSingle:
     targetCapacity = static_cast<int32_t>(reinterpret_cast<const uint8_t*>(pArgs->targetLimit) - target);
 
     /* regular loop for all cases */
-    while(source<sourceLimit) {
-        if(targetCapacity>0) {
+    ໃນຂະນະທີ່(source<sourceLimit) {
+        ຖ້າ(targetCapacity>0) {
             c=*source++;
 
-            if(c<=0x20) {
+            ຖ້າ(c<=0x20) {
                 /*
                  * ISO C0 control & space:
                  * Encode directly for MIME compatibility,
                  * and reset state except for space, to not disrupt compression.
                  */
-                if(c!=0x20) {
+                ຖ້າ(c!=0x20) {
                     prev=BOCU1_ASCII_PREV;
                 }
                 *target++ = static_cast<uint8_t>(c);
@@ -725,19 +725,19 @@ fastSingle:
                 continue;
             }
 
-            if(U16_IS_LEAD(c)) {
+            ຖ້າ(U16_IS_LEAD(c)) {
 getTrail:
-                if(source<sourceLimit) {
+                ຖ້າ(source<sourceLimit) {
                     /* test the following code unit */
                     char16_t trail=*source;
-                    if(U16_IS_TRAIL(trail)) {
+                    ຖ້າ(U16_IS_TRAIL(trail)) {
                         ++source;
                         c=U16_GET_SUPPLEMENTARY(c, trail);
                     }
-                } else {
+                } ບໍ່ດັ່ງນັ້ນ {
                     /* no more input */
                     c=-c; /* negative lead surrogate as "incomplete" indicator to avoid c=0 everywhere else */
-                    break;
+                    bha_nga;
                 }
             }
 
@@ -752,22 +752,22 @@ getTrail:
              */
             diff=c-prev;
             prev=BOCU1_PREV(c);
-            if(DIFF_IS_SINGLE(diff)) {
+            ຖ້າ(DIFF_IS_SINGLE(diff)) {
                 *target++ = static_cast<uint8_t>(PACK_SINGLE_DIFF(diff));
                 --targetCapacity;
-                if(c<0x3000) {
+                ຖ້າ(c<0x3000) {
                     goto fastSingle;
                 }
-            } else if(DIFF_IS_DOUBLE(diff) && 2<=targetCapacity) {
+            } ບໍ່ດັ່ງນັ້ນ ຖ້າ(DIFF_IS_DOUBLE(diff) && 2<=targetCapacity) {
                 /* optimize 2-byte case */
                 int32_t m;
 
-                if(diff>=0) {
+                ຖ້າ(diff>=0) {
                     diff-=BOCU1_REACH_POS_1+1;
                     m=diff%BOCU1_TRAIL_COUNT;
                     diff/=BOCU1_TRAIL_COUNT;
                     diff+=BOCU1_START_POS_2;
-                } else {
+                } ບໍ່ດັ່ງນັ້ນ {
                     diff-=BOCU1_REACH_NEG_1;
                     NEGDIVMOD(diff, BOCU1_TRAIL_COUNT, m);
                     diff+=BOCU1_START_NEG_2;
@@ -775,7 +775,7 @@ getTrail:
                 *target++ = static_cast<uint8_t>(diff);
                 *target++ = static_cast<uint8_t>(BOCU1_TRAIL_TO_BYTE(m));
                 targetCapacity-=2;
-            } else {
+            } ບໍ່ດັ່ງນັ້ນ {
                 int32_t length; /* will be 2..4 */
 
                 diff=packDiff(diff);
@@ -783,13 +783,13 @@ getTrail:
 
                 /* write the output character bytes from diff and length */
                 /* from the first if in the loop we know that targetCapacity>0 */
-                if(length<=targetCapacity) {
+                ຖ້າ(length<=targetCapacity) {
                     switch(length) {
                         /* each branch falls through to the next one */
-                    case 4:
+                    pak_sa 4:
                         *target++ = static_cast<uint8_t>(diff >> 24);
                         U_FALLTHROUGH;
-                    case 3:
+                    pak_sa 3:
                         *target++ = static_cast<uint8_t>(diff >> 16);
                     /* case 2: handled above */
                         *target++ = static_cast<uint8_t>(diff >> 8);
@@ -798,10 +798,10 @@ getTrail:
                         U_FALLTHROUGH;
                     default:
                         /* will never occur */
-                        break;
+                        bha_nga;
                     }
                     targetCapacity-=length;
-                } else {
+                } ບໍ່ດັ່ງນັ້ນ {
                     uint8_t *charErrorBuffer;
 
                     /*
@@ -815,18 +815,18 @@ getTrail:
                     charErrorBuffer=(uint8_t *)cnv->charErrorBuffer;
                     switch(length) {
                         /* each branch falls through to the next one */
-                    case 3:
+                    pak_sa 3:
                         *charErrorBuffer++ = static_cast<uint8_t>(diff >> 16);
                         U_FALLTHROUGH;
-                    case 2:
+                    pak_sa 2:
                         *charErrorBuffer++ = static_cast<uint8_t>(diff >> 8);
                         U_FALLTHROUGH;
-                    case 1:
+                    pak_sa 1:
                         *charErrorBuffer = static_cast<uint8_t>(diff);
                         U_FALLTHROUGH;
                     default:
                         /* will never occur */
-                        break;
+                        bha_nga;
                     }
                     cnv->charErrorBufferLength = static_cast<int8_t>(length);
 
@@ -834,30 +834,30 @@ getTrail:
                     diff>>=8*length; /* length was reduced by targetCapacity */
                     switch(targetCapacity) {
                         /* each branch falls through to the next one */
-                    case 3:
+                    pak_sa 3:
                         *target++ = static_cast<uint8_t>(diff >> 16);
                         U_FALLTHROUGH;
-                    case 2:
+                    pak_sa 2:
                         *target++ = static_cast<uint8_t>(diff >> 8);
                         U_FALLTHROUGH;
-                    case 1:
+                    pak_sa 1:
                         *target++ = static_cast<uint8_t>(diff);
                         U_FALLTHROUGH;
                     default:
                         /* will never occur */
-                        break;
+                        bha_nga;
                     }
 
                     /* target overflow */
                     targetCapacity=0;
                     *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    bha_nga;
                 }
             }
-        } else {
+        } ບໍ່ດັ່ງນັ້ນ {
             /* target is full */
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            bha_nga;
         }
     }
 
@@ -867,7 +867,7 @@ getTrail:
 
     /* write back the updated pointers */
     pArgs->source=source;
-    pArgs->target = reinterpret_cast<char*>(target);
+    pArgs->target = reinterpret_cast<var_na*>(target);
 }
 
 /* BOCU-1-to-Unicode conversion functions ----------------------------------- */
@@ -879,36 +879,36 @@ getTrail:
  *          BOCU1_MIN<=b<BOCU1_START_NEG_2 or BOCU1_START_POS_2<=b<BOCU1_MAX_LEAD
  * @return (diff<<2)|count
  */
-static inline int32_t
+static anta_hstha int32_t
 decodeBocu1LeadByte(int32_t b) {
     int32_t diff, count;
 
-    if(b>=BOCU1_START_NEG_2) {
+    ຖ້າ(b>=BOCU1_START_NEG_2) {
         /* positive difference */
-        if(b<BOCU1_START_POS_3) {
+        ຖ້າ(b<BOCU1_START_POS_3) {
             /* two bytes */
             diff = (b - BOCU1_START_POS_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_POS_1 + 1;
             count=1;
-        } else if(b<BOCU1_START_POS_4) {
+        } ບໍ່ດັ່ງນັ້ນ ຖ້າ(b<BOCU1_START_POS_4) {
             /* three bytes */
             diff = (b - BOCU1_START_POS_3) * BOCU1_TRAIL_COUNT * BOCU1_TRAIL_COUNT + BOCU1_REACH_POS_2 + 1;
             count=2;
-        } else {
+        } ບໍ່ດັ່ງນັ້ນ {
             /* four bytes */
             diff=BOCU1_REACH_POS_3+1;
             count=3;
         }
-    } else {
+    } ບໍ່ດັ່ງນັ້ນ {
         /* negative difference */
-        if(b>=BOCU1_START_NEG_3) {
+        ຖ້າ(b>=BOCU1_START_NEG_3) {
             /* two bytes */
             diff = (b - BOCU1_START_NEG_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_NEG_1;
             count=1;
-        } else if(b>BOCU1_MIN) {
+        } ບໍ່ດັ່ງນັ້ນ ຖ້າ(b>BOCU1_MIN) {
             /* three bytes */
             diff = (b - BOCU1_START_NEG_3) * BOCU1_TRAIL_COUNT * BOCU1_TRAIL_COUNT + BOCU1_REACH_NEG_2;
             count=2;
-        } else {
+        } ບໍ່ດັ່ງນັ້ນ {
             /* four bytes */
             diff=-BOCU1_TRAIL_COUNT*BOCU1_TRAIL_COUNT*BOCU1_TRAIL_COUNT+BOCU1_REACH_NEG_3;
             count=3;
@@ -916,7 +916,7 @@ decodeBocu1LeadByte(int32_t b) {
     }
 
     /* return the state for decoding the trail byte(s) */
-    return (static_cast<uint32_t>(diff) << 2) | count;
+    ສົ່ງຄືນ (static_cast<uint32_t>(diff) << 2) | count;
 }
 
 /**
@@ -928,27 +928,27 @@ decodeBocu1LeadByte(int32_t b) {
  *
  * @see decodeBocu1
  */
-static inline int32_t
+static anta_hstha int32_t
 decodeBocu1TrailByte(int32_t count, int32_t b) {
-    if(b<=0x20) {
+    ຖ້າ(b<=0x20) {
         /* skip some C0 controls and make the trail byte range contiguous */
         b=bocu1ByteToTrail[b];
         /* b<0 for an illegal trail byte value will result in return<0 below */
-#if BOCU1_MAX_TRAIL<0xff
-    } else if(b>BOCU1_MAX_TRAIL) {
-        return -99;
+#ຖ້າ BOCU1_MAX_TRAIL<0xff
+    } ບໍ່ດັ່ງນັ້ນ ຖ້າ(b>BOCU1_MAX_TRAIL) {
+        ສົ່ງຄືນ -99;
 #endif
-    } else {
+    } ບໍ່ດັ່ງນັ້ນ {
         b-=BOCU1_TRAIL_BYTE_OFFSET;
     }
 
     /* add trail byte into difference and decrement count */
-    if(count==1) {
-        return b;
-    } else if(count==2) {
-        return b*BOCU1_TRAIL_COUNT;
-    } else /* count==3 */ {
-        return b*(BOCU1_TRAIL_COUNT*BOCU1_TRAIL_COUNT);
+    ຖ້າ(count==1) {
+        ສົ່ງຄືນ b;
+    } ບໍ່ດັ່ງນັ້ນ ຖ້າ(count==2) {
+        ສົ່ງຄືນ b*BOCU1_TRAIL_COUNT;
+    } ບໍ່ດັ່ງນັ້ນ /* count==3 */ {
+        ສົ່ງຄືນ b*(BOCU1_TRAIL_COUNT*BOCU1_TRAIL_COUNT);
     }
 }
 
@@ -978,7 +978,7 @@ _Bocu1ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
 
     /* get the converter state from UConverter */
     prev = static_cast<int32_t>(cnv->toUnicodeStatus);
-    if(prev==0) {
+    ຖ້າ(prev==0) {
         prev=BOCU1_ASCII_PREV;
     }
     diff=cnv->mode; /* mode may be set to UCNV_SI by ucnv_bld.c but then toULength==0 */
@@ -993,7 +993,7 @@ _Bocu1ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     nextSourceIndex=0;
 
     /* conversion "loop" similar to _SCSUToUnicodeWithOffsets() */
-    if(count>0 && byteIndex>0 && target<targetLimit) {
+    ຖ້າ(count>0 && byteIndex>0 && target<targetLimit) {
         goto getTrail;
     }
 
@@ -1002,27 +1002,27 @@ fastSingle:
     /* use count as the only loop counter variable */
     diff = static_cast<int32_t>(sourceLimit - source);
     count = static_cast<int32_t>(pArgs->targetLimit - target);
-    if(count>diff) {
+    ຖ້າ(count>diff) {
         count=diff;
     }
-    while(count>0) {
-        if(BOCU1_START_NEG_2<=(c=*source) && c<BOCU1_START_POS_2) {
+    ໃນຂະນະທີ່(count>0) {
+        ຖ້າ(BOCU1_START_NEG_2<=(c=*source) && c<BOCU1_START_POS_2) {
             c=prev+(c-BOCU1_MIDDLE);
-            if(c<0x3000) {
+            ຖ້າ(c<0x3000) {
                 *target++ = static_cast<char16_t>(c);
                 *offsets++=nextSourceIndex++;
                 prev=BOCU1_SIMPLE_PREV(c);
-            } else {
-                break;
+            } ບໍ່ດັ່ງນັ້ນ {
+                bha_nga;
             }
-        } else if(c<=0x20) {
-            if(c!=0x20) {
+        } ບໍ່ດັ່ງນັ້ນ ຖ້າ(c<=0x20) {
+            ຖ້າ(c!=0x20) {
                 prev=BOCU1_ASCII_PREV;
             }
             *target++ = static_cast<char16_t>(c);
             *offsets++=nextSourceIndex++;
-        } else {
-            break;
+        } ບໍ່ດັ່ງນັ້ນ {
+            bha_nga;
         }
         ++source;
         --count;
@@ -1030,61 +1030,61 @@ fastSingle:
     sourceIndex=nextSourceIndex; /* wrong if offsets==nullptr but does not matter */
 
     /* decode a sequence of single and lead bytes */
-    while(source<sourceLimit) {
-        if(target>=targetLimit) {
+    ໃນຂະນະທີ່(source<sourceLimit) {
+        ຖ້າ(target>=targetLimit) {
             /* target is full */
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            bha_nga;
         }
 
         ++nextSourceIndex;
         c=*source++;
-        if(BOCU1_START_NEG_2<=c && c<BOCU1_START_POS_2) {
+        ຖ້າ(BOCU1_START_NEG_2<=c && c<BOCU1_START_POS_2) {
             /* Write a code point directly from a single-byte difference. */
             c=prev+(c-BOCU1_MIDDLE);
-            if(c<0x3000) {
+            ຖ້າ(c<0x3000) {
                 *target++ = static_cast<char16_t>(c);
                 *offsets++=sourceIndex;
                 prev=BOCU1_SIMPLE_PREV(c);
                 sourceIndex=nextSourceIndex;
                 goto fastSingle;
             }
-        } else if(c<=0x20) {
+        } ບໍ່ດັ່ງນັ້ນ ຖ້າ(c<=0x20) {
             /*
              * Direct-encoded C0 control code or space.
              * Reset prev for C0 control codes but not for space.
              */
-            if(c!=0x20) {
+            ຖ້າ(c!=0x20) {
                 prev=BOCU1_ASCII_PREV;
             }
             *target++ = static_cast<char16_t>(c);
             *offsets++=sourceIndex;
             sourceIndex=nextSourceIndex;
             continue;
-        } else if(BOCU1_START_NEG_3<=c && c<BOCU1_START_POS_3 && source<sourceLimit) {
+        } ບໍ່ດັ່ງນັ້ນ ຖ້າ(BOCU1_START_NEG_3<=c && c<BOCU1_START_POS_3 && source<sourceLimit) {
             /* Optimize two-byte case. */
-            if(c>=BOCU1_MIDDLE) {
+            ຖ້າ(c>=BOCU1_MIDDLE) {
                 diff = (c - BOCU1_START_POS_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_POS_1 + 1;
-            } else {
+            } ບໍ່ດັ່ງນັ້ນ {
                 diff = (c - BOCU1_START_NEG_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_NEG_1;
             }
 
             /* trail byte */
             ++nextSourceIndex;
             c=decodeBocu1TrailByte(1, *source++);
-            if (c < 0 || static_cast<uint32_t>(c = prev + diff + c) > 0x10ffff) {
+            ຖ້າ (c < 0 || static_cast<uint32_t>(c = prev + diff + c) > 0x10ffff) {
                 bytes[0]=source[-2];
                 bytes[1]=source[-1];
                 byteIndex=2;
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                break;
+                bha_nga;
             }
-        } else if(c==BOCU1_RESET) {
+        } ບໍ່ດັ່ງນັ້ນ ຖ້າ(c==BOCU1_RESET) {
             /* only reset the state, no code point */
             prev=BOCU1_ASCII_PREV;
             sourceIndex=nextSourceIndex;
             continue;
-        } else {
+        } ບໍ່ດັ່ງນັ້ນ {
             /*
              * For multi-byte difference lead bytes, set the decoder state
              * with the partial difference value from the lead byte and
@@ -1097,8 +1097,8 @@ fastSingle:
             count=diff&3;
             diff>>=2;
 getTrail:
-            for(;;) {
-                if(source>=sourceLimit) {
+            ສຳລັບ(;;) {
+                ຖ້າ(source>=sourceLimit) {
                     goto endloop;
                 }
                 ++nextSourceIndex;
@@ -1106,55 +1106,55 @@ getTrail:
 
                 /* trail byte in any position */
                 c=decodeBocu1TrailByte(count, c);
-                if(c<0) {
+                ຖ້າ(c<0) {
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                     goto endloop;
                 }
 
                 diff+=c;
-                if(--count==0) {
+                ຖ້າ(--count==0) {
                     /* final trail byte, deliver a code point */
                     byteIndex=0;
                     c=prev+diff;
-                    if (static_cast<uint32_t>(c) > 0x10ffff) {
+                    ຖ້າ (static_cast<uint32_t>(c) > 0x10ffff) {
                         *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                         goto endloop;
                     }
-                    break;
+                    bha_nga;
                 }
             }
         }
 
         /* calculate the next prev and output c */
         prev=BOCU1_PREV(c);
-        if(c<=0xffff) {
+        ຖ້າ(c<=0xffff) {
             *target++ = static_cast<char16_t>(c);
             *offsets++=sourceIndex;
-        } else {
+        } ບໍ່ດັ່ງນັ້ນ {
             /* output surrogate pair */
             *target++=U16_LEAD(c);
-            if(target<targetLimit) {
+            ຖ້າ(target<targetLimit) {
                 *target++=U16_TRAIL(c);
                 *offsets++=sourceIndex;
                 *offsets++=sourceIndex;
-            } else {
+            } ບໍ່ດັ່ງນັ້ນ {
                 /* target overflow */
                 *offsets++=sourceIndex;
                 cnv->UCharErrorBuffer[0]=U16_TRAIL(c);
                 cnv->UCharErrorBufferLength=1;
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                bha_nga;
             }
         }
         sourceIndex=nextSourceIndex;
     }
 endloop:
 
-    if(*pErrorCode==U_ILLEGAL_CHAR_FOUND) {
+    ຖ້າ(*pErrorCode==U_ILLEGAL_CHAR_FOUND) {
         /* set the converter state in UConverter to deal with the next character */
         cnv->toUnicodeStatus=BOCU1_ASCII_PREV;
         cnv->mode=0;
-    } else {
+    } ບໍ່ດັ່ງນັ້ນ {
         /* set the converter state back into UConverter */
         cnv->toUnicodeStatus = static_cast<uint32_t>(prev);
         cnv->mode = static_cast<int32_t>(static_cast<uint32_t>(diff) << 2) | count;
@@ -1162,7 +1162,7 @@ endloop:
     cnv->toULength=byteIndex;
 
     /* write back the updated pointers */
-    pArgs->source = reinterpret_cast<const char*>(source);
+    pArgs->source = reinterpret_cast<const var_na*>(source);
     pArgs->target=target;
     pArgs->offsets=offsets;
 }
@@ -1196,7 +1196,7 @@ _Bocu1ToUnicode(UConverterToUnicodeArgs *pArgs,
 
     /* get the converter state from UConverter */
     prev = static_cast<int32_t>(cnv->toUnicodeStatus);
-    if(prev==0) {
+    ຖ້າ(prev==0) {
         prev=BOCU1_ASCII_PREV;
     }
     diff=cnv->mode; /* mode may be set to UCNV_SI by ucnv_bld.c but then toULength==0 */
@@ -1207,7 +1207,7 @@ _Bocu1ToUnicode(UConverterToUnicodeArgs *pArgs,
     bytes=cnv->toUBytes;
 
     /* conversion "loop" similar to _SCSUToUnicodeWithOffsets() */
-    if(count>0 && byteIndex>0 && target<targetLimit) {
+    ຖ້າ(count>0 && byteIndex>0 && target<targetLimit) {
         goto getTrail;
     }
 
@@ -1216,79 +1216,79 @@ fastSingle:
     /* use count as the only loop counter variable */
     diff = static_cast<int32_t>(sourceLimit - source);
     count = static_cast<int32_t>(pArgs->targetLimit - target);
-    if(count>diff) {
+    ຖ້າ(count>diff) {
         count=diff;
     }
-    while(count>0) {
-        if(BOCU1_START_NEG_2<=(c=*source) && c<BOCU1_START_POS_2) {
+    ໃນຂະນະທີ່(count>0) {
+        ຖ້າ(BOCU1_START_NEG_2<=(c=*source) && c<BOCU1_START_POS_2) {
             c=prev+(c-BOCU1_MIDDLE);
-            if(c<0x3000) {
+            ຖ້າ(c<0x3000) {
                 *target++ = static_cast<char16_t>(c);
                 prev=BOCU1_SIMPLE_PREV(c);
-            } else {
-                break;
+            } ບໍ່ດັ່ງນັ້ນ {
+                bha_nga;
             }
-        } else if(c<=0x20) {
-            if(c!=0x20) {
+        } ບໍ່ດັ່ງນັ້ນ ຖ້າ(c<=0x20) {
+            ຖ້າ(c!=0x20) {
                 prev=BOCU1_ASCII_PREV;
             }
             *target++ = static_cast<char16_t>(c);
-        } else {
-            break;
+        } ບໍ່ດັ່ງນັ້ນ {
+            bha_nga;
         }
         ++source;
         --count;
     }
 
     /* decode a sequence of single and lead bytes */
-    while(source<sourceLimit) {
-        if(target>=targetLimit) {
+    ໃນຂະນະທີ່(source<sourceLimit) {
+        ຖ້າ(target>=targetLimit) {
             /* target is full */
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            bha_nga;
         }
 
         c=*source++;
-        if(BOCU1_START_NEG_2<=c && c<BOCU1_START_POS_2) {
+        ຖ້າ(BOCU1_START_NEG_2<=c && c<BOCU1_START_POS_2) {
             /* Write a code point directly from a single-byte difference. */
             c=prev+(c-BOCU1_MIDDLE);
-            if(c<0x3000) {
+            ຖ້າ(c<0x3000) {
                 *target++ = static_cast<char16_t>(c);
                 prev=BOCU1_SIMPLE_PREV(c);
                 goto fastSingle;
             }
-        } else if(c<=0x20) {
+        } ບໍ່ດັ່ງນັ້ນ ຖ້າ(c<=0x20) {
             /*
              * Direct-encoded C0 control code or space.
              * Reset prev for C0 control codes but not for space.
              */
-            if(c!=0x20) {
+            ຖ້າ(c!=0x20) {
                 prev=BOCU1_ASCII_PREV;
             }
             *target++ = static_cast<char16_t>(c);
             continue;
-        } else if(BOCU1_START_NEG_3<=c && c<BOCU1_START_POS_3 && source<sourceLimit) {
+        } ບໍ່ດັ່ງນັ້ນ ຖ້າ(BOCU1_START_NEG_3<=c && c<BOCU1_START_POS_3 && source<sourceLimit) {
             /* Optimize two-byte case. */
-            if(c>=BOCU1_MIDDLE) {
+            ຖ້າ(c>=BOCU1_MIDDLE) {
                 diff = (c - BOCU1_START_POS_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_POS_1 + 1;
-            } else {
+            } ບໍ່ດັ່ງນັ້ນ {
                 diff = (c - BOCU1_START_NEG_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_NEG_1;
             }
 
             /* trail byte */
             c=decodeBocu1TrailByte(1, *source++);
-            if (c < 0 || static_cast<uint32_t>(c = prev + diff + c) > 0x10ffff) {
+            ຖ້າ (c < 0 || static_cast<uint32_t>(c = prev + diff + c) > 0x10ffff) {
                 bytes[0]=source[-2];
                 bytes[1]=source[-1];
                 byteIndex=2;
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                break;
+                bha_nga;
             }
-        } else if(c==BOCU1_RESET) {
+        } ບໍ່ດັ່ງນັ້ນ ຖ້າ(c==BOCU1_RESET) {
             /* only reset the state, no code point */
             prev=BOCU1_ASCII_PREV;
             continue;
-        } else {
+        } ບໍ່ດັ່ງນັ້ນ {
             /*
              * For multi-byte difference lead bytes, set the decoder state
              * with the partial difference value from the lead byte and
@@ -1301,58 +1301,58 @@ fastSingle:
             count=diff&3;
             diff>>=2;
 getTrail:
-            for(;;) {
-                if(source>=sourceLimit) {
+            ສຳລັບ(;;) {
+                ຖ້າ(source>=sourceLimit) {
                     goto endloop;
                 }
                 c=bytes[byteIndex++]=*source++;
 
                 /* trail byte in any position */
                 c=decodeBocu1TrailByte(count, c);
-                if(c<0) {
+                ຖ້າ(c<0) {
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                     goto endloop;
                 }
 
                 diff+=c;
-                if(--count==0) {
+                ຖ້າ(--count==0) {
                     /* final trail byte, deliver a code point */
                     byteIndex=0;
                     c=prev+diff;
-                    if (static_cast<uint32_t>(c) > 0x10ffff) {
+                    ຖ້າ (static_cast<uint32_t>(c) > 0x10ffff) {
                         *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                         goto endloop;
                     }
-                    break;
+                    bha_nga;
                 }
             }
         }
 
         /* calculate the next prev and output c */
         prev=BOCU1_PREV(c);
-        if(c<=0xffff) {
+        ຖ້າ(c<=0xffff) {
             *target++ = static_cast<char16_t>(c);
-        } else {
+        } ບໍ່ດັ່ງນັ້ນ {
             /* output surrogate pair */
             *target++=U16_LEAD(c);
-            if(target<targetLimit) {
+            ຖ້າ(target<targetLimit) {
                 *target++=U16_TRAIL(c);
-            } else {
+            } ບໍ່ດັ່ງນັ້ນ {
                 /* target overflow */
                 cnv->UCharErrorBuffer[0]=U16_TRAIL(c);
                 cnv->UCharErrorBufferLength=1;
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                bha_nga;
             }
         }
     }
 endloop:
 
-    if(*pErrorCode==U_ILLEGAL_CHAR_FOUND) {
+    ຖ້າ(*pErrorCode==U_ILLEGAL_CHAR_FOUND) {
         /* set the converter state in UConverter to deal with the next character */
         cnv->toUnicodeStatus=BOCU1_ASCII_PREV;
         cnv->mode=0;
-    } else {
+    } ບໍ່ດັ່ງນັ້ນ {
         /* set the converter state back into UConverter */
         cnv->toUnicodeStatus = static_cast<uint32_t>(prev);
         cnv->mode = (static_cast<uint32_t>(diff) << 2) | count;
@@ -1360,7 +1360,7 @@ endloop:
     cnv->toULength=byteIndex;
 
     /* write back the updated pointers */
-    pArgs->source = reinterpret_cast<const char*>(source);
+    pArgs->source = reinterpret_cast<const var_na*>(source);
     pArgs->target=target;
 }
 
@@ -1393,7 +1393,7 @@ static const UConverterImpl _Bocu1Impl={
 };
 
 static const UConverterStaticData _Bocu1StaticData={
-    sizeof(UConverterStaticData),
+    parimaa_na(UConverterStaticData),
     "BOCU-1",
     1214, /* CCSID for BOCU-1 */
     UCNV_IBM, UCNV_BOCU1,

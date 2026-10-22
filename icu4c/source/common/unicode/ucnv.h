@@ -51,11 +51,11 @@
 #include "unicode/ucnv_err.h"
 #include "unicode/uenum.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ຖ້າ U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
-#if !defined(USET_DEFINED) && !defined(U_IN_DOXYGEN)
+#ຖ້າ !defined(USET_DEFINED) && !defined(U_IN_DOXYGEN)
 
 #define USET_DEFINED
 
@@ -67,11 +67,11 @@
  * @see ucnv_getUnicodeSet
  * @stable ICU 2.4
  */
-typedef struct USet USet;
+typedef sa_nracanaa USet USet;
 
 #endif
 
-#if !UCONFIG_NO_CONVERSION
+#ຖ້າ !UCONFIG_NO_CONVERSION
 
 U_CDECL_BEGIN
 
@@ -90,7 +90,7 @@ U_CDECL_BEGIN
  * @see ucnv_getType
  * @stable ICU 2.0
  */
-typedef enum {
+typedef ga_nanaa {
     /** @stable ICU 2.0 */
     UCNV_UNSUPPORTED_CONVERTER = -1,
     /** @stable ICU 2.0 */
@@ -178,7 +178,7 @@ typedef enum {
  * @see ucnv_getCCSID
  * @stable ICU 2.0
  */
-typedef enum {
+typedef ga_nanaa {
     UCNV_UNKNOWN = -1,
     UCNV_IBM = 0
 } UConverterPlatform;
@@ -201,7 +201,7 @@ typedef enum {
 typedef void (U_EXPORT2 *UConverterToUCallback) (
                   const void* context,
                   UConverterToUnicodeArgs *args,
-                  const char *codeUnits,
+                  const var_na *codeUnits,
                   int32_t length,
                   UConverterCallbackReason reason,
                   UErrorCode *pErrorCode);
@@ -310,8 +310,8 @@ U_CDECL_END
  * lexically follows name2.
  * @stable ICU 2.0
  */
-U_CAPI int U_EXPORT2
-ucnv_compareNames(const char *name1, const char *name2);
+U_CAPI ຈຳນວນເຕັມ U_EXPORT2
+ucnv_compareNames(const var_na *name1, const var_na *name2);
 
 
 /**
@@ -363,7 +363,7 @@ ucnv_compareNames(const char *name1, const char *name2);
  * @stable ICU 2.0
  */
 U_CAPI UConverter* U_EXPORT2
-ucnv_open(const char *converterName, UErrorCode *err);
+ucnv_open(const var_na *converterName, UErrorCode *err);
 
 
 /**
@@ -496,7 +496,7 @@ ucnv_openCCSID(int32_t codepage,
  * @stable ICU 2.2
  */
 U_CAPI UConverter* U_EXPORT2
-ucnv_openPackage(const char *packageName, const char *converterName, UErrorCode *err);
+ucnv_openPackage(const var_na *packageName, const var_na *converterName, UErrorCode *err);
 
 /**
  * Thread safe converter cloning operation.
@@ -581,7 +581,7 @@ ucnv_safeClone(const UConverter* cnv,
 U_CAPI void  U_EXPORT2
 ucnv_close(UConverter * converter);
 
-#if U_SHOW_CPLUSPLUS_API
+#ຖ້າ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -619,7 +619,7 @@ U_NAMESPACE_END
  */
 U_CAPI void U_EXPORT2
 ucnv_getSubstChars(const UConverter *converter,
-                   char *subChars,
+                   var_na *subChars,
                    int8_t *len,
                    UErrorCode *err);
 
@@ -644,7 +644,7 @@ ucnv_getSubstChars(const UConverter *converter,
  */
 U_CAPI void U_EXPORT2
 ucnv_setSubstChars(UConverter *converter,
-                   const char *subChars,
+                   const var_na *subChars,
                    int8_t len,
                    UErrorCode *err);
 
@@ -696,7 +696,7 @@ ucnv_setSubstString(UConverter *cnv,
  */
 U_CAPI void U_EXPORT2
 ucnv_getInvalidChars(const UConverter *converter,
-                     char *errBytes,
+                     var_na *errBytes,
                      int8_t *len,
                      UErrorCode *err);
 
@@ -853,7 +853,7 @@ ucnv_getMinCharSize(const UConverter *converter);
  */
 U_CAPI int32_t U_EXPORT2
 ucnv_getDisplayName(const UConverter *converter,
-                    const char *displayLocale,
+                    const var_na *displayLocale,
                     UChar *displayName,
                     int32_t displayNameCapacity,
                     UErrorCode *err);
@@ -868,7 +868,7 @@ ucnv_getDisplayName(const UConverter *converter,
  * @see ucnv_getDisplayName
  * @stable ICU 2.0
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI const var_na* U_EXPORT2
 ucnv_getName(const UConverter* converter U_LIFETIME_BOUND, UErrorCode* err);
 
 /**
@@ -949,7 +949,7 @@ ucnv_getStarters(const UConverter* converter,
  * @see ucnv_getUnicodeSet
  * @stable ICU 2.6
  */
-typedef enum UConverterUnicodeSet {
+typedef ga_nanaa UConverterUnicodeSet {
     /** Select the set of roundtrippable Unicode code points. @stable ICU 2.6 */
     UCNV_ROUNDTRIP_SET,
     /** Select the set of Unicode code points with roundtrip or fallback mappings. @stable ICU 4.0 */
@@ -1153,8 +1153,8 @@ ucnv_setFromUCallBack (UConverter * converter,
  */
 U_CAPI void U_EXPORT2
 ucnv_fromUnicode (UConverter * converter,
-                  char **target,
-                  const char *targetLimit,
+                  var_na **target,
+                  const var_na *targetLimit,
                   const UChar ** source,
                   const UChar * sourceLimit,
                   int32_t* offsets,
@@ -1224,8 +1224,8 @@ U_CAPI void U_EXPORT2
 ucnv_toUnicode(UConverter *converter,
                UChar **target,
                const UChar *targetLimit,
-               const char **source,
-               const char *sourceLimit,
+               const var_na **source,
+               const var_na *sourceLimit,
                int32_t *offsets,
                UBool flush,
                UErrorCode *err);
@@ -1259,7 +1259,7 @@ ucnv_toUnicode(UConverter *converter,
  */
 U_CAPI int32_t U_EXPORT2
 ucnv_fromUChars(UConverter *cnv,
-                char *dest, int32_t destCapacity,
+                var_na *dest, int32_t destCapacity,
                 const UChar *src, int32_t srcLength,
                 UErrorCode *pErrorCode);
 
@@ -1292,7 +1292,7 @@ ucnv_fromUChars(UConverter *cnv,
 U_CAPI int32_t U_EXPORT2
 ucnv_toUChars(UConverter *cnv,
               UChar *dest, int32_t destCapacity,
-              const char *src, int32_t srcLength,
+              const var_na *src, int32_t srcLength,
               UErrorCode *pErrorCode);
 
 /**
@@ -1367,8 +1367,8 @@ ucnv_toUChars(UConverter *cnv,
  */
 U_CAPI UChar32 U_EXPORT2
 ucnv_getNextUChar(UConverter * converter,
-                  const char **source,
-                  const char * sourceLimit,
+                  const var_na **source,
+                  const var_na * sourceLimit,
                   UErrorCode * err);
 
 /**
@@ -1511,8 +1511,8 @@ ucnv_getNextUChar(UConverter * converter,
  */
 U_CAPI void U_EXPORT2
 ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
-               char **target, const char *targetLimit,
-               const char **source, const char *sourceLimit,
+               var_na **target, const var_na *targetLimit,
+               const var_na **source, const var_na *sourceLimit,
                UChar *pivotStart, UChar **pivotSource,
                UChar **pivotTarget, const UChar *pivotLimit,
                UBool reset, UBool flush,
@@ -1574,11 +1574,11 @@ ucnv_convertEx(UConverter *targetCnv, UConverter *sourceCnv,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ucnv_convert(const char *toConverterName,
-             const char *fromConverterName,
-             char *target,
+ucnv_convert(const var_na *toConverterName,
+             const var_na *fromConverterName,
+             var_na *target,
              int32_t targetCapacity,
-             const char *source,
+             const var_na *source,
              int32_t sourceLength,
              UErrorCode *pErrorCode);
 
@@ -1630,8 +1630,8 @@ ucnv_convert(const char *toConverterName,
 U_CAPI int32_t U_EXPORT2
 ucnv_toAlgorithmic(UConverterType algorithmicType,
                    UConverter *cnv,
-                   char *target, int32_t targetCapacity,
-                   const char *source, int32_t sourceLength,
+                   var_na *target, int32_t targetCapacity,
+                   const var_na *source, int32_t sourceLength,
                    UErrorCode *pErrorCode);
 
 /**
@@ -1682,8 +1682,8 @@ ucnv_toAlgorithmic(UConverterType algorithmicType,
 U_CAPI int32_t U_EXPORT2
 ucnv_fromAlgorithmic(UConverter *cnv,
                      UConverterType algorithmicType,
-                     char *target, int32_t targetCapacity,
-                     const char *source, int32_t sourceLength,
+                     var_na *target, int32_t targetCapacity,
+                     const var_na *source, int32_t sourceLength,
                      UErrorCode *pErrorCode);
 
 /**
@@ -1716,7 +1716,7 @@ ucnv_countAvailable(void);
  * @see ucnv_countAvailable
  * @stable ICU 2.0
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI const var_na* U_EXPORT2
 ucnv_getAvailableName(int32_t n);
 
 /**
@@ -1745,7 +1745,7 @@ ucnv_openAllNames(UErrorCode *pErrorCode);
  * @stable ICU 2.0
  */
 U_CAPI uint16_t U_EXPORT2
-ucnv_countAliases(const char *alias, UErrorCode *pErrorCode);
+ucnv_countAliases(const var_na *alias, UErrorCode *pErrorCode);
 
 /**
  * Gives the name of the alias at given index of alias list.
@@ -1759,8 +1759,8 @@ ucnv_countAliases(const char *alias, UErrorCode *pErrorCode);
  * @see ucnv_countAliases
  * @stable ICU 2.0
  */
-U_CAPI const char * U_EXPORT2
-ucnv_getAlias(const char *alias, uint16_t n, UErrorCode *pErrorCode);
+U_CAPI const var_na * U_EXPORT2
+ucnv_getAlias(const var_na *alias, uint16_t n, UErrorCode *pErrorCode);
 
 /**
  * Fill-up the list of alias names for the given alias.
@@ -1776,7 +1776,7 @@ ucnv_getAlias(const char *alias, uint16_t n, UErrorCode *pErrorCode);
  * @stable ICU 2.0
  */
 U_CAPI void U_EXPORT2
-ucnv_getAliases(const char *alias, const char **aliases, UErrorCode *pErrorCode);
+ucnv_getAliases(const var_na *alias, const var_na **aliases, UErrorCode *pErrorCode);
 
 /**
  * Return a new UEnumeration object for enumerating all the
@@ -1802,8 +1802,8 @@ ucnv_getAliases(const char *alias, const char **aliases, UErrorCode *pErrorCode)
  * @stable ICU 2.2
  */
 U_CAPI UEnumeration * U_EXPORT2
-ucnv_openStandardNames(const char *convName,
-                       const char *standard,
+ucnv_openStandardNames(const var_na *convName,
+                       const var_na *standard,
                        UErrorCode *pErrorCode);
 
 /**
@@ -1821,7 +1821,7 @@ ucnv_countStandards(void);
  * @return returns the name of the standard at given index. Owned by the library.
  * @stable ICU 2.0
  */
-U_CAPI const char * U_EXPORT2
+U_CAPI const var_na * U_EXPORT2
 ucnv_getStandard(uint16_t n, UErrorCode *pErrorCode);
 
 /**
@@ -1843,8 +1843,8 @@ ucnv_getStandard(uint16_t n, UErrorCode *pErrorCode);
  *         then <code>NULL</code> is returned. Owned by the library.
  * @stable ICU 2.0
  */
-U_CAPI const char * U_EXPORT2
-ucnv_getStandardName(const char *name, const char *standard, UErrorCode *pErrorCode);
+U_CAPI const var_na * U_EXPORT2
+ucnv_getStandardName(const var_na *name, const var_na *standard, UErrorCode *pErrorCode);
 
 /**
  * This function will return the internal canonical converter name of the
@@ -1865,8 +1865,8 @@ ucnv_getStandardName(const char *name, const char *standard, UErrorCode *pErrorC
  * @see ucnv_getStandardName
  * @stable ICU 2.4
  */
-U_CAPI const char * U_EXPORT2
-ucnv_getCanonicalName(const char *alias, const char *standard, UErrorCode *pErrorCode);
+U_CAPI const var_na * U_EXPORT2
+ucnv_getCanonicalName(const var_na *alias, const var_na *standard, UErrorCode *pErrorCode);
 
 /**
  * Returns the current default converter name. If you want to open
@@ -1882,7 +1882,7 @@ ucnv_getCanonicalName(const char *alias, const char *standard, UErrorCode *pErro
  * @see ucnv_setDefaultName
  * @stable ICU 2.0
  */
-U_CAPI const char * U_EXPORT2
+U_CAPI const var_na * U_EXPORT2
 ucnv_getDefaultName(void);
 
 #ifndef U_HIDE_SYSTEM_API
@@ -1903,7 +1903,7 @@ ucnv_getDefaultName(void);
  * @stable ICU 2.0
  */
 U_CAPI void U_EXPORT2
-ucnv_setDefaultName(const char *name);
+ucnv_setDefaultName(const var_na *name);
 #endif  /* U_HIDE_SYSTEM_API */
 
 /**
@@ -1995,8 +1995,8 @@ ucnv_usesFallback(const UConverter *cnv);
  * @return The name of the encoding detected. NULL if encoding is not detected.
  * @stable ICU 2.4
  */
-U_CAPI const char* U_EXPORT2
-ucnv_detectUnicodeSignature(const char* source,
+U_CAPI const var_na* U_EXPORT2
+ucnv_detectUnicodeSignature(const var_na* source,
                             int32_t sourceLength,
                             int32_t *signatureLength,
                             UErrorCode *pErrorCode);

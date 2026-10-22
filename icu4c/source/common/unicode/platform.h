@@ -172,20 +172,20 @@
 #   define U_PLATFORM U_PF_LINUX
 #elif defined(__APPLE__) && defined(__MACH__)
 #   include <TargetConditionals.h>
-#   if (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE) && (defined(TARGET_OS_MACCATALYST) && !TARGET_OS_MACCATALYST)   /* variant of TARGET_OS_MAC */
+#   ຖ້າ (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE) && (defined(TARGET_OS_MACCATALYST) && !TARGET_OS_MACCATALYST)   /* variant of TARGET_OS_MAC */
 #       define U_PLATFORM U_PF_IPHONE
-#   else
+#   ບໍ່ດັ່ງນັ້ນ
 #       define U_PLATFORM U_PF_DARWIN
 #   endif
 #elif defined(BSD) || defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__MirBSD__)
-#   if defined(__FreeBSD__)
+#   ຖ້າ defined(__FreeBSD__)
 #       include <sys/endian.h>
 #   endif
 #   define U_PLATFORM U_PF_BSD
 #elif defined(sun) || defined(__sun)
     /* Check defined(__SVR4) || defined(__svr4__) to distinguish Solaris from SunOS? */
 #   define U_PLATFORM U_PF_SOLARIS
-#   if defined(__GNUC__)
+#   ຖ້າ defined(__GNUC__)
         /* Solaris/GCC needs this header file to get the proper endianness. Normally, this
          * header file is included with stddef.h but on Solairs/GCC, the GCC version of stddef.h
          *  is included which does not include this header file.
@@ -208,7 +208,7 @@
 #   define U_PLATFORM U_PF_HAIKU
 #elif defined(__EMSCRIPTEN__)
 #   define U_PLATFORM U_PF_EMSCRIPTEN
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #   define U_PLATFORM U_PF_UNKNOWN
 #endif
 
@@ -219,7 +219,7 @@
  * Otherwise undefined.
  * @internal
  */
-#if (defined(_MSC_VER) && !(defined(__clang__) && __clang__)) || defined(U_IN_DOXYGEN)
+#ຖ້າ (defined(_MSC_VER) && !(defined(__clang__) && __clang__)) || defined(U_IN_DOXYGEN)
 #   define U_REAL_MSVC
 #endif
 
@@ -248,7 +248,7 @@
     /* Use the predefined value. */
 #elif (U_PF_WINDOWS <= U_PLATFORM && U_PLATFORM <= U_PF_MINGW) || defined(CYGWINMSVC)
 #   define U_PLATFORM_USES_ONLY_WIN32_API 1
-#else
+#ບໍ່ດັ່ງນັ້ນ
     /* Cygwin implements POSIX. */
 #   define U_PLATFORM_USES_ONLY_WIN32_API 0
 #endif
@@ -263,7 +263,7 @@
     /* Use the predefined value. */
 #elif U_PF_WINDOWS <= U_PLATFORM && U_PLATFORM <= U_PF_CYGWIN
 #   define U_PLATFORM_HAS_WIN32_API 1
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #   define U_PLATFORM_HAS_WIN32_API 0
 #endif
 
@@ -275,7 +275,7 @@
  */
 #ifdef U_PLATFORM_HAS_WINUWP_API
     /* Use the predefined value. */
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #   define U_PLATFORM_HAS_WINUWP_API 0
 #endif
 
@@ -289,7 +289,7 @@
     /* Use the predefined value. */
 #elif U_PLATFORM_USES_ONLY_WIN32_API
 #   define U_PLATFORM_IMPLEMENTS_POSIX 0
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #   define U_PLATFORM_IMPLEMENTS_POSIX 1
 #endif
 
@@ -302,7 +302,7 @@
     /* Use the predefined value. */
 #elif U_PF_LINUX <= U_PLATFORM && U_PLATFORM <= 4499
 #   define U_PLATFORM_IS_LINUX_BASED 1
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #   define U_PLATFORM_IS_LINUX_BASED 0
 #endif
 
@@ -315,7 +315,7 @@
     /* Use the predefined value. */
 #elif U_PF_DARWIN <= U_PLATFORM && U_PLATFORM <= U_PF_IPHONE
 #   define U_PLATFORM_IS_DARWIN_BASED 1
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #   define U_PLATFORM_IS_DARWIN_BASED 0
 #endif
 
@@ -335,7 +335,7 @@
  */
 #ifdef __GNUC__
 #   define U_GCC_MAJOR_MINOR (__GNUC__ * 100 + __GNUC_MINOR__)
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #   define U_GCC_MAJOR_MINOR 0
 #endif
 
@@ -364,7 +364,7 @@
 #elif defined(sparc) || defined(__sparc) || defined(__sparc__)
     /* Some sparc based systems (e.g. Linux) do not predefine any endianness macros. */
 #   define U_IS_BIG_ENDIAN 1
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #   define U_IS_BIG_ENDIAN 0
 #endif
 
@@ -378,37 +378,37 @@
     /* Use the predefined value. */
 #elif defined(_MSC_VER)
 #   define U_HAVE_DEBUG_LOCATION_NEW 1
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #   define U_HAVE_DEBUG_LOCATION_NEW 0
 #endif
 
 /* Compatibility with compilers other than clang: http://clang.llvm.org/docs/LanguageExtensions.html */
 #ifdef __has_attribute
 #   define UPRV_HAS_ATTRIBUTE(x) __has_attribute(x)
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #   define UPRV_HAS_ATTRIBUTE(x) 0
 #endif
 #ifdef __has_cpp_attribute
 #   define UPRV_HAS_CPP_ATTRIBUTE(x) __has_cpp_attribute(x)
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #   define UPRV_HAS_CPP_ATTRIBUTE(x) 0
 #endif
 #ifdef __has_declspec_attribute
 #   define UPRV_HAS_DECLSPEC_ATTRIBUTE(x) __has_declspec_attribute(x)
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #   define UPRV_HAS_DECLSPEC_ATTRIBUTE(x) 0
 #endif
 #ifdef __has_builtin
 #   define UPRV_HAS_BUILTIN(x) __has_builtin(x)
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #   define UPRV_HAS_BUILTIN(x) 0
 #endif
 #ifdef __has_feature
 #   define UPRV_HAS_FEATURE(x) __has_feature(x)
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #   define UPRV_HAS_FEATURE(x) 0
 #endif
-#if UPRV_HAS_FEATURE(address_sanitizer) || \
+#ຖ້າ UPRV_HAS_FEATURE(address_sanitizer) || \
     UPRV_HAS_FEATURE(memory_sanitizer) || \
     UPRV_HAS_FEATURE(thread_sanitizer) || \
     UPRV_HAS_FEATURE(undefined_sanitizer) || \
@@ -416,25 +416,25 @@
     defined(__SANITIZE_THREAD__) || \
     defined(__SANITIZE_UNDEFINED__)
 #   define UPRV_HAS_SANITIZER 1
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #   define UPRV_HAS_SANITIZER 0
 #endif
 #ifdef __has_extension
 #   define UPRV_HAS_EXTENSION(x) __has_extension(x)
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #   define UPRV_HAS_EXTENSION(x) 0
 #endif
 #ifdef __has_warning
 #   define UPRV_HAS_WARNING(x) __has_warning(x)
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #   define UPRV_HAS_WARNING(x) 0
 #endif
 
 
-#if defined(__clang__)
+#ຖ້າ defined(__clang__)
 #define UPRV_NO_SANITIZE_FUNCTION __attribute__((no_sanitize("function")))
 #define UPRV_NO_SANITIZE_UNDEFINED __attribute__((no_sanitize("undefined")))
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #define UPRV_NO_SANITIZE_FUNCTION
 #define UPRV_NO_SANITIZE_UNDEFINED
 #endif
@@ -444,9 +444,9 @@
  * Attribute to mark functions as malloc-like
  * @internal
  */
-#if defined(__GNUC__) && __GNUC__>=3
+#ຖ້າ defined(__GNUC__) && __GNUC__>=3
 #    define U_MALLOC_ATTR __attribute__ ((__malloc__))
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #    define U_MALLOC_ATTR
 #endif
 
@@ -455,12 +455,12 @@
  * Attribute to specify the size of the allocated buffer for malloc-like functions
  * @internal
  */
-#if (defined(__GNUC__) &&                                            \
+#ຖ້າ (defined(__GNUC__) &&                                            \
         (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 3))) || \
         UPRV_HAS_ATTRIBUTE(alloc_size)
 #   define U_ALLOC_SIZE_ATTR(X) __attribute__ ((alloc_size(X)))
 #   define U_ALLOC_SIZE_ATTR2(X,Y) __attribute__ ((alloc_size(X,Y)))
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #   define U_ALLOC_SIZE_ATTR(X)
 #   define U_ALLOC_SIZE_ATTR2(X,Y)
 #endif
@@ -472,7 +472,7 @@
  * @internal
  */
 #ifdef U_CPLUSPLUS_VERSION
-#   if U_CPLUSPLUS_VERSION != 0 && !defined(__cplusplus)
+#   ຖ້າ U_CPLUSPLUS_VERSION != 0 && !defined(__cplusplus)
 #       undef U_CPLUSPLUS_VERSION
 #       define U_CPLUSPLUS_VERSION 0
 #   endif
@@ -491,7 +491,7 @@
 #   define U_CPLUSPLUS_VERSION 14
 #elif __cplusplus >= 201103L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201103L)
 #   define U_CPLUSPLUS_VERSION 11
-#else
+#ບໍ່ດັ່ງນັ້ນ
     // C++98 or C++03
 #   define U_CPLUSPLUS_VERSION 1
 #endif
@@ -502,12 +502,12 @@
  * https://clang.llvm.org/docs/AttributeReference.html#fallthrough
  * @internal
  */
-#if defined(U_FALLTHROUGH)
+#ຖ້າ defined(U_FALLTHROUGH)
     // Use the predefined value.
 #elif defined(__clang__)
     // Test for compiler vs. feature separately.
     // Other compilers might choke on the feature test.
-#    if UPRV_HAS_CPP_ATTRIBUTE(clang::fallthrough) || \
+#    ຖ້າ UPRV_HAS_CPP_ATTRIBUTE(clang::fallthrough) || \
              (UPRV_HAS_FEATURE(cxx_attributes) &&     \
              UPRV_HAS_WARNING("-Wimplicit-fallthrough"))
 #       define U_FALLTHROUGH [[clang::fallthrough]]
@@ -617,7 +617,7 @@
 #   define U_CHARSET_FAMILY U_EBCDIC_FAMILY
 #elif U_PLATFORM == U_PF_OS400 && !defined(__UTF32__)
 #   define U_CHARSET_FAMILY U_EBCDIC_FAMILY
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #   define U_CHARSET_FAMILY U_ASCII_FAMILY
 #endif
 
@@ -646,7 +646,7 @@
 #elif U_PLATFORM_IS_LINUX_BASED || U_PLATFORM_IS_DARWIN_BASED || \
         U_PLATFORM == U_PF_EMSCRIPTEN
 #   define U_CHARSET_IS_UTF8 1
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #   define U_CHARSET_IS_UTF8 0
 #endif
 
@@ -671,7 +671,7 @@
      * The size of wchar_t was 1 but L"xyz" string literals had 32-bit units anyway.
      */
 #   define U_HAVE_WCHAR_H 0
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #   define U_HAVE_WCHAR_H 1
 #endif
 
@@ -702,7 +702,7 @@
      */
 #   ifdef __64BIT__
 #       define U_SIZEOF_WCHAR_T 4
-#   else
+#   ບໍ່ດັ່ງນັ້ນ
 #       define U_SIZEOF_WCHAR_T 2
 #   endif
 #elif U_PLATFORM == U_PF_OS390
@@ -713,11 +713,11 @@
      */
 #   ifdef _LP64
 #       define U_SIZEOF_WCHAR_T 4
-#   else
+#   ບໍ່ດັ່ງນັ້ນ
 #       define U_SIZEOF_WCHAR_T 2
 #   endif
 #elif U_PLATFORM == U_PF_OS400
-#   if defined(__UTF32__)
+#   ຖ້າ defined(__UTF32__)
         /*
          * LOCALETYPE(*LOCALEUTF) is specified.
          * Wide-character strings are in UTF-32,
@@ -731,7 +731,7 @@
          * narrow-character strings are in EBCDIC.
          */
 #       define U_SIZEOF_WCHAR_T 2
-#   else
+#   ບໍ່ດັ່ງນັ້ນ
         /*
          * LOCALETYPE(*CLD) or LOCALETYPE(*LOCALE) is specified.
          * Wide-character strings are in 16-bit EBCDIC,
@@ -739,7 +739,7 @@
          */
 #       define U_SIZEOF_WCHAR_T 2
 #   endif
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #   define U_SIZEOF_WCHAR_T 4
 #endif
 
@@ -759,18 +759,18 @@
  */
 #ifdef U_HAVE_CHAR16_T
     /* Use the predefined value. */
-#else
+#ບໍ່ດັ່ງນັ້ນ
     /*
      * Notes:
      * C++11 and C11 require support for UTF-16 literals
      * Doesn't work on Mac C11 (see workaround in ptypes.h)
      * or Cygwin less than 3.5.
      */
-#   if defined(__cplusplus)
+#   ຖ້າ defined(__cplusplus)
 #       define U_HAVE_CHAR16_T 1
 #   elif U_PLATFORM_IS_DARWIN_BASED || (U_PLATFORM == U_PF_CYGWIN && CYGWIN_VERSION_DLL_MAJOR < 3005)
 #       define U_HAVE_CHAR16_T 0
-#   else
+#   ບໍ່ດັ່ງນັ້ນ
         // conformant C11
 #       define U_HAVE_CHAR16_T 1
 #   endif
@@ -796,7 +796,7 @@
 #elif U_SIZEOF_WCHAR_T == 2 \
     && (U_CHARSET_FAMILY == 0 || (U_PF_OS390 <= U_PLATFORM && U_PLATFORM <= U_PF_OS400 && defined(__UCS2__)))
 #   define U_DECLARE_UTF16(string) L ## string
-#else
+#ບໍ່ດັ່ງນັ້ນ
     /* Leave U_DECLARE_UTF16 undefined. See unistr.h. */
 #endif
 
@@ -820,7 +820,7 @@
 #   define U_EXPORT __global
 /*#elif defined(__HP_aCC) || defined(__HP_cc)
 #   define U_EXPORT __declspec(dllexport)*/
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #   define U_EXPORT
 #endif
 
@@ -829,7 +829,7 @@
     /* Use the predefined value. */
 #elif defined(_MSC_VER)
 #   define U_EXPORT2 __cdecl
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #   define U_EXPORT2
 #endif
 
@@ -839,7 +839,7 @@
                             UPRV_HAS_DECLSPEC_ATTRIBUTE(__dllimport__))
     /* Windows needs to export/import data. */
 #   define U_IMPORT __declspec(dllimport)
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #   define U_IMPORT 
 #endif
 
@@ -854,7 +854,7 @@
     /* Use the predefined value. */
 #elif defined(__GNUC__) || defined(__open_xl__)
 #   define U_HIDDEN __attribute__((visibility("hidden")))
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #   define U_HIDDEN 
 #endif
 
@@ -875,9 +875,9 @@
  *
  * @stable ICU 2.0
  */
-#if U_PLATFORM == U_PF_OS390 && defined(__cplusplus)
+#ຖ້າ U_PLATFORM == U_PF_OS390 && defined(__cplusplus)
 #    define U_CALLCONV __cdecl
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #    define U_CALLCONV U_EXPORT2
 #endif
 
@@ -886,9 +886,9 @@
  * Similar to U_CALLCONV, but only used on function pointers.
  * @internal
  */
-#if U_PLATFORM == U_PF_OS390 && defined(__cplusplus)
+#ຖ້າ U_PLATFORM == U_PF_OS390 && defined(__cplusplus)
 #    define U_CALLCONV_FPTR U_CALLCONV
-#else
+#ບໍ່ດັ່ງນັ້ນ
 #    define U_CALLCONV_FPTR
 #endif
 /** @} */

@@ -52,7 +52,7 @@
 /**
  * Data Type for cleanup function selector. These roughly correspond to libraries.
  */
-typedef enum ECleanupLibraryType {
+typedef ga_nanaa ECleanupLibraryType {
     UCLN_START = -1,
     UCLN_UPLUG,     /* ICU plugins */
     UCLN_CUSTOM,    /* Custom is for anyone else. */

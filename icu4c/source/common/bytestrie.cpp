@@ -31,48 +31,48 @@ BytesTrie::~BytesTrie() {
 int32_t
 BytesTrie::readValue(const uint8_t *pos, int32_t leadByte) {
     int32_t value;
-    if(leadByte<kMinTwoByteValueLead) {
+    ຖ້າ(leadByte<kMinTwoByteValueLead) {
         value=leadByte-kMinOneByteValueLead;
-    } else if(leadByte<kMinThreeByteValueLead) {
+    } ບໍ່ດັ່ງນັ້ນ ຖ້າ(leadByte<kMinThreeByteValueLead) {
         value=((leadByte-kMinTwoByteValueLead)<<8)|*pos;
-    } else if(leadByte<kFourByteValueLead) {
+    } ບໍ່ດັ່ງນັ້ນ ຖ້າ(leadByte<kFourByteValueLead) {
         value=((leadByte-kMinThreeByteValueLead)<<16)|(pos[0]<<8)|pos[1];
-    } else if(leadByte==kFourByteValueLead) {
+    } ບໍ່ດັ່ງນັ້ນ ຖ້າ(leadByte==kFourByteValueLead) {
         value=(pos[0]<<16)|(pos[1]<<8)|pos[2];
-    } else {
+    } ບໍ່ດັ່ງນັ້ນ {
         value=(pos[0]<<24)|(pos[1]<<16)|(pos[2]<<8)|pos[3];
     }
-    return value;
+    ສົ່ງຄືນ value;
 }
 
 const uint8_t*
 BytesTrie::jumpByDelta(const uint8_t* pos U_LIFETIME_BOUND) {
     int32_t delta=*pos++;
-    if(delta<kMinTwoByteDeltaLead) {
+    ຖ້າ(delta<kMinTwoByteDeltaLead) {
         // nothing to do
-    } else if(delta<kMinThreeByteDeltaLead) {
+    } ບໍ່ດັ່ງນັ້ນ ຖ້າ(delta<kMinThreeByteDeltaLead) {
         delta=((delta-kMinTwoByteDeltaLead)<<8)|*pos++;
-    } else if(delta<kFourByteDeltaLead) {
+    } ບໍ່ດັ່ງນັ້ນ ຖ້າ(delta<kFourByteDeltaLead) {
         delta=((delta-kMinThreeByteDeltaLead)<<16)|(pos[0]<<8)|pos[1];
         pos+=2;
-    } else if(delta==kFourByteDeltaLead) {
+    } ບໍ່ດັ່ງນັ້ນ ຖ້າ(delta==kFourByteDeltaLead) {
         delta=(pos[0]<<16)|(pos[1]<<8)|pos[2];
         pos+=3;
-    } else {
+    } ບໍ່ດັ່ງນັ້ນ {
         delta=(pos[0]<<24)|(pos[1]<<16)|(pos[2]<<8)|pos[3];
         pos+=4;
     }
-    return pos+delta;
+    ສົ່ງຄືນ pos+delta;
 }
 
 UStringTrieResult
 BytesTrie::current() const {
     const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
-    } else {
+    ຖ້າ(pos==nullptr) {
+        ສົ່ງຄືນ USTRINGTRIE_NO_MATCH;
+    } ບໍ່ດັ່ງນັ້ນ {
         int32_t node;
-        return (remainingMatchLength_<0 && (node=*pos)>=kMinValueLead) ?
+        ສົ່ງຄືນ (remainingMatchLength_<0 && (node=*pos)>=kMinValueLead) ?
                 valueResult(node) : USTRINGTRIE_NO_VALUE;
     }
 }
@@ -80,17 +80,17 @@ BytesTrie::current() const {
 UStringTrieResult
 BytesTrie::branchNext(const uint8_t *pos, int32_t length, int32_t inByte) {
     // Branch according to the current byte.
-    if(length==0) {
+    ຖ້າ(length==0) {
         length=*pos++;
     }
     ++length;
     // The length of the branch is the number of bytes to select from.
     // The data structure encodes a binary search.
-    while(length>kMaxBranchLinearSubNodeLength) {
-        if(inByte<*pos++) {
+    ໃນຂະນະທີ່(length>kMaxBranchLinearSubNodeLength) {
+        ຖ້າ(inByte<*pos++) {
             length>>=1;
             pos=jumpByDelta(pos);
-        } else {
+        } ບໍ່ດັ່ງນັ້ນ {
             length=length-(length>>1);
             pos=skipDelta(pos);
         }
@@ -99,30 +99,30 @@ BytesTrie::branchNext(const uint8_t *pos, int32_t length, int32_t inByte) {
     // length>=2 because the loop body above sees length>kMaxBranchLinearSubNodeLength>=3
     // and divides length by 2.
     do {
-        if(inByte==*pos++) {
+        ຖ້າ(inByte==*pos++) {
             UStringTrieResult result;
             int32_t node=*pos;
             U_ASSERT(node>=kMinValueLead);
-            if(node&kValueIsFinal) {
+            ຖ້າ(node&kValueIsFinal) {
                 // Leave the final value for getValue() to read.
                 result=USTRINGTRIE_FINAL_VALUE;
-            } else {
+            } ບໍ່ດັ່ງນັ້ນ {
                 // Use the non-final value as the jump delta.
                 ++pos;
                 // int32_t delta=readValue(pos, node>>1);
                 node>>=1;
                 int32_t delta;
-                if(node<kMinTwoByteValueLead) {
+                ຖ້າ(node<kMinTwoByteValueLead) {
                     delta=node-kMinOneByteValueLead;
-                } else if(node<kMinThreeByteValueLead) {
+                } ບໍ່ດັ່ງນັ້ນ ຖ້າ(node<kMinThreeByteValueLead) {
                     delta=((node-kMinTwoByteValueLead)<<8)|*pos++;
-                } else if(node<kFourByteValueLead) {
+                } ບໍ່ດັ່ງນັ້ນ ຖ້າ(node<kFourByteValueLead) {
                     delta=((node-kMinThreeByteValueLead)<<16)|(pos[0]<<8)|pos[1];
                     pos+=2;
-                } else if(node==kFourByteValueLead) {
+                } ບໍ່ດັ່ງນັ້ນ ຖ້າ(node==kFourByteValueLead) {
                     delta=(pos[0]<<16)|(pos[1]<<8)|pos[2];
                     pos+=3;
-                } else {
+                } ບໍ່ດັ່ງນັ້ນ {
                     delta=(pos[0]<<24)|(pos[1]<<16)|(pos[2]<<8)|pos[3];
                     pos+=4;
                 }
@@ -132,43 +132,43 @@ BytesTrie::branchNext(const uint8_t *pos, int32_t length, int32_t inByte) {
                 result= node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
             }
             pos_=pos;
-            return result;
+            ສົ່ງຄືນ result;
         }
         --length;
         pos=skipValue(pos);
-    } while(length>1);
-    if(inByte==*pos++) {
+    } ໃນຂະນະທີ່(length>1);
+    ຖ້າ(inByte==*pos++) {
         pos_=pos;
         int32_t node=*pos;
-        return node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
-    } else {
+        ສົ່ງຄືນ node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
+    } ບໍ່ດັ່ງນັ້ນ {
         stop();
-        return USTRINGTRIE_NO_MATCH;
+        ສົ່ງຄືນ USTRINGTRIE_NO_MATCH;
     }
 }
 
 UStringTrieResult
 BytesTrie::nextImpl(const uint8_t *pos, int32_t inByte) {
-    for(;;) {
+    ສຳລັບ(;;) {
         int32_t node=*pos++;
-        if(node<kMinLinearMatch) {
-            return branchNext(pos, node, inByte);
-        } else if(node<kMinValueLead) {
+        ຖ້າ(node<kMinLinearMatch) {
+            ສົ່ງຄືນ branchNext(pos, node, inByte);
+        } ບໍ່ດັ່ງນັ້ນ ຖ້າ(node<kMinValueLead) {
             // Match the first of length+1 bytes.
             int32_t length=node-kMinLinearMatch;  // Actual match length minus 1.
-            if(inByte==*pos++) {
+            ຖ້າ(inByte==*pos++) {
                 remainingMatchLength_=--length;
                 pos_=pos;
-                return (length<0 && (node=*pos)>=kMinValueLead) ?
+                ສົ່ງຄືນ (length<0 && (node=*pos)>=kMinValueLead) ?
                         valueResult(node) : USTRINGTRIE_NO_VALUE;
-            } else {
+            } ບໍ່ດັ່ງນັ້ນ {
                 // No match.
-                break;
+                bha_nga;
             }
-        } else if(node&kValueIsFinal) {
+        } ບໍ່ດັ່ງນັ້ນ ຖ້າ(node&kValueIsFinal) {
             // No further matching bytes.
-            break;
-        } else {
+            bha_nga;
+        } ບໍ່ດັ່ງນັ້ນ {
             // Skip intermediate value.
             pos=skipValue(pos, node);
             // The next node must not also be a value node.
@@ -176,133 +176,133 @@ BytesTrie::nextImpl(const uint8_t *pos, int32_t inByte) {
         }
     }
     stop();
-    return USTRINGTRIE_NO_MATCH;
+    ສົ່ງຄືນ USTRINGTRIE_NO_MATCH;
 }
 
 UStringTrieResult
 BytesTrie::next(int32_t inByte) {
     const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+    ຖ້າ(pos==nullptr) {
+        ສົ່ງຄືນ USTRINGTRIE_NO_MATCH;
     }
-    if(inByte<0) {
+    ຖ້າ(inByte<0) {
         inByte+=0x100;
     }
     int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    if(length>=0) {
+    ຖ້າ(length>=0) {
         // Remaining part of a linear-match node.
-        if(inByte==*pos++) {
+        ຖ້າ(inByte==*pos++) {
             remainingMatchLength_=--length;
             pos_=pos;
             int32_t node;
-            return (length<0 && (node=*pos)>=kMinValueLead) ?
+            ສົ່ງຄືນ (length<0 && (node=*pos)>=kMinValueLead) ?
                     valueResult(node) : USTRINGTRIE_NO_VALUE;
-        } else {
+        } ບໍ່ດັ່ງນັ້ນ {
             stop();
-            return USTRINGTRIE_NO_MATCH;
+            ສົ່ງຄືນ USTRINGTRIE_NO_MATCH;
         }
     }
-    return nextImpl(pos, inByte);
+    ສົ່ງຄືນ nextImpl(pos, inByte);
 }
 
 UStringTrieResult
-BytesTrie::next(const char *s, int32_t sLength) {
-    if(sLength<0 ? *s==0 : sLength==0) {
+BytesTrie::next(const var_na *s, int32_t sLength) {
+    ຖ້າ(sLength<0 ? *s==0 : sLength==0) {
         // Empty input.
-        return current();
+        ສົ່ງຄືນ current();
     }
     const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+    ຖ້າ(pos==nullptr) {
+        ສົ່ງຄືນ USTRINGTRIE_NO_MATCH;
     }
     int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    for(;;) {
+    ສຳລັບ(;;) {
         // Fetch the next input byte, if there is one.
         // Continue a linear-match node without rechecking sLength<0.
         int32_t inByte;
-        if(sLength<0) {
-            for(;;) {
-                if((inByte=*s++)==0) {
+        ຖ້າ(sLength<0) {
+            ສຳລັບ(;;) {
+                ຖ້າ((inByte=*s++)==0) {
                     remainingMatchLength_=length;
                     pos_=pos;
                     int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
+                    ສົ່ງຄືນ (length<0 && (node=*pos)>=kMinValueLead) ?
                             valueResult(node) : USTRINGTRIE_NO_VALUE;
                 }
-                if(length<0) {
+                ຖ້າ(length<0) {
                     remainingMatchLength_=length;
-                    break;
+                    bha_nga;
                 }
-                if(inByte!=*pos) {
+                ຖ້າ(inByte!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    ສົ່ງຄືນ USTRINGTRIE_NO_MATCH;
                 }
                 ++pos;
                 --length;
             }
-        } else {
-            for(;;) {
-                if(sLength==0) {
+        } ບໍ່ດັ່ງນັ້ນ {
+            ສຳລັບ(;;) {
+                ຖ້າ(sLength==0) {
                     remainingMatchLength_=length;
                     pos_=pos;
                     int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
+                    ສົ່ງຄືນ (length<0 && (node=*pos)>=kMinValueLead) ?
                             valueResult(node) : USTRINGTRIE_NO_VALUE;
                 }
                 inByte=*s++;
                 --sLength;
-                if(length<0) {
+                ຖ້າ(length<0) {
                     remainingMatchLength_=length;
-                    break;
+                    bha_nga;
                 }
-                if(inByte!=*pos) {
+                ຖ້າ(inByte!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    ສົ່ງຄືນ USTRINGTRIE_NO_MATCH;
                 }
                 ++pos;
                 --length;
             }
         }
-        for(;;) {
+        ສຳລັບ(;;) {
             int32_t node=*pos++;
-            if(node<kMinLinearMatch) {
+            ຖ້າ(node<kMinLinearMatch) {
                 UStringTrieResult result=branchNext(pos, node, inByte);
-                if(result==USTRINGTRIE_NO_MATCH) {
-                    return USTRINGTRIE_NO_MATCH;
+                ຖ້າ(result==USTRINGTRIE_NO_MATCH) {
+                    ສົ່ງຄືນ USTRINGTRIE_NO_MATCH;
                 }
                 // Fetch the next input byte, if there is one.
-                if(sLength<0) {
-                    if((inByte=*s++)==0) {
-                        return result;
+                ຖ້າ(sLength<0) {
+                    ຖ້າ((inByte=*s++)==0) {
+                        ສົ່ງຄືນ result;
                     }
-                } else {
-                    if(sLength==0) {
-                        return result;
+                } ບໍ່ດັ່ງນັ້ນ {
+                    ຖ້າ(sLength==0) {
+                        ສົ່ງຄືນ result;
                     }
                     inByte=*s++;
                     --sLength;
                 }
-                if(result==USTRINGTRIE_FINAL_VALUE) {
+                ຖ້າ(result==USTRINGTRIE_FINAL_VALUE) {
                     // No further matching bytes.
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    ສົ່ງຄືນ USTRINGTRIE_NO_MATCH;
                 }
                 pos=pos_;  // branchNext() advanced pos and wrote it to pos_ .
-            } else if(node<kMinValueLead) {
+            } ບໍ່ດັ່ງນັ້ນ ຖ້າ(node<kMinValueLead) {
                 // Match length+1 bytes.
                 length=node-kMinLinearMatch;  // Actual match length minus 1.
-                if(inByte!=*pos) {
+                ຖ້າ(inByte!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    ສົ່ງຄືນ USTRINGTRIE_NO_MATCH;
                 }
                 ++pos;
                 --length;
-                break;
-            } else if(node&kValueIsFinal) {
+                bha_nga;
+            } ບໍ່ດັ່ງນັ້ນ ຖ້າ(node&kValueIsFinal) {
                 // No further matching bytes.
                 stop();
-                return USTRINGTRIE_NO_MATCH;
-            } else {
+                ສົ່ງຄືນ USTRINGTRIE_NO_MATCH;
+            } ບໍ່ດັ່ງນັ້ນ {
                 // Skip intermediate value.
                 pos=skipValue(pos, node);
                 // The next node must not also be a value node.
@@ -317,10 +317,10 @@ BytesTrie::findUniqueValueFromBranch(const uint8_t* pos U_LIFETIME_BOUND,
                                      int32_t length,
                                      UBool haveUniqueValue,
                                      int32_t& uniqueValue) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+    ໃນຂະນະທີ່(length>kMaxBranchLinearSubNodeLength) {
         ++pos;  // ignore the comparison byte
-        if(nullptr==findUniqueValueFromBranch(jumpByDelta(pos), length>>1, haveUniqueValue, uniqueValue)) {
-            return nullptr;
+        ຖ້າ(nullptr==findUniqueValueFromBranch(jumpByDelta(pos), length>>1, haveUniqueValue, uniqueValue)) {
+            ສົ່ງຄືນ nullptr;
         }
         length=length-(length>>1);
         pos=skipDelta(pos);
@@ -332,54 +332,54 @@ BytesTrie::findUniqueValueFromBranch(const uint8_t* pos U_LIFETIME_BOUND,
         UBool isFinal = static_cast<UBool>(node & kValueIsFinal);
         int32_t value=readValue(pos, node>>1);
         pos=skipValue(pos, node);
-        if(isFinal) {
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return nullptr;
+        ຖ້າ(isFinal) {
+            ຖ້າ(haveUniqueValue) {
+                ຖ້າ(value!=uniqueValue) {
+                    ສົ່ງຄືນ nullptr;
                 }
-            } else {
+            } ບໍ່ດັ່ງນັ້ນ {
                 uniqueValue=value;
                 haveUniqueValue=true;
             }
-        } else {
-            if(!findUniqueValue(pos+value, haveUniqueValue, uniqueValue)) {
-                return nullptr;
+        } ບໍ່ດັ່ງນັ້ນ {
+            ຖ້າ(!findUniqueValue(pos+value, haveUniqueValue, uniqueValue)) {
+                ສົ່ງຄືນ nullptr;
             }
             haveUniqueValue=true;
         }
-    } while(--length>1);
-    return pos+1;  // ignore the last comparison byte
+    } ໃນຂະນະທີ່(--length>1);
+    ສົ່ງຄືນ pos+1;  // ignore the last comparison byte
 }
 
 UBool
 BytesTrie::findUniqueValue(const uint8_t *pos, UBool haveUniqueValue, int32_t &uniqueValue) {
-    for(;;) {
+    ສຳລັບ(;;) {
         int32_t node=*pos++;
-        if(node<kMinLinearMatch) {
-            if(node==0) {
+        ຖ້າ(node<kMinLinearMatch) {
+            ຖ້າ(node==0) {
                 node=*pos++;
             }
             pos=findUniqueValueFromBranch(pos, node+1, haveUniqueValue, uniqueValue);
-            if(pos==nullptr) {
-                return false;
+            ຖ້າ(pos==nullptr) {
+                ສົ່ງຄືນ false;
             }
             haveUniqueValue=true;
-        } else if(node<kMinValueLead) {
+        } ບໍ່ດັ່ງນັ້ນ ຖ້າ(node<kMinValueLead) {
             // linear-match node
             pos+=node-kMinLinearMatch+1;  // Ignore the match bytes.
-        } else {
+        } ບໍ່ດັ່ງນັ້ນ {
             UBool isFinal = static_cast<UBool>(node & kValueIsFinal);
             int32_t value=readValue(pos, node>>1);
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return false;
+            ຖ້າ(haveUniqueValue) {
+                ຖ້າ(value!=uniqueValue) {
+                    ສົ່ງຄືນ false;
                 }
-            } else {
+            } ບໍ່ດັ່ງນັ້ນ {
                 uniqueValue=value;
                 haveUniqueValue=true;
             }
-            if(isFinal) {
-                return true;
+            ຖ້າ(isFinal) {
+                ສົ່ງຄືນ true;
             }
             pos=skipValue(pos, node);
         }
@@ -389,39 +389,39 @@ BytesTrie::findUniqueValue(const uint8_t *pos, UBool haveUniqueValue, int32_t &u
 int32_t
 BytesTrie::getNextBytes(ByteSink &out) const {
     const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return 0;
+    ຖ້າ(pos==nullptr) {
+        ສົ່ງຄືນ 0;
     }
-    if(remainingMatchLength_>=0) {
+    ຖ້າ(remainingMatchLength_>=0) {
         append(out, *pos);  // Next byte of a pending linear-match node.
-        return 1;
+        ສົ່ງຄືນ 1;
     }
     int32_t node=*pos++;
-    if(node>=kMinValueLead) {
-        if(node&kValueIsFinal) {
-            return 0;
-        } else {
+    ຖ້າ(node>=kMinValueLead) {
+        ຖ້າ(node&kValueIsFinal) {
+            ສົ່ງຄືນ 0;
+        } ບໍ່ດັ່ງນັ້ນ {
             pos=skipValue(pos, node);
             node=*pos++;
             U_ASSERT(node<kMinValueLead);
         }
     }
-    if(node<kMinLinearMatch) {
-        if(node==0) {
+    ຖ້າ(node<kMinLinearMatch) {
+        ຖ້າ(node==0) {
             node=*pos++;
         }
         getNextBranchBytes(pos, ++node, out);
-        return node;
-    } else {
+        ສົ່ງຄືນ node;
+    } ບໍ່ດັ່ງນັ້ນ {
         // First byte of the linear-match node.
         append(out, *pos);
-        return 1;
+        ສົ່ງຄືນ 1;
     }
 }
 
 void
 BytesTrie::getNextBranchBytes(const uint8_t *pos, int32_t length, ByteSink &out) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+    ໃນຂະນະທີ່(length>kMaxBranchLinearSubNodeLength) {
         ++pos;  // ignore the comparison byte
         getNextBranchBytes(jumpByDelta(pos), length>>1, out);
         length=length-(length>>1);
@@ -430,13 +430,13 @@ BytesTrie::getNextBranchBytes(const uint8_t *pos, int32_t length, ByteSink &out)
     do {
         append(out, *pos++);
         pos=skipValue(pos);
-    } while(--length>1);
+    } ໃນຂະນະທີ່(--length>1);
     append(out, *pos);
 }
 
 void
-BytesTrie::append(ByteSink &out, int c) {
-    char ch = static_cast<char>(c);
+BytesTrie::append(ByteSink &out, ຈຳນວນເຕັມ c) {
+    var_na ch = static_cast<var_na>(c);
     out.Append(&ch, 1);
 }
 

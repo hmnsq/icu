@@ -36,16 +36,16 @@ uset_openPattern(const char16_t* pattern, int32_t patternLength,
     UnicodeString pat(patternLength==-1, pattern, patternLength);
     UnicodeSet* set = new UnicodeSet(pat, *ec);
     /* test for nullptr */
-    if (set == nullptr) {
+    ຖ້າ (set == nullptr) {
         *ec = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        ສົ່ງຄືນ nullptr;
     }
 
-    if (U_FAILURE(*ec)) {
+    ຖ້າ (U_FAILURE(*ec)) {
         delete set;
         set = nullptr;
     }
-    return (USet*) set;
+    ສົ່ງຄືນ (USet*) set;
 }
 
 U_CAPI USet* U_EXPORT2
@@ -56,16 +56,16 @@ uset_openPatternOptions(const char16_t* pattern, int32_t patternLength,
     UnicodeString pat(patternLength==-1, pattern, patternLength);
     UnicodeSet* set = new UnicodeSet(pat, options, nullptr, *ec);
     /* test for nullptr */
-    if (set == nullptr) {
+    ຖ້າ (set == nullptr) {
         *ec = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        ສົ່ງຄືນ nullptr;
     }
 
-    if (U_FAILURE(*ec)) {
+    ຖ້າ (U_FAILURE(*ec)) {
         delete set;
         set = nullptr;
     }
-    return (USet*) set;
+    ສົ່ງຄືນ (USet*) set;
 }
 
 
@@ -77,16 +77,16 @@ uset_applyPattern(USet *set,
 
     // status code needs to be checked since we 
     // dereference it
-    if(status == nullptr || U_FAILURE(*status)){
-        return 0;
+    ຖ້າ(status == nullptr || U_FAILURE(*status)){
+        ສົ່ງຄືນ 0;
     }
 
     // check only the set paramenter
     // if pattern is nullptr or NUL terminated
     // UnicodeString constructor takes care of it
-    if(set == nullptr){
+    ຖ້າ(set == nullptr){
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        ສົ່ງຄືນ 0;
     }
 
     UnicodeString pat(pattern, patternLength);
@@ -95,7 +95,7 @@ uset_applyPattern(USet *set,
    
     ((UnicodeSet*) set)->applyPattern(pat, pos, options, nullptr, *status);
     
-    return pos.getIndex();
+    ສົ່ງຄືນ pos.getIndex();
 }
 
 U_CAPI void U_EXPORT2
@@ -122,7 +122,7 @@ uset_resemblesPattern(const char16_t *pattern, int32_t patternLength,
 
     UnicodeString pat(pattern, patternLength);
 
-    return ((pos+1) < pat.length() &&
+    ສົ່ງຄືນ ((pos+1) < pat.length() &&
             pat.charAt(pos) == (char16_t)91/*[*/) ||
             UnicodeSet::resemblesPattern(pat, pos);
 }
@@ -134,7 +134,7 @@ uset_toPattern(const USet* set,
                UErrorCode* ec) {
     UnicodeString pat;
     ((const UnicodeSet*) set)->toPattern(pat, escapeUnprintable);
-    return pat.extract(result, resultCapacity, *ec);
+    ສົ່ງຄືນ pat.extract(result, resultCapacity, *ec);
 }
 
 U_CAPI void U_EXPORT2

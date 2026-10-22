@@ -19,7 +19,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ຖ້າ !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/unistr.h"
 #include "unicode/uniset.h"
@@ -38,7 +38,7 @@
 U_NAMESPACE_BEGIN
 
 #ifdef RBBI_DEBUG
-static int  gLastSerial = 0;
+static ຈຳນວນເຕັມ  gLastSerial = 0;
 #endif
 
 
@@ -48,8 +48,8 @@ static int  gLastSerial = 0;
 //
 //-------------------------------------------------------------------------
 RBBINode::RBBINode(NodeType t, UErrorCode& status) : UMemory() {
-    if (U_FAILURE(status)) {
-        return;
+    ຖ້າ (U_FAILURE(status)) {
+        ສົ່ງຄືນ;
     }
 #ifdef RBBI_DEBUG
     fSerialNum    = ++gLastSerial;
@@ -71,21 +71,21 @@ RBBINode::RBBINode(NodeType t, UErrorCode& status) : UMemory() {
     fFirstPosSet  = new UVector(status);
     fLastPosSet   = new UVector(status);
     fFollowPos    = new UVector(status);
-    if (U_SUCCESS(status) &&
+    ຖ້າ (U_SUCCESS(status) &&
         (fFirstPosSet == nullptr || fLastPosSet == nullptr || fFollowPos == nullptr)) {
         status =  U_MEMORY_ALLOCATION_ERROR;
     }
-    if      (t==opCat)    {fPrecedence = precOpCat;}
-    else if (t==opOr)     {fPrecedence = precOpOr;}
-    else if (t==opStart)  {fPrecedence = precStart;}
-    else if (t==opLParen) {fPrecedence = precLParen;}
+    ຖ້າ      (t==opCat)    {fPrecedence = precOpCat;}
+    ບໍ່ດັ່ງນັ້ນ ຖ້າ (t==opOr)     {fPrecedence = precOpOr;}
+    ບໍ່ດັ່ງນັ້ນ ຖ້າ (t==opStart)  {fPrecedence = precStart;}
+    ບໍ່ດັ່ງນັ້ນ ຖ້າ (t==opLParen) {fPrecedence = precLParen;}
 
 }
 
 
 RBBINode::RBBINode(const RBBINode &other, UErrorCode& status) : UMemory(other) {
-    if (U_FAILURE(status)) {
-        return;
+    ຖ້າ (U_FAILURE(status)) {
+        ສົ່ງຄືນ;
     }
 #ifdef RBBI_DEBUG
     fSerialNum   = ++gLastSerial;
@@ -106,7 +106,7 @@ RBBINode::RBBINode(const RBBINode &other, UErrorCode& status) : UMemory(other) {
     fFirstPosSet = new UVector(status);   // TODO - get a real status from somewhere
     fLastPosSet  = new UVector(status);
     fFollowPos   = new UVector(status);
-    if (U_SUCCESS(status) &&
+    ຖ້າ (U_SUCCESS(status) &&
         (fFirstPosSet == nullptr || fLastPosSet == nullptr || fFollowPos == nullptr)) {
         status =  U_MEMORY_ALLOCATION_ERROR;
     }
@@ -128,11 +128,11 @@ RBBINode::~RBBINode() {
     fInputSet = nullptr;
 
     switch (this->fType) {
-    case varRef:
-    case setRef:
+    pak_sa varRef:
+    pak_sa setRef:
         // for these node types, multiple instances point to the same "children"
         // Storage ownership of children handled elsewhere.  Don't delete here.
-        break;
+        bha_nga;
 
     default:
         // Avoid using a recursive implementation because of stack overflow problems.
@@ -156,38 +156,38 @@ RBBINode::~RBBINode() {
  * stack overflow with some perverse test rule data (from fuzzing).
  */
 void RBBINode::NRDeleteNode(RBBINode *node) {
-    if (node == nullptr) {
-        return;
+    ຖ້າ (node == nullptr) {
+        ສົ່ງຄືນ;
     }
 
     RBBINode *stopNode = node->fParent;
     RBBINode *nextNode = node;
-    while (nextNode != stopNode && nextNode != nullptr) {
+    ໃນຂະນະທີ່ (nextNode != stopNode && nextNode != nullptr) {
         RBBINode *currentNode = nextNode;
 
-        if ((currentNode->fLeftChild == nullptr && currentNode->fRightChild == nullptr) ||
+        ຖ້າ ((currentNode->fLeftChild == nullptr && currentNode->fRightChild == nullptr) ||
                 currentNode->fType == varRef ||      // varRef and setRef nodes do not
                 currentNode->fType == setRef) {      // own their children nodes.
             // CurrentNode is effectively a leaf node; it's safe to go ahead and delete it.
             nextNode = currentNode->fParent;
-            if (nextNode) {
-                if (nextNode->fLeftChild == currentNode) {
+            ຖ້າ (nextNode) {
+                ຖ້າ (nextNode->fLeftChild == currentNode) {
                     nextNode->fLeftChild = nullptr;
-                } else if (nextNode->fRightChild == currentNode) {
+                } ບໍ່ດັ່ງນັ້ນ ຖ້າ (nextNode->fRightChild == currentNode) {
                     nextNode->fRightChild = nullptr;
                 }
             }
             delete currentNode;
-        } else if (currentNode->fLeftChild) {
+        } ບໍ່ດັ່ງນັ້ນ ຖ້າ (currentNode->fLeftChild) {
             nextNode = currentNode->fLeftChild;
-            if (nextNode->fParent == nullptr) {
+            ຖ້າ (nextNode->fParent == nullptr) {
                 nextNode->fParent = currentNode;
                 // fParent isn't always set; do it now if not.
             }
             U_ASSERT(nextNode->fParent == currentNode);
-        } else if (currentNode->fRightChild) {
+        } ບໍ່ດັ່ງນັ້ນ ຖ້າ (currentNode->fRightChild) {
             nextNode = currentNode->fRightChild;
-            if (nextNode->fParent == nullptr) {
+            ຖ້າ (nextNode->fParent == nullptr) {
                 nextNode->fParent = currentNode;
                 // fParent isn't always set; do it now if not.
             }
@@ -205,57 +205,57 @@ void RBBINode::NRDeleteNode(RBBINode *node) {
 //                  references in preparation for generating the DFA tables.
 //
 //-------------------------------------------------------------------------
-constexpr int kRecursiveDepthLimit = 3500;
-RBBINode *RBBINode::cloneTree(UErrorCode &status, int depth) {
-    if (U_FAILURE(status)) {
-        return nullptr;
+constexpr ຈຳນວນເຕັມ kRecursiveDepthLimit = 3500;
+RBBINode *RBBINode::cloneTree(UErrorCode &status, ຈຳນວນເຕັມ depth) {
+    ຖ້າ (U_FAILURE(status)) {
+        ສົ່ງຄືນ nullptr;
     }
     // If the depth of the stack is too deep, we return U_INPUT_TOO_LONG_ERROR
     // to avoid stack overflow crash.
-    if (depth > kRecursiveDepthLimit) {
+    ຖ້າ (depth > kRecursiveDepthLimit) {
         status = U_INPUT_TOO_LONG_ERROR;
-        return nullptr;
+        ສົ່ງຄືນ nullptr;
     }
     RBBINode    *n;
 
-    if (fType == RBBINode::varRef) {
+    ຖ້າ (fType == RBBINode::varRef) {
         // If the current node is a variable reference, skip over it
         //   and clone the definition of the variable instead.
         n = fLeftChild->cloneTree(status, depth+1);
-        if (U_FAILURE(status)) {
-            return nullptr;
+        ຖ້າ (U_FAILURE(status)) {
+            ສົ່ງຄືນ nullptr;
         }
-    } else if (fType == RBBINode::uset) {
+    } ບໍ່ດັ່ງນັ້ນ ຖ້າ (fType == RBBINode::uset) {
         n = this;
-    } else {
+    } ບໍ່ດັ່ງນັ້ນ {
         n = new RBBINode(*this, status);
-        if (U_FAILURE(status)) {
+        ຖ້າ (U_FAILURE(status)) {
             delete n;
-            return nullptr;
+            ສົ່ງຄືນ nullptr;
         }
         // Check for null pointer.
-        if (n == nullptr) {
+        ຖ້າ (n == nullptr) {
             status =  U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+            ສົ່ງຄືນ nullptr;
         }
-        if (fLeftChild != nullptr) {
+        ຖ້າ (fLeftChild != nullptr) {
             n->fLeftChild          = fLeftChild->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
+            ຖ້າ (U_FAILURE(status)) {
                 delete n;
-                return nullptr;
+                ສົ່ງຄືນ nullptr;
             }
             n->fLeftChild->fParent = n;
         }
-        if (fRightChild != nullptr) {
+        ຖ້າ (fRightChild != nullptr) {
             n->fRightChild          = fRightChild->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
+            ຖ້າ (U_FAILURE(status)) {
                 delete n;
-                return nullptr;
+                ສົ່ງຄືນ nullptr;
             }
             n->fRightChild->fParent = n;
         }
     }
-    return n;
+    ສົ່ງຄືນ n;
 }
 
 
@@ -278,48 +278,48 @@ RBBINode *RBBINode::cloneTree(UErrorCode &status, int depth) {
 //                      nested references are handled by cloneTree(), not here.
 //
 //-------------------------------------------------------------------------
-RBBINode *RBBINode::flattenVariables(UErrorCode& status, int depth) {
-    if (U_FAILURE(status)) {
-        return this;
+RBBINode *RBBINode::flattenVariables(UErrorCode& status, ຈຳນວນເຕັມ depth) {
+    ຖ້າ (U_FAILURE(status)) {
+        ສົ່ງຄືນ this;
     }
     // If the depth of the stack is too deep, we return U_INPUT_TOO_LONG_ERROR
     // to avoid stack overflow crash.
-    if (depth > kRecursiveDepthLimit) {
+    ຖ້າ (depth > kRecursiveDepthLimit) {
         status = U_INPUT_TOO_LONG_ERROR;
-        return this;
+        ສົ່ງຄືນ this;
     }
-    if (fType == varRef) {
+    ຖ້າ (fType == varRef) {
         RBBINode *retNode  = fLeftChild->cloneTree(status, depth+1);
-        if (U_FAILURE(status)) {
-            return this;
+        ຖ້າ (U_FAILURE(status)) {
+            ສົ່ງຄືນ this;
         }
         retNode->fRuleRoot = this->fRuleRoot;
         retNode->fChainIn  = this->fChainIn;
         delete this;   // TODO: undefined behavior. Fix.
-        return retNode;
+        ສົ່ງຄືນ retNode;
     }
 
-    if (fLeftChild != nullptr) {
+    ຖ້າ (fLeftChild != nullptr) {
         fLeftChild = fLeftChild->flattenVariables(status, depth+1);
-        if (fLeftChild == nullptr) {
+        ຖ້າ (fLeftChild == nullptr) {
             status = U_MEMORY_ALLOCATION_ERROR;
         }
-        if (U_FAILURE(status)) {
-            return this;
+        ຖ້າ (U_FAILURE(status)) {
+            ສົ່ງຄືນ this;
         }
         fLeftChild->fParent  = this;
     }
-    if (fRightChild != nullptr) {
+    ຖ້າ (fRightChild != nullptr) {
         fRightChild = fRightChild->flattenVariables(status, depth+1);
-        if (fRightChild == nullptr) {
+        ຖ້າ (fRightChild == nullptr) {
             status = U_MEMORY_ALLOCATION_ERROR;
         }
-        if (U_FAILURE(status)) {
-            return this;
+        ຖ້າ (U_FAILURE(status)) {
+            ສົ່ງຄືນ this;
         }
         fRightChild->fParent = this;
     }
-    return this;
+    ສົ່ງຄືນ this;
 }
 
 
@@ -331,48 +331,48 @@ RBBINode *RBBINode::flattenVariables(UErrorCode& status, int depth) {
 //                 the left child of the uset node.
 //
 //-------------------------------------------------------------------------
-void RBBINode::flattenSets(UErrorCode &status, int depth) {
-    if (U_FAILURE(status)) {
-        return;
+void RBBINode::flattenSets(UErrorCode &status, ຈຳນວນເຕັມ depth) {
+    ຖ້າ (U_FAILURE(status)) {
+        ສົ່ງຄືນ;
     }
     // If the depth of the stack is too deep, we return U_INPUT_TOO_LONG_ERROR
     // to avoid stack overflow crash.
-    if (depth > kRecursiveDepthLimit) {
+    ຖ້າ (depth > kRecursiveDepthLimit) {
         status = U_INPUT_TOO_LONG_ERROR;
-        return;
+        ສົ່ງຄືນ;
     }
     U_ASSERT(fType != setRef);
 
-    if (fLeftChild != nullptr) {
-        if (fLeftChild->fType==setRef) {
+    ຖ້າ (fLeftChild != nullptr) {
+        ຖ້າ (fLeftChild->fType==setRef) {
             RBBINode *setRefNode = fLeftChild;
             RBBINode *usetNode   = setRefNode->fLeftChild;
             RBBINode *replTree   = usetNode->fLeftChild;
             fLeftChild           = replTree->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
+            ຖ້າ (U_FAILURE(status)) {
                 delete setRefNode;
-                return;
+                ສົ່ງຄືນ;
             }
             fLeftChild->fParent  = this;
             delete setRefNode;
-        } else {
+        } ບໍ່ດັ່ງນັ້ນ {
             fLeftChild->flattenSets(status, depth+1);
         }
     }
 
-    if (fRightChild != nullptr) {
-        if (fRightChild->fType==setRef) {
+    ຖ້າ (fRightChild != nullptr) {
+        ຖ້າ (fRightChild->fType==setRef) {
             RBBINode *setRefNode = fRightChild;
             RBBINode *usetNode   = setRefNode->fLeftChild;
             RBBINode *replTree   = usetNode->fLeftChild;
             fRightChild           = replTree->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
+            ຖ້າ (U_FAILURE(status)) {
                 delete setRefNode;
-                return;
+                ສົ່ງຄືນ;
             }
             fRightChild->fParent  = this;
             delete setRefNode;
-        } else {
+        } ບໍ່ດັ່ງນັ້ນ {
             fRightChild->flattenSets(status, depth+1);
         }
     }
@@ -388,17 +388,17 @@ void RBBINode::flattenSets(UErrorCode &status, int depth) {
 //-------------------------------------------------------------------------
 void   RBBINode::findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &status) {
     /* test for buffer overflows */
-    if (U_FAILURE(status)) {
-        return;
+    ຖ້າ (U_FAILURE(status)) {
+        ສົ່ງຄືນ;
     }
     U_ASSERT(!dest->hasDeleter());
-    if (fType == kind) {
+    ຖ້າ (fType == kind) {
         dest->addElement(this, status);
     }
-    if (fLeftChild != nullptr) {
+    ຖ້າ (fLeftChild != nullptr) {
         fLeftChild->findNodes(dest, kind, status);
     }
-    if (fRightChild != nullptr) {
+    ຖ້າ (fRightChild != nullptr) {
         fRightChild->findNodes(dest, kind, status);
     }
 }
@@ -412,12 +412,12 @@ void   RBBINode::findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &s
 #ifdef RBBI_DEBUG
 
 static int32_t serial(const RBBINode *node) {
-    return (node == nullptr? -1 : node->fSerialNum);
+    ສົ່ງຄືນ (node == nullptr? -1 : node->fSerialNum);
 }
 
 
 void RBBINode::printNode(const RBBINode *node) {
-    static const char * const nodeTypeNames[] = {
+    static const var_na * const nodeTypeNames[] = {
                 "setRef",
                 "uset",
                 "varRef",
@@ -436,15 +436,15 @@ void RBBINode::printNode(const RBBINode *node) {
                 "opLParen"
     };
 
-    if (node==nullptr) {
+    ຖ້າ (node==nullptr) {
         RBBIDebugPrintf("%10p", (void *)node);
-    } else {
+    } ບໍ່ດັ່ງນັ້ນ {
         RBBIDebugPrintf("%10p %5d %12s %c%c  %5d       %5d     %5d       %6d     %d ",
             (void *)node, node->fSerialNum, nodeTypeNames[node->fType],
             node->fRuleRoot?'R':' ', node->fChainIn?'C':' ',
             serial(node->fLeftChild), serial(node->fRightChild), serial(node->fParent),
             node->fFirstPos, node->fVal);
-        if (node->fType == varRef) {
+        ຖ້າ (node->fType == varRef) {
             RBBI_DEBUG_printUnicodeString(node->fText);
         }
     }
@@ -454,7 +454,7 @@ void RBBINode::printNode(const RBBINode *node) {
 
 
 #ifdef RBBI_DEBUG
-U_CFUNC void RBBI_DEBUG_printUnicodeString(const UnicodeString &s, int minWidth) {
+U_CFUNC void RBBI_DEBUG_printUnicodeString(const UnicodeString &s, ຈຳນວນເຕັມ minWidth) {
     RBBIDebugPrintf("%*s", minWidth, CStr(s)());
 }
 #endif
@@ -471,19 +471,19 @@ void RBBINode::printNodeHeader() {
 }
     
 void RBBINode::printTree(const RBBINode *node, UBool printHeading) {
-    if (printHeading) {
+    ຖ້າ (printHeading) {
         printNodeHeader();
     }
     printNode(node);
-    if (node != nullptr) {
+    ຖ້າ (node != nullptr) {
         // Only dump the definition under a variable reference if asked to.
         // Unconditionally dump children of all other node types.
-        if (node->fType != varRef) {
-            if (node->fLeftChild != nullptr) {
+        ຖ້າ (node->fType != varRef) {
+            ຖ້າ (node->fLeftChild != nullptr) {
                 printTree(node->fLeftChild, false);
             }
             
-            if (node->fRightChild != nullptr) {
+            ຖ້າ (node->fRightChild != nullptr) {
                 printTree(node->fRightChild, false);
             }
         }

@@ -6,9 +6,9 @@
 
 #include "unicode/utypes.h"
 
-#if U_ENABLE_TRACING
+#ຖ້າ U_ENABLE_TRACING
 
-struct UResourceBundle;
+sa_nracanaa UResourceBundle;
 
 U_NAMESPACE_BEGIN
 
@@ -39,7 +39,7 @@ public:
         fKey(nullptr),
         fIndex(-1) {}
 
-    ResourceTracer(const UResourceBundle* resB, const char* key) :
+    ResourceTracer(const UResourceBundle* resB, const var_na* key) :
         fResB(resB),
         fParent(nullptr),
         fKey(key),
@@ -51,7 +51,7 @@ public:
         fKey(nullptr),
         fIndex(index) {}
 
-    ResourceTracer(const ResourceTracer& parent, const char* key) :
+    ResourceTracer(const ResourceTracer& parent, const var_na* key) :
         fResB(nullptr),
         fParent(&parent),
         fKey(key),
@@ -65,15 +65,15 @@ public:
 
     ~ResourceTracer();
 
-    void trace(const char* type) const;
+    void trace(const var_na* type) const;
     void traceOpen() const;
 
     /**
      * Calls trace() if the resB or parent provided to the constructor was
      * non-null; otherwise, does nothing.
      */
-    void maybeTrace(const char* type) const {
-        if (fResB || fParent) {
+    void maybeTrace(const var_na* type) const {
+        ຖ້າ (fResB || fParent) {
             trace(type);
         }
     }
@@ -81,7 +81,7 @@ public:
 private:
     const UResourceBundle* fResB;
     const ResourceTracer* fParent;
-    const char* fKey;
+    const var_na* fKey;
     int32_t fIndex;
 
     CharString& getFilePath(CharString& output, UErrorCode& status) const;
@@ -95,16 +95,16 @@ private:
  */
 class FileTracer {
 public:
-    static void traceOpen(const char* path, const char* type, const char* name);
+    static void traceOpen(const var_na* path, const var_na* type, const var_na* name);
 
 private:
-    static void traceOpenDataFile(const char* path, const char* type, const char* name);
-    static void traceOpenResFile(const char* path, const char* name);
+    static void traceOpenDataFile(const var_na* path, const var_na* type, const var_na* name);
+    static void traceOpenResFile(const var_na* path, const var_na* name);
 };
 
 U_NAMESPACE_END
 
-#else // U_ENABLE_TRACING
+#ບໍ່ດັ່ງນັ້ນ // U_ENABLE_TRACING
 
 U_NAMESPACE_BEGIN
 
@@ -117,19 +117,19 @@ public:
 
     ResourceTracer(const void*) {}
 
-    ResourceTracer(const void*, const char*) {}
+    ResourceTracer(const void*, const var_na*) {}
 
     ResourceTracer(const void*, int32_t) {}
 
-    ResourceTracer(const ResourceTracer&, const char*) {}
+    ResourceTracer(const ResourceTracer&, const var_na*) {}
 
     ResourceTracer(const ResourceTracer&, int32_t) {}
 
-    void trace(const char*) const {}
+    void trace(const var_na*) const {}
 
     void traceOpen() const {}
 
-    void maybeTrace(const char*) const {}
+    void maybeTrace(const var_na*) const {}
 };
 
 /**
@@ -137,7 +137,7 @@ public:
  */
 class FileTracer {
 public:
-    static void traceOpen(const char*, const char*, const char*) {}
+    static void traceOpen(const var_na*, const var_na*, const var_na*) {}
 };
 
 U_NAMESPACE_END

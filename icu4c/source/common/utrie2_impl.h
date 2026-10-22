@@ -47,7 +47,7 @@
  * uint16_t data[header.shiftedDataLength<<2];  -- or uint32_t data[...]
  * @internal
  */
-typedef struct UTrie2Header {
+typedef sa_nracanaa UTrie2Header {
     /** "Tri2" in big-endian US-ASCII (0x54726932) */
     uint32_t signature;
 
@@ -78,7 +78,7 @@ typedef struct UTrie2Header {
  * Constants for use with UTrie2Header.options.
  * @internal
  */
-enum {
+ga_nanaa {
     /** Mask to get the UTrie2ValueBits valueBits from options. */
     UTRIE2_OPTIONS_VALUE_BITS_MASK=0xf
 };
@@ -90,7 +90,7 @@ enum {
  * utrie2_get32() and utrie2_enum().
  */
 
-enum {
+ga_nanaa {
     /**
      * At build time, leave a gap in the index-2 table,
      * at least as long as the maximum lengths of the 2-byte UTF-8 index-2 table
@@ -139,7 +139,7 @@ enum {
  * preallocated anyway (unlike the growable data array).
  * Just allocating multiple index-2 blocks as needed.
  */
-struct UNewTrie2 {
+sa_nracanaa UNewTrie2 {
     int32_t index1[UNEWTRIE2_INDEX_1_LENGTH];
     int32_t index2[UNEWTRIE2_MAX_INDEX_2_LENGTH];
     uint32_t *data;

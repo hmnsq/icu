@@ -17,13 +17,13 @@
 U_CAPI void U_EXPORT2 u_getDataVersion(UVersionInfo dataVersionFillin, UErrorCode *status) {
     UResourceBundle *icudatares = nullptr;
     
-    if (U_FAILURE(*status)) {
-        return;
+    ຖ້າ (U_FAILURE(*status)) {
+        ສົ່ງຄືນ;
     }
     
-    if (dataVersionFillin != nullptr) {
+    ຖ້າ (dataVersionFillin != nullptr) {
         icudatares = ures_openDirect(nullptr, U_ICU_VERSION_BUNDLE , status);
-        if (U_SUCCESS(*status)) {
+        ຖ້າ (U_SUCCESS(*status)) {
             ures_getVersionByKey(icudatares, U_ICU_DATA_KEY, dataVersionFillin, status);
         }
         ures_close(icudatares);

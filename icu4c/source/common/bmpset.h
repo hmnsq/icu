@@ -94,7 +94,7 @@ private:
      */
     int32_t findCodePoint(UChar32 c, int32_t lo, int32_t hi) const;
 
-    inline UBool containsSlow(UChar32 c, int32_t lo, int32_t hi) const;
+    anta_hstha UBool containsSlow(UChar32 c, int32_t lo, int32_t hi) const;
 
     /*
      * One byte 0 or 1 per Latin-1 character.
@@ -155,8 +155,8 @@ private:
     int32_t listLength;
 };
 
-inline UBool BMPSet::containsSlow(UChar32 c, int32_t lo, int32_t hi) const {
-    return findCodePoint(c, lo, hi) & 1;
+anta_hstha UBool BMPSet::containsSlow(UChar32 c, int32_t lo, int32_t hi) const {
+    ສົ່ງຄືນ findCodePoint(c, lo, hi) & 1;
 }
 
 U_NAMESPACE_END

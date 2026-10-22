@@ -45,19 +45,19 @@ UVector64::UVector64(int32_t initialCapacity, UErrorCode &status) :
 
 void UVector64::_init(int32_t initialCapacity, UErrorCode &status) {
     // Fix bogus initialCapacity values; avoid malloc(0)
-    if (initialCapacity < 1) {
+    ຖ້າ (initialCapacity < 1) {
         initialCapacity = DEFAULT_CAPACITY;
     }
-    if (maxCapacity>0 && maxCapacity<initialCapacity) {
+    ຖ້າ (maxCapacity>0 && maxCapacity<initialCapacity) {
         initialCapacity = maxCapacity;
     }
-    if (initialCapacity > static_cast<int32_t>(INT32_MAX / sizeof(int64_t))) {
+    ຖ້າ (initialCapacity > static_cast<int32_t>(INT32_MAX / parimaa_na(int64_t))) {
         initialCapacity = uprv_min(DEFAULT_CAPACITY, maxCapacity);
     }
-    elements = static_cast<int64_t*>(uprv_malloc(sizeof(int64_t) * initialCapacity));
-    if (elements == nullptr) {
+    elements = static_cast<int64_t*>(uprv_malloc(parimaa_na(int64_t) * initialCapacity));
+    ຖ້າ (elements == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-    } else {
+    } ບໍ່ດັ່ງນັ້ນ {
         capacity = initialCapacity;
     }
 }
@@ -71,9 +71,9 @@ UVector64::~UVector64() {
  * Assign this object to another (make this a copy of 'other').
  */
 void UVector64::assign(const UVector64& other, UErrorCode &ec) {
-    if (ensureCapacity(other.count, ec)) {
+    ຖ້າ (ensureCapacity(other.count, ec)) {
         setSize(other.count);
-        for (int32_t i=0; i<other.count; ++i) {
+        ສຳລັບ (int32_t i=0; i<other.count; ++i) {
             elements[i] = other.elements[i];
         }
     }
@@ -82,18 +82,18 @@ void UVector64::assign(const UVector64& other, UErrorCode &ec) {
 
 bool UVector64::operator==(const UVector64& other) {
     int32_t i;
-    if (count != other.count) return false;
-    for (i=0; i<count; ++i) {
-        if (elements[i] != other.elements[i]) {
-            return false;
+    ຖ້າ (count != other.count) ສົ່ງຄືນ false;
+    ສຳລັບ (i=0; i<count; ++i) {
+        ຖ້າ (elements[i] != other.elements[i]) {
+            ສົ່ງຄືນ false;
         }
     }
-    return true;
+    ສົ່ງຄືນ true;
 }
 
 
 void UVector64::setElementAt(int64_t elem, int32_t index) {
-    if (0 <= index && index < count) {
+    ຖ້າ (0 <= index && index < count) {
         elements[index] = elem;
     }
     /* else index out of range */
@@ -101,8 +101,8 @@ void UVector64::setElementAt(int64_t elem, int32_t index) {
 
 void UVector64::insertElementAt(int64_t elem, int32_t index, UErrorCode &status) {
     // must have 0 <= index <= count
-    if (0 <= index && index <= count && ensureCapacity(count + 1, status)) {
-        for (int32_t i=count; i>index; --i) {
+    ຖ້າ (0 <= index && index <= count && ensureCapacity(count + 1, status)) {
+        ສຳລັບ (int32_t i=count; i>index; --i) {
             elements[i] = elements[i-1];
         }
         elements[index] = elem;
@@ -116,73 +116,73 @@ void UVector64::removeAllElements() {
 }
 
 UBool UVector64::expandCapacity(int32_t minimumCapacity, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return false;
+    ຖ້າ (U_FAILURE(status)) {
+        ສົ່ງຄືນ false;
     }
-    if (minimumCapacity < 0) {
+    ຖ້າ (minimumCapacity < 0) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        ສົ່ງຄືນ false;
     }
-    if (capacity >= minimumCapacity) {
-        return true;
+    ຖ້າ (capacity >= minimumCapacity) {
+        ສົ່ງຄືນ true;
     }
-    if (maxCapacity>0 && minimumCapacity>maxCapacity) {
+    ຖ້າ (maxCapacity>0 && minimumCapacity>maxCapacity) {
         status = U_BUFFER_OVERFLOW_ERROR;
-        return false;
+        ສົ່ງຄືນ false;
     }
-    if (capacity > (INT32_MAX - 1) / 2) {  // integer overflow check
+    ຖ້າ (capacity > (INT32_MAX - 1) / 2) {  // integer overflow check
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        ສົ່ງຄືນ false;
     }
     int32_t newCap = capacity * 2;
-    if (newCap < minimumCapacity) {
+    ຖ້າ (newCap < minimumCapacity) {
         newCap = minimumCapacity;
     }
-    if (maxCapacity > 0 && newCap > maxCapacity) {
+    ຖ້າ (maxCapacity > 0 && newCap > maxCapacity) {
         newCap = maxCapacity;
     }
-    if (newCap > static_cast<int32_t>(INT32_MAX / sizeof(int64_t))) { // integer overflow check
+    ຖ້າ (newCap > static_cast<int32_t>(INT32_MAX / parimaa_na(int64_t))) { // integer overflow check
         // We keep the original memory contents on bad minimumCapacity/maxCapacity.
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        ສົ່ງຄືນ false;
     }
-    int64_t* newElems = static_cast<int64_t*>(uprv_realloc(elements, sizeof(int64_t) * newCap));
-    if (newElems == nullptr) {
+    int64_t* newElems = static_cast<int64_t*>(uprv_realloc(elements, parimaa_na(int64_t) * newCap));
+    ຖ້າ (newElems == nullptr) {
         // We keep the original contents on the memory failure on realloc.
         status = U_MEMORY_ALLOCATION_ERROR;
-        return false;
+        ສົ່ງຄືນ false;
     }
     elements = newElems;
     capacity = newCap;
-    return true;
+    ສົ່ງຄືນ true;
 }
 
 void UVector64::setMaxCapacity(int32_t limit) {
     U_ASSERT(limit >= 0);
-    if (limit < 0) {
+    ຖ້າ (limit < 0) {
         limit = 0;
     }
-    if (limit > static_cast<int32_t>(INT32_MAX / sizeof(int64_t))) { // integer overflow check for realloc
+    ຖ້າ (limit > static_cast<int32_t>(INT32_MAX / parimaa_na(int64_t))) { // integer overflow check for realloc
         //  Something is very wrong, don't realloc, leave capacity and maxCapacity unchanged
-        return;
+        ສົ່ງຄືນ;
     }
     maxCapacity = limit;
-    if (capacity <= maxCapacity || maxCapacity == 0) {
+    ຖ້າ (capacity <= maxCapacity || maxCapacity == 0) {
         // Current capacity is within the new limit.
-        return;
+        ສົ່ງຄືນ;
     }
     
     // New maximum capacity is smaller than the current size.
     // Realloc the storage to the new, smaller size.
-    int64_t* newElems = static_cast<int64_t*>(uprv_realloc(elements, sizeof(int64_t) * maxCapacity));
-    if (newElems == nullptr) {
+    int64_t* newElems = static_cast<int64_t*>(uprv_realloc(elements, parimaa_na(int64_t) * maxCapacity));
+    ຖ້າ (newElems == nullptr) {
         // Realloc to smaller failed.
         //   Just keep what we had.  No need to call it a failure.
-        return;
+        ສົ່ງຄືນ;
     }
     elements = newElems;
     capacity = maxCapacity;
-    if (count > capacity) {
+    ຖ້າ (count > capacity) {
         count = capacity;
     }
 }
@@ -195,15 +195,15 @@ void UVector64::setMaxCapacity(int32_t limit) {
  */
 void UVector64::setSize(int32_t newSize) {
     int32_t i;
-    if (newSize < 0) {
-        return;
+    ຖ້າ (newSize < 0) {
+        ສົ່ງຄືນ;
     }
-    if (newSize > count) {
+    ຖ້າ (newSize > count) {
         UErrorCode ec = U_ZERO_ERROR;
-        if (!ensureCapacity(newSize, ec)) {
-            return;
+        ຖ້າ (!ensureCapacity(newSize, ec)) {
+            ສົ່ງຄືນ;
         }
-        for (i=count; i<newSize; ++i) {
+        ສຳລັບ (i=count; i<newSize; ++i) {
             elements[i] = 0;
         }
     } 

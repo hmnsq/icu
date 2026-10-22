@@ -12,7 +12,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ຖ້າ U_SHOW_CPLUSPLUS_API
 
 #include "unicode/chariter.h"
 
@@ -371,7 +371,7 @@ public:
    */
   virtual UClassID getDynamicClassID() const override;
 
-protected:
+rak_sita:
   /**
    * Protected constructor
    * @stable ICU 2.0

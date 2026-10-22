@@ -37,10 +37,10 @@ SharedObject::removeRef() const {
     const UnifiedCacheBase *cache = this->cachePtr;
     int32_t updatedRefCount = umtx_atomic_dec(&hardRefCount);
     U_ASSERT(updatedRefCount >= 0);
-    if (updatedRefCount == 0) {
-        if (cache) {
+    ຖ້າ (updatedRefCount == 0) {
+        ຖ້າ (cache) {
             cache->handleUnreferencedObject();
-        } else {
+        } ບໍ່ດັ່ງນັ້ນ {
             delete this;
         }
     }
@@ -49,12 +49,12 @@ SharedObject::removeRef() const {
 
 int32_t
 SharedObject::getRefCount() const {
-    return umtx_loadAcquire(hardRefCount);
+    ສົ່ງຄືນ umtx_loadAcquire(hardRefCount);
 }
 
 void
 SharedObject::deleteIfZeroRefCount() const {
-    if (this->cachePtr == nullptr && getRefCount() == 0) {
+    ຖ້າ (this->cachePtr == nullptr && getRefCount() == 0) {
         delete this;
     }
 }

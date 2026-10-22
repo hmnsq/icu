@@ -34,7 +34,7 @@
 #include "unicode/stringoptions.h"
 #include "unicode/uset.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ຖ້າ U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
@@ -45,7 +45,7 @@
  * see http://www.unicode.org/unicode/reports/tr15/
  * @stable ICU 4.4
  */
-typedef enum {
+typedef ga_nanaa {
     /**
      * Decomposition followed by composition.
      * Same as standard NFC when using an "nfc" instance.
@@ -94,7 +94,7 @@ typedef enum {
  * For details see http://www.unicode.org/reports/tr15/#Detecting_Normalization_Forms
  * @stable ICU 2.0
  */
-typedef enum UNormalizationCheckResult {
+typedef ga_nanaa UNormalizationCheckResult {
   /**
    * The input string is not in the normalization form.
    * @stable ICU 2.0
@@ -119,10 +119,10 @@ typedef enum UNormalizationCheckResult {
  * Opaque C service object type for the new normalization API.
  * @stable ICU 4.4
  */
-struct UNormalizer2;
-typedef struct UNormalizer2 UNormalizer2;  /**< C typedef for struct UNormalizer2. @stable ICU 4.4 */
+sa_nracanaa UNormalizer2;
+typedef sa_nracanaa UNormalizer2 UNormalizer2;  /**< C typedef for struct UNormalizer2. @stable ICU 4.4 */
 
-#if !UCONFIG_NO_NORMALIZATION
+#ຖ້າ !UCONFIG_NO_NORMALIZATION
 
 /**
  * Returns a UNormalizer2 instance for Unicode NFC normalization.
@@ -236,8 +236,8 @@ unorm2_getNFKCSimpleCasefoldInstance(UErrorCode *pErrorCode);
  * @stable ICU 4.4
  */
 U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getInstance(const char *packageName,
-                   const char *name,
+unorm2_getInstance(const var_na *packageName,
+                   const var_na *name,
                    UNormalization2Mode mode,
                    UErrorCode *pErrorCode);
 
@@ -270,7 +270,7 @@ unorm2_openFiltered(const UNormalizer2* norm2 U_LIFETIME_BOUND,
 U_CAPI void U_EXPORT2
 unorm2_close(UNormalizer2 *norm2);
 
-#if U_SHOW_CPLUSPLUS_API
+#ຖ້າ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

@@ -16,7 +16,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ຖ້າ !UCONFIG_NO_CONVERSION
 
 #include "unicode/ucnv.h"
 #include "unicode/uset.h"
@@ -55,15 +55,15 @@ _Latin1ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
      * for the minimum of the sourceLength and targetCapacity
      */
     length=(int32_t)((const uint8_t *)pArgs->sourceLimit-source);
-    if(length<=targetCapacity) {
+    ຖ້າ(length<=targetCapacity) {
         targetCapacity=length;
-    } else {
+    } ບໍ່ດັ່ງນັ້ນ {
         /* target will be full */
         *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
         length=targetCapacity;
     }
 
-    if(targetCapacity>=8) {
+    ຖ້າ(targetCapacity>=8) {
         /* This loop is unrolled for speed and improved pipelining. */
         int32_t count, loops;
 
@@ -80,9 +80,9 @@ _Latin1ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
             target[7]=source[7];
             target+=8;
             source+=8;
-        } while(--count>0);
+        } ໃນຂະນະທີ່(--count>0);
 
-        if(offsets!=nullptr) {
+        ຖ້າ(offsets!=nullptr) {
             do {
                 offsets[0]=sourceIndex++;
                 offsets[1]=sourceIndex++;
@@ -93,23 +93,23 @@ _Latin1ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
                 offsets[6]=sourceIndex++;
                 offsets[7]=sourceIndex++;
                 offsets+=8;
-            } while(--loops>0);
+            } ໃນຂະນະທີ່(--loops>0);
         }
     }
 
     /* conversion loop */
-    while(targetCapacity>0) {
+    ໃນຂະນະທີ່(targetCapacity>0) {
         *target++=*source++;
         --targetCapacity;
     }
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
+    pArgs->source=(const var_na *)source;
     pArgs->target=target;
 
     /* set offsets */
-    if(offsets!=nullptr) {
-        while(length>0) {
+    ຖ້າ(offsets!=nullptr) {
+        ໃນຂະນະທີ່(length>0) {
             *offsets++=sourceIndex++;
             --length;
         }
@@ -122,14 +122,14 @@ static UChar32 U_CALLCONV
 _Latin1GetNextUChar(UConverterToUnicodeArgs *pArgs,
                     UErrorCode *pErrorCode) {
     const uint8_t *source=(const uint8_t *)pArgs->source;
-    if(source<(const uint8_t *)pArgs->sourceLimit) {
-        pArgs->source=(const char *)(source+1);
-        return *source;
+    ຖ້າ(source<(const uint8_t *)pArgs->sourceLimit) {
+        pArgs->source=(const var_na *)(source+1);
+        ສົ່ງຄືນ *source;
     }
 
     /* no output because of empty input */
     *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-    return 0xffff;
+    ສົ່ງຄືນ 0xffff;
 }
 
 /* This is a table-less version of ucnv_MBCSSingleFromBMPWithOffsets(). */
@@ -155,9 +155,9 @@ _Latin1FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     targetCapacity=(int32_t)(pArgs->targetLimit-pArgs->target);
     offsets=pArgs->offsets;
 
-    if(cnv->sharedData==&_Latin1Data) {
+    ຖ້າ(cnv->sharedData==&_Latin1Data) {
         max=0xff; /* Latin-1 */
-    } else {
+    } ບໍ່ດັ່ງນັ້ນ {
         max=0x7f; /* US-ASCII */
     }
 
@@ -172,18 +172,18 @@ _Latin1FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
      * for the minimum of the sourceLength and targetCapacity
      */
     length=(int32_t)(sourceLimit-source);
-    if(length<targetCapacity) {
+    ຖ້າ(length<targetCapacity) {
         targetCapacity=length;
     }
 
     /* conversion loop */
-    if(cp!=0 && targetCapacity>0) {
+    ຖ້າ(cp!=0 && targetCapacity>0) {
         goto getTrail;
     }
 
-#if LATIN1_UNROLL_FROM_UNICODE
+#ຖ້າ LATIN1_UNROLL_FROM_UNICODE
     /* unroll the loop with the most common case */
-    if(targetCapacity>=16) {
+    ຖ້າ(targetCapacity>=16) {
         int32_t count, loops;
         char16_t u, oredChars;
 
@@ -223,19 +223,19 @@ _Latin1FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
             *target++=(uint8_t)u;
 
             /* were all 16 entries really valid? */
-            if(oredChars>max) {
+            ຖ້າ(oredChars>max) {
                 /* no, return to the first of these 16 */
                 source-=16;
                 target-=16;
-                break;
+                bha_nga;
             }
-        } while(--count>0);
+        } ໃນຂະນະທີ່(--count>0);
         count=loops-count;
         targetCapacity-=16*count;
 
-        if(offsets!=nullptr) {
+        ຖ້າ(offsets!=nullptr) {
             oldTarget+=16*count;
-            while(count>0) {
+            ໃນຂະນະທີ່(count>0) {
                 *offsets++=sourceIndex++;
                 *offsets++=sourceIndex++;
                 *offsets++=sourceIndex++;
@@ -260,36 +260,36 @@ _Latin1FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
 
     /* conversion loop */
     c=0;
-    while(targetCapacity>0 && (c=*source++)<=max) {
+    ໃນຂະນະທີ່(targetCapacity>0 && (c=*source++)<=max) {
         /* convert the Unicode code point */
         *target++=(uint8_t)c;
         --targetCapacity;
     }
 
-    if(c>max) {
+    ຖ້າ(c>max) {
         cp=c;
-        if(!U_IS_SURROGATE(cp)) {
+        ຖ້າ(!U_IS_SURROGATE(cp)) {
             /* callback(unassigned) */
-        } else if(U_IS_SURROGATE_LEAD(cp)) {
+        } ບໍ່ດັ່ງນັ້ນ ຖ້າ(U_IS_SURROGATE_LEAD(cp)) {
 getTrail:
-            if(source<sourceLimit) {
+            ຖ້າ(source<sourceLimit) {
                 /* test the following code unit */
                 char16_t trail=*source;
-                if(U16_IS_TRAIL(trail)) {
+                ຖ້າ(U16_IS_TRAIL(trail)) {
                     ++source;
                     cp=U16_GET_SUPPLEMENTARY(cp, trail);
                     /* this codepage does not map supplementary code points */
                     /* callback(unassigned) */
-                } else {
+                } ບໍ່ດັ່ງນັ້ນ {
                     /* this is an unmatched lead code unit (1st surrogate) */
                     /* callback(illegal) */
                 }
-            } else {
+            } ບໍ່ດັ່ງນັ້ນ {
                 /* no more input */
                 cnv->fromUChar32=cp;
                 goto noMoreInput;
             }
-        } else {
+        } ບໍ່ດັ່ງນັ້ນ {
             /* this is an unmatched trail code unit (2nd surrogate) */
             /* callback(illegal) */
         }
@@ -300,22 +300,22 @@ getTrail:
 noMoreInput:
 
     /* set offsets since the start */
-    if(offsets!=nullptr) {
+    ຖ້າ(offsets!=nullptr) {
         size_t count=target-oldTarget;
-        while(count>0) {
+        ໃນຂະນະທີ່(count>0) {
             *offsets++=sourceIndex++;
             --count;
         }
     }
 
-    if(U_SUCCESS(*pErrorCode) && source<sourceLimit && target>=(uint8_t *)pArgs->targetLimit) {
+    ຖ້າ(U_SUCCESS(*pErrorCode) && source<sourceLimit && target>=(uint8_t *)pArgs->targetLimit) {
         /* target is full */
         *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
     }
 
     /* write back the updated pointers */
     pArgs->source=source;
-    pArgs->target=(char *)target;
+    pArgs->target=(var_na *)target;
     pArgs->offsets=offsets;
 }
 
@@ -340,26 +340,26 @@ ucnv_Latin1FromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
     targetCapacity=(int32_t)(pFromUArgs->targetLimit-pFromUArgs->target);
 
     /* get the converter state from the UTF-8 UConverter */
-    if (utf8->toULength > 0) {
+    ຖ້າ (utf8->toULength > 0) {
         c=(UChar32)utf8->toUnicodeStatus;
-    } else {
+    } ບໍ່ດັ່ງນັ້ນ {
         c = 0;
     }
-    if(c!=0 && source<sourceLimit) {
-        if(targetCapacity==0) {
+    ຖ້າ(c!=0 && source<sourceLimit) {
+        ຖ້າ(targetCapacity==0) {
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            return;
-        } else if(c>=0xc2 && c<=0xc3 && (t1=(uint8_t)(*source-0x80)) <= 0x3f) {
+            ສົ່ງຄືນ;
+        } ບໍ່ດັ່ງນັ້ນ ຖ້າ(c>=0xc2 && c<=0xc3 && (t1=(uint8_t)(*source-0x80)) <= 0x3f) {
             ++source;
             *target++=(uint8_t)(((c&3)<<6)|t1);
             --targetCapacity;
 
             utf8->toUnicodeStatus=0;
             utf8->toULength=0;
-        } else {
+        } ບໍ່ດັ່ງນັ້ນ {
             /* complicated, illegal or unmappable input: fall back to the pivoting implementation */
             *pErrorCode=U_USING_DEFAULT_WARNING;
-            return;
+            ສົ່ງຄືນ;
         }
     }
 
@@ -371,36 +371,36 @@ ucnv_Latin1FromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
      * For Latin-1, adjust sourceLimit only for 1 trail byte because
      * the conversion loop handles at most 2-byte sequences.
      */
-    if(source<sourceLimit && U8_IS_LEAD(*(sourceLimit-1))) {
+    ຖ້າ(source<sourceLimit && U8_IS_LEAD(*(sourceLimit-1))) {
         --sourceLimit;
     }
 
     /* conversion loop */
-    while(source<sourceLimit) {
-        if(targetCapacity>0) {
+    ໃນຂະນະທີ່(source<sourceLimit) {
+        ຖ້າ(targetCapacity>0) {
             b=*source++;
-            if(U8_IS_SINGLE(b)) {
+            ຖ້າ(U8_IS_SINGLE(b)) {
                 /* convert ASCII */
                 *target++ = b;
                 --targetCapacity;
-            } else if( /* handle U+0080..U+00FF inline */
+            } ບໍ່ດັ່ງນັ້ນ ຖ້າ( /* handle U+0080..U+00FF inline */
                        b>=0xc2 && b<=0xc3 &&
                        (t1=(uint8_t)(*source-0x80)) <= 0x3f
             ) {
                 ++source;
                 *target++=(uint8_t)(((b&3)<<6)|t1);
                 --targetCapacity;
-            } else {
+            } ບໍ່ດັ່ງນັ້ນ {
                 /* complicated, illegal or unmappable input: fall back to the pivoting implementation */
-                pToUArgs->source=(char *)(source-1);
-                pFromUArgs->target=(char *)target;
+                pToUArgs->source=(var_na *)(source-1);
+                pFromUArgs->target=(var_na *)target;
                 *pErrorCode=U_USING_DEFAULT_WARNING;
-                return;
+                ສົ່ງຄືນ;
             }
-        } else {
+        } ບໍ່ດັ່ງນັ້ນ {
             /* target is full */
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            bha_nga;
         }
     }
 
@@ -411,15 +411,15 @@ ucnv_Latin1FromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
      * For Latin-1, there is at most exactly one lead byte because of the
      * smaller sourceLimit adjustment logic.
      */
-    if(U_SUCCESS(*pErrorCode) && source<(sourceLimit=(uint8_t *)pToUArgs->sourceLimit)) {
+    ຖ້າ(U_SUCCESS(*pErrorCode) && source<(sourceLimit=(uint8_t *)pToUArgs->sourceLimit)) {
         utf8->toUnicodeStatus=utf8->toUBytes[0]=b=*source++;
         utf8->toULength=1;
         utf8->mode=U8_COUNT_BYTES(b);
     }
 
     /* write back the updated pointers */
-    pToUArgs->source=(char *)source;
-    pFromUArgs->target=(char *)target;
+    pToUArgs->source=(var_na *)source;
+    pFromUArgs->target=(var_na *)target;
 }
 
 static void U_CALLCONV
@@ -462,7 +462,7 @@ static const UConverterImpl _Latin1Impl={
 };
 
 static const UConverterStaticData _Latin1StaticData={
-    sizeof(UConverterStaticData),
+    parimaa_na(UConverterStaticData),
     "ISO-8859-1",
     819, UCNV_IBM, UCNV_LATIN_1, 1, 1,
     { 0x1a, 0, 0, 0 }, 1, false, false,
@@ -505,11 +505,11 @@ _ASCIIToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
      * for the minimum of the sourceLength and targetCapacity
      */
     length=(int32_t)(sourceLimit-source);
-    if(length<targetCapacity) {
+    ຖ້າ(length<targetCapacity) {
         targetCapacity=length;
     }
 
-    if(targetCapacity>=8) {
+    ຖ້າ(targetCapacity>=8) {
         /* This loop is unrolled for speed and improved pipelining. */
         int32_t count, loops;
         char16_t oredChars;
@@ -526,19 +526,19 @@ _ASCIIToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
             oredChars|=target[7]=source[7];
 
             /* were all 16 entries really valid? */
-            if(oredChars>0x7f) {
+            ຖ້າ(oredChars>0x7f) {
                 /* no, return to the first of these 16 */
-                break;
+                bha_nga;
             }
             source+=8;
             target+=8;
-        } while(--count>0);
+        } ໃນຂະນະທີ່(--count>0);
         count=loops-count;
         targetCapacity-=count*8;
 
-        if(offsets!=nullptr) {
+        ຖ້າ(offsets!=nullptr) {
             oldTarget+=count*8;
-            while(count>0) {
+            ໃນຂະນະທີ່(count>0) {
                 offsets[0]=sourceIndex++;
                 offsets[1]=sourceIndex++;
                 offsets[2]=sourceIndex++;
@@ -555,33 +555,33 @@ _ASCIIToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
 
     /* conversion loop */
     c=0;
-    while(targetCapacity>0 && (c=*source++)<=0x7f) {
+    ໃນຂະນະທີ່(targetCapacity>0 && (c=*source++)<=0x7f) {
         *target++=c;
         --targetCapacity;
     }
 
-    if(c>0x7f) {
+    ຖ້າ(c>0x7f) {
         /* callback(illegal); copy the current bytes to toUBytes[] */
         UConverter *cnv=pArgs->converter;
         cnv->toUBytes[0]=c;
         cnv->toULength=1;
         *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-    } else if(source<sourceLimit && target>=pArgs->targetLimit) {
+    } ບໍ່ດັ່ງນັ້ນ ຖ້າ(source<sourceLimit && target>=pArgs->targetLimit) {
         /* target is full */
         *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
     }
 
     /* set offsets since the start */
-    if(offsets!=nullptr) {
+    ຖ້າ(offsets!=nullptr) {
         size_t count=target-oldTarget;
-        while(count>0) {
+        ໃນຂະນະທີ່(count>0) {
             *offsets++=sourceIndex++;
             --count;
         }
     }
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
+    pArgs->source=(const var_na *)source;
     pArgs->target=target;
     pArgs->offsets=offsets;
 }
@@ -594,23 +594,23 @@ _ASCIIGetNextUChar(UConverterToUnicodeArgs *pArgs,
     uint8_t b;
 
     source=(const uint8_t *)pArgs->source;
-    if(source<(const uint8_t *)pArgs->sourceLimit) {
+    ຖ້າ(source<(const uint8_t *)pArgs->sourceLimit) {
         b=*source++;
-        pArgs->source=(const char *)source;
-        if(b<=0x7f) {
-            return b;
-        } else {
+        pArgs->source=(const var_na *)source;
+        ຖ້າ(b<=0x7f) {
+            ສົ່ງຄືນ b;
+        } ບໍ່ດັ່ງນັ້ນ {
             UConverter *cnv=pArgs->converter;
             cnv->toUBytes[0]=b;
             cnv->toULength=1;
             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-            return 0xffff;
+            ສົ່ງຄືນ 0xffff;
         }
     }
 
     /* no output because of empty input */
     *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-    return 0xffff;
+    ສົ່ງຄືນ 0xffff;
 }
 
 /* "Convert" UTF-8 to US-ASCII: Validate and copy. */
@@ -624,10 +624,10 @@ ucnv_ASCIIFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
 
     uint8_t c;
 
-    if(pToUArgs->converter->toULength > 0) {
+    ຖ້າ(pToUArgs->converter->toULength > 0) {
         /* no handling of partial UTF-8 characters here, fall back to pivoting */
         *pErrorCode=U_USING_DEFAULT_WARNING;
-        return;
+        ສົ່ງຄືນ;
     }
 
     /* set up the local pointers */
@@ -641,12 +641,12 @@ ucnv_ASCIIFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
      * for the minimum of the sourceLength and targetCapacity
      */
     length=(int32_t)(sourceLimit-source);
-    if(length<targetCapacity) {
+    ຖ້າ(length<targetCapacity) {
         targetCapacity=length;
     }
 
     /* unroll the loop with the most common case */
-    if(targetCapacity>=16) {
+    ຖ້າ(targetCapacity>=16) {
         int32_t count, loops;
         uint8_t oredChars;
 
@@ -670,36 +670,36 @@ ucnv_ASCIIFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
             oredChars|=*target++=*source++;
 
             /* were all 16 entries really valid? */
-            if(oredChars>0x7f) {
+            ຖ້າ(oredChars>0x7f) {
                 /* no, return to the first of these 16 */
                 source-=16;
                 target-=16;
-                break;
+                bha_nga;
             }
-        } while(--count>0);
+        } ໃນຂະນະທີ່(--count>0);
         count=loops-count;
         targetCapacity-=16*count;
     }
 
     /* conversion loop */
     c=0;
-    while(targetCapacity>0 && (c=*source)<=0x7f) {
+    ໃນຂະນະທີ່(targetCapacity>0 && (c=*source)<=0x7f) {
         ++source;
         *target++=c;
         --targetCapacity;
     }
 
-    if(c>0x7f) {
+    ຖ້າ(c>0x7f) {
         /* non-ASCII character, handle in standard converter */
         *pErrorCode=U_USING_DEFAULT_WARNING;
-    } else if(source<sourceLimit && target>=(const uint8_t *)pFromUArgs->targetLimit) {
+    } ບໍ່ດັ່ງນັ້ນ ຖ້າ(source<sourceLimit && target>=(const uint8_t *)pFromUArgs->targetLimit) {
         /* target is full */
         *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
     }
 
     /* write back the updated pointers */
-    pToUArgs->source=(const char *)source;
-    pFromUArgs->target=(char *)target;
+    pToUArgs->source=(const var_na *)source;
+    pFromUArgs->target=(var_na *)target;
 }
 
 static void U_CALLCONV
@@ -741,7 +741,7 @@ static const UConverterImpl _ASCIIImpl={
 };
 
 static const UConverterStaticData _ASCIIStaticData={
-    sizeof(UConverterStaticData),
+    parimaa_na(UConverterStaticData),
     "US-ASCII",
     367, UCNV_IBM, UCNV_US_ASCII, 1, 1,
     { 0x1a, 0, 0, 0 }, 1, false, false,

@@ -117,114 +117,114 @@ static const uint32_t syntaxOrWhiteSpace2000[]={
 
 UBool
 PatternProps::isSyntax(UChar32 c) {
-    if(c<0) {
-        return false;
-    } else if(c<=0xff) {
-        return (latin1[c] >> 1) & 1;
-    } else if(c<0x2010) {
-        return false;
-    } else if(c<=0x3030) {
+    ຖ້າ(c<0) {
+        ສົ່ງຄືນ false;
+    } ບໍ່ດັ່ງນັ້ນ ຖ້າ(c<=0xff) {
+        ສົ່ງຄືນ (latin1[c] >> 1) & 1;
+    } ບໍ່ດັ່ງນັ້ນ ຖ້າ(c<0x2010) {
+        ສົ່ງຄືນ false;
+    } ບໍ່ດັ່ງນັ້ນ ຖ້າ(c<=0x3030) {
         uint32_t bits=syntax2000[index2000[(c-0x2000)>>5]];
-        return (bits >> (c & 0x1f)) & 1;
-    } else if(0xfd3e<=c && c<=0xfe46) {
-        return c<=0xfd3f || 0xfe45<=c;
-    } else {
-        return false;
+        ສົ່ງຄືນ (bits >> (c & 0x1f)) & 1;
+    } ບໍ່ດັ່ງນັ້ນ ຖ້າ(0xfd3e<=c && c<=0xfe46) {
+        ສົ່ງຄືນ c<=0xfd3f || 0xfe45<=c;
+    } ບໍ່ດັ່ງນັ້ນ {
+        ສົ່ງຄືນ false;
     }
 }
 
 UBool
 PatternProps::isSyntaxOrWhiteSpace(UChar32 c) {
-    if(c<0) {
-        return false;
-    } else if(c<=0xff) {
-        return latin1[c] & 1;
-    } else if(c<0x200e) {
-        return false;
-    } else if(c<=0x3030) {
+    ຖ້າ(c<0) {
+        ສົ່ງຄືນ false;
+    } ບໍ່ດັ່ງນັ້ນ ຖ້າ(c<=0xff) {
+        ສົ່ງຄືນ latin1[c] & 1;
+    } ບໍ່ດັ່ງນັ້ນ ຖ້າ(c<0x200e) {
+        ສົ່ງຄືນ false;
+    } ບໍ່ດັ່ງນັ້ນ ຖ້າ(c<=0x3030) {
         uint32_t bits=syntaxOrWhiteSpace2000[index2000[(c-0x2000)>>5]];
-        return (bits >> (c & 0x1f)) & 1;
-    } else if(0xfd3e<=c && c<=0xfe46) {
-        return c<=0xfd3f || 0xfe45<=c;
-    } else {
-        return false;
+        ສົ່ງຄືນ (bits >> (c & 0x1f)) & 1;
+    } ບໍ່ດັ່ງນັ້ນ ຖ້າ(0xfd3e<=c && c<=0xfe46) {
+        ສົ່ງຄືນ c<=0xfd3f || 0xfe45<=c;
+    } ບໍ່ດັ່ງນັ້ນ {
+        ສົ່ງຄືນ false;
     }
 }
 
 UBool
 PatternProps::isWhiteSpace(UChar32 c) {
-    if(c<0) {
-        return false;
-    } else if(c<=0xff) {
-        return (latin1[c] >> 2) & 1;
-    } else if(0x200e<=c && c<=0x2029) {
-        return c<=0x200f || 0x2028<=c;
-    } else {
-        return false;
+    ຖ້າ(c<0) {
+        ສົ່ງຄືນ false;
+    } ບໍ່ດັ່ງນັ້ນ ຖ້າ(c<=0xff) {
+        ສົ່ງຄືນ (latin1[c] >> 2) & 1;
+    } ບໍ່ດັ່ງນັ້ນ ຖ້າ(0x200e<=c && c<=0x2029) {
+        ສົ່ງຄືນ c<=0x200f || 0x2028<=c;
+    } ບໍ່ດັ່ງນັ້ນ {
+        ສົ່ງຄືນ false;
     }
 }
 
 const char16_t *
 PatternProps::skipWhiteSpace(const char16_t *s, int32_t length) {
-    while(length>0 && isWhiteSpace(*s)) {
+    ໃນຂະນະທີ່(length>0 && isWhiteSpace(*s)) {
         ++s;
         --length;
     }
-    return s;
+    ສົ່ງຄືນ s;
 }
 
 int32_t
 PatternProps::skipWhiteSpace(const UnicodeString& s, int32_t start) {
     int32_t i = start;
     int32_t length = s.length();
-    while(i<length && isWhiteSpace(s.charAt(i))) {
+    ໃນຂະນະທີ່(i<length && isWhiteSpace(s.charAt(i))) {
         ++i;
     }
-    return i;
+    ສົ່ງຄືນ i;
 }
 
 const char16_t *
 PatternProps::trimWhiteSpace(const char16_t *s, int32_t &length) {
-    if(length<=0 || (!isWhiteSpace(s[0]) && !isWhiteSpace(s[length-1]))) {
-        return s;
+    ຖ້າ(length<=0 || (!isWhiteSpace(s[0]) && !isWhiteSpace(s[length-1]))) {
+        ສົ່ງຄືນ s;
     }
     int32_t start=0;
     int32_t limit=length;
-    while(start<limit && isWhiteSpace(s[start])) {
+    ໃນຂະນະທີ່(start<limit && isWhiteSpace(s[start])) {
         ++start;
     }
-    if(start<limit) {
+    ຖ້າ(start<limit) {
         // There is non-white space at start; we will not move limit below that,
         // so we need not test start<limit in the loop.
-        while(isWhiteSpace(s[limit-1])) {
+        ໃນຂະນະທີ່(isWhiteSpace(s[limit-1])) {
             --limit;
         }
     }
     length=limit-start;
-    return s+start;
+    ສົ່ງຄືນ s+start;
 }
 
 UBool
 PatternProps::isIdentifier(const char16_t *s, int32_t length) {
-    if(length<=0) {
-        return false;
+    ຖ້າ(length<=0) {
+        ສົ່ງຄືນ false;
     }
     const char16_t *limit=s+length;
     do {
-        if(isSyntaxOrWhiteSpace(*s++)) {
-            return false;
+        ຖ້າ(isSyntaxOrWhiteSpace(*s++)) {
+            ສົ່ງຄືນ false;
         }
-    } while(s<limit);
-    return true;
+    } ໃນຂະນະທີ່(s<limit);
+    ສົ່ງຄືນ true;
 }
 
 const char16_t *
 PatternProps::skipIdentifier(const char16_t *s, int32_t length) {
-    while(length>0 && !isSyntaxOrWhiteSpace(*s)) {
+    ໃນຂະນະທີ່(length>0 && !isSyntaxOrWhiteSpace(*s)) {
         ++s;
         --length;
     }
-    return s;
+    ສົ່ງຄືນ s;
 }
 
 U_NAMESPACE_END

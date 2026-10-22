@@ -31,29 +31,29 @@ uprv_itou (char16_t * buffer, int32_t capacity,
            uint32_t i, uint32_t radix, int32_t minwidth)
 {
     int32_t length = 0;
-    int digit;
+    ຈຳນວນເຕັມ digit;
     int32_t j;
     char16_t temp;
 
     do{
-        digit = (int)(i % radix);
+        digit = (ຈຳນວນເຕັມ)(i % radix);
         buffer[length++]=(char16_t)(digit<=9?(0x0030+digit):(0x0030+digit+7));
         i=i/radix;
-    } while(i && length<capacity);
+    } ໃນຂະນະທີ່(i && length<capacity);
 
-    while (length < minwidth){
+    ໃນຂະນະທີ່ (length < minwidth){
         buffer[length++] = (char16_t) 0x0030;/*zero padding */
     }
     /* null terminate the buffer */
-    if(length<capacity){
+    ຖ້າ(length<capacity){
         buffer[length] = (char16_t) 0x0000;
     }
 
     /* Reverses the string */
-    for (j = 0; j < (length / 2); j++){
+    ສຳລັບ (j = 0; j < (length / 2); j++){
         temp = buffer[(length-1) - j];
         buffer[(length-1) - j] = buffer[j];
         buffer[j] = temp;
     }
-    return length;
+    ສົ່ງຄືນ length;
 }

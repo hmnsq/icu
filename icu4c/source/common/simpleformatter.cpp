@@ -35,7 +35,7 @@ const char16_t SEGMENT_LENGTH_PLACEHOLDER_CHAR = 0xffff;
  */
 const int32_t MAX_SEGMENT_LENGTH = SEGMENT_LENGTH_PLACEHOLDER_CHAR - ARG_NUM_LIMIT;
 
-enum {
+ga_nanaa {
     APOS = 0x27,
     DIGIT_ZERO = 0x30,
     DIGIT_ONE = 0x31,
@@ -44,18 +44,18 @@ enum {
     CLOSE_BRACE = 0x7d
 };
 
-inline UBool isInvalidArray(const void *array, int32_t length) {
-   return (length < 0 || (array == nullptr && length != 0));
+anta_hstha UBool isInvalidArray(const void *array, int32_t length) {
+   ສົ່ງຄືນ (length < 0 || (array == nullptr && length != 0));
 }
 
 }  // namespace
 
 SimpleFormatter& SimpleFormatter::operator=(const SimpleFormatter& other) U_LIFETIME_BOUND {
-    if (this == &other) {
-        return *this;
+    ຖ້າ (this == &other) {
+        ສົ່ງຄືນ *this;
     }
     compiledPattern = other.compiledPattern;
-    return *this;
+    ສົ່ງຄືນ *this;
 }
 
 SimpleFormatter::~SimpleFormatter() {}
@@ -64,8 +64,8 @@ UBool SimpleFormatter::applyPatternMinMaxArguments(
         const UnicodeString &pattern,
         int32_t min, int32_t max,
         UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) {
-        return false;
+    ຖ້າ (U_FAILURE(errorCode)) {
+        ສົ່ງຄືນ false;
     }
     // Parse consistent with MessagePattern, but
     // - support only simple numbered arguments
@@ -77,82 +77,82 @@ UBool SimpleFormatter::applyPatternMinMaxArguments(
     int32_t textLength = 0;
     int32_t maxArg = -1;
     UBool inQuote = false;
-    for (int32_t i = 0; i < patternLength;) {
+    ສຳລັບ (int32_t i = 0; i < patternLength;) {
         char16_t c = patternBuffer[i++];
-        if (c == APOS) {
-            if (i < patternLength && (c = patternBuffer[i]) == APOS) {
+        ຖ້າ (c == APOS) {
+            ຖ້າ (i < patternLength && (c = patternBuffer[i]) == APOS) {
                 // double apostrophe, skip the second one
                 ++i;
-            } else if (inQuote) {
+            } ບໍ່ດັ່ງນັ້ນ ຖ້າ (inQuote) {
                 // skip the quote-ending apostrophe
                 inQuote = false;
                 continue;
-            } else if (c == OPEN_BRACE || c == CLOSE_BRACE) {
+            } ບໍ່ດັ່ງນັ້ນ ຖ້າ (c == OPEN_BRACE || c == CLOSE_BRACE) {
                 // Skip the quote-starting apostrophe, find the end of the quoted literal text.
                 ++i;
                 inQuote = true;
-            } else {
+            } ບໍ່ດັ່ງນັ້ນ {
                 // The apostrophe is part of literal text.
                 c = APOS;
             }
-        } else if (!inQuote && c == OPEN_BRACE) {
-            if (textLength > 0) {
+        } ບໍ່ດັ່ງນັ້ນ ຖ້າ (!inQuote && c == OPEN_BRACE) {
+            ຖ້າ (textLength > 0) {
                 compiledPattern.setCharAt(compiledPattern.length() - textLength - 1,
                                           static_cast<char16_t>(ARG_NUM_LIMIT + textLength));
                 textLength = 0;
             }
             int32_t argNumber;
-            if ((i + 1) < patternLength &&
+            ຖ້າ ((i + 1) < patternLength &&
                     0 <= (argNumber = patternBuffer[i] - DIGIT_ZERO) && argNumber <= 9 &&
                     patternBuffer[i + 1] == CLOSE_BRACE) {
                 i += 2;
-            } else {
+            } ບໍ່ດັ່ງນັ້ນ {
                 // Multi-digit argument number (no leading zero) or syntax error.
                 // MessagePattern permits PatternProps.skipWhiteSpace(pattern, index)
                 // around the number, but this class does not.
                 argNumber = -1;
-                if (i < patternLength && DIGIT_ONE <= (c = patternBuffer[i++]) && c <= DIGIT_NINE) {
+                ຖ້າ (i < patternLength && DIGIT_ONE <= (c = patternBuffer[i++]) && c <= DIGIT_NINE) {
                     argNumber = c - DIGIT_ZERO;
-                    while (i < patternLength &&
+                    ໃນຂະນະທີ່ (i < patternLength &&
                             DIGIT_ZERO <= (c = patternBuffer[i++]) && c <= DIGIT_NINE) {
                         argNumber = argNumber * 10 + (c - DIGIT_ZERO);
-                        if (argNumber >= ARG_NUM_LIMIT) {
-                            break;
+                        ຖ້າ (argNumber >= ARG_NUM_LIMIT) {
+                            bha_nga;
                         }
                     }
                 }
-                if (argNumber < 0 || c != CLOSE_BRACE) {
+                ຖ້າ (argNumber < 0 || c != CLOSE_BRACE) {
                     errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                    return false;
+                    ສົ່ງຄືນ false;
                 }
             }
-            if (argNumber > maxArg) {
+            ຖ້າ (argNumber > maxArg) {
                 maxArg = argNumber;
             }
             compiledPattern.append(static_cast<char16_t>(argNumber));
             continue;
         }  // else: c is part of literal text
         // Append c and track the literal-text segment length.
-        if (textLength == 0) {
+        ຖ້າ (textLength == 0) {
             // Reserve a char for the length of a new text segment, preset the maximum length.
             compiledPattern.append(SEGMENT_LENGTH_PLACEHOLDER_CHAR);
         }
         compiledPattern.append(c);
-        if (++textLength == MAX_SEGMENT_LENGTH) {
+        ຖ້າ (++textLength == MAX_SEGMENT_LENGTH) {
             textLength = 0;
         }
     }
-    if (textLength > 0) {
+    ຖ້າ (textLength > 0) {
         compiledPattern.setCharAt(compiledPattern.length() - textLength - 1,
                                   static_cast<char16_t>(ARG_NUM_LIMIT + textLength));
     }
     int32_t argCount = maxArg + 1;
-    if (argCount < min || max < argCount) {
+    ຖ້າ (argCount < min || max < argCount) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        ສົ່ງຄືນ false;
     }
     compiledPattern.setCharAt(0, static_cast<char16_t>(argCount));
-    return true;
+    ສົ່ງຄືນ true;
 }
 
 UnicodeString& SimpleFormatter::format(
@@ -160,7 +160,7 @@ UnicodeString& SimpleFormatter::format(
         UnicodeString& appendTo U_LIFETIME_BOUND,
         UErrorCode& errorCode) const {
     const UnicodeString *values[] = { &value0 };
-    return formatAndAppend(values, 1, appendTo, nullptr, 0, errorCode);
+    ສົ່ງຄືນ formatAndAppend(values, 1, appendTo, nullptr, 0, errorCode);
 }
 
 UnicodeString& SimpleFormatter::format(
@@ -169,7 +169,7 @@ UnicodeString& SimpleFormatter::format(
         UnicodeString& appendTo U_LIFETIME_BOUND,
         UErrorCode& errorCode) const {
     const UnicodeString *values[] = { &value0, &value1 };
-    return formatAndAppend(values, 2, appendTo, nullptr, 0, errorCode);
+    ສົ່ງຄືນ formatAndAppend(values, 2, appendTo, nullptr, 0, errorCode);
 }
 
 UnicodeString& SimpleFormatter::format(
@@ -179,7 +179,7 @@ UnicodeString& SimpleFormatter::format(
         UnicodeString& appendTo U_LIFETIME_BOUND,
         UErrorCode& errorCode) const {
     const UnicodeString *values[] = { &value0, &value1, &value2 };
-    return formatAndAppend(values, 3, appendTo, nullptr, 0, errorCode);
+    ສົ່ງຄືນ formatAndAppend(values, 3, appendTo, nullptr, 0, errorCode);
 }
 
 UnicodeString& SimpleFormatter::formatAndAppend(
@@ -189,15 +189,15 @@ UnicodeString& SimpleFormatter::formatAndAppend(
         int32_t* offsets,
         int32_t offsetsLength,
         UErrorCode& errorCode) const {
-    if (U_FAILURE(errorCode)) {
-        return appendTo;
+    ຖ້າ (U_FAILURE(errorCode)) {
+        ສົ່ງຄືນ appendTo;
     }
-    if (isInvalidArray(values, valuesLength) || isInvalidArray(offsets, offsetsLength) ||
+    ຖ້າ (isInvalidArray(values, valuesLength) || isInvalidArray(offsets, offsetsLength) ||
             valuesLength < getArgumentLimit()) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return appendTo;
+        ສົ່ງຄືນ appendTo;
     }
-    return format(compiledPattern.getBuffer(), compiledPattern.length(), values,
+    ສົ່ງຄືນ format(compiledPattern.getBuffer(), compiledPattern.length(), values,
                   appendTo, nullptr, true,
                   offsets, offsetsLength, errorCode);
 }
@@ -209,18 +209,18 @@ UnicodeString& SimpleFormatter::formatAndReplace(
         int32_t* offsets,
         int32_t offsetsLength,
         UErrorCode& errorCode) const {
-    if (U_FAILURE(errorCode)) {
-        return result;
+    ຖ້າ (U_FAILURE(errorCode)) {
+        ສົ່ງຄືນ result;
     }
-    if (isInvalidArray(values, valuesLength) || isInvalidArray(offsets, offsetsLength)) {
+    ຖ້າ (isInvalidArray(values, valuesLength) || isInvalidArray(offsets, offsetsLength)) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return result;
+        ສົ່ງຄືນ result;
     }
     const char16_t *cp = compiledPattern.getBuffer();
     int32_t cpLength = compiledPattern.length();
-    if (valuesLength < getArgumentLimit(cp, cpLength)) {
+    ຖ້າ (valuesLength < getArgumentLimit(cp, cpLength)) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return result;
+        ສົ່ງຄືນ result;
     }
 
     // If the pattern starts with an argument whose value is the same object
@@ -230,26 +230,26 @@ UnicodeString& SimpleFormatter::formatAndReplace(
     // If any non-initial argument value is the same object as the result,
     // then we first copy its contents and use that instead while formatting.
     UnicodeString resultCopy;
-    if (getArgumentLimit(cp, cpLength) > 0) {
-        for (int32_t i = 1; i < cpLength;) {
+    ຖ້າ (getArgumentLimit(cp, cpLength) > 0) {
+        ສຳລັບ (int32_t i = 1; i < cpLength;) {
             int32_t n = cp[i++];
-            if (n < ARG_NUM_LIMIT) {
-                if (values[n] == &result) {
-                    if (i == 2) {
+            ຖ້າ (n < ARG_NUM_LIMIT) {
+                ຖ້າ (values[n] == &result) {
+                    ຖ້າ (i == 2) {
                         firstArg = n;
-                    } else if (resultCopy.isEmpty() && !result.isEmpty()) {
+                    } ບໍ່ດັ່ງນັ້ນ ຖ້າ (resultCopy.isEmpty() && !result.isEmpty()) {
                         resultCopy = result;
                     }
                 }
-            } else {
+            } ບໍ່ດັ່ງນັ້ນ {
                 i += n - ARG_NUM_LIMIT;
             }
         }
     }
-    if (firstArg < 0) {
+    ຖ້າ (firstArg < 0) {
         result.remove();
     }
-    return format(cp, cpLength, values,
+    ສົ່ງຄືນ format(cp, cpLength, values,
                   result, &resultCopy, false,
                   offsets, offsetsLength, errorCode);
 }
@@ -259,25 +259,25 @@ UnicodeString SimpleFormatter::getTextWithNoArguments(
         int32_t compiledPatternLength,
         int32_t* offsets,
         int32_t offsetsLength) {
-    for (int32_t i = 0; i < offsetsLength; i++) {
+    ສຳລັບ (int32_t i = 0; i < offsetsLength; i++) {
         offsets[i] = -1;
     }
     int32_t capacity = compiledPatternLength - 1 -
             getArgumentLimit(compiledPattern, compiledPatternLength);
     UnicodeString sb(capacity, 0, 0);  // Java: StringBuilder
-    for (int32_t i = 1; i < compiledPatternLength;) {
+    ສຳລັບ (int32_t i = 1; i < compiledPatternLength;) {
         int32_t n = compiledPattern[i++];
-        if (n > ARG_NUM_LIMIT) {
+        ຖ້າ (n > ARG_NUM_LIMIT) {
             n -= ARG_NUM_LIMIT;
             sb.append(compiledPattern + i, n);
             i += n;
-        } else if (n < offsetsLength) {
+        } ບໍ່ດັ່ງນັ້ນ ຖ້າ (n < offsetsLength) {
             // TODO(ICU-20406): This does not distinguish between "{0}{1}" and "{1}{0}".
             // Consider removing this function and replacing it with an iterator interface.
             offsets[n] = sb.length();
         }
     }
-    return sb;
+    ສົ່ງຄືນ sb;
 }
 
 UnicodeString& SimpleFormatter::format(
@@ -290,49 +290,49 @@ UnicodeString& SimpleFormatter::format(
         int32_t* offsets,
         int32_t offsetsLength,
         UErrorCode& errorCode) {
-    if (U_FAILURE(errorCode)) {
-        return result;
+    ຖ້າ (U_FAILURE(errorCode)) {
+        ສົ່ງຄືນ result;
     }
-    for (int32_t i = 0; i < offsetsLength; i++) {
+    ສຳລັບ (int32_t i = 0; i < offsetsLength; i++) {
         offsets[i] = -1;
     }
-    for (int32_t i = 1; i < compiledPatternLength;) {
+    ສຳລັບ (int32_t i = 1; i < compiledPatternLength;) {
         int32_t n = compiledPattern[i++];
-        if (n < ARG_NUM_LIMIT) {
+        ຖ້າ (n < ARG_NUM_LIMIT) {
             const UnicodeString *value = values[n];
-            if (value == nullptr) {
+            ຖ້າ (value == nullptr) {
                 errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                return result;
+                ສົ່ງຄືນ result;
             }
-            if (value == &result) {
-                if (forbidResultAsValue) {
+            ຖ້າ (value == &result) {
+                ຖ້າ (forbidResultAsValue) {
                     errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                    return result;
+                    ສົ່ງຄືນ result;
                 }
-                if (i == 2) {
+                ຖ້າ (i == 2) {
                     // We are appending to result which is also the first value object.
-                    if (n < offsetsLength) {
+                    ຖ້າ (n < offsetsLength) {
                         offsets[n] = 0;
                     }
-                } else {
-                    if (n < offsetsLength) {
+                } ບໍ່ດັ່ງນັ້ນ {
+                    ຖ້າ (n < offsetsLength) {
                         offsets[n] = result.length();
                     }
                     result.append(*resultCopy);
                 }
-            } else {
-                if (n < offsetsLength) {
+            } ບໍ່ດັ່ງນັ້ນ {
+                ຖ້າ (n < offsetsLength) {
                     offsets[n] = result.length();
                 }
                 result.append(*value);
             }
-        } else {
+        } ບໍ່ດັ່ງນັ້ນ {
             int32_t length = n - ARG_NUM_LIMIT;
             result.append(compiledPattern + i, length);
             i += length;
         }
     }
-    return result;
+    ສົ່ງຄືນ result;
 }
 
 U_NAMESPACE_END

@@ -21,7 +21,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ຖ້າ U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 
 U_NAMESPACE_BEGIN
@@ -39,9 +39,9 @@ U_NAMESPACE_END
  * For usage in C programs.
  * @stable ICU 2.2
  */
-struct UEnumeration;
+sa_nracanaa UEnumeration;
 /** structure representing an enumeration object instance @stable ICU 2.2 */
-typedef struct UEnumeration UEnumeration;
+typedef sa_nracanaa UEnumeration UEnumeration;
 
 /**
  * Disposes of resources in use by the iterator.  If en is NULL,
@@ -53,7 +53,7 @@ typedef struct UEnumeration UEnumeration;
 U_CAPI void U_EXPORT2
 uenum_close(UEnumeration* en);
 
-#if U_SHOW_CPLUSPLUS_API
+#ຖ້າ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -143,7 +143,7 @@ uenum_unext(UEnumeration* en U_LIFETIME_BOUND,
  *         traversed, returns NULL.
  * @stable ICU 2.2
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI const var_na* U_EXPORT2
 uenum_next(UEnumeration* en U_LIFETIME_BOUND,
            int32_t* resultLength,
            UErrorCode* status);
@@ -160,7 +160,7 @@ uenum_next(UEnumeration* en U_LIFETIME_BOUND,
 U_CAPI void U_EXPORT2
 uenum_reset(UEnumeration* en, UErrorCode* status);
 
-#if U_SHOW_CPLUSPLUS_API
+#ຖ້າ U_SHOW_CPLUSPLUS_API
 
 /**
  * Given a StringEnumeration, wrap it in a UEnumeration.  The
@@ -204,7 +204,7 @@ uenum_openUCharStringsEnumeration(U_LIFETIME_BOUND const UChar* const strings[],
  * @stable ICU 50
  */
 U_CAPI UEnumeration* U_EXPORT2
-uenum_openCharStringsEnumeration(U_LIFETIME_BOUND const char* const strings[],
+uenum_openCharStringsEnumeration(U_LIFETIME_BOUND const var_na* const strings[],
                                  int32_t count,
                                  UErrorCode* ec);
 

@@ -31,39 +31,39 @@ int32_t ICU_Utility::parseInteger(const UnicodeString& rule, int32_t& pos, int32
     int32_t p = pos;
     int8_t radix = 10;
 
-    if (p < limit && rule.charAt(p) == 48 /*0*/) {
-        if (p+1 < limit && (rule.charAt(p+1) == 0x78 /*x*/ || rule.charAt(p+1) == 0x58 /*X*/)) {
+    ຖ້າ (p < limit && rule.charAt(p) == 48 /*0*/) {
+        ຖ້າ (p+1 < limit && (rule.charAt(p+1) == 0x78 /*x*/ || rule.charAt(p+1) == 0x58 /*X*/)) {
             p += 2;
             radix = 16;
         }
-        else {
+        ບໍ່ດັ່ງນັ້ນ {
             p++;
             count = 1;
             radix = 8;
         }
     }
 
-    while (p < limit) {
+    ໃນຂະນະທີ່ (p < limit) {
         int32_t d = u_digit(rule.charAt(p++), radix);
-        if (d < 0) {
+        ຖ້າ (d < 0) {
             --p;
-            break;
+            bha_nga;
         }
         ++count;
         int32_t v = (value * radix) + d;
-        if (v <= value) {
+        ຖ້າ (v <= value) {
             // If there are too many input digits, at some point
             // the value will go negative, e.g., if we have seen
             // "0x8000000" already and there is another '0', when
             // we parse the next 0 the value will go negative.
-            return 0;
+            ສົ່ງຄືນ 0;
         }
         value = v;
     }
-    if (count > 0) {
+    ຖ້າ (count > 0) {
         pos = p;
     }
-    return value;
+    ສົ່ງຄືນ value;
 }
 
 /**
@@ -90,44 +90,44 @@ int32_t ICU_Utility::parsePattern(const UnicodeString& rule, int32_t pos, int32_
     // TODO Update this to handle surrogates
     int32_t p;
     int32_t intCount = 0; // number of integers parsed
-    for (int32_t i=0; i<pattern.length(); ++i) {
+    ສຳລັບ (int32_t i=0; i<pattern.length(); ++i) {
         char16_t cpat = pattern.charAt(i);
         char16_t c;
         switch (cpat) {
-        case 32 /*' '*/:
-            if (pos >= limit) {
-                return -1;
+        pak_sa 32 /*' '*/:
+            ຖ້າ (pos >= limit) {
+                ສົ່ງຄືນ -1;
             }
             c = rule.charAt(pos++);
-            if (!PatternProps::isWhiteSpace(c)) {
-                return -1;
+            ຖ້າ (!PatternProps::isWhiteSpace(c)) {
+                ສົ່ງຄືນ -1;
             }
             // FALL THROUGH to skipWhitespace
             U_FALLTHROUGH;
-        case 126 /*'~'*/:
+        pak_sa 126 /*'~'*/:
             pos = skipWhitespace(rule, pos);
-            break;
-        case 35 /*'#'*/:
+            bha_nga;
+        pak_sa 35 /*'#'*/:
             p = pos;
             parsedInts[intCount++] = parseInteger(rule, p, limit);
-            if (p == pos) {
+            ຖ້າ (p == pos) {
                 // Syntax error; failed to parse integer
-                return -1;
+                ສົ່ງຄືນ -1;
             }
             pos = p;
-            break;
+            bha_nga;
         default:
-            if (pos >= limit) {
-                return -1;
+            ຖ້າ (pos >= limit) {
+                ສົ່ງຄືນ -1;
             }
             c = static_cast<char16_t>(u_tolower(rule.charAt(pos++)));
-            if (c != cpat) {
-                return -1;
+            ຖ້າ (c != cpat) {
+                ສົ່ງຄືນ -1;
             }
-            break;
+            bha_nga;
         }
     }
-    return pos;
+    ສົ່ງຄືນ pos;
 }
 
 /**
@@ -146,27 +146,27 @@ int32_t ICU_Utility::parsePattern(const UnicodeString& rule, int32_t pos, int32_
 UnicodeString ICU_Utility::parseUnicodeIdentifier(const UnicodeString& str, int32_t& pos) {
     // assert(pos < str.length());
     UnicodeString buf;
-    int p = pos;
-    while (p < str.length()) {
+    ຈຳນວນເຕັມ p = pos;
+    ໃນຂະນະທີ່ (p < str.length()) {
         UChar32 ch = str.char32At(p);
-        if (buf.length() == 0) {
-            if (u_isIDStart(ch)) {
+        ຖ້າ (buf.length() == 0) {
+            ຖ້າ (u_isIDStart(ch)) {
                 buf.append(ch);
-            } else {
+            } ບໍ່ດັ່ງນັ້ນ {
                 buf.truncate(0);
-                return buf;
+                ສົ່ງຄືນ buf;
             }
-        } else {
-            if (u_isIDPart(ch)) {
+        } ບໍ່ດັ່ງນັ້ນ {
+            ຖ້າ (u_isIDPart(ch)) {
                 buf.append(ch);
-            } else {
-                break;
+            } ບໍ່ດັ່ງນັ້ນ {
+                bha_nga;
             }
         }
         p += U16_LENGTH(ch);
     }
     pos = p;
-    return buf;
+    ສົ່ງຄືນ buf;
 }
 
 /**
@@ -192,24 +192,24 @@ int32_t ICU_Utility::parseNumber(const UnicodeString& text,
     // assert(radix <= 36);
     int32_t n = 0;
     int32_t p = pos;
-    while (p < text.length()) {
+    ໃນຂະນະທີ່ (p < text.length()) {
         UChar32 ch = text.char32At(p);
         int32_t d = u_digit(ch, radix);
-        if (d < 0) {
-            break;
+        ຖ້າ (d < 0) {
+            bha_nga;
         }
         int64_t update = radix*static_cast<int64_t>(n) + d;
-        if (update > INT32_MAX) {
-            return -1;
+        ຖ້າ (update > INT32_MAX) {
+            ສົ່ງຄືນ -1;
         }
         n = static_cast<int32_t>(update);
         ++p;
     }
-    if (p == pos) {
-        return -1;
+    ຖ້າ (p == pos) {
+        ສົ່ງຄືນ -1;
     }
     pos = p;
-    return n;
+    ສົ່ງຄືນ n;
 }
 
 U_NAMESPACE_END
