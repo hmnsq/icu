@@ -33,38 +33,38 @@ static const int32_t PAD = 8;
    or reallocating it if at least 'capacity' bytes are not available. */
 static void* _getBuffer(UEnumeration* en U_LIFETIME_BOUND, int32_t capacity) {
 
-    if (en->baseContext != nullptr) {
-        if (static_cast<_UEnumBuffer*>(en->baseContext)->len < capacity) {
+    nếu (en->baseContext != nullptr) {
+        nếu (static_cast<_UEnumBuffer*>(en->baseContext)->len < capacity) {
             capacity += PAD;
             en->baseContext = uprv_realloc(en->baseContext,
                                            sizeof(int32_t) + capacity);
-            if (en->baseContext == nullptr) {
-                return nullptr;
+            nếu (en->baseContext == nullptr) {
+                trả_về nullptr;
             }
             static_cast<_UEnumBuffer*>(en->baseContext)->len = capacity;
         }
-    } else {
+    } không_thì {
         capacity += PAD;
         en->baseContext = uprv_malloc(sizeof(int32_t) + capacity);
-        if (en->baseContext == nullptr) {
-            return nullptr;
+        nếu (en->baseContext == nullptr) {
+            trả_về nullptr;
         }
         static_cast<_UEnumBuffer*>(en->baseContext)->len = capacity;
     }
     
-    return static_cast<void*>(&static_cast<_UEnumBuffer*>(en->baseContext)->data);
+    trả_về static_cast<void*>(&static_cast<_UEnumBuffer*>(en->baseContext)->data);
 }
 
 U_CAPI void U_EXPORT2
 uenum_close(UEnumeration* en)
 {
-    if (en) {
-        if (en->close != nullptr) {
-            if (en->baseContext) {
+    nếu (en) {
+        nếu (en->close != nullptr) {
+            nếu (en->baseContext) {
                 uprv_free(en->baseContext);
             }
             en->close(en);
-        } else { /* this seems dangerous, but we better kill the object */
+        } không_thì { /* this seems dangerous, but we better kill the object */
             uprv_free(en);
         }
     }
@@ -73,14 +73,14 @@ uenum_close(UEnumeration* en)
 U_CAPI int32_t U_EXPORT2
 uenum_count(UEnumeration* en, UErrorCode* status)
 {
-    if (!en || U_FAILURE(*status)) {
-        return -1;
+    nếu (!en || U_FAILURE(*status)) {
+        trả_về -1;
     }
-    if (en->count != nullptr) {
-        return en->count(en, status);
-    } else {
+    nếu (en->count != nullptr) {
+        trả_về en->count(en, status);
+    } không_thì {
         *status = U_UNSUPPORTED_ERROR;
-        return -1;
+        trả_về -1;
     }
 }
 
@@ -92,24 +92,24 @@ uenum_unextDefault(UEnumeration* en U_LIFETIME_BOUND,
 {
     char16_t *ustr = nullptr;
     int32_t len = 0;
-    if (en->next != nullptr) {
+    nếu (en->next != nullptr) {
         const char *cstr = en->next(en, &len, status);
-        if (cstr != nullptr) {
+        nếu (cstr != nullptr) {
             ustr = (char16_t*) _getBuffer(en, (len+1) * sizeof(char16_t));
-            if (ustr == nullptr) {
+            nếu (ustr == nullptr) {
                 *status = U_MEMORY_ALLOCATION_ERROR;
-            } else {
+            } không_thì {
                 u_charsToUChars(cstr, ustr, len);
                 ustr[len] = 0;
             }
         }
-    } else {
+    } không_thì {
         *status = U_UNSUPPORTED_ERROR;
     }
-    if (resultLength) {
+    nếu (resultLength) {
         *resultLength = len;
     }
-    return ustr;
+    trả_về ustr;
 }
 
 /* Don't call this directly. Only uenum_next should be calling this. */
@@ -118,24 +118,24 @@ uenum_nextDefault(UEnumeration* en U_LIFETIME_BOUND,
                   int32_t* resultLength,
                   UErrorCode* status)
 {
-    if (en->uNext != nullptr) {
+    nếu (en->uNext != nullptr) {
         char *tempCharVal;
         const char16_t *tempUCharVal = en->uNext(en, resultLength, status);
-        if (tempUCharVal == nullptr) {
-            return nullptr;
+        nếu (tempUCharVal == nullptr) {
+            trả_về nullptr;
         }
         tempCharVal = (char*)
             _getBuffer(en, (*resultLength+1) * sizeof(char));
-        if (!tempCharVal) {
+        nếu (!tempCharVal) {
             *status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+            trả_về nullptr;
         }
         u_UCharsToChars(tempUCharVal, tempCharVal, *resultLength);
         tempCharVal[*resultLength] = 0;
-        return tempCharVal;
-    } else {
+        trả_về tempCharVal;
+    } không_thì {
         *status = U_UNSUPPORTED_ERROR;
-        return nullptr;
+        trả_về nullptr;
     }
 }
 
@@ -144,14 +144,14 @@ uenum_unext(UEnumeration* en U_LIFETIME_BOUND,
             int32_t* resultLength,
             UErrorCode* status)
 {
-    if (!en || U_FAILURE(*status)) {
-        return nullptr;
+    nếu (!en || U_FAILURE(*status)) {
+        trả_về nullptr;
     }
-    if (en->uNext != nullptr) {
-        return en->uNext(en, resultLength, status);
-    } else {
+    nếu (en->uNext != nullptr) {
+        trả_về en->uNext(en, resultLength, status);
+    } không_thì {
         *status = U_UNSUPPORTED_ERROR;
-        return nullptr;
+        trả_về nullptr;
     }
 }
 
@@ -160,32 +160,32 @@ uenum_next(UEnumeration* en U_LIFETIME_BOUND,
            int32_t* resultLength,
            UErrorCode* status)
 {
-    if (!en || U_FAILURE(*status)) {
-        return nullptr;
+    nếu (!en || U_FAILURE(*status)) {
+        trả_về nullptr;
     }
-    if (en->next != nullptr) {
-        if (resultLength != nullptr) {
-            return en->next(en, resultLength, status);
+    nếu (en->next != nullptr) {
+        nếu (resultLength != nullptr) {
+            trả_về en->next(en, resultLength, status);
         }
-        else {
+        không_thì {
             int32_t dummyLength=0;
-            return en->next(en, &dummyLength, status);
+            trả_về en->next(en, &dummyLength, status);
         }
-    } else {
+    } không_thì {
         *status = U_UNSUPPORTED_ERROR;
-        return nullptr;
+        trả_về nullptr;
     }
 }
 
 U_CAPI void U_EXPORT2
 uenum_reset(UEnumeration* en, UErrorCode* status)
 {
-    if (!en || U_FAILURE(*status)) {
-        return;
+    nếu (!en || U_FAILURE(*status)) {
+        trả_về;
     }
-    if (en->reset != nullptr) {
+    nếu (en->reset != nullptr) {
         en->reset(en, status);
-    } else {
+    } không_thì {
         *status = U_UNSUPPORTED_ERROR;
     }
 }

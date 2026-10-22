@@ -12,11 +12,11 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#nếu U_SHOW_CPLUSPLUS_API
 
 #include "unicode/brkiter.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION && !UCONFIG_NO_FILTERED_BREAK_ITERATION
+#nếu !UCONFIG_NO_BREAK_ITERATION && !UCONFIG_NO_FILTERED_BREAK_ITERATION
 
 U_NAMESPACE_BEGIN
 
@@ -131,7 +131,7 @@ class U_COMMON_API FilteredBreakIteratorBuilder : public UObject {
    * @stable ICU 60
    */
   inline BreakIterator *wrapIteratorWithFilter(BreakIterator* adoptBreakIterator, UErrorCode& status) {
-    return build(adoptBreakIterator, status);
+    trả_về build(adoptBreakIterator, status);
   }
 
  protected:

@@ -82,9 +82,9 @@ public:
     static UBool appendUnchanged(const uint8_t *s, int32_t length,
                                  ByteSink &sink, uint32_t options, Edits *edits,
                                  UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return false; }
-        if (length > 0) { appendNonEmptyUnchanged(s, length, sink, options, edits); }
-        return true;
+        nếu (U_FAILURE(errorCode)) { trả_về false; }
+        nếu (length > 0) { appendNonEmptyUnchanged(s, length, sink, options, edits); }
+        trả_về true;
     }
 
     static UBool appendUnchanged(const uint8_t *s, const uint8_t *limit,
@@ -110,19 +110,19 @@ public:
     static int32_t viaByteSinkToTerminatedChars(char* buffer, int32_t capacity,
                                                 F&& lambda,
                                                 UErrorCode& status) {
-        if (U_FAILURE(status)) { return 0; }
+        nếu (U_FAILURE(status)) { trả_về 0; }
         CheckedArrayByteSink sink(buffer, capacity);
         lambda(sink, status);
-        if (U_FAILURE(status)) { return 0; }
+        nếu (U_FAILURE(status)) { trả_về 0; }
 
         int32_t reslen = sink.NumberOfBytesAppended();
 
-        if (sink.Overflowed()) {
+        nếu (sink.Overflowed()) {
             status = U_BUFFER_OVERFLOW_ERROR;
-            return reslen;
+            trả_về reslen;
         }
 
-        return u_terminateChars(buffer, capacity, reslen, &status);
+        trả_về u_terminateChars(buffer, capacity, reslen, &status);
     }
 
     /**
@@ -139,11 +139,11 @@ public:
               typename = std::enable_if_t<
                   std::is_invocable_r_v<void, F, ByteSink&, UErrorCode&>>>
     static CharString viaByteSinkToCharString(F&& lambda, UErrorCode& status) {
-        if (U_FAILURE(status)) { return {}; }
+        nếu (U_FAILURE(status)) { trả_về {}; }
         CharString result;
         CharStringByteSink sink(&result);
         lambda(sink, status);
-        return result;
+        trả_về result;
     }
 
 private:

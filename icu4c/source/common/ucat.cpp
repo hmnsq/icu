@@ -33,12 +33,12 @@ _catkey(char* buffer U_LIFETIME_BOUND, int32_t set_num, int32_t msg_num) {
     i = T_CString_integerToString(buffer, set_num, 10);
     buffer[i++] = SEPARATOR;
     T_CString_integerToString(buffer+i, msg_num, 10);
-    return buffer;
+    trả_về buffer;
 }
 
 U_CAPI u_nl_catd U_EXPORT2
 u_catopen(const char* name, const char* locale, UErrorCode* ec) {
-    return (u_nl_catd) ures_open(name, locale, ec);
+    trả_về (u_nl_catd) ures_open(name, locale, ec);
 }
 
 U_CAPI void U_EXPORT2
@@ -57,25 +57,25 @@ u_catgets(u_nl_catd catd U_LIFETIME_BOUND,
     char key[MAX_KEY_LEN];
     const char16_t* result;
 
-    if (ec == nullptr || U_FAILURE(*ec)) {
+    nếu (ec == nullptr || U_FAILURE(*ec)) {
         goto ERROR;
     }
 
     result = ures_getStringByKey((const UResourceBundle*) catd,
                                  _catkey(key, set_num, msg_num),
                                  len, ec);
-    if (U_FAILURE(*ec)) {
+    nếu (U_FAILURE(*ec)) {
         goto ERROR;
     }
 
-    return result;
+    trả_về result;
 
  ERROR:
     /* In case of any failure, return s */
-    if (len != nullptr) {
+    nếu (len != nullptr) {
         *len = u_strlen(s);
     }
-    return s;
+    trả_về s;
 }
 
 /*eof*/

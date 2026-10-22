@@ -48,19 +48,19 @@ UVector32::UVector32(int32_t initialCapacity, UErrorCode &status) :
 
 void UVector32::_init(int32_t initialCapacity, UErrorCode &status) {
     // Fix bogus initialCapacity values; avoid malloc(0)
-    if (initialCapacity < 1) {
+    nếu (initialCapacity < 1) {
         initialCapacity = DEFAULT_CAPACITY;
     }
-    if (maxCapacity>0 && maxCapacity<initialCapacity) {
+    nếu (maxCapacity>0 && maxCapacity<initialCapacity) {
         initialCapacity = maxCapacity;
     }
-    if (initialCapacity > static_cast<int32_t>(INT32_MAX / sizeof(int32_t))) {
+    nếu (initialCapacity > static_cast<int32_t>(INT32_MAX / sizeof(int32_t))) {
         initialCapacity = uprv_min(DEFAULT_CAPACITY, maxCapacity);
     }
     elements = static_cast<int32_t*>(uprv_malloc(sizeof(int32_t) * initialCapacity));
-    if (elements == nullptr) {
+    nếu (elements == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-    } else {
+    } không_thì {
         capacity = initialCapacity;
     }
 }
@@ -74,9 +74,9 @@ UVector32::~UVector32() {
  * Assign this object to another (make this a copy of 'other').
  */
 void UVector32::assign(const UVector32& other, UErrorCode &ec) {
-    if (ensureCapacity(other.count, ec)) {
+    nếu (ensureCapacity(other.count, ec)) {
         setSize(other.count);
-        for (int32_t i=0; i<other.count; ++i) {
+        cho (int32_t i=0; i<other.count; ++i) {
             elements[i] = other.elements[i];
         }
     }
@@ -85,18 +85,18 @@ void UVector32::assign(const UVector32& other, UErrorCode &ec) {
 
 bool UVector32::operator==(const UVector32& other) const {
     int32_t i;
-    if (count != other.count) return false;
-    for (i=0; i<count; ++i) {
-        if (elements[i] != other.elements[i]) {
-            return false;
+    nếu (count != other.count) trả_về false;
+    cho (i=0; i<count; ++i) {
+        nếu (elements[i] != other.elements[i]) {
+            trả_về false;
         }
     }
-    return true;
+    trả_về true;
 }
 
 
 void UVector32::setElementAt(int32_t elem, int32_t index) {
-    if (0 <= index && index < count) {
+    nếu (0 <= index && index < count) {
         elements[index] = elem;
     }
     /* else index out of range */
@@ -104,8 +104,8 @@ void UVector32::setElementAt(int32_t elem, int32_t index) {
 
 void UVector32::insertElementAt(int32_t elem, int32_t index, UErrorCode &status) {
     // must have 0 <= index <= count
-    if (0 <= index && index <= count && ensureCapacity(count + 1, status)) {
-        for (int32_t i=count; i>index; --i) {
+    nếu (0 <= index && index <= count && ensureCapacity(count + 1, status)) {
+        cho (int32_t i=count; i>index; --i) {
             elements[i] = elements[i-1];
         }
         elements[index] = elem;
@@ -115,50 +115,50 @@ void UVector32::insertElementAt(int32_t elem, int32_t index, UErrorCode &status)
 }
 
 UBool UVector32::containsAll(const UVector32& other) const {
-    for (int32_t i=0; i<other.size(); ++i) {
-        if (indexOf(other.elements[i]) < 0) {
-            return false;
+    cho (int32_t i=0; i<other.size(); ++i) {
+        nếu (indexOf(other.elements[i]) < 0) {
+            trả_về false;
         }
     }
-    return true;
+    trả_về true;
 }
 
 UBool UVector32::containsNone(const UVector32& other) const {
-    for (int32_t i=0; i<other.size(); ++i) {
-        if (indexOf(other.elements[i]) >= 0) {
-            return false;
+    cho (int32_t i=0; i<other.size(); ++i) {
+        nếu (indexOf(other.elements[i]) >= 0) {
+            trả_về false;
         }
     }
-    return true;
+    trả_về true;
 }
 
 UBool UVector32::removeAll(const UVector32& other) {
     UBool changed = false;
-    for (int32_t i=0; i<other.size(); ++i) {
+    cho (int32_t i=0; i<other.size(); ++i) {
         int32_t j = indexOf(other.elements[i]);
-        if (j >= 0) {
+        nếu (j >= 0) {
             removeElementAt(j);
             changed = true;
         }
     }
-    return changed;
+    trả_về changed;
 }
 
 UBool UVector32::retainAll(const UVector32& other) {
     UBool changed = false;
-    for (int32_t j=size()-1; j>=0; --j) {
+    cho (int32_t j=size()-1; j>=0; --j) {
         int32_t i = other.indexOf(elements[j]);
-        if (i < 0) {
+        nếu (i < 0) {
             removeElementAt(j);
             changed = true;
         }
     }
-    return changed;
+    trả_về changed;
 }
 
 void UVector32::removeElementAt(int32_t index) {
-    if (index >= 0) {
-        for (int32_t i=index; i<count-1; ++i) {
+    nếu (index >= 0) {
+        cho (int32_t i=index; i<count-1; ++i) {
             elements[i] = elements[i+1];
         }
         --count;
@@ -170,17 +170,17 @@ void UVector32::removeAllElements() {
 }
 
 UBool   UVector32::equals(const UVector32 &other) const {
-    int      i;
+    số_nguyên      i;
 
-    if (this->count != other.count) {
-        return false;
+    nếu (this->count != other.count) {
+        trả_về false;
     }
-    for (i=0; i<count; i++) {
-        if (elements[i] != other.elements[i]) {
-            return false;
+    cho (i=0; i<count; i++) {
+        nếu (elements[i] != other.elements[i]) {
+            trả_về false;
         }
     }
-    return true;
+    trả_về true;
 }
 
 
@@ -188,83 +188,83 @@ UBool   UVector32::equals(const UVector32 &other) const {
 
 int32_t UVector32::indexOf(int32_t key, int32_t startIndex) const {
     int32_t i;
-    for (i=startIndex; i<count; ++i) {
-        if (key == elements[i]) {
-            return i;
+    cho (i=startIndex; i<count; ++i) {
+        nếu (key == elements[i]) {
+            trả_về i;
         }
     }
-    return -1;
+    trả_về -1;
 }
 
 
 UBool UVector32::expandCapacity(int32_t minimumCapacity, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return false;
+    nếu (U_FAILURE(status)) {
+        trả_về false;
     }
-    if (minimumCapacity < 0) {
+    nếu (minimumCapacity < 0) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        trả_về false;
     }
-    if (capacity >= minimumCapacity) {
-        return true;
+    nếu (capacity >= minimumCapacity) {
+        trả_về true;
     }
-    if (maxCapacity>0 && minimumCapacity>maxCapacity) {
+    nếu (maxCapacity>0 && minimumCapacity>maxCapacity) {
         status = U_BUFFER_OVERFLOW_ERROR;
-        return false;
+        trả_về false;
     }
-    if (capacity > (INT32_MAX - 1) / 2) {  // integer overflow check
+    nếu (capacity > (INT32_MAX - 1) / 2) {  // integer overflow check
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        trả_về false;
     }
     int32_t newCap = capacity * 2;
-    if (newCap < minimumCapacity) {
+    nếu (newCap < minimumCapacity) {
         newCap = minimumCapacity;
     }
-    if (maxCapacity > 0 && newCap > maxCapacity) {
+    nếu (maxCapacity > 0 && newCap > maxCapacity) {
         newCap = maxCapacity;
     }
-    if (newCap > static_cast<int32_t>(INT32_MAX / sizeof(int32_t))) { // integer overflow check
+    nếu (newCap > static_cast<int32_t>(INT32_MAX / sizeof(int32_t))) { // integer overflow check
         // We keep the original memory contents on bad minimumCapacity/maxCapacity.
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        trả_về false;
     }
     int32_t* newElems = static_cast<int32_t*>(uprv_realloc(elements, sizeof(int32_t) * newCap));
-    if (newElems == nullptr) {
+    nếu (newElems == nullptr) {
         // We keep the original contents on the memory failure on realloc.
         status = U_MEMORY_ALLOCATION_ERROR;
-        return false;
+        trả_về false;
     }
     elements = newElems;
     capacity = newCap;
-    return true;
+    trả_về true;
 }
 
 void UVector32::setMaxCapacity(int32_t limit) {
     U_ASSERT(limit >= 0);
-    if (limit < 0) {
+    nếu (limit < 0) {
         limit = 0;
     }
-    if (limit > static_cast<int32_t>(INT32_MAX / sizeof(int32_t))) { // integer overflow check for realloc
+    nếu (limit > static_cast<int32_t>(INT32_MAX / sizeof(int32_t))) { // integer overflow check for realloc
         //  Something is very wrong, don't realloc, leave capacity and maxCapacity unchanged
-        return;
+        trả_về;
     }
     maxCapacity = limit;
-    if (capacity <= maxCapacity || maxCapacity == 0) {
+    nếu (capacity <= maxCapacity || maxCapacity == 0) {
         // Current capacity is within the new limit.
-        return;
+        trả_về;
     }
     
     // New maximum capacity is smaller than the current size.
     // Realloc the storage to the new, smaller size.
     int32_t* newElems = static_cast<int32_t*>(uprv_realloc(elements, sizeof(int32_t) * maxCapacity));
-    if (newElems == nullptr) {
+    nếu (newElems == nullptr) {
         // Realloc to smaller failed.
         //   Just keep what we had.  No need to call it a failure.
-        return;
+        trả_về;
     }
     elements = newElems;
     capacity = maxCapacity;
-    if (count > capacity) {
+    nếu (count > capacity) {
         count = capacity;
     }
 }
@@ -277,15 +277,15 @@ void UVector32::setMaxCapacity(int32_t limit) {
  */
 void UVector32::setSize(int32_t newSize) {
     int32_t i;
-    if (newSize < 0) {
-        return;
+    nếu (newSize < 0) {
+        trả_về;
     }
-    if (newSize > count) {
+    nếu (newSize > count) {
         UErrorCode ec = U_ZERO_ERROR;
-        if (!ensureCapacity(newSize, ec)) {
-            return;
+        nếu (!ensureCapacity(newSize, ec)) {
+            trả_về;
         }
-        for (i=count; i<newSize; ++i) {
+        cho (i=count; i<newSize; ++i) {
             elements[i] = 0;
         }
     } 
@@ -307,19 +307,19 @@ void UVector32::sortedInsert(int32_t tok, UErrorCode& ec) {
     // less than tok and a 'virtual' elements[count] always greater
     // than tok.
     int32_t min = 0, max = count;
-    while (min != max) {
+    trong_khi (min != max) {
         int32_t probe = (min + max) / 2;
         //int8_t c = (*compare)(elements[probe], tok);
         //if (c > 0) {
-        if (elements[probe] > tok) {
+        nếu (elements[probe] > tok) {
             max = probe;
-        } else {
+        } không_thì {
             // assert(c <= 0);
             min = probe + 1;
         }
     }
-    if (ensureCapacity(count + 1, ec)) {
-        for (int32_t i=count; i>min; --i) {
+    nếu (ensureCapacity(count + 1, ec)) {
+        cho (int32_t i=count; i>min; --i) {
             elements[i] = elements[i-1];
         }
         elements[min] = tok;

@@ -28,35 +28,35 @@
 #include "ucmndata.h"
 #include "udatamem.h"
 
-#if defined(UDATA_DEBUG) || defined(UDATA_DEBUG_DUMP)
+#nếu defined(UDATA_DEBUG) || defined(UDATA_DEBUG_DUMP)
 #   include <stdio.h>
 #endif
 
 U_CFUNC uint16_t
 udata_getHeaderSize(const DataHeader *udh) {
-    if(udh==nullptr) {
-        return 0;
-    } else if(udh->info.isBigEndian==U_IS_BIG_ENDIAN) {
+    nếu(udh==nullptr) {
+        trả_về 0;
+    } không_thì nếu(udh->info.isBigEndian==U_IS_BIG_ENDIAN) {
         /* same endianness */
-        return udh->dataHeader.headerSize;
-    } else {
+        trả_về udh->dataHeader.headerSize;
+    } không_thì {
         /* opposite endianness */
         uint16_t x=udh->dataHeader.headerSize;
-        return (uint16_t)((x<<8)|(x>>8));
+        trả_về (uint16_t)((x<<8)|(x>>8));
     }
 }
 
 U_CFUNC uint16_t
 udata_getInfoSize(const UDataInfo *info) {
-    if(info==nullptr) {
-        return 0;
-    } else if(info->isBigEndian==U_IS_BIG_ENDIAN) {
+    nếu(info==nullptr) {
+        trả_về 0;
+    } không_thì nếu(info->isBigEndian==U_IS_BIG_ENDIAN) {
         /* same endianness */
-        return info->size;
-    } else {
+        trả_về info->size;
+    } không_thì {
         /* opposite endianness */
         uint16_t x=info->size;
-        return (uint16_t)((x<<8)|(x>>8));
+        trả_về (uint16_t)((x<<8)|(x>>8));
     }
 }
 
@@ -107,17 +107,17 @@ strcmpAfterPrefix(const char *s1, const char *s2, int32_t *pPrefixLength) {
     int32_t cmp=0;
     s1+=pl;
     s2+=pl;
-    for(;;) {
+    cho(;;) {
         int32_t c1 = static_cast<uint8_t>(*s1++);
         int32_t c2 = static_cast<uint8_t>(*s2++);
         cmp=c1-c2;
-        if(cmp!=0 || c1==0) {  /* different or done */
+        nếu(cmp!=0 || c1==0) {  /* different or done */
             break;
         }
         ++pl;  /* increment shared same-prefix length */
     }
     *pPrefixLength=pl;
-    return cmp;
+    trả_về cmp;
 }
 
 static int32_t
@@ -132,8 +132,8 @@ offsetTOCPrefixBinarySearch(const char *s, const char *names,
      */
     int32_t startPrefixLength=0;
     int32_t limitPrefixLength=0;
-    if(count==0) {
-        return -1;
+    nếu(count==0) {
+        trả_về -1;
     }
     /*
      * Prime the prefix lengths so that we don't keep prefixLength at 0 until
@@ -141,29 +141,29 @@ offsetTOCPrefixBinarySearch(const char *s, const char *names,
      * At the same time, we find if s is one of the start and (limit-1) names,
      * and if not, exclude them from the actual binary search.
      */
-    if(0==strcmpAfterPrefix(s, names+toc[0].nameOffset, &startPrefixLength)) {
-        return 0;
+    nếu(0==strcmpAfterPrefix(s, names+toc[0].nameOffset, &startPrefixLength)) {
+        trả_về 0;
     }
     ++start;
     --limit;
-    if(0==strcmpAfterPrefix(s, names+toc[limit].nameOffset, &limitPrefixLength)) {
-        return limit;
+    nếu(0==strcmpAfterPrefix(s, names+toc[limit].nameOffset, &limitPrefixLength)) {
+        trả_về limit;
     }
-    while(start<limit) {
+    trong_khi(start<limit) {
         int32_t i=(start+limit)/2;
         int32_t prefixLength=MIN(startPrefixLength, limitPrefixLength);
         int32_t cmp=strcmpAfterPrefix(s, names+toc[i].nameOffset, &prefixLength);
-        if(cmp<0) {
+        nếu(cmp<0) {
             limit=i;
             limitPrefixLength=prefixLength;
-        } else if(cmp==0) {
-            return i;
-        } else {
+        } không_thì nếu(cmp==0) {
+            trả_về i;
+        } không_thì {
             start=i+1;
             startPrefixLength=prefixLength;
         }
     }
-    return -1;
+    trả_về -1;
 }
 
 static int32_t
@@ -177,8 +177,8 @@ pointerTOCPrefixBinarySearch(const char *s, const PointerTOCEntry *toc, int32_t 
      */
     int32_t startPrefixLength=0;
     int32_t limitPrefixLength=0;
-    if(count==0) {
-        return -1;
+    nếu(count==0) {
+        trả_về -1;
     }
     /*
      * Prime the prefix lengths so that we don't keep prefixLength at 0 until
@@ -186,29 +186,29 @@ pointerTOCPrefixBinarySearch(const char *s, const PointerTOCEntry *toc, int32_t 
      * At the same time, we find if s is one of the start and (limit-1) names,
      * and if not, exclude them from the actual binary search.
      */
-    if(0==strcmpAfterPrefix(s, toc[0].entryName, &startPrefixLength)) {
-        return 0;
+    nếu(0==strcmpAfterPrefix(s, toc[0].entryName, &startPrefixLength)) {
+        trả_về 0;
     }
     ++start;
     --limit;
-    if(0==strcmpAfterPrefix(s, toc[limit].entryName, &limitPrefixLength)) {
-        return limit;
+    nếu(0==strcmpAfterPrefix(s, toc[limit].entryName, &limitPrefixLength)) {
+        trả_về limit;
     }
-    while(start<limit) {
+    trong_khi(start<limit) {
         int32_t i=(start+limit)/2;
         int32_t prefixLength=MIN(startPrefixLength, limitPrefixLength);
         int32_t cmp=strcmpAfterPrefix(s, toc[i].entryName, &prefixLength);
-        if(cmp<0) {
+        nếu(cmp<0) {
             limit=i;
             limitPrefixLength=prefixLength;
-        } else if(cmp==0) {
-            return i;
-        } else {
+        } không_thì nếu(cmp==0) {
+            trả_về i;
+        } không_thì {
             start=i+1;
             startPrefixLength=prefixLength;
         }
     }
-    return -1;
+    trả_về -1;
 }
 
 U_CDECL_BEGIN
@@ -216,10 +216,10 @@ static uint32_t U_CALLCONV
 offsetTOCEntryCount(const UDataMemory *pData) {
     int32_t          retVal=0;
     const UDataOffsetTOC *toc = (UDataOffsetTOC *)pData->toc;
-    if (toc != nullptr) {
+    nếu (toc != nullptr) {
         retVal = toc->count;
     }
-    return retVal;
+    trả_về retVal;
 }
 
 static const DataHeader * U_CALLCONV
@@ -229,49 +229,49 @@ offsetTOCLookupFn(const UDataMemory *pData,
                   UErrorCode *pErrorCode) {
     (void)pErrorCode;
     const UDataOffsetTOC  *toc = (UDataOffsetTOC *)pData->toc;
-    if(toc!=nullptr) {
+    nếu(toc!=nullptr) {
         const char *base=(const char *)toc;
         int32_t number, count=(int32_t)toc->count;
 
         /* perform a binary search for the data in the common data's table of contents */
-#if defined (UDATA_DEBUG_DUMP)
+#nếu defined (UDATA_DEBUG_DUMP)
         /* list the contents of the TOC each time .. not recommended */
-        for(number=0; number<count; ++number) {
+        cho(number=0; number<count; ++number) {
             fprintf(stderr, "\tx%d: %s\n", number, &base[toc->entry[number].nameOffset]);
         }
 #endif
         number=offsetTOCPrefixBinarySearch(tocEntryName, base, toc->entry, count);
-        if(number>=0) {
+        nếu(number>=0) {
             /* found it */
             const UDataOffsetTOCEntry *entry=toc->entry+number;
 #ifdef UDATA_DEBUG
             fprintf(stderr, "%s: Found.\n", tocEntryName);
 #endif
-            if((number+1) < count) {
+            nếu((number+1) < count) {
                 *pLength = (int32_t)(entry[1].dataOffset - entry->dataOffset);
-            } else {
+            } không_thì {
                 *pLength = -1;
             }
-            return (const DataHeader *)(base+entry->dataOffset);
-        } else {
+            trả_về (const DataHeader *)(base+entry->dataOffset);
+        } không_thì {
 #ifdef UDATA_DEBUG
             fprintf(stderr, "%s: Not found.\n", tocEntryName);
 #endif
-            return nullptr;
+            trả_về nullptr;
         }
-    } else {
+    } không_thì {
 #ifdef UDATA_DEBUG
         fprintf(stderr, "returning header\n");
 #endif
 
-        return pData->pHeader;
+        trả_về pData->pHeader;
     }
 }
 
 
 static uint32_t U_CALLCONV pointerTOCEntryCount(const UDataMemory *pData) {
     const PointerTOC *toc = (PointerTOC *)pData->toc;
-    return toc != nullptr ? toc->count : 0;
+    trả_về toc != nullptr ? toc->count : 0;
 }
 
 static const DataHeader * U_CALLCONV pointerTOCLookupFn(const UDataMemory *pData,
@@ -279,32 +279,32 @@ static const DataHeader * U_CALLCONV pointerTOCLookupFn(const UDataMemory *pData
                    int32_t *pLength,
                    UErrorCode *pErrorCode) {
     (void)pErrorCode;
-    if(pData->toc!=nullptr) {
+    nếu(pData->toc!=nullptr) {
         const PointerTOC *toc = (PointerTOC *)pData->toc;
         int32_t number, count=(int32_t)toc->count;
 
-#if defined (UDATA_DEBUG_DUMP)
+#nếu defined (UDATA_DEBUG_DUMP)
         /* list the contents of the TOC each time .. not recommended */
-        for(number=0; number<count; ++number) {
+        cho(number=0; number<count; ++number) {
             fprintf(stderr, "\tx%d: %s\n", number, toc->entry[number].entryName);
         }
 #endif
         number=pointerTOCPrefixBinarySearch(name, toc->entry, count);
-        if(number>=0) {
+        nếu(number>=0) {
             /* found it */
 #ifdef UDATA_DEBUG
             fprintf(stderr, "%s: Found.\n", toc->entry[number].entryName);
 #endif
             *pLength=-1;
-            return UDataMemory_normalizeDataPointer(toc->entry[number].pHeader);
-        } else {
+            trả_về UDataMemory_normalizeDataPointer(toc->entry[number].pHeader);
+        } không_thì {
 #ifdef UDATA_DEBUG
             fprintf(stderr, "%s: Not found.\n", name);
 #endif
-            return nullptr;
+            trả_về nullptr;
         }
-    } else {
-        return pData->pHeader;
+    } không_thì {
+        trả_về pData->pHeader;
     }
 }
 U_CDECL_END
@@ -324,13 +324,13 @@ static const commonDataFuncs ToCPFuncs = {pointerTOCLookupFn, pointerTOCEntryCou
  *                                                                      *
  *----------------------------------------------------------------------*/
 U_CFUNC void udata_checkCommonData(UDataMemory *udm, UErrorCode *err) {
-    if (U_FAILURE(*err)) {
-        return;
+    nếu (U_FAILURE(*err)) {
+        trả_về;
     }
 
-    if(udm==nullptr || udm->pHeader==nullptr) {
+    nếu(udm==nullptr || udm->pHeader==nullptr) {
       *err=U_INVALID_FORMAT_ERROR;
-    } else if(!(udm->pHeader->dataHeader.magic1==0xda &&
+    } không_thì nếu(!(udm->pHeader->dataHeader.magic1==0xda &&
         udm->pHeader->dataHeader.magic2==0x27 &&
         udm->pHeader->info.isBigEndian==U_IS_BIG_ENDIAN &&
         udm->pHeader->info.charsetFamily==U_CHARSET_FAMILY)
@@ -338,7 +338,7 @@ U_CFUNC void udata_checkCommonData(UDataMemory *udm, UErrorCode *err) {
         /* header not valid */
         *err=U_INVALID_FORMAT_ERROR;
     }
-    else if (udm->pHeader->info.dataFormat[0]==0x43 &&
+    không_thì nếu (udm->pHeader->info.dataFormat[0]==0x43 &&
         udm->pHeader->info.dataFormat[1]==0x6d &&
         udm->pHeader->info.dataFormat[2]==0x6e &&
         udm->pHeader->info.dataFormat[3]==0x44 &&
@@ -348,7 +348,7 @@ U_CFUNC void udata_checkCommonData(UDataMemory *udm, UErrorCode *err) {
         udm->vFuncs = &CmnDFuncs;
         udm->toc=(const char *)udm->pHeader+udata_getHeaderSize(udm->pHeader);
     }
-    else if(udm->pHeader->info.dataFormat[0]==0x54 &&
+    không_thì nếu(udm->pHeader->info.dataFormat[0]==0x54 &&
         udm->pHeader->info.dataFormat[1]==0x6f &&
         udm->pHeader->info.dataFormat[2]==0x43 &&
         udm->pHeader->info.dataFormat[3]==0x50 &&
@@ -358,12 +358,12 @@ U_CFUNC void udata_checkCommonData(UDataMemory *udm, UErrorCode *err) {
         udm->vFuncs = &ToCPFuncs;
         udm->toc=(const char *)udm->pHeader+udata_getHeaderSize(udm->pHeader);
     }
-    else {
+    không_thì {
         /* dataFormat not recognized */
         *err=U_INVALID_FORMAT_ERROR;
     }
 
-    if (U_FAILURE(*err)) {
+    nếu (U_FAILURE(*err)) {
         /* If the data is no good and we memory-mapped it ourselves,
          *  close the memory mapping so it doesn't leak.  Note that this has
          *  no effect on non-memory mapped data, other than clearing fields in udm.

@@ -117,114 +117,114 @@ static const uint32_t syntaxOrWhiteSpace2000[]={
 
 UBool
 PatternProps::isSyntax(UChar32 c) {
-    if(c<0) {
-        return false;
-    } else if(c<=0xff) {
-        return (latin1[c] >> 1) & 1;
-    } else if(c<0x2010) {
-        return false;
-    } else if(c<=0x3030) {
+    nếu(c<0) {
+        trả_về false;
+    } không_thì nếu(c<=0xff) {
+        trả_về (latin1[c] >> 1) & 1;
+    } không_thì nếu(c<0x2010) {
+        trả_về false;
+    } không_thì nếu(c<=0x3030) {
         uint32_t bits=syntax2000[index2000[(c-0x2000)>>5]];
-        return (bits >> (c & 0x1f)) & 1;
-    } else if(0xfd3e<=c && c<=0xfe46) {
-        return c<=0xfd3f || 0xfe45<=c;
-    } else {
-        return false;
+        trả_về (bits >> (c & 0x1f)) & 1;
+    } không_thì nếu(0xfd3e<=c && c<=0xfe46) {
+        trả_về c<=0xfd3f || 0xfe45<=c;
+    } không_thì {
+        trả_về false;
     }
 }
 
 UBool
 PatternProps::isSyntaxOrWhiteSpace(UChar32 c) {
-    if(c<0) {
-        return false;
-    } else if(c<=0xff) {
-        return latin1[c] & 1;
-    } else if(c<0x200e) {
-        return false;
-    } else if(c<=0x3030) {
+    nếu(c<0) {
+        trả_về false;
+    } không_thì nếu(c<=0xff) {
+        trả_về latin1[c] & 1;
+    } không_thì nếu(c<0x200e) {
+        trả_về false;
+    } không_thì nếu(c<=0x3030) {
         uint32_t bits=syntaxOrWhiteSpace2000[index2000[(c-0x2000)>>5]];
-        return (bits >> (c & 0x1f)) & 1;
-    } else if(0xfd3e<=c && c<=0xfe46) {
-        return c<=0xfd3f || 0xfe45<=c;
-    } else {
-        return false;
+        trả_về (bits >> (c & 0x1f)) & 1;
+    } không_thì nếu(0xfd3e<=c && c<=0xfe46) {
+        trả_về c<=0xfd3f || 0xfe45<=c;
+    } không_thì {
+        trả_về false;
     }
 }
 
 UBool
 PatternProps::isWhiteSpace(UChar32 c) {
-    if(c<0) {
-        return false;
-    } else if(c<=0xff) {
-        return (latin1[c] >> 2) & 1;
-    } else if(0x200e<=c && c<=0x2029) {
-        return c<=0x200f || 0x2028<=c;
-    } else {
-        return false;
+    nếu(c<0) {
+        trả_về false;
+    } không_thì nếu(c<=0xff) {
+        trả_về (latin1[c] >> 2) & 1;
+    } không_thì nếu(0x200e<=c && c<=0x2029) {
+        trả_về c<=0x200f || 0x2028<=c;
+    } không_thì {
+        trả_về false;
     }
 }
 
 const char16_t *
 PatternProps::skipWhiteSpace(const char16_t *s, int32_t length) {
-    while(length>0 && isWhiteSpace(*s)) {
+    trong_khi(length>0 && isWhiteSpace(*s)) {
         ++s;
         --length;
     }
-    return s;
+    trả_về s;
 }
 
 int32_t
 PatternProps::skipWhiteSpace(const UnicodeString& s, int32_t start) {
     int32_t i = start;
     int32_t length = s.length();
-    while(i<length && isWhiteSpace(s.charAt(i))) {
+    trong_khi(i<length && isWhiteSpace(s.charAt(i))) {
         ++i;
     }
-    return i;
+    trả_về i;
 }
 
 const char16_t *
 PatternProps::trimWhiteSpace(const char16_t *s, int32_t &length) {
-    if(length<=0 || (!isWhiteSpace(s[0]) && !isWhiteSpace(s[length-1]))) {
-        return s;
+    nếu(length<=0 || (!isWhiteSpace(s[0]) && !isWhiteSpace(s[length-1]))) {
+        trả_về s;
     }
     int32_t start=0;
     int32_t limit=length;
-    while(start<limit && isWhiteSpace(s[start])) {
+    trong_khi(start<limit && isWhiteSpace(s[start])) {
         ++start;
     }
-    if(start<limit) {
+    nếu(start<limit) {
         // There is non-white space at start; we will not move limit below that,
         // so we need not test start<limit in the loop.
-        while(isWhiteSpace(s[limit-1])) {
+        trong_khi(isWhiteSpace(s[limit-1])) {
             --limit;
         }
     }
     length=limit-start;
-    return s+start;
+    trả_về s+start;
 }
 
 UBool
 PatternProps::isIdentifier(const char16_t *s, int32_t length) {
-    if(length<=0) {
-        return false;
+    nếu(length<=0) {
+        trả_về false;
     }
     const char16_t *limit=s+length;
     do {
-        if(isSyntaxOrWhiteSpace(*s++)) {
-            return false;
+        nếu(isSyntaxOrWhiteSpace(*s++)) {
+            trả_về false;
         }
-    } while(s<limit);
-    return true;
+    } trong_khi(s<limit);
+    trả_về true;
 }
 
 const char16_t *
 PatternProps::skipIdentifier(const char16_t *s, int32_t length) {
-    while(length>0 && !isSyntaxOrWhiteSpace(*s)) {
+    trong_khi(length>0 && !isSyntaxOrWhiteSpace(*s)) {
         ++s;
         --length;
     }
-    return s;
+    trả_về s;
 }
 
 U_NAMESPACE_END

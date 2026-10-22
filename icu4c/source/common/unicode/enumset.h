@@ -19,7 +19,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#nếu U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -40,24 +40,24 @@ public:
     inline void clear() { fBools=0; }
     inline void add(T toAdd) { set(toAdd, 1); }
     inline void remove(T toRemove) { set(toRemove, 0); }
-    inline int32_t contains(T toCheck) const { return get(toCheck); }
+    inline int32_t contains(T toCheck) const { trả_về get(toCheck); }
     inline void set(T toSet, int32_t v) { fBools=(fBools&(~flag(toSet)))|(v?(flag(toSet)):0); }
-    inline int32_t get(T toCheck) const { return (fBools & flag(toCheck))?1:0; }
-    inline UBool isValidEnum(T toCheck) const {  return (toCheck>=minValue&&toCheck<limitValue); }
-    inline UBool isValidValue(int32_t v) const { return (v==0||v==1); }
+    inline int32_t get(T toCheck) const { trả_về (fBools & flag(toCheck))?1:0; }
+    inline UBool isValidEnum(T toCheck) const {  trả_về (toCheck>=minValue&&toCheck<limitValue); }
+    inline UBool isValidValue(int32_t v) const { trả_về (v==0||v==1); }
     inline const EnumSet<T, minValue, limitValue>&
     operator=(const EnumSet<T, minValue, limitValue>& other) U_LIFETIME_BOUND {
         fBools = other.fBools;
-        return *this;
+        trả_về *this;
     }
   
     inline uint32_t getAll() const {
-        return fBools; 
+        trả_về fBools; 
     }
 #endif /* U_HIDE_INTERNAL_API */
 
 private:
-    inline uint32_t flag(T toCheck) const { return (1<<(toCheck-minValue)); }
+    inline uint32_t flag(T toCheck) const { trả_về (1<<(toCheck-minValue)); }
 private:
     uint32_t fBools;
 };

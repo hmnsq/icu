@@ -63,7 +63,7 @@
 #include "ustr_imp.h"
 #include "uvector.h"
 
-#if UPRV_HAS_FEATURE(memory_sanitizer)
+#nếu UPRV_HAS_FEATURE(memory_sanitizer)
 #include <sanitizer/msan_interface.h>
 #endif
 
@@ -130,22 +130,22 @@ UBool U_CALLCONV locale_cleanup()
     gLocaleCache = nullptr;
     gLocaleCacheInitOnce.reset();
 
-    if (gDefaultLocalesHashT) {
+    nếu (gDefaultLocalesHashT) {
         uhash_close(gDefaultLocalesHashT);   // Automatically deletes all elements, using deleter func.
         gDefaultLocalesHashT = nullptr;
     }
     gDefaultLocale = nullptr;
-    return true;
+    trả_về true;
 }
 
 void U_CALLCONV locale_init(UErrorCode &status) {
     U_NAMESPACE_USE
 
     U_ASSERT(gLocaleCache == nullptr);
-    gLocaleCache = new Locale[static_cast<int>(eMAX_LOCALES)];
-    if (gLocaleCache == nullptr) {
+    gLocaleCache = new Locale[static_cast<số_nguyên>(eMAX_LOCALES)];
+    nếu (gLocaleCache == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        trả_về;
     }
     ucln_common_registerCleanup(UCLN_COMMON_LOCALE, locale_cleanup);
     gLocaleCache[eROOT]          = Locale("");
@@ -183,7 +183,7 @@ Locale *locale_set_default_internal(const char *id, UErrorCode& status) {
     //   name from the system.
     //   (Different from most other locale APIs, where a null name means use
     //    the current ICU default locale.)
-    if (id == nullptr) {
+    nếu (id == nullptr) {
         id = uprv_getDefaultLocaleID();   // This function not thread safe? TODO: verify.
         canonicalize = true; // always canonicalize host ID
     }
@@ -191,34 +191,34 @@ Locale *locale_set_default_internal(const char *id, UErrorCode& status) {
     CharString localeNameBuf =
         canonicalize ? ulocimp_canonicalize(id, status) : ulocimp_getName(id, status);
 
-    if (U_FAILURE(status)) {
-        return gDefaultLocale;
+    nếu (U_FAILURE(status)) {
+        trả_về gDefaultLocale;
     }
 
-    if (gDefaultLocalesHashT == nullptr) {
+    nếu (gDefaultLocalesHashT == nullptr) {
         gDefaultLocalesHashT = uhash_open(uhash_hashChars, uhash_compareChars, nullptr, &status);
-        if (U_FAILURE(status)) {
-            return gDefaultLocale;
+        nếu (U_FAILURE(status)) {
+            trả_về gDefaultLocale;
         }
         uhash_setValueDeleter(gDefaultLocalesHashT, deleteLocale);
         ucln_common_registerCleanup(UCLN_COMMON_LOCALE, locale_cleanup);
     }
 
     Locale* newDefault = static_cast<Locale*>(uhash_get(gDefaultLocalesHashT, localeNameBuf.data()));
-    if (newDefault == nullptr) {
+    nếu (newDefault == nullptr) {
         newDefault = new Locale(Locale::eBOGUS);
-        if (newDefault == nullptr) {
+        nếu (newDefault == nullptr) {
             status = U_MEMORY_ALLOCATION_ERROR;
-            return gDefaultLocale;
+            trả_về gDefaultLocale;
         }
         newDefault->init(localeNameBuf.data(), false);
         uhash_put(gDefaultLocalesHashT, const_cast<char*>(newDefault->getName()), newDefault, &status);
-        if (U_FAILURE(status)) {
-            return gDefaultLocale;
+        nếu (U_FAILURE(status)) {
+            trả_về gDefaultLocale;
         }
     }
     gDefaultLocale = newDefault;
-    return gDefaultLocale;
+    trả_về gDefaultLocale;
 }
 
 U_NAMESPACE_END
@@ -237,7 +237,7 @@ U_CFUNC const char *
 locale_get_default()
 {
     U_NAMESPACE_USE
-    return Locale::getDefault().getName();
+    trả_về Locale::getDefault().getName();
 }
 
 namespace {
@@ -247,7 +247,7 @@ void copyToArray(std::string_view sv, T* that) {
     auto& field = that->*FIELD;
     constexpr size_t capacity = std::extent_v<std::remove_reference_t<decltype(field)>>;
     static_assert(capacity > 0);
-    if (!sv.empty()) {
+    nếu (!sv.empty()) {
         U_ASSERT(sv.size() < capacity);
         uprv_memcpy(field, sv.data(), sv.size());
     }
@@ -276,7 +276,7 @@ Locale::Nest::Nest(Heap&& heap, uint8_t variantBegin) {
     static_assert(offsetof(Nest, region) <= offsetof(Heap, script));
     static_assert(offsetof(Nest, variantBegin) <= offsetof(Heap, region));
     U_ASSERT(this == reinterpret_cast<Nest*>(&heap));
-#if UPRV_HAS_FEATURE(memory_sanitizer)
+#nếu UPRV_HAS_FEATURE(memory_sanitizer)
     // Tell the sanitizer that we know that this memory really is OK to access.
     __msan_unpoison(&heap, sizeof(Heap));
 #endif
@@ -292,31 +292,31 @@ struct Locale::Heap::Alloc : public UMemory {
     int32_t variantBegin;
 
     const char* getVariant() const U_LIFETIME_BOUND {
-        return variantBegin == 0 ? "" : getBaseName() + variantBegin;
+        trả_về variantBegin == 0 ? "" : getBaseName() + variantBegin;
     }
-    const char* getFullName() const U_LIFETIME_BOUND { return fullName.data(); }
+    const char* getFullName() const U_LIFETIME_BOUND { trả_về fullName.data(); }
     const char* getBaseName() const U_LIFETIME_BOUND {
-        if (baseName.isEmpty()) {
-            if (const char* name = fullName.data(); *name != '@') {
-                return name;
+        nếu (baseName.isEmpty()) {
+            nếu (const char* name = fullName.data(); *name != '@') {
+                trả_về name;
             }
         }
-        return baseName.data();
+        trả_về baseName.data();
     }
 
     Alloc(int32_t variantBegin) : fullName(), baseName(), variantBegin(variantBegin) {}
 
     Alloc(const Alloc& other, UErrorCode& status)
         : fullName(), baseName(), variantBegin(other.variantBegin) {
-        if (U_SUCCESS(status)) {
-            if (!other.fullName.isEmpty()) {
+        nếu (U_SUCCESS(status)) {
+            nếu (!other.fullName.isEmpty()) {
                 fullName = other.fullName;
-                if (fullName.isEmpty()) {
+                nếu (fullName.isEmpty()) {
                     status = U_MEMORY_ALLOCATION_ERROR;
-                } else {
-                    if (!other.baseName.isEmpty()) {
+                } không_thì {
+                    nếu (!other.baseName.isEmpty()) {
                         baseName = other.baseName;
-                        if (baseName.isEmpty()) {
+                        nếu (baseName.isEmpty()) {
                             status = U_MEMORY_ALLOCATION_ERROR;
                         }
                     }
@@ -331,18 +331,18 @@ struct Locale::Heap::Alloc : public UMemory {
     ~Alloc() = default;
 };
 
-const char* Locale::Heap::getVariant() const U_LIFETIME_BOUND { return ptr->getVariant(); }
-const char* Locale::Heap::getFullName() const U_LIFETIME_BOUND { return ptr->getFullName(); }
-const char* Locale::Heap::getBaseName() const U_LIFETIME_BOUND { return ptr->getBaseName(); }
+const char* Locale::Heap::getVariant() const U_LIFETIME_BOUND { trả_về ptr->getVariant(); }
+const char* Locale::Heap::getFullName() const U_LIFETIME_BOUND { trả_về ptr->getFullName(); }
+const char* Locale::Heap::getBaseName() const U_LIFETIME_BOUND { trả_về ptr->getBaseName(); }
 
 Locale::Heap::Heap(std::string_view language,
                    std::string_view script,
                    std::string_view region,
                    int32_t variantBegin) {
     ptr = new Alloc(variantBegin);
-    if (ptr == nullptr) {
+    nếu (ptr == nullptr) {
         type = eBOGUS;
-    } else {
+    } không_thì {
         type = eHEAP;
         copyToArray<&Heap::language>(language, this);
         copyToArray<&Heap::script>(script, this);
@@ -359,15 +359,15 @@ Locale::Heap& Locale::Heap::operator=(const Heap& other) U_LIFETIME_BOUND {
     U_ASSERT(type == eBOGUS);
     UErrorCode status = U_ZERO_ERROR;
     ptr = new Alloc(*other.ptr, status);
-    if (ptr == nullptr || U_FAILURE(status)) {
+    nếu (ptr == nullptr || U_FAILURE(status)) {
         delete ptr;
-    } else {
+    } không_thì {
         type = eHEAP;
         uprv_memcpy(language, other.language, sizeof language);
         uprv_memcpy(script, other.script, sizeof script);
         uprv_memcpy(region, other.region, sizeof region);
     }
-    return *this;
+    trả_về *this;
 }
 
 Locale::Heap& Locale::Heap::operator=(Heap&& other) noexcept U_LIFETIME_BOUND {
@@ -378,18 +378,18 @@ Locale::Heap& Locale::Heap::operator=(Heap&& other) noexcept U_LIFETIME_BOUND {
     uprv_memcpy(language, other.language, sizeof language);
     uprv_memcpy(script, other.script, sizeof script);
     uprv_memcpy(region, other.region, sizeof region);
-    return *this;
+    trả_về *this;
 }
 
 template <typename BogusFn, typename NestFn, typename HeapFn, typename... Args>
 auto Locale::Payload::visit(BogusFn bogusFn, NestFn nestFn, HeapFn heapFn, Args... args) const {
     switch (type) {
         case eBOGUS:
-            return bogusFn(args...);
+            trả_về bogusFn(args...);
         case eNEST:
-            return nestFn(nest, args...);
+            trả_về nestFn(nest, args...);
         case eHEAP:
-            return heapFn(heap, args...);
+            trả_về heapFn(heap, args...);
         default:
             UPRV_UNREACHABLE_EXIT;
     };
@@ -411,26 +411,26 @@ void Locale::Payload::move(Payload&& other) noexcept {
 }
 
 Locale::Payload::~Payload() {
-    if (type == eHEAP) { heap.~Heap(); }
+    nếu (type == eHEAP) { heap.~Heap(); }
 }
 
 Locale::Payload::Payload(const Payload& other) : type{eBOGUS} { copy(other); }
 Locale::Payload::Payload(Payload&& other) noexcept : type{eBOGUS} { move(std::move(other)); }
 
 Locale::Payload& Locale::Payload::operator=(const Payload& other) U_LIFETIME_BOUND {
-    if (this != &other) {
+    nếu (this != &other) {
         setToBogus();
         copy(other);
     }
-    return *this;
+    trả_về *this;
 }
 
 Locale::Payload& Locale::Payload::operator=(Payload&& other) noexcept U_LIFETIME_BOUND {
-    if (this != &other) {
+    nếu (this != &other) {
         setToBogus();
         move(std::move(other));
     }
-    return *this;
+    trả_về *this;
 }
 
 void Locale::Payload::setToBogus() {
@@ -439,23 +439,23 @@ void Locale::Payload::setToBogus() {
 }
 
 template <typename T, typename... Args> T& Locale::Payload::emplace(Args&&... args) U_LIFETIME_BOUND {
-    if constexpr (std::is_same_v<T, Nest>) {
+    nếu constexpr (std::is_same_v<T, Nest>) {
         this->~Payload();
         ::new (&nest) Nest(std::forward<Args>(args)...);
-        return nest;
+        trả_về nest;
     }
-    if constexpr (std::is_same_v<T, Heap>) {
+    nếu constexpr (std::is_same_v<T, Heap>) {
         U_ASSERT(type != eHEAP);
         ::new (&heap) Heap(std::forward<Args>(args)...);
-        return heap;
+        trả_về heap;
     }
 }
 
 template <> Locale::Nest* Locale::Payload::get() U_LIFETIME_BOUND {
-    return type == eNEST ? &nest : nullptr;
+    trả_về type == eNEST ? &nest : nullptr;
 }
 template <> Locale::Heap* Locale::Payload::get() U_LIFETIME_BOUND {
-    return type == eHEAP ? &heap : nullptr;
+    trả_về type == eHEAP ? &heap : nullptr;
 }
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Locale)
@@ -491,11 +491,11 @@ Locale::Locale( const   char * newLanguage,
                 const   char * newKeywords)
     : UObject(), payload()
 {
-    if( (newLanguage==nullptr) && (newCountry == nullptr) && (newVariant == nullptr) )
+    nếu( (newLanguage==nullptr) && (newCountry == nullptr) && (newVariant == nullptr) )
     {
         init(nullptr, false); /* shortcut */
     }
-    else
+    không_thì
     {
         UErrorCode status = U_ZERO_ERROR;
         int32_t lsize = 0;
@@ -506,50 +506,50 @@ Locale::Locale( const   char * newLanguage,
         // Check the sizes of the input strings.
 
         // Language
-        if ( newLanguage != nullptr )
+        nếu ( newLanguage != nullptr )
         {
             lsize = static_cast<int32_t>(uprv_strlen(newLanguage));
-            if ( lsize < 0 || lsize > ULOC_STRING_LIMIT ) { // int32 wrap
-                return;
+            nếu ( lsize < 0 || lsize > ULOC_STRING_LIMIT ) { // int32 wrap
+                trả_về;
             }
         }
 
         CharString togo(newLanguage, lsize, status); // start with newLanguage
 
         // _Country
-        if ( newCountry != nullptr )
+        nếu ( newCountry != nullptr )
         {
             csize = static_cast<int32_t>(uprv_strlen(newCountry));
-            if ( csize < 0 || csize > ULOC_STRING_LIMIT ) { // int32 wrap
-                return;
+            nếu ( csize < 0 || csize > ULOC_STRING_LIMIT ) { // int32 wrap
+                trả_về;
             }
         }
 
         // _Variant
-        if ( newVariant != nullptr )
+        nếu ( newVariant != nullptr )
         {
             // remove leading _'s
-            while(newVariant[0] == SEP_CHAR)
+            trong_khi(newVariant[0] == SEP_CHAR)
             {
                 newVariant++;
             }
 
             // remove trailing _'s
             vsize = static_cast<int32_t>(uprv_strlen(newVariant));
-            if ( vsize < 0 || vsize > ULOC_STRING_LIMIT ) { // int32 wrap
-                return;
+            nếu ( vsize < 0 || vsize > ULOC_STRING_LIMIT ) { // int32 wrap
+                trả_về;
             }
-            while( (vsize>1) && (newVariant[vsize-1] == SEP_CHAR) )
+            trong_khi( (vsize>1) && (newVariant[vsize-1] == SEP_CHAR) )
             {
                 vsize--;
             }
         }
 
-        if ( newKeywords != nullptr)
+        nếu ( newKeywords != nullptr)
         {
             ksize = static_cast<int32_t>(uprv_strlen(newKeywords));
-            if ( ksize < 0 || ksize > ULOC_STRING_LIMIT ) {
-              return;
+            nếu ( ksize < 0 || ksize > ULOC_STRING_LIMIT ) {
+              trả_về;
             }
         }
 
@@ -557,39 +557,39 @@ Locale::Locale( const   char * newLanguage,
 
         // newLanguage is already copied
 
-        if ( ( vsize != 0 ) || (csize != 0) )  // at least:  __v
+        nếu ( ( vsize != 0 ) || (csize != 0) )  // at least:  __v
         {                                      //            ^
             togo.append(SEP_CHAR, status);
         }
 
-        if ( csize != 0 )
+        nếu ( csize != 0 )
         {
             togo.append(newCountry, status);
         }
 
-        if ( vsize != 0)
+        nếu ( vsize != 0)
         {
             togo.append(SEP_CHAR, status)
                 .append(newVariant, vsize, status);
         }
 
-        if ( ksize != 0)
+        nếu ( ksize != 0)
         {
-            if (uprv_strchr(newKeywords, '=')) {
+            nếu (uprv_strchr(newKeywords, '=')) {
                 togo.append('@', status); /* keyword parsing */
             }
-            else {
+            không_thì {
                 togo.append('_', status); /* Variant parsing with a script */
-                if ( vsize == 0) {
+                nếu ( vsize == 0) {
                     togo.append('_', status); /* No country found */
                 }
             }
             togo.append(newKeywords, status);
         }
 
-        if (U_FAILURE(status)) {
+        nếu (U_FAILURE(status)) {
             // Something went wrong with appending, etc.
-            return;
+            trả_về;
         }
         // Parse it, because for example 'language' might really be a complete
         // string.
@@ -605,13 +605,13 @@ Locale& Locale::operator=(Locale&&) noexcept U_LIFETIME_BOUND = default;
 
 Locale *
 Locale::clone() const {
-    return new Locale(*this);
+    trả_về new Locale(*this);
 }
 
 bool
 Locale::operator==( const   Locale& other) const
 {
-    return uprv_strcmp(other.getName(), getName()) == 0;
+    trả_về uprv_strcmp(other.getName(), getName()) == 0;
 }
 
 namespace {
@@ -645,8 +645,8 @@ constexpr const char* KNOWN_CANONICALIZED[] = {
 
 UBool U_CALLCONV cleanupKnownCanonicalized() {
     gKnownCanonicalizedInitOnce.reset();
-    if (gKnownCanonicalized) { uhash_close(gKnownCanonicalized); }
-    return true;
+    nếu (gKnownCanonicalized) { uhash_close(gKnownCanonicalized); }
+    trả_về true;
 }
 
 void U_CALLCONV loadKnownCanonicalized(UErrorCode &status) {
@@ -654,15 +654,15 @@ void U_CALLCONV loadKnownCanonicalized(UErrorCode &status) {
                                 cleanupKnownCanonicalized);
     LocalUHashtablePointer newKnownCanonicalizedMap(
         uhash_open(uhash_hashChars, uhash_compareChars, nullptr, &status));
-    for (int32_t i = 0;
+    cho (int32_t i = 0;
             U_SUCCESS(status) && i < UPRV_LENGTHOF(KNOWN_CANONICALIZED);
             i++) {
         uhash_puti(newKnownCanonicalizedMap.getAlias(),
                    (void*)KNOWN_CANONICALIZED[i],
                    1, &status);
     }
-    if (U_FAILURE(status)) {
-        return;
+    nếu (U_FAILURE(status)) {
+        trả_về;
     }
 
     gKnownCanonicalized = newKnownCanonicalizedMap.orphan();
@@ -755,19 +755,19 @@ private:
 class AliasData : public UMemory {
 public:
     static const AliasData* singleton(UErrorCode& status) {
-        if (U_FAILURE(status)) {
+        nếu (U_FAILURE(status)) {
             // Do not get into loadData if the status already has error.
-            return nullptr;
+            trả_về nullptr;
         }
         umtx_initOnce(AliasData::gInitOnce, &AliasData::loadData, status);
-        return gSingleton;
+        trả_về gSingleton;
     }
 
-    const CharStringMap& languageMap() const U_LIFETIME_BOUND { return language; }
-    const CharStringMap& scriptMap() const U_LIFETIME_BOUND { return script; }
-    const CharStringMap& territoryMap() const U_LIFETIME_BOUND { return territory; }
-    const CharStringMap& variantMap() const U_LIFETIME_BOUND { return variant; }
-    const CharStringMap& subdivisionMap() const U_LIFETIME_BOUND { return subdivision; }
+    const CharStringMap& languageMap() const U_LIFETIME_BOUND { trả_về language; }
+    const CharStringMap& scriptMap() const U_LIFETIME_BOUND { trả_về script; }
+    const CharStringMap& territoryMap() const U_LIFETIME_BOUND { trả_về territory; }
+    const CharStringMap& variantMap() const U_LIFETIME_BOUND { trả_về variant; }
+    const CharStringMap& subdivisionMap() const U_LIFETIME_BOUND { trả_về subdivision; }
 
     static void U_CALLCONV loadData(UErrorCode &status);
     static UBool U_CALLCONV cleanup();
@@ -814,7 +814,7 @@ AliasData::cleanup()
 {
     gInitOnce.reset();
     delete gSingleton;
-    return true;
+    trả_về true;
 }
 
 void
@@ -827,27 +827,27 @@ AliasDataBuilder::readAlias(
         void (*checkType)(const char* type),
         void (*checkReplacement)(const UChar* replacement),
         UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return;
+    nếu (U_FAILURE(status)) {
+        trả_về;
     }
     length = ures_getSize(alias);
     const char** rawTypes = types.allocateInsteadAndCopy(length);
-    if (rawTypes == nullptr) {
+    nếu (rawTypes == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        trả_về;
     }
     int32_t* rawIndexes = replacementIndexes.allocateInsteadAndCopy(length);
-    if (rawIndexes == nullptr) {
+    nếu (rawIndexes == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        trả_về;
     }
-    for (int i = 0; U_SUCCESS(status) && ures_hasNext(alias); i++) {
+    cho (số_nguyên i = 0; U_SUCCESS(status) && ures_hasNext(alias); i++) {
         LocalUResourceBundlePointer res(
             ures_getNextResource(alias, nullptr, &status));
         const char* aliasFrom = ures_getKey(res.getAlias());
         const UChar* aliasTo =
             ures_getStringByKey(res.getAlias(), "replacement", nullptr, &status);
-        if (U_FAILURE(status)) return;
+        nếu (U_FAILURE(status)) trả_về;
 
         checkType(aliasFrom);
         checkReplacement(aliasTo);
@@ -872,9 +872,9 @@ AliasDataBuilder::readLanguageAlias(
         int32_t &length,
         UErrorCode &status)
 {
-    return readAlias(
+    trả_về readAlias(
         alias, strings, types, replacementIndexes, length,
-#if U_DEBUG
+#nếu U_DEBUG
         [](const char* type) {
             // Assert the aliasFrom only contains the following possibilities
             // language_REGION_variant
@@ -888,7 +888,7 @@ AliasDataBuilder::readLanguageAlias(
             // Assert when language is und, no REGION in aliasFrom.
             U_ASSERT(test.getLanguage()[0] != '\0' || test.getCountry()[0] == '\0');
         },
-#else
+#không_thì
         [](const char*) {},
 #endif
         [](const UChar*) {}, status);
@@ -909,16 +909,16 @@ AliasDataBuilder::readScriptAlias(
         int32_t &length,
         UErrorCode &status)
 {
-    return readAlias(
+    trả_về readAlias(
         alias, strings, types, replacementIndexes, length,
-#if U_DEBUG
+#nếu U_DEBUG
         [](const char* type) {
             U_ASSERT(uprv_strlen(type) == 4);
         },
         [](const UChar* replacement) {
             U_ASSERT(u_strlen(replacement) == 4);
         },
-#else
+#không_thì
         [](const char*) {},
         [](const UChar*) { },
 #endif
@@ -940,13 +940,13 @@ AliasDataBuilder::readTerritoryAlias(
         int32_t &length,
         UErrorCode &status)
 {
-    return readAlias(
+    trả_về readAlias(
         alias, strings, types, replacementIndexes, length,
-#if U_DEBUG
+#nếu U_DEBUG
         [](const char* type) {
             U_ASSERT(uprv_strlen(type) == 2 || uprv_strlen(type) == 3);
         },
-#else
+#không_thì
         [](const char*) {},
 #endif
         [](const UChar*) { },
@@ -968,9 +968,9 @@ AliasDataBuilder::readVariantAlias(
         int32_t &length,
         UErrorCode &status)
 {
-    return readAlias(
+    trả_về readAlias(
         alias, strings, types, replacementIndexes, length,
-#if U_DEBUG
+#nếu U_DEBUG
         [](const char* type) {
             U_ASSERT(uprv_strlen(type) >= 4 && uprv_strlen(type) <= 8);
             U_ASSERT(uprv_strlen(type) != 4 ||
@@ -983,7 +983,7 @@ AliasDataBuilder::readVariantAlias(
                      (*replacement >= u'0' &&
                       *replacement <= u'9'));
         },
-#else
+#không_thì
         [](const char*) {},
         [](const UChar*) { },
 #endif
@@ -1005,13 +1005,13 @@ AliasDataBuilder::readSubdivisionAlias(
         int32_t &length,
         UErrorCode &status)
 {
-    return readAlias(
+    trả_về readAlias(
         alias, strings, types, replacementIndexes, length,
-#if U_DEBUG
+#nếu U_DEBUG
         [](const char* type) {
             U_ASSERT(uprv_strlen(type) >= 3 && uprv_strlen(type) <= 8);
         },
-#else
+#không_thì
         [](const char*) {},
 #endif
         [](const UChar*) { },
@@ -1045,7 +1045,7 @@ AliasData::loadData(UErrorCode &status)
  */
 AliasData*
 AliasDataBuilder::build(UErrorCode &status) {
-    if (U_FAILURE(status)) { return nullptr; }
+    nếu (U_FAILURE(status)) { trả_về nullptr; }
 
     LocalUResourceBundlePointer metadata(
         ures_openDirect(nullptr, "metadata", &status));
@@ -1062,8 +1062,8 @@ AliasDataBuilder::build(UErrorCode &status) {
     LocalUResourceBundlePointer subdivisionAlias(
         ures_getByKey(metadataAlias.getAlias(), "subdivision", nullptr, &status));
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    nếu (U_FAILURE(status)) {
+        trả_về nullptr;
     }
     int32_t languagesLength = 0, scriptLength = 0, territoryLength = 0,
             variantLength = 0, subdivisionLength = 0;
@@ -1121,8 +1121,8 @@ AliasDataBuilder::build(UErrorCode &status) {
                          subdivisionReplacementIndexes,
                          subdivisionLength, status);
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    nếu (U_FAILURE(status)) {
+        trả_về nullptr;
     }
 
     // We can only use strings after freeze it.
@@ -1130,7 +1130,7 @@ AliasDataBuilder::build(UErrorCode &status) {
 
     // Build the languageMap from languageTypes & languageReplacementIndexes
     CharStringMap languageMap(490, status);
-    for (int32_t i = 0; U_SUCCESS(status) && i < languagesLength; i++) {
+    cho (int32_t i = 0; U_SUCCESS(status) && i < languagesLength; i++) {
         languageMap.put(languageTypes[i],
                         strings.get(languageReplacementIndexes[i]),
                         status);
@@ -1138,7 +1138,7 @@ AliasDataBuilder::build(UErrorCode &status) {
 
     // Build the scriptMap from scriptTypes & scriptReplacementIndexes
     CharStringMap scriptMap(1, status);
-    for (int32_t i = 0; U_SUCCESS(status) && i < scriptLength; i++) {
+    cho (int32_t i = 0; U_SUCCESS(status) && i < scriptLength; i++) {
         scriptMap.put(scriptTypes[i],
                       strings.get(scriptReplacementIndexes[i]),
                       status);
@@ -1146,7 +1146,7 @@ AliasDataBuilder::build(UErrorCode &status) {
 
     // Build the territoryMap from territoryTypes & territoryReplacementIndexes
     CharStringMap territoryMap(650, status);
-    for (int32_t i = 0; U_SUCCESS(status) && i < territoryLength; i++) {
+    cho (int32_t i = 0; U_SUCCESS(status) && i < territoryLength; i++) {
         territoryMap.put(territoryTypes[i],
                          strings.get(territoryReplacementIndexes[i]),
                          status);
@@ -1154,7 +1154,7 @@ AliasDataBuilder::build(UErrorCode &status) {
 
     // Build the variantMap from variantTypes & variantReplacementIndexes.
     CharStringMap variantMap(2, status);
-    for (int32_t i = 0; U_SUCCESS(status) && i < variantLength; i++) {
+    cho (int32_t i = 0; U_SUCCESS(status) && i < variantLength; i++) {
         variantMap.put(variantTypes[i],
                        strings.get(variantReplacementIndexes[i]),
                        status);
@@ -1162,14 +1162,14 @@ AliasDataBuilder::build(UErrorCode &status) {
 
     // Build the subdivisionMap from subdivisionTypes & subdivisionReplacementIndexes.
     CharStringMap subdivisionMap(2, status);
-    for (int32_t i = 0; U_SUCCESS(status) && i < subdivisionLength; i++) {
+    cho (int32_t i = 0; U_SUCCESS(status) && i < subdivisionLength; i++) {
         subdivisionMap.put(subdivisionTypes[i],
                        strings.get(subdivisionReplacementIndexes[i]),
                        status);
     }
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    nếu (U_FAILURE(status)) {
+        trả_về nullptr;
     }
 
     // copy hashtables
@@ -1181,10 +1181,10 @@ AliasDataBuilder::build(UErrorCode &status) {
         std::move(subdivisionMap),
         strings.orphanCharStrings());
 
-    if (data == nullptr) {
+    nếu (data == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
     }
-    return data;
+    trả_về data;
 }
 
 /**
@@ -1198,7 +1198,7 @@ public:
             // store value in variants only once
             variants(nullptr,
                      ([](UElement e1, UElement e2) -> UBool {
-                       return 0==uprv_strcmp((const char*)e1.pointer,
+                       trả_về 0==uprv_strcmp((const char*)e1.pointer,
                                              (const char*)e2.pointer);}),
                      status),
             data(nullptr) {
@@ -1222,7 +1222,7 @@ private:
     const AliasData* data;
 
     inline bool notEmpty(const char* str) {
-        return str && str[0] != NULL_CHAR;
+        trả_về str && str[0] != NULL_CHAR;
     }
 
     /**
@@ -1241,20 +1241,20 @@ private:
     inline const char* deleteOrReplace(const char* input U_LIFETIME_BOUND,
                                        const char* type,
                                        const char* replacement U_LIFETIME_BOUND) {
-        return notEmpty(replacement) ?
+        trả_về notEmpty(replacement) ?
             ((input == nullptr) ?  replacement : input) :
             ((type == nullptr) ? input  : nullptr);
     }
 
     inline bool same(const char* a, const char* b) {
-        if (a == nullptr && b == nullptr) {
-            return true;
+        nếu (a == nullptr && b == nullptr) {
+            trả_về true;
         }
-        if ((a == nullptr && b != nullptr) ||
+        nếu ((a == nullptr && b != nullptr) ||
             (a != nullptr && b == nullptr)) {
-          return false;
+          trả_về false;
         }
-        return uprv_strcmp(a, b) == 0;
+        trả_về uprv_strcmp(a, b) == 0;
     }
 
     // Gather fields and generate locale ID into out.
@@ -1302,17 +1302,17 @@ AliasReplacer::generateKey(
         const char* language, const char* region, const char* variant,
         CharString& out U_LIFETIME_BOUND, UErrorCode& status)
 {
-    if (U_FAILURE(status)) { return out; }
+    nếu (U_FAILURE(status)) { trả_về out; }
     out.append(language, status);
-    if (notEmpty(region)) {
+    nếu (notEmpty(region)) {
         out.append(SEP_CHAR, status)
             .append(region, status);
     }
-    if (notEmpty(variant)) {
+    nếu (notEmpty(variant)) {
        out.append(SEP_CHAR, status)
            .append(variant, status);
     }
-    return out;
+    trả_về out;
 }
 
 void
@@ -1326,23 +1326,23 @@ AliasReplacer::parseLanguageReplacement(
     UVector& toBeFreed,
     UErrorCode& status)
 {
-    if (U_FAILURE(status)) {
-        return;
+    nếu (U_FAILURE(status)) {
+        trả_về;
     }
     replacedScript = replacedRegion = replacedVariant
         = replacedExtensions = nullptr;
-    if (uprv_strchr(replacement, '_') == nullptr) {
+    nếu (uprv_strchr(replacement, '_') == nullptr) {
         replacedLanguage = replacement;
         // reach the end, just return it.
-        return;
+        trả_về;
     }
     // We have multiple field so we have to allocate and parse
     auto str = prv::make_unique<CharString>(
         replacement, static_cast<int32_t>(uprv_strlen(replacement)), status, status);
     char* data = str->data();
     toBeFreed.adoptElement(str.release(), status);
-    if (U_FAILURE(status)) {
-        return;
+    nếu (U_FAILURE(status)) {
+        trả_về;
     }
     replacedLanguage = (const char*) data;
     char* endOfField = uprv_strchr(data, '_');
@@ -1351,47 +1351,47 @@ AliasReplacer::parseLanguageReplacement(
     const char* start = endOfField;
     endOfField = const_cast<char*>(uprv_strchr(start, '_'));
     size_t len = 0;
-    if (endOfField == nullptr) {
+    nếu (endOfField == nullptr) {
         len = uprv_strlen(start);
-    } else {
+    } không_thì {
         len = endOfField - start;
         *endOfField = '\0'; // null terminiate it.
     }
-    if (len == 4 && uprv_isASCIILetter(*start)) {
+    nếu (len == 4 && uprv_isASCIILetter(*start)) {
         // Got a script
         replacedScript = start;
-        if (endOfField == nullptr) {
-            return;
+        nếu (endOfField == nullptr) {
+            trả_về;
         }
         start = endOfField++;
         endOfField = const_cast<char*>(uprv_strchr(start, '_'));
-        if (endOfField == nullptr) {
+        nếu (endOfField == nullptr) {
             len = uprv_strlen(start);
-        } else {
+        } không_thì {
             len = endOfField - start;
             *endOfField = '\0'; // null terminiate it.
         }
     }
-    if (len >= 2 && len <= 3) {
+    nếu (len >= 2 && len <= 3) {
         // Got a region
         replacedRegion = start;
-        if (endOfField == nullptr) {
-            return;
+        nếu (endOfField == nullptr) {
+            trả_về;
         }
         start = endOfField++;
         endOfField = const_cast<char*>(uprv_strchr(start, '_'));
-        if (endOfField == nullptr) {
+        nếu (endOfField == nullptr) {
             len = uprv_strlen(start);
-        } else {
+        } không_thì {
             len = endOfField - start;
             *endOfField = '\0'; // null terminiate it.
         }
     }
-    if (len >= 4) {
+    nếu (len >= 4) {
         // Got a variant
         replacedVariant = start;
-        if (endOfField == nullptr) {
-            return;
+        nếu (endOfField == nullptr) {
+            trả_về;
         }
         start = endOfField++;
     }
@@ -1403,39 +1403,39 @@ AliasReplacer::replaceLanguage(
         bool checkLanguage, bool checkRegion,
         bool checkVariants, UVector& toBeFreed, UErrorCode& status)
 {
-    if (U_FAILURE(status)) {
-        return false;
+    nếu (U_FAILURE(status)) {
+        trả_về false;
     }
-    if (    (checkRegion && region == nullptr) ||
+    nếu (    (checkRegion && region == nullptr) ||
             (checkVariants && variants.size() == 0)) {
         // Nothing to search.
-        return false;
+        trả_về false;
     }
     int32_t variant_size = checkVariants ? variants.size() : 1;
     // Since we may have more than one variant, we need to loop through them.
     const char* searchLanguage = checkLanguage ? language : "und";
     const char* searchRegion = checkRegion ? region : nullptr;
     const char* searchVariant = nullptr;
-    for (int32_t variant_index = 0;
+    cho (int32_t variant_index = 0;
             variant_index < variant_size;
             variant_index++) {
-        if (checkVariants) {
+        nếu (checkVariants) {
             U_ASSERT(variant_index < variant_size);
             searchVariant = static_cast<const char*>(variants.elementAt(variant_index));
         }
 
-        if (searchVariant != nullptr && uprv_strlen(searchVariant) < 4) {
+        nếu (searchVariant != nullptr && uprv_strlen(searchVariant) < 4) {
             // Do not consider  ill-formed variant subtag.
             searchVariant = nullptr;
         }
         CharString typeKey;
         generateKey(searchLanguage, searchRegion, searchVariant, typeKey,
                     status);
-        if (U_FAILURE(status)) {
-            return false;
+        nếu (U_FAILURE(status)) {
+            trả_về false;
         }
         const char *replacement = data->languageMap().get(typeKey.data());
-        if (replacement == nullptr) {
+        nếu (replacement == nullptr) {
             // Found no replacement data.
             continue;
         }
@@ -1461,7 +1461,7 @@ AliasReplacer::replaceLanguage(
         replacedVariant = deleteOrReplace(
             searchVariant, searchVariant, replacedVariant);
 
-        if (    same(language, replacedLanguage) &&
+        nếu (    same(language, replacedLanguage) &&
                 same(script, replacedScript) &&
                 same(region, replacedRegion) &&
                 same(searchVariant, replacedVariant) &&
@@ -1473,14 +1473,14 @@ AliasReplacer::replaceLanguage(
         language = replacedLanguage;
         region = replacedRegion;
         script = replacedScript;
-        if (searchVariant != nullptr) {
-            if (notEmpty(replacedVariant)) {
+        nếu (searchVariant != nullptr) {
+            nếu (notEmpty(replacedVariant)) {
                 variants.setElementAt((void*)replacedVariant, variant_index);
-            } else {
+            } không_thì {
                 variants.removeElementAt(variant_index);
             }
         }
-        if (replacedExtensions != nullptr) {
+        nếu (replacedExtensions != nullptr) {
             // DO NOTHING
             // UTS35 does not specify what should we do if we have extensions in the
             // replacement. Currently we know only the following 4 "BCP47 LegacyRules" have
@@ -1494,30 +1494,30 @@ AliasReplacer::replaceLanguage(
         }
 
         // Something changed by language alias data.
-        return true;
+        trả_về true;
     }
     // Nothing changed by language alias data.
-    return false;
+    trả_về false;
 }
 
 bool
 AliasReplacer::replaceTerritory(UVector& toBeFreed, UErrorCode& status)
 {
-    if (U_FAILURE(status)) {
-        return false;
+    nếu (U_FAILURE(status)) {
+        trả_về false;
     }
-    if (region == nullptr) {
+    nếu (region == nullptr) {
         // No region to search.
-        return false;
+        trả_về false;
     }
     const char *replacement = data->territoryMap().get(region);
-    if (replacement == nullptr) {
+    nếu (replacement == nullptr) {
         // Found no replacement data for this region.
-        return false;
+        trả_về false;
     }
     const char* replacedRegion = replacement;
     const char* firstSpace = uprv_strchr(replacement, ' ');
-    if (firstSpace != nullptr) {
+    nếu (firstSpace != nullptr) {
         // If there are are more than one region in the replacement.
         // We need to check which one match based on the language.
         // Cannot use nullptr for language because that will construct
@@ -1530,11 +1530,11 @@ AliasReplacer::replaceTerritory(UVector& toBeFreed, UErrorCode& status)
         l.addLikelySubtags(status);
         const char* likelyRegion = l.getCountry();
         prv::unique_ptr<CharString> item;
-        if (likelyRegion != nullptr && uprv_strlen(likelyRegion) > 0) {
+        nếu (likelyRegion != nullptr && uprv_strlen(likelyRegion) > 0) {
             size_t len = uprv_strlen(likelyRegion);
             const char* foundInReplacement = uprv_strstr(replacement,
                                                          likelyRegion);
-            if (foundInReplacement != nullptr) {
+            nếu (foundInReplacement != nullptr) {
                 // Assuming the case there are no three letter region code in
                 // the replacement of territoryAlias
                 U_ASSERT(foundInReplacement == replacement ||
@@ -1545,53 +1545,53 @@ AliasReplacer::replaceTerritory(UVector& toBeFreed, UErrorCode& status)
                     foundInReplacement, static_cast<int32_t>(len), status, status);
             }
         }
-        if (!item && U_SUCCESS(status)) {
+        nếu (!item && U_SUCCESS(status)) {
             item = prv::make_unique<CharString>(
                 replacement, static_cast<int32_t>(firstSpace - replacement), status, status);
         }
-        if (U_FAILURE(status)) { return false; }
+        nếu (U_FAILURE(status)) { trả_về false; }
         replacedRegion = item->data();
         toBeFreed.adoptElement(item.release(), status);
-        if (U_FAILURE(status)) { return false; }
+        nếu (U_FAILURE(status)) { trả_về false; }
     }
     U_ASSERT(!same(region, replacedRegion));
     region = replacedRegion;
     // The region is changed by data in territory alias.
-    return true;
+    trả_về true;
 }
 
 bool
 AliasReplacer::replaceScript(UErrorCode& status)
 {
-    if (U_FAILURE(status)) {
-        return false;
+    nếu (U_FAILURE(status)) {
+        trả_về false;
     }
-    if (script == nullptr) {
+    nếu (script == nullptr) {
         // No script to search.
-        return false;
+        trả_về false;
     }
     const char *replacement = data->scriptMap().get(script);
-    if (replacement == nullptr) {
+    nếu (replacement == nullptr) {
         // Found no replacement data for this script.
-        return false;
+        trả_về false;
     }
     U_ASSERT(!same(script, replacement));
     script = replacement;
     // The script is changed by data in script alias.
-    return true;
+    trả_về true;
 }
 
 bool
 AliasReplacer::replaceVariant(UErrorCode& status)
 {
-    if (U_FAILURE(status)) {
-        return false;
+    nếu (U_FAILURE(status)) {
+        trả_về false;
     }
     // Since we may have more than one variant, we need to loop through them.
-    for (int32_t i = 0; i < variants.size(); i++) {
+    cho (int32_t i = 0; i < variants.size(); i++) {
         const char* variant = static_cast<const char*>(variants.elementAt(i));
         const char *replacement = data->variantMap().get(variant);
-        if (replacement == nullptr) {
+        nếu (replacement == nullptr) {
             // Found no replacement data for this variant.
             continue;
         }
@@ -1600,46 +1600,46 @@ AliasReplacer::replaceVariant(UErrorCode& status)
                  (uprv_strlen(replacement) == 4 &&
                   replacement[0] >= '0' &&
                   replacement[0] <= '9'));
-        if (!same(variant, replacement)) {
+        nếu (!same(variant, replacement)) {
             variants.setElementAt((void*)replacement, i);
             // Special hack to handle hepburn-heploc => alalc97
-            if (uprv_strcmp(variant, "heploc") == 0) {
-                for (int32_t j = 0; j < variants.size(); j++) {
-                     if (uprv_strcmp((const char*)(variants.elementAt(j)),
+            nếu (uprv_strcmp(variant, "heploc") == 0) {
+                cho (int32_t j = 0; j < variants.size(); j++) {
+                     nếu (uprv_strcmp((const char*)(variants.elementAt(j)),
                                      "hepburn") == 0) {
                          variants.removeElementAt(j);
                      }
                 }
             }
-            return true;
+            trả_về true;
         }
     }
-    return false;
+    trả_về false;
 }
 
 bool
 AliasReplacer::replaceSubdivision(
     StringPiece subdivision, CharString& output, UErrorCode& status)
 {
-    if (U_FAILURE(status)) {
-        return false;
+    nếu (U_FAILURE(status)) {
+        trả_về false;
     }
     const char *replacement = data->subdivisionMap().get(subdivision.data());
-    if (replacement != nullptr) {
+    nếu (replacement != nullptr) {
         const char* firstSpace = uprv_strchr(replacement, ' ');
         // Found replacement data for this subdivision.
         size_t len = (firstSpace != nullptr) ?
             (firstSpace - replacement) : uprv_strlen(replacement);
-        if (2 <= len && len <= 8) {
+        nếu (2 <= len && len <= 8) {
             output.append(replacement, static_cast<int32_t>(len), status);
-            if (2 == len) {
+            nếu (2 == len) {
                 // Add 'zzzz' based on changes to UTS #35 for CLDR-14312.
                 output.append("zzzz", 4, status);
             }
         }
-        return true;
+        trả_về true;
     }
-    return false;
+    trả_về false;
 }
 
 bool
@@ -1648,59 +1648,59 @@ AliasReplacer::replaceTransformedExtensions(
 {
     // The content of the transformedExtensions will be modified in this
     // function to NUL-terminating (tkey-tvalue) pairs.
-    if (U_FAILURE(status)) {
-        return false;
+    nếu (U_FAILURE(status)) {
+        trả_về false;
     }
     int32_t len = transformedExtensions.length();
     const char* str = transformedExtensions.data();
     const char* tkey = ultag_getTKeyStart(str);
     int32_t tlangLen = (tkey == str) ? 0 :
         ((tkey == nullptr) ? len : static_cast<int32_t>((tkey - str - 1)));
-    if (tlangLen > 0) {
+    nếu (tlangLen > 0) {
         Locale tlang = LocaleBuilder()
             .setLanguageTag(StringPiece(str, tlangLen))
             .build(status);
         tlang.canonicalize(status);
         output = tlang.toLanguageTag<CharString>(status);
-        if (U_FAILURE(status)) {
-            return false;
+        nếu (U_FAILURE(status)) {
+            trả_về false;
         }
         T_CString_toLowerCase(output.data());
     }
-    if (tkey != nullptr) {
+    nếu (tkey != nullptr) {
         // We need to sort the tfields by tkey
         UVector tfields(status);
-        if (U_FAILURE(status)) {
-            return false;
+        nếu (U_FAILURE(status)) {
+            trả_về false;
         }
         do {
             const char* tvalue = uprv_strchr(tkey, '-');
-            if (tvalue == nullptr) {
+            nếu (tvalue == nullptr) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
-                return false;
+                trả_về false;
             }
             const char* nextTKey = ultag_getTKeyStart(tvalue);
-            if (nextTKey != nullptr) {
+            nếu (nextTKey != nullptr) {
                 *const_cast<char*>(nextTKey - 1) = '\0'; // NUL terminate tvalue
             }
             tfields.insertElementAt((void*)tkey, tfields.size(), status);
-            if (U_FAILURE(status)) {
-                return false;
+            nếu (U_FAILURE(status)) {
+                trả_về false;
             }
             tkey = nextTKey;
-        } while (tkey != nullptr);
+        } trong_khi (tkey != nullptr);
         tfields.sort([](UElement e1, UElement e2) -> int32_t {
-            return uprv_strcmp((const char*)e1.pointer, (const char*)e2.pointer);
+            trả_về uprv_strcmp((const char*)e1.pointer, (const char*)e2.pointer);
         }, status);
-        for (int32_t i = 0; i < tfields.size(); i++) {
-             if (output.length() > 0) {
+        cho (int32_t i = 0; i < tfields.size(); i++) {
+             nếu (output.length() > 0) {
                  output.append('-', status);
              }
              const char* tfield = static_cast<const char*>(tfields.elementAt(i));
              const char* tvalue = uprv_strchr(tfield, '-');
-             if (tvalue == nullptr) {
+             nếu (tvalue == nullptr) {
                  status = U_ILLEGAL_ARGUMENT_ERROR;
-                 return false;
+                 trả_về false;
              }
              // Split the "tkey-tvalue" pair string so that we can canonicalize the tvalue.
              *const_cast<char*>(tvalue++) = '\0'; // NUL terminate tkey
@@ -1709,42 +1709,42 @@ AliasReplacer::replaceTransformedExtensions(
              output.append(bcpTValue.has_value() ? *bcpTValue : tvalue, status);
         }
     }
-    if (U_FAILURE(status)) {
-        return false;
+    nếu (U_FAILURE(status)) {
+        trả_về false;
     }
-    return true;
+    trả_về true;
 }
 
 CharString&
 AliasReplacer::outputToString(
     CharString& out U_LIFETIME_BOUND, UErrorCode& status)
 {
-    if (U_FAILURE(status)) { return out; }
+    nếu (U_FAILURE(status)) { trả_về out; }
     out.append(language, status);
-    if (notEmpty(script)) {
+    nếu (notEmpty(script)) {
         out.append(SEP_CHAR, status)
             .append(script, status);
     }
-    if (notEmpty(region)) {
+    nếu (notEmpty(region)) {
         out.append(SEP_CHAR, status)
             .append(region, status);
     }
-    if (variants.size() > 0) {
-        if (!notEmpty(script) && !notEmpty(region)) {
+    nếu (variants.size() > 0) {
+        nếu (!notEmpty(script) && !notEmpty(region)) {
           out.append(SEP_CHAR, status);
         }
         variants.sort([](UElement e1, UElement e2) -> int32_t {
-            return uprv_strcmp((const char*)e1.pointer, (const char*)e2.pointer);
+            trả_về uprv_strcmp((const char*)e1.pointer, (const char*)e2.pointer);
         }, status);
         int32_t variantsStart = out.length();
-        for (int32_t i = 0; i < variants.size(); i++) {
+        cho (int32_t i = 0; i < variants.size(); i++) {
              out.append(SEP_CHAR, status)
                  .append(static_cast<const char*>(variants.elementAt(i)),
                          status);
         }
         T_CString_toUpperCase(out.data() + variantsStart);
     }
-    if (notEmpty(extensions)) {
+    nếu (notEmpty(extensions)) {
         CharString tmp("und_", status);
         tmp.append(extensions, status);
         Locale tmpLocale(tmp.data());
@@ -1752,56 +1752,56 @@ AliasReplacer::outputToString(
         U_ASSERT(extensions[0] == 'x');
         out.append(tmpLocale.getName() + 1, status);
     }
-    return out;
+    trả_về out;
 }
 
 bool
 AliasReplacer::replace(const Locale& locale, CharString& out, UErrorCode& status)
 {
     data = AliasData::singleton(status);
-    if (U_FAILURE(status)) {
-        return false;
+    nếu (U_FAILURE(status)) {
+        trả_về false;
     }
     U_ASSERT(data != nullptr);
     out.clear();
     language = locale.getLanguage();
-    if (!notEmpty(language)) {
+    nếu (!notEmpty(language)) {
         language = nullptr;
     }
     script = locale.getScript();
-    if (!notEmpty(script)) {
+    nếu (!notEmpty(script)) {
         script = nullptr;
     }
     region = locale.getCountry();
-    if (!notEmpty(region)) {
+    nếu (!notEmpty(region)) {
         region = nullptr;
     }
     const char* variantsStr = locale.getVariant();
     CharString variantsBuff(variantsStr, -1, status);
-    if (!variantsBuff.isEmpty()) {
-        if (U_FAILURE(status)) { return false; }
+    nếu (!variantsBuff.isEmpty()) {
+        nếu (U_FAILURE(status)) { trả_về false; }
         char* start = variantsBuff.data();
         T_CString_toLowerCase(start);
         char* end;
-        while ((end = uprv_strchr(start, SEP_CHAR)) != nullptr &&
+        trong_khi ((end = uprv_strchr(start, SEP_CHAR)) != nullptr &&
                U_SUCCESS(status)) {
             *end = NULL_CHAR;  // null terminate inside variantsBuff
             // do not add "" or duplicate data to variants
-            if (*start && !variants.contains(start)) {
+            nếu (*start && !variants.contains(start)) {
                 variants.addElement(start, status);
             }
             start = end + 1;
         }
         // do not add "" or duplicate data to variants
-        if (*start && !variants.contains(start)) {
+        nếu (*start && !variants.contains(start)) {
             variants.addElement(start, status);
         }
     }
-    if (U_FAILURE(status)) { return false; }
+    nếu (U_FAILURE(status)) { trả_về false; }
 
     // Sort the variants
     variants.sort([](UElement e1, UElement e2) -> int32_t {
-        return uprv_strcmp((const char*)e1.pointer, (const char*)e2.pointer);
+        trả_về uprv_strcmp((const char*)e1.pointer, (const char*)e2.pointer);
     }, status);
 
     // A changed count to assert when loop too many times.
@@ -1812,7 +1812,7 @@ AliasReplacer::replace(const Locale& locale, CharString& out, UErrorCode& status
     // and freed when out of scope from his function.
     UVector stringsToBeFreed([](void *obj) { delete static_cast<CharString*>(obj); },
                              nullptr, 10, status);
-    while (U_SUCCESS(status)) {
+    trong_khi (U_SUCCESS(status)) {
         // Something wrong with the data cause looping here more than maxChanged
         // times already.
         U_ASSERT(changed <= maxChanged);
@@ -1827,7 +1827,7 @@ AliasReplacer::replace(const Locale& locale, CharString& out, UErrorCode& status
         // This assumption is ensured by the U_ASSERT in readLanguageAlias
         //
         //                      lang  REGION variant
-        if (    replaceLanguage(true, true,  true,  stringsToBeFreed, status) ||
+        nếu (    replaceLanguage(true, true,  true,  stringsToBeFreed, status) ||
                 replaceLanguage(true, true,  false, stringsToBeFreed, status) ||
                 replaceLanguage(true, false, true,  stringsToBeFreed, status) ||
                 replaceLanguage(true, false, false, stringsToBeFreed, status) ||
@@ -1844,64 +1844,64 @@ AliasReplacer::replace(const Locale& locale, CharString& out, UErrorCode& status
         break;
     }  // while(1)
 
-    if (U_FAILURE(status)) { return false; }
+    nếu (U_FAILURE(status)) { trả_về false; }
     // Nothing changed and we know the order of the variants are not change
     // because we have no variant or only one.
     const char* extensionsStr = locale_getKeywordsStart(locale.getName());
-    if (changed == 0 && variants.size() <= 1 && extensionsStr == nullptr) {
-        return false;
+    nếu (changed == 0 && variants.size() <= 1 && extensionsStr == nullptr) {
+        trả_về false;
     }
     outputToString(out, status);
-    if (U_FAILURE(status)) {
-        return false;
+    nếu (U_FAILURE(status)) {
+        trả_về false;
     }
-    if (extensionsStr != nullptr) {
+    nếu (extensionsStr != nullptr) {
         changed = 0;
         Locale temp(locale);
         LocalPointer<icu::StringEnumeration> iter(locale.createKeywords(status));
-        if (U_SUCCESS(status) && !iter.isNull()) {
+        nếu (U_SUCCESS(status) && !iter.isNull()) {
             const char* key;
-            while ((key = iter->next(nullptr, status)) != nullptr) {
-                if (uprv_strcmp("sd", key) == 0 || uprv_strcmp("rg", key) == 0 ||
+            trong_khi ((key = iter->next(nullptr, status)) != nullptr) {
+                nếu (uprv_strcmp("sd", key) == 0 || uprv_strcmp("rg", key) == 0 ||
                         uprv_strcmp("t", key) == 0) {
                     auto value = locale.getKeywordValue<CharString>(key, status);
-                    if (U_FAILURE(status)) {
+                    nếu (U_FAILURE(status)) {
                         status = U_ZERO_ERROR;
                         continue;
                     }
                     CharString replacement;
-                    if (uprv_strlen(key) == 2) {
-                        if (replaceSubdivision(value.toStringPiece(), replacement, status)) {
+                    nếu (uprv_strlen(key) == 2) {
+                        nếu (replaceSubdivision(value.toStringPiece(), replacement, status)) {
                             changed++;
                             temp.setKeywordValue(key, replacement.data(), status);
                         }
-                    } else {
+                    } không_thì {
                         U_ASSERT(uprv_strcmp(key, "t") == 0);
-                        if (replaceTransformedExtensions(value, replacement, status)) {
+                        nếu (replaceTransformedExtensions(value, replacement, status)) {
                             changed++;
                             temp.setKeywordValue(key, replacement.data(), status);
                         }
                     }
-                    if (U_FAILURE(status)) {
-                        return false;
+                    nếu (U_FAILURE(status)) {
+                        trả_về false;
                     }
                 }
             }
         }
-        if (changed != 0) {
+        nếu (changed != 0) {
             extensionsStr = locale_getKeywordsStart(temp.getName());
         }
         out.append(extensionsStr, status);
     }
-    if (U_FAILURE(status)) {
-        return false;
+    nếu (U_FAILURE(status)) {
+        trả_về false;
     }
     // If the tag is not changed, return.
-    if (uprv_strcmp(out.data(), locale.getName()) == 0) {
+    nếu (uprv_strcmp(out.data(), locale.getName()) == 0) {
         out.clear();
-        return false;
+        trả_về false;
     }
-    return true;
+    trả_về true;
 }
 
 // Return true if the locale is changed during canonicalization.
@@ -1909,9 +1909,9 @@ AliasReplacer::replace(const Locale& locale, CharString& out, UErrorCode& status
 bool
 canonicalizeLocale(const Locale& locale, CharString& out, UErrorCode& status)
 {
-    if (U_FAILURE(status)) { return false; }
+    nếu (U_FAILURE(status)) { trả_về false; }
     AliasReplacer replacer(status);
-    return replacer.replace(locale, out, status);
+    trả_về replacer.replace(locale, out, status);
 }
 
 // Function to optimize for known cases without so we can skip the loading
@@ -1919,22 +1919,22 @@ canonicalizeLocale(const Locale& locale, CharString& out, UErrorCode& status)
 bool
 isKnownCanonicalizedLocale(const char* locale, UErrorCode& status)
 {
-    if (U_FAILURE(status)) { return false; }
+    nếu (U_FAILURE(status)) { trả_về false; }
 
-    if (    uprv_strcmp(locale, "c") == 0 ||
+    nếu (    uprv_strcmp(locale, "c") == 0 ||
             uprv_strcmp(locale, "en") == 0 ||
             uprv_strcmp(locale, "en_US") == 0) {
-        return true;
+        trả_về true;
     }
 
     // common well-known Canonicalized.
     umtx_initOnce(gKnownCanonicalizedInitOnce,
                   &loadKnownCanonicalized, status);
-    if (U_FAILURE(status)) {
-        return false;
+    nếu (U_FAILURE(status)) {
+        trả_về false;
     }
     U_ASSERT(gKnownCanonicalized != nullptr);
-    return uhash_geti(gKnownCanonicalized, locale) != 0;
+    trả_về uhash_geti(gKnownCanonicalized, locale) != 0;
 }
 
 }  // namespace
@@ -1947,7 +1947,7 @@ ulocimp_getKnownCanonicalizedLocaleForTest(int32_t& length)
 {
     U_NAMESPACE_USE
     length = UPRV_LENGTHOF(KNOWN_CANONICALIZED);
-    return KNOWN_CANONICALIZED;
+    trả_về KNOWN_CANONICALIZED;
 }
 
 // Function for testing.
@@ -1958,14 +1958,14 @@ ulocimp_isCanonicalizedLocaleForTest(const char* localeName)
     Locale l(localeName);
     UErrorCode status = U_ZERO_ERROR;
     CharString temp;
-    return !canonicalizeLocale(l, temp, status) && U_SUCCESS(status);
+    trả_về !canonicalizeLocale(l, temp, status) && U_SUCCESS(status);
 }
 
 U_NAMESPACE_BEGIN
 
 Locale& Locale::init(const char* localeID, UBool canonicalize) U_LIFETIME_BOUND
 {
-    return localeID == nullptr ? *this = getDefault() : init(StringPiece{localeID}, canonicalize);
+    trả_về localeID == nullptr ? *this = getDefault() : init(StringPiece{localeID}, canonicalize);
 }
 
 /*This function initializes a Locale from a C locale ID*/
@@ -1990,12 +1990,12 @@ Locale& Locale::init(StringPiece localeID, UBool canonicalize) U_LIFETIME_BOUND
                                           char* name,
                                           int32_t nameCapacity,
                                           UErrorCode& status) {
-            return ByteSinkUtil::viaByteSinkToTerminatedChars(
+            trả_về ByteSinkUtil::viaByteSinkToTerminatedChars(
                 name, nameCapacity,
                 [&](ByteSink& sink, UErrorCode& status) {
-                    if (canonicalize) {
+                    nếu (canonicalize) {
                         ulocimp_canonicalize(localeID, sink, status);
-                    } else {
+                    } không_thì {
                         ulocimp_getName(localeID, sink, status);
                     }
                 },
@@ -2008,16 +2008,16 @@ Locale& Locale::init(StringPiece localeID, UBool canonicalize) U_LIFETIME_BOUND
         length = parse(localeID, fullName, sizeof Nest::baseName, err);
 
         FixedString fullNameBuffer;
-        if (err == U_BUFFER_OVERFLOW_ERROR || length >= static_cast<int32_t>(sizeof Nest::baseName)) {
+        nếu (err == U_BUFFER_OVERFLOW_ERROR || length >= static_cast<int32_t>(sizeof Nest::baseName)) {
             /*Go to heap for the fullName if necessary*/
-            if (!fullNameBuffer.reserve(length + 1)) {
+            nếu (!fullNameBuffer.reserve(length + 1)) {
                 break; // error: out of memory
             }
             fullName = fullNameBuffer.getAlias();
             err = U_ZERO_ERROR;
             length = parse(localeID, fullName, length + 1, err);
         }
-        if(U_FAILURE(err) || err == U_STRING_NOT_TERMINATED_WARNING) {
+        nếu(U_FAILURE(err) || err == U_STRING_NOT_TERMINATED_WARNING) {
             /* should never occur */
             break;
         }
@@ -2032,7 +2032,7 @@ Locale& Locale::init(StringPiece localeID, UBool canonicalize) U_LIFETIME_BOUND
         separator = field[0] = fullName;
         fieldIdx = 1;
         char* at = uprv_strchr(fullName, '@');
-        while ((separator = uprv_strchr(field[fieldIdx-1], SEP_CHAR)) != nullptr &&
+        trong_khi ((separator = uprv_strchr(field[fieldIdx-1], SEP_CHAR)) != nullptr &&
                fieldIdx < UPRV_LENGTHOF(field)-1 &&
                (at == nullptr || separator < at)) {
             field[fieldIdx] = separator + 1;
@@ -2042,27 +2042,27 @@ Locale& Locale::init(StringPiece localeID, UBool canonicalize) U_LIFETIME_BOUND
         // variant may contain @foo or .foo POSIX cruft; remove it
         separator = uprv_strchr(field[fieldIdx-1], '@');
         char* sep2 = uprv_strchr(field[fieldIdx-1], '.');
-        if (separator!=nullptr || sep2!=nullptr) {
-            if (separator==nullptr || (sep2!=nullptr && separator > sep2)) {
+        nếu (separator!=nullptr || sep2!=nullptr) {
+            nếu (separator==nullptr || (sep2!=nullptr && separator > sep2)) {
                 separator = sep2;
             }
             fieldLen[fieldIdx - 1] = static_cast<int32_t>(separator - field[fieldIdx - 1]);
-        } else {
+        } không_thì {
             fieldLen[fieldIdx - 1] = length - static_cast<int32_t>(field[fieldIdx - 1] - fullName);
         }
         bool hasKeywords = at != nullptr && uprv_strchr(at + 1, '=') != nullptr;
 
-        if (fieldLen[0] >= ULOC_LANG_CAPACITY)
+        nếu (fieldLen[0] >= ULOC_LANG_CAPACITY)
         {
             break; // error: the language field is too long
         }
 
         variantField = 1; /* Usually the 2nd one, except when a script or country is also used. */
-        if (fieldLen[0] > 0) {
+        nếu (fieldLen[0] > 0) {
             /* We have a language */
             language = {fullName, static_cast<std::string_view::size_type>(fieldLen[0])};
         }
-        if (fieldLen[1] == 4 && uprv_isASCIILetter(field[1][0]) &&
+        nếu (fieldLen[1] == 4 && uprv_isASCIILetter(field[1][0]) &&
                 uprv_isASCIILetter(field[1][1]) && uprv_isASCIILetter(field[1][2]) &&
                 uprv_isASCIILetter(field[1][3])) {
             /* We have at least a script */
@@ -2070,90 +2070,90 @@ Locale& Locale::init(StringPiece localeID, UBool canonicalize) U_LIFETIME_BOUND
             variantField++;
         }
 
-        if (fieldLen[variantField] == 2 || fieldLen[variantField] == 3) {
+        nếu (fieldLen[variantField] == 2 || fieldLen[variantField] == 3) {
             /* We have a country */
             region = {field[variantField], static_cast<std::string_view::size_type>(fieldLen[variantField])};
             variantField++;
-        } else if (fieldLen[variantField] == 0) {
+        } không_thì nếu (fieldLen[variantField] == 0) {
             variantField++; /* script or country empty but variant in next field (i.e. en__POSIX) */
         }
 
-        if (fieldLen[variantField] > 0) {
+        nếu (fieldLen[variantField] > 0) {
             /* We have a variant */
             variantBegin = static_cast<int32_t>(field[variantField] - fullName);
-        } else if (hasKeywords) {
+        } không_thì nếu (hasKeywords) {
             // The original computation of variantBegin leaves it equal to the length
             // of fullName if there is no variant.  It should instead be
             // the length of the baseName.
             variantBegin = static_cast<int32_t>(at - fullName);
         }
 
-        if (!hasKeywords && Nest::fits(length, language, script, region)) {
+        nếu (!hasKeywords && Nest::fits(length, language, script, region)) {
             U_ASSERT(fullName == nest.baseName);
             U_ASSERT(fullNameBuffer.isEmpty());
             nest.init(language, script, region, variantBegin);
-        } else {
-            if (fullName == nest.baseName) {
+        } không_thì {
+            nếu (fullName == nest.baseName) {
                 U_ASSERT(fullNameBuffer.isEmpty());
                 fullNameBuffer = {fullName, static_cast<std::string_view::size_type>(length)};
-                if (fullNameBuffer.isEmpty()) {
+                nếu (fullNameBuffer.isEmpty()) {
                     break; // error: out of memory
                 }
-                if (!language.empty()) {
+                nếu (!language.empty()) {
                     language = {fullNameBuffer.data(), language.size()};
                 }
-                if (!script.empty()) {
+                nếu (!script.empty()) {
                     script = {fullNameBuffer.data() + (script.data() - fullName), script.size()};
                 }
-                if (!region.empty()) {
+                nếu (!region.empty()) {
                     region = {fullNameBuffer.data() + (region.data() - fullName), region.size()};
                 }
             }
             Heap& heap = payload.emplace<Heap>(language, script, region, variantBegin);
-            if (isBogus()) {
+            nếu (isBogus()) {
                 break; // error: out of memory
             }
             U_ASSERT(!fullNameBuffer.isEmpty());
             heap.ptr->fullName = std::move(fullNameBuffer);
-            if (hasKeywords) {
-                if (std::string_view::size_type baseNameLength = at - fullName; baseNameLength > 0) {
+            nếu (hasKeywords) {
+                nếu (std::string_view::size_type baseNameLength = at - fullName; baseNameLength > 0) {
                     heap.ptr->baseName = {heap.ptr->fullName.data(), baseNameLength};
-                    if (heap.ptr->baseName.isEmpty()) {
+                    nếu (heap.ptr->baseName.isEmpty()) {
                         break; // error: out of memory
                     }
                 }
             }
         }
 
-        if (canonicalize) {
-            if (!isKnownCanonicalizedLocale(getName(), err)) {
+        nếu (canonicalize) {
+            nếu (!isKnownCanonicalizedLocale(getName(), err)) {
                 CharString replaced;
                 // Not sure it is already canonicalized
-                if (canonicalizeLocale(*this, replaced, err)) {
+                nếu (canonicalizeLocale(*this, replaced, err)) {
                     U_ASSERT(U_SUCCESS(err));
                     // If need replacement, call init again.
                     init(replaced.data(), false);
                 }
-                if (U_FAILURE(err)) {
+                nếu (U_FAILURE(err)) {
                     break;
                 }
             }
         }   // if (canonicalize) {
 
         // successful end of init()
-        return *this;
-    } while(0); /*loop doesn't iterate*/
+        trả_về *this;
+    } trong_khi(0); /*loop doesn't iterate*/
 
     // when an error occurs, then set this object to "bogus" (there is no UErrorCode here)
     setToBogus();
 
-    return *this;
+    trả_về *this;
 }
 
 int32_t
 Locale::hashCode() const
 {
-    return ustr_hashCharsN(getName(), static_cast<int32_t>(uprv_strlen(getName())));
+    trả_về ustr_hashCharsN(getName(), static_cast<int32_t>(uprv_strlen(getName())));
 }
 
 void
@@ -2167,12 +2167,12 @@ Locale::getDefault()
 {
     {
         Mutex lock(&gDefaultLocaleMutex);
-        if (gDefaultLocale != nullptr) {
-            return *gDefaultLocale;
+        nếu (gDefaultLocale != nullptr) {
+            trả_về *gDefaultLocale;
         }
     }
     UErrorCode status = U_ZERO_ERROR;
-    return *locale_set_default_internal(nullptr, status);
+    trả_về *locale_set_default_internal(nullptr, status);
 }
 
 
@@ -2181,8 +2181,8 @@ void U_EXPORT2
 Locale::setDefault( const   Locale&     newLocale,
                             UErrorCode&  status)
 {
-    if (U_FAILURE(status)) {
-        return;
+    nếu (U_FAILURE(status)) {
+        trả_về;
     }
 
     /* Set the default from the full name string of the supplied locale.
@@ -2194,21 +2194,21 @@ Locale::setDefault( const   Locale&     newLocale,
 
 void
 Locale::addLikelySubtags(UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return;
+    nếu (U_FAILURE(status)) {
+        trả_về;
     }
 
     CharString maximizedLocaleID = ulocimp_addLikelySubtags(getName(), status);
 
-    if (U_FAILURE(status)) {
-        if (status == U_MEMORY_ALLOCATION_ERROR) {
+    nếu (U_FAILURE(status)) {
+        nếu (status == U_MEMORY_ALLOCATION_ERROR) {
             setToBogus();
         }
-        return;
+        trả_về;
     }
 
     init(maximizedLocaleID.data(), /*canonicalize=*/false);
-    if (isBogus()) {
+    nếu (isBogus()) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
     }
 }
@@ -2219,43 +2219,43 @@ Locale::minimizeSubtags(UErrorCode& status) {
 }
 void
 Locale::minimizeSubtags(bool favorScript, UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return;
+    nếu (U_FAILURE(status)) {
+        trả_về;
     }
 
     CharString minimizedLocaleID = ulocimp_minimizeSubtags(getName(), favorScript, status);
 
-    if (U_FAILURE(status)) {
-        if (status == U_MEMORY_ALLOCATION_ERROR) {
+    nếu (U_FAILURE(status)) {
+        nếu (status == U_MEMORY_ALLOCATION_ERROR) {
             setToBogus();
         }
-        return;
+        trả_về;
     }
 
     init(minimizedLocaleID.data(), /*canonicalize=*/false);
-    if (isBogus()) {
+    nếu (isBogus()) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
     }
 }
 
 void
 Locale::canonicalize(UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return;
+    nếu (U_FAILURE(status)) {
+        trả_về;
     }
-    if (isBogus()) {
+    nếu (isBogus()) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        trả_về;
     }
     CharString uncanonicalized(getName(), status);
-    if (U_FAILURE(status)) {
-        if (status == U_MEMORY_ALLOCATION_ERROR) {
+    nếu (U_FAILURE(status)) {
+        nếu (status == U_MEMORY_ALLOCATION_ERROR) {
             setToBogus();
         }
-        return;
+        trả_về;
     }
     init(uncanonicalized.data(), /*canonicalize=*/true);
-    if (isBogus()) {
+    nếu (isBogus()) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
     }
 }
@@ -2265,8 +2265,8 @@ Locale::forLanguageTag(StringPiece tag, UErrorCode& status)
 {
     Locale result(Locale::eBOGUS);
 
-    if (U_FAILURE(status)) {
-        return result;
+    nếu (U_FAILURE(status)) {
+        trả_về result;
     }
 
     // If a BCP 47 language tag is passed as the language parameter to the
@@ -2287,32 +2287,32 @@ Locale::forLanguageTag(StringPiece tag, UErrorCode& status)
             &parsedLength,
             status);
 
-    if (U_FAILURE(status)) {
-        return result;
+    nếu (U_FAILURE(status)) {
+        trả_về result;
     }
 
-    if (parsedLength != tag.size()) {
+    nếu (parsedLength != tag.size()) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return result;
+        trả_về result;
     }
 
     result.init(localeID.data(), /*canonicalize=*/false);
-    if (result.isBogus()) {
+    nếu (result.isBogus()) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
     }
-    return result;
+    trả_về result;
 }
 
 void
 Locale::toLanguageTag(ByteSink& sink, UErrorCode& status) const
 {
-    if (U_FAILURE(status)) {
-        return;
+    nếu (U_FAILURE(status)) {
+        trả_về;
     }
 
-    if (isBogus()) {
+    nếu (isBogus()) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        trả_về;
     }
 
     ulocimp_toLanguageTag(getName(), sink, /*strict=*/false, status);
@@ -2321,13 +2321,13 @@ Locale::toLanguageTag(ByteSink& sink, UErrorCode& status) const
 Locale U_EXPORT2
 Locale::createFromName (const char *name)
 {
-    if (name) {
+    nếu (name) {
         Locale l("");
         l.init(name, false);
-        return l;
+        trả_về l;
     }
-    else {
-        return getDefault();
+    không_thì {
+        trả_về getDefault();
     }
 }
 
@@ -2335,27 +2335,27 @@ Locale U_EXPORT2
 Locale::createFromName(StringPiece name) {
     Locale loc("");
     loc.init(name, false);
-    return loc;
+    trả_về loc;
 }
 
 Locale U_EXPORT2
 Locale::createCanonical(const char* name) {
     Locale loc("");
     loc.init(name, true);
-    return loc;
+    trả_về loc;
 }
 
 const char *
 Locale::getISO3Language() const
 {
-    return uloc_getISO3Language(getName());
+    trả_về uloc_getISO3Language(getName());
 }
 
 
 const char *
 Locale::getISO3Country() const
 {
-    return uloc_getISO3Country(getName());
+    trả_về uloc_getISO3Country(getName());
 }
 
 /**
@@ -2368,17 +2368,17 @@ Locale::getISO3Country() const
 uint32_t
 Locale::getLCID() const
 {
-    return uloc_getLCID(getName());
+    trả_về uloc_getLCID(getName());
 }
 
 const char* const* U_EXPORT2 Locale::getISOCountries()
 {
-    return uloc_getISOCountries();
+    trả_về uloc_getISOCountries();
 }
 
 const char* const* U_EXPORT2 Locale::getISOLanguages()
 {
-    return uloc_getISOLanguages();
+    trả_về uloc_getISOLanguages();
 }
 
 // Set the locale's data based on a posix id.
@@ -2390,147 +2390,147 @@ void Locale::setFromPOSIXID(const char *posixID)
 const Locale & U_EXPORT2
 Locale::getRoot()
 {
-    return getLocale(eROOT);
+    trả_về getLocale(eROOT);
 }
 
 const Locale & U_EXPORT2
 Locale::getEnglish()
 {
-    return getLocale(eENGLISH);
+    trả_về getLocale(eENGLISH);
 }
 
 const Locale & U_EXPORT2
 Locale::getFrench()
 {
-    return getLocale(eFRENCH);
+    trả_về getLocale(eFRENCH);
 }
 
 const Locale & U_EXPORT2
 Locale::getGerman()
 {
-    return getLocale(eGERMAN);
+    trả_về getLocale(eGERMAN);
 }
 
 const Locale & U_EXPORT2
 Locale::getItalian()
 {
-    return getLocale(eITALIAN);
+    trả_về getLocale(eITALIAN);
 }
 
 const Locale & U_EXPORT2
 Locale::getJapanese()
 {
-    return getLocale(eJAPANESE);
+    trả_về getLocale(eJAPANESE);
 }
 
 const Locale & U_EXPORT2
 Locale::getKorean()
 {
-    return getLocale(eKOREAN);
+    trả_về getLocale(eKOREAN);
 }
 
 const Locale & U_EXPORT2
 Locale::getChinese()
 {
-    return getLocale(eCHINESE);
+    trả_về getLocale(eCHINESE);
 }
 
 const Locale & U_EXPORT2
 Locale::getSimplifiedChinese()
 {
-    return getLocale(eCHINA);
+    trả_về getLocale(eCHINA);
 }
 
 const Locale & U_EXPORT2
 Locale::getTraditionalChinese()
 {
-    return getLocale(eTAIWAN);
+    trả_về getLocale(eTAIWAN);
 }
 
 
 const Locale & U_EXPORT2
 Locale::getFrance()
 {
-    return getLocale(eFRANCE);
+    trả_về getLocale(eFRANCE);
 }
 
 const Locale & U_EXPORT2
 Locale::getGermany()
 {
-    return getLocale(eGERMANY);
+    trả_về getLocale(eGERMANY);
 }
 
 const Locale & U_EXPORT2
 Locale::getItaly()
 {
-    return getLocale(eITALY);
+    trả_về getLocale(eITALY);
 }
 
 const Locale & U_EXPORT2
 Locale::getJapan()
 {
-    return getLocale(eJAPAN);
+    trả_về getLocale(eJAPAN);
 }
 
 const Locale & U_EXPORT2
 Locale::getKorea()
 {
-    return getLocale(eKOREA);
+    trả_về getLocale(eKOREA);
 }
 
 const Locale & U_EXPORT2
 Locale::getChina()
 {
-    return getLocale(eCHINA);
+    trả_về getLocale(eCHINA);
 }
 
 const Locale & U_EXPORT2
 Locale::getPRC()
 {
-    return getLocale(eCHINA);
+    trả_về getLocale(eCHINA);
 }
 
 const Locale & U_EXPORT2
 Locale::getTaiwan()
 {
-    return getLocale(eTAIWAN);
+    trả_về getLocale(eTAIWAN);
 }
 
 const Locale & U_EXPORT2
 Locale::getUK()
 {
-    return getLocale(eUK);
+    trả_về getLocale(eUK);
 }
 
 const Locale & U_EXPORT2
 Locale::getUS()
 {
-    return getLocale(eUS);
+    trả_về getLocale(eUS);
 }
 
 const Locale & U_EXPORT2
 Locale::getCanada()
 {
-    return getLocale(eCANADA);
+    trả_về getLocale(eCANADA);
 }
 
 const Locale & U_EXPORT2
 Locale::getCanadaFrench()
 {
-    return getLocale(eCANADA_FRENCH);
+    trả_về getLocale(eCANADA_FRENCH);
 }
 
 const Locale &
-Locale::getLocale(int locid)
+Locale::getLocale(số_nguyên locid)
 {
     Locale *localeCache = getLocaleCache();
     U_ASSERT((locid < eMAX_LOCALES)&&(locid>=0));
-    if (localeCache == nullptr) {
+    nếu (localeCache == nullptr) {
         // Failure allocating the locale cache.
         //   The best we can do is return a nullptr reference.
         locid = 0;
     }
-    return localeCache[locid]; /*operating on nullptr*/
+    trả_về localeCache[locid]; /*operating on nullptr*/
 }
 
 /*
@@ -2542,7 +2542,7 @@ Locale::getLocaleCache()
 {
     UErrorCode status = U_ZERO_ERROR;
     umtx_initOnce(gLocaleCacheInitOnce, locale_init, status);
-    return gLocaleCache;
+    trả_về gLocaleCache;
 }
 
 class KeywordEnumeration : public StringEnumeration {
@@ -2554,19 +2554,19 @@ private:
     static const char fgClassID;
 
 public:
-    static UClassID U_EXPORT2 getStaticClassID() { return (UClassID)&fgClassID; }
-    virtual UClassID getDynamicClassID() const override { return getStaticClassID(); }
+    static UClassID U_EXPORT2 getStaticClassID() { trả_về (UClassID)&fgClassID; }
+    virtual UClassID getDynamicClassID() const override { trả_về getStaticClassID(); }
 public:
     KeywordEnumeration(const char *keys, int32_t keywordLen, int32_t currentIndex, UErrorCode &status)
         : keywords(), length(keywordLen), current(nullptr) {
-        if(U_SUCCESS(status) && keywordLen != 0) {
-            if(keys == nullptr || keywordLen < 0) {
+        nếu(U_SUCCESS(status) && keywordLen != 0) {
+            nếu(keys == nullptr || keywordLen < 0) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
-            } else {
+            } không_thì {
                 keywords = {keys, static_cast<std::string_view::size_type>(length)};
-                if (keywords.isEmpty()) {
+                nếu (keywords.isEmpty()) {
                     status = U_MEMORY_ALLOCATION_ERROR;
-                } else {
+                } không_thì {
                     current = keywords.data() + currentIndex;
                 }
             }
@@ -2578,50 +2578,50 @@ public:
     virtual StringEnumeration * clone() const override
     {
         UErrorCode status = U_ZERO_ERROR;
-        return new KeywordEnumeration(
+        trả_về new KeywordEnumeration(
                 keywords.data(), length,
                 static_cast<int32_t>(current - keywords.data()), status);
     }
 
     virtual int32_t count(UErrorCode& status) const override {
-        if (U_FAILURE(status)) { return 0; }
+        nếu (U_FAILURE(status)) { trả_về 0; }
         const char *kw = keywords.data();
         int32_t result = 0;
-        while(*kw) {
+        trong_khi(*kw) {
             result++;
             kw += uprv_strlen(kw)+1;
         }
-        return result;
+        trả_về result;
     }
 
     virtual const char* next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND override {
         const char* result;
         int32_t len;
-        if(U_SUCCESS(status) && *current != 0) {
+        nếu(U_SUCCESS(status) && *current != 0) {
             result = current;
             len = static_cast<int32_t>(uprv_strlen(current));
             current += len+1;
-            if(resultLength != nullptr) {
+            nếu(resultLength != nullptr) {
                 *resultLength = len;
             }
-        } else {
-            if(resultLength != nullptr) {
+        } không_thì {
+            nếu(resultLength != nullptr) {
                 *resultLength = 0;
             }
             result = nullptr;
         }
-        return result;
+        trả_về result;
     }
 
     virtual const UnicodeString* snext(UErrorCode& status) U_LIFETIME_BOUND override {
-        if (U_FAILURE(status)) { return nullptr; }
+        nếu (U_FAILURE(status)) { trả_về nullptr; }
         int32_t resultLength = 0;
         const char *s = next(&resultLength, status);
-        return setChars(s, resultLength, status);
+        trả_về setChars(s, resultLength, status);
     }
 
     virtual void reset(UErrorCode& status) override {
-        if (U_FAILURE(status)) { return; }
+        nếu (U_FAILURE(status)) { trả_về; }
         current = keywords.data();
     }
 };
@@ -2640,31 +2640,31 @@ public:
 
     virtual const char* next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND override {
         const char* legacy_key = KeywordEnumeration::next(nullptr, status);
-        while (U_SUCCESS(status) && legacy_key != nullptr) {
+        trong_khi (U_SUCCESS(status) && legacy_key != nullptr) {
             const char* key = uloc_toUnicodeLocaleKey(legacy_key);
-            if (key != nullptr) {
-                if (resultLength != nullptr) {
+            nếu (key != nullptr) {
+                nếu (resultLength != nullptr) {
                     *resultLength = static_cast<int32_t>(uprv_strlen(key));
                 }
-                return key;
+                trả_về key;
             }
             // Not a Unicode keyword, could be a t, x or other, continue to look at the next one.
             legacy_key = KeywordEnumeration::next(nullptr, status);
         }
-        if (resultLength != nullptr) *resultLength = 0;
-        return nullptr;
+        nếu (resultLength != nullptr) *resultLength = 0;
+        trả_về nullptr;
     }
     virtual int32_t count(UErrorCode& status) const override {
-        if (U_FAILURE(status)) { return 0; }
+        nếu (U_FAILURE(status)) { trả_về 0; }
         const char *kw = keywords.data();
         int32_t result = 0;
-        while(*kw) {
-            if (uloc_toUnicodeLocaleKey(kw) != nullptr) {
+        trong_khi(*kw) {
+            nếu (uloc_toUnicodeLocaleKey(kw) != nullptr) {
                 result++;
             }
             kw += uprv_strlen(kw)+1;
         }
-        return result;
+        trả_về result;
     }
 };
 
@@ -2676,26 +2676,26 @@ Locale::createKeywords(UErrorCode &status) const
 {
     StringEnumeration *result = nullptr;
 
-    if (U_FAILURE(status)) {
-        return result;
+    nếu (U_FAILURE(status)) {
+        trả_về result;
     }
 
     const char* variantStart = uprv_strchr(getName(), '@');
     const char* assignment = uprv_strchr(getName(), '=');
-    if(variantStart) {
-        if(assignment > variantStart) {
+    nếu(variantStart) {
+        nếu(assignment > variantStart) {
             CharString keywords = ulocimp_getKeywords(variantStart + 1, '@', false, status);
-            if (U_SUCCESS(status) && !keywords.isEmpty()) {
+            nếu (U_SUCCESS(status) && !keywords.isEmpty()) {
                 result = new KeywordEnumeration(keywords.data(), keywords.length(), 0, status);
-                if (!result) {
+                nếu (!result) {
                     status = U_MEMORY_ALLOCATION_ERROR;
                 }
             }
-        } else {
+        } không_thì {
             status = U_INVALID_FORMAT_ERROR;
         }
     }
-    return result;
+    trả_về result;
 }
 
 StringEnumeration *
@@ -2703,43 +2703,43 @@ Locale::createUnicodeKeywords(UErrorCode &status) const
 {
     StringEnumeration *result = nullptr;
 
-    if (U_FAILURE(status)) {
-        return result;
+    nếu (U_FAILURE(status)) {
+        trả_về result;
     }
 
     const char* variantStart = uprv_strchr(getName(), '@');
     const char* assignment = uprv_strchr(getName(), '=');
-    if(variantStart) {
-        if(assignment > variantStart) {
+    nếu(variantStart) {
+        nếu(assignment > variantStart) {
             CharString keywords = ulocimp_getKeywords(variantStart + 1, '@', false, status);
-            if (U_SUCCESS(status) && !keywords.isEmpty()) {
+            nếu (U_SUCCESS(status) && !keywords.isEmpty()) {
                 result = new UnicodeKeywordEnumeration(keywords.data(), keywords.length(), 0, status);
-                if (!result) {
+                nếu (!result) {
                     status = U_MEMORY_ALLOCATION_ERROR;
                 }
             }
-        } else {
+        } không_thì {
             status = U_INVALID_FORMAT_ERROR;
         }
     }
-    return result;
+    trả_về result;
 }
 
 int32_t
 Locale::getKeywordValue(const char* keywordName, char *buffer, int32_t bufLen, UErrorCode &status) const
 {
-    return uloc_getKeywordValue(getName(), keywordName, buffer, bufLen, &status);
+    trả_về uloc_getKeywordValue(getName(), keywordName, buffer, bufLen, &status);
 }
 
 void
 Locale::getKeywordValue(StringPiece keywordName, ByteSink& sink, UErrorCode& status) const {
-    if (U_FAILURE(status)) {
-        return;
+    nếu (U_FAILURE(status)) {
+        trả_về;
     }
 
-    if (isBogus()) {
+    nếu (isBogus()) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        trả_về;
     }
 
     ulocimp_getKeywordValue(getName(), keywordName, sink, status);
@@ -2749,27 +2749,27 @@ void
 Locale::getUnicodeKeywordValue(StringPiece keywordName,
                                ByteSink& sink,
                                UErrorCode& status) const {
-    if (U_FAILURE(status)) {
-        return;
+    nếu (U_FAILURE(status)) {
+        trả_về;
     }
 
     std::optional<std::string_view> legacy_key = ulocimp_toLegacyKeyWithFallback(keywordName);
-    if (!legacy_key.has_value()) {
+    nếu (!legacy_key.has_value()) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        trả_về;
     }
 
     auto legacy_value = getKeywordValue<CharString>(*legacy_key, status);
 
-    if (U_FAILURE(status)) {
-        return;
+    nếu (U_FAILURE(status)) {
+        trả_về;
     }
 
     std::optional<std::string_view> unicode_value =
         ulocimp_toBcpTypeWithFallback(keywordName, legacy_value.toStringPiece());
-    if (!unicode_value.has_value()) {
+    nếu (!unicode_value.has_value()) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        trả_về;
     }
 
     sink.Append(unicode_value->data(), static_cast<int32_t>(unicode_value->size()));
@@ -2779,53 +2779,53 @@ void
 Locale::setKeywordValue(StringPiece keywordName,
                         StringPiece keywordValue,
                         UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
-    if (keywordName.empty()) {
+    nếu (U_FAILURE(status)) { trả_về; }
+    nếu (keywordName.empty()) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        trả_về;
     }
-    if (status == U_STRING_NOT_TERMINATED_WARNING) {
+    nếu (status == U_STRING_NOT_TERMINATED_WARNING) {
         status = U_ZERO_ERROR;
     }
 
     CharString localeID(getName(), -1, status);
     ulocimp_setKeywordValue(keywordName, keywordValue, localeID, status);
-    if (U_FAILURE(status)) {
-        if (status == U_MEMORY_ALLOCATION_ERROR) {
+    nếu (U_FAILURE(status)) {
+        nếu (status == U_MEMORY_ALLOCATION_ERROR) {
             setToBogus();
         }
-        return;
+        trả_về;
     }
 
     const char* at = locale_getKeywordsStart(localeID.toStringPiece());
     bool hasKeywords = at != nullptr && uprv_strchr(at + 1, '=') != nullptr;
 
     Nest* nest = payload.get<Nest>();
-    if (!hasKeywords) {
-        if (nest == nullptr) {
+    nếu (!hasKeywords) {
+        nếu (nest == nullptr) {
             // There are no longer any keywords left, so it might now be
             // possible to move the payload from Heap to Nest.
             Heap* heap = payload.get<Heap>();
             U_ASSERT(heap != nullptr);
-            if (Nest::fits(localeID.length(), heap->language, heap->script, heap->region)) {
+            nếu (Nest::fits(localeID.length(), heap->language, heap->script, heap->region)) {
                 int32_t variantBegin = heap->ptr->variantBegin;
                 U_ASSERT(variantBegin >= 0);
                 U_ASSERT(static_cast<size_t>(variantBegin) < sizeof Nest::baseName);
                 nest = &payload.emplace<Nest>(std::move(*heap), static_cast<uint8_t>(variantBegin));
                 localeID.extract(nest->baseName, sizeof Nest::baseName, status);
-            } else {
+            } không_thì {
                 heap->ptr->baseName.clear();
                 heap->ptr->fullName = localeID.toStringPiece();
-                if (heap->ptr->fullName.isEmpty()) {
+                nếu (heap->ptr->fullName.isEmpty()) {
                     status = U_MEMORY_ALLOCATION_ERROR;
                     setToBogus();
-                    return;
+                    trả_về;
                 }
             }
         }
-    } else {
+    } không_thì {
         Heap* heap = nullptr;
-        if (nest != nullptr) {
+        nếu (nest != nullptr) {
             // A keyword has been added, so the payload now needs to be moved
             // from Nest to Heap so that it can get a baseName.
             Nest copy(*nest);
@@ -2833,29 +2833,29 @@ Locale::setKeywordValue(StringPiece keywordName,
                                           copy.script,
                                           copy.region,
                                           copy.variantBegin);
-            if (isBogus()) {
+            nếu (isBogus()) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                trả_về;
             }
-        } else {
+        } không_thì {
             heap = payload.get<Heap>();
         }
         U_ASSERT(heap != nullptr);
         heap->ptr->fullName = localeID.toStringPiece();
-        if (heap->ptr->fullName.isEmpty()) {
+        nếu (heap->ptr->fullName.isEmpty()) {
             status = U_MEMORY_ALLOCATION_ERROR;
             setToBogus();
-            return;
+            trả_về;
         }
 
-        if (heap->ptr->baseName.isEmpty()) {
+        nếu (heap->ptr->baseName.isEmpty()) {
             // Has added the first keyword, meaning that the fullName is no longer also the baseName.
-            if (std::string_view::size_type baseNameLength = at - localeID.data(); baseNameLength > 0) {
+            nếu (std::string_view::size_type baseNameLength = at - localeID.data(); baseNameLength > 0) {
                 heap->ptr->baseName = {heap->ptr->fullName.data(), baseNameLength};
-                if (heap->ptr->baseName.isEmpty()) {
+                nếu (heap->ptr->baseName.isEmpty()) {
                     status = U_MEMORY_ALLOCATION_ERROR;
                     setToBogus();
-                    return;
+                    trả_về;
                 }
             }
         }
@@ -2866,24 +2866,24 @@ void
 Locale::setUnicodeKeywordValue(StringPiece keywordName,
                                StringPiece keywordValue,
                                UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return;
+    nếu (U_FAILURE(status)) {
+        trả_về;
     }
 
     std::optional<std::string_view> legacy_key = ulocimp_toLegacyKeyWithFallback(keywordName);
-    if (!legacy_key.has_value()) {
+    nếu (!legacy_key.has_value()) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        trả_về;
     }
 
     std::string_view value;
 
-    if (!keywordValue.empty()) {
+    nếu (!keywordValue.empty()) {
         std::optional<std::string_view> legacy_value =
             ulocimp_toLegacyTypeWithFallback(keywordName, keywordValue);
-        if (!legacy_value.has_value()) {
+        nếu (!legacy_value.has_value()) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            trả_về;
         }
         value = *legacy_value;
     }
@@ -2893,40 +2893,40 @@ Locale::setUnicodeKeywordValue(StringPiece keywordName,
 
 const char*
 Locale::getCountry() const U_LIFETIME_BOUND {
-    return getField<&Nest::getRegion, &Heap::getRegion>();
+    trả_về getField<&Nest::getRegion, &Heap::getRegion>();
 }
 
 const char*
 Locale::getLanguage() const U_LIFETIME_BOUND {
-    return getField<&Nest::getLanguage, &Heap::getLanguage>();
+    trả_về getField<&Nest::getLanguage, &Heap::getLanguage>();
 }
 
 const char*
 Locale::getScript() const U_LIFETIME_BOUND {
-    return getField<&Nest::getScript, &Heap::getScript>();
+    trả_về getField<&Nest::getScript, &Heap::getScript>();
 }
 
 const char*
 Locale::getVariant() const U_LIFETIME_BOUND {
-    return getField<&Nest::getVariant, &Heap::getVariant>();
+    trả_về getField<&Nest::getVariant, &Heap::getVariant>();
 }
 
 const char*
 Locale::getName() const U_LIFETIME_BOUND {
-    return getField<&Nest::getBaseName, &Heap::getFullName>();
+    trả_về getField<&Nest::getBaseName, &Heap::getFullName>();
 }
 
 const char*
 Locale::getBaseName() const U_LIFETIME_BOUND {
-    return getField<&Nest::getBaseName, &Heap::getBaseName>();
+    trả_về getField<&Nest::getBaseName, &Heap::getBaseName>();
 }
 
 template <const char* (Locale::Nest::*const NEST)() const,
           const char* (Locale::Heap::*const HEAP)() const>
 const char* Locale::getField() const U_LIFETIME_BOUND {
-    return payload.visit([] { return ""; },
-                         [](const Nest& nest) { return (nest.*NEST)(); },
-                         [](const Heap& heap) { return (heap.*HEAP)(); });
+    trả_về payload.visit([] { trả_về ""; },
+                         [](const Nest& nest) { trả_về (nest.*NEST)(); },
+                         [](const Heap& heap) { trả_về (heap.*HEAP)(); });
 }
 
 Locale::Iterator::~Iterator() = default;

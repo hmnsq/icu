@@ -9,7 +9,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#nếu !UCONFIG_NO_NORMALIZATION
 
 #include "unicode/caniter.h"
 #include "unicode/normalizer2.h"
@@ -77,7 +77,7 @@ CanonicalIterator::CanonicalIterator(const UnicodeString &sourceStr, UErrorCode 
     nfd(Normalizer2::getNFDInstance(status)),
     nfcImpl(Normalizer2Factory::getNFCImpl(status))
 {
-    if(U_SUCCESS(status) && nfcImpl->ensureCanonIterData(status)) {
+    nếu(U_SUCCESS(status) && nfcImpl->ensureCanonIterData(status)) {
       setSource(sourceStr, status);
     }
 }
@@ -88,9 +88,9 @@ CanonicalIterator::~CanonicalIterator() {
 
 void CanonicalIterator::cleanPieces() {
     int32_t i = 0;
-    if(pieces != nullptr) {
-        for(i = 0; i < pieces_length; i++) {
-            if(pieces[i] != nullptr) {
+    nếu(pieces != nullptr) {
+        cho(i = 0; i < pieces_length; i++) {
+            nếu(pieces[i] != nullptr) {
                 delete[] pieces[i];
             }
         }
@@ -98,11 +98,11 @@ void CanonicalIterator::cleanPieces() {
         pieces = nullptr;
         pieces_length = 0;
     }
-    if(pieces_lengths != nullptr) {
+    nếu(pieces_lengths != nullptr) {
         uprv_free(pieces_lengths);
         pieces_lengths = nullptr;
     }
-    if(current != nullptr) {
+    nếu(current != nullptr) {
         uprv_free(current);
         current = nullptr;
         current_length = 0;
@@ -113,7 +113,7 @@ void CanonicalIterator::cleanPieces() {
  *@return gets the source: NOTE: it is the NFD form of source
  */
 UnicodeString CanonicalIterator::getSource() {
-  return source;
+  trả_về source;
 }
 
 /**
@@ -121,7 +121,7 @@ UnicodeString CanonicalIterator::getSource() {
  */
 void CanonicalIterator::reset() {
     done = false;
-    for (int i = 0; i < current_length; ++i) {
+    cho (số_nguyên i = 0; i < current_length; ++i) {
         current[i] = 0;
     }
 }
@@ -133,9 +133,9 @@ void CanonicalIterator::reset() {
 UnicodeString CanonicalIterator::next() {
     int32_t i = 0;
 
-    if (done) {
+    nếu (done) {
       buffer.setToBogus();
-      return buffer;
+      trả_về buffer;
     }
 
     // delete old contents
@@ -143,23 +143,23 @@ UnicodeString CanonicalIterator::next() {
 
     // construct return value
 
-    for (i = 0; i < pieces_length; ++i) {
+    cho (i = 0; i < pieces_length; ++i) {
         buffer.append(pieces[i][current[i]]);
     }
     //String result = buffer.toString(); // not needed
 
     // find next value for next time
 
-    for (i = current_length - 1; ; --i) {
-        if (i < 0) {
+    cho (i = current_length - 1; ; --i) {
+        nếu (i < 0) {
             done = true;
             break;
         }
         current[i]++;
-        if (current[i] < pieces_lengths[i]) break; // got sequence
+        nếu (current[i] < pieces_lengths[i]) break; // got sequence
         current[i] = 0;
     }
-    return buffer;
+    trả_về buffer;
 }
 
 /**
@@ -174,37 +174,37 @@ void CanonicalIterator::setSource(const UnicodeString &newSource, UErrorCode &st
     UnicodeString *list = nullptr;
 
     nfd->normalize(newSource, source, status);
-    if(U_FAILURE(status)) {
-      return;
+    nếu(U_FAILURE(status)) {
+      trả_về;
     }
     done = false;
 
     cleanPieces();
 
     // catch degenerate case
-    if (newSource.length() == 0) {
+    nếu (newSource.length() == 0) {
         pieces = static_cast<UnicodeString**>(uprv_malloc(sizeof(UnicodeString*)));
         pieces_lengths = static_cast<int32_t*>(uprv_malloc(1 * sizeof(int32_t)));
         pieces_length = 1;
         current = static_cast<int32_t*>(uprv_malloc(1 * sizeof(int32_t)));
         current_length = 1;
-        if (pieces == nullptr || pieces_lengths == nullptr || current == nullptr) {
+        nếu (pieces == nullptr || pieces_lengths == nullptr || current == nullptr) {
             status = U_MEMORY_ALLOCATION_ERROR;
             goto CleanPartialInitialization;
         }
         current[0] = 0;
         pieces[0] = new UnicodeString[1];
         pieces_lengths[0] = 1;
-        if (pieces[0] == nullptr) {
+        nếu (pieces[0] == nullptr) {
             status = U_MEMORY_ALLOCATION_ERROR;
             goto CleanPartialInitialization;
         }
-        return;
+        trả_về;
     }
 
 
     list = new UnicodeString[source.length()];
-    if (list == nullptr) {
+    nếu (list == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
         goto CleanPartialInitialization;
     }
@@ -218,9 +218,9 @@ void CanonicalIterator::setSource(const UnicodeString &newSource, UErrorCode &st
     // extracts segments that end up on a codepoint that
     // doesn't start any decompositions. (Analysis is done
     // on the NFD form - see above).
-    for (; i < source.length(); i += U16_LENGTH(cp)) {
+    cho (; i < source.length(); i += U16_LENGTH(cp)) {
         cp = source.char32At(i);
-        if (nfcImpl->isCanonSegmentStarter(cp)) {
+        nếu (nfcImpl->isCanonSegmentStarter(cp)) {
             source.extract(start, i-start, list[list_length++]); // add up to i
             start = i;
         }
@@ -234,23 +234,23 @@ void CanonicalIterator::setSource(const UnicodeString &newSource, UErrorCode &st
     pieces_lengths = static_cast<int32_t*>(uprv_malloc(list_length * sizeof(int32_t)));
     current = static_cast<int32_t*>(uprv_malloc(list_length * sizeof(int32_t)));
     current_length = list_length;
-    if (pieces == nullptr || pieces_lengths == nullptr || current == nullptr) {
+    nếu (pieces == nullptr || pieces_lengths == nullptr || current == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
         goto CleanPartialInitialization;
     }
 
-    for (i = 0; i < current_length; i++) {
+    cho (i = 0; i < current_length; i++) {
         current[i] = 0;
     }
     // for each segment, get all the combinations that can produce 
     // it after NFD normalization
-    for (i = 0; i < pieces_length; ++i) {
+    cho (i = 0; i < pieces_length; ++i) {
         //if (PROGRESS) printf("SEGMENT\n");
         pieces[i] = getEquivalents(list[i], pieces_lengths[i], status);
     }
 
     delete[] list;
-    return;
+    trả_về;
 // Common section to cleanup all local variables and reset object variables.
 CleanPartialInitialization:
     delete[] list;
@@ -264,17 +264,17 @@ CleanPartialInitialization:
  * @return the results in a set.
  */
 void U_EXPORT2 CanonicalIterator::permute(UnicodeString &source, UBool skipZeros, Hashtable *result, UErrorCode &status, int32_t depth) {
-    if(U_FAILURE(status)) {
-        return;
+    nếu(U_FAILURE(status)) {
+        trả_về;
     }
     // To avoid infinity loop caused by permute, we limit the depth of recursive
     // call to permute and return U_UNSUPPORTED_ERROR.
     // We know in some unit test we need at least 4. Set to 8 just in case some
     // unforseen use cases.
     constexpr int32_t kPermuteDepthLimit = 8;
-    if (depth > kPermuteDepthLimit) {
+    nếu (depth > kPermuteDepthLimit) {
         status = U_UNSUPPORTED_ERROR;
-        return;
+        trả_về;
     }
     //if (PROGRESS) printf("Permute: %s\n", UToS(Tr(source)));
     int32_t i = 0;
@@ -282,26 +282,26 @@ void U_EXPORT2 CanonicalIterator::permute(UnicodeString &source, UBool skipZeros
     // optimization:
     // if zero or one character, just return a set with it
     // we check for length < 2 to keep from counting code points all the time
-    if (source.length() <= 2 && source.countChar32() <= 1) {
+    nếu (source.length() <= 2 && source.countChar32() <= 1) {
         UnicodeString *toPut = new UnicodeString(source);
         /* test for nullptr */
-        if (toPut == nullptr) {
+        nếu (toPut == nullptr) {
             status = U_MEMORY_ALLOCATION_ERROR;
-            return;
+            trả_về;
         }
         result->put(source, toPut, status);
-        return;
+        trả_về;
     }
 
     // otherwise iterate through the string, and recursively permute all the other characters
     UChar32 cp;
     Hashtable subpermute(status);
-    if(U_FAILURE(status)) {
-        return;
+    nếu(U_FAILURE(status)) {
+        trả_về;
     }
     subpermute.setValueDeleter(uprv_deleteUObject);
 
-    for (i = 0; i < source.length(); i += U16_LENGTH(cp)) {
+    cho (i = 0; i < source.length(); i += U16_LENGTH(cp)) {
         cp = source.char32At(i);
         const UHashElement *ne = nullptr;
         int32_t el = UHASH_FIRST;
@@ -310,7 +310,7 @@ void U_EXPORT2 CanonicalIterator::permute(UnicodeString &source, UBool skipZeros
         // optimization:
         // if the character is canonical combining class zero,
         // don't permute it
-        if (skipZeros && i != 0 && u_getCombiningClass(cp) == 0) {
+        nếu (skipZeros && i != 0 && u_getCombiningClass(cp) == 0) {
             //System.out.println("Skipping " + Utility.hex(UTF16.valueOf(source, i)));
             continue;
         }
@@ -321,21 +321,21 @@ void U_EXPORT2 CanonicalIterator::permute(UnicodeString &source, UBool skipZeros
         //Hashtable *subpermute = permute(source.substring(0,i) + source.substring(i + UTF16.getCharCount(cp)));
         permute(subPermuteString.remove(i, U16_LENGTH(cp)), skipZeros, &subpermute, status, depth+1);
         /* Test for buffer overflows */
-        if(U_FAILURE(status)) {
-            return;
+        nếu(U_FAILURE(status)) {
+            trả_về;
         }
         // The upper remove is destructive. The question is do we have to make a copy, or we don't care about the contents 
         // of source at this point.
 
         // prefix this character to all of them
         ne = subpermute.nextElement(el);
-        while (ne != nullptr) {
+        trong_khi (ne != nullptr) {
             UnicodeString* permRes = static_cast<UnicodeString*>(ne->value.pointer);
             UnicodeString *chStr = new UnicodeString(cp);
             //test for nullptr
-            if (chStr == nullptr) {
+            nếu (chStr == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                trả_về;
             }
             chStr->append(*permRes); //*((UnicodeString *)(ne->value.pointer));
             //if (PROGRESS) printf("  Piece: %s\n", UToS(*chStr));
@@ -353,8 +353,8 @@ UnicodeString* CanonicalIterator::getEquivalents(const UnicodeString &segment, i
     Hashtable result(status);
     Hashtable permutations(status);
     Hashtable basic(status);
-    if (U_FAILURE(status)) {
-        return nullptr;
+    nếu (U_FAILURE(status)) {
+        trả_về nullptr;
     }
     result.setValueDeleter(uprv_deleteUObject);
     permutations.setValueDeleter(uprv_deleteUObject);
@@ -363,8 +363,8 @@ UnicodeString* CanonicalIterator::getEquivalents(const UnicodeString &segment, i
     char16_t USeg[256];
     int32_t segLen = segment.extract(USeg, 256, status);
     getEquivalents2(&basic, USeg, segLen, status);
-    if (U_FAILURE(status)) {
-        return nullptr;
+    nếu (U_FAILURE(status)) {
+        trả_về nullptr;
     }
 
     // now get all the permutations
@@ -376,7 +376,7 @@ UnicodeString* CanonicalIterator::getEquivalents(const UnicodeString &segment, i
     //Iterator it = basic.iterator();
     ne = basic.nextElement(el);
     //while (it.hasNext())
-    while (ne != nullptr) {
+    trong_khi (ne != nullptr) {
         //String item = (String) it.next();
         UnicodeString item = *static_cast<UnicodeString*>(ne->value.pointer);
 
@@ -387,7 +387,7 @@ UnicodeString* CanonicalIterator::getEquivalents(const UnicodeString &segment, i
         //Iterator it2 = permutations.iterator();
         ne2 = permutations.nextElement(el2);
         //while (it2.hasNext())
-        while (ne2 != nullptr) {
+        trong_khi (ne2 != nullptr) {
             //String possible = (String) it2.next();
             //UnicodeString *possible = new UnicodeString(*((UnicodeString *)(ne2->value.pointer)));
             UnicodeString possible(*static_cast<UnicodeString*>(ne2->value.pointer));
@@ -395,11 +395,11 @@ UnicodeString* CanonicalIterator::getEquivalents(const UnicodeString &segment, i
             nfd->normalize(possible, attempt, status);
 
             // TODO: check if operator == is semanticaly the same as attempt.equals(segment)
-            if (attempt==segment) {
+            nếu (attempt==segment) {
                 //if (PROGRESS) printf("Adding Permutation: %s\n", UToS(Tr(*possible)));
                 // TODO: use the hashtable just to catch duplicates - store strings directly (somehow).
                 result.put(possible, new UnicodeString(possible), status); //add(possible);
-            } else {
+            } không_thì {
                 //if (PROGRESS) printf("-Skipping Permutation: %s\n", UToS(Tr(*possible)));
             }
 
@@ -409,43 +409,43 @@ UnicodeString* CanonicalIterator::getEquivalents(const UnicodeString &segment, i
     }
 
     /* Test for buffer overflows */
-    if(U_FAILURE(status)) {
-        return nullptr;
+    nếu(U_FAILURE(status)) {
+        trả_về nullptr;
     }
     // convert into a String[] to clean up storage
     //String[] finalResult = new String[result.size()];
     UnicodeString *finalResult = nullptr;
     int32_t resultCount;
-    if((resultCount = result.count()) != 0) {
+    nếu((resultCount = result.count()) != 0) {
         finalResult = new UnicodeString[resultCount];
-        if (finalResult == nullptr) {
+        nếu (finalResult == nullptr) {
             status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+            trả_về nullptr;
         }
     }
-    else {
+    không_thì {
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        trả_về nullptr;
     }
     //result.toArray(finalResult);
     result_len = 0;
     el = UHASH_FIRST;
     ne = result.nextElement(el);
-    while(ne != nullptr) {
+    trong_khi(ne != nullptr) {
         finalResult[result_len++] = *static_cast<UnicodeString*>(ne->value.pointer);
         ne = result.nextElement(el);
     }
 
 
-    return finalResult;
+    trả_về finalResult;
 }
 
 Hashtable* CanonicalIterator::getEquivalents2(Hashtable* fillinResult U_LIFETIME_BOUND,
                                               const char16_t* segment,
                                               int32_t segLen,
                                               UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return nullptr;
+    nếu (U_FAILURE(status)) {
+        trả_về nullptr;
     }
 
     //if (PROGRESS) printf("Adding: %s\n", UToS(Tr(segment)));
@@ -458,21 +458,21 @@ Hashtable* CanonicalIterator::getEquivalents2(Hashtable* fillinResult U_LIFETIME
 
     // cycle through all the characters
     UChar32 cp;
-    for (int32_t i = 0; i < segLen; i += U16_LENGTH(cp)) {
+    cho (int32_t i = 0; i < segLen; i += U16_LENGTH(cp)) {
         // see if any character is at the start of some decomposition
         U16_GET(segment, 0, i, segLen, cp);
-        if (!nfcImpl->getCanonStartSet(cp, starts)) {
+        nếu (!nfcImpl->getCanonStartSet(cp, starts)) {
             continue;
         }
         // if so, see which decompositions match
         UnicodeSetIterator iter(starts);
-        while (iter.next()) {
+        trong_khi (iter.next()) {
             UChar32 cp2 = iter.getCodepoint();
             Hashtable remainder(status);
             remainder.setValueDeleter(uprv_deleteUObject);
-            if (extract(&remainder, cp2, segment, segLen, i, status) == nullptr) {
-                if (U_FAILURE(status)) {
-                    return nullptr;
+            nếu (extract(&remainder, cp2, segment, segLen, i, status) == nullptr) {
+                nếu (U_FAILURE(status)) {
+                    trả_về nullptr;
                 }
                 continue;
             }
@@ -483,13 +483,13 @@ Hashtable* CanonicalIterator::getEquivalents2(Hashtable* fillinResult U_LIFETIME
 
             int32_t el = UHASH_FIRST;
             const UHashElement *ne = remainder.nextElement(el);
-            while (ne != nullptr) {
+            trong_khi (ne != nullptr) {
                 UnicodeString item = *static_cast<UnicodeString*>(ne->value.pointer);
                 UnicodeString *toAdd = new UnicodeString(prefix);
                 /* test for nullptr */
-                if (toAdd == nullptr) {
+                nếu (toAdd == nullptr) {
                     status = U_MEMORY_ALLOCATION_ERROR;
-                    return nullptr;
+                    trả_về nullptr;
                 }
                 *toAdd += item;
                 fillinResult->put(*toAdd, toAdd, status);
@@ -501,18 +501,18 @@ Hashtable* CanonicalIterator::getEquivalents2(Hashtable* fillinResult U_LIFETIME
             // ICU-22642 Guards against strings that have so many permutations
             // that they would otherwise hang the function.
             constexpr int32_t kResultLimit = 4096;
-            if (fillinResult->count() > kResultLimit) {
+            nếu (fillinResult->count() > kResultLimit) {
                 status = U_UNSUPPORTED_ERROR;
-                return nullptr;
+                trả_về nullptr;
             }
         }
     }
 
     /* Test for buffer overflows */
-    if(U_FAILURE(status)) {
-        return nullptr;
+    nếu(U_FAILURE(status)) {
+        trả_về nullptr;
     }
-    return fillinResult;
+    trả_về fillinResult;
 }
 
 /**
@@ -530,20 +530,20 @@ Hashtable* CanonicalIterator::extract(Hashtable* fillinResult U_LIFETIME_BOUND,
     //if (PROGRESS) printf(" extract: %s, ", UToS(Tr(UnicodeString(comp))));
     //if (PROGRESS) printf("%s, %i\n", UToS(Tr(segment)), segmentPos);
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    nếu (U_FAILURE(status)) {
+        trả_về nullptr;
     }
 
     UnicodeString temp(comp);
     int32_t inputLen=temp.length();
     UnicodeString decompString;
     nfd->normalize(temp, decompString, status);
-    if (U_FAILURE(status)) {
-        return nullptr;
+    nếu (U_FAILURE(status)) {
+        trả_về nullptr;
     }
-    if (decompString.isBogus()) {
+    nếu (decompString.isBogus()) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        trả_về nullptr;
     }
     const char16_t *decomp=decompString.getBuffer();
     int32_t decompLen=decompString.length();
@@ -556,20 +556,20 @@ Hashtable* CanonicalIterator::extract(Hashtable* fillinResult U_LIFETIME_BOUND,
     U16_NEXT(decomp, decompPos, decompLen, decompCp);
 
     int32_t i = segmentPos;
-    while(i < segLen) {
+    trong_khi(i < segLen) {
         U16_NEXT(segment, i, segLen, cp);
 
-        if (cp == decompCp) { // if equal, eat another cp from decomp
+        nếu (cp == decompCp) { // if equal, eat another cp from decomp
 
             //if (PROGRESS) printf("  matches: %s\n", UToS(Tr(UnicodeString(cp))));
 
-            if (decompPos == decompLen) { // done, have all decomp characters!
+            nếu (decompPos == decompLen) { // done, have all decomp characters!
                 temp.append(segment+i, segLen-i);
                 ok = true;
                 break;
             }
             U16_NEXT(decomp, decompPos, decompLen, decompCp);
-        } else {
+        } không_thì {
             //if (PROGRESS) printf("  buffer: %s\n", UToS(Tr(UnicodeString(cp))));
 
             // brute force approach
@@ -588,25 +588,25 @@ Hashtable* CanonicalIterator::extract(Hashtable* fillinResult U_LIFETIME_BOUND,
             */
         }
     }
-    if (!ok)
-        return nullptr; // we failed, characters left over
+    nếu (!ok)
+        trả_về nullptr; // we failed, characters left over
 
     //if (PROGRESS) printf("Matches\n");
 
-    if (inputLen == temp.length()) {
+    nếu (inputLen == temp.length()) {
         fillinResult->put(UnicodeString(), new UnicodeString(), status);
-        return fillinResult; // succeed, but no remainder
+        trả_về fillinResult; // succeed, but no remainder
     }
 
     // brute force approach
     // check to make sure result is canonically equivalent
     UnicodeString trial;
     nfd->normalize(temp, trial, status);
-    if(U_FAILURE(status) || trial.compare(segment+segmentPos, segLen - segmentPos) != 0) {
-        return nullptr;
+    nếu(U_FAILURE(status) || trial.compare(segment+segmentPos, segLen - segmentPos) != 0) {
+        trả_về nullptr;
     }
 
-    return getEquivalents2(fillinResult, temp.getBuffer()+inputLen, temp.length()-inputLen, status);
+    trả_về getEquivalents2(fillinResult, temp.getBuffer()+inputLen, temp.length()-inputLen, status);
 }
 
 U_NAMESPACE_END

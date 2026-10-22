@@ -213,92 +213,92 @@ public:
 // UVector32 inlines
 
 inline UBool UVector32::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
-    if ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
-        return true;
-    } else {
-        return expandCapacity(minimumCapacity, status);
+    nếu ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
+        trả_về true;
+    } không_thì {
+        trả_về expandCapacity(minimumCapacity, status);
     }
 }
 
 inline int32_t UVector32::elementAti(int32_t index) const {
-    return (index >= 0 && count > 0 && count - index > 0) ? elements[index] : 0;
+    trả_về (index >= 0 && count > 0 && count - index > 0) ? elements[index] : 0;
 }
 
 
 inline void UVector32::addElement(int32_t elem, UErrorCode &status) {
-    if (ensureCapacity(count + 1, status)) {
+    nếu (ensureCapacity(count + 1, status)) {
         elements[count] = elem;
         count++;
     }
 }
 
 inline int32_t *UVector32::reserveBlock(int32_t size, UErrorCode &status) {
-    if (ensureCapacity(count+size, status) == false) {
-        return nullptr;
+    nếu (ensureCapacity(count+size, status) == false) {
+        trả_về nullptr;
     }
     int32_t  *rp = elements+count;
     count += size;
-    return rp;
+    trả_về rp;
 }
 
 inline int32_t *UVector32::popFrame(int32_t size) {
     U_ASSERT(count >= size);
     count -= size;
-    if (count < 0) {
+    nếu (count < 0) {
         count = 0;
     }
-    return elements+count-size;
+    trả_về elements+count-size;
 }
 
 
 
 inline int32_t UVector32::size() const {
-    return count;
+    trả_về count;
 }
 
 inline UBool UVector32::isEmpty() const {
-    return count == 0;
+    trả_về count == 0;
 }
 
 inline UBool UVector32::contains(int32_t obj) const {
-    return indexOf(obj) >= 0;
+    trả_về indexOf(obj) >= 0;
 }
 
 inline int32_t UVector32::lastElementi() const {
-    return elementAti(count-1);
+    trả_về elementAti(count-1);
 }
 
 inline bool UVector32::operator!=(const UVector32& other) const {
-    return !operator==(other);
+    trả_về !operator==(other);
 }
 
 inline int32_t *UVector32::getBuffer() const {
-    return elements;
+    trả_về elements;
 }
 
 
 // UStack inlines
 
 inline UBool UVector32::empty() const {
-    return isEmpty();
+    trả_về isEmpty();
 }
 
 inline int32_t UVector32::peeki() const {
-    return lastElementi();
+    trả_về lastElementi();
 }
 
 inline int32_t UVector32::push(int32_t i, UErrorCode &status) {
     addElement(i, status);
-    return i;
+    trả_về i;
 }
 
 inline int32_t UVector32::popi() {
     int32_t result = 0;
-    if (count > 0) {
+    nếu (count > 0) {
         count--;
         result = elements[count];
     }
-    return result;
+    trả_về result;
 }
 
 U_NAMESPACE_END

@@ -12,7 +12,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#nếu U_SHOW_CPLUSPLUS_API
 
 #include "unicode/chariter.h"
 

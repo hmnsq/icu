@@ -41,27 +41,27 @@ U_CFUNC void UDatamemory_assign(UDataMemory *dest, UDataMemory *source) {
 U_CFUNC UDataMemory *UDataMemory_createNewInstance(UErrorCode *pErr) {
     UDataMemory *This;
 
-    if (U_FAILURE(*pErr)) {
-        return nullptr;
+    nếu (U_FAILURE(*pErr)) {
+        trả_về nullptr;
     }
     This = (UDataMemory *)uprv_malloc(sizeof(UDataMemory));
-    if (This == nullptr) {
+    nếu (This == nullptr) {
         *pErr = U_MEMORY_ALLOCATION_ERROR; }
-    else {
+    không_thì {
         UDataMemory_init(This);
         This->heapAllocated = true;
     }
-    return This;
+    trả_về This;
 }
 
 U_CFUNC const DataHeader*
 UDataMemory_normalizeDataPointer(const void* p U_LIFETIME_BOUND) {
     /* allow the data to be optionally prepended with an alignment-forcing double value */
     const DataHeader *pdh = (const DataHeader *)p;
-    if(pdh==nullptr || (pdh->dataHeader.magic1==0xda && pdh->dataHeader.magic2==0x27)) {
-        return pdh;
-    } else {
-#if U_PLATFORM == U_PF_OS400
+    nếu(pdh==nullptr || (pdh->dataHeader.magic1==0xda && pdh->dataHeader.magic2==0x27)) {
+        trả_về pdh;
+    } không_thì {
+#nếu U_PLATFORM == U_PF_OS400
         /*
         TODO: Fix this once the compiler implements this feature. Keep in sync with genccode.c
 
@@ -74,9 +74,9 @@ UDataMemory_normalizeDataPointer(const void* p U_LIFETIME_BOUND) {
         magic numbers we must skip the initial double.
         [grhoten 4/24/2003]
         */
-        return (const DataHeader *)*((const void **)p+1);
-#else
-        return (const DataHeader *)((const double *)p+1);
+        trả_về (const DataHeader *)*((const void **)p+1);
+#không_thì
+        trả_về (const DataHeader *)((const double *)p+1);
 #endif
     }
 }
@@ -89,11 +89,11 @@ U_CFUNC void UDataMemory_setData (UDataMemory *This, const void *dataAddr) {
 
 U_CAPI void U_EXPORT2
 udata_close(UDataMemory *pData) {
-    if(pData!=nullptr) {
+    nếu(pData!=nullptr) {
         uprv_unmapFile(pData);
-        if(pData->heapAllocated ) {
+        nếu(pData->heapAllocated ) {
             uprv_free(pData);
-        } else {
+        } không_thì {
             UDataMemory_init(pData);
         }
     }
@@ -101,10 +101,10 @@ udata_close(UDataMemory *pData) {
 
 U_CAPI const void* U_EXPORT2
 udata_getMemory(UDataMemory* pData U_LIFETIME_BOUND) {
-    if(pData!=nullptr && pData->pHeader!=nullptr) {
-        return (char *)(pData->pHeader)+udata_getHeaderSize(pData->pHeader);
-    } else {
-        return nullptr;
+    nếu(pData!=nullptr && pData->pHeader!=nullptr) {
+        trả_về (char *)(pData->pHeader)+udata_getHeaderSize(pData->pHeader);
+    } không_thì {
+        trả_về nullptr;
     }
 }
 
@@ -130,14 +130,14 @@ udata_getMemory(UDataMemory* pData U_LIFETIME_BOUND) {
  */
 U_CAPI int32_t U_EXPORT2
 udata_getLength(const UDataMemory *pData) {
-    if(pData!=nullptr && pData->pHeader!=nullptr && pData->length>=0) {
+    nếu(pData!=nullptr && pData->pHeader!=nullptr && pData->length>=0) {
         /*
          * subtract the header size,
          * return only the size of the actual data starting at udata_getMemory()
          */
-        return pData->length-udata_getHeaderSize(pData->pHeader);
-    } else {
-        return -1;
+        trả_về pData->length-udata_getHeaderSize(pData->pHeader);
+    } không_thì {
+        trả_về -1;
     }
 }
 
@@ -148,13 +148,13 @@ udata_getLength(const UDataMemory *pData) {
  */
 U_CAPI const void* U_EXPORT2
 udata_getRawMemory(const UDataMemory* pData U_LIFETIME_BOUND) {
-    if(pData!=nullptr && pData->pHeader!=nullptr) {
-        return pData->pHeader;
-    } else {
-        return nullptr;
+    nếu(pData!=nullptr && pData->pHeader!=nullptr) {
+        trả_về pData->pHeader;
+    } không_thì {
+        trả_về nullptr;
     }
 }
 
 U_CFUNC UBool UDataMemory_isLoaded(const UDataMemory *This) {
-    return This->pHeader != nullptr;
+    trả_về This->pHeader != nullptr;
 }

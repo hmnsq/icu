@@ -16,7 +16,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#nếu !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
 #include "unicode/ucnv.h"
 #include "unicode/uset.h"
@@ -182,45 +182,45 @@ _CompoundTextgetName(const UConverter* cnv);
 static int32_t findNextEsc(const char *source, const char *sourceLimit) {
     int32_t length = static_cast<int32_t>(sourceLimit - source);
     int32_t i;
-    for (i = 1; i < length; i++) {
-        if (*(source + i) == 0x1B) {
-            return i;
+    cho (i = 1; i < length; i++) {
+        nếu (*(source + i) == 0x1B) {
+            trả_về i;
         }
     }
 
-    return length;
+    trả_về length;
 }
 
-static COMPOUND_TEXT_CONVERTERS getState(int codepoint) {
+static COMPOUND_TEXT_CONVERTERS getState(số_nguyên codepoint) {
     COMPOUND_TEXT_CONVERTERS state = DO_SEARCH;
 
-    if (isASCIIRange(codepoint)) {
+    nếu (isASCIIRange(codepoint)) {
         state = COMPOUND_TEXT_SINGLE_0;
-    } else if (isIBM912(codepoint)) {
+    } không_thì nếu (isIBM912(codepoint)) {
         state = IBM_912;
-    }else if (isIBM913(codepoint)) {
+    }không_thì nếu (isIBM913(codepoint)) {
         state = IBM_913;
-    } else if (isISO8859_14(codepoint)) {
+    } không_thì nếu (isISO8859_14(codepoint)) {
         state = ISO_8859_14;
-    } else if (isIBM923(codepoint)) {
+    } không_thì nếu (isIBM923(codepoint)) {
         state = IBM_923;
-    } else if (isIBM874(codepoint)) {
+    } không_thì nếu (isIBM874(codepoint)) {
         state = IBM_874;
-    } else if (isIBM914(codepoint)) {
+    } không_thì nếu (isIBM914(codepoint)) {
         state = IBM_914;
-    } else if (isCompoundS2(codepoint)) {
+    } không_thì nếu (isCompoundS2(codepoint)) {
         state = COMPOUND_TEXT_SINGLE_2;
-    } else if (isCompoundS3(codepoint)) {
+    } không_thì nếu (isCompoundS3(codepoint)) {
         state = COMPOUND_TEXT_SINGLE_3;
-    } else if (isIBM916(codepoint)) {
+    } không_thì nếu (isIBM916(codepoint)) {
         state = IBM_916;
-    } else if (isIBM915(codepoint)) {
+    } không_thì nếu (isIBM915(codepoint)) {
         state = IBM_915;
-    } else if (isCompoundS1(codepoint)) {
+    } không_thì nếu (isCompoundS1(codepoint)) {
         state = COMPOUND_TEXT_SINGLE_1;
     }
 
-    return state;
+    trả_về state;
 }
 
 static COMPOUND_TEXT_CONVERTERS findStateFromEscSeq(const char* source, const char* sourceLimit, const uint8_t* toUBytesBuffer, int32_t toUBytesBufferLength, UErrorCode *err) {
@@ -228,40 +228,40 @@ static COMPOUND_TEXT_CONVERTERS findStateFromEscSeq(const char* source, const ch
     UBool matchFound = false;
     int32_t i, n, offset = toUBytesBufferLength;
 
-    for (i = 0; i < NUM_OF_CONVERTERS; i++) {
+    cho (i = 0; i < NUM_OF_CONVERTERS; i++) {
         matchFound = true;
-        for (n = 0; escSeqCompoundText[i][n] != 0; n++) {
-            if (n < toUBytesBufferLength) {
-                if (toUBytesBuffer[n] != escSeqCompoundText[i][n]) {
+        cho (n = 0; escSeqCompoundText[i][n] != 0; n++) {
+            nếu (n < toUBytesBufferLength) {
+                nếu (toUBytesBuffer[n] != escSeqCompoundText[i][n]) {
                     matchFound = false;
                     break;
                 }
-            } else if ((source + (n - offset)) >= sourceLimit) {
+            } không_thì nếu ((source + (n - offset)) >= sourceLimit) {
                 *err = U_TRUNCATED_CHAR_FOUND;
                 matchFound = false;
                 break;
-            } else if (*(source + (n - offset)) != escSeqCompoundText[i][n]) {
+            } không_thì nếu (*(source + (n - offset)) != escSeqCompoundText[i][n]) {
                 matchFound = false;
                 break;
             }
         }
 
-        if (matchFound) {
+        nếu (matchFound) {
             break;
         }
     }
 
-    if (matchFound) {
+    nếu (matchFound) {
         state = (COMPOUND_TEXT_CONVERTERS)i;
     }
 
-    return state;
+    trả_về state;
 }
 
 static void U_CALLCONV
 _CompoundTextOpen(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode){
     cnv->extraInfo = uprv_malloc (sizeof (UConverterDataCompoundText));
-    if (cnv->extraInfo != nullptr) {
+    nếu (cnv->extraInfo != nullptr) {
         UConverterDataCompoundText *myConverterData = (UConverterDataCompoundText *) cnv->extraInfo;
 
         UConverterNamePieces stackPieces;
@@ -289,13 +289,13 @@ _CompoundTextOpen(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorC
         myConverterData->myConverterArray[ISO_8859_14] = ucnv_loadSharedData("iso-8859_14-1998", &stackPieces, &stackArgs, errorCode);
         myConverterData->myConverterArray[IBM_923] = ucnv_loadSharedData("ibm-923_P100-1998", &stackPieces, &stackArgs, errorCode);
 
-        if (U_FAILURE(*errorCode) || pArgs->onlyTestIsLoadable) {
+        nếu (U_FAILURE(*errorCode) || pArgs->onlyTestIsLoadable) {
             _CompoundTextClose(cnv);
-            return;
+            trả_về;
         }
 
         myConverterData->state = (COMPOUND_TEXT_CONVERTERS)0;
-    } else {
+    } không_thì {
         *errorCode = U_MEMORY_ALLOCATION_ERROR;
     }
 }
@@ -306,10 +306,10 @@ _CompoundTextClose(UConverter *converter) {
     UConverterDataCompoundText* myConverterData = (UConverterDataCompoundText*)(converter->extraInfo);
     int32_t i;
 
-    if (converter->extraInfo != nullptr) {
+    nếu (converter->extraInfo != nullptr) {
         /*close the array of converter pointers and free the memory*/
-        for (i = 0; i < NUM_OF_CONVERTERS; i++) {
-            if (myConverterData->myConverterArray[i] != nullptr) {
+        cho (i = 0; i < NUM_OF_CONVERTERS; i++) {
+            nếu (myConverterData->myConverterArray[i] != nullptr) {
                 ucnv_unloadSharedDataIfReady(myConverterData->myConverterArray[i]);
             }
         }
@@ -328,7 +328,7 @@ _CompoundTextReset(UConverter *converter, UConverterResetChoice choice) {
 static const char* U_CALLCONV
 _CompoundTextgetName(const UConverter* cnv){
     (void)cnv;
-    return "x11-compound-text";
+    trả_về "x11-compound-text";
 }
 
 static void U_CALLCONV
@@ -353,41 +353,41 @@ UConverter_fromUnicode_CompoundText_OFFSETS(UConverterFromUnicodeArgs* args, UEr
     currentState = myConverterData->state;
 
     /* check if the last codepoint of previous buffer was a lead surrogate*/
-    if((sourceChar = cnv->fromUChar32)!=0 && target< targetLimit) {
+    nếu((sourceChar = cnv->fromUChar32)!=0 && target< targetLimit) {
         goto getTrail;
     }
 
-    while( source < sourceLimit){
-        if(target < targetLimit){
+    trong_khi( source < sourceLimit){
+        nếu(target < targetLimit){
 
             sourceChar  = *(source++);
             /*check if the char is a First surrogate*/
-             if(U16_IS_SURROGATE(sourceChar)) {
-                if(U16_IS_SURROGATE_LEAD(sourceChar)) {
+             nếu(U16_IS_SURROGATE(sourceChar)) {
+                nếu(U16_IS_SURROGATE_LEAD(sourceChar)) {
 getTrail:
                     /*look ahead to find the trail surrogate*/
-                    if(source < sourceLimit) {
+                    nếu(source < sourceLimit) {
                         /* test the following code unit */
                         char16_t trail = *source;
-                        if(U16_IS_TRAIL(trail)) {
+                        nếu(U16_IS_TRAIL(trail)) {
                             source++;
                             sourceChar=U16_GET_SUPPLEMENTARY(sourceChar, trail);
                             cnv->fromUChar32=0x00;
                             /* convert this supplementary code point */
                             /* exit this condition tree */
-                        } else {
+                        } không_thì {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
                             *err=U_ILLEGAL_CHAR_FOUND;
                             cnv->fromUChar32=sourceChar;
                             break;
                         }
-                    } else {
+                    } không_thì {
                         /* no more input */
                         cnv->fromUChar32=sourceChar;
                         break;
                     }
-                } else {
+                } không_thì {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
                     *err=U_ILLEGAL_CHAR_FOUND;
@@ -399,58 +399,58 @@ getTrail:
              tmpTargetBufferLength = 0;
              tmpState = getState(sourceChar);
 
-             if (tmpState != DO_SEARCH && currentState != tmpState) {
+             nếu (tmpState != DO_SEARCH && currentState != tmpState) {
                  /* Get escape sequence if necessary */
                  currentState = tmpState;
-                 for (i = 0; escSeqCompoundText[currentState][i] != 0; i++) {
+                 cho (i = 0; escSeqCompoundText[currentState][i] != 0; i++) {
                      tmpTargetBuffer[tmpTargetBufferLength++] = escSeqCompoundText[currentState][i];
                  }
              }
 
-             if (tmpState == DO_SEARCH) {
+             nếu (tmpState == DO_SEARCH) {
                  /* Test all available converters */
-                 for (i = 1; i < SEARCH_LENGTH; i++) {
+                 cho (i = 1; i < SEARCH_LENGTH; i++) {
                      pValueLength = ucnv_MBCSFromUChar32(myConverterData->myConverterArray[i], sourceChar, &pValue, useFallback);
-                     if (pValueLength > 0) {
+                     nếu (pValueLength > 0) {
                          tmpState = (COMPOUND_TEXT_CONVERTERS)i;
-                         if (currentState != tmpState) {
+                         nếu (currentState != tmpState) {
                              currentState = tmpState;
-                             for (j = 0; escSeqCompoundText[currentState][j] != 0; j++) {
+                             cho (j = 0; escSeqCompoundText[currentState][j] != 0; j++) {
                                  tmpTargetBuffer[tmpTargetBufferLength++] = escSeqCompoundText[currentState][j];
                              }
                          }
-                         for (n = (pValueLength - 1); n >= 0; n--) {
+                         cho (n = (pValueLength - 1); n >= 0; n--) {
                              tmpTargetBuffer[tmpTargetBufferLength++] = (uint8_t)(pValue >> (n * 8));
                          }
                          break;
                      }
                  }
-             } else if (tmpState == COMPOUND_TEXT_SINGLE_0) {
+             } không_thì nếu (tmpState == COMPOUND_TEXT_SINGLE_0) {
                  tmpTargetBuffer[tmpTargetBufferLength++] = (uint8_t)sourceChar;
-             } else {
+             } không_thì {
                  pValueLength = ucnv_MBCSFromUChar32(myConverterData->myConverterArray[currentState], sourceChar, &pValue, useFallback);
-                 if (pValueLength > 0) {
-                     for (n = (pValueLength - 1); n >= 0; n--) {
+                 nếu (pValueLength > 0) {
+                     cho (n = (pValueLength - 1); n >= 0; n--) {
                          tmpTargetBuffer[tmpTargetBufferLength++] = (uint8_t)(pValue >> (n * 8));
                      }
                  }
              }
 
-             for (i = 0; i < tmpTargetBufferLength; i++) {
-                 if (target < targetLimit) {
+             cho (i = 0; i < tmpTargetBufferLength; i++) {
+                 nếu (target < targetLimit) {
                      *target++ = tmpTargetBuffer[i];
-                 } else {
+                 } không_thì {
                      *err = U_BUFFER_OVERFLOW_ERROR;
                      break;
                  }
              }
 
-             if (*err == U_BUFFER_OVERFLOW_ERROR) {
-                 for (; i < tmpTargetBufferLength; i++) {
+             nếu (*err == U_BUFFER_OVERFLOW_ERROR) {
+                 cho (; i < tmpTargetBufferLength; i++) {
                      args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = tmpTargetBuffer[i];
                  }
              }
-        } else {
+        } không_thì {
             *err = U_BUFFER_OVERFLOW_ERROR;
             break;
         }
@@ -480,9 +480,9 @@ UConverter_toUnicode_CompoundText_OFFSETS(UConverterToUnicodeArgs *args,
     int32_t minArgsSize;
 
     /* set up the subconverter arguments */
-    if(args->size<sizeof(UConverterToUnicodeArgs)) {
+    nếu(args->size<sizeof(UConverterToUnicodeArgs)) {
         minArgsSize = args->size;
-    } else {
+    } không_thì {
         minArgsSize = (int32_t)sizeof(UConverterToUnicodeArgs);
     }
 
@@ -491,32 +491,32 @@ UConverter_toUnicode_CompoundText_OFFSETS(UConverterToUnicodeArgs *args,
 
     currentState = tmpState =  myConverterData->state;
 
-    while(mySource < mySourceLimit){
-        if(myTarget < args->targetLimit){
-            if (args->converter->toULength > 0) {
+    trong_khi(mySource < mySourceLimit){
+        nếu(myTarget < args->targetLimit){
+            nếu (args->converter->toULength > 0) {
                 mySourceChar = args->converter->toUBytes[0];
-            } else {
+            } không_thì {
                 mySourceChar = (uint8_t)*mySource;
             }
 
-            if (mySourceChar == ESC_START) {
+            nếu (mySourceChar == ESC_START) {
                 tmpState = findStateFromEscSeq(mySource, mySourceLimit, args->converter->toUBytes, args->converter->toULength, err);
 
-                if (*err == U_TRUNCATED_CHAR_FOUND) {
-                    for (; mySource < mySourceLimit;) {
+                nếu (*err == U_TRUNCATED_CHAR_FOUND) {
+                    cho (; mySource < mySourceLimit;) {
                         args->converter->toUBytes[args->converter->toULength++] = *mySource++;
                     }
                     *err = U_ZERO_ERROR;
                     break;
-                } else if (tmpState == INVALID) {
-                    if (args->converter->toULength == 0) {
+                } không_thì nếu (tmpState == INVALID) {
+                    nếu (args->converter->toULength == 0) {
                         mySource++; /* skip over the 0x1b byte */
                     }
                     *err = U_ILLEGAL_CHAR_FOUND;
                     break;
                 }
 
-                if (tmpState != currentState) {
+                nếu (tmpState != currentState) {
                     currentState = tmpState;
                 }
 
@@ -527,19 +527,19 @@ UConverter_toUnicode_CompoundText_OFFSETS(UConverterToUnicodeArgs *args,
                 args->converter->toULength = 0;
             }
 
-            if (currentState == COMPOUND_TEXT_SINGLE_0) {
-                while (mySource < mySourceLimit) {
-                    if (*mySource == ESC_START) {
+            nếu (currentState == COMPOUND_TEXT_SINGLE_0) {
+                trong_khi (mySource < mySourceLimit) {
+                    nếu (*mySource == ESC_START) {
                         break;
                     }
-                    if (myTarget < args->targetLimit) {
+                    nếu (myTarget < args->targetLimit) {
                         *myTarget++ = 0x00ff&(*mySource++);
-                    } else {
+                    } không_thì {
                         *err = U_BUFFER_OVERFLOW_ERROR;
                         break;
                     }
                 }
-            } else if (mySource < mySourceLimit){
+            } không_thì nếu (mySource < mySourceLimit){
                 sourceOffset = findNextEsc(mySource, mySourceLimit);
 
                 tmpSourceLimit = mySource + sourceOffset;
@@ -557,9 +557,9 @@ UConverter_toUnicode_CompoundText_OFFSETS(UConverterToUnicodeArgs *args,
                 mySource = subArgs.source;
                 myTarget = subArgs.target;
 
-                if (U_FAILURE(*err)) {
-                    if(*err == U_BUFFER_OVERFLOW_ERROR) {
-                        if(subArgs.converter->UCharErrorBufferLength > 0) {
+                nếu (U_FAILURE(*err)) {
+                    nếu(*err == U_BUFFER_OVERFLOW_ERROR) {
+                        nếu(subArgs.converter->UCharErrorBufferLength > 0) {
                             uprv_memcpy(args->converter->UCharErrorBuffer, subArgs.converter->UCharErrorBuffer,
                                         subArgs.converter->UCharErrorBufferLength);
                         }
@@ -569,7 +569,7 @@ UConverter_toUnicode_CompoundText_OFFSETS(UConverterToUnicodeArgs *args,
                     break;
                 }
             }
-        } else {
+        } không_thì {
             *err = U_BUFFER_OVERFLOW_ERROR;
             break;
         }
@@ -587,7 +587,7 @@ _CompoundText_GetUnicodeSet(const UConverter *cnv,
     UConverterDataCompoundText *myConverterData = (UConverterDataCompoundText *)cnv->extraInfo;
     int32_t i;
 
-    for (i = 1; i < NUM_OF_CONVERTERS; i++) {
+    cho (i = 1; i < NUM_OF_CONVERTERS; i++) {
         ucnv_MBCSGetUnicodeSetForUnicode(myConverterData->myConverterArray[i], sa, which, pErrorCode);
     }
     sa->add(sa->set, 0x0000);

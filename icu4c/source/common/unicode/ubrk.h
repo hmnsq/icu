@@ -14,7 +14,7 @@
 #include "unicode/uloc.h"
 #include "unicode/utext.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#nếu U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
@@ -31,7 +31,7 @@
     typedef struct UBreakIterator UBreakIterator;
 #endif
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#nếu !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/parseerr.h"
 
@@ -356,7 +356,7 @@ ubrk_clone(const UBreakIterator *bi,
 U_CAPI void U_EXPORT2
 ubrk_close(UBreakIterator *bi);
 
-#if U_SHOW_CPLUSPLUS_API
+#nếu U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

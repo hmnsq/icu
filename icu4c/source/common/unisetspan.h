@@ -141,15 +141,15 @@ private:
 };
 
 UBool UnicodeSetStringSpan::needsStringSpanUTF16() {
-    return maxLength16 != 0;
+    trả_về maxLength16 != 0;
 }
 
 UBool UnicodeSetStringSpan::needsStringSpanUTF8() {
-    return maxLength8 != 0;
+    trả_về maxLength8 != 0;
 }
 
 UBool UnicodeSetStringSpan::contains(UChar32 c) const {
-    return spanSet.contains(c);
+    trả_về spanSet.contains(c);
 }
 
 U_NAMESPACE_END

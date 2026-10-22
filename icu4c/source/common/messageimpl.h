@@ -19,7 +19,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
+#nếu !UCONFIG_NO_FORMATTING
 
 #include "unicode/messagepattern.h"
 
@@ -36,7 +36,7 @@ public:
      * @return true if getApostropheMode()==UMSGPAT_APOS_DOUBLE_REQUIRED
      */
     static UBool jdkAposMode(const MessagePattern &msgPattern) {
-        return msgPattern.getApostropheMode()==UMSGPAT_APOS_DOUBLE_REQUIRED;
+        trả_về msgPattern.getApostropheMode()==UMSGPAT_APOS_DOUBLE_REQUIRED;
     }
 
     /**

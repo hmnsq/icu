@@ -37,10 +37,10 @@ SharedObject::removeRef() const {
     const UnifiedCacheBase *cache = this->cachePtr;
     int32_t updatedRefCount = umtx_atomic_dec(&hardRefCount);
     U_ASSERT(updatedRefCount >= 0);
-    if (updatedRefCount == 0) {
-        if (cache) {
+    nếu (updatedRefCount == 0) {
+        nếu (cache) {
             cache->handleUnreferencedObject();
-        } else {
+        } không_thì {
             delete this;
         }
     }
@@ -49,12 +49,12 @@ SharedObject::removeRef() const {
 
 int32_t
 SharedObject::getRefCount() const {
-    return umtx_loadAcquire(hardRefCount);
+    trả_về umtx_loadAcquire(hardRefCount);
 }
 
 void
 SharedObject::deleteIfZeroRefCount() const {
-    if (this->cachePtr == nullptr && getRefCount() == 0) {
+    nếu (this->cachePtr == nullptr && getRefCount() == 0) {
         delete this;
     }
 }

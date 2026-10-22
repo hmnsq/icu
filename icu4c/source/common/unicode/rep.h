@@ -18,7 +18,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#nếu U_SHOW_CPLUSPLUS_API
 
 #include "unicode/uobject.h"
 
@@ -243,17 +243,17 @@ inline Replaceable::Replaceable() {}
 
 inline int32_t
 Replaceable::length() const {
-    return getLength();
+    trả_về getLength();
 }
 
 inline char16_t
 Replaceable::charAt(int32_t offset) const {
-    return getCharAt(offset);
+    trả_về getCharAt(offset);
 }
 
 inline UChar32
 Replaceable::char32At(int32_t offset) const {
-    return getChar32At(offset);
+    trả_về getChar32At(offset);
 }
 
 // There is no rep.cpp, see unistr.cpp for Replaceable function implementations.

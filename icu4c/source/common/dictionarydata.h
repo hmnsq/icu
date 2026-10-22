@@ -16,7 +16,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#nếu !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/utext.h"
 #include "unicode/udata.h"

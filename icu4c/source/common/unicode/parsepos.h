@@ -20,7 +20,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#nếu U_SHOW_CPLUSPLUS_API
 
 #include "unicode/uobject.h"
 
@@ -189,28 +189,28 @@ ParsePosition::operator=(const ParsePosition& copy) U_LIFETIME_BOUND
 {
   index = copy.index;
   errorIndex = copy.errorIndex;
-  return *this;
+  trả_về *this;
 }
 
 inline bool
 ParsePosition::operator==(const ParsePosition& copy) const
 {
-  if(index != copy.index || errorIndex != copy.errorIndex)
-  return false;
-  else
-  return true;
+  nếu(index != copy.index || errorIndex != copy.errorIndex)
+  trả_về false;
+  không_thì
+  trả_về true;
 }
 
 inline bool
 ParsePosition::operator!=(const ParsePosition& copy) const
 {
-  return !operator==(copy);
+  trả_về !operator==(copy);
 }
 
 inline int32_t
 ParsePosition::getIndex() const
 {
-  return index;
+  trả_về index;
 }
 
 inline void
@@ -222,7 +222,7 @@ ParsePosition::setIndex(int32_t offset)
 inline int32_t
 ParsePosition::getErrorIndex() const
 {
-  return errorIndex;
+  trả_về errorIndex;
 }
 
 inline void

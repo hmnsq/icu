@@ -13,7 +13,7 @@
 
 #include "unicode/utypes.h"
 
-#if UCONFIG_NO_SERVICE
+#nếu UCONFIG_NO_SERVICE
 
 U_NAMESPACE_BEGIN
 
@@ -25,7 +25,7 @@ class ICULocaleService;
 
 U_NAMESPACE_END
 
-#else
+#không_thì
 
 #include "unicode/unistr.h"
 #include "unicode/locid.h"
@@ -444,16 +444,16 @@ class U_COMMON_API_CLASS ICULocaleService : public ICUService
    */
   U_COMMON_API virtual ~ICULocaleService();
 
-#if 0
+#nếu 0
   // redeclare because of overload resolution rules?
   // no, causes ambiguities since both UnicodeString and Locale have constructors that take a const char*
   // need some compiler flag to remove warnings 
   UObject* get(const UnicodeString& descriptor, UErrorCode& status) const {
-    return ICUService::get(descriptor, status);
+    trả_về ICUService::get(descriptor, status);
   }
 
   UObject* get(const UnicodeString& descriptor, UnicodeString* actualReturn, UErrorCode& status) const {
-    return ICUService::get(descriptor, actualReturn, status);
+    trả_về ICUService::get(descriptor, actualReturn, status);
   }
 #endif
 
