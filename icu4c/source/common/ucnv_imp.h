@@ -22,12 +22,12 @@
 #ifndef UCNV_IMP_H
 #define UCNV_IMP_H
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#यदि !UCONFIG_NO_CONVERSION
 
-#include "unicode/uloc.h"
-#include "ucnv_bld.h"
+#अन्तर्भाव "unicode/uloc.h"
+#अन्तर्भाव "ucnv_bld.h"
 
 /*
  * Fast check for whether a charset name is "UTF-8".
@@ -44,14 +44,14 @@
      (name[4]=='8' && name[5]==0) : \
      (name[3]=='8' && name[4]==0)))
 
-typedef struct {
-    char cnvName[UCNV_MAX_CONVERTER_NAME_LENGTH];
-    char locale[ULOC_FULLNAME_CAPACITY];
+प्रकारनिर्देश संरचना {
+    वर्ण cnvName[UCNV_MAX_CONVERTER_NAME_LENGTH];
+    वर्ण locale[ULOC_FULLNAME_CAPACITY];
     uint32_t options;
 } UConverterNamePieces;
 
 U_CFUNC UBool
-ucnv_canCreateConverter(const char *converterName, UErrorCode *err);
+ucnv_canCreateConverter(ध्रुव वर्ण *converterName, UErrorCode *err);
 
 /* figures out if we need to go to file to read in the data tables.
  * @param converterName The name of the converter
@@ -60,7 +60,7 @@ ucnv_canCreateConverter(const char *converterName, UErrorCode *err);
  */
 U_CAPI UConverter*
 ucnv_createConverter(UConverter* myUConverter U_LIFETIME_BOUND,
-                     const char* converterName,
+                     ध्रुव वर्ण* converterName,
                      UErrorCode* err);
 
 /*
@@ -77,7 +77,7 @@ ucnv_createConverter(UConverter* myUConverter U_LIFETIME_BOUND,
 U_CFUNC UConverter*
 ucnv_createAlgorithmicConverter(UConverter* myUConverter U_LIFETIME_BOUND,
                                 UConverterType type,
-                                const char* locale,
+                                ध्रुव वर्ण* locale,
                                 uint32_t options,
                                 UErrorCode* err);
 
@@ -94,7 +94,7 @@ ucnv_createConverterFromSharedData(UConverter* myUConverter U_LIFETIME_BOUND,
                                    UErrorCode* err);
 
 U_CFUNC UConverter *
-ucnv_createConverterFromPackage(const char *packageName, const char *converterName, UErrorCode *err);
+ucnv_createConverterFromPackage(ध्रुव वर्ण *packageName, ध्रुव वर्ण *converterName, UErrorCode *err);
 
 /**
  * Load a converter but do not create a UConverter object.
@@ -112,7 +112,7 @@ ucnv_createConverterFromPackage(const char *packageName, const char *converterNa
  * @internal
  */
 U_CFUNC UConverterSharedData *
-ucnv_loadSharedData(const char *converterName,
+ucnv_loadSharedData(ध्रुव वर्ण *converterName,
                     UConverterNamePieces *pieces,
                     UConverterLoadArgs *pArgs,
                     UErrorCode * err);
@@ -121,14 +121,14 @@ ucnv_loadSharedData(const char *converterName,
  * This may unload the shared data in a thread safe manner.
  * This will only unload the data if no other converters are sharing it.
  */
-U_CFUNC void
+U_CFUNC शून्य
 ucnv_unloadSharedDataIfReady(UConverterSharedData *sharedData);
 
 /**
  * This is a thread safe way to increment the reference count.
  */
-U_CFUNC void
-ucnv_incrementRefCount(UConverterSharedData *sharedData);
+U_CFUNC शून्य
+ucnv_increment_Ref_गिनती(UConverterSharedData *sharedData);
 
 /**
  * These are the default error handling callbacks for the charset conversion framework.
