@@ -23,9 +23,9 @@
 #define __UTRIE2_IMPL_H__
 
 #ifdef UCPTRIE_DEBUG
-#include "unicode/umutablecptrie.h"
+#ضمن "unicode/umutablecptrie.h"
 #endif
-#include "utrie2.h"
+#ضمن "utrie2.h"
 
 /* Public UTrie2 API implementation ----------------------------------------- */
 
@@ -47,7 +47,7 @@
  * uint16_t data[header.shiftedDataLength<<2];  -- or uint32_t data[...]
  * @internal
  */
-typedef struct UTrie2Header {
+تعريفنوع بنية UTrie2Header {
     /** "Tri2" in big-endian US-ASCII (0x54726932) */
     uint32_t signature;
 
@@ -71,16 +71,16 @@ typedef struct UTrie2Header {
      * First code point of the single-value range ending with U+10ffff,
      * rounded up and then shifted right by UTRIE2_SHIFT_1.
      */
-    uint16_t shiftedHighStart;
+    uint16_t shifted_عالي_Start;
 } UTrie2Header;
 
 /**
  * Constants for use with UTrie2Header.options.
  * @internal
  */
-enum {
+تعداد {
     /** Mask to get the UTrie2ValueBits valueBits from options. */
-    UTRIE2_OPTIONS_VALUE_BITS_MASK=0xf
+    UTRIE2_OPTIONS_قيمة_BITS_MASK=0xf
 };
 
 /* Building a trie ---------------------------------------------------------- */
@@ -90,7 +90,7 @@ enum {
  * utrie2_get32() and utrie2_enum().
  */
 
-enum {
+تعداد {
     /**
      * At build time, leave a gap in the index-2 table,
      * at least as long as the maximum lengths of the 2-byte UTF-8 index-2 table
@@ -139,7 +139,7 @@ enum {
  * preallocated anyway (unlike the growable data array).
  * Just allocating multiple index-2 blocks as needed.
  */
-struct UNewTrie2 {
+بنية UNewTrie2 {
     int32_t index1[UNEWTRIE2_INDEX_1_LENGTH];
     int32_t index2[UNEWTRIE2_MAX_INDEX_2_LENGTH];
     uint32_t *data;
@@ -147,11 +147,11 @@ struct UNewTrie2 {
     UMutableCPTrie *t3;
 #endif
 
-    uint32_t initialValue, errorValue;
+    uint32_t initial_قيمة, error_قيمة;
     int32_t index2Length, dataCapacity, dataLength;
     int32_t firstFreeBlock;
     int32_t index2NullOffset, dataNullOffset;
-    UChar32 highStart;
+    UChar32 عالي_Start;
     UBool isCompacted;
 
     /**
