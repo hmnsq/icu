@@ -7,21 +7,21 @@
 ******************************************************************************
 * sharedobject.cpp
 */
-#include "sharedobject.h"
-#include "mutex.h"
-#include "uassert.h"
-#include "umutex.h"
-#include "unifiedcache.h"
+#ಅನ್ತರ್ಭಾವ "sharedobject.h"
+#ಅನ್ತರ್ಭಾವ "mutex.h"
+#ಅನ್ತರ್ಭಾವ "uassert.h"
+#ಅನ್ತರ್ಭಾವ "umutex.h"
+#ಅನ್ತರ್ಭಾವ "unifiedcache.h"
 
 U_NAMESPACE_BEGIN
 
 SharedObject::~SharedObject() {}
 
-UnifiedCacheBase::~UnifiedCacheBase() {}
+Unified_Cache_ತಳ::~Unified_Cache_ತಳ() {}
 
-void
-SharedObject::addRef() const {
-    umtx_atomic_inc(&hardRefCount);
+ಶೂನ್ಯ
+SharedObject::ಕೂಡಿಸು_Ref() ಸ್ಥಿರಾಂಕ {
+    umtx_atomic_inc(&hard_Ref_ಎಣಿಕೆ);
 }
 
 // removeRef Decrement the reference count and delete if it is zero.
@@ -32,31 +32,31 @@ SharedObject::addRef() const {
 //           a cache eviction cycle concurrently.
 //           NO ACCESS TO *this PERMITTED AFTER REFERENCE COUNT == 0 for cached objects.
 //           THE OBJECT MAY ALREADY BE GONE.
-void
-SharedObject::removeRef() const {
-    const UnifiedCacheBase *cache = this->cachePtr;
-    int32_t updatedRefCount = umtx_atomic_dec(&hardRefCount);
-    U_ASSERT(updatedRefCount >= 0);
-    if (updatedRefCount == 0) {
-        if (cache) {
+ಶೂನ್ಯ
+SharedObject::removeRef() ಸ್ಥಿರಾಂಕ {
+    ಸ್ಥಿರಾಂಕ Unified_Cache_ತಳ *cache = ಇದು->cachePtr;
+    int32_t updated_Ref_ಎಣಿಕೆ = umtx_atomic_dec(&hard_Ref_ಎಣಿಕೆ);
+    U_ASSERT(updated_Ref_ಎಣಿಕೆ >= 0);
+    ಆದರೆ (updated_Ref_ಎಣಿಕೆ == 0) {
+        ಆದರೆ (cache) {
             cache->handleUnreferencedObject();
-        } else {
-            delete this;
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಅಳಿಸು ಇದು;
         }
     }
 }
 
 
 int32_t
-SharedObject::getRefCount() const {
-    return umtx_loadAcquire(hardRefCount);
+SharedObject::get_Ref_ಎಣಿಕೆ() ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ umtx_ತುಂಬು_Acquire(hard_Ref_ಎಣಿಕೆ);
 }
 
-void
-SharedObject::deleteIfZeroRefCount() const {
-    if (this->cachePtr == nullptr && getRefCount() == 0) {
-        delete this;
+ಶೂನ್ಯ
+SharedObject::delete_If_Zero_Ref_ಎಣಿಕೆ() ಸ್ಥಿರಾಂಕ {
+    ಆದರೆ (ಇದು->cachePtr == ಶೂನ್ಯಸೂಚಕ && get_Ref_ಎಣಿಕೆ() == 0) {
+        ಅಳಿಸು ಇದು;
     }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ

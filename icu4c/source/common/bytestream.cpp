@@ -6,81 +6,81 @@
 // Copyright 2007 Google Inc. All Rights Reserved.
 // Author: sanjay@google.com (Sanjay Ghemawat)
 
-#include "unicode/utypes.h"
-#include "unicode/bytestream.h"
-#include "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/bytestream.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
 ByteSink::~ByteSink() {}
 
-char* ByteSink::GetAppendBuffer(int32_t min_capacity,
+ಅಕ್ಷರ* ByteSink::Get_Append_ಬಫರ್(int32_t min_ಸಾಮರ್ಥ್ಯ_2,
                                 int32_t /*desired_capacity_hint*/,
-                                char* scratch U_LIFETIME_BOUND,
-                                int32_t scratch_capacity,
-                                int32_t* result_capacity) U_LIFETIME_BOUND {
-  if (min_capacity < 1 || scratch_capacity < min_capacity) {
-    *result_capacity = 0;
-    return nullptr;
+                                ಅಕ್ಷರ* scratch U_LIFETIME_BOUND,
+                                int32_t scratch_ಸಾಮರ್ಥ್ಯ_2,
+                                int32_t* ಫಲಿತಾಂಶ_ಸಾಮರ್ಥ್ಯ_2) U_LIFETIME_BOUND {
+  ಆದರೆ (min_ಸಾಮರ್ಥ್ಯ_2 < 1 || scratch_ಸಾಮರ್ಥ್ಯ_2 < min_ಸಾಮರ್ಥ್ಯ_2) {
+    *ಫಲಿತಾಂಶ_ಸಾಮರ್ಥ್ಯ_2 = 0;
+    ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
   }
-  *result_capacity = scratch_capacity;
-  return scratch;
+  *ಫಲಿತಾಂಶ_ಸಾಮರ್ಥ್ಯ_2 = scratch_ಸಾಮರ್ಥ್ಯ_2;
+  ಹಿಂತಿರುಗಿ scratch;
 }
 
-void ByteSink::Flush() {}
+ಶೂನ್ಯ ByteSink::Flush() {}
 
-CheckedArrayByteSink::CheckedArrayByteSink(char* outbuf, int32_t capacity)
-    : outbuf_(outbuf), capacity_(capacity < 0 ? 0 : capacity),
-      size_(0), appended_(0), overflowed_(false) {
+CheckedArrayByteSink::CheckedArrayByteSink(ಅಕ್ಷರ* outbuf, int32_t capacity)
+    : outbuf_(outbuf), ಸಾಮರ್ಥ್ಯ_2(capacity < 0 ? 0 : capacity),
+      ಗಾತ್ರ_2(0), appended_(0), overflowed_(ಸುಳ್ಳು) {
 }
 
 CheckedArrayByteSink::~CheckedArrayByteSink() {}
 
 CheckedArrayByteSink& CheckedArrayByteSink::Reset() U_LIFETIME_BOUND {
-  size_ = appended_ = 0;
-  overflowed_ = false;
-  return *this;
+  ಗಾತ್ರ_2 = appended_ = 0;
+  overflowed_ = ಸುಳ್ಳು;
+  ಹಿಂತಿರುಗಿ *ಇದು;
 }
 
-void CheckedArrayByteSink::Append(const char* bytes, int32_t n) {
-  if (n <= 0) {
-    return;
+ಶೂನ್ಯ CheckedArrayByteSink::Append(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* ಬೈಟುಗಳು, int32_t n) {
+  ಆದರೆ (n <= 0) {
+    ಹಿಂತಿರುಗಿ;
   }
-  if (n > (INT32_MAX - appended_)) {
+  ಆದರೆ (n > (INT32_MAX - appended_)) {
     // TODO: Report as integer overflow, not merely buffer overflow.
     appended_ = INT32_MAX;
-    overflowed_ = true;
-    return;
+    overflowed_ = ನಿಜ;
+    ಹಿಂತಿರುಗಿ;
   }
   appended_ += n;
-  int32_t available = capacity_ - size_;
-  if (n > available) {
-    n = available;
-    overflowed_ = true;
+  int32_t ಲಭ್ಯ = ಸಾಮರ್ಥ್ಯ_2 - ಗಾತ್ರ_2;
+  ಆದರೆ (n > ಲಭ್ಯ) {
+    n = ಲಭ್ಯ;
+    overflowed_ = ನಿಜ;
   }
-  if (n > 0 && bytes != (outbuf_ + size_)) {
-    uprv_memcpy(outbuf_ + size_, bytes, n);
+  ಆದರೆ (n > 0 && ಬೈಟುಗಳು != (outbuf_ + ಗಾತ್ರ_2)) {
+    uprv_memcpy(outbuf_ + ಗಾತ್ರ_2, ಬೈಟುಗಳು, n);
   }
-  size_ += n;
+  ಗಾತ್ರ_2 += n;
 }
 
-char* CheckedArrayByteSink::GetAppendBuffer(int32_t min_capacity,
+ಅಕ್ಷರ* CheckedArrayByteSink::Get_Append_ಬಫರ್(int32_t min_ಸಾಮರ್ಥ್ಯ_2,
                                             int32_t /*desired_capacity_hint*/,
-                                            char* scratch U_LIFETIME_BOUND,
-                                            int32_t scratch_capacity,
-                                            int32_t* result_capacity) U_LIFETIME_BOUND {
-  if (min_capacity < 1 || scratch_capacity < min_capacity) {
-    *result_capacity = 0;
-    return nullptr;
+                                            ಅಕ್ಷರ* scratch U_LIFETIME_BOUND,
+                                            int32_t scratch_ಸಾಮರ್ಥ್ಯ_2,
+                                            int32_t* ಫಲಿತಾಂಶ_ಸಾಮರ್ಥ್ಯ_2) U_LIFETIME_BOUND {
+  ಆದರೆ (min_ಸಾಮರ್ಥ್ಯ_2 < 1 || scratch_ಸಾಮರ್ಥ್ಯ_2 < min_ಸಾಮರ್ಥ್ಯ_2) {
+    *ಫಲಿತಾಂಶ_ಸಾಮರ್ಥ್ಯ_2 = 0;
+    ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
   }
-  int32_t available = capacity_ - size_;
-  if (available >= min_capacity) {
-    *result_capacity = available;
-    return outbuf_ + size_;
-  } else {
-    *result_capacity = scratch_capacity;
-    return scratch;
+  int32_t ಲಭ್ಯ = ಸಾಮರ್ಥ್ಯ_2 - ಗಾತ್ರ_2;
+  ಆದರೆ (ಲಭ್ಯ >= min_ಸಾಮರ್ಥ್ಯ_2) {
+    *ಫಲಿತಾಂಶ_ಸಾಮರ್ಥ್ಯ_2 = ಲಭ್ಯ;
+    ಹಿಂತಿರುಗಿ outbuf_ + ಗಾತ್ರ_2;
+  } ಇಲ್ಲದಿದ್ದರೆ {
+    *ಫಲಿತಾಂಶ_ಸಾಮರ್ಥ್ಯ_2 = scratch_ಸಾಮರ್ಥ್ಯ_2;
+    ಹಿಂತಿರುಗಿ scratch;
   }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ

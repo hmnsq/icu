@@ -14,34 +14,34 @@
 *   created by: George Rhoten
 */
 
-#include "unicode/utypes.h"
-#include "unicode/uclean.h"
-#include "cmemory.h"
-#include "mutex.h"
-#include "uassert.h"
-#include "ucln.h"
-#include "ucln_cmn.h"
-#include "utracimp.h"
-#include "umutex.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uclean.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "mutex.h"
+#ಅನ್ತರ್ಭಾವ "uassert.h"
+#ಅನ್ತರ್ಭಾವ "ucln.h"
+#ಅನ್ತರ್ಭಾವ "ucln_cmn.h"
+#ಅನ್ತರ್ಭಾವ "utracimp.h"
+#ಅನ್ತರ್ಭಾವ "umutex.h"
 
 /**  Auto-client for UCLN_COMMON **/
-#define UCLN_TYPE_IS_COMMON
-#include "ucln_imp.h"
+#ವ್ಯಾಖ್ಯಾನಿಸು UCLN_TYPE_IS_COMMON
+#ಅನ್ತರ್ಭಾವ "ucln_imp.h"
 
-static cleanupFunc *gCommonCleanupFunctions[UCLN_COMMON_COUNT];
-static cleanupFunc *gLibCleanupFunctions[UCLN_COMMON];
+ಸ್ಥಿರ cleanupFunc *gCommonCleanupFunctions[UCLN_COMMON_ಎಣಿಕೆ];
+ಸ್ಥಿರ cleanupFunc *gLibCleanupFunctions[UCLN_COMMON];
 
 
 /************************************************
  The cleanup order is important in this function.
  Please be sure that you have read ucln.h
  ************************************************/
-U_CAPI void U_EXPORT2
+U_CAPI ಶೂನ್ಯ U_EXPORT2
 u_cleanup()
 {
-    UTRACE_ENTRY_OC(UTRACE_U_CLEANUP);
-    icu::umtx_lock(nullptr);     /* Force a memory barrier, so that we are sure to see   */
-    icu::umtx_unlock(nullptr);   /*   all state left around by any other threads.        */
+    UTRACE_ನಮೂದು_OC(UTRACE_U_CLEANUP);
+    icu::umtx_ಬೀಗ(ಶೂನ್ಯಸೂಚಕ);     /* Force a memory barrier, so that we are sure to see   */
+    icu::umtx_unlock(ಶೂನ್ಯಸೂಚಕ);   /*   all state left around by any other threads.        */
 
     ucln_lib_cleanup();
 
@@ -52,17 +52,17 @@ u_cleanup()
 /*#endif*/
 }
 
-U_CAPI void U_EXPORT2 ucln_cleanupOne(ECleanupLibraryType libType) 
+U_CAPI ಶೂನ್ಯ U_EXPORT2 ucln_cleanupOne(ECleanupLibraryType libType) 
 {
-    if (gLibCleanupFunctions[libType])
+    ಆದರೆ (gLibCleanupFunctions[libType])
     {
         gLibCleanupFunctions[libType]();
-        gLibCleanupFunctions[libType] = nullptr;
+        gLibCleanupFunctions[libType] = ಶೂನ್ಯಸೂಚಕ;
     }
 }
 
-U_CFUNC void
-ucln_common_registerCleanup(ECleanupCommonType type,
+U_CFUNC ಶೂನ್ಯ
+ucln_common_ರಿಜಿಸ್ಟರ್_Cleanup(ECleanupCommonType type,
                             cleanupFunc *func)
 {
     // Thread safety messiness: From ticket 10295, calls to registerCleanup() may occur
@@ -75,50 +75,50 @@ ucln_common_registerCleanup(ECleanupCommonType type,
     //
     // No other point in ICU uses std::call_once().
 
-    U_ASSERT(UCLN_COMMON_START < type && type < UCLN_COMMON_COUNT);
-    if (type == UCLN_COMMON_MUTEX) {
+    U_ASSERT(UCLN_COMMON_ಆರಂಭ < type && type < UCLN_COMMON_ಎಣಿಕೆ);
+    ಆದರೆ (type == UCLN_COMMON_MUTEX) {
         gCommonCleanupFunctions[type] = func;
-    } else if (UCLN_COMMON_START < type && type < UCLN_COMMON_COUNT)  {
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (UCLN_COMMON_ಆರಂಭ < type && type < UCLN_COMMON_ಎಣಿಕೆ)  {
         icu::Mutex m;     // See ticket 10295 for discussion.
         gCommonCleanupFunctions[type] = func;
     }
-#if !UCLN_NO_AUTO_CLEANUP && (defined(UCLN_AUTO_ATEXIT) || defined(UCLN_AUTO_LOCAL))
-    ucln_registerAutomaticCleanup();
-#endif
+#ಆದರೆ !UCLN_NO_AUTO_CLEANUP && (defined(UCLN_AUTO_ATEXIT) || defined(UCLN_AUTO_LOCAL))
+    ucln_ರಿಜಿಸ್ಟರ್_Automatic_Cleanup();
+#ಆದರೆ_ಅಂತ್ಯ
 }
 
 // Note: ucln_registerCleanup() is called with the ICU global mutex locked.
 //       Be aware if adding anything to the function.
 //       See ticket 10295 for discussion.
 
-U_CAPI void U_EXPORT2
-ucln_registerCleanup(ECleanupLibraryType type,
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+ucln_ರಿಜಿಸ್ಟರ್_Cleanup(ECleanupLibraryType type,
                      cleanupFunc *func)
 {
-    U_ASSERT(UCLN_START < type && type < UCLN_COMMON);
-    if (UCLN_START < type && type < UCLN_COMMON)
+    U_ASSERT(UCLN_ಆರಂಭ < type && type < UCLN_COMMON);
+    ಆದರೆ (UCLN_ಆರಂಭ < type && type < UCLN_COMMON)
     {
         gLibCleanupFunctions[type] = func;
     }
 }
 
 U_CFUNC UBool ucln_lib_cleanup() {
-    int32_t libType = UCLN_START;
-    int32_t commonFunc = UCLN_COMMON_START;
+    int32_t libType = UCLN_ಆರಂಭ;
+    int32_t commonFunc = UCLN_COMMON_ಆರಂಭ;
 
-    for (libType++; libType<UCLN_COMMON; libType++) {
+    ಗಾಗಿ (libType++; libType<UCLN_COMMON; libType++) {
         ucln_cleanupOne(static_cast<ECleanupLibraryType>(libType));
     }
 
-    for (commonFunc++; commonFunc<UCLN_COMMON_COUNT; commonFunc++) {
-        if (gCommonCleanupFunctions[commonFunc])
+    ಗಾಗಿ (commonFunc++; commonFunc<UCLN_COMMON_ಎಣಿಕೆ; commonFunc++) {
+        ಆದರೆ (gCommonCleanupFunctions[commonFunc])
         {
             gCommonCleanupFunctions[commonFunc]();
-            gCommonCleanupFunctions[commonFunc] = nullptr;
+            gCommonCleanupFunctions[commonFunc] = ಶೂನ್ಯಸೂಚಕ;
         }
     }
-#if !UCLN_NO_AUTO_CLEANUP && (defined(UCLN_AUTO_ATEXIT) || defined(UCLN_AUTO_LOCAL))
-    ucln_unRegisterAutomaticCleanup();
-#endif
-    return true;
+#ಆದರೆ !UCLN_NO_AUTO_CLEANUP && (defined(UCLN_AUTO_ATEXIT) || defined(UCLN_AUTO_LOCAL))
+    ucln_un_ರಿಜಿಸ್ಟರ್_Automatic_Cleanup();
+#ಆದರೆ_ಅಂತ್ಯ
+    ಹಿಂತಿರುಗಿ ನಿಜ;
 }

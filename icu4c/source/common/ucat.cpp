@@ -10,72 +10,72 @@
 * Since: ICU 2.6
 **********************************************************************
 */
-#include "unicode/ucat.h"
-#include "unicode/ustring.h"
-#include "cstring.h"
-#include "uassert.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ucat.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ustring.h"
+#ಅನ್ತರ್ಭಾವ "cstring.h"
+#ಅನ್ತರ್ಭಾವ "uassert.h"
 
 /* Separator between set_num and msg_num */
-static const char SEPARATOR = '%';
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ SEPARATOR = '%';
 
 /* Maximum length of a set_num/msg_num key, incl. terminating zero.
  * Longest possible key is "-2147483648%-2147483648" */
-#define MAX_KEY_LEN (24)
+#ವ್ಯಾಖ್ಯಾನಿಸು MAX_ಕೀಲಿ_LEN (24)
 
 /**
  * Fill in buffer with a set_num/msg_num key string, given the numeric
  * values. Numeric values must be >= 0. Buffer must be of length
  * MAX_KEY_LEN or more.
  */
-static char*
-_catkey(char* buffer U_LIFETIME_BOUND, int32_t set_num, int32_t msg_num) {
+ಸ್ಥಿರ ಅಕ್ಷರ*
+_catkey(ಅಕ್ಷರ* ಬಫರ್ U_LIFETIME_BOUND, int32_t ಗಣ_ಅಂಕೆ, int32_t ಸಂದೇಶ_ಅಂಕೆ) {
     int32_t i = 0;
-    i = T_CString_integerToString(buffer, set_num, 10);
-    buffer[i++] = SEPARATOR;
-    T_CString_integerToString(buffer+i, msg_num, 10);
-    return buffer;
+    i = T_CString_integer_ಗಮ್ಯ_String(ಬಫರ್, ಗಣ_ಅಂಕೆ, 10);
+    ಬಫರ್[i++] = SEPARATOR;
+    T_CString_integer_ಗಮ್ಯ_String(ಬಫರ್+i, ಸಂದೇಶ_ಅಂಕೆ, 10);
+    ಹಿಂತಿರುಗಿ ಬಫರ್;
 }
 
 U_CAPI u_nl_catd U_EXPORT2
-u_catopen(const char* name, const char* locale, UErrorCode* ec) {
-    return (u_nl_catd) ures_open(name, locale, ec);
+u_catopen(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* name, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* locale, UError_ಸಂಕೇತ* ec) {
+    ಹಿಂತಿರುಗಿ (u_nl_catd) ures_open(name, locale, ec);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ಶೂನ್ಯ U_EXPORT2
 u_catclose(u_nl_catd catd) {
     ures_close((UResourceBundle*) catd); /* may be nullptr */
 }
 
-U_CAPI const char16_t* U_EXPORT2
+U_CAPI ಸ್ಥಿರಾಂಕ char16_t* U_EXPORT2
 u_catgets(u_nl_catd catd U_LIFETIME_BOUND,
-          int32_t set_num,
-          int32_t msg_num,
-          const char16_t* s U_LIFETIME_BOUND,
+          int32_t ಗಣ_ಅಂಕೆ,
+          int32_t ಸಂದೇಶ_ಅಂಕೆ,
+          ಸ್ಥಿರಾಂಕ char16_t* s U_LIFETIME_BOUND,
           int32_t* len,
-          UErrorCode* ec) {
+          UError_ಸಂಕೇತ* ec) {
 
-    char key[MAX_KEY_LEN];
-    const char16_t* result;
+    ಅಕ್ಷರ ಕೀಲಿ[MAX_ಕೀಲಿ_LEN];
+    ಸ್ಥಿರಾಂಕ char16_t* ಫಲಿತಾಂಶ;
 
-    if (ec == nullptr || U_FAILURE(*ec)) {
-        goto ERROR;
+    ಆದರೆ (ec == ಶೂನ್ಯಸೂಚಕ || U_FAILURE(*ec)) {
+        ಹೋಗು ERROR;
     }
 
-    result = ures_getStringByKey((const UResourceBundle*) catd,
-                                 _catkey(key, set_num, msg_num),
+    ಫಲಿತಾಂಶ = ures_get_String_By_ಕೀಲಿ((ಸ್ಥಿರಾಂಕ UResourceBundle*) catd,
+                                 _catkey(ಕೀಲಿ, ಗಣ_ಅಂಕೆ, ಸಂದೇಶ_ಅಂಕೆ),
                                  len, ec);
-    if (U_FAILURE(*ec)) {
-        goto ERROR;
+    ಆದರೆ (U_FAILURE(*ec)) {
+        ಹೋಗು ERROR;
     }
 
-    return result;
+    ಹಿಂತಿರುಗಿ ಫಲಿತಾಂಶ;
 
  ERROR:
     /* In case of any failure, return s */
-    if (len != nullptr) {
+    ಆದರೆ (len != ಶೂನ್ಯಸೂಚಕ) {
         *len = u_strlen(s);
     }
-    return s;
+    ಹಿಂತಿರುಗಿ s;
 }
 
 /*eof*/

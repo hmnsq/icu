@@ -18,61 +18,61 @@
 *   Character conversion functions moved here from uresbund.c
 */
 
-#include "unicode/utypes.h"
-#include "unicode/putil.h"
-#include "unicode/ustring.h"
-#include "unicode/ucnv.h"
-#include "unicode/ures.h"
-#include "uinvchar.h"
-#include "ustr_cnv.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/putil.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ustring.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ucnv.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ures.h"
+#ಅನ್ತರ್ಭಾವ "uinvchar.h"
+#ಅನ್ತರ್ಭಾವ "ustr_cnv.h"
 
 U_CAPI UResourceBundle * U_EXPORT2
-ures_openU(const char16_t *myPath,
-           const char *localeID, 
-           UErrorCode *status)
+ures_openU(ಸ್ಥಿರಾಂಕ char16_t *my_ಮಾರ್ಗ,
+           ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *localeID, 
+           UError_ಸಂಕೇತ *ಸ್ಥಿತಿ_2)
 {
-    char pathBuffer[1024];
+    ಅಕ್ಷರ ಮಾರ್ಗ_ಬಫರ್[1024];
     int32_t length;
-    char *path = pathBuffer;
+    ಅಕ್ಷರ *ಮಾರ್ಗ = ಮಾರ್ಗ_ಬಫರ್;
 
-    if(status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    ಆದರೆ(ಸ್ಥಿತಿ_2==ಶೂನ್ಯಸೂಚಕ || U_FAILURE(*ಸ್ಥಿತಿ_2)) {
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
-    if(myPath==nullptr) {
-        path = nullptr;
+    ಆದರೆ(my_ಮಾರ್ಗ==ಶೂನ್ಯಸೂಚಕ) {
+        ಮಾರ್ಗ = ಶೂನ್ಯಸೂಚಕ;
     }
-    else {
-        length=u_strlen(myPath);
-        if(length>=(int32_t)sizeof(pathBuffer)) {
-            *status=U_ILLEGAL_ARGUMENT_ERROR;
-            return nullptr;
-        } else if(uprv_isInvariantUString(myPath, length)) {
+    ಇಲ್ಲದಿದ್ದರೆ {
+        length=u_strlen(my_ಮಾರ್ಗ);
+        ಆದರೆ(length>=(int32_t)ಗಾತ್ರ(ಮಾರ್ಗ_ಬಫರ್)) {
+            *ಸ್ಥಿತಿ_2=U_ILLEGAL_ವಾದ_ERROR;
+            ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(uprv_isInvariantUString(my_ಮಾರ್ಗ, length)) {
             /*
              * the invariant converter is sufficient for package and tree names
              * and is more efficient
              */
-            u_UCharsToChars(myPath, path, length+1); /* length+1 to include the NUL */
-        } else {
-#if !UCONFIG_NO_CONVERSION
+            u_UChars_ಗಮ್ಯ_Chars(my_ಮಾರ್ಗ, ಮಾರ್ಗ, length+1); /* length+1 to include the NUL */
+        } ಇಲ್ಲದಿದ್ದರೆ {
+#ಆದರೆ !UCONFIG_NO_CONVERSION
             /* use the default converter to support variant-character paths */
-            UConverter *cnv=u_getDefaultConverter(status);
-            length=ucnv_fromUChars(cnv, path, (int32_t)sizeof(pathBuffer), myPath, length, status);
+            UConverter *cnv=u_getDefaultConverter(ಸ್ಥಿತಿ_2);
+            length=ucnv_fromUChars(cnv, ಮಾರ್ಗ, (int32_t)ಗಾತ್ರ(ಮಾರ್ಗ_ಬಫರ್), my_ಮಾರ್ಗ, length, ಸ್ಥಿತಿ_2);
             u_releaseDefaultConverter(cnv);
-            if(U_FAILURE(*status)) {
-                return nullptr;
+            ಆದರೆ(U_FAILURE(*ಸ್ಥಿತಿ_2)) {
+                ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
             }
-            if(length>=(int32_t)sizeof(pathBuffer)) {
+            ಆದರೆ(length>=(int32_t)ಗಾತ್ರ(ಮಾರ್ಗ_ಬಫರ್)) {
                 /* not NUL-terminated - path too long */
-                *status=U_ILLEGAL_ARGUMENT_ERROR;
-                return nullptr;
+                *ಸ್ಥಿತಿ_2=U_ILLEGAL_ವಾದ_ERROR;
+                ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
             }
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
             /* the default converter is not available */
-            *status=U_UNSUPPORTED_ERROR;
-            return nullptr;
-#endif
+            *ಸ್ಥಿತಿ_2=U_UNSUPPORTED_ERROR;
+            ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
+#ಆದರೆ_ಅಂತ್ಯ
         }
     }
 
-    return ures_open(path, localeID, status);
+    ಹಿಂತಿರುಗಿ ures_open(ಮಾರ್ಗ, localeID, ಸ್ಥಿತಿ_2);
 }

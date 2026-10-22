@@ -18,40 +18,40 @@
 *   Character conversion functions moved here from resbund.cpp
 */
 
-#include "unicode/utypes.h"
-#include "unicode/resbund.h"
-#include "uinvchar.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/resbund.h"
+#ಅನ್ತರ್ಭಾವ "uinvchar.h"
 
 U_NAMESPACE_BEGIN
 
-ResourceBundle::ResourceBundle( const UnicodeString&    path,
-                                const Locale&           locale,
-                                UErrorCode&              error)
-                                :UObject(), fLocale(nullptr)
+ResourceBundle::ResourceBundle( ಸ್ಥಿರಾಂಕ UnicodeString&    ಮಾರ್ಗ,
+                                ಸ್ಥಿರಾಂಕ Locale&           locale,
+                                UError_ಸಂಕೇತ&              error)
+                                :UObject(), fLocale(ಶೂನ್ಯಸೂಚಕ)
 {
-    constructForLocale(path, locale, error);
+    constructForLocale(ಮಾರ್ಗ, locale, error);
 }
 
-ResourceBundle::ResourceBundle( const UnicodeString&    path,
-                                UErrorCode&              error)
-                                :UObject(), fLocale(nullptr)
+ResourceBundle::ResourceBundle( ಸ್ಥಿರಾಂಕ UnicodeString&    ಮಾರ್ಗ,
+                                UError_ಸಂಕೇತ&              error)
+                                :UObject(), fLocale(ಶೂನ್ಯಸೂಚಕ)
 {
-    constructForLocale(path, Locale::getDefault(), error);
+    constructForLocale(ಮಾರ್ಗ, Locale::getDefault(), error);
 }
 
-void 
-ResourceBundle::constructForLocale(const UnicodeString& path,
-                                   const Locale& locale,
-                                   UErrorCode& error)
+ಶೂನ್ಯ 
+ResourceBundle::constructForLocale(ಸ್ಥಿರಾಂಕ UnicodeString& ಮಾರ್ಗ,
+                                   ಸ್ಥಿರಾಂಕ Locale& locale,
+                                   UError_ಸಂಕೇತ& error)
 {
-    if (path.isEmpty()) {
-        fResource = ures_open(nullptr, locale.getName(), &error);
+    ಆದರೆ (ಮಾರ್ಗ.is_ಖಾಲಿಗಳು()) {
+        fResource = ures_open(ಶೂನ್ಯಸೂಚಕ, locale.getName(), &error);
     }
-    else {
-        UnicodeString nullTerminatedPath(path);
-        nullTerminatedPath.append(static_cast<char16_t>(0));
-        fResource = ures_openU(nullTerminatedPath.getBuffer(), locale.getName(), &error);
+    ಇಲ್ಲದಿದ್ದರೆ {
+        UnicodeString null_Terminated_ಮಾರ್ಗ(ಮಾರ್ಗ);
+        null_Terminated_ಮಾರ್ಗ.append(static_cast<char16_t>(0));
+        fResource = ures_openU(null_Terminated_ಮಾರ್ಗ.get_ಬಫರ್(), locale.getName(), &error);
     }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ

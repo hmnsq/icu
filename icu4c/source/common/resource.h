@@ -11,8 +11,8 @@
 * created by: Markus W. Scherer
 */
 
-#ifndef __URESOURCE_H__
-#define __URESOURCE_H__
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __URESOURCE_H__
+#ವ್ಯಾಖ್ಯಾನಿಸು __URESOURCE_H__
 
 /**
  * \file
@@ -25,16 +25,16 @@
 // We use the Resource prefix for C++ classes, as usual.
 // The UResource prefix would be used for C types.
 
-#include "unicode/utypes.h"
-#include "unicode/unistr.h"
-#include "unicode/ures.h"
-#include "restrace.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unistr.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ures.h"
+#ಅನ್ತರ್ಭಾವ "restrace.h"
 
-struct ResourceData;
+ರಚನೆ Resource_ದತ್ತಾಂಶ;
 
 U_NAMESPACE_BEGIN
 
-class ResourceValue;
+class Resource_ಮೌಲ್ಯ;
 
 // Note: In C++, we use const char * pointers for keys,
 // rather than an abstraction like Java UResource.Key.
@@ -43,77 +43,77 @@ class ResourceValue;
  * Interface for iterating over a resource bundle array resource.
  */
 class U_COMMON_API ResourceArray {
-public:
+ಸಾರ್ವಜನಿಕ:
     /** Constructs an empty array object. */
-    ResourceArray() : items16(nullptr), items32(nullptr), length(0) {}
+    ResourceArray() : items16(nullptr), items32(nullptr), ಉದ್ದಳತೆ(0) {}
 
     /** Only for implementation use. @internal */
-    ResourceArray(const uint16_t *i16, const uint32_t *i32, int32_t len,
-                  const ResourceTracer& traceInfo) :
-            items16(i16), items32(i32), length(len),
+    ResourceArray(ಸ್ಥಿರಾಂಕ uint16_t *i16, ಸ್ಥಿರಾಂಕ uint32_t *i32, int32_t len,
+                  ಸ್ಥಿರಾಂಕ ResourceTracer& traceInfo) :
+            items16(i16), items32(i32), ಉದ್ದಳತೆ(len),
             fTraceInfo(traceInfo) {}
 
     /**
      * @return The number of items in the array resource.
      */
-    int32_t getSize() const { return length; }
+    int32_t get_ಗಾತ್ರ() ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ ಉದ್ದಳತೆ; }
     /**
      * @param i Array item index.
      * @param value Output-only, receives the value of the i'th item.
      * @return true if i is non-negative and less than getSize().
      */
-    UBool getValue(int32_t i, ResourceValue &value) const;
+    UBool get_ಮೌಲ್ಯ(int32_t i, Resource_ಮೌಲ್ಯ &ಮೌಲ್ಯ_2) ಸ್ಥಿರಾಂಕ;
 
     /** Only for implementation use. @internal */
-    uint32_t internalGetResource(const ResourceData *pResData, int32_t i) const;
+    uint32_t ಆಂತರಿಕ_Get_Resource(ಸ್ಥಿರಾಂಕ Resource_ದತ್ತಾಂಶ *p_Res_ದತ್ತಾಂಶ, int32_t i) ಸ್ಥಿರಾಂಕ;
 
-private:
-    const uint16_t *items16;
-    const uint32_t *items32;
-    int32_t length;
+ಖಾಸಗಿ:
+    ಸ್ಥಿರಾಂಕ uint16_t *items16;
+    ಸ್ಥಿರಾಂಕ uint32_t *items32;
+    int32_t ಉದ್ದಳತೆ;
     ResourceTracer fTraceInfo;
 };
 
 /**
  * Interface for iterating over a resource bundle table resource.
  */
-class U_COMMON_API ResourceTable {
-public:
+class U_COMMON_API Resource_ಕೋಷ್ಟಕ {
+ಸಾರ್ವಜನಿಕ:
     /** Constructs an empty table object. */
-    ResourceTable() : keys16(nullptr), keys32(nullptr), items16(nullptr), items32(nullptr), length(0) {}
+    Resource_ಕೋಷ್ಟಕ() : keys16(nullptr), keys32(nullptr), items16(nullptr), items32(nullptr), ಉದ್ದಳತೆ(0) {}
 
     /** Only for implementation use. @internal */
-    ResourceTable(const uint16_t *k16, const int32_t *k32,
-                  const uint16_t *i16, const uint32_t *i32, int32_t len,
-                  const ResourceTracer& traceInfo) :
-            keys16(k16), keys32(k32), items16(i16), items32(i32), length(len),
+    Resource_ಕೋಷ್ಟಕ(ಸ್ಥಿರಾಂಕ uint16_t *k16, ಸ್ಥಿರಾಂಕ int32_t *k32,
+                  ಸ್ಥಿರಾಂಕ uint16_t *i16, ಸ್ಥಿರಾಂಕ uint32_t *i32, int32_t len,
+                  ಸ್ಥಿರಾಂಕ ResourceTracer& traceInfo) :
+            keys16(k16), keys32(k32), items16(i16), items32(i32), ಉದ್ದಳತೆ(len),
             fTraceInfo(traceInfo) {}
 
     /**
      * @return The number of items in the array resource.
      */
-    int32_t getSize() const { return length; }
+    int32_t get_ಗಾತ್ರ() ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ ಉದ್ದಳತೆ; }
     /**
      * @param i Table item index.
      * @param key Output-only, receives the key of the i'th item.
      * @param value Output-only, receives the value of the i'th item.
      * @return true if i is non-negative and less than getSize().
      */
-    UBool getKeyAndValue(int32_t i, const char *&key, ResourceValue &value) const;
+    UBool get_ಕೀಲಿ_And_ಮೌಲ್ಯ(int32_t i, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *&ಕೀಲಿ, Resource_ಮೌಲ್ಯ &ಮೌಲ್ಯ_2) ಸ್ಥಿರಾಂಕ;
 
     /**
      * @param key Key string to find in the table.
      * @param value Output-only, receives the value of the item with that key.
      * @return true if the table contains the key.
      */
-    UBool findValue(const char *key, ResourceValue &value) const;
+    UBool ಕಂಡುಹಿಡಿ_ಮೌಲ್ಯ(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಕೀಲಿ, Resource_ಮೌಲ್ಯ &ಮೌಲ್ಯ_2) ಸ್ಥಿರಾಂಕ;
 
-private:
-    const uint16_t *keys16;
-    const int32_t *keys32;
-    const uint16_t *items16;
-    const uint32_t *items32;
-    int32_t length;
+ಖಾಸಗಿ:
+    ಸ್ಥಿರಾಂಕ uint16_t *keys16;
+    ಸ್ಥಿರಾಂಕ int32_t *keys32;
+    ಸ್ಥಿರಾಂಕ uint16_t *items16;
+    ಸ್ಥಿರಾಂಕ uint32_t *items32;
+    int32_t ಉದ್ದಳತೆ;
     ResourceTracer fTraceInfo;
 };
 
@@ -122,37 +122,37 @@ private:
  * Avoids object creations as much as possible.
  * Mutable, not thread-safe.
  */
-class U_COMMON_API ResourceValue : public UObject {
-public:
-    virtual ~ResourceValue();
+class U_COMMON_API Resource_ಮೌಲ್ಯ : ಸಾರ್ವಜನಿಕ UObject {
+ಸಾರ್ವಜನಿಕ:
+    ವಾಸ್ತವಿಕ ~Resource_ಮೌಲ್ಯ();
 
     /**
      * @return ICU resource type, for example, URES_STRING
      */
-    virtual UResType getType() const = 0;
+    ವಾಸ್ತವಿಕ UResType getType() ಸ್ಥಿರಾಂಕ = 0;
 
     /**
      * Sets U_RESOURCE_TYPE_MISMATCH if this is not a string resource.
      *
      * @see ures_getString()
      */
-    virtual const char16_t *getString(int32_t &length, UErrorCode &errorCode) const = 0;
+    ವಾಸ್ತವಿಕ ಸ್ಥಿರಾಂಕ char16_t *getString(int32_t &ಉದ್ದಳತೆ, UError_ಸಂಕೇತ &error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ = 0;
 
-    inline UnicodeString getUnicodeString(UErrorCode &errorCode) const {
+    ಸಾಲೊಳಗೆ UnicodeString getUnicodeString(UError_ಸಂಕೇತ &error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ {
         int32_t len = 0;
-        const char16_t *r = getString(len, errorCode);
-        return UnicodeString(true, r, len);
+        ಸ್ಥಿರಾಂಕ char16_t *r = getString(len, error_ಸಂಕೇತ);
+        ಹಿಂತಿರುಗಿ UnicodeString(true, r, len);
     }
 
     /**
      * Sets U_RESOURCE_TYPE_MISMATCH if this is not an alias resource.
      */
-    virtual const char16_t *getAliasString(int32_t &length, UErrorCode &errorCode) const = 0;
+    ವಾಸ್ತವಿಕ ಸ್ಥಿರಾಂಕ char16_t *getAliasString(int32_t &ಉದ್ದಳತೆ, UError_ಸಂಕೇತ &error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ = 0;
 
-    inline UnicodeString getAliasUnicodeString(UErrorCode &errorCode) const {
+    ಸಾಲೊಳಗೆ UnicodeString getAliasUnicodeString(UError_ಸಂಕೇತ &error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ {
         int32_t len = 0;
-        const char16_t *r = getAliasString(len, errorCode);
-        return UnicodeString(true, r, len);
+        ಸ್ಥಿರಾಂಕ char16_t *r = getAliasString(len, error_ಸಂಕೇತ);
+        ಹಿಂತಿರುಗಿ UnicodeString(true, r, len);
     }
 
     /**
@@ -160,38 +160,38 @@ public:
      *
      * @see ures_getInt()
      */
-    virtual int32_t getInt(UErrorCode &errorCode) const = 0;
+    ವಾಸ್ತವಿಕ int32_t getInt(UError_ಸಂಕೇತ &error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ = 0;
 
     /**
      * Sets U_RESOURCE_TYPE_MISMATCH if this is not an integer resource.
      *
      * @see ures_getUInt()
      */
-    virtual uint32_t getUInt(UErrorCode &errorCode) const = 0;
+    ವಾಸ್ತವಿಕ uint32_t getUInt(UError_ಸಂಕೇತ &error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ = 0;
 
     /**
      * Sets U_RESOURCE_TYPE_MISMATCH if this is not an intvector resource.
      *
      * @see ures_getIntVector()
      */
-    virtual const int32_t *getIntVector(int32_t &length, UErrorCode &errorCode) const = 0;
+    ವಾಸ್ತವಿಕ ಸ್ಥಿರಾಂಕ int32_t *get_Int_ಸದಿಶ(int32_t &ಉದ್ದಳತೆ, UError_ಸಂಕೇತ &error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ = 0;
 
     /**
      * Sets U_RESOURCE_TYPE_MISMATCH if this is not a binary-blob resource.
      *
      * @see ures_getBinary()
      */
-    virtual const uint8_t *getBinary(int32_t &length, UErrorCode &errorCode) const = 0;
+    ವಾಸ್ತವಿಕ ಸ್ಥಿರಾಂಕ uint8_t *get_ದ್ವಿಮಾನ(int32_t &ಉದ್ದಳತೆ, UError_ಸಂಕೇತ &error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ = 0;
 
     /**
      * Sets U_RESOURCE_TYPE_MISMATCH if this is not an array resource
      */
-    virtual ResourceArray getArray(UErrorCode &errorCode) const = 0;
+    ವಾಸ್ತವಿಕ ResourceArray getArray(UError_ಸಂಕೇತ &error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ = 0;
 
     /**
      * Sets U_RESOURCE_TYPE_MISMATCH if this is not a table resource
      */
-    virtual ResourceTable getTable(UErrorCode &errorCode) const = 0;
+    ವಾಸ್ತವಿಕ Resource_ಕೋಷ್ಟಕ get_ಕೋಷ್ಟಕ(UError_ಸಂಕೇತ &error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ = 0;
 
     /**
      * Is this a no-fallback/no-inheritance marker string?
@@ -201,7 +201,7 @@ public:
      *
      * @return true if this is a no-inheritance marker string
      */
-    virtual UBool isNoInheritanceMarker() const = 0;
+    ವಾಸ್ತವಿಕ UBool isNoInheritanceMarker() ಸ್ಥಿರಾಂಕ = 0;
 
     /**
      * Sets the dest strings from the string values in this array resource.
@@ -212,8 +212,8 @@ public:
      * Sets U_RESOURCE_TYPE_MISMATCH if this is not an array resource
      *     or if any of the array items is not a string
      */
-    virtual int32_t getStringArray(UnicodeString *dest, int32_t capacity,
-                                   UErrorCode &errorCode) const = 0;
+    ವಾಸ್ತವಿಕ int32_t getStringArray(UnicodeString *dest, int32_t ಸಾಮರ್ಥ್ಯ,
+                                   UError_ಸಂಕೇತ &error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ = 0;
 
     /**
      * Same as
@@ -230,8 +230,8 @@ public:
      * @see getString()
      * @see getStringArray()
      */
-    virtual int32_t getStringArrayOrStringAsArray(UnicodeString *dest, int32_t capacity,
-                                                  UErrorCode &errorCode) const = 0;
+    ವಾಸ್ತವಿಕ int32_t getStringArrayOrStringAsArray(UnicodeString *dest, int32_t ಸಾಮರ್ಥ್ಯ,
+                                                  UError_ಸಂಕೇತ &error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ = 0;
 
     /**
      * Same as
@@ -248,23 +248,23 @@ public:
      * @see getString()
      * @see getStringArray()
      */
-    virtual UnicodeString getStringOrFirstOfArray(UErrorCode &errorCode) const = 0;
+    ವಾಸ್ತವಿಕ UnicodeString get_String_Or_ಮೊದಲ_ದ_Array(UError_ಸಂಕೇತ &error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ = 0;
 
-protected:
-    ResourceValue() {}
+ಸಂರಕ್ಷಿತ:
+    Resource_ಮೌಲ್ಯ() {}
 
-private:
-    ResourceValue(const ResourceValue &);  // no copy constructor
-    ResourceValue &operator=(const ResourceValue &);  // no assignment operator
+ಖಾಸಗಿ:
+    Resource_ಮೌಲ್ಯ(ಸ್ಥಿರಾಂಕ Resource_ಮೌಲ್ಯ &);  // no copy constructor
+    Resource_ಮೌಲ್ಯ &ಕ್ರಿಯಾಕಾರಕ=(ಸ್ಥಿರಾಂಕ Resource_ಮೌಲ್ಯ &);  // no assignment operator
 };
 
 /**
  * Sink for ICU resource bundle contents.
  */
-class U_COMMON_API ResourceSink : public UObject {
-public:
+class U_COMMON_API ResourceSink : ಸಾರ್ವಜನಿಕ UObject {
+ಸಾರ್ವಜನಿಕ:
     ResourceSink() {}
-    virtual ~ResourceSink();
+    ವಾಸ್ತವಿಕ ~ResourceSink();
 
     /**
      * Called once for each bundle (child-parent-...-root).
@@ -282,14 +282,14 @@ public:
      *     that is, its top-level table has the nofallback attribute,
      *     or it is the root bundle of a locale tree.
      */
-    virtual void put(const char *key, ResourceValue &value, UBool noFallback,
-                     UErrorCode &errorCode) = 0;
+    ವಾಸ್ತವಿಕ ಶೂನ್ಯ put(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಕೀಲಿ, Resource_ಮೌಲ್ಯ &ಮೌಲ್ಯ_2, UBool noFallback,
+                     UError_ಸಂಕೇತ &error_ಸಂಕೇತ) = 0;
 
-private:
-    ResourceSink(const ResourceSink &) = delete;  // no copy constructor
-    ResourceSink &operator=(const ResourceSink &) = delete;  // no assignment operator
+ಖಾಸಗಿ:
+    ResourceSink(ಸ್ಥಿರಾಂಕ ResourceSink &) = delete;  // no copy constructor
+    ResourceSink &ಕ್ರಿಯಾಕಾರಕ=(ಸ್ಥಿರಾಂಕ ResourceSink &) = delete;  // no assignment operator
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

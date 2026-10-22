@@ -8,12 +8,12 @@
 * sharedobject.h
 */
 
-#ifndef __SHAREDOBJECT_H__
-#define __SHAREDOBJECT_H__
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __SHAREDOBJECT_H__
+#ವ್ಯಾಖ್ಯಾನಿಸು __SHAREDOBJECT_H__
 
 
-#include "unicode/uobject.h"
-#include "umutex.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uobject.h"
+#ಅನ್ತರ್ಭಾವ "umutex.h"
 
 U_NAMESPACE_BEGIN
 
@@ -25,21 +25,21 @@ class SharedObject;
  * update cache metrics. No other part of ICU, except for SharedObject,
  * should directly call the methods of this base class.
  */
-class U_COMMON_API UnifiedCacheBase : public UObject {
-public:
-    UnifiedCacheBase() { }
+class U_COMMON_API Unified_Cache_ತಳ : ಸಾರ್ವಜನಿಕ UObject {
+ಸಾರ್ವಜನಿಕ:
+    Unified_Cache_ತಳ() { }
 
     /**
      * Notify the cache implementation that an object was seen transitioning to
      * zero hard references. The cache may use this to keep track the number of
      * unreferenced SharedObjects, and to trigger evictions.
      */
-    virtual void handleUnreferencedObject() const = 0;
+    ವಾಸ್ತವಿಕ ಶೂನ್ಯ handleUnreferencedObject() ಸ್ಥಿರಾಂಕ = 0;
 
-    virtual ~UnifiedCacheBase();
-private:
-    UnifiedCacheBase(const UnifiedCacheBase &) = delete;
-    UnifiedCacheBase &operator=(const UnifiedCacheBase &) = delete;
+    ವಾಸ್ತವಿಕ ~Unified_Cache_ತಳ();
+ಖಾಸಗಿ:
+    Unified_Cache_ತಳ(ಸ್ಥಿರಾಂಕ Unified_Cache_ತಳ &) = delete;
+    Unified_Cache_ತಳ &ಕ್ರಿಯಾಕಾರಕ=(ಸ್ಥಿರಾಂಕ Unified_Cache_ತಳ &) = delete;
 };
 
 /**
@@ -51,28 +51,28 @@ private:
  * Either stack-allocate, use LocalPointer, or use addRef()/removeRef().
  * Sharing requires reference-counting.
  */
-class U_COMMON_API_CLASS SharedObject : public UObject {
-public:
+class U_COMMON_API_CLASS SharedObject : ಸಾರ್ವಜನಿಕ UObject {
+ಸಾರ್ವಜನಿಕ:
     /** Initializes totalRefCount, softRefCount to 0. */
     U_COMMON_API SharedObject() :
-            softRefCount(0),
-            hardRefCount(0),
+            soft_Ref_ಎಣಿಕೆ(0),
+            hard_Ref_ಎಣಿಕೆ(0),
             cachePtr(nullptr) {}
 
     /** Initializes totalRefCount, softRefCount to 0. */
-    U_COMMON_API SharedObject(const SharedObject &other) :
+    U_COMMON_API SharedObject(ಸ್ಥಿರಾಂಕ SharedObject &other) :
             UObject(other),
-            softRefCount(0),
-            hardRefCount(0),
+            soft_Ref_ಎಣಿಕೆ(0),
+            hard_Ref_ಎಣಿಕೆ(0),
             cachePtr(nullptr) {}
 
-    U_COMMON_API virtual ~SharedObject();
+    U_COMMON_API ವಾಸ್ತವಿಕ ~SharedObject();
 
     /**
      * Increments the number of hard references to this object. Thread-safe.
      * Not for use from within the Unified Cache implementation.
      */
-    U_COMMON_API void addRef() const;
+    U_COMMON_API ಶೂನ್ಯ ಕೂಡಿಸು_Ref() ಸ್ಥಿರಾಂಕ;
 
     /**
      * Decrements the number of hard references to this object, and
@@ -81,32 +81,32 @@ public:
      * 
      * Not for use from within the UnifiedCache implementation.
      */
-    U_COMMON_API void removeRef() const;
+    U_COMMON_API ಶೂನ್ಯ removeRef() ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns the number of hard references for this object.
      * Uses a memory barrier.
      */
-    U_COMMON_API int32_t getRefCount() const;
+    U_COMMON_API int32_t get_Ref_ಎಣಿಕೆ() ಸ್ಥಿರಾಂಕ;
 
     /**
      * If noHardReferences() == true then this object has no hard references.
      * Must be called only from within the internals of UnifiedCache.
      */
-    U_COMMON_API inline UBool noHardReferences() const { return getRefCount() == 0; }
+    U_COMMON_API ಸಾಲೊಳಗೆ UBool noHardReferences() ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ get_Ref_ಎಣಿಕೆ() == 0; }
 
     /**
      * If hasHardReferences() == true then this object has hard references.
      * Must be called only from within the internals of UnifiedCache.
      */
-    U_COMMON_API inline UBool hasHardReferences() const { return getRefCount() != 0; }
+    U_COMMON_API ಸಾಲೊಳಗೆ UBool hasHardReferences() ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ get_Ref_ಎಣಿಕೆ() != 0; }
 
     /**
      * Deletes this object if it has no references.
      * Available for non-cached SharedObjects only. Ownership of cached objects
      * is with the UnifiedCache, which is solely responsible for eviction and deletion.
      */
-    U_COMMON_API void deleteIfZeroRefCount() const;
+    U_COMMON_API ಶೂನ್ಯ delete_If_Zero_Ref_ಎಣಿಕೆ() ಸ್ಥಿರಾಂಕ;
 
         
     /**
@@ -120,16 +120,16 @@ public:
      *
      * T must be a subclass of SharedObject.
      */
-    template<typename T>
-    static T *copyOnWrite(const T *&ptr) {
-        const T *p = ptr;
-        if(p->getRefCount() <= 1) { return const_cast<T *>(p); }
+    ಮಾದರಿ<typename T>
+    ಸ್ಥಿರ T *copyOnWrite(ಸ್ಥಿರಾಂಕ T *&ptr) {
+        ಸ್ಥಿರಾಂಕ T *p = ptr;
+        ಆದರೆ(p->get_Ref_ಎಣಿಕೆ() <= 1) { ಹಿಂತಿರುಗಿ const_cast<T *>(p); }
         T *p2 = new T(*p);
-        if(p2 == nullptr) { return nullptr; }
+        ಆದರೆ(p2 == nullptr) { ಹಿಂತಿರುಗಿ nullptr; }
         p->removeRef();
         ptr = p2;
-        p2->addRef();
-        return p2;
+        p2->ಕೂಡಿಸು_Ref();
+        ಹಿಂತಿರುಗಿ p2;
     }
 
     /**
@@ -140,45 +140,45 @@ public:
      *
      * T must be a subclass of SharedObject.
      */
-    template<typename T>
-    static void copyPtr(const T *src, const T *&dest) {
-        if(src != dest) {
-            if(dest != nullptr) { dest->removeRef(); }
+    ಮಾದರಿ<typename T>
+    ಸ್ಥಿರ ಶೂನ್ಯ copyPtr(ಸ್ಥಿರಾಂಕ T *src, ಸ್ಥಿರಾಂಕ T *&dest) {
+        ಆದರೆ(src != dest) {
+            ಆದರೆ(dest != nullptr) { dest->removeRef(); }
             dest = src;
-            if(src != nullptr) { src->addRef(); }
+            ಆದರೆ(src != nullptr) { src->ಕೂಡಿಸು_Ref(); }
         }
     }
 
     /**
      * Equivalent to copyPtr(nullptr, dest).
      */
-    template<typename T>
-    static void clearPtr(const T *&ptr) {
-        if (ptr != nullptr) {
+    ಮಾದರಿ<typename T>
+    ಸ್ಥಿರ ಶೂನ್ಯ clearPtr(ಸ್ಥಿರಾಂಕ T *&ptr) {
+        ಆದರೆ (ptr != nullptr) {
             ptr->removeRef();
             ptr = nullptr;
         }
     }
 
-private:
+ಖಾಸಗಿ:
     /**
      * The number of references from the UnifiedCache, which is
      * the number of times that the sharedObject is stored as a hash table value.
      * For use by UnifiedCache implementation code only.
      * All access is synchronized by UnifiedCache's gCacheMutex
      */
-    mutable int32_t softRefCount;
-    friend class UnifiedCache;
+    mutable int32_t soft_Ref_ಎಣಿಕೆ;
+    ಮಿತ್ರ class UnifiedCache;
 
     /**
      * Reference count, excluding references from within the UnifiedCache implementation.
      */
-    mutable u_atomic_int32_t hardRefCount;
+    mutable u_atomic_int32_t hard_Ref_ಎಣಿಕೆ;
     
-    mutable const UnifiedCacheBase *cachePtr;
+    mutable ಸ್ಥಿರಾಂಕ Unified_Cache_ತಳ *cachePtr;
 
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

@@ -4,16 +4,16 @@
 // ucptrie.h (modified from utrie2.h)
 // created: 2017dec29 Markus W. Scherer
 
-#ifndef __UCPTRIE_H__
-#define __UCPTRIE_H__
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __UCPTRIE_H__
+#ವ್ಯಾಖ್ಯಾನಿಸು __UCPTRIE_H__
 
-#include "unicode/utypes.h"
-#include "unicode/ucpmap.h"
-#include "unicode/utf8.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ucpmap.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utf8.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#ಆದರೆ U_SHOW_CPLUSPLUS_API
+#ಅನ್ತರ್ಭಾವ "unicode/localpointer.h"
+#ಆದರೆ_ಅಂತ್ಯ   // U_SHOW_CPLUSPLUS_API
 
 U_CDECL_BEGIN
 
@@ -25,19 +25,19 @@ U_CDECL_BEGIN
  * @see UMutableCPTrie
  */
 
-#ifndef U_IN_DOXYGEN
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_ಒಳ_DOXYGEN
 /** @internal */
-typedef union UCPTrieData {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಒಕ್ಕೂಟ UCPTrie_ದತ್ತಾಂಶ {
     /** @internal */
-    const void *ptr0;
+    ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *ptr0;
     /** @internal */
-    const uint16_t *ptr16;
+    ಸ್ಥಿರಾಂಕ uint16_t *ptr16;
     /** @internal */
-    const uint32_t *ptr32;
+    ಸ್ಥಿರಾಂಕ uint32_t *ptr32;
     /** @internal */
-    const uint8_t *ptr8;
-} UCPTrieData;
-#endif
+    ಸ್ಥಿರಾಂಕ uint8_t *ptr8;
+} UCPTrie_ದತ್ತಾಂಶ;
+#ಆದರೆ_ಅಂತ್ಯ
 
 /**
  * Immutable Unicode code point trie structure.
@@ -56,26 +56,26 @@ typedef union UCPTrieData {
  * @see UMutableCPTrie
  * @stable ICU 63
  */
-struct UCPTrie {
-#ifndef U_IN_DOXYGEN
+ರಚನೆ UCPTrie {
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_ಒಳ_DOXYGEN
     /** @internal */
-    const uint16_t *index;
+    ಸ್ಥಿರಾಂಕ uint16_t *ಸೂಚ್ಯಂಕ;
     /** @internal */
-    UCPTrieData data;
+    UCPTrie_ದತ್ತಾಂಶ ದತ್ತಾಂಶ;
 
     /** @internal */
-    int32_t indexLength;
+    int32_t ಸೂಚ್ಯಂಕ_ಉದ್ದಳತೆ;
     /** @internal */
-    int32_t dataLength;
+    int32_t ದತ್ತಾಂಶ_ಉದ್ದಳತೆ;
     /** Start of the last range which ends at U+10FFFF. @internal */
-    UChar32 highStart;
+    UChar32 ಮೇಲಿನ_ಆರಂಭ;
     /** highStart>>12 @internal */
-    uint16_t shifted12HighStart;
+    uint16_t shifted12_ಮೇಲಿನ_ಆರಂಭ;
 
     /** @internal */
     int8_t type;  // UCPTrieType
     /** @internal */
-    int8_t valueWidth;  // UCPTrieValueWidth
+    int8_t ಮೌಲ್ಯ_ಅಗಲ;  // UCPTrieValueWidth
 
     /** padding/reserved @internal */
     uint32_t reserved32;
@@ -87,25 +87,25 @@ struct UCPTrie {
      * Set to an impossibly high value (e.g., 0xffff) if there is no dedicated index-3 null block.
      * @internal
      */
-    uint16_t index3NullOffset;
+    uint16_t index3_Null_ಸ್ಥಾನಾಂತರ;
     /**
      * Internal data null block offset, not shifted.
      * Set to an impossibly high value (e.g., 0xfffff) if there is no dedicated data null block.
      * @internal
      */
-    int32_t dataNullOffset;
+    int32_t ದತ್ತಾಂಶ_Null_ಸ್ಥಾನಾಂತರ;
     /** @internal */
-    uint32_t nullValue;
+    uint32_t null_ಮೌಲ್ಯ;
 
-#ifdef UCPTRIE_DEBUG
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ UCPTRIE_DEBUG
     /** @internal */
-    const char *name;
-#endif
-#endif
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name;
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ_ಅಂತ್ಯ
 };
-#ifndef U_IN_DOXYGEN
-typedef struct UCPTrie UCPTrie;
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_ಒಳ_DOXYGEN
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ UCPTrie UCPTrie;
+#ಆದರೆ_ಅಂತ್ಯ
 
 /**
  * Selectors for the type of a UCPTrie.
@@ -116,7 +116,7 @@ typedef struct UCPTrie UCPTrie;
  * @see ucptrie_getType
  * @stable ICU 63
  */
-enum UCPTrieType {
+ಎಣಿಕೆ UCPTrieType {
     /**
      * For ucptrie_openFromBinary() to accept any type.
      * ucptrie_getType() will return the actual type.
@@ -134,9 +134,9 @@ enum UCPTrieType {
      */
     UCPTRIE_TYPE_SMALL
 };
-#ifndef U_IN_DOXYGEN
-typedef enum UCPTrieType UCPTrieType;
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_ಒಳ_DOXYGEN
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಎಣಿಕೆ UCPTrieType UCPTrieType;
+#ಆದರೆ_ಅಂತ್ಯ
 
 /**
  * Selectors for the number of bits in a UCPTrie data value.
@@ -146,34 +146,34 @@ typedef enum UCPTrieType UCPTrieType;
  * @see ucptrie_getValueWidth
  * @stable ICU 63
  */
-enum UCPTrieValueWidth {
+ಎಣಿಕೆ UCPTrie_ಮೌಲ್ಯ_ಅಗಲ {
     /**
      * For ucptrie_openFromBinary() to accept any data value width.
      * ucptrie_getValueWidth() will return the actual data value width.
      * @stable ICU 63
      */
-    UCPTRIE_VALUE_BITS_ANY = -1,
+    UCPTRIE_ಮೌಲ್ಯ_ಬಿಟ್ಟುಗಳು_ANY = -1,
     /**
      * The trie stores 16 bits per data value.
      * It returns them as unsigned values 0..0xffff=65535.
      * @stable ICU 63
      */
-    UCPTRIE_VALUE_BITS_16,
+    UCPTRIE_ಮೌಲ್ಯ_ಬಿಟ್ಟುಗಳು_16,
     /**
      * The trie stores 32 bits per data value.
      * @stable ICU 63
      */
-    UCPTRIE_VALUE_BITS_32,
+    UCPTRIE_ಮೌಲ್ಯ_ಬಿಟ್ಟುಗಳು_32,
     /**
      * The trie stores 8 bits per data value.
      * It returns them as unsigned values 0..0xff=255.
      * @stable ICU 63
      */
-    UCPTRIE_VALUE_BITS_8
+    UCPTRIE_ಮೌಲ್ಯ_ಬಿಟ್ಟುಗಳು_8
 };
-#ifndef U_IN_DOXYGEN
-typedef enum UCPTrieValueWidth UCPTrieValueWidth;
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_ಒಳ_DOXYGEN
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಎಣಿಕೆ UCPTrie_ಮೌಲ್ಯ_ಅಗಲ UCPTrie_ಮೌಲ್ಯ_ಅಗಲ;
+#ಆದರೆ_ಅಂತ್ಯ
 
 /**
  * Opens a trie from its binary form, stored in 32-bit-aligned memory.
@@ -202,12 +202,12 @@ typedef enum UCPTrieValueWidth UCPTrieValueWidth;
  * @stable ICU 63
  */
 U_CAPI UCPTrie* U_EXPORT2
-ucptrie_openFromBinary(UCPTrieType type,
-                       UCPTrieValueWidth valueWidth,
-                       const void* data U_LIFETIME_BOUND,
-                       int32_t length,
-                       int32_t* pActualLength,
-                       UErrorCode* pErrorCode);
+ucptrie_open_From_ದ್ವಿಮಾನ(UCPTrieType type,
+                       UCPTrie_ಮೌಲ್ಯ_ಅಗಲ ಮೌಲ್ಯ_ಅಗಲ,
+                       ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ* ದತ್ತಾಂಶ U_LIFETIME_BOUND,
+                       int32_t ಉದ್ದಳತೆ,
+                       int32_t* p_Actual_ಉದ್ದಳತೆ,
+                       UError_ಸಂಕೇತ* p_Error_ಸಂಕೇತ);
 
 /**
  * Closes a trie and releases associated memory.
@@ -215,7 +215,7 @@ ucptrie_openFromBinary(UCPTrieType type,
  * @param trie the trie
  * @stable ICU 63
  */
-U_CAPI void U_EXPORT2
+U_CAPI ಶೂನ್ಯ U_EXPORT2
 ucptrie_close(UCPTrie *trie);
 
 /**
@@ -228,7 +228,7 @@ ucptrie_close(UCPTrie *trie);
  * @stable ICU 63
  */
 U_CAPI UCPTrieType U_EXPORT2
-ucptrie_getType(const UCPTrie *trie);
+ucptrie_getType(ಸ್ಥಿರಾಂಕ UCPTrie *trie);
 
 /**
  * Returns the number of bits in a trie data value.
@@ -239,8 +239,8 @@ ucptrie_getType(const UCPTrie *trie);
  * @see UCPTRIE_VALUE_BITS_ANY
  * @stable ICU 63
  */
-U_CAPI UCPTrieValueWidth U_EXPORT2
-ucptrie_getValueWidth(const UCPTrie *trie);
+U_CAPI UCPTrie_ಮೌಲ್ಯ_ಅಗಲ U_EXPORT2
+ucptrie_get_ಮೌಲ್ಯ_ಅಗಲ(ಸ್ಥಿರಾಂಕ UCPTrie *trie);
 
 /**
  * Returns the value for a code point as stored in the trie, with range checking.
@@ -257,7 +257,7 @@ ucptrie_getValueWidth(const UCPTrie *trie);
  * @stable ICU 63
  */
 U_CAPI uint32_t U_EXPORT2
-ucptrie_get(const UCPTrie *trie, UChar32 c);
+ucptrie_get(ಸ್ಥಿರಾಂಕ UCPTrie *trie, UChar32 c);
 
 /**
  * Returns the last code point such that all those from start to there have the same value.
@@ -296,9 +296,9 @@ ucptrie_get(const UCPTrie *trie, UChar32 c);
  * @stable ICU 63
  */
 U_CAPI UChar32 U_EXPORT2
-ucptrie_getRange(const UCPTrie *trie, UChar32 start,
-                 UCPMapRangeOption option, uint32_t surrogateValue,
-                 UCPMapValueFilter *filter, const void *context, uint32_t *pValue);
+ucptrie_getRange(ಸ್ಥಿರಾಂಕ UCPTrie *trie, UChar32 ಆರಂಭ,
+                 UCPMapRangeOption option, uint32_t surrogate_ಮೌಲ್ಯ,
+                 UCPMap_ಮೌಲ್ಯ_Filter *filter, ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *context, uint32_t *p_ಮೌಲ್ಯ);
 
 /**
  * Writes a memory-mappable form of the trie into 32-bit aligned memory.
@@ -316,7 +316,7 @@ ucptrie_getRange(const UCPTrie *trie, UChar32 start,
  * @stable ICU 63
  */
 U_CAPI int32_t U_EXPORT2
-ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *pErrorCode);
+ucptrie_ಗಮ್ಯ_ದ್ವಿಮಾನ(ಸ್ಥಿರಾಂಕ UCPTrie *trie, ಶೂನ್ಯ *ದತ್ತಾಂಶ, int32_t ಸಾಮರ್ಥ್ಯ, UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
 /**
  * Macro parameter value for a trie with 16-bit data values.
@@ -326,7 +326,7 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  * @see UCPTRIE_VALUE_BITS_16
  * @stable ICU 63
  */
-#define UCPTRIE_16(trie, i) ((trie)->data.ptr16[i])
+#ವ್ಯಾಖ್ಯಾನಿಸು UCPTRIE_16(trie, i) ((trie)->ದತ್ತಾಂಶ.ptr16[i])
 
 /**
  * Macro parameter value for a trie with 32-bit data values.
@@ -336,7 +336,7 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  * @see UCPTRIE_VALUE_BITS_32
  * @stable ICU 63
  */
-#define UCPTRIE_32(trie, i) ((trie)->data.ptr32[i])
+#ವ್ಯಾಖ್ಯಾನಿಸು UCPTRIE_32(trie, i) ((trie)->ದತ್ತಾಂಶ.ptr32[i])
 
 /**
  * Macro parameter value for a trie with 8-bit data values.
@@ -346,7 +346,7 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  * @see UCPTRIE_VALUE_BITS_8
  * @stable ICU 63
  */
-#define UCPTRIE_8(trie, i) ((trie)->data.ptr8[i])
+#ವ್ಯಾಖ್ಯಾನಿಸು UCPTRIE_8(trie, i) ((trie)->ದತ್ತಾಂಶ.ptr8[i])
 
 /**
  * Returns a trie value for a code point, with range checking.
@@ -358,7 +358,7 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  * @return The code point's trie value.
  * @stable ICU 63
  */
-#define UCPTRIE_FAST_GET(trie, dataAccess, c) dataAccess(trie, _UCPTRIE_CP_INDEX(trie, 0xffff, c))
+#ವ್ಯಾಖ್ಯಾನಿಸು UCPTRIE_FAST_GET(trie, ದತ್ತಾಂಶ_Access, c) ದತ್ತಾಂಶ_Access(trie, UCPTRIE_CP_ಸೂಚ್ಯಂಕ(trie, 0xffff, c))
 
 /**
  * Returns a 16-bit trie value for a code point, with range checking.
@@ -370,8 +370,8 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  * @return The code point's trie value.
  * @stable ICU 63
  */
-#define UCPTRIE_SMALL_GET(trie, dataAccess, c) \
-    dataAccess(trie, _UCPTRIE_CP_INDEX(trie, UCPTRIE_SMALL_MAX, c))
+#ವ್ಯಾಖ್ಯಾನಿಸು UCPTRIE_SMALL_GET(trie, ದತ್ತಾಂಶ_Access, c) \
+    ದತ್ತಾಂಶ_Access(trie, UCPTRIE_CP_ಸೂಚ್ಯಂಕ(trie, UCPTRIE_SMALL_MAX, c))
 
 /**
  * UTF-16: Reads the next code point (UChar32 c, out), post-increments src,
@@ -386,23 +386,23 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  * @param result (out) variable for the trie lookup result
  * @stable ICU 63
  */
-#define UCPTRIE_FAST_U16_NEXT(trie, dataAccess, src, limit, c, result) UPRV_BLOCK_MACRO_BEGIN { \
+#ವ್ಯಾಖ್ಯಾನಿಸು UCPTRIE_FAST_U16_ಮುಂದಿನ(trie, ದತ್ತಾಂಶ_Access, src, ಎಲ್ಲೆ, c, ಫಲಿತಾಂಶ) UPRV_ಖಂಡ_MACRO_BEGIN { \
     (c) = *(src)++; \
     int32_t __index; \
-    if (!U16_IS_SURROGATE(c)) { \
-        __index = _UCPTRIE_FAST_INDEX(trie, c); \
-    } else { \
+    ಆದರೆ (!U16_IS_SURROGATE(c)) { \
+        __index = UCPTRIE_FAST_ಸೂಚ್ಯಂಕ(trie, c); \
+    } ಇಲ್ಲದಿದ್ದರೆ { \
         uint16_t __c2; \
-        if (U16_IS_SURROGATE_LEAD(c) && (src) != (limit) && U16_IS_TRAIL(__c2 = *(src))) { \
+        ಆದರೆ (U16_IS_SURROGATE_LEAD(c) && (src) != (ಎಲ್ಲೆ) && U16_IS_TRAIL(__c2 = *(src))) { \
             ++(src); \
             (c) = U16_GET_SUPPLEMENTARY((c), __c2); \
-            __index = _UCPTRIE_SMALL_INDEX(trie, c); \
-        } else { \
-            __index = (trie)->dataLength - UCPTRIE_ERROR_VALUE_NEG_DATA_OFFSET; \
+            __index = UCPTRIE_SMALL_ಸೂಚ್ಯಂಕ(trie, c); \
+        } ಇಲ್ಲದಿದ್ದರೆ { \
+            __index = (trie)->ದತ್ತಾಂಶ_ಉದ್ದಳತೆ - UCPTRIE_ERROR_ಮೌಲ್ಯ_NEG_ದತ್ತಾಂಶ_ಸ್ಥಾನಾಂತರ; \
         } \
     } \
-    (result) = dataAccess(trie, __index); \
-} UPRV_BLOCK_MACRO_END
+    (ಫಲಿತಾಂಶ) = ದತ್ತಾಂಶ_Access(trie, __index); \
+} UPRV_ಖಂಡ_MACRO_ಕೊನೆ
 
 /**
  * UTF-16: Reads the previous code point (UChar32 c, out), pre-decrements src,
@@ -417,23 +417,23 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  * @param result (out) variable for the trie lookup result
  * @stable ICU 63
  */
-#define UCPTRIE_FAST_U16_PREV(trie, dataAccess, start, src, c, result) UPRV_BLOCK_MACRO_BEGIN { \
+#ವ್ಯಾಖ್ಯಾನಿಸು UCPTRIE_FAST_U16_PREV(trie, ದತ್ತಾಂಶ_Access, ಆರಂಭ, src, c, ಫಲಿತಾಂಶ) UPRV_ಖಂಡ_MACRO_BEGIN { \
     (c) = *--(src); \
     int32_t __index; \
-    if (!U16_IS_SURROGATE(c)) { \
-        __index = _UCPTRIE_FAST_INDEX(trie, c); \
-    } else { \
+    ಆದರೆ (!U16_IS_SURROGATE(c)) { \
+        __index = UCPTRIE_FAST_ಸೂಚ್ಯಂಕ(trie, c); \
+    } ಇಲ್ಲದಿದ್ದರೆ { \
         uint16_t __c2; \
-        if (U16_IS_SURROGATE_TRAIL(c) && (src) != (start) && U16_IS_LEAD(__c2 = *((src) - 1))) { \
+        ಆದರೆ (U16_IS_SURROGATE_TRAIL(c) && (src) != (ಆರಂಭ) && U16_IS_LEAD(__c2 = *((src) - 1))) { \
             --(src); \
             (c) = U16_GET_SUPPLEMENTARY(__c2, (c)); \
-            __index = _UCPTRIE_SMALL_INDEX(trie, c); \
-        } else { \
-            __index = (trie)->dataLength - UCPTRIE_ERROR_VALUE_NEG_DATA_OFFSET; \
+            __index = UCPTRIE_SMALL_ಸೂಚ್ಯಂಕ(trie, c); \
+        } ಇಲ್ಲದಿದ್ದರೆ { \
+            __index = (trie)->ದತ್ತಾಂಶ_ಉದ್ದಳತೆ - UCPTRIE_ERROR_ಮೌಲ್ಯ_NEG_ದತ್ತಾಂಶ_ಸ್ಥಾನಾಂತರ; \
         } \
     } \
-    (result) = dataAccess(trie, __index); \
-} UPRV_BLOCK_MACRO_END
+    (ಫಲಿತಾಂಶ) = ದತ್ತಾಂಶ_Access(trie, __index); \
+} UPRV_ಖಂಡ_MACRO_ಕೊನೆ
 
 /**
  * UTF-8: Post-increments src and gets a value from the trie.
@@ -451,35 +451,35 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  * @param result (out) variable for the trie lookup result
  * @stable ICU 63
  */
-#define UCPTRIE_FAST_U8_NEXT(trie, dataAccess, src, limit, result) UPRV_BLOCK_MACRO_BEGIN { \
+#ವ್ಯಾಖ್ಯಾನಿಸು UCPTRIE_FAST_U8_ಮುಂದಿನ(trie, ದತ್ತಾಂಶ_Access, src, ಎಲ್ಲೆ, ಫಲಿತಾಂಶ) UPRV_ಖಂಡ_MACRO_BEGIN { \
     int32_t __lead = (uint8_t)*(src)++; \
-    if (!U8_IS_SINGLE(__lead)) { \
+    ಆದರೆ (!U8_IS_SINGLE(__lead)) { \
         uint8_t __t1, __t2, __t3; \
-        if ((src) != (limit) && \
+        ಆದರೆ ((src) != (ಎಲ್ಲೆ) && \
             (__lead >= 0xe0 ? \
                 __lead < 0xf0 ?  /* U+0800..U+FFFF except surrogates */ \
-                    U8_LEAD3_T1_BITS[__lead &= 0xf] & (1 << ((__t1 = *(src)) >> 5)) && \
-                    ++(src) != (limit) && (__t2 = *(src) - 0x80) <= 0x3f && \
-                    (__lead = ((int32_t)(trie)->index[(__lead << 6) + (__t1 & 0x3f)]) + __t2, 1) \
+                    U8_LEAD3_T1_ಬಿಟ್ಟುಗಳು[__lead &= 0xf] & (1 << ((__t1 = *(src)) >> 5)) && \
+                    ++(src) != (ಎಲ್ಲೆ) && (__t2 = *(src) - 0x80) <= 0x3f && \
+                    (__lead = ((int32_t)(trie)->ಸೂಚ್ಯಂಕ[(__lead << 6) + (__t1 & 0x3f)]) + __t2, 1) \
                 :  /* U+10000..U+10FFFF */ \
                     (__lead -= 0xf0) <= 4 && \
-                    U8_LEAD4_T1_BITS[(__t1 = *(src)) >> 4] & (1 << __lead) && \
-                    (__lead = (__lead << 6) | (__t1 & 0x3f), ++(src) != (limit)) && \
+                    U8_LEAD4_T1_ಬಿಟ್ಟುಗಳು[(__t1 = *(src)) >> 4] & (1 << __lead) && \
+                    (__lead = (__lead << 6) | (__t1 & 0x3f), ++(src) != (ಎಲ್ಲೆ)) && \
                     (__t2 = *(src) - 0x80) <= 0x3f && \
-                    ++(src) != (limit) && (__t3 = *(src) - 0x80) <= 0x3f && \
-                    (__lead = __lead >= (trie)->shifted12HighStart ? \
-                        (trie)->dataLength - UCPTRIE_HIGH_VALUE_NEG_DATA_OFFSET : \
-                        ucptrie_internalSmallU8Index((trie), __lead, __t2, __t3), 1) \
+                    ++(src) != (ಎಲ್ಲೆ) && (__t3 = *(src) - 0x80) <= 0x3f && \
+                    (__lead = __lead >= (trie)->shifted12_ಮೇಲಿನ_ಆರಂಭ ? \
+                        (trie)->ದತ್ತಾಂಶ_ಉದ್ದಳತೆ - UCPTRIE_ಮೇಲಿನ_ಮೌಲ್ಯ_NEG_ದತ್ತಾಂಶ_ಸ್ಥಾನಾಂತರ : \
+                        ucptrie_ಆಂತರಿಕ_Small_U8_ಸೂಚ್ಯಂಕ((trie), __lead, __t2, __t3), 1) \
             :  /* U+0080..U+07FF */ \
                 __lead >= 0xc2 && (__t1 = *(src) - 0x80) <= 0x3f && \
-                (__lead = (int32_t)(trie)->index[__lead & 0x1f] + __t1, 1))) { \
+                (__lead = (int32_t)(trie)->ಸೂಚ್ಯಂಕ[__lead & 0x1f] + __t1, 1))) { \
             ++(src); \
-        } else { \
-            __lead = (trie)->dataLength - UCPTRIE_ERROR_VALUE_NEG_DATA_OFFSET;  /* ill-formed*/ \
+        } ಇಲ್ಲದಿದ್ದರೆ { \
+            __lead = (trie)->ದತ್ತಾಂಶ_ಉದ್ದಳತೆ - UCPTRIE_ERROR_ಮೌಲ್ಯ_NEG_ದತ್ತಾಂಶ_ಸ್ಥಾನಾಂತರ;  /* ill-formed*/ \
         } \
     } \
-    (result) = dataAccess(trie, __lead); \
-} UPRV_BLOCK_MACRO_END
+    (ಫಲಿತಾಂಶ) = ದತ್ತಾಂಶ_Access(trie, __lead); \
+} UPRV_ಖಂಡ_MACRO_ಕೊನೆ
 
 /**
  * UTF-8: Pre-decrements src and gets a value from the trie.
@@ -497,16 +497,16 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  * @param result (out) variable for the trie lookup result
  * @stable ICU 63
  */
-#define UCPTRIE_FAST_U8_PREV(trie, dataAccess, start, src, result) UPRV_BLOCK_MACRO_BEGIN { \
+#ವ್ಯಾಖ್ಯಾನಿಸು UCPTRIE_FAST_U8_PREV(trie, ದತ್ತಾಂಶ_Access, ಆರಂಭ, src, ಫಲಿತಾಂಶ) UPRV_ಖಂಡ_MACRO_BEGIN { \
     int32_t __index = (uint8_t)*--(src); \
-    if (!U8_IS_SINGLE(__index)) { \
-        __index = ucptrie_internalU8PrevIndex((trie), __index, (const uint8_t *)(start), \
-                                              (const uint8_t *)(src)); \
+    ಆದರೆ (!U8_IS_SINGLE(__index)) { \
+        __index = ucptrie_ಆಂತರಿಕ_U8_Prev_ಸೂಚ್ಯಂಕ((trie), __index, (ಸ್ಥಿರಾಂಕ uint8_t *)(ಆರಂಭ), \
+                                              (ಸ್ಥಿರಾಂಕ uint8_t *)(src)); \
         (src) -= __index & 7; \
         __index >>= 3; \
     } \
-    (result) = dataAccess(trie, __index); \
-} UPRV_BLOCK_MACRO_END
+    (ಫಲಿತಾಂಶ) = ದತ್ತಾಂಶ_Access(trie, __index); \
+} UPRV_ಖಂಡ_MACRO_ಕೊನೆ
 
 /**
  * Returns a trie value for an ASCII code point, without range checking.
@@ -517,7 +517,7 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  * @return The ASCII code point's trie value.
  * @stable ICU 63
  */
-#define UCPTRIE_ASCII_GET(trie, dataAccess, c) dataAccess(trie, c)
+#ವ್ಯಾಖ್ಯಾನಿಸು UCPTRIE_ASCII_GET(trie, ದತ್ತಾಂಶ_Access, c) ದತ್ತಾಂಶ_Access(trie, c)
 
 /**
  * Returns a trie value for a BMP code point (U+0000..U+FFFF), without range checking.
@@ -530,7 +530,7 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  * @return The BMP code point's trie value.
  * @stable ICU 63
  */
-#define UCPTRIE_FAST_BMP_GET(trie, dataAccess, c) dataAccess(trie, _UCPTRIE_FAST_INDEX(trie, c))
+#ವ್ಯಾಖ್ಯಾನಿಸು UCPTRIE_FAST_BMP_GET(trie, ದತ್ತಾಂಶ_Access, c) ದತ್ತಾಂಶ_Access(trie, UCPTRIE_FAST_ಸೂಚ್ಯಂಕ(trie, c))
 
 /**
  * Returns a trie value for a supplementary code point (U+10000..U+10FFFF),
@@ -542,26 +542,26 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  * @return The supplementary code point's trie value.
  * @stable ICU 63
  */
-#define UCPTRIE_FAST_SUPP_GET(trie, dataAccess, c) dataAccess(trie, _UCPTRIE_SMALL_INDEX(trie, c))
+#ವ್ಯಾಖ್ಯಾನಿಸು UCPTRIE_FAST_SUPP_GET(trie, ದತ್ತಾಂಶ_Access, c) ದತ್ತಾಂಶ_Access(trie, UCPTRIE_SMALL_ಸೂಚ್ಯಂಕ(trie, c))
 
 /* Internal definitions ----------------------------------------------------- */
 
-#ifndef U_IN_DOXYGEN
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_ಒಳ_DOXYGEN
 
 /**
  * Internal implementation constants.
  * These are needed for the API macros, but users should not use these directly.
  * @internal
  */
-enum {
+ಎಣಿಕೆ {
     /** @internal */
-    UCPTRIE_FAST_SHIFT = 6,
+    UCPTRIE_FAST_ಸರಿಸು = 6,
 
     /** Number of entries in a data block for code points below the fast limit. 64=0x40 @internal */
-    UCPTRIE_FAST_DATA_BLOCK_LENGTH = 1 << UCPTRIE_FAST_SHIFT,
+    UCPTRIE_FAST_ದತ್ತಾಂಶ_ಖಂಡ_ಉದ್ದಳತೆ = 1 << UCPTRIE_FAST_ಸರಿಸು,
 
     /** Mask for getting the lower bits for the in-fast-data-block offset. @internal */
-    UCPTRIE_FAST_DATA_MASK = UCPTRIE_FAST_DATA_BLOCK_LENGTH - 1,
+    UCPTRIE_FAST_ದತ್ತಾಂಶ_ಮುಖವಾಡ = UCPTRIE_FAST_ದತ್ತಾಂಶ_ಖಂಡ_ಉದ್ದಳತೆ - 1,
 
     /** @internal */
     UCPTRIE_SMALL_MAX = 0xfff,
@@ -571,13 +571,13 @@ enum {
      * value returned for out-of-range code points and ill-formed UTF-8/16.
      * @internal
      */
-    UCPTRIE_ERROR_VALUE_NEG_DATA_OFFSET = 1,
+    UCPTRIE_ERROR_ಮೌಲ್ಯ_NEG_ದತ್ತಾಂಶ_ಸ್ಥಾನಾಂತರ = 1,
     /**
      * Offset from dataLength (to be subtracted) for fetching the
      * value returned for code points highStart..U+10FFFF.
      * @internal
      */
-    UCPTRIE_HIGH_VALUE_NEG_DATA_OFFSET = 2
+    UCPTRIE_ಮೇಲಿನ_ಮೌಲ್ಯ_NEG_ದತ್ತಾಂಶ_ಸ್ಥಾನಾಂತರ = 2
 };
 
 /* Internal functions and macros -------------------------------------------- */
@@ -585,11 +585,11 @@ enum {
 
 /** @internal */
 U_CAPI int32_t U_EXPORT2
-ucptrie_internalSmallIndex(const UCPTrie *trie, UChar32 c);
+ucptrie_ಆಂತರಿಕ_Small_ಸೂಚ್ಯಂಕ(ಸ್ಥಿರಾಂಕ UCPTrie *trie, UChar32 c);
 
 /** @internal */
 U_CAPI int32_t U_EXPORT2
-ucptrie_internalSmallU8Index(const UCPTrie *trie, int32_t lt1, uint8_t t2, uint8_t t3);
+ucptrie_ಆಂತರಿಕ_Small_U8_ಸೂಚ್ಯಂಕ(ಸ್ಥಿರಾಂಕ UCPTrie *trie, int32_t lt1, uint8_t t2, uint8_t t3);
 
 /**
  * Internal function for part of the UCPTRIE_FAST_U8_PREVxx() macro implementations.
@@ -597,36 +597,36 @@ ucptrie_internalSmallU8Index(const UCPTrie *trie, int32_t lt1, uint8_t t2, uint8
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-ucptrie_internalU8PrevIndex(const UCPTrie *trie, UChar32 c,
-                            const uint8_t *start, const uint8_t *src);
+ucptrie_ಆಂತರಿಕ_U8_Prev_ಸೂಚ್ಯಂಕ(ಸ್ಥಿರಾಂಕ UCPTrie *trie, UChar32 c,
+                            ಸ್ಥಿರಾಂಕ uint8_t *ಆರಂಭ, ಸ್ಥಿರಾಂಕ uint8_t *src);
 
 /** Internal trie getter for a code point below the fast limit. Returns the data index. @internal */
-#define _UCPTRIE_FAST_INDEX(trie, c) \
-    ((int32_t)(trie)->index[(c) >> UCPTRIE_FAST_SHIFT] + ((c) & UCPTRIE_FAST_DATA_MASK))
+#ವ್ಯಾಖ್ಯಾನಿಸು UCPTRIE_FAST_ಸೂಚ್ಯಂಕ(trie, c) \
+    ((int32_t)(trie)->ಸೂಚ್ಯಂಕ[(c) >> UCPTRIE_FAST_ಸರಿಸು] + ((c) & UCPTRIE_FAST_ದತ್ತಾಂಶ_ಮುಖವಾಡ))
 
 /** Internal trie getter for a code point at or above the fast limit. Returns the data index. @internal */
-#define _UCPTRIE_SMALL_INDEX(trie, c) \
-    ((c) >= (trie)->highStart ? \
-        (trie)->dataLength - UCPTRIE_HIGH_VALUE_NEG_DATA_OFFSET : \
-        ucptrie_internalSmallIndex(trie, c))
+#ವ್ಯಾಖ್ಯಾನಿಸು UCPTRIE_SMALL_ಸೂಚ್ಯಂಕ(trie, c) \
+    ((c) >= (trie)->ಮೇಲಿನ_ಆರಂಭ ? \
+        (trie)->ದತ್ತಾಂಶ_ಉದ್ದಳತೆ - UCPTRIE_ಮೇಲಿನ_ಮೌಲ್ಯ_NEG_ದತ್ತಾಂಶ_ಸ್ಥಾನಾಂತರ : \
+        ucptrie_ಆಂತರಿಕ_Small_ಸೂಚ್ಯಂಕ(trie, c))
 
 /**
  * Internal trie getter for a code point, with checking that c is in U+0000..10FFFF.
  * Returns the data index.
  * @internal
  */
-#define _UCPTRIE_CP_INDEX(trie, fastMax, c) \
+#ವ್ಯಾಖ್ಯಾನಿಸು UCPTRIE_CP_ಸೂಚ್ಯಂಕ(trie, fastMax, c) \
     ((uint32_t)(c) <= (uint32_t)(fastMax) ? \
-        _UCPTRIE_FAST_INDEX(trie, c) : \
+        UCPTRIE_FAST_ಸೂಚ್ಯಂಕ(trie, c) : \
         (uint32_t)(c) <= 0x10ffff ? \
-            _UCPTRIE_SMALL_INDEX(trie, c) : \
-            (trie)->dataLength - UCPTRIE_ERROR_VALUE_NEG_DATA_OFFSET)
+            UCPTRIE_SMALL_ಸೂಚ್ಯಂಕ(trie, c) : \
+            (trie)->ದತ್ತಾಂಶ_ಉದ್ದಳತೆ - UCPTRIE_ERROR_ಮೌಲ್ಯ_NEG_ದತ್ತಾಂಶ_ಸ್ಥಾನಾಂತರ)
 
-U_CDECL_END
+U_CDECL_ಕೊನೆ
 
-#endif  // U_IN_DOXYGEN
+#ಆದರೆ_ಅಂತ್ಯ  // U_IN_DOXYGEN
 
-#if U_SHOW_CPLUSPLUS_API
+#ಆದರೆ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -639,10 +639,10 @@ U_NAMESPACE_BEGIN
  * @see LocalPointer
  * @stable ICU 63
  */
-U_DEFINE_LOCAL_OPEN_POINTER(LocalUCPTriePointer, UCPTrie, ucptrie_close);
+U_DEFINE_LOCAL_OPEN_ಸೂಚಕ(Local_UCPTrie_ಸೂಚಕ, UCPTrie, ucptrie_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif  // U_SHOW_CPLUSPLUS_API
+#ಆದರೆ_ಅಂತ್ಯ  // U_SHOW_CPLUSPLUS_API
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

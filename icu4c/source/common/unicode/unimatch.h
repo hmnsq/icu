@@ -7,30 +7,30 @@
 *   07/18/01    aliu        Creation.
 **********************************************************************
 */
-#ifndef UNIMATCH_H
-#define UNIMATCH_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ UNIMATCH_H
+#ವ್ಯಾಖ್ಯಾನಿಸು UNIMATCH_H
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
 /**
  * \file 
  * \brief C++ API: Unicode Matcher
  */
 
-#if U_SHOW_CPLUSPLUS_API
+#ಆದರೆ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
 class Replaceable;
 class UnicodeString;
-class UnicodeSet;
+class Unicode_ಗಣ;
 
 /**
  * Constants returned by <code>UnicodeMatcher::matches()</code>
  * indicating the degree of match.
  * @stable ICU 2.4
  */
-enum UMatchDegree {
+ಎಣಿಕೆ UMatchDegree {
     /**
      * Constant returned by <code>matches()</code> indicating a
      * mismatch between the text and this matcher.  The text contains
@@ -50,7 +50,7 @@ enum UMatchDegree {
      * supplied at limit, they might also match.
      * @stable ICU 2.4
      */
-    U_PARTIAL_MATCH,
+    U_PARTIAL_ಹೊಂದಿಕೆ,
     
     /**
      * Constant returned by <code>matches()</code> indicating a
@@ -60,7 +60,7 @@ enum UMatchDegree {
      * characters would not alter the extent of the match.
      * @stable ICU 2.4
      */
-    U_MATCH
+    U_ಹೊಂದಿಕೆ
 };
 
 /**
@@ -70,12 +70,12 @@ enum UMatchDegree {
  */
 class U_COMMON_API UnicodeMatcher /* not : public UObject because this is an interface/mixin class */ {
 
-public:
+ಸಾರ್ವಜನಿಕ:
     /**
      * Destructor.
      * @stable ICU 2.4
      */
-    virtual ~UnicodeMatcher();
+    ವಾಸ್ತವಿಕ ~UnicodeMatcher();
 
     /**
      * Return a UMatchDegree value indicating the degree of match for
@@ -123,9 +123,9 @@ public:
      * U_PARTIAL_MATCH should never be returned.
      * @stable ICU 2.4
      */
-    virtual UMatchDegree matches(const Replaceable& text,
-                                 int32_t& offset,
-                                 int32_t limit,
+    ವಾಸ್ತವಿಕ UMatchDegree matches(ಸ್ಥಿರಾಂಕ Replaceable& ಪಠ್ಯ,
+                                 int32_t& ಸ್ಥಾನಾಂತರ,
+                                 int32_t ಎಲ್ಲೆ,
                                  UBool incremental) = 0;
 
     /**
@@ -140,8 +140,8 @@ public:
      * U+000A, U+0020..U+007E.
      * @stable ICU 2.4
      */
-    virtual UnicodeString& toPattern(UnicodeString& result U_LIFETIME_BOUND,
-                                     UBool escapeUnprintable = false) const = 0;
+    ವಾಸ್ತವಿಕ UnicodeString& ಗಮ್ಯ_ನಮೂನೆ(UnicodeString& ಫಲಿತಾಂಶ U_LIFETIME_BOUND,
+                                     UBool escapeUnprintable = false) ಸ್ಥಿರಾಂಕ = 0;
 
     /**
      * Returns true if this matcher will match a character c, where c
@@ -150,7 +150,7 @@ public:
      * indexing.
      * @stable ICU 2.4
      */
-    virtual UBool matchesIndexValue(uint8_t v) const = 0;
+    ವಾಸ್ತವಿಕ UBool matches_ಸೂಚ್ಯಂಕ_ಮೌಲ್ಯ(uint8_t v) ಸ್ಥಿರಾಂಕ = 0;
 
     /**
      * Union the set of all characters that may be matched by this object
@@ -158,11 +158,11 @@ public:
      * @param toUnionTo the set into which to union the source characters
      * @stable ICU 2.4
      */
-    virtual void addMatchSetTo(UnicodeSet& toUnionTo) const = 0;
+    ವಾಸ್ತವಿಕ ಶೂನ್ಯ ಕೂಡಿಸು_ಹೊಂದಿಕೆ_ಗಣ_ಗಮ್ಯ(Unicode_ಗಣ& ಗಮ್ಯ_Union_ಗಮ್ಯ) ಸ್ಥಿರಾಂಕ = 0;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ಆದರೆ_ಅಂತ್ಯ /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

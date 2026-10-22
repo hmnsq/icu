@@ -18,12 +18,12 @@
 *   Store bits (Unicode character properties) in bit set vectors.
 */
 
-#ifndef __UPROPSVEC_H__
-#define __UPROPSVEC_H__
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __UPROPSVEC_H__
+#ವ್ಯಾಖ್ಯಾನಿಸು __UPROPSVEC_H__
 
-#include "unicode/utypes.h"
-#include "utrie.h"
-#include "utrie2.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "utrie.h"
+#ಅನ್ತರ್ಭಾವ "utrie2.h"
 
 U_CDECL_BEGIN
 
@@ -49,33 +49,33 @@ U_CDECL_BEGIN
  * It would be possible to store only one range boundary per row,
  * but self-contained rows allow to later sort them by contents.
  */
-struct UPropsVectors;
-typedef struct UPropsVectors UPropsVectors;
+ರಚನೆ UPropsVectors;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ UPropsVectors UPropsVectors;
 
 /*
  * Special pseudo code points for storing the initialValue and the errorValue,
  * which are used to initialize a UTrie2 or similar.
  */
-#define UPVEC_FIRST_SPECIAL_CP 0x110000
-#define UPVEC_INITIAL_VALUE_CP 0x110000
-#define UPVEC_ERROR_VALUE_CP 0x110001
-#define UPVEC_MAX_CP 0x110001
+#ವ್ಯಾಖ್ಯಾನಿಸು UPVEC_ಮೊದಲ_SPECIAL_CP 0x110000
+#ವ್ಯಾಖ್ಯಾನಿಸು UPVEC_INITIAL_ಮೌಲ್ಯ_CP 0x110000
+#ವ್ಯಾಖ್ಯಾನಿಸು UPVEC_ERROR_ಮೌಲ್ಯ_CP 0x110001
+#ವ್ಯಾಖ್ಯಾನಿಸು UPVEC_MAX_CP 0x110001
 
 /*
  * Special pseudo code point used in upvec_compact() signalling the end of
  * delivering special values and the beginning of delivering real ones.
  * Stable value, unlike UPVEC_MAX_CP which might grow over time.
  */
-#define UPVEC_START_REAL_VALUES_CP 0x200000
+#ವ್ಯಾಖ್ಯಾನಿಸು UPVEC_ಆರಂಭ_REAL_ಮೌಲ್ಯಗಳು_CP 0x200000
 
 /*
  * Open a UPropsVectors object.
  * @param columns Number of value integers (uint32_t) per row.
  */
 U_CAPI UPropsVectors * U_EXPORT2
-upvec_open(int32_t columns, UErrorCode *pErrorCode);
+upvec_open(int32_t columns, UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
-U_CAPI void U_EXPORT2
+U_CAPI ಶೂನ್ಯ U_EXPORT2
 upvec_close(UPropsVectors *pv);
 
 /*
@@ -84,19 +84,19 @@ upvec_close(UPropsVectors *pv);
  *
  * Will set U_NO_WRITE_PERMISSION if called after upvec_compact().
  */
-U_CAPI void U_EXPORT2
-upvec_setValue(UPropsVectors *pv,
-               UChar32 start, UChar32 end,
-               int32_t column,
-               uint32_t value, uint32_t mask,
-               UErrorCode *pErrorCode);
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+upvec_ಗಣ_ಮೌಲ್ಯ(UPropsVectors *pv,
+               UChar32 ಆರಂಭ, UChar32 ಕೊನೆ,
+               int32_t ಸ್ತಂಭ,
+               uint32_t ಮೌಲ್ಯ_2, uint32_t ಮುಖವಾಡ,
+               UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
 /*
  * Logically const but must not be used on the same pv concurrently!
  * Always returns 0 if called after upvec_compact().
  */
 U_CAPI uint32_t U_EXPORT2
-upvec_getValue(const UPropsVectors *pv, UChar32 c, int32_t column);
+upvec_get_ಮೌಲ್ಯ(ಸ್ಥಿರಾಂಕ UPropsVectors *pv, UChar32 c, int32_t ಸ್ತಂಭ);
 
 /*
  * pRangeStart and pRangeEnd can be NULL.
@@ -104,8 +104,8 @@ upvec_getValue(const UPropsVectors *pv, UChar32 c, int32_t column);
  *         or if called after upvec_compact()
  */
 U_CAPI uint32_t * U_EXPORT2
-upvec_getRow(const UPropsVectors *pv, int32_t rowIndex,
-             UChar32 *pRangeStart, UChar32 *pRangeEnd);
+upvec_get_ಅಡ್ಡಸಾಲು(ಸ್ಥಿರಾಂಕ UPropsVectors *pv, int32_t ಅಡ್ಡಸಾಲು_ಸೂಚ್ಯಂಕ,
+             UChar32 *p_Range_ಆರಂಭ, UChar32 *p_Range_ಕೊನೆ);
 
 /*
  * Compact the vectors:
@@ -125,22 +125,22 @@ upvec_getRow(const UPropsVectors *pv, int32_t rowIndex,
  * and the row is arbitrary (but not NULL).
  * Then, in the second phase, the handler is called for each row of real values.
  */
-typedef void U_CALLCONV
-UPVecCompactHandler(void *context,
-                    UChar32 start, UChar32 end,
-                    int32_t rowIndex, uint32_t *row, int32_t columns,
-                    UErrorCode *pErrorCode);
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಶೂನ್ಯ U_CALLCONV
+UPVecCompactHandler(ಶೂನ್ಯ *context,
+                    UChar32 ಆರಂಭ, UChar32 ಕೊನೆ,
+                    int32_t ಅಡ್ಡಸಾಲು_ಸೂಚ್ಯಂಕ, uint32_t *ಅಡ್ಡಸಾಲು, int32_t columns,
+                    UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
-U_CAPI void U_EXPORT2
-upvec_compact(UPropsVectors *pv, UPVecCompactHandler *handler, void *context, UErrorCode *pErrorCode);
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+upvec_compact(UPropsVectors *pv, UPVecCompactHandler *handler, ಶೂನ್ಯ *context, UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
 /*
  * Get the vectors array after calling upvec_compact().
  * The caller must not modify nor release the returned array.
  * Returns NULL if called before upvec_compact().
  */
-U_CAPI const uint32_t * U_EXPORT2
-upvec_getArray(const UPropsVectors *pv, int32_t *pRows, int32_t *pColumns);
+U_CAPI ಸ್ಥಿರಾಂಕ uint32_t * U_EXPORT2
+upvec_getArray(ಸ್ಥಿರಾಂಕ UPropsVectors *pv, int32_t *p_ಅಡ್ಡಸಾಲುಗಳು, int32_t *pColumns);
 
 /*
  * Get a clone of the vectors array after calling upvec_compact().
@@ -148,31 +148,31 @@ upvec_getArray(const UPropsVectors *pv, int32_t *pRows, int32_t *pColumns);
  * Returns NULL if called before upvec_compact().
  */
 U_CAPI uint32_t * U_EXPORT2
-upvec_cloneArray(const UPropsVectors *pv,
-                 int32_t *pRows, int32_t *pColumns, UErrorCode *pErrorCode);
+upvec_cloneArray(ಸ್ಥಿರಾಂಕ UPropsVectors *pv,
+                 int32_t *p_ಅಡ್ಡಸಾಲುಗಳು, int32_t *pColumns, UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
 /*
  * Call upvec_compact(), create a 16-bit UTrie2 with indexes into the compacted
  * vectors array, and freeze the trie.
  */
 U_CAPI UTrie2 * U_EXPORT2
-upvec_compactToUTrie2WithRowIndexes(UPropsVectors *pv, UErrorCode *pErrorCode);
+upvec_compact_ಗಮ್ಯ_UTrie2_With_ಅಡ್ಡಸಾಲು_Indexes(UPropsVectors *pv, UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
-struct UPVecToUTrie2Context {
+ರಚನೆ UPVec_ಗಮ್ಯ_UTrie2_Context {
     UTrie2 *trie;
-    int32_t initialValue;
-    int32_t errorValue;
-    int32_t maxValue;
+    int32_t initial_ಮೌಲ್ಯ;
+    int32_t error_ಮೌಲ್ಯ;
+    int32_t max_ಮೌಲ್ಯ;
 };
-typedef struct UPVecToUTrie2Context UPVecToUTrie2Context;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ UPVec_ಗಮ್ಯ_UTrie2_Context UPVec_ಗಮ್ಯ_UTrie2_Context;
 
 /* context=UPVecToUTrie2Context, creates the trie and stores the rowIndex values */
-U_CAPI void U_CALLCONV
-upvec_compactToUTrie2Handler(void *context,
-                             UChar32 start, UChar32 end,
-                             int32_t rowIndex, uint32_t *row, int32_t columns,
-                             UErrorCode *pErrorCode);
+U_CAPI ಶೂನ್ಯ U_CALLCONV
+upvec_compact_ಗಮ್ಯ_UTrie2_Handler(ಶೂನ್ಯ *context,
+                             UChar32 ಆರಂಭ, UChar32 ಕೊನೆ,
+                             int32_t ಅಡ್ಡಸಾಲು_ಸೂಚ್ಯಂಕ, uint32_t *ಅಡ್ಡಸಾಲು, int32_t columns,
+                             UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
-U_CDECL_END
+U_CDECL_ಕೊನೆ
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

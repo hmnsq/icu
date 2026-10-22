@@ -10,9 +10,9 @@
 **********************************************************************
 */
 
-#include "unicode/unifilt.h"
-#include "unicode/rep.h"
-#include "unicode/utf16.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unifilt.h"
+#ಅನ್ತರ್ಭಾವ "unicode/rep.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utf16.h"
 
 U_NAMESPACE_BEGIN
 UOBJECT_DEFINE_ABSTRACT_RTTI_IMPLEMENTATION(UnicodeFilter)
@@ -28,44 +28,44 @@ UnicodeFilter::~UnicodeFilter() {}
  * UnicodeFunctor API.
  *   Note that UnicodeMatcher is a base class of UnicodeFilter.
  */
-UnicodeMatcher* UnicodeFilter::toMatcher() const U_LIFETIME_BOUND {
-  return const_cast<UnicodeFilter *>(this);
+UnicodeMatcher* UnicodeFilter::ಗಮ್ಯ_Matcher() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND {
+  ಹಿಂತಿರುಗಿ const_cast<UnicodeFilter *>(ಇದು);
 }
 
-void UnicodeFilter::setData(const TransliterationRuleData*) {}
+ಶೂನ್ಯ UnicodeFilter::ಗಣ_ದತ್ತಾಂಶ(ಸ್ಥಿರಾಂಕ Transliteration_ನಿಯಮ_ದತ್ತಾಂಶ*) {}
 
 /**
  * Default implementation of UnicodeMatcher::matches() for Unicode
  * filters.  Matches a single code point at offset (either one or
  * two 16-bit code units).
  */
-UMatchDegree UnicodeFilter::matches(const Replaceable& text,
-                                    int32_t& offset,
-                                    int32_t limit,
+UMatchDegree UnicodeFilter::matches(ಸ್ಥಿರಾಂಕ Replaceable& ಪಠ್ಯ,
+                                    int32_t& ಸ್ಥಾನಾಂತರ,
+                                    int32_t ಎಲ್ಲೆ,
                                     UBool incremental) {
     UChar32 c;
-    if (offset < limit &&
-        contains(c = text.char32At(offset))) {
-        offset += U16_LENGTH(c);
-        return U_MATCH;
+    ಆದರೆ (ಸ್ಥಾನಾಂತರ < ಎಲ್ಲೆ &&
+        ಒಳಗೊಂಡಿದೆ(c = ಪಠ್ಯ.char32At(ಸ್ಥಾನಾಂತರ))) {
+        ಸ್ಥಾನಾಂತರ += U16_ಉದ್ದಳತೆ(c);
+        ಹಿಂತಿರುಗಿ U_ಹೊಂದಿಕೆ;
     }
-    if (offset > limit &&
-        contains(c = text.char32At(offset))) {
+    ಆದರೆ (ಸ್ಥಾನಾಂತರ > ಎಲ್ಲೆ &&
+        ಒಳಗೊಂಡಿದೆ(c = ಪಠ್ಯ.char32At(ಸ್ಥಾನಾಂತರ))) {
         // Backup offset by 1, unless the preceding character is a
         // surrogate pair -- then backup by 2 (keep offset pointing at
         // the lead surrogate).
-        --offset;
-        if (offset >= 0) {
-            offset -= U16_LENGTH(text.char32At(offset)) - 1;
+        --ಸ್ಥಾನಾಂತರ;
+        ಆದರೆ (ಸ್ಥಾನಾಂತರ >= 0) {
+            ಸ್ಥಾನಾಂತರ -= U16_ಉದ್ದಳತೆ(ಪಠ್ಯ.char32At(ಸ್ಥಾನಾಂತರ)) - 1;
         }
-        return U_MATCH;
+        ಹಿಂತಿರುಗಿ U_ಹೊಂದಿಕೆ;
     }
-    if (incremental && offset == limit) {
-        return U_PARTIAL_MATCH;
+    ಆದರೆ (incremental && ಸ್ಥಾನಾಂತರ == ಎಲ್ಲೆ) {
+        ಹಿಂತಿರುಗಿ U_PARTIAL_ಹೊಂದಿಕೆ;
     }
-    return U_MISMATCH;
+    ಹಿಂತಿರುಗಿ U_MISMATCH;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
 //eof

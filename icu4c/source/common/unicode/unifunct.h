@@ -9,14 +9,14 @@
 *   01/14/2002  aliu        Creation.
 **********************************************************************
 */
-#ifndef UNIFUNCT_H
-#define UNIFUNCT_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ UNIFUNCT_H
+#ವ್ಯಾಖ್ಯಾನಿಸು UNIFUNCT_H
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ಆದರೆ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uobject.h"
 
 /**
  * \file 
@@ -27,7 +27,7 @@ U_NAMESPACE_BEGIN
 
 class UnicodeMatcher;
 class UnicodeReplacer;
-class TransliterationRuleData;
+class Transliteration_ನಿಯಮ_ದತ್ತಾಂಶ;
 
 /**
  * <code>UnicodeFunctor</code> is an abstract base class for objects
@@ -35,15 +35,15 @@ class TransliterationRuleData;
  * @author Alan Liu
  * @stable ICU 2.4
  */
-class U_COMMON_API UnicodeFunctor : public UObject {
+class U_COMMON_API UnicodeFunctor : ಸಾರ್ವಜನಿಕ UObject {
 
-public:
+ಸಾರ್ವಜನಿಕ:
 
     /**
      * Destructor
      * @stable ICU 2.4
      */
-    virtual ~UnicodeFunctor();
+    ವಾಸ್ತವಿಕ ~UnicodeFunctor();
 
     /**
      * Return a copy of this object.  All UnicodeFunctor objects
@@ -51,7 +51,7 @@ public:
      * UnicodeFunctor to implement cloning.
      * @stable ICU 2.4
      */
-    virtual UnicodeFunctor* clone() const = 0;
+    ವಾಸ್ತವಿಕ UnicodeFunctor* clone() ಸ್ಥಿರಾಂಕ = 0;
 
     /**
      * Cast 'this' to a UnicodeMatcher* pointer and return the
@@ -63,7 +63,7 @@ public:
      * UnicodeFunctor.
      * @stable ICU 2.4
      */
-    virtual UnicodeMatcher* toMatcher() const U_LIFETIME_BOUND;
+    ವಾಸ್ತವಿಕ UnicodeMatcher* ಗಮ್ಯ_Matcher() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND;
 
     /**
      * Cast 'this' to a UnicodeReplacer* pointer and return the
@@ -75,7 +75,7 @@ public:
      * UnicodeFunctor.
      * @stable ICU 2.4
      */
-    virtual UnicodeReplacer* toReplacer() const U_LIFETIME_BOUND;
+    ವಾಸ್ತವಿಕ UnicodeReplacer* ಗಮ್ಯ_Replacer() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND;
 
     /**
      * Return the class ID for this class.  This is useful only for
@@ -83,7 +83,7 @@ public:
      * @return          The class ID for all objects of this class.
      * @stable ICU 2.0
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    ಸ್ಥಿರ UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * Returns a unique class ID <b>polymorphically</b>.  This method
@@ -100,7 +100,7 @@ public:
      * different class IDs.
      * @stable ICU 2.4
      */
-    virtual UClassID getDynamicClassID() const override = 0;
+    ವಾಸ್ತವಿಕ UClassID getDynamicClassID() ಸ್ಥಿರಾಂಕ override = 0;
 
     /**
      * Set the data object associated with this functor.  The data
@@ -110,9 +110,9 @@ public:
      * changed to pass data object pointers through the API.
      * @internal ICU 2.1
      */
-    virtual void setData(const TransliterationRuleData*) = 0;
+    ವಾಸ್ತವಿಕ ಶೂನ್ಯ ಗಣ_ದತ್ತಾಂಶ(ಸ್ಥಿರಾಂಕ Transliteration_ನಿಯಮ_ದತ್ತಾಂಶ*) = 0;
 
-protected:
+ಸಂರಕ್ಷಿತ:
 
     /**
      * Since this class has pure virtual functions,
@@ -125,8 +125,8 @@ protected:
 
 /*inline UnicodeFunctor::UnicodeFunctor() {}*/
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ಆದರೆ_ಅಂತ್ಯ /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

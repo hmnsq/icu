@@ -15,14 +15,14 @@
 *******************************************************************************
 */
 
-#ifndef PARSEPOS_H
-#define PARSEPOS_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ PARSEPOS_H
+#ವ್ಯಾಖ್ಯಾನಿಸು PARSEPOS_H
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ಆದರೆ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uobject.h"
 
  
 U_NAMESPACE_BEGIN
@@ -49,16 +49,16 @@ U_NAMESPACE_BEGIN
  * @see         java.text.Format
  */
 
-class U_COMMON_API ParsePosition : public UObject {
-public:
+class U_COMMON_API ParsePosition : ಸಾರ್ವಜನಿಕ UObject {
+ಸಾರ್ವಜನಿಕ:
     /**
      * Default constructor, the index starts with 0 as default.
      * @stable ICU 2.0
      */
     ParsePosition()
         : UObject(),
-        index(0),
-        errorIndex(-1)
+        ಸೂಚ್ಯಂಕ(0),
+        error_ಸೂಚ್ಯಂಕ(-1)
       {}
 
     /**
@@ -66,10 +66,10 @@ public:
      * @param newIndex the new text offset.
      * @stable ICU 2.0
      */
-    ParsePosition(int32_t newIndex)
+    ParsePosition(int32_t new_ಸೂಚ್ಯಂಕ)
         : UObject(),
-        index(newIndex),
-        errorIndex(-1)
+        ಸೂಚ್ಯಂಕ(new_ಸೂಚ್ಯಂಕ),
+        error_ಸೂಚ್ಯಂಕ(-1)
       {}
 
     /**
@@ -77,37 +77,37 @@ public:
      * @param copy the object to be copied from.
      * @stable ICU 2.0
      */
-    ParsePosition(const ParsePosition& copy)
+    ParsePosition(ಸ್ಥಿರಾಂಕ ParsePosition& copy)
         : UObject(copy),
-        index(copy.index),
-        errorIndex(copy.errorIndex)
+        ಸೂಚ್ಯಂಕ(copy.ಸೂಚ್ಯಂಕ),
+        error_ಸೂಚ್ಯಂಕ(copy.error_ಸೂಚ್ಯಂಕ)
       {}
 
     /**
      * Destructor
      * @stable ICU 2.0
      */
-    virtual ~ParsePosition();
+    ವಾಸ್ತವಿಕ ~ParsePosition();
 
     /**
      * Assignment operator
      * @stable ICU 2.0
      */
-    inline ParsePosition& operator=(const ParsePosition& copy) U_LIFETIME_BOUND;
+    ಸಾಲೊಳಗೆ ParsePosition& ಕ್ರಿಯಾಕಾರಕ=(ಸ್ಥಿರಾಂಕ ParsePosition& copy) U_LIFETIME_BOUND;
 
     /**
      * Equality operator.
      * @return true if the two parse positions are equal, false otherwise.
      * @stable ICU 2.0
      */
-    inline bool               operator==(const ParsePosition& that) const;
+    ಸಾಲೊಳಗೆ bool               ಕ್ರಿಯಾಕಾರಕ==(ಸ್ಥಿರಾಂಕ ParsePosition& that) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Equality operator.
      * @return true if the two parse positions are not equal, false otherwise.
      * @stable ICU 2.0
      */
-    inline bool               operator!=(const ParsePosition& that) const;
+    ಸಾಲೊಳಗೆ bool               ಕ್ರಿಯಾಕಾರಕ!=(ಸ್ಥಿರಾಂಕ ParsePosition& that) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Clone this object.
@@ -120,7 +120,7 @@ public:
      * @see getDynamicClassID
      * @stable ICU 2.8
      */
-    ParsePosition *clone() const;
+    ParsePosition *clone() ಸ್ಥಿರಾಂಕ;
 
     /**
      * Retrieve the current parse position.  On input to a parse method, this
@@ -129,14 +129,14 @@ public:
      * @return the current index.
      * @stable ICU 2.0
      */
-    inline int32_t getIndex() const;
+    ಸಾಲೊಳಗೆ int32_t get_ಸೂಚ್ಯಂಕ() ಸ್ಥಿರಾಂಕ;
 
     /**
      * Set the current parse position.
      * @param index the new index.
      * @stable ICU 2.0
      */
-    inline void setIndex(int32_t index);
+    ಸಾಲೊಳಗೆ ಶೂನ್ಯ ಗಣ_ಸೂಚ್ಯಂಕ(int32_t ಸೂಚ್ಯಂಕ);
 
     /**
      * Set the index at which a parse error occurred.  Formatters
@@ -145,93 +145,93 @@ public:
      * set.
      * @stable ICU 2.0
      */
-    inline void setErrorIndex(int32_t ei);
+    ಸಾಲೊಳಗೆ ಶೂನ್ಯ ಗಣ_Error_ಸೂಚ್ಯಂಕ(int32_t ei);
 
     /**
      * Retrieve the index at which an error occurred, or -1 if the
      * error index has not been set.
      * @stable ICU 2.0
      */
-    inline int32_t getErrorIndex() const;
+    ಸಾಲೊಳಗೆ int32_t get_Error_ಸೂಚ್ಯಂಕ() ಸ್ಥಿರಾಂಕ;
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      *
      * @stable ICU 2.2
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    ಸ್ಥಿರ UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      *
      * @stable ICU 2.2
      */
-    virtual UClassID getDynamicClassID() const override;
+    ವಾಸ್ತವಿಕ UClassID getDynamicClassID() ಸ್ಥಿರಾಂಕ override;
 
-private:
+ಖಾಸಗಿ:
     /**
      * Input: the place you start parsing.
      * <br>Output: position where the parse stopped.
      * This is designed to be used serially,
      * with each call setting index up for the next one.
      */
-    int32_t index;
+    int32_t ಸೂಚ್ಯಂಕ;
 
     /**
      * The index at which a parse error occurred.
      */
-    int32_t errorIndex;
+    int32_t error_ಸೂಚ್ಯಂಕ;
 
 };
 
-inline ParsePosition&
-ParsePosition::operator=(const ParsePosition& copy) U_LIFETIME_BOUND
+ಸಾಲೊಳಗೆ ParsePosition&
+ParsePosition::ಕ್ರಿಯಾಕಾರಕ=(ಸ್ಥಿರಾಂಕ ParsePosition& copy) U_LIFETIME_BOUND
 {
-  index = copy.index;
-  errorIndex = copy.errorIndex;
-  return *this;
+  ಸೂಚ್ಯಂಕ = copy.ಸೂಚ್ಯಂಕ;
+  error_ಸೂಚ್ಯಂಕ = copy.error_ಸೂಚ್ಯಂಕ;
+  ಹಿಂತಿರುಗಿ *this;
 }
 
-inline bool
-ParsePosition::operator==(const ParsePosition& copy) const
+ಸಾಲೊಳಗೆ bool
+ParsePosition::ಕ್ರಿಯಾಕಾರಕ==(ಸ್ಥಿರಾಂಕ ParsePosition& copy) ಸ್ಥಿರಾಂಕ
 {
-  if(index != copy.index || errorIndex != copy.errorIndex)
-  return false;
-  else
-  return true;
+  ಆದರೆ(ಸೂಚ್ಯಂಕ != copy.ಸೂಚ್ಯಂಕ || error_ಸೂಚ್ಯಂಕ != copy.error_ಸೂಚ್ಯಂಕ)
+  ಹಿಂತಿರುಗಿ false;
+  ಇಲ್ಲದಿದ್ದರೆ
+  ಹಿಂತಿರುಗಿ true;
 }
 
-inline bool
-ParsePosition::operator!=(const ParsePosition& copy) const
+ಸಾಲೊಳಗೆ bool
+ParsePosition::ಕ್ರಿಯಾಕಾರಕ!=(ಸ್ಥಿರಾಂಕ ParsePosition& copy) ಸ್ಥಿರಾಂಕ
 {
-  return !operator==(copy);
+  ಹಿಂತಿರುಗಿ !ಕ್ರಿಯಾಕಾರಕ==(copy);
 }
 
-inline int32_t
-ParsePosition::getIndex() const
+ಸಾಲೊಳಗೆ int32_t
+ParsePosition::get_ಸೂಚ್ಯಂಕ() ಸ್ಥಿರಾಂಕ
 {
-  return index;
+  ಹಿಂತಿರುಗಿ ಸೂಚ್ಯಂಕ;
 }
 
-inline void
-ParsePosition::setIndex(int32_t offset)
+ಸಾಲೊಳಗೆ ಶೂನ್ಯ
+ParsePosition::ಗಣ_ಸೂಚ್ಯಂಕ(int32_t ಸ್ಥಾನಾಂತರ)
 {
-  this->index = offset;
+  this->ಸೂಚ್ಯಂಕ = ಸ್ಥಾನಾಂತರ;
 }
 
-inline int32_t
-ParsePosition::getErrorIndex() const
+ಸಾಲೊಳಗೆ int32_t
+ParsePosition::get_Error_ಸೂಚ್ಯಂಕ() ಸ್ಥಿರಾಂಕ
 {
-  return errorIndex;
+  ಹಿಂತಿರುಗಿ error_ಸೂಚ್ಯಂಕ;
 }
 
-inline void
-ParsePosition::setErrorIndex(int32_t ei)
+ಸಾಲೊಳಗೆ ಶೂನ್ಯ
+ParsePosition::ಗಣ_Error_ಸೂಚ್ಯಂಕ(int32_t ei)
 {
-  this->errorIndex = ei;
+  this->error_ಸೂಚ್ಯಂಕ = ei;
 }
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ಆದರೆ_ಅಂತ್ಯ /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

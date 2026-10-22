@@ -24,40 +24,40 @@
  *                 are not intended to be used directly by applications.
  */
 
-#ifndef __UCMNDATA_H__
-#define __UCMNDATA_H__
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __UCMNDATA_H__
+#ವ್ಯಾಖ್ಯಾನಿಸು __UCMNDATA_H__
 
-#include "unicode/udata.h"
-#include "umapfile.h"
+#ಅನ್ತರ್ಭಾವ "unicode/udata.h"
+#ಅನ್ತರ್ಭಾವ "umapfile.h"
 
 
-#define COMMON_DATA_NAME U_ICUDATA_NAME
+#ವ್ಯಾಖ್ಯಾನಿಸು COMMON_ದತ್ತಾಂಶ_NAME U_ICUDATA_NAME
 
-typedef struct  {
-    uint16_t    headerSize;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ  {
+    uint16_t    ಶೀರ್ಷಿಕೆ_ಗಾತ್ರ;
     uint8_t     magic1;
     uint8_t     magic2;
-} MappedData;
+} Mapped_ದತ್ತಾಂಶ;
 
 
-typedef struct  {
-    MappedData  dataHeader;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ  {
+    Mapped_ದತ್ತಾಂಶ  ದತ್ತಾಂಶ_ಶೀರ್ಷಿಕೆ_2;
     UDataInfo   info;
-} DataHeader;
+} ದತ್ತಾಂಶ_ಶೀರ್ಷಿಕೆ;
 
-typedef struct {
-    uint32_t nameOffset;
-    uint32_t dataOffset;
-} UDataOffsetTOCEntry;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ {
+    uint32_t name_ಸ್ಥಾನಾಂತರ;
+    uint32_t ದತ್ತಾಂಶ_ಸ್ಥಾನಾಂತರ;
+} UData_ಸ್ಥಾನಾಂತರ_TOCEntry;
 
-typedef struct {
-    uint32_t count;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ {
+    uint32_t ಎಣಿಕೆ_2;
     /**
      * Variable-length array declared with length 1 to disable bounds checkers.
      * The actual array length is in the count field.
      */
-    UDataOffsetTOCEntry entry[1];
-} UDataOffsetTOC;
+    UData_ಸ್ಥಾನಾಂತರ_TOCEntry ನಮೂದು[1];
+} UData_ಸ್ಥಾನಾಂತರ_TOC;
 
 /**
  * Get the header size from a const DataHeader *udh.
@@ -66,7 +66,7 @@ typedef struct {
  * @internal
  */
 U_CFUNC uint16_t
-udata_getHeaderSize(const DataHeader *udh);
+udata_get_ಶೀರ್ಷಿಕೆ_ಗಾತ್ರ(ಸ್ಥಿರಾಂಕ ದತ್ತಾಂಶ_ಶೀರ್ಷಿಕೆ *udh);
 
 /**
  * Get the UDataInfo.size from a const UDataInfo *info.
@@ -75,7 +75,7 @@ udata_getHeaderSize(const DataHeader *udh);
  * @internal
  */
 U_CFUNC uint16_t
-udata_getInfoSize(const UDataInfo *info);
+udata_get_Info_ಗಾತ್ರ(ಸ್ಥಿರಾಂಕ UDataInfo *info);
 
 U_CDECL_BEGIN
 /*
@@ -85,21 +85,21 @@ U_CDECL_BEGIN
  *          (I sure do wish this was written in C++, not C)
  */
 
-typedef const DataHeader *
-(U_CALLCONV * LookupFn)(const UDataMemory *pData,
-                        const char *tocEntryName,
-                        int32_t *pLength,
-                        UErrorCode *pErrorCode);
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಸ್ಥಿರಾಂಕ ದತ್ತಾಂಶ_ಶೀರ್ಷಿಕೆ *
+(U_CALLCONV * LookupFn)(ಸ್ಥಿರಾಂಕ UData_ಸ್ಮರಣೆ *p_ದತ್ತಾಂಶ,
+                        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *toc_ನಮೂದು_Name,
+                        int32_t *p_ಉದ್ದಳತೆ,
+                        UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
-typedef uint32_t
-(U_CALLCONV * NumEntriesFn)(const UDataMemory *pData);
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ uint32_t
+(U_CALLCONV * ಅಂಕೆ_Entries_Fn)(ಸ್ಥಿರಾಂಕ UData_ಸ್ಮರಣೆ *p_ದತ್ತಾಂಶ);
 
-U_CDECL_END
+U_CDECL_ಕೊನೆ
 
-typedef struct {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ {
     LookupFn      Lookup;
-    NumEntriesFn  NumEntries; 
-} commonDataFuncs;
+    ಅಂಕೆ_Entries_Fn  ಅಂಕೆ_Entries; 
+} common_ದತ್ತಾಂಶ_Funcs;
 
 
 /*
@@ -112,6 +112,6 @@ typedef struct {
  *     otherwise
  *         set an errorcode.
  */
-U_CFUNC void udata_checkCommonData(UDataMemory *pData, UErrorCode *pErrorCode);
+U_CFUNC ಶೂನ್ಯ udata_check_Common_ದತ್ತಾಂಶ(UData_ಸ್ಮರಣೆ *p_ದತ್ತಾಂಶ, UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

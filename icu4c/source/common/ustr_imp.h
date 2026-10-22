@@ -14,17 +14,17 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __USTR_IMP_H__
-#define __USTR_IMP_H__
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __USTR_IMP_H__
+#ವ್ಯಾಖ್ಯಾನಿಸು __USTR_IMP_H__
 
-#include "unicode/utypes.h"
-#include "unicode/utf8.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utf8.h"
 
 /**
  * Internal option for unorm_cmpEquivFold() for strncmp style.
  * If set, checks for both string length and terminating NUL.
  */
-#define _STRNCMP_STYLE 0x1000
+#ವ್ಯಾಖ್ಯಾನಿಸು _STRNCMP_STYLE 0x1000
 
 /**
  * Compare two strings in code point order or code unit order.
@@ -33,18 +33,18 @@
  * and memcmp/UnicodeString style (at least one length >=0).
  */
 U_CFUNC int32_t U_EXPORT2
-uprv_strCompare(const UChar *s1, int32_t length1,
-                const UChar *s2, int32_t length2,
-                UBool strncmpStyle, UBool codePointOrder);
+uprv_strCompare(ಸ್ಥಿರಾಂಕ UChar *s1, int32_t length1,
+                ಸ್ಥಿರಾಂಕ UChar *s2, int32_t length2,
+                UBool strncmpStyle, UBool ಸಂಕೇತ_ಬಿಂದು_ಕ್ರಮ);
 
 U_CAPI int32_t U_EXPORT2 
-ustr_hashUCharsN(const UChar *str, int32_t length);
+ustr_hashUCharsN(ಸ್ಥಿರಾಂಕ UChar *str, int32_t ಉದ್ದಳತೆ);
 
 U_CAPI int32_t U_EXPORT2 
-ustr_hashCharsN(const char *str, int32_t length);
+ustr_hashCharsN(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *str, int32_t ಉದ್ದಳತೆ);
 
 U_CAPI int32_t U_EXPORT2
-ustr_hashICharsN(const char *str, int32_t length);
+ustr_hashICharsN(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *str, int32_t ಉದ್ದಳತೆ);
 
 /**
  * Convert an ASCII-range lowercase character to uppercase.
@@ -54,7 +54,7 @@ ustr_hashICharsN(const char *str, int32_t length);
  *         Otherwise, returns the input character.
  */
 U_CAPI UChar U_EXPORT2
-u_asciiToUpper(UChar c);
+u_ascii_ಗಮ್ಯ_ಊರ್ಧ್ವ(UChar c);
 
 // TODO: Add u_asciiToLower if/when there is a need for it.
 
@@ -71,28 +71,28 @@ u_asciiToUpper(UChar c);
  * @return length
  */
 U_CAPI int32_t U_EXPORT2
-u_terminateUChars(UChar *dest, int32_t destCapacity, int32_t length, UErrorCode *pErrorCode);
+u_terminateUChars(UChar *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ, int32_t ಉದ್ದಳತೆ, UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
 /**
  * NUL-terminate a char * string if possible.
  * Same as u_terminateUChars() but for a different string type.
  */
 U_CAPI int32_t U_EXPORT2
-u_terminateChars(char *dest, int32_t destCapacity, int32_t length, UErrorCode *pErrorCode);
+u_terminateChars(ಅಕ್ಷರ *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ, int32_t ಉದ್ದಳತೆ, UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
 /**
  * NUL-terminate a UChar32 * string if possible.
  * Same as u_terminateUChars() but for a different string type.
  */
 U_CAPI int32_t U_EXPORT2
-u_terminateUChar32s(UChar32 *dest, int32_t destCapacity, int32_t length, UErrorCode *pErrorCode);
+u_terminateUChar32s(UChar32 *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ, int32_t ಉದ್ದಳತೆ, UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
 /**
  * NUL-terminate a wchar_t * string if possible.
  * Same as u_terminateUChars() but for a different string type.
  */
 U_CAPI int32_t U_EXPORT2
-u_terminateWChars(wchar_t *dest, int32_t destCapacity, int32_t length, UErrorCode *pErrorCode);
+u_terminateWChars(wchar_t *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ, int32_t ಉದ್ದಳತೆ, UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
 /**
  * Counts the bytes of any whole valid sequence for a UTF-8 lead byte.
@@ -103,8 +103,8 @@ u_terminateWChars(wchar_t *dest, int32_t destCapacity, int32_t length, UErrorCod
  * @param leadByte The first byte of a UTF-8 sequence. Must be 0..0xff.
  * @return 0..4
  */
-#define U8_COUNT_BYTES(leadByte) \
-    (U8_IS_SINGLE(leadByte) ? 1 : U8_COUNT_BYTES_NON_ASCII(leadByte))
+#ವ್ಯಾಖ್ಯಾನಿಸು U8_ಎಣಿಕೆ_ಬೈಟುಗಳು(leadByte) \
+    (U8_IS_SINGLE(leadByte) ? 1 : U8_ಎಣಿಕೆ_ಬೈಟುಗಳು_NON_ASCII(leadByte))
 
 /**
  * Counts the bytes of any whole valid sequence for a UTF-8 lead byte.
@@ -114,15 +114,15 @@ u_terminateWChars(wchar_t *dest, int32_t destCapacity, int32_t length, UErrorCod
  * @param leadByte The first byte of a UTF-8 sequence. Must be 0..0xff.
  * @return 0 or 2..4
  */
-#define U8_COUNT_BYTES_NON_ASCII(leadByte) \
+#ವ್ಯಾಖ್ಯಾನಿಸು U8_ಎಣಿಕೆ_ಬೈಟುಗಳು_NON_ASCII(leadByte) \
     (U8_IS_LEAD(leadByte) ? ((uint8_t)(leadByte)>=0xe0)+((uint8_t)(leadByte)>=0xf0)+2 : 0)
 
-#ifdef __cplusplus
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ __cplusplus
 
 U_NAMESPACE_BEGIN
 
 class UTF8 {
-public:
+ಸಾರ್ವಜನಿಕ:
     UTF8() = delete;  // all static
 
     /**
@@ -135,21 +135,21 @@ public:
      * @param length The length (2..4) of the byte sequence according to the lead byte.
      * @return true if t is a valid trail byte in this context.
      */
-    static inline UBool isValidTrail(int32_t prev, uint8_t t, int32_t i, int32_t length) {
+    ಸ್ಥಿರ ಸಾಲೊಳಗೆ UBool isValidTrail(int32_t prev, uint8_t t, int32_t i, int32_t ಉದ್ದಳತೆ) {
         // The first trail byte after a 3- or 4-byte lead byte
         // needs to be validated together with its lead byte.
-        if (length <= 2 || i > 1) {
-            return U8_IS_TRAIL(t);
-        } else if (length == 3) {
-            return U8_IS_VALID_LEAD3_AND_T1(prev, t);
-        } else {  // length == 4
-            return U8_IS_VALID_LEAD4_AND_T1(prev, t);
+        ಆದರೆ (ಉದ್ದಳತೆ <= 2 || i > 1) {
+            ಹಿಂತಿರುಗಿ U8_IS_TRAIL(t);
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (ಉದ್ದಳತೆ == 3) {
+            ಹಿಂತಿರುಗಿ U8_IS_VALID_LEAD3_AND_T1(prev, t);
+        } ಇಲ್ಲದಿದ್ದರೆ {  // length == 4
+            ಹಿಂತಿರುಗಿ U8_IS_VALID_LEAD4_AND_T1(prev, t);
         }
     }
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif  // __cplusplus
+#ಆದರೆ_ಅಂತ್ಯ  // __cplusplus
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

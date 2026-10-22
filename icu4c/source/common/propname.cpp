@@ -11,18 +11,18 @@
 * 2010nov19 Markus Scherer  Rewrite for formatVersion 2.
 **********************************************************************
 */
-#include "propname.h"
-#include "unicode/uchar.h"
-#include "unicode/udata.h"
-#include "unicode/uscript.h"
-#include "umutex.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "uarrsort.h"
-#include "uinvchar.h"
+#ಅನ್ತರ್ಭಾವ "propname.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uchar.h"
+#ಅನ್ತರ್ಭಾವ "unicode/udata.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uscript.h"
+#ಅನ್ತರ್ಭಾವ "umutex.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "cstring.h"
+#ಅನ್ತರ್ಭಾವ "uarrsort.h"
+#ಅನ್ತರ್ಭಾವ "uinvchar.h"
 
-#define INCLUDED_FROM_PROPNAME_CPP
-#include "propname_data.h"
+#ವ್ಯಾಖ್ಯಾನಿಸು INCLUDED_FROM_PROPNAME_CPP
+#ಅನ್ತರ್ಭಾವ "propname_data.h"
 
 U_CDECL_BEGIN
 
@@ -31,21 +31,21 @@ U_CDECL_BEGIN
  * and lowercases it.
  * @return ((advance count for the name)<<8)|character
  */
-static inline int32_t
-getASCIIPropertyNameChar(const char *name) {
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ int32_t
+getASCIIPropertyNameChar(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name) {
     int32_t i;
-    char c;
+    ಅಕ್ಷರ c;
 
     /* Ignore delimiters '-', '_', and ASCII White_Space */
-    for(i=0;
+    ಗಾಗಿ(i=0;
         (c=name[i++])==0x2d || c==0x5f ||
         c==0x20 || (0x09<=c && c<=0x0d);
     ) {}
 
-    if(c!=0) {
-        return (i << 8) | static_cast<uint8_t>(uprv_asciitolower(c));
-    } else {
-        return i<<8;
+    ಆದರೆ(c!=0) {
+        ಹಿಂತಿರುಗಿ (i << 8) | static_cast<uint8_t>(uprv_asciitolower(c));
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಹಿಂತಿರುಗಿ i<<8;
     }
 }
 
@@ -54,21 +54,21 @@ getASCIIPropertyNameChar(const char *name) {
  * and lowercases it.
  * @return ((advance count for the name)<<8)|character
  */
-static inline int32_t
-getEBCDICPropertyNameChar(const char *name) {
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ int32_t
+getEBCDICPropertyNameChar(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name) {
     int32_t i;
-    char c;
+    ಅಕ್ಷರ c;
 
     /* Ignore delimiters '-', '_', and EBCDIC White_Space */
-    for(i=0;
+    ಗಾಗಿ(i=0;
         (c=name[i++])==0x60 || c==0x6d ||
         c==0x40 || c==0x05 || c==0x15 || c==0x25 || c==0x0b || c==0x0c || c==0x0d;
     ) {}
 
-    if(c!=0) {
-        return (i << 8) | static_cast<uint8_t>(uprv_ebcdictolower(c));
-    } else {
-        return i<<8;
+    ಆದರೆ(c!=0) {
+        ಹಿಂತಿರುಗಿ (i << 8) | static_cast<uint8_t>(uprv_ebcdictolower(c));
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಹಿಂತಿರುಗಿ i<<8;
     }
 }
 
@@ -90,23 +90,23 @@ getEBCDICPropertyNameChar(const char *name) {
  */
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareASCIIPropertyNames(const char *name1, const char *name2) {
+uprv_compare_ASCIIProperty_ಹೆಸರುಗಳು(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name1, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name2) {
     int32_t rc, r1, r2;
 
-    for(;;) {
+    ಗಾಗಿ(;;) {
         r1=getASCIIPropertyNameChar(name1);
         r2=getASCIIPropertyNameChar(name2);
 
         /* If we reach the ends of both strings then they match */
-        if(((r1|r2)&0xff)==0) {
-            return 0;
+        ಆದರೆ(((r1|r2)&0xff)==0) {
+            ಹಿಂತಿರುಗಿ 0;
         }
 
         /* Compare the lowercased characters */
-        if(r1!=r2) {
+        ಆದರೆ(r1!=r2) {
             rc=(r1&0xff)-(r2&0xff);
-            if(rc!=0) {
-                return rc;
+            ಆದರೆ(rc!=0) {
+                ಹಿಂತಿರುಗಿ rc;
             }
         }
 
@@ -116,23 +116,23 @@ uprv_compareASCIIPropertyNames(const char *name1, const char *name2) {
 }
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareEBCDICPropertyNames(const char *name1, const char *name2) {
+uprv_compare_EBCDICProperty_ಹೆಸರುಗಳು(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name1, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name2) {
     int32_t rc, r1, r2;
 
-    for(;;) {
+    ಗಾಗಿ(;;) {
         r1=getEBCDICPropertyNameChar(name1);
         r2=getEBCDICPropertyNameChar(name2);
 
         /* If we reach the ends of both strings then they match */
-        if(((r1|r2)&0xff)==0) {
-            return 0;
+        ಆದರೆ(((r1|r2)&0xff)==0) {
+            ಹಿಂತಿರುಗಿ 0;
         }
 
         /* Compare the lowercased characters */
-        if(r1!=r2) {
+        ಆದರೆ(r1!=r2) {
             rc=(r1&0xff)-(r2&0xff);
-            if(rc!=0) {
-                return rc;
+            ಆದರೆ(rc!=0) {
+                ಹಿಂತಿರುಗಿ rc;
             }
         }
 
@@ -141,194 +141,194 @@ uprv_compareEBCDICPropertyNames(const char *name1, const char *name2) {
     }
 }
 
-U_CDECL_END
+U_CDECL_ಕೊನೆ
 
 U_NAMESPACE_BEGIN
 
-int32_t PropNameData::findProperty(int32_t property) {
+int32_t Prop_Name_ದತ್ತಾಂಶ::ಕಂಡುಹಿಡಿ_Property(int32_t property) {
     int32_t i=1;  // valueMaps index, initially after numRanges
-    for(int32_t numRanges=valueMaps[0]; numRanges>0; --numRanges) {
+    ಗಾಗಿ(int32_t ಅಂಕೆ_Ranges=ಮೌಲ್ಯ_Maps[0]; ಅಂಕೆ_Ranges>0; --ಅಂಕೆ_Ranges) {
         // Read and skip the start and limit of this range.
-        int32_t start=valueMaps[i];
-        int32_t limit=valueMaps[i+1];
+        int32_t ಆರಂಭ=ಮೌಲ್ಯ_Maps[i];
+        int32_t ಎಲ್ಲೆ=ಮೌಲ್ಯ_Maps[i+1];
         i+=2;
-        if(property<start) {
-            break;
+        ಆದರೆ(property<ಆರಂಭ) {
+            ನಿಲ್ಲಿಸು;
         }
-        if(property<limit) {
-            return i+(property-start)*2;
+        ಆದರೆ(property<ಎಲ್ಲೆ) {
+            ಹಿಂತಿರುಗಿ i+(property-ಆರಂಭ)*2;
         }
-        i+=(limit-start)*2;  // Skip all entries for this range.
+        i+=(ಎಲ್ಲೆ-ಆರಂಭ)*2;  // Skip all entries for this range.
     }
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-int32_t PropNameData::findPropertyValueNameGroup(int32_t valueMapIndex, int32_t value) {
-    if(valueMapIndex==0) {
-        return 0;  // The property does not have named values.
+int32_t Prop_Name_ದತ್ತಾಂಶ::ಕಂಡುಹಿಡಿ_Property_ಮೌಲ್ಯ_Name_ಗುಂಪು(int32_t ಮೌಲ್ಯ_Map_ಸೂಚ್ಯಂಕ, int32_t value) {
+    ಆದರೆ(ಮೌಲ್ಯ_Map_ಸೂಚ್ಯಂಕ==0) {
+        ಹಿಂತಿರುಗಿ 0;  // The property does not have named values.
     }
-    ++valueMapIndex;  // Skip the BytesTrie offset.
-    int32_t numRanges=valueMaps[valueMapIndex++];
-    if(numRanges<0x10) {
+    ++ಮೌಲ್ಯ_Map_ಸೂಚ್ಯಂಕ;  // Skip the BytesTrie offset.
+    int32_t ಅಂಕೆ_Ranges=ಮೌಲ್ಯ_Maps[ಮೌಲ್ಯ_Map_ಸೂಚ್ಯಂಕ++];
+    ಆದರೆ(ಅಂಕೆ_Ranges<0x10) {
         // Ranges of values.
-        for(; numRanges>0; --numRanges) {
+        ಗಾಗಿ(; ಅಂಕೆ_Ranges>0; --ಅಂಕೆ_Ranges) {
             // Read and skip the start and limit of this range.
-            int32_t start=valueMaps[valueMapIndex];
-            int32_t limit=valueMaps[valueMapIndex+1];
-            valueMapIndex+=2;
-            if(value<start) {
-                break;
+            int32_t ಆರಂಭ=ಮೌಲ್ಯ_Maps[ಮೌಲ್ಯ_Map_ಸೂಚ್ಯಂಕ];
+            int32_t ಎಲ್ಲೆ=ಮೌಲ್ಯ_Maps[ಮೌಲ್ಯ_Map_ಸೂಚ್ಯಂಕ+1];
+            ಮೌಲ್ಯ_Map_ಸೂಚ್ಯಂಕ+=2;
+            ಆದರೆ(value<ಆರಂಭ) {
+                ನಿಲ್ಲಿಸು;
             }
-            if(value<limit) {
-                return valueMaps[valueMapIndex+value-start];
+            ಆದರೆ(value<ಎಲ್ಲೆ) {
+                ಹಿಂತಿರುಗಿ ಮೌಲ್ಯ_Maps[ಮೌಲ್ಯ_Map_ಸೂಚ್ಯಂಕ+value-ಆರಂಭ];
             }
-            valueMapIndex+=limit-start;  // Skip all entries for this range.
+            ಮೌಲ್ಯ_Map_ಸೂಚ್ಯಂಕ+=ಎಲ್ಲೆ-ಆರಂಭ;  // Skip all entries for this range.
         }
-    } else {
+    } ಇಲ್ಲದಿದ್ದರೆ {
         // List of values.
-        int32_t valuesStart=valueMapIndex;
-        int32_t nameGroupOffsetsStart=valueMapIndex+numRanges-0x10;
-        do {
-            int32_t v=valueMaps[valueMapIndex];
-            if(value<v) {
-                break;
+        int32_t ಮೌಲ್ಯಗಳು_ಆರಂಭ=ಮೌಲ್ಯ_Map_ಸೂಚ್ಯಂಕ;
+        int32_t name_ಗುಂಪು_Offsets_ಆರಂಭ=ಮೌಲ್ಯ_Map_ಸೂಚ್ಯಂಕ+ಅಂಕೆ_Ranges-0x10;
+        ಮಾಡು {
+            int32_t v=ಮೌಲ್ಯ_Maps[ಮೌಲ್ಯ_Map_ಸೂಚ್ಯಂಕ];
+            ಆದರೆ(value<v) {
+                ನಿಲ್ಲಿಸು;
             }
-            if(value==v) {
-                return valueMaps[nameGroupOffsetsStart+valueMapIndex-valuesStart];
+            ಆದರೆ(value==v) {
+                ಹಿಂತಿರುಗಿ ಮೌಲ್ಯ_Maps[name_ಗುಂಪು_Offsets_ಆರಂಭ+ಮೌಲ್ಯ_Map_ಸೂಚ್ಯಂಕ-ಮೌಲ್ಯಗಳು_ಆರಂಭ];
             }
-        } while(++valueMapIndex<nameGroupOffsetsStart);
+        } ಆಗ(++ಮೌಲ್ಯ_Map_ಸೂಚ್ಯಂಕ<name_ಗುಂಪು_Offsets_ಆರಂಭ);
     }
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-const char *PropNameData::getName(const char *nameGroup, int32_t nameIndex) {
-    int32_t numNames=*nameGroup++;
-    if(nameIndex<0 || numNames<=nameIndex) {
-        return nullptr;
+ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *Prop_Name_ದತ್ತಾಂಶ::getName(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name_ಗುಂಪು, int32_t name_ಸೂಚ್ಯಂಕ) {
+    int32_t ಅಂಕೆ_ಹೆಸರುಗಳು=*name_ಗುಂಪು++;
+    ಆದರೆ(name_ಸೂಚ್ಯಂಕ<0 || ಅಂಕೆ_ಹೆಸರುಗಳು<=name_ಸೂಚ್ಯಂಕ) {
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
     // Skip nameIndex names.
-    for(; nameIndex>0; --nameIndex) {
-        nameGroup=uprv_strchr(nameGroup, 0)+1;
+    ಗಾಗಿ(; name_ಸೂಚ್ಯಂಕ>0; --name_ಸೂಚ್ಯಂಕ) {
+        name_ಗುಂಪು=uprv_strchr(name_ಗುಂಪು, 0)+1;
     }
-    if(*nameGroup==0) {
-        return nullptr;  // no name (Property[Value]Aliases.txt has "n/a")
+    ಆದರೆ(*name_ಗುಂಪು==0) {
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;  // no name (Property[Value]Aliases.txt has "n/a")
     }
-    return nameGroup;
+    ಹಿಂತಿರುಗಿ name_ಗುಂಪು;
 }
 
-UBool PropNameData::containsName(BytesTrie &trie, const char *name) {
-    if(name==nullptr) {
-        return false;
+UBool Prop_Name_ದತ್ತಾಂಶ::ಒಳಗೊಂಡಿದೆ_Name(ಬೈಟುಗಳು_Trie &trie, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name) {
+    ಆದರೆ(name==ಶೂನ್ಯಸೂಚಕ) {
+        ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
     }
-    UStringTrieResult result=USTRINGTRIE_NO_VALUE;
-    char c;
-    while((c=*name++)!=0) {
-        c=uprv_invCharToLowercaseAscii(c);
+    UString_Trie_ಫಲಿತಾಂಶ ಫಲಿತಾಂಶ=USTRINGTRIE_NO_ಮೌಲ್ಯ;
+    ಅಕ್ಷರ c;
+    ಆಗ((c=*name++)!=0) {
+        c=uprv_inv_Char_ಗಮ್ಯ_Lowercase_Ascii(c);
         // Ignore delimiters '-', '_', and ASCII White_Space.
-        if(c==0x2d || c==0x5f || c==0x20 || (0x09<=c && c<=0x0d)) {
-            continue;
+        ಆದರೆ(c==0x2d || c==0x5f || c==0x20 || (0x09<=c && c<=0x0d)) {
+            ಮುಂದುವರಿ;
         }
-        if(!USTRINGTRIE_HAS_NEXT(result)) {
-            return false;
+        ಆದರೆ(!USTRINGTRIE_HAS_ಮುಂದಿನ(ಫಲಿತಾಂಶ)) {
+            ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
         }
-        result = trie.next(static_cast<uint8_t>(c));
+        ಫಲಿತಾಂಶ = trie.next(static_cast<uint8_t>(c));
     }
-    return USTRINGTRIE_HAS_VALUE(result);
+    ಹಿಂತಿರುಗಿ USTRINGTRIE_HAS_ಮೌಲ್ಯ(ಫಲಿತಾಂಶ);
 }
 
-const char *PropNameData::getPropertyName(int32_t property, int32_t nameChoice) {
-    int32_t valueMapIndex=findProperty(property);
-    if(valueMapIndex==0) {
-        return nullptr;  // Not a known property.
+ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *Prop_Name_ದತ್ತಾಂಶ::getPropertyName(int32_t property, int32_t nameChoice) {
+    int32_t ಮೌಲ್ಯ_Map_ಸೂಚ್ಯಂಕ=ಕಂಡುಹಿಡಿ_Property(property);
+    ಆದರೆ(ಮೌಲ್ಯ_Map_ಸೂಚ್ಯಂಕ==0) {
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;  // Not a known property.
     }
-    return getName(nameGroups+valueMaps[valueMapIndex], nameChoice);
+    ಹಿಂತಿರುಗಿ getName(nameGroups+ಮೌಲ್ಯ_Maps[ಮೌಲ್ಯ_Map_ಸೂಚ್ಯಂಕ], nameChoice);
 }
 
-const char *PropNameData::getPropertyValueName(int32_t property, int32_t value, int32_t nameChoice) {
-    int32_t valueMapIndex=findProperty(property);
-    if(valueMapIndex==0) {
-        return nullptr;  // Not a known property.
+ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *Prop_Name_ದತ್ತಾಂಶ::get_Property_ಮೌಲ್ಯ_Name(int32_t property, int32_t value, int32_t nameChoice) {
+    int32_t ಮೌಲ್ಯ_Map_ಸೂಚ್ಯಂಕ=ಕಂಡುಹಿಡಿ_Property(property);
+    ಆದರೆ(ಮೌಲ್ಯ_Map_ಸೂಚ್ಯಂಕ==0) {
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;  // Not a known property.
     }
-    int32_t nameGroupOffset=findPropertyValueNameGroup(valueMaps[valueMapIndex+1], value);
-    if(nameGroupOffset==0) {
-        return nullptr;
+    int32_t name_ಗುಂಪು_ಸ್ಥಾನಾಂತರ=ಕಂಡುಹಿಡಿ_Property_ಮೌಲ್ಯ_Name_ಗುಂಪು(ಮೌಲ್ಯ_Maps[ಮೌಲ್ಯ_Map_ಸೂಚ್ಯಂಕ+1], value);
+    ಆದರೆ(name_ಗುಂಪು_ಸ್ಥಾನಾಂತರ==0) {
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
-    return getName(nameGroups+nameGroupOffset, nameChoice);
+    ಹಿಂತಿರುಗಿ getName(nameGroups+name_ಗುಂಪು_ಸ್ಥಾನಾಂತರ, nameChoice);
 }
 
-int32_t PropNameData::getPropertyOrValueEnum(int32_t bytesTrieOffset, const char *alias) {
-    BytesTrie trie(bytesTries+bytesTrieOffset);
-    if(containsName(trie, alias)) {
-        return trie.getValue();
-    } else {
-        return UCHAR_INVALID_CODE;
+int32_t Prop_Name_ದತ್ತಾಂಶ::get_Property_Or_ಮೌಲ್ಯ_Enum(int32_t ಬೈಟುಗಳು_Trie_ಸ್ಥಾನಾಂತರ, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *alias) {
+    ಬೈಟುಗಳು_Trie trie(ಬೈಟುಗಳು_Tries+ಬೈಟುಗಳು_Trie_ಸ್ಥಾನಾಂತರ);
+    ಆದರೆ(ಒಳಗೊಂಡಿದೆ_Name(trie, alias)) {
+        ಹಿಂತಿರುಗಿ trie.get_ಮೌಲ್ಯ();
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಹಿಂತಿರುಗಿ UCHAR_INVALID_ಸಂಕೇತ;
     }
 }
 
-int32_t PropNameData::getPropertyEnum(const char *alias) {
-    return getPropertyOrValueEnum(0, alias);
+int32_t Prop_Name_ದತ್ತಾಂಶ::getPropertyEnum(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *alias) {
+    ಹಿಂತಿರುಗಿ get_Property_Or_ಮೌಲ್ಯ_Enum(0, alias);
 }
 
-int32_t PropNameData::getPropertyValueEnum(int32_t property, const char *alias) {
-    int32_t valueMapIndex=findProperty(property);
-    if(valueMapIndex==0) {
-        return UCHAR_INVALID_CODE;  // Not a known property.
+int32_t Prop_Name_ದತ್ತಾಂಶ::get_Property_ಮೌಲ್ಯ_Enum(int32_t property, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *alias) {
+    int32_t ಮೌಲ್ಯ_Map_ಸೂಚ್ಯಂಕ=ಕಂಡುಹಿಡಿ_Property(property);
+    ಆದರೆ(ಮೌಲ್ಯ_Map_ಸೂಚ್ಯಂಕ==0) {
+        ಹಿಂತಿರುಗಿ UCHAR_INVALID_ಸಂಕೇತ;  // Not a known property.
     }
-    valueMapIndex=valueMaps[valueMapIndex+1];
-    if(valueMapIndex==0) {
-        return UCHAR_INVALID_CODE;  // The property does not have named values.
+    ಮೌಲ್ಯ_Map_ಸೂಚ್ಯಂಕ=ಮೌಲ್ಯ_Maps[ಮೌಲ್ಯ_Map_ಸೂಚ್ಯಂಕ+1];
+    ಆದರೆ(ಮೌಲ್ಯ_Map_ಸೂಚ್ಯಂಕ==0) {
+        ಹಿಂತಿರುಗಿ UCHAR_INVALID_ಸಂಕೇತ;  // The property does not have named values.
     }
     // valueMapIndex is the start of the property's valueMap,
     // where the first word is the BytesTrie offset.
-    return getPropertyOrValueEnum(valueMaps[valueMapIndex], alias);
+    ಹಿಂತಿರುಗಿ get_Property_Or_ಮೌಲ್ಯ_Enum(ಮೌಲ್ಯ_Maps[ಮೌಲ್ಯ_Map_ಸೂಚ್ಯಂಕ], alias);
 }
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
 //----------------------------------------------------------------------
 // Public API implementation
 
-U_CAPI const char* U_EXPORT2
+U_CAPI ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* U_EXPORT2
 u_getPropertyName(UProperty property,
                   UPropertyNameChoice nameChoice) UPRV_NO_SANITIZE_UNDEFINED {
     // The nameChoice is really an integer with a couple of named constants.
     // Unicode allows for names other than short and long ones.
     // If present, these will be returned for U_LONG_PROPERTY_NAME + i, where i=1, 2,...
     U_NAMESPACE_USE
-    return PropNameData::getPropertyName(property, nameChoice);
+    ಹಿಂತಿರುಗಿ Prop_Name_ದತ್ತಾಂಶ::getPropertyName(property, nameChoice);
 }
 
 U_CAPI UProperty U_EXPORT2
-u_getPropertyEnum(const char* alias) {
+u_getPropertyEnum(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* alias) {
     U_NAMESPACE_USE
-    return (UProperty)PropNameData::getPropertyEnum(alias);
+    ಹಿಂತಿರುಗಿ (UProperty)Prop_Name_ದತ್ತಾಂಶ::getPropertyEnum(alias);
 }
 
-U_CAPI const char* U_EXPORT2
-u_getPropertyValueName(UProperty property,
+U_CAPI ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* U_EXPORT2
+u_get_Property_ಮೌಲ್ಯ_Name(UProperty property,
                        int32_t value,
                        UPropertyNameChoice nameChoice) UPRV_NO_SANITIZE_UNDEFINED {
     // The nameChoice is really an integer with a couple of named constants.
     // Unicode allows for names other than short and long ones.
     // If present, these will be returned for U_LONG_PROPERTY_NAME + i, where i=1, 2,...
     U_NAMESPACE_USE
-    return PropNameData::getPropertyValueName(property, value, nameChoice);
+    ಹಿಂತಿರುಗಿ Prop_Name_ದತ್ತಾಂಶ::get_Property_ಮೌಲ್ಯ_Name(property, value, nameChoice);
 }
 
 U_CAPI int32_t U_EXPORT2
-u_getPropertyValueEnum(UProperty property,
-                       const char* alias) {
+u_get_Property_ಮೌಲ್ಯ_Enum(UProperty property,
+                       ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* alias) {
     U_NAMESPACE_USE
-    return PropNameData::getPropertyValueEnum(property, alias);
+    ಹಿಂತಿರುಗಿ Prop_Name_ದತ್ತಾಂಶ::get_Property_ಮೌಲ್ಯ_Enum(property, alias);
 }
 
-U_CAPI const char*  U_EXPORT2
-uscript_getName(UScriptCode scriptCode){
-    return u_getPropertyValueName(UCHAR_SCRIPT, scriptCode,
+U_CAPI ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ*  U_EXPORT2
+uscript_getName(UScript_ಸಂಕೇತ script_ಸಂಕೇತ){
+    ಹಿಂತಿರುಗಿ u_get_Property_ಮೌಲ್ಯ_Name(UCHAR_SCRIPT, script_ಸಂಕೇತ,
                                   U_LONG_PROPERTY_NAME);
 }
 
-U_CAPI const char*  U_EXPORT2
-uscript_getShortName(UScriptCode scriptCode){
-    return u_getPropertyValueName(UCHAR_SCRIPT, scriptCode,
+U_CAPI ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ*  U_EXPORT2
+uscript_getShortName(UScript_ಸಂಕೇತ script_ಸಂಕೇತ){
+    ಹಿಂತಿರುಗಿ u_get_Property_ಮೌಲ್ಯ_Name(UCHAR_SCRIPT, script_ಸಂಕೇತ,
                                   U_SHORT_PROPERTY_NAME);
 }

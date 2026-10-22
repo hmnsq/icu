@@ -8,12 +8,12 @@
  *
  *******************************************************************************
  */
-#ifndef ICULSERV_H
-#define ICULSERV_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ ICULSERV_H
+#ವ್ಯಾಖ್ಯಾನಿಸು ICULSERV_H
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if UCONFIG_NO_SERVICE
+#ಆದರೆ UCONFIG_NO_SERVICE
 
 U_NAMESPACE_BEGIN
 
@@ -23,27 +23,27 @@ U_NAMESPACE_BEGIN
  */
 class ICULocaleService;
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
 
-#include "unicode/unistr.h"
-#include "unicode/locid.h"
-#include "unicode/strenum.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unistr.h"
+#ಅನ್ತರ್ಭಾವ "unicode/locid.h"
+#ಅನ್ತರ್ಭಾವ "unicode/strenum.h"
 
-#include "hash.h"
-#include "uvector.h"
+#ಅನ್ತರ್ಭಾವ "hash.h"
+#ಅನ್ತರ್ಭಾವ "uvector.h"
 
-#include "serv.h"
-#include "locutil.h"
+#ಅನ್ತರ್ಭಾವ "serv.h"
+#ಅನ್ತರ್ಭಾವ "locutil.h"
 
 U_NAMESPACE_BEGIN
 
 class ICULocaleService;
 
-class LocaleKey;
-class LocaleKeyFactory;
-class SimpleLocaleKeyFactory;
+class Locale_ಕೀಲಿ;
+class Locale_ಕೀಲಿ_Factory;
+class Simple_Locale_ಕೀಲಿ_Factory;
 class ServiceListener;
 
 /*
@@ -63,80 +63,80 @@ class ServiceListener;
  * is in upper case, with no trailing underscores.</p> 
  */
 
-class U_COMMON_API LocaleKey : public ICUServiceKey {
-  private: 
-    int32_t _kind;
+class U_COMMON_API Locale_ಕೀಲಿ : ಸಾರ್ವಜನಿಕ ICUService_ಕೀಲಿ {
+  ಖಾಸಗಿ: 
+    int32_t ಬಗೆ_2;
     UnicodeString _primaryID;
     UnicodeString _fallbackID;
     UnicodeString _currentID;
 
-  public:
-    enum {
-        KIND_ANY = -1
+  ಸಾರ್ವಜನಿಕ:
+    ಎಣಿಕೆ {
+        ಬಗೆ_ANY = -1
     };
 
     /**
      * Create a LocaleKey with canonical primary and fallback IDs.
      */
-    static LocaleKey* createWithCanonicalFallback(const UnicodeString* primaryID, 
-                                                  const UnicodeString* canonicalFallbackID,
-                                                  UErrorCode& status);
+    ಸ್ಥಿರ Locale_ಕೀಲಿ* createWithCanonicalFallback(ಸ್ಥಿರಾಂಕ UnicodeString* primaryID, 
+                                                  ಸ್ಥಿರಾಂಕ UnicodeString* canonicalFallbackID,
+                                                  UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
 
     /**
      * Create a LocaleKey with canonical primary and fallback IDs.
      */
-    static LocaleKey* createWithCanonicalFallback(const UnicodeString* primaryID, 
-                                                  const UnicodeString* canonicalFallbackID, 
-                                                  int32_t kind,
-                                                  UErrorCode& status);
+    ಸ್ಥಿರ Locale_ಕೀಲಿ* createWithCanonicalFallback(ಸ್ಥಿರಾಂಕ UnicodeString* primaryID, 
+                                                  ಸ್ಥಿರಾಂಕ UnicodeString* canonicalFallbackID, 
+                                                  int32_t ಬಗೆ,
+                                                  UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
 
-  protected:
+  ಸಂರಕ್ಷಿತ:
     /**
      * PrimaryID is the user's requested locale string,
      * canonicalPrimaryID is this string in canonical form,
      * fallbackID is the current default locale's string in
      * canonical form.
      */
-    LocaleKey(const UnicodeString& primaryID, 
-              const UnicodeString& canonicalPrimaryID, 
-              const UnicodeString* canonicalFallbackID, 
-              int32_t kind);
+    Locale_ಕೀಲಿ(ಸ್ಥಿರಾಂಕ UnicodeString& primaryID, 
+              ಸ್ಥಿರಾಂಕ UnicodeString& canonicalPrimaryID, 
+              ಸ್ಥಿರಾಂಕ UnicodeString* canonicalFallbackID, 
+              int32_t ಬಗೆ);
 
- public:
+ ಸಾರ್ವಜನಿಕ:
     /**
      * Append the prefix associated with the kind, or nothing if the kind is KIND_ANY.
      */
-    virtual UnicodeString& prefix(UnicodeString& result) const override;
+    ವಾಸ್ತವಿಕ UnicodeString& ಪೂರ್ವಪ್ರತ್ಯಯ(UnicodeString& ಫಲಿತಾಂಶ) ಸ್ಥಿರಾಂಕ override;
 
     /**
      * Return the kind code associated with this key.
      */
-    virtual int32_t kind() const;
+    ವಾಸ್ತವಿಕ int32_t ಬಗೆ() ಸ್ಥಿರಾಂಕ;
 
     /**
      * Return the canonicalID.
      */
-    virtual UnicodeString& canonicalID(UnicodeString& result) const override;
+    ವಾಸ್ತವಿಕ UnicodeString& canonicalID(UnicodeString& ಫಲಿತಾಂಶ) ಸ್ಥಿರಾಂಕ override;
 
     /**
      * Return the currentID.
      */
-    virtual UnicodeString& currentID(UnicodeString& result) const override;
+    ವಾಸ್ತವಿಕ UnicodeString& currentID(UnicodeString& ಫಲಿತಾಂಶ) ಸ್ಥಿರಾಂಕ override;
 
     /**
      * Return the (canonical) current descriptor, or null if no current id.
      */
-    virtual UnicodeString& currentDescriptor(UnicodeString& result) const override;
+    ವಾಸ್ತವಿಕ UnicodeString& currentDescriptor(UnicodeString& ಫಲಿತಾಂಶ) ಸ್ಥಿರಾಂಕ override;
 
     /**
      * Convenience method to return the locale corresponding to the (canonical) original ID.
      */
-    virtual Locale& canonicalLocale(Locale& result) const;
+    ವಾಸ್ತವಿಕ Locale& canonicalLocale(Locale& ಫಲಿತಾಂಶ) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Convenience method to return the locale corresponding to the (canonical) current ID.
      */
-    virtual Locale& currentLocale(Locale& result) const;
+    ವಾಸ್ತವಿಕ Locale& currentLocale(Locale& ಫಲಿತಾಂಶ) ಸ್ಥಿರಾಂಕ;
 
     /**
      * If the key has a fallback, modify the key and return true,
@@ -147,32 +147,32 @@ class U_COMMON_API LocaleKey : public ICUServiceKey {
      * unless the primary id was the empty string, in which case
      * there is no fallback.  
      */
-    virtual UBool fallback() override;
+    ವಾಸ್ತವಿಕ UBool fallback() override;
 
     /**
      * Return true if a key created from id matches, or would eventually
      * fallback to match, the canonical ID of this key.  
      */
-    virtual UBool isFallbackOf(const UnicodeString& id) const override;
+    ವಾಸ್ತವಿಕ UBool is_Fallback_ದ(ಸ್ಥಿರಾಂಕ UnicodeString& id) ಸ್ಥಿರಾಂಕ override;
     
- public:
+ ಸಾರ್ವಜನಿಕ:
     /**
      * UObject boilerplate.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    ಸ್ಥಿರ UClassID U_EXPORT2 getStaticClassID();
 
-    virtual UClassID getDynamicClassID() const override;
+    ವಾಸ್ತವಿಕ UClassID getDynamicClassID() ಸ್ಥಿರಾಂಕ override;
 
     /**
      * Destructor.
      */
-    virtual ~LocaleKey();
+    ವಾಸ್ತವಿಕ ~Locale_ಕೀಲಿ();
 
-#ifdef SERVICE_DEBUG
- public:
-    virtual UnicodeString& debug(UnicodeString& result) const;
-    virtual UnicodeString& debugClass(UnicodeString& result) const;
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ SERVICE_DEBUG
+ ಸಾರ್ವಜನಿಕ:
+    ವಾಸ್ತವಿಕ UnicodeString& debug(UnicodeString& ಫಲಿತಾಂಶ) ಸ್ಥಿರಾಂಕ;
+    ವಾಸ್ತವಿಕ UnicodeString& debugClass(UnicodeString& ಫಲಿತಾಂಶ) ಸ್ಥಿರಾಂಕ;
+#ಆದರೆ_ಅಂತ್ಯ
 
 };
 
@@ -194,13 +194,13 @@ class U_COMMON_API LocaleKey : public ICUServiceKey {
  * <p>Localization of visible ids is handled
  * by the handling factory, regardless of kind.
  */
-class U_COMMON_API LocaleKeyFactory : public ICUServiceFactory {
-protected:
-    const UnicodeString _name;
-    const int32_t _coverage;
+class U_COMMON_API Locale_ಕೀಲಿ_Factory : ಸಾರ್ವಜನಿಕ ICUServiceFactory {
+ಸಂರಕ್ಷಿತ:
+    ಸ್ಥಿರಾಂಕ UnicodeString _name;
+    ಸ್ಥಿರಾಂಕ int32_t _coverage;
 
-public:
-    enum {
+ಸಾರ್ವಜನಿಕ:
+    ಎಣಿಕೆ {
         /**
          * Coverage value indicating that the factory makes
          * its locales visible, and does not cover more specific 
@@ -219,48 +219,48 @@ public:
     /**
      * Destructor.
      */
-    virtual ~LocaleKeyFactory();
+    ವಾಸ್ತವಿಕ ~Locale_ಕೀಲಿ_Factory();
 
-protected:
+ಸಂರಕ್ಷಿತ:
     /**
      * Constructor used by subclasses.
      */
-    LocaleKeyFactory(int32_t coverage);
+    Locale_ಕೀಲಿ_Factory(int32_t coverage);
 
     /**
      * Constructor used by subclasses.
      */
-    LocaleKeyFactory(int32_t coverage, const UnicodeString& name);
+    Locale_ಕೀಲಿ_Factory(int32_t coverage, ಸ್ಥಿರಾಂಕ UnicodeString& name);
 
     /**
      * Implement superclass abstract method.  This checks the currentID of
      * the key against the supported IDs, and passes the canonicalLocale and
      * kind off to handleCreate (which subclasses must implement).
      */
-public:
-    virtual UObject* create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const override;
+ಸಾರ್ವಜನಿಕ:
+    ವಾಸ್ತವಿಕ UObject* create(ಸ್ಥಿರಾಂಕ ICUService_ಕೀಲಿ& ಕೀಲಿ, ಸ್ಥಿರಾಂಕ ICUService* service, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ override;
 
-protected:
-    virtual UBool handlesKey(const ICUServiceKey& key, UErrorCode& status) const;
+ಸಂರಕ್ಷಿತ:
+    ವಾಸ್ತವಿಕ UBool handles_ಕೀಲಿ(ಸ್ಥಿರಾಂಕ ICUService_ಕೀಲಿ& ಕೀಲಿ, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ;
 
-public:
+ಸಾರ್ವಜನಿಕ:
     /**
      * Override of superclass method.  This adjusts the result based
      * on the coverage rule for this factory.
      */
-    virtual void updateVisibleIDs(Hashtable& result, UErrorCode& status) const override;
+    ವಾಸ್ತವಿಕ ಶೂನ್ಯ updateVisibleIDs(Hashtable& ಫಲಿತಾಂಶ, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ override;
 
     /**
      * Return a localized name for the locale represented by id.
      */
-    virtual UnicodeString& getDisplayName(const UnicodeString& id, const Locale& locale, UnicodeString& result) const override;
+    ವಾಸ್ತವಿಕ UnicodeString& getDisplayName(ಸ್ಥಿರಾಂಕ UnicodeString& id, ಸ್ಥಿರಾಂಕ Locale& locale, UnicodeString& ಫಲಿತಾಂಶ) ಸ್ಥಿರಾಂಕ override;
 
-protected:
+ಸಂರಕ್ಷಿತ:
     /**
      * Utility method used by create(ICUServiceKey, ICUService).  Subclasses can implement
      * this instead of create.  The default returns nullptr.
      */
-    virtual UObject* handleCreate(const Locale& loc, int32_t kind, const ICUService* service, UErrorCode& status) const;
+    ವಾಸ್ತವಿಕ UObject* handleCreate(ಸ್ಥಿರಾಂಕ Locale& loc, int32_t ಬಗೆ, ಸ್ಥಿರಾಂಕ ICUService* service, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ;
 
    /**
      * Return true if this id is one the factory supports (visible or 
@@ -273,21 +273,21 @@ protected:
      * otherwise).  This can be called often and might need to be
      * cached if it is expensive to create.
      */
-    virtual const Hashtable* getSupportedIDs(UErrorCode& status) const;
+    ವಾಸ್ತವಿಕ ಸ್ಥಿರಾಂಕ Hashtable* getSupportedIDs(UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ;
 
-public:
+ಸಾರ್ವಜನಿಕ:
     /**
      * UObject boilerplate.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    ಸ್ಥಿರ UClassID U_EXPORT2 getStaticClassID();
 
-    virtual UClassID getDynamicClassID() const override;
+    ವಾಸ್ತವಿಕ UClassID getDynamicClassID() ಸ್ಥಿರಾಂಕ override;
 
-#ifdef SERVICE_DEBUG
- public:
-    virtual UnicodeString& debug(UnicodeString& result) const;
-    virtual UnicodeString& debugClass(UnicodeString& result) const;
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ SERVICE_DEBUG
+ ಸಾರ್ವಜನಿಕ:
+    ವಾಸ್ತವಿಕ UnicodeString& debug(UnicodeString& ಫಲಿತಾಂಶ) ಸ್ಥಿರಾಂಕ;
+    ವಾಸ್ತವಿಕ UnicodeString& debugClass(UnicodeString& ಫಲಿತಾಂಶ) ಸ್ಥಿರಾಂಕ;
+#ಆದರೆ_ಅಂತ್ಯ
 
 };
 
@@ -299,59 +299,59 @@ public:
  * A LocaleKeyFactory that just returns a single object for a kind/locale.
  */
 
-class U_COMMON_API SimpleLocaleKeyFactory : public LocaleKeyFactory {
- private:
+class U_COMMON_API Simple_Locale_ಕೀಲಿ_Factory : ಸಾರ್ವಜನಿಕ Locale_ಕೀಲಿ_Factory {
+ ಖಾಸಗಿ:
     UObject* _obj;
     UnicodeString _id;
-    const int32_t _kind;
+    ಸ್ಥಿರಾಂಕ int32_t ಬಗೆ_2;
 
- public:
-    SimpleLocaleKeyFactory(UObject* objToAdopt, 
-                           const UnicodeString& locale, 
-                           int32_t kind, 
+ ಸಾರ್ವಜನಿಕ:
+    Simple_Locale_ಕೀಲಿ_Factory(UObject* obj_ಗಮ್ಯ_Adopt, 
+                           ಸ್ಥಿರಾಂಕ UnicodeString& locale, 
+                           int32_t ಬಗೆ, 
                            int32_t coverage);
 
-    SimpleLocaleKeyFactory(UObject* objToAdopt, 
-                           const Locale& locale, 
-                           int32_t kind, 
+    Simple_Locale_ಕೀಲಿ_Factory(UObject* obj_ಗಮ್ಯ_Adopt, 
+                           ಸ್ಥಿರಾಂಕ Locale& locale, 
+                           int32_t ಬಗೆ, 
                            int32_t coverage);
 
     /**
      * Destructor.
      */
-    virtual ~SimpleLocaleKeyFactory();
+    ವಾಸ್ತವಿಕ ~Simple_Locale_ಕೀಲಿ_Factory();
 
     /**
      * Override of superclass method.  Returns the service object if kind/locale match.  Service is not used.
      */
-    virtual UObject* create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const override;
+    ವಾಸ್ತವಿಕ UObject* create(ಸ್ಥಿರಾಂಕ ICUService_ಕೀಲಿ& ಕೀಲಿ, ಸ್ಥಿರಾಂಕ ICUService* service, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ override;
 
     /**
      * Override of superclass method.  This adjusts the result based
      * on the coverage rule for this factory.
      */
-    virtual void updateVisibleIDs(Hashtable& result, UErrorCode& status) const override;
+    ವಾಸ್ತವಿಕ ಶೂನ್ಯ updateVisibleIDs(Hashtable& ಫಲಿತಾಂಶ, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ override;
 
- protected:
+ ಸಂರಕ್ಷಿತ:
     /**
      * Return true if this id is equal to the locale name.
      */
     //virtual UBool isSupportedID(const UnicodeString& id, UErrorCode& status) const;
 
 
-public:
+ಸಾರ್ವಜನಿಕ:
     /**
      * UObject boilerplate.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    ಸ್ಥಿರ UClassID U_EXPORT2 getStaticClassID();
 
-    virtual UClassID getDynamicClassID() const override;
+    ವಾಸ್ತವಿಕ UClassID getDynamicClassID() ಸ್ಥಿರಾಂಕ override;
 
-#ifdef SERVICE_DEBUG
- public:
-    virtual UnicodeString& debug(UnicodeString& result) const;
-    virtual UnicodeString& debugClass(UnicodeString& result) const;
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ SERVICE_DEBUG
+ ಸಾರ್ವಜನಿಕ:
+    ವಾಸ್ತವಿಕ UnicodeString& debug(UnicodeString& ಫಲಿತಾಂಶ) ಸ್ಥಿರಾಂಕ;
+    ವಾಸ್ತವಿಕ UnicodeString& debugClass(UnicodeString& ಫಲಿತಾಂಶ) ಸ್ಥಿರಾಂಕ;
+#ಆದರೆ_ಅಂತ್ಯ
 
 };
 
@@ -366,12 +366,12 @@ public:
  * IDs.  Subclasses then override handleCreate to create the actual service
  * object.  The default implementation returns a resource bundle.
  */
-class U_COMMON_API ICUResourceBundleFactory : public LocaleKeyFactory 
+class U_COMMON_API ICUResourceBundleFactory : ಸಾರ್ವಜನಿಕ Locale_ಕೀಲಿ_Factory 
 {
- protected:
+ ಸಂರಕ್ಷಿತ:
     UnicodeString _bundleName;
 
- public:
+ ಸಾರ್ವಜನಿಕ:
     /**
      * Convenience constructor that uses the main ICU bundle name.
      */
@@ -383,38 +383,38 @@ class U_COMMON_API ICUResourceBundleFactory : public LocaleKeyFactory
      * ures_openAvailableLocales, such as U_ICUDATA or U_ICUDATA_COLL.
      * The empty string is equivalent to U_ICUDATA.
      */
-    ICUResourceBundleFactory(const UnicodeString& bundleName);
+    ICUResourceBundleFactory(ಸ್ಥಿರಾಂಕ UnicodeString& bundleName);
 
     /**
      * Destructor
      */
-    virtual ~ICUResourceBundleFactory();
+    ವಾಸ್ತವಿಕ ~ICUResourceBundleFactory();
 
-protected:
+ಸಂರಕ್ಷಿತ:
     /**
      * Return the supported IDs.  This is the set of all locale names in ICULocaleData.
      */
-    virtual const Hashtable* getSupportedIDs(UErrorCode& status) const override;
+    ವಾಸ್ತವಿಕ ಸ್ಥಿರಾಂಕ Hashtable* getSupportedIDs(UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ override;
 
     /**
      * Create the service.  The default implementation returns the resource bundle
      * for the locale, ignoring kind, and service.
      */
-    virtual UObject* handleCreate(const Locale& loc, int32_t kind, const ICUService* service, UErrorCode& status) const override;
+    ವಾಸ್ತವಿಕ UObject* handleCreate(ಸ್ಥಿರಾಂಕ Locale& loc, int32_t ಬಗೆ, ಸ್ಥಿರಾಂಕ ICUService* service, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ override;
 
-public:
+ಸಾರ್ವಜನಿಕ:
     /**
      * UObject boilerplate.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
-    virtual UClassID getDynamicClassID() const override;
+    ಸ್ಥಿರ UClassID U_EXPORT2 getStaticClassID();
+    ವಾಸ್ತವಿಕ UClassID getDynamicClassID() ಸ್ಥಿರಾಂಕ override;
 
 
-#ifdef SERVICE_DEBUG
- public:
-    virtual UnicodeString& debug(UnicodeString& result) const;
-    virtual UnicodeString& debugClass(UnicodeString& result) const;
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ SERVICE_DEBUG
+ ಸಾರ್ವಜನಿಕ:
+    ವಾಸ್ತವಿಕ UnicodeString& debug(UnicodeString& ಫಲಿತಾಂಶ) ಸ್ಥಿರಾಂಕ;
+    ವಾಸ್ತವಿಕ UnicodeString& debugClass(UnicodeString& ಫಲಿತಾಂಶ) ಸ್ಥಿರಾಂಕ;
+#ಆದರೆ_ಅಂತ್ಯ
 
 };
 
@@ -422,13 +422,13 @@ public:
  ******************************************************************
  */
 
-class U_COMMON_API_CLASS ICULocaleService : public ICUService
+class U_COMMON_API_CLASS ICULocaleService : ಸಾರ್ವಜನಿಕ ICUService
 {
- private:
+ ಖಾಸಗಿ:
   Locale fallbackLocale;
   UnicodeString fallbackLocaleName;
 
- public:
+ ಸಾರ್ವಜನಿಕ:
   /**
    * Construct an ICULocaleService.
    */
@@ -437,44 +437,44 @@ class U_COMMON_API_CLASS ICULocaleService : public ICUService
   /**
    * Construct an ICULocaleService with a name (useful for debugging).
    */
-  U_COMMON_API ICULocaleService(const UnicodeString& name);
+  U_COMMON_API ICULocaleService(ಸ್ಥಿರಾಂಕ UnicodeString& name);
 
   /**
    * Destructor.
    */
-  U_COMMON_API virtual ~ICULocaleService();
+  U_COMMON_API ವಾಸ್ತವಿಕ ~ICULocaleService();
 
-#if 0
+#ಆದರೆ 0
   // redeclare because of overload resolution rules?
   // no, causes ambiguities since both UnicodeString and Locale have constructors that take a const char*
   // need some compiler flag to remove warnings 
-  UObject* get(const UnicodeString& descriptor, UErrorCode& status) const {
-    return ICUService::get(descriptor, status);
+  UObject* get(ಸ್ಥಿರಾಂಕ UnicodeString& descriptor, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ ICUService::get(descriptor, ಸ್ಥಿತಿ_2);
   }
 
-  UObject* get(const UnicodeString& descriptor, UnicodeString* actualReturn, UErrorCode& status) const {
-    return ICUService::get(descriptor, actualReturn, status);
+  UObject* get(ಸ್ಥಿರಾಂಕ UnicodeString& descriptor, UnicodeString* actualReturn, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ ICUService::get(descriptor, actualReturn, ಸ್ಥಿತಿ_2);
   }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
   /**
    * Convenience override for callers using locales.  This calls
    * get(Locale, int, Locale[]) with KIND_ANY for kind and null for
    * actualReturn.
    */
-  U_COMMON_API UObject* get(const Locale& locale, UErrorCode& status) const;
+  U_COMMON_API UObject* get(ಸ್ಥಿರಾಂಕ Locale& locale, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ;
 
   /**
    * Convenience override for callers using locales.  This calls
    * get(Locale, int, Locale[]) with a null actualReturn.
    */
-  U_COMMON_API UObject* get(const Locale& locale, int32_t kind, UErrorCode& status) const;
+  U_COMMON_API UObject* get(ಸ್ಥಿರಾಂಕ Locale& locale, int32_t ಬಗೆ, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ;
 
   /**
    * Convenience override for callers using locales. This calls
    * get(Locale, String, Locale[]) with a null kind.
    */
-  U_COMMON_API UObject* get(const Locale& locale, Locale* actualReturn, UErrorCode& status) const;
+  U_COMMON_API UObject* get(ಸ್ಥಿರಾಂಕ Locale& locale, Locale* actualReturn, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ;
                    
   /**
    * Convenience override for callers using locales.  This uses
@@ -482,27 +482,27 @@ class U_COMMON_API_CLASS ICULocaleService : public ICUService
    * if actualReturn is not null, returns the actualResult from
    * getKey (stripping any prefix) into a Locale.  
    */
-  U_COMMON_API UObject* get(const Locale& locale, int32_t kind, Locale* actualReturn, UErrorCode& status) const;
+  U_COMMON_API UObject* get(ಸ್ಥಿರಾಂಕ Locale& locale, int32_t ಬಗೆ, Locale* actualReturn, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ;
 
   /**
    * Convenience override for callers using locales.  This calls
    * registerObject(Object, Locale, int32_t kind, int coverage)
    * passing KIND_ANY for the kind, and VISIBLE for the coverage.
    */
-  U_COMMON_API virtual URegistryKey registerInstance(UObject* objToAdopt, const Locale& locale, UErrorCode& status);
+  U_COMMON_API ವಾಸ್ತವಿಕ URegistry_ಕೀಲಿ ರಿಜಿಸ್ಟರ್_Instance(UObject* obj_ಗಮ್ಯ_Adopt, ಸ್ಥಿರಾಂಕ Locale& locale, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
 
   /**
    * Convenience function for callers using locales.  This calls
    * registerObject(Object, Locale, int kind, int coverage)
    * passing VISIBLE for the coverage.
    */
-  U_COMMON_API virtual URegistryKey registerInstance(UObject* objToAdopt, const Locale& locale, int32_t kind, UErrorCode& status);
+  U_COMMON_API ವಾಸ್ತವಿಕ URegistry_ಕೀಲಿ ರಿಜಿಸ್ಟರ್_Instance(UObject* obj_ಗಮ್ಯ_Adopt, ಸ್ಥಿರಾಂಕ Locale& locale, int32_t ಬಗೆ, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
 
   /**
    * Convenience function for callers using locales.  This  instantiates
    * a SimpleLocaleKeyFactory, and registers the factory.
    */
-  U_COMMON_API virtual URegistryKey registerInstance(UObject* objToAdopt, const Locale& locale, int32_t kind, int32_t coverage, UErrorCode& status);
+  U_COMMON_API ವಾಸ್ತವಿಕ URegistry_ಕೀಲಿ ರಿಜಿಸ್ಟರ್_Instance(UObject* obj_ಗಮ್ಯ_Adopt, ಸ್ಥಿರಾಂಕ Locale& locale, int32_t ಬಗೆ, int32_t coverage, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
 
 
   /**
@@ -512,40 +512,40 @@ class U_COMMON_API_CLASS ICULocaleService : public ICUService
    * We really need a flag that is understood by all compilers that will suppress the warning about
    * hidden overrides.
    */
-  U_COMMON_API virtual URegistryKey registerInstance(UObject* objToAdopt, const UnicodeString& locale, UBool visible, UErrorCode& status) override;
+  U_COMMON_API ವಾಸ್ತವಿಕ URegistry_ಕೀಲಿ ರಿಜಿಸ್ಟರ್_Instance(UObject* obj_ಗಮ್ಯ_Adopt, ಸ್ಥಿರಾಂಕ UnicodeString& locale, UBool visible, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) override;
 
   /**
    * Convenience method for callers using locales.  This returns the standard
    * service ID enumeration.
    */
-  U_COMMON_API virtual StringEnumeration* getAvailableLocales() const U_LIFETIME_BOUND;
+  U_COMMON_API ವಾಸ್ತವಿಕ StringEnumeration* get_ಲಭ್ಯ_Locales() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND;
 
- protected:
+ ಸಂರಕ್ಷಿತ:
 
   /**
    * Return the name of the current fallback locale.  If it has changed since this was
    * last accessed, the service cache is cleared.
    */
-  U_COMMON_API const UnicodeString& validateFallbackLocale() const;
+  U_COMMON_API ಸ್ಥಿರಾಂಕ UnicodeString& validateFallbackLocale() ಸ್ಥಿರಾಂಕ;
 
   /**
    * Override superclass createKey method.
    */
-  U_COMMON_API virtual ICUServiceKey* createKey(const UnicodeString* id, UErrorCode& status) const override;
+  U_COMMON_API ವಾಸ್ತವಿಕ ICUService_ಕೀಲಿ* create_ಕೀಲಿ(ಸ್ಥಿರಾಂಕ UnicodeString* id, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ override;
 
   /**
    * Additional createKey that takes a kind.
    */
-  U_COMMON_API virtual ICUServiceKey* createKey(const UnicodeString* id, int32_t kind, UErrorCode& status) const;
+  U_COMMON_API ವಾಸ್ತವಿಕ ICUService_ಕೀಲಿ* create_ಕೀಲಿ(ಸ್ಥಿರಾಂಕ UnicodeString* id, int32_t ಬಗೆ, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ;
 
-  friend class ServiceEnumeration;
+  ಮಿತ್ರ class ServiceEnumeration;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
     /* UCONFIG_NO_SERVICE */
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
     /* ICULSERV_H */
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 

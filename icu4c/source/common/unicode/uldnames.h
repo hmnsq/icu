@@ -7,54 +7,54 @@
 *******************************************************************************
 */
 
-#ifndef __ULDNAMES_H__
-#define __ULDNAMES_H__
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __ULDNAMES_H__
+#ವ್ಯಾಖ್ಯಾನಿಸು __ULDNAMES_H__
 
 /**
  * \file
  * \brief C API: Provides display names of Locale ids and their components.
  */
 
-#include "unicode/utypes.h"
-#include "unicode/uscript.h"
-#include "unicode/udisplaycontext.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uscript.h"
+#ಅನ್ತರ್ಭಾವ "unicode/udisplaycontext.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#ಆದರೆ U_SHOW_CPLUSPLUS_API
+#ಅನ್ತರ್ಭಾವ "unicode/localpointer.h"
+#ಆದರೆ_ಅಂತ್ಯ   // U_SHOW_CPLUSPLUS_API
 
 /**
  * Enum used in LocaleDisplayNames::createInstance.
  * @stable ICU 4.4
  */
-typedef enum {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಎಣಿಕೆ {
     /**
      * Use standard names when generating a locale name,
      * e.g. en_GB displays as 'English (United Kingdom)'.
      * @stable ICU 4.4
      */
-    ULDN_STANDARD_NAMES = 0,
+    ULDN_STANDARD_ಹೆಸರುಗಳು = 0,
     /**
      * Use dialect names, when generating a locale name,
      * e.g. en_GB displays as 'British English'.
      * @stable ICU 4.4
      */
-    ULDN_DIALECT_NAMES
+    ULDN_DIALECT_ಹೆಸರುಗಳು
 } UDialectHandling;
 
 /**
  * Opaque C service object type for the locale display names API
  * @stable ICU 4.4
  */
-struct ULocaleDisplayNames;
+ರಚನೆ ULocale_Display_ಹೆಸರುಗಳು;
 
 /** 
  * C typedef for struct ULocaleDisplayNames. 
  * @stable ICU 4.4 
  */
-typedef struct ULocaleDisplayNames ULocaleDisplayNames;  
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ ULocale_Display_ಹೆಸರುಗಳು ULocale_Display_ಹೆಸರುಗಳು;  
 
-#if !UCONFIG_NO_FORMATTING
+#ಆದರೆ !UCONFIG_NO_FORMATTING
 
 /**
  * Returns an instance of LocaleDisplayNames that returns names
@@ -68,20 +68,20 @@ typedef struct ULocaleDisplayNames ULocaleDisplayNames;
  * @param pErrorCode the status code
  * @stable ICU 4.4
  */
-U_CAPI ULocaleDisplayNames * U_EXPORT2
-uldn_open(const char * locale,
+U_CAPI ULocale_Display_ಹೆಸರುಗಳು * U_EXPORT2
+uldn_open(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ * locale,
           UDialectHandling dialectHandling,
-          UErrorCode *pErrorCode);
+          UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
 /**
  * Closes a ULocaleDisplayNames instance obtained from uldn_open().
  * @param ldn the ULocaleDisplayNames instance to be closed
  * @stable ICU 4.4
  */
-U_CAPI void U_EXPORT2
-uldn_close(ULocaleDisplayNames *ldn);
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+uldn_close(ULocale_Display_ಹೆಸರುಗಳು *ldn);
 
-#if U_SHOW_CPLUSPLUS_API
+#ಆದರೆ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -94,11 +94,11 @@ U_NAMESPACE_BEGIN
  * @see LocalPointer
  * @stable ICU 4.4
  */
-U_DEFINE_LOCAL_OPEN_POINTER(LocalULocaleDisplayNamesPointer, ULocaleDisplayNames, uldn_close);
+U_DEFINE_LOCAL_OPEN_ಸೂಚಕ(Local_ULocale_Display_ಹೆಸರುಗಳು_ಸೂಚಕ, ULocale_Display_ಹೆಸರುಗಳು, uldn_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 /* getters for state */
 
@@ -109,8 +109,8 @@ U_NAMESPACE_END
  * @return the display locale 
  * @stable ICU 4.4
  */
-U_CAPI const char* U_EXPORT2
-uldn_getLocale(const ULocaleDisplayNames* ldn U_LIFETIME_BOUND);
+U_CAPI ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* U_EXPORT2
+uldn_getLocale(ಸ್ಥಿರಾಂಕ ULocale_Display_ಹೆಸರುಗಳು* ldn U_LIFETIME_BOUND);
 
 /**
  * Returns the dialect handling used in the display names.
@@ -119,7 +119,7 @@ uldn_getLocale(const ULocaleDisplayNames* ldn U_LIFETIME_BOUND);
  * @stable ICU 4.4
  */
 U_CAPI UDialectHandling U_EXPORT2
-uldn_getDialectHandling(const ULocaleDisplayNames *ldn);
+uldn_getDialectHandling(ಸ್ಥಿರಾಂಕ ULocale_Display_ಹೆಸರುಗಳು *ldn);
 
 /* names for entire locales */
 
@@ -135,11 +135,11 @@ uldn_getDialectHandling(const ULocaleDisplayNames *ldn);
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_localeDisplayName(const ULocaleDisplayNames *ldn,
-                       const char *locale,
-                       UChar *result,
-                       int32_t maxResultSize,
-                       UErrorCode *pErrorCode);
+uldn_localeDisplayName(ಸ್ಥಿರಾಂಕ ULocale_Display_ಹೆಸರುಗಳು *ldn,
+                       ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *locale,
+                       UChar *ಫಲಿತಾಂಶ,
+                       int32_t max_ಫಲಿತಾಂಶ_ಗಾತ್ರ,
+                       UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
 /* names for components of a locale */
 
@@ -155,11 +155,11 @@ uldn_localeDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_languageDisplayName(const ULocaleDisplayNames *ldn,
-                         const char *lang,
-                         UChar *result,
-                         int32_t maxResultSize,
-                         UErrorCode *pErrorCode);
+uldn_languageDisplayName(ಸ್ಥಿರಾಂಕ ULocale_Display_ಹೆಸರುಗಳು *ldn,
+                         ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *lang,
+                         UChar *ಫಲಿತಾಂಶ,
+                         int32_t max_ಫಲಿತಾಂಶ_ಗಾತ್ರ,
+                         UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
 /**
  * Returns the display name of the provided script.
@@ -173,11 +173,11 @@ uldn_languageDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_scriptDisplayName(const ULocaleDisplayNames *ldn,
-                       const char *script,
-                       UChar *result,
-                       int32_t maxResultSize,
-                       UErrorCode *pErrorCode);
+uldn_scriptDisplayName(ಸ್ಥಿರಾಂಕ ULocale_Display_ಹೆಸರುಗಳು *ldn,
+                       ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *script,
+                       UChar *ಫಲಿತಾಂಶ,
+                       int32_t max_ಫಲಿತಾಂಶ_ಗಾತ್ರ,
+                       UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
 /**
  * Returns the display name of the provided script code.
@@ -191,11 +191,11 @@ uldn_scriptDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_scriptCodeDisplayName(const ULocaleDisplayNames *ldn,
-                           UScriptCode scriptCode,
-                           UChar *result,
-                           int32_t maxResultSize,
-                           UErrorCode *pErrorCode);
+uldn_script_ಸಂಕೇತ_Display_Name(ಸ್ಥಿರಾಂಕ ULocale_Display_ಹೆಸರುಗಳು *ldn,
+                           UScript_ಸಂಕೇತ script_ಸಂಕೇತ,
+                           UChar *ಫಲಿತಾಂಶ,
+                           int32_t max_ಫಲಿತಾಂಶ_ಗಾತ್ರ,
+                           UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
 /**
  * Returns the display name of the provided region code.
@@ -209,11 +209,11 @@ uldn_scriptCodeDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_regionDisplayName(const ULocaleDisplayNames *ldn,
-                       const char *region,
-                       UChar *result,
-                       int32_t maxResultSize,
-                       UErrorCode *pErrorCode);
+uldn_regionDisplayName(ಸ್ಥಿರಾಂಕ ULocale_Display_ಹೆಸರುಗಳು *ldn,
+                       ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *region,
+                       UChar *ಫಲಿತಾಂಶ,
+                       int32_t max_ಫಲಿತಾಂಶ_ಗಾತ್ರ,
+                       UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
 /**
  * Returns the display name of the provided variant
@@ -227,11 +227,11 @@ uldn_regionDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_variantDisplayName(const ULocaleDisplayNames *ldn,
-                        const char *variant,
-                        UChar *result,
-                        int32_t maxResultSize,
-                        UErrorCode *pErrorCode);
+uldn_variantDisplayName(ಸ್ಥಿರಾಂಕ ULocale_Display_ಹೆಸರುಗಳು *ldn,
+                        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *variant,
+                        UChar *ಫಲಿತಾಂಶ,
+                        int32_t max_ಫಲಿತಾಂಶ_ಗಾತ್ರ,
+                        UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
 /**
  * Returns the display name of the provided locale key
@@ -245,11 +245,11 @@ uldn_variantDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_keyDisplayName(const ULocaleDisplayNames *ldn,
-                    const char *key,
-                    UChar *result,
-                    int32_t maxResultSize,
-                    UErrorCode *pErrorCode);
+uldn_ಕೀಲಿ_Display_Name(ಸ್ಥಿರಾಂಕ ULocale_Display_ಹೆಸರುಗಳು *ldn,
+                    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಕೀಲಿ,
+                    UChar *ಫಲಿತಾಂಶ,
+                    int32_t max_ಫಲಿತಾಂಶ_ಗಾತ್ರ,
+                    UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
 /**
  * Returns the display name of the provided value (used with the provided key).
@@ -264,12 +264,12 @@ uldn_keyDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_keyValueDisplayName(const ULocaleDisplayNames *ldn,
-                         const char *key,
-                         const char *value,
-                         UChar *result,
-                         int32_t maxResultSize,
-                         UErrorCode *pErrorCode);
+uldn_ಕೀಲಿ_ಮೌಲ್ಯ_Display_Name(ಸ್ಥಿರಾಂಕ ULocale_Display_ಹೆಸರುಗಳು *ldn,
+                         ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಕೀಲಿ,
+                         ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಮೌಲ್ಯ_2,
+                         UChar *ಫಲಿತಾಂಶ,
+                         int32_t max_ಫಲಿತಾಂಶ_ಗಾತ್ರ,
+                         UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
 /**
 * Returns an instance of LocaleDisplayNames that returns names formatted
@@ -285,9 +285,9 @@ uldn_keyValueDisplayName(const ULocaleDisplayNames *ldn,
 * @return a ULocaleDisplayNames instance 
 * @stable ICU 51
 */
-U_CAPI ULocaleDisplayNames * U_EXPORT2
-uldn_openForContext(const char * locale, UDisplayContext *contexts,
-                    int32_t length, UErrorCode *pErrorCode);
+U_CAPI ULocale_Display_ಹೆಸರುಗಳು * U_EXPORT2
+uldn_openForContext(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ * locale, UDisplayContext *contexts,
+                    int32_t ಉದ್ದಳತೆ, UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
 /**
 * Returns the UDisplayContext value for the specified UDisplayContextType.
@@ -300,8 +300,8 @@ uldn_openForContext(const char * locale, UDisplayContext *contexts,
 * @stable ICU 51
 */
 U_CAPI UDisplayContext U_EXPORT2
-uldn_getContext(const ULocaleDisplayNames *ldn, UDisplayContextType type,
-                UErrorCode *pErrorCode);
+uldn_getContext(ಸ್ಥಿರಾಂಕ ULocale_Display_ಹೆಸರುಗಳು *ldn, UDisplayContextType type,
+                UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
-#endif  /* !UCONFIG_NO_FORMATTING */
-#endif  /* __ULDNAMES_H__ */
+#ಆದರೆ_ಅಂತ್ಯ  /* !UCONFIG_NO_FORMATTING */
+#ಆದರೆ_ಅಂತ್ಯ  /* __ULDNAMES_H__ */

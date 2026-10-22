@@ -10,119 +10,119 @@
 * Since: ICU 2.8
 **********************************************************************
 */
-#include "ruleiter.h"
-#include "unicode/parsepos.h"
-#include "unicode/symtable.h"
-#include "unicode/unistr.h"
-#include "unicode/utf16.h"
-#include "patternprops.h"
+#ಅನ್ತರ್ಭಾವ "ruleiter.h"
+#ಅನ್ತರ್ಭಾವ "unicode/parsepos.h"
+#ಅನ್ತರ್ಭಾವ "unicode/symtable.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unistr.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utf16.h"
+#ಅನ್ತರ್ಭಾವ "patternprops.h"
 
 /* \U87654321 or \ud800\udc00 */
-#define MAX_U_NOTATION_LEN 12
+#ವ್ಯಾಖ್ಯಾನಿಸು MAX_U_NOTATION_LEN 12
 
 U_NAMESPACE_BEGIN
 
-RuleCharacterIterator::RuleCharacterIterator(const UnicodeString& theText, const SymbolTable* theSym,
+ನಿಯಮ_Character_Iterator::ನಿಯಮ_Character_Iterator(ಸ್ಥಿರಾಂಕ UnicodeString& the_ಪಠ್ಯ, ಸ್ಥಿರಾಂಕ ಚಿಹ್ನೆ_ಕೋಷ್ಟಕ* theSym,
                       ParsePosition& thePos) :
-    text(theText),
+    ಪಠ್ಯ(the_ಪಠ್ಯ),
     pos(thePos),
     sym(theSym),
-    buf(nullptr),
+    buf(ಶೂನ್ಯಸೂಚಕ),
     bufPos(0)
 {}
 
-UBool RuleCharacterIterator::atEnd() const {
-    return buf == nullptr && pos.getIndex() == text.length();
+UBool ನಿಯಮ_Character_Iterator::at_ಕೊನೆ() ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ buf == ಶೂನ್ಯಸೂಚಕ && pos.get_ಸೂಚ್ಯಂಕ() == ಪಠ್ಯ.length();
 }
 
-UChar32 RuleCharacterIterator::next(int32_t options, UBool& isEscaped, UErrorCode& ec) {
-    if (U_FAILURE(ec)) return DONE;
+UChar32 ನಿಯಮ_Character_Iterator::next(int32_t options, UBool& isEscaped, UError_ಸಂಕೇತ& ec) {
+    ಆದರೆ (U_FAILURE(ec)) ಹಿಂತಿರುಗಿ ಮುಗಿದ_2;
 
-    UChar32 c = DONE;
-    isEscaped = false;
+    UChar32 c = ಮುಗಿದ_2;
+    isEscaped = ಸುಳ್ಳು;
 
-    for (;;) {
+    ಗಾಗಿ (;;) {
         c = _current();
-        _advance(U16_LENGTH(c));
+        _advance(U16_ಉದ್ದಳತೆ(c));
 
-        if (c == SymbolTable::SYMBOL_REF && buf == nullptr &&
-            (options & PARSE_VARIABLES) != 0 && sym != nullptr) {
-            UnicodeString name = sym->parseReference(text, pos, text.length());
+        ಆದರೆ (c == ಚಿಹ್ನೆ_ಕೋಷ್ಟಕ::ಚಿಹ್ನೆ_REF && buf == ಶೂನ್ಯಸೂಚಕ &&
+            (options & PARSE_VARIABLES) != 0 && sym != ಶೂನ್ಯಸೂಚಕ) {
+            UnicodeString name = sym->parseReference(ಪಠ್ಯ, pos, ಪಠ್ಯ.length());
             // If name is empty there was an isolated SYMBOL_REF;
             // return it.  Caller must be prepared for this.
-            if (name.length() == 0) {
-                break;
+            ಆದರೆ (name.length() == 0) {
+                ನಿಲ್ಲಿಸು;
             }
             bufPos = 0;
             buf = sym->lookup(name);
-            if (buf == nullptr) {
+            ಆದರೆ (buf == ಶೂನ್ಯಸೂಚಕ) {
                 ec = U_UNDEFINED_VARIABLE;
-                return DONE;
+                ಹಿಂತಿರುಗಿ ಮುಗಿದ_2;
             }
             // Handle empty variable value
-            if (buf->length() == 0) {
-                buf = nullptr;
+            ಆದರೆ (buf->length() == 0) {
+                buf = ಶೂನ್ಯಸೂಚಕ;
             }
-            continue;
+            ಮುಂದುವರಿ;
         }
 
-        if ((options & SKIP_WHITESPACE) != 0 && PatternProps::isWhiteSpace(c)) {
-            continue;
+        ಆದರೆ ((options & SKIP_WHITESPACE) != 0 && ನಮೂನೆ_Props::isWhiteSpace(c)) {
+            ಮುಂದುವರಿ;
         }
 
-        if (c == 0x5C /*'\\'*/ && (options & PARSE_ESCAPES) != 0) {
-            UnicodeString tempEscape;
-            int32_t offset = 0;
-            c = lookahead(tempEscape, MAX_U_NOTATION_LEN).unescapeAt(offset);
-            jumpahead(offset);
-            isEscaped = true;
-            if (c < 0) {
+        ಆದರೆ (c == 0x5C /*'\\'*/ && (options & PARSE_ESCAPES) != 0) {
+            UnicodeString ತಾತ್ಕಾಲಿಕ_Escape;
+            int32_t ಸ್ಥಾನಾಂತರ = 0;
+            c = lookahead(ತಾತ್ಕಾಲಿಕ_Escape, MAX_U_NOTATION_LEN).unescapeAt(ಸ್ಥಾನಾಂತರ);
+            jumpahead(ಸ್ಥಾನಾಂತರ);
+            isEscaped = ನಿಜ;
+            ಆದರೆ (c < 0) {
                 ec = U_MALFORMED_UNICODE_ESCAPE;
-                return DONE;
+                ಹಿಂತಿರುಗಿ ಮುಗಿದ_2;
             }
         }
 
-        break;
+        ನಿಲ್ಲಿಸು;
     }
 
-    return c;
+    ಹಿಂತಿರುಗಿ c;
 }
 
-void RuleCharacterIterator::getPos(RuleCharacterIterator::Pos& p) const {
+ಶೂನ್ಯ ನಿಯಮ_Character_Iterator::getPos(ನಿಯಮ_Character_Iterator::Pos& p) ಸ್ಥಿರಾಂಕ {
     p.buf = buf;
-    p.pos = pos.getIndex();
+    p.pos = pos.get_ಸೂಚ್ಯಂಕ();
     p.bufPos = bufPos;
 }
 
-void RuleCharacterIterator::setPos(const RuleCharacterIterator::Pos& p) {
+ಶೂನ್ಯ ನಿಯಮ_Character_Iterator::ಗಣ_Pos(ಸ್ಥಿರಾಂಕ ನಿಯಮ_Character_Iterator::Pos& p) {
     buf = p.buf;
-    pos.setIndex(p.pos);
+    pos.ಗಣ_ಸೂಚ್ಯಂಕ(p.pos);
     bufPos = p.bufPos;
 }
 
-void RuleCharacterIterator::skipIgnored(int32_t options) {
-    if ((options & SKIP_WHITESPACE) != 0) {
-        for (;;) {
+ಶೂನ್ಯ ನಿಯಮ_Character_Iterator::skipIgnored(int32_t options) {
+    ಆದರೆ ((options & SKIP_WHITESPACE) != 0) {
+        ಗಾಗಿ (;;) {
             UChar32 a = _current();
-            if (!PatternProps::isWhiteSpace(a)) break;
-            _advance(U16_LENGTH(a));
+            ಆದರೆ (!ನಮೂನೆ_Props::isWhiteSpace(a)) ನಿಲ್ಲಿಸು;
+            _advance(U16_ಉದ್ದಳತೆ(a));
         }
     }
 }
 
-UnicodeString& RuleCharacterIterator::lookahead(UnicodeString& result, int32_t maxLookAhead) const {
-    if (maxLookAhead < 0) {
+UnicodeString& ನಿಯಮ_Character_Iterator::lookahead(UnicodeString& ಫಲಿತಾಂಶ, int32_t maxLookAhead) ಸ್ಥಿರಾಂಕ {
+    ಆದರೆ (maxLookAhead < 0) {
         maxLookAhead = 0x7FFFFFFF;
     }
-    if (buf != nullptr) {
-        buf->extract(bufPos, maxLookAhead, result);
-    } else {
-        text.extract(pos.getIndex(), maxLookAhead, result);
+    ಆದರೆ (buf != ಶೂನ್ಯಸೂಚಕ) {
+        buf->extract(bufPos, maxLookAhead, ಫಲಿತಾಂಶ);
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಪಠ್ಯ.extract(pos.get_ಸೂಚ್ಯಂಕ(), maxLookAhead, ಫಲಿತಾಂಶ);
     }
-    return result;
+    ಹಿಂತಿರುಗಿ ಫಲಿತಾಂಶ;
 }
 
-void RuleCharacterIterator::jumpahead(int32_t count) {
+ಶೂನ್ಯ ನಿಯಮ_Character_Iterator::jumpahead(int32_t count) {
     _advance(count);
 }
 
@@ -134,29 +134,29 @@ UnicodeString& RuleCharacterIterator::toString(UnicodeString& result) const {
 }
 */
 
-UChar32 RuleCharacterIterator::_current() const {
-    if (buf != nullptr) {
-        return buf->char32At(bufPos);
-    } else {
-        int i = pos.getIndex();
-        return (i < text.length()) ? text.char32At(i) : static_cast<UChar32>(DONE);
+UChar32 ನಿಯಮ_Character_Iterator::_current() ಸ್ಥಿರಾಂಕ {
+    ಆದರೆ (buf != ಶೂನ್ಯಸೂಚಕ) {
+        ಹಿಂತಿರುಗಿ buf->char32At(bufPos);
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಪೂರ್ಣಾಂಕ i = pos.get_ಸೂಚ್ಯಂಕ();
+        ಹಿಂತಿರುಗಿ (i < ಪಠ್ಯ.length()) ? ಪಠ್ಯ.char32At(i) : static_cast<UChar32>(ಮುಗಿದ_2);
     }
 }
 
-void RuleCharacterIterator::_advance(int32_t count) {
-    if (buf != nullptr) {
+ಶೂನ್ಯ ನಿಯಮ_Character_Iterator::_advance(int32_t count) {
+    ಆದರೆ (buf != ಶೂನ್ಯಸೂಚಕ) {
         bufPos += count;
-        if (bufPos == buf->length()) {
-            buf = nullptr;
+        ಆದರೆ (bufPos == buf->length()) {
+            buf = ಶೂನ್ಯಸೂಚಕ;
         }
-    } else {
-        pos.setIndex(pos.getIndex() + count);
-        if (pos.getIndex() > text.length()) {
-            pos.setIndex(text.length());
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        pos.ಗಣ_ಸೂಚ್ಯಂಕ(pos.get_ಸೂಚ್ಯಂಕ() + count);
+        ಆದರೆ (pos.get_ಸೂಚ್ಯಂಕ() > ಪಠ್ಯ.length()) {
+            pos.ಗಣ_ಸೂಚ್ಯಂಕ(ಪಠ್ಯ.length());
         }
     }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
 //eof

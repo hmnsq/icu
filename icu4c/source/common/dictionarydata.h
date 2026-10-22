@@ -11,42 +11,42 @@
 * created by: Markus W. Scherer & Maxime Serrano
 */
 
-#ifndef __DICTIONARYDATA_H__
-#define __DICTIONARYDATA_H__
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __DICTIONARYDATA_H__
+#ವ್ಯಾಖ್ಯಾನಿಸು __DICTIONARYDATA_H__
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ಆದರೆ !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/utext.h"
-#include "unicode/udata.h"
-#include "udataswp.h"
-#include "unicode/uobject.h"
-#include "unicode/ustringtrie.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utext.h"
+#ಅನ್ತರ್ಭಾವ "unicode/udata.h"
+#ಅನ್ತರ್ಭಾವ "udataswp.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uobject.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ustringtrie.h"
 
 U_NAMESPACE_BEGIN
 
 class UCharsTrie;
-class BytesTrie;
+class ಬೈಟುಗಳು_Trie;
 
-class U_COMMON_API DictionaryData : public UMemory {
-public:
-    static const int32_t TRIE_TYPE_BYTES; // = 0;
-    static const int32_t TRIE_TYPE_UCHARS; // = 1;
-    static const int32_t TRIE_TYPE_MASK; // = 7;
-    static const int32_t TRIE_HAS_VALUES; // = 8;
+class U_COMMON_API Dictionary_ದತ್ತಾಂಶ : ಸಾರ್ವಜನಿಕ UMemory {
+ಸಾರ್ವಜನಿಕ:
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t TRIE_TYPE_ಬೈಟುಗಳು; // = 0;
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t TRIE_TYPE_UCHARS; // = 1;
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t TRIE_TYPE_ಮುಖವಾಡ; // = 7;
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t TRIE_HAS_ಮೌಲ್ಯಗಳು; // = 8;
 
-    static const int32_t TRANSFORM_NONE; // = 0;
-    static const int32_t TRANSFORM_TYPE_OFFSET; // = 0x1000000;
-    static const int32_t TRANSFORM_TYPE_MASK; // = 0x7f000000;
-    static const int32_t TRANSFORM_OFFSET_MASK; // = 0x1fffff;
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t TRANSFORM_NONE; // = 0;
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t TRANSFORM_TYPE_ಸ್ಥಾನಾಂತರ; // = 0x1000000;
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t TRANSFORM_TYPE_ಮುಖವಾಡ; // = 0x7f000000;
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t TRANSFORM_ಸ್ಥಾನಾಂತರ_ಮುಖವಾಡ; // = 0x1fffff;
 
-    enum {
+    ಎಣಿಕೆ {
         // Byte offsets from the start of the data, after the generic header.
-        IX_STRING_TRIE_OFFSET,
-        IX_RESERVED1_OFFSET,
-        IX_RESERVED2_OFFSET,
-        IX_TOTAL_SIZE,
+        IX_STRING_TRIE_ಸ್ಥಾನಾಂತರ,
+        IX_RESERVED1_ಸ್ಥಾನಾಂತರ,
+        IX_RESERVED2_ಸ್ಥಾನಾಂತರ,
+        IX_ಒಟ್ಟು_ಗಾತ್ರ,
 
         // Trie type: TRIE_HAS_VALUES | TRIE_TYPE_BYTES etc.
         IX_TRIE_TYPE,
@@ -55,7 +55,7 @@ public:
 
         IX_RESERVED6,
         IX_RESERVED7,
-        IX_COUNT
+        IX_ಎಣಿಕೆ
     };
 };
 
@@ -66,10 +66,10 @@ public:
  * All implementations of this interface must be thread-safe if they are to be used inside of the
  * dictionary-based break iteration code.
  */
-class U_COMMON_API DictionaryMatcher : public UMemory {
-public:
+class U_COMMON_API DictionaryMatcher : ಸಾರ್ವಜನಿಕ UMemory {
+ಸಾರ್ವಜನಿಕ:
     DictionaryMatcher() {}
-    virtual ~DictionaryMatcher();
+    ವಾಸ್ತವಿಕ ~DictionaryMatcher();
     // this should emulate CompactTrieDictionary::matches()
     /*  @param text      The text in which to look for matching words. Matching begins
      *                   at the current position of the UText.
@@ -90,55 +90,55 @@ public:
      *                   of the longest complete word matched. May be nullptr.
      *  @return          Number of matching words found.
      */
-    virtual int32_t matches(UText *text, int32_t maxLength, int32_t limit,
-                            int32_t *lengths, int32_t *cpLengths, int32_t *values,
-                            int32_t *prefix) const = 0;
+    ವಾಸ್ತವಿಕ int32_t matches(UText *ಪಠ್ಯ, int32_t max_ಉದ್ದಳತೆ_2, int32_t ಎಲ್ಲೆ,
+                            int32_t *lengths, int32_t *cpLengths, int32_t *ಮೌಲ್ಯಗಳು,
+                            int32_t *ಪೂರ್ವಪ್ರತ್ಯಯ) ಸ್ಥಿರಾಂಕ = 0;
 
     /** @return DictionaryData::TRIE_TYPE_XYZ */
-    virtual int32_t getType() const = 0;
+    ವಾಸ್ತವಿಕ int32_t getType() ಸ್ಥಿರಾಂಕ = 0;
 };
 
 // Implementation of the DictionaryMatcher interface for a UCharsTrie dictionary
-class U_COMMON_API UCharsDictionaryMatcher : public DictionaryMatcher {
-public:
+class U_COMMON_API UCharsDictionaryMatcher : ಸಾರ್ವಜನಿಕ DictionaryMatcher {
+ಸಾರ್ವಜನಿಕ:
     // constructs a new UCharsDictionaryMatcher.
     // The UDataMemory * will be closed on this object's destruction.
-    UCharsDictionaryMatcher(const char16_t *c, UDataMemory *f) : characters(c), file(f) { }
-    virtual ~UCharsDictionaryMatcher();
-    virtual int32_t matches(UText *text, int32_t maxLength, int32_t limit,
-                            int32_t *lengths, int32_t *cpLengths, int32_t *values,
-                            int32_t *prefix) const override;
-    virtual int32_t getType() const override;
-private:
-    const char16_t *characters;
-    UDataMemory *file;
+    UCharsDictionaryMatcher(ಸ್ಥಿರಾಂಕ char16_t *c, UData_ಸ್ಮರಣೆ *f) : characters(c), file(f) { }
+    ವಾಸ್ತವಿಕ ~UCharsDictionaryMatcher();
+    ವಾಸ್ತವಿಕ int32_t matches(UText *ಪಠ್ಯ, int32_t max_ಉದ್ದಳತೆ_2, int32_t ಎಲ್ಲೆ,
+                            int32_t *lengths, int32_t *cpLengths, int32_t *ಮೌಲ್ಯಗಳು,
+                            int32_t *ಪೂರ್ವಪ್ರತ್ಯಯ) ಸ್ಥಿರಾಂಕ override;
+    ವಾಸ್ತವಿಕ int32_t getType() ಸ್ಥಿರಾಂಕ override;
+ಖಾಸಗಿ:
+    ಸ್ಥಿರಾಂಕ char16_t *characters;
+    UData_ಸ್ಮರಣೆ *file;
 };
 
 // Implementation of the DictionaryMatcher interface for a BytesTrie dictionary
-class U_COMMON_API BytesDictionaryMatcher : public DictionaryMatcher {
-public:
+class U_COMMON_API ಬೈಟುಗಳು_Dictionary_Matcher : ಸಾರ್ವಜನಿಕ DictionaryMatcher {
+ಸಾರ್ವಜನಿಕ:
     // constructs a new BytesTrieDictionaryMatcher
     // the transform constant should be the constant read from the file, not a masked version!
     // the UDataMemory * fed in here will be closed on this object's destruction
-    BytesDictionaryMatcher(const char *c, int32_t t, UDataMemory *f)
+    ಬೈಟುಗಳು_Dictionary_Matcher(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *c, int32_t t, UData_ಸ್ಮರಣೆ *f)
             : characters(c), transformConstant(t), file(f) { }
-    virtual ~BytesDictionaryMatcher();
-    virtual int32_t matches(UText *text, int32_t maxLength, int32_t limit,
-                            int32_t *lengths, int32_t *cpLengths, int32_t *values,
-                            int32_t *prefix) const override;
-    virtual int32_t getType() const override;
-private:
-    UChar32 transform(UChar32 c) const;
+    ವಾಸ್ತವಿಕ ~ಬೈಟುಗಳು_Dictionary_Matcher();
+    ವಾಸ್ತವಿಕ int32_t matches(UText *ಪಠ್ಯ, int32_t max_ಉದ್ದಳತೆ_2, int32_t ಎಲ್ಲೆ,
+                            int32_t *lengths, int32_t *cpLengths, int32_t *ಮೌಲ್ಯಗಳು,
+                            int32_t *ಪೂರ್ವಪ್ರತ್ಯಯ) ಸ್ಥಿರಾಂಕ override;
+    ವಾಸ್ತವಿಕ int32_t getType() ಸ್ಥಿರಾಂಕ override;
+ಖಾಸಗಿ:
+    UChar32 transform(UChar32 c) ಸ್ಥಿರಾಂಕ;
 
-    const char *characters;
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *characters;
     int32_t transformConstant;
-    UDataMemory *file;
+    UData_ಸ್ಮರಣೆ *file;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
 U_CAPI int32_t U_EXPORT2
-udict_swap(const UDataSwapper *ds, const void *inData, int32_t length, void *outData, UErrorCode *pErrorCode);
+udict_ಅದಲುಬದಲು(ಸ್ಥಿರಾಂಕ UDataSwapper *ds, ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *ಒಳ_ದತ್ತಾಂಶ, int32_t ಉದ್ದಳತೆ, ಶೂನ್ಯ *ಹೊರಹೋಗು_ದತ್ತಾಂಶ, UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
 /**
  * Format of dictionary .dict data files.
@@ -187,5 +187,5 @@ udict_swap(const UDataSwapper *ds, const void *inData, int32_t length, void *out
  *      or it maps all strings to 0 (TRIE_HAS_VALUES bit not set).
  */
 
-#endif  /* !UCONFIG_NO_BREAK_ITERATION */
-#endif  /* __DICTIONARYDATA_H__ */
+#ಆದರೆ_ಅಂತ್ಯ  /* !UCONFIG_NO_BREAK_ITERATION */
+#ಆದರೆ_ಅಂತ್ಯ  /* __DICTIONARYDATA_H__ */

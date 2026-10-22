@@ -10,10 +10,10 @@
 **********************************************************************
 */
 
-#include "unicode/uchar.h"
-#include "unicode/utf16.h"
-#include "patternprops.h"
-#include "util.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uchar.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utf16.h"
+#ಅನ್ತರ್ಭಾವ "patternprops.h"
+#ಅನ್ತರ್ಭಾವ "util.h"
 
 U_NAMESPACE_BEGIN
 
@@ -25,45 +25,45 @@ U_NAMESPACE_BEGIN
  * character to parse.  On output, the character after the last
  * parsed character.
  */
-int32_t ICU_Utility::parseInteger(const UnicodeString& rule, int32_t& pos, int32_t limit) {
+int32_t ICU_Utility::parseInteger(ಸ್ಥಿರಾಂಕ UnicodeString& ನಿಯಮ, int32_t& pos, int32_t ಎಲ್ಲೆ) {
     int32_t count = 0;
     int32_t value = 0;
     int32_t p = pos;
     int8_t radix = 10;
 
-    if (p < limit && rule.charAt(p) == 48 /*0*/) {
-        if (p+1 < limit && (rule.charAt(p+1) == 0x78 /*x*/ || rule.charAt(p+1) == 0x58 /*X*/)) {
+    ಆದರೆ (p < ಎಲ್ಲೆ && ನಿಯಮ.charAt(p) == 48 /*0*/) {
+        ಆದರೆ (p+1 < ಎಲ್ಲೆ && (ನಿಯಮ.charAt(p+1) == 0x78 /*x*/ || ನಿಯಮ.charAt(p+1) == 0x58 /*X*/)) {
             p += 2;
             radix = 16;
         }
-        else {
+        ಇಲ್ಲದಿದ್ದರೆ {
             p++;
             count = 1;
             radix = 8;
         }
     }
 
-    while (p < limit) {
-        int32_t d = u_digit(rule.charAt(p++), radix);
-        if (d < 0) {
+    ಆಗ (p < ಎಲ್ಲೆ) {
+        int32_t d = u_digit(ನಿಯಮ.charAt(p++), radix);
+        ಆದರೆ (d < 0) {
             --p;
-            break;
+            ನಿಲ್ಲಿಸು;
         }
         ++count;
         int32_t v = (value * radix) + d;
-        if (v <= value) {
+        ಆದರೆ (v <= value) {
             // If there are too many input digits, at some point
             // the value will go negative, e.g., if we have seen
             // "0x8000000" already and there is another '0', when
             // we parse the next 0 the value will go negative.
-            return 0;
+            ಹಿಂತಿರುಗಿ 0;
         }
         value = v;
     }
-    if (count > 0) {
+    ಆದರೆ (count > 0) {
         pos = p;
     }
-    return value;
+    ಹಿಂತಿರುಗಿ value;
 }
 
 /**
@@ -85,49 +85,49 @@ int32_t ICU_Utility::parseInteger(const UnicodeString& rule, int32_t& pos, int32
  * @return the position after the last character parsed, or -1 if
  * the parse failed
  */
-int32_t ICU_Utility::parsePattern(const UnicodeString& rule, int32_t pos, int32_t limit,
-                              const UnicodeString& pattern, int32_t* parsedInts) {
+int32_t ICU_Utility::parse_ನಮೂನೆ(ಸ್ಥಿರಾಂಕ UnicodeString& ನಿಯಮ, int32_t pos, int32_t ಎಲ್ಲೆ,
+                              ಸ್ಥಿರಾಂಕ UnicodeString& ನಮೂನೆ, int32_t* parsedInts) {
     // TODO Update this to handle surrogates
     int32_t p;
-    int32_t intCount = 0; // number of integers parsed
-    for (int32_t i=0; i<pattern.length(); ++i) {
-        char16_t cpat = pattern.charAt(i);
+    int32_t int_ಎಣಿಕೆ = 0; // number of integers parsed
+    ಗಾಗಿ (int32_t i=0; i<ನಮೂನೆ.length(); ++i) {
+        char16_t cpat = ನಮೂನೆ.charAt(i);
         char16_t c;
-        switch (cpat) {
-        case 32 /*' '*/:
-            if (pos >= limit) {
-                return -1;
+        ಆಯ್ಕೆ (cpat) {
+        ಸ್ಥಿತಿ 32 /*' '*/:
+            ಆದರೆ (pos >= ಎಲ್ಲೆ) {
+                ಹಿಂತಿರುಗಿ -1;
             }
-            c = rule.charAt(pos++);
-            if (!PatternProps::isWhiteSpace(c)) {
-                return -1;
+            c = ನಿಯಮ.charAt(pos++);
+            ಆದರೆ (!ನಮೂನೆ_Props::isWhiteSpace(c)) {
+                ಹಿಂತಿರುಗಿ -1;
             }
             // FALL THROUGH to skipWhitespace
             U_FALLTHROUGH;
-        case 126 /*'~'*/:
-            pos = skipWhitespace(rule, pos);
-            break;
-        case 35 /*'#'*/:
+        ಸ್ಥಿತಿ 126 /*'~'*/:
+            pos = skipWhitespace(ನಿಯಮ, pos);
+            ನಿಲ್ಲಿಸು;
+        ಸ್ಥಿತಿ 35 /*'#'*/:
             p = pos;
-            parsedInts[intCount++] = parseInteger(rule, p, limit);
-            if (p == pos) {
+            parsedInts[int_ಎಣಿಕೆ++] = parseInteger(ನಿಯಮ, p, ಎಲ್ಲೆ);
+            ಆದರೆ (p == pos) {
                 // Syntax error; failed to parse integer
-                return -1;
+                ಹಿಂತಿರುಗಿ -1;
             }
             pos = p;
-            break;
-        default:
-            if (pos >= limit) {
-                return -1;
+            ನಿಲ್ಲಿಸು;
+        ಪೂರ್ವನಿಯೋಜಿತ:
+            ಆದರೆ (pos >= ಎಲ್ಲೆ) {
+                ಹಿಂತಿರುಗಿ -1;
             }
-            c = static_cast<char16_t>(u_tolower(rule.charAt(pos++)));
-            if (c != cpat) {
-                return -1;
+            c = static_cast<char16_t>(u_tolower(ನಿಯಮ.charAt(pos++)));
+            ಆದರೆ (c != cpat) {
+                ಹಿಂತಿರುಗಿ -1;
             }
-            break;
+            ನಿಲ್ಲಿಸು;
         }
     }
-    return pos;
+    ಹಿಂತಿರುಗಿ pos;
 }
 
 /**
@@ -143,30 +143,30 @@ int32_t ICU_Utility::parsePattern(const UnicodeString& rule, int32_t pos, int32_
  * @return the Unicode identifier, or an empty string if there is
  * no valid identifier at pos.
  */
-UnicodeString ICU_Utility::parseUnicodeIdentifier(const UnicodeString& str, int32_t& pos) {
+UnicodeString ICU_Utility::parseUnicodeIdentifier(ಸ್ಥಿರಾಂಕ UnicodeString& str, int32_t& pos) {
     // assert(pos < str.length());
     UnicodeString buf;
-    int p = pos;
-    while (p < str.length()) {
+    ಪೂರ್ಣಾಂಕ p = pos;
+    ಆಗ (p < str.length()) {
         UChar32 ch = str.char32At(p);
-        if (buf.length() == 0) {
-            if (u_isIDStart(ch)) {
+        ಆದರೆ (buf.length() == 0) {
+            ಆದರೆ (u_isIDStart(ch)) {
                 buf.append(ch);
-            } else {
+            } ಇಲ್ಲದಿದ್ದರೆ {
                 buf.truncate(0);
-                return buf;
+                ಹಿಂತಿರುಗಿ buf;
             }
-        } else {
-            if (u_isIDPart(ch)) {
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಆದರೆ (u_isIDPart(ch)) {
                 buf.append(ch);
-            } else {
-                break;
+            } ಇಲ್ಲದಿದ್ದರೆ {
+                ನಿಲ್ಲಿಸು;
             }
         }
-        p += U16_LENGTH(ch);
+        p += U16_ಉದ್ದಳತೆ(ch);
     }
     pos = p;
-    return buf;
+    ಹಿಂತಿರುಗಿ buf;
 }
 
 /**
@@ -185,32 +185,32 @@ UnicodeString ICU_Utility::parseUnicodeIdentifier(const UnicodeString& str, int3
  * point to a valid digit on entry, or if the number to be parsed
  * does not fit into a 31-bit unsigned integer.
  */
-int32_t ICU_Utility::parseNumber(const UnicodeString& text,
+int32_t ICU_Utility::parse_ಸಂಖ್ಯೆ(ಸ್ಥಿರಾಂಕ UnicodeString& ಪಠ್ಯ,
                                  int32_t& pos, int8_t radix) {
     // assert(pos[0] >= 0);
     // assert(radix >= 2);
     // assert(radix <= 36);
     int32_t n = 0;
     int32_t p = pos;
-    while (p < text.length()) {
-        UChar32 ch = text.char32At(p);
+    ಆಗ (p < ಪಠ್ಯ.length()) {
+        UChar32 ch = ಪಠ್ಯ.char32At(p);
         int32_t d = u_digit(ch, radix);
-        if (d < 0) {
-            break;
+        ಆದರೆ (d < 0) {
+            ನಿಲ್ಲಿಸು;
         }
         int64_t update = radix*static_cast<int64_t>(n) + d;
-        if (update > INT32_MAX) {
-            return -1;
+        ಆದರೆ (update > INT32_MAX) {
+            ಹಿಂತಿರುಗಿ -1;
         }
         n = static_cast<int32_t>(update);
         ++p;
     }
-    if (p == pos) {
-        return -1;
+    ಆದರೆ (p == pos) {
+        ಹಿಂತಿರುಗಿ -1;
     }
     pos = p;
-    return n;
+    ಹಿಂತಿರುಗಿ n;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 

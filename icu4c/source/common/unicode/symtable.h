@@ -9,14 +9,14 @@
 *   02/04/00    aliu        Creation.
 **********************************************************************
 */
-#ifndef SYMTABLE_H
-#define SYMTABLE_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ SYMTABLE_H
+#ವ್ಯಾಖ್ಯಾನಿಸು SYMTABLE_H
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ಆದರೆ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uobject.h"
 
 /**
  * \file
@@ -28,7 +28,7 @@ U_NAMESPACE_BEGIN
 
 class ParsePosition;
 class UnicodeFunctor;
-class UnicodeSet;
+class Unicode_ಗಣ;
 class UnicodeString;
 
 /**
@@ -56,20 +56,20 @@ class UnicodeString;
  *
  * @stable ICU 2.8
  */
-class U_COMMON_API SymbolTable /* not : public UObject because this is an interface/mixin class */ {
-public:
+class U_COMMON_API ಚಿಹ್ನೆ_ಕೋಷ್ಟಕ /* not : public UObject because this is an interface/mixin class */ {
+ಸಾರ್ವಜನಿಕ:
 
     /**
      * The character preceding a symbol reference name.
      * @stable ICU 2.8
      */
-    enum { SYMBOL_REF = 0x0024 /*$*/ };
+    ಎಣಿಕೆ { ಚಿಹ್ನೆ_REF = 0x0024 /*$*/ };
 
     /**
      * Destructor.
      * @stable ICU 2.8
      */
-    virtual ~SymbolTable();
+    ವಾಸ್ತವಿಕ ~ಚಿಹ್ನೆ_ಕೋಷ್ಟಕ();
 
     /**
      * Lookup the characters associated with this string and return it.
@@ -80,7 +80,7 @@ public:
      * there is no mapping for s.
      * @stable ICU 2.8
      */
-    virtual const UnicodeString* lookup(const UnicodeString& s) const U_LIFETIME_BOUND = 0;
+    ವಾಸ್ತವಿಕ ಸ್ಥಿರಾಂಕ UnicodeString* lookup(ಸ್ಥಿರಾಂಕ UnicodeString& s) ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND = 0;
 
     /**
      * Returns a pointer to a pre-parsed set associated with the variable with
@@ -88,8 +88,8 @@ public:
      * undefined or string-valued variable).
      * @internal
      */
-    virtual const UnicodeSet* lookupSet(const UnicodeString& /*name*/) const {
-        return nullptr;
+    ವಾಸ್ತವಿಕ ಸ್ಥಿರಾಂಕ Unicode_ಗಣ* lookup_ಗಣ(ಸ್ಥಿರಾಂಕ UnicodeString& /*name*/) ಸ್ಥಿರಾಂಕ {
+        ಹಿಂತಿರುಗಿ nullptr;
     }
 
     /**
@@ -100,7 +100,7 @@ public:
      * character, or nullptr if there is no mapping for ch.
      * @stable ICU 2.8
      */
-    virtual const UnicodeFunctor* lookupMatcher(UChar32 ch) const U_LIFETIME_BOUND = 0;
+    ವಾಸ್ತವಿಕ ಸ್ಥಿರಾಂಕ UnicodeFunctor* lookupMatcher(UChar32 ch) ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND = 0;
 
     /**
      * Parse a symbol reference name from the given string, starting
@@ -119,11 +119,11 @@ public:
      * valid symbolic name at the given position.
      * @stable ICU 2.8
      */
-    virtual UnicodeString parseReference(const UnicodeString& text,
-                                         ParsePosition& pos, int32_t limit) const = 0;
+    ವಾಸ್ತವಿಕ UnicodeString parseReference(ಸ್ಥಿರಾಂಕ UnicodeString& ಪಠ್ಯ,
+                                         ParsePosition& pos, int32_t ಎಲ್ಲೆ) ಸ್ಥಿರಾಂಕ = 0;
 };
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ಆದರೆ_ಅಂತ್ಯ /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

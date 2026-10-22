@@ -19,14 +19,14 @@
 * the core algorithm and core API to write reordered text.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/ustring.h"
-#include "unicode/uchar.h"
-#include "unicode/ubidi.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "ustr_imp.h"
-#include "ubidiimp.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ustring.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uchar.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ubidi.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utf16.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "ustr_imp.h"
+#ಅನ್ತರ್ಭಾವ "ubidiimp.h"
 
 /*
  * The function implementations in this file are designed
@@ -39,11 +39,11 @@
  *
  * Note: Since Unicode 18, u_charMirror(c) may change the number of code units.
  */
-#if defined(UTF_SIZE) && UTF_SIZE==8
-# error reimplement ubidi_writeReordered() for UTF-8, see comment above
-#endif
+#ಆದರೆ defined(UTF_ಗಾತ್ರ) && UTF_ಗಾತ್ರ==8
+# error reimplement ubidi_writeReordered() ಗಾಗಿ UTF-8, see comment above
+#ಆದರೆ_ಅಂತ್ಯ
 
-#define IS_COMBINING(type) ((1UL<<(type))&(1UL<<U_NON_SPACING_MARK|1UL<<U_COMBINING_SPACING_MARK|1UL<<U_ENCLOSING_MARK))
+#ವ್ಯಾಖ್ಯಾನಿಸು IS_COMBINING(type) ((1UL<<(type))&(1UL<<U_NON_SPACING_MARK|1UL<<U_COMBINING_SPACING_MARK|1UL<<U_ENCLOSING_MARK))
 
 /*
  * When we have UBIDI_OUTPUT_REVERSE set on ubidi_writeReordered(), then we
@@ -54,115 +54,115 @@
  * It looks strange to do mirroring in LTR output, but it is only because
  * we are writing RTL output in reverse.
  */
-static int32_t
-doWriteForward(const char16_t *src, int32_t srcLength,
-               char16_t *dest, int32_t destSize,
+ಸ್ಥಿರ int32_t
+doWriteForward(ಸ್ಥಿರಾಂಕ char16_t *src, int32_t src_ಉದ್ದಳತೆ,
+               char16_t *dest, int32_t dest_ಗಾತ್ರ,
                uint16_t options,
-               UErrorCode *pErrorCode) {
-    if (srcLength<=0) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+               UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಆದರೆ (src_ಉದ್ದಳತೆ<=0) {
+        *p_Error_ಸಂಕೇತ=U_ILLEGAL_ವಾದ_ERROR;
+        ಹಿಂತಿರುಗಿ 0;
     }
     /* optimize for several combinations of options */
-    switch(options&(UBIDI_REMOVE_BIDI_CONTROLS|UBIDI_DO_MIRRORING)) {
-    case 0: {
+    ಆಯ್ಕೆ(options&(UBIDI_REMOVE_BIDI_CONTROLS|UBIDI_DO_MIRRORING)) {
+    ಸ್ಥಿತಿ 0: {
         /* simply copy the LTR run to the destination */
-        int32_t length=srcLength;
-        if(destSize<length) {
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            return srcLength;
+        int32_t length=src_ಉದ್ದಳತೆ;
+        ಆದರೆ(dest_ಗಾತ್ರ<length) {
+            *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
+            ಹಿಂತಿರುಗಿ src_ಉದ್ದಳತೆ;
         }
-        do {
+        ಮಾಡು {
             *dest++=*src++;
-        } while(--length>0);
-        return srcLength;
+        } ಆಗ(--length>0);
+        ಹಿಂತಿರುಗಿ src_ಉದ್ದಳತೆ;
     }
-    case UBIDI_DO_MIRRORING: {
+    ಸ್ಥಿತಿ UBIDI_DO_MIRRORING: {
         /* do mirroring */
         int32_t i=0, j=0;
         UChar32 c;
-        do {
-            U16_NEXT(src, i, srcLength, c);
+        ಮಾಡು {
+            U16_ಮುಂದಿನ(src, i, src_ಉದ್ದಳತೆ, c);
             c=u_charMirror(c);
-            int32_t charLen = U16_LENGTH(c);
-            if(j + charLen <= destSize) {
-                int32_t temp = j;
-                U16_APPEND_UNSAFE(dest, temp, c);
+            int32_t charLen = U16_ಉದ್ದಳತೆ(c);
+            ಆದರೆ(j + charLen <= dest_ಗಾತ್ರ) {
+                int32_t ತಾತ್ಕಾಲಿಕ = j;
+                U16_APPEND_UNSAFE(dest, ತಾತ್ಕಾಲಿಕ, c);
             }
             j += charLen;
-        } while(i<srcLength);
-        if(destSize < j) {
-            *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
+        } ಆಗ(i<src_ಉದ್ದಳತೆ);
+        ಆದರೆ(dest_ಗಾತ್ರ < j) {
+            *p_Error_ಸಂಕೇತ = U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
         }
-        if(j > srcLength) {
-            return j;
+        ಆದರೆ(j > src_ಉದ್ದಳತೆ) {
+            ಹಿಂತಿರುಗಿ j;
         }
         /* If mirroring caused code unit contraction (e.g., U+1DB10 contracting to U+221D),
          * pad trailing array slots up to srcLength to avoid leaving uninitialized memory.
          * If j > 0, repeat the preceding code unit; if j == 0, fallback to 0x0020 (ASCII space).
          */
-        while(j < srcLength && j < destSize) {
+        ಆಗ(j < src_ಉದ್ದಳತೆ && j < dest_ಗಾತ್ರ) {
             dest[j] = j > 0 ? dest[j - 1] : 0x0020;
             j++;
         }
-        return srcLength;
+        ಹಿಂತಿರುಗಿ src_ಉದ್ದಳತೆ;
     }
-    case UBIDI_REMOVE_BIDI_CONTROLS: {
+    ಸ್ಥಿತಿ UBIDI_REMOVE_BIDI_CONTROLS: {
         /* copy the LTR run and remove any BiDi control characters */
-        int32_t remaining=destSize;
+        int32_t ಉಳಿದ=dest_ಗಾತ್ರ;
         char16_t c;
-        do {
+        ಮಾಡು {
             c=*src++;
-            if(!IS_BIDI_CONTROL_CHAR(c)) {
-                if(--remaining<0) {
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+            ಆದರೆ(!IS_BIDI_CONTROL_CHAR(c)) {
+                ಆದರೆ(--ಉಳಿದ<0) {
+                    *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
 
                     /* preflight the length */
-                    while(--srcLength>0) {
+                    ಆಗ(--src_ಉದ್ದಳತೆ>0) {
                         c=*src++;
-                        if(!IS_BIDI_CONTROL_CHAR(c)) {
-                            --remaining;
+                        ಆದರೆ(!IS_BIDI_CONTROL_CHAR(c)) {
+                            --ಉಳಿದ;
                         }
                     }
-                    return destSize-remaining;
+                    ಹಿಂತಿರುಗಿ dest_ಗಾತ್ರ-ಉಳಿದ;
                 }
                 *dest++=c;
             }
-        } while(--srcLength>0);
-        return destSize-remaining;
+        } ಆಗ(--src_ಉದ್ದಳತೆ>0);
+        ಹಿಂತಿರುಗಿ dest_ಗಾತ್ರ-ಉಳಿದ;
     }
-    default: {
+    ಪೂರ್ವನಿಯೋಜಿತ: {
         /* remove BiDi control characters and do mirroring */
         int32_t i, j=0;
         UChar32 c;
-        do {
+        ಮಾಡು {
             i=0;
-            U16_NEXT(src, i, srcLength, c);
+            U16_ಮುಂದಿನ(src, i, src_ಉದ್ದಳತೆ, c);
             src+=i;
-            srcLength-=i;
-            if(!IS_BIDI_CONTROL_CHAR(c)) {
+            src_ಉದ್ದಳತೆ-=i;
+            ಆದರೆ(!IS_BIDI_CONTROL_CHAR(c)) {
                 c=u_charMirror(c);
-                int32_t charLen = U16_LENGTH(c);
-                if(j + charLen <= destSize) {
-                    int32_t temp = j;
-                    U16_APPEND_UNSAFE(dest, temp, c);
+                int32_t charLen = U16_ಉದ್ದಳತೆ(c);
+                ಆದರೆ(j + charLen <= dest_ಗಾತ್ರ) {
+                    int32_t ತಾತ್ಕಾಲಿಕ = j;
+                    U16_APPEND_UNSAFE(dest, ತಾತ್ಕಾಲಿಕ, c);
                 }
                 j += charLen;
             }
-        } while(srcLength>0);
-        if(destSize < j) {
-            *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
+        } ಆಗ(src_ಉದ್ದಳತೆ>0);
+        ಆದರೆ(dest_ಗಾತ್ರ < j) {
+            *p_Error_ಸಂಕೇತ = U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
         }
-        return j;
+        ಹಿಂತಿರುಗಿ j;
     }
     } /* end of switch */
 }
 
-static int32_t
-doWriteReverse(const char16_t *src, int32_t srcLength,
-               char16_t *dest, int32_t destSize,
+ಸ್ಥಿರ int32_t
+do_Write_ಹಿಮ್ಮುಖ(ಸ್ಥಿರಾಂಕ char16_t *src, int32_t src_ಉದ್ದಳತೆ,
+               char16_t *dest, int32_t dest_ಗಾತ್ರ,
                uint16_t options,
-               UErrorCode *pErrorCode) {
+               UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
     /*
      * RTL run -
      *
@@ -184,72 +184,72 @@ doWriteReverse(const char16_t *src, int32_t srcLength,
     int32_t i, j;
     UChar32 c;
 
-    if(srcLength<=0) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ಆದರೆ(src_ಉದ್ದಳತೆ<=0) {
+        *p_Error_ಸಂಕೇತ=U_ILLEGAL_ವಾದ_ERROR;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
     /* optimize for several combinations of options */
-    switch(options&(UBIDI_REMOVE_BIDI_CONTROLS|UBIDI_DO_MIRRORING|UBIDI_KEEP_BASE_COMBINING)) {
-    case 0:
+    ಆಯ್ಕೆ(options&(UBIDI_REMOVE_BIDI_CONTROLS|UBIDI_DO_MIRRORING|UBIDI_KEEP_ತಳ_COMBINING)) {
+    ಸ್ಥಿತಿ 0:
         /*
          * With none of the "complicated" options set, the destination
          * run will have the same length as the source run,
          * and there is no mirroring and no keeping combining characters
          * with their base characters.
          */
-        if(destSize<srcLength) {
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            return srcLength;
+        ಆದರೆ(dest_ಗಾತ್ರ<src_ಉದ್ದಳತೆ) {
+            *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
+            ಹಿಂತಿರುಗಿ src_ಉದ್ದಳತೆ;
         }
-        destSize=srcLength;
+        dest_ಗಾತ್ರ=src_ಉದ್ದಳತೆ;
 
         /* preserve character integrity */
-        do {
+        ಮಾಡು {
             /* i is always after the last code unit known to need to be kept in this segment */
-            i=srcLength;
+            i=src_ಉದ್ದಳತೆ;
 
             /* collect code units for one base character */
-            U16_PREV(src, 0, srcLength, c);
+            U16_PREV(src, 0, src_ಉದ್ದಳತೆ, c);
 
             /* copy this base character */
-            j=srcLength;
-            do {
+            j=src_ಉದ್ದಳತೆ;
+            ಮಾಡು {
                 *dest++=src[j++];
-            } while(j<i);
-        } while(srcLength>0);
-        break;
-    case UBIDI_KEEP_BASE_COMBINING:
+            } ಆಗ(j<i);
+        } ಆಗ(src_ಉದ್ದಳತೆ>0);
+        ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ UBIDI_KEEP_ತಳ_COMBINING:
         /*
          * Here, too, the destination
          * run will have the same length as the source run,
          * and there is no mirroring.
          * We do need to keep combining characters with their base characters.
          */
-        if(destSize<srcLength) {
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            return srcLength;
+        ಆದರೆ(dest_ಗಾತ್ರ<src_ಉದ್ದಳತೆ) {
+            *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
+            ಹಿಂತಿರುಗಿ src_ಉದ್ದಳತೆ;
         }
-        destSize=srcLength;
+        dest_ಗಾತ್ರ=src_ಉದ್ದಳತೆ;
 
         /* preserve character integrity */
-        do {
+        ಮಾಡು {
             /* i is always after the last code unit known to need to be kept in this segment */
-            i=srcLength;
+            i=src_ಉದ್ದಳತೆ;
 
             /* collect code units and modifier letters for one base character */
-            do {
-                U16_PREV(src, 0, srcLength, c);
-            } while(srcLength>0 && IS_COMBINING(u_charType(c)));
+            ಮಾಡು {
+                U16_PREV(src, 0, src_ಉದ್ದಳತೆ, c);
+            } ಆಗ(src_ಉದ್ದಳತೆ>0 && IS_COMBINING(u_charType(c)));
 
             /* copy this "user character" */
-            j=srcLength;
-            do {
+            j=src_ಉದ್ದಳತೆ;
+            ಮಾಡು {
                 *dest++=src[j++];
-            } while(j<i);
-        } while(srcLength>0);
-        break;
-    default: {
+            } ಆಗ(j<i);
+        } ಆಗ(src_ಉದ್ದಳತೆ>0);
+        ನಿಲ್ಲಿಸು;
+    ಪೂರ್ವನಿಯೋಜಿತ: {
         /*
          * Note on UBIDI_INTERNAL_RUNS_ONLY:
          * This internal flag is passed exclusively by setParaRunsOnly() in ubidi.cpp during
@@ -265,240 +265,240 @@ doWriteReverse(const char16_t *src, int32_t srcLength,
          * reordering), we use character stepping (j += origBaseLen) and return destLength,
          * which correctly handles expansion and contraction without leaking broken surrogates.
          */
-        if(options&UBIDI_INTERNAL_RUNS_ONLY) {
-            if(!(options&UBIDI_REMOVE_BIDI_CONTROLS)) {
-                i=srcLength;
-            } else {
-                int32_t length=srcLength;
+        ಆದರೆ(options&UBIDI_ಆಂತರಿಕ_RUNS_ONLY) {
+            ಆದರೆ(!(options&UBIDI_REMOVE_BIDI_CONTROLS)) {
+                i=src_ಉದ್ದಳತೆ;
+            } ಇಲ್ಲದಿದ್ದರೆ {
+                int32_t length=src_ಉದ್ದಳತೆ;
                 char16_t ch;
                 i=0;
                 /* Loop over all code units in the source run to count those that are not Bidi control characters,
                  * determining the required destination buffer length for preflighting when UBIDI_REMOVE_BIDI_CONTROLS is set.
                  */
-                do {
+                ಮಾಡು {
                     ch=*src++;
-                    if(!IS_BIDI_CONTROL_CHAR(ch)) {
+                    ಆದರೆ(!IS_BIDI_CONTROL_CHAR(ch)) {
                         ++i;
                     }
-                } while(--length>0);
-                src-=srcLength;
+                } ಆಗ(--length>0);
+                src-=src_ಉದ್ದಳತೆ;
             }
-            if(destSize<i) {
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                return i;
+            ಆದರೆ(dest_ಗಾತ್ರ<i) {
+                *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
+                ಹಿಂತಿರುಗಿ i;
             }
             char16_t *saveDest=dest;
-            int32_t destLength=0;
+            int32_t dest_ಉದ್ದಳತೆ=0;
             /* Loop backward across the source run segment by segment, using legacy 1-to-1 code unit stepping
              * to extract and reverse character clusters for internal setPara classification.
              */
-            do {
-                i=srcLength;
-                U16_PREV(src, 0, srcLength, c);
-                if(options&UBIDI_KEEP_BASE_COMBINING) {
+            ಮಾಡು {
+                i=src_ಉದ್ದಳತೆ;
+                U16_PREV(src, 0, src_ಉದ್ದಳತೆ, c);
+                ಆದರೆ(options&UBIDI_KEEP_ತಳ_COMBINING) {
                     /* Loop backward over any combining marks attached to the base character so that the combining
                      * sequence remains attached after its base character when reversed.
                      */
-                    while(srcLength>0 && IS_COMBINING(u_charType(c))) {
-                        U16_PREV(src, 0, srcLength, c);
+                    ಆಗ(src_ಉದ್ದಳತೆ>0 && IS_COMBINING(u_charType(c))) {
+                        U16_PREV(src, 0, src_ಉದ್ದಳತೆ, c);
                     }
                 }
-                if(options&UBIDI_REMOVE_BIDI_CONTROLS && IS_BIDI_CONTROL_CHAR(c)) {
-                    continue;
+                ಆದರೆ(options&UBIDI_REMOVE_BIDI_CONTROLS && IS_BIDI_CONTROL_CHAR(c)) {
+                    ಮುಂದುವರಿ;
                 }
-                int32_t origBaseLen=U16_LENGTH(c);
-                j=srcLength;
-                if(options&UBIDI_DO_MIRRORING) {
+                int32_t orig_ತಳ_Len=U16_ಉದ್ದಳತೆ(c);
+                j=src_ಉದ್ದಳತೆ;
+                ಆದರೆ(options&UBIDI_DO_MIRRORING) {
                     c=u_charMirror(c);
-                    int32_t k=U16_LENGTH(c);
-                    if(destLength+k<=destSize) {
-                        int32_t temp=destLength;
-                        U16_APPEND_UNSAFE(saveDest, temp, c);
+                    int32_t k=U16_ಉದ್ದಳತೆ(c);
+                    ಆದರೆ(dest_ಉದ್ದಳತೆ+k<=dest_ಗಾತ್ರ) {
+                        int32_t ತಾತ್ಕಾಲಿಕ=dest_ಉದ್ದಳತೆ;
+                        U16_APPEND_UNSAFE(saveDest, ತಾತ್ಕಾಲಿಕ, c);
                     }
-                    destLength+=k;
-                    j+=origBaseLen;
+                    dest_ಉದ್ದಳತೆ+=k;
+                    j+=orig_ತಳ_Len;
                 }
                 /* Loop forward from the current segment index to copy any unmirrored code units (such as combining marks
                  * or surrogate halves) into dest in forward visual order.
                  */
-                while(j<i) {
-                    if(destLength<destSize) {
-                        saveDest[destLength]=src[j];
+                ಆಗ(j<i) {
+                    ಆದರೆ(dest_ಉದ್ದಳತೆ<dest_ಗಾತ್ರ) {
+                        saveDest[dest_ಉದ್ದಳತೆ]=src[j];
                     }
-                    destLength++;
+                    dest_ಉದ್ದಳತೆ++;
                     j++;
                 }
-            } while(srcLength>0);
-            if(destSize<destLength) {
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+            } ಆಗ(src_ಉದ್ದಳತೆ>0);
+            ಆದರೆ(dest_ಗಾತ್ರ<dest_ಉದ್ದಳತೆ) {
+                *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
             }
-            return destLength;
+            ಹಿಂತಿರುಗಿ dest_ಉದ್ದಳತೆ;
         }
-        int32_t destLength=0;
-        do {
-            i=srcLength;
-            U16_PREV(src, 0, srcLength, c);
-            if(options&UBIDI_KEEP_BASE_COMBINING) {
-                while(srcLength>0 && IS_COMBINING(u_charType(c))) {
-                    U16_PREV(src, 0, srcLength, c);
+        int32_t dest_ಉದ್ದಳತೆ=0;
+        ಮಾಡು {
+            i=src_ಉದ್ದಳತೆ;
+            U16_PREV(src, 0, src_ಉದ್ದಳತೆ, c);
+            ಆದರೆ(options&UBIDI_KEEP_ತಳ_COMBINING) {
+                ಆಗ(src_ಉದ್ದಳತೆ>0 && IS_COMBINING(u_charType(c))) {
+                    U16_PREV(src, 0, src_ಉದ್ದಳತೆ, c);
                 }
             }
-            if(options&UBIDI_REMOVE_BIDI_CONTROLS && IS_BIDI_CONTROL_CHAR(c)) {
-                continue;
+            ಆದರೆ(options&UBIDI_REMOVE_BIDI_CONTROLS && IS_BIDI_CONTROL_CHAR(c)) {
+                ಮುಂದುವರಿ;
             }
 
-            int32_t origBaseLen=U16_LENGTH(c);
-            j=srcLength;
-            if(options&UBIDI_DO_MIRRORING) {
+            int32_t orig_ತಳ_Len=U16_ಉದ್ದಳತೆ(c);
+            j=src_ಉದ್ದಳತೆ;
+            ಆದರೆ(options&UBIDI_DO_MIRRORING) {
                 /* mirror only the base character */
                 c=u_charMirror(c);
-                int32_t k=U16_LENGTH(c);
-                if(destLength+k<=destSize) {
-                    int32_t temp=destLength;
-                    U16_APPEND_UNSAFE(dest, temp, c);
+                int32_t k=U16_ಉದ್ದಳತೆ(c);
+                ಆದರೆ(dest_ಉದ್ದಳತೆ+k<=dest_ಗಾತ್ರ) {
+                    int32_t ತಾತ್ಕಾಲಿಕ=dest_ಉದ್ದಳತೆ;
+                    U16_APPEND_UNSAFE(dest, ತಾತ್ಕಾಲಿಕ, c);
                 }
-                destLength+=k;
-                j+=origBaseLen;
+                dest_ಉದ್ದಳತೆ+=k;
+                j+=orig_ತಳ_Len;
             }
-            while(j<i) {
-                if(destLength<destSize) {
-                    dest[destLength]=src[j];
+            ಆಗ(j<i) {
+                ಆದರೆ(dest_ಉದ್ದಳತೆ<dest_ಗಾತ್ರ) {
+                    dest[dest_ಉದ್ದಳತೆ]=src[j];
                 }
-                destLength++;
+                dest_ಉದ್ದಳತೆ++;
                 j++;
             }
-        } while(srcLength>0);
+        } ಆಗ(src_ಉದ್ದಳತೆ>0);
 
 
-        if(destSize<destLength) {
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        ಆದರೆ(dest_ಗಾತ್ರ<dest_ಉದ್ದಳತೆ) {
+            *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
         }
-        return destLength;
+        ಹಿಂತಿರುಗಿ dest_ಉದ್ದಳತೆ;
     }
     } /* end of switch */
-    return destSize;
+    ಹಿಂತಿರುಗಿ dest_ಗಾತ್ರ;
 }
 
 U_CAPI int32_t U_EXPORT2
-ubidi_writeReverse(const char16_t *src, int32_t srcLength,
-                   char16_t *dest, int32_t destSize,
+ubidi_write_ಹಿಮ್ಮುಖ(ಸ್ಥಿರಾಂಕ char16_t *src, int32_t src_ಉದ್ದಳತೆ,
+                   char16_t *dest, int32_t dest_ಗಾತ್ರ,
                    uint16_t options,
-                   UErrorCode *pErrorCode) {
-    int32_t destLength;
+                   UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    int32_t dest_ಉದ್ದಳತೆ;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ಆದರೆ(p_Error_ಸಂಕೇತ==ಶೂನ್ಯಸೂಚಕ || U_FAILURE(*p_Error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ 0;
     }
 
     /* more error checking */
-    if( src==nullptr || srcLength<-1 ||
-        destSize<0 || (destSize>0 && dest==nullptr))
+    ಆದರೆ( src==ಶೂನ್ಯಸೂಚಕ || src_ಉದ್ದಳತೆ<-1 ||
+        dest_ಗಾತ್ರ<0 || (dest_ಗಾತ್ರ>0 && dest==ಶೂನ್ಯಸೂಚಕ))
     {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_ಸಂಕೇತ=U_ILLEGAL_ವಾದ_ERROR;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
     /* do input and output overlap? */
-    if( dest!=nullptr &&
-        ((src>=dest && src<dest+destSize) ||
-         (dest>=src && dest<src+srcLength)))
+    ಆದರೆ( dest!=ಶೂನ್ಯಸೂಚಕ &&
+        ((src>=dest && src<dest+dest_ಗಾತ್ರ) ||
+         (dest>=src && dest<src+src_ಉದ್ದಳತೆ)))
     {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_ಸಂಕೇತ=U_ILLEGAL_ವಾದ_ERROR;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
-    if(srcLength==-1) {
-        srcLength=u_strlen(src);
+    ಆದರೆ(src_ಉದ್ದಳತೆ==-1) {
+        src_ಉದ್ದಳತೆ=u_strlen(src);
     }
-    if(srcLength>0) {
-        destLength=doWriteReverse(src, srcLength, dest, destSize, options, pErrorCode);
-    } else {
+    ಆದರೆ(src_ಉದ್ದಳತೆ>0) {
+        dest_ಉದ್ದಳತೆ=do_Write_ಹಿಮ್ಮುಖ(src, src_ಉದ್ದಳತೆ, dest, dest_ಗಾತ್ರ, options, p_Error_ಸಂಕೇತ);
+    } ಇಲ್ಲದಿದ್ದರೆ {
         /* nothing to do */
-        destLength=0;
+        dest_ಉದ್ದಳತೆ=0;
     }
 
-    return u_terminateUChars(dest, destSize, destLength, pErrorCode);
+    ಹಿಂತಿರುಗಿ u_terminateUChars(dest, dest_ಗಾತ್ರ, dest_ಉದ್ದಳತೆ, p_Error_ಸಂಕೇತ);
 }
 
 // Ticket 20907 - The optimizer in MSVC/Visual Studio versions below 16.4 has trouble with this
 // function on Windows ARM64. As a work-around, we disable optimizations for this function.
 // This work-around could/should be removed once the following versions of Visual Studio are no
 // longer supported: All versions of VS2017, and versions of VS2019 below 16.4.
-#if (defined(_MSC_VER) && (defined(_M_ARM64)) && (_MSC_VER < 1924))
-#pragma optimize( "", off )
-#endif
+#ಆದರೆ (defined(_MSC_VER) && (defined(_M_ARM64)) && (_MSC_VER < 1924))
+#ಸೂಚನೆ optimize( "", off )
+#ಆದರೆ_ಅಂತ್ಯ
 U_CAPI int32_t U_EXPORT2
 ubidi_writeReordered(UBiDi *pBiDi,
-                     char16_t *dest, int32_t destSize,
+                     char16_t *dest, int32_t dest_ಗಾತ್ರ,
                      uint16_t options,
-                     UErrorCode *pErrorCode) {
-    const char16_t *text;
+                     UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಸ್ಥಿರಾಂಕ char16_t *ಪಠ್ಯ;
     char16_t *saveDest;
-    int32_t length, destCapacity;
-    int32_t run, runCount, logicalStart, runLength;
+    int32_t length, dest_ಸಾಮರ್ಥ್ಯ;
+    int32_t ಸತತ_2, ಸತತ_ಎಣಿಕೆ, logical_ಆರಂಭ, ಸತತ_ಉದ್ದಳತೆ;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ಆದರೆ(p_Error_ಸಂಕೇತ==ಶೂನ್ಯಸೂಚಕ || U_FAILURE(*p_Error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ 0;
     }
 
     /* more error checking */
-    if( pBiDi==nullptr ||
-        (text=pBiDi->text)==nullptr || (length=pBiDi->length)<0 ||
-        destSize<0 || (destSize>0 && dest==nullptr))
+    ಆದರೆ( pBiDi==ಶೂನ್ಯಸೂಚಕ ||
+        (ಪಠ್ಯ=pBiDi->ಪಠ್ಯ)==ಶೂನ್ಯಸೂಚಕ || (length=pBiDi->length)<0 ||
+        dest_ಗಾತ್ರ<0 || (dest_ಗಾತ್ರ>0 && dest==ಶೂನ್ಯಸೂಚಕ))
     {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_ಸಂಕೇತ=U_ILLEGAL_ವಾದ_ERROR;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
     /* do input and output overlap? */
-    if( dest!=nullptr &&
-        ((text>=dest && text<dest+destSize) ||
-         (dest>=text && dest<text+pBiDi->originalLength)))
+    ಆದರೆ( dest!=ಶೂನ್ಯಸೂಚಕ &&
+        ((ಪಠ್ಯ>=dest && ಪಠ್ಯ<dest+dest_ಗಾತ್ರ) ||
+         (dest>=ಪಠ್ಯ && dest<ಪಠ್ಯ+pBiDi->original_ಉದ್ದಳತೆ)))
     {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_ಸಂಕೇತ=U_ILLEGAL_ವಾದ_ERROR;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
-    if(length==0) {
+    ಆದರೆ(length==0) {
         /* nothing to do */
-        return u_terminateUChars(dest, destSize, 0, pErrorCode);
+        ಹಿಂತಿರುಗಿ u_terminateUChars(dest, dest_ಗಾತ್ರ, 0, p_Error_ಸಂಕೇತ);
     }
 
-    runCount=ubidi_countRuns(pBiDi, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    ಸತತ_ಎಣಿಕೆ=ubidi_ಎಣಿಕೆ_Runs(pBiDi, p_Error_ಸಂಕೇತ);
+    ಆದರೆ(U_FAILURE(*p_Error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ 0;
     }
 
     /* destSize shrinks, later destination length=destCapacity-destSize */
     saveDest=dest;
-    destCapacity=destSize;
-    runLength = 0;
+    dest_ಸಾಮರ್ಥ್ಯ=dest_ಗಾತ್ರ;
+    ಸತತ_ಉದ್ದಳತೆ = 0;
 
     /*
      * Option "insert marks" implies UBIDI_INSERT_LRM_FOR_NUMERIC if the
      * reordering mode (checked below) is appropriate.
      */
-    if(pBiDi->reorderingOptions & UBIDI_OPTION_INSERT_MARKS) {
-        options|=UBIDI_INSERT_LRM_FOR_NUMERIC;
+    ಆದರೆ(pBiDi->reorderingOptions & UBIDI_OPTION_ಸೇರಿಸು_MARKS) {
+        options|=UBIDI_ಸೇರಿಸು_LRM_FOR_NUMERIC;
         options&=~UBIDI_REMOVE_BIDI_CONTROLS;
     }
     /*
      * Option "remove controls" implies UBIDI_REMOVE_BIDI_CONTROLS
      * and cancels UBIDI_INSERT_LRM_FOR_NUMERIC.
      */
-    if(pBiDi->reorderingOptions & UBIDI_OPTION_REMOVE_CONTROLS) {
+    ಆದರೆ(pBiDi->reorderingOptions & UBIDI_OPTION_REMOVE_CONTROLS) {
         options|=UBIDI_REMOVE_BIDI_CONTROLS;
-        options&=~UBIDI_INSERT_LRM_FOR_NUMERIC;
+        options&=~UBIDI_ಸೇರಿಸು_LRM_FOR_NUMERIC;
     }
     /*
      * If we do not perform the "inverse BiDi" algorithm, then we
      * don't need to insert any LRMs, and don't need to test for it.
      */
-    if((pBiDi->reorderingMode != UBIDI_REORDER_INVERSE_NUMBERS_AS_L) &&
-       (pBiDi->reorderingMode != UBIDI_REORDER_INVERSE_LIKE_DIRECT)  &&
-       (pBiDi->reorderingMode != UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL) &&
-       (pBiDi->reorderingMode != UBIDI_REORDER_RUNS_ONLY)) {
-        options&=~UBIDI_INSERT_LRM_FOR_NUMERIC;
+    ಆದರೆ((pBiDi->reordering_ಬಹುಲಕ != UBIDI_REORDER_INVERSE_NUMBERS_AS_L) &&
+       (pBiDi->reordering_ಬಹುಲಕ != UBIDI_REORDER_INVERSE_LIKE_ನೇರ)  &&
+       (pBiDi->reordering_ಬಹುಲಕ != UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL) &&
+       (pBiDi->reordering_ಬಹುಲಕ != UBIDI_REORDER_RUNS_ONLY)) {
+        options&=~UBIDI_ಸೇರಿಸು_LRM_FOR_NUMERIC;
     }
     /*
      * Iterate through all visual runs and copy the run text segments to
@@ -512,221 +512,221 @@ ubidi_writeReordered(UBiDi *pBiDi,
      * Note that the only errors that are set by doWriteXY() are buffer overflow
      * errors. Ignore them until the end, and continue for preflighting.
      */
-    if(!(options&UBIDI_OUTPUT_REVERSE)) {
+    ಆದರೆ(!(options&UBIDI_OUTPUT_ಹಿಮ್ಮುಖ)) {
         /* forward output */
-        if(!(options&UBIDI_INSERT_LRM_FOR_NUMERIC)) {
+        ಆದರೆ(!(options&UBIDI_ಸೇರಿಸು_LRM_FOR_NUMERIC)) {
             /* do not insert BiDi controls */
-            for(run=0; run<runCount; ++run) {
-                if(UBIDI_LTR==ubidi_getVisualRun(pBiDi, run, &logicalStart, &runLength)) {
-                    runLength=doWriteForward(text+logicalStart, runLength,
-                                             dest, destSize,
-                                             (uint16_t)(options&~UBIDI_DO_MIRRORING), pErrorCode);
-                } else {
-                    runLength=doWriteReverse(text+logicalStart, runLength,
-                                             dest, destSize,
-                                             options, pErrorCode);
+            ಗಾಗಿ(ಸತತ_2=0; ಸತತ_2<ಸತತ_ಎಣಿಕೆ; ++ಸತತ_2) {
+                ಆದರೆ(UBIDI_LTR==ubidi_get_Visual_ಸತತ(pBiDi, ಸತತ_2, &logical_ಆರಂಭ, &ಸತತ_ಉದ್ದಳತೆ)) {
+                    ಸತತ_ಉದ್ದಳತೆ=doWriteForward(ಪಠ್ಯ+logical_ಆರಂಭ, ಸತತ_ಉದ್ದಳತೆ,
+                                             dest, dest_ಗಾತ್ರ,
+                                             (uint16_t)(options&~UBIDI_DO_MIRRORING), p_Error_ಸಂಕೇತ);
+                } ಇಲ್ಲದಿದ್ದರೆ {
+                    ಸತತ_ಉದ್ದಳತೆ=do_Write_ಹಿಮ್ಮುಖ(ಪಠ್ಯ+logical_ಆರಂಭ, ಸತತ_ಉದ್ದಳತೆ,
+                                             dest, dest_ಗಾತ್ರ,
+                                             options, p_Error_ಸಂಕೇತ);
                 }
-                if(dest!=nullptr) {
-                  dest+=runLength;
+                ಆದರೆ(dest!=ಶೂನ್ಯಸೂಚಕ) {
+                  dest+=ಸತತ_ಉದ್ದಳತೆ;
                 }
-                destSize-=runLength;
+                dest_ಗಾತ್ರ-=ಸತತ_ಉದ್ದಳತೆ;
             }
-        } else {
+        } ಇಲ್ಲದಿದ್ದರೆ {
             /* insert BiDi controls for "inverse BiDi" */
-            const DirProp *dirProps=pBiDi->dirProps;
-            const char16_t *src;
+            ಸ್ಥಿರಾಂಕ DirProp *dirProps=pBiDi->dirProps;
+            ಸ್ಥಿರಾಂಕ char16_t *src;
             char16_t uc;
             UBiDiDirection dir;
             int32_t markFlag;
 
-            for(run=0; run<runCount; ++run) {
-                dir=ubidi_getVisualRun(pBiDi, run, &logicalStart, &runLength);
-                src=text+logicalStart;
+            ಗಾಗಿ(ಸತತ_2=0; ಸತತ_2<ಸತತ_ಎಣಿಕೆ; ++ಸತತ_2) {
+                dir=ubidi_get_Visual_ಸತತ(pBiDi, ಸತತ_2, &logical_ಆರಂಭ, &ಸತತ_ಉದ್ದಳತೆ);
+                src=ಪಠ್ಯ+logical_ಆರಂಭ;
                 /* check if something relevant in insertPoints */
-                markFlag=pBiDi->runs[run].insertRemove;
-                if(markFlag<0) {        /* BiDi controls count */
+                markFlag=pBiDi->runs[ಸತತ_2].ಸೇರಿಸು_Remove;
+                ಆದರೆ(markFlag<0) {        /* BiDi controls count */
                     markFlag=0;
                 }
 
-                if(UBIDI_LTR==dir) {
-                    if((pBiDi->isInverse) &&
-                       (/*run>0 &&*/ dirProps[logicalStart]!=L)) {
+                ಆದರೆ(UBIDI_LTR==dir) {
+                    ಆದರೆ((pBiDi->isInverse) &&
+                       (/*run>0 &&*/ dirProps[logical_ಆರಂಭ]!=L)) {
                         markFlag |= LRM_BEFORE;
                     }
-                    if (markFlag & LRM_BEFORE) {
+                    ಆದರೆ (markFlag & LRM_BEFORE) {
                         uc=LRM_CHAR;
                     }
-                    else if (markFlag & RLM_BEFORE) {
+                    ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (markFlag & RLM_BEFORE) {
                         uc=RLM_CHAR;
                     }
-                    else  uc=0;
-                    if(uc) {
-                        if(destSize>0) {
+                    ಇಲ್ಲದಿದ್ದರೆ  uc=0;
+                    ಆದರೆ(uc) {
+                        ಆದರೆ(dest_ಗಾತ್ರ>0) {
                             *dest++=uc;
                         }
-                        --destSize;
+                        --dest_ಗಾತ್ರ;
                     }
 
-                    runLength=doWriteForward(src, runLength,
-                                             dest, destSize,
-                                             (uint16_t)(options&~UBIDI_DO_MIRRORING), pErrorCode);
-                    if(dest!=nullptr) {
-                      dest+=runLength;
+                    ಸತತ_ಉದ್ದಳತೆ=doWriteForward(src, ಸತತ_ಉದ್ದಳತೆ,
+                                             dest, dest_ಗಾತ್ರ,
+                                             (uint16_t)(options&~UBIDI_DO_MIRRORING), p_Error_ಸಂಕೇತ);
+                    ಆದರೆ(dest!=ಶೂನ್ಯಸೂಚಕ) {
+                      dest+=ಸತತ_ಉದ್ದಳತೆ;
                     }
-                    destSize-=runLength;
+                    dest_ಗಾತ್ರ-=ಸತತ_ಉದ್ದಳತೆ;
 
-                    if((pBiDi->isInverse) &&
+                    ಆದರೆ((pBiDi->isInverse) &&
                            (/*run<runCount-1 &&*/
-                            runLength > 0 && // doWriteForward may return 0 if src
+                            ಸತತ_ಉದ್ದಳತೆ > 0 && // doWriteForward may return 0 if src
                                              // only include bidi control chars
-                            dirProps[logicalStart+runLength-1]!=L)) {
+                            dirProps[logical_ಆರಂಭ+ಸತತ_ಉದ್ದಳತೆ-1]!=L)) {
                         markFlag |= LRM_AFTER;
                     }
-                    if (markFlag & LRM_AFTER) {
+                    ಆದರೆ (markFlag & LRM_AFTER) {
                         uc=LRM_CHAR;
                     }
-                    else if (markFlag & RLM_AFTER) {
+                    ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (markFlag & RLM_AFTER) {
                         uc=RLM_CHAR;
                     }
-                    else  uc=0;
-                    if(uc) {
-                        if(destSize>0) {
+                    ಇಲ್ಲದಿದ್ದರೆ  uc=0;
+                    ಆದರೆ(uc) {
+                        ಆದರೆ(dest_ಗಾತ್ರ>0) {
                             *dest++=uc;
                         }
-                        --destSize;
+                        --dest_ಗಾತ್ರ;
                     }
-                } else {                /* RTL run */
-                    if((pBiDi->isInverse) &&
-                       (/*run>0 &&*/ !(MASK_R_AL&DIRPROP_FLAG(dirProps[logicalStart+runLength-1])))) {
+                } ಇಲ್ಲದಿದ್ದರೆ {                /* RTL run */
+                    ಆದರೆ((pBiDi->isInverse) &&
+                       (/*run>0 &&*/ !(ಮುಖವಾಡ_R_AL&DIRPROP_FLAG(dirProps[logical_ಆರಂಭ+ಸತತ_ಉದ್ದಳತೆ-1])))) {
                         markFlag |= RLM_BEFORE;
                     }
-                    if (markFlag & LRM_BEFORE) {
+                    ಆದರೆ (markFlag & LRM_BEFORE) {
                         uc=LRM_CHAR;
                     }
-                    else if (markFlag & RLM_BEFORE) {
+                    ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (markFlag & RLM_BEFORE) {
                         uc=RLM_CHAR;
                     }
-                    else  uc=0;
-                    if(uc) {
-                        if(destSize>0) {
+                    ಇಲ್ಲದಿದ್ದರೆ  uc=0;
+                    ಆದರೆ(uc) {
+                        ಆದರೆ(dest_ಗಾತ್ರ>0) {
                             *dest++=uc;
                         }
-                        --destSize;
+                        --dest_ಗಾತ್ರ;
                     }
 
-                    runLength=doWriteReverse(src, runLength,
-                                             dest, destSize,
-                                             options, pErrorCode);
-                    if(dest!=nullptr) {
-                      dest+=runLength;
+                    ಸತತ_ಉದ್ದಳತೆ=do_Write_ಹಿಮ್ಮುಖ(src, ಸತತ_ಉದ್ದಳತೆ,
+                                             dest, dest_ಗಾತ್ರ,
+                                             options, p_Error_ಸಂಕೇತ);
+                    ಆದರೆ(dest!=ಶೂನ್ಯಸೂಚಕ) {
+                      dest+=ಸತತ_ಉದ್ದಳತೆ;
                     }
-                    destSize-=runLength;
+                    dest_ಗಾತ್ರ-=ಸತತ_ಉದ್ದಳತೆ;
 
-                    if((pBiDi->isInverse) &&
-                       (/*run<runCount-1 &&*/ !(MASK_R_AL&DIRPROP_FLAG(dirProps[logicalStart])))) {
+                    ಆದರೆ((pBiDi->isInverse) &&
+                       (/*run<runCount-1 &&*/ !(ಮುಖವಾಡ_R_AL&DIRPROP_FLAG(dirProps[logical_ಆರಂಭ])))) {
                         markFlag |= RLM_AFTER;
                     }
-                    if (markFlag & LRM_AFTER) {
+                    ಆದರೆ (markFlag & LRM_AFTER) {
                         uc=LRM_CHAR;
                     }
-                    else if (markFlag & RLM_AFTER) {
+                    ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (markFlag & RLM_AFTER) {
                         uc=RLM_CHAR;
                     }
-                    else  uc=0;
-                    if(uc) {
-                        if(destSize>0) {
+                    ಇಲ್ಲದಿದ್ದರೆ  uc=0;
+                    ಆದರೆ(uc) {
+                        ಆದರೆ(dest_ಗಾತ್ರ>0) {
                             *dest++=uc;
                         }
-                        --destSize;
+                        --dest_ಗಾತ್ರ;
                     }
                 }
             }
         }
-    } else {
+    } ಇಲ್ಲದಿದ್ದರೆ {
         /* reverse output */
-        if(!(options&UBIDI_INSERT_LRM_FOR_NUMERIC)) {
+        ಆದರೆ(!(options&UBIDI_ಸೇರಿಸು_LRM_FOR_NUMERIC)) {
             /* do not insert BiDi controls */
-            for(run=runCount; --run>=0;) {
-                if(UBIDI_LTR==ubidi_getVisualRun(pBiDi, run, &logicalStart, &runLength)) {
-                    runLength=doWriteReverse(text+logicalStart, runLength,
-                                             dest, destSize,
-                                             (uint16_t)(options&~UBIDI_DO_MIRRORING), pErrorCode);
-                } else {
-                    runLength=doWriteForward(text+logicalStart, runLength,
-                                             dest, destSize,
-                                             options, pErrorCode);
+            ಗಾಗಿ(ಸತತ_2=ಸತತ_ಎಣಿಕೆ; --ಸತತ_2>=0;) {
+                ಆದರೆ(UBIDI_LTR==ubidi_get_Visual_ಸತತ(pBiDi, ಸತತ_2, &logical_ಆರಂಭ, &ಸತತ_ಉದ್ದಳತೆ)) {
+                    ಸತತ_ಉದ್ದಳತೆ=do_Write_ಹಿಮ್ಮುಖ(ಪಠ್ಯ+logical_ಆರಂಭ, ಸತತ_ಉದ್ದಳತೆ,
+                                             dest, dest_ಗಾತ್ರ,
+                                             (uint16_t)(options&~UBIDI_DO_MIRRORING), p_Error_ಸಂಕೇತ);
+                } ಇಲ್ಲದಿದ್ದರೆ {
+                    ಸತತ_ಉದ್ದಳತೆ=doWriteForward(ಪಠ್ಯ+logical_ಆರಂಭ, ಸತತ_ಉದ್ದಳತೆ,
+                                             dest, dest_ಗಾತ್ರ,
+                                             options, p_Error_ಸಂಕೇತ);
                 }
-                if(dest!=nullptr) {
-                  dest+=runLength;
+                ಆದರೆ(dest!=ಶೂನ್ಯಸೂಚಕ) {
+                  dest+=ಸತತ_ಉದ್ದಳತೆ;
                 }
-                destSize-=runLength;
+                dest_ಗಾತ್ರ-=ಸತತ_ಉದ್ದಳತೆ;
             }
-        } else {
+        } ಇಲ್ಲದಿದ್ದರೆ {
             /* insert BiDi controls for "inverse BiDi" */
-            const DirProp *dirProps=pBiDi->dirProps;
-            const char16_t *src;
+            ಸ್ಥಿರಾಂಕ DirProp *dirProps=pBiDi->dirProps;
+            ಸ್ಥಿರಾಂಕ char16_t *src;
             UBiDiDirection dir;
 
-            for(run=runCount; --run>=0;) {
+            ಗಾಗಿ(ಸತತ_2=ಸತತ_ಎಣಿಕೆ; --ಸತತ_2>=0;) {
                 /* reverse output */
-                dir=ubidi_getVisualRun(pBiDi, run, &logicalStart, &runLength);
-                src=text+logicalStart;
+                dir=ubidi_get_Visual_ಸತತ(pBiDi, ಸತತ_2, &logical_ಆರಂಭ, &ಸತತ_ಉದ್ದಳತೆ);
+                src=ಪಠ್ಯ+logical_ಆರಂಭ;
 
-                if(UBIDI_LTR==dir) {
-                    if(/*run<runCount-1 &&*/ dirProps[logicalStart+runLength-1]!=L) {
-                        if(destSize>0) {
+                ಆದರೆ(UBIDI_LTR==dir) {
+                    ಆದರೆ(/*run<runCount-1 &&*/ dirProps[logical_ಆರಂಭ+ಸತತ_ಉದ್ದಳತೆ-1]!=L) {
+                        ಆದರೆ(dest_ಗಾತ್ರ>0) {
                             *dest++=LRM_CHAR;
                         }
-                        --destSize;
+                        --dest_ಗಾತ್ರ;
                     }
 
-                    runLength=doWriteReverse(src, runLength,
-                                             dest, destSize,
-                                             (uint16_t)(options&~UBIDI_DO_MIRRORING), pErrorCode);
-                    if(dest!=nullptr) {
-                      dest+=runLength;
+                    ಸತತ_ಉದ್ದಳತೆ=do_Write_ಹಿಮ್ಮುಖ(src, ಸತತ_ಉದ್ದಳತೆ,
+                                             dest, dest_ಗಾತ್ರ,
+                                             (uint16_t)(options&~UBIDI_DO_MIRRORING), p_Error_ಸಂಕೇತ);
+                    ಆದರೆ(dest!=ಶೂನ್ಯಸೂಚಕ) {
+                      dest+=ಸತತ_ಉದ್ದಳತೆ;
                     }
-                    destSize-=runLength;
+                    dest_ಗಾತ್ರ-=ಸತತ_ಉದ್ದಳತೆ;
 
-                    if(/*run>0 &&*/ dirProps[logicalStart]!=L) {
-                        if(destSize>0) {
+                    ಆದರೆ(/*run>0 &&*/ dirProps[logical_ಆರಂಭ]!=L) {
+                        ಆದರೆ(dest_ಗಾತ್ರ>0) {
                             *dest++=LRM_CHAR;
                         }
-                        --destSize;
+                        --dest_ಗಾತ್ರ;
                     }
-                } else {
-                    if(/*run<runCount-1 &&*/ !(MASK_R_AL&DIRPROP_FLAG(dirProps[logicalStart]))) {
-                        if(destSize>0) {
+                } ಇಲ್ಲದಿದ್ದರೆ {
+                    ಆದರೆ(/*run<runCount-1 &&*/ !(ಮುಖವಾಡ_R_AL&DIRPROP_FLAG(dirProps[logical_ಆರಂಭ]))) {
+                        ಆದರೆ(dest_ಗಾತ್ರ>0) {
                             *dest++=RLM_CHAR;
                         }
-                        --destSize;
+                        --dest_ಗಾತ್ರ;
                     }
 
-                    int32_t originalRunLength = runLength;
-                    runLength=doWriteForward(src, runLength,
-                                             dest, destSize,
-                                             options, pErrorCode);
-                    if(dest!=nullptr) {
-                      dest+=runLength;
+                    int32_t original_ಸತತ_ಉದ್ದಳತೆ = ಸತತ_ಉದ್ದಳತೆ;
+                    ಸತತ_ಉದ್ದಳತೆ=doWriteForward(src, ಸತತ_ಉದ್ದಳತೆ,
+                                             dest, dest_ಗಾತ್ರ,
+                                             options, p_Error_ಸಂಕೇತ);
+                    ಆದರೆ(dest!=ಶೂನ್ಯಸೂಚಕ) {
+                      dest+=ಸತತ_ಉದ್ದಳತೆ;
                     }
-                    destSize-=runLength;
+                    dest_ಗಾತ್ರ-=ಸತತ_ಉದ್ದಳತೆ;
 
-                    if(/*run>0 &&*/
-                            runLength > 0 && // doWriteForward may return 0 if src
+                    ಆದರೆ(/*run>0 &&*/
+                            ಸತತ_ಉದ್ದಳತೆ > 0 && // doWriteForward may return 0 if src
                                              // only include bidi control chars
-                            !(MASK_R_AL&DIRPROP_FLAG(dirProps[logicalStart+originalRunLength-1]))) {
-                        if(destSize>0) {
+                            !(ಮುಖವಾಡ_R_AL&DIRPROP_FLAG(dirProps[logical_ಆರಂಭ+original_ಸತತ_ಉದ್ದಳತೆ-1]))) {
+                        ಆದರೆ(dest_ಗಾತ್ರ>0) {
                             *dest++=RLM_CHAR;
                         }
-                        --destSize;
+                        --dest_ಗಾತ್ರ;
                     }
                 }
             }
         }
     }
 
-    return u_terminateUChars(saveDest, destCapacity, destCapacity-destSize, pErrorCode);
+    ಹಿಂತಿರುಗಿ u_terminateUChars(saveDest, dest_ಸಾಮರ್ಥ್ಯ, dest_ಸಾಮರ್ಥ್ಯ-dest_ಗಾತ್ರ, p_Error_ಸಂಕೇತ);
 }
-#if (defined(_MSC_VER) && (defined(_M_ARM64)) && (_MSC_VER < 1924))
-#pragma optimize( "", on )
-#endif
+#ಆದರೆ (defined(_MSC_VER) && (defined(_M_ARM64)) && (_MSC_VER < 1924))
+#ಸೂಚನೆ optimize( "", on )
+#ಆದರೆ_ಅಂತ್ಯ

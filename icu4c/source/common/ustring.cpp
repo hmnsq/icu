@@ -17,20 +17,20 @@
 ******************************************************************************
 */
 
-#include "unicode/utypes.h"
-#include "unicode/putil.h"
-#include "unicode/uchar.h"
-#include "unicode/ustring.h"
-#include "unicode/utf16.h"
-#include "cstring.h"
-#include "cwchar.h"
-#include "cmemory.h"
-#include "ustr_imp.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/putil.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uchar.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ustring.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utf16.h"
+#ಅನ್ತರ್ಭಾವ "cstring.h"
+#ಅನ್ತರ್ಭಾವ "cwchar.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "ustr_imp.h"
 
 /* ANSI string.h - style functions ------------------------------------------ */
 
 /* U+ffff is the highest BMP code point, the highest one that fits into a 16-bit char16_t */
-#define U_BMP_MAX 0xffff
+#ವ್ಯಾಖ್ಯಾನಿಸು U_BMP_MAX 0xffff
 
 /* Forward binary string search functions ----------------------------------- */
 
@@ -39,64 +39,64 @@
  * All pointers refer to the same buffer.
  * The limit pointer may be nullptr, all others must be real pointers.
  */
-static inline UBool
-isMatchAtCPBoundary(const char16_t *start, const char16_t *match, const char16_t *matchLimit, const char16_t *limit) {
-    if(U16_IS_TRAIL(*match) && start!=match && U16_IS_LEAD(*(match-1))) {
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ UBool
+is_ಹೊಂದಿಕೆ_At_CPBoundary(ಸ್ಥಿರಾಂಕ char16_t *ಆರಂಭ, ಸ್ಥಿರಾಂಕ char16_t *ಹೊಂದಿಕೆ, ಸ್ಥಿರಾಂಕ char16_t *ಹೊಂದಿಕೆ_ಎಲ್ಲೆ, ಸ್ಥಿರಾಂಕ char16_t *ಎಲ್ಲೆ) {
+    ಆದರೆ(U16_IS_TRAIL(*ಹೊಂದಿಕೆ) && ಆರಂಭ!=ಹೊಂದಿಕೆ && U16_IS_LEAD(*(ಹೊಂದಿಕೆ-1))) {
         /* the leading edge of the match is in the middle of a surrogate pair */
-        return false;
+        ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
     }
-    if(U16_IS_LEAD(*(matchLimit-1)) && matchLimit!=limit && U16_IS_TRAIL(*matchLimit)) {
+    ಆದರೆ(U16_IS_LEAD(*(ಹೊಂದಿಕೆ_ಎಲ್ಲೆ-1)) && ಹೊಂದಿಕೆ_ಎಲ್ಲೆ!=ಎಲ್ಲೆ && U16_IS_TRAIL(*ಹೊಂದಿಕೆ_ಎಲ್ಲೆ)) {
         /* the trailing edge of the match is in the middle of a surrogate pair */
-        return false;
+        ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
     }
-    return true;
+    ಹಿಂತಿರುಗಿ ನಿಜ;
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strFindFirst(const char16_t* s U_LIFETIME_BOUND,
+u_str_ಕಂಡುಹಿಡಿ_ಮೊದಲ(ಸ್ಥಿರಾಂಕ char16_t* s U_LIFETIME_BOUND,
                int32_t length,
-               const char16_t* sub,
-               int32_t subLength) {
-    const char16_t *start, *p, *q, *subLimit;
+               ಸ್ಥಿರಾಂಕ char16_t* sub,
+               int32_t sub_ಉದ್ದಳತೆ) {
+    ಸ್ಥಿರಾಂಕ char16_t *ಆರಂಭ, *p, *q, *sub_ಎಲ್ಲೆ;
     char16_t c, cs, cq;
 
-    if(sub==nullptr || subLength<-1) {
-        return (char16_t *)s;
+    ಆದರೆ(sub==ಶೂನ್ಯಸೂಚಕ || sub_ಉದ್ದಳತೆ<-1) {
+        ಹಿಂತಿರುಗಿ (char16_t *)s;
     }
-    if(s==nullptr || length<-1) {
-        return nullptr;
+    ಆದರೆ(s==ಶೂನ್ಯಸೂಚಕ || length<-1) {
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
 
-    start=s;
+    ಆರಂಭ=s;
 
-    if(length<0 && subLength<0) {
+    ಆದರೆ(length<0 && sub_ಉದ್ದಳತೆ<0) {
         /* both strings are NUL-terminated */
-        if((cs=*sub++)==0) {
-            return (char16_t *)s;
+        ಆದರೆ((cs=*sub++)==0) {
+            ಹಿಂತಿರುಗಿ (char16_t *)s;
         }
-        if(*sub==0 && !U16_IS_SURROGATE(cs)) {
+        ಆದರೆ(*sub==0 && !U16_IS_SURROGATE(cs)) {
             /* the substring consists of a single, non-surrogate BMP code point */
-            return u_strchr(s, cs);
+            ಹಿಂತಿರುಗಿ u_strchr(s, cs);
         }
 
-        while((c=*s++)!=0) {
-            if(c==cs) {
+        ಆಗ((c=*s++)!=0) {
+            ಆದರೆ(c==cs) {
                 /* found first substring char16_t, compare rest */
                 p=s;
                 q=sub;
-                for(;;) {
-                    if((cq=*q)==0) {
-                        if(isMatchAtCPBoundary(start, s-1, p, nullptr)) {
-                            return (char16_t *)(s-1); /* well-formed match */
-                        } else {
-                            break; /* no match because surrogate pair is split */
+                ಗಾಗಿ(;;) {
+                    ಆದರೆ((cq=*q)==0) {
+                        ಆದರೆ(is_ಹೊಂದಿಕೆ_At_CPBoundary(ಆರಂಭ, s-1, p, ಶೂನ್ಯಸೂಚಕ)) {
+                            ಹಿಂತಿರುಗಿ (char16_t *)(s-1); /* well-formed match */
+                        } ಇಲ್ಲದಿದ್ದರೆ {
+                            ನಿಲ್ಲಿಸು; /* no match because surrogate pair is split */
                         }
                     }
-                    if((c=*p)==0) {
-                        return nullptr; /* no match, and none possible after s */
+                    ಆದರೆ((c=*p)==0) {
+                        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ; /* no match, and none possible after s */
                     }
-                    if(c!=cq) {
-                        break; /* no match */
+                    ಆದರೆ(c!=cq) {
+                        ನಿಲ್ಲಿಸು; /* no match */
                     }
                     ++p;
                     ++q;
@@ -105,81 +105,81 @@ u_strFindFirst(const char16_t* s U_LIFETIME_BOUND,
         }
 
         /* not found */
-        return nullptr;
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
 
-    if(subLength<0) {
-        subLength=u_strlen(sub);
+    ಆದರೆ(sub_ಉದ್ದಳತೆ<0) {
+        sub_ಉದ್ದಳತೆ=u_strlen(sub);
     }
-    if(subLength==0) {
-        return (char16_t *)s;
+    ಆದರೆ(sub_ಉದ್ದಳತೆ==0) {
+        ಹಿಂತಿರುಗಿ (char16_t *)s;
     }
 
     /* get sub[0] to search for it fast */
     cs=*sub++;
-    --subLength;
-    subLimit=sub+subLength;
+    --sub_ಉದ್ದಳತೆ;
+    sub_ಎಲ್ಲೆ=sub+sub_ಉದ್ದಳತೆ;
 
-    if(subLength==0 && !U16_IS_SURROGATE(cs)) {
+    ಆದರೆ(sub_ಉದ್ದಳತೆ==0 && !U16_IS_SURROGATE(cs)) {
         /* the substring consists of a single, non-surrogate BMP code point */
-        return length<0 ? u_strchr(s, cs) : u_memchr(s, cs, length);
+        ಹಿಂತಿರುಗಿ length<0 ? u_strchr(s, cs) : u_memchr(s, cs, length);
     }
 
-    if(length<0) {
+    ಆದರೆ(length<0) {
         /* s is NUL-terminated */
-        while((c=*s++)!=0) {
-            if(c==cs) {
+        ಆಗ((c=*s++)!=0) {
+            ಆದರೆ(c==cs) {
                 /* found first substring char16_t, compare rest */
                 p=s;
                 q=sub;
-                for(;;) {
-                    if(q==subLimit) {
-                        if(isMatchAtCPBoundary(start, s-1, p, nullptr)) {
-                            return (char16_t *)(s-1); /* well-formed match */
-                        } else {
-                            break; /* no match because surrogate pair is split */
+                ಗಾಗಿ(;;) {
+                    ಆದರೆ(q==sub_ಎಲ್ಲೆ) {
+                        ಆದರೆ(is_ಹೊಂದಿಕೆ_At_CPBoundary(ಆರಂಭ, s-1, p, ಶೂನ್ಯಸೂಚಕ)) {
+                            ಹಿಂತಿರುಗಿ (char16_t *)(s-1); /* well-formed match */
+                        } ಇಲ್ಲದಿದ್ದರೆ {
+                            ನಿಲ್ಲಿಸು; /* no match because surrogate pair is split */
                         }
                     }
-                    if((c=*p)==0) {
-                        return nullptr; /* no match, and none possible after s */
+                    ಆದರೆ((c=*p)==0) {
+                        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ; /* no match, and none possible after s */
                     }
-                    if(c!=*q) {
-                        break; /* no match */
+                    ಆದರೆ(c!=*q) {
+                        ನಿಲ್ಲಿಸು; /* no match */
                     }
                     ++p;
                     ++q;
                 }
             }
         }
-    } else {
-        const char16_t *limit, *preLimit;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಸ್ಥಿರಾಂಕ char16_t *ಎಲ್ಲೆ, *pre_ಎಲ್ಲೆ;
 
         /* subLength was decremented above */
-        if(length<=subLength) {
-            return nullptr; /* s is shorter than sub */
+        ಆದರೆ(length<=sub_ಉದ್ದಳತೆ) {
+            ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ; /* s is shorter than sub */
         }
 
-        limit=s+length;
+        ಎಲ್ಲೆ=s+length;
 
         /* the substring must start before preLimit */
-        preLimit=limit-subLength;
+        pre_ಎಲ್ಲೆ=ಎಲ್ಲೆ-sub_ಉದ್ದಳತೆ;
 
-        while(s!=preLimit) {
+        ಆಗ(s!=pre_ಎಲ್ಲೆ) {
             c=*s++;
-            if(c==cs) {
+            ಆದರೆ(c==cs) {
                 /* found first substring char16_t, compare rest */
                 p=s;
                 q=sub;
-                for(;;) {
-                    if(q==subLimit) {
-                        if(isMatchAtCPBoundary(start, s-1, p, limit)) {
-                            return (char16_t *)(s-1); /* well-formed match */
-                        } else {
-                            break; /* no match because surrogate pair is split */
+                ಗಾಗಿ(;;) {
+                    ಆದರೆ(q==sub_ಎಲ್ಲೆ) {
+                        ಆದರೆ(is_ಹೊಂದಿಕೆ_At_CPBoundary(ಆರಂಭ, s-1, p, ಎಲ್ಲೆ)) {
+                            ಹಿಂತಿರುಗಿ (char16_t *)(s-1); /* well-formed match */
+                        } ಇಲ್ಲದಿದ್ದರೆ {
+                            ನಿಲ್ಲಿಸು; /* no match because surrogate pair is split */
                         }
                     }
-                    if(*p!=*q) {
-                        break; /* no match */
+                    ಆದರೆ(*p!=*q) {
+                        ನಿಲ್ಲಿಸು; /* no match */
                     }
                     ++p;
                     ++q;
@@ -189,29 +189,29 @@ u_strFindFirst(const char16_t* s U_LIFETIME_BOUND,
     }
 
     /* not found */
-    return nullptr;
+    ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strstr(const char16_t* s U_LIFETIME_BOUND, const char16_t* substring) {
-    return u_strFindFirst(s, -1, substring, -1);
+u_strstr(ಸ್ಥಿರಾಂಕ char16_t* s U_LIFETIME_BOUND, ಸ್ಥಿರಾಂಕ char16_t* substring) {
+    ಹಿಂತಿರುಗಿ u_str_ಕಂಡುಹಿಡಿ_ಮೊದಲ(s, -1, substring, -1);
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strchr(const char16_t* s U_LIFETIME_BOUND, char16_t c) {
-    if(U16_IS_SURROGATE(c)) {
+u_strchr(ಸ್ಥಿರಾಂಕ char16_t* s U_LIFETIME_BOUND, char16_t c) {
+    ಆದರೆ(U16_IS_SURROGATE(c)) {
         /* make sure to not find half of a surrogate pair */
-        return u_strFindFirst(s, -1, &c, 1);
-    } else {
+        ಹಿಂತಿರುಗಿ u_str_ಕಂಡುಹಿಡಿ_ಮೊದಲ(s, -1, &c, 1);
+    } ಇಲ್ಲದಿದ್ದರೆ {
         char16_t cs;
 
         /* trivial search for a BMP code point */
-        for(;;) {
-            if((cs=*s)==c) {
-                return (char16_t *)s;
+        ಗಾಗಿ(;;) {
+            ಆದರೆ((cs=*s)==c) {
+                ಹಿಂತಿರುಗಿ (char16_t *)s;
             }
-            if(cs==0) {
-                return nullptr;
+            ಆದರೆ(cs==0) {
+                ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
             }
             ++s;
         }
@@ -219,85 +219,85 @@ u_strchr(const char16_t* s U_LIFETIME_BOUND, char16_t c) {
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strchr32(const char16_t* s U_LIFETIME_BOUND, UChar32 c) {
-    if((uint32_t)c<=U_BMP_MAX) {
+u_strchr32(ಸ್ಥಿರಾಂಕ char16_t* s U_LIFETIME_BOUND, UChar32 c) {
+    ಆದರೆ((uint32_t)c<=U_BMP_MAX) {
         /* find BMP code point */
-        return u_strchr(s, (char16_t)c);
-    } else if((uint32_t)c<=UCHAR_MAX_VALUE) {
+        ಹಿಂತಿರುಗಿ u_strchr(s, (char16_t)c);
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ((uint32_t)c<=UCHAR_MAX_ಮೌಲ್ಯ) {
         /* find supplementary code point as surrogate pair */
         char16_t cs, lead=U16_LEAD(c), trail=U16_TRAIL(c);
 
-        while((cs=*s++)!=0) {
-            if(cs==lead && *s==trail) {
-                return (char16_t *)(s-1);
+        ಆಗ((cs=*s++)!=0) {
+            ಆದರೆ(cs==lead && *s==trail) {
+                ಹಿಂತಿರುಗಿ (char16_t *)(s-1);
             }
         }
-        return nullptr;
-    } else {
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
+    } ಇಲ್ಲದಿದ್ದರೆ {
         /* not a Unicode code point, not findable */
-        return nullptr;
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_memchr(const char16_t* s U_LIFETIME_BOUND, char16_t c, int32_t count) {
-    if(count<=0) {
-        return nullptr; /* no string */
-    } else if(U16_IS_SURROGATE(c)) {
+u_memchr(ಸ್ಥಿರಾಂಕ char16_t* s U_LIFETIME_BOUND, char16_t c, int32_t count) {
+    ಆದರೆ(count<=0) {
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ; /* no string */
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(U16_IS_SURROGATE(c)) {
         /* make sure to not find half of a surrogate pair */
-        return u_strFindFirst(s, count, &c, 1);
-    } else {
+        ಹಿಂತಿರುಗಿ u_str_ಕಂಡುಹಿಡಿ_ಮೊದಲ(s, count, &c, 1);
+    } ಇಲ್ಲದಿದ್ದರೆ {
         /* trivial search for a BMP code point */
-        const char16_t *limit=s+count;
-        do {
-            if(*s==c) {
-                return (char16_t *)s;
+        ಸ್ಥಿರಾಂಕ char16_t *ಎಲ್ಲೆ=s+count;
+        ಮಾಡು {
+            ಆದರೆ(*s==c) {
+                ಹಿಂತಿರುಗಿ (char16_t *)s;
             }
-        } while(++s!=limit);
-        return nullptr;
+        } ಆಗ(++s!=ಎಲ್ಲೆ);
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_memchr32(const char16_t* s U_LIFETIME_BOUND, UChar32 c, int32_t count) {
-    if((uint32_t)c<=U_BMP_MAX) {
+u_memchr32(ಸ್ಥಿರಾಂಕ char16_t* s U_LIFETIME_BOUND, UChar32 c, int32_t count) {
+    ಆದರೆ((uint32_t)c<=U_BMP_MAX) {
         /* find BMP code point */
-        return u_memchr(s, (char16_t)c, count);
-    } else if(count<2) {
+        ಹಿಂತಿರುಗಿ u_memchr(s, (char16_t)c, count);
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(count<2) {
         /* too short for a surrogate pair */
-        return nullptr;
-    } else if((uint32_t)c<=UCHAR_MAX_VALUE) {
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ((uint32_t)c<=UCHAR_MAX_ಮೌಲ್ಯ) {
         /* find supplementary code point as surrogate pair */
-        const char16_t *limit=s+count-1; /* -1 so that we do not need a separate check for the trail unit */
+        ಸ್ಥಿರಾಂಕ char16_t *ಎಲ್ಲೆ=s+count-1; /* -1 so that we do not need a separate check for the trail unit */
         char16_t lead=U16_LEAD(c), trail=U16_TRAIL(c);
 
-        do {
-            if(*s==lead && *(s+1)==trail) {
-                return (char16_t *)s;
+        ಮಾಡು {
+            ಆದರೆ(*s==lead && *(s+1)==trail) {
+                ಹಿಂತಿರುಗಿ (char16_t *)s;
             }
-        } while(++s!=limit);
-        return nullptr;
-    } else {
+        } ಆಗ(++s!=ಎಲ್ಲೆ);
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
+    } ಇಲ್ಲದಿದ್ದರೆ {
         /* not a Unicode code point, not findable */
-        return nullptr;
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
 }
 
 /* Backward binary string search functions ---------------------------------- */
 
 U_CAPI char16_t* U_EXPORT2
-u_strFindLast(const char16_t* s U_LIFETIME_BOUND,
+u_str_ಕಂಡುಹಿಡಿ_ಕೊನೆಯ(ಸ್ಥಿರಾಂಕ char16_t* s U_LIFETIME_BOUND,
               int32_t length,
-              const char16_t* sub,
-              int32_t subLength) {
-    const char16_t *start, *limit, *p, *q, *subLimit;
+              ಸ್ಥಿರಾಂಕ char16_t* sub,
+              int32_t sub_ಉದ್ದಳತೆ) {
+    ಸ್ಥಿರಾಂಕ char16_t *ಆರಂಭ, *ಎಲ್ಲೆ, *p, *q, *sub_ಎಲ್ಲೆ;
     char16_t c, cs;
 
-    if(sub==nullptr || subLength<-1) {
-        return (char16_t *)s;
+    ಆದರೆ(sub==ಶೂನ್ಯಸೂಚಕ || sub_ಉದ್ದಳತೆ<-1) {
+        ಹಿಂತಿರುಗಿ (char16_t *)s;
     }
-    if(s==nullptr || length<-1) {
-        return nullptr;
+    ಆದರೆ(s==ಶೂನ್ಯಸೂಚಕ || length<-1) {
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
 
     /*
@@ -310,84 +310,84 @@ u_strFindLast(const char16_t* s U_LIFETIME_BOUND,
      * markus 2002oct23
      */
 
-    if(subLength<0) {
-        subLength=u_strlen(sub);
+    ಆದರೆ(sub_ಉದ್ದಳತೆ<0) {
+        sub_ಉದ್ದಳತೆ=u_strlen(sub);
     }
-    if(subLength==0) {
-        return (char16_t *)s;
+    ಆದರೆ(sub_ಉದ್ದಳತೆ==0) {
+        ಹಿಂತಿರುಗಿ (char16_t *)s;
     }
 
     /* get sub[subLength-1] to search for it fast */
-    subLimit=sub+subLength;
-    cs=*(--subLimit);
-    --subLength;
+    sub_ಎಲ್ಲೆ=sub+sub_ಉದ್ದಳತೆ;
+    cs=*(--sub_ಎಲ್ಲೆ);
+    --sub_ಉದ್ದಳತೆ;
 
-    if(subLength==0 && !U16_IS_SURROGATE(cs)) {
+    ಆದರೆ(sub_ಉದ್ದಳತೆ==0 && !U16_IS_SURROGATE(cs)) {
         /* the substring consists of a single, non-surrogate BMP code point */
-        return length<0 ? u_strrchr(s, cs) : u_memrchr(s, cs, length);
+        ಹಿಂತಿರುಗಿ length<0 ? u_strrchr(s, cs) : u_memrchr(s, cs, length);
     }
 
-    if(length<0) {
+    ಆದರೆ(length<0) {
         length=u_strlen(s);
     }
 
     /* subLength was decremented above */
-    if(length<=subLength) {
-        return nullptr; /* s is shorter than sub */
+    ಆದರೆ(length<=sub_ಉದ್ದಳತೆ) {
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ; /* s is shorter than sub */
     }
 
-    start=s;
-    limit=s+length;
+    ಆರಂಭ=s;
+    ಎಲ್ಲೆ=s+length;
 
     /* the substring must start no later than s+subLength */
-    s+=subLength;
+    s+=sub_ಉದ್ದಳತೆ;
 
-    while(s!=limit) {
-        c=*(--limit);
-        if(c==cs) {
+    ಆಗ(s!=ಎಲ್ಲೆ) {
+        c=*(--ಎಲ್ಲೆ);
+        ಆದರೆ(c==cs) {
             /* found last substring char16_t, compare rest */
-            p=limit;
-            q=subLimit;
-            for(;;) {
-                if(q==sub) {
-                    if(isMatchAtCPBoundary(start, p, limit+1, start+length)) {
-                        return (char16_t *)p; /* well-formed match */
-                    } else {
-                        break; /* no match because surrogate pair is split */
+            p=ಎಲ್ಲೆ;
+            q=sub_ಎಲ್ಲೆ;
+            ಗಾಗಿ(;;) {
+                ಆದರೆ(q==sub) {
+                    ಆದರೆ(is_ಹೊಂದಿಕೆ_At_CPBoundary(ಆರಂಭ, p, ಎಲ್ಲೆ+1, ಆರಂಭ+length)) {
+                        ಹಿಂತಿರುಗಿ (char16_t *)p; /* well-formed match */
+                    } ಇಲ್ಲದಿದ್ದರೆ {
+                        ನಿಲ್ಲಿಸು; /* no match because surrogate pair is split */
                     }
                 }
-                if(*(--p)!=*(--q)) {
-                    break; /* no match */
+                ಆದರೆ(*(--p)!=*(--q)) {
+                    ನಿಲ್ಲಿಸು; /* no match */
                 }
             }
         }
     }
 
     /* not found */
-    return nullptr;
+    ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strrstr(const char16_t* s U_LIFETIME_BOUND, const char16_t* substring) {
-    return u_strFindLast(s, -1, substring, -1);
+u_strrstr(ಸ್ಥಿರಾಂಕ char16_t* s U_LIFETIME_BOUND, ಸ್ಥಿರಾಂಕ char16_t* substring) {
+    ಹಿಂತಿರುಗಿ u_str_ಕಂಡುಹಿಡಿ_ಕೊನೆಯ(s, -1, substring, -1);
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strrchr(const char16_t* s U_LIFETIME_BOUND, char16_t c) {
-    if(U16_IS_SURROGATE(c)) {
+u_strrchr(ಸ್ಥಿರಾಂಕ char16_t* s U_LIFETIME_BOUND, char16_t c) {
+    ಆದರೆ(U16_IS_SURROGATE(c)) {
         /* make sure to not find half of a surrogate pair */
-        return u_strFindLast(s, -1, &c, 1);
-    } else {
-        const char16_t *result=nullptr;
+        ಹಿಂತಿರುಗಿ u_str_ಕಂಡುಹಿಡಿ_ಕೊನೆಯ(s, -1, &c, 1);
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಸ್ಥಿರಾಂಕ char16_t *ಫಲಿತಾಂಶ=ಶೂನ್ಯಸೂಚಕ;
         char16_t cs;
 
         /* trivial search for a BMP code point */
-        for(;;) {
-            if((cs=*s)==c) {
-                result=s;
+        ಗಾಗಿ(;;) {
+            ಆದರೆ((cs=*s)==c) {
+                ಫಲಿತಾಂಶ=s;
             }
-            if(cs==0) {
-                return (char16_t *)result;
+            ಆದರೆ(cs==0) {
+                ಹಿಂತಿರುಗಿ (char16_t *)ಫಲಿತಾಂಶ;
             }
             ++s;
         }
@@ -395,68 +395,68 @@ u_strrchr(const char16_t* s U_LIFETIME_BOUND, char16_t c) {
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strrchr32(const char16_t* s U_LIFETIME_BOUND, UChar32 c) {
-    if((uint32_t)c<=U_BMP_MAX) {
+u_strrchr32(ಸ್ಥಿರಾಂಕ char16_t* s U_LIFETIME_BOUND, UChar32 c) {
+    ಆದರೆ((uint32_t)c<=U_BMP_MAX) {
         /* find BMP code point */
-        return u_strrchr(s, (char16_t)c);
-    } else if((uint32_t)c<=UCHAR_MAX_VALUE) {
+        ಹಿಂತಿರುಗಿ u_strrchr(s, (char16_t)c);
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ((uint32_t)c<=UCHAR_MAX_ಮೌಲ್ಯ) {
         /* find supplementary code point as surrogate pair */
-        const char16_t *result=nullptr;
+        ಸ್ಥಿರಾಂಕ char16_t *ಫಲಿತಾಂಶ=ಶೂನ್ಯಸೂಚಕ;
         char16_t cs, lead=U16_LEAD(c), trail=U16_TRAIL(c);
 
-        while((cs=*s++)!=0) {
-            if(cs==lead && *s==trail) {
-                result=s-1;
+        ಆಗ((cs=*s++)!=0) {
+            ಆದರೆ(cs==lead && *s==trail) {
+                ಫಲಿತಾಂಶ=s-1;
             }
         }
-        return (char16_t *)result;
-    } else {
+        ಹಿಂತಿರುಗಿ (char16_t *)ಫಲಿತಾಂಶ;
+    } ಇಲ್ಲದಿದ್ದರೆ {
         /* not a Unicode code point, not findable */
-        return nullptr;
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_memrchr(const char16_t* s U_LIFETIME_BOUND, char16_t c, int32_t count) {
-    if(count<=0) {
-        return nullptr; /* no string */
-    } else if(U16_IS_SURROGATE(c)) {
+u_memrchr(ಸ್ಥಿರಾಂಕ char16_t* s U_LIFETIME_BOUND, char16_t c, int32_t count) {
+    ಆದರೆ(count<=0) {
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ; /* no string */
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(U16_IS_SURROGATE(c)) {
         /* make sure to not find half of a surrogate pair */
-        return u_strFindLast(s, count, &c, 1);
-    } else {
+        ಹಿಂತಿರುಗಿ u_str_ಕಂಡುಹಿಡಿ_ಕೊನೆಯ(s, count, &c, 1);
+    } ಇಲ್ಲದಿದ್ದರೆ {
         /* trivial search for a BMP code point */
-        const char16_t *limit=s+count;
-        do {
-            if(*(--limit)==c) {
-                return (char16_t *)limit;
+        ಸ್ಥಿರಾಂಕ char16_t *ಎಲ್ಲೆ=s+count;
+        ಮಾಡು {
+            ಆದರೆ(*(--ಎಲ್ಲೆ)==c) {
+                ಹಿಂತಿರುಗಿ (char16_t *)ಎಲ್ಲೆ;
             }
-        } while(s!=limit);
-        return nullptr;
+        } ಆಗ(s!=ಎಲ್ಲೆ);
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_memrchr32(const char16_t* s U_LIFETIME_BOUND, UChar32 c, int32_t count) {
-    if((uint32_t)c<=U_BMP_MAX) {
+u_memrchr32(ಸ್ಥಿರಾಂಕ char16_t* s U_LIFETIME_BOUND, UChar32 c, int32_t count) {
+    ಆದರೆ((uint32_t)c<=U_BMP_MAX) {
         /* find BMP code point */
-        return u_memrchr(s, (char16_t)c, count);
-    } else if(count<2) {
+        ಹಿಂತಿರುಗಿ u_memrchr(s, (char16_t)c, count);
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(count<2) {
         /* too short for a surrogate pair */
-        return nullptr;
-    } else if((uint32_t)c<=UCHAR_MAX_VALUE) {
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ((uint32_t)c<=UCHAR_MAX_ಮೌಲ್ಯ) {
         /* find supplementary code point as surrogate pair */
-        const char16_t *limit=s+count-1;
+        ಸ್ಥಿರಾಂಕ char16_t *ಎಲ್ಲೆ=s+count-1;
         char16_t lead=U16_LEAD(c), trail=U16_TRAIL(c);
 
-        do {
-            if(*limit==trail && *(limit-1)==lead) {
-                return (char16_t *)(limit-1);
+        ಮಾಡು {
+            ಆದರೆ(*ಎಲ್ಲೆ==trail && *(ಎಲ್ಲೆ-1)==lead) {
+                ಹಿಂತಿರುಗಿ (char16_t *)(ಎಲ್ಲೆ-1);
             }
-        } while(s!=--limit);
-        return nullptr;
-    } else {
+        } ಆಗ(s!=--ಎಲ್ಲೆ);
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
+    } ಇಲ್ಲದಿದ್ದರೆ {
         /* not a Unicode code point, not findable */
-        return nullptr;
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
 }
 
@@ -468,68 +468,68 @@ u_memrchr32(const char16_t* s U_LIFETIME_BOUND, UChar32 c, int32_t count) {
  * is (polarity==true) or is not (false) contained in the matchSet.
  * Return -(string length)-1 if there is no such code point.
  */
-static int32_t
-_matchFromSet(const char16_t *string, const char16_t *matchSet, UBool polarity) {
-    int32_t matchLen, matchBMPLen, strItr, matchItr;
-    UChar32 stringCh, matchCh;
+ಸ್ಥಿರ int32_t
+ಹೊಂದಿಕೆ_From_ಗಣ(ಸ್ಥಿರಾಂಕ char16_t *string, ಸ್ಥಿರಾಂಕ char16_t *ಹೊಂದಿಕೆ_ಗಣ, UBool polarity) {
+    int32_t ಹೊಂದಿಕೆ_Len, ಹೊಂದಿಕೆ_BMPLen, strItr, ಹೊಂದಿಕೆ_Itr;
+    UChar32 stringCh, ಹೊಂದಿಕೆ_Ch;
     char16_t c, c2;
 
     /* first part of matchSet contains only BMP code points */
-    matchBMPLen = 0;
-    while((c = matchSet[matchBMPLen]) != 0 && U16_IS_SINGLE(c)) {
-        ++matchBMPLen;
+    ಹೊಂದಿಕೆ_BMPLen = 0;
+    ಆಗ((c = ಹೊಂದಿಕೆ_ಗಣ[ಹೊಂದಿಕೆ_BMPLen]) != 0 && U16_IS_SINGLE(c)) {
+        ++ಹೊಂದಿಕೆ_BMPLen;
     }
 
     /* second part of matchSet contains BMP and supplementary code points */
-    matchLen = matchBMPLen;
-    while(matchSet[matchLen] != 0) {
-        ++matchLen;
+    ಹೊಂದಿಕೆ_Len = ಹೊಂದಿಕೆ_BMPLen;
+    ಆಗ(ಹೊಂದಿಕೆ_ಗಣ[ಹೊಂದಿಕೆ_Len] != 0) {
+        ++ಹೊಂದಿಕೆ_Len;
     }
 
-    for(strItr = 0; (c = string[strItr]) != 0;) {
+    ಗಾಗಿ(strItr = 0; (c = string[strItr]) != 0;) {
         ++strItr;
-        if(U16_IS_SINGLE(c)) {
-            if(polarity) {
-                for(matchItr = 0; matchItr < matchLen; ++matchItr) {
-                    if(c == matchSet[matchItr]) {
-                        return strItr - 1; /* one matches */
+        ಆದರೆ(U16_IS_SINGLE(c)) {
+            ಆದರೆ(polarity) {
+                ಗಾಗಿ(ಹೊಂದಿಕೆ_Itr = 0; ಹೊಂದಿಕೆ_Itr < ಹೊಂದಿಕೆ_Len; ++ಹೊಂದಿಕೆ_Itr) {
+                    ಆದರೆ(c == ಹೊಂದಿಕೆ_ಗಣ[ಹೊಂದಿಕೆ_Itr]) {
+                        ಹಿಂತಿರುಗಿ strItr - 1; /* one matches */
                     }
                 }
-            } else {
-                for(matchItr = 0; matchItr < matchLen; ++matchItr) {
-                    if(c == matchSet[matchItr]) {
-                        goto endloop;
+            } ಇಲ್ಲದಿದ್ದರೆ {
+                ಗಾಗಿ(ಹೊಂದಿಕೆ_Itr = 0; ಹೊಂದಿಕೆ_Itr < ಹೊಂದಿಕೆ_Len; ++ಹೊಂದಿಕೆ_Itr) {
+                    ಆದರೆ(c == ಹೊಂದಿಕೆ_ಗಣ[ಹೊಂದಿಕೆ_Itr]) {
+                        ಹೋಗು endloop;
                     }
                 }
-                return strItr - 1; /* none matches */
+                ಹಿಂತಿರುಗಿ strItr - 1; /* none matches */
             }
-        } else {
+        } ಇಲ್ಲದಿದ್ದರೆ {
             /*
              * No need to check for string length before U16_IS_TRAIL
              * because c2 could at worst be the terminating NUL.
              */
-            if(U16_IS_SURROGATE_LEAD(c) && U16_IS_TRAIL(c2 = string[strItr])) {
+            ಆದರೆ(U16_IS_SURROGATE_LEAD(c) && U16_IS_TRAIL(c2 = string[strItr])) {
                 ++strItr;
                 stringCh = U16_GET_SUPPLEMENTARY(c, c2);
-            } else {
+            } ಇಲ್ಲದಿದ್ದರೆ {
                 stringCh = c; /* unpaired trail surrogate */
             }
 
-            if(polarity) {
-                for(matchItr = matchBMPLen; matchItr < matchLen;) {
-                    U16_NEXT(matchSet, matchItr, matchLen, matchCh);
-                    if(stringCh == matchCh) {
-                        return strItr - U16_LENGTH(stringCh); /* one matches */
+            ಆದರೆ(polarity) {
+                ಗಾಗಿ(ಹೊಂದಿಕೆ_Itr = ಹೊಂದಿಕೆ_BMPLen; ಹೊಂದಿಕೆ_Itr < ಹೊಂದಿಕೆ_Len;) {
+                    U16_ಮುಂದಿನ(ಹೊಂದಿಕೆ_ಗಣ, ಹೊಂದಿಕೆ_Itr, ಹೊಂದಿಕೆ_Len, ಹೊಂದಿಕೆ_Ch);
+                    ಆದರೆ(stringCh == ಹೊಂದಿಕೆ_Ch) {
+                        ಹಿಂತಿರುಗಿ strItr - U16_ಉದ್ದಳತೆ(stringCh); /* one matches */
                     }
                 }
-            } else {
-                for(matchItr = matchBMPLen; matchItr < matchLen;) {
-                    U16_NEXT(matchSet, matchItr, matchLen, matchCh);
-                    if(stringCh == matchCh) {
-                        goto endloop;
+            } ಇಲ್ಲದಿದ್ದರೆ {
+                ಗಾಗಿ(ಹೊಂದಿಕೆ_Itr = ಹೊಂದಿಕೆ_BMPLen; ಹೊಂದಿಕೆ_Itr < ಹೊಂದಿಕೆ_Len;) {
+                    U16_ಮುಂದಿನ(ಹೊಂದಿಕೆ_ಗಣ, ಹೊಂದಿಕೆ_Itr, ಹೊಂದಿಕೆ_Len, ಹೊಂದಿಕೆ_Ch);
+                    ಆದರೆ(stringCh == ಹೊಂದಿಕೆ_Ch) {
+                        ಹೋಗು endloop;
                     }
                 }
-                return strItr - U16_LENGTH(stringCh); /* none matches */
+                ಹಿಂತಿರುಗಿ strItr - U16_ಉದ್ದಳತೆ(stringCh); /* none matches */
             }
         }
 endloop:
@@ -537,156 +537,156 @@ endloop:
     }
 
     /* Didn't find it. */
-    return -strItr-1;
+    ಹಿಂತಿರುಗಿ -strItr-1;
 }
 
 /* Search for a codepoint in a string that matches one of the matchSet codepoints. */
 U_CAPI char16_t* U_EXPORT2
-u_strpbrk(const char16_t* string U_LIFETIME_BOUND, const char16_t* matchSet)
+u_strpbrk(ಸ್ಥಿರಾಂಕ char16_t* string U_LIFETIME_BOUND, ಸ್ಥಿರಾಂಕ char16_t* ಹೊಂದಿಕೆ_ಗಣ)
 {
-    int32_t idx = _matchFromSet(string, matchSet, true);
-    if(idx >= 0) {
-        return (char16_t *)string + idx;
-    } else {
-        return nullptr;
+    int32_t idx = ಹೊಂದಿಕೆ_From_ಗಣ(string, ಹೊಂದಿಕೆ_ಗಣ, ನಿಜ);
+    ಆದರೆ(idx >= 0) {
+        ಹಿಂತಿರುಗಿ (char16_t *)string + idx;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
 }
 
 /* Search for a codepoint in a string that matches one of the matchSet codepoints. */
 U_CAPI int32_t U_EXPORT2
-u_strcspn(const char16_t *string, const char16_t *matchSet)
+u_strcspn(ಸ್ಥಿರಾಂಕ char16_t *string, ಸ್ಥಿರಾಂಕ char16_t *ಹೊಂದಿಕೆ_ಗಣ)
 {
-    int32_t idx = _matchFromSet(string, matchSet, true);
-    if(idx >= 0) {
-        return idx;
-    } else {
-        return -idx - 1; /* == u_strlen(string) */
+    int32_t idx = ಹೊಂದಿಕೆ_From_ಗಣ(string, ಹೊಂದಿಕೆ_ಗಣ, ನಿಜ);
+    ಆದರೆ(idx >= 0) {
+        ಹಿಂತಿರುಗಿ idx;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಹಿಂತಿರುಗಿ -idx - 1; /* == u_strlen(string) */
     }
 }
 
 /* Search for a codepoint in a string that does not match one of the matchSet codepoints. */
 U_CAPI int32_t U_EXPORT2
-u_strspn(const char16_t *string, const char16_t *matchSet)
+u_strspn(ಸ್ಥಿರಾಂಕ char16_t *string, ಸ್ಥಿರಾಂಕ char16_t *ಹೊಂದಿಕೆ_ಗಣ)
 {
-    int32_t idx = _matchFromSet(string, matchSet, false);
-    if(idx >= 0) {
-        return idx;
-    } else {
-        return -idx - 1; /* == u_strlen(string) */
+    int32_t idx = ಹೊಂದಿಕೆ_From_ಗಣ(string, ಹೊಂದಿಕೆ_ಗಣ, ಸುಳ್ಳು);
+    ಆದರೆ(idx >= 0) {
+        ಹಿಂತಿರುಗಿ idx;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಹಿಂತಿರುಗಿ -idx - 1; /* == u_strlen(string) */
     }
 }
 
 /* ----- Text manipulation functions --- */
 
 U_CAPI char16_t* U_EXPORT2
-u_strtok_r(char16_t* src U_LIFETIME_BOUND, const char16_t* delim, char16_t** saveState)
+u_strtok_r(char16_t* src U_LIFETIME_BOUND, ಸ್ಥಿರಾಂಕ char16_t* delim, char16_t** saveState)
 {
-    char16_t *tokSource;
-    char16_t *nextToken;
+    char16_t *tok_ಮೂಲ;
+    char16_t *ಮುಂದಿನ_Token;
     uint32_t nonDelimIdx;
 
     /* If saveState is nullptr, the user messed up. */
-    if (src != nullptr) {
-        tokSource = src;
+    ಆದರೆ (src != ಶೂನ್ಯಸೂಚಕ) {
+        tok_ಮೂಲ = src;
         *saveState = src; /* Set to "src" in case there are no delimiters */
     }
-    else if (*saveState) {
-        tokSource = *saveState;
+    ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (*saveState) {
+        tok_ಮೂಲ = *saveState;
     }
-    else {
+    ಇಲ್ಲದಿದ್ದರೆ {
         /* src == nullptr && *saveState == nullptr */
         /* This shouldn't happen. We already finished tokenizing. */
-        return nullptr;
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
 
     /* Skip initial delimiters */
-    nonDelimIdx = u_strspn(tokSource, delim);
-    tokSource = &tokSource[nonDelimIdx];
+    nonDelimIdx = u_strspn(tok_ಮೂಲ, delim);
+    tok_ಮೂಲ = &tok_ಮೂಲ[nonDelimIdx];
 
-    if (*tokSource) {
-        nextToken = u_strpbrk(tokSource, delim);
-        if (nextToken != nullptr) {
+    ಆದರೆ (*tok_ಮೂಲ) {
+        ಮುಂದಿನ_Token = u_strpbrk(tok_ಮೂಲ, delim);
+        ಆದರೆ (ಮುಂದಿನ_Token != ಶೂನ್ಯಸೂಚಕ) {
             /* Create a token */
-            *(nextToken++) = 0;
-            *saveState = nextToken;
-            return tokSource;
+            *(ಮುಂದಿನ_Token++) = 0;
+            *saveState = ಮುಂದಿನ_Token;
+            ಹಿಂತಿರುಗಿ tok_ಮೂಲ;
         }
-        else if (*saveState) {
+        ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (*saveState) {
             /* Return the last token */
-            *saveState = nullptr;
-            return tokSource;
+            *saveState = ಶೂನ್ಯಸೂಚಕ;
+            ಹಿಂತಿರುಗಿ tok_ಮೂಲ;
         }
     }
-    else {
+    ಇಲ್ಲದಿದ್ದರೆ {
         /* No tokens were found. Only delimiters were left. */
-        *saveState = nullptr;
+        *saveState = ಶೂನ್ಯಸೂಚಕ;
     }
-    return nullptr;
+    ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
 }
 
 /* Miscellaneous functions -------------------------------------------------- */
 
 U_CAPI char16_t* U_EXPORT2
-u_strcat(char16_t* dst U_LIFETIME_BOUND, const char16_t* src)
+u_strcat(char16_t* dst U_LIFETIME_BOUND, ಸ್ಥಿರಾಂಕ char16_t* src)
 {
     char16_t *anchor = dst;            /* save a pointer to start of dst */
 
-    while(*dst != 0) {              /* To end of first string          */
+    ಆಗ(*dst != 0) {              /* To end of first string          */
         ++dst;
     }
-    while((*(dst++) = *(src++)) != 0) {     /* copy string 2 over              */
+    ಆಗ((*(dst++) = *(src++)) != 0) {     /* copy string 2 over              */
     }
 
-    return anchor;
+    ಹಿಂತಿರುಗಿ anchor;
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strncat(char16_t* dst U_LIFETIME_BOUND, const char16_t* src, int32_t n)
+u_strncat(char16_t* dst U_LIFETIME_BOUND, ಸ್ಥಿರಾಂಕ char16_t* src, int32_t n)
 {
-    if(n > 0) {
+    ಆದರೆ(n > 0) {
         char16_t *anchor = dst;            /* save a pointer to start of dst */
 
-        while(*dst != 0) {              /* To end of first string          */
+        ಆಗ(*dst != 0) {              /* To end of first string          */
             ++dst;
         }
-        while((*dst = *src) != 0) {     /* copy string 2 over              */
+        ಆಗ((*dst = *src) != 0) {     /* copy string 2 over              */
             ++dst;
-            if(--n == 0) {
+            ಆದರೆ(--n == 0) {
                 *dst = 0;
-                break;
+                ನಿಲ್ಲಿಸು;
             }
             ++src;
         }
 
-        return anchor;
-    } else {
-        return dst;
+        ಹಿಂತಿರುಗಿ anchor;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಹಿಂತಿರುಗಿ dst;
     }
 }
 
 /* ----- Text property functions --- */
 
 U_CAPI int32_t   U_EXPORT2
-u_strcmp(const char16_t *s1,
-    const char16_t *s2)
+u_strcmp(ಸ್ಥಿರಾಂಕ char16_t *s1,
+    ಸ್ಥಿರಾಂಕ char16_t *s2)
 {
     char16_t  c1, c2;
 
-    for(;;) {
+    ಗಾಗಿ(;;) {
         c1=*s1++;
         c2=*s2++;
-        if (c1 != c2 || c1 == 0) {
-            break;
+        ಆದರೆ (c1 != c2 || c1 == 0) {
+            ನಿಲ್ಲಿಸು;
         }
     }
-    return (int32_t)c1 - (int32_t)c2;
+    ಹಿಂತಿರುಗಿ (int32_t)c1 - (int32_t)c2;
 }
 
 U_CFUNC int32_t U_EXPORT2
-uprv_strCompare(const char16_t *s1, int32_t length1,
-                const char16_t *s2, int32_t length2,
-                UBool strncmpStyle, UBool codePointOrder) {
-    const char16_t *start1, *start2, *limit1, *limit2;
+uprv_strCompare(ಸ್ಥಿರಾಂಕ char16_t *s1, int32_t length1,
+                ಸ್ಥಿರಾಂಕ char16_t *s2, int32_t length2,
+                UBool strncmpStyle, UBool ಸಂಕೇತ_ಬಿಂದು_ಕ್ರಮ) {
+    ಸ್ಥಿರಾಂಕ char16_t *start1, *start2, *limit1, *limit2;
     char16_t c1, c2;
 
     /* setup for fix-up */
@@ -694,48 +694,48 @@ uprv_strCompare(const char16_t *s1, int32_t length1,
     start2=s2;
 
     /* compare identical prefixes - they do not need to be fixed up */
-    if(length1<0 && length2<0) {
+    ಆದರೆ(length1<0 && length2<0) {
         /* strcmp style, both NUL-terminated */
-        if(s1==s2) {
-            return 0;
+        ಆದರೆ(s1==s2) {
+            ಹಿಂತಿರುಗಿ 0;
         }
 
-        for(;;) {
+        ಗಾಗಿ(;;) {
             c1=*s1;
             c2=*s2;
-            if(c1!=c2) {
-                break;
+            ಆದರೆ(c1!=c2) {
+                ನಿಲ್ಲಿಸು;
             }
-            if(c1==0) {
-                return 0;
+            ಆದರೆ(c1==0) {
+                ಹಿಂತಿರುಗಿ 0;
             }
             ++s1;
             ++s2;
         }
 
         /* setup for fix-up */
-        limit1=limit2=nullptr;
-    } else if(strncmpStyle) {
+        limit1=limit2=ಶೂನ್ಯಸೂಚಕ;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(strncmpStyle) {
         /* special handling for strncmp, assume length1==length2>=0 but also check for NUL */
-        if(s1==s2) {
-            return 0;
+        ಆದರೆ(s1==s2) {
+            ಹಿಂತಿರುಗಿ 0;
         }
 
         limit1=start1+length1;
 
-        for(;;) {
+        ಗಾಗಿ(;;) {
             /* both lengths are same, check only one limit */
-            if(s1==limit1) {
-                return 0;
+            ಆದರೆ(s1==limit1) {
+                ಹಿಂತಿರುಗಿ 0;
             }
 
             c1=*s1;
             c2=*s2;
-            if(c1!=c2) {
-                break;
+            ಆದರೆ(c1!=c2) {
+                ನಿಲ್ಲಿಸು;
             }
-            if(c1==0) {
-                return 0;
+            ಆದರೆ(c1==0) {
+                ಹಿಂತಿರುಗಿ 0;
             }
             ++s1;
             ++s2;
@@ -743,43 +743,43 @@ uprv_strCompare(const char16_t *s1, int32_t length1,
 
         /* setup for fix-up */
         limit2=start2+length1; /* use length1 here, too, to enforce assumption */
-    } else {
+    } ಇಲ್ಲದಿದ್ದರೆ {
         /* memcmp/UnicodeString style, both length-specified */
-        int32_t lengthResult;
+        int32_t ಉದ್ದಳತೆ_ಫಲಿತಾಂಶ;
 
-        if(length1<0) {
+        ಆದರೆ(length1<0) {
             length1=u_strlen(s1);
         }
-        if(length2<0) {
+        ಆದರೆ(length2<0) {
             length2=u_strlen(s2);
         }
 
         /* limit1=start1+min(length1, length2) */
-        if(length1<length2) {
-            lengthResult=-1;
+        ಆದರೆ(length1<length2) {
+            ಉದ್ದಳತೆ_ಫಲಿತಾಂಶ=-1;
             limit1=start1+length1;
-        } else if(length1==length2) {
-            lengthResult=0;
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(length1==length2) {
+            ಉದ್ದಳತೆ_ಫಲಿತಾಂಶ=0;
             limit1=start1+length1;
-        } else /* length1>length2 */ {
-            lengthResult=1;
+        } ಇಲ್ಲದಿದ್ದರೆ /* length1>length2 */ {
+            ಉದ್ದಳತೆ_ಫಲಿತಾಂಶ=1;
             limit1=start1+length2;
         }
 
-        if(s1==s2) {
-            return lengthResult;
+        ಆದರೆ(s1==s2) {
+            ಹಿಂತಿರುಗಿ ಉದ್ದಳತೆ_ಫಲಿತಾಂಶ;
         }
 
-        for(;;) {
+        ಗಾಗಿ(;;) {
             /* check pseudo-limit */
-            if(s1==limit1) {
-                return lengthResult;
+            ಆದರೆ(s1==limit1) {
+                ಹಿಂತಿರುಗಿ ಉದ್ದಳತೆ_ಫಲಿತಾಂಶ;
             }
 
             c1=*s1;
             c2=*s2;
-            if(c1!=c2) {
-                break;
+            ಆದರೆ(c1!=c2) {
+                ನಿಲ್ಲಿಸು;
             }
             ++s1;
             ++s2;
@@ -791,31 +791,31 @@ uprv_strCompare(const char16_t *s1, int32_t length1,
     }
 
     /* if both values are in or above the surrogate range, fix them up */
-    if(c1>=0xd800 && c2>=0xd800 && codePointOrder) {
+    ಆದರೆ(c1>=0xd800 && c2>=0xd800 && ಸಂಕೇತ_ಬಿಂದು_ಕ್ರಮ) {
         /* subtract 0x2800 from BMP code points to make them smaller than supplementary ones */
-        if(
+        ಆದರೆ(
             (c1<=0xdbff && (s1+1)!=limit1 && U16_IS_TRAIL(*(s1+1))) ||
             (U16_IS_TRAIL(c1) && start1!=s1 && U16_IS_LEAD(*(s1-1)))
         ) {
             /* part of a surrogate pair, leave >=d800 */
-        } else {
+        } ಇಲ್ಲದಿದ್ದರೆ {
             /* BMP code point - may be surrogate code point - make <d800 */
             c1-=0x2800;
         }
 
-        if(
+        ಆದರೆ(
             (c2<=0xdbff && (s2+1)!=limit2 && U16_IS_TRAIL(*(s2+1))) ||
             (U16_IS_TRAIL(c2) && start2!=s2 && U16_IS_LEAD(*(s2-1)))
         ) {
             /* part of a surrogate pair, leave >=d800 */
-        } else {
+        } ಇಲ್ಲದಿದ್ದರೆ {
             /* BMP code point - may be surrogate code point - make <d800 */
             c2-=0x2800;
         }
     }
 
     /* now c1 and c2 are in the requested (code unit or code point) order */
-    return (int32_t)c1-(int32_t)c2;
+    ಹಿಂತಿರುಗಿ (int32_t)c1-(int32_t)c2;
 }
 
 /*
@@ -825,62 +825,62 @@ uprv_strCompare(const char16_t *s1, int32_t length1,
  * have stopped.
  */
 U_CAPI int32_t U_EXPORT2
-u_strCompareIter(UCharIterator *iter1, UCharIterator *iter2, UBool codePointOrder) {
+u_strCompareIter(UCharIterator *iter1, UCharIterator *iter2, UBool ಸಂಕೇತ_ಬಿಂದು_ಕ್ರಮ) {
     UChar32 c1, c2;
 
     /* argument checking */
-    if(iter1==nullptr || iter2==nullptr) {
-        return 0; /* bad arguments */
+    ಆದರೆ(iter1==ಶೂನ್ಯಸೂಚಕ || iter2==ಶೂನ್ಯಸೂಚಕ) {
+        ಹಿಂತಿರುಗಿ 0; /* bad arguments */
     }
-    if(iter1==iter2) {
-        return 0; /* identical iterators */
+    ಆದರೆ(iter1==iter2) {
+        ಹಿಂತಿರುಗಿ 0; /* identical iterators */
     }
 
     /* reset iterators to start? */
-    iter1->move(iter1, 0, UITER_START);
-    iter2->move(iter2, 0, UITER_START);
+    iter1->move(iter1, 0, UITER_ಆರಂಭ);
+    iter2->move(iter2, 0, UITER_ಆರಂಭ);
 
     /* compare identical prefixes - they do not need to be fixed up */
-    for(;;) {
+    ಗಾಗಿ(;;) {
         c1=iter1->next(iter1);
         c2=iter2->next(iter2);
-        if(c1!=c2) {
-            break;
+        ಆದರೆ(c1!=c2) {
+            ನಿಲ್ಲಿಸು;
         }
-        if(c1==-1) {
-            return 0;
+        ಆದರೆ(c1==-1) {
+            ಹಿಂತಿರುಗಿ 0;
         }
     }
 
     /* if both values are in or above the surrogate range, fix them up */
-    if(c1>=0xd800 && c2>=0xd800 && codePointOrder) {
+    ಆದರೆ(c1>=0xd800 && c2>=0xd800 && ಸಂಕೇತ_ಬಿಂದು_ಕ್ರಮ) {
         /* subtract 0x2800 from BMP code points to make them smaller than supplementary ones */
-        if(
+        ಆದರೆ(
             (c1<=0xdbff && U16_IS_TRAIL(iter1->current(iter1))) ||
-            (U16_IS_TRAIL(c1) && (iter1->previous(iter1), U16_IS_LEAD(iter1->previous(iter1))))
+            (U16_IS_TRAIL(c1) && (iter1->ಹಿಂದಿನ(iter1), U16_IS_LEAD(iter1->ಹಿಂದಿನ(iter1))))
         ) {
             /* part of a surrogate pair, leave >=d800 */
-        } else {
+        } ಇಲ್ಲದಿದ್ದರೆ {
             /* BMP code point - may be surrogate code point - make <d800 */
             c1-=0x2800;
         }
 
-        if(
+        ಆದರೆ(
             (c2<=0xdbff && U16_IS_TRAIL(iter2->current(iter2))) ||
-            (U16_IS_TRAIL(c2) && (iter2->previous(iter2), U16_IS_LEAD(iter2->previous(iter2))))
+            (U16_IS_TRAIL(c2) && (iter2->ಹಿಂದಿನ(iter2), U16_IS_LEAD(iter2->ಹಿಂದಿನ(iter2))))
         ) {
             /* part of a surrogate pair, leave >=d800 */
-        } else {
+        } ಇಲ್ಲದಿದ್ದರೆ {
             /* BMP code point - may be surrogate code point - make <d800 */
             c2-=0x2800;
         }
     }
 
     /* now c1 and c2 are in the requested (code unit or code point) order */
-    return (int32_t)c1-(int32_t)c2;
+    ಹಿಂತಿರುಗಿ (int32_t)c1-(int32_t)c2;
 }
 
-#if 0
+#ಆದರೆ 0
 /*
  * u_strCompareIter() does not leave the iterators _on_ the different units.
  * This is possible but would cost a few extra indirect function calls to back
@@ -897,134 +897,134 @@ u_strCompareIter(UCharIterator *iter1, UCharIterator *iter2, UBool codePointOrde
  *
  * The following fragment is part of what would need to be done for backing up.
  */
-void fragment {
+ಶೂನ್ಯ fragment {
         /* iff a surrogate is part of a surrogate pair, leave >=d800 */
-        if(c1<=0xdbff) {
-            if(!U16_IS_TRAIL(iter1->current(iter1))) {
+        ಆದರೆ(c1<=0xdbff) {
+            ಆದರೆ(!U16_IS_TRAIL(iter1->current(iter1))) {
                 /* lead surrogate code point - make <d800 */
                 c1-=0x2800;
             }
-        } else if(c1<=0xdfff) {
-            int32_t idx=iter1->getIndex(iter1, UITER_CURRENT);
-            iter1->previous(iter1); /* ==c1 */
-            if(!U16_IS_LEAD(iter1->previous(iter1))) {
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(c1<=0xdfff) {
+            int32_t idx=iter1->get_ಸೂಚ್ಯಂಕ(iter1, UITER_CURRENT);
+            iter1->ಹಿಂದಿನ(iter1); /* ==c1 */
+            ಆದರೆ(!U16_IS_LEAD(iter1->ಹಿಂದಿನ(iter1))) {
                 /* trail surrogate code point - make <d800 */
                 c1-=0x2800;
             }
             /* go back to behind where the difference is */
             iter1->move(iter1, idx, UITER_ZERO);
-        } else /* 0xe000<=c1<=0xffff */ {
+        } ಇಲ್ಲದಿದ್ದರೆ /* 0xe000<=c1<=0xffff */ {
             /* BMP code point - make <d800 */
             c1-=0x2800;
         }
 }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 U_CAPI int32_t U_EXPORT2
-u_strCompare(const char16_t *s1, int32_t length1,
-             const char16_t *s2, int32_t length2,
-             UBool codePointOrder) {
+u_strCompare(ಸ್ಥಿರಾಂಕ char16_t *s1, int32_t length1,
+             ಸ್ಥಿರಾಂಕ char16_t *s2, int32_t length2,
+             UBool ಸಂಕೇತ_ಬಿಂದು_ಕ್ರಮ) {
     /* argument checking */
-    if(s1==nullptr || length1<-1 || s2==nullptr || length2<-1) {
-        return 0;
+    ಆದರೆ(s1==ಶೂನ್ಯಸೂಚಕ || length1<-1 || s2==ಶೂನ್ಯಸೂಚಕ || length2<-1) {
+        ಹಿಂತಿರುಗಿ 0;
     }
-    return uprv_strCompare(s1, length1, s2, length2, false, codePointOrder);
+    ಹಿಂತಿರುಗಿ uprv_strCompare(s1, length1, s2, length2, ಸುಳ್ಳು, ಸಂಕೇತ_ಬಿಂದು_ಕ್ರಮ);
 }
 
 /* String compare in code point order - u_strcmp() compares in code unit order. */
 U_CAPI int32_t U_EXPORT2
-u_strcmpCodePointOrder(const char16_t *s1, const char16_t *s2) {
-    return uprv_strCompare(s1, -1, s2, -1, false, true);
+u_strcmp_ಸಂಕೇತ_ಬಿಂದು_ಕ್ರಮ(ಸ್ಥಿರಾಂಕ char16_t *s1, ಸ್ಥಿರಾಂಕ char16_t *s2) {
+    ಹಿಂತಿರುಗಿ uprv_strCompare(s1, -1, s2, -1, ಸುಳ್ಳು, ನಿಜ);
 }
 
 U_CAPI int32_t   U_EXPORT2
-u_strncmp(const char16_t  *s1,
-     const char16_t  *s2,
+u_strncmp(ಸ್ಥಿರಾಂಕ char16_t  *s1,
+     ಸ್ಥಿರಾಂಕ char16_t  *s2,
      int32_t     n) 
 {
-    if(n > 0) {
+    ಆದರೆ(n > 0) {
         int32_t rc;
-        for(;;) {
+        ಗಾಗಿ(;;) {
             rc = (int32_t)*s1 - (int32_t)*s2;
-            if(rc != 0 || *s1 == 0 || --n == 0) {
-                return rc;
+            ಆದರೆ(rc != 0 || *s1 == 0 || --n == 0) {
+                ಹಿಂತಿರುಗಿ rc;
             }
             ++s1;
             ++s2;
         }
-    } else {
-        return 0;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಹಿಂತಿರುಗಿ 0;
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-u_strncmpCodePointOrder(const char16_t *s1, const char16_t *s2, int32_t n) {
-    return uprv_strCompare(s1, n, s2, n, true, true);
+u_strncmp_ಸಂಕೇತ_ಬಿಂದು_ಕ್ರಮ(ಸ್ಥಿರಾಂಕ char16_t *s1, ಸ್ಥಿರಾಂಕ char16_t *s2, int32_t n) {
+    ಹಿಂತಿರುಗಿ uprv_strCompare(s1, n, s2, n, ನಿಜ, ನಿಜ);
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strcpy(char16_t* dst U_LIFETIME_BOUND, const char16_t* src)
+u_strcpy(char16_t* dst U_LIFETIME_BOUND, ಸ್ಥಿರಾಂಕ char16_t* src)
 {
     char16_t *anchor = dst;            /* save a pointer to start of dst */
 
-    while((*(dst++) = *(src++)) != 0) {     /* copy string 2 over              */
+    ಆಗ((*(dst++) = *(src++)) != 0) {     /* copy string 2 over              */
     }
 
-    return anchor;
+    ಹಿಂತಿರುಗಿ anchor;
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_strncpy(char16_t* dst U_LIFETIME_BOUND, const char16_t* src, int32_t n) {
+u_strncpy(char16_t* dst U_LIFETIME_BOUND, ಸ್ಥಿರಾಂಕ char16_t* src, int32_t n) {
     char16_t *anchor = dst;            /* save a pointer to start of dst */
 
     /* copy string 2 over */
-    while(n > 0 && (*(dst++) = *(src++)) != 0) {
+    ಆಗ(n > 0 && (*(dst++) = *(src++)) != 0) {
         --n;
     }
 
-    return anchor;
+    ಹಿಂತಿರುಗಿ anchor;
 }
 
 U_CAPI int32_t   U_EXPORT2
-u_strlen(const char16_t *s)
+u_strlen(ಸ್ಥಿರಾಂಕ char16_t *s)
 {
-#if U_SIZEOF_WCHAR_T == U_SIZEOF_UCHAR
-    return (int32_t)uprv_wcslen((const wchar_t *)s);
-#else
-    const char16_t *t = s;
-    while(*t != 0) {
+#ಆದರೆ U_SIZEOF_WCHAR_T == U_SIZEOF_UCHAR
+    ಹಿಂತಿರುಗಿ (int32_t)uprv_wcslen((ಸ್ಥಿರಾಂಕ wchar_t *)s);
+#ಇಲ್ಲದಿದ್ದರೆ
+    ಸ್ಥಿರಾಂಕ char16_t *t = s;
+    ಆಗ(*t != 0) {
       ++t;
     }
-    return t - s;
-#endif
+    ಹಿಂತಿರುಗಿ t - s;
+#ಆದರೆ_ಅಂತ್ಯ
 }
 
 U_CAPI int32_t U_EXPORT2
-u_countChar32(const char16_t *s, int32_t length) {
+u_ಎಣಿಕೆ_Char32(ಸ್ಥಿರಾಂಕ char16_t *s, int32_t length) {
     int32_t count;
 
-    if(s==nullptr || length<-1) {
-        return 0;
+    ಆದರೆ(s==ಶೂನ್ಯಸೂಚಕ || length<-1) {
+        ಹಿಂತಿರುಗಿ 0;
     }
 
     count=0;
-    if(length>=0) {
-        while(length>0) {
+    ಆದರೆ(length>=0) {
+        ಆಗ(length>0) {
             ++count;
-            if(U16_IS_LEAD(*s) && length>=2 && U16_IS_TRAIL(*(s+1))) {
+            ಆದರೆ(U16_IS_LEAD(*s) && length>=2 && U16_IS_TRAIL(*(s+1))) {
                 s+=2;
                 length-=2;
-            } else {
+            } ಇಲ್ಲದಿದ್ದರೆ {
                 ++s;
                 --length;
             }
         }
-    } else /* length==-1 */ {
+    } ಇಲ್ಲದಿದ್ದರೆ /* length==-1 */ {
         char16_t c;
 
-        for(;;) {
-            if((c=*s++)==0) {
-                break;
+        ಗಾಗಿ(;;) {
+            ಆದರೆ((c=*s++)==0) {
+                ನಿಲ್ಲಿಸು;
             }
             ++count;
 
@@ -1032,55 +1032,55 @@ u_countChar32(const char16_t *s, int32_t length) {
              * sufficient to look ahead one because of UTF-16;
              * safe to look ahead one because at worst that would be the terminating NUL
              */
-            if(U16_IS_LEAD(c) && U16_IS_TRAIL(*s)) {
+            ಆದರೆ(U16_IS_LEAD(c) && U16_IS_TRAIL(*s)) {
                 ++s;
             }
         }
     }
-    return count;
+    ಹಿಂತಿರುಗಿ count;
 }
 
 U_CAPI UBool U_EXPORT2
-u_strHasMoreChar32Than(const char16_t *s, int32_t length, int32_t number) {
+u_str_Has_ಇನ್ನಷ್ಟು_Char32_Than(ಸ್ಥಿರಾಂಕ char16_t *s, int32_t length, int32_t number) {
 
-    if(number<0) {
-        return true;
+    ಆದರೆ(number<0) {
+        ಹಿಂತಿರುಗಿ ನಿಜ;
     }
-    if(s==nullptr || length<-1) {
-        return false;
+    ಆದರೆ(s==ಶೂನ್ಯಸೂಚಕ || length<-1) {
+        ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
     }
 
-    if(length==-1) {
+    ಆದರೆ(length==-1) {
         /* s is NUL-terminated */
         char16_t c;
 
         /* count code points until they exceed */
-        for(;;) {
-            if((c=*s++)==0) {
-                return false;
+        ಗಾಗಿ(;;) {
+            ಆದರೆ((c=*s++)==0) {
+                ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
             }
-            if(number==0) {
-                return true;
+            ಆದರೆ(number==0) {
+                ಹಿಂತಿರುಗಿ ನಿಜ;
             }
-            if(U16_IS_LEAD(c) && U16_IS_TRAIL(*s)) {
+            ಆದರೆ(U16_IS_LEAD(c) && U16_IS_TRAIL(*s)) {
                 ++s;
             }
             --number;
         }
-    } else {
+    } ಇಲ್ಲದಿದ್ದರೆ {
         /* length>=0 known */
-        const char16_t *limit;
+        ಸ್ಥಿರಾಂಕ char16_t *ಎಲ್ಲೆ;
         int32_t maxSupplementary;
 
         /* s contains at least (length+1)/2 code points: <=2 UChars per cp */
-        if(((length+1)/2)>number) {
-            return true;
+        ಆದರೆ(((length+1)/2)>number) {
+            ಹಿಂತಿರುಗಿ ನಿಜ;
         }
 
         /* check if s does not even contain enough UChars */
         maxSupplementary=length-number;
-        if(maxSupplementary<=0) {
-            return false;
+        ಆದರೆ(maxSupplementary<=0) {
+            ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
         }
         /* there are maxSupplementary=length-number more UChars than asked-for code points */
 
@@ -1088,19 +1088,19 @@ u_strHasMoreChar32Than(const char16_t *s, int32_t length, int32_t number) {
          * count code points until they exceed and also check that there are
          * no more than maxSupplementary supplementary code points (char16_t pairs)
          */
-        limit=s+length;
-        for(;;) {
-            if(s==limit) {
-                return false;
+        ಎಲ್ಲೆ=s+length;
+        ಗಾಗಿ(;;) {
+            ಆದರೆ(s==ಎಲ್ಲೆ) {
+                ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
             }
-            if(number==0) {
-                return true;
+            ಆದರೆ(number==0) {
+                ಹಿಂತಿರುಗಿ ನಿಜ;
             }
-            if(U16_IS_LEAD(*s++) && s!=limit && U16_IS_TRAIL(*s)) {
+            ಆದರೆ(U16_IS_LEAD(*s++) && s!=ಎಲ್ಲೆ && U16_IS_TRAIL(*s)) {
                 ++s;
-                if(--maxSupplementary<=0) {
+                ಆದರೆ(--maxSupplementary<=0) {
                     /* too many pairs - too few code points */
-                    return false;
+                    ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
                 }
             }
             --number;
@@ -1109,61 +1109,61 @@ u_strHasMoreChar32Than(const char16_t *s, int32_t length, int32_t number) {
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_memcpy(char16_t* dest U_LIFETIME_BOUND, const char16_t* src, int32_t count) {
-    if(count > 0) {
+u_memcpy(char16_t* dest U_LIFETIME_BOUND, ಸ್ಥಿರಾಂಕ char16_t* src, int32_t count) {
+    ಆದರೆ(count > 0) {
         uprv_memcpy(dest, src, (size_t)count*U_SIZEOF_UCHAR);
     }
-    return dest;
+    ಹಿಂತಿರುಗಿ dest;
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_memmove(char16_t* dest U_LIFETIME_BOUND, const char16_t* src, int32_t count) {
-    if(count > 0) {
+u_memmove(char16_t* dest U_LIFETIME_BOUND, ಸ್ಥಿರಾಂಕ char16_t* src, int32_t count) {
+    ಆದರೆ(count > 0) {
         uprv_memmove(dest, src, (size_t)count*U_SIZEOF_UCHAR);
     }
-    return dest;
+    ಹಿಂತಿರುಗಿ dest;
 }
 
 U_CAPI char16_t* U_EXPORT2
 u_memset(char16_t* dest U_LIFETIME_BOUND, char16_t c, int32_t count) {
-    if(count > 0) {
+    ಆದರೆ(count > 0) {
         char16_t *ptr = dest;
-        char16_t *limit = dest + count;
+        char16_t *ಎಲ್ಲೆ = dest + count;
 
-        while (ptr < limit) {
+        ಆಗ (ptr < ಎಲ್ಲೆ) {
             *(ptr++) = c;
         }
     }
-    return dest;
+    ಹಿಂತಿರುಗಿ dest;
 }
 
 U_CAPI int32_t U_EXPORT2
-u_memcmp(const char16_t *buf1, const char16_t *buf2, int32_t count) {
-    if(count > 0) {
-        const char16_t *limit = buf1 + count;
-        int32_t result;
+u_memcmp(ಸ್ಥಿರಾಂಕ char16_t *buf1, ಸ್ಥಿರಾಂಕ char16_t *buf2, int32_t count) {
+    ಆದರೆ(count > 0) {
+        ಸ್ಥಿರಾಂಕ char16_t *ಎಲ್ಲೆ = buf1 + count;
+        int32_t ಫಲಿತಾಂಶ;
 
-        while (buf1 < limit) {
-            result = (int32_t)(uint16_t)*buf1 - (int32_t)(uint16_t)*buf2;
-            if (result != 0) {
-                return result;
+        ಆಗ (buf1 < ಎಲ್ಲೆ) {
+            ಫಲಿತಾಂಶ = (int32_t)(uint16_t)*buf1 - (int32_t)(uint16_t)*buf2;
+            ಆದರೆ (ಫಲಿತಾಂಶ != 0) {
+                ಹಿಂತಿರುಗಿ ಫಲಿತಾಂಶ;
             }
             buf1++;
             buf2++;
         }
     }
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
 U_CAPI int32_t U_EXPORT2
-u_memcmpCodePointOrder(const char16_t *s1, const char16_t *s2, int32_t count) {
-    return uprv_strCompare(s1, count, s2, count, false, true);
+u_memcmp_ಸಂಕೇತ_ಬಿಂದು_ಕ್ರಮ(ಸ್ಥಿರಾಂಕ char16_t *s1, ಸ್ಥಿರಾಂಕ char16_t *s2, int32_t count) {
+    ಹಿಂತಿರುಗಿ uprv_strCompare(s1, count, s2, count, ಸುಳ್ಳು, ನಿಜ);
 }
 
 /* u_unescape & support fns ------------------------------------------------- */
 
 /* This map must be in ASCENDING ORDER OF THE ESCAPE CODE */
-static const char16_t UNESCAPE_MAP[] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ char16_t UNESCAPE_MAP[] = {
     /*"   0x22, 0x22 */
     /*'   0x27, 0x27 */
     /*?   0x3F, 0x3F */
@@ -1177,28 +1177,28 @@ static const char16_t UNESCAPE_MAP[] = {
     /*t*/ 0x74, 0x09,
     /*v*/ 0x76, 0x0b
 };
-enum { UNESCAPE_MAP_LENGTH = UPRV_LENGTHOF(UNESCAPE_MAP) };
+ಎಣಿಕೆ { UNESCAPE_MAP_ಉದ್ದಳತೆ = UPRV_LENGTHOF(UNESCAPE_MAP) };
 
 /* Convert one octal digit to a numeric value 0..7, or -1 on failure */
-static int32_t _digit8(char16_t c) {
-    if (c >= u'0' && c <= u'7') {
-        return c - u'0';
+ಸ್ಥಿರ int32_t _digit8(char16_t c) {
+    ಆದರೆ (c >= u'0' && c <= u'7') {
+        ಹಿಂತಿರುಗಿ c - u'0';
     }
-    return -1;
+    ಹಿಂತಿರುಗಿ -1;
 }
 
 /* Convert one hex digit to a numeric value 0..F, or -1 on failure */
-static int32_t _digit16(char16_t c) {
-    if (c >= u'0' && c <= u'9') {
-        return c - u'0';
+ಸ್ಥಿರ int32_t _digit16(char16_t c) {
+    ಆದರೆ (c >= u'0' && c <= u'9') {
+        ಹಿಂತಿರುಗಿ c - u'0';
     }
-    if (c >= u'A' && c <= u'F') {
-        return c - (u'A' - 10);
+    ಆದರೆ (c >= u'A' && c <= u'F') {
+        ಹಿಂತಿರುಗಿ c - (u'A' - 10);
     }
-    if (c >= u'a' && c <= u'f') {
-        return c - (u'a' - 10);
+    ಆದರೆ (c >= u'a' && c <= u'f') {
+        ಹಿಂತಿರುಗಿ c - (u'a' - 10);
     }
-    return -1;
+    ಹಿಂತಿರುಗಿ -1;
 }
 
 /* Parse a single escape sequence.  Although this method deals in
@@ -1206,221 +1206,221 @@ static int32_t _digit16(char16_t c) {
  * be used from C contexts. */
 U_CAPI UChar32 U_EXPORT2
 u_unescapeAt(UNESCAPE_CHAR_AT charAt,
-             int32_t *offset,
+             int32_t *ಸ್ಥಾನಾಂತರ,
              int32_t length,
-             void *context) {
+             ಶೂನ್ಯ *context) {
 
-    int32_t start = *offset;
+    int32_t ಆರಂಭ = *ಸ್ಥಾನಾಂತರ;
     UChar32 c;
-    UChar32 result = 0;
+    UChar32 ಫಲಿತಾಂಶ = 0;
     int8_t n = 0;
     int8_t minDig = 0;
     int8_t maxDig = 0;
-    int8_t bitsPerDigit = 4; 
+    int8_t ಬಿಟ್ಟುಗಳು_ಪ್ರತಿ_Digit = 4; 
     int32_t dig;
-    UBool braces = false;
+    UBool braces = ಸುಳ್ಳು;
 
     /* Check that offset is in range */
-    if (*offset < 0 || *offset >= length) {
-        goto err;
+    ಆದರೆ (*ಸ್ಥಾನಾಂತರ < 0 || *ಸ್ಥಾನಾಂತರ >= length) {
+        ಹೋಗು err;
     }
 
     /* Fetch first char16_t after '\\' */
-    c = charAt((*offset)++, context);
+    c = charAt((*ಸ್ಥಾನಾಂತರ)++, context);
 
     /* Convert hexadecimal and octal escapes */
-    switch (c) {
-    case u'u':
+    ಆಯ್ಕೆ (c) {
+    ಸ್ಥಿತಿ u'u':
         minDig = maxDig = 4;
-        break;
-    case u'U':
+        ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ u'U':
         minDig = maxDig = 8;
-        break;
-    case u'x':
+        ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ u'x':
         minDig = 1;
-        if (*offset < length && charAt(*offset, context) == u'{') {
-            ++(*offset);
-            braces = true;
+        ಆದರೆ (*ಸ್ಥಾನಾಂತರ < length && charAt(*ಸ್ಥಾನಾಂತರ, context) == u'{') {
+            ++(*ಸ್ಥಾನಾಂತರ);
+            braces = ನಿಜ;
             maxDig = 8;
-        } else {
+        } ಇಲ್ಲದಿದ್ದರೆ {
             maxDig = 2;
         }
-        break;
-    default:
+        ನಿಲ್ಲಿಸು;
+    ಪೂರ್ವನಿಯೋಜಿತ:
         dig = _digit8(c);
-        if (dig >= 0) {
+        ಆದರೆ (dig >= 0) {
             minDig = 1;
             maxDig = 3;
             n = 1; /* Already have first octal digit */
-            bitsPerDigit = 3;
-            result = dig;
+            ಬಿಟ್ಟುಗಳು_ಪ್ರತಿ_Digit = 3;
+            ಫಲಿತಾಂಶ = dig;
         }
-        break;
+        ನಿಲ್ಲಿಸು;
     }
-    if (minDig != 0) {
-        while (*offset < length && n < maxDig) {
-            c = charAt(*offset, context);
-            dig = (bitsPerDigit == 3) ? _digit8(c) : _digit16(c);
-            if (dig < 0) {
-                break;
+    ಆದರೆ (minDig != 0) {
+        ಆಗ (*ಸ್ಥಾನಾಂತರ < length && n < maxDig) {
+            c = charAt(*ಸ್ಥಾನಾಂತರ, context);
+            dig = (ಬಿಟ್ಟುಗಳು_ಪ್ರತಿ_Digit == 3) ? _digit8(c) : _digit16(c);
+            ಆದರೆ (dig < 0) {
+                ನಿಲ್ಲಿಸು;
             }
-            result = (result << bitsPerDigit) | dig;
-            ++(*offset);
+            ಫಲಿತಾಂಶ = (ಫಲಿತಾಂಶ << ಬಿಟ್ಟುಗಳು_ಪ್ರತಿ_Digit) | dig;
+            ++(*ಸ್ಥಾನಾಂತರ);
             ++n;
         }
-        if (n < minDig) {
-            goto err;
+        ಆದರೆ (n < minDig) {
+            ಹೋಗು err;
         }
-        if (braces) {
-            if (c != u'}') {
-                goto err;
+        ಆದರೆ (braces) {
+            ಆದರೆ (c != u'}') {
+                ಹೋಗು err;
             }
-            ++(*offset);
+            ++(*ಸ್ಥಾನಾಂತರ);
         }
-        if (result < 0 || result >= 0x110000) {
-            goto err;
+        ಆದರೆ (ಫಲಿತಾಂಶ < 0 || ಫಲಿತಾಂಶ >= 0x110000) {
+            ಹೋಗು err;
         }
         /* If an escape sequence specifies a lead surrogate, see if
          * there is a trail surrogate after it, either as an escape or
          * as a literal.  If so, join them up into a supplementary.
          */
-        if (*offset < length && U16_IS_LEAD(result)) {
-            int32_t ahead = *offset + 1;
-            c = charAt(*offset, context);
-            if (c == u'\\' && ahead < length) {
+        ಆದರೆ (*ಸ್ಥಾನಾಂತರ < length && U16_IS_LEAD(ಫಲಿತಾಂಶ)) {
+            int32_t ahead = *ಸ್ಥಾನಾಂತರ + 1;
+            c = charAt(*ಸ್ಥಾನಾಂತರ, context);
+            ಆದರೆ (c == u'\\' && ahead < length) {
                 // Calling ourselves recursively may cause a stack overflow if
                 // we have repeated escaped lead surrogates.
                 // Limit the length to 11 ("x{0000DFFF}") after ahead.
-                int32_t tailLimit = ahead + 11;
-                if (tailLimit > length) {
-                    tailLimit = length;
+                int32_t ಬಾಲ_ಎಲ್ಲೆ = ahead + 11;
+                ಆದರೆ (ಬಾಲ_ಎಲ್ಲೆ > length) {
+                    ಬಾಲ_ಎಲ್ಲೆ = length;
                 }
-                c = u_unescapeAt(charAt, &ahead, tailLimit, context);
+                c = u_unescapeAt(charAt, &ahead, ಬಾಲ_ಎಲ್ಲೆ, context);
             }
-            if (U16_IS_TRAIL(c)) {
-                *offset = ahead;
-                result = U16_GET_SUPPLEMENTARY(result, c);
+            ಆದರೆ (U16_IS_TRAIL(c)) {
+                *ಸ್ಥಾನಾಂತರ = ahead;
+                ಫಲಿತಾಂಶ = U16_GET_SUPPLEMENTARY(ಫಲಿತಾಂಶ, c);
             }
         }
-        return result;
+        ಹಿಂತಿರುಗಿ ಫಲಿತಾಂಶ;
     }
 
     /* Convert C-style escapes in table */
-    for (int32_t i=0; i<UNESCAPE_MAP_LENGTH; i+=2) {
-        if (c == UNESCAPE_MAP[i]) {
-            return UNESCAPE_MAP[i+1];
-        } else if (c < UNESCAPE_MAP[i]) {
-            break;
+    ಗಾಗಿ (int32_t i=0; i<UNESCAPE_MAP_ಉದ್ದಳತೆ; i+=2) {
+        ಆದರೆ (c == UNESCAPE_MAP[i]) {
+            ಹಿಂತಿರುಗಿ UNESCAPE_MAP[i+1];
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (c < UNESCAPE_MAP[i]) {
+            ನಿಲ್ಲಿಸು;
         }
     }
 
     /* Map \cX to control-X: X & 0x1F */
-    if (c == u'c' && *offset < length) {
-        c = charAt((*offset)++, context);
-        if (U16_IS_LEAD(c) && *offset < length) {
-            char16_t c2 = charAt(*offset, context);
-            if (U16_IS_TRAIL(c2)) {
-                ++(*offset);
+    ಆದರೆ (c == u'c' && *ಸ್ಥಾನಾಂತರ < length) {
+        c = charAt((*ಸ್ಥಾನಾಂತರ)++, context);
+        ಆದರೆ (U16_IS_LEAD(c) && *ಸ್ಥಾನಾಂತರ < length) {
+            char16_t c2 = charAt(*ಸ್ಥಾನಾಂತರ, context);
+            ಆದರೆ (U16_IS_TRAIL(c2)) {
+                ++(*ಸ್ಥಾನಾಂತರ);
                 c = U16_GET_SUPPLEMENTARY(c, c2);
             }
         }
-        return 0x1F & c;
+        ಹಿಂತಿರುಗಿ 0x1F & c;
     }
 
     /* If no special forms are recognized, then consider
      * the backslash to generically escape the next character.
      * Deal with surrogate pairs. */
-    if (U16_IS_LEAD(c) && *offset < length) {
-        char16_t c2 = charAt(*offset, context);
-        if (U16_IS_TRAIL(c2)) {
-            ++(*offset);
-            return U16_GET_SUPPLEMENTARY(c, c2);
+    ಆದರೆ (U16_IS_LEAD(c) && *ಸ್ಥಾನಾಂತರ < length) {
+        char16_t c2 = charAt(*ಸ್ಥಾನಾಂತರ, context);
+        ಆದರೆ (U16_IS_TRAIL(c2)) {
+            ++(*ಸ್ಥಾನಾಂತರ);
+            ಹಿಂತಿರುಗಿ U16_GET_SUPPLEMENTARY(c, c2);
         }
     }
-    return c;
+    ಹಿಂತಿರುಗಿ c;
 
  err:
     /* Invalid escape sequence */
-    *offset = start; /* Reset to initial value */
-    return (UChar32)0xFFFFFFFF;
+    *ಸ್ಥಾನಾಂತರ = ಆರಂಭ; /* Reset to initial value */
+    ಹಿಂತಿರುಗಿ (UChar32)0xFFFFFFFF;
 }
 
 /* u_unescapeAt() callback to return a char16_t from a char* */
-static char16_t U_CALLCONV
-_charPtr_charAt(int32_t offset, void *context) {
+ಸ್ಥಿರ char16_t U_CALLCONV
+_charPtr_charAt(int32_t ಸ್ಥಾನಾಂತರ, ಶೂನ್ಯ *context) {
     char16_t c16;
     /* It would be more efficient to access the invariant tables
      * directly but there is no API for that. */
-    u_charsToUChars(static_cast<char*>(context) + offset, &c16, 1);
-    return c16;
+    u_chars_ಗಮ್ಯ_UChars(static_cast<ಅಕ್ಷರ*>(context) + ಸ್ಥಾನಾಂತರ, &c16, 1);
+    ಹಿಂತಿರುಗಿ c16;
 }
 
 /* Append an escape-free segment of the text; used by u_unescape() */
-static void _appendUChars(char16_t *dest, int32_t destCapacity,
-                          const char *src, int32_t srcLen) {
-    if (destCapacity < 0) {
-        destCapacity = 0;
+ಸ್ಥಿರ ಶೂನ್ಯ _appendUChars(char16_t *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ,
+                          ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *src, int32_t srcLen) {
+    ಆದರೆ (dest_ಸಾಮರ್ಥ್ಯ < 0) {
+        dest_ಸಾಮರ್ಥ್ಯ = 0;
     }
-    if (srcLen > destCapacity) {
-        srcLen = destCapacity;
+    ಆದರೆ (srcLen > dest_ಸಾಮರ್ಥ್ಯ) {
+        srcLen = dest_ಸಾಮರ್ಥ್ಯ;
     }
-    u_charsToUChars(src, dest, srcLen);
+    u_chars_ಗಮ್ಯ_UChars(src, dest, srcLen);
 }
 
 /* Do an invariant conversion of char* -> char16_t*, with escape parsing */
 U_CAPI int32_t U_EXPORT2
-u_unescape(const char *src, char16_t *dest, int32_t destCapacity) {
-    const char *segment = src;
+u_unescape(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *src, char16_t *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ) {
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *segment = src;
     int32_t i = 0;
-    char c;
+    ಅಕ್ಷರ c;
 
-    while ((c=*src) != 0) {
+    ಆಗ ((c=*src) != 0) {
         /* '\\' intentionally written as compiler-specific
          * character constant to correspond to compiler-specific
          * char* constants. */
-        if (c == '\\') {
+        ಆದರೆ (c == '\\') {
             int32_t lenParsed = 0;
             UChar32 c32;
-            if (src != segment) {
-                if (dest != nullptr) {
-                    _appendUChars(dest + i, destCapacity - i,
+            ಆದರೆ (src != segment) {
+                ಆದರೆ (dest != ಶೂನ್ಯಸೂಚಕ) {
+                    _appendUChars(dest + i, dest_ಸಾಮರ್ಥ್ಯ - i,
                                   segment, (int32_t)(src - segment));
                 }
                 i += (int32_t)(src - segment);
             }
             ++src; /* advance past '\\' */
-            c32 = u_unescapeAt(_charPtr_charAt, &lenParsed, (int32_t)uprv_strlen(src), const_cast<char*>(src));
-            if (lenParsed == 0) {
-                goto err;
+            c32 = u_unescapeAt(_charPtr_charAt, &lenParsed, (int32_t)uprv_strlen(src), const_cast<ಅಕ್ಷರ*>(src));
+            ಆದರೆ (lenParsed == 0) {
+                ಹೋಗು err;
             }
             src += lenParsed; /* advance past escape seq. */
-            if (dest != nullptr && U16_LENGTH(c32) <= (destCapacity - i)) {
+            ಆದರೆ (dest != ಶೂನ್ಯಸೂಚಕ && U16_ಉದ್ದಳತೆ(c32) <= (dest_ಸಾಮರ್ಥ್ಯ - i)) {
                 U16_APPEND_UNSAFE(dest, i, c32);
-            } else {
-                i += U16_LENGTH(c32);
+            } ಇಲ್ಲದಿದ್ದರೆ {
+                i += U16_ಉದ್ದಳತೆ(c32);
             }
             segment = src;
-        } else {
+        } ಇಲ್ಲದಿದ್ದರೆ {
             ++src;
         }
     }
-    if (src != segment) {
-        if (dest != nullptr) {
-            _appendUChars(dest + i, destCapacity - i,
+    ಆದರೆ (src != segment) {
+        ಆದರೆ (dest != ಶೂನ್ಯಸೂಚಕ) {
+            _appendUChars(dest + i, dest_ಸಾಮರ್ಥ್ಯ - i,
                           segment, (int32_t)(src - segment));
         }
         i += (int32_t)(src - segment);
     }
-    if (dest != nullptr && i < destCapacity) {
+    ಆದರೆ (dest != ಶೂನ್ಯಸೂಚಕ && i < dest_ಸಾಮರ್ಥ್ಯ) {
         dest[i] = 0;
     }
-    return i;
+    ಹಿಂತಿರುಗಿ i;
 
  err:
-    if (dest != nullptr && destCapacity > 0) {
+    ಆದರೆ (dest != ಶೂನ್ಯಸೂಚಕ && dest_ಸಾಮರ್ಥ್ಯ > 0) {
         *dest = 0;
     }
-    return 0;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
 /* NUL-termination of strings ----------------------------------------------- */
@@ -1429,59 +1429,59 @@ u_unescape(const char *src, char16_t *dest, int32_t destCapacity) {
  * NUL-terminate a string no matter what its type.
  * Set warning and error codes accordingly.
  */
-#define __TERMINATE_STRING(dest, destCapacity, length, pErrorCode) UPRV_BLOCK_MACRO_BEGIN { \
-    if(pErrorCode!=nullptr && U_SUCCESS(*pErrorCode)) {                    \
+#ವ್ಯಾಖ್ಯಾನಿಸು __TERMINATE_STRING(dest, dest_ಸಾಮರ್ಥ್ಯ, length, p_Error_ಸಂಕೇತ) UPRV_ಖಂಡ_MACRO_BEGIN { \
+    ಆದರೆ(p_Error_ಸಂಕೇತ!=ಶೂನ್ಯಸೂಚಕ && U_SUCCESS(*p_Error_ಸಂಕೇತ)) {                    \
         /* not a public function, so no complete argument checking */   \
                                                                         \
-        if(length<0) {                                                  \
+        ಆದರೆ(length<0) {                                                  \
             /* assume that the caller handles this */                   \
-        } else if(length<destCapacity) {                                \
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(length<dest_ಸಾಮರ್ಥ್ಯ) {                                \
             /* NUL-terminate the string, the NUL fits */                \
             dest[length]=0;                                             \
             /* unset the not-terminated warning but leave all others */ \
-            if(*pErrorCode==U_STRING_NOT_TERMINATED_WARNING) {          \
-                *pErrorCode=U_ZERO_ERROR;                               \
+            ಆದರೆ(*p_Error_ಸಂಕೇತ==U_STRING_NOT_TERMINATED_WARNING) {          \
+                *p_Error_ಸಂಕೇತ=U_ZERO_ERROR;                               \
             }                                                           \
-        } else if(length==destCapacity) {                               \
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(length==dest_ಸಾಮರ್ಥ್ಯ) {                               \
             /* unable to NUL-terminate, but the string itself fit - set a warning code */ \
-            *pErrorCode=U_STRING_NOT_TERMINATED_WARNING;                \
-        } else /* length>destCapacity */ {                              \
+            *p_Error_ಸಂಕೇತ=U_STRING_NOT_TERMINATED_WARNING;                \
+        } ಇಲ್ಲದಿದ್ದರೆ /* length>destCapacity */ {                              \
             /* even the string itself did not fit - set an error code */ \
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;                        \
+            *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;                        \
         }                                                               \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ಖಂಡ_MACRO_ಕೊನೆ
 
 U_CAPI char16_t U_EXPORT2
-u_asciiToUpper(char16_t c) {
-    if (u'a' <= c && c <= u'z') {
+u_ascii_ಗಮ್ಯ_ಊರ್ಧ್ವ(char16_t c) {
+    ಆದರೆ (u'a' <= c && c <= u'z') {
         c = c + u'A' - u'a';
     }
-    return c;
+    ಹಿಂತಿರುಗಿ c;
 }
 
 U_CAPI int32_t U_EXPORT2
-u_terminateUChars(char16_t *dest, int32_t destCapacity, int32_t length, UErrorCode *pErrorCode) {
-    __TERMINATE_STRING(dest, destCapacity, length, pErrorCode);
-    return length;
+u_terminateUChars(char16_t *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ, int32_t length, UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    __TERMINATE_STRING(dest, dest_ಸಾಮರ್ಥ್ಯ, length, p_Error_ಸಂಕೇತ);
+    ಹಿಂತಿರುಗಿ length;
 }
 
 U_CAPI int32_t U_EXPORT2
-u_terminateChars(char *dest, int32_t destCapacity, int32_t length, UErrorCode *pErrorCode) {
-    __TERMINATE_STRING(dest, destCapacity, length, pErrorCode);
-    return length;
+u_terminateChars(ಅಕ್ಷರ *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ, int32_t length, UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    __TERMINATE_STRING(dest, dest_ಸಾಮರ್ಥ್ಯ, length, p_Error_ಸಂಕೇತ);
+    ಹಿಂತಿರುಗಿ length;
 }
 
 U_CAPI int32_t U_EXPORT2
-u_terminateUChar32s(UChar32 *dest, int32_t destCapacity, int32_t length, UErrorCode *pErrorCode) {
-    __TERMINATE_STRING(dest, destCapacity, length, pErrorCode);
-    return length;
+u_terminateUChar32s(UChar32 *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ, int32_t length, UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    __TERMINATE_STRING(dest, dest_ಸಾಮರ್ಥ್ಯ, length, p_Error_ಸಂಕೇತ);
+    ಹಿಂತಿರುಗಿ length;
 }
 
 U_CAPI int32_t U_EXPORT2
-u_terminateWChars(wchar_t *dest, int32_t destCapacity, int32_t length, UErrorCode *pErrorCode) {
-    __TERMINATE_STRING(dest, destCapacity, length, pErrorCode);
-    return length;
+u_terminateWChars(wchar_t *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ, int32_t length, UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    __TERMINATE_STRING(dest, dest_ಸಾಮರ್ಥ್ಯ, length, p_Error_ಸಂಕೇತ);
+    ಹಿಂತಿರುಗಿ length;
 }
 
 // Compute the hash code for a string -------------------------------------- ***
@@ -1498,33 +1498,33 @@ u_terminateWChars(wchar_t *dest, int32_t destCapacity, int32_t length, UErrorCod
   the output range. [LIU]
 */
 
-#define STRING_HASH(TYPE, STR, STRLEN, DEREF) UPRV_BLOCK_MACRO_BEGIN { \
+#ವ್ಯಾಖ್ಯಾನಿಸು STRING_HASH(TYPE, STR, STRLEN, DEREF) UPRV_ಖಂಡ_MACRO_BEGIN { \
     uint32_t hash = 0;                        \
-    const TYPE *p = (const TYPE*) STR;        \
-    if (p != nullptr) {                          \
+    ಸ್ಥಿರಾಂಕ TYPE *p = (ಸ್ಥಿರಾಂಕ TYPE*) STR;        \
+    ಆದರೆ (p != ಶೂನ್ಯಸೂಚಕ) {                          \
         int32_t len = (int32_t)(STRLEN);      \
         int32_t inc = ((len - 32) / 32) + 1;  \
-        const TYPE *limit = p + len;          \
-        while (p<limit) {                     \
+        ಸ್ಥಿರಾಂಕ TYPE *ಎಲ್ಲೆ = p + len;          \
+        ಆಗ (p<ಎಲ್ಲೆ) {                     \
             hash = (hash * 37) + DEREF;       \
             p += inc;                         \
         }                                     \
     }                                         \
-    return static_cast<int32_t>(hash);        \
-} UPRV_BLOCK_MACRO_END
+    ಹಿಂತಿರುಗಿ static_cast<int32_t>(hash);        \
+} UPRV_ಖಂಡ_MACRO_ಕೊನೆ
 
 /* Used by UnicodeString to compute its hashcode - Not public API. */
 U_CAPI int32_t U_EXPORT2
-ustr_hashUCharsN(const char16_t *str, int32_t length) {
+ustr_hashUCharsN(ಸ್ಥಿರಾಂಕ char16_t *str, int32_t length) {
     STRING_HASH(char16_t, str, length, *p);
 }
 
 U_CAPI int32_t U_EXPORT2
-ustr_hashCharsN(const char *str, int32_t length) {
+ustr_hashCharsN(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *str, int32_t length) {
     STRING_HASH(uint8_t, str, length, *p);
 }
 
 U_CAPI int32_t U_EXPORT2
-ustr_hashICharsN(const char *str, int32_t length) {
-    STRING_HASH(char, str, length, (uint8_t)uprv_tolower(*p));
+ustr_hashICharsN(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *str, int32_t length) {
+    STRING_HASH(ಅಕ್ಷರ, str, length, (uint8_t)uprv_tolower(*p));
 }

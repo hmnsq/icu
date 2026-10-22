@@ -25,68 +25,68 @@
 * 2009-nov..2010-jan  Markus Scherer  total rewrite, new Normalizer2 API & code
 */
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#ಆದರೆ !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/udata.h"
-#include "unicode/ustring.h"
-#include "unicode/uiter.h"
-#include "unicode/unorm.h"
-#include "unicode/unorm2.h"
-#include "normalizer2impl.h"
-#include "unormimp.h"
-#include "uprops.h"
-#include "ustr_imp.h"
+#ಅನ್ತರ್ಭಾವ "unicode/udata.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ustring.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uiter.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unorm.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unorm2.h"
+#ಅನ್ತರ್ಭಾವ "normalizer2impl.h"
+#ಅನ್ತರ್ಭಾವ "unormimp.h"
+#ಅನ್ತರ್ಭಾವ "uprops.h"
+#ಅನ್ತರ್ಭಾವ "ustr_imp.h"
 
 U_NAMESPACE_USE
 
 /* quick check functions ---------------------------------------------------- */
 
-U_CAPI UNormalizationCheckResult U_EXPORT2
-unorm_quickCheck(const char16_t *src,
-                 int32_t srcLength, 
-                 UNormalizationMode mode,
-                 UErrorCode *pErrorCode) {
-    const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
-    return unorm2_quickCheck((const UNormalizer2 *)n2, src, srcLength, pErrorCode);
+U_CAPI UNormalization_Check_ಫಲಿತಾಂಶ U_EXPORT2
+unorm_ಶೀಘ್ರ_Check(ಸ್ಥಿರಾಂಕ char16_t *src,
+                 int32_t src_ಉದ್ದಳತೆ, 
+                 UNormalization_ಬಹುಲಕ ಬಹುಲಕ,
+                 UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಸ್ಥಿರಾಂಕ Normalizer2 *n2=Normalizer2Factory::getInstance(ಬಹುಲಕ, *p_Error_ಸಂಕೇತ);
+    ಹಿಂತಿರುಗಿ unorm2_ಶೀಘ್ರ_Check((ಸ್ಥಿರಾಂಕ UNormalizer2 *)n2, src, src_ಉದ್ದಳತೆ, p_Error_ಸಂಕೇತ);
 }
 
-U_CAPI UNormalizationCheckResult U_EXPORT2
-unorm_quickCheckWithOptions(const char16_t *src, int32_t srcLength,
-                            UNormalizationMode mode, int32_t options,
-                            UErrorCode *pErrorCode) {
-    const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
-    if(options&UNORM_UNICODE_3_2) {
-        FilteredNormalizer2 fn2(*n2, *uniset_getUnicode32Instance(*pErrorCode));
-        return unorm2_quickCheck(
-            reinterpret_cast<const UNormalizer2 *>(static_cast<Normalizer2 *>(&fn2)),
-            src, srcLength, pErrorCode);
-    } else {
-        return unorm2_quickCheck((const UNormalizer2 *)n2, src, srcLength, pErrorCode);
+U_CAPI UNormalization_Check_ಫಲಿತಾಂಶ U_EXPORT2
+unorm_ಶೀಘ್ರ_Check_With_Options(ಸ್ಥಿರಾಂಕ char16_t *src, int32_t src_ಉದ್ದಳತೆ,
+                            UNormalization_ಬಹುಲಕ ಬಹುಲಕ, int32_t options,
+                            UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಸ್ಥಿರಾಂಕ Normalizer2 *n2=Normalizer2Factory::getInstance(ಬಹುಲಕ, *p_Error_ಸಂಕೇತ);
+    ಆದರೆ(options&UNORM_UNICODE_3_2) {
+        FilteredNormalizer2 fn2(*n2, *uniset_getUnicode32Instance(*p_Error_ಸಂಕೇತ));
+        ಹಿಂತಿರುಗಿ unorm2_ಶೀಘ್ರ_Check(
+            reinterpret_cast<ಸ್ಥಿರಾಂಕ UNormalizer2 *>(static_cast<Normalizer2 *>(&fn2)),
+            src, src_ಉದ್ದಳತೆ, p_Error_ಸಂಕೇತ);
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಹಿಂತಿರುಗಿ unorm2_ಶೀಘ್ರ_Check((ಸ್ಥಿರಾಂಕ UNormalizer2 *)n2, src, src_ಉದ್ದಳತೆ, p_Error_ಸಂಕೇತ);
     }
 }
 
 U_CAPI UBool U_EXPORT2
-unorm_isNormalized(const char16_t *src, int32_t srcLength,
-                   UNormalizationMode mode,
-                   UErrorCode *pErrorCode) {
-    const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
-    return unorm2_isNormalized((const UNormalizer2 *)n2, src, srcLength, pErrorCode);
+unorm_isNormalized(ಸ್ಥಿರಾಂಕ char16_t *src, int32_t src_ಉದ್ದಳತೆ,
+                   UNormalization_ಬಹುಲಕ ಬಹುಲಕ,
+                   UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಸ್ಥಿರಾಂಕ Normalizer2 *n2=Normalizer2Factory::getInstance(ಬಹುಲಕ, *p_Error_ಸಂಕೇತ);
+    ಹಿಂತಿರುಗಿ unorm2_isNormalized((ಸ್ಥಿರಾಂಕ UNormalizer2 *)n2, src, src_ಉದ್ದಳತೆ, p_Error_ಸಂಕೇತ);
 }
 
 U_CAPI UBool U_EXPORT2
-unorm_isNormalizedWithOptions(const char16_t *src, int32_t srcLength,
-                              UNormalizationMode mode, int32_t options,
-                              UErrorCode *pErrorCode) {
-    const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
-    if(options&UNORM_UNICODE_3_2) {
-        FilteredNormalizer2 fn2(*n2, *uniset_getUnicode32Instance(*pErrorCode));
-        return unorm2_isNormalized(
-            reinterpret_cast<const UNormalizer2 *>(static_cast<Normalizer2 *>(&fn2)),
-            src, srcLength, pErrorCode);
-    } else {
-        return unorm2_isNormalized((const UNormalizer2 *)n2, src, srcLength, pErrorCode);
+unorm_isNormalizedWithOptions(ಸ್ಥಿರಾಂಕ char16_t *src, int32_t src_ಉದ್ದಳತೆ,
+                              UNormalization_ಬಹುಲಕ ಬಹುಲಕ, int32_t options,
+                              UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಸ್ಥಿರಾಂಕ Normalizer2 *n2=Normalizer2Factory::getInstance(ಬಹುಲಕ, *p_Error_ಸಂಕೇತ);
+    ಆದರೆ(options&UNORM_UNICODE_3_2) {
+        FilteredNormalizer2 fn2(*n2, *uniset_getUnicode32Instance(*p_Error_ಸಂಕೇತ));
+        ಹಿಂತಿರುಗಿ unorm2_isNormalized(
+            reinterpret_cast<ಸ್ಥಿರಾಂಕ UNormalizer2 *>(static_cast<Normalizer2 *>(&fn2)),
+            src, src_ಉದ್ದಳತೆ, p_Error_ಸಂಕೇತ);
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಹಿಂತಿರುಗಿ unorm2_isNormalized((ಸ್ಥಿರಾಂಕ UNormalizer2 *)n2, src, src_ಉದ್ದಳತೆ, p_Error_ಸಂಕೇತ);
     }
 }
 
@@ -94,187 +94,187 @@ unorm_isNormalizedWithOptions(const char16_t *src, int32_t srcLength,
 
 /** Public API for normalizing. */
 U_CAPI int32_t U_EXPORT2
-unorm_normalize(const char16_t *src, int32_t srcLength,
-                UNormalizationMode mode, int32_t options,
-                char16_t *dest, int32_t destCapacity,
-                UErrorCode *pErrorCode) {
-    const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
-    if(options&UNORM_UNICODE_3_2) {
-        FilteredNormalizer2 fn2(*n2, *uniset_getUnicode32Instance(*pErrorCode));
-        return unorm2_normalize(
-            reinterpret_cast<const UNormalizer2 *>(static_cast<Normalizer2 *>(&fn2)),
-            src, srcLength, dest, destCapacity, pErrorCode);
-    } else {
-        return unorm2_normalize((const UNormalizer2 *)n2,
-            src, srcLength, dest, destCapacity, pErrorCode);
+unorm_normalize(ಸ್ಥಿರಾಂಕ char16_t *src, int32_t src_ಉದ್ದಳತೆ,
+                UNormalization_ಬಹುಲಕ ಬಹುಲಕ, int32_t options,
+                char16_t *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ,
+                UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಸ್ಥಿರಾಂಕ Normalizer2 *n2=Normalizer2Factory::getInstance(ಬಹುಲಕ, *p_Error_ಸಂಕೇತ);
+    ಆದರೆ(options&UNORM_UNICODE_3_2) {
+        FilteredNormalizer2 fn2(*n2, *uniset_getUnicode32Instance(*p_Error_ಸಂಕೇತ));
+        ಹಿಂತಿರುಗಿ unorm2_normalize(
+            reinterpret_cast<ಸ್ಥಿರಾಂಕ UNormalizer2 *>(static_cast<Normalizer2 *>(&fn2)),
+            src, src_ಉದ್ದಳತೆ, dest, dest_ಸಾಮರ್ಥ್ಯ, p_Error_ಸಂಕೇತ);
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಹಿಂತಿರುಗಿ unorm2_normalize((ಸ್ಥಿರಾಂಕ UNormalizer2 *)n2,
+            src, src_ಉದ್ದಳತೆ, dest, dest_ಸಾಮರ್ಥ್ಯ, p_Error_ಸಂಕೇತ);
     }
 }
 
 
 /* iteration functions ------------------------------------------------------ */
 
-static int32_t
+ಸ್ಥಿರ int32_t
 _iterate(UCharIterator *src, UBool forward,
-              char16_t *dest, int32_t destCapacity,
-              const Normalizer2 *n2,
-              UBool doNormalize, UBool *pNeededToNormalize,
-              UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+              char16_t *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ,
+              ಸ್ಥಿರಾಂಕ Normalizer2 *n2,
+              UBool doNormalize, UBool *p_Needed_ಗಮ್ಯ_Normalize,
+              UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಆದರೆ(U_FAILURE(*p_Error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ 0;
     }
-    if(destCapacity<0 || (dest==nullptr && destCapacity>0) || src==nullptr) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
-    }
-
-    if(pNeededToNormalize!=nullptr) {
-        *pNeededToNormalize=false;
-    }
-    if(!(forward ? src->hasNext(src) : src->hasPrevious(src))) {
-        return u_terminateUChars(dest, destCapacity, 0, pErrorCode);
+    ಆದರೆ(dest_ಸಾಮರ್ಥ್ಯ<0 || (dest==ಶೂನ್ಯಸೂಚಕ && dest_ಸಾಮರ್ಥ್ಯ>0) || src==ಶೂನ್ಯಸೂಚಕ) {
+        *p_Error_ಸಂಕೇತ=U_ILLEGAL_ವಾದ_ERROR;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
-    UnicodeString buffer;
+    ಆದರೆ(p_Needed_ಗಮ್ಯ_Normalize!=ಶೂನ್ಯಸೂಚಕ) {
+        *p_Needed_ಗಮ್ಯ_Normalize=ಸುಳ್ಳು;
+    }
+    ಆದರೆ(!(forward ? src->has_ಮುಂದಿನ(src) : src->has_ಹಿಂದಿನ(src))) {
+        ಹಿಂತಿರುಗಿ u_terminateUChars(dest, dest_ಸಾಮರ್ಥ್ಯ, 0, p_Error_ಸಂಕೇತ);
+    }
+
+    UnicodeString ಬಫರ್;
     UChar32 c;
-    if(forward) {
+    ಆದರೆ(forward) {
         /* get one character and ignore its properties */
-        buffer.append(uiter_next32(src));
+        ಬಫರ್.append(uiter_next32(src));
         /* get all following characters until we see a boundary */
-        while((c=uiter_next32(src))>=0) {
-            if(n2->hasBoundaryBefore(c)) {
+        ಆಗ((c=uiter_next32(src))>=0) {
+            ಆದರೆ(n2->hasBoundaryBefore(c)) {
                 /* back out the latest movement to stop at the boundary */
-                src->move(src, -U16_LENGTH(c), UITER_CURRENT);
-                break;
-            } else {
-                buffer.append(c);
+                src->move(src, -U16_ಉದ್ದಳತೆ(c), UITER_CURRENT);
+                ನಿಲ್ಲಿಸು;
+            } ಇಲ್ಲದಿದ್ದರೆ {
+                ಬಫರ್.append(c);
             }
         }
-    } else {
-        while((c=uiter_previous32(src))>=0) {
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಆಗ((c=uiter_previous32(src))>=0) {
             /* always write this character to the front of the buffer */
-            buffer.insert(0, c);
+            ಬಫರ್.insert(0, c);
             /* stop if this just-copied character is a boundary */
-            if(n2->hasBoundaryBefore(c)) {
-                break;
+            ಆದರೆ(n2->hasBoundaryBefore(c)) {
+                ನಿಲ್ಲಿಸು;
             }
         }
     }
 
-    UnicodeString destString(dest, 0, destCapacity);
-    if(buffer.length()>0 && doNormalize) {
-        n2->normalize(buffer, destString, *pErrorCode).extract(dest, destCapacity, *pErrorCode);
-        if(pNeededToNormalize!=nullptr && U_SUCCESS(*pErrorCode)) {
-            *pNeededToNormalize= destString!=buffer;
+    UnicodeString destString(dest, 0, dest_ಸಾಮರ್ಥ್ಯ);
+    ಆದರೆ(ಬಫರ್.length()>0 && doNormalize) {
+        n2->normalize(ಬಫರ್, destString, *p_Error_ಸಂಕೇತ).extract(dest, dest_ಸಾಮರ್ಥ್ಯ, *p_Error_ಸಂಕೇತ);
+        ಆದರೆ(p_Needed_ಗಮ್ಯ_Normalize!=ಶೂನ್ಯಸೂಚಕ && U_SUCCESS(*p_Error_ಸಂಕೇತ)) {
+            *p_Needed_ಗಮ್ಯ_Normalize= destString!=ಬಫರ್;
         }
-        return destString.length();
-    } else {
+        ಹಿಂತಿರುಗಿ destString.length();
+    } ಇಲ್ಲದಿದ್ದರೆ {
         /* just copy the source characters */
-        return buffer.extract(dest, destCapacity, *pErrorCode);
+        ಹಿಂತಿರುಗಿ ಬಫರ್.extract(dest, dest_ಸಾಮರ್ಥ್ಯ, *p_Error_ಸಂಕೇತ);
     }
 }
 
-static int32_t
+ಸ್ಥಿರ int32_t
 unorm_iterate(UCharIterator *src, UBool forward,
-              char16_t *dest, int32_t destCapacity,
-              UNormalizationMode mode, int32_t options,
-              UBool doNormalize, UBool *pNeededToNormalize,
-              UErrorCode *pErrorCode) {
-    const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
-    if(options&UNORM_UNICODE_3_2) {
-        const UnicodeSet *uni32 = uniset_getUnicode32Instance(*pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
-            return 0;
+              char16_t *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ,
+              UNormalization_ಬಹುಲಕ ಬಹುಲಕ, int32_t options,
+              UBool doNormalize, UBool *p_Needed_ಗಮ್ಯ_Normalize,
+              UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಸ್ಥಿರಾಂಕ Normalizer2 *n2=Normalizer2Factory::getInstance(ಬಹುಲಕ, *p_Error_ಸಂಕೇತ);
+    ಆದರೆ(options&UNORM_UNICODE_3_2) {
+        ಸ್ಥಿರಾಂಕ Unicode_ಗಣ *uni32 = uniset_getUnicode32Instance(*p_Error_ಸಂಕೇತ);
+        ಆದರೆ(U_FAILURE(*p_Error_ಸಂಕೇತ)) {
+            ಹಿಂತಿರುಗಿ 0;
         }
         FilteredNormalizer2 fn2(*n2, *uni32);
-        return _iterate(src, forward, dest, destCapacity,
-            &fn2, doNormalize, pNeededToNormalize, pErrorCode);
+        ಹಿಂತಿರುಗಿ _iterate(src, forward, dest, dest_ಸಾಮರ್ಥ್ಯ,
+            &fn2, doNormalize, p_Needed_ಗಮ್ಯ_Normalize, p_Error_ಸಂಕೇತ);
     }
-    return _iterate(src, forward, dest, destCapacity,
-            n2, doNormalize, pNeededToNormalize, pErrorCode);
+    ಹಿಂತಿರುಗಿ _iterate(src, forward, dest, dest_ಸಾಮರ್ಥ್ಯ,
+            n2, doNormalize, p_Needed_ಗಮ್ಯ_Normalize, p_Error_ಸಂಕೇತ);
 }
 
 U_CAPI int32_t U_EXPORT2
-unorm_previous(UCharIterator *src,
-               char16_t *dest, int32_t destCapacity,
-               UNormalizationMode mode, int32_t options,
-               UBool doNormalize, UBool *pNeededToNormalize,
-               UErrorCode *pErrorCode) {
-    return unorm_iterate(src, false,
-                         dest, destCapacity,
-                         mode, options,
-                         doNormalize, pNeededToNormalize,
-                         pErrorCode);
+unorm_ಹಿಂದಿನ(UCharIterator *src,
+               char16_t *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ,
+               UNormalization_ಬಹುಲಕ ಬಹುಲಕ, int32_t options,
+               UBool doNormalize, UBool *p_Needed_ಗಮ್ಯ_Normalize,
+               UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಹಿಂತಿರುಗಿ unorm_iterate(src, ಸುಳ್ಳು,
+                         dest, dest_ಸಾಮರ್ಥ್ಯ,
+                         ಬಹುಲಕ, options,
+                         doNormalize, p_Needed_ಗಮ್ಯ_Normalize,
+                         p_Error_ಸಂಕೇತ);
 }
 
 U_CAPI int32_t U_EXPORT2
-unorm_next(UCharIterator *src,
-           char16_t *dest, int32_t destCapacity,
-           UNormalizationMode mode, int32_t options,
-           UBool doNormalize, UBool *pNeededToNormalize,
-           UErrorCode *pErrorCode) {
-    return unorm_iterate(src, true,
-                         dest, destCapacity,
-                         mode, options,
-                         doNormalize, pNeededToNormalize,
-                         pErrorCode);
+unorm_ಮುಂದಿನ(UCharIterator *src,
+           char16_t *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ,
+           UNormalization_ಬಹುಲಕ ಬಹುಲಕ, int32_t options,
+           UBool doNormalize, UBool *p_Needed_ಗಮ್ಯ_Normalize,
+           UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಹಿಂತಿರುಗಿ unorm_iterate(src, ನಿಜ,
+                         dest, dest_ಸಾಮರ್ಥ್ಯ,
+                         ಬಹುಲಕ, options,
+                         doNormalize, p_Needed_ಗಮ್ಯ_Normalize,
+                         p_Error_ಸಂಕೇತ);
 }
 
 /* Concatenation of normalized strings -------------------------------------- */
 
-static int32_t
-_concatenate(const char16_t *left, int32_t leftLength,
-                  const char16_t *right, int32_t rightLength,
-                  char16_t *dest, int32_t destCapacity,
-                  const Normalizer2 *n2,
-                  UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+ಸ್ಥಿರ int32_t
+_concatenate(ಸ್ಥಿರಾಂಕ char16_t *ಎಡ, int32_t ಎಡ_ಉದ್ದಳತೆ,
+                  ಸ್ಥಿರಾಂಕ char16_t *ಬಲ, int32_t ಬಲ_ಉದ್ದಳತೆ,
+                  char16_t *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ,
+                  ಸ್ಥಿರಾಂಕ Normalizer2 *n2,
+                  UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಆದರೆ(U_FAILURE(*p_Error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ 0;
     }
-    if(destCapacity<0 || (dest==nullptr && destCapacity>0) ||
-        left==nullptr || leftLength<-1 || right==nullptr || rightLength<-1) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ಆದರೆ(dest_ಸಾಮರ್ಥ್ಯ<0 || (dest==ಶೂನ್ಯಸೂಚಕ && dest_ಸಾಮರ್ಥ್ಯ>0) ||
+        ಎಡ==ಶೂನ್ಯಸೂಚಕ || ಎಡ_ಉದ್ದಳತೆ<-1 || ಬಲ==ಶೂನ್ಯಸೂಚಕ || ಬಲ_ಉದ್ದಳತೆ<-1) {
+        *p_Error_ಸಂಕೇತ=U_ILLEGAL_ವಾದ_ERROR;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
     /* check for overlapping right and destination */
-    if( dest!=nullptr &&
-        ((right>=dest && right<(dest+destCapacity)) ||
-         (rightLength>0 && dest>=right && dest<(right+rightLength)))
+    ಆದರೆ( dest!=ಶೂನ್ಯಸೂಚಕ &&
+        ((ಬಲ>=dest && ಬಲ<(dest+dest_ಸಾಮರ್ಥ್ಯ)) ||
+         (ಬಲ_ಉದ್ದಳತೆ>0 && dest>=ಬಲ && dest<(ಬಲ+ಬಲ_ಉದ್ದಳತೆ)))
     ) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        *p_Error_ಸಂಕೇತ=U_ILLEGAL_ವಾದ_ERROR;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
     /* allow left==dest */
     UnicodeString destString;
-    if(left==dest) {
-        destString.setTo(dest, leftLength, destCapacity);
-    } else {
-        destString.setTo(dest, 0, destCapacity);
-        destString.append(left, leftLength);
+    ಆದರೆ(ಎಡ==dest) {
+        destString.ಗಣ_ಗಮ್ಯ(dest, ಎಡ_ಉದ್ದಳತೆ, dest_ಸಾಮರ್ಥ್ಯ);
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        destString.ಗಣ_ಗಮ್ಯ(dest, 0, dest_ಸಾಮರ್ಥ್ಯ);
+        destString.append(ಎಡ, ಎಡ_ಉದ್ದಳತೆ);
     }
-    return n2->append(destString, UnicodeString(rightLength<0, right, rightLength), *pErrorCode).
-           extract(dest, destCapacity, *pErrorCode);
+    ಹಿಂತಿರುಗಿ n2->append(destString, UnicodeString(ಬಲ_ಉದ್ದಳತೆ<0, ಬಲ, ಬಲ_ಉದ್ದಳತೆ), *p_Error_ಸಂಕೇತ).
+           extract(dest, dest_ಸಾಮರ್ಥ್ಯ, *p_Error_ಸಂಕೇತ);
 }
 
 U_CAPI int32_t U_EXPORT2
-unorm_concatenate(const char16_t *left, int32_t leftLength,
-                  const char16_t *right, int32_t rightLength,
-                  char16_t *dest, int32_t destCapacity,
-                  UNormalizationMode mode, int32_t options,
-                  UErrorCode *pErrorCode) {
-    const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
-    if(options&UNORM_UNICODE_3_2) {
-        const UnicodeSet *uni32 = uniset_getUnicode32Instance(*pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
-            return 0;
+unorm_concatenate(ಸ್ಥಿರಾಂಕ char16_t *ಎಡ, int32_t ಎಡ_ಉದ್ದಳತೆ,
+                  ಸ್ಥಿರಾಂಕ char16_t *ಬಲ, int32_t ಬಲ_ಉದ್ದಳತೆ,
+                  char16_t *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ,
+                  UNormalization_ಬಹುಲಕ ಬಹುಲಕ, int32_t options,
+                  UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಸ್ಥಿರಾಂಕ Normalizer2 *n2=Normalizer2Factory::getInstance(ಬಹುಲಕ, *p_Error_ಸಂಕೇತ);
+    ಆದರೆ(options&UNORM_UNICODE_3_2) {
+        ಸ್ಥಿರಾಂಕ Unicode_ಗಣ *uni32 = uniset_getUnicode32Instance(*p_Error_ಸಂಕೇತ);
+        ಆದರೆ(U_FAILURE(*p_Error_ಸಂಕೇತ)) {
+            ಹಿಂತಿರುಗಿ 0;
         }
         FilteredNormalizer2 fn2(*n2, *uni32);
-        return _concatenate(left, leftLength, right, rightLength,
-            dest, destCapacity, &fn2, pErrorCode);
+        ಹಿಂತಿರುಗಿ _concatenate(ಎಡ, ಎಡ_ಉದ್ದಳತೆ, ಬಲ, ಬಲ_ಉದ್ದಳತೆ,
+            dest, dest_ಸಾಮರ್ಥ್ಯ, &fn2, p_Error_ಸಂಕೇತ);
     }
-    return _concatenate(left, leftLength, right, rightLength,
-        dest, destCapacity, n2, pErrorCode);
+    ಹಿಂತಿರುಗಿ _concatenate(ಎಡ, ಎಡ_ಉದ್ದಳತೆ, ಬಲ, ಬಲ_ಉದ್ದಳತೆ,
+        dest, dest_ಸಾಮರ್ಥ್ಯ, n2, p_Error_ಸಂಕೇತ);
 }
 
-#endif /* #if !UCONFIG_NO_NORMALIZATION */
+#ಆದರೆ_ಅಂತ್ಯ /* #if !UCONFIG_NO_NORMALIZATION */

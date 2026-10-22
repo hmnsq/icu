@@ -8,22 +8,22 @@
  *
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#ಆದರೆ !UCONFIG_NO_SERVICE
 
-#include "unicode/resbund.h"
-#include "uresimp.h"
-#include "cmemory.h"
-#include "servloc.h"
-#include "ustrfmt.h"
-#include "uhash.h"
-#include "charstr.h"
-#include "uassert.h"
+#ಅನ್ತರ್ಭಾವ "unicode/resbund.h"
+#ಅನ್ತರ್ಭಾವ "uresimp.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "servloc.h"
+#ಅನ್ತರ್ಭಾವ "ustrfmt.h"
+#ಅನ್ತರ್ಭಾವ "uhash.h"
+#ಅನ್ತರ್ಭಾವ "charstr.h"
+#ಅನ್ತರ್ಭಾವ "uassert.h"
 
-#define UNDERSCORE_CHAR ((char16_t)0x005f)
-#define AT_SIGN_CHAR    ((char16_t)64)
-#define PERIOD_CHAR     ((char16_t)46)
+#ವ್ಯಾಖ್ಯಾನಿಸು UNDERSCORE_CHAR ((char16_t)0x005f)
+#ವ್ಯಾಖ್ಯಾನಿಸು AT_SIGN_CHAR    ((char16_t)64)
+#ವ್ಯಾಖ್ಯಾನಿಸು PERIOD_CHAR     ((char16_t)46)
 
 U_NAMESPACE_BEGIN
 
@@ -31,49 +31,49 @@ U_NAMESPACE_BEGIN
  ******************************************************************
  */
 
-SimpleLocaleKeyFactory::SimpleLocaleKeyFactory(UObject* objToAdopt,
-                                               const UnicodeString& locale,
-                                               int32_t kind,
+Simple_Locale_ಕೀಲಿ_Factory::Simple_Locale_ಕೀಲಿ_Factory(UObject* obj_ಗಮ್ಯ_Adopt,
+                                               ಸ್ಥಿರಾಂಕ UnicodeString& locale,
+                                               int32_t ಬಗೆ,
                                                int32_t coverage)
-  : LocaleKeyFactory(coverage)
-  , _obj(objToAdopt)
+  : Locale_ಕೀಲಿ_Factory(coverage)
+  , _obj(obj_ಗಮ್ಯ_Adopt)
   , _id(locale)
-  , _kind(kind)
+  , ಬಗೆ_2(ಬಗೆ)
 {
 }
 
-SimpleLocaleKeyFactory::SimpleLocaleKeyFactory(UObject* objToAdopt,
-                                               const Locale& locale,
-                                               int32_t kind,
+Simple_Locale_ಕೀಲಿ_Factory::Simple_Locale_ಕೀಲಿ_Factory(UObject* obj_ಗಮ್ಯ_Adopt,
+                                               ಸ್ಥಿರಾಂಕ Locale& locale,
+                                               int32_t ಬಗೆ,
                                                int32_t coverage)
-  : LocaleKeyFactory(coverage)
-  , _obj(objToAdopt)
+  : Locale_ಕೀಲಿ_Factory(coverage)
+  , _obj(obj_ಗಮ್ಯ_Adopt)
   , _id()
-  , _kind(kind)
+  , ಬಗೆ_2(ಬಗೆ)
 {
     LocaleUtility::initNameFromLocale(locale, _id);
 }
 
-SimpleLocaleKeyFactory::~SimpleLocaleKeyFactory()
+Simple_Locale_ಕೀಲಿ_Factory::~Simple_Locale_ಕೀಲಿ_Factory()
 {
-  delete _obj;
-  _obj = nullptr;
+  ಅಳಿಸು _obj;
+  _obj = ಶೂನ್ಯಸೂಚಕ;
 }
 
 UObject*
-SimpleLocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const
+Simple_Locale_ಕೀಲಿ_Factory::create(ಸ್ಥಿರಾಂಕ ICUService_ಕೀಲಿ& ಕೀಲಿ, ಸ್ಥಿರಾಂಕ ICUService* service, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ
 {
-    if (U_SUCCESS(status)) {
-        const LocaleKey& lkey = static_cast<const LocaleKey&>(key);
-        if (_kind == LocaleKey::KIND_ANY || _kind == lkey.kind()) {
-            UnicodeString keyID;
-            lkey.currentID(keyID);
-            if (_id == keyID) {
-                return service->cloneInstance(_obj);
+    ಆದರೆ (U_SUCCESS(ಸ್ಥಿತಿ_2)) {
+        ಸ್ಥಿರಾಂಕ Locale_ಕೀಲಿ& lkey = static_cast<ಸ್ಥಿರಾಂಕ Locale_ಕೀಲಿ&>(ಕೀಲಿ);
+        ಆದರೆ (ಬಗೆ_2 == Locale_ಕೀಲಿ::ಬಗೆ_ANY || ಬಗೆ_2 == lkey.ಬಗೆ()) {
+            UnicodeString ಕೀಲಿ_ID;
+            lkey.currentID(ಕೀಲಿ_ID);
+            ಆದರೆ (_id == ಕೀಲಿ_ID) {
+                ಹಿಂತಿರುಗಿ service->cloneInstance(_obj);
             }
         }
     }
-    return nullptr;
+    ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
 }
 
 //UBool
@@ -82,42 +82,42 @@ SimpleLocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* servi
 //    return id == _id;
 //}
 
-void
-SimpleLocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const
+ಶೂನ್ಯ
+Simple_Locale_ಕೀಲಿ_Factory::updateVisibleIDs(Hashtable& ಫಲಿತಾಂಶ, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ
 {
-    if (U_SUCCESS(status)) {
-        if (_coverage & 0x1) {
-            result.remove(_id);
-        } else {
-            result.put(_id, (void*)this, status);
+    ಆದರೆ (U_SUCCESS(ಸ್ಥಿತಿ_2)) {
+        ಆದರೆ (_coverage & 0x1) {
+            ಫಲಿತಾಂಶ.remove(_id);
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಫಲಿತಾಂಶ.put(_id, (ಶೂನ್ಯ*)ಇದು, ಸ್ಥಿತಿ_2);
         }
     }
 }
 
-#ifdef SERVICE_DEBUG
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ SERVICE_DEBUG
 UnicodeString&
-SimpleLocaleKeyFactory::debug(UnicodeString& result) const
+Simple_Locale_ಕೀಲಿ_Factory::debug(UnicodeString& ಫಲಿತಾಂಶ) ಸ್ಥಿರಾಂಕ
 {
-    LocaleKeyFactory::debug(result);
-    result.append((UnicodeString)", id: ");
-    result.append(_id);
-    result.append((UnicodeString)", kind: ");
-    result.append(_kind);
-    return result;
+    Locale_ಕೀಲಿ_Factory::debug(ಫಲಿತಾಂಶ);
+    ಫಲಿತಾಂಶ.append((UnicodeString)", id: ");
+    ಫಲಿತಾಂಶ.append(_id);
+    ಫಲಿತಾಂಶ.append((UnicodeString)", kind: ");
+    ಫಲಿತಾಂಶ.append(ಬಗೆ_2);
+    ಹಿಂತಿರುಗಿ ಫಲಿತಾಂಶ;
 }
 
 UnicodeString&
-SimpleLocaleKeyFactory::debugClass(UnicodeString& result) const
+Simple_Locale_ಕೀಲಿ_Factory::debugClass(UnicodeString& ಫಲಿತಾಂಶ) ಸ್ಥಿರಾಂಕ
 {
-    return result.append((UnicodeString)"SimpleLocaleKeyFactory");
+    ಹಿಂತಿರುಗಿ ಫಲಿತಾಂಶ.append((UnicodeString)"SimpleLocaleKeyFactory");
 }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(SimpleLocaleKeyFactory)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Simple_Locale_ಕೀಲಿ_Factory)
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
 /* !UCONFIG_NO_SERVICE */
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 

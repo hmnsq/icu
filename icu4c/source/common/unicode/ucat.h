@@ -10,11 +10,11 @@
 * Since: ICU 2.6
 **********************************************************************
 */
-#ifndef UCAT_H
-#define UCAT_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ UCAT_H
+#ವ್ಯಾಖ್ಯಾನಿಸು UCAT_H
 
-#include "unicode/utypes.h"
-#include "unicode/ures.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ures.h"
 
 /**
  * \file
@@ -70,7 +70,7 @@ U_CDECL_BEGIN
  * 
  * @stable ICU 2.6
  */
-typedef UResourceBundle* u_nl_catd;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ UResourceBundle* u_nl_catd;
 
 /**
  * Open and return an ICU message catalog descriptor. The descriptor
@@ -104,7 +104,7 @@ typedef UResourceBundle* u_nl_catd;
  * @stable ICU 2.6
  */
 U_CAPI u_nl_catd U_EXPORT2
-u_catopen(const char* name, const char* locale, UErrorCode* ec);
+u_catopen(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* name, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* locale, UError_ಸಂಕೇತ* ec);
 
 /**
  * Close an ICU message catalog, given its descriptor.
@@ -114,7 +114,7 @@ u_catopen(const char* name, const char* locale, UErrorCode* ec);
  * 
  * @stable ICU 2.6
  */
-U_CAPI void U_EXPORT2
+U_CAPI ಶೂನ್ಯ U_EXPORT2
 u_catclose(u_nl_catd catd);
 
 /**
@@ -149,15 +149,15 @@ u_catclose(u_nl_catd catd);
  * 
  * @stable ICU 2.6
  */
-U_CAPI const UChar* U_EXPORT2
+U_CAPI ಸ್ಥಿರಾಂಕ UChar* U_EXPORT2
 u_catgets(u_nl_catd catd U_LIFETIME_BOUND,
-          int32_t set_num,
-          int32_t msg_num,
-          const UChar* s U_LIFETIME_BOUND,
+          int32_t ಗಣ_ಅಂಕೆ,
+          int32_t ಸಂದೇಶ_ಅಂಕೆ,
+          ಸ್ಥಿರಾಂಕ UChar* s U_LIFETIME_BOUND,
           int32_t* len,
-          UErrorCode* ec);
+          UError_ಸಂಕೇತ* ec);
 
-U_CDECL_END
+U_CDECL_ಕೊನೆ
 
-#endif /*UCAT_H*/
+#ಆದರೆ_ಅಂತ್ಯ /*UCAT_H*/
 /*eof*/

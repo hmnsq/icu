@@ -14,83 +14,83 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/bytestream.h"
-#include "unicode/bytestrie.h"
-#include "unicode/uobject.h"
-#include "cmemory.h"
-#include "uassert.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/bytestream.h"
+#ಅನ್ತರ್ಭಾವ "unicode/bytestrie.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uobject.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "uassert.h"
 
 U_NAMESPACE_BEGIN
 
-BytesTrie::~BytesTrie() {
+ಬೈಟುಗಳು_Trie::~ಬೈಟುಗಳು_Trie() {
     uprv_free(ownedArray_);
 }
 
 // lead byte already shifted right by 1.
 int32_t
-BytesTrie::readValue(const uint8_t *pos, int32_t leadByte) {
+ಬೈಟುಗಳು_Trie::read_ಮೌಲ್ಯ(ಸ್ಥಿರಾಂಕ uint8_t *pos, int32_t leadByte) {
     int32_t value;
-    if(leadByte<kMinTwoByteValueLead) {
-        value=leadByte-kMinOneByteValueLead;
-    } else if(leadByte<kMinThreeByteValueLead) {
-        value=((leadByte-kMinTwoByteValueLead)<<8)|*pos;
-    } else if(leadByte<kFourByteValueLead) {
-        value=((leadByte-kMinThreeByteValueLead)<<16)|(pos[0]<<8)|pos[1];
-    } else if(leadByte==kFourByteValueLead) {
+    ಆದರೆ(leadByte<k_Min_Two_Byte_ಮೌಲ್ಯ_Lead) {
+        value=leadByte-k_Min_One_Byte_ಮೌಲ್ಯ_Lead;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(leadByte<k_Min_Three_Byte_ಮೌಲ್ಯ_Lead) {
+        value=((leadByte-k_Min_Two_Byte_ಮೌಲ್ಯ_Lead)<<8)|*pos;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(leadByte<k_Four_Byte_ಮೌಲ್ಯ_Lead) {
+        value=((leadByte-k_Min_Three_Byte_ಮೌಲ್ಯ_Lead)<<16)|(pos[0]<<8)|pos[1];
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(leadByte==k_Four_Byte_ಮೌಲ್ಯ_Lead) {
         value=(pos[0]<<16)|(pos[1]<<8)|pos[2];
-    } else {
+    } ಇಲ್ಲದಿದ್ದರೆ {
         value=(pos[0]<<24)|(pos[1]<<16)|(pos[2]<<8)|pos[3];
     }
-    return value;
+    ಹಿಂತಿರುಗಿ value;
 }
 
-const uint8_t*
-BytesTrie::jumpByDelta(const uint8_t* pos U_LIFETIME_BOUND) {
+ಸ್ಥಿರಾಂಕ uint8_t*
+ಬೈಟುಗಳು_Trie::jumpByDelta(ಸ್ಥಿರಾಂಕ uint8_t* pos U_LIFETIME_BOUND) {
     int32_t delta=*pos++;
-    if(delta<kMinTwoByteDeltaLead) {
+    ಆದರೆ(delta<kMinTwoByteDeltaLead) {
         // nothing to do
-    } else if(delta<kMinThreeByteDeltaLead) {
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(delta<kMinThreeByteDeltaLead) {
         delta=((delta-kMinTwoByteDeltaLead)<<8)|*pos++;
-    } else if(delta<kFourByteDeltaLead) {
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(delta<kFourByteDeltaLead) {
         delta=((delta-kMinThreeByteDeltaLead)<<16)|(pos[0]<<8)|pos[1];
         pos+=2;
-    } else if(delta==kFourByteDeltaLead) {
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(delta==kFourByteDeltaLead) {
         delta=(pos[0]<<16)|(pos[1]<<8)|pos[2];
         pos+=3;
-    } else {
+    } ಇಲ್ಲದಿದ್ದರೆ {
         delta=(pos[0]<<24)|(pos[1]<<16)|(pos[2]<<8)|pos[3];
         pos+=4;
     }
-    return pos+delta;
+    ಹಿಂತಿರುಗಿ pos+delta;
 }
 
-UStringTrieResult
-BytesTrie::current() const {
-    const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
-    } else {
-        int32_t node;
-        return (remainingMatchLength_<0 && (node=*pos)>=kMinValueLead) ?
-                valueResult(node) : USTRINGTRIE_NO_VALUE;
+UString_Trie_ಫಲಿತಾಂಶ
+ಬೈಟುಗಳು_Trie::current() ಸ್ಥಿರಾಂಕ {
+    ಸ್ಥಿರಾಂಕ uint8_t *pos=pos_;
+    ಆದರೆ(pos==ಶೂನ್ಯಸೂಚಕ) {
+        ಹಿಂತಿರುಗಿ USTRINGTRIE_NO_ಹೊಂದಿಕೆ;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        int32_t ಗಂಟು;
+        ಹಿಂತಿರುಗಿ (ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ<0 && (ಗಂಟು=*pos)>=k_Min_ಮೌಲ್ಯ_Lead) ?
+                ಮೌಲ್ಯ_ಫಲಿತಾಂಶ(ಗಂಟು) : USTRINGTRIE_NO_ಮೌಲ್ಯ;
     }
 }
 
-UStringTrieResult
-BytesTrie::branchNext(const uint8_t *pos, int32_t length, int32_t inByte) {
+UString_Trie_ಫಲಿತಾಂಶ
+ಬೈಟುಗಳು_Trie::branch_ಮುಂದಿನ(ಸ್ಥಿರಾಂಕ uint8_t *pos, int32_t length, int32_t ಒಳ_Byte) {
     // Branch according to the current byte.
-    if(length==0) {
+    ಆದರೆ(length==0) {
         length=*pos++;
     }
     ++length;
     // The length of the branch is the number of bytes to select from.
     // The data structure encodes a binary search.
-    while(length>kMaxBranchLinearSubNodeLength) {
-        if(inByte<*pos++) {
+    ಆಗ(length>k_Max_Branch_ರೇಖೀಯ_Sub_ಗಂಟು_ಉದ್ದಳತೆ) {
+        ಆದರೆ(ಒಳ_Byte<*pos++) {
             length>>=1;
             pos=jumpByDelta(pos);
-        } else {
+        } ಇಲ್ಲದಿದ್ದರೆ {
             length=length-(length>>1);
             pos=skipDelta(pos);
         }
@@ -98,346 +98,346 @@ BytesTrie::branchNext(const uint8_t *pos, int32_t length, int32_t inByte) {
     // Drop down to linear search for the last few bytes.
     // length>=2 because the loop body above sees length>kMaxBranchLinearSubNodeLength>=3
     // and divides length by 2.
-    do {
-        if(inByte==*pos++) {
-            UStringTrieResult result;
-            int32_t node=*pos;
-            U_ASSERT(node>=kMinValueLead);
-            if(node&kValueIsFinal) {
+    ಮಾಡು {
+        ಆದರೆ(ಒಳ_Byte==*pos++) {
+            UString_Trie_ಫಲಿತಾಂಶ ಫಲಿತಾಂಶ;
+            int32_t ಗಂಟು=*pos;
+            U_ASSERT(ಗಂಟು>=k_Min_ಮೌಲ್ಯ_Lead);
+            ಆದರೆ(ಗಂಟು&k_ಮೌಲ್ಯ_Is_Final) {
                 // Leave the final value for getValue() to read.
-                result=USTRINGTRIE_FINAL_VALUE;
-            } else {
+                ಫಲಿತಾಂಶ=USTRINGTRIE_FINAL_ಮೌಲ್ಯ;
+            } ಇಲ್ಲದಿದ್ದರೆ {
                 // Use the non-final value as the jump delta.
                 ++pos;
                 // int32_t delta=readValue(pos, node>>1);
-                node>>=1;
+                ಗಂಟು>>=1;
                 int32_t delta;
-                if(node<kMinTwoByteValueLead) {
-                    delta=node-kMinOneByteValueLead;
-                } else if(node<kMinThreeByteValueLead) {
-                    delta=((node-kMinTwoByteValueLead)<<8)|*pos++;
-                } else if(node<kFourByteValueLead) {
-                    delta=((node-kMinThreeByteValueLead)<<16)|(pos[0]<<8)|pos[1];
+                ಆದರೆ(ಗಂಟು<k_Min_Two_Byte_ಮೌಲ್ಯ_Lead) {
+                    delta=ಗಂಟು-k_Min_One_Byte_ಮೌಲ್ಯ_Lead;
+                } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(ಗಂಟು<k_Min_Three_Byte_ಮೌಲ್ಯ_Lead) {
+                    delta=((ಗಂಟು-k_Min_Two_Byte_ಮೌಲ್ಯ_Lead)<<8)|*pos++;
+                } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(ಗಂಟು<k_Four_Byte_ಮೌಲ್ಯ_Lead) {
+                    delta=((ಗಂಟು-k_Min_Three_Byte_ಮೌಲ್ಯ_Lead)<<16)|(pos[0]<<8)|pos[1];
                     pos+=2;
-                } else if(node==kFourByteValueLead) {
+                } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(ಗಂಟು==k_Four_Byte_ಮೌಲ್ಯ_Lead) {
                     delta=(pos[0]<<16)|(pos[1]<<8)|pos[2];
                     pos+=3;
-                } else {
+                } ಇಲ್ಲದಿದ್ದರೆ {
                     delta=(pos[0]<<24)|(pos[1]<<16)|(pos[2]<<8)|pos[3];
                     pos+=4;
                 }
                 // end readValue()
                 pos+=delta;
-                node=*pos;
-                result= node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
+                ಗಂಟು=*pos;
+                ಫಲಿತಾಂಶ= ಗಂಟು>=k_Min_ಮೌಲ್ಯ_Lead ? ಮೌಲ್ಯ_ಫಲಿತಾಂಶ(ಗಂಟು) : USTRINGTRIE_NO_ಮೌಲ್ಯ;
             }
             pos_=pos;
-            return result;
+            ಹಿಂತಿರುಗಿ ಫಲಿತಾಂಶ;
         }
         --length;
-        pos=skipValue(pos);
-    } while(length>1);
-    if(inByte==*pos++) {
+        pos=skip_ಮೌಲ್ಯ(pos);
+    } ಆಗ(length>1);
+    ಆದರೆ(ಒಳ_Byte==*pos++) {
         pos_=pos;
-        int32_t node=*pos;
-        return node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
-    } else {
+        int32_t ಗಂಟು=*pos;
+        ಹಿಂತಿರುಗಿ ಗಂಟು>=k_Min_ಮೌಲ್ಯ_Lead ? ಮೌಲ್ಯ_ಫಲಿತಾಂಶ(ಗಂಟು) : USTRINGTRIE_NO_ಮೌಲ್ಯ;
+    } ಇಲ್ಲದಿದ್ದರೆ {
         stop();
-        return USTRINGTRIE_NO_MATCH;
+        ಹಿಂತಿರುಗಿ USTRINGTRIE_NO_ಹೊಂದಿಕೆ;
     }
 }
 
-UStringTrieResult
-BytesTrie::nextImpl(const uint8_t *pos, int32_t inByte) {
-    for(;;) {
-        int32_t node=*pos++;
-        if(node<kMinLinearMatch) {
-            return branchNext(pos, node, inByte);
-        } else if(node<kMinValueLead) {
+UString_Trie_ಫಲಿತಾಂಶ
+ಬೈಟುಗಳು_Trie::ಮುಂದಿನ_Impl(ಸ್ಥಿರಾಂಕ uint8_t *pos, int32_t ಒಳ_Byte) {
+    ಗಾಗಿ(;;) {
+        int32_t ಗಂಟು=*pos++;
+        ಆದರೆ(ಗಂಟು<k_Min_ರೇಖೀಯ_ಹೊಂದಿಕೆ) {
+            ಹಿಂತಿರುಗಿ branch_ಮುಂದಿನ(pos, ಗಂಟು, ಒಳ_Byte);
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(ಗಂಟು<k_Min_ಮೌಲ್ಯ_Lead) {
             // Match the first of length+1 bytes.
-            int32_t length=node-kMinLinearMatch;  // Actual match length minus 1.
-            if(inByte==*pos++) {
-                remainingMatchLength_=--length;
+            int32_t length=ಗಂಟು-k_Min_ರೇಖೀಯ_ಹೊಂದಿಕೆ;  // Actual match length minus 1.
+            ಆದರೆ(ಒಳ_Byte==*pos++) {
+                ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ=--length;
                 pos_=pos;
-                return (length<0 && (node=*pos)>=kMinValueLead) ?
-                        valueResult(node) : USTRINGTRIE_NO_VALUE;
-            } else {
+                ಹಿಂತಿರುಗಿ (length<0 && (ಗಂಟು=*pos)>=k_Min_ಮೌಲ್ಯ_Lead) ?
+                        ಮೌಲ್ಯ_ಫಲಿತಾಂಶ(ಗಂಟು) : USTRINGTRIE_NO_ಮೌಲ್ಯ;
+            } ಇಲ್ಲದಿದ್ದರೆ {
                 // No match.
-                break;
+                ನಿಲ್ಲಿಸು;
             }
-        } else if(node&kValueIsFinal) {
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(ಗಂಟು&k_ಮೌಲ್ಯ_Is_Final) {
             // No further matching bytes.
-            break;
-        } else {
+            ನಿಲ್ಲಿಸು;
+        } ಇಲ್ಲದಿದ್ದರೆ {
             // Skip intermediate value.
-            pos=skipValue(pos, node);
+            pos=skip_ಮೌಲ್ಯ(pos, ಗಂಟು);
             // The next node must not also be a value node.
-            U_ASSERT(*pos<kMinValueLead);
+            U_ASSERT(*pos<k_Min_ಮೌಲ್ಯ_Lead);
         }
     }
     stop();
-    return USTRINGTRIE_NO_MATCH;
+    ಹಿಂತಿರುಗಿ USTRINGTRIE_NO_ಹೊಂದಿಕೆ;
 }
 
-UStringTrieResult
-BytesTrie::next(int32_t inByte) {
-    const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+UString_Trie_ಫಲಿತಾಂಶ
+ಬೈಟುಗಳು_Trie::next(int32_t ಒಳ_Byte) {
+    ಸ್ಥಿರಾಂಕ uint8_t *pos=pos_;
+    ಆದರೆ(pos==ಶೂನ್ಯಸೂಚಕ) {
+        ಹಿಂತಿರುಗಿ USTRINGTRIE_NO_ಹೊಂದಿಕೆ;
     }
-    if(inByte<0) {
-        inByte+=0x100;
+    ಆದರೆ(ಒಳ_Byte<0) {
+        ಒಳ_Byte+=0x100;
     }
-    int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    if(length>=0) {
+    int32_t length=ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ;  // Actual remaining match length minus 1.
+    ಆದರೆ(length>=0) {
         // Remaining part of a linear-match node.
-        if(inByte==*pos++) {
-            remainingMatchLength_=--length;
+        ಆದರೆ(ಒಳ_Byte==*pos++) {
+            ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ=--length;
             pos_=pos;
-            int32_t node;
-            return (length<0 && (node=*pos)>=kMinValueLead) ?
-                    valueResult(node) : USTRINGTRIE_NO_VALUE;
-        } else {
+            int32_t ಗಂಟು;
+            ಹಿಂತಿರುಗಿ (length<0 && (ಗಂಟು=*pos)>=k_Min_ಮೌಲ್ಯ_Lead) ?
+                    ಮೌಲ್ಯ_ಫಲಿತಾಂಶ(ಗಂಟು) : USTRINGTRIE_NO_ಮೌಲ್ಯ;
+        } ಇಲ್ಲದಿದ್ದರೆ {
             stop();
-            return USTRINGTRIE_NO_MATCH;
+            ಹಿಂತಿರುಗಿ USTRINGTRIE_NO_ಹೊಂದಿಕೆ;
         }
     }
-    return nextImpl(pos, inByte);
+    ಹಿಂತಿರುಗಿ ಮುಂದಿನ_Impl(pos, ಒಳ_Byte);
 }
 
-UStringTrieResult
-BytesTrie::next(const char *s, int32_t sLength) {
-    if(sLength<0 ? *s==0 : sLength==0) {
+UString_Trie_ಫಲಿತಾಂಶ
+ಬೈಟುಗಳು_Trie::next(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *s, int32_t s_ಉದ್ದಳತೆ) {
+    ಆದರೆ(s_ಉದ್ದಳತೆ<0 ? *s==0 : s_ಉದ್ದಳತೆ==0) {
         // Empty input.
-        return current();
+        ಹಿಂತಿರುಗಿ current();
     }
-    const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+    ಸ್ಥಿರಾಂಕ uint8_t *pos=pos_;
+    ಆದರೆ(pos==ಶೂನ್ಯಸೂಚಕ) {
+        ಹಿಂತಿರುಗಿ USTRINGTRIE_NO_ಹೊಂದಿಕೆ;
     }
-    int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    for(;;) {
+    int32_t length=ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ;  // Actual remaining match length minus 1.
+    ಗಾಗಿ(;;) {
         // Fetch the next input byte, if there is one.
         // Continue a linear-match node without rechecking sLength<0.
-        int32_t inByte;
-        if(sLength<0) {
-            for(;;) {
-                if((inByte=*s++)==0) {
-                    remainingMatchLength_=length;
+        int32_t ಒಳ_Byte;
+        ಆದರೆ(s_ಉದ್ದಳತೆ<0) {
+            ಗಾಗಿ(;;) {
+                ಆದರೆ((ಒಳ_Byte=*s++)==0) {
+                    ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ=length;
                     pos_=pos;
-                    int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
-                            valueResult(node) : USTRINGTRIE_NO_VALUE;
+                    int32_t ಗಂಟು;
+                    ಹಿಂತಿರುಗಿ (length<0 && (ಗಂಟು=*pos)>=k_Min_ಮೌಲ್ಯ_Lead) ?
+                            ಮೌಲ್ಯ_ಫಲಿತಾಂಶ(ಗಂಟು) : USTRINGTRIE_NO_ಮೌಲ್ಯ;
                 }
-                if(length<0) {
-                    remainingMatchLength_=length;
-                    break;
+                ಆದರೆ(length<0) {
+                    ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ=length;
+                    ನಿಲ್ಲಿಸು;
                 }
-                if(inByte!=*pos) {
+                ಆದರೆ(ಒಳ_Byte!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    ಹಿಂತಿರುಗಿ USTRINGTRIE_NO_ಹೊಂದಿಕೆ;
                 }
                 ++pos;
                 --length;
             }
-        } else {
-            for(;;) {
-                if(sLength==0) {
-                    remainingMatchLength_=length;
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಗಾಗಿ(;;) {
+                ಆದರೆ(s_ಉದ್ದಳತೆ==0) {
+                    ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ=length;
                     pos_=pos;
-                    int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
-                            valueResult(node) : USTRINGTRIE_NO_VALUE;
+                    int32_t ಗಂಟು;
+                    ಹಿಂತಿರುಗಿ (length<0 && (ಗಂಟು=*pos)>=k_Min_ಮೌಲ್ಯ_Lead) ?
+                            ಮೌಲ್ಯ_ಫಲಿತಾಂಶ(ಗಂಟು) : USTRINGTRIE_NO_ಮೌಲ್ಯ;
                 }
-                inByte=*s++;
-                --sLength;
-                if(length<0) {
-                    remainingMatchLength_=length;
-                    break;
+                ಒಳ_Byte=*s++;
+                --s_ಉದ್ದಳತೆ;
+                ಆದರೆ(length<0) {
+                    ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ=length;
+                    ನಿಲ್ಲಿಸು;
                 }
-                if(inByte!=*pos) {
+                ಆದರೆ(ಒಳ_Byte!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    ಹಿಂತಿರುಗಿ USTRINGTRIE_NO_ಹೊಂದಿಕೆ;
                 }
                 ++pos;
                 --length;
             }
         }
-        for(;;) {
-            int32_t node=*pos++;
-            if(node<kMinLinearMatch) {
-                UStringTrieResult result=branchNext(pos, node, inByte);
-                if(result==USTRINGTRIE_NO_MATCH) {
-                    return USTRINGTRIE_NO_MATCH;
+        ಗಾಗಿ(;;) {
+            int32_t ಗಂಟು=*pos++;
+            ಆದರೆ(ಗಂಟು<k_Min_ರೇಖೀಯ_ಹೊಂದಿಕೆ) {
+                UString_Trie_ಫಲಿತಾಂಶ ಫಲಿತಾಂಶ=branch_ಮುಂದಿನ(pos, ಗಂಟು, ಒಳ_Byte);
+                ಆದರೆ(ಫಲಿತಾಂಶ==USTRINGTRIE_NO_ಹೊಂದಿಕೆ) {
+                    ಹಿಂತಿರುಗಿ USTRINGTRIE_NO_ಹೊಂದಿಕೆ;
                 }
                 // Fetch the next input byte, if there is one.
-                if(sLength<0) {
-                    if((inByte=*s++)==0) {
-                        return result;
+                ಆದರೆ(s_ಉದ್ದಳತೆ<0) {
+                    ಆದರೆ((ಒಳ_Byte=*s++)==0) {
+                        ಹಿಂತಿರುಗಿ ಫಲಿತಾಂಶ;
                     }
-                } else {
-                    if(sLength==0) {
-                        return result;
+                } ಇಲ್ಲದಿದ್ದರೆ {
+                    ಆದರೆ(s_ಉದ್ದಳತೆ==0) {
+                        ಹಿಂತಿರುಗಿ ಫಲಿತಾಂಶ;
                     }
-                    inByte=*s++;
-                    --sLength;
+                    ಒಳ_Byte=*s++;
+                    --s_ಉದ್ದಳತೆ;
                 }
-                if(result==USTRINGTRIE_FINAL_VALUE) {
+                ಆದರೆ(ಫಲಿತಾಂಶ==USTRINGTRIE_FINAL_ಮೌಲ್ಯ) {
                     // No further matching bytes.
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    ಹಿಂತಿರುಗಿ USTRINGTRIE_NO_ಹೊಂದಿಕೆ;
                 }
                 pos=pos_;  // branchNext() advanced pos and wrote it to pos_ .
-            } else if(node<kMinValueLead) {
+            } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(ಗಂಟು<k_Min_ಮೌಲ್ಯ_Lead) {
                 // Match length+1 bytes.
-                length=node-kMinLinearMatch;  // Actual match length minus 1.
-                if(inByte!=*pos) {
+                length=ಗಂಟು-k_Min_ರೇಖೀಯ_ಹೊಂದಿಕೆ;  // Actual match length minus 1.
+                ಆದರೆ(ಒಳ_Byte!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    ಹಿಂತಿರುಗಿ USTRINGTRIE_NO_ಹೊಂದಿಕೆ;
                 }
                 ++pos;
                 --length;
-                break;
-            } else if(node&kValueIsFinal) {
+                ನಿಲ್ಲಿಸು;
+            } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(ಗಂಟು&k_ಮೌಲ್ಯ_Is_Final) {
                 // No further matching bytes.
                 stop();
-                return USTRINGTRIE_NO_MATCH;
-            } else {
+                ಹಿಂತಿರುಗಿ USTRINGTRIE_NO_ಹೊಂದಿಕೆ;
+            } ಇಲ್ಲದಿದ್ದರೆ {
                 // Skip intermediate value.
-                pos=skipValue(pos, node);
+                pos=skip_ಮೌಲ್ಯ(pos, ಗಂಟು);
                 // The next node must not also be a value node.
-                U_ASSERT(*pos<kMinValueLead);
+                U_ASSERT(*pos<k_Min_ಮೌಲ್ಯ_Lead);
             }
         }
     }
 }
 
-const uint8_t*
-BytesTrie::findUniqueValueFromBranch(const uint8_t* pos U_LIFETIME_BOUND,
+ಸ್ಥಿರಾಂಕ uint8_t*
+ಬೈಟುಗಳು_Trie::ಕಂಡುಹಿಡಿ_Unique_ಮೌಲ್ಯ_From_Branch(ಸ್ಥಿರಾಂಕ uint8_t* pos U_LIFETIME_BOUND,
                                      int32_t length,
-                                     UBool haveUniqueValue,
-                                     int32_t& uniqueValue) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+                                     UBool have_Unique_ಮೌಲ್ಯ,
+                                     int32_t& unique_ಮೌಲ್ಯ) {
+    ಆಗ(length>k_Max_Branch_ರೇಖೀಯ_Sub_ಗಂಟು_ಉದ್ದಳತೆ) {
         ++pos;  // ignore the comparison byte
-        if(nullptr==findUniqueValueFromBranch(jumpByDelta(pos), length>>1, haveUniqueValue, uniqueValue)) {
-            return nullptr;
+        ಆದರೆ(ಶೂನ್ಯಸೂಚಕ==ಕಂಡುಹಿಡಿ_Unique_ಮೌಲ್ಯ_From_Branch(jumpByDelta(pos), length>>1, have_Unique_ಮೌಲ್ಯ, unique_ಮೌಲ್ಯ)) {
+            ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
         }
         length=length-(length>>1);
         pos=skipDelta(pos);
     }
-    do {
+    ಮಾಡು {
         ++pos;  // ignore a comparison byte
         // handle its value
-        int32_t node=*pos++;
-        UBool isFinal = static_cast<UBool>(node & kValueIsFinal);
-        int32_t value=readValue(pos, node>>1);
-        pos=skipValue(pos, node);
-        if(isFinal) {
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return nullptr;
+        int32_t ಗಂಟು=*pos++;
+        UBool isFinal = static_cast<UBool>(ಗಂಟು & k_ಮೌಲ್ಯ_Is_Final);
+        int32_t value=read_ಮೌಲ್ಯ(pos, ಗಂಟು>>1);
+        pos=skip_ಮೌಲ್ಯ(pos, ಗಂಟು);
+        ಆದರೆ(isFinal) {
+            ಆದರೆ(have_Unique_ಮೌಲ್ಯ) {
+                ಆದರೆ(value!=unique_ಮೌಲ್ಯ) {
+                    ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
                 }
-            } else {
-                uniqueValue=value;
-                haveUniqueValue=true;
+            } ಇಲ್ಲದಿದ್ದರೆ {
+                unique_ಮೌಲ್ಯ=value;
+                have_Unique_ಮೌಲ್ಯ=ನಿಜ;
             }
-        } else {
-            if(!findUniqueValue(pos+value, haveUniqueValue, uniqueValue)) {
-                return nullptr;
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಆದರೆ(!ಕಂಡುಹಿಡಿ_Unique_ಮೌಲ್ಯ(pos+value, have_Unique_ಮೌಲ್ಯ, unique_ಮೌಲ್ಯ)) {
+                ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
             }
-            haveUniqueValue=true;
+            have_Unique_ಮೌಲ್ಯ=ನಿಜ;
         }
-    } while(--length>1);
-    return pos+1;  // ignore the last comparison byte
+    } ಆಗ(--length>1);
+    ಹಿಂತಿರುಗಿ pos+1;  // ignore the last comparison byte
 }
 
 UBool
-BytesTrie::findUniqueValue(const uint8_t *pos, UBool haveUniqueValue, int32_t &uniqueValue) {
-    for(;;) {
-        int32_t node=*pos++;
-        if(node<kMinLinearMatch) {
-            if(node==0) {
-                node=*pos++;
+ಬೈಟುಗಳು_Trie::ಕಂಡುಹಿಡಿ_Unique_ಮೌಲ್ಯ(ಸ್ಥಿರಾಂಕ uint8_t *pos, UBool have_Unique_ಮೌಲ್ಯ, int32_t &unique_ಮೌಲ್ಯ) {
+    ಗಾಗಿ(;;) {
+        int32_t ಗಂಟು=*pos++;
+        ಆದರೆ(ಗಂಟು<k_Min_ರೇಖೀಯ_ಹೊಂದಿಕೆ) {
+            ಆದರೆ(ಗಂಟು==0) {
+                ಗಂಟು=*pos++;
             }
-            pos=findUniqueValueFromBranch(pos, node+1, haveUniqueValue, uniqueValue);
-            if(pos==nullptr) {
-                return false;
+            pos=ಕಂಡುಹಿಡಿ_Unique_ಮೌಲ್ಯ_From_Branch(pos, ಗಂಟು+1, have_Unique_ಮೌಲ್ಯ, unique_ಮೌಲ್ಯ);
+            ಆದರೆ(pos==ಶೂನ್ಯಸೂಚಕ) {
+                ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
             }
-            haveUniqueValue=true;
-        } else if(node<kMinValueLead) {
+            have_Unique_ಮೌಲ್ಯ=ನಿಜ;
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(ಗಂಟು<k_Min_ಮೌಲ್ಯ_Lead) {
             // linear-match node
-            pos+=node-kMinLinearMatch+1;  // Ignore the match bytes.
-        } else {
-            UBool isFinal = static_cast<UBool>(node & kValueIsFinal);
-            int32_t value=readValue(pos, node>>1);
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return false;
+            pos+=ಗಂಟು-k_Min_ರೇಖೀಯ_ಹೊಂದಿಕೆ+1;  // Ignore the match bytes.
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            UBool isFinal = static_cast<UBool>(ಗಂಟು & k_ಮೌಲ್ಯ_Is_Final);
+            int32_t value=read_ಮೌಲ್ಯ(pos, ಗಂಟು>>1);
+            ಆದರೆ(have_Unique_ಮೌಲ್ಯ) {
+                ಆದರೆ(value!=unique_ಮೌಲ್ಯ) {
+                    ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
                 }
-            } else {
-                uniqueValue=value;
-                haveUniqueValue=true;
+            } ಇಲ್ಲದಿದ್ದರೆ {
+                unique_ಮೌಲ್ಯ=value;
+                have_Unique_ಮೌಲ್ಯ=ನಿಜ;
             }
-            if(isFinal) {
-                return true;
+            ಆದರೆ(isFinal) {
+                ಹಿಂತಿರುಗಿ ನಿಜ;
             }
-            pos=skipValue(pos, node);
+            pos=skip_ಮೌಲ್ಯ(pos, ಗಂಟು);
         }
     }
 }
 
 int32_t
-BytesTrie::getNextBytes(ByteSink &out) const {
-    const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return 0;
+ಬೈಟುಗಳು_Trie::get_ಮುಂದಿನ_ಬೈಟುಗಳು(ByteSink &out) ಸ್ಥಿರಾಂಕ {
+    ಸ್ಥಿರಾಂಕ uint8_t *pos=pos_;
+    ಆದರೆ(pos==ಶೂನ್ಯಸೂಚಕ) {
+        ಹಿಂತಿರುಗಿ 0;
     }
-    if(remainingMatchLength_>=0) {
+    ಆದರೆ(ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ>=0) {
         append(out, *pos);  // Next byte of a pending linear-match node.
-        return 1;
+        ಹಿಂತಿರುಗಿ 1;
     }
-    int32_t node=*pos++;
-    if(node>=kMinValueLead) {
-        if(node&kValueIsFinal) {
-            return 0;
-        } else {
-            pos=skipValue(pos, node);
-            node=*pos++;
-            U_ASSERT(node<kMinValueLead);
+    int32_t ಗಂಟು=*pos++;
+    ಆದರೆ(ಗಂಟು>=k_Min_ಮೌಲ್ಯ_Lead) {
+        ಆದರೆ(ಗಂಟು&k_ಮೌಲ್ಯ_Is_Final) {
+            ಹಿಂತಿರುಗಿ 0;
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            pos=skip_ಮೌಲ್ಯ(pos, ಗಂಟು);
+            ಗಂಟು=*pos++;
+            U_ASSERT(ಗಂಟು<k_Min_ಮೌಲ್ಯ_Lead);
         }
     }
-    if(node<kMinLinearMatch) {
-        if(node==0) {
-            node=*pos++;
+    ಆದರೆ(ಗಂಟು<k_Min_ರೇಖೀಯ_ಹೊಂದಿಕೆ) {
+        ಆದರೆ(ಗಂಟು==0) {
+            ಗಂಟು=*pos++;
         }
-        getNextBranchBytes(pos, ++node, out);
-        return node;
-    } else {
+        get_ಮುಂದಿನ_Branch_ಬೈಟುಗಳು(pos, ++ಗಂಟು, out);
+        ಹಿಂತಿರುಗಿ ಗಂಟು;
+    } ಇಲ್ಲದಿದ್ದರೆ {
         // First byte of the linear-match node.
         append(out, *pos);
-        return 1;
+        ಹಿಂತಿರುಗಿ 1;
     }
 }
 
-void
-BytesTrie::getNextBranchBytes(const uint8_t *pos, int32_t length, ByteSink &out) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+ಶೂನ್ಯ
+ಬೈಟುಗಳು_Trie::get_ಮುಂದಿನ_Branch_ಬೈಟುಗಳು(ಸ್ಥಿರಾಂಕ uint8_t *pos, int32_t length, ByteSink &out) {
+    ಆಗ(length>k_Max_Branch_ರೇಖೀಯ_Sub_ಗಂಟು_ಉದ್ದಳತೆ) {
         ++pos;  // ignore the comparison byte
-        getNextBranchBytes(jumpByDelta(pos), length>>1, out);
+        get_ಮುಂದಿನ_Branch_ಬೈಟುಗಳು(jumpByDelta(pos), length>>1, out);
         length=length-(length>>1);
         pos=skipDelta(pos);
     }
-    do {
+    ಮಾಡು {
         append(out, *pos++);
-        pos=skipValue(pos);
-    } while(--length>1);
+        pos=skip_ಮೌಲ್ಯ(pos);
+    } ಆಗ(--length>1);
     append(out, *pos);
 }
 
-void
-BytesTrie::append(ByteSink &out, int c) {
-    char ch = static_cast<char>(c);
+ಶೂನ್ಯ
+ಬೈಟುಗಳು_Trie::append(ByteSink &out, ಪೂರ್ಣಾಂಕ c) {
+    ಅಕ್ಷರ ch = static_cast<ಅಕ್ಷರ>(c);
     out.Append(&ch, 1);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ

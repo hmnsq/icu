@@ -39,47 +39,47 @@
   *                            for the Unicode version.
   */
 
-#ifndef UVERNUM_H
-#define UVERNUM_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ UVERNUM_H
+#ವ್ಯಾಖ್ಯಾನಿಸು UVERNUM_H
 
 /** The standard copyright notice that gets compiled into each library.
  *  This value will change in the subsequent releases of ICU
  *  @stable ICU 2.4
  */
-#define U_COPYRIGHT_STRING \
+#ವ್ಯಾಖ್ಯಾನಿಸು U_COPYRIGHT_STRING \
   " Copyright (C) 2016 and later: Unicode, Inc. and others. License & terms of use: http://www.unicode.org/copyright.html "
 
 /** The current ICU major version as an integer.
  *  This value will change in the subsequent releases of ICU
  *  @stable ICU 2.4
  */
-#define U_ICU_VERSION_MAJOR_NUM 79
+#ವ್ಯಾಖ್ಯಾನಿಸು U_ICU_ಆವೃತ್ತಿ_MAJOR_ಅಂಕೆ 79
 
 /** The current ICU minor version as an integer.
  *  This value will change in the subsequent releases of ICU
  *  @stable ICU 2.6
  */
-#define U_ICU_VERSION_MINOR_NUM 1
+#ವ್ಯಾಖ್ಯಾನಿಸು U_ICU_ಆವೃತ್ತಿ_MINOR_ಅಂಕೆ 1
 
 /** The current ICU patchlevel version as an integer.
  *  This value will change in the subsequent releases of ICU
  *  @stable ICU 2.4
  */
-#define U_ICU_VERSION_PATCHLEVEL_NUM 0
+#ವ್ಯಾಖ್ಯಾನಿಸು U_ICU_ಆವೃತ್ತಿ_PATCHLEVEL_ಅಂಕೆ 0
 
 /** The current ICU build level version as an integer.
  *  This value is for use by ICU clients. It defaults to 0.
  *  @stable ICU 4.0
  */
-#ifndef U_ICU_VERSION_BUILDLEVEL_NUM
-#define U_ICU_VERSION_BUILDLEVEL_NUM 0
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_ICU_ಆವೃತ್ತಿ_BUILDLEVEL_ಅಂಕೆ
+#ವ್ಯಾಖ್ಯಾನಿಸು U_ICU_ಆವೃತ್ತಿ_BUILDLEVEL_ಅಂಕೆ 0
+#ಆದರೆ_ಅಂತ್ಯ
 
 /** Glued version suffix for renamers
  *  This value will change in the subsequent releases of ICU
  *  @stable ICU 2.6
  */
-#define U_ICU_VERSION_SUFFIX _79
+#ವ್ಯಾಖ್ಯಾನಿಸು U_ICU_ಆವೃತ್ತಿ_SUFFIX _79
 
 /**
  * \def U_DEF2_ICU_ENTRY_POINT_RENAME
@@ -101,38 +101,38 @@
  * \def U_DISABLE_VERSION_SUFFIX
  * @internal
  */
-#ifndef U_DISABLE_VERSION_SUFFIX
-#define U_DISABLE_VERSION_SUFFIX 0
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_DISABLE_ಆವೃತ್ತಿ_SUFFIX
+#ವ್ಯಾಖ್ಯಾನಿಸು U_DISABLE_ಆವೃತ್ತಿ_SUFFIX 0
+#ಆದರೆ_ಅಂತ್ಯ
 
-#ifndef U_ICU_ENTRY_POINT_RENAME
-#ifdef U_HAVE_LIB_SUFFIX
-#   if !U_DISABLE_VERSION_SUFFIX
-#       define U_DEF_ICU_ENTRY_POINT_RENAME(x,y,z) x ## y ##  z
-#       define U_DEF2_ICU_ENTRY_POINT_RENAME(x,y,z) U_DEF_ICU_ENTRY_POINT_RENAME(x,y,z)
-#       define U_ICU_ENTRY_POINT_RENAME(x)    U_DEF2_ICU_ENTRY_POINT_RENAME(x,U_ICU_VERSION_SUFFIX,U_LIB_SUFFIX_C_NAME)
-#   else
-#       define U_DEF_ICU_ENTRY_POINT_RENAME(x,y) x ## y
-#       define U_DEF2_ICU_ENTRY_POINT_RENAME(x,y) U_DEF_ICU_ENTRY_POINT_RENAME(x,y)
-#       define U_ICU_ENTRY_POINT_RENAME(x)    U_DEF2_ICU_ENTRY_POINT_RENAME(x,U_LIB_SUFFIX_C_NAME)
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_ICU_ನಮೂದು_ಬಿಂದು_RENAME
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ U_HAVE_LIB_SUFFIX
+#   ಆದರೆ !U_DISABLE_ಆವೃತ್ತಿ_SUFFIX
+#       define U_DEF_ICU_ನಮೂದು_ಬಿಂದು_RENAME(x,y,z) x ## y ##  z
+#       define U_DEF2_ICU_ನಮೂದು_ಬಿಂದು_RENAME(x,y,z) U_DEF_ICU_ನಮೂದು_ಬಿಂದು_RENAME(x,y,z)
+#       define U_ICU_ನಮೂದು_ಬಿಂದು_RENAME(x)    U_DEF2_ICU_ನಮೂದು_ಬಿಂದು_RENAME(x,U_ICU_ಆವೃತ್ತಿ_SUFFIX,U_LIB_SUFFIX_C_NAME)
+#   ಇಲ್ಲದಿದ್ದರೆ
+#       define U_DEF_ICU_ನಮೂದು_ಬಿಂದು_RENAME(x,y) x ## y
+#       define U_DEF2_ICU_ನಮೂದು_ಬಿಂದು_RENAME(x,y) U_DEF_ICU_ನಮೂದು_ಬಿಂದು_RENAME(x,y)
+#       define U_ICU_ನಮೂದು_ಬಿಂದು_RENAME(x)    U_DEF2_ICU_ನಮೂದು_ಬಿಂದು_RENAME(x,U_LIB_SUFFIX_C_NAME)
 #   endif
-#else
-#   if !U_DISABLE_VERSION_SUFFIX
-#       define U_DEF_ICU_ENTRY_POINT_RENAME(x,y) x ## y
-#       define U_DEF2_ICU_ENTRY_POINT_RENAME(x,y) U_DEF_ICU_ENTRY_POINT_RENAME(x,y)
-#       define U_ICU_ENTRY_POINT_RENAME(x)    U_DEF2_ICU_ENTRY_POINT_RENAME(x,U_ICU_VERSION_SUFFIX)
-#   else
-#       define U_ICU_ENTRY_POINT_RENAME(x)    x
+#ಇಲ್ಲದಿದ್ದರೆ
+#   ಆದರೆ !U_DISABLE_ಆವೃತ್ತಿ_SUFFIX
+#       define U_DEF_ICU_ನಮೂದು_ಬಿಂದು_RENAME(x,y) x ## y
+#       define U_DEF2_ICU_ನಮೂದು_ಬಿಂದು_RENAME(x,y) U_DEF_ICU_ನಮೂದು_ಬಿಂದು_RENAME(x,y)
+#       define U_ICU_ನಮೂದು_ಬಿಂದು_RENAME(x)    U_DEF2_ICU_ನಮೂದು_ಬಿಂದು_RENAME(x,U_ICU_ಆವೃತ್ತಿ_SUFFIX)
+#   ಇಲ್ಲದಿದ್ದರೆ
+#       define U_ICU_ನಮೂದು_ಬಿಂದು_RENAME(x)    x
 #   endif
-#endif
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
+#ಆದರೆ_ಅಂತ್ಯ
 
 /** The current ICU library version as a dotted-decimal string. The patchlevel
  *  only appears in this string if it non-zero.
  *  This value will change in the subsequent releases of ICU
  *  @stable ICU 2.4
  */
-#define U_ICU_VERSION "79.1"
+#ವ್ಯಾಖ್ಯಾನಿಸು U_ICU_ಆವೃತ್ತಿ "79.1"
 
 /**
  * The current ICU library major version number as a string, for library name suffixes.
@@ -145,14 +145,14 @@
  *
  * @stable ICU 2.6
  */
-#define U_ICU_VERSION_SHORT "79"
+#ವ್ಯಾಖ್ಯಾನಿಸು U_ICU_ಆವೃತ್ತಿ_SHORT "79"
 
-#ifndef U_HIDE_INTERNAL_API
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_ಆಂತರಿಕ_API
 /** Data version in ICU4C.
  * @internal ICU 4.4 Internal Use Only
  **/
-#define U_ICU_DATA_VERSION "79.1"
-#endif  /* U_HIDE_INTERNAL_API */
+#ವ್ಯಾಖ್ಯಾನಿಸು U_ICU_ದತ್ತಾಂಶ_ಆವೃತ್ತಿ "79.1"
+#ಆದರೆ_ಅಂತ್ಯ  /* U_HIDE_INTERNAL_API */
 
 /*===========================================================================
  * ICU collation framework version information
@@ -167,7 +167,7 @@
  * This value may change in subsequent releases of ICU.
  * @stable ICU 2.4
  */
-#define UCOL_RUNTIME_VERSION 9
+#ವ್ಯಾಖ್ಯಾನಿಸು UCOL_RUNTIME_ಆವೃತ್ತಿ 9
 
 /**
  * Collation builder code version.
@@ -176,16 +176,16 @@
  * This value may change in subsequent releases of ICU.
  * @stable ICU 2.4
  */
-#define UCOL_BUILDER_VERSION 9
+#ವ್ಯಾಖ್ಯಾನಿಸು UCOL_BUILDER_ಆವೃತ್ತಿ 9
 
-#ifndef U_HIDE_DEPRECATED_API
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_DEPRECATED_API
 /**
  * Constant 1.
  * This was intended to be the version of collation tailorings,
  * but instead the tailoring data carries a version number.
  * @deprecated ICU 54
  */
-#define UCOL_TAILORINGS_VERSION 1
-#endif  /* U_HIDE_DEPRECATED_API */
+#ವ್ಯಾಖ್ಯಾನಿಸು UCOL_TAILORINGS_ಆವೃತ್ತಿ 1
+#ಆದರೆ_ಅಂತ್ಯ  /* U_HIDE_DEPRECATED_API */
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

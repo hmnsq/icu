@@ -11,14 +11,14 @@
 * 2010nov19 Markus Scherer  Rewrite for formatVersion 2.
 **********************************************************************
 */
-#ifndef PROPNAME_H
-#define PROPNAME_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ PROPNAME_H
+#ವ್ಯಾಖ್ಯಾನಿಸು PROPNAME_H
 
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/uchar.h"
-#include "udataswp.h"
-#include "uprops.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/bytestrie.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uchar.h"
+#ಅನ್ತರ್ಭಾವ "udataswp.h"
+#ಅನ್ತರ್ಭಾವ "uprops.h"
 
 /*
  * This header defines the in-memory layout of the property names data
@@ -51,71 +51,71 @@ U_CDECL_BEGIN
  */
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareASCIIPropertyNames(const char *name1, const char *name2);
+uprv_compare_ASCIIProperty_ಹೆಸರುಗಳು(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name1, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name2);
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareEBCDICPropertyNames(const char *name1, const char *name2);
+uprv_compare_EBCDICProperty_ಹೆಸರುಗಳು(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name1, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name2);
 
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
-#   define uprv_comparePropertyNames uprv_compareASCIIPropertyNames
-#elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
-#   define uprv_comparePropertyNames uprv_compareEBCDICPropertyNames
-#else
+#ಆದರೆ U_CHARSET_FAMILY==U_ASCII_FAMILY
+#   define uprv_compare_Property_ಹೆಸರುಗಳು uprv_compare_ASCIIProperty_ಹೆಸರುಗಳು
+#ಅಥವಾಆದರೆ U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+#   define uprv_compare_Property_ಹೆಸರುಗಳು uprv_compare_EBCDICProperty_ಹೆಸರುಗಳು
+#ಇಲ್ಲದಿದ್ದರೆ
 #   error U_CHARSET_FAMILY is not valid
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-U_CDECL_END
+U_CDECL_ಕೊನೆ
 
 /* UDataMemory structure and signatures ------------------------------------- */
 
-#define PNAME_DATA_NAME "pnames"
-#define PNAME_DATA_TYPE "icu"
+#ವ್ಯಾಖ್ಯಾನಿಸು PNAME_ದತ್ತಾಂಶ_NAME "pnames"
+#ವ್ಯಾಖ್ಯಾನಿಸು PNAME_ದತ್ತಾಂಶ_TYPE "icu"
 
 /* Fields in UDataInfo: */
 
 /* PNAME_SIG[] is encoded as numeric literals for compatibility with the HP compiler */
-#define PNAME_SIG_0 ((uint8_t)0x70) /* p */
-#define PNAME_SIG_1 ((uint8_t)0x6E) /* n */
-#define PNAME_SIG_2 ((uint8_t)0x61) /* a */
-#define PNAME_SIG_3 ((uint8_t)0x6D) /* m */
+#ವ್ಯಾಖ್ಯಾನಿಸು PNAME_SIG_0 ((uint8_t)0x70) /* p */
+#ವ್ಯಾಖ್ಯಾನಿಸು PNAME_SIG_1 ((uint8_t)0x6E) /* n */
+#ವ್ಯಾಖ್ಯಾನಿಸು PNAME_SIG_2 ((uint8_t)0x61) /* a */
+#ವ್ಯಾಖ್ಯಾನಿಸು PNAME_SIG_3 ((uint8_t)0x6D) /* m */
 
 U_NAMESPACE_BEGIN
 
-class PropNameData {
-public:
-    enum {
+class Prop_Name_ದತ್ತಾಂಶ {
+ಸಾರ್ವಜನಿಕ:
+    ಎಣಿಕೆ {
         // Byte offsets from the start of the data, after the generic header.
-        IX_VALUE_MAPS_OFFSET,
-        IX_BYTE_TRIES_OFFSET,
-        IX_NAME_GROUPS_OFFSET,
-        IX_RESERVED3_OFFSET,
-        IX_RESERVED4_OFFSET,
-        IX_TOTAL_SIZE,
+        IX_ಮೌಲ್ಯ_MAPS_ಸ್ಥಾನಾಂತರ,
+        IX_BYTE_TRIES_ಸ್ಥಾನಾಂತರ,
+        IX_NAME_GROUPS_ಸ್ಥಾನಾಂತರ,
+        IX_RESERVED3_ಸ್ಥಾನಾಂತರ,
+        IX_RESERVED4_ಸ್ಥಾನಾಂತರ,
+        IX_ಒಟ್ಟು_ಗಾತ್ರ,
 
         // Other values.
-        IX_MAX_NAME_LENGTH,
+        IX_MAX_NAME_ಉದ್ದಳತೆ,
         IX_RESERVED7,
-        IX_COUNT
+        IX_ಎಣಿಕೆ
     };
 
-    static const char *getPropertyName(int32_t property, int32_t nameChoice);
-    static const char *getPropertyValueName(int32_t property, int32_t value, int32_t nameChoice);
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *getPropertyName(int32_t property, int32_t nameChoice);
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *get_Property_ಮೌಲ್ಯ_Name(int32_t property, int32_t ಮೌಲ್ಯ_2, int32_t nameChoice);
 
-    static int32_t getPropertyEnum(const char *alias);
-    static int32_t getPropertyValueEnum(int32_t property, const char *alias);
+    ಸ್ಥಿರ int32_t getPropertyEnum(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *alias);
+    ಸ್ಥಿರ int32_t get_Property_ಮೌಲ್ಯ_Enum(int32_t property, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *alias);
 
-private:
-    static int32_t findProperty(int32_t property);
-    static int32_t findPropertyValueNameGroup(int32_t valueMapIndex, int32_t value);
-    static const char *getName(const char *nameGroup, int32_t nameIndex);
-    static UBool containsName(BytesTrie &trie, const char *name);
+ಖಾಸಗಿ:
+    ಸ್ಥಿರ int32_t ಕಂಡುಹಿಡಿ_Property(int32_t property);
+    ಸ್ಥಿರ int32_t ಕಂಡುಹಿಡಿ_Property_ಮೌಲ್ಯ_Name_ಗುಂಪು(int32_t ಮೌಲ್ಯ_Map_ಸೂಚ್ಯಂಕ, int32_t ಮೌಲ್ಯ_2);
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *getName(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name_ಗುಂಪು, int32_t name_ಸೂಚ್ಯಂಕ);
+    ಸ್ಥಿರ UBool ಒಳಗೊಂಡಿದೆ_Name(ಬೈಟುಗಳು_Trie &trie, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name);
 
-    static int32_t getPropertyOrValueEnum(int32_t bytesTrieOffset, const char *alias);
+    ಸ್ಥಿರ int32_t get_Property_Or_ಮೌಲ್ಯ_Enum(int32_t ಬೈಟುಗಳು_Trie_ಸ್ಥಾನಾಂತರ, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *alias);
 
-    static const int32_t indexes[];
-    static const int32_t valueMaps[];
-    static const uint8_t bytesTries[];
-    static const char nameGroups[];
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t indexes[];
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t ಮೌಲ್ಯ_Maps[];
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint8_t ಬೈಟುಗಳು_Tries[];
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ nameGroups[];
 };
 
 /*
@@ -207,6 +207,6 @@ private:
  *      in a property's sparse value ranges.
  */
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

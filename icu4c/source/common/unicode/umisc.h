@@ -14,10 +14,10 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef UMISC_H
-#define UMISC_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ UMISC_H
+#ವ್ಯಾಖ್ಯಾನಿಸು UMISC_H
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
 /**
  * \file
@@ -31,32 +31,32 @@ U_CDECL_BEGIN
 /** A struct representing a range of text containing a specific field 
  *  @stable ICU 2.0
  */
-typedef struct UFieldPosition {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ UFieldPosition {
   /**
    * The field 
    * @stable ICU 2.0
    */
-  int32_t field;
+  int32_t ಕ್ಷೇತ್ರ_2;
   /**
    * The start of the text range containing field 
    * @stable ICU 2.0
    */
-  int32_t beginIndex;
+  int32_t begin_ಸೂಚ್ಯಂಕ;
   /** 
    * The limit of the text range containing field 
    * @stable ICU 2.0
    */
-  int32_t endIndex;
+  int32_t ಕೊನೆ_ಸೂಚ್ಯಂಕ;
 } UFieldPosition;
 
-#if !UCONFIG_NO_SERVICE
+#ಆದರೆ !UCONFIG_NO_SERVICE
 /**
  * Opaque type returned by registerInstance, registerFactory and unregister for service registration.
  * @stable ICU 2.6
  */
-typedef const void* URegistryKey;
-#endif
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ* URegistry_ಕೀಲಿ;
+#ಆದರೆ_ಅಂತ್ಯ
 
-U_CDECL_END
+U_CDECL_ಕೊನೆ
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

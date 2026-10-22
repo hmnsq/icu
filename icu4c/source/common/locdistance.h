@@ -4,48 +4,48 @@
 // locdistance.h
 // created: 2019may08 Markus W. Scherer
 
-#ifndef __LOCDISTANCE_H__
-#define __LOCDISTANCE_H__
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __LOCDISTANCE_H__
+#ವ್ಯಾಖ್ಯಾನಿಸು __LOCDISTANCE_H__
 
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/localematcher.h"
-#include "unicode/locid.h"
-#include "unicode/uobject.h"
-#include "lsr.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/bytestrie.h"
+#ಅನ್ತರ್ಭಾವ "unicode/localematcher.h"
+#ಅನ್ತರ್ಭಾವ "unicode/locid.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uobject.h"
+#ಅನ್ತರ್ಭಾವ "lsr.h"
 
 U_NAMESPACE_BEGIN
 
-struct LocaleDistanceData;
+ರಚನೆ Locale_ದೂರ_ದತ್ತಾಂಶ;
 
 /**
  * Offline-built data for LocaleMatcher.
  * Mostly but not only the data for mapping locales to their maximized forms.
  */
-class LocaleDistance final : public UMemory {
-public:
-    static const LocaleDistance *getSingleton(UErrorCode &errorCode);
+class Locale_ದೂರ final : ಸಾರ್ವಜನಿಕ UMemory {
+ಸಾರ್ವಜನಿಕ:
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Locale_ದೂರ *getSingleton(UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
-    static int32_t shiftDistance(int32_t distance) {
-        return distance << DISTANCE_SHIFT;
+    ಸ್ಥಿರ int32_t ಸರಿಸು_ದೂರ(int32_t ದೂರ) {
+        ಹಿಂತಿರುಗಿ ದೂರ << ದೂರ_ಸರಿಸು;
     }
 
-    static int32_t getShiftedDistance(int32_t indexAndDistance) {
-        return indexAndDistance & DISTANCE_MASK;
+    ಸ್ಥಿರ int32_t get_Shifted_ದೂರ(int32_t ಸೂಚ್ಯಂಕ_And_ದೂರ) {
+        ಹಿಂತಿರುಗಿ ಸೂಚ್ಯಂಕ_And_ದೂರ & ದೂರ_ಮುಖವಾಡ;
     }
 
-    static double getDistanceDouble(int32_t indexAndDistance) {
-        double shiftedDistance = getShiftedDistance(indexAndDistance);
-        return shiftedDistance / (1 << DISTANCE_SHIFT);
+    ಸ್ಥಿರ ದ್ವಿಗುಣ get_ದೂರ_Double(int32_t ಸೂಚ್ಯಂಕ_And_ದೂರ) {
+        ದ್ವಿಗುಣ shifted_ದೂರ = get_Shifted_ದೂರ(ಸೂಚ್ಯಂಕ_And_ದೂರ);
+        ಹಿಂತಿರುಗಿ shifted_ದೂರ / (1 << ದೂರ_ಸರಿಸು);
     }
 
-    static int32_t getDistanceFloor(int32_t indexAndDistance) {
-        return (indexAndDistance & DISTANCE_MASK) >> DISTANCE_SHIFT;
+    ಸ್ಥಿರ int32_t get_ದೂರ_Floor(int32_t ಸೂಚ್ಯಂಕ_And_ದೂರ) {
+        ಹಿಂತಿರುಗಿ (ಸೂಚ್ಯಂಕ_And_ದೂರ & ದೂರ_ಮುಖವಾಡ) >> ದೂರ_ಸರಿಸು;
     }
 
-    static int32_t getIndex(int32_t indexAndDistance) {
+    ಸ್ಥಿರ int32_t get_ಸೂಚ್ಯಂಕ(int32_t ಸೂಚ್ಯಂಕ_And_ದೂರ) {
         // assert indexAndDistance >= 0;
-        return indexAndDistance >> INDEX_SHIFT;
+        ಹಿಂತಿರುಗಿ ಸೂಚ್ಯಂಕ_And_ದೂರ >> ಸೂಚ್ಯಂಕ_ಸರಿಸು;
     }
 
     /**
@@ -56,96 +56,96 @@ public:
      * (negative if none has a distance below the threshold),
      * and its distance (0..ABOVE_THRESHOLD) in the low bits.
      */
-    int32_t getBestIndexAndDistance(const LSR &desired,
-                                    const LSR **supportedLSRs, int32_t supportedLSRsLength,
-                                    int32_t shiftedThreshold,
-                                    ULocMatchFavorSubtag favorSubtag,
-                                    ULocMatchDirection direction) const;
+    int32_t get_ಉತ್ತಮ_ಸೂಚ್ಯಂಕ_And_ದೂರ(ಸ್ಥಿರಾಂಕ LSR &desired,
+                                    ಸ್ಥಿರಾಂಕ LSR **supportedLSRs, int32_t supported_LSRs_ಉದ್ದಳತೆ,
+                                    int32_t shifted_ಮಿತಿ,
+                                    ULoc_ಹೊಂದಿಕೆ_Favor_Subtag favorSubtag,
+                                    ULoc_ಹೊಂದಿಕೆ_Direction direction) ಸ್ಥಿರಾಂಕ;
 
-    bool isParadigmLSR(const LSR &lsr) const;
+    bool isParadigmLSR(ಸ್ಥಿರಾಂಕ LSR &lsr) ಸ್ಥಿರಾಂಕ;
 
-    int32_t getDefaultScriptDistance() const {
-        return defaultScriptDistance;
+    int32_t get_Default_Script_ದೂರ() ಸ್ಥಿರಾಂಕ {
+        ಹಿಂತಿರುಗಿ default_Script_ದೂರ;
     }
 
-    int32_t getDefaultDemotionPerDesiredLocale() const {
-        return defaultDemotionPerDesiredLocale;
+    int32_t get_Default_Demotion_ಪ್ರತಿ_Desired_Locale() ಸ್ಥಿರಾಂಕ {
+        ಹಿಂತಿರುಗಿ default_Demotion_ಪ್ರತಿ_Desired_Locale;
     }
 
-private:
+ಖಾಸಗಿ:
     // The distance is shifted left to gain some fraction bits.
-    static constexpr int32_t DISTANCE_SHIFT = 3;
-    static constexpr int32_t DISTANCE_FRACTION_MASK = 7;
+    ಸ್ಥಿರ constexpr int32_t ದೂರ_ಸರಿಸು = 3;
+    ಸ್ಥಿರ constexpr int32_t ದೂರ_FRACTION_ಮುಖವಾಡ = 7;
     // 7 bits for 0..100
-    static constexpr int32_t DISTANCE_INT_SHIFT = 7;
-    static constexpr int32_t INDEX_SHIFT = DISTANCE_INT_SHIFT + DISTANCE_SHIFT;
-    static constexpr int32_t DISTANCE_MASK = 0x3ff;
+    ಸ್ಥಿರ constexpr int32_t ದೂರ_INT_ಸರಿಸು = 7;
+    ಸ್ಥಿರ constexpr int32_t ಸೂಚ್ಯಂಕ_ಸರಿಸು = ದೂರ_INT_ಸರಿಸು + ದೂರ_ಸರಿಸು;
+    ಸ್ಥಿರ constexpr int32_t ದೂರ_ಮುಖವಾಡ = 0x3ff;
     // tic constexpr int32_t MAX_INDEX = 0x1fffff;  // avoids sign bit
-    static constexpr int32_t INDEX_NEG_1 = 0xfffffc00;
+    ಸ್ಥಿರ constexpr int32_t ಸೂಚ್ಯಂಕ_NEG_1 = 0xfffffc00;
 
-    LocaleDistance(const LocaleDistanceData &data, const LikelySubtags &likely);
-    LocaleDistance(const LocaleDistance &other) = delete;
-    LocaleDistance &operator=(const LocaleDistance &other) = delete;
+    Locale_ದೂರ(ಸ್ಥಿರಾಂಕ Locale_ದೂರ_ದತ್ತಾಂಶ &ದತ್ತಾಂಶ, ಸ್ಥಿರಾಂಕ LikelySubtags &likely);
+    Locale_ದೂರ(ಸ್ಥಿರಾಂಕ Locale_ದೂರ &other) = delete;
+    Locale_ದೂರ &ಕ್ರಿಯಾಕಾರಕ=(ಸ್ಥಿರಾಂಕ Locale_ದೂರ &other) = delete;
 
-    static void initLocaleDistance(UErrorCode &errorCode);
+    ಸ್ಥಿರ ಶೂನ್ಯ init_Locale_ದೂರ(UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
-    bool isMatch(const LSR &desired, const LSR &supported,
-                 int32_t shiftedThreshold, ULocMatchFavorSubtag favorSubtag) const {
-        const LSR *pSupp = &supported;
-        return getBestIndexAndDistance(
+    bool is_ಹೊಂದಿಕೆ(ಸ್ಥಿರಾಂಕ LSR &desired, ಸ್ಥಿರಾಂಕ LSR &supported,
+                 int32_t shifted_ಮಿತಿ, ULoc_ಹೊಂದಿಕೆ_Favor_Subtag favorSubtag) ಸ್ಥಿರಾಂಕ {
+        ಸ್ಥಿರಾಂಕ LSR *pSupp = &supported;
+        ಹಿಂತಿರುಗಿ get_ಉತ್ತಮ_ಸೂಚ್ಯಂಕ_And_ದೂರ(
             desired, &pSupp, 1,
-            shiftedThreshold, favorSubtag, ULOCMATCH_DIRECTION_WITH_ONE_WAY) >= 0;
+            shifted_ಮಿತಿ, favorSubtag, ULOCMATCH_DIRECTION_WITH_ONE_WAY) >= 0;
     }
 
-    static int32_t getDesSuppScriptDistance(BytesTrie &iter, uint64_t startState,
-                                            const char *desired, const char *supported);
+    ಸ್ಥಿರ int32_t get_Des_Supp_Script_ದೂರ(ಬೈಟುಗಳು_Trie &iter, uint64_t ಆರಂಭ_State,
+                                            ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *desired, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *supported);
 
-    static int32_t getRegionPartitionsDistance(
-        BytesTrie &iter, uint64_t startState,
-        const char *desiredPartitions, const char *supportedPartitions,
-        int32_t threshold);
+    ಸ್ಥಿರ int32_t get_Region_Partitions_ದೂರ(
+        ಬೈಟುಗಳು_Trie &iter, uint64_t ಆರಂಭ_State,
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *desiredPartitions, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *supportedPartitions,
+        int32_t ಮಿತಿ);
 
-    static int32_t getFallbackRegionDistance(BytesTrie &iter, uint64_t startState);
+    ಸ್ಥಿರ int32_t get_Fallback_Region_ದೂರ(ಬೈಟುಗಳು_Trie &iter, uint64_t ಆರಂಭ_State);
 
-    static int32_t trieNext(BytesTrie &iter, const char *s, bool wantValue);
+    ಸ್ಥಿರ int32_t trie_ಮುಂದಿನ(ಬೈಟುಗಳು_Trie &iter, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *s, bool want_ಮೌಲ್ಯ);
 
-    const char *partitionsForRegion(const LSR &lsr) const {
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *partitionsForRegion(ಸ್ಥಿರಾಂಕ LSR &lsr) ಸ್ಥಿರಾಂಕ {
         // ill-formed region -> one non-matching string
-        int32_t pIndex = regionToPartitionsIndex[lsr.regionIndex];
-        return partitionArrays[pIndex];
+        int32_t p_ಸೂಚ್ಯಂಕ = region_ಗಮ್ಯ_Partitions_ಸೂಚ್ಯಂಕ[lsr.region_ಸೂಚ್ಯಂಕ];
+        ಹಿಂತಿರುಗಿ ವಿಭಜನೆ_Arrays[p_ಸೂಚ್ಯಂಕ];
     }
 
-    int32_t getDefaultRegionDistance() const {
-        return defaultRegionDistance;
+    int32_t get_Default_Region_ದೂರ() ಸ್ಥಿರಾಂಕ {
+        ಹಿಂತಿರುಗಿ default_Region_ದೂರ;
     }
 
-    const LikelySubtags &likelySubtags;
+    ಸ್ಥಿರಾಂಕ LikelySubtags &likelySubtags;
 
     // The trie maps each dlang+slang+dscript+sscript+dregion+sregion
     // (encoded in ASCII with bit 7 set on the last character of each subtag) to a distance.
     // There is also a trie value for each subsequence of whole subtags.
     // One '*' is used for a (desired, supported) pair of "und", "Zzzz"/"", or "ZZ"/"".
-    BytesTrie trie;
+    ಬೈಟುಗಳು_Trie trie;
 
     /**
      * Maps each region to zero or more single-character partitions.
      */
-    const uint8_t *regionToPartitionsIndex;
-    const char **partitionArrays;
+    ಸ್ಥಿರಾಂಕ uint8_t *region_ಗಮ್ಯ_Partitions_ಸೂಚ್ಯಂಕ;
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ **ವಿಭಜನೆ_Arrays;
 
     /**
      * Used to get the paradigm region for a cluster, if there is one.
      */
-    const LSR *paradigmLSRs;
-    int32_t paradigmLSRsLength;
+    ಸ್ಥಿರಾಂಕ LSR *paradigmLSRs;
+    int32_t paradigm_LSRs_ಉದ್ದಳತೆ;
 
-    int32_t defaultLanguageDistance;
-    int32_t defaultScriptDistance;
-    int32_t defaultRegionDistance;
-    int32_t minRegionDistance;
-    int32_t defaultDemotionPerDesiredLocale;
+    int32_t default_Language_ದೂರ;
+    int32_t default_Script_ದೂರ;
+    int32_t default_Region_ದೂರ;
+    int32_t min_Region_ದೂರ;
+    int32_t default_Demotion_ಪ್ರತಿ_Desired_Locale;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif  // __LOCDISTANCE_H__
+#ಆದರೆ_ಅಂತ್ಯ  // __LOCDISTANCE_H__

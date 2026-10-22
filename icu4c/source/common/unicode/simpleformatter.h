@@ -8,24 +8,24 @@
 * simpleformatter.h
 */
 
-#ifndef __SIMPLEFORMATTER_H__
-#define __SIMPLEFORMATTER_H__
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __SIMPLEFORMATTER_H__
+#ವ್ಯಾಖ್ಯಾನಿಸು __SIMPLEFORMATTER_H__
 
 /**
  * \file
  * \brief C++ API: Simple formatter, minimal subset of MessageFormat.
  */
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ಆದರೆ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/unistr.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unistr.h"
 
 U_NAMESPACE_BEGIN
 
 // Forward declaration:
-namespace number::impl {
+namespace ಸಂಖ್ಯೆ::impl {
 class SimpleModifier;
 }
 
@@ -57,13 +57,13 @@ class SimpleModifier;
  * @see UMessagePatternApostropheMode
  * @stable ICU 57
  */
-class U_COMMON_API SimpleFormatter final : public UMemory {
-public:
+class U_COMMON_API SimpleFormatter final : ಸಾರ್ವಜನಿಕ UMemory {
+ಸಾರ್ವಜನಿಕ:
     /**
      * Default constructor.
      * @stable ICU 57
      */
-    SimpleFormatter() : compiledPattern(static_cast<char16_t>(0)) {}
+    SimpleFormatter() : compiled_ನಮೂನೆ(static_cast<char16_t>(0)) {}
 
     /**
      * Constructs a formatter from the pattern string.
@@ -74,8 +74,8 @@ public:
      *                  Set to U_ILLEGAL_ARGUMENT_ERROR for bad argument syntax.
      * @stable ICU 57
      */
-    SimpleFormatter(const UnicodeString& pattern, UErrorCode &errorCode) {
-        applyPattern(pattern, errorCode);
+    SimpleFormatter(ಸ್ಥಿರಾಂಕ UnicodeString& ನಮೂನೆ, UError_ಸಂಕೇತ &error_ಸಂಕೇತ) {
+        apply_ನಮೂನೆ(ನಮೂನೆ, error_ಸಂಕೇತ);
     }
 
     /**
@@ -92,23 +92,23 @@ public:
      *                  too few or too many arguments.
      * @stable ICU 57
      */
-    SimpleFormatter(const UnicodeString& pattern, int32_t min, int32_t max,
-                    UErrorCode &errorCode) {
-        applyPatternMinMaxArguments(pattern, min, max, errorCode);
+    SimpleFormatter(ಸ್ಥಿರಾಂಕ UnicodeString& ನಮೂನೆ, int32_t min, int32_t max,
+                    UError_ಸಂಕೇತ &error_ಸಂಕೇತ) {
+        apply_ನಮೂನೆ_Min_Max_Arguments(ನಮೂನೆ, min, max, error_ಸಂಕೇತ);
     }
 
     /**
      * Copy constructor.
      * @stable ICU 57
      */
-    SimpleFormatter(const SimpleFormatter& other)
-            : compiledPattern(other.compiledPattern) {}
+    SimpleFormatter(ಸ್ಥಿರಾಂಕ SimpleFormatter& other)
+            : compiled_ನಮೂನೆ(other.compiled_ನಮೂನೆ) {}
 
     /**
      * Assignment operator.
      * @stable ICU 57
      */
-    SimpleFormatter& operator=(const SimpleFormatter& other) U_LIFETIME_BOUND;
+    SimpleFormatter& ಕ್ರಿಯಾಕಾರಕ=(ಸ್ಥಿರಾಂಕ SimpleFormatter& other) U_LIFETIME_BOUND;
 
     /**
      * Destructor.
@@ -126,8 +126,8 @@ public:
      * @return true if U_SUCCESS(errorCode).
      * @stable ICU 57
      */
-    UBool applyPattern(const UnicodeString &pattern, UErrorCode &errorCode) {
-        return applyPatternMinMaxArguments(pattern, 0, INT32_MAX, errorCode);
+    UBool apply_ನಮೂನೆ(ಸ್ಥಿರಾಂಕ UnicodeString &ನಮೂನೆ, UError_ಸಂಕೇತ &error_ಸಂಕೇತ) {
+        ಹಿಂತಿರುಗಿ apply_ನಮೂನೆ_Min_Max_Arguments(ನಮೂನೆ, 0, INT32_MAX, error_ಸಂಕೇತ);
     }
 
     /**
@@ -145,15 +145,15 @@ public:
      * @return true if U_SUCCESS(errorCode).
      * @stable ICU 57
      */
-    UBool applyPatternMinMaxArguments(const UnicodeString &pattern,
-                                      int32_t min, int32_t max, UErrorCode &errorCode);
+    UBool apply_ನಮೂನೆ_Min_Max_Arguments(ಸ್ಥಿರಾಂಕ UnicodeString &ನಮೂನೆ,
+                                      int32_t min, int32_t max, UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
     /**
      * @return The max argument number + 1.
      * @stable ICU 57
      */
-    int32_t getArgumentLimit() const {
-        return getArgumentLimit(compiledPattern.getBuffer(), compiledPattern.length());
+    int32_t get_ವಾದ_ಎಲ್ಲೆ() ಸ್ಥಿರಾಂಕ {
+        ಹಿಂತಿರುಗಿ get_ವಾದ_ಎಲ್ಲೆ(compiled_ನಮೂನೆ.get_ಬಫರ್(), compiled_ನಮೂನೆ.ಉದ್ದಳತೆ());
     }
 
     /**
@@ -169,9 +169,9 @@ public:
      * @stable ICU 57
      */
     UnicodeString& format(
-            const UnicodeString& value0,
-            UnicodeString& appendTo U_LIFETIME_BOUND,
-            UErrorCode& errorCode) const;
+            ಸ್ಥಿರಾಂಕ UnicodeString& value0,
+            UnicodeString& append_ಗಮ್ಯ U_LIFETIME_BOUND,
+            UError_ಸಂಕೇತ& error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Formats the given values, appending to the appendTo builder.
@@ -187,10 +187,10 @@ public:
      * @stable ICU 57
      */
     UnicodeString& format(
-            const UnicodeString& value0,
-            const UnicodeString& value1,
-            UnicodeString& appendTo U_LIFETIME_BOUND,
-            UErrorCode& errorCode) const;
+            ಸ್ಥಿರಾಂಕ UnicodeString& value0,
+            ಸ್ಥಿರಾಂಕ UnicodeString& value1,
+            UnicodeString& append_ಗಮ್ಯ U_LIFETIME_BOUND,
+            UError_ಸಂಕೇತ& error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Formats the given values, appending to the appendTo builder.
@@ -207,11 +207,11 @@ public:
      * @stable ICU 57
      */
     UnicodeString& format(
-            const UnicodeString& value0,
-            const UnicodeString& value1,
-            const UnicodeString& value2,
-            UnicodeString& appendTo U_LIFETIME_BOUND,
-            UErrorCode& errorCode) const;
+            ಸ್ಥಿರಾಂಕ UnicodeString& value0,
+            ಸ್ಥಿರಾಂಕ UnicodeString& value1,
+            ಸ್ಥಿರಾಂಕ UnicodeString& value2,
+            UnicodeString& append_ಗಮ್ಯ U_LIFETIME_BOUND,
+            UError_ಸಂಕೇತ& error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Formats the given values, appending to the appendTo string.
@@ -233,12 +233,12 @@ public:
      * @stable ICU 57
      */
     UnicodeString& formatAndAppend(
-            const UnicodeString* const* values,
-            int32_t valuesLength,
-            UnicodeString& appendTo U_LIFETIME_BOUND,
+            ಸ್ಥಿರಾಂಕ UnicodeString* ಸ್ಥಿರಾಂಕ* ಮೌಲ್ಯಗಳು,
+            int32_t ಮೌಲ್ಯಗಳು_ಉದ್ದಳತೆ,
+            UnicodeString& append_ಗಮ್ಯ U_LIFETIME_BOUND,
             int32_t* offsets,
-            int32_t offsetsLength,
-            UErrorCode& errorCode) const;
+            int32_t offsets_ಉದ್ದಳತೆ,
+            UError_ಸಂಕೇತ& error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Formats the given values, replacing the contents of the result string.
@@ -262,27 +262,27 @@ public:
      * @stable ICU 57
      */
     UnicodeString& formatAndReplace(
-            const UnicodeString* const* values,
-            int32_t valuesLength,
-            UnicodeString& result U_LIFETIME_BOUND,
+            ಸ್ಥಿರಾಂಕ UnicodeString* ಸ್ಥಿರಾಂಕ* ಮೌಲ್ಯಗಳು,
+            int32_t ಮೌಲ್ಯಗಳು_ಉದ್ದಳತೆ,
+            UnicodeString& ಫಲಿತಾಂಶ U_LIFETIME_BOUND,
             int32_t* offsets,
-            int32_t offsetsLength,
-            UErrorCode& errorCode) const;
+            int32_t offsets_ಉದ್ದಳತೆ,
+            UError_ಸಂಕೇತ& error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns the pattern text with none of the arguments.
      * Like formatting with all-empty string values.
      * @stable ICU 57
      */
-    UnicodeString getTextWithNoArguments() const {
-        return getTextWithNoArguments(
-            compiledPattern.getBuffer(),
-            compiledPattern.length(),
+    UnicodeString get_ಪಠ್ಯ_With_No_Arguments() ಸ್ಥಿರಾಂಕ {
+        ಹಿಂತಿರುಗಿ get_ಪಠ್ಯ_With_No_Arguments(
+            compiled_ನಮೂನೆ.get_ಬಫರ್(),
+            compiled_ನಮೂನೆ.ಉದ್ದಳತೆ(),
             nullptr,
             0);
     }
 
-#ifndef U_HIDE_INTERNAL_API
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_ಆಂತರಿಕ_API
     /**
      * Returns the pattern text with none of the arguments.
      * Like formatting with all-empty string values.
@@ -298,16 +298,16 @@ public:
      *
      * @internal
      */
-    UnicodeString getTextWithNoArguments(int32_t *offsets, int32_t offsetsLength) const {
-        return getTextWithNoArguments(
-            compiledPattern.getBuffer(),
-            compiledPattern.length(),
+    UnicodeString get_ಪಠ್ಯ_With_No_Arguments(int32_t *offsets, int32_t offsets_ಉದ್ದಳತೆ) ಸ್ಥಿರಾಂಕ {
+        ಹಿಂತಿರುಗಿ get_ಪಠ್ಯ_With_No_Arguments(
+            compiled_ನಮೂನೆ.get_ಬಫರ್(),
+            compiled_ನಮೂನೆ.ಉದ್ದಳತೆ(),
             offsets,
-            offsetsLength);
+            offsets_ಉದ್ದಳತೆ);
     }
-#endif // U_HIDE_INTERNAL_API
+#ಆದರೆ_ಅಂತ್ಯ // U_HIDE_INTERNAL_API
 
-private:
+ಖಾಸಗಿ:
     /**
      * Binary representation of the compiled pattern.
      * Index 0: One more than the highest argument number.
@@ -317,36 +317,36 @@ private:
      * A literal-text segment is stored as its length (at least 1) offset by ARG_NUM_LIMIT,
      * followed by that many chars.
      */
-    UnicodeString compiledPattern;
+    UnicodeString compiled_ನಮೂನೆ;
 
-    static inline int32_t getArgumentLimit(const char16_t *compiledPattern,
-                                              int32_t compiledPatternLength) {
-        return compiledPatternLength == 0 ? 0 : compiledPattern[0];
+    ಸ್ಥಿರ ಸಾಲೊಳಗೆ int32_t get_ವಾದ_ಎಲ್ಲೆ(ಸ್ಥಿರಾಂಕ char16_t *compiled_ನಮೂನೆ,
+                                              int32_t compiled_ನಮೂನೆ_ಉದ್ದಳತೆ) {
+        ಹಿಂತಿರುಗಿ compiled_ನಮೂನೆ_ಉದ್ದಳತೆ == 0 ? 0 : compiled_ನಮೂನೆ[0];
     }
 
-    static UnicodeString getTextWithNoArguments(
-        const char16_t *compiledPattern,
-        int32_t compiledPatternLength,
+    ಸ್ಥಿರ UnicodeString get_ಪಠ್ಯ_With_No_Arguments(
+        ಸ್ಥಿರಾಂಕ char16_t *compiled_ನಮೂನೆ,
+        int32_t compiled_ನಮೂನೆ_ಉದ್ದಳತೆ,
         int32_t *offsets,
-        int32_t offsetsLength);
+        int32_t offsets_ಉದ್ದಳತೆ);
 
-    static UnicodeString& format(
-            const char16_t* compiledPattern,
-            int32_t compiledPatternLength,
-            const UnicodeString* const* values,
-            UnicodeString& result U_LIFETIME_BOUND,
-            const UnicodeString* resultCopy,
-            UBool forbidResultAsValue,
+    ಸ್ಥಿರ UnicodeString& format(
+            ಸ್ಥಿರಾಂಕ char16_t* compiled_ನಮೂನೆ,
+            int32_t compiled_ನಮೂನೆ_ಉದ್ದಳತೆ,
+            ಸ್ಥಿರಾಂಕ UnicodeString* ಸ್ಥಿರಾಂಕ* ಮೌಲ್ಯಗಳು,
+            UnicodeString& ಫಲಿತಾಂಶ U_LIFETIME_BOUND,
+            ಸ್ಥಿರಾಂಕ UnicodeString* ಫಲಿತಾಂಶ_Copy,
+            UBool forbid_ಫಲಿತಾಂಶ_As_ಮೌಲ್ಯ,
             int32_t* offsets,
-            int32_t offsetsLength,
-            UErrorCode& errorCode);
+            int32_t offsets_ಉದ್ದಳತೆ,
+            UError_ಸಂಕೇತ& error_ಸಂಕೇತ);
 
     // Give access to internals to SimpleModifier for number formatting
-    friend class number::impl::SimpleModifier;
+    ಮಿತ್ರ class ಸಂಖ್ಯೆ::impl::SimpleModifier;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ಆದರೆ_ಅಂತ್ಯ /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __SIMPLEFORMATTER_H__
+#ಆದರೆ_ಅಂತ್ಯ  // __SIMPLEFORMATTER_H__

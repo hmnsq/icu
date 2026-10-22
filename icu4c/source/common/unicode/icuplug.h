@@ -104,27 +104,27 @@
  */
 
 
-#ifndef ICUPLUG_H
-#define ICUPLUG_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ ICUPLUG_H
+#ವ್ಯಾಖ್ಯಾನಿಸು ICUPLUG_H
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
 
-#if UCONFIG_ENABLE_PLUGINS || defined(U_IN_DOXYGEN)
+#ಆದರೆ UCONFIG_ENABLE_PLUGINS || defined(U_ಒಳ_DOXYGEN)
 
 
 
 /* === Basic types === */
 
-#ifndef U_HIDE_INTERNAL_API
-struct UPlugData;
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_ಆಂತರಿಕ_API
+ರಚನೆ UPlug_ದತ್ತಾಂಶ;
 /**
  * @{
  * Typedef for opaque structure passed to/from a plugin. 
  * Use the APIs to access it.
  * @internal ICU 4.4 Technology Preview
  */
-typedef struct UPlugData UPlugData;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ UPlug_ದತ್ತಾಂಶ UPlug_ದತ್ತಾಂಶ;
 
 /** @} */
 
@@ -133,13 +133,13 @@ typedef struct UPlugData UPlugData;
  * from the entrypoint.
  * @internal ICU 4.4 Technology Preview
  */
-#define UPLUG_TOKEN 0x54762486
+#ವ್ಯಾಖ್ಯಾನಿಸು UPLUG_TOKEN 0x54762486
 
 /**
  * Max width of names, symbols, and configuration strings
  * @internal ICU 4.4 Technology Preview
  */
-#define UPLUG_NAME_MAX              100
+#ವ್ಯಾಖ್ಯಾನಿಸು UPLUG_NAME_MAX              100
 
 
 /**
@@ -148,21 +148,21 @@ typedef struct UPlugData UPlugData;
  * @see UPLUG_TOKEN
  * @internal ICU 4.4 Technology Preview
  */
-typedef uint32_t UPlugTokenReturn;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ uint32_t UPlugTokenReturn;
 
 /**
  * Reason code for the entrypoint's call
  * @internal ICU 4.4 Technology Preview
  */
-typedef enum {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಎಣಿಕೆ {
     UPLUG_REASON_QUERY = 0,     /**< The plugin is being queried for info. **/
-    UPLUG_REASON_LOAD = 1,     /**< The plugin is being loaded. **/
+    UPLUG_REASON_ತುಂಬು = 1,     /**< The plugin is being loaded. **/
     UPLUG_REASON_UNLOAD = 2,   /**< The plugin is being unloaded. **/
     /**
      * Number of known reasons.
      * @internal The numeric value may change over time, see ICU ticket #12420.
      */
-    UPLUG_REASON_COUNT
+    UPLUG_REASON_ಎಣಿಕೆ
 } UPlugReason;
 
 
@@ -173,16 +173,16 @@ typedef enum {
  *     ERR -> INVALID
  * @internal ICU 4.4 Technology Preview
  */
-typedef enum {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಎಣಿಕೆ {
     UPLUG_LEVEL_INVALID = 0,     /**< The plugin is invalid, hasn't called uplug_setLevel, or can't load. **/
     UPLUG_LEVEL_UNKNOWN = 1,     /**< The plugin is waiting to be installed. **/
-    UPLUG_LEVEL_LOW     = 2,     /**< The plugin must be called before u_init completes **/
-    UPLUG_LEVEL_HIGH    = 3,     /**< The plugin can run at any time. **/
+    UPLUG_LEVEL_ಕೆಳಗಿನ     = 2,     /**< The plugin must be called before u_init completes **/
+    UPLUG_LEVEL_ಮೇಲಿನ    = 3,     /**< The plugin can run at any time. **/
     /**
      * Number of known levels.
      * @internal The numeric value may change over time, see ICU ticket #12420.
      */
-    UPLUG_LEVEL_COUNT
+    UPLUG_LEVEL_ಎಣಿಕೆ
 } UPlugLevel;
 
 /**
@@ -196,10 +196,10 @@ typedef enum {
  * @return A valid plugin must return UPLUG_TOKEN
  * @internal ICU 4.4 Technology Preview
  */
-typedef UPlugTokenReturn (U_EXPORT2 UPlugEntrypoint) (
-                  UPlugData *plug,
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ UPlugTokenReturn (U_EXPORT2 UPlugEntrypoint) (
+                  UPlug_ದತ್ತಾಂಶ *plug,
                   UPlugReason reason,
-                  UErrorCode *status);
+                  UError_ಸಂಕೇತ *ಸ್ಥಿತಿ_2);
 
 /* === Needed for Implementing === */
 
@@ -211,8 +211,8 @@ typedef UPlugTokenReturn (U_EXPORT2 UPlugEntrypoint) (
  * @param dontUnload  set true if this plugin can't be unloaded
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI void U_EXPORT2 
-uplug_setPlugNoUnload(UPlugData *plug, UBool dontUnload);
+U_CAPI ಶೂನ್ಯ U_EXPORT2 
+uplug_ಗಣ_Plug_No_Unload(UPlug_ದತ್ತಾಂಶ *plug, UBool dontUnload);
 
 /**
  * Set the level of this plugin.
@@ -220,8 +220,8 @@ uplug_setPlugNoUnload(UPlugData *plug, UBool dontUnload);
  * @param level the level of this plugin
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI void U_EXPORT2
-uplug_setPlugLevel(UPlugData *plug, UPlugLevel level);
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+uplug_ಗಣ_Plug_Level(UPlug_ದತ್ತಾಂಶ *plug, UPlugLevel level);
 
 /**
  * Get the level of this plugin.
@@ -230,7 +230,7 @@ uplug_setPlugLevel(UPlugData *plug, UPlugLevel level);
  * @internal ICU 4.4 Technology Preview
  */
 U_CAPI UPlugLevel U_EXPORT2
-uplug_getPlugLevel(UPlugData *plug);
+uplug_getPlugLevel(UPlug_ದತ್ತಾಂಶ *plug);
 
 /**
  * Get the lowest level of plug which can currently load.
@@ -240,7 +240,7 @@ uplug_getPlugLevel(UPlugData *plug);
  * @internal ICU 4.4 Technology Preview
  */
 U_CAPI UPlugLevel U_EXPORT2
-uplug_getCurrentLevel(void);
+uplug_getCurrentLevel(ಶೂನ್ಯ);
 
 
 /**
@@ -248,8 +248,8 @@ uplug_getCurrentLevel(void);
  * @return The error code of this plugin's load attempt.
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI UErrorCode U_EXPORT2
-uplug_getPlugLoadStatus(UPlugData *plug); 
+U_CAPI UError_ಸಂಕೇತ U_EXPORT2
+uplug_get_Plug_ತುಂಬು_ಸ್ಥಿತಿ(UPlug_ದತ್ತಾಂಶ *plug); 
 
 /**
  * Set the human-readable name of this plugin.
@@ -257,8 +257,8 @@ uplug_getPlugLoadStatus(UPlugData *plug);
  * @param name the name of this plugin. The first UPLUG_NAME_MAX characters willi be copied into a new buffer.
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI void U_EXPORT2
-uplug_setPlugName(UPlugData *plug, const char *name);
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+uplug_ಗಣ_Plug_Name(UPlug_ದತ್ತಾಂಶ *plug, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name);
 
 /**
  * Get the human-readable name of this plugin.
@@ -266,8 +266,8 @@ uplug_setPlugName(UPlugData *plug, const char *name);
  * @return the name of this plugin
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI const char* U_EXPORT2
-uplug_getPlugName(UPlugData* plug U_LIFETIME_BOUND);
+U_CAPI ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* U_EXPORT2
+uplug_getPlugName(UPlug_ದತ್ತಾಂಶ* plug U_LIFETIME_BOUND);
 
 /**
  * Return the symbol name for this plugin, if known.
@@ -275,8 +275,8 @@ uplug_getPlugName(UPlugData* plug U_LIFETIME_BOUND);
  * @return the symbol name, or NULL
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI const char* U_EXPORT2
-uplug_getSymbolName(UPlugData* plug U_LIFETIME_BOUND);
+U_CAPI ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* U_EXPORT2
+uplug_get_ಚಿಹ್ನೆ_Name(UPlug_ದತ್ತಾಂಶ* plug U_LIFETIME_BOUND);
 
 /**
  * Return the library name for this plugin, if known.
@@ -285,8 +285,8 @@ uplug_getSymbolName(UPlugData* plug U_LIFETIME_BOUND);
  * @return the library name, or NULL
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI const char* U_EXPORT2
-uplug_getLibraryName(UPlugData* plug U_LIFETIME_BOUND, UErrorCode* status);
+U_CAPI ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* U_EXPORT2
+uplug_getLibraryName(UPlug_ದತ್ತಾಂಶ* plug U_LIFETIME_BOUND, UError_ಸಂಕೇತ* ಸ್ಥಿತಿ_2);
 
 /**
  * Return the library used for this plugin, if known.
@@ -295,8 +295,8 @@ uplug_getLibraryName(UPlugData* plug U_LIFETIME_BOUND, UErrorCode* status);
  * @return the library, or NULL
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI void * U_EXPORT2
-uplug_getLibrary(UPlugData *plug);
+U_CAPI ಶೂನ್ಯ * U_EXPORT2
+uplug_getLibrary(UPlug_ದತ್ತಾಂಶ *plug);
 
 /**
  * Return the plugin-specific context data.
@@ -304,8 +304,8 @@ uplug_getLibrary(UPlugData *plug);
  * @return the context, or NULL if not set
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI void * U_EXPORT2
-uplug_getContext(UPlugData *plug);
+U_CAPI ಶೂನ್ಯ * U_EXPORT2
+uplug_getContext(UPlug_ದತ್ತಾಂಶ *plug);
 
 /**
  * Set the plugin-specific context data.
@@ -313,8 +313,8 @@ uplug_getContext(UPlugData *plug);
  * @param context new context to set
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI void U_EXPORT2
-uplug_setContext(UPlugData *plug, void *context);
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+uplug_ಗಣ_Context(UPlug_ದತ್ತಾಂಶ *plug, ಶೂನ್ಯ *context);
 
 
 /**
@@ -324,8 +324,8 @@ uplug_setContext(UPlugData *plug, void *context);
  * @return configuration string, or else null.
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI const char* U_EXPORT2
-uplug_getConfiguration(UPlugData* plug U_LIFETIME_BOUND);
+U_CAPI ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* U_EXPORT2
+uplug_getConfiguration(UPlug_ದತ್ತಾಂಶ* plug U_LIFETIME_BOUND);
 
 /**
  * Return all currently installed plugins, from newest to oldest
@@ -342,8 +342,8 @@ uplug_getConfiguration(UPlugData* plug U_LIFETIME_BOUND);
  * @return the next oldest plugin, or NULL if no more.
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI UPlugData* U_EXPORT2
-uplug_nextPlug(UPlugData *prior);
+U_CAPI UPlug_ದತ್ತಾಂಶ* U_EXPORT2
+uplug_ಮುಂದಿನ_Plug(UPlug_ದತ್ತಾಂಶ *ಪೂರ್ವ);
 
 /**
  * Inject a plugin as if it were loaded from a library.
@@ -357,8 +357,8 @@ uplug_nextPlug(UPlugData *prior);
  * @return the new UPlugData associated with this plugin, or NULL if error.
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI UPlugData* U_EXPORT2
-uplug_loadPlugFromEntrypoint(UPlugEntrypoint *entrypoint, const char *config, UErrorCode *status);
+U_CAPI UPlug_ದತ್ತಾಂಶ* U_EXPORT2
+uplug_ತುಂಬು_Plug_From_Entrypoint(UPlugEntrypoint *entrypoint, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *config, UError_ಸಂಕೇತ *ಸ್ಥಿತಿ_2);
 
 
 /**
@@ -371,8 +371,8 @@ uplug_loadPlugFromEntrypoint(UPlugEntrypoint *entrypoint, const char *config, UE
  * @return the new UPlugData associated with this plugin, or NULL if error.
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI UPlugData* U_EXPORT2
-uplug_loadPlugFromLibrary(const char *libName, const char *sym, const char *config, UErrorCode *status);
+U_CAPI UPlug_ದತ್ತಾಂಶ* U_EXPORT2
+uplug_ತುಂಬು_Plug_From_Library(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *libName, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *sym, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *config, UError_ಸಂಕೇತ *ಸ್ಥಿತಿ_2);
 
 /**
  * Remove a plugin. 
@@ -381,11 +381,11 @@ uplug_loadPlugFromLibrary(const char *libName, const char *sym, const char *conf
  * @param status error result
  * @internal ICU 4.4 Technology Preview
  */
-U_CAPI void U_EXPORT2
-uplug_removePlug(UPlugData *plug, UErrorCode *status);
-#endif  /* U_HIDE_INTERNAL_API */
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+uplug_removePlug(UPlug_ದತ್ತಾಂಶ *plug, UError_ಸಂಕೇತ *ಸ್ಥಿತಿ_2);
+#ಆದರೆ_ಅಂತ್ಯ  /* U_HIDE_INTERNAL_API */
 
-#endif /* UCONFIG_ENABLE_PLUGINS */
+#ಆದರೆ_ಅಂತ್ಯ /* UCONFIG_ENABLE_PLUGINS */
 
-#endif /* _ICUPLUG */
+#ಆದರೆ_ಅಂತ್ಯ /* _ICUPLUG */
 

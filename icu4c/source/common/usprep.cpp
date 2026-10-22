@@ -16,26 +16,26 @@
  *   created by: Ram Viswanadha
  */
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if !UCONFIG_NO_IDNA
+#ಆದರೆ !UCONFIG_NO_IDNA
 
-#include "unicode/usprep.h"
+#ಅನ್ತರ್ಭಾವ "unicode/usprep.h"
 
-#include "unicode/normalizer2.h"
-#include "unicode/ustring.h"
-#include "unicode/uchar.h"
-#include "unicode/uversion.h"
-#include "umutex.h"
-#include "cmemory.h"
-#include "sprpimpl.h"
-#include "ustr_imp.h"
-#include "uhash.h"
-#include "cstring.h"
-#include "udataswp.h"
-#include "ucln_cmn.h"
-#include "ubidi_props.h"
-#include "uprops.h"
+#ಅನ್ತರ್ಭಾವ "unicode/normalizer2.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ustring.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uchar.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uversion.h"
+#ಅನ್ತರ್ಭಾವ "umutex.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "sprpimpl.h"
+#ಅನ್ತರ್ಭಾವ "ustr_imp.h"
+#ಅನ್ತರ್ಭಾವ "uhash.h"
+#ಅನ್ತರ್ಭಾವ "cstring.h"
+#ಅನ್ತರ್ಭಾವ "udataswp.h"
+#ಅನ್ತರ್ಭಾವ "ucln_cmn.h"
+#ಅನ್ತರ್ಭಾವ "ubidi_props.h"
+#ಅನ್ತರ್ಭಾವ "uprops.h"
 
 U_NAMESPACE_USE
 
@@ -44,18 +44,18 @@ U_CDECL_BEGIN
 /*
 Static cache for already opened StringPrep profiles
 */
-static UHashtable *SHARED_DATA_HASHTABLE = nullptr;
-static icu::UInitOnce gSharedDataInitOnce {};
+ಸ್ಥಿರ UHashtable *SHARED_ದತ್ತಾಂಶ_HASHTABLE = ಶೂನ್ಯಸೂಚಕ;
+ಸ್ಥಿರ icu::UInitOnce g_Shared_ದತ್ತಾಂಶ_Init_Once {};
 
-static UMutex usprepMutex;
+ಸ್ಥಿರ UMutex usprepMutex;
 /* format version of spp file */
 //static uint8_t formatVersion[4]={ 0, 0, 0, 0 };
 
 /* the Unicode version of the sprep data */
-static UVersionInfo dataVersion={ 0, 0, 0, 0 };
+ಸ್ಥಿರ UVersionInfo ದತ್ತಾಂಶ_ಆವೃತ್ತಿ={ 0, 0, 0, 0 };
 
 /* Profile names must be aligned to UStringPrepProfileType */
-static const char * const PROFILE_NAMES[] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ * ಸ್ಥಿರಾಂಕ PROFILE_ಹೆಸರುಗಳು[] = {
     "rfc3491",      /* USPREP_RFC3491_NAMEPREP */
     "rfc3530cs",    /* USPREP_RFC3530_NFS4_CS_PREP */
     "rfc3530csci",  /* USPREP_RFC3530_NFS4_CS_PREP_CI */
@@ -72,116 +72,116 @@ static const char * const PROFILE_NAMES[] = {
     "rfc4518ci",    /* USPREP_RFC4518_LDAP_CI */
 };
 
-static UBool U_CALLCONV
-isSPrepAcceptable(void * /* context */,
-             const char * /* type */, 
-             const char * /* name */,
-             const UDataInfo *pInfo) {
-    if(
+ಸ್ಥಿರ UBool U_CALLCONV
+isSPrepAcceptable(ಶೂನ್ಯ * /* context */,
+             ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ * /* type */, 
+             ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ * /* name */,
+             ಸ್ಥಿರಾಂಕ UDataInfo *pInfo) {
+    ಆದರೆ(
         pInfo->size>=20 &&
         pInfo->isBigEndian==U_IS_BIG_ENDIAN &&
         pInfo->charsetFamily==U_CHARSET_FAMILY &&
-        pInfo->dataFormat[0]==0x53 &&   /* dataFormat="SPRP" */
-        pInfo->dataFormat[1]==0x50 &&
-        pInfo->dataFormat[2]==0x52 &&
-        pInfo->dataFormat[3]==0x50 &&
-        pInfo->formatVersion[0]==3 &&
-        pInfo->formatVersion[2]==UTRIE_SHIFT &&
-        pInfo->formatVersion[3]==UTRIE_INDEX_SHIFT
+        pInfo->ದತ್ತಾಂಶ_Format[0]==0x53 &&   /* dataFormat="SPRP" */
+        pInfo->ದತ್ತಾಂಶ_Format[1]==0x50 &&
+        pInfo->ದತ್ತಾಂಶ_Format[2]==0x52 &&
+        pInfo->ದತ್ತಾಂಶ_Format[3]==0x50 &&
+        pInfo->format_ಆವೃತ್ತಿ[0]==3 &&
+        pInfo->format_ಆವೃತ್ತಿ[2]==UTRIE_ಸರಿಸು &&
+        pInfo->format_ಆವೃತ್ತಿ[3]==UTRIE_ಸೂಚ್ಯಂಕ_ಸರಿಸು
     ) {
         //uprv_memcpy(formatVersion, pInfo->formatVersion, 4);
-        uprv_memcpy(dataVersion, pInfo->dataVersion, 4);
-        return true;
-    } else {
-        return false;
+        uprv_memcpy(ದತ್ತಾಂಶ_ಆವೃತ್ತಿ, pInfo->ದತ್ತಾಂಶ_ಆವೃತ್ತಿ, 4);
+        ಹಿಂತಿರುಗಿ ನಿಜ;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
     }
 }
 
-static int32_t U_CALLCONV
-getSPrepFoldingOffset(uint32_t data) {
+ಸ್ಥಿರ int32_t U_CALLCONV
+get_SPrep_Folding_ಸ್ಥಾನಾಂತರ(uint32_t ದತ್ತಾಂಶ) {
 
-    return (int32_t)data;
+    ಹಿಂತಿರುಗಿ (int32_t)ದತ್ತಾಂಶ;
 
 }
 
 /* hashes an entry  */
-static int32_t U_CALLCONV 
-hashEntry(const UHashTok parm) {
-    UStringPrepKey *b = (UStringPrepKey *)parm.pointer;
+ಸ್ಥಿರ int32_t U_CALLCONV 
+hash_ನಮೂದು(ಸ್ಥಿರಾಂಕ UHashTok parm) {
+    UString_Prep_ಕೀಲಿ *b = (UString_Prep_ಕೀಲಿ *)parm.ಸೂಚಕ;
     UHashTok namekey, pathkey;
-    namekey.pointer = b->name;
-    pathkey.pointer = b->path;
+    namekey.ಸೂಚಕ = b->name;
+    pathkey.ಸೂಚಕ = b->ಮಾರ್ಗ;
     uint32_t unsignedHash = static_cast<uint32_t>(uhash_hashChars(namekey)) +
             37u * static_cast<uint32_t>(uhash_hashChars(pathkey));
-    return static_cast<int32_t>(unsignedHash);
+    ಹಿಂತಿರುಗಿ static_cast<int32_t>(unsignedHash);
 }
 
 /* compares two entries */
-static UBool U_CALLCONV 
-compareEntries(const UHashTok p1, const UHashTok p2) {
-    UStringPrepKey *b1 = (UStringPrepKey *)p1.pointer;
-    UStringPrepKey *b2 = (UStringPrepKey *)p2.pointer;
+ಸ್ಥಿರ UBool U_CALLCONV 
+compareEntries(ಸ್ಥಿರಾಂಕ UHashTok p1, ಸ್ಥಿರಾಂಕ UHashTok p2) {
+    UString_Prep_ಕೀಲಿ *b1 = (UString_Prep_ಕೀಲಿ *)p1.ಸೂಚಕ;
+    UString_Prep_ಕೀಲಿ *b2 = (UString_Prep_ಕೀಲಿ *)p2.ಸೂಚಕ;
     UHashTok name1, name2, path1, path2;
-    name1.pointer = b1->name;
-    name2.pointer = b2->name;
-    path1.pointer = b1->path;
-    path2.pointer = b2->path;
-    return uhash_compareChars(name1, name2) && uhash_compareChars(path1, path2);
+    name1.ಸೂಚಕ = b1->name;
+    name2.ಸೂಚಕ = b2->name;
+    path1.ಸೂಚಕ = b1->ಮಾರ್ಗ;
+    path2.ಸೂಚಕ = b2->ಮಾರ್ಗ;
+    ಹಿಂತಿರುಗಿ uhash_compareChars(name1, name2) && uhash_compareChars(path1, path2);
 }
 
-static void 
-usprep_unload(UStringPrepProfile* data){
-    udata_close(data->sprepData);
+ಸ್ಥಿರ ಶೂನ್ಯ 
+usprep_unload(UStringPrepProfile* ದತ್ತಾಂಶ){
+    udata_close(ದತ್ತಾಂಶ->sprep_ದತ್ತಾಂಶ);
 }
 
-static int32_t 
-usprep_internal_flushCache(UBool noRefCount){
-    UStringPrepProfile *profile = nullptr;
-    UStringPrepKey  *key  = nullptr;
-    int32_t pos = UHASH_FIRST;
-    int32_t deletedNum = 0;
-    const UHashElement *e;
+ಸ್ಥಿರ int32_t 
+usprep_ಆಂತರಿಕ_flush_Cache(UBool no_Ref_ಎಣಿಕೆ){
+    UStringPrepProfile *profile = ಶೂನ್ಯಸೂಚಕ;
+    UString_Prep_ಕೀಲಿ  *ಕೀಲಿ  = ಶೂನ್ಯಸೂಚಕ;
+    int32_t pos = UHASH_ಮೊದಲ;
+    int32_t deleted_ಅಂಕೆ = 0;
+    ಸ್ಥಿರಾಂಕ UHashElement *e;
 
     /*
      * if shared data hasn't even been lazy evaluated yet
      * return 0
      */
-    umtx_lock(&usprepMutex);
-    if (SHARED_DATA_HASHTABLE == nullptr) {
+    umtx_ಬೀಗ(&usprepMutex);
+    ಆದರೆ (SHARED_ದತ್ತಾಂಶ_HASHTABLE == ಶೂನ್ಯಸೂಚಕ) {
         umtx_unlock(&usprepMutex);
-        return 0;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
     /*creates an enumeration to iterate through every element in the table */
-    while ((e = uhash_nextElement(SHARED_DATA_HASHTABLE, &pos)) != nullptr)
+    ಆಗ ((e = uhash_ಮುಂದಿನ_Element(SHARED_ದತ್ತಾಂಶ_HASHTABLE, &pos)) != ಶೂನ್ಯಸೂಚಕ)
     {
-        profile = (UStringPrepProfile *) e->value.pointer;
-        key  = (UStringPrepKey *) e->key.pointer;
+        profile = (UStringPrepProfile *) e->value.ಸೂಚಕ;
+        ಕೀಲಿ  = (UString_Prep_ಕೀಲಿ *) e->ಕೀಲಿ.ಸೂಚಕ;
 
-        if ((noRefCount== false && profile->refCount == 0) || 
-             noRefCount) {
-            deletedNum++;
-            uhash_removeElement(SHARED_DATA_HASHTABLE, e);
+        ಆದರೆ ((no_Ref_ಎಣಿಕೆ== ಸುಳ್ಳು && profile->ref_ಎಣಿಕೆ == 0) || 
+             no_Ref_ಎಣಿಕೆ) {
+            deleted_ಅಂಕೆ++;
+            uhash_removeElement(SHARED_ದತ್ತಾಂಶ_HASHTABLE, e);
 
             /* unload the data */
             usprep_unload(profile);
 
-            if(key->name != nullptr) {
-                uprv_free(key->name);
-                key->name=nullptr;
+            ಆದರೆ(ಕೀಲಿ->name != ಶೂನ್ಯಸೂಚಕ) {
+                uprv_free(ಕೀಲಿ->name);
+                ಕೀಲಿ->name=ಶೂನ್ಯಸೂಚಕ;
             }
-            if(key->path != nullptr) {
-                uprv_free(key->path);
-                key->path=nullptr;
+            ಆದರೆ(ಕೀಲಿ->ಮಾರ್ಗ != ಶೂನ್ಯಸೂಚಕ) {
+                uprv_free(ಕೀಲಿ->ಮಾರ್ಗ);
+                ಕೀಲಿ->ಮಾರ್ಗ=ಶೂನ್ಯಸೂಚಕ;
             }
             uprv_free(profile);
-            uprv_free(key);
+            uprv_free(ಕೀಲಿ);
         }
        
     }
     umtx_unlock(&usprepMutex);
 
-    return deletedNum;
+    ಹಿಂತಿರುಗಿ deleted_ಅಂಕೆ;
 }
 
 /* Works just like ucnv_flushCache() 
@@ -191,409 +191,409 @@ usprep_flushCache(){
 }
 */
 
-static UBool U_CALLCONV usprep_cleanup(){
-    if (SHARED_DATA_HASHTABLE != nullptr) {
-        usprep_internal_flushCache(true);
-        if (SHARED_DATA_HASHTABLE != nullptr && uhash_count(SHARED_DATA_HASHTABLE) == 0) {
-            uhash_close(SHARED_DATA_HASHTABLE);
-            SHARED_DATA_HASHTABLE = nullptr;
+ಸ್ಥಿರ UBool U_CALLCONV usprep_cleanup(){
+    ಆದರೆ (SHARED_ದತ್ತಾಂಶ_HASHTABLE != ಶೂನ್ಯಸೂಚಕ) {
+        usprep_ಆಂತರಿಕ_flush_Cache(ನಿಜ);
+        ಆದರೆ (SHARED_ದತ್ತಾಂಶ_HASHTABLE != ಶೂನ್ಯಸೂಚಕ && uhash_ಎಣಿಕೆ(SHARED_ದತ್ತಾಂಶ_HASHTABLE) == 0) {
+            uhash_close(SHARED_ದತ್ತಾಂಶ_HASHTABLE);
+            SHARED_ದತ್ತಾಂಶ_HASHTABLE = ಶೂನ್ಯಸೂಚಕ;
         }
     }
-    gSharedDataInitOnce.reset();
-    return (SHARED_DATA_HASHTABLE == nullptr);
+    g_Shared_ದತ್ತಾಂಶ_Init_Once.reset();
+    ಹಿಂತಿರುಗಿ (SHARED_ದತ್ತಾಂಶ_HASHTABLE == ಶೂನ್ಯಸೂಚಕ);
 }
-U_CDECL_END
+U_CDECL_ಕೊನೆ
 
 
 /** Initializes the cache for resources */
-static void U_CALLCONV
-createCache(UErrorCode &status) {
-    SHARED_DATA_HASHTABLE = uhash_open(hashEntry, compareEntries, nullptr, &status);
-    if (U_FAILURE(status)) {
-        SHARED_DATA_HASHTABLE = nullptr;
+ಸ್ಥಿರ ಶೂನ್ಯ U_CALLCONV
+createCache(UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2) {
+    SHARED_ದತ್ತಾಂಶ_HASHTABLE = uhash_open(hash_ನಮೂದು, compareEntries, ಶೂನ್ಯಸೂಚಕ, &ಸ್ಥಿತಿ_2);
+    ಆದರೆ (U_FAILURE(ಸ್ಥಿತಿ_2)) {
+        SHARED_ದತ್ತಾಂಶ_HASHTABLE = ಶೂನ್ಯಸೂಚಕ;
     }
-    ucln_common_registerCleanup(UCLN_COMMON_USPREP, usprep_cleanup);
+    ucln_common_ರಿಜಿಸ್ಟರ್_Cleanup(UCLN_COMMON_USPREP, usprep_cleanup);
 }
 
-static void 
-initCache(UErrorCode *status) {
-    umtx_initOnce(gSharedDataInitOnce, &createCache, *status);
+ಸ್ಥಿರ ಶೂನ್ಯ 
+initCache(UError_ಸಂಕೇತ *ಸ್ಥಿತಿ_2) {
+    umtx_initOnce(g_Shared_ದತ್ತಾಂಶ_Init_Once, &createCache, *ಸ್ಥಿತಿ_2);
 }
 
-static UBool U_CALLCONV
-loadData(UStringPrepProfile* profile, 
-         const char* path, 
-         const char* name, 
-         const char* type, 
-         UErrorCode* errorCode) {
+ಸ್ಥಿರ UBool U_CALLCONV
+ತುಂಬು_ದತ್ತಾಂಶ(UStringPrepProfile* profile, 
+         ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* ಮಾರ್ಗ, 
+         ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* name, 
+         ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* type, 
+         UError_ಸಂಕೇತ* error_ಸಂಕೇತ) {
     /* load Unicode SPREP data from file */    
-    UTrie _sprepTrie = {nullptr, nullptr, nullptr, 0, 0, 0, 0};
-    UDataMemory *dataMemory;
-    const int32_t *p=nullptr;
-    const uint8_t *pb;
-    UVersionInfo normUnicodeVersion;
+    UTrie _sprepTrie = {ಶೂನ್ಯಸೂಚಕ, ಶೂನ್ಯಸೂಚಕ, ಶೂನ್ಯಸೂಚಕ, 0, 0, 0, 0};
+    UData_ಸ್ಮರಣೆ *ದತ್ತಾಂಶ_ಸ್ಮರಣೆ;
+    ಸ್ಥಿರಾಂಕ int32_t *p=ಶೂನ್ಯಸೂಚಕ;
+    ಸ್ಥಿರಾಂಕ uint8_t *pb;
+    UVersionInfo norm_Unicode_ಆವೃತ್ತಿ;
     int32_t normUniVer, sprepUniVer, normCorrVer;
 
-    if(errorCode==nullptr || U_FAILURE(*errorCode)) {
-        return 0;
+    ಆದರೆ(error_ಸಂಕೇತ==ಶೂನ್ಯಸೂಚಕ || U_FAILURE(*error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ 0;
     }
 
     /* open the data outside the mutex block */
     //TODO: change the path
-    dataMemory=udata_openChoice(path, type, name, isSPrepAcceptable, nullptr, errorCode);
-    if(U_FAILURE(*errorCode)) {
-        return false;
+    ದತ್ತಾಂಶ_ಸ್ಮರಣೆ=udata_openChoice(ಮಾರ್ಗ, type, name, isSPrepAcceptable, ಶೂನ್ಯಸೂಚಕ, error_ಸಂಕೇತ);
+    ಆದರೆ(U_FAILURE(*error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
     }
 
-    p = static_cast<const int32_t*>(udata_getMemory(dataMemory));
-    pb = reinterpret_cast<const uint8_t*>(p + _SPREP_INDEX_TOP);
-    utrie_unserialize(&_sprepTrie, pb, p[_SPREP_INDEX_TRIE_SIZE], errorCode);
-    _sprepTrie.getFoldingOffset=getSPrepFoldingOffset;
+    p = static_cast<ಸ್ಥಿರಾಂಕ int32_t*>(udata_get_ಸ್ಮರಣೆ(ದತ್ತಾಂಶ_ಸ್ಮರಣೆ));
+    pb = reinterpret_cast<ಸ್ಥಿರಾಂಕ uint8_t*>(p + SPREP_ಸೂಚ್ಯಂಕ_ತುದಿ);
+    utrie_unserialize(&_sprepTrie, pb, p[SPREP_ಸೂಚ್ಯಂಕ_TRIE_ಗಾತ್ರ], error_ಸಂಕೇತ);
+    _sprepTrie.get_Folding_ಸ್ಥಾನಾಂತರ=get_SPrep_Folding_ಸ್ಥಾನಾಂತರ;
 
 
-    if(U_FAILURE(*errorCode)) {
-        udata_close(dataMemory);
-        return false;
+    ಆದರೆ(U_FAILURE(*error_ಸಂಕೇತ)) {
+        udata_close(ದತ್ತಾಂಶ_ಸ್ಮರಣೆ);
+        ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
     }
 
     /* in the mutex block, set the data for this process */
-    umtx_lock(&usprepMutex);
-    if(profile->sprepData==nullptr) {
-        profile->sprepData=dataMemory;
-        dataMemory=nullptr;
-        uprv_memcpy(&profile->indexes, p, sizeof(profile->indexes));
-        uprv_memcpy(&profile->sprepTrie, &_sprepTrie, sizeof(UTrie));
-    } else {
-        p = static_cast<const int32_t*>(udata_getMemory(profile->sprepData));
+    umtx_ಬೀಗ(&usprepMutex);
+    ಆದರೆ(profile->sprep_ದತ್ತಾಂಶ==ಶೂನ್ಯಸೂಚಕ) {
+        profile->sprep_ದತ್ತಾಂಶ=ದತ್ತಾಂಶ_ಸ್ಮರಣೆ;
+        ದತ್ತಾಂಶ_ಸ್ಮರಣೆ=ಶೂನ್ಯಸೂಚಕ;
+        uprv_memcpy(&profile->indexes, p, ಗಾತ್ರ(profile->indexes));
+        uprv_memcpy(&profile->sprepTrie, &_sprepTrie, ಗಾತ್ರ(UTrie));
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        p = static_cast<ಸ್ಥಿರಾಂಕ int32_t*>(udata_get_ಸ್ಮರಣೆ(profile->sprep_ದತ್ತಾಂಶ));
     }
     umtx_unlock(&usprepMutex);
     /* initialize some variables */
-    profile->mappingData = reinterpret_cast<const uint16_t*>(reinterpret_cast<const uint8_t*>(p + _SPREP_INDEX_TOP) + profile->indexes[_SPREP_INDEX_TRIE_SIZE]);
+    profile->mapping_ದತ್ತಾಂಶ = reinterpret_cast<ಸ್ಥಿರಾಂಕ uint16_t*>(reinterpret_cast<ಸ್ಥಿರಾಂಕ uint8_t*>(p + SPREP_ಸೂಚ್ಯಂಕ_ತುದಿ) + profile->indexes[SPREP_ಸೂಚ್ಯಂಕ_TRIE_ಗಾತ್ರ]);
     
-    u_getUnicodeVersion(normUnicodeVersion);
-    normUniVer = (normUnicodeVersion[0] << 24) + (normUnicodeVersion[1] << 16) + 
-                 (normUnicodeVersion[2] << 8 ) + (normUnicodeVersion[3]);
-    sprepUniVer = (dataVersion[0] << 24) + (dataVersion[1] << 16) + 
-                  (dataVersion[2] << 8 ) + (dataVersion[3]);
-    normCorrVer = profile->indexes[_SPREP_NORM_CORRECTNS_LAST_UNI_VERSION];
+    u_get_Unicode_ಆವೃತ್ತಿ(norm_Unicode_ಆವೃತ್ತಿ);
+    normUniVer = (norm_Unicode_ಆವೃತ್ತಿ[0] << 24) + (norm_Unicode_ಆವೃತ್ತಿ[1] << 16) + 
+                 (norm_Unicode_ಆವೃತ್ತಿ[2] << 8 ) + (norm_Unicode_ಆವೃತ್ತಿ[3]);
+    sprepUniVer = (ದತ್ತಾಂಶ_ಆವೃತ್ತಿ[0] << 24) + (ದತ್ತಾಂಶ_ಆವೃತ್ತಿ[1] << 16) + 
+                  (ದತ್ತಾಂಶ_ಆವೃತ್ತಿ[2] << 8 ) + (ದತ್ತಾಂಶ_ಆವೃತ್ತಿ[3]);
+    normCorrVer = profile->indexes[SPREP_NORM_CORRECTNS_ಕೊನೆಯ_UNI_ಆವೃತ್ತಿ];
     
-    if(U_FAILURE(*errorCode)){
-        udata_close(dataMemory);
-        return false;
+    ಆದರೆ(U_FAILURE(*error_ಸಂಕೇತ)){
+        udata_close(ದತ್ತಾಂಶ_ಸ್ಮರಣೆ);
+        ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
     }
-    if( normUniVer < sprepUniVer && /* the Unicode version of SPREP file must be less than the Unicode Version of the normalization data */
+    ಆದರೆ( normUniVer < sprepUniVer && /* the Unicode version of SPREP file must be less than the Unicode Version of the normalization data */
         normUniVer < normCorrVer && /* the Unicode version of the NormalizationCorrections.txt file should be less than the Unicode Version of the normalization data */
         ((profile->indexes[_SPREP_OPTIONS] & _SPREP_NORMALIZATION_ON) > 0) /* normalization turned on*/
       ){
-        *errorCode = U_INVALID_FORMAT_ERROR;
-        udata_close(dataMemory);
-        return false;
+        *error_ಸಂಕೇತ = U_INVALID_FORMAT_ERROR;
+        udata_close(ದತ್ತಾಂಶ_ಸ್ಮರಣೆ);
+        ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
     }
-    profile->isDataLoaded = true;
+    profile->is_ದತ್ತಾಂಶ_Loaded = ನಿಜ;
 
     /* if a different thread set it first, then close the extra data */
-    if(dataMemory!=nullptr) {
-        udata_close(dataMemory); /* nullptr if it was set correctly */
+    ಆದರೆ(ದತ್ತಾಂಶ_ಸ್ಮರಣೆ!=ಶೂನ್ಯಸೂಚಕ) {
+        udata_close(ದತ್ತಾಂಶ_ಸ್ಮರಣೆ); /* nullptr if it was set correctly */
     }
 
 
-    return profile->isDataLoaded;
+    ಹಿಂತಿರುಗಿ profile->is_ದತ್ತಾಂಶ_Loaded;
 }
 
-static UStringPrepProfile* 
-usprep_getProfile(const char* path, 
-                  const char* name,
-                  UErrorCode *status){
+ಸ್ಥಿರ UStringPrepProfile* 
+usprep_getProfile(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* ಮಾರ್ಗ, 
+                  ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* name,
+                  UError_ಸಂಕೇತ *ಸ್ಥಿತಿ_2){
 
-    UStringPrepProfile* profile = nullptr;
+    UStringPrepProfile* profile = ಶೂನ್ಯಸೂಚಕ;
 
-    initCache(status);
+    initCache(ಸ್ಥಿತಿ_2);
 
-    if(U_FAILURE(*status)){
-        return nullptr;
+    ಆದರೆ(U_FAILURE(*ಸ್ಥಿತಿ_2)){
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
 
-    UStringPrepKey stackKey;
+    UString_Prep_ಕೀಲಿ ರಾಶಿ_ಕೀಲಿ;
     /* 
      * const is cast way to save malloc, strcpy and free calls 
      * we use the passed in pointers for fetching the data from the 
      * hash table which is safe
      */
-    stackKey.name = const_cast<char*>(name);
-    stackKey.path = const_cast<char*>(path);
+    ರಾಶಿ_ಕೀಲಿ.name = const_cast<ಅಕ್ಷರ*>(name);
+    ರಾಶಿ_ಕೀಲಿ.ಮಾರ್ಗ = const_cast<ಅಕ್ಷರ*>(ಮಾರ್ಗ);
 
     /* fetch the data from the cache */
-    umtx_lock(&usprepMutex);
-    profile = static_cast<UStringPrepProfile*>(uhash_get(SHARED_DATA_HASHTABLE, &stackKey));
-    if(profile != nullptr) {
-        profile->refCount++;
+    umtx_ಬೀಗ(&usprepMutex);
+    profile = static_cast<UStringPrepProfile*>(uhash_get(SHARED_ದತ್ತಾಂಶ_HASHTABLE, &ರಾಶಿ_ಕೀಲಿ));
+    ಆದರೆ(profile != ಶೂನ್ಯಸೂಚಕ) {
+        profile->ref_ಎಣಿಕೆ++;
     }
     umtx_unlock(&usprepMutex);
     
-    if(profile == nullptr) {
+    ಆದರೆ(profile == ಶೂನ್ಯಸೂಚಕ) {
         /* else load the data and put the data in the cache */
-        LocalMemory<UStringPrepProfile> newProfile;
-        if(newProfile.allocateInsteadAndReset() == nullptr) {
-            *status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+        Local_ಸ್ಮರಣೆ<UStringPrepProfile> newProfile;
+        ಆದರೆ(newProfile.allocateInsteadAndReset() == ಶೂನ್ಯಸೂಚಕ) {
+            *ಸ್ಥಿತಿ_2 = U_ಸ್ಮರಣೆ_ಹಂಚಿಕೆ_ERROR;
+            ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
         }
 
         /* load the data */
-        if(!loadData(newProfile.getAlias(), path, name, _SPREP_DATA_TYPE, status) || U_FAILURE(*status) ){
-            return nullptr;
+        ಆದರೆ(!ತುಂಬು_ದತ್ತಾಂಶ(newProfile.getAlias(), ಮಾರ್ಗ, name, SPREP_ದತ್ತಾಂಶ_TYPE, ಸ್ಥಿತಿ_2) || U_FAILURE(*ಸ್ಥಿತಿ_2) ){
+            ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
         }
 
         /* get the options */
         newProfile->doNFKC = static_cast<UBool>((newProfile->indexes[_SPREP_OPTIONS] & _SPREP_NORMALIZATION_ON) > 0);
         newProfile->checkBiDi = static_cast<UBool>((newProfile->indexes[_SPREP_OPTIONS] & _SPREP_CHECK_BIDI_ON) > 0);
 
-        LocalMemory<UStringPrepKey> key;
-        LocalMemory<char> keyName;
-        LocalMemory<char> keyPath;
-        if( key.allocateInsteadAndReset() == nullptr ||
-            keyName.allocateInsteadAndCopy(static_cast<int32_t>(uprv_strlen(name)+1)) == nullptr ||
-            (path != nullptr &&
-             keyPath.allocateInsteadAndCopy(static_cast<int32_t>(uprv_strlen(path)+1)) == nullptr)
+        Local_ಸ್ಮರಣೆ<UString_Prep_ಕೀಲಿ> ಕೀಲಿ;
+        Local_ಸ್ಮರಣೆ<ಅಕ್ಷರ> ಕೀಲಿ_Name;
+        Local_ಸ್ಮರಣೆ<ಅಕ್ಷರ> ಕೀಲಿ_ಮಾರ್ಗ;
+        ಆದರೆ( ಕೀಲಿ.allocateInsteadAndReset() == ಶೂನ್ಯಸೂಚಕ ||
+            ಕೀಲಿ_Name.allocateInsteadAndCopy(static_cast<int32_t>(uprv_strlen(name)+1)) == ಶೂನ್ಯಸೂಚಕ ||
+            (ಮಾರ್ಗ != ಶೂನ್ಯಸೂಚಕ &&
+             ಕೀಲಿ_ಮಾರ್ಗ.allocateInsteadAndCopy(static_cast<int32_t>(uprv_strlen(ಮಾರ್ಗ)+1)) == ಶೂನ್ಯಸೂಚಕ)
          ) {
-            *status = U_MEMORY_ALLOCATION_ERROR;
+            *ಸ್ಥಿತಿ_2 = U_ಸ್ಮರಣೆ_ಹಂಚಿಕೆ_ERROR;
             usprep_unload(newProfile.getAlias());
-            return nullptr;
+            ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
         }
 
-        umtx_lock(&usprepMutex);
+        umtx_ಬೀಗ(&usprepMutex);
         // If another thread already inserted the same key/value, refcount and cleanup our thread data
-        profile = static_cast<UStringPrepProfile*>(uhash_get(SHARED_DATA_HASHTABLE, &stackKey));
-        if(profile != nullptr) {
-            profile->refCount++;
+        profile = static_cast<UStringPrepProfile*>(uhash_get(SHARED_ದತ್ತಾಂಶ_HASHTABLE, &ರಾಶಿ_ಕೀಲಿ));
+        ಆದರೆ(profile != ಶೂನ್ಯಸೂಚಕ) {
+            profile->ref_ಎಣಿಕೆ++;
             usprep_unload(newProfile.getAlias());
         }
-        else {
+        ಇಲ್ಲದಿದ್ದರೆ {
             /* initialize the key members */
-            key->name = keyName.orphan();
-            uprv_strcpy(key->name, name);
-            if(path != nullptr){
-                key->path = keyPath.orphan();
-                uprv_strcpy(key->path, path);
+            ಕೀಲಿ->name = ಕೀಲಿ_Name.orphan();
+            uprv_strcpy(ಕೀಲಿ->name, name);
+            ಆದರೆ(ಮಾರ್ಗ != ಶೂನ್ಯಸೂಚಕ){
+                ಕೀಲಿ->ಮಾರ್ಗ = ಕೀಲಿ_ಮಾರ್ಗ.orphan();
+                uprv_strcpy(ಕೀಲಿ->ಮಾರ್ಗ, ಮಾರ್ಗ);
             }        
             profile = newProfile.orphan();
     
             /* add the data object to the cache */
-            profile->refCount = 1;
-            uhash_put(SHARED_DATA_HASHTABLE, key.orphan(), profile, status);
+            profile->ref_ಎಣಿಕೆ = 1;
+            uhash_put(SHARED_ದತ್ತಾಂಶ_HASHTABLE, ಕೀಲಿ.orphan(), profile, ಸ್ಥಿತಿ_2);
         }
         umtx_unlock(&usprepMutex);
     }
 
-    return profile;
+    ಹಿಂತಿರುಗಿ profile;
 }
 
 U_CAPI UStringPrepProfile* U_EXPORT2
-usprep_open(const char* path, 
-            const char* name,
-            UErrorCode* status){
+usprep_open(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* ಮಾರ್ಗ, 
+            ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* name,
+            UError_ಸಂಕೇತ* ಸ್ಥಿತಿ_2){
 
-    if(status == nullptr || U_FAILURE(*status)){
-        return nullptr;
+    ಆದರೆ(ಸ್ಥಿತಿ_2 == ಶೂನ್ಯಸೂಚಕ || U_FAILURE(*ಸ್ಥಿತಿ_2)){
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
        
     /* initialize the profile struct members */
-    return usprep_getProfile(path,name,status);
+    ಹಿಂತಿರುಗಿ usprep_getProfile(ಮಾರ್ಗ,name,ಸ್ಥಿತಿ_2);
 }
 
 U_CAPI UStringPrepProfile* U_EXPORT2
 usprep_openByType(UStringPrepProfileType type,
-				  UErrorCode* status) {
-    if(status == nullptr || U_FAILURE(*status)){
-        return nullptr;
+				  UError_ಸಂಕೇತ* ಸ್ಥಿತಿ_2) {
+    ಆದರೆ(ಸ್ಥಿತಿ_2 == ಶೂನ್ಯಸೂಚಕ || U_FAILURE(*ಸ್ಥಿತಿ_2)){
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
-    int32_t index = (int32_t)type;
-    if (index < 0 || index >= UPRV_LENGTHOF(PROFILE_NAMES)) {
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+    int32_t ಸೂಚ್ಯಂಕ = (int32_t)type;
+    ಆದರೆ (ಸೂಚ್ಯಂಕ < 0 || ಸೂಚ್ಯಂಕ >= UPRV_LENGTHOF(PROFILE_ಹೆಸರುಗಳು)) {
+        *ಸ್ಥಿತಿ_2 = U_ILLEGAL_ವಾದ_ERROR;
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
-    return usprep_open(nullptr, PROFILE_NAMES[index], status);
+    ಹಿಂತಿರುಗಿ usprep_open(ಶೂನ್ಯಸೂಚಕ, PROFILE_ಹೆಸರುಗಳು[ಸೂಚ್ಯಂಕ], ಸ್ಥಿತಿ_2);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ಶೂನ್ಯ U_EXPORT2
 usprep_close(UStringPrepProfile* profile){
-    if(profile==nullptr){
-        return;
+    ಆದರೆ(profile==ಶೂನ್ಯಸೂಚಕ){
+        ಹಿಂತಿರುಗಿ;
     }
 
-    umtx_lock(&usprepMutex);
+    umtx_ಬೀಗ(&usprepMutex);
     /* decrement the ref count*/
-    if(profile->refCount > 0){
-        profile->refCount--;
+    ಆದರೆ(profile->ref_ಎಣಿಕೆ > 0){
+        profile->ref_ಎಣಿಕೆ--;
     }
     umtx_unlock(&usprepMutex);
     
 }
 
-U_CFUNC void 
-uprv_syntaxError(const char16_t* rules,
+U_CFUNC ಶೂನ್ಯ 
+uprv_syntaxError(ಸ್ಥಿರಾಂಕ char16_t* ನಿಯಮಗಳು,
                  int32_t pos,
-                 int32_t rulesLen,
+                 int32_t ನಿಯಮಗಳು_Len,
                  UParseError* parseError){
-    if(parseError == nullptr){
-        return;
+    ಆದರೆ(parseError == ಶೂನ್ಯಸೂಚಕ){
+        ಹಿಂತಿರುಗಿ;
     }
-    parseError->offset = pos;
-    parseError->line = 0 ; // we are not using line numbers 
+    parseError->ಸ್ಥಾನಾಂತರ = pos;
+    parseError->ಸಾಲು = 0 ; // we are not using line numbers 
     
     // for pre-context
-    int32_t start = (pos < U_PARSE_CONTEXT_LEN)? 0 : (pos - (U_PARSE_CONTEXT_LEN-1));
-    int32_t limit = pos;
+    int32_t ಆರಂಭ = (pos < U_PARSE_CONTEXT_LEN)? 0 : (pos - (U_PARSE_CONTEXT_LEN-1));
+    int32_t ಎಲ್ಲೆ = pos;
     
-    u_memcpy(parseError->preContext,rules+start,limit-start);
+    u_memcpy(parseError->preContext,ನಿಯಮಗಳು+ಆರಂಭ,ಎಲ್ಲೆ-ಆರಂಭ);
     //null terminate the buffer
-    parseError->preContext[limit-start] = 0;
+    parseError->preContext[ಎಲ್ಲೆ-ಆರಂಭ] = 0;
     
     // for post-context; include error rules[pos]
-    start = pos;
-    limit = start + (U_PARSE_CONTEXT_LEN-1);
-    if (limit > rulesLen) {
-        limit = rulesLen;
+    ಆರಂಭ = pos;
+    ಎಲ್ಲೆ = ಆರಂಭ + (U_PARSE_CONTEXT_LEN-1);
+    ಆದರೆ (ಎಲ್ಲೆ > ನಿಯಮಗಳು_Len) {
+        ಎಲ್ಲೆ = ನಿಯಮಗಳು_Len;
     }
-    if (start < rulesLen) {
-        u_memcpy(parseError->postContext,rules+start,limit-start);
+    ಆದರೆ (ಆರಂಭ < ನಿಯಮಗಳು_Len) {
+        u_memcpy(parseError->postContext,ನಿಯಮಗಳು+ಆರಂಭ,ಎಲ್ಲೆ-ಆರಂಭ);
     }
     //null terminate the buffer
-    parseError->postContext[limit-start]= 0;
+    parseError->postContext[ಎಲ್ಲೆ-ಆರಂಭ]= 0;
 }
 
 
-static inline UStringPrepType
-getValues(uint16_t trieWord, int16_t& value, UBool& isIndex){
+ಸ್ಥಿರ ಸಾಲೊಳಗೆ UStringPrepType
+get_ಮೌಲ್ಯಗಳು(uint16_t trie_ಶಬ್ದ, int16_t& value, UBool& is_ಸೂಚ್ಯಂಕ){
 
     UStringPrepType type;
-    if(trieWord == 0){
+    ಆದರೆ(trie_ಶಬ್ದ == 0){
         /* 
          * Initial value stored in the mapping table 
          * just return USPREP_TYPE_LIMIT .. so that
          * the source codepoint is copied to the destination
          */
-        type = USPREP_TYPE_LIMIT;
-        isIndex =false;
+        type = USPREP_TYPE_ಎಲ್ಲೆ;
+        is_ಸೂಚ್ಯಂಕ =ಸುಳ್ಳು;
         value = 0;
-    }else if(trieWord >= _SPREP_TYPE_THRESHOLD){
-        type = static_cast<UStringPrepType>(trieWord - _SPREP_TYPE_THRESHOLD);
-        isIndex =false;
+    }ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(trie_ಶಬ್ದ >= SPREP_TYPE_ಮಿತಿ){
+        type = static_cast<UStringPrepType>(trie_ಶಬ್ದ - SPREP_TYPE_ಮಿತಿ);
+        is_ಸೂಚ್ಯಂಕ =ಸುಳ್ಳು;
         value = 0;
-    }else{
+    }ಇಲ್ಲದಿದ್ದರೆ{
         /* get the type */
         type = USPREP_MAP;
         /* ascertain if the value is index or delta */
-        if(trieWord & 0x02){
-            isIndex = true;
-            value = trieWord  >> 2; //mask off the lower 2 bits and shift
-        }else{
-            isIndex = false;
-            value = static_cast<int16_t>(trieWord);
+        ಆದರೆ(trie_ಶಬ್ದ & 0x02){
+            is_ಸೂಚ್ಯಂಕ = ನಿಜ;
+            value = trie_ಶಬ್ದ  >> 2; //mask off the lower 2 bits and shift
+        }ಇಲ್ಲದಿದ್ದರೆ{
+            is_ಸೂಚ್ಯಂಕ = ಸುಳ್ಳು;
+            value = static_cast<int16_t>(trie_ಶಬ್ದ);
             value =  (value >> 2);
         }
  
-        if((trieWord>>2) == _SPREP_MAX_INDEX_VALUE){
+        ಆದರೆ((trie_ಶಬ್ದ>>2) == SPREP_MAX_ಸೂಚ್ಯಂಕ_ಮೌಲ್ಯ){
             type = USPREP_DELETE;
-            isIndex =false;
+            is_ಸೂಚ್ಯಂಕ =ಸುಳ್ಳು;
             value = 0;
         }
     }
-    return type;
+    ಹಿಂತಿರುಗಿ type;
 }
 
 // TODO: change to writing to UnicodeString not char16_t *
-static int32_t 
-usprep_map(  const UStringPrepProfile* profile, 
-             const char16_t* src, int32_t srcLength,
-             char16_t* dest, int32_t destCapacity,
+ಸ್ಥಿರ int32_t 
+usprep_map(  ಸ್ಥಿರಾಂಕ UStringPrepProfile* profile, 
+             ಸ್ಥಿರಾಂಕ char16_t* src, int32_t src_ಉದ್ದಳತೆ,
+             char16_t* dest, int32_t dest_ಸಾಮರ್ಥ್ಯ,
              int32_t options,
              UParseError* parseError,
-             UErrorCode* status ){
+             UError_ಸಂಕೇತ* ಸ್ಥಿತಿ_2 ){
     
-    uint16_t result;
-    int32_t destIndex=0;
-    int32_t srcIndex;
+    uint16_t ಫಲಿತಾಂಶ;
+    int32_t dest_ಸೂಚ್ಯಂಕ=0;
+    int32_t src_ಸೂಚ್ಯಂಕ;
     UBool allowUnassigned = static_cast<UBool>((options & USPREP_ALLOW_UNASSIGNED) > 0);
     UStringPrepType type;
     int16_t value;
-    UBool isIndex;
-    const int32_t* indexes = profile->indexes;
+    UBool is_ಸೂಚ್ಯಂಕ;
+    ಸ್ಥಿರಾಂಕ int32_t* indexes = profile->indexes;
 
     // no error checking the caller check for error and arguments
     // no string length check the caller finds out the string length
 
-    for(srcIndex=0;srcIndex<srcLength;){
+    ಗಾಗಿ(src_ಸೂಚ್ಯಂಕ=0;src_ಸೂಚ್ಯಂಕ<src_ಉದ್ದಳತೆ;){
         UChar32 ch;
 
-        U16_NEXT(src,srcIndex,srcLength,ch);
+        U16_ಮುಂದಿನ(src,src_ಸೂಚ್ಯಂಕ,src_ಉದ್ದಳತೆ,ch);
         
-        result=0;
+        ಫಲಿತಾಂಶ=0;
 
-        UTRIE_GET16(&profile->sprepTrie,ch,result);
+        UTRIE_GET16(&profile->sprepTrie,ch,ಫಲಿತಾಂಶ);
         
-        type = getValues(result, value, isIndex);
+        type = get_ಮೌಲ್ಯಗಳು(ಫಲಿತಾಂಶ, value, is_ಸೂಚ್ಯಂಕ);
 
         // check if the source codepoint is unassigned
-        if(type == USPREP_UNASSIGNED && allowUnassigned == false){
+        ಆದರೆ(type == USPREP_UNASSIGNED && allowUnassigned == ಸುಳ್ಳು){
 
-            uprv_syntaxError(src,srcIndex-U16_LENGTH(ch), srcLength,parseError);
-            *status = U_STRINGPREP_UNASSIGNED_ERROR;
-            return 0;
+            uprv_syntaxError(src,src_ಸೂಚ್ಯಂಕ-U16_ಉದ್ದಳತೆ(ch), src_ಉದ್ದಳತೆ,parseError);
+            *ಸ್ಥಿತಿ_2 = U_STRINGPREP_UNASSIGNED_ERROR;
+            ಹಿಂತಿರುಗಿ 0;
             
-        }else if(type == USPREP_MAP){
+        }ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(type == USPREP_MAP){
             
-            int32_t index, length;
+            int32_t ಸೂಚ್ಯಂಕ, length;
 
-            if(isIndex){
-                index = value;
-                if(index >= indexes[_SPREP_ONE_UCHAR_MAPPING_INDEX_START] &&
-                         index < indexes[_SPREP_TWO_UCHARS_MAPPING_INDEX_START]){
+            ಆದರೆ(is_ಸೂಚ್ಯಂಕ){
+                ಸೂಚ್ಯಂಕ = value;
+                ಆದರೆ(ಸೂಚ್ಯಂಕ >= indexes[SPREP_ONE_UCHAR_MAPPING_ಸೂಚ್ಯಂಕ_ಆರಂಭ] &&
+                         ಸೂಚ್ಯಂಕ < indexes[SPREP_TWO_UCHARS_MAPPING_ಸೂಚ್ಯಂಕ_ಆರಂಭ]){
                     length = 1;
-                }else if(index >= indexes[_SPREP_TWO_UCHARS_MAPPING_INDEX_START] &&
-                         index < indexes[_SPREP_THREE_UCHARS_MAPPING_INDEX_START]){
+                }ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(ಸೂಚ್ಯಂಕ >= indexes[SPREP_TWO_UCHARS_MAPPING_ಸೂಚ್ಯಂಕ_ಆರಂಭ] &&
+                         ಸೂಚ್ಯಂಕ < indexes[SPREP_THREE_UCHARS_MAPPING_ಸೂಚ್ಯಂಕ_ಆರಂಭ]){
                     length = 2;
-                }else if(index >= indexes[_SPREP_THREE_UCHARS_MAPPING_INDEX_START] &&
-                         index < indexes[_SPREP_FOUR_UCHARS_MAPPING_INDEX_START]){
+                }ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(ಸೂಚ್ಯಂಕ >= indexes[SPREP_THREE_UCHARS_MAPPING_ಸೂಚ್ಯಂಕ_ಆರಂಭ] &&
+                         ಸೂಚ್ಯಂಕ < indexes[SPREP_FOUR_UCHARS_MAPPING_ಸೂಚ್ಯಂಕ_ಆರಂಭ]){
                     length = 3;
-                }else{
-                    length = profile->mappingData[index++];
+                }ಇಲ್ಲದಿದ್ದರೆ{
+                    length = profile->mapping_ದತ್ತಾಂಶ[ಸೂಚ್ಯಂಕ++];
          
                 }
 
                 /* copy mapping to destination */
-                for(int32_t i=0; i< length; i++){
-                    if(destIndex < destCapacity  ){
-                        dest[destIndex] = profile->mappingData[index+i];
+                ಗಾಗಿ(int32_t i=0; i< length; i++){
+                    ಆದರೆ(dest_ಸೂಚ್ಯಂಕ < dest_ಸಾಮರ್ಥ್ಯ  ){
+                        dest[dest_ಸೂಚ್ಯಂಕ] = profile->mapping_ದತ್ತಾಂಶ[ಸೂಚ್ಯಂಕ+i];
                     }
-                    destIndex++; /* for pre-flighting */
+                    dest_ಸೂಚ್ಯಂಕ++; /* for pre-flighting */
                 }  
-                continue;
-            }else{
+                ಮುಂದುವರಿ;
+            }ಇಲ್ಲದಿದ್ದರೆ{
                 // subtract the delta to arrive at the code point
                 ch -= value;
             }
 
-        }else if(type==USPREP_DELETE){
+        }ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(type==USPREP_DELETE){
              // just consume the codepoint and continue
-            continue;
+            ಮುಂದುವರಿ;
         }
         //copy the code point into destination
-        if(ch <= 0xFFFF){
-            if(destIndex < destCapacity ){
-                dest[destIndex] = static_cast<char16_t>(ch);
+        ಆದರೆ(ch <= 0xFFFF){
+            ಆದರೆ(dest_ಸೂಚ್ಯಂಕ < dest_ಸಾಮರ್ಥ್ಯ ){
+                dest[dest_ಸೂಚ್ಯಂಕ] = static_cast<char16_t>(ch);
             }
-            destIndex++;
-        }else{
-            if(destIndex+1 < destCapacity ){
-                dest[destIndex]   = U16_LEAD(ch);
-                dest[destIndex+1] = U16_TRAIL(ch);
+            dest_ಸೂಚ್ಯಂಕ++;
+        }ಇಲ್ಲದಿದ್ದರೆ{
+            ಆದರೆ(dest_ಸೂಚ್ಯಂಕ+1 < dest_ಸಾಮರ್ಥ್ಯ ){
+                dest[dest_ಸೂಚ್ಯಂಕ]   = U16_LEAD(ch);
+                dest[dest_ಸೂಚ್ಯಂಕ+1] = U16_TRAIL(ch);
             }
-            destIndex +=2;
+            dest_ಸೂಚ್ಯಂಕ +=2;
         }
        
     }
         
-    return u_terminateUChars(dest, destCapacity, destIndex, status);
+    ಹಿಂತಿರುಗಿ u_terminateUChars(dest, dest_ಸಾಮರ್ಥ್ಯ, dest_ಸೂಚ್ಯಂಕ, ಸ್ಥಿತಿ_2);
 }
 
 /*
@@ -635,238 +635,238 @@ usprep_map(  const UStringPrepProfile* profile,
           RandALCat character MUST be the last character of the string.
 */
 U_CAPI int32_t U_EXPORT2
-usprep_prepare(   const UStringPrepProfile* profile,
-                  const char16_t* src, int32_t srcLength,
-                  char16_t* dest, int32_t destCapacity,
+usprep_prepare(   ಸ್ಥಿರಾಂಕ UStringPrepProfile* profile,
+                  ಸ್ಥಿರಾಂಕ char16_t* src, int32_t src_ಉದ್ದಳತೆ,
+                  char16_t* dest, int32_t dest_ಸಾಮರ್ಥ್ಯ,
                   int32_t options,
                   UParseError* parseError,
-                  UErrorCode* status ){
+                  UError_ಸಂಕೇತ* ಸ್ಥಿತಿ_2 ){
 
     // check error status
-    if(U_FAILURE(*status)){
-        return 0;
+    ಆದರೆ(U_FAILURE(*ಸ್ಥಿತಿ_2)){
+        ಹಿಂತಿರುಗಿ 0;
     }
 
     //check arguments
-    if(profile==nullptr ||
-            (src==nullptr ? srcLength!=0 : srcLength<-1) ||
-            (dest==nullptr ? destCapacity!=0 : destCapacity<0)) {
-        *status=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ಆದರೆ(profile==ಶೂನ್ಯಸೂಚಕ ||
+            (src==ಶೂನ್ಯಸೂಚಕ ? src_ಉದ್ದಳತೆ!=0 : src_ಉದ್ದಳತೆ<-1) ||
+            (dest==ಶೂನ್ಯಸೂಚಕ ? dest_ಸಾಮರ್ಥ್ಯ!=0 : dest_ಸಾಮರ್ಥ್ಯ<0)) {
+        *ಸ್ಥಿತಿ_2=U_ILLEGAL_ವಾದ_ERROR;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
     //get the string length
-    if(srcLength < 0){
-        srcLength = u_strlen(src);
+    ಆದರೆ(src_ಉದ್ದಳತೆ < 0){
+        src_ಉದ್ದಳತೆ = u_strlen(src);
     }
     // map
     UnicodeString s1;
-    char16_t *b1 = s1.getBuffer(srcLength);
-    if(b1==nullptr){
-        *status = U_MEMORY_ALLOCATION_ERROR;
-        return 0;
+    char16_t *b1 = s1.get_ಬಫರ್(src_ಉದ್ದಳತೆ);
+    ಆದರೆ(b1==ಶೂನ್ಯಸೂಚಕ){
+        *ಸ್ಥಿತಿ_2 = U_ಸ್ಮರಣೆ_ಹಂಚಿಕೆ_ERROR;
+        ಹಿಂತಿರುಗಿ 0;
     }
-    UErrorCode bufferStatus = U_ZERO_ERROR;
-    int32_t b1Len = usprep_map(profile, src, srcLength,
-                               b1, s1.getCapacity(), options, parseError, &bufferStatus);
-    s1.releaseBuffer(U_SUCCESS(bufferStatus) ? b1Len : 0);
+    UError_ಸಂಕೇತ ಬಫರ್_ಸ್ಥಿತಿ = U_ZERO_ERROR;
+    int32_t b1Len = usprep_map(profile, src, src_ಉದ್ದಳತೆ,
+                               b1, s1.get_ಸಾಮರ್ಥ್ಯ(), options, parseError, &ಬಫರ್_ಸ್ಥಿತಿ);
+    s1.release_ಬಫರ್(U_SUCCESS(ಬಫರ್_ಸ್ಥಿತಿ) ? b1Len : 0);
 
-    if(bufferStatus == U_BUFFER_OVERFLOW_ERROR){
+    ಆದರೆ(ಬಫರ್_ಸ್ಥಿತಿ == U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR){
         // redo processing of string
         /* we do not have enough room so grow the buffer*/
-        b1 = s1.getBuffer(b1Len);
-        if(b1==nullptr){
-            *status = U_MEMORY_ALLOCATION_ERROR;
-            return 0;
+        b1 = s1.get_ಬಫರ್(b1Len);
+        ಆದರೆ(b1==ಶೂನ್ಯಸೂಚಕ){
+            *ಸ್ಥಿತಿ_2 = U_ಸ್ಮರಣೆ_ಹಂಚಿಕೆ_ERROR;
+            ಹಿಂತಿರುಗಿ 0;
         }
 
-        bufferStatus = U_ZERO_ERROR; // reset error
-        b1Len = usprep_map(profile, src, srcLength,
-                           b1, s1.getCapacity(), options, parseError, &bufferStatus);
-        s1.releaseBuffer(U_SUCCESS(bufferStatus) ? b1Len : 0);
+        ಬಫರ್_ಸ್ಥಿತಿ = U_ZERO_ERROR; // reset error
+        b1Len = usprep_map(profile, src, src_ಉದ್ದಳತೆ,
+                           b1, s1.get_ಸಾಮರ್ಥ್ಯ(), options, parseError, &ಬಫರ್_ಸ್ಥಿತಿ);
+        s1.release_ಬಫರ್(U_SUCCESS(ಬಫರ್_ಸ್ಥಿತಿ) ? b1Len : 0);
     }
-    if(U_FAILURE(bufferStatus)){
-        *status = bufferStatus;
-        return 0;
+    ಆದರೆ(U_FAILURE(ಬಫರ್_ಸ್ಥಿತಿ)){
+        *ಸ್ಥಿತಿ_2 = ಬಫರ್_ಸ್ಥಿತಿ;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
     // normalize
     UnicodeString s2;
-    if(profile->doNFKC){
-        const Normalizer2 *n2 = Normalizer2::getNFKCInstance(*status);
-        FilteredNormalizer2 fn2(*n2, *uniset_getUnicode32Instance(*status));
-        if(U_FAILURE(*status)){
-            return 0;
+    ಆದರೆ(profile->doNFKC){
+        ಸ್ಥಿರಾಂಕ Normalizer2 *n2 = Normalizer2::getNFKCInstance(*ಸ್ಥಿತಿ_2);
+        FilteredNormalizer2 fn2(*n2, *uniset_getUnicode32Instance(*ಸ್ಥಿತಿ_2));
+        ಆದರೆ(U_FAILURE(*ಸ್ಥಿತಿ_2)){
+            ಹಿಂತಿರುಗಿ 0;
         }
-        fn2.normalize(s1, s2, *status);
-    }else{
+        fn2.normalize(s1, s2, *ಸ್ಥಿತಿ_2);
+    }ಇಲ್ಲದಿದ್ದರೆ{
         s2.fastCopyFrom(s1);
     }
-    if(U_FAILURE(*status)){
-        return 0;
+    ಆದರೆ(U_FAILURE(*ಸ್ಥಿತಿ_2)){
+        ಹಿಂತಿರುಗಿ 0;
     }
 
     // Prohibit and checkBiDi in one pass
-    const char16_t *b2 = s2.getBuffer();
+    ಸ್ಥಿರಾಂಕ char16_t *b2 = s2.get_ಬಫರ್();
     int32_t b2Len = s2.length();
-    UCharDirection direction=U_CHAR_DIRECTION_COUNT, firstCharDir=U_CHAR_DIRECTION_COUNT;
-    UBool leftToRight=false, rightToLeft=false;
+    UCharDirection direction=U_CHAR_DIRECTION_ಎಣಿಕೆ, ಮೊದಲ_Char_Dir=U_CHAR_DIRECTION_ಎಣಿಕೆ;
+    UBool ಎಡ_ಗಮ್ಯ_ಬಲ=ಸುಳ್ಳು, ಬಲ_ಗಮ್ಯ_ಎಡ=ಸುಳ್ಳು;
     int32_t rtlPos =-1, ltrPos =-1;
 
-    for(int32_t b2Index=0; b2Index<b2Len;){
+    ಗಾಗಿ(int32_t b2_ಸೂಚ್ಯಂಕ=0; b2_ಸೂಚ್ಯಂಕ<b2Len;){
         UChar32 ch = 0;
-        U16_NEXT(b2, b2Index, b2Len, ch);
+        U16_ಮುಂದಿನ(b2, b2_ಸೂಚ್ಯಂಕ, b2Len, ch);
 
-        uint16_t result;
-        UTRIE_GET16(&profile->sprepTrie,ch,result);
+        uint16_t ಫಲಿತಾಂಶ;
+        UTRIE_GET16(&profile->sprepTrie,ch,ಫಲಿತಾಂಶ);
 
         int16_t value;
-        UBool isIndex;
-        UStringPrepType type = getValues(result, value, isIndex);
+        UBool is_ಸೂಚ್ಯಂಕ;
+        UStringPrepType type = get_ಮೌಲ್ಯಗಳು(ಫಲಿತಾಂಶ, value, is_ಸೂಚ್ಯಂಕ);
 
-        if( type == USPREP_PROHIBITED || 
-            ((result < _SPREP_TYPE_THRESHOLD) && (result & 0x01) /* first bit says it the code point is prohibited*/)
+        ಆದರೆ( type == USPREP_PROHIBITED || 
+            ((ಫಲಿತಾಂಶ < SPREP_TYPE_ಮಿತಿ) && (ಫಲಿತಾಂಶ & 0x01) /* first bit says it the code point is prohibited*/)
            ){
-            *status = U_STRINGPREP_PROHIBITED_ERROR;
-            uprv_syntaxError(b2, b2Index-U16_LENGTH(ch), b2Len, parseError);
-            return 0;
+            *ಸ್ಥಿತಿ_2 = U_STRINGPREP_PROHIBITED_ERROR;
+            uprv_syntaxError(b2, b2_ಸೂಚ್ಯಂಕ-U16_ಉದ್ದಳತೆ(ch), b2Len, parseError);
+            ಹಿಂತಿರುಗಿ 0;
         }
 
-        if(profile->checkBiDi) {
+        ಆದರೆ(profile->checkBiDi) {
             direction = ubidi_getClass(ch);
-            if(firstCharDir == U_CHAR_DIRECTION_COUNT){
-                firstCharDir = direction;
+            ಆದರೆ(ಮೊದಲ_Char_Dir == U_CHAR_DIRECTION_ಎಣಿಕೆ){
+                ಮೊದಲ_Char_Dir = direction;
             }
-            if(direction == U_LEFT_TO_RIGHT){
-                leftToRight = true;
-                ltrPos = b2Index-1;
+            ಆದರೆ(direction == U_ಎಡ_ಗಮ್ಯ_ಬಲ){
+                ಎಡ_ಗಮ್ಯ_ಬಲ = ನಿಜ;
+                ltrPos = b2_ಸೂಚ್ಯಂಕ-1;
             }
-            if(direction == U_RIGHT_TO_LEFT || direction == U_RIGHT_TO_LEFT_ARABIC){
-                rightToLeft = true;
-                rtlPos = b2Index-1;
+            ಆದರೆ(direction == U_ಬಲ_ಗಮ್ಯ_ಎಡ || direction == U_ಬಲ_ಗಮ್ಯ_ಎಡ_ARABIC){
+                ಬಲ_ಗಮ್ಯ_ಎಡ = ನಿಜ;
+                rtlPos = b2_ಸೂಚ್ಯಂಕ-1;
             }
         }
     }
-    if(profile->checkBiDi){
+    ಆದರೆ(profile->checkBiDi){
         // satisfy 2
-        if( leftToRight && rightToLeft){
-            *status = U_STRINGPREP_CHECK_BIDI_ERROR;
+        ಆದರೆ( ಎಡ_ಗಮ್ಯ_ಬಲ && ಬಲ_ಗಮ್ಯ_ಎಡ){
+            *ಸ್ಥಿತಿ_2 = U_STRINGPREP_CHECK_BIDI_ERROR;
             uprv_syntaxError(b2,(rtlPos>ltrPos) ? rtlPos : ltrPos, b2Len, parseError);
-            return 0;
+            ಹಿಂತಿರುಗಿ 0;
         }
 
         //satisfy 3
-        if( rightToLeft && 
-            !((firstCharDir == U_RIGHT_TO_LEFT || firstCharDir == U_RIGHT_TO_LEFT_ARABIC) &&
-              (direction == U_RIGHT_TO_LEFT || direction == U_RIGHT_TO_LEFT_ARABIC))
+        ಆದರೆ( ಬಲ_ಗಮ್ಯ_ಎಡ && 
+            !((ಮೊದಲ_Char_Dir == U_ಬಲ_ಗಮ್ಯ_ಎಡ || ಮೊದಲ_Char_Dir == U_ಬಲ_ಗಮ್ಯ_ಎಡ_ARABIC) &&
+              (direction == U_ಬಲ_ಗಮ್ಯ_ಎಡ || direction == U_ಬಲ_ಗಮ್ಯ_ಎಡ_ARABIC))
            ){
-            *status = U_STRINGPREP_CHECK_BIDI_ERROR;
+            *ಸ್ಥಿತಿ_2 = U_STRINGPREP_CHECK_BIDI_ERROR;
             uprv_syntaxError(b2, rtlPos, b2Len, parseError);
-            return false;
+            ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
         }
     }
-    return s2.extract(dest, destCapacity, *status);
+    ಹಿಂತಿರುಗಿ s2.extract(dest, dest_ಸಾಮರ್ಥ್ಯ, *ಸ್ಥಿತಿ_2);
 }
 
 
 /* data swapping ------------------------------------------------------------ */
 
 U_CAPI int32_t U_EXPORT2
-usprep_swap(const UDataSwapper *ds,
-            const void *inData, int32_t length, void *outData,
-            UErrorCode *pErrorCode) {
-    const UDataInfo *pInfo;
-    int32_t headerSize;
+usprep_ಅದಲುಬದಲು(ಸ್ಥಿರಾಂಕ UDataSwapper *ds,
+            ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *ಒಳ_ದತ್ತಾಂಶ, int32_t length, ಶೂನ್ಯ *ಹೊರಹೋಗು_ದತ್ತಾಂಶ,
+            UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಸ್ಥಿರಾಂಕ UDataInfo *pInfo;
+    int32_t ಶೀರ್ಷಿಕೆ_ಗಾತ್ರ;
 
-    const uint8_t *inBytes;
-    uint8_t *outBytes;
+    ಸ್ಥಿರಾಂಕ uint8_t *ಒಳ_ಬೈಟುಗಳು;
+    uint8_t *ಹೊರಹೋಗು_ಬೈಟುಗಳು;
 
-    const int32_t *inIndexes;
+    ಸ್ಥಿರಾಂಕ int32_t *ಒಳ_Indexes;
     int32_t indexes[16];
 
-    int32_t i, offset, count, size;
+    int32_t i, ಸ್ಥಾನಾಂತರ, count, size;
 
     /* udata_swapDataHeader checks the arguments */
-    headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ಶೀರ್ಷಿಕೆ_ಗಾತ್ರ=udata_ಅದಲುಬದಲು_ದತ್ತಾಂಶ_ಶೀರ್ಷಿಕೆ(ds, ಒಳ_ದತ್ತಾಂಶ, length, ಹೊರಹೋಗು_ದತ್ತಾಂಶ, p_Error_ಸಂಕೇತ);
+    ಆದರೆ(p_Error_ಸಂಕೇತ==ಶೂನ್ಯಸೂಚಕ || U_FAILURE(*p_Error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ 0;
     }
 
     /* check data format and format version */
-    pInfo=(const UDataInfo *)((const char *)inData+4);
-    if(!(
-        pInfo->dataFormat[0]==0x53 &&   /* dataFormat="SPRP" */
-        pInfo->dataFormat[1]==0x50 &&
-        pInfo->dataFormat[2]==0x52 &&
-        pInfo->dataFormat[3]==0x50 &&
-        pInfo->formatVersion[0]==3
+    pInfo=(ಸ್ಥಿರಾಂಕ UDataInfo *)((ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *)ಒಳ_ದತ್ತಾಂಶ+4);
+    ಆದರೆ(!(
+        pInfo->ದತ್ತಾಂಶ_Format[0]==0x53 &&   /* dataFormat="SPRP" */
+        pInfo->ದತ್ತಾಂಶ_Format[1]==0x50 &&
+        pInfo->ದತ್ತಾಂಶ_Format[2]==0x52 &&
+        pInfo->ದತ್ತಾಂಶ_Format[3]==0x50 &&
+        pInfo->format_ಆವೃತ್ತಿ[0]==3
     )) {
         udata_printError(ds, "usprep_swap(): data format %02x.%02x.%02x.%02x (format version %02x) is not recognized as StringPrep .spp data\n",
-                         pInfo->dataFormat[0], pInfo->dataFormat[1],
-                         pInfo->dataFormat[2], pInfo->dataFormat[3],
-                         pInfo->formatVersion[0]);
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+                         pInfo->ದತ್ತಾಂಶ_Format[0], pInfo->ದತ್ತಾಂಶ_Format[1],
+                         pInfo->ದತ್ತಾಂಶ_Format[2], pInfo->ದತ್ತಾಂಶ_Format[3],
+                         pInfo->format_ಆವೃತ್ತಿ[0]);
+        *p_Error_ಸಂಕೇತ=U_UNSUPPORTED_ERROR;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
-    inBytes=(const uint8_t *)inData+headerSize;
-    outBytes= (outData == nullptr ) ? nullptr : (uint8_t *)outData+headerSize;
+    ಒಳ_ಬೈಟುಗಳು=(ಸ್ಥಿರಾಂಕ uint8_t *)ಒಳ_ದತ್ತಾಂಶ+ಶೀರ್ಷಿಕೆ_ಗಾತ್ರ;
+    ಹೊರಹೋಗು_ಬೈಟುಗಳು= (ಹೊರಹೋಗು_ದತ್ತಾಂಶ == ಶೂನ್ಯಸೂಚಕ ) ? ಶೂನ್ಯಸೂಚಕ : (uint8_t *)ಹೊರಹೋಗು_ದತ್ತಾಂಶ+ಶೀರ್ಷಿಕೆ_ಗಾತ್ರ;
 
-    inIndexes=(const int32_t *)inBytes;
+    ಒಳ_Indexes=(ಸ್ಥಿರಾಂಕ int32_t *)ಒಳ_ಬೈಟುಗಳು;
 
-    if(length>=0) {
-        length-=headerSize;
-        if(length<16*4) {
+    ಆದರೆ(length>=0) {
+        length-=ಶೀರ್ಷಿಕೆ_ಗಾತ್ರ;
+        ಆದರೆ(length<16*4) {
             udata_printError(ds, "usprep_swap(): too few bytes (%d after header) for StringPrep .spp data\n",
                              length);
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            *p_Error_ಸಂಕೇತ=U_ಸೂಚ್ಯಂಕ_OUTOFBOUNDS_ERROR;
+            ಹಿಂತಿರುಗಿ 0;
         }
     }
 
     /* read the first 16 indexes (ICU 2.8/format version 3: _SPREP_INDEX_TOP==16, might grow) */
-    for(i=0; i<16; ++i) {
-        indexes[i]=udata_readInt32(ds, inIndexes[i]);
+    ಗಾಗಿ(i=0; i<16; ++i) {
+        indexes[i]=udata_readInt32(ds, ಒಳ_Indexes[i]);
     }
 
     /* calculate the total length of the data */
     size=
         16*4+ /* size of indexes[] */
-        indexes[_SPREP_INDEX_TRIE_SIZE]+
-        indexes[_SPREP_INDEX_MAPPING_DATA_SIZE];
+        indexes[SPREP_ಸೂಚ್ಯಂಕ_TRIE_ಗಾತ್ರ]+
+        indexes[SPREP_ಸೂಚ್ಯಂಕ_MAPPING_ದತ್ತಾಂಶ_ಗಾತ್ರ];
 
-    if(length>=0) {
-        if(length<size) {
+    ಆದರೆ(length>=0) {
+        ಆದರೆ(length<size) {
             udata_printError(ds, "usprep_swap(): too few bytes (%d after header) for all of StringPrep .spp data\n",
                              length);
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            *p_Error_ಸಂಕೇತ=U_ಸೂಚ್ಯಂಕ_OUTOFBOUNDS_ERROR;
+            ಹಿಂತಿರುಗಿ 0;
         }
 
         /* copy the data for inaccessible bytes */
-        if(inBytes!=outBytes) {
-            uprv_memcpy(outBytes, inBytes, size);
+        ಆದರೆ(ಒಳ_ಬೈಟುಗಳು!=ಹೊರಹೋಗು_ಬೈಟುಗಳು) {
+            uprv_memcpy(ಹೊರಹೋಗು_ಬೈಟುಗಳು, ಒಳ_ಬೈಟುಗಳು, size);
         }
 
-        offset=0;
+        ಸ್ಥಾನಾಂತರ=0;
 
         /* swap the int32_t indexes[] */
         count=16*4;
-        ds->swapArray32(ds, inBytes, count, outBytes, pErrorCode);
-        offset+=count;
+        ds->ಅದಲುಬದಲು_Array32(ds, ಒಳ_ಬೈಟುಗಳು, count, ಹೊರಹೋಗು_ಬೈಟುಗಳು, p_Error_ಸಂಕೇತ);
+        ಸ್ಥಾನಾಂತರ+=count;
 
         /* swap the UTrie */
-        count=indexes[_SPREP_INDEX_TRIE_SIZE];
-        utrie_swap(ds, inBytes+offset, count, outBytes+offset, pErrorCode);
-        offset+=count;
+        count=indexes[SPREP_ಸೂಚ್ಯಂಕ_TRIE_ಗಾತ್ರ];
+        utrie_ಅದಲುಬದಲು(ds, ಒಳ_ಬೈಟುಗಳು+ಸ್ಥಾನಾಂತರ, count, ಹೊರಹೋಗು_ಬೈಟುಗಳು+ಸ್ಥಾನಾಂತರ, p_Error_ಸಂಕೇತ);
+        ಸ್ಥಾನಾಂತರ+=count;
 
         /* swap the uint16_t mappingTable[] */
-        count=indexes[_SPREP_INDEX_MAPPING_DATA_SIZE];
-        ds->swapArray16(ds, inBytes+offset, count, outBytes+offset, pErrorCode);
+        count=indexes[SPREP_ಸೂಚ್ಯಂಕ_MAPPING_ದತ್ತಾಂಶ_ಗಾತ್ರ];
+        ds->ಅದಲುಬದಲು_Array16(ds, ಒಳ_ಬೈಟುಗಳು+ಸ್ಥಾನಾಂತರ, count, ಹೊರಹೋಗು_ಬೈಟುಗಳು+ಸ್ಥಾನಾಂತರ, p_Error_ಸಂಕೇತ);
         //offset+=count;
     }
 
-    return headerSize+size;
+    ಹಿಂತಿರುಗಿ ಶೀರ್ಷಿಕೆ_ಗಾತ್ರ+size;
 }
 
-#endif /* #if !UCONFIG_NO_IDNA */
+#ಆದರೆ_ಅಂತ್ಯ /* #if !UCONFIG_NO_IDNA */

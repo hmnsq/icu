@@ -7,95 +7,95 @@
  *******************************************************************************
  */
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#ಆದರೆ !UCONFIG_NO_SERVICE
 
-#include "servnotf.h"
-#ifdef NOTIFIER_DEBUG
-#include <stdio.h>
-#endif
+#ಅನ್ತರ್ಭಾವ "servnotf.h"
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ NOTIFIER_DEBUG
+#ಅನ್ತರ್ಭಾವ <stdio.h>
+#ಆದರೆ_ಅಂತ್ಯ
 
 U_NAMESPACE_BEGIN
 
 EventListener::~EventListener() {}
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(EventListener)
 
-static UMutex notifyLock;
+ಸ್ಥಿರ UMutex notify_ಬೀಗ;
 
 ICUNotifier::ICUNotifier() 
-: listeners(nullptr) 
+: listeners(ಶೂನ್ಯಸೂಚಕ) 
 {
 }
 
 ICUNotifier::~ICUNotifier() {
     {
-        Mutex lmx(&notifyLock);
-        delete listeners;
-        listeners = nullptr;
+        Mutex lmx(&notify_ಬೀಗ);
+        ಅಳಿಸು listeners;
+        listeners = ಶೂನ್ಯಸೂಚಕ;
     }
 }
 
 
-void 
-ICUNotifier::addListener(const EventListener* l, UErrorCode& status) 
+ಶೂನ್ಯ 
+ICUNotifier::ಕೂಡಿಸು_Listener(ಸ್ಥಿರಾಂಕ EventListener* l, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) 
 {
-    if (U_SUCCESS(status)) {
-        if (l == nullptr) {
-            status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+    ಆದರೆ (U_SUCCESS(ಸ್ಥಿತಿ_2)) {
+        ಆದರೆ (l == ಶೂನ್ಯಸೂಚಕ) {
+            ಸ್ಥಿತಿ_2 = U_ILLEGAL_ವಾದ_ERROR;
+            ಹಿಂತಿರುಗಿ;
         }
 
-        if (acceptsListener(*l)) {
-            Mutex lmx(&notifyLock);
-            if (listeners == nullptr) {
-                LocalPointer<UVector> lpListeners(new UVector(5, status), status);
-                if (U_FAILURE(status)) {
-                    return;
+        ಆದರೆ (ಸ್ವೀಕರಿಸು_Listener(*l)) {
+            Mutex lmx(&notify_ಬೀಗ);
+            ಆದರೆ (listeners == ಶೂನ್ಯಸೂಚಕ) {
+                Local_ಸೂಚಕ<UVector> lpListeners(ಹೊಸ UVector(5, ಸ್ಥಿತಿ_2), ಸ್ಥಿತಿ_2);
+                ಆದರೆ (U_FAILURE(ಸ್ಥಿತಿ_2)) {
+                    ಹಿಂತಿರುಗಿ;
                 }
                 listeners = lpListeners.orphan();
-            } else {
-                for (int i = 0, e = listeners->size(); i < e; ++i) {
-                    const EventListener* el = static_cast<const EventListener*>(listeners->elementAt(i));
-                    if (l == el) {
-                        return;
+            } ಇಲ್ಲದಿದ್ದರೆ {
+                ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0, e = listeners->size(); i < e; ++i) {
+                    ಸ್ಥಿರಾಂಕ EventListener* el = static_cast<ಸ್ಥಿರಾಂಕ EventListener*>(listeners->elementAt(i));
+                    ಆದರೆ (l == el) {
+                        ಹಿಂತಿರುಗಿ;
                     }
                 }
             }
 
-            listeners->addElement((void*)l, status); // cast away const
+            listeners->ಕೂಡಿಸು_Element((ಶೂನ್ಯ*)l, ಸ್ಥಿತಿ_2); // cast away const
         }
-#ifdef NOTIFIER_DEBUG
-        else {
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ NOTIFIER_DEBUG
+        ಇಲ್ಲದಿದ್ದರೆ {
             fprintf(stderr, "Listener invalid for this notifier.");
-            exit(1);
+            ನಿರ್ಗಮಿಸು(1);
         }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
     }
 }
 
-void 
-ICUNotifier::removeListener(const EventListener *l, UErrorCode& status) 
+ಶೂನ್ಯ 
+ICUNotifier::removeListener(ಸ್ಥಿರಾಂಕ EventListener *l, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) 
 {
-    if (U_SUCCESS(status)) {
-        if (l == nullptr) {
-            status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+    ಆದರೆ (U_SUCCESS(ಸ್ಥಿತಿ_2)) {
+        ಆದರೆ (l == ಶೂನ್ಯಸೂಚಕ) {
+            ಸ್ಥಿತಿ_2 = U_ILLEGAL_ವಾದ_ERROR;
+            ಹಿಂತಿರುಗಿ;
         }
 
         {
-            Mutex lmx(&notifyLock);
-            if (listeners != nullptr) {
+            Mutex lmx(&notify_ಬೀಗ);
+            ಆದರೆ (listeners != ಶೂನ್ಯಸೂಚಕ) {
                 // identity equality check
-                for (int i = 0, e = listeners->size(); i < e; ++i) {
-                    const EventListener* el = static_cast<const EventListener*>(listeners->elementAt(i));
-                    if (l == el) {
+                ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0, e = listeners->size(); i < e; ++i) {
+                    ಸ್ಥಿರಾಂಕ EventListener* el = static_cast<ಸ್ಥಿರಾಂಕ EventListener*>(listeners->elementAt(i));
+                    ಆದರೆ (l == el) {
                         listeners->removeElementAt(i);
-                        if (listeners->size() == 0) {
-                            delete listeners;
-                            listeners = nullptr;
+                        ಆದರೆ (listeners->size() == 0) {
+                            ಅಳಿಸು listeners;
+                            listeners = ಶೂನ್ಯಸೂಚಕ;
                         }
-                        return;
+                        ಹಿಂತಿರುಗಿ;
                     }
                 }
             }
@@ -103,20 +103,20 @@ ICUNotifier::removeListener(const EventListener *l, UErrorCode& status)
     }
 }
 
-void 
-ICUNotifier::notifyChanged() 
+ಶೂನ್ಯ 
+ICUNotifier::notify_ಬದಲಾಯಿತು() 
 {
-    Mutex lmx(&notifyLock);
-    if (listeners != nullptr) {
-        for (int i = 0, e = listeners->size(); i < e; ++i) {
+    Mutex lmx(&notify_ಬೀಗ);
+    ಆದರೆ (listeners != ಶೂನ್ಯಸೂಚಕ) {
+        ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i = 0, e = listeners->size(); i < e; ++i) {
             EventListener* el = static_cast<EventListener*>(listeners->elementAt(i));
             notifyListener(*el);
         }
     }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
 /* UCONFIG_NO_SERVICE */
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 

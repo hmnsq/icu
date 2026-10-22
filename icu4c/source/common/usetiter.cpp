@@ -6,35 +6,35 @@
 * Corporation and others.  All Rights Reserved.
 **********************************************************************
 */
-#include "unicode/usetiter.h"
-#include "unicode/uniset.h"
-#include "unicode/unistr.h"
-#include "uvector.h"
+#ಅನ್ತರ್ಭಾವ "unicode/usetiter.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uniset.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unistr.h"
+#ಅನ್ತರ್ಭಾವ "uvector.h"
 
 U_NAMESPACE_BEGIN
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UnicodeSetIterator)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Unicode_ಗಣ_Iterator)
 
 /**
  * Create an iterator
  * @param set set to iterate over
  */
-UnicodeSetIterator::UnicodeSetIterator(const UnicodeSet& uSet U_LIFETIME_BOUND) {
-    cpString  = nullptr;
-    reset(uSet);
+Unicode_ಗಣ_Iterator::Unicode_ಗಣ_Iterator(ಸ್ಥಿರಾಂಕ Unicode_ಗಣ& u_ಗಣ U_LIFETIME_BOUND) {
+    cpString  = ಶೂನ್ಯಸೂಚಕ;
+    reset(u_ಗಣ);
 }
 
 /**
  * Create an iterator. Convenience for when the contents are to be set later.
  */
-UnicodeSetIterator::UnicodeSetIterator() {
-    this->set = nullptr;
-    cpString  = nullptr;
+Unicode_ಗಣ_Iterator::Unicode_ಗಣ_Iterator() {
+    ಇದು->ಗಣ = ಶೂನ್ಯಸೂಚಕ;
+    cpString  = ಶೂನ್ಯಸೂಚಕ;
     reset();
 }
 
-UnicodeSetIterator::~UnicodeSetIterator() {
-    delete cpString;
+Unicode_ಗಣ_Iterator::~Unicode_ಗಣ_Iterator() {
+    ಅಳಿಸು cpString;
 }
 
 /**
@@ -46,23 +46,23 @@ UnicodeSetIterator::~UnicodeSetIterator() {
  * and that all code points are returned before any strings are returned.
  * <br>Note also that the codepointEnd is undefined after calling this method.
  */
-UBool UnicodeSetIterator::next() {
-    if (nextElement <= endElement) {
-        codepoint = codepointEnd = nextElement++;
-        string = nullptr;
-        return true;
+UBool Unicode_ಗಣ_Iterator::next() {
+    ಆದರೆ (ಮುಂದಿನ_Element <= ಕೊನೆ_Element) {
+        codepoint = codepoint_ಕೊನೆ = ಮುಂದಿನ_Element++;
+        string = ಶೂನ್ಯಸೂಚಕ;
+        ಹಿಂತಿರುಗಿ ನಿಜ;
     }
-    if (range < endRange) {
-        loadRange(++range);
-        codepoint = codepointEnd = nextElement++;
-        string = nullptr;
-        return true;
+    ಆದರೆ (range < ಕೊನೆ_Range) {
+        ತುಂಬು_Range(++range);
+        codepoint = codepoint_ಕೊನೆ = ಮುಂದಿನ_Element++;
+        string = ಶೂನ್ಯಸೂಚಕ;
+        ಹಿಂತಿರುಗಿ ನಿಜ;
     }
 
-    if (nextString >= stringCount) return false;
+    ಆದರೆ (ಮುಂದಿನ_String >= string_ಎಣಿಕೆ) ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
     codepoint = static_cast<UChar32>(IS_STRING); // signal that value is actually a string
-    string = static_cast<const UnicodeString*>(set->strings_->elementAt(nextString++));
-    return true;
+    string = static_cast<ಸ್ಥಿರಾಂಕ UnicodeString*>(ಗಣ->ಅಕ್ಷರಸರಣಿಗಳು_2->elementAt(ಮುಂದಿನ_String++));
+    ಹಿಂತಿರುಗಿ ನಿಜ;
 }
 
 /**
@@ -76,77 +76,77 @@ UBool UnicodeSetIterator::next() {
  * <br>You are also guaranteed that ranges are disjoint and non-contiguous.
  * <br>Note also that the codepointEnd is undefined after calling this method.
  */
-UBool UnicodeSetIterator::nextRange() {
-    string = nullptr;
-    if (nextElement <= endElement) {
-        codepointEnd = endElement;
-        codepoint = nextElement;
-        nextElement = endElement+1;
-        return true;
+UBool Unicode_ಗಣ_Iterator::ಮುಂದಿನ_Range() {
+    string = ಶೂನ್ಯಸೂಚಕ;
+    ಆದರೆ (ಮುಂದಿನ_Element <= ಕೊನೆ_Element) {
+        codepoint_ಕೊನೆ = ಕೊನೆ_Element;
+        codepoint = ಮುಂದಿನ_Element;
+        ಮುಂದಿನ_Element = ಕೊನೆ_Element+1;
+        ಹಿಂತಿರುಗಿ ನಿಜ;
     }
-    if (range < endRange) {
-        loadRange(++range);
-        codepointEnd = endElement;
-        codepoint = nextElement;
-        nextElement = endElement+1;
-        return true;
+    ಆದರೆ (range < ಕೊನೆ_Range) {
+        ತುಂಬು_Range(++range);
+        codepoint_ಕೊನೆ = ಕೊನೆ_Element;
+        codepoint = ಮುಂದಿನ_Element;
+        ಮುಂದಿನ_Element = ಕೊನೆ_Element+1;
+        ಹಿಂತಿರುಗಿ ನಿಜ;
     }
 
-    if (nextString >= stringCount) return false;
+    ಆದರೆ (ಮುಂದಿನ_String >= string_ಎಣಿಕೆ) ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
     codepoint = static_cast<UChar32>(IS_STRING); // signal that value is actually a string
-    string = static_cast<const UnicodeString*>(set->strings_->elementAt(nextString++));
-    return true;
+    string = static_cast<ಸ್ಥಿರಾಂಕ UnicodeString*>(ಗಣ->ಅಕ್ಷರಸರಣಿಗಳು_2->elementAt(ಮುಂದಿನ_String++));
+    ಹಿಂತಿರುಗಿ ನಿಜ;
 }
 
 /**
  *@param set the set to iterate over. This allows reuse of the iterator.
  */
-void UnicodeSetIterator::reset(const UnicodeSet& uSet) {
-    this->set = &uSet;
+ಶೂನ್ಯ Unicode_ಗಣ_Iterator::reset(ಸ್ಥಿರಾಂಕ Unicode_ಗಣ& u_ಗಣ) {
+    ಇದು->ಗಣ = &u_ಗಣ;
     reset();
 }
 
 /**
  * Resets to the start, to allow the iteration to start over again.
  */
-void UnicodeSetIterator::reset() {
-    if (set == nullptr) {
+ಶೂನ್ಯ Unicode_ಗಣ_Iterator::reset() {
+    ಆದರೆ (ಗಣ == ಶೂನ್ಯಸೂಚಕ) {
         // Set up indices to empty iteration
-        endRange = -1;
-        stringCount = 0;
-    } else {
-        endRange = set->getRangeCount() - 1;
-        stringCount = set->stringsSize();
+        ಕೊನೆ_Range = -1;
+        string_ಎಣಿಕೆ = 0;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಕೊನೆ_Range = ಗಣ->get_Range_ಎಣಿಕೆ() - 1;
+        string_ಎಣಿಕೆ = ಗಣ->ಅಕ್ಷರಸರಣಿಗಳು_ಗಾತ್ರ();
     }
     range = 0;
-    endElement = -1;
-    nextElement = 0;            
-    if (endRange >= 0) {
-        loadRange(range);
+    ಕೊನೆ_Element = -1;
+    ಮುಂದಿನ_Element = 0;            
+    ಆದರೆ (ಕೊನೆ_Range >= 0) {
+        ತುಂಬು_Range(range);
     }
-    nextString = 0;
-    string = nullptr;
+    ಮುಂದಿನ_String = 0;
+    string = ಶೂನ್ಯಸೂಚಕ;
 }
 
-void UnicodeSetIterator::loadRange(int32_t iRange) {
-    nextElement = set->getRangeStart(iRange);
-    endElement = set->getRangeEnd(iRange);
+ಶೂನ್ಯ Unicode_ಗಣ_Iterator::ತುಂಬು_Range(int32_t iRange) {
+    ಮುಂದಿನ_Element = ಗಣ->get_Range_ಆರಂಭ(iRange);
+    ಕೊನೆ_Element = ಗಣ->get_Range_ಕೊನೆ(iRange);
 }
 
 
-const UnicodeString& UnicodeSetIterator::getString() U_LIFETIME_BOUND {
-    if (string == nullptr && codepoint != static_cast<UChar32>(IS_STRING)) {
-       if (cpString == nullptr) {
-          cpString = new UnicodeString();
+ಸ್ಥಿರಾಂಕ UnicodeString& Unicode_ಗಣ_Iterator::getString() U_LIFETIME_BOUND {
+    ಆದರೆ (string == ಶೂನ್ಯಸೂಚಕ && codepoint != static_cast<UChar32>(IS_STRING)) {
+       ಆದರೆ (cpString == ಶೂನ್ಯಸೂಚಕ) {
+          cpString = ಹೊಸ UnicodeString();
        }
-       if (cpString != nullptr) {
-          cpString->setTo(codepoint);
+       ಆದರೆ (cpString != ಶೂನ್ಯಸೂಚಕ) {
+          cpString->ಗಣ_ಗಮ್ಯ(codepoint);
        }
        string = cpString;
     }
-    return *string;
+    ಹಿಂತಿರುಗಿ *string;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
 //eof

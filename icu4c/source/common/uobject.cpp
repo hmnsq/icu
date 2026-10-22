@@ -16,12 +16,12 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/uobject.h"
-#include "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uobject.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
-#if U_OVERRIDE_CXX_ALLOCATION
+#ಆದರೆ U_OVERRIDE_CXX_ಹಂಚಿಕೆ
 
 /*
  * Default implementation of UMemory::new/delete
@@ -58,48 +58,48 @@ U_NAMESPACE_BEGIN
  * and replace with uprv_malloc/uprv_free.
  */
 
-void * U_EXPORT2 UMemory::operator new(size_t size) noexcept {
-    return uprv_malloc(size);
+ಶೂನ್ಯ * U_EXPORT2 UMemory::ಕ್ರಿಯಾಕಾರಕ ಹೊಸ(size_t size) noexcept {
+    ಹಿಂತಿರುಗಿ uprv_malloc(size);
 }
 
-void U_EXPORT2 UMemory::operator delete(void *p) noexcept {
-    if(p!=nullptr) {
+ಶೂನ್ಯ U_EXPORT2 UMemory::ಕ್ರಿಯಾಕಾರಕ ಅಳಿಸು(ಶೂನ್ಯ *p) noexcept {
+    ಆದರೆ(p!=ಶೂನ್ಯಸೂಚಕ) {
         uprv_free(p);
     }
 }
 
-void * U_EXPORT2 UMemory::operator new[](size_t size) noexcept {
-    return uprv_malloc(size);
+ಶೂನ್ಯ * U_EXPORT2 UMemory::ಕ್ರಿಯಾಕಾರಕ ಹೊಸ[](size_t size) noexcept {
+    ಹಿಂತಿರುಗಿ uprv_malloc(size);
 }
 
-void U_EXPORT2 UMemory::operator delete[](void *p) noexcept {
-    if(p!=nullptr) {
+ಶೂನ್ಯ U_EXPORT2 UMemory::ಕ್ರಿಯಾಕಾರಕ ಅಳಿಸು[](ಶೂನ್ಯ *p) noexcept {
+    ಆದರೆ(p!=ಶೂನ್ಯಸೂಚಕ) {
         uprv_free(p);
     }
 }
 
-#if U_HAVE_DEBUG_LOCATION_NEW
-void * U_EXPORT2 UMemory::operator new(size_t size, const char* /*file*/, int /*line*/) noexcept {
-    return UMemory::operator new(size);
+#ಆದರೆ U_HAVE_DEBUG_LOCATION_NEW
+ಶೂನ್ಯ * U_EXPORT2 UMemory::ಕ್ರಿಯಾಕಾರಕ ಹೊಸ(size_t size, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* /*file*/, ಪೂರ್ಣಾಂಕ /*ಸಾಲು*/) noexcept {
+    ಹಿಂತಿರುಗಿ UMemory::ಕ್ರಿಯಾಕಾರಕ ಹೊಸ(size);
 }
 
-void U_EXPORT2 UMemory::operator delete(void* p, const char* /*file*/, int /*line*/) noexcept {
-    UMemory::operator delete(p);
+ಶೂನ್ಯ U_EXPORT2 UMemory::ಕ್ರಿಯಾಕಾರಕ ಅಳಿಸು(ಶೂನ್ಯ* p, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* /*file*/, ಪೂರ್ಣಾಂಕ /*ಸಾಲು*/) noexcept {
+    UMemory::ಕ್ರಿಯಾಕಾರಕ ಅಳಿಸು(p);
 }
-#endif /* U_HAVE_DEBUG_LOCATION_NEW */
+#ಆದರೆ_ಅಂತ್ಯ /* U_HAVE_DEBUG_LOCATION_NEW */
 
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 UObject::~UObject() {}
 
-UClassID UObject::getDynamicClassID() const { return nullptr; }
+UClassID UObject::getDynamicClassID() ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ; }
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
 U_NAMESPACE_USE
 
-U_CAPI void U_EXPORT2
-uprv_deleteUObject(void *obj) {
-    delete static_cast<UObject *>(obj);
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+uprv_deleteUObject(ಶೂನ್ಯ *obj) {
+    ಅಳಿಸು static_cast<UObject *>(obj);
 }

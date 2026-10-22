@@ -11,85 +11,85 @@
 *   indentation:4
 */
 
-#include "unicode/utrace.h"
-#include "utracimp.h"
-#include "cstring.h"
-#include "uassert.h"
-#include "ucln_cmn.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utrace.h"
+#ಅನ್ತರ್ಭಾವ "utracimp.h"
+#ಅನ್ತರ್ಭಾವ "cstring.h"
+#ಅನ್ತರ್ಭಾವ "uassert.h"
+#ಅನ್ತರ್ಭಾವ "ucln_cmn.h"
 
 
-static UTraceEntry     *pTraceEntryFunc = nullptr;
-static UTraceExit      *pTraceExitFunc  = nullptr;
-static UTraceData      *pTraceDataFunc  = nullptr;
-static const void      *gTraceContext   = nullptr;
+ಸ್ಥಿರ UTrace_ನಮೂದು     *p_Trace_ನಮೂದು_Func = ಶೂನ್ಯಸೂಚಕ;
+ಸ್ಥಿರ UTraceExit      *pTraceExitFunc  = ಶೂನ್ಯಸೂಚಕ;
+ಸ್ಥಿರ UTrace_ದತ್ತಾಂಶ      *p_Trace_ದತ್ತಾಂಶ_Func  = ಶೂನ್ಯಸೂಚಕ;
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ      *gTraceContext   = ಶೂನ್ಯಸೂಚಕ;
 
 /**
  * \var utrace_level
  * Trace level variable. Negative for "off".
  */
-static int32_t
+ಸ್ಥಿರ int32_t
 utrace_level = UTRACE_ERROR;
 
-U_CAPI void U_EXPORT2
-utrace_entry(int32_t fnNumber) {
-    if (pTraceEntryFunc != nullptr) {
-        (*pTraceEntryFunc)(gTraceContext, fnNumber);
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+utrace_ನಮೂದು(int32_t fn_ಸಂಖ್ಯೆ) {
+    ಆದರೆ (p_Trace_ನಮೂದು_Func != ಶೂನ್ಯಸೂಚಕ) {
+        (*p_Trace_ನಮೂದು_Func)(gTraceContext, fn_ಸಂಖ್ಯೆ);
     }
 }
 
 
-static const char gExitFmt[]             = "Returns.";
-static const char gExitFmtValue[]        = "Returns %d.";
-static const char gExitFmtStatus[]       = "Returns.  Status = %d.";
-static const char gExitFmtValueStatus[]  = "Returns %d.  Status = %d.";
-static const char gExitFmtPtrStatus[]    = "Returns %d.  Status = %p.";
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ gExitFmt[]             = "Returns.";
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ g_Exit_Fmt_ಮೌಲ್ಯ[]        = "Returns %d.";
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ g_Exit_Fmt_ಸ್ಥಿತಿ[]       = "Returns.  Status = %d.";
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ g_Exit_Fmt_ಮೌಲ್ಯ_ಸ್ಥಿತಿ[]  = "Returns %d.  Status = %d.";
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ g_Exit_Fmt_Ptr_ಸ್ಥಿತಿ[]    = "Returns %d.  Status = %p.";
 
-U_CAPI void U_EXPORT2
-utrace_exit(int32_t fnNumber, int32_t returnType, ...) {
-    if (pTraceExitFunc != nullptr) {
-        va_list     args;
-        const char *fmt;
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+utrace_exit(int32_t fn_ಸಂಖ್ಯೆ, int32_t returnType, ...) {
+    ಆದರೆ (pTraceExitFunc != ಶೂನ್ಯಸೂಚಕ) {
+        va_list     ವಾದಗಳು_2;
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *fmt;
 
-        switch (returnType) {
-        case 0:
+        ಆಯ್ಕೆ (returnType) {
+        ಸ್ಥಿತಿ 0:
             fmt = gExitFmt;
-            break;
-        case UTRACE_EXITV_I32:
-            fmt = gExitFmtValue;
-            break;
-        case UTRACE_EXITV_STATUS:
-            fmt = gExitFmtStatus;
-            break;
-        case UTRACE_EXITV_I32 | UTRACE_EXITV_STATUS:
-            fmt = gExitFmtValueStatus;
-            break;
-        case UTRACE_EXITV_PTR | UTRACE_EXITV_STATUS:
-            fmt = gExitFmtPtrStatus;
-            break;
-        default:
+            ನಿಲ್ಲಿಸು;
+        ಸ್ಥಿತಿ UTRACE_EXITV_I32:
+            fmt = g_Exit_Fmt_ಮೌಲ್ಯ;
+            ನಿಲ್ಲಿಸು;
+        ಸ್ಥಿತಿ UTRACE_EXITV_ಸ್ಥಿತಿ:
+            fmt = g_Exit_Fmt_ಸ್ಥಿತಿ;
+            ನಿಲ್ಲಿಸು;
+        ಸ್ಥಿತಿ UTRACE_EXITV_I32 | UTRACE_EXITV_ಸ್ಥಿತಿ:
+            fmt = g_Exit_Fmt_ಮೌಲ್ಯ_ಸ್ಥಿತಿ;
+            ನಿಲ್ಲಿಸು;
+        ಸ್ಥಿತಿ UTRACE_EXITV_PTR | UTRACE_EXITV_ಸ್ಥಿತಿ:
+            fmt = g_Exit_Fmt_Ptr_ಸ್ಥಿತಿ;
+            ನಿಲ್ಲಿಸು;
+        ಪೂರ್ವನಿಯೋಜಿತ:
             UPRV_UNREACHABLE_EXIT;
         }
 
-        va_start(args, returnType);
-        (*pTraceExitFunc)(gTraceContext, fnNumber, fmt, args);
-        va_end(args);
+        va_start(ವಾದಗಳು_2, returnType);
+        (*pTraceExitFunc)(gTraceContext, fn_ಸಂಖ್ಯೆ, fmt, ವಾದಗಳು_2);
+        va_end(ವಾದಗಳು_2);
     }
 }
  
 
  
-U_CAPI void U_EXPORT2 
-utrace_data(int32_t fnNumber, int32_t level, const char *fmt, ...) {
-    if (pTraceDataFunc != nullptr) {
-           va_list args;
-           va_start(args, fmt ); 
-           (*pTraceDataFunc)(gTraceContext, fnNumber, level, fmt, args);
-           va_end(args);
+U_CAPI ಶೂನ್ಯ U_EXPORT2 
+utrace_ದತ್ತಾಂಶ(int32_t fn_ಸಂಖ್ಯೆ, int32_t level, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *fmt, ...) {
+    ಆದರೆ (p_Trace_ದತ್ತಾಂಶ_Func != ಶೂನ್ಯಸೂಚಕ) {
+           va_list ವಾದಗಳು_2;
+           va_start(ವಾದಗಳು_2, fmt ); 
+           (*p_Trace_ದತ್ತಾಂಶ_Func)(gTraceContext, fn_ಸಂಖ್ಯೆ, level, fmt, ವಾದಗಳು_2);
+           va_end(ವಾದಗಳು_2);
     }
 }
 
 
-static void outputChar(char c, char *outBuf, int32_t *outIx, int32_t capacity, int32_t indent) {
+ಸ್ಥಿರ ಶೂನ್ಯ outputChar(ಅಕ್ಷರ c, ಅಕ್ಷರ *ಹೊರಹೋಗು_Buf, int32_t *ಹೊರಹೋಗು_Ix, int32_t capacity, int32_t indent) {
     int32_t i;
     /* Check whether a start of line indenting is needed.  Three cases:
      *   1.  At the start of the first line  (output index == 0).
@@ -100,324 +100,324 @@ static void outputChar(char c, char *outBuf, int32_t *outIx, int32_t capacity, i
      *       the preceding char was \n.  Meaning that we may overstimate the
      *       buffer size needed.  No harm done.
      */
-    if (*outIx==0 ||   /* case 1. */
-        (c!='\n' && c!=0 && *outIx < capacity && outBuf[(*outIx)-1]=='\n') ||  /* case 2. */
-        (c=='\n' && *outIx>=capacity))    /* case 3 */
+    ಆದರೆ (*ಹೊರಹೋಗು_Ix==0 ||   /* case 1. */
+        (c!='\n' && c!=0 && *ಹೊರಹೋಗು_Ix < capacity && ಹೊರಹೋಗು_Buf[(*ಹೊರಹೋಗು_Ix)-1]=='\n') ||  /* case 2. */
+        (c=='\n' && *ಹೊರಹೋಗು_Ix>=capacity))    /* case 3 */
     {
         /* At the start of a line.  Indent. */
-        for(i=0; i<indent; i++) {
-            if (*outIx < capacity) {
-                outBuf[*outIx] = ' ';
+        ಗಾಗಿ(i=0; i<indent; i++) {
+            ಆದರೆ (*ಹೊರಹೋಗು_Ix < capacity) {
+                ಹೊರಹೋಗು_Buf[*ಹೊರಹೋಗು_Ix] = ' ';
             }
-            (*outIx)++;
+            (*ಹೊರಹೋಗು_Ix)++;
         }
     }
 
-    if (*outIx < capacity) {
-        outBuf[*outIx] = c;
+    ಆದರೆ (*ಹೊರಹೋಗು_Ix < capacity) {
+        ಹೊರಹೋಗು_Buf[*ಹೊರಹೋಗು_Ix] = c;
     }
-    if (c != 0) {
+    ಆದರೆ (c != 0) {
         /* NULs only appear as end-of-string terminators.  Move them to the output
          *  buffer, but do not update the length of the buffer, so that any
          *  following output will overwrite the NUL. */
-        (*outIx)++;
+        (*ಹೊರಹೋಗು_Ix)++;
     }
 }
 
-static void outputHexBytes(int64_t val, int32_t charsToOutput,
-                           char *outBuf, int32_t *outIx, int32_t capacity) {
-    static const char gHexChars[] = "0123456789abcdef";
-    int32_t shiftCount;
-    for  (shiftCount=(charsToOutput-1)*4; shiftCount >= 0; shiftCount-=4) {
-        char c = gHexChars[(val >> shiftCount) & 0xf];
-        outputChar(c, outBuf, outIx, capacity, 0);
+ಸ್ಥಿರ ಶೂನ್ಯ output_Hex_ಬೈಟುಗಳು(int64_t val, int32_t chars_ಗಮ್ಯ_Output,
+                           ಅಕ್ಷರ *ಹೊರಹೋಗು_Buf, int32_t *ಹೊರಹೋಗು_Ix, int32_t capacity) {
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ gHexChars[] = "0123456789abcdef";
+    int32_t ಸರಿಸು_ಎಣಿಕೆ;
+    ಗಾಗಿ  (ಸರಿಸು_ಎಣಿಕೆ=(chars_ಗಮ್ಯ_Output-1)*4; ಸರಿಸು_ಎಣಿಕೆ >= 0; ಸರಿಸು_ಎಣಿಕೆ-=4) {
+        ಅಕ್ಷರ c = gHexChars[(val >> ಸರಿಸು_ಎಣಿಕೆ) & 0xf];
+        outputChar(c, ಹೊರಹೋಗು_Buf, ಹೊರಹೋಗು_Ix, capacity, 0);
     }
 }
 
 /* Output a pointer value in hex.  Work with any size of pointer   */
-static void outputPtrBytes(void *val, char *outBuf, int32_t *outIx, int32_t capacity) {
+ಸ್ಥಿರ ಶೂನ್ಯ output_Ptr_ಬೈಟುಗಳು(ಶೂನ್ಯ *val, ಅಕ್ಷರ *ಹೊರಹೋಗು_Buf, int32_t *ಹೊರಹೋಗು_Ix, int32_t capacity) {
     uint32_t  i;
     int32_t  incVal = 1;              /* +1 for big endian, -1 for little endian          */
-    char* p = reinterpret_cast<char*>(&val); /* point to current byte to output in the ptr val  */
+    ಅಕ್ಷರ* p = reinterpret_cast<ಅಕ್ಷರ*>(&val); /* point to current byte to output in the ptr val  */
 
-#if !U_IS_BIG_ENDIAN
+#ಆದರೆ !U_IS_BIG_ENDIAN
     /* Little Endian.  Move p to most significant end of the value      */
     incVal = -1;
-    p += sizeof(void *) - 1;
-#endif
+    p += ಗಾತ್ರ(ಶೂನ್ಯ *) - 1;
+#ಆದರೆ_ಅಂತ್ಯ
 
     /* Loop through the bytes of the ptr as it sits in memory, from 
      * most significant to least significant end                    */
-    for (i=0; i<sizeof(void *); i++) {
-        outputHexBytes(*p, 2, outBuf, outIx, capacity);
+    ಗಾಗಿ (i=0; i<ಗಾತ್ರ(ಶೂನ್ಯ *); i++) {
+        output_Hex_ಬೈಟುಗಳು(*p, 2, ಹೊರಹೋಗು_Buf, ಹೊರಹೋಗು_Ix, capacity);
         p += incVal;
     }
 }
 
-static void outputString(const char *s, char *outBuf, int32_t *outIx, int32_t capacity, int32_t indent) {
+ಸ್ಥಿರ ಶೂನ್ಯ outputString(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *s, ಅಕ್ಷರ *ಹೊರಹೋಗು_Buf, int32_t *ಹೊರಹೋಗು_Ix, int32_t capacity, int32_t indent) {
     int32_t i = 0;
-    char    c;
-    if (s==nullptr) {
+    ಅಕ್ಷರ    c;
+    ಆದರೆ (s==ಶೂನ್ಯಸೂಚಕ) {
         s = "*NULL*";
     }
-    do {
+    ಮಾಡು {
         c = s[i++];
-        outputChar(c, outBuf, outIx, capacity, indent);
-    } while (c != 0);
+        outputChar(c, ಹೊರಹೋಗು_Buf, ಹೊರಹೋಗು_Ix, capacity, indent);
+    } ಆಗ (c != 0);
 }
         
 
 
-static void outputUString(const char16_t *s, int32_t len,
-                          char *outBuf, int32_t *outIx, int32_t capacity, int32_t indent) {
+ಸ್ಥಿರ ಶೂನ್ಯ outputUString(ಸ್ಥಿರಾಂಕ char16_t *s, int32_t len,
+                          ಅಕ್ಷರ *ಹೊರಹೋಗು_Buf, int32_t *ಹೊರಹೋಗು_Ix, int32_t capacity, int32_t indent) {
     int32_t i = 0;
     char16_t   c;
-    if (s==nullptr) {
-        outputString(nullptr, outBuf, outIx, capacity, indent);
-        return;
+    ಆದರೆ (s==ಶೂನ್ಯಸೂಚಕ) {
+        outputString(ಶೂನ್ಯಸೂಚಕ, ಹೊರಹೋಗು_Buf, ಹೊರಹೋಗು_Ix, capacity, indent);
+        ಹಿಂತಿರುಗಿ;
     }
 
-    for (i=0; i<len || len==-1; i++) {
+    ಗಾಗಿ (i=0; i<len || len==-1; i++) {
         c = s[i];
-        outputHexBytes(c, 4, outBuf, outIx, capacity);
-        outputChar(' ', outBuf, outIx, capacity, indent);
-        if (len == -1 && c==0) {
-            break;
+        output_Hex_ಬೈಟುಗಳು(c, 4, ಹೊರಹೋಗು_Buf, ಹೊರಹೋಗು_Ix, capacity);
+        outputChar(' ', ಹೊರಹೋಗು_Buf, ಹೊರಹೋಗು_Ix, capacity, indent);
+        ಆದರೆ (len == -1 && c==0) {
+            ನಿಲ್ಲಿಸು;
         }
     }
 }
         
 U_CAPI int32_t U_EXPORT2
-utrace_vformat(char *outBuf, int32_t capacity, int32_t indent, const char *fmt, va_list args) {
-    int32_t   outIx  = 0;
+utrace_vformat(ಅಕ್ಷರ *ಹೊರಹೋಗು_Buf, int32_t capacity, int32_t indent, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *fmt, va_list ವಾದಗಳು_2) {
+    int32_t   ಹೊರಹೋಗು_Ix  = 0;
     int32_t   fmtIx  = 0;
-    char      fmtC;
-    char      c;
+    ಅಕ್ಷರ      fmtC;
+    ಅಕ್ಷರ      c;
     int32_t   intArg;
     int64_t   longArg = 0;
-    char      *ptrArg;
+    ಅಕ್ಷರ      *ptrArg;
 
     /*   Loop runs once for each character in the format string.
      */
-    for (;;) {
+    ಗಾಗಿ (;;) {
         fmtC = fmt[fmtIx++];
-        if (fmtC != '%') {
+        ಆದರೆ (fmtC != '%') {
             /* Literal character, not part of a %sequence.  Just copy it to the output. */
-            outputChar(fmtC, outBuf, &outIx, capacity, indent);
-            if (fmtC == 0) {
+            outputChar(fmtC, ಹೊರಹೋಗು_Buf, &ಹೊರಹೋಗು_Ix, capacity, indent);
+            ಆದರೆ (fmtC == 0) {
                 /* We hit the NUL that terminates the format string.
                  * This is the normal (and only) exit from the loop that
                  * interprets the format
                  */
-                break;
+                ನಿಲ್ಲಿಸು;
             }
-            continue;
+            ಮುಂದುವರಿ;
         }
 
         /* We encountered a '%'.  Pick up the following format char */
         fmtC = fmt[fmtIx++];
 
-        switch (fmtC) {
-        case 'c':
+        ಆಯ್ಕೆ (fmtC) {
+        ಸ್ಥಿತಿ 'c':
             /* single 8 bit char   */
-            c = (char)va_arg(args, int32_t);
-            outputChar(c, outBuf, &outIx, capacity, indent);
-            break;
+            c = (ಅಕ್ಷರ)va_arg(ವಾದಗಳು_2, int32_t);
+            outputChar(c, ಹೊರಹೋಗು_Buf, &ಹೊರಹೋಗು_Ix, capacity, indent);
+            ನಿಲ್ಲಿಸು;
 
-        case 's':
+        ಸ್ಥಿತಿ 's':
             /* char * string, NUL terminated.  */
-            ptrArg = va_arg(args, char *);
-            outputString((const char *)ptrArg, outBuf, &outIx, capacity, indent);
-            break;
+            ptrArg = va_arg(ವಾದಗಳು_2, ಅಕ್ಷರ *);
+            outputString((ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *)ptrArg, ಹೊರಹೋಗು_Buf, &ಹೊರಹೋಗು_Ix, capacity, indent);
+            ನಿಲ್ಲಿಸು;
 
-        case 'S':
+        ಸ್ಥಿತಿ 'S':
             /* char16_t * string, with length, len==-1 for NUL terminated. */
-            ptrArg = va_arg(args, char *);             /* Ptr    */
-            intArg = va_arg(args, int32_t);            /* Length */
-            outputUString((const char16_t *)ptrArg, intArg, outBuf, &outIx, capacity, indent);
-            break;
+            ptrArg = va_arg(ವಾದಗಳು_2, ಅಕ್ಷರ *);             /* Ptr    */
+            intArg = va_arg(ವಾದಗಳು_2, int32_t);            /* Length */
+            outputUString((ಸ್ಥಿರಾಂಕ char16_t *)ptrArg, intArg, ಹೊರಹೋಗು_Buf, &ಹೊರಹೋಗು_Ix, capacity, indent);
+            ನಿಲ್ಲಿಸು;
 
-        case 'b':
+        ಸ್ಥಿತಿ 'b':
             /*  8 bit int  */
-            intArg = va_arg(args, int);
-            outputHexBytes(intArg, 2, outBuf, &outIx, capacity);
-            break;
+            intArg = va_arg(ವಾದಗಳು_2, ಪೂರ್ಣಾಂಕ);
+            output_Hex_ಬೈಟುಗಳು(intArg, 2, ಹೊರಹೋಗು_Buf, &ಹೊರಹೋಗು_Ix, capacity);
+            ನಿಲ್ಲಿಸು;
 
-        case 'h':
+        ಸ್ಥಿತಿ 'h':
             /*  16 bit int  */
-            intArg = va_arg(args, int);
-            outputHexBytes(intArg, 4, outBuf, &outIx, capacity);
-            break;
+            intArg = va_arg(ವಾದಗಳು_2, ಪೂರ್ಣಾಂಕ);
+            output_Hex_ಬೈಟುಗಳು(intArg, 4, ಹೊರಹೋಗು_Buf, &ಹೊರಹೋಗು_Ix, capacity);
+            ನಿಲ್ಲಿಸು;
 
-        case 'd':
+        ಸ್ಥಿತಿ 'd':
             /*  32 bit int  */
-            intArg = va_arg(args, int);
-            outputHexBytes(intArg, 8, outBuf, &outIx, capacity);
-            break;
+            intArg = va_arg(ವಾದಗಳು_2, ಪೂರ್ಣಾಂಕ);
+            output_Hex_ಬೈಟುಗಳು(intArg, 8, ಹೊರಹೋಗು_Buf, &ಹೊರಹೋಗು_Ix, capacity);
+            ನಿಲ್ಲಿಸು;
 
-        case 'l':
+        ಸ್ಥಿತಿ 'l':
             /*  64 bit long  */
-            longArg = va_arg(args, int64_t);
-            outputHexBytes(longArg, 16, outBuf, &outIx, capacity);
-            break;
+            longArg = va_arg(ವಾದಗಳು_2, int64_t);
+            output_Hex_ಬೈಟುಗಳು(longArg, 16, ಹೊರಹೋಗು_Buf, &ಹೊರಹೋಗು_Ix, capacity);
+            ನಿಲ್ಲಿಸು;
             
-        case 'p':
+        ಸ್ಥಿತಿ 'p':
             /*  Pointers.   */
-            ptrArg = va_arg(args, char *);
-            outputPtrBytes(ptrArg, outBuf, &outIx, capacity);
-            break;
+            ptrArg = va_arg(ವಾದಗಳು_2, ಅಕ್ಷರ *);
+            output_Ptr_ಬೈಟುಗಳು(ptrArg, ಹೊರಹೋಗು_Buf, &ಹೊರಹೋಗು_Ix, capacity);
+            ನಿಲ್ಲಿಸು;
 
-        case 0:
+        ಸ್ಥಿತಿ 0:
             /* Single '%' at end of fmt string.  Output as literal '%'.   
              * Back up index into format string so that the terminating NUL will be
              * re-fetched in the outer loop, causing it to terminate.
              */
-            outputChar('%', outBuf, &outIx, capacity, indent);
+            outputChar('%', ಹೊರಹೋಗು_Buf, &ಹೊರಹೋಗು_Ix, capacity, indent);
             fmtIx--;
-            break;
+            ನಿಲ್ಲಿಸು;
 
-        case 'v':
+        ಸ್ಥಿತಿ 'v':
             {
                 /* Vector of values, e.g. %vh */
-                char     vectorType;
-                int32_t  vectorLen;
-                const char   *i8Ptr;
+                ಅಕ್ಷರ     ಸದಿಶ_Type;
+                int32_t  ಸದಿಶ_Len;
+                ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ   *i8Ptr;
                 int16_t  *i16Ptr;
                 int32_t  *i32Ptr;
                 int64_t  *i64Ptr;
-                void     **ptrPtr;
-                int32_t   charsToOutput = 0;
+                ಶೂನ್ಯ     **ptrPtr;
+                int32_t   chars_ಗಮ್ಯ_Output = 0;
                 int32_t   i;
                 
-                vectorType = fmt[fmtIx];    /* b, h, d, l, p, etc. */
-                if (vectorType != 0) {
+                ಸದಿಶ_Type = fmt[fmtIx];    /* b, h, d, l, p, etc. */
+                ಆದರೆ (ಸದಿಶ_Type != 0) {
                     fmtIx++;
                 }
-                i8Ptr = (const char *)va_arg(args, void*);
+                i8Ptr = (ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *)va_arg(ವಾದಗಳು_2, ಶೂನ್ಯ*);
                 i16Ptr = (int16_t *)i8Ptr;
                 i32Ptr = (int32_t *)i8Ptr;
                 i64Ptr = (int64_t *)i8Ptr;
-                ptrPtr = (void **)i8Ptr;
-                vectorLen = va_arg(args, int32_t);
-                if (ptrPtr == nullptr) {
-                    outputString("*NULL* ", outBuf, &outIx, capacity, indent);
-                } else {
-                    for (i=0; i<vectorLen || vectorLen==-1; i++) { 
-                        switch (vectorType) {
-                        case 'b':
-                            charsToOutput = 2;
+                ptrPtr = (ಶೂನ್ಯ **)i8Ptr;
+                ಸದಿಶ_Len = va_arg(ವಾದಗಳು_2, int32_t);
+                ಆದರೆ (ptrPtr == ಶೂನ್ಯಸೂಚಕ) {
+                    outputString("*NULL* ", ಹೊರಹೋಗು_Buf, &ಹೊರಹೋಗು_Ix, capacity, indent);
+                } ಇಲ್ಲದಿದ್ದರೆ {
+                    ಗಾಗಿ (i=0; i<ಸದಿಶ_Len || ಸದಿಶ_Len==-1; i++) { 
+                        ಆಯ್ಕೆ (ಸದಿಶ_Type) {
+                        ಸ್ಥಿತಿ 'b':
+                            chars_ಗಮ್ಯ_Output = 2;
                             longArg = *i8Ptr++;
-                            break;
-                        case 'h':
-                            charsToOutput = 4;
+                            ನಿಲ್ಲಿಸು;
+                        ಸ್ಥಿತಿ 'h':
+                            chars_ಗಮ್ಯ_Output = 4;
                             longArg = *i16Ptr++;
-                            break;
-                        case 'd':
-                            charsToOutput = 8;
+                            ನಿಲ್ಲಿಸು;
+                        ಸ್ಥಿತಿ 'd':
+                            chars_ಗಮ್ಯ_Output = 8;
                             longArg = *i32Ptr++;
-                            break;
-                        case 'l':
-                            charsToOutput = 16;
+                            ನಿಲ್ಲಿಸು;
+                        ಸ್ಥಿತಿ 'l':
+                            chars_ಗಮ್ಯ_Output = 16;
                             longArg = *i64Ptr++;
-                            break;
-                        case 'p':
-                            charsToOutput = 0;
-                            outputPtrBytes(*ptrPtr, outBuf, &outIx, capacity);
-                            longArg = *ptrPtr==nullptr? 0: 1;    /* test for nullptr terminated array. */
+                            ನಿಲ್ಲಿಸು;
+                        ಸ್ಥಿತಿ 'p':
+                            chars_ಗಮ್ಯ_Output = 0;
+                            output_Ptr_ಬೈಟುಗಳು(*ptrPtr, ಹೊರಹೋಗು_Buf, &ಹೊರಹೋಗು_Ix, capacity);
+                            longArg = *ptrPtr==ಶೂನ್ಯಸೂಚಕ? 0: 1;    /* test for nullptr terminated array. */
                             ptrPtr++;
-                            break;
-                        case 'c':
-                            charsToOutput = 0;
-                            outputChar(*i8Ptr, outBuf, &outIx, capacity, indent);
+                            ನಿಲ್ಲಿಸು;
+                        ಸ್ಥಿತಿ 'c':
+                            chars_ಗಮ್ಯ_Output = 0;
+                            outputChar(*i8Ptr, ಹೊರಹೋಗು_Buf, &ಹೊರಹೋಗು_Ix, capacity, indent);
                             longArg = *i8Ptr;    /* for test for nullptr terminated array. */
                             i8Ptr++;
-                            break;
-                        case 's':
-                            charsToOutput = 0;
-                            outputString((const char *)*ptrPtr, outBuf, &outIx, capacity, indent);
-                            outputChar('\n', outBuf, &outIx, capacity, indent);
-                            longArg = *ptrPtr==nullptr? 0: 1;   /* for test for nullptr term. array. */
+                            ನಿಲ್ಲಿಸು;
+                        ಸ್ಥಿತಿ 's':
+                            chars_ಗಮ್ಯ_Output = 0;
+                            outputString((ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *)*ptrPtr, ಹೊರಹೋಗು_Buf, &ಹೊರಹೋಗು_Ix, capacity, indent);
+                            outputChar('\n', ಹೊರಹೋಗು_Buf, &ಹೊರಹೋಗು_Ix, capacity, indent);
+                            longArg = *ptrPtr==ಶೂನ್ಯಸೂಚಕ? 0: 1;   /* for test for nullptr term. array. */
                             ptrPtr++;
-                            break;
+                            ನಿಲ್ಲಿಸು;
 
-                        case 'S':
-                            charsToOutput = 0;
-                            outputUString((const char16_t *)*ptrPtr, -1, outBuf, &outIx, capacity, indent);
-                            outputChar('\n', outBuf, &outIx, capacity, indent);
-                            longArg = *ptrPtr==nullptr? 0: 1;   /* for test for nullptr term. array. */
+                        ಸ್ಥಿತಿ 'S':
+                            chars_ಗಮ್ಯ_Output = 0;
+                            outputUString((ಸ್ಥಿರಾಂಕ char16_t *)*ptrPtr, -1, ಹೊರಹೋಗು_Buf, &ಹೊರಹೋಗು_Ix, capacity, indent);
+                            outputChar('\n', ಹೊರಹೋಗು_Buf, &ಹೊರಹೋಗು_Ix, capacity, indent);
+                            longArg = *ptrPtr==ಶೂನ್ಯಸೂಚಕ? 0: 1;   /* for test for nullptr term. array. */
                             ptrPtr++;
-                            break;
+                            ನಿಲ್ಲಿಸು;
 
                             
                         }
-                        if (charsToOutput > 0) {
-                            outputHexBytes(longArg, charsToOutput, outBuf, &outIx, capacity);
-                            outputChar(' ', outBuf, &outIx, capacity, indent);
+                        ಆದರೆ (chars_ಗಮ್ಯ_Output > 0) {
+                            output_Hex_ಬೈಟುಗಳು(longArg, chars_ಗಮ್ಯ_Output, ಹೊರಹೋಗು_Buf, &ಹೊರಹೋಗು_Ix, capacity);
+                            outputChar(' ', ಹೊರಹೋಗು_Buf, &ಹೊರಹೋಗು_Ix, capacity, indent);
                         }
-                        if (vectorLen == -1 && longArg == 0) {
-                            break;
+                        ಆದರೆ (ಸದಿಶ_Len == -1 && longArg == 0) {
+                            ನಿಲ್ಲಿಸು;
                         }
                     }
                 }
-                outputChar('[', outBuf, &outIx, capacity, indent);
-                outputHexBytes(vectorLen, 8, outBuf, &outIx, capacity);
-                outputChar(']', outBuf, &outIx, capacity, indent);
+                outputChar('[', ಹೊರಹೋಗು_Buf, &ಹೊರಹೋಗು_Ix, capacity, indent);
+                output_Hex_ಬೈಟುಗಳು(ಸದಿಶ_Len, 8, ಹೊರಹೋಗು_Buf, &ಹೊರಹೋಗು_Ix, capacity);
+                outputChar(']', ಹೊರಹೋಗು_Buf, &ಹೊರಹೋಗು_Ix, capacity, indent);
             }
-            break;
+            ನಿಲ್ಲಿಸು;
 
 
-        default:
+        ಪೂರ್ವನಿಯೋಜಿತ:
             /* %. in format string, where . is some character not in the set
              *    of recognized format chars.  Just output it as if % wasn't there.
              *    (Covers "%%" outputting a single '%')
              */
-             outputChar(fmtC, outBuf, &outIx, capacity, indent);
+             outputChar(fmtC, ಹೊರಹೋಗು_Buf, &ಹೊರಹೋಗು_Ix, capacity, indent);
         }
     }
-    outputChar(0, outBuf, &outIx, capacity, indent);  /* Make sure that output is NUL terminated   */
-    return outIx + 1;     /* outIx + 1 because outIx does not increment when outputting final NUL. */
+    outputChar(0, ಹೊರಹೋಗು_Buf, &ಹೊರಹೋಗು_Ix, capacity, indent);  /* Make sure that output is NUL terminated   */
+    ಹಿಂತಿರುಗಿ ಹೊರಹೋಗು_Ix + 1;     /* outIx + 1 because outIx does not increment when outputting final NUL. */
 }
 
 
 
 
 U_CAPI int32_t U_EXPORT2
-utrace_format(char *outBuf, int32_t capacity,
-                int32_t indent, const char *fmt,  ...) {
+utrace_format(ಅಕ್ಷರ *ಹೊರಹೋಗು_Buf, int32_t capacity,
+                int32_t indent, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *fmt,  ...) {
     int32_t retVal;
-    va_list args;
-    va_start(args, fmt ); 
-    retVal = utrace_vformat(outBuf, capacity, indent, fmt, args);
-    va_end(args);
-    return retVal;
+    va_list ವಾದಗಳು_2;
+    va_start(ವಾದಗಳು_2, fmt ); 
+    retVal = utrace_vformat(ಹೊರಹೋಗು_Buf, capacity, indent, fmt, ವಾದಗಳು_2);
+    va_end(ವಾದಗಳು_2);
+    ಹಿಂತಿರುಗಿ retVal;
 }
 
 
-U_CAPI void U_EXPORT2
-utrace_setFunctions(const void *context,
-                    UTraceEntry *e, UTraceExit *x, UTraceData *d) {
-    pTraceEntryFunc = e;
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+utrace_ಗಣ_Functions(ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *context,
+                    UTrace_ನಮೂದು *e, UTraceExit *x, UTrace_ದತ್ತಾಂಶ *d) {
+    p_Trace_ನಮೂದು_Func = e;
     pTraceExitFunc  = x;
-    pTraceDataFunc  = d;
+    p_Trace_ದತ್ತಾಂಶ_Func  = d;
     gTraceContext   = context;
 }
 
 
-U_CAPI void U_EXPORT2
-utrace_getFunctions(const void **context,
-                    UTraceEntry **e, UTraceExit **x, UTraceData **d) {
-    *e = pTraceEntryFunc;
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+utrace_getFunctions(ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ **context,
+                    UTrace_ನಮೂದು **e, UTraceExit **x, UTrace_ದತ್ತಾಂಶ **d) {
+    *e = p_Trace_ನಮೂದು_Func;
     *x = pTraceExitFunc;
-    *d = pTraceDataFunc;
+    *d = p_Trace_ದತ್ತಾಂಶ_Func;
     *context = gTraceContext;
 }
 
-U_CAPI void U_EXPORT2
-utrace_setLevel(int32_t level) {
-    if (level < UTRACE_OFF) {
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+utrace_ಗಣ_Level(int32_t level) {
+    ಆದರೆ (level < UTRACE_OFF) {
         level = UTRACE_OFF;
     }
-    if (level > UTRACE_VERBOSE) {
+    ಆದರೆ (level > UTRACE_VERBOSE) {
         level = UTRACE_VERBOSE;
     }
     utrace_level = level;
@@ -425,31 +425,31 @@ utrace_setLevel(int32_t level) {
 
 U_CAPI int32_t U_EXPORT2
 utrace_getLevel() {
-    return utrace_level;
+    ಹಿಂತಿರುಗಿ utrace_level;
 }
 
 
 U_CFUNC UBool 
 utrace_cleanup() {
-    pTraceEntryFunc = nullptr;
-    pTraceExitFunc  = nullptr;
-    pTraceDataFunc  = nullptr;
+    p_Trace_ನಮೂದು_Func = ಶೂನ್ಯಸೂಚಕ;
+    pTraceExitFunc  = ಶೂನ್ಯಸೂಚಕ;
+    p_Trace_ದತ್ತಾಂಶ_Func  = ಶೂನ್ಯಸೂಚಕ;
     utrace_level    = UTRACE_OFF;
-    gTraceContext   = nullptr;
-    return true;
+    gTraceContext   = ಶೂನ್ಯಸೂಚಕ;
+    ಹಿಂತಿರುಗಿ ನಿಜ;
 }
 
 
-static const char * const
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ * ಸ್ಥಿರಾಂಕ
 trFnName[] = {
     "u_init",
     "u_cleanup",
-    nullptr
+    ಶೂನ್ಯಸೂಚಕ
 };
 
 
-static const char * const
-trConvNames[] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ * ಸ್ಥಿರಾಂಕ
+tr_Conv_ಹೆಸರುಗಳು[] = {
     "ucnv_open",
     "ucnv_openPackage",
     "ucnv_openAlgorithmic",
@@ -458,12 +458,12 @@ trConvNames[] = {
     "ucnv_flushCache",
     "ucnv_load",
     "ucnv_unload",
-    nullptr
+    ಶೂನ್ಯಸೂಚಕ
 };
 
     
-static const char * const
-trCollNames[] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ * ಸ್ಥಿರಾಂಕ
+tr_Coll_ಹೆಸರುಗಳು[] = {
     "ucol_open",
     "ucol_close",
     "ucol_strcoll",
@@ -473,32 +473,32 @@ trCollNames[] = {
     "ucol_strcollIter",
     "ucol_openFromShortString",
     "ucol_strcollUTF8",
-    nullptr
+    ಶೂನ್ಯಸೂಚಕ
 };
 
 
-static const char* const
-trResDataNames[] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* ಸ್ಥಿರಾಂಕ
+tr_Res_ದತ್ತಾಂಶ_ಹೆಸರುಗಳು[] = {
     "resc",
     "bundle-open",
     "file-open",
     "res-open",
-    nullptr
+    ಶೂನ್ಯಸೂಚಕ
 };
 
                 
-U_CAPI const char * U_EXPORT2
-utrace_functionName(int32_t fnNumber) {
-    if(UTRACE_FUNCTION_START <= fnNumber && fnNumber < UTRACE_FUNCTION_LIMIT) {
-        return trFnName[fnNumber];
-    } else if(UTRACE_CONVERSION_START <= fnNumber && fnNumber < UTRACE_CONVERSION_LIMIT) {
-        return trConvNames[fnNumber - UTRACE_CONVERSION_START];
-    } else if(UTRACE_COLLATION_START <= fnNumber && fnNumber < UTRACE_COLLATION_LIMIT){
-        return trCollNames[fnNumber - UTRACE_COLLATION_START];
-    } else if(UTRACE_UDATA_START <= fnNumber && fnNumber < UTRACE_RES_DATA_LIMIT){
-        return trResDataNames[fnNumber - UTRACE_UDATA_START];
-    } else {
-        return "[BOGUS Trace Function Number]";
+U_CAPI ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ * U_EXPORT2
+utrace_functionName(int32_t fn_ಸಂಖ್ಯೆ) {
+    ಆದರೆ(UTRACE_FUNCTION_ಆರಂಭ <= fn_ಸಂಖ್ಯೆ && fn_ಸಂಖ್ಯೆ < UTRACE_FUNCTION_ಎಲ್ಲೆ) {
+        ಹಿಂತಿರುಗಿ trFnName[fn_ಸಂಖ್ಯೆ];
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(UTRACE_CONVERSION_ಆರಂಭ <= fn_ಸಂಖ್ಯೆ && fn_ಸಂಖ್ಯೆ < UTRACE_CONVERSION_ಎಲ್ಲೆ) {
+        ಹಿಂತಿರುಗಿ tr_Conv_ಹೆಸರುಗಳು[fn_ಸಂಖ್ಯೆ - UTRACE_CONVERSION_ಆರಂಭ];
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(UTRACE_COLLATION_ಆರಂಭ <= fn_ಸಂಖ್ಯೆ && fn_ಸಂಖ್ಯೆ < UTRACE_COLLATION_ಎಲ್ಲೆ){
+        ಹಿಂತಿರುಗಿ tr_Coll_ಹೆಸರುಗಳು[fn_ಸಂಖ್ಯೆ - UTRACE_COLLATION_ಆರಂಭ];
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(UTRACE_UDATA_ಆರಂಭ <= fn_ಸಂಖ್ಯೆ && fn_ಸಂಖ್ಯೆ < UTRACE_RES_ದತ್ತಾಂಶ_ಎಲ್ಲೆ){
+        ಹಿಂತಿರುಗಿ tr_Res_ದತ್ತಾಂಶ_ಹೆಸರುಗಳು[fn_ಸಂಖ್ಯೆ - UTRACE_UDATA_ಆರಂಭ];
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಹಿಂತಿರುಗಿ "[BOGUS Trace Function Number]";
     }
 }
 

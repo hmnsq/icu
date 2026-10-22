@@ -9,15 +9,15 @@
 ********************************************************************
 */
 
-#ifndef CHARITER_H
-#define CHARITER_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ CHARITER_H
+#ವ್ಯಾಖ್ಯಾನಿಸು CHARITER_H
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ಆದರೆ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
-#include "unicode/unistr.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uobject.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unistr.h"
 /**
  * \file
  * \brief C++ API: Character Iterator
@@ -91,20 +91,20 @@ U_NAMESPACE_BEGIN
  *
  * @stable ICU 2.0
  */
-class U_COMMON_API ForwardCharacterIterator : public UObject {
-public:
+class U_COMMON_API ForwardCharacterIterator : ಸಾರ್ವಜನಿಕ UObject {
+ಸಾರ್ವಜನಿಕ:
     /**
      * Value returned by most of ForwardCharacterIterator's functions
      * when the iterator has reached the limits of its iteration.
      * @stable ICU 2.0
      */
-    enum { DONE = 0xffff };
+    ಎಣಿಕೆ { ಮುಗಿದ_2 = 0xffff };
     
     /**
      * Destructor.  
      * @stable ICU 2.0
      */
-    virtual ~ForwardCharacterIterator();
+    ವಾಸ್ತವಿಕ ~ForwardCharacterIterator();
     
     /**
      * Returns true when both iterators refer to the same
@@ -114,7 +114,7 @@ public:
      * character in the same character-storage object
      * @stable ICU 2.0
      */
-    virtual bool operator==(const ForwardCharacterIterator& that) const = 0;
+    ವಾಸ್ತವಿಕ bool ಕ್ರಿಯಾಕಾರಕ==(ಸ್ಥಿರಾಂಕ ForwardCharacterIterator& that) ಸ್ಥಿರಾಂಕ = 0;
     
     /**
      * Returns true when the iterators refer to different
@@ -126,14 +126,14 @@ public:
      * same text-storage object
      * @stable ICU 2.0
      */
-    inline bool operator!=(const ForwardCharacterIterator& that) const;
+    ಸಾಲೊಳಗೆ bool ಕ್ರಿಯಾಕಾರಕ!=(ಸ್ಥಿರಾಂಕ ForwardCharacterIterator& that) ಸ್ಥಿರಾಂಕ;
     
     /**
      * Generates a hash code for this iterator.  
      * @return the hash code.
      * @stable ICU 2.0
      */
-    virtual int32_t hashCode() const = 0;
+    ವಾಸ್ತವಿಕ int32_t hash_ಸಂಕೇತ() ಸ್ಥಿರಾಂಕ = 0;
 
     /**
      * Returns a UClassID for this ForwardCharacterIterator ("poor man's
@@ -142,7 +142,7 @@ public:
      * @return a UClassID for this ForwardCharacterIterator 
      * @stable ICU 2.0
      */
-    virtual UClassID getDynamicClassID() const override = 0;
+    ವಾಸ್ತವಿಕ UClassID getDynamicClassID() ಸ್ಥಿರಾಂಕ override = 0;
 
     /**
      * Gets the current code unit for returning and advances to the next code unit
@@ -152,7 +152,7 @@ public:
      * @return the current code unit.
      * @stable ICU 2.0
      */
-    virtual char16_t nextPostInc() = 0;
+    ವಾಸ್ತವಿಕ char16_t ಮುಂದಿನ_Post_Inc() = 0;
 
     /**
      * Gets the current code point for returning and advances to the next code point
@@ -162,7 +162,7 @@ public:
      * @return the current code point.
      * @stable ICU 2.0
      */
-    virtual UChar32 next32PostInc() = 0;
+    ವಾಸ್ತವಿಕ UChar32 next32PostInc() = 0;
 
     /**
      * Returns false if there are no more code units or code points
@@ -173,21 +173,21 @@ public:
      * at or after the current position in the iteration range.
      * @stable ICU 2.0
      */
-    virtual UBool        hasNext() = 0;
+    ವಾಸ್ತವಿಕ UBool        has_ಮುಂದಿನ() = 0;
     
-protected:
+ಸಂರಕ್ಷಿತ:
     /** Default constructor to be overridden in the implementing class. @stable ICU 2.0*/
     ForwardCharacterIterator();
     
     /** Copy constructor to be overridden in the implementing class. @stable ICU 2.0*/
-    ForwardCharacterIterator(const ForwardCharacterIterator &other);
+    ForwardCharacterIterator(ಸ್ಥಿರಾಂಕ ForwardCharacterIterator &other);
     
     /**
      * Assignment operator to be overridden in the implementing class.
      * @stable ICU 2.0
      */
-    ForwardCharacterIterator& operator=(const ForwardCharacterIterator&) U_LIFETIME_BOUND {
-        return *this;
+    ForwardCharacterIterator& ಕ್ರಿಯಾಕಾರಕ=(ಸ್ಥಿರಾಂಕ ForwardCharacterIterator&) U_LIFETIME_BOUND {
+        ಹಿಂತಿರುಗಿ *this;
     }
 };
 
@@ -360,19 +360,19 @@ protected:
  *
  * @stable ICU 2.0
  */
-class U_COMMON_API CharacterIterator : public ForwardCharacterIterator {
-public:
+class U_COMMON_API CharacterIterator : ಸಾರ್ವಜನಿಕ ForwardCharacterIterator {
+ಸಾರ್ವಜನಿಕ:
     /**
      * Origin enumeration for the move() and move32() functions.
      * @stable ICU 2.0
      */
-    enum EOrigin { kStart, kCurrent, kEnd };
+    ಎಣಿಕೆ EOrigin { k_ಆರಂಭ, kCurrent, k_ಕೊನೆ };
 
     /**
      * Destructor.
      * @stable ICU 2.0
      */
-    virtual ~CharacterIterator();
+    ವಾಸ್ತವಿಕ ~CharacterIterator();
 
     /**
      * Returns a pointer to a new CharacterIterator of the same
@@ -382,7 +382,7 @@ public:
      * @return a pointer to a new CharacterIterator
      * @stable ICU 2.0
      */
-    virtual CharacterIterator* clone() const = 0;
+    ವಾಸ್ತವಿಕ CharacterIterator* clone() ಸ್ಥಿರಾಂಕ = 0;
 
     /**
      * Sets the iterator to refer to the first code unit in its
@@ -391,7 +391,7 @@ public:
      * @return the first code unit in its iteration range.
      * @stable ICU 2.0
      */
-    virtual char16_t first() = 0;
+    ವಾಸ್ತವಿಕ char16_t ಮೊದಲ() = 0;
 
     /**
      * Sets the iterator to refer to the first code unit in its
@@ -401,7 +401,7 @@ public:
      * @return the first code unit in its iteration range.
      * @stable ICU 2.0
      */
-    virtual char16_t firstPostInc();
+    ವಾಸ್ತವಿಕ char16_t ಮೊದಲ_Post_Inc();
 
     /**
      * Sets the iterator to refer to the first code point in its
@@ -412,7 +412,7 @@ public:
      * @return the first code point in its iteration range.
      * @stable ICU 2.0
      */
-    virtual UChar32 first32() = 0;
+    ವಾಸ್ತವಿಕ UChar32 first32() = 0;
 
     /**
      * Sets the iterator to refer to the first code point in its
@@ -422,7 +422,7 @@ public:
      * @return the first code point in its iteration range.
      * @stable ICU 2.0
      */
-    virtual UChar32 first32PostInc();
+    ವಾಸ್ತವಿಕ UChar32 first32PostInc();
 
     /**
      * Sets the iterator to refer to the first code unit or code point in its
@@ -431,7 +431,7 @@ public:
      * @return the start position of the iteration range
      * @stable ICU 2.0
      */
-    inline int32_t    setToStart();
+    ಸಾಲೊಳಗೆ int32_t    ಗಣ_ಗಮ್ಯ_ಆರಂಭ();
 
     /**
      * Sets the iterator to refer to the last code unit in its
@@ -440,7 +440,7 @@ public:
      * @return the last code unit.
      * @stable ICU 2.0
      */
-    virtual char16_t last() = 0;
+    ವಾಸ್ತವಿಕ char16_t ಕೊನೆಯ() = 0;
 
     /**
      * Sets the iterator to refer to the last code point in its
@@ -449,7 +449,7 @@ public:
      * @return the last code point.
      * @stable ICU 2.0
      */
-    virtual UChar32 last32() = 0;
+    ವಾಸ್ತವಿಕ UChar32 last32() = 0;
 
     /**
      * Sets the iterator to the end of its iteration range, just behind
@@ -458,7 +458,7 @@ public:
      * @return the end position of the iteration range
      * @stable ICU 2.0
      */
-    inline int32_t    setToEnd();
+    ಸಾಲೊಳಗೆ int32_t    ಗಣ_ಗಮ್ಯ_ಕೊನೆ();
 
     /**
      * Sets the iterator to refer to the "position"-th code unit
@@ -468,7 +468,7 @@ public:
      * @return the "position"-th code unit.
      * @stable ICU 2.0
      */
-    virtual char16_t         setIndex(int32_t position) = 0;
+    ವಾಸ್ತವಿಕ char16_t         ಗಣ_ಸೂಚ್ಯಂಕ(int32_t position) = 0;
 
     /**
      * Sets the iterator to refer to the beginning of the code point
@@ -481,21 +481,21 @@ public:
      * @return the "position"-th code point.
      * @stable ICU 2.0
      */
-    virtual UChar32       setIndex32(int32_t position) = 0;
+    ವಾಸ್ತವಿಕ UChar32       ಗಣ_Index32(int32_t position) = 0;
 
     /**
      * Returns the code unit the iterator currently refers to. 
      * @return the current code unit. 
      * @stable ICU 2.0
      */
-    virtual char16_t current() const = 0;
+    ವಾಸ್ತವಿಕ char16_t current() ಸ್ಥಿರಾಂಕ = 0;
 
     /**
      * Returns the code point the iterator currently refers to.  
      * @return the current code point.
      * @stable ICU 2.0
      */
-    virtual UChar32 current32() const = 0;
+    ವಾಸ್ತವಿಕ UChar32 current32() ಸ್ಥಿರಾಂಕ = 0;
 
     /**
      * Advances to the next code unit in the iteration range
@@ -504,7 +504,7 @@ public:
      * @return the next code unit.
      * @stable ICU 2.0
      */
-    virtual char16_t next() = 0;
+    ವಾಸ್ತವಿಕ char16_t ಮುಂದಿನ() = 0;
 
     /**
      * Advances to the next code point in the iteration range
@@ -516,7 +516,7 @@ public:
      * @return the next code point.
      * @stable ICU 2.0
      */
-    virtual UChar32 next32() = 0;
+    ವಾಸ್ತವಿಕ UChar32 next32() = 0;
 
     /**
      * Advances to the previous code unit in the iteration range
@@ -525,7 +525,7 @@ public:
      * @return the previous code unit.
      * @stable ICU 2.0
      */
-    virtual char16_t previous() = 0;
+    ವಾಸ್ತವಿಕ char16_t ಹಿಂದಿನ() = 0;
 
     /**
      * Advances to the previous code point in the iteration range
@@ -534,7 +534,7 @@ public:
      * @return the previous code point. 
      * @stable ICU 2.0
      */
-    virtual UChar32 previous32() = 0;
+    ವಾಸ್ತವಿಕ UChar32 previous32() = 0;
 
     /**
      * Returns false if there are no more code units or code points
@@ -545,7 +545,7 @@ public:
      * before the current position in the iteration range, return true otherwise.
      * @stable ICU 2.0
      */
-    virtual UBool        hasPrevious() = 0;
+    ವಾಸ್ತವಿಕ UBool        has_ಹಿಂದಿನ() = 0;
 
     /**
      * Returns the numeric index in the underlying text-storage
@@ -557,7 +557,7 @@ public:
      * object of the character returned by first().
      * @stable ICU 2.0
      */
-    inline int32_t startIndex() const;
+    ಸಾಲೊಳಗೆ int32_t ಆರಂಭ_ಸೂಚ್ಯಂಕ() ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns the numeric index in the underlying text-storage
@@ -568,7 +568,7 @@ public:
      * returned by last().
      * @stable ICU 2.0
      */
-    inline int32_t endIndex() const;
+    ಸಾಲೊಳಗೆ int32_t ಕೊನೆ_ಸೂಚ್ಯಂಕ() ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns the numeric index in the underlying text-storage
@@ -578,7 +578,7 @@ public:
      * the character the iterator currently refers to
      * @stable ICU 2.0
      */
-    inline int32_t getIndex() const;
+    ಸಾಲೊಳಗೆ int32_t get_ಸೂಚ್ಯಂಕ() ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns the length of the entire text in the underlying
@@ -586,7 +586,7 @@ public:
      * @return the length of the entire text in the text-storage object
      * @stable ICU 2.0
      */
-    inline int32_t           getLength() const;
+    ಸಾಲೊಳಗೆ int32_t           get_ಉದ್ದಳತೆ() ಸ್ಥಿರಾಂಕ;
 
     /**
      * Moves the current position relative to the start or end of the
@@ -599,7 +599,7 @@ public:
      * @return the new position
      * @stable ICU 2.0
      */
-    virtual int32_t      move(int32_t delta, EOrigin origin) = 0;
+    ವಾಸ್ತವಿಕ int32_t      move(int32_t delta, EOrigin origin) = 0;
 
     /**
      * Moves the current position relative to the start or end of the
@@ -612,11 +612,11 @@ public:
      * @return the new position
      * @stable ICU 2.0
      */
-#ifdef move32
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ move32
      // One of the system headers right now is sometimes defining a conflicting macro we don't use
-#undef move32
-#endif
-    virtual int32_t      move32(int32_t delta, EOrigin origin) = 0;
+#ವ್ಯಾಖ್ಯಾನ_ರದ್ದು move32
+#ಆದರೆ_ಅಂತ್ಯ
+    ವಾಸ್ತವಿಕ int32_t      move32(int32_t delta, EOrigin origin) = 0;
 
     /**
      * Copies the text under iteration into the UnicodeString
@@ -624,9 +624,9 @@ public:
      * @param result Receives a copy of the text under iteration.  
      * @stable ICU 2.0
      */
-    virtual void            getText(UnicodeString&  result) = 0;
+    ವಾಸ್ತವಿಕ ಶೂನ್ಯ            get_ಪಠ್ಯ(UnicodeString&  ಫಲಿತಾಂಶ) = 0;
 
-protected:
+ಸಂರಕ್ಷಿತ:
     /**
      * Empty constructor.
      * @stable ICU 2.0
@@ -637,19 +637,19 @@ protected:
      * Constructor, just setting the length field in this base class.
      * @stable ICU 2.0
      */
-    CharacterIterator(int32_t length);
+    CharacterIterator(int32_t ಉದ್ದಳತೆ);
 
     /**
      * Constructor, just setting the length and position fields in this base class.
      * @stable ICU 2.0
      */
-    CharacterIterator(int32_t length, int32_t position);
+    CharacterIterator(int32_t ಉದ್ದಳತೆ, int32_t position);
 
     /**
      * Constructor, just setting the length, start, end, and position fields in this base class.
      * @stable ICU 2.0
      */
-    CharacterIterator(int32_t length, int32_t textBegin, int32_t textEnd, int32_t position);
+    CharacterIterator(int32_t ಉದ್ದಳತೆ, int32_t ಪಠ್ಯ_Begin, int32_t ಪಠ್ಯ_ಕೊನೆ, int32_t position);
   
     /**
      * Copy constructor.
@@ -657,7 +657,7 @@ protected:
      * @param that The CharacterIterator to be copied
      * @stable ICU 2.0
      */
-    CharacterIterator(const CharacterIterator &that);
+    CharacterIterator(ಸ್ಥಿರಾಂಕ CharacterIterator &that);
 
     /**
      * Assignment operator.  Sets this CharacterIterator to have the same behavior,
@@ -666,14 +666,14 @@ protected:
      * @return the newly set CharacterIterator.
      * @stable ICU 2.0
      */
-    CharacterIterator& operator=(const CharacterIterator& that) U_LIFETIME_BOUND;
+    CharacterIterator& ಕ್ರಿಯಾಕಾರಕ=(ಸ್ಥಿರಾಂಕ CharacterIterator& that) U_LIFETIME_BOUND;
 
     /**
      * Base class text length field.
      * Necessary this for correct getText() and hashCode().
      * @stable ICU 2.0
      */
-    int32_t textLength;
+    int32_t ಪಠ್ಯ_ಉದ್ದಳತೆ;
 
     /**
      * Base class field for the current position.
@@ -691,46 +691,46 @@ protected:
      * Base class field for the end of the iteration range.
      * @stable ICU 2.0
      */
-    int32_t  end;
+    int32_t  ಕೊನೆ;
 };
 
-inline bool
-ForwardCharacterIterator::operator!=(const ForwardCharacterIterator& that) const {
-    return !operator==(that);
+ಸಾಲೊಳಗೆ bool
+ForwardCharacterIterator::ಕ್ರಿಯಾಕಾರಕ!=(ಸ್ಥಿರಾಂಕ ForwardCharacterIterator& that) ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ !ಕ್ರಿಯಾಕಾರಕ==(that);
 }
 
-inline int32_t
-CharacterIterator::setToStart() {
-    return move(0, kStart);
+ಸಾಲೊಳಗೆ int32_t
+CharacterIterator::ಗಣ_ಗಮ್ಯ_ಆರಂಭ() {
+    ಹಿಂತಿರುಗಿ move(0, k_ಆರಂಭ);
 }
 
-inline int32_t
-CharacterIterator::setToEnd() {
-    return move(0, kEnd);
+ಸಾಲೊಳಗೆ int32_t
+CharacterIterator::ಗಣ_ಗಮ್ಯ_ಕೊನೆ() {
+    ಹಿಂತಿರುಗಿ move(0, k_ಕೊನೆ);
 }
 
-inline int32_t
-CharacterIterator::startIndex() const {
-    return begin;
+ಸಾಲೊಳಗೆ int32_t
+CharacterIterator::ಆರಂಭ_ಸೂಚ್ಯಂಕ() ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ begin;
 }
 
-inline int32_t
-CharacterIterator::endIndex() const {
-    return end;
+ಸಾಲೊಳಗೆ int32_t
+CharacterIterator::ಕೊನೆ_ಸೂಚ್ಯಂಕ() ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ ಕೊನೆ;
 }
 
-inline int32_t
-CharacterIterator::getIndex() const {
-    return pos;
+ಸಾಲೊಳಗೆ int32_t
+CharacterIterator::get_ಸೂಚ್ಯಂಕ() ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ pos;
 }
 
-inline int32_t
-CharacterIterator::getLength() const {
-    return textLength;
+ಸಾಲೊಳಗೆ int32_t
+CharacterIterator::get_ಉದ್ದಳತೆ() ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ ಪಠ್ಯ_ಉದ್ದಳತೆ;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ಆದರೆ_ಅಂತ್ಯ /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

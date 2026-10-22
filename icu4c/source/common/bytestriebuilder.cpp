@@ -14,16 +14,16 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/bytestriebuilder.h"
-#include "unicode/stringpiece.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "uhash.h"
-#include "uarrsort.h"
-#include "uassert.h"
-#include "ustr_imp.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/bytestrie.h"
+#ಅನ್ತರ್ಭಾವ "unicode/bytestriebuilder.h"
+#ಅನ್ತರ್ಭಾವ "unicode/stringpiece.h"
+#ಅನ್ತರ್ಭಾವ "charstr.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "uhash.h"
+#ಅನ್ತರ್ಭಾವ "uarrsort.h"
+#ಅನ್ತರ್ಭಾವ "uassert.h"
+#ಅನ್ತರ್ಭಾವ "ustr_imp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -33,49 +33,49 @@ U_NAMESPACE_BEGIN
  * It might(!) take less memory if we collected the data in a temporary, dynamic trie.
  */
 
-class BytesTrieElement : public UMemory {
-public:
+ವರ್ಗ ಬೈಟುಗಳು_Trie_Element : ಸಾರ್ವಜನಿಕ UMemory {
+ಸಾರ್ವಜನಿಕ:
     // Use compiler's default constructor, initializes nothing.
 
-    void setTo(StringPiece s, int32_t val, CharString &strings, UErrorCode &errorCode);
+    ಶೂನ್ಯ ಗಣ_ಗಮ್ಯ(StringPiece s, int32_t val, CharString &ಅಕ್ಷರಸರಣಿಗಳು, UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
-    StringPiece getString(const CharString& strings U_LIFETIME_BOUND) const {
-        int32_t offset=stringOffset;
+    StringPiece getString(ಸ್ಥಿರಾಂಕ CharString& ಅಕ್ಷರಸರಣಿಗಳು U_LIFETIME_BOUND) ಸ್ಥಿರಾಂಕ {
+        int32_t ಸ್ಥಾನಾಂತರ=string_ಸ್ಥಾನಾಂತರ;
         int32_t length;
-        if(offset>=0) {
-            length = static_cast<uint8_t>(strings[offset++]);
-        } else {
-            offset=~offset;
-            length = (static_cast<int32_t>(static_cast<uint8_t>(strings[offset])) << 8) | static_cast<uint8_t>(strings[offset + 1]);
-            offset+=2;
+        ಆದರೆ(ಸ್ಥಾನಾಂತರ>=0) {
+            length = static_cast<uint8_t>(ಅಕ್ಷರಸರಣಿಗಳು[ಸ್ಥಾನಾಂತರ++]);
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಸ್ಥಾನಾಂತರ=~ಸ್ಥಾನಾಂತರ;
+            length = (static_cast<int32_t>(static_cast<uint8_t>(ಅಕ್ಷರಸರಣಿಗಳು[ಸ್ಥಾನಾಂತರ])) << 8) | static_cast<uint8_t>(ಅಕ್ಷರಸರಣಿಗಳು[ಸ್ಥಾನಾಂತರ + 1]);
+            ಸ್ಥಾನಾಂತರ+=2;
         }
-        return StringPiece(strings.data()+offset, length);
+        ಹಿಂತಿರುಗಿ StringPiece(ಅಕ್ಷರಸರಣಿಗಳು.ದತ್ತಾಂಶ()+ಸ್ಥಾನಾಂತರ, length);
     }
-    int32_t getStringLength(const CharString &strings) const {
-        int32_t offset=stringOffset;
-        if(offset>=0) {
-            return static_cast<uint8_t>(strings[offset]);
-        } else {
-            offset=~offset;
-            return (static_cast<int32_t>(static_cast<uint8_t>(strings[offset])) << 8) | static_cast<uint8_t>(strings[offset + 1]);
+    int32_t get_String_ಉದ್ದಳತೆ(ಸ್ಥಿರಾಂಕ CharString &ಅಕ್ಷರಸರಣಿಗಳು) ಸ್ಥಿರಾಂಕ {
+        int32_t ಸ್ಥಾನಾಂತರ=string_ಸ್ಥಾನಾಂತರ;
+        ಆದರೆ(ಸ್ಥಾನಾಂತರ>=0) {
+            ಹಿಂತಿರುಗಿ static_cast<uint8_t>(ಅಕ್ಷರಸರಣಿಗಳು[ಸ್ಥಾನಾಂತರ]);
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಸ್ಥಾನಾಂತರ=~ಸ್ಥಾನಾಂತರ;
+            ಹಿಂತಿರುಗಿ (static_cast<int32_t>(static_cast<uint8_t>(ಅಕ್ಷರಸರಣಿಗಳು[ಸ್ಥಾನಾಂತರ])) << 8) | static_cast<uint8_t>(ಅಕ್ಷರಸರಣಿಗಳು[ಸ್ಥಾನಾಂತರ + 1]);
         }
     }
 
-    char charAt(int32_t index, const CharString &strings) const { return data(strings)[index]; }
+    ಅಕ್ಷರ charAt(int32_t ಸೂಚ್ಯಂಕ, ಸ್ಥಿರಾಂಕ CharString &ಅಕ್ಷರಸರಣಿಗಳು) ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ ದತ್ತಾಂಶ(ಅಕ್ಷರಸರಣಿಗಳು)[ಸೂಚ್ಯಂಕ]; }
 
-    int32_t getValue() const { return value; }
+    int32_t get_ಮೌಲ್ಯ() ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ value; }
 
-    int32_t compareStringTo(const BytesTrieElement &o, const CharString &strings) const;
+    int32_t compare_String_ಗಮ್ಯ(ಸ್ಥಿರಾಂಕ ಬೈಟುಗಳು_Trie_Element &o, ಸ್ಥಿರಾಂಕ CharString &ಅಕ್ಷರಸರಣಿಗಳು) ಸ್ಥಿರಾಂಕ;
 
-private:
-    const char* data(const CharString& strings U_LIFETIME_BOUND) const {
-        int32_t offset=stringOffset;
-        if(offset>=0) {
-            ++offset;
-        } else {
-            offset=~offset+2;
+ಖಾಸಗಿ:
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* ದತ್ತಾಂಶ(ಸ್ಥಿರಾಂಕ CharString& ಅಕ್ಷರಸರಣಿಗಳು U_LIFETIME_BOUND) ಸ್ಥಿರಾಂಕ {
+        int32_t ಸ್ಥಾನಾಂತರ=string_ಸ್ಥಾನಾಂತರ;
+        ಆದರೆ(ಸ್ಥಾನಾಂತರ>=0) {
+            ++ಸ್ಥಾನಾಂತರ;
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಸ್ಥಾನಾಂತರ=~ಸ್ಥಾನಾಂತರ+2;
         }
-        return strings.data()+offset;
+        ಹಿಂತಿರುಗಿ ಅಕ್ಷರಸರಣಿಗಳು.ದತ್ತಾಂಶ()+ಸ್ಥಾನಾಂತರ;
     }
 
     // If the stringOffset is non-negative, then the first strings byte contains
@@ -83,431 +83,431 @@ private:
     // If the stringOffset is negative, then the first two strings bytes contain
     // the string length (big-endian), and the offset needs to be bit-inverted.
     // (Compared with a stringLength field here, this saves 3 bytes per string for most strings.)
-    int32_t stringOffset;
+    int32_t string_ಸ್ಥಾನಾಂತರ;
     int32_t value;
 };
 
-void
-BytesTrieElement::setTo(StringPiece s, int32_t val,
-                        CharString &strings, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+ಶೂನ್ಯ
+ಬೈಟುಗಳು_Trie_Element::ಗಣ_ಗಮ್ಯ(StringPiece s, int32_t val,
+                        CharString &ಅಕ್ಷರಸರಣಿಗಳು, UError_ಸಂಕೇತ &error_ಸಂಕೇತ) {
+    ಆದರೆ(U_FAILURE(error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ;
     }
     int32_t length=s.length();
-    if(length>0xffff) {
+    ಆದರೆ(length>0xffff) {
         // Too long: We store the length in 1 or 2 bytes.
-        errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+        error_ಸಂಕೇತ=U_ಸೂಚ್ಯಂಕ_OUTOFBOUNDS_ERROR;
+        ಹಿಂತಿರುಗಿ;
     }
-    int32_t offset=strings.length();
-    if(length>0xff) {
-        offset=~offset;
-        strings.append(static_cast<char>(length >> 8), errorCode);
+    int32_t ಸ್ಥಾನಾಂತರ=ಅಕ್ಷರಸರಣಿಗಳು.length();
+    ಆದರೆ(length>0xff) {
+        ಸ್ಥಾನಾಂತರ=~ಸ್ಥಾನಾಂತರ;
+        ಅಕ್ಷರಸರಣಿಗಳು.append(static_cast<ಅಕ್ಷರ>(length >> 8), error_ಸಂಕೇತ);
     }
-    strings.append(static_cast<char>(length), errorCode);
-    stringOffset=offset;
+    ಅಕ್ಷರಸರಣಿಗಳು.append(static_cast<ಅಕ್ಷರ>(length), error_ಸಂಕೇತ);
+    string_ಸ್ಥಾನಾಂತರ=ಸ್ಥಾನಾಂತರ;
     value=val;
-    strings.append(s, errorCode);
+    ಅಕ್ಷರಸರಣಿಗಳು.append(s, error_ಸಂಕೇತ);
 }
 
 int32_t
-BytesTrieElement::compareStringTo(const BytesTrieElement &other, const CharString &strings) const {
+ಬೈಟುಗಳು_Trie_Element::compare_String_ಗಮ್ಯ(ಸ್ಥಿರಾಂಕ ಬೈಟುಗಳು_Trie_Element &other, ಸ್ಥಿರಾಂಕ CharString &ಅಕ್ಷರಸರಣಿಗಳು) ಸ್ಥಿರಾಂಕ {
     // TODO: add StringPiece::compare(), see ticket #8187
-    StringPiece thisString=getString(strings);
-    StringPiece otherString=other.getString(strings);
-    int32_t lengthDiff=thisString.length()-otherString.length();
-    int32_t commonLength;
-    if(lengthDiff<=0) {
-        commonLength=thisString.length();
-    } else {
-        commonLength=otherString.length();
+    StringPiece thisString=getString(ಅಕ್ಷರಸರಣಿಗಳು);
+    StringPiece otherString=other.getString(ಅಕ್ಷರಸರಣಿಗಳು);
+    int32_t ಉದ್ದಳತೆ_Diff=thisString.length()-otherString.length();
+    int32_t common_ಉದ್ದಳತೆ;
+    ಆದರೆ(ಉದ್ದಳತೆ_Diff<=0) {
+        common_ಉದ್ದಳತೆ=thisString.length();
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        common_ಉದ್ದಳತೆ=otherString.length();
     }
-    int32_t diff=uprv_memcmp(thisString.data(), otherString.data(), commonLength);
-    return diff!=0 ? diff : lengthDiff;
+    int32_t diff=uprv_memcmp(thisString.ದತ್ತಾಂಶ(), otherString.ದತ್ತಾಂಶ(), common_ಉದ್ದಳತೆ);
+    ಹಿಂತಿರುಗಿ diff!=0 ? diff : ಉದ್ದಳತೆ_Diff;
 }
 
-BytesTrieBuilder::BytesTrieBuilder(UErrorCode &errorCode)
-        : strings(nullptr), elements(nullptr), elementsCapacity(0), elementsLength(0),
-          bytes(nullptr), bytesCapacity(0), bytesLength(0) {
-    if(U_FAILURE(errorCode)) {
-        return;
+ಬೈಟುಗಳು_Trie_Builder::ಬೈಟುಗಳು_Trie_Builder(UError_ಸಂಕೇತ &error_ಸಂಕೇತ)
+        : ಅಕ್ಷರಸರಣಿಗಳು(ಶೂನ್ಯಸೂಚಕ), elements(ಶೂನ್ಯಸೂಚಕ), elements_ಸಾಮರ್ಥ್ಯ(0), elements_ಉದ್ದಳತೆ(0),
+          ಬೈಟುಗಳು(ಶೂನ್ಯಸೂಚಕ), ಬೈಟುಗಳು_ಸಾಮರ್ಥ್ಯ(0), ಬೈಟುಗಳು_ಉದ್ದಳತೆ(0) {
+    ಆದರೆ(U_FAILURE(error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ;
     }
-    strings=new CharString();
-    if(strings==nullptr) {
-        errorCode=U_MEMORY_ALLOCATION_ERROR;
+    ಅಕ್ಷರಸರಣಿಗಳು=ಹೊಸ CharString();
+    ಆದರೆ(ಅಕ್ಷರಸರಣಿಗಳು==ಶೂನ್ಯಸೂಚಕ) {
+        error_ಸಂಕೇತ=U_ಸ್ಮರಣೆ_ಹಂಚಿಕೆ_ERROR;
     }
 }
 
-BytesTrieBuilder::~BytesTrieBuilder() {
-    delete strings;
-    delete[] elements;
-    uprv_free(bytes);
+ಬೈಟುಗಳು_Trie_Builder::~ಬೈಟುಗಳು_Trie_Builder() {
+    ಅಳಿಸು ಅಕ್ಷರಸರಣಿಗಳು;
+    ಅಳಿಸು[] elements;
+    uprv_free(ಬೈಟುಗಳು);
 }
 
-BytesTrieBuilder&
-BytesTrieBuilder::add(StringPiece s, int32_t value, UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if(U_FAILURE(errorCode)) {
-        return *this;
+ಬೈಟುಗಳು_Trie_Builder&
+ಬೈಟುಗಳು_Trie_Builder::ಕೂಡಿಸು(StringPiece s, int32_t value, UError_ಸಂಕೇತ& error_ಸಂಕೇತ) U_LIFETIME_BOUND {
+    ಆದರೆ(U_FAILURE(error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ *ಇದು;
     }
-    if(bytesLength>0) {
+    ಆದರೆ(ಬೈಟುಗಳು_ಉದ್ದಳತೆ>0) {
         // Cannot add elements after building.
-        errorCode=U_NO_WRITE_PERMISSION;
-        return *this;
+        error_ಸಂಕೇತ=U_NO_WRITE_PERMISSION;
+        ಹಿಂತಿರುಗಿ *ಇದು;
     }
-    if(elementsLength==elementsCapacity) {
-        int32_t newCapacity;
-        if(elementsCapacity==0) {
-            newCapacity=1024;
-        } else {
-            newCapacity=4*elementsCapacity;
+    ಆದರೆ(elements_ಉದ್ದಳತೆ==elements_ಸಾಮರ್ಥ್ಯ) {
+        int32_t new_ಸಾಮರ್ಥ್ಯ;
+        ಆದರೆ(elements_ಸಾಮರ್ಥ್ಯ==0) {
+            new_ಸಾಮರ್ಥ್ಯ=1024;
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            new_ಸಾಮರ್ಥ್ಯ=4*elements_ಸಾಮರ್ಥ್ಯ;
         }
-        BytesTrieElement *newElements=new BytesTrieElement[newCapacity];
-        if(newElements==nullptr) {
-            errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return *this; // error instead of dereferencing null
+        ಬೈಟುಗಳು_Trie_Element *newElements=ಹೊಸ ಬೈಟುಗಳು_Trie_Element[new_ಸಾಮರ್ಥ್ಯ];
+        ಆದರೆ(newElements==ಶೂನ್ಯಸೂಚಕ) {
+            error_ಸಂಕೇತ=U_ಸ್ಮರಣೆ_ಹಂಚಿಕೆ_ERROR;
+            ಹಿಂತಿರುಗಿ *ಇದು; // error instead of dereferencing null
         }
-        if(elementsLength>0) {
-            uprv_memcpy(newElements, elements, (size_t)elementsLength*sizeof(BytesTrieElement));
+        ಆದರೆ(elements_ಉದ್ದಳತೆ>0) {
+            uprv_memcpy(newElements, elements, (size_t)elements_ಉದ್ದಳತೆ*ಗಾತ್ರ(ಬೈಟುಗಳು_Trie_Element));
         }
-        delete[] elements;
+        ಅಳಿಸು[] elements;
         elements=newElements;
-        elementsCapacity=newCapacity;
+        elements_ಸಾಮರ್ಥ್ಯ=new_ಸಾಮರ್ಥ್ಯ;
     }
-    elements[elementsLength++].setTo(s, value, *strings, errorCode);
-    return *this;
+    elements[elements_ಉದ್ದಳತೆ++].ಗಣ_ಗಮ್ಯ(s, value, *ಅಕ್ಷರಸರಣಿಗಳು, error_ಸಂಕೇತ);
+    ಹಿಂತಿರುಗಿ *ಇದು;
 }
 
 U_CDECL_BEGIN
 
-static int32_t U_CALLCONV
-compareElementStrings(const void *context, const void *left, const void *right) {
-    const CharString *strings=static_cast<const CharString *>(context);
-    const BytesTrieElement *leftElement=static_cast<const BytesTrieElement *>(left);
-    const BytesTrieElement *rightElement=static_cast<const BytesTrieElement *>(right);
-    return leftElement->compareStringTo(*rightElement, *strings);
+ಸ್ಥಿರ int32_t U_CALLCONV
+compare_Element_ಅಕ್ಷರಸರಣಿಗಳು(ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *context, ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *ಎಡ, ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *ಬಲ) {
+    ಸ್ಥಿರಾಂಕ CharString *ಅಕ್ಷರಸರಣಿಗಳು=static_cast<ಸ್ಥಿರಾಂಕ CharString *>(context);
+    ಸ್ಥಿರಾಂಕ ಬೈಟುಗಳು_Trie_Element *ಎಡ_Element=static_cast<ಸ್ಥಿರಾಂಕ ಬೈಟುಗಳು_Trie_Element *>(ಎಡ);
+    ಸ್ಥಿರಾಂಕ ಬೈಟುಗಳು_Trie_Element *ಬಲ_Element=static_cast<ಸ್ಥಿರಾಂಕ ಬೈಟುಗಳು_Trie_Element *>(ಬಲ);
+    ಹಿಂತಿರುಗಿ ಎಡ_Element->compare_String_ಗಮ್ಯ(*ಬಲ_Element, *ಅಕ್ಷರಸರಣಿಗಳು);
 }
 
-U_CDECL_END
+U_CDECL_ಕೊನೆ
 
-BytesTrie *
-BytesTrieBuilder::build(UStringTrieBuildOption buildOption, UErrorCode &errorCode) {
-    buildBytes(buildOption, errorCode);
-    BytesTrie *newTrie=nullptr;
-    if(U_SUCCESS(errorCode)) {
-        newTrie=new BytesTrie(bytes, bytes+(bytesCapacity-bytesLength));
-        if(newTrie==nullptr) {
-            errorCode=U_MEMORY_ALLOCATION_ERROR;
-        } else {
-            bytes=nullptr;  // The new trie now owns the array.
-            bytesCapacity=0;
+ಬೈಟುಗಳು_Trie *
+ಬೈಟುಗಳು_Trie_Builder::build(UStringTrieBuildOption buildOption, UError_ಸಂಕೇತ &error_ಸಂಕೇತ) {
+    build_ಬೈಟುಗಳು(buildOption, error_ಸಂಕೇತ);
+    ಬೈಟುಗಳು_Trie *newTrie=ಶೂನ್ಯಸೂಚಕ;
+    ಆದರೆ(U_SUCCESS(error_ಸಂಕೇತ)) {
+        newTrie=ಹೊಸ ಬೈಟುಗಳು_Trie(ಬೈಟುಗಳು, ಬೈಟುಗಳು+(ಬೈಟುಗಳು_ಸಾಮರ್ಥ್ಯ-ಬೈಟುಗಳು_ಉದ್ದಳತೆ));
+        ಆದರೆ(newTrie==ಶೂನ್ಯಸೂಚಕ) {
+            error_ಸಂಕೇತ=U_ಸ್ಮರಣೆ_ಹಂಚಿಕೆ_ERROR;
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಬೈಟುಗಳು=ಶೂನ್ಯಸೂಚಕ;  // The new trie now owns the array.
+            ಬೈಟುಗಳು_ಸಾಮರ್ಥ್ಯ=0;
         }
     }
-    return newTrie;
+    ಹಿಂತಿರುಗಿ newTrie;
 }
 
 StringPiece
-BytesTrieBuilder::buildStringPiece(UStringTrieBuildOption buildOption,
-                                   UErrorCode& errorCode) U_LIFETIME_BOUND {
-    buildBytes(buildOption, errorCode);
-    StringPiece result;
-    if(U_SUCCESS(errorCode)) {
-        result.set(bytes+(bytesCapacity-bytesLength), bytesLength);
+ಬೈಟುಗಳು_Trie_Builder::buildStringPiece(UStringTrieBuildOption buildOption,
+                                   UError_ಸಂಕೇತ& error_ಸಂಕೇತ) U_LIFETIME_BOUND {
+    build_ಬೈಟುಗಳು(buildOption, error_ಸಂಕೇತ);
+    StringPiece ಫಲಿತಾಂಶ;
+    ಆದರೆ(U_SUCCESS(error_ಸಂಕೇತ)) {
+        ಫಲಿತಾಂಶ.ಗಣ(ಬೈಟುಗಳು+(ಬೈಟುಗಳು_ಸಾಮರ್ಥ್ಯ-ಬೈಟುಗಳು_ಉದ್ದಳತೆ), ಬೈಟುಗಳು_ಉದ್ದಳತೆ);
     }
-    return result;
+    ಹಿಂತಿರುಗಿ ಫಲಿತಾಂಶ;
 }
 
-void
-BytesTrieBuilder::buildBytes(UStringTrieBuildOption buildOption, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+ಶೂನ್ಯ
+ಬೈಟುಗಳು_Trie_Builder::build_ಬೈಟುಗಳು(UStringTrieBuildOption buildOption, UError_ಸಂಕೇತ &error_ಸಂಕೇತ) {
+    ಆದರೆ(U_FAILURE(error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ;
     }
-    if(bytes!=nullptr && bytesLength>0) {
+    ಆದರೆ(ಬೈಟುಗಳು!=ಶೂನ್ಯಸೂಚಕ && ಬೈಟುಗಳು_ಉದ್ದಳತೆ>0) {
         // Already built.
-        return;
+        ಹಿಂತಿರುಗಿ;
     }
-    if(bytesLength==0) {
-        if(elementsLength==0) {
-            errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return;
+    ಆದರೆ(ಬೈಟುಗಳು_ಉದ್ದಳತೆ==0) {
+        ಆದರೆ(elements_ಉದ್ದಳತೆ==0) {
+            error_ಸಂಕೇತ=U_ಸೂಚ್ಯಂಕ_OUTOFBOUNDS_ERROR;
+            ಹಿಂತಿರುಗಿ;
         }
-        uprv_sortArray(elements, elementsLength, static_cast<int32_t>(sizeof(BytesTrieElement)),
-                      compareElementStrings, strings,
-                      false,  // need not be a stable sort
-                      &errorCode);
-        if(U_FAILURE(errorCode)) {
-            return;
+        uprv_ವಿಂಗಡಿಸು_Array(elements, elements_ಉದ್ದಳತೆ, static_cast<int32_t>(ಗಾತ್ರ(ಬೈಟುಗಳು_Trie_Element)),
+                      compare_Element_ಅಕ್ಷರಸರಣಿಗಳು, ಅಕ್ಷರಸರಣಿಗಳು,
+                      ಸುಳ್ಳು,  // need not be a stable sort
+                      &error_ಸಂಕೇತ);
+        ಆದರೆ(U_FAILURE(error_ಸಂಕೇತ)) {
+            ಹಿಂತಿರುಗಿ;
         }
         // Duplicate strings are not allowed.
-        StringPiece prev=elements[0].getString(*strings);
-        for(int32_t i=1; i<elementsLength; ++i) {
-            StringPiece current=elements[i].getString(*strings);
-            if(prev==current) {
-                errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-                return;
+        StringPiece prev=elements[0].getString(*ಅಕ್ಷರಸರಣಿಗಳು);
+        ಗಾಗಿ(int32_t i=1; i<elements_ಉದ್ದಳತೆ; ++i) {
+            StringPiece current=elements[i].getString(*ಅಕ್ಷರಸರಣಿಗಳು);
+            ಆದರೆ(prev==current) {
+                error_ಸಂಕೇತ=U_ILLEGAL_ವಾದ_ERROR;
+                ಹಿಂತಿರುಗಿ;
             }
             prev=current;
         }
     }
     // Create and byte-serialize the trie for the elements.
-    bytesLength=0;
-    int32_t capacity=strings->length();
-    if(capacity<1024) {
+    ಬೈಟುಗಳು_ಉದ್ದಳತೆ=0;
+    int32_t capacity=ಅಕ್ಷರಸರಣಿಗಳು->length();
+    ಆದರೆ(capacity<1024) {
         capacity=1024;
     }
-    if(bytesCapacity<capacity) {
-        uprv_free(bytes);
-        bytes=static_cast<char *>(uprv_malloc(capacity));
-        if(bytes==nullptr) {
-            errorCode=U_MEMORY_ALLOCATION_ERROR;
-            bytesCapacity=0;
-            return;
+    ಆದರೆ(ಬೈಟುಗಳು_ಸಾಮರ್ಥ್ಯ<capacity) {
+        uprv_free(ಬೈಟುಗಳು);
+        ಬೈಟುಗಳು=static_cast<ಅಕ್ಷರ *>(uprv_malloc(capacity));
+        ಆದರೆ(ಬೈಟುಗಳು==ಶೂನ್ಯಸೂಚಕ) {
+            error_ಸಂಕೇತ=U_ಸ್ಮರಣೆ_ಹಂಚಿಕೆ_ERROR;
+            ಬೈಟುಗಳು_ಸಾಮರ್ಥ್ಯ=0;
+            ಹಿಂತಿರುಗಿ;
         }
-        bytesCapacity=capacity;
+        ಬೈಟುಗಳು_ಸಾಮರ್ಥ್ಯ=capacity;
     }
-    StringTrieBuilder::build(buildOption, elementsLength, errorCode);
-    if(bytes==nullptr) {
-        errorCode=U_MEMORY_ALLOCATION_ERROR;
+    StringTrieBuilder::build(buildOption, elements_ಉದ್ದಳತೆ, error_ಸಂಕೇತ);
+    ಆದರೆ(ಬೈಟುಗಳು==ಶೂನ್ಯಸೂಚಕ) {
+        error_ಸಂಕೇತ=U_ಸ್ಮರಣೆ_ಹಂಚಿಕೆ_ERROR;
     }
 }
 
-BytesTrieBuilder&
-BytesTrieBuilder::clear() U_LIFETIME_BOUND {
-    strings->clear();
-    elementsLength=0;
-    bytesLength=0;
-    return *this;
+ಬೈಟುಗಳು_Trie_Builder&
+ಬೈಟುಗಳು_Trie_Builder::clear() U_LIFETIME_BOUND {
+    ಅಕ್ಷರಸರಣಿಗಳು->clear();
+    elements_ಉದ್ದಳತೆ=0;
+    ಬೈಟುಗಳು_ಉದ್ದಳತೆ=0;
+    ಹಿಂತಿರುಗಿ *ಇದು;
 }
 
 int32_t
-BytesTrieBuilder::getElementStringLength(int32_t i) const {
-    return elements[i].getStringLength(*strings);
+ಬೈಟುಗಳು_Trie_Builder::get_Element_String_ಉದ್ದಳತೆ(int32_t i) ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ elements[i].get_String_ಉದ್ದಳತೆ(*ಅಕ್ಷರಸರಣಿಗಳು);
 }
 
 char16_t
-BytesTrieBuilder::getElementUnit(int32_t i, int32_t byteIndex) const {
-    return static_cast<uint8_t>(elements[i].charAt(byteIndex, *strings));
+ಬೈಟುಗಳು_Trie_Builder::getElementUnit(int32_t i, int32_t byte_ಸೂಚ್ಯಂಕ) ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ static_cast<uint8_t>(elements[i].charAt(byte_ಸೂಚ್ಯಂಕ, *ಅಕ್ಷರಸರಣಿಗಳು));
 }
 
 int32_t
-BytesTrieBuilder::getElementValue(int32_t i) const {
-    return elements[i].getValue();
+ಬೈಟುಗಳು_Trie_Builder::get_Element_ಮೌಲ್ಯ(int32_t i) ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ elements[i].get_ಮೌಲ್ಯ();
 }
 
 int32_t
-BytesTrieBuilder::getLimitOfLinearMatch(int32_t first, int32_t last, int32_t byteIndex) const {
-    const BytesTrieElement &firstElement=elements[first];
-    const BytesTrieElement &lastElement=elements[last];
-    int32_t minStringLength=firstElement.getStringLength(*strings);
-    while(++byteIndex<minStringLength &&
-            firstElement.charAt(byteIndex, *strings)==
-            lastElement.charAt(byteIndex, *strings)) {}
-    return byteIndex;
+ಬೈಟುಗಳು_Trie_Builder::get_ಎಲ್ಲೆ_ದ_ರೇಖೀಯ_ಹೊಂದಿಕೆ(int32_t first, int32_t ಕೊನೆಯ, int32_t byte_ಸೂಚ್ಯಂಕ) ಸ್ಥಿರಾಂಕ {
+    ಸ್ಥಿರಾಂಕ ಬೈಟುಗಳು_Trie_Element &ಮೊದಲ_Element=elements[first];
+    ಸ್ಥಿರಾಂಕ ಬೈಟುಗಳು_Trie_Element &ಕೊನೆಯ_Element=elements[ಕೊನೆಯ];
+    int32_t min_String_ಉದ್ದಳತೆ=ಮೊದಲ_Element.get_String_ಉದ್ದಳತೆ(*ಅಕ್ಷರಸರಣಿಗಳು);
+    ಆಗ(++byte_ಸೂಚ್ಯಂಕ<min_String_ಉದ್ದಳತೆ &&
+            ಮೊದಲ_Element.charAt(byte_ಸೂಚ್ಯಂಕ, *ಅಕ್ಷರಸರಣಿಗಳು)==
+            ಕೊನೆಯ_Element.charAt(byte_ಸೂಚ್ಯಂಕ, *ಅಕ್ಷರಸರಣಿಗಳು)) {}
+    ಹಿಂತಿರುಗಿ byte_ಸೂಚ್ಯಂಕ;
 }
 
 int32_t
-BytesTrieBuilder::countElementUnits(int32_t start, int32_t limit, int32_t byteIndex) const {
+ಬೈಟುಗಳು_Trie_Builder::ಎಣಿಕೆ_Element_Units(int32_t ಆರಂಭ, int32_t ಎಲ್ಲೆ, int32_t byte_ಸೂಚ್ಯಂಕ) ಸ್ಥಿರಾಂಕ {
     int32_t length=0;  // Number of different bytes at byteIndex.
-    int32_t i=start;
-    do {
-        char byte=elements[i++].charAt(byteIndex, *strings);
-        while(i<limit && byte==elements[i].charAt(byteIndex, *strings)) {
+    int32_t i=ಆರಂಭ;
+    ಮಾಡು {
+        ಅಕ್ಷರ byte=elements[i++].charAt(byte_ಸೂಚ್ಯಂಕ, *ಅಕ್ಷರಸರಣಿಗಳು);
+        ಆಗ(i<ಎಲ್ಲೆ && byte==elements[i].charAt(byte_ಸೂಚ್ಯಂಕ, *ಅಕ್ಷರಸರಣಿಗಳು)) {
             ++i;
         }
         ++length;
-    } while(i<limit);
-    return length;
+    } ಆಗ(i<ಎಲ್ಲೆ);
+    ಹಿಂತಿರುಗಿ length;
 }
 
 int32_t
-BytesTrieBuilder::skipElementsBySomeUnits(int32_t i, int32_t byteIndex, int32_t count) const {
-    do {
-        char byte=elements[i++].charAt(byteIndex, *strings);
-        while(byte==elements[i].charAt(byteIndex, *strings)) {
+ಬೈಟುಗಳು_Trie_Builder::skipElementsBySomeUnits(int32_t i, int32_t byte_ಸೂಚ್ಯಂಕ, int32_t count) ಸ್ಥಿರಾಂಕ {
+    ಮಾಡು {
+        ಅಕ್ಷರ byte=elements[i++].charAt(byte_ಸೂಚ್ಯಂಕ, *ಅಕ್ಷರಸರಣಿಗಳು);
+        ಆಗ(byte==elements[i].charAt(byte_ಸೂಚ್ಯಂಕ, *ಅಕ್ಷರಸರಣಿಗಳು)) {
             ++i;
         }
-    } while(--count>0);
-    return i;
+    } ಆಗ(--count>0);
+    ಹಿಂತಿರುಗಿ i;
 }
 
 int32_t
-BytesTrieBuilder::indexOfElementWithNextUnit(int32_t i, int32_t byteIndex, char16_t byte) const {
-    char b = static_cast<char>(byte);
-    while(b==elements[i].charAt(byteIndex, *strings)) {
+ಬೈಟುಗಳು_Trie_Builder::ಸೂಚ್ಯಂಕ_ದ_Element_With_ಮುಂದಿನ_Unit(int32_t i, int32_t byte_ಸೂಚ್ಯಂಕ, char16_t byte) ಸ್ಥಿರಾಂಕ {
+    ಅಕ್ಷರ b = static_cast<ಅಕ್ಷರ>(byte);
+    ಆಗ(b==elements[i].charAt(byte_ಸೂಚ್ಯಂಕ, *ಅಕ್ಷರಸರಣಿಗಳು)) {
         ++i;
     }
-    return i;
+    ಹಿಂತಿರುಗಿ i;
 }
 
-BytesTrieBuilder::BTLinearMatchNode::BTLinearMatchNode(const char *bytes, int32_t len, Node *nextNode)
-        : LinearMatchNode(len, nextNode), s(bytes) {
+ಬೈಟುಗಳು_Trie_Builder::BTLinear_ಹೊಂದಿಕೆ_ಗಂಟು::BTLinear_ಹೊಂದಿಕೆ_ಗಂಟು(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಬೈಟುಗಳು, int32_t len, Node *ಮುಂದಿನ_ಗಂಟು)
+        : ರೇಖೀಯ_ಹೊಂದಿಕೆ_ಗಂಟು(len, ಮುಂದಿನ_ಗಂಟು), s(ಬೈಟುಗಳು) {
     hash=static_cast<int32_t>(
-        static_cast<uint32_t>(hash)*37u + static_cast<uint32_t>(ustr_hashCharsN(bytes, len)));
+        static_cast<uint32_t>(hash)*37u + static_cast<uint32_t>(ustr_hashCharsN(ಬೈಟುಗಳು, len)));
 }
 
-bool
-BytesTrieBuilder::BTLinearMatchNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
+ತಾರ್ಕಿಕ
+ಬೈಟುಗಳು_Trie_Builder::BTLinear_ಹೊಂದಿಕೆ_ಗಂಟು::ಕ್ರಿಯಾಕಾರಕ==(ಸ್ಥಿರಾಂಕ Node &other) ಸ್ಥಿರಾಂಕ {
+    ಆದರೆ(ಇದು==&other) {
+        ಹಿಂತಿರುಗಿ ನಿಜ;
     }
-    if(!LinearMatchNode::operator==(other)) {
-        return false;
+    ಆದರೆ(!ರೇಖೀಯ_ಹೊಂದಿಕೆ_ಗಂಟು::ಕ್ರಿಯಾಕಾರಕ==(other)) {
+        ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
     }
-    const BTLinearMatchNode &o=static_cast<const BTLinearMatchNode &>(other);
-    return 0==uprv_memcmp(s, o.s, length);
+    ಸ್ಥಿರಾಂಕ BTLinear_ಹೊಂದಿಕೆ_ಗಂಟು &o=static_cast<ಸ್ಥಿರಾಂಕ BTLinear_ಹೊಂದಿಕೆ_ಗಂಟು &>(other);
+    ಹಿಂತಿರುಗಿ 0==uprv_memcmp(s, o.s, length);
 }
 
-void
-BytesTrieBuilder::BTLinearMatchNode::write(StringTrieBuilder &builder) {
-    BytesTrieBuilder &b=static_cast<BytesTrieBuilder &>(builder);
-    next->write(builder);
-    b.write(s, length);
-    offset=b.write(b.getMinLinearMatch()+length-1);
+ಶೂನ್ಯ
+ಬೈಟುಗಳು_Trie_Builder::BTLinear_ಹೊಂದಿಕೆ_ಗಂಟು::ಲಿಖ(StringTrieBuilder &builder) {
+    ಬೈಟುಗಳು_Trie_Builder &b=static_cast<ಬೈಟುಗಳು_Trie_Builder &>(builder);
+    next->ಲಿಖ(builder);
+    b.ಲಿಖ(s, length);
+    ಸ್ಥಾನಾಂತರ=b.ಲಿಖ(b.get_Min_ರೇಖೀಯ_ಹೊಂದಿಕೆ()+length-1);
 }
 
 StringTrieBuilder::Node *
-BytesTrieBuilder::createLinearMatchNode(int32_t i, int32_t byteIndex, int32_t length,
-                                        Node *nextNode) const {
-    return new BTLinearMatchNode(
-            elements[i].getString(*strings).data()+byteIndex,
+ಬೈಟುಗಳು_Trie_Builder::create_ರೇಖೀಯ_ಹೊಂದಿಕೆ_ಗಂಟು(int32_t i, int32_t byte_ಸೂಚ್ಯಂಕ, int32_t length,
+                                        Node *ಮುಂದಿನ_ಗಂಟು) ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ ಹೊಸ BTLinear_ಹೊಂದಿಕೆ_ಗಂಟು(
+            elements[i].getString(*ಅಕ್ಷರಸರಣಿಗಳು).ದತ್ತಾಂಶ()+byte_ಸೂಚ್ಯಂಕ,
             length,
-            nextNode);
+            ಮುಂದಿನ_ಗಂಟು);
 }
 
 UBool
-BytesTrieBuilder::ensureCapacity(int32_t length) {
-    if(bytes==nullptr) {
-        return false;  // previous memory allocation had failed
+ಬೈಟುಗಳು_Trie_Builder::ensure_ಸಾಮರ್ಥ್ಯ(int32_t length) {
+    ಆದರೆ(ಬೈಟುಗಳು==ಶೂನ್ಯಸೂಚಕ) {
+        ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;  // previous memory allocation had failed
     }
-    if(length>bytesCapacity) {
-        int32_t newCapacity=bytesCapacity;
-        do {
-            newCapacity*=2;
-        } while(newCapacity<=length);
-        char *newBytes=static_cast<char *>(uprv_malloc(newCapacity));
-        if(newBytes==nullptr) {
+    ಆದರೆ(length>ಬೈಟುಗಳು_ಸಾಮರ್ಥ್ಯ) {
+        int32_t new_ಸಾಮರ್ಥ್ಯ=ಬೈಟುಗಳು_ಸಾಮರ್ಥ್ಯ;
+        ಮಾಡು {
+            new_ಸಾಮರ್ಥ್ಯ*=2;
+        } ಆಗ(new_ಸಾಮರ್ಥ್ಯ<=length);
+        ಅಕ್ಷರ *new_ಬೈಟುಗಳು=static_cast<ಅಕ್ಷರ *>(uprv_malloc(new_ಸಾಮರ್ಥ್ಯ));
+        ಆದರೆ(new_ಬೈಟುಗಳು==ಶೂನ್ಯಸೂಚಕ) {
             // unable to allocate memory
-            uprv_free(bytes);
-            bytes=nullptr;
-            bytesCapacity=0;
-            return false;
+            uprv_free(ಬೈಟುಗಳು);
+            ಬೈಟುಗಳು=ಶೂನ್ಯಸೂಚಕ;
+            ಬೈಟುಗಳು_ಸಾಮರ್ಥ್ಯ=0;
+            ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
         }
-        uprv_memcpy(newBytes+(newCapacity-bytesLength),
-                    bytes+(bytesCapacity-bytesLength), bytesLength);
-        uprv_free(bytes);
-        bytes=newBytes;
-        bytesCapacity=newCapacity;
+        uprv_memcpy(new_ಬೈಟುಗಳು+(new_ಸಾಮರ್ಥ್ಯ-ಬೈಟುಗಳು_ಉದ್ದಳತೆ),
+                    ಬೈಟುಗಳು+(ಬೈಟುಗಳು_ಸಾಮರ್ಥ್ಯ-ಬೈಟುಗಳು_ಉದ್ದಳತೆ), ಬೈಟುಗಳು_ಉದ್ದಳತೆ);
+        uprv_free(ಬೈಟುಗಳು);
+        ಬೈಟುಗಳು=new_ಬೈಟುಗಳು;
+        ಬೈಟುಗಳು_ಸಾಮರ್ಥ್ಯ=new_ಸಾಮರ್ಥ್ಯ;
     }
-    return true;
+    ಹಿಂತಿರುಗಿ ನಿಜ;
 }
 
 int32_t
-BytesTrieBuilder::write(int32_t byte) {
-    int32_t newLength=bytesLength+1;
-    if(ensureCapacity(newLength)) {
-        bytesLength=newLength;
-        bytes[bytesCapacity - bytesLength] = static_cast<char>(byte);
+ಬೈಟುಗಳು_Trie_Builder::ಲಿಖ(int32_t byte) {
+    int32_t new_ಉದ್ದಳತೆ=ಬೈಟುಗಳು_ಉದ್ದಳತೆ+1;
+    ಆದರೆ(ensure_ಸಾಮರ್ಥ್ಯ(new_ಉದ್ದಳತೆ)) {
+        ಬೈಟುಗಳು_ಉದ್ದಳತೆ=new_ಉದ್ದಳತೆ;
+        ಬೈಟುಗಳು[ಬೈಟುಗಳು_ಸಾಮರ್ಥ್ಯ - ಬೈಟುಗಳು_ಉದ್ದಳತೆ] = static_cast<ಅಕ್ಷರ>(byte);
     }
-    return bytesLength;
+    ಹಿಂತಿರುಗಿ ಬೈಟುಗಳು_ಉದ್ದಳತೆ;
 }
 
 int32_t
-BytesTrieBuilder::write(const char *b, int32_t length) {
-    int32_t newLength=bytesLength+length;
-    if(ensureCapacity(newLength)) {
-        bytesLength=newLength;
-        uprv_memcpy(bytes+(bytesCapacity-bytesLength), b, length);
+ಬೈಟುಗಳು_Trie_Builder::ಲಿಖ(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *b, int32_t length) {
+    int32_t new_ಉದ್ದಳತೆ=ಬೈಟುಗಳು_ಉದ್ದಳತೆ+length;
+    ಆದರೆ(ensure_ಸಾಮರ್ಥ್ಯ(new_ಉದ್ದಳತೆ)) {
+        ಬೈಟುಗಳು_ಉದ್ದಳತೆ=new_ಉದ್ದಳತೆ;
+        uprv_memcpy(ಬೈಟುಗಳು+(ಬೈಟುಗಳು_ಸಾಮರ್ಥ್ಯ-ಬೈಟುಗಳು_ಉದ್ದಳತೆ), b, length);
     }
-    return bytesLength;
+    ಹಿಂತಿರುಗಿ ಬೈಟುಗಳು_ಉದ್ದಳತೆ;
 }
 
 int32_t
-BytesTrieBuilder::writeElementUnits(int32_t i, int32_t byteIndex, int32_t length) {
-    return write(elements[i].getString(*strings).data()+byteIndex, length);
+ಬೈಟುಗಳು_Trie_Builder::writeElementUnits(int32_t i, int32_t byte_ಸೂಚ್ಯಂಕ, int32_t length) {
+    ಹಿಂತಿರುಗಿ ಲಿಖ(elements[i].getString(*ಅಕ್ಷರಸರಣಿಗಳು).ದತ್ತಾಂಶ()+byte_ಸೂಚ್ಯಂಕ, length);
 }
 
 int32_t
-BytesTrieBuilder::writeValueAndFinal(int32_t i, UBool isFinal) {
-    if(0<=i && i<=BytesTrie::kMaxOneByteValue) {
-        return write(((BytesTrie::kMinOneByteValueLead+i)<<1)|isFinal);
+ಬೈಟುಗಳು_Trie_Builder::write_ಮೌಲ್ಯ_And_Final(int32_t i, UBool isFinal) {
+    ಆದರೆ(0<=i && i<=ಬೈಟುಗಳು_Trie::k_Max_One_Byte_ಮೌಲ್ಯ) {
+        ಹಿಂತಿರುಗಿ ಲಿಖ(((ಬೈಟುಗಳು_Trie::k_Min_One_Byte_ಮೌಲ್ಯ_Lead+i)<<1)|isFinal);
     }
-    char intBytes[5];
+    ಅಕ್ಷರ int_ಬೈಟುಗಳು[5];
     int32_t length=1;
-    if(i<0 || i>0xffffff) {
-        intBytes[0] = static_cast<char>(BytesTrie::kFiveByteValueLead);
-        intBytes[1] = static_cast<char>(static_cast<uint32_t>(i) >> 24);
-        intBytes[2] = static_cast<char>(static_cast<uint32_t>(i) >> 16);
-        intBytes[3] = static_cast<char>(static_cast<uint32_t>(i) >> 8);
-        intBytes[4] = static_cast<char>(i);
+    ಆದರೆ(i<0 || i>0xffffff) {
+        int_ಬೈಟುಗಳು[0] = static_cast<ಅಕ್ಷರ>(ಬೈಟುಗಳು_Trie::k_Five_Byte_ಮೌಲ್ಯ_Lead);
+        int_ಬೈಟುಗಳು[1] = static_cast<ಅಕ್ಷರ>(static_cast<uint32_t>(i) >> 24);
+        int_ಬೈಟುಗಳು[2] = static_cast<ಅಕ್ಷರ>(static_cast<uint32_t>(i) >> 16);
+        int_ಬೈಟುಗಳು[3] = static_cast<ಅಕ್ಷರ>(static_cast<uint32_t>(i) >> 8);
+        int_ಬೈಟುಗಳು[4] = static_cast<ಅಕ್ಷರ>(i);
         length=5;
     // } else if(i<=BytesTrie::kMaxOneByteValue) {
     //     intBytes[0]=(char)(BytesTrie::kMinOneByteValueLead+i);
-    } else {
-        if(i<=BytesTrie::kMaxTwoByteValue) {
-            intBytes[0] = static_cast<char>(BytesTrie::kMinTwoByteValueLead + (i >> 8));
-        } else {
-            if(i<=BytesTrie::kMaxThreeByteValue) {
-                intBytes[0] = static_cast<char>(BytesTrie::kMinThreeByteValueLead + (i >> 16));
-            } else {
-                intBytes[0] = static_cast<char>(BytesTrie::kFourByteValueLead);
-                intBytes[1] = static_cast<char>(i >> 16);
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಆದರೆ(i<=ಬೈಟುಗಳು_Trie::k_Max_Two_Byte_ಮೌಲ್ಯ) {
+            int_ಬೈಟುಗಳು[0] = static_cast<ಅಕ್ಷರ>(ಬೈಟುಗಳು_Trie::k_Min_Two_Byte_ಮೌಲ್ಯ_Lead + (i >> 8));
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಆದರೆ(i<=ಬೈಟುಗಳು_Trie::k_Max_Three_Byte_ಮೌಲ್ಯ) {
+                int_ಬೈಟುಗಳು[0] = static_cast<ಅಕ್ಷರ>(ಬೈಟುಗಳು_Trie::k_Min_Three_Byte_ಮೌಲ್ಯ_Lead + (i >> 16));
+            } ಇಲ್ಲದಿದ್ದರೆ {
+                int_ಬೈಟುಗಳು[0] = static_cast<ಅಕ್ಷರ>(ಬೈಟುಗಳು_Trie::k_Four_Byte_ಮೌಲ್ಯ_Lead);
+                int_ಬೈಟುಗಳು[1] = static_cast<ಅಕ್ಷರ>(i >> 16);
                 length=2;
             }
-            intBytes[length++] = static_cast<char>(i >> 8);
+            int_ಬೈಟುಗಳು[length++] = static_cast<ಅಕ್ಷರ>(i >> 8);
         }
-        intBytes[length++] = static_cast<char>(i);
+        int_ಬೈಟುಗಳು[length++] = static_cast<ಅಕ್ಷರ>(i);
     }
-    intBytes[0] = static_cast<char>((intBytes[0] << 1) | isFinal);
-    return write(intBytes, length);
+    int_ಬೈಟುಗಳು[0] = static_cast<ಅಕ್ಷರ>((int_ಬೈಟುಗಳು[0] << 1) | isFinal);
+    ಹಿಂತಿರುಗಿ ಲಿಖ(int_ಬೈಟುಗಳು, length);
 }
 
 int32_t
-BytesTrieBuilder::writeValueAndType(UBool hasValue, int32_t value, int32_t node) {
-    int32_t offset=write(node);
-    if(hasValue) {
-        offset=writeValueAndFinal(value, false);
+ಬೈಟುಗಳು_Trie_Builder::write_ಮೌಲ್ಯ_And_Type(UBool has_ಮೌಲ್ಯ, int32_t value, int32_t ಗಂಟು) {
+    int32_t ಸ್ಥಾನಾಂತರ=ಲಿಖ(ಗಂಟು);
+    ಆದರೆ(has_ಮೌಲ್ಯ) {
+        ಸ್ಥಾನಾಂತರ=write_ಮೌಲ್ಯ_And_Final(value, ಸುಳ್ಳು);
     }
-    return offset;
+    ಹಿಂತಿರುಗಿ ಸ್ಥಾನಾಂತರ;
 }
 
 int32_t
-BytesTrieBuilder::writeDeltaTo(int32_t jumpTarget) {
-    int32_t i=bytesLength-jumpTarget;
+ಬೈಟುಗಳು_Trie_Builder::write_Delta_ಗಮ್ಯ(int32_t jump_ಗುರಿ) {
+    int32_t i=ಬೈಟುಗಳು_ಉದ್ದಳತೆ-jump_ಗುರಿ;
     U_ASSERT(i>=0);
-    if(i<=BytesTrie::kMaxOneByteDelta) {
-        return write(i);
-    } else {
-        char intBytes[5];
-        return write(intBytes, internalEncodeDelta(i, intBytes));
+    ಆದರೆ(i<=ಬೈಟುಗಳು_Trie::kMaxOneByteDelta) {
+        ಹಿಂತಿರುಗಿ ಲಿಖ(i);
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಅಕ್ಷರ int_ಬೈಟುಗಳು[5];
+        ಹಿಂತಿರುಗಿ ಲಿಖ(int_ಬೈಟುಗಳು, ಆಂತರಿಕ_Encode_Delta(i, int_ಬೈಟುಗಳು));
     }
 }
 
 int32_t
-BytesTrieBuilder::internalEncodeDelta(int32_t i, char intBytes[]) {
+ಬೈಟುಗಳು_Trie_Builder::ಆಂತರಿಕ_Encode_Delta(int32_t i, ಅಕ್ಷರ int_ಬೈಟುಗಳು[]) {
     U_ASSERT(i>=0);
-    if(i<=BytesTrie::kMaxOneByteDelta) {
-        intBytes[0] = static_cast<char>(i);
-        return 1;
+    ಆದರೆ(i<=ಬೈಟುಗಳು_Trie::kMaxOneByteDelta) {
+        int_ಬೈಟುಗಳು[0] = static_cast<ಅಕ್ಷರ>(i);
+        ಹಿಂತಿರುಗಿ 1;
     }
     int32_t length=1;
-    if(i<=BytesTrie::kMaxTwoByteDelta) {
-        intBytes[0] = static_cast<char>(BytesTrie::kMinTwoByteDeltaLead + (i >> 8));
-    } else {
-        if(i<=BytesTrie::kMaxThreeByteDelta) {
-            intBytes[0] = static_cast<char>(BytesTrie::kMinThreeByteDeltaLead + (i >> 16));
-        } else {
-            if(i<=0xffffff) {
-                intBytes[0] = static_cast<char>(BytesTrie::kFourByteDeltaLead);
-            } else {
-                intBytes[0] = static_cast<char>(BytesTrie::kFiveByteDeltaLead);
-                intBytes[1] = static_cast<char>(i >> 24);
+    ಆದರೆ(i<=ಬೈಟುಗಳು_Trie::kMaxTwoByteDelta) {
+        int_ಬೈಟುಗಳು[0] = static_cast<ಅಕ್ಷರ>(ಬೈಟುಗಳು_Trie::kMinTwoByteDeltaLead + (i >> 8));
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಆದರೆ(i<=ಬೈಟುಗಳು_Trie::kMaxThreeByteDelta) {
+            int_ಬೈಟುಗಳು[0] = static_cast<ಅಕ್ಷರ>(ಬೈಟುಗಳು_Trie::kMinThreeByteDeltaLead + (i >> 16));
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಆದರೆ(i<=0xffffff) {
+                int_ಬೈಟುಗಳು[0] = static_cast<ಅಕ್ಷರ>(ಬೈಟುಗಳು_Trie::kFourByteDeltaLead);
+            } ಇಲ್ಲದಿದ್ದರೆ {
+                int_ಬೈಟುಗಳು[0] = static_cast<ಅಕ್ಷರ>(ಬೈಟುಗಳು_Trie::kFiveByteDeltaLead);
+                int_ಬೈಟುಗಳು[1] = static_cast<ಅಕ್ಷರ>(i >> 24);
                 length=2;
             }
-            intBytes[length++] = static_cast<char>(i >> 16);
+            int_ಬೈಟುಗಳು[length++] = static_cast<ಅಕ್ಷರ>(i >> 16);
         }
-        intBytes[length++] = static_cast<char>(i >> 8);
+        int_ಬೈಟುಗಳು[length++] = static_cast<ಅಕ್ಷರ>(i >> 8);
     }
-    intBytes[length++] = static_cast<char>(i);
-    return length;
+    int_ಬೈಟುಗಳು[length++] = static_cast<ಅಕ್ಷರ>(i);
+    ಹಿಂತಿರುಗಿ length;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ

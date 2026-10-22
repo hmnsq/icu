@@ -1,15 +1,15 @@
 // © 2025 and later: Unicode, Inc. and others.
 // License & terms of use: https://www.unicode.org/copyright.html
 
-#ifndef FIXEDSTRING_H
-#define FIXEDSTRING_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ FIXEDSTRING_H
+#ವ್ಯಾಖ್ಯಾನಿಸು FIXEDSTRING_H
 
-#include <string_view>
-#include <utility>
+#ಅನ್ತರ್ಭಾವ <string_view>
+#ಅನ್ತರ್ಭಾವ <utility>
 
-#include "unicode/uobject.h"
-#include "unicode/utypes.h"
-#include "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uobject.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
@@ -26,79 +26,79 @@ class UnicodeString;
  * This class wants to be convenient but is also deliberately minimalist.
  * Please do not add methods if they only add minor convenience.
  */
-class FixedString : public UMemory {
-public:
-    FixedString() = default;
-    ~FixedString() { operator delete[](ptr); }
+class FixedString : ಸಾರ್ವಜನಿಕ UMemory {
+ಸಾರ್ವಜನಿಕ:
+    FixedString() = ಪೂರ್ವನಿಯೋಜಿತ;
+    ~FixedString() { ಕ್ರಿಯಾಕಾರಕ delete[](ptr); }
 
-    FixedString(const FixedString& other) : FixedString(other.data()) {}
+    FixedString(ಸ್ಥಿರಾಂಕ FixedString& other) : FixedString(other.ದತ್ತಾಂಶ()) {}
 
     FixedString(std::string_view init) {
-        size_t size = init.size();
-        if (size > 0 && reserve(size + 1)) {
-            uprv_memcpy(ptr, init.data(), size);
-            ptr[size] = '\0';
+        size_t ಗಾತ್ರ_3 = init.ಗಾತ್ರ_3();
+        ಆದರೆ (ಗಾತ್ರ_3 > 0 && reserve(ಗಾತ್ರ_3 + 1)) {
+            uprv_memcpy(ptr, init.ದತ್ತಾಂಶ(), ಗಾತ್ರ_3);
+            ptr[ಗಾತ್ರ_3] = '\0';
         }
     }
 
-    FixedString& operator=(const FixedString& other) {
-        *this = other.data();
-        return *this;
+    FixedString& ಕ್ರಿಯಾಕಾರಕ=(ಸ್ಥಿರಾಂಕ FixedString& other) {
+        *this = other.ದತ್ತಾಂಶ();
+        ಹಿಂತಿರುಗಿ *this;
     }
 
-    FixedString& operator=(std::string_view init) {
-        if (init.empty()) {
-            operator delete[](ptr);
+    FixedString& ಕ್ರಿಯಾಕಾರಕ=(std::string_view init) {
+        ಆದರೆ (init.ಖಾಲಿಗಳು()) {
+            ಕ್ರಿಯಾಕಾರಕ delete[](ptr);
             ptr = nullptr;
-        } else {
-            size_t size = init.size();
-            if (reserve(size + 1)) {
-                uprv_memcpy(ptr, init.data(), size);
-                ptr[size] = '\0';
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            size_t ಗಾತ್ರ_3 = init.ಗಾತ್ರ_3();
+            ಆದರೆ (reserve(ಗಾತ್ರ_3 + 1)) {
+                uprv_memcpy(ptr, init.ದತ್ತಾಂಶ(), ಗಾತ್ರ_3);
+                ptr[ಗಾತ್ರ_3] = '\0';
             }
         }
-        return *this;
+        ಹಿಂತಿರುಗಿ *this;
     }
 
     FixedString(FixedString&& other) noexcept : ptr(std::exchange(other.ptr, nullptr)) {}
 
-    FixedString& operator=(FixedString&& other) noexcept {
-        operator delete[](ptr);
+    FixedString& ಕ್ರಿಯಾಕಾರಕ=(FixedString&& other) noexcept {
+        ಕ್ರಿಯಾಕಾರಕ delete[](ptr);
         ptr = other.ptr;
         other.ptr = nullptr;
-        return *this;
+        ಹಿಂತಿರುಗಿ *this;
     }
 
-    void clear() {
-        operator delete[](ptr);
+    ಶೂನ್ಯ clear() {
+        ಕ್ರಿಯಾಕಾರಕ delete[](ptr);
         ptr = nullptr;
     }
 
-    const char* data() const {
-        return isEmpty() ? "" : ptr;
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* ದತ್ತಾಂಶ() ಸ್ಥಿರಾಂಕ {
+        ಹಿಂತಿರುಗಿ is_ಖಾಲಿಗಳು() ? "" : ptr;
     }
 
-    char* getAlias() {
-        return ptr;
+    ಅಕ್ಷರ* getAlias() {
+        ಹಿಂತಿರುಗಿ ptr;
     }
 
-    bool isEmpty() const {
-        return ptr == nullptr;
+    bool is_ಖಾಲಿಗಳು() ಸ್ಥಿರಾಂಕ {
+        ಹಿಂತಿರುಗಿ ptr == nullptr;
     }
 
     /** Allocate storage for a new string, without initializing it. */
-    bool reserve(size_t size) {
-        operator delete[](ptr);
-        ptr = static_cast<char*>(operator new[](size));
-        return ptr != nullptr;
+    bool reserve(size_t ಗಾತ್ರ_3) {
+        ಕ್ರಿಯಾಕಾರಕ delete[](ptr);
+        ptr = static_cast<ಅಕ್ಷರ*>(ಕ್ರಿಯಾಕಾರಕ new[](ಗಾತ್ರ_3));
+        ಹಿಂತಿರುಗಿ ptr != nullptr;
     }
 
-private:
-    char* ptr = nullptr;
+ಖಾಸಗಿ:
+    ಅಕ್ಷರ* ptr = nullptr;
 };
 
-U_COMMON_API void copyInvariantChars(const UnicodeString& src, FixedString& dst, UErrorCode& status);
+U_COMMON_API ಶೂನ್ಯ copyInvariantChars(ಸ್ಥಿರಾಂಕ UnicodeString& src, FixedString& dst, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

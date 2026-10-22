@@ -28,23 +28,23 @@
 ******************************************************************************
 */
 
-#ifndef LOCID_H
-#define LOCID_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ LOCID_H
+#ವ್ಯಾಖ್ಯಾನಿಸು LOCID_H
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ಆದರೆ U_SHOW_CPLUSPLUS_API
 
-#include <cstdint>
-#include <string_view>
+#ಅನ್ತರ್ಭಾವ <cstdint>
+#ಅನ್ತರ್ಭಾವ <string_view>
 
-#include "unicode/bytestream.h"
-#include "unicode/localpointer.h"
-#include "unicode/strenum.h"
-#include "unicode/stringpiece.h"
-#include "unicode/uobject.h"
-#include "unicode/putil.h"
-#include "unicode/uloc.h"
+#ಅನ್ತರ್ಭಾವ "unicode/bytestream.h"
+#ಅನ್ತರ್ಭಾವ "unicode/localpointer.h"
+#ಅನ್ತರ್ಭಾವ "unicode/strenum.h"
+#ಅನ್ತರ್ಭಾವ "unicode/stringpiece.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uobject.h"
+#ಅನ್ತರ್ಭಾವ "unicode/putil.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uloc.h"
 
 /**
  * \file
@@ -54,7 +54,7 @@
 U_NAMESPACE_BEGIN
 
 // Forward Declarations
-void U_CALLCONV locale_available_init(); /**< @internal */
+ಶೂನ್ಯ U_CALLCONV locale_ಲಭ್ಯ_init(); /**< @internal */
 
 class StringEnumeration;
 class UnicodeString;
@@ -195,53 +195,53 @@ class UnicodeString;
  * @stable ICU 2.0
  * @see ResourceBundle
  */
-class U_COMMON_API_CLASS Locale : public UObject {
-public:
+class U_COMMON_API_CLASS Locale : ಸಾರ್ವಜನಿಕ UObject {
+ಸಾರ್ವಜನಿಕ:
     /** Useful constant for the Root locale. @stable ICU 4.4 */
-    U_COMMON_API static const Locale& U_EXPORT2 getRoot();
+    U_COMMON_API ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Locale& U_EXPORT2 get_ಬೇರು();
     /** Useful constant for this language. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getEnglish();
+    U_COMMON_API ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Locale& U_EXPORT2 getEnglish();
     /** Useful constant for this language. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getFrench();
+    U_COMMON_API ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Locale& U_EXPORT2 getFrench();
     /** Useful constant for this language. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getGerman();
+    U_COMMON_API ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Locale& U_EXPORT2 getGerman();
     /** Useful constant for this language. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getItalian();
+    U_COMMON_API ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Locale& U_EXPORT2 getItalian();
     /** Useful constant for this language. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getJapanese();
+    U_COMMON_API ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Locale& U_EXPORT2 getJapanese();
     /** Useful constant for this language. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getKorean();
+    U_COMMON_API ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Locale& U_EXPORT2 getKorean();
     /** Useful constant for this language. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getChinese();
+    U_COMMON_API ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Locale& U_EXPORT2 getChinese();
     /** Useful constant for this language. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getSimplifiedChinese();
+    U_COMMON_API ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Locale& U_EXPORT2 getSimplifiedChinese();
     /** Useful constant for this language. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getTraditionalChinese();
+    U_COMMON_API ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Locale& U_EXPORT2 getTraditionalChinese();
 
     /** Useful constant for this country/region. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getFrance();
+    U_COMMON_API ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Locale& U_EXPORT2 getFrance();
     /** Useful constant for this country/region. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getGermany();
+    U_COMMON_API ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Locale& U_EXPORT2 getGermany();
     /** Useful constant for this country/region. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getItaly();
+    U_COMMON_API ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Locale& U_EXPORT2 getItaly();
     /** Useful constant for this country/region. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getJapan();
+    U_COMMON_API ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Locale& U_EXPORT2 getJapan();
     /** Useful constant for this country/region. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getKorea();
+    U_COMMON_API ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Locale& U_EXPORT2 getKorea();
     /** Useful constant for this country/region. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getChina();
+    U_COMMON_API ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Locale& U_EXPORT2 getChina();
     /** Useful constant for this country/region. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getPRC();
+    U_COMMON_API ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Locale& U_EXPORT2 getPRC();
     /** Useful constant for this country/region. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getTaiwan();
+    U_COMMON_API ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Locale& U_EXPORT2 getTaiwan();
     /** Useful constant for this country/region. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getUK();
+    U_COMMON_API ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Locale& U_EXPORT2 getUK();
     /** Useful constant for this country/region. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getUS();
+    U_COMMON_API ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Locale& U_EXPORT2 getUS();
     /** Useful constant for this country/region. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getCanada();
+    U_COMMON_API ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Locale& U_EXPORT2 getCanada();
     /** Useful constant for this country/region. @stable ICU 2.0 */
-    U_COMMON_API static const Locale& U_EXPORT2 getCanadaFrench();
+    U_COMMON_API ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Locale& U_EXPORT2 getCanadaFrench();
 
     /**
      * Construct a default locale object, a Locale for the default locale ID.
@@ -276,10 +276,10 @@ public:
      * @see uloc_getDefault
      * @stable ICU 2.0
      */
-    U_COMMON_API Locale(const char* language,
-                        const char* country = nullptr,
-                        const char* variant = nullptr,
-                        const char* keywordsAndValues = nullptr);
+    U_COMMON_API Locale(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* language,
+                        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* country = nullptr,
+                        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* variant = nullptr,
+                        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* keywords_And_ಮೌಲ್ಯಗಳು = nullptr);
 
     /**
      * Initializes a Locale object from another Locale object.
@@ -287,7 +287,7 @@ public:
      * @param other The Locale object being copied in.
      * @stable ICU 2.0
      */
-    U_COMMON_API Locale(const Locale& other);
+    U_COMMON_API Locale(ಸ್ಥಿರಾಂಕ Locale& other);
 
     /**
      * Move constructor; might leave source in bogus state.
@@ -302,7 +302,7 @@ public:
      * Destructor
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual ~Locale();
+    U_COMMON_API ವಾಸ್ತವಿಕ ~Locale();
 
     /**
      * Replaces the entire contents of *this with the specified value.
@@ -311,7 +311,7 @@ public:
      * @return      *this
      * @stable ICU 2.0
      */
-    U_COMMON_API Locale& operator=(const Locale& other) U_LIFETIME_BOUND;
+    U_COMMON_API Locale& ಕ್ರಿಯಾಕಾರಕ=(ಸ್ಥಿರಾಂಕ Locale& other) U_LIFETIME_BOUND;
 
     /**
      * Move assignment operator; might leave source in bogus state.
@@ -322,7 +322,7 @@ public:
      * @return      *this
      * @stable ICU 63
      */
-    U_COMMON_API Locale& operator=(Locale&& other) noexcept U_LIFETIME_BOUND;
+    U_COMMON_API Locale& ಕ್ರಿಯಾಕಾರಕ=(Locale&& other) noexcept U_LIFETIME_BOUND;
 
     /**
      * Checks if two locale keys are the same.
@@ -331,7 +331,7 @@ public:
      * @return      true if the two locale keys are the same, false otherwise.
      * @stable ICU 2.0
      */
-    U_COMMON_API bool operator==(const Locale& other) const;
+    U_COMMON_API bool ಕ್ರಿಯಾಕಾರಕ==(ಸ್ಥಿರಾಂಕ Locale& other) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Checks if two locale keys are not the same.
@@ -341,7 +341,7 @@ public:
      *              otherwise.
      * @stable ICU 2.0
      */
-    U_COMMON_API inline bool operator!=(const Locale& other) const;
+    U_COMMON_API ಸಾಲೊಳಗೆ bool ಕ್ರಿಯಾಕಾರಕ!=(ಸ್ಥಿರಾಂಕ Locale& other) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Clone this object.
@@ -354,9 +354,9 @@ public:
      * @see getDynamicClassID
      * @stable ICU 2.8
      */
-    U_COMMON_API Locale* clone() const;
+    U_COMMON_API Locale* clone() ಸ್ಥಿರಾಂಕ;
 
-#ifndef U_HIDE_SYSTEM_API
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_SYSTEM_API
     /**
      * Common methods of getting the current default Locale. Used for the
      * presentation: menus, dialogs, etc. Generally set once when your applet or
@@ -372,7 +372,7 @@ public:
      * @system
      * @stable ICU 2.0
      */
-    U_COMMON_API static const Locale& U_EXPORT2 getDefault();
+    U_COMMON_API ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Locale& U_EXPORT2 getDefault();
 
     /**
      * Sets the default. Normally set once at the beginning of a process,
@@ -386,8 +386,8 @@ public:
      * @system
      * @stable ICU 2.0
      */
-    U_COMMON_API static void U_EXPORT2 setDefault(const Locale& newLocale, UErrorCode& success);
-#endif  /* U_HIDE_SYSTEM_API */
+    U_COMMON_API ಸ್ಥಿರ ಶೂನ್ಯ U_EXPORT2 ಗಣ_Default(ಸ್ಥಿರಾಂಕ Locale& newLocale, UError_ಸಂಕೇತ& success);
+#ಆದರೆ_ಅಂತ್ಯ  /* U_HIDE_SYSTEM_API */
 
     /**
      * Returns a Locale for the specified BCP47 language tag string.
@@ -410,7 +410,7 @@ public:
      * @return        the Locale for the specified BCP47 language tag.
      * @stable ICU 63
      */
-    U_COMMON_API static Locale U_EXPORT2 forLanguageTag(StringPiece tag, UErrorCode& status);
+    U_COMMON_API ಸ್ಥಿರ Locale U_EXPORT2 for_Language_ಟ್ಯಾಗ್(StringPiece ಟ್ಯಾಗ್, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
 
     /**
      * Returns a well-formed language tag for this Locale.
@@ -425,7 +425,7 @@ public:
      * @param status  error information if creating the language tag failed.
      * @stable ICU 63
      */
-    U_COMMON_API void toLanguageTag(ByteSink& sink, UErrorCode& status) const;
+    U_COMMON_API ಶೂನ್ಯ ಗಮ್ಯ_Language_ಟ್ಯಾಗ್(ByteSink& sink, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns a well-formed language tag for this Locale.
@@ -437,8 +437,8 @@ public:
      * @return        the BCP47 language tag for this Locale.
      * @stable ICU 63
      */
-    template<typename StringClass>
-    inline StringClass toLanguageTag(UErrorCode& status) const;
+    ಮಾದರಿ<typename StringClass>
+    ಸಾಲೊಳಗೆ StringClass ಗಮ್ಯ_Language_ಟ್ಯಾಗ್(UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Creates a locale which has had minimal canonicalization
@@ -449,12 +449,12 @@ public:
      * @stable ICU 2.0
      * @see uloc_getName
      */
-    U_COMMON_API static Locale U_EXPORT2 createFromName(const char* name);
+    U_COMMON_API ಸ್ಥಿರ Locale U_EXPORT2 createFromName(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* name);
 
-#ifndef U_HIDE_INTERNAL_API
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_ಆಂತರಿಕ_API
     /** @internal */
-    U_COMMON_API static Locale U_EXPORT2 createFromName(StringPiece name);
-#endif  /* U_HIDE_INTERNAL_API */
+    U_COMMON_API ಸ್ಥಿರ Locale U_EXPORT2 createFromName(StringPiece name);
+#ಆದರೆ_ಅಂತ್ಯ  /* U_HIDE_INTERNAL_API */
 
     /**
      * Creates a locale from the given string after canonicalizing
@@ -464,14 +464,14 @@ public:
      * @stable ICU 3.0
      * @see uloc_canonicalize
      */
-    U_COMMON_API static Locale U_EXPORT2 createCanonical(const char* name);
+    U_COMMON_API ಸ್ಥಿರ Locale U_EXPORT2 createCanonical(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* name);
 
     /**
      * Returns the locale's ISO-639 language code.
      * @return      An alias to the code
      * @stable ICU 2.0
      */
-    U_COMMON_API const char* getLanguage() const U_LIFETIME_BOUND;
+    U_COMMON_API ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* getLanguage() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND;
 
     /**
      * Returns the locale's ISO-15924 abbreviation script code.
@@ -480,21 +480,21 @@ public:
      * @see uscript_getCode
      * @stable ICU 2.8
      */
-    U_COMMON_API const char* getScript() const U_LIFETIME_BOUND;
+    U_COMMON_API ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* getScript() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND;
 
     /**
      * Returns the locale's ISO-3166 country code.
      * @return      An alias to the code
      * @stable ICU 2.0
      */
-    U_COMMON_API const char* getCountry() const U_LIFETIME_BOUND;
+    U_COMMON_API ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* getCountry() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND;
 
     /**
      * Returns the locale's variant code.
      * @return      An alias to the code
      * @stable ICU 2.0
      */
-    U_COMMON_API const char* getVariant() const U_LIFETIME_BOUND;
+    U_COMMON_API ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* getVariant() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND;
 
     /**
      * Returns the programmatic name of the entire locale, with the language,
@@ -504,7 +504,7 @@ public:
      * @return      A pointer to "name".
      * @stable ICU 2.0
      */
-    U_COMMON_API const char* getName() const U_LIFETIME_BOUND;
+    U_COMMON_API ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* getName() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND;
 
     /**
      * Returns the programmatic name of the entire locale as getName() would return,
@@ -513,7 +513,7 @@ public:
      * @see getName
      * @stable ICU 2.8
      */
-    U_COMMON_API const char* getBaseName() const U_LIFETIME_BOUND;
+    U_COMMON_API ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* get_ತಳ_Name() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND;
 
     /**
      * Add the likely subtags for this Locale, per the algorithm described
@@ -544,7 +544,7 @@ public:
      *                U_ILLEGAL_ARGUMENT_ERROR.
      * @stable ICU 63
      */
-    U_COMMON_API void addLikelySubtags(UErrorCode& status);
+    U_COMMON_API ಶೂನ್ಯ ಕೂಡಿಸು_Likely_Subtags(UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
 
     /**
      * Minimize the subtags for this Locale, per the algorithm described
@@ -575,7 +575,7 @@ public:
      *                U_ILLEGAL_ARGUMENT_ERROR.
      * @stable ICU 63
      */
-    U_COMMON_API void minimizeSubtags(UErrorCode& status);
+    U_COMMON_API ಶೂನ್ಯ minimizeSubtags(UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
 
     /**
      * Canonicalize the locale ID of this object according to CLDR.
@@ -583,7 +583,7 @@ public:
      * @stable ICU 67
      * @see createCanonical
      */
-    U_COMMON_API void canonicalize(UErrorCode& status);
+    U_COMMON_API ಶೂನ್ಯ canonicalize(UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
 
     /**
      * Gets the list of keywords for the specified locale.
@@ -594,7 +594,7 @@ public:
      * @see getKeywords
      * @stable ICU 2.8
      */
-    U_COMMON_API StringEnumeration* createKeywords(UErrorCode& status) const;
+    U_COMMON_API StringEnumeration* createKeywords(UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Gets the list of Unicode keywords for the specified locale.
@@ -605,7 +605,7 @@ public:
      * @see getUnicodeKeywords
      * @stable ICU 63
      */
-    U_COMMON_API StringEnumeration* createUnicodeKeywords(UErrorCode& status) const;
+    U_COMMON_API StringEnumeration* createUnicodeKeywords(UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Gets the set of keywords for this Locale.
@@ -618,8 +618,8 @@ public:
      * @param status    error information if creating set of keywords failed.
      * @stable ICU 63
      */
-    template<typename StringClass, typename OutputIterator>
-    inline void getKeywords(OutputIterator iterator, UErrorCode& status) const;
+    ಮಾದರಿ<typename StringClass, typename OutputIterator>
+    ಸಾಲೊಳಗೆ ಶೂನ್ಯ getKeywords(OutputIterator iterator, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Gets the set of Unicode keywords for this Locale.
@@ -632,8 +632,8 @@ public:
      * @param status    error information if creating set of keywords failed.
      * @stable ICU 63
      */
-    template<typename StringClass, typename OutputIterator>
-    inline void getUnicodeKeywords(OutputIterator iterator, UErrorCode& status) const;
+    ಮಾದರಿ<typename StringClass, typename OutputIterator>
+    ಸಾಲೊಳಗೆ ಶೂನ್ಯ getUnicodeKeywords(OutputIterator iterator, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Gets the value for a keyword.
@@ -651,10 +651,10 @@ public:
      *
      * @stable ICU 2.8
      */
-    U_COMMON_API int32_t getKeywordValue(const char* keywordName,
-                                         char* buffer,
-                                         int32_t bufferCapacity,
-                                         UErrorCode& status) const;
+    U_COMMON_API int32_t get_Keyword_ಮೌಲ್ಯ(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* keywordName,
+                                         ಅಕ್ಷರ* ಬಫರ್,
+                                         int32_t ಬಫರ್_ಸಾಮರ್ಥ್ಯ,
+                                         UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Gets the value for a keyword.
@@ -669,7 +669,7 @@ public:
      * @param status       error information if getting the value failed.
      * @stable ICU 63
      */
-    U_COMMON_API void getKeywordValue(StringPiece keywordName, ByteSink& sink, UErrorCode& status) const;
+    U_COMMON_API ಶೂನ್ಯ get_Keyword_ಮೌಲ್ಯ(StringPiece keywordName, ByteSink& sink, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Gets the value for a keyword.
@@ -684,8 +684,8 @@ public:
      * @return             the keyword value.
      * @stable ICU 63
      */
-    template<typename StringClass>
-    inline StringClass getKeywordValue(StringPiece keywordName, UErrorCode& status) const;
+    ಮಾದರಿ<typename StringClass>
+    ಸಾಲೊಳಗೆ StringClass get_Keyword_ಮೌಲ್ಯ(StringPiece keywordName, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Gets the Unicode value for a Unicode keyword.
@@ -700,9 +700,9 @@ public:
      * @param status       error information if getting the value failed.
      * @stable ICU 63
      */
-    U_COMMON_API void getUnicodeKeywordValue(StringPiece keywordName,
+    U_COMMON_API ಶೂನ್ಯ get_Unicode_Keyword_ಮೌಲ್ಯ(StringPiece keywordName,
                                              ByteSink& sink,
-                                             UErrorCode& status) const;
+                                             UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Gets the Unicode value for a Unicode keyword.
@@ -717,8 +717,8 @@ public:
      * @return             the keyword value.
      * @stable ICU 63
      */
-    template<typename StringClass>
-    inline StringClass getUnicodeKeywordValue(StringPiece keywordName, UErrorCode& status) const;
+    ಮಾದರಿ<typename StringClass>
+    ಸಾಲೊಳಗೆ StringClass get_Unicode_Keyword_ಮೌಲ್ಯ(StringPiece keywordName, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Sets or removes the value for a keyword.
@@ -739,10 +739,10 @@ public:
      *
      * @stable ICU 49
      */
-    U_COMMON_API void setKeywordValue(const char* keywordName,
-                                      const char* keywordValue,
-                                      UErrorCode& status) {
-        setKeywordValue(StringPiece{keywordName}, StringPiece{keywordValue}, status);
+    U_COMMON_API ಶೂನ್ಯ ಗಣ_Keyword_ಮೌಲ್ಯ(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* keywordName,
+                                      ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* keyword_ಮೌಲ್ಯ,
+                                      UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) {
+        ಗಣ_Keyword_ಮೌಲ್ಯ(StringPiece{keywordName}, StringPiece{keyword_ಮೌಲ್ಯ}, ಸ್ಥಿತಿ_2);
     }
 
     /**
@@ -763,9 +763,9 @@ public:
      * @param status Returns any error information while performing this operation.
      * @stable ICU 63
      */
-    U_COMMON_API void setKeywordValue(StringPiece keywordName,
-                                      StringPiece keywordValue,
-                                      UErrorCode& status);
+    U_COMMON_API ಶೂನ್ಯ ಗಣ_Keyword_ಮೌಲ್ಯ(StringPiece keywordName,
+                                      StringPiece keyword_ಮೌಲ್ಯ,
+                                      UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
 
     /**
      * Sets or removes the Unicode value for a Unicode keyword.
@@ -785,9 +785,9 @@ public:
      * @param status Returns any error information while performing this operation.
      * @stable ICU 63
      */
-    U_COMMON_API void setUnicodeKeywordValue(StringPiece keywordName,
-                                             StringPiece keywordValue,
-                                             UErrorCode& status);
+    U_COMMON_API ಶೂನ್ಯ ಗಣ_Unicode_Keyword_ಮೌಲ್ಯ(StringPiece keywordName,
+                                             StringPiece keyword_ಮೌಲ್ಯ,
+                                             UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
 
     /**
      * returns the locale's three-letter language code, as specified
@@ -795,14 +795,14 @@ public:
      * @return      An alias to the code, or an empty string
      * @stable ICU 2.0
      */
-    U_COMMON_API const char* getISO3Language() const;
+    U_COMMON_API ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* getISO3Language() ಸ್ಥಿರಾಂಕ;
 
     /**
      * Fills in "name" with the locale's three-letter ISO-3166 country code.
      * @return      An alias to the code, or an empty string
      * @stable ICU 2.0
      */
-    U_COMMON_API const char* getISO3Country() const;
+    U_COMMON_API ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* getISO3Country() ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns the Windows LCID value corresponding to this locale.
@@ -811,7 +811,7 @@ public:
      * there is no Windows LCID value that corresponds to this locale, returns 0.
      * @stable ICU 2.0
      */
-    U_COMMON_API uint32_t getLCID() const;
+    U_COMMON_API uint32_t getLCID() ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns whether this locale's script is written right-to-left.
@@ -826,7 +826,7 @@ public:
      * @return true if the locale's script is written right-to-left
      * @stable ICU 54
      */
-    U_COMMON_API UBool isRightToLeft() const;
+    U_COMMON_API UBool is_ಬಲ_ಗಮ್ಯ_ಎಡ() ಸ್ಥಿರಾಂಕ;
 
     /**
      * Fills in "dispLang" with the name of this locale's language in a format suitable for
@@ -837,7 +837,7 @@ public:
      * @return          A reference to "dispLang".
      * @stable ICU 2.0
      */
-    U_COMMON_API UnicodeString& getDisplayLanguage(UnicodeString& dispLang U_LIFETIME_BOUND) const;
+    U_COMMON_API UnicodeString& getDisplayLanguage(UnicodeString& dispLang U_LIFETIME_BOUND) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Fills in "dispLang" with the name of this locale's language in a format suitable for
@@ -852,8 +852,8 @@ public:
      * @return          A reference to "dispLang".
      * @stable ICU 2.0
      */
-    U_COMMON_API UnicodeString& getDisplayLanguage(const Locale& displayLocale,
-                                                   UnicodeString& dispLang U_LIFETIME_BOUND) const;
+    U_COMMON_API UnicodeString& getDisplayLanguage(ಸ್ಥಿರಾಂಕ Locale& displayLocale,
+                                                   UnicodeString& dispLang U_LIFETIME_BOUND) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Fills in "dispScript" with the name of this locale's script in a format suitable
@@ -864,7 +864,7 @@ public:
      * @return              A reference to "dispScript".
      * @stable ICU 2.8
      */
-    U_COMMON_API UnicodeString& getDisplayScript(UnicodeString& dispScript U_LIFETIME_BOUND) const;
+    U_COMMON_API UnicodeString& getDisplayScript(UnicodeString& dispScript U_LIFETIME_BOUND) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Fills in "dispScript" with the name of this locale's country in a format suitable
@@ -880,8 +880,8 @@ public:
      * @return              A reference to "dispScript".
      * @stable ICU 2.8
      */
-    U_COMMON_API UnicodeString& getDisplayScript(const Locale& displayLocale,
-                                                 UnicodeString& dispScript U_LIFETIME_BOUND) const;
+    U_COMMON_API UnicodeString& getDisplayScript(ಸ್ಥಿರಾಂಕ Locale& displayLocale,
+                                                 UnicodeString& dispScript U_LIFETIME_BOUND) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Fills in "dispCountry" with the name of this locale's country in a format suitable
@@ -893,7 +893,7 @@ public:
      * @stable ICU 2.0
      */
     U_COMMON_API UnicodeString&
-    getDisplayCountry(UnicodeString& dispCountry U_LIFETIME_BOUND) const;
+    getDisplayCountry(UnicodeString& dispCountry U_LIFETIME_BOUND) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Fills in "dispCountry" with the name of this locale's country in a format suitable
@@ -910,8 +910,8 @@ public:
      * @stable ICU 2.0
      */
     U_COMMON_API UnicodeString&
-    getDisplayCountry(const Locale& displayLocale,
-                      UnicodeString& dispCountry U_LIFETIME_BOUND) const;
+    getDisplayCountry(ಸ್ಥಿರಾಂಕ Locale& displayLocale,
+                      UnicodeString& dispCountry U_LIFETIME_BOUND) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Fills in "dispVar" with the name of this locale's variant code in a format suitable
@@ -920,7 +920,7 @@ public:
      * @return          A reference to "dispVar".
      * @stable ICU 2.0
      */
-    U_COMMON_API UnicodeString& getDisplayVariant(UnicodeString& dispVar U_LIFETIME_BOUND) const;
+    U_COMMON_API UnicodeString& getDisplayVariant(UnicodeString& dispVar U_LIFETIME_BOUND) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Fills in "dispVar" with the name of this locale's variant code in a format
@@ -930,8 +930,8 @@ public:
      * @return          A reference to "dispVar".
      * @stable ICU 2.0
      */
-    U_COMMON_API UnicodeString& getDisplayVariant(const Locale& displayLocale,
-                                                  UnicodeString& dispVar U_LIFETIME_BOUND) const;
+    U_COMMON_API UnicodeString& getDisplayVariant(ಸ್ಥಿರಾಂಕ Locale& displayLocale,
+                                                  UnicodeString& dispVar U_LIFETIME_BOUND) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Fills in "name" with the name of this locale in a format suitable for user display
@@ -944,7 +944,7 @@ public:
      * @return      A reference to "name".
      * @stable ICU 2.0
      */
-    U_COMMON_API UnicodeString& getDisplayName(UnicodeString& name U_LIFETIME_BOUND) const;
+    U_COMMON_API UnicodeString& getDisplayName(UnicodeString& name U_LIFETIME_BOUND) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Fills in "name" with the name of this locale in a format suitable for user display
@@ -958,14 +958,14 @@ public:
      * @return          A reference to "name".
      * @stable ICU 2.0
      */
-    U_COMMON_API UnicodeString& getDisplayName(const Locale& displayLocale,
-                                               UnicodeString& name U_LIFETIME_BOUND) const;
+    U_COMMON_API UnicodeString& getDisplayName(ಸ್ಥಿರಾಂಕ Locale& displayLocale,
+                                               UnicodeString& name U_LIFETIME_BOUND) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Generates a hash code for the locale.
      * @stable ICU 2.0
      */
-    U_COMMON_API int32_t hashCode() const;
+    U_COMMON_API int32_t hash_ಸಂಕೇತ() ಸ್ಥಿರಾಂಕ;
 
     /**
      * Sets the locale to bogus
@@ -975,14 +975,14 @@ public:
      * instantiated from a locale and from a rule set).
      * @stable ICU 2.1
      */
-    U_COMMON_API void setToBogus();
+    U_COMMON_API ಶೂನ್ಯ ಗಣ_ಗಮ್ಯ_Bogus();
 
     /**
      * Gets the bogus state. Locale object can be bogus if it doesn't exist
      * @return false if it is a real locale, true if it is a bogus locale
      * @stable ICU 2.1
      */
-    U_COMMON_API inline UBool isBogus() const;
+    U_COMMON_API ಸಾಲೊಳಗೆ UBool isBogus() ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns a list of all installed locales.
@@ -992,7 +992,7 @@ public:
      *              get ownership of this list, and must NOT delete it.
      * @stable ICU 2.0
      */
-    U_COMMON_API static const Locale* U_EXPORT2 getAvailableLocales(int32_t& count);
+    U_COMMON_API ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Locale* U_EXPORT2 get_ಲಭ್ಯ_Locales(int32_t& ಎಣಿಕೆ_2);
 
     /**
      * Gets a list of all available 2-letter country codes defined in ISO 3166.  This is a
@@ -1002,7 +1002,7 @@ public:
      * @return a list of all available country codes
      * @stable ICU 2.0
      */
-    U_COMMON_API static const char* const* U_EXPORT2 getISOCountries();
+    U_COMMON_API ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* ಸ್ಥಿರಾಂಕ* U_EXPORT2 getISOCountries();
 
     /**
      * Returns a list of all unique language codes defined in ISO 639.
@@ -1015,51 +1015,51 @@ public:
      * @return a list of all available language codes
      * @stable ICU 2.0
      */
-    U_COMMON_API static const char* const* U_EXPORT2 getISOLanguages();
+    U_COMMON_API ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* ಸ್ಥಿರಾಂಕ* U_EXPORT2 getISOLanguages();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      *
      * @stable ICU 2.2
      */
-    U_COMMON_API static UClassID U_EXPORT2 getStaticClassID();
+    U_COMMON_API ಸ್ಥಿರ UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      *
      * @stable ICU 2.2
      */
-    U_COMMON_API virtual UClassID getDynamicClassID() const override;
+    U_COMMON_API ವಾಸ್ತವಿಕ UClassID getDynamicClassID() ಸ್ಥಿರಾಂಕ override;
 
     /**
      * A Locale iterator interface similar to a Java Iterator<Locale>.
      * @stable ICU 65
      */
     class U_COMMON_API Iterator /* not : public UObject because this is an interface/mixin class */ {
-    public:
+    ಸಾರ್ವಜನಿಕ:
         /** @stable ICU 65 */
-        virtual ~Iterator();
+        ವಾಸ್ತವಿಕ ~Iterator();
 
         /**
          * @return true if next() can be called again.
          * @stable ICU 65
          */
-        virtual UBool hasNext() const = 0;
+        ವಾಸ್ತವಿಕ UBool has_ಮುಂದಿನ() ಸ್ಥಿರಾಂಕ = 0;
 
         /**
          * @return the next locale.
          * @stable ICU 65
          */
-        virtual const Locale &next() = 0;
+        ವಾಸ್ತವಿಕ ಸ್ಥಿರಾಂಕ Locale &ಮುಂದಿನ() = 0;
     };
 
     /**
      * A generic Locale iterator implementation over Locale input iterators.
      * @stable ICU 65
      */
-    template<typename Iter>
-    class RangeIterator : public Iterator, public UMemory {
-    public:
+    ಮಾದರಿ<typename Iter>
+    class RangeIterator : ಸಾರ್ವಜನಿಕ Iterator, ಸಾರ್ವಜನಿಕ UMemory {
+    ಸಾರ್ವಜನಿಕ:
         /**
          * Constructs an iterator from a begin/end range.
          * Each of the iterator parameter values must be an
@@ -1069,23 +1069,23 @@ public:
          * @param end Exclusive end of range.
          * @stable ICU 65
          */
-        RangeIterator(Iter begin, Iter end) : it_(begin), end_(end) {}
+        RangeIterator(Iter begin, Iter ಕೊನೆ) : it_(begin), ಕೊನೆ_3(ಕೊನೆ) {}
 
         /**
          * @return true if next() can be called again.
          * @stable ICU 65
          */
-        UBool hasNext() const override { return it_ != end_; }
+        UBool has_ಮುಂದಿನ() ಸ್ಥಿರಾಂಕ override { ಹಿಂತಿರುಗಿ it_ != ಕೊನೆ_3; }
 
         /**
          * @return the next locale.
          * @stable ICU 65
          */
-        const Locale &next() override { return *it_++; }
+        ಸ್ಥಿರಾಂಕ Locale &ಮುಂದಿನ() override { ಹಿಂತಿರುಗಿ *it_++; }
 
-    private:
+    ಖಾಸಗಿ:
         Iter it_;
-        const Iter end_;
+        ಸ್ಥಿರಾಂಕ Iter ಕೊನೆ_3;
     };
 
     /**
@@ -1093,9 +1093,9 @@ public:
      * Calls the converter to convert each *begin to a const Locale &.
      * @stable ICU 65
      */
-    template<typename Iter, typename Conv>
-    class ConvertingIterator : public Iterator, public UMemory {
-    public:
+    ಮಾದರಿ<typename Iter, typename Conv>
+    class ConvertingIterator : ಸಾರ್ವಜನಿಕ Iterator, ಸಾರ್ವಜನಿಕ UMemory {
+    ಸಾರ್ವಜನಿಕ:
         /**
          * Constructs an iterator from a begin/end range.
          * Each of the iterator parameter values must be an
@@ -1106,34 +1106,34 @@ public:
          * @param converter Converter from *begin to const Locale & or compatible.
          * @stable ICU 65
          */
-        ConvertingIterator(Iter begin, Iter end, Conv converter) :
-                it_(begin), end_(end), converter_(converter) {}
+        ConvertingIterator(Iter begin, Iter ಕೊನೆ, Conv converter) :
+                it_(begin), ಕೊನೆ_3(ಕೊನೆ), converter_(converter) {}
 
         /**
          * @return true if next() can be called again.
          * @stable ICU 65
          */
-        UBool hasNext() const override { return it_ != end_; }
+        UBool has_ಮುಂದಿನ() ಸ್ಥಿರಾಂಕ override { ಹಿಂತಿರುಗಿ it_ != ಕೊನೆ_3; }
 
         /**
          * @return the next locale.
          * @stable ICU 65
          */
-        const Locale &next() override { return converter_(*it_++); }
+        ಸ್ಥಿರಾಂಕ Locale &ಮುಂದಿನ() override { ಹಿಂತಿರುಗಿ converter_(*it_++); }
 
-    private:
+    ಖಾಸಗಿ:
         Iter it_;
-        const Iter end_;
+        ಸ್ಥಿರಾಂಕ Iter ಕೊನೆ_3;
         Conv converter_;
     };
 
-protected: /* only protected for testing purposes. DO NOT USE. */
-#ifndef U_HIDE_INTERNAL_API
+ಸಂರಕ್ಷಿತ: /* only protected for testing purposes. DO NOT USE. */
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_ಆಂತರಿಕ_API
     /**
      * Set this from a single POSIX style locale string.
      * @internal
      */
-    U_COMMON_API void setFromPOSIXID(const char* posixID);
+    U_COMMON_API ಶೂನ್ಯ ಗಣ_From_POSIXID(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* posixID);
     /**
      * Minimize the subtags for this Locale, per the algorithm described
      * @param favorScript favor to keep script if true, to keep region if false.
@@ -1142,10 +1142,10 @@ protected: /* only protected for testing purposes. DO NOT USE. */
      *                U_ILLEGAL_ARGUMENT_ERROR.
      * @internal
      */
-    U_COMMON_API void minimizeSubtags(bool favorScript, UErrorCode& status);
-#endif  /* U_HIDE_INTERNAL_API */
+    U_COMMON_API ಶೂನ್ಯ minimizeSubtags(bool favorScript, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
+#ಆದರೆ_ಅಂತ್ಯ  /* U_HIDE_INTERNAL_API */
 
-private:
+ಖಾಸಗಿ:
     /**
      * Initialize the locale object with a new name.
      * Was deprecated - used in implementation - moved internal
@@ -1153,7 +1153,7 @@ private:
      * @param cLocaleID The new locale name.
      * @param canonicalize whether to call uloc_canonicalize on cLocaleID
      */
-    Locale& init(const char* localeID, UBool canonicalize) U_LIFETIME_BOUND;
+    Locale& init(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* localeID, UBool canonicalize) U_LIFETIME_BOUND;
     Locale& init(StringPiece localeID, UBool canonicalize) U_LIFETIME_BOUND;
 
     /*
@@ -1161,145 +1161,145 @@ private:
      *   NO side effects.   (Default constructor tries to get
      *   the default locale.)
      */
-    enum ELocaleType : uint8_t {
+    ಎಣಿಕೆ ELocaleType : uint8_t {
         eBOGUS,
         eNEST,
-        eHEAP,
+        e_ರಾಶಿ,
     };
     Locale(ELocaleType);
 
     /**
      * Initialize the locale cache for commonly used locales
      */
-    static Locale* getLocaleCache();
+    ಸ್ಥಿರ Locale* getLocaleCache();
 
-    union Payload;
-    struct Nest;
-    struct Heap;
+    ಒಕ್ಕೂಟ Payload;
+    ರಚನೆ Nest;
+    ರಚನೆ ರಾಶಿ_2;
 
     /**
      * Locale data that can be nested directly within the union Payload object.
      */
-    struct Nest {
-        static constexpr size_t SIZE = 32;
+    ರಚನೆ Nest {
+        ಸ್ಥಿರ constexpr size_t ಗಾತ್ರ_4 = 32;
 
         ELocaleType type = eNEST;
-        char language[4];
-        char script[5];
-        char region[4];
+        ಅಕ್ಷರ language[4];
+        ಅಕ್ಷರ script[5];
+        ಅಕ್ಷರ region[4];
         uint8_t variantBegin;
-        char baseName[SIZE -
-                      sizeof type -
-                      sizeof language -
-                      sizeof script -
-                      sizeof region -
-                      sizeof variantBegin];
+        ಅಕ್ಷರ ತಳ_Name[ಗಾತ್ರ_4 -
+                      ಗಾತ್ರ type -
+                      ಗಾತ್ರ language -
+                      ಗಾತ್ರ script -
+                      ಗಾತ್ರ region -
+                      ಗಾತ್ರ variantBegin];
 
-        const char* getLanguage() const U_LIFETIME_BOUND { return language; }
-        const char* getScript() const U_LIFETIME_BOUND { return script; }
-        const char* getRegion() const U_LIFETIME_BOUND { return region; }
-        const char* getVariant() const U_LIFETIME_BOUND {
-            return variantBegin == 0 ? "" : getBaseName() + variantBegin;
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* getLanguage() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND { ಹಿಂತಿರುಗಿ language; }
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* getScript() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND { ಹಿಂತಿರುಗಿ script; }
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* getRegion() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND { ಹಿಂತಿರುಗಿ region; }
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* getVariant() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND {
+            ಹಿಂತಿರುಗಿ variantBegin == 0 ? "" : get_ತಳ_Name() + variantBegin;
         }
-        const char* getBaseName() const U_LIFETIME_BOUND { return baseName; }
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* get_ತಳ_Name() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND { ಹಿಂತಿರುಗಿ ತಳ_Name; }
 
         // Doesn't inherit from UMemory, shouldn't be heap allocated.
-        static void* U_EXPORT2 operator new(size_t) noexcept = delete;
-        static void* U_EXPORT2 operator new[](size_t) noexcept = delete;
+        ಸ್ಥಿರ ಶೂನ್ಯ* U_EXPORT2 ಕ್ರಿಯಾಕಾರಕ new(size_t) noexcept = delete;
+        ಸ್ಥಿರ ಶೂನ್ಯ* U_EXPORT2 ಕ್ರಿಯಾಕಾರಕ new[](size_t) noexcept = delete;
 
-        Nest() : language{'\0'}, script{'\0'}, region{'\0'}, variantBegin{0}, baseName{'\0'} {}
+        Nest() : language{'\0'}, script{'\0'}, region{'\0'}, variantBegin{0}, ತಳ_Name{'\0'} {}
 
-        void init(std::string_view language,
+        ಶೂನ್ಯ init(std::string_view language,
                   std::string_view script,
                   std::string_view region,
                   uint8_t variantBegin);
 
-        static bool fits(int32_t length,
+        ಸ್ಥಿರ bool ಹೊಂದುತ್ತದೆ(int32_t ಉದ್ದಳತೆ,
                          std::string_view language,
                          std::string_view script,
                          std::string_view region) {
-            return length < static_cast<int32_t>(sizeof Nest::baseName) &&
-                   language.size() < sizeof Nest::language &&
-                   script.size() < sizeof Nest::script &&
-                   region.size() < sizeof Nest::region;
+            ಹಿಂತಿರುಗಿ ಉದ್ದಳತೆ < static_cast<int32_t>(ಗಾತ್ರ Nest::ತಳ_Name) &&
+                   language.ಗಾತ್ರ_3() < ಗಾತ್ರ Nest::language &&
+                   script.ಗಾತ್ರ_3() < ಗಾತ್ರ Nest::script &&
+                   region.ಗಾತ್ರ_3() < ಗಾತ್ರ Nest::region;
         }
 
-      private:
-        friend union Payload;
-        Nest(Heap&& heap, uint8_t variantBegin);
+      ಖಾಸಗಿ:
+        ಮಿತ್ರ ಒಕ್ಕೂಟ Payload;
+        Nest(ರಾಶಿ_2&& ರಾಶಿ_3, uint8_t variantBegin);
     };
-    static_assert(sizeof(Nest) == Nest::SIZE);
+    static_assert(ಗಾತ್ರ(Nest) == Nest::ಗಾತ್ರ_4);
 
     /**
      * Locale data that needs to be heap allocated in the union Payload object.
      */
-    struct Heap {
-        struct Alloc;
+    ರಚನೆ ರಾಶಿ_2 {
+        ರಚನೆ Alloc;
 
         ELocaleType type;
-        char language[ULOC_LANG_CAPACITY];
-        char script[ULOC_SCRIPT_CAPACITY];
-        char region[ULOC_COUNTRY_CAPACITY];
+        ಅಕ್ಷರ language[ULOC_LANG_ಸಾಮರ್ಥ್ಯ];
+        ಅಕ್ಷರ script[ULOC_SCRIPT_ಸಾಮರ್ಥ್ಯ];
+        ಅಕ್ಷರ region[ULOC_COUNTRY_ಸಾಮರ್ಥ್ಯ];
         Alloc* ptr;
 
-        const char* getLanguage() const U_LIFETIME_BOUND { return language; }
-        const char* getScript() const U_LIFETIME_BOUND { return script; }
-        const char* getRegion() const U_LIFETIME_BOUND { return region; }
-        const char* getVariant() const U_LIFETIME_BOUND;
-        const char* getFullName() const U_LIFETIME_BOUND;
-        const char* getBaseName() const U_LIFETIME_BOUND;
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* getLanguage() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND { ಹಿಂತಿರುಗಿ language; }
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* getScript() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND { ಹಿಂತಿರುಗಿ script; }
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* getRegion() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND { ಹಿಂತಿರುಗಿ region; }
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* getVariant() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND;
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* get_ತುಂಬಿದ_Name() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND;
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* get_ತಳ_Name() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND;
 
         // Doesn't inherit from UMemory, shouldn't be heap allocated.
-        static void* U_EXPORT2 operator new(size_t) noexcept = delete;
-        static void* U_EXPORT2 operator new[](size_t) noexcept = delete;
+        ಸ್ಥಿರ ಶೂನ್ಯ* U_EXPORT2 ಕ್ರಿಯಾಕಾರಕ new(size_t) noexcept = delete;
+        ಸ್ಥಿರ ಶೂನ್ಯ* U_EXPORT2 ಕ್ರಿಯಾಕಾರಕ new[](size_t) noexcept = delete;
 
-        Heap(std::string_view language,
+        ರಾಶಿ_2(std::string_view language,
              std::string_view script,
              std::string_view region,
              int32_t variantBegin);
-        ~Heap();
+        ~ರಾಶಿ_2();
 
-        Heap& operator=(const Heap& other) U_LIFETIME_BOUND;
-        Heap& operator=(Heap&& other) noexcept U_LIFETIME_BOUND;
+        ರಾಶಿ_2& ಕ್ರಿಯಾಕಾರಕ=(ಸ್ಥಿರಾಂಕ ರಾಶಿ_2& other) U_LIFETIME_BOUND;
+        ರಾಶಿ_2& ಕ್ರಿಯಾಕಾರಕ=(ರಾಶಿ_2&& other) noexcept U_LIFETIME_BOUND;
     };
-    static_assert(sizeof(Heap) <= sizeof(Nest));
+    static_assert(ಗಾತ್ರ(ರಾಶಿ_2) <= ಗಾತ್ರ(Nest));
 
     /**
      * This is kind of std::variant but customized to not waste any space on the
      * discriminator or on any padding, and to copy any heap allocated object.
      */
-    union Payload {
-      private:
+    ಒಕ್ಕೂಟ Payload {
+      ಖಾಸಗಿ:
         Nest nest;
-        Heap heap;
+        ರಾಶಿ_2 ರಾಶಿ_3;
         ELocaleType type;
 
-        void copy(const Payload& other);
-        void move(Payload&& other) noexcept;
+        ಶೂನ್ಯ copy(ಸ್ಥಿರಾಂಕ Payload& other);
+        ಶೂನ್ಯ move(Payload&& other) noexcept;
 
-      public:
+      ಸಾರ್ವಜನಿಕ:
         // Doesn't inherit from UMemory, shouldn't be heap allocated.
-        static void* U_EXPORT2 operator new(size_t) noexcept = delete;
-        static void* U_EXPORT2 operator new[](size_t) noexcept = delete;
+        ಸ್ಥಿರ ಶೂನ್ಯ* U_EXPORT2 ಕ್ರಿಯಾಕಾರಕ new(size_t) noexcept = delete;
+        ಸ್ಥಿರ ಶೂನ್ಯ* U_EXPORT2 ಕ್ರಿಯಾಕಾರಕ new[](size_t) noexcept = delete;
 
         Payload() : type{eBOGUS} {}
         ~Payload();
 
-        Payload(const Payload& other);
+        Payload(ಸ್ಥಿರಾಂಕ Payload& other);
         Payload(Payload&& other) noexcept;
 
-        Payload& operator=(const Payload& other) U_LIFETIME_BOUND;
-        Payload& operator=(Payload&& other) noexcept U_LIFETIME_BOUND;
+        Payload& ಕ್ರಿಯಾಕಾರಕ=(ಸ್ಥಿರಾಂಕ Payload& other) U_LIFETIME_BOUND;
+        Payload& ಕ್ರಿಯಾಕಾರಕ=(Payload&& other) noexcept U_LIFETIME_BOUND;
 
-        void setToBogus();
-        bool isBogus() const { return type == eBOGUS; }
+        ಶೂನ್ಯ ಗಣ_ಗಮ್ಯ_Bogus();
+        bool isBogus() ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ type == eBOGUS; }
 
-        template <typename T, typename... Args> T& emplace(Args&&... args) U_LIFETIME_BOUND;
+        ಮಾದರಿ <typename T, typename... ವಾದಗಳು> T& emplace(ವಾದಗಳು&&... ವಾದಗಳು_2) U_LIFETIME_BOUND;
 
-        template <typename T> T* get() U_LIFETIME_BOUND;
+        ಮಾದರಿ <typename T> T* get() U_LIFETIME_BOUND;
 
-        template <typename BogusFn, typename NestFn, typename HeapFn, typename... Args>
-        auto visit(BogusFn bogusFn, NestFn nestFn, HeapFn heapFn, Args... args) const;
+        ಮಾದರಿ <typename BogusFn, typename NestFn, typename ರಾಶಿ_Fn, typename... ವಾದಗಳು>
+        ಸ್ವಯಂಚಾಲಿತ ಭೇಟಿ(BogusFn bogusFn, NestFn nestFn, ರಾಶಿ_Fn ರಾಶಿ_Fn_2, ವಾದಗಳು... ವಾದಗಳು_2) ಸ್ಥಿರಾಂಕ;
     } payload;
 
     /**
@@ -1310,101 +1310,101 @@ private:
      * @tparam HEAP Pointer to the Heap getter function.
      * @return the result from the getter, or the empty string if isBogus().
      */
-    template <const char* (Nest::*const NEST)() const,
-              const char* (Heap::*const HEAP)() const>
-    const char* getField() const U_LIFETIME_BOUND;
+    ಮಾದರಿ <ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* (Nest::*ಸ್ಥಿರಾಂಕ NEST)() ಸ್ಥಿರಾಂಕ,
+              ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* (ರಾಶಿ_2::*ಸ್ಥಿರಾಂಕ ರಾಶಿ_4)() ಸ್ಥಿರಾಂಕ>
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* get_ಕ್ಷೇತ್ರ() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND;
 
-    static const Locale &getLocale(int locid);
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Locale &getLocale(ಪೂರ್ಣಾಂಕ locid);
 
     /**
      * A friend to allow the default locale to be set by either the C or C++ API.
      */
-    friend Locale *locale_set_default_internal(const char *, UErrorCode& status);
+    ಮಿತ್ರ Locale *locale_ಗಣ_default_ಆಂತರಿಕ(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
 
     /**
      */
-    friend void U_CALLCONV locale_available_init();
+    ಮಿತ್ರ ಶೂನ್ಯ U_CALLCONV locale_ಲಭ್ಯ_init();
 };
 
-U_COMMON_API inline bool
-Locale::operator!=(const    Locale&     other) const
+U_COMMON_API ಸಾಲೊಳಗೆ bool
+Locale::ಕ್ರಿಯಾಕಾರಕ!=(ಸ್ಥಿರಾಂಕ    Locale&     other) ಸ್ಥಿರಾಂಕ
 {
-    return !operator==(other);
+    ಹಿಂತಿರುಗಿ !ಕ್ರಿಯಾಕಾರಕ==(other);
 }
 
-template<typename StringClass> inline StringClass
-Locale::toLanguageTag(UErrorCode& status) const
+ಮಾದರಿ<typename StringClass> ಸಾಲೊಳಗೆ StringClass
+Locale::ಗಮ್ಯ_Language_ಟ್ಯಾಗ್(UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ
 {
-    if (U_FAILURE(status)) { return {}; }
-    StringClass result;
-    StringByteSink<StringClass> sink(&result);
-    toLanguageTag(sink, status);
-    return result;
+    ಆದರೆ (U_FAILURE(ಸ್ಥಿತಿ_2)) { ಹಿಂತಿರುಗಿ {}; }
+    StringClass ಫಲಿತಾಂಶ;
+    StringByteSink<StringClass> sink(&ಫಲಿತಾಂಶ);
+    ಗಮ್ಯ_Language_ಟ್ಯಾಗ್(sink, ಸ್ಥಿತಿ_2);
+    ಹಿಂತಿರುಗಿ ಫಲಿತಾಂಶ;
 }
 
-template<typename StringClass, typename OutputIterator> inline void
-Locale::getKeywords(OutputIterator iterator, UErrorCode& status) const
+ಮಾದರಿ<typename StringClass, typename OutputIterator> ಸಾಲೊಳಗೆ ಶೂನ್ಯ
+Locale::getKeywords(OutputIterator iterator, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ
 {
-    if (U_FAILURE(status)) { return; }
-    LocalPointer<StringEnumeration> keys(createKeywords(status));
-    if (U_FAILURE(status) || keys.isNull()) {
-        return;
+    ಆದರೆ (U_FAILURE(ಸ್ಥಿತಿ_2)) { ಹಿಂತಿರುಗಿ; }
+    Local_ಸೂಚಕ<StringEnumeration> ಕೀಲಿಗಳು(createKeywords(ಸ್ಥಿತಿ_2));
+    ಆದರೆ (U_FAILURE(ಸ್ಥಿತಿ_2) || ಕೀಲಿಗಳು.isNull()) {
+        ಹಿಂತಿರುಗಿ;
     }
-    for (;;) {
-        int32_t resultLength;
-        const char* buffer = keys->next(&resultLength, status);
-        if (U_FAILURE(status) || buffer == nullptr) {
-            return;
+    ಗಾಗಿ (;;) {
+        int32_t ಫಲಿತಾಂಶ_ಉದ್ದಳತೆ;
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* ಬಫರ್ = ಕೀಲಿಗಳು->ಮುಂದಿನ(&ಫಲಿತಾಂಶ_ಉದ್ದಳತೆ, ಸ್ಥಿತಿ_2);
+        ಆದರೆ (U_FAILURE(ಸ್ಥಿತಿ_2) || ಬಫರ್ == nullptr) {
+            ಹಿಂತಿರುಗಿ;
         }
-        *iterator++ = StringClass(buffer, resultLength);
+        *iterator++ = StringClass(ಬಫರ್, ಫಲಿತಾಂಶ_ಉದ್ದಳತೆ);
     }
 }
 
-template<typename StringClass, typename OutputIterator> inline void
-Locale::getUnicodeKeywords(OutputIterator iterator, UErrorCode& status) const
+ಮಾದರಿ<typename StringClass, typename OutputIterator> ಸಾಲೊಳಗೆ ಶೂನ್ಯ
+Locale::getUnicodeKeywords(OutputIterator iterator, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ
 {
-    if (U_FAILURE(status)) { return; }
-    LocalPointer<StringEnumeration> keys(createUnicodeKeywords(status));
-    if (U_FAILURE(status) || keys.isNull()) {
-        return;
+    ಆದರೆ (U_FAILURE(ಸ್ಥಿತಿ_2)) { ಹಿಂತಿರುಗಿ; }
+    Local_ಸೂಚಕ<StringEnumeration> ಕೀಲಿಗಳು(createUnicodeKeywords(ಸ್ಥಿತಿ_2));
+    ಆದರೆ (U_FAILURE(ಸ್ಥಿತಿ_2) || ಕೀಲಿಗಳು.isNull()) {
+        ಹಿಂತಿರುಗಿ;
     }
-    for (;;) {
-        int32_t resultLength;
-        const char* buffer = keys->next(&resultLength, status);
-        if (U_FAILURE(status) || buffer == nullptr) {
-            return;
+    ಗಾಗಿ (;;) {
+        int32_t ಫಲಿತಾಂಶ_ಉದ್ದಳತೆ;
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* ಬಫರ್ = ಕೀಲಿಗಳು->ಮುಂದಿನ(&ಫಲಿತಾಂಶ_ಉದ್ದಳತೆ, ಸ್ಥಿತಿ_2);
+        ಆದರೆ (U_FAILURE(ಸ್ಥಿತಿ_2) || ಬಫರ್ == nullptr) {
+            ಹಿಂತಿರುಗಿ;
         }
-        *iterator++ = StringClass(buffer, resultLength);
+        *iterator++ = StringClass(ಬಫರ್, ಫಲಿತಾಂಶ_ಉದ್ದಳತೆ);
     }
 }
 
-template<typename StringClass> inline StringClass
-Locale::getKeywordValue(StringPiece keywordName, UErrorCode& status) const
+ಮಾದರಿ<typename StringClass> ಸಾಲೊಳಗೆ StringClass
+Locale::get_Keyword_ಮೌಲ್ಯ(StringPiece keywordName, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ
 {
-    if (U_FAILURE(status)) { return {}; }
-    StringClass result;
-    StringByteSink<StringClass> sink(&result);
-    getKeywordValue(keywordName, sink, status);
-    return result;
+    ಆದರೆ (U_FAILURE(ಸ್ಥಿತಿ_2)) { ಹಿಂತಿರುಗಿ {}; }
+    StringClass ಫಲಿತಾಂಶ;
+    StringByteSink<StringClass> sink(&ಫಲಿತಾಂಶ);
+    get_Keyword_ಮೌಲ್ಯ(keywordName, sink, ಸ್ಥಿತಿ_2);
+    ಹಿಂತಿರುಗಿ ಫಲಿತಾಂಶ;
 }
 
-template<typename StringClass> inline StringClass
-Locale::getUnicodeKeywordValue(StringPiece keywordName, UErrorCode& status) const
+ಮಾದರಿ<typename StringClass> ಸಾಲೊಳಗೆ StringClass
+Locale::get_Unicode_Keyword_ಮೌಲ್ಯ(StringPiece keywordName, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ
 {
-    if (U_FAILURE(status)) { return {}; }
-    StringClass result;
-    StringByteSink<StringClass> sink(&result);
-    getUnicodeKeywordValue(keywordName, sink, status);
-    return result;
+    ಆದರೆ (U_FAILURE(ಸ್ಥಿತಿ_2)) { ಹಿಂತಿರುಗಿ {}; }
+    StringClass ಫಲಿತಾಂಶ;
+    StringByteSink<StringClass> sink(&ಫಲಿತಾಂಶ);
+    get_Unicode_Keyword_ಮೌಲ್ಯ(keywordName, sink, ಸ್ಥಿತಿ_2);
+    ಹಿಂತಿರುಗಿ ಫಲಿತಾಂಶ;
 }
 
-U_COMMON_API inline UBool
-Locale::isBogus() const {
-    return payload.isBogus();
+U_COMMON_API ಸಾಲೊಳಗೆ UBool
+Locale::isBogus() ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ payload.isBogus();
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ಆದರೆ_ಅಂತ್ಯ /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

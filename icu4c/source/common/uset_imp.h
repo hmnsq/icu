@@ -18,54 +18,54 @@
 *   Internal USet definitions.
 */
 
-#ifndef __USET_IMP_H__
-#define __USET_IMP_H__
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __USET_IMP_H__
+#ವ್ಯಾಖ್ಯಾನಿಸು __USET_IMP_H__
 
-#include "unicode/utypes.h"
-#include "unicode/uset.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uset.h"
 
 U_CDECL_BEGIN
 
-typedef void U_CALLCONV
-USetAdd(USet *set, UChar32 c);
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಶೂನ್ಯ U_CALLCONV
+USet_ಕೂಡಿಸು(USet *ಗಣ, UChar32 c);
 
-typedef void U_CALLCONV
-USetAddRange(USet *set, UChar32 start, UChar32 end);
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಶೂನ್ಯ U_CALLCONV
+USet_ಕೂಡಿಸು_Range(USet *ಗಣ, UChar32 ಆರಂಭ, UChar32 ಕೊನೆ);
 
-typedef void U_CALLCONV
-USetAddString(USet *set, const UChar *str, int32_t length);
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಶೂನ್ಯ U_CALLCONV
+USet_ಕೂಡಿಸು_String(USet *ಗಣ, ಸ್ಥಿರಾಂಕ UChar *str, int32_t ಉದ್ದಳತೆ);
 
-typedef void U_CALLCONV
-USetRemove(USet *set, UChar32 c);
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಶೂನ್ಯ U_CALLCONV
+USetRemove(USet *ಗಣ, UChar32 c);
 
-typedef void U_CALLCONV
-USetRemoveRange(USet *set, UChar32 start, UChar32 end);
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಶೂನ್ಯ U_CALLCONV
+USetRemoveRange(USet *ಗಣ, UChar32 ಆರಂಭ, UChar32 ಕೊನೆ);
 
 /**
  * Interface for adding items to a USet, to keep low-level code from
  * statically depending on the USet implementation.
  * Calls will look like sa->add(sa->set, c);
  */
-struct USetAdder {
-    USet *set;
-    USetAdd *add;
-    USetAddRange *addRange;
-    USetAddString *addString;
+ರಚನೆ USetAdder {
+    USet *ಗಣ;
+    USet_ಕೂಡಿಸು *ಕೂಡಿಸು;
+    USet_ಕೂಡಿಸು_Range *ಕೂಡಿಸು_Range;
+    USet_ಕೂಡಿಸು_String *ಕೂಡಿಸು_String;
     USetRemove *remove;
     USetRemoveRange *removeRange;
 };
-typedef struct USetAdder USetAdder;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ USetAdder USetAdder;
 
-U_CDECL_END
+U_CDECL_ಕೊನೆ
 
-#ifdef __cplusplus
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ __cplusplus
 
 namespace {
 
-constexpr int32_t USET_CASE_MASK = USET_CASE_INSENSITIVE | USET_ADD_CASE_MAPPINGS;
+constexpr int32_t USET_CASE_ಮುಖವಾಡ = USET_CASE_INSENSITIVE | USET_ಕೂಡಿಸು_CASE_MAPPINGS;
 
 }  // namespace
 
-#endif  // __cplusplus
+#ಆದರೆ_ಅಂತ್ಯ  // __cplusplus
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

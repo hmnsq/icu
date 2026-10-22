@@ -16,11 +16,11 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __UTRIE_H__
-#define __UTRIE_H__
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __UTRIE_H__
+#ವ್ಯಾಖ್ಯಾನಿಸು __UTRIE_H__
 
-#include "unicode/utypes.h"
-#include "unicode/utf16.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utf16.h"
 
 U_CDECL_BEGIN
 
@@ -50,21 +50,21 @@ U_CDECL_BEGIN
 /**
  * Trie constants, defining shift widths, index array lengths, etc.
  */
-enum {
+ಎಣಿಕೆ {
     /** Shift size for shifting right the input index. 1..9 */
-    UTRIE_SHIFT=5,
+    UTRIE_ಸರಿಸು=5,
 
     /** Number of data values in a stage 2 (data array) block. 2, 4, 8, .., 0x200 */
-    UTRIE_DATA_BLOCK_LENGTH=1<<UTRIE_SHIFT,
+    UTRIE_ದತ್ತಾಂಶ_ಖಂಡ_ಉದ್ದಳತೆ=1<<UTRIE_ಸರಿಸು,
 
     /** Mask for getting the lower bits from the input index. */
-    UTRIE_MASK=UTRIE_DATA_BLOCK_LENGTH-1,
+    UTRIE_ಮುಖವಾಡ=UTRIE_ದತ್ತಾಂಶ_ಖಂಡ_ಉದ್ದಳತೆ-1,
 
     /**
      * Lead surrogate code points' index displacement in the index array.
      * 0x10000-0xd800=0x2800
      */
-    UTRIE_LEAD_INDEX_DISP=0x2800>>UTRIE_SHIFT,
+    UTRIE_LEAD_ಸೂಚ್ಯಂಕ_DISP=0x2800>>UTRIE_ಸರಿಸು,
 
     /**
      * Shift size for shifting left the index array values.
@@ -73,36 +73,36 @@ enum {
      * This requires blocks of stage 2 data to be aligned by UTRIE_DATA_GRANULARITY.
      * 0..UTRIE_SHIFT
      */
-    UTRIE_INDEX_SHIFT=2,
+    UTRIE_ಸೂಚ್ಯಂಕ_ಸರಿಸು=2,
 
     /** The alignment size of a stage 2 data block. Also the granularity for compaction. */
-    UTRIE_DATA_GRANULARITY=1<<UTRIE_INDEX_SHIFT,
+    UTRIE_ದತ್ತಾಂಶ_GRANULARITY=1<<UTRIE_ಸೂಚ್ಯಂಕ_ಸರಿಸು,
 
     /** Number of bits of a trail surrogate that are used in index table lookups. */
-    UTRIE_SURROGATE_BLOCK_BITS=10-UTRIE_SHIFT,
+    UTRIE_SURROGATE_ಖಂಡ_ಬಿಟ್ಟುಗಳು=10-UTRIE_ಸರಿಸು,
 
     /**
      * Number of index (stage 1) entries per lead surrogate.
      * Same as number of index entries for 1024 trail surrogates,
      * ==0x400>>UTRIE_SHIFT
      */
-    UTRIE_SURROGATE_BLOCK_COUNT=(1<<UTRIE_SURROGATE_BLOCK_BITS),
+    UTRIE_SURROGATE_ಖಂಡ_ಎಣಿಕೆ=(1<<UTRIE_SURROGATE_ಖಂಡ_ಬಿಟ್ಟುಗಳು),
 
     /** Length of the BMP portion of the index (stage 1) array. */
-    UTRIE_BMP_INDEX_LENGTH=0x10000>>UTRIE_SHIFT
+    UTRIE_BMP_ಸೂಚ್ಯಂಕ_ಉದ್ದಳತೆ=0x10000>>UTRIE_ಸರಿಸು
 };
 
 /**
  * Length of the index (stage 1) array before folding.
  * Maximum number of Unicode code points (0x110000) shifted right by UTRIE_SHIFT.
  */
-#define UTRIE_MAX_INDEX_LENGTH (0x110000>>UTRIE_SHIFT)
+#ವ್ಯಾಖ್ಯಾನಿಸು UTRIE_MAX_ಸೂಚ್ಯಂಕ_ಉದ್ದಳತೆ (0x110000>>UTRIE_ಸರಿಸು)
 
 /**
  * Maximum length of the runtime data (stage 2) array.
  * Limited by 16-bit index values that are left-shifted by UTRIE_INDEX_SHIFT.
  */
-#define UTRIE_MAX_DATA_LENGTH (0x10000<<UTRIE_INDEX_SHIFT)
+#ವ್ಯಾಖ್ಯಾನಿಸು UTRIE_MAX_ದತ್ತಾಂಶ_ಉದ್ದಳತೆ (0x10000<<UTRIE_ಸೂಚ್ಯಂಕ_ಸರಿಸು)
 
 /**
  * Maximum length of the build-time data (stage 2) array.
@@ -110,7 +110,7 @@ enum {
  * (Number of Unicode code points + one all-initial-value block +
  *  possible duplicate entries for 1024 lead surrogates.)
  */
-#define UTRIE_MAX_BUILD_TIME_DATA_LENGTH (0x110000+UTRIE_DATA_BLOCK_LENGTH+0x400)
+#ವ್ಯಾಖ್ಯಾನಿಸು UTRIE_MAX_BUILD_ಸಮಯ_ದತ್ತಾಂಶ_ಉದ್ದಳತೆ (0x110000+UTRIE_ದತ್ತಾಂಶ_ಖಂಡ_ಉದ್ದಳತೆ+0x400)
 
 /**
  * Number of bytes for a dummy trie.
@@ -127,7 +127,7 @@ enum {
  *
  * @see utrie_unserializeDummy
  */
-#define UTRIE_DUMMY_SIZE ((UTRIE_BMP_INDEX_LENGTH+UTRIE_SURROGATE_BLOCK_COUNT)*2+(UTRIE_SHIFT<=8?256:UTRIE_DATA_BLOCK_LENGTH)*4+UTRIE_DATA_BLOCK_LENGTH*4)
+#ವ್ಯಾಖ್ಯಾನಿಸು UTRIE_DUMMY_ಗಾತ್ರ ((UTRIE_BMP_ಸೂಚ್ಯಂಕ_ಉದ್ದಳತೆ+UTRIE_SURROGATE_ಖಂಡ_ಎಣಿಕೆ)*2+(UTRIE_ಸರಿಸು<=8?256:UTRIE_ದತ್ತಾಂಶ_ಖಂಡ_ಉದ್ದಳತೆ)*4+UTRIE_ದತ್ತಾಂಶ_ಖಂಡ_ಉದ್ದಳತೆ*4)
 
 /**
  * Runtime UTrie callback function.
@@ -137,8 +137,8 @@ enum {
  * @param data data value for a surrogate from the trie, including the folding offset
  * @return offset>=UTRIE_BMP_INDEX_LENGTH, or 0 if there is no data for the lead surrogate
  */
-typedef int32_t U_CALLCONV
-UTrieGetFoldingOffset(uint32_t data);
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ int32_t U_CALLCONV
+UTrie_Get_Folding_ಸ್ಥಾನಾಂತರ(uint32_t ದತ್ತಾಂಶ);
 
 /**
  * Run-time Trie structure.
@@ -149,9 +149,9 @@ UTrieGetFoldingOffset(uint32_t data);
  *
  * Or the data table is 32 bits wide and accessed via the data32 pointer.
  */
-struct UTrie {
-    const uint16_t *index;
-    const uint32_t *data32; /* NULL if 16b data is used via index */
+ರಚನೆ UTrie {
+    ಸ್ಥಿರಾಂಕ uint16_t *ಸೂಚ್ಯಂಕ;
+    ಸ್ಥಿರಾಂಕ uint32_t *data32; /* NULL if 16b data is used via index */
 
     /**
      * This function is not used in _FROM_LEAD, _FROM_BMP, and _FROM_OFFSET_TRAIL macros.
@@ -163,102 +163,102 @@ struct UTrie {
      *
      * @see UTrieGetFoldingOffset
      */
-    UTrieGetFoldingOffset *getFoldingOffset;
+    UTrie_Get_Folding_ಸ್ಥಾನಾಂತರ *get_Folding_ಸ್ಥಾನಾಂತರ;
 
-    int32_t indexLength, dataLength;
-    uint32_t initialValue;
-    UBool isLatin1Linear;
+    int32_t ಸೂಚ್ಯಂಕ_ಉದ್ದಳತೆ, ದತ್ತಾಂಶ_ಉದ್ದಳತೆ;
+    uint32_t initial_ಮೌಲ್ಯ;
+    UBool is_Latin1_ರೇಖೀಯ;
 };
 
-#ifndef __UTRIE2_H__
-typedef struct UTrie UTrie;
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __UTRIE2_H__
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ UTrie UTrie;
+#ಆದರೆ_ಅಂತ್ಯ
 
 /** Internal trie getter from an offset (0 if c16 is a BMP/lead units) and a 16-bit unit */
-#define _UTRIE_GET_RAW(trie, data, offset, c16) \
-    (trie)->data[ \
-        ((int32_t)((trie)->index[(offset)+((c16)>>UTRIE_SHIFT)])<<UTRIE_INDEX_SHIFT)+ \
-        ((c16)&UTRIE_MASK) \
+#ವ್ಯಾಖ್ಯಾನಿಸು _UTRIE_GET_RAW(trie, ದತ್ತಾಂಶ, ಸ್ಥಾನಾಂತರ, c16) \
+    (trie)->ದತ್ತಾಂಶ[ \
+        ((int32_t)((trie)->ಸೂಚ್ಯಂಕ[(ಸ್ಥಾನಾಂತರ)+((c16)>>UTRIE_ಸರಿಸು)])<<UTRIE_ಸೂಚ್ಯಂಕ_ಸರಿಸು)+ \
+        ((c16)&UTRIE_ಮುಖವಾಡ) \
     ]
 
 /** Internal trie getter from a pair of surrogates */
-#define _UTRIE_GET_FROM_PAIR(trie, data, c, c2, result, resultType) UPRV_BLOCK_MACRO_BEGIN { \
+#ವ್ಯಾಖ್ಯಾನಿಸು _UTRIE_GET_FROM_PAIR(trie, ದತ್ತಾಂಶ, c, c2, ಫಲಿತಾಂಶ, ಫಲಿತಾಂಶ_Type) UPRV_ಖಂಡ_MACRO_BEGIN { \
     int32_t __offset; \
 \
     /* get data for lead surrogate */ \
-    (result)=_UTRIE_GET_RAW((trie), data, 0, (c)); \
-    __offset=(trie)->getFoldingOffset(result); \
+    (ಫಲಿತಾಂಶ)=_UTRIE_GET_RAW((trie), ದತ್ತಾಂಶ, 0, (c)); \
+    __offset=(trie)->get_Folding_ಸ್ಥಾನಾಂತರ(ಫಲಿತಾಂಶ); \
 \
     /* get the real data from the folded lead/trail units */ \
-    if(__offset>0) { \
-        (result)=_UTRIE_GET_RAW((trie), data, __offset, (c2)&0x3ff); \
-    } else { \
-        (result)=(resultType)((trie)->initialValue); \
+    ಆದರೆ(__offset>0) { \
+        (ಫಲಿತಾಂಶ)=_UTRIE_GET_RAW((trie), ದತ್ತಾಂಶ, __offset, (c2)&0x3ff); \
+    } ಇಲ್ಲದಿದ್ದರೆ { \
+        (ಫಲಿತಾಂಶ)=(ಫಲಿತಾಂಶ_Type)((trie)->initial_ಮೌಲ್ಯ); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ಖಂಡ_MACRO_ಕೊನೆ
 
 /** Internal trie getter from a BMP code point, treating a lead surrogate as a normal code point */
-#define _UTRIE_GET_FROM_BMP(trie, data, c16) \
-    _UTRIE_GET_RAW(trie, data, 0xd800<=(c16) && (c16)<=0xdbff ? UTRIE_LEAD_INDEX_DISP : 0, c16)
+#ವ್ಯಾಖ್ಯಾನಿಸು _UTRIE_GET_FROM_BMP(trie, ದತ್ತಾಂಶ, c16) \
+    _UTRIE_GET_RAW(trie, ದತ್ತಾಂಶ, 0xd800<=(c16) && (c16)<=0xdbff ? UTRIE_LEAD_ಸೂಚ್ಯಂಕ_DISP : 0, c16)
 
 /**
  * Internal trie getter from a code point.
  * Could be faster(?) but longer with
  *   if((c32)<=0xd7ff) { (result)=_UTRIE_GET_RAW(trie, data, 0, c32); }
  */
-#define _UTRIE_GET(trie, data, c32, result, resultType) UPRV_BLOCK_MACRO_BEGIN { \
-    if((uint32_t)(c32)<=0xffff) { \
+#ವ್ಯಾಖ್ಯಾನಿಸು _UTRIE_GET(trie, ದತ್ತಾಂಶ, c32, ಫಲಿತಾಂಶ, ಫಲಿತಾಂಶ_Type) UPRV_ಖಂಡ_MACRO_BEGIN { \
+    ಆದರೆ((uint32_t)(c32)<=0xffff) { \
         /* BMP code points */ \
-        (result)=_UTRIE_GET_FROM_BMP(trie, data, c32); \
-    } else if((uint32_t)(c32)<=0x10ffff) { \
+        (ಫಲಿತಾಂಶ)=_UTRIE_GET_FROM_BMP(trie, ದತ್ತಾಂಶ, c32); \
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ((uint32_t)(c32)<=0x10ffff) { \
         /* supplementary code point */ \
         UChar __lead16=U16_LEAD(c32); \
-        _UTRIE_GET_FROM_PAIR(trie, data, __lead16, c32, result, resultType); \
-    } else { \
+        _UTRIE_GET_FROM_PAIR(trie, ದತ್ತಾಂಶ, __lead16, c32, ಫಲಿತಾಂಶ, ಫಲಿತಾಂಶ_Type); \
+    } ಇಲ್ಲದಿದ್ದರೆ { \
         /* out of range */ \
-        (result)=(resultType)((trie)->initialValue); \
+        (ಫಲಿತಾಂಶ)=(ಫಲಿತಾಂಶ_Type)((trie)->initial_ಮೌಲ್ಯ); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ಖಂಡ_MACRO_ಕೊನೆ
 
 /** Internal next-post-increment: get the next code point (c, c2) and its data */
-#define _UTRIE_NEXT(trie, data, src, limit, c, c2, result, resultType) UPRV_BLOCK_MACRO_BEGIN { \
+#ವ್ಯಾಖ್ಯಾನಿಸು UTRIE_ಮುಂದಿನ(trie, ದತ್ತಾಂಶ, src, ಎಲ್ಲೆ, c, c2, ಫಲಿತಾಂಶ, ಫಲಿತಾಂಶ_Type) UPRV_ಖಂಡ_MACRO_BEGIN { \
     (c)=*(src)++; \
-    if(!U16_IS_LEAD(c)) { \
+    ಆದರೆ(!U16_IS_LEAD(c)) { \
         (c2)=0; \
-        (result)=_UTRIE_GET_RAW((trie), data, 0, (c)); \
-    } else if((src)!=(limit) && U16_IS_TRAIL((c2)=*(src))) { \
+        (ಫಲಿತಾಂಶ)=_UTRIE_GET_RAW((trie), ದತ್ತಾಂಶ, 0, (c)); \
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ((src)!=(ಎಲ್ಲೆ) && U16_IS_TRAIL((c2)=*(src))) { \
         ++(src); \
-        _UTRIE_GET_FROM_PAIR((trie), data, (c), (c2), (result), resultType); \
-    } else { \
+        _UTRIE_GET_FROM_PAIR((trie), ದತ್ತಾಂಶ, (c), (c2), (ಫಲಿತಾಂಶ), ಫಲಿತಾಂಶ_Type); \
+    } ಇಲ್ಲದಿದ್ದರೆ { \
         /* unpaired lead surrogate code point */ \
         (c2)=0; \
-        (result)=_UTRIE_GET_RAW((trie), data, UTRIE_LEAD_INDEX_DISP, (c)); \
+        (ಫಲಿತಾಂಶ)=_UTRIE_GET_RAW((trie), ದತ್ತಾಂಶ, UTRIE_LEAD_ಸೂಚ್ಯಂಕ_DISP, (c)); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ಖಂಡ_MACRO_ಕೊನೆ
 
 /** Internal previous: get the previous code point (c, c2) and its data */
-#define _UTRIE_PREVIOUS(trie, data, start, src, c, c2, result, resultType) UPRV_BLOCK_MACRO_BEGIN { \
+#ವ್ಯಾಖ್ಯಾನಿಸು UTRIE_ಹಿಂದಿನ(trie, ದತ್ತಾಂಶ, ಆರಂಭ, src, c, c2, ಫಲಿತಾಂಶ, ಫಲಿತಾಂಶ_Type) UPRV_ಖಂಡ_MACRO_BEGIN { \
     (c)=*--(src); \
-    if(!U16_IS_SURROGATE(c)) { \
+    ಆದರೆ(!U16_IS_SURROGATE(c)) { \
         (c2)=0; \
-        (result)=_UTRIE_GET_RAW((trie), data, 0, (c)); \
-    } else if(!U16_IS_SURROGATE_LEAD(c)) { \
+        (ಫಲಿತಾಂಶ)=_UTRIE_GET_RAW((trie), ದತ್ತಾಂಶ, 0, (c)); \
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(!U16_IS_SURROGATE_LEAD(c)) { \
         /* trail surrogate */ \
-        if((start)!=(src) && U16_IS_LEAD((c2)=*((src)-1))) { \
+        ಆದರೆ((ಆರಂಭ)!=(src) && U16_IS_LEAD((c2)=*((src)-1))) { \
             --(src); \
-            (result)=(c); (c)=(c2); (c2)=(UChar)(result); /* swap c, c2 */ \
-            _UTRIE_GET_FROM_PAIR((trie), data, (c), (c2), (result), resultType); \
-        } else { \
+            (ಫಲಿತಾಂಶ)=(c); (c)=(c2); (c2)=(UChar)(ಫಲಿತಾಂಶ); /* swap c, c2 */ \
+            _UTRIE_GET_FROM_PAIR((trie), ದತ್ತಾಂಶ, (c), (c2), (ಫಲಿತಾಂಶ), ಫಲಿತಾಂಶ_Type); \
+        } ಇಲ್ಲದಿದ್ದರೆ { \
             /* unpaired trail surrogate code point */ \
             (c2)=0; \
-            (result)=_UTRIE_GET_RAW((trie), data, 0, (c)); \
+            (ಫಲಿತಾಂಶ)=_UTRIE_GET_RAW((trie), ದತ್ತಾಂಶ, 0, (c)); \
         } \
-    } else { \
+    } ಇಲ್ಲದಿದ್ದರೆ { \
         /* unpaired lead surrogate code point */ \
         (c2)=0; \
-        (result)=_UTRIE_GET_RAW((trie), data, UTRIE_LEAD_INDEX_DISP, (c)); \
+        (ಫಲಿತಾಂಶ)=_UTRIE_GET_RAW((trie), ದತ್ತಾಂಶ, UTRIE_LEAD_ಸೂಚ್ಯಂಕ_DISP, (c)); \
     } \
-} UPRV_BLOCK_MACRO_END
+} UPRV_ಖಂಡ_MACRO_ಕೊನೆ
 
 /* Public UTrie API ---------------------------------------------------------*/
 
@@ -271,7 +271,7 @@ typedef struct UTrie UTrie;
  * @param trie (const UTrie *, in) a pointer to the runtime trie structure
  * @return (const uint16_t *) pointer to values for Latin-1 code points
  */
-#define UTRIE_GET16_LATIN1(trie) ((trie)->index+(trie)->indexLength+UTRIE_DATA_BLOCK_LENGTH)
+#ವ್ಯಾಖ್ಯಾನಿಸು UTRIE_GET16_LATIN1(trie) ((trie)->ಸೂಚ್ಯಂಕ+(trie)->ಸೂಚ್ಯಂಕ_ಉದ್ದಳತೆ+UTRIE_ದತ್ತಾಂಶ_ಖಂಡ_ಉದ್ದಳತೆ)
 
 /**
  * Get a pointer to the contiguous part of the data array
@@ -282,7 +282,7 @@ typedef struct UTrie UTrie;
  * @param trie (const UTrie *, in) a pointer to the runtime trie structure
  * @return (const uint32_t *) pointer to values for Latin-1 code points
  */
-#define UTRIE_GET32_LATIN1(trie) ((trie)->data32+UTRIE_DATA_BLOCK_LENGTH)
+#ವ್ಯಾಖ್ಯಾನಿಸು UTRIE_GET32_LATIN1(trie) ((trie)->data32+UTRIE_ದತ್ತಾಂಶ_ಖಂಡ_ಉದ್ದಳತೆ)
 
 /**
  * Get a 16-bit trie value from a BMP code point (UChar, <=U+ffff).
@@ -292,7 +292,7 @@ typedef struct UTrie UTrie;
  * @param c16 (UChar, in) the input BMP code point
  * @return (uint16_t) trie lookup result
  */
-#define UTRIE_GET16_FROM_LEAD(trie, c16) _UTRIE_GET_RAW(trie, index, 0, c16)
+#ವ್ಯಾಖ್ಯಾನಿಸು UTRIE_GET16_FROM_LEAD(trie, c16) _UTRIE_GET_RAW(trie, ಸೂಚ್ಯಂಕ, 0, c16)
 
 /**
  * Get a 32-bit trie value from a BMP code point (UChar, <=U+ffff).
@@ -302,7 +302,7 @@ typedef struct UTrie UTrie;
  * @param c16 (UChar, in) the input BMP code point
  * @return (uint32_t) trie lookup result
  */
-#define UTRIE_GET32_FROM_LEAD(trie, c16) _UTRIE_GET_RAW(trie, data32, 0, c16)
+#ವ್ಯಾಖ್ಯಾನಿಸು UTRIE_GET32_FROM_LEAD(trie, c16) _UTRIE_GET_RAW(trie, data32, 0, c16)
 
 /**
  * Get a 16-bit trie value from a BMP code point (UChar, <=U+ffff).
@@ -313,7 +313,7 @@ typedef struct UTrie UTrie;
  * @param c16 (UChar, in) the input BMP code point
  * @return (uint16_t) trie lookup result
  */
-#define UTRIE_GET16_FROM_BMP(trie, c16) _UTRIE_GET_FROM_BMP(trie, index, c16)
+#ವ್ಯಾಖ್ಯಾನಿಸು UTRIE_GET16_FROM_BMP(trie, c16) _UTRIE_GET_FROM_BMP(trie, ಸೂಚ್ಯಂಕ, c16)
 
 /**
  * Get a 32-bit trie value from a BMP code point (UChar, <=U+ffff).
@@ -324,7 +324,7 @@ typedef struct UTrie UTrie;
  * @param c16 (UChar, in) the input BMP code point
  * @return (uint32_t) trie lookup result
  */
-#define UTRIE_GET32_FROM_BMP(trie, c16) _UTRIE_GET_FROM_BMP(trie, data32, c16)
+#ವ್ಯಾಖ್ಯಾನಿಸು UTRIE_GET32_FROM_BMP(trie, c16) _UTRIE_GET_FROM_BMP(trie, data32, c16)
 
 /**
  * Get a 16-bit trie value from a code point.
@@ -335,7 +335,7 @@ typedef struct UTrie UTrie;
  * @param c32 (UChar32, in) the input code point
  * @param result (uint16_t, out) uint16_t variable for the trie lookup result
  */
-#define UTRIE_GET16(trie, c32, result) _UTRIE_GET(trie, index, c32, result, uint16_t)
+#ವ್ಯಾಖ್ಯಾನಿಸು UTRIE_GET16(trie, c32, ಫಲಿತಾಂಶ) _UTRIE_GET(trie, ಸೂಚ್ಯಂಕ, c32, ಫಲಿತಾಂಶ, uint16_t)
 
 /**
  * Get a 32-bit trie value from a code point.
@@ -346,7 +346,7 @@ typedef struct UTrie UTrie;
  * @param c32 (UChar32, in) the input code point
  * @param result (uint32_t, out) uint32_t variable for the trie lookup result
  */
-#define UTRIE_GET32(trie, c32, result) _UTRIE_GET(trie, data32, c32, result, uint32_t)
+#ವ್ಯಾಖ್ಯಾನಿಸು UTRIE_GET32(trie, c32, ಫಲಿತಾಂಶ) _UTRIE_GET(trie, data32, c32, ಫಲಿತಾಂಶ, uint32_t)
 
 /**
  * Get the next code point (c, c2), post-increment src,
@@ -359,7 +359,7 @@ typedef struct UTrie UTrie;
  * @param c2 (UChar, out) variable for 0 or the trail code unit
  * @param result (uint16_t, out) uint16_t variable for the trie lookup result
  */
-#define UTRIE_NEXT16(trie, src, limit, c, c2, result) _UTRIE_NEXT(trie, index, src, limit, c, c2, result, uint16_t)
+#ವ್ಯಾಖ್ಯಾನಿಸು UTRIE_NEXT16(trie, src, ಎಲ್ಲೆ, c, c2, ಫಲಿತಾಂಶ) UTRIE_ಮುಂದಿನ(trie, ಸೂಚ್ಯಂಕ, src, ಎಲ್ಲೆ, c, c2, ಫಲಿತಾಂಶ, uint16_t)
 
 /**
  * Get the next code point (c, c2), post-increment src,
@@ -372,7 +372,7 @@ typedef struct UTrie UTrie;
  * @param c2 (UChar, out) variable for 0 or the trail code unit
  * @param result (uint32_t, out) uint32_t variable for the trie lookup result
  */
-#define UTRIE_NEXT32(trie, src, limit, c, c2, result) _UTRIE_NEXT(trie, data32, src, limit, c, c2, result, uint32_t)
+#ವ್ಯಾಖ್ಯಾನಿಸು UTRIE_NEXT32(trie, src, ಎಲ್ಲೆ, c, c2, ಫಲಿತಾಂಶ) UTRIE_ಮುಂದಿನ(trie, data32, src, ಎಲ್ಲೆ, c, c2, ಫಲಿತಾಂಶ, uint32_t)
 
 /**
  * Get the previous code point (c, c2), pre-decrement src,
@@ -385,7 +385,7 @@ typedef struct UTrie UTrie;
  * @param c2 (UChar, out) variable for 0 or the trail code unit
  * @param result (uint16_t, out) uint16_t variable for the trie lookup result
  */
-#define UTRIE_PREVIOUS16(trie, start, src, c, c2, result) _UTRIE_PREVIOUS(trie, index, start, src, c, c2, result, uint16_t)
+#ವ್ಯಾಖ್ಯಾನಿಸು UTRIE_PREVIOUS16(trie, ಆರಂಭ, src, c, c2, ಫಲಿತಾಂಶ) UTRIE_ಹಿಂದಿನ(trie, ಸೂಚ್ಯಂಕ, ಆರಂಭ, src, c, c2, ಫಲಿತಾಂಶ, uint16_t)
 
 /**
  * Get the previous code point (c, c2), pre-decrement src,
@@ -398,7 +398,7 @@ typedef struct UTrie UTrie;
  * @param c2 (UChar, out) variable for 0 or the trail code unit
  * @param result (uint32_t, out) uint32_t variable for the trie lookup result
  */
-#define UTRIE_PREVIOUS32(trie, start, src, c, c2, result) _UTRIE_PREVIOUS(trie, data32, start, src, c, c2, result, uint32_t)
+#ವ್ಯಾಖ್ಯಾನಿಸು UTRIE_PREVIOUS32(trie, ಆರಂಭ, src, c, c2, ಫಲಿತಾಂಶ) UTRIE_ಹಿಂದಿನ(trie, data32, ಆರಂಭ, src, c, c2, ಫಲಿತಾಂಶ, uint32_t)
 
 /**
  * Get a 16-bit trie value from a pair of surrogates.
@@ -408,7 +408,7 @@ typedef struct UTrie UTrie;
  * @param c2 (UChar, in) a trail surrogate
  * @param result (uint16_t, out) uint16_t variable for the trie lookup result
  */
-#define UTRIE_GET16_FROM_PAIR(trie, c, c2, result) _UTRIE_GET_FROM_PAIR(trie, index, c, c2, result, uint16_t)
+#ವ್ಯಾಖ್ಯಾನಿಸು UTRIE_GET16_FROM_PAIR(trie, c, c2, ಫಲಿತಾಂಶ) _UTRIE_GET_FROM_PAIR(trie, ಸೂಚ್ಯಂಕ, c, c2, ಫಲಿತಾಂಶ, uint16_t)
 
 /**
  * Get a 32-bit trie value from a pair of surrogates.
@@ -418,7 +418,7 @@ typedef struct UTrie UTrie;
  * @param c2 (UChar, in) a trail surrogate
  * @param result (uint32_t, out) uint32_t variable for the trie lookup result
  */
-#define UTRIE_GET32_FROM_PAIR(trie, c, c2, result) _UTRIE_GET_FROM_PAIR(trie, data32, c, c2, result, uint32_t)
+#ವ್ಯಾಖ್ಯಾನಿಸು UTRIE_GET32_FROM_PAIR(trie, c, c2, ಫಲಿತಾಂಶ) _UTRIE_GET_FROM_PAIR(trie, data32, c, c2, ಫಲಿತಾಂಶ, uint32_t)
 
 /**
  * Get a 16-bit trie value from a folding offset (from the value of a lead surrogate)
@@ -429,7 +429,7 @@ typedef struct UTrie UTrie;
  * @param c2 (UChar, in) a trail surrogate (only the 10 low bits are significant)
  * @return (uint16_t) trie lookup result
  */
-#define UTRIE_GET16_FROM_OFFSET_TRAIL(trie, offset, c2) _UTRIE_GET_RAW(trie, index, offset, (c2)&0x3ff)
+#ವ್ಯಾಖ್ಯಾನಿಸು UTRIE_GET16_FROM_ಸ್ಥಾನಾಂತರ_TRAIL(trie, ಸ್ಥಾನಾಂತರ, c2) _UTRIE_GET_RAW(trie, ಸೂಚ್ಯಂಕ, ಸ್ಥಾನಾಂತರ, (c2)&0x3ff)
 
 /**
  * Get a 32-bit trie value from a folding offset (from the value of a lead surrogate)
@@ -440,7 +440,7 @@ typedef struct UTrie UTrie;
  * @param c2 (UChar, in) a trail surrogate (only the 10 low bits are significant)
  * @return (uint32_t) trie lookup result
  */
-#define UTRIE_GET32_FROM_OFFSET_TRAIL(trie, offset, c2) _UTRIE_GET_RAW(trie, data32, offset, (c2)&0x3ff)
+#ವ್ಯಾಖ್ಯಾನಿಸು UTRIE_GET32_FROM_ಸ್ಥಾನಾಂತರ_TRAIL(trie, ಸ್ಥಾನಾಂತರ, c2) _UTRIE_GET_RAW(trie, data32, ಸ್ಥಾನಾಂತರ, (c2)&0x3ff)
 
 /* enumeration callback types */
 
@@ -452,8 +452,8 @@ typedef struct UTrie UTrie;
  * @param value a value from the trie
  * @return the value that is to be passed on to the UTrieEnumRange function
  */
-typedef uint32_t U_CALLCONV
-UTrieEnumValue(const void *context, uint32_t value);
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ uint32_t U_CALLCONV
+UTrie_Enum_ಮೌಲ್ಯ(ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *context, uint32_t ಮೌಲ್ಯ_2);
 
 /**
  * Callback from utrie_enum(), is called for each contiguous range
@@ -468,8 +468,8 @@ UTrieEnumValue(const void *context, uint32_t value);
  * @param value the value that is set for all code points in [start..limit[
  * @return false to stop the enumeration
  */
-typedef UBool U_CALLCONV
-UTrieEnumRange(const void *context, UChar32 start, UChar32 limit, uint32_t value);
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ UBool U_CALLCONV
+UTrieEnumRange(ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *context, UChar32 ಆರಂಭ, UChar32 ಎಲ್ಲೆ, uint32_t ಮೌಲ್ಯ_2);
 
 /**
  * Enumerate efficiently all values in a trie.
@@ -487,9 +487,9 @@ UTrieEnumRange(const void *context, UChar32 start, UChar32 limit, uint32_t value
  *                  of code points with the same value
  * @param context an opaque pointer that is passed on to the callback functions
  */
-U_CAPI void U_EXPORT2
-utrie_enum(const UTrie *trie,
-           UTrieEnumValue *enumValue, UTrieEnumRange *enumRange, const void *context);
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+utrie_enum(ಸ್ಥಿರಾಂಕ UTrie *trie,
+           UTrie_Enum_ಮೌಲ್ಯ *enum_ಮೌಲ್ಯ, UTrieEnumRange *enumRange, ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *context);
 
 /**
  * Unserialize a trie from 32-bit-aligned memory.
@@ -503,7 +503,7 @@ utrie_enum(const UTrie *trie,
  * @return the number of bytes at data taken up by the trie data
  */
 U_CAPI int32_t U_EXPORT2
-utrie_unserialize(UTrie *trie, const void *data, int32_t length, UErrorCode *pErrorCode);
+utrie_unserialize(UTrie *trie, ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *ದತ್ತಾಂಶ, int32_t ಉದ್ದಳತೆ, UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
 /**
  * "Unserialize" a dummy trie.
@@ -527,10 +527,10 @@ utrie_unserialize(UTrie *trie, const void *data, int32_t length, UErrorCode *pEr
  */
 U_CAPI int32_t U_EXPORT2
 utrie_unserializeDummy(UTrie *trie,
-                       void *data, int32_t length,
-                       uint32_t initialValue, uint32_t leadUnitValue,
-                       UBool make16BitTrie,
-                       UErrorCode *pErrorCode);
+                       ಶೂನ್ಯ *ದತ್ತಾಂಶ, int32_t ಉದ್ದಳತೆ,
+                       uint32_t initial_ಮೌಲ್ಯ, uint32_t lead_Unit_ಮೌಲ್ಯ,
+                       UBool make16_ಬಿಟ್_Trie,
+                       UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
 /**
  * Default implementation for UTrie.getFoldingOffset, set automatically by
@@ -542,7 +542,7 @@ utrie_unserializeDummy(UTrie *trie,
  * @see UTrieGetFoldingOffset
  */
 U_CAPI int32_t U_EXPORT2
-utrie_defaultGetFoldingOffset(uint32_t data);
+utrie_default_Get_Folding_ಸ್ಥಾನಾಂತರ(uint32_t ದತ್ತಾಂಶ);
 
 /* Building a trie ----------------------------------------------------------*/
 
@@ -551,27 +551,27 @@ utrie_defaultGetFoldingOffset(uint32_t data);
  * Opaque definition, here only to make fillIn parameters possible
  * for utrie_open() and utrie_clone().
  */
-struct UNewTrie {
+ರಚನೆ UNewTrie {
     /**
      * Index values at build-time are 32 bits wide for easier processing.
      * Bit 31 is set if the data block is used by multiple index values (from utrie_setRange()).
      */
-    int32_t index[UTRIE_MAX_INDEX_LENGTH+UTRIE_SURROGATE_BLOCK_COUNT];
-    uint32_t *data;
+    int32_t ಸೂಚ್ಯಂಕ[UTRIE_MAX_ಸೂಚ್ಯಂಕ_ಉದ್ದಳತೆ+UTRIE_SURROGATE_ಖಂಡ_ಎಣಿಕೆ];
+    uint32_t *ದತ್ತಾಂಶ;
 
-    uint32_t leadUnitValue;
-    int32_t indexLength, dataCapacity, dataLength;
-    UBool isAllocated, isDataAllocated;
-    UBool isLatin1Linear, isCompacted;
+    uint32_t lead_Unit_ಮೌಲ್ಯ;
+    int32_t ಸೂಚ್ಯಂಕ_ಉದ್ದಳತೆ, ದತ್ತಾಂಶ_ಸಾಮರ್ಥ್ಯ, ದತ್ತಾಂಶ_ಉದ್ದಳತೆ;
+    UBool isAllocated, is_ದತ್ತಾಂಶ_Allocated;
+    UBool is_Latin1_ರೇಖೀಯ, isCompacted;
 
     /**
      * Map of adjusted indexes, used in utrie_compact().
      * Maps from original indexes to new ones.
      */
-    int32_t map[UTRIE_MAX_BUILD_TIME_DATA_LENGTH>>UTRIE_SHIFT];
+    int32_t map[UTRIE_MAX_BUILD_ಸಮಯ_ದತ್ತಾಂಶ_ಉದ್ದಳತೆ>>UTRIE_ಸರಿಸು];
 };
 
-typedef struct UNewTrie UNewTrie;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ UNewTrie UNewTrie;
 
 /**
  * Build-time trie callback function, used with utrie_serialize().
@@ -591,8 +591,8 @@ typedef struct UNewTrie UNewTrie;
  *
  * @return a folded value, or 0 if there is no relevant data for the lead surrogate.
  */
-typedef uint32_t U_CALLCONV
-UNewTrieGetFoldedValue(UNewTrie *trie, UChar32 start, int32_t offset);
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ uint32_t U_CALLCONV
+UNew_Trie_Get_Folded_ಮೌಲ್ಯ(UNewTrie *trie, UChar32 ಆರಂಭ, int32_t ಸ್ಥಾನಾಂತರ);
 
 /**
  * Open a build-time trie structure.
@@ -621,10 +621,10 @@ UNewTrieGetFoldedValue(UNewTrie *trie, UChar32 start, int32_t offset);
  * @return a pointer to the initialized fillIn or the allocated and initialized new UNewTrie
  */
 U_CAPI UNewTrie * U_EXPORT2
-utrie_open(UNewTrie *fillIn,
-           uint32_t *aliasData, int32_t maxDataLength,
-           uint32_t initialValue, uint32_t leadUnitValue,
-           UBool latin1Linear);
+utrie_open(UNewTrie *fill_ಒಳ,
+           uint32_t *alias_ದತ್ತಾಂಶ, int32_t max_ದತ್ತಾಂಶ_ಉದ್ದಳತೆ,
+           uint32_t initial_ಮೌಲ್ಯ, uint32_t lead_Unit_ಮೌಲ್ಯ,
+           UBool latin1_ರೇಖೀಯ);
 
 /**
  * Clone a build-time trie structure with all entries.
@@ -637,7 +637,7 @@ utrie_open(UNewTrie *fillIn,
  * @return a pointer to the initialized fillIn or the allocated and initialized new UNewTrie
  */
 U_CAPI UNewTrie * U_EXPORT2
-utrie_clone(UNewTrie *fillIn, const UNewTrie *other, uint32_t *aliasData, int32_t aliasDataLength);
+utrie_clone(UNewTrie *fill_ಒಳ, ಸ್ಥಿರಾಂಕ UNewTrie *other, uint32_t *alias_ದತ್ತಾಂಶ, int32_t alias_ದತ್ತಾಂಶ_ಉದ್ದಳತೆ);
 
 /**
  * Close a build-time trie structure, and release memory
@@ -645,7 +645,7 @@ utrie_clone(UNewTrie *fillIn, const UNewTrie *other, uint32_t *aliasData, int32_
  *
  * @param trie the build-time trie
  */
-U_CAPI void U_EXPORT2
+U_CAPI ಶೂನ್ಯ U_EXPORT2
 utrie_close(UNewTrie *trie);
 
 /**
@@ -659,7 +659,7 @@ utrie_close(UNewTrie *trie);
  * @return the data array
  */
 U_CAPI uint32_t * U_EXPORT2
-utrie_getData(UNewTrie *trie, int32_t *pLength);
+utrie_get_ದತ್ತಾಂಶ(UNewTrie *trie, int32_t *p_ಉದ್ದಳತೆ);
 
 /**
  * Set a value for a code point.
@@ -670,7 +670,7 @@ utrie_getData(UNewTrie *trie, int32_t *pLength);
  * @return false if a failure occurred (illegal argument or data array overrun)
  */
 U_CAPI UBool U_EXPORT2
-utrie_set32(UNewTrie *trie, UChar32 c, uint32_t value);
+utrie_set32(UNewTrie *trie, UChar32 c, uint32_t ಮೌಲ್ಯ_2);
 
 /**
  * Get a value from a code point as stored in the build-time trie.
@@ -683,7 +683,7 @@ utrie_set32(UNewTrie *trie, UChar32 c, uint32_t value);
  * @return the value
  */
 U_CAPI uint32_t U_EXPORT2
-utrie_get32(UNewTrie *trie, UChar32 c, UBool *pInBlockZero);
+utrie_get32(UNewTrie *trie, UChar32 c, UBool *p_ಒಳ_ಖಂಡ_Zero);
 
 /**
  * Set a value in a range of code points [start..limit[.
@@ -698,7 +698,7 @@ utrie_get32(UNewTrie *trie, UChar32 c, UBool *pInBlockZero);
  * @return false if a failure occurred (illegal argument or data array overrun)
  */
 U_CAPI UBool U_EXPORT2
-utrie_setRange32(UNewTrie *trie, UChar32 start, UChar32 limit, uint32_t value, UBool overwrite);
+utrie_ಗಣ_Range32(UNewTrie *trie, UChar32 ಆರಂಭ, UChar32 ಎಲ್ಲೆ, uint32_t ಮೌಲ್ಯ_2, UBool overwrite);
 
 /**
  * Compact the build-time trie after all values are set, and then
@@ -727,17 +727,17 @@ utrie_setRange32(UNewTrie *trie, UChar32 start, UChar32 limit, uint32_t value, U
  * @return the number of bytes written for the trie
  */
 U_CAPI int32_t U_EXPORT2
-utrie_serialize(UNewTrie *trie, void *data, int32_t capacity,
-                UNewTrieGetFoldedValue *getFoldedValue,
-                UBool reduceTo16Bits,
-                UErrorCode *pErrorCode);
+utrie_serialize(UNewTrie *trie, ಶೂನ್ಯ *ದತ್ತಾಂಶ, int32_t ಸಾಮರ್ಥ್ಯ,
+                UNew_Trie_Get_Folded_ಮೌಲ್ಯ *get_Folded_ಮೌಲ್ಯ,
+                UBool reduce_To16_ಬಿಟ್ಟುಗಳು,
+                UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
 /* serialization ------------------------------------------------------------ */
 
 // UTrie signature values, in platform endianness and opposite endianness.
 // The UTrie signature ASCII byte values spell "Trie".
-#define UTRIE_SIG       0x54726965
-#define UTRIE_OE_SIG    0x65697254
+#ವ್ಯಾಖ್ಯಾನಿಸು UTRIE_SIG       0x54726965
+#ವ್ಯಾಖ್ಯಾನಿಸು UTRIE_OE_SIG    0x65697254
 
 /**
  * Trie data structure in serialized form:
@@ -747,7 +747,7 @@ utrie_serialize(UNewTrie *trie, void *data, int32_t capacity,
  * uint16_t data[header.dataLength];
  * @internal
  */
-typedef struct UTrieHeader {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ UTrie_ಶೀರ್ಷಿಕೆ {
     /** "Trie" in big-endian US-ASCII (0x54726965) */
     uint32_t signature;
 
@@ -761,33 +761,33 @@ typedef struct UTrieHeader {
     uint32_t options;
 
     /** indexLength is a multiple of UTRIE_SURROGATE_BLOCK_COUNT */
-    int32_t indexLength;
+    int32_t ಸೂಚ್ಯಂಕ_ಉದ್ದಳತೆ;
 
     /** dataLength>=UTRIE_DATA_BLOCK_LENGTH */
-    int32_t dataLength;
-} UTrieHeader;
+    int32_t ದತ್ತಾಂಶ_ಉದ್ದಳತೆ;
+} UTrie_ಶೀರ್ಷಿಕೆ;
 
 /**
  * Constants for use with UTrieHeader.options.
  * @internal
  */
-enum {
+ಎಣಿಕೆ {
     /** Mask to get the UTRIE_SHIFT value from options. */
-    UTRIE_OPTIONS_SHIFT_MASK=0xf,
+    UTRIE_OPTIONS_ಸರಿಸು_ಮುಖವಾಡ=0xf,
 
     /** Shift options right this much to get the UTRIE_INDEX_SHIFT value. */
-    UTRIE_OPTIONS_INDEX_SHIFT=4,
+    UTRIE_OPTIONS_ಸೂಚ್ಯಂಕ_ಸರಿಸು=4,
 
     /** If set, then the data (stage 2) array is 32 bits wide. */
-    UTRIE_OPTIONS_DATA_IS_32_BIT=0x100,
+    UTRIE_OPTIONS_ದತ್ತಾಂಶ_IS_32_ಬಿಟ್=0x100,
 
     /**
      * If set, then Latin-1 data (for U+0000..U+00ff) is stored in the data (stage 2) array
      * as a simple, linear array at data+UTRIE_DATA_BLOCK_LENGTH.
      */
-    UTRIE_OPTIONS_LATIN1_IS_LINEAR=0x200
+    UTRIE_OPTIONS_LATIN1_IS_ರೇಖೀಯ=0x200
 };
 
-U_CDECL_END
+U_CDECL_ಕೊನೆ
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

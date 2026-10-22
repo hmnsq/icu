@@ -17,78 +17,78 @@
 *   were moved here to break dependency cycles among parts of the common library.
 */
 
-#include "unicode/utypes.h"
-#include "uassert.h"
-#include "unicode/brkiter.h"
-#include "unicode/casemap.h"
-#include "unicode/ucasemap.h"
-#include "unicode/uloc.h"
-#include "unicode/ustring.h"
-#include "ucase.h"
-#include "ucasemap_imp.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "uassert.h"
+#ಅನ್ತರ್ಭಾವ "unicode/brkiter.h"
+#ಅನ್ತರ್ಭಾವ "unicode/casemap.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ucasemap.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uloc.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ustring.h"
+#ಅನ್ತರ್ಭಾವ "ucase.h"
+#ಅನ್ತರ್ಭಾವ "ucasemap_imp.h"
 
 U_CFUNC int32_t
-ustrcase_getCaseLocale(const char *locale) {
-    if (locale == nullptr) {
+ustrcase_getCaseLocale(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *locale) {
+    ಆದರೆ (locale == ಶೂನ್ಯಸೂಚಕ) {
         locale = uloc_getDefault();
     }
-    if (*locale == 0) {
-        return UCASE_LOC_ROOT;
-    } else {
-        return ucase_getCaseLocale(locale);
+    ಆದರೆ (*locale == 0) {
+        ಹಿಂತಿರುಗಿ UCASE_LOC_ಬೇರು;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಹಿಂತಿರುಗಿ ucase_getCaseLocale(locale);
     }
 }
 
 /* public API functions */
 
 U_CAPI int32_t U_EXPORT2
-u_strToLower(char16_t *dest, int32_t destCapacity,
-             const char16_t *src, int32_t srcLength,
-             const char *locale,
-             UErrorCode *pErrorCode) {
-    return ustrcase_mapWithOverlap(
+u_str_ಗಮ್ಯ_ಅಧೋ(char16_t *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ,
+             ಸ್ಥಿರಾಂಕ char16_t *src, int32_t src_ಉದ್ದಳತೆ,
+             ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *locale,
+             UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಹಿಂತಿರುಗಿ ustrcase_mapWithOverlap(
         ustrcase_getCaseLocale(locale), 0, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ustrcase_internalToLower, *pErrorCode);
+        dest, dest_ಸಾಮರ್ಥ್ಯ,
+        src, src_ಉದ್ದಳತೆ,
+        ustrcase_ಆಂತರಿಕ_ಗಮ್ಯ_ಅಧೋ, *p_Error_ಸಂಕೇತ);
 }
 
 U_CAPI int32_t U_EXPORT2
-u_strToUpper(char16_t *dest, int32_t destCapacity,
-             const char16_t *src, int32_t srcLength,
-             const char *locale,
-             UErrorCode *pErrorCode) {
-    return ustrcase_mapWithOverlap(
+u_str_ಗಮ್ಯ_ಊರ್ಧ್ವ(char16_t *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ,
+             ಸ್ಥಿರಾಂಕ char16_t *src, int32_t src_ಉದ್ದಳತೆ,
+             ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *locale,
+             UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಹಿಂತಿರುಗಿ ustrcase_mapWithOverlap(
         ustrcase_getCaseLocale(locale), 0, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ustrcase_internalToUpper, *pErrorCode);
+        dest, dest_ಸಾಮರ್ಥ್ಯ,
+        src, src_ಉದ್ದಳತೆ,
+        ustrcase_ಆಂತರಿಕ_ಗಮ್ಯ_ಊರ್ಧ್ವ, *p_Error_ಸಂಕೇತ);
 }
 
 U_NAMESPACE_BEGIN
 
-int32_t CaseMap::toLower(
-        const char *locale, uint32_t options,
-        const char16_t *src, int32_t srcLength,
-        char16_t *dest, int32_t destCapacity, Edits *edits,
-        UErrorCode &errorCode) {
-    return ustrcase_map(
+int32_t CaseMap::ಗಮ್ಯ_ಅಧೋ(
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *locale, uint32_t options,
+        ಸ್ಥಿರಾಂಕ char16_t *src, int32_t src_ಉದ್ದಳತೆ,
+        char16_t *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ, Edits *edits,
+        UError_ಸಂಕೇತ &error_ಸಂಕೇತ) {
+    ಹಿಂತಿರುಗಿ ustrcase_map(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ustrcase_internalToLower, edits, errorCode);
+        dest, dest_ಸಾಮರ್ಥ್ಯ,
+        src, src_ಉದ್ದಳತೆ,
+        ustrcase_ಆಂತರಿಕ_ಗಮ್ಯ_ಅಧೋ, edits, error_ಸಂಕೇತ);
 }
 
-int32_t CaseMap::toUpper(
-        const char *locale, uint32_t options,
-        const char16_t *src, int32_t srcLength,
-        char16_t *dest, int32_t destCapacity, Edits *edits,
-        UErrorCode &errorCode) {
-    return ustrcase_map(
+int32_t CaseMap::ಗಮ್ಯ_ಊರ್ಧ್ವ(
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *locale, uint32_t options,
+        ಸ್ಥಿರಾಂಕ char16_t *src, int32_t src_ಉದ್ದಳತೆ,
+        char16_t *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ, Edits *edits,
+        UError_ಸಂಕೇತ &error_ಸಂಕೇತ) {
+    ಹಿಂತಿರುಗಿ ustrcase_map(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
-        dest, destCapacity,
-        src, srcLength,
-        ustrcase_internalToUpper, edits, errorCode);
+        dest, dest_ಸಾಮರ್ಥ್ಯ,
+        src, src_ಉದ್ದಳತೆ,
+        ustrcase_ಆಂತರಿಕ_ಗಮ್ಯ_ಊರ್ಧ್ವ, edits, error_ಸಂಕೇತ);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ

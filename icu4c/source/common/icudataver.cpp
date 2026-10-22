@@ -9,22 +9,22 @@
 ******************************************************************************
 */
 
-#include "unicode/utypes.h"
-#include "unicode/icudataver.h"
-#include "unicode/ures.h"
-#include "uresimp.h" /* for ures_getVersionByKey */
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/icudataver.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ures.h"
+#ಅನ್ತರ್ಭಾವ "uresimp.h" /* for ures_getVersionByKey */
 
-U_CAPI void U_EXPORT2 u_getDataVersion(UVersionInfo dataVersionFillin, UErrorCode *status) {
-    UResourceBundle *icudatares = nullptr;
+U_CAPI ಶೂನ್ಯ U_EXPORT2 u_get_ದತ್ತಾಂಶ_ಆವೃತ್ತಿ(UVersionInfo ದತ್ತಾಂಶ_ಆವೃತ್ತಿ_Fillin, UError_ಸಂಕೇತ *ಸ್ಥಿತಿ_2) {
+    UResourceBundle *icudatares = ಶೂನ್ಯಸೂಚಕ;
     
-    if (U_FAILURE(*status)) {
-        return;
+    ಆದರೆ (U_FAILURE(*ಸ್ಥಿತಿ_2)) {
+        ಹಿಂತಿರುಗಿ;
     }
     
-    if (dataVersionFillin != nullptr) {
-        icudatares = ures_openDirect(nullptr, U_ICU_VERSION_BUNDLE , status);
-        if (U_SUCCESS(*status)) {
-            ures_getVersionByKey(icudatares, U_ICU_DATA_KEY, dataVersionFillin, status);
+    ಆದರೆ (ದತ್ತಾಂಶ_ಆವೃತ್ತಿ_Fillin != ಶೂನ್ಯಸೂಚಕ) {
+        icudatares = ures_open_ನೇರ(ಶೂನ್ಯಸೂಚಕ, U_ICU_ಆವೃತ್ತಿ_BUNDLE , ಸ್ಥಿತಿ_2);
+        ಆದರೆ (U_SUCCESS(*ಸ್ಥಿತಿ_2)) {
+            ures_get_ಆವೃತ್ತಿ_By_ಕೀಲಿ(icudatares, U_ICU_ದತ್ತಾಂಶ_ಕೀಲಿ, ದತ್ತಾಂಶ_ಆವೃತ್ತಿ_Fillin, ಸ್ಥಿತಿ_2);
         }
         ures_close(icudatares);
     }

@@ -10,21 +10,21 @@
 **********************************************************************
 */
 
-#include "unicode/unimatch.h"
-#include "unicode/utf16.h"
-#include "patternprops.h"
-#include "util.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unimatch.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utf16.h"
+#ಅನ್ತರ್ಭಾವ "patternprops.h"
+#ಅನ್ತರ್ಭಾವ "util.h"
 
 // Define char16_t constants using hex for EBCDIC compatibility
 
-static const char16_t BACKSLASH  = 0x005C; /*\*/
-static const char16_t UPPER_U    = 0x0055; /*U*/
-static const char16_t LOWER_U    = 0x0075; /*u*/
-static const char16_t APOSTROPHE = 0x0027; // '\''
-static const char16_t SPACE      = 0x0020; // ' '
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ char16_t BACKSLASH  = 0x005C; /*\*/
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ char16_t ಊರ್ಧ್ವ_U    = 0x0055; /*U*/
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ char16_t ಅಧೋ_U    = 0x0075; /*u*/
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ char16_t APOSTROPHE = 0x0027; // '\''
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ char16_t SPACE      = 0x0020; // ' '
 
 // "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-static const char16_t DIGITS[] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ char16_t DIGITS[] = {
     48,49,50,51,52,53,54,55,56,57,
     65,66,67,68,69,70,71,72,73,74,
     75,76,77,78,79,80,81,82,83,84,
@@ -33,84 +33,84 @@ static const char16_t DIGITS[] = {
 
 U_NAMESPACE_BEGIN
 
-UnicodeString& ICU_Utility::appendNumber(UnicodeString& result, int32_t n,
+UnicodeString& ICU_Utility::append_ಸಂಖ್ಯೆ(UnicodeString& ಫಲಿತಾಂಶ, int32_t n,
                                      int32_t radix, int32_t minDigits) {
-    if (radix < 2 || radix > 36) {
+    ಆದರೆ (radix < 2 || radix > 36) {
         // Bogus radix
-        return result.append(static_cast<char16_t>(63)/*?*/);
+        ಹಿಂತಿರುಗಿ ಫಲಿತಾಂಶ.append(static_cast<char16_t>(63)/*?*/);
     }
     // Handle negatives
-    if (n < 0) {
+    ಆದರೆ (n < 0) {
         n = -n;
-        result.append(static_cast<char16_t>(45)/*-*/);
+        ಫಲಿತಾಂಶ.append(static_cast<char16_t>(45)/*-*/);
     }
     // First determine the number of digits
     int32_t nn = n;
     int32_t r = 1;
-    while (nn >= radix) {
+    ಆಗ (nn >= radix) {
         nn /= radix;
         r *= radix;
         --minDigits;
     }
     // Now generate the digits
-    while (--minDigits > 0) {
-        result.append(DIGITS[0]);
+    ಆಗ (--minDigits > 0) {
+        ಫಲಿತಾಂಶ.append(DIGITS[0]);
     }
-    while (r > 0) {
+    ಆಗ (r > 0) {
         int32_t digit = n / r;
-        result.append(DIGITS[digit]);
+        ಫಲಿತಾಂಶ.append(DIGITS[digit]);
         n -= digit * r;
         r /= radix;
     }
-    return result;
+    ಹಿಂತಿರುಗಿ ಫಲಿತಾಂಶ;
 }
 
 UBool ICU_Utility::isUnprintable(UChar32 c) {
-    return !(c >= 0x20 && c <= 0x7E);
+    ಹಿಂತಿರುಗಿ !(c >= 0x20 && c <= 0x7E);
 }
 
 UBool ICU_Utility::shouldAlwaysBeEscaped(UChar32 c) {
-    if (c < 0x20) {
-        return true;  // C0 control codes
-    } else if (c <= 0x7e) {
-        return false;  // printable ASCII
-    } else if (c <= 0x9f) {
-        return true;  // C1 control codes
-    } else if (c < 0xd800) {
-        return false;  // most of the BMP
-    } else if (c <= 0xdfff || (0xfdd0 <= c && c <= 0xfdef) || (c & 0xfffe) == 0xfffe) {
-        return true;  // surrogate or noncharacter code points
-    } else if (c <= 0x10ffff) {
-        return false;  // all else
-    } else {
-        return true;  // not a code point
+    ಆದರೆ (c < 0x20) {
+        ಹಿಂತಿರುಗಿ ನಿಜ;  // C0 control codes
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (c <= 0x7e) {
+        ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;  // printable ASCII
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (c <= 0x9f) {
+        ಹಿಂತಿರುಗಿ ನಿಜ;  // C1 control codes
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (c < 0xd800) {
+        ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;  // most of the BMP
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (c <= 0xdfff || (0xfdd0 <= c && c <= 0xfdef) || (c & 0xfffe) == 0xfffe) {
+        ಹಿಂತಿರುಗಿ ನಿಜ;  // surrogate or noncharacter code points
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (c <= 0x10ffff) {
+        ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;  // all else
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಹಿಂತಿರುಗಿ ನಿಜ;  // not a code point
     }
 }
 
-UBool ICU_Utility::escapeUnprintable(UnicodeString& result, UChar32 c) {
-    if (isUnprintable(c)) {
-        escape(result, c);
-        return true;
+UBool ICU_Utility::escapeUnprintable(UnicodeString& ಫಲಿತಾಂಶ, UChar32 c) {
+    ಆದರೆ (isUnprintable(c)) {
+        escape(ಫಲಿತಾಂಶ, c);
+        ಹಿಂತಿರುಗಿ ನಿಜ;
     }
-    return false;
+    ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
 }
 
-UnicodeString &ICU_Utility::escape(UnicodeString& result, UChar32 c) {
-    result.append(BACKSLASH);
-    if (c & ~0xFFFF) {
-        result.append(UPPER_U);
-        result.append(DIGITS[0xF&(c>>28)]);
-        result.append(DIGITS[0xF&(c>>24)]);
-        result.append(DIGITS[0xF&(c>>20)]);
-        result.append(DIGITS[0xF&(c>>16)]);
-    } else {
-        result.append(LOWER_U);
+UnicodeString &ICU_Utility::escape(UnicodeString& ಫಲಿತಾಂಶ, UChar32 c) {
+    ಫಲಿತಾಂಶ.append(BACKSLASH);
+    ಆದರೆ (c & ~0xFFFF) {
+        ಫಲಿತಾಂಶ.append(ಊರ್ಧ್ವ_U);
+        ಫಲಿತಾಂಶ.append(DIGITS[0xF&(c>>28)]);
+        ಫಲಿತಾಂಶ.append(DIGITS[0xF&(c>>24)]);
+        ಫಲಿತಾಂಶ.append(DIGITS[0xF&(c>>20)]);
+        ಫಲಿತಾಂಶ.append(DIGITS[0xF&(c>>16)]);
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಫಲಿತಾಂಶ.append(ಅಧೋ_U);
     }
-    result.append(DIGITS[0xF&(c>>12)]);
-    result.append(DIGITS[0xF&(c>>8)]);
-    result.append(DIGITS[0xF&(c>>4)]);
-    result.append(DIGITS[0xF&c]);
-    return result;
+    ಫಲಿತಾಂಶ.append(DIGITS[0xF&(c>>12)]);
+    ಫಲಿತಾಂಶ.append(DIGITS[0xF&(c>>8)]);
+    ಫಲಿತಾಂಶ.append(DIGITS[0xF&(c>>4)]);
+    ಫಲಿತಾಂಶ.append(DIGITS[0xF&c]);
+    ಹಿಂತಿರುಗಿ ಫಲಿತಾಂಶ;
 }
 
 /**
@@ -146,15 +146,15 @@ int32_t ICU_Utility::quotedIndexOf(const UnicodeString& text,
  * @return the index of the first non-white-space character at or
  * after pos, or str.length(), if there is none.
  */
-int32_t ICU_Utility::skipWhitespace(const UnicodeString& str, int32_t& pos,
+int32_t ICU_Utility::skipWhitespace(ಸ್ಥಿರಾಂಕ UnicodeString& str, int32_t& pos,
                                     UBool advance) {
     int32_t p = pos;
-    const char16_t* s = str.getBuffer();
-    p = static_cast<int32_t>(PatternProps::skipWhiteSpace(s + p, str.length() - p) - s);
-    if (advance) {
+    ಸ್ಥಿರಾಂಕ char16_t* s = str.get_ಬಫರ್();
+    p = static_cast<int32_t>(ನಮೂನೆ_Props::skipWhiteSpace(s + p, str.length() - p) - s);
+    ಆದರೆ (advance) {
         pos = p;
     }
-    return p;
+    ಹಿಂತಿರುಗಿ p;
 }
 
 /**
@@ -212,16 +212,16 @@ int32_t ICU_Utility::skipWhitespace(const UnicodeString& str, int32_t& pos,
  * @return true if 'ch' is seen preceded by zero or more
  * whitespace characters.
  */
-UBool ICU_Utility::parseChar(const UnicodeString& id, int32_t& pos, char16_t ch) {
-    int32_t start = pos;
-    skipWhitespace(id, pos, true);
-    if (pos == id.length() ||
+UBool ICU_Utility::parseChar(ಸ್ಥಿರಾಂಕ UnicodeString& id, int32_t& pos, char16_t ch) {
+    int32_t ಆರಂಭ = pos;
+    skipWhitespace(id, pos, ನಿಜ);
+    ಆದರೆ (pos == id.length() ||
         id.charAt(pos) != ch) {
-        pos = start;
-        return false;
+        pos = ಆರಂಭ;
+        ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
     }
     ++pos;
-    return true;
+    ಹಿಂತಿರುಗಿ ನಿಜ;
 }
 
 /**
@@ -240,64 +240,64 @@ UBool ICU_Utility::parseChar(const UnicodeString& id, int32_t& pos, char16_t ch)
  * @param limit offset after last character to parse
  * @return index after last parsed character, or -1 on parse failure.
  */
-int32_t ICU_Utility::parsePattern(const UnicodeString& pat,
-                                  const Replaceable& text,
-                                  int32_t index,
-                                  int32_t limit) {
+int32_t ICU_Utility::parse_ನಮೂನೆ(ಸ್ಥಿರಾಂಕ UnicodeString& pat,
+                                  ಸ್ಥಿರಾಂಕ Replaceable& ಪಠ್ಯ,
+                                  int32_t ಸೂಚ್ಯಂಕ,
+                                  int32_t ಎಲ್ಲೆ) {
     int32_t ipat = 0;
 
     // empty pattern matches immediately
-    if (ipat == pat.length()) {
-        return index;
+    ಆದರೆ (ipat == pat.length()) {
+        ಹಿಂತಿರುಗಿ ಸೂಚ್ಯಂಕ;
     }
 
     UChar32 cpat = pat.char32At(ipat);
 
-    while (index < limit) {
-        UChar32 c = text.char32At(index);
+    ಆಗ (ಸೂಚ್ಯಂಕ < ಎಲ್ಲೆ) {
+        UChar32 c = ಪಠ್ಯ.char32At(ಸೂಚ್ಯಂಕ);
 
         // parse \s*
-        if (cpat == 126 /*~*/) {
-            if (PatternProps::isWhiteSpace(c)) {
-                index += U16_LENGTH(c);
-                continue;
-            } else {
-                if (++ipat == pat.length()) {
-                    return index; // success; c unparsed
+        ಆದರೆ (cpat == 126 /*~*/) {
+            ಆದರೆ (ನಮೂನೆ_Props::isWhiteSpace(c)) {
+                ಸೂಚ್ಯಂಕ += U16_ಉದ್ದಳತೆ(c);
+                ಮುಂದುವರಿ;
+            } ಇಲ್ಲದಿದ್ದರೆ {
+                ಆದರೆ (++ipat == pat.length()) {
+                    ಹಿಂತಿರುಗಿ ಸೂಚ್ಯಂಕ; // success; c unparsed
                 }
                 // fall thru; process c again with next cpat
             }
         }
 
         // parse literal
-        else if (c == cpat) {
-            index += U16_LENGTH(c);
-            ipat += U16_LENGTH(cpat);
-            if (ipat == pat.length()) {
-                return index; // success; c parsed
+        ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (c == cpat) {
+            ಸೂಚ್ಯಂಕ += U16_ಉದ್ದಳತೆ(c);
+            ipat += U16_ಉದ್ದಳತೆ(cpat);
+            ಆದರೆ (ipat == pat.length()) {
+                ಹಿಂತಿರುಗಿ ಸೂಚ್ಯಂಕ; // success; c parsed
             }
             // fall thru; get next cpat
         }
 
         // match failure of literal
-        else {
-            return -1;
+        ಇಲ್ಲದಿದ್ದರೆ {
+            ಹಿಂತಿರುಗಿ -1;
         }
 
         cpat = pat.char32At(ipat);
     }
 
-    return -1; // text ended before end of pat
+    ಹಿಂತಿರುಗಿ -1; // text ended before end of pat
 }
 
-int32_t ICU_Utility::parseAsciiInteger(const UnicodeString& str, int32_t& pos) {
-    int32_t result = 0;
+int32_t ICU_Utility::parseAsciiInteger(ಸ್ಥಿರಾಂಕ UnicodeString& str, int32_t& pos) {
+    int32_t ಫಲಿತಾಂಶ = 0;
     char16_t c;
-    while (pos < str.length() && (c = str.charAt(pos)) >= u'0' && c <= u'9') {
-        result = result * 10 + (c - u'0');
+    ಆಗ (pos < str.length() && (c = str.charAt(pos)) >= u'0' && c <= u'9') {
+        ಫಲಿತಾಂಶ = ಫಲಿತಾಂಶ * 10 + (c - u'0');
         pos++;
     }
-    return result;
+    ಹಿಂತಿರುಗಿ ಫಲಿತಾಂಶ;
 }
 
 /**
@@ -318,7 +318,7 @@ int32_t ICU_Utility::parseAsciiInteger(const UnicodeString& str, int32_t& pos) {
  * cleared out by, at the end, calling this method with a literal
  * character.
  */
-void ICU_Utility::appendToRule(UnicodeString& rule,
+ಶೂನ್ಯ ICU_Utility::append_ಗಮ್ಯ_ನಿಯಮ(UnicodeString& ನಿಯಮ,
                                UChar32 c,
                                UBool isLiteral,
                                UBool escapeUnprintable,
@@ -326,9 +326,9 @@ void ICU_Utility::appendToRule(UnicodeString& rule,
     // If we are escaping unprintables, then escape them outside
     // quotes.  \u and \U are not recognized within quotes.  The same
     // logic applies to literals, but literals are never escaped.
-    if (isLiteral ||
+    ಆದರೆ (isLiteral ||
         (escapeUnprintable && ICU_Utility::isUnprintable(c))) {
-        if (quoteBuf.length() > 0) {
+        ಆದರೆ (quoteBuf.length() > 0) {
             // We prefer backslash APOSTROPHE to double APOSTROPHE
             // (more readable, less similar to ") so if there are
             // double APOSTROPHEs at the ends, we pull them outside
@@ -336,84 +336,84 @@ void ICU_Utility::appendToRule(UnicodeString& rule,
 
             // If the first thing in the quoteBuf is APOSTROPHE
             // (doubled) then pull it out.
-            while (quoteBuf.length() >= 2 &&
+            ಆಗ (quoteBuf.length() >= 2 &&
                    quoteBuf.charAt(0) == APOSTROPHE &&
                    quoteBuf.charAt(1) == APOSTROPHE) {
-                rule.append(BACKSLASH).append(APOSTROPHE);
+                ನಿಯಮ.append(BACKSLASH).append(APOSTROPHE);
                 quoteBuf.remove(0, 2);
             }
             // If the last thing in the quoteBuf is APOSTROPHE
             // (doubled) then remove and count it and add it after.
-            int32_t trailingCount = 0;
-            while (quoteBuf.length() >= 2 &&
+            int32_t trailing_ಎಣಿಕೆ = 0;
+            ಆಗ (quoteBuf.length() >= 2 &&
                    quoteBuf.charAt(quoteBuf.length()-2) == APOSTROPHE &&
                    quoteBuf.charAt(quoteBuf.length()-1) == APOSTROPHE) {
                 quoteBuf.truncate(quoteBuf.length()-2);
-                ++trailingCount;
+                ++trailing_ಎಣಿಕೆ;
             }
-            if (quoteBuf.length() > 0) {
-                rule.append(APOSTROPHE);
-                rule.append(quoteBuf);
-                rule.append(APOSTROPHE);
+            ಆದರೆ (quoteBuf.length() > 0) {
+                ನಿಯಮ.append(APOSTROPHE);
+                ನಿಯಮ.append(quoteBuf);
+                ನಿಯಮ.append(APOSTROPHE);
                 quoteBuf.truncate(0);
             }
-            while (trailingCount-- > 0) {
-                rule.append(BACKSLASH).append(APOSTROPHE);
+            ಆಗ (trailing_ಎಣಿಕೆ-- > 0) {
+                ನಿಯಮ.append(BACKSLASH).append(APOSTROPHE);
             }
         }
-        if (c != static_cast<UChar32>(-1)) {
+        ಆದರೆ (c != static_cast<UChar32>(-1)) {
             /* Since spaces are ignored during parsing, they are
              * emitted only for readability.  We emit one here
              * only if there isn't already one at the end of the
              * rule.
              */
-            if (c == SPACE) {
-                int32_t len = rule.length();
-                if (len > 0 && rule.charAt(len-1) != c) {
-                    rule.append(c);
+            ಆದರೆ (c == SPACE) {
+                int32_t len = ನಿಯಮ.length();
+                ಆದರೆ (len > 0 && ನಿಯಮ.charAt(len-1) != c) {
+                    ನಿಯಮ.append(c);
                 }
-            } else if (!escapeUnprintable || !ICU_Utility::escapeUnprintable(rule, c)) {
-                rule.append(c);
+            } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (!escapeUnprintable || !ICU_Utility::escapeUnprintable(ನಿಯಮ, c)) {
+                ನಿಯಮ.append(c);
             }
         }
     }
 
     // Escape ' and '\' and don't begin a quote just for them
-    else if (quoteBuf.length() == 0 &&
+    ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (quoteBuf.length() == 0 &&
              (c == APOSTROPHE || c == BACKSLASH)) {
-        rule.append(BACKSLASH);
-        rule.append(c);
+        ನಿಯಮ.append(BACKSLASH);
+        ನಿಯಮ.append(c);
     }
 
     // Specials (printable ascii that isn't [0-9a-zA-Z]) and
     // whitespace need quoting.  Also append stuff to quotes if we are
     // building up a quoted substring already.
-    else if (quoteBuf.length() > 0 ||
+    ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (quoteBuf.length() > 0 ||
              (c >= 0x0021 && c <= 0x007E &&
               !((c >= 0x0030/*'0'*/ && c <= 0x0039/*'9'*/) ||
                 (c >= 0x0041/*'A'*/ && c <= 0x005A/*'Z'*/) ||
                 (c >= 0x0061/*'a'*/ && c <= 0x007A/*'z'*/))) ||
-             PatternProps::isWhiteSpace(c)) {
+             ನಮೂನೆ_Props::isWhiteSpace(c)) {
         quoteBuf.append(c);
         // Double ' within a quote
-        if (c == APOSTROPHE) {
+        ಆದರೆ (c == APOSTROPHE) {
             quoteBuf.append(c);
         }
     }
     
     // Otherwise just append
-    else {
-        rule.append(c);
+    ಇಲ್ಲದಿದ್ದರೆ {
+        ನಿಯಮ.append(c);
     }
 }
 
-void ICU_Utility::appendToRule(UnicodeString& rule,
-                               const UnicodeString& text,
+ಶೂನ್ಯ ICU_Utility::append_ಗಮ್ಯ_ನಿಯಮ(UnicodeString& ನಿಯಮ,
+                               ಸ್ಥಿರಾಂಕ UnicodeString& ಪಠ್ಯ,
                                UBool isLiteral,
                                UBool escapeUnprintable,
                                UnicodeString& quoteBuf) {
-    for (int32_t i=0; i<text.length(); ++i) {
-        appendToRule(rule, text[i], isLiteral, escapeUnprintable, quoteBuf);
+    ಗಾಗಿ (int32_t i=0; i<ಪಠ್ಯ.length(); ++i) {
+        append_ಗಮ್ಯ_ನಿಯಮ(ನಿಯಮ, ಪಠ್ಯ[i], isLiteral, escapeUnprintable, quoteBuf);
     }
 }
 
@@ -421,15 +421,15 @@ void ICU_Utility::appendToRule(UnicodeString& rule,
  * Given a matcher reference, which may be null, append its
  * pattern as a literal to the given rule.
  */
-void ICU_Utility::appendToRule(UnicodeString& rule,
-                               const UnicodeMatcher* matcher,
+ಶೂನ್ಯ ICU_Utility::append_ಗಮ್ಯ_ನಿಯಮ(UnicodeString& ನಿಯಮ,
+                               ಸ್ಥಿರಾಂಕ UnicodeMatcher* matcher,
                                UBool escapeUnprintable,
                                UnicodeString& quoteBuf) {
-    if (matcher != nullptr) {
+    ಆದರೆ (matcher != ಶೂನ್ಯಸೂಚಕ) {
         UnicodeString pat;
-        appendToRule(rule, matcher->toPattern(pat, escapeUnprintable),
-                     true, escapeUnprintable, quoteBuf);
+        append_ಗಮ್ಯ_ನಿಯಮ(ನಿಯಮ, matcher->ಗಮ್ಯ_ನಮೂನೆ(pat, escapeUnprintable),
+                     ನಿಜ, escapeUnprintable, quoteBuf);
     }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ

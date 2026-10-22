@@ -6,12 +6,12 @@
  * others. All Rights Reserved.
  ********************************************************************/
 
-#ifndef RBBINODE_H
-#define RBBINODE_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ RBBINODE_H
+#ವ್ಯಾಖ್ಯಾನಿಸು RBBINODE_H
 
-#include "unicode/utypes.h"
-#include "unicode/unistr.h"
-#include "unicode/uobject.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unistr.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uobject.h"
 
 //
 //  class RBBINode
@@ -22,53 +22,53 @@
 
 U_NAMESPACE_BEGIN
 
-class    UnicodeSet;
+class    Unicode_ಗಣ;
 class    UVector;
 
-class RBBINode : public UMemory {
-    public:
-        enum NodeType {
-            setRef,
+class RBBINode : ಸಾರ್ವಜನಿಕ UMemory {
+    ಸಾರ್ವಜನಿಕ:
+        ಎಣಿಕೆ ಗಂಟು_Type {
+            ಗಣ_Ref,
             uset,
             varRef,
-            leafChar,
+            ಎಲೆ_Char,
             lookAhead,
-            tag,
-            endMark,
-            opStart,
+            ಟ್ಯಾಗ್,
+            ಕೊನೆ_Mark,
+            op_ಆರಂಭ,
             opCat,
             opOr,
-            opStar,
+            op_ನಕ್ಷತ್ರ,
             opPlus,
             opQuestion,
             opBreak,
-            opReverse,
+            op_ಹಿಮ್ಮುಖ,
             opLParen
         };
 
-        enum OpPrecedence {      
+        ಎಣಿಕೆ OpPrecedence {      
             precZero,
-            precStart,
+            prec_ಆರಂಭ,
             precLParen,
             precOpOr,
             precOpCat
         };
             
-        NodeType      fType;
-        RBBINode      *fParent;
-        RBBINode      *fLeftChild;
-        RBBINode      *fRightChild;
-        UnicodeSet    *fInputSet;           // For uset nodes only.
+        ಗಂಟು_Type      fType;
+        RBBINode      *f_ಪೋಷಕ;
+        RBBINode      *f_ಎಡ_ಮಗು;
+        RBBINode      *f_ಬಲ_ಮಗು;
+        Unicode_ಗಣ    *f_ಒಳಹರಿವು_ಗಣ;           // For uset nodes only.
         OpPrecedence  fPrecedence;          // For binary ops only.
         
-        UnicodeString fText;                // Text corresponding to this node.
+        UnicodeString f_ಪಠ್ಯ;                // Text corresponding to this node.
                                             //   May be lazily evaluated when (if) needed
                                             //   for some node types.
-        int           fFirstPos;            // Position in the rule source string of the
+        ಪೂರ್ಣಾಂಕ           f_ಮೊದಲ_Pos;            // Position in the rule source string of the
                                             //   first text associated with the node.
                                             //   If there's a left child, this will be the same
                                             //   as that child's left pos.
-        int           fLastPos;             //  Last position in the rule source string
+        ಪೂರ್ಣಾಂಕ           f_ಕೊನೆಯ_Pos;             //  Last position in the rule source string
                                             //    of any text associated with this node.
                                             //    If there's a right child, this will be the same
                                             //    as that child's last position.
@@ -79,50 +79,50 @@ class RBBINode : public UMemory {
                                             //   corresponds to columns in the final
                                             //   state transition table.
 
-        UBool         fLookAheadEnd;        // For endMark nodes, set true if
+        UBool         f_Look_Ahead_ಕೊನೆ;        // For endMark nodes, set true if
                                             //   marking the end of a look-ahead rule.
 
-        UBool         fRuleRoot;            // True if this node is the root of a rule.
-        UBool         fChainIn;             // True if chaining into this rule is allowed
+        UBool         f_ನಿಯಮ_ಬೇರು;            // True if this node is the root of a rule.
+        UBool         f_Chain_ಒಳ;             // True if chaining into this rule is allowed
                                             //     (no '^' present).
 
-        UVector       *fFirstPosSet;
-        UVector       *fLastPosSet;         // TODO: rename fFirstPos & fLastPos to avoid confusion.
+        UVector       *f_ಮೊದಲ_Pos_ಗಣ;
+        UVector       *f_ಕೊನೆಯ_Pos_ಗಣ;         // TODO: rename fFirstPos & fLastPos to avoid confusion.
         UVector       *fFollowPos;
 
 
-        RBBINode(NodeType t, UErrorCode& status);
-        RBBINode(const RBBINode &other, UErrorCode& status);
+        RBBINode(ಗಂಟು_Type t, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
+        RBBINode(ಸ್ಥಿರಾಂಕ RBBINode &other, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
         ~RBBINode();
-        static void  NRDeleteNode(RBBINode *node);
+        ಸ್ಥಿರ ಶೂನ್ಯ  NRDelete_ಗಂಟು(RBBINode *ಗಂಟು);
         
-        RBBINode    *cloneTree(UErrorCode &status, int depth=0);
-        RBBINode    *flattenVariables(UErrorCode &status, int depth=0);
-        void         flattenSets(UErrorCode &status, int depth=0);
-        void         findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &status);
+        RBBINode    *clone_ವೃಕ್ಷ(UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2, ಪೂರ್ಣಾಂಕ ಆಳ=0);
+        RBBINode    *flattenVariables(UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2, ಪೂರ್ಣಾಂಕ ಆಳ=0);
+        ಶೂನ್ಯ         flattenSets(UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2, ಪೂರ್ಣಾಂಕ ಆಳ=0);
+        ಶೂನ್ಯ         ಕಂಡುಹಿಡಿ_Nodes(UVector *dest, RBBINode::ಗಂಟು_Type ಬಗೆ, UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2);
 
-#ifdef RBBI_DEBUG
-        static void printNodeHeader();
-        static void printNode(const RBBINode *n);
-        static void printTree(const RBBINode *n, UBool withHeading);
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ RBBI_DEBUG
+        ಸ್ಥಿರ ಶೂನ್ಯ print_ಗಂಟು_ಶೀರ್ಷಿಕೆ();
+        ಸ್ಥಿರ ಶೂನ್ಯ print_ಗಂಟು(ಸ್ಥಿರಾಂಕ RBBINode *n);
+        ಸ್ಥಿರ ಶೂನ್ಯ print_ವೃಕ್ಷ(ಸ್ಥಿರಾಂಕ RBBINode *n, UBool withHeading);
+#ಆದರೆ_ಅಂತ್ಯ
 
-    private:
-        RBBINode &operator = (const RBBINode &other); // No defs.
-        bool operator == (const RBBINode &other);     // Private, so these functions won't accidentally be used.
+    ಖಾಸಗಿ:
+        RBBINode &ಕ್ರಿಯಾಕಾರಕ = (ಸ್ಥಿರಾಂಕ RBBINode &other); // No defs.
+        bool ಕ್ರಿಯಾಕಾರಕ == (ಸ್ಥಿರಾಂಕ RBBINode &other);     // Private, so these functions won't accidentally be used.
 
-#ifdef RBBI_DEBUG
-    public:
-        int           fSerialNum;           //  Debugging aids.
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ RBBI_DEBUG
+    ಸಾರ್ವಜನಿಕ:
+        ಪೂರ್ಣಾಂಕ           f_Serial_ಅಂಕೆ;           //  Debugging aids.
+#ಆದರೆ_ಅಂತ್ಯ
 };
 
-#ifdef RBBI_DEBUG
-U_CFUNC void 
-RBBI_DEBUG_printUnicodeString(const UnicodeString &s, int minWidth=0);
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ RBBI_DEBUG
+U_CFUNC ಶೂನ್ಯ 
+RBBI_DEBUG_printUnicodeString(ಸ್ಥಿರಾಂಕ UnicodeString &s, ಪೂರ್ಣಾಂಕ min_ಅಗಲ=0);
+#ಆದರೆ_ಅಂತ್ಯ
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 

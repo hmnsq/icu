@@ -11,25 +11,25 @@
 * created by: Markus W. Scherer & Maxime Serrano
 */
 
-#include "dictionarydata.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/bytestrie.h"
-#include "unicode/udata.h"
-#include "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "dictionarydata.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ucharstrie.h"
+#ಅನ್ತರ್ಭಾವ "unicode/bytestrie.h"
+#ಅನ್ತರ್ಭಾವ "unicode/udata.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ಆದರೆ !UCONFIG_NO_BREAK_ITERATION
 
 U_NAMESPACE_BEGIN
 
-const int32_t  DictionaryData::TRIE_TYPE_BYTES = 0;
-const int32_t  DictionaryData::TRIE_TYPE_UCHARS = 1;
-const int32_t  DictionaryData::TRIE_TYPE_MASK = 7;
-const int32_t  DictionaryData::TRIE_HAS_VALUES = 8;
+ಸ್ಥಿರಾಂಕ int32_t  Dictionary_ದತ್ತಾಂಶ::TRIE_TYPE_ಬೈಟುಗಳು = 0;
+ಸ್ಥಿರಾಂಕ int32_t  Dictionary_ದತ್ತಾಂಶ::TRIE_TYPE_UCHARS = 1;
+ಸ್ಥಿರಾಂಕ int32_t  Dictionary_ದತ್ತಾಂಶ::TRIE_TYPE_ಮುಖವಾಡ = 7;
+ಸ್ಥಿರಾಂಕ int32_t  Dictionary_ದತ್ತಾಂಶ::TRIE_HAS_ಮೌಲ್ಯಗಳು = 8;
 
-const int32_t  DictionaryData::TRANSFORM_NONE = 0;
-const int32_t  DictionaryData::TRANSFORM_TYPE_OFFSET = 0x1000000;
-const int32_t  DictionaryData::TRANSFORM_TYPE_MASK = 0x7f000000;
-const int32_t  DictionaryData::TRANSFORM_OFFSET_MASK = 0x1fffff;
+ಸ್ಥಿರಾಂಕ int32_t  Dictionary_ದತ್ತಾಂಶ::TRANSFORM_NONE = 0;
+ಸ್ಥಿರಾಂಕ int32_t  Dictionary_ದತ್ತಾಂಶ::TRANSFORM_TYPE_ಸ್ಥಾನಾಂತರ = 0x1000000;
+ಸ್ಥಿರಾಂಕ int32_t  Dictionary_ದತ್ತಾಂಶ::TRANSFORM_TYPE_ಮುಖವಾಡ = 0x7f000000;
+ಸ್ಥಿರಾಂಕ int32_t  Dictionary_ದತ್ತಾಂಶ::TRANSFORM_ಸ್ಥಾನಾಂತರ_ಮುಖವಾಡ = 0x1fffff;
     
 DictionaryMatcher::~DictionaryMatcher() {
 }
@@ -38,205 +38,205 @@ UCharsDictionaryMatcher::~UCharsDictionaryMatcher() {
     udata_close(file);
 }
 
-int32_t UCharsDictionaryMatcher::getType() const {
-    return DictionaryData::TRIE_TYPE_UCHARS;
+int32_t UCharsDictionaryMatcher::getType() ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ Dictionary_ದತ್ತಾಂಶ::TRIE_TYPE_UCHARS;
 }
 
-int32_t UCharsDictionaryMatcher::matches(UText *text, int32_t maxLength, int32_t limit,
-                            int32_t *lengths, int32_t *cpLengths, int32_t *values,
-                            int32_t *prefix) const {
+int32_t UCharsDictionaryMatcher::matches(UText *ಪಠ್ಯ, int32_t max_ಉದ್ದಳತೆ_2, int32_t ಎಲ್ಲೆ,
+                            int32_t *lengths, int32_t *cpLengths, int32_t *ಮೌಲ್ಯಗಳು,
+                            int32_t *ಪೂರ್ವಪ್ರತ್ಯಯ) ಸ್ಥಿರಾಂಕ {
 
     UCharsTrie uct(characters);
-    int32_t startingTextIndex = static_cast<int32_t>(utext_getNativeIndex(text));
-    int32_t wordCount = 0;
-    int32_t codePointsMatched = 0;
+    int32_t starting_ಪಠ್ಯ_ಸೂಚ್ಯಂಕ = static_cast<int32_t>(utext_get_Native_ಸೂಚ್ಯಂಕ(ಪಠ್ಯ));
+    int32_t ಶಬ್ದ_ಎಣಿಕೆ = 0;
+    int32_t ಸಂಕೇತ_Points_Matched = 0;
 
-    for (UChar32 c = utext_next32(text); c >= 0; c=utext_next32(text)) {
-        UStringTrieResult result = (codePointsMatched == 0) ? uct.first(c) : uct.next(c);
-        int32_t lengthMatched = static_cast<int32_t>(utext_getNativeIndex(text)) - startingTextIndex;
-        codePointsMatched += 1;
-        if (USTRINGTRIE_HAS_VALUE(result)) {
-            if (wordCount < limit) {
-                if (values != nullptr) {
-                    values[wordCount] = uct.getValue();
+    ಗಾಗಿ (UChar32 c = utext_next32(ಪಠ್ಯ); c >= 0; c=utext_next32(ಪಠ್ಯ)) {
+        UString_Trie_ಫಲಿತಾಂಶ ಫಲಿತಾಂಶ = (ಸಂಕೇತ_Points_Matched == 0) ? uct.first(c) : uct.next(c);
+        int32_t ಉದ್ದಳತೆ_Matched = static_cast<int32_t>(utext_get_Native_ಸೂಚ್ಯಂಕ(ಪಠ್ಯ)) - starting_ಪಠ್ಯ_ಸೂಚ್ಯಂಕ;
+        ಸಂಕೇತ_Points_Matched += 1;
+        ಆದರೆ (USTRINGTRIE_HAS_ಮೌಲ್ಯ(ಫಲಿತಾಂಶ)) {
+            ಆದರೆ (ಶಬ್ದ_ಎಣಿಕೆ < ಎಲ್ಲೆ) {
+                ಆದರೆ (ಮೌಲ್ಯಗಳು != ಶೂನ್ಯಸೂಚಕ) {
+                    ಮೌಲ್ಯಗಳು[ಶಬ್ದ_ಎಣಿಕೆ] = uct.get_ಮೌಲ್ಯ();
                 }
-                if (lengths != nullptr) {
-                    lengths[wordCount] = lengthMatched;
+                ಆದರೆ (lengths != ಶೂನ್ಯಸೂಚಕ) {
+                    lengths[ಶಬ್ದ_ಎಣಿಕೆ] = ಉದ್ದಳತೆ_Matched;
                 }
-                if (cpLengths != nullptr) {
-                    cpLengths[wordCount] = codePointsMatched;
+                ಆದರೆ (cpLengths != ಶೂನ್ಯಸೂಚಕ) {
+                    cpLengths[ಶಬ್ದ_ಎಣಿಕೆ] = ಸಂಕೇತ_Points_Matched;
                 }
-                ++wordCount;
+                ++ಶಬ್ದ_ಎಣಿಕೆ;
             }
-            if (result == USTRINGTRIE_FINAL_VALUE) {
-                break;
+            ಆದರೆ (ಫಲಿತಾಂಶ == USTRINGTRIE_FINAL_ಮೌಲ್ಯ) {
+                ನಿಲ್ಲಿಸು;
             }
         }
-        else if (result == USTRINGTRIE_NO_MATCH) {
-            break;
+        ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (ಫಲಿತಾಂಶ == USTRINGTRIE_NO_ಹೊಂದಿಕೆ) {
+            ನಿಲ್ಲಿಸು;
         }
-        if (lengthMatched >= maxLength) {
-            break;
+        ಆದರೆ (ಉದ್ದಳತೆ_Matched >= max_ಉದ್ದಳತೆ_2) {
+            ನಿಲ್ಲಿಸು;
         }
     }
 
-    if (prefix != nullptr) {
-        *prefix = codePointsMatched;
+    ಆದರೆ (ಪೂರ್ವಪ್ರತ್ಯಯ != ಶೂನ್ಯಸೂಚಕ) {
+        *ಪೂರ್ವಪ್ರತ್ಯಯ = ಸಂಕೇತ_Points_Matched;
     }
-    return wordCount;
+    ಹಿಂತಿರುಗಿ ಶಬ್ದ_ಎಣಿಕೆ;
 }
 
-BytesDictionaryMatcher::~BytesDictionaryMatcher() {
+ಬೈಟುಗಳು_Dictionary_Matcher::~ಬೈಟುಗಳು_Dictionary_Matcher() {
     udata_close(file);
 }
 
-UChar32 BytesDictionaryMatcher::transform(UChar32 c) const {
-    if ((transformConstant & DictionaryData::TRANSFORM_TYPE_MASK) == DictionaryData::TRANSFORM_TYPE_OFFSET) {
-        if (c == 0x200D) {
-            return 0xFF;
-        } else if (c == 0x200C) {
-            return 0xFE;
+UChar32 ಬೈಟುಗಳು_Dictionary_Matcher::transform(UChar32 c) ಸ್ಥಿರಾಂಕ {
+    ಆದರೆ ((transformConstant & Dictionary_ದತ್ತಾಂಶ::TRANSFORM_TYPE_ಮುಖವಾಡ) == Dictionary_ದತ್ತಾಂಶ::TRANSFORM_TYPE_ಸ್ಥಾನಾಂತರ) {
+        ಆದರೆ (c == 0x200D) {
+            ಹಿಂತಿರುಗಿ 0xFF;
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (c == 0x200C) {
+            ಹಿಂತಿರುಗಿ 0xFE;
         }
-        int32_t delta = c - (transformConstant & DictionaryData::TRANSFORM_OFFSET_MASK);
-        if (delta < 0 || 0xFD < delta) {
-            return U_SENTINEL;
+        int32_t delta = c - (transformConstant & Dictionary_ದತ್ತಾಂಶ::TRANSFORM_ಸ್ಥಾನಾಂತರ_ಮುಖವಾಡ);
+        ಆದರೆ (delta < 0 || 0xFD < delta) {
+            ಹಿಂತಿರುಗಿ U_SENTINEL;
         }
-        return static_cast<UChar32>(delta);
+        ಹಿಂತಿರುಗಿ static_cast<UChar32>(delta);
     }
-    return c;
+    ಹಿಂತಿರುಗಿ c;
 }
 
-int32_t BytesDictionaryMatcher::getType() const {
-    return DictionaryData::TRIE_TYPE_BYTES;
+int32_t ಬೈಟುಗಳು_Dictionary_Matcher::getType() ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ Dictionary_ದತ್ತಾಂಶ::TRIE_TYPE_ಬೈಟುಗಳು;
 }
 
-int32_t BytesDictionaryMatcher::matches(UText *text, int32_t maxLength, int32_t limit,
-                            int32_t *lengths, int32_t *cpLengths, int32_t *values,
-                            int32_t *prefix) const {
-    BytesTrie bt(characters);
-    int32_t startingTextIndex = static_cast<int32_t>(utext_getNativeIndex(text));
-    int32_t wordCount = 0;
-    int32_t codePointsMatched = 0;
+int32_t ಬೈಟುಗಳು_Dictionary_Matcher::matches(UText *ಪಠ್ಯ, int32_t max_ಉದ್ದಳತೆ_2, int32_t ಎಲ್ಲೆ,
+                            int32_t *lengths, int32_t *cpLengths, int32_t *ಮೌಲ್ಯಗಳು,
+                            int32_t *ಪೂರ್ವಪ್ರತ್ಯಯ) ಸ್ಥಿರಾಂಕ {
+    ಬೈಟುಗಳು_Trie bt(characters);
+    int32_t starting_ಪಠ್ಯ_ಸೂಚ್ಯಂಕ = static_cast<int32_t>(utext_get_Native_ಸೂಚ್ಯಂಕ(ಪಠ್ಯ));
+    int32_t ಶಬ್ದ_ಎಣಿಕೆ = 0;
+    int32_t ಸಂಕೇತ_Points_Matched = 0;
 
-    for (UChar32 c = utext_next32(text); c >= 0; c=utext_next32(text)) {
-        UStringTrieResult result = (codePointsMatched == 0) ? bt.first(transform(c)) : bt.next(transform(c));
-        int32_t lengthMatched = static_cast<int32_t>(utext_getNativeIndex(text)) - startingTextIndex;
-        codePointsMatched += 1;
-        if (USTRINGTRIE_HAS_VALUE(result)) {
-            if (wordCount < limit) {
-                if (values != nullptr) {
-                    values[wordCount] = bt.getValue();
+    ಗಾಗಿ (UChar32 c = utext_next32(ಪಠ್ಯ); c >= 0; c=utext_next32(ಪಠ್ಯ)) {
+        UString_Trie_ಫಲಿತಾಂಶ ಫಲಿತಾಂಶ = (ಸಂಕೇತ_Points_Matched == 0) ? bt.first(transform(c)) : bt.next(transform(c));
+        int32_t ಉದ್ದಳತೆ_Matched = static_cast<int32_t>(utext_get_Native_ಸೂಚ್ಯಂಕ(ಪಠ್ಯ)) - starting_ಪಠ್ಯ_ಸೂಚ್ಯಂಕ;
+        ಸಂಕೇತ_Points_Matched += 1;
+        ಆದರೆ (USTRINGTRIE_HAS_ಮೌಲ್ಯ(ಫಲಿತಾಂಶ)) {
+            ಆದರೆ (ಶಬ್ದ_ಎಣಿಕೆ < ಎಲ್ಲೆ) {
+                ಆದರೆ (ಮೌಲ್ಯಗಳು != ಶೂನ್ಯಸೂಚಕ) {
+                    ಮೌಲ್ಯಗಳು[ಶಬ್ದ_ಎಣಿಕೆ] = bt.get_ಮೌಲ್ಯ();
                 }
-                if (lengths != nullptr) {
-                    lengths[wordCount] = lengthMatched;
+                ಆದರೆ (lengths != ಶೂನ್ಯಸೂಚಕ) {
+                    lengths[ಶಬ್ದ_ಎಣಿಕೆ] = ಉದ್ದಳತೆ_Matched;
                 }
-                if (cpLengths != nullptr) {
-                    cpLengths[wordCount] = codePointsMatched;
+                ಆದರೆ (cpLengths != ಶೂನ್ಯಸೂಚಕ) {
+                    cpLengths[ಶಬ್ದ_ಎಣಿಕೆ] = ಸಂಕೇತ_Points_Matched;
                 }
-                ++wordCount;
+                ++ಶಬ್ದ_ಎಣಿಕೆ;
             }
-            if (result == USTRINGTRIE_FINAL_VALUE) {
-                break;
+            ಆದರೆ (ಫಲಿತಾಂಶ == USTRINGTRIE_FINAL_ಮೌಲ್ಯ) {
+                ನಿಲ್ಲಿಸು;
             }
         }
-        else if (result == USTRINGTRIE_NO_MATCH) {
-            break;
+        ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (ಫಲಿತಾಂಶ == USTRINGTRIE_NO_ಹೊಂದಿಕೆ) {
+            ನಿಲ್ಲಿಸು;
         }
-        if (lengthMatched >= maxLength) {
-            break;
+        ಆದರೆ (ಉದ್ದಳತೆ_Matched >= max_ಉದ್ದಳತೆ_2) {
+            ನಿಲ್ಲಿಸು;
         }
     }
 
-    if (prefix != nullptr) {
-        *prefix = codePointsMatched;
+    ಆದರೆ (ಪೂರ್ವಪ್ರತ್ಯಯ != ಶೂನ್ಯಸೂಚಕ) {
+        *ಪೂರ್ವಪ್ರತ್ಯಯ = ಸಂಕೇತ_Points_Matched;
     }
-    return wordCount;
+    ಹಿಂತಿರುಗಿ ಶಬ್ದ_ಎಣಿಕೆ;
 }
 
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
 U_NAMESPACE_USE
 
 U_CAPI int32_t U_EXPORT2
-udict_swap(const UDataSwapper *ds, const void *inData, int32_t length,
-           void *outData, UErrorCode *pErrorCode) {
-    const UDataInfo *pInfo;
-    int32_t headerSize;
-    const uint8_t *inBytes;
-    uint8_t *outBytes;
-    const int32_t *inIndexes;
-    int32_t indexes[DictionaryData::IX_COUNT];
-    int32_t i, offset, size;
+udict_ಅದಲುಬದಲು(ಸ್ಥಿರಾಂಕ UDataSwapper *ds, ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *ಒಳ_ದತ್ತಾಂಶ, int32_t length,
+           ಶೂನ್ಯ *ಹೊರಹೋಗು_ದತ್ತಾಂಶ, UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಸ್ಥಿರಾಂಕ UDataInfo *pInfo;
+    int32_t ಶೀರ್ಷಿಕೆ_ಗಾತ್ರ;
+    ಸ್ಥಿರಾಂಕ uint8_t *ಒಳ_ಬೈಟುಗಳು;
+    uint8_t *ಹೊರಹೋಗು_ಬೈಟುಗಳು;
+    ಸ್ಥಿರಾಂಕ int32_t *ಒಳ_Indexes;
+    int32_t indexes[Dictionary_ದತ್ತಾಂಶ::IX_ಎಣಿಕೆ];
+    int32_t i, ಸ್ಥಾನಾಂತರ, size;
 
-    headerSize = udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) return 0;
-    pInfo = (const UDataInfo *)((const char *)inData + 4);
-    if (!(pInfo->dataFormat[0] == 0x44 && 
-          pInfo->dataFormat[1] == 0x69 && 
-          pInfo->dataFormat[2] == 0x63 && 
-          pInfo->dataFormat[3] == 0x74 && 
-          pInfo->formatVersion[0] == 1)) {
+    ಶೀರ್ಷಿಕೆ_ಗಾತ್ರ = udata_ಅದಲುಬದಲು_ದತ್ತಾಂಶ_ಶೀರ್ಷಿಕೆ(ds, ಒಳ_ದತ್ತಾಂಶ, length, ಹೊರಹೋಗು_ದತ್ತಾಂಶ, p_Error_ಸಂಕೇತ);
+    ಆದರೆ (p_Error_ಸಂಕೇತ == ಶೂನ್ಯಸೂಚಕ || U_FAILURE(*p_Error_ಸಂಕೇತ)) ಹಿಂತಿರುಗಿ 0;
+    pInfo = (ಸ್ಥಿರಾಂಕ UDataInfo *)((ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *)ಒಳ_ದತ್ತಾಂಶ + 4);
+    ಆದರೆ (!(pInfo->ದತ್ತಾಂಶ_Format[0] == 0x44 && 
+          pInfo->ದತ್ತಾಂಶ_Format[1] == 0x69 && 
+          pInfo->ದತ್ತಾಂಶ_Format[2] == 0x63 && 
+          pInfo->ದತ್ತಾಂಶ_Format[3] == 0x74 && 
+          pInfo->format_ಆವೃತ್ತಿ[0] == 1)) {
         udata_printError(ds, "udict_swap(): data format %02x.%02x.%02x.%02x (format version %02x) is not recognized as dictionary data\n",
-                         pInfo->dataFormat[0], pInfo->dataFormat[1], pInfo->dataFormat[2], pInfo->dataFormat[3], pInfo->formatVersion[0]);
-        *pErrorCode = U_UNSUPPORTED_ERROR;
-        return 0;
+                         pInfo->ದತ್ತಾಂಶ_Format[0], pInfo->ದತ್ತಾಂಶ_Format[1], pInfo->ದತ್ತಾಂಶ_Format[2], pInfo->ದತ್ತಾಂಶ_Format[3], pInfo->format_ಆವೃತ್ತಿ[0]);
+        *p_Error_ಸಂಕೇತ = U_UNSUPPORTED_ERROR;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
-    inBytes = (const uint8_t *)inData + headerSize;
-    outBytes = (outData == nullptr) ? nullptr : (uint8_t *)outData + headerSize;
+    ಒಳ_ಬೈಟುಗಳು = (ಸ್ಥಿರಾಂಕ uint8_t *)ಒಳ_ದತ್ತಾಂಶ + ಶೀರ್ಷಿಕೆ_ಗಾತ್ರ;
+    ಹೊರಹೋಗು_ಬೈಟುಗಳು = (ಹೊರಹೋಗು_ದತ್ತಾಂಶ == ಶೂನ್ಯಸೂಚಕ) ? ಶೂನ್ಯಸೂಚಕ : (uint8_t *)ಹೊರಹೋಗು_ದತ್ತಾಂಶ + ಶೀರ್ಷಿಕೆ_ಗಾತ್ರ;
 
-    inIndexes = (const int32_t *)inBytes;
-    if (length >= 0) {
-        length -= headerSize;
-        if (length < (int32_t)(sizeof(indexes))) {
+    ಒಳ_Indexes = (ಸ್ಥಿರಾಂಕ int32_t *)ಒಳ_ಬೈಟುಗಳು;
+    ಆದರೆ (length >= 0) {
+        length -= ಶೀರ್ಷಿಕೆ_ಗಾತ್ರ;
+        ಆದರೆ (length < (int32_t)(ಗಾತ್ರ(indexes))) {
             udata_printError(ds, "udict_swap(): too few bytes (%d after header) for dictionary data\n", length);
-            *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            *p_Error_ಸಂಕೇತ = U_ಸೂಚ್ಯಂಕ_OUTOFBOUNDS_ERROR;
+            ಹಿಂತಿರುಗಿ 0;
         }
     }
 
-    for (i = 0; i < DictionaryData::IX_COUNT; i++) {
-        indexes[i] = udata_readInt32(ds, inIndexes[i]);
+    ಗಾಗಿ (i = 0; i < Dictionary_ದತ್ತಾಂಶ::IX_ಎಣಿಕೆ; i++) {
+        indexes[i] = udata_readInt32(ds, ಒಳ_Indexes[i]);
     }
 
-    size = indexes[DictionaryData::IX_TOTAL_SIZE];
+    size = indexes[Dictionary_ದತ್ತಾಂಶ::IX_ಒಟ್ಟು_ಗಾತ್ರ];
 
-    if (length >= 0) {
-        if (length < size) {
+    ಆದರೆ (length >= 0) {
+        ಆದರೆ (length < size) {
             udata_printError(ds, "udict_swap(): too few bytes (%d after header) for all of dictionary data\n", length);
-            *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            *p_Error_ಸಂಕೇತ = U_ಸೂಚ್ಯಂಕ_OUTOFBOUNDS_ERROR;
+            ಹಿಂತಿರುಗಿ 0;
         }
 
-        if (inBytes != outBytes) {
-            uprv_memcpy(outBytes, inBytes, size);
+        ಆದರೆ (ಒಳ_ಬೈಟುಗಳು != ಹೊರಹೋಗು_ಬೈಟುಗಳು) {
+            uprv_memcpy(ಹೊರಹೋಗು_ಬೈಟುಗಳು, ಒಳ_ಬೈಟುಗಳು, size);
         }
 
-        offset = 0;
-        ds->swapArray32(ds, inBytes, sizeof(indexes), outBytes, pErrorCode);
-        offset = (int32_t)sizeof(indexes);
-        int32_t trieType = indexes[DictionaryData::IX_TRIE_TYPE] & DictionaryData::TRIE_TYPE_MASK;
-        int32_t nextOffset = indexes[DictionaryData::IX_RESERVED1_OFFSET];
+        ಸ್ಥಾನಾಂತರ = 0;
+        ds->ಅದಲುಬದಲು_Array32(ds, ಒಳ_ಬೈಟುಗಳು, ಗಾತ್ರ(indexes), ಹೊರಹೋಗು_ಬೈಟುಗಳು, p_Error_ಸಂಕೇತ);
+        ಸ್ಥಾನಾಂತರ = (int32_t)ಗಾತ್ರ(indexes);
+        int32_t trieType = indexes[Dictionary_ದತ್ತಾಂಶ::IX_TRIE_TYPE] & Dictionary_ದತ್ತಾಂಶ::TRIE_TYPE_ಮುಖವಾಡ;
+        int32_t ಮುಂದಿನ_ಸ್ಥಾನಾಂತರ = indexes[Dictionary_ದತ್ತಾಂಶ::IX_RESERVED1_ಸ್ಥಾನಾಂತರ];
 
-        if (trieType == DictionaryData::TRIE_TYPE_UCHARS) {
-            ds->swapArray16(ds, inBytes + offset, nextOffset - offset, outBytes + offset, pErrorCode);
-        } else if (trieType == DictionaryData::TRIE_TYPE_BYTES) {
+        ಆದರೆ (trieType == Dictionary_ದತ್ತಾಂಶ::TRIE_TYPE_UCHARS) {
+            ds->ಅದಲುಬದಲು_Array16(ds, ಒಳ_ಬೈಟುಗಳು + ಸ್ಥಾನಾಂತರ, ಮುಂದಿನ_ಸ್ಥಾನಾಂತರ - ಸ್ಥಾನಾಂತರ, ಹೊರಹೋಗು_ಬೈಟುಗಳು + ಸ್ಥಾನಾಂತರ, p_Error_ಸಂಕೇತ);
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (trieType == Dictionary_ದತ್ತಾಂಶ::TRIE_TYPE_ಬೈಟುಗಳು) {
             // nothing to do
-        } else {
+        } ಇಲ್ಲದಿದ್ದರೆ {
             udata_printError(ds, "udict_swap(): unknown trie type!\n");
-            *pErrorCode = U_UNSUPPORTED_ERROR;
-            return 0;
+            *p_Error_ಸಂಕೇತ = U_UNSUPPORTED_ERROR;
+            ಹಿಂತಿರುಗಿ 0;
         }
 
         // these next two sections are empty in the current format,
         // but may be used later.
-        offset = nextOffset;
-        nextOffset = indexes[DictionaryData::IX_RESERVED2_OFFSET];
-        offset = nextOffset;
-        nextOffset = indexes[DictionaryData::IX_TOTAL_SIZE];
-        offset = nextOffset;
+        ಸ್ಥಾನಾಂತರ = ಮುಂದಿನ_ಸ್ಥಾನಾಂತರ;
+        ಮುಂದಿನ_ಸ್ಥಾನಾಂತರ = indexes[Dictionary_ದತ್ತಾಂಶ::IX_RESERVED2_ಸ್ಥಾನಾಂತರ];
+        ಸ್ಥಾನಾಂತರ = ಮುಂದಿನ_ಸ್ಥಾನಾಂತರ;
+        ಮುಂದಿನ_ಸ್ಥಾನಾಂತರ = indexes[Dictionary_ದತ್ತಾಂಶ::IX_ಒಟ್ಟು_ಗಾತ್ರ];
+        ಸ್ಥಾನಾಂತರ = ಮುಂದಿನ_ಸ್ಥಾನಾಂತರ;
     }
-    return headerSize + size;
+    ಹಿಂತಿರುಗಿ ಶೀರ್ಷಿಕೆ_ಗಾತ್ರ + size;
 }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

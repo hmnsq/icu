@@ -16,8 +16,8 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __ERRORCODE_H__
-#define __ERRORCODE_H__
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __ERRORCODE_H__
+#ವ್ಯಾಖ್ಯಾನಿಸು __ERRORCODE_H__
 
 /**
  * \file 
@@ -25,11 +25,11 @@
  *                 ICU C and C++ APIs from C++ user code.
  */
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ಆದರೆ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uobject.h"
 
 U_NAMESPACE_BEGIN
 
@@ -81,29 +81,29 @@ U_NAMESPACE_BEGIN
  *
  * @stable ICU 4.2
  */
-class U_COMMON_API ErrorCode: public UMemory {
-public:
+class U_COMMON_API Error_ಸಂಕೇತ: ಸಾರ್ವಜನಿಕ UMemory {
+ಸಾರ್ವಜನಿಕ:
     /**
      * Default constructor. Initializes its UErrorCode to U_ZERO_ERROR.
      * @stable ICU 4.2
      */
-    ErrorCode() : errorCode(U_ZERO_ERROR) {}
+    Error_ಸಂಕೇತ() : error_ಸಂಕೇತ(U_ZERO_ERROR) {}
     /** Destructor, does nothing. See class documentation for details. @stable ICU 4.2 */
-    virtual ~ErrorCode();
+    ವಾಸ್ತವಿಕ ~Error_ಸಂಕೇತ();
     /** Conversion operator, returns a reference. @stable ICU 4.2 */
-    operator UErrorCode&() U_LIFETIME_BOUND { return errorCode; }
+    ಕ್ರಿಯಾಕಾರಕ UError_ಸಂಕೇತ&() U_LIFETIME_BOUND { ಹಿಂತಿರುಗಿ error_ಸಂಕೇತ; }
     /** Conversion operator, returns a pointer. @stable ICU 4.2 */
-    operator UErrorCode*() U_LIFETIME_BOUND { return &errorCode; }
+    ಕ್ರಿಯಾಕಾರಕ UError_ಸಂಕೇತ*() U_LIFETIME_BOUND { ಹಿಂತಿರುಗಿ &error_ಸಂಕೇತ; }
     /** Tests for U_SUCCESS(). @stable ICU 4.2 */
-    UBool isSuccess() const { return U_SUCCESS(errorCode); }
+    UBool isSuccess() ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ U_SUCCESS(error_ಸಂಕೇತ); }
     /** Tests for U_FAILURE(). @stable ICU 4.2 */
-    UBool isFailure() const { return U_FAILURE(errorCode); }
+    UBool isFailure() ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ U_FAILURE(error_ಸಂಕೇತ); }
     /** Returns the UErrorCode value. @stable ICU 4.2 */
-    UErrorCode get() const { return errorCode; }
+    UError_ಸಂಕೇತ get() ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ error_ಸಂಕೇತ; }
     /** Sets the UErrorCode value. @stable ICU 4.2 */
-    void set(UErrorCode value) { errorCode=value; }
+    ಶೂನ್ಯ ಗಣ(UError_ಸಂಕೇತ ಮೌಲ್ಯ_2) { error_ಸಂಕೇತ=ಮೌಲ್ಯ_2; }
     /** Returns the UErrorCode value and resets it to U_ZERO_ERROR. @stable ICU 4.2 */
-    UErrorCode reset();
+    UError_ಸಂಕೇತ reset();
     /**
      * Asserts isSuccess().
      * In other words, this method checks for a failure code,
@@ -113,32 +113,32 @@ public:
      * \endcode
      * @stable ICU 4.4
      */
-    void assertSuccess() const;
+    ಶೂನ್ಯ assertSuccess() ಸ್ಥಿರಾಂಕ;
     /**
      * Return a string for the UErrorCode value.
      * The string will be the same as the name of the error code constant
      * in the UErrorCode enum.
      * @stable ICU 4.4
      */
-    const char* errorName() const;
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* errorName() ಸ್ಥಿರಾಂಕ;
 
-protected:
+ಸಂರಕ್ಷಿತ:
     /**
      * Internal UErrorCode, accessible to subclasses.
      * @stable ICU 4.2
      */
-    UErrorCode errorCode;
+    UError_ಸಂಕೇತ error_ಸಂಕೇತ;
     /**
      * Called by assertSuccess() if isFailure() is true.
      * A subclass should override this function to deal with a failure code:
      * Throw an exception, log an error, terminate the program, or similar.
      * @stable ICU 4.2
      */
-    virtual void handleFailure() const {}
+    ವಾಸ್ತವಿಕ ಶೂನ್ಯ handleFailure() ಸ್ಥಿರಾಂಕ {}
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ಆದರೆ_ಅಂತ್ಯ /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __ERRORCODE_H__
+#ಆದರೆ_ಅಂತ್ಯ  // __ERRORCODE_H__

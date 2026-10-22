@@ -13,38 +13,38 @@
 **********************************************************************
 */
 
-#ifndef RBBI_H
-#define RBBI_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ RBBI_H
+#ವ್ಯಾಖ್ಯಾನಿಸು RBBI_H
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ಆದರೆ U_SHOW_CPLUSPLUS_API
 
 /**
  * \file
  * \brief C++ API: Rule Based Break Iterator
  */
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ಆದರೆ !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/brkiter.h"
-#include "unicode/udata.h"
-#include "unicode/parseerr.h"
-#include "unicode/schriter.h"
+#ಅನ್ತರ್ಭಾವ "unicode/brkiter.h"
+#ಅನ್ತರ್ಭಾವ "unicode/udata.h"
+#ಅನ್ತರ್ಭಾವ "unicode/parseerr.h"
+#ಅನ್ತರ್ಭಾವ "unicode/schriter.h"
 
-struct UCPTrie;
+ರಚನೆ UCPTrie;
 
 U_NAMESPACE_BEGIN
 
 /** @internal */
 class  LanguageBreakEngine;
-struct RBBIDataHeader;
+ರಚನೆ RBBIData_ಶೀರ್ಷಿಕೆ;
 class  RBBIDataWrapper;
 class  UnhandledEngine;
 class  UStack;
 
 
-#ifndef U_HIDE_INTERNAL_API
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_ಆಂತರಿಕ_API
 /**
  * The ExternalBreakEngine class define an abstract interface for the host environment
  * to provide a low level facility to break text for unicode text in script that the text boundary
@@ -57,13 +57,13 @@ class  UStack;
  * event.
  * @internal ICU 74 technology preview
  */
-class ExternalBreakEngine : public UObject {
-  public:
+class ExternalBreakEngine : ಸಾರ್ವಜನಿಕ UObject {
+  ಸಾರ್ವಜನಿಕ:
     /**
      * destructor
      * @internal ICU 74 technology preview
      */
-    virtual ~ExternalBreakEngine() {}
+    ವಾಸ್ತವಿಕ ~ExternalBreakEngine() {}
 
     /**
      * <p>Indicate whether this engine handles a particular character when
@@ -74,7 +74,7 @@ class ExternalBreakEngine : public UObject {
      * @return true if this engine handles the particular character for that locale.
      * @internal ICU 74 technology preview
      */
-    virtual bool isFor(UChar32 c, const char* locale) const = 0;
+    ವಾಸ್ತವಿಕ bool isFor(UChar32 c, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* locale) ಸ್ಥಿರಾಂಕ = 0;
 
     /**
      * <p>Indicate whether this engine handles a particular character.This method is
@@ -84,7 +84,7 @@ class ExternalBreakEngine : public UObject {
      * @return true if this engine handles the particular character.
      * @internal ICU 74 technology preview
      */
-    virtual bool handles(UChar32 c) const = 0;
+    ವಾಸ್ತವಿಕ bool handles(UChar32 c) ಸ್ಥಿರಾಂಕ = 0;
 
     /**
      * <p>Divide up a range of text handled by this break engine.</p>
@@ -99,11 +99,11 @@ class ExternalBreakEngine : public UObject {
      * @return The number of breaks found
      * @internal ICU 74 technology preview
      */
-     virtual int32_t fillBreaks(UText* text,  int32_t start, int32_t end,
-                               int32_t* foundBreaks, int32_t foundBreaksCapacity,
-                               UErrorCode& status) const = 0;
+     ವಾಸ್ತವಿಕ int32_t fillBreaks(UText* ಪಠ್ಯ,  int32_t ಆರಂಭ, int32_t ಕೊನೆ,
+                               int32_t* ಸಿಕ್ಕಿತು_Breaks, int32_t ಸಿಕ್ಕಿತು_Breaks_ಸಾಮರ್ಥ್ಯ,
+                               UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ = 0;
 };
-#endif  /* U_HIDE_INTERNAL_API */
+#ಆದರೆ_ಅಂತ್ಯ  /* U_HIDE_INTERNAL_API */
 
 
 /**
@@ -117,30 +117,30 @@ class ExternalBreakEngine : public UObject {
  *
  * <p>This class is not intended to be subclassed.</p>
  */
-class U_COMMON_API RuleBasedBreakIterator /*final*/ : public BreakIterator {
+class U_COMMON_API ನಿಯಮ_Based_Break_Iterator /*final*/ : ಸಾರ್ವಜನಿಕ BreakIterator {
 
-private:
+ಖಾಸಗಿ:
     /**
      * The UText through which this BreakIterator accesses the text
      */
-    UText  fText = UTEXT_INITIALIZER;
+    UText  f_ಪಠ್ಯ = UTEXT_INITIALIZER;
 
-#ifndef U_HIDE_INTERNAL_API
-public:
-#endif /* U_HIDE_INTERNAL_API */
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_ಆಂತರಿಕ_API
+ಸಾರ್ವಜನಿಕ:
+#ಆದರೆ_ಅಂತ್ಯ /* U_HIDE_INTERNAL_API */
     /**
      * The rule data for this BreakIterator instance.
      * Not for general use; Public only for testing purposes.
      * @internal
      */
-    RBBIDataWrapper    *fData = nullptr;
+    RBBIDataWrapper    *f_ದತ್ತಾಂಶ = nullptr;
 
-private:
+ಖಾಸಗಿ:
     /**
       * The saved error code associated with this break iterator.
       * This is the value to be returned by copyErrorTo().
       */
-    UErrorCode      fErrorCode = U_ZERO_ERROR;
+    UError_ಸಂಕೇತ      f_Error_ಸಂಕೇತ = U_ZERO_ERROR;
 
     /**
       * The current  position of the iterator. Pinned, 0 < fPosition <= text.length.
@@ -151,7 +151,7 @@ private:
     /**
       * TODO:
       */
-    int32_t         fRuleStatusIndex = 0;
+    int32_t         f_ನಿಯಮ_ಸ್ಥಿತಿ_ಸೂಚ್ಯಂಕ = 0;
 
     /**
      *   Cache of previously determined boundary positions.
@@ -186,7 +186,7 @@ private:
      * Counter for the number of characters encountered with the "dictionary"
      *   flag set.
      */
-    uint32_t            fDictionaryCharCount = 0;
+    uint32_t            f_Dictionary_Char_ಎಣಿಕೆ = 0;
 
     /**
      *   A character iterator that refers to the same text as the UText, above.
@@ -205,7 +205,7 @@ private:
     /**
       * True when iteration has run off the end, and iterator functions should return UBRK_DONE.
       */
-    bool           fDone = false;
+    bool           f_ಮುಗಿದ = false;
 
     /**
      *  Array of look-ahead tentative results.
@@ -230,7 +230,7 @@ private:
      *             The break iterator adopts the memory, and will
      *             free it when done.
      */
-    RuleBasedBreakIterator(RBBIDataHeader* data, UErrorCode &status);
+    ನಿಯಮ_Based_Break_Iterator(RBBIData_ಶೀರ್ಷಿಕೆ* ದತ್ತಾಂಶ, UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2);
 
     /**
      * This constructor uses the udata interface to create a BreakIterator
@@ -244,26 +244,26 @@ private:
      * @see udata_open
      * @see #getBinaryRules
      */
-    RuleBasedBreakIterator(UDataMemory* image, UBool isPhraseBreaking, UErrorCode &status);
+    ನಿಯಮ_Based_Break_Iterator(UData_ಸ್ಮರಣೆ* image, UBool isPhraseBreaking, UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2);
 
-    friend class RBBIRuleBuilder;
-    friend class BreakIterator;
+    ಮಿತ್ರ class RBBIRuleBuilder;
+    ಮಿತ್ರ class BreakIterator;
 
     /**
      * Default constructor with an error code parameter.
      * Aside from error handling, otherwise identical to the default constructor.
      * Internally, handles common initialization for other constructors.
      */
-    RuleBasedBreakIterator(UErrorCode *status);
+    ನಿಯಮ_Based_Break_Iterator(UError_ಸಂಕೇತ *ಸ್ಥಿತಿ_2);
 
-public:
+ಸಾರ್ವಜನಿಕ:
 
     /** Default constructor.  Creates an empty shell of an iterator, with no
      *  rules or text to iterate over.   Object can subsequently be assigned to,
      *  but is otherwise unusable.
      *  @stable ICU 2.2
      */
-    RuleBasedBreakIterator();
+    ನಿಯಮ_Based_Break_Iterator();
 
     /**
      * Copy constructor.  Will produce a break iterator with the same behavior,
@@ -271,7 +271,7 @@ public:
      * @param that The RuleBasedBreakIterator passed to be copied
      * @stable ICU 2.0
      */
-    RuleBasedBreakIterator(const RuleBasedBreakIterator& that);
+    ನಿಯಮ_Based_Break_Iterator(ಸ್ಥಿರಾಂಕ ನಿಯಮ_Based_Break_Iterator& that);
 
     /**
      * Construct a RuleBasedBreakIterator from a set of rules supplied as a string.
@@ -281,9 +281,9 @@ public:
      * @param status Information on any errors encountered.
      * @stable ICU 2.2
      */
-    RuleBasedBreakIterator( const UnicodeString    &rules,
+    ನಿಯಮ_Based_Break_Iterator( ಸ್ಥಿರಾಂಕ UnicodeString    &ನಿಯಮಗಳು,
                              UParseError           &parseError,
-                             UErrorCode            &status);
+                             UError_ಸಂಕೇತ            &ಸ್ಥಿತಿ_2);
 
     /**
      * Construct a RuleBasedBreakIterator from a set of precompiled binary rules.
@@ -308,9 +308,9 @@ public:
      *   binary rules.
      * @stable ICU 4.8
      */
-    RuleBasedBreakIterator(const uint8_t *compiledRules,
-                           uint32_t       ruleLength,
-                           UErrorCode    &status);
+    ನಿಯಮ_Based_Break_Iterator(ಸ್ಥಿರಾಂಕ uint8_t *compiled_ನಿಯಮಗಳು,
+                           uint32_t       ನಿಯಮ_ಉದ್ದಳತೆ,
+                           UError_ಸಂಕೇತ    &ಸ್ಥಿತಿ_2);
 
     /**
      * This constructor uses the udata interface to create a BreakIterator
@@ -324,13 +324,13 @@ public:
      * @see #getBinaryRules
      * @stable ICU 2.8
      */
-    RuleBasedBreakIterator(UDataMemory* image, UErrorCode &status);
+    ನಿಯಮ_Based_Break_Iterator(UData_ಸ್ಮರಣೆ* image, UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2);
 
     /**
      * Destructor
      *  @stable ICU 2.0
      */
-    virtual ~RuleBasedBreakIterator();
+    ವಾಸ್ತವಿಕ ~ನಿಯಮ_Based_Break_Iterator();
 
     /**
      * Assignment operator.  Sets this iterator to have the same behavior,
@@ -339,7 +339,7 @@ public:
      * @return the newly created RuleBasedBreakIterator
      *  @stable ICU 2.0
      */
-    RuleBasedBreakIterator& operator=(const RuleBasedBreakIterator& that) U_LIFETIME_BOUND;
+    ನಿಯಮ_Based_Break_Iterator& ಕ್ರಿಯಾಕಾರಕ=(ಸ್ಥಿರಾಂಕ ನಿಯಮ_Based_Break_Iterator& that) U_LIFETIME_BOUND;
 
     /**
      * Equality operator.  Returns true if both BreakIterators are of the
@@ -349,7 +349,7 @@ public:
      * same class, have the same behavior, and iterate over the same text.
      *  @stable ICU 2.0
      */
-    virtual bool operator==(const BreakIterator& that) const override;
+    ವಾಸ್ತವಿಕ bool ಕ್ರಿಯಾಕಾರಕ==(ಸ್ಥಿರಾಂಕ BreakIterator& that) ಸ್ಥಿರಾಂಕ override;
 
     /**
      * Not-equal operator.  If operator== returns true, this returns false,
@@ -358,8 +358,8 @@ public:
      * @return true if both BreakIterators are not same.
      *  @stable ICU 2.0
      */
-    inline bool operator!=(const BreakIterator& that) const {
-        return !operator==(that);
+    ಸಾಲೊಳಗೆ bool ಕ್ರಿಯಾಕಾರಕ!=(ಸ್ಥಿರಾಂಕ BreakIterator& that) ಸ್ಥಿರಾಂಕ {
+        ಹಿಂತಿರುಗಿ !ಕ್ರಿಯಾಕಾರಕ==(that);
     }
 
     /**
@@ -372,21 +372,21 @@ public:
      * @return a newly-constructed RuleBasedBreakIterator
      * @stable ICU 2.0
      */
-    virtual RuleBasedBreakIterator* clone() const override;
+    ವಾಸ್ತವಿಕ ನಿಯಮ_Based_Break_Iterator* clone() ಸ್ಥಿರಾಂಕ override;
 
     /**
      * Compute a hash code for this BreakIterator
      * @return A hash code
      *  @stable ICU 2.0
      */
-    virtual int32_t hashCode() const;
+    ವಾಸ್ತವಿಕ int32_t hash_ಸಂಕೇತ() ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns the description used to create this iterator
      * @return the description used to create this iterator
      *  @stable ICU 2.0
      */
-    virtual const UnicodeString& getRules() const U_LIFETIME_BOUND;
+    ವಾಸ್ತವಿಕ ಸ್ಥಿರಾಂಕ UnicodeString& get_ನಿಯಮಗಳು() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND;
 
     //=======================================================================
     // BreakIterator overrides
@@ -416,7 +416,7 @@ public:
      * @return An iterator over the text being analyzed.
      * @stable ICU 2.0
      */
-    virtual CharacterIterator& getText() const U_LIFETIME_BOUND override;
+    ವಾಸ್ತವಿಕ CharacterIterator& get_ಪಠ್ಯ() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND override;
 
     /**
       *  Get a UText for the text being analyzed.
@@ -432,7 +432,7 @@ public:
       *           UText was provided, it will always be returned.
       * @stable ICU 3.4
       */
-    virtual UText* getUText(UText* fillIn U_LIFETIME_BOUND, UErrorCode& status) const override;
+    ವಾಸ್ತವಿಕ UText* getUText(UText* fill_ಒಳ U_LIFETIME_BOUND, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ override;
 
     /**
      * Set the iterator to analyze a new piece of text.  This function resets
@@ -441,7 +441,7 @@ public:
      * takes ownership of the character iterator.  The caller MUST NOT delete it!
      *  @stable ICU 2.0
      */
-    virtual void adoptText(CharacterIterator* newText) override;
+    ವಾಸ್ತವಿಕ ಶೂನ್ಯ adopt_ಪಠ್ಯ(CharacterIterator* new_ಪಠ್ಯ) override;
 
     /**
      * Set the iterator to analyze a new piece of text.  This function resets
@@ -454,7 +454,7 @@ public:
      * @param newText The text to analyze.
      *  @stable ICU 2.0
      */
-    virtual void setText(const UnicodeString& newText) override;
+    ವಾಸ್ತವಿಕ ಶೂನ್ಯ ಗಣ_ಪಠ್ಯ(ಸ್ಥಿರಾಂಕ UnicodeString& new_ಪಠ್ಯ) override;
 
     /**
      * Reset the break iterator to operate over the text represented by
@@ -469,21 +469,21 @@ public:
      * @param status  Receives any error codes.
      * @stable ICU 3.4
      */
-    virtual void  setText(UText *text, UErrorCode &status) override;
+    ವಾಸ್ತವಿಕ ಶೂನ್ಯ  ಗಣ_ಪಠ್ಯ(UText *ಪಠ್ಯ, UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2) override;
 
     /**
      * Sets the current iteration position to the beginning of the text, position zero.
      * @return The offset of the beginning of the text, zero.
      *  @stable ICU 2.0
      */
-    virtual int32_t first() override;
+    ವಾಸ್ತವಿಕ int32_t ಮೊದಲ() override;
 
     /**
      * Sets the current iteration position to the end of the text.
      * @return The text's past-the-end offset.
      *  @stable ICU 2.0
      */
-    virtual int32_t last() override;
+    ವಾಸ್ತವಿಕ int32_t ಕೊನೆಯ() override;
 
     /**
      * Advances the iterator either forward or backward the specified number of steps.
@@ -495,21 +495,21 @@ public:
      * the current one.
      *  @stable ICU 2.0
      */
-    virtual int32_t next(int32_t n) override;
+    ವಾಸ್ತವಿಕ int32_t ಮುಂದಿನ(int32_t n) override;
 
     /**
      * Advances the iterator to the next boundary position.
      * @return The position of the first boundary after this one.
      *  @stable ICU 2.0
      */
-    virtual int32_t next() override;
+    ವಾಸ್ತವಿಕ int32_t ಮುಂದಿನ() override;
 
     /**
      * Moves the iterator backwards, to the last boundary preceding this one.
      * @return The position of the last boundary position preceding this one.
      *  @stable ICU 2.0
      */
-    virtual int32_t previous() override;
+    ವಾಸ್ತವಿಕ int32_t ಹಿಂದಿನ() override;
 
     /**
      * Sets the iterator to refer to the first boundary position following
@@ -518,7 +518,7 @@ public:
      * @return The position of the first break after the current position.
      *  @stable ICU 2.0
      */
-    virtual int32_t following(int32_t offset) override;
+    ವಾಸ್ತವಿಕ int32_t following(int32_t ಸ್ಥಾನಾಂತರ) override;
 
     /**
      * Sets the iterator to refer to the last boundary position before the
@@ -527,7 +527,7 @@ public:
      * @return The position of the last boundary before the starting position.
      *  @stable ICU 2.0
      */
-    virtual int32_t preceding(int32_t offset) override;
+    ವಾಸ್ತವಿಕ int32_t preceding(int32_t ಸ್ಥಾನಾಂತರ) override;
 
     /**
      * Returns true if the specified position is a boundary position.  As a side
@@ -537,7 +537,7 @@ public:
      * @return True if "offset" is a boundary position.
      *  @stable ICU 2.0
      */
-    virtual UBool isBoundary(int32_t offset) override;
+    ವಾಸ್ತವಿಕ UBool isBoundary(int32_t ಸ್ಥಾನಾಂತರ) override;
 
     /**
      * Returns the current iteration position. Note that UBRK_DONE is never
@@ -547,7 +547,7 @@ public:
      * @return The current iteration position.
      * @stable ICU 2.0
      */
-    virtual int32_t current() const override;
+    ವಾಸ್ತವಿಕ int32_t current() ಸ್ಥಿರಾಂಕ override;
 
     /**
      * Return the status tag from the break rule that determined the boundary at
@@ -580,7 +580,7 @@ public:
      * @see UWordBreak
      * @stable ICU 2.2
      */
-    virtual int32_t getRuleStatus() const override;
+    ವಾಸ್ತವಿಕ int32_t get_ನಿಯಮ_ಸ್ಥಿತಿ() ಸ್ಥಿರಾಂಕ override;
 
    /**
     * Get the status (tag) values from the break rule(s) that determined the boundary
@@ -605,7 +605,7 @@ public:
     * @see getRuleStatus
     * @stable ICU 3.0
     */
-    virtual int32_t getRuleStatusVec(int32_t *fillInVec, int32_t capacity, UErrorCode &status) override;
+    ವಾಸ್ತವಿಕ int32_t get_ನಿಯಮ_ಸ್ಥಿತಿ_Vec(int32_t *fill_ಒಳ_Vec, int32_t ಸಾಮರ್ಥ್ಯ, UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2) override;
 
     /**
      * Returns a unique class ID POLYMORPHICALLY.  Pure virtual override.
@@ -618,7 +618,7 @@ public:
      *                  other classes have different class IDs.
      * @stable ICU 2.0
      */
-    virtual UClassID getDynamicClassID() const override;
+    ವಾಸ್ತವಿಕ UClassID getDynamicClassID() ಸ್ಥಿರಾಂಕ override;
 
     /**
      * Returns the class ID for this class.  This is useful only for
@@ -631,9 +631,9 @@ public:
      * @return          The class ID for all objects of this class.
      * @stable ICU 2.0
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    ಸ್ಥಿರ UClassID U_EXPORT2 getStaticClassID();
 
-#ifndef U_FORCE_HIDE_DEPRECATED_API
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_FORCE_HIDE_DEPRECATED_API
     /**
      * Deprecated functionality. Use clone() instead.
      *
@@ -660,10 +660,10 @@ public:
      *          or if the stackBuffer was too small to hold the clone.
      * @deprecated ICU 52. Use clone() instead.
      */
-    virtual RuleBasedBreakIterator *createBufferClone(void *stackBuffer,
-                                                      int32_t &BufferSize,
-                                                      UErrorCode &status) override;
-#endif  // U_FORCE_HIDE_DEPRECATED_API
+    ವಾಸ್ತವಿಕ ನಿಯಮ_Based_Break_Iterator *create_ಬಫರ್_Clone(ಶೂನ್ಯ *ರಾಶಿ_ಬಫರ್,
+                                                      int32_t &ಬಫರ್_ಗಾತ್ರ_2,
+                                                      UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2) override;
+#ಆದರೆ_ಅಂತ್ಯ  // U_FORCE_HIDE_DEPRECATED_API
 
     /**
      * Return the binary form of compiled break rules,
@@ -682,7 +682,7 @@ public:
      *           caller, and must not be modified or deleted.
      * @stable ICU 4.8
      */
-    virtual const uint8_t* getBinaryRules(uint32_t& length) U_LIFETIME_BOUND;
+    ವಾಸ್ತವಿಕ ಸ್ಥಿರಾಂಕ uint8_t* get_ದ್ವಿಮಾನ_ನಿಯಮಗಳು(uint32_t& ಉದ್ದಳತೆ) U_LIFETIME_BOUND;
 
     /**
      *  Set the subject text string upon which the break iterator is operating
@@ -709,18 +709,18 @@ public:
      *
      * @stable ICU 49
      */
-    virtual RuleBasedBreakIterator& refreshInputText(UText* input,
-                                                     UErrorCode& status) U_LIFETIME_BOUND override;
+    ವಾಸ್ತವಿಕ ನಿಯಮ_Based_Break_Iterator& refresh_ಒಳಹರಿವು_ಪಠ್ಯ(UText* ಒಳಹರಿವು,
+                                                     UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) U_LIFETIME_BOUND override;
 
 
-private:
+ಖಾಸಗಿ:
     //=======================================================================
     // implementation
     //=======================================================================
 
-#ifndef U_HIDE_INTERNAL_API
-public:
-#endif /* U_HIDE_INTERNAL_API */
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_ಆಂತರಿಕ_API
+ಸಾರ್ವಜನಿಕ:
+#ಆದರೆ_ಅಂತ್ಯ /* U_HIDE_INTERNAL_API */
     /**
      * Iterate backwards from an arbitrary position in the input text using the
      * synthesized Safe Reverse rules.
@@ -732,9 +732,9 @@ public:
      * @param fromPosition the position in the input text to begin the iteration.
      * @internal
      */
-    int32_t handleSafePrevious(int32_t fromPosition);
+    int32_t handle_ಸುರಕ್ಷಿತ_ಹಿಂದಿನ(int32_t fromPosition);
 
-private:
+ಖಾಸಗಿ:
     /**
      * Find a rule-based boundary by running the state machine.
      * Input
@@ -745,7 +745,7 @@ private:
      *                         If > 0, the segment will be further subdivided
      *    fRuleStatusIndex     Info from the state table indicating which rules caused the boundary.
      */
-    int32_t handleNext();
+    int32_t handle_ಮುಂದಿನ();
 
     /*
      * Templatized version of handleNext() and handleSafePrevious().
@@ -761,13 +761,13 @@ private:
      * signature)
      */
 
-    typedef uint16_t (*PTrieFunc)(const UCPTrie *, UChar32);
+    ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ uint16_t (*PTrieFunc)(ಸ್ಥಿರಾಂಕ UCPTrie *, UChar32);
 
-    template<typename RowType, PTrieFunc trieFunc>
-    int32_t handleSafePrevious(int32_t fromPosition);
+    ಮಾದರಿ<typename ಅಡ್ಡಸಾಲು_Type, PTrieFunc trieFunc>
+    int32_t handle_ಸುರಕ್ಷಿತ_ಹಿಂದಿನ(int32_t fromPosition);
 
-    template<typename RowType, PTrieFunc trieFunc>
-    int32_t handleNext();
+    ಮಾದರಿ<typename ಅಡ್ಡಸಾಲು_Type, PTrieFunc trieFunc>
+    int32_t handle_ಮುಂದಿನ();
 
 
     /**
@@ -776,25 +776,25 @@ private:
      * @param c         A character in the dictionary set
      * @param locale    The locale.
      */
-    const LanguageBreakEngine* getLanguageBreakEngine(UChar32 c,
-                                                      const char* locale) U_LIFETIME_BOUND;
+    ಸ್ಥಿರಾಂಕ LanguageBreakEngine* getLanguageBreakEngine(UChar32 c,
+                                                      ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* locale) U_LIFETIME_BOUND;
 
-  public:
-#ifndef U_HIDE_INTERNAL_API
+  ಸಾರ್ವಜನಿಕ:
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_ಆಂತರಿಕ_API
     /**
      *   Debugging function only.
      *   @internal
      */
-     void dumpCache();
+     ಶೂನ್ಯ dumpCache();
 
     /**
      * Debugging function only.
      * @internal
      */
-    void dumpTables();
-#endif  /* U_HIDE_INTERNAL_API */
+    ಶೂನ್ಯ dumpTables();
+#ಆದರೆ_ಅಂತ್ಯ  /* U_HIDE_INTERNAL_API */
 
-#ifndef U_HIDE_INTERNAL_API
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_ಆಂತರಿಕ_API
     /**
      * Register a new external break engine. The external break engine will be adopted.
      * Because ICU may choose to cache break engine internally, this must
@@ -804,17 +804,17 @@ private:
      * @param status the in/out status code, no special meanings are assigned
      * @internal ICU 74 technology preview
      */
-    static void U_EXPORT2 registerExternalBreakEngine(
-                  ExternalBreakEngine* toAdopt, UErrorCode& status);
-#endif  /* U_HIDE_INTERNAL_API */
+    ಸ್ಥಿರ ಶೂನ್ಯ U_EXPORT2 ರಿಜಿಸ್ಟರ್_External_Break_Engine(
+                  ExternalBreakEngine* ಗಮ್ಯ_Adopt, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
+#ಆದರೆ_ಅಂತ್ಯ  /* U_HIDE_INTERNAL_API */
 
 };
 
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#ಆದರೆ_ಅಂತ್ಯ /* #if !UCONFIG_NO_BREAK_ITERATION */
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ಆದರೆ_ಅಂತ್ಯ /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

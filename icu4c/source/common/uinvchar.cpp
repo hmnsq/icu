@@ -19,13 +19,13 @@
 *   for better modularization.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/ustring.h"
-#include "udataswp.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "uassert.h"
-#include "uinvchar.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ustring.h"
+#ಅನ್ತರ್ಭಾವ "udataswp.h"
+#ಅನ್ತರ್ಭಾವ "cstring.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "uassert.h"
+#ಅನ್ತರ್ಭಾವ "uinvchar.h"
 
 /* invariant-character handling --------------------------------------------- */
 
@@ -62,7 +62,7 @@
  * These tables do not establish a converter or a codepage.
  */
 
-static const uint8_t asciiFromEbcdic[256]={
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint8_t asciiFromEbcdic[256]={
     0x00, 0x01, 0x02, 0x03, 0x00, 0x09, 0x00, 0x7f, 0x00, 0x00, 0x00, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
     0x10, 0x11, 0x12, 0x13, 0x00, 0x0a, 0x08, 0x00, 0x18, 0x19, 0x00, 0x00, 0x1c, 0x1d, 0x1e, 0x1f,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x0a, 0x17, 0x1b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x06, 0x07,
@@ -84,7 +84,7 @@ static const uint8_t asciiFromEbcdic[256]={
     0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-static const uint8_t ebcdicFromAscii[256]={
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint8_t ebcdicFromAscii[256]={
     0x00, 0x01, 0x02, 0x03, 0x37, 0x2d, 0x2e, 0x2f, 0x16, 0x05, 0x00, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
     0x10, 0x11, 0x12, 0x13, 0x3c, 0x3d, 0x32, 0x26, 0x18, 0x19, 0x3f, 0x27, 0x1c, 0x1d, 0x1e, 0x1f,
     0x40, 0x00, 0x7f, 0x00, 0x00, 0x6c, 0x50, 0x7d, 0x4d, 0x5d, 0x5c, 0x4e, 0x6b, 0x60, 0x4b, 0x61,
@@ -107,7 +107,7 @@ static const uint8_t ebcdicFromAscii[256]={
 };
 
 /* Same as asciiFromEbcdic[] except maps all letters to lowercase. */
-static const uint8_t lowercaseAsciiFromEbcdic[256]={
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint8_t lowercaseAsciiFromEbcdic[256]={
     0x00, 0x01, 0x02, 0x03, 0x00, 0x09, 0x00, 0x7f, 0x00, 0x00, 0x00, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
     0x10, 0x11, 0x12, 0x13, 0x00, 0x0a, 0x08, 0x00, 0x18, 0x19, 0x00, 0x00, 0x1c, 0x1d, 0x1e, 0x1f,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x0a, 0x17, 0x1b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x06, 0x07,
@@ -154,7 +154,7 @@ static const uint8_t lowercaseAsciiFromEbcdic[256]={
  * 7d  '}' <right brace>
  * 7e  '~' <tilde>
  */
-static const uint32_t invariantChars[4]={
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint32_t invariantChars[4]={
     0xfffffbff, /* 00..1f but not 0a */
     0xffffffe5, /* 20..3f but not 21 23 24 */
     0x87fffffe, /* 40..5f but not 40 5b..5e */
@@ -165,24 +165,24 @@ static const uint32_t invariantChars[4]={
  * test unsigned types (or values known to be non-negative) for invariant characters,
  * tests ASCII-family character values
  */
-#define UCHAR_IS_INVARIANT(c) (((c)<=0x7f) && (invariantChars[(c)>>5]&((uint32_t)1<<((c)&0x1f)))!=0)
+#ವ್ಯಾಖ್ಯಾನಿಸು UCHAR_IS_INVARIANT(c) (((c)<=0x7f) && (invariantChars[(c)>>5]&((uint32_t)1<<((c)&0x1f)))!=0)
 
 /* test signed types for invariant characters, adds test for positive values */
-#define SCHAR_IS_INVARIANT(c) ((0<=(c)) && UCHAR_IS_INVARIANT(c))
+#ವ್ಯಾಖ್ಯಾನಿಸು SCHAR_IS_INVARIANT(c) ((0<=(c)) && UCHAR_IS_INVARIANT(c))
 
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
-#define CHAR_TO_UCHAR(c) c
-#define UCHAR_TO_CHAR(c) c
-#elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
-#define CHAR_TO_UCHAR(u) asciiFromEbcdic[u]
-#define UCHAR_TO_CHAR(u) ebcdicFromAscii[u]
-#else
+#ಆದರೆ U_CHARSET_FAMILY==U_ASCII_FAMILY
+#ವ್ಯಾಖ್ಯಾನಿಸು CHAR_ಗಮ್ಯ_UCHAR(c) c
+#ವ್ಯಾಖ್ಯಾನಿಸು UCHAR_ಗಮ್ಯ_CHAR(c) c
+#ಅಥವಾಆದರೆ U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+#ವ್ಯಾಖ್ಯಾನಿಸು CHAR_ಗಮ್ಯ_UCHAR(u) asciiFromEbcdic[u]
+#ವ್ಯಾಖ್ಯಾನಿಸು UCHAR_ಗಮ್ಯ_CHAR(u) ebcdicFromAscii[u]
+#ಇಲ್ಲದಿದ್ದರೆ
 #   error U_CHARSET_FAMILY is not valid
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 
-U_CAPI void U_EXPORT2
-u_charsToUChars(const char *cs, char16_t *us, int32_t length) {
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+u_chars_ಗಮ್ಯ_UChars(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *cs, char16_t *us, int32_t length) {
     char16_t u;
     uint8_t c;
 
@@ -191,50 +191,50 @@ u_charsToUChars(const char *cs, char16_t *us, int32_t length) {
      * For EBCDIC systems, this works for characters with codes from
      * codepages 37 and 1047 or compatible.
      */
-    while(length>0) {
+    ಆಗ(length>0) {
         c=(uint8_t)(*cs++);
-        u=(char16_t)CHAR_TO_UCHAR(c);
+        u=(char16_t)CHAR_ಗಮ್ಯ_UCHAR(c);
         U_ASSERT((u!=0 || c==0)); /* only invariant chars converted? */
         *us++=u;
         --length;
     }
 }
 
-U_CAPI void U_EXPORT2
-u_UCharsToChars(const char16_t *us, char *cs, int32_t length) {
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+u_UChars_ಗಮ್ಯ_Chars(ಸ್ಥಿರಾಂಕ char16_t *us, ಅಕ್ಷರ *cs, int32_t length) {
     char16_t u;
 
-    while(length>0) {
+    ಆಗ(length>0) {
         u=*us++;
-        if(!UCHAR_IS_INVARIANT(u)) {
-            U_ASSERT(false); /* Variant characters were used. These are not portable in ICU. */
+        ಆದರೆ(!UCHAR_IS_INVARIANT(u)) {
+            U_ASSERT(ಸುಳ್ಳು); /* Variant characters were used. These are not portable in ICU. */
             u=0;
         }
-        *cs++=(char)UCHAR_TO_CHAR(u);
+        *cs++=(ಅಕ್ಷರ)UCHAR_ಗಮ್ಯ_CHAR(u);
         --length;
     }
 }
 
 U_CAPI UBool U_EXPORT2
-uprv_isInvariantString(const char *s, int32_t length) {
+uprv_isInvariantString(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *s, int32_t length) {
     uint8_t c;
 
-    for(;;) {
-        if(length<0) {
+    ಗಾಗಿ(;;) {
+        ಆದರೆ(length<0) {
             /* NUL-terminated */
             c=(uint8_t)*s++;
-            if(c==0) {
-                break;
+            ಆದರೆ(c==0) {
+                ನಿಲ್ಲಿಸು;
             }
-        } else {
+        } ಇಲ್ಲದಿದ್ದರೆ {
             /* count length */
-            if(length==0) {
-                break;
+            ಆದರೆ(length==0) {
+                ನಿಲ್ಲಿಸು;
             }
             --length;
             c=(uint8_t)*s++;
-            if(c==0) {
-                continue; /* NUL is invariant */
+            ಆದರೆ(c==0) {
+                ಮುಂದುವರಿ; /* NUL is invariant */
             }
         }
         /* c!=0 now, one branch below checks c==0 for variant characters */
@@ -243,37 +243,37 @@ uprv_isInvariantString(const char *s, int32_t length) {
          * no assertions here because these functions are legitimately called
          * for strings with variant characters
          */
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
-        if(!UCHAR_IS_INVARIANT(c)) {
-            return false; /* found a variant char */
+#ಆದರೆ U_CHARSET_FAMILY==U_ASCII_FAMILY
+        ಆದರೆ(!UCHAR_IS_INVARIANT(c)) {
+            ಹಿಂತಿರುಗಿ ಸುಳ್ಳು; /* found a variant char */
         }
-#elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
-        c=CHAR_TO_UCHAR(c);
-        if(c==0 || !UCHAR_IS_INVARIANT(c)) {
-            return false; /* found a variant char */
+#ಅಥವಾಆದರೆ U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+        c=CHAR_ಗಮ್ಯ_UCHAR(c);
+        ಆದರೆ(c==0 || !UCHAR_IS_INVARIANT(c)) {
+            ಹಿಂತಿರುಗಿ ಸುಳ್ಳು; /* found a variant char */
         }
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
 #   error U_CHARSET_FAMILY is not valid
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
     }
-    return true;
+    ಹಿಂತಿರುಗಿ ನಿಜ;
 }
 
 U_CAPI UBool U_EXPORT2
-uprv_isInvariantUString(const char16_t *s, int32_t length) {
+uprv_isInvariantUString(ಸ್ಥಿರಾಂಕ char16_t *s, int32_t length) {
     char16_t c;
 
-    for(;;) {
-        if(length<0) {
+    ಗಾಗಿ(;;) {
+        ಆದರೆ(length<0) {
             /* NUL-terminated */
             c=*s++;
-            if(c==0) {
-                break;
+            ಆದರೆ(c==0) {
+                ನಿಲ್ಲಿಸು;
             }
-        } else {
+        } ಇಲ್ಲದಿದ್ದರೆ {
             /* count length */
-            if(length==0) {
-                break;
+            ಆದರೆ(length==0) {
+                ನಿಲ್ಲಿಸು;
             }
             --length;
             c=*s++;
@@ -283,345 +283,345 @@ uprv_isInvariantUString(const char16_t *s, int32_t length) {
          * no assertions here because these functions are legitimately called
          * for strings with variant characters
          */
-        if(!UCHAR_IS_INVARIANT(c)) {
-            return false; /* found a variant char */
+        ಆದರೆ(!UCHAR_IS_INVARIANT(c)) {
+            ಹಿಂತಿರುಗಿ ಸುಳ್ಳು; /* found a variant char */
         }
     }
-    return true;
+    ಹಿಂತಿರುಗಿ ನಿಜ;
 }
 
 /* UDataSwapFn implementations used in udataswp.c ------- */
 
 /* convert ASCII to EBCDIC and verify that all characters are invariant */
 U_CAPI int32_t U_EXPORT2
-uprv_ebcdicFromAscii(const UDataSwapper *ds,
-                     const void *inData, int32_t length, void *outData,
-                     UErrorCode *pErrorCode) {
-    const uint8_t *s;
+uprv_ebcdicFromAscii(ಸ್ಥಿರಾಂಕ UDataSwapper *ds,
+                     ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *ಒಳ_ದತ್ತಾಂಶ, int32_t length, ಶೂನ್ಯ *ಹೊರಹೋಗು_ದತ್ತಾಂಶ,
+                     UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಸ್ಥಿರಾಂಕ uint8_t *s;
     uint8_t *t;
     uint8_t c;
 
     int32_t count;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ಆದರೆ(p_Error_ಸಂಕೇತ==ಶೂನ್ಯಸೂಚಕ || U_FAILURE(*p_Error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length>0 && outData==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ಆದರೆ(ds==ಶೂನ್ಯಸೂಚಕ || ಒಳ_ದತ್ತಾಂಶ==ಶೂನ್ಯಸೂಚಕ || length<0 || (length>0 && ಹೊರಹೋಗು_ದತ್ತಾಂಶ==ಶೂನ್ಯಸೂಚಕ)) {
+        *p_Error_ಸಂಕೇತ=U_ILLEGAL_ವಾದ_ERROR;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
     /* setup and swapping */
-    s=(const uint8_t *)inData;
-    t=(uint8_t *)outData;
+    s=(ಸ್ಥಿರಾಂಕ uint8_t *)ಒಳ_ದತ್ತಾಂಶ;
+    t=(uint8_t *)ಹೊರಹೋಗು_ದತ್ತಾಂಶ;
     count=length;
-    while(count>0) {
+    ಆಗ(count>0) {
         c=*s++;
-        if(!UCHAR_IS_INVARIANT(c)) {
+        ಆದರೆ(!UCHAR_IS_INVARIANT(c)) {
             udata_printError(ds, "uprv_ebcdicFromAscii() string[%d] contains a variant character in position %d\n",
                              length, length-count);
-            *pErrorCode=U_INVALID_CHAR_FOUND;
-            return 0;
+            *p_Error_ಸಂಕೇತ=U_INVALID_CHAR_ಸಿಕ್ಕಿತು;
+            ಹಿಂತಿರುಗಿ 0;
         }
         *t++=ebcdicFromAscii[c];
         --count;
     }
 
-    return length;
+    ಹಿಂತಿರುಗಿ length;
 }
 
 /* this function only checks and copies ASCII strings without conversion */
 U_CFUNC int32_t
-uprv_copyAscii(const UDataSwapper *ds,
-               const void *inData, int32_t length, void *outData,
-               UErrorCode *pErrorCode) {
-    const uint8_t *s;
+uprv_copyAscii(ಸ್ಥಿರಾಂಕ UDataSwapper *ds,
+               ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *ಒಳ_ದತ್ತಾಂಶ, int32_t length, ಶೂನ್ಯ *ಹೊರಹೋಗು_ದತ್ತಾಂಶ,
+               UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಸ್ಥಿರಾಂಕ uint8_t *s;
     uint8_t c;
 
     int32_t count;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ಆದರೆ(p_Error_ಸಂಕೇತ==ಶೂನ್ಯಸೂಚಕ || U_FAILURE(*p_Error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length>0 && outData==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ಆದರೆ(ds==ಶೂನ್ಯಸೂಚಕ || ಒಳ_ದತ್ತಾಂಶ==ಶೂನ್ಯಸೂಚಕ || length<0 || (length>0 && ಹೊರಹೋಗು_ದತ್ತಾಂಶ==ಶೂನ್ಯಸೂಚಕ)) {
+        *p_Error_ಸಂಕೇತ=U_ILLEGAL_ವಾದ_ERROR;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
     /* setup and checking */
-    s=(const uint8_t *)inData;
+    s=(ಸ್ಥಿರಾಂಕ uint8_t *)ಒಳ_ದತ್ತಾಂಶ;
     count=length;
-    while(count>0) {
+    ಆಗ(count>0) {
         c=*s++;
-        if(!UCHAR_IS_INVARIANT(c)) {
+        ಆದರೆ(!UCHAR_IS_INVARIANT(c)) {
             udata_printError(ds, "uprv_copyFromAscii() string[%d] contains a variant character in position %d\n",
                              length, length-count);
-            *pErrorCode=U_INVALID_CHAR_FOUND;
-            return 0;
+            *p_Error_ಸಂಕೇತ=U_INVALID_CHAR_ಸಿಕ್ಕಿತು;
+            ಹಿಂತಿರುಗಿ 0;
         }
         --count;
     }
 
-    if(length>0 && inData!=outData) {
-        uprv_memcpy(outData, inData, length);
+    ಆದರೆ(length>0 && ಒಳ_ದತ್ತಾಂಶ!=ಹೊರಹೋಗು_ದತ್ತಾಂಶ) {
+        uprv_memcpy(ಹೊರಹೋಗು_ದತ್ತಾಂಶ, ಒಳ_ದತ್ತಾಂಶ, length);
     }
 
-    return length;
+    ಹಿಂತಿರುಗಿ length;
 }
 
 /* convert EBCDIC to ASCII and verify that all characters are invariant */
 U_CFUNC int32_t
-uprv_asciiFromEbcdic(const UDataSwapper *ds,
-                     const void *inData, int32_t length, void *outData,
-                     UErrorCode *pErrorCode) {
-    const uint8_t *s;
+uprv_asciiFromEbcdic(ಸ್ಥಿರಾಂಕ UDataSwapper *ds,
+                     ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *ಒಳ_ದತ್ತಾಂಶ, int32_t length, ಶೂನ್ಯ *ಹೊರಹೋಗು_ದತ್ತಾಂಶ,
+                     UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಸ್ಥಿರಾಂಕ uint8_t *s;
     uint8_t *t;
     uint8_t c;
 
     int32_t count;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ಆದರೆ(p_Error_ಸಂಕೇತ==ಶೂನ್ಯಸೂಚಕ || U_FAILURE(*p_Error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 ||  (length>0 && outData==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ಆದರೆ(ds==ಶೂನ್ಯಸೂಚಕ || ಒಳ_ದತ್ತಾಂಶ==ಶೂನ್ಯಸೂಚಕ || length<0 ||  (length>0 && ಹೊರಹೋಗು_ದತ್ತಾಂಶ==ಶೂನ್ಯಸೂಚಕ)) {
+        *p_Error_ಸಂಕೇತ=U_ILLEGAL_ವಾದ_ERROR;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
     /* setup and swapping */
-    s=(const uint8_t *)inData;
-    t=(uint8_t *)outData;
+    s=(ಸ್ಥಿರಾಂಕ uint8_t *)ಒಳ_ದತ್ತಾಂಶ;
+    t=(uint8_t *)ಹೊರಹೋಗು_ದತ್ತಾಂಶ;
     count=length;
-    while(count>0) {
+    ಆಗ(count>0) {
         c=*s++;
-        if(c!=0 && ((c=asciiFromEbcdic[c])==0 || !UCHAR_IS_INVARIANT(c))) {
+        ಆದರೆ(c!=0 && ((c=asciiFromEbcdic[c])==0 || !UCHAR_IS_INVARIANT(c))) {
             udata_printError(ds, "uprv_asciiFromEbcdic() string[%d] contains a variant character in position %d\n",
                              length, length-count);
-            *pErrorCode=U_INVALID_CHAR_FOUND;
-            return 0;
+            *p_Error_ಸಂಕೇತ=U_INVALID_CHAR_ಸಿಕ್ಕಿತು;
+            ಹಿಂತಿರುಗಿ 0;
         }
         *t++=c;
         --count;
     }
 
-    return length;
+    ಹಿಂತಿರುಗಿ length;
 }
 
 /* this function only checks and copies EBCDIC strings without conversion */
 U_CFUNC int32_t
-uprv_copyEbcdic(const UDataSwapper *ds,
-                const void *inData, int32_t length, void *outData,
-                UErrorCode *pErrorCode) {
-    const uint8_t *s;
+uprv_copyEbcdic(ಸ್ಥಿರಾಂಕ UDataSwapper *ds,
+                ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *ಒಳ_ದತ್ತಾಂಶ, int32_t length, ಶೂನ್ಯ *ಹೊರಹೋಗು_ದತ್ತಾಂಶ,
+                UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಸ್ಥಿರಾಂಕ uint8_t *s;
     uint8_t c;
 
     int32_t count;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ಆದರೆ(p_Error_ಸಂಕೇತ==ಶೂನ್ಯಸೂಚಕ || U_FAILURE(*p_Error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length>0 && outData==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ಆದರೆ(ds==ಶೂನ್ಯಸೂಚಕ || ಒಳ_ದತ್ತಾಂಶ==ಶೂನ್ಯಸೂಚಕ || length<0 || (length>0 && ಹೊರಹೋಗು_ದತ್ತಾಂಶ==ಶೂನ್ಯಸೂಚಕ)) {
+        *p_Error_ಸಂಕೇತ=U_ILLEGAL_ವಾದ_ERROR;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
     /* setup and checking */
-    s=(const uint8_t *)inData;
+    s=(ಸ್ಥಿರಾಂಕ uint8_t *)ಒಳ_ದತ್ತಾಂಶ;
     count=length;
-    while(count>0) {
+    ಆಗ(count>0) {
         c=*s++;
-        if(c!=0 && ((c=asciiFromEbcdic[c])==0 || !UCHAR_IS_INVARIANT(c))) {
+        ಆದರೆ(c!=0 && ((c=asciiFromEbcdic[c])==0 || !UCHAR_IS_INVARIANT(c))) {
             udata_printError(ds, "uprv_copyEbcdic() string[%] contains a variant character in position %d\n",
                              length, length-count);
-            *pErrorCode=U_INVALID_CHAR_FOUND;
-            return 0;
+            *p_Error_ಸಂಕೇತ=U_INVALID_CHAR_ಸಿಕ್ಕಿತು;
+            ಹಿಂತಿರುಗಿ 0;
         }
         --count;
     }
 
-    if(length>0 && inData!=outData) {
-        uprv_memcpy(outData, inData, length);
+    ಆದರೆ(length>0 && ಒಳ_ದತ್ತಾಂಶ!=ಹೊರಹೋಗು_ದತ್ತಾಂಶ) {
+        uprv_memcpy(ಹೊರಹೋಗು_ದತ್ತಾಂಶ, ಒಳ_ದತ್ತಾಂಶ, length);
     }
 
-    return length;
+    ಹಿಂತಿರುಗಿ length;
 }
 
 U_CAPI UBool
-uprv_isEbcdicAtSign(char c) {
-    static const uint8_t ebcdicAtSigns[] = {
+uprv_isEbcdicAtSign(ಅಕ್ಷರ c) {
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint8_t ebcdicAtSigns[] = {
         0x7C, 0x44, 0x66, 0x80, 0xAC, 0xAE, 0xAF, 0xB5, 0xEC, 0xEF, 0x00 };
-    return c != 0 && uprv_strchr((const char *)ebcdicAtSigns, c) != nullptr;
+    ಹಿಂತಿರುಗಿ c != 0 && uprv_strchr((ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *)ebcdicAtSigns, c) != ಶೂನ್ಯಸೂಚಕ;
 }
 
 /* compare invariant strings; variant characters compare less than others and unlike each other */
 U_CFUNC int32_t
-uprv_compareInvAscii(const UDataSwapper *ds,
-                     const char *outString, int32_t outLength,
-                     const char16_t *localString, int32_t localLength) {
-    (void)ds;
-    int32_t minLength;
+uprv_compareInvAscii(ಸ್ಥಿರಾಂಕ UDataSwapper *ds,
+                     ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಹೊರಹೋಗು_String, int32_t ಹೊರಹೋಗು_ಉದ್ದಳತೆ,
+                     ಸ್ಥಿರಾಂಕ char16_t *localString, int32_t local_ಉದ್ದಳತೆ) {
+    (ಶೂನ್ಯ)ds;
+    int32_t min_ಉದ್ದಳತೆ;
     UChar32 c1, c2;
     uint8_t c;
 
-    if(outString==nullptr || outLength<-1 || localString==nullptr || localLength<-1) {
-        return 0;
+    ಆದರೆ(ಹೊರಹೋಗು_String==ಶೂನ್ಯಸೂಚಕ || ಹೊರಹೋಗು_ಉದ್ದಳತೆ<-1 || localString==ಶೂನ್ಯಸೂಚಕ || local_ಉದ್ದಳತೆ<-1) {
+        ಹಿಂತಿರುಗಿ 0;
     }
 
-    if(outLength<0) {
-        outLength=(int32_t)uprv_strlen(outString);
+    ಆದರೆ(ಹೊರಹೋಗು_ಉದ್ದಳತೆ<0) {
+        ಹೊರಹೋಗು_ಉದ್ದಳತೆ=(int32_t)uprv_strlen(ಹೊರಹೋಗು_String);
     }
-    if(localLength<0) {
-        localLength=u_strlen(localString);
+    ಆದರೆ(local_ಉದ್ದಳತೆ<0) {
+        local_ಉದ್ದಳತೆ=u_strlen(localString);
     }
 
-    minLength= outLength<localLength ? outLength : localLength;
+    min_ಉದ್ದಳತೆ= ಹೊರಹೋಗು_ಉದ್ದಳತೆ<local_ಉದ್ದಳತೆ ? ಹೊರಹೋಗು_ಉದ್ದಳತೆ : local_ಉದ್ದಳತೆ;
 
-    while(minLength>0) {
-        c=(uint8_t)*outString++;
-        if(UCHAR_IS_INVARIANT(c)) {
+    ಆಗ(min_ಉದ್ದಳತೆ>0) {
+        c=(uint8_t)*ಹೊರಹೋಗು_String++;
+        ಆದರೆ(UCHAR_IS_INVARIANT(c)) {
             c1=c;
-        } else {
+        } ಇಲ್ಲದಿದ್ದರೆ {
             c1=-1;
         }
 
         c2=*localString++;
-        if(!UCHAR_IS_INVARIANT(c2)) {
+        ಆದರೆ(!UCHAR_IS_INVARIANT(c2)) {
             c2=-2;
         }
 
-        if((c1-=c2)!=0) {
-            return c1;
+        ಆದರೆ((c1-=c2)!=0) {
+            ಹಿಂತಿರುಗಿ c1;
         }
 
-        --minLength;
+        --min_ಉದ್ದಳತೆ;
     }
 
     /* strings start with same prefix, compare lengths */
-    return outLength-localLength;
+    ಹಿಂತಿರುಗಿ ಹೊರಹೋಗು_ಉದ್ದಳತೆ-local_ಉದ್ದಳತೆ;
 }
 
 U_CFUNC int32_t
-uprv_compareInvEbcdic(const UDataSwapper *ds,
-                      const char *outString, int32_t outLength,
-                      const char16_t *localString, int32_t localLength) {
-    (void)ds;
-    int32_t minLength;
+uprv_compareInvEbcdic(ಸ್ಥಿರಾಂಕ UDataSwapper *ds,
+                      ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಹೊರಹೋಗು_String, int32_t ಹೊರಹೋಗು_ಉದ್ದಳತೆ,
+                      ಸ್ಥಿರಾಂಕ char16_t *localString, int32_t local_ಉದ್ದಳತೆ) {
+    (ಶೂನ್ಯ)ds;
+    int32_t min_ಉದ್ದಳತೆ;
     UChar32 c1, c2;
     uint8_t c;
 
-    if(outString==nullptr || outLength<-1 || localString==nullptr || localLength<-1) {
-        return 0;
+    ಆದರೆ(ಹೊರಹೋಗು_String==ಶೂನ್ಯಸೂಚಕ || ಹೊರಹೋಗು_ಉದ್ದಳತೆ<-1 || localString==ಶೂನ್ಯಸೂಚಕ || local_ಉದ್ದಳತೆ<-1) {
+        ಹಿಂತಿರುಗಿ 0;
     }
 
-    if(outLength<0) {
-        outLength=(int32_t)uprv_strlen(outString);
+    ಆದರೆ(ಹೊರಹೋಗು_ಉದ್ದಳತೆ<0) {
+        ಹೊರಹೋಗು_ಉದ್ದಳತೆ=(int32_t)uprv_strlen(ಹೊರಹೋಗು_String);
     }
-    if(localLength<0) {
-        localLength=u_strlen(localString);
+    ಆದರೆ(local_ಉದ್ದಳತೆ<0) {
+        local_ಉದ್ದಳತೆ=u_strlen(localString);
     }
 
-    minLength= outLength<localLength ? outLength : localLength;
+    min_ಉದ್ದಳತೆ= ಹೊರಹೋಗು_ಉದ್ದಳತೆ<local_ಉದ್ದಳತೆ ? ಹೊರಹೋಗು_ಉದ್ದಳತೆ : local_ಉದ್ದಳತೆ;
 
-    while(minLength>0) {
-        c=(uint8_t)*outString++;
-        if(c==0) {
+    ಆಗ(min_ಉದ್ದಳತೆ>0) {
+        c=(uint8_t)*ಹೊರಹೋಗು_String++;
+        ಆದರೆ(c==0) {
             c1=0;
-        } else if((c1=asciiFromEbcdic[c])!=0 && UCHAR_IS_INVARIANT(c1)) {
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ((c1=asciiFromEbcdic[c])!=0 && UCHAR_IS_INVARIANT(c1)) {
             /* c1 is set */
-        } else {
+        } ಇಲ್ಲದಿದ್ದರೆ {
             c1=-1;
         }
 
         c2=*localString++;
-        if(!UCHAR_IS_INVARIANT(c2)) {
+        ಆದರೆ(!UCHAR_IS_INVARIANT(c2)) {
             c2=-2;
         }
 
-        if((c1-=c2)!=0) {
-            return c1;
+        ಆದರೆ((c1-=c2)!=0) {
+            ಹಿಂತಿರುಗಿ c1;
         }
 
-        --minLength;
+        --min_ಉದ್ದಳತೆ;
     }
 
     /* strings start with same prefix, compare lengths */
-    return outLength-localLength;
+    ಹಿಂತಿರುಗಿ ಹೊರಹೋಗು_ಉದ್ದಳತೆ-local_ಉದ್ದಳತೆ;
 }
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareInvEbcdicAsAscii(const char *s1, const char *s2) {
+uprv_compareInvEbcdicAsAscii(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *s1, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *s2) {
     int32_t c1, c2;
 
-    for(;; ++s1, ++s2) {
+    ಗಾಗಿ(;; ++s1, ++s2) {
         c1=(uint8_t)*s1;
         c2=(uint8_t)*s2;
-        if(c1!=c2) {
-            if(c1!=0 && ((c1=asciiFromEbcdic[c1])==0 || !UCHAR_IS_INVARIANT(c1))) {
+        ಆದರೆ(c1!=c2) {
+            ಆದರೆ(c1!=0 && ((c1=asciiFromEbcdic[c1])==0 || !UCHAR_IS_INVARIANT(c1))) {
                 c1=-(int32_t)(uint8_t)*s1;
             }
-            if(c2!=0 && ((c2=asciiFromEbcdic[c2])==0 || !UCHAR_IS_INVARIANT(c2))) {
+            ಆದರೆ(c2!=0 && ((c2=asciiFromEbcdic[c2])==0 || !UCHAR_IS_INVARIANT(c2))) {
                 c2=-(int32_t)(uint8_t)*s2;
             }
-            return c1-c2;
-        } else if(c1==0) {
-            return 0;
+            ಹಿಂತಿರುಗಿ c1-c2;
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(c1==0) {
+            ಹಿಂತಿರುಗಿ 0;
         }
     }
 }
 
-U_CAPI char U_EXPORT2
-uprv_ebcdicToAscii(char c) {
-    return (char)asciiFromEbcdic[(uint8_t)c];
+U_CAPI ಅಕ್ಷರ U_EXPORT2
+uprv_ebcdic_ಗಮ್ಯ_Ascii(ಅಕ್ಷರ c) {
+    ಹಿಂತಿರುಗಿ (ಅಕ್ಷರ)asciiFromEbcdic[(uint8_t)c];
 }
 
-U_CAPI char U_EXPORT2
-uprv_ebcdicToLowercaseAscii(char c) {
-    return (char)lowercaseAsciiFromEbcdic[(uint8_t)c];
+U_CAPI ಅಕ್ಷರ U_EXPORT2
+uprv_ebcdic_ಗಮ್ಯ_Lowercase_Ascii(ಅಕ್ಷರ c) {
+    ಹಿಂತಿರುಗಿ (ಅಕ್ಷರ)lowercaseAsciiFromEbcdic[(uint8_t)c];
 }
 
 U_CAPI uint8_t* U_EXPORT2
-uprv_aestrncpy(uint8_t *dst, const uint8_t *src, int32_t n)
+uprv_aestrncpy(uint8_t *dst, ಸ್ಥಿರಾಂಕ uint8_t *src, int32_t n)
 {
   uint8_t *orig_dst = dst;
 
-  if(n==-1) { 
-    n = static_cast<int32_t>(uprv_strlen((const char*)src)+1); /* copy NUL */
+  ಆದರೆ(n==-1) { 
+    n = static_cast<int32_t>(uprv_strlen((ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ*)src)+1); /* copy NUL */
   }
   /* copy non-null */
-  while(*src && n>0) {
+  ಆಗ(*src && n>0) {
     *(dst++) = asciiFromEbcdic[*(src++)];
     n--;
   }
   /* pad */
-  while(n>0) {
+  ಆಗ(n>0) {
     *(dst++) = 0;
     n--;
   }
-  return orig_dst;
+  ಹಿಂತಿರುಗಿ orig_dst;
 }
 
 U_CAPI uint8_t* U_EXPORT2
-uprv_eastrncpy(uint8_t *dst, const uint8_t *src, int32_t n)
+uprv_eastrncpy(uint8_t *dst, ಸ್ಥಿರಾಂಕ uint8_t *src, int32_t n)
 {
   uint8_t *orig_dst = dst;
 
-  if(n==-1) { 
-    n = static_cast<int32_t>(uprv_strlen((const char*)src)+1); /* copy NUL */
+  ಆದರೆ(n==-1) { 
+    n = static_cast<int32_t>(uprv_strlen((ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ*)src)+1); /* copy NUL */
   }
   /* copy non-null */
-  while(*src && n>0) {
-    char ch = ebcdicFromAscii[*(src++)];
-    if(ch == 0) {
+  ಆಗ(*src && n>0) {
+    ಅಕ್ಷರ ch = ebcdicFromAscii[*(src++)];
+    ಆದರೆ(ch == 0) {
       ch = ebcdicFromAscii[0x3f]; /* questionmark (subchar) */
     }
     *(dst++) = ch;
     n--;
   }
   /* pad */
-  while(n>0) {
+  ಆಗ(n>0) {
     *(dst++) = 0;
     n--;
   }
-  return orig_dst;
+  ಹಿಂತಿರುಗಿ orig_dst;
 }
 

@@ -10,39 +10,39 @@
 * Since: ICU 2.8
 **********************************************************************
 */
-#include "locbased.h"
-#include "uresimp.h"
+#ಅನ್ತರ್ಭಾವ "locbased.h"
+#ಅನ್ತರ್ಭಾವ "uresimp.h"
 
 U_NAMESPACE_BEGIN
 
-const Locale& LocaleBased::getLocale(const Locale& valid U_LIFETIME_BOUND,
-                                     const Locale& actual U_LIFETIME_BOUND,
-                                     ULocDataLocaleType type,
-                                     UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return Locale::getRoot();
+ಸ್ಥಿರಾಂಕ Locale& LocaleBased::getLocale(ಸ್ಥಿರಾಂಕ Locale& valid U_LIFETIME_BOUND,
+                                     ಸ್ಥಿರಾಂಕ Locale& actual U_LIFETIME_BOUND,
+                                     ULoc_ದತ್ತಾಂಶ_Locale_Type type,
+                                     UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) {
+    ಆದರೆ (U_FAILURE(ಸ್ಥಿತಿ_2)) {
+        ಹಿಂತಿರುಗಿ Locale::get_ಬೇರು();
     }
 
-    switch(type) {
-    case ULOC_VALID_LOCALE:
-        return valid;
-    case ULOC_ACTUAL_LOCALE:
-        return actual;
-    default:
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return Locale::getRoot();
+    ಆಯ್ಕೆ(type) {
+    ಸ್ಥಿತಿ ULOC_VALID_LOCALE:
+        ಹಿಂತಿರುಗಿ valid;
+    ಸ್ಥಿತಿ ULOC_ACTUAL_LOCALE:
+        ಹಿಂತಿರುಗಿ actual;
+    ಪೂರ್ವನಿಯೋಜಿತ:
+        ಸ್ಥಿತಿ_2 = U_ILLEGAL_ವಾದ_ERROR;
+        ಹಿಂತಿರುಗಿ Locale::get_ಬೇರು();
     }
 }
 
-const char* LocaleBased::getLocaleID(const Locale& valid, const Locale& actual,
-                                     ULocDataLocaleType type, UErrorCode& status) {
-    const Locale& locale = getLocale(valid, actual, type, status);
+ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* LocaleBased::getLocaleID(ಸ್ಥಿರಾಂಕ Locale& valid, ಸ್ಥಿರಾಂಕ Locale& actual,
+                                     ULoc_ದತ್ತಾಂಶ_Locale_Type type, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) {
+    ಸ್ಥಿರಾಂಕ Locale& locale = getLocale(valid, actual, type, ಸ್ಥಿತಿ_2);
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    ಆದರೆ (U_FAILURE(ಸ್ಥಿತಿ_2)) {
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
 
-    return locale == Locale::getRoot() ? kRootLocaleName : locale.getName();
+    ಹಿಂತಿರುಗಿ locale == Locale::get_ಬೇರು() ? k_ಬೇರು_Locale_Name : locale.getName();
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ

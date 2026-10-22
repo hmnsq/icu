@@ -18,28 +18,28 @@
 *   Low-level Unicode character/string case mapping code.
 */
 
-#ifndef __UCASE_H__
-#define __UCASE_H__
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __UCASE_H__
+#ವ್ಯಾಖ್ಯಾನಿಸು __UCASE_H__
 
-#include "unicode/utypes.h"
-#include "unicode/uset.h"
-#include "putilimp.h"
-#include "uset_imp.h"
-#include "udataswp.h"
-#include "utrie2.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uset.h"
+#ಅನ್ತರ್ಭಾವ "putilimp.h"
+#ಅನ್ತರ್ಭಾವ "uset_imp.h"
+#ಅನ್ತರ್ಭಾವ "udataswp.h"
+#ಅನ್ತರ್ಭಾವ "utrie2.h"
 
-#ifdef __cplusplus
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ __cplusplus
 U_NAMESPACE_BEGIN
 
 class UnicodeString;
 
-U_NAMESPACE_END
-#endif
+U_NAMESPACE_ಕೊನೆ
+#ಆದರೆ_ಅಂತ್ಯ
 
 /* library API -------------------------------------------------------------- */
 
-U_CFUNC void U_EXPORT2
-ucase_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode);
+U_CFUNC ಶೂನ್ಯ U_EXPORT2
+ucase_ಕೂಡಿಸು_Property_Starts(ಸ್ಥಿರಾಂಕ USetAdder *sa, UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
 /**
  * Requires non-NULL locale ID but otherwise does the equivalent of
@@ -47,12 +47,12 @@ ucase_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode);
  * Accepts both 2- and 3-letter codes and accepts case variants.
  */
 U_CFUNC int32_t
-ucase_getCaseLocale(const char *locale);
+ucase_getCaseLocale(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *locale);
 
 /* Casing locale types for ucase_getCaseLocale */
-enum {
+ಎಣಿಕೆ {
     UCASE_LOC_UNKNOWN,
-    UCASE_LOC_ROOT,
+    UCASE_LOC_ಬೇರು,
     UCASE_LOC_TURKISH,
     UCASE_LOC_LITHUANIAN,
     UCASE_LOC_GREEK,
@@ -66,7 +66,7 @@ enum {
  * See stringoptions.h. Also include _STRNCMP_STYLE and U_COMPARE_CODE_POINT_ORDER.
  * @internal
  */
-#define _STRCASECMP_OPTIONS_MASK 0xffff
+#ವ್ಯಾಖ್ಯಾನಿಸು STRCASECMP_OPTIONS_ಮುಖವಾಡ 0xffff
 
 /**
  * Bit mask for getting just the options from a string compare options word
@@ -80,7 +80,7 @@ enum {
  * See stringoptions.h.
  * @internal
  */
-#define _FOLD_CASE_OPTIONS_MASK 7
+#ವ್ಯಾಖ್ಯಾನಿಸು FOLD_CASE_OPTIONS_ಮುಖವಾಡ 7
 
 /* single-code point functions */
 
@@ -105,12 +105,12 @@ ucase_fold(UChar32 c, uint32_t options);
  * - for sharp s include ss
  * - for k include the Kelvin sign
  */
-U_CFUNC void U_EXPORT2
-ucase_addCaseClosure(UChar32 c, const USetAdder *sa);
+U_CFUNC ಶೂನ್ಯ U_EXPORT2
+ucase_ಕೂಡಿಸು_Case_ಆವರಣ(UChar32 c, ಸ್ಥಿರಾಂಕ USetAdder *sa);
 
 /** Case closure with only scf=Simple_Case_Folding. */
-U_CFUNC void U_EXPORT2
-ucase_addSimpleCaseClosure(UChar32 c, const USetAdder *sa);
+U_CFUNC ಶೂನ್ಯ U_EXPORT2
+ucase_ಕೂಡಿಸು_Simple_Case_ಆವರಣ(UChar32 c, ಸ್ಥಿರಾಂಕ USetAdder *sa);
 
 /**
  * Maps the string to single code points and adds the associated case closure
@@ -125,33 +125,33 @@ ucase_addSimpleCaseClosure(UChar32 c, const USetAdder *sa);
  * @return true if the string was found
  */
 U_CFUNC UBool U_EXPORT2
-ucase_addStringCaseClosure(const UChar *s, int32_t length, const USetAdder *sa);
+ucase_ಕೂಡಿಸು_String_Case_ಆವರಣ(ಸ್ಥಿರಾಂಕ UChar *s, int32_t ಉದ್ದಳತೆ, ಸ್ಥಿರಾಂಕ USetAdder *sa);
 
-#ifdef __cplusplus
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ __cplusplus
 U_NAMESPACE_BEGIN
 
 /**
  * Iterator over characters with more than one code point in the full default Case_Folding.
  */
-class U_COMMON_API FullCaseFoldingIterator {
-public:
+class U_COMMON_API ತುಂಬಿದ_Case_Folding_Iterator {
+ಸಾರ್ವಜನಿಕ:
     /** Constructor. */
-    FullCaseFoldingIterator();
+    ತುಂಬಿದ_Case_Folding_Iterator();
     /**
      * Returns the next (cp, full) pair where "full" is cp's full default Case_Folding.
      * Returns a negative cp value at the end of the iteration.
      */
-    UChar32 next(UnicodeString &full);
-private:
-    FullCaseFoldingIterator(const FullCaseFoldingIterator &) = delete;  // no copy
-    FullCaseFoldingIterator &operator=(const FullCaseFoldingIterator &) = delete;  // no assignment
+    UChar32 ಮುಂದಿನ(UnicodeString &ತುಂಬಿದ);
+ಖಾಸಗಿ:
+    ತುಂಬಿದ_Case_Folding_Iterator(ಸ್ಥಿರಾಂಕ ತುಂಬಿದ_Case_Folding_Iterator &) = delete;  // no copy
+    ತುಂಬಿದ_Case_Folding_Iterator &ಕ್ರಿಯಾಕಾರಕ=(ಸ್ಥಿರಾಂಕ ತುಂಬಿದ_Case_Folding_Iterator &) = delete;  // no assignment
 
-    const char16_t *unfold;
-    int32_t unfoldRows;
-    int32_t unfoldRowWidth;
-    int32_t unfoldStringWidth;
-    int32_t currentRow;
-    int32_t rowCpIndex;
+    ಸ್ಥಿರಾಂಕ char16_t *unfold;
+    int32_t unfold_ಅಡ್ಡಸಾಲುಗಳು;
+    int32_t unfold_ಅಡ್ಡಸಾಲು_ಅಗಲ;
+    int32_t unfold_String_ಅಗಲ;
+    int32_t current_ಅಡ್ಡಸಾಲು;
+    int32_t ಅಡ್ಡಸಾಲು_Cp_ಸೂಚ್ಯಂಕ;
 };
 
 /**
@@ -163,26 +163,26 @@ private:
 namespace LatinCase {
 
 /** Case mapping/folding data for code points up to U+017F. */
-constexpr char16_t LIMIT = 0x180;
+constexpr char16_t ಎಲ್ಲೆ_2 = 0x180;
 /** U+017F case-folds and uppercases crossing the ASCII boundary. */
 constexpr char16_t LONG_S = 0x17f;
 /** Exception: Complex mapping, or too-large delta. */
 constexpr int8_t EXC = -0x80;
 
 /** Deltas for lowercasing for most locales, and default case folding. */
-extern const int8_t TO_LOWER_NORMAL[LIMIT];
+ಬಾಹ್ಯ ಸ್ಥಿರಾಂಕ int8_t ಗಮ್ಯ_ಅಧೋ_ಸಾಮಾನ್ಯ[ಎಲ್ಲೆ_2];
 /** Deltas for lowercasing for tr/az/lt, and Turkic case folding. */
-extern const int8_t TO_LOWER_TR_LT[LIMIT];
+ಬಾಹ್ಯ ಸ್ಥಿರಾಂಕ int8_t ಗಮ್ಯ_ಅಧೋ_TR_LT[ಎಲ್ಲೆ_2];
 
 /** Deltas for uppercasing for most locales. */
-extern const int8_t TO_UPPER_NORMAL[LIMIT];
+ಬಾಹ್ಯ ಸ್ಥಿರಾಂಕ int8_t ಗಮ್ಯ_ಊರ್ಧ್ವ_ಸಾಮಾನ್ಯ[ಎಲ್ಲೆ_2];
 /** Deltas for uppercasing for tr/az. */
-extern const int8_t TO_UPPER_TR[LIMIT];
+ಬಾಹ್ಯ ಸ್ಥಿರಾಂಕ int8_t ಗಮ್ಯ_ಊರ್ಧ್ವ_TR[ಎಲ್ಲೆ_2];
 
 }  // namespace LatinCase
 
-U_NAMESPACE_END
-#endif
+U_NAMESPACE_ಕೊನೆ
+#ಆದರೆ_ಅಂತ್ಯ
 
 /** @return UCASE_NONE, UCASE_LOWER, UCASE_UPPER, UCASE_TITLE */
 U_CAPI int32_t U_EXPORT2
@@ -220,27 +220,27 @@ U_CDECL_BEGIN
  *            if 0 then continue iterating in the current direction.
  * @return Next code point, or <0 when the iteration is done.
  */
-typedef UChar32 U_CALLCONV
-UCaseContextIterator(void *context, int8_t dir);
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ UChar32 U_CALLCONV
+UCaseContextIterator(ಶೂನ್ಯ *context, int8_t dir);
 
 /**
  * Sample struct which may be used by some implementations of
  * UCaseContextIterator.
  */
-struct UCaseContext {
-    void *p;
-    int32_t start, index, limit;
-    int32_t cpStart, cpLimit;
+ರಚನೆ UCaseContext {
+    ಶೂನ್ಯ *p;
+    int32_t ಆರಂಭ, ಸೂಚ್ಯಂಕ, ಎಲ್ಲೆ;
+    int32_t cp_ಆರಂಭ, cp_ಎಲ್ಲೆ;
     int8_t dir;
     int8_t b1, b2, b3;
 };
-typedef struct UCaseContext UCaseContext;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ UCaseContext UCaseContext;
 
-U_CDECL_END
+U_CDECL_ಕೊನೆ
 
-#define UCASECONTEXT_INITIALIZER { NULL,  0, 0, 0,  0, 0,  0,  0, 0, 0 }
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASECONTEXT_INITIALIZER { ಖಾಲಿ,  0, 0, 0,  0, 0,  0,  0, 0, 0 }
 
-enum {
+ಎಣಿಕೆ {
     /**
      * For string case mappings, a single character (a code point) is mapped
      * either to itself (in which case in-place mapping functions do nothing),
@@ -255,7 +255,7 @@ enum {
      * Mapping to a string: The string length (0..UCASE_MAX_STRING_LENGTH) is
      * returned. Note that the string result may indeed have zero length.
      */
-    UCASE_MAX_STRING_LENGTH=0x1f
+    UCASE_MAX_STRING_ಉದ್ದಳತೆ=0x1f
 };
 
 /**
@@ -277,30 +277,30 @@ enum {
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-ucase_toFullLower(UChar32 c,
-                  UCaseContextIterator *iter, void *context,
-                  const UChar **pString,
+ucase_ಗಮ್ಯ_ತುಂಬಿದ_ಅಧೋ(UChar32 c,
+                  UCaseContextIterator *iter, ಶೂನ್ಯ *context,
+                  ಸ್ಥಿರಾಂಕ UChar **pString,
                   int32_t caseLocale);
 
 U_CAPI int32_t U_EXPORT2
-ucase_toFullUpper(UChar32 c,
-                  UCaseContextIterator *iter, void *context,
-                  const UChar **pString,
+ucase_ಗಮ್ಯ_ತುಂಬಿದ_ಊರ್ಧ್ವ(UChar32 c,
+                  UCaseContextIterator *iter, ಶೂನ್ಯ *context,
+                  ಸ್ಥಿರಾಂಕ UChar **pString,
                   int32_t caseLocale);
 
 U_CAPI int32_t U_EXPORT2
-ucase_toFullTitle(UChar32 c,
-                  UCaseContextIterator *iter, void *context,
-                  const UChar **pString,
+ucase_ಗಮ್ಯ_ತುಂಬಿದ_Title(UChar32 c,
+                  UCaseContextIterator *iter, ಶೂನ್ಯ *context,
+                  ಸ್ಥಿರಾಂಕ UChar **pString,
                   int32_t caseLocale);
 
 U_CAPI int32_t U_EXPORT2
-ucase_toFullFolding(UChar32 c,
-                    const UChar **pString,
+ucase_ಗಮ್ಯ_ತುಂಬಿದ_Folding(UChar32 c,
+                    ಸ್ಥಿರಾಂಕ UChar **pString,
                     uint32_t options);
 
 U_CFUNC int32_t U_EXPORT2
-ucase_hasBinaryProperty(UChar32 c, UProperty which);
+ucase_has_ದ್ವಿಮಾನ_Property(UChar32 c, UProperty which);
 
 
 U_CDECL_BEGIN
@@ -308,79 +308,79 @@ U_CDECL_BEGIN
 /**
  * @internal
  */
-typedef int32_t U_CALLCONV
-UCaseMapFull(UChar32 c,
-             UCaseContextIterator *iter, void *context,
-             const UChar **pString,
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ int32_t U_CALLCONV
+UCase_Map_ತುಂಬಿದ(UChar32 c,
+             UCaseContextIterator *iter, ಶೂನ್ಯ *context,
+             ಸ್ಥಿರಾಂಕ UChar **pString,
              int32_t caseLocale);
 
-U_CDECL_END
+U_CDECL_ಕೊನೆ
 
 /* for icuexportdata -------------------------------------------------------- */
 
-struct UCaseProps {
-    void *mem;  // TODO: was unused, and type UDataMemory -- remove
-    const int32_t *indexes;
-    const uint16_t *exceptions;
-    const uint16_t *unfold;
+ರಚನೆ UCaseProps {
+    ಶೂನ್ಯ *mem;  // TODO: was unused, and type UDataMemory -- remove
+    ಸ್ಥಿರಾಂಕ int32_t *indexes;
+    ಸ್ಥಿರಾಂಕ uint16_t *exceptions;
+    ಸ್ಥಿರಾಂಕ uint16_t *unfold;
 
     UTrie2 trie;
-    uint8_t formatVersion[4];
+    uint8_t format_ಆವೃತ್ತಿ[4];
 };
 
-U_CAPI const struct UCaseProps * U_EXPORT2
-ucase_getSingleton(int32_t *pExceptionsLength, int32_t *pUnfoldLength);
+U_CAPI ಸ್ಥಿರಾಂಕ ರಚನೆ UCaseProps * U_EXPORT2
+ucase_getSingleton(int32_t *p_Exceptions_ಉದ್ದಳತೆ, int32_t *p_Unfold_ಉದ್ದಳತೆ);
 
 /* file definitions --------------------------------------------------------- */
 
-#define UCASE_DATA_NAME "ucase"
-#define UCASE_DATA_TYPE "icu"
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_ದತ್ತಾಂಶ_NAME "ucase"
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_ದತ್ತಾಂಶ_TYPE "icu"
 
 /* format "cAsE" */
-#define UCASE_FMT_0 0x63
-#define UCASE_FMT_1 0x41
-#define UCASE_FMT_2 0x53
-#define UCASE_FMT_3 0x45
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_FMT_0 0x63
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_FMT_1 0x41
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_FMT_2 0x53
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_FMT_3 0x45
 
 /* indexes into indexes[] */
-enum {
-    UCASE_IX_INDEX_TOP,
-    UCASE_IX_LENGTH,
-    UCASE_IX_TRIE_SIZE,
-    UCASE_IX_EXC_LENGTH,
-    UCASE_IX_UNFOLD_LENGTH,
+ಎಣಿಕೆ {
+    UCASE_IX_ಸೂಚ್ಯಂಕ_ತುದಿ,
+    UCASE_IX_ಉದ್ದಳತೆ,
+    UCASE_IX_TRIE_ಗಾತ್ರ,
+    UCASE_IX_EXC_ಉದ್ದಳತೆ,
+    UCASE_IX_UNFOLD_ಉದ್ದಳತೆ,
 
-    UCASE_IX_MAX_FULL_LENGTH=15,
-    UCASE_IX_TOP=16
+    UCASE_IX_MAX_ತುಂಬಿದ_ಉದ್ದಳತೆ=15,
+    UCASE_IX_ತುದಿ=16
 };
 
 /* definitions for 16-bit case properties word ------------------------------ */
 
-U_CFUNC const UTrie2 * U_EXPORT2
-ucase_getTrie(void);
+U_CFUNC ಸ್ಥಿರಾಂಕ UTrie2 * U_EXPORT2
+ucase_getTrie(ಶೂನ್ಯ);
 
 /* 2-bit constants for types of cased characters */
-#define UCASE_TYPE_MASK     3
-enum {
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_TYPE_ಮುಖವಾಡ     3
+ಎಣಿಕೆ {
     UCASE_NONE,
-    UCASE_LOWER,
-    UCASE_UPPER,
+    UCASE_ಅಧೋ,
+    UCASE_ಊರ್ಧ್ವ,
     UCASE_TITLE
 };
 
-#define UCASE_GET_TYPE(props) ((props)&UCASE_TYPE_MASK)
-#define UCASE_GET_TYPE_AND_IGNORABLE(props) ((props)&7)
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_GET_TYPE(props) ((props)&UCASE_TYPE_ಮುಖವಾಡ)
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_GET_TYPE_AND_IGNORABLE(props) ((props)&7)
 
-#define UCASE_IS_UPPER_OR_TITLE(props) ((props)&2)
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_IS_ಊರ್ಧ್ವ_OR_TITLE(props) ((props)&2)
 
-#define UCASE_IGNORABLE         4
-#define UCASE_EXCEPTION         8
-#define UCASE_SENSITIVE         0x10
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_IGNORABLE         4
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_EXCEPTION         8
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_SENSITIVE         0x10
 
-#define UCASE_HAS_EXCEPTION(props) ((props)&UCASE_EXCEPTION)
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_HAS_EXCEPTION(props) ((props)&UCASE_EXCEPTION)
 
-#define UCASE_DOT_MASK      0x60
-enum {
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_DOT_ಮುಖವಾಡ      0x60
+ಎಣಿಕೆ {
     UCASE_NO_DOT=0,         /* normal characters with cc=0 */
     UCASE_SOFT_DOTTED=0x20, /* soft-dotted characters with cc=0 */
     UCASE_ABOVE=0x40,       /* "above" accents with cc=230 */
@@ -388,52 +388,52 @@ enum {
 };
 
 /* no exception: bits 15..7 are a 9-bit signed case mapping delta */
-#define UCASE_DELTA_SHIFT   7
-#define UCASE_DELTA_MASK    0xff80
-#define UCASE_MAX_DELTA     0xff
-#define UCASE_MIN_DELTA     (-UCASE_MAX_DELTA-1)
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_DELTA_ಸರಿಸು   7
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_DELTA_ಮುಖವಾಡ    0xff80
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_MAX_DELTA     0xff
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_MIN_DELTA     (-UCASE_MAX_DELTA-1)
 
-#if U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
-#   define UCASE_GET_DELTA(props) ((int16_t)(props)>>UCASE_DELTA_SHIFT)
-#else
-#   define UCASE_GET_DELTA(props) (int16_t)(((props)&0x8000) ? (((props)>>UCASE_DELTA_SHIFT)|0xfe00) : ((uint16_t)(props)>>UCASE_DELTA_SHIFT))
-#endif
+#ಆದರೆ U_SIGNED_ಬಲ_ಸರಿಸು_IS_ARITHMETIC
+#   define UCASE_GET_DELTA(props) ((int16_t)(props)>>UCASE_DELTA_ಸರಿಸು)
+#ಇಲ್ಲದಿದ್ದರೆ
+#   define UCASE_GET_DELTA(props) (int16_t)(((props)&0x8000) ? (((props)>>UCASE_DELTA_ಸರಿಸು)|0xfe00) : ((uint16_t)(props)>>UCASE_DELTA_ಸರಿಸು))
+#ಆದರೆ_ಅಂತ್ಯ
 
 /* exception: bits 15..4 are an unsigned 12-bit index into the exceptions array */
-#define UCASE_EXC_SHIFT     4
-#define UCASE_EXC_MASK      0xfff0
-#define UCASE_MAX_EXCEPTIONS ((UCASE_EXC_MASK>>UCASE_EXC_SHIFT)+1)
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_EXC_ಸರಿಸು     4
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_EXC_ಮುಖವಾಡ      0xfff0
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_MAX_EXCEPTIONS ((UCASE_EXC_ಮುಖವಾಡ>>UCASE_EXC_ಸರಿಸು)+1)
 
 /* definitions for 16-bit main exceptions word ------------------------------ */
 
 /* first 8 bits indicate values in optional slots */
-enum {
-    UCASE_EXC_LOWER,
+ಎಣಿಕೆ {
+    UCASE_EXC_ಅಧೋ,
     UCASE_EXC_FOLD,
-    UCASE_EXC_UPPER,
+    UCASE_EXC_ಊರ್ಧ್ವ,
     UCASE_EXC_TITLE,
     UCASE_EXC_DELTA,
     UCASE_EXC_5,            /* reserved */
-    UCASE_EXC_CLOSURE,
-    UCASE_EXC_FULL_MAPPINGS,
+    UCASE_EXC_ಆವರಣ,
+    UCASE_EXC_ತುಂಬಿದ_MAPPINGS,
     UCASE_EXC_ALL_SLOTS     /* one past the last slot */
 };
 
 /* each slot is 2 uint16_t instead of 1 */
-#define UCASE_EXC_DOUBLE_SLOTS      0x100
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_EXC_DOUBLE_SLOTS      0x100
 
-enum {
+ಎಣಿಕೆ {
     UCASE_EXC_NO_SIMPLE_CASE_FOLDING=0x200,
     UCASE_EXC_DELTA_IS_NEGATIVE=0x400,
     UCASE_EXC_SENSITIVE=0x800
 };
 
 /* UCASE_EXC_DOT_MASK=UCASE_DOT_MASK<<UCASE_EXC_DOT_SHIFT */
-#define UCASE_EXC_DOT_SHIFT     7
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_EXC_DOT_ಸರಿಸು     7
 
 /* normally stored in the main word, but pushed out for larger exception indexes */
-#define UCASE_EXC_DOT_MASK      0x3000
-enum {
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_EXC_DOT_ಮುಖವಾಡ      0x3000
+ಎಣಿಕೆ {
     UCASE_EXC_NO_DOT=0,
     UCASE_EXC_SOFT_DOTTED=0x1000,
     UCASE_EXC_ABOVE=0x2000,         /* "above" accents with cc=230 */
@@ -441,24 +441,24 @@ enum {
 };
 
 /* complex/conditional mappings */
-#define UCASE_EXC_CONDITIONAL_SPECIAL   0x4000
-#define UCASE_EXC_CONDITIONAL_FOLD      0x8000
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_EXC_CONDITIONAL_SPECIAL   0x4000
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_EXC_CONDITIONAL_FOLD      0x8000
 
 /* definitions for lengths word for full case mappings */
-#define UCASE_FULL_LOWER    0xf
-#define UCASE_FULL_FOLDING  0xf0
-#define UCASE_FULL_UPPER    0xf00
-#define UCASE_FULL_TITLE    0xf000
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_ತುಂಬಿದ_ಅಧೋ    0xf
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_ತುಂಬಿದ_FOLDING  0xf0
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_ತುಂಬಿದ_ಊರ್ಧ್ವ    0xf00
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_ತುಂಬಿದ_TITLE    0xf000
 
 /* maximum lengths */
-#define UCASE_FULL_MAPPINGS_MAX_LENGTH (4*0xf)
-#define UCASE_CLOSURE_MAX_LENGTH 0xf
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_ತುಂಬಿದ_MAPPINGS_MAX_ಉದ್ದಳತೆ (4*0xf)
+#ವ್ಯಾಖ್ಯಾನಿಸು UCASE_ಆವರಣ_MAX_ಉದ್ದಳತೆ 0xf
 
 /* constants for reverse case folding ("unfold") data */
-enum {
-    UCASE_UNFOLD_ROWS,
-    UCASE_UNFOLD_ROW_WIDTH,
-    UCASE_UNFOLD_STRING_WIDTH
+ಎಣಿಕೆ {
+    UCASE_UNFOLD_ಅಡ್ಡಸಾಲುಗಳು,
+    UCASE_UNFOLD_ಅಡ್ಡಸಾಲು_ಅಗಲ,
+    UCASE_UNFOLD_STRING_ಅಗಲ
 };
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

@@ -14,14 +14,14 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __STRINGTRIEBUILDER_H__
-#define __STRINGTRIEBUILDER_H__
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __STRINGTRIEBUILDER_H__
+#ವ್ಯಾಖ್ಯಾನಿಸು __STRINGTRIEBUILDER_H__
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ಆದರೆ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uobject.h"
 
 /**
  * \file
@@ -30,15 +30,15 @@
 
 // Forward declaration.
 /// \cond
-struct UHashtable;
-typedef struct UHashtable UHashtable;
+ರಚನೆ UHashtable;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ UHashtable UHashtable;
 /// \endcond
 
 /**
  * Build options for BytesTrieBuilder and CharsTrieBuilder.
  * @stable ICU 4.8
  */
-enum UStringTrieBuildOption {
+ಎಣಿಕೆ UStringTrieBuildOption {
     /**
      * Builds a trie quickly.
      * @stable ICU 4.8
@@ -65,93 +65,93 @@ U_NAMESPACE_BEGIN
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API StringTrieBuilder : public UObject {
-public:
-#ifndef U_HIDE_INTERNAL_API
+class U_COMMON_API StringTrieBuilder : ಸಾರ್ವಜನಿಕ UObject {
+ಸಾರ್ವಜನಿಕ:
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_ಆಂತರಿಕ_API
     /** @internal */
-    static int32_t hashNode(const void *node);
+    ಸ್ಥಿರ int32_t hash_ಗಂಟು(ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *ಗಂಟು);
     /** @internal */
-    static UBool equalNodes(const void *left, const void *right);
-#endif  /* U_HIDE_INTERNAL_API */
+    ಸ್ಥಿರ UBool equalNodes(ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *ಎಡ_2, ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *ಬಲ_2);
+#ಆದರೆ_ಅಂತ್ಯ  /* U_HIDE_INTERNAL_API */
 
-protected:
+ಸಂರಕ್ಷಿತ:
     // Do not enclose the protected default constructor with #ifndef U_HIDE_INTERNAL_API
     // or else the compiler will create a public default constructor.
     /** @internal */
     StringTrieBuilder();
     /** @internal */
-    virtual ~StringTrieBuilder();
+    ವಾಸ್ತವಿಕ ~StringTrieBuilder();
 
-#ifndef U_HIDE_INTERNAL_API
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_ಆಂತರಿಕ_API
     /** @internal */
-    void createCompactBuilder(int32_t sizeGuess, UErrorCode &errorCode);
+    ಶೂನ್ಯ createCompactBuilder(int32_t ಗಾತ್ರ_Guess, UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
     /** @internal */
-    void deleteCompactBuilder();
-
-    /** @internal */
-    void build(UStringTrieBuildOption buildOption, int32_t elementsLength, UErrorCode &errorCode);
+    ಶೂನ್ಯ deleteCompactBuilder();
 
     /** @internal */
-    int32_t writeNode(int32_t start, int32_t limit, int32_t unitIndex);
-    /** @internal */
-    int32_t writeBranchSubNode(int32_t start, int32_t limit, int32_t unitIndex, int32_t length);
-#endif  /* U_HIDE_INTERNAL_API */
-
-    class Node;
-
-#ifndef U_HIDE_INTERNAL_API
-    /** @internal */
-    Node* makeNode(int32_t start,
-                   int32_t limit,
-                   int32_t unitIndex,
-                   UErrorCode& errorCode) U_LIFETIME_BOUND;
-    /** @internal */
-    Node* makeBranchSubNode(int32_t start,
-                            int32_t limit,
-                            int32_t unitIndex,
-                            int32_t length,
-                            UErrorCode& errorCode) U_LIFETIME_BOUND;
-#endif  /* U_HIDE_INTERNAL_API */
+    ಶೂನ್ಯ build(UStringTrieBuildOption buildOption, int32_t elements_ಉದ್ದಳತೆ, UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
     /** @internal */
-    virtual int32_t getElementStringLength(int32_t i) const = 0;
+    int32_t write_ಗಂಟು(int32_t ಆರಂಭ, int32_t ಎಲ್ಲೆ, int32_t unit_ಸೂಚ್ಯಂಕ);
     /** @internal */
-    virtual char16_t getElementUnit(int32_t i, int32_t unitIndex) const = 0;
+    int32_t write_Branch_Sub_ಗಂಟು(int32_t ಆರಂಭ, int32_t ಎಲ್ಲೆ, int32_t unit_ಸೂಚ್ಯಂಕ, int32_t ಉದ್ದಳತೆ);
+#ಆದರೆ_ಅಂತ್ಯ  /* U_HIDE_INTERNAL_API */
+
+    class ಗಂಟು_2;
+
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_ಆಂತರಿಕ_API
     /** @internal */
-    virtual int32_t getElementValue(int32_t i) const = 0;
+    ಗಂಟು_2* make_ಗಂಟು(int32_t ಆರಂಭ,
+                   int32_t ಎಲ್ಲೆ,
+                   int32_t unit_ಸೂಚ್ಯಂಕ,
+                   UError_ಸಂಕೇತ& error_ಸಂಕೇತ) U_LIFETIME_BOUND;
+    /** @internal */
+    ಗಂಟು_2* make_Branch_Sub_ಗಂಟು(int32_t ಆರಂಭ,
+                            int32_t ಎಲ್ಲೆ,
+                            int32_t unit_ಸೂಚ್ಯಂಕ,
+                            int32_t ಉದ್ದಳತೆ,
+                            UError_ಸಂಕೇತ& error_ಸಂಕೇತ) U_LIFETIME_BOUND;
+#ಆದರೆ_ಅಂತ್ಯ  /* U_HIDE_INTERNAL_API */
+
+    /** @internal */
+    ವಾಸ್ತವಿಕ int32_t get_Element_String_ಉದ್ದಳತೆ(int32_t i) ಸ್ಥಿರಾಂಕ = 0;
+    /** @internal */
+    ವಾಸ್ತವಿಕ char16_t getElementUnit(int32_t i, int32_t unit_ಸೂಚ್ಯಂಕ) ಸ್ಥಿರಾಂಕ = 0;
+    /** @internal */
+    ವಾಸ್ತವಿಕ int32_t get_Element_ಮೌಲ್ಯ(int32_t i) ಸ್ಥಿರಾಂಕ = 0;
 
     // Finds the first unit index after this one where
     // the first and last element have different units again.
     /** @internal */
-    virtual int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) const = 0;
+    ವಾಸ್ತವಿಕ int32_t get_ಎಲ್ಲೆ_ದ_ರೇಖೀಯ_ಹೊಂದಿಕೆ(int32_t ಮೊದಲ, int32_t ಕೊನೆಯ, int32_t unit_ಸೂಚ್ಯಂಕ) ಸ್ಥಿರಾಂಕ = 0;
 
     // Number of different units at unitIndex.
     /** @internal */
-    virtual int32_t countElementUnits(int32_t start, int32_t limit, int32_t unitIndex) const = 0;
+    ವಾಸ್ತವಿಕ int32_t ಎಣಿಕೆ_Element_Units(int32_t ಆರಂಭ, int32_t ಎಲ್ಲೆ, int32_t unit_ಸೂಚ್ಯಂಕ) ಸ್ಥಿರಾಂಕ = 0;
     /** @internal */
-    virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t count) const = 0;
+    ವಾಸ್ತವಿಕ int32_t skipElementsBySomeUnits(int32_t i, int32_t unit_ಸೂಚ್ಯಂಕ, int32_t ಎಣಿಕೆ_2) ಸ್ಥಿರಾಂಕ = 0;
     /** @internal */
-    virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) const = 0;
+    ವಾಸ್ತವಿಕ int32_t ಸೂಚ್ಯಂಕ_ದ_Element_With_ಮುಂದಿನ_Unit(int32_t i, int32_t unit_ಸೂಚ್ಯಂಕ, char16_t unit) ಸ್ಥಿರಾಂಕ = 0;
 
     /** @internal */
-    virtual UBool matchNodesCanHaveValues() const = 0;
+    ವಾಸ್ತವಿಕ UBool ಹೊಂದಿಕೆ_Nodes_Can_Have_ಮೌಲ್ಯಗಳು() ಸ್ಥಿರಾಂಕ = 0;
 
     /** @internal */
-    virtual int32_t getMaxBranchLinearSubNodeLength() const = 0;
+    ವಾಸ್ತವಿಕ int32_t get_Max_Branch_ರೇಖೀಯ_Sub_ಗಂಟು_ಉದ್ದಳತೆ() ಸ್ಥಿರಾಂಕ = 0;
     /** @internal */
-    virtual int32_t getMinLinearMatch() const = 0;
+    ವಾಸ್ತವಿಕ int32_t get_Min_ರೇಖೀಯ_ಹೊಂದಿಕೆ() ಸ್ಥಿರಾಂಕ = 0;
     /** @internal */
-    virtual int32_t getMaxLinearMatchLength() const = 0;
+    ವಾಸ್ತವಿಕ int32_t get_Max_ರೇಖೀಯ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ() ಸ್ಥಿರಾಂಕ = 0;
 
-#ifndef U_HIDE_INTERNAL_API
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_ಆಂತರಿಕ_API
     // max(BytesTrie::kMaxBranchLinearSubNodeLength, UCharsTrie::kMaxBranchLinearSubNodeLength).
     /** @internal */
-    static const int32_t kMaxBranchLinearSubNodeLength=5;
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t k_Max_Branch_ರೇಖೀಯ_Sub_ಗಂಟು_ಉದ್ದಳತೆ=5;
 
     // Maximum number of nested split-branch levels for a branch on all 2^16 possible char16_t units.
     // log2(2^16/kMaxBranchLinearSubNodeLength) rounded up.
     /** @internal */
-    static const int32_t kMaxSplitBranchLevels=14;
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t k_Max_ವಿಭಜಿಸು_Branch_ಮಟ್ಟಗಳು=14;
 
     /**
      * Makes sure that there is only one unique node registered that is
@@ -163,7 +163,7 @@ protected:
      *         an equivalent node if newNode is a duplicate.
      * @internal
      */
-    Node* registerNode(Node* newNode, UErrorCode& errorCode) U_LIFETIME_BOUND;
+    ಗಂಟು_2* ರಿಜಿಸ್ಟರ್_ಗಂಟು(ಗಂಟು_2* new_ಗಂಟು, UError_ಸಂಕೇತ& error_ಸಂಕೇತ) U_LIFETIME_BOUND;
     /**
      * Makes sure that there is only one unique FinalValueNode registered
      * with this value.
@@ -174,8 +174,8 @@ protected:
      * @return A FinalValueNode with the given value.
      * @internal
      */
-    Node* registerFinalValue(int32_t value, UErrorCode& errorCode) U_LIFETIME_BOUND;
-#endif  /* U_HIDE_INTERNAL_API */
+    ಗಂಟು_2* ರಿಜಿಸ್ಟರ್_Final_ಮೌಲ್ಯ(int32_t ಮೌಲ್ಯ_2, UError_ಸಂಕೇತ& error_ಸಂಕೇತ) U_LIFETIME_BOUND;
+#ಆದರೆ_ಅಂತ್ಯ  /* U_HIDE_INTERNAL_API */
 
     /*
      * C++ note:
@@ -203,15 +203,15 @@ protected:
      * @internal
      * \cond
      */
-    class Node : public UObject {
-    public:
-        Node(int32_t initialHash) : hash(initialHash), offset(0) {}
-        inline int32_t hashCode() const { return hash; }
+    class ಗಂಟು_2 : ಸಾರ್ವಜನಿಕ UObject {
+    ಸಾರ್ವಜನಿಕ:
+        ಗಂಟು_2(int32_t initialHash) : hash(initialHash), ಸ್ಥಾನಾಂತರ(0) {}
+        ಸಾಲೊಳಗೆ int32_t hash_ಸಂಕೇತ() ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ hash; }
         // Handles node==nullptr.
-        static inline int32_t hashCode(const Node *node) { return node==nullptr ? 0 : node->hashCode(); }
+        ಸ್ಥಿರ ಸಾಲೊಳಗೆ int32_t hash_ಸಂಕೇತ(ಸ್ಥಿರಾಂಕ ಗಂಟು_2 *ಗಂಟು) { ಹಿಂತಿರುಗಿ ಗಂಟು==nullptr ? 0 : ಗಂಟು->hash_ಸಂಕೇತ(); }
         // Base class operator==() compares the actual class types.
-        virtual bool operator==(const Node &other) const;
-        inline bool operator!=(const Node &other) const { return !operator==(other); }
+        ವಾಸ್ತವಿಕ bool ಕ್ರಿಯಾಕಾರಕ==(ಸ್ಥಿರಾಂಕ ಗಂಟು_2 &other) ಸ್ಥಿರಾಂಕ;
+        ಸಾಲೊಳಗೆ bool ಕ್ರಿಯಾಕಾರಕ!=(ಸ್ಥಿರಾಂಕ ಗಂಟು_2 &other) ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ !ಕ್ರಿಯಾಕಾರಕ==(other); }
         /**
          * Traverses the Node graph and numbers branch edges, with rightmost edges first.
          * This is to avoid writing a duplicate node twice.
@@ -239,28 +239,28 @@ protected:
          * @return An edge number that is at least the maximum-negative
          *         of the input edge number and the numbers of this node and all of its sub-nodes.
          */
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber);
+        ವಾಸ್ತವಿಕ int32_t mark_ಬಲ_ಅಂಚುಗಳು_ಮೊದಲ(int32_t ಅಂಚು_ಸಂಖ್ಯೆ);
         // write() must set the offset to a positive value.
-        virtual void write(StringTrieBuilder &builder) = 0;
+        ವಾಸ್ತವಿಕ ಶೂನ್ಯ ಲಿಖ(StringTrieBuilder &builder) = 0;
         // See markRightEdgesFirst.
-        inline void writeUnlessInsideRightEdge(int32_t firstRight, int32_t lastRight,
+        ಸಾಲೊಳಗೆ ಶೂನ್ಯ write_Unless_Inside_ಬಲ_ಅಂಚು(int32_t ಮೊದಲ_ಬಲ, int32_t ಕೊನೆಯ_ಬಲ,
                                                StringTrieBuilder &builder) {
             // Note: Edge numbers are negative, lastRight<=firstRight.
             // If offset>0 then this node and its sub-nodes have been written already
             // and we need not write them again.
             // If this node is part of the unwritten right branch edge,
             // then we wait until that is written.
-            if(offset<0 && (offset<lastRight || firstRight<offset)) {
-                write(builder);
+            ಆದರೆ(ಸ್ಥಾನಾಂತರ<0 && (ಸ್ಥಾನಾಂತರ<ಕೊನೆಯ_ಬಲ || ಮೊದಲ_ಬಲ<ಸ್ಥಾನಾಂತರ)) {
+                ಲಿಖ(builder);
             }
         }
-        inline int32_t getOffset() const { return offset; }
-    protected:
+        ಸಾಲೊಳಗೆ int32_t get_ಸ್ಥಾನಾಂತರ() ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ ಸ್ಥಾನಾಂತರ; }
+    ಸಂರಕ್ಷಿತ:
         int32_t hash;
-        int32_t offset;
+        int32_t ಸ್ಥಾನಾಂತರ;
     };
 
-#ifndef U_HIDE_INTERNAL_API
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_ಆಂತರಿಕ_API
     // This class should not be overridden because
     // registerFinalValue() compares a stack-allocated FinalValueNode
     // (stack-allocated so that we don't unnecessarily create lots of duplicate nodes)
@@ -268,165 +268,165 @@ protected:
     // !Node::operator==(other) used inside FinalValueNode::operator==(other)
     // will be false if the typeid's are different.
     /** @internal */
-    class FinalValueNode : public Node {
-    public:
-        FinalValueNode(int32_t v) : Node(0x111111u*37u+v), value(v) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
-        int32_t value;
+    class Final_ಮೌಲ್ಯ_ಗಂಟು : ಸಾರ್ವಜನಿಕ ಗಂಟು_2 {
+    ಸಾರ್ವಜನಿಕ:
+        Final_ಮೌಲ್ಯ_ಗಂಟು(int32_t v) : ಗಂಟು_2(0x111111u*37u+v), ಮೌಲ್ಯ_2(v) {}
+        ವಾಸ್ತವಿಕ bool ಕ್ರಿಯಾಕಾರಕ==(ಸ್ಥಿರಾಂಕ ಗಂಟು_2 &other) ಸ್ಥಿರಾಂಕ override;
+        ವಾಸ್ತವಿಕ ಶೂನ್ಯ ಲಿಖ(StringTrieBuilder &builder) override;
+    ಸಂರಕ್ಷಿತ:
+        int32_t ಮೌಲ್ಯ_2;
     };
-#endif  /* U_HIDE_INTERNAL_API */
+#ಆದರೆ_ಅಂತ್ಯ  /* U_HIDE_INTERNAL_API */
 
     // Do not conditionalize the following with #ifndef U_HIDE_INTERNAL_API,
     // it is needed for layout of other objects.
     /**
      * @internal 
      */
-    class ValueNode : public Node {
-    public:
-        ValueNode(int32_t initialHash) : Node(initialHash), hasValue(false), value(0) {}
-        virtual bool operator==(const Node &other) const override;
-        void setValue(int32_t v) {
-            hasValue=true;
-            value=v;
+    class ಮೌಲ್ಯ_ಗಂಟು : ಸಾರ್ವಜನಿಕ ಗಂಟು_2 {
+    ಸಾರ್ವಜನಿಕ:
+        ಮೌಲ್ಯ_ಗಂಟು(int32_t initialHash) : ಗಂಟು_2(initialHash), has_ಮೌಲ್ಯ(false), ಮೌಲ್ಯ_2(0) {}
+        ವಾಸ್ತವಿಕ bool ಕ್ರಿಯಾಕಾರಕ==(ಸ್ಥಿರಾಂಕ ಗಂಟು_2 &other) ಸ್ಥಿರಾಂಕ override;
+        ಶೂನ್ಯ ಗಣ_ಮೌಲ್ಯ(int32_t v) {
+            has_ಮೌಲ್ಯ=true;
+            ಮೌಲ್ಯ_2=v;
             hash=hash*37u+v;
         }
-    protected:
-        UBool hasValue;
-        int32_t value;
+    ಸಂರಕ್ಷಿತ:
+        UBool has_ಮೌಲ್ಯ;
+        int32_t ಮೌಲ್ಯ_2;
     };
 
-#ifndef U_HIDE_INTERNAL_API
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_ಆಂತರಿಕ_API
     /** 
      * @internal 
      */
-    class IntermediateValueNode : public ValueNode {
-    public:
-        IntermediateValueNode(int32_t v, Node *nextNode)
-                : ValueNode(0x222222u*37u+hashCode(nextNode)), next(nextNode) { setValue(v); }
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
-        Node *next;
+    class Intermediate_ಮೌಲ್ಯ_ಗಂಟು : ಸಾರ್ವಜನಿಕ ಮೌಲ್ಯ_ಗಂಟು {
+    ಸಾರ್ವಜನಿಕ:
+        Intermediate_ಮೌಲ್ಯ_ಗಂಟು(int32_t v, ಗಂಟು_2 *ಮುಂದಿನ_ಗಂಟು)
+                : ಮೌಲ್ಯ_ಗಂಟು(0x222222u*37u+hash_ಸಂಕೇತ(ಮುಂದಿನ_ಗಂಟು)), ಮುಂದಿನ(ಮುಂದಿನ_ಗಂಟು) { ಗಣ_ಮೌಲ್ಯ(v); }
+        ವಾಸ್ತವಿಕ bool ಕ್ರಿಯಾಕಾರಕ==(ಸ್ಥಿರಾಂಕ ಗಂಟು_2 &other) ಸ್ಥಿರಾಂಕ override;
+        ವಾಸ್ತವಿಕ int32_t mark_ಬಲ_ಅಂಚುಗಳು_ಮೊದಲ(int32_t ಅಂಚು_ಸಂಖ್ಯೆ) override;
+        ವಾಸ್ತವಿಕ ಶೂನ್ಯ ಲಿಖ(StringTrieBuilder &builder) override;
+    ಸಂರಕ್ಷಿತ:
+        ಗಂಟು_2 *ಮುಂದಿನ;
     };
-#endif  /* U_HIDE_INTERNAL_API */
+#ಆದರೆ_ಅಂತ್ಯ  /* U_HIDE_INTERNAL_API */
 
     // Do not conditionalize the following with #ifndef U_HIDE_INTERNAL_API,
     // it is needed for layout of other objects.
     /**
      * @internal 
      */
-    class LinearMatchNode : public ValueNode {
-    public:
-        LinearMatchNode(int32_t len, Node *nextNode)
-                : ValueNode((0x333333u*37u+len)*37u+hashCode(nextNode)),
-                  length(len), next(nextNode) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-    protected:
-        int32_t length;
-        Node *next;
+    class ರೇಖೀಯ_ಹೊಂದಿಕೆ_ಗಂಟು : ಸಾರ್ವಜನಿಕ ಮೌಲ್ಯ_ಗಂಟು {
+    ಸಾರ್ವಜನಿಕ:
+        ರೇಖೀಯ_ಹೊಂದಿಕೆ_ಗಂಟು(int32_t len, ಗಂಟು_2 *ಮುಂದಿನ_ಗಂಟು)
+                : ಮೌಲ್ಯ_ಗಂಟು((0x333333u*37u+len)*37u+hash_ಸಂಕೇತ(ಮುಂದಿನ_ಗಂಟು)),
+                  ಉದ್ದಳತೆ(len), ಮುಂದಿನ(ಮುಂದಿನ_ಗಂಟು) {}
+        ವಾಸ್ತವಿಕ bool ಕ್ರಿಯಾಕಾರಕ==(ಸ್ಥಿರಾಂಕ ಗಂಟು_2 &other) ಸ್ಥಿರಾಂಕ override;
+        ವಾಸ್ತವಿಕ int32_t mark_ಬಲ_ಅಂಚುಗಳು_ಮೊದಲ(int32_t ಅಂಚು_ಸಂಖ್ಯೆ) override;
+    ಸಂರಕ್ಷಿತ:
+        int32_t ಉದ್ದಳತೆ;
+        ಗಂಟು_2 *ಮುಂದಿನ;
     };
 
-#ifndef U_HIDE_INTERNAL_API
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_ಆಂತರಿಕ_API
     /**
      * @internal 
      */
-    class BranchNode : public Node {
-    public:
-        BranchNode(int32_t initialHash) : Node(initialHash) {}
-    protected:
-        int32_t firstEdgeNumber;
+    class Branch_ಗಂಟು : ಸಾರ್ವಜನಿಕ ಗಂಟು_2 {
+    ಸಾರ್ವಜನಿಕ:
+        Branch_ಗಂಟು(int32_t initialHash) : ಗಂಟು_2(initialHash) {}
+    ಸಂರಕ್ಷಿತ:
+        int32_t ಮೊದಲ_ಅಂಚು_ಸಂಖ್ಯೆ;
     };
 
     /**
      * @internal 
      */
-    class ListBranchNode : public BranchNode {
-    public:
-        ListBranchNode() : BranchNode(0x444444), length(0) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
+    class List_Branch_ಗಂಟು : ಸಾರ್ವಜನಿಕ Branch_ಗಂಟು {
+    ಸಾರ್ವಜನಿಕ:
+        List_Branch_ಗಂಟು() : Branch_ಗಂಟು(0x444444), ಉದ್ದಳತೆ(0) {}
+        ವಾಸ್ತವಿಕ bool ಕ್ರಿಯಾಕಾರಕ==(ಸ್ಥಿರಾಂಕ ಗಂಟು_2 &other) ಸ್ಥಿರಾಂಕ override;
+        ವಾಸ್ತವಿಕ int32_t mark_ಬಲ_ಅಂಚುಗಳು_ಮೊದಲ(int32_t ಅಂಚು_ಸಂಖ್ಯೆ) override;
+        ವಾಸ್ತವಿಕ ಶೂನ್ಯ ಲಿಖ(StringTrieBuilder &builder) override;
         // Adds a unit with a final value.
-        void add(int32_t c, int32_t value) {
-            units[length] = static_cast<char16_t>(c);
-            equal[length]=nullptr;
-            values[length]=value;
-            ++length;
-            hash=(hash*37u+c)*37u+value;
+        ಶೂನ್ಯ ಕೂಡಿಸು(int32_t c, int32_t ಮೌಲ್ಯ_2) {
+            units[ಉದ್ದಳತೆ] = static_cast<char16_t>(c);
+            equal[ಉದ್ದಳತೆ]=nullptr;
+            ಮೌಲ್ಯಗಳು[ಉದ್ದಳತೆ]=ಮೌಲ್ಯ_2;
+            ++ಉದ್ದಳತೆ;
+            hash=(hash*37u+c)*37u+ಮೌಲ್ಯ_2;
         }
         // Adds a unit which leads to another match node.
-        void add(int32_t c, Node *node) {
-            units[length] = static_cast<char16_t>(c);
-            equal[length]=node;
-            values[length]=0;
-            ++length;
-            hash=(hash*37u+c)*37u+hashCode(node);
+        ಶೂನ್ಯ ಕೂಡಿಸು(int32_t c, ಗಂಟು_2 *ಗಂಟು) {
+            units[ಉದ್ದಳತೆ] = static_cast<char16_t>(c);
+            equal[ಉದ್ದಳತೆ]=ಗಂಟು;
+            ಮೌಲ್ಯಗಳು[ಉದ್ದಳತೆ]=0;
+            ++ಉದ್ದಳತೆ;
+            hash=(hash*37u+c)*37u+hash_ಸಂಕೇತ(ಗಂಟು);
         }
-    protected:
-        Node *equal[kMaxBranchLinearSubNodeLength];  // nullptr means "has final value".
-        int32_t length;
-        int32_t values[kMaxBranchLinearSubNodeLength];
-        char16_t units[kMaxBranchLinearSubNodeLength];
+    ಸಂರಕ್ಷಿತ:
+        ಗಂಟು_2 *equal[k_Max_Branch_ರೇಖೀಯ_Sub_ಗಂಟು_ಉದ್ದಳತೆ];  // nullptr means "has final value".
+        int32_t ಉದ್ದಳತೆ;
+        int32_t ಮೌಲ್ಯಗಳು[k_Max_Branch_ರೇಖೀಯ_Sub_ಗಂಟು_ಉದ್ದಳತೆ];
+        char16_t units[k_Max_Branch_ರೇಖೀಯ_Sub_ಗಂಟು_ಉದ್ದಳತೆ];
     };
 
     /**
      * @internal 
      */
-    class SplitBranchNode : public BranchNode {
-    public:
-        SplitBranchNode(char16_t middleUnit, Node *lessThanNode, Node *greaterOrEqualNode)
-                : BranchNode(((0x555555u*37u+middleUnit)*37u+
-                              hashCode(lessThanNode))*37u+hashCode(greaterOrEqualNode)),
-                  unit(middleUnit), lessThan(lessThanNode), greaterOrEqual(greaterOrEqualNode) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
+    class ವಿಭಜಿಸು_Branch_ಗಂಟು : ಸಾರ್ವಜನಿಕ Branch_ಗಂಟು {
+    ಸಾರ್ವಜನಿಕ:
+        ವಿಭಜಿಸು_Branch_ಗಂಟು(char16_t ಮಧ್ಯ_Unit, ಗಂಟು_2 *less_Than_ಗಂಟು, ಗಂಟು_2 *greater_Or_Equal_ಗಂಟು)
+                : Branch_ಗಂಟು(((0x555555u*37u+ಮಧ್ಯ_Unit)*37u+
+                              hash_ಸಂಕೇತ(less_Than_ಗಂಟು))*37u+hash_ಸಂಕೇತ(greater_Or_Equal_ಗಂಟು)),
+                  unit(ಮಧ್ಯ_Unit), lessThan(less_Than_ಗಂಟು), greaterOrEqual(greater_Or_Equal_ಗಂಟು) {}
+        ವಾಸ್ತವಿಕ bool ಕ್ರಿಯಾಕಾರಕ==(ಸ್ಥಿರಾಂಕ ಗಂಟು_2 &other) ಸ್ಥಿರಾಂಕ override;
+        ವಾಸ್ತವಿಕ int32_t mark_ಬಲ_ಅಂಚುಗಳು_ಮೊದಲ(int32_t ಅಂಚು_ಸಂಖ್ಯೆ) override;
+        ವಾಸ್ತವಿಕ ಶೂನ್ಯ ಲಿಖ(StringTrieBuilder &builder) override;
+    ಸಂರಕ್ಷಿತ:
         char16_t unit;
-        Node *lessThan;
-        Node *greaterOrEqual;
+        ಗಂಟು_2 *lessThan;
+        ಗಂಟು_2 *greaterOrEqual;
     };
 
     // Branch head node, for writing the actual node lead unit.
     /** @internal */
-    class BranchHeadNode : public ValueNode {
-    public:
-        BranchHeadNode(int32_t len, Node *subNode)
-                : ValueNode((0x666666u*37u+len)*37u+hashCode(subNode)),
-                  length(len), next(subNode) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
-        int32_t length;
-        Node *next;  // A branch sub-node.
+    class Branch_ತಲೆ_ಗಂಟು : ಸಾರ್ವಜನಿಕ ಮೌಲ್ಯ_ಗಂಟು {
+    ಸಾರ್ವಜನಿಕ:
+        Branch_ತಲೆ_ಗಂಟು(int32_t len, ಗಂಟು_2 *sub_ಗಂಟು)
+                : ಮೌಲ್ಯ_ಗಂಟು((0x666666u*37u+len)*37u+hash_ಸಂಕೇತ(sub_ಗಂಟು)),
+                  ಉದ್ದಳತೆ(len), ಮುಂದಿನ(sub_ಗಂಟು) {}
+        ವಾಸ್ತವಿಕ bool ಕ್ರಿಯಾಕಾರಕ==(ಸ್ಥಿರಾಂಕ ಗಂಟು_2 &other) ಸ್ಥಿರಾಂಕ override;
+        ವಾಸ್ತವಿಕ int32_t mark_ಬಲ_ಅಂಚುಗಳು_ಮೊದಲ(int32_t ಅಂಚು_ಸಂಖ್ಯೆ) override;
+        ವಾಸ್ತವಿಕ ಶೂನ್ಯ ಲಿಖ(StringTrieBuilder &builder) override;
+    ಸಂರಕ್ಷಿತ:
+        int32_t ಉದ್ದಳತೆ;
+        ಗಂಟು_2 *ಮುಂದಿನ;  // A branch sub-node.
     };
 
-#endif  /* U_HIDE_INTERNAL_API */
+#ಆದರೆ_ಅಂತ್ಯ  /* U_HIDE_INTERNAL_API */
     /// \endcond
 
     /** @internal */
-    virtual Node *createLinearMatchNode(int32_t i, int32_t unitIndex, int32_t length,
-                                        Node *nextNode) const = 0;
+    ವಾಸ್ತವಿಕ ಗಂಟು_2 *create_ರೇಖೀಯ_ಹೊಂದಿಕೆ_ಗಂಟು(int32_t i, int32_t unit_ಸೂಚ್ಯಂಕ, int32_t ಉದ್ದಳತೆ,
+                                        ಗಂಟು_2 *ಮುಂದಿನ_ಗಂಟು) ಸ್ಥಿರಾಂಕ = 0;
 
     /** @internal */
-    virtual int32_t write(int32_t unit) = 0;
+    ವಾಸ್ತವಿಕ int32_t ಲಿಖ(int32_t unit) = 0;
     /** @internal */
-    virtual int32_t writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) = 0;
+    ವಾಸ್ತವಿಕ int32_t writeElementUnits(int32_t i, int32_t unit_ಸೂಚ್ಯಂಕ, int32_t ಉದ್ದಳತೆ) = 0;
     /** @internal */
-    virtual int32_t writeValueAndFinal(int32_t i, UBool isFinal) = 0;
+    ವಾಸ್ತವಿಕ int32_t write_ಮೌಲ್ಯ_And_Final(int32_t i, UBool isFinal) = 0;
     /** @internal */
-    virtual int32_t writeValueAndType(UBool hasValue, int32_t value, int32_t node) = 0;
+    ವಾಸ್ತವಿಕ int32_t write_ಮೌಲ್ಯ_And_Type(UBool has_ಮೌಲ್ಯ, int32_t ಮೌಲ್ಯ_2, int32_t ಗಂಟು) = 0;
     /** @internal */
-    virtual int32_t writeDeltaTo(int32_t jumpTarget) = 0;
+    ವಾಸ್ತವಿಕ int32_t write_Delta_ಗಮ್ಯ(int32_t jump_ಗುರಿ) = 0;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ಆದರೆ_ಅಂತ್ಯ /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __STRINGTRIEBUILDER_H__
+#ಆದರೆ_ಅಂತ್ಯ  // __STRINGTRIEBUILDER_H__

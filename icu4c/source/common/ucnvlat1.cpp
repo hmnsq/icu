@@ -14,150 +14,150 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ಆದರೆ !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/uset.h"
-#include "unicode/utf8.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "ustr_imp.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ucnv.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uset.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utf8.h"
+#ಅನ್ತರ್ಭಾವ "ucnv_bld.h"
+#ಅನ್ತರ್ಭಾವ "ucnv_cnv.h"
+#ಅನ್ತರ್ಭಾವ "ustr_imp.h"
 
 /* control optimizations according to the platform */
-#define LATIN1_UNROLL_FROM_UNICODE 1
+#ವ್ಯಾಖ್ಯಾನಿಸು LATIN1_UNROLL_FROM_UNICODE 1
 
 /* ISO 8859-1 --------------------------------------------------------------- */
 
 /* This is a table-less and callback-less version of ucnv_MBCSSingleToBMPWithOffsets(). */
 U_CDECL_BEGIN
-static void U_CALLCONV
-_Latin1ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                            UErrorCode *pErrorCode) {
-    const uint8_t *source;
-    char16_t *target;
-    int32_t targetCapacity, length;
+ಸ್ಥಿರ ಶೂನ್ಯ U_CALLCONV
+Latin1_ಗಮ್ಯ_Unicode_With_Offsets(UConverter_ಗಮ್ಯ_Unicode_ವಾದಗಳು *p_ವಾದಗಳು,
+                            UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಸ್ಥಿರಾಂಕ uint8_t *ಮೂಲ;
+    char16_t *ಗುರಿ;
+    int32_t ಗುರಿ_ಸಾಮರ್ಥ್ಯ, length;
     int32_t *offsets;
 
-    int32_t sourceIndex;
+    int32_t ಮೂಲ_ಸೂಚ್ಯಂಕ;
 
     /* set up the local pointers */
-    source=(const uint8_t *)pArgs->source;
-    target=pArgs->target;
-    targetCapacity=(int32_t)(pArgs->targetLimit-pArgs->target);
-    offsets=pArgs->offsets;
+    ಮೂಲ=(ಸ್ಥಿರಾಂಕ uint8_t *)p_ವಾದಗಳು->ಮೂಲ;
+    ಗುರಿ=p_ವಾದಗಳು->ಗುರಿ;
+    ಗುರಿ_ಸಾಮರ್ಥ್ಯ=(int32_t)(p_ವಾದಗಳು->ಗುರಿ_ಎಲ್ಲೆ-p_ವಾದಗಳು->ಗುರಿ);
+    offsets=p_ವಾದಗಳು->offsets;
 
-    sourceIndex=0;
+    ಮೂಲ_ಸೂಚ್ಯಂಕ=0;
 
     /*
      * since the conversion here is 1:1 char16_t:uint8_t, we need only one counter
      * for the minimum of the sourceLength and targetCapacity
      */
-    length=(int32_t)((const uint8_t *)pArgs->sourceLimit-source);
-    if(length<=targetCapacity) {
-        targetCapacity=length;
-    } else {
+    length=(int32_t)((ಸ್ಥಿರಾಂಕ uint8_t *)p_ವಾದಗಳು->ಮೂಲ_ಎಲ್ಲೆ-ಮೂಲ);
+    ಆದರೆ(length<=ಗುರಿ_ಸಾಮರ್ಥ್ಯ) {
+        ಗುರಿ_ಸಾಮರ್ಥ್ಯ=length;
+    } ಇಲ್ಲದಿದ್ದರೆ {
         /* target will be full */
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-        length=targetCapacity;
+        *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
+        length=ಗುರಿ_ಸಾಮರ್ಥ್ಯ;
     }
 
-    if(targetCapacity>=8) {
+    ಆದರೆ(ಗುರಿ_ಸಾಮರ್ಥ್ಯ>=8) {
         /* This loop is unrolled for speed and improved pipelining. */
         int32_t count, loops;
 
-        loops=count=targetCapacity>>3;
-        length=targetCapacity&=0x7;
-        do {
-            target[0]=source[0];
-            target[1]=source[1];
-            target[2]=source[2];
-            target[3]=source[3];
-            target[4]=source[4];
-            target[5]=source[5];
-            target[6]=source[6];
-            target[7]=source[7];
-            target+=8;
-            source+=8;
-        } while(--count>0);
+        loops=count=ಗುರಿ_ಸಾಮರ್ಥ್ಯ>>3;
+        length=ಗುರಿ_ಸಾಮರ್ಥ್ಯ&=0x7;
+        ಮಾಡು {
+            ಗುರಿ[0]=ಮೂಲ[0];
+            ಗುರಿ[1]=ಮೂಲ[1];
+            ಗುರಿ[2]=ಮೂಲ[2];
+            ಗುರಿ[3]=ಮೂಲ[3];
+            ಗುರಿ[4]=ಮೂಲ[4];
+            ಗುರಿ[5]=ಮೂಲ[5];
+            ಗುರಿ[6]=ಮೂಲ[6];
+            ಗುರಿ[7]=ಮೂಲ[7];
+            ಗುರಿ+=8;
+            ಮೂಲ+=8;
+        } ಆಗ(--count>0);
 
-        if(offsets!=nullptr) {
-            do {
-                offsets[0]=sourceIndex++;
-                offsets[1]=sourceIndex++;
-                offsets[2]=sourceIndex++;
-                offsets[3]=sourceIndex++;
-                offsets[4]=sourceIndex++;
-                offsets[5]=sourceIndex++;
-                offsets[6]=sourceIndex++;
-                offsets[7]=sourceIndex++;
+        ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+            ಮಾಡು {
+                offsets[0]=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                offsets[1]=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                offsets[2]=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                offsets[3]=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                offsets[4]=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                offsets[5]=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                offsets[6]=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                offsets[7]=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
                 offsets+=8;
-            } while(--loops>0);
+            } ಆಗ(--loops>0);
         }
     }
 
     /* conversion loop */
-    while(targetCapacity>0) {
-        *target++=*source++;
-        --targetCapacity;
+    ಆಗ(ಗುರಿ_ಸಾಮರ್ಥ್ಯ>0) {
+        *ಗುರಿ++=*ಮೂಲ++;
+        --ಗುರಿ_ಸಾಮರ್ಥ್ಯ;
     }
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
+    p_ವಾದಗಳು->ಮೂಲ=(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *)ಮೂಲ;
+    p_ವಾದಗಳು->ಗುರಿ=ಗುರಿ;
 
     /* set offsets */
-    if(offsets!=nullptr) {
-        while(length>0) {
-            *offsets++=sourceIndex++;
+    ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+        ಆಗ(length>0) {
+            *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
             --length;
         }
-        pArgs->offsets=offsets;
+        p_ವಾದಗಳು->offsets=offsets;
     }
 }
 
 /* This is a table-less and callback-less version of ucnv_MBCSSingleGetNextUChar(). */
-static UChar32 U_CALLCONV
-_Latin1GetNextUChar(UConverterToUnicodeArgs *pArgs,
-                    UErrorCode *pErrorCode) {
-    const uint8_t *source=(const uint8_t *)pArgs->source;
-    if(source<(const uint8_t *)pArgs->sourceLimit) {
-        pArgs->source=(const char *)(source+1);
-        return *source;
+ಸ್ಥಿರ UChar32 U_CALLCONV
+Latin1_Get_ಮುಂದಿನ_UChar(UConverter_ಗಮ್ಯ_Unicode_ವಾದಗಳು *p_ವಾದಗಳು,
+                    UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಸ್ಥಿರಾಂಕ uint8_t *ಮೂಲ=(ಸ್ಥಿರಾಂಕ uint8_t *)p_ವಾದಗಳು->ಮೂಲ;
+    ಆದರೆ(ಮೂಲ<(ಸ್ಥಿರಾಂಕ uint8_t *)p_ವಾದಗಳು->ಮೂಲ_ಎಲ್ಲೆ) {
+        p_ವಾದಗಳು->ಮೂಲ=(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *)(ಮೂಲ+1);
+        ಹಿಂತಿರುಗಿ *ಮೂಲ;
     }
 
     /* no output because of empty input */
-    *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-    return 0xffff;
+    *p_Error_ಸಂಕೇತ=U_ಸೂಚ್ಯಂಕ_OUTOFBOUNDS_ERROR;
+    ಹಿಂತಿರುಗಿ 0xffff;
 }
 
 /* This is a table-less version of ucnv_MBCSSingleFromBMPWithOffsets(). */
-static void U_CALLCONV
-_Latin1FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
-                              UErrorCode *pErrorCode) {
+ಸ್ಥಿರ ಶೂನ್ಯ U_CALLCONV
+_Latin1FromUnicodeWithOffsets(UConverter_From_Unicode_ವಾದಗಳು *p_ವಾದಗಳು,
+                              UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
     UConverter *cnv;
-    const char16_t *source, *sourceLimit;
-    uint8_t *target, *oldTarget;
-    int32_t targetCapacity, length;
+    ಸ್ಥಿರಾಂಕ char16_t *ಮೂಲ, *ಮೂಲ_ಎಲ್ಲೆ;
+    uint8_t *ಗುರಿ, *old_ಗುರಿ;
+    int32_t ಗುರಿ_ಸಾಮರ್ಥ್ಯ, length;
     int32_t *offsets;
 
     UChar32 cp;
     char16_t c, max;
 
-    int32_t sourceIndex;
+    int32_t ಮೂಲ_ಸೂಚ್ಯಂಕ;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target=oldTarget=(uint8_t *)pArgs->target;
-    targetCapacity=(int32_t)(pArgs->targetLimit-pArgs->target);
-    offsets=pArgs->offsets;
+    cnv=p_ವಾದಗಳು->converter;
+    ಮೂಲ=p_ವಾದಗಳು->ಮೂಲ;
+    ಮೂಲ_ಎಲ್ಲೆ=p_ವಾದಗಳು->ಮೂಲ_ಎಲ್ಲೆ;
+    ಗುರಿ=old_ಗುರಿ=(uint8_t *)p_ವಾದಗಳು->ಗುರಿ;
+    ಗುರಿ_ಸಾಮರ್ಥ್ಯ=(int32_t)(p_ವಾದಗಳು->ಗುರಿ_ಎಲ್ಲೆ-p_ವಾದಗಳು->ಗುರಿ);
+    offsets=p_ವಾದಗಳು->offsets;
 
-    if(cnv->sharedData==&_Latin1Data) {
+    ಆದರೆ(cnv->shared_ದತ್ತಾಂಶ==&Latin1_ದತ್ತಾಂಶ) {
         max=0xff; /* Latin-1 */
-    } else {
+    } ಇಲ್ಲದಿದ್ದರೆ {
         max=0x7f; /* US-ASCII */
     }
 
@@ -165,201 +165,201 @@ _Latin1FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     cp=cnv->fromUChar32;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex= cp==0 ? 0 : -1;
+    ಮೂಲ_ಸೂಚ್ಯಂಕ= cp==0 ? 0 : -1;
 
     /*
      * since the conversion here is 1:1 char16_t:uint8_t, we need only one counter
      * for the minimum of the sourceLength and targetCapacity
      */
-    length=(int32_t)(sourceLimit-source);
-    if(length<targetCapacity) {
-        targetCapacity=length;
+    length=(int32_t)(ಮೂಲ_ಎಲ್ಲೆ-ಮೂಲ);
+    ಆದರೆ(length<ಗುರಿ_ಸಾಮರ್ಥ್ಯ) {
+        ಗುರಿ_ಸಾಮರ್ಥ್ಯ=length;
     }
 
     /* conversion loop */
-    if(cp!=0 && targetCapacity>0) {
-        goto getTrail;
+    ಆದರೆ(cp!=0 && ಗುರಿ_ಸಾಮರ್ಥ್ಯ>0) {
+        ಹೋಗು getTrail;
     }
 
-#if LATIN1_UNROLL_FROM_UNICODE
+#ಆದರೆ LATIN1_UNROLL_FROM_UNICODE
     /* unroll the loop with the most common case */
-    if(targetCapacity>=16) {
+    ಆದರೆ(ಗುರಿ_ಸಾಮರ್ಥ್ಯ>=16) {
         int32_t count, loops;
         char16_t u, oredChars;
 
-        loops=count=targetCapacity>>4;
-        do {
-            oredChars=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
-            oredChars|=u=*source++;
-            *target++=(uint8_t)u;
+        loops=count=ಗುರಿ_ಸಾಮರ್ಥ್ಯ>>4;
+        ಮಾಡು {
+            oredChars=u=*ಮೂಲ++;
+            *ಗುರಿ++=(uint8_t)u;
+            oredChars|=u=*ಮೂಲ++;
+            *ಗುರಿ++=(uint8_t)u;
+            oredChars|=u=*ಮೂಲ++;
+            *ಗುರಿ++=(uint8_t)u;
+            oredChars|=u=*ಮೂಲ++;
+            *ಗುರಿ++=(uint8_t)u;
+            oredChars|=u=*ಮೂಲ++;
+            *ಗುರಿ++=(uint8_t)u;
+            oredChars|=u=*ಮೂಲ++;
+            *ಗುರಿ++=(uint8_t)u;
+            oredChars|=u=*ಮೂಲ++;
+            *ಗುರಿ++=(uint8_t)u;
+            oredChars|=u=*ಮೂಲ++;
+            *ಗುರಿ++=(uint8_t)u;
+            oredChars|=u=*ಮೂಲ++;
+            *ಗುರಿ++=(uint8_t)u;
+            oredChars|=u=*ಮೂಲ++;
+            *ಗುರಿ++=(uint8_t)u;
+            oredChars|=u=*ಮೂಲ++;
+            *ಗುರಿ++=(uint8_t)u;
+            oredChars|=u=*ಮೂಲ++;
+            *ಗುರಿ++=(uint8_t)u;
+            oredChars|=u=*ಮೂಲ++;
+            *ಗುರಿ++=(uint8_t)u;
+            oredChars|=u=*ಮೂಲ++;
+            *ಗುರಿ++=(uint8_t)u;
+            oredChars|=u=*ಮೂಲ++;
+            *ಗುರಿ++=(uint8_t)u;
+            oredChars|=u=*ಮೂಲ++;
+            *ಗುರಿ++=(uint8_t)u;
 
             /* were all 16 entries really valid? */
-            if(oredChars>max) {
+            ಆದರೆ(oredChars>max) {
                 /* no, return to the first of these 16 */
-                source-=16;
-                target-=16;
-                break;
+                ಮೂಲ-=16;
+                ಗುರಿ-=16;
+                ನಿಲ್ಲಿಸು;
             }
-        } while(--count>0);
+        } ಆಗ(--count>0);
         count=loops-count;
-        targetCapacity-=16*count;
+        ಗುರಿ_ಸಾಮರ್ಥ್ಯ-=16*count;
 
-        if(offsets!=nullptr) {
-            oldTarget+=16*count;
-            while(count>0) {
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
+        ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+            old_ಗುರಿ+=16*count;
+            ಆಗ(count>0) {
+                *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
                 --count;
             }
         }
     }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
     /* conversion loop */
     c=0;
-    while(targetCapacity>0 && (c=*source++)<=max) {
+    ಆಗ(ಗುರಿ_ಸಾಮರ್ಥ್ಯ>0 && (c=*ಮೂಲ++)<=max) {
         /* convert the Unicode code point */
-        *target++=(uint8_t)c;
-        --targetCapacity;
+        *ಗುರಿ++=(uint8_t)c;
+        --ಗುರಿ_ಸಾಮರ್ಥ್ಯ;
     }
 
-    if(c>max) {
+    ಆದರೆ(c>max) {
         cp=c;
-        if(!U_IS_SURROGATE(cp)) {
+        ಆದರೆ(!U_IS_SURROGATE(cp)) {
             /* callback(unassigned) */
-        } else if(U_IS_SURROGATE_LEAD(cp)) {
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(U_IS_SURROGATE_LEAD(cp)) {
 getTrail:
-            if(source<sourceLimit) {
+            ಆದರೆ(ಮೂಲ<ಮೂಲ_ಎಲ್ಲೆ) {
                 /* test the following code unit */
-                char16_t trail=*source;
-                if(U16_IS_TRAIL(trail)) {
-                    ++source;
+                char16_t trail=*ಮೂಲ;
+                ಆದರೆ(U16_IS_TRAIL(trail)) {
+                    ++ಮೂಲ;
                     cp=U16_GET_SUPPLEMENTARY(cp, trail);
                     /* this codepage does not map supplementary code points */
                     /* callback(unassigned) */
-                } else {
+                } ಇಲ್ಲದಿದ್ದರೆ {
                     /* this is an unmatched lead code unit (1st surrogate) */
                     /* callback(illegal) */
                 }
-            } else {
+            } ಇಲ್ಲದಿದ್ದರೆ {
                 /* no more input */
                 cnv->fromUChar32=cp;
-                goto noMoreInput;
+                ಹೋಗು no_ಇನ್ನಷ್ಟು_ಒಳಹರಿವು;
             }
-        } else {
+        } ಇಲ್ಲದಿದ್ದರೆ {
             /* this is an unmatched trail code unit (2nd surrogate) */
             /* callback(illegal) */
         }
 
-        *pErrorCode= U_IS_SURROGATE(cp) ? U_ILLEGAL_CHAR_FOUND : U_INVALID_CHAR_FOUND;
+        *p_Error_ಸಂಕೇತ= U_IS_SURROGATE(cp) ? U_ILLEGAL_CHAR_ಸಿಕ್ಕಿತು : U_INVALID_CHAR_ಸಿಕ್ಕಿತು;
         cnv->fromUChar32=cp;
     }
-noMoreInput:
+no_ಇನ್ನಷ್ಟು_ಒಳಹರಿವು:
 
     /* set offsets since the start */
-    if(offsets!=nullptr) {
-        size_t count=target-oldTarget;
-        while(count>0) {
-            *offsets++=sourceIndex++;
+    ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+        size_t count=ಗುರಿ-old_ಗುರಿ;
+        ಆಗ(count>0) {
+            *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
             --count;
         }
     }
 
-    if(U_SUCCESS(*pErrorCode) && source<sourceLimit && target>=(uint8_t *)pArgs->targetLimit) {
+    ಆದರೆ(U_SUCCESS(*p_Error_ಸಂಕೇತ) && ಮೂಲ<ಮೂಲ_ಎಲ್ಲೆ && ಗುರಿ>=(uint8_t *)p_ವಾದಗಳು->ಗುರಿ_ಎಲ್ಲೆ) {
         /* target is full */
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
     }
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target=(char *)target;
-    pArgs->offsets=offsets;
+    p_ವಾದಗಳು->ಮೂಲ=ಮೂಲ;
+    p_ವಾದಗಳು->ಗುರಿ=(ಅಕ್ಷರ *)ಗುರಿ;
+    p_ವಾದಗಳು->offsets=offsets;
 }
 
 /* Convert UTF-8 to Latin-1. Adapted from ucnv_SBCSFromUTF8(). */
-static void U_CALLCONV
-ucnv_Latin1FromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
-                    UConverterToUnicodeArgs *pToUArgs,
-                    UErrorCode *pErrorCode) {
+ಸ್ಥಿರ ಶೂನ್ಯ U_CALLCONV
+ucnv_Latin1FromUTF8(UConverter_From_Unicode_ವಾದಗಳು *pFromUArgs,
+                    UConverter_ಗಮ್ಯ_Unicode_ವಾದಗಳು *p_ಗಮ್ಯ_UArgs,
+                    UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
     UConverter *utf8;
-    const uint8_t *source, *sourceLimit;
-    uint8_t *target;
-    int32_t targetCapacity;
+    ಸ್ಥಿರಾಂಕ uint8_t *ಮೂಲ, *ಮೂಲ_ಎಲ್ಲೆ;
+    uint8_t *ಗುರಿ;
+    int32_t ಗುರಿ_ಸಾಮರ್ಥ್ಯ;
 
     UChar32 c;
     uint8_t b, t1;
 
     /* set up the local pointers */
-    utf8=pToUArgs->converter;
-    source=(uint8_t *)pToUArgs->source;
-    sourceLimit=(uint8_t *)pToUArgs->sourceLimit;
-    target=(uint8_t *)pFromUArgs->target;
-    targetCapacity=(int32_t)(pFromUArgs->targetLimit-pFromUArgs->target);
+    utf8=p_ಗಮ್ಯ_UArgs->converter;
+    ಮೂಲ=(uint8_t *)p_ಗಮ್ಯ_UArgs->ಮೂಲ;
+    ಮೂಲ_ಎಲ್ಲೆ=(uint8_t *)p_ಗಮ್ಯ_UArgs->ಮೂಲ_ಎಲ್ಲೆ;
+    ಗುರಿ=(uint8_t *)pFromUArgs->ಗುರಿ;
+    ಗುರಿ_ಸಾಮರ್ಥ್ಯ=(int32_t)(pFromUArgs->ಗುರಿ_ಎಲ್ಲೆ-pFromUArgs->ಗುರಿ);
 
     /* get the converter state from the UTF-8 UConverter */
-    if (utf8->toULength > 0) {
-        c=(UChar32)utf8->toUnicodeStatus;
-    } else {
+    ಆದರೆ (utf8->ಗಮ್ಯ_ULength > 0) {
+        c=(UChar32)utf8->ಗಮ್ಯ_Unicode_ಸ್ಥಿತಿ;
+    } ಇಲ್ಲದಿದ್ದರೆ {
         c = 0;
     }
-    if(c!=0 && source<sourceLimit) {
-        if(targetCapacity==0) {
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            return;
-        } else if(c>=0xc2 && c<=0xc3 && (t1=(uint8_t)(*source-0x80)) <= 0x3f) {
-            ++source;
-            *target++=(uint8_t)(((c&3)<<6)|t1);
-            --targetCapacity;
+    ಆದರೆ(c!=0 && ಮೂಲ<ಮೂಲ_ಎಲ್ಲೆ) {
+        ಆದರೆ(ಗುರಿ_ಸಾಮರ್ಥ್ಯ==0) {
+            *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
+            ಹಿಂತಿರುಗಿ;
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(c>=0xc2 && c<=0xc3 && (t1=(uint8_t)(*ಮೂಲ-0x80)) <= 0x3f) {
+            ++ಮೂಲ;
+            *ಗುರಿ++=(uint8_t)(((c&3)<<6)|t1);
+            --ಗುರಿ_ಸಾಮರ್ಥ್ಯ;
 
-            utf8->toUnicodeStatus=0;
-            utf8->toULength=0;
-        } else {
+            utf8->ಗಮ್ಯ_Unicode_ಸ್ಥಿತಿ=0;
+            utf8->ಗಮ್ಯ_ULength=0;
+        } ಇಲ್ಲದಿದ್ದರೆ {
             /* complicated, illegal or unmappable input: fall back to the pivoting implementation */
-            *pErrorCode=U_USING_DEFAULT_WARNING;
-            return;
+            *p_Error_ಸಂಕೇತ=U_USING_DEFAULT_WARNING;
+            ಹಿಂತಿರುಗಿ;
         }
     }
 
@@ -371,36 +371,36 @@ ucnv_Latin1FromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
      * For Latin-1, adjust sourceLimit only for 1 trail byte because
      * the conversion loop handles at most 2-byte sequences.
      */
-    if(source<sourceLimit && U8_IS_LEAD(*(sourceLimit-1))) {
-        --sourceLimit;
+    ಆದರೆ(ಮೂಲ<ಮೂಲ_ಎಲ್ಲೆ && U8_IS_LEAD(*(ಮೂಲ_ಎಲ್ಲೆ-1))) {
+        --ಮೂಲ_ಎಲ್ಲೆ;
     }
 
     /* conversion loop */
-    while(source<sourceLimit) {
-        if(targetCapacity>0) {
-            b=*source++;
-            if(U8_IS_SINGLE(b)) {
+    ಆಗ(ಮೂಲ<ಮೂಲ_ಎಲ್ಲೆ) {
+        ಆದರೆ(ಗುರಿ_ಸಾಮರ್ಥ್ಯ>0) {
+            b=*ಮೂಲ++;
+            ಆದರೆ(U8_IS_SINGLE(b)) {
                 /* convert ASCII */
-                *target++ = b;
-                --targetCapacity;
-            } else if( /* handle U+0080..U+00FF inline */
+                *ಗುರಿ++ = b;
+                --ಗುರಿ_ಸಾಮರ್ಥ್ಯ;
+            } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ( /* handle U+0080..U+00FF inline */
                        b>=0xc2 && b<=0xc3 &&
-                       (t1=(uint8_t)(*source-0x80)) <= 0x3f
+                       (t1=(uint8_t)(*ಮೂಲ-0x80)) <= 0x3f
             ) {
-                ++source;
-                *target++=(uint8_t)(((b&3)<<6)|t1);
-                --targetCapacity;
-            } else {
+                ++ಮೂಲ;
+                *ಗುರಿ++=(uint8_t)(((b&3)<<6)|t1);
+                --ಗುರಿ_ಸಾಮರ್ಥ್ಯ;
+            } ಇಲ್ಲದಿದ್ದರೆ {
                 /* complicated, illegal or unmappable input: fall back to the pivoting implementation */
-                pToUArgs->source=(char *)(source-1);
-                pFromUArgs->target=(char *)target;
-                *pErrorCode=U_USING_DEFAULT_WARNING;
-                return;
+                p_ಗಮ್ಯ_UArgs->ಮೂಲ=(ಅಕ್ಷರ *)(ಮೂಲ-1);
+                pFromUArgs->ಗುರಿ=(ಅಕ್ಷರ *)ಗುರಿ;
+                *p_Error_ಸಂಕೇತ=U_USING_DEFAULT_WARNING;
+                ಹಿಂತಿರುಗಿ;
             }
-        } else {
+        } ಇಲ್ಲದಿದ್ದರೆ {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
+            ನಿಲ್ಲಿಸು;
         }
     }
 
@@ -411,142 +411,142 @@ ucnv_Latin1FromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
      * For Latin-1, there is at most exactly one lead byte because of the
      * smaller sourceLimit adjustment logic.
      */
-    if(U_SUCCESS(*pErrorCode) && source<(sourceLimit=(uint8_t *)pToUArgs->sourceLimit)) {
-        utf8->toUnicodeStatus=utf8->toUBytes[0]=b=*source++;
-        utf8->toULength=1;
-        utf8->mode=U8_COUNT_BYTES(b);
+    ಆದರೆ(U_SUCCESS(*p_Error_ಸಂಕೇತ) && ಮೂಲ<(ಮೂಲ_ಎಲ್ಲೆ=(uint8_t *)p_ಗಮ್ಯ_UArgs->ಮೂಲ_ಎಲ್ಲೆ)) {
+        utf8->ಗಮ್ಯ_Unicode_ಸ್ಥಿತಿ=utf8->ಗಮ್ಯ_UBytes[0]=b=*ಮೂಲ++;
+        utf8->ಗಮ್ಯ_ULength=1;
+        utf8->ಬಹುಲಕ=U8_ಎಣಿಕೆ_ಬೈಟುಗಳು(b);
     }
 
     /* write back the updated pointers */
-    pToUArgs->source=(char *)source;
-    pFromUArgs->target=(char *)target;
+    p_ಗಮ್ಯ_UArgs->ಮೂಲ=(ಅಕ್ಷರ *)ಮೂಲ;
+    pFromUArgs->ಗುರಿ=(ಅಕ್ಷರ *)ಗುರಿ;
 }
 
-static void U_CALLCONV
-_Latin1GetUnicodeSet(const UConverter *cnv,
-                     const USetAdder *sa,
-                     UConverterUnicodeSet which,
-                     UErrorCode *pErrorCode) {
-    (void)cnv;
-    (void)which;
-    (void)pErrorCode;
-    sa->addRange(sa->set, 0, 0xff);
+ಸ್ಥಿರ ಶೂನ್ಯ U_CALLCONV
+Latin1_Get_Unicode_ಗಣ(ಸ್ಥಿರಾಂಕ UConverter *cnv,
+                     ಸ್ಥಿರಾಂಕ USetAdder *sa,
+                     UConverter_Unicode_ಗಣ which,
+                     UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    (ಶೂನ್ಯ)cnv;
+    (ಶೂನ್ಯ)which;
+    (ಶೂನ್ಯ)p_Error_ಸಂಕೇತ;
+    sa->ಕೂಡಿಸು_Range(sa->ಗಣ, 0, 0xff);
 }
-U_CDECL_END
+U_CDECL_ಕೊನೆ
 
 
-static const UConverterImpl _Latin1Impl={
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ UConverterImpl _Latin1Impl={
     UCNV_LATIN_1,
 
-    nullptr,
-    nullptr,
+    ಶೂನ್ಯಸೂಚಕ,
+    ಶೂನ್ಯಸೂಚಕ,
 
-    nullptr,
-    nullptr,
-    nullptr,
+    ಶೂನ್ಯಸೂಚಕ,
+    ಶೂನ್ಯಸೂಚಕ,
+    ಶೂನ್ಯಸೂಚಕ,
 
-    _Latin1ToUnicodeWithOffsets,
-    _Latin1ToUnicodeWithOffsets,
+    Latin1_ಗಮ್ಯ_Unicode_With_Offsets,
+    Latin1_ಗಮ್ಯ_Unicode_With_Offsets,
     _Latin1FromUnicodeWithOffsets,
     _Latin1FromUnicodeWithOffsets,
-    _Latin1GetNextUChar,
+    Latin1_Get_ಮುಂದಿನ_UChar,
 
-    nullptr,
-    nullptr,
-    nullptr,
-    nullptr,
-    _Latin1GetUnicodeSet,
+    ಶೂನ್ಯಸೂಚಕ,
+    ಶೂನ್ಯಸೂಚಕ,
+    ಶೂನ್ಯಸೂಚಕ,
+    ಶೂನ್ಯಸೂಚಕ,
+    Latin1_Get_Unicode_ಗಣ,
 
-    nullptr,
+    ಶೂನ್ಯಸೂಚಕ,
     ucnv_Latin1FromUTF8
 };
 
-static const UConverterStaticData _Latin1StaticData={
-    sizeof(UConverterStaticData),
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ UConverter_Static_ದತ್ತಾಂಶ Latin1_Static_ದತ್ತಾಂಶ={
+    ಗಾತ್ರ(UConverter_Static_ದತ್ತಾಂಶ),
     "ISO-8859-1",
     819, UCNV_IBM, UCNV_LATIN_1, 1, 1,
-    { 0x1a, 0, 0, 0 }, 1, false, false,
+    { 0x1a, 0, 0, 0 }, 1, ಸುಳ್ಳು, ಸುಳ್ಳು,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _Latin1Data=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_Latin1StaticData, &_Latin1Impl);
+ಸ್ಥಿರಾಂಕ UConverter_Shared_ದತ್ತಾಂಶ Latin1_ದತ್ತಾಂಶ=
+        UCNV_IMMUTABLE_SHARED_ದತ್ತಾಂಶ_INITIALIZER(&Latin1_Static_ದತ್ತಾಂಶ, &_Latin1Impl);
 
 /* US-ASCII ----------------------------------------------------------------- */
 
 U_CDECL_BEGIN
 /* This is a table-less version of ucnv_MBCSSingleToBMPWithOffsets(). */
-static void U_CALLCONV
-_ASCIIToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                           UErrorCode *pErrorCode) {
-    const uint8_t *source, *sourceLimit;
-    char16_t *target, *oldTarget;
-    int32_t targetCapacity, length;
+ಸ್ಥಿರ ಶೂನ್ಯ U_CALLCONV
+_ASCIIToUnicodeWithOffsets(UConverter_ಗಮ್ಯ_Unicode_ವಾದಗಳು *p_ವಾದಗಳು,
+                           UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಸ್ಥಿರಾಂಕ uint8_t *ಮೂಲ, *ಮೂಲ_ಎಲ್ಲೆ;
+    char16_t *ಗುರಿ, *old_ಗುರಿ;
+    int32_t ಗುರಿ_ಸಾಮರ್ಥ್ಯ, length;
     int32_t *offsets;
 
-    int32_t sourceIndex;
+    int32_t ಮೂಲ_ಸೂಚ್ಯಂಕ;
 
     uint8_t c;
 
     /* set up the local pointers */
-    source=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
-    target=oldTarget=pArgs->target;
-    targetCapacity=(int32_t)(pArgs->targetLimit-pArgs->target);
-    offsets=pArgs->offsets;
+    ಮೂಲ=(ಸ್ಥಿರಾಂಕ uint8_t *)p_ವಾದಗಳು->ಮೂಲ;
+    ಮೂಲ_ಎಲ್ಲೆ=(ಸ್ಥಿರಾಂಕ uint8_t *)p_ವಾದಗಳು->ಮೂಲ_ಎಲ್ಲೆ;
+    ಗುರಿ=old_ಗುರಿ=p_ವಾದಗಳು->ಗುರಿ;
+    ಗುರಿ_ಸಾಮರ್ಥ್ಯ=(int32_t)(p_ವಾದಗಳು->ಗುರಿ_ಎಲ್ಲೆ-p_ವಾದಗಳು->ಗುರಿ);
+    offsets=p_ವಾದಗಳು->offsets;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex=0;
+    ಮೂಲ_ಸೂಚ್ಯಂಕ=0;
 
     /*
      * since the conversion here is 1:1 char16_t:uint8_t, we need only one counter
      * for the minimum of the sourceLength and targetCapacity
      */
-    length=(int32_t)(sourceLimit-source);
-    if(length<targetCapacity) {
-        targetCapacity=length;
+    length=(int32_t)(ಮೂಲ_ಎಲ್ಲೆ-ಮೂಲ);
+    ಆದರೆ(length<ಗುರಿ_ಸಾಮರ್ಥ್ಯ) {
+        ಗುರಿ_ಸಾಮರ್ಥ್ಯ=length;
     }
 
-    if(targetCapacity>=8) {
+    ಆದರೆ(ಗುರಿ_ಸಾಮರ್ಥ್ಯ>=8) {
         /* This loop is unrolled for speed and improved pipelining. */
         int32_t count, loops;
         char16_t oredChars;
 
-        loops=count=targetCapacity>>3;
-        do {
-            oredChars=target[0]=source[0];
-            oredChars|=target[1]=source[1];
-            oredChars|=target[2]=source[2];
-            oredChars|=target[3]=source[3];
-            oredChars|=target[4]=source[4];
-            oredChars|=target[5]=source[5];
-            oredChars|=target[6]=source[6];
-            oredChars|=target[7]=source[7];
+        loops=count=ಗುರಿ_ಸಾಮರ್ಥ್ಯ>>3;
+        ಮಾಡು {
+            oredChars=ಗುರಿ[0]=ಮೂಲ[0];
+            oredChars|=ಗುರಿ[1]=ಮೂಲ[1];
+            oredChars|=ಗುರಿ[2]=ಮೂಲ[2];
+            oredChars|=ಗುರಿ[3]=ಮೂಲ[3];
+            oredChars|=ಗುರಿ[4]=ಮೂಲ[4];
+            oredChars|=ಗುರಿ[5]=ಮೂಲ[5];
+            oredChars|=ಗುರಿ[6]=ಮೂಲ[6];
+            oredChars|=ಗುರಿ[7]=ಮೂಲ[7];
 
             /* were all 16 entries really valid? */
-            if(oredChars>0x7f) {
+            ಆದರೆ(oredChars>0x7f) {
                 /* no, return to the first of these 16 */
-                break;
+                ನಿಲ್ಲಿಸು;
             }
-            source+=8;
-            target+=8;
-        } while(--count>0);
+            ಮೂಲ+=8;
+            ಗುರಿ+=8;
+        } ಆಗ(--count>0);
         count=loops-count;
-        targetCapacity-=count*8;
+        ಗುರಿ_ಸಾಮರ್ಥ್ಯ-=count*8;
 
-        if(offsets!=nullptr) {
-            oldTarget+=count*8;
-            while(count>0) {
-                offsets[0]=sourceIndex++;
-                offsets[1]=sourceIndex++;
-                offsets[2]=sourceIndex++;
-                offsets[3]=sourceIndex++;
-                offsets[4]=sourceIndex++;
-                offsets[5]=sourceIndex++;
-                offsets[6]=sourceIndex++;
-                offsets[7]=sourceIndex++;
+        ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+            old_ಗುರಿ+=count*8;
+            ಆಗ(count>0) {
+                offsets[0]=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                offsets[1]=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                offsets[2]=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                offsets[3]=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                offsets[4]=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                offsets[5]=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                offsets[6]=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
+                offsets[7]=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
                 offsets+=8;
                 --count;
             }
@@ -555,202 +555,202 @@ _ASCIIToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
 
     /* conversion loop */
     c=0;
-    while(targetCapacity>0 && (c=*source++)<=0x7f) {
-        *target++=c;
-        --targetCapacity;
+    ಆಗ(ಗುರಿ_ಸಾಮರ್ಥ್ಯ>0 && (c=*ಮೂಲ++)<=0x7f) {
+        *ಗುರಿ++=c;
+        --ಗುರಿ_ಸಾಮರ್ಥ್ಯ;
     }
 
-    if(c>0x7f) {
+    ಆದರೆ(c>0x7f) {
         /* callback(illegal); copy the current bytes to toUBytes[] */
-        UConverter *cnv=pArgs->converter;
-        cnv->toUBytes[0]=c;
-        cnv->toULength=1;
-        *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-    } else if(source<sourceLimit && target>=pArgs->targetLimit) {
+        UConverter *cnv=p_ವಾದಗಳು->converter;
+        cnv->ಗಮ್ಯ_UBytes[0]=c;
+        cnv->ಗಮ್ಯ_ULength=1;
+        *p_Error_ಸಂಕೇತ=U_ILLEGAL_CHAR_ಸಿಕ್ಕಿತು;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(ಮೂಲ<ಮೂಲ_ಎಲ್ಲೆ && ಗುರಿ>=p_ವಾದಗಳು->ಗುರಿ_ಎಲ್ಲೆ) {
         /* target is full */
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
     }
 
     /* set offsets since the start */
-    if(offsets!=nullptr) {
-        size_t count=target-oldTarget;
-        while(count>0) {
-            *offsets++=sourceIndex++;
+    ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+        size_t count=ಗುರಿ-old_ಗುರಿ;
+        ಆಗ(count>0) {
+            *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
             --count;
         }
     }
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_ವಾದಗಳು->ಮೂಲ=(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *)ಮೂಲ;
+    p_ವಾದಗಳು->ಗುರಿ=ಗುರಿ;
+    p_ವಾದಗಳು->offsets=offsets;
 }
 
 /* This is a table-less version of ucnv_MBCSSingleGetNextUChar(). */
-static UChar32 U_CALLCONV
-_ASCIIGetNextUChar(UConverterToUnicodeArgs *pArgs,
-                   UErrorCode *pErrorCode) {
-    const uint8_t *source;
+ಸ್ಥಿರ UChar32 U_CALLCONV
+ASCIIGet_ಮುಂದಿನ_UChar(UConverter_ಗಮ್ಯ_Unicode_ವಾದಗಳು *p_ವಾದಗಳು,
+                   UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಸ್ಥಿರಾಂಕ uint8_t *ಮೂಲ;
     uint8_t b;
 
-    source=(const uint8_t *)pArgs->source;
-    if(source<(const uint8_t *)pArgs->sourceLimit) {
-        b=*source++;
-        pArgs->source=(const char *)source;
-        if(b<=0x7f) {
-            return b;
-        } else {
-            UConverter *cnv=pArgs->converter;
-            cnv->toUBytes[0]=b;
-            cnv->toULength=1;
-            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-            return 0xffff;
+    ಮೂಲ=(ಸ್ಥಿರಾಂಕ uint8_t *)p_ವಾದಗಳು->ಮೂಲ;
+    ಆದರೆ(ಮೂಲ<(ಸ್ಥಿರಾಂಕ uint8_t *)p_ವಾದಗಳು->ಮೂಲ_ಎಲ್ಲೆ) {
+        b=*ಮೂಲ++;
+        p_ವಾದಗಳು->ಮೂಲ=(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *)ಮೂಲ;
+        ಆದರೆ(b<=0x7f) {
+            ಹಿಂತಿರುಗಿ b;
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            UConverter *cnv=p_ವಾದಗಳು->converter;
+            cnv->ಗಮ್ಯ_UBytes[0]=b;
+            cnv->ಗಮ್ಯ_ULength=1;
+            *p_Error_ಸಂಕೇತ=U_ILLEGAL_CHAR_ಸಿಕ್ಕಿತು;
+            ಹಿಂತಿರುಗಿ 0xffff;
         }
     }
 
     /* no output because of empty input */
-    *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-    return 0xffff;
+    *p_Error_ಸಂಕೇತ=U_ಸೂಚ್ಯಂಕ_OUTOFBOUNDS_ERROR;
+    ಹಿಂತಿರುಗಿ 0xffff;
 }
 
 /* "Convert" UTF-8 to US-ASCII: Validate and copy. */
-static void U_CALLCONV
-ucnv_ASCIIFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
-                   UConverterToUnicodeArgs *pToUArgs,
-                   UErrorCode *pErrorCode) {
-    const uint8_t *source, *sourceLimit;
-    uint8_t *target;
-    int32_t targetCapacity, length;
+ಸ್ಥಿರ ಶೂನ್ಯ U_CALLCONV
+ucnv_ASCIIFromUTF8(UConverter_From_Unicode_ವಾದಗಳು *pFromUArgs,
+                   UConverter_ಗಮ್ಯ_Unicode_ವಾದಗಳು *p_ಗಮ್ಯ_UArgs,
+                   UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಸ್ಥಿರಾಂಕ uint8_t *ಮೂಲ, *ಮೂಲ_ಎಲ್ಲೆ;
+    uint8_t *ಗುರಿ;
+    int32_t ಗುರಿ_ಸಾಮರ್ಥ್ಯ, length;
 
     uint8_t c;
 
-    if(pToUArgs->converter->toULength > 0) {
+    ಆದರೆ(p_ಗಮ್ಯ_UArgs->converter->ಗಮ್ಯ_ULength > 0) {
         /* no handling of partial UTF-8 characters here, fall back to pivoting */
-        *pErrorCode=U_USING_DEFAULT_WARNING;
-        return;
+        *p_Error_ಸಂಕೇತ=U_USING_DEFAULT_WARNING;
+        ಹಿಂತಿರುಗಿ;
     }
 
     /* set up the local pointers */
-    source=(const uint8_t *)pToUArgs->source;
-    sourceLimit=(const uint8_t *)pToUArgs->sourceLimit;
-    target=(uint8_t *)pFromUArgs->target;
-    targetCapacity=(int32_t)(pFromUArgs->targetLimit-pFromUArgs->target);
+    ಮೂಲ=(ಸ್ಥಿರಾಂಕ uint8_t *)p_ಗಮ್ಯ_UArgs->ಮೂಲ;
+    ಮೂಲ_ಎಲ್ಲೆ=(ಸ್ಥಿರಾಂಕ uint8_t *)p_ಗಮ್ಯ_UArgs->ಮೂಲ_ಎಲ್ಲೆ;
+    ಗುರಿ=(uint8_t *)pFromUArgs->ಗುರಿ;
+    ಗುರಿ_ಸಾಮರ್ಥ್ಯ=(int32_t)(pFromUArgs->ಗುರಿ_ಎಲ್ಲೆ-pFromUArgs->ಗುರಿ);
 
     /*
      * since the conversion here is 1:1 uint8_t:uint8_t, we need only one counter
      * for the minimum of the sourceLength and targetCapacity
      */
-    length=(int32_t)(sourceLimit-source);
-    if(length<targetCapacity) {
-        targetCapacity=length;
+    length=(int32_t)(ಮೂಲ_ಎಲ್ಲೆ-ಮೂಲ);
+    ಆದರೆ(length<ಗುರಿ_ಸಾಮರ್ಥ್ಯ) {
+        ಗುರಿ_ಸಾಮರ್ಥ್ಯ=length;
     }
 
     /* unroll the loop with the most common case */
-    if(targetCapacity>=16) {
+    ಆದರೆ(ಗುರಿ_ಸಾಮರ್ಥ್ಯ>=16) {
         int32_t count, loops;
         uint8_t oredChars;
 
-        loops=count=targetCapacity>>4;
-        do {
-            oredChars=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
-            oredChars|=*target++=*source++;
+        loops=count=ಗುರಿ_ಸಾಮರ್ಥ್ಯ>>4;
+        ಮಾಡು {
+            oredChars=*ಗುರಿ++=*ಮೂಲ++;
+            oredChars|=*ಗುರಿ++=*ಮೂಲ++;
+            oredChars|=*ಗುರಿ++=*ಮೂಲ++;
+            oredChars|=*ಗುರಿ++=*ಮೂಲ++;
+            oredChars|=*ಗುರಿ++=*ಮೂಲ++;
+            oredChars|=*ಗುರಿ++=*ಮೂಲ++;
+            oredChars|=*ಗುರಿ++=*ಮೂಲ++;
+            oredChars|=*ಗುರಿ++=*ಮೂಲ++;
+            oredChars|=*ಗುರಿ++=*ಮೂಲ++;
+            oredChars|=*ಗುರಿ++=*ಮೂಲ++;
+            oredChars|=*ಗುರಿ++=*ಮೂಲ++;
+            oredChars|=*ಗುರಿ++=*ಮೂಲ++;
+            oredChars|=*ಗುರಿ++=*ಮೂಲ++;
+            oredChars|=*ಗುರಿ++=*ಮೂಲ++;
+            oredChars|=*ಗುರಿ++=*ಮೂಲ++;
+            oredChars|=*ಗುರಿ++=*ಮೂಲ++;
 
             /* were all 16 entries really valid? */
-            if(oredChars>0x7f) {
+            ಆದರೆ(oredChars>0x7f) {
                 /* no, return to the first of these 16 */
-                source-=16;
-                target-=16;
-                break;
+                ಮೂಲ-=16;
+                ಗುರಿ-=16;
+                ನಿಲ್ಲಿಸು;
             }
-        } while(--count>0);
+        } ಆಗ(--count>0);
         count=loops-count;
-        targetCapacity-=16*count;
+        ಗುರಿ_ಸಾಮರ್ಥ್ಯ-=16*count;
     }
 
     /* conversion loop */
     c=0;
-    while(targetCapacity>0 && (c=*source)<=0x7f) {
-        ++source;
-        *target++=c;
-        --targetCapacity;
+    ಆಗ(ಗುರಿ_ಸಾಮರ್ಥ್ಯ>0 && (c=*ಮೂಲ)<=0x7f) {
+        ++ಮೂಲ;
+        *ಗುರಿ++=c;
+        --ಗುರಿ_ಸಾಮರ್ಥ್ಯ;
     }
 
-    if(c>0x7f) {
+    ಆದರೆ(c>0x7f) {
         /* non-ASCII character, handle in standard converter */
-        *pErrorCode=U_USING_DEFAULT_WARNING;
-    } else if(source<sourceLimit && target>=(const uint8_t *)pFromUArgs->targetLimit) {
+        *p_Error_ಸಂಕೇತ=U_USING_DEFAULT_WARNING;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(ಮೂಲ<ಮೂಲ_ಎಲ್ಲೆ && ಗುರಿ>=(ಸ್ಥಿರಾಂಕ uint8_t *)pFromUArgs->ಗುರಿ_ಎಲ್ಲೆ) {
         /* target is full */
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
     }
 
     /* write back the updated pointers */
-    pToUArgs->source=(const char *)source;
-    pFromUArgs->target=(char *)target;
+    p_ಗಮ್ಯ_UArgs->ಮೂಲ=(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *)ಮೂಲ;
+    pFromUArgs->ಗುರಿ=(ಅಕ್ಷರ *)ಗುರಿ;
 }
 
-static void U_CALLCONV
-_ASCIIGetUnicodeSet(const UConverter *cnv,
-                    const USetAdder *sa,
-                    UConverterUnicodeSet which,
-                    UErrorCode *pErrorCode) {
-    (void)cnv;
-    (void)which;
-    (void)pErrorCode;
-    sa->addRange(sa->set, 0, 0x7f);
+ಸ್ಥಿರ ಶೂನ್ಯ U_CALLCONV
+ASCIIGet_Unicode_ಗಣ(ಸ್ಥಿರಾಂಕ UConverter *cnv,
+                    ಸ್ಥಿರಾಂಕ USetAdder *sa,
+                    UConverter_Unicode_ಗಣ which,
+                    UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    (ಶೂನ್ಯ)cnv;
+    (ಶೂನ್ಯ)which;
+    (ಶೂನ್ಯ)p_Error_ಸಂಕೇತ;
+    sa->ಕೂಡಿಸು_Range(sa->ಗಣ, 0, 0x7f);
 }
-U_CDECL_END
+U_CDECL_ಕೊನೆ
 
-static const UConverterImpl _ASCIIImpl={
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ UConverterImpl _ASCIIImpl={
     UCNV_US_ASCII,
 
-    nullptr,
-    nullptr,
+    ಶೂನ್ಯಸೂಚಕ,
+    ಶೂನ್ಯಸೂಚಕ,
 
-    nullptr,
-    nullptr,
-    nullptr,
+    ಶೂನ್ಯಸೂಚಕ,
+    ಶೂನ್ಯಸೂಚಕ,
+    ಶೂನ್ಯಸೂಚಕ,
 
     _ASCIIToUnicodeWithOffsets,
     _ASCIIToUnicodeWithOffsets,
     _Latin1FromUnicodeWithOffsets,
     _Latin1FromUnicodeWithOffsets,
-    _ASCIIGetNextUChar,
+    ASCIIGet_ಮುಂದಿನ_UChar,
 
-    nullptr,
-    nullptr,
-    nullptr,
-    nullptr,
-    _ASCIIGetUnicodeSet,
+    ಶೂನ್ಯಸೂಚಕ,
+    ಶೂನ್ಯಸೂಚಕ,
+    ಶೂನ್ಯಸೂಚಕ,
+    ಶೂನ್ಯಸೂಚಕ,
+    ASCIIGet_Unicode_ಗಣ,
 
-    nullptr,
+    ಶೂನ್ಯಸೂಚಕ,
     ucnv_ASCIIFromUTF8
 };
 
-static const UConverterStaticData _ASCIIStaticData={
-    sizeof(UConverterStaticData),
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ UConverter_Static_ದತ್ತಾಂಶ ASCIIStatic_ದತ್ತಾಂಶ={
+    ಗಾತ್ರ(UConverter_Static_ದತ್ತಾಂಶ),
     "US-ASCII",
     367, UCNV_IBM, UCNV_US_ASCII, 1, 1,
-    { 0x1a, 0, 0, 0 }, 1, false, false,
+    { 0x1a, 0, 0, 0 }, 1, ಸುಳ್ಳು, ಸುಳ್ಳು,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _ASCIIData=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_ASCIIStaticData, &_ASCIIImpl);
+ಸ್ಥಿರಾಂಕ UConverter_Shared_ದತ್ತಾಂಶ _ASCIIData=
+        UCNV_IMMUTABLE_SHARED_ದತ್ತಾಂಶ_INITIALIZER(&ASCIIStatic_ದತ್ತಾಂಶ, &_ASCIIImpl);
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

@@ -7,18 +7,18 @@
  ************************************************************************************
  */
 
-#ifndef BRKENG_H
-#define BRKENG_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ BRKENG_H
+#ವ್ಯಾಖ್ಯಾನಿಸು BRKENG_H
 
-#include "unicode/umisc.h"
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "unicode/utext.h"
-#include "unicode/uscript.h"
+#ಅನ್ತರ್ಭಾವ "unicode/umisc.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uobject.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utext.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uscript.h"
 
 U_NAMESPACE_BEGIN
 
-class UnicodeSet;
+class Unicode_ಗಣ;
 class UStack;
 class UVector32;
 class DictionaryMatcher;
@@ -37,8 +37,8 @@ class ExternalBreakEngine;
  * <p>LanguageBreakEngines should normally be implemented so as to
  * be shared between threads without locking.</p>
  */
-class LanguageBreakEngine : public UObject {
- public:
+class LanguageBreakEngine : ಸಾರ್ವಜನಿಕ UObject {
+ ಸಾರ್ವಜನಿಕ:
 
   /**
    * <p>Default constructor.</p>
@@ -49,7 +49,7 @@ class LanguageBreakEngine : public UObject {
   /**
    * <p>Virtual destructor.</p>
    */
-  virtual ~LanguageBreakEngine();
+  ವಾಸ್ತವಿಕ ~LanguageBreakEngine();
 
  /**
   * <p>Indicate whether this engine handles a particular character for
@@ -60,7 +60,7 @@ class LanguageBreakEngine : public UObject {
   * @return true if this engine handles the particular character and break
   * type.
   */
-  virtual UBool handles(UChar32 c, const char* locale) const = 0;
+  ವಾಸ್ತವಿಕ UBool handles(UChar32 c, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* locale) ಸ್ಥಿರಾಂಕ = 0;
 
  /**
   * <p>Find any breaks within a run in the supplied text.</p>
@@ -74,12 +74,12 @@ class LanguageBreakEngine : public UObject {
   * @param status Information on any errors encountered.
   * @return The number of breaks found.
   */
-  virtual int32_t findBreaks( UText *text,
-                              int32_t startPos,
-                              int32_t endPos,
-                              UVector32 &foundBreaks,
+  ವಾಸ್ತವಿಕ int32_t ಕಂಡುಹಿಡಿ_Breaks( UText *ಪಠ್ಯ,
+                              int32_t ಆರಂಭ_Pos,
+                              int32_t ಕೊನೆ_Pos,
+                              UVector32 &ಸಿಕ್ಕಿತು_Breaks,
                               UBool isPhraseBreaking,
-                              UErrorCode &status) const = 0;
+                              UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ = 0;
 
 };
 
@@ -92,24 +92,24 @@ class LanguageBreakEngine : public UObject {
  * a thin wrapper that delegate the task to ExternalBreakEngine
  * </p>
  */
-class BreakEngineWrapper : public  LanguageBreakEngine {
- public:
+class BreakEngineWrapper : ಸಾರ್ವಜನಿಕ  LanguageBreakEngine {
+ ಸಾರ್ವಜನಿಕ:
 
-  BreakEngineWrapper(ExternalBreakEngine* engine, UErrorCode &status);
+  BreakEngineWrapper(ExternalBreakEngine* engine, UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2);
 
-  virtual ~BreakEngineWrapper();
+  ವಾಸ್ತವಿಕ ~BreakEngineWrapper();
 
-  virtual UBool handles(UChar32 c, const char* locale) const override;
+  ವಾಸ್ತವಿಕ UBool handles(UChar32 c, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* locale) ಸ್ಥಿರಾಂಕ override;
 
-  virtual int32_t findBreaks( UText *text,
-                              int32_t startPos,
-                              int32_t endPos,
-                              UVector32 &foundBreaks,
+  ವಾಸ್ತವಿಕ int32_t ಕಂಡುಹಿಡಿ_Breaks( UText *ಪಠ್ಯ,
+                              int32_t ಆರಂಭ_Pos,
+                              int32_t ಕೊನೆ_Pos,
+                              UVector32 &ಸಿಕ್ಕಿತು_Breaks,
                               UBool isPhraseBreaking,
-                              UErrorCode &status) const override;
+                              UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ override;
 
- private:
-  LocalPointer<ExternalBreakEngine> delegate;
+ ಖಾಸಗಿ:
+  Local_ಸೂಚಕ<ExternalBreakEngine> delegate;
 };
 
 /*******************************************************************
@@ -135,8 +135,8 @@ class BreakEngineWrapper : public  LanguageBreakEngine {
  * not be deleted until the LanguageBreakEngines it has returned are no
  * longer needed.</p>
  */
-class LanguageBreakFactory : public UMemory {
- public:
+class LanguageBreakFactory : ಸಾರ್ವಜನಿಕ UMemory {
+ ಸಾರ್ವಜನಿಕ:
 
   /**
    * <p>Default constructor.</p>
@@ -147,7 +147,7 @@ class LanguageBreakFactory : public UMemory {
   /**
    * <p>Virtual destructor.</p>
    */
-  virtual ~LanguageBreakFactory();
+  ವಾಸ್ತವಿಕ ~LanguageBreakFactory();
 
  /**
   * <p>Find and return a LanguageBreakEngine that can find the desired
@@ -160,7 +160,7 @@ class LanguageBreakFactory : public UMemory {
   * @param locale The locale.
   * @return A LanguageBreakEngine with the desired characteristics, or 0.
   */
-  virtual const LanguageBreakEngine *getEngineFor(UChar32 c, const char* locale) = 0;
+  ವಾಸ್ತವಿಕ ಸ್ಥಿರಾಂಕ LanguageBreakEngine *getEngineFor(UChar32 c, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* locale) = 0;
 
 };
 
@@ -179,28 +179,28 @@ class LanguageBreakFactory : public UMemory {
  * external synchronization.</p>
  */
 
-class UnhandledEngine : public LanguageBreakEngine {
- private:
+class UnhandledEngine : ಸಾರ್ವಜನಿಕ LanguageBreakEngine {
+ ಖಾಸಗಿ:
 
     /**
      * The sets of characters handled.
      * @internal
      */
 
-  UnicodeSet    *fHandled;
+  Unicode_ಗಣ    *fHandled;
 
- public:
+ ಸಾರ್ವಜನಿಕ:
 
   /**
    * <p>Default constructor.</p>
    *
    */
-  UnhandledEngine(UErrorCode &status);
+  UnhandledEngine(UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2);
 
   /**
    * <p>Virtual destructor.</p>
    */
-  virtual ~UnhandledEngine();
+  ವಾಸ್ತವಿಕ ~UnhandledEngine();
 
  /**
   * <p>Indicate whether this engine handles a particular character for
@@ -211,7 +211,7 @@ class UnhandledEngine : public LanguageBreakEngine {
   * @return true if this engine handles the particular character and break
   * type.
   */
-  virtual UBool handles(UChar32 c, const char* locale) const override;
+  ವಾಸ್ತವಿಕ UBool handles(UChar32 c, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* locale) ಸ್ಥಿರಾಂಕ override;
 
  /**
   * <p>Find any breaks within a run in the supplied text.</p>
@@ -225,19 +225,19 @@ class UnhandledEngine : public LanguageBreakEngine {
   * @param status Information on any errors encountered.
   * @return The number of breaks found.
   */
-  virtual int32_t findBreaks( UText *text,
-                              int32_t startPos,
-                              int32_t endPos,
-                              UVector32 &foundBreaks,
+  ವಾಸ್ತವಿಕ int32_t ಕಂಡುಹಿಡಿ_Breaks( UText *ಪಠ್ಯ,
+                              int32_t ಆರಂಭ_Pos,
+                              int32_t ಕೊನೆ_Pos,
+                              UVector32 &ಸಿಕ್ಕಿತು_Breaks,
                               UBool isPhraseBreaking,
-                              UErrorCode &status) const override;
+                              UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ override;
 
  /**
   * <p>Tell the engine to handle a particular character and break type.</p>
   *
   * @param c A character which the engine should handle
   */
-  virtual void handleCharacter(UChar32 c);
+  ವಾಸ್ತವಿಕ ಶೂನ್ಯ handleCharacter(UChar32 c);
 
 };
 
@@ -250,8 +250,8 @@ class UnhandledEngine : public LanguageBreakEngine {
  * ICU. It creates dictionary-based LanguageBreakEngines from dictionary
  * data in the ICU data file.</p>
  */
-class ICULanguageBreakFactory : public LanguageBreakFactory {
- private:
+class ICULanguageBreakFactory : ಸಾರ್ವಜನಿಕ LanguageBreakFactory {
+ ಖಾಸಗಿ:
 
     /**
      * The stack of break engines created by this factory
@@ -260,18 +260,18 @@ class ICULanguageBreakFactory : public LanguageBreakFactory {
 
   UStack    *fEngines;
 
- public:
+ ಸಾರ್ವಜನಿಕ:
 
   /**
    * <p>Standard constructor.</p>
    *
    */
-  ICULanguageBreakFactory(UErrorCode &status);
+  ICULanguageBreakFactory(UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2);
 
   /**
    * <p>Virtual destructor.</p>
    */
-  virtual ~ICULanguageBreakFactory();
+  ವಾಸ್ತವಿಕ ~ICULanguageBreakFactory();
 
  /**
   * <p>Find and return a LanguageBreakEngine that can find the desired
@@ -284,7 +284,7 @@ class ICULanguageBreakFactory : public LanguageBreakFactory {
   * @param locale The locale.
   * @return A LanguageBreakEngine with the desired characteristics, or 0.
   */
-  virtual const LanguageBreakEngine *getEngineFor(UChar32 c, const char* locale) override;
+  ವಾಸ್ತವಿಕ ಸ್ಥಿರಾಂಕ LanguageBreakEngine *getEngineFor(UChar32 c, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* locale) override;
 
   /**
    * Add and adopt the engine and return an URegistryKey.
@@ -292,9 +292,9 @@ class ICULanguageBreakFactory : public LanguageBreakFactory {
    *     pass the ownership and should not release the memory after this.
    * @param status the error code.
    */
-  virtual void addExternalEngine(ExternalBreakEngine* engine, UErrorCode& status);
+  ವಾಸ್ತವಿಕ ಶೂನ್ಯ ಕೂಡಿಸು_External_Engine(ExternalBreakEngine* engine, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
 
-protected:
+ಸಂರಕ್ಷಿತ:
  /**
   * <p>Create a LanguageBreakEngine for the set of characters to which
   * the supplied character belongs, for the specified break type.</p>
@@ -304,7 +304,7 @@ protected:
   * @param locale The locale.
   * @return A LanguageBreakEngine with the desired characteristics, or 0.
   */
-  virtual const LanguageBreakEngine *loadEngineFor(UChar32 c, const char* locale);
+  ವಾಸ್ತವಿಕ ಸ್ಥಿರಾಂಕ LanguageBreakEngine *ತುಂಬು_Engine_For(UChar32 c, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* locale);
 
   /**
    * <p>Create a DictionaryMatcher for the specified script and break type.</p>
@@ -312,13 +312,13 @@ protected:
    * created.
    * @return A DictionaryMatcher with the desired characteristics, or nullptr.
    */
-  virtual DictionaryMatcher *loadDictionaryMatcherFor(UScriptCode script);
+  ವಾಸ್ತವಿಕ DictionaryMatcher *ತುಂಬು_Dictionary_Matcher_For(UScript_ಸಂಕೇತ script);
 
- private:
-  void ensureEngines(UErrorCode& status);
+ ಖಾಸಗಿ:
+  ಶೂನ್ಯ ensureEngines(UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
     /* BRKENG_H */
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

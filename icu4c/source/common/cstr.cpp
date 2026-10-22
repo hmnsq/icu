@@ -7,48 +7,48 @@
 *******************************************************************************
 *   file name:  charstr.cpp
 */
-#include "unicode/utypes.h"
-#include "unicode/putil.h"
-#include "unicode/unistr.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/putil.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unistr.h"
 
-#include "cstr.h"
+#ಅನ್ತರ್ಭಾವ "cstr.h"
 
-#include "charstr.h"
-#include "uinvchar.h"
+#ಅನ್ತರ್ಭಾವ "charstr.h"
+#ಅನ್ತರ್ಭಾವ "uinvchar.h"
 
 U_NAMESPACE_BEGIN
 
-CStr::CStr(const UnicodeString &in) {
-    UErrorCode status = U_ZERO_ERROR;
-#if !UCONFIG_NO_CONVERSION || U_CHARSET_IS_UTF8
-    int32_t length = in.extract(0, in.length(), static_cast<char *>(nullptr), static_cast<uint32_t>(0));
-    int32_t resultCapacity = 0;
-    char *buf = s.getAppendBuffer(length, length, resultCapacity, status);
-    if (U_SUCCESS(status)) {
-        in.extract(0, in.length(), buf, resultCapacity);
-        s.append(buf, length, status);
+CStr::CStr(ಸ್ಥಿರಾಂಕ UnicodeString &in) {
+    UError_ಸಂಕೇತ ಸ್ಥಿತಿ_2 = U_ZERO_ERROR;
+#ಆದರೆ !UCONFIG_NO_CONVERSION || U_CHARSET_IS_UTF8
+    int32_t length = in.extract(0, in.length(), static_cast<ಅಕ್ಷರ *>(ಶೂನ್ಯಸೂಚಕ), static_cast<uint32_t>(0));
+    int32_t ಫಲಿತಾಂಶ_ಸಾಮರ್ಥ್ಯ = 0;
+    ಅಕ್ಷರ *buf = s.get_Append_ಬಫರ್(length, length, ಫಲಿತಾಂಶ_ಸಾಮರ್ಥ್ಯ, ಸ್ಥಿತಿ_2);
+    ಆದರೆ (U_SUCCESS(ಸ್ಥಿತಿ_2)) {
+        in.extract(0, in.length(), buf, ಫಲಿತಾಂಶ_ಸಾಮರ್ಥ್ಯ);
+        s.append(buf, length, ಸ್ಥಿತಿ_2);
     }
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
     // No conversion available. Convert any invariant characters; substitute '?' for the rest.
     // Note: can't just call u_UCharsToChars() or CharString.appendInvariantChars() on the 
     //       whole string because they require that the entire input be invariant.
-    char buf[2];
-    for (int i=0; i<in.length(); i = in.moveIndex32(i, 1)) {
-        if (uprv_isInvariantUString(in.getBuffer()+i, 1)) {
-            u_UCharsToChars(in.getBuffer()+i, buf, 1);
-        } else {
+    ಅಕ್ಷರ buf[2];
+    ಗಾಗಿ (ಪೂರ್ಣಾಂಕ i=0; i<in.length(); i = in.moveIndex32(i, 1)) {
+        ಆದರೆ (uprv_isInvariantUString(in.get_ಬಫರ್()+i, 1)) {
+            u_UChars_ಗಮ್ಯ_Chars(in.get_ಬಫರ್()+i, buf, 1);
+        } ಇಲ್ಲದಿದ್ದರೆ {
             buf[0] = '?';
         }
-        s.append(buf, 1, status);
+        s.append(buf, 1, ಸ್ಥಿತಿ_2);
     }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 }
 
 CStr::~CStr() {
 }
 
-const char * CStr::operator ()() const {
-    return s.data();
+ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ * CStr::ಕ್ರಿಯಾಕಾರಕ ()() ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ s.ದತ್ತಾಂಶ();
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ

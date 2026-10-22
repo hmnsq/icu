@@ -19,21 +19,21 @@
 ********************************************************************************
 */
 
-#ifndef BRKITER_H
-#define BRKITER_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ BRKITER_H
+#ವ್ಯಾಖ್ಯಾನಿಸು BRKITER_H
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
 /**
  * \file
  * \brief C++ API: Break Iterator.
  */
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ಆದರೆ U_SHOW_CPLUSPLUS_API
 
-#if UCONFIG_NO_BREAK_ITERATION
+#ಆದರೆ UCONFIG_NO_BREAK_ITERATION
 
 U_NAMESPACE_BEGIN
 
@@ -43,18 +43,18 @@ U_NAMESPACE_BEGIN
  */
 class BreakIterator;
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
 
-#include "unicode/uobject.h"
-#include "unicode/unistr.h"
-#include "unicode/chariter.h"
-#include "unicode/locid.h"
-#include "unicode/ubrk.h"
-#include "unicode/strenum.h"
-#include "unicode/utext.h"
-#include "unicode/umisc.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uobject.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unistr.h"
+#ಅನ್ತರ್ಭಾವ "unicode/chariter.h"
+#ಅನ್ತರ್ಭಾವ "unicode/locid.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ubrk.h"
+#ಅನ್ತರ್ಭಾವ "unicode/strenum.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utext.h"
+#ಅನ್ತರ್ಭಾವ "unicode/umisc.h"
 
 U_NAMESPACE_BEGIN
 
@@ -103,13 +103,13 @@ U_NAMESPACE_BEGIN
  * and in the sample program icu/source/samples/break/break.cpp
  *
  */
-class U_COMMON_API_CLASS BreakIterator : public UObject {
-public:
+class U_COMMON_API_CLASS BreakIterator : ಸಾರ್ವಜನಿಕ UObject {
+ಸಾರ್ವಜನಿಕ:
     /**
      *  destructor
      *  @stable ICU 2.0
      */
-    U_COMMON_API virtual ~BreakIterator();
+    U_COMMON_API ವಾಸ್ತವಿಕ ~BreakIterator();
 
     /**
      * Return true if another object is semantically equal to this
@@ -124,7 +124,7 @@ public:
      * object, and styles are not considered.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual bool operator==(const BreakIterator&) const = 0;
+    U_COMMON_API ವಾಸ್ತವಿಕ bool ಕ್ರಿಯಾಕಾರಕ==(ಸ್ಥಿರಾಂಕ BreakIterator&) ಸ್ಥಿರಾಂಕ = 0;
 
     /**
      * Returns the complement of the result of operator==
@@ -132,27 +132,27 @@ public:
      * @return the complement of the result of operator==
      * @stable ICU 2.0
      */
-    U_COMMON_API bool operator!=(const BreakIterator& rhs) const { return !operator==(rhs); }
+    U_COMMON_API bool ಕ್ರಿಯಾಕಾರಕ!=(ಸ್ಥಿರಾಂಕ BreakIterator& rhs) ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ !ಕ್ರಿಯಾಕಾರಕ==(rhs); }
 
     /**
      * Return a polymorphic copy of this object.  This is an abstract
      * method which subclasses implement.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual BreakIterator* clone() const = 0;
+    U_COMMON_API ವಾಸ್ತವಿಕ BreakIterator* clone() ಸ್ಥಿರಾಂಕ = 0;
 
     /**
      * Return a polymorphic class ID for this object. Different subclasses
      * will return distinct unequal values.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual UClassID getDynamicClassID() const override = 0;
+    U_COMMON_API ವಾಸ್ತವಿಕ UClassID getDynamicClassID() ಸ್ಥಿರಾಂಕ override = 0;
 
     /**
      * Return a CharacterIterator over the text being analyzed.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual CharacterIterator& getText() const U_LIFETIME_BOUND = 0;
+    U_COMMON_API ವಾಸ್ತವಿಕ CharacterIterator& get_ಪಠ್ಯ() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND = 0;
 
     /**
       *  Get a UText for the text being analyzed.
@@ -168,7 +168,7 @@ public:
       *           UText was provided, it will always be returned.
       * @stable ICU 3.4
       */
-    U_COMMON_API virtual UText* getUText(UText* fillIn U_LIFETIME_BOUND, UErrorCode& status) const = 0;
+    U_COMMON_API ವಾಸ್ತವಿಕ UText* getUText(UText* fill_ಒಳ U_LIFETIME_BOUND, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ = 0;
 
     /**
      * Change the text over which this operates. The text boundary is
@@ -181,7 +181,7 @@ public:
      * @param text The UnicodeString used to change the text.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual void setText(const UnicodeString& text) = 0;
+    U_COMMON_API ವಾಸ್ತವಿಕ ಶೂನ್ಯ ಗಣ_ಪಠ್ಯ(ಸ್ಥಿರಾಂಕ UnicodeString& ಪಠ್ಯ) = 0;
 
     /**
      * Reset the break iterator to operate over the text represented by
@@ -201,7 +201,7 @@ public:
      * @param status receives any error codes.
      * @stable ICU 3.4
      */
-    U_COMMON_API virtual void setText(UText* text, UErrorCode& status) = 0;
+    U_COMMON_API ವಾಸ್ತವಿಕ ಶೂನ್ಯ ಗಣ_ಪಠ್ಯ(UText* ಪಠ್ಯ, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) = 0;
 
     /**
      * Change the text over which this operates. The text boundary is
@@ -211,15 +211,15 @@ public:
      * @param it The CharacterIterator used to change the text.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual void adoptText(CharacterIterator* it) = 0;
+    U_COMMON_API ವಾಸ್ತವಿಕ ಶೂನ್ಯ adopt_ಪಠ್ಯ(CharacterIterator* it) = 0;
 
-    enum {
+    ಎಣಿಕೆ {
         /**
          * DONE is returned by previous() and next() after all valid
          * boundaries have been returned.
          * @stable ICU 2.0
          */
-        DONE = static_cast<int32_t>(-1)
+        ಮುಗಿದ_2 = static_cast<int32_t>(-1)
     };
 
     /**
@@ -227,14 +227,14 @@ public:
      * @return The offset of the beginning of the text, zero.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual int32_t first() = 0;
+    U_COMMON_API ವಾಸ್ತವಿಕ int32_t ಮೊದಲ() = 0;
 
     /**
      * Set the iterator position to the index immediately BEYOND the last character in the text being scanned.
      * @return The index immediately BEYOND the last character in the text being scanned.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual int32_t last() = 0;
+    U_COMMON_API ವಾಸ್ತವಿಕ int32_t ಕೊನೆಯ() = 0;
 
     /**
      * Set the iterator position to the boundary preceding the current boundary.
@@ -242,7 +242,7 @@ public:
      * boundaries have been returned.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual int32_t previous() = 0;
+    U_COMMON_API ವಾಸ್ತವಿಕ int32_t ಹಿಂದಿನ() = 0;
 
     /**
      * Advance the iterator to the boundary following the current boundary.
@@ -250,14 +250,14 @@ public:
      * boundaries have been returned.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual int32_t next() = 0;
+    U_COMMON_API ವಾಸ್ತವಿಕ int32_t ಮುಂದಿನ() = 0;
 
     /**
      * Return character index of the current iterator position within the text.
      * @return The boundary most recently returned.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual int32_t current() const = 0;
+    U_COMMON_API ವಾಸ್ತವಿಕ int32_t current() ಸ್ಥಿರಾಂಕ = 0;
 
     /**
      * Advance the iterator to the first boundary following the specified offset.
@@ -267,7 +267,7 @@ public:
      * @return The first boundary after the specified offset.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual int32_t following(int32_t offset) = 0;
+    U_COMMON_API ವಾಸ್ತವಿಕ int32_t following(int32_t ಸ್ಥಾನಾಂತರ) = 0;
 
     /**
      * Set the iterator position to the first boundary preceding the specified offset.
@@ -277,7 +277,7 @@ public:
      * @return The first boundary before the specified offset.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual int32_t preceding(int32_t offset) = 0;
+    U_COMMON_API ವಾಸ್ತವಿಕ int32_t preceding(int32_t ಸ್ಥಾನಾಂತರ) = 0;
 
     /**
      * Return true if the specified position is a boundary position.
@@ -287,7 +287,7 @@ public:
      * @return True if "offset" is a boundary position.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual UBool isBoundary(int32_t offset) = 0;
+    U_COMMON_API ವಾಸ್ತವಿಕ UBool isBoundary(int32_t ಸ್ಥಾನಾಂತರ) = 0;
 
     /**
      * Set the iterator position to the nth boundary from the current boundary
@@ -298,7 +298,7 @@ public:
      * DONE if there are fewer than |n| boundaries in the specified direction.
      * @stable ICU 2.0
      */
-    U_COMMON_API virtual int32_t next(int32_t n) = 0;
+    U_COMMON_API ವಾಸ್ತವಿಕ int32_t ಮುಂದಿನ(int32_t n) = 0;
 
     /**
      * For RuleBasedBreakIterators, return the status tag from the break rule
@@ -313,7 +313,7 @@ public:
      * @see UWordBreak
      * @stable ICU 52
      */
-    U_COMMON_API virtual int32_t getRuleStatus() const;
+    U_COMMON_API ವಾಸ್ತವಿಕ int32_t get_ನಿಯಮ_ಸ್ಥಿತಿ() ಸ್ಥಿರಾಂಕ;
 
    /**
     * For RuleBasedBreakIterators, get the status (tag) values from the break rule(s)
@@ -343,9 +343,9 @@ public:
     * @see getRuleStatus
     * @stable ICU 52
     */
-    U_COMMON_API virtual int32_t getRuleStatusVec(int32_t* fillInVec,
-                                                  int32_t capacity,
-                                                  UErrorCode& status);
+    U_COMMON_API ವಾಸ್ತವಿಕ int32_t get_ನಿಯಮ_ಸ್ಥಿತಿ_Vec(int32_t* fill_ಒಳ_Vec,
+                                                  int32_t ಸಾಮರ್ಥ್ಯ,
+                                                  UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
 
     /**
      * Create BreakIterator for word-breaks using the given locale.
@@ -366,8 +366,8 @@ public:
      * The caller owns the returned object and is responsible for deleting it.
      * @stable ICU 2.0
      */
-    U_COMMON_API static BreakIterator* U_EXPORT2
-    createWordInstance(const Locale& where, UErrorCode& status);
+    U_COMMON_API ಸ್ಥಿರ BreakIterator* U_EXPORT2
+    create_ಶಬ್ದ_Instance(ಸ್ಥಿರಾಂಕ Locale& where, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
 
     /**
      * Create BreakIterator for line-breaks using specified locale.
@@ -390,8 +390,8 @@ public:
      * The caller owns the returned object and is responsible for deleting it.
      * @stable ICU 2.0
      */
-    U_COMMON_API static BreakIterator* U_EXPORT2
-    createLineInstance(const Locale& where, UErrorCode& status);
+    U_COMMON_API ಸ್ಥಿರ BreakIterator* U_EXPORT2
+    create_ಸಾಲು_Instance(ಸ್ಥಿರಾಂಕ Locale& where, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
 
     /**
      * Create BreakIterator for character-breaks using specified locale
@@ -412,8 +412,8 @@ public:
      * The caller owns the returned object and is responsible for deleting it.
      * @stable ICU 2.0
      */
-    U_COMMON_API static BreakIterator* U_EXPORT2
-    createCharacterInstance(const Locale& where, UErrorCode& status);
+    U_COMMON_API ಸ್ಥಿರ BreakIterator* U_EXPORT2
+    createCharacterInstance(ಸ್ಥಿರಾಂಕ Locale& where, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
 
     /**
      * Create BreakIterator for sentence-breaks using specified locale
@@ -433,10 +433,10 @@ public:
      * The caller owns the returned object and is responsible for deleting it.
      * @stable ICU 2.0
      */
-    U_COMMON_API static BreakIterator* U_EXPORT2
-    createSentenceInstance(const Locale& where, UErrorCode& status);
+    U_COMMON_API ಸ್ಥಿರ BreakIterator* U_EXPORT2
+    createSentenceInstance(ಸ್ಥಿರಾಂಕ Locale& where, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
 
-#ifndef U_HIDE_DEPRECATED_API
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_DEPRECATED_API
     /**
      * Create BreakIterator for title-casing breaks using the specified locale
      * Returns an instance of a BreakIterator implementing title breaks.
@@ -459,9 +459,9 @@ public:
      * The caller owns the returned object and is responsible for deleting it.
      * @deprecated ICU 64 Use createWordInstance instead.
      */
-    U_COMMON_API static BreakIterator* U_EXPORT2
-    createTitleInstance(const Locale& where, UErrorCode& status);
-#endif /* U_HIDE_DEPRECATED_API */
+    U_COMMON_API ಸ್ಥಿರ BreakIterator* U_EXPORT2
+    createTitleInstance(ಸ್ಥಿರಾಂಕ Locale& where, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
+#ಆದರೆ_ಅಂತ್ಯ /* U_HIDE_DEPRECATED_API */
 
     /**
      * Get the set of Locales for which TextBoundaries are installed.
@@ -472,7 +472,7 @@ public:
      * @return available locales
      * @stable ICU 2.0
      */
-    U_COMMON_API static const Locale* U_EXPORT2 getAvailableLocales(int32_t& count);
+    U_COMMON_API ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Locale* U_EXPORT2 get_ಲಭ್ಯ_Locales(int32_t& ಎಣಿಕೆ_2);
 
     /**
      * Get name of the object for the desired Locale, in the desired language.
@@ -483,9 +483,9 @@ public:
      * @return user-displayable name
      * @stable ICU 2.0
      */
-    U_COMMON_API static UnicodeString& U_EXPORT2
-    getDisplayName(const Locale& objectLocale,
-                   const Locale& displayLocale,
+    U_COMMON_API ಸ್ಥಿರ UnicodeString& U_EXPORT2
+    getDisplayName(ಸ್ಥಿರಾಂಕ Locale& objectLocale,
+                   ಸ್ಥಿರಾಂಕ Locale& displayLocale,
                    UnicodeString& name U_LIFETIME_BOUND);
 
     /**
@@ -496,11 +496,11 @@ public:
      * @return user-displayable name
      * @stable ICU 2.0
      */
-    U_COMMON_API static UnicodeString& U_EXPORT2
-    getDisplayName(const Locale& objectLocale,
+    U_COMMON_API ಸ್ಥಿರ UnicodeString& U_EXPORT2
+    getDisplayName(ಸ್ಥಿರಾಂಕ Locale& objectLocale,
                    UnicodeString& name U_LIFETIME_BOUND);
 
-#ifndef U_FORCE_HIDE_DEPRECATED_API
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_FORCE_HIDE_DEPRECATED_API
     /**
      * Deprecated functionality. Use clone() instead.
      *
@@ -520,12 +520,12 @@ public:
      *
      * @deprecated ICU 52. Use clone() instead.
      */
-    U_COMMON_API virtual BreakIterator* createBufferClone(void* stackBuffer,
-                                                          int32_t& BufferSize,
-                                                          UErrorCode& status) = 0;
-#endif  // U_FORCE_HIDE_DEPRECATED_API
+    U_COMMON_API ವಾಸ್ತವಿಕ BreakIterator* create_ಬಫರ್_Clone(ಶೂನ್ಯ* ರಾಶಿ_ಬಫರ್,
+                                                          int32_t& ಬಫರ್_ಗಾತ್ರ_2,
+                                                          UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) = 0;
+#ಆದರೆ_ಅಂತ್ಯ  // U_FORCE_HIDE_DEPRECATED_API
 
-#ifndef U_HIDE_DEPRECATED_API
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_DEPRECATED_API
 
     /**
      *   Determine whether the BreakIterator was created in user memory by
@@ -533,11 +533,11 @@ public:
      *   must be closed by an explicit call to the destructor (not delete).
      * @deprecated ICU 52. Always delete the BreakIterator.
      */
-    U_COMMON_API inline UBool isBufferClone();
+    U_COMMON_API ಸಾಲೊಳಗೆ UBool is_ಬಫರ್_Clone();
 
-#endif /* U_HIDE_DEPRECATED_API */
+#ಆದರೆ_ಅಂತ್ಯ /* U_HIDE_DEPRECATED_API */
 
-#if !UCONFIG_NO_SERVICE
+#ಆದರೆ !UCONFIG_NO_SERVICE
     /**
      * Register a new break iterator of the indicated kind, to use in the given locale.
      * The break iterator will be adopted.  Clones of the iterator will be returned
@@ -553,10 +553,10 @@ public:
      * @return a registry key that can be used to unregister this instance
      * @stable ICU 2.4
      */
-    U_COMMON_API static URegistryKey U_EXPORT2 registerInstance(BreakIterator* toAdopt,
-                                                                const Locale& locale,
-                                                                UBreakIteratorType kind,
-                                                                UErrorCode& status);
+    U_COMMON_API ಸ್ಥಿರ URegistry_ಕೀಲಿ U_EXPORT2 ರಿಜಿಸ್ಟರ್_Instance(BreakIterator* ಗಮ್ಯ_Adopt,
+                                                                ಸ್ಥಿರಾಂಕ Locale& locale,
+                                                                UBreakIteratorType ಬಗೆ,
+                                                                UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
 
     /**
      * Unregister a previously-registered BreakIterator using the key returned from the
@@ -570,7 +570,7 @@ public:
      * @return true if the iterator for the key was successfully unregistered
      * @stable ICU 2.4
      */
-    U_COMMON_API static UBool U_EXPORT2 unregister(URegistryKey key, UErrorCode& status);
+    U_COMMON_API ಸ್ಥಿರ UBool U_EXPORT2 unregister(URegistry_ಕೀಲಿ ಕೀಲಿ, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
 
     /**
      * Return a StringEnumeration over the locales available at the time of the call,
@@ -578,26 +578,26 @@ public:
      * @return a StringEnumeration over the locales available at the time of the call
      * @stable ICU 2.4
      */
-    U_COMMON_API static StringEnumeration* U_EXPORT2 getAvailableLocales();
-#endif
+    U_COMMON_API ಸ್ಥಿರ StringEnumeration* U_EXPORT2 get_ಲಭ್ಯ_Locales();
+#ಆದರೆ_ಅಂತ್ಯ
 
     /**
      * Returns the locale for this break iterator. Two flavors are available: valid and
      * actual locale.
      * @stable ICU 2.8
      */
-    U_COMMON_API Locale getLocale(ULocDataLocaleType type, UErrorCode& status) const;
+    U_COMMON_API Locale getLocale(ULoc_ದತ್ತಾಂಶ_Locale_Type type, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ;
 
-#ifndef U_HIDE_INTERNAL_API
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_ಆಂತರಿಕ_API
     /** Get the locale for this break iterator object. You can choose between valid and actual locale.
      *  @param type type of the locale we're looking for (valid or actual)
      *  @param status error code for the operation
      *  @return the locale
      *  @internal
      */
-    U_COMMON_API const char* getLocaleID(ULocDataLocaleType type,
-                                         UErrorCode& status) const U_LIFETIME_BOUND;
-#endif  /* U_HIDE_INTERNAL_API */
+    U_COMMON_API ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* getLocaleID(ULoc_ದತ್ತಾಂಶ_Locale_Type type,
+                                         UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND;
+#ಆದರೆ_ಅಂತ್ಯ  /* U_HIDE_INTERNAL_API */
 
     /**
      *  Set the subject text string upon which the break iterator is operating
@@ -624,52 +624,52 @@ public:
      *
      * @stable ICU 49
      */
-    U_COMMON_API virtual BreakIterator& refreshInputText(UText* input,
-                                                         UErrorCode& status) U_LIFETIME_BOUND = 0;
+    U_COMMON_API ವಾಸ್ತವಿಕ BreakIterator& refresh_ಒಳಹರಿವು_ಪಠ್ಯ(UText* ಒಳಹರಿವು,
+                                                         UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) U_LIFETIME_BOUND = 0;
 
- private:
-    static BreakIterator* buildInstance(const Locale& loc, const char *type, UErrorCode& status);
-    static BreakIterator* createInstance(const Locale& loc, int32_t kind, UErrorCode& status);
-    static BreakIterator* makeInstance(const Locale& loc, int32_t kind, UErrorCode& status);
+ ಖಾಸಗಿ:
+    ಸ್ಥಿರ BreakIterator* buildInstance(ಸ್ಥಿರಾಂಕ Locale& loc, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *type, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
+    ಸ್ಥಿರ BreakIterator* createInstance(ಸ್ಥಿರಾಂಕ Locale& loc, int32_t ಬಗೆ, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
+    ಸ್ಥಿರ BreakIterator* makeInstance(ಸ್ಥಿರಾಂಕ Locale& loc, int32_t ಬಗೆ, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
 
-    friend class ICUBreakIteratorFactory;
-    friend class ICUBreakIteratorService;
+    ಮಿತ್ರ class ICUBreakIteratorFactory;
+    ಮಿತ್ರ class ICUBreakIteratorService;
 
-protected:
+ಸಂರಕ್ಷಿತ:
     // Do not enclose protected default/copy constructors with #ifndef U_HIDE_INTERNAL_API
     // or else the compiler will create a public ones.
     /** @internal */
     U_COMMON_API BreakIterator();
     /** @internal */
-    U_COMMON_API BreakIterator(const BreakIterator& other);
-#ifndef U_HIDE_INTERNAL_API
+    U_COMMON_API BreakIterator(ಸ್ಥಿರಾಂಕ BreakIterator& other);
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_ಆಂತರಿಕ_API
     /** @internal */
-    U_COMMON_API BreakIterator(const Locale& valid, const Locale& actual);
+    U_COMMON_API BreakIterator(ಸ್ಥಿರಾಂಕ Locale& valid, ಸ್ಥಿರಾಂಕ Locale& actual);
     /** @internal. Assignment Operator, used by RuleBasedBreakIterator. */
-    U_COMMON_API BreakIterator& operator=(const BreakIterator& other) U_LIFETIME_BOUND;
-#endif  /* U_HIDE_INTERNAL_API */
+    U_COMMON_API BreakIterator& ಕ್ರಿಯಾಕಾರಕ=(ಸ್ಥಿರಾಂಕ BreakIterator& other) U_LIFETIME_BOUND;
+#ಆದರೆ_ಅಂತ್ಯ  /* U_HIDE_INTERNAL_API */
 
-private:
+ಖಾಸಗಿ:
 
     Locale actualLocale;
     Locale validLocale;
     Locale requestLocale;
 };
 
-#ifndef U_HIDE_DEPRECATED_API
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_DEPRECATED_API
 
-inline UBool BreakIterator::isBufferClone()
+ಸಾಲೊಳಗೆ UBool BreakIterator::is_ಬಫರ್_Clone()
 {
-    return false;
+    ಹಿಂತಿರುಗಿ false;
 }
 
-#endif /* U_HIDE_DEPRECATED_API */
+#ಆದರೆ_ಅಂತ್ಯ /* U_HIDE_DEPRECATED_API */
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#ಆದರೆ_ಅಂತ್ಯ /* #if !UCONFIG_NO_BREAK_ITERATION */
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ಆದರೆ_ಅಂತ್ಯ /* U_SHOW_CPLUSPLUS_API */
 
-#endif // BRKITER_H
+#ಆದರೆ_ಅಂತ್ಯ // BRKITER_H
 //eof

@@ -6,15 +6,15 @@
 * Corporation and others.  All Rights Reserved.
 **********************************************************************
 */
-#ifndef USETITER_H
-#define USETITER_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ USETITER_H
+#ವ್ಯಾಖ್ಯಾನಿಸು USETITER_H
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ಆದರೆ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
-#include "unicode/unistr.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uobject.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unistr.h"
 
 /**
  * \file 
@@ -23,7 +23,7 @@
 
 U_NAMESPACE_BEGIN
 
-class UnicodeSet;
+class Unicode_ಗಣ;
 class UnicodeString;
 
 /**
@@ -64,13 +64,13 @@ class UnicodeString;
  * @author M. Davis
  * @stable ICU 2.4
  */
-class U_COMMON_API UnicodeSetIterator final : public UObject {
+class U_COMMON_API Unicode_ಗಣ_Iterator final : ಸಾರ್ವಜನಿಕ UObject {
     /**
      * Value of <tt>codepoint</tt> if the iterator points to a string.
      * If <tt>codepoint == IS_STRING</tt>, then examine
      * <tt>string</tt> for the current iteration result.
      */
-    enum { IS_STRING = -1 };
+    ಎಣಿಕೆ { IS_STRING = -1 };
 
     /**
      * Current code point, or the special value <tt>IS_STRING</tt>, if
@@ -86,16 +86,16 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * <tt>codepoint == IS_STRING</tt>, then the value of
      * <tt>codepointEnd</tt> is undefined.
      */
-    UChar32 codepointEnd;
+    UChar32 codepoint_ಕೊನೆ;
 
     /**
      * If <tt>codepoint == IS_STRING</tt>, then <tt>string</tt> points
      * to the current string.  If <tt>codepoint != IS_STRING</tt>, the
      * value of <tt>string</tt> is undefined.
      */
-    const UnicodeString* string;
+    ಸ್ಥಿರಾಂಕ UnicodeString* string;
 
- public:
+ ಸಾರ್ವಜನಿಕ:
 
     /**
      * Create an iterator over the given set.  The iterator is valid
@@ -103,7 +103,7 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * @param set set to iterate over
      * @stable ICU 2.4
      */
-    UnicodeSetIterator(const UnicodeSet& set U_LIFETIME_BOUND);
+    Unicode_ಗಣ_Iterator(ಸ್ಥಿರಾಂಕ Unicode_ಗಣ& ಗಣ U_LIFETIME_BOUND);
 
     /**
      * Create an iterator over nothing.  <tt>next()</tt> and
@@ -111,13 +111,13 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * constructor allowing the target to be set later.
      * @stable ICU 2.4
      */
-    UnicodeSetIterator();
+    Unicode_ಗಣ_Iterator();
 
     /**
      * Destructor.
      * @stable ICU 2.4
      */
-    virtual ~UnicodeSetIterator();
+    ವಾಸ್ತವಿಕ ~Unicode_ಗಣ_Iterator();
 
     /**
      * Returns true if the current element is a string.  If so, the
@@ -134,14 +134,14 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * of the range.
      * @stable ICU 2.4
      */
-    inline UBool isString() const;
+    ಸಾಲೊಳಗೆ UBool isString() ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns the current code point, if <tt>isString()</tt> returned
      * false.  Otherwise returns an undefined result.
      * @stable ICU 2.4
      */
-    inline UChar32 getCodepoint() const;
+    ಸಾಲೊಳಗೆ UChar32 getCodepoint() ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns the end of the current code point range, if
@@ -149,7 +149,7 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * called.  Otherwise returns an undefined result.
      * @stable ICU 2.4
      */
-    inline UChar32 getCodepointEnd() const;
+    ಸಾಲೊಳಗೆ UChar32 get_Codepoint_ಕೊನೆ() ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns the current string, if <tt>isString()</tt> returned
@@ -162,7 +162,7 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * 
      * @stable ICU 2.4
      */
-    const UnicodeString& getString() U_LIFETIME_BOUND;
+    ಸ್ಥಿರಾಂಕ UnicodeString& getString() U_LIFETIME_BOUND;
 
     /**
      * Skips over the remaining code points/ranges, if any.
@@ -173,12 +173,12 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * @stable ICU 70
      * @see UnicodeSet#strings()
      */
-    inline UnicodeSetIterator& skipToStrings() U_LIFETIME_BOUND {
+    ಸಾಲೊಳಗೆ Unicode_ಗಣ_Iterator& skip_ಗಮ್ಯ_ಅಕ್ಷರಸರಣಿಗಳು() U_LIFETIME_BOUND {
         // Finish code point/range iteration.
-        range = endRange;
-        endElement = -1;
-        nextElement = 0;
-        return *this;
+        range = ಕೊನೆ_Range;
+        ಕೊನೆ_Element = -1;
+        ಮುಂದಿನ_Element = 0;
+        ಹಿಂತಿರುಗಿ *this;
     }
 
     /**
@@ -203,7 +203,7 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * @return true if there was another element in the set.
      * @stable ICU 2.4
      */
-    UBool next();
+    UBool ಮುಂದಿನ();
 
     /**
      * Returns the next element in the set, either a code point range
@@ -224,7 +224,7 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * @return true if there was another element in the set.
      * @stable ICU 2.4
      */
-    UBool nextRange();
+    UBool ಮುಂದಿನ_Range();
 
     /**
      * Sets this iterator to visit the elements of the given set and
@@ -233,56 +233,56 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * @param set the set to iterate over.
      * @stable ICU 2.4
      */
-    void reset(const UnicodeSet& set);
+    ಶೂನ್ಯ reset(ಸ್ಥಿರಾಂಕ Unicode_ಗಣ& ಗಣ);
 
     /**
      * Resets this iterator to the start of the set.
      * @stable ICU 2.4
      */
-    void reset();
+    ಶೂನ್ಯ reset();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      *
      * @stable ICU 2.4
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    ಸ್ಥಿರ UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      *
      * @stable ICU 2.4
      */
-    virtual UClassID getDynamicClassID() const override;
+    ವಾಸ್ತವಿಕ UClassID getDynamicClassID() ಸ್ಥಿರಾಂಕ override;
 
     // ======================= PRIVATES ===========================
 
-private:
+ಖಾಸಗಿ:
 
     // endElement and nextElements are really UChar32's, but we keep
     // them as signed int32_t's so we can do comparisons with
     // endElement set to -1.  Leave them as int32_t's.
     /** The set
      */
-    const UnicodeSet* set;
+    ಸ್ಥಿರಾಂಕ Unicode_ಗಣ* ಗಣ;
     /** End range
      */
-    int32_t endRange;
+    int32_t ಕೊನೆ_Range;
     /** Range
      */
     int32_t range;
     /** End element
      */
-    int32_t endElement;
+    int32_t ಕೊನೆ_Element;
     /** Next element
      */
-    int32_t nextElement;
+    int32_t ಮುಂದಿನ_Element;
     /** Next string
      */
-    int32_t nextString;
+    int32_t ಮುಂದಿನ_String;
     /** String count
      */
-    int32_t stringCount;
+    int32_t string_ಎಣಿಕೆ;
 
     /**
      *  Points to the string to use when the caller asks for a
@@ -292,32 +292,32 @@ private:
 
     /** Copy constructor. Disallowed.
      */
-    UnicodeSetIterator(const UnicodeSetIterator&) = delete;
+    Unicode_ಗಣ_Iterator(ಸ್ಥಿರಾಂಕ Unicode_ಗಣ_Iterator&) = delete;
 
     /** Assignment operator. Disallowed.
      */
-    UnicodeSetIterator& operator=(const UnicodeSetIterator&) = delete;
+    Unicode_ಗಣ_Iterator& ಕ್ರಿಯಾಕಾರಕ=(ಸ್ಥಿರಾಂಕ Unicode_ಗಣ_Iterator&) = delete;
 
     /** Load range
      */
-    void loadRange(int32_t range);
+    ಶೂನ್ಯ ತುಂಬು_Range(int32_t range);
 };
 
-inline UBool UnicodeSetIterator::isString() const {
-    return codepoint < 0;
+ಸಾಲೊಳಗೆ UBool Unicode_ಗಣ_Iterator::isString() ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ codepoint < 0;
 }
 
-inline UChar32 UnicodeSetIterator::getCodepoint() const {
-    return codepoint;
+ಸಾಲೊಳಗೆ UChar32 Unicode_ಗಣ_Iterator::getCodepoint() ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ codepoint;
 }
 
-inline UChar32 UnicodeSetIterator::getCodepointEnd() const {
-    return codepointEnd;
+ಸಾಲೊಳಗೆ UChar32 Unicode_ಗಣ_Iterator::get_Codepoint_ಕೊನೆ() ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ codepoint_ಕೊನೆ;
 }
 
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ಆದರೆ_ಅಂತ್ಯ /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

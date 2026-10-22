@@ -4,13 +4,13 @@
 // charstrmap.h
 // created: 2020sep01 Frank Yung-Fong Tang
 
-#ifndef __CHARSTRMAP_H__
-#define __CHARSTRMAP_H__
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __CHARSTRMAP_H__
+#ವ್ಯಾಖ್ಯಾನಿಸು __CHARSTRMAP_H__
 
-#include <utility>
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "uhash.h"
+#ಅನ್ತರ್ಭಾವ <utility>
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uobject.h"
+#ಅನ್ತರ್ಭಾವ "uhash.h"
 
 U_NAMESPACE_BEGIN
 
@@ -18,38 +18,38 @@ U_NAMESPACE_BEGIN
  * Map of const char * keys & values.
  * Stores pointers as is: Does not own/copy/adopt/release strings.
  */
-class CharStringMap final : public UMemory {
-public:
+class CharStringMap final : ಸಾರ್ವಜನಿಕ UMemory {
+ಸಾರ್ವಜನಿಕ:
     /** Constructs an unusable non-map. */
     CharStringMap() : map(nullptr) {}
-    CharStringMap(int32_t size, UErrorCode &errorCode) {
-        map = uhash_openSize(uhash_hashChars, uhash_compareChars, uhash_compareChars,
-                             size, &errorCode);
+    CharStringMap(int32_t ಗಾತ್ರ_3, UError_ಸಂಕೇತ &error_ಸಂಕೇತ) {
+        map = uhash_open_ಗಾತ್ರ(uhash_hashChars, uhash_compareChars, uhash_compareChars,
+                             ಗಾತ್ರ_3, &error_ಸಂಕೇತ);
     }
     CharStringMap(CharStringMap &&other) noexcept : map(other.map) {
         other.map = nullptr;
     }
-    CharStringMap(const CharStringMap &other) = delete;
+    CharStringMap(ಸ್ಥಿರಾಂಕ CharStringMap &other) = delete;
     ~CharStringMap() {
         uhash_close(map);
     }
 
-    CharStringMap &operator=(CharStringMap &&other) noexcept {
+    CharStringMap &ಕ್ರಿಯಾಕಾರಕ=(CharStringMap &&other) noexcept {
         map = other.map;
         other.map = nullptr;
-        return *this;
+        ಹಿಂತಿರುಗಿ *this;
     }
-    CharStringMap &operator=(const CharStringMap &other) = delete;
+    CharStringMap &ಕ್ರಿಯಾಕಾರಕ=(ಸ್ಥಿರಾಂಕ CharStringMap &other) = delete;
 
-    const char *get(const char *key) const { return static_cast<const char *>(uhash_get(map, key)); }
-    void put(const char *key, const char *value, UErrorCode &errorCode) {
-        uhash_put(map, const_cast<char *>(key), const_cast<char *>(value), &errorCode);
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *get(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಕೀಲಿ) ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ static_cast<ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *>(uhash_get(map, ಕೀಲಿ)); }
+    ಶೂನ್ಯ put(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಕೀಲಿ, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಮೌಲ್ಯ_2, UError_ಸಂಕೇತ &error_ಸಂಕೇತ) {
+        uhash_put(map, const_cast<ಅಕ್ಷರ *>(ಕೀಲಿ), const_cast<ಅಕ್ಷರ *>(ಮೌಲ್ಯ_2), &error_ಸಂಕೇತ);
     }
 
-private:
+ಖಾಸಗಿ:
     UHashtable *map;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif  //  __CHARSTRMAP_H__
+#ಆದರೆ_ಅಂತ್ಯ  //  __CHARSTRMAP_H__

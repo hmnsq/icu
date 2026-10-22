@@ -10,17 +10,17 @@
 ***************************************************************************
 */
 
-#ifndef UNICODESET_H
-#define UNICODESET_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ UNICODESET_H
+#ವ್ಯಾಖ್ಯಾನಿಸು UNICODESET_H
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ಆದರೆ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/ucpmap.h"
-#include "unicode/unifilt.h"
-#include "unicode/unistr.h"
-#include "unicode/uset.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ucpmap.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unifilt.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unistr.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uset.h"
 
 /**
  * \file
@@ -33,10 +33,10 @@ U_NAMESPACE_BEGIN
 class BMPSet;
 class ParsePosition;
 class RBBIRuleScanner;
-class SymbolTable;
-class UnicodeSetStringSpan;
+class ಚಿಹ್ನೆ_ಕೋಷ್ಟಕ;
+class Unicode_ಗಣ_String_ಹರವು;
 class UVector;
-class RuleCharacterIterator;
+class ನಿಯಮ_Character_Iterator;
 
 /**
  * A mutable set of Unicode characters and multicharacter strings. Objects of this class represent
@@ -172,24 +172,24 @@ class RuleCharacterIterator;
  * @author Alan Liu
  * @stable ICU 2.0
  */
-class U_COMMON_API UnicodeSet final : public UnicodeFilter {
-private:
+class U_COMMON_API Unicode_ಗಣ final : ಸಾರ್ವಜನಿಕ UnicodeFilter {
+ಖಾಸಗಿ:
     /**
      * Enough for sets with few ranges.
      * For example, White_Space has 10 ranges, list length 21.
      */
-    static constexpr int32_t INITIAL_CAPACITY = 25;
+    ಸ್ಥಿರ constexpr int32_t INITIAL_ಸಾಮರ್ಥ್ಯ = 25;
     // fFlags constant
-    static constexpr uint8_t kIsBogus = 1;  // This set is bogus (i.e. not valid)
+    ಸ್ಥಿರ constexpr uint8_t kIsBogus = 1;  // This set is bogus (i.e. not valid)
 
-    UChar32* list = stackList; // MUST be terminated with HIGH
-    int32_t capacity = INITIAL_CAPACITY; // capacity of list
+    UChar32* list = ರಾಶಿ_List; // MUST be terminated with HIGH
+    int32_t ಸಾಮರ್ಥ್ಯ = INITIAL_ಸಾಮರ್ಥ್ಯ; // capacity of list
     int32_t len = 1; // length of list used; 1 <= len <= capacity
     uint8_t fFlags = 0;         // Bit flag (see constants above)
 
-    BMPSet *bmpSet = nullptr; // The set is frozen iff either bmpSet or stringSpan is not nullptr.
-    UChar32* buffer = nullptr; // internal buffer, may be nullptr
-    int32_t bufferCapacity = 0; // capacity of buffer
+    BMPSet *bmp_ಗಣ = nullptr; // The set is frozen iff either bmpSet or stringSpan is not nullptr.
+    UChar32* ಬಫರ್ = nullptr; // internal buffer, may be nullptr
+    int32_t ಬಫರ್_ಸಾಮರ್ಥ್ಯ = 0; // capacity of buffer
 
     /**
      * The pattern representation of this set.  This may not be the
@@ -203,17 +203,17 @@ private:
     char16_t *pat = nullptr;
     int32_t patLen = 0;
 
-    UVector* strings_ = nullptr; // maintained in sorted order
-    UnicodeSetStringSpan *stringSpan = nullptr;
+    UVector* ಅಕ್ಷರಸರಣಿಗಳು_2 = nullptr; // maintained in sorted order
+    Unicode_ಗಣ_String_ಹರವು *string_ಹರವು = nullptr;
 
     /**
      * Initial list array.
      * Avoids some heap allocations, and list is never nullptr.
      * Increases the object size a bit.
      */
-    UChar32 stackList[INITIAL_CAPACITY];
+    UChar32 ರಾಶಿ_List[INITIAL_ಸಾಮರ್ಥ್ಯ];
 
-public:
+ಸಾರ್ವಜನಿಕ:
     /**
      * Determine if this object contains a valid set.
      * A bogus set has no value. It is different from an empty set.
@@ -223,7 +223,7 @@ public:
      * @see setToBogus()
      * @stable ICU 4.0
      */
-    inline UBool isBogus() const;
+    ಸಾಲೊಳಗೆ UBool isBogus() ಸ್ಥಿರಾಂಕ;
 
     /**
      * Make this UnicodeSet object invalid.
@@ -241,35 +241,35 @@ public:
      * @see isBogus()
      * @stable ICU 4.0
      */
-    void setToBogus();
+    ಶೂನ್ಯ ಗಣ_ಗಮ್ಯ_Bogus();
 
-public:
+ಸಾರ್ವಜನಿಕ:
 
-    enum {
+    ಎಣಿಕೆ {
         /**
          * Minimum value that can be stored in a UnicodeSet.
          * @stable ICU 2.4
          */
-        MIN_VALUE = 0,
+        MIN_ಮೌಲ್ಯ = 0,
 
         /**
          * Maximum value that can be stored in a UnicodeSet.
          * @stable ICU 2.4
          */
-        MAX_VALUE = 0x10ffff
+        MAX_ಮೌಲ್ಯ = 0x10ffff
     };
 
     //----------------------------------------------------------------
     // Constructors &c
     //----------------------------------------------------------------
 
-public:
+ಸಾರ್ವಜನಿಕ:
 
     /**
      * Constructs an empty set.
      * @stable ICU 2.0
      */
-    UnicodeSet();
+    Unicode_ಗಣ();
 
     /**
      * Constructs a set containing the given range. If <code>end <
@@ -279,13 +279,13 @@ public:
      * @param end last character, inclusive, of range
      * @stable ICU 2.4
      */
-    UnicodeSet(UChar32 start, UChar32 end);
+    Unicode_ಗಣ(UChar32 ಆರಂಭ, UChar32 ಕೊನೆ);
 
-#ifndef U_HIDE_INTERNAL_API
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_ಆಂತರಿಕ_API
     /**
      * @internal
      */
-    enum ESerialization {
+    ಎಣಿಕೆ ESerialization {
       kSerialized  /* result of serialize() */
     };
 
@@ -299,9 +299,9 @@ public:
      *
      * @internal
      */
-    UnicodeSet(const uint16_t buffer[], int32_t bufferLen,
-               ESerialization serialization, UErrorCode &status);
-#endif  /* U_HIDE_INTERNAL_API */
+    Unicode_ಗಣ(ಸ್ಥಿರಾಂಕ uint16_t ಬಫರ್[], int32_t ಬಫರ್_Len,
+               ESerialization serialization, UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2);
+#ಆದರೆ_ಅಂತ್ಯ  /* U_HIDE_INTERNAL_API */
 
     /**
      * Constructs a set from the given pattern.  See the class
@@ -311,10 +311,10 @@ public:
      * contains a syntax error.
      * @stable ICU 2.0
      */
-    UnicodeSet(const UnicodeString& pattern,
-               UErrorCode& status);
+    Unicode_ಗಣ(ಸ್ಥಿರಾಂಕ UnicodeString& ನಮೂನೆ,
+               UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
 
-#ifndef U_HIDE_INTERNAL_API
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_ಆಂತರಿಕ_API
     /**
      * Constructs a set from the given pattern.  See the class
      * description for the syntax of the pattern language.
@@ -329,11 +329,11 @@ public:
      * contains a syntax error.
      * @internal
      */
-    UnicodeSet(const UnicodeString& pattern,
+    Unicode_ಗಣ(ಸ್ಥಿರಾಂಕ UnicodeString& ನಮೂನೆ,
                uint32_t options,
-               const SymbolTable* symbols,
-               UErrorCode& status);
-#endif  /* U_HIDE_INTERNAL_API */
+               ಸ್ಥಿರಾಂಕ ಚಿಹ್ನೆ_ಕೋಷ್ಟಕ* symbols,
+               UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
+#ಆದರೆ_ಅಂತ್ಯ  /* U_HIDE_INTERNAL_API */
 
     /**
      * Constructs a set from the given pattern.  See the class description
@@ -350,29 +350,29 @@ public:
      * @param status input-output error code
      * @stable ICU 2.8
      */
-    UnicodeSet(const UnicodeString& pattern, ParsePosition& pos,
+    Unicode_ಗಣ(ಸ್ಥಿರಾಂಕ UnicodeString& ನಮೂನೆ, ParsePosition& pos,
                uint32_t options,
-               const SymbolTable* symbols,
-               UErrorCode& status);
+               ಸ್ಥಿರಾಂಕ ಚಿಹ್ನೆ_ಕೋಷ್ಟಕ* symbols,
+               UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
 
     /**
      * Constructs a set that is identical to the given UnicodeSet.
      * @stable ICU 2.0
      */
-    UnicodeSet(const UnicodeSet& o);
+    Unicode_ಗಣ(ಸ್ಥಿರಾಂಕ Unicode_ಗಣ& o);
 
     /**
      * Destructs the set.
      * @stable ICU 2.0
      */
-    virtual ~UnicodeSet();
+    ವಾಸ್ತವಿಕ ~Unicode_ಗಣ();
 
     /**
      * Assigns this object to be a copy of another.
      * A frozen set will not be modified.
      * @stable ICU 2.0
      */
-    UnicodeSet& operator=(const UnicodeSet& o) U_LIFETIME_BOUND;
+    Unicode_ಗಣ& ಕ್ರಿಯಾಕಾರಕ=(ಸ್ಥಿರಾಂಕ Unicode_ಗಣ& o) U_LIFETIME_BOUND;
 
     /**
      * Compares the specified object with this set for equality.  Returns
@@ -385,14 +385,14 @@ public:
      * @return <tt>true</tt> if the specified set is equal to this set.
      * @stable ICU 2.0
      */
-    bool operator==(const UnicodeSet& o) const;
+    bool ಕ್ರಿಯಾಕಾರಕ==(ಸ್ಥಿರಾಂಕ Unicode_ಗಣ& o) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Compares the specified object with this set for equality.  Returns
      * <tt>true</tt> if the specified set is not equal to this set.
      * @stable ICU 2.0
      */
-    inline bool operator!=(const UnicodeSet& o) const;
+    ಸಾಲೊಳಗೆ bool ಕ್ರಿಯಾಕಾರಕ!=(ಸ್ಥಿರಾಂಕ Unicode_ಗಣ& o) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns a copy of this object.  All UnicodeFunctor objects have
@@ -403,7 +403,7 @@ public:
      * @see cloneAsThawed
      * @stable ICU 2.0
      */
-    virtual UnicodeSet* clone() const override;
+    ವಾಸ್ತವಿಕ Unicode_ಗಣ* clone() ಸ್ಥಿರಾಂಕ override;
 
     /**
      * Returns the hash code value for this set.
@@ -412,7 +412,7 @@ public:
      * @see Object#hashCode()
      * @stable ICU 2.0
      */
-    int32_t hashCode() const;
+    int32_t hash_ಸಂಕೇತ() ಸ್ಥಿರಾಂಕ;
 
     /**
      * Get a UnicodeSet pointer from a USet
@@ -422,7 +422,7 @@ public:
      *
      * @stable ICU 4.2
      */
-    inline static UnicodeSet* fromUSet(USet* uset U_LIFETIME_BOUND);
+    ಸಾಲೊಳಗೆ ಸ್ಥಿರ Unicode_ಗಣ* fromUSet(USet* uset U_LIFETIME_BOUND);
 
     /**
      * Get a UnicodeSet pointer from a const USet
@@ -432,7 +432,7 @@ public:
      *
      * @stable ICU 4.2
      */
-    inline static const UnicodeSet* fromUSet(const USet* uset U_LIFETIME_BOUND);
+    ಸಾಲೊಳಗೆ ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ Unicode_ಗಣ* fromUSet(ಸ್ಥಿರಾಂಕ USet* uset U_LIFETIME_BOUND);
 
     /**
      * Produce a USet * pointer for this UnicodeSet.
@@ -441,7 +441,7 @@ public:
      * @return a USet pointer for this UnicodeSet
      * @stable ICU 4.2
      */
-    inline USet* toUSet() U_LIFETIME_BOUND;
+    ಸಾಲೊಳಗೆ USet* ಗಮ್ಯ_USet() U_LIFETIME_BOUND;
 
     /**
      * Produce a const USet * pointer for this UnicodeSet.
@@ -450,7 +450,7 @@ public:
      * @return a const USet pointer for this UnicodeSet
      * @stable ICU 4.2
      */
-    inline const USet* toUSet() const U_LIFETIME_BOUND;
+    ಸಾಲೊಳಗೆ ಸ್ಥಿರಾಂಕ USet* ಗಮ್ಯ_USet() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND;
 
 
     //----------------------------------------------------------------
@@ -465,7 +465,7 @@ public:
      * @see cloneAsThawed
      * @stable ICU 3.8
      */
-    inline UBool isFrozen() const;
+    ಸಾಲೊಳಗೆ UBool isFrozen() ಸ್ಥಿರಾಂಕ;
 
     /**
      * Freeze the set (make it immutable).
@@ -480,7 +480,7 @@ public:
      * @see cloneAsThawed
      * @stable ICU 3.8
      */
-    UnicodeSet* freeze() U_LIFETIME_BOUND;
+    Unicode_ಗಣ* freeze() U_LIFETIME_BOUND;
 
     /**
      * Clone the set and make the clone mutable.
@@ -490,7 +490,7 @@ public:
      * @see isFrozen
      * @stable ICU 3.8
      */
-    UnicodeSet *cloneAsThawed() const;
+    Unicode_ಗಣ *cloneAsThawed() ಸ್ಥಿರಾಂಕ;
 
     //----------------------------------------------------------------
     // Public API
@@ -505,14 +505,14 @@ public:
      * @param end last character in the set, inclusive
      * @stable ICU 2.4
      */
-    UnicodeSet& set(UChar32 start, UChar32 end) U_LIFETIME_BOUND;
+    Unicode_ಗಣ& ಗಣ(UChar32 ಆರಂಭ, UChar32 ಕೊನೆ) U_LIFETIME_BOUND;
 
     /**
      * Return true if the given position, in the given pattern, appears
      * to be the start of a UnicodeSet pattern.
      * @stable ICU 2.4
      */
-    static UBool resemblesPattern(const UnicodeString& pattern,
+    ಸ್ಥಿರ UBool resembles_ನಮೂನೆ(ಸ್ಥಿರಾಂಕ UnicodeString& ನಮೂನೆ,
                                   int32_t pos);
 
     /**
@@ -527,9 +527,9 @@ public:
      * @return a reference to this
      * @stable ICU 2.0
      */
-    UnicodeSet& applyPattern(const UnicodeString& pattern, UErrorCode& status) U_LIFETIME_BOUND;
+    Unicode_ಗಣ& apply_ನಮೂನೆ(ಸ್ಥಿರಾಂಕ UnicodeString& ನಮೂನೆ, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) U_LIFETIME_BOUND;
 
-#ifndef U_HIDE_INTERNAL_API
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_ಆಂತರಿಕ_API
     /**
      * Modifies this set to represent the set specified by the given
      * pattern, optionally ignoring Unicode Pattern_White_Space characters.
@@ -548,11 +548,11 @@ public:
      * @return a reference to this
      * @internal
      */
-    UnicodeSet& applyPattern(const UnicodeString& pattern,
+    Unicode_ಗಣ& apply_ನಮೂನೆ(ಸ್ಥಿರಾಂಕ UnicodeString& ನಮೂನೆ,
                              uint32_t options,
-                             const SymbolTable* symbols,
-                             UErrorCode& status) U_LIFETIME_BOUND;
-#endif  /* U_HIDE_INTERNAL_API */
+                             ಸ್ಥಿರಾಂಕ ಚಿಹ್ನೆ_ಕೋಷ್ಟಕ* symbols,
+                             UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) U_LIFETIME_BOUND;
+#ಆದರೆ_ಅಂತ್ಯ  /* U_HIDE_INTERNAL_API */
 
     /**
      * Parses the given pattern, starting at the given position.  The
@@ -587,11 +587,11 @@ public:
      * @return a reference to this
      * @stable ICU 2.8
      */
-    UnicodeSet& applyPattern(const UnicodeString& pattern,
+    Unicode_ಗಣ& apply_ನಮೂನೆ(ಸ್ಥಿರಾಂಕ UnicodeString& ನಮೂನೆ,
                              ParsePosition& pos,
                              uint32_t options,
-                             const SymbolTable* symbols,
-                             UErrorCode& status) U_LIFETIME_BOUND;
+                             ಸ್ಥಿರಾಂಕ ಚಿಹ್ನೆ_ಕೋಷ್ಟಕ* symbols,
+                             UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) U_LIFETIME_BOUND;
 
     /**
      * Returns a string representation of this set.  If the result of
@@ -606,8 +606,8 @@ public:
      * U+000A, U+0020..U+007E.
      * @stable ICU 2.0
      */
-    virtual UnicodeString& toPattern(UnicodeString& result U_LIFETIME_BOUND,
-                                     UBool escapeUnprintable = false) const override;
+    ವಾಸ್ತವಿಕ UnicodeString& ಗಮ್ಯ_ನಮೂನೆ(UnicodeString& ಫಲಿತಾಂಶ U_LIFETIME_BOUND,
+                                     UBool escapeUnprintable = false) ಸ್ಥಿರಾಂಕ override;
 
     /**
      * Modifies this set to contain those code points which have the given value
@@ -631,9 +631,9 @@ public:
      *
      * @stable ICU 2.4
      */
-    UnicodeSet& applyIntPropertyValue(UProperty prop,
-                                      int32_t value,
-                                      UErrorCode& ec) U_LIFETIME_BOUND;
+    Unicode_ಗಣ& apply_Int_Property_ಮೌಲ್ಯ(UProperty prop,
+                                      int32_t ಮೌಲ್ಯ_2,
+                                      UError_ಸಂಕೇತ& ec) U_LIFETIME_BOUND;
 
     /**
      * Modifies this set to contain those code points which have the
@@ -664,9 +664,9 @@ public:
      *
      * @stable ICU 2.4
      */
-    UnicodeSet& applyPropertyAlias(const UnicodeString& prop,
-                                   const UnicodeString& value,
-                                   UErrorCode& ec) U_LIFETIME_BOUND;
+    Unicode_ಗಣ& applyPropertyAlias(ಸ್ಥಿರಾಂಕ UnicodeString& prop,
+                                   ಸ್ಥಿರಾಂಕ UnicodeString& ಮೌಲ್ಯ_2,
+                                   UError_ಸಂಕೇತ& ec) U_LIFETIME_BOUND;
 
     /**
      * Returns the number of elements in this set (its cardinality).
@@ -680,7 +680,7 @@ public:
      * @stable ICU 2.0
      * @see getRangeCount
      */
-    int32_t size() const;
+    int32_t ಗಾತ್ರ_3() ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns <tt>true</tt> if this set contains no elements.
@@ -688,13 +688,13 @@ public:
      * @return <tt>true</tt> if this set contains no elements.
      * @stable ICU 2.0
      */
-    UBool isEmpty() const;
+    UBool is_ಖಾಲಿಗಳು() ಸ್ಥಿರಾಂಕ;
 
     /**
      * @return true if this set contains multi-character strings or the empty string.
      * @stable ICU 70
      */
-    UBool hasStrings() const;
+    UBool has_ಅಕ್ಷರಸರಣಿಗಳು() ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns true if this set contains the given character.
@@ -703,7 +703,7 @@ public:
      * @return true if the test condition is met
      * @stable ICU 2.0
      */
-    virtual UBool contains(UChar32 c) const override;
+    ವಾಸ್ತವಿಕ UBool ಒಳಗೊಂಡಿದೆ(UChar32 c) ಸ್ಥಿರಾಂಕ override;
 
     /**
      * Returns true if this set contains every character
@@ -713,7 +713,7 @@ public:
      * @return true if the test condition is met
      * @stable ICU 2.0
      */
-    UBool contains(UChar32 start, UChar32 end) const;
+    UBool ಒಳಗೊಂಡಿದೆ(UChar32 ಆರಂಭ, UChar32 ಕೊನೆ) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns <tt>true</tt> if this set contains the given
@@ -722,7 +722,7 @@ public:
      * @return <tt>true</tt> if this set contains the specified string
      * @stable ICU 2.4
      */
-    UBool contains(const UnicodeString& s) const;
+    UBool ಒಳಗೊಂಡಿದೆ(ಸ್ಥಿರಾಂಕ UnicodeString& s) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns true if this set contains all the characters and strings
@@ -731,7 +731,7 @@ public:
      * @return true if the test condition is met
      * @stable ICU 2.4
      */
-    UBool containsAll(const UnicodeSet& c) const;
+    UBool ಒಳಗೊಂಡಿದೆ_All(ಸ್ಥಿರಾಂಕ Unicode_ಗಣ& c) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns true if this set contains all the characters
@@ -740,7 +740,7 @@ public:
      * @return true if the test condition is met
      * @stable ICU 2.4
      */
-    UBool containsAll(const UnicodeString& s) const;
+    UBool ಒಳಗೊಂಡಿದೆ_All(ಸ್ಥಿರಾಂಕ UnicodeString& s) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns true if this set contains none of the characters
@@ -750,7 +750,7 @@ public:
      * @return true if the test condition is met
      * @stable ICU 2.4
      */
-    UBool containsNone(UChar32 start, UChar32 end) const;
+    UBool ಒಳಗೊಂಡಿದೆ_None(UChar32 ಆರಂಭ, UChar32 ಕೊನೆ) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns true if this set contains none of the characters and strings
@@ -759,7 +759,7 @@ public:
      * @return true if the test condition is met
      * @stable ICU 2.4
      */
-    UBool containsNone(const UnicodeSet& c) const;
+    UBool ಒಳಗೊಂಡಿದೆ_None(ಸ್ಥಿರಾಂಕ Unicode_ಗಣ& c) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns true if this set contains none of the characters
@@ -768,7 +768,7 @@ public:
      * @return true if the test condition is met
      * @stable ICU 2.4
      */
-    UBool containsNone(const UnicodeString& s) const;
+    UBool ಒಳಗೊಂಡಿದೆ_None(ಸ್ಥಿರಾಂಕ UnicodeString& s) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns true if this set contains one or more of the characters
@@ -778,7 +778,7 @@ public:
      * @return true if the condition is met
      * @stable ICU 2.4
      */
-    inline UBool containsSome(UChar32 start, UChar32 end) const;
+    ಸಾಲೊಳಗೆ UBool ಒಳಗೊಂಡಿದೆ_Some(UChar32 ಆರಂಭ, UChar32 ಕೊನೆ) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns true if this set contains one or more of the characters
@@ -787,7 +787,7 @@ public:
      * @return true if the condition is met
      * @stable ICU 2.4
      */
-    inline UBool containsSome(const UnicodeSet& s) const;
+    ಸಾಲೊಳಗೆ UBool ಒಳಗೊಂಡಿದೆ_Some(ಸ್ಥಿರಾಂಕ Unicode_ಗಣ& s) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns true if this set contains one or more of the characters
@@ -796,7 +796,7 @@ public:
      * @return true if the condition is met
      * @stable ICU 2.4
      */
-    inline UBool containsSome(const UnicodeString& s) const;
+    ಸಾಲೊಳಗೆ UBool ಒಳಗೊಂಡಿದೆ_Some(ಸ್ಥಿರಾಂಕ UnicodeString& s) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns the length of the initial substring of the input string which
@@ -816,7 +816,7 @@ public:
      * @stable ICU 3.8
      * @see USetSpanCondition
      */
-    int32_t span(const char16_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t ಹರವು(ಸ್ಥಿರಾಂಕ char16_t *s, int32_t ಉದ್ದಳತೆ, USet_ಹರವು_Condition ಹರವು_Condition) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns the end of the substring of the input string according to the USetSpanCondition.
@@ -830,7 +830,7 @@ public:
      * @stable ICU 4.4
      * @see USetSpanCondition
      */
-    inline int32_t span(const UnicodeString &s, int32_t start, USetSpanCondition spanCondition) const;
+    ಸಾಲೊಳಗೆ int32_t ಹರವು(ಸ್ಥಿರಾಂಕ UnicodeString &s, int32_t ಆರಂಭ, USet_ಹರವು_Condition ಹರವು_Condition) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns the start of the trailing substring of the input string which
@@ -849,7 +849,7 @@ public:
      * @stable ICU 3.8
      * @see USetSpanCondition
      */
-    int32_t spanBack(const char16_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t ಹರವು_ಹಿಂಭಾಗ(ಸ್ಥಿರಾಂಕ char16_t *s, int32_t ಉದ್ದಳತೆ, USet_ಹರವು_Condition ಹರವು_Condition) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns the start of the substring of the input string according to the USetSpanCondition.
@@ -864,7 +864,7 @@ public:
      * @stable ICU 4.4
      * @see USetSpanCondition
      */
-    inline int32_t spanBack(const UnicodeString &s, int32_t limit, USetSpanCondition spanCondition) const;
+    ಸಾಲೊಳಗೆ int32_t ಹರವು_ಹಿಂಭಾಗ(ಸ್ಥಿರಾಂಕ UnicodeString &s, int32_t ಎಲ್ಲೆ, USet_ಹರವು_Condition ಹರವು_Condition) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns the length of the initial substring of the input string which
@@ -884,7 +884,7 @@ public:
      * @stable ICU 3.8
      * @see USetSpanCondition
      */
-    int32_t spanUTF8(const char *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t ಹರವು_UTF8(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *s, int32_t ಉದ್ದಳತೆ, USet_ಹರವು_Condition ಹರವು_Condition) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns the start of the trailing substring of the input string which
@@ -903,18 +903,18 @@ public:
      * @stable ICU 3.8
      * @see USetSpanCondition
      */
-    int32_t spanBackUTF8(const char *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t ಹರವು_ಹಿಂಭಾಗ_UTF8(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *s, int32_t ಉದ್ದಳತೆ, USet_ಹರವು_Condition ಹರವು_Condition) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Implement UnicodeMatcher::matches()
      * @stable ICU 2.4
      */
-    UMatchDegree matches(const Replaceable& text,
-                         int32_t& offset,
-                         int32_t limit,
+    UMatchDegree matches(ಸ್ಥಿರಾಂಕ Replaceable& ಪಠ್ಯ,
+                         int32_t& ಸ್ಥಾನಾಂತರ,
+                         int32_t ಎಲ್ಲೆ,
                          UBool incremental) override;
 
-private:
+ಖಾಸಗಿ:
     /**
      * Returns the longest match for s in text at the given position.
      * If limit > start then match forward from start+1 to limit
@@ -937,9 +937,9 @@ private:
      * s.length().  If there is a mismatch between s and text, return
      * 0
      */
-    static int32_t matchRest(const Replaceable& text,
-                             int32_t start, int32_t limit,
-                             const UnicodeString& s);
+    ಸ್ಥಿರ int32_t ಹೊಂದಿಕೆ_Rest(ಸ್ಥಿರಾಂಕ Replaceable& ಪಠ್ಯ,
+                             int32_t ಆರಂಭ, int32_t ಎಲ್ಲೆ,
+                             ಸ್ಥಿರಾಂಕ UnicodeString& s);
 
     /**
      * Returns the smallest value i such that c < list[i].  Caller
@@ -950,9 +950,9 @@ private:
      * @return the smallest integer i in the range 0..len-1,
      * inclusive, such that c < list[i]
      */
-    int32_t findCodePoint(UChar32 c) const;
+    int32_t ಕಂಡುಹಿಡಿ_ಸಂಕೇತ_ಬಿಂದು(UChar32 c) ಸ್ಥಿರಾಂಕ;
 
-public:
+ಸಾರ್ವಜನಿಕ:
 
     /**
      * Implementation of UnicodeMatcher API.  Union the set of all
@@ -961,7 +961,7 @@ public:
      * @param toUnionTo the set into which to union the source characters
      * @stable ICU 2.4
      */
-    virtual void addMatchSetTo(UnicodeSet& toUnionTo) const override;
+    ವಾಸ್ತವಿಕ ಶೂನ್ಯ ಕೂಡಿಸು_ಹೊಂದಿಕೆ_ಗಣ_ಗಮ್ಯ(Unicode_ಗಣ& ಗಮ್ಯ_Union_ಗಮ್ಯ) ಸ್ಥಿರಾಂಕ override;
 
     /**
      * Returns the index of the given character within this set, where
@@ -971,7 +971,7 @@ public:
      * @return an index from 0..size()-1, or -1
      * @stable ICU 2.4
      */
-    int32_t indexOf(UChar32 c) const;
+    int32_t ಸೂಚ್ಯಂಕ_ದ(UChar32 c) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns the character at the given index within this set, where
@@ -988,7 +988,7 @@ public:
      * @return the character at the given index, or (UChar32)-1.
      * @stable ICU 2.4
      */
-    UChar32 charAt(int32_t index) const;
+    UChar32 charAt(int32_t ಸೂಚ್ಯಂಕ) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Returns a C++ "range" for iterating over the code points of this set.
@@ -1007,8 +1007,8 @@ public:
      * @see begin
      * @see end
      */
-    inline U_HEADER_NESTED_NAMESPACE::USetCodePoints codePoints() const U_LIFETIME_BOUND {
-        return U_HEADER_NESTED_NAMESPACE::USetCodePoints(toUSet());
+    ಸಾಲೊಳಗೆ U_ಶೀರ್ಷಿಕೆ_NESTED_NAMESPACE::USet_ಸಂಕೇತ_Points ಸಂಕೇತ_Points() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND {
+        ಹಿಂತಿರುಗಿ U_ಶೀರ್ಷಿಕೆ_NESTED_NAMESPACE::USet_ಸಂಕೇತ_Points(ಗಮ್ಯ_USet());
     }
 
     /**
@@ -1033,8 +1033,8 @@ public:
      * @see begin
      * @see end
      */
-    inline U_HEADER_NESTED_NAMESPACE::USetRanges ranges() const U_LIFETIME_BOUND {
-        return U_HEADER_NESTED_NAMESPACE::USetRanges(toUSet());
+    ಸಾಲೊಳಗೆ U_ಶೀರ್ಷಿಕೆ_NESTED_NAMESPACE::USetRanges ranges() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND {
+        ಹಿಂತಿರುಗಿ U_ಶೀರ್ಷಿಕೆ_NESTED_NAMESPACE::USetRanges(ಗಮ್ಯ_USet());
     }
 
     /**
@@ -1057,8 +1057,8 @@ public:
      * @see begin
      * @see end
      */
-    inline U_HEADER_NESTED_NAMESPACE::USetStrings strings() const U_LIFETIME_BOUND {
-        return U_HEADER_NESTED_NAMESPACE::USetStrings(toUSet());
+    ಸಾಲೊಳಗೆ U_ಶೀರ್ಷಿಕೆ_NESTED_NAMESPACE::USet_ಅಕ್ಷರಸರಣಿಗಳು ಅಕ್ಷರಸರಣಿಗಳು() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND {
+        ಹಿಂತಿರುಗಿ U_ಶೀರ್ಷಿಕೆ_NESTED_NAMESPACE::USet_ಅಕ್ಷರಸರಣಿಗಳು(ಗಮ್ಯ_USet());
     }
 
     /**
@@ -1085,8 +1085,8 @@ public:
      * @see ranges
      * @see strings
      */
-    inline U_HEADER_NESTED_NAMESPACE::USetElementIterator begin() const U_LIFETIME_BOUND {
-        return U_HEADER_NESTED_NAMESPACE::USetElements(toUSet()).begin();
+    ಸಾಲೊಳಗೆ U_ಶೀರ್ಷಿಕೆ_NESTED_NAMESPACE::USetElementIterator begin() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND {
+        ಹಿಂತಿರುಗಿ U_ಶೀರ್ಷಿಕೆ_NESTED_NAMESPACE::USetElements(ಗಮ್ಯ_USet()).begin();
     }
 
     /**
@@ -1097,8 +1097,8 @@ public:
      * @see ranges
      * @see strings
      */
-    inline U_HEADER_NESTED_NAMESPACE::USetElementIterator end() const U_LIFETIME_BOUND {
-        return U_HEADER_NESTED_NAMESPACE::USetElements(toUSet()).end();
+    ಸಾಲೊಳಗೆ U_ಶೀರ್ಷಿಕೆ_NESTED_NAMESPACE::USetElementIterator ಕೊನೆ() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND {
+        ಹಿಂತಿರುಗಿ U_ಶೀರ್ಷಿಕೆ_NESTED_NAMESPACE::USetElements(ಗಮ್ಯ_USet()).ಕೊನೆ();
     }
 
     /**
@@ -1115,7 +1115,7 @@ public:
      * to this set.
      * @stable ICU 2.0
      */
-    UnicodeSet& add(UChar32 start, UChar32 end) U_LIFETIME_BOUND;
+    Unicode_ಗಣ& ಕೂಡಿಸು(UChar32 ಆರಂಭ, UChar32 ಕೊನೆ) U_LIFETIME_BOUND;
 
     /**
      * Adds the specified character to this set if it is not already
@@ -1127,7 +1127,7 @@ public:
      * @return this object, for chaining
      * @stable ICU 2.0
      */
-    UnicodeSet& add(UChar32 c) U_LIFETIME_BOUND;
+    Unicode_ಗಣ& ಕೂಡಿಸು(UChar32 c) U_LIFETIME_BOUND;
 
     /**
      * Adds the specified multicharacter to this set if it is not already
@@ -1140,19 +1140,19 @@ public:
      * @return this object, for chaining
      * @stable ICU 2.4
      */
-    UnicodeSet& add(const UnicodeString& s) U_LIFETIME_BOUND;
+    Unicode_ಗಣ& ಕೂಡಿಸು(ಸ್ಥಿರಾಂಕ UnicodeString& s) U_LIFETIME_BOUND;
 
- private:
+ ಖಾಸಗಿ:
     /**
      * @return a code point IF the string consists of a single one.
      * otherwise returns -1.
      * @param s string to test
      */
-    static int32_t getSingleCP(const UnicodeString& s);
+    ಸ್ಥಿರ int32_t getSingleCP(ಸ್ಥಿರಾಂಕ UnicodeString& s);
 
-    void _add(const UnicodeString& s);
+    ಶೂನ್ಯ ಕೂಡಿಸು_2(ಸ್ಥಿರಾಂಕ UnicodeString& s);
 
- public:
+ ಸಾರ್ವಜನಿಕ:
     /**
      * Adds each of the characters in this string to the set. Note: "ch" => {"c", "h"}
      * If this set already contains any particular character, it has no effect on that character.
@@ -1161,7 +1161,7 @@ public:
      * @return this object, for chaining
      * @stable ICU 2.4
      */
-    UnicodeSet& addAll(const UnicodeString& s) U_LIFETIME_BOUND;
+    Unicode_ಗಣ& ಕೂಡಿಸು_All(ಸ್ಥಿರಾಂಕ UnicodeString& s) U_LIFETIME_BOUND;
 
     /**
      * Retains EACH of the characters in this string. Note: "ch" == {"c", "h"}
@@ -1170,7 +1170,7 @@ public:
      * @return this object, for chaining
      * @stable ICU 2.4
      */
-    UnicodeSet& retainAll(const UnicodeString& s) U_LIFETIME_BOUND;
+    Unicode_ಗಣ& retainAll(ಸ್ಥಿರಾಂಕ UnicodeString& s) U_LIFETIME_BOUND;
 
     /**
      * Complement EACH of the characters in this string. Note: "ch" == {"c", "h"}
@@ -1179,7 +1179,7 @@ public:
      * @return this object, for chaining
      * @stable ICU 2.4
      */
-    UnicodeSet& complementAll(const UnicodeString& s) U_LIFETIME_BOUND;
+    Unicode_ಗಣ& complementAll(ಸ್ಥಿರಾಂಕ UnicodeString& s) U_LIFETIME_BOUND;
 
     /**
      * Remove EACH of the characters in this string. Note: "ch" == {"c", "h"}
@@ -1188,7 +1188,7 @@ public:
      * @return this object, for chaining
      * @stable ICU 2.4
      */
-    UnicodeSet& removeAll(const UnicodeString& s) U_LIFETIME_BOUND;
+    Unicode_ಗಣ& removeAll(ಸ್ಥಿರಾಂಕ UnicodeString& s) U_LIFETIME_BOUND;
 
     /**
      * Makes a set from a multicharacter string. Thus "ch" => {"ch"}
@@ -1198,7 +1198,7 @@ public:
      * The caller owns the return object and is responsible for deleting it.
      * @stable ICU 2.4
      */
-    static UnicodeSet* U_EXPORT2 createFrom(const UnicodeString& s);
+    ಸ್ಥಿರ Unicode_ಗಣ* U_EXPORT2 createFrom(ಸ್ಥಿರಾಂಕ UnicodeString& s);
 
 
     /**
@@ -1208,7 +1208,7 @@ public:
      * The caller owns the return object and is responsible for deleting it.
      * @stable ICU 2.4
      */
-    static UnicodeSet* U_EXPORT2 createFromAll(const UnicodeString& s);
+    ಸ್ಥಿರ Unicode_ಗಣ* U_EXPORT2 createFromAll(ಸ್ಥಿರಾಂಕ UnicodeString& s);
 
     /**
      * Retain only the elements in this set that are contained in the
@@ -1221,7 +1221,7 @@ public:
      * @param end last character, inclusive, of range
      * @stable ICU 2.0
      */
-    UnicodeSet& retain(UChar32 start, UChar32 end) U_LIFETIME_BOUND;
+    Unicode_ಗಣ& retain(UChar32 ಆರಂಭ, UChar32 ಕೊನೆ) U_LIFETIME_BOUND;
 
 
     /**
@@ -1232,7 +1232,7 @@ public:
      * @return this object, for chaining
      * @stable ICU 2.0
      */
-    UnicodeSet& retain(UChar32 c) U_LIFETIME_BOUND;
+    Unicode_ಗಣ& retain(UChar32 c) U_LIFETIME_BOUND;
 
     /**
      * Retains only the specified string from this set if it is present.
@@ -1244,7 +1244,7 @@ public:
      * @return this object, for chaining
      * @stable ICU 69
      */
-    UnicodeSet& retain(const UnicodeString& s) U_LIFETIME_BOUND;
+    Unicode_ಗಣ& retain(ಸ್ಥಿರಾಂಕ UnicodeString& s) U_LIFETIME_BOUND;
 
     /**
      * Removes the specified range from this set if it is present.
@@ -1259,7 +1259,7 @@ public:
      * from this set.
      * @stable ICU 2.0
      */
-    UnicodeSet& remove(UChar32 start, UChar32 end) U_LIFETIME_BOUND;
+    Unicode_ಗಣ& remove(UChar32 ಆರಂಭ, UChar32 ಕೊನೆ) U_LIFETIME_BOUND;
 
     /**
      * Removes the specified character from this set if it is present.
@@ -1271,7 +1271,7 @@ public:
      * @return this object, for chaining
      * @stable ICU 2.0
      */
-    UnicodeSet& remove(UChar32 c) U_LIFETIME_BOUND;
+    Unicode_ಗಣ& remove(UChar32 c) U_LIFETIME_BOUND;
 
     /**
      * Removes the specified string from this set if it is present.
@@ -1282,7 +1282,7 @@ public:
      * @return this object, for chaining
      * @stable ICU 2.4
      */
-    UnicodeSet& remove(const UnicodeString& s) U_LIFETIME_BOUND;
+    Unicode_ಗಣ& remove(ಸ್ಥಿರಾಂಕ UnicodeString& s) U_LIFETIME_BOUND;
 
     /**
      * This is equivalent to
@@ -1296,7 +1296,7 @@ public:
      * A frozen set will not be modified.
      * @stable ICU 2.0
      */
-    UnicodeSet& complement() U_LIFETIME_BOUND;
+    Unicode_ಗಣ& complement() U_LIFETIME_BOUND;
 
     /**
      * Complements the specified range in this set.  Any character in
@@ -1310,7 +1310,7 @@ public:
      * @param end last character, inclusive, of range
      * @stable ICU 2.0
      */
-    UnicodeSet& complement(UChar32 start, UChar32 end) U_LIFETIME_BOUND;
+    Unicode_ಗಣ& complement(UChar32 ಆರಂಭ, UChar32 ಕೊನೆ) U_LIFETIME_BOUND;
 
     /**
      * Complements the specified character in this set.  The character
@@ -1322,7 +1322,7 @@ public:
      * @return this object, for chaining
      * @stable ICU 2.0
      */
-    UnicodeSet& complement(UChar32 c) U_LIFETIME_BOUND;
+    Unicode_ಗಣ& complement(UChar32 c) U_LIFETIME_BOUND;
 
     /**
      * Complement the specified string in this set.
@@ -1333,7 +1333,7 @@ public:
      * @return this object, for chaining
      * @stable ICU 2.4
      */
-    UnicodeSet& complement(const UnicodeString& s) U_LIFETIME_BOUND;
+    Unicode_ಗಣ& complement(ಸ್ಥಿರಾಂಕ UnicodeString& s) U_LIFETIME_BOUND;
 
     /**
      * Adds all of the elements in the specified set to this set if
@@ -1347,7 +1347,7 @@ public:
      * @see #add(UChar32, UChar32)
      * @stable ICU 2.0
      */
-    UnicodeSet& addAll(const UnicodeSet& c) U_LIFETIME_BOUND;
+    Unicode_ಗಣ& ಕೂಡಿಸು_All(ಸ್ಥಿರಾಂಕ Unicode_ಗಣ& c) U_LIFETIME_BOUND;
 
     /**
      * Retains only the elements in this set that are contained in the
@@ -1360,7 +1360,7 @@ public:
      * @param c set that defines which elements this set will retain.
      * @stable ICU 2.0
      */
-    UnicodeSet& retainAll(const UnicodeSet& c) U_LIFETIME_BOUND;
+    Unicode_ಗಣ& retainAll(ಸ್ಥಿರಾಂಕ Unicode_ಗಣ& c) U_LIFETIME_BOUND;
 
     /**
      * Removes from this set all of its elements that are contained in the
@@ -1373,7 +1373,7 @@ public:
      *          this set.
      * @stable ICU 2.0
      */
-    UnicodeSet& removeAll(const UnicodeSet& c) U_LIFETIME_BOUND;
+    Unicode_ಗಣ& removeAll(ಸ್ಥಿರಾಂಕ Unicode_ಗಣ& c) U_LIFETIME_BOUND;
 
     /**
      * Complements in this set all elements contained in the specified
@@ -1385,7 +1385,7 @@ public:
      *          this set.
      * @stable ICU 2.4
      */
-    UnicodeSet& complementAll(const UnicodeSet& c) U_LIFETIME_BOUND;
+    Unicode_ಗಣ& complementAll(ಸ್ಥಿರಾಂಕ Unicode_ಗಣ& c) U_LIFETIME_BOUND;
 
     /**
      * Removes all of the elements from this set.  This set will be
@@ -1393,7 +1393,7 @@ public:
      * A frozen set will not be modified.
      * @stable ICU 2.0
      */
-    UnicodeSet& clear() U_LIFETIME_BOUND;
+    Unicode_ಗಣ& clear() U_LIFETIME_BOUND;
 
     /**
      * Close this set over the given attribute.  For the attribute
@@ -1422,7 +1422,7 @@ public:
      * @return a reference to this set.
      * @stable ICU 4.2
      */
-    UnicodeSet& closeOver(int32_t attribute) U_LIFETIME_BOUND;
+    Unicode_ಗಣ& closeOver(int32_t attribute) U_LIFETIME_BOUND;
 
     /**
      * Remove all strings from this set.
@@ -1430,7 +1430,7 @@ public:
      * @return a reference to this set.
      * @stable ICU 4.2
      */
-    UnicodeSet& removeAllStrings() U_LIFETIME_BOUND;
+    Unicode_ಗಣ& remove_All_ಅಕ್ಷರಸರಣಿಗಳು() U_LIFETIME_BOUND;
 
     /**
      * Iteration method that returns the number of ranges contained in
@@ -1439,7 +1439,7 @@ public:
      * @see #getRangeEnd
      * @stable ICU 2.4
      */
-    int32_t getRangeCount() const;
+    int32_t get_Range_ಎಣಿಕೆ() ಸ್ಥಿರಾಂಕ;
 
     /**
      * Iteration method that returns the first character in the
@@ -1448,7 +1448,7 @@ public:
      * @see #getRangeEnd
      * @stable ICU 2.4
      */
-    UChar32 getRangeStart(int32_t index) const;
+    UChar32 get_Range_ಆರಂಭ(int32_t ಸೂಚ್ಯಂಕ) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Iteration method that returns the last character in the
@@ -1457,7 +1457,7 @@ public:
      * @see #getRangeEnd
      * @stable ICU 2.4
      */
-    UChar32 getRangeEnd(int32_t index) const;
+    UChar32 get_Range_ಕೊನೆ(int32_t ಸೂಚ್ಯಂಕ) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Serializes this set into an array of 16-bit integers.  Serialization
@@ -1507,7 +1507,7 @@ public:
      * than U_BUFFER_OVERFLOW_ERROR.
      * @stable ICU 2.4
      */
-    int32_t serialize(uint16_t *dest, int32_t destCapacity, UErrorCode& ec) const;
+    int32_t serialize(uint16_t *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ, UError_ಸಂಕೇತ& ec) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Reallocate this objects internal structures to take up the least
@@ -1515,7 +1515,7 @@ public:
      * A frozen set will not be modified.
      * @stable ICU 2.4
      */
-    UnicodeSet& compact() U_LIFETIME_BOUND;
+    Unicode_ಗಣ& compact() U_LIFETIME_BOUND;
 
     /**
      * Return the class ID for this class.  This is useful only for
@@ -1528,7 +1528,7 @@ public:
      * @return          The class ID for all objects of this class.
      * @stable ICU 2.0
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    ಸ್ಥಿರ UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * Implement UnicodeFunctor API.
@@ -1538,56 +1538,56 @@ public:
      * different class IDs.
      * @stable ICU 2.4
      */
-    virtual UClassID getDynamicClassID() const override;
+    ವಾಸ್ತವಿಕ UClassID getDynamicClassID() ಸ್ಥಿರಾಂಕ override;
 
-  private:
+  ಖಾಸಗಿ:
 
     // Private API for the USet API
 
-    friend class USetAccess;
+    ಮಿತ್ರ class USetAccess;
 
-    const UnicodeString* getString(int32_t index) const U_LIFETIME_BOUND;
+    ಸ್ಥಿರಾಂಕ UnicodeString* getString(int32_t ಸೂಚ್ಯಂಕ) ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND;
 
     //----------------------------------------------------------------
     // RuleBasedTransliterator support
     //----------------------------------------------------------------
 
-private:
+ಖಾಸಗಿ:
 
     /**
      * Returns <tt>true</tt> if this set contains any character whose low byte
      * is the given value.  This is used by <tt>RuleBasedTransliterator</tt> for
      * indexing.
      */
-    virtual UBool matchesIndexValue(uint8_t v) const override;
+    ವಾಸ್ತವಿಕ UBool matches_ಸೂಚ್ಯಂಕ_ಮೌಲ್ಯ(uint8_t v) ಸ್ಥಿರಾಂಕ override;
 
-private:
-    friend class RBBIRuleScanner;
+ಖಾಸಗಿ:
+    ಮಿತ್ರ class RBBIRuleScanner;
 
     //----------------------------------------------------------------
     // Implementation: Clone as thawed (see ICU4J Freezable)
     //----------------------------------------------------------------
 
-    UnicodeSet(const UnicodeSet& o, UBool /* asThawed */);
-    UnicodeSet& copyFrom(const UnicodeSet& o, UBool asThawed) U_LIFETIME_BOUND;
+    Unicode_ಗಣ(ಸ್ಥಿರಾಂಕ Unicode_ಗಣ& o, UBool /* asThawed */);
+    Unicode_ಗಣ& copyFrom(ಸ್ಥಿರಾಂಕ Unicode_ಗಣ& o, UBool asThawed) U_LIFETIME_BOUND;
 
     //----------------------------------------------------------------
     // Implementation: Pattern parsing
     //----------------------------------------------------------------
 
-    void applyPatternIgnoreSpace(const UnicodeString& pattern,
+    ಶೂನ್ಯ apply_ನಮೂನೆ_Ignore_Space(ಸ್ಥಿರಾಂಕ UnicodeString& ನಮೂನೆ,
                                  ParsePosition& pos,
-                                 const SymbolTable* symbols,
-                                 UErrorCode& status);
+                                 ಸ್ಥಿರಾಂಕ ಚಿಹ್ನೆ_ಕೋಷ್ಟಕ* symbols,
+                                 UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2);
 
-    void applyPattern(const UnicodeString &pattern,
-                      const ParsePosition& parsePosition,
-                      RuleCharacterIterator &chars,
-                      const SymbolTable *symbols,
+    ಶೂನ್ಯ apply_ನಮೂನೆ(ಸ್ಥಿರಾಂಕ UnicodeString &ನಮೂನೆ,
+                      ಸ್ಥಿರಾಂಕ ParsePosition& parsePosition,
+                      ನಿಯಮ_Character_Iterator &chars,
+                      ಸ್ಥಿರಾಂಕ ಚಿಹ್ನೆ_ಕೋಷ್ಟಕ *symbols,
                       UnicodeString &rebuiltPat,
                       uint32_t options,
-                      UnicodeSet &(UnicodeSet::*caseClosure)(int32_t attribute),
-                      UErrorCode &ec);
+                      Unicode_ಗಣ &(Unicode_ಗಣ::*case_ಆವರಣ)(int32_t attribute),
+                      UError_ಸಂಕೇತ &ec);
 
     // Recursive-descent predictive parsing.  These functions parse the syntactic categories
     // matching their name in the base grammar of PD UTR #56 (before the highlighted changes are
@@ -1598,89 +1598,89 @@ private:
 
     class Lexer;
 
-    static UnicodeSet parseUnicodeSet(Lexer &lexer,
+    ಸ್ಥಿರ Unicode_ಗಣ parse_Unicode_ಗಣ(Lexer &lexer,
                                       UnicodeString &rebuiltPat,
                                       uint32_t options,
-                                      UnicodeSet &(UnicodeSet::*caseClosure)(int32_t attribute),
-                                      int32_t depth,
-                                      UErrorCode &ec);
+                                      Unicode_ಗಣ &(Unicode_ಗಣ::*case_ಆವರಣ)(int32_t attribute),
+                                      int32_t ಆಳ,
+                                      UError_ಸಂಕೇತ &ec);
 
-    static UnicodeSet parseContent(Lexer &lexer,
+    ಸ್ಥಿರ Unicode_ಗಣ parseContent(Lexer &lexer,
                                    UnicodeString &rebuiltPat,
                                    uint32_t options,
-                                   UnicodeSet &(UnicodeSet::*caseClosure)(int32_t attribute),
-                                   int32_t depth,
-                                   bool &containsSetOperation,
-                                   UErrorCode &ec);
+                                   Unicode_ಗಣ &(Unicode_ಗಣ::*case_ಆವರಣ)(int32_t attribute),
+                                   int32_t ಆಳ,
+                                   bool &ಒಳಗೊಂಡಿದೆ_ಗಣ_Operation,
+                                   UError_ಸಂಕೇತ &ec);
 
-    void parseMutation(Lexer &lexer,
+    ಶೂನ್ಯ parseMutation(Lexer &lexer,
                        UnicodeString &rebuiltPat,
                        uint32_t options,
-                       UnicodeSet &(UnicodeSet::*caseClosure)(int32_t attribute),
-                       int32_t depth,
-                       bool &containsSetOperation,
-                       UErrorCode &ec);
+                       Unicode_ಗಣ &(Unicode_ಗಣ::*case_ಆವರಣ)(int32_t attribute),
+                       int32_t ಆಳ,
+                       bool &ಒಳಗೊಂಡಿದೆ_ಗಣ_Operation,
+                       UError_ಸಂಕೇತ &ec);
 
-    void parseSetOperations(Lexer &lexer,
+    ಶೂನ್ಯ parse_ಗಣ_Operations(Lexer &lexer,
                             UnicodeString &rebuiltPat,
                             uint32_t options,
-                            UnicodeSet &(UnicodeSet::*caseClosure)(int32_t attribute),
-                            int32_t depth,
-                            UErrorCode &ec);
+                            Unicode_ಗಣ &(Unicode_ಗಣ::*case_ಆವರಣ)(int32_t attribute),
+                            int32_t ಆಳ,
+                            UError_ಸಂಕೇತ &ec);
 
-    static UnicodeSet parseElements(Lexer &lexer,
+    ಸ್ಥಿರ Unicode_ಗಣ parseElements(Lexer &lexer,
                                     UnicodeString &rebuiltPat,
-                                    UErrorCode &ec);
+                                    UError_ಸಂಕೇತ &ec);
 
 
-    void closeOverCaseInsensitive(bool simple);
-    void closeOverAddCaseMappings();
+    ಶೂನ್ಯ closeOverCaseInsensitive(bool simple);
+    ಶೂನ್ಯ close_Over_ಕೂಡಿಸು_Case_Mappings();
 
     //----------------------------------------------------------------
     // Implementation: Utility methods
     //----------------------------------------------------------------
 
-    static int32_t nextCapacity(int32_t minCapacity);
+    ಸ್ಥಿರ int32_t ಮುಂದಿನ_ಸಾಮರ್ಥ್ಯ(int32_t min_ಸಾಮರ್ಥ್ಯ);
 
-    bool ensureCapacity(int32_t newLen);
+    bool ensure_ಸಾಮರ್ಥ್ಯ(int32_t newLen);
 
-    bool ensureBufferCapacity(int32_t newLen);
+    bool ensure_ಬಫರ್_ಸಾಮರ್ಥ್ಯ(int32_t newLen);
 
-    void swapBuffers();
+    ಶೂನ್ಯ ಅದಲುಬದಲು_Buffers();
 
-    UBool allocateStrings(UErrorCode &status);
-    int32_t stringsSize() const;
-    UBool stringsContains(const UnicodeString &s) const;
+    UBool allocate_ಅಕ್ಷರಸರಣಿಗಳು(UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2);
+    int32_t ಅಕ್ಷರಸರಣಿಗಳು_ಗಾತ್ರ() ಸ್ಥಿರಾಂಕ;
+    UBool ಅಕ್ಷರಸರಣಿಗಳು_ಒಳಗೊಂಡಿದೆ(ಸ್ಥಿರಾಂಕ UnicodeString &s) ಸ್ಥಿರಾಂಕ;
 
-    UnicodeString& _toPattern(UnicodeString& result U_LIFETIME_BOUND,
-                              UBool escapeUnprintable) const;
+    UnicodeString& ಗಮ್ಯ_ನಮೂನೆ_2(UnicodeString& ಫಲಿತಾಂಶ U_LIFETIME_BOUND,
+                              UBool escapeUnprintable) ಸ್ಥಿರಾಂಕ;
 
-    UnicodeString& _generatePattern(UnicodeString& result U_LIFETIME_BOUND,
-                                    UBool escapeUnprintable) const;
+    UnicodeString& generate_ನಮೂನೆ(UnicodeString& ಫಲಿತಾಂಶ U_LIFETIME_BOUND,
+                                    UBool escapeUnprintable) ಸ್ಥಿರಾಂಕ;
 
-    static void _appendToPat(UnicodeString& buf, const UnicodeString& s, UBool escapeUnprintable);
+    ಸ್ಥಿರ ಶೂನ್ಯ append_ಗಮ್ಯ_Pat(UnicodeString& buf, ಸ್ಥಿರಾಂಕ UnicodeString& s, UBool escapeUnprintable);
 
-    static void _appendToPat(UnicodeString& buf, UChar32 c, UBool escapeUnprintable);
+    ಸ್ಥಿರ ಶೂನ್ಯ append_ಗಮ್ಯ_Pat(UnicodeString& buf, UChar32 c, UBool escapeUnprintable);
 
-    static void _appendToPat(UnicodeString &result, UChar32 start, UChar32 end,
+    ಸ್ಥಿರ ಶೂನ್ಯ append_ಗಮ್ಯ_Pat(UnicodeString &ಫಲಿತಾಂಶ, UChar32 ಆರಂಭ, UChar32 ಕೊನೆ,
                              UBool escapeUnprintable);
 
     //----------------------------------------------------------------
     // Implementation: Fundamental operators
     //----------------------------------------------------------------
 
-    void exclusiveOr(const UChar32* other, int32_t otherLen, int8_t polarity);
+    ಶೂನ್ಯ exclusiveOr(ಸ್ಥಿರಾಂಕ UChar32* other, int32_t otherLen, int8_t polarity);
 
-    void add(const UChar32* other, int32_t otherLen, int8_t polarity);
+    ಶೂನ್ಯ ಕೂಡಿಸು(ಸ್ಥಿರಾಂಕ UChar32* other, int32_t otherLen, int8_t polarity);
 
-    void retain(const UChar32* other, int32_t otherLen, int8_t polarity);
+    ಶೂನ್ಯ retain(ಸ್ಥಿರಾಂಕ UChar32* other, int32_t otherLen, int8_t polarity);
 
     /**
      * Return true if the given position, in the given pattern, appears
      * to be the start of a property set pattern [:foo:], \\p{foo}, or
      * \\P{foo}, or \\N{name}.
      */
-    static UBool resemblesPropertyPattern(const UnicodeString& pattern,
+    ಸ್ಥಿರ UBool resembles_Property_ನಮೂನೆ(ಸ್ಥಿರಾಂಕ UnicodeString& ನಮೂನೆ,
                                           int32_t pos);
 
     /**
@@ -1722,15 +1722,15 @@ private:
      * @param ec status
      * @return a reference to this.
      */
-    UnicodeSet& applyPropertyPattern(const UnicodeString& pattern,
+    Unicode_ಗಣ& apply_Property_ನಮೂನೆ(ಸ್ಥಿರಾಂಕ UnicodeString& ನಮೂನೆ,
                                      ParsePosition& ppos,
-                                     UErrorCode& ec) U_LIFETIME_BOUND;
+                                     UError_ಸಂಕೇತ& ec) U_LIFETIME_BOUND;
 
     /**
      * A filter that returns true if the given code point should be
      * included in the UnicodeSet being constructed.
      */
-    typedef UBool (*Filter)(UChar32 codePoint, void* context);
+    ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ UBool (*Filter)(UChar32 ಸಂಕೇತ_ಬಿಂದು, ಶೂನ್ಯ* context);
 
     /**
      * Given a filter, set this UnicodeSet to the code points
@@ -1741,90 +1741,90 @@ private:
      * getInclusions().
      * src is a UPropertySource value.
      */
-    void applyFilter(Filter filter,
-                     void* context,
-                     const UnicodeSet* inclusions,
-                     UErrorCode &status);
+    ಶೂನ್ಯ applyFilter(Filter filter,
+                     ಶೂನ್ಯ* context,
+                     ಸ್ಥಿರಾಂಕ Unicode_ಗಣ* inclusions,
+                     UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2);
 
     /**
      * Set the new pattern to cache.
      */
-    void setPattern(const UnicodeString& newPat) {
-        setPattern(newPat.getBuffer(), newPat.length());
+    ಶೂನ್ಯ ಗಣ_ನಮೂನೆ(ಸ್ಥಿರಾಂಕ UnicodeString& newPat) {
+        ಗಣ_ನಮೂನೆ(newPat.get_ಬಫರ್(), newPat.ಉದ್ದಳತೆ());
     }
-    void setPattern(const char16_t *newPat, int32_t newPatLen);
+    ಶೂನ್ಯ ಗಣ_ನಮೂನೆ(ಸ್ಥಿರಾಂಕ char16_t *newPat, int32_t newPatLen);
     /**
      * Release existing cached pattern.
      */
-    void releasePattern();
+    ಶೂನ್ಯ release_ನಮೂನೆ();
 
-    friend class UnicodeSetIterator;
+    ಮಿತ್ರ class Unicode_ಗಣ_Iterator;
 };
 
 
 
-inline bool UnicodeSet::operator!=(const UnicodeSet& o) const {
-    return !operator==(o);
+ಸಾಲೊಳಗೆ bool Unicode_ಗಣ::ಕ್ರಿಯಾಕಾರಕ!=(ಸ್ಥಿರಾಂಕ Unicode_ಗಣ& o) ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ !ಕ್ರಿಯಾಕಾರಕ==(o);
 }
 
-inline UBool UnicodeSet::isFrozen() const {
-    return bmpSet != nullptr || stringSpan != nullptr;
+ಸಾಲೊಳಗೆ UBool Unicode_ಗಣ::isFrozen() ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ bmp_ಗಣ != nullptr || string_ಹರವು != nullptr;
 }
 
-inline UBool UnicodeSet::containsSome(UChar32 start, UChar32 end) const {
-    return !containsNone(start, end);
+ಸಾಲೊಳಗೆ UBool Unicode_ಗಣ::ಒಳಗೊಂಡಿದೆ_Some(UChar32 ಆರಂಭ, UChar32 ಕೊನೆ) ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ !ಒಳಗೊಂಡಿದೆ_None(ಆರಂಭ, ಕೊನೆ);
 }
 
-inline UBool UnicodeSet::containsSome(const UnicodeSet& s) const {
-    return !containsNone(s);
+ಸಾಲೊಳಗೆ UBool Unicode_ಗಣ::ಒಳಗೊಂಡಿದೆ_Some(ಸ್ಥಿರಾಂಕ Unicode_ಗಣ& s) ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ !ಒಳಗೊಂಡಿದೆ_None(s);
 }
 
-inline UBool UnicodeSet::containsSome(const UnicodeString& s) const {
-    return !containsNone(s);
+ಸಾಲೊಳಗೆ UBool Unicode_ಗಣ::ಒಳಗೊಂಡಿದೆ_Some(ಸ್ಥಿರಾಂಕ UnicodeString& s) ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ !ಒಳಗೊಂಡಿದೆ_None(s);
 }
 
-inline UBool UnicodeSet::isBogus() const {
-    return fFlags & kIsBogus;
+ಸಾಲೊಳಗೆ UBool Unicode_ಗಣ::isBogus() ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ fFlags & kIsBogus;
 }
 
-inline UnicodeSet* UnicodeSet::fromUSet(USet* uset U_LIFETIME_BOUND) {
-    return reinterpret_cast<UnicodeSet *>(uset);
+ಸಾಲೊಳಗೆ Unicode_ಗಣ* Unicode_ಗಣ::fromUSet(USet* uset U_LIFETIME_BOUND) {
+    ಹಿಂತಿರುಗಿ reinterpret_cast<Unicode_ಗಣ *>(uset);
 }
 
-inline const UnicodeSet* UnicodeSet::fromUSet(const USet* uset U_LIFETIME_BOUND) {
-    return reinterpret_cast<const UnicodeSet *>(uset);
+ಸಾಲೊಳಗೆ ಸ್ಥಿರಾಂಕ Unicode_ಗಣ* Unicode_ಗಣ::fromUSet(ಸ್ಥಿರಾಂಕ USet* uset U_LIFETIME_BOUND) {
+    ಹಿಂತಿರುಗಿ reinterpret_cast<ಸ್ಥಿರಾಂಕ Unicode_ಗಣ *>(uset);
 }
 
-inline USet* UnicodeSet::toUSet() U_LIFETIME_BOUND {
-    return reinterpret_cast<USet*>(this);
+ಸಾಲೊಳಗೆ USet* Unicode_ಗಣ::ಗಮ್ಯ_USet() U_LIFETIME_BOUND {
+    ಹಿಂತಿರುಗಿ reinterpret_cast<USet*>(this);
 }
 
-inline const USet* UnicodeSet::toUSet() const U_LIFETIME_BOUND {
-    return reinterpret_cast<const USet *>(this);
+ಸಾಲೊಳಗೆ ಸ್ಥಿರಾಂಕ USet* Unicode_ಗಣ::ಗಮ್ಯ_USet() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND {
+    ಹಿಂತಿರುಗಿ reinterpret_cast<ಸ್ಥಿರಾಂಕ USet *>(this);
 }
 
-inline int32_t UnicodeSet::span(const UnicodeString &s, int32_t start, USetSpanCondition spanCondition) const {
-    int32_t sLength=s.length();
-    if(start<0) {
-        start=0;
-    } else if(start>sLength) {
-        start=sLength;
+ಸಾಲೊಳಗೆ int32_t Unicode_ಗಣ::ಹರವು(ಸ್ಥಿರಾಂಕ UnicodeString &s, int32_t ಆರಂಭ, USet_ಹರವು_Condition ಹರವು_Condition) ಸ್ಥಿರಾಂಕ {
+    int32_t s_ಉದ್ದಳತೆ=s.ಉದ್ದಳತೆ();
+    ಆದರೆ(ಆರಂಭ<0) {
+        ಆರಂಭ=0;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(ಆರಂಭ>s_ಉದ್ದಳತೆ) {
+        ಆರಂಭ=s_ಉದ್ದಳತೆ;
     }
-    return start+span(s.getBuffer()+start, sLength-start, spanCondition);
+    ಹಿಂತಿರುಗಿ ಆರಂಭ+ಹರವು(s.get_ಬಫರ್()+ಆರಂಭ, s_ಉದ್ದಳತೆ-ಆರಂಭ, ಹರವು_Condition);
 }
 
-inline int32_t UnicodeSet::spanBack(const UnicodeString &s, int32_t limit, USetSpanCondition spanCondition) const {
-    int32_t sLength=s.length();
-    if(limit<0) {
-        limit=0;
-    } else if(limit>sLength) {
-        limit=sLength;
+ಸಾಲೊಳಗೆ int32_t Unicode_ಗಣ::ಹರವು_ಹಿಂಭಾಗ(ಸ್ಥಿರಾಂಕ UnicodeString &s, int32_t ಎಲ್ಲೆ, USet_ಹರವು_Condition ಹರವು_Condition) ಸ್ಥಿರಾಂಕ {
+    int32_t s_ಉದ್ದಳತೆ=s.ಉದ್ದಳತೆ();
+    ಆದರೆ(ಎಲ್ಲೆ<0) {
+        ಎಲ್ಲೆ=0;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(ಎಲ್ಲೆ>s_ಉದ್ದಳತೆ) {
+        ಎಲ್ಲೆ=s_ಉದ್ದಳತೆ;
     }
-    return spanBack(s.getBuffer(), limit, spanCondition);
+    ಹಿಂತಿರುಗಿ ಹರವು_ಹಿಂಭಾಗ(s.get_ಬಫರ್(), ಎಲ್ಲೆ, ಹರವು_Condition);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ಆದರೆ_ಅಂತ್ಯ /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

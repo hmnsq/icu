@@ -22,41 +22,41 @@
  *
  */
 
-#include "unicode/utypes.h"
-#include "unicode/udata.h"
-#include "cstring.h"
-#include "ucmndata.h"
-#include "udatamem.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/udata.h"
+#ಅನ್ತರ್ಭಾವ "cstring.h"
+#ಅನ್ತರ್ಭಾವ "ucmndata.h"
+#ಅನ್ತರ್ಭಾವ "udatamem.h"
 
-#if defined(UDATA_DEBUG) || defined(UDATA_DEBUG_DUMP)
+#ಆದರೆ defined(UDATA_DEBUG) || defined(UDATA_DEBUG_DUMP)
 #   include <stdio.h>
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 U_CFUNC uint16_t
-udata_getHeaderSize(const DataHeader *udh) {
-    if(udh==nullptr) {
-        return 0;
-    } else if(udh->info.isBigEndian==U_IS_BIG_ENDIAN) {
+udata_get_ಶೀರ್ಷಿಕೆ_ಗಾತ್ರ(ಸ್ಥಿರಾಂಕ ದತ್ತಾಂಶ_ಶೀರ್ಷಿಕೆ *udh) {
+    ಆದರೆ(udh==ಶೂನ್ಯಸೂಚಕ) {
+        ಹಿಂತಿರುಗಿ 0;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(udh->info.isBigEndian==U_IS_BIG_ENDIAN) {
         /* same endianness */
-        return udh->dataHeader.headerSize;
-    } else {
+        ಹಿಂತಿರುಗಿ udh->ದತ್ತಾಂಶ_ಶೀರ್ಷಿಕೆ_2.ಶೀರ್ಷಿಕೆ_ಗಾತ್ರ;
+    } ಇಲ್ಲದಿದ್ದರೆ {
         /* opposite endianness */
-        uint16_t x=udh->dataHeader.headerSize;
-        return (uint16_t)((x<<8)|(x>>8));
+        uint16_t x=udh->ದತ್ತಾಂಶ_ಶೀರ್ಷಿಕೆ_2.ಶೀರ್ಷಿಕೆ_ಗಾತ್ರ;
+        ಹಿಂತಿರುಗಿ (uint16_t)((x<<8)|(x>>8));
     }
 }
 
 U_CFUNC uint16_t
-udata_getInfoSize(const UDataInfo *info) {
-    if(info==nullptr) {
-        return 0;
-    } else if(info->isBigEndian==U_IS_BIG_ENDIAN) {
+udata_get_Info_ಗಾತ್ರ(ಸ್ಥಿರಾಂಕ UDataInfo *info) {
+    ಆದರೆ(info==ಶೂನ್ಯಸೂಚಕ) {
+        ಹಿಂತಿರುಗಿ 0;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(info->isBigEndian==U_IS_BIG_ENDIAN) {
         /* same endianness */
-        return info->size;
-    } else {
+        ಹಿಂತಿರುಗಿ info->size;
+    } ಇಲ್ಲದಿದ್ದರೆ {
         /* opposite endianness */
         uint16_t x=info->size;
-        return (uint16_t)((x<<8)|(x>>8));
+        ಹಿಂತಿರುಗಿ (uint16_t)((x<<8)|(x>>8));
     }
 }
 
@@ -68,21 +68,21 @@ udata_getInfoSize(const UDataInfo *info) {
  *                  mapping of the data much less likely to work.              *
  *                                                                             *
  *-----------------------------------------------------------------------------*/
-typedef struct {
-    const char       *entryName;
-    const DataHeader *pHeader;
-} PointerTOCEntry;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ {
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ       *ನಮೂದು_Name;
+    ಸ್ಥಿರಾಂಕ ದತ್ತಾಂಶ_ಶೀರ್ಷಿಕೆ *p_ಶೀರ್ಷಿಕೆ;
+} ಸೂಚಕ_TOCEntry;
 
 
-typedef struct  {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ  {
     uint32_t          count;
     uint32_t          reserved;
     /**
      * Variable-length array declared with length 1 to disable bounds checkers.
      * The actual array length is in the count field.
      */
-    PointerTOCEntry   entry[1];
-}  PointerTOC;
+    ಸೂಚಕ_TOCEntry   ನಮೂದು[1];
+}  ಸೂಚಕ_TOC;
 
 
 /* definition of OffsetTOC struct types moved to ucmndata.h */
@@ -93,47 +93,47 @@ typedef struct  {
  *                                                                             *
  *-----------------------------------------------------------------------------*/
 
-#ifndef MIN
-#define MIN(a,b) (((a)<(b)) ? (a) : (b))
-#endif
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ MIN
+#ವ್ಯಾಖ್ಯಾನಿಸು MIN(a,b) (((a)<(b)) ? (a) : (b))
+#ಆದರೆ_ಅಂತ್ಯ
 
 /**
  * Compare strings where we know the shared prefix length,
  * and advance the prefix length as we find that the strings share even more characters.
  */
-static int32_t
-strcmpAfterPrefix(const char *s1, const char *s2, int32_t *pPrefixLength) {
-    int32_t pl=*pPrefixLength;
+ಸ್ಥಿರ int32_t
+strcmp_After_ಪೂರ್ವಪ್ರತ್ಯಯ(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *s1, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *s2, int32_t *p_ಪೂರ್ವಪ್ರತ್ಯಯ_ಉದ್ದಳತೆ) {
+    int32_t pl=*p_ಪೂರ್ವಪ್ರತ್ಯಯ_ಉದ್ದಳತೆ;
     int32_t cmp=0;
     s1+=pl;
     s2+=pl;
-    for(;;) {
+    ಗಾಗಿ(;;) {
         int32_t c1 = static_cast<uint8_t>(*s1++);
         int32_t c2 = static_cast<uint8_t>(*s2++);
         cmp=c1-c2;
-        if(cmp!=0 || c1==0) {  /* different or done */
-            break;
+        ಆದರೆ(cmp!=0 || c1==0) {  /* different or done */
+            ನಿಲ್ಲಿಸು;
         }
         ++pl;  /* increment shared same-prefix length */
     }
-    *pPrefixLength=pl;
-    return cmp;
+    *p_ಪೂರ್ವಪ್ರತ್ಯಯ_ಉದ್ದಳತೆ=pl;
+    ಹಿಂತಿರುಗಿ cmp;
 }
 
-static int32_t
-offsetTOCPrefixBinarySearch(const char *s, const char *names,
-                            const UDataOffsetTOCEntry *toc, int32_t count) {
-    int32_t start=0;
-    int32_t limit=count;
+ಸ್ಥಿರ int32_t
+ಸ್ಥಾನಾಂತರ_TOCPrefix_ದ್ವಿಮಾನ_ಹುಡುಕು(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *s, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಹೆಸರುಗಳು,
+                            ಸ್ಥಿರಾಂಕ UData_ಸ್ಥಾನಾಂತರ_TOCEntry *toc, int32_t count) {
+    int32_t ಆರಂಭ=0;
+    int32_t ಎಲ್ಲೆ=count;
     /*
      * Remember the shared prefix between s, start and limit,
      * and don't compare that shared prefix again.
      * The shared prefix should get longer as we narrow the [start, limit[ range.
      */
-    int32_t startPrefixLength=0;
-    int32_t limitPrefixLength=0;
-    if(count==0) {
-        return -1;
+    int32_t ಆರಂಭ_ಪೂರ್ವಪ್ರತ್ಯಯ_ಉದ್ದಳತೆ=0;
+    int32_t ಎಲ್ಲೆ_ಪೂರ್ವಪ್ರತ್ಯಯ_ಉದ್ದಳತೆ=0;
+    ಆದರೆ(count==0) {
+        ಹಿಂತಿರುಗಿ -1;
     }
     /*
      * Prime the prefix lengths so that we don't keep prefixLength at 0 until
@@ -141,44 +141,44 @@ offsetTOCPrefixBinarySearch(const char *s, const char *names,
      * At the same time, we find if s is one of the start and (limit-1) names,
      * and if not, exclude them from the actual binary search.
      */
-    if(0==strcmpAfterPrefix(s, names+toc[0].nameOffset, &startPrefixLength)) {
-        return 0;
+    ಆದರೆ(0==strcmp_After_ಪೂರ್ವಪ್ರತ್ಯಯ(s, ಹೆಸರುಗಳು+toc[0].name_ಸ್ಥಾನಾಂತರ, &ಆರಂಭ_ಪೂರ್ವಪ್ರತ್ಯಯ_ಉದ್ದಳತೆ)) {
+        ಹಿಂತಿರುಗಿ 0;
     }
-    ++start;
-    --limit;
-    if(0==strcmpAfterPrefix(s, names+toc[limit].nameOffset, &limitPrefixLength)) {
-        return limit;
+    ++ಆರಂಭ;
+    --ಎಲ್ಲೆ;
+    ಆದರೆ(0==strcmp_After_ಪೂರ್ವಪ್ರತ್ಯಯ(s, ಹೆಸರುಗಳು+toc[ಎಲ್ಲೆ].name_ಸ್ಥಾನಾಂತರ, &ಎಲ್ಲೆ_ಪೂರ್ವಪ್ರತ್ಯಯ_ಉದ್ದಳತೆ)) {
+        ಹಿಂತಿರುಗಿ ಎಲ್ಲೆ;
     }
-    while(start<limit) {
-        int32_t i=(start+limit)/2;
-        int32_t prefixLength=MIN(startPrefixLength, limitPrefixLength);
-        int32_t cmp=strcmpAfterPrefix(s, names+toc[i].nameOffset, &prefixLength);
-        if(cmp<0) {
-            limit=i;
-            limitPrefixLength=prefixLength;
-        } else if(cmp==0) {
-            return i;
-        } else {
-            start=i+1;
-            startPrefixLength=prefixLength;
+    ಆಗ(ಆರಂಭ<ಎಲ್ಲೆ) {
+        int32_t i=(ಆರಂಭ+ಎಲ್ಲೆ)/2;
+        int32_t ಪೂರ್ವಪ್ರತ್ಯಯ_ಉದ್ದಳತೆ=MIN(ಆರಂಭ_ಪೂರ್ವಪ್ರತ್ಯಯ_ಉದ್ದಳತೆ, ಎಲ್ಲೆ_ಪೂರ್ವಪ್ರತ್ಯಯ_ಉದ್ದಳತೆ);
+        int32_t cmp=strcmp_After_ಪೂರ್ವಪ್ರತ್ಯಯ(s, ಹೆಸರುಗಳು+toc[i].name_ಸ್ಥಾನಾಂತರ, &ಪೂರ್ವಪ್ರತ್ಯಯ_ಉದ್ದಳತೆ);
+        ಆದರೆ(cmp<0) {
+            ಎಲ್ಲೆ=i;
+            ಎಲ್ಲೆ_ಪೂರ್ವಪ್ರತ್ಯಯ_ಉದ್ದಳತೆ=ಪೂರ್ವಪ್ರತ್ಯಯ_ಉದ್ದಳತೆ;
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(cmp==0) {
+            ಹಿಂತಿರುಗಿ i;
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಆರಂಭ=i+1;
+            ಆರಂಭ_ಪೂರ್ವಪ್ರತ್ಯಯ_ಉದ್ದಳತೆ=ಪೂರ್ವಪ್ರತ್ಯಯ_ಉದ್ದಳತೆ;
         }
     }
-    return -1;
+    ಹಿಂತಿರುಗಿ -1;
 }
 
-static int32_t
-pointerTOCPrefixBinarySearch(const char *s, const PointerTOCEntry *toc, int32_t count) {
-    int32_t start=0;
-    int32_t limit=count;
+ಸ್ಥಿರ int32_t
+ಸೂಚಕ_TOCPrefix_ದ್ವಿಮಾನ_ಹುಡುಕು(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *s, ಸ್ಥಿರಾಂಕ ಸೂಚಕ_TOCEntry *toc, int32_t count) {
+    int32_t ಆರಂಭ=0;
+    int32_t ಎಲ್ಲೆ=count;
     /*
      * Remember the shared prefix between s, start and limit,
      * and don't compare that shared prefix again.
      * The shared prefix should get longer as we narrow the [start, limit[ range.
      */
-    int32_t startPrefixLength=0;
-    int32_t limitPrefixLength=0;
-    if(count==0) {
-        return -1;
+    int32_t ಆರಂಭ_ಪೂರ್ವಪ್ರತ್ಯಯ_ಉದ್ದಳತೆ=0;
+    int32_t ಎಲ್ಲೆ_ಪೂರ್ವಪ್ರತ್ಯಯ_ಉದ್ದಳತೆ=0;
+    ಆದರೆ(count==0) {
+        ಹಿಂತಿರುಗಿ -1;
     }
     /*
      * Prime the prefix lengths so that we don't keep prefixLength at 0 until
@@ -186,132 +186,132 @@ pointerTOCPrefixBinarySearch(const char *s, const PointerTOCEntry *toc, int32_t 
      * At the same time, we find if s is one of the start and (limit-1) names,
      * and if not, exclude them from the actual binary search.
      */
-    if(0==strcmpAfterPrefix(s, toc[0].entryName, &startPrefixLength)) {
-        return 0;
+    ಆದರೆ(0==strcmp_After_ಪೂರ್ವಪ್ರತ್ಯಯ(s, toc[0].ನಮೂದು_Name, &ಆರಂಭ_ಪೂರ್ವಪ್ರತ್ಯಯ_ಉದ್ದಳತೆ)) {
+        ಹಿಂತಿರುಗಿ 0;
     }
-    ++start;
-    --limit;
-    if(0==strcmpAfterPrefix(s, toc[limit].entryName, &limitPrefixLength)) {
-        return limit;
+    ++ಆರಂಭ;
+    --ಎಲ್ಲೆ;
+    ಆದರೆ(0==strcmp_After_ಪೂರ್ವಪ್ರತ್ಯಯ(s, toc[ಎಲ್ಲೆ].ನಮೂದು_Name, &ಎಲ್ಲೆ_ಪೂರ್ವಪ್ರತ್ಯಯ_ಉದ್ದಳತೆ)) {
+        ಹಿಂತಿರುಗಿ ಎಲ್ಲೆ;
     }
-    while(start<limit) {
-        int32_t i=(start+limit)/2;
-        int32_t prefixLength=MIN(startPrefixLength, limitPrefixLength);
-        int32_t cmp=strcmpAfterPrefix(s, toc[i].entryName, &prefixLength);
-        if(cmp<0) {
-            limit=i;
-            limitPrefixLength=prefixLength;
-        } else if(cmp==0) {
-            return i;
-        } else {
-            start=i+1;
-            startPrefixLength=prefixLength;
+    ಆಗ(ಆರಂಭ<ಎಲ್ಲೆ) {
+        int32_t i=(ಆರಂಭ+ಎಲ್ಲೆ)/2;
+        int32_t ಪೂರ್ವಪ್ರತ್ಯಯ_ಉದ್ದಳತೆ=MIN(ಆರಂಭ_ಪೂರ್ವಪ್ರತ್ಯಯ_ಉದ್ದಳತೆ, ಎಲ್ಲೆ_ಪೂರ್ವಪ್ರತ್ಯಯ_ಉದ್ದಳತೆ);
+        int32_t cmp=strcmp_After_ಪೂರ್ವಪ್ರತ್ಯಯ(s, toc[i].ನಮೂದು_Name, &ಪೂರ್ವಪ್ರತ್ಯಯ_ಉದ್ದಳತೆ);
+        ಆದರೆ(cmp<0) {
+            ಎಲ್ಲೆ=i;
+            ಎಲ್ಲೆ_ಪೂರ್ವಪ್ರತ್ಯಯ_ಉದ್ದಳತೆ=ಪೂರ್ವಪ್ರತ್ಯಯ_ಉದ್ದಳತೆ;
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(cmp==0) {
+            ಹಿಂತಿರುಗಿ i;
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಆರಂಭ=i+1;
+            ಆರಂಭ_ಪೂರ್ವಪ್ರತ್ಯಯ_ಉದ್ದಳತೆ=ಪೂರ್ವಪ್ರತ್ಯಯ_ಉದ್ದಳತೆ;
         }
     }
-    return -1;
+    ಹಿಂತಿರುಗಿ -1;
 }
 
 U_CDECL_BEGIN
-static uint32_t U_CALLCONV
-offsetTOCEntryCount(const UDataMemory *pData) {
+ಸ್ಥಿರ uint32_t U_CALLCONV
+ಸ್ಥಾನಾಂತರ_TOCEntry_ಎಣಿಕೆ(ಸ್ಥಿರಾಂಕ UData_ಸ್ಮರಣೆ *p_ದತ್ತಾಂಶ) {
     int32_t          retVal=0;
-    const UDataOffsetTOC *toc = (UDataOffsetTOC *)pData->toc;
-    if (toc != nullptr) {
+    ಸ್ಥಿರಾಂಕ UData_ಸ್ಥಾನಾಂತರ_TOC *toc = (UData_ಸ್ಥಾನಾಂತರ_TOC *)p_ದತ್ತಾಂಶ->toc;
+    ಆದರೆ (toc != ಶೂನ್ಯಸೂಚಕ) {
         retVal = toc->count;
     }
-    return retVal;
+    ಹಿಂತಿರುಗಿ retVal;
 }
 
-static const DataHeader * U_CALLCONV
-offsetTOCLookupFn(const UDataMemory *pData,
-                  const char *tocEntryName,
-                  int32_t *pLength,
-                  UErrorCode *pErrorCode) {
-    (void)pErrorCode;
-    const UDataOffsetTOC  *toc = (UDataOffsetTOC *)pData->toc;
-    if(toc!=nullptr) {
-        const char *base=(const char *)toc;
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ದತ್ತಾಂಶ_ಶೀರ್ಷಿಕೆ * U_CALLCONV
+ಸ್ಥಾನಾಂತರ_TOCLookup_Fn(ಸ್ಥಿರಾಂಕ UData_ಸ್ಮರಣೆ *p_ದತ್ತಾಂಶ,
+                  ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *toc_ನಮೂದು_Name,
+                  int32_t *p_ಉದ್ದಳತೆ,
+                  UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    (ಶೂನ್ಯ)p_Error_ಸಂಕೇತ;
+    ಸ್ಥಿರಾಂಕ UData_ಸ್ಥಾನಾಂತರ_TOC  *toc = (UData_ಸ್ಥಾನಾಂತರ_TOC *)p_ದತ್ತಾಂಶ->toc;
+    ಆದರೆ(toc!=ಶೂನ್ಯಸೂಚಕ) {
+        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ತಳ=(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *)toc;
         int32_t number, count=(int32_t)toc->count;
 
         /* perform a binary search for the data in the common data's table of contents */
-#if defined (UDATA_DEBUG_DUMP)
+#ಆದರೆ defined (UDATA_DEBUG_DUMP)
         /* list the contents of the TOC each time .. not recommended */
-        for(number=0; number<count; ++number) {
-            fprintf(stderr, "\tx%d: %s\n", number, &base[toc->entry[number].nameOffset]);
+        ಗಾಗಿ(number=0; number<count; ++number) {
+            fprintf(stderr, "\tx%d: %s\n", number, &ತಳ[toc->ನಮೂದು[number].name_ಸ್ಥಾನಾಂತರ]);
         }
-#endif
-        number=offsetTOCPrefixBinarySearch(tocEntryName, base, toc->entry, count);
-        if(number>=0) {
+#ಆದರೆ_ಅಂತ್ಯ
+        number=ಸ್ಥಾನಾಂತರ_TOCPrefix_ದ್ವಿಮಾನ_ಹುಡುಕು(toc_ನಮೂದು_Name, ತಳ, toc->ನಮೂದು, count);
+        ಆದರೆ(number>=0) {
             /* found it */
-            const UDataOffsetTOCEntry *entry=toc->entry+number;
-#ifdef UDATA_DEBUG
-            fprintf(stderr, "%s: Found.\n", tocEntryName);
-#endif
-            if((number+1) < count) {
-                *pLength = (int32_t)(entry[1].dataOffset - entry->dataOffset);
-            } else {
-                *pLength = -1;
+            ಸ್ಥಿರಾಂಕ UData_ಸ್ಥಾನಾಂತರ_TOCEntry *ನಮೂದು=toc->ನಮೂದು+number;
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ UDATA_DEBUG
+            fprintf(stderr, "%s: Found.\n", toc_ನಮೂದು_Name);
+#ಆದರೆ_ಅಂತ್ಯ
+            ಆದರೆ((number+1) < count) {
+                *p_ಉದ್ದಳತೆ = (int32_t)(ನಮೂದು[1].ದತ್ತಾಂಶ_ಸ್ಥಾನಾಂತರ - ನಮೂದು->ದತ್ತಾಂಶ_ಸ್ಥಾನಾಂತರ);
+            } ಇಲ್ಲದಿದ್ದರೆ {
+                *p_ಉದ್ದಳತೆ = -1;
             }
-            return (const DataHeader *)(base+entry->dataOffset);
-        } else {
-#ifdef UDATA_DEBUG
-            fprintf(stderr, "%s: Not found.\n", tocEntryName);
-#endif
-            return nullptr;
+            ಹಿಂತಿರುಗಿ (ಸ್ಥಿರಾಂಕ ದತ್ತಾಂಶ_ಶೀರ್ಷಿಕೆ *)(ತಳ+ನಮೂದು->ದತ್ತಾಂಶ_ಸ್ಥಾನಾಂತರ);
+        } ಇಲ್ಲದಿದ್ದರೆ {
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ UDATA_DEBUG
+            fprintf(stderr, "%s: Not found.\n", toc_ನಮೂದು_Name);
+#ಆದರೆ_ಅಂತ್ಯ
+            ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
         }
-    } else {
-#ifdef UDATA_DEBUG
+    } ಇಲ್ಲದಿದ್ದರೆ {
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ UDATA_DEBUG
         fprintf(stderr, "returning header\n");
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-        return pData->pHeader;
+        ಹಿಂತಿರುಗಿ p_ದತ್ತಾಂಶ->p_ಶೀರ್ಷಿಕೆ;
     }
 }
 
 
-static uint32_t U_CALLCONV pointerTOCEntryCount(const UDataMemory *pData) {
-    const PointerTOC *toc = (PointerTOC *)pData->toc;
-    return toc != nullptr ? toc->count : 0;
+ಸ್ಥಿರ uint32_t U_CALLCONV ಸೂಚಕ_TOCEntry_ಎಣಿಕೆ(ಸ್ಥಿರಾಂಕ UData_ಸ್ಮರಣೆ *p_ದತ್ತಾಂಶ) {
+    ಸ್ಥಿರಾಂಕ ಸೂಚಕ_TOC *toc = (ಸೂಚಕ_TOC *)p_ದತ್ತಾಂಶ->toc;
+    ಹಿಂತಿರುಗಿ toc != ಶೂನ್ಯಸೂಚಕ ? toc->count : 0;
 }
 
-static const DataHeader * U_CALLCONV pointerTOCLookupFn(const UDataMemory *pData,
-                   const char *name,
-                   int32_t *pLength,
-                   UErrorCode *pErrorCode) {
-    (void)pErrorCode;
-    if(pData->toc!=nullptr) {
-        const PointerTOC *toc = (PointerTOC *)pData->toc;
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ದತ್ತಾಂಶ_ಶೀರ್ಷಿಕೆ * U_CALLCONV ಸೂಚಕ_TOCLookup_Fn(ಸ್ಥಿರಾಂಕ UData_ಸ್ಮರಣೆ *p_ದತ್ತಾಂಶ,
+                   ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name,
+                   int32_t *p_ಉದ್ದಳತೆ,
+                   UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    (ಶೂನ್ಯ)p_Error_ಸಂಕೇತ;
+    ಆದರೆ(p_ದತ್ತಾಂಶ->toc!=ಶೂನ್ಯಸೂಚಕ) {
+        ಸ್ಥಿರಾಂಕ ಸೂಚಕ_TOC *toc = (ಸೂಚಕ_TOC *)p_ದತ್ತಾಂಶ->toc;
         int32_t number, count=(int32_t)toc->count;
 
-#if defined (UDATA_DEBUG_DUMP)
+#ಆದರೆ defined (UDATA_DEBUG_DUMP)
         /* list the contents of the TOC each time .. not recommended */
-        for(number=0; number<count; ++number) {
-            fprintf(stderr, "\tx%d: %s\n", number, toc->entry[number].entryName);
+        ಗಾಗಿ(number=0; number<count; ++number) {
+            fprintf(stderr, "\tx%d: %s\n", number, toc->ನಮೂದು[number].ನಮೂದು_Name);
         }
-#endif
-        number=pointerTOCPrefixBinarySearch(name, toc->entry, count);
-        if(number>=0) {
+#ಆದರೆ_ಅಂತ್ಯ
+        number=ಸೂಚಕ_TOCPrefix_ದ್ವಿಮಾನ_ಹುಡುಕು(name, toc->ನಮೂದು, count);
+        ಆದರೆ(number>=0) {
             /* found it */
-#ifdef UDATA_DEBUG
-            fprintf(stderr, "%s: Found.\n", toc->entry[number].entryName);
-#endif
-            *pLength=-1;
-            return UDataMemory_normalizeDataPointer(toc->entry[number].pHeader);
-        } else {
-#ifdef UDATA_DEBUG
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ UDATA_DEBUG
+            fprintf(stderr, "%s: Found.\n", toc->ನಮೂದು[number].ನಮೂದು_Name);
+#ಆದರೆ_ಅಂತ್ಯ
+            *p_ಉದ್ದಳತೆ=-1;
+            ಹಿಂತಿರುಗಿ UData_ಸ್ಮರಣೆ_normalize_ದತ್ತಾಂಶ_ಸೂಚಕ(toc->ನಮೂದು[number].p_ಶೀರ್ಷಿಕೆ);
+        } ಇಲ್ಲದಿದ್ದರೆ {
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ UDATA_DEBUG
             fprintf(stderr, "%s: Not found.\n", name);
-#endif
-            return nullptr;
+#ಆದರೆ_ಅಂತ್ಯ
+            ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
         }
-    } else {
-        return pData->pHeader;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಹಿಂತಿರುಗಿ p_ದತ್ತಾಂಶ->p_ಶೀರ್ಷಿಕೆ;
     }
 }
-U_CDECL_END
+U_CDECL_ಕೊನೆ
 
 
-static const commonDataFuncs CmnDFuncs = {offsetTOCLookupFn,  offsetTOCEntryCount};
-static const commonDataFuncs ToCPFuncs = {pointerTOCLookupFn, pointerTOCEntryCount};
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ common_ದತ್ತಾಂಶ_Funcs CmnDFuncs = {ಸ್ಥಾನಾಂತರ_TOCLookup_Fn,  ಸ್ಥಾನಾಂತರ_TOCEntry_ಎಣಿಕೆ};
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ common_ದತ್ತಾಂಶ_Funcs ಗಮ್ಯ_CPFuncs = {ಸೂಚಕ_TOCLookup_Fn, ಸೂಚಕ_TOCEntry_ಎಣಿಕೆ};
 
 
 
@@ -323,47 +323,47 @@ static const commonDataFuncs ToCPFuncs = {pointerTOCLookupFn, pointerTOCEntryCou
  *                    and set the appropriate error code.               *
  *                                                                      *
  *----------------------------------------------------------------------*/
-U_CFUNC void udata_checkCommonData(UDataMemory *udm, UErrorCode *err) {
-    if (U_FAILURE(*err)) {
-        return;
+U_CFUNC ಶೂನ್ಯ udata_check_Common_ದತ್ತಾಂಶ(UData_ಸ್ಮರಣೆ *udm, UError_ಸಂಕೇತ *err) {
+    ಆದರೆ (U_FAILURE(*err)) {
+        ಹಿಂತಿರುಗಿ;
     }
 
-    if(udm==nullptr || udm->pHeader==nullptr) {
+    ಆದರೆ(udm==ಶೂನ್ಯಸೂಚಕ || udm->p_ಶೀರ್ಷಿಕೆ==ಶೂನ್ಯಸೂಚಕ) {
       *err=U_INVALID_FORMAT_ERROR;
-    } else if(!(udm->pHeader->dataHeader.magic1==0xda &&
-        udm->pHeader->dataHeader.magic2==0x27 &&
-        udm->pHeader->info.isBigEndian==U_IS_BIG_ENDIAN &&
-        udm->pHeader->info.charsetFamily==U_CHARSET_FAMILY)
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(!(udm->p_ಶೀರ್ಷಿಕೆ->ದತ್ತಾಂಶ_ಶೀರ್ಷಿಕೆ_2.magic1==0xda &&
+        udm->p_ಶೀರ್ಷಿಕೆ->ದತ್ತಾಂಶ_ಶೀರ್ಷಿಕೆ_2.magic2==0x27 &&
+        udm->p_ಶೀರ್ಷಿಕೆ->info.isBigEndian==U_IS_BIG_ENDIAN &&
+        udm->p_ಶೀರ್ಷಿಕೆ->info.charsetFamily==U_CHARSET_FAMILY)
         ) {
         /* header not valid */
         *err=U_INVALID_FORMAT_ERROR;
     }
-    else if (udm->pHeader->info.dataFormat[0]==0x43 &&
-        udm->pHeader->info.dataFormat[1]==0x6d &&
-        udm->pHeader->info.dataFormat[2]==0x6e &&
-        udm->pHeader->info.dataFormat[3]==0x44 &&
-        udm->pHeader->info.formatVersion[0]==1
+    ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (udm->p_ಶೀರ್ಷಿಕೆ->info.ದತ್ತಾಂಶ_Format[0]==0x43 &&
+        udm->p_ಶೀರ್ಷಿಕೆ->info.ದತ್ತಾಂಶ_Format[1]==0x6d &&
+        udm->p_ಶೀರ್ಷಿಕೆ->info.ದತ್ತಾಂಶ_Format[2]==0x6e &&
+        udm->p_ಶೀರ್ಷಿಕೆ->info.ದತ್ತಾಂಶ_Format[3]==0x44 &&
+        udm->p_ಶೀರ್ಷಿಕೆ->info.format_ಆವೃತ್ತಿ[0]==1
         ) {
         /* dataFormat="CmnD" */
         udm->vFuncs = &CmnDFuncs;
-        udm->toc=(const char *)udm->pHeader+udata_getHeaderSize(udm->pHeader);
+        udm->toc=(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *)udm->p_ಶೀರ್ಷಿಕೆ+udata_get_ಶೀರ್ಷಿಕೆ_ಗಾತ್ರ(udm->p_ಶೀರ್ಷಿಕೆ);
     }
-    else if(udm->pHeader->info.dataFormat[0]==0x54 &&
-        udm->pHeader->info.dataFormat[1]==0x6f &&
-        udm->pHeader->info.dataFormat[2]==0x43 &&
-        udm->pHeader->info.dataFormat[3]==0x50 &&
-        udm->pHeader->info.formatVersion[0]==1
+    ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(udm->p_ಶೀರ್ಷಿಕೆ->info.ದತ್ತಾಂಶ_Format[0]==0x54 &&
+        udm->p_ಶೀರ್ಷಿಕೆ->info.ದತ್ತಾಂಶ_Format[1]==0x6f &&
+        udm->p_ಶೀರ್ಷಿಕೆ->info.ದತ್ತಾಂಶ_Format[2]==0x43 &&
+        udm->p_ಶೀರ್ಷಿಕೆ->info.ದತ್ತಾಂಶ_Format[3]==0x50 &&
+        udm->p_ಶೀರ್ಷಿಕೆ->info.format_ಆವೃತ್ತಿ[0]==1
         ) {
         /* dataFormat="ToCP" */
-        udm->vFuncs = &ToCPFuncs;
-        udm->toc=(const char *)udm->pHeader+udata_getHeaderSize(udm->pHeader);
+        udm->vFuncs = &ಗಮ್ಯ_CPFuncs;
+        udm->toc=(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *)udm->p_ಶೀರ್ಷಿಕೆ+udata_get_ಶೀರ್ಷಿಕೆ_ಗಾತ್ರ(udm->p_ಶೀರ್ಷಿಕೆ);
     }
-    else {
+    ಇಲ್ಲದಿದ್ದರೆ {
         /* dataFormat not recognized */
         *err=U_INVALID_FORMAT_ERROR;
     }
 
-    if (U_FAILURE(*err)) {
+    ಆದರೆ (U_FAILURE(*err)) {
         /* If the data is no good and we memory-mapped it ourselves,
          *  close the memory mapping so it doesn't leak.  Note that this has
          *  no effect on non-memory mapped data, other than clearing fields in udm.

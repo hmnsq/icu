@@ -10,212 +10,212 @@
 ******************************************************************************
 */
 
-#include "unifiedcache.h"
+#ಅನ್ತರ್ಭಾವ "unifiedcache.h"
 
-#include <algorithm>      // For std::max()
-#include <mutex>
+#ಅನ್ತರ್ಭಾವ <algorithm>      // For std::max()
+#ಅನ್ತರ್ಭಾವ <mutex>
 
-#include "uassert.h"
-#include "uhash.h"
-#include "ucln_cmn.h"
+#ಅನ್ತರ್ಭಾವ "uassert.h"
+#ಅನ್ತರ್ಭಾವ "uhash.h"
+#ಅನ್ತರ್ಭಾವ "ucln_cmn.h"
 
-static icu::UnifiedCache *gCache = nullptr;
-static std::mutex *gCacheMutex = nullptr;
-static std::condition_variable *gInProgressValueAddedCond;
-static icu::UInitOnce gCacheInitOnce {};
+ಸ್ಥಿರ icu::UnifiedCache *gCache = ಶೂನ್ಯಸೂಚಕ;
+ಸ್ಥಿರ std::mutex *gCacheMutex = ಶೂನ್ಯಸೂಚಕ;
+ಸ್ಥಿರ std::condition_variable *g_ಒಳ_ಪ್ರಗತಿ_ಮೌಲ್ಯ_Added_Cond;
+ಸ್ಥಿರ icu::UInitOnce gCacheInitOnce {};
 
-static const int32_t MAX_EVICT_ITERATIONS = 10;
-static const int32_t DEFAULT_MAX_UNUSED = 1000;
-static const int32_t DEFAULT_PERCENTAGE_OF_IN_USE = 100;
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t MAX_EVICT_ITERATIONS = 10;
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t DEFAULT_MAX_ಬಳಸದ = 1000;
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t DEFAULT_PERCENTAGE_ದ_ಒಳ_USE = 100;
 
 
 U_CDECL_BEGIN
-static UBool U_CALLCONV unifiedcache_cleanup() {
+ಸ್ಥಿರ UBool U_CALLCONV unifiedcache_cleanup() {
     gCacheInitOnce.reset();
-    delete gCache;
-    gCache = nullptr;
+    ಅಳಿಸು gCache;
+    gCache = ಶೂನ್ಯಸೂಚಕ;
     gCacheMutex->~mutex();
-    gCacheMutex = nullptr;
-    gInProgressValueAddedCond->~condition_variable();
-    gInProgressValueAddedCond = nullptr;
-    return true;
+    gCacheMutex = ಶೂನ್ಯಸೂಚಕ;
+    g_ಒಳ_ಪ್ರಗತಿ_ಮೌಲ್ಯ_Added_Cond->~condition_variable();
+    g_ಒಳ_ಪ್ರಗತಿ_ಮೌಲ್ಯ_Added_Cond = ಶೂನ್ಯಸೂಚಕ;
+    ಹಿಂತಿರುಗಿ ನಿಜ;
 }
-U_CDECL_END
+U_CDECL_ಕೊನೆ
 
 
 U_NAMESPACE_BEGIN
 
 int32_t U_EXPORT2
-ucache_hashKeys(const UHashTok key) {
-    const CacheKeyBase* ckey = static_cast<const CacheKeyBase*>(key.pointer);
-    return ckey->hashCode();
+ucache_hash_ಕೀಲಿಗಳು(ಸ್ಥಿರಾಂಕ UHashTok ಕೀಲಿ) {
+    ಸ್ಥಿರಾಂಕ Cache_ಕೀಲಿ_ತಳ* ckey = static_cast<ಸ್ಥಿರಾಂಕ Cache_ಕೀಲಿ_ತಳ*>(ಕೀಲಿ.ಸೂಚಕ);
+    ಹಿಂತಿರುಗಿ ckey->hash_ಸಂಕೇತ();
 }
 
 UBool U_EXPORT2
-ucache_compareKeys(const UHashTok key1, const UHashTok key2) {
-    const CacheKeyBase* p1 = static_cast<const CacheKeyBase*>(key1.pointer);
-    const CacheKeyBase* p2 = static_cast<const CacheKeyBase*>(key2.pointer);
-    return *p1 == *p2;
+ucache_compare_ಕೀಲಿಗಳು(ಸ್ಥಿರಾಂಕ UHashTok key1, ಸ್ಥಿರಾಂಕ UHashTok key2) {
+    ಸ್ಥಿರಾಂಕ Cache_ಕೀಲಿ_ತಳ* p1 = static_cast<ಸ್ಥಿರಾಂಕ Cache_ಕೀಲಿ_ತಳ*>(key1.ಸೂಚಕ);
+    ಸ್ಥಿರಾಂಕ Cache_ಕೀಲಿ_ತಳ* p2 = static_cast<ಸ್ಥಿರಾಂಕ Cache_ಕೀಲಿ_ತಳ*>(key2.ಸೂಚಕ);
+    ಹಿಂತಿರುಗಿ *p1 == *p2;
 }
 
-void U_EXPORT2
-ucache_deleteKey(void *obj) {
-    CacheKeyBase* p = static_cast<CacheKeyBase*>(obj);
-    delete p;
+ಶೂನ್ಯ U_EXPORT2
+ucache_delete_ಕೀಲಿ(ಶೂನ್ಯ *obj) {
+    Cache_ಕೀಲಿ_ತಳ* p = static_cast<Cache_ಕೀಲಿ_ತಳ*>(obj);
+    ಅಳಿಸು p;
 }
 
-CacheKeyBase::~CacheKeyBase() {
+Cache_ಕೀಲಿ_ತಳ::~Cache_ಕೀಲಿ_ತಳ() {
 }
 
-static void U_CALLCONV cacheInit(UErrorCode &status) {
-    U_ASSERT(gCache == nullptr);
-    ucln_common_registerCleanup(
+ಸ್ಥಿರ ಶೂನ್ಯ U_CALLCONV cacheInit(UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2) {
+    U_ASSERT(gCache == ಶೂನ್ಯಸೂಚಕ);
+    ucln_common_ರಿಜಿಸ್ಟರ್_Cleanup(
             UCLN_COMMON_UNIFIED_CACHE, unifiedcache_cleanup);
 
     gCacheMutex = STATIC_NEW(std::mutex);
-    gInProgressValueAddedCond = STATIC_NEW(std::condition_variable);
-    gCache = new UnifiedCache(status);
-    if (gCache == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
+    g_ಒಳ_ಪ್ರಗತಿ_ಮೌಲ್ಯ_Added_Cond = STATIC_NEW(std::condition_variable);
+    gCache = ಹೊಸ UnifiedCache(ಸ್ಥಿತಿ_2);
+    ಆದರೆ (gCache == ಶೂನ್ಯಸೂಚಕ) {
+        ಸ್ಥಿತಿ_2 = U_ಸ್ಮರಣೆ_ಹಂಚಿಕೆ_ERROR;
     }
-    if (U_FAILURE(status)) {
-        delete gCache;
-        gCache = nullptr;
-        return;
+    ಆದರೆ (U_FAILURE(ಸ್ಥಿತಿ_2)) {
+        ಅಳಿಸು gCache;
+        gCache = ಶೂನ್ಯಸೂಚಕ;
+        ಹಿಂತಿರುಗಿ;
     }
 }
 
-UnifiedCache *UnifiedCache::getInstance(UErrorCode &status) {
-    umtx_initOnce(gCacheInitOnce, &cacheInit, status);
-    if (U_FAILURE(status)) {
-        return nullptr;
+UnifiedCache *UnifiedCache::getInstance(UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2) {
+    umtx_initOnce(gCacheInitOnce, &cacheInit, ಸ್ಥಿತಿ_2);
+    ಆದರೆ (U_FAILURE(ಸ್ಥಿತಿ_2)) {
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
-    U_ASSERT(gCache != nullptr);
-    return gCache;
+    U_ASSERT(gCache != ಶೂನ್ಯಸೂಚಕ);
+    ಹಿಂತಿರುಗಿ gCache;
 }
 
-UnifiedCache::UnifiedCache(UErrorCode &status) :
-        fHashtable(nullptr),
-        fEvictPos(UHASH_FIRST),
-        fNumValuesTotal(0),
-        fNumValuesInUse(0),
-        fMaxUnused(DEFAULT_MAX_UNUSED),
-        fMaxPercentageOfInUse(DEFAULT_PERCENTAGE_OF_IN_USE),
-        fAutoEvictedCount(0),
-        fNoValue(nullptr) {
-    if (U_FAILURE(status)) {
-        return;
+UnifiedCache::UnifiedCache(UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2) :
+        fHashtable(ಶೂನ್ಯಸೂಚಕ),
+        fEvictPos(UHASH_ಮೊದಲ),
+        f_ಅಂಕೆ_ಮೌಲ್ಯಗಳು_ಒಟ್ಟು(0),
+        f_ಅಂಕೆ_ಮೌಲ್ಯಗಳು_ಒಳ_Use(0),
+        f_Max_ಬಳಸದ(DEFAULT_MAX_ಬಳಸದ),
+        f_Max_Percentage_ದ_ಒಳ_Use(DEFAULT_PERCENTAGE_ದ_ಒಳ_USE),
+        f_Auto_Evicted_ಎಣಿಕೆ(0),
+        f_No_ಮೌಲ್ಯ(ಶೂನ್ಯಸೂಚಕ) {
+    ಆದರೆ (U_FAILURE(ಸ್ಥಿತಿ_2)) {
+        ಹಿಂತಿರುಗಿ;
     }
-    fNoValue = new SharedObject();
-    if (fNoValue == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    f_No_ಮೌಲ್ಯ = ಹೊಸ SharedObject();
+    ಆದರೆ (f_No_ಮೌಲ್ಯ == ಶೂನ್ಯಸೂಚಕ) {
+        ಸ್ಥಿತಿ_2 = U_ಸ್ಮರಣೆ_ಹಂಚಿಕೆ_ERROR;
+        ಹಿಂತಿರುಗಿ;
     }
-    fNoValue->softRefCount = 1;  // Add fake references to prevent fNoValue from being deleted
-    fNoValue->hardRefCount = 1;  // when other references to it are removed.
-    fNoValue->cachePtr = this;
+    f_No_ಮೌಲ್ಯ->soft_Ref_ಎಣಿಕೆ = 1;  // Add fake references to prevent fNoValue from being deleted
+    f_No_ಮೌಲ್ಯ->hard_Ref_ಎಣಿಕೆ = 1;  // when other references to it are removed.
+    f_No_ಮೌಲ್ಯ->cachePtr = ಇದು;
 
     fHashtable = uhash_open(
-            &ucache_hashKeys,
-            &ucache_compareKeys,
-            nullptr,
-            &status);
-    if (U_FAILURE(status)) {
-        return;
+            &ucache_hash_ಕೀಲಿಗಳು,
+            &ucache_compare_ಕೀಲಿಗಳು,
+            ಶೂನ್ಯಸೂಚಕ,
+            &ಸ್ಥಿತಿ_2);
+    ಆದರೆ (U_FAILURE(ಸ್ಥಿತಿ_2)) {
+        ಹಿಂತಿರುಗಿ;
     }
-    uhash_setKeyDeleter(fHashtable, &ucache_deleteKey);
+    uhash_ಗಣ_ಕೀಲಿ_Deleter(fHashtable, &ucache_delete_ಕೀಲಿ);
 }
 
-void UnifiedCache::setEvictionPolicy(
-        int32_t count, int32_t percentageOfInUseItems, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return;
+ಶೂನ್ಯ UnifiedCache::ಗಣ_Eviction_Policy(
+        int32_t count, int32_t percentage_ದ_ಒಳ_Use_ವಸ್ತುಗಳು, UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2) {
+    ಆದರೆ (U_FAILURE(ಸ್ಥಿತಿ_2)) {
+        ಹಿಂತಿರುಗಿ;
     }
-    if (count < 0 || percentageOfInUseItems < 0) {
-        status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ಆದರೆ (count < 0 || percentage_ದ_ಒಳ_Use_ವಸ್ತುಗಳು < 0) {
+        ಸ್ಥಿತಿ_2 = U_ILLEGAL_ವಾದ_ERROR;
+        ಹಿಂತಿರುಗಿ;
     }
-    std::lock_guard<std::mutex> lock(*gCacheMutex);
-    fMaxUnused = count;
-    fMaxPercentageOfInUse = percentageOfInUseItems;
+    std::lock_guard<std::mutex> ಬೀಗ(*gCacheMutex);
+    f_Max_ಬಳಸದ = count;
+    f_Max_Percentage_ದ_ಒಳ_Use = percentage_ದ_ಒಳ_Use_ವಸ್ತುಗಳು;
 }
 
-int32_t UnifiedCache::unusedCount() const {
-    std::lock_guard<std::mutex> lock(*gCacheMutex);
-    return uhash_count(fHashtable) - fNumValuesInUse;
+int32_t UnifiedCache::ಬಳಸದ_ಎಣಿಕೆ() ಸ್ಥಿರಾಂಕ {
+    std::lock_guard<std::mutex> ಬೀಗ(*gCacheMutex);
+    ಹಿಂತಿರುಗಿ uhash_ಎಣಿಕೆ(fHashtable) - f_ಅಂಕೆ_ಮೌಲ್ಯಗಳು_ಒಳ_Use;
 }
 
-int64_t UnifiedCache::autoEvictedCount() const {
-    std::lock_guard<std::mutex> lock(*gCacheMutex);
-    return fAutoEvictedCount;
+int64_t UnifiedCache::auto_Evicted_ಎಣಿಕೆ() ಸ್ಥಿರಾಂಕ {
+    std::lock_guard<std::mutex> ಬೀಗ(*gCacheMutex);
+    ಹಿಂತಿರುಗಿ f_Auto_Evicted_ಎಣಿಕೆ;
 }
 
-int32_t UnifiedCache::keyCount() const {
-    std::lock_guard<std::mutex> lock(*gCacheMutex);
-    return uhash_count(fHashtable);
+int32_t UnifiedCache::ಕೀಲಿ_ಎಣಿಕೆ() ಸ್ಥಿರಾಂಕ {
+    std::lock_guard<std::mutex> ಬೀಗ(*gCacheMutex);
+    ಹಿಂತಿರುಗಿ uhash_ಎಣಿಕೆ(fHashtable);
 }
 
-void UnifiedCache::flush() const {
-    std::lock_guard<std::mutex> lock(*gCacheMutex);
+ಶೂನ್ಯ UnifiedCache::flush() ಸ್ಥಿರಾಂಕ {
+    std::lock_guard<std::mutex> ಬೀಗ(*gCacheMutex);
 
     // Use a loop in case cache items that are flushed held hard references to
     // other cache items making those additional cache items eligible for
     // flushing.
-    while (_flush(false));
+    ಆಗ (_flush(ಸುಳ್ಳು));
 }
 
-void UnifiedCache::handleUnreferencedObject() const {
-    std::lock_guard<std::mutex> lock(*gCacheMutex);
-    --fNumValuesInUse;
-    _runEvictionSlice();
+ಶೂನ್ಯ UnifiedCache::handleUnreferencedObject() ಸ್ಥಿರಾಂಕ {
+    std::lock_guard<std::mutex> ಬೀಗ(*gCacheMutex);
+    --f_ಅಂಕೆ_ಮೌಲ್ಯಗಳು_ಒಳ_Use;
+    ಸತತ_Eviction_ತುಂಡು();
 }
 
-#ifdef UNIFIED_CACHE_DEBUG
-#include <stdio.h>
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ UNIFIED_CACHE_DEBUG
+#ಅನ್ತರ್ಭಾವ <stdio.h>
 
-void UnifiedCache::dump() {
-    UErrorCode status = U_ZERO_ERROR;
-    const UnifiedCache *cache = getInstance(status);
-    if (U_FAILURE(status)) {
+ಶೂನ್ಯ UnifiedCache::dump() {
+    UError_ಸಂಕೇತ ಸ್ಥಿತಿ_2 = U_ZERO_ERROR;
+    ಸ್ಥಿರಾಂಕ UnifiedCache *cache = getInstance(ಸ್ಥಿತಿ_2);
+    ಆದರೆ (U_FAILURE(ಸ್ಥಿತಿ_2)) {
         fprintf(stderr, "Unified Cache: Error fetching cache.\n");
-        return;
+        ಹಿಂತಿರುಗಿ;
     }
     cache->dumpContents();
 }
 
-void UnifiedCache::dumpContents() const {
-    std::lock_guard<std::mutex> lock(*gCacheMutex);
+ಶೂನ್ಯ UnifiedCache::dumpContents() ಸ್ಥಿರಾಂಕ {
+    std::lock_guard<std::mutex> ಬೀಗ(*gCacheMutex);
     _dumpContents();
 }
 
 // Dumps content of cache.
 // On entry, gCacheMutex must be held.
 // On exit, cache contents dumped to stderr.
-void UnifiedCache::_dumpContents() const {
-    int32_t pos = UHASH_FIRST;
-    const UHashElement *element = uhash_nextElement(fHashtable, &pos);
-    char buffer[256];
+ಶೂನ್ಯ UnifiedCache::_dumpContents() ಸ್ಥಿರಾಂಕ {
+    int32_t pos = UHASH_ಮೊದಲ;
+    ಸ್ಥಿರಾಂಕ UHashElement *element = uhash_ಮುಂದಿನ_Element(fHashtable, &pos);
+    ಅಕ್ಷರ ಬಫರ್[256];
     int32_t cnt = 0;
-    for (; element != nullptr; element = uhash_nextElement(fHashtable, &pos)) {
-        const SharedObject *sharedObject =
-                (const SharedObject *) element->value.pointer;
-        const CacheKeyBase *key =
-                (const CacheKeyBase *) element->key.pointer;
-        if (sharedObject->hasHardReferences()) {
+    ಗಾಗಿ (; element != ಶೂನ್ಯಸೂಚಕ; element = uhash_ಮುಂದಿನ_Element(fHashtable, &pos)) {
+        ಸ್ಥಿರಾಂಕ SharedObject *sharedObject =
+                (ಸ್ಥಿರಾಂಕ SharedObject *) element->value.ಸೂಚಕ;
+        ಸ್ಥಿರಾಂಕ Cache_ಕೀಲಿ_ತಳ *ಕೀಲಿ =
+                (ಸ್ಥಿರಾಂಕ Cache_ಕೀಲಿ_ತಳ *) element->ಕೀಲಿ.ಸೂಚಕ;
+        ಆದರೆ (sharedObject->hasHardReferences()) {
             ++cnt;
             fprintf(
                     stderr,
                     "Unified Cache: Key '%s', error %d, value %p, total refcount %d, soft refcount %d\n",
-                    key->writeDescription(buffer, 256),
-                    key->creationStatus,
-                    sharedObject == fNoValue ? nullptr :sharedObject,
-                    sharedObject->getRefCount(),
-                    sharedObject->getSoftRefCount());
+                    ಕೀಲಿ->writeDescription(ಬಫರ್, 256),
+                    ಕೀಲಿ->creation_ಸ್ಥಿತಿ,
+                    sharedObject == f_No_ಮೌಲ್ಯ ? ಶೂನ್ಯಸೂಚಕ :sharedObject,
+                    sharedObject->get_Ref_ಎಣಿಕೆ(),
+                    sharedObject->get_Soft_Ref_ಎಣಿಕೆ());
         }
     }
-    fprintf(stderr, "Unified Cache: %d out of a total of %d still have hard references\n", cnt, uhash_count(fHashtable));
+    fprintf(stderr, "Unified Cache: %d out of a total of %d still have hard references\n", cnt, uhash_ಎಣಿಕೆ(fHashtable));
 }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 UnifiedCache::~UnifiedCache() {
     // Try our best to clean up first.
@@ -224,298 +224,298 @@ UnifiedCache::~UnifiedCache() {
         // Now all that should be left in the cache are entries that refer to
         // each other and entries with hard references from outside the cache.
         // Nothing we can do about these so proceed to wipe out the cache.
-        std::lock_guard<std::mutex> lock(*gCacheMutex);
-        _flush(true);
+        std::lock_guard<std::mutex> ಬೀಗ(*gCacheMutex);
+        _flush(ನಿಜ);
     }
     uhash_close(fHashtable);
-    fHashtable = nullptr;
-    delete fNoValue;
-    fNoValue = nullptr;
+    fHashtable = ಶೂನ್ಯಸೂಚಕ;
+    ಅಳಿಸು f_No_ಮೌಲ್ಯ;
+    f_No_ಮೌಲ್ಯ = ಶೂನ್ಯಸೂಚಕ;
 }
 
-const UHashElement *
-UnifiedCache::_nextElement() const {
-    const UHashElement *element = uhash_nextElement(fHashtable, &fEvictPos);
-    if (element == nullptr) {
-        fEvictPos = UHASH_FIRST;
-        return uhash_nextElement(fHashtable, &fEvictPos);
+ಸ್ಥಿರಾಂಕ UHashElement *
+UnifiedCache::ಮುಂದಿನ_Element_2() ಸ್ಥಿರಾಂಕ {
+    ಸ್ಥಿರಾಂಕ UHashElement *element = uhash_ಮುಂದಿನ_Element(fHashtable, &fEvictPos);
+    ಆದರೆ (element == ಶೂನ್ಯಸೂಚಕ) {
+        fEvictPos = UHASH_ಮೊದಲ;
+        ಹಿಂತಿರುಗಿ uhash_ಮುಂದಿನ_Element(fHashtable, &fEvictPos);
     }
-    return element;
+    ಹಿಂತಿರುಗಿ element;
 }
 
-UBool UnifiedCache::_flush(UBool all) const {
-    UBool result = false;
-    int32_t origSize = uhash_count(fHashtable);
-    for (int32_t i = 0; i < origSize; ++i) {
-        const UHashElement *element = _nextElement();
-        if (element == nullptr) {
-            break;
+UBool UnifiedCache::_flush(UBool all) ಸ್ಥಿರಾಂಕ {
+    UBool ಫಲಿತಾಂಶ = ಸುಳ್ಳು;
+    int32_t orig_ಗಾತ್ರ = uhash_ಎಣಿಕೆ(fHashtable);
+    ಗಾಗಿ (int32_t i = 0; i < orig_ಗಾತ್ರ; ++i) {
+        ಸ್ಥಿರಾಂಕ UHashElement *element = ಮುಂದಿನ_Element_2();
+        ಆದರೆ (element == ಶೂನ್ಯಸೂಚಕ) {
+            ನಿಲ್ಲಿಸು;
         }
-        if (all || _isEvictable(element)) {
-            const SharedObject *sharedObject =
-                    static_cast<const SharedObject*>(element->value.pointer);
-            U_ASSERT(sharedObject->cachePtr == this);
+        ಆದರೆ (all || _isEvictable(element)) {
+            ಸ್ಥಿರಾಂಕ SharedObject *sharedObject =
+                    static_cast<ಸ್ಥಿರಾಂಕ SharedObject*>(element->value.ಸೂಚಕ);
+            U_ASSERT(sharedObject->cachePtr == ಇದು);
             uhash_removeElement(fHashtable, element);
             removeSoftRef(sharedObject);    // Deletes the sharedObject when softRefCount goes to zero.
-            result = true;
+            ಫಲಿತಾಂಶ = ನಿಜ;
         }
     }
-    return result;
+    ಹಿಂತಿರುಗಿ ಫಲಿತಾಂಶ;
 }
 
-int32_t UnifiedCache::_computeCountOfItemsToEvict() const {
-    int32_t totalItems = uhash_count(fHashtable);
-    int32_t evictableItems = totalItems - fNumValuesInUse;
+int32_t UnifiedCache::compute_ಎಣಿಕೆ_ದ_ವಸ್ತುಗಳು_ಗಮ್ಯ_Evict() ಸ್ಥಿರಾಂಕ {
+    int32_t ಒಟ್ಟು_ವಸ್ತುಗಳು = uhash_ಎಣಿಕೆ(fHashtable);
+    int32_t evictable_ವಸ್ತುಗಳು = ಒಟ್ಟು_ವಸ್ತುಗಳು - f_ಅಂಕೆ_ಮೌಲ್ಯಗಳು_ಒಳ_Use;
 
-    int32_t unusedLimitByPercentage = fNumValuesInUse * fMaxPercentageOfInUse / 100;
-    int32_t unusedLimit = std::max(unusedLimitByPercentage, fMaxUnused);
-    int32_t countOfItemsToEvict = std::max<int32_t>(0, evictableItems - unusedLimit);
-    return countOfItemsToEvict;
+    int32_t ಬಳಸದ_ಎಲ್ಲೆ_By_Percentage = f_ಅಂಕೆ_ಮೌಲ್ಯಗಳು_ಒಳ_Use * f_Max_Percentage_ದ_ಒಳ_Use / 100;
+    int32_t ಬಳಸದ_ಎಲ್ಲೆ = std::max(ಬಳಸದ_ಎಲ್ಲೆ_By_Percentage, f_Max_ಬಳಸದ);
+    int32_t ಎಣಿಕೆ_ದ_ವಸ್ತುಗಳು_ಗಮ್ಯ_Evict = std::max<int32_t>(0, evictable_ವಸ್ತುಗಳು - ಬಳಸದ_ಎಲ್ಲೆ);
+    ಹಿಂತಿರುಗಿ ಎಣಿಕೆ_ದ_ವಸ್ತುಗಳು_ಗಮ್ಯ_Evict;
 }
 
-void UnifiedCache::_runEvictionSlice() const {
-    int32_t maxItemsToEvict = _computeCountOfItemsToEvict();
-    if (maxItemsToEvict <= 0) {
-        return;
+ಶೂನ್ಯ UnifiedCache::ಸತತ_Eviction_ತುಂಡು() ಸ್ಥಿರಾಂಕ {
+    int32_t max_ವಸ್ತುಗಳು_ಗಮ್ಯ_Evict = compute_ಎಣಿಕೆ_ದ_ವಸ್ತುಗಳು_ಗಮ್ಯ_Evict();
+    ಆದರೆ (max_ವಸ್ತುಗಳು_ಗಮ್ಯ_Evict <= 0) {
+        ಹಿಂತಿರುಗಿ;
     }
-    for (int32_t i = 0; i < MAX_EVICT_ITERATIONS; ++i) {
-        const UHashElement *element = _nextElement();
-        if (element == nullptr) {
-            break;
+    ಗಾಗಿ (int32_t i = 0; i < MAX_EVICT_ITERATIONS; ++i) {
+        ಸ್ಥಿರಾಂಕ UHashElement *element = ಮುಂದಿನ_Element_2();
+        ಆದರೆ (element == ಶೂನ್ಯಸೂಚಕ) {
+            ನಿಲ್ಲಿಸು;
         }
-        if (_isEvictable(element)) {
-            const SharedObject *sharedObject =
-                    static_cast<const SharedObject*>(element->value.pointer);
+        ಆದರೆ (_isEvictable(element)) {
+            ಸ್ಥಿರಾಂಕ SharedObject *sharedObject =
+                    static_cast<ಸ್ಥಿರಾಂಕ SharedObject*>(element->value.ಸೂಚಕ);
             uhash_removeElement(fHashtable, element);
             removeSoftRef(sharedObject);   // Deletes sharedObject when SoftRefCount goes to zero.
-            ++fAutoEvictedCount;
-            if (--maxItemsToEvict == 0) {
-                break;
+            ++f_Auto_Evicted_ಎಣಿಕೆ;
+            ಆದರೆ (--max_ವಸ್ತುಗಳು_ಗಮ್ಯ_Evict == 0) {
+                ನಿಲ್ಲಿಸು;
             }
         }
     }
 }
 
-void UnifiedCache::_putNew(
-        const CacheKeyBase &key,
-        const SharedObject *value,
-        const UErrorCode creationStatus,
-        UErrorCode &status) const {
-    if (U_FAILURE(status)) {
-        return;
+ಶೂನ್ಯ UnifiedCache::_putNew(
+        ಸ್ಥಿರಾಂಕ Cache_ಕೀಲಿ_ತಳ &ಕೀಲಿ,
+        ಸ್ಥಿರಾಂಕ SharedObject *value,
+        ಸ್ಥಿರಾಂಕ UError_ಸಂಕೇತ creation_ಸ್ಥಿತಿ,
+        UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ {
+    ಆದರೆ (U_FAILURE(ಸ್ಥಿತಿ_2)) {
+        ಹಿಂತಿರುಗಿ;
     }
-    CacheKeyBase *keyToAdopt = key.clone();
-    if (keyToAdopt == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    Cache_ಕೀಲಿ_ತಳ *ಕೀಲಿ_ಗಮ್ಯ_Adopt = ಕೀಲಿ.clone();
+    ಆದರೆ (ಕೀಲಿ_ಗಮ್ಯ_Adopt == ಶೂನ್ಯಸೂಚಕ) {
+        ಸ್ಥಿತಿ_2 = U_ಸ್ಮರಣೆ_ಹಂಚಿಕೆ_ERROR;
+        ಹಿಂತಿರುಗಿ;
     }
-    keyToAdopt->fCreationStatus = creationStatus;
-    if (value->softRefCount == 0) {
-        _registerPrimary(keyToAdopt, value);
+    ಕೀಲಿ_ಗಮ್ಯ_Adopt->f_Creation_ಸ್ಥಿತಿ = creation_ಸ್ಥಿತಿ;
+    ಆದರೆ (value->soft_Ref_ಎಣಿಕೆ == 0) {
+        ರಿಜಿಸ್ಟರ್_Primary(ಕೀಲಿ_ಗಮ್ಯ_Adopt, value);
     }
-    void *oldValue = uhash_put(fHashtable, keyToAdopt, (void *) value, &status);
-    U_ASSERT(oldValue == nullptr);
-    (void)oldValue;
-    if (U_SUCCESS(status)) {
-        value->softRefCount++;
+    ಶೂನ್ಯ *old_ಮೌಲ್ಯ = uhash_put(fHashtable, ಕೀಲಿ_ಗಮ್ಯ_Adopt, (ಶೂನ್ಯ *) value, &ಸ್ಥಿತಿ_2);
+    U_ASSERT(old_ಮೌಲ್ಯ == ಶೂನ್ಯಸೂಚಕ);
+    (ಶೂನ್ಯ)old_ಮೌಲ್ಯ;
+    ಆದರೆ (U_SUCCESS(ಸ್ಥಿತಿ_2)) {
+        value->soft_Ref_ಎಣಿಕೆ++;
     }
 }
 
-void UnifiedCache::_putIfAbsentAndGet(
-        const CacheKeyBase &key,
-        const SharedObject *&value,
-        UErrorCode &status) const {
-    std::lock_guard<std::mutex> lock(*gCacheMutex);
-    const UHashElement *element = uhash_find(fHashtable, &key);
-    if (element != nullptr && !_inProgress(element)) {
-        _fetch(element, value, status);
-        return;
+ಶೂನ್ಯ UnifiedCache::_putIfAbsentAndGet(
+        ಸ್ಥಿರಾಂಕ Cache_ಕೀಲಿ_ತಳ &ಕೀಲಿ,
+        ಸ್ಥಿರಾಂಕ SharedObject *&value,
+        UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ {
+    std::lock_guard<std::mutex> ಬೀಗ(*gCacheMutex);
+    ಸ್ಥಿರಾಂಕ UHashElement *element = uhash_ಕಂಡುಹಿಡಿ(fHashtable, &ಕೀಲಿ);
+    ಆದರೆ (element != ಶೂನ್ಯಸೂಚಕ && !ಒಳ_ಪ್ರಗತಿ(element)) {
+        _fetch(element, value, ಸ್ಥಿತಿ_2);
+        ಹಿಂತಿರುಗಿ;
     }
-    if (element == nullptr) {
-        UErrorCode putError = U_ZERO_ERROR;
+    ಆದರೆ (element == ಶೂನ್ಯಸೂಚಕ) {
+        UError_ಸಂಕೇತ putError = U_ZERO_ERROR;
         // best-effort basis only.
-        _putNew(key, value, status, putError);
-    } else {
-        _put(element, value, status);
+        _putNew(ಕೀಲಿ, value, ಸ್ಥಿತಿ_2, putError);
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        _put(element, value, ಸ್ಥಿತಿ_2);
     }
     // Run an eviction slice. This will run even if we added a primary entry
     // which doesn't increase the unused count, but that is still o.k
-    _runEvictionSlice();
+    ಸತತ_Eviction_ತುಂಡು();
 }
 
 
 UBool UnifiedCache::_poll(
-        const CacheKeyBase &key,
-        const SharedObject *&value,
-        UErrorCode &status) const {
-    U_ASSERT(value == nullptr);
-    U_ASSERT(status == U_ZERO_ERROR);
-    std::unique_lock<std::mutex> lock(*gCacheMutex);
-    const UHashElement *element = uhash_find(fHashtable, &key);
+        ಸ್ಥಿರಾಂಕ Cache_ಕೀಲಿ_ತಳ &ಕೀಲಿ,
+        ಸ್ಥಿರಾಂಕ SharedObject *&value,
+        UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ {
+    U_ASSERT(value == ಶೂನ್ಯಸೂಚಕ);
+    U_ASSERT(ಸ್ಥಿತಿ_2 == U_ZERO_ERROR);
+    std::unique_lock<std::mutex> ಬೀಗ(*gCacheMutex);
+    ಸ್ಥಿರಾಂಕ UHashElement *element = uhash_ಕಂಡುಹಿಡಿ(fHashtable, &ಕೀಲಿ);
 
     // If the hash table contains an inProgress placeholder entry for this key,
     // this means that another thread is currently constructing the value object.
     // Loop, waiting for that construction to complete.
-     while (element != nullptr && _inProgress(element)) {
-         gInProgressValueAddedCond->wait(lock);
-         element = uhash_find(fHashtable, &key);
+     ಆಗ (element != ಶೂನ್ಯಸೂಚಕ && ಒಳ_ಪ್ರಗತಿ(element)) {
+         g_ಒಳ_ಪ್ರಗತಿ_ಮೌಲ್ಯ_Added_Cond->wait(ಬೀಗ);
+         element = uhash_ಕಂಡುಹಿಡಿ(fHashtable, &ಕೀಲಿ);
     }
 
     // If the hash table contains an entry for the key,
     // fetch out the contents and return them.
-    if (element != nullptr) {
-         _fetch(element, value, status);
-        return true;
+    ಆದರೆ (element != ಶೂನ್ಯಸೂಚಕ) {
+         _fetch(element, value, ಸ್ಥಿತಿ_2);
+        ಹಿಂತಿರುಗಿ ನಿಜ;
     }
 
     // The hash table contained nothing for this key.
     // Insert an inProgress place holder value.
     // Our caller will create the final value and update the hash table.
-    _putNew(key, fNoValue, U_ZERO_ERROR, status);
-    return false;
+    _putNew(ಕೀಲಿ, f_No_ಮೌಲ್ಯ, U_ZERO_ERROR, ಸ್ಥಿತಿ_2);
+    ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
 }
 
-void UnifiedCache::_get(
-        const CacheKeyBase &key,
-        const SharedObject *&value,
-        const void *creationContext,
-        UErrorCode &status) const {
-    U_ASSERT(value == nullptr);
-    U_ASSERT(status == U_ZERO_ERROR);
-    if (_poll(key, value, status)) {
-        if (value == fNoValue) {
+ಶೂನ್ಯ UnifiedCache::_get(
+        ಸ್ಥಿರಾಂಕ Cache_ಕೀಲಿ_ತಳ &ಕೀಲಿ,
+        ಸ್ಥಿರಾಂಕ SharedObject *&value,
+        ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *creationContext,
+        UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ {
+    U_ASSERT(value == ಶೂನ್ಯಸೂಚಕ);
+    U_ASSERT(ಸ್ಥಿತಿ_2 == U_ZERO_ERROR);
+    ಆದರೆ (_poll(ಕೀಲಿ, value, ಸ್ಥಿತಿ_2)) {
+        ಆದರೆ (value == f_No_ಮೌಲ್ಯ) {
             SharedObject::clearPtr(value);
         }
-        return;
+        ಹಿಂತಿರುಗಿ;
     }
-    if (U_FAILURE(status)) {
-        return;
+    ಆದರೆ (U_FAILURE(ಸ್ಥಿತಿ_2)) {
+        ಹಿಂತಿರುಗಿ;
     }
-    value = key.createObject(creationContext, status);
-    U_ASSERT(value == nullptr || value->hasHardReferences());
-    U_ASSERT(value != nullptr || status != U_ZERO_ERROR);
-    if (value == nullptr) {
-        SharedObject::copyPtr(fNoValue, value);
+    value = ಕೀಲಿ.createObject(creationContext, ಸ್ಥಿತಿ_2);
+    U_ASSERT(value == ಶೂನ್ಯಸೂಚಕ || value->hasHardReferences());
+    U_ASSERT(value != ಶೂನ್ಯಸೂಚಕ || ಸ್ಥಿತಿ_2 != U_ZERO_ERROR);
+    ಆದರೆ (value == ಶೂನ್ಯಸೂಚಕ) {
+        SharedObject::copyPtr(f_No_ಮೌಲ್ಯ, value);
     }
-    _putIfAbsentAndGet(key, value, status);
-    if (value == fNoValue) {
+    _putIfAbsentAndGet(ಕೀಲಿ, value, ಸ್ಥಿತಿ_2);
+    ಆದರೆ (value == f_No_ಮೌಲ್ಯ) {
         SharedObject::clearPtr(value);
     }
 }
 
-void UnifiedCache::_registerPrimary(
-            const CacheKeyBase *theKey, const SharedObject *value) const {
-    theKey->fIsPrimary = true;
-    value->cachePtr = this;
-    ++fNumValuesTotal;
-    ++fNumValuesInUse;
+ಶೂನ್ಯ UnifiedCache::ರಿಜಿಸ್ಟರ್_Primary(
+            ಸ್ಥಿರಾಂಕ Cache_ಕೀಲಿ_ತಳ *the_ಕೀಲಿ, ಸ್ಥಿರಾಂಕ SharedObject *value) ಸ್ಥಿರಾಂಕ {
+    the_ಕೀಲಿ->fIsPrimary = ನಿಜ;
+    value->cachePtr = ಇದು;
+    ++f_ಅಂಕೆ_ಮೌಲ್ಯಗಳು_ಒಟ್ಟು;
+    ++f_ಅಂಕೆ_ಮೌಲ್ಯಗಳು_ಒಳ_Use;
 }
 
-void UnifiedCache::_put(
-        const UHashElement *element,
-        const SharedObject *value,
-        const UErrorCode status) const {
-    U_ASSERT(_inProgress(element));
-    const CacheKeyBase* theKey = static_cast<const CacheKeyBase*>(element->key.pointer);
-    const SharedObject* oldValue = static_cast<const SharedObject*>(element->value.pointer);
-    theKey->fCreationStatus = status;
-    if (value->softRefCount == 0) {
-        _registerPrimary(theKey, value);
+ಶೂನ್ಯ UnifiedCache::_put(
+        ಸ್ಥಿರಾಂಕ UHashElement *element,
+        ಸ್ಥಿರಾಂಕ SharedObject *value,
+        ಸ್ಥಿರಾಂಕ UError_ಸಂಕೇತ ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ {
+    U_ASSERT(ಒಳ_ಪ್ರಗತಿ(element));
+    ಸ್ಥಿರಾಂಕ Cache_ಕೀಲಿ_ತಳ* the_ಕೀಲಿ = static_cast<ಸ್ಥಿರಾಂಕ Cache_ಕೀಲಿ_ತಳ*>(element->ಕೀಲಿ.ಸೂಚಕ);
+    ಸ್ಥಿರಾಂಕ SharedObject* old_ಮೌಲ್ಯ = static_cast<ಸ್ಥಿರಾಂಕ SharedObject*>(element->value.ಸೂಚಕ);
+    the_ಕೀಲಿ->f_Creation_ಸ್ಥಿತಿ = ಸ್ಥಿತಿ_2;
+    ಆದರೆ (value->soft_Ref_ಎಣಿಕೆ == 0) {
+        ರಿಜಿಸ್ಟರ್_Primary(the_ಕೀಲಿ, value);
     }
-    value->softRefCount++;
+    value->soft_Ref_ಎಣಿಕೆ++;
     UHashElement *ptr = const_cast<UHashElement *>(element);
-    ptr->value.pointer = (void *) value;
-    U_ASSERT(oldValue == fNoValue);
-    removeSoftRef(oldValue);
+    ptr->value.ಸೂಚಕ = (ಶೂನ್ಯ *) value;
+    U_ASSERT(old_ಮೌಲ್ಯ == f_No_ಮೌಲ್ಯ);
+    removeSoftRef(old_ಮೌಲ್ಯ);
 
     // Tell waiting threads that we replace in-progress status with
     // an error.
-    gInProgressValueAddedCond->notify_all();
+    g_ಒಳ_ಪ್ರಗತಿ_ಮೌಲ್ಯ_Added_Cond->notify_all();
 }
 
-void UnifiedCache::_fetch(
-        const UHashElement *element,
-        const SharedObject *&value,
-        UErrorCode &status) const {
-    const CacheKeyBase* theKey = static_cast<const CacheKeyBase*>(element->key.pointer);
-    status = theKey->fCreationStatus;
+ಶೂನ್ಯ UnifiedCache::_fetch(
+        ಸ್ಥಿರಾಂಕ UHashElement *element,
+        ಸ್ಥಿರಾಂಕ SharedObject *&value,
+        UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ {
+    ಸ್ಥಿರಾಂಕ Cache_ಕೀಲಿ_ತಳ* the_ಕೀಲಿ = static_cast<ಸ್ಥಿರಾಂಕ Cache_ಕೀಲಿ_ತಳ*>(element->ಕೀಲಿ.ಸೂಚಕ);
+    ಸ್ಥಿತಿ_2 = the_ಕೀಲಿ->f_Creation_ಸ್ಥಿತಿ;
 
     // Since we have the cache lock, calling regular SharedObject add/removeRef
     // could cause us to deadlock on ourselves since they may need to lock
     // the cache mutex.
     removeHardRef(value);
-    value = static_cast<const SharedObject *>(element->value.pointer);
-    addHardRef(value);
+    value = static_cast<ಸ್ಥಿರಾಂಕ SharedObject *>(element->value.ಸೂಚಕ);
+    ಕೂಡಿಸು_Hard_Ref(value);
 }
 
 
-UBool UnifiedCache::_inProgress(const UHashElement* element) const {
-    UErrorCode status = U_ZERO_ERROR;
-    const SharedObject * value = nullptr;
-    _fetch(element, value, status);
-    UBool result = _inProgress(value, status);
+UBool UnifiedCache::ಒಳ_ಪ್ರಗತಿ(ಸ್ಥಿರಾಂಕ UHashElement* element) ಸ್ಥಿರಾಂಕ {
+    UError_ಸಂಕೇತ ಸ್ಥಿತಿ_2 = U_ZERO_ERROR;
+    ಸ್ಥಿರಾಂಕ SharedObject * value = ಶೂನ್ಯಸೂಚಕ;
+    _fetch(element, value, ಸ್ಥಿತಿ_2);
+    UBool ಫಲಿತಾಂಶ = ಒಳ_ಪ್ರಗತಿ(value, ಸ್ಥಿತಿ_2);
     removeHardRef(value);
-    return result;
+    ಹಿಂತಿರುಗಿ ಫಲಿತಾಂಶ;
 }
 
-UBool UnifiedCache::_inProgress(
-        const SharedObject* theValue, UErrorCode creationStatus) const {
-    return (theValue == fNoValue && creationStatus == U_ZERO_ERROR);
+UBool UnifiedCache::ಒಳ_ಪ್ರಗತಿ(
+        ಸ್ಥಿರಾಂಕ SharedObject* the_ಮೌಲ್ಯ, UError_ಸಂಕೇತ creation_ಸ್ಥಿತಿ) ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ (the_ಮೌಲ್ಯ == f_No_ಮೌಲ್ಯ && creation_ಸ್ಥಿತಿ == U_ZERO_ERROR);
 }
 
-UBool UnifiedCache::_isEvictable(const UHashElement *element) const
+UBool UnifiedCache::_isEvictable(ಸ್ಥಿರಾಂಕ UHashElement *element) ಸ್ಥಿರಾಂಕ
 {
-    const CacheKeyBase* theKey = static_cast<const CacheKeyBase*>(element->key.pointer);
-    const SharedObject* theValue = static_cast<const SharedObject*>(element->value.pointer);
+    ಸ್ಥಿರಾಂಕ Cache_ಕೀಲಿ_ತಳ* the_ಕೀಲಿ = static_cast<ಸ್ಥಿರಾಂಕ Cache_ಕೀಲಿ_ತಳ*>(element->ಕೀಲಿ.ಸೂಚಕ);
+    ಸ್ಥಿರಾಂಕ SharedObject* the_ಮೌಲ್ಯ = static_cast<ಸ್ಥಿರಾಂಕ SharedObject*>(element->value.ಸೂಚಕ);
 
     // Entries that are under construction are never evictable
-    if (_inProgress(theValue, theKey->fCreationStatus)) {
-        return false;
+    ಆದರೆ (ಒಳ_ಪ್ರಗತಿ(the_ಮೌಲ್ಯ, the_ಕೀಲಿ->f_Creation_ಸ್ಥಿತಿ)) {
+        ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
     }
 
     // We can evict entries that are either not a primary or have just
     // one reference (The one reference being from the cache itself).
-    return (!theKey->fIsPrimary || (theValue->softRefCount == 1 && theValue->noHardReferences()));
+    ಹಿಂತಿರುಗಿ (!the_ಕೀಲಿ->fIsPrimary || (the_ಮೌಲ್ಯ->soft_Ref_ಎಣಿಕೆ == 1 && the_ಮೌಲ್ಯ->noHardReferences()));
 }
 
-void UnifiedCache::removeSoftRef(const SharedObject *value) const {
-    U_ASSERT(value->cachePtr == this);
-    U_ASSERT(value->softRefCount > 0);
-    if (--value->softRefCount == 0) {
-        --fNumValuesTotal;
-        if (value->noHardReferences()) {
-            delete value;
-        } else {
+ಶೂನ್ಯ UnifiedCache::removeSoftRef(ಸ್ಥಿರಾಂಕ SharedObject *value) ಸ್ಥಿರಾಂಕ {
+    U_ASSERT(value->cachePtr == ಇದು);
+    U_ASSERT(value->soft_Ref_ಎಣಿಕೆ > 0);
+    ಆದರೆ (--value->soft_Ref_ಎಣಿಕೆ == 0) {
+        --f_ಅಂಕೆ_ಮೌಲ್ಯಗಳು_ಒಟ್ಟು;
+        ಆದರೆ (value->noHardReferences()) {
+            ಅಳಿಸು value;
+        } ಇಲ್ಲದಿದ್ದರೆ {
             // This path only happens from flush(all). Which only happens from the
             // UnifiedCache destructor.  Nulling out value.cacheptr changes the behavior
             // of value.removeRef(), causing the deletion to be done there.
-            value->cachePtr = nullptr;
+            value->cachePtr = ಶೂನ್ಯಸೂಚಕ;
         }
     }
 }
 
-int32_t UnifiedCache::removeHardRef(const SharedObject *value) const {
-    int refCount = 0;
-    if (value) {
-        refCount = umtx_atomic_dec(&value->hardRefCount);
-        U_ASSERT(refCount >= 0);
-        if (refCount == 0) {
-            --fNumValuesInUse;
+int32_t UnifiedCache::removeHardRef(ಸ್ಥಿರಾಂಕ SharedObject *value) ಸ್ಥಿರಾಂಕ {
+    ಪೂರ್ಣಾಂಕ ref_ಎಣಿಕೆ = 0;
+    ಆದರೆ (value) {
+        ref_ಎಣಿಕೆ = umtx_atomic_dec(&value->hard_Ref_ಎಣಿಕೆ);
+        U_ASSERT(ref_ಎಣಿಕೆ >= 0);
+        ಆದರೆ (ref_ಎಣಿಕೆ == 0) {
+            --f_ಅಂಕೆ_ಮೌಲ್ಯಗಳು_ಒಳ_Use;
         }
     }
-    return refCount;
+    ಹಿಂತಿರುಗಿ ref_ಎಣಿಕೆ;
 }
 
-int32_t UnifiedCache::addHardRef(const SharedObject *value) const {
-    int refCount = 0;
-    if (value) {
-        refCount = umtx_atomic_inc(&value->hardRefCount);
-        U_ASSERT(refCount >= 1);
-        if (refCount == 1) {
-            fNumValuesInUse++;
+int32_t UnifiedCache::ಕೂಡಿಸು_Hard_Ref(ಸ್ಥಿರಾಂಕ SharedObject *value) ಸ್ಥಿರಾಂಕ {
+    ಪೂರ್ಣಾಂಕ ref_ಎಣಿಕೆ = 0;
+    ಆದರೆ (value) {
+        ref_ಎಣಿಕೆ = umtx_atomic_inc(&value->hard_Ref_ಎಣಿಕೆ);
+        U_ASSERT(ref_ಎಣಿಕೆ >= 1);
+        ಆದರೆ (ref_ಎಣಿಕೆ == 1) {
+            f_ಅಂಕೆ_ಮೌಲ್ಯಗಳು_ಒಳ_Use++;
         }
     }
-    return refCount;
+    ಹಿಂತಿರುಗಿ ref_ಎಣಿಕೆ;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ

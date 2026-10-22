@@ -14,8 +14,8 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __UCHARSTRIE_H__
-#define __UCHARSTRIE_H__
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __UCHARSTRIE_H__
+#ವ್ಯಾಖ್ಯಾನಿಸು __UCHARSTRIE_H__
 
 /**
  * \file
@@ -23,13 +23,13 @@
  *                 to integer values.
  */
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ಆದರೆ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/unistr.h"
-#include "unicode/uobject.h"
-#include "unicode/ustringtrie.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unistr.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uobject.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ustringtrie.h"
 
 U_NAMESPACE_BEGIN
 
@@ -50,8 +50,8 @@ class UVector32;
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API UCharsTrie : public UMemory {
-public:
+class U_COMMON_API UCharsTrie : ಸಾರ್ವಜನಿಕ UMemory {
+ಸಾರ್ವಜನಿಕ:
     /**
      * Constructs a UCharsTrie reader instance.
      *
@@ -68,7 +68,7 @@ public:
      */
     UCharsTrie(ConstChar16Ptr trieUChars U_LIFETIME_BOUND)
             : ownedArray_(nullptr), uchars_(trieUChars),
-              pos_(uchars_), remainingMatchLength_(-1) {}
+              pos_(uchars_), ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ(-1) {}
 
     /**
      * Destructor.
@@ -82,9 +82,9 @@ public:
      * @param other Another UCharsTrie object.
      * @stable ICU 4.8
      */
-    UCharsTrie(const UCharsTrie &other)
+    UCharsTrie(ಸ್ಥಿರಾಂಕ UCharsTrie &other)
             : ownedArray_(nullptr), uchars_(other.uchars_),
-              pos_(other.pos_), remainingMatchLength_(other.remainingMatchLength_) {}
+              pos_(other.pos_), ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ(other.ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ) {}
 
     /**
      * Resets this trie to its initial state.
@@ -93,8 +93,8 @@ public:
      */
     UCharsTrie& reset() U_LIFETIME_BOUND {
         pos_=uchars_;
-        remainingMatchLength_=-1;
-        return *this;
+        ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ=-1;
+        ಹಿಂತಿರುಗಿ *this;
     }
 
     /**
@@ -105,8 +105,8 @@ public:
      * @see resetToState64
      * @stable ICU 65
      */
-    uint64_t getState64() const {
-        return (static_cast<uint64_t>(remainingMatchLength_ + 2) << kState64RemainingShift) |
+    uint64_t getState64() ಸ್ಥಿರಾಂಕ {
+        ಹಿಂತಿರುಗಿ (static_cast<uint64_t>(ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ + 2) << k_State64_ಉಳಿದ_ಸರಿಸು) |
             static_cast<uint64_t>(pos_ - uchars_);
     }
 
@@ -124,10 +124,10 @@ public:
      * @see reset
      * @stable ICU 65
      */
-    UCharsTrie& resetToState64(uint64_t state) U_LIFETIME_BOUND {
-        remainingMatchLength_ = static_cast<int32_t>(state >> kState64RemainingShift) - 2;
-        pos_ = uchars_ + (state & kState64PosMask);
-        return *this;
+    UCharsTrie& reset_ಗಮ್ಯ_State64(uint64_t state) U_LIFETIME_BOUND {
+        ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ = static_cast<int32_t>(state >> k_State64_ಉಳಿದ_ಸರಿಸು) - 2;
+        pos_ = uchars_ + (state & k_State64_Pos_ಮುಖವಾಡ);
+        ಹಿಂತಿರುಗಿ *this;
     }
 
     /**
@@ -135,19 +135,19 @@ public:
      * and resetting the trie back to this state later.
      * @stable ICU 4.8
      */
-    class State : public UMemory {
-    public:
+    class State : ಸಾರ್ವಜನಿಕ UMemory {
+    ಸಾರ್ವಜನಿಕ:
         /**
          * Constructs an empty State.
          * @stable ICU 4.8
          */
         State() { uchars=nullptr; }
-    private:
-        friend class UCharsTrie;
+    ಖಾಸಗಿ:
+        ಮಿತ್ರ class UCharsTrie;
 
-        const char16_t *uchars;
-        const char16_t *pos;
-        int32_t remainingMatchLength;
+        ಸ್ಥಿರಾಂಕ char16_t *uchars;
+        ಸ್ಥಿರಾಂಕ char16_t *pos;
+        int32_t ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ_2;
     };
 
     /**
@@ -157,11 +157,11 @@ public:
      * @see resetToState
      * @stable ICU 4.8
      */
-    const UCharsTrie& saveState(State& state) const U_LIFETIME_BOUND {
+    ಸ್ಥಿರಾಂಕ UCharsTrie& saveState(State& state) ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND {
         state.uchars=uchars_;
         state.pos=pos_;
-        state.remainingMatchLength=remainingMatchLength_;
-        return *this;
+        state.ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ_2=ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ;
+        ಹಿಂತಿರುಗಿ *this;
     }
 
     /**
@@ -174,12 +174,12 @@ public:
      * @see reset
      * @stable ICU 4.8
      */
-    UCharsTrie& resetToState(const State& state) U_LIFETIME_BOUND {
-        if(uchars_==state.uchars && uchars_!=nullptr) {
+    UCharsTrie& reset_ಗಮ್ಯ_State(ಸ್ಥಿರಾಂಕ State& state) U_LIFETIME_BOUND {
+        ಆದರೆ(uchars_==state.uchars && uchars_!=nullptr) {
             pos_=state.pos;
-            remainingMatchLength_=state.remainingMatchLength;
+            ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ=state.ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ_2;
         }
-        return *this;
+        ಹಿಂತಿರುಗಿ *this;
     }
 
     /**
@@ -188,7 +188,7 @@ public:
      * @return The match/value Result.
      * @stable ICU 4.8
      */
-    UStringTrieResult current() const;
+    UString_Trie_ಫಲಿತಾಂಶ current() ಸ್ಥಿರಾಂಕ;
 
     /**
      * Traverses the trie from the initial state for this input char16_t.
@@ -197,9 +197,9 @@ public:
      * @return The match/value Result.
      * @stable ICU 4.8
      */
-    inline UStringTrieResult first(int32_t uchar) {
-        remainingMatchLength_=-1;
-        return nextImpl(uchars_, uchar);
+    ಸಾಲೊಳಗೆ UString_Trie_ಫಲಿತಾಂಶ ಮೊದಲ(int32_t uchar) {
+        ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ=-1;
+        ಹಿಂತಿರುಗಿ ಮುಂದಿನ_Impl(uchars_, uchar);
     }
 
     /**
@@ -210,7 +210,7 @@ public:
      * @return The match/value Result.
      * @stable ICU 4.8
      */
-    UStringTrieResult firstForCodePoint(UChar32 cp);
+    UString_Trie_ಫಲಿತಾಂಶ ಮೊದಲ_For_ಸಂಕೇತ_ಬಿಂದು(UChar32 cp);
 
     /**
      * Traverses the trie from the current state for this input char16_t.
@@ -218,7 +218,7 @@ public:
      * @return The match/value Result.
      * @stable ICU 4.8
      */
-    UStringTrieResult next(int32_t uchar);
+    UString_Trie_ಫಲಿತಾಂಶ ಮುಂದಿನ(int32_t uchar);
 
     /**
      * Traverses the trie from the current state for the
@@ -227,7 +227,7 @@ public:
      * @return The match/value Result.
      * @stable ICU 4.8
      */
-    UStringTrieResult nextForCodePoint(UChar32 cp);
+    UString_Trie_ಫಲಿತಾಂಶ ಮುಂದಿನ_For_ಸಂಕೇತ_ಬಿಂದು(UChar32 cp);
 
     /**
      * Traverses the trie from the current state for this string.
@@ -244,7 +244,7 @@ public:
      * @return The match/value Result.
      * @stable ICU 4.8
      */
-    UStringTrieResult next(ConstChar16Ptr s, int32_t length);
+    UString_Trie_ಫಲಿತಾಂಶ ಮುಂದಿನ(ConstChar16Ptr s, int32_t ಉದ್ದಳತೆ);
 
     /**
      * Returns a matching string's value if called immediately after
@@ -255,12 +255,12 @@ public:
      * @return The value for the string so far.
      * @stable ICU 4.8
      */
-    inline int32_t getValue() const {
-        const char16_t *pos=pos_;
+    ಸಾಲೊಳಗೆ int32_t get_ಮೌಲ್ಯ() ಸ್ಥಿರಾಂಕ {
+        ಸ್ಥಿರಾಂಕ char16_t *pos=pos_;
         int32_t leadUnit=*pos++;
         // U_ASSERT(leadUnit>=kMinValueLead);
-        return leadUnit&kValueIsFinal ?
-            readValue(pos, leadUnit&0x7fff) : readNodeValue(pos, leadUnit);
+        ಹಿಂತಿರುಗಿ leadUnit&k_ಮೌಲ್ಯ_Is_Final ?
+            read_ಮೌಲ್ಯ(pos, leadUnit&0x7fff) : read_ಗಂಟು_ಮೌಲ್ಯ(pos, leadUnit);
     }
 
     /**
@@ -272,10 +272,10 @@ public:
      *         map to the same value.
      * @stable ICU 4.8
      */
-    inline UBool hasUniqueValue(int32_t &uniqueValue) const {
-        const char16_t *pos=pos_;
+    ಸಾಲೊಳಗೆ UBool has_Unique_ಮೌಲ್ಯ(int32_t &unique_ಮೌಲ್ಯ) ಸ್ಥಿರಾಂಕ {
+        ಸ್ಥಿರಾಂಕ char16_t *pos=pos_;
         // Skip the rest of a pending linear-match node.
-        return pos!=nullptr && findUniqueValue(pos+remainingMatchLength_+1, false, uniqueValue);
+        ಹಿಂತಿರುಗಿ pos!=nullptr && ಕಂಡುಹಿಡಿ_Unique_ಮೌಲ್ಯ(pos+ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ+1, false, unique_ಮೌಲ್ಯ);
     }
 
     /**
@@ -285,14 +285,14 @@ public:
      * @return the number of char16_ts which continue the string from here
      * @stable ICU 4.8
      */
-    int32_t getNextUChars(Appendable &out) const;
+    int32_t get_ಮುಂದಿನ_UChars(Appendable &ಹೊರಹೋಗು) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Iterator for all of the (string, value) pairs in a UCharsTrie.
      * @stable ICU 4.8
      */
-    class U_COMMON_API Iterator : public UMemory {
-    public:
+    class U_COMMON_API Iterator : ಸಾರ್ವಜನಿಕ UMemory {
+    ಸಾರ್ವಜನಿಕ:
         /**
          * Iterates from the root of a char16_t-serialized UCharsTrie.
          * @param trieUChars The trie char16_ts.
@@ -304,7 +304,7 @@ public:
          *                  function chaining. (See User Guide for details.)
          * @stable ICU 4.8
          */
-        Iterator(ConstChar16Ptr trieUChars U_LIFETIME_BOUND, int32_t maxStringLength, UErrorCode& errorCode);
+        Iterator(ConstChar16Ptr trieUChars U_LIFETIME_BOUND, int32_t max_String_ಉದ್ದಳತೆ, UError_ಸಂಕೇತ& error_ಸಂಕೇತ);
 
         /**
          * Iterates from the current state of the specified UCharsTrie.
@@ -317,7 +317,7 @@ public:
          *                  function chaining. (See User Guide for details.)
          * @stable ICU 4.8
          */
-        Iterator(const UCharsTrie &trie, int32_t maxStringLength, UErrorCode &errorCode);
+        Iterator(ಸ್ಥಿರಾಂಕ UCharsTrie &trie, int32_t max_String_ಉದ್ದಳತೆ, UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
         /**
          * Destructor.
@@ -336,7 +336,7 @@ public:
          * @return true if there are more elements.
          * @stable ICU 4.8
          */
-        UBool hasNext() const;
+        UBool has_ಮುಂದಿನ() ಸ್ಥಿರಾಂಕ;
 
         /**
          * Finds the next (string, value) pair if there is one.
@@ -352,40 +352,40 @@ public:
          * @return true if there is another element.
          * @stable ICU 4.8
          */
-        UBool next(UErrorCode &errorCode);
+        UBool ಮುಂದಿನ(UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
         /**
          * @return The string for the last successful next().
          * @stable ICU 4.8
          */
-        const UnicodeString& getString() const U_LIFETIME_BOUND { return str_; }
+        ಸ್ಥಿರಾಂಕ UnicodeString& getString() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND { ಹಿಂತಿರುಗಿ str_; }
         /**
          * @return The value for the last successful next().
          * @stable ICU 4.8
          */
-        int32_t getValue() const { return value_; }
+        int32_t get_ಮೌಲ್ಯ() ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ ಮೌಲ್ಯ; }
 
-    private:
+    ಖಾಸಗಿ:
         UBool truncateAndStop() {
             pos_=nullptr;
-            value_=-1;  // no real value for str
-            return true;
+            ಮೌಲ್ಯ=-1;  // no real value for str
+            ಹಿಂತಿರುಗಿ true;
         }
 
-        const char16_t* branchNext(const char16_t* pos U_LIFETIME_BOUND,
-                                   int32_t length,
-                                   UErrorCode& errorCode);
+        ಸ್ಥಿರಾಂಕ char16_t* branch_ಮುಂದಿನ(ಸ್ಥಿರಾಂಕ char16_t* pos U_LIFETIME_BOUND,
+                                   int32_t ಉದ್ದಳತೆ,
+                                   UError_ಸಂಕೇತ& error_ಸಂಕೇತ);
 
-        const char16_t *uchars_;
-        const char16_t *pos_;
-        const char16_t *initialPos_;
-        int32_t remainingMatchLength_;
-        int32_t initialRemainingMatchLength_;
-        UBool skipValue_;  // Skip intermediate value which was already delivered.
+        ಸ್ಥಿರಾಂಕ char16_t *uchars_;
+        ಸ್ಥಿರಾಂಕ char16_t *pos_;
+        ಸ್ಥಿರಾಂಕ char16_t *initialPos_;
+        int32_t ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ;
+        int32_t initial_ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ;
+        UBool skip_ಮೌಲ್ಯ_2;  // Skip intermediate value which was already delivered.
 
         UnicodeString str_;
-        int32_t maxLength_;
-        int32_t value_;
+        int32_t max_ಉದ್ದಳತೆ;
+        int32_t ಮೌಲ್ಯ;
 
         // The stack stores pairs of integers for backtracking to another
         // outbound edge of a branch node.
@@ -394,11 +394,11 @@ public:
         // and the remaining branch length in bits 31..16.
         // (We could store the remaining branch length minus 1 in bits 30..16 and not use the sign bit,
         // but the code looks more confusing that way.)
-        UVector32 *stack_;
+        UVector32 *ರಾಶಿ;
     };
 
-private:
-    friend class UCharsTrieBuilder;
+ಖಾಸಗಿ:
+    ಮಿತ್ರ class UCharsTrieBuilder;
 
     /**
      * Constructs a UCharsTrie reader instance.
@@ -406,120 +406,120 @@ private:
      * this constructor adopts the builder's array.
      * This constructor is only called by the builder.
      */
-    UCharsTrie(char16_t *adoptUChars, const char16_t *trieUChars)
+    UCharsTrie(char16_t *adoptUChars, ಸ್ಥಿರಾಂಕ char16_t *trieUChars)
             : ownedArray_(adoptUChars), uchars_(trieUChars),
-              pos_(uchars_), remainingMatchLength_(-1) {}
+              pos_(uchars_), ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ(-1) {}
 
     // No assignment operator.
-    UCharsTrie &operator=(const UCharsTrie &other) = delete;
+    UCharsTrie &ಕ್ರಿಯಾಕಾರಕ=(ಸ್ಥಿರಾಂಕ UCharsTrie &other) = delete;
 
-    inline void stop() {
+    ಸಾಲೊಳಗೆ ಶೂನ್ಯ stop() {
         pos_=nullptr;
     }
 
     // Reads a compact 32-bit integer.
     // pos is already after the leadUnit, and the lead unit has bit 15 reset.
-    static inline int32_t readValue(const char16_t *pos, int32_t leadUnit) {
-        int32_t value;
-        if(leadUnit<kMinTwoUnitValueLead) {
-            value=leadUnit;
-        } else if(leadUnit<kThreeUnitValueLead) {
-            value=((leadUnit-kMinTwoUnitValueLead)<<16)|*pos;
-        } else {
-            value=(pos[0]<<16)|pos[1];
+    ಸ್ಥಿರ ಸಾಲೊಳಗೆ int32_t read_ಮೌಲ್ಯ(ಸ್ಥಿರಾಂಕ char16_t *pos, int32_t leadUnit) {
+        int32_t ಮೌಲ್ಯ_2;
+        ಆದರೆ(leadUnit<k_Min_Two_Unit_ಮೌಲ್ಯ_Lead) {
+            ಮೌಲ್ಯ_2=leadUnit;
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(leadUnit<k_Three_Unit_ಮೌಲ್ಯ_Lead) {
+            ಮೌಲ್ಯ_2=((leadUnit-k_Min_Two_Unit_ಮೌಲ್ಯ_Lead)<<16)|*pos;
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಮೌಲ್ಯ_2=(pos[0]<<16)|pos[1];
         }
-        return value;
+        ಹಿಂತಿರುಗಿ ಮೌಲ್ಯ_2;
     }
-    static inline const char16_t* skipValue(const char16_t* pos U_LIFETIME_BOUND,
+    ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಸ್ಥಿರಾಂಕ char16_t* skip_ಮೌಲ್ಯ(ಸ್ಥಿರಾಂಕ char16_t* pos U_LIFETIME_BOUND,
                                             int32_t leadUnit) {
-        if(leadUnit>=kMinTwoUnitValueLead) {
-            if(leadUnit<kThreeUnitValueLead) {
+        ಆದರೆ(leadUnit>=k_Min_Two_Unit_ಮೌಲ್ಯ_Lead) {
+            ಆದರೆ(leadUnit<k_Three_Unit_ಮೌಲ್ಯ_Lead) {
                 ++pos;
-            } else {
+            } ಇಲ್ಲದಿದ್ದರೆ {
                 pos+=2;
             }
         }
-        return pos;
+        ಹಿಂತಿರುಗಿ pos;
     }
-    static inline const char16_t* skipValue(const char16_t* pos U_LIFETIME_BOUND) {
+    ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಸ್ಥಿರಾಂಕ char16_t* skip_ಮೌಲ್ಯ(ಸ್ಥಿರಾಂಕ char16_t* pos U_LIFETIME_BOUND) {
         int32_t leadUnit=*pos++;
-        return skipValue(pos, leadUnit&0x7fff);
+        ಹಿಂತಿರುಗಿ skip_ಮೌಲ್ಯ(pos, leadUnit&0x7fff);
     }
 
-    static inline int32_t readNodeValue(const char16_t *pos, int32_t leadUnit) {
+    ಸ್ಥಿರ ಸಾಲೊಳಗೆ int32_t read_ಗಂಟು_ಮೌಲ್ಯ(ಸ್ಥಿರಾಂಕ char16_t *pos, int32_t leadUnit) {
         // U_ASSERT(kMinValueLead<=leadUnit && leadUnit<kValueIsFinal);
-        int32_t value;
-        if(leadUnit<kMinTwoUnitNodeValueLead) {
-            value=(leadUnit>>6)-1;
-        } else if(leadUnit<kThreeUnitNodeValueLead) {
-            value=(((leadUnit&0x7fc0)-kMinTwoUnitNodeValueLead)<<10)|*pos;
-        } else {
-            value=(pos[0]<<16)|pos[1];
+        int32_t ಮೌಲ್ಯ_2;
+        ಆದರೆ(leadUnit<k_Min_Two_Unit_ಗಂಟು_ಮೌಲ್ಯ_Lead) {
+            ಮೌಲ್ಯ_2=(leadUnit>>6)-1;
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(leadUnit<k_Three_Unit_ಗಂಟು_ಮೌಲ್ಯ_Lead) {
+            ಮೌಲ್ಯ_2=(((leadUnit&0x7fc0)-k_Min_Two_Unit_ಗಂಟು_ಮೌಲ್ಯ_Lead)<<10)|*pos;
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಮೌಲ್ಯ_2=(pos[0]<<16)|pos[1];
         }
-        return value;
+        ಹಿಂತಿರುಗಿ ಮೌಲ್ಯ_2;
     }
-    static inline const char16_t* skipNodeValue(const char16_t* pos U_LIFETIME_BOUND,
+    ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಸ್ಥಿರಾಂಕ char16_t* skip_ಗಂಟು_ಮೌಲ್ಯ(ಸ್ಥಿರಾಂಕ char16_t* pos U_LIFETIME_BOUND,
                                                 int32_t leadUnit) {
         // U_ASSERT(kMinValueLead<=leadUnit && leadUnit<kValueIsFinal);
-        if(leadUnit>=kMinTwoUnitNodeValueLead) {
-            if(leadUnit<kThreeUnitNodeValueLead) {
+        ಆದರೆ(leadUnit>=k_Min_Two_Unit_ಗಂಟು_ಮೌಲ್ಯ_Lead) {
+            ಆದರೆ(leadUnit<k_Three_Unit_ಗಂಟು_ಮೌಲ್ಯ_Lead) {
                 ++pos;
-            } else {
+            } ಇಲ್ಲದಿದ್ದರೆ {
                 pos+=2;
             }
         }
-        return pos;
+        ಹಿಂತಿರುಗಿ pos;
     }
 
-    static inline const char16_t* jumpByDelta(const char16_t* pos U_LIFETIME_BOUND) {
+    ಸ್ಥಿರ ಸಾಲೊಳಗೆ ಸ್ಥಿರಾಂಕ char16_t* jumpByDelta(ಸ್ಥಿರಾಂಕ char16_t* pos U_LIFETIME_BOUND) {
         int32_t delta=*pos++;
-        if(delta>=kMinTwoUnitDeltaLead) {
-            if(delta==kThreeUnitDeltaLead) {
+        ಆದರೆ(delta>=kMinTwoUnitDeltaLead) {
+            ಆದರೆ(delta==kThreeUnitDeltaLead) {
                 delta=(pos[0]<<16)|pos[1];
                 pos+=2;
-            } else {
+            } ಇಲ್ಲದಿದ್ದರೆ {
                 delta=((delta-kMinTwoUnitDeltaLead)<<16)|*pos++;
             }
         }
-        return pos+delta;
+        ಹಿಂತಿರುಗಿ pos+delta;
     }
 
-    static const char16_t* skipDelta(const char16_t* pos U_LIFETIME_BOUND) {
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ char16_t* skipDelta(ಸ್ಥಿರಾಂಕ char16_t* pos U_LIFETIME_BOUND) {
         int32_t delta=*pos++;
-        if(delta>=kMinTwoUnitDeltaLead) {
-            if(delta==kThreeUnitDeltaLead) {
+        ಆದರೆ(delta>=kMinTwoUnitDeltaLead) {
+            ಆದರೆ(delta==kThreeUnitDeltaLead) {
                 pos+=2;
-            } else {
+            } ಇಲ್ಲದಿದ್ದರೆ {
                 ++pos;
             }
         }
-        return pos;
+        ಹಿಂತಿರುಗಿ pos;
     }
 
-    static inline UStringTrieResult valueResult(int32_t node) {
-        return static_cast<UStringTrieResult>(USTRINGTRIE_INTERMEDIATE_VALUE - (node >> 15));
+    ಸ್ಥಿರ ಸಾಲೊಳಗೆ UString_Trie_ಫಲಿತಾಂಶ ಮೌಲ್ಯ_ಫಲಿತಾಂಶ(int32_t ಗಂಟು) {
+        ಹಿಂತಿರುಗಿ static_cast<UString_Trie_ಫಲಿತಾಂಶ>(USTRINGTRIE_INTERMEDIATE_ಮೌಲ್ಯ - (ಗಂಟು >> 15));
     }
 
     // Handles a branch node for both next(uchar) and next(string).
-    UStringTrieResult branchNext(const char16_t *pos, int32_t length, int32_t uchar);
+    UString_Trie_ಫಲಿತಾಂಶ branch_ಮುಂದಿನ(ಸ್ಥಿರಾಂಕ char16_t *pos, int32_t ಉದ್ದಳತೆ, int32_t uchar);
 
     // Requires remainingLength_<0.
-    UStringTrieResult nextImpl(const char16_t *pos, int32_t uchar);
+    UString_Trie_ಫಲಿತಾಂಶ ಮುಂದಿನ_Impl(ಸ್ಥಿರಾಂಕ char16_t *pos, int32_t uchar);
 
     // Helper functions for hasUniqueValue().
     // Recursively finds a unique value (or whether there is not a unique one)
     // from a branch.
-    static const char16_t* findUniqueValueFromBranch(const char16_t* pos U_LIFETIME_BOUND,
-                                                     int32_t length,
-                                                     UBool haveUniqueValue,
-                                                     int32_t& uniqueValue);
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ char16_t* ಕಂಡುಹಿಡಿ_Unique_ಮೌಲ್ಯ_From_Branch(ಸ್ಥಿರಾಂಕ char16_t* pos U_LIFETIME_BOUND,
+                                                     int32_t ಉದ್ದಳತೆ,
+                                                     UBool have_Unique_ಮೌಲ್ಯ,
+                                                     int32_t& unique_ಮೌಲ್ಯ);
     // Recursively finds a unique value (or whether there is not a unique one)
     // starting from a position on a node lead unit.
-    static UBool findUniqueValue(const char16_t *pos, UBool haveUniqueValue, int32_t &uniqueValue);
+    ಸ್ಥಿರ UBool ಕಂಡುಹಿಡಿ_Unique_ಮೌಲ್ಯ(ಸ್ಥಿರಾಂಕ char16_t *pos, UBool have_Unique_ಮೌಲ್ಯ, int32_t &unique_ಮೌಲ್ಯ);
 
     // Helper functions for getNextUChars().
     // getNextUChars() when pos is on a branch node.
-    static void getNextBranchUChars(const char16_t *pos, int32_t length, Appendable &out);
+    ಸ್ಥಿರ ಶೂನ್ಯ get_ಮುಂದಿನ_Branch_UChars(ಸ್ಥಿರಾಂಕ char16_t *pos, int32_t ಉದ್ದಳತೆ, Appendable &ಹೊರಹೋಗು);
 
     // UCharsTrie data structure
     //
@@ -564,66 +564,66 @@ private:
 
     // For a branch sub-node with at most this many entries, we drop down
     // to a linear search.
-    static const int32_t kMaxBranchLinearSubNodeLength=5;
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t k_Max_Branch_ರೇಖೀಯ_Sub_ಗಂಟು_ಉದ್ದಳತೆ=5;
 
     // 0030..003f: Linear-match node, match 1..16 units and continue reading the next node.
-    static const int32_t kMinLinearMatch=0x30;
-    static const int32_t kMaxLinearMatchLength=0x10;
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t k_Min_ರೇಖೀಯ_ಹೊಂದಿಕೆ=0x30;
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t k_Max_ರೇಖೀಯ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ=0x10;
 
     // Match-node lead unit bits 14..6 for the optional intermediate value.
     // If these bits are 0, then there is no intermediate value.
     // Otherwise, see the *NodeValue* constants below.
-    static const int32_t kMinValueLead=kMinLinearMatch+kMaxLinearMatchLength;  // 0x0040
-    static const int32_t kNodeTypeMask=kMinValueLead-1;  // 0x003f
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t k_Min_ಮೌಲ್ಯ_Lead=k_Min_ರೇಖೀಯ_ಹೊಂದಿಕೆ+k_Max_ರೇಖೀಯ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ;  // 0x0040
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t k_ಗಂಟು_Type_ಮುಖವಾಡ=k_Min_ಮೌಲ್ಯ_Lead-1;  // 0x003f
 
     // A final-value node has bit 15 set.
-    static const int32_t kValueIsFinal=0x8000;
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t k_ಮೌಲ್ಯ_Is_Final=0x8000;
 
     // Compact value: After testing and masking off bit 15, use the following thresholds.
-    static const int32_t kMaxOneUnitValue=0x3fff;
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t k_Max_One_Unit_ಮೌಲ್ಯ=0x3fff;
 
-    static const int32_t kMinTwoUnitValueLead=kMaxOneUnitValue+1;  // 0x4000
-    static const int32_t kThreeUnitValueLead=0x7fff;
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t k_Min_Two_Unit_ಮೌಲ್ಯ_Lead=k_Max_One_Unit_ಮೌಲ್ಯ+1;  // 0x4000
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t k_Three_Unit_ಮೌಲ್ಯ_Lead=0x7fff;
 
-    static const int32_t kMaxTwoUnitValue=((kThreeUnitValueLead-kMinTwoUnitValueLead)<<16)-1;  // 0x3ffeffff
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t k_Max_Two_Unit_ಮೌಲ್ಯ=((k_Three_Unit_ಮೌಲ್ಯ_Lead-k_Min_Two_Unit_ಮೌಲ್ಯ_Lead)<<16)-1;  // 0x3ffeffff
 
     // Compact intermediate-value integer, lead unit shared with a branch or linear-match node.
-    static const int32_t kMaxOneUnitNodeValue=0xff;
-    static const int32_t kMinTwoUnitNodeValueLead=kMinValueLead+((kMaxOneUnitNodeValue+1)<<6);  // 0x4040
-    static const int32_t kThreeUnitNodeValueLead=0x7fc0;
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t k_Max_One_Unit_ಗಂಟು_ಮೌಲ್ಯ=0xff;
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t k_Min_Two_Unit_ಗಂಟು_ಮೌಲ್ಯ_Lead=k_Min_ಮೌಲ್ಯ_Lead+((k_Max_One_Unit_ಗಂಟು_ಮೌಲ್ಯ+1)<<6);  // 0x4040
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t k_Three_Unit_ಗಂಟು_ಮೌಲ್ಯ_Lead=0x7fc0;
 
-    static const int32_t kMaxTwoUnitNodeValue=
-        ((kThreeUnitNodeValueLead-kMinTwoUnitNodeValueLead)<<10)-1;  // 0xfdffff
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t k_Max_Two_Unit_ಗಂಟು_ಮೌಲ್ಯ=
+        ((k_Three_Unit_ಗಂಟು_ಮೌಲ್ಯ_Lead-k_Min_Two_Unit_ಗಂಟು_ಮೌಲ್ಯ_Lead)<<10)-1;  // 0xfdffff
 
     // Compact delta integers.
-    static const int32_t kMaxOneUnitDelta=0xfbff;
-    static const int32_t kMinTwoUnitDeltaLead=kMaxOneUnitDelta+1;  // 0xfc00
-    static const int32_t kThreeUnitDeltaLead=0xffff;
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t kMaxOneUnitDelta=0xfbff;
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t kMinTwoUnitDeltaLead=kMaxOneUnitDelta+1;  // 0xfc00
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t kThreeUnitDeltaLead=0xffff;
 
-    static const int32_t kMaxTwoUnitDelta=((kThreeUnitDeltaLead-kMinTwoUnitDeltaLead)<<16)-1;  // 0x03feffff
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int32_t kMaxTwoUnitDelta=((kThreeUnitDeltaLead-kMinTwoUnitDeltaLead)<<16)-1;  // 0x03feffff
 
     // For getState64():
     // The remainingMatchLength_ is -1..14=(kMaxLinearMatchLength=0x10)-2
     // so we need at least 5 bits for that.
     // We add 2 to store it as a positive value 1..16=kMaxLinearMatchLength.
-    static constexpr int32_t kState64RemainingShift = 59;
-    static constexpr uint64_t kState64PosMask = (UINT64_C(1) << kState64RemainingShift) - 1;
+    ಸ್ಥಿರ constexpr int32_t k_State64_ಉಳಿದ_ಸರಿಸು = 59;
+    ಸ್ಥಿರ constexpr uint64_t k_State64_Pos_ಮುಖವಾಡ = (UINT64_C(1) << k_State64_ಉಳಿದ_ಸರಿಸು) - 1;
 
     char16_t *ownedArray_;
 
     // Fixed value referencing the UCharsTrie words.
-    const char16_t *uchars_;
+    ಸ್ಥಿರಾಂಕ char16_t *uchars_;
 
     // Iterator variables.
 
     // Pointer to next trie unit to read. nullptr if no more matches.
-    const char16_t *pos_;
+    ಸ್ಥಿರಾಂಕ char16_t *pos_;
     // Remaining length of a linear-match node, minus 1. Negative if not in such a node.
-    int32_t remainingMatchLength_;
+    int32_t ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ಆದರೆ_ಅಂತ್ಯ /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __UCHARSTRIE_H__
+#ಆದರೆ_ಅಂತ್ಯ  // __UCHARSTRIE_H__

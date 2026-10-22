@@ -8,21 +8,21 @@
  *
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#ಆದರೆ !UCONFIG_NO_SERVICE
 
-#include "unicode/resbund.h"
-#include "uresimp.h"
-#include "cmemory.h"
-#include "servloc.h"
-#include "ustrfmt.h"
-#include "charstr.h"
-#include "uassert.h"
+#ಅನ್ತರ್ಭಾವ "unicode/resbund.h"
+#ಅನ್ತರ್ಭಾವ "uresimp.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "servloc.h"
+#ಅನ್ತರ್ಭಾವ "ustrfmt.h"
+#ಅನ್ತರ್ಭಾವ "charstr.h"
+#ಅನ್ತರ್ಭಾವ "uassert.h"
 
-#define UNDERSCORE_CHAR ((char16_t)0x005f)
-#define AT_SIGN_CHAR    ((char16_t)64)
-#define PERIOD_CHAR     ((char16_t)46)
+#ವ್ಯಾಖ್ಯಾನಿಸು UNDERSCORE_CHAR ((char16_t)0x005f)
+#ವ್ಯಾಖ್ಯಾನಿಸು AT_SIGN_CHAR    ((char16_t)64)
+#ವ್ಯಾಖ್ಯಾನಿಸು PERIOD_CHAR     ((char16_t)46)
 
 U_NAMESPACE_BEGIN
 
@@ -31,7 +31,7 @@ ICULocaleService::ICULocaleService()
 {
 }
 
-ICULocaleService::ICULocaleService(const UnicodeString& dname)
+ICULocaleService::ICULocaleService(ಸ್ಥಿರಾಂಕ UnicodeString& dname)
   : ICUService(dname)
   , fallbackLocale(Locale::getDefault())
 {
@@ -42,211 +42,211 @@ ICULocaleService::~ICULocaleService()
 }
 
 UObject*
-ICULocaleService::get(const Locale& locale, UErrorCode& status) const
+ICULocaleService::get(ಸ್ಥಿರಾಂಕ Locale& locale, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ
 {
-    return get(locale, LocaleKey::KIND_ANY, nullptr, status);
+    ಹಿಂತಿರುಗಿ get(locale, Locale_ಕೀಲಿ::ಬಗೆ_ANY, ಶೂನ್ಯಸೂಚಕ, ಸ್ಥಿತಿ_2);
 }
 
 UObject*
-ICULocaleService::get(const Locale& locale, int32_t kind, UErrorCode& status) const
+ICULocaleService::get(ಸ್ಥಿರಾಂಕ Locale& locale, int32_t ಬಗೆ, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ
 {
-    return get(locale, kind, nullptr, status);
+    ಹಿಂತಿರುಗಿ get(locale, ಬಗೆ, ಶೂನ್ಯಸೂಚಕ, ಸ್ಥಿತಿ_2);
 }
 
 UObject*
-ICULocaleService::get(const Locale& locale, Locale* actualReturn, UErrorCode& status) const
+ICULocaleService::get(ಸ್ಥಿರಾಂಕ Locale& locale, Locale* actualReturn, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ
 {
-    return get(locale, LocaleKey::KIND_ANY, actualReturn, status);
+    ಹಿಂತಿರುಗಿ get(locale, Locale_ಕೀಲಿ::ಬಗೆ_ANY, actualReturn, ಸ್ಥಿತಿ_2);
 }
 
 UObject*
-ICULocaleService::get(const Locale& locale, int32_t kind, Locale* actualReturn, UErrorCode& status) const
+ICULocaleService::get(ಸ್ಥಿರಾಂಕ Locale& locale, int32_t ಬಗೆ, Locale* actualReturn, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ
 {
-    UObject* result = nullptr;
-    if (U_FAILURE(status)) {
-        return result;
+    UObject* ಫಲಿತಾಂಶ = ಶೂನ್ಯಸೂಚಕ;
+    ಆದರೆ (U_FAILURE(ಸ್ಥಿತಿ_2)) {
+        ಹಿಂತಿರುಗಿ ಫಲಿತಾಂಶ;
     }
 
     UnicodeString locName(locale.getName(), -1, US_INV);
-    if (locName.isBogus()) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-    } else {
-        ICUServiceKey* key = createKey(&locName, kind, status);
-        if (key) {
-            if (actualReturn == nullptr) {
-                result = getKey(*key, status);
-            } else {
-                UnicodeString temp;
-                result = getKey(*key, &temp, status);
+    ಆದರೆ (locName.isBogus()) {
+        ಸ್ಥಿತಿ_2 = U_ಸ್ಮರಣೆ_ಹಂಚಿಕೆ_ERROR;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ICUService_ಕೀಲಿ* ಕೀಲಿ = create_ಕೀಲಿ(&locName, ಬಗೆ, ಸ್ಥಿತಿ_2);
+        ಆದರೆ (ಕೀಲಿ) {
+            ಆದರೆ (actualReturn == ಶೂನ್ಯಸೂಚಕ) {
+                ಫಲಿತಾಂಶ = get_ಕೀಲಿ(*ಕೀಲಿ, ಸ್ಥಿತಿ_2);
+            } ಇಲ್ಲದಿದ್ದರೆ {
+                UnicodeString ತಾತ್ಕಾಲಿಕ;
+                ಫಲಿತಾಂಶ = get_ಕೀಲಿ(*ಕೀಲಿ, &ತಾತ್ಕಾಲಿಕ, ಸ್ಥಿತಿ_2);
 
-                if (result != nullptr) {
-                    key->parseSuffix(temp);
-                    LocaleUtility::initLocaleFromName(temp, *actualReturn);
+                ಆದರೆ (ಫಲಿತಾಂಶ != ಶೂನ್ಯಸೂಚಕ) {
+                    ಕೀಲಿ->parseSuffix(ತಾತ್ಕಾಲಿಕ);
+                    LocaleUtility::initLocaleFromName(ತಾತ್ಕಾಲಿಕ, *actualReturn);
                 }
             }
-            delete key;
+            ಅಳಿಸು ಕೀಲಿ;
         }
     }
-    return result;
+    ಹಿಂತಿರುಗಿ ಫಲಿತಾಂಶ;
 }
 
 
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const UnicodeString& locale, 
-    UBool visible, UErrorCode& status)
+URegistry_ಕೀಲಿ
+ICULocaleService::ರಿಜಿಸ್ಟರ್_Instance(UObject* obj_ಗಮ್ಯ_Adopt, ಸ್ಥಿರಾಂಕ UnicodeString& locale, 
+    UBool visible, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2)
 {
     Locale loc;
     LocaleUtility::initLocaleFromName(locale, loc);
-    return registerInstance(objToAdopt, loc, LocaleKey::KIND_ANY, 
-        visible ? LocaleKeyFactory::VISIBLE : LocaleKeyFactory::INVISIBLE, status);
+    ಹಿಂತಿರುಗಿ ರಿಜಿಸ್ಟರ್_Instance(obj_ಗಮ್ಯ_Adopt, loc, Locale_ಕೀಲಿ::ಬಗೆ_ANY, 
+        visible ? Locale_ಕೀಲಿ_Factory::VISIBLE : Locale_ಕೀಲಿ_Factory::INVISIBLE, ಸ್ಥಿತಿ_2);
 }
 
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const Locale& locale, UErrorCode& status)
+URegistry_ಕೀಲಿ
+ICULocaleService::ರಿಜಿಸ್ಟರ್_Instance(UObject* obj_ಗಮ್ಯ_Adopt, ಸ್ಥಿರಾಂಕ Locale& locale, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2)
 {
-    return registerInstance(objToAdopt, locale, LocaleKey::KIND_ANY, LocaleKeyFactory::VISIBLE, status);
+    ಹಿಂತಿರುಗಿ ರಿಜಿಸ್ಟರ್_Instance(obj_ಗಮ್ಯ_Adopt, locale, Locale_ಕೀಲಿ::ಬಗೆ_ANY, Locale_ಕೀಲಿ_Factory::VISIBLE, ಸ್ಥಿತಿ_2);
 }
 
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const Locale& locale, int32_t kind, UErrorCode& status)
+URegistry_ಕೀಲಿ
+ICULocaleService::ರಿಜಿಸ್ಟರ್_Instance(UObject* obj_ಗಮ್ಯ_Adopt, ಸ್ಥಿರಾಂಕ Locale& locale, int32_t ಬಗೆ, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2)
 {
-    return registerInstance(objToAdopt, locale, kind, LocaleKeyFactory::VISIBLE, status);
+    ಹಿಂತಿರುಗಿ ರಿಜಿಸ್ಟರ್_Instance(obj_ಗಮ್ಯ_Adopt, locale, ಬಗೆ, Locale_ಕೀಲಿ_Factory::VISIBLE, ಸ್ಥಿತಿ_2);
 }
 
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const Locale& locale, int32_t kind, int32_t coverage, UErrorCode& status)
+URegistry_ಕೀಲಿ
+ICULocaleService::ರಿಜಿಸ್ಟರ್_Instance(UObject* obj_ಗಮ್ಯ_Adopt, ಸ್ಥಿರಾಂಕ Locale& locale, int32_t ಬಗೆ, int32_t coverage, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2)
 {
-    ICUServiceFactory * factory = new SimpleLocaleKeyFactory(objToAdopt, locale, kind, coverage);
-    if (factory != nullptr) {
-        return registerFactory(factory, status);
+    ICUServiceFactory * factory = ಹೊಸ Simple_Locale_ಕೀಲಿ_Factory(obj_ಗಮ್ಯ_Adopt, locale, ಬಗೆ, coverage);
+    ಆದರೆ (factory != ಶೂನ್ಯಸೂಚಕ) {
+        ಹಿಂತಿರುಗಿ ರಿಜಿಸ್ಟರ್_Factory(factory, ಸ್ಥಿತಿ_2);
     }
-    delete objToAdopt;
-    return nullptr;
+    ಅಳಿಸು obj_ಗಮ್ಯ_Adopt;
+    ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
 }
 
-#if 0
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const UnicodeString& locale, UErrorCode& status)
+#ಆದರೆ 0
+URegistry_ಕೀಲಿ
+ICULocaleService::ರಿಜಿಸ್ಟರ್_Instance(UObject* obj_ಗಮ್ಯ_Adopt, ಸ್ಥಿರಾಂಕ UnicodeString& locale, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2)
 {
-    return registerInstance(objToAdopt, locale, LocaleKey::KIND_ANY, LocaleKeyFactory::VISIBLE, status);
+    ಹಿಂತಿರುಗಿ ರಿಜಿಸ್ಟರ್_Instance(obj_ಗಮ್ಯ_Adopt, locale, Locale_ಕೀಲಿ::ಬಗೆ_ANY, Locale_ಕೀಲಿ_Factory::VISIBLE, ಸ್ಥಿತಿ_2);
 }
 
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const UnicodeString& locale, UBool visible, UErrorCode& status)
+URegistry_ಕೀಲಿ
+ICULocaleService::ರಿಜಿಸ್ಟರ್_Instance(UObject* obj_ಗಮ್ಯ_Adopt, ಸ್ಥಿರಾಂಕ UnicodeString& locale, UBool visible, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2)
 {
-    return registerInstance(objToAdopt, locale, LocaleKey::KIND_ANY,
-                            visible ? LocaleKeyFactory::VISIBLE : LocaleKeyFactory::INVISIBLE,
-                            status);
+    ಹಿಂತಿರುಗಿ ರಿಜಿಸ್ಟರ್_Instance(obj_ಗಮ್ಯ_Adopt, locale, Locale_ಕೀಲಿ::ಬಗೆ_ANY,
+                            visible ? Locale_ಕೀಲಿ_Factory::VISIBLE : Locale_ಕೀಲಿ_Factory::INVISIBLE,
+                            ಸ್ಥಿತಿ_2);
 }
 
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const UnicodeString& locale, int32_t kind, int32_t coverage, UErrorCode& status)
+URegistry_ಕೀಲಿ
+ICULocaleService::ರಿಜಿಸ್ಟರ್_Instance(UObject* obj_ಗಮ್ಯ_Adopt, ಸ್ಥಿರಾಂಕ UnicodeString& locale, int32_t ಬಗೆ, int32_t coverage, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2)
 {
-    ICUServiceFactory * factory = new SimpleLocaleKeyFactory(objToAdopt, locale, kind, coverage);
-    if (factory != nullptr) {
-        return registerFactory(factory, status);
+    ICUServiceFactory * factory = ಹೊಸ Simple_Locale_ಕೀಲಿ_Factory(obj_ಗಮ್ಯ_Adopt, locale, ಬಗೆ, coverage);
+    ಆದರೆ (factory != ಶೂನ್ಯಸೂಚಕ) {
+        ಹಿಂತಿರುಗಿ ರಿಜಿಸ್ಟರ್_Factory(factory, ಸ್ಥಿತಿ_2);
     }
-    delete objToAdopt;
-    return nullptr;
+    ಅಳಿಸು obj_ಗಮ್ಯ_Adopt;
+    ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
 }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-class ServiceEnumeration : public StringEnumeration {
-private:
-    const ICULocaleService* _service;
+ವರ್ಗ ServiceEnumeration : ಸಾರ್ವಜನಿಕ StringEnumeration {
+ಖಾಸಗಿ:
+    ಸ್ಥಿರಾಂಕ ICULocaleService* _service;
     int32_t _timestamp;
     UVector _ids;
     int32_t _pos;
 
-private:
-    ServiceEnumeration(const ICULocaleService* service U_LIFETIME_BOUND, UErrorCode& status)
+ಖಾಸಗಿ:
+    ServiceEnumeration(ಸ್ಥಿರಾಂಕ ICULocaleService* service U_LIFETIME_BOUND, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2)
         : _service(service)
         , _timestamp(service->getTimestamp())
-        , _ids(uprv_deleteUObject, nullptr, status)
+        , _ids(uprv_deleteUObject, ಶೂನ್ಯಸೂಚಕ, ಸ್ಥಿತಿ_2)
         , _pos(0)
     {
-        _service->getVisibleIDs(_ids, status);
+        _service->getVisibleIDs(_ids, ಸ್ಥಿತಿ_2);
     }
 
-    ServiceEnumeration(const ServiceEnumeration &other, UErrorCode &status)
+    ServiceEnumeration(ಸ್ಥಿರಾಂಕ ServiceEnumeration &other, UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2)
         : _service(other._service)
         , _timestamp(other._timestamp)
-        , _ids(uprv_deleteUObject, nullptr, status)
+        , _ids(uprv_deleteUObject, ಶೂನ್ಯಸೂಚಕ, ಸ್ಥಿತಿ_2)
         , _pos(0)
     {
-        if(U_SUCCESS(status)) {
+        ಆದರೆ(U_SUCCESS(ಸ್ಥಿತಿ_2)) {
             int32_t i, length;
 
             length = other._ids.size();
-            for(i = 0; i < length; ++i) {
-                LocalPointer<UnicodeString> clonedId(static_cast<UnicodeString*>(other._ids.elementAt(i))->clone(), status);
-                _ids.adoptElement(clonedId.orphan(), status);
+            ಗಾಗಿ(i = 0; i < length; ++i) {
+                Local_ಸೂಚಕ<UnicodeString> clonedId(static_cast<UnicodeString*>(other._ids.elementAt(i))->clone(), ಸ್ಥಿತಿ_2);
+                _ids.adoptElement(clonedId.orphan(), ಸ್ಥಿತಿ_2);
             }
 
-            if(U_SUCCESS(status)) {
+            ಆದರೆ(U_SUCCESS(ಸ್ಥಿತಿ_2)) {
                 _pos = other._pos;
             }
         }
     }
 
-public:
-    static ServiceEnumeration* create(const ICULocaleService* service U_LIFETIME_BOUND) {
-        UErrorCode status = U_ZERO_ERROR;
-        ServiceEnumeration* result = new ServiceEnumeration(service, status);
-        if (U_SUCCESS(status)) {
-            return result;
+ಸಾರ್ವಜನಿಕ:
+    ಸ್ಥಿರ ServiceEnumeration* create(ಸ್ಥಿರಾಂಕ ICULocaleService* service U_LIFETIME_BOUND) {
+        UError_ಸಂಕೇತ ಸ್ಥಿತಿ_2 = U_ZERO_ERROR;
+        ServiceEnumeration* ಫಲಿತಾಂಶ = ಹೊಸ ServiceEnumeration(service, ಸ್ಥಿತಿ_2);
+        ಆದರೆ (U_SUCCESS(ಸ್ಥಿತಿ_2)) {
+            ಹಿಂತಿರುಗಿ ಫಲಿತಾಂಶ;
         }
-        delete result;
-        return nullptr;
+        ಅಳಿಸು ಫಲಿತಾಂಶ;
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
 
-    virtual ~ServiceEnumeration();
+    ವಾಸ್ತವಿಕ ~ServiceEnumeration();
 
-    virtual StringEnumeration *clone() const override {
-        UErrorCode status = U_ZERO_ERROR;
-        ServiceEnumeration *cl = new ServiceEnumeration(*this, status);
-        if(U_FAILURE(status)) {
-            delete cl;
-            cl = nullptr;
+    ವಾಸ್ತವಿಕ StringEnumeration *clone() ಸ್ಥಿರಾಂಕ override {
+        UError_ಸಂಕೇತ ಸ್ಥಿತಿ_2 = U_ZERO_ERROR;
+        ServiceEnumeration *cl = ಹೊಸ ServiceEnumeration(*ಇದು, ಸ್ಥಿತಿ_2);
+        ಆದರೆ(U_FAILURE(ಸ್ಥಿತಿ_2)) {
+            ಅಳಿಸು cl;
+            cl = ಶೂನ್ಯಸೂಚಕ;
         }
-        return cl;
+        ಹಿಂತಿರುಗಿ cl;
     }
 
-    UBool upToDate(UErrorCode& status) const {
-        if (U_SUCCESS(status)) {
-            if (_timestamp == _service->getTimestamp()) {
-                return true;
+    UBool ಮೇಲೆ_ಗಮ್ಯ_Date(UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ {
+        ಆದರೆ (U_SUCCESS(ಸ್ಥಿತಿ_2)) {
+            ಆದರೆ (_timestamp == _service->getTimestamp()) {
+                ಹಿಂತಿರುಗಿ ನಿಜ;
             }
-            status = U_ENUM_OUT_OF_SYNC_ERROR;
+            ಸ್ಥಿತಿ_2 = U_ENUM_ಹೊರಹೋಗು_ದ_SYNC_ERROR;
         }
-        return false;
+        ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
     }
 
-    virtual int32_t count(UErrorCode& status) const override {
-        return upToDate(status) ? _ids.size() : 0;
+    ವಾಸ್ತವಿಕ int32_t count(UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ override {
+        ಹಿಂತಿರುಗಿ ಮೇಲೆ_ಗಮ್ಯ_Date(ಸ್ಥಿತಿ_2) ? _ids.size() : 0;
     }
 
-    virtual const UnicodeString* snext(UErrorCode& status) U_LIFETIME_BOUND override {
-        if (upToDate(status) && (_pos < _ids.size())) {
-            return static_cast<const UnicodeString*>(_ids[_pos++]);
+    ವಾಸ್ತವಿಕ ಸ್ಥಿರಾಂಕ UnicodeString* snext(UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) U_LIFETIME_BOUND override {
+        ಆದರೆ (ಮೇಲೆ_ಗಮ್ಯ_Date(ಸ್ಥಿತಿ_2) && (_pos < _ids.size())) {
+            ಹಿಂತಿರುಗಿ static_cast<ಸ್ಥಿರಾಂಕ UnicodeString*>(_ids[_pos++]);
         }
-        return nullptr;
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
 
-    virtual void reset(UErrorCode& status) override {
-        if (status == U_ENUM_OUT_OF_SYNC_ERROR) {
-            status = U_ZERO_ERROR;
+    ವಾಸ್ತವಿಕ ಶೂನ್ಯ reset(UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) override {
+        ಆದರೆ (ಸ್ಥಿತಿ_2 == U_ENUM_ಹೊರಹೋಗು_ದ_SYNC_ERROR) {
+            ಸ್ಥಿತಿ_2 = U_ZERO_ERROR;
         }
-        if (U_SUCCESS(status)) {
+        ಆದರೆ (U_SUCCESS(ಸ್ಥಿತಿ_2)) {
             _timestamp = _service->getTimestamp();
             _pos = 0;
-            _service->getVisibleIDs(_ids, status);
+            _service->getVisibleIDs(_ids, ಸ್ಥಿತಿ_2);
         }
     }
 
-public:
-    static UClassID U_EXPORT2 getStaticClassID();
-    virtual UClassID getDynamicClassID() const override;
+ಸಾರ್ವಜನಿಕ:
+    ಸ್ಥಿರ UClassID U_EXPORT2 getStaticClassID();
+    ವಾಸ್ತವಿಕ UClassID getDynamicClassID() ಸ್ಥಿರಾಂಕ override;
 };
 
 ServiceEnumeration::~ServiceEnumeration() {}
@@ -254,43 +254,43 @@ ServiceEnumeration::~ServiceEnumeration() {}
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ServiceEnumeration)
 
 StringEnumeration*
-ICULocaleService::getAvailableLocales() const U_LIFETIME_BOUND
+ICULocaleService::get_ಲಭ್ಯ_Locales() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND
 {
-    return ServiceEnumeration::create(this);
+    ಹಿಂತಿರುಗಿ ServiceEnumeration::create(ಇದು);
 }
 
-const UnicodeString&
-ICULocaleService::validateFallbackLocale() const
+ಸ್ಥಿರಾಂಕ UnicodeString&
+ICULocaleService::validateFallbackLocale() ಸ್ಥಿರಾಂಕ
 {
-    const Locale&     loc    = Locale::getDefault();
-    ICULocaleService* ncThis = const_cast<ICULocaleService*>(this);
-    static UMutex llock;
+    ಸ್ಥಿರಾಂಕ Locale&     loc    = Locale::getDefault();
+    ICULocaleService* ncThis = const_cast<ICULocaleService*>(ಇದು);
+    ಸ್ಥಿರ UMutex llock;
     {
         Mutex mutex(&llock);
-        if (loc != fallbackLocale) {
+        ಆದರೆ (loc != fallbackLocale) {
             ncThis->fallbackLocale = loc;
             LocaleUtility::initNameFromLocale(loc, ncThis->fallbackLocaleName);
             ncThis->clearServiceCache();
         }
     }
-    return fallbackLocaleName;
+    ಹಿಂತಿರುಗಿ fallbackLocaleName;
 }
 
-ICUServiceKey*
-ICULocaleService::createKey(const UnicodeString* id, UErrorCode& status) const
+ICUService_ಕೀಲಿ*
+ICULocaleService::create_ಕೀಲಿ(ಸ್ಥಿರಾಂಕ UnicodeString* id, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ
 {
-    return LocaleKey::createWithCanonicalFallback(id, &validateFallbackLocale(), status);
+    ಹಿಂತಿರುಗಿ Locale_ಕೀಲಿ::createWithCanonicalFallback(id, &validateFallbackLocale(), ಸ್ಥಿತಿ_2);
 }
 
-ICUServiceKey*
-ICULocaleService::createKey(const UnicodeString* id, int32_t kind, UErrorCode& status) const
+ICUService_ಕೀಲಿ*
+ICULocaleService::create_ಕೀಲಿ(ಸ್ಥಿರಾಂಕ UnicodeString* id, int32_t ಬಗೆ, UError_ಸಂಕೇತ& ಸ್ಥಿತಿ_2) ಸ್ಥಿರಾಂಕ
 {
-    return LocaleKey::createWithCanonicalFallback(id, &validateFallbackLocale(), kind, status);
+    ಹಿಂತಿರುಗಿ Locale_ಕೀಲಿ::createWithCanonicalFallback(id, &validateFallbackLocale(), ಬಗೆ, ಸ್ಥಿತಿ_2);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
 /* !UCONFIG_NO_SERVICE */
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 

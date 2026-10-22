@@ -14,16 +14,16 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __UCHARSTRIEBUILDER_H__
-#define __UCHARSTRIEBUILDER_H__
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __UCHARSTRIEBUILDER_H__
+#ವ್ಯಾಖ್ಯಾನಿಸು __UCHARSTRIEBUILDER_H__
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ಆದರೆ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/stringtriebuilder.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/unistr.h"
+#ಅನ್ತರ್ಭಾವ "unicode/stringtriebuilder.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ucharstrie.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unistr.h"
 
 /**
  * \file
@@ -40,20 +40,20 @@ class UCharsTrieElement;
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API UCharsTrieBuilder : public StringTrieBuilder {
-public:
+class U_COMMON_API UCharsTrieBuilder : ಸಾರ್ವಜನಿಕ StringTrieBuilder {
+ಸಾರ್ವಜನಿಕ:
     /**
      * Constructs an empty builder.
      * @param errorCode Standard ICU error code.
      * @stable ICU 4.8
      */
-    UCharsTrieBuilder(UErrorCode &errorCode);
+    UCharsTrieBuilder(UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
     /**
      * Destructor.
      * @stable ICU 4.8
      */
-    virtual ~UCharsTrieBuilder();
+    ವಾಸ್ತವಿಕ ~UCharsTrieBuilder();
 
     /**
      * Adds a (string, value) pair.
@@ -69,9 +69,9 @@ public:
      * @return *this
      * @stable ICU 4.8
      */
-    UCharsTrieBuilder& add(const UnicodeString& s,
-                           int32_t value,
-                           UErrorCode& errorCode) U_LIFETIME_BOUND;
+    UCharsTrieBuilder& ಕೂಡಿಸು(ಸ್ಥಿರಾಂಕ UnicodeString& s,
+                           int32_t ಮೌಲ್ಯ_2,
+                           UError_ಸಂಕೇತ& error_ಸಂಕೇತ) U_LIFETIME_BOUND;
 
     /**
      * Builds a UCharsTrie for the add()ed data.
@@ -91,7 +91,7 @@ public:
      * @return A new UCharsTrie for the add()ed data.
      * @stable ICU 4.8
      */
-    UCharsTrie *build(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
+    UCharsTrie *build(UStringTrieBuildOption buildOption, UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
     /**
      * Builds a UCharsTrie for the add()ed data and char16_t-serializes it.
@@ -119,8 +119,8 @@ public:
      * @stable ICU 4.8
      */
     UnicodeString& buildUnicodeString(UStringTrieBuildOption buildOption,
-                                      UnicodeString& result U_LIFETIME_BOUND,
-                                      UErrorCode& errorCode) U_LIFETIME_BOUND;
+                                      UnicodeString& ಫಲಿತಾಂಶ U_LIFETIME_BOUND,
+                                      UError_ಸಂಕೇತ& error_ಸಂಕೇತ) U_LIFETIME_BOUND;
 
     /**
      * Removes all (string, value) pairs.
@@ -129,68 +129,68 @@ public:
      * @stable ICU 4.8
      */
     UCharsTrieBuilder& clear() U_LIFETIME_BOUND {
-        strings.remove();
-        elementsLength=0;
-        ucharsLength=0;
-        return *this;
+        ಅಕ್ಷರಸರಣಿಗಳು.remove();
+        elements_ಉದ್ದಳತೆ=0;
+        uchars_ಉದ್ದಳತೆ=0;
+        ಹಿಂತಿರುಗಿ *this;
     }
 
-private:
-    UCharsTrieBuilder(const UCharsTrieBuilder &other) = delete;  // no copy constructor
-    UCharsTrieBuilder &operator=(const UCharsTrieBuilder &other) = delete;  // no assignment operator
+ಖಾಸಗಿ:
+    UCharsTrieBuilder(ಸ್ಥಿರಾಂಕ UCharsTrieBuilder &other) = delete;  // no copy constructor
+    UCharsTrieBuilder &ಕ್ರಿಯಾಕಾರಕ=(ಸ್ಥಿರಾಂಕ UCharsTrieBuilder &other) = delete;  // no assignment operator
 
-    void buildUChars(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
+    ಶೂನ್ಯ buildUChars(UStringTrieBuildOption buildOption, UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
-    virtual int32_t getElementStringLength(int32_t i) const override;
-    virtual char16_t getElementUnit(int32_t i, int32_t unitIndex) const override;
-    virtual int32_t getElementValue(int32_t i) const override;
+    ವಾಸ್ತವಿಕ int32_t get_Element_String_ಉದ್ದಳತೆ(int32_t i) ಸ್ಥಿರಾಂಕ override;
+    ವಾಸ್ತವಿಕ char16_t getElementUnit(int32_t i, int32_t unit_ಸೂಚ್ಯಂಕ) ಸ್ಥಿರಾಂಕ override;
+    ವಾಸ್ತವಿಕ int32_t get_Element_ಮೌಲ್ಯ(int32_t i) ಸ್ಥಿರಾಂಕ override;
 
-    virtual int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) const override;
+    ವಾಸ್ತವಿಕ int32_t get_ಎಲ್ಲೆ_ದ_ರೇಖೀಯ_ಹೊಂದಿಕೆ(int32_t ಮೊದಲ, int32_t ಕೊನೆಯ, int32_t unit_ಸೂಚ್ಯಂಕ) ಸ್ಥಿರಾಂಕ override;
 
-    virtual int32_t countElementUnits(int32_t start, int32_t limit, int32_t unitIndex) const override;
-    virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t count) const override;
-    virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) const override;
+    ವಾಸ್ತವಿಕ int32_t ಎಣಿಕೆ_Element_Units(int32_t ಆರಂಭ, int32_t ಎಲ್ಲೆ, int32_t unit_ಸೂಚ್ಯಂಕ) ಸ್ಥಿರಾಂಕ override;
+    ವಾಸ್ತವಿಕ int32_t skipElementsBySomeUnits(int32_t i, int32_t unit_ಸೂಚ್ಯಂಕ, int32_t ಎಣಿಕೆ_2) ಸ್ಥಿರಾಂಕ override;
+    ವಾಸ್ತವಿಕ int32_t ಸೂಚ್ಯಂಕ_ದ_Element_With_ಮುಂದಿನ_Unit(int32_t i, int32_t unit_ಸೂಚ್ಯಂಕ, char16_t unit) ಸ್ಥಿರಾಂಕ override;
 
-    virtual UBool matchNodesCanHaveValues() const override { return true; }
+    ವಾಸ್ತವಿಕ UBool ಹೊಂದಿಕೆ_Nodes_Can_Have_ಮೌಲ್ಯಗಳು() ಸ್ಥಿರಾಂಕ override { ಹಿಂತಿರುಗಿ true; }
 
-    virtual int32_t getMaxBranchLinearSubNodeLength() const override { return UCharsTrie::kMaxBranchLinearSubNodeLength; }
-    virtual int32_t getMinLinearMatch() const override { return UCharsTrie::kMinLinearMatch; }
-    virtual int32_t getMaxLinearMatchLength() const override { return UCharsTrie::kMaxLinearMatchLength; }
+    ವಾಸ್ತವಿಕ int32_t get_Max_Branch_ರೇಖೀಯ_Sub_ಗಂಟು_ಉದ್ದಳತೆ() ಸ್ಥಿರಾಂಕ override { ಹಿಂತಿರುಗಿ UCharsTrie::k_Max_Branch_ರೇಖೀಯ_Sub_ಗಂಟು_ಉದ್ದಳತೆ; }
+    ವಾಸ್ತವಿಕ int32_t get_Min_ರೇಖೀಯ_ಹೊಂದಿಕೆ() ಸ್ಥಿರಾಂಕ override { ಹಿಂತಿರುಗಿ UCharsTrie::k_Min_ರೇಖೀಯ_ಹೊಂದಿಕೆ; }
+    ವಾಸ್ತವಿಕ int32_t get_Max_ರೇಖೀಯ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ() ಸ್ಥಿರಾಂಕ override { ಹಿಂತಿರುಗಿ UCharsTrie::k_Max_ರೇಖೀಯ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ; }
 
-    class UCTLinearMatchNode : public LinearMatchNode {
-    public:
-        UCTLinearMatchNode(const char16_t *units, int32_t len, Node *nextNode);
-        virtual bool operator==(const Node &other) const override;
-        virtual void write(StringTrieBuilder &builder) override;
-    private:
-        const char16_t *s;
+    class UCTLinear_ಹೊಂದಿಕೆ_ಗಂಟು : ಸಾರ್ವಜನಿಕ ರೇಖೀಯ_ಹೊಂದಿಕೆ_ಗಂಟು {
+    ಸಾರ್ವಜನಿಕ:
+        UCTLinear_ಹೊಂದಿಕೆ_ಗಂಟು(ಸ್ಥಿರಾಂಕ char16_t *units, int32_t len, ಗಂಟು_2 *ಮುಂದಿನ_ಗಂಟು);
+        ವಾಸ್ತವಿಕ bool ಕ್ರಿಯಾಕಾರಕ==(ಸ್ಥಿರಾಂಕ ಗಂಟು_2 &other) ಸ್ಥಿರಾಂಕ override;
+        ವಾಸ್ತವಿಕ ಶೂನ್ಯ ಲಿಖ(StringTrieBuilder &builder) override;
+    ಖಾಸಗಿ:
+        ಸ್ಥಿರಾಂಕ char16_t *s;
     };
 
-    virtual Node *createLinearMatchNode(int32_t i, int32_t unitIndex, int32_t length,
-                                        Node *nextNode) const override;
+    ವಾಸ್ತವಿಕ ಗಂಟು_2 *create_ರೇಖೀಯ_ಹೊಂದಿಕೆ_ಗಂಟು(int32_t i, int32_t unit_ಸೂಚ್ಯಂಕ, int32_t ಉದ್ದಳತೆ,
+                                        ಗಂಟು_2 *ಮುಂದಿನ_ಗಂಟು) ಸ್ಥಿರಾಂಕ override;
 
-    UBool ensureCapacity(int32_t length);
-    virtual int32_t write(int32_t unit) override;
-    int32_t write(const char16_t *s, int32_t length);
-    virtual int32_t writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) override;
-    virtual int32_t writeValueAndFinal(int32_t i, UBool isFinal) override;
-    virtual int32_t writeValueAndType(UBool hasValue, int32_t value, int32_t node) override;
-    virtual int32_t writeDeltaTo(int32_t jumpTarget) override;
+    UBool ensure_ಸಾಮರ್ಥ್ಯ(int32_t ಉದ್ದಳತೆ);
+    ವಾಸ್ತವಿಕ int32_t ಲಿಖ(int32_t unit) override;
+    int32_t ಲಿಖ(ಸ್ಥಿರಾಂಕ char16_t *s, int32_t ಉದ್ದಳತೆ);
+    ವಾಸ್ತವಿಕ int32_t writeElementUnits(int32_t i, int32_t unit_ಸೂಚ್ಯಂಕ, int32_t ಉದ್ದಳತೆ) override;
+    ವಾಸ್ತವಿಕ int32_t write_ಮೌಲ್ಯ_And_Final(int32_t i, UBool isFinal) override;
+    ವಾಸ್ತವಿಕ int32_t write_ಮೌಲ್ಯ_And_Type(UBool has_ಮೌಲ್ಯ, int32_t ಮೌಲ್ಯ_2, int32_t ಗಂಟು) override;
+    ವಾಸ್ತವಿಕ int32_t write_Delta_ಗಮ್ಯ(int32_t jump_ಗುರಿ) override;
 
-    UnicodeString strings;
+    UnicodeString ಅಕ್ಷರಸರಣಿಗಳು;
     UCharsTrieElement *elements;
-    int32_t elementsCapacity;
-    int32_t elementsLength;
+    int32_t elements_ಸಾಮರ್ಥ್ಯ;
+    int32_t elements_ಉದ್ದಳತೆ;
 
     // char16_t serialization of the trie.
     // Grows from the back: ucharsLength measures from the end of the buffer!
     char16_t *uchars;
-    int32_t ucharsCapacity;
-    int32_t ucharsLength;
+    int32_t uchars_ಸಾಮರ್ಥ್ಯ;
+    int32_t uchars_ಉದ್ದಳತೆ;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ಆದರೆ_ಅಂತ್ಯ /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __UCHARSTRIEBUILDER_H__
+#ಆದರೆ_ಅಂತ್ಯ  // __UCHARSTRIEBUILDER_H__

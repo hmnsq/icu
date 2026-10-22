@@ -15,10 +15,10 @@
 ******************************************************************************
 */
 
-#ifndef USC_IMPL_H
-#define USC_IMPL_H
-#include "unicode/utypes.h"
-#include "unicode/uscript.h"
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ USC_IMPL_H
+#ವ್ಯಾಖ್ಯಾನಿಸು USC_IMPL_H
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uscript.h"
 
 /**
  * <code>UScriptRun</code> is used to find runs of characters in
@@ -54,9 +54,9 @@
  *  }
  * </pre>
  */
-struct UScriptRun;
+ರಚನೆ UScript_ಸತತ;
 
-typedef struct UScriptRun UScriptRun;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ UScript_ಸತತ UScript_ಸತತ;
 
 /**
  * Create a <code>UScriptRun</code> object for iterating over the given text. This object must
@@ -77,8 +77,8 @@ typedef struct UScriptRun UScriptRun;
  * @return the address of <code>UScriptRun</code> object which will iterate over the text,
  *         or <code>NULL</code> if the operation failed.
  */
-U_CAPI UScriptRun * U_EXPORT2
-uscript_openRun(const UChar *src, int32_t length, UErrorCode *pErrorCode);
+U_CAPI UScript_ಸತತ * U_EXPORT2
+uscript_open_ಸತತ(ಸ್ಥಿರಾಂಕ UChar *src, int32_t ಉದ್ದಳತೆ, UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
 /**
  * Frees the given <code>UScriptRun</code> object and any storage associated with it.
@@ -86,8 +86,8 @@ uscript_openRun(const UChar *src, int32_t length, UErrorCode *pErrorCode);
  *
  * @param scriptRun is the <code>UScriptRun</code> object which will be freed.
  */
-U_CAPI void U_EXPORT2
-uscript_closeRun(UScriptRun *scriptRun);
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+uscript_close_ಸತತ(UScript_ಸತತ *script_ಸತತ);
 
 /**
  * Reset the <code>UScriptRun</code> object so that it will start iterating from
@@ -95,8 +95,8 @@ uscript_closeRun(UScriptRun *scriptRun);
  *
  * @param scriptRun is the address of the <code>UScriptRun</code> object to be reset.
  */
-U_CAPI void U_EXPORT2
-uscript_resetRun(UScriptRun *scriptRun);
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+uscript_reset_ಸತತ(UScript_ಸತತ *script_ಸತತ);
 
 /**
  * Change the text over which the given <code>UScriptRun</code> object iterates.
@@ -113,8 +113,8 @@ uscript_resetRun(UScriptRun *scriptRun);
  *        indicates a failure on entry, the function will immediately return.
  *        On exit the value will indicate the success of the operation.
  */
-U_CAPI void U_EXPORT2
-uscript_setRunText(UScriptRun *scriptRun, const UChar *src, int32_t length, UErrorCode *pErrorCode);
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+uscript_ಗಣ_ಸತತ_ಪಠ್ಯ(UScript_ಸತತ *script_ಸತತ, ಸ್ಥಿರಾಂಕ UChar *src, int32_t ಉದ್ದಳತೆ, UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
 /**
  * Advance the <code>UScriptRun</code> object to the next script run, return the start and limit
@@ -134,6 +134,6 @@ uscript_setRunText(UScriptRun *scriptRun, const UChar *src, int32_t length, UErr
  * @return true if there was another script run.
  */
 U_CAPI UBool U_EXPORT2
-uscript_nextRun(UScriptRun *scriptRun, int32_t *pRunStart, int32_t *pRunLimit, UScriptCode *pRunScript);
+uscript_ಮುಂದಿನ_ಸತತ(UScript_ಸತತ *script_ಸತತ, int32_t *p_ಸತತ_ಆರಂಭ, int32_t *p_ಸತತ_ಎಲ್ಲೆ, UScript_ಸಂಕೇತ *p_ಸತತ_Script);
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

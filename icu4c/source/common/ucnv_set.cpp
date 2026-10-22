@@ -20,51 +20,51 @@
 *   implementation functions on the USet implementation.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/uset.h"
-#include "unicode/ucnv.h"
-#include "ucnv_bld.h"
-#include "uset_imp.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uset.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ucnv.h"
+#ಅನ್ತರ್ಭಾವ "ucnv_bld.h"
+#ಅನ್ತರ್ಭಾವ "uset_imp.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ಆದರೆ !UCONFIG_NO_CONVERSION
 
-U_CAPI void U_EXPORT2
-ucnv_getUnicodeSet(const UConverter *cnv,
-                   USet *setFillIn,
-                   UConverterUnicodeSet whichSet,
-                   UErrorCode *pErrorCode) {
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+ucnv_get_Unicode_ಗಣ(ಸ್ಥಿರಾಂಕ UConverter *cnv,
+                   USet *ಗಣ_Fill_ಒಳ,
+                   UConverter_Unicode_ಗಣ which_ಗಣ,
+                   UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
     /* argument checking */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    ಆದರೆ(p_Error_ಸಂಕೇತ==ಶೂನ್ಯಸೂಚಕ || U_FAILURE(*p_Error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ;
     }
-    if(cnv==nullptr || setFillIn==nullptr || whichSet<UCNV_ROUNDTRIP_SET || UCNV_SET_COUNT<=whichSet) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+    ಆದರೆ(cnv==ಶೂನ್ಯಸೂಚಕ || ಗಣ_Fill_ಒಳ==ಶೂನ್ಯಸೂಚಕ || which_ಗಣ<UCNV_ROUNDTRIP_ಗಣ || UCNV_ಗಣ_ಎಣಿಕೆ<=which_ಗಣ) {
+        *p_Error_ಸಂಕೇತ=U_ILLEGAL_ವಾದ_ERROR;
+        ಹಿಂತಿರುಗಿ;
     }
 
     /* does this converter support this function? */
-    if(cnv->sharedData->impl->getUnicodeSet==nullptr) {
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return;
+    ಆದರೆ(cnv->shared_ದತ್ತಾಂಶ->impl->get_Unicode_ಗಣ==ಶೂನ್ಯಸೂಚಕ) {
+        *p_Error_ಸಂಕೇತ=U_UNSUPPORTED_ERROR;
+        ಹಿಂತಿರುಗಿ;
     }
 
     {
         USetAdder sa={
-            nullptr,
-            uset_add,
-            uset_addRange,
-            uset_addString,
+            ಶೂನ್ಯಸೂಚಕ,
+            uset_ಕೂಡಿಸು,
+            uset_ಕೂಡಿಸು_Range,
+            uset_ಕೂಡಿಸು_String,
             uset_remove,
             uset_removeRange
         };
-        sa.set=setFillIn;
+        sa.ಗಣ=ಗಣ_Fill_ಒಳ;
 
         /* empty the set */
-        uset_clear(setFillIn);
+        uset_clear(ಗಣ_Fill_ಒಳ);
 
         /* call the converter to add the code points it supports */
-        cnv->sharedData->impl->getUnicodeSet(cnv, &sa, whichSet, pErrorCode);
+        cnv->shared_ದತ್ತಾಂಶ->impl->get_Unicode_ಗಣ(cnv, &sa, which_ಗಣ, p_Error_ಸಂಕೇತ);
     }
 }
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

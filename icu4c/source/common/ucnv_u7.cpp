@@ -16,15 +16,15 @@
 *   UTF-7 converter implementation. Used to be in ucnv_utf.c.
 */
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#ಆದರೆ !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
-#include "cmemory.h"
-#include "unicode/ucnv.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "uassert.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ucnv.h"
+#ಅನ್ತರ್ಭಾವ "ucnv_bld.h"
+#ಅನ್ತರ್ಭಾವ "ucnv_cnv.h"
+#ಅನ್ತರ್ಭಾವ "uassert.h"
 
 /* UTF-7 -------------------------------------------------------------------- */
 
@@ -70,7 +70,7 @@
  * - DEL
  * - all codes beyond US-ASCII, i.e. all >127
  */
-#define inSetD(c) \
+#ವ್ಯಾಖ್ಯಾನಿಸು ಒಳ_ಗಣ_D(c) \
     ((uint8_t)((c)-97)<26 || (uint8_t)((c)-65)<26 || /* letters */ \
      (uint8_t)((c)-48)<10 ||    /* digits */ \
      (uint8_t)((c)-39)<3 ||     /* '() */ \
@@ -78,7 +78,7 @@
      (c)==58 || (c)==63         /* :? */ \
     )
 
-#define inSetO(c) \
+#ವ್ಯಾಖ್ಯಾನಿಸು ಒಳ_ಗಣ_O(c) \
     ((uint8_t)((c)-33)<6 ||         /* !"#$%& */ \
      (uint8_t)((c)-59)<4 ||         /* ;<=> */ \
      (uint8_t)((c)-93)<4 ||         /* ]^_` */ \
@@ -86,19 +86,19 @@
      (c)==42 || (c)==64 || (c)==91  /* *@[ */ \
     )
 
-#define isCRLFTAB(c) ((c)==13 || (c)==10 || (c)==9)
-#define isCRLFSPTAB(c) ((c)==32 || (c)==13 || (c)==10 || (c)==9)
+#ವ್ಯಾಖ್ಯಾನಿಸು isCRLFTAB(c) ((c)==13 || (c)==10 || (c)==9)
+#ವ್ಯಾಖ್ಯಾನಿಸು isCRLFSPTAB(c) ((c)==32 || (c)==13 || (c)==10 || (c)==9)
 
-#define PLUS  43
-#define MINUS 45
-#define BACKSLASH 92
-#define TILDE 126
+#ವ್ಯಾಖ್ಯಾನಿಸು PLUS  43
+#ವ್ಯಾಖ್ಯಾನಿಸು MINUS 45
+#ವ್ಯಾಖ್ಯಾನಿಸು BACKSLASH 92
+#ವ್ಯಾಖ್ಯಾನಿಸು TILDE 126
 
 /* legal byte values: all US-ASCII graphic characters from space to before tilde, and CR LF TAB */
-#define isLegalUTF7(c) (((uint8_t)((c)-32)<94 && (c)!=BACKSLASH) || isCRLFTAB(c))
+#ವ್ಯಾಖ್ಯಾನಿಸು isLegalUTF7(c) (((uint8_t)((c)-32)<94 && (c)!=BACKSLASH) || isCRLFTAB(c))
 
 /* encode directly sets D and O and CR LF SP TAB */
-static const UBool encodeDirectlyMaximum[128]={
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ UBool encode_Directly_ಗರಿಷ್ಠ[128]={
  /* 0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -114,7 +114,7 @@ static const UBool encodeDirectlyMaximum[128]={
 };
 
 /* encode directly set D and CR LF SP TAB but not set O */
-static const UBool encodeDirectlyRestricted[128]={
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ UBool encodeDirectlyRestricted[128]={
  /* 0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f */
     0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -129,8 +129,8 @@ static const UBool encodeDirectlyRestricted[128]={
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0
 };
 
-static const uint8_t
-toBase64[64]={
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint8_t
+ಗಮ್ಯ_Base64[64]={
     /* A-Z */
     65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77,
     78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
@@ -143,7 +143,7 @@ toBase64[64]={
     43, 47
 };
 
-static const int8_t
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int8_t
 fromBase64[128]={
     /* C0 controls, -1 for legal ones (CR LF TAB), -3 for illegal ones */
     -3, -3, -3, -3, -3, -3, -3, -3, -3, -1, -1, -3, -3, -1, -3, -3,
@@ -180,81 +180,81 @@ fromBase64[128]={
  */
 
 U_CDECL_BEGIN
-static void U_CALLCONV
+ಸ್ಥಿರ ಶೂನ್ಯ U_CALLCONV
 _UTF7Reset(UConverter *cnv, UConverterResetChoice choice) {
-    if(choice<=UCNV_RESET_TO_UNICODE) {
+    ಆದರೆ(choice<=UCNV_RESET_ಗಮ್ಯ_UNICODE) {
         /* reset toUnicode */
-        cnv->toUnicodeStatus=0x1000000; /* inDirectMode=true */
-        cnv->toULength=0;
+        cnv->ಗಮ್ಯ_Unicode_ಸ್ಥಿತಿ=0x1000000; /* inDirectMode=true */
+        cnv->ಗಮ್ಯ_ULength=0;
     }
-    if(choice!=UCNV_RESET_TO_UNICODE) {
+    ಆದರೆ(choice!=UCNV_RESET_ಗಮ್ಯ_UNICODE) {
         /* reset fromUnicode */
-        cnv->fromUnicodeStatus=(cnv->fromUnicodeStatus&0xf0000000)|0x1000000; /* keep version, inDirectMode=true */
+        cnv->from_Unicode_ಸ್ಥಿತಿ=(cnv->from_Unicode_ಸ್ಥಿತಿ&0xf0000000)|0x1000000; /* keep version, inDirectMode=true */
     }
 }
 
-static void U_CALLCONV
+ಸ್ಥಿರ ಶೂನ್ಯ U_CALLCONV
 _UTF7Open(UConverter *cnv,
-          UConverterLoadArgs *pArgs,
-          UErrorCode *pErrorCode) {
-    (void)pArgs;
-    if(UCNV_GET_VERSION(cnv)<=1) {
+          UConverter_ತುಂಬು_ವಾದಗಳು *p_ವಾದಗಳು,
+          UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    (ಶೂನ್ಯ)p_ವಾದಗಳು;
+    ಆದರೆ(UCNV_GET_ಆವೃತ್ತಿ(cnv)<=1) {
         /* TODO(markus): Should just use cnv->options rather than copying the version number. */
-        cnv->fromUnicodeStatus=UCNV_GET_VERSION(cnv)<<28;
+        cnv->from_Unicode_ಸ್ಥಿತಿ=UCNV_GET_ಆವೃತ್ತಿ(cnv)<<28;
         _UTF7Reset(cnv, UCNV_RESET_BOTH);
-    } else {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        *p_Error_ಸಂಕೇತ=U_ILLEGAL_ವಾದ_ERROR;
     }
 }
 
-static void U_CALLCONV
-_UTF7ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                          UErrorCode *pErrorCode) {
+ಸ್ಥಿರ ಶೂನ್ಯ U_CALLCONV
+UTF7_ಗಮ್ಯ_Unicode_With_Offsets(UConverter_ಗಮ್ಯ_Unicode_ವಾದಗಳು *p_ವಾದಗಳು,
+                          UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
     UConverter *cnv;
-    const uint8_t *source, *sourceLimit;
-    char16_t *target;
-    const char16_t *targetLimit;
+    ಸ್ಥಿರಾಂಕ uint8_t *ಮೂಲ, *ಮೂಲ_ಎಲ್ಲೆ;
+    char16_t *ಗುರಿ;
+    ಸ್ಥಿರಾಂಕ char16_t *ಗುರಿ_ಎಲ್ಲೆ;
     int32_t *offsets;
 
-    uint8_t *bytes;
-    uint8_t byteIndex;
+    uint8_t *ಬೈಟುಗಳು;
+    uint8_t byte_ಸೂಚ್ಯಂಕ;
 
-    int32_t length, targetCapacity;
+    int32_t length, ಗುರಿ_ಸಾಮರ್ಥ್ಯ;
 
     /* UTF-7 state */
-    uint16_t bits;
+    uint16_t ಬಿಟ್ಟುಗಳು;
     int8_t base64Counter;
-    UBool inDirectMode;
+    UBool ಒಳ_ನೇರ_ಬಹುಲಕ;
 
-    int8_t base64Value;
+    int8_t base64_ಮೌಲ್ಯ;
 
-    int32_t sourceIndex, nextSourceIndex;
+    int32_t ಮೂಲ_ಸೂಚ್ಯಂಕ, ಮುಂದಿನ_ಮೂಲ_ಸೂಚ್ಯಂಕ;
 
     uint8_t b;
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_ವಾದಗಳು->converter;
 
-    source=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
-    target=pArgs->target;
-    targetLimit=pArgs->targetLimit;
-    offsets=pArgs->offsets;
+    ಮೂಲ=(ಸ್ಥಿರಾಂಕ uint8_t *)p_ವಾದಗಳು->ಮೂಲ;
+    ಮೂಲ_ಎಲ್ಲೆ=(ಸ್ಥಿರಾಂಕ uint8_t *)p_ವಾದಗಳು->ಮೂಲ_ಎಲ್ಲೆ;
+    ಗುರಿ=p_ವಾದಗಳು->ಗುರಿ;
+    ಗುರಿ_ಎಲ್ಲೆ=p_ವಾದಗಳು->ಗುರಿ_ಎಲ್ಲೆ;
+    offsets=p_ವಾದಗಳು->offsets;
     /* get the state machine state */
     {
-        uint32_t status=cnv->toUnicodeStatus;
-        inDirectMode=(UBool)((status>>24)&1);
-        base64Counter=(int8_t)(status>>16);
-        bits=(uint16_t)status;
+        uint32_t ಸ್ಥಿತಿ_2=cnv->ಗಮ್ಯ_Unicode_ಸ್ಥಿತಿ;
+        ಒಳ_ನೇರ_ಬಹುಲಕ=(UBool)((ಸ್ಥಿತಿ_2>>24)&1);
+        base64Counter=(int8_t)(ಸ್ಥಿತಿ_2>>16);
+        ಬಿಟ್ಟುಗಳು=(uint16_t)ಸ್ಥಿತಿ_2;
     }
-    bytes=cnv->toUBytes;
-    byteIndex=cnv->toULength;
+    ಬೈಟುಗಳು=cnv->ಗಮ್ಯ_UBytes;
+    byte_ಸೂಚ್ಯಂಕ=cnv->ಗಮ್ಯ_ULength;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex=byteIndex==0 ? 0 : -1;
-    nextSourceIndex=0;
+    ಮೂಲ_ಸೂಚ್ಯಂಕ=byte_ಸೂಚ್ಯಂಕ==0 ? 0 : -1;
+    ಮುಂದಿನ_ಮೂಲ_ಸೂಚ್ಯಂಕ=0;
 
-    if(inDirectMode) {
-directMode:
+    ಆದರೆ(ಒಳ_ನೇರ_ಬಹುಲಕ) {
+ನೇರ_ಬಹುಲಕ:
         /*
          * In Direct Mode, most US-ASCII characters are encoded directly, i.e.,
          * with their US-ASCII byte values.
@@ -263,43 +263,43 @@ directMode:
          *
          * In Direct Mode, only the sourceIndex is used.
          */
-        byteIndex=0;
-        length=(int32_t)(sourceLimit-source);
-        targetCapacity=(int32_t)(targetLimit-target);
-        if(length>targetCapacity) {
-            length=targetCapacity;
+        byte_ಸೂಚ್ಯಂಕ=0;
+        length=(int32_t)(ಮೂಲ_ಎಲ್ಲೆ-ಮೂಲ);
+        ಗುರಿ_ಸಾಮರ್ಥ್ಯ=(int32_t)(ಗುರಿ_ಎಲ್ಲೆ-ಗುರಿ);
+        ಆದರೆ(length>ಗುರಿ_ಸಾಮರ್ಥ್ಯ) {
+            length=ಗುರಿ_ಸಾಮರ್ಥ್ಯ;
         }
-        while(length>0) {
-            b=*source++;
-            if(!isLegalUTF7(b)) {
+        ಆಗ(length>0) {
+            b=*ಮೂಲ++;
+            ಆದರೆ(!isLegalUTF7(b)) {
                 /* illegal */
-                bytes[0]=b;
-                byteIndex=1;
-                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                break;
-            } else if(b!=PLUS) {
+                ಬೈಟುಗಳು[0]=b;
+                byte_ಸೂಚ್ಯಂಕ=1;
+                *p_Error_ಸಂಕೇತ=U_ILLEGAL_CHAR_ಸಿಕ್ಕಿತು;
+                ನಿಲ್ಲಿಸು;
+            } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(b!=PLUS) {
                 /* write directly encoded character */
-                *target++=b;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex++;
+                *ಗುರಿ++=b;
+                ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
                 }
-            } else /* PLUS */ {
+            } ಇಲ್ಲದಿದ್ದರೆ /* PLUS */ {
                 /* switch to Unicode mode */
-                nextSourceIndex=++sourceIndex;
-                inDirectMode=false;
-                byteIndex=0;
-                bits=0;
+                ಮುಂದಿನ_ಮೂಲ_ಸೂಚ್ಯಂಕ=++ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                ಒಳ_ನೇರ_ಬಹುಲಕ=ಸುಳ್ಳು;
+                byte_ಸೂಚ್ಯಂಕ=0;
+                ಬಿಟ್ಟುಗಳು=0;
                 base64Counter=-1;
-                goto unicodeMode;
+                ಹೋಗು unicode_ಬಹುಲಕ;
             }
             --length;
         }
-        if(source<sourceLimit && target>=targetLimit) {
+        ಆದರೆ(ಮೂಲ<ಮೂಲ_ಎಲ್ಲೆ && ಗುರಿ>=ಗುರಿ_ಎಲ್ಲೆ) {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+            *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
         }
-    } else {
-unicodeMode:
+    } ಇಲ್ಲದಿದ್ದರೆ {
+unicode_ಬಹುಲಕ:
         /*
          * In Unicode (or "escape") Mode, UTF-16BE is base64-encoded.
          * The base64 sequence ends with any character that is not in the base64 alphabet.
@@ -310,12 +310,12 @@ unicodeMode:
          * keeping the index to the following byte.
          * Note that in 2 out of 3 cases, UChars overlap within a base64 byte.
          */
-        while(source<sourceLimit) {
-            if(target<targetLimit) {
-                bytes[byteIndex++]=b=*source++;
-                ++nextSourceIndex;
-                base64Value = -3; /* initialize as illegal */
-                if(b>=126 || (base64Value=fromBase64[b])==-3 || base64Value==-1) {
+        ಆಗ(ಮೂಲ<ಮೂಲ_ಎಲ್ಲೆ) {
+            ಆದರೆ(ಗುರಿ<ಗುರಿ_ಎಲ್ಲೆ) {
+                ಬೈಟುಗಳು[byte_ಸೂಚ್ಯಂಕ++]=b=*ಮೂಲ++;
+                ++ಮುಂದಿನ_ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                base64_ಮೌಲ್ಯ = -3; /* initialize as illegal */
+                ಆದರೆ(b>=126 || (base64_ಮೌಲ್ಯ=fromBase64[b])==-3 || base64_ಮೌಲ್ಯ==-1) {
                     /* either
                      * base64Value==-1 for any legal character except base64 and minus sign, or
                      * base64Value==-3 for illegal characters:
@@ -329,263 +329,263 @@ unicodeMode:
                      *        It may be for example, a plus which we need to deal with in direct mode.
                      * 2.2.2. Else if the current char is illegal, we might as well deal with it here.
                      */
-                    inDirectMode=true;
-                    if(base64Counter==-1) {
+                    ಒಳ_ನೇರ_ಬಹುಲಕ=ನಿಜ;
+                    ಆದರೆ(base64Counter==-1) {
                         /* illegal: + immediately followed by something other than base64 or minus sign */
                         /* include the plus sign in the reported sequence, but not the subsequent char */
-                        --source;
-                        bytes[0]=PLUS;
-                        byteIndex=1;
-                        *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        break;
-                    } else if(bits!=0) {
+                        --ಮೂಲ;
+                        ಬೈಟುಗಳು[0]=PLUS;
+                        byte_ಸೂಚ್ಯಂಕ=1;
+                        *p_Error_ಸಂಕೇತ=U_ILLEGAL_CHAR_ಸಿಕ್ಕಿತು;
+                        ನಿಲ್ಲಿಸು;
+                    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(ಬಿಟ್ಟುಗಳು!=0) {
                         /* bits are illegally left over, a char16_t is incomplete */
                         /* don't include current char (legal or illegal) in error seq */
-                        --source;
-                        --byteIndex;
-                        *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        break;
-                    } else {
+                        --ಮೂಲ;
+                        --byte_ಸೂಚ್ಯಂಕ;
+                        *p_Error_ಸಂಕೇತ=U_ILLEGAL_CHAR_ಸಿಕ್ಕಿತು;
+                        ನಿಲ್ಲಿಸು;
+                    } ಇಲ್ಲದಿದ್ದರೆ {
                         /* previous char16_t was complete */
-                        if(base64Value==-3) {
+                        ಆದರೆ(base64_ಮೌಲ್ಯ==-3) {
                             /* current character is illegal, deal with it here */
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            break;
-                        } else {
+                            *p_Error_ಸಂಕೇತ=U_ILLEGAL_CHAR_ಸಿಕ್ಕಿತು;
+                            ನಿಲ್ಲಿಸು;
+                        } ಇಲ್ಲದಿದ್ದರೆ {
                             /* un-read the current character in case it is a plus sign */
-                            --source;
-                            sourceIndex=nextSourceIndex-1;
-                            goto directMode;
+                            --ಮೂಲ;
+                            ಮೂಲ_ಸೂಚ್ಯಂಕ=ಮುಂದಿನ_ಮೂಲ_ಸೂಚ್ಯಂಕ-1;
+                            ಹೋಗು ನೇರ_ಬಹುಲಕ;
                         }
                     }
-                } else if(base64Value>=0) {
+                } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(base64_ಮೌಲ್ಯ>=0) {
                     /* collect base64 bytes into UChars */
-                    switch(base64Counter) {
-                    case -1: /* -1 is immediately after the + */
-                    case 0:
-                        bits=base64Value;
+                    ಆಯ್ಕೆ(base64Counter) {
+                    ಸ್ಥಿತಿ -1: /* -1 is immediately after the + */
+                    ಸ್ಥಿತಿ 0:
+                        ಬಿಟ್ಟುಗಳು=base64_ಮೌಲ್ಯ;
                         base64Counter=1;
-                        break;
-                    case 1:
-                    case 3:
-                    case 4:
-                    case 6:
-                        bits=(uint16_t)((bits<<6)|base64Value);
+                        ನಿಲ್ಲಿಸು;
+                    ಸ್ಥಿತಿ 1:
+                    ಸ್ಥಿತಿ 3:
+                    ಸ್ಥಿತಿ 4:
+                    ಸ್ಥಿತಿ 6:
+                        ಬಿಟ್ಟುಗಳು=(uint16_t)((ಬಿಟ್ಟುಗಳು<<6)|base64_ಮೌಲ್ಯ);
                         ++base64Counter;
-                        break;
-                    case 2:
-                        *target++=(char16_t)((bits<<4)|(base64Value>>2));
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex;
-                            sourceIndex=nextSourceIndex-1;
+                        ನಿಲ್ಲಿಸು;
+                    ಸ್ಥಿತಿ 2:
+                        *ಗುರಿ++=(char16_t)((ಬಿಟ್ಟುಗಳು<<4)|(base64_ಮೌಲ್ಯ>>2));
+                        ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                            *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                            ಮೂಲ_ಸೂಚ್ಯಂಕ=ಮುಂದಿನ_ಮೂಲ_ಸೂಚ್ಯಂಕ-1;
                         }
-                        bytes[0]=b; /* keep this byte in case an error occurs */
-                        byteIndex=1;
-                        bits=(uint16_t)(base64Value&3);
+                        ಬೈಟುಗಳು[0]=b; /* keep this byte in case an error occurs */
+                        byte_ಸೂಚ್ಯಂಕ=1;
+                        ಬಿಟ್ಟುಗಳು=(uint16_t)(base64_ಮೌಲ್ಯ&3);
                         base64Counter=3;
-                        break;
-                    case 5:
-                        *target++=(char16_t)((bits<<2)|(base64Value>>4));
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex;
-                            sourceIndex=nextSourceIndex-1;
+                        ನಿಲ್ಲಿಸು;
+                    ಸ್ಥಿತಿ 5:
+                        *ಗುರಿ++=(char16_t)((ಬಿಟ್ಟುಗಳು<<2)|(base64_ಮೌಲ್ಯ>>4));
+                        ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                            *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                            ಮೂಲ_ಸೂಚ್ಯಂಕ=ಮುಂದಿನ_ಮೂಲ_ಸೂಚ್ಯಂಕ-1;
                         }
-                        bytes[0]=b; /* keep this byte in case an error occurs */
-                        byteIndex=1;
-                        bits=(uint16_t)(base64Value&15);
+                        ಬೈಟುಗಳು[0]=b; /* keep this byte in case an error occurs */
+                        byte_ಸೂಚ್ಯಂಕ=1;
+                        ಬಿಟ್ಟುಗಳು=(uint16_t)(base64_ಮೌಲ್ಯ&15);
                         base64Counter=6;
-                        break;
-                    case 7:
-                        *target++=(char16_t)((bits<<6)|base64Value);
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex;
-                            sourceIndex=nextSourceIndex;
+                        ನಿಲ್ಲಿಸು;
+                    ಸ್ಥಿತಿ 7:
+                        *ಗುರಿ++=(char16_t)((ಬಿಟ್ಟುಗಳು<<6)|base64_ಮೌಲ್ಯ);
+                        ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                            *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                            ಮೂಲ_ಸೂಚ್ಯಂಕ=ಮುಂದಿನ_ಮೂಲ_ಸೂಚ್ಯಂಕ;
                         }
-                        byteIndex=0;
-                        bits=0;
+                        byte_ಸೂಚ್ಯಂಕ=0;
+                        ಬಿಟ್ಟುಗಳು=0;
                         base64Counter=0;
-                        break;
-                    default:
+                        ನಿಲ್ಲಿಸು;
+                    ಪೂರ್ವನಿಯೋಜಿತ:
                         /* will never occur */
-                        break;
+                        ನಿಲ್ಲಿಸು;
                     }
-                } else /*base64Value==-2*/ {
+                } ಇಲ್ಲದಿದ್ದರೆ /*base64Value==-2*/ {
                     /* minus sign terminates the base64 sequence */
-                    inDirectMode=true;
-                    if(base64Counter==-1) {
+                    ಒಳ_ನೇರ_ಬಹುಲಕ=ನಿಜ;
+                    ಆದರೆ(base64Counter==-1) {
                         /* +- i.e. a minus immediately following a plus */
-                        *target++=PLUS;
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex-1;
+                        *ಗುರಿ++=PLUS;
+                        ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                            *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ-1;
                         }
-                    } else {
+                    } ಇಲ್ಲದಿದ್ದರೆ {
                         /* absorb the minus and leave the Unicode Mode */
-                        if(bits!=0) {
+                        ಆದರೆ(ಬಿಟ್ಟುಗಳು!=0) {
                             /* bits are illegally left over, a char16_t is incomplete */
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            break;
+                            *p_Error_ಸಂಕೇತ=U_ILLEGAL_CHAR_ಸಿಕ್ಕಿತು;
+                            ನಿಲ್ಲಿಸು;
                         }
                     }
-                    sourceIndex=nextSourceIndex;
-                    goto directMode;
+                    ಮೂಲ_ಸೂಚ್ಯಂಕ=ಮುಂದಿನ_ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                    ಹೋಗು ನೇರ_ಬಹುಲಕ;
                 }
-            } else {
+            } ಇಲ್ಲದಿದ್ದರೆ {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
+                ನಿಲ್ಲಿಸು;
             }
         }
     }
 
-    if(U_SUCCESS(*pErrorCode) && pArgs->flush && source==sourceLimit && bits==0) {
+    ಆದರೆ(U_SUCCESS(*p_Error_ಸಂಕೇತ) && p_ವಾದಗಳು->flush && ಮೂಲ==ಮೂಲ_ಎಲ್ಲೆ && ಬಿಟ್ಟುಗಳು==0) {
         /*
          * if we are in Unicode mode, then the byteIndex might not be 0,
          * but that is ok if bits==0
          * -> we set byteIndex=0 at the end of the stream to avoid a truncated error
          * (not true for IMAP-mailbox-name where we must end in direct mode)
          */
-        byteIndex=0;
+        byte_ಸೂಚ್ಯಂಕ=0;
     }
 
     /* set the converter state back into UConverter */
-    cnv->toUnicodeStatus=((uint32_t)inDirectMode<<24)|((uint32_t)((uint8_t)base64Counter)<<16)|(uint32_t)bits;
-    cnv->toULength=byteIndex;
+    cnv->ಗಮ್ಯ_Unicode_ಸ್ಥಿತಿ=((uint32_t)ಒಳ_ನೇರ_ಬಹುಲಕ<<24)|((uint32_t)((uint8_t)base64Counter)<<16)|(uint32_t)ಬಿಟ್ಟುಗಳು;
+    cnv->ಗಮ್ಯ_ULength=byte_ಸೂಚ್ಯಂಕ;
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_ವಾದಗಳು->ಮೂಲ=(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *)ಮೂಲ;
+    p_ವಾದಗಳು->ಗುರಿ=ಗುರಿ;
+    p_ವಾದಗಳು->offsets=offsets;
 }
 
-static void U_CALLCONV
-_UTF7FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
-                            UErrorCode *pErrorCode) {
+ಸ್ಥಿರ ಶೂನ್ಯ U_CALLCONV
+_UTF7FromUnicodeWithOffsets(UConverter_From_Unicode_ವಾದಗಳು *p_ವಾದಗಳು,
+                            UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
     UConverter *cnv;
-    const char16_t *source, *sourceLimit;
-    uint8_t *target, *targetLimit;
+    ಸ್ಥಿರಾಂಕ char16_t *ಮೂಲ, *ಮೂಲ_ಎಲ್ಲೆ;
+    uint8_t *ಗುರಿ, *ಗುರಿ_ಎಲ್ಲೆ;
     int32_t *offsets;
 
-    int32_t length, targetCapacity, sourceIndex;
+    int32_t length, ಗುರಿ_ಸಾಮರ್ಥ್ಯ, ಮೂಲ_ಸೂಚ್ಯಂಕ;
     char16_t c;
 
     /* UTF-7 state */
-    const UBool *encodeDirectly;
-    uint8_t bits;
+    ಸ್ಥಿರಾಂಕ UBool *encodeDirectly;
+    uint8_t ಬಿಟ್ಟುಗಳು;
     int8_t base64Counter;
-    UBool inDirectMode;
+    UBool ಒಳ_ನೇರ_ಬಹುಲಕ;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_ವಾದಗಳು->converter;
 
     /* set up the local pointers */
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target=(uint8_t *)pArgs->target;
-    targetLimit=(uint8_t *)pArgs->targetLimit;
-    offsets=pArgs->offsets;
+    ಮೂಲ=p_ವಾದಗಳು->ಮೂಲ;
+    ಮೂಲ_ಎಲ್ಲೆ=p_ವಾದಗಳು->ಮೂಲ_ಎಲ್ಲೆ;
+    ಗುರಿ=(uint8_t *)p_ವಾದಗಳು->ಗುರಿ;
+    ಗುರಿ_ಎಲ್ಲೆ=(uint8_t *)p_ವಾದಗಳು->ಗುರಿ_ಎಲ್ಲೆ;
+    offsets=p_ವಾದಗಳು->offsets;
 
     /* get the state machine state */
     {
-        uint32_t status=cnv->fromUnicodeStatus;
-        encodeDirectly= status<0x10000000 ? encodeDirectlyMaximum : encodeDirectlyRestricted;
-        inDirectMode=(UBool)((status>>24)&1);
-        base64Counter=(int8_t)(status>>16);
-        bits=(uint8_t)status;
-        U_ASSERT(bits<=UPRV_LENGTHOF(toBase64));
+        uint32_t ಸ್ಥಿತಿ_2=cnv->from_Unicode_ಸ್ಥಿತಿ;
+        encodeDirectly= ಸ್ಥಿತಿ_2<0x10000000 ? encode_Directly_ಗರಿಷ್ಠ : encodeDirectlyRestricted;
+        ಒಳ_ನೇರ_ಬಹುಲಕ=(UBool)((ಸ್ಥಿತಿ_2>>24)&1);
+        base64Counter=(int8_t)(ಸ್ಥಿತಿ_2>>16);
+        ಬಿಟ್ಟುಗಳು=(uint8_t)ಸ್ಥಿತಿ_2;
+        U_ASSERT(ಬಿಟ್ಟುಗಳು<=UPRV_LENGTHOF(ಗಮ್ಯ_Base64));
     }
 
     /* UTF-7 always encodes UTF-16 code units, therefore we need only a simple sourceIndex */
-    sourceIndex=0;
+    ಮೂಲ_ಸೂಚ್ಯಂಕ=0;
 
-    if(inDirectMode) {
-directMode:
-        length=(int32_t)(sourceLimit-source);
-        targetCapacity=(int32_t)(targetLimit-target);
-        if(length>targetCapacity) {
-            length=targetCapacity;
+    ಆದರೆ(ಒಳ_ನೇರ_ಬಹುಲಕ) {
+ನೇರ_ಬಹುಲಕ:
+        length=(int32_t)(ಮೂಲ_ಎಲ್ಲೆ-ಮೂಲ);
+        ಗುರಿ_ಸಾಮರ್ಥ್ಯ=(int32_t)(ಗುರಿ_ಎಲ್ಲೆ-ಗುರಿ);
+        ಆದರೆ(length>ಗುರಿ_ಸಾಮರ್ಥ್ಯ) {
+            length=ಗುರಿ_ಸಾಮರ್ಥ್ಯ;
         }
-        while(length>0) {
-            c=*source++;
+        ಆಗ(length>0) {
+            c=*ಮೂಲ++;
             /* currently always encode CR LF SP TAB directly */
-            if(c<=127 && encodeDirectly[c]) {
+            ಆದರೆ(c<=127 && encodeDirectly[c]) {
                 /* encode directly */
-                *target++=(uint8_t)c;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex++;
+                *ಗುರಿ++=(uint8_t)c;
+                ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
                 }
-            } else if(c==PLUS) {
+            } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(c==PLUS) {
                 /* output +- for + */
-                *target++=PLUS;
-                if(target<targetLimit) {
-                    *target++=MINUS;
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
-                        *offsets++=sourceIndex++;
+                *ಗುರಿ++=PLUS;
+                ಆದರೆ(ಗುರಿ<ಗುರಿ_ಎಲ್ಲೆ) {
+                    *ಗುರಿ++=MINUS;
+                    ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                        *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                        *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
                     }
                     /* realign length and targetCapacity */
-                    goto directMode;
-                } else {
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex++;
+                    ಹೋಗು ನೇರ_ಬಹುಲಕ;
+                } ಇಲ್ಲದಿದ್ದರೆ {
+                    ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                        *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
                     }
-                    cnv->charErrorBuffer[0]=MINUS;
-                    cnv->charErrorBufferLength=1;
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    cnv->char_Error_ಬಫರ್[0]=MINUS;
+                    cnv->char_Error_ಬಫರ್_ಉದ್ದಳತೆ=1;
+                    *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
+                    ನಿಲ್ಲಿಸು;
                 }
-            } else {
+            } ಇಲ್ಲದಿದ್ದರೆ {
                 /* un-read this character and switch to Unicode Mode */
-                --source;
-                *target++=PLUS;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                --ಮೂಲ;
+                *ಗುರಿ++=PLUS;
+                ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ;
                 }
-                inDirectMode=false;
+                ಒಳ_ನೇರ_ಬಹುಲಕ=ಸುಳ್ಳು;
                 base64Counter=0;
-                goto unicodeMode;
+                ಹೋಗು unicode_ಬಹುಲಕ;
             }
             --length;
         }
-        if(source<sourceLimit && target>=targetLimit) {
+        ಆದರೆ(ಮೂಲ<ಮೂಲ_ಎಲ್ಲೆ && ಗುರಿ>=ಗುರಿ_ಎಲ್ಲೆ) {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+            *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
         }
-    } else {
-unicodeMode:
-        while(source<sourceLimit) {
-            if(target<targetLimit) {
-                c=*source++;
-                if(c<=127 && encodeDirectly[c]) {
+    } ಇಲ್ಲದಿದ್ದರೆ {
+unicode_ಬಹುಲಕ:
+        ಆಗ(ಮೂಲ<ಮೂಲ_ಎಲ್ಲೆ) {
+            ಆದರೆ(ಗುರಿ<ಗುರಿ_ಎಲ್ಲೆ) {
+                c=*ಮೂಲ++;
+                ಆದರೆ(c<=127 && encodeDirectly[c]) {
                     /* encode directly */
-                    inDirectMode=true;
+                    ಒಳ_ನೇರ_ಬಹುಲಕ=ನಿಜ;
 
                     /* trick: back out this character to make this easier */
-                    --source;
+                    --ಮೂಲ;
 
                     /* terminate the base64 sequence */
-                    if(base64Counter!=0) {
+                    ಆದರೆ(base64Counter!=0) {
                         /* write remaining bits for the previous character */
-                        *target++=toBase64[bits];
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex-1;
+                        *ಗುರಿ++=ಗಮ್ಯ_Base64[ಬಿಟ್ಟುಗಳು];
+                        ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                            *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ-1;
                         }
                     }
-                    if(fromBase64[c]!=-1) {
+                    ಆದರೆ(fromBase64[c]!=-1) {
                         /* need to terminate with a minus */
-                        if(target<targetLimit) {
-                            *target++=MINUS;
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex-1;
+                        ಆದರೆ(ಗುರಿ<ಗುರಿ_ಎಲ್ಲೆ) {
+                            *ಗುರಿ++=MINUS;
+                            ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                                *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ-1;
                             }
-                        } else {
-                            cnv->charErrorBuffer[0]=MINUS;
-                            cnv->charErrorBufferLength=1;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                            break;
+                        } ಇಲ್ಲದಿದ್ದರೆ {
+                            cnv->char_Error_ಬಫರ್[0]=MINUS;
+                            cnv->char_Error_ಬಫರ್_ಉದ್ದಳತೆ=1;
+                            *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
+                            ನಿಲ್ಲಿಸು;
                         }
                     }
-                    goto directMode;
-                } else {
+                    ಹೋಗು ನೇರ_ಬಹುಲಕ;
+                } ಇಲ್ಲದಿದ್ದರೆ {
                     /*
                      * base64 this character:
                      * Output 2 or 3 base64 bytes for the remaining bits of the previous character
@@ -595,195 +595,195 @@ unicodeMode:
                      * character to the next. The actual 2 or 4 bits are shifted to the left edge
                      * of the 6-bits field 5..0 to make the termination of the base64 sequence easier.
                      */
-                    switch(base64Counter) {
-                    case 0:
-                        *target++=toBase64[c>>10];
-                        if(target<targetLimit) {
-                            *target++=toBase64[(c>>4)&0x3f];
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex;
-                                *offsets++=sourceIndex++;
+                    ಆಯ್ಕೆ(base64Counter) {
+                    ಸ್ಥಿತಿ 0:
+                        *ಗುರಿ++=ಗಮ್ಯ_Base64[c>>10];
+                        ಆದರೆ(ಗುರಿ<ಗುರಿ_ಎಲ್ಲೆ) {
+                            *ಗುರಿ++=ಗಮ್ಯ_Base64[(c>>4)&0x3f];
+                            ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                                *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                                *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex++;
+                        } ಇಲ್ಲದಿದ್ದರೆ {
+                            ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                                *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
                             }
-                            cnv->charErrorBuffer[0]=toBase64[(c>>4)&0x3f];
-                            cnv->charErrorBufferLength=1;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                            cnv->char_Error_ಬಫರ್[0]=ಗಮ್ಯ_Base64[(c>>4)&0x3f];
+                            cnv->char_Error_ಬಫರ್_ಉದ್ದಳತೆ=1;
+                            *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
                         }
-                        bits=(uint8_t)((c&15)<<2);
+                        ಬಿಟ್ಟುಗಳು=(uint8_t)((c&15)<<2);
                         base64Counter=1;
-                        break;
-                    case 1:
-                        *target++=toBase64[bits|(c>>14)];
-                        if(target<targetLimit) {
-                            *target++=toBase64[(c>>8)&0x3f];
-                            if(target<targetLimit) {
-                                *target++=toBase64[(c>>2)&0x3f];
-                                if(offsets!=nullptr) {
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex++;
+                        ನಿಲ್ಲಿಸು;
+                    ಸ್ಥಿತಿ 1:
+                        *ಗುರಿ++=ಗಮ್ಯ_Base64[ಬಿಟ್ಟುಗಳು|(c>>14)];
+                        ಆದರೆ(ಗುರಿ<ಗುರಿ_ಎಲ್ಲೆ) {
+                            *ಗುರಿ++=ಗಮ್ಯ_Base64[(c>>8)&0x3f];
+                            ಆದರೆ(ಗುರಿ<ಗುರಿ_ಎಲ್ಲೆ) {
+                                *ಗುರಿ++=ಗಮ್ಯ_Base64[(c>>2)&0x3f];
+                                ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
                                 }
-                            } else {
-                                if(offsets!=nullptr) {
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex++;
+                            } ಇಲ್ಲದಿದ್ದರೆ {
+                                ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
                                 }
-                                cnv->charErrorBuffer[0]=toBase64[(c>>2)&0x3f];
-                                cnv->charErrorBufferLength=1;
-                                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                                cnv->char_Error_ಬಫರ್[0]=ಗಮ್ಯ_Base64[(c>>2)&0x3f];
+                                cnv->char_Error_ಬಫರ್_ಉದ್ದಳತೆ=1;
+                                *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex++;
+                        } ಇಲ್ಲದಿದ್ದರೆ {
+                            ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                                *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
                             }
-                            cnv->charErrorBuffer[0]=toBase64[(c>>8)&0x3f];
-                            cnv->charErrorBuffer[1]=toBase64[(c>>2)&0x3f];
-                            cnv->charErrorBufferLength=2;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                            cnv->char_Error_ಬಫರ್[0]=ಗಮ್ಯ_Base64[(c>>8)&0x3f];
+                            cnv->char_Error_ಬಫರ್[1]=ಗಮ್ಯ_Base64[(c>>2)&0x3f];
+                            cnv->char_Error_ಬಫರ್_ಉದ್ದಳತೆ=2;
+                            *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
                         }
-                        bits=(uint8_t)((c&3)<<4);
+                        ಬಿಟ್ಟುಗಳು=(uint8_t)((c&3)<<4);
                         base64Counter=2;
-                        break;
-                    case 2:
-                        *target++=toBase64[bits|(c>>12)];
-                        if(target<targetLimit) {
-                            *target++=toBase64[(c>>6)&0x3f];
-                            if(target<targetLimit) {
-                                *target++=toBase64[c&0x3f];
-                                if(offsets!=nullptr) {
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex++;
+                        ನಿಲ್ಲಿಸು;
+                    ಸ್ಥಿತಿ 2:
+                        *ಗುರಿ++=ಗಮ್ಯ_Base64[ಬಿಟ್ಟುಗಳು|(c>>12)];
+                        ಆದರೆ(ಗುರಿ<ಗುರಿ_ಎಲ್ಲೆ) {
+                            *ಗುರಿ++=ಗಮ್ಯ_Base64[(c>>6)&0x3f];
+                            ಆದರೆ(ಗುರಿ<ಗುರಿ_ಎಲ್ಲೆ) {
+                                *ಗುರಿ++=ಗಮ್ಯ_Base64[c&0x3f];
+                                ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
                                 }
-                            } else {
-                                if(offsets!=nullptr) {
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex++;
+                            } ಇಲ್ಲದಿದ್ದರೆ {
+                                ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
                                 }
-                                cnv->charErrorBuffer[0]=toBase64[c&0x3f];
-                                cnv->charErrorBufferLength=1;
-                                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                                cnv->char_Error_ಬಫರ್[0]=ಗಮ್ಯ_Base64[c&0x3f];
+                                cnv->char_Error_ಬಫರ್_ಉದ್ದಳತೆ=1;
+                                *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex++;
+                        } ಇಲ್ಲದಿದ್ದರೆ {
+                            ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                                *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
                             }
-                            cnv->charErrorBuffer[0]=toBase64[(c>>6)&0x3f];
-                            cnv->charErrorBuffer[1]=toBase64[c&0x3f];
-                            cnv->charErrorBufferLength=2;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                            cnv->char_Error_ಬಫರ್[0]=ಗಮ್ಯ_Base64[(c>>6)&0x3f];
+                            cnv->char_Error_ಬಫರ್[1]=ಗಮ್ಯ_Base64[c&0x3f];
+                            cnv->char_Error_ಬಫರ್_ಉದ್ದಳತೆ=2;
+                            *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
                         }
-                        bits=0;
+                        ಬಿಟ್ಟುಗಳು=0;
                         base64Counter=0;
-                        break;
-                    default:
+                        ನಿಲ್ಲಿಸು;
+                    ಪೂರ್ವನಿಯೋಜಿತ:
                         /* will never occur */
-                        break;
+                        ನಿಲ್ಲಿಸು;
                     }
                 }
-            } else {
+            } ಇಲ್ಲದಿದ್ದರೆ {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
+                ನಿಲ್ಲಿಸು;
             }
         }
     }
 
-    if(pArgs->flush && source>=sourceLimit) {
+    ಆದರೆ(p_ವಾದಗಳು->flush && ಮೂಲ>=ಮೂಲ_ಎಲ್ಲೆ) {
         /* flush remaining bits to the target */
-        if(!inDirectMode) {
-            if (base64Counter!=0) {
-                if(target<targetLimit) {
-                    *target++=toBase64[bits];
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex-1;
+        ಆದರೆ(!ಒಳ_ನೇರ_ಬಹುಲಕ) {
+            ಆದರೆ (base64Counter!=0) {
+                ಆದರೆ(ಗುರಿ<ಗುರಿ_ಎಲ್ಲೆ) {
+                    *ಗುರಿ++=ಗಮ್ಯ_Base64[ಬಿಟ್ಟುಗಳು];
+                    ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                        *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ-1;
                     }
-                } else {
-                    cnv->charErrorBuffer[cnv->charErrorBufferLength++]=toBase64[bits];
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                } ಇಲ್ಲದಿದ್ದರೆ {
+                    cnv->char_Error_ಬಫರ್[cnv->char_Error_ಬಫರ್_ಉದ್ದಳತೆ++]=ಗಮ್ಯ_Base64[ಬಿಟ್ಟುಗಳು];
+                    *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
                 }
             }
             /* Add final MINUS to terminate unicodeMode */
-            if(target<targetLimit) {
-                *target++=MINUS;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex-1;
+            ಆದರೆ(ಗುರಿ<ಗುರಿ_ಎಲ್ಲೆ) {
+                *ಗುರಿ++=MINUS;
+                ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ-1;
                 }
-            } else {
-                cnv->charErrorBuffer[cnv->charErrorBufferLength++]=MINUS;
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+            } ಇಲ್ಲದಿದ್ದರೆ {
+                cnv->char_Error_ಬಫರ್[cnv->char_Error_ಬಫರ್_ಉದ್ದಳತೆ++]=MINUS;
+                *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
             }
         }
         /* reset the state for the next conversion */
-        cnv->fromUnicodeStatus=(cnv->fromUnicodeStatus&0xf0000000)|0x1000000; /* keep version, inDirectMode=true */
-    } else {
+        cnv->from_Unicode_ಸ್ಥಿತಿ=(cnv->from_Unicode_ಸ್ಥಿತಿ&0xf0000000)|0x1000000; /* keep version, inDirectMode=true */
+    } ಇಲ್ಲದಿದ್ದರೆ {
         /* set the converter state back into UConverter */
-        cnv->fromUnicodeStatus=
-            (cnv->fromUnicodeStatus&0xf0000000)|    /* keep version*/
-            ((uint32_t)inDirectMode<<24)|((uint32_t)base64Counter<<16)|(uint32_t)bits;
+        cnv->from_Unicode_ಸ್ಥಿತಿ=
+            (cnv->from_Unicode_ಸ್ಥಿತಿ&0xf0000000)|    /* keep version*/
+            ((uint32_t)ಒಳ_ನೇರ_ಬಹುಲಕ<<24)|((uint32_t)base64Counter<<16)|(uint32_t)ಬಿಟ್ಟುಗಳು;
     }
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target=(char *)target;
-    pArgs->offsets=offsets;
+    p_ವಾದಗಳು->ಮೂಲ=ಮೂಲ;
+    p_ವಾದಗಳು->ಗುರಿ=(ಅಕ್ಷರ *)ಗುರಿ;
+    p_ವಾದಗಳು->offsets=offsets;
 }
 
-static const char * U_CALLCONV
-_UTF7GetName(const UConverter *cnv) {
-    switch(cnv->fromUnicodeStatus>>28) {
-    case 1:
-        return "UTF-7,version=1";
-    default:
-        return "UTF-7";
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ * U_CALLCONV
+_UTF7GetName(ಸ್ಥಿರಾಂಕ UConverter *cnv) {
+    ಆಯ್ಕೆ(cnv->from_Unicode_ಸ್ಥಿತಿ>>28) {
+    ಸ್ಥಿತಿ 1:
+        ಹಿಂತಿರುಗಿ "UTF-7,version=1";
+    ಪೂರ್ವನಿಯೋಜಿತ:
+        ಹಿಂತಿರುಗಿ "UTF-7";
     }
 }
-U_CDECL_END
+U_CDECL_ಕೊನೆ
 
-static const UConverterImpl _UTF7Impl={
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ UConverterImpl _UTF7Impl={
     UCNV_UTF7,
 
-    nullptr,
-    nullptr,
+    ಶೂನ್ಯಸೂಚಕ,
+    ಶೂನ್ಯಸೂಚಕ,
 
     _UTF7Open,
-    nullptr,
+    ಶೂನ್ಯಸೂಚಕ,
     _UTF7Reset,
 
-    _UTF7ToUnicodeWithOffsets,
-    _UTF7ToUnicodeWithOffsets,
+    UTF7_ಗಮ್ಯ_Unicode_With_Offsets,
+    UTF7_ಗಮ್ಯ_Unicode_With_Offsets,
     _UTF7FromUnicodeWithOffsets,
     _UTF7FromUnicodeWithOffsets,
-    nullptr,
+    ಶೂನ್ಯಸೂಚಕ,
 
-    nullptr,
+    ಶೂನ್ಯಸೂಚಕ,
     _UTF7GetName,
-    nullptr, /* we don't need writeSub() because we never call a callback at fromUnicode() */
-    nullptr,
-    ucnv_getCompleteUnicodeSet,
+    ಶೂನ್ಯಸೂಚಕ, /* we don't need writeSub() because we never call a callback at fromUnicode() */
+    ಶೂನ್ಯಸೂಚಕ,
+    ucnv_get_Complete_Unicode_ಗಣ,
 
-    nullptr,
-    nullptr
+    ಶೂನ್ಯಸೂಚಕ,
+    ಶೂನ್ಯಸೂಚಕ
 };
 
-static const UConverterStaticData _UTF7StaticData={
-    sizeof(UConverterStaticData),
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ UConverter_Static_ದತ್ತಾಂಶ UTF7_Static_ದತ್ತಾಂಶ={
+    ಗಾತ್ರ(UConverter_Static_ದತ್ತಾಂಶ),
     "UTF-7",
     0, /* TODO CCSID for UTF-7 */
     UCNV_IBM, UCNV_UTF7,
     1, 4,
     { 0x3f, 0, 0, 0 }, 1, /* the subchar is not used */
-    false, false,
+    ಸುಳ್ಳು, ಸುಳ್ಳು,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _UTF7Data=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_UTF7StaticData, &_UTF7Impl);
+ಸ್ಥಿರಾಂಕ UConverter_Shared_ದತ್ತಾಂಶ UTF7_ದತ್ತಾಂಶ=
+        UCNV_IMMUTABLE_SHARED_ದತ್ತಾಂಶ_INITIALIZER(&UTF7_Static_ದತ್ತಾಂಶ, &_UTF7Impl);
 
 /* IMAP mailbox name encoding ----------------------------------------------- */
 
@@ -859,18 +859,18 @@ const UConverterSharedData _UTF7Data=
  */
 
 /* uses '&' not '+' to start a base64 sequence */
-#define AMPERSAND 0x26
-#define COMMA 0x2c
-#define SLASH 0x2f
+#ವ್ಯಾಖ್ಯಾನಿಸು AMPERSAND 0x26
+#ವ್ಯಾಖ್ಯಾನಿಸು COMMA 0x2c
+#ವ್ಯಾಖ್ಯಾನಿಸು SLASH 0x2f
 
 /* legal byte values: all US-ASCII graphic characters 0x20..0x7e */
-#define isLegalIMAP(c) (0x20<=(c) && (c)<=0x7e)
+#ವ್ಯಾಖ್ಯಾನಿಸು isLegalIMAP(c) (0x20<=(c) && (c)<=0x7e)
 
 /* direct-encode all of printable ASCII 0x20..0x7e except '&' 0x26 */
-#define inSetDIMAP(c) (isLegalIMAP(c) && c!=AMPERSAND)
+#ವ್ಯಾಖ್ಯಾನಿಸು ಒಳ_ಗಣ_DIMAP(c) (isLegalIMAP(c) && c!=AMPERSAND)
 
-#define TO_BASE64_IMAP(n) ((n)<63 ? toBase64[n] : COMMA)
-#define FROM_BASE64_IMAP(c) ((c)==COMMA ? 63 : (c)==SLASH ? -1 : fromBase64[c])
+#ವ್ಯಾಖ್ಯಾನಿಸು ಗಮ್ಯ_BASE64_IMAP(n) ((n)<63 ? ಗಮ್ಯ_Base64[n] : COMMA)
+#ವ್ಯಾಖ್ಯಾನಿಸು FROM_BASE64_IMAP(c) ((c)==COMMA ? 63 : (c)==SLASH ? -1 : fromBase64[c])
 
 /*
  * converter status values:
@@ -889,56 +889,56 @@ const UConverterSharedData _UTF7Data=
  */
 
 U_CDECL_BEGIN
-static void U_CALLCONV
-_IMAPToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
-                          UErrorCode *pErrorCode) {
+ಸ್ಥಿರ ಶೂನ್ಯ U_CALLCONV
+_IMAPToUnicodeWithOffsets(UConverter_ಗಮ್ಯ_Unicode_ವಾದಗಳು *p_ವಾದಗಳು,
+                          UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
     UConverter *cnv;
-    const uint8_t *source, *sourceLimit;
-    char16_t *target;
-    const char16_t *targetLimit;
+    ಸ್ಥಿರಾಂಕ uint8_t *ಮೂಲ, *ಮೂಲ_ಎಲ್ಲೆ;
+    char16_t *ಗುರಿ;
+    ಸ್ಥಿರಾಂಕ char16_t *ಗುರಿ_ಎಲ್ಲೆ;
     int32_t *offsets;
 
-    uint8_t *bytes;
-    uint8_t byteIndex;
+    uint8_t *ಬೈಟುಗಳು;
+    uint8_t byte_ಸೂಚ್ಯಂಕ;
 
-    int32_t length, targetCapacity;
+    int32_t length, ಗುರಿ_ಸಾಮರ್ಥ್ಯ;
 
     /* UTF-7 state */
-    uint16_t bits;
+    uint16_t ಬಿಟ್ಟುಗಳು;
     int8_t base64Counter;
-    UBool inDirectMode;
+    UBool ಒಳ_ನೇರ_ಬಹುಲಕ;
 
-    int8_t base64Value;
+    int8_t base64_ಮೌಲ್ಯ;
 
-    int32_t sourceIndex, nextSourceIndex;
+    int32_t ಮೂಲ_ಸೂಚ್ಯಂಕ, ಮುಂದಿನ_ಮೂಲ_ಸೂಚ್ಯಂಕ;
 
     char16_t c;
     uint8_t b;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_ವಾದಗಳು->converter;
 
-    source=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
-    target=pArgs->target;
-    targetLimit=pArgs->targetLimit;
-    offsets=pArgs->offsets;
+    ಮೂಲ=(ಸ್ಥಿರಾಂಕ uint8_t *)p_ವಾದಗಳು->ಮೂಲ;
+    ಮೂಲ_ಎಲ್ಲೆ=(ಸ್ಥಿರಾಂಕ uint8_t *)p_ವಾದಗಳು->ಮೂಲ_ಎಲ್ಲೆ;
+    ಗುರಿ=p_ವಾದಗಳು->ಗುರಿ;
+    ಗುರಿ_ಎಲ್ಲೆ=p_ವಾದಗಳು->ಗುರಿ_ಎಲ್ಲೆ;
+    offsets=p_ವಾದಗಳು->offsets;
     /* get the state machine state */
     {
-        uint32_t status=cnv->toUnicodeStatus;
-        inDirectMode=(UBool)((status>>24)&1);
-        base64Counter=(int8_t)(status>>16);
-        bits=(uint16_t)status;
+        uint32_t ಸ್ಥಿತಿ_2=cnv->ಗಮ್ಯ_Unicode_ಸ್ಥಿತಿ;
+        ಒಳ_ನೇರ_ಬಹುಲಕ=(UBool)((ಸ್ಥಿತಿ_2>>24)&1);
+        base64Counter=(int8_t)(ಸ್ಥಿತಿ_2>>16);
+        ಬಿಟ್ಟುಗಳು=(uint16_t)ಸ್ಥಿತಿ_2;
     }
-    bytes=cnv->toUBytes;
-    byteIndex=cnv->toULength;
+    ಬೈಟುಗಳು=cnv->ಗಮ್ಯ_UBytes;
+    byte_ಸೂಚ್ಯಂಕ=cnv->ಗಮ್ಯ_ULength;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex=byteIndex==0 ? 0 : -1;
-    nextSourceIndex=0;
+    ಮೂಲ_ಸೂಚ್ಯಂಕ=byte_ಸೂಚ್ಯಂಕ==0 ? 0 : -1;
+    ಮುಂದಿನ_ಮೂಲ_ಸೂಚ್ಯಂಕ=0;
 
-    if(inDirectMode) {
-directMode:
+    ಆದರೆ(ಒಳ_ನೇರ_ಬಹುಲಕ) {
+ನೇರ_ಬಹುಲಕ:
         /*
          * In Direct Mode, US-ASCII characters are encoded directly, i.e.,
          * with their US-ASCII byte values.
@@ -946,43 +946,43 @@ directMode:
          *
          * In Direct Mode, only the sourceIndex is used.
          */
-        byteIndex=0;
-        length=(int32_t)(sourceLimit-source);
-        targetCapacity=(int32_t)(targetLimit-target);
-        if(length>targetCapacity) {
-            length=targetCapacity;
+        byte_ಸೂಚ್ಯಂಕ=0;
+        length=(int32_t)(ಮೂಲ_ಎಲ್ಲೆ-ಮೂಲ);
+        ಗುರಿ_ಸಾಮರ್ಥ್ಯ=(int32_t)(ಗುರಿ_ಎಲ್ಲೆ-ಗುರಿ);
+        ಆದರೆ(length>ಗುರಿ_ಸಾಮರ್ಥ್ಯ) {
+            length=ಗುರಿ_ಸಾಮರ್ಥ್ಯ;
         }
-        while(length>0) {
-            b=*source++;
-            if(!isLegalIMAP(b)) {
+        ಆಗ(length>0) {
+            b=*ಮೂಲ++;
+            ಆದರೆ(!isLegalIMAP(b)) {
                 /* illegal */
-                bytes[0]=b;
-                byteIndex=1;
-                *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                break;
-            } else if(b!=AMPERSAND) {
+                ಬೈಟುಗಳು[0]=b;
+                byte_ಸೂಚ್ಯಂಕ=1;
+                *p_Error_ಸಂಕೇತ=U_ILLEGAL_CHAR_ಸಿಕ್ಕಿತು;
+                ನಿಲ್ಲಿಸು;
+            } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(b!=AMPERSAND) {
                 /* write directly encoded character */
-                *target++=b;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex++;
+                *ಗುರಿ++=b;
+                ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
                 }
-            } else /* AMPERSAND */ {
+            } ಇಲ್ಲದಿದ್ದರೆ /* AMPERSAND */ {
                 /* switch to Unicode mode */
-                nextSourceIndex=++sourceIndex;
-                inDirectMode=false;
-                byteIndex=0;
-                bits=0;
+                ಮುಂದಿನ_ಮೂಲ_ಸೂಚ್ಯಂಕ=++ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                ಒಳ_ನೇರ_ಬಹುಲಕ=ಸುಳ್ಳು;
+                byte_ಸೂಚ್ಯಂಕ=0;
+                ಬಿಟ್ಟುಗಳು=0;
                 base64Counter=-1;
-                goto unicodeMode;
+                ಹೋಗು unicode_ಬಹುಲಕ;
             }
             --length;
         }
-        if(source<sourceLimit && target>=targetLimit) {
+        ಆದರೆ(ಮೂಲ<ಮೂಲ_ಎಲ್ಲೆ && ಗುರಿ>=ಗುರಿ_ಎಲ್ಲೆ) {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+            *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
         }
-    } else {
-unicodeMode:
+    } ಇಲ್ಲದಿದ್ದರೆ {
+unicode_ಬಹುಲಕ:
         /*
          * In Unicode (or "escape") Mode, UTF-16BE is base64-encoded.
          * The base64 sequence ends with any character that is not in the base64 alphabet.
@@ -994,127 +994,127 @@ unicodeMode:
          * keeping the index to the following byte.
          * Note that in 2 out of 3 cases, UChars overlap within a base64 byte.
          */
-        while(source<sourceLimit) {
-            if(target<targetLimit) {
-                bytes[byteIndex++]=b=*source++;
-                ++nextSourceIndex;
-                if(b>0x7e) {
+        ಆಗ(ಮೂಲ<ಮೂಲ_ಎಲ್ಲೆ) {
+            ಆದರೆ(ಗುರಿ<ಗುರಿ_ಎಲ್ಲೆ) {
+                ಬೈಟುಗಳು[byte_ಸೂಚ್ಯಂಕ++]=b=*ಮೂಲ++;
+                ++ಮುಂದಿನ_ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                ಆದರೆ(b>0x7e) {
                     /* illegal - test other illegal US-ASCII values by base64Value==-3 */
-                    inDirectMode=true;
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    break;
-                } else if((base64Value=FROM_BASE64_IMAP(b))>=0) {
+                    ಒಳ_ನೇರ_ಬಹುಲಕ=ನಿಜ;
+                    *p_Error_ಸಂಕೇತ=U_ILLEGAL_CHAR_ಸಿಕ್ಕಿತು;
+                    ನಿಲ್ಲಿಸು;
+                } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ((base64_ಮೌಲ್ಯ=FROM_BASE64_IMAP(b))>=0) {
                     /* collect base64 bytes into UChars */
-                    switch(base64Counter) {
-                    case -1: /* -1 is immediately after the & */
-                    case 0:
-                        bits=base64Value;
+                    ಆಯ್ಕೆ(base64Counter) {
+                    ಸ್ಥಿತಿ -1: /* -1 is immediately after the & */
+                    ಸ್ಥಿತಿ 0:
+                        ಬಿಟ್ಟುಗಳು=base64_ಮೌಲ್ಯ;
                         base64Counter=1;
-                        break;
-                    case 1:
-                    case 3:
-                    case 4:
-                    case 6:
-                        bits=(uint16_t)((bits<<6)|base64Value);
+                        ನಿಲ್ಲಿಸು;
+                    ಸ್ಥಿತಿ 1:
+                    ಸ್ಥಿತಿ 3:
+                    ಸ್ಥಿತಿ 4:
+                    ಸ್ಥಿತಿ 6:
+                        ಬಿಟ್ಟುಗಳು=(uint16_t)((ಬಿಟ್ಟುಗಳು<<6)|base64_ಮೌಲ್ಯ);
                         ++base64Counter;
-                        break;
-                    case 2:
-                        c=(char16_t)((bits<<4)|(base64Value>>2));
-                        if(isLegalIMAP(c)) {
+                        ನಿಲ್ಲಿಸು;
+                    ಸ್ಥಿತಿ 2:
+                        c=(char16_t)((ಬಿಟ್ಟುಗಳು<<4)|(base64_ಮೌಲ್ಯ>>2));
+                        ಆದರೆ(isLegalIMAP(c)) {
                             /* illegal */
-                            inDirectMode=true;
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            ಒಳ_ನೇರ_ಬಹುಲಕ=ನಿಜ;
+                            *p_Error_ಸಂಕೇತ=U_ILLEGAL_CHAR_ಸಿಕ್ಕಿತು;
+                            ಹೋಗು endloop;
                         }
-                        *target++=c;
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex;
-                            sourceIndex=nextSourceIndex-1;
+                        *ಗುರಿ++=c;
+                        ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                            *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                            ಮೂಲ_ಸೂಚ್ಯಂಕ=ಮುಂದಿನ_ಮೂಲ_ಸೂಚ್ಯಂಕ-1;
                         }
-                        bytes[0]=b; /* keep this byte in case an error occurs */
-                        byteIndex=1;
-                        bits=(uint16_t)(base64Value&3);
+                        ಬೈಟುಗಳು[0]=b; /* keep this byte in case an error occurs */
+                        byte_ಸೂಚ್ಯಂಕ=1;
+                        ಬಿಟ್ಟುಗಳು=(uint16_t)(base64_ಮೌಲ್ಯ&3);
                         base64Counter=3;
-                        break;
-                    case 5:
-                        c=(char16_t)((bits<<2)|(base64Value>>4));
-                        if(isLegalIMAP(c)) {
+                        ನಿಲ್ಲಿಸು;
+                    ಸ್ಥಿತಿ 5:
+                        c=(char16_t)((ಬಿಟ್ಟುಗಳು<<2)|(base64_ಮೌಲ್ಯ>>4));
+                        ಆದರೆ(isLegalIMAP(c)) {
                             /* illegal */
-                            inDirectMode=true;
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            ಒಳ_ನೇರ_ಬಹುಲಕ=ನಿಜ;
+                            *p_Error_ಸಂಕೇತ=U_ILLEGAL_CHAR_ಸಿಕ್ಕಿತು;
+                            ಹೋಗು endloop;
                         }
-                        *target++=c;
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex;
-                            sourceIndex=nextSourceIndex-1;
+                        *ಗುರಿ++=c;
+                        ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                            *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                            ಮೂಲ_ಸೂಚ್ಯಂಕ=ಮುಂದಿನ_ಮೂಲ_ಸೂಚ್ಯಂಕ-1;
                         }
-                        bytes[0]=b; /* keep this byte in case an error occurs */
-                        byteIndex=1;
-                        bits=(uint16_t)(base64Value&15);
+                        ಬೈಟುಗಳು[0]=b; /* keep this byte in case an error occurs */
+                        byte_ಸೂಚ್ಯಂಕ=1;
+                        ಬಿಟ್ಟುಗಳು=(uint16_t)(base64_ಮೌಲ್ಯ&15);
                         base64Counter=6;
-                        break;
-                    case 7:
-                        c=(char16_t)((bits<<6)|base64Value);
-                        if(isLegalIMAP(c)) {
+                        ನಿಲ್ಲಿಸು;
+                    ಸ್ಥಿತಿ 7:
+                        c=(char16_t)((ಬಿಟ್ಟುಗಳು<<6)|base64_ಮೌಲ್ಯ);
+                        ಆದರೆ(isLegalIMAP(c)) {
                             /* illegal */
-                            inDirectMode=true;
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            ಒಳ_ನೇರ_ಬಹುಲಕ=ನಿಜ;
+                            *p_Error_ಸಂಕೇತ=U_ILLEGAL_CHAR_ಸಿಕ್ಕಿತು;
+                            ಹೋಗು endloop;
                         }
-                        *target++=c;
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex;
-                            sourceIndex=nextSourceIndex;
+                        *ಗುರಿ++=c;
+                        ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                            *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                            ಮೂಲ_ಸೂಚ್ಯಂಕ=ಮುಂದಿನ_ಮೂಲ_ಸೂಚ್ಯಂಕ;
                         }
-                        byteIndex=0;
-                        bits=0;
+                        byte_ಸೂಚ್ಯಂಕ=0;
+                        ಬಿಟ್ಟುಗಳು=0;
                         base64Counter=0;
-                        break;
-                    default:
+                        ನಿಲ್ಲಿಸು;
+                    ಪೂರ್ವನಿಯೋಜಿತ:
                         /* will never occur */
-                        break;
+                        ನಿಲ್ಲಿಸು;
                     }
-                } else if(base64Value==-2) {
+                } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(base64_ಮೌಲ್ಯ==-2) {
                     /* minus sign terminates the base64 sequence */
-                    inDirectMode=true;
-                    if(base64Counter==-1) {
+                    ಒಳ_ನೇರ_ಬಹುಲಕ=ನಿಜ;
+                    ಆದರೆ(base64Counter==-1) {
                         /* &- i.e. a minus immediately following an ampersand */
-                        *target++=AMPERSAND;
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex-1;
+                        *ಗುರಿ++=AMPERSAND;
+                        ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                            *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ-1;
                         }
-                    } else {
+                    } ಇಲ್ಲದಿದ್ದರೆ {
                         /* absorb the minus and leave the Unicode Mode */
-                        if(bits!=0 || (base64Counter!=0 && base64Counter!=3 && base64Counter!=6)) {
+                        ಆದರೆ(ಬಿಟ್ಟುಗಳು!=0 || (base64Counter!=0 && base64Counter!=3 && base64Counter!=6)) {
                             /* bits are illegally left over, a char16_t is incomplete */
                             /* base64Counter other than 0, 3, 6 means non-minimal zero-padding, also illegal */
-                            *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            break;
+                            *p_Error_ಸಂಕೇತ=U_ILLEGAL_CHAR_ಸಿಕ್ಕಿತು;
+                            ನಿಲ್ಲಿಸು;
                         }
                     }
-                    sourceIndex=nextSourceIndex;
-                    goto directMode;
-                } else {
-                    if(base64Counter==-1) {
+                    ಮೂಲ_ಸೂಚ್ಯಂಕ=ಮುಂದಿನ_ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                    ಹೋಗು ನೇರ_ಬಹುಲಕ;
+                } ಇಲ್ಲದಿದ್ದರೆ {
+                    ಆದರೆ(base64Counter==-1) {
                         /* illegal: & immediately followed by something other than base64 or minus sign */
                         /* include the ampersand in the reported sequence */
-                        --sourceIndex;
-                        bytes[0]=AMPERSAND;
-                        bytes[1]=b;
-                        byteIndex=2;
+                        --ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                        ಬೈಟುಗಳು[0]=AMPERSAND;
+                        ಬೈಟುಗಳು[1]=b;
+                        byte_ಸೂಚ್ಯಂಕ=2;
                     }
                     /* base64Value==-1 for characters that are illegal only in Unicode mode */
                     /* base64Value==-3 for illegal characters */
                     /* illegal */
-                    inDirectMode=true;
-                    *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    break;
+                    ಒಳ_ನೇರ_ಬಹುಲಕ=ನಿಜ;
+                    *p_Error_ಸಂಕೇತ=U_ILLEGAL_CHAR_ಸಿಕ್ಕಿತು;
+                    ನಿಲ್ಲಿಸು;
                 }
-            } else {
+            } ಇಲ್ಲದಿದ್ದರೆ {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
+                ನಿಲ್ಲಿಸು;
             }
         }
     }
@@ -1130,157 +1130,157 @@ endloop:
      *   in Unicode mode and byteIndex==0
      *   end of input and no truncated input
      */
-    if( U_SUCCESS(*pErrorCode) &&
-        !inDirectMode && byteIndex==0 &&
-        pArgs->flush && source>=sourceLimit
+    ಆದರೆ( U_SUCCESS(*p_Error_ಸಂಕೇತ) &&
+        !ಒಳ_ನೇರ_ಬಹುಲಕ && byte_ಸೂಚ್ಯಂಕ==0 &&
+        p_ವಾದಗಳು->flush && ಮೂಲ>=ಮೂಲ_ಎಲ್ಲೆ
     ) {
-        if(base64Counter==-1) {
+        ಆದರೆ(base64Counter==-1) {
             /* & at the very end of the input */
             /* make the ampersand the reported sequence */
-            bytes[0]=AMPERSAND;
-            byteIndex=1;
+            ಬೈಟುಗಳು[0]=AMPERSAND;
+            byte_ಸೂಚ್ಯಂಕ=1;
         }
         /* else if(base64Counter!=-1) byteIndex remains 0 because there is no particular byte sequence */
 
-        inDirectMode=true; /* avoid looping */
-        *pErrorCode=U_TRUNCATED_CHAR_FOUND;
+        ಒಳ_ನೇರ_ಬಹುಲಕ=ನಿಜ; /* avoid looping */
+        *p_Error_ಸಂಕೇತ=U_TRUNCATED_CHAR_ಸಿಕ್ಕಿತು;
     }
 
     /* set the converter state back into UConverter */
-    cnv->toUnicodeStatus=((uint32_t)inDirectMode<<24)|((uint32_t)((uint8_t)base64Counter)<<16)|(uint32_t)bits;
-    cnv->toULength=byteIndex;
+    cnv->ಗಮ್ಯ_Unicode_ಸ್ಥಿತಿ=((uint32_t)ಒಳ_ನೇರ_ಬಹುಲಕ<<24)|((uint32_t)((uint8_t)base64Counter)<<16)|(uint32_t)ಬಿಟ್ಟುಗಳು;
+    cnv->ಗಮ್ಯ_ULength=byte_ಸೂಚ್ಯಂಕ;
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
-    pArgs->target=target;
-    pArgs->offsets=offsets;
+    p_ವಾದಗಳು->ಮೂಲ=(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *)ಮೂಲ;
+    p_ವಾದಗಳು->ಗುರಿ=ಗುರಿ;
+    p_ವಾದಗಳು->offsets=offsets;
 }
 
-static void U_CALLCONV
-_IMAPFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
-                            UErrorCode *pErrorCode) {
+ಸ್ಥಿರ ಶೂನ್ಯ U_CALLCONV
+_IMAPFromUnicodeWithOffsets(UConverter_From_Unicode_ವಾದಗಳು *p_ವಾದಗಳು,
+                            UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
     UConverter *cnv;
-    const char16_t *source, *sourceLimit;
-    uint8_t *target, *targetLimit;
+    ಸ್ಥಿರಾಂಕ char16_t *ಮೂಲ, *ಮೂಲ_ಎಲ್ಲೆ;
+    uint8_t *ಗುರಿ, *ಗುರಿ_ಎಲ್ಲೆ;
     int32_t *offsets;
 
-    int32_t length, targetCapacity, sourceIndex;
+    int32_t length, ಗುರಿ_ಸಾಮರ್ಥ್ಯ, ಮೂಲ_ಸೂಚ್ಯಂಕ;
     char16_t c;
     uint8_t b;
 
     /* UTF-7 state */
-    uint8_t bits;
+    uint8_t ಬಿಟ್ಟುಗಳು;
     int8_t base64Counter;
-    UBool inDirectMode;
+    UBool ಒಳ_ನೇರ_ಬಹುಲಕ;
 
     /* set up the local pointers */
-    cnv=pArgs->converter;
+    cnv=p_ವಾದಗಳು->converter;
 
     /* set up the local pointers */
-    source=pArgs->source;
-    sourceLimit=pArgs->sourceLimit;
-    target=(uint8_t *)pArgs->target;
-    targetLimit=(uint8_t *)pArgs->targetLimit;
-    offsets=pArgs->offsets;
+    ಮೂಲ=p_ವಾದಗಳು->ಮೂಲ;
+    ಮೂಲ_ಎಲ್ಲೆ=p_ವಾದಗಳು->ಮೂಲ_ಎಲ್ಲೆ;
+    ಗುರಿ=(uint8_t *)p_ವಾದಗಳು->ಗುರಿ;
+    ಗುರಿ_ಎಲ್ಲೆ=(uint8_t *)p_ವಾದಗಳು->ಗುರಿ_ಎಲ್ಲೆ;
+    offsets=p_ವಾದಗಳು->offsets;
 
     /* get the state machine state */
     {
-        uint32_t status=cnv->fromUnicodeStatus;
-        inDirectMode=(UBool)((status>>24)&1);
-        base64Counter=(int8_t)(status>>16);
-        bits=(uint8_t)status;
+        uint32_t ಸ್ಥಿತಿ_2=cnv->from_Unicode_ಸ್ಥಿತಿ;
+        ಒಳ_ನೇರ_ಬಹುಲಕ=(UBool)((ಸ್ಥಿತಿ_2>>24)&1);
+        base64Counter=(int8_t)(ಸ್ಥಿತಿ_2>>16);
+        ಬಿಟ್ಟುಗಳು=(uint8_t)ಸ್ಥಿತಿ_2;
     }
 
     /* UTF-7 always encodes UTF-16 code units, therefore we need only a simple sourceIndex */
-    sourceIndex=0;
+    ಮೂಲ_ಸೂಚ್ಯಂಕ=0;
 
-    if(inDirectMode) {
-directMode:
-        length=(int32_t)(sourceLimit-source);
-        targetCapacity=(int32_t)(targetLimit-target);
-        if(length>targetCapacity) {
-            length=targetCapacity;
+    ಆದರೆ(ಒಳ_ನೇರ_ಬಹುಲಕ) {
+ನೇರ_ಬಹುಲಕ:
+        length=(int32_t)(ಮೂಲ_ಎಲ್ಲೆ-ಮೂಲ);
+        ಗುರಿ_ಸಾಮರ್ಥ್ಯ=(int32_t)(ಗುರಿ_ಎಲ್ಲೆ-ಗುರಿ);
+        ಆದರೆ(length>ಗುರಿ_ಸಾಮರ್ಥ್ಯ) {
+            length=ಗುರಿ_ಸಾಮರ್ಥ್ಯ;
         }
-        while(length>0) {
-            c=*source++;
+        ಆಗ(length>0) {
+            c=*ಮೂಲ++;
             /* encode 0x20..0x7e except '&' directly */
-            if(inSetDIMAP(c)) {
+            ಆದರೆ(ಒಳ_ಗಣ_DIMAP(c)) {
                 /* encode directly */
-                *target++=(uint8_t)c;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex++;
+                *ಗುರಿ++=(uint8_t)c;
+                ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
                 }
-            } else if(c==AMPERSAND) {
+            } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(c==AMPERSAND) {
                 /* output &- for & */
-                *target++=AMPERSAND;
-                if(target<targetLimit) {
-                    *target++=MINUS;
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
-                        *offsets++=sourceIndex++;
+                *ಗುರಿ++=AMPERSAND;
+                ಆದರೆ(ಗುರಿ<ಗುರಿ_ಎಲ್ಲೆ) {
+                    *ಗುರಿ++=MINUS;
+                    ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                        *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                        *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
                     }
                     /* realign length and targetCapacity */
-                    goto directMode;
-                } else {
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex++;
+                    ಹೋಗು ನೇರ_ಬಹುಲಕ;
+                } ಇಲ್ಲದಿದ್ದರೆ {
+                    ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                        *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
                     }
-                    cnv->charErrorBuffer[0]=MINUS;
-                    cnv->charErrorBufferLength=1;
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    cnv->char_Error_ಬಫರ್[0]=MINUS;
+                    cnv->char_Error_ಬಫರ್_ಉದ್ದಳತೆ=1;
+                    *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
+                    ನಿಲ್ಲಿಸು;
                 }
-            } else {
+            } ಇಲ್ಲದಿದ್ದರೆ {
                 /* un-read this character and switch to Unicode Mode */
-                --source;
-                *target++=AMPERSAND;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                --ಮೂಲ;
+                *ಗುರಿ++=AMPERSAND;
+                ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ;
                 }
-                inDirectMode=false;
+                ಒಳ_ನೇರ_ಬಹುಲಕ=ಸುಳ್ಳು;
                 base64Counter=0;
-                goto unicodeMode;
+                ಹೋಗು unicode_ಬಹುಲಕ;
             }
             --length;
         }
-        if(source<sourceLimit && target>=targetLimit) {
+        ಆದರೆ(ಮೂಲ<ಮೂಲ_ಎಲ್ಲೆ && ಗುರಿ>=ಗುರಿ_ಎಲ್ಲೆ) {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+            *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
         }
-    } else {
-unicodeMode:
-        while(source<sourceLimit) {
-            if(target<targetLimit) {
-                c=*source++;
-                if(isLegalIMAP(c)) {
+    } ಇಲ್ಲದಿದ್ದರೆ {
+unicode_ಬಹುಲಕ:
+        ಆಗ(ಮೂಲ<ಮೂಲ_ಎಲ್ಲೆ) {
+            ಆದರೆ(ಗುರಿ<ಗುರಿ_ಎಲ್ಲೆ) {
+                c=*ಮೂಲ++;
+                ಆದರೆ(isLegalIMAP(c)) {
                     /* encode directly */
-                    inDirectMode=true;
+                    ಒಳ_ನೇರ_ಬಹುಲಕ=ನಿಜ;
 
                     /* trick: back out this character to make this easier */
-                    --source;
+                    --ಮೂಲ;
 
                     /* terminate the base64 sequence */
-                    if(base64Counter!=0) {
+                    ಆದರೆ(base64Counter!=0) {
                         /* write remaining bits for the previous character */
-                        *target++=TO_BASE64_IMAP(bits);
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex-1;
+                        *ಗುರಿ++=ಗಮ್ಯ_BASE64_IMAP(ಬಿಟ್ಟುಗಳು);
+                        ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                            *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ-1;
                         }
                     }
                     /* need to terminate with a minus */
-                    if(target<targetLimit) {
-                        *target++=MINUS;
-                        if(offsets!=nullptr) {
-                            *offsets++=sourceIndex-1;
+                    ಆದರೆ(ಗುರಿ<ಗುರಿ_ಎಲ್ಲೆ) {
+                        *ಗುರಿ++=MINUS;
+                        ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                            *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ-1;
                         }
-                    } else {
-                        cnv->charErrorBuffer[0]=MINUS;
-                        cnv->charErrorBufferLength=1;
-                        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                        break;
+                    } ಇಲ್ಲದಿದ್ದರೆ {
+                        cnv->char_Error_ಬಫರ್[0]=MINUS;
+                        cnv->char_Error_ಬಫರ್_ಉದ್ದಳತೆ=1;
+                        *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
+                        ನಿಲ್ಲಿಸು;
                     }
-                    goto directMode;
-                } else {
+                    ಹೋಗು ನೇರ_ಬಹುಲಕ;
+                } ಇಲ್ಲದಿದ್ದರೆ {
                     /*
                      * base64 this character:
                      * Output 2 or 3 base64 bytes for the remaining bits of the previous character
@@ -1290,198 +1290,198 @@ unicodeMode:
                      * character to the next. The actual 2 or 4 bits are shifted to the left edge
                      * of the 6-bits field 5..0 to make the termination of the base64 sequence easier.
                      */
-                    switch(base64Counter) {
-                    case 0:
+                    ಆಯ್ಕೆ(base64Counter) {
+                    ಸ್ಥಿತಿ 0:
                         b=(uint8_t)(c>>10);
-                        *target++=TO_BASE64_IMAP(b);
-                        if(target<targetLimit) {
+                        *ಗುರಿ++=ಗಮ್ಯ_BASE64_IMAP(b);
+                        ಆದರೆ(ಗುರಿ<ಗುರಿ_ಎಲ್ಲೆ) {
                             b=(uint8_t)((c>>4)&0x3f);
-                            *target++=TO_BASE64_IMAP(b);
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex;
-                                *offsets++=sourceIndex++;
+                            *ಗುರಿ++=ಗಮ್ಯ_BASE64_IMAP(b);
+                            ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                                *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                                *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex++;
+                        } ಇಲ್ಲದಿದ್ದರೆ {
+                            ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                                *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
                             }
                             b=(uint8_t)((c>>4)&0x3f);
-                            cnv->charErrorBuffer[0]=TO_BASE64_IMAP(b);
-                            cnv->charErrorBufferLength=1;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                            cnv->char_Error_ಬಫರ್[0]=ಗಮ್ಯ_BASE64_IMAP(b);
+                            cnv->char_Error_ಬಫರ್_ಉದ್ದಳತೆ=1;
+                            *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
                         }
-                        bits=(uint8_t)((c&15)<<2);
+                        ಬಿಟ್ಟುಗಳು=(uint8_t)((c&15)<<2);
                         base64Counter=1;
-                        break;
-                    case 1:
-                        b=(uint8_t)(bits|(c>>14));
-                        *target++=TO_BASE64_IMAP(b);
-                        if(target<targetLimit) {
+                        ನಿಲ್ಲಿಸು;
+                    ಸ್ಥಿತಿ 1:
+                        b=(uint8_t)(ಬಿಟ್ಟುಗಳು|(c>>14));
+                        *ಗುರಿ++=ಗಮ್ಯ_BASE64_IMAP(b);
+                        ಆದರೆ(ಗುರಿ<ಗುರಿ_ಎಲ್ಲೆ) {
                             b=(uint8_t)((c>>8)&0x3f);
-                            *target++=TO_BASE64_IMAP(b);
-                            if(target<targetLimit) {
+                            *ಗುರಿ++=ಗಮ್ಯ_BASE64_IMAP(b);
+                            ಆದರೆ(ಗುರಿ<ಗುರಿ_ಎಲ್ಲೆ) {
                                 b=(uint8_t)((c>>2)&0x3f);
-                                *target++=TO_BASE64_IMAP(b);
-                                if(offsets!=nullptr) {
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex++;
+                                *ಗುರಿ++=ಗಮ್ಯ_BASE64_IMAP(b);
+                                ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
                                 }
-                            } else {
-                                if(offsets!=nullptr) {
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex++;
+                            } ಇಲ್ಲದಿದ್ದರೆ {
+                                ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
                                 }
                                 b=(uint8_t)((c>>2)&0x3f);
-                                cnv->charErrorBuffer[0]=TO_BASE64_IMAP(b);
-                                cnv->charErrorBufferLength=1;
-                                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                                cnv->char_Error_ಬಫರ್[0]=ಗಮ್ಯ_BASE64_IMAP(b);
+                                cnv->char_Error_ಬಫರ್_ಉದ್ದಳತೆ=1;
+                                *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex++;
+                        } ಇಲ್ಲದಿದ್ದರೆ {
+                            ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                                *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
                             }
                             b=(uint8_t)((c>>8)&0x3f);
-                            cnv->charErrorBuffer[0]=TO_BASE64_IMAP(b);
+                            cnv->char_Error_ಬಫರ್[0]=ಗಮ್ಯ_BASE64_IMAP(b);
                             b=(uint8_t)((c>>2)&0x3f);
-                            cnv->charErrorBuffer[1]=TO_BASE64_IMAP(b);
-                            cnv->charErrorBufferLength=2;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                            cnv->char_Error_ಬಫರ್[1]=ಗಮ್ಯ_BASE64_IMAP(b);
+                            cnv->char_Error_ಬಫರ್_ಉದ್ದಳತೆ=2;
+                            *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
                         }
-                        bits=(uint8_t)((c&3)<<4);
+                        ಬಿಟ್ಟುಗಳು=(uint8_t)((c&3)<<4);
                         base64Counter=2;
-                        break;
-                    case 2:
-                        b=(uint8_t)(bits|(c>>12));
-                        *target++=TO_BASE64_IMAP(b);
-                        if(target<targetLimit) {
+                        ನಿಲ್ಲಿಸು;
+                    ಸ್ಥಿತಿ 2:
+                        b=(uint8_t)(ಬಿಟ್ಟುಗಳು|(c>>12));
+                        *ಗುರಿ++=ಗಮ್ಯ_BASE64_IMAP(b);
+                        ಆದರೆ(ಗುರಿ<ಗುರಿ_ಎಲ್ಲೆ) {
                             b=(uint8_t)((c>>6)&0x3f);
-                            *target++=TO_BASE64_IMAP(b);
-                            if(target<targetLimit) {
+                            *ಗುರಿ++=ಗಮ್ಯ_BASE64_IMAP(b);
+                            ಆದರೆ(ಗುರಿ<ಗುರಿ_ಎಲ್ಲೆ) {
                                 b=(uint8_t)(c&0x3f);
-                                *target++=TO_BASE64_IMAP(b);
-                                if(offsets!=nullptr) {
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex++;
+                                *ಗುರಿ++=ಗಮ್ಯ_BASE64_IMAP(b);
+                                ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
                                 }
-                            } else {
-                                if(offsets!=nullptr) {
-                                    *offsets++=sourceIndex;
-                                    *offsets++=sourceIndex++;
+                            } ಇಲ್ಲದಿದ್ದರೆ {
+                                ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ;
+                                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
                                 }
                                 b=(uint8_t)(c&0x3f);
-                                cnv->charErrorBuffer[0]=TO_BASE64_IMAP(b);
-                                cnv->charErrorBufferLength=1;
-                                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                                cnv->char_Error_ಬಫರ್[0]=ಗಮ್ಯ_BASE64_IMAP(b);
+                                cnv->char_Error_ಬಫರ್_ಉದ್ದಳತೆ=1;
+                                *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex++;
+                        } ಇಲ್ಲದಿದ್ದರೆ {
+                            ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                                *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ++;
                             }
                             b=(uint8_t)((c>>6)&0x3f);
-                            cnv->charErrorBuffer[0]=TO_BASE64_IMAP(b);
+                            cnv->char_Error_ಬಫರ್[0]=ಗಮ್ಯ_BASE64_IMAP(b);
                             b=(uint8_t)(c&0x3f);
-                            cnv->charErrorBuffer[1]=TO_BASE64_IMAP(b);
-                            cnv->charErrorBufferLength=2;
-                            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                            cnv->char_Error_ಬಫರ್[1]=ಗಮ್ಯ_BASE64_IMAP(b);
+                            cnv->char_Error_ಬಫರ್_ಉದ್ದಳತೆ=2;
+                            *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
                         }
-                        bits=0;
+                        ಬಿಟ್ಟುಗಳು=0;
                         base64Counter=0;
-                        break;
-                    default:
+                        ನಿಲ್ಲಿಸು;
+                    ಪೂರ್ವನಿಯೋಜಿತ:
                         /* will never occur */
-                        break;
+                        ನಿಲ್ಲಿಸು;
                     }
                 }
-            } else {
+            } ಇಲ್ಲದಿದ್ದರೆ {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
+                ನಿಲ್ಲಿಸು;
             }
         }
     }
 
-    if(pArgs->flush && source>=sourceLimit) {
+    ಆದರೆ(p_ವಾದಗಳು->flush && ಮೂಲ>=ಮೂಲ_ಎಲ್ಲೆ) {
         /* flush remaining bits to the target */
-        if(!inDirectMode) {
-            if(base64Counter!=0) {
-                if(target<targetLimit) {
-                    *target++=TO_BASE64_IMAP(bits);
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex-1;
+        ಆದರೆ(!ಒಳ_ನೇರ_ಬಹುಲಕ) {
+            ಆದರೆ(base64Counter!=0) {
+                ಆದರೆ(ಗುರಿ<ಗುರಿ_ಎಲ್ಲೆ) {
+                    *ಗುರಿ++=ಗಮ್ಯ_BASE64_IMAP(ಬಿಟ್ಟುಗಳು);
+                    ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                        *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ-1;
                     }
-                } else {
-                    cnv->charErrorBuffer[cnv->charErrorBufferLength++]=TO_BASE64_IMAP(bits);
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                } ಇಲ್ಲದಿದ್ದರೆ {
+                    cnv->char_Error_ಬಫರ್[cnv->char_Error_ಬಫರ್_ಉದ್ದಳತೆ++]=ಗಮ್ಯ_BASE64_IMAP(ಬಿಟ್ಟುಗಳು);
+                    *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
                 }
             }
             /* need to terminate with a minus */
-            if(target<targetLimit) {
-                *target++=MINUS;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex-1;
+            ಆದರೆ(ಗುರಿ<ಗುರಿ_ಎಲ್ಲೆ) {
+                *ಗುರಿ++=MINUS;
+                ಆದರೆ(offsets!=ಶೂನ್ಯಸೂಚಕ) {
+                    *offsets++=ಮೂಲ_ಸೂಚ್ಯಂಕ-1;
                 }
-            } else {
-                cnv->charErrorBuffer[cnv->charErrorBufferLength++]=MINUS;
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+            } ಇಲ್ಲದಿದ್ದರೆ {
+                cnv->char_Error_ಬಫರ್[cnv->char_Error_ಬಫರ್_ಉದ್ದಳತೆ++]=MINUS;
+                *p_Error_ಸಂಕೇತ=U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
             }
         }
         /* reset the state for the next conversion */
-        cnv->fromUnicodeStatus=(cnv->fromUnicodeStatus&0xf0000000)|0x1000000; /* keep version, inDirectMode=true */
-    } else {
+        cnv->from_Unicode_ಸ್ಥಿತಿ=(cnv->from_Unicode_ಸ್ಥಿತಿ&0xf0000000)|0x1000000; /* keep version, inDirectMode=true */
+    } ಇಲ್ಲದಿದ್ದರೆ {
         /* set the converter state back into UConverter */
-        cnv->fromUnicodeStatus=
-            (cnv->fromUnicodeStatus&0xf0000000)|    /* keep version*/
-            ((uint32_t)inDirectMode<<24)|((uint32_t)base64Counter<<16)|(uint32_t)bits;
+        cnv->from_Unicode_ಸ್ಥಿತಿ=
+            (cnv->from_Unicode_ಸ್ಥಿತಿ&0xf0000000)|    /* keep version*/
+            ((uint32_t)ಒಳ_ನೇರ_ಬಹುಲಕ<<24)|((uint32_t)base64Counter<<16)|(uint32_t)ಬಿಟ್ಟುಗಳು;
     }
 
     /* write back the updated pointers */
-    pArgs->source=source;
-    pArgs->target=(char *)target;
-    pArgs->offsets=offsets;
+    p_ವಾದಗಳು->ಮೂಲ=ಮೂಲ;
+    p_ವಾದಗಳು->ಗುರಿ=(ಅಕ್ಷರ *)ಗುರಿ;
+    p_ವಾದಗಳು->offsets=offsets;
 }
-U_CDECL_END
+U_CDECL_ಕೊನೆ
 
-static const UConverterImpl _IMAPImpl={
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ UConverterImpl _IMAPImpl={
     UCNV_IMAP_MAILBOX,
 
-    nullptr,
-    nullptr,
+    ಶೂನ್ಯಸೂಚಕ,
+    ಶೂನ್ಯಸೂಚಕ,
 
     _UTF7Open,
-    nullptr,
+    ಶೂನ್ಯಸೂಚಕ,
     _UTF7Reset,
 
     _IMAPToUnicodeWithOffsets,
     _IMAPToUnicodeWithOffsets,
     _IMAPFromUnicodeWithOffsets,
     _IMAPFromUnicodeWithOffsets,
-    nullptr,
+    ಶೂನ್ಯಸೂಚಕ,
 
-    nullptr,
-    nullptr,
-    nullptr, /* we don't need writeSub() because we never call a callback at fromUnicode() */
-    nullptr,
-    ucnv_getCompleteUnicodeSet,
-    nullptr,
-    nullptr
+    ಶೂನ್ಯಸೂಚಕ,
+    ಶೂನ್ಯಸೂಚಕ,
+    ಶೂನ್ಯಸೂಚಕ, /* we don't need writeSub() because we never call a callback at fromUnicode() */
+    ಶೂನ್ಯಸೂಚಕ,
+    ucnv_get_Complete_Unicode_ಗಣ,
+    ಶೂನ್ಯಸೂಚಕ,
+    ಶೂನ್ಯಸೂಚಕ
 };
 
-static const UConverterStaticData _IMAPStaticData={
-    sizeof(UConverterStaticData),
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ UConverter_Static_ದತ್ತಾಂಶ IMAPStatic_ದತ್ತಾಂಶ={
+    ಗಾತ್ರ(UConverter_Static_ದತ್ತಾಂಶ),
     "IMAP-mailbox-name",
     0, /* TODO CCSID for IMAP-mailbox-name */
     UCNV_IBM, UCNV_IMAP_MAILBOX,
     1, 4,
     { 0x3f, 0, 0, 0 }, 1, /* the subchar is not used */
-    false, false,
+    ಸುಳ್ಳು, ಸುಳ್ಳು,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _IMAPData=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_IMAPStaticData, &_IMAPImpl);
+ಸ್ಥಿರಾಂಕ UConverter_Shared_ದತ್ತಾಂಶ _IMAPData=
+        UCNV_IMMUTABLE_SHARED_ದತ್ತಾಂಶ_INITIALIZER(&IMAPStatic_ದತ್ತಾಂಶ, &_IMAPImpl);
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

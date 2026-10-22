@@ -16,40 +16,40 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if !U_HAVE_WCSCPY
+#ಆದರೆ !U_HAVE_WCSCPY
 
-#include "cwchar.h"
+#ಅನ್ತರ್ಭಾವ "cwchar.h"
 
-U_CAPI wchar_t *uprv_wcscat(wchar_t *dst, const wchar_t *src) {
-    wchar_t *start=dst;
-    while(*dst!=0) {
+U_CAPI wchar_t *uprv_wcscat(wchar_t *dst, ಸ್ಥಿರಾಂಕ wchar_t *src) {
+    wchar_t *ಆರಂಭ=dst;
+    ಆಗ(*dst!=0) {
         ++dst;
     }
-    while((*dst=*src)!=0) {
-        ++dst;
-        ++src;
-    }
-    return start;
-}
-
-U_CAPI wchar_t *uprv_wcscpy(wchar_t *dst, const wchar_t *src) {
-    wchar_t *start=dst;
-    while((*dst=*src)!=0) {
+    ಆಗ((*dst=*src)!=0) {
         ++dst;
         ++src;
     }
-    return start;
+    ಹಿಂತಿರುಗಿ ಆರಂಭ;
 }
 
-U_CAPI size_t uprv_wcslen(const wchar_t *src) {
-    const wchar_t *start=src;
-    while(*src!=0) {
+U_CAPI wchar_t *uprv_wcscpy(wchar_t *dst, ಸ್ಥಿರಾಂಕ wchar_t *src) {
+    wchar_t *ಆರಂಭ=dst;
+    ಆಗ((*dst=*src)!=0) {
+        ++dst;
         ++src;
     }
-    return src-start;
+    ಹಿಂತಿರುಗಿ ಆರಂಭ;
 }
 
-#endif
+U_CAPI size_t uprv_wcslen(ಸ್ಥಿರಾಂಕ wchar_t *src) {
+    ಸ್ಥಿರಾಂಕ wchar_t *ಆರಂಭ=src;
+    ಆಗ(*src!=0) {
+        ++src;
+    }
+    ಹಿಂತಿರುಗಿ src-ಆರಂಭ;
+}
+
+#ಆದರೆ_ಅಂತ್ಯ
 

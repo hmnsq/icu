@@ -30,22 +30,22 @@
 //                      the previous step.
 //
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ಆದರೆ !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/uniset.h"
-#include "uvector.h"
-#include "uassert.h"
-#include "cmemory.h"
-#include "cstring.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uniset.h"
+#ಅನ್ತರ್ಭಾವ "uvector.h"
+#ಅನ್ತರ್ಭಾವ "uassert.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "cstring.h"
 
-#include "rbbisetb.h"
-#include "rbbinode.h"
+#ಅನ್ತರ್ಭಾವ "rbbisetb.h"
+#ಅನ್ತರ್ಭಾವ "rbbinode.h"
 
 U_NAMESPACE_BEGIN
 
-const int32_t kMaxCharCategoriesFor8BitsTrie = 255;
+ಸ್ಥಿರಾಂಕ int32_t k_Max_Char_Categories_For8_ಬಿಟ್ಟುಗಳು_Trie = 255;
 //------------------------------------------------------------------------
 //
 //   Constructor
@@ -54,12 +54,12 @@ const int32_t kMaxCharCategoriesFor8BitsTrie = 255;
 RBBISetBuilder::RBBISetBuilder(RBBIRuleBuilder *rb)
 {
     fRB             = rb;
-    fStatus         = rb->fStatus;
-    fRangeList      = nullptr;
-    fMutableTrie    = nullptr;
-    fTrie           = nullptr;
-    fTrieSize       = 0;
-    fGroupCount     = 0;
+    f_ಸ್ಥಿತಿ         = rb->f_ಸ್ಥಿತಿ;
+    fRangeList      = ಶೂನ್ಯಸೂಚಕ;
+    fMutableTrie    = ಶೂನ್ಯಸೂಚಕ;
+    fTrie           = ಶೂನ್ಯಸೂಚಕ;
+    f_Trie_ಗಾತ್ರ       = 0;
+    f_ಗುಂಪು_ಎಣಿಕೆ     = 0;
 }
 
 
@@ -70,13 +70,13 @@ RBBISetBuilder::RBBISetBuilder(RBBIRuleBuilder *rb)
 //------------------------------------------------------------------------
 RBBISetBuilder::~RBBISetBuilder()
 {
-    RangeDescriptor   *nextRangeDesc;
+    RangeDescriptor   *ಮುಂದಿನ_Range_Desc;
 
     // Walk through & delete the linked list of RangeDescriptors
-    for (nextRangeDesc = fRangeList; nextRangeDesc!=nullptr;) {
-        RangeDescriptor *r = nextRangeDesc;
-        nextRangeDesc      = r->fNext;
-        delete r;
+    ಗಾಗಿ (ಮುಂದಿನ_Range_Desc = fRangeList; ಮುಂದಿನ_Range_Desc!=ಶೂನ್ಯಸೂಚಕ;) {
+        RangeDescriptor *r = ಮುಂದಿನ_Range_Desc;
+        ಮುಂದಿನ_Range_Desc      = r->f_ಮುಂದಿನ;
+        ಅಳಿಸು r;
     }
 
     ucptrie_close(fTrie);
@@ -92,54 +92,54 @@ RBBISetBuilder::~RBBISetBuilder()
 //                  from the Unicode Sets.
 //
 //------------------------------------------------------------------------
-void RBBISetBuilder::buildRanges() {
-    RBBINode        *usetNode;
+ಶೂನ್ಯ RBBISetBuilder::buildRanges() {
+    RBBINode        *uset_ಗಂಟು;
     RangeDescriptor *rlRange;
 
-    if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "usets")) {printSets();}
+    ಆದರೆ (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "usets")) {printSets();}
 
     //
     //  Initialize the process by creating a single range encompassing all characters
     //  that is in no sets.
     //
-    fRangeList                = new RangeDescriptor(*fStatus); // will check for status here
-    if (fRangeList == nullptr) {
-        *fStatus = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    fRangeList                = ಹೊಸ RangeDescriptor(*f_ಸ್ಥಿತಿ); // will check for status here
+    ಆದರೆ (fRangeList == ಶೂನ್ಯಸೂಚಕ) {
+        *f_ಸ್ಥಿತಿ = U_ಸ್ಮರಣೆ_ಹಂಚಿಕೆ_ERROR;
+        ಹಿಂತಿರುಗಿ;
     }
-    fRangeList->fStartChar    = 0;
-    fRangeList->fEndChar      = 0x10ffff;
+    fRangeList->f_ಆರಂಭ_Char    = 0;
+    fRangeList->f_ಕೊನೆ_Char      = 0x10ffff;
 
-    if (U_FAILURE(*fStatus)) {
-        return;
+    ಆದರೆ (U_FAILURE(*f_ಸ್ಥಿತಿ)) {
+        ಹಿಂತಿರುಗಿ;
     }
 
     //
     //  Find the set of non-overlapping ranges of characters
     //
-    int  ni;
-    for (ni=0; ; ni++) {        // Loop over each of the UnicodeSets encountered in the input rules
-        usetNode = static_cast<RBBINode*>(this->fRB->fUSetNodes->elementAt(ni));
-        if (usetNode==nullptr) {
-            break;
+    ಪೂರ್ಣಾಂಕ  ni;
+    ಗಾಗಿ (ni=0; ; ni++) {        // Loop over each of the UnicodeSets encountered in the input rules
+        uset_ಗಂಟು = static_cast<RBBINode*>(ಇದು->fRB->fUSetNodes->elementAt(ni));
+        ಆದರೆ (uset_ಗಂಟು==ಶೂನ್ಯಸೂಚಕ) {
+            ನಿಲ್ಲಿಸು;
         }
 
-        UnicodeSet      *inputSet             = usetNode->fInputSet;
-        int32_t          inputSetRangeCount   = inputSet->getRangeCount();
-        int              inputSetRangeIndex   = 0;
+        Unicode_ಗಣ      *ಒಳಹರಿವು_ಗಣ             = uset_ಗಂಟು->f_ಒಳಹರಿವು_ಗಣ;
+        int32_t          ಒಳಹರಿವು_ಗಣ_Range_ಎಣಿಕೆ   = ಒಳಹರಿವು_ಗಣ->get_Range_ಎಣಿಕೆ();
+        ಪೂರ್ಣಾಂಕ              ಒಳಹರಿವು_ಗಣ_Range_ಸೂಚ್ಯಂಕ   = 0;
                          rlRange              = fRangeList;
 
-        for (;;) {
-            if (inputSetRangeIndex >= inputSetRangeCount) {
-                break;
+        ಗಾಗಿ (;;) {
+            ಆದರೆ (ಒಳಹರಿವು_ಗಣ_Range_ಸೂಚ್ಯಂಕ >= ಒಳಹರಿವು_ಗಣ_Range_ಎಣಿಕೆ) {
+                ನಿಲ್ಲಿಸು;
             }
-            UChar32      inputSetRangeBegin  = inputSet->getRangeStart(inputSetRangeIndex);
-            UChar32      inputSetRangeEnd    = inputSet->getRangeEnd(inputSetRangeIndex);
+            UChar32      ಒಳಹರಿವು_ಗಣ_Range_Begin  = ಒಳಹರಿವು_ಗಣ->get_Range_ಆರಂಭ(ಒಳಹರಿವು_ಗಣ_Range_ಸೂಚ್ಯಂಕ);
+            UChar32      ಒಳಹರಿವು_ಗಣ_Range_ಕೊನೆ    = ಒಳಹರಿವು_ಗಣ->get_Range_ಕೊನೆ(ಒಳಹರಿವು_ಗಣ_Range_ಸೂಚ್ಯಂಕ);
 
             // skip over ranges from the range list that are completely
             //   below the current range from the input unicode set.
-            while (rlRange->fEndChar < inputSetRangeBegin) {
-                rlRange = rlRange->fNext;
+            ಆಗ (rlRange->f_ಕೊನೆ_Char < ಒಳಹರಿವು_ಗಣ_Range_Begin) {
+                rlRange = rlRange->f_ಮುಂದಿನ;
             }
 
             // If the start of the range from the range list is before with
@@ -148,12 +148,12 @@ void RBBISetBuilder::buildRanges() {
             //   and the other containing the rest.
             //   Then continue the loop; the post-split current range will then be skipped
             //     over
-            if (rlRange->fStartChar < inputSetRangeBegin) {
-                rlRange->split(inputSetRangeBegin, *fStatus);
-                if (U_FAILURE(*fStatus)) {
-                    return;
+            ಆದರೆ (rlRange->f_ಆರಂಭ_Char < ಒಳಹರಿವು_ಗಣ_Range_Begin) {
+                rlRange->ವಿಭಜಿಸು(ಒಳಹರಿವು_ಗಣ_Range_Begin, *f_ಸ್ಥಿತಿ);
+                ಆದರೆ (U_FAILURE(*f_ಸ್ಥಿತಿ)) {
+                    ಹಿಂತಿರುಗಿ;
                 }
-                continue;
+                ಮುಂದುವರಿ;
             }
 
             // Same thing at the end of the ranges...
@@ -161,31 +161,31 @@ void RBBISetBuilder::buildRanges() {
             //   the end of the range from the unicode set, split the range list
             //   range in two.  The first part of the split range will be
             //   wholly inside the Unicode set.
-            if (rlRange->fEndChar > inputSetRangeEnd) {
-                rlRange->split(inputSetRangeEnd+1, *fStatus);
-                if (U_FAILURE(*fStatus)) {
-                    return;
+            ಆದರೆ (rlRange->f_ಕೊನೆ_Char > ಒಳಹರಿವು_ಗಣ_Range_ಕೊನೆ) {
+                rlRange->ವಿಭಜಿಸು(ಒಳಹರಿವು_ಗಣ_Range_ಕೊನೆ+1, *f_ಸ್ಥಿತಿ);
+                ಆದರೆ (U_FAILURE(*f_ಸ್ಥಿತಿ)) {
+                    ಹಿಂತಿರುಗಿ;
                 }
             }
 
             // The current rlRange is now entirely within the UnicodeSet range.
             // Add this unicode set to the list of sets for this rlRange
-            if (rlRange->fIncludesSets->indexOf(usetNode) == -1) {
-                rlRange->fIncludesSets->addElement(usetNode, *fStatus);
-                if (U_FAILURE(*fStatus)) {
-                    return;
+            ಆದರೆ (rlRange->fIncludesSets->ಸೂಚ್ಯಂಕ_ದ(uset_ಗಂಟು) == -1) {
+                rlRange->fIncludesSets->ಕೂಡಿಸು_Element(uset_ಗಂಟು, *f_ಸ್ಥಿತಿ);
+                ಆದರೆ (U_FAILURE(*f_ಸ್ಥಿತಿ)) {
+                    ಹಿಂತಿರುಗಿ;
                 }
             }
 
             // Advance over ranges that we are finished with.
-            if (inputSetRangeEnd == rlRange->fEndChar) {
-                inputSetRangeIndex++;
+            ಆದರೆ (ಒಳಹರಿವು_ಗಣ_Range_ಕೊನೆ == rlRange->f_ಕೊನೆ_Char) {
+                ಒಳಹರಿವು_ಗಣ_Range_ಸೂಚ್ಯಂಕ++;
             }
-            rlRange = rlRange->fNext;
+            rlRange = rlRange->f_ಮುಂದಿನ;
         }
     }
 
-    if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "range")) { printRanges();}
+    ಆದರೆ (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "range")) { printRanges();}
 
     //
     //  Group the above ranges, with each group consisting of one or more
@@ -198,26 +198,26 @@ void RBBISetBuilder::buildRanges() {
     //               # 2  is reserved - table column 2 is for beginning-of-input
     //               # 3  is the first range list.
     //
-    RangeDescriptor *rlSearchRange;
-    int32_t dictGroupCount = 0;
+    RangeDescriptor *rl_ಹುಡುಕು_Range;
+    int32_t dict_ಗುಂಪು_ಎಣಿಕೆ = 0;
 
-    for (rlRange = fRangeList; rlRange!=nullptr; rlRange=rlRange->fNext) {
-        for (rlSearchRange=fRangeList; rlSearchRange != rlRange; rlSearchRange=rlSearchRange->fNext) {
-            if (rlRange->fIncludesSets->equals(*rlSearchRange->fIncludesSets)) {
-                rlRange->fNum = rlSearchRange->fNum;
-                rlRange->fIncludesDict = rlSearchRange->fIncludesDict;
-                break;
+    ಗಾಗಿ (rlRange = fRangeList; rlRange!=ಶೂನ್ಯಸೂಚಕ; rlRange=rlRange->f_ಮುಂದಿನ) {
+        ಗಾಗಿ (rl_ಹುಡುಕು_Range=fRangeList; rl_ಹುಡುಕು_Range != rlRange; rl_ಹುಡುಕು_Range=rl_ಹುಡುಕು_Range->f_ಮುಂದಿನ) {
+            ಆದರೆ (rlRange->fIncludesSets->equals(*rl_ಹುಡುಕು_Range->fIncludesSets)) {
+                rlRange->f_ಅಂಕೆ = rl_ಹುಡುಕು_Range->f_ಅಂಕೆ;
+                rlRange->fIncludesDict = rl_ಹುಡುಕು_Range->fIncludesDict;
+                ನಿಲ್ಲಿಸು;
             }
         }
-        if (rlRange->fNum == 0) {
-            rlRange->fFirstInGroup = true;
-            if (rlRange->isDictionaryRange()) {
-                rlRange->fNum = ++dictGroupCount;
-                rlRange->fIncludesDict = true;
-            } else {
-                fGroupCount++;
-                rlRange->fNum = fGroupCount+2;
-                addValToSets(rlRange->fIncludesSets, rlRange->fNum);
+        ಆದರೆ (rlRange->f_ಅಂಕೆ == 0) {
+            rlRange->f_ಮೊದಲ_ಒಳ_ಗುಂಪು = ನಿಜ;
+            ಆದರೆ (rlRange->isDictionaryRange()) {
+                rlRange->f_ಅಂಕೆ = ++dict_ಗುಂಪು_ಎಣಿಕೆ;
+                rlRange->fIncludesDict = ನಿಜ;
+            } ಇಲ್ಲದಿದ್ದರೆ {
+                f_ಗುಂಪು_ಎಣಿಕೆ++;
+                rlRange->f_ಅಂಕೆ = f_ಗುಂಪು_ಎಣಿಕೆ+2;
+                ಕೂಡಿಸು_Val_ಗಮ್ಯ_Sets(rlRange->fIncludesSets, rlRange->f_ಅಂಕೆ);
             }
         }
     }
@@ -225,16 +225,16 @@ void RBBISetBuilder::buildRanges() {
     // Move the character category numbers for any dictionary ranges up, so that they
     // immediately follow the non-dictionary ranges.
 
-    fDictCategoriesStart = fGroupCount + 3;
-    for (rlRange = fRangeList; rlRange!=nullptr; rlRange=rlRange->fNext) {
-        if (rlRange->fIncludesDict) {
-            rlRange->fNum += fDictCategoriesStart - 1;
-            if (rlRange->fFirstInGroup) {
-                addValToSets(rlRange->fIncludesSets, rlRange->fNum);
+    f_Dict_Categories_ಆರಂಭ = f_ಗುಂಪು_ಎಣಿಕೆ + 3;
+    ಗಾಗಿ (rlRange = fRangeList; rlRange!=ಶೂನ್ಯಸೂಚಕ; rlRange=rlRange->f_ಮುಂದಿನ) {
+        ಆದರೆ (rlRange->fIncludesDict) {
+            rlRange->f_ಅಂಕೆ += f_Dict_Categories_ಆರಂಭ - 1;
+            ಆದರೆ (rlRange->f_ಮೊದಲ_ಒಳ_ಗುಂಪು) {
+                ಕೂಡಿಸು_Val_ಗಮ್ಯ_Sets(rlRange->fIncludesSets, rlRange->f_ಅಂಕೆ);
             }
         }
     }
-    fGroupCount += dictGroupCount;
+    f_ಗುಂಪು_ಎಣಿಕೆ += dict_ಗುಂಪು_ಎಣಿಕೆ;
 
 
     // Handle input sets that contain the special string {eof}.
@@ -245,20 +245,20 @@ void RBBISetBuilder::buildRanges() {
     //   it doesn’t affect the computation of ranges or TRIE.
 
     UnicodeString eofString(u"eof");
-    for (ni=0; ; ni++) {        // Loop over each of the UnicodeSets encountered in the input rules
-        usetNode = static_cast<RBBINode*>(this->fRB->fUSetNodes->elementAt(ni));
-        if (usetNode==nullptr) {
-            break;
+    ಗಾಗಿ (ni=0; ; ni++) {        // Loop over each of the UnicodeSets encountered in the input rules
+        uset_ಗಂಟು = static_cast<RBBINode*>(ಇದು->fRB->fUSetNodes->elementAt(ni));
+        ಆದರೆ (uset_ಗಂಟು==ಶೂನ್ಯಸೂಚಕ) {
+            ನಿಲ್ಲಿಸು;
         }
-        UnicodeSet      *inputSet = usetNode->fInputSet;
-        if (inputSet->contains(eofString)) {
-            addValToSet(usetNode, 1);
+        Unicode_ಗಣ      *ಒಳಹರಿವು_ಗಣ = uset_ಗಂಟು->f_ಒಳಹರಿವು_ಗಣ;
+        ಆದರೆ (ಒಳಹರಿವು_ಗಣ->ಒಳಗೊಂಡಿದೆ(eofString)) {
+            ಕೂಡಿಸು_Val_ಗಮ್ಯ_ಗಣ(uset_ಗಂಟು, 1);
         }
     }
 
 
-    if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "rgroup")) {printRangeGroups();}
-    if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "esets")) {printSets();}
+    ಆದರೆ (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "rgroup")) {printRangeGroups();}
+    ಆದರೆ (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "esets")) {printSets();}
 }
 
 
@@ -266,39 +266,39 @@ void RBBISetBuilder::buildRanges() {
 // Build the Trie table for mapping UChar32 values to the corresponding
 // range group number.
 //
-void RBBISetBuilder::buildTrie() {
+ಶೂನ್ಯ RBBISetBuilder::buildTrie() {
     fMutableTrie = umutablecptrie_open(
                         0,       //  Initial value for all code points.
                         0,       //  Error value for out-of-range input.
-                        fStatus);
+                        f_ಸ್ಥಿತಿ);
 
-    for (RangeDescriptor *range = fRangeList; range!=nullptr && U_SUCCESS(*fStatus); range=range->fNext) {
-        umutablecptrie_setRange(fMutableTrie,
-                                range->fStartChar,     // Range start
-                                range->fEndChar,       // Range end (inclusive)
-                                range->fNum,           // value for range
-                                fStatus);
+    ಗಾಗಿ (RangeDescriptor *range = fRangeList; range!=ಶೂನ್ಯಸೂಚಕ && U_SUCCESS(*f_ಸ್ಥಿತಿ); range=range->f_ಮುಂದಿನ) {
+        umutablecptrie_ಗಣ_Range(fMutableTrie,
+                                range->f_ಆರಂಭ_Char,     // Range start
+                                range->f_ಕೊನೆ_Char,       // Range end (inclusive)
+                                range->f_ಅಂಕೆ,           // value for range
+                                f_ಸ್ಥಿತಿ);
     }
 }
 
 
-void RBBISetBuilder::mergeCategories(IntPair categories) {
+ಶೂನ್ಯ RBBISetBuilder::ವಿಲೀನ_Categories(IntPair categories) {
     U_ASSERT(categories.first >= 1);
-    U_ASSERT(categories.second > categories.first);
-    U_ASSERT((categories.first <  fDictCategoriesStart && categories.second <  fDictCategoriesStart) ||
-             (categories.first >= fDictCategoriesStart && categories.second >= fDictCategoriesStart));
+    U_ASSERT(categories.ಎರಡನೇ > categories.first);
+    U_ASSERT((categories.first <  f_Dict_Categories_ಆರಂಭ && categories.ಎರಡನೇ <  f_Dict_Categories_ಆರಂಭ) ||
+             (categories.first >= f_Dict_Categories_ಆರಂಭ && categories.ಎರಡನೇ >= f_Dict_Categories_ಆರಂಭ));
 
-    for (RangeDescriptor *rd = fRangeList; rd != nullptr; rd = rd->fNext) {
-        int32_t rangeNum = rd->fNum;
-        if (rangeNum == categories.second) {
-            rd->fNum = categories.first;
-        } else if (rangeNum > categories.second) {
-            rd->fNum--;
+    ಗಾಗಿ (RangeDescriptor *rd = fRangeList; rd != ಶೂನ್ಯಸೂಚಕ; rd = rd->f_ಮುಂದಿನ) {
+        int32_t range_ಅಂಕೆ = rd->f_ಅಂಕೆ;
+        ಆದರೆ (range_ಅಂಕೆ == categories.ಎರಡನೇ) {
+            rd->f_ಅಂಕೆ = categories.first;
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (range_ಅಂಕೆ > categories.ಎರಡನೇ) {
+            rd->f_ಅಂಕೆ--;
         }
     }
-    --fGroupCount;
-    if (categories.second <= fDictCategoriesStart) {
-        --fDictCategoriesStart;
+    --f_ಗುಂಪು_ಎಣಿಕೆ;
+    ಆದರೆ (categories.ಎರಡನೇ <= f_Dict_Categories_ಆರಂಭ) {
+        --f_Dict_Categories_ಆರಂಭ;
     }
 }
 
@@ -308,24 +308,24 @@ void RBBISetBuilder::mergeCategories(IntPair categories) {
 //  getTrieSize()    Return the size that will be required to serialize the Trie.
 //
 //-----------------------------------------------------------------------------------
-int32_t RBBISetBuilder::getTrieSize()  {
-    if (U_FAILURE(*fStatus)) {
-        return 0;
+int32_t RBBISetBuilder::get_Trie_ಗಾತ್ರ()  {
+    ಆದರೆ (U_FAILURE(*f_ಸ್ಥಿತಿ)) {
+        ಹಿಂತಿರುಗಿ 0;
     }
-    if (fTrie == nullptr) {
-        bool use8Bits = getNumCharCategories() <= kMaxCharCategoriesFor8BitsTrie;
+    ಆದರೆ (fTrie == ಶೂನ್ಯಸೂಚಕ) {
+        ತಾರ್ಕಿಕ use8_ಬಿಟ್ಟುಗಳು = get_ಅಂಕೆ_Char_Categories() <= k_Max_Char_Categories_For8_ಬಿಟ್ಟುಗಳು_Trie;
         fTrie = umutablecptrie_buildImmutable(
             fMutableTrie,
             UCPTRIE_TYPE_FAST,
-            use8Bits ? UCPTRIE_VALUE_BITS_8 : UCPTRIE_VALUE_BITS_16,
-            fStatus);
-        UErrorCode bufferStatus = *fStatus;
-        fTrieSize = ucptrie_toBinary(fTrie, nullptr, 0, &bufferStatus);
-        if (bufferStatus != U_BUFFER_OVERFLOW_ERROR && U_FAILURE(bufferStatus)) {
-            *fStatus = bufferStatus;
+            use8_ಬಿಟ್ಟುಗಳು ? UCPTRIE_ಮೌಲ್ಯ_ಬಿಟ್ಟುಗಳು_8 : UCPTRIE_ಮೌಲ್ಯ_ಬಿಟ್ಟುಗಳು_16,
+            f_ಸ್ಥಿತಿ);
+        UError_ಸಂಕೇತ ಬಫರ್_ಸ್ಥಿತಿ = *f_ಸ್ಥಿತಿ;
+        f_Trie_ಗಾತ್ರ = ucptrie_ಗಮ್ಯ_ದ್ವಿಮಾನ(fTrie, ಶೂನ್ಯಸೂಚಕ, 0, &ಬಫರ್_ಸ್ಥಿತಿ);
+        ಆದರೆ (ಬಫರ್_ಸ್ಥಿತಿ != U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR && U_FAILURE(ಬಫರ್_ಸ್ಥಿತಿ)) {
+            *f_ಸ್ಥಿತಿ = ಬಫರ್_ಸ್ಥಿತಿ;
         }
     }
-    return fTrieSize;
+    ಹಿಂತಿರುಗಿ f_Trie_ಗಾತ್ರ;
 }
 
 
@@ -336,11 +336,11 @@ int32_t RBBISetBuilder::getTrieSize()  {
 //                    getTrieSize() MUST be called first.
 //
 //-----------------------------------------------------------------------------------
-void RBBISetBuilder::serializeTrie(uint8_t *where) {
-    ucptrie_toBinary(fTrie,
-                     where,                // Buffer
-                     fTrieSize,            // Capacity
-                     fStatus);
+ಶೂನ್ಯ RBBISetBuilder::serializeTrie(uint8_t *where) {
+    ucptrie_ಗಮ್ಯ_ದ್ವಿಮಾನ(fTrie,
+                     where,                //ಬಫರ್
+                     f_Trie_ಗಾತ್ರ,            //ಸಾಮರ್ಥ್ಯ
+                     f_ಸ್ಥಿತಿ);
 }
 
 //------------------------------------------------------------------------
@@ -357,48 +357,48 @@ void RBBISetBuilder::serializeTrie(uint8_t *where) {
 //                   or-ing together of all of the symbols that go into the set.
 //
 //------------------------------------------------------------------------
-void  RBBISetBuilder::addValToSets(UVector *sets, uint32_t val) {
+ಶೂನ್ಯ  RBBISetBuilder::ಕೂಡಿಸು_Val_ಗಮ್ಯ_Sets(UVector *sets, uint32_t val) {
     int32_t       ix;
 
-    for (ix=0; ix<sets->size(); ix++) {
-        RBBINode* usetNode = static_cast<RBBINode*>(sets->elementAt(ix));
-        addValToSet(usetNode, val);
+    ಗಾಗಿ (ix=0; ix<sets->size(); ix++) {
+        RBBINode* uset_ಗಂಟು = static_cast<RBBINode*>(sets->elementAt(ix));
+        ಕೂಡಿಸು_Val_ಗಮ್ಯ_ಗಣ(uset_ಗಂಟು, val);
     }
 }
 
-void  RBBISetBuilder::addValToSet(RBBINode *usetNode, uint32_t val) {
-    RBBINode *leafNode = new RBBINode(RBBINode::leafChar, *fStatus);
-    if (U_FAILURE(*fStatus)) {
-        delete leafNode;
-        return;
+ಶೂನ್ಯ  RBBISetBuilder::ಕೂಡಿಸು_Val_ಗಮ್ಯ_ಗಣ(RBBINode *uset_ಗಂಟು, uint32_t val) {
+    RBBINode *ಎಲೆ_ಗಂಟು = ಹೊಸ RBBINode(RBBINode::ಎಲೆ_Char, *f_ಸ್ಥಿತಿ);
+    ಆದರೆ (U_FAILURE(*f_ಸ್ಥಿತಿ)) {
+        ಅಳಿಸು ಎಲೆ_ಗಂಟು;
+        ಹಿಂತಿರುಗಿ;
     }
-    if (leafNode == nullptr) {
-        *fStatus = U_MEMORY_ALLOCATION_ERROR;
-        return;
+    ಆದರೆ (ಎಲೆ_ಗಂಟು == ಶೂನ್ಯಸೂಚಕ) {
+        *f_ಸ್ಥಿತಿ = U_ಸ್ಮರಣೆ_ಹಂಚಿಕೆ_ERROR;
+        ಹಿಂತಿರುಗಿ;
     }
-    leafNode->fVal = static_cast<unsigned short>(val);
-    if (usetNode->fLeftChild == nullptr) {
-        usetNode->fLeftChild = leafNode;
-        leafNode->fParent    = usetNode;
-    } else {
+    ಎಲೆ_ಗಂಟು->fVal = static_cast<ಚಿಹ್ನೆರಹಿತ ಗಿಡ್ಡ>(val);
+    ಆದರೆ (uset_ಗಂಟು->f_ಎಡ_ಮಗು == ಶೂನ್ಯಸೂಚಕ) {
+        uset_ಗಂಟು->f_ಎಡ_ಮಗು = ಎಲೆ_ಗಂಟು;
+        ಎಲೆ_ಗಂಟು->f_ಪೋಷಕ    = uset_ಗಂಟು;
+    } ಇಲ್ಲದಿದ್ದರೆ {
         // There are already input symbols present for this set.
         // Set up an OR node, with the previous stuff as the left child
         //   and the new value as the right child.
-        RBBINode *orNode = new RBBINode(RBBINode::opOr, *fStatus);
-        if (orNode == nullptr) {
-            *fStatus = U_MEMORY_ALLOCATION_ERROR;
+        RBBINode *or_ಗಂಟು = ಹೊಸ RBBINode(RBBINode::opOr, *f_ಸ್ಥಿತಿ);
+        ಆದರೆ (or_ಗಂಟು == ಶೂನ್ಯಸೂಚಕ) {
+            *f_ಸ್ಥಿತಿ = U_ಸ್ಮರಣೆ_ಹಂಚಿಕೆ_ERROR;
         }
-        if (U_FAILURE(*fStatus)) {
-            delete orNode;
-            delete leafNode;
-            return;
+        ಆದರೆ (U_FAILURE(*f_ಸ್ಥಿತಿ)) {
+            ಅಳಿಸು or_ಗಂಟು;
+            ಅಳಿಸು ಎಲೆ_ಗಂಟು;
+            ಹಿಂತಿರುಗಿ;
         }
-        orNode->fLeftChild  = usetNode->fLeftChild;
-        orNode->fRightChild = leafNode;
-        orNode->fLeftChild->fParent  = orNode;
-        orNode->fRightChild->fParent = orNode;
-        usetNode->fLeftChild = orNode;
-        orNode->fParent = usetNode;
+        or_ಗಂಟು->f_ಎಡ_ಮಗು  = uset_ಗಂಟು->f_ಎಡ_ಮಗು;
+        or_ಗಂಟು->f_ಬಲ_ಮಗು = ಎಲೆ_ಗಂಟು;
+        or_ಗಂಟು->f_ಎಡ_ಮಗು->f_ಪೋಷಕ  = or_ಗಂಟು;
+        or_ಗಂಟು->f_ಬಲ_ಮಗು->f_ಪೋಷಕ = or_ಗಂಟು;
+        uset_ಗಂಟು->f_ಎಡ_ಮಗು = or_ಗಂಟು;
+        or_ಗಂಟು->f_ಪೋಷಕ = uset_ಗಂಟು;
     }
 }
 
@@ -408,8 +408,8 @@ void  RBBISetBuilder::addValToSet(RBBINode *usetNode, uint32_t val) {
 //   getNumCharCategories
 //
 //------------------------------------------------------------------------
-int32_t  RBBISetBuilder::getNumCharCategories() const {
-    return fGroupCount + 3;
+int32_t  RBBISetBuilder::get_ಅಂಕೆ_Char_Categories() ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ f_ಗುಂಪು_ಎಣಿಕೆ + 3;
 }
 
 
@@ -418,8 +418,8 @@ int32_t  RBBISetBuilder::getNumCharCategories() const {
 //   getDictCategoriesStart
 //
 //------------------------------------------------------------------------
-int32_t  RBBISetBuilder::getDictCategoriesStart() const {
-    return fDictCategoriesStart;
+int32_t  RBBISetBuilder::get_Dict_Categories_ಆರಂಭ() ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ f_Dict_Categories_ಆರಂಭ;
 }
 
 
@@ -429,16 +429,16 @@ int32_t  RBBISetBuilder::getDictCategoriesStart() const {
 //                     the first UChar32 that is in the set of chars 
 //                     in the category.
 //------------------------------------------------------------------------
-UChar32  RBBISetBuilder::getFirstChar(int32_t category) const {
+UChar32  RBBISetBuilder::get_ಮೊದಲ_Char(int32_t category) ಸ್ಥಿರಾಂಕ {
     RangeDescriptor   *rlRange;
     UChar32 retVal = static_cast<UChar32>(-1);
-    for (rlRange = fRangeList; rlRange!=nullptr; rlRange=rlRange->fNext) {
-        if (rlRange->fNum == category) {
-            retVal = rlRange->fStartChar;
-            break;
+    ಗಾಗಿ (rlRange = fRangeList; rlRange!=ಶೂನ್ಯಸೂಚಕ; rlRange=rlRange->f_ಮುಂದಿನ) {
+        ಆದರೆ (rlRange->f_ಅಂಕೆ == category) {
+            retVal = rlRange->f_ಆರಂಭ_Char;
+            ನಿಲ್ಲಿಸು;
         }
     }
-    return retVal;
+    ಹಿಂತಿರುಗಿ retVal;
 }
 
 
@@ -448,31 +448,31 @@ UChar32  RBBISetBuilder::getFirstChar(int32_t category) const {
 //                      dump out all of the range definitions.
 //
 //------------------------------------------------------------------------
-#ifdef RBBI_DEBUG
-void RBBISetBuilder::printRanges() {
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ RBBI_DEBUG
+ಶೂನ್ಯ RBBISetBuilder::printRanges() {
     RangeDescriptor       *rlRange;
-    int                    i;
+    ಪೂರ್ಣಾಂಕ                    i;
 
     RBBIDebugPrintf("\n\n Nonoverlapping Ranges ...\n");
-    for (rlRange = fRangeList; rlRange!=nullptr; rlRange=rlRange->fNext) {
-        RBBIDebugPrintf("%4x-%4x  ", rlRange->fStartChar, rlRange->fEndChar);
+    ಗಾಗಿ (rlRange = fRangeList; rlRange!=ಶೂನ್ಯಸೂಚಕ; rlRange=rlRange->f_ಮುಂದಿನ) {
+        RBBIDebugPrintf("%4x-%4x  ", rlRange->f_ಆರಂಭ_Char, rlRange->f_ಕೊನೆ_Char);
 
-        for (i=0; i<rlRange->fIncludesSets->size(); i++) {
-            RBBINode       *usetNode    = (RBBINode *)rlRange->fIncludesSets->elementAt(i);
-            UnicodeString   setName {u"anon"};
-            RBBINode       *setRef = usetNode->fParent;
-            if (setRef != nullptr) {
-                RBBINode *varRef = setRef->fParent;
-                if (varRef != nullptr  &&  varRef->fType == RBBINode::varRef) {
-                    setName = varRef->fText;
+        ಗಾಗಿ (i=0; i<rlRange->fIncludesSets->size(); i++) {
+            RBBINode       *uset_ಗಂಟು    = (RBBINode *)rlRange->fIncludesSets->elementAt(i);
+            UnicodeString   ಗಣ_Name {u"anon"};
+            RBBINode       *ಗಣ_Ref = uset_ಗಂಟು->f_ಪೋಷಕ;
+            ಆದರೆ (ಗಣ_Ref != ಶೂನ್ಯಸೂಚಕ) {
+                RBBINode *varRef = ಗಣ_Ref->f_ಪೋಷಕ;
+                ಆದರೆ (varRef != ಶೂನ್ಯಸೂಚಕ  &&  varRef->fType == RBBINode::varRef) {
+                    ಗಣ_Name = varRef->f_ಪಠ್ಯ;
                 }
             }
-            RBBI_DEBUG_printUnicodeString(setName); RBBIDebugPrintf("  ");
+            RBBI_DEBUG_printUnicodeString(ಗಣ_Name); RBBIDebugPrintf("  ");
         }
         RBBIDebugPrintf("\n");
     }
 }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 
 //------------------------------------------------------------------------
@@ -481,38 +481,38 @@ void RBBISetBuilder::printRanges() {
 //                        dump out all of the range groups.
 //
 //------------------------------------------------------------------------
-#ifdef RBBI_DEBUG
-void RBBISetBuilder::printRangeGroups() {
-    int                    i;
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ RBBI_DEBUG
+ಶೂನ್ಯ RBBISetBuilder::printRangeGroups() {
+    ಪೂರ್ಣಾಂಕ                    i;
 
     RBBIDebugPrintf("\nRanges grouped by Unicode Set Membership...\n");
-    for (RangeDescriptor *rlRange = fRangeList; rlRange!=nullptr; rlRange=rlRange->fNext) {
-        if (rlRange->fFirstInGroup) {
-            int groupNum = rlRange->fNum;
-            RBBIDebugPrintf("%2i  ", groupNum);
+    ಗಾಗಿ (RangeDescriptor *rlRange = fRangeList; rlRange!=ಶೂನ್ಯಸೂಚಕ; rlRange=rlRange->f_ಮುಂದಿನ) {
+        ಆದರೆ (rlRange->f_ಮೊದಲ_ಒಳ_ಗುಂಪು) {
+            ಪೂರ್ಣಾಂಕ ಗುಂಪು_ಅಂಕೆ = rlRange->f_ಅಂಕೆ;
+            RBBIDebugPrintf("%2i  ", ಗುಂಪು_ಅಂಕೆ);
 
-            if (groupNum >= fDictCategoriesStart) { RBBIDebugPrintf(" <DICT> ");}
+            ಆದರೆ (ಗುಂಪು_ಅಂಕೆ >= f_Dict_Categories_ಆರಂಭ) { RBBIDebugPrintf(" <DICT> ");}
 
-            for (i=0; i<rlRange->fIncludesSets->size(); i++) {
-                RBBINode       *usetNode    = (RBBINode *)rlRange->fIncludesSets->elementAt(i);
-                UnicodeString   setName = UNICODE_STRING("anon", 4);
-                RBBINode       *setRef = usetNode->fParent;
-                if (setRef != nullptr) {
-                    RBBINode *varRef = setRef->fParent;
-                    if (varRef != nullptr  &&  varRef->fType == RBBINode::varRef) {
-                        setName = varRef->fText;
+            ಗಾಗಿ (i=0; i<rlRange->fIncludesSets->size(); i++) {
+                RBBINode       *uset_ಗಂಟು    = (RBBINode *)rlRange->fIncludesSets->elementAt(i);
+                UnicodeString   ಗಣ_Name = UNICODE_STRING("anon", 4);
+                RBBINode       *ಗಣ_Ref = uset_ಗಂಟು->f_ಪೋಷಕ;
+                ಆದರೆ (ಗಣ_Ref != ಶೂನ್ಯಸೂಚಕ) {
+                    RBBINode *varRef = ಗಣ_Ref->f_ಪೋಷಕ;
+                    ಆದರೆ (varRef != ಶೂನ್ಯಸೂಚಕ  &&  varRef->fType == RBBINode::varRef) {
+                        ಗಣ_Name = varRef->f_ಪಠ್ಯ;
                     }
                 }
-                RBBI_DEBUG_printUnicodeString(setName); RBBIDebugPrintf(" ");
+                RBBI_DEBUG_printUnicodeString(ಗಣ_Name); RBBIDebugPrintf(" ");
             }
 
             i = 0;
-            for (RangeDescriptor *tRange = rlRange; tRange != nullptr; tRange = tRange->fNext) {
-                if (tRange->fNum == rlRange->fNum) {
-                    if (i++ % 5 == 0) {
+            ಗಾಗಿ (RangeDescriptor *tRange = rlRange; tRange != ಶೂನ್ಯಸೂಚಕ; tRange = tRange->f_ಮುಂದಿನ) {
+                ಆದರೆ (tRange->f_ಅಂಕೆ == rlRange->f_ಅಂಕೆ) {
+                    ಆದರೆ (i++ % 5 == 0) {
                         RBBIDebugPrintf("\n    ");
                     }
-                    RBBIDebugPrintf("  %05x-%05x", tRange->fStartChar, tRange->fEndChar);
+                    RBBIDebugPrintf("  %05x-%05x", tRange->f_ಆರಂಭ_Char, tRange->f_ಕೊನೆ_Char);
                 }
             }
             RBBIDebugPrintf("\n");
@@ -520,7 +520,7 @@ void RBBISetBuilder::printRangeGroups() {
     }
     RBBIDebugPrintf("\n");
 }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 
 //------------------------------------------------------------------------
@@ -529,42 +529,42 @@ void RBBISetBuilder::printRangeGroups() {
 //                      dump out all of the set definitions.
 //
 //------------------------------------------------------------------------
-#ifdef RBBI_DEBUG
-void RBBISetBuilder::printSets() {
-    int                   i;
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ RBBI_DEBUG
+ಶೂನ್ಯ RBBISetBuilder::printSets() {
+    ಪೂರ್ಣಾಂಕ                   i;
 
     RBBIDebugPrintf("\n\nUnicode Sets List\n------------------\n");
-    for (i=0; ; i++) {
-        RBBINode        *usetNode;
-        RBBINode        *setRef;
+    ಗಾಗಿ (i=0; ; i++) {
+        RBBINode        *uset_ಗಂಟು;
+        RBBINode        *ಗಣ_Ref;
         RBBINode        *varRef;
-        UnicodeString    setName;
+        UnicodeString    ಗಣ_Name;
 
-        usetNode = (RBBINode *)fRB->fUSetNodes->elementAt(i);
-        if (usetNode == nullptr) {
-            break;
+        uset_ಗಂಟು = (RBBINode *)fRB->fUSetNodes->elementAt(i);
+        ಆದರೆ (uset_ಗಂಟು == ಶೂನ್ಯಸೂಚಕ) {
+            ನಿಲ್ಲಿಸು;
         }
 
         RBBIDebugPrintf("%3d    ", i);
-        setName = UNICODE_STRING("anonymous", 9);
-        setRef = usetNode->fParent;
-        if (setRef != nullptr) {
-            varRef = setRef->fParent;
-            if (varRef != nullptr  &&  varRef->fType == RBBINode::varRef) {
-                setName = varRef->fText;
+        ಗಣ_Name = UNICODE_STRING("anonymous", 9);
+        ಗಣ_Ref = uset_ಗಂಟು->f_ಪೋಷಕ;
+        ಆದರೆ (ಗಣ_Ref != ಶೂನ್ಯಸೂಚಕ) {
+            varRef = ಗಣ_Ref->f_ಪೋಷಕ;
+            ಆದರೆ (varRef != ಶೂನ್ಯಸೂಚಕ  &&  varRef->fType == RBBINode::varRef) {
+                ಗಣ_Name = varRef->f_ಪಠ್ಯ;
             }
         }
-        RBBI_DEBUG_printUnicodeString(setName);
+        RBBI_DEBUG_printUnicodeString(ಗಣ_Name);
         RBBIDebugPrintf("   ");
-        RBBI_DEBUG_printUnicodeString(usetNode->fText);
+        RBBI_DEBUG_printUnicodeString(uset_ಗಂಟು->f_ಪಠ್ಯ);
         RBBIDebugPrintf("\n");
-        if (usetNode->fLeftChild != nullptr) {
-            RBBINode::printTree(usetNode->fLeftChild, true);
+        ಆದರೆ (uset_ಗಂಟು->f_ಎಡ_ಮಗು != ಶೂನ್ಯಸೂಚಕ) {
+            RBBINode::print_ವೃಕ್ಷ(uset_ಗಂಟು->f_ಎಡ_ಮಗು, ನಿಜ);
         }
     }
     RBBIDebugPrintf("\n");
 }
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 
 
@@ -574,23 +574,23 @@ void RBBISetBuilder::printSets() {
 //
 //-------------------------------------------------------------------------------------
 
-RangeDescriptor::RangeDescriptor(const RangeDescriptor &other, UErrorCode &status) :
-        fStartChar(other.fStartChar), fEndChar {other.fEndChar}, fNum {other.fNum},
-        fIncludesDict{other.fIncludesDict}, fFirstInGroup{other.fFirstInGroup} {
+RangeDescriptor::RangeDescriptor(ಸ್ಥಿರಾಂಕ RangeDescriptor &other, UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2) :
+        f_ಆರಂಭ_Char(other.f_ಆರಂಭ_Char), f_ಕೊನೆ_Char {other.f_ಕೊನೆ_Char}, f_ಅಂಕೆ {other.f_ಅಂಕೆ},
+        fIncludesDict{other.fIncludesDict}, f_ಮೊದಲ_ಒಳ_ಗುಂಪು{other.f_ಮೊದಲ_ಒಳ_ಗುಂಪು} {
 
-    if (U_FAILURE(status)) {
-        return;
+    ಆದರೆ (U_FAILURE(ಸ್ಥಿತಿ_2)) {
+        ಹಿಂತಿರುಗಿ;
     }
-    fIncludesSets = new UVector(status);
-    if (this->fIncludesSets == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
+    fIncludesSets = ಹೊಸ UVector(ಸ್ಥಿತಿ_2);
+    ಆದರೆ (ಇದು->fIncludesSets == ಶೂನ್ಯಸೂಚಕ) {
+        ಸ್ಥಿತಿ_2 = U_ಸ್ಮರಣೆ_ಹಂಚಿಕೆ_ERROR;
     }
-    if (U_FAILURE(status)) {
-        return;
+    ಆದರೆ (U_FAILURE(ಸ್ಥಿತಿ_2)) {
+        ಹಿಂತಿರುಗಿ;
     }
 
-    for (int32_t i=0; i<other.fIncludesSets->size(); i++) {
-        this->fIncludesSets->addElement(other.fIncludesSets->elementAt(i), status);
+    ಗಾಗಿ (int32_t i=0; i<other.fIncludesSets->size(); i++) {
+        ಇದು->fIncludesSets->ಕೂಡಿಸು_Element(other.fIncludesSets->elementAt(i), ಸ್ಥಿತಿ_2);
     }
 }
 
@@ -600,13 +600,13 @@ RangeDescriptor::RangeDescriptor(const RangeDescriptor &other, UErrorCode &statu
 //  RangeDesriptor default constructor
 //
 //-------------------------------------------------------------------------------------
-RangeDescriptor::RangeDescriptor(UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return;
+RangeDescriptor::RangeDescriptor(UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2) {
+    ಆದರೆ (U_FAILURE(ಸ್ಥಿತಿ_2)) {
+        ಹಿಂತಿರುಗಿ;
     }
-    fIncludesSets = new UVector(status);
-    if (fIncludesSets == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
+    fIncludesSets = ಹೊಸ UVector(ಸ್ಥಿತಿ_2);
+    ಆದರೆ (fIncludesSets == ಶೂನ್ಯಸೂಚಕ) {
+        ಸ್ಥಿತಿ_2 = U_ಸ್ಮರಣೆ_ಹಂಚಿಕೆ_ERROR;
     }
 }
 
@@ -617,8 +617,8 @@ RangeDescriptor::RangeDescriptor(UErrorCode &status) {
 //
 //-------------------------------------------------------------------------------------
 RangeDescriptor::~RangeDescriptor() {
-    delete  fIncludesSets;
-    fIncludesSets = nullptr;
+    ಅಳಿಸು  fIncludesSets;
+    fIncludesSets = ಶೂನ್ಯಸೂಚಕ;
 }
 
 //-------------------------------------------------------------------------------------
@@ -626,23 +626,23 @@ RangeDescriptor::~RangeDescriptor() {
 //  RangeDesriptor::split()
 //
 //-------------------------------------------------------------------------------------
-void RangeDescriptor::split(UChar32 where, UErrorCode &status) {
-    U_ASSERT(where>fStartChar && where<=fEndChar);
-    RangeDescriptor *nr = new RangeDescriptor(*this, status);
-    if(nr == nullptr) {
-        status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+ಶೂನ್ಯ RangeDescriptor::ವಿಭಜಿಸು(UChar32 where, UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2) {
+    U_ASSERT(where>f_ಆರಂಭ_Char && where<=f_ಕೊನೆ_Char);
+    RangeDescriptor *nr = ಹೊಸ RangeDescriptor(*ಇದು, ಸ್ಥಿತಿ_2);
+    ಆದರೆ(nr == ಶೂನ್ಯಸೂಚಕ) {
+        ಸ್ಥಿತಿ_2 = U_ಸ್ಮರಣೆ_ಹಂಚಿಕೆ_ERROR;
+        ಹಿಂತಿರುಗಿ;
     }
-    if (U_FAILURE(status)) {
-        delete nr;
-        return;
+    ಆದರೆ (U_FAILURE(ಸ್ಥಿತಿ_2)) {
+        ಅಳಿಸು nr;
+        ಹಿಂತಿರುಗಿ;
     }
     //  RangeDescriptor copy constructor copies all fields.
     //  Only need to update those that are different after the split.
-    nr->fStartChar = where;
-    this->fEndChar = where-1;
-    nr->fNext      = this->fNext;
-    this->fNext    = nr;
+    nr->f_ಆರಂಭ_Char = where;
+    ಇದು->f_ಕೊನೆ_Char = where-1;
+    nr->f_ಮುಂದಿನ      = ಇದು->f_ಮುಂದಿನ;
+    ಇದು->f_ಮುಂದಿನ    = nr;
 }
 
 
@@ -661,24 +661,24 @@ void RangeDescriptor::split(UChar32 where, UErrorCode &status) {
 //                   up by name every time.
 //
 //-------------------------------------------------------------------------------------
-bool RangeDescriptor::isDictionaryRange() {
-    static const char16_t *dictionary = u"dictionary";
-    for (int32_t i=0; i<fIncludesSets->size(); i++) {
-        RBBINode* usetNode = static_cast<RBBINode*>(fIncludesSets->elementAt(i));
-        RBBINode *setRef = usetNode->fParent;
-        if (setRef != nullptr) {
-            RBBINode *varRef = setRef->fParent;
-            if (varRef && varRef->fType == RBBINode::varRef) {
-                const UnicodeString *setName = &varRef->fText;
-                if (setName->compare(dictionary, -1) == 0) {
-                    return true;
+ತಾರ್ಕಿಕ RangeDescriptor::isDictionaryRange() {
+    ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ char16_t *dictionary = u"dictionary";
+    ಗಾಗಿ (int32_t i=0; i<fIncludesSets->size(); i++) {
+        RBBINode* uset_ಗಂಟು = static_cast<RBBINode*>(fIncludesSets->elementAt(i));
+        RBBINode *ಗಣ_Ref = uset_ಗಂಟು->f_ಪೋಷಕ;
+        ಆದರೆ (ಗಣ_Ref != ಶೂನ್ಯಸೂಚಕ) {
+            RBBINode *varRef = ಗಣ_Ref->f_ಪೋಷಕ;
+            ಆದರೆ (varRef && varRef->fType == RBBINode::varRef) {
+                ಸ್ಥಿರಾಂಕ UnicodeString *ಗಣ_Name = &varRef->f_ಪಠ್ಯ;
+                ಆದರೆ (ಗಣ_Name->compare(dictionary, -1) == 0) {
+                    ಹಿಂತಿರುಗಿ ನಿಜ;
                 }
             }
         }
     }
-    return false;
+    ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#ಆದರೆ_ಅಂತ್ಯ /* #if !UCONFIG_NO_BREAK_ITERATION */

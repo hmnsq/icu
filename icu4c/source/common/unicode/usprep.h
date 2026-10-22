@@ -16,19 +16,19 @@
  *   created by: Ram Viswanadha
  */
 
-#ifndef __USPREP_H__
-#define __USPREP_H__
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __USPREP_H__
+#ವ್ಯಾಖ್ಯಾನಿಸು __USPREP_H__
 
 /**
  * \file 
  * \brief C API: Implements the StringPrep algorithm.
  */
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#ಆದರೆ U_SHOW_CPLUSPLUS_API
+#ಅನ್ತರ್ಭಾವ "unicode/localpointer.h"
+#ಆದರೆ_ಅಂತ್ಯ   // U_SHOW_CPLUSPLUS_API
 
 /**
  *
@@ -62,15 +62,15 @@
  * </ol>
  * @author Ram Viswanadha
  */
-#if !UCONFIG_NO_IDNA
+#ಆದರೆ !UCONFIG_NO_IDNA
 
-#include "unicode/parseerr.h"
+#ಅನ್ತರ್ಭಾವ "unicode/parseerr.h"
 
 /**
  * The StringPrep profile
  * @stable ICU 2.8
  */
-typedef struct UStringPrepProfile UStringPrepProfile;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ UStringPrepProfile UStringPrepProfile;
 
 
 /** 
@@ -79,7 +79,7 @@ typedef struct UStringPrepProfile UStringPrepProfile;
  * @see  usprep_prepare
  * @stable ICU 2.8
  */
-#define USPREP_DEFAULT 0x0000
+#ವ್ಯಾಖ್ಯಾನಿಸು USPREP_DEFAULT 0x0000
 
 /** 
  * Option to allow processing of unassigned code points in the input
@@ -87,7 +87,7 @@ typedef struct UStringPrepProfile UStringPrepProfile;
  * @see  usprep_prepare
  * @stable ICU 2.8
  */
-#define USPREP_ALLOW_UNASSIGNED 0x0001
+#ವ್ಯಾಖ್ಯಾನಿಸು USPREP_ALLOW_UNASSIGNED 0x0001
 
 /**
  * enums for the standard stringprep profile types
@@ -95,7 +95,7 @@ typedef struct UStringPrepProfile UStringPrepProfile;
  * @see usprep_openByType
  * @stable ICU 4.2
  */
-typedef enum UStringPrepProfileType {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಎಣಿಕೆ UStringPrepProfileType {
     /**
      * RFC3491 Nameprep
      * @stable ICU 4.2
@@ -120,7 +120,7 @@ typedef enum UStringPrepProfileType {
      * RFC3530 nfs4_mixed_prep for prefix
      * @stable ICU 4.2
      */
-	USPREP_RFC3530_NFS4_MIXED_PREP_PREFIX,
+	USPREP_RFC3530_NFS4_MIXED_PREP_ಪೂರ್ವಪ್ರತ್ಯಯ,
     /**
      * RFC3530 nfs4_mixed_prep for suffix
      * @stable ICU 4.2
@@ -185,9 +185,9 @@ typedef enum UStringPrepProfileType {
  * @stable ICU 2.8
  */
 U_CAPI UStringPrepProfile* U_EXPORT2
-usprep_open(const char* path, 
-            const char* fileName,
-            UErrorCode* status);
+usprep_open(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* ಮಾರ್ಗ, 
+            ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* fileName,
+            UError_ಸಂಕೇತ* ಸ್ಥಿತಿ_2);
 
 /**
  * Creates a StringPrep profile for the specified profile type.
@@ -202,17 +202,17 @@ usprep_open(const char* path,
  */
 U_CAPI UStringPrepProfile* U_EXPORT2
 usprep_openByType(UStringPrepProfileType type,
-				  UErrorCode* status);
+				  UError_ಸಂಕೇತ* ಸ್ಥಿತಿ_2);
 
 /**
  * Closes the profile
  * @param profile The profile to close
  * @stable ICU 2.8
  */
-U_CAPI void U_EXPORT2
+U_CAPI ಶೂನ್ಯ U_EXPORT2
 usprep_close(UStringPrepProfile* profile);
 
-#if U_SHOW_CPLUSPLUS_API
+#ಆದರೆ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -225,11 +225,11 @@ U_NAMESPACE_BEGIN
  * @see LocalPointer
  * @stable ICU 4.4
  */
-U_DEFINE_LOCAL_OPEN_POINTER(LocalUStringPrepProfilePointer, UStringPrepProfile, usprep_close);
+U_DEFINE_LOCAL_OPEN_ಸೂಚಕ(Local_UString_Prep_Profile_ಸೂಚಕ, UStringPrepProfile, usprep_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 /**
  * Prepare the input buffer for use in applications with the given profile. This operation maps, normalizes(NFKC),
@@ -261,14 +261,14 @@ U_NAMESPACE_END
  */
 
 U_CAPI int32_t U_EXPORT2
-usprep_prepare(   const UStringPrepProfile* prep,
-                  const UChar* src, int32_t srcLength, 
-                  UChar* dest, int32_t destCapacity,
+usprep_prepare(   ಸ್ಥಿರಾಂಕ UStringPrepProfile* prep,
+                  ಸ್ಥಿರಾಂಕ UChar* src, int32_t src_ಉದ್ದಳತೆ, 
+                  UChar* dest, int32_t dest_ಸಾಮರ್ಥ್ಯ,
                   int32_t options,
                   UParseError* parseError,
-                  UErrorCode* status );
+                  UError_ಸಂಕೇತ* ಸ್ಥಿತಿ_2 );
 
 
-#endif /* #if !UCONFIG_NO_IDNA */
+#ಆದರೆ_ಅಂತ್ಯ /* #if !UCONFIG_NO_IDNA */
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

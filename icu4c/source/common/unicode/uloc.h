@@ -20,11 +20,11 @@
 ********************************************************************************
 */
 
-#ifndef ULOC_H
-#define ULOC_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ ULOC_H
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_H
 
-#include "unicode/utypes.h"
-#include "unicode/uenum.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uenum.h"
 
 /**
  * \file
@@ -200,126 +200,126 @@
  */
 
 /** Useful constant for this language. @stable ICU 2.0 */
-#define ULOC_CHINESE            "zh"
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_CHINESE            "zh"
 /** Useful constant for this language. @stable ICU 2.0 */
-#define ULOC_ENGLISH            "en"
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_ENGLISH            "en"
 /** Useful constant for this language. @stable ICU 2.0 */
-#define ULOC_FRENCH             "fr"
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_FRENCH             "fr"
 /** Useful constant for this language. @stable ICU 2.0 */
-#define ULOC_GERMAN             "de"
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_GERMAN             "de"
 /** Useful constant for this language. @stable ICU 2.0 */
-#define ULOC_ITALIAN            "it"
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_ITALIAN            "it"
 /** Useful constant for this language. @stable ICU 2.0 */
-#define ULOC_JAPANESE           "ja"
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_JAPANESE           "ja"
 /** Useful constant for this language. @stable ICU 2.0 */
-#define ULOC_KOREAN             "ko"
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_KOREAN             "ko"
 /** Useful constant for this language. @stable ICU 2.0 */
-#define ULOC_SIMPLIFIED_CHINESE "zh_CN"
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_SIMPLIFIED_CHINESE "zh_CN"
 /** Useful constant for this language. @stable ICU 2.0 */
-#define ULOC_TRADITIONAL_CHINESE "zh_TW"
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_TRADITIONAL_CHINESE "zh_TW"
 
 /** Useful constant for this country/region. @stable ICU 2.0 */
-#define ULOC_CANADA         "en_CA"
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_CANADA         "en_CA"
 /** Useful constant for this country/region. @stable ICU 2.0 */
-#define ULOC_CANADA_FRENCH  "fr_CA"
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_CANADA_FRENCH  "fr_CA"
 /** Useful constant for this country/region. @stable ICU 2.0 */
-#define ULOC_CHINA          "zh_CN"
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_CHINA          "zh_CN"
 /** Useful constant for this country/region. @stable ICU 2.0 */
-#define ULOC_PRC            "zh_CN"
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_PRC            "zh_CN"
 /** Useful constant for this country/region. @stable ICU 2.0 */
-#define ULOC_FRANCE         "fr_FR"
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_FRANCE         "fr_FR"
 /** Useful constant for this country/region. @stable ICU 2.0 */
-#define ULOC_GERMANY        "de_DE"
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_GERMANY        "de_DE"
 /** Useful constant for this country/region. @stable ICU 2.0 */
-#define ULOC_ITALY          "it_IT"
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_ITALY          "it_IT"
 /** Useful constant for this country/region. @stable ICU 2.0 */
-#define ULOC_JAPAN          "ja_JP"
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_JAPAN          "ja_JP"
 /** Useful constant for this country/region. @stable ICU 2.0 */
-#define ULOC_KOREA          "ko_KR"
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_KOREA          "ko_KR"
 /** Useful constant for this country/region. @stable ICU 2.0 */
-#define ULOC_TAIWAN         "zh_TW"
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_TAIWAN         "zh_TW"
 /** Useful constant for this country/region. @stable ICU 2.0 */
-#define ULOC_UK             "en_GB"
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_UK             "en_GB"
 /** Useful constant for this country/region. @stable ICU 2.0 */
-#define ULOC_US             "en_US"
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_US             "en_US"
 
 /**
  * Useful constant for the maximum size of the language part of a locale ID.
  * (including the terminating NULL).
  * @stable ICU 2.0
  */
-#define ULOC_LANG_CAPACITY 12
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_LANG_ಸಾಮರ್ಥ್ಯ 12
 
 /**
  * Useful constant for the maximum size of the country part of a locale ID
  * (including the terminating NULL).
  * @stable ICU 2.0
  */
-#define ULOC_COUNTRY_CAPACITY 4
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_COUNTRY_ಸಾಮರ್ಥ್ಯ 4
 /**
  * Useful constant for the maximum size of the whole locale ID
  * (including the terminating NULL and all keywords).
  * @stable ICU 2.0
  */
-#define ULOC_FULLNAME_CAPACITY 157
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_FULLNAME_ಸಾಮರ್ಥ್ಯ 157
 
 /**
  * Useful constant for the maximum size of the script part of a locale ID
  * (including the terminating NULL).
  * @stable ICU 2.8
  */
-#define ULOC_SCRIPT_CAPACITY 6
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_SCRIPT_ಸಾಮರ್ಥ್ಯ 6
 
 /**
  * Useful constant for the maximum size of keywords in a locale
  * @stable ICU 2.8
  */
-#define ULOC_KEYWORDS_CAPACITY 96
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_KEYWORDS_ಸಾಮರ್ಥ್ಯ 96
 
 /**
  * Useful constant for the maximum total size of keywords and their values in a locale
  * @stable ICU 2.8
  */
-#define ULOC_KEYWORD_AND_VALUES_CAPACITY 100
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_KEYWORD_AND_ಮೌಲ್ಯಗಳು_ಸಾಮರ್ಥ್ಯ 100
 
 /**
  * Invariant character separating keywords from the locale string
  * @stable ICU 2.8
  */
-#define ULOC_KEYWORD_SEPARATOR '@'
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_KEYWORD_SEPARATOR '@'
 
 /**
   * Unicode code point for '@' separating keywords from the locale string.
   * @see ULOC_KEYWORD_SEPARATOR
   * @stable ICU 4.6
   */
-#define ULOC_KEYWORD_SEPARATOR_UNICODE 0x40
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_KEYWORD_SEPARATOR_UNICODE 0x40
 
 /**
  * Invariant character for assigning value to a keyword
  * @stable ICU 2.8
  */
-#define ULOC_KEYWORD_ASSIGN '='
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_KEYWORD_ನಿಯೋಜಿಸು '='
 
 /**
   * Unicode code point for '=' for assigning value to a keyword.
   * @see ULOC_KEYWORD_ASSIGN
   * @stable ICU 4.6 
   */
-#define ULOC_KEYWORD_ASSIGN_UNICODE 0x3D
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_KEYWORD_ನಿಯೋಜಿಸು_UNICODE 0x3D
 
 /**
  * Invariant character separating keywords
  * @stable ICU 2.8
  */
-#define ULOC_KEYWORD_ITEM_SEPARATOR ';'
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_KEYWORD_ಅಂಶ_SEPARATOR ';'
 
 /**
   * Unicode code point for ';' separating keywords
   * @see ULOC_KEYWORD_ITEM_SEPARATOR
   * @stable ICU 4.6
   */
-#define ULOC_KEYWORD_ITEM_SEPARATOR_UNICODE 0x3B
+#ವ್ಯಾಖ್ಯಾನಿಸು ULOC_KEYWORD_ಅಂಶ_SEPARATOR_UNICODE 0x3B
 
 /**
  * Constants for *_getLocale()
@@ -335,7 +335,7 @@
  * for that locale (although it may be empty).
  * @stable ICU 2.1
  */
-typedef enum {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಎಣಿಕೆ {
   /** This is locale the data actually comes from 
    * @stable ICU 2.1
    */
@@ -345,7 +345,7 @@ typedef enum {
    */
   ULOC_VALID_LOCALE    = 1,
 
-#ifndef U_HIDE_DEPRECATED_API
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_DEPRECATED_API
   /** This is the requested locale
    *  @deprecated ICU 2.8 
    */
@@ -355,11 +355,11 @@ typedef enum {
      * One more than the highest normal ULocDataLocaleType value.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    ULOC_DATA_LOCALE_TYPE_LIMIT = 3
-#endif  // U_HIDE_DEPRECATED_API
-} ULocDataLocaleType;
+    ULOC_ದತ್ತಾಂಶ_LOCALE_TYPE_ಎಲ್ಲೆ = 3
+#ಆದರೆ_ಅಂತ್ಯ  // U_HIDE_DEPRECATED_API
+} ULoc_ದತ್ತಾಂಶ_Locale_Type;
 
-#ifndef U_HIDE_SYSTEM_API
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_SYSTEM_API
 /**
  * Gets ICU's default locale.  
  * The returned string is a snapshot in time, and will remain valid
@@ -371,8 +371,8 @@ typedef enum {
  * @system
  * @stable ICU 2.0
  */
-U_CAPI const char* U_EXPORT2
-uloc_getDefault(void);
+U_CAPI ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* U_EXPORT2
+uloc_getDefault(ಶೂನ್ಯ);
 
 /**
  * Sets ICU's default locale.  
@@ -391,10 +391,10 @@ uloc_getDefault(void);
  * @system
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-uloc_setDefault(const char* localeID,
-        UErrorCode*       status);
-#endif  /* U_HIDE_SYSTEM_API */
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+uloc_ಗಣ_Default(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* localeID,
+        UError_ಸಂಕೇತ*       ಸ್ಥಿತಿ_2);
+#ಆದರೆ_ಅಂತ್ಯ  /* U_HIDE_SYSTEM_API */
 
 /**
  * Gets the language code for the specified locale.
@@ -412,10 +412,10 @@ uloc_setDefault(const char* localeID,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getLanguage(const char*    localeID,
-         char* language,
-         int32_t languageCapacity,
-         UErrorCode* err);
+uloc_getLanguage(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ*    localeID,
+         ಅಕ್ಷರ* language,
+         int32_t language_ಸಾಮರ್ಥ್ಯ,
+         UError_ಸಂಕೇತ* err);
 
 /**
  * Gets the script code for the specified locale.
@@ -433,10 +433,10 @@ uloc_getLanguage(const char*    localeID,
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getScript(const char*    localeID,
-         char* script,
-         int32_t scriptCapacity,
-         UErrorCode* err);
+uloc_getScript(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ*    localeID,
+         ಅಕ್ಷರ* script,
+         int32_t script_ಸಾಮರ್ಥ್ಯ,
+         UError_ಸಂಕೇತ* err);
 
 /**
  * Gets the  country code for the specified locale.
@@ -454,10 +454,10 @@ uloc_getScript(const char*    localeID,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getCountry(const char*    localeID,
-        char* country,
-        int32_t countryCapacity,
-        UErrorCode* err);
+uloc_getCountry(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ*    localeID,
+        ಅಕ್ಷರ* country,
+        int32_t country_ಸಾಮರ್ಥ್ಯ,
+        UError_ಸಂಕೇತ* err);
 
 /**
  * Gets the variant code for the specified locale.
@@ -475,10 +475,10 @@ uloc_getCountry(const char*    localeID,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getVariant(const char*    localeID,
-        char* variant,
-        int32_t variantCapacity,
-        UErrorCode* err);
+uloc_getVariant(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ*    localeID,
+        ಅಕ್ಷರ* variant,
+        int32_t variant_ಸಾಮರ್ಥ್ಯ,
+        UError_ಸಂಕೇತ* err);
 
 
 /**
@@ -502,10 +502,10 @@ uloc_getVariant(const char*    localeID,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getName(const char*    localeID,
-         char* name,
-         int32_t nameCapacity,
-         UErrorCode* err);
+uloc_getName(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ*    localeID,
+         ಅಕ್ಷರ* name,
+         int32_t name_ಸಾಮರ್ಥ್ಯ,
+         UError_ಸಂಕೇತ* err);
 
 /**
  * Gets the full name for the specified locale.
@@ -525,10 +525,10 @@ uloc_getName(const char*    localeID,
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-uloc_canonicalize(const char*    localeID,
-         char* name,
-         int32_t nameCapacity,
-         UErrorCode* err);
+uloc_canonicalize(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ*    localeID,
+         ಅಕ್ಷರ* name,
+         int32_t name_ಸಾಮರ್ಥ್ಯ,
+         UError_ಸಂಕೇತ* err);
 
 /**
  * Gets the ISO language code for the specified locale.
@@ -537,8 +537,8 @@ uloc_canonicalize(const char*    localeID,
  * @return language the ISO language code for localeID
  * @stable ICU 2.0
  */
-U_CAPI const char* U_EXPORT2
-uloc_getISO3Language(const char* localeID);
+U_CAPI ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* U_EXPORT2
+uloc_getISO3Language(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* localeID);
 
 
 /**
@@ -548,8 +548,8 @@ uloc_getISO3Language(const char* localeID);
  * @return country the ISO country code for localeID
  * @stable ICU 2.0
  */
-U_CAPI const char* U_EXPORT2
-uloc_getISO3Country(const char* localeID);
+U_CAPI ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* U_EXPORT2
+uloc_getISO3Country(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* localeID);
 
 /**
  * Gets the Win32 LCID value for the specified locale.
@@ -563,7 +563,7 @@ uloc_getISO3Country(const char* localeID);
  * @stable ICU 2.0
  */
 U_CAPI uint32_t U_EXPORT2
-uloc_getLCID(const char* localeID);
+uloc_getLCID(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* localeID);
 
 /**
  * Gets the language name suitable for display for the specified locale.
@@ -587,11 +587,11 @@ uloc_getLCID(const char* localeID);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayLanguage(const char* locale,
-            const char* displayLocale,
+uloc_getDisplayLanguage(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* locale,
+            ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* displayLocale,
             UChar* language,
-            int32_t languageCapacity,
-            UErrorCode* status);
+            int32_t language_ಸಾಮರ್ಥ್ಯ,
+            UError_ಸಂಕೇತ* ಸ್ಥಿತಿ_2);
 
 /**
  * Gets the script name suitable for display for the specified locale.
@@ -616,11 +616,11 @@ uloc_getDisplayLanguage(const char* locale,
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayScript(const char* locale,
-            const char* displayLocale,
+uloc_getDisplayScript(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* locale,
+            ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* displayLocale,
             UChar* script,
-            int32_t scriptCapacity,
-            UErrorCode* status);
+            int32_t script_ಸಾಮರ್ಥ್ಯ,
+            UError_ಸಂಕೇತ* ಸ್ಥಿತಿ_2);
 
 /**
  * Gets the country name suitable for display for the specified locale.
@@ -648,11 +648,11 @@ uloc_getDisplayScript(const char* locale,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayCountry(const char* locale,
-                       const char* displayLocale,
+uloc_getDisplayCountry(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* locale,
+                       ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* displayLocale,
                        UChar* country,
-                       int32_t countryCapacity,
-                       UErrorCode* status);
+                       int32_t country_ಸಾಮರ್ಥ್ಯ,
+                       UError_ಸಂಕೇತ* ಸ್ಥಿತಿ_2);
 
 
 /**
@@ -678,11 +678,11 @@ uloc_getDisplayCountry(const char* locale,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayVariant(const char* locale,
-                       const char* displayLocale,
+uloc_getDisplayVariant(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* locale,
+                       ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* displayLocale,
                        UChar* variant,
-                       int32_t variantCapacity,
-                       UErrorCode* status);
+                       int32_t variant_ಸಾಮರ್ಥ್ಯ,
+                       UError_ಸಂಕೇತ* ಸ್ಥಿತಿ_2);
 
 /**
  * Gets the keyword name suitable for display for the specified locale. E.g:
@@ -727,11 +727,11 @@ uloc_getDisplayVariant(const char* locale,
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayKeyword(const char* keyword,
-                       const char* displayLocale,
+uloc_getDisplayKeyword(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* keyword,
+                       ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* displayLocale,
                        UChar* dest,
-                       int32_t destCapacity,
-                       UErrorCode* status);
+                       int32_t dest_ಸಾಮರ್ಥ್ಯ,
+                       UError_ಸಂಕೇತ* ಸ್ಥಿತಿ_2);
 /**
  * Gets the value of the keyword suitable for display for the specified locale.
  * E.g: for the locale string de_DE\@collation=PHONEBOOK, this API gets the display
@@ -755,12 +755,12 @@ uloc_getDisplayKeyword(const char* keyword,
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayKeywordValue(   const char* locale,
-                               const char* keyword,
-                               const char* displayLocale,
+uloc_get_Display_Keyword_ಮೌಲ್ಯ(   ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* locale,
+                               ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* keyword,
+                               ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* displayLocale,
                                UChar* dest,
-                               int32_t destCapacity,
-                               UErrorCode* status);
+                               int32_t dest_ಸಾಮರ್ಥ್ಯ,
+                               UError_ಸಂಕೇತ* ಸ್ಥಿತಿ_2);
 /**
  * Gets the full name suitable for display for the specified locale.
  *
@@ -778,11 +778,11 @@ uloc_getDisplayKeywordValue(   const char* locale,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayName(const char* localeID,
-            const char* inLocaleID,
-            UChar* result,
-            int32_t maxResultSize,
-            UErrorCode* err);
+uloc_getDisplayName(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* localeID,
+            ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* ಒಳ_Locale_ID,
+            UChar* ಫಲಿತಾಂಶ,
+            int32_t max_ಫಲಿತಾಂಶ_ಗಾತ್ರ,
+            UError_ಸಂಕೇತ* err);
 
 
 /**
@@ -801,8 +801,8 @@ uloc_getDisplayName(const char* localeID,
  * @return a specified locale name of all available locales
  * @stable ICU 2.0
  */
-U_CAPI const char* U_EXPORT2
-uloc_getAvailable(int32_t n);
+U_CAPI ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* U_EXPORT2
+uloc_get_ಲಭ್ಯ(int32_t n);
 
 /**
  * Gets the size of the all available locale list.
@@ -810,21 +810,21 @@ uloc_getAvailable(int32_t n);
  * @return the size of the locale list
  * @stable ICU 2.0
  */
-U_CAPI int32_t U_EXPORT2 uloc_countAvailable(void);
+U_CAPI int32_t U_EXPORT2 uloc_ಎಣಿಕೆ_ಲಭ್ಯ(ಶೂನ್ಯ);
 
 /**
  * Types for uloc_getAvailableByType and uloc_countAvailableByType.
  *
  * @stable ICU 65
  */
-typedef enum ULocAvailableType {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಎಣಿಕೆ ULoc_ಲಭ್ಯ_Type {
   /**
    * Locales that return data when passed to ICU APIs,
    * but not including legacy or alias locales.
    *
    * @stable ICU 65
    */
-  ULOC_AVAILABLE_DEFAULT,
+  ULOC_ಲಭ್ಯ_DEFAULT,
 
   /**
    * Legacy or alias locales that return data when passed to ICU APIs.
@@ -842,7 +842,7 @@ typedef enum ULocAvailableType {
    *
    * @stable ICU 65
    */
-  ULOC_AVAILABLE_ONLY_LEGACY_ALIASES,
+  ULOC_ಲಭ್ಯ_ONLY_LEGACY_ALIASES,
 
   /**
    * The union of the locales in ULOC_AVAILABLE_DEFAULT and
@@ -850,15 +850,15 @@ typedef enum ULocAvailableType {
    *
    * @stable ICU 65
    */
-  ULOC_AVAILABLE_WITH_LEGACY_ALIASES,
+  ULOC_ಲಭ್ಯ_WITH_LEGACY_ALIASES,
 
-#ifndef U_HIDE_INTERNAL_API
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_ಆಂತರಿಕ_API
   /**
    * @internal
    */
-  ULOC_AVAILABLE_COUNT
-#endif  /* U_HIDE_INTERNAL_API */
-} ULocAvailableType;
+  ULOC_ಲಭ್ಯ_ಎಣಿಕೆ
+#ಆದರೆ_ಅಂತ್ಯ  /* U_HIDE_INTERNAL_API */
+} ULoc_ಲಭ್ಯ_Type;
 
 /**
  * Gets a list of available locales according to the type argument, allowing
@@ -872,7 +872,7 @@ typedef enum ULocAvailableType {
  * @stable ICU 65
  */
 U_CAPI UEnumeration* U_EXPORT2
-uloc_openAvailableByType(ULocAvailableType type, UErrorCode* status);
+uloc_open_ಲಭ್ಯ_By_Type(ULoc_ಲಭ್ಯ_Type type, UError_ಸಂಕೇತ* ಸ್ಥಿತಿ_2);
 
 /**
  *
@@ -885,8 +885,8 @@ uloc_openAvailableByType(ULocAvailableType type, UErrorCode* status);
  * @return a list of all available language codes
  * @stable ICU 2.0
  */
-U_CAPI const char* const* U_EXPORT2
-uloc_getISOLanguages(void);
+U_CAPI ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* ಸ್ಥಿರಾಂಕ* U_EXPORT2
+uloc_getISOLanguages(ಶೂನ್ಯ);
 
 /**
  *
@@ -897,8 +897,8 @@ uloc_getISOLanguages(void);
  * @return a list of all available country codes
  * @stable ICU 2.0
  */
-U_CAPI const char* const* U_EXPORT2
-uloc_getISOCountries(void);
+U_CAPI ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* ಸ್ಥಿರಾಂಕ* U_EXPORT2
+uloc_getISOCountries(ಶೂನ್ಯ);
 
 /**
  * Truncate the locale ID string to get the parent locale ID.
@@ -914,10 +914,10 @@ uloc_getISOCountries(void);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getParent(const char*    localeID,
-                 char* parent,
-                 int32_t parentCapacity,
-                 UErrorCode* err);
+uloc_get_ಪೋಷಕ(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ*    localeID,
+                 ಅಕ್ಷರ* ಪೋಷಕ,
+                 int32_t ಪೋಷಕ_ಸಾಮರ್ಥ್ಯ,
+                 UError_ಸಂಕೇತ* err);
 
 
 
@@ -945,10 +945,10 @@ uloc_getParent(const char*    localeID,
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getBaseName(const char*    localeID,
-         char* name,
-         int32_t nameCapacity,
-         UErrorCode* err);
+uloc_get_ತಳ_Name(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ*    localeID,
+         ಅಕ್ಷರ* name,
+         int32_t name_ಸಾಮರ್ಥ್ಯ,
+         UError_ಸಂಕೇತ* err);
 
 /**
  * Gets an enumeration of keywords for the specified locale. Enumeration
@@ -960,8 +960,8 @@ uloc_getBaseName(const char*    localeID,
  * @stable ICU 2.8
  */
 U_CAPI UEnumeration* U_EXPORT2
-uloc_openKeywords(const char* localeID,
-                        UErrorCode* status);
+uloc_openKeywords(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* localeID,
+                        UError_ಸಂಕೇತ* ಸ್ಥಿತಿ_2);
 
 /**
  * Get the value for a keyword. Locale name does not need to be normalized.
@@ -977,10 +977,10 @@ uloc_openKeywords(const char* localeID,
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getKeywordValue(const char* localeID,
-                     const char* keywordName,
-                     char* buffer, int32_t bufferCapacity,
-                     UErrorCode* status);
+uloc_get_Keyword_ಮೌಲ್ಯ(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* localeID,
+                     ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* keywordName,
+                     ಅಕ್ಷರ* ಬಫರ್, int32_t ಬಫರ್_ಸಾಮರ್ಥ್ಯ,
+                     UError_ಸಂಕೇತ* ಸ್ಥಿತಿ_2);
 
 
 /**
@@ -1014,10 +1014,10 @@ uloc_getKeywordValue(const char* localeID,
  * @stable ICU 3.2
  */
 U_CAPI int32_t U_EXPORT2
-uloc_setKeywordValue(const char* keywordName,
-                     const char* keywordValue,
-                     char* buffer, int32_t bufferCapacity,
-                     UErrorCode* status);
+uloc_ಗಣ_Keyword_ಮೌಲ್ಯ(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* keywordName,
+                     ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* keyword_ಮೌಲ್ಯ,
+                     ಅಕ್ಷರ* ಬಫರ್, int32_t ಬಫರ್_ಸಾಮರ್ಥ್ಯ,
+                     UError_ಸಂಕೇತ* ಸ್ಥಿತಿ_2);
 
 /**
  * Returns whether the locale's script is written right-to-left.
@@ -1034,14 +1034,14 @@ uloc_setKeywordValue(const char* keywordName,
  * @stable ICU 54
  */
 U_CAPI UBool U_EXPORT2
-uloc_isRightToLeft(const char *locale);
+uloc_is_ಬಲ_ಗಮ್ಯ_ಎಡ(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *locale);
 
 /**
  * enums for the  return value for the character and line orientation
  * functions.
  * @stable ICU 4.0
  */
-typedef enum {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಎಣಿಕೆ {
   ULOC_LAYOUT_LTR   = 0,  /* left-to-right. */
   ULOC_LAYOUT_RTL    = 1,  /* right-to-left. */
   ULOC_LAYOUT_TTB    = 2,  /* top-to-bottom. */
@@ -1058,8 +1058,8 @@ typedef enum {
  * @stable ICU 4.0
  */
 U_CAPI ULayoutType U_EXPORT2
-uloc_getCharacterOrientation(const char* localeId,
-                             UErrorCode *status);
+uloc_getCharacterOrientation(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* localeId,
+                             UError_ಸಂಕೇತ *ಸ್ಥಿತಿ_2);
 
 /**
  * Get the layout line orientation for the specified locale.
@@ -1070,8 +1070,8 @@ uloc_getCharacterOrientation(const char* localeId,
  * @stable ICU 4.0
  */
 U_CAPI ULayoutType U_EXPORT2
-uloc_getLineOrientation(const char* localeId,
-                        UErrorCode *status);
+uloc_get_ಸಾಲು_Orientation(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* localeId,
+                        UError_ಸಂಕೇತ *ಸ್ಥಿತಿ_2);
 
 /**
  * Output values which uloc_acceptLanguage() writes to the 'outResult' parameter.
@@ -1080,7 +1080,7 @@ uloc_getLineOrientation(const char* localeId,
  * @see uloc_acceptLanguage
  * @stable ICU 3.2
  */
-typedef enum {
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಎಣಿಕೆ {
     /**
      * No exact match was found.
      * @stable ICU 3.2
@@ -1097,7 +1097,7 @@ typedef enum {
      * @stable ICU 3.2
      */
     ULOC_ACCEPT_FALLBACK = 2   /*  */
-} UAcceptResult;
+} UAccept_ಫಲಿತಾಂಶ;
 
 /**
  * Based on a HTTP header from a web browser and a list of available locales,
@@ -1117,11 +1117,11 @@ typedef enum {
  * @stable ICU 3.2
  */
 U_CAPI int32_t U_EXPORT2
-uloc_acceptLanguageFromHTTP(char *result, int32_t resultAvailable,
-                            UAcceptResult *outResult,
-                            const char *httpAcceptLanguage,
-                            UEnumeration* availableLocales,
-                            UErrorCode *status);
+uloc_acceptLanguageFromHTTP(ಅಕ್ಷರ *ಫಲಿತಾಂಶ, int32_t ಫಲಿತಾಂಶ_ಲಭ್ಯ,
+                            UAccept_ಫಲಿತಾಂಶ *ಹೊರಹೋಗು_ಫಲಿತಾಂಶ,
+                            ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *httpAcceptLanguage,
+                            UEnumeration* ಲಭ್ಯ_Locales,
+                            UError_ಸಂಕೇತ *ಸ್ಥಿತಿ_2);
 
 /**
  * Based on a list of available locales,
@@ -1142,11 +1142,11 @@ uloc_acceptLanguageFromHTTP(char *result, int32_t resultAvailable,
  * @stable ICU 3.2
  */
 U_CAPI int32_t U_EXPORT2
-uloc_acceptLanguage(char *result, int32_t resultAvailable, 
-                    UAcceptResult *outResult, const char **acceptList,
-                    int32_t acceptListCount,
-                    UEnumeration* availableLocales,
-                    UErrorCode *status);
+uloc_acceptLanguage(ಅಕ್ಷರ *ಫಲಿತಾಂಶ, int32_t ಫಲಿತಾಂಶ_ಲಭ್ಯ, 
+                    UAccept_ಫಲಿತಾಂಶ *ಹೊರಹೋಗು_ಫಲಿತಾಂಶ, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ **acceptList,
+                    int32_t accept_List_ಎಣಿಕೆ,
+                    UEnumeration* ಲಭ್ಯ_Locales,
+                    UError_ಸಂಕೇತ *ಸ್ಥಿತಿ_2);
 
 
 /**
@@ -1162,8 +1162,8 @@ uloc_acceptLanguage(char *result, int32_t resultAvailable,
  * @stable ICU 3.8
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getLocaleForLCID(uint32_t hostID, char *locale, int32_t localeCapacity,
-                    UErrorCode *status);
+uloc_getLocaleForLCID(uint32_t hostID, ಅಕ್ಷರ *locale, int32_t locale_ಸಾಮರ್ಥ್ಯ,
+                    UError_ಸಂಕೇತ *ಸ್ಥಿತಿ_2);
 
 
 /**
@@ -1201,10 +1201,10 @@ uloc_getLocaleForLCID(uint32_t hostID, char *locale, int32_t localeCapacity,
  * @stable ICU 4.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_addLikelySubtags(const char*    localeID,
-         char* maximizedLocaleID,
+uloc_ಕೂಡಿಸು_Likely_Subtags_2(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ*    localeID,
+         ಅಕ್ಷರ* maximizedLocaleID,
          int32_t maximizedLocaleIDCapacity,
-         UErrorCode* err);
+         UError_ಸಂಕೇತ* err);
 
 
 /**
@@ -1241,10 +1241,10 @@ uloc_addLikelySubtags(const char*    localeID,
  * @stable ICU 4.0
  */
 U_CAPI int32_t U_EXPORT2
-uloc_minimizeSubtags(const char*    localeID,
-         char* minimizedLocaleID,
+uloc_minimizeSubtags(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ*    localeID,
+         ಅಕ್ಷರ* minimizedLocaleID,
          int32_t minimizedLocaleIDCapacity,
-         UErrorCode* err);
+         UError_ಸಂಕೇತ* err);
 
 /**
  * Returns a locale ID for the specified BCP47 language tag string.
@@ -1274,11 +1274,11 @@ uloc_minimizeSubtags(const char*    localeID,
  * @stable ICU 4.2
  */
 U_CAPI int32_t U_EXPORT2
-uloc_forLanguageTag(const char* langtag,
-                    char* localeID,
+uloc_for_Language_ಟ್ಯಾಗ್(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* langtag,
+                    ಅಕ್ಷರ* localeID,
                     int32_t localeIDCapacity,
-                    int32_t* parsedLength,
-                    UErrorCode* err);
+                    int32_t* parsed_ಉದ್ದಳತೆ,
+                    UError_ಸಂಕೇತ* err);
 
 /**
  * Returns a well-formed language tag for this locale ID. 
@@ -1302,11 +1302,11 @@ uloc_forLanguageTag(const char* langtag,
  * @stable ICU 4.2
  */
 U_CAPI int32_t U_EXPORT2
-uloc_toLanguageTag(const char* localeID,
-                   char* langtag,
-                   int32_t langtagCapacity,
+uloc_ಗಮ್ಯ_Language_ಟ್ಯಾಗ್(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* localeID,
+                   ಅಕ್ಷರ* langtag,
+                   int32_t langtag_ಸಾಮರ್ಥ್ಯ,
                    UBool strict,
-                   UErrorCode* err);
+                   UError_ಸಂಕೇತ* err);
 
 /**
  * Converts the specified keyword (legacy key, or BCP 47 Unicode locale
@@ -1329,8 +1329,8 @@ uloc_toLanguageTag(const char* localeID,
  * @see uloc_toLegacyKey
  * @stable ICU 54
  */
-U_CAPI const char* U_EXPORT2
-uloc_toUnicodeLocaleKey(const char* keyword U_LIFETIME_BOUND);
+U_CAPI ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* U_EXPORT2
+uloc_ಗಮ್ಯ_Unicode_Locale_ಕೀಲಿ(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* keyword U_LIFETIME_BOUND);
 
 /**
  * Converts the specified keyword value (legacy type, or BCP 47
@@ -1360,8 +1360,8 @@ uloc_toUnicodeLocaleKey(const char* keyword U_LIFETIME_BOUND);
  * @see uloc_toLegacyType
  * @stable ICU 54
  */
-U_CAPI const char* U_EXPORT2
-uloc_toUnicodeLocaleType(const char* keyword, const char* value U_LIFETIME_BOUND);
+U_CAPI ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* U_EXPORT2
+uloc_ಗಮ್ಯ_Unicode_Locale_Type(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* keyword, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* ಮೌಲ್ಯ_2 U_LIFETIME_BOUND);
 
 /**
  * Converts the specified keyword (BCP 47 Unicode locale extension key, or
@@ -1375,8 +1375,8 @@ uloc_toUnicodeLocaleType(const char* keyword, const char* value U_LIFETIME_BOUND
  * @see toUnicodeLocaleKey
  * @stable ICU 54
  */
-U_CAPI const char* U_EXPORT2
-uloc_toLegacyKey(const char* keyword U_LIFETIME_BOUND);
+U_CAPI ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* U_EXPORT2
+uloc_ಗಮ್ಯ_Legacy_ಕೀಲಿ(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* keyword U_LIFETIME_BOUND);
 
 /**
  * Converts the specified keyword value (BCP 47 Unicode locale extension type,
@@ -1404,7 +1404,7 @@ uloc_toLegacyKey(const char* keyword U_LIFETIME_BOUND);
  * @see toUnicodeLocaleType
  * @stable ICU 54
  */
-U_CAPI const char* U_EXPORT2
-uloc_toLegacyType(const char* keyword, const char* value U_LIFETIME_BOUND);
+U_CAPI ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* U_EXPORT2
+uloc_ಗಮ್ಯ_Legacy_Type(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* keyword, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* ಮೌಲ್ಯ_2 U_LIFETIME_BOUND);
 
-#endif /*_ULOC*/
+#ಆದರೆ_ಅಂತ್ಯ /*_ULOC*/

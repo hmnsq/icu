@@ -20,21 +20,21 @@
 ******************************************************************************
 */
 
-#include "umutex.h"
+#ಅನ್ತರ್ಭಾವ "umutex.h"
 
-#include "unicode/utypes.h"
-#include "uassert.h"
-#include "ucln_cmn.h"
-#include "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "uassert.h"
+#ಅನ್ತರ್ಭಾವ "ucln_cmn.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
 
-#if defined(U_USER_MUTEX_CPP)
+#ಆದರೆ defined(U_USER_MUTEX_CPP)
 // Support for including an alternate implementation of mutexes has been withdrawn.
 // See issue ICU-20185.
-#error U_USER_MUTEX_CPP not supported
-#endif
+#ದೋಷ U_USER_MUTEX_CPP not supported
+#ಆದರೆ_ಅಂತ್ಯ
 
 
 /*************************************************************************************************
@@ -43,7 +43,7 @@ U_NAMESPACE_BEGIN
  *
  *************************************************************************************************/
 
-namespace {
+ನಾಮಾಕಾಶ {
 std::mutex *initMutex;
 std::condition_variable *initCondition;
 
@@ -57,7 +57,7 @@ std::once_flag *pInitFlag = &initFlag;
 }  // Anonymous namespace
 
 U_CDECL_BEGIN
-static UBool U_CALLCONV umtx_cleanup() {
+ಸ್ಥಿರ UBool U_CALLCONV umtx_cleanup() {
     initMutex->~mutex();
     initCondition->~condition_variable();
     UMutex::cleanup();
@@ -65,62 +65,62 @@ static UBool U_CALLCONV umtx_cleanup() {
     // Reset the once_flag, by destructing it and creating a fresh one in its place.
     // Do not use this trick anywhere else in ICU; use umtx_initOnce, not std::call_once().
     pInitFlag->~once_flag();
-    pInitFlag = new(&initFlag) std::once_flag();
-    return true;
+    pInitFlag = ಹೊಸ(&initFlag) std::once_flag();
+    ಹಿಂತಿರುಗಿ ನಿಜ;
 }
 
-static void U_CALLCONV umtx_init() {
+ಸ್ಥಿರ ಶೂನ್ಯ U_CALLCONV umtx_init() {
     initMutex = STATIC_NEW(std::mutex);
     initCondition = STATIC_NEW(std::condition_variable);
-    ucln_common_registerCleanup(UCLN_COMMON_MUTEX, umtx_cleanup);
+    ucln_common_ರಿಜಿಸ್ಟರ್_Cleanup(UCLN_COMMON_MUTEX, umtx_cleanup);
 }
-U_CDECL_END
+U_CDECL_ಕೊನೆ
 
 
 std::mutex *UMutex::getMutex() {
     std::mutex *retPtr = fMutex.load(std::memory_order_acquire);
-    if (retPtr == nullptr) {
+    ಆದರೆ (retPtr == ಶೂನ್ಯಸೂಚಕ) {
         std::call_once(*pInitFlag, umtx_init);
         std::lock_guard<std::mutex> guard(*initMutex);
         retPtr = fMutex.load(std::memory_order_acquire);
-        if (retPtr == nullptr) {
-            fMutex = new(fStorage) std::mutex();
+        ಆದರೆ (retPtr == ಶೂನ್ಯಸೂಚಕ) {
+            fMutex = ಹೊಸ(fStorage) std::mutex();
             retPtr = fMutex;
-            fListLink = gListHead;
-            gListHead = this;
+            fListLink = g_List_ತಲೆ;
+            g_List_ತಲೆ = ಇದು;
         }
     }
-    U_ASSERT(retPtr != nullptr);
-    return retPtr;
+    U_ASSERT(retPtr != ಶೂನ್ಯಸೂಚಕ);
+    ಹಿಂತಿರುಗಿ retPtr;
 }
 
-UMutex *UMutex::gListHead = nullptr;
+UMutex *UMutex::g_List_ತಲೆ = ಶೂನ್ಯಸೂಚಕ;
 
-void UMutex::cleanup() {
-    UMutex *next = nullptr;
-    for (UMutex *m = gListHead; m != nullptr; m = next) {
+ಶೂನ್ಯ UMutex::cleanup() {
+    UMutex *next = ಶೂನ್ಯಸೂಚಕ;
+    ಗಾಗಿ (UMutex *m = g_List_ತಲೆ; m != ಶೂನ್ಯಸೂಚಕ; m = next) {
         (*m->fMutex).~mutex();
-        m->fMutex = nullptr;
+        m->fMutex = ಶೂನ್ಯಸೂಚಕ;
         next = m->fListLink;
-        m->fListLink = nullptr;
+        m->fListLink = ಶೂನ್ಯಸೂಚಕ;
     }
-    gListHead = nullptr;
+    g_List_ತಲೆ = ಶೂನ್ಯಸೂಚಕ;
 }
 
 
-U_CAPI void  U_EXPORT2
-umtx_lock(UMutex *mutex) {
-    if (mutex == nullptr) {
+U_CAPI ಶೂನ್ಯ  U_EXPORT2
+umtx_ಬೀಗ(UMutex *mutex) {
+    ಆದರೆ (mutex == ಶೂನ್ಯಸೂಚಕ) {
         mutex = &globalMutex;
     }
-    mutex->lock();
+    mutex->ಬೀಗ();
 }
 
 
-U_CAPI void  U_EXPORT2
+U_CAPI ಶೂನ್ಯ  U_EXPORT2
 umtx_unlock(UMutex* mutex)
 {
-    if (mutex == nullptr) {
+    ಆದರೆ (mutex == ಶೂನ್ಯಸೂಚಕ) {
         mutex = &globalMutex;
     }
     mutex->unlock();
@@ -144,18 +144,18 @@ umtx_unlock(UMutex* mutex)
 U_COMMON_API UBool U_EXPORT2
 umtx_initImplPreInit(UInitOnce &uio) {
     std::call_once(*pInitFlag, umtx_init);
-    std::unique_lock<std::mutex> lock(*initMutex);
-    if (umtx_loadAcquire(uio.fState) == 0) {
+    std::unique_lock<std::mutex> ಬೀಗ(*initMutex);
+    ಆದರೆ (umtx_ತುಂಬು_Acquire(uio.fState) == 0) {
         umtx_storeRelease(uio.fState, 1);
-        return true;      // Caller will next call the init function.
-    } else {
-        while (umtx_loadAcquire(uio.fState) == 1) {
+        ಹಿಂತಿರುಗಿ ನಿಜ;      // Caller will next call the init function.
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಆಗ (umtx_ತುಂಬು_Acquire(uio.fState) == 1) {
             // Another thread is currently running the initialization.
             // Wait until it completes.
-            initCondition->wait(lock);
+            initCondition->wait(ಬೀಗ);
         }
         U_ASSERT(uio.fState == 2);
-        return false;
+        ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
     }
 }
 
@@ -166,16 +166,16 @@ umtx_initImplPreInit(UInitOnce &uio) {
 //   Some threads may be racing to test the fState variable outside of the mutex,
 //   requiring the use of store/release when changing its value.
 
-U_COMMON_API void U_EXPORT2
+U_COMMON_API ಶೂನ್ಯ U_EXPORT2
 umtx_initImplPostInit(UInitOnce &uio) {
     {
-        std::unique_lock<std::mutex> lock(*initMutex);
+        std::unique_lock<std::mutex> ಬೀಗ(*initMutex);
         umtx_storeRelease(uio.fState, 2);
     }
     initCondition->notify_all();
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
 /*************************************************************************************************
  *
@@ -183,20 +183,20 @@ U_NAMESPACE_END
  *
  *************************************************************************************************/
 
-U_DEPRECATED void U_EXPORT2
-u_setMutexFunctions(const void * /*context */, UMtxInitFn *, UMtxFn *,
-                    UMtxFn *,  UMtxFn *, UErrorCode *status) {
-    if (U_SUCCESS(*status)) {
-        *status = U_UNSUPPORTED_ERROR;
+U_DEPRECATED ಶೂನ್ಯ U_EXPORT2
+u_ಗಣ_Mutex_Functions(ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ * /*context */, UMtxInitFn *, UMtxFn *,
+                    UMtxFn *,  UMtxFn *, UError_ಸಂಕೇತ *ಸ್ಥಿತಿ_2) {
+    ಆದರೆ (U_SUCCESS(*ಸ್ಥಿತಿ_2)) {
+        *ಸ್ಥಿತಿ_2 = U_UNSUPPORTED_ERROR;
     }
 }
 
 
 
-U_DEPRECATED void U_EXPORT2
-u_setAtomicIncDecFunctions(const void * /*context */, UMtxAtomicFn *, UMtxAtomicFn *,
-                           UErrorCode *status) {
-    if (U_SUCCESS(*status)) {
-        *status = U_UNSUPPORTED_ERROR;
+U_DEPRECATED ಶೂನ್ಯ U_EXPORT2
+u_ಗಣ_Atomic_Inc_Dec_Functions(ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ * /*context */, UMtxAtomicFn *, UMtxAtomicFn *,
+                           UError_ಸಂಕೇತ *ಸ್ಥಿತಿ_2) {
+    ಆದರೆ (U_SUCCESS(*ಸ್ಥಿತಿ_2)) {
+        *ಸ್ಥಿತಿ_2 = U_UNSUPPORTED_ERROR;
     }
 }

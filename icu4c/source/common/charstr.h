@@ -11,13 +11,13 @@
 **********************************************************************
 */
 
-#ifndef CHARSTRING_H
-#define CHARSTRING_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ CHARSTRING_H
+#ವ್ಯಾಖ್ಯಾನಿಸು CHARSTRING_H
 
-#include "unicode/utypes.h"
-#include "unicode/unistr.h"
-#include "unicode/uobject.h"
-#include "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unistr.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uobject.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
@@ -32,20 +32,20 @@ U_NAMESPACE_BEGIN
  * For example:
  *   cs.data()[5]='a';  // no need for setCharAt(5, 'a')
  */
-class U_COMMON_API_CLASS CharString : public UMemory {
-public:
-    U_COMMON_API CharString() : len(0) { buffer[0]=0; }
-    U_COMMON_API CharString(StringPiece s, UErrorCode &errorCode) : len(0) {
-        buffer[0]=0;
-        append(s, errorCode);
+class U_COMMON_API_CLASS CharString : ಸಾರ್ವಜನಿಕ UMemory {
+ಸಾರ್ವಜನಿಕ:
+    U_COMMON_API CharString() : len(0) { ಬಫರ್[0]=0; }
+    U_COMMON_API CharString(StringPiece s, UError_ಸಂಕೇತ &error_ಸಂಕೇತ) : len(0) {
+        ಬಫರ್[0]=0;
+        append(s, error_ಸಂಕೇತ);
     }
-    U_COMMON_API CharString(const CharString &s, UErrorCode &errorCode) : len(0) {
-        buffer[0]=0;
-        append(s, errorCode);
+    U_COMMON_API CharString(ಸ್ಥಿರಾಂಕ CharString &s, UError_ಸಂಕೇತ &error_ಸಂಕೇತ) : len(0) {
+        ಬಫರ್[0]=0;
+        append(s, error_ಸಂಕೇತ);
     }
-    U_COMMON_API CharString(const char *s, int32_t sLength, UErrorCode &errorCode) : len(0) {
-        buffer[0]=0;
-        append(s, sLength, errorCode);
+    U_COMMON_API CharString(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *s, int32_t s_ಉದ್ದಳತೆ, UError_ಸಂಕೇತ &error_ಸಂಕೇತ) : len(0) {
+        ಬಫರ್[0]=0;
+        append(s, s_ಉದ್ದಳತೆ, error_ಸಂಕೇತ);
     }
     U_COMMON_API ~CharString() {}
 
@@ -59,7 +59,7 @@ public:
      * This string will have the same contents and state that the source string had.
      * The behavior is undefined if *this and src are the same object.
      */
-    U_COMMON_API CharString &operator=(CharString &&src) noexcept;
+    U_COMMON_API CharString &ಕ್ರಿಯಾಕಾರಕ=(CharString &&src) noexcept;
 
     /**
      * Replaces this string's contents with the other string's contents.
@@ -67,21 +67,21 @@ public:
      * the assignment operator, to make copies explicit and to
      * use a UErrorCode where memory allocations might be needed.
      */
-    U_COMMON_API CharString &copyFrom(const CharString &other, UErrorCode &errorCode);
-    U_COMMON_API CharString &copyFrom(StringPiece s, UErrorCode &errorCode);
+    U_COMMON_API CharString &copyFrom(ಸ್ಥಿರಾಂಕ CharString &other, UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
+    U_COMMON_API CharString &copyFrom(StringPiece s, UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
-    U_COMMON_API UBool isEmpty() const { return len==0; }
-    U_COMMON_API int32_t length() const { return len; }
-    U_COMMON_API char operator[](int32_t index) const { return buffer[index]; }
-    U_COMMON_API StringPiece toStringPiece() const { return StringPiece(buffer.getAlias(), len); }
+    U_COMMON_API UBool is_ಖಾಲಿಗಳು() ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ len==0; }
+    U_COMMON_API int32_t ಉದ್ದಳತೆ() ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ len; }
+    U_COMMON_API ಅಕ್ಷರ ಕ್ರಿಯಾಕಾರಕ[](int32_t ಸೂಚ್ಯಂಕ) ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ ಬಫರ್[ಸೂಚ್ಯಂಕ]; }
+    U_COMMON_API StringPiece ಗಮ್ಯ_String_Piece() ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ StringPiece(ಬಫರ್.getAlias(), len); }
 
-    U_COMMON_API const char *data() const { return buffer.getAlias(); }
-    U_COMMON_API char *data() { return buffer.getAlias(); }
+    U_COMMON_API ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ದತ್ತಾಂಶ() ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ ಬಫರ್.getAlias(); }
+    U_COMMON_API ಅಕ್ಷರ *ದತ್ತಾಂಶ() { ಹಿಂತಿರುಗಿ ಬಫರ್.getAlias(); }
     /**
      * Allocates length()+1 chars and copies the NUL-terminated data().
      * The caller must uprv_free() the result.
      */
-    U_COMMON_API char *cloneData(UErrorCode &errorCode) const;
+    U_COMMON_API ಅಕ್ಷರ *clone_ದತ್ತಾಂಶ(UError_ಸಂಕೇತ &error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ;
     /**
      * Copies the contents of the string into dest.
      * Checks if there is enough space in dest, extracts the entire string if possible,
@@ -97,40 +97,40 @@ public:
      * @param errorCode ICU error code.
      * @return length()
      */
-    U_COMMON_API int32_t extract(char *dest, int32_t capacity, UErrorCode &errorCode) const;
+    U_COMMON_API int32_t ಹೊರತೆಗೆ(ಅಕ್ಷರ *dest, int32_t ಸಾಮರ್ಥ್ಯ, UError_ಸಂಕೇತ &error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ;
 
-    U_COMMON_API bool operator==(const CharString& other) const {
-        return len == other.length() && (len == 0 || uprv_memcmp(data(), other.data(), len) == 0);
+    U_COMMON_API bool ಕ್ರಿಯಾಕಾರಕ==(ಸ್ಥಿರಾಂಕ CharString& other) ಸ್ಥಿರಾಂಕ {
+        ಹಿಂತಿರುಗಿ len == other.ಉದ್ದಳತೆ() && (len == 0 || uprv_memcmp(ದತ್ತಾಂಶ(), other.ದತ್ತಾಂಶ(), len) == 0);
     }
-    U_COMMON_API bool operator!=(const CharString& other) const {
-        return !operator==(other);
+    U_COMMON_API bool ಕ್ರಿಯಾಕಾರಕ!=(ಸ್ಥಿರಾಂಕ CharString& other) ಸ್ಥಿರಾಂಕ {
+        ಹಿಂತಿರುಗಿ !ಕ್ರಿಯಾಕಾರಕ==(other);
     }
 
-    U_COMMON_API bool operator==(StringPiece other) const {
-        return len == other.length() && (len == 0 || uprv_memcmp(data(), other.data(), len) == 0);
+    U_COMMON_API bool ಕ್ರಿಯಾಕಾರಕ==(StringPiece other) ಸ್ಥಿರಾಂಕ {
+        ಹಿಂತಿರುಗಿ len == other.ಉದ್ದಳತೆ() && (len == 0 || uprv_memcmp(ದತ್ತಾಂಶ(), other.ದತ್ತಾಂಶ(), len) == 0);
     }
-    U_COMMON_API bool operator!=(StringPiece other) const {
-        return !operator==(other);
+    U_COMMON_API bool ಕ್ರಿಯಾಕಾರಕ!=(StringPiece other) ಸ್ಥಿರಾಂಕ {
+        ಹಿಂತಿರುಗಿ !ಕ್ರಿಯಾಕಾರಕ==(other);
     }
 
     /** @return last index of c, or -1 if c is not in this string */
-    U_COMMON_API int32_t lastIndexOf(char c) const;
+    U_COMMON_API int32_t ಕೊನೆಯ_ಸೂಚ್ಯಂಕ_ದ(ಅಕ್ಷರ c) ಸ್ಥಿರಾಂಕ;
 
-    U_COMMON_API bool contains(StringPiece s) const;
+    U_COMMON_API bool ಒಳಗೊಂಡಿದೆ(StringPiece s) ಸ್ಥಿರಾಂಕ;
 
-    U_COMMON_API CharString &clear() { len=0; buffer[0]=0; return *this; }
-    U_COMMON_API CharString &truncate(int32_t newLength);
+    U_COMMON_API CharString &clear() { len=0; ಬಫರ್[0]=0; ಹಿಂತಿರುಗಿ *this; }
+    U_COMMON_API CharString &truncate(int32_t new_ಉದ್ದಳತೆ);
 
-    U_COMMON_API CharString &append(char c, UErrorCode &errorCode);
-    U_COMMON_API CharString &append(StringPiece s, UErrorCode &errorCode) {
-        return append(s.data(), s.length(), errorCode);
+    U_COMMON_API CharString &append(ಅಕ್ಷರ c, UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
+    U_COMMON_API CharString &append(StringPiece s, UError_ಸಂಕೇತ &error_ಸಂಕೇತ) {
+        ಹಿಂತಿರುಗಿ append(s.ದತ್ತಾಂಶ(), s.ಉದ್ದಳತೆ(), error_ಸಂಕೇತ);
     }
-    U_COMMON_API CharString &append(const CharString &s, UErrorCode &errorCode) {
-        return append(s.data(), s.length(), errorCode);
+    U_COMMON_API CharString &append(ಸ್ಥಿರಾಂಕ CharString &s, UError_ಸಂಕೇತ &error_ಸಂಕೇತ) {
+        ಹಿಂತಿರುಗಿ append(s.ದತ್ತಾಂಶ(), s.ಉದ್ದಳತೆ(), error_ಸಂಕೇತ);
     }
-    U_COMMON_API CharString &append(const char *s, int32_t sLength, UErrorCode &status);
+    U_COMMON_API CharString &append(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *s, int32_t s_ಉದ್ದಳತೆ, UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2);
 
-    U_COMMON_API CharString &appendNumber(int64_t number, UErrorCode &status);
+    U_COMMON_API CharString &append_ಸಂಖ್ಯೆ(int64_t ಸಂಖ್ಯೆ, UError_ಸಂಕೇತ &ಸ್ಥಿತಿ_2);
 
     /**
      * Returns a writable buffer for appending and writes the buffer's capacity to
@@ -152,46 +152,46 @@ public:
      * @param errorCode in/out error code
      * @return a buffer with resultCapacity>=min_capacity
      */
-    U_COMMON_API char *getAppendBuffer(int32_t minCapacity,
-                                       int32_t desiredCapacityHint,
-                                       int32_t &resultCapacity,
-                                       UErrorCode &errorCode);
+    U_COMMON_API ಅಕ್ಷರ *get_Append_ಬಫರ್(int32_t min_ಸಾಮರ್ಥ್ಯ,
+                                       int32_t desired_ಸಾಮರ್ಥ್ಯ_Hint,
+                                       int32_t &ಫಲಿತಾಂಶ_ಸಾಮರ್ಥ್ಯ,
+                                       UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
-    U_COMMON_API CharString &appendInvariantChars(const UnicodeString &s, UErrorCode &errorCode);
-    U_COMMON_API CharString &appendInvariantChars(const char16_t* uchars,
+    U_COMMON_API CharString &appendInvariantChars(ಸ್ಥಿರಾಂಕ UnicodeString &s, UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
+    U_COMMON_API CharString &appendInvariantChars(ಸ್ಥಿರಾಂಕ char16_t* uchars,
                                                   int32_t ucharsLen,
-                                                  UErrorCode& errorCode);
+                                                  UError_ಸಂಕೇತ& error_ಸಂಕೇತ);
 
     /**
      * Appends a filename/path part, e.g., a directory name.
      * First appends a U_FILE_SEP_CHAR or U_FILE_ALT_SEP_CHAR if necessary.
      * Does nothing if s is empty.
      */
-    U_COMMON_API CharString &appendPathPart(StringPiece s, UErrorCode &errorCode);
+    U_COMMON_API CharString &append_ಮಾರ್ಗ_Part(StringPiece s, UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
     /**
      * Appends a U_FILE_SEP_CHAR or U_FILE_ALT_SEP_CHAR if this string is not empty
      * and does not already end with a U_FILE_SEP_CHAR or U_FILE_ALT_SEP_CHAR.
      */
-    U_COMMON_API CharString &ensureEndsWithFileSeparator(UErrorCode &errorCode);
+    U_COMMON_API CharString &ensure_ತುದಿಗಳು_With_File_Separator(UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
-private:
-    MaybeStackArray<char, 40> buffer;
+ಖಾಸಗಿ:
+    Maybe_ರಾಶಿ_Array<ಅಕ್ಷರ, 40> ಬಫರ್;
     int32_t len;
 
-    UBool ensureCapacity(int32_t capacity, int32_t desiredCapacityHint, UErrorCode &errorCode);
+    UBool ensure_ಸಾಮರ್ಥ್ಯ(int32_t ಸಾಮರ್ಥ್ಯ, int32_t desired_ಸಾಮರ್ಥ್ಯ_Hint, UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
-    CharString(const CharString &other) = delete; // forbid copying of this class
-    CharString &operator=(const CharString &other) = delete; // forbid copying of this class
+    CharString(ಸ್ಥಿರಾಂಕ CharString &other) = delete; // forbid copying of this class
+    CharString &ಕ್ರಿಯಾಕಾರಕ=(ಸ್ಥಿರಾಂಕ CharString &other) = delete; // forbid copying of this class
 
     /**
      * Returns U_FILE_ALT_SEP_CHAR if found in string, and U_FILE_SEP_CHAR is not found.
      * Otherwise returns U_FILE_SEP_CHAR.
      */
-    char getDirSepChar() const;
+    ಅಕ್ಷರ getDirSepChar() ಸ್ಥಿರಾಂಕ;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 //eof

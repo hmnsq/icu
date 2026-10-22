@@ -14,12 +14,12 @@
  * \brief C++: internal template EnumSet<>
  */
 
-#ifndef ENUMSET_H
-#define ENUMSET_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ ENUMSET_H
+#ವ್ಯಾಖ್ಯಾನಿಸು ENUMSET_H
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ಆದರೆ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -30,41 +30,41 @@ U_NAMESPACE_BEGIN
  * @internal
  * \cond
  */
-template<typename T, uint32_t minValue, uint32_t limitValue>
-class EnumSet {
-public:
-    inline EnumSet() : fBools(0) {}
-    inline EnumSet(const EnumSet<T,minValue,limitValue>& other) : fBools(other.fBools) {}
-    inline ~EnumSet() {}
-#ifndef U_HIDE_INTERNAL_API
-    inline void clear() { fBools=0; }
-    inline void add(T toAdd) { set(toAdd, 1); }
-    inline void remove(T toRemove) { set(toRemove, 0); }
-    inline int32_t contains(T toCheck) const { return get(toCheck); }
-    inline void set(T toSet, int32_t v) { fBools=(fBools&(~flag(toSet)))|(v?(flag(toSet)):0); }
-    inline int32_t get(T toCheck) const { return (fBools & flag(toCheck))?1:0; }
-    inline UBool isValidEnum(T toCheck) const {  return (toCheck>=minValue&&toCheck<limitValue); }
-    inline UBool isValidValue(int32_t v) const { return (v==0||v==1); }
-    inline const EnumSet<T, minValue, limitValue>&
-    operator=(const EnumSet<T, minValue, limitValue>& other) U_LIFETIME_BOUND {
+ಮಾದರಿ<typename T, uint32_t min_ಮೌಲ್ಯ, uint32_t ಎಲ್ಲೆ_ಮೌಲ್ಯ>
+class Enum_ಗಣ {
+ಸಾರ್ವಜನಿಕ:
+    ಸಾಲೊಳಗೆ Enum_ಗಣ() : fBools(0) {}
+    ಸಾಲೊಳಗೆ Enum_ಗಣ(ಸ್ಥಿರಾಂಕ Enum_ಗಣ<T,min_ಮೌಲ್ಯ,ಎಲ್ಲೆ_ಮೌಲ್ಯ>& other) : fBools(other.fBools) {}
+    ಸಾಲೊಳಗೆ ~Enum_ಗಣ() {}
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ U_HIDE_ಆಂತರಿಕ_API
+    ಸಾಲೊಳಗೆ ಶೂನ್ಯ clear() { fBools=0; }
+    ಸಾಲೊಳಗೆ ಶೂನ್ಯ ಕೂಡಿಸು(T ಗಮ್ಯ_ಕೂಡಿಸು) { ಗಣ(ಗಮ್ಯ_ಕೂಡಿಸು, 1); }
+    ಸಾಲೊಳಗೆ ಶೂನ್ಯ remove(T ಗಮ್ಯ_Remove) { ಗಣ(ಗಮ್ಯ_Remove, 0); }
+    ಸಾಲೊಳಗೆ int32_t ಒಳಗೊಂಡಿದೆ(T ಗಮ್ಯ_Check) ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ get(ಗಮ್ಯ_Check); }
+    ಸಾಲೊಳಗೆ ಶೂನ್ಯ ಗಣ(T ಗಮ್ಯ_ಗಣ, int32_t v) { fBools=(fBools&(~flag(ಗಮ್ಯ_ಗಣ)))|(v?(flag(ಗಮ್ಯ_ಗಣ)):0); }
+    ಸಾಲೊಳಗೆ int32_t get(T ಗಮ್ಯ_Check) ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ (fBools & flag(ಗಮ್ಯ_Check))?1:0; }
+    ಸಾಲೊಳಗೆ UBool isValidEnum(T ಗಮ್ಯ_Check) ಸ್ಥಿರಾಂಕ {  ಹಿಂತಿರುಗಿ (ಗಮ್ಯ_Check>=min_ಮೌಲ್ಯ&&ಗಮ್ಯ_Check<ಎಲ್ಲೆ_ಮೌಲ್ಯ); }
+    ಸಾಲೊಳಗೆ UBool is_Valid_ಮೌಲ್ಯ(int32_t v) ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ (v==0||v==1); }
+    ಸಾಲೊಳಗೆ ಸ್ಥಿರಾಂಕ Enum_ಗಣ<T, min_ಮೌಲ್ಯ, ಎಲ್ಲೆ_ಮೌಲ್ಯ>&
+    ಕ್ರಿಯಾಕಾರಕ=(ಸ್ಥಿರಾಂಕ Enum_ಗಣ<T, min_ಮೌಲ್ಯ, ಎಲ್ಲೆ_ಮೌಲ್ಯ>& other) U_LIFETIME_BOUND {
         fBools = other.fBools;
-        return *this;
+        ಹಿಂತಿರುಗಿ *this;
     }
   
-    inline uint32_t getAll() const {
-        return fBools; 
+    ಸಾಲೊಳಗೆ uint32_t getAll() ಸ್ಥಿರಾಂಕ {
+        ಹಿಂತಿರುಗಿ fBools; 
     }
-#endif /* U_HIDE_INTERNAL_API */
+#ಆದರೆ_ಅಂತ್ಯ /* U_HIDE_INTERNAL_API */
 
-private:
-    inline uint32_t flag(T toCheck) const { return (1<<(toCheck-minValue)); }
-private:
+ಖಾಸಗಿ:
+    ಸಾಲೊಳಗೆ uint32_t flag(T ಗಮ್ಯ_Check) ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ (1<<(ಗಮ್ಯ_Check-min_ಮೌಲ್ಯ)); }
+ಖಾಸಗಿ:
     uint32_t fBools;
 };
 
 /** \endcond */
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif /* U_SHOW_CPLUSPLUS_API */
-#endif /* ENUMSET_H */
+#ಆದರೆ_ಅಂತ್ಯ /* U_SHOW_CPLUSPLUS_API */
+#ಆದರೆ_ಅಂತ್ಯ /* ENUMSET_H */

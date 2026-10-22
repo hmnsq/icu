@@ -4,19 +4,19 @@
 // localeprioritylist.h
 // created: 2019jul11 Markus W. Scherer
 
-#ifndef __LOCALEPRIORITYLIST_H__
-#define __LOCALEPRIORITYLIST_H__
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __LOCALEPRIORITYLIST_H__
+#ವ್ಯಾಖ್ಯಾನಿಸು __LOCALEPRIORITYLIST_H__
 
-#include "unicode/utypes.h"
-#include "unicode/locid.h"
-#include "unicode/stringpiece.h"
-#include "unicode/uobject.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/locid.h"
+#ಅನ್ತರ್ಭಾವ "unicode/stringpiece.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uobject.h"
 
-struct UHashtable;
+ರಚನೆ UHashtable;
 
 U_NAMESPACE_BEGIN
 
-struct LocaleAndWeightArray;
+ರಚನೆ Locale_And_ತೂಕ_Array;
 
 /**
  * Parses a list of locales from an accept-language string.
@@ -54,62 +54,62 @@ struct LocaleAndWeightArray;
  *        qvalue         = ( "0" [ "." 0*3DIGIT ] )
  *                       | ( "1" [ "." 0*3("0") ] )
  */
-class U_COMMON_API LocalePriorityList : public UMemory {
-public:
-    class Iterator : public Locale::Iterator {
-    public:
-        UBool hasNext() const override { return count < length; }
+class U_COMMON_API Locale_ಆದ್ಯತೆ_List : ಸಾರ್ವಜನಿಕ UMemory {
+ಸಾರ್ವಜನಿಕ:
+    class Iterator : ಸಾರ್ವಜನಿಕ Locale::Iterator {
+    ಸಾರ್ವಜನಿಕ:
+        UBool has_ಮುಂದಿನ() ಸ್ಥಿರಾಂಕ override { ಹಿಂತಿರುಗಿ ಎಣಿಕೆ_2 < ಉದ್ದಳತೆ; }
 
-        const Locale &next() override {
-            for(;;) {
-                const Locale *locale = list.localeAt(index++);
-                if (locale != nullptr) {
-                    ++count;
-                    return *locale;
+        ಸ್ಥಿರಾಂಕ Locale &ಮುಂದಿನ() override {
+            ಗಾಗಿ(;;) {
+                ಸ್ಥಿರಾಂಕ Locale *locale = list.localeAt(ಸೂಚ್ಯಂಕ++);
+                ಆದರೆ (locale != nullptr) {
+                    ++ಎಣಿಕೆ_2;
+                    ಹಿಂತಿರುಗಿ *locale;
                 }
             }
         }
 
-    private:
-        friend class LocalePriorityList;
+    ಖಾಸಗಿ:
+        ಮಿತ್ರ class Locale_ಆದ್ಯತೆ_List;
 
-        Iterator(const LocalePriorityList &list) : list(list), length(list.getLength()) {}
+        Iterator(ಸ್ಥಿರಾಂಕ Locale_ಆದ್ಯತೆ_List &list) : list(list), ಉದ್ದಳತೆ(list.get_ಉದ್ದಳತೆ()) {}
 
-        const LocalePriorityList &list;
-        int32_t index = 0;
-        int32_t count = 0;
-        const int32_t length;
+        ಸ್ಥಿರಾಂಕ Locale_ಆದ್ಯತೆ_List &list;
+        int32_t ಸೂಚ್ಯಂಕ = 0;
+        int32_t ಎಣಿಕೆ_2 = 0;
+        ಸ್ಥಿರಾಂಕ int32_t ಉದ್ದಳತೆ;
     };
 
-    LocalePriorityList(StringPiece s, UErrorCode &errorCode);
+    Locale_ಆದ್ಯತೆ_List(StringPiece s, UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
-    ~LocalePriorityList();
+    ~Locale_ಆದ್ಯತೆ_List();
 
-    int32_t getLength() const { return listLength - numRemoved; }
+    int32_t get_ಉದ್ದಳತೆ() ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ list_ಉದ್ದಳತೆ - ಅಂಕೆ_Removed; }
 
-    int32_t getLengthIncludingRemoved() const { return listLength; }
+    int32_t get_ಉದ್ದಳತೆ_Including_Removed() ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ list_ಉದ್ದಳತೆ; }
 
-    Iterator iterator() const { return Iterator(*this); }
+    Iterator iterator() ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ Iterator(*this); }
 
-    const Locale *localeAt(int32_t i) const;
+    ಸ್ಥಿರಾಂಕ Locale *localeAt(int32_t i) ಸ್ಥಿರಾಂಕ;
 
     Locale *orphanLocaleAt(int32_t i);
 
-private:
-    LocalePriorityList(const LocalePriorityList &) = delete;
-    LocalePriorityList &operator=(const LocalePriorityList &) = delete;
+ಖಾಸಗಿ:
+    Locale_ಆದ್ಯತೆ_List(ಸ್ಥಿರಾಂಕ Locale_ಆದ್ಯತೆ_List &) = delete;
+    Locale_ಆದ್ಯತೆ_List &ಕ್ರಿಯಾಕಾರಕ=(ಸ್ಥಿರಾಂಕ Locale_ಆದ್ಯತೆ_List &) = delete;
 
-    bool add(const Locale &locale, int32_t weight, UErrorCode &errorCode);
+    bool ಕೂಡಿಸು(ಸ್ಥಿರಾಂಕ Locale &locale, int32_t ತೂಕ, UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
-    void sort(UErrorCode &errorCode);
+    ಶೂನ್ಯ ವಿಂಗಡಿಸು(UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
-    LocaleAndWeightArray *list = nullptr;
-    int32_t listLength = 0;
-    int32_t numRemoved = 0;
+    Locale_And_ತೂಕ_Array *list = nullptr;
+    int32_t list_ಉದ್ದಳತೆ = 0;
+    int32_t ಅಂಕೆ_Removed = 0;
     bool hasWeights = false;  // other than 1.0
     UHashtable *map = nullptr;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif  // __LOCALEPRIORITYLIST_H__
+#ಆದರೆ_ಅಂತ್ಯ  // __LOCALEPRIORITYLIST_H__

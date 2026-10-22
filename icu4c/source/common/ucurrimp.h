@@ -7,13 +7,13 @@
 **********************************************************************
 */
 
-#ifndef _UCURR_IMP_H_
-#define _UCURR_IMP_H_
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ _UCURR_IMP_H_
+#ವ್ಯಾಖ್ಯಾನಿಸು _UCURR_IMP_H_
 
-#include "unicode/utypes.h"
-#include "unicode/unistr.h"
-#include "unicode/parsepos.h"
-#include "unicode/uniset.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unistr.h"
+#ಅನ್ತರ್ಭಾವ "unicode/parsepos.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uniset.h"
 
 /**
  * Internal method.  Given a currency ISO code and a locale, return
@@ -25,9 +25,9 @@
  * This is used for backward compatibility with old currency logic in
  * DecimalFormat and DecimalFormatSymbols.
  */
-U_CAPI void
-uprv_getStaticCurrencyName(const UChar* iso, const char* loc,
-                           icu::UnicodeString& result, UErrorCode& ec);
+U_CAPI ಶೂನ್ಯ
+uprv_getStaticCurrencyName(ಸ್ಥಿರಾಂಕ UChar* iso, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* loc,
+                           icu::UnicodeString& ಫಲಿತಾಂಶ, UError_ಸಂಕೇತ& ec);
 
 /**
  * Attempt to parse the given string as a currency, either as a
@@ -53,14 +53,14 @@ uprv_getStaticCurrencyName(const UChar* iso, const char* loc,
  *
  * @internal
  */
-U_CAPI void
-uprv_parseCurrency(const char* locale,
-                   const icu::UnicodeString& text,
+U_CAPI ಶೂನ್ಯ
+uprv_parseCurrency(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* locale,
+                   ಸ್ಥಿರಾಂಕ icu::UnicodeString& ಪಠ್ಯ,
                    icu::ParsePosition& pos,
                    int8_t type,
-                   int32_t* partialMatchLen,
-                   UChar* result,
-                   UErrorCode& ec);
+                   int32_t* partial_ಹೊಂದಿಕೆ_Len,
+                   UChar* ಫಲಿತಾಂಶ,
+                   UError_ಸಂಕೇತ& ec);
 
 /**
  * Puts all possible first-characters of a currency into the
@@ -69,10 +69,10 @@ uprv_parseCurrency(const char* locale,
  * @param locale the locale of the display names of interest
  * @param result the UnicodeSet to which to add the starting characters
  */
-void uprv_currencyLeads(const char* locale, icu::UnicodeSet& result, UErrorCode& ec);
+ಶೂನ್ಯ uprv_currencyLeads(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* locale, icu::Unicode_ಗಣ& ಫಲಿತಾಂಶ, UError_ಸಂಕೇತ& ec);
 
 
 
-#endif /* #ifndef _UCURR_IMP_H_ */
+#ಆದರೆ_ಅಂತ್ಯ /* #ifndef _UCURR_IMP_H_ */
 
 //eof

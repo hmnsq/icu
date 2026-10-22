@@ -11,14 +11,14 @@
 *******************************************************************************
 */
 
-#ifndef __DTINTRV_H__
-#define __DTINTRV_H__
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __DTINTRV_H__
+#ವ್ಯಾಖ್ಯಾನಿಸು __DTINTRV_H__
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ಆದರೆ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uobject.h"
 
 /**
  * \file
@@ -33,8 +33,8 @@ U_NAMESPACE_BEGIN
  * It is a pair of UDate representing from UDate 1 to UDate 2.
  * @stable ICU 4.0
 **/
-class U_COMMON_API DateInterval : public UObject {
-public:
+class U_COMMON_API DateInterval : ಸಾರ್ವಜನಿಕ UObject {
+ಸಾರ್ವಜನಿಕ:
 
     /** 
      * Construct a DateInterval given a from date and a to date.
@@ -42,27 +42,27 @@ public:
      * @param toDate    The to date in date interval.
      * @stable ICU 4.0
      */
-    DateInterval(UDate fromDate, UDate toDate);
+    DateInterval(UDate fromDate, UDate ಗಮ್ಯ_Date);
 
     /**
      * destructor
      * @stable ICU 4.0
      */
-    virtual ~DateInterval();
+    ವಾಸ್ತವಿಕ ~DateInterval();
  
     /** 
      * Get the from date.
      * @return  the from date in dateInterval.
      * @stable ICU 4.0
      */
-    inline UDate getFromDate() const;
+    ಸಾಲೊಳಗೆ UDate getFromDate() ಸ್ಥಿರಾಂಕ;
 
     /** 
      * Get the to date.
      * @return  the to date in dateInterval.
      * @stable ICU 4.0
      */
-    inline UDate getToDate() const;
+    ಸಾಲೊಳಗೆ UDate get_ಗಮ್ಯ_Date() ಸ್ಥಿರಾಂಕ;
 
 
     /**
@@ -76,7 +76,7 @@ public:
      * @return          The class ID for all objects of this class.
      * @stable ICU 4.0
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    ಸ್ಥಿರ UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * Returns a unique class ID POLYMORPHICALLY. Pure virtual override. This
@@ -89,33 +89,33 @@ public:
      *                  other classes have different class IDs.
      * @stable ICU 4.0
      */
-    virtual UClassID getDynamicClassID() const override;
+    ವಾಸ್ತವಿಕ UClassID getDynamicClassID() ಸ್ಥಿರಾಂಕ override;
 
     /**
      * Copy constructor.
      * @stable ICU 4.0
      */
-    DateInterval(const DateInterval& other);
+    DateInterval(ಸ್ಥಿರಾಂಕ DateInterval& other);
 
     /**
      * Default assignment operator
      * @stable ICU 4.0
      */
-    DateInterval& operator=(const DateInterval&) U_LIFETIME_BOUND;
+    DateInterval& ಕ್ರಿಯಾಕಾರಕ=(ಸ್ಥಿರಾಂಕ DateInterval&) U_LIFETIME_BOUND;
 
     /**
      * Equality operator.
      * @return true if the two DateIntervals are the same
      * @stable ICU 4.0
      */
-    virtual bool operator==(const DateInterval& other) const;
+    ವಾಸ್ತವಿಕ bool ಕ್ರಿಯಾಕಾರಕ==(ಸ್ಥಿರಾಂಕ DateInterval& other) ಸ್ಥಿರಾಂಕ;
 
     /**
      * Non-equality operator
      * @return true if the two DateIntervals are not the same
      * @stable ICU 4.0
      */
-    inline bool operator!=(const DateInterval& other) const;
+    ಸಾಲೊಳಗೆ bool ಕ್ರಿಯಾಕಾರಕ!=(ಸ್ಥಿರಾಂಕ DateInterval& other) ಸ್ಥಿರಾಂಕ;
 
 
     /**
@@ -124,40 +124,40 @@ public:
      * @return a cloned DateInterval
      * @stable ICU 4.0
      */
-     virtual DateInterval* clone() const;
+     ವಾಸ್ತವಿಕ DateInterval* clone() ಸ್ಥಿರಾಂಕ;
 
-private:
+ಖಾಸಗಿ:
     /** 
      * Default constructor, not implemented.
      */
     DateInterval() = delete;
 
     UDate fromDate;
-    UDate toDate;
+    UDate ಗಮ್ಯ_Date;
 
 } ;// end class DateInterval
 
 
-inline UDate 
-DateInterval::getFromDate() const { 
-    return fromDate; 
+ಸಾಲೊಳಗೆ UDate 
+DateInterval::getFromDate() ಸ್ಥಿರಾಂಕ { 
+    ಹಿಂತಿರುಗಿ fromDate; 
 }
 
 
-inline UDate 
-DateInterval::getToDate() const { 
-    return toDate; 
+ಸಾಲೊಳಗೆ UDate 
+DateInterval::get_ಗಮ್ಯ_Date() ಸ್ಥಿರಾಂಕ { 
+    ಹಿಂತಿರುಗಿ ಗಮ್ಯ_Date; 
 }
 
 
-inline bool
-DateInterval::operator!=(const DateInterval& other) const { 
-    return ( !operator==(other) );
+ಸಾಲೊಳಗೆ bool
+DateInterval::ಕ್ರಿಯಾಕಾರಕ!=(ಸ್ಥಿರಾಂಕ DateInterval& other) ಸ್ಥಿರಾಂಕ { 
+    ಹಿಂತಿರುಗಿ ( !ಕ್ರಿಯಾಕಾರಕ==(other) );
 }
 
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#ಆದರೆ_ಅಂತ್ಯ /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

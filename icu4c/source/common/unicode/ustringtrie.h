@@ -14,15 +14,15 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __USTRINGTRIE_H__
-#define __USTRINGTRIE_H__
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __USTRINGTRIE_H__
+#ವ್ಯಾಖ್ಯಾನಿಸು __USTRINGTRIE_H__
 
 /**
  * \file
  * \brief C API: Helper definitions for dictionary trie APIs.
  */
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
 
 /**
@@ -32,7 +32,7 @@
  * @see USTRINGTRIE_HAS_NEXT
  * @stable ICU 4.8
  */
-enum UStringTrieResult {
+ಎಣಿಕೆ UString_Trie_ಫಲಿತಾಂಶ {
     /**
      * The input unit(s) did not continue a matching string.
      * Once current()/next() return USTRINGTRIE_NO_MATCH,
@@ -40,14 +40,14 @@ enum UStringTrieResult {
      * until the trie is reset to its original state or to a saved state.
      * @stable ICU 4.8
      */
-    USTRINGTRIE_NO_MATCH,
+    USTRINGTRIE_NO_ಹೊಂದಿಕೆ,
     /**
      * The input unit(s) continued a matching string
      * but there is no value for the string so far.
      * (It is a prefix of a longer string.)
      * @stable ICU 4.8
      */
-    USTRINGTRIE_NO_VALUE,
+    USTRINGTRIE_NO_ಮೌಲ್ಯ,
     /**
      * The input unit(s) continued a matching string
      * and there is a value for the string so far.
@@ -55,7 +55,7 @@ enum UStringTrieResult {
      * No further input byte/unit can continue a matching string.
      * @stable ICU 4.8
      */
-    USTRINGTRIE_FINAL_VALUE,
+    USTRINGTRIE_FINAL_ಮೌಲ್ಯ,
     /**
      * The input unit(s) continued a matching string
      * and there is a value for the string so far.
@@ -63,7 +63,7 @@ enum UStringTrieResult {
      * Another input byte/unit can continue a matching string.
      * @stable ICU 4.8
      */
-    USTRINGTRIE_INTERMEDIATE_VALUE
+    USTRINGTRIE_INTERMEDIATE_ಮೌಲ್ಯ
 };
 
 /**
@@ -72,7 +72,7 @@ enum UStringTrieResult {
  * @return true if the input bytes/units so far are part of a matching string/byte sequence.
  * @stable ICU 4.8
  */
-#define USTRINGTRIE_MATCHES(result) ((result)!=USTRINGTRIE_NO_MATCH)
+#ವ್ಯಾಖ್ಯಾನಿಸು USTRINGTRIE_MATCHES(ಫಲಿತಾಂಶ) ((ಫಲಿತಾಂಶ)!=USTRINGTRIE_NO_ಹೊಂದಿಕೆ)
 
 /**
  * Equivalent to (result==USTRINGTRIE_INTERMEDIATE_VALUE || result==USTRINGTRIE_FINAL_VALUE) but
@@ -83,7 +83,7 @@ enum UStringTrieResult {
  * @see UCharsTrie::getValue
  * @stable ICU 4.8
  */
-#define USTRINGTRIE_HAS_VALUE(result) ((result)>=USTRINGTRIE_FINAL_VALUE)
+#ವ್ಯಾಖ್ಯಾನಿಸು USTRINGTRIE_HAS_ಮೌಲ್ಯ(ಫಲಿತಾಂಶ) ((ಫಲಿತಾಂಶ)>=USTRINGTRIE_FINAL_ಮೌಲ್ಯ)
 
 /**
  * Equivalent to (result==USTRINGTRIE_NO_VALUE || result==USTRINGTRIE_INTERMEDIATE_VALUE) but
@@ -92,6 +92,6 @@ enum UStringTrieResult {
  * @return true if another input byte/unit can continue a matching string.
  * @stable ICU 4.8
  */
-#define USTRINGTRIE_HAS_NEXT(result) ((result)&1)
+#ವ್ಯಾಖ್ಯಾನಿಸು USTRINGTRIE_HAS_ಮುಂದಿನ(ಫಲಿತಾಂಶ) ((ಫಲಿತಾಂಶ)&1)
 
-#endif  /* __USTRINGTRIE_H__ */
+#ಆದರೆ_ಅಂತ್ಯ  /* __USTRINGTRIE_H__ */

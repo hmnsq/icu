@@ -4,10 +4,10 @@
 // stringoptions.h
 // created: 2017jun08 Markus W. Scherer
 
-#ifndef __STRINGOPTIONS_H__
-#define __STRINGOPTIONS_H__
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __STRINGOPTIONS_H__
+#ವ್ಯಾಖ್ಯಾನಿಸು __STRINGOPTIONS_H__
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
 /**
  * \file
@@ -19,7 +19,7 @@
  *
  * @stable ICU 2.0
  */
-#define U_FOLD_CASE_DEFAULT 0
+#ವ್ಯಾಖ್ಯಾನಿಸು U_FOLD_CASE_DEFAULT 0
 
 /**
  * Option value for case folding:
@@ -37,7 +37,7 @@
  *
  * @stable ICU 2.0
  */
-#define U_FOLD_CASE_EXCLUDE_SPECIAL_I 1
+#ವ್ಯಾಖ್ಯಾನಿಸು U_FOLD_CASE_EXCLUDE_SPECIAL_I 1
 
 /**
  * Titlecase the string as a whole rather than each word.
@@ -50,7 +50,7 @@
  * @see U_TITLECASE_ADJUST_TO_CASED
  * @stable ICU 60
  */
-#define U_TITLECASE_WHOLE_STRING 0x20
+#ವ್ಯಾಖ್ಯಾನಿಸು U_TITLECASE_ಸಂಪೂರ್ಣ_STRING 0x20
 
 /**
  * Titlecase sentences rather than words.
@@ -63,7 +63,7 @@
  * @see U_TITLECASE_ADJUST_TO_CASED
  * @stable ICU 60
  */
-#define U_TITLECASE_SENTENCES 0x40
+#ವ್ಯಾಖ್ಯಾನಿಸು U_TITLECASE_SENTENCES 0x40
 
 /**
  * Do not lowercase non-initial parts of words when titlecasing.
@@ -82,7 +82,7 @@
  * @see ucasemap_utf8ToTitle
  * @stable ICU 3.8
  */
-#define U_TITLECASE_NO_LOWERCASE 0x100
+#ವ್ಯಾಖ್ಯಾನಿಸು U_TITLECASE_NO_LOWERCASE 0x100
 
 /**
  * Do not adjust the titlecasing BreakIterator indexes;
@@ -106,7 +106,7 @@
  * @see ucasemap_utf8ToTitle
  * @stable ICU 3.8
  */
-#define U_TITLECASE_NO_BREAK_ADJUSTMENT 0x200
+#ವ್ಯಾಖ್ಯಾನಿಸು U_TITLECASE_NO_BREAK_ADJUSTMENT 0x200
 
 /**
  * Adjust each titlecasing BreakIterator index to the next cased character.
@@ -126,7 +126,7 @@
  * @see U_TITLECASE_NO_BREAK_ADJUSTMENT
  * @stable ICU 60
  */
-#define U_TITLECASE_ADJUST_TO_CASED 0x400
+#ವ್ಯಾಖ್ಯಾನಿಸು U_TITLECASE_ADJUST_ಗಮ್ಯ_CASED 0x400
 
 /**
  * Option for string transformation functions to not first reset the Edits object.
@@ -137,7 +137,7 @@
  * @see Normalizer2
  * @stable ICU 60
  */
-#define U_EDITS_NO_RESET 0x2000
+#ವ್ಯಾಖ್ಯಾನಿಸು U_EDITS_NO_RESET 0x2000
 
 /**
  * Omit unchanged text when recording how source substrings
@@ -149,28 +149,28 @@
  * @see Normalizer2
  * @stable ICU 60
  */
-#define U_OMIT_UNCHANGED_TEXT 0x4000
+#ವ್ಯಾಖ್ಯಾನಿಸು U_OMIT_UNCHANGED_ಪಠ್ಯ 0x4000
 
 /**
  * Option bit for u_strCaseCompare, u_strcasecmp, unorm_compare, etc:
  * Compare strings in code point order instead of code unit order.
  * @stable ICU 2.2
  */
-#define U_COMPARE_CODE_POINT_ORDER  0x8000
+#ವ್ಯಾಖ್ಯಾನಿಸು U_COMPARE_ಸಂಕೇತ_ಬಿಂದು_ಕ್ರಮ  0x8000
 
 /**
  * Option bit for unorm_compare:
  * Perform case-insensitive comparison.
  * @stable ICU 2.2
  */
-#define U_COMPARE_IGNORE_CASE       0x10000
+#ವ್ಯಾಖ್ಯಾನಿಸು U_COMPARE_IGNORE_CASE       0x10000
 
 /**
  * Option bit for unorm_compare:
  * Both input strings are assumed to fulfill FCD conditions.
  * @stable ICU 2.2
  */
-#define UNORM_INPUT_IS_FCD          0x20000
+#ವ್ಯಾಖ್ಯಾನಿಸು UNORM_ಒಳಹರಿವು_IS_FCD          0x20000
 
 // Related definitions elsewhere.
 // Options that are not meaningful in the same functions
@@ -187,4 +187,4 @@
 // ustr_imp.h #define _STRNCMP_STYLE 0x1000
 // unormcmp.cpp #define _COMPARE_EQUIV 0x80000
 
-#endif  // __STRINGOPTIONS_H__
+#ಆದರೆ_ಅಂತ್ಯ  // __STRINGOPTIONS_H__

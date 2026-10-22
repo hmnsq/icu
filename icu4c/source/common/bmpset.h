@@ -16,11 +16,11 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __BMPSET_H__
-#define __BMPSET_H__
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __BMPSET_H__
+#ವ್ಯಾಖ್ಯಾನಿಸು __BMPSET_H__
 
-#include "unicode/utypes.h"
-#include "unicode/uniset.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uniset.h"
 
 U_NAMESPACE_BEGIN
 
@@ -35,45 +35,45 @@ U_NAMESPACE_BEGIN
  * Supplementary characters: Binary search over
  * the supplementary part of the parent set's inversion list.
  */
-class BMPSet : public UMemory {
-public:
-    BMPSet(const int32_t *parentList, int32_t parentListLength);
-    BMPSet(const BMPSet &otherBMPSet, const int32_t *newParentList, int32_t newParentListLength);
-    virtual ~BMPSet();
+class BMPSet : ಸಾರ್ವಜನಿಕ UMemory {
+ಸಾರ್ವಜನಿಕ:
+    BMPSet(ಸ್ಥಿರಾಂಕ int32_t *ಪೋಷಕ_List, int32_t ಪೋಷಕ_List_ಉದ್ದಳತೆ);
+    BMPSet(ಸ್ಥಿರಾಂಕ BMPSet &otherBMPSet, ಸ್ಥಿರಾಂಕ int32_t *new_ಪೋಷಕ_List, int32_t new_ಪೋಷಕ_List_ಉದ್ದಳತೆ);
+    ವಾಸ್ತವಿಕ ~BMPSet();
 
-    virtual UBool contains(UChar32 c) const;
+    ವಾಸ್ತವಿಕ UBool ಒಳಗೊಂಡಿದೆ(UChar32 c) ಸ್ಥಿರಾಂಕ;
 
     /*
      * Span the initial substring for which each character c has spanCondition==contains(c).
      * It must be s<limit and spanCondition==0 or 1.
      * @return The string pointer which limits the span.
      */
-    const char16_t *span(const char16_t *s, const char16_t *limit, USetSpanCondition spanCondition) const;
+    ಸ್ಥಿರಾಂಕ char16_t *ಹರವು(ಸ್ಥಿರಾಂಕ char16_t *s, ಸ್ಥಿರಾಂಕ char16_t *ಎಲ್ಲೆ, USet_ಹರವು_Condition ಹರವು_Condition) ಸ್ಥಿರಾಂಕ;
 
     /*
      * Span the trailing substring for which each character c has spanCondition==contains(c).
      * It must be s<limit and spanCondition==0 or 1.
      * @return The string pointer which starts the span.
      */
-    const char16_t *spanBack(const char16_t *s, const char16_t *limit, USetSpanCondition spanCondition) const;
+    ಸ್ಥಿರಾಂಕ char16_t *ಹರವು_ಹಿಂಭಾಗ(ಸ್ಥಿರಾಂಕ char16_t *s, ಸ್ಥಿರಾಂಕ char16_t *ಎಲ್ಲೆ, USet_ಹರವು_Condition ಹರವು_Condition) ಸ್ಥಿರಾಂಕ;
 
     /*
      * Span the initial substring for which each character c has spanCondition==contains(c).
      * It must be length>0 and spanCondition==0 or 1.
      * @return The string pointer which limits the span.
      */
-    const uint8_t *spanUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    ಸ್ಥಿರಾಂಕ uint8_t *ಹರವು_UTF8(ಸ್ಥಿರಾಂಕ uint8_t *s, int32_t ಉದ್ದಳತೆ, USet_ಹರವು_Condition ಹರವು_Condition) ಸ್ಥಿರಾಂಕ;
 
     /*
      * Span the trailing substring for which each character c has spanCondition==contains(c).
      * It must be length>0 and spanCondition==0 or 1.
      * @return The start of the span.
      */
-    int32_t spanBackUTF8(const uint8_t *s, int32_t length, USetSpanCondition spanCondition) const;
+    int32_t ಹರವು_ಹಿಂಭಾಗ_UTF8(ಸ್ಥಿರಾಂಕ uint8_t *s, int32_t ಉದ್ದಳತೆ, USet_ಹರವು_Condition ಹರವು_Condition) ಸ್ಥಿರಾಂಕ;
 
-private:
-    void initBits();
-    void overrideIllegal();
+ಖಾಸಗಿ:
+    ಶೂನ್ಯ init_ಬಿಟ್ಟುಗಳು();
+    ಶೂನ್ಯ overrideIllegal();
 
     /**
      * Same as UnicodeSet::findCodePoint(UChar32 c) const except that the
@@ -92,17 +92,17 @@ private:
      * @return the smallest integer i in the range lo..hi,
      *         inclusive, such that c < list[i]
      */
-    int32_t findCodePoint(UChar32 c, int32_t lo, int32_t hi) const;
+    int32_t ಕಂಡುಹಿಡಿ_ಸಂಕೇತ_ಬಿಂದು(UChar32 c, int32_t lo, int32_t hi) ಸ್ಥಿರಾಂಕ;
 
-    inline UBool containsSlow(UChar32 c, int32_t lo, int32_t hi) const;
+    ಸಾಲೊಳಗೆ UBool ಒಳಗೊಂಡಿದೆ_Slow(UChar32 c, int32_t lo, int32_t hi) ಸ್ಥಿರಾಂಕ;
 
     /*
      * One byte 0 or 1 per Latin-1 character.
      */
-    UBool latin1Contains[0x100];
+    UBool latin1_ಒಳಗೊಂಡಿದೆ[0x100];
 
     /* true if contains(U+FFFD). */
-    UBool containsFFFD;
+    UBool ಒಳಗೊಂಡಿದೆ_FFFD;
 
     /*
      * One bit per code point from U+0000..U+07FF.
@@ -134,7 +134,7 @@ private:
      * Bits for 0..7FF (non-shortest forms) and D800..DFFF are set to
      * the result of contains(FFFD) for faster validity checking at runtime.
      */
-    uint32_t bmpBlockBits[64];
+    uint32_t bmp_ಖಂಡ_ಬಿಟ್ಟುಗಳು[64];
 
     /*
      * Inversion list indexes for restricted binary searches in
@@ -151,14 +151,14 @@ private:
      * for mixed BMP blocks and for supplementary code points.
      * The list is terminated with list[listLength-1]=0x110000.
      */
-    const int32_t *list;
-    int32_t listLength;
+    ಸ್ಥಿರಾಂಕ int32_t *list;
+    int32_t list_ಉದ್ದಳತೆ;
 };
 
-inline UBool BMPSet::containsSlow(UChar32 c, int32_t lo, int32_t hi) const {
-    return findCodePoint(c, lo, hi) & 1;
+ಸಾಲೊಳಗೆ UBool BMPSet::ಒಳಗೊಂಡಿದೆ_Slow(UChar32 c, int32_t lo, int32_t hi) ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ ಕಂಡುಹಿಡಿ_ಸಂಕೇತ_ಬಿಂದು(c, lo, hi) & 1;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

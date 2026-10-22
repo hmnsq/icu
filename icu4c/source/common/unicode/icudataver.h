@@ -15,20 +15,20 @@
  * \brief C API: access to ICU Data Version number
  */
 
-#ifndef __ICU_DATA_VER_H__
-#define __ICU_DATA_VER_H__
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __ICU_DATA_VER_H__
+#ವ್ಯಾಖ್ಯಾನಿಸು __ICU_DATA_VER_H__
 
-#include "unicode/utypes.h"
-
-/**
- * @stable ICU 49
- */
-#define U_ICU_VERSION_BUNDLE "icuver"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
 /**
  * @stable ICU 49
  */
-#define U_ICU_DATA_KEY "DataVersion"
+#ವ್ಯಾಖ್ಯಾನಿಸು U_ICU_ಆವೃತ್ತಿ_BUNDLE "icuver"
+
+/**
+ * @stable ICU 49
+ */
+#ವ್ಯಾಖ್ಯಾನಿಸು U_ICU_ದತ್ತಾಂಶ_ಕೀಲಿ "DataVersion"
 
 /**
  * Retrieves the data version from icuver and stores it in dataVersionFillin.
@@ -38,6 +38,6 @@
  * 
  * @stable ICU 49
  */
-U_CAPI void U_EXPORT2 u_getDataVersion(UVersionInfo dataVersionFillin, UErrorCode *status);
+U_CAPI ಶೂನ್ಯ U_EXPORT2 u_get_ದತ್ತಾಂಶ_ಆವೃತ್ತಿ(UVersionInfo ದತ್ತಾಂಶ_ಆವೃತ್ತಿ_Fillin, UError_ಸಂಕೇತ *ಸ್ಥಿತಿ_2);
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

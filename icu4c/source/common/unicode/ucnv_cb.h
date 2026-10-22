@@ -60,15 +60,15 @@
  *
  */
 
-#ifndef UCNV_CB_H
-#define UCNV_CB_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ UCNV_CB_H
+#ವ್ಯಾಖ್ಯಾನಿಸು UCNV_CB_H
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ಆದರೆ !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/ucnv_err.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ucnv.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ucnv_err.h"
 
 /**
  * ONLY used by FromU callback functions.
@@ -84,12 +84,12 @@
  * @see ucnv_cbFromUWriteSub
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ucnv_cbFromUWriteBytes (UConverterFromUnicodeArgs *args,
-                        const char* source,
-                        int32_t length,
-                        int32_t offsetIndex,
-                        UErrorCode * err);
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+ucnv_cb_From_UWrite_ಬೈಟುಗಳು (UConverter_From_Unicode_ವಾದಗಳು *ವಾದಗಳು_2,
+                        ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* ಮೂಲ,
+                        int32_t ಉದ್ದಳತೆ,
+                        int32_t ಸ್ಥಾನಾಂತರ_ಸೂಚ್ಯಂಕ,
+                        UError_ಸಂಕೇತ * err);
 
 /**
  * ONLY used by FromU callback functions.  
@@ -104,10 +104,10 @@ ucnv_cbFromUWriteBytes (UConverterFromUnicodeArgs *args,
  * @see ucnv_cbFromUWriteBytes
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 
-ucnv_cbFromUWriteSub (UConverterFromUnicodeArgs *args,
-                      int32_t offsetIndex,
-                      UErrorCode * err);
+U_CAPI ಶೂನ್ಯ U_EXPORT2 
+ucnv_cbFromUWriteSub (UConverter_From_Unicode_ವಾದಗಳು *ವಾದಗಳು_2,
+                      int32_t ಸ್ಥಾನಾಂತರ_ಸೂಚ್ಯಂಕ,
+                      UError_ಸಂಕೇತ * err);
 
 /**
  * ONLY used by fromU callback functions.  
@@ -121,11 +121,11 @@ ucnv_cbFromUWriteSub (UConverterFromUnicodeArgs *args,
  * @see ucnv_cbToUWriteSub
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
-                             const UChar** source,
-                             const UChar*  sourceLimit,
-                             int32_t offsetIndex,
-                             UErrorCode * err);
+U_CAPI ಶೂನ್ಯ U_EXPORT2 ucnv_cbFromUWriteUChars(UConverter_From_Unicode_ವಾದಗಳು *ವಾದಗಳು_2,
+                             ಸ್ಥಿರಾಂಕ UChar** ಮೂಲ,
+                             ಸ್ಥಿರಾಂಕ UChar*  ಮೂಲ_ಎಲ್ಲೆ,
+                             int32_t ಸ್ಥಾನಾಂತರ_ಸೂಚ್ಯಂಕ,
+                             UError_ಸಂಕೇತ * err);
 
 /**
  * ONLY used by ToU callback functions.
@@ -140,11 +140,11 @@ U_CAPI void U_EXPORT2 ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
  * @see ucnv_cbToUWriteSub
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 ucnv_cbToUWriteUChars (UConverterToUnicodeArgs *args,
-                                             const UChar* source,
-                                             int32_t length,
-                                             int32_t offsetIndex,
-                                             UErrorCode * err);
+U_CAPI ಶೂನ್ಯ U_EXPORT2 ucnv_cb_ಗಮ್ಯ_UWrite_UChars (UConverter_ಗಮ್ಯ_Unicode_ವಾದಗಳು *ವಾದಗಳು_2,
+                                             ಸ್ಥಿರಾಂಕ UChar* ಮೂಲ,
+                                             int32_t ಉದ್ದಳತೆ,
+                                             int32_t ಸ್ಥಾನಾಂತರ_ಸೂಚ್ಯಂಕ,
+                                             UError_ಸಂಕೇತ * err);
 
 /**
  * ONLY used by ToU  callback functions.  
@@ -156,9 +156,9 @@ U_CAPI void U_EXPORT2 ucnv_cbToUWriteUChars (UConverterToUnicodeArgs *args,
  * @see ucnv_cbToUWriteUChars
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 ucnv_cbToUWriteSub (UConverterToUnicodeArgs *args,
-                       int32_t offsetIndex,
-                       UErrorCode * err);
-#endif
+U_CAPI ಶೂನ್ಯ U_EXPORT2 ucnv_cb_ಗಮ್ಯ_UWrite_Sub (UConverter_ಗಮ್ಯ_Unicode_ವಾದಗಳು *ವಾದಗಳು_2,
+                       int32_t ಸ್ಥಾನಾಂತರ_ಸೂಚ್ಯಂಕ,
+                       UError_ಸಂಕೇತ * err);
+#ಆದರೆ_ಅಂತ್ಯ
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

@@ -8,109 +8,109 @@
 // Author: wilsonh@google.com (Wilson Hsieh)
 //
 
-#include "unicode/utypes.h"
-#include "unicode/stringpiece.h"
-#include "cstring.h"
-#include "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/stringpiece.h"
+#ಅನ್ತರ್ಭಾವ "cstring.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
-StringPiece::StringPiece(const char* str U_LIFETIME_BOUND)
-    : ptr_(str), length_((str == nullptr) ? 0 : static_cast<int32_t>(uprv_strlen(str))) { }
+StringPiece::StringPiece(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* str U_LIFETIME_BOUND)
+    : ptr_(str), ಉದ್ದಳತೆ_2((str == ಶೂನ್ಯಸೂಚಕ) ? 0 : static_cast<int32_t>(uprv_strlen(str))) { }
 
-StringPiece::StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos) {
-  if (pos < 0) {
+StringPiece::StringPiece(ಸ್ಥಿರಾಂಕ StringPiece& x U_LIFETIME_BOUND, int32_t pos) {
+  ಆದರೆ (pos < 0) {
     pos = 0;
-  } else if (pos > x.length_) {
-    pos = x.length_;
+  } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (pos > x.ಉದ್ದಳತೆ_2) {
+    pos = x.ಉದ್ದಳತೆ_2;
   }
   ptr_ = x.ptr_ + pos;
-  length_ = x.length_ - pos;
+  ಉದ್ದಳತೆ_2 = x.ಉದ್ದಳತೆ_2 - pos;
 }
 
-StringPiece::StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos, int32_t len) {
-  if (pos < 0) {
+StringPiece::StringPiece(ಸ್ಥಿರಾಂಕ StringPiece& x U_LIFETIME_BOUND, int32_t pos, int32_t len) {
+  ಆದರೆ (pos < 0) {
     pos = 0;
-  } else if (pos > x.length_) {
-    pos = x.length_;
+  } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (pos > x.ಉದ್ದಳತೆ_2) {
+    pos = x.ಉದ್ದಳತೆ_2;
   }
-  if (len < 0) {
+  ಆದರೆ (len < 0) {
     len = 0;
-  } else if (len > x.length_ - pos) {
-    len = x.length_ - pos;
+  } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (len > x.ಉದ್ದಳತೆ_2 - pos) {
+    len = x.ಉದ್ದಳತೆ_2 - pos;
   }
   ptr_ = x.ptr_ + pos;
-  length_ = len;
+  ಉದ್ದಳತೆ_2 = len;
 }
 
-void StringPiece::set(const char* str) {
+ಶೂನ್ಯ StringPiece::ಗಣ(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* str) {
   ptr_ = str;
-  if (str != nullptr)
-    length_ = static_cast<int32_t>(uprv_strlen(str));
-  else
-    length_ = 0;
+  ಆದರೆ (str != ಶೂನ್ಯಸೂಚಕ)
+    ಉದ್ದಳತೆ_2 = static_cast<int32_t>(uprv_strlen(str));
+  ಇಲ್ಲದಿದ್ದರೆ
+    ಉದ್ದಳತೆ_2 = 0;
 }
 
-int32_t StringPiece::find(StringPiece needle, int32_t offset) {
-  if (length() == 0 && needle.length() == 0) {
-    return 0;
+int32_t StringPiece::find(StringPiece needle, int32_t ಸ್ಥಾನಾಂತರ) {
+  ಆದರೆ (length() == 0 && needle.length() == 0) {
+    ಹಿಂತಿರುಗಿ 0;
   }
   // TODO: Improve to be better than O(N^2)?
-  for (int32_t i = offset; i < length(); i++) {
+  ಗಾಗಿ (int32_t i = ಸ್ಥಾನಾಂತರ; i < length(); i++) {
     int32_t j = 0;
-    for (; j < needle.length(); i++, j++) {
-      if (data()[i] != needle.data()[j]) {
+    ಗಾಗಿ (; j < needle.length(); i++, j++) {
+      ಆದರೆ (ದತ್ತಾಂಶ()[i] != needle.ದತ್ತಾಂಶ()[j]) {
         i -= j;
-        goto outer_end;
+        ಹೋಗು outer_ಕೊನೆ_2;
       }
     }
-    return i - j;
-    outer_end: void();
+    ಹಿಂತಿರುಗಿ i - j;
+    outer_ಕೊನೆ_2: ಶೂನ್ಯ();
   }
-  return -1;
+  ಹಿಂತಿರುಗಿ -1;
 }
 
 int32_t StringPiece::compare(StringPiece other) {
   int32_t i = 0;
-  for (; i < length(); i++) {
-    if (i == other.length()) {
+  ಗಾಗಿ (; i < length(); i++) {
+    ಆದರೆ (i == other.length()) {
       // this is longer
-      return 1;
+      ಹಿಂತಿರುಗಿ 1;
     }
-    char a = data()[i];
-    char b = other.data()[i];
-    if (a < b) {
-      return -1;
-    } else if (a > b) {
-      return 1;
+    ಅಕ್ಷರ a = ದತ್ತಾಂಶ()[i];
+    ಅಕ್ಷರ b = other.ದತ್ತಾಂಶ()[i];
+    ಆದರೆ (a < b) {
+      ಹಿಂತಿರುಗಿ -1;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (a > b) {
+      ಹಿಂತಿರುಗಿ 1;
     }
   }
-  if (i < other.length()) {
+  ಆದರೆ (i < other.length()) {
     // other is longer
-    return -1;
+    ಹಿಂತಿರುಗಿ -1;
   }
-  return 0;
+  ಹಿಂತಿರುಗಿ 0;
 }
 
 U_EXPORT UBool U_EXPORT2
-operator==(const StringPiece& x, const StringPiece& y) {
+ಕ್ರಿಯಾಕಾರಕ==(ಸ್ಥಿರಾಂಕ StringPiece& x, ಸ್ಥಿರಾಂಕ StringPiece& y) {
   int32_t len = x.size();
-  if (len != y.size()) {
-    return false;
+  ಆದರೆ (len != y.size()) {
+    ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
   }
-  if (len == 0) {
-    return true;
+  ಆದರೆ (len == 0) {
+    ಹಿಂತಿರುಗಿ ನಿಜ;
   }
-  const char* p = x.data();
-  const char* p2 = y.data();
+  ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* p = x.ದತ್ತಾಂಶ();
+  ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* p2 = y.ದತ್ತಾಂಶ();
   // Test last byte in case strings share large common prefix
   --len;
-  if (p[len] != p2[len]) return false;
+  ಆದರೆ (p[len] != p2[len]) ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
   // At this point we can, but don't have to, ignore the last byte.
-  return uprv_memcmp(p, p2, len) == 0;
+  ಹಿಂತಿರುಗಿ uprv_memcmp(p, p2, len) == 0;
 }
 
 
-const int32_t StringPiece::npos = 0x7fffffff;
+ಸ್ಥಿರಾಂಕ int32_t StringPiece::npos = 0x7fffffff;
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ

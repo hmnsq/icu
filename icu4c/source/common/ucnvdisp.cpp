@@ -20,63 +20,63 @@
 *   09/08/2004  grhoten     split from ucnv.c
 */
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ಆದರೆ !UCONFIG_NO_CONVERSION
 
-#include "unicode/ustring.h"
-#include "unicode/ures.h"
-#include "unicode/ucnv.h"
-#include "cstring.h"
-#include "ustr_imp.h"
-#include "ucnv_imp.h"
-#include "putilimp.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ustring.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ures.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ucnv.h"
+#ಅನ್ತರ್ಭಾವ "cstring.h"
+#ಅನ್ತರ್ಭಾವ "ustr_imp.h"
+#ಅನ್ತರ್ಭಾವ "ucnv_imp.h"
+#ಅನ್ತರ್ಭಾವ "putilimp.h"
 
 U_CAPI int32_t U_EXPORT2
-ucnv_getDisplayName(const UConverter *cnv,
-                    const char *displayLocale,
-                    char16_t *displayName, int32_t displayNameCapacity,
-                    UErrorCode *pErrorCode) {
+ucnv_getDisplayName(ಸ್ಥಿರಾಂಕ UConverter *cnv,
+                    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *displayLocale,
+                    char16_t *displayName, int32_t display_Name_ಸಾಮರ್ಥ್ಯ,
+                    UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
     UResourceBundle *rb;
-    const char16_t *name;
+    ಸ್ಥಿರಾಂಕ char16_t *name;
     int32_t length;
-    UErrorCode localStatus = U_ZERO_ERROR;
+    UError_ಸಂಕೇತ local_ಸ್ಥಿತಿ = U_ZERO_ERROR;
 
     /* check arguments */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ಆದರೆ(p_Error_ಸಂಕೇತ==ಶೂನ್ಯಸೂಚಕ || U_FAILURE(*p_Error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ 0;
     }
 
-    if(cnv==nullptr || displayNameCapacity<0 || (displayNameCapacity>0 && displayName==nullptr)) {
-        *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ಆದರೆ(cnv==ಶೂನ್ಯಸೂಚಕ || display_Name_ಸಾಮರ್ಥ್ಯ<0 || (display_Name_ಸಾಮರ್ಥ್ಯ>0 && displayName==ಶೂನ್ಯಸೂಚಕ)) {
+        *p_Error_ಸಂಕೇತ=U_ILLEGAL_ವಾದ_ERROR;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
     /* open the resource bundle and get the display name string */
-    rb=ures_open(nullptr, displayLocale, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    rb=ures_open(ಶೂನ್ಯಸೂಚಕ, displayLocale, p_Error_ಸಂಕೇತ);
+    ಆದರೆ(U_FAILURE(*p_Error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ 0;
     }
 
     /* use the internal name as the key */
-    name=ures_getStringByKey(rb, cnv->sharedData->staticData->name, &length, &localStatus);
+    name=ures_get_String_By_ಕೀಲಿ(rb, cnv->shared_ದತ್ತಾಂಶ->static_ದತ್ತಾಂಶ->name, &length, &local_ಸ್ಥಿತಿ);
     ures_close(rb);
 
-    if(U_SUCCESS(localStatus)) {
+    ಆದರೆ(U_SUCCESS(local_ಸ್ಥಿತಿ)) {
         /* copy the string */
-        if (*pErrorCode == U_ZERO_ERROR) {
-            *pErrorCode = localStatus;
+        ಆದರೆ (*p_Error_ಸಂಕೇತ == U_ZERO_ERROR) {
+            *p_Error_ಸಂಕೇತ = local_ಸ್ಥಿತಿ;
         }
-        u_memcpy(displayName, name, uprv_min(length, displayNameCapacity)*U_SIZEOF_UCHAR);
-    } else {
+        u_memcpy(displayName, name, uprv_min(length, display_Name_ಸಾಮರ್ಥ್ಯ)*U_SIZEOF_UCHAR);
+    } ಇಲ್ಲದಿದ್ದರೆ {
         /* convert the internal name into a Unicode string */
-        length=(int32_t)uprv_strlen(cnv->sharedData->staticData->name);
-        u_charsToUChars(cnv->sharedData->staticData->name, displayName, uprv_min(length, displayNameCapacity));
+        length=(int32_t)uprv_strlen(cnv->shared_ದತ್ತಾಂಶ->static_ದತ್ತಾಂಶ->name);
+        u_chars_ಗಮ್ಯ_UChars(cnv->shared_ದತ್ತಾಂಶ->static_ದತ್ತಾಂಶ->name, displayName, uprv_min(length, display_Name_ಸಾಮರ್ಥ್ಯ));
     }
-    return u_terminateUChars(displayName, displayNameCapacity, length, pErrorCode);
+    ಹಿಂತಿರುಗಿ u_terminateUChars(displayName, display_Name_ಸಾಮರ್ಥ್ಯ, length, p_Error_ಸಂಕೇತ);
 }
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 /*
  * Hey, Emacs, please set the following:

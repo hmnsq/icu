@@ -19,275 +19,275 @@
 *   06/24/02    weiv        Added support for resource sharing
 */
 
-#include "unicode/utypes.h"
-#include "unicode/udata.h"
-#include "unicode/ustring.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "resource.h"
-#include "uarrsort.h"
-#include "uassert.h"
-#include "ucol_swp.h"
-#include "udataswp.h"
-#include "uinvchar.h"
-#include "uresdata.h"
-#include "uresimp.h"
-#include "utracimp.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/udata.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ustring.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utf16.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "cstring.h"
+#ಅನ್ತರ್ಭಾವ "resource.h"
+#ಅನ್ತರ್ಭಾವ "uarrsort.h"
+#ಅನ್ತರ್ಭಾವ "uassert.h"
+#ಅನ್ತರ್ಭಾವ "ucol_swp.h"
+#ಅನ್ತರ್ಭಾವ "udataswp.h"
+#ಅನ್ತರ್ಭಾವ "uinvchar.h"
+#ಅನ್ತರ್ಭಾವ "uresdata.h"
+#ಅನ್ತರ್ಭಾವ "uresimp.h"
+#ಅನ್ತರ್ಭಾವ "utracimp.h"
 
 /*
  * Resource access helpers
  */
 
 /* get a const char* pointer to the key with the keyOffset byte offset from pRoot */
-#define RES_GET_KEY16(pResData, keyOffset) \
-    ((keyOffset)<(pResData)->localKeyLimit ? \
-        (const char *)(pResData)->pRoot+(keyOffset) : \
-        (pResData)->poolBundleKeys+(keyOffset)-(pResData)->localKeyLimit)
+#ವ್ಯಾಖ್ಯಾನಿಸು RES_GET_KEY16(p_Res_ದತ್ತಾಂಶ, ಕೀಲಿ_ಸ್ಥಾನಾಂತರ) \
+    ((ಕೀಲಿ_ಸ್ಥಾನಾಂತರ)<(p_Res_ದತ್ತಾಂಶ)->local_ಕೀಲಿ_ಎಲ್ಲೆ ? \
+        (ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *)(p_Res_ದತ್ತಾಂಶ)->p_ಬೇರು+(ಕೀಲಿ_ಸ್ಥಾನಾಂತರ) : \
+        (p_Res_ದತ್ತಾಂಶ)->pool_Bundle_ಕೀಲಿಗಳು+(ಕೀಲಿ_ಸ್ಥಾನಾಂತರ)-(p_Res_ದತ್ತಾಂಶ)->local_ಕೀಲಿ_ಎಲ್ಲೆ)
 
-#define RES_GET_KEY32(pResData, keyOffset) \
-    ((keyOffset)>=0 ? \
-        (const char *)(pResData)->pRoot+(keyOffset) : \
-        (pResData)->poolBundleKeys+((keyOffset)&0x7fffffff))
+#ವ್ಯಾಖ್ಯಾನಿಸು RES_GET_KEY32(p_Res_ದತ್ತಾಂಶ, ಕೀಲಿ_ಸ್ಥಾನಾಂತರ) \
+    ((ಕೀಲಿ_ಸ್ಥಾನಾಂತರ)>=0 ? \
+        (ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *)(p_Res_ದತ್ತಾಂಶ)->p_ಬೇರು+(ಕೀಲಿ_ಸ್ಥಾನಾಂತರ) : \
+        (p_Res_ದತ್ತಾಂಶ)->pool_Bundle_ಕೀಲಿಗಳು+((ಕೀಲಿ_ಸ್ಥಾನಾಂತರ)&0x7fffffff))
 
-#define URESDATA_ITEM_NOT_FOUND -1
+#ವ್ಯಾಖ್ಯಾನಿಸು URESDATA_ಅಂಶ_NOT_ಸಿಕ್ಕಿತು -1
 
 /* empty resources, returned when the resource offset is 0 */
-static const uint16_t gEmpty16=0;
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint16_t gEmpty16=0;
 
-static const struct {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ರಚನೆ {
     int32_t length;
     int32_t res;
 } gEmpty32={ 0, 0 };
 
-static const struct {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ರಚನೆ {
     int32_t length;
     char16_t nul;
     char16_t pad;
-} gEmptyString={ 0, 0, 0 };
+} g_ಖಾಲಿಗಳು_String={ 0, 0, 0 };
 
 /*
  * All the type-access functions assume that
  * the resource is of the expected type.
  */
 
-static int32_t
-_res_findTableItem(const ResourceData *pResData, const uint16_t *keyOffsets, int32_t length,
-                   const char *key, const char **realKey) {
-    const char *tableKey;
-    int32_t mid, start, limit;
-    int result;
+ಸ್ಥಿರ int32_t
+res_ಕಂಡುಹಿಡಿ_ಕೋಷ್ಟಕ_ಅಂಶ(ಸ್ಥಿರಾಂಕ Resource_ದತ್ತಾಂಶ *p_Res_ದತ್ತಾಂಶ, ಸ್ಥಿರಾಂಕ uint16_t *ಕೀಲಿ_Offsets, int32_t length,
+                   ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಕೀಲಿ, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ **real_ಕೀಲಿ) {
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಕೋಷ್ಟಕ_ಕೀಲಿ;
+    int32_t mid, ಆರಂಭ, ಎಲ್ಲೆ;
+    ಪೂರ್ಣಾಂಕ ಫಲಿತಾಂಶ;
 
     /* do a binary search for the key */
-    start=0;
-    limit=length;
-    while(start<limit) {
-        mid = (start + limit) / 2;
-        tableKey = RES_GET_KEY16(pResData, keyOffsets[mid]);
-        if (pResData->useNativeStrcmp) {
-            result = uprv_strcmp(key, tableKey);
-        } else {
-            result = uprv_compareInvCharsAsAscii(key, tableKey);
+    ಆರಂಭ=0;
+    ಎಲ್ಲೆ=length;
+    ಆಗ(ಆರಂಭ<ಎಲ್ಲೆ) {
+        mid = (ಆರಂಭ + ಎಲ್ಲೆ) / 2;
+        ಕೋಷ್ಟಕ_ಕೀಲಿ = RES_GET_KEY16(p_Res_ದತ್ತಾಂಶ, ಕೀಲಿ_Offsets[mid]);
+        ಆದರೆ (p_Res_ದತ್ತಾಂಶ->useNativeStrcmp) {
+            ಫಲಿತಾಂಶ = uprv_strcmp(ಕೀಲಿ, ಕೋಷ್ಟಕ_ಕೀಲಿ);
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಫಲಿತಾಂಶ = uprv_compareInvCharsAsAscii(ಕೀಲಿ, ಕೋಷ್ಟಕ_ಕೀಲಿ);
         }
-        if (result < 0) {
-            limit = mid;
-        } else if (result > 0) {
-            start = mid + 1;
-        } else {
+        ಆದರೆ (ಫಲಿತಾಂಶ < 0) {
+            ಎಲ್ಲೆ = mid;
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (ಫಲಿತಾಂಶ > 0) {
+            ಆರಂಭ = mid + 1;
+        } ಇಲ್ಲದಿದ್ದರೆ {
             /* We found it! */
-            *realKey=tableKey;
-            return mid;
+            *real_ಕೀಲಿ=ಕೋಷ್ಟಕ_ಕೀಲಿ;
+            ಹಿಂತಿರುಗಿ mid;
         }
     }
-    return URESDATA_ITEM_NOT_FOUND;  /* not found or table is empty. */
+    ಹಿಂತಿರುಗಿ URESDATA_ಅಂಶ_NOT_ಸಿಕ್ಕಿತು;  /* not found or table is empty. */
 }
 
-static int32_t
-_res_findTable32Item(const ResourceData *pResData, const int32_t *keyOffsets, int32_t length,
-                     const char *key, const char **realKey) {
-    const char *tableKey;
-    int32_t mid, start, limit;
-    int result;
+ಸ್ಥಿರ int32_t
+res_ಕಂಡುಹಿಡಿ_Table32_ಅಂಶ(ಸ್ಥಿರಾಂಕ Resource_ದತ್ತಾಂಶ *p_Res_ದತ್ತಾಂಶ, ಸ್ಥಿರಾಂಕ int32_t *ಕೀಲಿ_Offsets, int32_t length,
+                     ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಕೀಲಿ, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ **real_ಕೀಲಿ) {
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಕೋಷ್ಟಕ_ಕೀಲಿ;
+    int32_t mid, ಆರಂಭ, ಎಲ್ಲೆ;
+    ಪೂರ್ಣಾಂಕ ಫಲಿತಾಂಶ;
 
     /* do a binary search for the key */
-    start=0;
-    limit=length;
-    while(start<limit) {
-        mid = (start + limit) / 2;
-        tableKey = RES_GET_KEY32(pResData, keyOffsets[mid]);
-        if (pResData->useNativeStrcmp) {
-            result = uprv_strcmp(key, tableKey);
-        } else {
-            result = uprv_compareInvCharsAsAscii(key, tableKey);
+    ಆರಂಭ=0;
+    ಎಲ್ಲೆ=length;
+    ಆಗ(ಆರಂಭ<ಎಲ್ಲೆ) {
+        mid = (ಆರಂಭ + ಎಲ್ಲೆ) / 2;
+        ಕೋಷ್ಟಕ_ಕೀಲಿ = RES_GET_KEY32(p_Res_ದತ್ತಾಂಶ, ಕೀಲಿ_Offsets[mid]);
+        ಆದರೆ (p_Res_ದತ್ತಾಂಶ->useNativeStrcmp) {
+            ಫಲಿತಾಂಶ = uprv_strcmp(ಕೀಲಿ, ಕೋಷ್ಟಕ_ಕೀಲಿ);
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಫಲಿತಾಂಶ = uprv_compareInvCharsAsAscii(ಕೀಲಿ, ಕೋಷ್ಟಕ_ಕೀಲಿ);
         }
-        if (result < 0) {
-            limit = mid;
-        } else if (result > 0) {
-            start = mid + 1;
-        } else {
+        ಆದರೆ (ಫಲಿತಾಂಶ < 0) {
+            ಎಲ್ಲೆ = mid;
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (ಫಲಿತಾಂಶ > 0) {
+            ಆರಂಭ = mid + 1;
+        } ಇಲ್ಲದಿದ್ದರೆ {
             /* We found it! */
-            *realKey=tableKey;
-            return mid;
+            *real_ಕೀಲಿ=ಕೋಷ್ಟಕ_ಕೀಲಿ;
+            ಹಿಂತಿರುಗಿ mid;
         }
     }
-    return URESDATA_ITEM_NOT_FOUND;  /* not found or table is empty. */
+    ಹಿಂತಿರುಗಿ URESDATA_ಅಂಶ_NOT_ಸಿಕ್ಕಿತು;  /* not found or table is empty. */
 }
 
 /* helper for res_load() ---------------------------------------------------- */
 
-static UBool U_CALLCONV
-isAcceptable(void *context,
-             const char * /*type*/, const char * /*name*/,
-             const UDataInfo *pInfo) {
-    uprv_memcpy(context, pInfo->formatVersion, 4);
-    return
+ಸ್ಥಿರ UBool U_CALLCONV
+isAcceptable(ಶೂನ್ಯ *context,
+             ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ * /*type*/, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ * /*name*/,
+             ಸ್ಥಿರಾಂಕ UDataInfo *pInfo) {
+    uprv_memcpy(context, pInfo->format_ಆವೃತ್ತಿ, 4);
+    ಹಿಂತಿರುಗಿ
         pInfo->size>=20 &&
         pInfo->isBigEndian==U_IS_BIG_ENDIAN &&
         pInfo->charsetFamily==U_CHARSET_FAMILY &&
         pInfo->sizeofUChar==U_SIZEOF_UCHAR &&
-        pInfo->dataFormat[0]==0x52 &&   /* dataFormat="ResB" */
-        pInfo->dataFormat[1]==0x65 &&
-        pInfo->dataFormat[2]==0x73 &&
-        pInfo->dataFormat[3]==0x42 &&
-        (1<=pInfo->formatVersion[0] && pInfo->formatVersion[0]<=3);
+        pInfo->ದತ್ತಾಂಶ_Format[0]==0x52 &&   /* dataFormat="ResB" */
+        pInfo->ದತ್ತಾಂಶ_Format[1]==0x65 &&
+        pInfo->ದತ್ತಾಂಶ_Format[2]==0x73 &&
+        pInfo->ದತ್ತಾಂಶ_Format[3]==0x42 &&
+        (1<=pInfo->format_ಆವೃತ್ತಿ[0] && pInfo->format_ಆವೃತ್ತಿ[0]<=3);
 }
 
 /* semi-public functions ---------------------------------------------------- */
 
-static void
-res_init(ResourceData *pResData,
-         UVersionInfo formatVersion, const void *inBytes, int32_t length,
-         UErrorCode *errorCode) {
-    UResType rootType;
+ಸ್ಥಿರ ಶೂನ್ಯ
+res_init(Resource_ದತ್ತಾಂಶ *p_Res_ದತ್ತಾಂಶ,
+         UVersionInfo format_ಆವೃತ್ತಿ, ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *ಒಳ_ಬೈಟುಗಳು, int32_t length,
+         UError_ಸಂಕೇತ *error_ಸಂಕೇತ) {
+    UResType ಬೇರು_Type;
 
     /* get the root resource */
-    pResData->pRoot = static_cast<const int32_t*>(inBytes);
-    pResData->rootRes = static_cast<Resource>(*pResData->pRoot);
-    pResData->p16BitUnits=&gEmpty16;
+    p_Res_ದತ್ತಾಂಶ->p_ಬೇರು = static_cast<ಸ್ಥಿರಾಂಕ int32_t*>(ಒಳ_ಬೈಟುಗಳು);
+    p_Res_ದತ್ತಾಂಶ->ಬೇರು_Res = static_cast<Resource>(*p_Res_ದತ್ತಾಂಶ->p_ಬೇರು);
+    p_Res_ದತ್ತಾಂಶ->p16_ಬಿಟ್_Units=&gEmpty16;
 
     /* formatVersion 1.1 must have a root item and at least 5 indexes */
-    if(length>=0 && (length/4)<((formatVersion[0]==1 && formatVersion[1]==0) ? 1 : 1+5)) {
-        *errorCode=U_INVALID_FORMAT_ERROR;
-        res_unload(pResData);
-        return;
+    ಆದರೆ(length>=0 && (length/4)<((format_ಆವೃತ್ತಿ[0]==1 && format_ಆವೃತ್ತಿ[1]==0) ? 1 : 1+5)) {
+        *error_ಸಂಕೇತ=U_INVALID_FORMAT_ERROR;
+        res_unload(p_Res_ದತ್ತಾಂಶ);
+        ಹಿಂತಿರುಗಿ;
     }
 
     /* currently, we accept only resources that have a Table as their roots */
-    rootType = static_cast<UResType>(RES_GET_TYPE(pResData->rootRes));
-    if(!URES_IS_TABLE(rootType)) {
-        *errorCode=U_INVALID_FORMAT_ERROR;
-        res_unload(pResData);
-        return;
+    ಬೇರು_Type = static_cast<UResType>(RES_GET_TYPE(p_Res_ದತ್ತಾಂಶ->ಬೇರು_Res));
+    ಆದರೆ(!URES_IS_ಕೋಷ್ಟಕ(ಬೇರು_Type)) {
+        *error_ಸಂಕೇತ=U_INVALID_FORMAT_ERROR;
+        res_unload(p_Res_ದತ್ತಾಂಶ);
+        ಹಿಂತಿರುಗಿ;
     }
 
-    if(formatVersion[0]==1 && formatVersion[1]==0) {
-        pResData->localKeyLimit=0x10000;  /* greater than any 16-bit key string offset */
-    } else {
+    ಆದರೆ(format_ಆವೃತ್ತಿ[0]==1 && format_ಆವೃತ್ತಿ[1]==0) {
+        p_Res_ದತ್ತಾಂಶ->local_ಕೀಲಿ_ಎಲ್ಲೆ=0x10000;  /* greater than any 16-bit key string offset */
+    } ಇಲ್ಲದಿದ್ದರೆ {
         /* bundles with formatVersion 1.1 and later contain an indexes[] array */
-        const int32_t *indexes=pResData->pRoot+1;
-        int32_t indexLength=indexes[URES_INDEX_LENGTH]&0xff;
-        if(indexLength<=URES_INDEX_MAX_TABLE_LENGTH) {
-            *errorCode=U_INVALID_FORMAT_ERROR;
-            res_unload(pResData);
-            return;
+        ಸ್ಥಿರಾಂಕ int32_t *indexes=p_Res_ದತ್ತಾಂಶ->p_ಬೇರು+1;
+        int32_t ಸೂಚ್ಯಂಕ_ಉದ್ದಳತೆ=indexes[URES_ಸೂಚ್ಯಂಕ_ಉದ್ದಳತೆ]&0xff;
+        ಆದರೆ(ಸೂಚ್ಯಂಕ_ಉದ್ದಳತೆ<=URES_ಸೂಚ್ಯಂಕ_MAX_ಕೋಷ್ಟಕ_ಉದ್ದಳತೆ) {
+            *error_ಸಂಕೇತ=U_INVALID_FORMAT_ERROR;
+            res_unload(p_Res_ದತ್ತಾಂಶ);
+            ಹಿಂತಿರುಗಿ;
         }
-        if( length>=0 &&
-            (length<((1+indexLength)<<2) ||
-             length<(indexes[URES_INDEX_BUNDLE_TOP]<<2))
+        ಆದರೆ( length>=0 &&
+            (length<((1+ಸೂಚ್ಯಂಕ_ಉದ್ದಳತೆ)<<2) ||
+             length<(indexes[URES_ಸೂಚ್ಯಂಕ_BUNDLE_ತುದಿ]<<2))
         ) {
-            *errorCode=U_INVALID_FORMAT_ERROR;
-            res_unload(pResData);
-            return;
+            *error_ಸಂಕೇತ=U_INVALID_FORMAT_ERROR;
+            res_unload(p_Res_ದತ್ತಾಂಶ);
+            ಹಿಂತಿರುಗಿ;
         }
-        if(indexes[URES_INDEX_KEYS_TOP]>(1+indexLength)) {
-            pResData->localKeyLimit=indexes[URES_INDEX_KEYS_TOP]<<2;
+        ಆದರೆ(indexes[URES_ಸೂಚ್ಯಂಕ_ಕೀಲಿಗಳು_ತುದಿ]>(1+ಸೂಚ್ಯಂಕ_ಉದ್ದಳತೆ)) {
+            p_Res_ದತ್ತಾಂಶ->local_ಕೀಲಿ_ಎಲ್ಲೆ=indexes[URES_ಸೂಚ್ಯಂಕ_ಕೀಲಿಗಳು_ತುದಿ]<<2;
         }
-        if(formatVersion[0]>=3) {
+        ಆದರೆ(format_ಆವೃತ್ತಿ[0]>=3) {
             // In formatVersion 1, the indexLength took up this whole int.
             // In version 2, bits 31..8 were reserved and always 0.
             // In version 3, they contain bits 23..0 of the poolStringIndexLimit.
             // Bits 27..24 are in indexes[URES_INDEX_ATTRIBUTES] bits 15..12.
-            pResData->poolStringIndexLimit = static_cast<int32_t>(static_cast<uint32_t>(indexes[URES_INDEX_LENGTH]) >> 8);
+            p_Res_ದತ್ತಾಂಶ->pool_String_ಸೂಚ್ಯಂಕ_ಎಲ್ಲೆ = static_cast<int32_t>(static_cast<uint32_t>(indexes[URES_ಸೂಚ್ಯಂಕ_ಉದ್ದಳತೆ]) >> 8);
         }
-        if(indexLength>URES_INDEX_ATTRIBUTES) {
-            int32_t att=indexes[URES_INDEX_ATTRIBUTES];
-            pResData->noFallback = static_cast<UBool>(att & URES_ATT_NO_FALLBACK);
-            pResData->isPoolBundle = static_cast<UBool>((att & URES_ATT_IS_POOL_BUNDLE) != 0);
-            pResData->usesPoolBundle = static_cast<UBool>((att & URES_ATT_USES_POOL_BUNDLE) != 0);
-            pResData->poolStringIndexLimit|=(att&0xf000)<<12;  // bits 15..12 -> 27..24
-            pResData->poolStringIndex16Limit = static_cast<int32_t>(static_cast<uint32_t>(att) >> 16);
+        ಆದರೆ(ಸೂಚ್ಯಂಕ_ಉದ್ದಳತೆ>URES_ಸೂಚ್ಯಂಕ_ಗುಣಲಕ್ಷಣಗಳು) {
+            int32_t att=indexes[URES_ಸೂಚ್ಯಂಕ_ಗುಣಲಕ್ಷಣಗಳು];
+            p_Res_ದತ್ತಾಂಶ->noFallback = static_cast<UBool>(att & URES_ATT_NO_FALLBACK);
+            p_Res_ದತ್ತಾಂಶ->isPoolBundle = static_cast<UBool>((att & URES_ATT_IS_POOL_BUNDLE) != 0);
+            p_Res_ದತ್ತಾಂಶ->ಬಳಸುತ್ತದೆ_Pool_Bundle = static_cast<UBool>((att & URES_ATT_ಬಳಸುತ್ತದೆ_POOL_BUNDLE) != 0);
+            p_Res_ದತ್ತಾಂಶ->pool_String_ಸೂಚ್ಯಂಕ_ಎಲ್ಲೆ|=(att&0xf000)<<12;  // bits 15..12 -> 27..24
+            p_Res_ದತ್ತಾಂಶ->pool_String_Index16_ಎಲ್ಲೆ = static_cast<int32_t>(static_cast<uint32_t>(att) >> 16);
         }
-        if((pResData->isPoolBundle || pResData->usesPoolBundle) && indexLength<=URES_INDEX_POOL_CHECKSUM) {
-            *errorCode=U_INVALID_FORMAT_ERROR;
-            res_unload(pResData);
-            return;
+        ಆದರೆ((p_Res_ದತ್ತಾಂಶ->isPoolBundle || p_Res_ದತ್ತಾಂಶ->ಬಳಸುತ್ತದೆ_Pool_Bundle) && ಸೂಚ್ಯಂಕ_ಉದ್ದಳತೆ<=URES_ಸೂಚ್ಯಂಕ_POOL_CHECKSUM) {
+            *error_ಸಂಕೇತ=U_INVALID_FORMAT_ERROR;
+            res_unload(p_Res_ದತ್ತಾಂಶ);
+            ಹಿಂತಿರುಗಿ;
         }
-        if( indexLength>URES_INDEX_16BIT_TOP &&
-            indexes[URES_INDEX_16BIT_TOP]>indexes[URES_INDEX_KEYS_TOP]
+        ಆದರೆ( ಸೂಚ್ಯಂಕ_ಉದ್ದಳತೆ>URES_ಸೂಚ್ಯಂಕ_16_ಬಿಟ್_ತುದಿ &&
+            indexes[URES_ಸೂಚ್ಯಂಕ_16_ಬಿಟ್_ತುದಿ]>indexes[URES_ಸೂಚ್ಯಂಕ_ಕೀಲಿಗಳು_ತುದಿ]
         ) {
-            pResData->p16BitUnits = reinterpret_cast<const uint16_t*>(pResData->pRoot + indexes[URES_INDEX_KEYS_TOP]);
+            p_Res_ದತ್ತಾಂಶ->p16_ಬಿಟ್_Units = reinterpret_cast<ಸ್ಥಿರಾಂಕ uint16_t*>(p_Res_ದತ್ತಾಂಶ->p_ಬೇರು + indexes[URES_ಸೂಚ್ಯಂಕ_ಕೀಲಿಗಳು_ತುದಿ]);
         }
     }
 
-    if(formatVersion[0]==1 || U_CHARSET_FAMILY==U_ASCII_FAMILY) {
+    ಆದರೆ(format_ಆವೃತ್ತಿ[0]==1 || U_CHARSET_FAMILY==U_ASCII_FAMILY) {
         /*
          * formatVersion 1: compare key strings in native-charset order
          * formatVersion 2 and up: compare key strings in ASCII order
          */
-        pResData->useNativeStrcmp=true;
+        p_Res_ದತ್ತಾಂಶ->useNativeStrcmp=ನಿಜ;
     }
 }
 
-U_CAPI void U_EXPORT2
-res_read(ResourceData *pResData,
-         const UDataInfo *pInfo, const void *inBytes, int32_t length,
-         UErrorCode *errorCode) {
-    UVersionInfo formatVersion;
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+res_read(Resource_ದತ್ತಾಂಶ *p_Res_ದತ್ತಾಂಶ,
+         ಸ್ಥಿರಾಂಕ UDataInfo *pInfo, ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *ಒಳ_ಬೈಟುಗಳು, int32_t length,
+         UError_ಸಂಕೇತ *error_ಸಂಕೇತ) {
+    UVersionInfo format_ಆವೃತ್ತಿ;
 
-    uprv_memset(pResData, 0, sizeof(ResourceData));
-    if(U_FAILURE(*errorCode)) {
-        return;
+    uprv_memset(p_Res_ದತ್ತಾಂಶ, 0, ಗಾತ್ರ(Resource_ದತ್ತಾಂಶ));
+    ಆದರೆ(U_FAILURE(*error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ;
     }
-    if(!isAcceptable(formatVersion, nullptr, nullptr, pInfo)) {
-        *errorCode=U_INVALID_FORMAT_ERROR;
-        return;
+    ಆದರೆ(!isAcceptable(format_ಆವೃತ್ತಿ, ಶೂನ್ಯಸೂಚಕ, ಶೂನ್ಯಸೂಚಕ, pInfo)) {
+        *error_ಸಂಕೇತ=U_INVALID_FORMAT_ERROR;
+        ಹಿಂತಿರುಗಿ;
     }
-    res_init(pResData, formatVersion, inBytes, length, errorCode);
+    res_init(p_Res_ದತ್ತಾಂಶ, format_ಆವೃತ್ತಿ, ಒಳ_ಬೈಟುಗಳು, length, error_ಸಂಕೇತ);
 }
 
-U_CFUNC void
-res_load(ResourceData *pResData,
-         const char *path, const char *name, UErrorCode *errorCode) {
-    UVersionInfo formatVersion;
+U_CFUNC ಶೂನ್ಯ
+res_ತುಂಬು(Resource_ದತ್ತಾಂಶ *p_Res_ದತ್ತಾಂಶ,
+         ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಮಾರ್ಗ, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *name, UError_ಸಂಕೇತ *error_ಸಂಕೇತ) {
+    UVersionInfo format_ಆವೃತ್ತಿ;
 
-    uprv_memset(pResData, 0, sizeof(ResourceData));
+    uprv_memset(p_Res_ದತ್ತಾಂಶ, 0, ಗಾತ್ರ(Resource_ದತ್ತಾಂಶ));
 
     /* load the ResourceBundle file */
-    pResData->data=udata_openChoice(path, "res", name, isAcceptable, formatVersion, errorCode);
-    if(U_FAILURE(*errorCode)) {
-        return;
+    p_Res_ದತ್ತಾಂಶ->ದತ್ತಾಂಶ=udata_openChoice(ಮಾರ್ಗ, "res", name, isAcceptable, format_ಆವೃತ್ತಿ, error_ಸಂಕೇತ);
+    ಆದರೆ(U_FAILURE(*error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ;
     }
 
     /* get its memory and initialize *pResData */
-    res_init(pResData, formatVersion, udata_getMemory(pResData->data), -1, errorCode);
+    res_init(p_Res_ದತ್ತಾಂಶ, format_ಆವೃತ್ತಿ, udata_get_ಸ್ಮರಣೆ(p_Res_ದತ್ತಾಂಶ->ದತ್ತಾಂಶ), -1, error_ಸಂಕೇತ);
 }
 
-U_CFUNC void
-res_unload(ResourceData *pResData) {
-    if(pResData->data!=nullptr) {
-        udata_close(pResData->data);
-        pResData->data=nullptr;
+U_CFUNC ಶೂನ್ಯ
+res_unload(Resource_ದತ್ತಾಂಶ *p_Res_ದತ್ತಾಂಶ) {
+    ಆದರೆ(p_Res_ದತ್ತಾಂಶ->ದತ್ತಾಂಶ!=ಶೂನ್ಯಸೂಚಕ) {
+        udata_close(p_Res_ದತ್ತಾಂಶ->ದತ್ತಾಂಶ);
+        p_Res_ದತ್ತಾಂಶ->ದತ್ತಾಂಶ=ಶೂನ್ಯಸೂಚಕ;
     }
 }
 
-static const int8_t gPublicTypes[URES_LIMIT] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ int8_t g_ಬಹಿರಂಗ_Types[URES_ಎಲ್ಲೆ] = {
     URES_STRING,
-    URES_BINARY,
-    URES_TABLE,
+    URES_ದ್ವಿಮಾನ,
+    URES_ಕೋಷ್ಟಕ,
     URES_ALIAS,
 
-    URES_TABLE,     /* URES_TABLE32 */
-    URES_TABLE,     /* URES_TABLE16 */
+    URES_ಕೋಷ್ಟಕ,     /* URES_TABLE32 */
+    URES_ಕೋಷ್ಟಕ,     /* URES_TABLE16 */
     URES_STRING,    /* URES_STRING_V2 */
     URES_INT,
 
@@ -298,55 +298,55 @@ static const int8_t gPublicTypes[URES_LIMIT] = {
 
     URES_NONE,
     URES_NONE,
-    URES_INT_VECTOR,
+    URES_INT_ಸದಿಶ,
     URES_NONE
 };
 
 U_CAPI UResType U_EXPORT2
-res_getPublicType(Resource res) {
-    return (UResType)gPublicTypes[RES_GET_TYPE(res)];
+res_get_ಬಹಿರಂಗ_Type(Resource res) {
+    ಹಿಂತಿರುಗಿ (UResType)g_ಬಹಿರಂಗ_Types[RES_GET_TYPE(res)];
 }
 
-U_CAPI const char16_t * U_EXPORT2
-res_getStringNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength) {
-    const char16_t *p;
-    uint32_t offset=RES_GET_OFFSET(res);
+U_CAPI ಸ್ಥಿರಾಂಕ char16_t * U_EXPORT2
+res_getStringNoTrace(ಸ್ಥಿರಾಂಕ Resource_ದತ್ತಾಂಶ *p_Res_ದತ್ತಾಂಶ, Resource res, int32_t *p_ಉದ್ದಳತೆ) {
+    ಸ್ಥಿರಾಂಕ char16_t *p;
+    uint32_t ಸ್ಥಾನಾಂತರ=RES_GET_ಸ್ಥಾನಾಂತರ(res);
     int32_t length;
-    if(RES_GET_TYPE(res)==URES_STRING_V2) {
+    ಆದರೆ(RES_GET_TYPE(res)==URES_STRING_V2) {
         int32_t first;
-        if((int32_t)offset<pResData->poolStringIndexLimit) {
-            p=(const char16_t *)pResData->poolBundleStrings+offset;
-        } else {
-            p=(const char16_t *)pResData->p16BitUnits+(offset-pResData->poolStringIndexLimit);
+        ಆದರೆ((int32_t)ಸ್ಥಾನಾಂತರ<p_Res_ದತ್ತಾಂಶ->pool_String_ಸೂಚ್ಯಂಕ_ಎಲ್ಲೆ) {
+            p=(ಸ್ಥಿರಾಂಕ char16_t *)p_Res_ದತ್ತಾಂಶ->pool_Bundle_ಅಕ್ಷರಸರಣಿಗಳು+ಸ್ಥಾನಾಂತರ;
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            p=(ಸ್ಥಿರಾಂಕ char16_t *)p_Res_ದತ್ತಾಂಶ->p16_ಬಿಟ್_Units+(ಸ್ಥಾನಾಂತರ-p_Res_ದತ್ತಾಂಶ->pool_String_ಸೂಚ್ಯಂಕ_ಎಲ್ಲೆ);
         }
         first=*p;
-        if(!U16_IS_TRAIL(first)) {
+        ಆದರೆ(!U16_IS_TRAIL(first)) {
             length=u_strlen(p);
-        } else if(first<0xdfef) {
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(first<0xdfef) {
             length=first&0x3ff;
             ++p;
-        } else if(first<0xdfff) {
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(first<0xdfff) {
             length=((first-0xdfef)<<16)|p[1];
             p+=2;
-        } else {
+        } ಇಲ್ಲದಿದ್ದರೆ {
             length=((int32_t)p[1]<<16)|p[2];
             p+=3;
         }
-    } else if(res==offset) /* RES_GET_TYPE(res)==URES_STRING */ {
-        const int32_t *p32= res==0 ? &gEmptyString.length : pResData->pRoot+res;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(res==ಸ್ಥಾನಾಂತರ) /* RES_GET_TYPE(res)==URES_STRING */ {
+        ಸ್ಥಿರಾಂಕ int32_t *p32= res==0 ? &g_ಖಾಲಿಗಳು_String.length : p_Res_ದತ್ತಾಂಶ->p_ಬೇರು+res;
         length=*p32++;
-        p=(const char16_t *)p32;
-    } else {
-        p=nullptr;
+        p=(ಸ್ಥಿರಾಂಕ char16_t *)p32;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        p=ಶೂನ್ಯಸೂಚಕ;
         length=0;
     }
-    if(pLength) {
-        *pLength=length;
+    ಆದರೆ(p_ಉದ್ದಳತೆ) {
+        *p_ಉದ್ದಳತೆ=length;
     }
-    return p;
+    ಹಿಂತಿರುಗಿ p;
 }
 
-namespace {
+ನಾಮಾಕಾಶ {
 
 /**
  * CLDR string value (three empty-set symbols)=={2205, 2205, 2205}
@@ -354,630 +354,630 @@ namespace {
  * TODO: combine with other code that handles this marker, use EMPTY_SET constant.
  * TODO: maybe move to uresbund.cpp?
  */
-UBool isNoInheritanceMarker(const ResourceData *pResData, Resource res) {
-    uint32_t offset=RES_GET_OFFSET(res);
-    if (offset == 0) {
+UBool isNoInheritanceMarker(ಸ್ಥಿರಾಂಕ Resource_ದತ್ತಾಂಶ *p_Res_ದತ್ತಾಂಶ, Resource res) {
+    uint32_t ಸ್ಥಾನಾಂತರ=RES_GET_ಸ್ಥಾನಾಂತರ(res);
+    ಆದರೆ (ಸ್ಥಾನಾಂತರ == 0) {
         // empty string
-    } else if (res == offset) {
-        const int32_t *p32=pResData->pRoot+res;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (res == ಸ್ಥಾನಾಂತರ) {
+        ಸ್ಥಿರಾಂಕ int32_t *p32=p_Res_ದತ್ತಾಂಶ->p_ಬೇರು+res;
         int32_t length=*p32;
-        const char16_t* p = reinterpret_cast<const char16_t*>(p32);
-        return length == 3 && p[2] == 0x2205 && p[3] == 0x2205 && p[4] == 0x2205;
-    } else if (RES_GET_TYPE(res) == URES_STRING_V2) {
-        const char16_t *p;
-        if (static_cast<int32_t>(offset) < pResData->poolStringIndexLimit) {
-            p = reinterpret_cast<const char16_t*>(pResData->poolBundleStrings) + offset;
-        } else {
-            p = reinterpret_cast<const char16_t*>(pResData->p16BitUnits) + (offset - pResData->poolStringIndexLimit);
+        ಸ್ಥಿರಾಂಕ char16_t* p = reinterpret_cast<ಸ್ಥಿರಾಂಕ char16_t*>(p32);
+        ಹಿಂತಿರುಗಿ length == 3 && p[2] == 0x2205 && p[3] == 0x2205 && p[4] == 0x2205;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (RES_GET_TYPE(res) == URES_STRING_V2) {
+        ಸ್ಥಿರಾಂಕ char16_t *p;
+        ಆದರೆ (static_cast<int32_t>(ಸ್ಥಾನಾಂತರ) < p_Res_ದತ್ತಾಂಶ->pool_String_ಸೂಚ್ಯಂಕ_ಎಲ್ಲೆ) {
+            p = reinterpret_cast<ಸ್ಥಿರಾಂಕ char16_t*>(p_Res_ದತ್ತಾಂಶ->pool_Bundle_ಅಕ್ಷರಸರಣಿಗಳು) + ಸ್ಥಾನಾಂತರ;
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            p = reinterpret_cast<ಸ್ಥಿರಾಂಕ char16_t*>(p_Res_ದತ್ತಾಂಶ->p16_ಬಿಟ್_Units) + (ಸ್ಥಾನಾಂತರ - p_Res_ದತ್ತಾಂಶ->pool_String_ಸೂಚ್ಯಂಕ_ಎಲ್ಲೆ);
         }
         int32_t first=*p;
-        if (first == 0x2205) {  // implicit length
-            return p[1] == 0x2205 && p[2] == 0x2205 && p[3] == 0;
-        } else if (first == 0xdc03) {  // explicit length 3 (should not occur)
-            return p[1] == 0x2205 && p[2] == 0x2205 && p[3] == 0x2205;
-        } else {
+        ಆದರೆ (first == 0x2205) {  // implicit length
+            ಹಿಂತಿರುಗಿ p[1] == 0x2205 && p[2] == 0x2205 && p[3] == 0;
+        } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ (first == 0xdc03) {  // explicit length 3 (should not occur)
+            ಹಿಂತಿರುಗಿ p[1] == 0x2205 && p[2] == 0x2205 && p[3] == 0x2205;
+        } ಇಲ್ಲದಿದ್ದರೆ {
             // Assume that the string has not been stored with more length units than necessary.
-            return false;
+            ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
         }
     }
-    return false;
+    ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
 }
 
-int32_t getStringArray(const ResourceData *pResData, const icu::ResourceArray &array,
+int32_t getStringArray(ಸ್ಥಿರಾಂಕ Resource_ದತ್ತಾಂಶ *p_Res_ದತ್ತಾಂಶ, ಸ್ಥಿರಾಂಕ icu::ResourceArray &array,
                        icu::UnicodeString *dest, int32_t capacity,
-                       UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+                       UError_ಸಂಕೇತ &error_ಸಂಕೇತ) {
+    ಆದರೆ(U_FAILURE(error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ 0;
     }
-    if(dest == nullptr ? capacity != 0 : capacity < 0) {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ಆದರೆ(dest == ಶೂನ್ಯಸೂಚಕ ? capacity != 0 : capacity < 0) {
+        error_ಸಂಕೇತ = U_ILLEGAL_ವಾದ_ERROR;
+        ಹಿಂತಿರುಗಿ 0;
     }
-    int32_t length = array.getSize();
-    if(length == 0) {
-        return 0;
+    int32_t length = array.get_ಗಾತ್ರ();
+    ಆದರೆ(length == 0) {
+        ಹಿಂತಿರುಗಿ 0;
     }
-    if(length > capacity) {
-        errorCode = U_BUFFER_OVERFLOW_ERROR;
-        return length;
+    ಆದರೆ(length > capacity) {
+        error_ಸಂಕೇತ = U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
+        ಹಿಂತಿರುಗಿ length;
     }
-    for(int32_t i = 0; i < length; ++i) {
-        int32_t sLength;
+    ಗಾಗಿ(int32_t i = 0; i < length; ++i) {
+        int32_t s_ಉದ್ದಳತೆ;
         // No tracing: handled by the caller
-        const char16_t *s = res_getStringNoTrace(pResData, array.internalGetResource(pResData, i), &sLength);
-        if(s == nullptr) {
-            errorCode = U_RESOURCE_TYPE_MISMATCH;
-            return 0;
+        ಸ್ಥಿರಾಂಕ char16_t *s = res_getStringNoTrace(p_Res_ದತ್ತಾಂಶ, array.ಆಂತರಿಕ_Get_Resource(p_Res_ದತ್ತಾಂಶ, i), &s_ಉದ್ದಳತೆ);
+        ಆದರೆ(s == ಶೂನ್ಯಸೂಚಕ) {
+            error_ಸಂಕೇತ = U_RESOURCE_TYPE_MISMATCH;
+            ಹಿಂತಿರುಗಿ 0;
         }
-        dest[i].setTo(true, s, sLength);
+        dest[i].ಗಣ_ಗಮ್ಯ(ನಿಜ, s, s_ಉದ್ದಳತೆ);
     }
-    return length;
+    ಹಿಂತಿರುಗಿ length;
 }
 
 }  // namespace
 
-U_CAPI const char16_t * U_EXPORT2
-res_getAlias(const ResourceData *pResData, Resource res, int32_t *pLength) {
-    const char16_t *p;
-    uint32_t offset=RES_GET_OFFSET(res);
+U_CAPI ಸ್ಥಿರಾಂಕ char16_t * U_EXPORT2
+res_getAlias(ಸ್ಥಿರಾಂಕ Resource_ದತ್ತಾಂಶ *p_Res_ದತ್ತಾಂಶ, Resource res, int32_t *p_ಉದ್ದಳತೆ) {
+    ಸ್ಥಿರಾಂಕ char16_t *p;
+    uint32_t ಸ್ಥಾನಾಂತರ=RES_GET_ಸ್ಥಾನಾಂತರ(res);
     int32_t length;
-    if(RES_GET_TYPE(res)==URES_ALIAS) {
-        const int32_t *p32= offset==0 ? &gEmptyString.length : pResData->pRoot+offset;
+    ಆದರೆ(RES_GET_TYPE(res)==URES_ALIAS) {
+        ಸ್ಥಿರಾಂಕ int32_t *p32= ಸ್ಥಾನಾಂತರ==0 ? &g_ಖಾಲಿಗಳು_String.length : p_Res_ದತ್ತಾಂಶ->p_ಬೇರು+ಸ್ಥಾನಾಂತರ;
         length=*p32++;
-        p=(const char16_t *)p32;
-    } else {
-        p=nullptr;
+        p=(ಸ್ಥಿರಾಂಕ char16_t *)p32;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        p=ಶೂನ್ಯಸೂಚಕ;
         length=0;
     }
-    if(pLength) {
-        *pLength=length;
+    ಆದರೆ(p_ಉದ್ದಳತೆ) {
+        *p_ಉದ್ದಳತೆ=length;
     }
-    return p;
+    ಹಿಂತಿರುಗಿ p;
 }
 
-U_CAPI const uint8_t * U_EXPORT2
-res_getBinaryNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength) {
-    const uint8_t *p;
-    uint32_t offset=RES_GET_OFFSET(res);
+U_CAPI ಸ್ಥಿರಾಂಕ uint8_t * U_EXPORT2
+res_get_ದ್ವಿಮಾನ_No_Trace(ಸ್ಥಿರಾಂಕ Resource_ದತ್ತಾಂಶ *p_Res_ದತ್ತಾಂಶ, Resource res, int32_t *p_ಉದ್ದಳತೆ) {
+    ಸ್ಥಿರಾಂಕ uint8_t *p;
+    uint32_t ಸ್ಥಾನಾಂತರ=RES_GET_ಸ್ಥಾನಾಂತರ(res);
     int32_t length;
-    if(RES_GET_TYPE(res)==URES_BINARY) {
-        const int32_t *p32= offset==0 ? (const int32_t*)&gEmpty32 : pResData->pRoot+offset;
+    ಆದರೆ(RES_GET_TYPE(res)==URES_ದ್ವಿಮಾನ) {
+        ಸ್ಥಿರಾಂಕ int32_t *p32= ಸ್ಥಾನಾಂತರ==0 ? (ಸ್ಥಿರಾಂಕ int32_t*)&gEmpty32 : p_Res_ದತ್ತಾಂಶ->p_ಬೇರು+ಸ್ಥಾನಾಂತರ;
         length=*p32++;
-        p=(const uint8_t *)p32;
-    } else {
-        p=nullptr;
+        p=(ಸ್ಥಿರಾಂಕ uint8_t *)p32;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        p=ಶೂನ್ಯಸೂಚಕ;
         length=0;
     }
-    if(pLength) {
-        *pLength=length;
+    ಆದರೆ(p_ಉದ್ದಳತೆ) {
+        *p_ಉದ್ದಳತೆ=length;
     }
-    return p;
+    ಹಿಂತಿರುಗಿ p;
 }
 
 
-U_CAPI const int32_t * U_EXPORT2
-res_getIntVectorNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength) {
-    const int32_t *p;
-    uint32_t offset=RES_GET_OFFSET(res);
+U_CAPI ಸ್ಥಿರಾಂಕ int32_t * U_EXPORT2
+res_get_Int_ಸದಿಶ_No_Trace(ಸ್ಥಿರಾಂಕ Resource_ದತ್ತಾಂಶ *p_Res_ದತ್ತಾಂಶ, Resource res, int32_t *p_ಉದ್ದಳತೆ) {
+    ಸ್ಥಿರಾಂಕ int32_t *p;
+    uint32_t ಸ್ಥಾನಾಂತರ=RES_GET_ಸ್ಥಾನಾಂತರ(res);
     int32_t length;
-    if(RES_GET_TYPE(res)==URES_INT_VECTOR) {
-        p= offset==0 ? (const int32_t *)&gEmpty32 : pResData->pRoot+offset;
+    ಆದರೆ(RES_GET_TYPE(res)==URES_INT_ಸದಿಶ) {
+        p= ಸ್ಥಾನಾಂತರ==0 ? (ಸ್ಥಿರಾಂಕ int32_t *)&gEmpty32 : p_Res_ದತ್ತಾಂಶ->p_ಬೇರು+ಸ್ಥಾನಾಂತರ;
         length=*p++;
-    } else {
-        p=nullptr;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        p=ಶೂನ್ಯಸೂಚಕ;
         length=0;
     }
-    if(pLength) {
-        *pLength=length;
+    ಆದರೆ(p_ಉದ್ದಳತೆ) {
+        *p_ಉದ್ದಳತೆ=length;
     }
-    return p;
+    ಹಿಂತಿರುಗಿ p;
 }
 
 U_CAPI int32_t U_EXPORT2
-res_countArrayItems(const ResourceData *pResData, Resource res) {
-    uint32_t offset=RES_GET_OFFSET(res);
-    switch(RES_GET_TYPE(res)) {
-    case URES_STRING:
-    case URES_STRING_V2:
-    case URES_BINARY:
-    case URES_ALIAS:
-    case URES_INT:
-    case URES_INT_VECTOR:
-        return 1;
-    case URES_ARRAY:
-    case URES_TABLE32:
-        return offset==0 ? 0 : *(pResData->pRoot+offset);
-    case URES_TABLE:
-        return offset==0 ? 0 : *((const uint16_t *)(pResData->pRoot+offset));
-    case URES_ARRAY16:
-    case URES_TABLE16:
-        return pResData->p16BitUnits[offset];
-    default:
-        return 0;
+res_ಎಣಿಕೆ_Array_ವಸ್ತುಗಳು(ಸ್ಥಿರಾಂಕ Resource_ದತ್ತಾಂಶ *p_Res_ದತ್ತಾಂಶ, Resource res) {
+    uint32_t ಸ್ಥಾನಾಂತರ=RES_GET_ಸ್ಥಾನಾಂತರ(res);
+    ಆಯ್ಕೆ(RES_GET_TYPE(res)) {
+    ಸ್ಥಿತಿ URES_STRING:
+    ಸ್ಥಿತಿ URES_STRING_V2:
+    ಸ್ಥಿತಿ URES_ದ್ವಿಮಾನ:
+    ಸ್ಥಿತಿ URES_ALIAS:
+    ಸ್ಥಿತಿ URES_INT:
+    ಸ್ಥಿತಿ URES_INT_ಸದಿಶ:
+        ಹಿಂತಿರುಗಿ 1;
+    ಸ್ಥಿತಿ URES_ARRAY:
+    ಸ್ಥಿತಿ URES_TABLE32:
+        ಹಿಂತಿರುಗಿ ಸ್ಥಾನಾಂತರ==0 ? 0 : *(p_Res_ದತ್ತಾಂಶ->p_ಬೇರು+ಸ್ಥಾನಾಂತರ);
+    ಸ್ಥಿತಿ URES_ಕೋಷ್ಟಕ:
+        ಹಿಂತಿರುಗಿ ಸ್ಥಾನಾಂತರ==0 ? 0 : *((ಸ್ಥಿರಾಂಕ uint16_t *)(p_Res_ದತ್ತಾಂಶ->p_ಬೇರು+ಸ್ಥಾನಾಂತರ));
+    ಸ್ಥಿತಿ URES_ARRAY16:
+    ಸ್ಥಿತಿ URES_TABLE16:
+        ಹಿಂತಿರುಗಿ p_Res_ದತ್ತಾಂಶ->p16_ಬಿಟ್_Units[ಸ್ಥಾನಾಂತರ];
+    ಪೂರ್ವನಿಯೋಜಿತ:
+        ಹಿಂತಿರುಗಿ 0;
     }
 }
 
 U_NAMESPACE_BEGIN
 
-ResourceDataValue::~ResourceDataValue() {}
+Resource_ದತ್ತಾಂಶ_ಮೌಲ್ಯ::~Resource_ದತ್ತಾಂಶ_ಮೌಲ್ಯ() {}
 
-UResType ResourceDataValue::getType() const {
-    return res_getPublicType(res);
+UResType Resource_ದತ್ತಾಂಶ_ಮೌಲ್ಯ::getType() ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ res_get_ಬಹಿರಂಗ_Type(res);
 }
 
-const char16_t *ResourceDataValue::getString(int32_t &length, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+ಸ್ಥಿರಾಂಕ char16_t *Resource_ದತ್ತಾಂಶ_ಮೌಲ್ಯ::getString(int32_t &length, UError_ಸಂಕೇತ &error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ {
+    ಆದರೆ(U_FAILURE(error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
-    const char16_t *s = res_getString(fTraceInfo, &getData(), res, &length);
-    if(s == nullptr) {
-        errorCode = U_RESOURCE_TYPE_MISMATCH;
+    ಸ್ಥಿರಾಂಕ char16_t *s = res_getString(fTraceInfo, &get_ದತ್ತಾಂಶ(), res, &length);
+    ಆದರೆ(s == ಶೂನ್ಯಸೂಚಕ) {
+        error_ಸಂಕೇತ = U_RESOURCE_TYPE_MISMATCH;
     }
-    return s;
+    ಹಿಂತಿರುಗಿ s;
 }
 
-const char16_t *ResourceDataValue::getAliasString(int32_t &length, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+ಸ್ಥಿರಾಂಕ char16_t *Resource_ದತ್ತಾಂಶ_ಮೌಲ್ಯ::getAliasString(int32_t &length, UError_ಸಂಕೇತ &error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ {
+    ಆದರೆ(U_FAILURE(error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
-    const char16_t *s = res_getAlias(&getData(), res, &length);
-    if(s == nullptr) {
-        errorCode = U_RESOURCE_TYPE_MISMATCH;
+    ಸ್ಥಿರಾಂಕ char16_t *s = res_getAlias(&get_ದತ್ತಾಂಶ(), res, &length);
+    ಆದರೆ(s == ಶೂನ್ಯಸೂಚಕ) {
+        error_ಸಂಕೇತ = U_RESOURCE_TYPE_MISMATCH;
     }
-    return s;
+    ಹಿಂತಿರುಗಿ s;
 }
 
-int32_t ResourceDataValue::getInt(UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+int32_t Resource_ದತ್ತಾಂಶ_ಮೌಲ್ಯ::getInt(UError_ಸಂಕೇತ &error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ {
+    ಆದರೆ(U_FAILURE(error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ 0;
     }
-    if(RES_GET_TYPE(res) != URES_INT) {
-        errorCode = U_RESOURCE_TYPE_MISMATCH;
+    ಆದರೆ(RES_GET_TYPE(res) != URES_INT) {
+        error_ಸಂಕೇತ = U_RESOURCE_TYPE_MISMATCH;
     }
-    return res_getInt(fTraceInfo, res);
+    ಹಿಂತಿರುಗಿ res_getInt(fTraceInfo, res);
 }
 
-uint32_t ResourceDataValue::getUInt(UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+uint32_t Resource_ದತ್ತಾಂಶ_ಮೌಲ್ಯ::getUInt(UError_ಸಂಕೇತ &error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ {
+    ಆದರೆ(U_FAILURE(error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ 0;
     }
-    if(RES_GET_TYPE(res) != URES_INT) {
-        errorCode = U_RESOURCE_TYPE_MISMATCH;
+    ಆದರೆ(RES_GET_TYPE(res) != URES_INT) {
+        error_ಸಂಕೇತ = U_RESOURCE_TYPE_MISMATCH;
     }
-    return res_getUInt(fTraceInfo, res);
+    ಹಿಂತಿರುಗಿ res_getUInt(fTraceInfo, res);
 }
 
-const int32_t *ResourceDataValue::getIntVector(int32_t &length, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+ಸ್ಥಿರಾಂಕ int32_t *Resource_ದತ್ತಾಂಶ_ಮೌಲ್ಯ::get_Int_ಸದಿಶ(int32_t &length, UError_ಸಂಕೇತ &error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ {
+    ಆದರೆ(U_FAILURE(error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
-    const int32_t *iv = res_getIntVector(fTraceInfo, &getData(), res, &length);
-    if(iv == nullptr) {
-        errorCode = U_RESOURCE_TYPE_MISMATCH;
+    ಸ್ಥಿರಾಂಕ int32_t *iv = res_get_Int_ಸದಿಶ(fTraceInfo, &get_ದತ್ತಾಂಶ(), res, &length);
+    ಆದರೆ(iv == ಶೂನ್ಯಸೂಚಕ) {
+        error_ಸಂಕೇತ = U_RESOURCE_TYPE_MISMATCH;
     }
-    return iv;
+    ಹಿಂತಿರುಗಿ iv;
 }
 
-const uint8_t *ResourceDataValue::getBinary(int32_t &length, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+ಸ್ಥಿರಾಂಕ uint8_t *Resource_ದತ್ತಾಂಶ_ಮೌಲ್ಯ::get_ದ್ವಿಮಾನ(int32_t &length, UError_ಸಂಕೇತ &error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ {
+    ಆದರೆ(U_FAILURE(error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
-    const uint8_t *b = res_getBinary(fTraceInfo, &getData(), res, &length);
-    if(b == nullptr) {
-        errorCode = U_RESOURCE_TYPE_MISMATCH;
+    ಸ್ಥಿರಾಂಕ uint8_t *b = res_get_ದ್ವಿಮಾನ(fTraceInfo, &get_ದತ್ತಾಂಶ(), res, &length);
+    ಆದರೆ(b == ಶೂನ್ಯಸೂಚಕ) {
+        error_ಸಂಕೇತ = U_RESOURCE_TYPE_MISMATCH;
     }
-    return b;
+    ಹಿಂತಿರುಗಿ b;
 }
 
-ResourceArray ResourceDataValue::getArray(UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return {};
+ResourceArray Resource_ದತ್ತಾಂಶ_ಮೌಲ್ಯ::getArray(UError_ಸಂಕೇತ &error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ {
+    ಆದರೆ(U_FAILURE(error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ {};
     }
-    const uint16_t *items16 = nullptr;
-    const Resource *items32 = nullptr;
-    uint32_t offset=RES_GET_OFFSET(res);
+    ಸ್ಥಿರಾಂಕ uint16_t *items16 = ಶೂನ್ಯಸೂಚಕ;
+    ಸ್ಥಿರಾಂಕ Resource *items32 = ಶೂನ್ಯಸೂಚಕ;
+    uint32_t ಸ್ಥಾನಾಂತರ=RES_GET_ಸ್ಥಾನಾಂತರ(res);
     int32_t length = 0;
-    switch(RES_GET_TYPE(res)) {
-    case URES_ARRAY:
-        if (offset!=0) {  // empty if offset==0
-            items32 = reinterpret_cast<const Resource*>(getData().pRoot) + offset;
+    ಆಯ್ಕೆ(RES_GET_TYPE(res)) {
+    ಸ್ಥಿತಿ URES_ARRAY:
+        ಆದರೆ (ಸ್ಥಾನಾಂತರ!=0) {  // empty if offset==0
+            items32 = reinterpret_cast<ಸ್ಥಿರಾಂಕ Resource*>(get_ದತ್ತಾಂಶ().p_ಬೇರು) + ಸ್ಥಾನಾಂತರ;
             length = *items32++;
         }
-        break;
-    case URES_ARRAY16:
-        items16 = getData().p16BitUnits+offset;
+        ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ URES_ARRAY16:
+        items16 = get_ದತ್ತಾಂಶ().p16_ಬಿಟ್_Units+ಸ್ಥಾನಾಂತರ;
         length = *items16++;
-        break;
-    default:
-        errorCode = U_RESOURCE_TYPE_MISMATCH;
-        return {};
+        ನಿಲ್ಲಿಸು;
+    ಪೂರ್ವನಿಯೋಜಿತ:
+        error_ಸಂಕೇತ = U_RESOURCE_TYPE_MISMATCH;
+        ಹಿಂತಿರುಗಿ {};
     }
-    return ResourceArray(items16, items32, length, fTraceInfo);
+    ಹಿಂತಿರುಗಿ ResourceArray(items16, items32, length, fTraceInfo);
 }
 
-ResourceTable ResourceDataValue::getTable(UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return {};
+Resource_ಕೋಷ್ಟಕ Resource_ದತ್ತಾಂಶ_ಮೌಲ್ಯ::get_ಕೋಷ್ಟಕ(UError_ಸಂಕೇತ &error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ {
+    ಆದರೆ(U_FAILURE(error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ {};
     }
-    const uint16_t *keys16 = nullptr;
-    const int32_t *keys32 = nullptr;
-    const uint16_t *items16 = nullptr;
-    const Resource *items32 = nullptr;
-    uint32_t offset = RES_GET_OFFSET(res);
+    ಸ್ಥಿರಾಂಕ uint16_t *keys16 = ಶೂನ್ಯಸೂಚಕ;
+    ಸ್ಥಿರಾಂಕ int32_t *keys32 = ಶೂನ್ಯಸೂಚಕ;
+    ಸ್ಥಿರಾಂಕ uint16_t *items16 = ಶೂನ್ಯಸೂಚಕ;
+    ಸ್ಥಿರಾಂಕ Resource *items32 = ಶೂನ್ಯಸೂಚಕ;
+    uint32_t ಸ್ಥಾನಾಂತರ = RES_GET_ಸ್ಥಾನಾಂತರ(res);
     int32_t length = 0;
-    switch(RES_GET_TYPE(res)) {
-    case URES_TABLE:
-        if (offset != 0) {  // empty if offset==0
-            keys16 = reinterpret_cast<const uint16_t*>(getData().pRoot + offset);
+    ಆಯ್ಕೆ(RES_GET_TYPE(res)) {
+    ಸ್ಥಿತಿ URES_ಕೋಷ್ಟಕ:
+        ಆದರೆ (ಸ್ಥಾನಾಂತರ != 0) {  // empty if offset==0
+            keys16 = reinterpret_cast<ಸ್ಥಿರಾಂಕ uint16_t*>(get_ದತ್ತಾಂಶ().p_ಬೇರು + ಸ್ಥಾನಾಂತರ);
             length = *keys16++;
-            items32 = reinterpret_cast<const Resource*>(keys16 + length + (~length & 1));
+            items32 = reinterpret_cast<ಸ್ಥಿರಾಂಕ Resource*>(keys16 + length + (~length & 1));
         }
-        break;
-    case URES_TABLE16:
-        keys16 = getData().p16BitUnits+offset;
+        ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ URES_TABLE16:
+        keys16 = get_ದತ್ತಾಂಶ().p16_ಬಿಟ್_Units+ಸ್ಥಾನಾಂತರ;
         length = *keys16++;
         items16 = keys16 + length;
-        break;
-    case URES_TABLE32:
-        if (offset != 0) {  // empty if offset==0
-            keys32 = getData().pRoot+offset;
+        ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ URES_TABLE32:
+        ಆದರೆ (ಸ್ಥಾನಾಂತರ != 0) {  // empty if offset==0
+            keys32 = get_ದತ್ತಾಂಶ().p_ಬೇರು+ಸ್ಥಾನಾಂತರ;
             length = *keys32++;
-            items32 = reinterpret_cast<const Resource*>(keys32) + length;
+            items32 = reinterpret_cast<ಸ್ಥಿರಾಂಕ Resource*>(keys32) + length;
         }
-        break;
-    default:
-        errorCode = U_RESOURCE_TYPE_MISMATCH;
-        return {};
+        ನಿಲ್ಲಿಸು;
+    ಪೂರ್ವನಿಯೋಜಿತ:
+        error_ಸಂಕೇತ = U_RESOURCE_TYPE_MISMATCH;
+        ಹಿಂತಿರುಗಿ {};
     }
-    return ResourceTable(keys16, keys32, items16, items32, length, fTraceInfo);
+    ಹಿಂತಿರುಗಿ Resource_ಕೋಷ್ಟಕ(keys16, keys32, items16, items32, length, fTraceInfo);
 }
 
-UBool ResourceDataValue::isNoInheritanceMarker() const {
-    return ::isNoInheritanceMarker(&getData(), res);
+UBool Resource_ದತ್ತಾಂಶ_ಮೌಲ್ಯ::isNoInheritanceMarker() ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ ::isNoInheritanceMarker(&get_ದತ್ತಾಂಶ(), res);
 }
 
-int32_t ResourceDataValue::getStringArray(UnicodeString *dest, int32_t capacity,
-                                          UErrorCode &errorCode) const {
-    return ::getStringArray(&getData(), getArray(errorCode), dest, capacity, errorCode);
+int32_t Resource_ದತ್ತಾಂಶ_ಮೌಲ್ಯ::getStringArray(UnicodeString *dest, int32_t capacity,
+                                          UError_ಸಂಕೇತ &error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ {
+    ಹಿಂತಿರುಗಿ ::getStringArray(&get_ದತ್ತಾಂಶ(), getArray(error_ಸಂಕೇತ), dest, capacity, error_ಸಂಕೇತ);
 }
 
-int32_t ResourceDataValue::getStringArrayOrStringAsArray(UnicodeString *dest, int32_t capacity,
-                                                         UErrorCode &errorCode) const {
-    if(URES_IS_ARRAY(res)) {
-        return ::getStringArray(&getData(), getArray(errorCode), dest, capacity, errorCode);
+int32_t Resource_ದತ್ತಾಂಶ_ಮೌಲ್ಯ::getStringArrayOrStringAsArray(UnicodeString *dest, int32_t capacity,
+                                                         UError_ಸಂಕೇತ &error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ {
+    ಆದರೆ(URES_IS_ARRAY(res)) {
+        ಹಿಂತಿರುಗಿ ::getStringArray(&get_ದತ್ತಾಂಶ(), getArray(error_ಸಂಕೇತ), dest, capacity, error_ಸಂಕೇತ);
     }
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    ಆದರೆ(U_FAILURE(error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ 0;
     }
-    if(dest == nullptr ? capacity != 0 : capacity < 0) {
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ಆದರೆ(dest == ಶೂನ್ಯಸೂಚಕ ? capacity != 0 : capacity < 0) {
+        error_ಸಂಕೇತ = U_ILLEGAL_ವಾದ_ERROR;
+        ಹಿಂತಿರುಗಿ 0;
     }
-    if(capacity < 1) {
-        errorCode = U_BUFFER_OVERFLOW_ERROR;
-        return 1;
+    ಆದರೆ(capacity < 1) {
+        error_ಸಂಕೇತ = U_ಬಫರ್_ಅತಿಪ್ರವಾಹ_ERROR;
+        ಹಿಂತಿರುಗಿ 1;
     }
-    int32_t sLength;
-    const char16_t *s = res_getString(fTraceInfo, &getData(), res, &sLength);
-    if(s != nullptr) {
-        dest[0].setTo(true, s, sLength);
-        return 1;
+    int32_t s_ಉದ್ದಳತೆ;
+    ಸ್ಥಿರಾಂಕ char16_t *s = res_getString(fTraceInfo, &get_ದತ್ತಾಂಶ(), res, &s_ಉದ್ದಳತೆ);
+    ಆದರೆ(s != ಶೂನ್ಯಸೂಚಕ) {
+        dest[0].ಗಣ_ಗಮ್ಯ(ನಿಜ, s, s_ಉದ್ದಳತೆ);
+        ಹಿಂತಿರುಗಿ 1;
     }
-    errorCode = U_RESOURCE_TYPE_MISMATCH;
-    return 0;
+    error_ಸಂಕೇತ = U_RESOURCE_TYPE_MISMATCH;
+    ಹಿಂತಿರುಗಿ 0;
 }
 
-UnicodeString ResourceDataValue::getStringOrFirstOfArray(UErrorCode &errorCode) const {
+UnicodeString Resource_ದತ್ತಾಂಶ_ಮೌಲ್ಯ::get_String_Or_ಮೊದಲ_ದ_Array(UError_ಸಂಕೇತ &error_ಸಂಕೇತ) ಸ್ಥಿರಾಂಕ {
     UnicodeString us;
-    if(U_FAILURE(errorCode)) {
-        return us;
+    ಆದರೆ(U_FAILURE(error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ us;
     }
-    int32_t sLength;
-    const char16_t *s = res_getString(fTraceInfo, &getData(), res, &sLength);
-    if(s != nullptr) {
-        us.setTo(true, s, sLength);
-        return us;
+    int32_t s_ಉದ್ದಳತೆ;
+    ಸ್ಥಿರಾಂಕ char16_t *s = res_getString(fTraceInfo, &get_ದತ್ತಾಂಶ(), res, &s_ಉದ್ದಳತೆ);
+    ಆದರೆ(s != ಶೂನ್ಯಸೂಚಕ) {
+        us.ಗಣ_ಗಮ್ಯ(ನಿಜ, s, s_ಉದ್ದಳತೆ);
+        ಹಿಂತಿರುಗಿ us;
     }
-    ResourceArray array = getArray(errorCode);
-    if(U_FAILURE(errorCode)) {
-        return us;
+    ResourceArray array = getArray(error_ಸಂಕೇತ);
+    ಆದರೆ(U_FAILURE(error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ us;
     }
-    if(array.getSize() > 0) {
+    ಆದರೆ(array.get_ಗಾತ್ರ() > 0) {
         // Tracing is already performed above (unimportant for trace that this is an array)
-        s = res_getStringNoTrace(&getData(), array.internalGetResource(&getData(), 0), &sLength);
-        if(s != nullptr) {
-            us.setTo(true, s, sLength);
-            return us;
+        s = res_getStringNoTrace(&get_ದತ್ತಾಂಶ(), array.ಆಂತರಿಕ_Get_Resource(&get_ದತ್ತಾಂಶ(), 0), &s_ಉದ್ದಳತೆ);
+        ಆದರೆ(s != ಶೂನ್ಯಸೂಚಕ) {
+            us.ಗಣ_ಗಮ್ಯ(ನಿಜ, s, s_ಉದ್ದಳತೆ);
+            ಹಿಂತಿರುಗಿ us;
         }
     }
-    errorCode = U_RESOURCE_TYPE_MISMATCH;
-    return us;
+    error_ಸಂಕೇತ = U_RESOURCE_TYPE_MISMATCH;
+    ಹಿಂತಿರುಗಿ us;
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-static Resource
-makeResourceFrom16(const ResourceData *pResData, int32_t res16) {
-    if(res16<pResData->poolStringIndex16Limit) {
+ಸ್ಥಿರ Resource
+makeResourceFrom16(ಸ್ಥಿರಾಂಕ Resource_ದತ್ತಾಂಶ *p_Res_ದತ್ತಾಂಶ, int32_t res16) {
+    ಆದರೆ(res16<p_Res_ದತ್ತಾಂಶ->pool_String_Index16_ಎಲ್ಲೆ) {
         // Pool string, nothing to do.
-    } else {
+    } ಇಲ್ಲದಿದ್ದರೆ {
         // Local string, adjust the 16-bit offset to a regular one,
         // with a larger pool string index limit.
-        res16=res16-pResData->poolStringIndex16Limit+pResData->poolStringIndexLimit;
+        res16=res16-p_Res_ದತ್ತಾಂಶ->pool_String_Index16_ಎಲ್ಲೆ+p_Res_ದತ್ತಾಂಶ->pool_String_ಸೂಚ್ಯಂಕ_ಎಲ್ಲೆ;
     }
-    return URES_MAKE_RESOURCE(URES_STRING_V2, res16);
+    ಹಿಂತಿರುಗಿ URES_MAKE_RESOURCE(URES_STRING_V2, res16);
 }
 
 U_CAPI Resource U_EXPORT2
-res_getTableItemByKey(const ResourceData *pResData, Resource table,
-                      int32_t *indexR, const char **key) {
-    uint32_t offset=RES_GET_OFFSET(table);
+res_get_ಕೋಷ್ಟಕ_ಅಂಶ_By_ಕೀಲಿ(ಸ್ಥಿರಾಂಕ Resource_ದತ್ತಾಂಶ *p_Res_ದತ್ತಾಂಶ, Resource ಕೋಷ್ಟಕ,
+                      int32_t *ಸೂಚ್ಯಂಕ_R, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ **ಕೀಲಿ) {
+    uint32_t ಸ್ಥಾನಾಂತರ=RES_GET_ಸ್ಥಾನಾಂತರ(ಕೋಷ್ಟಕ);
     int32_t length;
     int32_t idx;
-    if(key == nullptr || *key == nullptr) {
-        return RES_BOGUS;
+    ಆದರೆ(ಕೀಲಿ == ಶೂನ್ಯಸೂಚಕ || *ಕೀಲಿ == ಶೂನ್ಯಸೂಚಕ) {
+        ಹಿಂತಿರುಗಿ RES_BOGUS;
     }
-    switch(RES_GET_TYPE(table)) {
-    case URES_TABLE: {
-        if (offset!=0) { /* empty if offset==0 */
-            const uint16_t *p= (const uint16_t *)(pResData->pRoot+offset);
+    ಆಯ್ಕೆ(RES_GET_TYPE(ಕೋಷ್ಟಕ)) {
+    ಸ್ಥಿತಿ URES_ಕೋಷ್ಟಕ: {
+        ಆದರೆ (ಸ್ಥಾನಾಂತರ!=0) { /* empty if offset==0 */
+            ಸ್ಥಿರಾಂಕ uint16_t *p= (ಸ್ಥಿರಾಂಕ uint16_t *)(p_Res_ದತ್ತಾಂಶ->p_ಬೇರು+ಸ್ಥಾನಾಂತರ);
             length=*p++;
-            *indexR=idx=_res_findTableItem(pResData, p, length, *key, key);
-            if(idx>=0) {
-                const Resource *p32=(const Resource *)(p+length+(~length&1));
-                return p32[idx];
+            *ಸೂಚ್ಯಂಕ_R=idx=res_ಕಂಡುಹಿಡಿ_ಕೋಷ್ಟಕ_ಅಂಶ(p_Res_ದತ್ತಾಂಶ, p, length, *ಕೀಲಿ, ಕೀಲಿ);
+            ಆದರೆ(idx>=0) {
+                ಸ್ಥಿರಾಂಕ Resource *p32=(ಸ್ಥಿರಾಂಕ Resource *)(p+length+(~length&1));
+                ಹಿಂತಿರುಗಿ p32[idx];
             }
         }
-        break;
+        ನಿಲ್ಲಿಸು;
     }
-    case URES_TABLE16: {
-        const uint16_t *p=pResData->p16BitUnits+offset;
+    ಸ್ಥಿತಿ URES_TABLE16: {
+        ಸ್ಥಿರಾಂಕ uint16_t *p=p_Res_ದತ್ತಾಂಶ->p16_ಬಿಟ್_Units+ಸ್ಥಾನಾಂತರ;
         length=*p++;
-        *indexR=idx=_res_findTableItem(pResData, p, length, *key, key);
-        if(idx>=0) {
-            return makeResourceFrom16(pResData, p[length+idx]);
+        *ಸೂಚ್ಯಂಕ_R=idx=res_ಕಂಡುಹಿಡಿ_ಕೋಷ್ಟಕ_ಅಂಶ(p_Res_ದತ್ತಾಂಶ, p, length, *ಕೀಲಿ, ಕೀಲಿ);
+        ಆದರೆ(idx>=0) {
+            ಹಿಂತಿರುಗಿ makeResourceFrom16(p_Res_ದತ್ತಾಂಶ, p[length+idx]);
         }
-        break;
+        ನಿಲ್ಲಿಸು;
     }
-    case URES_TABLE32: {
-        if (offset!=0) { /* empty if offset==0 */
-            const int32_t *p= pResData->pRoot+offset;
+    ಸ್ಥಿತಿ URES_TABLE32: {
+        ಆದರೆ (ಸ್ಥಾನಾಂತರ!=0) { /* empty if offset==0 */
+            ಸ್ಥಿರಾಂಕ int32_t *p= p_Res_ದತ್ತಾಂಶ->p_ಬೇರು+ಸ್ಥಾನಾಂತರ;
             length=*p++;
-            *indexR=idx=_res_findTable32Item(pResData, p, length, *key, key);
-            if(idx>=0) {
-                return (Resource)p[length+idx];
+            *ಸೂಚ್ಯಂಕ_R=idx=res_ಕಂಡುಹಿಡಿ_Table32_ಅಂಶ(p_Res_ದತ್ತಾಂಶ, p, length, *ಕೀಲಿ, ಕೀಲಿ);
+            ಆದರೆ(idx>=0) {
+                ಹಿಂತಿರುಗಿ (Resource)p[length+idx];
             }
         }
-        break;
+        ನಿಲ್ಲಿಸು;
     }
-    default:
-        break;
+    ಪೂರ್ವನಿಯೋಜಿತ:
+        ನಿಲ್ಲಿಸು;
     }
-    return RES_BOGUS;
+    ಹಿಂತಿರುಗಿ RES_BOGUS;
 }
 
 U_CAPI Resource U_EXPORT2
-res_getTableItemByIndex(const ResourceData *pResData, Resource table,
-                        int32_t indexR, const char **key) {
-    uint32_t offset=RES_GET_OFFSET(table);
+res_get_ಕೋಷ್ಟಕ_ಅಂಶ_By_ಸೂಚ್ಯಂಕ(ಸ್ಥಿರಾಂಕ Resource_ದತ್ತಾಂಶ *p_Res_ದತ್ತಾಂಶ, Resource ಕೋಷ್ಟಕ,
+                        int32_t ಸೂಚ್ಯಂಕ_R, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ **ಕೀಲಿ) {
+    uint32_t ಸ್ಥಾನಾಂತರ=RES_GET_ಸ್ಥಾನಾಂತರ(ಕೋಷ್ಟಕ);
     int32_t length;
-    if (indexR < 0) {
-        return RES_BOGUS;
+    ಆದರೆ (ಸೂಚ್ಯಂಕ_R < 0) {
+        ಹಿಂತಿರುಗಿ RES_BOGUS;
     }
-    switch(RES_GET_TYPE(table)) {
-    case URES_TABLE: {
-        if (offset != 0) { /* empty if offset==0 */
-            const uint16_t *p= (const uint16_t *)(pResData->pRoot+offset);
+    ಆಯ್ಕೆ(RES_GET_TYPE(ಕೋಷ್ಟಕ)) {
+    ಸ್ಥಿತಿ URES_ಕೋಷ್ಟಕ: {
+        ಆದರೆ (ಸ್ಥಾನಾಂತರ != 0) { /* empty if offset==0 */
+            ಸ್ಥಿರಾಂಕ uint16_t *p= (ಸ್ಥಿರಾಂಕ uint16_t *)(p_Res_ದತ್ತಾಂಶ->p_ಬೇರು+ಸ್ಥಾನಾಂತರ);
             length=*p++;
-            if(indexR<length) {
-                const Resource *p32=(const Resource *)(p+length+(~length&1));
-                if(key!=nullptr) {
-                    *key=RES_GET_KEY16(pResData, p[indexR]);
+            ಆದರೆ(ಸೂಚ್ಯಂಕ_R<length) {
+                ಸ್ಥಿರಾಂಕ Resource *p32=(ಸ್ಥಿರಾಂಕ Resource *)(p+length+(~length&1));
+                ಆದರೆ(ಕೀಲಿ!=ಶೂನ್ಯಸೂಚಕ) {
+                    *ಕೀಲಿ=RES_GET_KEY16(p_Res_ದತ್ತಾಂಶ, p[ಸೂಚ್ಯಂಕ_R]);
                 }
-                return p32[indexR];
+                ಹಿಂತಿರುಗಿ p32[ಸೂಚ್ಯಂಕ_R];
             }
         }
-        break;
+        ನಿಲ್ಲಿಸು;
     }
-    case URES_TABLE16: {
-        const uint16_t *p=pResData->p16BitUnits+offset;
+    ಸ್ಥಿತಿ URES_TABLE16: {
+        ಸ್ಥಿರಾಂಕ uint16_t *p=p_Res_ದತ್ತಾಂಶ->p16_ಬಿಟ್_Units+ಸ್ಥಾನಾಂತರ;
         length=*p++;
-        if(indexR<length) {
-            if(key!=nullptr) {
-                *key=RES_GET_KEY16(pResData, p[indexR]);
+        ಆದರೆ(ಸೂಚ್ಯಂಕ_R<length) {
+            ಆದರೆ(ಕೀಲಿ!=ಶೂನ್ಯಸೂಚಕ) {
+                *ಕೀಲಿ=RES_GET_KEY16(p_Res_ದತ್ತಾಂಶ, p[ಸೂಚ್ಯಂಕ_R]);
             }
-            return makeResourceFrom16(pResData, p[length+indexR]);
+            ಹಿಂತಿರುಗಿ makeResourceFrom16(p_Res_ದತ್ತಾಂಶ, p[length+ಸೂಚ್ಯಂಕ_R]);
         }
-        break;
+        ನಿಲ್ಲಿಸು;
     }
-    case URES_TABLE32: {
-        if (offset != 0) { /* empty if offset==0 */
-            const int32_t *p= pResData->pRoot+offset;
+    ಸ್ಥಿತಿ URES_TABLE32: {
+        ಆದರೆ (ಸ್ಥಾನಾಂತರ != 0) { /* empty if offset==0 */
+            ಸ್ಥಿರಾಂಕ int32_t *p= p_Res_ದತ್ತಾಂಶ->p_ಬೇರು+ಸ್ಥಾನಾಂತರ;
             length=*p++;
-            if(indexR<length) {
-                if(key!=nullptr) {
-                    *key=RES_GET_KEY32(pResData, p[indexR]);
+            ಆದರೆ(ಸೂಚ್ಯಂಕ_R<length) {
+                ಆದರೆ(ಕೀಲಿ!=ಶೂನ್ಯಸೂಚಕ) {
+                    *ಕೀಲಿ=RES_GET_KEY32(p_Res_ದತ್ತಾಂಶ, p[ಸೂಚ್ಯಂಕ_R]);
                 }
-                return (Resource)p[length+indexR];
+                ಹಿಂತಿರುಗಿ (Resource)p[length+ಸೂಚ್ಯಂಕ_R];
             }
         }
-        break;
+        ನಿಲ್ಲಿಸು;
     }
-    default:
-        break;
+    ಪೂರ್ವನಿಯೋಜಿತ:
+        ನಿಲ್ಲಿಸು;
     }
-    return RES_BOGUS;
+    ಹಿಂತಿರುಗಿ RES_BOGUS;
 }
 
 U_CAPI Resource U_EXPORT2
-res_getResource(const ResourceData *pResData, const char *key) {
-    const char *realKey=key;
+res_getResource(ಸ್ಥಿರಾಂಕ Resource_ದತ್ತಾಂಶ *p_Res_ದತ್ತಾಂಶ, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಕೀಲಿ) {
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *real_ಕೀಲಿ=ಕೀಲಿ;
     int32_t idx;
-    return res_getTableItemByKey(pResData, pResData->rootRes, &idx, &realKey);
+    ಹಿಂತಿರುಗಿ res_get_ಕೋಷ್ಟಕ_ಅಂಶ_By_ಕೀಲಿ(p_Res_ದತ್ತಾಂಶ, p_Res_ದತ್ತಾಂಶ->ಬೇರು_Res, &idx, &real_ಕೀಲಿ);
 }
 
 
-UBool icu::ResourceTable::getKeyAndValue(int32_t i,
-                                         const char *&key, icu::ResourceValue &value) const {
-    if(0 <= i && i < length) {
-        icu::ResourceDataValue &rdValue = static_cast<icu::ResourceDataValue &>(value);
-        if (keys16 != nullptr) {
-            key = RES_GET_KEY16(&rdValue.getData(), keys16[i]);
-        } else {
-            key = RES_GET_KEY32(&rdValue.getData(), keys32[i]);
+UBool icu::Resource_ಕೋಷ್ಟಕ::get_ಕೀಲಿ_And_ಮೌಲ್ಯ(int32_t i,
+                                         ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *&ಕೀಲಿ, icu::Resource_ಮೌಲ್ಯ &value) ಸ್ಥಿರಾಂಕ {
+    ಆದರೆ(0 <= i && i < length) {
+        icu::Resource_ದತ್ತಾಂಶ_ಮೌಲ್ಯ &rd_ಮೌಲ್ಯ = static_cast<icu::Resource_ದತ್ತಾಂಶ_ಮೌಲ್ಯ &>(value);
+        ಆದರೆ (keys16 != ಶೂನ್ಯಸೂಚಕ) {
+            ಕೀಲಿ = RES_GET_KEY16(&rd_ಮೌಲ್ಯ.get_ದತ್ತಾಂಶ(), keys16[i]);
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ಕೀಲಿ = RES_GET_KEY32(&rd_ಮೌಲ್ಯ.get_ದತ್ತಾಂಶ(), keys32[i]);
         }
         Resource res;
-        if (items16 != nullptr) {
-            res = makeResourceFrom16(&rdValue.getData(), items16[i]);
-        } else {
+        ಆದರೆ (items16 != ಶೂನ್ಯಸೂಚಕ) {
+            res = makeResourceFrom16(&rd_ಮೌಲ್ಯ.get_ದತ್ತಾಂಶ(), items16[i]);
+        } ಇಲ್ಲದಿದ್ದರೆ {
             res = items32[i];
         }
         // Note: the ResourceTracer keeps a reference to the field of this
         // ResourceTable. This is OK because the ResourceTable should remain
         // alive for the duration that fields are being read from it
         // (including nested fields).
-        rdValue.setResource(res, ResourceTracer(fTraceInfo, key));
-        return true;
+        rd_ಮೌಲ್ಯ.ಗಣ_Resource(res, ResourceTracer(fTraceInfo, ಕೀಲಿ));
+        ಹಿಂತಿರುಗಿ ನಿಜ;
     }
-    return false;
+    ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
 }
 
-UBool icu::ResourceTable::findValue(const char *key, ResourceValue &value) const {
-    icu::ResourceDataValue &rdValue = static_cast<icu::ResourceDataValue &>(value);
-    const char *realKey = nullptr;
+UBool icu::Resource_ಕೋಷ್ಟಕ::ಕಂಡುಹಿಡಿ_ಮೌಲ್ಯ(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಕೀಲಿ, Resource_ಮೌಲ್ಯ &value) ಸ್ಥಿರಾಂಕ {
+    icu::Resource_ದತ್ತಾಂಶ_ಮೌಲ್ಯ &rd_ಮೌಲ್ಯ = static_cast<icu::Resource_ದತ್ತಾಂಶ_ಮೌಲ್ಯ &>(value);
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *real_ಕೀಲಿ = ಶೂನ್ಯಸೂಚಕ;
     int32_t i;
-    if (keys16 != nullptr) {
-        i = _res_findTableItem(&rdValue.getData(), keys16, length, key, &realKey);
-    } else {
-        i = _res_findTable32Item(&rdValue.getData(), keys32, length, key, &realKey);
+    ಆದರೆ (keys16 != ಶೂನ್ಯಸೂಚಕ) {
+        i = res_ಕಂಡುಹಿಡಿ_ಕೋಷ್ಟಕ_ಅಂಶ(&rd_ಮೌಲ್ಯ.get_ದತ್ತಾಂಶ(), keys16, length, ಕೀಲಿ, &real_ಕೀಲಿ);
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        i = res_ಕಂಡುಹಿಡಿ_Table32_ಅಂಶ(&rd_ಮೌಲ್ಯ.get_ದತ್ತಾಂಶ(), keys32, length, ಕೀಲಿ, &real_ಕೀಲಿ);
     }
-    if (i >= 0) {
+    ಆದರೆ (i >= 0) {
         Resource res;
-        if (items16 != nullptr) {
-            res = makeResourceFrom16(&rdValue.getData(), items16[i]);
-        } else {
+        ಆದರೆ (items16 != ಶೂನ್ಯಸೂಚಕ) {
+            res = makeResourceFrom16(&rd_ಮೌಲ್ಯ.get_ದತ್ತಾಂಶ(), items16[i]);
+        } ಇಲ್ಲದಿದ್ದರೆ {
             res = items32[i];
         }
         // Same note about lifetime as in getKeyAndValue().
-        rdValue.setResource(res, ResourceTracer(fTraceInfo, key));
-        return true;
+        rd_ಮೌಲ್ಯ.ಗಣ_Resource(res, ResourceTracer(fTraceInfo, ಕೀಲಿ));
+        ಹಿಂತಿರುಗಿ ನಿಜ;
     }
-    return false;
+    ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
 }
 
 U_CAPI Resource U_EXPORT2
-res_getArrayItem(const ResourceData *pResData, Resource array, int32_t indexR) {
-    uint32_t offset=RES_GET_OFFSET(array);
-    if (indexR < 0) {
-        return RES_BOGUS;
+res_get_Array_ಅಂಶ(ಸ್ಥಿರಾಂಕ Resource_ದತ್ತಾಂಶ *p_Res_ದತ್ತಾಂಶ, Resource array, int32_t ಸೂಚ್ಯಂಕ_R) {
+    uint32_t ಸ್ಥಾನಾಂತರ=RES_GET_ಸ್ಥಾನಾಂತರ(array);
+    ಆದರೆ (ಸೂಚ್ಯಂಕ_R < 0) {
+        ಹಿಂತಿರುಗಿ RES_BOGUS;
     }
-    switch(RES_GET_TYPE(array)) {
-    case URES_ARRAY: {
-        if (offset!=0) { /* empty if offset==0 */
-            const int32_t *p= pResData->pRoot+offset;
-            if(indexR<*p) {
-                return (Resource)p[1+indexR];
+    ಆಯ್ಕೆ(RES_GET_TYPE(array)) {
+    ಸ್ಥಿತಿ URES_ARRAY: {
+        ಆದರೆ (ಸ್ಥಾನಾಂತರ!=0) { /* empty if offset==0 */
+            ಸ್ಥಿರಾಂಕ int32_t *p= p_Res_ದತ್ತಾಂಶ->p_ಬೇರು+ಸ್ಥಾನಾಂತರ;
+            ಆದರೆ(ಸೂಚ್ಯಂಕ_R<*p) {
+                ಹಿಂತಿರುಗಿ (Resource)p[1+ಸೂಚ್ಯಂಕ_R];
             }
         }
-        break;
+        ನಿಲ್ಲಿಸು;
     }
-    case URES_ARRAY16: {
-        const uint16_t *p=pResData->p16BitUnits+offset;
-        if(indexR<*p) {
-            return makeResourceFrom16(pResData, p[1+indexR]);
+    ಸ್ಥಿತಿ URES_ARRAY16: {
+        ಸ್ಥಿರಾಂಕ uint16_t *p=p_Res_ದತ್ತಾಂಶ->p16_ಬಿಟ್_Units+ಸ್ಥಾನಾಂತರ;
+        ಆದರೆ(ಸೂಚ್ಯಂಕ_R<*p) {
+            ಹಿಂತಿರುಗಿ makeResourceFrom16(p_Res_ದತ್ತಾಂಶ, p[1+ಸೂಚ್ಯಂಕ_R]);
         }
-        break;
+        ನಿಲ್ಲಿಸು;
     }
-    default:
-        break;
+    ಪೂರ್ವನಿಯೋಜಿತ:
+        ನಿಲ್ಲಿಸು;
     }
-    return RES_BOGUS;
+    ಹಿಂತಿರುಗಿ RES_BOGUS;
 }
 
-uint32_t icu::ResourceArray::internalGetResource(const ResourceData *pResData, int32_t i) const {
-    if (items16 != nullptr) {
-        return makeResourceFrom16(pResData, items16[i]);
-    } else {
-        return items32[i];
+uint32_t icu::ResourceArray::ಆಂತರಿಕ_Get_Resource(ಸ್ಥಿರಾಂಕ Resource_ದತ್ತಾಂಶ *p_Res_ದತ್ತಾಂಶ, int32_t i) ಸ್ಥಿರಾಂಕ {
+    ಆದರೆ (items16 != ಶೂನ್ಯಸೂಚಕ) {
+        ಹಿಂತಿರುಗಿ makeResourceFrom16(p_Res_ದತ್ತಾಂಶ, items16[i]);
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಹಿಂತಿರುಗಿ items32[i];
     }
 }
 
-UBool icu::ResourceArray::getValue(int32_t i, icu::ResourceValue &value) const {
-    if(0 <= i && i < length) {
-        icu::ResourceDataValue &rdValue = static_cast<icu::ResourceDataValue &>(value);
+UBool icu::ResourceArray::get_ಮೌಲ್ಯ(int32_t i, icu::Resource_ಮೌಲ್ಯ &value) ಸ್ಥಿರಾಂಕ {
+    ಆದರೆ(0 <= i && i < length) {
+        icu::Resource_ದತ್ತಾಂಶ_ಮೌಲ್ಯ &rd_ಮೌಲ್ಯ = static_cast<icu::Resource_ದತ್ತಾಂಶ_ಮೌಲ್ಯ &>(value);
         // Note: the ResourceTracer keeps a reference to the field of this
         // ResourceArray. This is OK because the ResourceArray should remain
         // alive for the duration that fields are being read from it
         // (including nested fields).
-        rdValue.setResource(
-            internalGetResource(&rdValue.getData(), i),
+        rd_ಮೌಲ್ಯ.ಗಣ_Resource(
+            ಆಂತರಿಕ_Get_Resource(&rd_ಮೌಲ್ಯ.get_ದತ್ತಾಂಶ(), i),
             ResourceTracer(fTraceInfo, i));
-        return true;
+        ಹಿಂತಿರುಗಿ ನಿಜ;
     }
-    return false;
+    ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
 }
 
 U_CFUNC Resource
-res_findResource(const ResourceData *pResData, Resource r, char** path, const char** key) {
-  char *pathP = *path, *nextSepP = *path;
-  char *closeIndex = nullptr;
+res_ಕಂಡುಹಿಡಿ_Resource(ಸ್ಥಿರಾಂಕ Resource_ದತ್ತಾಂಶ *p_Res_ದತ್ತಾಂಶ, Resource r, ಅಕ್ಷರ** ಮಾರ್ಗ, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ** ಕೀಲಿ) {
+  ಅಕ್ಷರ *ಮಾರ್ಗ_P = *ಮಾರ್ಗ, *ಮುಂದಿನ_Sep_P = *ಮಾರ್ಗ;
+  ಅಕ್ಷರ *close_ಸೂಚ್ಯಂಕ = ಶೂನ್ಯಸೂಚಕ;
   Resource t1 = r;
   Resource t2;
-  int32_t indexR = 0;
+  int32_t ಸೂಚ್ಯಂಕ_R = 0;
   UResType type = (UResType)RES_GET_TYPE(t1);
 
   /* if you come in with an empty path, you'll be getting back the same resource */
-  if(!uprv_strlen(pathP)) {
-      return r;
+  ಆದರೆ(!uprv_strlen(ಮಾರ್ಗ_P)) {
+      ಹಿಂತಿರುಗಿ r;
   }
 
   /* one needs to have an aggregate resource in order to search in it */
-  if(!URES_IS_CONTAINER(type)) {
-      return RES_BOGUS;
+  ಆದರೆ(!URES_IS_CONTAINER(type)) {
+      ಹಿಂತಿರುಗಿ RES_BOGUS;
   }
   
-  while(nextSepP && *pathP && t1 != RES_BOGUS && URES_IS_CONTAINER(type)) {
+  ಆಗ(ಮುಂದಿನ_Sep_P && *ಮಾರ್ಗ_P && t1 != RES_BOGUS && URES_IS_CONTAINER(type)) {
     /* Iteration stops if: the path has been consumed, we found a non-existing
      * resource (t1 == RES_BOGUS) or we found a scalar resource (including alias)
      */
-    nextSepP = uprv_strchr(pathP, RES_PATH_SEPARATOR);
+    ಮುಂದಿನ_Sep_P = uprv_strchr(ಮಾರ್ಗ_P, RES_ಮಾರ್ಗ_SEPARATOR);
     /* if there are more separators, terminate string 
      * and set path to the remaining part of the string
      */
-    if(nextSepP != nullptr) {
-      if(nextSepP == pathP) {
+    ಆದರೆ(ಮುಂದಿನ_Sep_P != ಶೂನ್ಯಸೂಚಕ) {
+      ಆದರೆ(ಮುಂದಿನ_Sep_P == ಮಾರ್ಗ_P) {
         // Empty key string.
-        return RES_BOGUS;
+        ಹಿಂತಿರುಗಿ RES_BOGUS;
       }
-      *nextSepP = 0; /* overwrite the separator with a NUL to terminate the key */
-      *path = nextSepP+1;
-    } else {
-      *path = uprv_strchr(pathP, 0);
+      *ಮುಂದಿನ_Sep_P = 0; /* overwrite the separator with a NUL to terminate the key */
+      *ಮಾರ್ಗ = ಮುಂದಿನ_Sep_P+1;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+      *ಮಾರ್ಗ = uprv_strchr(ಮಾರ್ಗ_P, 0);
     }
 
     /* if the resource is a table */
     /* try the key based access */
-    if(URES_IS_TABLE(type)) {
-      *key = pathP;
-      t2 = res_getTableItemByKey(pResData, t1, &indexR, key);
-    } else if(URES_IS_ARRAY(type)) {
-      indexR = uprv_strtol(pathP, &closeIndex, 10);
-      if(indexR >= 0 && *closeIndex == 0) {
-        t2 = res_getArrayItem(pResData, t1, indexR);
-      } else {
+    ಆದರೆ(URES_IS_ಕೋಷ್ಟಕ(type)) {
+      *ಕೀಲಿ = ಮಾರ್ಗ_P;
+      t2 = res_get_ಕೋಷ್ಟಕ_ಅಂಶ_By_ಕೀಲಿ(p_Res_ದತ್ತಾಂಶ, t1, &ಸೂಚ್ಯಂಕ_R, ಕೀಲಿ);
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(URES_IS_ARRAY(type)) {
+      ಸೂಚ್ಯಂಕ_R = uprv_strtol(ಮಾರ್ಗ_P, &close_ಸೂಚ್ಯಂಕ, 10);
+      ಆದರೆ(ಸೂಚ್ಯಂಕ_R >= 0 && *close_ಸೂಚ್ಯಂಕ == 0) {
+        t2 = res_get_Array_ಅಂಶ(p_Res_ದತ್ತಾಂಶ, t1, ಸೂಚ್ಯಂಕ_R);
+      } ಇಲ್ಲದಿದ್ದರೆ {
         t2 = RES_BOGUS; /* have an array, but don't have a valid index */
       }
-      *key = nullptr;
-    } else { /* can't do much here, except setting t2 to bogus */
+      *ಕೀಲಿ = ಶೂನ್ಯಸೂಚಕ;
+    } ಇಲ್ಲದಿದ್ದರೆ { /* can't do much here, except setting t2 to bogus */
       t2 = RES_BOGUS;
     }
     t1 = t2;
     type = (UResType)RES_GET_TYPE(t1);
     /* position pathP to next resource key/index */
-    pathP = *path;
+    ಮಾರ್ಗ_P = *ಮಾರ್ಗ;
   }
 
-  return t1;
+  ಹಿಂತಿರುಗಿ t1;
 }
 
 /* resource bundle swapping ------------------------------------------------- */
@@ -1013,189 +1013,189 @@ res_findResource(const ResourceData *pResData, Resource r, char** path, const ch
  * after sorting this array by keys, the actual key/value arrays are permutated
  * according to the sorting indexes
  */
-typedef struct Row {
-    int32_t keyIndex, sortIndex;
-} Row;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ ಅಡ್ಡಸಾಲು_2 {
+    int32_t ಕೀಲಿ_ಸೂಚ್ಯಂಕ, ವಿಂಗಡಿಸು_ಸೂಚ್ಯಂಕ;
+} ಅಡ್ಡಸಾಲು_2;
 
-static int32_t U_CALLCONV
-ures_compareRows(const void *context, const void *left, const void *right) {
-    const char* keyChars = static_cast<const char*>(context);
-    return static_cast<int32_t>(uprv_strcmp(keyChars + static_cast<const Row*>(left)->keyIndex,
-                                            keyChars + static_cast<const Row*>(right)->keyIndex));
+ಸ್ಥಿರ int32_t U_CALLCONV
+ures_compare_ಅಡ್ಡಸಾಲುಗಳು(ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *context, ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *ಎಡ, ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *ಬಲ) {
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* ಕೀಲಿ_Chars = static_cast<ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ*>(context);
+    ಹಿಂತಿರುಗಿ static_cast<int32_t>(uprv_strcmp(ಕೀಲಿ_Chars + static_cast<ಸ್ಥಿರಾಂಕ ಅಡ್ಡಸಾಲು_2*>(ಎಡ)->ಕೀಲಿ_ಸೂಚ್ಯಂಕ,
+                                            ಕೀಲಿ_Chars + static_cast<ಸ್ಥಿರಾಂಕ ಅಡ್ಡಸಾಲು_2*>(ಬಲ)->ಕೀಲಿ_ಸೂಚ್ಯಂಕ));
 }
 
-typedef struct TempTable {
-    const char *keyChars;
-    Row *rows;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ_2 {
+    ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಕೀಲಿ_Chars;
+    ಅಡ್ಡಸಾಲು_2 *ಅಡ್ಡಸಾಲುಗಳು;
     int32_t *resort;
     uint32_t *resFlags;
-    int32_t localKeyLimit;
-    uint8_t majorFormatVersion;
-} TempTable;
+    int32_t local_ಕೀಲಿ_ಎಲ್ಲೆ;
+    uint8_t major_Format_ಆವೃತ್ತಿ;
+} ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ_2;
 
-enum {
-    STACK_ROW_CAPACITY=200
+ಎಣಿಕೆ {
+    ರಾಶಿ_ಅಡ್ಡಸಾಲು_ಸಾಮರ್ಥ್ಯ=200
 };
 
 /* The table item key string is not locally available. */
-static const char *const gUnknownKey="";
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಸ್ಥಿರಾಂಕ g_Unknown_ಕೀಲಿ="";
 
-#if !UCONFIG_NO_COLLATION
+#ಆದರೆ !UCONFIG_NO_COLLATION
 // resource table key for collation binaries
-static const char16_t gCollationBinKey[]=u"%%CollationBin";
-#endif
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ char16_t g_Collation_Bin_ಕೀಲಿ[]=u"%%CollationBin";
+#ಆದರೆ_ಅಂತ್ಯ
 
 /*
  * swap one resource item
  */
-static void
-ures_swapResource(const UDataSwapper *ds,
-                  const Resource *inBundle, Resource *outBundle,
+ಸ್ಥಿರ ಶೂನ್ಯ
+ures_ಅದಲುಬದಲು_Resource(ಸ್ಥಿರಾಂಕ UDataSwapper *ds,
+                  ಸ್ಥಿರಾಂಕ Resource *ಒಳ_Bundle, Resource *ಹೊರಹೋಗು_Bundle,
                   Resource res, /* caller swaps res itself */
-                  const char *key,
-                  TempTable *pTempTable,
-                  UErrorCode *pErrorCode) {
-    const Resource *p;
+                  ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಕೀಲಿ,
+                  ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ_2 *p_ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ,
+                  UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಸ್ಥಿರಾಂಕ Resource *p;
     Resource *q;
-    int32_t offset, count;
+    int32_t ಸ್ಥಾನಾಂತರ, count;
 
-    switch(RES_GET_TYPE(res)) {
-    case URES_TABLE16:
-    case URES_STRING_V2:
-    case URES_INT:
-    case URES_ARRAY16:
+    ಆಯ್ಕೆ(RES_GET_TYPE(res)) {
+    ಸ್ಥಿತಿ URES_TABLE16:
+    ಸ್ಥಿತಿ URES_STRING_V2:
+    ಸ್ಥಿತಿ URES_INT:
+    ಸ್ಥಿತಿ URES_ARRAY16:
         /* integer, or points to 16-bit units, nothing to do here */
-        return;
-    default:
-        break;
+        ಹಿಂತಿರುಗಿ;
+    ಪೂರ್ವನಿಯೋಜಿತ:
+        ನಿಲ್ಲಿಸು;
     }
 
     /* all other types use an offset to point to their data */
-    offset = static_cast<int32_t>(RES_GET_OFFSET(res));
-    if(offset==0) {
+    ಸ್ಥಾನಾಂತರ = static_cast<int32_t>(RES_GET_ಸ್ಥಾನಾಂತರ(res));
+    ಆದರೆ(ಸ್ಥಾನಾಂತರ==0) {
         /* special offset indicating an empty item */
-        return;
+        ಹಿಂತಿರುಗಿ;
     }
-    if (pTempTable->resFlags[offset >> 5] & (static_cast<uint32_t>(1) << (offset & 0x1f))) {
+    ಆದರೆ (p_ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ->resFlags[ಸ್ಥಾನಾಂತರ >> 5] & (static_cast<uint32_t>(1) << (ಸ್ಥಾನಾಂತರ & 0x1f))) {
         /* we already swapped this resource item */
-        return;
-    } else {
+        ಹಿಂತಿರುಗಿ;
+    } ಇಲ್ಲದಿದ್ದರೆ {
         /* mark it as swapped now */
-        pTempTable->resFlags[offset >> 5] |= static_cast<uint32_t>(1) << (offset & 0x1f);
+        p_ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ->resFlags[ಸ್ಥಾನಾಂತರ >> 5] |= static_cast<uint32_t>(1) << (ಸ್ಥಾನಾಂತರ & 0x1f);
     }
 
-    p=inBundle+offset;
-    q=outBundle+offset;
+    p=ಒಳ_Bundle+ಸ್ಥಾನಾಂತರ;
+    q=ಹೊರಹೋಗು_Bundle+ಸ್ಥಾನಾಂತರ;
 
-    switch(RES_GET_TYPE(res)) {
-    case URES_ALIAS:
+    ಆಯ್ಕೆ(RES_GET_TYPE(res)) {
+    ಸ್ಥಿತಿ URES_ALIAS:
         /* physically same value layout as string, fall through */
         U_FALLTHROUGH;
-    case URES_STRING:
+    ಸ್ಥಿತಿ URES_STRING:
         count = udata_readInt32(ds, static_cast<int32_t>(*p));
         /* swap length */
-        ds->swapArray32(ds, p, 4, q, pErrorCode);
+        ds->ಅದಲುಬದಲು_Array32(ds, p, 4, q, p_Error_ಸಂಕೇತ);
         /* swap each char16_t (the terminating NUL would not change) */
-        ds->swapArray16(ds, p+1, 2*count, q+1, pErrorCode);
-        break;
-    case URES_BINARY:
+        ds->ಅದಲುಬದಲು_Array16(ds, p+1, 2*count, q+1, p_Error_ಸಂಕೇತ);
+        ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ URES_ದ್ವಿಮಾನ:
         count = udata_readInt32(ds, static_cast<int32_t>(*p));
         /* swap length */
-        ds->swapArray32(ds, p, 4, q, pErrorCode);
+        ds->ಅದಲುಬದಲು_Array32(ds, p, 4, q, p_Error_ಸಂಕೇತ);
         /* no need to swap or copy bytes - ures_swap() copied them all */
 
         /* swap known formats */
-#if !UCONFIG_NO_COLLATION
-        if( key!=nullptr &&  /* the binary is in a table */
-            (key!=gUnknownKey ?
+#ಆದರೆ !UCONFIG_NO_COLLATION
+        ಆದರೆ( ಕೀಲಿ!=ಶೂನ್ಯಸೂಚಕ &&  /* the binary is in a table */
+            (ಕೀಲಿ!=g_Unknown_ಕೀಲಿ ?
                 /* its table key string is "%%CollationBin" */
-                0==ds->compareInvChars(ds, key, -1,
-                                       gCollationBinKey, UPRV_LENGTHOF(gCollationBinKey)-1) :
+                0==ds->compareInvChars(ds, ಕೀಲಿ, -1,
+                                       g_Collation_Bin_ಕೀಲಿ, UPRV_LENGTHOF(g_Collation_Bin_ಕೀಲಿ)-1) :
                 /* its table key string is unknown but it looks like a collation binary */
-                ucol_looksLikeCollationBinary(ds, p+1, count))
+                ucol_looks_Like_Collation_ದ್ವಿಮಾನ(ds, p+1, count))
         ) {
-            ucol_swap(ds, p+1, count, q+1, pErrorCode);
+            ucol_ಅದಲುಬದಲು(ds, p+1, count, q+1, p_Error_ಸಂಕೇತ);
         }
-#endif
-        break;
-    case URES_TABLE:
-    case URES_TABLE32:
+#ಆದರೆ_ಅಂತ್ಯ
+        ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ URES_ಕೋಷ್ಟಕ:
+    ಸ್ಥಿತಿ URES_TABLE32:
         {
-            const uint16_t *pKey16;
+            ಸ್ಥಿರಾಂಕ uint16_t *pKey16;
             uint16_t *qKey16;
 
-            const int32_t *pKey32;
+            ಸ್ಥಿರಾಂಕ int32_t *pKey32;
             int32_t *qKey32;
 
-            Resource item;
-            int32_t i, oldIndex;
+            Resource ಅಂಶ;
+            int32_t i, old_ಸೂಚ್ಯಂಕ;
 
-            if(RES_GET_TYPE(res)==URES_TABLE) {
+            ಆದರೆ(RES_GET_TYPE(res)==URES_ಕೋಷ್ಟಕ) {
                 /* get table item count */
-                pKey16 = reinterpret_cast<const uint16_t*>(p);
+                pKey16 = reinterpret_cast<ಸ್ಥಿರಾಂಕ uint16_t*>(p);
                 qKey16 = reinterpret_cast<uint16_t*>(q);
                 count=ds->readUInt16(*pKey16);
 
-                pKey32=qKey32=nullptr;
+                pKey32=qKey32=ಶೂನ್ಯಸೂಚಕ;
 
                 /* swap count */
-                ds->swapArray16(ds, pKey16++, 2, qKey16++, pErrorCode);
+                ds->ಅದಲುಬದಲು_Array16(ds, pKey16++, 2, qKey16++, p_Error_ಸಂಕೇತ);
 
-                offset+=((1+count)+1)/2;
-            } else {
+                ಸ್ಥಾನಾಂತರ+=((1+count)+1)/2;
+            } ಇಲ್ಲದಿದ್ದರೆ {
                 /* get table item count */
-                pKey32 = reinterpret_cast<const int32_t*>(p);
+                pKey32 = reinterpret_cast<ಸ್ಥಿರಾಂಕ int32_t*>(p);
                 qKey32 = reinterpret_cast<int32_t*>(q);
                 count=udata_readInt32(ds, *pKey32);
 
-                pKey16=qKey16=nullptr;
+                pKey16=qKey16=ಶೂನ್ಯಸೂಚಕ;
 
                 /* swap count */
-                ds->swapArray32(ds, pKey32++, 4, qKey32++, pErrorCode);
+                ds->ಅದಲುಬದಲು_Array32(ds, pKey32++, 4, qKey32++, p_Error_ಸಂಕೇತ);
 
-                offset+=1+count;
+                ಸ್ಥಾನಾಂತರ+=1+count;
             }
 
-            if(count==0) {
-                break;
+            ಆದರೆ(count==0) {
+                ನಿಲ್ಲಿಸು;
             }
 
-            p=inBundle+offset; /* pointer to table resources */
-            q=outBundle+offset;
+            p=ಒಳ_Bundle+ಸ್ಥಾನಾಂತರ; /* pointer to table resources */
+            q=ಹೊರಹೋಗು_Bundle+ಸ್ಥಾನಾಂತರ;
 
             /* recurse */
-            for(i=0; i<count; ++i) {
-                const char *itemKey=gUnknownKey;
-                if(pKey16!=nullptr) {
-                    int32_t keyOffset=ds->readUInt16(pKey16[i]);
-                    if(keyOffset<pTempTable->localKeyLimit) {
-                        itemKey = reinterpret_cast<const char*>(outBundle) + keyOffset;
+            ಗಾಗಿ(i=0; i<count; ++i) {
+                ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *ಅಂಶ_ಕೀಲಿ=g_Unknown_ಕೀಲಿ;
+                ಆದರೆ(pKey16!=ಶೂನ್ಯಸೂಚಕ) {
+                    int32_t ಕೀಲಿ_ಸ್ಥಾನಾಂತರ=ds->readUInt16(pKey16[i]);
+                    ಆದರೆ(ಕೀಲಿ_ಸ್ಥಾನಾಂತರ<p_ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ->local_ಕೀಲಿ_ಎಲ್ಲೆ) {
+                        ಅಂಶ_ಕೀಲಿ = reinterpret_cast<ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ*>(ಹೊರಹೋಗು_Bundle) + ಕೀಲಿ_ಸ್ಥಾನಾಂತರ;
                     }
-                } else {
-                    int32_t keyOffset=udata_readInt32(ds, pKey32[i]);
-                    if(keyOffset>=0) {
-                        itemKey = reinterpret_cast<const char*>(outBundle) + keyOffset;
+                } ಇಲ್ಲದಿದ್ದರೆ {
+                    int32_t ಕೀಲಿ_ಸ್ಥಾನಾಂತರ=udata_readInt32(ds, pKey32[i]);
+                    ಆದರೆ(ಕೀಲಿ_ಸ್ಥಾನಾಂತರ>=0) {
+                        ಅಂಶ_ಕೀಲಿ = reinterpret_cast<ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ*>(ಹೊರಹೋಗು_Bundle) + ಕೀಲಿ_ಸ್ಥಾನಾಂತರ;
                     }
                 }
-                item=ds->readUInt32(p[i]);
-                ures_swapResource(ds, inBundle, outBundle, item, itemKey, pTempTable, pErrorCode);
-                if(U_FAILURE(*pErrorCode)) {
+                ಅಂಶ=ds->readUInt32(p[i]);
+                ures_ಅದಲುಬದಲು_Resource(ds, ಒಳ_Bundle, ಹೊರಹೋಗು_Bundle, ಅಂಶ, ಅಂಶ_ಕೀಲಿ, p_ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ, p_Error_ಸಂಕೇತ);
+                ಆದರೆ(U_FAILURE(*p_Error_ಸಂಕೇತ)) {
                     udata_printError(ds, "ures_swapResource(table res=%08x)[%d].recurse(%08x) failed\n",
-                                     res, i, item);
-                    return;
+                                     res, i, ಅಂಶ);
+                    ಹಿಂತಿರುಗಿ;
                 }
             }
 
-            if(pTempTable->majorFormatVersion>1 || ds->inCharset==ds->outCharset) {
+            ಆದರೆ(p_ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ->major_Format_ಆವೃತ್ತಿ>1 || ds->ಒಳ_Charset==ds->ಹೊರಹೋಗು_Charset) {
                 /* no need to sort, just swap the offset/value arrays */
-                if(pKey16!=nullptr) {
-                    ds->swapArray16(ds, pKey16, count*2, qKey16, pErrorCode);
-                    ds->swapArray32(ds, p, count*4, q, pErrorCode);
-                } else {
+                ಆದರೆ(pKey16!=ಶೂನ್ಯಸೂಚಕ) {
+                    ds->ಅದಲುಬದಲು_Array16(ds, pKey16, count*2, qKey16, p_Error_ಸಂಕೇತ);
+                    ds->ಅದಲುಬದಲು_Array32(ds, p, count*4, q, p_Error_ಸಂಕೇತ);
+                } ಇಲ್ಲದಿದ್ದರೆ {
                     /* swap key offsets and items as one array */
-                    ds->swapArray32(ds, pKey32, count*2*4, qKey32, pErrorCode);
+                    ds->ಅದಲುಬದಲು_Array32(ds, pKey32, count*2*4, qKey32, p_Error_ಸಂಕೇತ);
                 }
-                break;
+                ನಿಲ್ಲಿಸು;
             }
 
             /*
@@ -1206,24 +1206,24 @@ ures_swapResource(const UDataSwapper *ds,
              * sorting indexes and sort that.
              * Then we permutate and copy/swap the actual values.
              */
-            if(pKey16!=nullptr) {
-                for(i=0; i<count; ++i) {
-                    pTempTable->rows[i].keyIndex=ds->readUInt16(pKey16[i]);
-                    pTempTable->rows[i].sortIndex=i;
+            ಆದರೆ(pKey16!=ಶೂನ್ಯಸೂಚಕ) {
+                ಗಾಗಿ(i=0; i<count; ++i) {
+                    p_ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ->ಅಡ್ಡಸಾಲುಗಳು[i].ಕೀಲಿ_ಸೂಚ್ಯಂಕ=ds->readUInt16(pKey16[i]);
+                    p_ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ->ಅಡ್ಡಸಾಲುಗಳು[i].ವಿಂಗಡಿಸು_ಸೂಚ್ಯಂಕ=i;
                 }
-            } else {
-                for(i=0; i<count; ++i) {
-                    pTempTable->rows[i].keyIndex=udata_readInt32(ds, pKey32[i]);
-                    pTempTable->rows[i].sortIndex=i;
+            } ಇಲ್ಲದಿದ್ದರೆ {
+                ಗಾಗಿ(i=0; i<count; ++i) {
+                    p_ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ->ಅಡ್ಡಸಾಲುಗಳು[i].ಕೀಲಿ_ಸೂಚ್ಯಂಕ=udata_readInt32(ds, pKey32[i]);
+                    p_ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ->ಅಡ್ಡಸಾಲುಗಳು[i].ವಿಂಗಡಿಸು_ಸೂಚ್ಯಂಕ=i;
                 }
             }
-            uprv_sortArray(pTempTable->rows, count, sizeof(Row),
-                           ures_compareRows, pTempTable->keyChars,
-                           false, pErrorCode);
-            if(U_FAILURE(*pErrorCode)) {
+            uprv_ವಿಂಗಡಿಸು_Array(p_ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ->ಅಡ್ಡಸಾಲುಗಳು, count, ಗಾತ್ರ(ಅಡ್ಡಸಾಲು_2),
+                           ures_compare_ಅಡ್ಡಸಾಲುಗಳು, p_ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ->ಕೀಲಿ_Chars,
+                           ಸುಳ್ಳು, p_Error_ಸಂಕೇತ);
+            ಆದರೆ(U_FAILURE(*p_Error_ಸಂಕೇತ)) {
                 udata_printError(ds, "ures_swapResource(table res=%08x).uprv_sortArray(%d items) failed\n",
                                  res, count);
-                return;
+                ಹಿಂತಿರುಗಿ;
             }
 
             /*
@@ -1233,35 +1233,35 @@ ures_swapResource(const UDataSwapper *ds,
              * temporary array (pTempTable->resort)
              * before the results are copied to the outBundle.
              */
-            /* keys */
-            if(pKey16!=nullptr) {
+            /*ಕೀಲಿಗಳು*/
+            ಆದರೆ(pKey16!=ಶೂನ್ಯಸೂಚಕ) {
                 uint16_t *rKey16;
 
-                if(pKey16!=qKey16) {
+                ಆದರೆ(pKey16!=qKey16) {
                     rKey16=qKey16;
-                } else {
-                    rKey16 = reinterpret_cast<uint16_t*>(pTempTable->resort);
+                } ಇಲ್ಲದಿದ್ದರೆ {
+                    rKey16 = reinterpret_cast<uint16_t*>(p_ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ->resort);
                 }
-                for(i=0; i<count; ++i) {
-                    oldIndex=pTempTable->rows[i].sortIndex;
-                    ds->swapArray16(ds, pKey16+oldIndex, 2, rKey16+i, pErrorCode);
+                ಗಾಗಿ(i=0; i<count; ++i) {
+                    old_ಸೂಚ್ಯಂಕ=p_ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ->ಅಡ್ಡಸಾಲುಗಳು[i].ವಿಂಗಡಿಸು_ಸೂಚ್ಯಂಕ;
+                    ds->ಅದಲುಬದಲು_Array16(ds, pKey16+old_ಸೂಚ್ಯಂಕ, 2, rKey16+i, p_Error_ಸಂಕೇತ);
                 }
-                if(qKey16!=rKey16) {
+                ಆದರೆ(qKey16!=rKey16) {
                     uprv_memcpy(qKey16, rKey16, 2*count);
                 }
-            } else {
+            } ಇಲ್ಲದಿದ್ದರೆ {
                 int32_t *rKey32;
 
-                if(pKey32!=qKey32) {
+                ಆದರೆ(pKey32!=qKey32) {
                     rKey32=qKey32;
-                } else {
-                    rKey32=pTempTable->resort;
+                } ಇಲ್ಲದಿದ್ದರೆ {
+                    rKey32=p_ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ->resort;
                 }
-                for(i=0; i<count; ++i) {
-                    oldIndex=pTempTable->rows[i].sortIndex;
-                    ds->swapArray32(ds, pKey32+oldIndex, 4, rKey32+i, pErrorCode);
+                ಗಾಗಿ(i=0; i<count; ++i) {
+                    old_ಸೂಚ್ಯಂಕ=p_ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ->ಅಡ್ಡಸಾಲುಗಳು[i].ವಿಂಗಡಿಸು_ಸೂಚ್ಯಂಕ;
+                    ds->ಅದಲುಬದಲು_Array32(ds, pKey32+old_ಸೂಚ್ಯಂಕ, 4, rKey32+i, p_Error_ಸಂಕೇತ);
                 }
-                if(qKey32!=rKey32) {
+                ಆದರೆ(qKey32!=rKey32) {
                     uprv_memcpy(qKey32, rKey32, 4*count);
                 }
             }
@@ -1271,156 +1271,156 @@ ures_swapResource(const UDataSwapper *ds,
                 Resource *r;
 
 
-                if(p!=q) {
+                ಆದರೆ(p!=q) {
                     r=q;
-                } else {
-                    r = reinterpret_cast<Resource*>(pTempTable->resort);
+                } ಇಲ್ಲದಿದ್ದರೆ {
+                    r = reinterpret_cast<Resource*>(p_ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ->resort);
                 }
-                for(i=0; i<count; ++i) {
-                    oldIndex=pTempTable->rows[i].sortIndex;
-                    ds->swapArray32(ds, p+oldIndex, 4, r+i, pErrorCode);
+                ಗಾಗಿ(i=0; i<count; ++i) {
+                    old_ಸೂಚ್ಯಂಕ=p_ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ->ಅಡ್ಡಸಾಲುಗಳು[i].ವಿಂಗಡಿಸು_ಸೂಚ್ಯಂಕ;
+                    ds->ಅದಲುಬದಲು_Array32(ds, p+old_ಸೂಚ್ಯಂಕ, 4, r+i, p_Error_ಸಂಕೇತ);
                 }
-                if(q!=r) {
+                ಆದರೆ(q!=r) {
                     uprv_memcpy(q, r, 4*count);
                 }
             }
         }
-        break;
-    case URES_ARRAY:
+        ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ URES_ARRAY:
         {
-            Resource item;
+            Resource ಅಂಶ;
             int32_t i;
 
             count = udata_readInt32(ds, static_cast<int32_t>(*p));
             /* swap length */
-            ds->swapArray32(ds, p++, 4, q++, pErrorCode);
+            ds->ಅದಲುಬದಲು_Array32(ds, p++, 4, q++, p_Error_ಸಂಕೇತ);
 
             /* recurse */
-            for(i=0; i<count; ++i) {
-                item=ds->readUInt32(p[i]);
-                ures_swapResource(ds, inBundle, outBundle, item, nullptr, pTempTable, pErrorCode);
-                if(U_FAILURE(*pErrorCode)) {
+            ಗಾಗಿ(i=0; i<count; ++i) {
+                ಅಂಶ=ds->readUInt32(p[i]);
+                ures_ಅದಲುಬದಲು_Resource(ds, ಒಳ_Bundle, ಹೊರಹೋಗು_Bundle, ಅಂಶ, ಶೂನ್ಯಸೂಚಕ, p_ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ, p_Error_ಸಂಕೇತ);
+                ಆದರೆ(U_FAILURE(*p_Error_ಸಂಕೇತ)) {
                     udata_printError(ds, "ures_swapResource(array res=%08x)[%d].recurse(%08x) failed\n",
-                                     res, i, item);
-                    return;
+                                     res, i, ಅಂಶ);
+                    ಹಿಂತಿರುಗಿ;
                 }
             }
 
             /* swap items */
-            ds->swapArray32(ds, p, 4*count, q, pErrorCode);
+            ds->ಅದಲುಬದಲು_Array32(ds, p, 4*count, q, p_Error_ಸಂಕೇತ);
         }
-        break;
-    case URES_INT_VECTOR:
+        ನಿಲ್ಲಿಸು;
+    ಸ್ಥಿತಿ URES_INT_ಸದಿಶ:
         count = udata_readInt32(ds, static_cast<int32_t>(*p));
         /* swap length and each integer */
-        ds->swapArray32(ds, p, 4*(1+count), q, pErrorCode);
-        break;
-    default:
+        ds->ಅದಲುಬದಲು_Array32(ds, p, 4*(1+count), q, p_Error_ಸಂಕೇತ);
+        ನಿಲ್ಲಿಸು;
+    ಪೂರ್ವನಿಯೋಜಿತ:
         /* also catches RES_BOGUS */
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        break;
+        *p_Error_ಸಂಕೇತ=U_UNSUPPORTED_ERROR;
+        ನಿಲ್ಲಿಸು;
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-ures_swap(const UDataSwapper *ds,
-          const void *inData, int32_t length, void *outData,
-          UErrorCode *pErrorCode) {
-    const UDataInfo *pInfo;
-    const Resource *inBundle;
-    Resource rootRes;
-    int32_t headerSize, maxTableLength;
+ures_ಅದಲುಬದಲು(ಸ್ಥಿರಾಂಕ UDataSwapper *ds,
+          ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ *ಒಳ_ದತ್ತಾಂಶ, int32_t length, ಶೂನ್ಯ *ಹೊರಹೋಗು_ದತ್ತಾಂಶ,
+          UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ) {
+    ಸ್ಥಿರಾಂಕ UDataInfo *pInfo;
+    ಸ್ಥಿರಾಂಕ Resource *ಒಳ_Bundle;
+    Resource ಬೇರು_Res;
+    int32_t ಶೀರ್ಷಿಕೆ_ಗಾತ್ರ, max_ಕೋಷ್ಟಕ_ಉದ್ದಳತೆ;
 
-    Row rows[STACK_ROW_CAPACITY];
-    int32_t resort[STACK_ROW_CAPACITY];
-    TempTable tempTable;
+    ಅಡ್ಡಸಾಲು_2 ಅಡ್ಡಸಾಲುಗಳು[ರಾಶಿ_ಅಡ್ಡಸಾಲು_ಸಾಮರ್ಥ್ಯ];
+    int32_t resort[ರಾಶಿ_ಅಡ್ಡಸಾಲು_ಸಾಮರ್ಥ್ಯ];
+    ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ_2 ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ;
 
-    const int32_t *inIndexes;
+    ಸ್ಥಿರಾಂಕ int32_t *ಒಳ_Indexes;
 
     /* the following integers count Resource item offsets (4 bytes each), not bytes */
-    int32_t bundleLength, indexLength, keysBottom, keysTop, resBottom, top;
+    int32_t bundle_ಉದ್ದಳತೆ, ಸೂಚ್ಯಂಕ_ಉದ್ದಳತೆ, ಕೀಲಿಗಳು_Bottom, ಕೀಲಿಗಳು_ತುದಿ, resBottom, ತುದಿ;
 
     /* udata_swapDataHeader checks the arguments */
-    headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ಶೀರ್ಷಿಕೆ_ಗಾತ್ರ=udata_ಅದಲುಬದಲು_ದತ್ತಾಂಶ_ಶೀರ್ಷಿಕೆ(ds, ಒಳ_ದತ್ತಾಂಶ, length, ಹೊರಹೋಗು_ದತ್ತಾಂಶ, p_Error_ಸಂಕೇತ);
+    ಆದರೆ(p_Error_ಸಂಕೇತ==ಶೂನ್ಯಸೂಚಕ || U_FAILURE(*p_Error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ 0;
     }
 
     /* check data format and format version */
-    pInfo=(const UDataInfo *)((const char *)inData+4);
-    if(!(
-        pInfo->dataFormat[0]==0x52 &&   /* dataFormat="ResB" */
-        pInfo->dataFormat[1]==0x65 &&
-        pInfo->dataFormat[2]==0x73 &&
-        pInfo->dataFormat[3]==0x42 &&
+    pInfo=(ಸ್ಥಿರಾಂಕ UDataInfo *)((ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *)ಒಳ_ದತ್ತಾಂಶ+4);
+    ಆದರೆ(!(
+        pInfo->ದತ್ತಾಂಶ_Format[0]==0x52 &&   /* dataFormat="ResB" */
+        pInfo->ದತ್ತಾಂಶ_Format[1]==0x65 &&
+        pInfo->ದತ್ತಾಂಶ_Format[2]==0x73 &&
+        pInfo->ದತ್ತಾಂಶ_Format[3]==0x42 &&
         /* formatVersion 1.1+ or 2.x or 3.x */
-        ((pInfo->formatVersion[0]==1 && pInfo->formatVersion[1]>=1) ||
-            pInfo->formatVersion[0]==2 || pInfo->formatVersion[0]==3)
+        ((pInfo->format_ಆವೃತ್ತಿ[0]==1 && pInfo->format_ಆವೃತ್ತಿ[1]>=1) ||
+            pInfo->format_ಆವೃತ್ತಿ[0]==2 || pInfo->format_ಆವೃತ್ತಿ[0]==3)
     )) {
         udata_printError(ds, "ures_swap(): data format %02x.%02x.%02x.%02x (format version %02x.%02x) is not a resource bundle\n",
-                         pInfo->dataFormat[0], pInfo->dataFormat[1],
-                         pInfo->dataFormat[2], pInfo->dataFormat[3],
-                         pInfo->formatVersion[0], pInfo->formatVersion[1]);
-        *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+                         pInfo->ದತ್ತಾಂಶ_Format[0], pInfo->ದತ್ತಾಂಶ_Format[1],
+                         pInfo->ದತ್ತಾಂಶ_Format[2], pInfo->ದತ್ತಾಂಶ_Format[3],
+                         pInfo->format_ಆವೃತ್ತಿ[0], pInfo->format_ಆವೃತ್ತಿ[1]);
+        *p_Error_ಸಂಕೇತ=U_UNSUPPORTED_ERROR;
+        ಹಿಂತಿರುಗಿ 0;
     }
-    tempTable.majorFormatVersion=pInfo->formatVersion[0];
+    ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ.major_Format_ಆವೃತ್ತಿ=pInfo->format_ಆವೃತ್ತಿ[0];
 
     /* a resource bundle must contain at least one resource item */
-    if(length<0) {
-        bundleLength=-1;
-    } else {
-        bundleLength=(length-headerSize)/4;
+    ಆದರೆ(length<0) {
+        bundle_ಉದ್ದಳತೆ=-1;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        bundle_ಉದ್ದಳತೆ=(length-ಶೀರ್ಷಿಕೆ_ಗಾತ್ರ)/4;
 
         /* formatVersion 1.1 must have a root item and at least 5 indexes */
-        if(bundleLength<(1+5)) {
+        ಆದರೆ(bundle_ಉದ್ದಳತೆ<(1+5)) {
             udata_printError(ds, "ures_swap(): too few bytes (%d after header) for a resource bundle\n",
-                             length-headerSize);
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+                             length-ಶೀರ್ಷಿಕೆ_ಗಾತ್ರ);
+            *p_Error_ಸಂಕೇತ=U_ಸೂಚ್ಯಂಕ_OUTOFBOUNDS_ERROR;
+            ಹಿಂತಿರುಗಿ 0;
         }
     }
 
-    inBundle=(const Resource *)((const char *)inData+headerSize);
-    rootRes=ds->readUInt32(*inBundle);
+    ಒಳ_Bundle=(ಸ್ಥಿರಾಂಕ Resource *)((ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *)ಒಳ_ದತ್ತಾಂಶ+ಶೀರ್ಷಿಕೆ_ಗಾತ್ರ);
+    ಬೇರು_Res=ds->readUInt32(*ಒಳ_Bundle);
 
     /* formatVersion 1.1 adds the indexes[] array */
-    inIndexes=(const int32_t *)(inBundle+1);
+    ಒಳ_Indexes=(ಸ್ಥಿರಾಂಕ int32_t *)(ಒಳ_Bundle+1);
 
-    indexLength=udata_readInt32(ds, inIndexes[URES_INDEX_LENGTH])&0xff;
-    if(indexLength<=URES_INDEX_MAX_TABLE_LENGTH) {
+    ಸೂಚ್ಯಂಕ_ಉದ್ದಳತೆ=udata_readInt32(ds, ಒಳ_Indexes[URES_ಸೂಚ್ಯಂಕ_ಉದ್ದಳತೆ])&0xff;
+    ಆದರೆ(ಸೂಚ್ಯಂಕ_ಉದ್ದಳತೆ<=URES_ಸೂಚ್ಯಂಕ_MAX_ಕೋಷ್ಟಕ_ಉದ್ದಳತೆ) {
         udata_printError(ds, "ures_swap(): too few indexes for a 1.1+ resource bundle\n");
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        *p_Error_ಸಂಕೇತ=U_ಸೂಚ್ಯಂಕ_OUTOFBOUNDS_ERROR;
+        ಹಿಂತಿರುಗಿ 0;
     }
-    keysBottom=1+indexLength;
-    keysTop=udata_readInt32(ds, inIndexes[URES_INDEX_KEYS_TOP]);
-    if(indexLength>URES_INDEX_16BIT_TOP) {
-        resBottom=udata_readInt32(ds, inIndexes[URES_INDEX_16BIT_TOP]);
-    } else {
-        resBottom=keysTop;
+    ಕೀಲಿಗಳು_Bottom=1+ಸೂಚ್ಯಂಕ_ಉದ್ದಳತೆ;
+    ಕೀಲಿಗಳು_ತುದಿ=udata_readInt32(ds, ಒಳ_Indexes[URES_ಸೂಚ್ಯಂಕ_ಕೀಲಿಗಳು_ತುದಿ]);
+    ಆದರೆ(ಸೂಚ್ಯಂಕ_ಉದ್ದಳತೆ>URES_ಸೂಚ್ಯಂಕ_16_ಬಿಟ್_ತುದಿ) {
+        resBottom=udata_readInt32(ds, ಒಳ_Indexes[URES_ಸೂಚ್ಯಂಕ_16_ಬಿಟ್_ತುದಿ]);
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        resBottom=ಕೀಲಿಗಳು_ತುದಿ;
     }
-    top=udata_readInt32(ds, inIndexes[URES_INDEX_BUNDLE_TOP]);
-    maxTableLength=udata_readInt32(ds, inIndexes[URES_INDEX_MAX_TABLE_LENGTH]);
+    ತುದಿ=udata_readInt32(ds, ಒಳ_Indexes[URES_ಸೂಚ್ಯಂಕ_BUNDLE_ತುದಿ]);
+    max_ಕೋಷ್ಟಕ_ಉದ್ದಳತೆ=udata_readInt32(ds, ಒಳ_Indexes[URES_ಸೂಚ್ಯಂಕ_MAX_ಕೋಷ್ಟಕ_ಉದ್ದಳತೆ]);
 
-    if(0<=bundleLength && bundleLength<top) {
+    ಆದರೆ(0<=bundle_ಉದ್ದಳತೆ && bundle_ಉದ್ದಳತೆ<ತುದಿ) {
         udata_printError(ds, "ures_swap(): resource top %d exceeds bundle length %d\n",
-                         top, bundleLength);
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+                         ತುದಿ, bundle_ಉದ್ದಳತೆ);
+        *p_Error_ಸಂಕೇತ=U_ಸೂಚ್ಯಂಕ_OUTOFBOUNDS_ERROR;
+        ಹಿಂತಿರುಗಿ 0;
     }
-    if(keysTop>(1+indexLength)) {
-        tempTable.localKeyLimit=keysTop<<2;
-    } else {
-        tempTable.localKeyLimit=0;
+    ಆದರೆ(ಕೀಲಿಗಳು_ತುದಿ>(1+ಸೂಚ್ಯಂಕ_ಉದ್ದಳತೆ)) {
+        ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ.local_ಕೀಲಿ_ಎಲ್ಲೆ=ಕೀಲಿಗಳು_ತುದಿ<<2;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ.local_ಕೀಲಿ_ಎಲ್ಲೆ=0;
     }
 
-    if(length>=0) {
-        Resource *outBundle=(Resource *)((char *)outData+headerSize);
+    ಆದರೆ(length>=0) {
+        Resource *ಹೊರಹೋಗು_Bundle=(Resource *)((ಅಕ್ಷರ *)ಹೊರಹೋಗು_ದತ್ತಾಂಶ+ಶೀರ್ಷಿಕೆ_ಗಾತ್ರ);
 
         /* track which resources we have already swapped */
-        uint32_t stackResFlags[STACK_ROW_CAPACITY];
-        int32_t resFlagsLength;
+        uint32_t ರಾಶಿ_Res_Flags[ರಾಶಿ_ಅಡ್ಡಸಾಲು_ಸಾಮರ್ಥ್ಯ];
+        int32_t res_Flags_ಉದ್ದಳತೆ;
 
         /*
          * We need one bit per 4 resource bundle bytes so that we can track
@@ -1430,84 +1430,84 @@ ures_swap(const UDataSwapper *ds,
          * We could optimize this by allocating only for locations above
          * where Resource values are stored (above keys & strings).
          */
-        resFlagsLength=(length+31)>>5;          /* number of bytes needed */
-        resFlagsLength=(resFlagsLength+3)&~3;   /* multiple of 4 bytes for uint32_t */
-        if(resFlagsLength<=(int32_t)sizeof(stackResFlags)) {
-            tempTable.resFlags=stackResFlags;
-        } else {
-            tempTable.resFlags=(uint32_t *)uprv_malloc(resFlagsLength);
-            if(tempTable.resFlags==nullptr) {
+        res_Flags_ಉದ್ದಳತೆ=(length+31)>>5;          /* number of bytes needed */
+        res_Flags_ಉದ್ದಳತೆ=(res_Flags_ಉದ್ದಳತೆ+3)&~3;   /* multiple of 4 bytes for uint32_t */
+        ಆದರೆ(res_Flags_ಉದ್ದಳತೆ<=(int32_t)ಗಾತ್ರ(ರಾಶಿ_Res_Flags)) {
+            ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ.resFlags=ರಾಶಿ_Res_Flags;
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ.resFlags=(uint32_t *)uprv_malloc(res_Flags_ಉದ್ದಳತೆ);
+            ಆದರೆ(ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ.resFlags==ಶೂನ್ಯಸೂಚಕ) {
                 udata_printError(ds, "ures_swap(): unable to allocate memory for tracking resources\n");
-                *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                return 0;
+                *p_Error_ಸಂಕೇತ=U_ಸ್ಮರಣೆ_ಹಂಚಿಕೆ_ERROR;
+                ಹಿಂತಿರುಗಿ 0;
             }
         }
-        uprv_memset(tempTable.resFlags, 0, resFlagsLength);
+        uprv_memset(ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ.resFlags, 0, res_Flags_ಉದ್ದಳತೆ);
 
         /* copy the bundle for binary and inaccessible data */
-        if(inData!=outData) {
-            uprv_memcpy(outBundle, inBundle, 4*top);
+        ಆದರೆ(ಒಳ_ದತ್ತಾಂಶ!=ಹೊರಹೋಗು_ದತ್ತಾಂಶ) {
+            uprv_memcpy(ಹೊರಹೋಗು_Bundle, ಒಳ_Bundle, 4*ತುದಿ);
         }
 
         /* swap the key strings, but not the padding bytes (0xaa) after the last string and its NUL */
-        udata_swapInvStringBlock(ds, inBundle+keysBottom, 4*(keysTop-keysBottom),
-                                    outBundle+keysBottom, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
-            udata_printError(ds, "ures_swap().udata_swapInvStringBlock(keys[%d]) failed\n", 4*(keysTop-keysBottom));
-            if(tempTable.resFlags!=stackResFlags) {
-                uprv_free(tempTable.resFlags);
+        udata_ಅದಲುಬದಲು_Inv_String_ಖಂಡ(ds, ಒಳ_Bundle+ಕೀಲಿಗಳು_Bottom, 4*(ಕೀಲಿಗಳು_ತುದಿ-ಕೀಲಿಗಳು_Bottom),
+                                    ಹೊರಹೋಗು_Bundle+ಕೀಲಿಗಳು_Bottom, p_Error_ಸಂಕೇತ);
+        ಆದರೆ(U_FAILURE(*p_Error_ಸಂಕೇತ)) {
+            udata_printError(ds, "ures_swap().udata_swapInvStringBlock(keys[%d]) failed\n", 4*(ಕೀಲಿಗಳು_ತುದಿ-ಕೀಲಿಗಳು_Bottom));
+            ಆದರೆ(ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ.resFlags!=ರಾಶಿ_Res_Flags) {
+                uprv_free(ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ.resFlags);
             }
-            return 0;
+            ಹಿಂತಿರುಗಿ 0;
         }
 
         /* swap the 16-bit units (strings, table16, array16) */
-        if(keysTop<resBottom) {
-            ds->swapArray16(ds, inBundle+keysTop, (resBottom-keysTop)*4, outBundle+keysTop, pErrorCode);
-            if(U_FAILURE(*pErrorCode)) {
-                udata_printError(ds, "ures_swap().swapArray16(16-bit units[%d]) failed\n", 2*(resBottom-keysTop));
-                if(tempTable.resFlags!=stackResFlags) {
-                    uprv_free(tempTable.resFlags);
+        ಆದರೆ(ಕೀಲಿಗಳು_ತುದಿ<resBottom) {
+            ds->ಅದಲುಬದಲು_Array16(ds, ಒಳ_Bundle+ಕೀಲಿಗಳು_ತುದಿ, (resBottom-ಕೀಲಿಗಳು_ತುದಿ)*4, ಹೊರಹೋಗು_Bundle+ಕೀಲಿಗಳು_ತುದಿ, p_Error_ಸಂಕೇತ);
+            ಆದರೆ(U_FAILURE(*p_Error_ಸಂಕೇತ)) {
+                udata_printError(ds, "ures_swap().swapArray16(16-bit units[%d]) failed\n", 2*(resBottom-ಕೀಲಿಗಳು_ತುದಿ));
+                ಆದರೆ(ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ.resFlags!=ರಾಶಿ_Res_Flags) {
+                    uprv_free(ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ.resFlags);
                 }
-                return 0;
+                ಹಿಂತಿರುಗಿ 0;
             }
         }
 
         /* allocate the temporary table for sorting resource tables */
-        tempTable.keyChars=(const char *)outBundle; /* sort by outCharset */
-        if(tempTable.majorFormatVersion>1 || maxTableLength<=STACK_ROW_CAPACITY) {
-            tempTable.rows=rows;
-            tempTable.resort=resort;
-        } else {
-            tempTable.rows=(Row *)uprv_malloc(maxTableLength*sizeof(Row)+maxTableLength*4);
-            if(tempTable.rows==nullptr) {
+        ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ.ಕೀಲಿ_Chars=(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *)ಹೊರಹೋಗು_Bundle; /* sort by outCharset */
+        ಆದರೆ(ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ.major_Format_ಆವೃತ್ತಿ>1 || max_ಕೋಷ್ಟಕ_ಉದ್ದಳತೆ<=ರಾಶಿ_ಅಡ್ಡಸಾಲು_ಸಾಮರ್ಥ್ಯ) {
+            ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ.ಅಡ್ಡಸಾಲುಗಳು=ಅಡ್ಡಸಾಲುಗಳು;
+            ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ.resort=resort;
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ.ಅಡ್ಡಸಾಲುಗಳು=(ಅಡ್ಡಸಾಲು_2 *)uprv_malloc(max_ಕೋಷ್ಟಕ_ಉದ್ದಳತೆ*ಗಾತ್ರ(ಅಡ್ಡಸಾಲು_2)+max_ಕೋಷ್ಟಕ_ಉದ್ದಳತೆ*4);
+            ಆದರೆ(ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ.ಅಡ್ಡಸಾಲುಗಳು==ಶೂನ್ಯಸೂಚಕ) {
                 udata_printError(ds, "ures_swap(): unable to allocate memory for sorting tables (max length: %d)\n",
-                                 maxTableLength);
-                *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                if(tempTable.resFlags!=stackResFlags) {
-                    uprv_free(tempTable.resFlags);
+                                 max_ಕೋಷ್ಟಕ_ಉದ್ದಳತೆ);
+                *p_Error_ಸಂಕೇತ=U_ಸ್ಮರಣೆ_ಹಂಚಿಕೆ_ERROR;
+                ಆದರೆ(ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ.resFlags!=ರಾಶಿ_Res_Flags) {
+                    uprv_free(ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ.resFlags);
                 }
-                return 0;
+                ಹಿಂತಿರುಗಿ 0;
             }
-            tempTable.resort=(int32_t *)(tempTable.rows+maxTableLength);
+            ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ.resort=(int32_t *)(ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ.ಅಡ್ಡಸಾಲುಗಳು+max_ಕೋಷ್ಟಕ_ಉದ್ದಳತೆ);
         }
 
         /* swap the resources */
-        ures_swapResource(ds, inBundle, outBundle, rootRes, nullptr, &tempTable, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
+        ures_ಅದಲುಬದಲು_Resource(ds, ಒಳ_Bundle, ಹೊರಹೋಗು_Bundle, ಬೇರು_Res, ಶೂನ್ಯಸೂಚಕ, &ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ, p_Error_ಸಂಕೇತ);
+        ಆದರೆ(U_FAILURE(*p_Error_ಸಂಕೇತ)) {
             udata_printError(ds, "ures_swapResource(root res=%08x) failed\n",
-                             rootRes);
+                             ಬೇರು_Res);
         }
 
-        if(tempTable.rows!=rows) {
-            uprv_free(tempTable.rows);
+        ಆದರೆ(ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ.ಅಡ್ಡಸಾಲುಗಳು!=ಅಡ್ಡಸಾಲುಗಳು) {
+            uprv_free(ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ.ಅಡ್ಡಸಾಲುಗಳು);
         }
-        if(tempTable.resFlags!=stackResFlags) {
-            uprv_free(tempTable.resFlags);
+        ಆದರೆ(ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ.resFlags!=ರಾಶಿ_Res_Flags) {
+            uprv_free(ತಾತ್ಕಾಲಿಕ_ಕೋಷ್ಟಕ.resFlags);
         }
 
         /* swap the root resource and indexes */
-        ds->swapArray32(ds, inBundle, keysBottom*4, outBundle, pErrorCode);
+        ds->ಅದಲುಬದಲು_Array32(ds, ಒಳ_Bundle, ಕೀಲಿಗಳು_Bottom*4, ಹೊರಹೋಗು_Bundle, p_Error_ಸಂಕೇತ);
     }
 
-    return headerSize+4*top;
+    ಹಿಂತಿರುಗಿ ಶೀರ್ಷಿಕೆ_ಗಾತ್ರ+4*ತುದಿ;
 }

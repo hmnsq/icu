@@ -10,13 +10,13 @@
  **********************************************************************
  */
 
-#ifndef ICU_UTIL_H
-#define ICU_UTIL_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ ICU_UTIL_H
+#ವ್ಯಾಖ್ಯಾನಿಸು ICU_UTIL_H
 
-#include "charstr.h"
-#include "unicode/unistr.h"
-#include "unicode/uobject.h"
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "charstr.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unistr.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uobject.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 //--------------------------------------------------------------------
 // class ICU_Utility
 // i18n utility functions, scoped into the class ICU_Utility.
@@ -27,7 +27,7 @@ U_NAMESPACE_BEGIN
 class UnicodeMatcher;
 
 class U_COMMON_API ICU_Utility /* not : public UObject because all methods are static */ {
- public:
+ ಸಾರ್ವಜನಿಕ:
 
     /**
      * Append a number to the given UnicodeString in the given radix.
@@ -42,27 +42,27 @@ class U_COMMON_API ICU_Utility /* not : public UObject because all methods are s
      * digit is always emitted regardless of this parameter.
      * @return a reference to result
      */
-    static UnicodeString& appendNumber(UnicodeString& result, int32_t n,
+    ಸ್ಥಿರ UnicodeString& append_ಸಂಖ್ಯೆ(UnicodeString& ಫಲಿತಾಂಶ, int32_t n,
                                        int32_t radix = 10,
                                        int32_t minDigits = 1);
 
     /** Returns a bogus UnicodeString by value. */
-    static inline UnicodeString makeBogusString() {
-        UnicodeString result;
-        result.setToBogus();
-        return result;
+    ಸ್ಥಿರ ಸಾಲೊಳಗೆ UnicodeString makeBogusString() {
+        UnicodeString ಫಲಿತಾಂಶ;
+        ಫಲಿತಾಂಶ.ಗಣ_ಗಮ್ಯ_Bogus();
+        ಹಿಂತಿರುಗಿ ಫಲಿತಾಂಶ;
     }
 
     /**
      * Return true if the character is NOT printable ASCII.
      * The tab, newline and linefeed characters are considered unprintable.
      */
-    static UBool isUnprintable(UChar32 c);
+    ಸ್ಥಿರ UBool isUnprintable(UChar32 c);
 
     /**
      * @return true for control codes and for surrogate and noncharacter code points
      */
-    static UBool shouldAlwaysBeEscaped(UChar32 c);
+    ಸ್ಥಿರ UBool shouldAlwaysBeEscaped(UChar32 c);
 
     /**
      * Escapes one unprintable code point using \uxxxx notation for U+0000 to
@@ -70,14 +70,14 @@ class U_COMMON_API ICU_Utility /* not : public UObject because all methods are s
      * printable ASCII, then do nothing and return false.  Otherwise,
      * append the escaped notation and return true.
      */
-    static UBool escapeUnprintable(UnicodeString& result, UChar32 c);
+    ಸ್ಥಿರ UBool escapeUnprintable(UnicodeString& ಫಲಿತಾಂಶ, UChar32 c);
 
     /**
      * Escapes one code point using \uxxxx notation
      * for U+0000 to U+FFFF and \Uxxxxxxxx for U+10000 and above.
      * @return result
      */
-    static UnicodeString &escape(UnicodeString& result, UChar32 c);
+    ಸ್ಥಿರ UnicodeString &escape(UnicodeString& ಫಲಿತಾಂಶ, UChar32 c);
 
     /**
      * Returns the index of a character, ignoring quoted text.
@@ -104,7 +104,7 @@ class U_COMMON_API ICU_Utility /* not : public UObject because all methods are s
      * @return the index of the first non-white-space character at or
      * after pos, or str.length(), if there is none.
      */
-    static int32_t skipWhitespace(const UnicodeString& str, int32_t& pos,
+    ಸ್ಥಿರ int32_t skipWhitespace(ಸ್ಥಿರಾಂಕ UnicodeString& str, int32_t& pos,
                                   UBool advance = false);
 
     /**
@@ -140,7 +140,7 @@ class U_COMMON_API ICU_Utility /* not : public UObject because all methods are s
      * @return true if 'ch' is seen preceded by zero or more
      * whitespace characters.
      */
-    static UBool parseChar(const UnicodeString& id, int32_t& pos, char16_t ch);
+    ಸ್ಥಿರ UBool parseChar(ಸ್ಥಿರಾಂಕ UnicodeString& id, int32_t& pos, char16_t ch);
 
     /**
      * Parse a pattern string starting at offset pos.  Keywords are
@@ -161,8 +161,8 @@ class U_COMMON_API ICU_Utility /* not : public UObject because all methods are s
      * @return the position after the last character parsed, or -1 if
      * the parse failed
      */
-    static int32_t parsePattern(const UnicodeString& rule, int32_t pos, int32_t limit,
-                                const UnicodeString& pattern, int32_t* parsedInts);
+    ಸ್ಥಿರ int32_t parse_ನಮೂನೆ(ಸ್ಥಿರಾಂಕ UnicodeString& ನಿಯಮ, int32_t pos, int32_t ಎಲ್ಲೆ,
+                                ಸ್ಥಿರಾಂಕ UnicodeString& ನಮೂನೆ, int32_t* parsedInts);
         
     /**
      * Parse a pattern string within the given Replaceable and a parsing
@@ -180,10 +180,10 @@ class U_COMMON_API ICU_Utility /* not : public UObject because all methods are s
      * @param limit offset after last character to parse
      * @return index after last parsed character, or -1 on parse failure.
      */
-    static int32_t parsePattern(const UnicodeString& pat,
-                                const Replaceable& text,
-                                int32_t index,
-                                int32_t limit);
+    ಸ್ಥಿರ int32_t parse_ನಮೂನೆ(ಸ್ಥಿರಾಂಕ UnicodeString& pat,
+                                ಸ್ಥಿರಾಂಕ Replaceable& ಪಠ್ಯ,
+                                int32_t ಸೂಚ್ಯಂಕ,
+                                int32_t ಎಲ್ಲೆ);
 
     /**
      * Parse an integer at pos, either of the form \d+ or of the form
@@ -193,7 +193,7 @@ class U_COMMON_API ICU_Utility /* not : public UObject because all methods are s
      * character to parse.  On output, the index of the character after the
      * last parsed character.
      */
-    static int32_t parseInteger(const UnicodeString& rule, int32_t& pos, int32_t limit);
+    ಸ್ಥಿರ int32_t parseInteger(ಸ್ಥಿರಾಂಕ UnicodeString& ನಿಯಮ, int32_t& pos, int32_t ಎಲ್ಲೆ);
 
     /**
      * Parse an integer at pos using only ASCII digits.
@@ -202,7 +202,7 @@ class U_COMMON_API ICU_Utility /* not : public UObject because all methods are s
      * character to parse.  On output, the index of the character after the
      * last parsed character.
      */
-    static int32_t parseAsciiInteger(const UnicodeString& str, int32_t& pos);
+    ಸ್ಥಿರ int32_t parseAsciiInteger(ಸ್ಥಿರಾಂಕ UnicodeString& str, int32_t& pos);
 
     /**
      * Parse a Unicode identifier from the given string at the given
@@ -218,7 +218,7 @@ class U_COMMON_API ICU_Utility /* not : public UObject because all methods are s
      * @return the Unicode identifier, or an empty string if there is
      * no valid identifier at pos.
      */
-    static UnicodeString parseUnicodeIdentifier(const UnicodeString& str, int32_t& pos);
+    ಸ್ಥಿರ UnicodeString parseUnicodeIdentifier(ಸ್ಥಿರಾಂಕ UnicodeString& str, int32_t& pos);
 
     /**
      * Parse an unsigned 31-bit integer at the given offset.  Use
@@ -236,32 +236,32 @@ class U_COMMON_API ICU_Utility /* not : public UObject because all methods are s
      * point to a valid digit on entry, or if the number to be parsed
      * does not fit into a 31-bit unsigned integer.
      */
-    static int32_t parseNumber(const UnicodeString& text,
+    ಸ್ಥಿರ int32_t parse_ಸಂಖ್ಯೆ(ಸ್ಥಿರಾಂಕ UnicodeString& ಪಠ್ಯ,
                                int32_t& pos, int8_t radix);
 
-    static void appendToRule(UnicodeString& rule,
+    ಸ್ಥಿರ ಶೂನ್ಯ append_ಗಮ್ಯ_ನಿಯಮ(UnicodeString& ನಿಯಮ,
                              UChar32 c,
                              UBool isLiteral,
                              UBool escapeUnprintable,
                              UnicodeString& quoteBuf);
     
-    static void appendToRule(UnicodeString& rule,
-                             const UnicodeString& text,
+    ಸ್ಥಿರ ಶೂನ್ಯ append_ಗಮ್ಯ_ನಿಯಮ(UnicodeString& ನಿಯಮ,
+                             ಸ್ಥಿರಾಂಕ UnicodeString& ಪಠ್ಯ,
                              UBool isLiteral,
                              UBool escapeUnprintable,
                              UnicodeString& quoteBuf);
 
-    static void appendToRule(UnicodeString& rule,
-                             const UnicodeMatcher* matcher,
+    ಸ್ಥಿರ ಶೂನ್ಯ append_ಗಮ್ಯ_ನಿಯಮ(UnicodeString& ನಿಯಮ,
+                             ಸ್ಥಿರಾಂಕ UnicodeMatcher* matcher,
                              UBool escapeUnprintable,
                              UnicodeString& quoteBuf);
 
-private:
+ಖಾಸಗಿ:
     // do not instantiate
     ICU_Utility() = delete;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 //eof

@@ -14,23 +14,23 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/stringpiece.h"
-#include "charstr.h"
-#include "uvectr32.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/bytestrie.h"
+#ಅನ್ತರ್ಭಾವ "unicode/stringpiece.h"
+#ಅನ್ತರ್ಭಾವ "charstr.h"
+#ಅನ್ತರ್ಭಾವ "uvectr32.h"
 
 U_NAMESPACE_BEGIN
 
-BytesTrie::Iterator::Iterator(const void* trieBytes U_LIFETIME_BOUND,
-                              int32_t maxStringLength,
-                              UErrorCode& errorCode)
-        : bytes_(static_cast<const uint8_t *>(trieBytes)),
-          pos_(bytes_), initialPos_(bytes_),
-          remainingMatchLength_(-1), initialRemainingMatchLength_(-1),
-          str_(nullptr), maxLength_(maxStringLength), value_(0), stack_(nullptr) {
-    if(U_FAILURE(errorCode)) {
-        return;
+ಬೈಟುಗಳು_Trie::Iterator::Iterator(ಸ್ಥಿರಾಂಕ ಶೂನ್ಯ* trie_ಬೈಟುಗಳು U_LIFETIME_BOUND,
+                              int32_t max_String_ಉದ್ದಳತೆ,
+                              UError_ಸಂಕೇತ& error_ಸಂಕೇತ)
+        : ಬೈಟುಗಳು_2(static_cast<ಸ್ಥಿರಾಂಕ uint8_t *>(trie_ಬೈಟುಗಳು)),
+          pos_(ಬೈಟುಗಳು_2), initialPos_(ಬೈಟುಗಳು_2),
+          ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ(-1), initial_ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ(-1),
+          str_(ಶೂನ್ಯಸೂಚಕ), max_ಉದ್ದಳತೆ(max_String_ಉದ್ದಳತೆ), ಮೌಲ್ಯ(0), ರಾಶಿ(ಶೂನ್ಯಸೂಚಕ) {
+    ಆದರೆ(U_FAILURE(error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ;
     }
     // str_ and stack_ are pointers so that it's easy to turn bytestrie.h into
     // a public API header for which we would want it to depend only on
@@ -38,159 +38,159 @@ BytesTrie::Iterator::Iterator(const void* trieBytes U_LIFETIME_BOUND,
     // Unlike BytesTrie itself, its Iterator performs memory allocations anyway
     // via the CharString and UVector32 implementations, so this additional
     // cost is minimal.
-    str_=new CharString();
-    stack_=new UVector32(errorCode);
-    if(U_SUCCESS(errorCode) && (str_==nullptr || stack_==nullptr)) {
-        errorCode=U_MEMORY_ALLOCATION_ERROR;
+    str_=ಹೊಸ CharString();
+    ರಾಶಿ=ಹೊಸ UVector32(error_ಸಂಕೇತ);
+    ಆದರೆ(U_SUCCESS(error_ಸಂಕೇತ) && (str_==ಶೂನ್ಯಸೂಚಕ || ರಾಶಿ==ಶೂನ್ಯಸೂಚಕ)) {
+        error_ಸಂಕೇತ=U_ಸ್ಮರಣೆ_ಹಂಚಿಕೆ_ERROR;
     }
 }
 
-BytesTrie::Iterator::Iterator(const BytesTrie &trie, int32_t maxStringLength,
-                              UErrorCode &errorCode)
-        : bytes_(trie.bytes_), pos_(trie.pos_), initialPos_(trie.pos_),
-          remainingMatchLength_(trie.remainingMatchLength_),
-          initialRemainingMatchLength_(trie.remainingMatchLength_),
-          str_(nullptr), maxLength_(maxStringLength), value_(0), stack_(nullptr) {
-    if(U_FAILURE(errorCode)) {
-        return;
+ಬೈಟುಗಳು_Trie::Iterator::Iterator(ಸ್ಥಿರಾಂಕ ಬೈಟುಗಳು_Trie &trie, int32_t max_String_ಉದ್ದಳತೆ,
+                              UError_ಸಂಕೇತ &error_ಸಂಕೇತ)
+        : ಬೈಟುಗಳು_2(trie.ಬೈಟುಗಳು_2), pos_(trie.pos_), initialPos_(trie.pos_),
+          ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ(trie.ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ),
+          initial_ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ(trie.ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ),
+          str_(ಶೂನ್ಯಸೂಚಕ), max_ಉದ್ದಳತೆ(max_String_ಉದ್ದಳತೆ), ಮೌಲ್ಯ(0), ರಾಶಿ(ಶೂನ್ಯಸೂಚಕ) {
+    ಆದರೆ(U_FAILURE(error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ;
     }
-    str_=new CharString();
-    stack_=new UVector32(errorCode);
-    if(U_FAILURE(errorCode)) {
-        return;
+    str_=ಹೊಸ CharString();
+    ರಾಶಿ=ಹೊಸ UVector32(error_ಸಂಕೇತ);
+    ಆದರೆ(U_FAILURE(error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ;
     }
-    if(str_==nullptr || stack_==nullptr) {
-        errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return;
+    ಆದರೆ(str_==ಶೂನ್ಯಸೂಚಕ || ರಾಶಿ==ಶೂನ್ಯಸೂಚಕ) {
+        error_ಸಂಕೇತ=U_ಸ್ಮರಣೆ_ಹಂಚಿಕೆ_ERROR;
+        ಹಿಂತಿರುಗಿ;
     }
-    int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    if(length>=0) {
+    int32_t length=ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ;  // Actual remaining match length minus 1.
+    ಆದರೆ(length>=0) {
         // Pending linear-match node, append remaining bytes to str_.
         ++length;
-        if(maxLength_>0 && length>maxLength_) {
-            length=maxLength_;  // This will leave remainingMatchLength>=0 as a signal.
+        ಆದರೆ(max_ಉದ್ದಳತೆ>0 && length>max_ಉದ್ದಳತೆ) {
+            length=max_ಉದ್ದಳತೆ;  // This will leave remainingMatchLength>=0 as a signal.
         }
-        str_->append(reinterpret_cast<const char *>(pos_), length, errorCode);
+        str_->append(reinterpret_cast<ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *>(pos_), length, error_ಸಂಕೇತ);
         pos_+=length;
-        remainingMatchLength_-=length;
+        ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ-=length;
     }
 }
 
-BytesTrie::Iterator::~Iterator() {
-    delete str_;
-    delete stack_;
+ಬೈಟುಗಳು_Trie::Iterator::~Iterator() {
+    ಅಳಿಸು str_;
+    ಅಳಿಸು ರಾಶಿ;
 }
 
-BytesTrie::Iterator&
-BytesTrie::Iterator::reset() U_LIFETIME_BOUND {
+ಬೈಟುಗಳು_Trie::Iterator&
+ಬೈಟುಗಳು_Trie::Iterator::reset() U_LIFETIME_BOUND {
     pos_=initialPos_;
-    remainingMatchLength_=initialRemainingMatchLength_;
-    int32_t length=remainingMatchLength_+1;  // Remaining match length.
-    if(maxLength_>0 && length>maxLength_) {
-        length=maxLength_;
+    ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ=initial_ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ;
+    int32_t length=ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ+1;  // Remaining match length.
+    ಆದರೆ(max_ಉದ್ದಳತೆ>0 && length>max_ಉದ್ದಳತೆ) {
+        length=max_ಉದ್ದಳತೆ;
     }
     str_->truncate(length);
     pos_+=length;
-    remainingMatchLength_-=length;
-    stack_->setSize(0);
-    return *this;
+    ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ-=length;
+    ರಾಶಿ->ಗಣ_ಗಾತ್ರ(0);
+    ಹಿಂತಿರುಗಿ *ಇದು;
 }
 
 UBool
-BytesTrie::Iterator::hasNext() const { return pos_!=nullptr || !stack_->isEmpty(); }
+ಬೈಟುಗಳು_Trie::Iterator::has_ಮುಂದಿನ() ಸ್ಥಿರಾಂಕ { ಹಿಂತಿರುಗಿ pos_!=ಶೂನ್ಯಸೂಚಕ || !ರಾಶಿ->is_ಖಾಲಿಗಳು(); }
 
 UBool
-BytesTrie::Iterator::next(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return false;
+ಬೈಟುಗಳು_Trie::Iterator::next(UError_ಸಂಕೇತ &error_ಸಂಕೇತ) {
+    ಆದರೆ(U_FAILURE(error_ಸಂಕೇತ)) {
+        ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
     }
-    const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        if(stack_->isEmpty()) {
-            return false;
+    ಸ್ಥಿರಾಂಕ uint8_t *pos=pos_;
+    ಆದರೆ(pos==ಶೂನ್ಯಸೂಚಕ) {
+        ಆದರೆ(ರಾಶಿ->is_ಖಾಲಿಗಳು()) {
+            ಹಿಂತಿರುಗಿ ಸುಳ್ಳು;
         }
         // Pop the state off the stack and continue with the next outbound edge of
         // the branch node.
-        int32_t stackSize=stack_->size();
-        int32_t length=stack_->elementAti(stackSize-1);
-        pos=bytes_+stack_->elementAti(stackSize-2);
-        stack_->setSize(stackSize-2);
+        int32_t ರಾಶಿ_ಗಾತ್ರ=ರಾಶಿ->size();
+        int32_t length=ರಾಶಿ->elementAti(ರಾಶಿ_ಗಾತ್ರ-1);
+        pos=ಬೈಟುಗಳು_2+ರಾಶಿ->elementAti(ರಾಶಿ_ಗಾತ್ರ-2);
+        ರಾಶಿ->ಗಣ_ಗಾತ್ರ(ರಾಶಿ_ಗಾತ್ರ-2);
         str_->truncate(length&0xffff);
         length = static_cast<int32_t>(static_cast<uint32_t>(length) >> 16);
-        if(length>1) {
-            pos=branchNext(pos, length, errorCode);
-            if(pos==nullptr) {
-                return true;  // Reached a final value.
+        ಆದರೆ(length>1) {
+            pos=branch_ಮುಂದಿನ(pos, length, error_ಸಂಕೇತ);
+            ಆದರೆ(pos==ಶೂನ್ಯಸೂಚಕ) {
+                ಹಿಂತಿರುಗಿ ನಿಜ;  // Reached a final value.
             }
-        } else {
-            str_->append(static_cast<char>(*pos++), errorCode);
+        } ಇಲ್ಲದಿದ್ದರೆ {
+            str_->append(static_cast<ಅಕ್ಷರ>(*pos++), error_ಸಂಕೇತ);
         }
     }
-    if(remainingMatchLength_>=0) {
+    ಆದರೆ(ಉಳಿದ_ಹೊಂದಿಕೆ_ಉದ್ದಳತೆ>=0) {
         // We only get here if we started in a pending linear-match node
         // with more than maxLength remaining bytes.
-        return truncateAndStop();
+        ಹಿಂತಿರುಗಿ truncateAndStop();
     }
-    for(;;) {
-        int32_t node=*pos++;
-        if(node>=kMinValueLead) {
+    ಗಾಗಿ(;;) {
+        int32_t ಗಂಟು=*pos++;
+        ಆದರೆ(ಗಂಟು>=k_Min_ಮೌಲ್ಯ_Lead) {
             // Deliver value for the byte sequence so far.
-            UBool isFinal = static_cast<UBool>(node & kValueIsFinal);
-            value_=readValue(pos, node>>1);
-            if(isFinal || (maxLength_>0 && str_->length()==maxLength_)) {
-                pos_=nullptr;
-            } else {
-                pos_=skipValue(pos, node);
+            UBool isFinal = static_cast<UBool>(ಗಂಟು & k_ಮೌಲ್ಯ_Is_Final);
+            ಮೌಲ್ಯ=read_ಮೌಲ್ಯ(pos, ಗಂಟು>>1);
+            ಆದರೆ(isFinal || (max_ಉದ್ದಳತೆ>0 && str_->length()==max_ಉದ್ದಳತೆ)) {
+                pos_=ಶೂನ್ಯಸೂಚಕ;
+            } ಇಲ್ಲದಿದ್ದರೆ {
+                pos_=skip_ಮೌಲ್ಯ(pos, ಗಂಟು);
             }
-            return true;
+            ಹಿಂತಿರುಗಿ ನಿಜ;
         }
-        if(maxLength_>0 && str_->length()==maxLength_) {
-            return truncateAndStop();
+        ಆದರೆ(max_ಉದ್ದಳತೆ>0 && str_->length()==max_ಉದ್ದಳತೆ) {
+            ಹಿಂತಿರುಗಿ truncateAndStop();
         }
-        if(node<kMinLinearMatch) {
-            if(node==0) {
-                node=*pos++;
+        ಆದರೆ(ಗಂಟು<k_Min_ರೇಖೀಯ_ಹೊಂದಿಕೆ) {
+            ಆದರೆ(ಗಂಟು==0) {
+                ಗಂಟು=*pos++;
             }
-            pos=branchNext(pos, node+1, errorCode);
-            if(pos==nullptr) {
-                return true;  // Reached a final value.
+            pos=branch_ಮುಂದಿನ(pos, ಗಂಟು+1, error_ಸಂಕೇತ);
+            ಆದರೆ(pos==ಶೂನ್ಯಸೂಚಕ) {
+                ಹಿಂತಿರುಗಿ ನಿಜ;  // Reached a final value.
             }
-        } else {
+        } ಇಲ್ಲದಿದ್ದರೆ {
             // Linear-match node, append length bytes to str_.
-            int32_t length=node-kMinLinearMatch+1;
-            if(maxLength_>0 && str_->length()+length>maxLength_) {
-                str_->append(reinterpret_cast<const char *>(pos),
-                            maxLength_-str_->length(), errorCode);
-                return truncateAndStop();
+            int32_t length=ಗಂಟು-k_Min_ರೇಖೀಯ_ಹೊಂದಿಕೆ+1;
+            ಆದರೆ(max_ಉದ್ದಳತೆ>0 && str_->length()+length>max_ಉದ್ದಳತೆ) {
+                str_->append(reinterpret_cast<ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *>(pos),
+                            max_ಉದ್ದಳತೆ-str_->length(), error_ಸಂಕೇತ);
+                ಹಿಂತಿರುಗಿ truncateAndStop();
             }
-            str_->append(reinterpret_cast<const char *>(pos), length, errorCode);
+            str_->append(reinterpret_cast<ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *>(pos), length, error_ಸಂಕೇತ);
             pos+=length;
         }
     }
 }
 
 StringPiece
-BytesTrie::Iterator::getString() const U_LIFETIME_BOUND {
-    return str_ == nullptr ? StringPiece() : str_->toStringPiece();
+ಬೈಟುಗಳು_Trie::Iterator::getString() ಸ್ಥಿರಾಂಕ U_LIFETIME_BOUND {
+    ಹಿಂತಿರುಗಿ str_ == ಶೂನ್ಯಸೂಚಕ ? StringPiece() : str_->ಗಮ್ಯ_String_Piece();
 }
 
 UBool
-BytesTrie::Iterator::truncateAndStop() {
-    pos_=nullptr;
-    value_=-1;  // no real value for str
-    return true;
+ಬೈಟುಗಳು_Trie::Iterator::truncateAndStop() {
+    pos_=ಶೂನ್ಯಸೂಚಕ;
+    ಮೌಲ್ಯ=-1;  // no real value for str
+    ಹಿಂತಿರುಗಿ ನಿಜ;
 }
 
 // Branch node, needs to take the first outbound edge and push state for the rest.
-const uint8_t*
-BytesTrie::Iterator::branchNext(const uint8_t* pos U_LIFETIME_BOUND,
+ಸ್ಥಿರಾಂಕ uint8_t*
+ಬೈಟುಗಳು_Trie::Iterator::branch_ಮುಂದಿನ(ಸ್ಥಿರಾಂಕ uint8_t* pos U_LIFETIME_BOUND,
                                 int32_t length,
-                                UErrorCode& errorCode) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+                                UError_ಸಂಕೇತ& error_ಸಂಕೇತ) {
+    ಆಗ(length>k_Max_Branch_ರೇಖೀಯ_Sub_ಗಂಟು_ಉದ್ದಳತೆ) {
         ++pos;  // ignore the comparison byte
         // Push state for the greater-or-equal edge.
-        stack_->addElement(static_cast<int32_t>(skipDelta(pos) - bytes_), errorCode);
-        stack_->addElement(((length-(length>>1))<<16)|str_->length(), errorCode);
+        ರಾಶಿ->ಕೂಡಿಸು_Element(static_cast<int32_t>(skipDelta(pos) - ಬೈಟುಗಳು_2), error_ಸಂಕೇತ);
+        ರಾಶಿ->ಕೂಡಿಸು_Element(((length-(length>>1))<<16)|str_->length(), error_ಸಂಕೇತ);
         // Follow the less-than edge.
         length>>=1;
         pos=jumpByDelta(pos);
@@ -198,20 +198,20 @@ BytesTrie::Iterator::branchNext(const uint8_t* pos U_LIFETIME_BOUND,
     // List of key-value pairs where values are either final values or jump deltas.
     // Read the first (key, value) pair.
     uint8_t trieByte=*pos++;
-    int32_t node=*pos++;
-    UBool isFinal = static_cast<UBool>(node & kValueIsFinal);
-    int32_t value=readValue(pos, node>>1);
-    pos=skipValue(pos, node);
-    stack_->addElement(static_cast<int32_t>(pos - bytes_), errorCode);
-    stack_->addElement(((length-1)<<16)|str_->length(), errorCode);
-    str_->append(static_cast<char>(trieByte), errorCode);
-    if(isFinal) {
-        pos_=nullptr;
-        value_=value;
-        return nullptr;
-    } else {
-        return pos+value;
+    int32_t ಗಂಟು=*pos++;
+    UBool isFinal = static_cast<UBool>(ಗಂಟು & k_ಮೌಲ್ಯ_Is_Final);
+    int32_t value=read_ಮೌಲ್ಯ(pos, ಗಂಟು>>1);
+    pos=skip_ಮೌಲ್ಯ(pos, ಗಂಟು);
+    ರಾಶಿ->ಕೂಡಿಸು_Element(static_cast<int32_t>(pos - ಬೈಟುಗಳು_2), error_ಸಂಕೇತ);
+    ರಾಶಿ->ಕೂಡಿಸು_Element(((length-1)<<16)|str_->length(), error_ಸಂಕೇತ);
+    str_->append(static_cast<ಅಕ್ಷರ>(trieByte), error_ಸಂಕೇತ);
+    ಆದರೆ(isFinal) {
+        pos_=ಶೂನ್ಯಸೂಚಕ;
+        ಮೌಲ್ಯ=value;
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
+    } ಇಲ್ಲದಿದ್ದರೆ {
+        ಹಿಂತಿರುಗಿ pos+value;
     }
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ

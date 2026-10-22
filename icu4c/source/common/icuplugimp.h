@@ -18,12 +18,12 @@
 */
 
 
-#ifndef ICUPLUGIMP_H
-#define ICUPLUGIMP_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ ICUPLUGIMP_H
+#ವ್ಯಾಖ್ಯಾನಿಸು ICUPLUGIMP_H
 
-#include "unicode/icuplug.h"
+#ಅನ್ತರ್ಭಾವ "unicode/icuplug.h"
 
-#if UCONFIG_ENABLE_PLUGINS
+#ಆದರೆ UCONFIG_ENABLE_PLUGINS
 
 /*========================*/
 /** @{ Library Manipulation  
@@ -36,8 +36,8 @@
  * @return the library pointer, or NULL
  * @internal internal use only
  */
-U_CAPI void * U_EXPORT2
-uplug_openLibrary(const char *libName, UErrorCode *status);
+U_CAPI ಶೂನ್ಯ * U_EXPORT2
+uplug_openLibrary(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *libName, UError_ಸಂಕೇತ *ಸ್ಥಿತಿ_2);
 
 /**
  * Close a library, if its reference count is 0
@@ -45,8 +45,8 @@ uplug_openLibrary(const char *libName, UErrorCode *status);
  * @param status error code
  * @internal internal use only
  */
-U_CAPI void U_EXPORT2
-uplug_closeLibrary(void *lib, UErrorCode *status);
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+uplug_closeLibrary(ಶೂನ್ಯ *lib, UError_ಸಂಕೇತ *ಸ್ಥಿತಿ_2);
 
 /**
  * Get a library's name, or NULL if not found.
@@ -55,8 +55,8 @@ uplug_closeLibrary(void *lib, UErrorCode *status);
  * @return the library name, or NULL if not found.
  * @internal internal use only
  */
-U_CAPI  char * U_EXPORT2
-uplug_findLibrary(void *lib, UErrorCode *status);
+U_CAPI  ಅಕ್ಷರ * U_EXPORT2
+uplug_ಕಂಡುಹಿಡಿ_Library(ಶೂನ್ಯ *lib, UError_ಸಂಕೇತ *ಸ್ಥಿತಿ_2);
 
 /** @} */
 
@@ -69,25 +69,25 @@ uplug_findLibrary(void *lib, UErrorCode *status);
  * @param status error result
  * @internal - Internal use only.
  */
-U_CAPI void U_EXPORT2
-uplug_init(UErrorCode *status);
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+uplug_init(UError_ಸಂಕೇತ *ಸ್ಥಿತಿ_2);
 
 /**
  * Get raw plug N
  * @internal - Internal use only
  */ 
-U_CAPI UPlugData* U_EXPORT2
-uplug_getPlugInternal(int32_t n);
+U_CAPI UPlug_ದತ್ತಾಂಶ* U_EXPORT2
+uplug_get_Plug_ಆಂತರಿಕ(int32_t n);
 
 /**
  * Get the name of the plugin file. 
  * @internal - Internal use only.
  */
-U_CAPI const char* U_EXPORT2
-uplug_getPluginFile(void);
+U_CAPI ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* U_EXPORT2
+uplug_getPluginFile(ಶೂನ್ಯ);
 
 /** @} */
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

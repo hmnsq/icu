@@ -19,125 +19,125 @@
 *   uniset_props.cpp, split off for modularization.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "unicode/uset.h"
-#include "unicode/uniset.h"
-#include "cmemory.h"
-#include "unicode/ustring.h"
-#include "unicode/parsepos.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uobject.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uset.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uniset.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ustring.h"
+#ಅನ್ತರ್ಭಾವ "unicode/parsepos.h"
 
 U_NAMESPACE_USE
 
 U_CAPI USet* U_EXPORT2
-uset_openPattern(const char16_t* pattern, int32_t patternLength,
-                 UErrorCode* ec)
+uset_open_ನಮೂನೆ(ಸ್ಥಿರಾಂಕ char16_t* ನಮೂನೆ, int32_t ನಮೂನೆ_ಉದ್ದಳತೆ,
+                 UError_ಸಂಕೇತ* ec)
 {
-    UnicodeString pat(patternLength==-1, pattern, patternLength);
-    UnicodeSet* set = new UnicodeSet(pat, *ec);
+    UnicodeString pat(ನಮೂನೆ_ಉದ್ದಳತೆ==-1, ನಮೂನೆ, ನಮೂನೆ_ಉದ್ದಳತೆ);
+    Unicode_ಗಣ* ಗಣ = ಹೊಸ Unicode_ಗಣ(pat, *ec);
     /* test for nullptr */
-    if (set == nullptr) {
-        *ec = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    ಆದರೆ (ಗಣ == ಶೂನ್ಯಸೂಚಕ) {
+        *ec = U_ಸ್ಮರಣೆ_ಹಂಚಿಕೆ_ERROR;
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
 
-    if (U_FAILURE(*ec)) {
-        delete set;
-        set = nullptr;
+    ಆದರೆ (U_FAILURE(*ec)) {
+        ಅಳಿಸು ಗಣ;
+        ಗಣ = ಶೂನ್ಯಸೂಚಕ;
     }
-    return (USet*) set;
+    ಹಿಂತಿರುಗಿ (USet*) ಗಣ;
 }
 
 U_CAPI USet* U_EXPORT2
-uset_openPatternOptions(const char16_t* pattern, int32_t patternLength,
+uset_open_ನಮೂನೆ_Options(ಸ್ಥಿರಾಂಕ char16_t* ನಮೂನೆ, int32_t ನಮೂನೆ_ಉದ್ದಳತೆ,
                  uint32_t options,
-                 UErrorCode* ec)
+                 UError_ಸಂಕೇತ* ec)
 {
-    UnicodeString pat(patternLength==-1, pattern, patternLength);
-    UnicodeSet* set = new UnicodeSet(pat, options, nullptr, *ec);
+    UnicodeString pat(ನಮೂನೆ_ಉದ್ದಳತೆ==-1, ನಮೂನೆ, ನಮೂನೆ_ಉದ್ದಳತೆ);
+    Unicode_ಗಣ* ಗಣ = ಹೊಸ Unicode_ಗಣ(pat, options, ಶೂನ್ಯಸೂಚಕ, *ec);
     /* test for nullptr */
-    if (set == nullptr) {
-        *ec = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+    ಆದರೆ (ಗಣ == ಶೂನ್ಯಸೂಚಕ) {
+        *ec = U_ಸ್ಮರಣೆ_ಹಂಚಿಕೆ_ERROR;
+        ಹಿಂತಿರುಗಿ ಶೂನ್ಯಸೂಚಕ;
     }
 
-    if (U_FAILURE(*ec)) {
-        delete set;
-        set = nullptr;
+    ಆದರೆ (U_FAILURE(*ec)) {
+        ಅಳಿಸು ಗಣ;
+        ಗಣ = ಶೂನ್ಯಸೂಚಕ;
     }
-    return (USet*) set;
+    ಹಿಂತಿರುಗಿ (USet*) ಗಣ;
 }
 
 
 U_CAPI int32_t U_EXPORT2 
-uset_applyPattern(USet *set,
-                  const char16_t *pattern, int32_t patternLength,
+uset_apply_ನಮೂನೆ(USet *ಗಣ,
+                  ಸ್ಥಿರಾಂಕ char16_t *ನಮೂನೆ, int32_t ನಮೂನೆ_ಉದ್ದಳತೆ,
                   uint32_t options,
-                  UErrorCode *status){
+                  UError_ಸಂಕೇತ *ಸ್ಥಿತಿ_2){
 
     // status code needs to be checked since we 
     // dereference it
-    if(status == nullptr || U_FAILURE(*status)){
-        return 0;
+    ಆದರೆ(ಸ್ಥಿತಿ_2 == ಶೂನ್ಯಸೂಚಕ || U_FAILURE(*ಸ್ಥಿತಿ_2)){
+        ಹಿಂತಿರುಗಿ 0;
     }
 
     // check only the set paramenter
     // if pattern is nullptr or NUL terminated
     // UnicodeString constructor takes care of it
-    if(set == nullptr){
-        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+    ಆದರೆ(ಗಣ == ಶೂನ್ಯಸೂಚಕ){
+        *ಸ್ಥಿತಿ_2 = U_ILLEGAL_ವಾದ_ERROR;
+        ಹಿಂತಿರುಗಿ 0;
     }
 
-    UnicodeString pat(pattern, patternLength);
+    UnicodeString pat(ನಮೂನೆ, ನಮೂನೆ_ಉದ್ದಳತೆ);
 
     ParsePosition pos;
    
-    ((UnicodeSet*) set)->applyPattern(pat, pos, options, nullptr, *status);
+    ((Unicode_ಗಣ*) ಗಣ)->apply_ನಮೂನೆ(pat, pos, options, ಶೂನ್ಯಸೂಚಕ, *ಸ್ಥಿತಿ_2);
     
-    return pos.getIndex();
+    ಹಿಂತಿರುಗಿ pos.get_ಸೂಚ್ಯಂಕ();
 }
 
-U_CAPI void U_EXPORT2
-uset_applyIntPropertyValue(USet* set,
-               UProperty prop, int32_t value, UErrorCode* ec) {
-    ((UnicodeSet*) set)->applyIntPropertyValue(prop, value, *ec);
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+uset_apply_Int_Property_ಮೌಲ್ಯ(USet* ಗಣ,
+               UProperty prop, int32_t value, UError_ಸಂಕೇತ* ec) {
+    ((Unicode_ಗಣ*) ಗಣ)->apply_Int_Property_ಮೌಲ್ಯ(prop, value, *ec);
 }
 
-U_CAPI void U_EXPORT2
-uset_applyPropertyAlias(USet* set,
-                        const char16_t *prop, int32_t propLength,
-                        const char16_t *value, int32_t valueLength,
-            UErrorCode* ec) {
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+uset_applyPropertyAlias(USet* ಗಣ,
+                        ಸ್ಥಿರಾಂಕ char16_t *prop, int32_t prop_ಉದ್ದಳತೆ,
+                        ಸ್ಥಿರಾಂಕ char16_t *value, int32_t ಮೌಲ್ಯ_ಉದ್ದಳತೆ,
+            UError_ಸಂಕೇತ* ec) {
 
-    UnicodeString p(prop, propLength);
-    UnicodeString v(value, valueLength);
+    UnicodeString p(prop, prop_ಉದ್ದಳತೆ);
+    UnicodeString v(value, ಮೌಲ್ಯ_ಉದ್ದಳತೆ);
 
-    ((UnicodeSet*) set)->applyPropertyAlias(p, v, *ec);
+    ((Unicode_ಗಣ*) ಗಣ)->applyPropertyAlias(p, v, *ec);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_resemblesPattern(const char16_t *pattern, int32_t patternLength,
+uset_resembles_ನಮೂನೆ(ಸ್ಥಿರಾಂಕ char16_t *ನಮೂನೆ, int32_t ನಮೂನೆ_ಉದ್ದಳತೆ,
                       int32_t pos) {
 
-    UnicodeString pat(pattern, patternLength);
+    UnicodeString pat(ನಮೂನೆ, ನಮೂನೆ_ಉದ್ದಳತೆ);
 
-    return ((pos+1) < pat.length() &&
+    ಹಿಂತಿರುಗಿ ((pos+1) < pat.length() &&
             pat.charAt(pos) == (char16_t)91/*[*/) ||
-            UnicodeSet::resemblesPattern(pat, pos);
+            Unicode_ಗಣ::resembles_ನಮೂನೆ(pat, pos);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_toPattern(const USet* set,
-               char16_t* result, int32_t resultCapacity,
+uset_ಗಮ್ಯ_ನಮೂನೆ(ಸ್ಥಿರಾಂಕ USet* ಗಣ,
+               char16_t* ಫಲಿತಾಂಶ, int32_t ಫಲಿತಾಂಶ_ಸಾಮರ್ಥ್ಯ,
                UBool escapeUnprintable,
-               UErrorCode* ec) {
+               UError_ಸಂಕೇತ* ec) {
     UnicodeString pat;
-    ((const UnicodeSet*) set)->toPattern(pat, escapeUnprintable);
-    return pat.extract(result, resultCapacity, *ec);
+    ((ಸ್ಥಿರಾಂಕ Unicode_ಗಣ*) ಗಣ)->ಗಮ್ಯ_ನಮೂನೆ(pat, escapeUnprintable);
+    ಹಿಂತಿರುಗಿ pat.extract(ಫಲಿತಾಂಶ, ಫಲಿತಾಂಶ_ಸಾಮರ್ಥ್ಯ, *ec);
 }
 
-U_CAPI void U_EXPORT2
-uset_closeOver(USet* set, int32_t attributes) {
-    ((UnicodeSet*) set)->UnicodeSet::closeOver(attributes);
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+uset_closeOver(USet* ಗಣ, int32_t ಗುಣಲಕ್ಷಣಗಳು) {
+    ((Unicode_ಗಣ*) ಗಣ)->Unicode_ಗಣ::closeOver(ಗುಣಲಕ್ಷಣಗಳು);
 }

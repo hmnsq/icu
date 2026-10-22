@@ -4,14 +4,14 @@
 // ucasemap_imp.h
 // created: 2017feb08 Markus W. Scherer
 
-#ifndef __UCASEMAP_IMP_H__
-#define __UCASEMAP_IMP_H__
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __UCASEMAP_IMP_H__
+#ವ್ಯಾಖ್ಯಾನಿಸು __UCASEMAP_IMP_H__
 
-#include "unicode/utypes.h"
-#include "unicode/ucasemap.h"
-#include "unicode/uchar.h"
-#include "unicode/unistr.h"  // for UStringCaseMapper
-#include "ucase.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ucasemap.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uchar.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unistr.h"  // for UStringCaseMapper
+#ಅನ್ತರ್ಭಾವ "ucase.h"
 
 /**
  * Bit mask for the titlecasing iterator options bit field.
@@ -20,7 +20,7 @@
  * See stringoptions.h.
  * @internal
  */
-#define U_TITLECASE_ITERATOR_MASK 0xe0
+#ವ್ಯಾಖ್ಯಾನಿಸು U_TITLECASE_ITERATOR_ಮುಖವಾಡ 0xe0
 
 /**
  * Bit mask for the titlecasing index adjustment options bit set.
@@ -29,7 +29,7 @@
  * See stringoptions.h.
  * @internal
  */
-#define U_TITLECASE_ADJUSTMENT_MASK 0x600
+#ವ್ಯಾಖ್ಯಾನಿಸು U_TITLECASE_ADJUSTMENT_ಮುಖವಾಡ 0x600
 
 /**
  * Internal API, used by u_strcasecmp() etc.
@@ -37,10 +37,10 @@
  * in code point order or code unit order.
  */
 U_CFUNC int32_t
-u_strcmpFold(const UChar *s1, int32_t length1,
-             const UChar *s2, int32_t length2,
+u_strcmpFold(ಸ್ಥಿರಾಂಕ UChar *s1, int32_t length1,
+             ಸ್ಥಿರಾಂಕ UChar *s2, int32_t length2,
              uint32_t options,
-             UErrorCode *pErrorCode);
+             UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
 /**
  * Internal API, used for detecting length of
@@ -54,14 +54,14 @@ u_strcmpFold(const UChar *s1, int32_t length1,
  * @param matchLen2     (output) length of partial prefix match in s2
  * @param pErrorCode    receives error status
  */
-U_CAPI void
-u_caseInsensitivePrefixMatch(const UChar *s1, int32_t length1,
-                             const UChar *s2, int32_t length2,
+U_CAPI ಶೂನ್ಯ
+u_case_Insensitive_ಪೂರ್ವಪ್ರತ್ಯಯ_ಹೊಂದಿಕೆ(ಸ್ಥಿರಾಂಕ UChar *s1, int32_t length1,
+                             ಸ್ಥಿರಾಂಕ UChar *s2, int32_t length2,
                              uint32_t options,
-                             int32_t *matchLen1, int32_t *matchLen2,
-                             UErrorCode *pErrorCode);
+                             int32_t *ಹೊಂದಿಕೆ_Len1, int32_t *ಹೊಂದಿಕೆ_Len2,
+                             UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
 
-#ifdef __cplusplus
+#ವ್ಯಾಖ್ಯಾನಿತವಾದರೆ __cplusplus
 
 U_NAMESPACE_BEGIN
 
@@ -70,110 +70,110 @@ class ByteSink;
 class Locale;               // unicode/locid.h
 
 /** Returns true if the options are valid. Otherwise false, and sets an error. */
-inline UBool ustrcase_checkTitleAdjustmentOptions(uint32_t options, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return false; }
-    if ((options & U_TITLECASE_ADJUSTMENT_MASK) == U_TITLECASE_ADJUSTMENT_MASK) {
+ಸಾಲೊಳಗೆ UBool ustrcase_checkTitleAdjustmentOptions(uint32_t options, UError_ಸಂಕೇತ &error_ಸಂಕೇತ) {
+    ಆದರೆ (U_FAILURE(error_ಸಂಕೇತ)) { ಹಿಂತಿರುಗಿ false; }
+    ಆದರೆ ((options & U_TITLECASE_ADJUSTMENT_ಮುಖವಾಡ) == U_TITLECASE_ADJUSTMENT_ಮುಖವಾಡ) {
         // Both options together.
-        errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        error_ಸಂಕೇತ = U_ILLEGAL_ವಾದ_ERROR;
+        ಹಿಂತಿರುಗಿ false;
     }
-    return true;
+    ಹಿಂತಿರುಗಿ true;
 }
 
-inline UBool ustrcase_isLNS(UChar32 c) {
+ಸಾಲೊಳಗೆ UBool ustrcase_isLNS(UChar32 c) {
     // Letter, number, symbol,
     // or a private use code point because those are typically used as letters or numbers.
     // Consider modifier letters only if they are cased.
-    const uint32_t LNS = (U_GC_L_MASK|U_GC_N_MASK|U_GC_S_MASK|U_GC_CO_MASK) & ~U_GC_LM_MASK;
-    int gc = u_charType(c);
-    return (U_MASK(gc) & LNS) != 0 || (gc == U_MODIFIER_LETTER && ucase_getType(c) != UCASE_NONE);
+    ಸ್ಥಿರಾಂಕ uint32_t LNS = (U_GC_L_ಮುಖವಾಡ|U_GC_N_ಮುಖವಾಡ|U_GC_S_ಮುಖವಾಡ|U_GC_CO_ಮುಖವಾಡ) & ~U_GC_LM_ಮುಖವಾಡ;
+    ಪೂರ್ಣಾಂಕ gc = u_charType(c);
+    ಹಿಂತಿರುಗಿ (U_ಮುಖವಾಡ(gc) & LNS) != 0 || (gc == U_MODIFIER_LETTER && ucase_getType(c) != UCASE_NONE);
 }
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ಆದರೆ !UCONFIG_NO_BREAK_ITERATION
 
 /** Returns nullptr if error. Pass in either locale or locID, not both. */
 U_CFUNC
-BreakIterator* ustrcase_getTitleBreakIterator(const Locale* locale,
-                                              const char* locID,
+BreakIterator* ustrcase_getTitleBreakIterator(ಸ್ಥಿರಾಂಕ Locale* locale,
+                                              ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* locID,
                                               uint32_t options,
                                               BreakIterator* iter U_LIFETIME_BOUND,
-                                              LocalPointer<BreakIterator>& ownedIter,
-                                              UErrorCode& errorCode);
+                                              Local_ಸೂಚಕ<BreakIterator>& ownedIter,
+                                              UError_ಸಂಕೇತ& error_ಸಂಕೇತ);
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 /*
  * Internal string casing functions implementing
  * ustring.h/ustrcase.cpp and UnicodeString case mapping functions.
  */
 
-struct UCaseMapImpl : public icu::UMemory {
+ರಚನೆ UCaseMapImpl : ಸಾರ್ವಜನಿಕ icu::UMemory {
     /** Implements most of ucasemap_open(). */
-    UCaseMapImpl(const char *localeID, uint32_t opts, UErrorCode *pErrorCode);
+    UCaseMapImpl(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *localeID, uint32_t opts, UError_ಸಂಕೇತ *p_Error_ಸಂಕೇತ);
     ~UCaseMapImpl();
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ಆದರೆ !UCONFIG_NO_BREAK_ITERATION
     icu::BreakIterator *iter;  /* We adopt the iterator, so we own it. */
-#endif
-    char locale[32];
+#ಆದರೆ_ಅಂತ್ಯ
+    ಅಕ್ಷರ locale[32];
     int32_t caseLocale;
     uint32_t options;
 };
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#if UCONFIG_NO_BREAK_ITERATION
+#ಆದರೆ UCONFIG_NO_BREAK_ITERATION
 #   define UCASEMAP_BREAK_ITERATOR_PARAM
-#   define UCASEMAP_BREAK_ITERATOR_UNUSED
+#   define UCASEMAP_BREAK_ITERATOR_ಬಳಸದ
 #   define UCASEMAP_BREAK_ITERATOR
 #   define UCASEMAP_BREAK_ITERATOR_NULL
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
 #   define UCASEMAP_BREAK_ITERATOR_PARAM icu::BreakIterator *iter,
-#   define UCASEMAP_BREAK_ITERATOR_UNUSED icu::BreakIterator *,
+#   define UCASEMAP_BREAK_ITERATOR_ಬಳಸದ icu::BreakIterator *,
 #   define UCASEMAP_BREAK_ITERATOR iter,
-#   define UCASEMAP_BREAK_ITERATOR_NULL NULL,
-#endif
+#   define UCASEMAP_BREAK_ITERATOR_NULL ಖಾಲಿ,
+#ಆದರೆ_ಅಂತ್ಯ
 
 U_CFUNC int32_t
-ustrcase_getCaseLocale(const char *locale);
+ustrcase_getCaseLocale(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *locale);
 
 // TODO: swap src / dest if approved for new public api
 /** Implements UStringCaseMapper. */
 U_CFUNC int32_t U_CALLCONV
-ustrcase_internalToLower(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
-                         char16_t *dest, int32_t destCapacity,
-                         const char16_t *src, int32_t srcLength,
+ustrcase_ಆಂತರಿಕ_ಗಮ್ಯ_ಅಧೋ(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
+                         char16_t *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ,
+                         ಸ್ಥಿರಾಂಕ char16_t *src, int32_t src_ಉದ್ದಳತೆ,
                          icu::Edits *edits,
-                         UErrorCode &errorCode);
+                         UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
 /** Implements UStringCaseMapper. */
 U_CFUNC int32_t U_CALLCONV
-ustrcase_internalToUpper(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
-                         char16_t *dest, int32_t destCapacity,
-                         const char16_t *src, int32_t srcLength,
+ustrcase_ಆಂತರಿಕ_ಗಮ್ಯ_ಊರ್ಧ್ವ(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
+                         char16_t *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ,
+                         ಸ್ಥಿರಾಂಕ char16_t *src, int32_t src_ಉದ್ದಳತೆ,
                          icu::Edits *edits,
-                         UErrorCode &errorCode);
+                         UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ಆದರೆ !UCONFIG_NO_BREAK_ITERATION
 
 /** Implements UStringCaseMapper. */
 U_CFUNC int32_t U_CALLCONV
-ustrcase_internalToTitle(int32_t caseLocale, uint32_t options,
+ustrcase_ಆಂತರಿಕ_ಗಮ್ಯ_Title(int32_t caseLocale, uint32_t options,
                          icu::BreakIterator *iter,
-                         char16_t *dest, int32_t destCapacity,
-                         const char16_t *src, int32_t srcLength,
+                         char16_t *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ,
+                         ಸ್ಥಿರಾಂಕ char16_t *src, int32_t src_ಉದ್ದಳತೆ,
                          icu::Edits *edits,
-                         UErrorCode &errorCode);
+                         UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 /** Implements UStringCaseMapper. */
 U_CFUNC int32_t U_CALLCONV
-ustrcase_internalFold(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
-                      char16_t *dest, int32_t destCapacity,
-                      const char16_t *src, int32_t srcLength,
+ustrcase_ಆಂತರಿಕ_Fold(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
+                      char16_t *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ,
+                      ಸ್ಥಿರಾಂಕ char16_t *src, int32_t src_ಉದ್ದಳತೆ,
                       icu::Edits *edits,
-                      UErrorCode &errorCode);
+                      UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
 /**
  * Common string case mapping implementation for ucasemap_toXyz() and UnicodeString::toXyz().
@@ -181,11 +181,11 @@ ustrcase_internalFold(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERA
  */
 U_CFUNC int32_t
 ustrcase_map(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
-             char16_t *dest, int32_t destCapacity,
-             const char16_t *src, int32_t srcLength,
+             char16_t *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ,
+             ಸ್ಥಿರಾಂಕ char16_t *src, int32_t src_ಉದ್ದಳತೆ,
              UStringCaseMapper *stringCaseMapper,
              icu::Edits *edits,
-             UErrorCode &errorCode);
+             UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
 /**
  * Common string case mapping implementation for old-fashioned u_strToXyz() functions
@@ -194,43 +194,43 @@ ustrcase_map(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
  */
 U_CFUNC int32_t
 ustrcase_mapWithOverlap(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
-                        char16_t *dest, int32_t destCapacity,
-                        const char16_t *src, int32_t srcLength,
+                        char16_t *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ,
+                        ಸ್ಥಿರಾಂಕ char16_t *src, int32_t src_ಉದ್ದಳತೆ,
                         UStringCaseMapper *stringCaseMapper,
-                        UErrorCode &errorCode);
+                        UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
 /**
  * UTF-8 string case mapping function type, used by ucasemap_mapUTF8().
  * UTF-8 version of UStringCaseMapper.
  * All error checking must be done.
  */
-typedef void U_CALLCONV
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ಶೂನ್ಯ U_CALLCONV
 UTF8CaseMapper(int32_t caseLocale, uint32_t options,
-#if !UCONFIG_NO_BREAK_ITERATION
+#ಆದರೆ !UCONFIG_NO_BREAK_ITERATION
                icu::BreakIterator *iter,
-#endif
-               const uint8_t *src, int32_t srcLength,
+#ಆದರೆ_ಅಂತ್ಯ
+               ಸ್ಥಿರಾಂಕ uint8_t *src, int32_t src_ಉದ್ದಳತೆ,
                icu::ByteSink &sink, icu::Edits *edits,
-               UErrorCode &errorCode);
+               UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ಆದರೆ !UCONFIG_NO_BREAK_ITERATION
 
 /** Implements UTF8CaseMapper. */
-U_CFUNC void U_CALLCONV
-ucasemap_internalUTF8ToTitle(int32_t caseLocale, uint32_t options,
+U_CFUNC ಶೂನ್ಯ U_CALLCONV
+ucasemap_ಆಂತರಿಕ_UTF8_ಗಮ್ಯ_Title(int32_t caseLocale, uint32_t options,
         icu::BreakIterator *iter,
-        const uint8_t *src, int32_t srcLength,
+        ಸ್ಥಿರಾಂಕ uint8_t *src, int32_t src_ಉದ್ದಳತೆ,
         icu::ByteSink &sink, icu::Edits *edits,
-        UErrorCode &errorCode);
+        UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-void
+ಶೂನ್ಯ
 ucasemap_mapUTF8(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
-                 const char *src, int32_t srcLength,
+                 ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *src, int32_t src_ಉದ್ದಳತೆ,
                  UTF8CaseMapper *stringCaseMapper,
                  icu::ByteSink &sink, icu::Edits *edits,
-                 UErrorCode &errorCode);
+                 UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
 /**
  * Implements argument checking and buffer handling
@@ -238,47 +238,47 @@ ucasemap_mapUTF8(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_P
  */
 int32_t
 ucasemap_mapUTF8(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
-                 char *dest, int32_t destCapacity,
-                 const char *src, int32_t srcLength,
+                 ಅಕ್ಷರ *dest, int32_t dest_ಸಾಮರ್ಥ್ಯ,
+                 ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *src, int32_t src_ಉದ್ದಳತೆ,
                  UTF8CaseMapper *stringCaseMapper,
                  icu::Edits *edits,
-                 UErrorCode &errorCode);
+                 UError_ಸಂಕೇತ &error_ಸಂಕೇತ);
 
 U_NAMESPACE_BEGIN
-namespace GreekUpper {
+namespace Greek_ಊರ್ಧ್ವ {
 
 // Data bits.
-static const uint32_t UPPER_MASK = 0x3ff;
-static const uint32_t HAS_VOWEL = 0x1000;
-static const uint32_t HAS_YPOGEGRAMMENI = 0x2000;
-static const uint32_t HAS_ACCENT = 0x4000;
-static const uint32_t HAS_DIALYTIKA = 0x8000;
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint32_t ಊರ್ಧ್ವ_ಮುಖವಾಡ = 0x3ff;
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint32_t HAS_VOWEL = 0x1000;
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint32_t HAS_YPOGEGRAMMENI = 0x2000;
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint32_t HAS_ACCENT = 0x4000;
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint32_t HAS_DIALYTIKA = 0x8000;
 // Further bits during data building and processing, not stored in the data map.
-static const uint32_t HAS_COMBINING_DIALYTIKA = 0x10000;
-static const uint32_t HAS_OTHER_GREEK_DIACRITIC = 0x20000;
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint32_t HAS_COMBINING_DIALYTIKA = 0x10000;
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint32_t HAS_OTHER_GREEK_DIACRITIC = 0x20000;
 
-static const uint32_t HAS_VOWEL_AND_ACCENT = HAS_VOWEL | HAS_ACCENT;
-static const uint32_t HAS_VOWEL_AND_ACCENT_AND_DIALYTIKA =
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint32_t HAS_VOWEL_AND_ACCENT = HAS_VOWEL | HAS_ACCENT;
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint32_t HAS_VOWEL_AND_ACCENT_AND_DIALYTIKA =
         HAS_VOWEL_AND_ACCENT | HAS_DIALYTIKA;
-static const uint32_t HAS_EITHER_DIALYTIKA = HAS_DIALYTIKA | HAS_COMBINING_DIALYTIKA;
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint32_t HAS_EITHER_DIALYTIKA = HAS_DIALYTIKA | HAS_COMBINING_DIALYTIKA;
 
 // State bits.
-static const uint32_t AFTER_CASED = 1;
-static const uint32_t AFTER_VOWEL_WITH_COMBINING_ACCENT = 2;
-static const uint32_t AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT = 4;
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint32_t AFTER_CASED = 1;
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint32_t AFTER_VOWEL_WITH_COMBINING_ACCENT = 2;
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ uint32_t AFTER_VOWEL_WITH_PRECOMPOSED_ACCENT = 4;
 
-uint32_t getLetterData(UChar32 c);
+uint32_t get_Letter_ದತ್ತಾಂಶ(UChar32 c);
 
 /**
  * Returns a non-zero value for each of the Greek combining diacritics
  * listed in The Unicode Standard, version 8, chapter 7.2 Greek,
  * plus some perispomeni look-alikes.
  */
-uint32_t getDiacriticData(UChar32 c);
+uint32_t get_Diacritic_ದತ್ತಾಂಶ(UChar32 c);
 
 }  // namespace GreekUpper
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif  // __cplusplus
+#ಆದರೆ_ಅಂತ್ಯ  // __cplusplus
 
-#endif  // __UCASEMAP_IMP_H__
+#ಆದರೆ_ಅಂತ್ಯ  // __UCASEMAP_IMP_H__

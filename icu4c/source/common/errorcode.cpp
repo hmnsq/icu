@@ -16,27 +16,27 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/errorcode.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/errorcode.h"
 
 U_NAMESPACE_BEGIN
 
-ErrorCode::~ErrorCode() {}
+Error_ಸಂಕೇತ::~Error_ಸಂಕೇತ() {}
 
-UErrorCode ErrorCode::reset() {
-    UErrorCode code = errorCode;
-    errorCode = U_ZERO_ERROR;
-    return code;
+UError_ಸಂಕೇತ Error_ಸಂಕೇತ::reset() {
+    UError_ಸಂಕೇತ ಸಂಕೇತ_2 = error_ಸಂಕೇತ;
+    error_ಸಂಕೇತ = U_ZERO_ERROR;
+    ಹಿಂತಿರುಗಿ ಸಂಕೇತ_2;
 }
 
-void ErrorCode::assertSuccess() const {
-    if(isFailure()) {
+ಶೂನ್ಯ Error_ಸಂಕೇತ::assertSuccess() ಸ್ಥಿರಾಂಕ {
+    ಆದರೆ(isFailure()) {
         handleFailure();
     }
 }
 
-const char* ErrorCode::errorName() const {
-  return u_errorName(errorCode);
+ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* Error_ಸಂಕೇತ::errorName() ಸ್ಥಿರಾಂಕ {
+  ಹಿಂತಿರುಗಿ u_errorName(error_ಸಂಕೇತ);
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ

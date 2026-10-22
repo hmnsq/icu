@@ -24,25 +24,25 @@
 ******************************************************************************
 */
 
-#ifndef CSTRING_H
-#define CSTRING_H 1
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ CSTRING_H
+#ವ್ಯಾಖ್ಯಾನಿಸು CSTRING_H 1
 
-#include "unicode/utypes.h"
-#include "cmemory.h"
-#include <string.h>
-#include <stdlib.h>
-#include <ctype.h>
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
+#ಅನ್ತರ್ಭಾವ <string.h>
+#ಅನ್ತರ್ಭಾವ <stdlib.h>
+#ಅನ್ತರ್ಭಾವ <ctype.h>
 
-#define uprv_strcpy(dst, src) U_STANDARD_CPP_NAMESPACE  strcpy(dst, src)
-#define uprv_strlen(str) U_STANDARD_CPP_NAMESPACE strlen(str)
-#define uprv_strcmp(s1, s2) U_STANDARD_CPP_NAMESPACE strcmp(s1, s2)
-#define uprv_strcat(dst, src) U_STANDARD_CPP_NAMESPACE strcat(dst, src)
-#define uprv_strchr(s, c) U_STANDARD_CPP_NAMESPACE strchr(s, c)
-#define uprv_strstr(s, c) U_STANDARD_CPP_NAMESPACE strstr(s, c)
-#define uprv_strrchr(s, c) U_STANDARD_CPP_NAMESPACE strrchr(s, c)
-#define uprv_strncpy(dst, src, size) U_STANDARD_CPP_NAMESPACE strncpy(dst, src, size)
-#define uprv_strncmp(s1, s2, n) U_STANDARD_CPP_NAMESPACE strncmp(s1, s2, n)
-#define uprv_strncat(dst, src, n) U_STANDARD_CPP_NAMESPACE strncat(dst, src, n)
+#ವ್ಯಾಖ್ಯಾನಿಸು uprv_strcpy(dst, src) U_STANDARD_CPP_NAMESPACE  strcpy(dst, src)
+#ವ್ಯಾಖ್ಯಾನಿಸು uprv_strlen(str) U_STANDARD_CPP_NAMESPACE ಅಕ್ಷರಸರಣಿ_ಉದ್ದ(str)
+#ವ್ಯಾಖ್ಯಾನಿಸು uprv_strcmp(s1, s2) U_STANDARD_CPP_NAMESPACE strcmp(s1, s2)
+#ವ್ಯಾಖ್ಯಾನಿಸು uprv_strcat(dst, src) U_STANDARD_CPP_NAMESPACE strcat(dst, src)
+#ವ್ಯಾಖ್ಯಾನಿಸು uprv_strchr(s, c) U_STANDARD_CPP_NAMESPACE strchr(s, c)
+#ವ್ಯಾಖ್ಯಾನಿಸು uprv_strstr(s, c) U_STANDARD_CPP_NAMESPACE ಅಕ್ಷರಸರಣಿ_ಹುಡುಕು(s, c)
+#ವ್ಯಾಖ್ಯಾನಿಸು uprv_strrchr(s, c) U_STANDARD_CPP_NAMESPACE strrchr(s, c)
+#ವ್ಯಾಖ್ಯಾನಿಸು uprv_strncpy(dst, src, ಗಾತ್ರ_3) U_STANDARD_CPP_NAMESPACE strncpy(dst, src, ಗಾತ್ರ_3)
+#ವ್ಯಾಖ್ಯಾನಿಸು uprv_strncmp(s1, s2, n) U_STANDARD_CPP_NAMESPACE ಅಕ್ಷರಸರಣಿ_ಹೋಲಿಕೆ(s1, s2, n)
+#ವ್ಯಾಖ್ಯಾನಿಸು uprv_strncat(dst, src, n) U_STANDARD_CPP_NAMESPACE strncat(dst, src, n)
 
 /**
  * Is c an ASCII-repertoire letter a-z or A-Z?
@@ -50,38 +50,38 @@
  * an ASCII-based or EBCDIC-based machine. There just does not seem to be a better name for this.
  */
 U_CAPI UBool U_EXPORT2
-uprv_isASCIILetter(char c);
+uprv_isASCIILetter(ಅಕ್ಷರ c);
 
 // NOTE: For u_asciiToUpper that takes a UChar, see ustr_imp.h
 
-U_CAPI char U_EXPORT2
-uprv_toupper(char c);
+U_CAPI ಅಕ್ಷರ U_EXPORT2
+uprv_toupper(ಅಕ್ಷರ c);
 
 
-U_CAPI char U_EXPORT2
-uprv_asciitolower(char c);
+U_CAPI ಅಕ್ಷರ U_EXPORT2
+uprv_asciitolower(ಅಕ್ಷರ c);
 
-U_CAPI char U_EXPORT2
-uprv_ebcdictolower(char c);
+U_CAPI ಅಕ್ಷರ U_EXPORT2
+uprv_ebcdictolower(ಅಕ್ಷರ c);
 
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
+#ಆದರೆ U_CHARSET_FAMILY==U_ASCII_FAMILY
 #   define uprv_tolower uprv_asciitolower
-#elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+#ಅಥವಾಆದರೆ U_CHARSET_FAMILY==U_EBCDIC_FAMILY
 #   define uprv_tolower uprv_ebcdictolower
-#else
+#ಇಲ್ಲದಿದ್ದರೆ
 #   error U_CHARSET_FAMILY is not valid
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
-#define uprv_strtod(source, end) U_STANDARD_CPP_NAMESPACE strtod(source, end)
-#define uprv_strtoul(str, end, base) U_STANDARD_CPP_NAMESPACE strtoul(str, end, base)
-#define uprv_strtol(str, end, base) U_STANDARD_CPP_NAMESPACE strtol(str, end, base)
+#ವ್ಯಾಖ್ಯಾನಿಸು uprv_strtod(ಮೂಲ, ಕೊನೆ) U_STANDARD_CPP_NAMESPACE strtod(ಮೂಲ, ಕೊನೆ)
+#ವ್ಯಾಖ್ಯಾನಿಸು uprv_strtoul(str, ಕೊನೆ, ತಳ) U_STANDARD_CPP_NAMESPACE strtoul(str, ಕೊನೆ, ತಳ)
+#ವ್ಯಾಖ್ಯಾನಿಸು uprv_strtol(str, ಕೊನೆ, ತಳ) U_STANDARD_CPP_NAMESPACE strtol(str, ಕೊನೆ, ತಳ)
 
 /* Conversion from a digit to the character with radix base from 2-19 */
 /* May need to use U_UPPER_ORDINAL*/
-#define T_CString_itosOffset(a) ((a)<=9?('0'+(a)):('A'+(a)-10))
+#ವ್ಯಾಖ್ಯಾನಿಸು T_CString_itos_ಸ್ಥಾನಾಂತರ(a) ((a)<=9?('0'+(a)):('A'+(a)-10))
 
-U_CAPI char* U_EXPORT2
-uprv_strdup(const char *src);
+U_CAPI ಅಕ್ಷರ* U_EXPORT2
+uprv_strdup(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *src);
 
 /**
  * uprv_malloc n+1 bytes, and copy n bytes from src into the new string.
@@ -91,36 +91,36 @@ uprv_strdup(const char *src);
  * @return new string (owned by caller, use uprv_free to free).
  * @internal
  */
-U_CAPI char* U_EXPORT2
-uprv_strndup(const char *src, int32_t n);
+U_CAPI ಅಕ್ಷರ* U_EXPORT2
+uprv_strndup(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *src, int32_t n);
 
-U_CAPI char* U_EXPORT2
-T_CString_toLowerCase(char* str);
+U_CAPI ಅಕ್ಷರ* U_EXPORT2
+T_CString_ಗಮ್ಯ_ಅಧೋ_Case(ಅಕ್ಷರ* str);
 
-U_CAPI char* U_EXPORT2
-T_CString_toUpperCase(char* str);
-
-U_CAPI int32_t U_EXPORT2
-T_CString_integerToString(char *buffer, int32_t n, int32_t radix);
+U_CAPI ಅಕ್ಷರ* U_EXPORT2
+T_CString_ಗಮ್ಯ_ಊರ್ಧ್ವ_Case(ಅಕ್ಷರ* str);
 
 U_CAPI int32_t U_EXPORT2
-T_CString_int64ToString(char *buffer, int64_t n, uint32_t radix);
+T_CString_integer_ಗಮ್ಯ_String(ಅಕ್ಷರ *ಬಫರ್, int32_t n, int32_t radix);
 
 U_CAPI int32_t U_EXPORT2
-T_CString_stringToInteger(const char *integerString, int32_t radix);
+T_CString_int64_ಗಮ್ಯ_String(ಅಕ್ಷರ *ಬಫರ್, int64_t n, uint32_t radix);
+
+U_CAPI int32_t U_EXPORT2
+T_CString_string_ಗಮ್ಯ_Integer(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *integerString, int32_t radix);
 
 /**
  * Case-insensitive, language-independent string comparison
  * limited to the ASCII character repertoire.
  */
-U_CAPI int U_EXPORT2
-uprv_stricmp(const char *str1, const char *str2);
+U_CAPI ಪೂರ್ಣಾಂಕ U_EXPORT2
+uprv_stricmp(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *str1, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *str2);
 
 /**
  * Case-insensitive, language-independent string comparison
  * limited to the ASCII character repertoire.
  */
-U_CAPI int U_EXPORT2
-uprv_strnicmp(const char *str1, const char *str2, uint32_t n);
+U_CAPI ಪೂರ್ಣಾಂಕ U_EXPORT2
+uprv_strnicmp(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *str1, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *str2, uint32_t n);
 
-#endif /* ! CSTRING_H */
+#ಆದರೆ_ಅಂತ್ಯ /* ! CSTRING_H */

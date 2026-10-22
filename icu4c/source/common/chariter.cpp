@@ -7,7 +7,7 @@
 **********************************************************************
 */
 
-#include "unicode/chariter.h"
+#ಅನ್ತರ್ಭಾವ "unicode/chariter.h"
 
 U_NAMESPACE_BEGIN
 
@@ -15,86 +15,86 @@ ForwardCharacterIterator::~ForwardCharacterIterator() {}
 ForwardCharacterIterator::ForwardCharacterIterator()
 : UObject()
 {}
-ForwardCharacterIterator::ForwardCharacterIterator(const ForwardCharacterIterator &other)
+ForwardCharacterIterator::ForwardCharacterIterator(ಸ್ಥಿರಾಂಕ ForwardCharacterIterator &other)
 : UObject(other)
 {}
 
 
 CharacterIterator::CharacterIterator()
-: textLength(0), pos(0), begin(0), end(0) {
+: ಪಠ್ಯ_ಉದ್ದಳತೆ(0), pos(0), begin(0), ಕೊನೆ(0) {
 }
 
 CharacterIterator::CharacterIterator(int32_t length)
-: textLength(length), pos(0), begin(0), end(length) {
-    if(textLength < 0) {
-        textLength = end = 0;
+: ಪಠ್ಯ_ಉದ್ದಳತೆ(length), pos(0), begin(0), ಕೊನೆ(length) {
+    ಆದರೆ(ಪಠ್ಯ_ಉದ್ದಳತೆ < 0) {
+        ಪಠ್ಯ_ಉದ್ದಳತೆ = ಕೊನೆ = 0;
     }
 }
 
 CharacterIterator::CharacterIterator(int32_t length, int32_t position)
-: textLength(length), pos(position), begin(0), end(length) {
-    if(textLength < 0) {
-        textLength = end = 0;
+: ಪಠ್ಯ_ಉದ್ದಳತೆ(length), pos(position), begin(0), ಕೊನೆ(length) {
+    ಆದರೆ(ಪಠ್ಯ_ಉದ್ದಳತೆ < 0) {
+        ಪಠ್ಯ_ಉದ್ದಳತೆ = ಕೊನೆ = 0;
     }
-    if(pos < 0) {
+    ಆದರೆ(pos < 0) {
         pos = 0;
-    } else if(pos > end) {
-        pos = end;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(pos > ಕೊನೆ) {
+        pos = ಕೊನೆ;
     }
 }
 
-CharacterIterator::CharacterIterator(int32_t length, int32_t textBegin, int32_t textEnd, int32_t position)
-: textLength(length), pos(position), begin(textBegin), end(textEnd) {
-    if(textLength < 0) {
-        textLength = 0;
+CharacterIterator::CharacterIterator(int32_t length, int32_t ಪಠ್ಯ_Begin, int32_t ಪಠ್ಯ_ಕೊನೆ, int32_t position)
+: ಪಠ್ಯ_ಉದ್ದಳತೆ(length), pos(position), begin(ಪಠ್ಯ_Begin), ಕೊನೆ(ಪಠ್ಯ_ಕೊನೆ) {
+    ಆದರೆ(ಪಠ್ಯ_ಉದ್ದಳತೆ < 0) {
+        ಪಠ್ಯ_ಉದ್ದಳತೆ = 0;
     }
-    if(begin < 0) {
+    ಆದರೆ(begin < 0) {
         begin = 0;
-    } else if(begin > textLength) {
-        begin = textLength;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(begin > ಪಠ್ಯ_ಉದ್ದಳತೆ) {
+        begin = ಪಠ್ಯ_ಉದ್ದಳತೆ;
     }
-    if(end < begin) {
-        end = begin;
-    } else if(end > textLength) {
-        end = textLength;
+    ಆದರೆ(ಕೊನೆ < begin) {
+        ಕೊನೆ = begin;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(ಕೊನೆ > ಪಠ್ಯ_ಉದ್ದಳತೆ) {
+        ಕೊನೆ = ಪಠ್ಯ_ಉದ್ದಳತೆ;
     }
-    if(pos < begin) {
+    ಆದರೆ(pos < begin) {
         pos = begin;
-    } else if(pos > end) {
-        pos = end;
+    } ಇಲ್ಲದಿದ್ದರೆ ಆದರೆ(pos > ಕೊನೆ) {
+        pos = ಕೊನೆ;
     }
 }
 
 CharacterIterator::~CharacterIterator() {}
 
-CharacterIterator::CharacterIterator(const CharacterIterator &that) :
+CharacterIterator::CharacterIterator(ಸ್ಥಿರಾಂಕ CharacterIterator &that) :
 ForwardCharacterIterator(that),
-textLength(that.textLength), pos(that.pos), begin(that.begin), end(that.end)
+ಪಠ್ಯ_ಉದ್ದಳತೆ(that.ಪಠ್ಯ_ಉದ್ದಳತೆ), pos(that.pos), begin(that.begin), ಕೊನೆ(that.ಕೊನೆ)
 {
 }
 
 CharacterIterator&
-CharacterIterator::operator=(const CharacterIterator& that) U_LIFETIME_BOUND {
-    ForwardCharacterIterator::operator=(that);
-    textLength = that.textLength;
+CharacterIterator::ಕ್ರಿಯಾಕಾರಕ=(ಸ್ಥಿರಾಂಕ CharacterIterator& that) U_LIFETIME_BOUND {
+    ForwardCharacterIterator::ಕ್ರಿಯಾಕಾರಕ=(that);
+    ಪಠ್ಯ_ಉದ್ದಳತೆ = that.ಪಠ್ಯ_ಉದ್ದಳತೆ;
     pos = that.pos;
     begin = that.begin;
-    end = that.end;
-    return *this;
+    ಕೊನೆ = that.ಕೊನೆ;
+    ಹಿಂತಿರುಗಿ *ಇದು;
 }
 
 // implementing first[32]PostInc() directly in a subclass should be faster
 // but these implementations make subclassing a little easier
 char16_t
-CharacterIterator::firstPostInc() {
-    setToStart();
-    return nextPostInc();
+CharacterIterator::ಮೊದಲ_Post_Inc() {
+    ಗಣ_ಗಮ್ಯ_ಆರಂಭ();
+    ಹಿಂತಿರುಗಿ ಮುಂದಿನ_Post_Inc();
 }
 
 UChar32
 CharacterIterator::first32PostInc() {
-    setToStart();
-    return next32PostInc();
+    ಗಣ_ಗಮ್ಯ_ಆರಂಭ();
+    ಹಿಂತಿರುಗಿ next32PostInc();
 }
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ

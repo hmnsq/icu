@@ -5,40 +5,40 @@
  * others. All Rights Reserved.
  */
 
-#include "unicode/unistr.h"
-#include "charstr.h"
-#include "cstring.h"
-#include "pluralmap.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unistr.h"
+#ಅನ್ತರ್ಭಾವ "charstr.h"
+#ಅನ್ತರ್ಭಾವ "cstring.h"
+#ಅನ್ತರ್ಭಾವ "pluralmap.h"
 
 U_NAMESPACE_BEGIN
 
-static const char * const gPluralForms[] = {
+ಸ್ಥಿರ ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ * ಸ್ಥಿರಾಂಕ gPluralForms[] = {
         "other", "zero", "one", "two", "few", "many"};
 
-PluralMapBase::Category
-PluralMapBase::toCategory(const char *pluralForm) {
-    for (int32_t i = 0; i < UPRV_LENGTHOF(gPluralForms); ++i) {
-        if (uprv_strcmp(pluralForm, gPluralForms[i]) == 0) {
-            return static_cast<Category>(i);
+Plural_Map_ತಳ::Category
+Plural_Map_ತಳ::ಗಮ್ಯ_Category(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *pluralForm) {
+    ಗಾಗಿ (int32_t i = 0; i < UPRV_LENGTHOF(gPluralForms); ++i) {
+        ಆದರೆ (uprv_strcmp(pluralForm, gPluralForms[i]) == 0) {
+            ಹಿಂತಿರುಗಿ static_cast<Category>(i);
         }
     }
-    return NONE;
+    ಹಿಂತಿರುಗಿ NONE;
 }
 
-PluralMapBase::Category
-PluralMapBase::toCategory(const UnicodeString &pluralForm) {
+Plural_Map_ತಳ::Category
+Plural_Map_ತಳ::ಗಮ್ಯ_Category(ಸ್ಥಿರಾಂಕ UnicodeString &pluralForm) {
     CharString cCategory;
-    UErrorCode status = U_ZERO_ERROR;
-    cCategory.appendInvariantChars(pluralForm, status);    
-    return U_FAILURE(status) ? NONE : toCategory(cCategory.data());
+    UError_ಸಂಕೇತ ಸ್ಥಿತಿ_2 = U_ZERO_ERROR;
+    cCategory.appendInvariantChars(pluralForm, ಸ್ಥಿತಿ_2);    
+    ಹಿಂತಿರುಗಿ U_FAILURE(ಸ್ಥಿತಿ_2) ? NONE : ಗಮ್ಯ_Category(cCategory.ದತ್ತಾಂಶ());
 }
 
-const char *PluralMapBase::getCategoryName(Category c) {
-    int32_t index = c;
-    return (index < 0 || index >= UPRV_LENGTHOF(gPluralForms)) ?
-            nullptr : gPluralForms[index];
+ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *Plural_Map_ತಳ::getCategoryName(Category c) {
+    int32_t ಸೂಚ್ಯಂಕ = c;
+    ಹಿಂತಿರುಗಿ (ಸೂಚ್ಯಂಕ < 0 || ಸೂಚ್ಯಂಕ >= UPRV_LENGTHOF(gPluralForms)) ?
+            ಶೂನ್ಯಸೂಚಕ : gPluralForms[ಸೂಚ್ಯಂಕ];
 }
 
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 

@@ -16,18 +16,18 @@
 *   created by: Vladimir Weinstein
 */
 
-#ifndef __UENUM_H
-#define __UENUM_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ __UENUM_H
+#ವ್ಯಾಖ್ಯಾನಿಸು __UENUM_H
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
+#ಆದರೆ U_SHOW_CPLUSPLUS_API
+#ಅನ್ತರ್ಭಾವ "unicode/localpointer.h"
 
 U_NAMESPACE_BEGIN
 class StringEnumeration;
-U_NAMESPACE_END
-#endif   // U_SHOW_CPLUSPLUS_API
+U_NAMESPACE_ಕೊನೆ
+#ಆದರೆ_ಅಂತ್ಯ   // U_SHOW_CPLUSPLUS_API
 
 /**
  * \file
@@ -39,9 +39,9 @@ U_NAMESPACE_END
  * For usage in C programs.
  * @stable ICU 2.2
  */
-struct UEnumeration;
+ರಚನೆ UEnumeration;
 /** structure representing an enumeration object instance @stable ICU 2.2 */
-typedef struct UEnumeration UEnumeration;
+ಪ್ರಕಾರವ್ಯಾಖ್ಯೆ ರಚನೆ UEnumeration UEnumeration;
 
 /**
  * Disposes of resources in use by the iterator.  If en is NULL,
@@ -50,10 +50,10 @@ typedef struct UEnumeration UEnumeration;
  * @param en UEnumeration structure pointer
  * @stable ICU 2.2
  */
-U_CAPI void U_EXPORT2
+U_CAPI ಶೂನ್ಯ U_EXPORT2
 uenum_close(UEnumeration* en);
 
-#if U_SHOW_CPLUSPLUS_API
+#ಆದರೆ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -66,11 +66,11 @@ U_NAMESPACE_BEGIN
  * @see LocalPointer
  * @stable ICU 4.4
  */
-U_DEFINE_LOCAL_OPEN_POINTER(LocalUEnumerationPointer, UEnumeration, uenum_close);
+U_DEFINE_LOCAL_OPEN_ಸೂಚಕ(Local_UEnumeration_ಸೂಚಕ, UEnumeration, uenum_close);
 
-U_NAMESPACE_END
+U_NAMESPACE_ಕೊನೆ
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 /**
  * Returns the number of elements that the iterator traverses.  If
@@ -87,7 +87,7 @@ U_NAMESPACE_END
  * @stable ICU 2.2
  */
 U_CAPI int32_t U_EXPORT2
-uenum_count(UEnumeration* en, UErrorCode* status);
+uenum_ಎಣಿಕೆ(UEnumeration* en, UError_ಸಂಕೇತ* ಸ್ಥಿತಿ_2);
 
 /**
  * Returns the next element in the iterator's list.  If there are
@@ -110,10 +110,10 @@ uenum_count(UEnumeration* en, UErrorCode* status);
  *         traversed, returns NULL.
  * @stable ICU 2.2
  */
-U_CAPI const UChar* U_EXPORT2
+U_CAPI ಸ್ಥಿರಾಂಕ UChar* U_EXPORT2
 uenum_unext(UEnumeration* en U_LIFETIME_BOUND,
-            int32_t* resultLength,
-            UErrorCode* status);
+            int32_t* ಫಲಿತಾಂಶ_ಉದ್ದಳತೆ,
+            UError_ಸಂಕೇತ* ಸ್ಥಿತಿ_2);
 
 /**
  * Returns the next element in the iterator's list.  If there are
@@ -143,10 +143,10 @@ uenum_unext(UEnumeration* en U_LIFETIME_BOUND,
  *         traversed, returns NULL.
  * @stable ICU 2.2
  */
-U_CAPI const char* U_EXPORT2
-uenum_next(UEnumeration* en U_LIFETIME_BOUND,
-           int32_t* resultLength,
-           UErrorCode* status);
+U_CAPI ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* U_EXPORT2
+uenum_ಮುಂದಿನ(UEnumeration* en U_LIFETIME_BOUND,
+           int32_t* ಫಲಿತಾಂಶ_ಉದ್ದಳತೆ,
+           UError_ಸಂಕೇತ* ಸ್ಥಿತಿ_2);
 
 /**
  * Resets the iterator to the current list of service IDs.  This
@@ -157,10 +157,10 @@ uenum_next(UEnumeration* en U_LIFETIME_BOUND,
  *               the iterator is out of sync with its service.  
  * @stable ICU 2.2
  */
-U_CAPI void U_EXPORT2
-uenum_reset(UEnumeration* en, UErrorCode* status);
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+uenum_reset(UEnumeration* en, UError_ಸಂಕೇತ* ಸ್ಥಿತಿ_2);
 
-#if U_SHOW_CPLUSPLUS_API
+#ಆದರೆ U_SHOW_CPLUSPLUS_API
 
 /**
  * Given a StringEnumeration, wrap it in a UEnumeration.  The
@@ -172,9 +172,9 @@ uenum_reset(UEnumeration* en, UErrorCode* status);
  * @stable ICU 4.2
  */
 U_CAPI UEnumeration* U_EXPORT2
-uenum_openFromStringEnumeration(icu::StringEnumeration* adopted, UErrorCode* ec);
+uenum_openFromStringEnumeration(icu::StringEnumeration* adopted, UError_ಸಂಕೇತ* ec);
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
 
 /**
  * Given an array of const UChar* strings, return a UEnumeration.  String pointers from 0..count-1 must not be null.
@@ -188,9 +188,9 @@ uenum_openFromStringEnumeration(icu::StringEnumeration* adopted, UErrorCode* ec)
  * @stable ICU 50
  */
 U_CAPI UEnumeration* U_EXPORT2
-uenum_openUCharStringsEnumeration(U_LIFETIME_BOUND const UChar* const strings[],
-                                  int32_t count,
-                                  UErrorCode* ec);
+uenum_open_UChar_ಅಕ್ಷರಸರಣಿಗಳು_Enumeration(U_LIFETIME_BOUND ಸ್ಥಿರಾಂಕ UChar* ಸ್ಥಿರಾಂಕ ಅಕ್ಷರಸರಣಿಗಳು[],
+                                  int32_t ಎಣಿಕೆ_2,
+                                  UError_ಸಂಕೇತ* ec);
 
 /**
  * Given an array of const char* strings (invariant chars only), return a UEnumeration.  String pointers from 0..count-1 must not be null.
@@ -204,8 +204,8 @@ uenum_openUCharStringsEnumeration(U_LIFETIME_BOUND const UChar* const strings[],
  * @stable ICU 50
  */
 U_CAPI UEnumeration* U_EXPORT2
-uenum_openCharStringsEnumeration(U_LIFETIME_BOUND const char* const strings[],
-                                 int32_t count,
-                                 UErrorCode* ec);
+uenum_open_Char_ಅಕ್ಷರಸರಣಿಗಳು_Enumeration(U_LIFETIME_BOUND ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* ಸ್ಥಿರಾಂಕ ಅಕ್ಷರಸರಣಿಗಳು[],
+                                 int32_t ಎಣಿಕೆ_2,
+                                 UError_ಸಂಕೇತ* ec);
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ

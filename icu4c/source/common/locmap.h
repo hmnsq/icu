@@ -23,18 +23,18 @@
 *============================================================================
 */
 
-#ifndef LOCMAP_H
-#define LOCMAP_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ LOCMAP_H
+#ವ್ಯಾಖ್ಯಾನಿಸು LOCMAP_H
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#define LANGUAGE_LCID(hostID) (uint16_t)(0x03FF & hostID)
+#ವ್ಯಾಖ್ಯಾನಿಸು LANGUAGE_LCID(hostID) (uint16_t)(0x03FF & hostID)
 
-U_CAPI int32_t uprv_convertToPosix(uint32_t hostid, char* posixID, int32_t posixIDCapacity, UErrorCode* status);
+U_CAPI int32_t uprv_convert_ಗಮ್ಯ_Posix(uint32_t hostid, ಅಕ್ಷರ* posixID, int32_t posixIDCapacity, UError_ಸಂಕೇತ* ಸ್ಥಿತಿ_2);
 
 /* Don't call these functions directly. Use uloc_getLCID instead. */
-U_CAPI uint32_t uprv_convertToLCIDPlatform(const char* localeID, UErrorCode* status); // Leverage platform conversion if possible
-U_CAPI uint32_t uprv_convertToLCID(const char* langID, const char* posixID, UErrorCode* status);
+U_CAPI uint32_t uprv_convert_ಗಮ್ಯ_LCIDPlatform(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* localeID, UError_ಸಂಕೇತ* ಸ್ಥಿತಿ_2); // Leverage platform conversion if possible
+U_CAPI uint32_t uprv_convert_ಗಮ್ಯ_LCID(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* langID, ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ* posixID, UError_ಸಂಕೇತ* ಸ್ಥಿತಿ_2);
 
-#endif /* LOCMAP_H */
+#ಆದರೆ_ಅಂತ್ಯ /* LOCMAP_H */
 

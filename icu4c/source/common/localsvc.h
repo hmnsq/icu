@@ -7,12 +7,12 @@
 ***************************************************************************
 */
 
-#ifndef LOCALSVC_H
-#define LOCALSVC_H
+#ವ್ಯಾಖ್ಯಾನಿತವಾಗದಿದ್ದರೆ LOCALSVC_H
+#ವ್ಯಾಖ್ಯಾನಿಸು LOCALSVC_H
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if defined(U_LOCAL_SERVICE_HOOK) && U_LOCAL_SERVICE_HOOK
+#ಆದರೆ defined(U_LOCAL_SERVICE_HOOK) && U_LOCAL_SERVICE_HOOK
 /**
  * Prototype for user-supplied service hook. This function is expected to return
  * a type of factory object specific to the requested service.
@@ -21,7 +21,7 @@
  * @param status error status
  * @return a service-specific hook, or NULL on failure.
  */
-U_CAPI void* uprv_svc_hook(const char *what, UErrorCode *status);
-#endif
+U_CAPI ಶೂನ್ಯ* uprv_svc_hook(ಸ್ಥಿರಾಂಕ ಅಕ್ಷರ *what, UError_ಸಂಕೇತ *ಸ್ಥಿತಿ_2);
+#ಆದರೆ_ಅಂತ್ಯ
 
-#endif
+#ಆದರೆ_ಅಂತ್ಯ
