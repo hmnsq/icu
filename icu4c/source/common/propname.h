@@ -14,11 +14,11 @@
 #ifndef PROPNAME_H
 #define PROPNAME_H
 
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/uchar.h"
-#include "udataswp.h"
-#include "uprops.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/bytestrie.h"
+#അന്തര്ഭാവ "unicode/uchar.h"
+#അന്തര്ഭാവ "udataswp.h"
+#അന്തര്ഭാവ "uprops.h"
 
 /*
  * This header defines the in-memory layout of the property names data
@@ -51,16 +51,16 @@ U_CDECL_BEGIN
  */
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareASCIIPropertyNames(const char *name1, const char *name2);
+uprv_compareASCIIPropertyNames(സ്ഥിരം അക്ഷരം *name1, സ്ഥിരം അക്ഷരം *name2);
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareEBCDICPropertyNames(const char *name1, const char *name2);
+uprv_compareEBCDICPropertyNames(സ്ഥിരം അക്ഷരം *name1, സ്ഥിരം അക്ഷരം *name2);
 
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
+#എങ്കിൽ U_CHARSET_FAMILY==U_ASCII_FAMILY
 #   define uprv_comparePropertyNames uprv_compareASCIIPropertyNames
-#elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+#അല്ലെങ്കിലെങ്കിൽ U_CHARSET_FAMILY==U_EBCDIC_FAMILY
 #   define uprv_comparePropertyNames uprv_compareEBCDICPropertyNames
-#else
+#അല്ലെങ്കിൽ
 #   error U_CHARSET_FAMILY is not valid
 #endif
 
@@ -82,10 +82,10 @@ U_CDECL_END
 U_NAMESPACE_BEGIN
 
 class PropNameData {
-public:
-    enum {
+പൊതു:
+    എണ്ണൽ {
         // Byte offsets from the start of the data, after the generic header.
-        IX_VALUE_MAPS_OFFSET,
+        IX_മൂല്യം_MAPS_OFFSET,
         IX_BYTE_TRIES_OFFSET,
         IX_NAME_GROUPS_OFFSET,
         IX_RESERVED3_OFFSET,
@@ -95,27 +95,27 @@ public:
         // Other values.
         IX_MAX_NAME_LENGTH,
         IX_RESERVED7,
-        IX_COUNT
+        IX_എണ്ണം
     };
 
-    static const char *getPropertyName(int32_t property, int32_t nameChoice);
-    static const char *getPropertyValueName(int32_t property, int32_t value, int32_t nameChoice);
+    സ്ഥിതം സ്ഥിരം അക്ഷരം *getPropertyName(int32_t property, int32_t nameChoice);
+    സ്ഥിതം സ്ഥിരം അക്ഷരം *get_Property_മൂല്യം_Name(int32_t property, int32_t മൂല്യം_2, int32_t nameChoice);
 
-    static int32_t getPropertyEnum(const char *alias);
-    static int32_t getPropertyValueEnum(int32_t property, const char *alias);
+    സ്ഥിതം int32_t getPropertyEnum(സ്ഥിരം അക്ഷരം *alias);
+    സ്ഥിതം int32_t get_Property_മൂല്യം_Enum(int32_t property, സ്ഥിരം അക്ഷരം *alias);
 
-private:
-    static int32_t findProperty(int32_t property);
-    static int32_t findPropertyValueNameGroup(int32_t valueMapIndex, int32_t value);
-    static const char *getName(const char *nameGroup, int32_t nameIndex);
-    static UBool containsName(BytesTrie &trie, const char *name);
+സ്വകാര്യ:
+    സ്ഥിതം int32_t findProperty(int32_t property);
+    സ്ഥിതം int32_t find_Property_മൂല്യം_Name_Group(int32_t മൂല്യം_Map_Index, int32_t മൂല്യം_2);
+    സ്ഥിതം സ്ഥിരം അക്ഷരം *getName(സ്ഥിരം അക്ഷരം *nameGroup, int32_t nameIndex);
+    സ്ഥിതം UBool containsName(BytesTrie &trie, സ്ഥിരം അക്ഷരം *name);
 
-    static int32_t getPropertyOrValueEnum(int32_t bytesTrieOffset, const char *alias);
+    സ്ഥിതം int32_t get_Property_Or_മൂല്യം_Enum(int32_t bytesTrieOffset, സ്ഥിരം അക്ഷരം *alias);
 
-    static const int32_t indexes[];
-    static const int32_t valueMaps[];
-    static const uint8_t bytesTries[];
-    static const char nameGroups[];
+    സ്ഥിതം സ്ഥിരം int32_t indexes[];
+    സ്ഥിതം സ്ഥിരം int32_t മൂല്യം_Maps[];
+    സ്ഥിതം സ്ഥിരം uint8_t bytesTries[];
+    സ്ഥിതം സ്ഥിരം അക്ഷരം nameGroups[];
 };
 
 /*

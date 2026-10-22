@@ -14,9 +14,9 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/appendable.h"
-#include "unicode/utf16.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/appendable.h"
+#അന്തര്ഭാവ "unicode/utf16.h"
 
 U_NAMESPACE_BEGIN
 
@@ -24,36 +24,36 @@ Appendable::~Appendable() {}
 
 UBool
 Appendable::appendCodePoint(UChar32 c) {
-    if(c<=0xffff) {
-        return appendCodeUnit(static_cast<char16_t>(c));
-    } else {
-        return appendCodeUnit(U16_LEAD(c)) && appendCodeUnit(U16_TRAIL(c));
+    എങ്കിൽ(c<=0xffff) {
+        തിരികെ appendCodeUnit(static_cast<char16_t>(c));
+    } അല്ലെങ്കിൽ {
+        തിരികെ appendCodeUnit(U16_LEAD(c)) && appendCodeUnit(U16_TRAIL(c));
     }
 }
 
 UBool
-Appendable::appendString(const char16_t *s, int32_t length) {
-    if(length<0) {
+Appendable::appendString(സ്ഥിരം char16_t *s, int32_t length) {
+    എങ്കിൽ(length<0) {
         char16_t c;
-        while((c=*s++)!=0) {
-            if(!appendCodeUnit(c)) {
-                return false;
+        ആകുമ്പോൾ((c=*s++)!=0) {
+            എങ്കിൽ(!appendCodeUnit(c)) {
+                തിരികെ അസത്യം;
             }
         }
-    } else if(length>0) {
-        const char16_t *limit=s+length;
-        do {
-            if(!appendCodeUnit(*s++)) {
-                return false;
+    } അല്ലെങ്കിൽ എങ്കിൽ(length>0) {
+        സ്ഥിരം char16_t *limit=s+length;
+        ചെയ്യുക {
+            എങ്കിൽ(!appendCodeUnit(*s++)) {
+                തിരികെ അസത്യം;
             }
-        } while(s<limit);
+        } ആകുമ്പോൾ(s<limit);
     }
-    return true;
+    തിരികെ സത്യം;
 }
 
 UBool
 Appendable::reserveAppendCapacity(int32_t /*appendCapacity*/) {
-    return true;
+    തിരികെ സത്യം;
 }
 
 char16_t*
@@ -62,12 +62,12 @@ Appendable::getAppendBuffer(int32_t minCapacity,
                             char16_t* scratch U_LIFETIME_BOUND,
                             int32_t scratchCapacity,
                             int32_t* resultCapacity) U_LIFETIME_BOUND {
-    if(minCapacity<1 || scratchCapacity<minCapacity) {
+    എങ്കിൽ(minCapacity<1 || scratchCapacity<minCapacity) {
         *resultCapacity=0;
-        return nullptr;
+        തിരികെ nullptr;
     }
     *resultCapacity=scratchCapacity;
-    return scratch;
+    തിരികെ scratch;
 }
 
 // UnicodeStringAppendable is implemented in unistr.cpp.

@@ -18,16 +18,16 @@
 *   Store bits (Unicode character properties) in bit set vectors.
 */
 
-#include <stdlib.h>
-#include "unicode/utypes.h"
-#include "cmemory.h"
-#include "utrie.h"
-#include "utrie2.h"
-#include "uarrsort.h"
-#include "propsvec.h"
-#include "uassert.h"
+#അന്തര്ഭാവ <stdlib.h>
+#അന്തര്ഭാവ "unicode/utypes.h"
+#അന്തര്ഭാവ "cmemory.h"
+#അന്തര്ഭാവ "utrie.h"
+#അന്തര്ഭാവ "utrie2.h"
+#അന്തര്ഭാവ "uarrsort.h"
+#അന്തര്ഭാവ "propsvec.h"
+#അന്തര്ഭാവ "uassert.h"
 
-struct UPropsVectors {
+ഘടന UPropsVectors {
     uint32_t *v;
     int32_t columns;  /* number of columns, plus two for start & limit values */
     int32_t maxRows;
@@ -46,24 +46,24 @@ upvec_open(int32_t columns, UErrorCode *pErrorCode) {
     uint32_t *v, *row;
     uint32_t cp;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    എങ്കിൽ(U_FAILURE(*pErrorCode)) {
+        തിരികെ nullptr;
     }
-    if(columns<1) {
+    എങ്കിൽ(columns<1) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
     columns+=2; /* count range start and limit columns */
 
-    pv=(UPropsVectors *)uprv_malloc(sizeof(UPropsVectors));
+    pv=(UPropsVectors *)uprv_malloc(വലുപ്പം(UPropsVectors));
     v=(uint32_t *)uprv_malloc(UPVEC_INITIAL_ROWS*columns*4);
-    if(pv==nullptr || v==nullptr) {
+    എങ്കിൽ(pv==nullptr || v==nullptr) {
         uprv_free(pv);
         uprv_free(v);
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
-    uprv_memset(pv, 0, sizeof(UPropsVectors));
+    uprv_memset(pv, 0, വലുപ്പം(UPropsVectors));
     pv->v=v;
     pv->columns=columns;
     pv->maxRows=UPVEC_INITIAL_ROWS;
@@ -75,23 +75,23 @@ upvec_open(int32_t columns, UErrorCode *pErrorCode) {
     row[0]=0;
     row[1]=0x110000;
     row+=columns;
-    for(cp=UPVEC_FIRST_SPECIAL_CP; cp<=UPVEC_MAX_CP; ++cp) {
+    വേണ്ടി(cp=UPVEC_FIRST_SPECIAL_CP; cp<=UPVEC_MAX_CP; ++cp) {
         row[0]=cp;
         row[1]=cp+1;
         row+=columns;
     }
-    return pv;
+    തിരികെ pv;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 upvec_close(UPropsVectors *pv) {
-    if(pv!=nullptr) {
+    എങ്കിൽ(pv!=nullptr) {
         uprv_free(pv->v);
         uprv_free(pv);
     }
 }
 
-static uint32_t *
+സ്ഥിതം uint32_t *
 _findRow(UPropsVectors *pv, UChar32 rangeStart) {
     uint32_t *row;
     int32_t columns, i, start, limit, prevRow;
@@ -102,56 +102,56 @@ _findRow(UPropsVectors *pv, UChar32 rangeStart) {
 
     /* check the vicinity of the last-seen row (start searching with an unrolled loop) */
     row=pv->v+prevRow*columns;
-    if (rangeStart >= static_cast<UChar32>(row[0])) {
-        if (rangeStart < static_cast<UChar32>(row[1])) {
+    എങ്കിൽ (rangeStart >= static_cast<UChar32>(row[0])) {
+        എങ്കിൽ (rangeStart < static_cast<UChar32>(row[1])) {
             /* same row as last seen */
-            return row;
-        } else if (rangeStart < static_cast<UChar32>((row += columns)[1])) {
+            തിരികെ row;
+        } അല്ലെങ്കിൽ എങ്കിൽ (rangeStart < static_cast<UChar32>((row += columns)[1])) {
             /* next row after the last one */
             pv->prevRow=prevRow+1;
-            return row;
-        } else if (rangeStart < static_cast<UChar32>((row += columns)[1])) {
+            തിരികെ row;
+        } അല്ലെങ്കിൽ എങ്കിൽ (rangeStart < static_cast<UChar32>((row += columns)[1])) {
             /* second row after the last one */
             pv->prevRow=prevRow+2;
-            return row;
-        } else if ((rangeStart - static_cast<UChar32>(row[1])) < 10) {
+            തിരികെ row;
+        } അല്ലെങ്കിൽ എങ്കിൽ ((rangeStart - static_cast<UChar32>(row[1])) < 10) {
             /* we are close, continue looping */
             prevRow+=2;
-            do {
+            ചെയ്യുക {
                 ++prevRow;
                 row+=columns;
-            } while (rangeStart >= static_cast<UChar32>(row[1]));
+            } ആകുമ്പോൾ (rangeStart >= static_cast<UChar32>(row[1]));
             pv->prevRow=prevRow;
-            return row;
+            തിരികെ row;
         }
-    } else if (rangeStart < static_cast<UChar32>(pv->v[1])) {
+    } അല്ലെങ്കിൽ എങ്കിൽ (rangeStart < static_cast<UChar32>(pv->v[1])) {
         /* the very first row */
         pv->prevRow=0;
-        return pv->v;
+        തിരികെ pv->v;
     }
 
     /* do a binary search for the start of the range */
     start=0;
-    while(start<limit-1) {
+    ആകുമ്പോൾ(start<limit-1) {
         i=(start+limit)/2;
         row=pv->v+i*columns;
-        if (rangeStart < static_cast<UChar32>(row[0])) {
+        എങ്കിൽ (rangeStart < static_cast<UChar32>(row[0])) {
             limit=i;
-        } else if (rangeStart < static_cast<UChar32>(row[1])) {
+        } അല്ലെങ്കിൽ എങ്കിൽ (rangeStart < static_cast<UChar32>(row[1])) {
             pv->prevRow=i;
-            return row;
-        } else {
+            തിരികെ row;
+        } അല്ലെങ്കിൽ {
             start=i;
         }
     }
 
     /* must be found because all ranges together always cover all of Unicode */
     pv->prevRow=start;
-    return pv->v+start*columns;
+    തിരികെ pv->v+start*columns;
 }
 
-U_CAPI void U_EXPORT2
-upvec_setValue(UPropsVectors *pv,
+U_CAPI ശൂന്യം U_EXPORT2
+upvec_set_മൂല്യം(UPropsVectors *pv,
                UChar32 start, UChar32 end,
                int32_t column,
                uint32_t value, uint32_t mask,
@@ -162,19 +162,19 @@ upvec_setValue(UPropsVectors *pv,
     UBool splitFirstRow, splitLastRow;
 
     /* argument checking */
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    എങ്കിൽ(U_FAILURE(*pErrorCode)) {
+        തിരികെ;
     }
-    if( pv==nullptr ||
+    എങ്കിൽ( pv==nullptr ||
         start<0 || start>end || end>UPVEC_MAX_CP ||
         column<0 || column>=(pv->columns-2)
     ) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        തിരികെ;
     }
-    if(pv->isCompacted) {
+    എങ്കിൽ(pv->isCompacted) {
         *pErrorCode=U_NO_WRITE_PERMISSION;
-        return;
+        തിരികെ;
     }
     limit=end+1;
 
@@ -198,27 +198,27 @@ upvec_setValue(UPropsVectors *pv,
     splitLastRow = limit != static_cast<UChar32>(lastRow[1]) && value != (lastRow[column] & mask);
 
     /* split first/last rows if necessary */
-    if(splitFirstRow || splitLastRow) {
+    എങ്കിൽ(splitFirstRow || splitLastRow) {
         int32_t count, rows;
 
         rows=pv->rows;
-        if((rows+splitFirstRow+splitLastRow)>pv->maxRows) {
+        എങ്കിൽ((rows+splitFirstRow+splitLastRow)>pv->maxRows) {
             uint32_t *newVectors;
             int32_t newMaxRows;
 
-            if(pv->maxRows<UPVEC_MEDIUM_ROWS) {
+            എങ്കിൽ(pv->maxRows<UPVEC_MEDIUM_ROWS) {
                 newMaxRows=UPVEC_MEDIUM_ROWS;
-            } else if(pv->maxRows<UPVEC_MAX_ROWS) {
+            } അല്ലെങ്കിൽ എങ്കിൽ(pv->maxRows<UPVEC_MAX_ROWS) {
                 newMaxRows=UPVEC_MAX_ROWS;
-            } else {
+            } അല്ലെങ്കിൽ {
                 /* Implementation bug, or UPVEC_MAX_ROWS too low. */
                 *pErrorCode=U_INTERNAL_PROGRAM_ERROR;
-                return;
+                തിരികെ;
             }
             newVectors=(uint32_t *)uprv_malloc(newMaxRows*columns*4);
-            if(newVectors==nullptr) {
+            എങ്കിൽ(newVectors==nullptr) {
                 *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                return;
+                തിരികെ;
             }
             uprv_memcpy(newVectors, pv->v, (size_t)rows*columns*4);
             firstRow=newVectors+(firstRow-pv->v);
@@ -230,7 +230,7 @@ upvec_setValue(UPropsVectors *pv,
 
         /* count the number of row cells to move after the last row, and move them */
         count = (int32_t)((pv->v+rows*columns)-(lastRow+columns));
-        if(count>0) {
+        എങ്കിൽ(count>0) {
             uprv_memmove(
                 lastRow+(1+splitFirstRow+splitLastRow)*columns,
                 lastRow+columns,
@@ -239,7 +239,7 @@ upvec_setValue(UPropsVectors *pv,
         pv->rows=rows+splitFirstRow+splitLastRow;
 
         /* split the first row, and move the firstRow pointer to the second part */
-        if(splitFirstRow) {
+        എങ്കിൽ(splitFirstRow) {
             /* copy all affected rows up one and move the lastRow pointer */
             count = (int32_t)((lastRow-firstRow)+columns);
             uprv_memmove(firstRow+columns, firstRow, (size_t)count*4);
@@ -251,7 +251,7 @@ upvec_setValue(UPropsVectors *pv,
         }
 
         /* split the last row */
-        if(splitLastRow) {
+        എങ്കിൽ(splitLastRow) {
             /* copy the last row data */
             uprv_memcpy(lastRow+columns, lastRow, (size_t)columns*4);
 
@@ -267,102 +267,102 @@ upvec_setValue(UPropsVectors *pv,
     firstRow+=column;
     lastRow+=column;
     mask=~mask;
-    for(;;) {
+    വേണ്ടി(;;) {
         *firstRow=(*firstRow&mask)|value;
-        if(firstRow==lastRow) {
-            break;
+        എങ്കിൽ(firstRow==lastRow) {
+            നിർത്തുക;
         }
         firstRow+=columns;
     }
 }
 
 U_CAPI uint32_t U_EXPORT2
-upvec_getValue(const UPropsVectors *pv, UChar32 c, int32_t column) {
+upvec_get_മൂല്യം(സ്ഥിരം UPropsVectors *pv, UChar32 c, int32_t column) {
     uint32_t *row;
     UPropsVectors *ncpv;
 
-    if(pv->isCompacted || c<0 || c>UPVEC_MAX_CP || column<0 || column>=(pv->columns-2)) {
-        return 0;
+    എങ്കിൽ(pv->isCompacted || c<0 || c>UPVEC_MAX_CP || column<0 || column>=(pv->columns-2)) {
+        തിരികെ 0;
     }
     ncpv=(UPropsVectors *)pv;
     row=_findRow(ncpv, c);
-    return row[2+column];
+    തിരികെ row[2+column];
 }
 
 U_CAPI uint32_t * U_EXPORT2
-upvec_getRow(const UPropsVectors *pv, int32_t rowIndex,
+upvec_getRow(സ്ഥിരം UPropsVectors *pv, int32_t rowIndex,
              UChar32 *pRangeStart, UChar32 *pRangeEnd) {
     uint32_t *row;
     int32_t columns;
 
-    if(pv->isCompacted || rowIndex<0 || rowIndex>=pv->rows) {
-        return nullptr;
+    എങ്കിൽ(pv->isCompacted || rowIndex<0 || rowIndex>=pv->rows) {
+        തിരികെ nullptr;
     }
 
     columns=pv->columns;
     row=pv->v+rowIndex*columns;
-    if(pRangeStart!=nullptr) {
+    എങ്കിൽ(pRangeStart!=nullptr) {
         *pRangeStart=(UChar32)row[0];
     }
-    if(pRangeEnd!=nullptr) {
+    എങ്കിൽ(pRangeEnd!=nullptr) {
         *pRangeEnd=(UChar32)row[1]-1;
     }
-    return row+2;
+    തിരികെ row+2;
 }
 
-static int32_t U_CALLCONV
-upvec_compareRows(const void *context, const void *l, const void *r) {
-    const uint32_t* left = static_cast<const uint32_t*>(l), *right = static_cast<const uint32_t*>(r);
-    const UPropsVectors* pv = static_cast<const UPropsVectors*>(context);
+സ്ഥിതം int32_t U_CALLCONV
+upvec_compareRows(സ്ഥിരം ശൂന്യം *context, സ്ഥിരം ശൂന്യം *l, സ്ഥിരം ശൂന്യം *r) {
+    സ്ഥിരം uint32_t* left = static_cast<സ്ഥിരം uint32_t*>(l), *വലത് = static_cast<സ്ഥിരം uint32_t*>(r);
+    സ്ഥിരം UPropsVectors* pv = static_cast<സ്ഥിരം UPropsVectors*>(context);
     int32_t i, count, columns;
 
     count=columns=pv->columns; /* includes start/limit columns */
 
     /* start comparing after start/limit but wrap around to them */
     i=2;
-    do {
-        if(left[i]!=right[i]) {
-            return left[i]<right[i] ? -1 : 1;
+    ചെയ്യുക {
+        എങ്കിൽ(left[i]!=വലത്[i]) {
+            തിരികെ left[i]<വലത്[i] ? -1 : 1;
         }
-        if(++i==columns) {
+        എങ്കിൽ(++i==columns) {
             i=0;
         }
-    } while(--count>0);
+    } ആകുമ്പോൾ(--count>0);
 
-    return 0;
+    തിരികെ 0;
 }
 
-U_CAPI void U_EXPORT2
-upvec_compact(UPropsVectors *pv, UPVecCompactHandler *handler, void *context, UErrorCode *pErrorCode) {
+U_CAPI ശൂന്യം U_EXPORT2
+upvec_compact(UPropsVectors *pv, UPVecCompactHandler *handler, ശൂന്യം *context, UErrorCode *pErrorCode) {
     uint32_t *row;
-    int32_t i, columns, valueColumns, rows, count;
+    int32_t i, columns, മൂല്യം_Columns, rows, count;
     UChar32 start, limit;
 
     /* argument checking */
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    എങ്കിൽ(U_FAILURE(*pErrorCode)) {
+        തിരികെ;
     }
-    if(handler==nullptr) {
+    എങ്കിൽ(handler==nullptr) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        തിരികെ;
     }
-    if(pv->isCompacted) {
-        return;
+    എങ്കിൽ(pv->isCompacted) {
+        തിരികെ;
     }
 
     /* Set the flag now: Sorting and compacting destroys the builder data structure. */
-    pv->isCompacted=true;
+    pv->isCompacted=സത്യം;
 
     rows=pv->rows;
     columns=pv->columns;
     U_ASSERT(columns>=3); /* upvec_open asserts this */
-    valueColumns=columns-2; /* not counting start & limit */
+    മൂല്യം_Columns=columns-2; /* not counting start & limit */
 
     /* sort the properties vectors to find unique vector values */
     uprv_sortArray(pv->v, rows, columns*4,
-                   upvec_compareRows, pv, false, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+                   upvec_compareRows, pv, അസത്യം, pErrorCode);
+    എങ്കിൽ(U_FAILURE(*pErrorCode)) {
+        തിരികെ;
     }
 
     /*
@@ -371,19 +371,19 @@ upvec_compact(UPropsVectors *pv, UPVecCompactHandler *handler, void *context, UE
      * to find the indexes where the special-value rows will move.
      */
     row=pv->v;
-    count=-valueColumns;
-    for(i=0; i<rows; ++i) {
+    count=-മൂല്യം_Columns;
+    വേണ്ടി(i=0; i<rows; ++i) {
         start=(UChar32)row[0];
 
         /* count a new values vector if it is different from the current one */
-        if(count<0 || 0!=uprv_memcmp(row+2, row-valueColumns, valueColumns*4)) {
-            count+=valueColumns;
+        എങ്കിൽ(count<0 || 0!=uprv_memcmp(row+2, row-മൂല്യം_Columns, മൂല്യം_Columns*4)) {
+            count+=മൂല്യം_Columns;
         }
 
-        if(start>=UPVEC_FIRST_SPECIAL_CP) {
-            handler(context, start, start, count, row+2, valueColumns, pErrorCode);
-            if(U_FAILURE(*pErrorCode)) {
-                return;
+        എങ്കിൽ(start>=UPVEC_FIRST_SPECIAL_CP) {
+            handler(context, start, start, count, row+2, മൂല്യം_Columns, pErrorCode);
+            എങ്കിൽ(U_FAILURE(*pErrorCode)) {
+                തിരികെ;
             }
         }
 
@@ -391,13 +391,13 @@ upvec_compact(UPropsVectors *pv, UPVecCompactHandler *handler, void *context, UE
     }
 
     /* count is at the beginning of the last vector, add valueColumns to include that last vector */
-    count+=valueColumns;
+    count+=മൂല്യം_Columns;
 
     /* Call the handler once more to signal the start of delivering real values. */
-    handler(context, UPVEC_START_REAL_VALUES_CP, UPVEC_START_REAL_VALUES_CP,
-            count, row-valueColumns, valueColumns, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    handler(context, UPVEC_START_REAL_മൂല്യങ്ങൾ_CP, UPVEC_START_REAL_മൂല്യങ്ങൾ_CP,
+            count, row-മൂല്യം_Columns, മൂല്യം_Columns, pErrorCode);
+    എങ്കിൽ(U_FAILURE(*pErrorCode)) {
+        തിരികെ;
     }
 
     /*
@@ -408,22 +408,22 @@ upvec_compact(UPropsVectors *pv, UPVecCompactHandler *handler, void *context, UE
      * with an array of just vector values.
      */
     row=pv->v;
-    count=-valueColumns;
-    for(i=0; i<rows; ++i) {
+    count=-മൂല്യം_Columns;
+    വേണ്ടി(i=0; i<rows; ++i) {
         /* fetch these first before memmove() may overwrite them */
         start=(UChar32)row[0];
         limit=(UChar32)row[1];
 
         /* add a new values vector if it is different from the current one */
-        if(count<0 || 0!=uprv_memcmp(row+2, pv->v+count, valueColumns*4)) {
-            count+=valueColumns;
-            uprv_memmove(pv->v+count, row+2, (size_t)valueColumns*4);
+        എങ്കിൽ(count<0 || 0!=uprv_memcmp(row+2, pv->v+count, മൂല്യം_Columns*4)) {
+            count+=മൂല്യം_Columns;
+            uprv_memmove(pv->v+count, row+2, (size_t)മൂല്യം_Columns*4);
         }
 
-        if(start<UPVEC_FIRST_SPECIAL_CP) {
-            handler(context, start, limit-1, count, pv->v+count, valueColumns, pErrorCode);
-            if(U_FAILURE(*pErrorCode)) {
-                return;
+        എങ്കിൽ(start<UPVEC_FIRST_SPECIAL_CP) {
+            handler(context, start, limit-1, count, pv->v+count, മൂല്യം_Columns, pErrorCode);
+            എങ്കിൽ(U_FAILURE(*pErrorCode)) {
+                തിരികെ;
             }
         }
 
@@ -431,62 +431,62 @@ upvec_compact(UPropsVectors *pv, UPVecCompactHandler *handler, void *context, UE
     }
 
     /* count is at the beginning of the last vector, add one to include that last vector */
-    pv->rows=count/valueColumns+1;
+    pv->rows=count/മൂല്യം_Columns+1;
 }
 
-U_CAPI const uint32_t * U_EXPORT2
-upvec_getArray(const UPropsVectors *pv, int32_t *pRows, int32_t *pColumns) {
-    if(!pv->isCompacted) {
-        return nullptr;
+U_CAPI സ്ഥിരം uint32_t * U_EXPORT2
+upvec_getArray(സ്ഥിരം UPropsVectors *pv, int32_t *pRows, int32_t *pColumns) {
+    എങ്കിൽ(!pv->isCompacted) {
+        തിരികെ nullptr;
     }
-    if(pRows!=nullptr) {
+    എങ്കിൽ(pRows!=nullptr) {
         *pRows=pv->rows;
     }
-    if(pColumns!=nullptr) {
+    എങ്കിൽ(pColumns!=nullptr) {
         *pColumns=pv->columns-2;
     }
-    return pv->v;
+    തിരികെ pv->v;
 }
 
 U_CAPI uint32_t * U_EXPORT2
-upvec_cloneArray(const UPropsVectors *pv,
+upvec_cloneArray(സ്ഥിരം UPropsVectors *pv,
                  int32_t *pRows, int32_t *pColumns, UErrorCode *pErrorCode) {
     uint32_t *clonedArray;
     int32_t byteLength;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    എങ്കിൽ(U_FAILURE(*pErrorCode)) {
+        തിരികെ nullptr;
     }
-    if(!pv->isCompacted) {
+    എങ്കിൽ(!pv->isCompacted) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
     byteLength=pv->rows*(pv->columns-2)*4;
     clonedArray=(uint32_t *)uprv_malloc(byteLength);
-    if(clonedArray==nullptr) {
+    എങ്കിൽ(clonedArray==nullptr) {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
     uprv_memcpy(clonedArray, pv->v, byteLength);
-    if(pRows!=nullptr) {
+    എങ്കിൽ(pRows!=nullptr) {
         *pRows=pv->rows;
     }
-    if(pColumns!=nullptr) {
+    എങ്കിൽ(pColumns!=nullptr) {
         *pColumns=pv->columns-2;
     }
-    return clonedArray;
+    തിരികെ clonedArray;
 }
 
 U_CAPI UTrie2 * U_EXPORT2
 upvec_compactToUTrie2WithRowIndexes(UPropsVectors *pv, UErrorCode *pErrorCode) {
     UPVecToUTrie2Context toUTrie2={ nullptr, 0, 0, 0 };
     upvec_compact(pv, upvec_compactToUTrie2Handler, &toUTrie2, pErrorCode);
-    utrie2_freeze(toUTrie2.trie, UTRIE2_16_VALUE_BITS, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
+    utrie2_freeze(toUTrie2.trie, UTRIE2_16_മൂല്യം_BITS, pErrorCode);
+    എങ്കിൽ(U_FAILURE(*pErrorCode)) {
         utrie2_close(toUTrie2.trie);
         toUTrie2.trie=nullptr;
     }
-    return toUTrie2.trie;
+    തിരികെ toUTrie2.trie;
 }
 
 /*
@@ -494,36 +494,36 @@ upvec_compactToUTrie2WithRowIndexes(UPropsVectors *pv, UErrorCode *pErrorCode) {
  * some 16-bit field and builds and returns a UTrie2.
  */
 
-U_CAPI void U_CALLCONV
-upvec_compactToUTrie2Handler(void *context,
+U_CAPI ശൂന്യം U_CALLCONV
+upvec_compactToUTrie2Handler(ശൂന്യം *context,
                              UChar32 start, UChar32 end,
                              int32_t rowIndex, uint32_t *row, int32_t columns,
                              UErrorCode *pErrorCode) {
-    (void)row;
-    (void)columns;
+    (ശൂന്യം)row;
+    (ശൂന്യം)columns;
     UPVecToUTrie2Context *toUTrie2=(UPVecToUTrie2Context *)context;
-    if(start<UPVEC_FIRST_SPECIAL_CP) {
-        utrie2_setRange32(toUTrie2->trie, start, end, (uint32_t)rowIndex, true, pErrorCode);
-    } else {
-        switch(start) {
-        case UPVEC_INITIAL_VALUE_CP:
-            toUTrie2->initialValue=rowIndex;
-            break;
-        case UPVEC_ERROR_VALUE_CP:
-            toUTrie2->errorValue=rowIndex;
-            break;
-        case UPVEC_START_REAL_VALUES_CP:
-            toUTrie2->maxValue=rowIndex;
-            if(rowIndex>0xffff) {
+    എങ്കിൽ(start<UPVEC_FIRST_SPECIAL_CP) {
+        utrie2_setRange32(toUTrie2->trie, start, end, (uint32_t)rowIndex, സത്യം, pErrorCode);
+    } അല്ലെങ്കിൽ {
+        തിരഞ്ഞെടുപ്പ്(start) {
+        അവസ്ഥ UPVEC_INITIAL_മൂല്യം_CP:
+            toUTrie2->initial_മൂല്യം=rowIndex;
+            നിർത്തുക;
+        അവസ്ഥ UPVEC_ERROR_മൂല്യം_CP:
+            toUTrie2->error_മൂല്യം=rowIndex;
+            നിർത്തുക;
+        അവസ്ഥ UPVEC_START_REAL_മൂല്യങ്ങൾ_CP:
+            toUTrie2->max_മൂല്യം=rowIndex;
+            എങ്കിൽ(rowIndex>0xffff) {
                 /* too many rows for a 16-bit trie */
                 *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            } else {
-                toUTrie2->trie=utrie2_open(toUTrie2->initialValue,
-                                           toUTrie2->errorValue, pErrorCode);
+            } അല്ലെങ്കിൽ {
+                toUTrie2->trie=utrie2_open(toUTrie2->initial_മൂല്യം,
+                                           toUTrie2->error_മൂല്യം, pErrorCode);
             }
-            break;
-        default:
-            break;
+            നിർത്തുക;
+        സ്ഥിരസ്ഥിതി:
+            നിർത്തുക;
         }
     }
 }

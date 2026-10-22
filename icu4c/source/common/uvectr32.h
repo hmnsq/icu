@@ -16,10 +16,10 @@
 #ifndef UVECTOR32_H
 #define UVECTOR32_H
 
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "uhash.h"
-#include "uassert.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/uobject.h"
+#അന്തര്ഭാവ "uhash.h"
+#അന്തര്ഭാവ "uassert.h"
 
 U_NAMESPACE_BEGIN
 
@@ -58,9 +58,9 @@ U_NAMESPACE_BEGIN
  *
  * @author Alan Liu
  */
-class U_COMMON_API UVector32 : public UObject {
-private:
-    int32_t   count;
+class U_COMMON_API UVector32 : പൊതു UObject {
+സ്വകാര്യ:
+    int32_t   എണ്ണം;
 
     int32_t   capacity;
     
@@ -68,67 +68,67 @@ private:
 
     int32_t*  elements;
 
-public:
+പൊതു:
     UVector32(UErrorCode &status);
 
     UVector32(int32_t initialCapacity, UErrorCode &status);
 
-    virtual ~UVector32();
+    മായാ ~UVector32();
 
     /**
      * Assign this object to another (make this a copy of 'other').
      * Use the 'assign' function to assign each element.
      */
-    void assign(const UVector32& other, UErrorCode &ec);
+    ശൂന്യം assign(സ്ഥിരം UVector32& other, UErrorCode &ec);
 
     /**
      * Compare this vector with another.  They will be considered
      * equal if they are of the same size and all elements are equal,
      * as compared using this object's comparer.
      */
-    bool operator==(const UVector32& other) const;
+    bool operator==(സ്ഥിരം UVector32& other) സ്ഥിരം;
 
     /**
      * Equivalent to !operator==()
      */
-    inline bool operator!=(const UVector32& other) const;
+    വരിയിൽ bool operator!=(സ്ഥിരം UVector32& other) സ്ഥിരം;
 
     //------------------------------------------------------------
     // java.util.Vector API
     //------------------------------------------------------------
 
-    inline void addElement(int32_t elem, UErrorCode &status);
+    വരിയിൽ ശൂന്യം addElement(int32_t elem, UErrorCode &status);
 
-    void setElementAt(int32_t elem, int32_t index);
+    ശൂന്യം setElementAt(int32_t elem, int32_t index);
 
-    void insertElementAt(int32_t elem, int32_t index, UErrorCode &status);
+    ശൂന്യം തിരുകുക_Element_At(int32_t elem, int32_t index, UErrorCode &status);
     
-    inline int32_t elementAti(int32_t index) const;
+    വരിയിൽ int32_t elementAti(int32_t index) സ്ഥിരം;
 
-    UBool equals(const UVector32 &other) const;
+    UBool equals(സ്ഥിരം UVector32 &other) സ്ഥിരം;
 
-    inline int32_t lastElementi() const;
+    വരിയിൽ int32_t lastElementi() സ്ഥിരം;
 
-    int32_t indexOf(int32_t elem, int32_t startIndex = 0) const;
+    int32_t indexOf(int32_t elem, int32_t startIndex = 0) സ്ഥിരം;
 
-    inline UBool contains(int32_t elem) const;
+    വരിയിൽ UBool contains(int32_t elem) സ്ഥിരം;
 
-    UBool containsAll(const UVector32& other) const;
+    UBool containsAll(സ്ഥിരം UVector32& other) സ്ഥിരം;
 
-    UBool removeAll(const UVector32& other);
+    UBool removeAll(സ്ഥിരം UVector32& other);
 
-    UBool retainAll(const UVector32& other);
+    UBool retainAll(സ്ഥിരം UVector32& other);
 
-    void removeElementAt(int32_t index);
+    ശൂന്യം removeElementAt(int32_t index);
 
-    void removeAllElements();
+    ശൂന്യം removeAllElements();
 
-    inline int32_t size() const;
+    വരിയിൽ int32_t size() സ്ഥിരം;
 
-    inline UBool isEmpty() const;
+    വരിയിൽ UBool isEmpty() സ്ഥിരം;
 
     // Inline.  Use this one for speedy size check.
-    inline UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
+    വരിയിൽ UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
 
     // Out-of-line, handles actual growth.  Called by ensureCapacity() when necessary.
     UBool expandCapacity(int32_t minimumCapacity, UErrorCode &status);
@@ -139,7 +139,7 @@ public:
      * elements for i >= newSize.  If newSize is larger, grow the
      * array, filling in new slows with zero.
      */
-    void setSize(int32_t newSize);
+    ശൂന്യം setSize(int32_t newSize);
 
     //------------------------------------------------------------
     // New API
@@ -151,19 +151,19 @@ public:
      * @param other vector to be checked for containment
      * @return true if the test condition is met
      */
-    UBool containsNone(const UVector32& other) const;
+    UBool containsNone(സ്ഥിരം UVector32& other) സ്ഥിരം;
 
 
     /**
      * Insert the given integer into this vector at its sorted position.
      * The current elements are assumed to be sorted already.
      */
-    void sortedInsert(int32_t elem, UErrorCode& ec);
+    ശൂന്യം sorted_തിരുകുക(int32_t elem, UErrorCode& ec);
 
     /**
      * Returns a pointer to the internal array holding the vector.
      */
-    inline int32_t *getBuffer() const;
+    വരിയിൽ int32_t *getBuffer() സ്ഥിരം;
 
     /**
      * Set the maximum allowed buffer capacity for this vector/stack.
@@ -171,134 +171,134 @@ public:
      * A Limit of zero means unlimited capacity.
      * Units are vector elements (32 bits each), not bytes.
      */
-    void setMaxCapacity(int32_t limit);
+    ശൂന്യം setMaxCapacity(int32_t limit);
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    സ്ഥിതം UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      */
-    virtual UClassID getDynamicClassID() const override;
+    മായാ UClassID getDynamicClassID() സ്ഥിരം override;
 
-private:
-    void _init(int32_t initialCapacity, UErrorCode &status);
-
-    // Disallow
-    UVector32(const UVector32&) = delete;
+സ്വകാര്യ:
+    ശൂന്യം _init(int32_t initialCapacity, UErrorCode &status);
 
     // Disallow
-    UVector32& operator=(const UVector32&) = delete;
+    UVector32(സ്ഥിരം UVector32&) = delete;
+
+    // Disallow
+    UVector32& operator=(സ്ഥിരം UVector32&) = delete;
 
 
     //  API Functions for Stack operations.
     //  In the original UVector, these were in a separate derived class, UStack.
     //  Here in UVector32, they are all together.
-public:
-    inline UBool empty() const;   // TODO:  redundant, same as empty().  Remove it?
+പൊതു:
+    വരിയിൽ UBool empty() സ്ഥിരം;   // TODO:  redundant, same as empty().  Remove it?
 
-    inline int32_t peeki() const;
+    വരിയിൽ int32_t peeki() സ്ഥിരം;
     
-    inline int32_t popi();
+    വരിയിൽ int32_t popi();
     
-    inline int32_t push(int32_t i, UErrorCode &status);
+    വരിയിൽ int32_t തള്ളുക(int32_t i, UErrorCode &status);
 
-    inline int32_t *reserveBlock(int32_t size, UErrorCode &status);
-    inline int32_t *popFrame(int32_t size);
+    വരിയിൽ int32_t *reserveBlock(int32_t size, UErrorCode &status);
+    വരിയിൽ int32_t *എടുക്കുക_Frame(int32_t size);
 };
 
 
 // UVector32 inlines
 
-inline UBool UVector32::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
-    if ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
-        return true;
-    } else {
-        return expandCapacity(minimumCapacity, status);
+വരിയിൽ UBool UVector32::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
+    എങ്കിൽ ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
+        തിരികെ true;
+    } അല്ലെങ്കിൽ {
+        തിരികെ expandCapacity(minimumCapacity, status);
     }
 }
 
-inline int32_t UVector32::elementAti(int32_t index) const {
-    return (index >= 0 && count > 0 && count - index > 0) ? elements[index] : 0;
+വരിയിൽ int32_t UVector32::elementAti(int32_t index) സ്ഥിരം {
+    തിരികെ (index >= 0 && എണ്ണം > 0 && എണ്ണം - index > 0) ? elements[index] : 0;
 }
 
 
-inline void UVector32::addElement(int32_t elem, UErrorCode &status) {
-    if (ensureCapacity(count + 1, status)) {
-        elements[count] = elem;
-        count++;
+വരിയിൽ ശൂന്യം UVector32::addElement(int32_t elem, UErrorCode &status) {
+    എങ്കിൽ (ensureCapacity(എണ്ണം + 1, status)) {
+        elements[എണ്ണം] = elem;
+        എണ്ണം++;
     }
 }
 
-inline int32_t *UVector32::reserveBlock(int32_t size, UErrorCode &status) {
-    if (ensureCapacity(count+size, status) == false) {
-        return nullptr;
+വരിയിൽ int32_t *UVector32::reserveBlock(int32_t size, UErrorCode &status) {
+    എങ്കിൽ (ensureCapacity(എണ്ണം+size, status) == false) {
+        തിരികെ nullptr;
     }
-    int32_t  *rp = elements+count;
-    count += size;
-    return rp;
+    int32_t  *rp = elements+എണ്ണം;
+    എണ്ണം += size;
+    തിരികെ rp;
 }
 
-inline int32_t *UVector32::popFrame(int32_t size) {
-    U_ASSERT(count >= size);
-    count -= size;
-    if (count < 0) {
-        count = 0;
+വരിയിൽ int32_t *UVector32::എടുക്കുക_Frame(int32_t size) {
+    U_ASSERT(എണ്ണം >= size);
+    എണ്ണം -= size;
+    എങ്കിൽ (എണ്ണം < 0) {
+        എണ്ണം = 0;
     }
-    return elements+count-size;
+    തിരികെ elements+എണ്ണം-size;
 }
 
 
 
-inline int32_t UVector32::size() const {
-    return count;
+വരിയിൽ int32_t UVector32::size() സ്ഥിരം {
+    തിരികെ എണ്ണം;
 }
 
-inline UBool UVector32::isEmpty() const {
-    return count == 0;
+വരിയിൽ UBool UVector32::isEmpty() സ്ഥിരം {
+    തിരികെ എണ്ണം == 0;
 }
 
-inline UBool UVector32::contains(int32_t obj) const {
-    return indexOf(obj) >= 0;
+വരിയിൽ UBool UVector32::contains(int32_t obj) സ്ഥിരം {
+    തിരികെ indexOf(obj) >= 0;
 }
 
-inline int32_t UVector32::lastElementi() const {
-    return elementAti(count-1);
+വരിയിൽ int32_t UVector32::lastElementi() സ്ഥിരം {
+    തിരികെ elementAti(എണ്ണം-1);
 }
 
-inline bool UVector32::operator!=(const UVector32& other) const {
-    return !operator==(other);
+വരിയിൽ bool UVector32::operator!=(സ്ഥിരം UVector32& other) സ്ഥിരം {
+    തിരികെ !operator==(other);
 }
 
-inline int32_t *UVector32::getBuffer() const {
-    return elements;
+വരിയിൽ int32_t *UVector32::getBuffer() സ്ഥിരം {
+    തിരികെ elements;
 }
 
 
 // UStack inlines
 
-inline UBool UVector32::empty() const {
-    return isEmpty();
+വരിയിൽ UBool UVector32::empty() സ്ഥിരം {
+    തിരികെ isEmpty();
 }
 
-inline int32_t UVector32::peeki() const {
-    return lastElementi();
+വരിയിൽ int32_t UVector32::peeki() സ്ഥിരം {
+    തിരികെ lastElementi();
 }
 
-inline int32_t UVector32::push(int32_t i, UErrorCode &status) {
+വരിയിൽ int32_t UVector32::തള്ളുക(int32_t i, UErrorCode &status) {
     addElement(i, status);
-    return i;
+    തിരികെ i;
 }
 
-inline int32_t UVector32::popi() {
+വരിയിൽ int32_t UVector32::popi() {
     int32_t result = 0;
-    if (count > 0) {
-        count--;
-        result = elements[count];
+    എങ്കിൽ (എണ്ണം > 0) {
+        എണ്ണം--;
+        result = elements[എണ്ണം];
     }
-    return result;
+    തിരികെ result;
 }
 
 U_NAMESPACE_END

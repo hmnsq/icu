@@ -4,21 +4,21 @@
 #ifndef MLBREAKENGINE_H
 #define MLBREAKENGINE_H
 
-#include "hash.h"
-#include "unicode/resbund.h"
-#include "unicode/uniset.h"
-#include "unicode/utext.h"
-#include "uvectr32.h"
+#അന്തര്ഭാവ "hash.h"
+#അന്തര്ഭാവ "unicode/resbund.h"
+#അന്തര്ഭാവ "unicode/uniset.h"
+#അന്തര്ഭാവ "unicode/utext.h"
+#അന്തര്ഭാവ "uvectr32.h"
 
 U_NAMESPACE_BEGIN
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#എങ്കിൽ !UCONFIG_NO_BREAK_ITERATION
 
 /**
  * A machine learning break engine for the phrase breaking in Japanese.
  */
-class MlBreakEngine : public UMemory {
-   public:
+class MlBreakEngine : പൊതു UMemory {
+   പൊതു:
     /**
      * Constructor.
      *
@@ -27,15 +27,15 @@ class MlBreakEngine : public UMemory {
      * @param closePunctuationSet An UnicodeSet with close punctuation.
      * @param status Information on any errors encountered.
      */
-    MlBreakEngine(const UnicodeSet &digitOrOpenPunctuationOrAlphabetSet,
-                  const UnicodeSet &closePunctuationSet, UErrorCode &status);
+    MlBreakEngine(സ്ഥിരം UnicodeSet &digitOrOpenPunctuationOrAlphabetSet,
+                  സ്ഥിരം UnicodeSet &closePunctuationSet, UErrorCode &status);
 
     /**
      * Virtual destructor.
      */
-    virtual ~MlBreakEngine();
+    മായാ ~MlBreakEngine();
 
-   public:
+   പൊതു:
     /**
      * Divide up a range of characters handled by this break engine.
      *
@@ -49,16 +49,16 @@ class MlBreakEngine : public UMemory {
      * @return The number of breaks found
      */
     int32_t divideUpRange(UText *inText, int32_t rangeStart, int32_t rangeEnd,
-                          UVector32 &foundBreaks, const UnicodeString &inString,
-                          const LocalPointer<UVector32> &inputMap, UErrorCode &status) const;
+                          UVector32 &foundBreaks, സ്ഥിരം UnicodeString &inString,
+                          സ്ഥിരം LocalPointer<UVector32> &നിവേശം_Map, UErrorCode &status) സ്ഥിരം;
 
-   private:
+   സ്വകാര്യ:
     /**
      * Load the machine learning's model file.
      *
      * @param error Information on any errors encountered.
      */
-    void loadMLModel(UErrorCode &error);
+    ശൂന്യം loadMLModel(UErrorCode &error);
 
     /**
      * In the machine learning's model file, specify the name of the key and value to load the
@@ -70,7 +70,7 @@ class MlBreakEngine : public UMemory {
      * @param model A hashtable to store the pairs of the feature and its score.
      * @param error Information on any errors encountered.
      */
-    void initKeyValue(UResourceBundle *rb, const char *keyName, const char *valueName,
+    ശൂന്യം init_താക്കോൽ_മൂല്യം(UResourceBundle *rb, സ്ഥിരം അക്ഷരം *താക്കോൽ_Name, സ്ഥിരം അക്ഷരം *മൂല്യം_Name,
                       Hashtable &model, UErrorCode &error);
 
     /**
@@ -81,8 +81,8 @@ class MlBreakEngine : public UMemory {
      * @param status Information on any errors encountered.
      * @return The number of code units of the first four characters in inString.
      */
-    int32_t initIndexList(const UnicodeString &inString, int32_t *indexList,
-                          UErrorCode &status) const;
+    int32_t initIndexList(സ്ഥിരം UnicodeString &inString, int32_t *indexList,
+                          UErrorCode &status) സ്ഥിരം;
 
     /**
      * Evaluate whether the index is a potential breakpoint.
@@ -96,11 +96,11 @@ class MlBreakEngine : public UMemory {
      * @param status Information on any errors encountered.
      * @return The number of breakpoints
      */
-    int32_t evaluateBreakpoint(const UnicodeString &inString, int32_t *indexList, int32_t startIdx,
-                               int32_t numCodeUnits, int32_t numBreaks, UVector32 &boundary,
-                               UErrorCode &status) const;
+    int32_t evaluateBreakpoint(സ്ഥിരം UnicodeString &inString, int32_t *indexList, int32_t startIdx,
+                               int32_t അക്കം_Code_Units, int32_t അക്കം_Breaks, UVector32 &boundary,
+                               UErrorCode &status) സ്ഥിരം;
 
-    void printUnicodeString(const UnicodeString &s) const;
+    ശൂന്യം printUnicodeString(സ്ഥിരം UnicodeString &s) സ്ഥിരം;
 
     UnicodeSet fDigitOrOpenPunctuationOrAlphabetSet;
     UnicodeSet fClosePunctuationSet;

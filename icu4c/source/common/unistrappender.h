@@ -13,11 +13,11 @@
 #ifndef __UNISTRAPPENDER_H__
 #define __UNISTRAPPENDER_H__
 
-#include "unicode/unistr.h"
-#include "unicode/uobject.h"
-#include "unicode/utf16.h"
-#include "unicode/utypes.h"
-#include "cmemory.h"
+#അന്തര്ഭാവ "unicode/unistr.h"
+#അന്തര്ഭാവ "unicode/uobject.h"
+#അന്തര്ഭാവ "unicode/utf16.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
+#അന്തര്ഭാവ "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
@@ -36,8 +36,8 @@ U_NAMESPACE_BEGIN
  *     // appender flushed automatically when it goes out of scope.
  * }
  */
-class UnicodeStringAppender : public UMemory {
-public:
+class UnicodeStringAppender : പൊതു UMemory {
+പൊതു:
     
     /**
      * dest is the UnicodeString being appended to. It must always
@@ -45,16 +45,16 @@ public:
      */
     UnicodeStringAppender(UnicodeString &dest) : fDest(&dest), fIdx(0) { }
 
-    inline void append(char16_t x) {
-        if (fIdx == UPRV_LENGTHOF(fBuffer)) {
+    വരിയിൽ ശൂന്യം append(char16_t x) {
+        എങ്കിൽ (fIdx == UPRV_LENGTHOF(fBuffer)) {
             fDest->append(fBuffer, 0, fIdx);
             fIdx = 0;
         }
         fBuffer[fIdx++] = x;
     }
 
-    inline void append(UChar32 x) {
-        if (fIdx >= UPRV_LENGTHOF(fBuffer) - 1) {
+    വരിയിൽ ശൂന്യം append(UChar32 x) {
+        എങ്കിൽ (fIdx >= UPRV_LENGTHOF(fBuffer) - 1) {
             fDest->append(fBuffer, 0, fIdx);
             fIdx = 0;
         }
@@ -64,8 +64,8 @@ public:
     /**
      * Ensures that all appended characters have been written out to dest.
      */
-    inline void flush() {
-        if (fIdx) {
+    വരിയിൽ ശൂന്യം flush() {
+        എങ്കിൽ (fIdx) {
             fDest->append(fBuffer, 0, fIdx);
         }
         fIdx = 0;
@@ -77,12 +77,12 @@ public:
     ~UnicodeStringAppender() {
         flush();
     }
-private:
+സ്വകാര്യ:
     UnicodeString *fDest;
     int32_t fIdx;
     char16_t fBuffer[32];
-    UnicodeStringAppender(const UnicodeStringAppender &other);
-    UnicodeStringAppender &operator=(const UnicodeStringAppender &other);
+    UnicodeStringAppender(സ്ഥിരം UnicodeStringAppender &other);
+    UnicodeStringAppender &operator=(സ്ഥിരം UnicodeStringAppender &other);
 };
 
 U_NAMESPACE_END

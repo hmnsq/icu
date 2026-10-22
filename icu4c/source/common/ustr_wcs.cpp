@@ -19,82 +19,82 @@
 *   moved here from ustrtrns.c for better modularization.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/ustring.h"
-#include "cstring.h"
-#include "cwchar.h"
-#include "cmemory.h"
-#include "ustr_imp.h"
-#include "ustr_cnv.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/ustring.h"
+#അന്തര്ഭാവ "cstring.h"
+#അന്തര്ഭാവ "cwchar.h"
+#അന്തര്ഭാവ "cmemory.h"
+#അന്തര്ഭാവ "ustr_imp.h"
+#അന്തര്ഭാവ "ustr_cnv.h"
 
-#if defined(U_WCHAR_IS_UTF16) || defined(U_WCHAR_IS_UTF32) || !UCONFIG_NO_CONVERSION
+#എങ്കിൽ defined(U_WCHAR_IS_UTF16) || defined(U_WCHAR_IS_UTF32) || !UCONFIG_NO_CONVERSION
 
-#define _STACK_BUFFER_CAPACITY 1000
+#define അട്ടി_BUFFER_CAPACITY 1000
 #define _BUFFER_CAPACITY_MULTIPLIER 2
 
-#if !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
+#എങ്കിൽ !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
 // TODO: We should use CharString for char buffers and UnicodeString for char16_t buffers.
 // Then we could change this to work only with wchar_t buffers.
-static inline UBool 
-u_growAnyBufferFromStatic(void *context,
-                       void **pBuffer, int32_t *pCapacity, int32_t reqCapacity,
+സ്ഥിതം വരിയിൽ UBool 
+u_growAnyBufferFromStatic(ശൂന്യം *context,
+                       ശൂന്യം **pBuffer, int32_t *pCapacity, int32_t reqCapacity,
                        int32_t length, int32_t size) {
     // Use char* not void* to avoid the compiler's strict-aliasing assumptions
     // and related warnings.
-    char *newBuffer=(char *)uprv_malloc(reqCapacity*size);
-    if(newBuffer!=nullptr) {
-        if(length>0) {
+    അക്ഷരം *newBuffer=(അക്ഷരം *)uprv_malloc(reqCapacity*size);
+    എങ്കിൽ(newBuffer!=nullptr) {
+        എങ്കിൽ(length>0) {
             uprv_memcpy(newBuffer, *pBuffer, (size_t)length*size);
         }
         *pCapacity=reqCapacity;
-    } else {
+    } അല്ലെങ്കിൽ {
         *pCapacity=0;
     }
 
     /* release the old pBuffer if it was not statically allocated */
-    if(*pBuffer!=(char *)context) {
+    എങ്കിൽ(*pBuffer!=(അക്ഷരം *)context) {
         uprv_free(*pBuffer);
     }
 
     *pBuffer=newBuffer;
-    return newBuffer!=nullptr;
+    തിരികെ newBuffer!=nullptr;
 }
 
 /* helper function */
-static wchar_t* 
+സ്ഥിതം wchar_t* 
 _strToWCS(wchar_t *dest, 
            int32_t destCapacity,
            int32_t *pDestLength,
-           const char16_t *src,
+           സ്ഥിരം char16_t *src,
            int32_t srcLength,
            UErrorCode *pErrorCode){
 
-    char stackBuffer [_STACK_BUFFER_CAPACITY];
-    char* tempBuf = stackBuffer;
-    int32_t tempBufCapacity = _STACK_BUFFER_CAPACITY;
-    char* tempBufLimit = stackBuffer + tempBufCapacity;
+    അക്ഷരം അട്ടി_Buffer [അട്ടി_BUFFER_CAPACITY];
+    അക്ഷരം* tempBuf = അട്ടി_Buffer;
+    int32_t tempBufCapacity = അട്ടി_BUFFER_CAPACITY;
+    അക്ഷരം* tempBufLimit = അട്ടി_Buffer + tempBufCapacity;
     UConverter* conv = nullptr;
-    char* saveBuf = tempBuf;
+    അക്ഷരം* saveBuf = tempBuf;
     wchar_t* intTarget=nullptr;
     int32_t intTargetCapacity=0;
-    int count=0,retVal=0;
+    പൂർണ്ണസംഖ്യ count=0,retVal=0;
     
-    const char16_t *pSrcLimit =nullptr;
-    const char16_t *pSrc = src;
+    സ്ഥിരം char16_t *pSrcLimit =nullptr;
+    സ്ഥിരം char16_t *pSrc = src;
 
     conv = u_getDefaultConverter(pErrorCode);
     
-    if(U_FAILURE(*pErrorCode)){
-        return nullptr;
+    എങ്കിൽ(U_FAILURE(*pErrorCode)){
+        തിരികെ nullptr;
     }
     
-    if(srcLength == -1){
+    എങ്കിൽ(srcLength == -1){
         srcLength = u_strlen(pSrc);
     }
     
     pSrcLimit = pSrc + srcLength;
 
-    for(;;) {
+    വേണ്ടി(;;) {
         UErrorCode bufferStatus = U_ZERO_ERROR;
 
         /* convert to chars using default converter */
@@ -102,38 +102,38 @@ _strToWCS(wchar_t *dest,
         count =(tempBuf - saveBuf);
         
         /* This should rarely occur */
-        if(bufferStatus==U_BUFFER_OVERFLOW_ERROR){
+        എങ്കിൽ(bufferStatus==U_BUFFER_OVERFLOW_ERROR){
             tempBuf = saveBuf;
             
             /* we don't have enough room on the stack grow the buffer */
             int32_t newCapacity = 2 * srcLength;
-            if(newCapacity <= tempBufCapacity) {
+            എങ്കിൽ(newCapacity <= tempBufCapacity) {
                 newCapacity = _BUFFER_CAPACITY_MULTIPLIER * tempBufCapacity;
             }
-            if(!u_growAnyBufferFromStatic(stackBuffer,(void**) &tempBuf, &tempBufCapacity,
+            എങ്കിൽ(!u_growAnyBufferFromStatic(അട്ടി_Buffer,(ശൂന്യം**) &tempBuf, &tempBufCapacity,
                     newCapacity, count, 1)) {
-                goto cleanup;
+                പോകുക cleanup;
             }
           
            saveBuf = tempBuf;
            tempBufLimit = tempBuf + tempBufCapacity;
            tempBuf = tempBuf + count;
-        } else {
-            if (U_FAILURE(bufferStatus)) {
+        } അല്ലെങ്കിൽ {
+            എങ്കിൽ (U_FAILURE(bufferStatus)) {
                 *pErrorCode = bufferStatus;
-                goto cleanup;
+                പോകുക cleanup;
             }
-            break;
+            നിർത്തുക;
         }
     }
 
     /* done with conversion null terminate the char buffer */
-    if(count>=tempBufCapacity){
+    എങ്കിൽ(count>=tempBufCapacity){
         tempBuf = saveBuf;
         /* we don't have enough room on the stack grow the buffer */
-        if(!u_growAnyBufferFromStatic(stackBuffer,(void**) &tempBuf, &tempBufCapacity, 
+        എങ്കിൽ(!u_growAnyBufferFromStatic(അട്ടി_Buffer,(ശൂന്യം**) &tempBuf, &tempBufCapacity, 
                 count+1, count, 1)) {
-            goto cleanup;
+            പോകുക cleanup;
         }              
        saveBuf = tempBuf;
     }
@@ -146,9 +146,9 @@ _strToWCS(wchar_t *dest,
      * no more than 2 wchar_ts
      */
     intTargetCapacity =  (count * _BUFFER_CAPACITY_MULTIPLIER + 1) /*for null termination */;
-    intTarget = (wchar_t*)uprv_malloc( intTargetCapacity * sizeof(wchar_t) );
+    intTarget = (wchar_t*)uprv_malloc( intTargetCapacity * വലുപ്പം(wchar_t) );
 
-    if(intTarget){
+    എങ്കിൽ(intTarget){
 
         int32_t nulLen = 0;
         int32_t remaining = intTargetCapacity;
@@ -156,73 +156,73 @@ _strToWCS(wchar_t *dest,
         tempBuf = saveBuf;
         
         /* now convert the mbs to wcs */
-        for(;;){
+        വേണ്ടി(;;){
             
             /* we can call the system API since we are sure that
              * there is atleast 1 null in the input
              */
             retVal = uprv_mbstowcs(pIntTarget,(tempBuf+nulLen),remaining);
             
-            if(retVal==-1){
+            എങ്കിൽ(retVal==-1){
                 *pErrorCode = U_INVALID_CHAR_FOUND;
-                break;
-            }else if(retVal== remaining){/* should never occur */
-                int numWritten = (pIntTarget-intTarget);
-                u_growAnyBufferFromStatic(nullptr,(void**) &intTarget,
+                നിർത്തുക;
+            }അല്ലെങ്കിൽ എങ്കിൽ(retVal== remaining){/* should never occur */
+                പൂർണ്ണസംഖ്യ അക്കം_Written = (pIntTarget-intTarget);
+                u_growAnyBufferFromStatic(nullptr,(ശൂന്യം**) &intTarget,
                                           &intTargetCapacity,
                                           intTargetCapacity * _BUFFER_CAPACITY_MULTIPLIER,
-                                          numWritten,
-                                          sizeof(wchar_t));
+                                          അക്കം_Written,
+                                          വലുപ്പം(wchar_t));
                 pIntTarget = intTarget;
                 remaining=intTargetCapacity;
 
-                if(nulLen!=count){ /*there are embedded nulls*/
-                    pIntTarget+=numWritten;
-                    remaining-=numWritten;
+                എങ്കിൽ(nulLen!=count){ /*there are embedded nulls*/
+                    pIntTarget+=അക്കം_Written;
+                    remaining-=അക്കം_Written;
                 }
 
-            }else{
+            }അല്ലെങ്കിൽ{
                 int32_t nulVal;
                 /*scan for nulls */
                 /* we donot check for limit since tempBuf is null terminated */
-                while(tempBuf[nulLen++] != 0){
+                ആകുമ്പോൾ(tempBuf[nulLen++] != 0){
                 }
                 nulVal = (nulLen < srcLength) ? 1 : 0; 
                 pIntTarget = pIntTarget + retVal+nulVal;
                 remaining -=(retVal+nulVal);
             
                 /* check if we have reached the source limit*/
-                if(nulLen>=(count)){
-                    break;
+                എങ്കിൽ(nulLen>=(count)){
+                    നിർത്തുക;
                 }
             }
         }
         count = (int32_t)(pIntTarget-intTarget);
        
-        if(0 < count && count <= destCapacity){
-            uprv_memcpy(dest, intTarget, (size_t)count*sizeof(wchar_t));
+        എങ്കിൽ(0 < count && count <= destCapacity){
+            uprv_memcpy(dest, intTarget, (size_t)count*വലുപ്പം(wchar_t));
         }  
 
-        if(pDestLength){
+        എങ്കിൽ(pDestLength){
             *pDestLength = count;
         }
 
         /* free the allocated memory */
         uprv_free(intTarget);
 
-    }else{
+    }അല്ലെങ്കിൽ{
         *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
     }
 cleanup:
     /* are we still using stack buffer */
-    if(stackBuffer != saveBuf){
+    എങ്കിൽ(അട്ടി_Buffer != saveBuf){
         uprv_free(saveBuf);
     }
     u_terminateWChars(dest,destCapacity,count,pErrorCode);
 
     u_releaseDefaultConverter(conv);
 
-    return dest;
+    തിരികെ dest;
 }
 #endif
 
@@ -230,58 +230,58 @@ U_CAPI wchar_t* U_EXPORT2
 u_strToWCS(wchar_t* dest U_LIFETIME_BOUND,
            int32_t destCapacity,
            int32_t* pDestLength,
-           const char16_t* src,
+           സ്ഥിരം char16_t* src,
            int32_t srcLength,
            UErrorCode* pErrorCode) {
 
     /* args check */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)){
-        return nullptr;
+    എങ്കിൽ(pErrorCode==nullptr || U_FAILURE(*pErrorCode)){
+        തിരികെ nullptr;
     }
         
-    if( (src==nullptr && srcLength!=0) || srcLength < -1 ||
+    എങ്കിൽ( (src==nullptr && srcLength!=0) || srcLength < -1 ||
         (destCapacity<0) || (dest == nullptr && destCapacity > 0)
     ) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
     
 #ifdef U_WCHAR_IS_UTF16
     /* wchar_t is UTF-16 just do a memcpy */
-    if(srcLength == -1){
+    എങ്കിൽ(srcLength == -1){
         srcLength = u_strlen(src);
     }
-    if(0 < srcLength && srcLength <= destCapacity){
+    എങ്കിൽ(0 < srcLength && srcLength <= destCapacity){
         u_memcpy((char16_t *)dest, src, srcLength);
     }
-    if(pDestLength){
+    എങ്കിൽ(pDestLength){
        *pDestLength = srcLength;
     }
 
     u_terminateUChars((char16_t *)dest,destCapacity,srcLength,pErrorCode);
 
-    return dest;
+    തിരികെ dest;
 
-#elif defined U_WCHAR_IS_UTF32
+#അല്ലെങ്കിലെങ്കിൽ defined U_WCHAR_IS_UTF32
     
-    return (wchar_t*)u_strToUTF32((UChar32*)dest, destCapacity, pDestLength,
+    തിരികെ (wchar_t*)u_strToUTF32((UChar32*)dest, destCapacity, pDestLength,
                                   src, srcLength, pErrorCode);
 
-#else
+#അല്ലെങ്കിൽ
     
-    return _strToWCS(dest,destCapacity,pDestLength,src,srcLength, pErrorCode);
+    തിരികെ _strToWCS(dest,destCapacity,pDestLength,src,srcLength, pErrorCode);
     
 #endif
 
 }
 
-#if !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
+#എങ്കിൽ !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
 /* helper function */
-static char16_t*
+സ്ഥിതം char16_t*
 _strFromWCS( char16_t   *dest,
              int32_t destCapacity, 
              int32_t *pDestLength,
-             const wchar_t *src,
+             സ്ഥിരം wchar_t *src,
              int32_t srcLength,
              UErrorCode *pErrorCode)
 {
@@ -291,74 +291,74 @@ _strFromWCS( char16_t   *dest,
     char16_t* pTargetLimit = nullptr;
     char16_t* target = nullptr;
     
-    char16_t uStack [_STACK_BUFFER_CAPACITY];
+    char16_t u_അട്ടി [അട്ടി_BUFFER_CAPACITY];
 
-    wchar_t wStack[_STACK_BUFFER_CAPACITY];
-    wchar_t* pWStack = wStack;
+    wchar_t w_അട്ടി[അട്ടി_BUFFER_CAPACITY];
+    wchar_t* pWStack = w_അട്ടി;
 
 
-    char cStack[_STACK_BUFFER_CAPACITY];
-    int32_t cStackCap = _STACK_BUFFER_CAPACITY;
-    char* pCSrc=cStack;
-    char* pCSave=pCSrc;
-    char* pCSrcLimit=nullptr;
+    അക്ഷരം c_അട്ടി[അട്ടി_BUFFER_CAPACITY];
+    int32_t c_അട്ടി_Cap = അട്ടി_BUFFER_CAPACITY;
+    അക്ഷരം* pCSrc=c_അട്ടി;
+    അക്ഷരം* pCSave=pCSrc;
+    അക്ഷരം* pCSrcLimit=nullptr;
 
-    const wchar_t* pSrc = src;
-    const wchar_t* pSrcLimit = nullptr;
+    സ്ഥിരം wchar_t* pSrc = src;
+    സ്ഥിരം wchar_t* pSrcLimit = nullptr;
 
-    if(srcLength ==-1){
+    എങ്കിൽ(srcLength ==-1){
         /* if the wchar_t source is null terminated we can safely
          * assume that there are no embedded nulls, this is a fast
          * path for null terminated strings.
          */
-        for(;;){
+        വേണ്ടി(;;){
             /* convert wchars  to chars */
-            retVal = uprv_wcstombs(pCSrc,src, cStackCap);
+            retVal = uprv_wcstombs(pCSrc,src, c_അട്ടി_Cap);
     
-            if(retVal == -1){
+            എങ്കിൽ(retVal == -1){
                 *pErrorCode = U_ILLEGAL_CHAR_FOUND;
-                goto cleanup;
-            }else if(retVal >= (cStackCap-1)){
+                പോകുക cleanup;
+            }അല്ലെങ്കിൽ എങ്കിൽ(retVal >= (c_അട്ടി_Cap-1)){
                 /* Should rarely occur */
-                u_growAnyBufferFromStatic(cStack,(void**)&pCSrc,&cStackCap,
-                    cStackCap * _BUFFER_CAPACITY_MULTIPLIER, 0, sizeof(char));
+                u_growAnyBufferFromStatic(c_അട്ടി,(ശൂന്യം**)&pCSrc,&c_അട്ടി_Cap,
+                    c_അട്ടി_Cap * _BUFFER_CAPACITY_MULTIPLIER, 0, വലുപ്പം(അക്ഷരം));
                 pCSave = pCSrc;
-            }else{
+            }അല്ലെങ്കിൽ{
                 /* converted every thing */
                 pCSrc = pCSrc+retVal;
-                break;
+                നിർത്തുക;
             }
         }
         
-    }else{
+    }അല്ലെങ്കിൽ{
         /* here the source is not null terminated 
          * so it may have nulls embedded and we need to
          * do some extra processing 
          */
-        int32_t remaining =cStackCap;
+        int32_t remaining =c_അട്ടി_Cap;
         
         pSrcLimit = src + srcLength;
 
-        for(;;){
+        വേണ്ടി(;;){
             int32_t nulLen = 0;
 
             /* find nulls in the string */
-            while(nulLen<srcLength && pSrc[nulLen++]!=0){
+            ആകുമ്പോൾ(nulLen<srcLength && pSrc[nulLen++]!=0){
             }
 
-            if((pSrc+nulLen) < pSrcLimit){
+            എങ്കിൽ((pSrc+nulLen) < pSrcLimit){
                 /* check if we have enough room in pCSrc */
-                if(remaining < (nulLen * MB_CUR_MAX)){
+                എങ്കിൽ(remaining < (nulLen * MB_CUR_MAX)){
                     /* should rarely occur */
                     int32_t len = (pCSrc-pCSave);
                     pCSrc = pCSave;
                     /* we do not have enough room so grow the buffer*/
-                    u_growAnyBufferFromStatic(cStack,(void**)&pCSrc,&cStackCap,
-                           _BUFFER_CAPACITY_MULTIPLIER*cStackCap+(nulLen*MB_CUR_MAX),len,sizeof(char));
+                    u_growAnyBufferFromStatic(c_അട്ടി,(ശൂന്യം**)&pCSrc,&c_അട്ടി_Cap,
+                           _BUFFER_CAPACITY_MULTIPLIER*c_അട്ടി_Cap+(nulLen*MB_CUR_MAX),len,വലുപ്പം(അക്ഷരം));
 
                     pCSave = pCSrc;
                     pCSrc = pCSave+len;
-                    remaining = cStackCap-(pCSrc - pCSave);
+                    remaining = c_അട്ടി_Cap-(pCSrc - pCSave);
                 }
 
                 /* we have found a null  so convert the 
@@ -366,10 +366,10 @@ _strFromWCS( char16_t   *dest,
                  */
                 retVal = uprv_wcstombs(pCSrc,pSrc,remaining);
 
-                if(retVal==-1){
+                എങ്കിൽ(retVal==-1){
                     /* an error occurred bail out */
                     *pErrorCode = U_ILLEGAL_CHAR_FOUND;
-                    goto cleanup;
+                    പോകുക cleanup;
                 }
 
                 pCSrc += retVal+1 /* already null terminated */;
@@ -379,39 +379,39 @@ _strFromWCS( char16_t   *dest,
                 remaining -= (pCSrc-pCSave);
 
 
-            }else{
+            }അല്ലെങ്കിൽ{
                 /* the source is not null terminated and we are 
                  * end of source so we copy the source to a temp buffer
                  * null terminate it and convert wchar_ts to chars
                  */
-                if(nulLen >= _STACK_BUFFER_CAPACITY){
+                എങ്കിൽ(nulLen >= അട്ടി_BUFFER_CAPACITY){
                     /* Should rarely occur */
                     /* allocate new buffer buffer */
-                    pWStack =(wchar_t*) uprv_malloc(sizeof(wchar_t) * (nulLen + 1));
-                    if(pWStack==nullptr){
+                    pWStack =(wchar_t*) uprv_malloc(വലുപ്പം(wchar_t) * (nulLen + 1));
+                    എങ്കിൽ(pWStack==nullptr){
                         *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-                        goto cleanup;
+                        പോകുക cleanup;
                     }
                 }
-                if(nulLen>0){
+                എങ്കിൽ(nulLen>0){
                     /* copy the contents to tempStack */
-                    uprv_memcpy(pWStack, pSrc, (size_t)nulLen*sizeof(wchar_t));
+                    uprv_memcpy(pWStack, pSrc, (size_t)nulLen*വലുപ്പം(wchar_t));
                 }
             
                 /* null terminate the tempBuffer */
                 pWStack[nulLen] =0 ;
             
-                if(remaining < (nulLen * MB_CUR_MAX)){
+                എങ്കിൽ(remaining < (nulLen * MB_CUR_MAX)){
                     /* Should rarely occur */
                     int32_t len = (pCSrc-pCSave);
                     pCSrc = pCSave;
                     /* we do not have enough room so grow the buffer*/
-                    u_growAnyBufferFromStatic(cStack,(void**)&pCSrc,&cStackCap,
-                           cStackCap+(nulLen*MB_CUR_MAX),len,sizeof(char));
+                    u_growAnyBufferFromStatic(c_അട്ടി,(ശൂന്യം**)&pCSrc,&c_അട്ടി_Cap,
+                           c_അട്ടി_Cap+(nulLen*MB_CUR_MAX),len,വലുപ്പം(അക്ഷരം));
 
                     pCSave = pCSrc;
                     pCSrc = pCSave+len;
-                    remaining = cStackCap-(pCSrc - pCSave);
+                    remaining = c_അട്ടി_Cap-(pCSrc - pCSave);
                 }
                 /* convert to chars */
                 retVal = uprv_wcstombs(pCSrc,pWStack,remaining);
@@ -419,7 +419,7 @@ _strFromWCS( char16_t   *dest,
                 pCSrc += retVal;
                 pSrc  += nulLen;
                 srcLength-=nulLen; /* decrement the srcLength */
-                break;
+                നിർത്തുക;
             }
         }
     }
@@ -434,33 +434,33 @@ _strFromWCS( char16_t   *dest,
     
     conv= u_getDefaultConverter(pErrorCode);
     
-    if(U_FAILURE(*pErrorCode)|| conv==nullptr){
-        goto cleanup;
+    എങ്കിൽ(U_FAILURE(*pErrorCode)|| conv==nullptr){
+        പോകുക cleanup;
     }
     
-    for(;;) {
+    വേണ്ടി(;;) {
         UErrorCode bufferStatus = U_ZERO_ERROR;
 
         /* convert to stack buffer*/
-        ucnv_toUnicode(conv,&pTarget,pTargetLimit,(const char**)&pCSrc,pCSrcLimit,nullptr,(UBool)(pCSrc==pCSrcLimit),&bufferStatus);
+        ucnv_toUnicode(conv,&pTarget,pTargetLimit,(സ്ഥിരം അക്ഷരം**)&pCSrc,pCSrcLimit,nullptr,(UBool)(pCSrc==pCSrcLimit),&bufferStatus);
 
         /* increment count to number written to stack */
         count+= pTarget - target;
 
-        if(bufferStatus==U_BUFFER_OVERFLOW_ERROR){
-            target = uStack;
-            pTarget = uStack;
-            pTargetLimit = uStack + _STACK_BUFFER_CAPACITY;
-        } else {
-            if (U_FAILURE(bufferStatus)) {
+        എങ്കിൽ(bufferStatus==U_BUFFER_OVERFLOW_ERROR){
+            target = u_അട്ടി;
+            pTarget = u_അട്ടി;
+            pTargetLimit = u_അട്ടി + അട്ടി_BUFFER_CAPACITY;
+        } അല്ലെങ്കിൽ {
+            എങ്കിൽ (U_FAILURE(bufferStatus)) {
                 *pErrorCode = bufferStatus;
             }
-            break;
+            നിർത്തുക;
         }
         
     }
     
-    if(pDestLength){
+    എങ്കിൽ(pDestLength){
         *pDestLength =count;
     }
 
@@ -468,17 +468,17 @@ _strFromWCS( char16_t   *dest,
     
 cleanup:
  
-    if(cStack != pCSave){
+    എങ്കിൽ(c_അട്ടി != pCSave){
         uprv_free(pCSave);
     }
 
-    if(wStack != pWStack){
+    എങ്കിൽ(w_അട്ടി != pWStack){
         uprv_free(pWStack);
     }
     
     u_releaseDefaultConverter(conv);
 
-    return dest;
+    തിരികെ dest;
 }
 #endif
 
@@ -486,47 +486,47 @@ U_CAPI char16_t* U_EXPORT2
 u_strFromWCS(char16_t* dest U_LIFETIME_BOUND,
              int32_t destCapacity,
              int32_t* pDestLength,
-             const wchar_t* src,
+             സ്ഥിരം wchar_t* src,
              int32_t srcLength,
              UErrorCode* pErrorCode)
 {
 
     /* args check */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)){
-        return nullptr;
+    എങ്കിൽ(pErrorCode==nullptr || U_FAILURE(*pErrorCode)){
+        തിരികെ nullptr;
     }
 
-    if( (src==nullptr && srcLength!=0) || srcLength < -1 ||
+    എങ്കിൽ( (src==nullptr && srcLength!=0) || srcLength < -1 ||
         (destCapacity<0) || (dest == nullptr && destCapacity > 0)
     ) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
 
 #ifdef U_WCHAR_IS_UTF16
     /* wchar_t is UTF-16 just do a memcpy */
-    if(srcLength == -1){
-        srcLength = u_strlen((const char16_t *)src);
+    എങ്കിൽ(srcLength == -1){
+        srcLength = u_strlen((സ്ഥിരം char16_t *)src);
     }
-    if(0 < srcLength && srcLength <= destCapacity){
-        u_memcpy(dest, (const char16_t *)src, srcLength);
+    എങ്കിൽ(0 < srcLength && srcLength <= destCapacity){
+        u_memcpy(dest, (സ്ഥിരം char16_t *)src, srcLength);
     }
-    if(pDestLength){
+    എങ്കിൽ(pDestLength){
        *pDestLength = srcLength;
     }
 
     u_terminateUChars(dest,destCapacity,srcLength,pErrorCode);
 
-    return dest;
+    തിരികെ dest;
 
-#elif defined U_WCHAR_IS_UTF32
+#അല്ലെങ്കിലെങ്കിൽ defined U_WCHAR_IS_UTF32
     
-    return u_strFromUTF32(dest, destCapacity, pDestLength,
+    തിരികെ u_strFromUTF32(dest, destCapacity, pDestLength,
                           (UChar32*)src, srcLength, pErrorCode);
 
-#else
+#അല്ലെങ്കിൽ
 
-    return _strFromWCS(dest,destCapacity,pDestLength,src,srcLength,pErrorCode);  
+    തിരികെ _strFromWCS(dest,destCapacity,pDestLength,src,srcLength,pErrorCode);  
 
 #endif
 

@@ -11,36 +11,36 @@
 * created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#എങ്കിൽ !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/udata.h"
-#include "unicode/localpointer.h"
-#include "unicode/normalizer2.h"
-#include "unicode/ucptrie.h"
-#include "unicode/unistr.h"
-#include "unicode/unorm.h"
-#include "cstring.h"
-#include "mutex.h"
-#include "norm2allmodes.h"
-#include "normalizer2impl.h"
-#include "uassert.h"
-#include "ucln_cmn.h"
-#include "uhash.h"
+#അന്തര്ഭാവ "unicode/udata.h"
+#അന്തര്ഭാവ "unicode/localpointer.h"
+#അന്തര്ഭാവ "unicode/normalizer2.h"
+#അന്തര്ഭാവ "unicode/ucptrie.h"
+#അന്തര്ഭാവ "unicode/unistr.h"
+#അന്തര്ഭാവ "unicode/unorm.h"
+#അന്തര്ഭാവ "cstring.h"
+#അന്തര്ഭാവ "mutex.h"
+#അന്തര്ഭാവ "norm2allmodes.h"
+#അന്തര്ഭാവ "normalizer2impl.h"
+#അന്തര്ഭാവ "uassert.h"
+#അന്തര്ഭാവ "ucln_cmn.h"
+#അന്തര്ഭാവ "uhash.h"
 
 U_NAMESPACE_BEGIN
 
-class LoadedNormalizer2Impl : public Normalizer2Impl {
-public:
+വർഗ്ഗം LoadedNormalizer2Impl : പൊതു Normalizer2Impl {
+പൊതു:
     LoadedNormalizer2Impl() : memory(nullptr), ownedTrie(nullptr) {}
-    virtual ~LoadedNormalizer2Impl();
+    മായാ ~LoadedNormalizer2Impl();
 
-    void load(const char *packageName, const char *name, UErrorCode &errorCode);
+    ശൂന്യം load(സ്ഥിരം അക്ഷരം *packageName, സ്ഥിരം അക്ഷരം *name, UErrorCode &errorCode);
 
-private:
-    static UBool U_CALLCONV
-    isAcceptable(void *context, const char *type, const char *name, const UDataInfo *pInfo);
+സ്വകാര്യ:
+    സ്ഥിതം UBool U_CALLCONV
+    isAcceptable(ശൂന്യം *context, സ്ഥിരം അക്ഷരം *type, സ്ഥിരം അക്ഷരം *name, സ്ഥിരം UDataInfo *pInfo);
 
     UDataMemory *memory;
     UCPTrie *ownedTrie;
@@ -52,10 +52,10 @@ LoadedNormalizer2Impl::~LoadedNormalizer2Impl() {
 }
 
 UBool U_CALLCONV
-LoadedNormalizer2Impl::isAcceptable(void * /*context*/,
-                                    const char * /* type */, const char * /*name*/,
-                                    const UDataInfo *pInfo) {
-    if(
+LoadedNormalizer2Impl::isAcceptable(ശൂന്യം * /*context*/,
+                                    സ്ഥിരം അക്ഷരം * /* type */, സ്ഥിരം അക്ഷരം * /*name*/,
+                                    സ്ഥിരം UDataInfo *pInfo) {
+    എങ്കിൽ(
         pInfo->size>=20 &&
         pInfo->isBigEndian==U_IS_BIG_ENDIAN &&
         pInfo->charsetFamily==U_CHARSET_FAMILY &&
@@ -67,45 +67,45 @@ LoadedNormalizer2Impl::isAcceptable(void * /*context*/,
     ) {
         // Normalizer2Impl *me=(Normalizer2Impl *)context;
         // uprv_memcpy(me->dataVersion, pInfo->dataVersion, 4);
-        return true;
-    } else {
-        return false;
+        തിരികെ സത്യം;
+    } അല്ലെങ്കിൽ {
+        തിരികെ അസത്യം;
     }
 }
 
-void
-LoadedNormalizer2Impl::load(const char *packageName, const char *name, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+ശൂന്യം
+LoadedNormalizer2Impl::load(സ്ഥിരം അക്ഷരം *packageName, സ്ഥിരം അക്ഷരം *name, UErrorCode &errorCode) {
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        തിരികെ;
     }
-    memory=udata_openChoice(packageName, "nrm", name, isAcceptable, this, &errorCode);
-    if(U_FAILURE(errorCode)) {
-        return;
+    memory=udata_openChoice(packageName, "nrm", name, isAcceptable, ഇത്, &errorCode);
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        തിരികെ;
     }
-    const uint8_t* inBytes = static_cast<const uint8_t*>(udata_getMemory(memory));
-    const int32_t* inIndexes = reinterpret_cast<const int32_t*>(inBytes);
+    സ്ഥിരം uint8_t* inBytes = static_cast<സ്ഥിരം uint8_t*>(udata_getMemory(memory));
+    സ്ഥിരം int32_t* inIndexes = reinterpret_cast<സ്ഥിരം int32_t*>(inBytes);
     int32_t indexesLength=inIndexes[IX_NORM_TRIE_OFFSET]/4;
-    if(indexesLength<=IX_MIN_LCCC_CP) {
+    എങ്കിൽ(indexesLength<=IX_MIN_LCCC_CP) {
         errorCode=U_INVALID_FORMAT_ERROR;  // Not enough indexes.
-        return;
+        തിരികെ;
     }
 
     int32_t offset=inIndexes[IX_NORM_TRIE_OFFSET];
     int32_t nextOffset=inIndexes[IX_EXTRA_DATA_OFFSET];
-    ownedTrie=ucptrie_openFromBinary(UCPTRIE_TYPE_FAST, UCPTRIE_VALUE_BITS_16,
+    ownedTrie=ucptrie_open_From_ദ്വിമാന(UCPTRIE_TYPE_FAST, UCPTRIE_മൂല്യം_BITS_16,
                                      inBytes+offset, nextOffset-offset, nullptr,
                                      &errorCode);
-    if(U_FAILURE(errorCode)) {
-        return;
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        തിരികെ;
     }
 
     offset=nextOffset;
     nextOffset=inIndexes[IX_SMALL_FCD_OFFSET];
-    const uint16_t* inExtraData = reinterpret_cast<const uint16_t*>(inBytes + offset);
+    സ്ഥിരം uint16_t* inExtraData = reinterpret_cast<സ്ഥിരം uint16_t*>(inBytes + offset);
 
     // smallFCD: new in formatVersion 2
     offset=nextOffset;
-    const uint8_t *inSmallFCD=inBytes+offset;
+    സ്ഥിരം uint8_t *inSmallFCD=inBytes+offset;
 
     init(inIndexes, ownedTrie, inExtraData, inSmallFCD);
 }
@@ -113,55 +113,55 @@ LoadedNormalizer2Impl::load(const char *packageName, const char *name, UErrorCod
 // instance cache ---------------------------------------------------------- ***
 
 Norm2AllModes *
-Norm2AllModes::createInstance(const char *packageName,
-                              const char *name,
+Norm2AllModes::createInstance(സ്ഥിരം അക്ഷരം *packageName,
+                              സ്ഥിരം അക്ഷരം *name,
                               UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        തിരികെ nullptr;
     }
-    LoadedNormalizer2Impl *impl=new LoadedNormalizer2Impl;
-    if(impl==nullptr) {
+    LoadedNormalizer2Impl *impl=പുതിയ LoadedNormalizer2Impl;
+    എങ്കിൽ(impl==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
     impl->load(packageName, name, errorCode);
-    return createInstance(impl, errorCode);
+    തിരികെ createInstance(impl, errorCode);
 }
 
 U_CDECL_BEGIN
-static UBool U_CALLCONV uprv_loaded_normalizer2_cleanup();
+സ്ഥിതം UBool U_CALLCONV uprv_loaded_normalizer2_cleanup();
 U_CDECL_END
 
-#if !NORM2_HARDCODE_NFC_DATA
-static Norm2AllModes *nfcSingleton;
-static icu::UInitOnce nfcInitOnce {};
+#എങ്കിൽ !NORM2_HARDCODE_NFC_DATA
+സ്ഥിതം Norm2AllModes *nfcSingleton;
+സ്ഥിതം icu::UInitOnce nfcInitOnce {};
 #endif
 
-static Norm2AllModes *nfkcSingleton;
-static icu::UInitOnce nfkcInitOnce {};
+സ്ഥിതം Norm2AllModes *nfkcSingleton;
+സ്ഥിതം icu::UInitOnce nfkcInitOnce {};
 
-static Norm2AllModes *nfkc_cfSingleton;
-static icu::UInitOnce nfkc_cfInitOnce {};
+സ്ഥിതം Norm2AllModes *nfkc_cfSingleton;
+സ്ഥിതം icu::UInitOnce nfkc_cfInitOnce {};
 
-static Norm2AllModes *nfkc_scfSingleton;
-static icu::UInitOnce nfkc_scfInitOnce {};
+സ്ഥിതം Norm2AllModes *nfkc_scfSingleton;
+സ്ഥിതം icu::UInitOnce nfkc_scfInitOnce {};
 
-static UHashtable    *cache=nullptr;
+സ്ഥിതം UHashtable    *cache=nullptr;
 
 // UInitOnce singleton initialization function
-static void U_CALLCONV initSingletons(const char *what, UErrorCode &errorCode) {
-#if !NORM2_HARDCODE_NFC_DATA
-    if (uprv_strcmp(what, "nfc") == 0) {
+സ്ഥിതം ശൂന്യം U_CALLCONV initSingletons(സ്ഥിരം അക്ഷരം *what, UErrorCode &errorCode) {
+#എങ്കിൽ !NORM2_HARDCODE_NFC_DATA
+    എങ്കിൽ (uprv_strcmp(what, "nfc") == 0) {
         nfcSingleton    = Norm2AllModes::createInstance(nullptr, "nfc", errorCode);
-    } else
+    } അല്ലെങ്കിൽ
 #endif
-    if (uprv_strcmp(what, "nfkc") == 0) {
+    എങ്കിൽ (uprv_strcmp(what, "nfkc") == 0) {
         nfkcSingleton    = Norm2AllModes::createInstance(nullptr, "nfkc", errorCode);
-    } else if (uprv_strcmp(what, "nfkc_cf") == 0) {
+    } അല്ലെങ്കിൽ എങ്കിൽ (uprv_strcmp(what, "nfkc_cf") == 0) {
         nfkc_cfSingleton = Norm2AllModes::createInstance(nullptr, "nfkc_cf", errorCode);
-    } else if (uprv_strcmp(what, "nfkc_scf") == 0) {
+    } അല്ലെങ്കിൽ എങ്കിൽ (uprv_strcmp(what, "nfkc_scf") == 0) {
         nfkc_scfSingleton = Norm2AllModes::createInstance(nullptr, "nfkc_scf", errorCode);
-    } else {
+    } അല്ലെങ്കിൽ {
         UPRV_UNREACHABLE_EXIT;   // Unknown singleton
     }
     ucln_common_registerCleanup(UCLN_COMMON_LOADED_NORMALIZER2, uprv_loaded_normalizer2_cleanup);
@@ -169,12 +169,12 @@ static void U_CALLCONV initSingletons(const char *what, UErrorCode &errorCode) {
 
 U_CDECL_BEGIN
 
-static void U_CALLCONV deleteNorm2AllModes(void *allModes) {
+സ്ഥിതം ശൂന്യം U_CALLCONV deleteNorm2AllModes(ശൂന്യം *allModes) {
     delete (Norm2AllModes *)allModes;
 }
 
-static UBool U_CALLCONV uprv_loaded_normalizer2_cleanup() {
-#if !NORM2_HARDCODE_NFC_DATA
+സ്ഥിതം UBool U_CALLCONV uprv_loaded_normalizer2_cleanup() {
+#എങ്കിൽ !NORM2_HARDCODE_NFC_DATA
     delete nfcSingleton;
     nfcSingleton = nullptr;
     nfcInitOnce.reset();
@@ -194,206 +194,206 @@ static UBool U_CALLCONV uprv_loaded_normalizer2_cleanup() {
 
     uhash_close(cache);
     cache=nullptr;
-    return true;
+    തിരികെ സത്യം;
 }
 
 U_CDECL_END
 
-#if !NORM2_HARDCODE_NFC_DATA
-const Norm2AllModes *
+#എങ്കിൽ !NORM2_HARDCODE_NFC_DATA
+സ്ഥിരം Norm2AllModes *
 Norm2AllModes::getNFCInstance(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) { return nullptr; }
+    എങ്കിൽ(U_FAILURE(errorCode)) { തിരികെ nullptr; }
     umtx_initOnce(nfcInitOnce, &initSingletons, "nfc", errorCode);
-    return nfcSingleton;
+    തിരികെ nfcSingleton;
 }
 #endif
 
-const Norm2AllModes *
+സ്ഥിരം Norm2AllModes *
 Norm2AllModes::getNFKCInstance(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) { return nullptr; }
+    എങ്കിൽ(U_FAILURE(errorCode)) { തിരികെ nullptr; }
     umtx_initOnce(nfkcInitOnce, &initSingletons, "nfkc", errorCode);
-    return nfkcSingleton;
+    തിരികെ nfkcSingleton;
 }
 
-const Norm2AllModes *
+സ്ഥിരം Norm2AllModes *
 Norm2AllModes::getNFKC_CFInstance(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) { return nullptr; }
+    എങ്കിൽ(U_FAILURE(errorCode)) { തിരികെ nullptr; }
     umtx_initOnce(nfkc_cfInitOnce, &initSingletons, "nfkc_cf", errorCode);
-    return nfkc_cfSingleton;
+    തിരികെ nfkc_cfSingleton;
 }
 
-const Norm2AllModes *
+സ്ഥിരം Norm2AllModes *
 Norm2AllModes::getNFKC_SCFInstance(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) { return nullptr; }
+    എങ്കിൽ(U_FAILURE(errorCode)) { തിരികെ nullptr; }
     umtx_initOnce(nfkc_scfInitOnce, &initSingletons, "nfkc_scf", errorCode);
-    return nfkc_scfSingleton;
+    തിരികെ nfkc_scfSingleton;
 }
 
-#if !NORM2_HARDCODE_NFC_DATA
-const Normalizer2 *
+#എങ്കിൽ !NORM2_HARDCODE_NFC_DATA
+സ്ഥിരം Normalizer2 *
 Normalizer2::getNFCInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->comp : nullptr;
+    സ്ഥിരം Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
+    തിരികെ allModes!=nullptr ? &allModes->comp : nullptr;
 }
 
-const Normalizer2 *
+സ്ഥിരം Normalizer2 *
 Normalizer2::getNFDInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->decomp : nullptr;
+    സ്ഥിരം Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
+    തിരികെ allModes!=nullptr ? &allModes->decomp : nullptr;
 }
 
-const Normalizer2 *Normalizer2Factory::getFCDInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->fcd : nullptr;
+സ്ഥിരം Normalizer2 *Normalizer2Factory::getFCDInstance(UErrorCode &errorCode) {
+    സ്ഥിരം Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
+    തിരികെ allModes!=nullptr ? &allModes->fcd : nullptr;
 }
 
-const Normalizer2 *Normalizer2Factory::getFCCInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->fcc : nullptr;
+സ്ഥിരം Normalizer2 *Normalizer2Factory::getFCCInstance(UErrorCode &errorCode) {
+    സ്ഥിരം Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
+    തിരികെ allModes!=nullptr ? &allModes->fcc : nullptr;
 }
 
-const Normalizer2Impl *
+സ്ഥിരം Normalizer2Impl *
 Normalizer2Factory::getNFCImpl(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
-    return allModes!=nullptr ? allModes->impl : nullptr;
+    സ്ഥിരം Norm2AllModes *allModes=Norm2AllModes::getNFCInstance(errorCode);
+    തിരികെ allModes!=nullptr ? allModes->impl : nullptr;
 }
 #endif
 
-const Normalizer2 *
+സ്ഥിരം Normalizer2 *
 Normalizer2::getNFKCInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFKCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->comp : nullptr;
+    സ്ഥിരം Norm2AllModes *allModes=Norm2AllModes::getNFKCInstance(errorCode);
+    തിരികെ allModes!=nullptr ? &allModes->comp : nullptr;
 }
 
-const Normalizer2 *
+സ്ഥിരം Normalizer2 *
 Normalizer2::getNFKDInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFKCInstance(errorCode);
-    return allModes!=nullptr ? &allModes->decomp : nullptr;
+    സ്ഥിരം Norm2AllModes *allModes=Norm2AllModes::getNFKCInstance(errorCode);
+    തിരികെ allModes!=nullptr ? &allModes->decomp : nullptr;
 }
 
-const Normalizer2 *
+സ്ഥിരം Normalizer2 *
 Normalizer2::getNFKCCasefoldInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFKC_CFInstance(errorCode);
-    return allModes!=nullptr ? &allModes->comp : nullptr;
+    സ്ഥിരം Norm2AllModes *allModes=Norm2AllModes::getNFKC_CFInstance(errorCode);
+    തിരികെ allModes!=nullptr ? &allModes->comp : nullptr;
 }
 
-const Normalizer2 *
+സ്ഥിരം Normalizer2 *
 Normalizer2::getNFKCSimpleCasefoldInstance(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFKC_SCFInstance(errorCode);
-    return allModes!=nullptr ? &allModes->comp : nullptr;
+    സ്ഥിരം Norm2AllModes *allModes=Norm2AllModes::getNFKC_SCFInstance(errorCode);
+    തിരികെ allModes!=nullptr ? &allModes->comp : nullptr;
 }
 
-const Normalizer2 *
-Normalizer2::getInstance(const char *packageName,
-                         const char *name,
+സ്ഥിരം Normalizer2 *
+Normalizer2::getInstance(സ്ഥിരം അക്ഷരം *packageName,
+                         സ്ഥിരം അക്ഷരം *name,
                          UNormalization2Mode mode,
                          UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        തിരികെ nullptr;
     }
-    if(name==nullptr || *name==0) {
+    എങ്കിൽ(name==nullptr || *name==0) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
-    const Norm2AllModes *allModes=nullptr;
-    if(packageName==nullptr) {
-        if(0==uprv_strcmp(name, "nfc")) {
+    സ്ഥിരം Norm2AllModes *allModes=nullptr;
+    എങ്കിൽ(packageName==nullptr) {
+        എങ്കിൽ(0==uprv_strcmp(name, "nfc")) {
             allModes=Norm2AllModes::getNFCInstance(errorCode);
-        } else if(0==uprv_strcmp(name, "nfkc")) {
+        } അല്ലെങ്കിൽ എങ്കിൽ(0==uprv_strcmp(name, "nfkc")) {
             allModes=Norm2AllModes::getNFKCInstance(errorCode);
-        } else if(0==uprv_strcmp(name, "nfkc_cf")) {
+        } അല്ലെങ്കിൽ എങ്കിൽ(0==uprv_strcmp(name, "nfkc_cf")) {
             allModes=Norm2AllModes::getNFKC_CFInstance(errorCode);
-        } else if(0==uprv_strcmp(name, "nfkc_scf")) {
+        } അല്ലെങ്കിൽ എങ്കിൽ(0==uprv_strcmp(name, "nfkc_scf")) {
             allModes=Norm2AllModes::getNFKC_SCFInstance(errorCode);
         }
     }
-    if(allModes==nullptr && U_SUCCESS(errorCode)) {
+    എങ്കിൽ(allModes==nullptr && U_SUCCESS(errorCode)) {
         {
             Mutex lock;
-            if(cache!=nullptr) {
+            എങ്കിൽ(cache!=nullptr) {
                 allModes = static_cast<Norm2AllModes*>(uhash_get(cache, name));
             }
         }
-        if(allModes==nullptr) {
+        എങ്കിൽ(allModes==nullptr) {
             ucln_common_registerCleanup(UCLN_COMMON_LOADED_NORMALIZER2, uprv_loaded_normalizer2_cleanup);
             LocalPointer<Norm2AllModes> localAllModes(
                 Norm2AllModes::createInstance(packageName, name, errorCode));
-            if(U_SUCCESS(errorCode)) {
+            എങ്കിൽ(U_SUCCESS(errorCode)) {
                 Mutex lock;
-                if(cache==nullptr) {
+                എങ്കിൽ(cache==nullptr) {
                     cache=uhash_open(uhash_hashChars, uhash_compareChars, nullptr, &errorCode);
-                    if(U_FAILURE(errorCode)) {
-                        return nullptr;
+                    എങ്കിൽ(U_FAILURE(errorCode)) {
+                        തിരികെ nullptr;
                     }
-                    uhash_setKeyDeleter(cache, uprv_free);
-                    uhash_setValueDeleter(cache, deleteNorm2AllModes);
+                    uhash_set_താക്കോൽ_Deleter(cache, uprv_free);
+                    uhash_set_മൂല്യം_Deleter(cache, deleteNorm2AllModes);
                 }
-                void *temp=uhash_get(cache, name);
-                if(temp==nullptr) {
-                    int32_t keyLength= static_cast<int32_t>(uprv_strlen(name)+1);
-                    char* nameCopy = static_cast<char*>(uprv_malloc(keyLength));
-                    if(nameCopy==nullptr) {
+                ശൂന്യം *temp=uhash_get(cache, name);
+                എങ്കിൽ(temp==nullptr) {
+                    int32_t താക്കോൽ_Length= static_cast<int32_t>(uprv_strlen(name)+1);
+                    അക്ഷരം* nameCopy = static_cast<അക്ഷരം*>(uprv_malloc(താക്കോൽ_Length));
+                    എങ്കിൽ(nameCopy==nullptr) {
                         errorCode=U_MEMORY_ALLOCATION_ERROR;
-                        return nullptr;
+                        തിരികെ nullptr;
                     }
-                    uprv_memcpy(nameCopy, name, keyLength);
+                    uprv_memcpy(nameCopy, name, താക്കോൽ_Length);
                     allModes=localAllModes.getAlias();
                     uhash_put(cache, nameCopy, localAllModes.orphan(), &errorCode);
-                } else {
+                } അല്ലെങ്കിൽ {
                     // race condition
                     allModes = static_cast<Norm2AllModes*>(temp);
                 }
             }
         }
     }
-    if(allModes!=nullptr && U_SUCCESS(errorCode)) {
-        switch(mode) {
-        case UNORM2_COMPOSE:
-            return &allModes->comp;
-        case UNORM2_DECOMPOSE:
-            return &allModes->decomp;
-        case UNORM2_FCD:
-            return &allModes->fcd;
-        case UNORM2_COMPOSE_CONTIGUOUS:
-            return &allModes->fcc;
-        default:
-            break;  // do nothing
+    എങ്കിൽ(allModes!=nullptr && U_SUCCESS(errorCode)) {
+        തിരഞ്ഞെടുപ്പ്(mode) {
+        അവസ്ഥ UNORM2_COMPOSE:
+            തിരികെ &allModes->comp;
+        അവസ്ഥ UNORM2_DECOMPOSE:
+            തിരികെ &allModes->decomp;
+        അവസ്ഥ UNORM2_FCD:
+            തിരികെ &allModes->fcd;
+        അവസ്ഥ UNORM2_COMPOSE_CONTIGUOUS:
+            തിരികെ &allModes->fcc;
+        സ്ഥിരസ്ഥിതി:
+            നിർത്തുക;  // do nothing
         }
     }
-    return nullptr;
+    തിരികെ nullptr;
 }
 
-const Normalizer2 *
+സ്ഥിരം Normalizer2 *
 Normalizer2Factory::getInstance(UNormalizationMode mode, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        തിരികെ nullptr;
     }
-    switch(mode) {
-    case UNORM_NFD:
-        return Normalizer2::getNFDInstance(errorCode);
-    case UNORM_NFKD:
-        return Normalizer2::getNFKDInstance(errorCode);
-    case UNORM_NFC:
-        return Normalizer2::getNFCInstance(errorCode);
-    case UNORM_NFKC:
-        return Normalizer2::getNFKCInstance(errorCode);
-    case UNORM_FCD:
-        return getFCDInstance(errorCode);
-    default:  // UNORM_NONE
-        return getNoopInstance(errorCode);
+    തിരഞ്ഞെടുപ്പ്(mode) {
+    അവസ്ഥ UNORM_NFD:
+        തിരികെ Normalizer2::getNFDInstance(errorCode);
+    അവസ്ഥ UNORM_NFKD:
+        തിരികെ Normalizer2::getNFKDInstance(errorCode);
+    അവസ്ഥ UNORM_NFC:
+        തിരികെ Normalizer2::getNFCInstance(errorCode);
+    അവസ്ഥ UNORM_NFKC:
+        തിരികെ Normalizer2::getNFKCInstance(errorCode);
+    അവസ്ഥ UNORM_FCD:
+        തിരികെ getFCDInstance(errorCode);
+    സ്ഥിരസ്ഥിതി:  // UNORM_NONE
+        തിരികെ getNoopInstance(errorCode);
     }
 }
 
-const Normalizer2Impl *
+സ്ഥിരം Normalizer2Impl *
 Normalizer2Factory::getNFKCImpl(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFKCInstance(errorCode);
-    return allModes!=nullptr ? allModes->impl : nullptr;
+    സ്ഥിരം Norm2AllModes *allModes=Norm2AllModes::getNFKCInstance(errorCode);
+    തിരികെ allModes!=nullptr ? allModes->impl : nullptr;
 }
 
-const Normalizer2Impl *
+സ്ഥിരം Normalizer2Impl *
 Normalizer2Factory::getNFKC_CFImpl(UErrorCode &errorCode) {
-    const Norm2AllModes *allModes=Norm2AllModes::getNFKC_CFInstance(errorCode);
-    return allModes!=nullptr ? allModes->impl : nullptr;
+    സ്ഥിരം Norm2AllModes *allModes=Norm2AllModes::getNFKC_CFInstance(errorCode);
+    തിരികെ allModes!=nullptr ? allModes->impl : nullptr;
 }
 
 U_NAMESPACE_END
@@ -402,45 +402,45 @@ U_NAMESPACE_END
 
 U_NAMESPACE_USE
 
-U_CAPI const UNormalizer2 * U_EXPORT2
+U_CAPI സ്ഥിരം UNormalizer2 * U_EXPORT2
 unorm2_getNFKCInstance(UErrorCode *pErrorCode) {
-    return (const UNormalizer2 *)Normalizer2::getNFKCInstance(*pErrorCode);
+    തിരികെ (സ്ഥിരം UNormalizer2 *)Normalizer2::getNFKCInstance(*pErrorCode);
 }
 
-U_CAPI const UNormalizer2 * U_EXPORT2
+U_CAPI സ്ഥിരം UNormalizer2 * U_EXPORT2
 unorm2_getNFKDInstance(UErrorCode *pErrorCode) {
-    return (const UNormalizer2 *)Normalizer2::getNFKDInstance(*pErrorCode);
+    തിരികെ (സ്ഥിരം UNormalizer2 *)Normalizer2::getNFKDInstance(*pErrorCode);
 }
 
-U_CAPI const UNormalizer2 * U_EXPORT2
+U_CAPI സ്ഥിരം UNormalizer2 * U_EXPORT2
 unorm2_getNFKCCasefoldInstance(UErrorCode *pErrorCode) {
-    return (const UNormalizer2 *)Normalizer2::getNFKCCasefoldInstance(*pErrorCode);
+    തിരികെ (സ്ഥിരം UNormalizer2 *)Normalizer2::getNFKCCasefoldInstance(*pErrorCode);
 }
 
-U_CAPI const UNormalizer2 * U_EXPORT2
+U_CAPI സ്ഥിരം UNormalizer2 * U_EXPORT2
 unorm2_getNFKCSimpleCasefoldInstance(UErrorCode *pErrorCode) {
-    return (const UNormalizer2 *)Normalizer2::getNFKCSimpleCasefoldInstance(*pErrorCode);
+    തിരികെ (സ്ഥിരം UNormalizer2 *)Normalizer2::getNFKCSimpleCasefoldInstance(*pErrorCode);
 }
 
-U_CAPI const UNormalizer2 * U_EXPORT2
-unorm2_getInstance(const char *packageName,
-                   const char *name,
+U_CAPI സ്ഥിരം UNormalizer2 * U_EXPORT2
+unorm2_getInstance(സ്ഥിരം അക്ഷരം *packageName,
+                   സ്ഥിരം അക്ഷരം *name,
                    UNormalization2Mode mode,
                    UErrorCode *pErrorCode) {
-    return (const UNormalizer2 *)Normalizer2::getInstance(packageName, name, mode, *pErrorCode);
+    തിരികെ (സ്ഥിരം UNormalizer2 *)Normalizer2::getInstance(packageName, name, mode, *pErrorCode);
 }
 
 U_CFUNC UNormalizationCheckResult
 unorm_getQuickCheck(UChar32 c, UNormalizationMode mode) {
-    if(mode<=UNORM_NONE || UNORM_FCD<=mode) {
-        return UNORM_YES;
+    എങ്കിൽ(mode<=UNORM_NONE || UNORM_FCD<=mode) {
+        തിരികെ UNORM_YES;
     }
     UErrorCode errorCode=U_ZERO_ERROR;
-    const Normalizer2 *norm2=Normalizer2Factory::getInstance(mode, errorCode);
-    if(U_SUCCESS(errorCode)) {
-        return ((const Normalizer2WithImpl *)norm2)->getQuickCheck(c);
-    } else {
-        return UNORM_MAYBE;
+    സ്ഥിരം Normalizer2 *norm2=Normalizer2Factory::getInstance(mode, errorCode);
+    എങ്കിൽ(U_SUCCESS(errorCode)) {
+        തിരികെ ((സ്ഥിരം Normalizer2WithImpl *)norm2)->getQuickCheck(c);
+    } അല്ലെങ്കിൽ {
+        തിരികെ UNORM_MAYBE;
     }
 }
 

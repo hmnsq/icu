@@ -19,48 +19,48 @@
 *   06/24/02    weiv        Added support for resource sharing
 */
 
-#include "unicode/utypes.h"
-#include "unicode/udata.h"
-#include "unicode/ustring.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "resource.h"
-#include "uarrsort.h"
-#include "uassert.h"
-#include "ucol_swp.h"
-#include "udataswp.h"
-#include "uinvchar.h"
-#include "uresdata.h"
-#include "uresimp.h"
-#include "utracimp.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/udata.h"
+#അന്തര്ഭാവ "unicode/ustring.h"
+#അന്തര്ഭാവ "unicode/utf16.h"
+#അന്തര്ഭാവ "cmemory.h"
+#അന്തര്ഭാവ "cstring.h"
+#അന്തര്ഭാവ "resource.h"
+#അന്തര്ഭാവ "uarrsort.h"
+#അന്തര്ഭാവ "uassert.h"
+#അന്തര്ഭാവ "ucol_swp.h"
+#അന്തര്ഭാവ "udataswp.h"
+#അന്തര്ഭാവ "uinvchar.h"
+#അന്തര്ഭാവ "uresdata.h"
+#അന്തര്ഭാവ "uresimp.h"
+#അന്തര്ഭാവ "utracimp.h"
 
 /*
  * Resource access helpers
  */
 
 /* get a const char* pointer to the key with the keyOffset byte offset from pRoot */
-#define RES_GET_KEY16(pResData, keyOffset) \
-    ((keyOffset)<(pResData)->localKeyLimit ? \
-        (const char *)(pResData)->pRoot+(keyOffset) : \
-        (pResData)->poolBundleKeys+(keyOffset)-(pResData)->localKeyLimit)
+#define RES_GET_KEY16(pResData, താക്കോൽ_Offset) \
+    ((താക്കോൽ_Offset)<(pResData)->local_താക്കോൽ_Limit ? \
+        (സ്ഥിരം അക്ഷരം *)(pResData)->p_വേര്+(താക്കോൽ_Offset) : \
+        (pResData)->pool_Bundle_താക്കോലുകൾ+(താക്കോൽ_Offset)-(pResData)->local_താക്കോൽ_Limit)
 
-#define RES_GET_KEY32(pResData, keyOffset) \
-    ((keyOffset)>=0 ? \
-        (const char *)(pResData)->pRoot+(keyOffset) : \
-        (pResData)->poolBundleKeys+((keyOffset)&0x7fffffff))
+#define RES_GET_KEY32(pResData, താക്കോൽ_Offset) \
+    ((താക്കോൽ_Offset)>=0 ? \
+        (സ്ഥിരം അക്ഷരം *)(pResData)->p_വേര്+(താക്കോൽ_Offset) : \
+        (pResData)->pool_Bundle_താക്കോലുകൾ+((താക്കോൽ_Offset)&0x7fffffff))
 
 #define URESDATA_ITEM_NOT_FOUND -1
 
 /* empty resources, returned when the resource offset is 0 */
-static const uint16_t gEmpty16=0;
+സ്ഥിതം സ്ഥിരം uint16_t gEmpty16=0;
 
-static const struct {
+സ്ഥിതം സ്ഥിരം ഘടന {
     int32_t length;
     int32_t res;
 } gEmpty32={ 0, 0 };
 
-static const struct {
+സ്ഥിതം സ്ഥിരം ഘടന {
     int32_t length;
     char16_t nul;
     char16_t pad;
@@ -71,76 +71,76 @@ static const struct {
  * the resource is of the expected type.
  */
 
-static int32_t
-_res_findTableItem(const ResourceData *pResData, const uint16_t *keyOffsets, int32_t length,
-                   const char *key, const char **realKey) {
-    const char *tableKey;
+സ്ഥിതം int32_t
+_res_findTableItem(സ്ഥിരം ResourceData *pResData, സ്ഥിരം uint16_t *താക്കോൽ_Offsets, int32_t length,
+                   സ്ഥിരം അക്ഷരം *താക്കോൽ, സ്ഥിരം അക്ഷരം **real_താക്കോൽ) {
+    സ്ഥിരം അക്ഷരം *table_താക്കോൽ;
     int32_t mid, start, limit;
-    int result;
+    പൂർണ്ണസംഖ്യ result;
 
     /* do a binary search for the key */
     start=0;
     limit=length;
-    while(start<limit) {
+    ആകുമ്പോൾ(start<limit) {
         mid = (start + limit) / 2;
-        tableKey = RES_GET_KEY16(pResData, keyOffsets[mid]);
-        if (pResData->useNativeStrcmp) {
-            result = uprv_strcmp(key, tableKey);
-        } else {
-            result = uprv_compareInvCharsAsAscii(key, tableKey);
+        table_താക്കോൽ = RES_GET_KEY16(pResData, താക്കോൽ_Offsets[mid]);
+        എങ്കിൽ (pResData->useNativeStrcmp) {
+            result = uprv_strcmp(താക്കോൽ, table_താക്കോൽ);
+        } അല്ലെങ്കിൽ {
+            result = uprv_compareInvCharsAsAscii(താക്കോൽ, table_താക്കോൽ);
         }
-        if (result < 0) {
+        എങ്കിൽ (result < 0) {
             limit = mid;
-        } else if (result > 0) {
+        } അല്ലെങ്കിൽ എങ്കിൽ (result > 0) {
             start = mid + 1;
-        } else {
+        } അല്ലെങ്കിൽ {
             /* We found it! */
-            *realKey=tableKey;
-            return mid;
+            *real_താക്കോൽ=table_താക്കോൽ;
+            തിരികെ mid;
         }
     }
-    return URESDATA_ITEM_NOT_FOUND;  /* not found or table is empty. */
+    തിരികെ URESDATA_ITEM_NOT_FOUND;  /* not found or table is empty. */
 }
 
-static int32_t
-_res_findTable32Item(const ResourceData *pResData, const int32_t *keyOffsets, int32_t length,
-                     const char *key, const char **realKey) {
-    const char *tableKey;
+സ്ഥിതം int32_t
+_res_findTable32Item(സ്ഥിരം ResourceData *pResData, സ്ഥിരം int32_t *താക്കോൽ_Offsets, int32_t length,
+                     സ്ഥിരം അക്ഷരം *താക്കോൽ, സ്ഥിരം അക്ഷരം **real_താക്കോൽ) {
+    സ്ഥിരം അക്ഷരം *table_താക്കോൽ;
     int32_t mid, start, limit;
-    int result;
+    പൂർണ്ണസംഖ്യ result;
 
     /* do a binary search for the key */
     start=0;
     limit=length;
-    while(start<limit) {
+    ആകുമ്പോൾ(start<limit) {
         mid = (start + limit) / 2;
-        tableKey = RES_GET_KEY32(pResData, keyOffsets[mid]);
-        if (pResData->useNativeStrcmp) {
-            result = uprv_strcmp(key, tableKey);
-        } else {
-            result = uprv_compareInvCharsAsAscii(key, tableKey);
+        table_താക്കോൽ = RES_GET_KEY32(pResData, താക്കോൽ_Offsets[mid]);
+        എങ്കിൽ (pResData->useNativeStrcmp) {
+            result = uprv_strcmp(താക്കോൽ, table_താക്കോൽ);
+        } അല്ലെങ്കിൽ {
+            result = uprv_compareInvCharsAsAscii(താക്കോൽ, table_താക്കോൽ);
         }
-        if (result < 0) {
+        എങ്കിൽ (result < 0) {
             limit = mid;
-        } else if (result > 0) {
+        } അല്ലെങ്കിൽ എങ്കിൽ (result > 0) {
             start = mid + 1;
-        } else {
+        } അല്ലെങ്കിൽ {
             /* We found it! */
-            *realKey=tableKey;
-            return mid;
+            *real_താക്കോൽ=table_താക്കോൽ;
+            തിരികെ mid;
         }
     }
-    return URESDATA_ITEM_NOT_FOUND;  /* not found or table is empty. */
+    തിരികെ URESDATA_ITEM_NOT_FOUND;  /* not found or table is empty. */
 }
 
 /* helper for res_load() ---------------------------------------------------- */
 
-static UBool U_CALLCONV
-isAcceptable(void *context,
-             const char * /*type*/, const char * /*name*/,
-             const UDataInfo *pInfo) {
+സ്ഥിതം UBool U_CALLCONV
+isAcceptable(ശൂന്യം *context,
+             സ്ഥിരം അക്ഷരം * /*type*/, സ്ഥിരം അക്ഷരം * /*name*/,
+             സ്ഥിരം UDataInfo *pInfo) {
     uprv_memcpy(context, pInfo->formatVersion, 4);
-    return
+    തിരികെ
         pInfo->size>=20 &&
         pInfo->isBigEndian==U_IS_BIG_ENDIAN &&
         pInfo->charsetFamily==U_CHARSET_FAMILY &&
@@ -154,62 +154,62 @@ isAcceptable(void *context,
 
 /* semi-public functions ---------------------------------------------------- */
 
-static void
+സ്ഥിതം ശൂന്യം
 res_init(ResourceData *pResData,
-         UVersionInfo formatVersion, const void *inBytes, int32_t length,
+         UVersionInfo formatVersion, സ്ഥിരം ശൂന്യം *inBytes, int32_t length,
          UErrorCode *errorCode) {
-    UResType rootType;
+    UResType വേര്_Type;
 
     /* get the root resource */
-    pResData->pRoot = static_cast<const int32_t*>(inBytes);
-    pResData->rootRes = static_cast<Resource>(*pResData->pRoot);
+    pResData->p_വേര് = static_cast<സ്ഥിരം int32_t*>(inBytes);
+    pResData->വേര്_Res = static_cast<Resource>(*pResData->p_വേര്);
     pResData->p16BitUnits=&gEmpty16;
 
     /* formatVersion 1.1 must have a root item and at least 5 indexes */
-    if(length>=0 && (length/4)<((formatVersion[0]==1 && formatVersion[1]==0) ? 1 : 1+5)) {
+    എങ്കിൽ(length>=0 && (length/4)<((formatVersion[0]==1 && formatVersion[1]==0) ? 1 : 1+5)) {
         *errorCode=U_INVALID_FORMAT_ERROR;
         res_unload(pResData);
-        return;
+        തിരികെ;
     }
 
     /* currently, we accept only resources that have a Table as their roots */
-    rootType = static_cast<UResType>(RES_GET_TYPE(pResData->rootRes));
-    if(!URES_IS_TABLE(rootType)) {
+    വേര്_Type = static_cast<UResType>(RES_GET_TYPE(pResData->വേര്_Res));
+    എങ്കിൽ(!URES_IS_TABLE(വേര്_Type)) {
         *errorCode=U_INVALID_FORMAT_ERROR;
         res_unload(pResData);
-        return;
+        തിരികെ;
     }
 
-    if(formatVersion[0]==1 && formatVersion[1]==0) {
-        pResData->localKeyLimit=0x10000;  /* greater than any 16-bit key string offset */
-    } else {
+    എങ്കിൽ(formatVersion[0]==1 && formatVersion[1]==0) {
+        pResData->local_താക്കോൽ_Limit=0x10000;  /* greater than any 16-bit key string offset */
+    } അല്ലെങ്കിൽ {
         /* bundles with formatVersion 1.1 and later contain an indexes[] array */
-        const int32_t *indexes=pResData->pRoot+1;
+        സ്ഥിരം int32_t *indexes=pResData->p_വേര്+1;
         int32_t indexLength=indexes[URES_INDEX_LENGTH]&0xff;
-        if(indexLength<=URES_INDEX_MAX_TABLE_LENGTH) {
+        എങ്കിൽ(indexLength<=URES_INDEX_MAX_TABLE_LENGTH) {
             *errorCode=U_INVALID_FORMAT_ERROR;
             res_unload(pResData);
-            return;
+            തിരികെ;
         }
-        if( length>=0 &&
+        എങ്കിൽ( length>=0 &&
             (length<((1+indexLength)<<2) ||
-             length<(indexes[URES_INDEX_BUNDLE_TOP]<<2))
+             length<(indexes[URES_INDEX_BUNDLE_മുകൾ]<<2))
         ) {
             *errorCode=U_INVALID_FORMAT_ERROR;
             res_unload(pResData);
-            return;
+            തിരികെ;
         }
-        if(indexes[URES_INDEX_KEYS_TOP]>(1+indexLength)) {
-            pResData->localKeyLimit=indexes[URES_INDEX_KEYS_TOP]<<2;
+        എങ്കിൽ(indexes[URES_INDEX_താക്കോലുകൾ_മുകൾ]>(1+indexLength)) {
+            pResData->local_താക്കോൽ_Limit=indexes[URES_INDEX_താക്കോലുകൾ_മുകൾ]<<2;
         }
-        if(formatVersion[0]>=3) {
+        എങ്കിൽ(formatVersion[0]>=3) {
             // In formatVersion 1, the indexLength took up this whole int.
             // In version 2, bits 31..8 were reserved and always 0.
             // In version 3, they contain bits 23..0 of the poolStringIndexLimit.
             // Bits 27..24 are in indexes[URES_INDEX_ATTRIBUTES] bits 15..12.
             pResData->poolStringIndexLimit = static_cast<int32_t>(static_cast<uint32_t>(indexes[URES_INDEX_LENGTH]) >> 8);
         }
-        if(indexLength>URES_INDEX_ATTRIBUTES) {
+        എങ്കിൽ(indexLength>URES_INDEX_ATTRIBUTES) {
             int32_t att=indexes[URES_INDEX_ATTRIBUTES];
             pResData->noFallback = static_cast<UBool>(att & URES_ATT_NO_FALLBACK);
             pResData->isPoolBundle = static_cast<UBool>((att & URES_ATT_IS_POOL_BUNDLE) != 0);
@@ -217,72 +217,72 @@ res_init(ResourceData *pResData,
             pResData->poolStringIndexLimit|=(att&0xf000)<<12;  // bits 15..12 -> 27..24
             pResData->poolStringIndex16Limit = static_cast<int32_t>(static_cast<uint32_t>(att) >> 16);
         }
-        if((pResData->isPoolBundle || pResData->usesPoolBundle) && indexLength<=URES_INDEX_POOL_CHECKSUM) {
+        എങ്കിൽ((pResData->isPoolBundle || pResData->usesPoolBundle) && indexLength<=URES_INDEX_POOL_CHECKSUM) {
             *errorCode=U_INVALID_FORMAT_ERROR;
             res_unload(pResData);
-            return;
+            തിരികെ;
         }
-        if( indexLength>URES_INDEX_16BIT_TOP &&
-            indexes[URES_INDEX_16BIT_TOP]>indexes[URES_INDEX_KEYS_TOP]
+        എങ്കിൽ( indexLength>URES_INDEX_16_BIT_മുകൾ &&
+            indexes[URES_INDEX_16_BIT_മുകൾ]>indexes[URES_INDEX_താക്കോലുകൾ_മുകൾ]
         ) {
-            pResData->p16BitUnits = reinterpret_cast<const uint16_t*>(pResData->pRoot + indexes[URES_INDEX_KEYS_TOP]);
+            pResData->p16BitUnits = reinterpret_cast<സ്ഥിരം uint16_t*>(pResData->p_വേര് + indexes[URES_INDEX_താക്കോലുകൾ_മുകൾ]);
         }
     }
 
-    if(formatVersion[0]==1 || U_CHARSET_FAMILY==U_ASCII_FAMILY) {
+    എങ്കിൽ(formatVersion[0]==1 || U_CHARSET_FAMILY==U_ASCII_FAMILY) {
         /*
          * formatVersion 1: compare key strings in native-charset order
          * formatVersion 2 and up: compare key strings in ASCII order
          */
-        pResData->useNativeStrcmp=true;
+        pResData->useNativeStrcmp=സത്യം;
     }
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 res_read(ResourceData *pResData,
-         const UDataInfo *pInfo, const void *inBytes, int32_t length,
+         സ്ഥിരം UDataInfo *pInfo, സ്ഥിരം ശൂന്യം *inBytes, int32_t length,
          UErrorCode *errorCode) {
     UVersionInfo formatVersion;
 
-    uprv_memset(pResData, 0, sizeof(ResourceData));
-    if(U_FAILURE(*errorCode)) {
-        return;
+    uprv_memset(pResData, 0, വലുപ്പം(ResourceData));
+    എങ്കിൽ(U_FAILURE(*errorCode)) {
+        തിരികെ;
     }
-    if(!isAcceptable(formatVersion, nullptr, nullptr, pInfo)) {
+    എങ്കിൽ(!isAcceptable(formatVersion, nullptr, nullptr, pInfo)) {
         *errorCode=U_INVALID_FORMAT_ERROR;
-        return;
+        തിരികെ;
     }
     res_init(pResData, formatVersion, inBytes, length, errorCode);
 }
 
-U_CFUNC void
+U_CFUNC ശൂന്യം
 res_load(ResourceData *pResData,
-         const char *path, const char *name, UErrorCode *errorCode) {
+         സ്ഥിരം അക്ഷരം *path, സ്ഥിരം അക്ഷരം *name, UErrorCode *errorCode) {
     UVersionInfo formatVersion;
 
-    uprv_memset(pResData, 0, sizeof(ResourceData));
+    uprv_memset(pResData, 0, വലുപ്പം(ResourceData));
 
     /* load the ResourceBundle file */
     pResData->data=udata_openChoice(path, "res", name, isAcceptable, formatVersion, errorCode);
-    if(U_FAILURE(*errorCode)) {
-        return;
+    എങ്കിൽ(U_FAILURE(*errorCode)) {
+        തിരികെ;
     }
 
     /* get its memory and initialize *pResData */
     res_init(pResData, formatVersion, udata_getMemory(pResData->data), -1, errorCode);
 }
 
-U_CFUNC void
+U_CFUNC ശൂന്യം
 res_unload(ResourceData *pResData) {
-    if(pResData->data!=nullptr) {
+    എങ്കിൽ(pResData->data!=nullptr) {
         udata_close(pResData->data);
         pResData->data=nullptr;
     }
 }
 
-static const int8_t gPublicTypes[URES_LIMIT] = {
+സ്ഥിതം സ്ഥിരം int8_t gPublicTypes[URES_LIMIT] = {
     URES_STRING,
-    URES_BINARY,
+    URES_ദ്വിമാന,
     URES_TABLE,
     URES_ALIAS,
 
@@ -304,49 +304,49 @@ static const int8_t gPublicTypes[URES_LIMIT] = {
 
 U_CAPI UResType U_EXPORT2
 res_getPublicType(Resource res) {
-    return (UResType)gPublicTypes[RES_GET_TYPE(res)];
+    തിരികെ (UResType)gPublicTypes[RES_GET_TYPE(res)];
 }
 
-U_CAPI const char16_t * U_EXPORT2
-res_getStringNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength) {
-    const char16_t *p;
+U_CAPI സ്ഥിരം char16_t * U_EXPORT2
+res_getStringNoTrace(സ്ഥിരം ResourceData *pResData, Resource res, int32_t *pLength) {
+    സ്ഥിരം char16_t *p;
     uint32_t offset=RES_GET_OFFSET(res);
     int32_t length;
-    if(RES_GET_TYPE(res)==URES_STRING_V2) {
+    എങ്കിൽ(RES_GET_TYPE(res)==URES_STRING_V2) {
         int32_t first;
-        if((int32_t)offset<pResData->poolStringIndexLimit) {
-            p=(const char16_t *)pResData->poolBundleStrings+offset;
-        } else {
-            p=(const char16_t *)pResData->p16BitUnits+(offset-pResData->poolStringIndexLimit);
+        എങ്കിൽ((int32_t)offset<pResData->poolStringIndexLimit) {
+            p=(സ്ഥിരം char16_t *)pResData->poolBundleStrings+offset;
+        } അല്ലെങ്കിൽ {
+            p=(സ്ഥിരം char16_t *)pResData->p16BitUnits+(offset-pResData->poolStringIndexLimit);
         }
         first=*p;
-        if(!U16_IS_TRAIL(first)) {
+        എങ്കിൽ(!U16_IS_TRAIL(first)) {
             length=u_strlen(p);
-        } else if(first<0xdfef) {
+        } അല്ലെങ്കിൽ എങ്കിൽ(first<0xdfef) {
             length=first&0x3ff;
             ++p;
-        } else if(first<0xdfff) {
+        } അല്ലെങ്കിൽ എങ്കിൽ(first<0xdfff) {
             length=((first-0xdfef)<<16)|p[1];
             p+=2;
-        } else {
+        } അല്ലെങ്കിൽ {
             length=((int32_t)p[1]<<16)|p[2];
             p+=3;
         }
-    } else if(res==offset) /* RES_GET_TYPE(res)==URES_STRING */ {
-        const int32_t *p32= res==0 ? &gEmptyString.length : pResData->pRoot+res;
+    } അല്ലെങ്കിൽ എങ്കിൽ(res==offset) /* RES_GET_TYPE(res)==URES_STRING */ {
+        സ്ഥിരം int32_t *p32= res==0 ? &gEmptyString.length : pResData->p_വേര്+res;
         length=*p32++;
-        p=(const char16_t *)p32;
-    } else {
+        p=(സ്ഥിരം char16_t *)p32;
+    } അല്ലെങ്കിൽ {
         p=nullptr;
         length=0;
     }
-    if(pLength) {
+    എങ്കിൽ(pLength) {
         *pLength=length;
     }
-    return p;
+    തിരികെ p;
 }
 
-namespace {
+നാമാകാശ {
 
 /**
  * CLDR string value (three empty-set symbols)=={2205, 2205, 2205}
@@ -354,589 +354,589 @@ namespace {
  * TODO: combine with other code that handles this marker, use EMPTY_SET constant.
  * TODO: maybe move to uresbund.cpp?
  */
-UBool isNoInheritanceMarker(const ResourceData *pResData, Resource res) {
+UBool isNoInheritanceMarker(സ്ഥിരം ResourceData *pResData, Resource res) {
     uint32_t offset=RES_GET_OFFSET(res);
-    if (offset == 0) {
+    എങ്കിൽ (offset == 0) {
         // empty string
-    } else if (res == offset) {
-        const int32_t *p32=pResData->pRoot+res;
+    } അല്ലെങ്കിൽ എങ്കിൽ (res == offset) {
+        സ്ഥിരം int32_t *p32=pResData->p_വേര്+res;
         int32_t length=*p32;
-        const char16_t* p = reinterpret_cast<const char16_t*>(p32);
-        return length == 3 && p[2] == 0x2205 && p[3] == 0x2205 && p[4] == 0x2205;
-    } else if (RES_GET_TYPE(res) == URES_STRING_V2) {
-        const char16_t *p;
-        if (static_cast<int32_t>(offset) < pResData->poolStringIndexLimit) {
-            p = reinterpret_cast<const char16_t*>(pResData->poolBundleStrings) + offset;
-        } else {
-            p = reinterpret_cast<const char16_t*>(pResData->p16BitUnits) + (offset - pResData->poolStringIndexLimit);
+        സ്ഥിരം char16_t* p = reinterpret_cast<സ്ഥിരം char16_t*>(p32);
+        തിരികെ length == 3 && p[2] == 0x2205 && p[3] == 0x2205 && p[4] == 0x2205;
+    } അല്ലെങ്കിൽ എങ്കിൽ (RES_GET_TYPE(res) == URES_STRING_V2) {
+        സ്ഥിരം char16_t *p;
+        എങ്കിൽ (static_cast<int32_t>(offset) < pResData->poolStringIndexLimit) {
+            p = reinterpret_cast<സ്ഥിരം char16_t*>(pResData->poolBundleStrings) + offset;
+        } അല്ലെങ്കിൽ {
+            p = reinterpret_cast<സ്ഥിരം char16_t*>(pResData->p16BitUnits) + (offset - pResData->poolStringIndexLimit);
         }
         int32_t first=*p;
-        if (first == 0x2205) {  // implicit length
-            return p[1] == 0x2205 && p[2] == 0x2205 && p[3] == 0;
-        } else if (first == 0xdc03) {  // explicit length 3 (should not occur)
-            return p[1] == 0x2205 && p[2] == 0x2205 && p[3] == 0x2205;
-        } else {
+        എങ്കിൽ (first == 0x2205) {  // implicit length
+            തിരികെ p[1] == 0x2205 && p[2] == 0x2205 && p[3] == 0;
+        } അല്ലെങ്കിൽ എങ്കിൽ (first == 0xdc03) {  // explicit length 3 (should not occur)
+            തിരികെ p[1] == 0x2205 && p[2] == 0x2205 && p[3] == 0x2205;
+        } അല്ലെങ്കിൽ {
             // Assume that the string has not been stored with more length units than necessary.
-            return false;
+            തിരികെ അസത്യം;
         }
     }
-    return false;
+    തിരികെ അസത്യം;
 }
 
-int32_t getStringArray(const ResourceData *pResData, const icu::ResourceArray &array,
+int32_t getStringArray(സ്ഥിരം ResourceData *pResData, സ്ഥിരം icu::ResourceArray &array,
                        icu::UnicodeString *dest, int32_t capacity,
                        UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        തിരികെ 0;
     }
-    if(dest == nullptr ? capacity != 0 : capacity < 0) {
+    എങ്കിൽ(dest == nullptr ? capacity != 0 : capacity < 0) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        തിരികെ 0;
     }
     int32_t length = array.getSize();
-    if(length == 0) {
-        return 0;
+    എങ്കിൽ(length == 0) {
+        തിരികെ 0;
     }
-    if(length > capacity) {
+    എങ്കിൽ(length > capacity) {
         errorCode = U_BUFFER_OVERFLOW_ERROR;
-        return length;
+        തിരികെ length;
     }
-    for(int32_t i = 0; i < length; ++i) {
+    വേണ്ടി(int32_t i = 0; i < length; ++i) {
         int32_t sLength;
         // No tracing: handled by the caller
-        const char16_t *s = res_getStringNoTrace(pResData, array.internalGetResource(pResData, i), &sLength);
-        if(s == nullptr) {
+        സ്ഥിരം char16_t *s = res_getStringNoTrace(pResData, array.internalGetResource(pResData, i), &sLength);
+        എങ്കിൽ(s == nullptr) {
             errorCode = U_RESOURCE_TYPE_MISMATCH;
-            return 0;
+            തിരികെ 0;
         }
-        dest[i].setTo(true, s, sLength);
+        dest[i].setTo(സത്യം, s, sLength);
     }
-    return length;
+    തിരികെ length;
 }
 
 }  // namespace
 
-U_CAPI const char16_t * U_EXPORT2
-res_getAlias(const ResourceData *pResData, Resource res, int32_t *pLength) {
-    const char16_t *p;
+U_CAPI സ്ഥിരം char16_t * U_EXPORT2
+res_getAlias(സ്ഥിരം ResourceData *pResData, Resource res, int32_t *pLength) {
+    സ്ഥിരം char16_t *p;
     uint32_t offset=RES_GET_OFFSET(res);
     int32_t length;
-    if(RES_GET_TYPE(res)==URES_ALIAS) {
-        const int32_t *p32= offset==0 ? &gEmptyString.length : pResData->pRoot+offset;
+    എങ്കിൽ(RES_GET_TYPE(res)==URES_ALIAS) {
+        സ്ഥിരം int32_t *p32= offset==0 ? &gEmptyString.length : pResData->p_വേര്+offset;
         length=*p32++;
-        p=(const char16_t *)p32;
-    } else {
+        p=(സ്ഥിരം char16_t *)p32;
+    } അല്ലെങ്കിൽ {
         p=nullptr;
         length=0;
     }
-    if(pLength) {
+    എങ്കിൽ(pLength) {
         *pLength=length;
     }
-    return p;
+    തിരികെ p;
 }
 
-U_CAPI const uint8_t * U_EXPORT2
-res_getBinaryNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength) {
-    const uint8_t *p;
+U_CAPI സ്ഥിരം uint8_t * U_EXPORT2
+res_get_ദ്വിമാന_No_Trace(സ്ഥിരം ResourceData *pResData, Resource res, int32_t *pLength) {
+    സ്ഥിരം uint8_t *p;
     uint32_t offset=RES_GET_OFFSET(res);
     int32_t length;
-    if(RES_GET_TYPE(res)==URES_BINARY) {
-        const int32_t *p32= offset==0 ? (const int32_t*)&gEmpty32 : pResData->pRoot+offset;
+    എങ്കിൽ(RES_GET_TYPE(res)==URES_ദ്വിമാന) {
+        സ്ഥിരം int32_t *p32= offset==0 ? (സ്ഥിരം int32_t*)&gEmpty32 : pResData->p_വേര്+offset;
         length=*p32++;
-        p=(const uint8_t *)p32;
-    } else {
+        p=(സ്ഥിരം uint8_t *)p32;
+    } അല്ലെങ്കിൽ {
         p=nullptr;
         length=0;
     }
-    if(pLength) {
+    എങ്കിൽ(pLength) {
         *pLength=length;
     }
-    return p;
+    തിരികെ p;
 }
 
 
-U_CAPI const int32_t * U_EXPORT2
-res_getIntVectorNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength) {
-    const int32_t *p;
+U_CAPI സ്ഥിരം int32_t * U_EXPORT2
+res_getIntVectorNoTrace(സ്ഥിരം ResourceData *pResData, Resource res, int32_t *pLength) {
+    സ്ഥിരം int32_t *p;
     uint32_t offset=RES_GET_OFFSET(res);
     int32_t length;
-    if(RES_GET_TYPE(res)==URES_INT_VECTOR) {
-        p= offset==0 ? (const int32_t *)&gEmpty32 : pResData->pRoot+offset;
+    എങ്കിൽ(RES_GET_TYPE(res)==URES_INT_VECTOR) {
+        p= offset==0 ? (സ്ഥിരം int32_t *)&gEmpty32 : pResData->p_വേര്+offset;
         length=*p++;
-    } else {
+    } അല്ലെങ്കിൽ {
         p=nullptr;
         length=0;
     }
-    if(pLength) {
+    എങ്കിൽ(pLength) {
         *pLength=length;
     }
-    return p;
+    തിരികെ p;
 }
 
 U_CAPI int32_t U_EXPORT2
-res_countArrayItems(const ResourceData *pResData, Resource res) {
+res_എണ്ണം_Array_ഇനങ്ങൾ(സ്ഥിരം ResourceData *pResData, Resource res) {
     uint32_t offset=RES_GET_OFFSET(res);
-    switch(RES_GET_TYPE(res)) {
-    case URES_STRING:
-    case URES_STRING_V2:
-    case URES_BINARY:
-    case URES_ALIAS:
-    case URES_INT:
-    case URES_INT_VECTOR:
-        return 1;
-    case URES_ARRAY:
-    case URES_TABLE32:
-        return offset==0 ? 0 : *(pResData->pRoot+offset);
-    case URES_TABLE:
-        return offset==0 ? 0 : *((const uint16_t *)(pResData->pRoot+offset));
-    case URES_ARRAY16:
-    case URES_TABLE16:
-        return pResData->p16BitUnits[offset];
-    default:
-        return 0;
+    തിരഞ്ഞെടുപ്പ്(RES_GET_TYPE(res)) {
+    അവസ്ഥ URES_STRING:
+    അവസ്ഥ URES_STRING_V2:
+    അവസ്ഥ URES_ദ്വിമാന:
+    അവസ്ഥ URES_ALIAS:
+    അവസ്ഥ URES_INT:
+    അവസ്ഥ URES_INT_VECTOR:
+        തിരികെ 1;
+    അവസ്ഥ URES_ARRAY:
+    അവസ്ഥ URES_TABLE32:
+        തിരികെ offset==0 ? 0 : *(pResData->p_വേര്+offset);
+    അവസ്ഥ URES_TABLE:
+        തിരികെ offset==0 ? 0 : *((സ്ഥിരം uint16_t *)(pResData->p_വേര്+offset));
+    അവസ്ഥ URES_ARRAY16:
+    അവസ്ഥ URES_TABLE16:
+        തിരികെ pResData->p16BitUnits[offset];
+    സ്ഥിരസ്ഥിതി:
+        തിരികെ 0;
     }
 }
 
 U_NAMESPACE_BEGIN
 
-ResourceDataValue::~ResourceDataValue() {}
+Resource_Data_മൂല്യം::~Resource_Data_മൂല്യം() {}
 
-UResType ResourceDataValue::getType() const {
-    return res_getPublicType(res);
+UResType Resource_Data_മൂല്യം::getType() സ്ഥിരം {
+    തിരികെ res_getPublicType(res);
 }
 
-const char16_t *ResourceDataValue::getString(int32_t &length, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+സ്ഥിരം char16_t *Resource_Data_മൂല്യം::getString(int32_t &length, UErrorCode &errorCode) സ്ഥിരം {
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        തിരികെ nullptr;
     }
-    const char16_t *s = res_getString(fTraceInfo, &getData(), res, &length);
-    if(s == nullptr) {
+    സ്ഥിരം char16_t *s = res_getString(fTraceInfo, &getData(), res, &length);
+    എങ്കിൽ(s == nullptr) {
         errorCode = U_RESOURCE_TYPE_MISMATCH;
     }
-    return s;
+    തിരികെ s;
 }
 
-const char16_t *ResourceDataValue::getAliasString(int32_t &length, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+സ്ഥിരം char16_t *Resource_Data_മൂല്യം::getAliasString(int32_t &length, UErrorCode &errorCode) സ്ഥിരം {
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        തിരികെ nullptr;
     }
-    const char16_t *s = res_getAlias(&getData(), res, &length);
-    if(s == nullptr) {
+    സ്ഥിരം char16_t *s = res_getAlias(&getData(), res, &length);
+    എങ്കിൽ(s == nullptr) {
         errorCode = U_RESOURCE_TYPE_MISMATCH;
     }
-    return s;
+    തിരികെ s;
 }
 
-int32_t ResourceDataValue::getInt(UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+int32_t Resource_Data_മൂല്യം::getInt(UErrorCode &errorCode) സ്ഥിരം {
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        തിരികെ 0;
     }
-    if(RES_GET_TYPE(res) != URES_INT) {
+    എങ്കിൽ(RES_GET_TYPE(res) != URES_INT) {
         errorCode = U_RESOURCE_TYPE_MISMATCH;
     }
-    return res_getInt(fTraceInfo, res);
+    തിരികെ res_getInt(fTraceInfo, res);
 }
 
-uint32_t ResourceDataValue::getUInt(UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+uint32_t Resource_Data_മൂല്യം::getUInt(UErrorCode &errorCode) സ്ഥിരം {
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        തിരികെ 0;
     }
-    if(RES_GET_TYPE(res) != URES_INT) {
+    എങ്കിൽ(RES_GET_TYPE(res) != URES_INT) {
         errorCode = U_RESOURCE_TYPE_MISMATCH;
     }
-    return res_getUInt(fTraceInfo, res);
+    തിരികെ res_getUInt(fTraceInfo, res);
 }
 
-const int32_t *ResourceDataValue::getIntVector(int32_t &length, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+സ്ഥിരം int32_t *Resource_Data_മൂല്യം::getIntVector(int32_t &length, UErrorCode &errorCode) സ്ഥിരം {
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        തിരികെ nullptr;
     }
-    const int32_t *iv = res_getIntVector(fTraceInfo, &getData(), res, &length);
-    if(iv == nullptr) {
+    സ്ഥിരം int32_t *iv = res_getIntVector(fTraceInfo, &getData(), res, &length);
+    എങ്കിൽ(iv == nullptr) {
         errorCode = U_RESOURCE_TYPE_MISMATCH;
     }
-    return iv;
+    തിരികെ iv;
 }
 
-const uint8_t *ResourceDataValue::getBinary(int32_t &length, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+സ്ഥിരം uint8_t *Resource_Data_മൂല്യം::get_ദ്വിമാന(int32_t &length, UErrorCode &errorCode) സ്ഥിരം {
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        തിരികെ nullptr;
     }
-    const uint8_t *b = res_getBinary(fTraceInfo, &getData(), res, &length);
-    if(b == nullptr) {
+    സ്ഥിരം uint8_t *b = res_get_ദ്വിമാന(fTraceInfo, &getData(), res, &length);
+    എങ്കിൽ(b == nullptr) {
         errorCode = U_RESOURCE_TYPE_MISMATCH;
     }
-    return b;
+    തിരികെ b;
 }
 
-ResourceArray ResourceDataValue::getArray(UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return {};
+ResourceArray Resource_Data_മൂല്യം::getArray(UErrorCode &errorCode) സ്ഥിരം {
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        തിരികെ {};
     }
-    const uint16_t *items16 = nullptr;
-    const Resource *items32 = nullptr;
+    സ്ഥിരം uint16_t *items16 = nullptr;
+    സ്ഥിരം Resource *items32 = nullptr;
     uint32_t offset=RES_GET_OFFSET(res);
     int32_t length = 0;
-    switch(RES_GET_TYPE(res)) {
-    case URES_ARRAY:
-        if (offset!=0) {  // empty if offset==0
-            items32 = reinterpret_cast<const Resource*>(getData().pRoot) + offset;
+    തിരഞ്ഞെടുപ്പ്(RES_GET_TYPE(res)) {
+    അവസ്ഥ URES_ARRAY:
+        എങ്കിൽ (offset!=0) {  // empty if offset==0
+            items32 = reinterpret_cast<സ്ഥിരം Resource*>(getData().p_വേര്) + offset;
             length = *items32++;
         }
-        break;
-    case URES_ARRAY16:
+        നിർത്തുക;
+    അവസ്ഥ URES_ARRAY16:
         items16 = getData().p16BitUnits+offset;
         length = *items16++;
-        break;
-    default:
+        നിർത്തുക;
+    സ്ഥിരസ്ഥിതി:
         errorCode = U_RESOURCE_TYPE_MISMATCH;
-        return {};
+        തിരികെ {};
     }
-    return ResourceArray(items16, items32, length, fTraceInfo);
+    തിരികെ ResourceArray(items16, items32, length, fTraceInfo);
 }
 
-ResourceTable ResourceDataValue::getTable(UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return {};
+ResourceTable Resource_Data_മൂല്യം::getTable(UErrorCode &errorCode) സ്ഥിരം {
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        തിരികെ {};
     }
-    const uint16_t *keys16 = nullptr;
-    const int32_t *keys32 = nullptr;
-    const uint16_t *items16 = nullptr;
-    const Resource *items32 = nullptr;
+    സ്ഥിരം uint16_t *keys16 = nullptr;
+    സ്ഥിരം int32_t *keys32 = nullptr;
+    സ്ഥിരം uint16_t *items16 = nullptr;
+    സ്ഥിരം Resource *items32 = nullptr;
     uint32_t offset = RES_GET_OFFSET(res);
     int32_t length = 0;
-    switch(RES_GET_TYPE(res)) {
-    case URES_TABLE:
-        if (offset != 0) {  // empty if offset==0
-            keys16 = reinterpret_cast<const uint16_t*>(getData().pRoot + offset);
+    തിരഞ്ഞെടുപ്പ്(RES_GET_TYPE(res)) {
+    അവസ്ഥ URES_TABLE:
+        എങ്കിൽ (offset != 0) {  // empty if offset==0
+            keys16 = reinterpret_cast<സ്ഥിരം uint16_t*>(getData().p_വേര് + offset);
             length = *keys16++;
-            items32 = reinterpret_cast<const Resource*>(keys16 + length + (~length & 1));
+            items32 = reinterpret_cast<സ്ഥിരം Resource*>(keys16 + length + (~length & 1));
         }
-        break;
-    case URES_TABLE16:
+        നിർത്തുക;
+    അവസ്ഥ URES_TABLE16:
         keys16 = getData().p16BitUnits+offset;
         length = *keys16++;
         items16 = keys16 + length;
-        break;
-    case URES_TABLE32:
-        if (offset != 0) {  // empty if offset==0
-            keys32 = getData().pRoot+offset;
+        നിർത്തുക;
+    അവസ്ഥ URES_TABLE32:
+        എങ്കിൽ (offset != 0) {  // empty if offset==0
+            keys32 = getData().p_വേര്+offset;
             length = *keys32++;
-            items32 = reinterpret_cast<const Resource*>(keys32) + length;
+            items32 = reinterpret_cast<സ്ഥിരം Resource*>(keys32) + length;
         }
-        break;
-    default:
+        നിർത്തുക;
+    സ്ഥിരസ്ഥിതി:
         errorCode = U_RESOURCE_TYPE_MISMATCH;
-        return {};
+        തിരികെ {};
     }
-    return ResourceTable(keys16, keys32, items16, items32, length, fTraceInfo);
+    തിരികെ ResourceTable(keys16, keys32, items16, items32, length, fTraceInfo);
 }
 
-UBool ResourceDataValue::isNoInheritanceMarker() const {
-    return ::isNoInheritanceMarker(&getData(), res);
+UBool Resource_Data_മൂല്യം::isNoInheritanceMarker() സ്ഥിരം {
+    തിരികെ ::isNoInheritanceMarker(&getData(), res);
 }
 
-int32_t ResourceDataValue::getStringArray(UnicodeString *dest, int32_t capacity,
-                                          UErrorCode &errorCode) const {
-    return ::getStringArray(&getData(), getArray(errorCode), dest, capacity, errorCode);
+int32_t Resource_Data_മൂല്യം::getStringArray(UnicodeString *dest, int32_t capacity,
+                                          UErrorCode &errorCode) സ്ഥിരം {
+    തിരികെ ::getStringArray(&getData(), getArray(errorCode), dest, capacity, errorCode);
 }
 
-int32_t ResourceDataValue::getStringArrayOrStringAsArray(UnicodeString *dest, int32_t capacity,
-                                                         UErrorCode &errorCode) const {
-    if(URES_IS_ARRAY(res)) {
-        return ::getStringArray(&getData(), getArray(errorCode), dest, capacity, errorCode);
+int32_t Resource_Data_മൂല്യം::getStringArrayOrStringAsArray(UnicodeString *dest, int32_t capacity,
+                                                         UErrorCode &errorCode) സ്ഥിരം {
+    എങ്കിൽ(URES_IS_ARRAY(res)) {
+        തിരികെ ::getStringArray(&getData(), getArray(errorCode), dest, capacity, errorCode);
     }
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        തിരികെ 0;
     }
-    if(dest == nullptr ? capacity != 0 : capacity < 0) {
+    എങ്കിൽ(dest == nullptr ? capacity != 0 : capacity < 0) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        തിരികെ 0;
     }
-    if(capacity < 1) {
+    എങ്കിൽ(capacity < 1) {
         errorCode = U_BUFFER_OVERFLOW_ERROR;
-        return 1;
+        തിരികെ 1;
     }
     int32_t sLength;
-    const char16_t *s = res_getString(fTraceInfo, &getData(), res, &sLength);
-    if(s != nullptr) {
-        dest[0].setTo(true, s, sLength);
-        return 1;
+    സ്ഥിരം char16_t *s = res_getString(fTraceInfo, &getData(), res, &sLength);
+    എങ്കിൽ(s != nullptr) {
+        dest[0].setTo(സത്യം, s, sLength);
+        തിരികെ 1;
     }
     errorCode = U_RESOURCE_TYPE_MISMATCH;
-    return 0;
+    തിരികെ 0;
 }
 
-UnicodeString ResourceDataValue::getStringOrFirstOfArray(UErrorCode &errorCode) const {
+UnicodeString Resource_Data_മൂല്യം::getStringOrFirstOfArray(UErrorCode &errorCode) സ്ഥിരം {
     UnicodeString us;
-    if(U_FAILURE(errorCode)) {
-        return us;
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        തിരികെ us;
     }
     int32_t sLength;
-    const char16_t *s = res_getString(fTraceInfo, &getData(), res, &sLength);
-    if(s != nullptr) {
-        us.setTo(true, s, sLength);
-        return us;
+    സ്ഥിരം char16_t *s = res_getString(fTraceInfo, &getData(), res, &sLength);
+    എങ്കിൽ(s != nullptr) {
+        us.setTo(സത്യം, s, sLength);
+        തിരികെ us;
     }
     ResourceArray array = getArray(errorCode);
-    if(U_FAILURE(errorCode)) {
-        return us;
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        തിരികെ us;
     }
-    if(array.getSize() > 0) {
+    എങ്കിൽ(array.getSize() > 0) {
         // Tracing is already performed above (unimportant for trace that this is an array)
         s = res_getStringNoTrace(&getData(), array.internalGetResource(&getData(), 0), &sLength);
-        if(s != nullptr) {
-            us.setTo(true, s, sLength);
-            return us;
+        എങ്കിൽ(s != nullptr) {
+            us.setTo(സത്യം, s, sLength);
+            തിരികെ us;
         }
     }
     errorCode = U_RESOURCE_TYPE_MISMATCH;
-    return us;
+    തിരികെ us;
 }
 
 U_NAMESPACE_END
 
-static Resource
-makeResourceFrom16(const ResourceData *pResData, int32_t res16) {
-    if(res16<pResData->poolStringIndex16Limit) {
+സ്ഥിതം Resource
+makeResourceFrom16(സ്ഥിരം ResourceData *pResData, int32_t res16) {
+    എങ്കിൽ(res16<pResData->poolStringIndex16Limit) {
         // Pool string, nothing to do.
-    } else {
+    } അല്ലെങ്കിൽ {
         // Local string, adjust the 16-bit offset to a regular one,
         // with a larger pool string index limit.
         res16=res16-pResData->poolStringIndex16Limit+pResData->poolStringIndexLimit;
     }
-    return URES_MAKE_RESOURCE(URES_STRING_V2, res16);
+    തിരികെ URES_MAKE_RESOURCE(URES_STRING_V2, res16);
 }
 
 U_CAPI Resource U_EXPORT2
-res_getTableItemByKey(const ResourceData *pResData, Resource table,
-                      int32_t *indexR, const char **key) {
+res_get_Table_Item_By_താക്കോൽ(സ്ഥിരം ResourceData *pResData, Resource table,
+                      int32_t *indexR, സ്ഥിരം അക്ഷരം **താക്കോൽ) {
     uint32_t offset=RES_GET_OFFSET(table);
     int32_t length;
     int32_t idx;
-    if(key == nullptr || *key == nullptr) {
-        return RES_BOGUS;
+    എങ്കിൽ(താക്കോൽ == nullptr || *താക്കോൽ == nullptr) {
+        തിരികെ RES_BOGUS;
     }
-    switch(RES_GET_TYPE(table)) {
-    case URES_TABLE: {
-        if (offset!=0) { /* empty if offset==0 */
-            const uint16_t *p= (const uint16_t *)(pResData->pRoot+offset);
+    തിരഞ്ഞെടുപ്പ്(RES_GET_TYPE(table)) {
+    അവസ്ഥ URES_TABLE: {
+        എങ്കിൽ (offset!=0) { /* empty if offset==0 */
+            സ്ഥിരം uint16_t *p= (സ്ഥിരം uint16_t *)(pResData->p_വേര്+offset);
             length=*p++;
-            *indexR=idx=_res_findTableItem(pResData, p, length, *key, key);
-            if(idx>=0) {
-                const Resource *p32=(const Resource *)(p+length+(~length&1));
-                return p32[idx];
+            *indexR=idx=_res_findTableItem(pResData, p, length, *താക്കോൽ, താക്കോൽ);
+            എങ്കിൽ(idx>=0) {
+                സ്ഥിരം Resource *p32=(സ്ഥിരം Resource *)(p+length+(~length&1));
+                തിരികെ p32[idx];
             }
         }
-        break;
+        നിർത്തുക;
     }
-    case URES_TABLE16: {
-        const uint16_t *p=pResData->p16BitUnits+offset;
+    അവസ്ഥ URES_TABLE16: {
+        സ്ഥിരം uint16_t *p=pResData->p16BitUnits+offset;
         length=*p++;
-        *indexR=idx=_res_findTableItem(pResData, p, length, *key, key);
-        if(idx>=0) {
-            return makeResourceFrom16(pResData, p[length+idx]);
+        *indexR=idx=_res_findTableItem(pResData, p, length, *താക്കോൽ, താക്കോൽ);
+        എങ്കിൽ(idx>=0) {
+            തിരികെ makeResourceFrom16(pResData, p[length+idx]);
         }
-        break;
+        നിർത്തുക;
     }
-    case URES_TABLE32: {
-        if (offset!=0) { /* empty if offset==0 */
-            const int32_t *p= pResData->pRoot+offset;
+    അവസ്ഥ URES_TABLE32: {
+        എങ്കിൽ (offset!=0) { /* empty if offset==0 */
+            സ്ഥിരം int32_t *p= pResData->p_വേര്+offset;
             length=*p++;
-            *indexR=idx=_res_findTable32Item(pResData, p, length, *key, key);
-            if(idx>=0) {
-                return (Resource)p[length+idx];
+            *indexR=idx=_res_findTable32Item(pResData, p, length, *താക്കോൽ, താക്കോൽ);
+            എങ്കിൽ(idx>=0) {
+                തിരികെ (Resource)p[length+idx];
             }
         }
-        break;
+        നിർത്തുക;
     }
-    default:
-        break;
+    സ്ഥിരസ്ഥിതി:
+        നിർത്തുക;
     }
-    return RES_BOGUS;
+    തിരികെ RES_BOGUS;
 }
 
 U_CAPI Resource U_EXPORT2
-res_getTableItemByIndex(const ResourceData *pResData, Resource table,
-                        int32_t indexR, const char **key) {
+res_getTableItemByIndex(സ്ഥിരം ResourceData *pResData, Resource table,
+                        int32_t indexR, സ്ഥിരം അക്ഷരം **താക്കോൽ) {
     uint32_t offset=RES_GET_OFFSET(table);
     int32_t length;
-    if (indexR < 0) {
-        return RES_BOGUS;
+    എങ്കിൽ (indexR < 0) {
+        തിരികെ RES_BOGUS;
     }
-    switch(RES_GET_TYPE(table)) {
-    case URES_TABLE: {
-        if (offset != 0) { /* empty if offset==0 */
-            const uint16_t *p= (const uint16_t *)(pResData->pRoot+offset);
+    തിരഞ്ഞെടുപ്പ്(RES_GET_TYPE(table)) {
+    അവസ്ഥ URES_TABLE: {
+        എങ്കിൽ (offset != 0) { /* empty if offset==0 */
+            സ്ഥിരം uint16_t *p= (സ്ഥിരം uint16_t *)(pResData->p_വേര്+offset);
             length=*p++;
-            if(indexR<length) {
-                const Resource *p32=(const Resource *)(p+length+(~length&1));
-                if(key!=nullptr) {
-                    *key=RES_GET_KEY16(pResData, p[indexR]);
+            എങ്കിൽ(indexR<length) {
+                സ്ഥിരം Resource *p32=(സ്ഥിരം Resource *)(p+length+(~length&1));
+                എങ്കിൽ(താക്കോൽ!=nullptr) {
+                    *താക്കോൽ=RES_GET_KEY16(pResData, p[indexR]);
                 }
-                return p32[indexR];
+                തിരികെ p32[indexR];
             }
         }
-        break;
+        നിർത്തുക;
     }
-    case URES_TABLE16: {
-        const uint16_t *p=pResData->p16BitUnits+offset;
+    അവസ്ഥ URES_TABLE16: {
+        സ്ഥിരം uint16_t *p=pResData->p16BitUnits+offset;
         length=*p++;
-        if(indexR<length) {
-            if(key!=nullptr) {
-                *key=RES_GET_KEY16(pResData, p[indexR]);
+        എങ്കിൽ(indexR<length) {
+            എങ്കിൽ(താക്കോൽ!=nullptr) {
+                *താക്കോൽ=RES_GET_KEY16(pResData, p[indexR]);
             }
-            return makeResourceFrom16(pResData, p[length+indexR]);
+            തിരികെ makeResourceFrom16(pResData, p[length+indexR]);
         }
-        break;
+        നിർത്തുക;
     }
-    case URES_TABLE32: {
-        if (offset != 0) { /* empty if offset==0 */
-            const int32_t *p= pResData->pRoot+offset;
+    അവസ്ഥ URES_TABLE32: {
+        എങ്കിൽ (offset != 0) { /* empty if offset==0 */
+            സ്ഥിരം int32_t *p= pResData->p_വേര്+offset;
             length=*p++;
-            if(indexR<length) {
-                if(key!=nullptr) {
-                    *key=RES_GET_KEY32(pResData, p[indexR]);
+            എങ്കിൽ(indexR<length) {
+                എങ്കിൽ(താക്കോൽ!=nullptr) {
+                    *താക്കോൽ=RES_GET_KEY32(pResData, p[indexR]);
                 }
-                return (Resource)p[length+indexR];
+                തിരികെ (Resource)p[length+indexR];
             }
         }
-        break;
+        നിർത്തുക;
     }
-    default:
-        break;
+    സ്ഥിരസ്ഥിതി:
+        നിർത്തുക;
     }
-    return RES_BOGUS;
+    തിരികെ RES_BOGUS;
 }
 
 U_CAPI Resource U_EXPORT2
-res_getResource(const ResourceData *pResData, const char *key) {
-    const char *realKey=key;
+res_getResource(സ്ഥിരം ResourceData *pResData, സ്ഥിരം അക്ഷരം *താക്കോൽ) {
+    സ്ഥിരം അക്ഷരം *real_താക്കോൽ=താക്കോൽ;
     int32_t idx;
-    return res_getTableItemByKey(pResData, pResData->rootRes, &idx, &realKey);
+    തിരികെ res_get_Table_Item_By_താക്കോൽ(pResData, pResData->വേര്_Res, &idx, &real_താക്കോൽ);
 }
 
 
-UBool icu::ResourceTable::getKeyAndValue(int32_t i,
-                                         const char *&key, icu::ResourceValue &value) const {
-    if(0 <= i && i < length) {
-        icu::ResourceDataValue &rdValue = static_cast<icu::ResourceDataValue &>(value);
-        if (keys16 != nullptr) {
-            key = RES_GET_KEY16(&rdValue.getData(), keys16[i]);
-        } else {
-            key = RES_GET_KEY32(&rdValue.getData(), keys32[i]);
+UBool icu::ResourceTable::get_താക്കോൽ_And_മൂല്യം(int32_t i,
+                                         സ്ഥിരം അക്ഷരം *&താക്കോൽ, icu::Resource_മൂല്യം &value) സ്ഥിരം {
+    എങ്കിൽ(0 <= i && i < length) {
+        icu::Resource_Data_മൂല്യം &rd_മൂല്യം = static_cast<icu::Resource_Data_മൂല്യം &>(value);
+        എങ്കിൽ (keys16 != nullptr) {
+            താക്കോൽ = RES_GET_KEY16(&rd_മൂല്യം.getData(), keys16[i]);
+        } അല്ലെങ്കിൽ {
+            താക്കോൽ = RES_GET_KEY32(&rd_മൂല്യം.getData(), keys32[i]);
         }
         Resource res;
-        if (items16 != nullptr) {
-            res = makeResourceFrom16(&rdValue.getData(), items16[i]);
-        } else {
+        എങ്കിൽ (items16 != nullptr) {
+            res = makeResourceFrom16(&rd_മൂല്യം.getData(), items16[i]);
+        } അല്ലെങ്കിൽ {
             res = items32[i];
         }
         // Note: the ResourceTracer keeps a reference to the field of this
         // ResourceTable. This is OK because the ResourceTable should remain
         // alive for the duration that fields are being read from it
         // (including nested fields).
-        rdValue.setResource(res, ResourceTracer(fTraceInfo, key));
-        return true;
+        rd_മൂല്യം.setResource(res, ResourceTracer(fTraceInfo, താക്കോൽ));
+        തിരികെ സത്യം;
     }
-    return false;
+    തിരികെ അസത്യം;
 }
 
-UBool icu::ResourceTable::findValue(const char *key, ResourceValue &value) const {
-    icu::ResourceDataValue &rdValue = static_cast<icu::ResourceDataValue &>(value);
-    const char *realKey = nullptr;
+UBool icu::ResourceTable::find_മൂല്യം(സ്ഥിരം അക്ഷരം *താക്കോൽ, Resource_മൂല്യം &value) സ്ഥിരം {
+    icu::Resource_Data_മൂല്യം &rd_മൂല്യം = static_cast<icu::Resource_Data_മൂല്യം &>(value);
+    സ്ഥിരം അക്ഷരം *real_താക്കോൽ = nullptr;
     int32_t i;
-    if (keys16 != nullptr) {
-        i = _res_findTableItem(&rdValue.getData(), keys16, length, key, &realKey);
-    } else {
-        i = _res_findTable32Item(&rdValue.getData(), keys32, length, key, &realKey);
+    എങ്കിൽ (keys16 != nullptr) {
+        i = _res_findTableItem(&rd_മൂല്യം.getData(), keys16, length, താക്കോൽ, &real_താക്കോൽ);
+    } അല്ലെങ്കിൽ {
+        i = _res_findTable32Item(&rd_മൂല്യം.getData(), keys32, length, താക്കോൽ, &real_താക്കോൽ);
     }
-    if (i >= 0) {
+    എങ്കിൽ (i >= 0) {
         Resource res;
-        if (items16 != nullptr) {
-            res = makeResourceFrom16(&rdValue.getData(), items16[i]);
-        } else {
+        എങ്കിൽ (items16 != nullptr) {
+            res = makeResourceFrom16(&rd_മൂല്യം.getData(), items16[i]);
+        } അല്ലെങ്കിൽ {
             res = items32[i];
         }
         // Same note about lifetime as in getKeyAndValue().
-        rdValue.setResource(res, ResourceTracer(fTraceInfo, key));
-        return true;
+        rd_മൂല്യം.setResource(res, ResourceTracer(fTraceInfo, താക്കോൽ));
+        തിരികെ സത്യം;
     }
-    return false;
+    തിരികെ അസത്യം;
 }
 
 U_CAPI Resource U_EXPORT2
-res_getArrayItem(const ResourceData *pResData, Resource array, int32_t indexR) {
+res_getArrayItem(സ്ഥിരം ResourceData *pResData, Resource array, int32_t indexR) {
     uint32_t offset=RES_GET_OFFSET(array);
-    if (indexR < 0) {
-        return RES_BOGUS;
+    എങ്കിൽ (indexR < 0) {
+        തിരികെ RES_BOGUS;
     }
-    switch(RES_GET_TYPE(array)) {
-    case URES_ARRAY: {
-        if (offset!=0) { /* empty if offset==0 */
-            const int32_t *p= pResData->pRoot+offset;
-            if(indexR<*p) {
-                return (Resource)p[1+indexR];
+    തിരഞ്ഞെടുപ്പ്(RES_GET_TYPE(array)) {
+    അവസ്ഥ URES_ARRAY: {
+        എങ്കിൽ (offset!=0) { /* empty if offset==0 */
+            സ്ഥിരം int32_t *p= pResData->p_വേര്+offset;
+            എങ്കിൽ(indexR<*p) {
+                തിരികെ (Resource)p[1+indexR];
             }
         }
-        break;
+        നിർത്തുക;
     }
-    case URES_ARRAY16: {
-        const uint16_t *p=pResData->p16BitUnits+offset;
-        if(indexR<*p) {
-            return makeResourceFrom16(pResData, p[1+indexR]);
+    അവസ്ഥ URES_ARRAY16: {
+        സ്ഥിരം uint16_t *p=pResData->p16BitUnits+offset;
+        എങ്കിൽ(indexR<*p) {
+            തിരികെ makeResourceFrom16(pResData, p[1+indexR]);
         }
-        break;
+        നിർത്തുക;
     }
-    default:
-        break;
+    സ്ഥിരസ്ഥിതി:
+        നിർത്തുക;
     }
-    return RES_BOGUS;
+    തിരികെ RES_BOGUS;
 }
 
-uint32_t icu::ResourceArray::internalGetResource(const ResourceData *pResData, int32_t i) const {
-    if (items16 != nullptr) {
-        return makeResourceFrom16(pResData, items16[i]);
-    } else {
-        return items32[i];
+uint32_t icu::ResourceArray::internalGetResource(സ്ഥിരം ResourceData *pResData, int32_t i) സ്ഥിരം {
+    എങ്കിൽ (items16 != nullptr) {
+        തിരികെ makeResourceFrom16(pResData, items16[i]);
+    } അല്ലെങ്കിൽ {
+        തിരികെ items32[i];
     }
 }
 
-UBool icu::ResourceArray::getValue(int32_t i, icu::ResourceValue &value) const {
-    if(0 <= i && i < length) {
-        icu::ResourceDataValue &rdValue = static_cast<icu::ResourceDataValue &>(value);
+UBool icu::ResourceArray::get_മൂല്യം(int32_t i, icu::Resource_മൂല്യം &value) സ്ഥിരം {
+    എങ്കിൽ(0 <= i && i < length) {
+        icu::Resource_Data_മൂല്യം &rd_മൂല്യം = static_cast<icu::Resource_Data_മൂല്യം &>(value);
         // Note: the ResourceTracer keeps a reference to the field of this
         // ResourceArray. This is OK because the ResourceArray should remain
         // alive for the duration that fields are being read from it
         // (including nested fields).
-        rdValue.setResource(
-            internalGetResource(&rdValue.getData(), i),
+        rd_മൂല്യം.setResource(
+            internalGetResource(&rd_മൂല്യം.getData(), i),
             ResourceTracer(fTraceInfo, i));
-        return true;
+        തിരികെ സത്യം;
     }
-    return false;
+    തിരികെ അസത്യം;
 }
 
 U_CFUNC Resource
-res_findResource(const ResourceData *pResData, Resource r, char** path, const char** key) {
-  char *pathP = *path, *nextSepP = *path;
-  char *closeIndex = nullptr;
+res_findResource(സ്ഥിരം ResourceData *pResData, Resource r, അക്ഷരം** path, സ്ഥിരം അക്ഷരം** താക്കോൽ) {
+  അക്ഷരം *pathP = *path, *nextSepP = *path;
+  അക്ഷരം *closeIndex = nullptr;
   Resource t1 = r;
   Resource t2;
   int32_t indexR = 0;
   UResType type = (UResType)RES_GET_TYPE(t1);
 
   /* if you come in with an empty path, you'll be getting back the same resource */
-  if(!uprv_strlen(pathP)) {
-      return r;
+  എങ്കിൽ(!uprv_strlen(pathP)) {
+      തിരികെ r;
   }
 
   /* one needs to have an aggregate resource in order to search in it */
-  if(!URES_IS_CONTAINER(type)) {
-      return RES_BOGUS;
+  എങ്കിൽ(!URES_IS_CONTAINER(type)) {
+      തിരികെ RES_BOGUS;
   }
   
-  while(nextSepP && *pathP && t1 != RES_BOGUS && URES_IS_CONTAINER(type)) {
+  ആകുമ്പോൾ(nextSepP && *pathP && t1 != RES_BOGUS && URES_IS_CONTAINER(type)) {
     /* Iteration stops if: the path has been consumed, we found a non-existing
      * resource (t1 == RES_BOGUS) or we found a scalar resource (including alias)
      */
@@ -944,31 +944,31 @@ res_findResource(const ResourceData *pResData, Resource r, char** path, const ch
     /* if there are more separators, terminate string 
      * and set path to the remaining part of the string
      */
-    if(nextSepP != nullptr) {
-      if(nextSepP == pathP) {
+    എങ്കിൽ(nextSepP != nullptr) {
+      എങ്കിൽ(nextSepP == pathP) {
         // Empty key string.
-        return RES_BOGUS;
+        തിരികെ RES_BOGUS;
       }
       *nextSepP = 0; /* overwrite the separator with a NUL to terminate the key */
       *path = nextSepP+1;
-    } else {
+    } അല്ലെങ്കിൽ {
       *path = uprv_strchr(pathP, 0);
     }
 
     /* if the resource is a table */
     /* try the key based access */
-    if(URES_IS_TABLE(type)) {
-      *key = pathP;
-      t2 = res_getTableItemByKey(pResData, t1, &indexR, key);
-    } else if(URES_IS_ARRAY(type)) {
+    എങ്കിൽ(URES_IS_TABLE(type)) {
+      *താക്കോൽ = pathP;
+      t2 = res_get_Table_Item_By_താക്കോൽ(pResData, t1, &indexR, താക്കോൽ);
+    } അല്ലെങ്കിൽ എങ്കിൽ(URES_IS_ARRAY(type)) {
       indexR = uprv_strtol(pathP, &closeIndex, 10);
-      if(indexR >= 0 && *closeIndex == 0) {
+      എങ്കിൽ(indexR >= 0 && *closeIndex == 0) {
         t2 = res_getArrayItem(pResData, t1, indexR);
-      } else {
+      } അല്ലെങ്കിൽ {
         t2 = RES_BOGUS; /* have an array, but don't have a valid index */
       }
-      *key = nullptr;
-    } else { /* can't do much here, except setting t2 to bogus */
+      *താക്കോൽ = nullptr;
+    } അല്ലെങ്കിൽ { /* can't do much here, except setting t2 to bogus */
       t2 = RES_BOGUS;
     }
     t1 = t2;
@@ -977,7 +977,7 @@ res_findResource(const ResourceData *pResData, Resource r, char** path, const ch
     pathP = *path;
   }
 
-  return t1;
+  തിരികെ t1;
 }
 
 /* resource bundle swapping ------------------------------------------------- */
@@ -1013,73 +1013,73 @@ res_findResource(const ResourceData *pResData, Resource r, char** path, const ch
  * after sorting this array by keys, the actual key/value arrays are permutated
  * according to the sorting indexes
  */
-typedef struct Row {
-    int32_t keyIndex, sortIndex;
+തരനിർവചനം ഘടന Row {
+    int32_t താക്കോൽ_Index, sortIndex;
 } Row;
 
-static int32_t U_CALLCONV
-ures_compareRows(const void *context, const void *left, const void *right) {
-    const char* keyChars = static_cast<const char*>(context);
-    return static_cast<int32_t>(uprv_strcmp(keyChars + static_cast<const Row*>(left)->keyIndex,
-                                            keyChars + static_cast<const Row*>(right)->keyIndex));
+സ്ഥിതം int32_t U_CALLCONV
+ures_compareRows(സ്ഥിരം ശൂന്യം *context, സ്ഥിരം ശൂന്യം *left, സ്ഥിരം ശൂന്യം *വലത്) {
+    സ്ഥിരം അക്ഷരം* താക്കോൽ_Chars = static_cast<സ്ഥിരം അക്ഷരം*>(context);
+    തിരികെ static_cast<int32_t>(uprv_strcmp(താക്കോൽ_Chars + static_cast<സ്ഥിരം Row*>(left)->താക്കോൽ_Index,
+                                            താക്കോൽ_Chars + static_cast<സ്ഥിരം Row*>(വലത്)->താക്കോൽ_Index));
 }
 
-typedef struct TempTable {
-    const char *keyChars;
+തരനിർവചനം ഘടന TempTable {
+    സ്ഥിരം അക്ഷരം *താക്കോൽ_Chars;
     Row *rows;
     int32_t *resort;
     uint32_t *resFlags;
-    int32_t localKeyLimit;
+    int32_t local_താക്കോൽ_Limit;
     uint8_t majorFormatVersion;
 } TempTable;
 
-enum {
-    STACK_ROW_CAPACITY=200
+എണ്ണൽ {
+    അട്ടി_ROW_CAPACITY=200
 };
 
 /* The table item key string is not locally available. */
-static const char *const gUnknownKey="";
+സ്ഥിതം സ്ഥിരം അക്ഷരം *സ്ഥിരം g_Unknown_താക്കോൽ="";
 
-#if !UCONFIG_NO_COLLATION
+#എങ്കിൽ !UCONFIG_NO_COLLATION
 // resource table key for collation binaries
-static const char16_t gCollationBinKey[]=u"%%CollationBin";
+സ്ഥിതം സ്ഥിരം char16_t g_Collation_Bin_താക്കോൽ[]=u"%%CollationBin";
 #endif
 
 /*
  * swap one resource item
  */
-static void
-ures_swapResource(const UDataSwapper *ds,
-                  const Resource *inBundle, Resource *outBundle,
+സ്ഥിതം ശൂന്യം
+ures_swapResource(സ്ഥിരം UDataSwapper *ds,
+                  സ്ഥിരം Resource *inBundle, Resource *outBundle,
                   Resource res, /* caller swaps res itself */
-                  const char *key,
+                  സ്ഥിരം അക്ഷരം *താക്കോൽ,
                   TempTable *pTempTable,
                   UErrorCode *pErrorCode) {
-    const Resource *p;
+    സ്ഥിരം Resource *p;
     Resource *q;
     int32_t offset, count;
 
-    switch(RES_GET_TYPE(res)) {
-    case URES_TABLE16:
-    case URES_STRING_V2:
-    case URES_INT:
-    case URES_ARRAY16:
+    തിരഞ്ഞെടുപ്പ്(RES_GET_TYPE(res)) {
+    അവസ്ഥ URES_TABLE16:
+    അവസ്ഥ URES_STRING_V2:
+    അവസ്ഥ URES_INT:
+    അവസ്ഥ URES_ARRAY16:
         /* integer, or points to 16-bit units, nothing to do here */
-        return;
-    default:
-        break;
+        തിരികെ;
+    സ്ഥിരസ്ഥിതി:
+        നിർത്തുക;
     }
 
     /* all other types use an offset to point to their data */
     offset = static_cast<int32_t>(RES_GET_OFFSET(res));
-    if(offset==0) {
+    എങ്കിൽ(offset==0) {
         /* special offset indicating an empty item */
-        return;
+        തിരികെ;
     }
-    if (pTempTable->resFlags[offset >> 5] & (static_cast<uint32_t>(1) << (offset & 0x1f))) {
+    എങ്കിൽ (pTempTable->resFlags[offset >> 5] & (static_cast<uint32_t>(1) << (offset & 0x1f))) {
         /* we already swapped this resource item */
-        return;
-    } else {
+        തിരികെ;
+    } അല്ലെങ്കിൽ {
         /* mark it as swapped now */
         pTempTable->resFlags[offset >> 5] |= static_cast<uint32_t>(1) << (offset & 0x1f);
     }
@@ -1087,52 +1087,52 @@ ures_swapResource(const UDataSwapper *ds,
     p=inBundle+offset;
     q=outBundle+offset;
 
-    switch(RES_GET_TYPE(res)) {
-    case URES_ALIAS:
+    തിരഞ്ഞെടുപ്പ്(RES_GET_TYPE(res)) {
+    അവസ്ഥ URES_ALIAS:
         /* physically same value layout as string, fall through */
         U_FALLTHROUGH;
-    case URES_STRING:
+    അവസ്ഥ URES_STRING:
         count = udata_readInt32(ds, static_cast<int32_t>(*p));
         /* swap length */
         ds->swapArray32(ds, p, 4, q, pErrorCode);
         /* swap each char16_t (the terminating NUL would not change) */
         ds->swapArray16(ds, p+1, 2*count, q+1, pErrorCode);
-        break;
-    case URES_BINARY:
+        നിർത്തുക;
+    അവസ്ഥ URES_ദ്വിമാന:
         count = udata_readInt32(ds, static_cast<int32_t>(*p));
         /* swap length */
         ds->swapArray32(ds, p, 4, q, pErrorCode);
         /* no need to swap or copy bytes - ures_swap() copied them all */
 
         /* swap known formats */
-#if !UCONFIG_NO_COLLATION
-        if( key!=nullptr &&  /* the binary is in a table */
-            (key!=gUnknownKey ?
+#എങ്കിൽ !UCONFIG_NO_COLLATION
+        എങ്കിൽ( താക്കോൽ!=nullptr &&  /* the binary is in a table */
+            (താക്കോൽ!=g_Unknown_താക്കോൽ ?
                 /* its table key string is "%%CollationBin" */
-                0==ds->compareInvChars(ds, key, -1,
-                                       gCollationBinKey, UPRV_LENGTHOF(gCollationBinKey)-1) :
+                0==ds->compareInvChars(ds, താക്കോൽ, -1,
+                                       g_Collation_Bin_താക്കോൽ, UPRV_LENGTHOF(g_Collation_Bin_താക്കോൽ)-1) :
                 /* its table key string is unknown but it looks like a collation binary */
-                ucol_looksLikeCollationBinary(ds, p+1, count))
+                ucol_looks_Like_Collation_ദ്വിമാന(ds, p+1, count))
         ) {
             ucol_swap(ds, p+1, count, q+1, pErrorCode);
         }
 #endif
-        break;
-    case URES_TABLE:
-    case URES_TABLE32:
+        നിർത്തുക;
+    അവസ്ഥ URES_TABLE:
+    അവസ്ഥ URES_TABLE32:
         {
-            const uint16_t *pKey16;
+            സ്ഥിരം uint16_t *pKey16;
             uint16_t *qKey16;
 
-            const int32_t *pKey32;
+            സ്ഥിരം int32_t *pKey32;
             int32_t *qKey32;
 
             Resource item;
             int32_t i, oldIndex;
 
-            if(RES_GET_TYPE(res)==URES_TABLE) {
+            എങ്കിൽ(RES_GET_TYPE(res)==URES_TABLE) {
                 /* get table item count */
-                pKey16 = reinterpret_cast<const uint16_t*>(p);
+                pKey16 = reinterpret_cast<സ്ഥിരം uint16_t*>(p);
                 qKey16 = reinterpret_cast<uint16_t*>(q);
                 count=ds->readUInt16(*pKey16);
 
@@ -1142,9 +1142,9 @@ ures_swapResource(const UDataSwapper *ds,
                 ds->swapArray16(ds, pKey16++, 2, qKey16++, pErrorCode);
 
                 offset+=((1+count)+1)/2;
-            } else {
+            } അല്ലെങ്കിൽ {
                 /* get table item count */
-                pKey32 = reinterpret_cast<const int32_t*>(p);
+                pKey32 = reinterpret_cast<സ്ഥിരം int32_t*>(p);
                 qKey32 = reinterpret_cast<int32_t*>(q);
                 count=udata_readInt32(ds, *pKey32);
 
@@ -1156,46 +1156,46 @@ ures_swapResource(const UDataSwapper *ds,
                 offset+=1+count;
             }
 
-            if(count==0) {
-                break;
+            എങ്കിൽ(count==0) {
+                നിർത്തുക;
             }
 
             p=inBundle+offset; /* pointer to table resources */
             q=outBundle+offset;
 
             /* recurse */
-            for(i=0; i<count; ++i) {
-                const char *itemKey=gUnknownKey;
-                if(pKey16!=nullptr) {
-                    int32_t keyOffset=ds->readUInt16(pKey16[i]);
-                    if(keyOffset<pTempTable->localKeyLimit) {
-                        itemKey = reinterpret_cast<const char*>(outBundle) + keyOffset;
+            വേണ്ടി(i=0; i<count; ++i) {
+                സ്ഥിരം അക്ഷരം *item_താക്കോൽ=g_Unknown_താക്കോൽ;
+                എങ്കിൽ(pKey16!=nullptr) {
+                    int32_t താക്കോൽ_Offset=ds->readUInt16(pKey16[i]);
+                    എങ്കിൽ(താക്കോൽ_Offset<pTempTable->local_താക്കോൽ_Limit) {
+                        item_താക്കോൽ = reinterpret_cast<സ്ഥിരം അക്ഷരം*>(outBundle) + താക്കോൽ_Offset;
                     }
-                } else {
-                    int32_t keyOffset=udata_readInt32(ds, pKey32[i]);
-                    if(keyOffset>=0) {
-                        itemKey = reinterpret_cast<const char*>(outBundle) + keyOffset;
+                } അല്ലെങ്കിൽ {
+                    int32_t താക്കോൽ_Offset=udata_readInt32(ds, pKey32[i]);
+                    എങ്കിൽ(താക്കോൽ_Offset>=0) {
+                        item_താക്കോൽ = reinterpret_cast<സ്ഥിരം അക്ഷരം*>(outBundle) + താക്കോൽ_Offset;
                     }
                 }
                 item=ds->readUInt32(p[i]);
-                ures_swapResource(ds, inBundle, outBundle, item, itemKey, pTempTable, pErrorCode);
-                if(U_FAILURE(*pErrorCode)) {
+                ures_swapResource(ds, inBundle, outBundle, item, item_താക്കോൽ, pTempTable, pErrorCode);
+                എങ്കിൽ(U_FAILURE(*pErrorCode)) {
                     udata_printError(ds, "ures_swapResource(table res=%08x)[%d].recurse(%08x) failed\n",
                                      res, i, item);
-                    return;
+                    തിരികെ;
                 }
             }
 
-            if(pTempTable->majorFormatVersion>1 || ds->inCharset==ds->outCharset) {
+            എങ്കിൽ(pTempTable->majorFormatVersion>1 || ds->inCharset==ds->outCharset) {
                 /* no need to sort, just swap the offset/value arrays */
-                if(pKey16!=nullptr) {
+                എങ്കിൽ(pKey16!=nullptr) {
                     ds->swapArray16(ds, pKey16, count*2, qKey16, pErrorCode);
                     ds->swapArray32(ds, p, count*4, q, pErrorCode);
-                } else {
+                } അല്ലെങ്കിൽ {
                     /* swap key offsets and items as one array */
                     ds->swapArray32(ds, pKey32, count*2*4, qKey32, pErrorCode);
                 }
-                break;
+                നിർത്തുക;
             }
 
             /*
@@ -1206,24 +1206,24 @@ ures_swapResource(const UDataSwapper *ds,
              * sorting indexes and sort that.
              * Then we permutate and copy/swap the actual values.
              */
-            if(pKey16!=nullptr) {
-                for(i=0; i<count; ++i) {
-                    pTempTable->rows[i].keyIndex=ds->readUInt16(pKey16[i]);
+            എങ്കിൽ(pKey16!=nullptr) {
+                വേണ്ടി(i=0; i<count; ++i) {
+                    pTempTable->rows[i].താക്കോൽ_Index=ds->readUInt16(pKey16[i]);
                     pTempTable->rows[i].sortIndex=i;
                 }
-            } else {
-                for(i=0; i<count; ++i) {
-                    pTempTable->rows[i].keyIndex=udata_readInt32(ds, pKey32[i]);
+            } അല്ലെങ്കിൽ {
+                വേണ്ടി(i=0; i<count; ++i) {
+                    pTempTable->rows[i].താക്കോൽ_Index=udata_readInt32(ds, pKey32[i]);
                     pTempTable->rows[i].sortIndex=i;
                 }
             }
-            uprv_sortArray(pTempTable->rows, count, sizeof(Row),
-                           ures_compareRows, pTempTable->keyChars,
-                           false, pErrorCode);
-            if(U_FAILURE(*pErrorCode)) {
+            uprv_sortArray(pTempTable->rows, count, വലുപ്പം(Row),
+                           ures_compareRows, pTempTable->താക്കോൽ_Chars,
+                           അസത്യം, pErrorCode);
+            എങ്കിൽ(U_FAILURE(*pErrorCode)) {
                 udata_printError(ds, "ures_swapResource(table res=%08x).uprv_sortArray(%d items) failed\n",
                                  res, count);
-                return;
+                തിരികെ;
             }
 
             /*
@@ -1233,35 +1233,35 @@ ures_swapResource(const UDataSwapper *ds,
              * temporary array (pTempTable->resort)
              * before the results are copied to the outBundle.
              */
-            /* keys */
-            if(pKey16!=nullptr) {
+            /*താക്കോലുകൾ*/
+            എങ്കിൽ(pKey16!=nullptr) {
                 uint16_t *rKey16;
 
-                if(pKey16!=qKey16) {
+                എങ്കിൽ(pKey16!=qKey16) {
                     rKey16=qKey16;
-                } else {
+                } അല്ലെങ്കിൽ {
                     rKey16 = reinterpret_cast<uint16_t*>(pTempTable->resort);
                 }
-                for(i=0; i<count; ++i) {
+                വേണ്ടി(i=0; i<count; ++i) {
                     oldIndex=pTempTable->rows[i].sortIndex;
                     ds->swapArray16(ds, pKey16+oldIndex, 2, rKey16+i, pErrorCode);
                 }
-                if(qKey16!=rKey16) {
+                എങ്കിൽ(qKey16!=rKey16) {
                     uprv_memcpy(qKey16, rKey16, 2*count);
                 }
-            } else {
+            } അല്ലെങ്കിൽ {
                 int32_t *rKey32;
 
-                if(pKey32!=qKey32) {
+                എങ്കിൽ(pKey32!=qKey32) {
                     rKey32=qKey32;
-                } else {
+                } അല്ലെങ്കിൽ {
                     rKey32=pTempTable->resort;
                 }
-                for(i=0; i<count; ++i) {
+                വേണ്ടി(i=0; i<count; ++i) {
                     oldIndex=pTempTable->rows[i].sortIndex;
                     ds->swapArray32(ds, pKey32+oldIndex, 4, rKey32+i, pErrorCode);
                 }
-                if(qKey32!=rKey32) {
+                എങ്കിൽ(qKey32!=rKey32) {
                     uprv_memcpy(qKey32, rKey32, 4*count);
                 }
             }
@@ -1271,22 +1271,22 @@ ures_swapResource(const UDataSwapper *ds,
                 Resource *r;
 
 
-                if(p!=q) {
+                എങ്കിൽ(p!=q) {
                     r=q;
-                } else {
+                } അല്ലെങ്കിൽ {
                     r = reinterpret_cast<Resource*>(pTempTable->resort);
                 }
-                for(i=0; i<count; ++i) {
+                വേണ്ടി(i=0; i<count; ++i) {
                     oldIndex=pTempTable->rows[i].sortIndex;
                     ds->swapArray32(ds, p+oldIndex, 4, r+i, pErrorCode);
                 }
-                if(q!=r) {
+                എങ്കിൽ(q!=r) {
                     uprv_memcpy(q, r, 4*count);
                 }
             }
         }
-        break;
-    case URES_ARRAY:
+        നിർത്തുക;
+    അവസ്ഥ URES_ARRAY:
         {
             Resource item;
             int32_t i;
@@ -1296,59 +1296,59 @@ ures_swapResource(const UDataSwapper *ds,
             ds->swapArray32(ds, p++, 4, q++, pErrorCode);
 
             /* recurse */
-            for(i=0; i<count; ++i) {
+            വേണ്ടി(i=0; i<count; ++i) {
                 item=ds->readUInt32(p[i]);
                 ures_swapResource(ds, inBundle, outBundle, item, nullptr, pTempTable, pErrorCode);
-                if(U_FAILURE(*pErrorCode)) {
+                എങ്കിൽ(U_FAILURE(*pErrorCode)) {
                     udata_printError(ds, "ures_swapResource(array res=%08x)[%d].recurse(%08x) failed\n",
                                      res, i, item);
-                    return;
+                    തിരികെ;
                 }
             }
 
             /* swap items */
             ds->swapArray32(ds, p, 4*count, q, pErrorCode);
         }
-        break;
-    case URES_INT_VECTOR:
+        നിർത്തുക;
+    അവസ്ഥ URES_INT_VECTOR:
         count = udata_readInt32(ds, static_cast<int32_t>(*p));
         /* swap length and each integer */
         ds->swapArray32(ds, p, 4*(1+count), q, pErrorCode);
-        break;
-    default:
+        നിർത്തുക;
+    സ്ഥിരസ്ഥിതി:
         /* also catches RES_BOGUS */
         *pErrorCode=U_UNSUPPORTED_ERROR;
-        break;
+        നിർത്തുക;
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-ures_swap(const UDataSwapper *ds,
-          const void *inData, int32_t length, void *outData,
+ures_swap(സ്ഥിരം UDataSwapper *ds,
+          സ്ഥിരം ശൂന്യം *inData, int32_t length, ശൂന്യം *outData,
           UErrorCode *pErrorCode) {
-    const UDataInfo *pInfo;
-    const Resource *inBundle;
-    Resource rootRes;
+    സ്ഥിരം UDataInfo *pInfo;
+    സ്ഥിരം Resource *inBundle;
+    Resource വേര്_Res;
     int32_t headerSize, maxTableLength;
 
-    Row rows[STACK_ROW_CAPACITY];
-    int32_t resort[STACK_ROW_CAPACITY];
+    Row rows[അട്ടി_ROW_CAPACITY];
+    int32_t resort[അട്ടി_ROW_CAPACITY];
     TempTable tempTable;
 
-    const int32_t *inIndexes;
+    സ്ഥിരം int32_t *inIndexes;
 
     /* the following integers count Resource item offsets (4 bytes each), not bytes */
-    int32_t bundleLength, indexLength, keysBottom, keysTop, resBottom, top;
+    int32_t bundleLength, indexLength, താക്കോലുകൾ_Bottom, താക്കോലുകൾ_മുകൾ, resBottom, മുകൾ;
 
     /* udata_swapDataHeader checks the arguments */
     headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    എങ്കിൽ(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        തിരികെ 0;
     }
 
     /* check data format and format version */
-    pInfo=(const UDataInfo *)((const char *)inData+4);
-    if(!(
+    pInfo=(സ്ഥിരം UDataInfo *)((സ്ഥിരം അക്ഷരം *)inData+4);
+    എങ്കിൽ(!(
         pInfo->dataFormat[0]==0x52 &&   /* dataFormat="ResB" */
         pInfo->dataFormat[1]==0x65 &&
         pInfo->dataFormat[2]==0x73 &&
@@ -1362,64 +1362,64 @@ ures_swap(const UDataSwapper *ds,
                          pInfo->dataFormat[2], pInfo->dataFormat[3],
                          pInfo->formatVersion[0], pInfo->formatVersion[1]);
         *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+        തിരികെ 0;
     }
     tempTable.majorFormatVersion=pInfo->formatVersion[0];
 
     /* a resource bundle must contain at least one resource item */
-    if(length<0) {
+    എങ്കിൽ(length<0) {
         bundleLength=-1;
-    } else {
+    } അല്ലെങ്കിൽ {
         bundleLength=(length-headerSize)/4;
 
         /* formatVersion 1.1 must have a root item and at least 5 indexes */
-        if(bundleLength<(1+5)) {
+        എങ്കിൽ(bundleLength<(1+5)) {
             udata_printError(ds, "ures_swap(): too few bytes (%d after header) for a resource bundle\n",
                              length-headerSize);
             *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            തിരികെ 0;
         }
     }
 
-    inBundle=(const Resource *)((const char *)inData+headerSize);
-    rootRes=ds->readUInt32(*inBundle);
+    inBundle=(സ്ഥിരം Resource *)((സ്ഥിരം അക്ഷരം *)inData+headerSize);
+    വേര്_Res=ds->readUInt32(*inBundle);
 
     /* formatVersion 1.1 adds the indexes[] array */
-    inIndexes=(const int32_t *)(inBundle+1);
+    inIndexes=(സ്ഥിരം int32_t *)(inBundle+1);
 
     indexLength=udata_readInt32(ds, inIndexes[URES_INDEX_LENGTH])&0xff;
-    if(indexLength<=URES_INDEX_MAX_TABLE_LENGTH) {
+    എങ്കിൽ(indexLength<=URES_INDEX_MAX_TABLE_LENGTH) {
         udata_printError(ds, "ures_swap(): too few indexes for a 1.1+ resource bundle\n");
         *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        തിരികെ 0;
     }
-    keysBottom=1+indexLength;
-    keysTop=udata_readInt32(ds, inIndexes[URES_INDEX_KEYS_TOP]);
-    if(indexLength>URES_INDEX_16BIT_TOP) {
-        resBottom=udata_readInt32(ds, inIndexes[URES_INDEX_16BIT_TOP]);
-    } else {
-        resBottom=keysTop;
+    താക്കോലുകൾ_Bottom=1+indexLength;
+    താക്കോലുകൾ_മുകൾ=udata_readInt32(ds, inIndexes[URES_INDEX_താക്കോലുകൾ_മുകൾ]);
+    എങ്കിൽ(indexLength>URES_INDEX_16_BIT_മുകൾ) {
+        resBottom=udata_readInt32(ds, inIndexes[URES_INDEX_16_BIT_മുകൾ]);
+    } അല്ലെങ്കിൽ {
+        resBottom=താക്കോലുകൾ_മുകൾ;
     }
-    top=udata_readInt32(ds, inIndexes[URES_INDEX_BUNDLE_TOP]);
+    മുകൾ=udata_readInt32(ds, inIndexes[URES_INDEX_BUNDLE_മുകൾ]);
     maxTableLength=udata_readInt32(ds, inIndexes[URES_INDEX_MAX_TABLE_LENGTH]);
 
-    if(0<=bundleLength && bundleLength<top) {
+    എങ്കിൽ(0<=bundleLength && bundleLength<മുകൾ) {
         udata_printError(ds, "ures_swap(): resource top %d exceeds bundle length %d\n",
-                         top, bundleLength);
+                         മുകൾ, bundleLength);
         *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        തിരികെ 0;
     }
-    if(keysTop>(1+indexLength)) {
-        tempTable.localKeyLimit=keysTop<<2;
-    } else {
-        tempTable.localKeyLimit=0;
+    എങ്കിൽ(താക്കോലുകൾ_മുകൾ>(1+indexLength)) {
+        tempTable.local_താക്കോൽ_Limit=താക്കോലുകൾ_മുകൾ<<2;
+    } അല്ലെങ്കിൽ {
+        tempTable.local_താക്കോൽ_Limit=0;
     }
 
-    if(length>=0) {
-        Resource *outBundle=(Resource *)((char *)outData+headerSize);
+    എങ്കിൽ(length>=0) {
+        Resource *outBundle=(Resource *)((അക്ഷരം *)outData+headerSize);
 
         /* track which resources we have already swapped */
-        uint32_t stackResFlags[STACK_ROW_CAPACITY];
+        uint32_t അട്ടി_Res_Flags[അട്ടി_ROW_CAPACITY];
         int32_t resFlagsLength;
 
         /*
@@ -1432,82 +1432,82 @@ ures_swap(const UDataSwapper *ds,
          */
         resFlagsLength=(length+31)>>5;          /* number of bytes needed */
         resFlagsLength=(resFlagsLength+3)&~3;   /* multiple of 4 bytes for uint32_t */
-        if(resFlagsLength<=(int32_t)sizeof(stackResFlags)) {
-            tempTable.resFlags=stackResFlags;
-        } else {
+        എങ്കിൽ(resFlagsLength<=(int32_t)വലുപ്പം(അട്ടി_Res_Flags)) {
+            tempTable.resFlags=അട്ടി_Res_Flags;
+        } അല്ലെങ്കിൽ {
             tempTable.resFlags=(uint32_t *)uprv_malloc(resFlagsLength);
-            if(tempTable.resFlags==nullptr) {
+            എങ്കിൽ(tempTable.resFlags==nullptr) {
                 udata_printError(ds, "ures_swap(): unable to allocate memory for tracking resources\n");
                 *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                return 0;
+                തിരികെ 0;
             }
         }
         uprv_memset(tempTable.resFlags, 0, resFlagsLength);
 
         /* copy the bundle for binary and inaccessible data */
-        if(inData!=outData) {
-            uprv_memcpy(outBundle, inBundle, 4*top);
+        എങ്കിൽ(inData!=outData) {
+            uprv_memcpy(outBundle, inBundle, 4*മുകൾ);
         }
 
         /* swap the key strings, but not the padding bytes (0xaa) after the last string and its NUL */
-        udata_swapInvStringBlock(ds, inBundle+keysBottom, 4*(keysTop-keysBottom),
-                                    outBundle+keysBottom, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
-            udata_printError(ds, "ures_swap().udata_swapInvStringBlock(keys[%d]) failed\n", 4*(keysTop-keysBottom));
-            if(tempTable.resFlags!=stackResFlags) {
+        udata_swapInvStringBlock(ds, inBundle+താക്കോലുകൾ_Bottom, 4*(താക്കോലുകൾ_മുകൾ-താക്കോലുകൾ_Bottom),
+                                    outBundle+താക്കോലുകൾ_Bottom, pErrorCode);
+        എങ്കിൽ(U_FAILURE(*pErrorCode)) {
+            udata_printError(ds, "ures_swap().udata_swapInvStringBlock(keys[%d]) failed\n", 4*(താക്കോലുകൾ_മുകൾ-താക്കോലുകൾ_Bottom));
+            എങ്കിൽ(tempTable.resFlags!=അട്ടി_Res_Flags) {
                 uprv_free(tempTable.resFlags);
             }
-            return 0;
+            തിരികെ 0;
         }
 
         /* swap the 16-bit units (strings, table16, array16) */
-        if(keysTop<resBottom) {
-            ds->swapArray16(ds, inBundle+keysTop, (resBottom-keysTop)*4, outBundle+keysTop, pErrorCode);
-            if(U_FAILURE(*pErrorCode)) {
-                udata_printError(ds, "ures_swap().swapArray16(16-bit units[%d]) failed\n", 2*(resBottom-keysTop));
-                if(tempTable.resFlags!=stackResFlags) {
+        എങ്കിൽ(താക്കോലുകൾ_മുകൾ<resBottom) {
+            ds->swapArray16(ds, inBundle+താക്കോലുകൾ_മുകൾ, (resBottom-താക്കോലുകൾ_മുകൾ)*4, outBundle+താക്കോലുകൾ_മുകൾ, pErrorCode);
+            എങ്കിൽ(U_FAILURE(*pErrorCode)) {
+                udata_printError(ds, "ures_swap().swapArray16(16-bit units[%d]) failed\n", 2*(resBottom-താക്കോലുകൾ_മുകൾ));
+                എങ്കിൽ(tempTable.resFlags!=അട്ടി_Res_Flags) {
                     uprv_free(tempTable.resFlags);
                 }
-                return 0;
+                തിരികെ 0;
             }
         }
 
         /* allocate the temporary table for sorting resource tables */
-        tempTable.keyChars=(const char *)outBundle; /* sort by outCharset */
-        if(tempTable.majorFormatVersion>1 || maxTableLength<=STACK_ROW_CAPACITY) {
+        tempTable.താക്കോൽ_Chars=(സ്ഥിരം അക്ഷരം *)outBundle; /* sort by outCharset */
+        എങ്കിൽ(tempTable.majorFormatVersion>1 || maxTableLength<=അട്ടി_ROW_CAPACITY) {
             tempTable.rows=rows;
             tempTable.resort=resort;
-        } else {
-            tempTable.rows=(Row *)uprv_malloc(maxTableLength*sizeof(Row)+maxTableLength*4);
-            if(tempTable.rows==nullptr) {
+        } അല്ലെങ്കിൽ {
+            tempTable.rows=(Row *)uprv_malloc(maxTableLength*വലുപ്പം(Row)+maxTableLength*4);
+            എങ്കിൽ(tempTable.rows==nullptr) {
                 udata_printError(ds, "ures_swap(): unable to allocate memory for sorting tables (max length: %d)\n",
                                  maxTableLength);
                 *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                if(tempTable.resFlags!=stackResFlags) {
+                എങ്കിൽ(tempTable.resFlags!=അട്ടി_Res_Flags) {
                     uprv_free(tempTable.resFlags);
                 }
-                return 0;
+                തിരികെ 0;
             }
             tempTable.resort=(int32_t *)(tempTable.rows+maxTableLength);
         }
 
         /* swap the resources */
-        ures_swapResource(ds, inBundle, outBundle, rootRes, nullptr, &tempTable, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
+        ures_swapResource(ds, inBundle, outBundle, വേര്_Res, nullptr, &tempTable, pErrorCode);
+        എങ്കിൽ(U_FAILURE(*pErrorCode)) {
             udata_printError(ds, "ures_swapResource(root res=%08x) failed\n",
-                             rootRes);
+                             വേര്_Res);
         }
 
-        if(tempTable.rows!=rows) {
+        എങ്കിൽ(tempTable.rows!=rows) {
             uprv_free(tempTable.rows);
         }
-        if(tempTable.resFlags!=stackResFlags) {
+        എങ്കിൽ(tempTable.resFlags!=അട്ടി_Res_Flags) {
             uprv_free(tempTable.resFlags);
         }
 
         /* swap the root resource and indexes */
-        ds->swapArray32(ds, inBundle, keysBottom*4, outBundle, pErrorCode);
+        ds->swapArray32(ds, inBundle, താക്കോലുകൾ_Bottom*4, outBundle, pErrorCode);
     }
 
-    return headerSize+4*top;
+    തിരികെ headerSize+4*മുകൾ;
 }

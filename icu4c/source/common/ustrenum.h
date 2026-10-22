@@ -13,8 +13,8 @@
 #ifndef _USTRENUM_H_
 #define _USTRENUM_H_
 
-#include "unicode/uenum.h"
-#include "unicode/strenum.h"
+#അന്തര്ഭാവ "unicode/uenum.h"
+#അന്തര്ഭാവ "unicode/strenum.h"
 
 //----------------------------------------------------------------------
 U_NAMESPACE_BEGIN
@@ -23,9 +23,9 @@ U_NAMESPACE_BEGIN
  * A wrapper to make a UEnumeration into a StringEnumeration.  The
  * wrapper adopts the UEnumeration is wraps.
  */
-class U_COMMON_API UStringEnumeration : public StringEnumeration {
+class U_COMMON_API UStringEnumeration : പൊതു StringEnumeration {
 
-public:
+പൊതു:
     /**
      * Constructor.  This constructor adopts its UEnumeration
      * argument.
@@ -40,16 +40,16 @@ public:
      * Destructor.  This closes the UEnumeration passed in to the
      * constructor.
      */
-    virtual ~UStringEnumeration();
+    മായാ ~UStringEnumeration();
 
     /**
      * Return the number of elements that the iterator traverses.
      * @param status the error code.
      * @return number of elements in the iterator.
      */
-    virtual int32_t count(UErrorCode& status) const override;
+    മായാ int32_t എണ്ണം(UErrorCode& status) സ്ഥിരം override;
 
-    virtual const char* next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND override;
+    മായാ സ്ഥിരം അക്ഷരം* next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND override;
 
     /**
      * Returns the next element a UnicodeString*.  If there are no
@@ -57,27 +57,27 @@ public:
      * @param status the error code.
      * @return a pointer to the string, or nullptr.
      */
-    virtual const UnicodeString* snext(UErrorCode& status) U_LIFETIME_BOUND override;
+    മായാ സ്ഥിരം UnicodeString* snext(UErrorCode& status) U_LIFETIME_BOUND override;
 
     /**
      * Resets the iterator.
      * @param status the error code.
      */
-    virtual void reset(UErrorCode& status) override;
+    മായാ ശൂന്യം reset(UErrorCode& status) override;
 
     /**
      * ICU4C "poor man's RTTI", returns a UClassID for the actual ICU class.
      */
-    virtual UClassID getDynamicClassID() const override;
+    മായാ UClassID getDynamicClassID() സ്ഥിരം override;
 
     /**
      * ICU4C "poor man's RTTI", returns a UClassID for this ICU class.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    സ്ഥിതം UClassID U_EXPORT2 getStaticClassID();
 
-    static UStringEnumeration * U_EXPORT2 fromUEnumeration(
+    സ്ഥിതം UStringEnumeration * U_EXPORT2 fromUEnumeration(
             UEnumeration *enumToAdopt, UErrorCode &status);
-private:
+സ്വകാര്യ:
     UEnumeration *uenum; // owned
 };
 

@@ -28,19 +28,19 @@
  * \brief C++ API: Unicode String
  */
 
-#include "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#എങ്കിൽ U_SHOW_CPLUSPLUS_API
 
-#include <cstddef>
-#include <string_view>
-#include "unicode/char16ptr.h"
-#include "unicode/rep.h"
-#include "unicode/std_string.h"
-#include "unicode/stringpiece.h"
-#include "unicode/bytestream.h"
+#അന്തര്ഭാവ <cstddef>
+#അന്തര്ഭാവ <string_view>
+#അന്തര്ഭാവ "unicode/char16ptr.h"
+#അന്തര്ഭാവ "unicode/rep.h"
+#അന്തര്ഭാവ "unicode/std_string.h"
+#അന്തര്ഭാവ "unicode/stringpiece.h"
+#അന്തര്ഭാവ "unicode/bytestream.h"
 
-struct UConverter;          // unicode/ucnv.h
+ഘടന UConverter;          // unicode/ucnv.h
 
 #ifndef USTRING_H
 /**
@@ -48,12 +48,12 @@ struct UConverter;          // unicode/ucnv.h
  * @param s Pointer to sequence of UChars.
  * @return Length of sequence.
  */
-U_CAPI int32_t U_EXPORT2 u_strlen(const UChar *s);
+U_CAPI int32_t U_EXPORT2 u_strlen(സ്ഥിരം UChar *s);
 #endif
 
 U_NAMESPACE_BEGIN
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#എങ്കിൽ !UCONFIG_NO_BREAK_ITERATION
 class BreakIterator;        // unicode/brkiter.h
 #endif
 class Edits;
@@ -67,13 +67,13 @@ U_NAMESPACE_END
  * src and dest must not overlap.
  * @internal
  */
-typedef int32_t U_CALLCONV
+തരനിർവചനം int32_t U_CALLCONV
 UStringCaseMapper(int32_t caseLocale, uint32_t options,
-#if !UCONFIG_NO_BREAK_ITERATION
+#എങ്കിൽ !UCONFIG_NO_BREAK_ITERATION
                   icu::BreakIterator *iter,
 #endif
                   char16_t *dest, int32_t destCapacity,
-                  const char16_t *src, int32_t srcLength,
+                  സ്ഥിരം char16_t *src, int32_t srcLength,
                   icu::Edits *edits,
                   UErrorCode &errorCode);
 
@@ -117,10 +117,10 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  * `NUL`, must be specified as a constant.
  * @stable ICU 2.0
  */
-#if !U_CHAR16_IS_TYPEDEF
+#എങ്കിൽ !U_CHAR16_IS_TYPEDEF
 # define UNICODE_STRING(cs, _length) icu::UnicodeString(true, u ## cs, _length)
-#else
-# define UNICODE_STRING(cs, _length) icu::UnicodeString(true, (const char16_t*)u ## cs, _length)
+#അല്ലെങ്കിൽ
+# define UNICODE_STRING(cs, _length) icu::UnicodeString(true, (സ്ഥിരം char16_t*)u ## cs, _length)
 #endif
 
 /**
@@ -142,10 +142,10 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  * @stable ICU 49
  */
 #ifndef UNISTR_FROM_CHAR_EXPLICIT
-# if defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION)
+# എങ്കിൽ defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION)
     // Auto-"explicit" in ICU library code.
 #   define UNISTR_FROM_CHAR_EXPLICIT explicit
-# else
+# അല്ലെങ്കിൽ
     // Empty by default for source code compatibility.
 #   define UNISTR_FROM_CHAR_EXPLICIT
 # endif
@@ -162,10 +162,10 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  * @stable ICU 49
  */
 #ifndef UNISTR_FROM_STRING_EXPLICIT
-# if defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION)
+# എങ്കിൽ defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION)
     // Auto-"explicit" in ICU library code.
 #   define UNISTR_FROM_STRING_EXPLICIT explicit
-# else
+# അല്ലെങ്കിൽ
     // Empty by default for source code compatibility.
 #   define UNISTR_FROM_STRING_EXPLICIT
 # endif
@@ -299,11 +299,11 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  * @see CharacterIterator
  * @stable ICU 2.0
  */
-class U_COMMON_API UnicodeString : public Replaceable
+class U_COMMON_API UnicodeString : പൊതു Replaceable
 {
-public:
+പൊതു:
   /** C++ boilerplate @internal */
-  using value_type = char16_t;
+  using മൂല്യം_type = char16_t;
 
   /**
    * Constant to be used in the UnicodeString(char *, int32_t, EInvariant) constructor
@@ -313,7 +313,7 @@ public:
    * @see US_INV
    * @stable ICU 3.2
    */
-  enum EInvariant {
+  എണ്ണൽ EInvariant {
     /**
      * @see EInvariant
      * @stable ICU 3.2
@@ -334,7 +334,7 @@ public:
    * false otherwise.
    * @stable ICU 2.0
    */
-  inline bool operator== (const UnicodeString& text) const;
+  വരിയിൽ bool operator== (സ്ഥിരം UnicodeString& text) സ്ഥിരം;
 
   /**
    * Equality operator. Performs only bitwise comparison with `text`
@@ -352,10 +352,10 @@ public:
    * @stable ICU 76
    */
   template<typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  inline bool operator==(const S &text) const {
+  വരിയിൽ bool operator==(സ്ഥിരം S &text) സ്ഥിരം {
     std::u16string_view sv(internal::toU16StringView(text));
     uint32_t len;  // unsigned to avoid a compiler warning
-    return !isBogus() && (len = length()) == sv.length() && doEquals(sv.data(), len);
+    തിരികെ !isBogus() && (len = length()) == sv.length() && doEquals(sv.data(), len);
   }
 
   /**
@@ -365,7 +365,7 @@ public:
    * true otherwise.
    * @stable ICU 2.0
    */
-  inline bool operator!= (const UnicodeString& text) const;
+  വരിയിൽ bool operator!= (സ്ഥിരം UnicodeString& text) സ്ഥിരം;
 
   /**
    * Inequality operator. Performs only bitwise comparison with `text`
@@ -385,8 +385,8 @@ public:
    * @stable ICU 76
    */
   template<typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  inline bool operator!=(const S &text) const {
-    return !operator==(text);
+  വരിയിൽ bool operator!=(സ്ഥിരം S &text) സ്ഥിരം {
+    തിരികെ !operator==(text);
   }
 
   /**
@@ -396,7 +396,7 @@ public:
    * greater than the characters in `text`, false otherwise
    * @stable ICU 2.0
    */
-  inline UBool operator> (const UnicodeString& text) const;
+  വരിയിൽ UBool operator> (സ്ഥിരം UnicodeString& text) സ്ഥിരം;
 
   /**
    * Less than operator. Performs only bitwise comparison.
@@ -405,7 +405,7 @@ public:
    * less than the characters in `text`, false otherwise
    * @stable ICU 2.0
    */
-  inline UBool operator< (const UnicodeString& text) const;
+  വരിയിൽ UBool operator< (സ്ഥിരം UnicodeString& text) സ്ഥിരം;
 
   /**
    * Greater than or equal operator. Performs only bitwise comparison.
@@ -414,7 +414,7 @@ public:
    * greater than or equal to the characters in `text`, false otherwise
    * @stable ICU 2.0
    */
-  inline UBool operator>= (const UnicodeString& text) const;
+  വരിയിൽ UBool operator>= (സ്ഥിരം UnicodeString& text) സ്ഥിരം;
 
   /**
    * Less than or equal operator. Performs only bitwise comparison.
@@ -423,7 +423,7 @@ public:
    * less than or equal to the characters in `text`, false otherwise
    * @stable ICU 2.0
    */
-  inline UBool operator<= (const UnicodeString& text) const;
+  വരിയിൽ UBool operator<= (സ്ഥിരം UnicodeString& text) സ്ഥിരം;
 
   /**
    * Compare the characters bitwise in this UnicodeString to
@@ -436,7 +436,7 @@ public:
    * in `text`.
    * @stable ICU 2.0
    */
-  inline int8_t compare(const UnicodeString& text) const;
+  വരിയിൽ int8_t compare(സ്ഥിരം UnicodeString& text) സ്ഥിരം;
 
   /**
    * Compare the characters bitwise in the range
@@ -453,9 +453,9 @@ public:
    * in `text`.
    * @stable ICU 2.0
    */
-  inline int8_t compare(int32_t start,
+  വരിയിൽ int8_t compare(int32_t start,
          int32_t length,
-         const UnicodeString& text) const;
+         സ്ഥിരം UnicodeString& text) സ്ഥിരം;
 
   /**
    * Compare the characters bitwise in the range
@@ -474,11 +474,11 @@ public:
    * in `srcText`.
    * @stable ICU 2.0
    */
-   inline int8_t compare(int32_t start,
+   വരിയിൽ int8_t compare(int32_t start,
          int32_t length,
-         const UnicodeString& srcText,
+         സ്ഥിരം UnicodeString& srcText,
          int32_t srcStart,
-         int32_t srcLength) const;
+         int32_t srcLength) സ്ഥിരം;
 
   /**
    * Compare the characters bitwise in this UnicodeString with the first
@@ -492,8 +492,8 @@ public:
    * in `srcChars`.
    * @stable ICU 2.0
    */
-  inline int8_t compare(ConstChar16Ptr srcChars,
-         int32_t srcLength) const;
+  വരിയിൽ int8_t compare(ConstChar16Ptr srcChars,
+         int32_t srcLength) സ്ഥിരം;
 
   /**
    * Compare the characters bitwise in the range
@@ -509,9 +509,9 @@ public:
    * in `srcChars`.
    * @stable ICU 2.0
    */
-  inline int8_t compare(int32_t start,
+  വരിയിൽ int8_t compare(int32_t start,
          int32_t length,
-         const char16_t *srcChars) const;
+         സ്ഥിരം char16_t *srcChars) സ്ഥിരം;
 
   /**
    * Compare the characters bitwise in the range
@@ -530,11 +530,11 @@ public:
    * in `srcChars`.
    * @stable ICU 2.0
    */
-  inline int8_t compare(int32_t start,
+  വരിയിൽ int8_t compare(int32_t start,
          int32_t length,
-         const char16_t *srcChars,
+         സ്ഥിരം char16_t *srcChars,
          int32_t srcStart,
-         int32_t srcLength) const;
+         int32_t srcLength) സ്ഥിരം;
 
   /**
    * Compare the characters bitwise in the range
@@ -553,11 +553,11 @@ public:
    * in `srcText`.
    * @stable ICU 2.0
    */
-  inline int8_t compareBetween(int32_t start,
+  വരിയിൽ int8_t compareBetween(int32_t start,
             int32_t limit,
-            const UnicodeString& srcText,
+            സ്ഥിരം UnicodeString& srcText,
             int32_t srcStart,
-            int32_t srcLimit) const;
+            int32_t srcLimit) സ്ഥിരം;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -576,7 +576,7 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-  inline int8_t compareCodePointOrder(const UnicodeString& text) const;
+  വരിയിൽ int8_t compareCodePointOrder(സ്ഥിരം UnicodeString& text) സ്ഥിരം;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -597,9 +597,9 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-  inline int8_t compareCodePointOrder(int32_t start,
+  വരിയിൽ int8_t compareCodePointOrder(int32_t start,
                                       int32_t length,
-                                      const UnicodeString& srcText) const;
+                                      സ്ഥിരം UnicodeString& srcText) സ്ഥിരം;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -622,11 +622,11 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-   inline int8_t compareCodePointOrder(int32_t start,
+   വരിയിൽ int8_t compareCodePointOrder(int32_t start,
                                        int32_t length,
-                                       const UnicodeString& srcText,
+                                       സ്ഥിരം UnicodeString& srcText,
                                        int32_t srcStart,
-                                       int32_t srcLength) const;
+                                       int32_t srcLength) സ്ഥിരം;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -646,8 +646,8 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-  inline int8_t compareCodePointOrder(ConstChar16Ptr srcChars,
-                                      int32_t srcLength) const;
+  വരിയിൽ int8_t compareCodePointOrder(ConstChar16Ptr srcChars,
+                                      int32_t srcLength) സ്ഥിരം;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -668,9 +668,9 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-  inline int8_t compareCodePointOrder(int32_t start,
+  വരിയിൽ int8_t compareCodePointOrder(int32_t start,
                                       int32_t length,
-                                      const char16_t *srcChars) const;
+                                      സ്ഥിരം char16_t *srcChars) സ്ഥിരം;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -693,11 +693,11 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-  inline int8_t compareCodePointOrder(int32_t start,
+  വരിയിൽ int8_t compareCodePointOrder(int32_t start,
                                       int32_t length,
-                                      const char16_t *srcChars,
+                                      സ്ഥിരം char16_t *srcChars,
                                       int32_t srcStart,
-                                      int32_t srcLength) const;
+                                      int32_t srcLength) സ്ഥിരം;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -720,11 +720,11 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-  inline int8_t compareCodePointOrderBetween(int32_t start,
+  വരിയിൽ int8_t compareCodePointOrderBetween(int32_t start,
                                              int32_t limit,
-                                             const UnicodeString& srcText,
+                                             സ്ഥിരം UnicodeString& srcText,
                                              int32_t srcStart,
-                                             int32_t srcLimit) const;
+                                             int32_t srcLimit) സ്ഥിരം;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -744,7 +744,7 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompare(const UnicodeString& text, uint32_t options) const;
+  വരിയിൽ int8_t caseCompare(സ്ഥിരം UnicodeString& text, uint32_t options) സ്ഥിരം;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -766,10 +766,10 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompare(int32_t start,
+  വരിയിൽ int8_t caseCompare(int32_t start,
          int32_t length,
-         const UnicodeString& srcText,
-         uint32_t options) const;
+         സ്ഥിരം UnicodeString& srcText,
+         uint32_t options) സ്ഥിരം;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -793,12 +793,12 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompare(int32_t start,
+  വരിയിൽ int8_t caseCompare(int32_t start,
          int32_t length,
-         const UnicodeString& srcText,
+         സ്ഥിരം UnicodeString& srcText,
          int32_t srcStart,
          int32_t srcLength,
-         uint32_t options) const;
+         uint32_t options) സ്ഥിരം;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -819,9 +819,9 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompare(ConstChar16Ptr srcChars,
+  വരിയിൽ int8_t caseCompare(ConstChar16Ptr srcChars,
          int32_t srcLength,
-         uint32_t options) const;
+         uint32_t options) സ്ഥിരം;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -843,10 +843,10 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompare(int32_t start,
+  വരിയിൽ int8_t caseCompare(int32_t start,
          int32_t length,
-         const char16_t *srcChars,
-         uint32_t options) const;
+         സ്ഥിരം char16_t *srcChars,
+         uint32_t options) സ്ഥിരം;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -870,12 +870,12 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompare(int32_t start,
+  വരിയിൽ int8_t caseCompare(int32_t start,
          int32_t length,
-         const char16_t *srcChars,
+         സ്ഥിരം char16_t *srcChars,
          int32_t srcStart,
          int32_t srcLength,
-         uint32_t options) const;
+         uint32_t options) സ്ഥിരം;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -899,12 +899,12 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompareBetween(int32_t start,
+  വരിയിൽ int8_t caseCompareBetween(int32_t start,
             int32_t limit,
-            const UnicodeString& srcText,
+            സ്ഥിരം UnicodeString& srcText,
             int32_t srcStart,
             int32_t srcLimit,
-            uint32_t options) const;
+            uint32_t options) സ്ഥിരം;
 
   /**
    * Determine if this starts with the characters in `text`
@@ -913,7 +913,7 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool startsWith(const UnicodeString& text) const;
+  വരിയിൽ UBool startsWith(സ്ഥിരം UnicodeString& text) സ്ഥിരം;
 
   /**
    * Determine if this starts with the characters in `srcText`
@@ -925,9 +925,9 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool startsWith(const UnicodeString& srcText,
+  വരിയിൽ UBool startsWith(സ്ഥിരം UnicodeString& srcText,
             int32_t srcStart,
-            int32_t srcLength) const;
+            int32_t srcLength) സ്ഥിരം;
 
   /**
    * Determine if this starts with the characters in `srcChars`
@@ -937,8 +937,8 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool startsWith(ConstChar16Ptr srcChars,
-            int32_t srcLength) const;
+  വരിയിൽ UBool startsWith(ConstChar16Ptr srcChars,
+            int32_t srcLength) സ്ഥിരം;
 
   /**
    * Determine if this ends with the characters in `srcChars`
@@ -949,9 +949,9 @@ public:
    * @return true if this ends with the characters in `srcChars`, false otherwise
    * @stable ICU 2.0
    */
-  inline UBool startsWith(const char16_t *srcChars,
+  വരിയിൽ UBool startsWith(സ്ഥിരം char16_t *srcChars,
             int32_t srcStart,
-            int32_t srcLength) const;
+            int32_t srcLength) സ്ഥിരം;
 
   /**
    * Determine if this ends with the characters in `text`
@@ -960,7 +960,7 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool endsWith(const UnicodeString& text) const;
+  വരിയിൽ UBool endsWith(സ്ഥിരം UnicodeString& text) സ്ഥിരം;
 
   /**
    * Determine if this ends with the characters in `srcText`
@@ -972,9 +972,9 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool endsWith(const UnicodeString& srcText,
+  വരിയിൽ UBool endsWith(സ്ഥിരം UnicodeString& srcText,
           int32_t srcStart,
-          int32_t srcLength) const;
+          int32_t srcLength) സ്ഥിരം;
 
   /**
    * Determine if this ends with the characters in `srcChars`
@@ -984,8 +984,8 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool endsWith(ConstChar16Ptr srcChars,
-          int32_t srcLength) const;
+  വരിയിൽ UBool endsWith(ConstChar16Ptr srcChars,
+          int32_t srcLength) സ്ഥിരം;
 
   /**
    * Determine if this ends with the characters in `srcChars`
@@ -997,9 +997,9 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool endsWith(const char16_t *srcChars,
+  വരിയിൽ UBool endsWith(സ്ഥിരം char16_t *srcChars,
           int32_t srcStart,
-          int32_t srcLength) const;
+          int32_t srcLength) സ്ഥിരം;
 
 
   /* Searching - bitwise only */
@@ -1012,7 +1012,7 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(const UnicodeString& text) const;
+  വരിയിൽ int32_t indexOf(സ്ഥിരം UnicodeString& text) സ്ഥിരം;
 
   /**
    * Locate in this the first occurrence of the characters in `text`
@@ -1023,8 +1023,8 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(const UnicodeString& text,
-              int32_t start) const;
+  വരിയിൽ int32_t indexOf(സ്ഥിരം UnicodeString& text,
+              int32_t start) സ്ഥിരം;
 
   /**
    * Locate in this the first occurrence in the range
@@ -1037,9 +1037,9 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(const UnicodeString& text,
+  വരിയിൽ int32_t indexOf(സ്ഥിരം UnicodeString& text,
               int32_t start,
-              int32_t length) const;
+              int32_t length) സ്ഥിരം;
 
   /**
    * Locate in this the first occurrence in the range
@@ -1057,11 +1057,11 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(const UnicodeString& srcText,
+  വരിയിൽ int32_t indexOf(സ്ഥിരം UnicodeString& srcText,
               int32_t srcStart,
               int32_t srcLength,
               int32_t start,
-              int32_t length) const;
+              int32_t length) സ്ഥിരം;
 
   /**
    * Locate in this the first occurrence of the characters in
@@ -1074,9 +1074,9 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(const char16_t *srcChars,
+  വരിയിൽ int32_t indexOf(സ്ഥിരം char16_t *srcChars,
               int32_t srcLength,
-              int32_t start) const;
+              int32_t start) സ്ഥിരം;
 
   /**
    * Locate in this the first occurrence in the range
@@ -1090,10 +1090,10 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(ConstChar16Ptr srcChars,
+  വരിയിൽ int32_t indexOf(ConstChar16Ptr srcChars,
               int32_t srcLength,
               int32_t start,
-              int32_t length) const;
+              int32_t length) സ്ഥിരം;
 
   /**
    * Locate in this the first occurrence in the range
@@ -1111,11 +1111,11 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  int32_t indexOf(const char16_t *srcChars,
+  int32_t indexOf(സ്ഥിരം char16_t *srcChars,
               int32_t srcStart,
               int32_t srcLength,
               int32_t start,
-              int32_t length) const;
+              int32_t length) സ്ഥിരം;
 
   /**
    * Locate in this the first occurrence of the BMP code point `c`,
@@ -1124,7 +1124,7 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(char16_t c) const;
+  വരിയിൽ int32_t indexOf(char16_t c) സ്ഥിരം;
 
   /**
    * Locate in this the first occurrence of the code point `c`,
@@ -1134,7 +1134,7 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(UChar32 c) const;
+  വരിയിൽ int32_t indexOf(UChar32 c) സ്ഥിരം;
 
   /**
    * Locate in this the first occurrence of the BMP code point `c`,
@@ -1144,8 +1144,8 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(char16_t c,
-              int32_t start) const;
+  വരിയിൽ int32_t indexOf(char16_t c,
+              int32_t start) സ്ഥിരം;
 
   /**
    * Locate in this the first occurrence of the code point `c`
@@ -1156,8 +1156,8 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(UChar32 c,
-              int32_t start) const;
+  വരിയിൽ int32_t indexOf(UChar32 c,
+              int32_t start) സ്ഥിരം;
 
   /**
    * Locate in this the first occurrence of the BMP code point `c`
@@ -1169,9 +1169,9 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(char16_t c,
+  വരിയിൽ int32_t indexOf(char16_t c,
               int32_t start,
-              int32_t length) const;
+              int32_t length) സ്ഥിരം;
 
   /**
    * Locate in this the first occurrence of the code point `c`
@@ -1184,9 +1184,9 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(UChar32 c,
+  വരിയിൽ int32_t indexOf(UChar32 c,
               int32_t start,
-              int32_t length) const;
+              int32_t length) സ്ഥിരം;
 
   /**
    * Locate in this the last occurrence of the characters in `text`,
@@ -1196,7 +1196,7 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(const UnicodeString& text) const;
+  വരിയിൽ int32_t lastIndexOf(സ്ഥിരം UnicodeString& text) സ്ഥിരം;
 
   /**
    * Locate in this the last occurrence of the characters in `text`
@@ -1207,8 +1207,8 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(const UnicodeString& text,
-              int32_t start) const;
+  വരിയിൽ int32_t lastIndexOf(സ്ഥിരം UnicodeString& text,
+              int32_t start) സ്ഥിരം;
 
   /**
    * Locate in this the last occurrence in the range
@@ -1221,9 +1221,9 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(const UnicodeString& text,
+  വരിയിൽ int32_t lastIndexOf(സ്ഥിരം UnicodeString& text,
               int32_t start,
-              int32_t length) const;
+              int32_t length) സ്ഥിരം;
 
   /**
    * Locate in this the last occurrence in the range
@@ -1241,11 +1241,11 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(const UnicodeString& srcText,
+  വരിയിൽ int32_t lastIndexOf(സ്ഥിരം UnicodeString& srcText,
               int32_t srcStart,
               int32_t srcLength,
               int32_t start,
-              int32_t length) const;
+              int32_t length) സ്ഥിരം;
 
   /**
    * Locate in this the last occurrence of the characters in `srcChars`
@@ -1257,9 +1257,9 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(const char16_t *srcChars,
+  വരിയിൽ int32_t lastIndexOf(സ്ഥിരം char16_t *srcChars,
               int32_t srcLength,
-              int32_t start) const;
+              int32_t start) സ്ഥിരം;
 
   /**
    * Locate in this the last occurrence in the range
@@ -1273,10 +1273,10 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(ConstChar16Ptr srcChars,
+  വരിയിൽ int32_t lastIndexOf(ConstChar16Ptr srcChars,
               int32_t srcLength,
               int32_t start,
-              int32_t length) const;
+              int32_t length) സ്ഥിരം;
 
   /**
    * Locate in this the last occurrence in the range
@@ -1294,11 +1294,11 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  int32_t lastIndexOf(const char16_t *srcChars,
+  int32_t lastIndexOf(സ്ഥിരം char16_t *srcChars,
               int32_t srcStart,
               int32_t srcLength,
               int32_t start,
-              int32_t length) const;
+              int32_t length) സ്ഥിരം;
 
   /**
    * Locate in this the last occurrence of the BMP code point `c`,
@@ -1307,7 +1307,7 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(char16_t c) const;
+  വരിയിൽ int32_t lastIndexOf(char16_t c) സ്ഥിരം;
 
   /**
    * Locate in this the last occurrence of the code point `c`,
@@ -1317,7 +1317,7 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(UChar32 c) const;
+  വരിയിൽ int32_t lastIndexOf(UChar32 c) സ്ഥിരം;
 
   /**
    * Locate in this the last occurrence of the BMP code point `c`
@@ -1327,8 +1327,8 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(char16_t c,
-              int32_t start) const;
+  വരിയിൽ int32_t lastIndexOf(char16_t c,
+              int32_t start) സ്ഥിരം;
 
   /**
    * Locate in this the last occurrence of the code point `c`
@@ -1339,8 +1339,8 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(UChar32 c,
-              int32_t start) const;
+  വരിയിൽ int32_t lastIndexOf(UChar32 c,
+              int32_t start) സ്ഥിരം;
 
   /**
    * Locate in this the last occurrence of the BMP code point `c`
@@ -1352,9 +1352,9 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(char16_t c,
+  വരിയിൽ int32_t lastIndexOf(char16_t c,
               int32_t start,
-              int32_t length) const;
+              int32_t length) സ്ഥിരം;
 
   /**
    * Locate in this the last occurrence of the code point `c`
@@ -1367,9 +1367,9 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(UChar32 c,
+  വരിയിൽ int32_t lastIndexOf(UChar32 c,
               int32_t start,
-              int32_t length) const;
+              int32_t length) സ്ഥിരം;
 
 
   /* Character access */
@@ -1382,7 +1382,7 @@ public:
    *         or 0xffff if the offset is not valid for this string
    * @stable ICU 2.0
    */
-  inline char16_t charAt(int32_t offset) const;
+  വരിയിൽ char16_t charAt(int32_t offset) സ്ഥിരം;
 
   /**
    * Return the code unit at offset `offset`.
@@ -1391,7 +1391,7 @@ public:
    * @return the code unit at offset `offset`
    * @stable ICU 2.0
    */
-  inline char16_t operator[] (int32_t offset) const;
+  വരിയിൽ char16_t operator[] (int32_t offset) സ്ഥിരം;
 
   /**
    * Return the code point that contains the code unit
@@ -1404,7 +1404,7 @@ public:
    *         or 0xffff if the offset is not valid for this string
    * @stable ICU 2.0
    */
-  UChar32 char32At(int32_t offset) const;
+  UChar32 char32At(int32_t offset) സ്ഥിരം;
 
   /**
    * Adjust a random-access offset so that
@@ -1421,7 +1421,7 @@ public:
    * @see U16_SET_CP_START
    * @stable ICU 2.0
    */
-  int32_t getChar32Start(int32_t offset) const;
+  int32_t getChar32Start(int32_t offset) സ്ഥിരം;
 
   /**
    * Adjust a random-access offset so that
@@ -1439,7 +1439,7 @@ public:
    * @see U16_SET_CP_LIMIT
    * @stable ICU 2.0
    */
-  int32_t getChar32Limit(int32_t offset) const;
+  int32_t getChar32Limit(int32_t offset) സ്ഥിരം;
 
   /**
    * Move the code unit index along the string by delta code points.
@@ -1491,7 +1491,7 @@ public:
    * @return the resulting code unit index
    * @stable ICU 2.0
    */
-  int32_t moveIndex32(int32_t index, int32_t delta) const;
+  int32_t moveIndex32(int32_t index, int32_t delta) സ്ഥിരം;
 
   /* Substring extraction */
 
@@ -1510,10 +1510,10 @@ public:
    * will be extracted
    * @stable ICU 2.0
    */
-  inline void extract(int32_t start,
+  വരിയിൽ ശൂന്യം extract(int32_t start,
            int32_t length,
            Char16Ptr dst,
-           int32_t dstStart = 0) const;
+           int32_t dstStart = 0) സ്ഥിരം;
 
   /**
    * Copy the contents of the string into dest.
@@ -1538,7 +1538,7 @@ public:
    */
   int32_t
   extract(Char16Ptr dest, int32_t destCapacity,
-          UErrorCode &errorCode) const;
+          UErrorCode &errorCode) സ്ഥിരം;
 
   /**
    * Copy the characters in the range
@@ -1549,9 +1549,9 @@ public:
    * @param target UnicodeString into which to copy characters.
    * @stable ICU 2.0
    */
-  inline void extract(int32_t start,
+  വരിയിൽ ശൂന്യം extract(int32_t start,
            int32_t length,
-           UnicodeString& target) const;
+           UnicodeString& target) സ്ഥിരം;
 
   /**
    * Copy the characters in the range [`start`, `limit`)
@@ -1564,10 +1564,10 @@ public:
    * will be extracted
    * @stable ICU 2.0
    */
-  inline void extractBetween(int32_t start,
+  വരിയിൽ ശൂന്യം extractBetween(int32_t start,
               int32_t limit,
               char16_t *dst,
-              int32_t dstStart = 0) const;
+              int32_t dstStart = 0) സ്ഥിരം;
 
   /**
    * Copy the characters in the range [`start`, `limit`)
@@ -1577,9 +1577,9 @@ public:
    * @param target UnicodeString into which to copy characters.
    * @stable ICU 2.0
    */
-  virtual void extractBetween(int32_t start,
+  മായാ ശൂന്യം extractBetween(int32_t start,
               int32_t limit,
-              UnicodeString& target) const override;
+              UnicodeString& target) സ്ഥിരം override;
 
   /**
    * Copy the characters in the range
@@ -1604,11 +1604,11 @@ public:
    */
   int32_t extract(int32_t start,
            int32_t startLength,
-           char *target,
+           അക്ഷരം *target,
            int32_t targetCapacity,
-           enum EInvariant inv) const;
+           എണ്ണൽ EInvariant inv) സ്ഥിരം;
 
-#if U_CHARSET_IS_UTF8 || !UCONFIG_NO_CONVERSION
+#എങ്കിൽ U_CHARSET_IS_UTF8 || !UCONFIG_NO_CONVERSION
 
   /**
    * Copy the characters in the range
@@ -1631,12 +1631,12 @@ public:
    */
   int32_t extract(int32_t start,
            int32_t startLength,
-           char *target,
-           uint32_t targetLength) const;
+           അക്ഷരം *target,
+           uint32_t targetLength) സ്ഥിരം;
 
 #endif
 
-#if !UCONFIG_NO_CONVERSION
+#എങ്കിൽ !UCONFIG_NO_CONVERSION
 
   /**
    * Copy the characters in the range
@@ -1663,10 +1663,10 @@ public:
    * @return the output string length, not including the terminating NUL
    * @stable ICU 2.0
    */
-  inline int32_t extract(int32_t start,
+  വരിയിൽ int32_t extract(int32_t start,
                          int32_t startLength,
-                         char* target,
-                         const char* codepage = nullptr) const;
+                         അക്ഷരം* target,
+                         സ്ഥിരം അക്ഷരം* codepage = nullptr) സ്ഥിരം;
 
   /**
    * Copy the characters in the range
@@ -1699,9 +1699,9 @@ public:
    */
   int32_t extract(int32_t start,
            int32_t startLength,
-           char *target,
+           അക്ഷരം *target,
            uint32_t targetLength,
-           const char *codepage) const;
+           സ്ഥിരം അക്ഷരം *codepage) സ്ഥിരം;
 
   /**
    * Convert the UnicodeString into a codepage string using an existing UConverter.
@@ -1720,9 +1720,9 @@ public:
    *         and a buffer of the indicated length would need to be passed in
    * @stable ICU 2.0
    */
-  int32_t extract(char *dest, int32_t destCapacity,
+  int32_t extract(അക്ഷരം *dest, int32_t destCapacity,
                   UConverter *cnv,
-                  UErrorCode &errorCode) const;
+                  UErrorCode &errorCode) സ്ഥിരം;
 
 #endif
 
@@ -1739,7 +1739,7 @@ public:
    * @return a read-only alias UnicodeString object for the substring
    * @stable ICU 4.4
    */
-  UnicodeString tempSubString(int32_t start=0, int32_t length=INT32_MAX) const U_LIFETIME_BOUND;
+  UnicodeString tempSubString(int32_t start=0, int32_t length=INT32_MAX) സ്ഥിരം U_LIFETIME_BOUND;
 
   /**
    * Create a temporary substring for the specified range.
@@ -1751,8 +1751,8 @@ public:
    * @return a read-only alias UnicodeString object for the substring
    * @stable ICU 4.4
    */
-  inline UnicodeString tempSubStringBetween(int32_t start,
-                                            int32_t limit = INT32_MAX) const U_LIFETIME_BOUND;
+  വരിയിൽ UnicodeString tempSubStringBetween(int32_t start,
+                                            int32_t limit = INT32_MAX) സ്ഥിരം U_LIFETIME_BOUND;
 
   /**
    * Convert the UnicodeString to UTF-8 and write the result
@@ -1765,7 +1765,7 @@ public:
    * @stable ICU 4.2
    * @see toUTF8String
    */
-  void toUTF8(ByteSink &sink) const;
+  ശൂന്യം toUTF8(ByteSink &sink) സ്ഥിരം;
 
   /**
    * Convert the UnicodeString to UTF-8 and append the result
@@ -1781,10 +1781,10 @@ public:
    * @see toUTF8
    */
   template <typename StringClass>
-  StringClass& toUTF8String(StringClass& result U_LIFETIME_BOUND) const {
+  StringClass& toUTF8String(StringClass& result U_LIFETIME_BOUND) സ്ഥിരം {
     StringByteSink<StringClass> sbs(&result, length());
     toUTF8(sbs);
-    return result;
+    തിരികെ result;
   }
 
 #ifndef U_HIDE_DRAFT_API
@@ -1800,11 +1800,11 @@ public:
    * @see toUTF8
    */
   template<typename StringClass>
-  StringClass toUTF8String() const {
+  StringClass toUTF8String() സ്ഥിരം {
     StringClass result;
     StringByteSink<StringClass> sbs(&result, length());
     toUTF8(sbs);
-    return result;
+    തിരികെ result;
   }
 #endif  // U_HIDE_DRAFT_API
 
@@ -1823,7 +1823,7 @@ public:
    * @see fromUTF32
    * @stable ICU 4.2
    */
-  int32_t toUTF32(UChar32 *utf32, int32_t capacity, UErrorCode &errorCode) const;
+  int32_t toUTF32(UChar32 *utf32, int32_t capacity, UErrorCode &errorCode) സ്ഥിരം;
 
   /* Length operations */
 
@@ -1835,7 +1835,7 @@ public:
    * @see countChar32
    * @stable ICU 2.0
    */
-  inline int32_t length() const;
+  വരിയിൽ int32_t length() സ്ഥിരം;
 
   /**
    * Count Unicode code points in the length char16_t code units of the string.
@@ -1851,7 +1851,7 @@ public:
    * @stable ICU 2.0
    */
   int32_t
-  countChar32(int32_t start=0, int32_t length=INT32_MAX) const;
+  എണ്ണം_Char32(int32_t start=0, int32_t length=INT32_MAX) സ്ഥിരം;
 
   /**
    * Check if the length char16_t code units of the string
@@ -1877,14 +1877,14 @@ public:
    * @stable ICU 2.4
    */
   UBool
-  hasMoreChar32Than(int32_t start, int32_t length, int32_t number) const;
+  hasMoreChar32Than(int32_t start, int32_t length, int32_t സംഖ്യ) സ്ഥിരം;
 
   /**
    * Determine if this string is empty.
    * @return true if this string contains 0 characters, false otherwise.
    * @stable ICU 2.0
    */
-  inline UBool isEmpty() const;
+  വരിയിൽ UBool isEmpty() സ്ഥിരം;
 
   /**
    * Return the capacity of the internal buffer of the UnicodeString object.
@@ -1895,7 +1895,7 @@ public:
    * @see getBuffer
    * @stable ICU 2.0
    */
-  inline int32_t getCapacity() const;
+  വരിയിൽ int32_t getCapacity() സ്ഥിരം;
 
   /* Other operations */
 
@@ -1904,7 +1904,7 @@ public:
    * @return The hash code of this UnicodeString.
    * @stable ICU 2.0
    */
-  inline int32_t hashCode() const;
+  വരിയിൽ int32_t hashCode() സ്ഥിരം;
 
   /**
    * Determine if this object contains a valid string.
@@ -1918,10 +1918,10 @@ public:
    * @see setToBogus()
    * @stable ICU 2.0
    */
-  inline UBool isBogus() const;
+  വരിയിൽ UBool isBogus() സ്ഥിരം;
 
 #ifndef U_HIDE_DRAFT_API
-private:
+സ്വകാര്യ:
   // These type aliases are private; there is no guarantee that they will remain
   // aliases to the same types in subsequent versions of ICU.
   // Note that whether `std::u16string_view::const_iterator` is a pointer or a
@@ -1929,31 +1929,31 @@ private:
   using unspecified_iterator = std::u16string_view::const_iterator;
   using unspecified_reverse_iterator = std::u16string_view::const_reverse_iterator;
 
-public:
+പൊതു:
   /**
    * @return an iterator to the first code unit in this string.
    *     The iterator may be a pointer or a contiguous-iterator object.
    * @draft ICU 78
    */
-  unspecified_iterator begin() const { return std::u16string_view(*this).begin(); }
+  unspecified_iterator begin() സ്ഥിരം { തിരികെ std::u16string_view(*this).begin(); }
   /**
    * @return an iterator to just past the last code unit in this string.
    *     The iterator may be a pointer or a contiguous-iterator object.
    * @draft ICU 78
    */
-  unspecified_iterator end() const { return std::u16string_view(*this).end(); }
+  unspecified_iterator end() സ്ഥിരം { തിരികെ std::u16string_view(*this).end(); }
   /**
    * @return a reverse iterator to the last code unit in this string.
    *     The iterator may be a pointer or a contiguous-iterator object.
    * @draft ICU 78
    */
-  unspecified_reverse_iterator rbegin() const { return std::u16string_view(*this).rbegin(); }
+  unspecified_reverse_iterator rbegin() സ്ഥിരം { തിരികെ std::u16string_view(*this).rbegin(); }
   /**
    * @return a reverse iterator to just before the first code unit in this string.
    *     The iterator may be a pointer or a contiguous-iterator object.
    * @draft ICU 78
    */
-  unspecified_reverse_iterator rend() const { return std::u16string_view(*this).rend(); }
+  unspecified_reverse_iterator rend() സ്ഥിരം { തിരികെ std::u16string_view(*this).rend(); }
 #endif  // U_HIDE_DRAFT_API
 
   //========================================
@@ -1980,7 +1980,7 @@ public:
    * @stable ICU 2.0
    * @see fastCopyFrom
    */
-  UnicodeString& operator=(const UnicodeString& srcText) U_LIFETIME_BOUND;
+  UnicodeString& operator=(സ്ഥിരം UnicodeString& srcText) U_LIFETIME_BOUND;
 
   /**
    * Almost the same as the assignment operator.
@@ -2007,7 +2007,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.4
    */
-  UnicodeString& fastCopyFrom(const UnicodeString& src) U_LIFETIME_BOUND;
+  UnicodeString& fastCopyFrom(സ്ഥിരം UnicodeString& src) U_LIFETIME_BOUND;
 
   /**
    * Assignment operator. Replaces the characters in this UnicodeString
@@ -2020,9 +2020,9 @@ public:
    * @stable ICU 76
    */
   template <typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  inline UnicodeString& operator=(const S& src) U_LIFETIME_BOUND {
+  വരിയിൽ UnicodeString& operator=(സ്ഥിരം S& src) U_LIFETIME_BOUND {
     unBogus();
-    return doReplace(0, length(), internal::toU16StringView(src));
+    തിരികെ doReplace(0, length(), internal::toU16StringView(src));
   }
 
   /**
@@ -2040,7 +2040,7 @@ public:
    * @param other other string
    * @stable ICU 56
    */
-  void swap(UnicodeString &other) noexcept;
+  ശൂന്യം swap(UnicodeString &other) noexcept;
 
   /**
    * Non-member UnicodeString swap function.
@@ -2048,7 +2048,7 @@ public:
    * @param s2 will get s1's contents and state
    * @stable ICU 56
    */
-  friend inline void U_EXPORT2
+  friend വരിയിൽ ശൂന്യം U_EXPORT2
   swap(UnicodeString &s1, UnicodeString &s2) noexcept {
     s1.swap(s2);
   }
@@ -2060,7 +2060,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& operator=(char16_t ch) U_LIFETIME_BOUND;
+  വരിയിൽ UnicodeString& operator=(char16_t ch) U_LIFETIME_BOUND;
 
   /**
    * Assignment operator.  Replace the characters in this UnicodeString
@@ -2069,7 +2069,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& operator=(UChar32 ch) U_LIFETIME_BOUND;
+  വരിയിൽ UnicodeString& operator=(UChar32 ch) U_LIFETIME_BOUND;
 
   /**
    * Set the text in the UnicodeString object to the characters
@@ -2082,7 +2082,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.2
    */
-  inline UnicodeString& setTo(const UnicodeString& srcText, int32_t srcStart) U_LIFETIME_BOUND;
+  വരിയിൽ UnicodeString& setTo(സ്ഥിരം UnicodeString& srcText, int32_t srcStart) U_LIFETIME_BOUND;
 
   /**
    * Set the text in the UnicodeString object to the characters
@@ -2097,7 +2097,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& setTo(const UnicodeString& srcText,
+  വരിയിൽ UnicodeString& setTo(സ്ഥിരം UnicodeString& srcText,
                               int32_t srcStart,
                               int32_t srcLength) U_LIFETIME_BOUND;
 
@@ -2109,7 +2109,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& setTo(const UnicodeString& srcText) U_LIFETIME_BOUND;
+  വരിയിൽ UnicodeString& setTo(സ്ഥിരം UnicodeString& srcText) U_LIFETIME_BOUND;
 
   /**
    * Set the characters in the UnicodeString object to the characters
@@ -2119,7 +2119,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& setTo(const char16_t* srcChars, int32_t srcLength) U_LIFETIME_BOUND;
+  വരിയിൽ UnicodeString& setTo(സ്ഥിരം char16_t* srcChars, int32_t srcLength) U_LIFETIME_BOUND;
 
   /**
    * Set the characters in the UnicodeString object to the code unit
@@ -2129,7 +2129,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& setTo(char16_t srcChar) U_LIFETIME_BOUND;
+  വരിയിൽ UnicodeString& setTo(char16_t srcChar) U_LIFETIME_BOUND;
 
   /**
    * Set the characters in the UnicodeString object to the code point
@@ -2139,7 +2139,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& setTo(UChar32 srcChar) U_LIFETIME_BOUND;
+  വരിയിൽ UnicodeString& setTo(UChar32 srcChar) U_LIFETIME_BOUND;
 
   /**
    * Aliasing setTo() function, analogous to the readonly-aliasing char16_t* constructor.
@@ -2230,7 +2230,7 @@ public:
    * @see isBogus()
    * @stable ICU 2.0
    */
-  void setToBogus();
+  ശൂന്യം setToBogus();
 
   /**
    * Set the character at the specified offset to the specified character.
@@ -2250,7 +2250,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& operator+=(char16_t ch) U_LIFETIME_BOUND;
+  വരിയിൽ UnicodeString& operator+=(char16_t ch) U_LIFETIME_BOUND;
 
   /**
    * Append operator. Append the code point `ch` to the UnicodeString
@@ -2259,7 +2259,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& operator+=(UChar32 ch) U_LIFETIME_BOUND;
+  വരിയിൽ UnicodeString& operator+=(UChar32 ch) U_LIFETIME_BOUND;
 
   /**
    * Append operator. Append the characters in `srcText` to the
@@ -2268,7 +2268,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& operator+=(const UnicodeString& srcText) U_LIFETIME_BOUND;
+  വരിയിൽ UnicodeString& operator+=(സ്ഥിരം UnicodeString& srcText) U_LIFETIME_BOUND;
 
   /**
    * Append operator. Appends the characters in `src`
@@ -2281,8 +2281,8 @@ public:
    * @stable ICU 76
    */
   template <typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  inline UnicodeString& operator+=(const S& src) U_LIFETIME_BOUND {
-    return doAppend(internal::toU16StringView(src));
+  വരിയിൽ UnicodeString& operator+=(സ്ഥിരം S& src) U_LIFETIME_BOUND {
+    തിരികെ doAppend(internal::toU16StringView(src));
   }
 
   /**
@@ -2299,7 +2299,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& append(const UnicodeString& srcText,
+  വരിയിൽ UnicodeString& append(സ്ഥിരം UnicodeString& srcText,
                                int32_t srcStart,
                                int32_t srcLength) U_LIFETIME_BOUND;
 
@@ -2310,7 +2310,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& append(const UnicodeString& srcText) U_LIFETIME_BOUND;
+  വരിയിൽ UnicodeString& append(സ്ഥിരം UnicodeString& srcText) U_LIFETIME_BOUND;
 
   /**
    * Append the characters in `srcChars` in the range
@@ -2325,7 +2325,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& append(const char16_t* srcChars,
+  വരിയിൽ UnicodeString& append(സ്ഥിരം char16_t* srcChars,
                                int32_t srcStart,
                                int32_t srcLength) U_LIFETIME_BOUND;
 
@@ -2338,7 +2338,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& append(ConstChar16Ptr srcChars, int32_t srcLength) U_LIFETIME_BOUND;
+  വരിയിൽ UnicodeString& append(ConstChar16Ptr srcChars, int32_t srcLength) U_LIFETIME_BOUND;
 
   /**
    * Appends the characters in `src`
@@ -2351,8 +2351,8 @@ public:
    * @stable ICU 76
    */
   template <typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  inline UnicodeString& append(const S& src) U_LIFETIME_BOUND {
-    return doAppend(internal::toU16StringView(src));
+  വരിയിൽ UnicodeString& append(സ്ഥിരം S& src) U_LIFETIME_BOUND {
+    തിരികെ doAppend(internal::toU16StringView(src));
   }
 
   /**
@@ -2361,7 +2361,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& append(char16_t srcChar) U_LIFETIME_BOUND;
+  വരിയിൽ UnicodeString& append(char16_t srcChar) U_LIFETIME_BOUND;
 
   /**
    * Append the code point `srcChar` to the UnicodeString object.
@@ -2379,7 +2379,7 @@ public:
    * @param c the code unit to append
    * @draft ICU 78
    */
-  inline void push_back(char16_t c) { append(c); }
+  വരിയിൽ ശൂന്യം തള്ളുക_back(char16_t c) { append(c); }
 #endif  // U_HIDE_DRAFT_API
 
   /* Insert operations */
@@ -2397,8 +2397,8 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start,
-                               const UnicodeString& srcText,
+  വരിയിൽ UnicodeString& തിരുകുക(int32_t start,
+                               സ്ഥിരം UnicodeString& srcText,
                                int32_t srcStart,
                                int32_t srcLength) U_LIFETIME_BOUND;
 
@@ -2410,7 +2410,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start, const UnicodeString& srcText) U_LIFETIME_BOUND;
+  വരിയിൽ UnicodeString& തിരുകുക(int32_t start, സ്ഥിരം UnicodeString& srcText) U_LIFETIME_BOUND;
 
   /**
    * Insert the characters in `srcChars` in the range
@@ -2425,8 +2425,8 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start,
-                               const char16_t* srcChars,
+  വരിയിൽ UnicodeString& തിരുകുക(int32_t start,
+                               സ്ഥിരം char16_t* srcChars,
                                int32_t srcStart,
                                int32_t srcLength) U_LIFETIME_BOUND;
 
@@ -2439,7 +2439,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start,
+  വരിയിൽ UnicodeString& തിരുകുക(int32_t start,
                                ConstChar16Ptr srcChars,
                                int32_t srcLength) U_LIFETIME_BOUND;
 
@@ -2451,7 +2451,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start, char16_t srcChar) U_LIFETIME_BOUND;
+  വരിയിൽ UnicodeString& തിരുകുക(int32_t start, char16_t srcChar) U_LIFETIME_BOUND;
 
   /**
    * Insert the code point `srcChar` into the UnicodeString object at
@@ -2461,7 +2461,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start, UChar32 srcChar) U_LIFETIME_BOUND;
+  വരിയിൽ UnicodeString& തിരുകുക(int32_t start, UChar32 srcChar) U_LIFETIME_BOUND;
 
   /* Replace operations */
 
@@ -2482,9 +2482,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replace(int32_t start,
+  വരിയിൽ UnicodeString& replace(int32_t start,
                                 int32_t length,
-                                const UnicodeString& srcText,
+                                സ്ഥിരം UnicodeString& srcText,
                                 int32_t srcStart,
                                 int32_t srcLength) U_LIFETIME_BOUND;
 
@@ -2500,9 +2500,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replace(int32_t start,
+  വരിയിൽ UnicodeString& replace(int32_t start,
                                 int32_t length,
-                                const UnicodeString& srcText) U_LIFETIME_BOUND;
+                                സ്ഥിരം UnicodeString& srcText) U_LIFETIME_BOUND;
 
   /**
    * Replace the characters in the range
@@ -2521,9 +2521,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replace(int32_t start,
+  വരിയിൽ UnicodeString& replace(int32_t start,
                                 int32_t length,
-                                const char16_t* srcChars,
+                                സ്ഥിരം char16_t* srcChars,
                                 int32_t srcStart,
                                 int32_t srcLength) U_LIFETIME_BOUND;
 
@@ -2539,7 +2539,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replace(int32_t start,
+  വരിയിൽ UnicodeString& replace(int32_t start,
                                 int32_t length,
                                 ConstChar16Ptr srcChars,
                                 int32_t srcLength) U_LIFETIME_BOUND;
@@ -2555,7 +2555,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replace(int32_t start, int32_t length, char16_t srcChar) U_LIFETIME_BOUND;
+  വരിയിൽ UnicodeString& replace(int32_t start, int32_t length, char16_t srcChar) U_LIFETIME_BOUND;
 
   /**
    * Replace the characters in the range
@@ -2579,9 +2579,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replaceBetween(int32_t start,
+  വരിയിൽ UnicodeString& replaceBetween(int32_t start,
                                        int32_t limit,
-                                       const UnicodeString& srcText) U_LIFETIME_BOUND;
+                                       സ്ഥിരം UnicodeString& srcText) U_LIFETIME_BOUND;
 
   /**
    * Replace the characters in the range [`start`, `limit`)
@@ -2597,9 +2597,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replaceBetween(int32_t start,
+  വരിയിൽ UnicodeString& replaceBetween(int32_t start,
                                        int32_t limit,
-                                       const UnicodeString& srcText,
+                                       സ്ഥിരം UnicodeString& srcText,
                                        int32_t srcStart,
                                        int32_t srcLimit) U_LIFETIME_BOUND;
 
@@ -2610,16 +2610,16 @@ public:
    * @param text the text to replace characters `start` to `limit - 1`
    * @stable ICU 2.0
    */
-  virtual void handleReplaceBetween(int32_t start,
+  മായാ ശൂന്യം handleReplaceBetween(int32_t start,
                                     int32_t limit,
-                                    const UnicodeString& text) override;
+                                    സ്ഥിരം UnicodeString& text) override;
 
   /**
    * Replaceable API
    * @return true if it has MetaData
    * @stable ICU 2.4
    */
-  virtual UBool hasMetaData() const override;
+  മായാ UBool hasMetaData() സ്ഥിരം override;
 
   /**
    * Copy a substring of this object, retaining attribute (out-of-band)
@@ -2634,7 +2634,7 @@ public:
    * dest >= limit`.
    * @stable ICU 2.0
    */
-  virtual void copy(int32_t start, int32_t limit, int32_t dest) override;
+  മായാ ശൂന്യം copy(int32_t start, int32_t limit, int32_t dest) override;
 
   /* Search and replace operations */
 
@@ -2646,8 +2646,8 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& findAndReplace(const UnicodeString& oldText,
-                                       const UnicodeString& newText) U_LIFETIME_BOUND;
+  വരിയിൽ UnicodeString& findAndReplace(സ്ഥിരം UnicodeString& oldText,
+                                       സ്ഥിരം UnicodeString& newText) U_LIFETIME_BOUND;
 
   /**
    * Replace all occurrences of characters in oldText with characters
@@ -2660,10 +2660,10 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& findAndReplace(int32_t start,
+  വരിയിൽ UnicodeString& findAndReplace(int32_t start,
                                        int32_t length,
-                                       const UnicodeString& oldText,
-                                       const UnicodeString& newText) U_LIFETIME_BOUND;
+                                       സ്ഥിരം UnicodeString& oldText,
+                                       സ്ഥിരം UnicodeString& newText) U_LIFETIME_BOUND;
 
   /**
    * Replace all occurrences of characters in oldText in the range
@@ -2684,10 +2684,10 @@ public:
    */
   UnicodeString& findAndReplace(int32_t start,
                                 int32_t length,
-                                const UnicodeString& oldText,
+                                സ്ഥിരം UnicodeString& oldText,
                                 int32_t oldStart,
                                 int32_t oldLength,
-                                const UnicodeString& newText,
+                                സ്ഥിരം UnicodeString& newText,
                                 int32_t newStart,
                                 int32_t newLength) U_LIFETIME_BOUND;
 
@@ -2702,7 +2702,7 @@ public:
    * @see setToBogus
    * @stable ICU 2.0
    */
-  inline UnicodeString& remove() U_LIFETIME_BOUND;
+  വരിയിൽ UnicodeString& remove() U_LIFETIME_BOUND;
 
   /**
    * Remove the characters in the range
@@ -2712,7 +2712,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& remove(int32_t start,
+  വരിയിൽ UnicodeString& remove(int32_t start,
                                int32_t length = static_cast<int32_t>(INT32_MAX)) U_LIFETIME_BOUND;
 
   /**
@@ -2723,7 +2723,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString&
+  വരിയിൽ UnicodeString&
   removeBetween(int32_t start, int32_t limit = static_cast<int32_t>(INT32_MAX)) U_LIFETIME_BOUND;
 
   /**
@@ -2735,7 +2735,7 @@ public:
    * @return a reference to this
    * @stable ICU 4.4
    */
-  inline UnicodeString& retainBetween(int32_t start, int32_t limit = INT32_MAX) U_LIFETIME_BOUND;
+  വരിയിൽ UnicodeString& retainBetween(int32_t start, int32_t limit = INT32_MAX) U_LIFETIME_BOUND;
 
   /* Length operations */
 
@@ -2773,7 +2773,7 @@ public:
    * @return true if the text was truncated, false otherwise
    * @stable ICU 2.0
    */
-  inline UBool truncate(int32_t targetLength);
+  വരിയിൽ UBool truncate(int32_t targetLength);
 
   /**
    * Trims leading and trailing whitespace from this UnicodeString.
@@ -2789,7 +2789,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& reverse() U_LIFETIME_BOUND;
+  വരിയിൽ UnicodeString& reverse() U_LIFETIME_BOUND;
 
   /**
    * Reverse the range [`start`, `start + length`) in
@@ -2799,7 +2799,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& reverse(int32_t start, int32_t length) U_LIFETIME_BOUND;
+  വരിയിൽ UnicodeString& reverse(int32_t start, int32_t length) U_LIFETIME_BOUND;
 
   /**
    * Convert the characters in this to UPPER CASE following the conventions of
@@ -2816,7 +2816,7 @@ public:
    * @return A reference to this.
    * @stable ICU 2.0
    */
-  UnicodeString& toUpper(const Locale& locale) U_LIFETIME_BOUND;
+  UnicodeString& toUpper(സ്ഥിരം Locale& locale) U_LIFETIME_BOUND;
 
   /**
    * Convert the characters in this to lower case following the conventions of
@@ -2833,9 +2833,9 @@ public:
    * @return A reference to this.
    * @stable ICU 2.0
    */
-  UnicodeString& toLower(const Locale& locale) U_LIFETIME_BOUND;
+  UnicodeString& toLower(സ്ഥിരം Locale& locale) U_LIFETIME_BOUND;
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#എങ്കിൽ !UCONFIG_NO_BREAK_ITERATION
 
   /**
    * Titlecase this string, convenience function using the default locale.
@@ -2892,7 +2892,7 @@ public:
    * @return A reference to this.
    * @stable ICU 2.1
    */
-  UnicodeString& toTitle(BreakIterator* titleIter, const Locale& locale) U_LIFETIME_BOUND;
+  UnicodeString& toTitle(BreakIterator* titleIter, സ്ഥിരം Locale& locale) U_LIFETIME_BOUND;
 
   /**
    * Titlecase this string, with options.
@@ -2925,7 +2925,7 @@ public:
    * @stable ICU 3.8
    */
   UnicodeString& toTitle(BreakIterator* titleIter,
-                         const Locale& locale,
+                         സ്ഥിരം Locale& locale,
                          uint32_t options) U_LIFETIME_BOUND;
 
 #endif
@@ -3014,7 +3014,7 @@ public:
    * @see getBuffer(int32_t minCapacity)
    * @stable ICU 2.0
    */
-  void releaseBuffer(int32_t newLength=-1);
+  ശൂന്യം releaseBuffer(int32_t newLength=-1);
 
   /**
    * Get a read-only pointer to the internal buffer.
@@ -3046,7 +3046,7 @@ public:
    * @see getTerminatedBuffer()
    * @stable ICU 2.0
    */
-  inline const char16_t* getBuffer() const U_LIFETIME_BOUND;
+  വരിയിൽ സ്ഥിരം char16_t* getBuffer() സ്ഥിരം U_LIFETIME_BOUND;
 
   /**
    * Get a read-only pointer to the internal buffer,
@@ -3081,7 +3081,7 @@ public:
    * @see getBuffer()
    * @stable ICU 2.2
    */
-  const char16_t* getTerminatedBuffer() U_LIFETIME_BOUND;
+  സ്ഥിരം char16_t* getTerminatedBuffer() U_LIFETIME_BOUND;
 
   /**
    * Converts to a std::u16string_view.
@@ -3089,11 +3089,11 @@ public:
    * @return a string view of the contents of this string
    * @stable ICU 76
    */
-  inline operator std::u16string_view() const {
-    return {getBuffer(), static_cast<std::u16string_view::size_type>(length())};
+  വരിയിൽ operator std::u16string_view() സ്ഥിരം {
+    തിരികെ {getBuffer(), static_cast<std::u16string_view::size_type>(length())};
   }
 
-#if U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
+#എങ്കിൽ U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
   /**
    * Converts to a std::wstring_view.
    *
@@ -3103,12 +3103,12 @@ public:
    * @return a string view of the contents of this string
    * @stable ICU 76
    */
-  inline operator std::wstring_view() const {
-    const char16_t *p = getBuffer();
+  വരിയിൽ operator std::wstring_view() സ്ഥിരം {
+    സ്ഥിരം char16_t *p = getBuffer();
 #ifdef U_ALIASING_BARRIER
     U_ALIASING_BARRIER(p);
 #endif
-    return { reinterpret_cast<const wchar_t *>(p), (std::wstring_view::size_type)length() };
+    തിരികെ { reinterpret_cast<സ്ഥിരം wchar_t *>(p), (std::wstring_view::size_type)length() };
   }
 #endif  // U_SIZEOF_WCHAR_T
 
@@ -3119,7 +3119,7 @@ public:
   /** Construct an empty UnicodeString.
    * @stable ICU 2.0
    */
-  inline UnicodeString();
+  വരിയിൽ UnicodeString();
 
   /**
    * Construct a UnicodeString with capacity to hold `capacity` char16_ts
@@ -3132,7 +3132,7 @@ public:
    *              string
    * @stable ICU 2.0
    */
-  UnicodeString(int32_t capacity, UChar32 c, int32_t count);
+  UnicodeString(int32_t capacity, UChar32 c, int32_t എണ്ണം);
 
   /**
    * Single char16_t (code unit) constructor.
@@ -3176,11 +3176,11 @@ public:
    * must be NUL (U+0000) terminated.
    * @stable ICU 2.0
    */
-  UNISTR_FROM_STRING_EXPLICIT UnicodeString(const char16_t *text) :
+  UNISTR_FROM_STRING_EXPLICIT UnicodeString(സ്ഥിരം char16_t *text) :
       UnicodeString(text, -1) {}
 #endif  // U_HIDE_DRAFT_API
 
-#if !U_CHAR16_IS_TYPEDEF && \
+#എങ്കിൽ !U_CHAR16_IS_TYPEDEF && \
     (defined(U_HIDE_DRAFT_API) || (defined(_LIBCPP_VERSION) && _LIBCPP_VERSION >= 180000))
   /**
    * uint16_t * constructor.
@@ -3201,11 +3201,11 @@ public:
    * @param text NUL-terminated UTF-16 string
    * @stable ICU 59
    */
-  UNISTR_FROM_STRING_EXPLICIT UnicodeString(const uint16_t *text) :
+  UNISTR_FROM_STRING_EXPLICIT UnicodeString(സ്ഥിരം uint16_t *text) :
       UnicodeString(ConstChar16Ptr(text), -1) {}
 #endif
 
-#if defined(U_HIDE_DRAFT_API) && (U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN))
+#എങ്കിൽ defined(U_HIDE_DRAFT_API) && (U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN))
   /**
    * wchar_t * constructor.
    * (Only defined if U_SIZEOF_WCHAR_T==2.)
@@ -3226,7 +3226,7 @@ public:
    * @param text NUL-terminated UTF-16 string
    * @stable ICU 59
    */
-  UNISTR_FROM_STRING_EXPLICIT UnicodeString(const wchar_t *text) :
+  UNISTR_FROM_STRING_EXPLICIT UnicodeString(സ്ഥിരം wchar_t *text) :
       UnicodeString(ConstChar16Ptr(text), -1) {}
 #endif
 
@@ -3240,7 +3240,7 @@ public:
    * @param text nullptr
    * @stable ICU 59
    */
-  UNISTR_FROM_STRING_EXPLICIT inline UnicodeString(const std::nullptr_t text);
+  UNISTR_FROM_STRING_EXPLICIT വരിയിൽ UnicodeString(സ്ഥിരം std::nullptr_t text);
 
   /**
    * char16_t* constructor.
@@ -3258,10 +3258,10 @@ public:
    * to copy.
    * @stable ICU 2.0
    */
-  UnicodeString(const char16_t *text,
+  UnicodeString(സ്ഥിരം char16_t *text,
         int32_t textLength);
 
-#if !U_CHAR16_IS_TYPEDEF
+#എങ്കിൽ !U_CHAR16_IS_TYPEDEF
   /**
    * uint16_t * constructor.
    * Delegates to UnicodeString(const char16_t *, int32_t).
@@ -3278,11 +3278,11 @@ public:
    * @param textLength string length
    * @stable ICU 59
    */
-  UnicodeString(const uint16_t *text, int32_t textLength) :
+  UnicodeString(സ്ഥിരം uint16_t *text, int32_t textLength) :
       UnicodeString(ConstChar16Ptr(text), textLength) {}
 #endif
 
-#if U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
+#എങ്കിൽ U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
   /**
    * wchar_t * constructor.
    * (Only defined if U_SIZEOF_WCHAR_T==2.)
@@ -3300,7 +3300,7 @@ public:
    * @param textLength string length
    * @stable ICU 59
    */
-  UnicodeString(const wchar_t *text, int32_t textLength) :
+  UnicodeString(സ്ഥിരം wchar_t *text, int32_t textLength) :
       UnicodeString(ConstChar16Ptr(text), textLength) {}
 #endif
 
@@ -3311,7 +3311,7 @@ public:
    * @param textLength ignored
    * @stable ICU 59
    */
-  inline UnicodeString(const std::nullptr_t text, int32_t textLength);
+  വരിയിൽ UnicodeString(സ്ഥിരം std::nullptr_t text, int32_t textLength);
 
   /**
    * Constructor from `text`
@@ -3326,7 +3326,7 @@ public:
    * @stable ICU 76
    */
   template<typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  UNISTR_FROM_STRING_EXPLICIT UnicodeString(const S &text) {
+  UNISTR_FROM_STRING_EXPLICIT UnicodeString(സ്ഥിരം S &text) {
     fUnion.fFields.fLengthAndFlags = kShortString;
     doAppend(internal::toU16StringViewNullable(text));
   }
@@ -3385,7 +3385,7 @@ public:
    */
   UnicodeString(char16_t* buffer U_LIFETIME_BOUND, int32_t buffLength, int32_t buffCapacity);
 
-#if !U_CHAR16_IS_TYPEDEF
+#എങ്കിൽ !U_CHAR16_IS_TYPEDEF
   /**
    * Writable-aliasing uint16_t * constructor.
    * Delegates to UnicodeString(const char16_t *, int32_t, int32_t).
@@ -3398,7 +3398,7 @@ public:
       UnicodeString(Char16Ptr(buffer), buffLength, buffCapacity) {}
 #endif
 
-#if U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
+#എങ്കിൽ U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
   /**
    * Writable-aliasing wchar_t * constructor.
    * (Only defined if U_SIZEOF_WCHAR_T==2.)
@@ -3420,9 +3420,9 @@ public:
    * @param buffCapacity ignored
    * @stable ICU 59
    */
-  inline UnicodeString(std::nullptr_t buffer, int32_t buffLength, int32_t buffCapacity);
+  വരിയിൽ UnicodeString(std::nullptr_t buffer, int32_t buffLength, int32_t buffCapacity);
 
-#if U_CHARSET_IS_UTF8 || !UCONFIG_NO_CONVERSION
+#എങ്കിൽ U_CHARSET_IS_UTF8 || !UCONFIG_NO_CONVERSION
 
   /**
    * char* constructor.
@@ -3447,7 +3447,7 @@ public:
    *                     in the platform's default codepage.
    * @stable ICU 2.0
    */
-  UNISTR_FROM_STRING_EXPLICIT UnicodeString(const char *codepageData);
+  UNISTR_FROM_STRING_EXPLICIT UnicodeString(സ്ഥിരം അക്ഷരം *codepageData);
 
   /**
    * char* constructor.
@@ -3457,11 +3457,11 @@ public:
    * @param dataLength The number of bytes in `codepageData`.
    * @stable ICU 2.0
    */
-  UnicodeString(const char *codepageData, int32_t dataLength);
+  UnicodeString(സ്ഥിരം അക്ഷരം *codepageData, int32_t dataLength);
 
 #endif
 
-#if !UCONFIG_NO_CONVERSION
+#എങ്കിൽ !UCONFIG_NO_CONVERSION
 
   /**
    * char* constructor.
@@ -3480,7 +3480,7 @@ public:
    *
    * @stable ICU 2.0
    */
-  UnicodeString(const char *codepageData, const char *codepage);
+  UnicodeString(സ്ഥിരം അക്ഷരം *codepageData, സ്ഥിരം അക്ഷരം *codepage);
 
   /**
    * char* constructor.
@@ -3499,7 +3499,7 @@ public:
    *
    * @stable ICU 2.0
    */
-  UnicodeString(const char *codepageData, int32_t dataLength, const char *codepage);
+  UnicodeString(സ്ഥിരം അക്ഷരം *codepageData, int32_t dataLength, സ്ഥിരം അക്ഷരം *codepage);
 
   /**
    * char * / UConverter constructor.
@@ -3523,7 +3523,7 @@ public:
    * @stable ICU 2.0
    */
   UnicodeString(
-        const char *src, int32_t srcLength,
+        സ്ഥിരം അക്ഷരം *src, int32_t srcLength,
         UConverter *cnv,
         UErrorCode &errorCode);
 
@@ -3561,7 +3561,7 @@ public:
    * @see US_INV
    * @stable ICU 3.2
    */
-  UnicodeString(const char *src, int32_t textLength, enum EInvariant inv);
+  UnicodeString(സ്ഥിരം അക്ഷരം *src, int32_t textLength, എണ്ണൽ EInvariant inv);
 
 
   /**
@@ -3580,7 +3580,7 @@ public:
    * @stable ICU 2.0
    * @see fastCopyFrom
    */
-  UnicodeString(const UnicodeString& that);
+  UnicodeString(സ്ഥിരം UnicodeString& that);
 
   /**
    * Move constructor; might leave src in bogus state.
@@ -3596,7 +3596,7 @@ public:
    * @param srcStart The offset into `src` at which to start copying.
    * @stable ICU 2.2
    */
-  UnicodeString(const UnicodeString& src, int32_t srcStart);
+  UnicodeString(സ്ഥിരം UnicodeString& src, int32_t srcStart);
 
   /**
    * 'Substring' constructor from subrange of source string.
@@ -3605,7 +3605,7 @@ public:
    * @param srcLength The number of characters from `src` to copy.
    * @stable ICU 2.2
    */
-  UnicodeString(const UnicodeString& src, int32_t srcStart, int32_t srcLength);
+  UnicodeString(സ്ഥിരം UnicodeString& src, int32_t srcStart, int32_t srcLength);
 
   /**
    * Clone this object, an instance of a subclass of Replaceable.
@@ -3620,12 +3620,12 @@ public:
    * @see getDynamicClassID
    * @stable ICU 2.6
    */
-  virtual UnicodeString *clone() const override;
+  മായാ UnicodeString *clone() സ്ഥിരം override;
 
   /** Destructor.
    * @stable ICU 2.0
    */
-  virtual ~UnicodeString();
+  മായാ ~UnicodeString();
 
   /**
    * Readonly-aliasing factory method.
@@ -3650,8 +3650,8 @@ public:
    * @stable ICU 76
    */
   template <typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  static inline UnicodeString readOnlyAlias(const S& text U_LIFETIME_BOUND) {
-    return readOnlyAliasFromU16StringView(internal::toU16StringView(text));
+  സ്ഥിതം വരിയിൽ UnicodeString readOnlyAlias(സ്ഥിരം S& text U_LIFETIME_BOUND) {
+    തിരികെ readOnlyAliasFromU16StringView(internal::toU16StringView(text));
   }
 
   /**
@@ -3673,8 +3673,8 @@ public:
    * @param text The UnicodeString to alias.
    * @stable ICU 76
    */
-  static inline UnicodeString readOnlyAlias(const UnicodeString& text U_LIFETIME_BOUND) {
-    return readOnlyAliasFromUnicodeString(text);
+  സ്ഥിതം വരിയിൽ UnicodeString readOnlyAlias(സ്ഥിരം UnicodeString& text U_LIFETIME_BOUND) {
+    തിരികെ readOnlyAliasFromUnicodeString(text);
   }
 
   /**
@@ -3690,7 +3690,7 @@ public:
    * @see toUTF8String
    * @stable ICU 4.2
    */
-  static UnicodeString fromUTF8(StringPiece utf8);
+  സ്ഥിതം UnicodeString fromUTF8(StringPiece utf8);
 
   /**
    * Create a UnicodeString from a UTF-32 string.
@@ -3703,7 +3703,7 @@ public:
    * @see toUTF32
    * @stable ICU 4.2
    */
-  static UnicodeString fromUTF32(const UChar32 *utf32, int32_t length);
+  സ്ഥിതം UnicodeString fromUTF32(സ്ഥിരം UChar32 *utf32, int32_t length);
 
   /* Miscellaneous operations */
 
@@ -3741,7 +3741,7 @@ public:
    * @see u_unescapeAt()
    * @stable ICU 2.0
    */
-  UnicodeString unescape() const;
+  UnicodeString unescape() സ്ഥിരം;
 
   /**
    * Unescape a single escape sequence and return the represented
@@ -3762,50 +3762,50 @@ public:
    * @see u_unescapeAt()
    * @stable ICU 2.0
    */
-  UChar32 unescapeAt(int32_t &offset) const;
+  UChar32 unescapeAt(int32_t &offset) സ്ഥിരം;
 
   /**
    * ICU "poor man's RTTI", returns a UClassID for this class.
    *
    * @stable ICU 2.2
    */
-  static UClassID U_EXPORT2 getStaticClassID();
+  സ്ഥിതം UClassID U_EXPORT2 getStaticClassID();
 
   /**
    * ICU "poor man's RTTI", returns a UClassID for the actual class.
    *
    * @stable ICU 2.2
    */
-  virtual UClassID getDynamicClassID() const override;
+  മായാ UClassID getDynamicClassID() സ്ഥിരം override;
 
   //========================================
   // Implementation methods
   //========================================
 
-protected:
+സംരക്ഷിത:
   /**
    * Implement Replaceable::getLength() (see jitterbug 1027).
    * @stable ICU 2.4
    */
-  virtual int32_t getLength() const override;
+  മായാ int32_t getLength() സ്ഥിരം override;
 
   /**
    * The change in Replaceable to use virtual getCharAt() allows
    * UnicodeString::charAt() to be inline again (see jitterbug 709).
    * @stable ICU 2.4
    */
-  virtual char16_t getCharAt(int32_t offset) const override;
+  മായാ char16_t getCharAt(int32_t offset) സ്ഥിരം override;
 
   /**
    * The change in Replaceable to use virtual getChar32At() allows
    * UnicodeString::char32At() to be inline again (see jitterbug 709).
    * @stable ICU 2.4
    */
-  virtual UChar32 getChar32At(int32_t offset) const override;
+  മായാ UChar32 getChar32At(int32_t offset) സ്ഥിരം override;
 
-private:
-  static UnicodeString readOnlyAliasFromU16StringView(std::u16string_view text U_LIFETIME_BOUND);
-  static UnicodeString readOnlyAliasFromUnicodeString(const UnicodeString& text U_LIFETIME_BOUND);
+സ്വകാര്യ:
+  സ്ഥിതം UnicodeString readOnlyAliasFromU16StringView(std::u16string_view text U_LIFETIME_BOUND);
+  സ്ഥിതം UnicodeString readOnlyAliasFromUnicodeString(സ്ഥിരം UnicodeString& text U_LIFETIME_BOUND);
 
   // For char* constructors. Could be made public.
   UnicodeString& setToUTF8(StringPiece utf8) U_LIFETIME_BOUND;
@@ -3816,116 +3816,116 @@ private:
   // and it should take a UErrorCode&.
   int32_t
   toUTF8(int32_t start, int32_t len,
-         char *target, int32_t capacity) const;
+         അക്ഷരം *target, int32_t capacity) സ്ഥിരം;
 
   /**
    * Internal string contents comparison, called by operator==.
    * Requires: this & text not bogus and have same lengths.
    */
-  inline UBool doEquals(const UnicodeString &text, int32_t len) const {
-    return doEquals(text.getArrayStart(), len);
+  വരിയിൽ UBool doEquals(സ്ഥിരം UnicodeString &text, int32_t len) സ്ഥിരം {
+    തിരികെ doEquals(text.getArrayStart(), len);
   }
-  UBool doEquals(const char16_t *text, int32_t len) const;
+  UBool doEquals(സ്ഥിരം char16_t *text, int32_t len) സ്ഥിരം;
 
-  inline UBool
+  വരിയിൽ UBool
   doEqualsSubstring(int32_t start,
            int32_t length,
-           const UnicodeString& srcText,
+           സ്ഥിരം UnicodeString& srcText,
            int32_t srcStart,
-           int32_t srcLength) const;
+           int32_t srcLength) സ്ഥിരം;
 
   UBool doEqualsSubstring(int32_t start,
            int32_t length,
-           const char16_t *srcChars,
+           സ്ഥിരം char16_t *srcChars,
            int32_t srcStart,
-           int32_t srcLength) const;
+           int32_t srcLength) സ്ഥിരം;
 
-  inline int8_t
+  വരിയിൽ int8_t
   doCompare(int32_t start,
            int32_t length,
-           const UnicodeString& srcText,
+           സ്ഥിരം UnicodeString& srcText,
            int32_t srcStart,
-           int32_t srcLength) const;
+           int32_t srcLength) സ്ഥിരം;
 
   int8_t doCompare(int32_t start,
            int32_t length,
-           const char16_t *srcChars,
+           സ്ഥിരം char16_t *srcChars,
            int32_t srcStart,
-           int32_t srcLength) const;
+           int32_t srcLength) സ്ഥിരം;
 
-  inline int8_t
+  വരിയിൽ int8_t
   doCompareCodePointOrder(int32_t start,
                           int32_t length,
-                          const UnicodeString& srcText,
+                          സ്ഥിരം UnicodeString& srcText,
                           int32_t srcStart,
-                          int32_t srcLength) const;
+                          int32_t srcLength) സ്ഥിരം;
 
   int8_t doCompareCodePointOrder(int32_t start,
                                  int32_t length,
-                                 const char16_t *srcChars,
+                                 സ്ഥിരം char16_t *srcChars,
                                  int32_t srcStart,
-                                 int32_t srcLength) const;
+                                 int32_t srcLength) സ്ഥിരം;
 
-  inline int8_t
+  വരിയിൽ int8_t
   doCaseCompare(int32_t start,
                 int32_t length,
-                const UnicodeString &srcText,
+                സ്ഥിരം UnicodeString &srcText,
                 int32_t srcStart,
                 int32_t srcLength,
-                uint32_t options) const;
+                uint32_t options) സ്ഥിരം;
 
   int8_t
   doCaseCompare(int32_t start,
                 int32_t length,
-                const char16_t *srcChars,
+                സ്ഥിരം char16_t *srcChars,
                 int32_t srcStart,
                 int32_t srcLength,
-                uint32_t options) const;
+                uint32_t options) സ്ഥിരം;
 
   int32_t doIndexOf(char16_t c,
             int32_t start,
-            int32_t length) const;
+            int32_t length) സ്ഥിരം;
 
   int32_t doIndexOf(UChar32 c,
                         int32_t start,
-                        int32_t length) const;
+                        int32_t length) സ്ഥിരം;
 
   int32_t doLastIndexOf(char16_t c,
                 int32_t start,
-                int32_t length) const;
+                int32_t length) സ്ഥിരം;
 
   int32_t doLastIndexOf(UChar32 c,
                             int32_t start,
-                            int32_t length) const;
+                            int32_t length) സ്ഥിരം;
 
-  void doExtract(int32_t start,
+  ശൂന്യം doExtract(int32_t start,
          int32_t length,
          char16_t *dst,
-         int32_t dstStart) const;
+         int32_t dstStart) സ്ഥിരം;
 
-  inline void doExtract(int32_t start,
+  വരിയിൽ ശൂന്യം doExtract(int32_t start,
          int32_t length,
-         UnicodeString& target) const;
+         UnicodeString& target) സ്ഥിരം;
 
-  inline char16_t doCharAt(int32_t offset)  const;
+  വരിയിൽ char16_t doCharAt(int32_t offset)  സ്ഥിരം;
 
   UnicodeString& doReplace(int32_t start,
                            int32_t length,
-                           const UnicodeString& srcText,
+                           സ്ഥിരം UnicodeString& srcText,
                            int32_t srcStart,
                            int32_t srcLength) U_LIFETIME_BOUND;
 
   UnicodeString& doReplace(int32_t start,
                            int32_t length,
-                           const char16_t* srcChars,
+                           സ്ഥിരം char16_t* srcChars,
                            int32_t srcStart,
                            int32_t srcLength) U_LIFETIME_BOUND;
   UnicodeString& doReplace(int32_t start, int32_t length, std::u16string_view src) U_LIFETIME_BOUND;
 
-  UnicodeString& doAppend(const UnicodeString& src,
+  UnicodeString& doAppend(സ്ഥിരം UnicodeString& src,
                           int32_t srcStart,
                           int32_t srcLength) U_LIFETIME_BOUND;
-  UnicodeString& doAppend(const char16_t* srcChars,
+  UnicodeString& doAppend(സ്ഥിരം char16_t* srcChars,
                           int32_t srcStart,
                           int32_t srcLength) U_LIFETIME_BOUND;
   UnicodeString& doAppend(std::u16string_view src) U_LIFETIME_BOUND;
@@ -3933,29 +3933,29 @@ private:
   UnicodeString& doReverse(int32_t start, int32_t length) U_LIFETIME_BOUND;
 
   // calculate hash code
-  int32_t doHashCode() const;
+  int32_t doHashCode() സ്ഥിരം;
 
   // get pointer to start of array
   // these do not check for kOpenGetBuffer, unlike the public getBuffer() function
-  inline char16_t* getArrayStart() U_LIFETIME_BOUND;
-  inline const char16_t* getArrayStart() const U_LIFETIME_BOUND;
+  വരിയിൽ char16_t* getArrayStart() U_LIFETIME_BOUND;
+  വരിയിൽ സ്ഥിരം char16_t* getArrayStart() സ്ഥിരം U_LIFETIME_BOUND;
 
-  inline UBool hasShortLength() const;
-  inline int32_t getShortLength() const;
+  വരിയിൽ UBool hasShortLength() സ്ഥിരം;
+  വരിയിൽ int32_t getShortLength() സ്ഥിരം;
 
   // A UnicodeString object (not necessarily its current buffer)
   // is writable unless it isBogus() or it has an "open" getBuffer(minCapacity).
-  inline UBool isWritable() const;
+  വരിയിൽ UBool isWritable() സ്ഥിരം;
 
   // Is the current buffer writable?
-  inline UBool isBufferWritable() const;
+  വരിയിൽ UBool isBufferWritable() സ്ഥിരം;
 
   // None of the following does releaseArray().
-  inline void setZeroLength();
-  inline void setShortLength(int32_t len);
-  inline void setLength(int32_t len);
-  inline void setToEmpty();
-  inline void setArray(char16_t *array, int32_t len, int32_t capacity); // sets length but not flags
+  വരിയിൽ ശൂന്യം setZeroLength();
+  വരിയിൽ ശൂന്യം setShortLength(int32_t len);
+  വരിയിൽ ശൂന്യം setLength(int32_t len);
+  വരിയിൽ ശൂന്യം setToEmpty();
+  വരിയിൽ ശൂന്യം setArray(char16_t *array, int32_t len, int32_t capacity); // sets length but not flags
 
   // allocate the array; result may be the stack buffer
   // sets refCount to 1 if appropriate
@@ -3965,29 +3965,29 @@ private:
   UBool allocate(int32_t capacity);
 
   // release the array if owned
-  void releaseArray();
+  ശൂന്യം releaseArray();
 
   // turn a bogus string into an empty one
-  void unBogus();
+  ശൂന്യം unBogus();
 
   // implements assignment operator, copy constructor, and fastCopyFrom()
-  UnicodeString& copyFrom(const UnicodeString& src, UBool fastCopy = false) U_LIFETIME_BOUND;
+  UnicodeString& copyFrom(സ്ഥിരം UnicodeString& src, UBool fastCopy = false) U_LIFETIME_BOUND;
 
   // Copies just the fields without memory management.
-  void copyFieldsFrom(UnicodeString &src, UBool setSrcToBogus) noexcept;
+  ശൂന്യം copyFieldsFrom(UnicodeString &src, UBool setSrcToBogus) noexcept;
 
   // Pin start and limit to acceptable values.
-  inline void pinIndex(int32_t& start) const;
-  inline void pinIndices(int32_t& start,
-                         int32_t& length) const;
+  വരിയിൽ ശൂന്യം pinIndex(int32_t& start) സ്ഥിരം;
+  വരിയിൽ ശൂന്യം pinIndices(int32_t& start,
+                         int32_t& length) സ്ഥിരം;
 
-#if !UCONFIG_NO_CONVERSION
+#എങ്കിൽ !UCONFIG_NO_CONVERSION
 
   /* Internal extract() using UConverter. */
   int32_t doExtract(int32_t start, int32_t length,
-                    char *dest, int32_t destCapacity,
+                    അക്ഷരം *dest, int32_t destCapacity,
                     UConverter *cnv,
-                    UErrorCode &errorCode) const;
+                    UErrorCode &errorCode) സ്ഥിരം;
 
   /*
    * Real constructor for converting from codepage data.
@@ -3999,16 +3999,16 @@ private:
    * then a simple conversion is performed on the codepage-invariant
    * subset ("invariant characters") of the platform encoding. See utypes.h.
    */
-  void doCodepageCreate(const char *codepageData,
+  ശൂന്യം doCodepageCreate(സ്ഥിരം അക്ഷരം *codepageData,
                         int32_t dataLength,
-                        const char *codepage);
+                        സ്ഥിരം അക്ഷരം *codepage);
 
   /*
    * Worker function for creating a UnicodeString from
    * a codepage string using a UConverter.
    */
-  void
-  doCodepageCreate(const char *codepageData,
+  ശൂന്യം
+  doCodepageCreate(സ്ഥിരം അക്ഷരം *codepageData,
                    int32_t dataLength,
                    UConverter *converter,
                    UErrorCode &status);
@@ -4039,31 +4039,31 @@ private:
    */
   UnicodeString& caseMap(int32_t caseLocale,
                          uint32_t options,
-#if !UCONFIG_NO_BREAK_ITERATION
+#എങ്കിൽ !UCONFIG_NO_BREAK_ITERATION
                          BreakIterator* iter,
 #endif
                          UStringCaseMapper* stringCaseMapper) U_LIFETIME_BOUND;
 
   // ref counting
-  void addRef();
+  ശൂന്യം addRef();
   int32_t removeRef();
-  int32_t refCount() const;
+  int32_t ref_എണ്ണം() സ്ഥിരം;
 
   // constants
-  enum {
+  എണ്ണൽ {
     /**
      * Size of stack buffer for short strings.
      * Must be at least U16_MAX_LENGTH for the single-code point constructor to work.
      * @see UNISTR_OBJECT_SIZE
      */
-    US_STACKBUF_SIZE = static_cast<int32_t>(UNISTR_OBJECT_SIZE - sizeof(void*) - 2) / U_SIZEOF_UCHAR,
+    US_STACKBUF_SIZE = static_cast<int32_t>(UNISTR_OBJECT_SIZE - വലുപ്പം(ശൂന്യം*) - 2) / U_SIZEOF_UCHAR,
     kInvalidUChar=0xffff, // U+FFFF returned by charAt(invalid index)
     kInvalidHashCode=0, // invalid hash code
     kEmptyHashCode=1, // hash code for empty string
 
     // bit flag values for fLengthAndFlags
     kIsBogus=1,         // this string is bogus, i.e., not valid or nullptr
-    kUsingStackBuffer=2,// using fUnion.fStackFields instead of fUnion.fFields
+    k_Using_അട്ടി_Buffer=2,// using fUnion.fStackFields instead of fUnion.fFields
     kRefCounted=4,      // there is a refCount field before the characters in fArray
     kBufferIsReadonly=8,// do not write to this buffer
     kOpenGetBuffer=16,  // getBuffer(minCapacity) was called (is "open"),
@@ -4076,7 +4076,7 @@ private:
     kLengthIsLarge=0xffe0,  // short length < 0, real length is in fUnion.fFields.fLength
 
     // combined values for convenience
-    kShortString=kUsingStackBuffer,
+    kShortString=k_Using_അട്ടി_Buffer,
     kLongString=kRefCounted,
     kReadonlyAlias=kBufferIsReadonly,
     kWritableAlias=0
@@ -4084,8 +4084,8 @@ private:
 
   friend class UnicodeStringAppendable;
 
-  union StackBufferOrFields;        // forward declaration necessary before friend declaration
-  friend union StackBufferOrFields; // make US_STACKBUF_SIZE visible inside fUnion
+  സംഘം അട്ടി_Buffer_Or_Fields;        // forward declaration necessary before friend declaration
+  friend സംഘം അട്ടി_Buffer_Or_Fields; // make US_STACKBUF_SIZE visible inside fUnion
 
   /*
    * The following are all the class fields that are stored
@@ -4128,14 +4128,14 @@ private:
    * - ICU ticket #8322 "why is sizeof(UnicodeString)==48?"
    */
   // (implicit) *vtable;
-  union StackBufferOrFields {
+  സംഘം അട്ടി_Buffer_Or_Fields {
     // fStackFields is used iff (fLengthAndFlags&kUsingStackBuffer) else fFields is used.
     // Each struct of the union must begin with fLengthAndFlags.
-    struct {
+    ഘടന {
       int16_t fLengthAndFlags;          // bit fields: see constants above
       char16_t fBuffer[US_STACKBUF_SIZE];  // buffer for short strings
-    } fStackFields;
-    struct {
+    } f_അട്ടി_Fields;
+    ഘടന {
       int16_t fLengthAndFlags;          // bit fields: see constants above
       int32_t fLength;    // number of characters in fArray if >127; else undefined
       int32_t fCapacity;  // capacity of fArray (in char16_ts)
@@ -4155,7 +4155,7 @@ private:
  * @stable ICU 2.8
  */
 U_COMMON_API UnicodeString U_EXPORT2
-operator+ (const UnicodeString &s1, const UnicodeString &s2);
+operator+ (സ്ഥിരം UnicodeString &s1, സ്ഥിരം UnicodeString &s2);
 
 /**
  * Creates a new UnicodeString from the concatenation of a UnicodeString and `s2`
@@ -4170,14 +4170,14 @@ operator+ (const UnicodeString &s1, const UnicodeString &s2);
 template<
     typename US, typename S,
     typename = std::enable_if_t<ConvertibleToU16StringView<S> && std::is_same_v<US, UnicodeString>>>
-inline UnicodeString operator+(const US &s1, const S &s2) {
-  return unistr_internalConcat(s1, internal::toU16StringView(s2));
+വരിയിൽ UnicodeString operator+(സ്ഥിരം US &s1, സ്ഥിരം S &s2) {
+  തിരികെ unistr_internalConcat(s1, internal::toU16StringView(s2));
 }
 
 #ifndef U_FORCE_HIDE_INTERNAL_API
 /** @internal */
 U_COMMON_API UnicodeString U_EXPORT2
-unistr_internalConcat(const UnicodeString &s1, std::u16string_view s2);
+unistr_internalConcat(സ്ഥിരം UnicodeString &s1, std::u16string_view s2);
 #endif
 
 //========================================
@@ -4188,960 +4188,960 @@ unistr_internalConcat(const UnicodeString &s1, std::u16string_view s2);
 // Privates
 //========================================
 
-inline void
-UnicodeString::pinIndex(int32_t& start) const
+വരിയിൽ ശൂന്യം
+UnicodeString::pinIndex(int32_t& start) സ്ഥിരം
 {
   // pin index
-  if(start < 0) {
+  എങ്കിൽ(start < 0) {
     start = 0;
-  } else if(start > length()) {
+  } അല്ലെങ്കിൽ എങ്കിൽ(start > length()) {
     start = length();
   }
 }
 
-inline void
+വരിയിൽ ശൂന്യം
 UnicodeString::pinIndices(int32_t& start,
-                          int32_t& _length) const
+                          int32_t& _length) സ്ഥിരം
 {
   // pin indices
   int32_t len = length();
-  if(start < 0) {
+  എങ്കിൽ(start < 0) {
     start = 0;
-  } else if(start > len) {
+  } അല്ലെങ്കിൽ എങ്കിൽ(start > len) {
     start = len;
   }
-  if(_length < 0) {
+  എങ്കിൽ(_length < 0) {
     _length = 0;
-  } else if(_length > (len - start)) {
+  } അല്ലെങ്കിൽ എങ്കിൽ(_length > (len - start)) {
     _length = (len - start);
   }
 }
 
-inline char16_t*
+വരിയിൽ char16_t*
 UnicodeString::getArrayStart() U_LIFETIME_BOUND {
-  return (fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) ?
-    fUnion.fStackFields.fBuffer : fUnion.fFields.fArray;
+  തിരികെ (fUnion.fFields.fLengthAndFlags&k_Using_അട്ടി_Buffer) ?
+    fUnion.f_അട്ടി_Fields.fBuffer : fUnion.fFields.fArray;
 }
 
-inline const char16_t*
-UnicodeString::getArrayStart() const U_LIFETIME_BOUND {
-  return (fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) ?
-    fUnion.fStackFields.fBuffer : fUnion.fFields.fArray;
+വരിയിൽ സ്ഥിരം char16_t*
+UnicodeString::getArrayStart() സ്ഥിരം U_LIFETIME_BOUND {
+  തിരികെ (fUnion.fFields.fLengthAndFlags&k_Using_അട്ടി_Buffer) ?
+    fUnion.f_അട്ടി_Fields.fBuffer : fUnion.fFields.fArray;
 }
 
 //========================================
 // Default constructor
 //========================================
 
-inline
+വരിയിൽ
 UnicodeString::UnicodeString() {
-  fUnion.fStackFields.fLengthAndFlags=kShortString;
+  fUnion.f_അട്ടി_Fields.fLengthAndFlags=kShortString;
 }
 
-inline UnicodeString::UnicodeString(const std::nullptr_t /*text*/) {
-  fUnion.fStackFields.fLengthAndFlags=kShortString;
+വരിയിൽ UnicodeString::UnicodeString(സ്ഥിരം std::nullptr_t /*text*/) {
+  fUnion.f_അട്ടി_Fields.fLengthAndFlags=kShortString;
 }
 
-inline UnicodeString::UnicodeString(const std::nullptr_t /*text*/, int32_t /*length*/) {
-  fUnion.fStackFields.fLengthAndFlags=kShortString;
+വരിയിൽ UnicodeString::UnicodeString(സ്ഥിരം std::nullptr_t /*text*/, int32_t /*length*/) {
+  fUnion.f_അട്ടി_Fields.fLengthAndFlags=kShortString;
 }
 
-inline UnicodeString::UnicodeString(std::nullptr_t /*buffer*/, int32_t /*buffLength*/, int32_t /*buffCapacity*/) {
-  fUnion.fStackFields.fLengthAndFlags=kShortString;
+വരിയിൽ UnicodeString::UnicodeString(std::nullptr_t /*buffer*/, int32_t /*buffLength*/, int32_t /*buffCapacity*/) {
+  fUnion.f_അട്ടി_Fields.fLengthAndFlags=kShortString;
 }
 
 //========================================
 // Read-only implementation methods
 //========================================
-inline UBool
-UnicodeString::hasShortLength() const {
-  return fUnion.fFields.fLengthAndFlags>=0;
+വരിയിൽ UBool
+UnicodeString::hasShortLength() സ്ഥിരം {
+  തിരികെ fUnion.fFields.fLengthAndFlags>=0;
 }
 
-inline int32_t
-UnicodeString::getShortLength() const {
+വരിയിൽ int32_t
+UnicodeString::getShortLength() സ്ഥിരം {
   // fLengthAndFlags must be non-negative -> short length >= 0
   // and arithmetic or logical shift does not matter.
-  return fUnion.fFields.fLengthAndFlags>>kLengthShift;
+  തിരികെ fUnion.fFields.fLengthAndFlags>>kLengthShift;
 }
 
-inline int32_t
-UnicodeString::length() const {
-  return hasShortLength() ? getShortLength() : fUnion.fFields.fLength;
+വരിയിൽ int32_t
+UnicodeString::length() സ്ഥിരം {
+  തിരികെ hasShortLength() ? getShortLength() : fUnion.fFields.fLength;
 }
 
-inline int32_t
-UnicodeString::getCapacity() const {
-  return (fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) ?
+വരിയിൽ int32_t
+UnicodeString::getCapacity() സ്ഥിരം {
+  തിരികെ (fUnion.fFields.fLengthAndFlags&k_Using_അട്ടി_Buffer) ?
     US_STACKBUF_SIZE : fUnion.fFields.fCapacity;
 }
 
-inline int32_t
-UnicodeString::hashCode() const
-{ return doHashCode(); }
+വരിയിൽ int32_t
+UnicodeString::hashCode() സ്ഥിരം
+{ തിരികെ doHashCode(); }
 
-inline UBool
-UnicodeString::isBogus() const
-{ return fUnion.fFields.fLengthAndFlags & kIsBogus; }
+വരിയിൽ UBool
+UnicodeString::isBogus() സ്ഥിരം
+{ തിരികെ fUnion.fFields.fLengthAndFlags & kIsBogus; }
 
-inline UBool
-UnicodeString::isWritable() const
-{ return !(fUnion.fFields.fLengthAndFlags & (kOpenGetBuffer | kIsBogus)); }
+വരിയിൽ UBool
+UnicodeString::isWritable() സ്ഥിരം
+{ തിരികെ !(fUnion.fFields.fLengthAndFlags & (kOpenGetBuffer | kIsBogus)); }
 
-inline UBool
-UnicodeString::isBufferWritable() const
+വരിയിൽ UBool
+UnicodeString::isBufferWritable() സ്ഥിരം
 {
-  return
+  തിരികെ
       !(fUnion.fFields.fLengthAndFlags&(kOpenGetBuffer|kIsBogus|kBufferIsReadonly)) &&
-      (!(fUnion.fFields.fLengthAndFlags&kRefCounted) || refCount()==1);
+      (!(fUnion.fFields.fLengthAndFlags&kRefCounted) || ref_എണ്ണം()==1);
 }
 
-inline const char16_t *
-UnicodeString::getBuffer() const U_LIFETIME_BOUND {
-  if(fUnion.fFields.fLengthAndFlags&(kIsBogus|kOpenGetBuffer)) {
-    return nullptr;
-  } else if(fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) {
-    return fUnion.fStackFields.fBuffer;
-  } else {
-    return fUnion.fFields.fArray;
+വരിയിൽ സ്ഥിരം char16_t *
+UnicodeString::getBuffer() സ്ഥിരം U_LIFETIME_BOUND {
+  എങ്കിൽ(fUnion.fFields.fLengthAndFlags&(kIsBogus|kOpenGetBuffer)) {
+    തിരികെ nullptr;
+  } അല്ലെങ്കിൽ എങ്കിൽ(fUnion.fFields.fLengthAndFlags&k_Using_അട്ടി_Buffer) {
+    തിരികെ fUnion.f_അട്ടി_Fields.fBuffer;
+  } അല്ലെങ്കിൽ {
+    തിരികെ fUnion.fFields.fArray;
   }
 }
 
 //========================================
 // Read-only alias methods
 //========================================
-inline int8_t
+വരിയിൽ int8_t
 UnicodeString::doCompare(int32_t start,
               int32_t thisLength,
-              const UnicodeString& srcText,
+              സ്ഥിരം UnicodeString& srcText,
               int32_t srcStart,
-              int32_t srcLength) const
+              int32_t srcLength) സ്ഥിരം
 {
-  if(srcText.isBogus()) {
-    return static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
-  } else {
+  എങ്കിൽ(srcText.isBogus()) {
+    തിരികെ static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
+  } അല്ലെങ്കിൽ {
     srcText.pinIndices(srcStart, srcLength);
-    return doCompare(start, thisLength, srcText.getArrayStart(), srcStart, srcLength);
+    തിരികെ doCompare(start, thisLength, srcText.getArrayStart(), srcStart, srcLength);
   }
 }
 
-inline UBool
+വരിയിൽ UBool
 UnicodeString::doEqualsSubstring(int32_t start,
               int32_t thisLength,
-              const UnicodeString& srcText,
+              സ്ഥിരം UnicodeString& srcText,
               int32_t srcStart,
-              int32_t srcLength) const
+              int32_t srcLength) സ്ഥിരം
 {
-  if(srcText.isBogus()) {
-    return isBogus();
-  } else {
+  എങ്കിൽ(srcText.isBogus()) {
+    തിരികെ isBogus();
+  } അല്ലെങ്കിൽ {
     srcText.pinIndices(srcStart, srcLength);
-    return !isBogus() && doEqualsSubstring(start, thisLength, srcText.getArrayStart(), srcStart, srcLength);
+    തിരികെ !isBogus() && doEqualsSubstring(start, thisLength, srcText.getArrayStart(), srcStart, srcLength);
   }
 }
 
-inline bool
-UnicodeString::operator== (const UnicodeString& text) const
+വരിയിൽ bool
+UnicodeString::operator== (സ്ഥിരം UnicodeString& text) സ്ഥിരം
 {
-  if(isBogus()) {
-    return text.isBogus();
-  } else {
+  എങ്കിൽ(isBogus()) {
+    തിരികെ text.isBogus();
+  } അല്ലെങ്കിൽ {
     int32_t len = length(), textLength = text.length();
-    return !text.isBogus() && len == textLength && doEquals(text, len);
+    തിരികെ !text.isBogus() && len == textLength && doEquals(text, len);
   }
 }
 
-inline bool
-UnicodeString::operator!= (const UnicodeString& text) const
-{ return (! operator==(text)); }
+വരിയിൽ bool
+UnicodeString::operator!= (സ്ഥിരം UnicodeString& text) സ്ഥിരം
+{ തിരികെ (! operator==(text)); }
 
-inline UBool
-UnicodeString::operator> (const UnicodeString& text) const
-{ return doCompare(0, length(), text, 0, text.length()) == 1; }
+വരിയിൽ UBool
+UnicodeString::operator> (സ്ഥിരം UnicodeString& text) സ്ഥിരം
+{ തിരികെ doCompare(0, length(), text, 0, text.length()) == 1; }
 
-inline UBool
-UnicodeString::operator< (const UnicodeString& text) const
-{ return doCompare(0, length(), text, 0, text.length()) == -1; }
+വരിയിൽ UBool
+UnicodeString::operator< (സ്ഥിരം UnicodeString& text) സ്ഥിരം
+{ തിരികെ doCompare(0, length(), text, 0, text.length()) == -1; }
 
-inline UBool
-UnicodeString::operator>= (const UnicodeString& text) const
-{ return doCompare(0, length(), text, 0, text.length()) != -1; }
+വരിയിൽ UBool
+UnicodeString::operator>= (സ്ഥിരം UnicodeString& text) സ്ഥിരം
+{ തിരികെ doCompare(0, length(), text, 0, text.length()) != -1; }
 
-inline UBool
-UnicodeString::operator<= (const UnicodeString& text) const
-{ return doCompare(0, length(), text, 0, text.length()) != 1; }
+വരിയിൽ UBool
+UnicodeString::operator<= (സ്ഥിരം UnicodeString& text) സ്ഥിരം
+{ തിരികെ doCompare(0, length(), text, 0, text.length()) != 1; }
 
-inline int8_t
-UnicodeString::compare(const UnicodeString& text) const
-{ return doCompare(0, length(), text, 0, text.length()); }
+വരിയിൽ int8_t
+UnicodeString::compare(സ്ഥിരം UnicodeString& text) സ്ഥിരം
+{ തിരികെ doCompare(0, length(), text, 0, text.length()); }
 
-inline int8_t
+വരിയിൽ int8_t
 UnicodeString::compare(int32_t start,
                int32_t _length,
-               const UnicodeString& srcText) const
-{ return doCompare(start, _length, srcText, 0, srcText.length()); }
+               സ്ഥിരം UnicodeString& srcText) സ്ഥിരം
+{ തിരികെ doCompare(start, _length, srcText, 0, srcText.length()); }
 
-inline int8_t
+വരിയിൽ int8_t
 UnicodeString::compare(ConstChar16Ptr srcChars,
-               int32_t srcLength) const
-{ return doCompare(0, length(), srcChars, 0, srcLength); }
+               int32_t srcLength) സ്ഥിരം
+{ തിരികെ doCompare(0, length(), srcChars, 0, srcLength); }
 
-inline int8_t
+വരിയിൽ int8_t
 UnicodeString::compare(int32_t start,
                int32_t _length,
-               const UnicodeString& srcText,
+               സ്ഥിരം UnicodeString& srcText,
                int32_t srcStart,
-               int32_t srcLength) const
-{ return doCompare(start, _length, srcText, srcStart, srcLength); }
+               int32_t srcLength) സ്ഥിരം
+{ തിരികെ doCompare(start, _length, srcText, srcStart, srcLength); }
 
-inline int8_t
+വരിയിൽ int8_t
 UnicodeString::compare(int32_t start,
                int32_t _length,
-               const char16_t *srcChars) const
-{ return doCompare(start, _length, srcChars, 0, _length); }
+               സ്ഥിരം char16_t *srcChars) സ്ഥിരം
+{ തിരികെ doCompare(start, _length, srcChars, 0, _length); }
 
-inline int8_t
+വരിയിൽ int8_t
 UnicodeString::compare(int32_t start,
                int32_t _length,
-               const char16_t *srcChars,
+               സ്ഥിരം char16_t *srcChars,
                int32_t srcStart,
-               int32_t srcLength) const
-{ return doCompare(start, _length, srcChars, srcStart, srcLength); }
+               int32_t srcLength) സ്ഥിരം
+{ തിരികെ doCompare(start, _length, srcChars, srcStart, srcLength); }
 
-inline int8_t
+വരിയിൽ int8_t
 UnicodeString::compareBetween(int32_t start,
                   int32_t limit,
-                  const UnicodeString& srcText,
+                  സ്ഥിരം UnicodeString& srcText,
                   int32_t srcStart,
-                  int32_t srcLimit) const
-{ return doCompare(start, limit - start,
+                  int32_t srcLimit) സ്ഥിരം
+{ തിരികെ doCompare(start, limit - start,
            srcText, srcStart, srcLimit - srcStart); }
 
-inline int8_t
+വരിയിൽ int8_t
 UnicodeString::doCompareCodePointOrder(int32_t start,
                                        int32_t thisLength,
-                                       const UnicodeString& srcText,
+                                       സ്ഥിരം UnicodeString& srcText,
                                        int32_t srcStart,
-                                       int32_t srcLength) const
+                                       int32_t srcLength) സ്ഥിരം
 {
-  if(srcText.isBogus()) {
-    return static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
-  } else {
+  എങ്കിൽ(srcText.isBogus()) {
+    തിരികെ static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
+  } അല്ലെങ്കിൽ {
     srcText.pinIndices(srcStart, srcLength);
-    return doCompareCodePointOrder(start, thisLength, srcText.getArrayStart(), srcStart, srcLength);
+    തിരികെ doCompareCodePointOrder(start, thisLength, srcText.getArrayStart(), srcStart, srcLength);
   }
 }
 
-inline int8_t
-UnicodeString::compareCodePointOrder(const UnicodeString& text) const
-{ return doCompareCodePointOrder(0, length(), text, 0, text.length()); }
+വരിയിൽ int8_t
+UnicodeString::compareCodePointOrder(സ്ഥിരം UnicodeString& text) സ്ഥിരം
+{ തിരികെ doCompareCodePointOrder(0, length(), text, 0, text.length()); }
 
-inline int8_t
+വരിയിൽ int8_t
 UnicodeString::compareCodePointOrder(int32_t start,
                                      int32_t _length,
-                                     const UnicodeString& srcText) const
-{ return doCompareCodePointOrder(start, _length, srcText, 0, srcText.length()); }
+                                     സ്ഥിരം UnicodeString& srcText) സ്ഥിരം
+{ തിരികെ doCompareCodePointOrder(start, _length, srcText, 0, srcText.length()); }
 
-inline int8_t
+വരിയിൽ int8_t
 UnicodeString::compareCodePointOrder(ConstChar16Ptr srcChars,
-                                     int32_t srcLength) const
-{ return doCompareCodePointOrder(0, length(), srcChars, 0, srcLength); }
+                                     int32_t srcLength) സ്ഥിരം
+{ തിരികെ doCompareCodePointOrder(0, length(), srcChars, 0, srcLength); }
 
-inline int8_t
+വരിയിൽ int8_t
 UnicodeString::compareCodePointOrder(int32_t start,
                                      int32_t _length,
-                                     const UnicodeString& srcText,
+                                     സ്ഥിരം UnicodeString& srcText,
                                      int32_t srcStart,
-                                     int32_t srcLength) const
-{ return doCompareCodePointOrder(start, _length, srcText, srcStart, srcLength); }
+                                     int32_t srcLength) സ്ഥിരം
+{ തിരികെ doCompareCodePointOrder(start, _length, srcText, srcStart, srcLength); }
 
-inline int8_t
+വരിയിൽ int8_t
 UnicodeString::compareCodePointOrder(int32_t start,
                                      int32_t _length,
-                                     const char16_t *srcChars) const
-{ return doCompareCodePointOrder(start, _length, srcChars, 0, _length); }
+                                     സ്ഥിരം char16_t *srcChars) സ്ഥിരം
+{ തിരികെ doCompareCodePointOrder(start, _length, srcChars, 0, _length); }
 
-inline int8_t
+വരിയിൽ int8_t
 UnicodeString::compareCodePointOrder(int32_t start,
                                      int32_t _length,
-                                     const char16_t *srcChars,
+                                     സ്ഥിരം char16_t *srcChars,
                                      int32_t srcStart,
-                                     int32_t srcLength) const
-{ return doCompareCodePointOrder(start, _length, srcChars, srcStart, srcLength); }
+                                     int32_t srcLength) സ്ഥിരം
+{ തിരികെ doCompareCodePointOrder(start, _length, srcChars, srcStart, srcLength); }
 
-inline int8_t
+വരിയിൽ int8_t
 UnicodeString::compareCodePointOrderBetween(int32_t start,
                                             int32_t limit,
-                                            const UnicodeString& srcText,
+                                            സ്ഥിരം UnicodeString& srcText,
                                             int32_t srcStart,
-                                            int32_t srcLimit) const
-{ return doCompareCodePointOrder(start, limit - start,
+                                            int32_t srcLimit) സ്ഥിരം
+{ തിരികെ doCompareCodePointOrder(start, limit - start,
            srcText, srcStart, srcLimit - srcStart); }
 
-inline int8_t
+വരിയിൽ int8_t
 UnicodeString::doCaseCompare(int32_t start,
                              int32_t thisLength,
-                             const UnicodeString &srcText,
+                             സ്ഥിരം UnicodeString &srcText,
                              int32_t srcStart,
                              int32_t srcLength,
-                             uint32_t options) const
+                             uint32_t options) സ്ഥിരം
 {
-  if(srcText.isBogus()) {
-    return static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
-  } else {
+  എങ്കിൽ(srcText.isBogus()) {
+    തിരികെ static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
+  } അല്ലെങ്കിൽ {
     srcText.pinIndices(srcStart, srcLength);
-    return doCaseCompare(start, thisLength, srcText.getArrayStart(), srcStart, srcLength, options);
+    തിരികെ doCaseCompare(start, thisLength, srcText.getArrayStart(), srcStart, srcLength, options);
   }
 }
 
-inline int8_t
-UnicodeString::caseCompare(const UnicodeString &text, uint32_t options) const {
-  return doCaseCompare(0, length(), text, 0, text.length(), options);
+വരിയിൽ int8_t
+UnicodeString::caseCompare(സ്ഥിരം UnicodeString &text, uint32_t options) സ്ഥിരം {
+  തിരികെ doCaseCompare(0, length(), text, 0, text.length(), options);
 }
 
-inline int8_t
+വരിയിൽ int8_t
 UnicodeString::caseCompare(int32_t start,
                            int32_t _length,
-                           const UnicodeString &srcText,
-                           uint32_t options) const {
-  return doCaseCompare(start, _length, srcText, 0, srcText.length(), options);
+                           സ്ഥിരം UnicodeString &srcText,
+                           uint32_t options) സ്ഥിരം {
+  തിരികെ doCaseCompare(start, _length, srcText, 0, srcText.length(), options);
 }
 
-inline int8_t
+വരിയിൽ int8_t
 UnicodeString::caseCompare(ConstChar16Ptr srcChars,
                            int32_t srcLength,
-                           uint32_t options) const {
-  return doCaseCompare(0, length(), srcChars, 0, srcLength, options);
+                           uint32_t options) സ്ഥിരം {
+  തിരികെ doCaseCompare(0, length(), srcChars, 0, srcLength, options);
 }
 
-inline int8_t
+വരിയിൽ int8_t
 UnicodeString::caseCompare(int32_t start,
                            int32_t _length,
-                           const UnicodeString &srcText,
+                           സ്ഥിരം UnicodeString &srcText,
                            int32_t srcStart,
                            int32_t srcLength,
-                           uint32_t options) const {
-  return doCaseCompare(start, _length, srcText, srcStart, srcLength, options);
+                           uint32_t options) സ്ഥിരം {
+  തിരികെ doCaseCompare(start, _length, srcText, srcStart, srcLength, options);
 }
 
-inline int8_t
+വരിയിൽ int8_t
 UnicodeString::caseCompare(int32_t start,
                            int32_t _length,
-                           const char16_t *srcChars,
-                           uint32_t options) const {
-  return doCaseCompare(start, _length, srcChars, 0, _length, options);
+                           സ്ഥിരം char16_t *srcChars,
+                           uint32_t options) സ്ഥിരം {
+  തിരികെ doCaseCompare(start, _length, srcChars, 0, _length, options);
 }
 
-inline int8_t
+വരിയിൽ int8_t
 UnicodeString::caseCompare(int32_t start,
                            int32_t _length,
-                           const char16_t *srcChars,
+                           സ്ഥിരം char16_t *srcChars,
                            int32_t srcStart,
                            int32_t srcLength,
-                           uint32_t options) const {
-  return doCaseCompare(start, _length, srcChars, srcStart, srcLength, options);
+                           uint32_t options) സ്ഥിരം {
+  തിരികെ doCaseCompare(start, _length, srcChars, srcStart, srcLength, options);
 }
 
-inline int8_t
+വരിയിൽ int8_t
 UnicodeString::caseCompareBetween(int32_t start,
                                   int32_t limit,
-                                  const UnicodeString &srcText,
+                                  സ്ഥിരം UnicodeString &srcText,
                                   int32_t srcStart,
                                   int32_t srcLimit,
-                                  uint32_t options) const {
-  return doCaseCompare(start, limit - start, srcText, srcStart, srcLimit - srcStart, options);
+                                  uint32_t options) സ്ഥിരം {
+  തിരികെ doCaseCompare(start, limit - start, srcText, srcStart, srcLimit - srcStart, options);
 }
 
-inline int32_t
-UnicodeString::indexOf(const UnicodeString& srcText,
+വരിയിൽ int32_t
+UnicodeString::indexOf(സ്ഥിരം UnicodeString& srcText,
                int32_t srcStart,
                int32_t srcLength,
                int32_t start,
-               int32_t _length) const
+               int32_t _length) സ്ഥിരം
 {
-  if(!srcText.isBogus()) {
+  എങ്കിൽ(!srcText.isBogus()) {
     srcText.pinIndices(srcStart, srcLength);
-    if(srcLength > 0) {
-      return indexOf(srcText.getArrayStart(), srcStart, srcLength, start, _length);
+    എങ്കിൽ(srcLength > 0) {
+      തിരികെ indexOf(srcText.getArrayStart(), srcStart, srcLength, start, _length);
     }
   }
-  return -1;
+  തിരികെ -1;
 }
 
-inline int32_t
-UnicodeString::indexOf(const UnicodeString& text) const
-{ return indexOf(text, 0, text.length(), 0, length()); }
+വരിയിൽ int32_t
+UnicodeString::indexOf(സ്ഥിരം UnicodeString& text) സ്ഥിരം
+{ തിരികെ indexOf(text, 0, text.length(), 0, length()); }
 
-inline int32_t
-UnicodeString::indexOf(const UnicodeString& text,
-               int32_t start) const {
+വരിയിൽ int32_t
+UnicodeString::indexOf(സ്ഥിരം UnicodeString& text,
+               int32_t start) സ്ഥിരം {
   pinIndex(start);
-  return indexOf(text, 0, text.length(), start, length() - start);
+  തിരികെ indexOf(text, 0, text.length(), start, length() - start);
 }
 
-inline int32_t
-UnicodeString::indexOf(const UnicodeString& text,
+വരിയിൽ int32_t
+UnicodeString::indexOf(സ്ഥിരം UnicodeString& text,
                int32_t start,
-               int32_t _length) const
-{ return indexOf(text, 0, text.length(), start, _length); }
+               int32_t _length) സ്ഥിരം
+{ തിരികെ indexOf(text, 0, text.length(), start, _length); }
 
-inline int32_t
-UnicodeString::indexOf(const char16_t *srcChars,
+വരിയിൽ int32_t
+UnicodeString::indexOf(സ്ഥിരം char16_t *srcChars,
                int32_t srcLength,
-               int32_t start) const {
+               int32_t start) സ്ഥിരം {
   pinIndex(start);
-  return indexOf(srcChars, 0, srcLength, start, length() - start);
+  തിരികെ indexOf(srcChars, 0, srcLength, start, length() - start);
 }
 
-inline int32_t
+വരിയിൽ int32_t
 UnicodeString::indexOf(ConstChar16Ptr srcChars,
                int32_t srcLength,
                int32_t start,
-               int32_t _length) const
-{ return indexOf(srcChars, 0, srcLength, start, _length); }
+               int32_t _length) സ്ഥിരം
+{ തിരികെ indexOf(srcChars, 0, srcLength, start, _length); }
 
-inline int32_t
+വരിയിൽ int32_t
 UnicodeString::indexOf(char16_t c,
                int32_t start,
-               int32_t _length) const
-{ return doIndexOf(c, start, _length); }
+               int32_t _length) സ്ഥിരം
+{ തിരികെ doIndexOf(c, start, _length); }
 
-inline int32_t
+വരിയിൽ int32_t
 UnicodeString::indexOf(UChar32 c,
                int32_t start,
-               int32_t _length) const
-{ return doIndexOf(c, start, _length); }
+               int32_t _length) സ്ഥിരം
+{ തിരികെ doIndexOf(c, start, _length); }
 
-inline int32_t
-UnicodeString::indexOf(char16_t c) const
-{ return doIndexOf(c, 0, length()); }
+വരിയിൽ int32_t
+UnicodeString::indexOf(char16_t c) സ്ഥിരം
+{ തിരികെ doIndexOf(c, 0, length()); }
 
-inline int32_t
-UnicodeString::indexOf(UChar32 c) const
-{ return indexOf(c, 0, length()); }
+വരിയിൽ int32_t
+UnicodeString::indexOf(UChar32 c) സ്ഥിരം
+{ തിരികെ indexOf(c, 0, length()); }
 
-inline int32_t
+വരിയിൽ int32_t
 UnicodeString::indexOf(char16_t c,
-               int32_t start) const {
+               int32_t start) സ്ഥിരം {
   pinIndex(start);
-  return doIndexOf(c, start, length() - start);
+  തിരികെ doIndexOf(c, start, length() - start);
 }
 
-inline int32_t
+വരിയിൽ int32_t
 UnicodeString::indexOf(UChar32 c,
-               int32_t start) const {
+               int32_t start) സ്ഥിരം {
   pinIndex(start);
-  return indexOf(c, start, length() - start);
+  തിരികെ indexOf(c, start, length() - start);
 }
 
-inline int32_t
+വരിയിൽ int32_t
 UnicodeString::lastIndexOf(ConstChar16Ptr srcChars,
                int32_t srcLength,
                int32_t start,
-               int32_t _length) const
-{ return lastIndexOf(srcChars, 0, srcLength, start, _length); }
+               int32_t _length) സ്ഥിരം
+{ തിരികെ lastIndexOf(srcChars, 0, srcLength, start, _length); }
 
-inline int32_t
-UnicodeString::lastIndexOf(const char16_t *srcChars,
+വരിയിൽ int32_t
+UnicodeString::lastIndexOf(സ്ഥിരം char16_t *srcChars,
                int32_t srcLength,
-               int32_t start) const {
+               int32_t start) സ്ഥിരം {
   pinIndex(start);
-  return lastIndexOf(srcChars, 0, srcLength, start, length() - start);
+  തിരികെ lastIndexOf(srcChars, 0, srcLength, start, length() - start);
 }
 
-inline int32_t
-UnicodeString::lastIndexOf(const UnicodeString& srcText,
+വരിയിൽ int32_t
+UnicodeString::lastIndexOf(സ്ഥിരം UnicodeString& srcText,
                int32_t srcStart,
                int32_t srcLength,
                int32_t start,
-               int32_t _length) const
+               int32_t _length) സ്ഥിരം
 {
-  if(!srcText.isBogus()) {
+  എങ്കിൽ(!srcText.isBogus()) {
     srcText.pinIndices(srcStart, srcLength);
-    if(srcLength > 0) {
-      return lastIndexOf(srcText.getArrayStart(), srcStart, srcLength, start, _length);
+    എങ്കിൽ(srcLength > 0) {
+      തിരികെ lastIndexOf(srcText.getArrayStart(), srcStart, srcLength, start, _length);
     }
   }
-  return -1;
+  തിരികെ -1;
 }
 
-inline int32_t
-UnicodeString::lastIndexOf(const UnicodeString& text,
+വരിയിൽ int32_t
+UnicodeString::lastIndexOf(സ്ഥിരം UnicodeString& text,
                int32_t start,
-               int32_t _length) const
-{ return lastIndexOf(text, 0, text.length(), start, _length); }
+               int32_t _length) സ്ഥിരം
+{ തിരികെ lastIndexOf(text, 0, text.length(), start, _length); }
 
-inline int32_t
-UnicodeString::lastIndexOf(const UnicodeString& text,
-               int32_t start) const {
+വരിയിൽ int32_t
+UnicodeString::lastIndexOf(സ്ഥിരം UnicodeString& text,
+               int32_t start) സ്ഥിരം {
   pinIndex(start);
-  return lastIndexOf(text, 0, text.length(), start, length() - start);
+  തിരികെ lastIndexOf(text, 0, text.length(), start, length() - start);
 }
 
-inline int32_t
-UnicodeString::lastIndexOf(const UnicodeString& text) const
-{ return lastIndexOf(text, 0, text.length(), 0, length()); }
+വരിയിൽ int32_t
+UnicodeString::lastIndexOf(സ്ഥിരം UnicodeString& text) സ്ഥിരം
+{ തിരികെ lastIndexOf(text, 0, text.length(), 0, length()); }
 
-inline int32_t
+വരിയിൽ int32_t
 UnicodeString::lastIndexOf(char16_t c,
                int32_t start,
-               int32_t _length) const
-{ return doLastIndexOf(c, start, _length); }
+               int32_t _length) സ്ഥിരം
+{ തിരികെ doLastIndexOf(c, start, _length); }
 
-inline int32_t
+വരിയിൽ int32_t
 UnicodeString::lastIndexOf(UChar32 c,
                int32_t start,
-               int32_t _length) const {
-  return doLastIndexOf(c, start, _length);
+               int32_t _length) സ്ഥിരം {
+  തിരികെ doLastIndexOf(c, start, _length);
 }
 
-inline int32_t
-UnicodeString::lastIndexOf(char16_t c) const
-{ return doLastIndexOf(c, 0, length()); }
+വരിയിൽ int32_t
+UnicodeString::lastIndexOf(char16_t c) സ്ഥിരം
+{ തിരികെ doLastIndexOf(c, 0, length()); }
 
-inline int32_t
-UnicodeString::lastIndexOf(UChar32 c) const {
-  return lastIndexOf(c, 0, length());
+വരിയിൽ int32_t
+UnicodeString::lastIndexOf(UChar32 c) സ്ഥിരം {
+  തിരികെ lastIndexOf(c, 0, length());
 }
 
-inline int32_t
+വരിയിൽ int32_t
 UnicodeString::lastIndexOf(char16_t c,
-               int32_t start) const {
+               int32_t start) സ്ഥിരം {
   pinIndex(start);
-  return doLastIndexOf(c, start, length() - start);
+  തിരികെ doLastIndexOf(c, start, length() - start);
 }
 
-inline int32_t
+വരിയിൽ int32_t
 UnicodeString::lastIndexOf(UChar32 c,
-               int32_t start) const {
+               int32_t start) സ്ഥിരം {
   pinIndex(start);
-  return lastIndexOf(c, start, length() - start);
+  തിരികെ lastIndexOf(c, start, length() - start);
 }
 
-inline UBool
-UnicodeString::startsWith(const UnicodeString& text) const
-{ return doEqualsSubstring(0, text.length(), text, 0, text.length()); }
+വരിയിൽ UBool
+UnicodeString::startsWith(സ്ഥിരം UnicodeString& text) സ്ഥിരം
+{ തിരികെ doEqualsSubstring(0, text.length(), text, 0, text.length()); }
 
-inline UBool
-UnicodeString::startsWith(const UnicodeString& srcText,
+വരിയിൽ UBool
+UnicodeString::startsWith(സ്ഥിരം UnicodeString& srcText,
               int32_t srcStart,
-              int32_t srcLength) const
-{ return doEqualsSubstring(0, srcLength, srcText, srcStart, srcLength); }
+              int32_t srcLength) സ്ഥിരം
+{ തിരികെ doEqualsSubstring(0, srcLength, srcText, srcStart, srcLength); }
 
-inline UBool
-UnicodeString::startsWith(ConstChar16Ptr srcChars, int32_t srcLength) const {
-  if(srcLength < 0) {
+വരിയിൽ UBool
+UnicodeString::startsWith(ConstChar16Ptr srcChars, int32_t srcLength) സ്ഥിരം {
+  എങ്കിൽ(srcLength < 0) {
     srcLength = u_strlen(toUCharPtr(srcChars));
   }
-  return doEqualsSubstring(0, srcLength, srcChars, 0, srcLength);
+  തിരികെ doEqualsSubstring(0, srcLength, srcChars, 0, srcLength);
 }
 
-inline UBool
-UnicodeString::startsWith(const char16_t *srcChars, int32_t srcStart, int32_t srcLength) const {
-  if(srcLength < 0) {
+വരിയിൽ UBool
+UnicodeString::startsWith(സ്ഥിരം char16_t *srcChars, int32_t srcStart, int32_t srcLength) സ്ഥിരം {
+  എങ്കിൽ(srcLength < 0) {
     srcLength = u_strlen(toUCharPtr(srcChars));
   }
-  return doEqualsSubstring(0, srcLength, srcChars, srcStart, srcLength);
+  തിരികെ doEqualsSubstring(0, srcLength, srcChars, srcStart, srcLength);
 }
 
-inline UBool
-UnicodeString::endsWith(const UnicodeString& text) const
-{ return doEqualsSubstring(length() - text.length(), text.length(),
+വരിയിൽ UBool
+UnicodeString::endsWith(സ്ഥിരം UnicodeString& text) സ്ഥിരം
+{ തിരികെ doEqualsSubstring(length() - text.length(), text.length(),
            text, 0, text.length()); }
 
-inline UBool
-UnicodeString::endsWith(const UnicodeString& srcText,
+വരിയിൽ UBool
+UnicodeString::endsWith(സ്ഥിരം UnicodeString& srcText,
             int32_t srcStart,
-            int32_t srcLength) const {
+            int32_t srcLength) സ്ഥിരം {
   srcText.pinIndices(srcStart, srcLength);
-  return doEqualsSubstring(length() - srcLength, srcLength,
+  തിരികെ doEqualsSubstring(length() - srcLength, srcLength,
                    srcText, srcStart, srcLength);
 }
 
-inline UBool
+വരിയിൽ UBool
 UnicodeString::endsWith(ConstChar16Ptr srcChars,
-            int32_t srcLength) const {
-  if(srcLength < 0) {
+            int32_t srcLength) സ്ഥിരം {
+  എങ്കിൽ(srcLength < 0) {
     srcLength = u_strlen(toUCharPtr(srcChars));
   }
-  return doEqualsSubstring(length() - srcLength, srcLength, srcChars, 0, srcLength);
+  തിരികെ doEqualsSubstring(length() - srcLength, srcLength, srcChars, 0, srcLength);
 }
 
-inline UBool
-UnicodeString::endsWith(const char16_t *srcChars,
+വരിയിൽ UBool
+UnicodeString::endsWith(സ്ഥിരം char16_t *srcChars,
             int32_t srcStart,
-            int32_t srcLength) const {
-  if(srcLength < 0) {
+            int32_t srcLength) സ്ഥിരം {
+  എങ്കിൽ(srcLength < 0) {
     srcLength = u_strlen(toUCharPtr(srcChars + srcStart));
   }
-  return doEqualsSubstring(length() - srcLength, srcLength,
+  തിരികെ doEqualsSubstring(length() - srcLength, srcLength,
                    srcChars, srcStart, srcLength);
 }
 
 //========================================
 // replace
 //========================================
-inline UnicodeString&
+വരിയിൽ UnicodeString&
 UnicodeString::replace(int32_t start,
                        int32_t _length,
-                       const UnicodeString& srcText) U_LIFETIME_BOUND
-{ return doReplace(start, _length, srcText, 0, srcText.length()); }
+                       സ്ഥിരം UnicodeString& srcText) U_LIFETIME_BOUND
+{ തിരികെ doReplace(start, _length, srcText, 0, srcText.length()); }
 
-inline UnicodeString&
+വരിയിൽ UnicodeString&
 UnicodeString::replace(int32_t start,
                        int32_t _length,
-                       const UnicodeString& srcText,
+                       സ്ഥിരം UnicodeString& srcText,
                        int32_t srcStart,
                        int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, _length, srcText, srcStart, srcLength); }
+{ തിരികെ doReplace(start, _length, srcText, srcStart, srcLength); }
 
-inline UnicodeString&
+വരിയിൽ UnicodeString&
 UnicodeString::replace(int32_t start,
                        int32_t _length,
                        ConstChar16Ptr srcChars,
                        int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, _length, srcChars, 0, srcLength); }
+{ തിരികെ doReplace(start, _length, srcChars, 0, srcLength); }
 
-inline UnicodeString&
+വരിയിൽ UnicodeString&
 UnicodeString::replace(int32_t start,
                        int32_t _length,
-                       const char16_t* srcChars,
+                       സ്ഥിരം char16_t* srcChars,
                        int32_t srcStart,
                        int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, _length, srcChars, srcStart, srcLength); }
+{ തിരികെ doReplace(start, _length, srcChars, srcStart, srcLength); }
 
-inline UnicodeString&
+വരിയിൽ UnicodeString&
 UnicodeString::replace(int32_t start,
                        int32_t _length,
                        char16_t srcChar) U_LIFETIME_BOUND
-{ return doReplace(start, _length, &srcChar, 0, 1); }
+{ തിരികെ doReplace(start, _length, &srcChar, 0, 1); }
 
-inline UnicodeString&
+വരിയിൽ UnicodeString&
 UnicodeString::replaceBetween(int32_t start,
                               int32_t limit,
-                              const UnicodeString& srcText) U_LIFETIME_BOUND
-{ return doReplace(start, limit - start, srcText, 0, srcText.length()); }
+                              സ്ഥിരം UnicodeString& srcText) U_LIFETIME_BOUND
+{ തിരികെ doReplace(start, limit - start, srcText, 0, srcText.length()); }
 
-inline UnicodeString&
+വരിയിൽ UnicodeString&
 UnicodeString::replaceBetween(int32_t start,
                               int32_t limit,
-                              const UnicodeString& srcText,
+                              സ്ഥിരം UnicodeString& srcText,
                               int32_t srcStart,
                               int32_t srcLimit) U_LIFETIME_BOUND
-{ return doReplace(start, limit - start, srcText, srcStart, srcLimit - srcStart); }
+{ തിരികെ doReplace(start, limit - start, srcText, srcStart, srcLimit - srcStart); }
 
-inline UnicodeString&
-UnicodeString::findAndReplace(const UnicodeString& oldText,
-                              const UnicodeString& newText) U_LIFETIME_BOUND
-{ return findAndReplace(0, length(), oldText, 0, oldText.length(),
+വരിയിൽ UnicodeString&
+UnicodeString::findAndReplace(സ്ഥിരം UnicodeString& oldText,
+                              സ്ഥിരം UnicodeString& newText) U_LIFETIME_BOUND
+{ തിരികെ findAndReplace(0, length(), oldText, 0, oldText.length(),
             newText, 0, newText.length()); }
 
-inline UnicodeString&
+വരിയിൽ UnicodeString&
 UnicodeString::findAndReplace(int32_t start,
                               int32_t _length,
-                              const UnicodeString& oldText,
-                              const UnicodeString& newText) U_LIFETIME_BOUND
-{ return findAndReplace(start, _length, oldText, 0, oldText.length(),
+                              സ്ഥിരം UnicodeString& oldText,
+                              സ്ഥിരം UnicodeString& newText) U_LIFETIME_BOUND
+{ തിരികെ findAndReplace(start, _length, oldText, 0, oldText.length(),
             newText, 0, newText.length()); }
 
 // ============================
 // extract
 // ============================
-inline void
+വരിയിൽ ശൂന്യം
 UnicodeString::doExtract(int32_t start,
              int32_t _length,
-             UnicodeString& target) const
+             UnicodeString& target) സ്ഥിരം
 { target.replace(0, target.length(), *this, start, _length); }
 
-inline void
+വരിയിൽ ശൂന്യം
 UnicodeString::extract(int32_t start,
                int32_t _length,
                Char16Ptr target,
-               int32_t targetStart) const
+               int32_t targetStart) സ്ഥിരം
 { doExtract(start, _length, target, targetStart); }
 
-inline void
+വരിയിൽ ശൂന്യം
 UnicodeString::extract(int32_t start,
                int32_t _length,
-               UnicodeString& target) const
+               UnicodeString& target) സ്ഥിരം
 { doExtract(start, _length, target); }
 
-#if !UCONFIG_NO_CONVERSION
+#എങ്കിൽ !UCONFIG_NO_CONVERSION
 
-inline int32_t
+വരിയിൽ int32_t
 UnicodeString::extract(int32_t start,
                int32_t _length,
-               char *dst,
-               const char *codepage) const
+               അക്ഷരം *dst,
+               സ്ഥിരം അക്ഷരം *codepage) സ്ഥിരം
 
 {
   // This dstSize value will be checked explicitly
-  return extract(start, _length, dst, dst != nullptr ? 0xffffffff : 0, codepage);
+  തിരികെ extract(start, _length, dst, dst != nullptr ? 0xffffffff : 0, codepage);
 }
 
 #endif
 
-inline void
+വരിയിൽ ശൂന്യം
 UnicodeString::extractBetween(int32_t start,
                   int32_t limit,
                   char16_t *dst,
-                  int32_t dstStart) const {
+                  int32_t dstStart) സ്ഥിരം {
   pinIndex(start);
   pinIndex(limit);
   doExtract(start, limit - start, dst, dstStart);
 }
 
-inline UnicodeString
-UnicodeString::tempSubStringBetween(int32_t start, int32_t limit) const U_LIFETIME_BOUND {
-    return tempSubString(start, limit - start);
+വരിയിൽ UnicodeString
+UnicodeString::tempSubStringBetween(int32_t start, int32_t limit) സ്ഥിരം U_LIFETIME_BOUND {
+    തിരികെ tempSubString(start, limit - start);
 }
 
-inline char16_t
-UnicodeString::doCharAt(int32_t offset) const
+വരിയിൽ char16_t
+UnicodeString::doCharAt(int32_t offset) സ്ഥിരം
 {
-  if (static_cast<uint32_t>(offset) < static_cast<uint32_t>(length())) {
-    return getArrayStart()[offset];
-  } else {
-    return kInvalidUChar;
+  എങ്കിൽ (static_cast<uint32_t>(offset) < static_cast<uint32_t>(length())) {
+    തിരികെ getArrayStart()[offset];
+  } അല്ലെങ്കിൽ {
+    തിരികെ kInvalidUChar;
   }
 }
 
-inline char16_t
-UnicodeString::charAt(int32_t offset) const
-{ return doCharAt(offset); }
+വരിയിൽ char16_t
+UnicodeString::charAt(int32_t offset) സ്ഥിരം
+{ തിരികെ doCharAt(offset); }
 
-inline char16_t
-UnicodeString::operator[] (int32_t offset) const
-{ return doCharAt(offset); }
+വരിയിൽ char16_t
+UnicodeString::operator[] (int32_t offset) സ്ഥിരം
+{ തിരികെ doCharAt(offset); }
 
-inline UBool
-UnicodeString::isEmpty() const {
+വരിയിൽ UBool
+UnicodeString::isEmpty() സ്ഥിരം {
   // Arithmetic or logical right shift does not matter: only testing for 0.
-  return (fUnion.fFields.fLengthAndFlags>>kLengthShift) == 0;
+  തിരികെ (fUnion.fFields.fLengthAndFlags>>kLengthShift) == 0;
 }
 
 //========================================
 // Write implementation methods
 //========================================
-inline void
+വരിയിൽ ശൂന്യം
 UnicodeString::setZeroLength() {
   fUnion.fFields.fLengthAndFlags &= kAllStorageFlags;
 }
 
-inline void
+വരിയിൽ ശൂന്യം
 UnicodeString::setShortLength(int32_t len) {
   // requires 0 <= len <= kMaxShortLength
   fUnion.fFields.fLengthAndFlags =
     static_cast<int16_t>((fUnion.fFields.fLengthAndFlags & kAllStorageFlags) | (len << kLengthShift));
 }
 
-inline void
+വരിയിൽ ശൂന്യം
 UnicodeString::setLength(int32_t len) {
-  if(len <= kMaxShortLength) {
+  എങ്കിൽ(len <= kMaxShortLength) {
     setShortLength(len);
-  } else {
+  } അല്ലെങ്കിൽ {
     fUnion.fFields.fLengthAndFlags |= kLengthIsLarge;
     fUnion.fFields.fLength = len;
   }
 }
 
-inline void
+വരിയിൽ ശൂന്യം
 UnicodeString::setToEmpty() {
   fUnion.fFields.fLengthAndFlags = kShortString;
 }
 
-inline void
+വരിയിൽ ശൂന്യം
 UnicodeString::setArray(char16_t *array, int32_t len, int32_t capacity) {
   setLength(len);
   fUnion.fFields.fArray = array;
   fUnion.fFields.fCapacity = capacity;
 }
 
-inline UnicodeString&
+വരിയിൽ UnicodeString&
 UnicodeString::operator=(char16_t ch) U_LIFETIME_BOUND
-{ return doReplace(0, length(), &ch, 0, 1); }
+{ തിരികെ doReplace(0, length(), &ch, 0, 1); }
 
-inline UnicodeString&
+വരിയിൽ UnicodeString&
 UnicodeString::operator=(UChar32 ch) U_LIFETIME_BOUND
-{ return replace(0, length(), ch); }
+{ തിരികെ replace(0, length(), ch); }
 
-inline UnicodeString&
-UnicodeString::setTo(const UnicodeString& srcText,
+വരിയിൽ UnicodeString&
+UnicodeString::setTo(സ്ഥിരം UnicodeString& srcText,
                      int32_t srcStart,
                      int32_t srcLength) U_LIFETIME_BOUND
 {
   unBogus();
-  return doReplace(0, length(), srcText, srcStart, srcLength);
+  തിരികെ doReplace(0, length(), srcText, srcStart, srcLength);
 }
 
-inline UnicodeString&
-UnicodeString::setTo(const UnicodeString& srcText,
+വരിയിൽ UnicodeString&
+UnicodeString::setTo(സ്ഥിരം UnicodeString& srcText,
                      int32_t srcStart) U_LIFETIME_BOUND
 {
   unBogus();
   srcText.pinIndex(srcStart);
-  return doReplace(0, length(), srcText, srcStart, srcText.length() - srcStart);
+  തിരികെ doReplace(0, length(), srcText, srcStart, srcText.length() - srcStart);
 }
 
-inline UnicodeString&
-UnicodeString::setTo(const UnicodeString& srcText) U_LIFETIME_BOUND
+വരിയിൽ UnicodeString&
+UnicodeString::setTo(സ്ഥിരം UnicodeString& srcText) U_LIFETIME_BOUND
 {
-  return copyFrom(srcText);
+  തിരികെ copyFrom(srcText);
 }
 
-inline UnicodeString&
-UnicodeString::setTo(const char16_t* srcChars,
+വരിയിൽ UnicodeString&
+UnicodeString::setTo(സ്ഥിരം char16_t* srcChars,
                      int32_t srcLength) U_LIFETIME_BOUND
 {
   unBogus();
-  return doReplace(0, length(), srcChars, 0, srcLength);
+  തിരികെ doReplace(0, length(), srcChars, 0, srcLength);
 }
 
-inline UnicodeString&
+വരിയിൽ UnicodeString&
 UnicodeString::setTo(char16_t srcChar) U_LIFETIME_BOUND
 {
   unBogus();
-  return doReplace(0, length(), &srcChar, 0, 1);
+  തിരികെ doReplace(0, length(), &srcChar, 0, 1);
 }
 
-inline UnicodeString&
+വരിയിൽ UnicodeString&
 UnicodeString::setTo(UChar32 srcChar) U_LIFETIME_BOUND
 {
   unBogus();
-  return replace(0, length(), srcChar);
+  തിരികെ replace(0, length(), srcChar);
 }
 
-inline UnicodeString&
-UnicodeString::append(const UnicodeString& srcText,
+വരിയിൽ UnicodeString&
+UnicodeString::append(സ്ഥിരം UnicodeString& srcText,
                       int32_t srcStart,
                       int32_t srcLength) U_LIFETIME_BOUND
-{ return doAppend(srcText, srcStart, srcLength); }
+{ തിരികെ doAppend(srcText, srcStart, srcLength); }
 
-inline UnicodeString&
-UnicodeString::append(const UnicodeString& srcText) U_LIFETIME_BOUND
-{ return doAppend(srcText, 0, srcText.length()); }
+വരിയിൽ UnicodeString&
+UnicodeString::append(സ്ഥിരം UnicodeString& srcText) U_LIFETIME_BOUND
+{ തിരികെ doAppend(srcText, 0, srcText.length()); }
 
-inline UnicodeString&
-UnicodeString::append(const char16_t* srcChars,
+വരിയിൽ UnicodeString&
+UnicodeString::append(സ്ഥിരം char16_t* srcChars,
                       int32_t srcStart,
                       int32_t srcLength) U_LIFETIME_BOUND
-{ return doAppend(srcChars, srcStart, srcLength); }
+{ തിരികെ doAppend(srcChars, srcStart, srcLength); }
 
-inline UnicodeString&
+വരിയിൽ UnicodeString&
 UnicodeString::append(ConstChar16Ptr srcChars,
                       int32_t srcLength) U_LIFETIME_BOUND
-{ return doAppend(srcChars, 0, srcLength); }
+{ തിരികെ doAppend(srcChars, 0, srcLength); }
 
-inline UnicodeString&
+വരിയിൽ UnicodeString&
 UnicodeString::append(char16_t srcChar) U_LIFETIME_BOUND
-{ return doAppend(&srcChar, 0, 1); }
+{ തിരികെ doAppend(&srcChar, 0, 1); }
 
-inline UnicodeString&
+വരിയിൽ UnicodeString&
 UnicodeString::operator+=(char16_t ch) U_LIFETIME_BOUND
-{ return doAppend(&ch, 0, 1); }
+{ തിരികെ doAppend(&ch, 0, 1); }
 
-inline UnicodeString&
+വരിയിൽ UnicodeString&
 UnicodeString::operator+=(UChar32 ch) U_LIFETIME_BOUND {
-  return append(ch);
+  തിരികെ append(ch);
 }
 
-inline UnicodeString&
-UnicodeString::operator+=(const UnicodeString& srcText) U_LIFETIME_BOUND
-{ return doAppend(srcText, 0, srcText.length()); }
+വരിയിൽ UnicodeString&
+UnicodeString::operator+=(സ്ഥിരം UnicodeString& srcText) U_LIFETIME_BOUND
+{ തിരികെ doAppend(srcText, 0, srcText.length()); }
 
-inline UnicodeString&
-UnicodeString::insert(int32_t start,
-                      const UnicodeString& srcText,
+വരിയിൽ UnicodeString&
+UnicodeString::തിരുകുക(int32_t start,
+                      സ്ഥിരം UnicodeString& srcText,
                       int32_t srcStart,
                       int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, 0, srcText, srcStart, srcLength); }
+{ തിരികെ doReplace(start, 0, srcText, srcStart, srcLength); }
 
-inline UnicodeString&
-UnicodeString::insert(int32_t start,
-                      const UnicodeString& srcText) U_LIFETIME_BOUND
-{ return doReplace(start, 0, srcText, 0, srcText.length()); }
+വരിയിൽ UnicodeString&
+UnicodeString::തിരുകുക(int32_t start,
+                      സ്ഥിരം UnicodeString& srcText) U_LIFETIME_BOUND
+{ തിരികെ doReplace(start, 0, srcText, 0, srcText.length()); }
 
-inline UnicodeString&
-UnicodeString::insert(int32_t start,
-                      const char16_t* srcChars,
+വരിയിൽ UnicodeString&
+UnicodeString::തിരുകുക(int32_t start,
+                      സ്ഥിരം char16_t* srcChars,
                       int32_t srcStart,
                       int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, 0, srcChars, srcStart, srcLength); }
+{ തിരികെ doReplace(start, 0, srcChars, srcStart, srcLength); }
 
-inline UnicodeString&
-UnicodeString::insert(int32_t start,
+വരിയിൽ UnicodeString&
+UnicodeString::തിരുകുക(int32_t start,
                       ConstChar16Ptr srcChars,
                       int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, 0, srcChars, 0, srcLength); }
+{ തിരികെ doReplace(start, 0, srcChars, 0, srcLength); }
 
-inline UnicodeString&
-UnicodeString::insert(int32_t start,
+വരിയിൽ UnicodeString&
+UnicodeString::തിരുകുക(int32_t start,
                       char16_t srcChar) U_LIFETIME_BOUND
-{ return doReplace(start, 0, &srcChar, 0, 1); }
+{ തിരികെ doReplace(start, 0, &srcChar, 0, 1); }
 
-inline UnicodeString&
-UnicodeString::insert(int32_t start,
+വരിയിൽ UnicodeString&
+UnicodeString::തിരുകുക(int32_t start,
                       UChar32 srcChar) U_LIFETIME_BOUND
-{ return replace(start, 0, srcChar); }
+{ തിരികെ replace(start, 0, srcChar); }
 
 
-inline UnicodeString&
+വരിയിൽ UnicodeString&
 UnicodeString::remove() U_LIFETIME_BOUND
 {
   // remove() of a bogus string makes the string empty and non-bogus
-  if(isBogus()) {
+  എങ്കിൽ(isBogus()) {
     setToEmpty();
-  } else {
+  } അല്ലെങ്കിൽ {
     setZeroLength();
   }
-  return *this;
+  തിരികെ *this;
 }
 
-inline UnicodeString&
+വരിയിൽ UnicodeString&
 UnicodeString::remove(int32_t start,
                       int32_t _length) U_LIFETIME_BOUND
 {
-    if(start <= 0 && _length == INT32_MAX) {
+    എങ്കിൽ(start <= 0 && _length == INT32_MAX) {
         // remove(guaranteed everything) of a bogus string makes the string empty and non-bogus
-        return remove();
+        തിരികെ remove();
     }
-    return doReplace(start, _length, nullptr, 0, 0);
+    തിരികെ doReplace(start, _length, nullptr, 0, 0);
 }
 
-inline UnicodeString&
+വരിയിൽ UnicodeString&
 UnicodeString::removeBetween(int32_t start,
                              int32_t limit) U_LIFETIME_BOUND
-{ return doReplace(start, limit - start, nullptr, 0, 0); }
+{ തിരികെ doReplace(start, limit - start, nullptr, 0, 0); }
 
-inline UnicodeString&
+വരിയിൽ UnicodeString&
 UnicodeString::retainBetween(int32_t start, int32_t limit) U_LIFETIME_BOUND {
   truncate(limit);
-  return doReplace(0, start, nullptr, 0, 0);
+  തിരികെ doReplace(0, start, nullptr, 0, 0);
 }
 
-inline UBool
+വരിയിൽ UBool
 UnicodeString::truncate(int32_t targetLength)
 {
-  if(isBogus() && targetLength == 0) {
+  എങ്കിൽ(isBogus() && targetLength == 0) {
     // truncate(0) of a bogus string makes the string empty and non-bogus
     unBogus();
-    return false;
-  } else if (static_cast<uint32_t>(targetLength) < static_cast<uint32_t>(length())) {
+    തിരികെ false;
+  } അല്ലെങ്കിൽ എങ്കിൽ (static_cast<uint32_t>(targetLength) < static_cast<uint32_t>(length())) {
     setLength(targetLength);
-    return true;
-  } else {
-    return false;
+    തിരികെ true;
+  } അല്ലെങ്കിൽ {
+    തിരികെ false;
   }
 }
 
-inline UnicodeString&
+വരിയിൽ UnicodeString&
 UnicodeString::reverse() U_LIFETIME_BOUND
-{ return doReverse(0, length()); }
+{ തിരികെ doReverse(0, length()); }
 
-inline UnicodeString&
+വരിയിൽ UnicodeString&
 UnicodeString::reverse(int32_t start,
                        int32_t _length) U_LIFETIME_BOUND
-{ return doReverse(start, _length); }
+{ തിരികെ doReverse(start, _length); }
 
 U_NAMESPACE_END
 

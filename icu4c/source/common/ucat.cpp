@@ -10,72 +10,72 @@
 * Since: ICU 2.6
 **********************************************************************
 */
-#include "unicode/ucat.h"
-#include "unicode/ustring.h"
-#include "cstring.h"
-#include "uassert.h"
+#അന്തര്ഭാവ "unicode/ucat.h"
+#അന്തര്ഭാവ "unicode/ustring.h"
+#അന്തര്ഭാവ "cstring.h"
+#അന്തര്ഭാവ "uassert.h"
 
 /* Separator between set_num and msg_num */
-static const char SEPARATOR = '%';
+സ്ഥിതം സ്ഥിരം അക്ഷരം SEPARATOR = '%';
 
 /* Maximum length of a set_num/msg_num key, incl. terminating zero.
  * Longest possible key is "-2147483648%-2147483648" */
-#define MAX_KEY_LEN (24)
+#define MAX_താക്കോൽ_LEN (24)
 
 /**
  * Fill in buffer with a set_num/msg_num key string, given the numeric
  * values. Numeric values must be >= 0. Buffer must be of length
  * MAX_KEY_LEN or more.
  */
-static char*
-_catkey(char* buffer U_LIFETIME_BOUND, int32_t set_num, int32_t msg_num) {
+സ്ഥിതം അക്ഷരം*
+_catkey(അക്ഷരം* buffer U_LIFETIME_BOUND, int32_t set_അക്കം, int32_t സന്ദേശം_അക്കം) {
     int32_t i = 0;
-    i = T_CString_integerToString(buffer, set_num, 10);
+    i = T_CString_integerToString(buffer, set_അക്കം, 10);
     buffer[i++] = SEPARATOR;
-    T_CString_integerToString(buffer+i, msg_num, 10);
-    return buffer;
+    T_CString_integerToString(buffer+i, സന്ദേശം_അക്കം, 10);
+    തിരികെ buffer;
 }
 
 U_CAPI u_nl_catd U_EXPORT2
-u_catopen(const char* name, const char* locale, UErrorCode* ec) {
-    return (u_nl_catd) ures_open(name, locale, ec);
+u_catopen(സ്ഥിരം അക്ഷരം* name, സ്ഥിരം അക്ഷരം* locale, UErrorCode* ec) {
+    തിരികെ (u_nl_catd) ures_open(name, locale, ec);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 u_catclose(u_nl_catd catd) {
     ures_close((UResourceBundle*) catd); /* may be nullptr */
 }
 
-U_CAPI const char16_t* U_EXPORT2
+U_CAPI സ്ഥിരം char16_t* U_EXPORT2
 u_catgets(u_nl_catd catd U_LIFETIME_BOUND,
-          int32_t set_num,
-          int32_t msg_num,
-          const char16_t* s U_LIFETIME_BOUND,
+          int32_t set_അക്കം,
+          int32_t സന്ദേശം_അക്കം,
+          സ്ഥിരം char16_t* s U_LIFETIME_BOUND,
           int32_t* len,
           UErrorCode* ec) {
 
-    char key[MAX_KEY_LEN];
-    const char16_t* result;
+    അക്ഷരം താക്കോൽ[MAX_താക്കോൽ_LEN];
+    സ്ഥിരം char16_t* result;
 
-    if (ec == nullptr || U_FAILURE(*ec)) {
-        goto ERROR;
+    എങ്കിൽ (ec == nullptr || U_FAILURE(*ec)) {
+        പോകുക ERROR;
     }
 
-    result = ures_getStringByKey((const UResourceBundle*) catd,
-                                 _catkey(key, set_num, msg_num),
+    result = ures_get_String_By_താക്കോൽ((സ്ഥിരം UResourceBundle*) catd,
+                                 _catkey(താക്കോൽ, set_അക്കം, സന്ദേശം_അക്കം),
                                  len, ec);
-    if (U_FAILURE(*ec)) {
-        goto ERROR;
+    എങ്കിൽ (U_FAILURE(*ec)) {
+        പോകുക ERROR;
     }
 
-    return result;
+    തിരികെ result;
 
  ERROR:
     /* In case of any failure, return s */
-    if (len != nullptr) {
+    എങ്കിൽ (len != nullptr) {
         *len = u_strlen(s);
     }
-    return s;
+    തിരികെ s;
 }
 
 /*eof*/

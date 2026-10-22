@@ -48,15 +48,15 @@
 ******************************************************************************
 */
 
-#include "unicode/utypes.h"
-#include "unicode/resbund.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/resbund.h"
 
-#include "cmemory.h"
-#include "mutex.h"
-#include "uassert.h"
-#include "umutex.h"
+#അന്തര്ഭാവ "cmemory.h"
+#അന്തര്ഭാവ "mutex.h"
+#അന്തര്ഭാവ "uassert.h"
+#അന്തര്ഭാവ "umutex.h"
 
-#include "uresimp.h"
+#അന്തര്ഭാവ "uresimp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -182,14 +182,14 @@ ResourceBundle::ResourceBundle(UErrorCode &err)
     fResource = ures_open(nullptr, Locale::getDefault().getName(), &err);
 }
 
-ResourceBundle::ResourceBundle(const ResourceBundle &other)
+ResourceBundle::ResourceBundle(സ്ഥിരം ResourceBundle &other)
                               :UObject(other), fLocale(nullptr)
 {
     UErrorCode status = U_ZERO_ERROR;
 
-    if (other.fResource) {
+    എങ്കിൽ (other.fResource) {
         fResource = ures_copyResb(nullptr, other.fResource, &status);
-    } else {
+    } അല്ലെങ്കിൽ {
         /* Copying a bad resource bundle */
         fResource = nullptr;
     }
@@ -198,201 +198,201 @@ ResourceBundle::ResourceBundle(const ResourceBundle &other)
 ResourceBundle::ResourceBundle(UResourceBundle *res, UErrorCode& err)
                                :UObject(), fLocale(nullptr)
 {
-    if (res) {
+    എങ്കിൽ (res) {
         fResource = ures_copyResb(nullptr, res, &err);
-    } else {
+    } അല്ലെങ്കിൽ {
         /* Copying a bad resource bundle */
         fResource = nullptr;
     }
 }
 
-ResourceBundle::ResourceBundle(const char* path, const Locale& locale, UErrorCode& err) 
+ResourceBundle::ResourceBundle(സ്ഥിരം അക്ഷരം* path, സ്ഥിരം Locale& locale, UErrorCode& err) 
                                :UObject(), fLocale(nullptr)
 {
     fResource = ures_open(path, locale.getName(), &err);
 }
 
 
-ResourceBundle& ResourceBundle::operator=(const ResourceBundle& other) U_LIFETIME_BOUND
+ResourceBundle& ResourceBundle::operator=(സ്ഥിരം ResourceBundle& other) U_LIFETIME_BOUND
 {
-    if(this == &other) {
-        return *this;
+    എങ്കിൽ(ഇത് == &other) {
+        തിരികെ *ഇത്;
     }
-    if (fResource != nullptr) {
+    എങ്കിൽ (fResource != nullptr) {
         ures_close(fResource);
         fResource = nullptr;
     }
-    if (fLocale != nullptr) {
+    എങ്കിൽ (fLocale != nullptr) {
         delete fLocale;
         fLocale = nullptr;
     }
     UErrorCode status = U_ZERO_ERROR;
-    if (other.fResource) {
+    എങ്കിൽ (other.fResource) {
         fResource = ures_copyResb(nullptr, other.fResource, &status);
-    } else {
+    } അല്ലെങ്കിൽ {
         /* Copying a bad resource bundle */
         fResource = nullptr;
     }
-    return *this;
+    തിരികെ *ഇത്;
 }
 
 ResourceBundle::~ResourceBundle()
 {
-    if (fResource != nullptr) {
+    എങ്കിൽ (fResource != nullptr) {
         ures_close(fResource);
     }
     delete fLocale;
 }
 
 ResourceBundle *
-ResourceBundle::clone() const {
-    return new ResourceBundle(*this);
+ResourceBundle::clone() സ്ഥിരം {
+    തിരികെ പുതിയ ResourceBundle(*ഇത്);
 }
 
-UnicodeString ResourceBundle::getString(UErrorCode& status) const U_LIFETIME_BOUND {
+UnicodeString ResourceBundle::getString(UErrorCode& status) സ്ഥിരം U_LIFETIME_BOUND {
     int32_t len = 0;
-    const char16_t *r = ures_getString(fResource, &len, &status);
-    return UnicodeString(true, r, len);
+    സ്ഥിരം char16_t *r = ures_getString(fResource, &len, &status);
+    തിരികെ UnicodeString(സത്യം, r, len);
 }
 
-const uint8_t* ResourceBundle::getBinary(int32_t& len, UErrorCode& status) const U_LIFETIME_BOUND {
-    return ures_getBinary(fResource, &len, &status);
+സ്ഥിരം uint8_t* ResourceBundle::get_ദ്വിമാന(int32_t& len, UErrorCode& status) സ്ഥിരം U_LIFETIME_BOUND {
+    തിരികെ ures_get_ദ്വിമാന(fResource, &len, &status);
 }
 
-const int32_t* ResourceBundle::getIntVector(int32_t& len,
-                                            UErrorCode& status) const U_LIFETIME_BOUND {
-    return ures_getIntVector(fResource, &len, &status);
+സ്ഥിരം int32_t* ResourceBundle::getIntVector(int32_t& len,
+                                            UErrorCode& status) സ്ഥിരം U_LIFETIME_BOUND {
+    തിരികെ ures_getIntVector(fResource, &len, &status);
 }
 
-uint32_t ResourceBundle::getUInt(UErrorCode& status) const {
-    return ures_getUInt(fResource, &status);
+uint32_t ResourceBundle::getUInt(UErrorCode& status) സ്ഥിരം {
+    തിരികെ ures_getUInt(fResource, &status);
 }
 
-int32_t ResourceBundle::getInt(UErrorCode& status) const {
-    return ures_getInt(fResource, &status);
+int32_t ResourceBundle::getInt(UErrorCode& status) സ്ഥിരം {
+    തിരികെ ures_getInt(fResource, &status);
 }
 
-const char* ResourceBundle::getName() const U_LIFETIME_BOUND {
-    return ures_getName(fResource);
+സ്ഥിരം അക്ഷരം* ResourceBundle::getName() സ്ഥിരം U_LIFETIME_BOUND {
+    തിരികെ ures_getName(fResource);
 }
 
-const char* ResourceBundle::getKey() const U_LIFETIME_BOUND {
-    return ures_getKey(fResource);
+സ്ഥിരം അക്ഷരം* ResourceBundle::get_താക്കോൽ() സ്ഥിരം U_LIFETIME_BOUND {
+    തിരികെ ures_get_താക്കോൽ(fResource);
 }
 
-UResType ResourceBundle::getType() const {
-    return ures_getType(fResource);
+UResType ResourceBundle::getType() സ്ഥിരം {
+    തിരികെ ures_getType(fResource);
 }
 
-int32_t ResourceBundle::getSize() const {
-    return ures_getSize(fResource);
+int32_t ResourceBundle::getSize() സ്ഥിരം {
+    തിരികെ ures_getSize(fResource);
 }
 
-UBool ResourceBundle::hasNext() const {
-    return ures_hasNext(fResource);
+UBool ResourceBundle::hasNext() സ്ഥിരം {
+    തിരികെ ures_hasNext(fResource);
 }
 
-void ResourceBundle::resetIterator() {
+ശൂന്യം ResourceBundle::resetIterator() {
     ures_resetIterator(fResource);
 }
 
 ResourceBundle ResourceBundle::getNext(UErrorCode& status) {
     UResourceBundle r;
 
-    ures_initStackObject(&r);
+    ures_init_അട്ടി_Object(&r);
     ures_getNextResource(fResource, &r, &status);
     ResourceBundle res(&r, status);
-    if (U_SUCCESS(status)) {
+    എങ്കിൽ (U_SUCCESS(status)) {
         ures_close(&r);
     }
-    return res;
+    തിരികെ res;
 }
 
 UnicodeString ResourceBundle::getNextString(UErrorCode& status) U_LIFETIME_BOUND {
     int32_t len = 0;
-    const char16_t* r = ures_getNextString(fResource, &len, nullptr, &status);
-    return UnicodeString(true, r, len);
+    സ്ഥിരം char16_t* r = ures_getNextString(fResource, &len, nullptr, &status);
+    തിരികെ UnicodeString(സത്യം, r, len);
 }
 
-UnicodeString ResourceBundle::getNextString(const char** key, UErrorCode& status) U_LIFETIME_BOUND {
+UnicodeString ResourceBundle::getNextString(സ്ഥിരം അക്ഷരം** താക്കോൽ, UErrorCode& status) U_LIFETIME_BOUND {
     int32_t len = 0;
-    const char16_t* r = ures_getNextString(fResource, &len, key, &status);
-    return UnicodeString(true, r, len);
+    സ്ഥിരം char16_t* r = ures_getNextString(fResource, &len, താക്കോൽ, &status);
+    തിരികെ UnicodeString(സത്യം, r, len);
 }
 
-ResourceBundle ResourceBundle::get(int32_t indexR, UErrorCode& status) const {
+ResourceBundle ResourceBundle::get(int32_t indexR, UErrorCode& status) സ്ഥിരം {
     UResourceBundle r;
 
-    ures_initStackObject(&r);
+    ures_init_അട്ടി_Object(&r);
     ures_getByIndex(fResource, indexR, &r, &status);
     ResourceBundle res(&r, status);
-    if (U_SUCCESS(status)) {
+    എങ്കിൽ (U_SUCCESS(status)) {
         ures_close(&r);
     }
-    return res;
+    തിരികെ res;
 }
 
 UnicodeString ResourceBundle::getStringEx(int32_t indexS,
-                                          UErrorCode& status) const U_LIFETIME_BOUND {
+                                          UErrorCode& status) സ്ഥിരം U_LIFETIME_BOUND {
     int32_t len = 0;
-    const char16_t* r = ures_getStringByIndex(fResource, indexS, &len, &status);
-    return UnicodeString(true, r, len);
+    സ്ഥിരം char16_t* r = ures_getStringByIndex(fResource, indexS, &len, &status);
+    തിരികെ UnicodeString(സത്യം, r, len);
 }
 
-ResourceBundle ResourceBundle::get(const char* key, UErrorCode& status) const {
+ResourceBundle ResourceBundle::get(സ്ഥിരം അക്ഷരം* താക്കോൽ, UErrorCode& status) സ്ഥിരം {
     UResourceBundle r;
 
-    ures_initStackObject(&r);
-    ures_getByKey(fResource, key, &r, &status);
+    ures_init_അട്ടി_Object(&r);
+    ures_get_By_താക്കോൽ(fResource, താക്കോൽ, &r, &status);
     ResourceBundle res(&r, status);
-    if (U_SUCCESS(status)) {
+    എങ്കിൽ (U_SUCCESS(status)) {
         ures_close(&r);
     }
-    return res;
+    തിരികെ res;
 }
 
-ResourceBundle ResourceBundle::getWithFallback(const char* key, UErrorCode& status){
+ResourceBundle ResourceBundle::getWithFallback(സ്ഥിരം അക്ഷരം* താക്കോൽ, UErrorCode& status){
     UResourceBundle r;
-    ures_initStackObject(&r);
-    ures_getByKeyWithFallback(fResource, key, &r, &status);
+    ures_init_അട്ടി_Object(&r);
+    ures_get_By_താക്കോൽ_With_Fallback(fResource, താക്കോൽ, &r, &status);
     ResourceBundle res(&r, status);
-    if(U_SUCCESS(status)){
+    എങ്കിൽ(U_SUCCESS(status)){
         ures_close(&r);
     }
-    return res;
+    തിരികെ res;
 }
 
-UnicodeString ResourceBundle::getStringEx(const char* key,
-                                          UErrorCode& status) const U_LIFETIME_BOUND {
+UnicodeString ResourceBundle::getStringEx(സ്ഥിരം അക്ഷരം* താക്കോൽ,
+                                          UErrorCode& status) സ്ഥിരം U_LIFETIME_BOUND {
     int32_t len = 0;
-    const char16_t* r = ures_getStringByKey(fResource, key, &len, &status);
-    return UnicodeString(true, r, len);
+    സ്ഥിരം char16_t* r = ures_get_String_By_താക്കോൽ(fResource, താക്കോൽ, &len, &status);
+    തിരികെ UnicodeString(സത്യം, r, len);
 }
 
-const char* ResourceBundle::getVersionNumber() const U_LIFETIME_BOUND {
-    return ures_getVersionNumberInternal(fResource);
+സ്ഥിരം അക്ഷരം* ResourceBundle::get_Version_സംഖ്യ() സ്ഥിരം U_LIFETIME_BOUND {
+    തിരികെ ures_get_Version_സംഖ്യ_Internal(fResource);
 }
 
-void ResourceBundle::getVersion(UVersionInfo versionInfo) const {
+ശൂന്യം ResourceBundle::getVersion(UVersionInfo versionInfo) സ്ഥിരം {
     ures_getVersion(fResource, versionInfo);
 }
 
-const Locale& ResourceBundle::getLocale() const U_LIFETIME_BOUND {
-    static UMutex gLocaleLock;
+സ്ഥിരം Locale& ResourceBundle::getLocale() സ്ഥിരം U_LIFETIME_BOUND {
+    സ്ഥിതം UMutex gLocaleLock;
     Mutex lock(&gLocaleLock);
-    if (fLocale != nullptr) {
-        return *fLocale;
+    എങ്കിൽ (fLocale != nullptr) {
+        തിരികെ *fLocale;
     }
     UErrorCode status = U_ZERO_ERROR;
-    const char *localeName = ures_getLocaleInternal(fResource, &status);
-    ResourceBundle *ncThis = const_cast<ResourceBundle *>(this);
-    ncThis->fLocale = new Locale(localeName);
-    return ncThis->fLocale != nullptr ? *ncThis->fLocale : Locale::getDefault();
+    സ്ഥിരം അക്ഷരം *localeName = ures_getLocaleInternal(fResource, &status);
+    ResourceBundle *ncThis = const_cast<ResourceBundle *>(ഇത്);
+    ncThis->fLocale = പുതിയ Locale(localeName);
+    തിരികെ ncThis->fLocale != nullptr ? *ncThis->fLocale : Locale::getDefault();
 }
 
-Locale ResourceBundle::getLocale(ULocDataLocaleType type, UErrorCode &status) const
+Locale ResourceBundle::getLocale(ULocDataLocaleType type, UErrorCode &status) സ്ഥിരം
 {
-  return ures_getLocaleByType(fResource, type, &status);
+  തിരികെ ures_getLocaleByType(fResource, type, &status);
 }
 
 U_NAMESPACE_END

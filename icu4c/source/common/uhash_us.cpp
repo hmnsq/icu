@@ -12,13 +12,13 @@
 ******************************************************************************
 */
 
-#include "hash.h"
+#അന്തര്ഭാവ "hash.h"
 
 /**
  * Deleter for Hashtable objects.
  */
-U_CAPI void U_EXPORT2
-uhash_deleteHashtable(void *obj) {
+U_CAPI ശൂന്യം U_EXPORT2
+uhash_deleteHashtable(ശൂന്യം *obj) {
     U_NAMESPACE_USE
     delete (Hashtable*) obj;
 }

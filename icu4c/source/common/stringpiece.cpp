@@ -8,109 +8,109 @@
 // Author: wilsonh@google.com (Wilson Hsieh)
 //
 
-#include "unicode/utypes.h"
-#include "unicode/stringpiece.h"
-#include "cstring.h"
-#include "cmemory.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/stringpiece.h"
+#അന്തര്ഭാവ "cstring.h"
+#അന്തര്ഭാവ "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
-StringPiece::StringPiece(const char* str U_LIFETIME_BOUND)
+StringPiece::StringPiece(സ്ഥിരം അക്ഷരം* str U_LIFETIME_BOUND)
     : ptr_(str), length_((str == nullptr) ? 0 : static_cast<int32_t>(uprv_strlen(str))) { }
 
-StringPiece::StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos) {
-  if (pos < 0) {
+StringPiece::StringPiece(സ്ഥിരം StringPiece& x U_LIFETIME_BOUND, int32_t pos) {
+  എങ്കിൽ (pos < 0) {
     pos = 0;
-  } else if (pos > x.length_) {
+  } അല്ലെങ്കിൽ എങ്കിൽ (pos > x.length_) {
     pos = x.length_;
   }
   ptr_ = x.ptr_ + pos;
   length_ = x.length_ - pos;
 }
 
-StringPiece::StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos, int32_t len) {
-  if (pos < 0) {
+StringPiece::StringPiece(സ്ഥിരം StringPiece& x U_LIFETIME_BOUND, int32_t pos, int32_t len) {
+  എങ്കിൽ (pos < 0) {
     pos = 0;
-  } else if (pos > x.length_) {
+  } അല്ലെങ്കിൽ എങ്കിൽ (pos > x.length_) {
     pos = x.length_;
   }
-  if (len < 0) {
+  എങ്കിൽ (len < 0) {
     len = 0;
-  } else if (len > x.length_ - pos) {
+  } അല്ലെങ്കിൽ എങ്കിൽ (len > x.length_ - pos) {
     len = x.length_ - pos;
   }
   ptr_ = x.ptr_ + pos;
   length_ = len;
 }
 
-void StringPiece::set(const char* str) {
+ശൂന്യം StringPiece::set(സ്ഥിരം അക്ഷരം* str) {
   ptr_ = str;
-  if (str != nullptr)
+  എങ്കിൽ (str != nullptr)
     length_ = static_cast<int32_t>(uprv_strlen(str));
-  else
+  അല്ലെങ്കിൽ
     length_ = 0;
 }
 
 int32_t StringPiece::find(StringPiece needle, int32_t offset) {
-  if (length() == 0 && needle.length() == 0) {
-    return 0;
+  എങ്കിൽ (length() == 0 && needle.length() == 0) {
+    തിരികെ 0;
   }
   // TODO: Improve to be better than O(N^2)?
-  for (int32_t i = offset; i < length(); i++) {
+  വേണ്ടി (int32_t i = offset; i < length(); i++) {
     int32_t j = 0;
-    for (; j < needle.length(); i++, j++) {
-      if (data()[i] != needle.data()[j]) {
+    വേണ്ടി (; j < needle.length(); i++, j++) {
+      എങ്കിൽ (data()[i] != needle.data()[j]) {
         i -= j;
-        goto outer_end;
+        പോകുക outer_end;
       }
     }
-    return i - j;
-    outer_end: void();
+    തിരികെ i - j;
+    outer_end: ശൂന്യം();
   }
-  return -1;
+  തിരികെ -1;
 }
 
 int32_t StringPiece::compare(StringPiece other) {
   int32_t i = 0;
-  for (; i < length(); i++) {
-    if (i == other.length()) {
+  വേണ്ടി (; i < length(); i++) {
+    എങ്കിൽ (i == other.length()) {
       // this is longer
-      return 1;
+      തിരികെ 1;
     }
-    char a = data()[i];
-    char b = other.data()[i];
-    if (a < b) {
-      return -1;
-    } else if (a > b) {
-      return 1;
+    അക്ഷരം a = data()[i];
+    അക്ഷരം b = other.data()[i];
+    എങ്കിൽ (a < b) {
+      തിരികെ -1;
+    } അല്ലെങ്കിൽ എങ്കിൽ (a > b) {
+      തിരികെ 1;
     }
   }
-  if (i < other.length()) {
+  എങ്കിൽ (i < other.length()) {
     // other is longer
-    return -1;
+    തിരികെ -1;
   }
-  return 0;
+  തിരികെ 0;
 }
 
 U_EXPORT UBool U_EXPORT2
-operator==(const StringPiece& x, const StringPiece& y) {
+operator==(സ്ഥിരം StringPiece& x, സ്ഥിരം StringPiece& y) {
   int32_t len = x.size();
-  if (len != y.size()) {
-    return false;
+  എങ്കിൽ (len != y.size()) {
+    തിരികെ അസത്യം;
   }
-  if (len == 0) {
-    return true;
+  എങ്കിൽ (len == 0) {
+    തിരികെ സത്യം;
   }
-  const char* p = x.data();
-  const char* p2 = y.data();
+  സ്ഥിരം അക്ഷരം* p = x.data();
+  സ്ഥിരം അക്ഷരം* p2 = y.data();
   // Test last byte in case strings share large common prefix
   --len;
-  if (p[len] != p2[len]) return false;
+  എങ്കിൽ (p[len] != p2[len]) തിരികെ അസത്യം;
   // At this point we can, but don't have to, ignore the last byte.
-  return uprv_memcmp(p, p2, len) == 0;
+  തിരികെ uprv_memcmp(p, p2, len) == 0;
 }
 
 
-const int32_t StringPiece::npos = 0x7fffffff;
+സ്ഥിരം int32_t StringPiece::npos = 0x7fffffff;
 
 U_NAMESPACE_END

@@ -21,23 +21,23 @@
 #ifndef __UDATAMEM_H__
 #define __UDATAMEM_H__
 
-#include "unicode/udata.h"
-#include "ucmndata.h"
+#അന്തര്ഭാവ "unicode/udata.h"
+#അന്തര്ഭാവ "ucmndata.h"
 
-struct UDataMemory {
-    const commonDataFuncs  *vFuncs;      /* Function Pointers for accessing TOC             */
+ഘടന UDataMemory {
+    സ്ഥിരം commonDataFuncs  *vFuncs;      /* Function Pointers for accessing TOC             */
 
-    const DataHeader *pHeader;     /* Header of the memory being described by this    */
+    സ്ഥിരം DataHeader *pHeader;     /* Header of the memory being described by this    */
                                    /*   UDataMemory object.                           */
-    const void       *toc;         /* For common memory, table of contents for        */
+    സ്ഥിരം ശൂന്യം       *toc;         /* For common memory, table of contents for        */
                                    /*   the pieces within.                            */
     UBool             heapAllocated;  /* True if this UDataMemory Object is on the    */
                                    /*  heap and thus needs to be deleted when closed. */
 
-    void             *mapAddr;     /* For mapped or allocated memory, the start addr. */
+    ശൂന്യം             *mapAddr;     /* For mapped or allocated memory, the start addr. */
                                    /* Only non-null if a close operation should unmap */
                                    /*  the associated data.                           */
-    void             *map;         /* Handle, or other data, OS dependent.            */
+    ശൂന്യം             *map;         /* Handle, or other data, OS dependent.            */
                                    /* Only non-null if a close operation should unmap */
                                    /*  the associated data, and additional info       */
                                    /*   beyond the mapAddr is needed to do that.      */
@@ -45,17 +45,17 @@ struct UDataMemory {
 };
 
 U_CAPI  UDataMemory* U_EXPORT2 UDataMemory_createNewInstance(UErrorCode *pErr);
-U_CFUNC void         UDatamemory_assign  (UDataMemory *dest, UDataMemory *source);
-U_CFUNC void         UDataMemory_init    (UDataMemory *This);
-U_CFUNC UBool        UDataMemory_isLoaded(const UDataMemory *This);
-U_CFUNC void         UDataMemory_setData (UDataMemory *This, const void *dataAddr);
+U_CFUNC ശൂന്യം         UDatamemory_assign  (UDataMemory *dest, UDataMemory *source);
+U_CFUNC ശൂന്യം         UDataMemory_init    (UDataMemory *This);
+U_CFUNC UBool        UDataMemory_isLoaded(സ്ഥിരം UDataMemory *This);
+U_CFUNC ശൂന്യം         UDataMemory_setData (UDataMemory *This, സ്ഥിരം ശൂന്യം *dataAddr);
 
-U_CFUNC const DataHeader* UDataMemory_normalizeDataPointer(const void* p U_LIFETIME_BOUND);
+U_CFUNC സ്ഥിരം DataHeader* UDataMemory_normalizeDataPointer(സ്ഥിരം ശൂന്യം* p U_LIFETIME_BOUND);
 
 U_CAPI int32_t U_EXPORT2
-udata_getLength(const UDataMemory *pData);
+udata_getLength(സ്ഥിരം UDataMemory *pData);
 
-U_CAPI const void* U_EXPORT2
-udata_getRawMemory(const UDataMemory* pData U_LIFETIME_BOUND);
+U_CAPI സ്ഥിരം ശൂന്യം* U_EXPORT2
+udata_getRawMemory(സ്ഥിരം UDataMemory* pData U_LIFETIME_BOUND);
 
 #endif

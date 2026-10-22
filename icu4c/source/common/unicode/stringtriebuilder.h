@@ -17,11 +17,11 @@
 #ifndef __STRINGTRIEBUILDER_H__
 #define __STRINGTRIEBUILDER_H__
 
-#include "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#എങ്കിൽ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#അന്തര്ഭാവ "unicode/uobject.h"
 
 /**
  * \file
@@ -30,15 +30,15 @@
 
 // Forward declaration.
 /// \cond
-struct UHashtable;
-typedef struct UHashtable UHashtable;
+ഘടന UHashtable;
+തരനിർവചനം ഘടന UHashtable UHashtable;
 /// \endcond
 
 /**
  * Build options for BytesTrieBuilder and CharsTrieBuilder.
  * @stable ICU 4.8
  */
-enum UStringTrieBuildOption {
+എണ്ണൽ UStringTrieBuildOption {
     /**
      * Builds a trie quickly.
      * @stable ICU 4.8
@@ -65,48 +65,48 @@ U_NAMESPACE_BEGIN
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API StringTrieBuilder : public UObject {
-public:
+class U_COMMON_API StringTrieBuilder : പൊതു UObject {
+പൊതു:
 #ifndef U_HIDE_INTERNAL_API
     /** @internal */
-    static int32_t hashNode(const void *node);
+    സ്ഥിതം int32_t hash_കണ്ണി(സ്ഥിരം ശൂന്യം *കണ്ണി);
     /** @internal */
-    static UBool equalNodes(const void *left, const void *right);
+    സ്ഥിതം UBool equalNodes(സ്ഥിരം ശൂന്യം *ഇടത്, സ്ഥിരം ശൂന്യം *വലത്);
 #endif  /* U_HIDE_INTERNAL_API */
 
-protected:
+സംരക്ഷിത:
     // Do not enclose the protected default constructor with #ifndef U_HIDE_INTERNAL_API
     // or else the compiler will create a public default constructor.
     /** @internal */
     StringTrieBuilder();
     /** @internal */
-    virtual ~StringTrieBuilder();
+    മായാ ~StringTrieBuilder();
 
 #ifndef U_HIDE_INTERNAL_API
     /** @internal */
-    void createCompactBuilder(int32_t sizeGuess, UErrorCode &errorCode);
+    ശൂന്യം createCompactBuilder(int32_t sizeGuess, UErrorCode &errorCode);
     /** @internal */
-    void deleteCompactBuilder();
+    ശൂന്യം deleteCompactBuilder();
 
     /** @internal */
-    void build(UStringTrieBuildOption buildOption, int32_t elementsLength, UErrorCode &errorCode);
+    ശൂന്യം build(UStringTrieBuildOption buildOption, int32_t elementsLength, UErrorCode &errorCode);
 
     /** @internal */
-    int32_t writeNode(int32_t start, int32_t limit, int32_t unitIndex);
+    int32_t write_കണ്ണി(int32_t start, int32_t limit, int32_t unitIndex);
     /** @internal */
-    int32_t writeBranchSubNode(int32_t start, int32_t limit, int32_t unitIndex, int32_t length);
+    int32_t write_Branch_Sub_കണ്ണി(int32_t start, int32_t limit, int32_t unitIndex, int32_t length);
 #endif  /* U_HIDE_INTERNAL_API */
 
-    class Node;
+    class കണ്ണി_2;
 
 #ifndef U_HIDE_INTERNAL_API
     /** @internal */
-    Node* makeNode(int32_t start,
+    കണ്ണി_2* make_കണ്ണി(int32_t start,
                    int32_t limit,
                    int32_t unitIndex,
                    UErrorCode& errorCode) U_LIFETIME_BOUND;
     /** @internal */
-    Node* makeBranchSubNode(int32_t start,
+    കണ്ണി_2* make_Branch_Sub_കണ്ണി(int32_t start,
                             int32_t limit,
                             int32_t unitIndex,
                             int32_t length,
@@ -114,44 +114,44 @@ protected:
 #endif  /* U_HIDE_INTERNAL_API */
 
     /** @internal */
-    virtual int32_t getElementStringLength(int32_t i) const = 0;
+    മായാ int32_t getElementStringLength(int32_t i) സ്ഥിരം = 0;
     /** @internal */
-    virtual char16_t getElementUnit(int32_t i, int32_t unitIndex) const = 0;
+    മായാ char16_t getElementUnit(int32_t i, int32_t unitIndex) സ്ഥിരം = 0;
     /** @internal */
-    virtual int32_t getElementValue(int32_t i) const = 0;
+    മായാ int32_t get_Element_മൂല്യം(int32_t i) സ്ഥിരം = 0;
 
     // Finds the first unit index after this one where
     // the first and last element have different units again.
     /** @internal */
-    virtual int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) const = 0;
+    മായാ int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) സ്ഥിരം = 0;
 
     // Number of different units at unitIndex.
     /** @internal */
-    virtual int32_t countElementUnits(int32_t start, int32_t limit, int32_t unitIndex) const = 0;
+    മായാ int32_t എണ്ണം_Element_Units(int32_t start, int32_t limit, int32_t unitIndex) സ്ഥിരം = 0;
     /** @internal */
-    virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t count) const = 0;
+    മായാ int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t എണ്ണം) സ്ഥിരം = 0;
     /** @internal */
-    virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) const = 0;
+    മായാ int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) സ്ഥിരം = 0;
 
     /** @internal */
-    virtual UBool matchNodesCanHaveValues() const = 0;
+    മായാ UBool match_Nodes_Can_Have_മൂല്യങ്ങൾ() സ്ഥിരം = 0;
 
     /** @internal */
-    virtual int32_t getMaxBranchLinearSubNodeLength() const = 0;
+    മായാ int32_t get_Max_Branch_Linear_Sub_കണ്ണി_Length() സ്ഥിരം = 0;
     /** @internal */
-    virtual int32_t getMinLinearMatch() const = 0;
+    മായാ int32_t getMinLinearMatch() സ്ഥിരം = 0;
     /** @internal */
-    virtual int32_t getMaxLinearMatchLength() const = 0;
+    മായാ int32_t getMaxLinearMatchLength() സ്ഥിരം = 0;
 
 #ifndef U_HIDE_INTERNAL_API
     // max(BytesTrie::kMaxBranchLinearSubNodeLength, UCharsTrie::kMaxBranchLinearSubNodeLength).
     /** @internal */
-    static const int32_t kMaxBranchLinearSubNodeLength=5;
+    സ്ഥിതം സ്ഥിരം int32_t k_Max_Branch_Linear_Sub_കണ്ണി_Length=5;
 
     // Maximum number of nested split-branch levels for a branch on all 2^16 possible char16_t units.
     // log2(2^16/kMaxBranchLinearSubNodeLength) rounded up.
     /** @internal */
-    static const int32_t kMaxSplitBranchLevels=14;
+    സ്ഥിതം സ്ഥിരം int32_t kMaxSplitBranchLevels=14;
 
     /**
      * Makes sure that there is only one unique node registered that is
@@ -163,7 +163,7 @@ protected:
      *         an equivalent node if newNode is a duplicate.
      * @internal
      */
-    Node* registerNode(Node* newNode, UErrorCode& errorCode) U_LIFETIME_BOUND;
+    കണ്ണി_2* register_കണ്ണി(കണ്ണി_2* new_കണ്ണി, UErrorCode& errorCode) U_LIFETIME_BOUND;
     /**
      * Makes sure that there is only one unique FinalValueNode registered
      * with this value.
@@ -174,7 +174,7 @@ protected:
      * @return A FinalValueNode with the given value.
      * @internal
      */
-    Node* registerFinalValue(int32_t value, UErrorCode& errorCode) U_LIFETIME_BOUND;
+    കണ്ണി_2* register_Final_മൂല്യം(int32_t മൂല്യം_2, UErrorCode& errorCode) U_LIFETIME_BOUND;
 #endif  /* U_HIDE_INTERNAL_API */
 
     /*
@@ -203,15 +203,15 @@ protected:
      * @internal
      * \cond
      */
-    class Node : public UObject {
-    public:
-        Node(int32_t initialHash) : hash(initialHash), offset(0) {}
-        inline int32_t hashCode() const { return hash; }
+    class കണ്ണി_2 : പൊതു UObject {
+    പൊതു:
+        കണ്ണി_2(int32_t initialHash) : hash(initialHash), offset(0) {}
+        വരിയിൽ int32_t hashCode() സ്ഥിരം { തിരികെ hash; }
         // Handles node==nullptr.
-        static inline int32_t hashCode(const Node *node) { return node==nullptr ? 0 : node->hashCode(); }
+        സ്ഥിതം വരിയിൽ int32_t hashCode(സ്ഥിരം കണ്ണി_2 *കണ്ണി) { തിരികെ കണ്ണി==nullptr ? 0 : കണ്ണി->hashCode(); }
         // Base class operator==() compares the actual class types.
-        virtual bool operator==(const Node &other) const;
-        inline bool operator!=(const Node &other) const { return !operator==(other); }
+        മായാ bool operator==(സ്ഥിരം കണ്ണി_2 &other) സ്ഥിരം;
+        വരിയിൽ bool operator!=(സ്ഥിരം കണ്ണി_2 &other) സ്ഥിരം { തിരികെ !operator==(other); }
         /**
          * Traverses the Node graph and numbers branch edges, with rightmost edges first.
          * This is to avoid writing a duplicate node twice.
@@ -239,23 +239,23 @@ protected:
          * @return An edge number that is at least the maximum-negative
          *         of the input edge number and the numbers of this node and all of its sub-nodes.
          */
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber);
+        മായാ int32_t mark_വലത്_Edges_First(int32_t edge_സംഖ്യ);
         // write() must set the offset to a positive value.
-        virtual void write(StringTrieBuilder &builder) = 0;
+        മായാ ശൂന്യം ലിഖ(StringTrieBuilder &builder) = 0;
         // See markRightEdgesFirst.
-        inline void writeUnlessInsideRightEdge(int32_t firstRight, int32_t lastRight,
+        വരിയിൽ ശൂന്യം write_Unless_Inside_വലത്_Edge(int32_t first_വലത്, int32_t last_വലത്,
                                                StringTrieBuilder &builder) {
             // Note: Edge numbers are negative, lastRight<=firstRight.
             // If offset>0 then this node and its sub-nodes have been written already
             // and we need not write them again.
             // If this node is part of the unwritten right branch edge,
             // then we wait until that is written.
-            if(offset<0 && (offset<lastRight || firstRight<offset)) {
-                write(builder);
+            എങ്കിൽ(offset<0 && (offset<last_വലത് || first_വലത്<offset)) {
+                ലിഖ(builder);
             }
         }
-        inline int32_t getOffset() const { return offset; }
-    protected:
+        വരിയിൽ int32_t getOffset() സ്ഥിരം { തിരികെ offset; }
+    സംരക്ഷിത:
         int32_t hash;
         int32_t offset;
     };
@@ -268,13 +268,13 @@ protected:
     // !Node::operator==(other) used inside FinalValueNode::operator==(other)
     // will be false if the typeid's are different.
     /** @internal */
-    class FinalValueNode : public Node {
-    public:
-        FinalValueNode(int32_t v) : Node(0x111111u*37u+v), value(v) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
-        int32_t value;
+    class Final_മൂല്യം_കണ്ണി : പൊതു കണ്ണി_2 {
+    പൊതു:
+        Final_മൂല്യം_കണ്ണി(int32_t v) : കണ്ണി_2(0x111111u*37u+v), മൂല്യം_2(v) {}
+        മായാ bool operator==(സ്ഥിരം കണ്ണി_2 &other) സ്ഥിരം override;
+        മായാ ശൂന്യം ലിഖ(StringTrieBuilder &builder) override;
+    സംരക്ഷിത:
+        int32_t മൂല്യം_2;
     };
 #endif  /* U_HIDE_INTERNAL_API */
 
@@ -283,33 +283,33 @@ protected:
     /**
      * @internal 
      */
-    class ValueNode : public Node {
-    public:
-        ValueNode(int32_t initialHash) : Node(initialHash), hasValue(false), value(0) {}
-        virtual bool operator==(const Node &other) const override;
-        void setValue(int32_t v) {
-            hasValue=true;
-            value=v;
+    class മൂല്യം_കണ്ണി : പൊതു കണ്ണി_2 {
+    പൊതു:
+        മൂല്യം_കണ്ണി(int32_t initialHash) : കണ്ണി_2(initialHash), has_മൂല്യം(false), മൂല്യം_2(0) {}
+        മായാ bool operator==(സ്ഥിരം കണ്ണി_2 &other) സ്ഥിരം override;
+        ശൂന്യം set_മൂല്യം(int32_t v) {
+            has_മൂല്യം=true;
+            മൂല്യം_2=v;
             hash=hash*37u+v;
         }
-    protected:
-        UBool hasValue;
-        int32_t value;
+    സംരക്ഷിത:
+        UBool has_മൂല്യം;
+        int32_t മൂല്യം_2;
     };
 
 #ifndef U_HIDE_INTERNAL_API
     /** 
      * @internal 
      */
-    class IntermediateValueNode : public ValueNode {
-    public:
-        IntermediateValueNode(int32_t v, Node *nextNode)
-                : ValueNode(0x222222u*37u+hashCode(nextNode)), next(nextNode) { setValue(v); }
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
-        Node *next;
+    class Intermediate_മൂല്യം_കണ്ണി : പൊതു മൂല്യം_കണ്ണി {
+    പൊതു:
+        Intermediate_മൂല്യം_കണ്ണി(int32_t v, കണ്ണി_2 *next_കണ്ണി)
+                : മൂല്യം_കണ്ണി(0x222222u*37u+hashCode(next_കണ്ണി)), next(next_കണ്ണി) { set_മൂല്യം(v); }
+        മായാ bool operator==(സ്ഥിരം കണ്ണി_2 &other) സ്ഥിരം override;
+        മായാ int32_t mark_വലത്_Edges_First(int32_t edge_സംഖ്യ) override;
+        മായാ ശൂന്യം ലിഖ(StringTrieBuilder &builder) override;
+    സംരക്ഷിത:
+        കണ്ണി_2 *next;
     };
 #endif  /* U_HIDE_INTERNAL_API */
 
@@ -318,111 +318,111 @@ protected:
     /**
      * @internal 
      */
-    class LinearMatchNode : public ValueNode {
-    public:
-        LinearMatchNode(int32_t len, Node *nextNode)
-                : ValueNode((0x333333u*37u+len)*37u+hashCode(nextNode)),
-                  length(len), next(nextNode) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-    protected:
+    class Linear_Match_കണ്ണി : പൊതു മൂല്യം_കണ്ണി {
+    പൊതു:
+        Linear_Match_കണ്ണി(int32_t len, കണ്ണി_2 *next_കണ്ണി)
+                : മൂല്യം_കണ്ണി((0x333333u*37u+len)*37u+hashCode(next_കണ്ണി)),
+                  length(len), next(next_കണ്ണി) {}
+        മായാ bool operator==(സ്ഥിരം കണ്ണി_2 &other) സ്ഥിരം override;
+        മായാ int32_t mark_വലത്_Edges_First(int32_t edge_സംഖ്യ) override;
+    സംരക്ഷിത:
         int32_t length;
-        Node *next;
+        കണ്ണി_2 *next;
     };
 
 #ifndef U_HIDE_INTERNAL_API
     /**
      * @internal 
      */
-    class BranchNode : public Node {
-    public:
-        BranchNode(int32_t initialHash) : Node(initialHash) {}
-    protected:
-        int32_t firstEdgeNumber;
+    class Branch_കണ്ണി : പൊതു കണ്ണി_2 {
+    പൊതു:
+        Branch_കണ്ണി(int32_t initialHash) : കണ്ണി_2(initialHash) {}
+    സംരക്ഷിത:
+        int32_t first_Edge_സംഖ്യ;
     };
 
     /**
      * @internal 
      */
-    class ListBranchNode : public BranchNode {
-    public:
-        ListBranchNode() : BranchNode(0x444444), length(0) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
+    class List_Branch_കണ്ണി : പൊതു Branch_കണ്ണി {
+    പൊതു:
+        List_Branch_കണ്ണി() : Branch_കണ്ണി(0x444444), length(0) {}
+        മായാ bool operator==(സ്ഥിരം കണ്ണി_2 &other) സ്ഥിരം override;
+        മായാ int32_t mark_വലത്_Edges_First(int32_t edge_സംഖ്യ) override;
+        മായാ ശൂന്യം ലിഖ(StringTrieBuilder &builder) override;
         // Adds a unit with a final value.
-        void add(int32_t c, int32_t value) {
+        ശൂന്യം add(int32_t c, int32_t മൂല്യം_2) {
             units[length] = static_cast<char16_t>(c);
             equal[length]=nullptr;
-            values[length]=value;
+            മൂല്യങ്ങൾ[length]=മൂല്യം_2;
             ++length;
-            hash=(hash*37u+c)*37u+value;
+            hash=(hash*37u+c)*37u+മൂല്യം_2;
         }
         // Adds a unit which leads to another match node.
-        void add(int32_t c, Node *node) {
+        ശൂന്യം add(int32_t c, കണ്ണി_2 *കണ്ണി) {
             units[length] = static_cast<char16_t>(c);
-            equal[length]=node;
-            values[length]=0;
+            equal[length]=കണ്ണി;
+            മൂല്യങ്ങൾ[length]=0;
             ++length;
-            hash=(hash*37u+c)*37u+hashCode(node);
+            hash=(hash*37u+c)*37u+hashCode(കണ്ണി);
         }
-    protected:
-        Node *equal[kMaxBranchLinearSubNodeLength];  // nullptr means "has final value".
+    സംരക്ഷിത:
+        കണ്ണി_2 *equal[k_Max_Branch_Linear_Sub_കണ്ണി_Length];  // nullptr means "has final value".
         int32_t length;
-        int32_t values[kMaxBranchLinearSubNodeLength];
-        char16_t units[kMaxBranchLinearSubNodeLength];
+        int32_t മൂല്യങ്ങൾ[k_Max_Branch_Linear_Sub_കണ്ണി_Length];
+        char16_t units[k_Max_Branch_Linear_Sub_കണ്ണി_Length];
     };
 
     /**
      * @internal 
      */
-    class SplitBranchNode : public BranchNode {
-    public:
-        SplitBranchNode(char16_t middleUnit, Node *lessThanNode, Node *greaterOrEqualNode)
-                : BranchNode(((0x555555u*37u+middleUnit)*37u+
-                              hashCode(lessThanNode))*37u+hashCode(greaterOrEqualNode)),
-                  unit(middleUnit), lessThan(lessThanNode), greaterOrEqual(greaterOrEqualNode) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
+    class Split_Branch_കണ്ണി : പൊതു Branch_കണ്ണി {
+    പൊതു:
+        Split_Branch_കണ്ണി(char16_t നടുവ്_Unit, കണ്ണി_2 *less_Than_കണ്ണി, കണ്ണി_2 *greater_Or_Equal_കണ്ണി)
+                : Branch_കണ്ണി(((0x555555u*37u+നടുവ്_Unit)*37u+
+                              hashCode(less_Than_കണ്ണി))*37u+hashCode(greater_Or_Equal_കണ്ണി)),
+                  unit(നടുവ്_Unit), lessThan(less_Than_കണ്ണി), greaterOrEqual(greater_Or_Equal_കണ്ണി) {}
+        മായാ bool operator==(സ്ഥിരം കണ്ണി_2 &other) സ്ഥിരം override;
+        മായാ int32_t mark_വലത്_Edges_First(int32_t edge_സംഖ്യ) override;
+        മായാ ശൂന്യം ലിഖ(StringTrieBuilder &builder) override;
+    സംരക്ഷിത:
         char16_t unit;
-        Node *lessThan;
-        Node *greaterOrEqual;
+        കണ്ണി_2 *lessThan;
+        കണ്ണി_2 *greaterOrEqual;
     };
 
     // Branch head node, for writing the actual node lead unit.
     /** @internal */
-    class BranchHeadNode : public ValueNode {
-    public:
-        BranchHeadNode(int32_t len, Node *subNode)
-                : ValueNode((0x666666u*37u+len)*37u+hashCode(subNode)),
-                  length(len), next(subNode) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
+    class Branch_Head_കണ്ണി : പൊതു മൂല്യം_കണ്ണി {
+    പൊതു:
+        Branch_Head_കണ്ണി(int32_t len, കണ്ണി_2 *sub_കണ്ണി)
+                : മൂല്യം_കണ്ണി((0x666666u*37u+len)*37u+hashCode(sub_കണ്ണി)),
+                  length(len), next(sub_കണ്ണി) {}
+        മായാ bool operator==(സ്ഥിരം കണ്ണി_2 &other) സ്ഥിരം override;
+        മായാ int32_t mark_വലത്_Edges_First(int32_t edge_സംഖ്യ) override;
+        മായാ ശൂന്യം ലിഖ(StringTrieBuilder &builder) override;
+    സംരക്ഷിത:
         int32_t length;
-        Node *next;  // A branch sub-node.
+        കണ്ണി_2 *next;  // A branch sub-node.
     };
 
 #endif  /* U_HIDE_INTERNAL_API */
     /// \endcond
 
     /** @internal */
-    virtual Node *createLinearMatchNode(int32_t i, int32_t unitIndex, int32_t length,
-                                        Node *nextNode) const = 0;
+    മായാ കണ്ണി_2 *create_Linear_Match_കണ്ണി(int32_t i, int32_t unitIndex, int32_t length,
+                                        കണ്ണി_2 *next_കണ്ണി) സ്ഥിരം = 0;
 
     /** @internal */
-    virtual int32_t write(int32_t unit) = 0;
+    മായാ int32_t ലിഖ(int32_t unit) = 0;
     /** @internal */
-    virtual int32_t writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) = 0;
+    മായാ int32_t writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) = 0;
     /** @internal */
-    virtual int32_t writeValueAndFinal(int32_t i, UBool isFinal) = 0;
+    മായാ int32_t write_മൂല്യം_And_Final(int32_t i, UBool isFinal) = 0;
     /** @internal */
-    virtual int32_t writeValueAndType(UBool hasValue, int32_t value, int32_t node) = 0;
+    മായാ int32_t write_മൂല്യം_And_Type(UBool has_മൂല്യം, int32_t മൂല്യം_2, int32_t കണ്ണി) = 0;
     /** @internal */
-    virtual int32_t writeDeltaTo(int32_t jumpTarget) = 0;
+    മായാ int32_t writeDeltaTo(int32_t jumpTarget) = 0;
 };
 
 U_NAMESPACE_END

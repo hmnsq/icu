@@ -23,31 +23,31 @@
 *   including those for normalization and case mappings.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/uchar.h"
-#include "unicode/ucptrie.h"
-#include "unicode/udata.h"
-#include "unicode/unorm2.h"
-#include "unicode/uscript.h"
-#include "unicode/ustring.h"
-#include "unicode/utf16.h"
-#include "cstring.h"
-#include "emojiprops.h"
-#include "mutex.h"
-#include "normalizer2impl.h"
-#include "umutex.h"
-#include "ubidi_props.h"
-#include "uprops.h"
-#include "ucase.h"
-#include "ucln_cmn.h"
-#include "ulayout_props.h"
-#include "ustr_imp.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/uchar.h"
+#അന്തര്ഭാവ "unicode/ucptrie.h"
+#അന്തര്ഭാവ "unicode/udata.h"
+#അന്തര്ഭാവ "unicode/unorm2.h"
+#അന്തര്ഭാവ "unicode/uscript.h"
+#അന്തര്ഭാവ "unicode/ustring.h"
+#അന്തര്ഭാവ "unicode/utf16.h"
+#അന്തര്ഭാവ "cstring.h"
+#അന്തര്ഭാവ "emojiprops.h"
+#അന്തര്ഭാവ "mutex.h"
+#അന്തര്ഭാവ "normalizer2impl.h"
+#അന്തര്ഭാവ "umutex.h"
+#അന്തര്ഭാവ "ubidi_props.h"
+#അന്തര്ഭാവ "uprops.h"
+#അന്തര്ഭാവ "ucase.h"
+#അന്തര്ഭാവ "ucln_cmn.h"
+#അന്തര്ഭാവ "ulayout_props.h"
+#അന്തര്ഭാവ "ustr_imp.h"
 
 U_NAMESPACE_USE
 
 // Unicode text layout properties data -----------------------------------------
 
-namespace {
+നാമാകാശ {
 
 icu::UInitOnce gLayoutInitOnce {};
 UDataMemory *gLayoutMemory = nullptr;
@@ -56,9 +56,9 @@ UCPTrie *gInpcTrie = nullptr;  // Indic_Positional_Category
 UCPTrie *gInscTrie = nullptr;  // Indic_Syllabic_Category
 UCPTrie *gVoTrie = nullptr;  // Vertical_Orientation
 
-int32_t gMaxInpcValue = 0;
-int32_t gMaxInscValue = 0;
-int32_t gMaxVoValue = 0;
+int32_t g_Max_Inpc_മൂല്യം = 0;
+int32_t g_Max_Insc_മൂല്യം = 0;
+int32_t g_Max_Vo_മൂല്യം = 0;
 
 UBool U_CALLCONV uprops_cleanup() {
     udata_close(gLayoutMemory);
@@ -71,19 +71,19 @@ UBool U_CALLCONV uprops_cleanup() {
     ucptrie_close(gVoTrie);
     gVoTrie = nullptr;
 
-    gMaxInpcValue = 0;
-    gMaxInscValue = 0;
-    gMaxVoValue = 0;
+    g_Max_Inpc_മൂല്യം = 0;
+    g_Max_Insc_മൂല്യം = 0;
+    g_Max_Vo_മൂല്യം = 0;
 
     gLayoutInitOnce.reset();
-    return true;
+    തിരികെ സത്യം;
 }
 
 UBool U_CALLCONV
-ulayout_isAcceptable(void * /*context*/,
-                     const char * /* type */, const char * /*name*/,
-                     const UDataInfo *pInfo) {
-    return pInfo->size >= 20 &&
+ulayout_isAcceptable(ശൂന്യം * /*context*/,
+                     സ്ഥിരം അക്ഷരം * /* type */, സ്ഥിരം അക്ഷരം * /*name*/,
+                     സ്ഥിരം UDataInfo *pInfo) {
+    തിരികെ pInfo->size >= 20 &&
         pInfo->isBigEndian == U_IS_BIG_ENDIAN &&
         pInfo->charsetFamily == U_CHARSET_FAMILY &&
         pInfo->dataFormat[0] == ULAYOUT_FMT_0 &&
@@ -94,179 +94,179 @@ ulayout_isAcceptable(void * /*context*/,
 }
 
 // UInitOnce singleton initialization function
-void U_CALLCONV ulayout_load(UErrorCode &errorCode) {
+ശൂന്യം U_CALLCONV ulayout_load(UErrorCode &errorCode) {
     gLayoutMemory = udata_openChoice(
         nullptr, ULAYOUT_DATA_TYPE, ULAYOUT_DATA_NAME,
         ulayout_isAcceptable, nullptr, &errorCode);
-    if (U_FAILURE(errorCode)) { return; }
+    എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ; }
 
-    const uint8_t* inBytes = static_cast<const uint8_t*>(udata_getMemory(gLayoutMemory));
-    const int32_t* inIndexes = reinterpret_cast<const int32_t*>(inBytes);
+    സ്ഥിരം uint8_t* inBytes = static_cast<സ്ഥിരം uint8_t*>(udata_getMemory(gLayoutMemory));
+    സ്ഥിരം int32_t* inIndexes = reinterpret_cast<സ്ഥിരം int32_t*>(inBytes);
     int32_t indexesLength = inIndexes[ULAYOUT_IX_INDEXES_LENGTH];
-    if (indexesLength < 12) {
+    എങ്കിൽ (indexesLength < 12) {
         errorCode = U_INVALID_FORMAT_ERROR;  // Not enough indexes.
-        return;
+        തിരികെ;
     }
     int32_t offset = indexesLength * 4;
-    int32_t top = inIndexes[ULAYOUT_IX_INPC_TRIE_TOP];
-    int32_t trieSize = top - offset;
-    if (trieSize >= 16) {
-        gInpcTrie = ucptrie_openFromBinary(
-            UCPTRIE_TYPE_ANY, UCPTRIE_VALUE_BITS_ANY,
+    int32_t മുകൾ = inIndexes[ULAYOUT_IX_INPC_TRIE_മുകൾ];
+    int32_t trieSize = മുകൾ - offset;
+    എങ്കിൽ (trieSize >= 16) {
+        gInpcTrie = ucptrie_open_From_ദ്വിമാന(
+            UCPTRIE_TYPE_ANY, UCPTRIE_മൂല്യം_BITS_ANY,
             inBytes + offset, trieSize, nullptr, &errorCode);
     }
-    offset = top;
-    top = inIndexes[ULAYOUT_IX_INSC_TRIE_TOP];
-    trieSize = top - offset;
-    if (trieSize >= 16) {
-        gInscTrie = ucptrie_openFromBinary(
-            UCPTRIE_TYPE_ANY, UCPTRIE_VALUE_BITS_ANY,
+    offset = മുകൾ;
+    മുകൾ = inIndexes[ULAYOUT_IX_INSC_TRIE_മുകൾ];
+    trieSize = മുകൾ - offset;
+    എങ്കിൽ (trieSize >= 16) {
+        gInscTrie = ucptrie_open_From_ദ്വിമാന(
+            UCPTRIE_TYPE_ANY, UCPTRIE_മൂല്യം_BITS_ANY,
             inBytes + offset, trieSize, nullptr, &errorCode);
     }
-    offset = top;
-    top = inIndexes[ULAYOUT_IX_VO_TRIE_TOP];
-    trieSize = top - offset;
-    if (trieSize >= 16) {
-        gVoTrie = ucptrie_openFromBinary(
-            UCPTRIE_TYPE_ANY, UCPTRIE_VALUE_BITS_ANY,
+    offset = മുകൾ;
+    മുകൾ = inIndexes[ULAYOUT_IX_VO_TRIE_മുകൾ];
+    trieSize = മുകൾ - offset;
+    എങ്കിൽ (trieSize >= 16) {
+        gVoTrie = ucptrie_open_From_ദ്വിമാന(
+            UCPTRIE_TYPE_ANY, UCPTRIE_മൂല്യം_BITS_ANY,
             inBytes + offset, trieSize, nullptr, &errorCode);
     }
 
-    uint32_t maxValues = inIndexes[ULAYOUT_IX_MAX_VALUES];
-    gMaxInpcValue = maxValues >> ULAYOUT_MAX_INPC_SHIFT;
-    gMaxInscValue = (maxValues >> ULAYOUT_MAX_INSC_SHIFT) & 0xff;
-    gMaxVoValue = (maxValues >> ULAYOUT_MAX_VO_SHIFT) & 0xff;
+    uint32_t max_മൂല്യങ്ങൾ = inIndexes[ULAYOUT_IX_MAX_മൂല്യങ്ങൾ];
+    g_Max_Inpc_മൂല്യം = max_മൂല്യങ്ങൾ >> ULAYOUT_MAX_INPC_SHIFT;
+    g_Max_Insc_മൂല്യം = (max_മൂല്യങ്ങൾ >> ULAYOUT_MAX_INSC_SHIFT) & 0xff;
+    g_Max_Vo_മൂല്യം = (max_മൂല്യങ്ങൾ >> ULAYOUT_MAX_VO_SHIFT) & 0xff;
 
     ucln_common_registerCleanup(UCLN_COMMON_UPROPS, uprops_cleanup);
 }
 
 UBool ulayout_ensureData(UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return false; }
+    എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ അസത്യം; }
     umtx_initOnce(gLayoutInitOnce, &ulayout_load, errorCode);
-    return U_SUCCESS(errorCode);
+    തിരികെ U_SUCCESS(errorCode);
 }
 
 UBool ulayout_ensureData() {
     UErrorCode errorCode = U_ZERO_ERROR;
-    return ulayout_ensureData(errorCode);
+    തിരികെ ulayout_ensureData(errorCode);
 }
 
 }  // namespace
 
 /* general properties API functions ----------------------------------------- */
 
-struct BinaryProperty;
+ഘടന ദ്വിമാന_Property;
 
-typedef UBool BinaryPropertyContains(const BinaryProperty &prop, UChar32 c, UProperty which);
+തരനിർവചനം UBool ദ്വിമാന_Property_Contains(സ്ഥിരം ദ്വിമാന_Property &prop, UChar32 c, UProperty which);
 
-struct BinaryProperty {
+ഘടന ദ്വിമാന_Property {
     int32_t column;  // SRC_PROPSVEC column, or "source" if mask==0
     uint32_t mask;
-    BinaryPropertyContains *contains;
+    ദ്വിമാന_Property_Contains *contains;
 };
 
-static UBool defaultContains(const BinaryProperty &prop, UChar32 c, UProperty /*which*/) {
+സ്ഥിതം UBool defaultContains(സ്ഥിരം ദ്വിമാന_Property &prop, UChar32 c, UProperty /*which*/) {
     /* systematic, directly stored properties */
-    return (u_getUnicodeProperties(c, prop.column)&prop.mask)!=0;
+    തിരികെ (u_getUnicodeProperties(c, prop.column)&prop.mask)!=0;
 }
 
-static UBool caseBinaryPropertyContains(const BinaryProperty &/*prop*/, UChar32 c, UProperty which) {
-    return ucase_hasBinaryProperty(c, which);
+സ്ഥിതം UBool case_ദ്വിമാന_Property_Contains(സ്ഥിരം ദ്വിമാന_Property &/*prop*/, UChar32 c, UProperty which) {
+    തിരികെ ucase_has_ദ്വിമാന_Property(c, which);
 }
 
-static UBool isBidiControl(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return ubidi_isBidiControl(c);
+സ്ഥിതം UBool isBidiControl(സ്ഥിരം ദ്വിമാന_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
+    തിരികെ ubidi_isBidiControl(c);
 }
 
-static UBool isMirrored(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return ubidi_isMirrored(c);
+സ്ഥിതം UBool isMirrored(സ്ഥിരം ദ്വിമാന_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
+    തിരികെ ubidi_isMirrored(c);
 }
 
-static UBool isJoinControl(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return ubidi_isJoinControl(c);
+സ്ഥിതം UBool isJoinControl(സ്ഥിരം ദ്വിമാന_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
+    തിരികെ ubidi_isJoinControl(c);
 }
 
-#if UCONFIG_NO_NORMALIZATION
-static UBool hasFullCompositionExclusion(const BinaryProperty &, UChar32, UProperty) {
-    return false;
+#എങ്കിൽ UCONFIG_NO_NORMALIZATION
+സ്ഥിതം UBool hasFullCompositionExclusion(സ്ഥിരം ദ്വിമാന_Property &, UChar32, UProperty) {
+    തിരികെ അസത്യം;
 }
-#else
-static UBool hasFullCompositionExclusion(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+#അല്ലെങ്കിൽ
+സ്ഥിതം UBool hasFullCompositionExclusion(സ്ഥിരം ദ്വിമാന_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
     // By definition, Full_Composition_Exclusion is the same as NFC_QC=No.
     UErrorCode errorCode=U_ZERO_ERROR;
-    const Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(errorCode);
-    return U_SUCCESS(errorCode) && impl->isCompNo(impl->getNorm16(c));
+    സ്ഥിരം Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(errorCode);
+    തിരികെ U_SUCCESS(errorCode) && impl->isCompNo(impl->getNorm16(c));
 }
 #endif
 
 // UCHAR_NF*_INERT properties
-#if UCONFIG_NO_NORMALIZATION
-static UBool isNormInert(const BinaryProperty &, UChar32, UProperty) {
-    return false;
+#എങ്കിൽ UCONFIG_NO_NORMALIZATION
+സ്ഥിതം UBool isNormInert(സ്ഥിരം ദ്വിമാന_Property &, UChar32, UProperty) {
+    തിരികെ അസത്യം;
 }
-#else
-static UBool isNormInert(const BinaryProperty &/*prop*/, UChar32 c, UProperty which) {
+#അല്ലെങ്കിൽ
+സ്ഥിതം UBool isNormInert(സ്ഥിരം ദ്വിമാന_Property &/*prop*/, UChar32 c, UProperty which) {
     UErrorCode errorCode=U_ZERO_ERROR;
-    const Normalizer2 *norm2=Normalizer2Factory::getInstance(
+    സ്ഥിരം Normalizer2 *norm2=Normalizer2Factory::getInstance(
         static_cast<UNormalizationMode>(which - UCHAR_NFD_INERT + UNORM_NFD), errorCode);
-    return U_SUCCESS(errorCode) && norm2->isInert(c);
+    തിരികെ U_SUCCESS(errorCode) && norm2->isInert(c);
 }
 #endif
 
-#if UCONFIG_NO_NORMALIZATION
-static UBool changesWhenCasefolded(const BinaryProperty &, UChar32, UProperty) {
-    return false;
+#എങ്കിൽ UCONFIG_NO_NORMALIZATION
+സ്ഥിതം UBool changesWhenCasefolded(സ്ഥിരം ദ്വിമാന_Property &, UChar32, UProperty) {
+    തിരികെ അസത്യം;
 }
-#else
-static UBool changesWhenCasefolded(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+#അല്ലെങ്കിൽ
+സ്ഥിതം UBool changesWhenCasefolded(സ്ഥിരം ദ്വിമാന_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
     UnicodeString nfd;
     UErrorCode errorCode=U_ZERO_ERROR;
-    const Normalizer2 *nfcNorm2=Normalizer2::getNFCInstance(errorCode);
-    if(U_FAILURE(errorCode)) {
-        return false;
+    സ്ഥിരം Normalizer2 *nfcNorm2=Normalizer2::getNFCInstance(errorCode);
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        തിരികെ അസത്യം;
     }
-    if(nfcNorm2->getDecomposition(c, nfd)) {
+    എങ്കിൽ(nfcNorm2->getDecomposition(c, nfd)) {
         /* c has a decomposition */
-        if(nfd.length()==1) {
+        എങ്കിൽ(nfd.length()==1) {
             c=nfd[0];  /* single BMP code point */
-        } else if(nfd.length()<=U16_MAX_LENGTH &&
+        } അല്ലെങ്കിൽ എങ്കിൽ(nfd.length()<=U16_MAX_LENGTH &&
                   nfd.length()==U16_LENGTH(c=nfd.char32At(0))
         ) {
             /* single supplementary code point */
-        } else {
+        } അല്ലെങ്കിൽ {
             c=U_SENTINEL;
         }
-    } else if(c<0) {
-        return false;  /* protect against bad input */
+    } അല്ലെങ്കിൽ എങ്കിൽ(c<0) {
+        തിരികെ അസത്യം;  /* protect against bad input */
     }
-    if(c>=0) {
+    എങ്കിൽ(c>=0) {
         /* single code point */
-        const char16_t *resultString;
-        return ucase_toFullFolding(c, &resultString, U_FOLD_CASE_DEFAULT) >= 0;
-    } else {
+        സ്ഥിരം char16_t *resultString;
+        തിരികെ ucase_toFullFolding(c, &resultString, U_FOLD_CASE_DEFAULT) >= 0;
+    } അല്ലെങ്കിൽ {
         /* guess some large but stack-friendly capacity */
         char16_t dest[2*UCASE_MAX_STRING_LENGTH];
         int32_t destLength;
         destLength=u_strFoldCase(dest, UPRV_LENGTHOF(dest),
                                   nfd.getBuffer(), nfd.length(),
                                   U_FOLD_CASE_DEFAULT, &errorCode);
-        return U_SUCCESS(errorCode) &&
+        തിരികെ U_SUCCESS(errorCode) &&
                        0!=u_strCompare(nfd.getBuffer(), nfd.length(),
-                                       dest, destLength, false);
+                                       dest, destLength, അസത്യം);
     }
 }
 #endif
 
-#if UCONFIG_NO_NORMALIZATION
-static UBool changesWhenNFKC_Casefolded(const BinaryProperty &, UChar32, UProperty) {
-    return false;
+#എങ്കിൽ UCONFIG_NO_NORMALIZATION
+സ്ഥിതം UBool changesWhenNFKC_Casefolded(സ്ഥിരം ദ്വിമാന_Property &, UChar32, UProperty) {
+    തിരികെ അസത്യം;
 }
-#else
-static UBool changesWhenNFKC_Casefolded(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+#അല്ലെങ്കിൽ
+സ്ഥിതം UBool changesWhenNFKC_Casefolded(സ്ഥിരം ദ്വിമാന_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
     UErrorCode errorCode=U_ZERO_ERROR;
-    const Normalizer2Impl *kcf=Normalizer2Factory::getNFKC_CFImpl(errorCode);
-    if(U_FAILURE(errorCode)) {
-        return false;
+    സ്ഥിരം Normalizer2Impl *kcf=Normalizer2Factory::getNFKC_CFImpl(errorCode);
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        തിരികെ അസത്യം;
     }
     UnicodeString src(c);
     UnicodeString dest;
@@ -275,66 +275,66 @@ static UBool changesWhenNFKC_Casefolded(const BinaryProperty &/*prop*/, UChar32 
         // needs to release dest's buffer before we look at its contents.
         ReorderingBuffer buffer(*kcf, dest);
         // Small destCapacity for NFKC_CF(c).
-        if(buffer.init(5, errorCode)) {
-            const char16_t *srcArray=src.getBuffer();
-            kcf->compose(srcArray, srcArray+src.length(), false,
-                          true, buffer, errorCode);
+        എങ്കിൽ(buffer.init(5, errorCode)) {
+            സ്ഥിരം char16_t *srcArray=src.getBuffer();
+            kcf->compose(srcArray, srcArray+src.length(), അസത്യം,
+                          സത്യം, buffer, errorCode);
         }
     }
-    return U_SUCCESS(errorCode) && dest!=src;
+    തിരികെ U_SUCCESS(errorCode) && dest!=src;
 }
 #endif
 
-#if UCONFIG_NO_NORMALIZATION
-static UBool isCanonSegmentStarter(const BinaryProperty &, UChar32, UProperty) {
-    return false;
+#എങ്കിൽ UCONFIG_NO_NORMALIZATION
+സ്ഥിതം UBool isCanonSegmentStarter(സ്ഥിരം ദ്വിമാന_Property &, UChar32, UProperty) {
+    തിരികെ അസത്യം;
 }
-#else
-static UBool isCanonSegmentStarter(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+#അല്ലെങ്കിൽ
+സ്ഥിതം UBool isCanonSegmentStarter(സ്ഥിരം ദ്വിമാന_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
     UErrorCode errorCode=U_ZERO_ERROR;
-    const Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(errorCode);
-    return
+    സ്ഥിരം Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(errorCode);
+    തിരികെ
         U_SUCCESS(errorCode) && impl->ensureCanonIterData(errorCode) &&
         impl->isCanonSegmentStarter(c);
 }
 #endif
 
-static UBool isPOSIX_alnum(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return u_isalnumPOSIX(c);
+സ്ഥിതം UBool isPOSIX_alnum(സ്ഥിരം ദ്വിമാന_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
+    തിരികെ u_isalnumPOSIX(c);
 }
 
-static UBool isPOSIX_blank(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return u_isblank(c);
+സ്ഥിതം UBool isPOSIX_blank(സ്ഥിരം ദ്വിമാന_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
+    തിരികെ u_isblank(c);
 }
 
-static UBool isPOSIX_graph(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return u_isgraphPOSIX(c);
+സ്ഥിതം UBool isPOSIX_graph(സ്ഥിരം ദ്വിമാന_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
+    തിരികെ u_isgraphPOSIX(c);
 }
 
-static UBool isPOSIX_print(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return u_isprintPOSIX(c);
+സ്ഥിതം UBool isPOSIX_print(സ്ഥിരം ദ്വിമാന_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
+    തിരികെ u_isprintPOSIX(c);
 }
 
-static UBool isPOSIX_xdigit(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return u_isxdigit(c);
+സ്ഥിതം UBool isPOSIX_xdigit(സ്ഥിരം ദ്വിമാന_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
+    തിരികെ u_isxdigit(c);
 }
 
-static UBool isRegionalIndicator(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+സ്ഥിതം UBool isRegionalIndicator(സ്ഥിരം ദ്വിമാന_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
     // Property starts are a subset of lb=RI etc.
-    return 0x1F1E6<=c && c<=0x1F1FF;
+    തിരികെ 0x1F1E6<=c && c<=0x1F1FF;
 }
 
-static UBool hasEmojiProperty(const BinaryProperty &/*prop*/, UChar32 c, UProperty which) {
-    return EmojiProps::hasBinaryProperty(c, which);
+സ്ഥിതം UBool hasEmojiProperty(സ്ഥിരം ദ്വിമാന_Property &/*prop*/, UChar32 c, UProperty which) {
+    തിരികെ EmojiProps::has_ദ്വിമാന_Property(c, which);
 }
 
-static UBool isIDSUnaryOperator(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+സ്ഥിതം UBool isIDSUnaryOperator(സ്ഥിരം ദ്വിമാന_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
     // New in Unicode 15.1 for just two characters.
-    return 0x2FFE<=c && c<=0x2FFF;
+    തിരികെ 0x2FFE<=c && c<=0x2FFF;
 }
 
 /** Ranges (start/limit pairs) of ID_Compat_Math_Continue (only), from UCD PropList.txt. */
-static constexpr UChar32 ID_COMPAT_MATH_CONTINUE[] = {
+സ്ഥിതം constexpr UChar32 ID_COMPAT_MATH_CONTINUE[] = {
     0x00B2, 0x00B3 + 1,
     0x00B9, 0x00B9 + 1,
     0x2070, 0x2070 + 1,
@@ -343,7 +343,7 @@ static constexpr UChar32 ID_COMPAT_MATH_CONTINUE[] = {
 };
 
 /** ID_Compat_Math_Start characters, from UCD PropList.txt. */
-static constexpr UChar32 ID_COMPAT_MATH_START[] = {
+സ്ഥിതം constexpr UChar32 ID_COMPAT_MATH_START[] = {
     0x2202,
     0x2207,
     0x221E,
@@ -360,7 +360,7 @@ static constexpr UChar32 ID_COMPAT_MATH_START[] = {
 };
 
 /** Ranges (start/limit pairs) of Modifier_Combining_Mark (only), from UCD PropList.txt. */
-static constexpr UChar32 MODIFIER_COMBINING_MARK[] = {
+സ്ഥിതം constexpr UChar32 MODIFIER_COMBINING_MARK[] = {
     0x0654, 0x0655 + 1,
     0x0658, 0x0658 + 1, // U+0658
     0x06DC, 0x06DC + 1, // U+06DC
@@ -375,31 +375,31 @@ static constexpr UChar32 MODIFIER_COMBINING_MARK[] = {
     0x10EF9, 0x10EF9 + 1,
 };
 
-static UBool isIDCompatMathStart(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    if (c < ID_COMPAT_MATH_START[0]) { return false; }  // fastpath for common scripts
-    for (UChar32 startChar : ID_COMPAT_MATH_START) {
-        if (c == startChar) { return true; }
+സ്ഥിതം UBool isIDCompatMathStart(സ്ഥിരം ദ്വിമാന_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
+    എങ്കിൽ (c < ID_COMPAT_MATH_START[0]) { തിരികെ അസത്യം; }  // fastpath for common scripts
+    വേണ്ടി (UChar32 startChar : ID_COMPAT_MATH_START) {
+        എങ്കിൽ (c == startChar) { തിരികെ സത്യം; }
     }
-    return false;
+    തിരികെ അസത്യം;
 }
 
-static UBool isIDCompatMathContinue(const BinaryProperty &prop, UChar32 c, UProperty /*which*/) {
-    for (int32_t i = 0; i < UPRV_LENGTHOF(ID_COMPAT_MATH_CONTINUE); i += 2) {
-        if (c < ID_COMPAT_MATH_CONTINUE[i]) { return false; }  // below range start
-        if (c < ID_COMPAT_MATH_CONTINUE[i + 1]) { return true; }  // below range limit
+സ്ഥിതം UBool isIDCompatMathContinue(സ്ഥിരം ദ്വിമാന_Property &prop, UChar32 c, UProperty /*which*/) {
+    വേണ്ടി (int32_t i = 0; i < UPRV_LENGTHOF(ID_COMPAT_MATH_CONTINUE); i += 2) {
+        എങ്കിൽ (c < ID_COMPAT_MATH_CONTINUE[i]) { തിരികെ അസത്യം; }  // below range start
+        എങ്കിൽ (c < ID_COMPAT_MATH_CONTINUE[i + 1]) { തിരികെ സത്യം; }  // below range limit
     }
-    return isIDCompatMathStart(prop, c, UCHAR_ID_COMPAT_MATH_START);
+    തിരികെ isIDCompatMathStart(prop, c, UCHAR_ID_COMPAT_MATH_START);
 }
 
-static UBool isModifierCombiningMark(const BinaryProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    for (int32_t i = 0; i < UPRV_LENGTHOF(MODIFIER_COMBINING_MARK); i += 2) {
-        if (c < MODIFIER_COMBINING_MARK[i]) { return false; }  // below range start
-        if (c < MODIFIER_COMBINING_MARK[i + 1]) { return true; }  // below range limit
+സ്ഥിതം UBool isModifierCombiningMark(സ്ഥിരം ദ്വിമാന_Property &/*prop*/, UChar32 c, UProperty /*which*/) {
+    വേണ്ടി (int32_t i = 0; i < UPRV_LENGTHOF(MODIFIER_COMBINING_MARK); i += 2) {
+        എങ്കിൽ (c < MODIFIER_COMBINING_MARK[i]) { തിരികെ അസത്യം; }  // below range start
+        എങ്കിൽ (c < MODIFIER_COMBINING_MARK[i + 1]) { തിരികെ സത്യം; }  // below range limit
     }
-    return false;
+    തിരികെ അസത്യം;
 }
 
-static const BinaryProperty binProps[UCHAR_BINARY_LIMIT]={
+സ്ഥിതം സ്ഥിരം ദ്വിമാന_Property binProps[UCHAR_ദ്വിമാന_LIMIT]={
     /*
      * column and mask values for binary properties from u_getUnicodeProperties().
      * Must be in order of corresponding UProperty,
@@ -426,23 +426,23 @@ static const BinaryProperty binProps[UCHAR_BINARY_LIMIT]={
     { 1,                U_MASK(UPROPS_ID_CONTINUE), defaultContains },
     { 1,                U_MASK(UPROPS_ID_START), defaultContains },
     { 1,                U_MASK(UPROPS_IDEOGRAPHIC), defaultContains },
-    { 1,                U_MASK(UPROPS_IDS_BINARY_OPERATOR), defaultContains },
+    { 1,                U_MASK(UPROPS_IDS_ദ്വിമാന_OPERATOR), defaultContains },
     { 1,                U_MASK(UPROPS_IDS_TRINARY_OPERATOR), defaultContains },
     { UPROPS_SRC_BIDI,  0, isJoinControl },
     { 1,                U_MASK(UPROPS_LOGICAL_ORDER_EXCEPTION), defaultContains },
-    { UPROPS_SRC_CASE,  0, caseBinaryPropertyContains },  // UCHAR_LOWERCASE
+    { UPROPS_SRC_CASE,  0, case_ദ്വിമാന_Property_Contains },  // UCHAR_LOWERCASE
     { 1,                U_MASK(UPROPS_MATH), defaultContains },
     { 1,                U_MASK(UPROPS_NONCHARACTER_CODE_POINT), defaultContains },
     { 1,                U_MASK(UPROPS_QUOTATION_MARK), defaultContains },
     { 1,                U_MASK(UPROPS_RADICAL), defaultContains },
-    { UPROPS_SRC_CASE,  0, caseBinaryPropertyContains },  // UCHAR_SOFT_DOTTED
+    { UPROPS_SRC_CASE,  0, case_ദ്വിമാന_Property_Contains },  // UCHAR_SOFT_DOTTED
     { 1,                U_MASK(UPROPS_TERMINAL_PUNCTUATION), defaultContains },
     { 1,                U_MASK(UPROPS_UNIFIED_IDEOGRAPH), defaultContains },
-    { UPROPS_SRC_CASE,  0, caseBinaryPropertyContains },  // UCHAR_UPPERCASE
+    { UPROPS_SRC_CASE,  0, case_ദ്വിമാന_Property_Contains },  // UCHAR_UPPERCASE
     { 1,                U_MASK(UPROPS_WHITE_SPACE), defaultContains },
     { 1,                U_MASK(UPROPS_XID_CONTINUE), defaultContains },
     { 1,                U_MASK(UPROPS_XID_START), defaultContains },
-    { UPROPS_SRC_CASE,  0, caseBinaryPropertyContains },  // UCHAR_CASE_SENSITIVE
+    { UPROPS_SRC_CASE,  0, case_ദ്വിമാന_Property_Contains },  // UCHAR_CASE_SENSITIVE
     { 1,                U_MASK(UPROPS_S_TERM), defaultContains },
     { 1,                U_MASK(UPROPS_VARIATION_SELECTOR), defaultContains },
     { UPROPS_SRC_NFC,   0, isNormInert },  // UCHAR_NFD_INERT
@@ -457,13 +457,13 @@ static const BinaryProperty binProps[UCHAR_BINARY_LIMIT]={
     { UPROPS_SRC_CHAR,  0, isPOSIX_graph },
     { UPROPS_SRC_CHAR,  0, isPOSIX_print },
     { UPROPS_SRC_CHAR,  0, isPOSIX_xdigit },
-    { UPROPS_SRC_CASE,  0, caseBinaryPropertyContains },  // UCHAR_CASED
-    { UPROPS_SRC_CASE,  0, caseBinaryPropertyContains },  // UCHAR_CASE_IGNORABLE
-    { UPROPS_SRC_CASE,  0, caseBinaryPropertyContains },  // UCHAR_CHANGES_WHEN_LOWERCASED
-    { UPROPS_SRC_CASE,  0, caseBinaryPropertyContains },  // UCHAR_CHANGES_WHEN_UPPERCASED
-    { UPROPS_SRC_CASE,  0, caseBinaryPropertyContains },  // UCHAR_CHANGES_WHEN_TITLECASED
+    { UPROPS_SRC_CASE,  0, case_ദ്വിമാന_Property_Contains },  // UCHAR_CASED
+    { UPROPS_SRC_CASE,  0, case_ദ്വിമാന_Property_Contains },  // UCHAR_CASE_IGNORABLE
+    { UPROPS_SRC_CASE,  0, case_ദ്വിമാന_Property_Contains },  // UCHAR_CHANGES_WHEN_LOWERCASED
+    { UPROPS_SRC_CASE,  0, case_ദ്വിമാന_Property_Contains },  // UCHAR_CHANGES_WHEN_UPPERCASED
+    { UPROPS_SRC_CASE,  0, case_ദ്വിമാന_Property_Contains },  // UCHAR_CHANGES_WHEN_TITLECASED
     { UPROPS_SRC_CASE_AND_NORM,  0, changesWhenCasefolded },
-    { UPROPS_SRC_CASE,  0, caseBinaryPropertyContains },  // UCHAR_CHANGES_WHEN_CASEMAPPED
+    { UPROPS_SRC_CASE,  0, case_ദ്വിമാന_Property_Contains },  // UCHAR_CHANGES_WHEN_CASEMAPPED
     { UPROPS_SRC_NFKC_CF, 0, changesWhenNFKC_Casefolded },
     { UPROPS_SRC_EMOJI, 0, hasEmojiProperty },  // UCHAR_EMOJI
     { UPROPS_SRC_EMOJI, 0, hasEmojiProperty },  // UCHAR_EMOJI_PRESENTATION
@@ -487,130 +487,130 @@ static const BinaryProperty binProps[UCHAR_BINARY_LIMIT]={
 };
 
 U_CAPI UBool U_EXPORT2
-u_hasBinaryProperty(UChar32 c, UProperty which) {
+u_has_ദ്വിമാന_Property(UChar32 c, UProperty which) {
     /* c is range-checked in the functions that are called from here */
-    if(which<UCHAR_BINARY_START || UCHAR_BINARY_LIMIT<=which) {
+    എങ്കിൽ(which<UCHAR_ദ്വിമാന_START || UCHAR_ദ്വിമാന_LIMIT<=which) {
         /* not a known binary property */
-        return false;
-    } else {
-        const BinaryProperty &prop=binProps[which];
-        return prop.contains(prop, c, which);
+        തിരികെ അസത്യം;
+    } അല്ലെങ്കിൽ {
+        സ്ഥിരം ദ്വിമാന_Property &prop=binProps[which];
+        തിരികെ prop.contains(prop, c, which);
     }
 }
 
 /* Checks if the Unicode character can start a Unicode identifier.*/
 U_CAPI UBool U_EXPORT2
 u_isIDStart(UChar32 c) {
-    return u_hasBinaryProperty(c, UCHAR_ID_START);
+    തിരികെ u_has_ദ്വിമാന_Property(c, UCHAR_ID_START);
 }
 
 /* Checks if the Unicode character can be a Unicode identifier part other than starting the
  identifier.*/
 U_CAPI UBool U_EXPORT2
 u_isIDPart(UChar32 c) {
-    return u_hasBinaryProperty(c, UCHAR_ID_CONTINUE);
+    തിരികെ u_has_ദ്വിമാന_Property(c, UCHAR_ID_CONTINUE);
 }
 
 U_CAPI UBool U_EXPORT2
-u_stringHasBinaryProperty(const char16_t *s, int32_t length, UProperty which) {
-    if (s == nullptr && length != 0) { return false; }
-    if (length == 1) {
-        return u_hasBinaryProperty(s[0], which);  // single code point
-    } else if (length == 2 || (length < 0 && *s != 0)) {  // not empty string
+u_string_Has_ദ്വിമാന_Property(സ്ഥിരം char16_t *s, int32_t length, UProperty which) {
+    എങ്കിൽ (s == nullptr && length != 0) { തിരികെ അസത്യം; }
+    എങ്കിൽ (length == 1) {
+        തിരികെ u_has_ദ്വിമാന_Property(s[0], which);  // single code point
+    } അല്ലെങ്കിൽ എങ്കിൽ (length == 2 || (length < 0 && *s != 0)) {  // not empty string
         // first code point
         int32_t i = 0;
         UChar32 c;
         U16_NEXT(s, i, length, c);
-        if (length > 0 ? i == length : s[i] == 0) {
-            return u_hasBinaryProperty(c, which);  // single code point
+        എങ്കിൽ (length > 0 ? i == length : s[i] == 0) {
+            തിരികെ u_has_ദ്വിമാന_Property(c, which);  // single code point
         }
     }
     // Only call into EmojiProps for a relevant property,
     // so that we not unnecessarily try to load its data file.
-    return UCHAR_BASIC_EMOJI <= which && which <= UCHAR_RGI_EMOJI &&
-        EmojiProps::hasBinaryProperty(s, length, which);
+    തിരികെ UCHAR_BASIC_EMOJI <= which && which <= UCHAR_RGI_EMOJI &&
+        EmojiProps::has_ദ്വിമാന_Property(s, length, which);
 }
 
-struct IntProperty;
+ഘടന IntProperty;
 
-typedef int32_t IntPropertyGetValue(const IntProperty &prop, UChar32 c, UProperty which);
-typedef int32_t IntPropertyGetMaxValue(const IntProperty &prop, UProperty which);
+തരനിർവചനം int32_t Int_Property_Get_മൂല്യം(സ്ഥിരം IntProperty &prop, UChar32 c, UProperty which);
+തരനിർവചനം int32_t Int_Property_Get_Max_മൂല്യം(സ്ഥിരം IntProperty &prop, UProperty which);
 
-struct IntProperty {
+ഘടന IntProperty {
     int32_t column;  // SRC_PROPSVEC column, or "source" if mask==0
     uint32_t mask;
     int32_t shift;  // =maxValue if getMaxValueFromShift() is used
-    IntPropertyGetValue *getValue;
-    IntPropertyGetMaxValue *getMaxValue;
+    Int_Property_Get_മൂല്യം *get_മൂല്യം;
+    Int_Property_Get_Max_മൂല്യം *get_Max_മൂല്യം;
 };
 
-static int32_t defaultGetValue(const IntProperty &prop, UChar32 c, UProperty /*which*/) {
+സ്ഥിതം int32_t default_Get_മൂല്യം(സ്ഥിരം IntProperty &prop, UChar32 c, UProperty /*which*/) {
     /* systematic, directly stored properties */
-    return static_cast<int32_t>(u_getUnicodeProperties(c, prop.column) & prop.mask) >> prop.shift;
+    തിരികെ static_cast<int32_t>(u_getUnicodeProperties(c, prop.column) & prop.mask) >> prop.shift;
 }
 
-static int32_t defaultGetMaxValue(const IntProperty &prop, UProperty /*which*/) {
-    return (uprv_getMaxValues(prop.column)&prop.mask)>>prop.shift;
+സ്ഥിതം int32_t default_Get_Max_മൂല്യം(സ്ഥിരം IntProperty &prop, UProperty /*which*/) {
+    തിരികെ (uprv_get_Max_മൂല്യങ്ങൾ(prop.column)&prop.mask)>>prop.shift;
 }
 
-static int32_t getMaxValueFromShift(const IntProperty &prop, UProperty /*which*/) {
-    return prop.shift;
+സ്ഥിതം int32_t get_Max_മൂല്യം_From_Shift(സ്ഥിരം IntProperty &prop, UProperty /*which*/) {
+    തിരികെ prop.shift;
 }
 
-static int32_t getBiDiClass(const IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return static_cast<int32_t>(u_charDirection(c));
+സ്ഥിതം int32_t getBiDiClass(സ്ഥിരം IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    തിരികെ static_cast<int32_t>(u_charDirection(c));
 }
 
-static int32_t getBiDiPairedBracketType(const IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return static_cast<int32_t>(ubidi_getPairedBracketType(c));
+സ്ഥിതം int32_t getBiDiPairedBracketType(സ്ഥിരം IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    തിരികെ static_cast<int32_t>(ubidi_getPairedBracketType(c));
 }
 
-static int32_t biDiGetMaxValue(const IntProperty &/*prop*/, UProperty which) {
-    return ubidi_getMaxValue(which);
+സ്ഥിതം int32_t bi_Di_Get_Max_മൂല്യം(സ്ഥിരം IntProperty &/*prop*/, UProperty which) {
+    തിരികെ ubidi_get_Max_മൂല്യം(which);
 }
 
-static int32_t getBlock(const IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return static_cast<int32_t>(ublock_getCode(c));
+സ്ഥിതം int32_t getBlock(സ്ഥിരം IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    തിരികെ static_cast<int32_t>(ublock_getCode(c));
 }
 
-static int32_t blockGetMaxValue(const IntProperty &/*prop*/, UProperty /*which*/) {
-    return uprv_getMaxValues(UPROPS_MAX_VALUES_OTHER_INDEX) & UPROPS_MAX_BLOCK;
+സ്ഥിതം int32_t block_Get_Max_മൂല്യം(സ്ഥിരം IntProperty &/*prop*/, UProperty /*which*/) {
+    തിരികെ uprv_get_Max_മൂല്യങ്ങൾ(UPROPS_MAX_മൂല്യങ്ങൾ_OTHER_INDEX) & UPROPS_MAX_BLOCK;
 }
 
-#if UCONFIG_NO_NORMALIZATION
-static int32_t getCombiningClass(const IntProperty &, UChar32, UProperty) {
-    return 0;
+#എങ്കിൽ UCONFIG_NO_NORMALIZATION
+സ്ഥിതം int32_t getCombiningClass(സ്ഥിരം IntProperty &, UChar32, UProperty) {
+    തിരികെ 0;
 }
-#else
-static int32_t getCombiningClass(const IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return u_getCombiningClass(c);
+#അല്ലെങ്കിൽ
+സ്ഥിതം int32_t getCombiningClass(സ്ഥിരം IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    തിരികെ u_getCombiningClass(c);
 }
 #endif
 
-static int32_t getGeneralCategory(const IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return static_cast<int32_t>(u_charType(c));
+സ്ഥിതം int32_t getGeneralCategory(സ്ഥിരം IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    തിരികെ static_cast<int32_t>(u_charType(c));
 }
 
-static int32_t getJoiningGroup(const IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return ubidi_getJoiningGroup(c);
+സ്ഥിതം int32_t getJoiningGroup(സ്ഥിരം IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    തിരികെ ubidi_getJoiningGroup(c);
 }
 
-static int32_t getJoiningType(const IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return ubidi_getJoiningType(c);
+സ്ഥിതം int32_t getJoiningType(സ്ഥിരം IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    തിരികെ ubidi_getJoiningType(c);
 }
 
-static int32_t getNumericType(const IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    int32_t ntv = static_cast<int32_t>(GET_NUMERIC_TYPE_VALUE(u_getMainProperties(c)));
-    return UPROPS_NTV_GET_TYPE(ntv);
+സ്ഥിതം int32_t getNumericType(സ്ഥിരം IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    int32_t ntv = static_cast<int32_t>(GET_NUMERIC_TYPE_മൂല്യം(u_getMainProperties(c)));
+    തിരികെ UPROPS_NTV_GET_TYPE(ntv);
 }
 
-static int32_t getScript(const IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+സ്ഥിതം int32_t getScript(സ്ഥിരം IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
     UErrorCode errorCode=U_ZERO_ERROR;
-    return static_cast<int32_t>(uscript_getScript(c, &errorCode));
+    തിരികെ static_cast<int32_t>(uscript_getScript(c, &errorCode));
 }
 
-static int32_t scriptGetMaxValue(const IntProperty &/*prop*/, UProperty /*which*/) {
-    return uprv_getMaxValues(0)&UPROPS_MAX_SCRIPT;
+സ്ഥിതം int32_t script_Get_Max_മൂല്യം(സ്ഥിരം IntProperty &/*prop*/, UProperty /*which*/) {
+    തിരികെ uprv_get_Max_മൂല്യങ്ങൾ(0)&UPROPS_MAX_SCRIPT;
 }
 
 /*
@@ -621,7 +621,7 @@ static int32_t scriptGetMaxValue(const IntProperty &/*prop*/, UProperty /*which*
  * Some Kirat Rai vowels are given GCB=V for proper grapheme clustering, but
  * they are of course not related to Hangul syllables.
  */
-static const UHangulSyllableType gcbToHst[]={
+സ്ഥിതം സ്ഥിരം UHangulSyllableType gcbToHst[]={
     U_HST_NOT_APPLICABLE,   /* U_GCB_OTHER */
     U_HST_NOT_APPLICABLE,   /* U_GCB_CONTROL */
     U_HST_NOT_APPLICABLE,   /* U_GCB_CR */
@@ -638,83 +638,83 @@ static const UHangulSyllableType gcbToHst[]={
      */
 };
 
-static int32_t getHangulSyllableType(const IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+സ്ഥിതം int32_t getHangulSyllableType(സ്ഥിരം IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
     // Ignore supplementary code points: They all have HST=NA.
     // This is a simple way to handle the GCB!=hst cases since Unicode 16 (Kirat Rai vowels).
-    if(c>0xffff) {
-        return U_HST_NOT_APPLICABLE;
+    എങ്കിൽ(c>0xffff) {
+        തിരികെ U_HST_NOT_APPLICABLE;
     }
     /* see comments on gcbToHst[] above */
     int32_t gcb = static_cast<int32_t>(u_getUnicodeProperties(c, 2) & UPROPS_GCB_MASK) >> UPROPS_GCB_SHIFT;
-    if(gcb<UPRV_LENGTHOF(gcbToHst)) {
-        return gcbToHst[gcb];
-    } else {
-        return U_HST_NOT_APPLICABLE;
+    എങ്കിൽ(gcb<UPRV_LENGTHOF(gcbToHst)) {
+        തിരികെ gcbToHst[gcb];
+    } അല്ലെങ്കിൽ {
+        തിരികെ U_HST_NOT_APPLICABLE;
     }
 }
 
-#if UCONFIG_NO_NORMALIZATION
-static int32_t getNormQuickCheck(const IntProperty &, UChar32, UProperty) {
-    return 0;
+#എങ്കിൽ UCONFIG_NO_NORMALIZATION
+സ്ഥിതം int32_t getNormQuickCheck(സ്ഥിരം IntProperty &, UChar32, UProperty) {
+    തിരികെ 0;
 }
-#else
-static int32_t getNormQuickCheck(const IntProperty &/*prop*/, UChar32 c, UProperty which) {
-    return static_cast<int32_t>(unorm_getQuickCheck(c, static_cast<UNormalizationMode>(which - UCHAR_NFD_QUICK_CHECK + UNORM_NFD)));
-}
-#endif
-
-#if UCONFIG_NO_NORMALIZATION
-static int32_t getLeadCombiningClass(const IntProperty &, UChar32, UProperty) {
-    return 0;
-}
-#else
-static int32_t getLeadCombiningClass(const IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return unorm_getFCD16(c)>>8;
+#അല്ലെങ്കിൽ
+സ്ഥിതം int32_t getNormQuickCheck(സ്ഥിരം IntProperty &/*prop*/, UChar32 c, UProperty which) {
+    തിരികെ static_cast<int32_t>(unorm_getQuickCheck(c, static_cast<UNormalizationMode>(which - UCHAR_NFD_QUICK_CHECK + UNORM_NFD)));
 }
 #endif
 
-#if UCONFIG_NO_NORMALIZATION
-static int32_t getTrailCombiningClass(const IntProperty &, UChar32, UProperty) {
-    return 0;
+#എങ്കിൽ UCONFIG_NO_NORMALIZATION
+സ്ഥിതം int32_t getLeadCombiningClass(സ്ഥിരം IntProperty &, UChar32, UProperty) {
+    തിരികെ 0;
 }
-#else
-static int32_t getTrailCombiningClass(const IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
-    return unorm_getFCD16(c)&0xff;
+#അല്ലെങ്കിൽ
+സ്ഥിതം int32_t getLeadCombiningClass(സ്ഥിരം IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    തിരികെ unorm_getFCD16(c)>>8;
 }
 #endif
 
-static int32_t getInPC(const IntProperty &, UChar32 c, UProperty) {
-    return ulayout_ensureData() && gInpcTrie != nullptr ? ucptrie_get(gInpcTrie, c) : 0;
+#എങ്കിൽ UCONFIG_NO_NORMALIZATION
+സ്ഥിതം int32_t getTrailCombiningClass(സ്ഥിരം IntProperty &, UChar32, UProperty) {
+    തിരികെ 0;
+}
+#അല്ലെങ്കിൽ
+സ്ഥിതം int32_t getTrailCombiningClass(സ്ഥിരം IntProperty &/*prop*/, UChar32 c, UProperty /*which*/) {
+    തിരികെ unorm_getFCD16(c)&0xff;
+}
+#endif
+
+സ്ഥിതം int32_t getInPC(സ്ഥിരം IntProperty &, UChar32 c, UProperty) {
+    തിരികെ ulayout_ensureData() && gInpcTrie != nullptr ? ucptrie_get(gInpcTrie, c) : 0;
 }
 
-static int32_t getInSC(const IntProperty &, UChar32 c, UProperty) {
-    return ulayout_ensureData() && gInscTrie != nullptr ? ucptrie_get(gInscTrie, c) : 0;
+സ്ഥിതം int32_t getInSC(സ്ഥിരം IntProperty &, UChar32 c, UProperty) {
+    തിരികെ ulayout_ensureData() && gInscTrie != nullptr ? ucptrie_get(gInscTrie, c) : 0;
 }
 
-static int32_t getVo(const IntProperty &, UChar32 c, UProperty) {
-    return ulayout_ensureData() && gVoTrie != nullptr ? ucptrie_get(gVoTrie, c) : 0;
+സ്ഥിതം int32_t getVo(സ്ഥിരം IntProperty &, UChar32 c, UProperty) {
+    തിരികെ ulayout_ensureData() && gVoTrie != nullptr ? ucptrie_get(gVoTrie, c) : 0;
 }
 
-static int32_t layoutGetMaxValue(const IntProperty &/*prop*/, UProperty which) {
-    if (!ulayout_ensureData()) { return 0; }
-    switch (which) {
-    case UCHAR_INDIC_POSITIONAL_CATEGORY:
-        return gMaxInpcValue;
-    case UCHAR_INDIC_SYLLABIC_CATEGORY:
-        return gMaxInscValue;
-    case UCHAR_VERTICAL_ORIENTATION:
-        return gMaxVoValue;
-    default:
-        return 0;
+സ്ഥിതം int32_t layout_Get_Max_മൂല്യം(സ്ഥിരം IntProperty &/*prop*/, UProperty which) {
+    എങ്കിൽ (!ulayout_ensureData()) { തിരികെ 0; }
+    തിരഞ്ഞെടുപ്പ് (which) {
+    അവസ്ഥ UCHAR_INDIC_POSITIONAL_CATEGORY:
+        തിരികെ g_Max_Inpc_മൂല്യം;
+    അവസ്ഥ UCHAR_INDIC_SYLLABIC_CATEGORY:
+        തിരികെ g_Max_Insc_മൂല്യം;
+    അവസ്ഥ UCHAR_VERTICAL_ORIENTATION:
+        തിരികെ g_Max_Vo_മൂല്യം;
+    സ്ഥിരസ്ഥിതി:
+        തിരികെ 0;
     }
 }
 
-static int32_t getIDStatusValue(const IntProperty & /*prop*/, UChar32 c, UProperty /*which*/) {
+സ്ഥിതം int32_t get_IDStatus_മൂല്യം(സ്ഥിരം IntProperty & /*prop*/, UChar32 c, UProperty /*which*/) {
     uint32_t value = u_getUnicodeProperties(c, 2) >> UPROPS_2_ID_TYPE_SHIFT;
-    return value >= UPROPS_ID_TYPE_ALLOWED_MIN ? U_ID_STATUS_ALLOWED : U_ID_STATUS_RESTRICTED;
+    തിരികെ value >= UPROPS_ID_TYPE_ALLOWED_MIN ? U_ID_STATUS_ALLOWED : U_ID_STATUS_RESTRICTED;
 }
 
-static const IntProperty intProps[UCHAR_INT_LIMIT-UCHAR_INT_START]={
+സ്ഥിതം സ്ഥിരം IntProperty intProps[UCHAR_INT_LIMIT-UCHAR_INT_START]={
     /*
      * column, mask and shift values for int-value properties from u_getUnicodeProperties().
      * Must be in order of corresponding UProperty,
@@ -723,213 +723,213 @@ static const IntProperty intProps[UCHAR_INT_LIMIT-UCHAR_INT_START]={
      * Properties with mask==0 are handled in code.
      * For them, column is the UPropertySource value.
      */
-    { UPROPS_SRC_BIDI,  0, 0,                               getBiDiClass, biDiGetMaxValue },
-    { UPROPS_SRC_BLOCK, 0, 0,                               getBlock, blockGetMaxValue },
-    { UPROPS_SRC_NFC,   0, 0xff,                            getCombiningClass, getMaxValueFromShift },
-    { 2,                UPROPS_DT_MASK, 0,                  defaultGetValue, defaultGetMaxValue },
-    { 0,                UPROPS_EA_MASK, UPROPS_EA_SHIFT,    defaultGetValue, defaultGetMaxValue },
-    { UPROPS_SRC_CHAR, 0, static_cast<int32_t>(U_CHAR_CATEGORY_COUNT) - 1, getGeneralCategory, getMaxValueFromShift },
-    { UPROPS_SRC_BIDI,  0, 0,                               getJoiningGroup, biDiGetMaxValue },
-    { UPROPS_SRC_BIDI,  0, 0,                               getJoiningType, biDiGetMaxValue },
-    { 2,                UPROPS_LB_MASK, UPROPS_LB_SHIFT,    defaultGetValue, defaultGetMaxValue },
-    { UPROPS_SRC_CHAR, 0, static_cast<int32_t>(U_NT_COUNT) - 1, getNumericType, getMaxValueFromShift },
-    { UPROPS_SRC_PROPSVEC, 0, 0,                            getScript, scriptGetMaxValue },
-    { UPROPS_SRC_PROPSVEC, 0, static_cast<int32_t>(U_HST_COUNT) - 1, getHangulSyllableType, getMaxValueFromShift },
+    { UPROPS_SRC_BIDI,  0, 0,                               getBiDiClass, bi_Di_Get_Max_മൂല്യം },
+    { UPROPS_SRC_BLOCK, 0, 0,                               getBlock, block_Get_Max_മൂല്യം },
+    { UPROPS_SRC_NFC,   0, 0xff,                            getCombiningClass, get_Max_മൂല്യം_From_Shift },
+    { 2,                UPROPS_DT_MASK, 0,                  default_Get_മൂല്യം, default_Get_Max_മൂല്യം },
+    { 0,                UPROPS_EA_MASK, UPROPS_EA_SHIFT,    default_Get_മൂല്യം, default_Get_Max_മൂല്യം },
+    { UPROPS_SRC_CHAR, 0, static_cast<int32_t>(U_CHAR_CATEGORY_എണ്ണം) - 1, getGeneralCategory, get_Max_മൂല്യം_From_Shift },
+    { UPROPS_SRC_BIDI,  0, 0,                               getJoiningGroup, bi_Di_Get_Max_മൂല്യം },
+    { UPROPS_SRC_BIDI,  0, 0,                               getJoiningType, bi_Di_Get_Max_മൂല്യം },
+    { 2,                UPROPS_LB_MASK, UPROPS_LB_SHIFT,    default_Get_മൂല്യം, default_Get_Max_മൂല്യം },
+    { UPROPS_SRC_CHAR, 0, static_cast<int32_t>(U_NT_എണ്ണം) - 1, getNumericType, get_Max_മൂല്യം_From_Shift },
+    { UPROPS_SRC_PROPSVEC, 0, 0,                            getScript, script_Get_Max_മൂല്യം },
+    { UPROPS_SRC_PROPSVEC, 0, static_cast<int32_t>(U_HST_എണ്ണം) - 1, getHangulSyllableType, get_Max_മൂല്യം_From_Shift },
     // UCHAR_NFD_QUICK_CHECK: max=1=YES -- never "maybe", only "no" or "yes"
-    { UPROPS_SRC_NFC, 0, static_cast<int32_t>(UNORM_YES), getNormQuickCheck, getMaxValueFromShift },
+    { UPROPS_SRC_NFC, 0, static_cast<int32_t>(UNORM_YES), getNormQuickCheck, get_Max_മൂല്യം_From_Shift },
     // UCHAR_NFKD_QUICK_CHECK: max=1=YES -- never "maybe", only "no" or "yes"
-    { UPROPS_SRC_NFKC, 0, static_cast<int32_t>(UNORM_YES), getNormQuickCheck, getMaxValueFromShift },
+    { UPROPS_SRC_NFKC, 0, static_cast<int32_t>(UNORM_YES), getNormQuickCheck, get_Max_മൂല്യം_From_Shift },
     // UCHAR_NFC_QUICK_CHECK: max=2=MAYBE
-    { UPROPS_SRC_NFC, 0, static_cast<int32_t>(UNORM_MAYBE), getNormQuickCheck, getMaxValueFromShift },
+    { UPROPS_SRC_NFC, 0, static_cast<int32_t>(UNORM_MAYBE), getNormQuickCheck, get_Max_മൂല്യം_From_Shift },
     // UCHAR_NFKC_QUICK_CHECK: max=2=MAYBE
-    { UPROPS_SRC_NFKC, 0, static_cast<int32_t>(UNORM_MAYBE), getNormQuickCheck, getMaxValueFromShift },
-    { UPROPS_SRC_NFC,   0, 0xff,                            getLeadCombiningClass, getMaxValueFromShift },
-    { UPROPS_SRC_NFC,   0, 0xff,                            getTrailCombiningClass, getMaxValueFromShift },
-    { 2,                UPROPS_GCB_MASK, UPROPS_GCB_SHIFT,  defaultGetValue, defaultGetMaxValue },
-    { 2,                UPROPS_SB_MASK, UPROPS_SB_SHIFT,    defaultGetValue, defaultGetMaxValue },
-    { 2,                UPROPS_WB_MASK, UPROPS_WB_SHIFT,    defaultGetValue, defaultGetMaxValue },
-    { UPROPS_SRC_BIDI,  0, 0,                               getBiDiPairedBracketType, biDiGetMaxValue },
-    { UPROPS_SRC_INPC,  0, 0,                               getInPC, layoutGetMaxValue },
-    { UPROPS_SRC_INSC,  0, 0,                               getInSC, layoutGetMaxValue },
-    { UPROPS_SRC_VO,    0, 0,                               getVo, layoutGetMaxValue },
-    { UPROPS_SRC_PROPSVEC, 0, static_cast<int32_t>(U_ID_STATUS_ALLOWED), getIDStatusValue, getMaxValueFromShift },
-    { 0,                UPROPS_INCB_MASK, UPROPS_INCB_SHIFT,defaultGetValue, defaultGetMaxValue },
+    { UPROPS_SRC_NFKC, 0, static_cast<int32_t>(UNORM_MAYBE), getNormQuickCheck, get_Max_മൂല്യം_From_Shift },
+    { UPROPS_SRC_NFC,   0, 0xff,                            getLeadCombiningClass, get_Max_മൂല്യം_From_Shift },
+    { UPROPS_SRC_NFC,   0, 0xff,                            getTrailCombiningClass, get_Max_മൂല്യം_From_Shift },
+    { 2,                UPROPS_GCB_MASK, UPROPS_GCB_SHIFT,  default_Get_മൂല്യം, default_Get_Max_മൂല്യം },
+    { 2,                UPROPS_SB_MASK, UPROPS_SB_SHIFT,    default_Get_മൂല്യം, default_Get_Max_മൂല്യം },
+    { 2,                UPROPS_WB_MASK, UPROPS_WB_SHIFT,    default_Get_മൂല്യം, default_Get_Max_മൂല്യം },
+    { UPROPS_SRC_BIDI,  0, 0,                               getBiDiPairedBracketType, bi_Di_Get_Max_മൂല്യം },
+    { UPROPS_SRC_INPC,  0, 0,                               getInPC, layout_Get_Max_മൂല്യം },
+    { UPROPS_SRC_INSC,  0, 0,                               getInSC, layout_Get_Max_മൂല്യം },
+    { UPROPS_SRC_VO,    0, 0,                               getVo, layout_Get_Max_മൂല്യം },
+    { UPROPS_SRC_PROPSVEC, 0, static_cast<int32_t>(U_ID_STATUS_ALLOWED), get_IDStatus_മൂല്യം, get_Max_മൂല്യം_From_Shift },
+    { 0,                UPROPS_INCB_MASK, UPROPS_INCB_SHIFT,default_Get_മൂല്യം, default_Get_Max_മൂല്യം },
 };
 
 U_CAPI int32_t U_EXPORT2
-u_getIntPropertyValue(UChar32 c, UProperty which) {
-    if(which<UCHAR_INT_START) {
-        if(UCHAR_BINARY_START<=which && which<UCHAR_BINARY_LIMIT) {
-            const BinaryProperty &prop=binProps[which];
-            return prop.contains(prop, c, which);
+u_get_Int_Property_മൂല്യം(UChar32 c, UProperty which) {
+    എങ്കിൽ(which<UCHAR_INT_START) {
+        എങ്കിൽ(UCHAR_ദ്വിമാന_START<=which && which<UCHAR_ദ്വിമാന_LIMIT) {
+            സ്ഥിരം ദ്വിമാന_Property &prop=binProps[which];
+            തിരികെ prop.contains(prop, c, which);
         }
-    } else if(which<UCHAR_INT_LIMIT) {
-        const IntProperty &prop=intProps[which-UCHAR_INT_START];
-        return prop.getValue(prop, c, which);
-    } else if(which==UCHAR_GENERAL_CATEGORY_MASK) {
-        return U_MASK(u_charType(c));
+    } അല്ലെങ്കിൽ എങ്കിൽ(which<UCHAR_INT_LIMIT) {
+        സ്ഥിരം IntProperty &prop=intProps[which-UCHAR_INT_START];
+        തിരികെ prop.get_മൂല്യം(prop, c, which);
+    } അല്ലെങ്കിൽ എങ്കിൽ(which==UCHAR_GENERAL_CATEGORY_MASK) {
+        തിരികെ U_MASK(u_charType(c));
     }
-    return 0;  // undefined
+    തിരികെ 0;  // undefined
 }
 
 U_CAPI int32_t U_EXPORT2
-u_getIntPropertyMinValue(UProperty /*which*/) {
-    return 0; /* all binary/enum/int properties have a minimum value of 0 */
+u_get_Int_Property_Min_മൂല്യം(UProperty /*which*/) {
+    തിരികെ 0; /* all binary/enum/int properties have a minimum value of 0 */
 }
 
 U_CAPI int32_t U_EXPORT2
-u_getIntPropertyMaxValue(UProperty which) {
-    if(which<UCHAR_INT_START) {
-        if(UCHAR_BINARY_START<=which && which<UCHAR_BINARY_LIMIT) {
-            return 1;  // maximum true for all binary properties
+u_get_Int_Property_Max_മൂല്യം(UProperty which) {
+    എങ്കിൽ(which<UCHAR_INT_START) {
+        എങ്കിൽ(UCHAR_ദ്വിമാന_START<=which && which<UCHAR_ദ്വിമാന_LIMIT) {
+            തിരികെ 1;  // maximum true for all binary properties
         }
-    } else if(which<UCHAR_INT_LIMIT) {
-        const IntProperty &prop=intProps[which-UCHAR_INT_START];
-        return prop.getMaxValue(prop, which);
+    } അല്ലെങ്കിൽ എങ്കിൽ(which<UCHAR_INT_LIMIT) {
+        സ്ഥിരം IntProperty &prop=intProps[which-UCHAR_INT_START];
+        തിരികെ prop.get_Max_മൂല്യം(prop, which);
     }
-    return -1;  // undefined
+    തിരികെ -1;  // undefined
 }
 
 U_CFUNC UPropertySource U_EXPORT2
 uprops_getSource(UProperty which) {
-    if(which<UCHAR_BINARY_START) {
-        return UPROPS_SRC_NONE; /* undefined */
-    } else if(which<UCHAR_BINARY_LIMIT) {
-        const BinaryProperty &prop=binProps[which];
-        if(prop.mask!=0) {
-            return UPROPS_SRC_PROPSVEC;
-        } else {
-            return (UPropertySource)prop.column;
+    എങ്കിൽ(which<UCHAR_ദ്വിമാന_START) {
+        തിരികെ UPROPS_SRC_NONE; /* undefined */
+    } അല്ലെങ്കിൽ എങ്കിൽ(which<UCHAR_ദ്വിമാന_LIMIT) {
+        സ്ഥിരം ദ്വിമാന_Property &prop=binProps[which];
+        എങ്കിൽ(prop.mask!=0) {
+            തിരികെ UPROPS_SRC_PROPSVEC;
+        } അല്ലെങ്കിൽ {
+            തിരികെ (UPropertySource)prop.column;
         }
-    } else if(which<UCHAR_INT_START) {
-        return UPROPS_SRC_NONE; /* undefined */
-    } else if(which<UCHAR_INT_LIMIT) {
-        const IntProperty &prop=intProps[which-UCHAR_INT_START];
-        if(prop.mask!=0) {
-            return UPROPS_SRC_PROPSVEC;
-        } else {
-            return (UPropertySource)prop.column;
+    } അല്ലെങ്കിൽ എങ്കിൽ(which<UCHAR_INT_START) {
+        തിരികെ UPROPS_SRC_NONE; /* undefined */
+    } അല്ലെങ്കിൽ എങ്കിൽ(which<UCHAR_INT_LIMIT) {
+        സ്ഥിരം IntProperty &prop=intProps[which-UCHAR_INT_START];
+        എങ്കിൽ(prop.mask!=0) {
+            തിരികെ UPROPS_SRC_PROPSVEC;
+        } അല്ലെങ്കിൽ {
+            തിരികെ (UPropertySource)prop.column;
         }
-    } else if(which<UCHAR_STRING_START) {
-        switch(which) {
-        case UCHAR_GENERAL_CATEGORY_MASK:
-        case UCHAR_NUMERIC_VALUE:
-            return UPROPS_SRC_CHAR;
+    } അല്ലെങ്കിൽ എങ്കിൽ(which<UCHAR_STRING_START) {
+        തിരഞ്ഞെടുപ്പ്(which) {
+        അവസ്ഥ UCHAR_GENERAL_CATEGORY_MASK:
+        അവസ്ഥ UCHAR_NUMERIC_മൂല്യം:
+            തിരികെ UPROPS_SRC_CHAR;
 
-        default:
-            return UPROPS_SRC_NONE;
+        സ്ഥിരസ്ഥിതി:
+            തിരികെ UPROPS_SRC_NONE;
         }
-    } else if(which<UCHAR_STRING_LIMIT) {
-        switch(which) {
-        case UCHAR_AGE:
-            return UPROPS_SRC_PROPSVEC;
+    } അല്ലെങ്കിൽ എങ്കിൽ(which<UCHAR_STRING_LIMIT) {
+        തിരഞ്ഞെടുപ്പ്(which) {
+        അവസ്ഥ UCHAR_AGE:
+            തിരികെ UPROPS_SRC_PROPSVEC;
 
-        case UCHAR_BIDI_MIRRORING_GLYPH:
-            return UPROPS_SRC_BIDI;
+        അവസ്ഥ UCHAR_BIDI_MIRRORING_GLYPH:
+            തിരികെ UPROPS_SRC_BIDI;
 
-        case UCHAR_CASE_FOLDING:
-        case UCHAR_LOWERCASE_MAPPING:
-        case UCHAR_SIMPLE_CASE_FOLDING:
-        case UCHAR_SIMPLE_LOWERCASE_MAPPING:
-        case UCHAR_SIMPLE_TITLECASE_MAPPING:
-        case UCHAR_SIMPLE_UPPERCASE_MAPPING:
-        case UCHAR_TITLECASE_MAPPING:
-        case UCHAR_UPPERCASE_MAPPING:
-            return UPROPS_SRC_CASE;
+        അവസ്ഥ UCHAR_CASE_FOLDING:
+        അവസ്ഥ UCHAR_LOWERCASE_MAPPING:
+        അവസ്ഥ UCHAR_SIMPLE_CASE_FOLDING:
+        അവസ്ഥ UCHAR_SIMPLE_LOWERCASE_MAPPING:
+        അവസ്ഥ UCHAR_SIMPLE_TITLECASE_MAPPING:
+        അവസ്ഥ UCHAR_SIMPLE_UPPERCASE_MAPPING:
+        അവസ്ഥ UCHAR_TITLECASE_MAPPING:
+        അവസ്ഥ UCHAR_UPPERCASE_MAPPING:
+            തിരികെ UPROPS_SRC_CASE;
 
-        case UCHAR_ISO_COMMENT:
-        case UCHAR_NAME:
-        case UCHAR_UNICODE_1_NAME:
-            return UPROPS_SRC_NAMES;
+        അവസ്ഥ UCHAR_ISO_COMMENT:
+        അവസ്ഥ UCHAR_NAME:
+        അവസ്ഥ UCHAR_UNICODE_1_NAME:
+            തിരികെ UPROPS_SRC_NAMES;
 
-        default:
-            return UPROPS_SRC_NONE;
+        സ്ഥിരസ്ഥിതി:
+            തിരികെ UPROPS_SRC_NONE;
         }
-    } else {
-        switch(which) {
-        case UCHAR_SCRIPT_EXTENSIONS:
-        case UCHAR_IDENTIFIER_TYPE:
-            return UPROPS_SRC_PROPSVEC;
-        default:
-            return UPROPS_SRC_NONE; /* undefined */
+    } അല്ലെങ്കിൽ {
+        തിരഞ്ഞെടുപ്പ്(which) {
+        അവസ്ഥ UCHAR_SCRIPT_EXTENSIONS:
+        അവസ്ഥ UCHAR_IDENTIFIER_TYPE:
+            തിരികെ UPROPS_SRC_PROPSVEC;
+        സ്ഥിരസ്ഥിതി:
+            തിരികെ UPROPS_SRC_NONE; /* undefined */
         }
     }
 }
 
-U_CFUNC void U_EXPORT2
-uprops_addPropertyStarts(UPropertySource src, const USetAdder *sa, UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) { return; }
-    if (src == UPROPS_SRC_ID_COMPAT_MATH) {
+U_CFUNC ശൂന്യം U_EXPORT2
+uprops_addPropertyStarts(UPropertySource src, സ്ഥിരം USetAdder *sa, UErrorCode *pErrorCode) {
+    എങ്കിൽ (U_FAILURE(*pErrorCode)) { തിരികെ; }
+    എങ്കിൽ (src == UPROPS_SRC_ID_COMPAT_MATH) {
         // range limits
-        for (UChar32 c : ID_COMPAT_MATH_CONTINUE) {
+        വേണ്ടി (UChar32 c : ID_COMPAT_MATH_CONTINUE) {
             sa->add(sa->set, c);
         }
         // single characters
-        for (UChar32 c : ID_COMPAT_MATH_START) {
+        വേണ്ടി (UChar32 c : ID_COMPAT_MATH_START) {
             sa->add(sa->set, c);
             sa->add(sa->set, c + 1);
         }
-        return;
+        തിരികെ;
     }
-    if (src == UPROPS_SRC_MCM) {
+    എങ്കിൽ (src == UPROPS_SRC_MCM) {
         // range limits
-        for (UChar32 c : MODIFIER_COMBINING_MARK) {
+        വേണ്ടി (UChar32 c : MODIFIER_COMBINING_MARK) {
             sa->add(sa->set, c);
         }
-        return;
+        തിരികെ;
     }
-    if (!ulayout_ensureData(*pErrorCode)) { return; }
-    const UCPTrie *trie;
-    switch (src) {
-    case UPROPS_SRC_INPC:
+    എങ്കിൽ (!ulayout_ensureData(*pErrorCode)) { തിരികെ; }
+    സ്ഥിരം UCPTrie *trie;
+    തിരഞ്ഞെടുപ്പ് (src) {
+    അവസ്ഥ UPROPS_SRC_INPC:
         trie = gInpcTrie;
-        break;
-    case UPROPS_SRC_INSC:
+        നിർത്തുക;
+    അവസ്ഥ UPROPS_SRC_INSC:
         trie = gInscTrie;
-        break;
-    case UPROPS_SRC_VO:
+        നിർത്തുക;
+    അവസ്ഥ UPROPS_SRC_VO:
         trie = gVoTrie;
-        break;
-    default:
+        നിർത്തുക;
+    സ്ഥിരസ്ഥിതി:
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        തിരികെ;
     }
 
-    if (trie == nullptr) {
+    എങ്കിൽ (trie == nullptr) {
         *pErrorCode = U_MISSING_RESOURCE_ERROR;
-        return;
+        തിരികെ;
     }
 
     // Add the start code point of each same-value range of the trie.
     UChar32 start = 0, end;
-    while ((end = ucptrie_getRange(trie, start, UCPMAP_RANGE_NORMAL, 0,
+    ആകുമ്പോൾ ((end = ucptrie_getRange(trie, start, UCPMAP_RANGE_NORMAL, 0,
                                    nullptr, nullptr, nullptr)) >= 0) {
         sa->add(sa->set, start);
         start = end + 1;
     }
 }
 
-U_CAPI bool U_EXPORT2
+U_CAPI തർക്കം U_EXPORT2
 u_hasIDType(UChar32 c, UIdentifierType type) {
     uint32_t typeIndex = type;  // also guards against negative type integers
-    if (typeIndex >= UPRV_LENGTHOF(uprops_idTypeToEncoded)) {
-        return false;
+    എങ്കിൽ (typeIndex >= UPRV_LENGTHOF(uprops_idTypeToEncoded)) {
+        തിരികെ അസത്യം;
     }
     uint32_t encodedType = uprops_idTypeToEncoded[typeIndex];
     uint32_t value = u_getUnicodeProperties(c, 2) >> UPROPS_2_ID_TYPE_SHIFT;
-    if ((encodedType & UPROPS_ID_TYPE_BIT) != 0) {
-        return value < UPROPS_ID_TYPE_FORBIDDEN && (value & encodedType) != 0;
-    } else {
-        return value == encodedType;
+    എങ്കിൽ ((encodedType & UPROPS_ID_TYPE_BIT) != 0) {
+        തിരികെ value < UPROPS_ID_TYPE_FORBIDDEN && (value & encodedType) != 0;
+    } അല്ലെങ്കിൽ {
+        തിരികെ value == encodedType;
     }
 }
 
-namespace {
+നാമാകാശ {
 
-void maybeAppendType(uint32_t value, uint32_t bit, UIdentifierType t,
+ശൂന്യം maybeAppendType(uint32_t value, uint32_t bit, UIdentifierType t,
                      UIdentifierType *types, int32_t &length, int32_t capacity) {
-    if ((value & bit) != 0) {
-        if (length < capacity) {
+    എങ്കിൽ ((value & bit) != 0) {
+        എങ്കിൽ (length < capacity) {
             types[length] = t;
         }
         ++length;
@@ -940,34 +940,34 @@ void maybeAppendType(uint32_t value, uint32_t bit, UIdentifierType t,
 
 U_CAPI int32_t U_EXPORT2
 u_getIDTypes(UChar32 c, UIdentifierType *types, int32_t capacity, UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) { return 0; }
-    if (capacity < 0 || (capacity > 0 && types == nullptr)) {
+    എങ്കിൽ (U_FAILURE(*pErrorCode)) { തിരികെ 0; }
+    എങ്കിൽ (capacity < 0 || (capacity > 0 && types == nullptr)) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        തിരികെ 0;
     }
     uint32_t value = u_getUnicodeProperties(c, 2) >> UPROPS_2_ID_TYPE_SHIFT;
-    if ((value & UPROPS_ID_TYPE_FORBIDDEN) == UPROPS_ID_TYPE_FORBIDDEN ||
+    എങ്കിൽ ((value & UPROPS_ID_TYPE_FORBIDDEN) == UPROPS_ID_TYPE_FORBIDDEN ||
             value == UPROPS_ID_TYPE_NOT_CHARACTER) {
         // single value
-        if (capacity > 0) {
+        എങ്കിൽ (capacity > 0) {
             UIdentifierType t;
-            switch (value) {
-                case UPROPS_ID_TYPE_NOT_CHARACTER: t = U_ID_TYPE_NOT_CHARACTER; break;
-                case UPROPS_ID_TYPE_DEPRECATED: t = U_ID_TYPE_DEPRECATED; break;
-                case UPROPS_ID_TYPE_DEFAULT_IGNORABLE: t = U_ID_TYPE_DEFAULT_IGNORABLE; break;
-                case UPROPS_ID_TYPE_NOT_NFKC: t = U_ID_TYPE_NOT_NFKC; break;
-                case UPROPS_ID_TYPE_INCLUSION: t = U_ID_TYPE_INCLUSION; break;
-                case UPROPS_ID_TYPE_RECOMMENDED: t = U_ID_TYPE_RECOMMENDED; break;
-                default:
+            തിരഞ്ഞെടുപ്പ് (value) {
+                അവസ്ഥ UPROPS_ID_TYPE_NOT_CHARACTER: t = U_ID_TYPE_NOT_CHARACTER; നിർത്തുക;
+                അവസ്ഥ UPROPS_ID_TYPE_DEPRECATED: t = U_ID_TYPE_DEPRECATED; നിർത്തുക;
+                അവസ്ഥ UPROPS_ID_TYPE_DEFAULT_IGNORABLE: t = U_ID_TYPE_DEFAULT_IGNORABLE; നിർത്തുക;
+                അവസ്ഥ UPROPS_ID_TYPE_NOT_NFKC: t = U_ID_TYPE_NOT_NFKC; നിർത്തുക;
+                അവസ്ഥ UPROPS_ID_TYPE_INCLUSION: t = U_ID_TYPE_INCLUSION; നിർത്തുക;
+                അവസ്ഥ UPROPS_ID_TYPE_RECOMMENDED: t = U_ID_TYPE_RECOMMENDED; നിർത്തുക;
+                സ്ഥിരസ്ഥിതി:
                     *pErrorCode = U_INVALID_FORMAT_ERROR;
-                    return 0;
+                    തിരികെ 0;
             }
             types[0] = t;
-        } else {
+        } അല്ലെങ്കിൽ {
             *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
         }
-        return 1;
-    } else {
+        തിരികെ 1;
+    } അല്ലെങ്കിൽ {
         // one or more combinable bits
         int32_t length = 0;
         maybeAppendType(value, UPROPS_ID_TYPE_NOT_XID, U_ID_TYPE_NOT_XID,
@@ -982,23 +982,23 @@ u_getIDTypes(UChar32 c, UIdentifierType *types, int32_t capacity, UErrorCode *pE
                         types, length, capacity);
         maybeAppendType(value, UPROPS_ID_TYPE_LIMITED_USE, U_ID_TYPE_LIMITED_USE,
                         types, length, capacity);
-        if (length >= capacity) {
+        എങ്കിൽ (length >= capacity) {
             *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
         }
-        return length;
+        തിരികെ length;
     }
 }
 
-#if !UCONFIG_NO_NORMALIZATION
+#എങ്കിൽ !UCONFIG_NO_NORMALIZATION
 
 U_CAPI int32_t U_EXPORT2
 u_getFC_NFKC_Closure(UChar32 c, char16_t *dest, int32_t destCapacity, UErrorCode *pErrorCode) {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    എങ്കിൽ(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        തിരികെ 0;
     }
-    if(destCapacity<0 || (dest==nullptr && destCapacity>0)) {
+    എങ്കിൽ(destCapacity<0 || (dest==nullptr && destCapacity>0)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        തിരികെ 0;
     }
     // Compute the FC_NFKC_Closure on the fly:
     // We have the API for complete coverage of Unicode properties, although
@@ -1006,25 +1006,25 @@ u_getFC_NFKC_Closure(UChar32 c, char16_t *dest, int32_t destCapacity, UErrorCode
     // (What could be useful is a custom normalization table that combines
     // case folding and NFKC.)
     // For the derivation, see Unicode's DerivedNormalizationProps.txt.
-    const Normalizer2 *nfkc=Normalizer2::getNFKCInstance(*pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    സ്ഥിരം Normalizer2 *nfkc=Normalizer2::getNFKCInstance(*pErrorCode);
+    എങ്കിൽ(U_FAILURE(*pErrorCode)) {
+        തിരികെ 0;
     }
     // first: b = NFKC(Fold(a))
     UnicodeString folded1String;
-    const char16_t *folded1;
+    സ്ഥിരം char16_t *folded1;
     int32_t folded1Length=ucase_toFullFolding(c, &folded1, U_FOLD_CASE_DEFAULT);
-    if(folded1Length<0) {
-        const Normalizer2Impl *nfkcImpl=Normalizer2Factory::getImpl(nfkc);
-        if(nfkcImpl->getCompQuickCheck(nfkcImpl->getNorm16(c))!=UNORM_NO) {
-            return u_terminateUChars(dest, destCapacity, 0, pErrorCode);  // c does not change at all under CaseFolding+NFKC
+    എങ്കിൽ(folded1Length<0) {
+        സ്ഥിരം Normalizer2Impl *nfkcImpl=Normalizer2Factory::getImpl(nfkc);
+        എങ്കിൽ(nfkcImpl->getCompQuickCheck(nfkcImpl->getNorm16(c))!=UNORM_NO) {
+            തിരികെ u_terminateUChars(dest, destCapacity, 0, pErrorCode);  // c does not change at all under CaseFolding+NFKC
         }
         folded1String.setTo(c);
-    } else {
-        if(folded1Length>UCASE_MAX_STRING_LENGTH) {
+    } അല്ലെങ്കിൽ {
+        എങ്കിൽ(folded1Length>UCASE_MAX_STRING_LENGTH) {
             folded1String.setTo(folded1Length);
-        } else {
-            folded1String.setTo(false, folded1, folded1Length);
+        } അല്ലെങ്കിൽ {
+            folded1String.setTo(അസത്യം, folded1, folded1Length);
         }
     }
     UnicodeString kc1=nfkc->normalize(folded1String, *pErrorCode);
@@ -1032,10 +1032,10 @@ u_getFC_NFKC_Closure(UChar32 c, char16_t *dest, int32_t destCapacity, UErrorCode
     UnicodeString folded2String(kc1);
     UnicodeString kc2=nfkc->normalize(folded2String.foldCase(), *pErrorCode);
     // if (c != b) add the mapping from a to c
-    if(U_FAILURE(*pErrorCode) || kc1==kc2) {
-        return u_terminateUChars(dest, destCapacity, 0, pErrorCode);
-    } else {
-        return kc2.extract(dest, destCapacity, *pErrorCode);
+    എങ്കിൽ(U_FAILURE(*pErrorCode) || kc1==kc2) {
+        തിരികെ u_terminateUChars(dest, destCapacity, 0, pErrorCode);
+    } അല്ലെങ്കിൽ {
+        തിരികെ kc2.extract(dest, destCapacity, *pErrorCode);
     }
 }
 

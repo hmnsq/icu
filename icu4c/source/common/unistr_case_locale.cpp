@@ -17,11 +17,11 @@
 *   were moved here to break dependency cycles among parts of the common library.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/locid.h"
-#include "unicode/ucasemap.h"
-#include "unicode/unistr.h"
-#include "ucasemap_imp.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/locid.h"
+#അന്തര്ഭാവ "unicode/ucasemap.h"
+#അന്തര്ഭാവ "unicode/unistr.h"
+#അന്തര്ഭാവ "ucasemap_imp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -31,25 +31,25 @@ U_NAMESPACE_BEGIN
 
 UnicodeString&
 UnicodeString::toLower() U_LIFETIME_BOUND {
-  return caseMap(ustrcase_getCaseLocale(nullptr), 0,
+  തിരികെ caseMap(ustrcase_getCaseLocale(nullptr), 0,
                  UCASEMAP_BREAK_ITERATOR_NULL ustrcase_internalToLower);
 }
 
 UnicodeString&
-UnicodeString::toLower(const Locale& locale) U_LIFETIME_BOUND {
-  return caseMap(ustrcase_getCaseLocale(locale.getBaseName()), 0,
+UnicodeString::toLower(സ്ഥിരം Locale& locale) U_LIFETIME_BOUND {
+  തിരികെ caseMap(ustrcase_getCaseLocale(locale.getBaseName()), 0,
                  UCASEMAP_BREAK_ITERATOR_NULL ustrcase_internalToLower);
 }
 
 UnicodeString&
 UnicodeString::toUpper() U_LIFETIME_BOUND {
-  return caseMap(ustrcase_getCaseLocale(nullptr), 0,
+  തിരികെ caseMap(ustrcase_getCaseLocale(nullptr), 0,
                  UCASEMAP_BREAK_ITERATOR_NULL ustrcase_internalToUpper);
 }
 
 UnicodeString&
-UnicodeString::toUpper(const Locale& locale) U_LIFETIME_BOUND {
-  return caseMap(ustrcase_getCaseLocale(locale.getBaseName()), 0,
+UnicodeString::toUpper(സ്ഥിരം Locale& locale) U_LIFETIME_BOUND {
+  തിരികെ caseMap(ustrcase_getCaseLocale(locale.getBaseName()), 0,
                  UCASEMAP_BREAK_ITERATOR_NULL ustrcase_internalToUpper);
 }
 

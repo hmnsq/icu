@@ -25,12 +25,12 @@
 #ifndef UCHAR_H
 #define UCHAR_H
 
-#include <stdbool.h>
-#include "unicode/utypes.h"
-#include "unicode/stringoptions.h"
-#include "unicode/ucpmap.h"
+#അന്തര്ഭാവ <stdbool.h>
+#അന്തര്ഭാവ "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/stringoptions.h"
+#അന്തര്ഭാവ "unicode/ucpmap.h"
 
-#if !defined(USET_DEFINED) && !defined(U_IN_DOXYGEN)
+#എങ്കിൽ !defined(USET_DEFINED) && !defined(U_IN_DOXYGEN)
 
 #define USET_DEFINED
 
@@ -42,7 +42,7 @@
  * @see ucnv_getUnicodeSet
  * @stable ICU 2.4
  */
-typedef struct USet USet;
+തരനിർവചനം ഘടന USet USet;
 
 #endif
 
@@ -155,7 +155,7 @@ U_CDECL_BEGIN
  */
 
 /** The lowest Unicode code point value. Code points are non-negative. @stable ICU 2.0 */
-#define UCHAR_MIN_VALUE 0
+#define UCHAR_MIN_മൂല്യം 0
 
 /**
  * The highest Unicode code point value (scalar value) according to
@@ -165,7 +165,7 @@ U_CDECL_BEGIN
  * @see UChar32
  * @stable ICU 2.0
  */
-#define UCHAR_MAX_VALUE 0x10ffff
+#define UCHAR_MAX_മൂല്യം 0x10ffff
 
 /**
  * Get a single-bit bit set (a flag) from a bit number 0..31.
@@ -193,7 +193,7 @@ U_CDECL_BEGIN
  * @see u_getUnicodeVersion
  * @stable ICU 2.1
  */
-typedef enum UProperty {
+തരനിർവചനം എണ്ണൽ UProperty {
     /*
      * Note: UProperty constants are parsed by preparseucd.py.
      * It matches lines like
@@ -209,7 +209,7 @@ typedef enum UProperty {
         Lu+Ll+Lt+Lm+Lo+Nl+Other_Alphabetic @stable ICU 2.1 */
     UCHAR_ALPHABETIC=0,
     /** First constant for binary Unicode properties. @stable ICU 2.1 */
-    UCHAR_BINARY_START=UCHAR_ALPHABETIC,
+    UCHAR_ദ്വിമാന_START=UCHAR_ALPHABETIC,
     /** Binary property ASCII_Hex_Digit. 0-9 A-F a-f @stable ICU 2.1 */
     UCHAR_ASCII_HEX_DIGIT=1,
     /** Binary property Bidi_Control.
@@ -273,7 +273,7 @@ typedef enum UProperty {
     /** Binary property IDS_Binary_Operator (new in Unicode 3.2).
         For programmatic determination of
         Ideographic Description Sequences. @stable ICU 2.1 */
-    UCHAR_IDS_BINARY_OPERATOR=18,
+    UCHAR_IDS_ദ്വിമാന_OPERATOR=18,
     /** Binary property IDS_Trinary_Operator (new in Unicode 3.2).
         For programmatic determination of
         Ideographic Description Sequences. @stable ICU 2.1 */
@@ -563,7 +563,7 @@ typedef enum UProperty {
      * One more than the last constant for binary Unicode properties.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    UCHAR_BINARY_LIMIT=76,
+    UCHAR_ദ്വിമാന_LIMIT=76,
 #endif  // U_HIDE_DEPRECATED_API
 
     /** Enumerated property Bidi_Class.
@@ -595,7 +595,7 @@ typedef enum UProperty {
     UCHAR_JOINING_TYPE=0x1007,
     /** Enumerated property Line_Break.
         Returns ULineBreak values. @stable ICU 2.2 */
-    UCHAR_LINE_BREAK=0x1008,
+    UCHAR_വരി_BREAK=0x1008,
     /** Enumerated property Numeric_Type.
         Returns UNumericType values. @stable ICU 2.2 */
     UCHAR_NUMERIC_TYPE=0x1009,
@@ -715,9 +715,9 @@ typedef enum UProperty {
 
     /** Double property Numeric_Value.
         Corresponds to u_getNumericValue. @stable ICU 2.4 */
-    UCHAR_NUMERIC_VALUE=0x3000,
+    UCHAR_NUMERIC_മൂല്യം=0x3000,
     /** First constant for double Unicode properties. @stable ICU 2.4 */
-    UCHAR_DOUBLE_START=UCHAR_NUMERIC_VALUE,
+    UCHAR_DOUBLE_START=UCHAR_NUMERIC_മൂല്യം,
 #ifndef U_HIDE_DEPRECATED_API
     /**
      * One more than the last constant for double Unicode properties.
@@ -823,7 +823,7 @@ typedef enum UProperty {
  * See http://www.unicode.org/Public/UNIDATA/UnicodeData.html .
  * @stable ICU 2.0
  */
-typedef enum UCharCategory
+തരനിർവചനം എണ്ണൽ UCharCategory
 {
     /*
      * Note: UCharCategory constants and their API comments are parsed by preparseucd.py.
@@ -853,15 +853,15 @@ typedef enum UCharCategory
     /** Mc @stable ICU 2.0 */
     U_COMBINING_SPACING_MARK  = 8,
     /** Nd @stable ICU 2.0 */
-    U_DECIMAL_DIGIT_NUMBER    = 9,
+    U_DECIMAL_DIGIT_സംഖ്യ    = 9,
     /** Nl @stable ICU 2.0 */
-    U_LETTER_NUMBER           = 10,
+    U_LETTER_സംഖ്യ           = 10,
     /** No @stable ICU 2.0 */
-    U_OTHER_NUMBER            = 11,
+    U_OTHER_സംഖ്യ            = 11,
     /** Zs @stable ICU 2.0 */
     U_SPACE_SEPARATOR         = 12,
     /** Zl @stable ICU 2.0 */
-    U_LINE_SEPARATOR          = 13,
+    U_വരി_SEPARATOR          = 13,
     /** Zp @stable ICU 2.0 */
     U_PARAGRAPH_SEPARATOR     = 14,
     /** Cc @stable ICU 2.0 */
@@ -883,13 +883,13 @@ typedef enum UCharCategory
     /** Po @stable ICU 2.0 */
     U_OTHER_PUNCTUATION       = 23,
     /** Sm @stable ICU 2.0 */
-    U_MATH_SYMBOL             = 24,
+    U_MATH_ചിഹ്നം             = 24,
     /** Sc @stable ICU 2.0 */
-    U_CURRENCY_SYMBOL         = 25,
+    U_CURRENCY_ചിഹ്നം         = 25,
     /** Sk @stable ICU 2.0 */
-    U_MODIFIER_SYMBOL         = 26,
+    U_MODIFIER_ചിഹ്നം         = 26,
     /** So @stable ICU 2.0 */
-    U_OTHER_SYMBOL            = 27,
+    U_OTHER_ചിഹ്നം            = 27,
     /** Pi @stable ICU 2.0 */
     U_INITIAL_PUNCTUATION     = 28,
     /** Pf @stable ICU 2.0 */
@@ -901,7 +901,7 @@ typedef enum UCharCategory
      *
      * @stable ICU 2.0
      */
-    U_CHAR_CATEGORY_COUNT
+    U_CHAR_CATEGORY_എണ്ണം
 } UCharCategory;
 
 /**
@@ -939,16 +939,16 @@ typedef enum UCharCategory
 #define U_GC_MC_MASK    U_MASK(U_COMBINING_SPACING_MARK)
 
 /** Mask constant for a UCharCategory. @stable ICU 2.1 */
-#define U_GC_ND_MASK    U_MASK(U_DECIMAL_DIGIT_NUMBER)
+#define U_GC_ND_MASK    U_MASK(U_DECIMAL_DIGIT_സംഖ്യ)
 /** Mask constant for a UCharCategory. @stable ICU 2.1 */
-#define U_GC_NL_MASK    U_MASK(U_LETTER_NUMBER)
+#define U_GC_NL_MASK    U_MASK(U_LETTER_സംഖ്യ)
 /** Mask constant for a UCharCategory. @stable ICU 2.1 */
-#define U_GC_NO_MASK    U_MASK(U_OTHER_NUMBER)
+#define U_GC_NO_MASK    U_MASK(U_OTHER_സംഖ്യ)
 
 /** Mask constant for a UCharCategory. @stable ICU 2.1 */
 #define U_GC_ZS_MASK    U_MASK(U_SPACE_SEPARATOR)
 /** Mask constant for a UCharCategory. @stable ICU 2.1 */
-#define U_GC_ZL_MASK    U_MASK(U_LINE_SEPARATOR)
+#define U_GC_ZL_MASK    U_MASK(U_വരി_SEPARATOR)
 /** Mask constant for a UCharCategory. @stable ICU 2.1 */
 #define U_GC_ZP_MASK    U_MASK(U_PARAGRAPH_SEPARATOR)
 
@@ -973,13 +973,13 @@ typedef enum UCharCategory
 #define U_GC_PO_MASK    U_MASK(U_OTHER_PUNCTUATION)
 
 /** Mask constant for a UCharCategory. @stable ICU 2.1 */
-#define U_GC_SM_MASK    U_MASK(U_MATH_SYMBOL)
+#define U_GC_SM_MASK    U_MASK(U_MATH_ചിഹ്നം)
 /** Mask constant for a UCharCategory. @stable ICU 2.1 */
-#define U_GC_SC_MASK    U_MASK(U_CURRENCY_SYMBOL)
+#define U_GC_SC_MASK    U_MASK(U_CURRENCY_ചിഹ്നം)
 /** Mask constant for a UCharCategory. @stable ICU 2.1 */
-#define U_GC_SK_MASK    U_MASK(U_MODIFIER_SYMBOL)
+#define U_GC_SK_MASK    U_MASK(U_MODIFIER_ചിഹ്നം)
 /** Mask constant for a UCharCategory. @stable ICU 2.1 */
-#define U_GC_SO_MASK    U_MASK(U_OTHER_SYMBOL)
+#define U_GC_SO_MASK    U_MASK(U_OTHER_ചിഹ്നം)
 
 /** Mask constant for a UCharCategory. @stable ICU 2.1 */
 #define U_GC_PI_MASK    U_MASK(U_INITIAL_PUNCTUATION)
@@ -1020,7 +1020,7 @@ typedef enum UCharCategory
  * This specifies the language directional property of a character set.
  * @stable ICU 2.0
  */
-typedef enum UCharDirection {
+തരനിർവചനം എണ്ണൽ UCharDirection {
     /*
      * Note: UCharDirection constants and their API comments are parsed by preparseucd.py.
      * It matches pairs of lines like
@@ -1029,19 +1029,19 @@ typedef enum UCharDirection {
      */
 
     /** L @stable ICU 2.0 */
-    U_LEFT_TO_RIGHT               = 0,
+    U_ഇടത്_TO_വലത്               = 0,
     /** R @stable ICU 2.0 */
-    U_RIGHT_TO_LEFT               = 1,
+    U_വലത്_TO_ഇടത്               = 1,
     /** EN @stable ICU 2.0 */
-    U_EUROPEAN_NUMBER             = 2,
+    U_EUROPEAN_സംഖ്യ             = 2,
     /** ES @stable ICU 2.0 */
-    U_EUROPEAN_NUMBER_SEPARATOR   = 3,
+    U_EUROPEAN_സംഖ്യ_SEPARATOR   = 3,
     /** ET @stable ICU 2.0 */
-    U_EUROPEAN_NUMBER_TERMINATOR  = 4,
+    U_EUROPEAN_സംഖ്യ_TERMINATOR  = 4,
     /** AN @stable ICU 2.0 */
-    U_ARABIC_NUMBER               = 5,
+    U_ARABIC_സംഖ്യ               = 5,
     /** CS @stable ICU 2.0 */
-    U_COMMON_NUMBER_SEPARATOR     = 6,
+    U_COMMON_സംഖ്യ_SEPARATOR     = 6,
     /** B @stable ICU 2.0 */
     U_BLOCK_SEPARATOR             = 7,
     /** S @stable ICU 2.0 */
@@ -1051,17 +1051,17 @@ typedef enum UCharDirection {
     /** ON @stable ICU 2.0 */
     U_OTHER_NEUTRAL               = 10,
     /** LRE @stable ICU 2.0 */
-    U_LEFT_TO_RIGHT_EMBEDDING     = 11,
+    U_ഇടത്_TO_വലത്_EMBEDDING     = 11,
     /** LRO @stable ICU 2.0 */
-    U_LEFT_TO_RIGHT_OVERRIDE      = 12,
+    U_ഇടത്_TO_വലത്_OVERRIDE      = 12,
     /** AL @stable ICU 2.0 */
-    U_RIGHT_TO_LEFT_ARABIC        = 13,
+    U_വലത്_TO_ഇടത്_ARABIC        = 13,
     /** RLE @stable ICU 2.0 */
-    U_RIGHT_TO_LEFT_EMBEDDING     = 14,
+    U_വലത്_TO_ഇടത്_EMBEDDING     = 14,
     /** RLO @stable ICU 2.0 */
-    U_RIGHT_TO_LEFT_OVERRIDE      = 15,
+    U_വലത്_TO_ഇടത്_OVERRIDE      = 15,
     /** PDF @stable ICU 2.0 */
-    U_POP_DIRECTIONAL_FORMAT      = 16,
+    U_എടുക്കുക_DIRECTIONAL_FORMAT      = 16,
     /** NSM @stable ICU 2.0 */
     U_DIR_NON_SPACING_MARK        = 17,
     /** BN @stable ICU 2.0 */
@@ -1069,11 +1069,11 @@ typedef enum UCharDirection {
     /** FSI @stable ICU 52 */
     U_FIRST_STRONG_ISOLATE        = 19,
     /** LRI @stable ICU 52 */
-    U_LEFT_TO_RIGHT_ISOLATE       = 20,
+    U_ഇടത്_TO_വലത്_ISOLATE       = 20,
     /** RLI @stable ICU 52 */
-    U_RIGHT_TO_LEFT_ISOLATE       = 21,
+    U_വലത്_TO_ഇടത്_ISOLATE       = 21,
     /** PDI @stable ICU 52 */
-    U_POP_DIRECTIONAL_ISOLATE     = 22,
+    U_എടുക്കുക_DIRECTIONAL_ISOLATE     = 22,
 #ifndef U_HIDE_DEPRECATED_API
     /**
      * One more than the highest UCharDirection value.
@@ -1081,7 +1081,7 @@ typedef enum UCharDirection {
      *
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_CHAR_DIRECTION_COUNT
+    U_CHAR_DIRECTION_എണ്ണം
 #endif  // U_HIDE_DEPRECATED_API
 } UCharDirection;
 
@@ -1091,7 +1091,7 @@ typedef enum UCharDirection {
  * @see UCHAR_BIDI_PAIRED_BRACKET_TYPE
  * @stable ICU 52
  */
-typedef enum UBidiPairedBracketType {
+തരനിർവചനം എണ്ണൽ UBidiPairedBracketType {
     /*
      * Note: UBidiPairedBracketType constants are parsed by preparseucd.py.
      * It matches lines like
@@ -1111,7 +1111,7 @@ typedef enum UBidiPairedBracketType {
      *
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_BPT_COUNT /* 3 */
+    U_BPT_എണ്ണം /* 3 */
 #endif  // U_HIDE_DEPRECATED_API
 } UBidiPairedBracketType;
 
@@ -1119,7 +1119,7 @@ typedef enum UBidiPairedBracketType {
  * Constants for Unicode blocks, see the Unicode Data file Blocks.txt
  * @stable ICU 2.0
  */
-enum UBlockCode {
+എണ്ണൽ UBlockCode {
     /*
      * Note: UBlockCode constants are parsed by preparseucd.py.
      * It matches lines like
@@ -1268,7 +1268,7 @@ enum UBlockCode {
     UBLOCK_LETTERLIKE_SYMBOLS =44, /*[2100]*/
 
     /** @stable ICU 2.0 */
-    UBLOCK_NUMBER_FORMS =45, /*[2150]*/
+    UBLOCK_സംഖ്യ_FORMS =45, /*[2150]*/
 
     /** @stable ICU 2.0 */
     UBLOCK_ARROWS =46, /*[2190]*/
@@ -1358,13 +1358,13 @@ enum UBlockCode {
     UBLOCK_HANGUL_SYLLABLES =74, /*[AC00]*/
 
     /** @stable ICU 2.0 */
-    UBLOCK_HIGH_SURROGATES =75, /*[D800]*/
+    UBLOCK_മുകളിലെ_SURROGATES =75, /*[D800]*/
 
     /** @stable ICU 2.0 */
-    UBLOCK_HIGH_PRIVATE_USE_SURROGATES =76, /*[DB80]*/
+    UBLOCK_മുകളിലെ_PRIVATE_USE_SURROGATES =76, /*[DB80]*/
 
     /** @stable ICU 2.0 */
-    UBLOCK_LOW_SURROGATES =77, /*[DC00]*/
+    UBLOCK_താഴെയുള്ള_SURROGATES =77, /*[DC00]*/
 
     /**
      * Same as UBLOCK_PRIVATE_USE.
@@ -1620,7 +1620,7 @@ enum UBlockCode {
     /** @stable ICU 4.4 */
     UBLOCK_BAMUM = 177, /*[A6A0]*/
     /** @stable ICU 4.4 */
-    UBLOCK_COMMON_INDIC_NUMBER_FORMS = 178, /*[A830]*/
+    UBLOCK_COMMON_INDIC_സംഖ്യ_FORMS = 178, /*[A830]*/
     /** @stable ICU 4.4 */
     UBLOCK_DEVANAGARI_EXTENDED = 179, /*[A8E0]*/
     /** @stable ICU 4.4 */
@@ -2024,7 +2024,7 @@ enum UBlockCode {
      *
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    UBLOCK_COUNT = 354,
+    UBLOCK_എണ്ണം = 354,
 #endif  // U_HIDE_DEPRECATED_API
 
     /** @stable ICU 2.0 */
@@ -2032,7 +2032,7 @@ enum UBlockCode {
 };
 
 /** @stable ICU 2.0 */
-typedef enum UBlockCode UBlockCode;
+തരനിർവചനം എണ്ണൽ UBlockCode UBlockCode;
 
 /**
  * East Asian Width constants.
@@ -2041,7 +2041,7 @@ typedef enum UBlockCode UBlockCode;
  * @see u_getIntPropertyValue
  * @stable ICU 2.2
  */
-typedef enum UEastAsianWidth {
+തരനിർവചനം എണ്ണൽ UEastAsianWidth {
     /*
      * Note: UEastAsianWidth constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2061,7 +2061,7 @@ typedef enum UEastAsianWidth {
      *
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_EA_COUNT
+    U_EA_എണ്ണം
 #endif  // U_HIDE_DEPRECATED_API
 } UEastAsianWidth;
 
@@ -2076,7 +2076,7 @@ typedef enum UEastAsianWidth {
  * @see u_charName
  * @stable ICU 2.0
  */
-typedef enum UCharNameChoice {
+തരനിർവചനം എണ്ണൽ UCharNameChoice {
     /** Unicode character name (Name property). @stable ICU 2.0 */
     U_UNICODE_CHAR_NAME,
 #ifndef U_HIDE_DEPRECATED_API
@@ -2096,7 +2096,7 @@ typedef enum UCharNameChoice {
      * One more than the highest normal UCharNameChoice value.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_CHAR_NAME_CHOICE_COUNT
+    U_CHAR_NAME_CHOICE_എണ്ണം
 #endif  // U_HIDE_DEPRECATED_API
 } UCharNameChoice;
 
@@ -2113,7 +2113,7 @@ typedef enum UCharNameChoice {
  * @see u_getPropertyValueName()
  * @stable ICU 2.4
  */
-typedef enum UPropertyNameChoice {
+തരനിർവചനം എണ്ണൽ UPropertyNameChoice {
     U_SHORT_PROPERTY_NAME,
     U_LONG_PROPERTY_NAME,
 #ifndef U_HIDE_DEPRECATED_API
@@ -2121,7 +2121,7 @@ typedef enum UPropertyNameChoice {
      * One more than the highest normal UPropertyNameChoice value.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_PROPERTY_NAME_CHOICE_COUNT
+    U_PROPERTY_NAME_CHOICE_എണ്ണം
 #endif  // U_HIDE_DEPRECATED_API
 } UPropertyNameChoice;
 
@@ -2131,7 +2131,7 @@ typedef enum UPropertyNameChoice {
  * @see UCHAR_DECOMPOSITION_TYPE
  * @stable ICU 2.2
  */
-typedef enum UDecompositionType {
+തരനിർവചനം എണ്ണൽ UDecompositionType {
     /*
      * Note: UDecompositionType constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2163,7 +2163,7 @@ typedef enum UDecompositionType {
      *
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_DT_COUNT /* 18 */
+    U_DT_എണ്ണം /* 18 */
 #endif  // U_HIDE_DEPRECATED_API
 } UDecompositionType;
 
@@ -2173,7 +2173,7 @@ typedef enum UDecompositionType {
  * @see UCHAR_JOINING_TYPE
  * @stable ICU 2.2
  */
-typedef enum UJoiningType {
+തരനിർവചനം എണ്ണൽ UJoiningType {
     /*
      * Note: UJoiningType constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2183,8 +2183,8 @@ typedef enum UJoiningType {
     U_JT_NON_JOINING,       /*[U]*/
     U_JT_JOIN_CAUSING,      /*[C]*/
     U_JT_DUAL_JOINING,      /*[D]*/
-    U_JT_LEFT_JOINING,      /*[L]*/
-    U_JT_RIGHT_JOINING,     /*[R]*/
+    U_JT_ഇടത്_JOINING,      /*[L]*/
+    U_JT_വലത്_JOINING,     /*[R]*/
     U_JT_TRANSPARENT,       /*[T]*/
 #ifndef U_HIDE_DEPRECATED_API
     /**
@@ -2193,7 +2193,7 @@ typedef enum UJoiningType {
      *
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_JT_COUNT /* 6 */
+    U_JT_എണ്ണം /* 6 */
 #endif  // U_HIDE_DEPRECATED_API
 } UJoiningType;
 
@@ -2203,7 +2203,7 @@ typedef enum UJoiningType {
  * @see UCHAR_JOINING_GROUP
  * @stable ICU 2.2
  */
-typedef enum UJoiningGroup {
+തരനിർവചനം എണ്ണൽ UJoiningGroup {
     /*
      * Note: UJoiningGroup constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2341,7 +2341,7 @@ typedef enum UJoiningGroup {
      *
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_JG_COUNT
+    U_JG_എണ്ണം
 #endif  // U_HIDE_DEPRECATED_API
 } UJoiningGroup;
 
@@ -2351,7 +2351,7 @@ typedef enum UJoiningGroup {
  * @see UCHAR_GRAPHEME_CLUSTER_BREAK
  * @stable ICU 3.4
  */
-typedef enum UGraphemeClusterBreak {
+തരനിർവചനം എണ്ണൽ UGraphemeClusterBreak {
     /*
      * Note: UGraphemeClusterBreak constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2392,7 +2392,7 @@ typedef enum UGraphemeClusterBreak {
      *
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_GCB_COUNT = 18
+    U_GCB_എണ്ണം = 18
 #endif  // U_HIDE_DEPRECATED_API
 } UGraphemeClusterBreak;
 
@@ -2403,7 +2403,7 @@ typedef enum UGraphemeClusterBreak {
  * @see UCHAR_WORD_BREAK
  * @stable ICU 3.4
  */
-typedef enum UWordBreakValues {
+തരനിർവചനം എണ്ണൽ UWord_Break_മൂല്യങ്ങൾ {
     /*
      * Note: UWordBreakValues constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2456,9 +2456,9 @@ typedef enum UWordBreakValues {
      *
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_WB_COUNT = 23
+    U_WB_എണ്ണം = 23
 #endif  // U_HIDE_DEPRECATED_API
-} UWordBreakValues;
+} UWord_Break_മൂല്യങ്ങൾ;
 
 /**
  * Sentence Break constants.
@@ -2466,7 +2466,7 @@ typedef enum UWordBreakValues {
  * @see UCHAR_SENTENCE_BREAK
  * @stable ICU 3.4
  */
-typedef enum USentenceBreak {
+തരനിർവചനം എണ്ണൽ USentenceBreak {
     /*
      * Note: USentenceBreak constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2495,7 +2495,7 @@ typedef enum USentenceBreak {
      *
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_SB_COUNT = 15
+    U_SB_എണ്ണം = 15
 #endif  // U_HIDE_DEPRECATED_API
 } USentenceBreak;
 
@@ -2505,7 +2505,7 @@ typedef enum USentenceBreak {
  * @see UCHAR_LINE_BREAK
  * @stable ICU 2.2
  */
-typedef enum ULineBreak {
+തരനിർവചനം എണ്ണൽ ULineBreak {
     /*
      * Note: ULineBreak constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2531,7 +2531,7 @@ typedef enum ULineBreak {
     U_LB_INSEPARABLE = 15,       /*[IN]*/
     U_LB_INSEPERABLE = U_LB_INSEPARABLE,
     U_LB_INFIX_NUMERIC = 16,     /*[IS]*/
-    U_LB_LINE_FEED = 17,         /*[LF]*/
+    U_LB_വരി_FEED = 17,         /*[LF]*/
     U_LB_NONSTARTER = 18,        /*[NS]*/
     U_LB_NUMERIC = 19,           /*[NU]*/
     U_LB_OPEN_PUNCTUATION = 20,  /*[OP]*/
@@ -2544,7 +2544,7 @@ typedef enum ULineBreak {
     U_LB_BREAK_SYMBOLS = 27,     /*[SY]*/
     U_LB_ZWSPACE = 28,           /*[ZW]*/
     /** @stable ICU 2.6 */
-    U_LB_NEXT_LINE = 29,         /*[NL]*/ /* from here on: new in Unicode 4/ICU 2.6 */
+    U_LB_NEXT_വരി = 29,         /*[NL]*/ /* from here on: new in Unicode 4/ICU 2.6 */
     /** @stable ICU 2.6 */
     U_LB_WORD_JOINER = 30,       /*[WJ]*/
     /** @stable ICU 3.4 */
@@ -2590,7 +2590,7 @@ typedef enum ULineBreak {
      *
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_LB_COUNT = 49
+    U_LB_എണ്ണം = 49
 #endif  // U_HIDE_DEPRECATED_API
 } ULineBreak;
 
@@ -2600,7 +2600,7 @@ typedef enum ULineBreak {
  * @see UCHAR_NUMERIC_TYPE
  * @stable ICU 2.2
  */
-typedef enum UNumericType {
+തരനിർവചനം എണ്ണൽ UNumericType {
     /*
      * Note: UNumericType constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2618,7 +2618,7 @@ typedef enum UNumericType {
      *
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_NT_COUNT
+    U_NT_എണ്ണം
 #endif  // U_HIDE_DEPRECATED_API
 } UNumericType;
 
@@ -2628,7 +2628,7 @@ typedef enum UNumericType {
  * @see UCHAR_HANGUL_SYLLABLE_TYPE
  * @stable ICU 2.6
  */
-typedef enum UHangulSyllableType {
+തരനിർവചനം എണ്ണൽ UHangulSyllableType {
     /*
      * Note: UHangulSyllableType constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2648,7 +2648,7 @@ typedef enum UHangulSyllableType {
      *
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    U_HST_COUNT
+    U_HST_എണ്ണം
 #endif  // U_HIDE_DEPRECATED_API
 } UHangulSyllableType;
 
@@ -2658,7 +2658,7 @@ typedef enum UHangulSyllableType {
  * @see UCHAR_INDIC_POSITIONAL_CATEGORY
  * @stable ICU 63
  */
-typedef enum UIndicPositionalCategory {
+തരനിർവചനം എണ്ണൽ UIndicPositionalCategory {
     /*
      * Note: UIndicPositionalCategory constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2670,33 +2670,33 @@ typedef enum UIndicPositionalCategory {
     /** @stable ICU 63 */
     U_INPC_BOTTOM,
     /** @stable ICU 63 */
-    U_INPC_BOTTOM_AND_LEFT,
+    U_INPC_BOTTOM_AND_ഇടത്,
     /** @stable ICU 63 */
-    U_INPC_BOTTOM_AND_RIGHT,
+    U_INPC_BOTTOM_AND_വലത്,
     /** @stable ICU 63 */
-    U_INPC_LEFT,
+    U_INPC_ഇടത്,
     /** @stable ICU 63 */
-    U_INPC_LEFT_AND_RIGHT,
+    U_INPC_ഇടത്_AND_വലത്,
     /** @stable ICU 63 */
     U_INPC_OVERSTRUCK,
     /** @stable ICU 63 */
-    U_INPC_RIGHT,
+    U_INPC_വലത്,
     /** @stable ICU 63 */
-    U_INPC_TOP,
+    U_INPC_മുകൾ,
     /** @stable ICU 63 */
-    U_INPC_TOP_AND_BOTTOM,
+    U_INPC_മുകൾ_AND_BOTTOM,
     /** @stable ICU 63 */
-    U_INPC_TOP_AND_BOTTOM_AND_RIGHT,
+    U_INPC_മുകൾ_AND_BOTTOM_AND_വലത്,
     /** @stable ICU 63 */
-    U_INPC_TOP_AND_LEFT,
+    U_INPC_മുകൾ_AND_ഇടത്,
     /** @stable ICU 63 */
-    U_INPC_TOP_AND_LEFT_AND_RIGHT,
+    U_INPC_മുകൾ_AND_ഇടത്_AND_വലത്,
     /** @stable ICU 63 */
-    U_INPC_TOP_AND_RIGHT,
+    U_INPC_മുകൾ_AND_വലത്,
     /** @stable ICU 63 */
-    U_INPC_VISUAL_ORDER_LEFT,
+    U_INPC_VISUAL_ORDER_ഇടത്,
     /** @stable ICU 66 */
-    U_INPC_TOP_AND_BOTTOM_AND_LEFT,
+    U_INPC_മുകൾ_AND_BOTTOM_AND_ഇടത്,
 } UIndicPositionalCategory;
 
 /**
@@ -2705,7 +2705,7 @@ typedef enum UIndicPositionalCategory {
  * @see UCHAR_INDIC_SYLLABIC_CATEGORY
  * @stable ICU 63
  */
-typedef enum UIndicSyllabicCategory {
+തരനിർവചനം എണ്ണൽ UIndicSyllabicCategory {
     /*
      * Note: UIndicSyllabicCategory constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2719,7 +2719,7 @@ typedef enum UIndicSyllabicCategory {
     /** @stable ICU 63 */
     U_INSC_BINDU,
     /** @stable ICU 63 */
-    U_INSC_BRAHMI_JOINING_NUMBER,
+    U_INSC_BRAHMI_JOINING_സംഖ്യ,
     /** @stable ICU 63 */
     U_INSC_CANTILLATION_MARK,
     /** @stable ICU 63 */
@@ -2761,9 +2761,9 @@ typedef enum UIndicSyllabicCategory {
     /** @stable ICU 63 */
     U_INSC_NUKTA,
     /** @stable ICU 63 */
-    U_INSC_NUMBER,
+    U_INSC_സംഖ്യ,
     /** @stable ICU 63 */
-    U_INSC_NUMBER_JOINER,
+    U_INSC_സംഖ്യ_JOINER,
     /** @stable ICU 63 */
     U_INSC_PURE_KILLER,
     /** @stable ICU 63 */
@@ -2794,7 +2794,7 @@ typedef enum UIndicSyllabicCategory {
  * @see UCHAR_INDIC_CONJUNCT_BREAK
  * @stable ICU 76
  */
-typedef enum UIndicConjunctBreak {
+തരനിർവചനം എണ്ണൽ UIndicConjunctBreak {
     /*
     * Note: UIndicConjunctBreak constants are parsed by preparseucd.py.
     * It matches lines like
@@ -2816,7 +2816,7 @@ typedef enum UIndicConjunctBreak {
      *
      * @internal The numeric value may change over time, see ICU ticket #12420.
      */
-    U_INTERNAL_INCB_COUNT
+    U_INTERNAL_INCB_എണ്ണം
 #endif  // U_HIDE_INTERNAL_API
 } UIndicConjunctBreak;
 
@@ -2826,7 +2826,7 @@ typedef enum UIndicConjunctBreak {
  * @see UCHAR_VERTICAL_ORIENTATION
  * @stable ICU 63
  */
-typedef enum UVerticalOrientation {
+തരനിർവചനം എണ്ണൽ UVerticalOrientation {
     /*
      * Note: UVerticalOrientation constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2850,7 +2850,7 @@ typedef enum UVerticalOrientation {
  * @see UCHAR_IDENTIFIER_STATUS
  * @stable ICU 75
  */
-typedef enum UIdentifierStatus {
+തരനിർവചനം എണ്ണൽ UIdentifierStatus {
     /*
      * Note: UIdentifierStatus constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2870,7 +2870,7 @@ typedef enum UIdentifierStatus {
  * @see UCHAR_IDENTIFIER_TYPE
  * @stable ICU 75
  */
-typedef enum UIdentifierType {
+തരനിർവചനം എണ്ണൽ UIdentifierType {
     /*
      * Note: UIdentifierType constants are parsed by preparseucd.py.
      * It matches lines like
@@ -2931,7 +2931,7 @@ typedef enum UIdentifierType {
  * @stable ICU 2.1
  */
 U_CAPI UBool U_EXPORT2
-u_hasBinaryProperty(UChar32 c, UProperty which);
+u_has_ദ്വിമാന_Property(UChar32 c, UProperty which);
 
 /**
  * Returns true if the property is true for the string.
@@ -2958,7 +2958,7 @@ u_hasBinaryProperty(UChar32 c, UProperty which);
  * @stable ICU 70
  */
 U_CAPI UBool U_EXPORT2
-u_stringHasBinaryProperty(const UChar *s, int32_t length, UProperty which);
+u_string_Has_ദ്വിമാന_Property(സ്ഥിരം UChar *s, int32_t length, UProperty which);
 
 /**
  * Returns a frozen USet for a binary property.
@@ -2975,8 +2975,8 @@ u_stringHasBinaryProperty(const UChar *s, int32_t length, UProperty which);
  * @see UnicodeSet::fromUSet
  * @stable ICU 63
  */
-U_CAPI const USet * U_EXPORT2
-u_getBinaryPropertySet(UProperty property, UErrorCode *pErrorCode);
+U_CAPI സ്ഥിരം USet * U_EXPORT2
+u_get_ദ്വിമാന_Property_Set(UProperty property, UErrorCode *pErrorCode);
 
 /**
  * Check if a code point has the Alphabetic Unicode property.
@@ -3083,7 +3083,7 @@ u_isUWhiteSpace(UChar32 c);
  * @stable ICU 2.2
  */
 U_CAPI int32_t U_EXPORT2
-u_getIntPropertyValue(UChar32 c, UProperty which);
+u_get_Int_Property_മൂല്യം(UChar32 c, UProperty which);
 
 /**
  * Get the minimum value for an enumerated/integer/binary Unicode property.
@@ -3104,7 +3104,7 @@ u_getIntPropertyValue(UChar32 c, UProperty which);
  * @stable ICU 2.2
  */
 U_CAPI int32_t U_EXPORT2
-u_getIntPropertyMinValue(UProperty which);
+u_get_Int_Property_Min_മൂല്യം(UProperty which);
 
 /**
  * Get the maximum value for an enumerated/integer/binary Unicode property.
@@ -3133,7 +3133,7 @@ u_getIntPropertyMinValue(UProperty which);
  * @stable ICU 2.2
  */
 U_CAPI int32_t U_EXPORT2
-u_getIntPropertyMaxValue(UProperty which);
+u_get_Int_Property_Max_മൂല്യം(UProperty which);
 
 /**
  * Returns an immutable UCPMap for an enumerated/catalog/int-valued property.
@@ -3150,7 +3150,7 @@ u_getIntPropertyMaxValue(UProperty which);
  * @see u_getIntPropertyValue
  * @stable ICU 63
  */
-U_CAPI const UCPMap * U_EXPORT2
+U_CAPI സ്ഥിരം UCPMap * U_EXPORT2
 u_getIntPropertyMap(UProperty property, UErrorCode *pErrorCode);
 
 /**
@@ -3175,8 +3175,8 @@ u_getIntPropertyMap(UProperty property, UErrorCode *pErrorCode);
  * @see U_NO_NUMERIC_VALUE
  * @stable ICU 2.2
  */
-U_CAPI double U_EXPORT2
-u_getNumericValue(UChar32 c);
+U_CAPI ഇരട്ട U_EXPORT2
+u_get_Numeric_മൂല്യം(UChar32 c);
 
 /**
  * Special value that is returned by u_getNumericValue when
@@ -3185,7 +3185,7 @@ u_getNumericValue(UChar32 c);
  * @see u_getNumericValue
  * @stable ICU 2.2
  */
-#define U_NO_NUMERIC_VALUE ((double)-123456789.)
+#define U_NO_NUMERIC_മൂല്യം ((ഇരട്ട)-123456789.)
 
 /**
  * Determines whether the specified code point has the general category "Ll"
@@ -3714,8 +3714,8 @@ u_charType(UChar32 c);
  * @see UCharCategory
  * @see u_enumCharTypes
  */
-typedef UBool U_CALLCONV
-UCharEnumTypeRange(const void *context, UChar32 start, UChar32 limit, UCharCategory type);
+തരനിർവചനം UBool U_CALLCONV
+UCharEnumTypeRange(സ്ഥിരം ശൂന്യം *context, UChar32 start, UChar32 limit, UCharCategory type);
 
 /**
  * Enumerate efficiently all code points with their Unicode general categories.
@@ -3736,10 +3736,10 @@ UCharEnumTypeRange(const void *context, UChar32 start, UChar32 limit, UCharCateg
  * @see UCharCategory
  * @see UCharEnumTypeRange
  */
-U_CAPI void U_EXPORT2
-u_enumCharTypes(UCharEnumTypeRange *enumRange, const void *context);
+U_CAPI ശൂന്യം U_EXPORT2
+u_enumCharTypes(UCharEnumTypeRange *enumRange, സ്ഥിരം ശൂന്യം *context);
 
-#if !UCONFIG_NO_NORMALIZATION
+#എങ്കിൽ !UCONFIG_NO_NORMALIZATION
 
 /**
  * Returns the combining class of the code point as specified in UnicodeData.txt.
@@ -3777,7 +3777,7 @@ u_getCombiningClass(UChar32 c);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_charDigitValue(UChar32 c);
+u_char_Digit_മൂല്യം(UChar32 c);
 
 /**
  * Returns the Unicode allocation block that contains the character.
@@ -3825,7 +3825,7 @@ ublock_getCode(UChar32 c);
  */
 U_CAPI int32_t U_EXPORT2
 u_charName(UChar32 code, UCharNameChoice nameChoice,
-           char *buffer, int32_t bufferLength,
+           അക്ഷരം *buffer, int32_t bufferLength,
            UErrorCode *pErrorCode);
 
 #ifndef U_HIDE_DEPRECATED_API
@@ -3849,7 +3849,7 @@ u_charName(UChar32 code, UCharNameChoice nameChoice,
  */
 U_DEPRECATED int32_t U_EXPORT2
 u_getISOComment(UChar32 c,
-                char *dest, int32_t destCapacity,
+                അക്ഷരം *dest, int32_t destCapacity,
                 UErrorCode *pErrorCode);
 #endif  /* U_HIDE_DEPRECATED_API */
 
@@ -3875,7 +3875,7 @@ u_getISOComment(UChar32 c,
  */
 U_CAPI UChar32 U_EXPORT2
 u_charFromName(UCharNameChoice nameChoice,
-               const char *name,
+               സ്ഥിരം അക്ഷരം *name,
                UErrorCode *pErrorCode);
 
 /**
@@ -3895,10 +3895,10 @@ u_charFromName(UCharNameChoice nameChoice,
  * @see u_enumCharNames
  * @stable ICU 1.7
  */
-typedef UBool U_CALLCONV UEnumCharNamesFn(void *context,
+തരനിർവചനം UBool U_CALLCONV UEnumCharNamesFn(ശൂന്യം *context,
                                UChar32 code,
                                UCharNameChoice nameChoice,
-                               const char *name,
+                               സ്ഥിരം അക്ഷരം *name,
                                int32_t length);
 
 /**
@@ -3922,10 +3922,10 @@ typedef UBool U_CALLCONV UEnumCharNamesFn(void *context,
  * @see u_charFromName
  * @stable ICU 1.7
  */
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 u_enumCharNames(UChar32 start, UChar32 limit,
                 UEnumCharNamesFn *fn,
-                void *context,
+                ശൂന്യം *context,
                 UCharNameChoice nameChoice,
                 UErrorCode *pErrorCode);
 
@@ -3960,7 +3960,7 @@ u_enumCharNames(UChar32 start, UChar32 limit,
  * @see UPropertyNameChoice
  * @stable ICU 2.4
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI സ്ഥിരം അക്ഷരം* U_EXPORT2
 u_getPropertyName(UProperty property,
                   UPropertyNameChoice nameChoice);
 
@@ -3984,7 +3984,7 @@ u_getPropertyName(UProperty property,
  * @stable ICU 2.4
  */
 U_CAPI UProperty U_EXPORT2
-u_getPropertyEnum(const char* alias);
+u_getPropertyEnum(സ്ഥിരം അക്ഷരം* alias);
 
 /**
  * Return the Unicode name for a given property value, as given in the
@@ -4033,9 +4033,9 @@ u_getPropertyEnum(const char* alias);
  * @see UPropertyNameChoice
  * @stable ICU 2.4
  */
-U_CAPI const char* U_EXPORT2
-u_getPropertyValueName(UProperty property,
-                       int32_t value,
+U_CAPI സ്ഥിരം അക്ഷരം* U_EXPORT2
+u_get_Property_മൂല്യം_Name(UProperty property,
+                       int32_t മൂല്യം_2,
                        UPropertyNameChoice nameChoice);
 
 /**
@@ -4070,8 +4070,8 @@ u_getPropertyValueName(UProperty property,
  * @stable ICU 2.4
  */
 U_CAPI int32_t U_EXPORT2
-u_getPropertyValueEnum(UProperty property,
-                       const char* alias);
+u_get_Property_മൂല്യം_Enum(UProperty property,
+                       സ്ഥിരം അക്ഷരം* alias);
 
 /**
  * Determines if the specified character is permissible as the first character in an identifier
@@ -4407,7 +4407,7 @@ u_forDigit(int32_t digit, int8_t radix);
  *
  * @stable ICU 2.1
  */
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 u_charAge(UChar32 c, UVersionInfo versionArray);
 
 /**
@@ -4421,10 +4421,10 @@ u_charAge(UChar32 c, UVersionInfo versionArray);
  *                     the Unicode version number
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 u_getUnicodeVersion(UVersionInfo versionArray);
 
-#if !UCONFIG_NO_NORMALIZATION
+#എങ്കിൽ !UCONFIG_NO_NORMALIZATION
 /**
  * Get the FC_NFKC_Closure property string for a character.
  * See Unicode Standard Annex #15 for details, search for "FC_NFKC_Closure"

@@ -21,12 +21,12 @@
 #ifndef __UCNV_EXT_H__
 #define __UCNV_EXT_H__
 
-#include "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#എങ്കിൽ !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "ucnv_cnv.h"
+#അന്തര്ഭാവ "unicode/ucnv.h"
+#അന്തര്ഭാവ "ucnv_cnv.h"
 
 /*
  * See icuhtml/design/conversion/conversion_extensions.html
@@ -308,7 +308,7 @@
  *   Contains fromUnicode mapping results, stored as sequences of chars.
  *   Indexes and lengths stored in the fromUTableValues[].
  */
-enum {
+എണ്ണൽ {
     UCNV_EXT_INDEXES_LENGTH,            /* 0 */
 
     UCNV_EXT_TO_U_INDEX,                /* 1 */
@@ -317,7 +317,7 @@ enum {
     UCNV_EXT_TO_U_UCHARS_LENGTH,
 
     UCNV_EXT_FROM_U_UCHARS_INDEX,       /* 5 */
-    UCNV_EXT_FROM_U_VALUES_INDEX,
+    UCNV_EXT_FROM_U_മൂല്യങ്ങൾ_INDEX,
     UCNV_EXT_FROM_U_LENGTH,
     UCNV_EXT_FROM_U_BYTES_INDEX,
     UCNV_EXT_FROM_U_BYTES_LENGTH,
@@ -330,8 +330,8 @@ enum {
     UCNV_EXT_FROM_U_STAGE_3B_INDEX,
     UCNV_EXT_FROM_U_STAGE_3B_LENGTH,
 
-    UCNV_EXT_COUNT_BYTES,               /* 17 */
-    UCNV_EXT_COUNT_UCHARS,
+    UCNV_EXT_എണ്ണം_BYTES,               /* 17 */
+    UCNV_EXT_എണ്ണം_UCHARS,
     UCNV_EXT_FLAGS,
 
     UCNV_EXT_RESERVED_INDEX,            /* 20, moves with additional indexes */
@@ -342,48 +342,48 @@ enum {
 
 /* get the pointer to an extension array from indexes[index] */
 #define UCNV_EXT_ARRAY(indexes, index, itemType) \
-    ((const itemType *)((const char *)(indexes)+(indexes)[index]))
+    ((സ്ഥിരം itemType *)((സ്ഥിരം അക്ഷരം *)(indexes)+(indexes)[index]))
 
 #define UCNV_GET_MAX_BYTES_PER_UCHAR(indexes) \
-    ((indexes)[UCNV_EXT_COUNT_BYTES]&0xff)
+    ((indexes)[UCNV_EXT_എണ്ണം_BYTES]&0xff)
 
 /* internal API ------------------------------------------------------------- */
 
 U_CFUNC UBool
-ucnv_extInitialMatchToU(UConverter *cnv, const int32_t *cx,
+ucnv_extInitialMatchToU(UConverter *cnv, സ്ഥിരം int32_t *cx,
                         int32_t firstLength,
-                        const char **src, const char *srcLimit,
-                        UChar **target, const UChar *targetLimit,
+                        സ്ഥിരം അക്ഷരം **src, സ്ഥിരം അക്ഷരം *srcLimit,
+                        UChar **target, സ്ഥിരം UChar *targetLimit,
                         int32_t **offsets, int32_t srcIndex,
                         UBool flush,
                         UErrorCode *pErrorCode);
 
 U_CFUNC UChar32
-ucnv_extSimpleMatchToU(const int32_t *cx,
-                       const char *source, int32_t length,
+ucnv_extSimpleMatchToU(സ്ഥിരം int32_t *cx,
+                       സ്ഥിരം അക്ഷരം *source, int32_t length,
                        UBool useFallback);
 
-U_CFUNC void
+U_CFUNC ശൂന്യം
 ucnv_extContinueMatchToU(UConverter *cnv,
                          UConverterToUnicodeArgs *pArgs, int32_t srcIndex,
                          UErrorCode *pErrorCode);
 
 
 U_CFUNC UBool
-ucnv_extInitialMatchFromU(UConverter *cnv, const int32_t *cx,
+ucnv_extInitialMatchFromU(UConverter *cnv, സ്ഥിരം int32_t *cx,
                           UChar32 cp,
-                          const UChar **src, const UChar *srcLimit,
-                          char **target, const char *targetLimit,
+                          സ്ഥിരം UChar **src, സ്ഥിരം UChar *srcLimit,
+                          അക്ഷരം **target, സ്ഥിരം അക്ഷരം *targetLimit,
                           int32_t **offsets, int32_t srcIndex,
                           UBool flush,
                           UErrorCode *pErrorCode);
 
 U_CFUNC int32_t
-ucnv_extSimpleMatchFromU(const int32_t *cx,
-                         UChar32 cp, uint32_t *pValue,
+ucnv_extSimpleMatchFromU(സ്ഥിരം int32_t *cx,
+                         UChar32 cp, uint32_t *p_മൂല്യം,
                          UBool useFallback);
 
-U_CFUNC void
+U_CFUNC ശൂന്യം
 ucnv_extContinueMatchFromU(UConverter *cnv,
                            UConverterFromUnicodeArgs *pArgs, int32_t srcIndex,
                            UErrorCode *pErrorCode);
@@ -397,9 +397,9 @@ ucnv_extContinueMatchFromU(UConverter *cnv,
  * For example, the Shift-JIS filter only works for 2-byte results and tests
  * that those 2 bytes are in the JIS X 0208 range of Shift-JIS.
  */
-U_CFUNC void
-ucnv_extGetUnicodeSet(const UConverterSharedData *sharedData,
-                      const USetAdder *sa,
+U_CFUNC ശൂന്യം
+ucnv_extGetUnicodeSet(സ്ഥിരം UConverterSharedData *sharedData,
+                      സ്ഥിരം USetAdder *sa,
                       UConverterUnicodeSet which,
                       UConverterSetFilter filter,
                       UErrorCode *pErrorCode);
@@ -407,7 +407,7 @@ ucnv_extGetUnicodeSet(const UConverterSharedData *sharedData,
 /* toUnicode helpers -------------------------------------------------------- */
 
 #define UCNV_EXT_TO_U_BYTE_SHIFT 24
-#define UCNV_EXT_TO_U_VALUE_MASK 0xffffff
+#define UCNV_EXT_TO_U_മൂല്യം_MASK 0xffffff
 #define UCNV_EXT_TO_U_MIN_CODE_POINT 0x1f0000
 #define UCNV_EXT_TO_U_MAX_CODE_POINT 0x2fffff
 #define UCNV_EXT_TO_U_ROUNDTRIP_FLAG ((uint32_t)1<<23)
@@ -418,35 +418,35 @@ ucnv_extGetUnicodeSet(const UConverterSharedData *sharedData,
 /* maximum number of indexed UChars */
 #define UCNV_EXT_MAX_UCHARS 19
 
-#define UCNV_EXT_TO_U_MAKE_WORD(byte, value) (((uint32_t)(byte)<<UCNV_EXT_TO_U_BYTE_SHIFT)|(value))
+#define UCNV_EXT_TO_U_MAKE_WORD(byte, മൂല്യം_2) (((uint32_t)(byte)<<UCNV_EXT_TO_U_BYTE_SHIFT)|(മൂല്യം_2))
 
 #define UCNV_EXT_TO_U_GET_BYTE(word) ((word)>>UCNV_EXT_TO_U_BYTE_SHIFT)
-#define UCNV_EXT_TO_U_GET_VALUE(word) ((word)&UCNV_EXT_TO_U_VALUE_MASK)
+#define UCNV_EXT_TO_U_GET_മൂല്യം(word) ((word)&UCNV_EXT_TO_U_മൂല്യം_MASK)
 
-#define UCNV_EXT_TO_U_IS_PARTIAL(value) ((value)<UCNV_EXT_TO_U_MIN_CODE_POINT)
-#define UCNV_EXT_TO_U_GET_PARTIAL_INDEX(value) (value)
+#define UCNV_EXT_TO_U_IS_PARTIAL(മൂല്യം_2) ((മൂല്യം_2)<UCNV_EXT_TO_U_MIN_CODE_POINT)
+#define UCNV_EXT_TO_U_GET_PARTIAL_INDEX(മൂല്യം_2) (മൂല്യം_2)
 
-#define UCNV_EXT_TO_U_IS_ROUNDTRIP(value) (((value)&UCNV_EXT_TO_U_ROUNDTRIP_FLAG)!=0)
-#define UCNV_EXT_TO_U_MASK_ROUNDTRIP(value) ((value)&~UCNV_EXT_TO_U_ROUNDTRIP_FLAG)
+#define UCNV_EXT_TO_U_IS_ROUNDTRIP(മൂല്യം_2) (((മൂല്യം_2)&UCNV_EXT_TO_U_ROUNDTRIP_FLAG)!=0)
+#define UCNV_EXT_TO_U_MASK_ROUNDTRIP(മൂല്യം_2) ((മൂല്യം_2)&~UCNV_EXT_TO_U_ROUNDTRIP_FLAG)
 
 /* use after masking off the roundtrip flag */
-#define UCNV_EXT_TO_U_IS_CODE_POINT(value) ((value)<=UCNV_EXT_TO_U_MAX_CODE_POINT)
-#define UCNV_EXT_TO_U_GET_CODE_POINT(value) ((value)-UCNV_EXT_TO_U_MIN_CODE_POINT)
+#define UCNV_EXT_TO_U_IS_CODE_POINT(മൂല്യം_2) ((മൂല്യം_2)<=UCNV_EXT_TO_U_MAX_CODE_POINT)
+#define UCNV_EXT_TO_U_GET_CODE_POINT(മൂല്യം_2) ((മൂല്യം_2)-UCNV_EXT_TO_U_MIN_CODE_POINT)
 
-#define UCNV_EXT_TO_U_GET_INDEX(value) ((value)&UCNV_EXT_TO_U_INDEX_MASK)
-#define UCNV_EXT_TO_U_GET_LENGTH(value) (((value)>>UCNV_EXT_TO_U_LENGTH_SHIFT)-UCNV_EXT_TO_U_LENGTH_OFFSET)
+#define UCNV_EXT_TO_U_GET_INDEX(മൂല്യം_2) ((മൂല്യം_2)&UCNV_EXT_TO_U_INDEX_MASK)
+#define UCNV_EXT_TO_U_GET_LENGTH(മൂല്യം_2) (((മൂല്യം_2)>>UCNV_EXT_TO_U_LENGTH_SHIFT)-UCNV_EXT_TO_U_LENGTH_OFFSET)
 
 /* fromUnicode helpers ------------------------------------------------------ */
 
 /* most trie constants are shared with ucnvmbcs.h */
 
 /* see similar utrie.h UTRIE_INDEX_SHIFT and UTRIE_DATA_GRANULARITY */
-#define UCNV_EXT_STAGE_2_LEFT_SHIFT 2
+#define UCNV_EXT_STAGE_2_ഇടത്_SHIFT 2
 #define UCNV_EXT_STAGE_3_GRANULARITY 4
 
 /* trie access, returns the stage 3 value=index to stage 3b; s1Index=c>>10 */
 #define UCNV_EXT_FROM_U(stage12, stage3, s1Index, c) \
-    (stage3)[ ((int32_t)(stage12)[ (stage12)[s1Index] +(((c)>>4)&0x3f) ]<<UCNV_EXT_STAGE_2_LEFT_SHIFT) +((c)&0xf) ]
+    (stage3)[ ((int32_t)(stage12)[ (stage12)[s1Index] +(((c)>>4)&0x3f) ]<<UCNV_EXT_STAGE_2_ഇടത്_SHIFT) +((c)&0xf) ]
 
 #define UCNV_EXT_FROM_U_LENGTH_SHIFT 24
 #define UCNV_EXT_FROM_U_ROUNDTRIP_FLAG ((uint32_t)1<<31)
@@ -464,17 +464,17 @@ ucnv_extGetUnicodeSet(const UConverterSharedData *sharedData,
 /* maximum number of indexed bytes */
 #define UCNV_EXT_MAX_BYTES 0x1f
 
-#define UCNV_EXT_FROM_U_IS_PARTIAL(value) (((value)>>UCNV_EXT_FROM_U_LENGTH_SHIFT)==0)
-#define UCNV_EXT_FROM_U_GET_PARTIAL_INDEX(value) (value)
+#define UCNV_EXT_FROM_U_IS_PARTIAL(മൂല്യം_2) (((മൂല്യം_2)>>UCNV_EXT_FROM_U_LENGTH_SHIFT)==0)
+#define UCNV_EXT_FROM_U_GET_PARTIAL_INDEX(മൂല്യം_2) (മൂല്യം_2)
 
-#define UCNV_EXT_FROM_U_IS_ROUNDTRIP(value) (((value)&UCNV_EXT_FROM_U_ROUNDTRIP_FLAG)!=0)
-#define UCNV_EXT_FROM_U_MASK_ROUNDTRIP(value) ((value)&~UCNV_EXT_FROM_U_ROUNDTRIP_FLAG)
+#define UCNV_EXT_FROM_U_IS_ROUNDTRIP(മൂല്യം_2) (((മൂല്യം_2)&UCNV_EXT_FROM_U_ROUNDTRIP_FLAG)!=0)
+#define UCNV_EXT_FROM_U_MASK_ROUNDTRIP(മൂല്യം_2) ((മൂല്യം_2)&~UCNV_EXT_FROM_U_ROUNDTRIP_FLAG)
 
 /* get length; masks away all other bits */
-#define UCNV_EXT_FROM_U_GET_LENGTH(value) (int32_t)(((value)>>UCNV_EXT_FROM_U_LENGTH_SHIFT)&UCNV_EXT_MAX_BYTES)
+#define UCNV_EXT_FROM_U_GET_LENGTH(മൂല്യം_2) (int32_t)(((മൂല്യം_2)>>UCNV_EXT_FROM_U_LENGTH_SHIFT)&UCNV_EXT_MAX_BYTES)
 
 /* get bytes or bytes index */
-#define UCNV_EXT_FROM_U_GET_DATA(value) ((value)&UCNV_EXT_FROM_U_DATA_MASK)
+#define UCNV_EXT_FROM_U_GET_DATA(മൂല്യം_2) ((മൂല്യം_2)&UCNV_EXT_FROM_U_DATA_MASK)
 
 #endif
 

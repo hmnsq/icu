@@ -8,22 +8,22 @@
  *************************************************************************
  */
 
-#include "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#എങ്കിൽ !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/uniset.h"
-#include "unicode/unistr.h"
-#include "unicode/chariter.h"
-#include "unicode/schriter.h"
-#include "unicode/uchriter.h"
-#include "unicode/normlzr.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "normalizer2impl.h"
-#include "uprops.h"  // for uniset_getUnicode32Instance()
+#അന്തര്ഭാവ "unicode/uniset.h"
+#അന്തര്ഭാവ "unicode/unistr.h"
+#അന്തര്ഭാവ "unicode/chariter.h"
+#അന്തര്ഭാവ "unicode/schriter.h"
+#അന്തര്ഭാവ "unicode/uchriter.h"
+#അന്തര്ഭാവ "unicode/normlzr.h"
+#അന്തര്ഭാവ "unicode/utf16.h"
+#അന്തര്ഭാവ "cmemory.h"
+#അന്തര്ഭാവ "normalizer2impl.h"
+#അന്തര്ഭാവ "uprops.h"  // for uniset_getUnicode32Instance()
 
-#if defined(move32)
+#എങ്കിൽ defined(move32)
  // System can define move32 intrinsics, but the char iters define move32 method
  // using same undef trick in headers, so undef here to re-enable the method.
 #undef move32
@@ -37,9 +37,9 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Normalizer)
 // Constructors and other boilerplate
 //-------------------------------------------------------------------------
 
-Normalizer::Normalizer(const UnicodeString& str, UNormalizationMode mode) :
+Normalizer::Normalizer(സ്ഥിരം UnicodeString& str, UNormalizationMode mode) :
     UObject(), fFilteredNorm2(nullptr), fNorm2(nullptr), fUMode(mode), fOptions(0),
-    text(new StringCharacterIterator(str)),
+    text(പുതിയ StringCharacterIterator(str)),
     currentIndex(0), nextIndex(0),
     buffer(), bufferPos(0)
 {
@@ -48,14 +48,14 @@ Normalizer::Normalizer(const UnicodeString& str, UNormalizationMode mode) :
 
 Normalizer::Normalizer(ConstChar16Ptr str U_LIFETIME_BOUND, int32_t length, UNormalizationMode mode) :
     UObject(), fFilteredNorm2(nullptr), fNorm2(nullptr), fUMode(mode), fOptions(0),
-    text(new UCharCharacterIterator(str, length)),
+    text(പുതിയ UCharCharacterIterator(str, length)),
     currentIndex(0), nextIndex(0),
     buffer(), bufferPos(0)
 {
     init();
 }
 
-Normalizer::Normalizer(const CharacterIterator& iter, UNormalizationMode mode) :
+Normalizer::Normalizer(സ്ഥിരം CharacterIterator& iter, UNormalizationMode mode) :
     UObject(), fFilteredNorm2(nullptr), fNorm2(nullptr), fUMode(mode), fOptions(0),
     text(iter.clone()),
     currentIndex(0), nextIndex(0),
@@ -64,7 +64,7 @@ Normalizer::Normalizer(const CharacterIterator& iter, UNormalizationMode mode) :
     init();
 }
 
-Normalizer::Normalizer(const Normalizer &copy) :
+Normalizer::Normalizer(സ്ഥിരം Normalizer &copy) :
     UObject(copy), fFilteredNorm2(nullptr), fNorm2(nullptr), fUMode(copy.fUMode), fOptions(copy.fOptions),
     text(copy.text->clone()),
     currentIndex(copy.currentIndex), nextIndex(copy.nextIndex),
@@ -73,16 +73,16 @@ Normalizer::Normalizer(const Normalizer &copy) :
     init();
 }
 
-void
+ശൂന്യം
 Normalizer::init() {
     UErrorCode errorCode=U_ZERO_ERROR;
     fNorm2=Normalizer2Factory::getInstance(fUMode, errorCode);
-    if(fOptions&UNORM_UNICODE_3_2) {
+    എങ്കിൽ(fOptions&UNORM_UNICODE_3_2) {
         delete fFilteredNorm2;
         fNorm2=fFilteredNorm2=
-            new FilteredNormalizer2(*fNorm2, *uniset_getUnicode32Instance(errorCode));
+            പുതിയ FilteredNormalizer2(*fNorm2, *uniset_getUnicode32Instance(errorCode));
     }
-    if(U_FAILURE(errorCode)) {
+    എങ്കിൽ(U_FAILURE(errorCode)) {
         errorCode=U_ZERO_ERROR;
         fNorm2=Normalizer2Factory::getNoopInstance(errorCode);
     }
@@ -95,23 +95,23 @@ Normalizer::~Normalizer()
 }
 
 Normalizer* 
-Normalizer::clone() const
+Normalizer::clone() സ്ഥിരം
 {
-    return new Normalizer(*this);
+    തിരികെ പുതിയ Normalizer(*ഇത്);
 }
 
 /**
  * Generates a hash code for this iterator.
  */
-int32_t Normalizer::hashCode() const
+int32_t Normalizer::hashCode() സ്ഥിരം
 {
-    return text->hashCode() + fUMode + fOptions + buffer.hashCode() + bufferPos + currentIndex + nextIndex;
+    തിരികെ text->hashCode() + fUMode + fOptions + buffer.hashCode() + bufferPos + currentIndex + nextIndex;
 }
     
-bool Normalizer::operator==(const Normalizer& that) const
+തർക്കം Normalizer::operator==(സ്ഥിരം Normalizer& that) സ്ഥിരം
 {
-    return
-        this==&that ||
+    തിരികെ
+        ഇത്==&that ||
         (fUMode==that.fUMode &&
         fOptions==that.fOptions &&
         *text==*that.text &&
@@ -124,51 +124,51 @@ bool Normalizer::operator==(const Normalizer& that) const
 // Static utility methods
 //-------------------------------------------------------------------------
 
-void U_EXPORT2
-Normalizer::normalize(const UnicodeString& source, 
+ശൂന്യം U_EXPORT2
+Normalizer::normalize(സ്ഥിരം UnicodeString& source, 
                       UNormalizationMode mode, int32_t options,
                       UnicodeString& result, 
                       UErrorCode &status) {
-    if(source.isBogus() || U_FAILURE(status)) {
+    എങ്കിൽ(source.isBogus() || U_FAILURE(status)) {
         result.setToBogus();
-        if(U_SUCCESS(status)) {
+        എങ്കിൽ(U_SUCCESS(status)) {
             status=U_ILLEGAL_ARGUMENT_ERROR;
         }
-    } else {
+    } അല്ലെങ്കിൽ {
         UnicodeString localDest;
         UnicodeString *dest;
 
-        if(&source!=&result) {
+        എങ്കിൽ(&source!=&result) {
             dest=&result;
-        } else {
+        } അല്ലെങ്കിൽ {
             // the source and result strings are the same object, use a temporary one
             dest=&localDest;
         }
-        const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, status);
-        if(U_SUCCESS(status)) {
-            if(options&UNORM_UNICODE_3_2) {
+        സ്ഥിരം Normalizer2 *n2=Normalizer2Factory::getInstance(mode, status);
+        എങ്കിൽ(U_SUCCESS(status)) {
+            എങ്കിൽ(options&UNORM_UNICODE_3_2) {
                 FilteredNormalizer2(*n2, *uniset_getUnicode32Instance(status)).
                     normalize(source, *dest, status);
-            } else {
+            } അല്ലെങ്കിൽ {
                 n2->normalize(source, *dest, status);
             }
         }
-        if(dest==&localDest && U_SUCCESS(status)) {
+        എങ്കിൽ(dest==&localDest && U_SUCCESS(status)) {
             result=*dest;
         }
     }
 }
 
-void U_EXPORT2
-Normalizer::compose(const UnicodeString& source, 
+ശൂന്യം U_EXPORT2
+Normalizer::compose(സ്ഥിരം UnicodeString& source, 
                     UBool compat, int32_t options,
                     UnicodeString& result, 
                     UErrorCode &status) {
     normalize(source, compat ? UNORM_NFKC : UNORM_NFC, options, result, status);
 }
 
-void U_EXPORT2
-Normalizer::decompose(const UnicodeString& source, 
+ശൂന്യം U_EXPORT2
+Normalizer::decompose(സ്ഥിരം UnicodeString& source, 
                       UBool compat, int32_t options,
                       UnicodeString& result, 
                       UErrorCode &status) {
@@ -176,76 +176,76 @@ Normalizer::decompose(const UnicodeString& source,
 }
 
 UNormalizationCheckResult
-Normalizer::quickCheck(const UnicodeString& source,
+Normalizer::quickCheck(സ്ഥിരം UnicodeString& source,
                        UNormalizationMode mode, int32_t options,
                        UErrorCode &status) {
-    const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, status);
-    if(U_SUCCESS(status)) {
-        if(options&UNORM_UNICODE_3_2) {
-            return FilteredNormalizer2(*n2, *uniset_getUnicode32Instance(status)).
+    സ്ഥിരം Normalizer2 *n2=Normalizer2Factory::getInstance(mode, status);
+    എങ്കിൽ(U_SUCCESS(status)) {
+        എങ്കിൽ(options&UNORM_UNICODE_3_2) {
+            തിരികെ FilteredNormalizer2(*n2, *uniset_getUnicode32Instance(status)).
                 quickCheck(source, status);
-        } else {
-            return n2->quickCheck(source, status);
+        } അല്ലെങ്കിൽ {
+            തിരികെ n2->quickCheck(source, status);
         }
-    } else {
-        return UNORM_MAYBE;
+    } അല്ലെങ്കിൽ {
+        തിരികെ UNORM_MAYBE;
     }
 }
 
 UBool
-Normalizer::isNormalized(const UnicodeString& source,
+Normalizer::isNormalized(സ്ഥിരം UnicodeString& source,
                          UNormalizationMode mode, int32_t options,
                          UErrorCode &status) {
-    const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, status);
-    if(U_SUCCESS(status)) {
-        if(options&UNORM_UNICODE_3_2) {
-            return FilteredNormalizer2(*n2, *uniset_getUnicode32Instance(status)).
+    സ്ഥിരം Normalizer2 *n2=Normalizer2Factory::getInstance(mode, status);
+    എങ്കിൽ(U_SUCCESS(status)) {
+        എങ്കിൽ(options&UNORM_UNICODE_3_2) {
+            തിരികെ FilteredNormalizer2(*n2, *uniset_getUnicode32Instance(status)).
                 isNormalized(source, status);
-        } else {
-            return n2->isNormalized(source, status);
+        } അല്ലെങ്കിൽ {
+            തിരികെ n2->isNormalized(source, status);
         }
-    } else {
-        return false;
+    } അല്ലെങ്കിൽ {
+        തിരികെ അസത്യം;
     }
 }
 
 UnicodeString& U_EXPORT2
-Normalizer::concatenate(const UnicodeString& left,
-                        const UnicodeString& right,
+Normalizer::concatenate(സ്ഥിരം UnicodeString& left,
+                        സ്ഥിരം UnicodeString& വലത്,
                         UnicodeString& result U_LIFETIME_BOUND,
                         UNormalizationMode mode,
                         int32_t options,
                         UErrorCode& errorCode) {
-    if(left.isBogus() || right.isBogus() || U_FAILURE(errorCode)) {
+    എങ്കിൽ(left.isBogus() || വലത്.isBogus() || U_FAILURE(errorCode)) {
         result.setToBogus();
-        if(U_SUCCESS(errorCode)) {
+        എങ്കിൽ(U_SUCCESS(errorCode)) {
             errorCode=U_ILLEGAL_ARGUMENT_ERROR;
         }
-    } else {
+    } അല്ലെങ്കിൽ {
         UnicodeString localDest;
         UnicodeString *dest;
 
-        if(&right!=&result) {
+        എങ്കിൽ(&വലത്!=&result) {
             dest=&result;
-        } else {
+        } അല്ലെങ്കിൽ {
             // the right and result strings are the same object, use a temporary one
             dest=&localDest;
         }
         *dest=left;
-        const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, errorCode);
-        if(U_SUCCESS(errorCode)) {
-            if(options&UNORM_UNICODE_3_2) {
+        സ്ഥിരം Normalizer2 *n2=Normalizer2Factory::getInstance(mode, errorCode);
+        എങ്കിൽ(U_SUCCESS(errorCode)) {
+            എങ്കിൽ(options&UNORM_UNICODE_3_2) {
                 FilteredNormalizer2(*n2, *uniset_getUnicode32Instance(errorCode)).
-                    append(*dest, right, errorCode);
-            } else {
-                n2->append(*dest, right, errorCode);
+                    append(*dest, വലത്, errorCode);
+            } അല്ലെങ്കിൽ {
+                n2->append(*dest, വലത്, errorCode);
             }
         }
-        if(dest==&localDest && U_SUCCESS(errorCode)) {
+        എങ്കിൽ(dest==&localDest && U_SUCCESS(errorCode)) {
             result=*dest;
         }
     }
-    return result;
+    തിരികെ result;
 }
 
 //-------------------------------------------------------------------------
@@ -256,10 +256,10 @@ Normalizer::concatenate(const UnicodeString& left,
  * Return the current character in the normalized text.
  */
 UChar32 Normalizer::current() {
-    if(bufferPos<buffer.length() || nextNormalize()) {
-        return buffer.char32At(bufferPos);
-    } else {
-        return DONE;
+    എങ്കിൽ(bufferPos<buffer.length() || nextNormalize()) {
+        തിരികെ buffer.char32At(bufferPos);
+    } അല്ലെങ്കിൽ {
+        തിരികെ DONE;
     }
 }
 
@@ -269,12 +269,12 @@ UChar32 Normalizer::current() {
  * of the text has already been reached, {@link #DONE} is returned.
  */
 UChar32 Normalizer::next() {
-    if(bufferPos<buffer.length() ||  nextNormalize()) {
+    എങ്കിൽ(bufferPos<buffer.length() ||  nextNormalize()) {
         UChar32 c=buffer.char32At(bufferPos);
         bufferPos+=U16_LENGTH(c);
-        return c;
-    } else {
-        return DONE;
+        തിരികെ c;
+    } അല്ലെങ്കിൽ {
+        തിരികെ DONE;
     }
 }
 
@@ -284,21 +284,21 @@ UChar32 Normalizer::next() {
  * of the text has already been reached, {@link #DONE} is returned.
  */
 UChar32 Normalizer::previous() {
-    if(bufferPos>0 || previousNormalize()) {
+    എങ്കിൽ(bufferPos>0 || previousNormalize()) {
         UChar32 c=buffer.char32At(bufferPos-1);
         bufferPos-=U16_LENGTH(c);
-        return c;
-    } else {
-        return DONE;
+        തിരികെ c;
+    } അല്ലെങ്കിൽ {
+        തിരികെ DONE;
     }
 }
 
-void Normalizer::reset() {
+ശൂന്യം Normalizer::reset() {
     currentIndex=nextIndex=text->setToStart();
     clearBuffer();
 }
 
-void
+ശൂന്യം
 Normalizer::setIndexOnly(int32_t index) {
     text->setIndex(index);  // pins index
     currentIndex=nextIndex=text->getIndex();
@@ -311,7 +311,7 @@ Normalizer::setIndexOnly(int32_t index) {
  */
 UChar32 Normalizer::first() {
     reset();
-    return next();
+    തിരികെ next();
 }
 
 /**
@@ -322,7 +322,7 @@ UChar32 Normalizer::first() {
 UChar32 Normalizer::last() {
     currentIndex=nextIndex=text->setToEnd();
     clearBuffer();
-    return previous();
+    തിരികെ previous();
 }
 
 /**
@@ -339,11 +339,11 @@ UChar32 Normalizer::last() {
  * <tt>setIndex</tt> and {@link #getIndex}.
  *
  */
-int32_t Normalizer::getIndex() const {
-    if(bufferPos<buffer.length()) {
-        return currentIndex;
-    } else {
-        return nextIndex;
+int32_t Normalizer::getIndex() സ്ഥിരം {
+    എങ്കിൽ(bufferPos<buffer.length()) {
+        തിരികെ currentIndex;
+    } അല്ലെങ്കിൽ {
+        തിരികെ nextIndex;
     }
 }
 
@@ -352,8 +352,8 @@ int32_t Normalizer::getIndex() const {
  * of the <tt>CharacterIterator</tt> or the start (i.e. 0) of the <tt>String</tt>
  * over which this <tt>Normalizer</tt> is iterating
  */
-int32_t Normalizer::startIndex() const {
-    return text->startIndex();
+int32_t Normalizer::startIndex() സ്ഥിരം {
+    തിരികെ text->startIndex();
 }
 
 /**
@@ -361,15 +361,15 @@ int32_t Normalizer::startIndex() const {
  * of the <tt>CharacterIterator</tt> or the length of the <tt>String</tt>
  * over which this <tt>Normalizer</tt> is iterating
  */
-int32_t Normalizer::endIndex() const {
-    return text->endIndex();
+int32_t Normalizer::endIndex() സ്ഥിരം {
+    തിരികെ text->endIndex();
 }
 
 //-------------------------------------------------------------------------
 // Property access methods
 //-------------------------------------------------------------------------
 
-void
+ശൂന്യം
 Normalizer::setMode(UNormalizationMode newMode) 
 {
     fUMode = newMode;
@@ -377,44 +377,44 @@ Normalizer::setMode(UNormalizationMode newMode)
 }
 
 UNormalizationMode
-Normalizer::getUMode() const
+Normalizer::getUMode() സ്ഥിരം
 {
-    return fUMode;
+    തിരികെ fUMode;
 }
 
-void
+ശൂന്യം
 Normalizer::setOption(int32_t option, 
                       UBool value) 
 {
-    if (value) {
+    എങ്കിൽ (value) {
         fOptions |= option;
-    } else {
+    } അല്ലെങ്കിൽ {
         fOptions &= (~option);
     }
     init();
 }
 
 UBool
-Normalizer::getOption(int32_t option) const
+Normalizer::getOption(int32_t option) സ്ഥിരം
 {
-    return (fOptions & option) != 0;
+    തിരികെ (fOptions & option) != 0;
 }
 
 /**
  * Set the input text over which this <tt>Normalizer</tt> will iterate.
  * The iteration position is set to the beginning of the input text.
  */
-void
-Normalizer::setText(const UnicodeString& newText, 
+ശൂന്യം
+Normalizer::setText(സ്ഥിരം UnicodeString& newText, 
                     UErrorCode &status)
 {
-    if (U_FAILURE(status)) {
-        return;
+    എങ്കിൽ (U_FAILURE(status)) {
+        തിരികെ;
     }
-    CharacterIterator *newIter = new StringCharacterIterator(newText);
-    if (newIter == nullptr) {
+    CharacterIterator *newIter = പുതിയ StringCharacterIterator(newText);
+    എങ്കിൽ (newIter == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        തിരികെ;
     }
     delete text;
     text = newIter;
@@ -425,35 +425,35 @@ Normalizer::setText(const UnicodeString& newText,
  * Set the input text over which this <tt>Normalizer</tt> will iterate.
  * The iteration position is set to the beginning of the string.
  */
-void
-Normalizer::setText(const CharacterIterator& newText, 
+ശൂന്യം
+Normalizer::setText(സ്ഥിരം CharacterIterator& newText, 
                     UErrorCode &status) 
 {
-    if (U_FAILURE(status)) {
-        return;
+    എങ്കിൽ (U_FAILURE(status)) {
+        തിരികെ;
     }
     CharacterIterator *newIter = newText.clone();
-    if (newIter == nullptr) {
+    എങ്കിൽ (newIter == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        തിരികെ;
     }
     delete text;
     text = newIter;
     reset();
 }
 
-void
+ശൂന്യം
 Normalizer::setText(ConstChar16Ptr newText,
                     int32_t length,
                     UErrorCode &status)
 {
-    if (U_FAILURE(status)) {
-        return;
+    എങ്കിൽ (U_FAILURE(status)) {
+        തിരികെ;
     }
-    CharacterIterator *newIter = new UCharCharacterIterator(newText, length);
-    if (newIter == nullptr) {
+    CharacterIterator *newIter = പുതിയ UCharCharacterIterator(newText, length);
+    എങ്കിൽ (newIter == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        തിരികെ;
     }
     delete text;
     text = newIter;
@@ -464,7 +464,7 @@ Normalizer::setText(ConstChar16Ptr newText,
  * Copies the text under iteration into the UnicodeString referred to by "result".
  * @param result Receives a copy of the text under iteration.
  */
-void
+ശൂന്യം
 Normalizer::getText(UnicodeString&  result) 
 {
     text->getText(result);
@@ -474,7 +474,7 @@ Normalizer::getText(UnicodeString&  result)
 // Private utility methods
 //-------------------------------------------------------------------------
 
-void Normalizer::clearBuffer() {
+ശൂന്യം Normalizer::clearBuffer() {
     buffer.remove();
     bufferPos=0;
 }
@@ -484,23 +484,23 @@ Normalizer::nextNormalize() {
     clearBuffer();
     currentIndex=nextIndex;
     text->setIndex(nextIndex);
-    if(!text->hasNext()) {
-        return false;
+    എങ്കിൽ(!text->hasNext()) {
+        തിരികെ അസത്യം;
     }
     // Skip at least one character so we make progress.
     UnicodeString segment(text->next32PostInc());
-    while(text->hasNext()) {
+    ആകുമ്പോൾ(text->hasNext()) {
         UChar32 c;
-        if(fNorm2->hasBoundaryBefore(c=text->next32PostInc())) {
+        എങ്കിൽ(fNorm2->hasBoundaryBefore(c=text->next32PostInc())) {
             text->move32(-1, CharacterIterator::kCurrent);
-            break;
+            നിർത്തുക;
         }
         segment.append(c);
     }
     nextIndex=text->getIndex();
     UErrorCode errorCode=U_ZERO_ERROR;
     fNorm2->normalize(segment, buffer, errorCode);
-    return U_SUCCESS(errorCode) && !buffer.isEmpty();
+    തിരികെ U_SUCCESS(errorCode) && !buffer.isEmpty();
 }
 
 UBool
@@ -508,22 +508,22 @@ Normalizer::previousNormalize() {
     clearBuffer();
     nextIndex=currentIndex;
     text->setIndex(currentIndex);
-    if(!text->hasPrevious()) {
-        return false;
+    എങ്കിൽ(!text->hasPrevious()) {
+        തിരികെ അസത്യം;
     }
     UnicodeString segment;
-    while(text->hasPrevious()) {
+    ആകുമ്പോൾ(text->hasPrevious()) {
         UChar32 c=text->previous32();
         segment.insert(0, c);
-        if(fNorm2->hasBoundaryBefore(c)) {
-            break;
+        എങ്കിൽ(fNorm2->hasBoundaryBefore(c)) {
+            നിർത്തുക;
         }
     }
     currentIndex=text->getIndex();
     UErrorCode errorCode=U_ZERO_ERROR;
     fNorm2->normalize(segment, buffer, errorCode);
     bufferPos=buffer.length();
-    return U_SUCCESS(errorCode) && !buffer.isEmpty();
+    തിരികെ U_SUCCESS(errorCode) && !buffer.isEmpty();
 }
 
 U_NAMESPACE_END

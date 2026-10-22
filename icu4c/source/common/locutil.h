@@ -11,10 +11,10 @@
 #ifndef LOCUTIL_H
 #define LOCUTIL_H
 
-#include "unicode/utypes.h"
-#include "hash.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
+#അന്തര്ഭാവ "hash.h"
 
-#if !UCONFIG_NO_SERVICE || !UCONFIG_NO_TRANSLITERATION
+#എങ്കിൽ !UCONFIG_NO_SERVICE || !UCONFIG_NO_TRANSLITERATION
 
 
 U_NAMESPACE_BEGIN
@@ -23,12 +23,12 @@ U_NAMESPACE_BEGIN
 // in header so tests can also access them
 
 class U_COMMON_API LocaleUtility {
-public:
-  static UnicodeString& canonicalLocaleString(const UnicodeString* id, UnicodeString& result);
-  static Locale& initLocaleFromName(const UnicodeString& id, Locale& result);
-  static UnicodeString& initNameFromLocale(const Locale& locale, UnicodeString& result);
-  static const Hashtable* getAvailableLocaleNames(const UnicodeString& bundleID);
-  static bool isFallbackOf(const UnicodeString& root, const UnicodeString& child);
+പൊതു:
+  സ്ഥിതം UnicodeString& canonicalLocaleString(സ്ഥിരം UnicodeString* id, UnicodeString& result);
+  സ്ഥിതം Locale& initLocaleFromName(സ്ഥിരം UnicodeString& id, Locale& result);
+  സ്ഥിതം UnicodeString& initNameFromLocale(സ്ഥിരം Locale& locale, UnicodeString& result);
+  സ്ഥിതം സ്ഥിരം Hashtable* getAvailableLocaleNames(സ്ഥിരം UnicodeString& bundleID);
+  സ്ഥിതം bool isFallbackOf(സ്ഥിരം UnicodeString& വേര്, സ്ഥിരം UnicodeString& child);
 };
 
 U_NAMESPACE_END

@@ -15,19 +15,19 @@
  * \brief C API: Provides display names of Locale ids and their components.
  */
 
-#include "unicode/utypes.h"
-#include "unicode/uscript.h"
-#include "unicode/udisplaycontext.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/uscript.h"
+#അന്തര്ഭാവ "unicode/udisplaycontext.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
+#എങ്കിൽ U_SHOW_CPLUSPLUS_API
+#അന്തര്ഭാവ "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
 /**
  * Enum used in LocaleDisplayNames::createInstance.
  * @stable ICU 4.4
  */
-typedef enum {
+തരനിർവചനം എണ്ണൽ {
     /**
      * Use standard names when generating a locale name,
      * e.g. en_GB displays as 'English (United Kingdom)'.
@@ -46,15 +46,15 @@ typedef enum {
  * Opaque C service object type for the locale display names API
  * @stable ICU 4.4
  */
-struct ULocaleDisplayNames;
+ഘടന ULocaleDisplayNames;
 
 /** 
  * C typedef for struct ULocaleDisplayNames. 
  * @stable ICU 4.4 
  */
-typedef struct ULocaleDisplayNames ULocaleDisplayNames;  
+തരനിർവചനം ഘടന ULocaleDisplayNames ULocaleDisplayNames;  
 
-#if !UCONFIG_NO_FORMATTING
+#എങ്കിൽ !UCONFIG_NO_FORMATTING
 
 /**
  * Returns an instance of LocaleDisplayNames that returns names
@@ -69,7 +69,7 @@ typedef struct ULocaleDisplayNames ULocaleDisplayNames;
  * @stable ICU 4.4
  */
 U_CAPI ULocaleDisplayNames * U_EXPORT2
-uldn_open(const char * locale,
+uldn_open(സ്ഥിരം അക്ഷരം * locale,
           UDialectHandling dialectHandling,
           UErrorCode *pErrorCode);
 
@@ -78,10 +78,10 @@ uldn_open(const char * locale,
  * @param ldn the ULocaleDisplayNames instance to be closed
  * @stable ICU 4.4
  */
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 uldn_close(ULocaleDisplayNames *ldn);
 
-#if U_SHOW_CPLUSPLUS_API
+#എങ്കിൽ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -109,8 +109,8 @@ U_NAMESPACE_END
  * @return the display locale 
  * @stable ICU 4.4
  */
-U_CAPI const char* U_EXPORT2
-uldn_getLocale(const ULocaleDisplayNames* ldn U_LIFETIME_BOUND);
+U_CAPI സ്ഥിരം അക്ഷരം* U_EXPORT2
+uldn_getLocale(സ്ഥിരം ULocaleDisplayNames* ldn U_LIFETIME_BOUND);
 
 /**
  * Returns the dialect handling used in the display names.
@@ -119,7 +119,7 @@ uldn_getLocale(const ULocaleDisplayNames* ldn U_LIFETIME_BOUND);
  * @stable ICU 4.4
  */
 U_CAPI UDialectHandling U_EXPORT2
-uldn_getDialectHandling(const ULocaleDisplayNames *ldn);
+uldn_getDialectHandling(സ്ഥിരം ULocaleDisplayNames *ldn);
 
 /* names for entire locales */
 
@@ -135,8 +135,8 @@ uldn_getDialectHandling(const ULocaleDisplayNames *ldn);
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_localeDisplayName(const ULocaleDisplayNames *ldn,
-                       const char *locale,
+uldn_localeDisplayName(സ്ഥിരം ULocaleDisplayNames *ldn,
+                       സ്ഥിരം അക്ഷരം *locale,
                        UChar *result,
                        int32_t maxResultSize,
                        UErrorCode *pErrorCode);
@@ -155,8 +155,8 @@ uldn_localeDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_languageDisplayName(const ULocaleDisplayNames *ldn,
-                         const char *lang,
+uldn_languageDisplayName(സ്ഥിരം ULocaleDisplayNames *ldn,
+                         സ്ഥിരം അക്ഷരം *lang,
                          UChar *result,
                          int32_t maxResultSize,
                          UErrorCode *pErrorCode);
@@ -173,8 +173,8 @@ uldn_languageDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_scriptDisplayName(const ULocaleDisplayNames *ldn,
-                       const char *script,
+uldn_scriptDisplayName(സ്ഥിരം ULocaleDisplayNames *ldn,
+                       സ്ഥിരം അക്ഷരം *script,
                        UChar *result,
                        int32_t maxResultSize,
                        UErrorCode *pErrorCode);
@@ -191,7 +191,7 @@ uldn_scriptDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_scriptCodeDisplayName(const ULocaleDisplayNames *ldn,
+uldn_scriptCodeDisplayName(സ്ഥിരം ULocaleDisplayNames *ldn,
                            UScriptCode scriptCode,
                            UChar *result,
                            int32_t maxResultSize,
@@ -209,8 +209,8 @@ uldn_scriptCodeDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_regionDisplayName(const ULocaleDisplayNames *ldn,
-                       const char *region,
+uldn_regionDisplayName(സ്ഥിരം ULocaleDisplayNames *ldn,
+                       സ്ഥിരം അക്ഷരം *region,
                        UChar *result,
                        int32_t maxResultSize,
                        UErrorCode *pErrorCode);
@@ -227,8 +227,8 @@ uldn_regionDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_variantDisplayName(const ULocaleDisplayNames *ldn,
-                        const char *variant,
+uldn_variantDisplayName(സ്ഥിരം ULocaleDisplayNames *ldn,
+                        സ്ഥിരം അക്ഷരം *variant,
                         UChar *result,
                         int32_t maxResultSize,
                         UErrorCode *pErrorCode);
@@ -245,8 +245,8 @@ uldn_variantDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_keyDisplayName(const ULocaleDisplayNames *ldn,
-                    const char *key,
+uldn_താക്കോൽ_Display_Name(സ്ഥിരം ULocaleDisplayNames *ldn,
+                    സ്ഥിരം അക്ഷരം *താക്കോൽ,
                     UChar *result,
                     int32_t maxResultSize,
                     UErrorCode *pErrorCode);
@@ -264,9 +264,9 @@ uldn_keyDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_keyValueDisplayName(const ULocaleDisplayNames *ldn,
-                         const char *key,
-                         const char *value,
+uldn_താക്കോൽ_മൂല്യം_Display_Name(സ്ഥിരം ULocaleDisplayNames *ldn,
+                         സ്ഥിരം അക്ഷരം *താക്കോൽ,
+                         സ്ഥിരം അക്ഷരം *മൂല്യം_2,
                          UChar *result,
                          int32_t maxResultSize,
                          UErrorCode *pErrorCode);
@@ -286,7 +286,7 @@ uldn_keyValueDisplayName(const ULocaleDisplayNames *ldn,
 * @stable ICU 51
 */
 U_CAPI ULocaleDisplayNames * U_EXPORT2
-uldn_openForContext(const char * locale, UDisplayContext *contexts,
+uldn_openForContext(സ്ഥിരം അക്ഷരം * locale, UDisplayContext *contexts,
                     int32_t length, UErrorCode *pErrorCode);
 
 /**
@@ -300,7 +300,7 @@ uldn_openForContext(const char * locale, UDisplayContext *contexts,
 * @stable ICU 51
 */
 U_CAPI UDisplayContext U_EXPORT2
-uldn_getContext(const ULocaleDisplayNames *ldn, UDisplayContextType type,
+uldn_getContext(സ്ഥിരം ULocaleDisplayNames *ldn, UDisplayContextType type,
                 UErrorCode *pErrorCode);
 
 #endif  /* !UCONFIG_NO_FORMATTING */

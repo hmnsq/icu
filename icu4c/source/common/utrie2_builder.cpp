@@ -30,17 +30,17 @@
 #endif
 // #define UCPTRIE_DEBUG
 
-#include "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
 #ifdef UCPTRIE_DEBUG
-#include "unicode/ucptrie.h"
-#include "unicode/umutablecptrie.h"
-#include "ucptrie_impl.h"
+#അന്തര്ഭാവ "unicode/ucptrie.h"
+#അന്തര്ഭാവ "unicode/umutablecptrie.h"
+#അന്തര്ഭാവ "ucptrie_impl.h"
 #endif
-#include "cmemory.h"
-#include "utrie2.h"
-#include "utrie2_impl.h"
+#അന്തര്ഭാവ "cmemory.h"
+#അന്തര്ഭാവ "utrie2.h"
+#അന്തര്ഭാവ "utrie2_impl.h"
 
-#include "utrie.h"  // for utrie2_fromUTrie()
+#അന്തര്ഭാവ "utrie.h"  // for utrie2_fromUTrie()
 
 /* Implementation notes ----------------------------------------------------- */
 
@@ -77,7 +77,7 @@
 
 /* Building a trie ----------------------------------------------------------*/
 
-enum {
+എണ്ണൽ {
     /** The null index-2 block, following the gap in the index-2 table. */
     UNEWTRIE2_INDEX_2_NULL_OFFSET=UNEWTRIE2_INDEX_GAP_OFFSET+UNEWTRIE2_INDEX_GAP_LENGTH,
 
@@ -109,35 +109,35 @@ enum {
 /* Grow about 8x each time. */
 #define UNEWTRIE2_MEDIUM_DATA_LENGTH ((int32_t)1<<17)
 
-static int32_t
+സ്ഥിതം int32_t
 allocIndex2Block(UNewTrie2 *trie);
 
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_open(uint32_t initialValue, uint32_t errorValue, UErrorCode *pErrorCode) {
+utrie2_open(uint32_t initial_മൂല്യം, uint32_t error_മൂല്യം, UErrorCode *pErrorCode) {
     UTrie2 *trie;
     UNewTrie2 *newTrie;
     uint32_t *data;
     int32_t i, j;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    എങ്കിൽ(U_FAILURE(*pErrorCode)) {
+        തിരികെ nullptr;
     }
 
-    trie=(UTrie2 *)uprv_malloc(sizeof(UTrie2));
-    newTrie=(UNewTrie2 *)uprv_malloc(sizeof(UNewTrie2));
+    trie=(UTrie2 *)uprv_malloc(വലുപ്പം(UTrie2));
+    newTrie=(UNewTrie2 *)uprv_malloc(വലുപ്പം(UNewTrie2));
     data=(uint32_t *)uprv_malloc(UNEWTRIE2_INITIAL_DATA_LENGTH*4);
-    if(trie==nullptr || newTrie==nullptr || data==nullptr) {
+    എങ്കിൽ(trie==nullptr || newTrie==nullptr || data==nullptr) {
         uprv_free(trie);
         uprv_free(newTrie);
         uprv_free(data);
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
 
-    uprv_memset(trie, 0, sizeof(UTrie2));
-    trie->initialValue=initialValue;
-    trie->errorValue=errorValue;
-    trie->highStart=0x110000;
+    uprv_memset(trie, 0, വലുപ്പം(UTrie2));
+    trie->initial_മൂല്യം=initial_മൂല്യം;
+    trie->error_മൂല്യം=error_മൂല്യം;
+    trie->മുകളിലെ_Start=0x110000;
     trie->newTrie=newTrie;
 #ifdef UTRIE2_DEBUG
     trie->name="open";
@@ -145,14 +145,14 @@ utrie2_open(uint32_t initialValue, uint32_t errorValue, UErrorCode *pErrorCode) 
 
     newTrie->data=data;
 #ifdef UCPTRIE_DEBUG
-    newTrie->t3=umutablecptrie_open(initialValue, errorValue, pErrorCode);
+    newTrie->t3=umutablecptrie_open(initial_മൂല്യം, error_മൂല്യം, pErrorCode);
 #endif
     newTrie->dataCapacity=UNEWTRIE2_INITIAL_DATA_LENGTH;
-    newTrie->initialValue=initialValue;
-    newTrie->errorValue=errorValue;
-    newTrie->highStart=0x110000;
+    newTrie->initial_മൂല്യം=initial_മൂല്യം;
+    newTrie->error_മൂല്യം=error_മൂല്യം;
+    newTrie->മുകളിലെ_Start=0x110000;
     newTrie->firstFreeBlock=0;  /* no free block in the list */
-    newTrie->isCompacted=false;
+    newTrie->isCompacted=അസത്യം;
 
     /*
      * preallocate and reset
@@ -160,25 +160,25 @@ utrie2_open(uint32_t initialValue, uint32_t errorValue, UErrorCode *pErrorCode) 
      * - the bad-UTF-8-data block
      * - the null data block
      */
-    for(i=0; i<0x80; ++i) {
-        newTrie->data[i]=initialValue;
+    വേണ്ടി(i=0; i<0x80; ++i) {
+        newTrie->data[i]=initial_മൂല്യം;
     }
-    for(; i<0xc0; ++i) {
-        newTrie->data[i]=errorValue;
+    വേണ്ടി(; i<0xc0; ++i) {
+        newTrie->data[i]=error_മൂല്യം;
     }
-    for(i=UNEWTRIE2_DATA_NULL_OFFSET; i<UNEWTRIE2_DATA_START_OFFSET; ++i) {
-        newTrie->data[i]=initialValue;
+    വേണ്ടി(i=UNEWTRIE2_DATA_NULL_OFFSET; i<UNEWTRIE2_DATA_START_OFFSET; ++i) {
+        newTrie->data[i]=initial_മൂല്യം;
     }
     newTrie->dataNullOffset=UNEWTRIE2_DATA_NULL_OFFSET;
     newTrie->dataLength=UNEWTRIE2_DATA_START_OFFSET;
 
     /* set the index-2 indexes for the 2=0x80>>UTRIE2_SHIFT_2 ASCII data blocks */
-    for(i=0, j=0; j<0x80; ++i, j+=UTRIE2_DATA_BLOCK_LENGTH) {
+    വേണ്ടി(i=0, j=0; j<0x80; ++i, j+=UTRIE2_DATA_BLOCK_LENGTH) {
         newTrie->index2[i]=j;
         newTrie->map[i]=1;
     }
     /* reference counts for the bad-UTF-8-data block */
-    for(; j<0xc0; ++i, j+=UTRIE2_DATA_BLOCK_LENGTH) {
+    വേണ്ടി(; j<0xc0; ++i, j+=UTRIE2_DATA_BLOCK_LENGTH) {
         newTrie->map[i]=0;
     }
     /*
@@ -193,7 +193,7 @@ utrie2_open(uint32_t initialValue, uint32_t errorValue, UErrorCode *pErrorCode) 
         1+
         UTRIE2_LSCP_INDEX_2_LENGTH;
     j+=UTRIE2_DATA_BLOCK_LENGTH;
-    for(; j<UNEWTRIE2_DATA_START_OFFSET; ++i, j+=UTRIE2_DATA_BLOCK_LENGTH) {
+    വേണ്ടി(; j<UNEWTRIE2_DATA_START_OFFSET; ++i, j+=UTRIE2_DATA_BLOCK_LENGTH) {
         newTrie->map[i]=0;
     }
 
@@ -201,7 +201,7 @@ utrie2_open(uint32_t initialValue, uint32_t errorValue, UErrorCode *pErrorCode) 
      * set the remaining indexes in the BMP index-2 block
      * to the null data block
      */
-    for(i=0x80>>UTRIE2_SHIFT_2; i<UTRIE2_INDEX_2_BMP_LENGTH; ++i) {
+    വേണ്ടി(i=0x80>>UTRIE2_SHIFT_2; i<UTRIE2_INDEX_2_BMP_LENGTH; ++i) {
         newTrie->index2[i]=UNEWTRIE2_DATA_NULL_OFFSET;
     }
 
@@ -209,19 +209,19 @@ utrie2_open(uint32_t initialValue, uint32_t errorValue, UErrorCode *pErrorCode) 
      * Fill the index gap with impossible values so that compaction
      * does not overlap other index-2 blocks with the gap.
      */
-    for(i=0; i<UNEWTRIE2_INDEX_GAP_LENGTH; ++i) {
+    വേണ്ടി(i=0; i<UNEWTRIE2_INDEX_GAP_LENGTH; ++i) {
         newTrie->index2[UNEWTRIE2_INDEX_GAP_OFFSET+i]=-1;
     }
 
     /* set the indexes in the null index-2 block */
-    for(i=0; i<UTRIE2_INDEX_2_BLOCK_LENGTH; ++i) {
+    വേണ്ടി(i=0; i<UTRIE2_INDEX_2_BLOCK_LENGTH; ++i) {
         newTrie->index2[UNEWTRIE2_INDEX_2_NULL_OFFSET+i]=UNEWTRIE2_DATA_NULL_OFFSET;
     }
     newTrie->index2NullOffset=UNEWTRIE2_INDEX_2_NULL_OFFSET;
     newTrie->index2Length=UNEWTRIE2_INDEX_2_START_OFFSET;
 
     /* set the index-1 indexes for the linear index-2 block */
-    for(i=0, j=0;
+    വേണ്ടി(i=0, j=0;
         i<UTRIE2_OMITTED_BMP_INDEX_1_LENGTH;
         ++i, j+=UTRIE2_INDEX_2_BLOCK_LENGTH
     ) {
@@ -229,7 +229,7 @@ utrie2_open(uint32_t initialValue, uint32_t errorValue, UErrorCode *pErrorCode) 
     }
 
     /* set the remaining index-1 indexes to the null index-2 block */
-    for(; i<UNEWTRIE2_INDEX_1_LENGTH; ++i) {
+    വേണ്ടി(; i<UNEWTRIE2_INDEX_1_LENGTH; ++i) {
         newTrie->index1[i]=UNEWTRIE2_INDEX_2_NULL_OFFSET;
     }
 
@@ -238,31 +238,31 @@ utrie2_open(uint32_t initialValue, uint32_t errorValue, UErrorCode *pErrorCode) 
      * for 2-byte UTF-8 which will be compacted in 64-blocks
      * even if UTRIE2_DATA_BLOCK_LENGTH is smaller.
      */
-    for(i=0x80; i<0x800; i+=UTRIE2_DATA_BLOCK_LENGTH) {
-        utrie2_set32(trie, i, initialValue, pErrorCode);
+    വേണ്ടി(i=0x80; i<0x800; i+=UTRIE2_DATA_BLOCK_LENGTH) {
+        utrie2_set32(trie, i, initial_മൂല്യം, pErrorCode);
     }
 
-    return trie;
+    തിരികെ trie;
 }
 
-static UNewTrie2 *
-cloneBuilder(const UNewTrie2 *other) {
+സ്ഥിതം UNewTrie2 *
+cloneBuilder(സ്ഥിരം UNewTrie2 *other) {
     UNewTrie2 *trie;
 
-    trie = static_cast<UNewTrie2*>(uprv_malloc(sizeof(UNewTrie2)));
-    if(trie==nullptr) {
-        return nullptr;
+    trie = static_cast<UNewTrie2*>(uprv_malloc(വലുപ്പം(UNewTrie2)));
+    എങ്കിൽ(trie==nullptr) {
+        തിരികെ nullptr;
     }
 
     trie->data = static_cast<uint32_t*>(uprv_malloc(other->dataCapacity * 4));
-    if(trie->data==nullptr) {
+    എങ്കിൽ(trie->data==nullptr) {
         uprv_free(trie);
-        return nullptr;
+        തിരികെ nullptr;
     }
 #ifdef UCPTRIE_DEBUG
-    if(other->t3==nullptr) {
+    എങ്കിൽ(other->t3==nullptr) {
         trie->t3=nullptr;
-    } else {
+    } അല്ലെങ്കിൽ {
         UErrorCode errorCode=U_ZERO_ERROR;
         trie->t3=umutablecptrie_clone(other->t3, &errorCode);
     }
@@ -270,7 +270,7 @@ cloneBuilder(const UNewTrie2 *other) {
     trie->dataCapacity=other->dataCapacity;
 
     /* clone data */
-    uprv_memcpy(trie->index1, other->index1, sizeof(trie->index1));
+    uprv_memcpy(trie->index1, other->index1, വലുപ്പം(trie->index1));
     uprv_memcpy(trie->index2, other->index2, (size_t)other->index2Length*4);
     trie->index2NullOffset=other->index2NullOffset;
     trie->index2Length=other->index2Length;
@@ -280,338 +280,338 @@ cloneBuilder(const UNewTrie2 *other) {
     trie->dataLength=other->dataLength;
 
     /* reference counters */
-    if(other->isCompacted) {
+    എങ്കിൽ(other->isCompacted) {
         trie->firstFreeBlock=0;
-    } else {
+    } അല്ലെങ്കിൽ {
         uprv_memcpy(trie->map, other->map, ((size_t)other->dataLength>>UTRIE2_SHIFT_2)*4);
         trie->firstFreeBlock=other->firstFreeBlock;
     }
 
-    trie->initialValue=other->initialValue;
-    trie->errorValue=other->errorValue;
-    trie->highStart=other->highStart;
+    trie->initial_മൂല്യം=other->initial_മൂല്യം;
+    trie->error_മൂല്യം=other->error_മൂല്യം;
+    trie->മുകളിലെ_Start=other->മുകളിലെ_Start;
     trie->isCompacted=other->isCompacted;
 
-    return trie;
+    തിരികെ trie;
 }
 
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_clone(const UTrie2 *other, UErrorCode *pErrorCode) {
+utrie2_clone(സ്ഥിരം UTrie2 *other, UErrorCode *pErrorCode) {
     UTrie2 *trie;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    എങ്കിൽ(U_FAILURE(*pErrorCode)) {
+        തിരികെ nullptr;
     }
-    if(other==nullptr || (other->memory==nullptr && other->newTrie==nullptr)) {
+    എങ്കിൽ(other==nullptr || (other->memory==nullptr && other->newTrie==nullptr)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
 
-    trie=(UTrie2 *)uprv_malloc(sizeof(UTrie2));
-    if(trie==nullptr) {
+    trie=(UTrie2 *)uprv_malloc(വലുപ്പം(UTrie2));
+    എങ്കിൽ(trie==nullptr) {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
-    uprv_memcpy(trie, other, sizeof(UTrie2));
+    uprv_memcpy(trie, other, വലുപ്പം(UTrie2));
 
-    if(other->memory!=nullptr) {
+    എങ്കിൽ(other->memory!=nullptr) {
         trie->memory=uprv_malloc(other->length);
-        if(trie->memory!=nullptr) {
-            trie->isMemoryOwned=true;
+        എങ്കിൽ(trie->memory!=nullptr) {
+            trie->isMemoryOwned=സത്യം;
             uprv_memcpy(trie->memory, other->memory, other->length);
 
             /* make the clone's pointers point to its own memory */
             trie->index=(uint16_t *)trie->memory+(other->index-(uint16_t *)other->memory);
-            if(other->data16!=nullptr) {
+            എങ്കിൽ(other->data16!=nullptr) {
                 trie->data16=(uint16_t *)trie->memory+(other->data16-(uint16_t *)other->memory);
             }
-            if(other->data32!=nullptr) {
+            എങ്കിൽ(other->data32!=nullptr) {
                 trie->data32=(uint32_t *)trie->memory+(other->data32-(uint32_t *)other->memory);
             }
         }
-    } else /* other->newTrie!=nullptr */ {
+    } അല്ലെങ്കിൽ /* other->newTrie!=nullptr */ {
         trie->newTrie=cloneBuilder(other->newTrie);
     }
 
-    if(trie->memory==nullptr && trie->newTrie==nullptr) {
+    എങ്കിൽ(trie->memory==nullptr && trie->newTrie==nullptr) {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
         uprv_free(trie);
         trie=nullptr;
     }
-    return trie;
+    തിരികെ trie;
 }
 
-typedef struct NewTrieAndStatus {
+തരനിർവചനം ഘടന NewTrieAndStatus {
     UTrie2 *trie;
     UErrorCode errorCode;
     UBool exclusiveLimit;  /* rather than inclusive range end */
 } NewTrieAndStatus;
 
-static UBool U_CALLCONV
-copyEnumRange(const void *context, UChar32 start, UChar32 end, uint32_t value) {
+സ്ഥിതം UBool U_CALLCONV
+copyEnumRange(സ്ഥിരം ശൂന്യം *context, UChar32 start, UChar32 end, uint32_t value) {
     NewTrieAndStatus *nt=(NewTrieAndStatus *)context;
-    if(value!=nt->trie->initialValue) {
-        if(nt->exclusiveLimit) {
+    എങ്കിൽ(value!=nt->trie->initial_മൂല്യം) {
+        എങ്കിൽ(nt->exclusiveLimit) {
             --end;
         }
-        if(start==end) {
+        എങ്കിൽ(start==end) {
             utrie2_set32(nt->trie, start, value, &nt->errorCode);
-        } else {
-            utrie2_setRange32(nt->trie, start, end, value, true, &nt->errorCode);
+        } അല്ലെങ്കിൽ {
+            utrie2_setRange32(nt->trie, start, end, value, സത്യം, &nt->errorCode);
         }
-        return U_SUCCESS(nt->errorCode);
-    } else {
-        return true;
+        തിരികെ U_SUCCESS(nt->errorCode);
+    } അല്ലെങ്കിൽ {
+        തിരികെ സത്യം;
     }
 }
 
 #ifdef UTRIE2_DEBUG
-static long countInitial(const UTrie2 *trie) {
-    uint32_t initialValue=trie->initialValue;
+സ്ഥിതം long എണ്ണം_Initial(സ്ഥിരം UTrie2 *trie) {
+    uint32_t initial_മൂല്യം=trie->initial_മൂല്യം;
     int32_t length=trie->dataLength;
     long count=0;
-    if(trie->data16!=nullptr) {
-        for(int32_t i=0; i<length; ++i) {
-            if(trie->data16[i]==initialValue) { ++count; }
+    എങ്കിൽ(trie->data16!=nullptr) {
+        വേണ്ടി(int32_t i=0; i<length; ++i) {
+            എങ്കിൽ(trie->data16[i]==initial_മൂല്യം) { ++count; }
         }
-    } else {
-        for(int32_t i=0; i<length; ++i) {
-            if(trie->data32[i]==initialValue) { ++count; }
+    } അല്ലെങ്കിൽ {
+        വേണ്ടി(int32_t i=0; i<length; ++i) {
+            എങ്കിൽ(trie->data32[i]==initial_മൂല്യം) { ++count; }
         }
     }
-    return count;
+    തിരികെ count;
 }
 
-static void
-utrie_printLengths(const UTrie *trie) {
+സ്ഥിതം ശൂന്യം
+utrie_printLengths(സ്ഥിരം UTrie *trie) {
     long indexLength=trie->indexLength;
     long dataLength=(long)trie->dataLength;
-    long totalLength=(long)sizeof(UTrieHeader)+indexLength*2+dataLength*(trie->data32!=nullptr ? 4 : 2);
+    long totalLength=(long)വലുപ്പം(UTrieHeader)+indexLength*2+dataLength*(trie->data32!=nullptr ? 4 : 2);
     printf("**UTrieLengths** index:%6ld  data:%6ld  serialized:%6ld\n",
            indexLength, dataLength, totalLength);
 }
 
-static void
-utrie2_printLengths(const UTrie2 *trie, const char *which) {
+സ്ഥിതം ശൂന്യം
+utrie2_printLengths(സ്ഥിരം UTrie2 *trie, സ്ഥിരം അക്ഷരം *which) {
     long indexLength=trie->indexLength;
     long dataLength=(long)trie->dataLength;
-    long totalLength=(long)sizeof(UTrie2Header)+indexLength*2+dataLength*(trie->data32!=nullptr ? 4 : 2);
+    long totalLength=(long)വലുപ്പം(UTrie2Header)+indexLength*2+dataLength*(trie->data32!=nullptr ? 4 : 2);
     printf("**UTrie2Lengths(%s %s)** index:%6ld  data:%6ld  countInitial:%6ld  serialized:%6ld\n",
-           which, trie->name, indexLength, dataLength, countInitial(trie), totalLength);
+           which, trie->name, indexLength, dataLength, എണ്ണം_Initial(trie), totalLength);
 }
 #endif
 
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_cloneAsThawed(const UTrie2 *other, UErrorCode *pErrorCode) {
+utrie2_cloneAsThawed(സ്ഥിരം UTrie2 *other, UErrorCode *pErrorCode) {
     NewTrieAndStatus context;
     char16_t lead;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    എങ്കിൽ(U_FAILURE(*pErrorCode)) {
+        തിരികെ nullptr;
     }
-    if(other==nullptr || (other->memory==nullptr && other->newTrie==nullptr)) {
+    എങ്കിൽ(other==nullptr || (other->memory==nullptr && other->newTrie==nullptr)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
-    if(other->newTrie!=nullptr && !other->newTrie->isCompacted) {
-        return utrie2_clone(other, pErrorCode);  /* clone an unfrozen trie */
+    എങ്കിൽ(other->newTrie!=nullptr && !other->newTrie->isCompacted) {
+        തിരികെ utrie2_clone(other, pErrorCode);  /* clone an unfrozen trie */
     }
 
     /* Clone the frozen trie by enumerating it and building a new one. */
-    context.trie=utrie2_open(other->initialValue, other->errorValue, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    context.trie=utrie2_open(other->initial_മൂല്യം, other->error_മൂല്യം, pErrorCode);
+    എങ്കിൽ(U_FAILURE(*pErrorCode)) {
+        തിരികെ nullptr;
     }
-    context.exclusiveLimit=false;
+    context.exclusiveLimit=അസത്യം;
     context.errorCode=*pErrorCode;
     utrie2_enum(other, nullptr, copyEnumRange, &context);
     *pErrorCode=context.errorCode;
-    for(lead=0xd800; lead<0xdc00; ++lead) {
+    വേണ്ടി(lead=0xd800; lead<0xdc00; ++lead) {
         uint32_t value;
-        if(other->data32==nullptr) {
+        എങ്കിൽ(other->data32==nullptr) {
             value=UTRIE2_GET16_FROM_U16_SINGLE_LEAD(other, lead);
-        } else {
+        } അല്ലെങ്കിൽ {
             value=UTRIE2_GET32_FROM_U16_SINGLE_LEAD(other, lead);
         }
-        if(value!=other->initialValue) {
+        എങ്കിൽ(value!=other->initial_മൂല്യം) {
             utrie2_set32ForLeadSurrogateCodeUnit(context.trie, lead, value, pErrorCode);
         }
     }
-    if(U_FAILURE(*pErrorCode)) {
+    എങ്കിൽ(U_FAILURE(*pErrorCode)) {
         utrie2_close(context.trie);
         context.trie=nullptr;
     }
-    return context.trie;
+    തിരികെ context.trie;
 }
 
 /* Almost the same as utrie2_cloneAsThawed() but copies a UTrie and freezes the clone. */
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_fromUTrie(const UTrie *trie1, uint32_t errorValue, UErrorCode *pErrorCode) {
+utrie2_fromUTrie(സ്ഥിരം UTrie *trie1, uint32_t error_മൂല്യം, UErrorCode *pErrorCode) {
     NewTrieAndStatus context;
     char16_t lead;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    എങ്കിൽ(U_FAILURE(*pErrorCode)) {
+        തിരികെ nullptr;
     }
-    if(trie1==nullptr) {
+    എങ്കിൽ(trie1==nullptr) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
-    context.trie=utrie2_open(trie1->initialValue, errorValue, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    context.trie=utrie2_open(trie1->initial_മൂല്യം, error_മൂല്യം, pErrorCode);
+    എങ്കിൽ(U_FAILURE(*pErrorCode)) {
+        തിരികെ nullptr;
     }
-    context.exclusiveLimit=true;
+    context.exclusiveLimit=സത്യം;
     context.errorCode=*pErrorCode;
     utrie_enum(trie1, nullptr, copyEnumRange, &context);
     *pErrorCode=context.errorCode;
-    for(lead=0xd800; lead<0xdc00; ++lead) {
+    വേണ്ടി(lead=0xd800; lead<0xdc00; ++lead) {
         uint32_t value;
-        if(trie1->data32==nullptr) {
+        എങ്കിൽ(trie1->data32==nullptr) {
             value=UTRIE_GET16_FROM_LEAD(trie1, lead);
-        } else {
+        } അല്ലെങ്കിൽ {
             value=UTRIE_GET32_FROM_LEAD(trie1, lead);
         }
-        if(value!=trie1->initialValue) {
+        എങ്കിൽ(value!=trie1->initial_മൂല്യം) {
             utrie2_set32ForLeadSurrogateCodeUnit(context.trie, lead, value, pErrorCode);
         }
     }
-    if(U_SUCCESS(*pErrorCode)) {
+    എങ്കിൽ(U_SUCCESS(*pErrorCode)) {
         utrie2_freeze(context.trie,
-                      trie1->data32!=nullptr ? UTRIE2_32_VALUE_BITS : UTRIE2_16_VALUE_BITS,
+                      trie1->data32!=nullptr ? UTRIE2_32_മൂല്യം_BITS : UTRIE2_16_മൂല്യം_BITS,
                       pErrorCode);
     }
 #ifdef UTRIE2_DEBUG
-    if(U_SUCCESS(*pErrorCode)) {
+    എങ്കിൽ(U_SUCCESS(*pErrorCode)) {
         utrie_printLengths(trie1);
         utrie2_printLengths(context.trie, "fromUTrie");
     }
 #endif
-    if(U_FAILURE(*pErrorCode)) {
+    എങ്കിൽ(U_FAILURE(*pErrorCode)) {
         utrie2_close(context.trie);
         context.trie=nullptr;
     }
-    return context.trie;
+    തിരികെ context.trie;
 }
 
-static inline UBool
+സ്ഥിതം വരിയിൽ UBool
 isInNullBlock(UNewTrie2 *trie, UChar32 c, UBool forLSCP) {
     int32_t i2, block;
 
-    if(U_IS_LEAD(c) && forLSCP) {
+    എങ്കിൽ(U_IS_LEAD(c) && forLSCP) {
         i2=(UTRIE2_LSCP_INDEX_2_OFFSET-(0xd800>>UTRIE2_SHIFT_2))+
             (c>>UTRIE2_SHIFT_2);
-    } else {
+    } അല്ലെങ്കിൽ {
         i2=trie->index1[c>>UTRIE2_SHIFT_1]+
             ((c>>UTRIE2_SHIFT_2)&UTRIE2_INDEX_2_MASK);
     }
     block=trie->index2[i2];
-    return block == trie->dataNullOffset;
+    തിരികെ block == trie->dataNullOffset;
 }
 
-static int32_t
+സ്ഥിതം int32_t
 allocIndex2Block(UNewTrie2 *trie) {
-    int32_t newBlock, newTop;
+    int32_t newBlock, new_മുകൾ;
 
     newBlock=trie->index2Length;
-    newTop=newBlock+UTRIE2_INDEX_2_BLOCK_LENGTH;
-    if(newTop>UPRV_LENGTHOF(trie->index2)) {
+    new_മുകൾ=newBlock+UTRIE2_INDEX_2_BLOCK_LENGTH;
+    എങ്കിൽ(new_മുകൾ>UPRV_LENGTHOF(trie->index2)) {
         /*
          * Should never occur.
          * Either UTRIE2_MAX_BUILD_TIME_INDEX_LENGTH is incorrect,
          * or the code writes more values than should be possible.
          */
-        return -1;
+        തിരികെ -1;
     }
-    trie->index2Length=newTop;
+    trie->index2Length=new_മുകൾ;
     uprv_memcpy(trie->index2+newBlock, trie->index2+trie->index2NullOffset, UTRIE2_INDEX_2_BLOCK_LENGTH*4);
-    return newBlock;
+    തിരികെ newBlock;
 }
 
-static int32_t
+സ്ഥിതം int32_t
 getIndex2Block(UNewTrie2 *trie, UChar32 c, UBool forLSCP) {
     int32_t i1, i2;
 
-    if(U_IS_LEAD(c) && forLSCP) {
-        return UTRIE2_LSCP_INDEX_2_OFFSET;
+    എങ്കിൽ(U_IS_LEAD(c) && forLSCP) {
+        തിരികെ UTRIE2_LSCP_INDEX_2_OFFSET;
     }
 
     i1=c>>UTRIE2_SHIFT_1;
     i2=trie->index1[i1];
-    if(i2==trie->index2NullOffset) {
+    എങ്കിൽ(i2==trie->index2NullOffset) {
         i2=allocIndex2Block(trie);
-        if(i2<0) {
-            return -1;  /* program error */
+        എങ്കിൽ(i2<0) {
+            തിരികെ -1;  /* program error */
         }
         trie->index1[i1]=i2;
     }
-    return i2;
+    തിരികെ i2;
 }
 
-static int32_t
+സ്ഥിതം int32_t
 allocDataBlock(UNewTrie2 *trie, int32_t copyBlock) {
-    int32_t newBlock, newTop;
+    int32_t newBlock, new_മുകൾ;
 
-    if(trie->firstFreeBlock!=0) {
+    എങ്കിൽ(trie->firstFreeBlock!=0) {
         /* get the first free block */
         newBlock=trie->firstFreeBlock;
         trie->firstFreeBlock=-trie->map[newBlock>>UTRIE2_SHIFT_2];
-    } else {
+    } അല്ലെങ്കിൽ {
         /* get a new block from the high end */
         newBlock=trie->dataLength;
-        newTop=newBlock+UTRIE2_DATA_BLOCK_LENGTH;
-        if(newTop>trie->dataCapacity) {
+        new_മുകൾ=newBlock+UTRIE2_DATA_BLOCK_LENGTH;
+        എങ്കിൽ(new_മുകൾ>trie->dataCapacity) {
             /* out of memory in the data array */
             int32_t capacity;
             uint32_t *data;
 
-            if(trie->dataCapacity<UNEWTRIE2_MEDIUM_DATA_LENGTH) {
+            എങ്കിൽ(trie->dataCapacity<UNEWTRIE2_MEDIUM_DATA_LENGTH) {
                 capacity=UNEWTRIE2_MEDIUM_DATA_LENGTH;
-            } else if(trie->dataCapacity<UNEWTRIE2_MAX_DATA_LENGTH) {
+            } അല്ലെങ്കിൽ എങ്കിൽ(trie->dataCapacity<UNEWTRIE2_MAX_DATA_LENGTH) {
                 capacity=UNEWTRIE2_MAX_DATA_LENGTH;
-            } else {
+            } അല്ലെങ്കിൽ {
                 /*
                  * Should never occur.
                  * Either UNEWTRIE2_MAX_DATA_LENGTH is incorrect,
                  * or the code writes more values than should be possible.
                  */
-                return -1;
+                തിരികെ -1;
             }
             data = static_cast<uint32_t*>(uprv_malloc(capacity * 4));
-            if(data==nullptr) {
-                return -1;
+            എങ്കിൽ(data==nullptr) {
+                തിരികെ -1;
             }
             uprv_memcpy(data, trie->data, (size_t)trie->dataLength*4);
             uprv_free(trie->data);
             trie->data=data;
             trie->dataCapacity=capacity;
         }
-        trie->dataLength=newTop;
+        trie->dataLength=new_മുകൾ;
     }
     uprv_memcpy(trie->data+newBlock, trie->data+copyBlock, UTRIE2_DATA_BLOCK_LENGTH*4);
     trie->map[newBlock>>UTRIE2_SHIFT_2]=0;
-    return newBlock;
+    തിരികെ newBlock;
 }
 
 /* call when the block's reference counter reaches 0 */
-static void
+സ്ഥിതം ശൂന്യം
 releaseDataBlock(UNewTrie2 *trie, int32_t block) {
     /* put this block at the front of the free-block chain */
     trie->map[block>>UTRIE2_SHIFT_2]=-trie->firstFreeBlock;
     trie->firstFreeBlock=block;
 }
 
-static inline UBool
+സ്ഥിതം വരിയിൽ UBool
 isWritableBlock(UNewTrie2 *trie, int32_t block) {
-    return block != trie->dataNullOffset && 1 == trie->map[block >> UTRIE2_SHIFT_2];
+    തിരികെ block != trie->dataNullOffset && 1 == trie->map[block >> UTRIE2_SHIFT_2];
 }
 
-static inline void
+സ്ഥിതം വരിയിൽ ശൂന്യം
 setIndex2Entry(UNewTrie2 *trie, int32_t i2, int32_t block) {
     int32_t oldBlock;
     ++trie->map[block>>UTRIE2_SHIFT_2];  /* increment first, in case block==oldBlock! */
     oldBlock=trie->index2[i2];
-    if(0 == --trie->map[oldBlock>>UTRIE2_SHIFT_2]) {
+    എങ്കിൽ(0 == --trie->map[oldBlock>>UTRIE2_SHIFT_2]) {
         releaseDataBlock(trie, oldBlock);
     }
     trie->index2[i2]=block;
@@ -623,87 +623,87 @@ setIndex2Entry(UNewTrie2 *trie, int32_t i2, int32_t block) {
  * @return -1 if no new data block available (out of memory in data array)
  * @internal
  */
-static int32_t
+സ്ഥിതം int32_t
 getDataBlock(UNewTrie2 *trie, UChar32 c, UBool forLSCP) {
     int32_t i2, oldBlock, newBlock;
 
     i2=getIndex2Block(trie, c, forLSCP);
-    if(i2<0) {
-        return -1;  /* program error */
+    എങ്കിൽ(i2<0) {
+        തിരികെ -1;  /* program error */
     }
 
     i2+=(c>>UTRIE2_SHIFT_2)&UTRIE2_INDEX_2_MASK;
     oldBlock=trie->index2[i2];
-    if(isWritableBlock(trie, oldBlock)) {
-        return oldBlock;
+    എങ്കിൽ(isWritableBlock(trie, oldBlock)) {
+        തിരികെ oldBlock;
     }
 
     /* allocate a new data block */
     newBlock=allocDataBlock(trie, oldBlock);
-    if(newBlock<0) {
+    എങ്കിൽ(newBlock<0) {
         /* out of memory in the data array */
-        return -1;
+        തിരികെ -1;
     }
     setIndex2Entry(trie, i2, newBlock);
-    return newBlock;
+    തിരികെ newBlock;
 }
 
 /**
  * @return true if the value was successfully set
  */
-static void
+സ്ഥിതം ശൂന്യം
 set32(UNewTrie2 *trie,
       UChar32 c, UBool forLSCP, uint32_t value,
       UErrorCode *pErrorCode) {
     int32_t block;
 
-    if(trie==nullptr || trie->isCompacted) {
+    എങ്കിൽ(trie==nullptr || trie->isCompacted) {
         *pErrorCode=U_NO_WRITE_PERMISSION;
-        return;
+        തിരികെ;
     }
 #ifdef UCPTRIE_DEBUG
     umutablecptrie_set(trie->t3, c, value, pErrorCode);
 #endif
 
     block=getDataBlock(trie, c, forLSCP);
-    if(block<0) {
+    എങ്കിൽ(block<0) {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return;
+        തിരികെ;
     }
 
     trie->data[block+(c&UTRIE2_DATA_MASK)]=value;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 utrie2_set32(UTrie2 *trie, UChar32 c, uint32_t value, UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    എങ്കിൽ(U_FAILURE(*pErrorCode)) {
+        തിരികെ;
     }
-    if((uint32_t)c>0x10ffff) {
+    എങ്കിൽ((uint32_t)c>0x10ffff) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        തിരികെ;
     }
-    set32(trie->newTrie, c, true, value, pErrorCode);
+    set32(trie->newTrie, c, സത്യം, value, pErrorCode);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 utrie2_set32ForLeadSurrogateCodeUnit(UTrie2 *trie,
                                      UChar32 c, uint32_t value,
                                      UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    എങ്കിൽ(U_FAILURE(*pErrorCode)) {
+        തിരികെ;
     }
-    if(!U_IS_LEAD(c)) {
+    എങ്കിൽ(!U_IS_LEAD(c)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        തിരികെ;
     }
-    set32(trie->newTrie, c, false, value, pErrorCode);
+    set32(trie->newTrie, c, അസത്യം, value, pErrorCode);
 }
 
-static void
+സ്ഥിതം ശൂന്യം
 writeBlock(uint32_t *block, uint32_t value) {
     uint32_t *limit=block+UTRIE2_DATA_BLOCK_LENGTH;
-    while(block<limit) {
+    ആകുമ്പോൾ(block<limit) {
         *block++=value;
     }
 }
@@ -712,20 +712,20 @@ writeBlock(uint32_t *block, uint32_t value) {
  * initialValue is ignored if overwrite=true
  * @internal
  */
-static void
+സ്ഥിതം ശൂന്യം
 fillBlock(uint32_t *block, UChar32 start, UChar32 limit,
-          uint32_t value, uint32_t initialValue, UBool overwrite) {
+          uint32_t value, uint32_t initial_മൂല്യം, UBool overwrite) {
     uint32_t *pLimit;
 
     pLimit=block+limit;
     block+=start;
-    if(overwrite) {
-        while(block<pLimit) {
+    എങ്കിൽ(overwrite) {
+        ആകുമ്പോൾ(block<pLimit) {
             *block++=value;
         }
-    } else {
-        while(block<pLimit) {
-            if(*block==initialValue) {
+    } അല്ലെങ്കിൽ {
+        ആകുമ്പോൾ(block<pLimit) {
+            എങ്കിൽ(*block==initial_മൂല്യം) {
                 *block=value;
             }
             ++block;
@@ -733,7 +733,7 @@ fillBlock(uint32_t *block, UChar32 start, UChar32 limit,
     }
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 utrie2_setRange32(UTrie2 *trie,
                   UChar32 start, UChar32 end,
                   uint32_t value, UBool overwrite,
@@ -747,45 +747,45 @@ utrie2_setRange32(UTrie2 *trie,
     int32_t block, rest, repeatBlock;
     UChar32 limit;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    എങ്കിൽ(U_FAILURE(*pErrorCode)) {
+        തിരികെ;
     }
-    if((uint32_t)start>0x10ffff || (uint32_t)end>0x10ffff || start>end) {
+    എങ്കിൽ((uint32_t)start>0x10ffff || (uint32_t)end>0x10ffff || start>end) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        തിരികെ;
     }
     newTrie=trie->newTrie;
-    if(newTrie==nullptr || newTrie->isCompacted) {
+    എങ്കിൽ(newTrie==nullptr || newTrie->isCompacted) {
         *pErrorCode=U_NO_WRITE_PERMISSION;
-        return;
+        തിരികെ;
     }
 #ifdef UCPTRIE_DEBUG
     umutablecptrie_setRange(newTrie->t3, start, end, value, pErrorCode);
 #endif
-    if(!overwrite && value==newTrie->initialValue) {
-        return; /* nothing to do */
+    എങ്കിൽ(!overwrite && value==newTrie->initial_മൂല്യം) {
+        തിരികെ; /* nothing to do */
     }
 
     limit=end+1;
-    if(start&UTRIE2_DATA_MASK) {
+    എങ്കിൽ(start&UTRIE2_DATA_MASK) {
         UChar32 nextStart;
 
         /* set partial block at [start..following block boundary[ */
-        block=getDataBlock(newTrie, start, true);
-        if(block<0) {
+        block=getDataBlock(newTrie, start, സത്യം);
+        എങ്കിൽ(block<0) {
             *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+            തിരികെ;
         }
 
         nextStart=(start+UTRIE2_DATA_MASK)&~UTRIE2_DATA_MASK;
-        if(nextStart<=limit) {
+        എങ്കിൽ(nextStart<=limit) {
             fillBlock(newTrie->data+block, start&UTRIE2_DATA_MASK, UTRIE2_DATA_BLOCK_LENGTH,
-                      value, newTrie->initialValue, overwrite);
+                      value, newTrie->initial_മൂല്യം, overwrite);
             start=nextStart;
-        } else {
+        } അല്ലെങ്കിൽ {
             fillBlock(newTrie->data+block, start&UTRIE2_DATA_MASK, limit&UTRIE2_DATA_MASK,
-                      value, newTrie->initialValue, overwrite);
-            return;
+                      value, newTrie->initial_മൂല്യം, overwrite);
+            തിരികെ;
         }
     }
 
@@ -796,45 +796,45 @@ utrie2_setRange32(UTrie2 *trie,
     limit&=~UTRIE2_DATA_MASK;
 
     /* iterate over all-value blocks */
-    if(value==newTrie->initialValue) {
+    എങ്കിൽ(value==newTrie->initial_മൂല്യം) {
         repeatBlock=newTrie->dataNullOffset;
-    } else {
+    } അല്ലെങ്കിൽ {
         repeatBlock=-1;
     }
 
-    while(start<limit) {
+    ആകുമ്പോൾ(start<limit) {
         int32_t i2;
-        UBool setRepeatBlock=false;
+        UBool setRepeatBlock=അസത്യം;
 
-        if(value==newTrie->initialValue && isInNullBlock(newTrie, start, true)) {
+        എങ്കിൽ(value==newTrie->initial_മൂല്യം && isInNullBlock(newTrie, start, സത്യം)) {
             start+=UTRIE2_DATA_BLOCK_LENGTH; /* nothing to do */
-            continue;
+            തുടരുക;
         }
 
         /* get index value */
-        i2=getIndex2Block(newTrie, start, true);
-        if(i2<0) {
+        i2=getIndex2Block(newTrie, start, സത്യം);
+        എങ്കിൽ(i2<0) {
             *pErrorCode=U_INTERNAL_PROGRAM_ERROR;
-            return;
+            തിരികെ;
         }
         i2+=(start>>UTRIE2_SHIFT_2)&UTRIE2_INDEX_2_MASK;
         block=newTrie->index2[i2];
-        if(isWritableBlock(newTrie, block)) {
+        എങ്കിൽ(isWritableBlock(newTrie, block)) {
             /* already allocated */
-            if(overwrite && block>=UNEWTRIE2_DATA_0800_OFFSET) {
+            എങ്കിൽ(overwrite && block>=UNEWTRIE2_DATA_0800_OFFSET) {
                 /*
                  * We overwrite all values, and it's not a
                  * protected (ASCII-linear or 2-byte UTF-8) block:
                  * replace with the repeatBlock.
                  */
-                setRepeatBlock=true;
-            } else {
+                setRepeatBlock=സത്യം;
+            } അല്ലെങ്കിൽ {
                 /* !overwrite, or protected block: just write the values into this block */
                 fillBlock(newTrie->data+block,
                           0, UTRIE2_DATA_BLOCK_LENGTH,
-                          value, newTrie->initialValue, overwrite);
+                          value, newTrie->initial_മൂല്യം, overwrite);
             }
-        } else if(newTrie->data[block]!=value && (overwrite || block==newTrie->dataNullOffset)) {
+        } അല്ലെങ്കിൽ എങ്കിൽ(newTrie->data[block]!=value && (overwrite || block==newTrie->dataNullOffset)) {
             /*
              * Set the repeatBlock instead of the null block or previous repeat block:
              *
@@ -851,17 +851,17 @@ utrie2_setRange32(UTrie2 *trie,
              * and if we overwrite any data or if the data is all initial values
              * (which is the same as the block being the null block, see above).
              */
-            setRepeatBlock=true;
+            setRepeatBlock=സത്യം;
         }
-        if(setRepeatBlock) {
-            if(repeatBlock>=0) {
+        എങ്കിൽ(setRepeatBlock) {
+            എങ്കിൽ(repeatBlock>=0) {
                 setIndex2Entry(newTrie, i2, repeatBlock);
-            } else {
+            } അല്ലെങ്കിൽ {
                 /* create and set and fill the repeatBlock */
-                repeatBlock=getDataBlock(newTrie, start, true);
-                if(repeatBlock<0) {
+                repeatBlock=getDataBlock(newTrie, start, സത്യം);
+                എങ്കിൽ(repeatBlock<0) {
                     *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                    return;
+                    തിരികെ;
                 }
                 writeBlock(newTrie->data+repeatBlock, value);
             }
@@ -870,93 +870,93 @@ utrie2_setRange32(UTrie2 *trie,
         start+=UTRIE2_DATA_BLOCK_LENGTH;
     }
 
-    if(rest>0) {
+    എങ്കിൽ(rest>0) {
         /* set partial block at [last block boundary..limit[ */
-        block=getDataBlock(newTrie, start, true);
-        if(block<0) {
+        block=getDataBlock(newTrie, start, സത്യം);
+        എങ്കിൽ(block<0) {
             *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+            തിരികെ;
         }
 
-        fillBlock(newTrie->data+block, 0, rest, value, newTrie->initialValue, overwrite);
+        fillBlock(newTrie->data+block, 0, rest, value, newTrie->initial_മൂല്യം, overwrite);
     }
 }
 
 /* compaction --------------------------------------------------------------- */
 
-static inline UBool
-equal_int32(const int32_t *s, const int32_t *t, int32_t length) {
-    while(length>0 && *s==*t) {
+സ്ഥിതം വരിയിൽ UBool
+equal_int32(സ്ഥിരം int32_t *s, സ്ഥിരം int32_t *t, int32_t length) {
+    ആകുമ്പോൾ(length>0 && *s==*t) {
         ++s;
         ++t;
         --length;
     }
-    return length == 0;
+    തിരികെ length == 0;
 }
 
-static inline UBool
-equal_uint32(const uint32_t *s, const uint32_t *t, int32_t length) {
-    while(length>0 && *s==*t) {
+സ്ഥിതം വരിയിൽ UBool
+equal_uint32(സ്ഥിരം uint32_t *s, സ്ഥിരം uint32_t *t, int32_t length) {
+    ആകുമ്പോൾ(length>0 && *s==*t) {
         ++s;
         ++t;
         --length;
     }
-    return length == 0;
+    തിരികെ length == 0;
 }
 
-static int32_t
-findSameIndex2Block(const int32_t *idx, int32_t index2Length, int32_t otherBlock) {
+സ്ഥിതം int32_t
+findSameIndex2Block(സ്ഥിരം int32_t *idx, int32_t index2Length, int32_t otherBlock) {
     int32_t block;
 
     /* ensure that we do not even partially get past index2Length */
     index2Length-=UTRIE2_INDEX_2_BLOCK_LENGTH;
 
-    for(block=0; block<=index2Length; ++block) {
-        if(equal_int32(idx+block, idx+otherBlock, UTRIE2_INDEX_2_BLOCK_LENGTH)) {
-            return block;
+    വേണ്ടി(block=0; block<=index2Length; ++block) {
+        എങ്കിൽ(equal_int32(idx+block, idx+otherBlock, UTRIE2_INDEX_2_BLOCK_LENGTH)) {
+            തിരികെ block;
         }
     }
-    return -1;
+    തിരികെ -1;
 }
 
-static int32_t
-findSameDataBlock(const uint32_t *data, int32_t dataLength, int32_t otherBlock, int32_t blockLength) {
+സ്ഥിതം int32_t
+findSameDataBlock(സ്ഥിരം uint32_t *data, int32_t dataLength, int32_t otherBlock, int32_t blockLength) {
     int32_t block;
 
     /* ensure that we do not even partially get past dataLength */
     dataLength-=blockLength;
 
-    for(block=0; block<=dataLength; block+=UTRIE2_DATA_GRANULARITY) {
-        if(equal_uint32(data+block, data+otherBlock, blockLength)) {
-            return block;
+    വേണ്ടി(block=0; block<=dataLength; block+=UTRIE2_DATA_GRANULARITY) {
+        എങ്കിൽ(equal_uint32(data+block, data+otherBlock, blockLength)) {
+            തിരികെ block;
         }
     }
-    return -1;
+    തിരികെ -1;
 }
 
 /*
  * Find the start of the last range in the trie by enumerating backward.
  * Indexes for supplementary code points higher than this will be omitted.
  */
-static UChar32
-findHighStart(UNewTrie2 *trie, uint32_t highValue) {
-    const uint32_t *data32;
+സ്ഥിതം UChar32
+find_മുകളിലെ_Start(UNewTrie2 *trie, uint32_t മുകളിലെ_മൂല്യം) {
+    സ്ഥിരം uint32_t *data32;
 
-    uint32_t value, initialValue;
+    uint32_t value, initial_മൂല്യം;
     UChar32 c, prev;
     int32_t i1, i2, j, i2Block, prevI2Block, index2NullOffset, block, prevBlock, nullBlock;
 
     data32=trie->data;
-    initialValue=trie->initialValue;
+    initial_മൂല്യം=trie->initial_മൂല്യം;
 
     index2NullOffset=trie->index2NullOffset;
     nullBlock=trie->dataNullOffset;
 
     /* set variables for previous range */
-    if(highValue==initialValue) {
+    എങ്കിൽ(മുകളിലെ_മൂല്യം==initial_മൂല്യം) {
         prevI2Block=index2NullOffset;
         prevBlock=nullBlock;
-    } else {
+    } അല്ലെങ്കിൽ {
         prevI2Block=-1;
         prevBlock=-1;
     }
@@ -965,41 +965,41 @@ findHighStart(UNewTrie2 *trie, uint32_t highValue) {
     /* enumerate index-2 blocks */
     i1=UNEWTRIE2_INDEX_1_LENGTH;
     c=prev;
-    while(c>0) {
+    ആകുമ്പോൾ(c>0) {
         i2Block=trie->index1[--i1];
-        if(i2Block==prevI2Block) {
+        എങ്കിൽ(i2Block==prevI2Block) {
             /* the index-2 block is the same as the previous one, and filled with highValue */
             c-=UTRIE2_CP_PER_INDEX_1_ENTRY;
-            continue;
+            തുടരുക;
         }
         prevI2Block=i2Block;
-        if(i2Block==index2NullOffset) {
+        എങ്കിൽ(i2Block==index2NullOffset) {
             /* this is the null index-2 block */
-            if(highValue!=initialValue) {
-                return c;
+            എങ്കിൽ(മുകളിലെ_മൂല്യം!=initial_മൂല്യം) {
+                തിരികെ c;
             }
             c-=UTRIE2_CP_PER_INDEX_1_ENTRY;
-        } else {
+        } അല്ലെങ്കിൽ {
             /* enumerate data blocks for one index-2 block */
-            for(i2=UTRIE2_INDEX_2_BLOCK_LENGTH; i2>0;) {
+            വേണ്ടി(i2=UTRIE2_INDEX_2_BLOCK_LENGTH; i2>0;) {
                 block=trie->index2[i2Block+ --i2];
-                if(block==prevBlock) {
+                എങ്കിൽ(block==prevBlock) {
                     /* the block is the same as the previous one, and filled with highValue */
                     c-=UTRIE2_DATA_BLOCK_LENGTH;
-                    continue;
+                    തുടരുക;
                 }
                 prevBlock=block;
-                if(block==nullBlock) {
+                എങ്കിൽ(block==nullBlock) {
                     /* this is the null data block */
-                    if(highValue!=initialValue) {
-                        return c;
+                    എങ്കിൽ(മുകളിലെ_മൂല്യം!=initial_മൂല്യം) {
+                        തിരികെ c;
                     }
                     c-=UTRIE2_DATA_BLOCK_LENGTH;
-                } else {
-                    for(j=UTRIE2_DATA_BLOCK_LENGTH; j>0;) {
+                } അല്ലെങ്കിൽ {
+                    വേണ്ടി(j=UTRIE2_DATA_BLOCK_LENGTH; j>0;) {
                         value=data32[block+ --j];
-                        if(value!=highValue) {
-                            return c;
+                        എങ്കിൽ(value!=മുകളിലെ_മൂല്യം) {
+                            തിരികെ c;
                         }
                         --c;
                     }
@@ -1009,7 +1009,7 @@ findHighStart(UNewTrie2 *trie, uint32_t highValue) {
     }
 
     /* deliver last range */
-    return 0;
+    തിരികെ 0;
 }
 
 /*
@@ -1024,19 +1024,19 @@ findHighStart(UNewTrie2 *trie, uint32_t highValue) {
  * It does not
  * - try to move and overlap blocks that are not already adjacent
  */
-static void
+സ്ഥിതം ശൂന്യം
 compactData(UNewTrie2 *trie) {
 #ifdef UTRIE2_DEBUG
-    int32_t countSame=0, sumOverlaps=0;
+    int32_t എണ്ണം_Same=0, sumOverlaps=0;
 #endif
 
     int32_t start, newStart, movedStart;
     int32_t blockLength, overlap;
-    int32_t i, mapIndex, blockCount;
+    int32_t i, mapIndex, block_എണ്ണം;
 
     /* do not compact linear-ASCII data */
     newStart=UTRIE2_DATA_START_OFFSET;
-    for(start=0, i=0; start<newStart; start+=UTRIE2_DATA_BLOCK_LENGTH, ++i) {
+    വേണ്ടി(start=0, i=0; start<newStart; start+=UTRIE2_DATA_BLOCK_LENGTH, ++i) {
         trie->map[i]=start;
     }
 
@@ -1045,36 +1045,36 @@ compactData(UNewTrie2 *trie) {
      * then switch to UTRIE2_DATA_BLOCK_LENGTH.
      */
     blockLength=64;
-    blockCount=blockLength>>UTRIE2_SHIFT_2;
-    for(start=newStart; start<trie->dataLength;) {
+    block_എണ്ണം=blockLength>>UTRIE2_SHIFT_2;
+    വേണ്ടി(start=newStart; start<trie->dataLength;) {
         /*
          * start: index of first entry of current block
          * newStart: index where the current block is to be moved
          *           (right after current end of already-compacted data)
          */
-        if(start==UNEWTRIE2_DATA_0800_OFFSET) {
+        എങ്കിൽ(start==UNEWTRIE2_DATA_0800_OFFSET) {
             blockLength=UTRIE2_DATA_BLOCK_LENGTH;
-            blockCount=1;
+            block_എണ്ണം=1;
         }
 
         /* skip blocks that are not used */
-        if(trie->map[start>>UTRIE2_SHIFT_2]<=0) {
+        എങ്കിൽ(trie->map[start>>UTRIE2_SHIFT_2]<=0) {
             /* advance start to the next block */
             start+=blockLength;
 
             /* leave newStart with the previous block! */
-            continue;
+            തുടരുക;
         }
 
         /* search for an identical block */
-        if( (movedStart=findSameDataBlock(trie->data, newStart, start, blockLength))
+        എങ്കിൽ( (movedStart=findSameDataBlock(trie->data, newStart, start, blockLength))
              >=0
         ) {
 #ifdef UTRIE2_DEBUG
-            ++countSame;
+            ++എണ്ണം_Same;
 #endif
             /* found an identical block, set the other block's index value for the current block */
-            for(i=blockCount, mapIndex=start>>UTRIE2_SHIFT_2; i>0; --i) {
+            വേണ്ടി(i=block_എണ്ണം, mapIndex=start>>UTRIE2_SHIFT_2; i>0; --i) {
                 trie->map[mapIndex++]=movedStart;
                 movedStart+=UTRIE2_DATA_BLOCK_LENGTH;
             }
@@ -1083,33 +1083,33 @@ compactData(UNewTrie2 *trie) {
             start+=blockLength;
 
             /* leave newStart with the previous block! */
-            continue;
+            തുടരുക;
         }
 
         /* see if the beginning of this block can be overlapped with the end of the previous block */
         /* look for maximum overlap (modulo granularity) with the previous, adjacent block */
-        for(overlap=blockLength-UTRIE2_DATA_GRANULARITY;
+        വേണ്ടി(overlap=blockLength-UTRIE2_DATA_GRANULARITY;
             overlap>0 && !equal_uint32(trie->data+(newStart-overlap), trie->data+start, overlap);
             overlap-=UTRIE2_DATA_GRANULARITY) {}
 
 #ifdef UTRIE2_DEBUG
             sumOverlaps+=overlap;
 #endif
-        if(overlap>0 || newStart<start) {
+        എങ്കിൽ(overlap>0 || newStart<start) {
             /* some overlap, or just move the whole block */
             movedStart=newStart-overlap;
-            for(i=blockCount, mapIndex=start>>UTRIE2_SHIFT_2; i>0; --i) {
+            വേണ്ടി(i=block_എണ്ണം, mapIndex=start>>UTRIE2_SHIFT_2; i>0; --i) {
                 trie->map[mapIndex++]=movedStart;
                 movedStart+=UTRIE2_DATA_BLOCK_LENGTH;
             }
 
             /* move the non-overlapping indexes to their new positions */
             start+=overlap;
-            for(i=blockLength-overlap; i>0; --i) {
+            വേണ്ടി(i=blockLength-overlap; i>0; --i) {
                 trie->data[newStart++]=trie->data[start++];
             }
-        } else /* no overlap && newStart==start */ {
-            for(i=blockCount, mapIndex=start>>UTRIE2_SHIFT_2; i>0; --i) {
+        } അല്ലെങ്കിൽ /* no overlap && newStart==start */ {
+            വേണ്ടി(i=block_എണ്ണം, mapIndex=start>>UTRIE2_SHIFT_2; i>0; --i) {
                 trie->map[mapIndex++]=start;
                 start+=UTRIE2_DATA_BLOCK_LENGTH;
             }
@@ -1118,8 +1118,8 @@ compactData(UNewTrie2 *trie) {
     }
 
     /* now adjust the index-2 table */
-    for(i=0; i<trie->index2Length; ++i) {
-        if(i==UNEWTRIE2_INDEX_GAP_OFFSET) {
+    വേണ്ടി(i=0; i<trie->index2Length; ++i) {
+        എങ്കിൽ(i==UNEWTRIE2_INDEX_GAP_OFFSET) {
             /* Gap indexes are invalid (-1). Skip over the gap. */
             i+=UNEWTRIE2_INDEX_GAP_LENGTH;
         }
@@ -1128,33 +1128,33 @@ compactData(UNewTrie2 *trie) {
     trie->dataNullOffset=trie->map[trie->dataNullOffset>>UTRIE2_SHIFT_2];
 
     /* ensure dataLength alignment */
-    while((newStart&(UTRIE2_DATA_GRANULARITY-1))!=0) {
-        trie->data[newStart++]=trie->initialValue;
+    ആകുമ്പോൾ((newStart&(UTRIE2_DATA_GRANULARITY-1))!=0) {
+        trie->data[newStart++]=trie->initial_മൂല്യം;
     }
 
 #ifdef UTRIE2_DEBUG
     /* we saved some space */
     printf("compacting UTrie2: count of 32-bit data words %lu->%lu  countSame=%ld  sumOverlaps=%ld\n",
-            (long)trie->dataLength, (long)newStart, (long)countSame, (long)sumOverlaps);
+            (long)trie->dataLength, (long)newStart, (long)എണ്ണം_Same, (long)sumOverlaps);
 #endif
 
     trie->dataLength=newStart;
 }
 
-static void
+സ്ഥിതം ശൂന്യം
 compactIndex2(UNewTrie2 *trie) {
     int32_t i, start, newStart, movedStart, overlap;
 
     /* do not compact linear-BMP index-2 blocks */
     newStart=UTRIE2_INDEX_2_BMP_LENGTH;
-    for(start=0, i=0; start<newStart; start+=UTRIE2_INDEX_2_BLOCK_LENGTH, ++i) {
+    വേണ്ടി(start=0, i=0; start<newStart; start+=UTRIE2_INDEX_2_BLOCK_LENGTH, ++i) {
         trie->map[i]=start;
     }
 
     /* Reduce the index table gap to what will be needed at runtime. */
-    newStart+=UTRIE2_UTF8_2B_INDEX_2_LENGTH+((trie->highStart-0x10000)>>UTRIE2_SHIFT_1);
+    newStart+=UTRIE2_UTF8_2B_INDEX_2_LENGTH+((trie->മുകളിലെ_Start-0x10000)>>UTRIE2_SHIFT_1);
 
-    for(start=UNEWTRIE2_INDEX_2_NULL_OFFSET; start<trie->index2Length;) {
+    വേണ്ടി(start=UNEWTRIE2_INDEX_2_NULL_OFFSET; start<trie->index2Length;) {
         /*
          * start: index of first entry of current block
          * newStart: index where the current block is to be moved
@@ -1162,7 +1162,7 @@ compactIndex2(UNewTrie2 *trie) {
          */
 
         /* search for an identical block */
-        if( (movedStart=findSameIndex2Block(trie->index2, newStart, start))
+        എങ്കിൽ( (movedStart=findSameIndex2Block(trie->index2, newStart, start))
              >=0
         ) {
             /* found an identical block, set the other block's index value for the current block */
@@ -1172,25 +1172,25 @@ compactIndex2(UNewTrie2 *trie) {
             start+=UTRIE2_INDEX_2_BLOCK_LENGTH;
 
             /* leave newStart with the previous block! */
-            continue;
+            തുടരുക;
         }
 
         /* see if the beginning of this block can be overlapped with the end of the previous block */
         /* look for maximum overlap with the previous, adjacent block */
-        for(overlap=UTRIE2_INDEX_2_BLOCK_LENGTH-1;
+        വേണ്ടി(overlap=UTRIE2_INDEX_2_BLOCK_LENGTH-1;
             overlap>0 && !equal_int32(trie->index2+(newStart-overlap), trie->index2+start, overlap);
             --overlap) {}
 
-        if(overlap>0 || newStart<start) {
+        എങ്കിൽ(overlap>0 || newStart<start) {
             /* some overlap, or just move the whole block */
             trie->map[start>>UTRIE2_SHIFT_1_2]=newStart-overlap;
 
             /* move the non-overlapping indexes to their new positions */
             start+=overlap;
-            for(i=UTRIE2_INDEX_2_BLOCK_LENGTH-overlap; i>0; --i) {
+            വേണ്ടി(i=UTRIE2_INDEX_2_BLOCK_LENGTH-overlap; i>0; --i) {
                 trie->index2[newStart++]=trie->index2[start++];
             }
-        } else /* no overlap && newStart==start */ {
+        } അല്ലെങ്കിൽ /* no overlap && newStart==start */ {
             trie->map[start>>UTRIE2_SHIFT_1_2]=start;
             start+=UTRIE2_INDEX_2_BLOCK_LENGTH;
             newStart=start;
@@ -1198,7 +1198,7 @@ compactIndex2(UNewTrie2 *trie) {
     }
 
     /* now adjust the index-1 table */
-    for(i=0; i<UNEWTRIE2_INDEX_1_LENGTH; ++i) {
+    വേണ്ടി(i=0; i<UNEWTRIE2_INDEX_1_LENGTH; ++i) {
         trie->index1[i]=trie->map[trie->index1[i]>>UTRIE2_SHIFT_1_2];
     }
     trie->index2NullOffset=trie->map[trie->index2NullOffset>>UTRIE2_SHIFT_1_2];
@@ -1209,7 +1209,7 @@ compactIndex2(UNewTrie2 *trie) {
      * (so that dataMove will be down-shiftable),
      * and 2-aligned for uint32_t data.
      */
-    while((newStart&((UTRIE2_DATA_GRANULARITY-1)|1))!=0) {
+    ആകുമ്പോൾ((newStart&((UTRIE2_DATA_GRANULARITY-1)|1))!=0) {
         /* Arbitrary value: 0x3fffc not possible for real data. */
         trie->index2[newStart++] = static_cast<int32_t>(0xffff) << UTRIE2_INDEX_SHIFT;
     }
@@ -1223,49 +1223,49 @@ compactIndex2(UNewTrie2 *trie) {
     trie->index2Length=newStart;
 }
 
-static void
+സ്ഥിതം ശൂന്യം
 compactTrie(UTrie2 *trie, UErrorCode *pErrorCode) {
     UNewTrie2 *newTrie;
-    UChar32 highStart, suppHighStart;
-    uint32_t highValue;
+    UChar32 മുകളിലെ_Start, supp_മുകളിലെ_Start;
+    uint32_t മുകളിലെ_മൂല്യം;
 
     newTrie=trie->newTrie;
 
     /* find highStart and round it up */
-    highValue=utrie2_get32(trie, 0x10ffff);
-    highStart=findHighStart(newTrie, highValue);
-    highStart=(highStart+(UTRIE2_CP_PER_INDEX_1_ENTRY-1))&~(UTRIE2_CP_PER_INDEX_1_ENTRY-1);
-    if(highStart==0x110000) {
-        highValue=trie->errorValue;
+    മുകളിലെ_മൂല്യം=utrie2_get32(trie, 0x10ffff);
+    മുകളിലെ_Start=find_മുകളിലെ_Start(newTrie, മുകളിലെ_മൂല്യം);
+    മുകളിലെ_Start=(മുകളിലെ_Start+(UTRIE2_CP_PER_INDEX_1_ENTRY-1))&~(UTRIE2_CP_PER_INDEX_1_ENTRY-1);
+    എങ്കിൽ(മുകളിലെ_Start==0x110000) {
+        മുകളിലെ_മൂല്യം=trie->error_മൂല്യം;
     }
 
     /*
      * Set trie->highStart only after utrie2_get32(trie, highStart).
      * Otherwise utrie2_get32(trie, highStart) would try to read the highValue.
      */
-    trie->highStart=newTrie->highStart=highStart;
+    trie->മുകളിലെ_Start=newTrie->മുകളിലെ_Start=മുകളിലെ_Start;
 
 #ifdef UTRIE2_DEBUG
     printf("UTrie2: highStart U+%06lx  highValue 0x%lx  initialValue 0x%lx\n",
-            (long)highStart, (long)highValue, (long)trie->initialValue);
+            (long)മുകളിലെ_Start, (long)മുകളിലെ_മൂല്യം, (long)trie->initial_മൂല്യം);
 #endif
 
-    if(highStart<0x110000) {
+    എങ്കിൽ(മുകളിലെ_Start<0x110000) {
         /* Blank out [highStart..10ffff] to release associated data blocks. */
-        suppHighStart= highStart<=0x10000 ? 0x10000 : highStart;
-        utrie2_setRange32(trie, suppHighStart, 0x10ffff, trie->initialValue, true, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
-            return;
+        supp_മുകളിലെ_Start= മുകളിലെ_Start<=0x10000 ? 0x10000 : മുകളിലെ_Start;
+        utrie2_setRange32(trie, supp_മുകളിലെ_Start, 0x10ffff, trie->initial_മൂല്യം, സത്യം, pErrorCode);
+        എങ്കിൽ(U_FAILURE(*pErrorCode)) {
+            തിരികെ;
         }
     }
 
     compactData(newTrie);
-    if(highStart>0x10000) {
+    എങ്കിൽ(മുകളിലെ_Start>0x10000) {
         compactIndex2(newTrie);
 #ifdef UTRIE2_DEBUG
-    } else {
+    } അല്ലെങ്കിൽ {
         printf("UTrie2: highStart U+%04lx  count of 16-bit index words %lu->%lu\n",
-                (long)highStart, (long)trie->newTrie->index2Length, (long)UTRIE2_INDEX_1_OFFSET);
+                (long)മുകളിലെ_Start, (long)trie->newTrie->index2Length, (long)UTRIE2_INDEX_1_OFFSET);
 #endif
     }
 
@@ -1274,12 +1274,12 @@ compactTrie(UTrie2 *trie, UErrorCode *pErrorCode) {
      * Must be done after compactData() because that assumes that dataLength
      * is a multiple of UTRIE2_DATA_BLOCK_LENGTH.
      */
-    newTrie->data[newTrie->dataLength++]=highValue;
-    while((newTrie->dataLength&(UTRIE2_DATA_GRANULARITY-1))!=0) {
-        newTrie->data[newTrie->dataLength++]=trie->initialValue;
+    newTrie->data[newTrie->dataLength++]=മുകളിലെ_മൂല്യം;
+    ആകുമ്പോൾ((newTrie->dataLength&(UTRIE2_DATA_GRANULARITY-1))!=0) {
+        newTrie->data[newTrie->dataLength++]=trie->initial_മൂല്യം;
     }
 
-    newTrie->isCompacted=true;
+    newTrie->isCompacted=സത്യം;
 }
 
 /* serialization ------------------------------------------------------------ */
@@ -1300,8 +1300,8 @@ compactTrie(UTrie2 *trie, UErrorCode *pErrorCode) {
 #define UTRIE2_MAX_DATA_LENGTH (0xffff<<UTRIE2_INDEX_SHIFT)
 
 /* Compact and internally serialize the trie. */
-U_CAPI void U_EXPORT2
-utrie2_freeze(UTrie2 *trie, UTrie2ValueBits valueBits, UErrorCode *pErrorCode) {
+U_CAPI ശൂന്യം U_EXPORT2
+utrie2_freeze(UTrie2 *trie, UTrie2_മൂല്യം_Bits മൂല്യം_Bits, UErrorCode *pErrorCode) {
     UNewTrie2 *newTrie;
     UTrie2Header *header;
     uint32_t *p;
@@ -1309,51 +1309,51 @@ utrie2_freeze(UTrie2 *trie, UTrie2ValueBits valueBits, UErrorCode *pErrorCode) {
     int32_t i, length;
     int32_t allIndexesLength;
     int32_t dataMove;  /* >0 if the data is moved to the end of the index array */
-    UChar32 highStart;
+    UChar32 മുകളിലെ_Start;
 
     /* argument check */
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    എങ്കിൽ(U_FAILURE(*pErrorCode)) {
+        തിരികെ;
     }
-    if( trie==nullptr ||
-        valueBits<0 || UTRIE2_COUNT_VALUE_BITS<=valueBits
+    എങ്കിൽ( trie==nullptr ||
+        മൂല്യം_Bits<0 || UTRIE2_എണ്ണം_മൂല്യം_BITS<=മൂല്യം_Bits
     ) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        തിരികെ;
     }
     newTrie=trie->newTrie;
-    if(newTrie==nullptr) {
+    എങ്കിൽ(newTrie==nullptr) {
         /* already frozen */
-        UTrie2ValueBits frozenValueBits=
-            trie->data16!=nullptr ? UTRIE2_16_VALUE_BITS : UTRIE2_32_VALUE_BITS;
-        if(valueBits!=frozenValueBits) {
+        UTrie2_മൂല്യം_Bits frozen_മൂല്യം_Bits=
+            trie->data16!=nullptr ? UTRIE2_16_മൂല്യം_BITS : UTRIE2_32_മൂല്യം_BITS;
+        എങ്കിൽ(മൂല്യം_Bits!=frozen_മൂല്യം_Bits) {
             *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return;
+        തിരികെ;
     }
 
     /* compact if necessary */
-    if(!newTrie->isCompacted) {
+    എങ്കിൽ(!newTrie->isCompacted) {
         compactTrie(trie, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
-            return;
+        എങ്കിൽ(U_FAILURE(*pErrorCode)) {
+            തിരികെ;
         }
     }
-    highStart=trie->highStart;
+    മുകളിലെ_Start=trie->മുകളിലെ_Start;
 
-    if(highStart<=0x10000) {
+    എങ്കിൽ(മുകളിലെ_Start<=0x10000) {
         allIndexesLength=UTRIE2_INDEX_1_OFFSET;
-    } else {
+    } അല്ലെങ്കിൽ {
         allIndexesLength=newTrie->index2Length;
     }
-    if(valueBits==UTRIE2_16_VALUE_BITS) {
+    എങ്കിൽ(മൂല്യം_Bits==UTRIE2_16_മൂല്യം_BITS) {
         dataMove=allIndexesLength;
-    } else {
+    } അല്ലെങ്കിൽ {
         dataMove=0;
     }
 
     /* are indexLength and dataLength within limits? */
-    if( /* for unshifted indexLength */
+    എങ്കിൽ( /* for unshifted indexLength */
         allIndexesLength>UTRIE2_MAX_INDEX_LENGTH ||
         /* for unshifted dataNullOffset */
         (dataMove+newTrie->dataNullOffset)>0xffff ||
@@ -1363,46 +1363,46 @@ utrie2_freeze(UTrie2 *trie, UTrie2ValueBits valueBits, UErrorCode *pErrorCode) {
         (dataMove+newTrie->dataLength)>UTRIE2_MAX_DATA_LENGTH
     ) {
         *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+        തിരികെ;
     }
 
     /* calculate the total serialized length */
-    length=sizeof(UTrie2Header)+allIndexesLength*2;
-    if(valueBits==UTRIE2_16_VALUE_BITS) {
+    length=വലുപ്പം(UTrie2Header)+allIndexesLength*2;
+    എങ്കിൽ(മൂല്യം_Bits==UTRIE2_16_മൂല്യം_BITS) {
         length+=newTrie->dataLength*2;
-    } else {
+    } അല്ലെങ്കിൽ {
         length+=newTrie->dataLength*4;
     }
 
     trie->memory=uprv_malloc(length);
-    if(trie->memory==nullptr) {
+    എങ്കിൽ(trie->memory==nullptr) {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return;
+        തിരികെ;
     }
     trie->length=length;
-    trie->isMemoryOwned=true;
+    trie->isMemoryOwned=സത്യം;
 
     trie->indexLength=allIndexesLength;
     trie->dataLength=newTrie->dataLength;
-    if(highStart<=0x10000) {
+    എങ്കിൽ(മുകളിലെ_Start<=0x10000) {
         trie->index2NullOffset=0xffff;
-    } else {
+    } അല്ലെങ്കിൽ {
         trie->index2NullOffset=static_cast<uint16_t>(UTRIE2_INDEX_2_OFFSET+newTrie->index2NullOffset);
     }
     trie->dataNullOffset=(uint16_t)(dataMove+newTrie->dataNullOffset);
-    trie->highValueIndex=dataMove+trie->dataLength-UTRIE2_DATA_GRANULARITY;
+    trie->മുകളിലെ_മൂല്യം_Index=dataMove+trie->dataLength-UTRIE2_DATA_GRANULARITY;
 
     /* set the header fields */
     header=(UTrie2Header *)trie->memory;
 
     header->signature=UTRIE2_SIG; /* "Tri2" */
-    header->options=(uint16_t)valueBits;
+    header->options=(uint16_t)മൂല്യം_Bits;
 
     header->indexLength=(uint16_t)trie->indexLength;
     header->shiftedDataLength=(uint16_t)(trie->dataLength>>UTRIE2_INDEX_SHIFT);
     header->index2NullOffset=trie->index2NullOffset;
     header->dataNullOffset=trie->dataNullOffset;
-    header->shiftedHighStart=(uint16_t)(highStart>>UTRIE2_SHIFT_1);
+    header->shifted_മുകളിലെ_Start=(uint16_t)(മുകളിലെ_Start>>UTRIE2_SHIFT_1);
 
     /* fill the index and data arrays */
     dest16=(uint16_t *)(header+1);
@@ -1410,25 +1410,25 @@ utrie2_freeze(UTrie2 *trie, UTrie2ValueBits valueBits, UErrorCode *pErrorCode) {
 
     /* write the index-2 array values shifted right by UTRIE2_INDEX_SHIFT, after adding dataMove */
     p=(uint32_t *)newTrie->index2;
-    for(i=UTRIE2_INDEX_2_BMP_LENGTH; i>0; --i) {
+    വേണ്ടി(i=UTRIE2_INDEX_2_BMP_LENGTH; i>0; --i) {
         *dest16++=(uint16_t)((dataMove + *p++)>>UTRIE2_INDEX_SHIFT);
     }
 
     /* write UTF-8 2-byte index-2 values, not right-shifted */
-    for(i=0; i<(0xc2-0xc0); ++i) {                                  /* C0..C1 */
+    വേണ്ടി(i=0; i<(0xc2-0xc0); ++i) {                                  /* C0..C1 */
         *dest16++=(uint16_t)(dataMove+UTRIE2_BAD_UTF8_DATA_OFFSET);
     }
-    for(; i<(0xe0-0xc0); ++i) {                                     /* C2..DF */
+    വേണ്ടി(; i<(0xe0-0xc0); ++i) {                                     /* C2..DF */
         *dest16++=(uint16_t)(dataMove+newTrie->index2[i<<(6-UTRIE2_SHIFT_2)]);
     }
 
-    if(highStart>0x10000) {
-        int32_t index1Length=(highStart-0x10000)>>UTRIE2_SHIFT_1;
+    എങ്കിൽ(മുകളിലെ_Start>0x10000) {
+        int32_t index1Length=(മുകളിലെ_Start-0x10000)>>UTRIE2_SHIFT_1;
         int32_t index2Offset=UTRIE2_INDEX_2_BMP_LENGTH+UTRIE2_UTF8_2B_INDEX_2_LENGTH+index1Length;
 
         /* write 16-bit index-1 values for supplementary code points */
         p=(uint32_t *)newTrie->index1+UTRIE2_OMITTED_BMP_INDEX_1_LENGTH;
-        for(i=index1Length; i>0; --i) {
+        വേണ്ടി(i=index1Length; i>0; --i) {
             *dest16++=(uint16_t)(UTRIE2_INDEX_2_OFFSET + *p++);
         }
 
@@ -1437,31 +1437,31 @@ utrie2_freeze(UTrie2 *trie, UTrie2ValueBits valueBits, UErrorCode *pErrorCode) {
          * shifted right by UTRIE2_INDEX_SHIFT, after adding dataMove
          */
         p=(uint32_t *)newTrie->index2+index2Offset;
-        for(i=newTrie->index2Length-index2Offset; i>0; --i) {
+        വേണ്ടി(i=newTrie->index2Length-index2Offset; i>0; --i) {
             *dest16++=(uint16_t)((dataMove + *p++)>>UTRIE2_INDEX_SHIFT);
         }
     }
 
     /* write the 16/32-bit data array */
-    switch(valueBits) {
-    case UTRIE2_16_VALUE_BITS:
+    തിരഞ്ഞെടുപ്പ്(മൂല്യം_Bits) {
+    അവസ്ഥ UTRIE2_16_മൂല്യം_BITS:
         /* write 16-bit data values */
         trie->data16=dest16;
         trie->data32=nullptr;
         p=newTrie->data;
-        for(i=newTrie->dataLength; i>0; --i) {
+        വേണ്ടി(i=newTrie->dataLength; i>0; --i) {
             *dest16++=(uint16_t)*p++;
         }
-        break;
-    case UTRIE2_32_VALUE_BITS:
+        നിർത്തുക;
+    അവസ്ഥ UTRIE2_32_മൂല്യം_BITS:
         /* write 32-bit data values */
         trie->data16=nullptr;
         trie->data32=(uint32_t *)dest16;
         uprv_memcpy(dest16, newTrie->data, (size_t)newTrie->dataLength*4);
-        break;
-    default:
+        നിർത്തുക;
+    സ്ഥിരസ്ഥിതി:
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        തിരികെ;
     }
 
 #ifdef UTRIE2_DEBUG
@@ -1472,7 +1472,7 @@ utrie2_freeze(UTrie2 *trie, UTrie2ValueBits valueBits, UErrorCode *pErrorCode) {
     umutablecptrie_setName(newTrie->t3, trie->name);
     ucptrie_close(
         umutablecptrie_buildImmutable(
-            newTrie->t3, UCPTRIE_TYPE_FAST, (UCPTrieValueWidth)valueBits, pErrorCode));
+            newTrie->t3, UCPTRIE_TYPE_FAST, (UCPTrie_മൂല്യം_Width)മൂല്യം_Bits, pErrorCode));
 #endif
     /* Delete the UNewTrie2. */
     uprv_free(newTrie->data);

@@ -21,17 +21,17 @@
 #ifndef __ICU_UCNV_SEL_H__
 #define __ICU_UCNV_SEL_H__
 
-#include "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#എങ്കിൽ !UCONFIG_NO_CONVERSION
 
-#include "unicode/uset.h"
-#include "unicode/utf16.h"
-#include "unicode/uenum.h"
-#include "unicode/ucnv.h"
+#അന്തര്ഭാവ "unicode/uset.h"
+#അന്തര്ഭാവ "unicode/utf16.h"
+#അന്തര്ഭാവ "unicode/uenum.h"
+#അന്തര്ഭാവ "unicode/ucnv.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
+#എങ്കിൽ U_SHOW_CPLUSPLUS_API
+#അന്തര്ഭാവ "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
 /**
@@ -46,12 +46,12 @@
  * from the serialized form.
  */
 
-struct UConverterSelector;
+ഘടന UConverterSelector;
 /**
  * @{
  * Typedef for selector data structure.
  */
-typedef struct UConverterSelector UConverterSelector;
+തരനിർവചനം ഘടന UConverterSelector UConverterSelector;
 /** @} */
 
 /**
@@ -77,9 +77,9 @@ typedef struct UConverterSelector UConverterSelector;
  * @stable ICU 4.2
  */
 U_CAPI UConverterSelector* U_EXPORT2
-ucnvsel_open(const char* const*  converterList, int32_t converterListSize,
-             const USet* excludedCodePoints,
-             const UConverterUnicodeSet whichSet, UErrorCode* status);
+ucnvsel_open(സ്ഥിരം അക്ഷരം* സ്ഥിരം*  converterList, int32_t converterListSize,
+             സ്ഥിരം USet* excludedCodePoints,
+             സ്ഥിരം UConverterUnicodeSet whichSet, UErrorCode* status);
 
 /**
  * Closes a selector.
@@ -94,10 +94,10 @@ ucnvsel_open(const char* const*  converterList, int32_t converterListSize,
  *
  * @stable ICU 4.2
  */
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 ucnvsel_close(UConverterSelector *sel);
 
-#if U_SHOW_CPLUSPLUS_API
+#എങ്കിൽ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -132,7 +132,7 @@ U_NAMESPACE_END
  * @stable ICU 4.2
  */
 U_CAPI UConverterSelector* U_EXPORT2
-ucnvsel_openFromSerialized(const void* buffer U_LIFETIME_BOUND, int32_t length, UErrorCode* status);
+ucnvsel_openFromSerialized(സ്ഥിരം ശൂന്യം* buffer U_LIFETIME_BOUND, int32_t length, UErrorCode* status);
 
 /**
  * Serialize a selector into a linear buffer.
@@ -149,8 +149,8 @@ ucnvsel_openFromSerialized(const void* buffer U_LIFETIME_BOUND, int32_t length, 
  * @stable ICU 4.2
  */
 U_CAPI int32_t U_EXPORT2
-ucnvsel_serialize(const UConverterSelector* sel,
-                  void* buffer, int32_t bufferCapacity, UErrorCode* status);
+ucnvsel_serialize(സ്ഥിരം UConverterSelector* sel,
+                  ശൂന്യം* buffer, int32_t bufferCapacity, UErrorCode* status);
 
 /**
  * Select converters that can map all characters in a UTF-16 string,
@@ -167,8 +167,8 @@ ucnvsel_serialize(const UConverterSelector* sel,
  * @stable ICU 4.2
  */
 U_CAPI UEnumeration* U_EXPORT2
-ucnvsel_selectForString(const UConverterSelector* sel U_LIFETIME_BOUND,
-                        const UChar* s,
+ucnvsel_selectForString(സ്ഥിരം UConverterSelector* sel U_LIFETIME_BOUND,
+                        സ്ഥിരം UChar* s,
                         int32_t length,
                         UErrorCode* status);
 
@@ -187,8 +187,8 @@ ucnvsel_selectForString(const UConverterSelector* sel U_LIFETIME_BOUND,
  * @stable ICU 4.2
  */
 U_CAPI UEnumeration* U_EXPORT2
-ucnvsel_selectForUTF8(const UConverterSelector* sel U_LIFETIME_BOUND,
-                      const char* s,
+ucnvsel_selectForUTF8(സ്ഥിരം UConverterSelector* sel U_LIFETIME_BOUND,
+                      സ്ഥിരം അക്ഷരം* s,
                       int32_t length,
                       UErrorCode* status);
 

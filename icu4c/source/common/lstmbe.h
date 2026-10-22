@@ -4,23 +4,23 @@
 #ifndef LSTMBE_H
 #define LSTMBE_H
 
-#include "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#എങ്കിൽ !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/uniset.h"
-#include "unicode/ures.h"
-#include "unicode/utext.h"
-#include "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/uniset.h"
+#അന്തര്ഭാവ "unicode/ures.h"
+#അന്തര്ഭാവ "unicode/utext.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
 
-#include "brkeng.h"
-#include "dictbe.h"
-#include "uvectr32.h"
+#അന്തര്ഭാവ "brkeng.h"
+#അന്തര്ഭാവ "dictbe.h"
+#അന്തര്ഭാവ "uvectr32.h"
 
 U_NAMESPACE_BEGIN
 
 class Vectorizer;
-struct LSTMData;
+ഘടന LSTMData;
 
 /*******************************************************************
  * LSTMBreakEngine
@@ -33,21 +33,21 @@ struct LSTMData;
  * <p>After it is constructed a LSTMBreakEngine may be shared between
  * threads without synchronization.</p>
  */
-class LSTMBreakEngine : public DictionaryBreakEngine {
-public:
+class LSTMBreakEngine : പൊതു DictionaryBreakEngine {
+പൊതു:
     /**
      * <p>Constructor.</p>
      */
-    LSTMBreakEngine(const LSTMData* data, const UnicodeSet& set, UErrorCode &status);
+    LSTMBreakEngine(സ്ഥിരം LSTMData* data, സ്ഥിരം UnicodeSet& set, UErrorCode &status);
 
     /**
      * <p>Virtual destructor.</p>
      */
-    virtual ~LSTMBreakEngine();
+    മായാ ~LSTMBreakEngine();
 
-    virtual const char16_t* name() const;
+    മായാ സ്ഥിരം char16_t* name() സ്ഥിരം;
 
-protected:
+സംരക്ഷിത:
     /**
      * <p>Divide up a range of known dictionary characters handled by this break engine.</p>
      *
@@ -58,28 +58,28 @@ protected:
      * @param status Information on any errors encountered.
      * @return The number of breaks found
      */
-     virtual int32_t divideUpDictionaryRange(UText *text,
+     മായാ int32_t divideUpDictionaryRange(UText *text,
                                              int32_t rangeStart,
                                              int32_t rangeEnd,
                                              UVector32 &foundBreaks,
                                              UBool isPhraseBreaking,
-                                             UErrorCode& status) const override;
-private:
-    const LSTMData* fData;
-    const Vectorizer* fVectorizer;
+                                             UErrorCode& status) സ്ഥിരം override;
+സ്വകാര്യ:
+    സ്ഥിരം LSTMData* fData;
+    സ്ഥിരം Vectorizer* fVectorizer;
 };
 
-U_CAPI const LanguageBreakEngine* U_EXPORT2 CreateLSTMBreakEngine(
-    UScriptCode script, const LSTMData* data, UErrorCode& status);
+U_CAPI സ്ഥിരം LanguageBreakEngine* U_EXPORT2 CreateLSTMBreakEngine(
+    UScriptCode script, സ്ഥിരം LSTMData* data, UErrorCode& status);
 
-U_CAPI const LSTMData* U_EXPORT2 CreateLSTMData(
+U_CAPI സ്ഥിരം LSTMData* U_EXPORT2 CreateLSTMData(
     UResourceBundle* rb, UErrorCode& status);
 
-U_CAPI const LSTMData* U_EXPORT2 CreateLSTMDataForScript(
+U_CAPI സ്ഥിരം LSTMData* U_EXPORT2 CreateLSTMDataForScript(
     UScriptCode script, UErrorCode& status);
 
-U_CAPI void U_EXPORT2 DeleteLSTMData(const LSTMData* data);
-U_CAPI const char16_t* U_EXPORT2 LSTMDataName(const LSTMData* data);
+U_CAPI ശൂന്യം U_EXPORT2 DeleteLSTMData(സ്ഥിരം LSTMData* data);
+U_CAPI സ്ഥിരം char16_t* U_EXPORT2 LSTMDataName(സ്ഥിരം LSTMData* data);
 
 U_NAMESPACE_END
 

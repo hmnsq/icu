@@ -17,13 +17,13 @@
 #ifndef __UCHARSTRIEBUILDER_H__
 #define __UCHARSTRIEBUILDER_H__
 
-#include "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#എങ്കിൽ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/stringtriebuilder.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/unistr.h"
+#അന്തര്ഭാവ "unicode/stringtriebuilder.h"
+#അന്തര്ഭാവ "unicode/ucharstrie.h"
+#അന്തര്ഭാവ "unicode/unistr.h"
 
 /**
  * \file
@@ -40,8 +40,8 @@ class UCharsTrieElement;
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API UCharsTrieBuilder : public StringTrieBuilder {
-public:
+class U_COMMON_API UCharsTrieBuilder : പൊതു StringTrieBuilder {
+പൊതു:
     /**
      * Constructs an empty builder.
      * @param errorCode Standard ICU error code.
@@ -53,7 +53,7 @@ public:
      * Destructor.
      * @stable ICU 4.8
      */
-    virtual ~UCharsTrieBuilder();
+    മായാ ~UCharsTrieBuilder();
 
     /**
      * Adds a (string, value) pair.
@@ -69,8 +69,8 @@ public:
      * @return *this
      * @stable ICU 4.8
      */
-    UCharsTrieBuilder& add(const UnicodeString& s,
-                           int32_t value,
+    UCharsTrieBuilder& add(സ്ഥിരം UnicodeString& s,
+                           int32_t മൂല്യം_2,
                            UErrorCode& errorCode) U_LIFETIME_BOUND;
 
     /**
@@ -132,50 +132,50 @@ public:
         strings.remove();
         elementsLength=0;
         ucharsLength=0;
-        return *this;
+        തിരികെ *this;
     }
 
-private:
-    UCharsTrieBuilder(const UCharsTrieBuilder &other) = delete;  // no copy constructor
-    UCharsTrieBuilder &operator=(const UCharsTrieBuilder &other) = delete;  // no assignment operator
+സ്വകാര്യ:
+    UCharsTrieBuilder(സ്ഥിരം UCharsTrieBuilder &other) = delete;  // no copy constructor
+    UCharsTrieBuilder &operator=(സ്ഥിരം UCharsTrieBuilder &other) = delete;  // no assignment operator
 
-    void buildUChars(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
+    ശൂന്യം buildUChars(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
 
-    virtual int32_t getElementStringLength(int32_t i) const override;
-    virtual char16_t getElementUnit(int32_t i, int32_t unitIndex) const override;
-    virtual int32_t getElementValue(int32_t i) const override;
+    മായാ int32_t getElementStringLength(int32_t i) സ്ഥിരം override;
+    മായാ char16_t getElementUnit(int32_t i, int32_t unitIndex) സ്ഥിരം override;
+    മായാ int32_t get_Element_മൂല്യം(int32_t i) സ്ഥിരം override;
 
-    virtual int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) const override;
+    മായാ int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) സ്ഥിരം override;
 
-    virtual int32_t countElementUnits(int32_t start, int32_t limit, int32_t unitIndex) const override;
-    virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t count) const override;
-    virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) const override;
+    മായാ int32_t എണ്ണം_Element_Units(int32_t start, int32_t limit, int32_t unitIndex) സ്ഥിരം override;
+    മായാ int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t എണ്ണം) സ്ഥിരം override;
+    മായാ int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) സ്ഥിരം override;
 
-    virtual UBool matchNodesCanHaveValues() const override { return true; }
+    മായാ UBool match_Nodes_Can_Have_മൂല്യങ്ങൾ() സ്ഥിരം override { തിരികെ true; }
 
-    virtual int32_t getMaxBranchLinearSubNodeLength() const override { return UCharsTrie::kMaxBranchLinearSubNodeLength; }
-    virtual int32_t getMinLinearMatch() const override { return UCharsTrie::kMinLinearMatch; }
-    virtual int32_t getMaxLinearMatchLength() const override { return UCharsTrie::kMaxLinearMatchLength; }
+    മായാ int32_t get_Max_Branch_Linear_Sub_കണ്ണി_Length() സ്ഥിരം override { തിരികെ UCharsTrie::k_Max_Branch_Linear_Sub_കണ്ണി_Length; }
+    മായാ int32_t getMinLinearMatch() സ്ഥിരം override { തിരികെ UCharsTrie::kMinLinearMatch; }
+    മായാ int32_t getMaxLinearMatchLength() സ്ഥിരം override { തിരികെ UCharsTrie::kMaxLinearMatchLength; }
 
-    class UCTLinearMatchNode : public LinearMatchNode {
-    public:
-        UCTLinearMatchNode(const char16_t *units, int32_t len, Node *nextNode);
-        virtual bool operator==(const Node &other) const override;
-        virtual void write(StringTrieBuilder &builder) override;
-    private:
-        const char16_t *s;
+    class UCTLinear_Match_കണ്ണി : പൊതു Linear_Match_കണ്ണി {
+    പൊതു:
+        UCTLinear_Match_കണ്ണി(സ്ഥിരം char16_t *units, int32_t len, കണ്ണി_2 *next_കണ്ണി);
+        മായാ bool operator==(സ്ഥിരം കണ്ണി_2 &other) സ്ഥിരം override;
+        മായാ ശൂന്യം ലിഖ(StringTrieBuilder &builder) override;
+    സ്വകാര്യ:
+        സ്ഥിരം char16_t *s;
     };
 
-    virtual Node *createLinearMatchNode(int32_t i, int32_t unitIndex, int32_t length,
-                                        Node *nextNode) const override;
+    മായാ കണ്ണി_2 *create_Linear_Match_കണ്ണി(int32_t i, int32_t unitIndex, int32_t length,
+                                        കണ്ണി_2 *next_കണ്ണി) സ്ഥിരം override;
 
     UBool ensureCapacity(int32_t length);
-    virtual int32_t write(int32_t unit) override;
-    int32_t write(const char16_t *s, int32_t length);
-    virtual int32_t writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) override;
-    virtual int32_t writeValueAndFinal(int32_t i, UBool isFinal) override;
-    virtual int32_t writeValueAndType(UBool hasValue, int32_t value, int32_t node) override;
-    virtual int32_t writeDeltaTo(int32_t jumpTarget) override;
+    മായാ int32_t ലിഖ(int32_t unit) override;
+    int32_t ലിഖ(സ്ഥിരം char16_t *s, int32_t length);
+    മായാ int32_t writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) override;
+    മായാ int32_t write_മൂല്യം_And_Final(int32_t i, UBool isFinal) override;
+    മായാ int32_t write_മൂല്യം_And_Type(UBool has_മൂല്യം, int32_t മൂല്യം_2, int32_t കണ്ണി) override;
+    മായാ int32_t writeDeltaTo(int32_t jumpTarget) override;
 
     UnicodeString strings;
     UCharsTrieElement *elements;

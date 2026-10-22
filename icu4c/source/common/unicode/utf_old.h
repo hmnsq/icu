@@ -142,9 +142,9 @@
 #ifndef __UTF_OLD_H__
 #define __UTF_OLD_H__
 
-#include "unicode/utf.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
+#അന്തര്ഭാവ "unicode/utf.h"
+#അന്തര്ഭാവ "unicode/utf8.h"
+#അന്തര്ഭാവ "unicode/utf16.h"
 
 /**
  * \def U_HIDE_OBSOLETE_UTF_OLD_H
@@ -161,7 +161,7 @@
 #   define U_HIDE_OBSOLETE_UTF_OLD_H 0
 #endif
 
-#if !defined(U_HIDE_DEPRECATED_API) && !U_HIDE_OBSOLETE_UTF_OLD_H
+#എങ്കിൽ !defined(U_HIDE_DEPRECATED_API) && !U_HIDE_OBSOLETE_UTF_OLD_H
 
 /* Formerly utf.h, part 1 --------------------------------------------------- */
 
@@ -173,7 +173,7 @@
  *
  * @obsolete ICU 2.6. Use int32_t directly instead since this API will be removed in that release.
  */
-typedef int32_t UTextOffset;
+തരനിർവചനം int32_t UTextOffset;
 #endif
 
 /** Number of bits in a Unicode string code unit - ICU uses 16-bit Unicode. @deprecated ICU 2.4. Obsolete, see utf_old.h. */
@@ -205,14 +205,14 @@ typedef int32_t UTextOffset;
  *
  * @deprecated ICU 2.4. Obsolete, see utf_old.h.
  */
-#define UTF8_ERROR_VALUE_1 0x15
+#define UTF8_ERROR_മൂല്യം_1 0x15
 
 /**
  * See documentation on UTF8_ERROR_VALUE_1 for details.
  *
  * @deprecated ICU 2.4. Obsolete, see utf_old.h.
  */
-#define UTF8_ERROR_VALUE_2 0x9f
+#define UTF8_ERROR_മൂല്യം_2 0x9f
 
 /**
  * Error value for all UTFs. This code point value will be set by macros with error
@@ -220,7 +220,7 @@ typedef int32_t UTextOffset;
  *
  * @deprecated ICU 2.4. Obsolete, see utf_old.h.
  */
-#define UTF_ERROR_VALUE 0xffff
+#define UTF_ERROR_മൂല്യം 0xffff
 
 /**
  * Is a given 32-bit code an error value
@@ -229,7 +229,7 @@ typedef int32_t UTextOffset;
  * @deprecated ICU 2.4. Obsolete, see utf_old.h.
  */
 #define UTF_IS_ERROR(c) \
-    (((c)&0xfffe)==0xfffe || (c)==UTF8_ERROR_VALUE_1 || (c)==UTF8_ERROR_VALUE_2)
+    (((c)&0xfffe)==0xfffe || (c)==UTF8_ERROR_മൂല്യം_1 || (c)==UTF8_ERROR_മൂല്യം_2)
 
 /**
  * This is a combined macro: Is c a valid Unicode value _and_ not an error code?
@@ -238,7 +238,7 @@ typedef int32_t UTextOffset;
  */
 #define UTF_IS_VALID(c) \
     (UTF_IS_UNICODE_CHAR(c) && \
-     (c)!=UTF8_ERROR_VALUE_1 && (c)!=UTF8_ERROR_VALUE_2)
+     (c)!=UTF8_ERROR_മൂല്യം_1 && (c)!=UTF8_ERROR_മൂല്യം_2)
 
 /**
  * Is this code unit or code point a surrogate (U+d800..U+dfff)?
@@ -292,23 +292,23 @@ typedef int32_t UTextOffset;
 */
 #ifdef U_UTF8_IMPL
 // No forward declaration if compiling utf_impl.cpp, which defines utf8_countTrailBytes.
-#elif defined(U_STATIC_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION)
-U_CAPI const uint8_t utf8_countTrailBytes[];
-#else
-U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
+#അല്ലെങ്കിലെങ്കിൽ defined(U_STATIC_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION)
+U_CAPI സ്ഥിരം uint8_t utf8_എണ്ണം_Trail_Bytes[];
+#അല്ലെങ്കിൽ
+U_CFUNC U_IMPORT സ്ഥിരം uint8_t utf8_എണ്ണം_Trail_Bytes[];
 #endif 
 
 /**
  * Count the trail bytes for a UTF-8 lead byte.
  * @deprecated ICU 2.4. Renamed to U8_COUNT_TRAIL_BYTES, see utf_old.h.
  */
-#define UTF8_COUNT_TRAIL_BYTES(leadByte) (utf8_countTrailBytes[(uint8_t)leadByte])
+#define UTF8_എണ്ണം_TRAIL_BYTES(leadByte) (utf8_എണ്ണം_Trail_Bytes[(uint8_t)leadByte])
 
 /**
  * Mask a UTF-8 lead byte, leave only the lower bits that form part of the code point value.
  * @deprecated ICU 2.4. Renamed to U8_MASK_LEAD_BYTE, see utf_old.h.
  */
-#define UTF8_MASK_LEAD_BYTE(leadByte, countTrailBytes) ((leadByte)&=(1<<(6-(countTrailBytes)))-1)
+#define UTF8_MASK_LEAD_BYTE(leadByte, എണ്ണം_Trail_Bytes) ((leadByte)&=(1<<(6-(എണ്ണം_Trail_Bytes)))-1)
 
 /** Is this this code point a single code unit (byte)? @deprecated ICU 2.4. Renamed to U8_IS_SINGLE, see utf_old.h. */
 #define UTF8_IS_SINGLE(uchar) (((uchar)&0x80)==0)
@@ -333,14 +333,14 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
  *
  * @deprecated ICU 2.4. Use U8_LENGTH instead, see utf.h.
  */
-#if 1
+#എങ്കിൽ 1
 #   define UTF8_CHAR_LENGTH(c) \
         ((uint32_t)(c)<=0x7f ? 1 : \
             ((uint32_t)(c)<=0x7ff ? 2 : \
                 ((uint32_t)((c)-0x10000)>0xfffff ? 3 : 4) \
             ) \
         )
-#else
+#അല്ലെങ്കിൽ
 #   define UTF8_CHAR_LENGTH(c) \
         ((uint32_t)(c)<=0x7f ? 1 : \
             ((uint32_t)(c)<=0x7ff ? 2 : \
@@ -378,36 +378,36 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 /** @deprecated ICU 2.4. Renamed to U8_NEXT_UNSAFE, see utf_old.h. */
 #define UTF8_NEXT_CHAR_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[(i)++]; \
-    if((uint8_t)((c)-0xc0)<0x35) { \
-        uint8_t __count=UTF8_COUNT_TRAIL_BYTES(c); \
+    എങ്കിൽ((uint8_t)((c)-0xc0)<0x35) { \
+        uint8_t __count=UTF8_എണ്ണം_TRAIL_BYTES(c); \
         UTF8_MASK_LEAD_BYTE(c, __count); \
-        switch(__count) { \
+        തിരഞ്ഞെടുപ്പ്(__count) { \
         /* each following branch falls through to the next one */ \
-        case 3: \
+        അവസ്ഥ 3: \
             (c)=((c)<<6)|((s)[(i)++]&0x3f); \
             U_FALLTHROUGH; \
-        case 2: \
+        അവസ്ഥ 2: \
             (c)=((c)<<6)|((s)[(i)++]&0x3f); \
             U_FALLTHROUGH; \
-        case 1: \
+        അവസ്ഥ 1: \
             (c)=((c)<<6)|((s)[(i)++]&0x3f); \
         /* no other branches to optimize switch() */ \
-            break; \
+            നിർത്തുക; \
         } \
     } \
 } UPRV_BLOCK_MACRO_END
 
 /** @deprecated ICU 2.4. Renamed to U8_APPEND_UNSAFE, see utf_old.h. */
 #define UTF8_APPEND_CHAR_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
-    if((uint32_t)(c)<=0x7f) { \
+    എങ്കിൽ((uint32_t)(c)<=0x7f) { \
         (s)[(i)++]=(uint8_t)(c); \
-    } else { \
-        if((uint32_t)(c)<=0x7ff) { \
+    } അല്ലെങ്കിൽ { \
+        എങ്കിൽ((uint32_t)(c)<=0x7ff) { \
             (s)[(i)++]=(uint8_t)(((c)>>6)|0xc0); \
-        } else { \
-            if((uint32_t)(c)<=0xffff) { \
+        } അല്ലെങ്കിൽ { \
+            എങ്കിൽ((uint32_t)(c)<=0xffff) { \
                 (s)[(i)++]=(uint8_t)(((c)>>12)|0xe0); \
-            } else { \
+            } അല്ലെങ്കിൽ { \
                 (s)[(i)++]=(uint8_t)(((c)>>18)|0xf0); \
                 (s)[(i)++]=(uint8_t)((((c)>>12)&0x3f)|0x80); \
             } \
@@ -419,13 +419,13 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 
 /** @deprecated ICU 2.4. Renamed to U8_FWD_1_UNSAFE, see utf_old.h. */
 #define UTF8_FWD_1_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    (i)+=1+UTF8_COUNT_TRAIL_BYTES((s)[i]); \
+    (i)+=1+UTF8_എണ്ണം_TRAIL_BYTES((s)[i]); \
 } UPRV_BLOCK_MACRO_END
 
 /** @deprecated ICU 2.4. Renamed to U8_FWD_N_UNSAFE, see utf_old.h. */
 #define UTF8_FWD_N_UNSAFE(s, i, n) UPRV_BLOCK_MACRO_BEGIN { \
     int32_t __N=(n); \
-    while(__N>0) { \
+    ആകുമ്പോൾ(__N>0) { \
         UTF8_FWD_1_UNSAFE(s, i); \
         --__N; \
     } \
@@ -433,27 +433,27 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 
 /** @deprecated ICU 2.4. Renamed to U8_SET_CP_START_UNSAFE, see utf_old.h. */
 #define UTF8_SET_CHAR_START_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    while(UTF8_IS_TRAIL((s)[i])) { --(i); } \
+    ആകുമ്പോൾ(UTF8_IS_TRAIL((s)[i])) { --(i); } \
 } UPRV_BLOCK_MACRO_END
 
 /** @deprecated ICU 2.4. Use U8_NEXT instead, see utf_old.h. */
 #define UTF8_NEXT_CHAR_SAFE(s, i, length, c, strict) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[(i)++]; \
-    if((c)>=0x80) { \
-        if(UTF8_IS_LEAD(c)) { \
+    എങ്കിൽ((c)>=0x80) { \
+        എങ്കിൽ(UTF8_IS_LEAD(c)) { \
             (c)=utf8_nextCharSafeBody(s, &(i), (int32_t)(length), c, strict); \
-        } else { \
-            (c)=UTF8_ERROR_VALUE_1; \
+        } അല്ലെങ്കിൽ { \
+            (c)=UTF8_ERROR_മൂല്യം_1; \
         } \
     } \
 } UPRV_BLOCK_MACRO_END
 
 /** @deprecated ICU 2.4. Use U8_APPEND instead, see utf_old.h. */
 #define UTF8_APPEND_CHAR_SAFE(s, i, length, c)  UPRV_BLOCK_MACRO_BEGIN { \
-    if((uint32_t)(c)<=0x7f) { \
+    എങ്കിൽ((uint32_t)(c)<=0x7f) { \
         (s)[(i)++]=(uint8_t)(c); \
-    } else { \
-        (i)=utf8_appendCharSafeBody(s, (int32_t)(i), (int32_t)(length), c, NULL); \
+    } അല്ലെങ്കിൽ { \
+        (i)=utf8_appendCharSafeBody(s, (int32_t)(i), (int32_t)(length), c, ശൂന്യ); \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -469,18 +469,18 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 /** @deprecated ICU 2.4. Renamed to U8_PREV_UNSAFE, see utf_old.h. */
 #define UTF8_PREV_CHAR_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[--(i)]; \
-    if(UTF8_IS_TRAIL(c)) { \
+    എങ്കിൽ(UTF8_IS_TRAIL(c)) { \
         uint8_t __b, __count=1, __shift=6; \
 \
         /* c is a trail byte */ \
         (c)&=0x3f; \
-        for(;;) { \
+        വേണ്ടി(;;) { \
             __b=(s)[--(i)]; \
-            if(__b>=0xc0) { \
+            എങ്കിൽ(__b>=0xc0) { \
                 UTF8_MASK_LEAD_BYTE(__b, __count); \
                 (c)|=(UChar32)__b<<__shift; \
-                break; \
-            } else { \
+                നിർത്തുക; \
+            } അല്ലെങ്കിൽ { \
                 (c)|=(UChar32)(__b&0x3f)<<__shift; \
                 ++__count; \
                 __shift+=6; \
@@ -491,13 +491,13 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 
 /** @deprecated ICU 2.4. Renamed to U8_BACK_1_UNSAFE, see utf_old.h. */
 #define UTF8_BACK_1_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    while(UTF8_IS_TRAIL((s)[--(i)])) {} \
+    ആകുമ്പോൾ(UTF8_IS_TRAIL((s)[--(i)])) {} \
 } UPRV_BLOCK_MACRO_END
 
 /** @deprecated ICU 2.4. Renamed to U8_BACK_N_UNSAFE, see utf_old.h. */
 #define UTF8_BACK_N_UNSAFE(s, i, n) UPRV_BLOCK_MACRO_BEGIN { \
     int32_t __N=(n); \
-    while(__N>0) { \
+    ആകുമ്പോൾ(__N>0) { \
         UTF8_BACK_1_UNSAFE(s, i); \
         --__N; \
     } \
@@ -512,11 +512,11 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 /** @deprecated ICU 2.4. Use U8_PREV instead, see utf_old.h. */
 #define UTF8_PREV_CHAR_SAFE(s, start, i, c, strict) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[--(i)]; \
-    if((c)>=0x80) { \
-        if((c)<=0xbf) { \
+    എങ്കിൽ((c)>=0x80) { \
+        എങ്കിൽ((c)<=0xbf) { \
             (c)=utf8_prevCharSafeBody(s, start, &(i), c, strict); \
-        } else { \
-            (c)=UTF8_ERROR_VALUE_1; \
+        } അല്ലെങ്കിൽ { \
+            (c)=UTF8_ERROR_മൂല്യം_1; \
         } \
     } \
 } UPRV_BLOCK_MACRO_END
@@ -545,7 +545,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 #define UTF_SURROGATE_OFFSET ((0xd800<<10UL)+0xdc00-0x10000)
 
 /** Get the UTF-32 value from the surrogate code units. @deprecated ICU 2.4. Renamed to U16_GET_SUPPLEMENTARY, see utf_old.h. */
-#define UTF16_GET_PAIR_VALUE(first, second) \
+#define UTF16_GET_PAIR_മൂല്യം(first, second) \
     (((first)<<10UL)+(second)-UTF_SURROGATE_OFFSET)
 
 /** @deprecated ICU 2.4. Renamed to U16_LEAD, see utf_old.h. */
@@ -594,11 +594,11 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
  */
 #define UTF16_GET_CHAR_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[i]; \
-    if(UTF_IS_SURROGATE(c)) { \
-        if(UTF_IS_SURROGATE_FIRST(c)) { \
-            (c)=UTF16_GET_PAIR_VALUE((c), (s)[(i)+1]); \
-        } else { \
-            (c)=UTF16_GET_PAIR_VALUE((s)[(i)-1], (c)); \
+    എങ്കിൽ(UTF_IS_SURROGATE(c)) { \
+        എങ്കിൽ(UTF_IS_SURROGATE_FIRST(c)) { \
+            (c)=UTF16_GET_PAIR_മൂല്യം((c), (s)[(i)+1]); \
+        } അല്ലെങ്കിൽ { \
+            (c)=UTF16_GET_PAIR_മൂല്യം((s)[(i)-1], (c)); \
         } \
     } \
 } UPRV_BLOCK_MACRO_END
@@ -606,43 +606,43 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 /** @deprecated ICU 2.4. Use U16_GET instead, see utf_old.h. */
 #define UTF16_GET_CHAR_SAFE(s, start, i, length, c, strict) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[i]; \
-    if(UTF_IS_SURROGATE(c)) { \
+    എങ്കിൽ(UTF_IS_SURROGATE(c)) { \
         uint16_t __c2; \
-        if(UTF_IS_SURROGATE_FIRST(c)) { \
-            if((i)+1<(length) && UTF_IS_SECOND_SURROGATE(__c2=(s)[(i)+1])) { \
-                (c)=UTF16_GET_PAIR_VALUE((c), __c2); \
+        എങ്കിൽ(UTF_IS_SURROGATE_FIRST(c)) { \
+            എങ്കിൽ((i)+1<(length) && UTF_IS_SECOND_SURROGATE(__c2=(s)[(i)+1])) { \
+                (c)=UTF16_GET_PAIR_മൂല്യം((c), __c2); \
                 /* strict: ((c)&0xfffe)==0xfffe is caught by UTF_IS_ERROR() and UTF_IS_UNICODE_CHAR() */ \
-            } else if(strict) {\
+            } അല്ലെങ്കിൽ എങ്കിൽ(strict) {\
                 /* unmatched first surrogate */ \
-                (c)=UTF_ERROR_VALUE; \
+                (c)=UTF_ERROR_മൂല്യം; \
             } \
-        } else { \
-            if((i)-1>=(start) && UTF_IS_FIRST_SURROGATE(__c2=(s)[(i)-1])) { \
-                (c)=UTF16_GET_PAIR_VALUE(__c2, (c)); \
+        } അല്ലെങ്കിൽ { \
+            എങ്കിൽ((i)-1>=(start) && UTF_IS_FIRST_SURROGATE(__c2=(s)[(i)-1])) { \
+                (c)=UTF16_GET_PAIR_മൂല്യം(__c2, (c)); \
                 /* strict: ((c)&0xfffe)==0xfffe is caught by UTF_IS_ERROR() and UTF_IS_UNICODE_CHAR() */ \
-            } else if(strict) {\
+            } അല്ലെങ്കിൽ എങ്കിൽ(strict) {\
                 /* unmatched second surrogate */ \
-                (c)=UTF_ERROR_VALUE; \
+                (c)=UTF_ERROR_മൂല്യം; \
             } \
         } \
-    } else if((strict) && !UTF_IS_UNICODE_CHAR(c)) { \
-        (c)=UTF_ERROR_VALUE; \
+    } അല്ലെങ്കിൽ എങ്കിൽ((strict) && !UTF_IS_UNICODE_CHAR(c)) { \
+        (c)=UTF_ERROR_മൂല്യം; \
     } \
 } UPRV_BLOCK_MACRO_END
 
 /** @deprecated ICU 2.4. Renamed to U16_NEXT_UNSAFE, see utf_old.h. */
 #define UTF16_NEXT_CHAR_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[(i)++]; \
-    if(UTF_IS_FIRST_SURROGATE(c)) { \
-        (c)=UTF16_GET_PAIR_VALUE((c), (s)[(i)++]); \
+    എങ്കിൽ(UTF_IS_FIRST_SURROGATE(c)) { \
+        (c)=UTF16_GET_PAIR_മൂല്യം((c), (s)[(i)++]); \
     } \
 } UPRV_BLOCK_MACRO_END
 
 /** @deprecated ICU 2.4. Renamed to U16_APPEND_UNSAFE, see utf_old.h. */
 #define UTF16_APPEND_CHAR_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
-    if((uint32_t)(c)<=0xffff) { \
+    എങ്കിൽ((uint32_t)(c)<=0xffff) { \
         (s)[(i)++]=(uint16_t)(c); \
-    } else { \
+    } അല്ലെങ്കിൽ { \
         (s)[(i)++]=(uint16_t)(((c)>>10)+0xd7c0); \
         (s)[(i)++]=(uint16_t)(((c)&0x3ff)|0xdc00); \
     } \
@@ -650,7 +650,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 
 /** @deprecated ICU 2.4. Renamed to U16_FWD_1_UNSAFE, see utf_old.h. */
 #define UTF16_FWD_1_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    if(UTF_IS_FIRST_SURROGATE((s)[(i)++])) { \
+    എങ്കിൽ(UTF_IS_FIRST_SURROGATE((s)[(i)++])) { \
         ++(i); \
     } \
 } UPRV_BLOCK_MACRO_END
@@ -658,7 +658,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 /** @deprecated ICU 2.4. Renamed to U16_FWD_N_UNSAFE, see utf_old.h. */
 #define UTF16_FWD_N_UNSAFE(s, i, n) UPRV_BLOCK_MACRO_BEGIN { \
     int32_t __N=(n); \
-    while(__N>0) { \
+    ആകുമ്പോൾ(__N>0) { \
         UTF16_FWD_1_UNSAFE(s, i); \
         --__N; \
     } \
@@ -666,7 +666,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 
 /** @deprecated ICU 2.4. Renamed to U16_SET_CP_START_UNSAFE, see utf_old.h. */
 #define UTF16_SET_CHAR_START_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    if(UTF_IS_SECOND_SURROGATE((s)[i])) { \
+    എങ്കിൽ(UTF_IS_SECOND_SURROGATE((s)[i])) { \
         --(i); \
     } \
 } UPRV_BLOCK_MACRO_END
@@ -674,35 +674,35 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 /** @deprecated ICU 2.4. Use U16_NEXT instead, see utf_old.h. */
 #define UTF16_NEXT_CHAR_SAFE(s, i, length, c, strict) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[(i)++]; \
-    if(UTF_IS_FIRST_SURROGATE(c)) { \
+    എങ്കിൽ(UTF_IS_FIRST_SURROGATE(c)) { \
         uint16_t __c2; \
-        if((i)<(length) && UTF_IS_SECOND_SURROGATE(__c2=(s)[(i)])) { \
+        എങ്കിൽ((i)<(length) && UTF_IS_SECOND_SURROGATE(__c2=(s)[(i)])) { \
             ++(i); \
-            (c)=UTF16_GET_PAIR_VALUE((c), __c2); \
+            (c)=UTF16_GET_PAIR_മൂല്യം((c), __c2); \
             /* strict: ((c)&0xfffe)==0xfffe is caught by UTF_IS_ERROR() and UTF_IS_UNICODE_CHAR() */ \
-        } else if(strict) {\
+        } അല്ലെങ്കിൽ എങ്കിൽ(strict) {\
             /* unmatched first surrogate */ \
-            (c)=UTF_ERROR_VALUE; \
+            (c)=UTF_ERROR_മൂല്യം; \
         } \
-    } else if((strict) && !UTF_IS_UNICODE_CHAR(c)) { \
+    } അല്ലെങ്കിൽ എങ്കിൽ((strict) && !UTF_IS_UNICODE_CHAR(c)) { \
         /* unmatched second surrogate or other non-character */ \
-        (c)=UTF_ERROR_VALUE; \
+        (c)=UTF_ERROR_മൂല്യം; \
     } \
 } UPRV_BLOCK_MACRO_END
 
 /** @deprecated ICU 2.4. Use U16_APPEND instead, see utf_old.h. */
 #define UTF16_APPEND_CHAR_SAFE(s, i, length, c) UPRV_BLOCK_MACRO_BEGIN { \
-    if((uint32_t)(c)<=0xffff) { \
+    എങ്കിൽ((uint32_t)(c)<=0xffff) { \
         (s)[(i)++]=(uint16_t)(c); \
-    } else if((uint32_t)(c)<=0x10ffff) { \
-        if((i)+1<(length)) { \
+    } അല്ലെങ്കിൽ എങ്കിൽ((uint32_t)(c)<=0x10ffff) { \
+        എങ്കിൽ((i)+1<(length)) { \
             (s)[(i)++]=(uint16_t)(((c)>>10)+0xd7c0); \
             (s)[(i)++]=(uint16_t)(((c)&0x3ff)|0xdc00); \
-        } else /* not enough space */ { \
-            (s)[(i)++]=UTF_ERROR_VALUE; \
+        } അല്ലെങ്കിൽ /* not enough space */ { \
+            (s)[(i)++]=UTF_ERROR_മൂല്യം; \
         } \
-    } else /* c>0x10ffff, write error value */ { \
-        (s)[(i)++]=UTF_ERROR_VALUE; \
+    } അല്ലെങ്കിൽ /* c>0x10ffff, write error value */ { \
+        (s)[(i)++]=UTF_ERROR_മൂല്യം; \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -718,14 +718,14 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 /** @deprecated ICU 2.4. Renamed to U16_PREV_UNSAFE, see utf_old.h. */
 #define UTF16_PREV_CHAR_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[--(i)]; \
-    if(UTF_IS_SECOND_SURROGATE(c)) { \
-        (c)=UTF16_GET_PAIR_VALUE((s)[--(i)], (c)); \
+    എങ്കിൽ(UTF_IS_SECOND_SURROGATE(c)) { \
+        (c)=UTF16_GET_PAIR_മൂല്യം((s)[--(i)], (c)); \
     } \
 } UPRV_BLOCK_MACRO_END
 
 /** @deprecated ICU 2.4. Renamed to U16_BACK_1_UNSAFE, see utf_old.h. */
 #define UTF16_BACK_1_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    if(UTF_IS_SECOND_SURROGATE((s)[--(i)])) { \
+    എങ്കിൽ(UTF_IS_SECOND_SURROGATE((s)[--(i)])) { \
         --(i); \
     } \
 } UPRV_BLOCK_MACRO_END
@@ -733,7 +733,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 /** @deprecated ICU 2.4. Renamed to U16_BACK_N_UNSAFE, see utf_old.h. */
 #define UTF16_BACK_N_UNSAFE(s, i, n) UPRV_BLOCK_MACRO_BEGIN { \
     int32_t __N=(n); \
-    while(__N>0) { \
+    ആകുമ്പോൾ(__N>0) { \
         UTF16_BACK_1_UNSAFE(s, i); \
         --__N; \
     } \
@@ -741,7 +741,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 
 /** @deprecated ICU 2.4. Renamed to U16_SET_CP_LIMIT_UNSAFE, see utf_old.h. */
 #define UTF16_SET_CHAR_LIMIT_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    if(UTF_IS_FIRST_SURROGATE((s)[(i)-1])) { \
+    എങ്കിൽ(UTF_IS_FIRST_SURROGATE((s)[(i)-1])) { \
         ++(i); \
     } \
 } UPRV_BLOCK_MACRO_END
@@ -749,19 +749,19 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 /** @deprecated ICU 2.4. Use U16_PREV instead, see utf_old.h. */
 #define UTF16_PREV_CHAR_SAFE(s, start, i, c, strict) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[--(i)]; \
-    if(UTF_IS_SECOND_SURROGATE(c)) { \
+    എങ്കിൽ(UTF_IS_SECOND_SURROGATE(c)) { \
         uint16_t __c2; \
-        if((i)>(start) && UTF_IS_FIRST_SURROGATE(__c2=(s)[(i)-1])) { \
+        എങ്കിൽ((i)>(start) && UTF_IS_FIRST_SURROGATE(__c2=(s)[(i)-1])) { \
             --(i); \
-            (c)=UTF16_GET_PAIR_VALUE(__c2, (c)); \
+            (c)=UTF16_GET_PAIR_മൂല്യം(__c2, (c)); \
             /* strict: ((c)&0xfffe)==0xfffe is caught by UTF_IS_ERROR() and UTF_IS_UNICODE_CHAR() */ \
-        } else if(strict) {\
+        } അല്ലെങ്കിൽ എങ്കിൽ(strict) {\
             /* unmatched second surrogate */ \
-            (c)=UTF_ERROR_VALUE; \
+            (c)=UTF_ERROR_മൂല്യം; \
         } \
-    } else if((strict) && !UTF_IS_UNICODE_CHAR(c)) { \
+    } അല്ലെങ്കിൽ എങ്കിൽ((strict) && !UTF_IS_UNICODE_CHAR(c)) { \
         /* unmatched first surrogate or other non-character */ \
-        (c)=UTF_ERROR_VALUE; \
+        (c)=UTF_ERROR_മൂല്യം; \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -836,8 +836,8 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
 #define UTF32_GET_CHAR_SAFE(s, start, i, length, c, strict) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[i]; \
-    if(!UTF32_IS_SAFE(c, strict)) { \
-        (c)=UTF_ERROR_VALUE; \
+    എങ്കിൽ(!UTF32_IS_SAFE(c, strict)) { \
+        (c)=UTF_ERROR_മൂല്യം; \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -870,16 +870,16 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
 #define UTF32_NEXT_CHAR_SAFE(s, i, length, c, strict) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[(i)++]; \
-    if(!UTF32_IS_SAFE(c, strict)) { \
-        (c)=UTF_ERROR_VALUE; \
+    എങ്കിൽ(!UTF32_IS_SAFE(c, strict)) { \
+        (c)=UTF_ERROR_മൂല്യം; \
     } \
 } UPRV_BLOCK_MACRO_END
 
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
 #define UTF32_APPEND_CHAR_SAFE(s, i, length, c) UPRV_BLOCK_MACRO_BEGIN { \
-    if((uint32_t)(c)<=0x10ffff) { \
+    എങ്കിൽ((uint32_t)(c)<=0x10ffff) { \
         (s)[(i)++]=(c); \
-    } else /* c>0x10ffff, write 0xfffd */ { \
+    } അല്ലെങ്കിൽ /* c>0x10ffff, write 0xfffd */ { \
         (s)[(i)++]=0xfffd; \
     } \
 } UPRV_BLOCK_MACRO_END
@@ -891,7 +891,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
 #define UTF32_FWD_N_SAFE(s, i, length, n) UPRV_BLOCK_MACRO_BEGIN { \
-    if(((i)+=(n))>(length)) { \
+    എങ്കിൽ(((i)+=(n))>(length)) { \
         (i)=(length); \
     } \
 } UPRV_BLOCK_MACRO_END
@@ -924,8 +924,8 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
 #define UTF32_PREV_CHAR_SAFE(s, start, i, c, strict) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[--(i)]; \
-    if(!UTF32_IS_SAFE(c, strict)) { \
-        (c)=UTF_ERROR_VALUE; \
+    എങ്കിൽ(!UTF32_IS_SAFE(c, strict)) { \
+        (c)=UTF_ERROR_മൂല്യം; \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -937,7 +937,7 @@ U_CFUNC U_IMPORT const uint8_t utf8_countTrailBytes[];
 /** @deprecated ICU 2.4. Obsolete, see utf_old.h. */
 #define UTF32_BACK_N_SAFE(s, start, i, n) UPRV_BLOCK_MACRO_BEGIN { \
     (i)-=(n); \
-    if((i)<(start)) { \
+    എങ്കിൽ((i)<(start)) { \
         (i)=(start); \
     } \
 } UPRV_BLOCK_MACRO_END

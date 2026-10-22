@@ -10,124 +10,124 @@
 * Since: ICU 2.4
 **********************************************************************
 */
-#include "utypeinfo.h"  // for 'typeid' to work 
+#അന്തര്ഭാവ "utypeinfo.h"  // for 'typeid' to work 
 
-#include "unicode/ustring.h"
-#include "unicode/strenum.h"
-#include "unicode/putil.h"
-#include "uenumimp.h"
-#include "ustrenum.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "uassert.h"
+#അന്തര്ഭാവ "unicode/ustring.h"
+#അന്തര്ഭാവ "unicode/strenum.h"
+#അന്തര്ഭാവ "unicode/putil.h"
+#അന്തര്ഭാവ "uenumimp.h"
+#അന്തര്ഭാവ "ustrenum.h"
+#അന്തര്ഭാവ "cstring.h"
+#അന്തര്ഭാവ "cmemory.h"
+#അന്തര്ഭാവ "uassert.h"
 
 U_NAMESPACE_BEGIN
 // StringEnumeration implementation ---------------------------------------- ***
 
 StringEnumeration::StringEnumeration()
-    : chars(charsBuffer), charsCapacity(sizeof(charsBuffer)) {
+    : chars(charsBuffer), charsCapacity(വലുപ്പം(charsBuffer)) {
 }
 
 StringEnumeration::~StringEnumeration() {
-    if (chars != nullptr && chars != charsBuffer) {
+    എങ്കിൽ (chars != nullptr && chars != charsBuffer) {
         uprv_free(chars);
     }
 }
 
 // StringEnumeration base class clone() default implementation, does not clone
 StringEnumeration *
-StringEnumeration::clone() const {
-  return nullptr;
+StringEnumeration::clone() സ്ഥിരം {
+  തിരികെ nullptr;
 }
 
-const char*
+സ്ഥിരം അക്ഷരം*
 StringEnumeration::next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND {
-    const UnicodeString *s=snext(status);
-    if(U_SUCCESS(status) && s!=nullptr) {
+    സ്ഥിരം UnicodeString *s=snext(status);
+    എങ്കിൽ(U_SUCCESS(status) && s!=nullptr) {
         unistr=*s;
         ensureCharsCapacity(unistr.length()+1, status);
-        if(U_SUCCESS(status)) {
-            if(resultLength!=nullptr) {
+        എങ്കിൽ(U_SUCCESS(status)) {
+            എങ്കിൽ(resultLength!=nullptr) {
                 *resultLength=unistr.length();
             }
             unistr.extract(0, INT32_MAX, chars, charsCapacity, US_INV);
-            return chars;
+            തിരികെ chars;
         }
     }
 
-    return nullptr;
+    തിരികെ nullptr;
 }
 
-const char16_t*
+സ്ഥിരം char16_t*
 StringEnumeration::unext(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND {
-    const UnicodeString *s=snext(status);
-    if(U_SUCCESS(status) && s!=nullptr) {
+    സ്ഥിരം UnicodeString *s=snext(status);
+    എങ്കിൽ(U_SUCCESS(status) && s!=nullptr) {
         unistr=*s;
-        if(resultLength!=nullptr) {
+        എങ്കിൽ(resultLength!=nullptr) {
             *resultLength=unistr.length();
         }
-        return unistr.getTerminatedBuffer();
+        തിരികെ unistr.getTerminatedBuffer();
     }
 
-    return nullptr;
+    തിരികെ nullptr;
 }
 
-const UnicodeString*
+സ്ഥിരം UnicodeString*
 StringEnumeration::snext(UErrorCode& status) U_LIFETIME_BOUND {
     int32_t length;
-    const char *s=next(&length, status);
-    return setChars(s, length, status);
+    സ്ഥിരം അക്ഷരം *s=next(&length, status);
+    തിരികെ setChars(s, length, status);
 }
 
-void
+ശൂന്യം
 StringEnumeration::ensureCharsCapacity(int32_t capacity, UErrorCode &status) {
-    if(U_SUCCESS(status) && capacity>charsCapacity) {
-        if(capacity<(charsCapacity+charsCapacity/2)) {
+    എങ്കിൽ(U_SUCCESS(status) && capacity>charsCapacity) {
+        എങ്കിൽ(capacity<(charsCapacity+charsCapacity/2)) {
             // avoid allocation thrashing
             capacity=charsCapacity+charsCapacity/2;
         }
-        if(chars!=charsBuffer) {
+        എങ്കിൽ(chars!=charsBuffer) {
             uprv_free(chars);
         }
-        chars = static_cast<char*>(uprv_malloc(capacity));
-        if(chars==nullptr) {
+        chars = static_cast<അക്ഷരം*>(uprv_malloc(capacity));
+        എങ്കിൽ(chars==nullptr) {
             chars=charsBuffer;
-            charsCapacity=sizeof(charsBuffer);
+            charsCapacity=വലുപ്പം(charsBuffer);
             status=U_MEMORY_ALLOCATION_ERROR;
-        } else {
+        } അല്ലെങ്കിൽ {
             charsCapacity=capacity;
         }
     }
 }
 
 UnicodeString*
-StringEnumeration::setChars(const char* s, int32_t length, UErrorCode& status) U_LIFETIME_BOUND {
-    if(U_SUCCESS(status) && s!=nullptr) {
-        if(length<0) {
+StringEnumeration::setChars(സ്ഥിരം അക്ഷരം* s, int32_t length, UErrorCode& status) U_LIFETIME_BOUND {
+    എങ്കിൽ(U_SUCCESS(status) && s!=nullptr) {
+        എങ്കിൽ(length<0) {
             length = static_cast<int32_t>(uprv_strlen(s));
         }
 
         char16_t *buffer=unistr.getBuffer(length+1);
-        if(buffer!=nullptr) {
+        എങ്കിൽ(buffer!=nullptr) {
             u_charsToUChars(s, buffer, length);
             buffer[length]=0;
             unistr.releaseBuffer(length);
-            return &unistr;
-        } else {
+            തിരികെ &unistr;
+        } അല്ലെങ്കിൽ {
             status=U_MEMORY_ALLOCATION_ERROR;
         }
     }
 
-    return nullptr;
+    തിരികെ nullptr;
 }
-bool
-StringEnumeration::operator==(const StringEnumeration& that)const {
-    return typeid(*this) == typeid(that); 
+തർക്കം
+StringEnumeration::operator==(സ്ഥിരം StringEnumeration& that)സ്ഥിരം {
+    തിരികെ typeid(*ഇത്) == typeid(that); 
 }
 
-bool
-StringEnumeration::operator!=(const StringEnumeration& that)const {
-    return !operator==(that);
+തർക്കം
+StringEnumeration::operator!=(സ്ഥിരം StringEnumeration& that)സ്ഥിരം {
+    തിരികെ !operator==(that);
 }
 
 // UStringEnumeration implementation --------------------------------------- ***
@@ -135,17 +135,17 @@ StringEnumeration::operator!=(const StringEnumeration& that)const {
 UStringEnumeration * U_EXPORT2
 UStringEnumeration::fromUEnumeration(
         UEnumeration *uenumToAdopt, UErrorCode &status) {
-    if (U_FAILURE(status)) {
+    എങ്കിൽ (U_FAILURE(status)) {
         uenum_close(uenumToAdopt);
-        return nullptr;
+        തിരികെ nullptr;
     }
-    UStringEnumeration *result = new UStringEnumeration(uenumToAdopt);
-    if (result == nullptr) {
+    UStringEnumeration *result = പുതിയ UStringEnumeration(uenumToAdopt);
+    എങ്കിൽ (result == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
         uenum_close(uenumToAdopt);
-        return nullptr;
+        തിരികെ nullptr;
     }
-    return result;
+    തിരികെ result;
 }
 
 UStringEnumeration::UStringEnumeration(UEnumeration* _uenum) :
@@ -157,24 +157,24 @@ UStringEnumeration::~UStringEnumeration() {
     uenum_close(uenum);
 }
 
-int32_t UStringEnumeration::count(UErrorCode& status) const {
-    return uenum_count(uenum, &status);
+int32_t UStringEnumeration::count(UErrorCode& status) സ്ഥിരം {
+    തിരികെ uenum_എണ്ണം(uenum, &status);
 }
 
-const char* UStringEnumeration::next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND {
-    return uenum_next(uenum, resultLength, &status);
+സ്ഥിരം അക്ഷരം* UStringEnumeration::next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND {
+    തിരികെ uenum_next(uenum, resultLength, &status);
 }
 
-const UnicodeString* UStringEnumeration::snext(UErrorCode& status) U_LIFETIME_BOUND {
+സ്ഥിരം UnicodeString* UStringEnumeration::snext(UErrorCode& status) U_LIFETIME_BOUND {
     int32_t length;
-    const char16_t* str = uenum_unext(uenum, &length, &status);
-    if (str == nullptr || U_FAILURE(status)) {
-        return nullptr;
+    സ്ഥിരം char16_t* str = uenum_unext(uenum, &length, &status);
+    എങ്കിൽ (str == nullptr || U_FAILURE(status)) {
+        തിരികെ nullptr;
     }
-    return &unistr.setTo(str, length);
+    തിരികെ &unistr.setTo(str, length);
 }
 
-void UStringEnumeration::reset(UErrorCode& status) {
+ശൂന്യം UStringEnumeration::reset(UErrorCode& status) {
     uenum_reset(uenum, &status);
 }
 
@@ -190,7 +190,7 @@ U_CDECL_BEGIN
 /**
  * Wrapper API to make StringEnumeration look like UEnumeration.
  */
-static void U_CALLCONV
+സ്ഥിതം ശൂന്യം U_CALLCONV
 ustrenum_close(UEnumeration* en) {
     delete THIS(en);
     uprv_free(en);
@@ -199,39 +199,39 @@ ustrenum_close(UEnumeration* en) {
 /**
  * Wrapper API to make StringEnumeration look like UEnumeration.
  */
-static int32_t U_CALLCONV
-ustrenum_count(UEnumeration* en,
+സ്ഥിതം int32_t U_CALLCONV
+ustrenum_എണ്ണം(UEnumeration* en,
                UErrorCode* ec)
 {
-    return THIS(en)->count(*ec);
+    തിരികെ THIS(en)->count(*ec);
 }
 
 /**
  * Wrapper API to make StringEnumeration look like UEnumeration.
  */
-static const char16_t* U_CALLCONV
+സ്ഥിതം സ്ഥിരം char16_t* U_CALLCONV
 ustrenum_unext(UEnumeration* en U_LIFETIME_BOUND,
                int32_t* resultLength,
                UErrorCode* ec)
 {
-    return THIS(en)->unext(resultLength, *ec);
+    തിരികെ THIS(en)->unext(resultLength, *ec);
 }
 
 /**
  * Wrapper API to make StringEnumeration look like UEnumeration.
  */
-static const char* U_CALLCONV
+സ്ഥിതം സ്ഥിരം അക്ഷരം* U_CALLCONV
 ustrenum_next(UEnumeration* en U_LIFETIME_BOUND,
               int32_t* resultLength,
               UErrorCode* ec)
 {
-    return THIS(en)->next(resultLength, *ec);
+    തിരികെ THIS(en)->next(resultLength, *ec);
 }
 
 /**
  * Wrapper API to make StringEnumeration look like UEnumeration.
  */
-static void U_CALLCONV
+സ്ഥിതം ശൂന്യം U_CALLCONV
 ustrenum_reset(UEnumeration* en,
                UErrorCode* ec)
 {
@@ -242,11 +242,11 @@ ustrenum_reset(UEnumeration* en,
  * Pseudo-vtable for UEnumeration wrapper around StringEnumeration.
  * The StringEnumeration pointer will be stored in 'context'.
  */
-static const UEnumeration USTRENUM_VT = {
+സ്ഥിതം സ്ഥിരം UEnumeration USTRENUM_VT = {
     nullptr,
     nullptr, // store StringEnumeration pointer here
     ustrenum_close,
-    ustrenum_count,
+    ustrenum_എണ്ണം,
     ustrenum_unext,
     ustrenum_next,
     ustrenum_reset
@@ -262,93 +262,93 @@ U_CDECL_END
 U_CAPI UEnumeration* U_EXPORT2
 uenum_openFromStringEnumeration(icu::StringEnumeration* adopted, UErrorCode* ec) { 
     UEnumeration* result = nullptr;
-    if (U_SUCCESS(*ec) && adopted != nullptr) {
-        result = (UEnumeration*) uprv_malloc(sizeof(UEnumeration));
-        if (result == nullptr) {
+    എങ്കിൽ (U_SUCCESS(*ec) && adopted != nullptr) {
+        result = (UEnumeration*) uprv_malloc(വലുപ്പം(UEnumeration));
+        എങ്കിൽ (result == nullptr) {
             *ec = U_MEMORY_ALLOCATION_ERROR;
-        } else {
-            uprv_memcpy(result, &USTRENUM_VT, sizeof(USTRENUM_VT));
+        } അല്ലെങ്കിൽ {
+            uprv_memcpy(result, &USTRENUM_VT, വലുപ്പം(USTRENUM_VT));
             result->context = adopted;
         }
     }
-    if (result == nullptr) {
+    എങ്കിൽ (result == nullptr) {
         delete adopted;
     }
-    return result;
+    തിരികെ result;
 }
 
 // C wrapper --------------------------------------------------------------- ***
 
 U_CDECL_BEGIN
 
-typedef struct UCharStringEnumeration {
+തരനിർവചനം ഘടന UCharStringEnumeration {
     UEnumeration uenum;
     int32_t index, count;
 } UCharStringEnumeration;
 
-static void U_CALLCONV
+സ്ഥിതം ശൂന്യം U_CALLCONV
 ucharstrenum_close(UEnumeration* en) {
     uprv_free(en);
 }
 
-static int32_t U_CALLCONV
-ucharstrenum_count(UEnumeration* en,
+സ്ഥിതം int32_t U_CALLCONV
+ucharstrenum_എണ്ണം(UEnumeration* en,
                    UErrorCode* /*ec*/) {
-    return ((UCharStringEnumeration*)en)->count;
+    തിരികെ ((UCharStringEnumeration*)en)->count;
 }
 
-static const char16_t* U_CALLCONV
+സ്ഥിതം സ്ഥിരം char16_t* U_CALLCONV
 ucharstrenum_unext(UEnumeration* en U_LIFETIME_BOUND,
                   int32_t* resultLength,
                   UErrorCode* /*ec*/) {
     UCharStringEnumeration *e = (UCharStringEnumeration*) en;
-    if (e->index >= e->count) {
-        return nullptr;
+    എങ്കിൽ (e->index >= e->count) {
+        തിരികെ nullptr;
     }
-    const char16_t* result = ((const char16_t**)e->uenum.context)[e->index++];
-    if (resultLength) {
+    സ്ഥിരം char16_t* result = ((സ്ഥിരം char16_t**)e->uenum.context)[e->index++];
+    എങ്കിൽ (resultLength) {
         *resultLength = u_strlen(result);
     }
-    return result;
+    തിരികെ result;
 }
 
 
-static const char* U_CALLCONV
+സ്ഥിതം സ്ഥിരം അക്ഷരം* U_CALLCONV
 ucharstrenum_next(UEnumeration* en U_LIFETIME_BOUND,
                   int32_t* resultLength,
                   UErrorCode* /*ec*/) {
     UCharStringEnumeration *e = (UCharStringEnumeration*) en;
-    if (e->index >= e->count) {
-        return nullptr;
+    എങ്കിൽ (e->index >= e->count) {
+        തിരികെ nullptr;
     }
-    const char* result = ((const char**)e->uenum.context)[e->index++];
-    if (resultLength) {
+    സ്ഥിരം അക്ഷരം* result = ((സ്ഥിരം അക്ഷരം**)e->uenum.context)[e->index++];
+    എങ്കിൽ (resultLength) {
         *resultLength = (int32_t)uprv_strlen(result);
     }
-    return result;
+    തിരികെ result;
 }
 
-static void U_CALLCONV
+സ്ഥിതം ശൂന്യം U_CALLCONV
 ucharstrenum_reset(UEnumeration* en,
                    UErrorCode* /*ec*/) {
     ((UCharStringEnumeration*)en)->index = 0;
 }
 
-static const UEnumeration UCHARSTRENUM_VT = {
+സ്ഥിതം സ്ഥിരം UEnumeration UCHARSTRENUM_VT = {
     nullptr,
     nullptr, // store StringEnumeration pointer here
     ucharstrenum_close,
-    ucharstrenum_count,
+    ucharstrenum_എണ്ണം,
     uenum_unextDefault,
     ucharstrenum_next,
     ucharstrenum_reset
 };
 
-static const UEnumeration UCHARSTRENUM_U_VT = {
+സ്ഥിതം സ്ഥിരം UEnumeration UCHARSTRENUM_U_VT = {
     nullptr,
     nullptr, // store StringEnumeration pointer here
     ucharstrenum_close,
-    ucharstrenum_count,
+    ucharstrenum_എണ്ണം,
     ucharstrenum_unext,
     uenum_nextDefault,
     ucharstrenum_reset
@@ -357,43 +357,43 @@ static const UEnumeration UCHARSTRENUM_U_VT = {
 U_CDECL_END
 
 U_CAPI UEnumeration* U_EXPORT2
-uenum_openCharStringsEnumeration(U_LIFETIME_BOUND const char* const strings[],
+uenum_openCharStringsEnumeration(U_LIFETIME_BOUND സ്ഥിരം അക്ഷരം* സ്ഥിരം strings[],
                                  int32_t count,
                                  UErrorCode* ec) {
     UCharStringEnumeration* result = nullptr;
-    if (U_SUCCESS(*ec) && count >= 0 && (count == 0 || strings != nullptr)) {
-        result = (UCharStringEnumeration*) uprv_malloc(sizeof(UCharStringEnumeration));
-        if (result == nullptr) {
+    എങ്കിൽ (U_SUCCESS(*ec) && count >= 0 && (count == 0 || strings != nullptr)) {
+        result = (UCharStringEnumeration*) uprv_malloc(വലുപ്പം(UCharStringEnumeration));
+        എങ്കിൽ (result == nullptr) {
             *ec = U_MEMORY_ALLOCATION_ERROR;
-        } else {
-            U_ASSERT((char*)result==(char*)(&result->uenum));
-            uprv_memcpy(result, &UCHARSTRENUM_VT, sizeof(UCHARSTRENUM_VT));
-            result->uenum.context = (void*)strings;
+        } അല്ലെങ്കിൽ {
+            U_ASSERT((അക്ഷരം*)result==(അക്ഷരം*)(&result->uenum));
+            uprv_memcpy(result, &UCHARSTRENUM_VT, വലുപ്പം(UCHARSTRENUM_VT));
+            result->uenum.context = (ശൂന്യം*)strings;
             result->index = 0;
             result->count = count;
         }
     }
-    return (UEnumeration*) result;
+    തിരികെ (UEnumeration*) result;
 }
 
 U_CAPI UEnumeration* U_EXPORT2
-uenum_openUCharStringsEnumeration(U_LIFETIME_BOUND const char16_t* const strings[],
+uenum_openUCharStringsEnumeration(U_LIFETIME_BOUND സ്ഥിരം char16_t* സ്ഥിരം strings[],
                                   int32_t count,
                                   UErrorCode* ec) {
     UCharStringEnumeration* result = nullptr;
-    if (U_SUCCESS(*ec) && count >= 0 && (count == 0 || strings != nullptr)) {
-        result = (UCharStringEnumeration*) uprv_malloc(sizeof(UCharStringEnumeration));
-        if (result == nullptr) {
+    എങ്കിൽ (U_SUCCESS(*ec) && count >= 0 && (count == 0 || strings != nullptr)) {
+        result = (UCharStringEnumeration*) uprv_malloc(വലുപ്പം(UCharStringEnumeration));
+        എങ്കിൽ (result == nullptr) {
             *ec = U_MEMORY_ALLOCATION_ERROR;
-        } else {
-            U_ASSERT((char*)result==(char*)(&result->uenum));
-            uprv_memcpy(result, &UCHARSTRENUM_U_VT, sizeof(UCHARSTRENUM_U_VT));
-            result->uenum.context = (void*)strings;
+        } അല്ലെങ്കിൽ {
+            U_ASSERT((അക്ഷരം*)result==(അക്ഷരം*)(&result->uenum));
+            uprv_memcpy(result, &UCHARSTRENUM_U_VT, വലുപ്പം(UCHARSTRENUM_U_VT));
+            result->uenum.context = (ശൂന്യം*)strings;
             result->index = 0;
             result->count = count;
         }
     }
-    return (UEnumeration*) result;
+    തിരികെ (UEnumeration*) result;
 }
 
 

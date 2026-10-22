@@ -30,39 +30,39 @@
      l = lang, C = ctry, M = charmap, V = variant
 */
 
-#include <algorithm>
-#include <optional>
-#include <string_view>
+#അന്തര്ഭാവ <algorithm>
+#അന്തര്ഭാവ <optional>
+#അന്തര്ഭാവ <string_view>
 
-#include "unicode/bytestream.h"
-#include "unicode/errorcode.h"
-#include "unicode/stringpiece.h"
-#include "unicode/utypes.h"
-#include "unicode/ustring.h"
-#include "unicode/uloc.h"
+#അന്തര്ഭാവ "unicode/bytestream.h"
+#അന്തര്ഭാവ "unicode/errorcode.h"
+#അന്തര്ഭാവ "unicode/stringpiece.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/ustring.h"
+#അന്തര്ഭാവ "unicode/uloc.h"
 
-#include "bytesinkutil.h"
-#include "putilimp.h"
-#include "ustr_imp.h"
-#include "ulocimp.h"
-#include "umutex.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "locmap.h"
-#include "uarrsort.h"
-#include "uenumimp.h"
-#include "uassert.h"
-#include "charstr.h"
+#അന്തര്ഭാവ "bytesinkutil.h"
+#അന്തര്ഭാവ "putilimp.h"
+#അന്തര്ഭാവ "ustr_imp.h"
+#അന്തര്ഭാവ "ulocimp.h"
+#അന്തര്ഭാവ "umutex.h"
+#അന്തര്ഭാവ "cstring.h"
+#അന്തര്ഭാവ "cmemory.h"
+#അന്തര്ഭാവ "locmap.h"
+#അന്തര്ഭാവ "uarrsort.h"
+#അന്തര്ഭാവ "uenumimp.h"
+#അന്തര്ഭാവ "uassert.h"
+#അന്തര്ഭാവ "charstr.h"
 
 U_NAMESPACE_USE
 
 /* ### Declarations **************************************************/
 
 /* Locale stuff from locid.cpp */
-U_CFUNC void locale_set_default(const char *id);
-U_CFUNC const char *locale_get_default();
+U_CFUNC ശൂന്യം locale_set_default(സ്ഥിരം അക്ഷരം *id);
+U_CFUNC സ്ഥിരം അക്ഷരം *locale_get_default();
 
-namespace {
+നാമാകാശ {
 
 /* ### Data tables **************************************************/
 
@@ -100,7 +100,7 @@ namespace {
 /* Generated using org.unicode.cldr.icu.GenerateISO639LanguageTables */
 /* ISO639 table version is 20150505 */
 /* Subsequent hand addition of selected languages */
-constexpr const char* LANGUAGES[] = {
+constexpr സ്ഥിരം അക്ഷരം* LANGUAGES[] = {
     "aa", "ab", "ace", "ach", "ada", "ady", "ae", "aeb", "af", "afh", "agq", "ain", "ak", "akk",
     "akz", "ale", "aln", "alt", "am", "an", "ang", "anp", "ar", "arc", "arn", "aro", "arp",
     "arq", "ars", "arw", "ary", "arz", "as", "asa", "ase", "ast", "av", "avk", "awa", "ay",
@@ -155,10 +155,10 @@ nullptr,
 nullptr
 };
 
-constexpr const char* DEPRECATED_LANGUAGES[]={
+constexpr സ്ഥിരം അക്ഷരം* DEPRECATED_LANGUAGES[]={
     "in", "iw", "ji", "jw", "mo", nullptr, nullptr
 };
-constexpr const char* REPLACEMENT_LANGUAGES[]={
+constexpr സ്ഥിരം അക്ഷരം* REPLACEMENT_LANGUAGES[]={
     "id", "he", "yi", "jv", "ro", nullptr, nullptr
 };
 
@@ -181,7 +181,7 @@ constexpr const char* REPLACEMENT_LANGUAGES[]={
 /* Generated using org.unicode.cldr.icu.GenerateISO639LanguageTables */
 /* ISO639 table version is 20150505 */
 /* Subsequent hand addition of selected languages */
-constexpr const char* LANGUAGES_3[] = {
+constexpr സ്ഥിരം അക്ഷരം* LANGUAGES_3[] = {
     "aar", "abk", "ace", "ach", "ada", "ady", "ave", "aeb", "afr", "afh", "agq", "ain", "aka",
     "akk", "akz", "ale", "aln", "alt", "amh", "arg", "ang", "anp", "ara", "arc", "arn", "aro",
     "arp", "arq", "ars", "arw", "ary", "arz", "asm", "asa", "ase", "ast", "ava", "avk", "awa",
@@ -262,7 +262,7 @@ nullptr
  * RO(ROM) is now RO(ROU) according to
  * http://www.iso.org/iso/en/prods-services/iso3166ma/03updates-on-iso-3166/nlv3e-rou.html
  */
-constexpr const char* COUNTRIES[] = {
+constexpr സ്ഥിരം അക്ഷരം* COUNTRIES[] = {
     "AD",  "AE",  "AF",  "AG",  "AI",  "AL",  "AM",
     "AO",  "AQ",  "AR",  "AS",  "AT",  "AU",  "AW",  "AX",  "AZ",
     "BA",  "BB",  "BD",  "BE",  "BF",  "BG",  "BH",  "BI",
@@ -298,10 +298,10 @@ nullptr,
 nullptr
 };
 
-constexpr const char* DEPRECATED_COUNTRIES[] = {
+constexpr സ്ഥിരം അക്ഷരം* DEPRECATED_COUNTRIES[] = {
     "AN", "BU", "CS", "DD", "DY", "FX", "HV", "NH", "RH", "SU", "TP", "UK", "VD", "YD", "YU", "ZR", nullptr, nullptr /* deprecated country list */
 };
-constexpr const char* REPLACEMENT_COUNTRIES[] = {
+constexpr സ്ഥിരം അക്ഷരം* REPLACEMENT_COUNTRIES[] = {
 /*  "AN", "BU", "CS", "DD", "DY", "FX", "HV", "NH", "RH", "SU", "TP", "UK", "VD", "YD", "YU", "ZR" */
     "CW", "MM", "RS", "DE", "BJ", "FR", "BF", "VU", "ZW", "RU", "TL", "GB", "VN", "YE", "RS", "CD", nullptr, nullptr  /* replacement country codes */
 };
@@ -319,7 +319,7 @@ constexpr const char* REPLACEMENT_COUNTRIES[] = {
  * second list, and another nullptr entry.  The two lists correspond to
  * the two lists in COUNTRIES.
  */
-constexpr const char* COUNTRIES_3[] = {
+constexpr സ്ഥിരം അക്ഷരം* COUNTRIES_3[] = {
 /*  "AD",  "AE",  "AF",  "AG",  "AI",  "AL",  "AM",      */
     "AND", "ARE", "AFG", "ATG", "AIA", "ALB", "ARM",
 /*  "AO",  "AQ",  "AR",  "AS",  "AT",  "AU",  "AW",  "AX",  "AZ",     */
@@ -386,9 +386,9 @@ nullptr,
 nullptr
 };
 
-typedef struct CanonicalizationMap {
-    const char *id;          /* input ID */
-    const char *canonicalID; /* canonicalized output ID */
+തരനിർവചനം ഘടന CanonicalizationMap {
+    സ്ഥിരം അക്ഷരം *id;          /* input ID */
+    സ്ഥിരം അക്ഷരം *canonicalID; /* canonicalized output ID */
 } CanonicalizationMap;
 
 /**
@@ -416,65 +416,65 @@ int32_t getShortestSubtagLength(std::string_view localeID) {
     int32_t length = localeIDLength;
     int32_t tmpLength = 0;
     int32_t i;
-    bool reset = true;
+    തർക്കം reset = സത്യം;
 
-    for (i = 0; i < localeIDLength; i++) {
-        if (localeID[i] != '_' && localeID[i] != '-') {
-            if (reset) {
+    വേണ്ടി (i = 0; i < localeIDLength; i++) {
+        എങ്കിൽ (localeID[i] != '_' && localeID[i] != '-') {
+            എങ്കിൽ (reset) {
                 tmpLength = 0;
-                reset = false;
+                reset = അസത്യം;
             }
             tmpLength++;
-        } else {
-            if (tmpLength != 0 && tmpLength < length) {
+        } അല്ലെങ്കിൽ {
+            എങ്കിൽ (tmpLength != 0 && tmpLength < length) {
                 length = tmpLength;
             }
-            reset = true;
+            reset = സത്യം;
         }
     }
 
-    return length;
+    തിരികെ length;
 }
 /* Test if the locale id has BCP47 u extension and does not have '@' */
-inline bool _hasBCP47Extension(std::string_view id) {
-    return id.find('@') == std::string_view::npos && getShortestSubtagLength(id) == 1;
+വരിയിൽ തർക്കം _hasBCP47Extension(std::string_view id) {
+    തിരികെ id.find('@') == std::string_view::npos && getShortestSubtagLength(id) == 1;
 }
 
 /* ### Keywords **************************************************/
-inline bool UPRV_ISDIGIT(char c) { return c >= '0' && c <= '9'; }
-inline bool UPRV_ISALPHANUM(char c) { return uprv_isASCIILetter(c) || UPRV_ISDIGIT(c); }
+വരിയിൽ തർക്കം UPRV_ISDIGIT(അക്ഷരം c) { തിരികെ c >= '0' && c <= '9'; }
+വരിയിൽ തർക്കം UPRV_ISALPHANUM(അക്ഷരം c) { തിരികെ uprv_isASCIILetter(c) || UPRV_ISDIGIT(c); }
 /* Punctuation/symbols allowed in legacy key values */
-inline bool UPRV_OK_VALUE_PUNCTUATION(char c) { return c == '_' || c == '-' || c == '+' || c == '/'; }
+വരിയിൽ തർക്കം UPRV_OK_മൂല്യം_PUNCTUATION(അക്ഷരം c) { തിരികെ c == '_' || c == '-' || c == '+' || c == '/'; }
 
 }  // namespace
 
 #define ULOC_KEYWORD_BUFFER_LEN 25
 #define ULOC_MAX_NO_KEYWORDS 25
 
-U_CAPI const char* U_EXPORT2
+U_CAPI സ്ഥിരം അക്ഷരം* U_EXPORT2
 locale_getKeywordsStart(std::string_view localeID U_LIFETIME_BOUND) {
-    if (size_t pos = localeID.find('@'); pos != std::string_view::npos) {
-        return localeID.data() + pos;
+    എങ്കിൽ (size_t pos = localeID.find('@'); pos != std::string_view::npos) {
+        തിരികെ localeID.data() + pos;
     }
-#if (U_CHARSET_FAMILY == U_EBCDIC_FAMILY)
-    else {
+#എങ്കിൽ (U_CHARSET_FAMILY == U_EBCDIC_FAMILY)
+    അല്ലെങ്കിൽ {
         /* We do this because the @ sign is variant, and the @ sign used on one
         EBCDIC machine won't be compiled the same way on other EBCDIC based
         machines. */
-        static const uint8_t ebcdicSigns[] = { 0x7C, 0x44, 0x66, 0x80, 0xAC, 0xAE, 0xAF, 0xB5, 0xEC, 0xEF, 0x00 };
-        const uint8_t *charToFind = ebcdicSigns;
-        while(*charToFind) {
-            if (size_t pos = localeID.find(*charToFind); pos != std::string_view::npos) {
-                return localeID.data() + pos;
+        സ്ഥിതം സ്ഥിരം uint8_t ebcdicSigns[] = { 0x7C, 0x44, 0x66, 0x80, 0xAC, 0xAE, 0xAF, 0xB5, 0xEC, 0xEF, 0x00 };
+        സ്ഥിരം uint8_t *charToFind = ebcdicSigns;
+        ആകുമ്പോൾ(*charToFind) {
+            എങ്കിൽ (size_t pos = localeID.find(*charToFind); pos != std::string_view::npos) {
+                തിരികെ localeID.data() + pos;
             }
             charToFind++;
         }
     }
 #endif
-    return nullptr;
+    തിരികെ nullptr;
 }
 
-namespace {
+നാമാകാശ {
 
 /**
  * @param keywordName incoming name to be canonicalized
@@ -483,171 +483,171 @@ namespace {
  */
 CharString locale_canonKeywordName(std::string_view keywordName, UErrorCode& status)
 {
-  if (U_FAILURE(status)) { return {}; }
+  എങ്കിൽ (U_FAILURE(status)) { തിരികെ {}; }
   CharString result;
 
-  for (char c : keywordName) {
-    if (!UPRV_ISALPHANUM(c)) {
+  വേണ്ടി (അക്ഷരം c : keywordName) {
+    എങ്കിൽ (!UPRV_ISALPHANUM(c)) {
       status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed keyword name */
-      return {};
+      തിരികെ {};
     }
     result.append(uprv_tolower(c), status);
   }
-  if (result.isEmpty()) {
+  എങ്കിൽ (result.isEmpty()) {
     status = U_ILLEGAL_ARGUMENT_ERROR; /* empty keyword name */
-    return {};
+    തിരികെ {};
   }
 
-  return result;
+  തിരികെ result;
 }
 
-typedef struct {
-    char keyword[ULOC_KEYWORD_BUFFER_LEN];
+തരനിർവചനം ഘടന {
+    അക്ഷരം keyword[ULOC_KEYWORD_BUFFER_LEN];
     int32_t keywordLen;
-    const char *valueStart;
-    int32_t valueLen;
+    സ്ഥിരം അക്ഷരം *മൂല്യം_Start;
+    int32_t മൂല്യം_Len;
 } KeywordStruct;
 
 int32_t U_CALLCONV
-compareKeywordStructs(const void * /*context*/, const void *left, const void *right) {
-    const char* leftString = static_cast<const KeywordStruct*>(left)->keyword;
-    const char* rightString = static_cast<const KeywordStruct*>(right)->keyword;
-    return uprv_strcmp(leftString, rightString);
+compareKeywordStructs(സ്ഥിരം ശൂന്യം * /*context*/, സ്ഥിരം ശൂന്യം *left, സ്ഥിരം ശൂന്യം *വലത്) {
+    സ്ഥിരം അക്ഷരം* ഇടത്_String = static_cast<സ്ഥിരം KeywordStruct*>(left)->keyword;
+    സ്ഥിരം അക്ഷരം* വലത്_String = static_cast<സ്ഥിരം KeywordStruct*>(വലത്)->keyword;
+    തിരികെ uprv_strcmp(ഇടത്_String, വലത്_String);
 }
 
 }  // namespace
 
 U_EXPORT CharString
 ulocimp_getKeywords(std::string_view localeID,
-                    char prev,
-                    bool valuesToo,
+                    അക്ഷരം prev,
+                    തർക്കം മൂല്യങ്ങൾ_Too,
                     UErrorCode& status)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
+    തിരികെ ByteSinkUtil::viaByteSinkToCharString(
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getKeywords(localeID,
                                 prev,
                                 sink,
-                                valuesToo,
+                                മൂല്യങ്ങൾ_Too,
                                 status);
         },
         status);
 }
 
-U_EXPORT void
+U_EXPORT ശൂന്യം
 ulocimp_getKeywords(std::string_view localeID,
-                    char prev,
+                    അക്ഷരം prev,
                     ByteSink& sink,
-                    bool valuesToo,
+                    തർക്കം മൂല്യങ്ങൾ_Too,
                     UErrorCode& status)
 {
-    if (U_FAILURE(status)) { return; }
+    എങ്കിൽ (U_FAILURE(status)) { തിരികെ; }
 
     KeywordStruct keywordList[ULOC_MAX_NO_KEYWORDS];
 
     int32_t maxKeywords = ULOC_MAX_NO_KEYWORDS;
-    int32_t numKeywords = 0;
+    int32_t അക്കം_Keywords = 0;
     size_t equalSign = std::string_view::npos;
     size_t semicolon = std::string_view::npos;
     int32_t i = 0, j, n;
 
-    if(prev == '@') { /* start of keyword definition */
+    എങ്കിൽ(prev == '@') { /* start of keyword definition */
         /* we will grab pairs, trim spaces, lowercase keywords, sort and return */
-        do {
-            bool duplicate = false;
+        ചെയ്യുക {
+            തർക്കം duplicate = അസത്യം;
             /* skip leading spaces */
-            while (!localeID.empty() && localeID.front() == ' ') {
+            ആകുമ്പോൾ (!localeID.empty() && localeID.front() == ' ') {
                 localeID.remove_prefix(1);
             }
-            if (localeID.empty()) { /* handle trailing "; " */
-                break;
+            എങ്കിൽ (localeID.empty()) { /* handle trailing "; " */
+                നിർത്തുക;
             }
-            if(numKeywords == maxKeywords) {
+            എങ്കിൽ(അക്കം_Keywords == maxKeywords) {
                 status = U_INTERNAL_PROGRAM_ERROR;
-                return;
+                തിരികെ;
             }
             equalSign = localeID.find('=');
             semicolon = localeID.find(';');
             /* lack of '=' [foo@currency] is illegal */
             /* ';' before '=' [foo@currency;collation=pinyin] is illegal */
-            if (equalSign == std::string_view::npos ||
+            എങ്കിൽ (equalSign == std::string_view::npos ||
                 (semicolon != std::string_view::npos && semicolon < equalSign)) {
                 status = U_INVALID_FORMAT_ERROR;
-                return;
+                തിരികെ;
             }
             /* zero-length keyword is an error. */
-            if (equalSign == 0) {
+            എങ്കിൽ (equalSign == 0) {
                 status = U_INVALID_FORMAT_ERROR;
-                return;
+                തിരികെ;
             }
             /* need to normalize both keyword and keyword name */
-            if (equalSign >= ULOC_KEYWORD_BUFFER_LEN) {
+            എങ്കിൽ (equalSign >= ULOC_KEYWORD_BUFFER_LEN) {
                 /* keyword name too long for internal buffer */
                 status = U_INTERNAL_PROGRAM_ERROR;
-                return;
+                തിരികെ;
             }
-            for (i = 0, n = 0; static_cast<size_t>(i) < equalSign; ++i) {
-                if (localeID[i] != ' ') {
-                    keywordList[numKeywords].keyword[n++] = uprv_tolower(localeID[i]);
+            വേണ്ടി (i = 0, n = 0; static_cast<size_t>(i) < equalSign; ++i) {
+                എങ്കിൽ (localeID[i] != ' ') {
+                    keywordList[അക്കം_Keywords].keyword[n++] = uprv_tolower(localeID[i]);
                 }
             }
 
-            keywordList[numKeywords].keyword[n] = 0;
-            keywordList[numKeywords].keywordLen = n;
+            keywordList[അക്കം_Keywords].keyword[n] = 0;
+            keywordList[അക്കം_Keywords].keywordLen = n;
             /* now grab the value part. First we skip the '=' */
             equalSign++;
             /* then we leading spaces */
-            while (equalSign < localeID.length() && localeID[equalSign] == ' ') {
+            ആകുമ്പോൾ (equalSign < localeID.length() && localeID[equalSign] == ' ') {
                 equalSign++;
             }
 
             /* Premature end or zero-length value */
-            if (equalSign == localeID.length() || equalSign == semicolon) {
+            എങ്കിൽ (equalSign == localeID.length() || equalSign == semicolon) {
                 status = U_INVALID_FORMAT_ERROR;
-                return;
+                തിരികെ;
             }
 
-            keywordList[numKeywords].valueStart = localeID.data() + equalSign;
+            keywordList[അക്കം_Keywords].മൂല്യം_Start = localeID.data() + equalSign;
 
             std::string_view value = localeID;
-            if (semicolon != std::string_view::npos) {
+            എങ്കിൽ (semicolon != std::string_view::npos) {
                 value.remove_suffix(value.length() - semicolon);
                 localeID.remove_prefix(semicolon + 1);
-            } else {
+            } അല്ലെങ്കിൽ {
                 localeID = {};
             }
             value.remove_prefix(equalSign);
-            if (size_t last = value.find_last_not_of(' '); last != std::string_view::npos) {
+            എങ്കിൽ (size_t last = value.find_last_not_of(' '); last != std::string_view::npos) {
                 value.remove_suffix(value.length() - last - 1);
             }
-            keywordList[numKeywords].valueLen = static_cast<int32_t>(value.length());
+            keywordList[അക്കം_Keywords].മൂല്യം_Len = static_cast<int32_t>(value.length());
 
             /* If this is a duplicate keyword, then ignore it */
-            for (j=0; j<numKeywords; ++j) {
-                if (uprv_strcmp(keywordList[j].keyword, keywordList[numKeywords].keyword) == 0) {
-                    duplicate = true;
-                    break;
+            വേണ്ടി (j=0; j<അക്കം_Keywords; ++j) {
+                എങ്കിൽ (uprv_strcmp(keywordList[j].keyword, keywordList[അക്കം_Keywords].keyword) == 0) {
+                    duplicate = സത്യം;
+                    നിർത്തുക;
                 }
             }
-            if (!duplicate) {
-                ++numKeywords;
+            എങ്കിൽ (!duplicate) {
+                ++അക്കം_Keywords;
             }
-        } while (!localeID.empty());
+        } ആകുമ്പോൾ (!localeID.empty());
 
         /* now we have a list of keywords */
         /* we need to sort it */
-        uprv_sortArray(keywordList, numKeywords, sizeof(KeywordStruct), compareKeywordStructs, nullptr, false, &status);
+        uprv_sortArray(keywordList, അക്കം_Keywords, വലുപ്പം(KeywordStruct), compareKeywordStructs, nullptr, അസത്യം, &status);
 
         /* Now construct the keyword part */
-        for(i = 0; i < numKeywords; i++) {
+        വേണ്ടി(i = 0; i < അക്കം_Keywords; i++) {
             sink.Append(keywordList[i].keyword, keywordList[i].keywordLen);
-            if(valuesToo) {
+            എങ്കിൽ(മൂല്യങ്ങൾ_Too) {
                 sink.Append("=", 1);
-                sink.Append(keywordList[i].valueStart, keywordList[i].valueLen);
-                if(i < numKeywords - 1) {
+                sink.Append(keywordList[i].മൂല്യം_Start, keywordList[i].മൂല്യം_Len);
+                എങ്കിൽ(i < അക്കം_Keywords - 1) {
                     sink.Append(";", 1);
                 }
-            } else {
+            } അല്ലെങ്കിൽ {
                 sink.Append("\0", 1);
             }
         }
@@ -655,180 +655,180 @@ ulocimp_getKeywords(std::string_view localeID,
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_getKeywordValue(const char* localeID,
-                     const char* keywordName,
-                     char* buffer, int32_t bufferCapacity,
+uloc_get_Keyword_മൂല്യം(സ്ഥിരം അക്ഷരം* localeID,
+                     സ്ഥിരം അക്ഷരം* keywordName,
+                     അക്ഷരം* buffer, int32_t bufferCapacity,
                      UErrorCode* status)
 {
-    if (U_FAILURE(*status)) { return 0; }
-    if (keywordName == nullptr || *keywordName == '\0') {
+    എങ്കിൽ (U_FAILURE(*status)) { തിരികെ 0; }
+    എങ്കിൽ (keywordName == nullptr || *keywordName == '\0') {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        തിരികെ 0;
     }
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
+    തിരികെ ByteSinkUtil::viaByteSinkToTerminatedChars(
         buffer, bufferCapacity,
         [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getKeywordValue(localeID, keywordName, sink, status);
+            ulocimp_get_Keyword_മൂല്യം(localeID, keywordName, sink, status);
         },
         *status);
 }
 
 U_EXPORT CharString
-ulocimp_getKeywordValue(const char* localeID,
+ulocimp_get_Keyword_മൂല്യം(സ്ഥിരം അക്ഷരം* localeID,
                         std::string_view keywordName,
                         UErrorCode& status)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
+    തിരികെ ByteSinkUtil::viaByteSinkToCharString(
         [&](ByteSink& sink, UErrorCode& status) {
-            ulocimp_getKeywordValue(localeID, keywordName, sink, status);
+            ulocimp_get_Keyword_മൂല്യം(localeID, keywordName, sink, status);
         },
         status);
 }
 
-U_EXPORT void
-ulocimp_getKeywordValue(const char* localeID,
+U_EXPORT ശൂന്യം
+ulocimp_get_Keyword_മൂല്യം(സ്ഥിരം അക്ഷരം* localeID,
                         std::string_view keywordName,
                         icu::ByteSink& sink,
                         UErrorCode& status)
 {
-    if (U_FAILURE(status)) { return; }
+    എങ്കിൽ (U_FAILURE(status)) { തിരികെ; }
 
-    if (localeID == nullptr || keywordName.empty()) {
+    എങ്കിൽ (localeID == nullptr || keywordName.empty()) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        തിരികെ;
     }
 
-    const char* startSearchHere = nullptr;
-    const char* nextSeparator = nullptr;
+    സ്ഥിരം അക്ഷരം* start_തിരയൽ_Here = nullptr;
+    സ്ഥിരം അക്ഷരം* nextSeparator = nullptr;
 
     CharString tempBuffer;
-    const char* tmpLocaleID;
+    സ്ഥിരം അക്ഷരം* tmpLocaleID;
 
     CharString canonKeywordName = locale_canonKeywordName(keywordName, status);
-    if (U_FAILURE(status)) {
-      return;
+    എങ്കിൽ (U_FAILURE(status)) {
+      തിരികെ;
     }
 
-    if (localeID != nullptr && _hasBCP47Extension(localeID)) {
+    എങ്കിൽ (localeID != nullptr && _hasBCP47Extension(localeID)) {
         tempBuffer = ulocimp_forLanguageTag(localeID, -1, nullptr, status);
         tmpLocaleID = U_SUCCESS(status) && !tempBuffer.isEmpty() ? tempBuffer.data() : localeID;
-    } else {
+    } അല്ലെങ്കിൽ {
         tmpLocaleID=localeID;
     }
 
-    startSearchHere = locale_getKeywordsStart(tmpLocaleID);
-    if(startSearchHere == nullptr) {
+    start_തിരയൽ_Here = locale_getKeywordsStart(tmpLocaleID);
+    എങ്കിൽ(start_തിരയൽ_Here == nullptr) {
         /* no keywords, return at once */
-        return;
+        തിരികെ;
     }
 
     /* find the first keyword */
-    while(startSearchHere) {
-        const char* keyValueTail;
+    ആകുമ്പോൾ(start_തിരയൽ_Here) {
+        സ്ഥിരം അക്ഷരം* താക്കോൽ_മൂല്യം_Tail;
 
-        startSearchHere++; /* skip @ or ; */
-        nextSeparator = uprv_strchr(startSearchHere, '=');
-        if(!nextSeparator) {
+        start_തിരയൽ_Here++; /* skip @ or ; */
+        nextSeparator = uprv_strchr(start_തിരയൽ_Here, '=');
+        എങ്കിൽ(!nextSeparator) {
             status = U_ILLEGAL_ARGUMENT_ERROR; /* key must have =value */
-            return;
+            തിരികെ;
         }
         /* strip leading & trailing spaces (TC decided to tolerate these) */
-        while(*startSearchHere == ' ') {
-            startSearchHere++;
+        ആകുമ്പോൾ(*start_തിരയൽ_Here == ' ') {
+            start_തിരയൽ_Here++;
         }
-        keyValueTail = nextSeparator;
-        while (keyValueTail > startSearchHere && *(keyValueTail-1) == ' ') {
-            keyValueTail--;
+        താക്കോൽ_മൂല്യം_Tail = nextSeparator;
+        ആകുമ്പോൾ (താക്കോൽ_മൂല്യം_Tail > start_തിരയൽ_Here && *(താക്കോൽ_മൂല്യം_Tail-1) == ' ') {
+            താക്കോൽ_മൂല്യം_Tail--;
         }
         /* now keyValueTail points to first char after the keyName */
         /* copy & normalize keyName from locale */
-        if (startSearchHere == keyValueTail) {
+        എങ്കിൽ (start_തിരയൽ_Here == താക്കോൽ_മൂല്യം_Tail) {
             status = U_ILLEGAL_ARGUMENT_ERROR; /* empty keyword name in passed-in locale */
-            return;
+            തിരികെ;
         }
         CharString localeKeywordName;
-        while (startSearchHere < keyValueTail) {
-          if (!UPRV_ISALPHANUM(*startSearchHere)) {
+        ആകുമ്പോൾ (start_തിരയൽ_Here < താക്കോൽ_മൂല്യം_Tail) {
+          എങ്കിൽ (!UPRV_ISALPHANUM(*start_തിരയൽ_Here)) {
             status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed keyword name */
-            return;
+            തിരികെ;
           }
-          localeKeywordName.append(uprv_tolower(*startSearchHere++), status);
+          localeKeywordName.append(uprv_tolower(*start_തിരയൽ_Here++), status);
         }
-        if (U_FAILURE(status)) {
-            return;
+        എങ്കിൽ (U_FAILURE(status)) {
+            തിരികെ;
         }
 
-        startSearchHere = uprv_strchr(nextSeparator, ';');
+        start_തിരയൽ_Here = uprv_strchr(nextSeparator, ';');
 
-        if (canonKeywordName == localeKeywordName) {
+        എങ്കിൽ (canonKeywordName == localeKeywordName) {
              /* current entry matches the keyword. */
            nextSeparator++; /* skip '=' */
             /* First strip leading & trailing spaces (TC decided to tolerate these) */
-            while(*nextSeparator == ' ') {
+            ആകുമ്പോൾ(*nextSeparator == ' ') {
               nextSeparator++;
             }
-            keyValueTail = (startSearchHere)? startSearchHere: nextSeparator + uprv_strlen(nextSeparator);
-            while(keyValueTail > nextSeparator && *(keyValueTail-1) == ' ') {
-              keyValueTail--;
+            താക്കോൽ_മൂല്യം_Tail = (start_തിരയൽ_Here)? start_തിരയൽ_Here: nextSeparator + uprv_strlen(nextSeparator);
+            ആകുമ്പോൾ(താക്കോൽ_മൂല്യം_Tail > nextSeparator && *(താക്കോൽ_മൂല്യം_Tail-1) == ' ') {
+              താക്കോൽ_മൂല്യം_Tail--;
             }
             /* Now copy the value, but check well-formedness */
-            if (nextSeparator == keyValueTail) {
+            എങ്കിൽ (nextSeparator == താക്കോൽ_മൂല്യം_Tail) {
               status = U_ILLEGAL_ARGUMENT_ERROR; /* empty key value name in passed-in locale */
-              return;
+              തിരികെ;
             }
-            while (nextSeparator < keyValueTail) {
-              if (!UPRV_ISALPHANUM(*nextSeparator) && !UPRV_OK_VALUE_PUNCTUATION(*nextSeparator)) {
+            ആകുമ്പോൾ (nextSeparator < താക്കോൽ_മൂല്യം_Tail) {
+              എങ്കിൽ (!UPRV_ISALPHANUM(*nextSeparator) && !UPRV_OK_മൂല്യം_PUNCTUATION(*nextSeparator)) {
                 status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed key value */
-                return;
+                തിരികെ;
               }
               /* Should we lowercase value to return here? Tests expect as-is. */
               sink.Append(nextSeparator++, 1);
             }
-            return;
+            തിരികെ;
         }
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_setKeywordValue(const char* keywordName,
-                     const char* keywordValue,
-                     char* buffer, int32_t bufferCapacity,
+uloc_set_Keyword_മൂല്യം(സ്ഥിരം അക്ഷരം* keywordName,
+                     സ്ഥിരം അക്ഷരം* keyword_മൂല്യം,
+                     അക്ഷരം* buffer, int32_t bufferCapacity,
                      UErrorCode* status)
 {
-    if (U_FAILURE(*status)) { return 0; }
+    എങ്കിൽ (U_FAILURE(*status)) { തിരികെ 0; }
 
-    if (keywordName == nullptr || *keywordName == 0) {
+    എങ്കിൽ (keywordName == nullptr || *keywordName == 0) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        തിരികെ 0;
     }
 
-    if (bufferCapacity <= 1) {
+    എങ്കിൽ (bufferCapacity <= 1) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        തിരികെ 0;
     }
 
     int32_t bufLen = (int32_t)uprv_strlen(buffer);
-    if(bufferCapacity<bufLen) {
+    എങ്കിൽ(bufferCapacity<bufLen) {
         /* The capacity is less than the length?! Is this NUL terminated? */
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        തിരികെ 0;
     }
 
-    char* keywords = const_cast<char*>(
+    അക്ഷരം* keywords = const_cast<അക്ഷരം*>(
         locale_getKeywordsStart({buffer, static_cast<std::string_view::size_type>(bufLen)}));
     int32_t baseLen = keywords == nullptr ? bufLen : keywords - buffer;
     // Remove -1 from the capacity so that this function can guarantee NUL termination.
     CheckedArrayByteSink sink(keywords == nullptr ? buffer + bufLen : keywords,
                               bufferCapacity - baseLen - 1);
-    int32_t reslen = ulocimp_setKeywordValue(
+    int32_t reslen = ulocimp_set_Keyword_മൂല്യം(
         keywords == nullptr ? std::string_view() : keywords,
         keywordName,
-        keywordValue == nullptr ? std::string_view() : keywordValue,
+        keyword_മൂല്യം == nullptr ? std::string_view() : keyword_മൂല്യം,
         sink,
         *status);
 
-    if (U_FAILURE(*status)) {
-        return *status == U_BUFFER_OVERFLOW_ERROR ? reslen + baseLen : 0;
+    എങ്കിൽ (U_FAILURE(*status)) {
+        തിരികെ *status == U_BUFFER_OVERFLOW_ERROR ? reslen + baseLen : 0;
     }
 
     // See the documentation for this function, it's guaranteed to never
@@ -836,18 +836,18 @@ uloc_setKeywordValue(const char* keywordName,
     // In this case, nothing has been written to the sink, so it cannot have Overflowed().
     U_ASSERT(!sink.Overflowed());
     U_ASSERT(reslen >= 0);
-    return u_terminateChars(buffer, bufferCapacity, reslen + baseLen, status);
+    തിരികെ u_terminateChars(buffer, bufferCapacity, reslen + baseLen, status);
 }
 
-U_EXPORT void
-ulocimp_setKeywordValue(std::string_view keywordName,
-                        std::string_view keywordValue,
+U_EXPORT ശൂന്യം
+ulocimp_set_Keyword_മൂല്യം(std::string_view keywordName,
+                        std::string_view keyword_മൂല്യം,
                         CharString& localeID,
                         UErrorCode& status)
 {
-    if (U_FAILURE(status)) { return; }
+    എങ്കിൽ (U_FAILURE(status)) { തിരികെ; }
     std::string_view keywords;
-    if (const char* start = locale_getKeywordsStart(localeID.toStringPiece()); start != nullptr) {
+    എങ്കിൽ (സ്ഥിരം അക്ഷരം* start = locale_getKeywordsStart(localeID.toStringPiece()); start != nullptr) {
         // This is safe because CharString::truncate() doesn't actually erase any
         // data, but simply sets the position for where new data will be written.
         int32_t size = start - localeID.data();
@@ -856,108 +856,108 @@ ulocimp_setKeywordValue(std::string_view keywordName,
         localeID.truncate(size);
     }
     CharStringByteSink sink(&localeID);
-    ulocimp_setKeywordValue(keywords, keywordName, keywordValue, sink, status);
+    ulocimp_set_Keyword_മൂല്യം(keywords, keywordName, keyword_മൂല്യം, sink, status);
 }
 
 U_EXPORT int32_t
-ulocimp_setKeywordValue(std::string_view keywords,
+ulocimp_set_Keyword_മൂല്യം(std::string_view keywords,
                         std::string_view keywordName,
-                        std::string_view keywordValue,
+                        std::string_view keyword_മൂല്യം,
                         ByteSink& sink,
                         UErrorCode& status)
 {
-    if (U_FAILURE(status)) { return 0; }
+    എങ്കിൽ (U_FAILURE(status)) { തിരികെ 0; }
 
     /* TODO: sorting. removal. */
     int32_t needLen = 0;
     int32_t rc;
-    CharString updatedKeysAndValues;
-    bool handledInputKeyAndValue = false;
-    char keyValuePrefix = '@';
+    CharString updated_താക്കോലുകൾ_And_മൂല്യങ്ങൾ;
+    തർക്കം handled_നിവേശം_താക്കോൽ_And_മൂല്യം = അസത്യം;
+    അക്ഷരം താക്കോൽ_മൂല്യം_Prefix = '@';
 
-    if (status == U_STRING_NOT_TERMINATED_WARNING) {
+    എങ്കിൽ (status == U_STRING_NOT_TERMINATED_WARNING) {
         status = U_ZERO_ERROR;
     }
-    if (keywordName.empty()) {
+    എങ്കിൽ (keywordName.empty()) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        തിരികെ 0;
     }
     CharString canonKeywordName = locale_canonKeywordName(keywordName, status);
-    if (U_FAILURE(status)) {
-        return 0;
+    എങ്കിൽ (U_FAILURE(status)) {
+        തിരികെ 0;
     }
 
-    CharString canonKeywordValue;
-    for (char c : keywordValue) {
-        if (!UPRV_ISALPHANUM(c) && !UPRV_OK_VALUE_PUNCTUATION(c)) {
+    CharString canon_Keyword_മൂല്യം;
+    വേണ്ടി (അക്ഷരം c : keyword_മൂല്യം) {
+        എങ്കിൽ (!UPRV_ISALPHANUM(c) && !UPRV_OK_മൂല്യം_PUNCTUATION(c)) {
             status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed key value */
-            return 0;
+            തിരികെ 0;
         }
         /* Should we force lowercase in value to set? */
-        canonKeywordValue.append(c, status);
+        canon_Keyword_മൂല്യം.append(c, status);
     }
-    if (U_FAILURE(status)) {
-        return 0;
+    എങ്കിൽ (U_FAILURE(status)) {
+        തിരികെ 0;
     }
 
-    if (keywords.size() <= 1) {
-        if (canonKeywordValue.isEmpty()) { /* no keywords = nothing to remove */
+    എങ്കിൽ (keywords.size() <= 1) {
+        എങ്കിൽ (canon_Keyword_മൂല്യം.isEmpty()) { /* no keywords = nothing to remove */
             U_ASSERT(status != U_STRING_NOT_TERMINATED_WARNING);
-            return 0;
+            തിരികെ 0;
         }
 
-        needLen = 1 + canonKeywordName.length() + 1 + canonKeywordValue.length();
+        needLen = 1 + canonKeywordName.length() + 1 + canon_Keyword_മൂല്യം.length();
         int32_t capacity = 0;
-        char* buffer = sink.GetAppendBuffer(
+        അക്ഷരം* buffer = sink.GetAppendBuffer(
                 needLen, needLen, nullptr, needLen, &capacity);
-        if (capacity < needLen || buffer == nullptr) {
+        എങ്കിൽ (capacity < needLen || buffer == nullptr) {
             status = U_BUFFER_OVERFLOW_ERROR;
-            return needLen; /* no change */
+            തിരികെ needLen; /* no change */
         }
-        char* it = buffer;
+        അക്ഷരം* it = buffer;
 
         *it++ = '@';
         uprv_memcpy(it, canonKeywordName.data(), canonKeywordName.length());
         it += canonKeywordName.length();
         *it++ = '=';
-        uprv_memcpy(it, canonKeywordValue.data(), canonKeywordValue.length());
+        uprv_memcpy(it, canon_Keyword_മൂല്യം.data(), canon_Keyword_മൂല്യം.length());
         sink.Append(buffer, needLen);
         U_ASSERT(status != U_STRING_NOT_TERMINATED_WARNING);
-        return needLen;
+        തിരികെ needLen;
     } /* end shortcut - no @ */
 
     /* search for keyword */
-    for (size_t keywordStart = 0; keywordStart != std::string_view::npos;) {
+    വേണ്ടി (size_t keywordStart = 0; keywordStart != std::string_view::npos;) {
         keywordStart++; /* skip @ or ; */
         size_t nextEqualsign = keywords.find('=', keywordStart);
-        if (nextEqualsign == std::string_view::npos) {
+        എങ്കിൽ (nextEqualsign == std::string_view::npos) {
             status = U_ILLEGAL_ARGUMENT_ERROR; /* key must have =value */
-            return 0;
+            തിരികെ 0;
         }
         /* strip leading & trailing spaces (TC decided to tolerate these) */
-        while (keywordStart < keywords.size() && keywords[keywordStart] == ' ') {
+        ആകുമ്പോൾ (keywordStart < keywords.size() && keywords[keywordStart] == ' ') {
             keywordStart++;
         }
-        size_t keyValueTail = nextEqualsign;
-        while (keyValueTail > keywordStart && keywords[keyValueTail - 1] == ' ') {
-            keyValueTail--;
+        size_t താക്കോൽ_മൂല്യം_Tail = nextEqualsign;
+        ആകുമ്പോൾ (താക്കോൽ_മൂല്യം_Tail > keywordStart && keywords[താക്കോൽ_മൂല്യം_Tail - 1] == ' ') {
+            താക്കോൽ_മൂല്യം_Tail--;
         }
         /* now keyValueTail points to first char after the keyName */
         /* copy & normalize keyName from locale */
-        if (keywordStart == keyValueTail) {
+        എങ്കിൽ (keywordStart == താക്കോൽ_മൂല്യം_Tail) {
             status = U_ILLEGAL_ARGUMENT_ERROR; /* empty keyword name in passed-in locale */
-            return 0;
+            തിരികെ 0;
         }
         CharString localeKeywordName;
-        while (keywordStart < keyValueTail) {
-            if (!UPRV_ISALPHANUM(keywords[keywordStart])) {
+        ആകുമ്പോൾ (keywordStart < താക്കോൽ_മൂല്യം_Tail) {
+            എങ്കിൽ (!UPRV_ISALPHANUM(keywords[keywordStart])) {
                 status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed keyword name */
-                return 0;
+                തിരികെ 0;
             }
             localeKeywordName.append(uprv_tolower(keywords[keywordStart++]), status);
         }
-        if (U_FAILURE(status)) {
-            return 0;
+        എങ്കിൽ (U_FAILURE(status)) {
+            തിരികെ 0;
         }
 
         size_t nextSeparator = keywords.find(';', nextEqualsign);
@@ -965,56 +965,56 @@ ulocimp_setKeywordValue(std::string_view keywords,
         /* start processing the value part */
         nextEqualsign++; /* skip '=' */
         /* First strip leading & trailing spaces (TC decided to tolerate these) */
-        while (nextEqualsign < keywords.size() && keywords[nextEqualsign] == ' ') {
+        ആകുമ്പോൾ (nextEqualsign < keywords.size() && keywords[nextEqualsign] == ' ') {
             nextEqualsign++;
         }
-        keyValueTail = nextSeparator == std::string_view::npos ? keywords.size() : nextSeparator;
-        while (keyValueTail > nextEqualsign && keywords[keyValueTail - 1] == ' ') {
-            keyValueTail--;
+        താക്കോൽ_മൂല്യം_Tail = nextSeparator == std::string_view::npos ? keywords.size() : nextSeparator;
+        ആകുമ്പോൾ (താക്കോൽ_മൂല്യം_Tail > nextEqualsign && keywords[താക്കോൽ_മൂല്യം_Tail - 1] == ' ') {
+            താക്കോൽ_മൂല്യം_Tail--;
         }
-        if (nextEqualsign == keyValueTail) {
+        എങ്കിൽ (nextEqualsign == താക്കോൽ_മൂല്യം_Tail) {
             status = U_ILLEGAL_ARGUMENT_ERROR; /* empty key value in passed-in locale */
-            return 0;
+            തിരികെ 0;
         }
 
         rc = uprv_strcmp(canonKeywordName.data(), localeKeywordName.data());
-        if(rc == 0) {
+        എങ്കിൽ(rc == 0) {
             /* Current entry matches the input keyword. Update the entry */
-            if (!canonKeywordValue.isEmpty()) { /* updating a value */
-                updatedKeysAndValues.append(keyValuePrefix, status);
-                keyValuePrefix = ';'; /* for any subsequent key-value pair */
-                updatedKeysAndValues.append(canonKeywordName, status);
-                updatedKeysAndValues.append('=', status);
-                updatedKeysAndValues.append(canonKeywordValue, status);
+            എങ്കിൽ (!canon_Keyword_മൂല്യം.isEmpty()) { /* updating a value */
+                updated_താക്കോലുകൾ_And_മൂല്യങ്ങൾ.append(താക്കോൽ_മൂല്യം_Prefix, status);
+                താക്കോൽ_മൂല്യം_Prefix = ';'; /* for any subsequent key-value pair */
+                updated_താക്കോലുകൾ_And_മൂല്യങ്ങൾ.append(canonKeywordName, status);
+                updated_താക്കോലുകൾ_And_മൂല്യങ്ങൾ.append('=', status);
+                updated_താക്കോലുകൾ_And_മൂല്യങ്ങൾ.append(canon_Keyword_മൂല്യം, status);
             } /* else removing this entry, don't emit anything */
-            handledInputKeyAndValue = true;
-        } else {
+            handled_നിവേശം_താക്കോൽ_And_മൂല്യം = സത്യം;
+        } അല്ലെങ്കിൽ {
            /* input keyword sorts earlier than current entry, add before current entry */
-            if (rc < 0 && !canonKeywordValue.isEmpty() && !handledInputKeyAndValue) {
+            എങ്കിൽ (rc < 0 && !canon_Keyword_മൂല്യം.isEmpty() && !handled_നിവേശം_താക്കോൽ_And_മൂല്യം) {
                 /* insert new entry at this location */
-                updatedKeysAndValues.append(keyValuePrefix, status);
-                keyValuePrefix = ';'; /* for any subsequent key-value pair */
-                updatedKeysAndValues.append(canonKeywordName, status);
-                updatedKeysAndValues.append('=', status);
-                updatedKeysAndValues.append(canonKeywordValue, status);
-                handledInputKeyAndValue = true;
+                updated_താക്കോലുകൾ_And_മൂല്യങ്ങൾ.append(താക്കോൽ_മൂല്യം_Prefix, status);
+                താക്കോൽ_മൂല്യം_Prefix = ';'; /* for any subsequent key-value pair */
+                updated_താക്കോലുകൾ_And_മൂല്യങ്ങൾ.append(canonKeywordName, status);
+                updated_താക്കോലുകൾ_And_മൂല്യങ്ങൾ.append('=', status);
+                updated_താക്കോലുകൾ_And_മൂല്യങ്ങൾ.append(canon_Keyword_മൂല്യം, status);
+                handled_നിവേശം_താക്കോൽ_And_മൂല്യം = സത്യം;
             }
             /* copy the current entry */
-            updatedKeysAndValues.append(keyValuePrefix, status);
-            keyValuePrefix = ';'; /* for any subsequent key-value pair */
-            updatedKeysAndValues.append(localeKeywordName, status);
-            updatedKeysAndValues.append('=', status);
-            updatedKeysAndValues.append(keywords.data() + nextEqualsign,
-                                        static_cast<int32_t>(keyValueTail - nextEqualsign), status);
+            updated_താക്കോലുകൾ_And_മൂല്യങ്ങൾ.append(താക്കോൽ_മൂല്യം_Prefix, status);
+            താക്കോൽ_മൂല്യം_Prefix = ';'; /* for any subsequent key-value pair */
+            updated_താക്കോലുകൾ_And_മൂല്യങ്ങൾ.append(localeKeywordName, status);
+            updated_താക്കോലുകൾ_And_മൂല്യങ്ങൾ.append('=', status);
+            updated_താക്കോലുകൾ_And_മൂല്യങ്ങൾ.append(keywords.data() + nextEqualsign,
+                                        static_cast<int32_t>(താക്കോൽ_മൂല്യം_Tail - nextEqualsign), status);
         }
-        if (nextSeparator == std::string_view::npos && !canonKeywordValue.isEmpty() && !handledInputKeyAndValue) {
+        എങ്കിൽ (nextSeparator == std::string_view::npos && !canon_Keyword_മൂല്യം.isEmpty() && !handled_നിവേശം_താക്കോൽ_And_മൂല്യം) {
             /* append new entry at the end, it sorts later than existing entries */
-            updatedKeysAndValues.append(keyValuePrefix, status);
+            updated_താക്കോലുകൾ_And_മൂല്യങ്ങൾ.append(താക്കോൽ_മൂല്യം_Prefix, status);
             /* skip keyValuePrefix update, no subsequent key-value pair */
-            updatedKeysAndValues.append(canonKeywordName, status);
-            updatedKeysAndValues.append('=', status);
-            updatedKeysAndValues.append(canonKeywordValue, status);
-            handledInputKeyAndValue = true;
+            updated_താക്കോലുകൾ_And_മൂല്യങ്ങൾ.append(canonKeywordName, status);
+            updated_താക്കോലുകൾ_And_മൂല്യങ്ങൾ.append('=', status);
+            updated_താക്കോലുകൾ_And_മൂല്യങ്ങൾ.append(canon_Keyword_മൂല്യം, status);
+            handled_നിവേശം_താക്കോൽ_And_മൂല്യം = സത്യം;
         }
         keywordStart = nextSeparator;
     } /* end loop searching */
@@ -1027,7 +1027,7 @@ ulocimp_setKeywordValue(std::string_view keywords,
      * error return but the passed-in locale is unmodified and the original bufLen is
      * returned.
      */
-    if (!handledInputKeyAndValue || U_FAILURE(status)) {
+    എങ്കിൽ (!handled_നിവേശം_താക്കോൽ_And_മൂല്യം || U_FAILURE(status)) {
         /* if input key/value specified removal of a keyword not present in locale, or
          * there was an error in CharString.append, leave original locale alone. */
         U_ASSERT(status != U_STRING_NOT_TERMINATED_WARNING);
@@ -1037,58 +1037,58 @@ ulocimp_setKeywordValue(std::string_view keywords,
         // the first character needs to be overwritten (changing '\0' to '@').
         needLen = static_cast<int32_t>(keywords.size());
         int32_t capacity = 0;
-        char* buffer = sink.GetAppendBuffer(
+        അക്ഷരം* buffer = sink.GetAppendBuffer(
                 needLen, needLen, nullptr, needLen, &capacity);
-        if (capacity < needLen || buffer == nullptr) {
+        എങ്കിൽ (capacity < needLen || buffer == nullptr) {
             status = U_BUFFER_OVERFLOW_ERROR;
-        } else {
+        } അല്ലെങ്കിൽ {
             *buffer = '@';
             sink.Append(buffer, needLen);
         }
-        return needLen;
+        തിരികെ needLen;
     }
 
-    needLen = updatedKeysAndValues.length();
+    needLen = updated_താക്കോലുകൾ_And_മൂല്യങ്ങൾ.length();
     // Check to see can we fit the updatedKeysAndValues, if not, return
     // U_BUFFER_OVERFLOW_ERROR without copy updatedKeysAndValues into it.
     // We do this because this API function does not behave like most others:
     // It promises never to set a U_STRING_NOT_TERMINATED_WARNING.
     // When the contents fits but without the terminating NUL, in this case we need to not change
     // the buffer contents and return with a buffer overflow error.
-    if (needLen > 0) {
+    എങ്കിൽ (needLen > 0) {
         int32_t capacity = 0;
-        char* buffer = sink.GetAppendBuffer(
+        അക്ഷരം* buffer = sink.GetAppendBuffer(
                 needLen, needLen, nullptr, needLen, &capacity);
-        if (capacity < needLen || buffer == nullptr) {
+        എങ്കിൽ (capacity < needLen || buffer == nullptr) {
             status = U_BUFFER_OVERFLOW_ERROR;
-            return needLen;
+            തിരികെ needLen;
         }
-        uprv_memcpy(buffer, updatedKeysAndValues.data(), needLen);
+        uprv_memcpy(buffer, updated_താക്കോലുകൾ_And_മൂല്യങ്ങൾ.data(), needLen);
         sink.Append(buffer, needLen);
     }
     U_ASSERT(status != U_STRING_NOT_TERMINATED_WARNING);
-    return needLen;
+    തിരികെ needLen;
 }
 
 /* ### ID parsing implementation **************************************************/
 
-namespace {
+നാമാകാശ {
 
-inline bool _isPrefixLetter(char a) { return a == 'x' || a == 'X' || a == 'i' || a == 'I'; }
+വരിയിൽ തർക്കം _isPrefixLetter(അക്ഷരം a) { തിരികെ a == 'x' || a == 'X' || a == 'i' || a == 'I'; }
 
 /*returns true if one of the special prefixes is here (s=string)
   'x-' or 'i-' */
-inline bool _isIDPrefix(std::string_view s) {
-    return s.size() >= 2 && _isPrefixLetter(s[0]) && _isIDSeparator(s[1]);
+വരിയിൽ തർക്കം _isIDPrefix(std::string_view s) {
+    തിരികെ s.size() >= 2 && _isPrefixLetter(s[0]) && _isIDSeparator(s[1]);
 }
 
 /* Dot terminates it because of POSIX form  where dot precedes the codepage
  * except for variant
  */
-inline bool _isTerminator(char a) { return a == '.' || a == '@'; }
+വരിയിൽ തർക്കം _isTerminator(അക്ഷരം a) { തിരികെ a == '.' || a == '@'; }
 
-inline bool _isBCP47Extension(std::string_view p) {
-    return p.size() >= 3 &&
+വരിയിൽ തർക്കം _isBCP47Extension(std::string_view p) {
+    തിരികെ p.size() >= 3 &&
            p[0] == '-' &&
            (p[1] == 't' || p[1] == 'T' ||
             p[1] == 'u' || p[1] == 'U' ||
@@ -1103,38 +1103,38 @@ inline bool _isBCP47Extension(std::string_view p) {
  * The 'list' param should be LANGUAGES, LANGUAGES_3, COUNTRIES, or
  * COUNTRIES_3.
  */
-std::optional<int16_t> _findIndex(const char* const* list, const char* key)
+std::optional<int16_t> _findIndex(സ്ഥിരം അക്ഷരം* സ്ഥിരം* list, സ്ഥിരം അക്ഷരം* താക്കോൽ)
 {
-    const char* const* anchor = list;
+    സ്ഥിരം അക്ഷരം* സ്ഥിരം* anchor = list;
     int32_t pass = 0;
 
     /* Make two passes through two nullptr-terminated arrays at 'list' */
-    while (pass++ < 2) {
-        while (*list) {
-            if (uprv_strcmp(key, *list) == 0) {
-                return static_cast<int16_t>(list - anchor);
+    ആകുമ്പോൾ (pass++ < 2) {
+        ആകുമ്പോൾ (*list) {
+            എങ്കിൽ (uprv_strcmp(താക്കോൽ, *list) == 0) {
+                തിരികെ static_cast<int16_t>(list - anchor);
             }
             list++;
         }
         ++list;     /* skip final nullptr *CWB*/
     }
-    return std::nullopt;
+    തിരികെ std::nullopt;
 }
 
 }  // namespace
 
-U_CFUNC const char*
-uloc_getCurrentCountryID(const char* oldID U_LIFETIME_BOUND) {
+U_CFUNC സ്ഥിരം അക്ഷരം*
+uloc_getCurrentCountryID(സ്ഥിരം അക്ഷരം* oldID U_LIFETIME_BOUND) {
     std::optional<int16_t> offset = _findIndex(DEPRECATED_COUNTRIES, oldID);
-    return offset.has_value() ? REPLACEMENT_COUNTRIES[*offset] : oldID;
+    തിരികെ offset.has_value() ? REPLACEMENT_COUNTRIES[*offset] : oldID;
 }
-U_CFUNC const char*
-uloc_getCurrentLanguageID(const char* oldID U_LIFETIME_BOUND) {
+U_CFUNC സ്ഥിരം അക്ഷരം*
+uloc_getCurrentLanguageID(സ്ഥിരം അക്ഷരം* oldID U_LIFETIME_BOUND) {
     std::optional<int16_t> offset = _findIndex(DEPRECATED_LANGUAGES, oldID);
-    return offset.has_value() ? REPLACEMENT_LANGUAGES[*offset] : oldID;
+    തിരികെ offset.has_value() ? REPLACEMENT_LANGUAGES[*offset] : oldID;
 }
 
-namespace {
+നാമാകാശ {
 
 /*
  * the internal functions _getLanguage(), _getScript(), _getRegion(), _getVariant()
@@ -1147,10 +1147,10 @@ namespace {
 
 size_t _getLanguage(std::string_view localeID, ByteSink* sink, UErrorCode& status) {
     size_t skip = 0;
-    if (localeID.size() == 4 && uprv_strnicmp(localeID.data(), "root", 4) == 0) {
+    എങ്കിൽ (localeID.size() == 4 && uprv_strnicmp(localeID.data(), "root", 4) == 0) {
         skip = 4;
         localeID.remove_prefix(skip);
-    } else if (localeID.size() >= 3 && uprv_strnicmp(localeID.data(), "und", 3) == 0 &&
+    } അല്ലെങ്കിൽ എങ്കിൽ (localeID.size() >= 3 && uprv_strnicmp(localeID.data(), "und", 3) == 0 &&
                (localeID.size() == 3 ||
                 localeID[3] == '-' ||
                 localeID[3] == '_' ||
@@ -1163,70 +1163,70 @@ size_t _getLanguage(std::string_view localeID, ByteSink* sink, UErrorCode& statu
 
     /* if it starts with i- or x- then copy that prefix */
     size_t len = _isIDPrefix(localeID) ? 2 : 0;
-    while (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len])) {
-        if (len == MAXLEN) {
+    ആകുമ്പോൾ (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len])) {
+        എങ്കിൽ (len == MAXLEN) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return 0;
+            തിരികെ 0;
         }
         len++;
     }
 
-    if (sink == nullptr || len == 0) { return skip + len; }
+    എങ്കിൽ (sink == nullptr || len == 0) { തിരികെ skip + len; }
 
     int32_t minCapacity = uprv_max(static_cast<int32_t>(len), 4);  // Minimum 3 letters plus NUL.
-    char scratch[MAXLEN];
+    അക്ഷരം scratch[MAXLEN];
     int32_t capacity = 0;
-    char* buffer = sink->GetAppendBuffer(
+    അക്ഷരം* buffer = sink->GetAppendBuffer(
             minCapacity, minCapacity, scratch, UPRV_LENGTHOF(scratch), &capacity);
 
-    for (size_t i = 0; i < len; ++i) {
+    വേണ്ടി (size_t i = 0; i < len; ++i) {
         buffer[i] = uprv_tolower(localeID[i]);
     }
-    if (localeID.size() >= 2 && _isIDSeparator(localeID[1])) {
+    എങ്കിൽ (localeID.size() >= 2 && _isIDSeparator(localeID[1])) {
         buffer[1] = '-';
     }
 
-    if (len == 3) {
+    എങ്കിൽ (len == 3) {
         /* convert 3 character code to 2 character code if possible *CWB*/
         U_ASSERT(capacity >= 4);
         buffer[3] = '\0';
         std::optional<int16_t> offset = _findIndex(LANGUAGES_3, buffer);
-        if (offset.has_value()) {
-            const char* const alias = LANGUAGES[*offset];
+        എങ്കിൽ (offset.has_value()) {
+            സ്ഥിരം അക്ഷരം* സ്ഥിരം alias = LANGUAGES[*offset];
             sink->Append(alias, static_cast<int32_t>(uprv_strlen(alias)));
-            return skip + len;
+            തിരികെ skip + len;
         }
     }
 
     sink->Append(buffer, static_cast<int32_t>(len));
-    return skip + len;
+    തിരികെ skip + len;
 }
 
 size_t _getScript(std::string_view localeID, ByteSink* sink) {
     constexpr int32_t LENGTH = 4;
 
     size_t len = 0;
-    while (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len]) &&
+    ആകുമ്പോൾ (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len]) &&
             uprv_isASCIILetter(localeID[len])) {
-        if (len == LENGTH) { return 0; }
+        എങ്കിൽ (len == LENGTH) { തിരികെ 0; }
         len++;
     }
-    if (len != LENGTH) { return 0; }
+    എങ്കിൽ (len != LENGTH) { തിരികെ 0; }
 
-    if (sink == nullptr) { return len; }
+    എങ്കിൽ (sink == nullptr) { തിരികെ len; }
 
-    char scratch[LENGTH];
+    അക്ഷരം scratch[LENGTH];
     int32_t capacity = 0;
-    char* buffer = sink->GetAppendBuffer(
+    അക്ഷരം* buffer = sink->GetAppendBuffer(
             LENGTH, LENGTH, scratch, UPRV_LENGTHOF(scratch), &capacity);
 
     buffer[0] = uprv_toupper(localeID[0]);
-    for (int32_t i = 1; i < LENGTH; ++i) {
+    വേണ്ടി (int32_t i = 1; i < LENGTH; ++i) {
         buffer[i] = uprv_tolower(localeID[i]);
     }
 
     sink->Append(buffer, LENGTH);
-    return len;
+    തിരികെ len;
 }
 
 size_t _getRegion(std::string_view localeID, ByteSink* sink) {
@@ -1234,41 +1234,41 @@ size_t _getRegion(std::string_view localeID, ByteSink* sink) {
     constexpr int32_t MAXLEN = ULOC_COUNTRY_CAPACITY - 1;  // Minus NUL.
 
     size_t len = 0;
-    while (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len])) {
-        if (len == MAXLEN) { return 0; }
+    ആകുമ്പോൾ (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len])) {
+        എങ്കിൽ (len == MAXLEN) { തിരികെ 0; }
         len++;
     }
-    if (len < MINLEN) { return 0; }
+    എങ്കിൽ (len < MINLEN) { തിരികെ 0; }
 
-    if (sink == nullptr) { return len; }
+    എങ്കിൽ (sink == nullptr) { തിരികെ len; }
 
-    char scratch[ULOC_COUNTRY_CAPACITY];
+    അക്ഷരം scratch[ULOC_COUNTRY_CAPACITY];
     int32_t capacity = 0;
-    char* buffer = sink->GetAppendBuffer(
+    അക്ഷരം* buffer = sink->GetAppendBuffer(
             ULOC_COUNTRY_CAPACITY,
             ULOC_COUNTRY_CAPACITY,
             scratch,
             UPRV_LENGTHOF(scratch),
             &capacity);
 
-    for (size_t i = 0; i < len; ++i) {
+    വേണ്ടി (size_t i = 0; i < len; ++i) {
         buffer[i] = uprv_toupper(localeID[i]);
     }
 
-    if (len == 3) {
+    എങ്കിൽ (len == 3) {
         /* convert 3 character code to 2 character code if possible *CWB*/
         U_ASSERT(capacity >= 4);
         buffer[3] = '\0';
         std::optional<int16_t> offset = _findIndex(COUNTRIES_3, buffer);
-        if (offset.has_value()) {
-            const char* const alias = COUNTRIES[*offset];
+        എങ്കിൽ (offset.has_value()) {
+            സ്ഥിരം അക്ഷരം* സ്ഥിരം alias = COUNTRIES[*offset];
             sink->Append(alias, static_cast<int32_t>(uprv_strlen(alias)));
-            return len;
+            തിരികെ len;
         }
     }
 
     sink->Append(buffer, static_cast<int32_t>(len));
-    return len;
+    തിരികെ len;
 }
 
 /**
@@ -1277,11 +1277,11 @@ size_t _getRegion(std::string_view localeID, ByteSink* sink) {
  */
 size_t
 _getVariant(std::string_view localeID,
-            char prev,
+            അക്ഷരം prev,
             ByteSink* sink,
-            bool needSeparator,
+            തർക്കം needSeparator,
             UErrorCode& status) {
-    if (U_FAILURE(status) || localeID.empty()) return 0;
+    എങ്കിൽ (U_FAILURE(status) || localeID.empty()) തിരികെ 0;
 
     // Reasonable upper limit for variants
     // There are no strict limitation of the syntax of variant in the legacy
@@ -1295,42 +1295,42 @@ _getVariant(std::string_view localeID,
 
     /* get one or more variant tags and separate them with '_' */
     size_t index = 0;
-    if (_isIDSeparator(prev)) {
+    എങ്കിൽ (_isIDSeparator(prev)) {
         /* get a variant string after a '-' or '_' */
-        for (std::string_view sub = localeID;;) {
+        വേണ്ടി (std::string_view sub = localeID;;) {
             size_t next = sub.find_first_of(".@_-");
             // For historical reasons, a trailing separator is included in the variant.
-            bool finished = next == std::string_view::npos || next + 1 == sub.length();
+            തർക്കം finished = next == std::string_view::npos || next + 1 == sub.length();
             size_t limit = finished ? sub.length() : next;
             index += limit;
-            if (index > MAX_VARIANTS_LENGTH) {
+            എങ്കിൽ (index > MAX_VARIANTS_LENGTH) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
-                return 0;
+                തിരികെ 0;
             }
 
-            if (sink != nullptr) {
-                if (needSeparator) {
+            എങ്കിൽ (sink != nullptr) {
+                എങ്കിൽ (needSeparator) {
                     sink->Append("_", 1);
-                } else {
-                    needSeparator = true;
+                } അല്ലെങ്കിൽ {
+                    needSeparator = സത്യം;
                 }
 
                 int32_t length = static_cast<int32_t>(limit);
                 int32_t minCapacity = uprv_min(length, MAX_VARIANTS_LENGTH);
-                char scratch[MAX_VARIANTS_LENGTH];
+                അക്ഷരം scratch[MAX_VARIANTS_LENGTH];
                 int32_t capacity = 0;
-                char* buffer = sink->GetAppendBuffer(
+                അക്ഷരം* buffer = sink->GetAppendBuffer(
                         minCapacity, minCapacity, scratch, UPRV_LENGTHOF(scratch), &capacity);
 
-                for (size_t i = 0; i < limit; ++i) {
+                വേണ്ടി (size_t i = 0; i < limit; ++i) {
                     buffer[i] = uprv_toupper(sub[i]);
                 }
                 sink->Append(buffer, length);
             }
 
-            if (finished) { return index; }
+            എങ്കിൽ (finished) { തിരികെ index; }
             sub.remove_prefix(next);
-            if (_isTerminator(sub.front()) || _isBCP47Extension(sub)) { return index; }
+            എങ്കിൽ (_isTerminator(sub.front()) || _isBCP47Extension(sub)) { തിരികെ index; }
             sub.remove_prefix(1);
             index++;
         }
@@ -1338,39 +1338,39 @@ _getVariant(std::string_view localeID,
 
     size_t skip = 0;
     /* if there is no variant tag after a '-' or '_' then look for '@' */
-    if (prev == '@') {
+    എങ്കിൽ (prev == '@') {
         /* keep localeID */
-    } else if (const char* p = locale_getKeywordsStart(localeID); p != nullptr) {
+    } അല്ലെങ്കിൽ എങ്കിൽ (സ്ഥിരം അക്ഷരം* p = locale_getKeywordsStart(localeID); p != nullptr) {
         skip = 1 + p - localeID.data(); /* point after the '@' */
         localeID.remove_prefix(skip);
-    } else {
-        return 0;
+    } അല്ലെങ്കിൽ {
+        തിരികെ 0;
     }
-    for (; index < localeID.size() && !_isTerminator(localeID[index]); index++) {
-        if (index >= MAX_VARIANTS_LENGTH) { // same as length > MAX_VARIANTS_LENGTH
+    വേണ്ടി (; index < localeID.size() && !_isTerminator(localeID[index]); index++) {
+        എങ്കിൽ (index >= MAX_VARIANTS_LENGTH) { // same as length > MAX_VARIANTS_LENGTH
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return 0;
+            തിരികെ 0;
         }
-        if (needSeparator) {
-            if (sink != nullptr) {
+        എങ്കിൽ (needSeparator) {
+            എങ്കിൽ (sink != nullptr) {
                 sink->Append("_", 1);
             }
-            needSeparator = false;
+            needSeparator = അസത്യം;
         }
-        if (sink != nullptr) {
-            char c = uprv_toupper(localeID[index]);
-            if (c == '-' || c == ',') c = '_';
+        എങ്കിൽ (sink != nullptr) {
+            അക്ഷരം c = uprv_toupper(localeID[index]);
+            എങ്കിൽ (c == '-' || c == ',') c = '_';
             sink->Append(&c, 1);
         }
     }
-    return skip + index;
+    തിരികെ skip + index;
 }
 
 }  // namespace
 
 U_EXPORT CharString
 ulocimp_getLanguage(std::string_view localeID, UErrorCode& status) {
-    return ByteSinkUtil::viaByteSinkToCharString(
+    തിരികെ ByteSinkUtil::viaByteSinkToCharString(
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getSubtags(
                     localeID,
@@ -1386,7 +1386,7 @@ ulocimp_getLanguage(std::string_view localeID, UErrorCode& status) {
 
 U_EXPORT CharString
 ulocimp_getScript(std::string_view localeID, UErrorCode& status) {
-    return ByteSinkUtil::viaByteSinkToCharString(
+    തിരികെ ByteSinkUtil::viaByteSinkToCharString(
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getSubtags(
                     localeID,
@@ -1402,7 +1402,7 @@ ulocimp_getScript(std::string_view localeID, UErrorCode& status) {
 
 U_EXPORT CharString
 ulocimp_getRegion(std::string_view localeID, UErrorCode& status) {
-    return ByteSinkUtil::viaByteSinkToCharString(
+    തിരികെ ByteSinkUtil::viaByteSinkToCharString(
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getSubtags(
                     localeID,
@@ -1418,7 +1418,7 @@ ulocimp_getRegion(std::string_view localeID, UErrorCode& status) {
 
 U_EXPORT CharString
 ulocimp_getVariant(std::string_view localeID, UErrorCode& status) {
-    return ByteSinkUtil::viaByteSinkToCharString(
+    തിരികെ ByteSinkUtil::viaByteSinkToCharString(
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getSubtags(
                     localeID,
@@ -1432,26 +1432,26 @@ ulocimp_getVariant(std::string_view localeID, UErrorCode& status) {
         status);
 }
 
-U_EXPORT void
+U_EXPORT ശൂന്യം
 ulocimp_getSubtags(
         std::string_view localeID,
         CharString* language,
         CharString* script,
         CharString* region,
         CharString* variant,
-        const char** pEnd,
+        സ്ഥിരം അക്ഷരം** pEnd,
         UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    എങ്കിൽ (U_FAILURE(status)) { തിരികെ; }
 
     std::optional<CharStringByteSink> languageSink;
     std::optional<CharStringByteSink> scriptSink;
     std::optional<CharStringByteSink> regionSink;
     std::optional<CharStringByteSink> variantSink;
 
-    if (language != nullptr) { languageSink.emplace(language); }
-    if (script != nullptr) { scriptSink.emplace(script); }
-    if (region != nullptr) { regionSink.emplace(region); }
-    if (variant != nullptr) { variantSink.emplace(variant); }
+    എങ്കിൽ (language != nullptr) { languageSink.emplace(language); }
+    എങ്കിൽ (script != nullptr) { scriptSink.emplace(script); }
+    എങ്കിൽ (region != nullptr) { regionSink.emplace(region); }
+    എങ്കിൽ (variant != nullptr) { variantSink.emplace(variant); }
 
     ulocimp_getSubtags(
             localeID,
@@ -1463,163 +1463,163 @@ ulocimp_getSubtags(
             status);
 }
 
-U_EXPORT void
+U_EXPORT ശൂന്യം
 ulocimp_getSubtags(
         std::string_view localeID,
         ByteSink* language,
         ByteSink* script,
         ByteSink* region,
         ByteSink* variant,
-        const char** pEnd,
+        സ്ഥിരം അക്ഷരം** pEnd,
         UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    എങ്കിൽ (U_FAILURE(status)) { തിരികെ; }
 
-    if (pEnd != nullptr) {
+    എങ്കിൽ (pEnd != nullptr) {
         *pEnd = localeID.data();
-    } else if (language == nullptr &&
+    } അല്ലെങ്കിൽ എങ്കിൽ (language == nullptr &&
                script == nullptr &&
                region == nullptr &&
                variant == nullptr) {
-        return;
+        തിരികെ;
     }
 
-    if (localeID.empty()) { return; }
+    എങ്കിൽ (localeID.empty()) { തിരികെ; }
 
-    bool hasRegion = false;
+    തർക്കം hasRegion = അസത്യം;
 
     {
         size_t len = _getLanguage(localeID, language, status);
-        if (U_FAILURE(status)) { return; }
-        if (len > 0) {
+        എങ്കിൽ (U_FAILURE(status)) { തിരികെ; }
+        എങ്കിൽ (len > 0) {
             localeID.remove_prefix(len);
         }
     }
 
-    if (pEnd != nullptr) {
+    എങ്കിൽ (pEnd != nullptr) {
         *pEnd = localeID.data();
-    } else if (script == nullptr &&
+    } അല്ലെങ്കിൽ എങ്കിൽ (script == nullptr &&
                region == nullptr &&
                variant == nullptr) {
-        return;
+        തിരികെ;
     }
 
-    if (localeID.empty()) { return; }
+    എങ്കിൽ (localeID.empty()) { തിരികെ; }
 
-    if (_isIDSeparator(localeID.front())) {
+    എങ്കിൽ (_isIDSeparator(localeID.front())) {
         std::string_view sub = localeID;
         sub.remove_prefix(1);
         size_t len = _getScript(sub, script);
-        if (len > 0) {
+        എങ്കിൽ (len > 0) {
             localeID.remove_prefix(len + 1);
-            if (pEnd != nullptr) { *pEnd = localeID.data(); }
+            എങ്കിൽ (pEnd != nullptr) { *pEnd = localeID.data(); }
         }
     }
 
-    if ((region == nullptr && variant == nullptr && pEnd == nullptr) || localeID.empty()) { return; }
+    എങ്കിൽ ((region == nullptr && variant == nullptr && pEnd == nullptr) || localeID.empty()) { തിരികെ; }
 
-    if (_isIDSeparator(localeID.front())) {
+    എങ്കിൽ (_isIDSeparator(localeID.front())) {
         std::string_view sub = localeID;
         sub.remove_prefix(1);
         size_t len = _getRegion(sub, region);
-        if (len > 0) {
-            hasRegion = true;
+        എങ്കിൽ (len > 0) {
+            hasRegion = സത്യം;
             localeID.remove_prefix(len + 1);
-            if (pEnd != nullptr) { *pEnd = localeID.data(); }
+            എങ്കിൽ (pEnd != nullptr) { *pEnd = localeID.data(); }
         }
     }
 
-    if ((variant == nullptr && pEnd == nullptr) || localeID.empty()) { return; }
+    എങ്കിൽ ((variant == nullptr && pEnd == nullptr) || localeID.empty()) { തിരികെ; }
 
-    bool hasVariant = false;
+    തർക്കം hasVariant = അസത്യം;
 
-    if (_isIDSeparator(localeID.front()) && !_isBCP47Extension(localeID)) {
+    എങ്കിൽ (_isIDSeparator(localeID.front()) && !_isBCP47Extension(localeID)) {
         std::string_view sub = localeID;
         /* If there was no country ID, skip a possible extra IDSeparator */
         size_t skip = !hasRegion && localeID.size() > 1 && _isIDSeparator(localeID[1]) ? 2 : 1;
         sub.remove_prefix(skip);
-        size_t len = _getVariant(sub, localeID[0], variant, false, status);
-        if (U_FAILURE(status)) { return; }
-        if (len > 0) {
-            hasVariant = true;
+        size_t len = _getVariant(sub, localeID[0], variant, അസത്യം, status);
+        എങ്കിൽ (U_FAILURE(status)) { തിരികെ; }
+        എങ്കിൽ (len > 0) {
+            hasVariant = സത്യം;
             localeID.remove_prefix(skip + len);
-            if (pEnd != nullptr) { *pEnd = localeID.data(); }
+            എങ്കിൽ (pEnd != nullptr) { *pEnd = localeID.data(); }
         }
     }
 
-    if ((variant == nullptr && pEnd == nullptr) || localeID.empty()) { return; }
+    എങ്കിൽ ((variant == nullptr && pEnd == nullptr) || localeID.empty()) { തിരികെ; }
 
-    if (_isBCP47Extension(localeID)) {
+    എങ്കിൽ (_isBCP47Extension(localeID)) {
         localeID.remove_prefix(2);
-        constexpr char vaposix[] = "-va-posix";
-        constexpr size_t length = sizeof vaposix - 1;
-        for (size_t next;; localeID.remove_prefix(next)) {
+        constexpr അക്ഷരം vaposix[] = "-va-posix";
+        constexpr size_t length = വലുപ്പം vaposix - 1;
+        വേണ്ടി (size_t next;; localeID.remove_prefix(next)) {
             next = localeID.find('-', 1);
-            if (next == std::string_view::npos) { break; }
+            എങ്കിൽ (next == std::string_view::npos) { നിർത്തുക; }
             next = localeID.find('-', next + 1);
-            bool finished = next == std::string_view::npos;
+            തർക്കം finished = next == std::string_view::npos;
             std::string_view sub = localeID;
-            if (!finished) { sub.remove_suffix(sub.length() - next); }
+            എങ്കിൽ (!finished) { sub.remove_suffix(sub.length() - next); }
 
-            if (sub.length() == length && uprv_strnicmp(sub.data(), vaposix, length) == 0) {
-                if (variant != nullptr) {
-                    if (hasVariant) { variant->Append("_", 1); }
-                    constexpr char posix[] = "POSIX";
-                    variant->Append(posix, sizeof posix - 1);
+            എങ്കിൽ (sub.length() == length && uprv_strnicmp(sub.data(), vaposix, length) == 0) {
+                എങ്കിൽ (variant != nullptr) {
+                    എങ്കിൽ (hasVariant) { variant->Append("_", 1); }
+                    constexpr അക്ഷരം posix[] = "POSIX";
+                    variant->Append(posix, വലുപ്പം posix - 1);
                 }
-                if (pEnd != nullptr) { *pEnd = localeID.data() + length; }
+                എങ്കിൽ (pEnd != nullptr) { *pEnd = localeID.data() + length; }
             }
 
-            if (finished) { break; }
+            എങ്കിൽ (finished) { നിർത്തുക; }
         }
     }
 }
 
 /* Keyword enumeration */
 
-typedef struct UKeywordsContext {
-    char* keywords;
-    char* current;
+തരനിർവചനം ഘടന UKeywordsContext {
+    അക്ഷരം* keywords;
+    അക്ഷരം* current;
 } UKeywordsContext;
 
 U_CDECL_BEGIN
 
-static void U_CALLCONV
+സ്ഥിതം ശൂന്യം U_CALLCONV
 uloc_kw_closeKeywords(UEnumeration *enumerator) {
     uprv_free(((UKeywordsContext *)enumerator->context)->keywords);
     uprv_free(enumerator->context);
     uprv_free(enumerator);
 }
 
-static int32_t U_CALLCONV
-uloc_kw_countKeywords(UEnumeration *en, UErrorCode * /*status*/) {
-    char *kw = ((UKeywordsContext *)en->context)->keywords;
+സ്ഥിതം int32_t U_CALLCONV
+uloc_kw_എണ്ണം_Keywords(UEnumeration *en, UErrorCode * /*status*/) {
+    അക്ഷരം *kw = ((UKeywordsContext *)en->context)->keywords;
     int32_t result = 0;
-    while(*kw) {
+    ആകുമ്പോൾ(*kw) {
         result++;
         kw += uprv_strlen(kw)+1;
     }
-    return result;
+    തിരികെ result;
 }
 
-static const char * U_CALLCONV
+സ്ഥിതം സ്ഥിരം അക്ഷരം * U_CALLCONV
 uloc_kw_nextKeyword(UEnumeration* en,
                     int32_t* resultLength,
                     UErrorCode* /*status*/) {
-    const char* result = ((UKeywordsContext *)en->context)->current;
+    സ്ഥിരം അക്ഷരം* result = ((UKeywordsContext *)en->context)->current;
     int32_t len = 0;
-    if(*result) {
+    എങ്കിൽ(*result) {
         len = (int32_t)uprv_strlen(((UKeywordsContext *)en->context)->current);
         ((UKeywordsContext *)en->context)->current += len+1;
-    } else {
+    } അല്ലെങ്കിൽ {
         result = nullptr;
     }
-    if (resultLength) {
+    എങ്കിൽ (resultLength) {
         *resultLength = len;
     }
-    return result;
+    തിരികെ result;
 }
 
-static void U_CALLCONV
+സ്ഥിതം ശൂന്യം U_CALLCONV
 uloc_kw_resetKeywords(UEnumeration* en,
                       UErrorCode* /*status*/) {
     ((UKeywordsContext *)en->context)->current = ((UKeywordsContext *)en->context)->keywords;
@@ -1628,59 +1628,59 @@ uloc_kw_resetKeywords(UEnumeration* en,
 U_CDECL_END
 
 
-static const UEnumeration gKeywordsEnum = {
+സ്ഥിതം സ്ഥിരം UEnumeration gKeywordsEnum = {
     nullptr,
     nullptr,
     uloc_kw_closeKeywords,
-    uloc_kw_countKeywords,
+    uloc_kw_എണ്ണം_Keywords,
     uenum_unextDefault,
     uloc_kw_nextKeyword,
     uloc_kw_resetKeywords
 };
 
 U_CAPI UEnumeration* U_EXPORT2
-uloc_openKeywordList(const char *keywordList, int32_t keywordListSize, UErrorCode* status)
+uloc_openKeywordList(സ്ഥിരം അക്ഷരം *keywordList, int32_t keywordListSize, UErrorCode* status)
 {
-    if (U_FAILURE(*status)) { return nullptr; }
+    എങ്കിൽ (U_FAILURE(*status)) { തിരികെ nullptr; }
 
     LocalMemory<UKeywordsContext> myContext;
     LocalMemory<UEnumeration> result;
 
-    myContext.adoptInstead(static_cast<UKeywordsContext *>(uprv_malloc(sizeof(UKeywordsContext))));
-    result.adoptInstead(static_cast<UEnumeration *>(uprv_malloc(sizeof(UEnumeration))));
-    if (myContext.isNull() || result.isNull()) {
+    myContext.adoptInstead(static_cast<UKeywordsContext *>(uprv_malloc(വലുപ്പം(UKeywordsContext))));
+    result.adoptInstead(static_cast<UEnumeration *>(uprv_malloc(വലുപ്പം(UEnumeration))));
+    എങ്കിൽ (myContext.isNull() || result.isNull()) {
         *status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
-    uprv_memcpy(result.getAlias(), &gKeywordsEnum, sizeof(UEnumeration));
-    myContext->keywords = static_cast<char *>(uprv_malloc(keywordListSize+1));
-    if (myContext->keywords == nullptr) {
+    uprv_memcpy(result.getAlias(), &gKeywordsEnum, വലുപ്പം(UEnumeration));
+    myContext->keywords = static_cast<അക്ഷരം *>(uprv_malloc(keywordListSize+1));
+    എങ്കിൽ (myContext->keywords == nullptr) {
         *status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
     uprv_memcpy(myContext->keywords, keywordList, keywordListSize);
     myContext->keywords[keywordListSize] = 0;
     myContext->current = myContext->keywords;
     result->context = myContext.orphan();
-    return result.orphan();
+    തിരികെ result.orphan();
 }
 
 U_CAPI UEnumeration* U_EXPORT2
-uloc_openKeywords(const char* localeID,
+uloc_openKeywords(സ്ഥിരം അക്ഷരം* localeID,
                         UErrorCode* status)
 {
-    if(status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    എങ്കിൽ(status==nullptr || U_FAILURE(*status)) {
+        തിരികെ nullptr;
     }
 
     CharString tempBuffer;
-    const char* tmpLocaleID;
+    സ്ഥിരം അക്ഷരം* tmpLocaleID;
 
-    if (localeID != nullptr && _hasBCP47Extension(localeID)) {
+    എങ്കിൽ (localeID != nullptr && _hasBCP47Extension(localeID)) {
         tempBuffer = ulocimp_forLanguageTag(localeID, -1, nullptr, *status);
         tmpLocaleID = U_SUCCESS(*status) && !tempBuffer.isEmpty() ? tempBuffer.data() : localeID;
-    } else {
-        if (localeID==nullptr) {
+    } അല്ലെങ്കിൽ {
+        എങ്കിൽ (localeID==nullptr) {
             localeID=uloc_getDefault();
         }
         tmpLocaleID=localeID;
@@ -1694,19 +1694,19 @@ uloc_openKeywords(const char* localeID,
             nullptr,
             &tmpLocaleID,
             *status);
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    എങ്കിൽ (U_FAILURE(*status)) {
+        തിരികെ nullptr;
     }
 
     /* keywords are located after '@' */
-    if((tmpLocaleID = locale_getKeywordsStart(tmpLocaleID)) != nullptr) {
-        CharString keywords = ulocimp_getKeywords(tmpLocaleID + 1, '@', false, *status);
-        if (U_FAILURE(*status)) {
-            return nullptr;
+    എങ്കിൽ((tmpLocaleID = locale_getKeywordsStart(tmpLocaleID)) != nullptr) {
+        CharString keywords = ulocimp_getKeywords(tmpLocaleID + 1, '@', അസത്യം, *status);
+        എങ്കിൽ (U_FAILURE(*status)) {
+            തിരികെ nullptr;
         }
-        return uloc_openKeywordList(keywords.data(), keywords.length(), status);
+        തിരികെ uloc_openKeywordList(keywords.data(), keywords.length(), status);
     }
-    return nullptr;
+    തിരികെ nullptr;
 }
 
 
@@ -1714,11 +1714,11 @@ uloc_openKeywords(const char* localeID,
 #define _ULOC_STRIP_KEYWORDS 0x2
 #define _ULOC_CANONICALIZE   0x1
 
-namespace {
+നാമാകാശ {
 
-inline bool OPTION_SET(uint32_t options, uint32_t mask) { return (options & mask) != 0; }
+വരിയിൽ തർക്കം OPTION_SET(uint32_t options, uint32_t mask) { തിരികെ (options & mask) != 0; }
 
-constexpr char i_default[] = {'i', '-', 'd', 'e', 'f', 'a', 'u', 'l', 't'};
+constexpr അക്ഷരം i_default[] = {'i', '-', 'd', 'e', 'f', 'a', 'u', 'l', 't'};
 constexpr int32_t I_DEFAULT_LENGTH = UPRV_LENGTHOF(i_default);
 
 /**
@@ -1728,16 +1728,16 @@ constexpr int32_t I_DEFAULT_LENGTH = UPRV_LENGTHOF(i_default);
  *
  * This is the code underlying uloc_getName and uloc_canonicalize.
  */
-void
+ശൂന്യം
 _canonicalize(std::string_view localeID,
               ByteSink& sink,
               uint32_t options,
               UErrorCode& err) {
-    if (U_FAILURE(err)) {
-        return;
+    എങ്കിൽ (U_FAILURE(err)) {
+        തിരികെ;
     }
 
-    int32_t j, fieldCount=0;
+    int32_t j, field_എണ്ണം=0;
     CharString tempBuffer;  // if localeID has a BCP47 extension, tmpLocaleID points to this
     CharString localeIDWithHyphens;  // if localeID has a BPC47 extension and have _, tmpLocaleID points to this
     std::string_view origLocaleID;
@@ -1745,15 +1745,15 @@ _canonicalize(std::string_view localeID,
     size_t keywordAssign = std::string_view::npos;
     size_t separatorIndicator = std::string_view::npos;
 
-    if (_hasBCP47Extension(localeID)) {
+    എങ്കിൽ (_hasBCP47Extension(localeID)) {
         std::string_view localeIDPtr = localeID;
 
         // convert all underbars to hyphens, unless the "BCP47 extension" comes at the beginning of the string
-        if (localeID.size() >= 2 && localeID.find('_') != std::string_view::npos && localeID[1] != '-' && localeID[1] != '_') {
+        എങ്കിൽ (localeID.size() >= 2 && localeID.find('_') != std::string_view::npos && localeID[1] != '-' && localeID[1] != '_') {
             localeIDWithHyphens.append(localeID, err);
-            if (U_SUCCESS(err)) {
-                for (char* p = localeIDWithHyphens.data(); *p != '\0'; ++p) {
-                    if (*p == '_') {
+            എങ്കിൽ (U_SUCCESS(err)) {
+                വേണ്ടി (അക്ഷരം* p = localeIDWithHyphens.data(); *p != '\0'; ++p) {
+                    എങ്കിൽ (*p == '_') {
                         *p = '-';
                     }
                 }
@@ -1763,7 +1763,7 @@ _canonicalize(std::string_view localeID,
 
         tempBuffer = ulocimp_forLanguageTag(localeIDPtr.data(), static_cast<int32_t>(localeIDPtr.size()), nullptr, err);
         tmpLocaleID = U_SUCCESS(err) && !tempBuffer.isEmpty() ? static_cast<std::string_view>(tempBuffer.toStringPiece()) : localeIDPtr;
-    } else {
+    } അല്ലെങ്കിൽ {
         tmpLocaleID=localeID;
     }
 
@@ -1774,7 +1774,7 @@ _canonicalize(std::string_view localeID,
     CharString script;
     CharString country;
     CharString variant;
-    const char* end = nullptr;
+    സ്ഥിരം അക്ഷരം* end = nullptr;
     ulocimp_getSubtags(
             tmpLocaleID,
             &tag,
@@ -1783,32 +1783,32 @@ _canonicalize(std::string_view localeID,
             &variant,
             &end,
             err);
-    if (U_FAILURE(err)) {
-        return;
+    എങ്കിൽ (U_FAILURE(err)) {
+        തിരികെ;
     }
     U_ASSERT(end != nullptr);
-    if (end > tmpLocaleID.data()) {
+    എങ്കിൽ (end > tmpLocaleID.data()) {
         tmpLocaleID.remove_prefix(end - tmpLocaleID.data());
     }
 
-    if (tag.length() == I_DEFAULT_LENGTH && origLocaleID.length() >= I_DEFAULT_LENGTH &&
+    എങ്കിൽ (tag.length() == I_DEFAULT_LENGTH && origLocaleID.length() >= I_DEFAULT_LENGTH &&
             uprv_strncmp(origLocaleID.data(), i_default, I_DEFAULT_LENGTH) == 0) {
         tag.clear();
         tag.append(uloc_getDefault(), err);
-    } else {
-        if (!script.isEmpty()) {
-            ++fieldCount;
+    } അല്ലെങ്കിൽ {
+        എങ്കിൽ (!script.isEmpty()) {
+            ++field_എണ്ണം;
             tag.append('_', err);
             tag.append(script, err);
         }
-        if (!country.isEmpty()) {
-            ++fieldCount;
+        എങ്കിൽ (!country.isEmpty()) {
+            ++field_എണ്ണം;
             tag.append('_', err);
             tag.append(country, err);
         }
-        if (!variant.isEmpty()) {
-            ++fieldCount;
-            if (country.isEmpty()) {
+        എങ്കിൽ (!variant.isEmpty()) {
+            ++field_എണ്ണം;
+            എങ്കിൽ (country.isEmpty()) {
                 tag.append('_', err);
             }
             tag.append('_', err);
@@ -1817,13 +1817,13 @@ _canonicalize(std::string_view localeID,
     }
 
     /* Copy POSIX-style charset specifier, if any [mr.utf8] */
-    if (!OPTION_SET(options, _ULOC_CANONICALIZE) && !tmpLocaleID.empty() && tmpLocaleID.front() == '.') {
+    എങ്കിൽ (!OPTION_SET(options, _ULOC_CANONICALIZE) && !tmpLocaleID.empty() && tmpLocaleID.front() == '.') {
         tag.append('.', err);
         tmpLocaleID.remove_prefix(1);
         size_t length;
-        if (size_t atPos = tmpLocaleID.find('@'); atPos != std::string_view::npos) {
+        എങ്കിൽ (size_t atPos = tmpLocaleID.find('@'); atPos != std::string_view::npos) {
             length = atPos;
-        } else {
+        } അല്ലെങ്കിൽ {
             length = tmpLocaleID.length();
         }
         // The longest charset name we found in IANA charset registry
@@ -1832,11 +1832,11 @@ _canonicalize(std::string_view localeID,
         // we therefore restrict the length here to be 64 which is a power of 2
         // number that is longer than 45.
         constexpr size_t kMaxCharsetLength = 64;
-        if (length > kMaxCharsetLength) {
+        എങ്കിൽ (length > kMaxCharsetLength) {
            err = U_ILLEGAL_ARGUMENT_ERROR; /* malformed keyword name */
-           return;
+           തിരികെ;
         }
-        if (length > 0) {
+        എങ്കിൽ (length > 0) {
             tag.append(tmpLocaleID.data(), static_cast<int32_t>(length), err);
             tmpLocaleID.remove_prefix(length);
         }
@@ -1844,64 +1844,64 @@ _canonicalize(std::string_view localeID,
 
     /* Scan ahead to next '@' and determine if it is followed by '=' and/or ';'
        After this, tmpLocaleID either starts at '@' or is empty. */
-    if (const char* start = locale_getKeywordsStart(tmpLocaleID); start != nullptr) {
-        if (start > tmpLocaleID.data()) {
+    എങ്കിൽ (സ്ഥിരം അക്ഷരം* start = locale_getKeywordsStart(tmpLocaleID); start != nullptr) {
+        എങ്കിൽ (start > tmpLocaleID.data()) {
             tmpLocaleID.remove_prefix(start - tmpLocaleID.data());
         }
         keywordAssign = tmpLocaleID.find('=');
         separatorIndicator = tmpLocaleID.find(';');
-    } else {
+    } അല്ലെങ്കിൽ {
         tmpLocaleID = {};
     }
 
     /* Copy POSIX-style variant, if any [mr@FOO] */
-    if (!OPTION_SET(options, _ULOC_CANONICALIZE) &&
+    എങ്കിൽ (!OPTION_SET(options, _ULOC_CANONICALIZE) &&
         !tmpLocaleID.empty() && keywordAssign == std::string_view::npos) {
         tag.append(tmpLocaleID, err);
         tmpLocaleID = {};
     }
 
-    if (OPTION_SET(options, _ULOC_CANONICALIZE)) {
+    എങ്കിൽ (OPTION_SET(options, _ULOC_CANONICALIZE)) {
         /* Handle @FOO variant if @ is present and not followed by = */
-        if (!tmpLocaleID.empty() && keywordAssign == std::string_view::npos) {
+        എങ്കിൽ (!tmpLocaleID.empty() && keywordAssign == std::string_view::npos) {
             /* Add missing '_' if needed */
-            if (fieldCount < 2 || (fieldCount < 3 && !script.isEmpty())) {
-                do {
+            എങ്കിൽ (field_എണ്ണം < 2 || (field_എണ്ണം < 3 && !script.isEmpty())) {
+                ചെയ്യുക {
                     tag.append('_', err);
-                    ++fieldCount;
-                } while(fieldCount<2);
+                    ++field_എണ്ണം;
+                } ആകുമ്പോൾ(field_എണ്ണം<2);
             }
 
             CharStringByteSink s(&tag);
             std::string_view sub = tmpLocaleID;
             sub.remove_prefix(1);
             _getVariant(sub, '@', &s, !variant.isEmpty(), err);
-            if (U_FAILURE(err)) { return; }
+            എങ്കിൽ (U_FAILURE(err)) { തിരികെ; }
         }
 
         /* Look up the ID in the canonicalization map */
-        for (j=0; j<UPRV_LENGTHOF(CANONICALIZE_MAP); j++) {
+        വേണ്ടി (j=0; j<UPRV_LENGTHOF(CANONICALIZE_MAP); j++) {
             StringPiece id(CANONICALIZE_MAP[j].id);
-            if (tag == id) {
-                if (id.empty() && !tmpLocaleID.empty()) {
-                    break; /* Don't remap "" if keywords present */
+            എങ്കിൽ (tag == id) {
+                എങ്കിൽ (id.empty() && !tmpLocaleID.empty()) {
+                    നിർത്തുക; /* Don't remap "" if keywords present */
                 }
                 tag.clear();
                 tag.append(CANONICALIZE_MAP[j].canonicalID, err);
-                break;
+                നിർത്തുക;
             }
         }
     }
 
     sink.Append(tag.data(), tag.length());
 
-    if (!OPTION_SET(options, _ULOC_STRIP_KEYWORDS)) {
-        if (!tmpLocaleID.empty() && keywordAssign != std::string_view::npos &&
+    എങ്കിൽ (!OPTION_SET(options, _ULOC_STRIP_KEYWORDS)) {
+        എങ്കിൽ (!tmpLocaleID.empty() && keywordAssign != std::string_view::npos &&
             (separatorIndicator == std::string_view::npos || separatorIndicator > keywordAssign)) {
             sink.Append("@", 1);
-            ++fieldCount;
+            ++field_എണ്ണം;
             tmpLocaleID.remove_prefix(1);
-            ulocimp_getKeywords(tmpLocaleID, '@', sink, true, err);
+            ulocimp_getKeywords(tmpLocaleID, '@', sink, സത്യം, err);
         }
     }
 }
@@ -1911,12 +1911,12 @@ _canonicalize(std::string_view localeID,
 /* ### ID parsing API **************************************************/
 
 U_CAPI int32_t  U_EXPORT2
-uloc_getParent(const char*    localeID,
-               char* parent,
+uloc_getParent(സ്ഥിരം അക്ഷരം*    localeID,
+               അക്ഷരം* parent,
                int32_t parentCapacity,
                UErrorCode* err)
 {
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
+    തിരികെ ByteSinkUtil::viaByteSinkToTerminatedChars(
         parent, parentCapacity,
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getParent(localeID, sink, status);
@@ -1925,38 +1925,38 @@ uloc_getParent(const char*    localeID,
 }
 
 U_EXPORT CharString
-ulocimp_getParent(const char* localeID,
+ulocimp_getParent(സ്ഥിരം അക്ഷരം* localeID,
                   UErrorCode& err)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
+    തിരികെ ByteSinkUtil::viaByteSinkToCharString(
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getParent(localeID, sink, status);
         },
         err);
 }
 
-U_EXPORT void
-ulocimp_getParent(const char* localeID,
+U_EXPORT ശൂന്യം
+ulocimp_getParent(സ്ഥിരം അക്ഷരം* localeID,
                   icu::ByteSink& sink,
                   UErrorCode& err)
 {
-    if (U_FAILURE(err)) { return; }
+    എങ്കിൽ (U_FAILURE(err)) { തിരികെ; }
 
-    const char *lastUnderscore;
+    സ്ഥിരം അക്ഷരം *lastUnderscore;
     int32_t i;
 
-    if (localeID == nullptr)
+    എങ്കിൽ (localeID == nullptr)
         localeID = uloc_getDefault();
 
     lastUnderscore=uprv_strrchr(localeID, '_');
-    if(lastUnderscore!=nullptr) {
+    എങ്കിൽ(lastUnderscore!=nullptr) {
         i = static_cast<int32_t>(lastUnderscore - localeID);
-    } else {
+    } അല്ലെങ്കിൽ {
         i=0;
     }
 
-    if (i > 0) {
-        if (uprv_strnicmp(localeID, "und_", 4) == 0) {
+    എങ്കിൽ (i > 0) {
+        എങ്കിൽ (uprv_strnicmp(localeID, "und_", 4) == 0) {
             localeID += 3;
             i -= 3;
         }
@@ -1965,17 +1965,17 @@ ulocimp_getParent(const char* localeID,
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_getLanguage(const char*    localeID,
-         char* language,
+uloc_getLanguage(സ്ഥിരം അക്ഷരം*    localeID,
+         അക്ഷരം* language,
          int32_t languageCapacity,
          UErrorCode* err)
 {
-    if (localeID == nullptr) {
+    എങ്കിൽ (localeID == nullptr) {
         localeID = uloc_getDefault();
     }
 
     /* uloc_getLanguage will return a 2 character iso-639 code if one exists. *CWB*/
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
+    തിരികെ ByteSinkUtil::viaByteSinkToTerminatedChars(
         language, languageCapacity,
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getSubtags(
@@ -1991,16 +1991,16 @@ uloc_getLanguage(const char*    localeID,
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_getScript(const char*    localeID,
-         char* script,
+uloc_getScript(സ്ഥിരം അക്ഷരം*    localeID,
+         അക്ഷരം* script,
          int32_t scriptCapacity,
          UErrorCode* err)
 {
-    if (localeID == nullptr) {
+    എങ്കിൽ (localeID == nullptr) {
         localeID = uloc_getDefault();
     }
 
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
+    തിരികെ ByteSinkUtil::viaByteSinkToTerminatedChars(
         script, scriptCapacity,
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getSubtags(
@@ -2016,16 +2016,16 @@ uloc_getScript(const char*    localeID,
 }
 
 U_CAPI int32_t  U_EXPORT2
-uloc_getCountry(const char* localeID,
-            char* country,
+uloc_getCountry(സ്ഥിരം അക്ഷരം* localeID,
+            അക്ഷരം* country,
             int32_t countryCapacity,
             UErrorCode* err)
 {
-    if (localeID == nullptr) {
+    എങ്കിൽ (localeID == nullptr) {
         localeID = uloc_getDefault();
     }
 
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
+    തിരികെ ByteSinkUtil::viaByteSinkToTerminatedChars(
         country, countryCapacity,
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getSubtags(
@@ -2041,16 +2041,16 @@ uloc_getCountry(const char* localeID,
 }
 
 U_CAPI int32_t  U_EXPORT2
-uloc_getVariant(const char* localeID,
-                char* variant,
+uloc_getVariant(സ്ഥിരം അക്ഷരം* localeID,
+                അക്ഷരം* variant,
                 int32_t variantCapacity,
                 UErrorCode* err)
 {
-    if (localeID == nullptr) {
+    എങ്കിൽ (localeID == nullptr) {
         localeID = uloc_getDefault();
     }
 
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
+    തിരികെ ByteSinkUtil::viaByteSinkToTerminatedChars(
         variant, variantCapacity,
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getSubtags(
@@ -2066,15 +2066,15 @@ uloc_getVariant(const char* localeID,
 }
 
 U_CAPI int32_t  U_EXPORT2
-uloc_getName(const char* localeID,
-             char* name,
+uloc_getName(സ്ഥിരം അക്ഷരം* localeID,
+             അക്ഷരം* name,
              int32_t nameCapacity,
              UErrorCode* err)
 {
-    if (localeID == nullptr) {
+    എങ്കിൽ (localeID == nullptr) {
         localeID = uloc_getDefault();
     }
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
+    തിരികെ ByteSinkUtil::viaByteSinkToTerminatedChars(
         name, nameCapacity,
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getName(localeID, sink, status);
@@ -2086,14 +2086,14 @@ U_EXPORT CharString
 ulocimp_getName(std::string_view localeID,
                 UErrorCode& err)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
+    തിരികെ ByteSinkUtil::viaByteSinkToCharString(
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getName(localeID, sink, status);
         },
         err);
 }
 
-U_EXPORT void
+U_EXPORT ശൂന്യം
 ulocimp_getName(std::string_view localeID,
                 ByteSink& sink,
                 UErrorCode& err)
@@ -2102,15 +2102,15 @@ ulocimp_getName(std::string_view localeID,
 }
 
 U_CAPI int32_t  U_EXPORT2
-uloc_getBaseName(const char* localeID,
-                 char* name,
+uloc_getBaseName(സ്ഥിരം അക്ഷരം* localeID,
+                 അക്ഷരം* name,
                  int32_t nameCapacity,
                  UErrorCode* err)
 {
-    if (localeID == nullptr) {
+    എങ്കിൽ (localeID == nullptr) {
         localeID = uloc_getDefault();
     }
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
+    തിരികെ ByteSinkUtil::viaByteSinkToTerminatedChars(
         name, nameCapacity,
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getBaseName(localeID, sink, status);
@@ -2122,14 +2122,14 @@ U_EXPORT CharString
 ulocimp_getBaseName(std::string_view localeID,
                     UErrorCode& err)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
+    തിരികെ ByteSinkUtil::viaByteSinkToCharString(
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getBaseName(localeID, sink, status);
         },
         err);
 }
 
-U_EXPORT void
+U_EXPORT ശൂന്യം
 ulocimp_getBaseName(std::string_view localeID,
                     ByteSink& sink,
                     UErrorCode& err)
@@ -2138,15 +2138,15 @@ ulocimp_getBaseName(std::string_view localeID,
 }
 
 U_CAPI int32_t  U_EXPORT2
-uloc_canonicalize(const char* localeID,
-                  char* name,
+uloc_canonicalize(സ്ഥിരം അക്ഷരം* localeID,
+                  അക്ഷരം* name,
                   int32_t nameCapacity,
                   UErrorCode* err)
 {
-    if (localeID == nullptr) {
+    എങ്കിൽ (localeID == nullptr) {
         localeID = uloc_getDefault();
     }
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
+    തിരികെ ByteSinkUtil::viaByteSinkToTerminatedChars(
         name, nameCapacity,
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_canonicalize(localeID, sink, status);
@@ -2158,14 +2158,14 @@ U_EXPORT CharString
 ulocimp_canonicalize(std::string_view localeID,
                      UErrorCode& err)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
+    തിരികെ ByteSinkUtil::viaByteSinkToCharString(
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_canonicalize(localeID, sink, status);
         },
         err);
 }
 
-U_EXPORT void
+U_EXPORT ശൂന്യം
 ulocimp_canonicalize(std::string_view localeID,
                      ByteSink& sink,
                      UErrorCode& err)
@@ -2173,74 +2173,74 @@ ulocimp_canonicalize(std::string_view localeID,
     _canonicalize(localeID, sink, _ULOC_CANONICALIZE, err);
 }
 
-U_CAPI const char*  U_EXPORT2
-uloc_getISO3Language(const char* localeID)
+U_CAPI സ്ഥിരം അക്ഷരം*  U_EXPORT2
+uloc_getISO3Language(സ്ഥിരം അക്ഷരം* localeID)
 {
     UErrorCode err = U_ZERO_ERROR;
 
-    if (localeID == nullptr)
+    എങ്കിൽ (localeID == nullptr)
     {
         localeID = uloc_getDefault();
     }
     CharString lang = ulocimp_getLanguage(localeID, err);
-    if (U_FAILURE(err))
-        return "";
+    എങ്കിൽ (U_FAILURE(err))
+        തിരികെ "";
     std::optional<int16_t> offset = _findIndex(LANGUAGES, lang.data());
-    return offset.has_value() ? LANGUAGES_3[*offset] : "";
+    തിരികെ offset.has_value() ? LANGUAGES_3[*offset] : "";
 }
 
-U_CAPI const char*  U_EXPORT2
-uloc_getISO3Country(const char* localeID)
+U_CAPI സ്ഥിരം അക്ഷരം*  U_EXPORT2
+uloc_getISO3Country(സ്ഥിരം അക്ഷരം* localeID)
 {
     UErrorCode err = U_ZERO_ERROR;
 
-    if (localeID == nullptr)
+    എങ്കിൽ (localeID == nullptr)
     {
         localeID = uloc_getDefault();
     }
     CharString cntry = ulocimp_getRegion(localeID, err);
-    if (U_FAILURE(err))
-        return "";
+    എങ്കിൽ (U_FAILURE(err))
+        തിരികെ "";
     std::optional<int16_t> offset = _findIndex(COUNTRIES, cntry.data());
-    return offset.has_value() ? COUNTRIES_3[*offset] : "";
+    തിരികെ offset.has_value() ? COUNTRIES_3[*offset] : "";
 }
 
 U_CAPI uint32_t  U_EXPORT2
-uloc_getLCID(const char* localeID)
+uloc_getLCID(സ്ഥിരം അക്ഷരം* localeID)
 {
     UErrorCode status = U_ZERO_ERROR;
     uint32_t   lcid = 0;
 
     /* Check for incomplete id. */
-    if (!localeID || uprv_strlen(localeID) < 2) {
-        return 0;
+    എങ്കിൽ (!localeID || uprv_strlen(localeID) < 2) {
+        തിരികെ 0;
     }
 
     // First, attempt Windows platform lookup if available, but fall
     // through to catch any special cases (ICU vs Windows name differences).
     lcid = uprv_convertToLCIDPlatform(localeID, &status);
-    if (U_FAILURE(status)) {
-        return 0;
+    എങ്കിൽ (U_FAILURE(status)) {
+        തിരികെ 0;
     }
-    if (lcid > 0) {
+    എങ്കിൽ (lcid > 0) {
         // Windows found an LCID, return that
-        return lcid;
+        തിരികെ lcid;
     }
 
     CharString langID = ulocimp_getLanguage(localeID, status);
-    if (U_FAILURE(status)) {
-        return 0;
+    എങ്കിൽ (U_FAILURE(status)) {
+        തിരികെ 0;
     }
 
-    if (uprv_strchr(localeID, '@')) {
+    എങ്കിൽ (uprv_strchr(localeID, '@')) {
         // uprv_convertToLCID does not support keywords other than collation.
         // Remove all keywords except collation.
-        CharString collVal = ulocimp_getKeywordValue(localeID, "collation", status);
-        if (U_SUCCESS(status) && !collVal.isEmpty()) {
+        CharString collVal = ulocimp_get_Keyword_മൂല്യം(localeID, "collation", status);
+        എങ്കിൽ (U_SUCCESS(status) && !collVal.isEmpty()) {
             CharString tmpLocaleID = ulocimp_getBaseName(localeID, status);
-            ulocimp_setKeywordValue("collation", collVal.toStringPiece(), tmpLocaleID, status);
-            if (U_SUCCESS(status)) {
-                return uprv_convertToLCID(langID.data(), tmpLocaleID.data(), &status);
+            ulocimp_set_Keyword_മൂല്യം("collation", collVal.toStringPiece(), tmpLocaleID, status);
+            എങ്കിൽ (U_SUCCESS(status)) {
+                തിരികെ uprv_convertToLCID(langID.data(), tmpLocaleID.data(), &status);
             }
         }
 
@@ -2248,30 +2248,30 @@ uloc_getLCID(const char* localeID)
         status = U_ZERO_ERROR;
     }
 
-    return uprv_convertToLCID(langID.data(), localeID, &status);
+    തിരികെ uprv_convertToLCID(langID.data(), localeID, &status);
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_getLocaleForLCID(uint32_t hostid, char *locale, int32_t localeCapacity,
+uloc_getLocaleForLCID(uint32_t hostid, അക്ഷരം *locale, int32_t localeCapacity,
                 UErrorCode *status)
 {
-    return uprv_convertToPosix(hostid, locale, localeCapacity, status);
+    തിരികെ uprv_convertToPosix(hostid, locale, localeCapacity, status);
 }
 
 /* ### Default locale **************************************************/
 
-U_CAPI const char*  U_EXPORT2
+U_CAPI സ്ഥിരം അക്ഷരം*  U_EXPORT2
 uloc_getDefault()
 {
-    return locale_get_default();
+    തിരികെ locale_get_default();
 }
 
-U_CAPI void  U_EXPORT2
-uloc_setDefault(const char*   newDefaultLocale,
+U_CAPI ശൂന്യം  U_EXPORT2
+uloc_setDefault(സ്ഥിരം അക്ഷരം*   newDefaultLocale,
              UErrorCode* err)
 {
-    if (U_FAILURE(*err))
-        return;
+    എങ്കിൽ (U_FAILURE(*err))
+        തിരികെ;
     /* the error code isn't currently used for anything by this function*/
 
     /* propagate change to C++ */
@@ -2284,10 +2284,10 @@ uloc_setDefault(const char*   newDefaultLocale,
  * by ICU-- do not delete them, and do not write through them.  The array is
  * terminated with a null pointer.
  */
-U_CAPI const char* const*  U_EXPORT2
+U_CAPI സ്ഥിരം അക്ഷരം* സ്ഥിരം*  U_EXPORT2
 uloc_getISOLanguages()
 {
-    return LANGUAGES;
+    തിരികെ LANGUAGES;
 }
 
 /**
@@ -2296,95 +2296,95 @@ uloc_getISOLanguages()
  * owned by ICU-- do not delete them, and do not write through them.  The array is
  * terminated with a null pointer.
  */
-U_CAPI const char* const*  U_EXPORT2
+U_CAPI സ്ഥിരം അക്ഷരം* സ്ഥിരം*  U_EXPORT2
 uloc_getISOCountries()
 {
-    return COUNTRIES;
+    തിരികെ COUNTRIES;
 }
 
-U_CAPI const char* U_EXPORT2
-uloc_toUnicodeLocaleKey(const char* keyword U_LIFETIME_BOUND)
+U_CAPI സ്ഥിരം അക്ഷരം* U_EXPORT2
+uloc_to_Unicode_Locale_താക്കോൽ(സ്ഥിരം അക്ഷരം* keyword U_LIFETIME_BOUND)
 {
-    if (keyword == nullptr || *keyword == '\0') { return nullptr; }
-    std::optional<std::string_view> result = ulocimp_toBcpKeyWithFallback(keyword);
-    return result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
+    എങ്കിൽ (keyword == nullptr || *keyword == '\0') { തിരികെ nullptr; }
+    std::optional<std::string_view> result = ulocimp_to_Bcp_താക്കോൽ_With_Fallback(keyword);
+    തിരികെ result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
 }
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toBcpKeyWithFallback(std::string_view keyword U_LIFETIME_BOUND)
+ulocimp_to_Bcp_താക്കോൽ_With_Fallback(std::string_view keyword U_LIFETIME_BOUND)
 {
-    std::optional<std::string_view> bcpKey = ulocimp_toBcpKey(keyword);
-    if (!bcpKey.has_value() &&
-        ultag_isUnicodeLocaleKey(keyword.data(), static_cast<int32_t>(keyword.size()))) {
+    std::optional<std::string_view> bcp_താക്കോൽ = ulocimp_to_Bcp_താക്കോൽ(keyword);
+    എങ്കിൽ (!bcp_താക്കോൽ.has_value() &&
+        ultag_is_Unicode_Locale_താക്കോൽ(keyword.data(), static_cast<int32_t>(keyword.size()))) {
         // unknown keyword, but syntax is fine..
-        return keyword;
+        തിരികെ keyword;
     }
-    return bcpKey;
+    തിരികെ bcp_താക്കോൽ;
 }
 
-U_CAPI const char* U_EXPORT2
-uloc_toUnicodeLocaleType(const char* keyword, const char* value U_LIFETIME_BOUND)
+U_CAPI സ്ഥിരം അക്ഷരം* U_EXPORT2
+uloc_toUnicodeLocaleType(സ്ഥിരം അക്ഷരം* keyword, സ്ഥിരം അക്ഷരം* value U_LIFETIME_BOUND)
 {
-    if (keyword == nullptr || *keyword == '\0' ||
-        value == nullptr || *value == '\0') { return nullptr; }
+    എങ്കിൽ (keyword == nullptr || *keyword == '\0' ||
+        value == nullptr || *value == '\0') { തിരികെ nullptr; }
     std::optional<std::string_view> result = ulocimp_toBcpTypeWithFallback(keyword, value);
-    return result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
+    തിരികെ result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
 }
 
 U_EXPORT std::optional<std::string_view>
 ulocimp_toBcpTypeWithFallback(std::string_view keyword, std::string_view value U_LIFETIME_BOUND)
 {
     std::optional<std::string_view> bcpType = ulocimp_toBcpType(keyword, value);
-    if (!bcpType.has_value() &&
+    എങ്കിൽ (!bcpType.has_value() &&
         ultag_isUnicodeLocaleType(value.data(), static_cast<int32_t>(value.size()))) {
         // unknown keyword, but syntax is fine..
-        return value;
+        തിരികെ value;
     }
-    return bcpType;
+    തിരികെ bcpType;
 }
 
-namespace {
+നാമാകാശ {
 
-bool
-isWellFormedLegacyKey(std::string_view key)
+തർക്കം
+is_Well_Formed_Legacy_താക്കോൽ(std::string_view താക്കോൽ)
 {
-    return std::all_of(key.begin(), key.end(), UPRV_ISALPHANUM);
+    തിരികെ std::all_of(താക്കോൽ.begin(), താക്കോൽ.end(), UPRV_ISALPHANUM);
 }
 
-bool
+തർക്കം
 isWellFormedLegacyType(std::string_view legacyType)
 {
-    int32_t alphaNumLen = 0;
-    for (char c : legacyType) {
-        if (c == '_' || c == '/' || c == '-') {
-            if (alphaNumLen == 0) {
-                return false;
+    int32_t alpha_അക്കം_Len = 0;
+    വേണ്ടി (അക്ഷരം c : legacyType) {
+        എങ്കിൽ (c == '_' || c == '/' || c == '-') {
+            എങ്കിൽ (alpha_അക്കം_Len == 0) {
+                തിരികെ അസത്യം;
             }
-            alphaNumLen = 0;
-        } else if (UPRV_ISALPHANUM(c)) {
-            alphaNumLen++;
-        } else {
-            return false;
+            alpha_അക്കം_Len = 0;
+        } അല്ലെങ്കിൽ എങ്കിൽ (UPRV_ISALPHANUM(c)) {
+            alpha_അക്കം_Len++;
+        } അല്ലെങ്കിൽ {
+            തിരികെ അസത്യം;
         }
     }
-    return alphaNumLen != 0;
+    തിരികെ alpha_അക്കം_Len != 0;
 }
 
 }  // namespace
 
-U_CAPI const char* U_EXPORT2
-uloc_toLegacyKey(const char* keyword U_LIFETIME_BOUND)
+U_CAPI സ്ഥിരം അക്ഷരം* U_EXPORT2
+uloc_to_Legacy_താക്കോൽ(സ്ഥിരം അക്ഷരം* keyword U_LIFETIME_BOUND)
 {
-    if (keyword == nullptr || *keyword == '\0') { return nullptr; }
-    std::optional<std::string_view> result = ulocimp_toLegacyKeyWithFallback(keyword);
-    return result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
+    എങ്കിൽ (keyword == nullptr || *keyword == '\0') { തിരികെ nullptr; }
+    std::optional<std::string_view> result = ulocimp_to_Legacy_താക്കോൽ_With_Fallback(keyword);
+    തിരികെ result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
 }
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toLegacyKeyWithFallback(std::string_view keyword U_LIFETIME_BOUND)
+ulocimp_to_Legacy_താക്കോൽ_With_Fallback(std::string_view keyword U_LIFETIME_BOUND)
 {
-    std::optional<std::string_view> legacyKey = ulocimp_toLegacyKey(keyword);
-    if (!legacyKey.has_value() && isWellFormedLegacyKey(keyword)) {
+    std::optional<std::string_view> legacy_താക്കോൽ_2 = ulocimp_to_Legacy_താക്കോൽ(keyword);
+    എങ്കിൽ (!legacy_താക്കോൽ_2.has_value() && is_Well_Formed_Legacy_താക്കോൽ(keyword)) {
         // Checks if the specified locale key is well-formed with the legacy locale syntax.
         //
         // Note:
@@ -2392,25 +2392,25 @@ ulocimp_toLegacyKeyWithFallback(std::string_view keyword U_LIFETIME_BOUND)
         //  * http://www.unicode.org/reports/tr35/#Unicode_locale_identifier and
         //  * http://www.unicode.org/reports/tr35/#Old_Locale_Extension_Syntax
         //  Keys can only consist of [0-9a-zA-Z].
-        return keyword;
+        തിരികെ keyword;
     }
-    return legacyKey;
+    തിരികെ legacy_താക്കോൽ_2;
 }
 
-U_CAPI const char* U_EXPORT2
-uloc_toLegacyType(const char* keyword, const char* value U_LIFETIME_BOUND)
+U_CAPI സ്ഥിരം അക്ഷരം* U_EXPORT2
+uloc_toLegacyType(സ്ഥിരം അക്ഷരം* keyword, സ്ഥിരം അക്ഷരം* value U_LIFETIME_BOUND)
 {
-    if (keyword == nullptr || *keyword == '\0' ||
-        value == nullptr || *value == '\0') { return nullptr; }
+    എങ്കിൽ (keyword == nullptr || *keyword == '\0' ||
+        value == nullptr || *value == '\0') { തിരികെ nullptr; }
     std::optional<std::string_view> result = ulocimp_toLegacyTypeWithFallback(keyword, value);
-    return result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
+    തിരികെ result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
 }
 
 U_EXPORT std::optional<std::string_view>
 ulocimp_toLegacyTypeWithFallback(std::string_view keyword, std::string_view value U_LIFETIME_BOUND)
 {
     std::optional<std::string_view> legacyType = ulocimp_toLegacyType(keyword, value);
-    if (!legacyType.has_value() && isWellFormedLegacyType(value)) {
+    എങ്കിൽ (!legacyType.has_value() && isWellFormedLegacyType(value)) {
         // Checks if the specified locale type is well-formed with the legacy locale syntax.
         //
         // Note:
@@ -2419,9 +2419,9 @@ ulocimp_toLegacyTypeWithFallback(std::string_view keyword, std::string_view valu
         //  * http://www.unicode.org/reports/tr35/#Old_Locale_Extension_Syntax
         //  Values (types) can only consist of [0-9a-zA-Z], plus for legacy values
         //  we allow [/_-+] in the middle (e.g. "Etc/GMT+1", "Asia/Tel_Aviv")
-        return value;
+        തിരികെ value;
     }
-    return legacyType;
+    തിരികെ legacyType;
 }
 
 /*eof*/

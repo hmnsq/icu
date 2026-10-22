@@ -20,264 +20,264 @@
 *   instantiating a new USet.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/char16ptr.h"
-#include "unicode/uobject.h"
-#include "unicode/uset.h"
-#include "unicode/uniset.h"
-#include "cmemory.h"
-#include "unicode/ustring.h"
-#include "unicode/parsepos.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/char16ptr.h"
+#അന്തര്ഭാവ "unicode/uobject.h"
+#അന്തര്ഭാവ "unicode/uset.h"
+#അന്തര്ഭാവ "unicode/uniset.h"
+#അന്തര്ഭാവ "cmemory.h"
+#അന്തര്ഭാവ "unicode/ustring.h"
+#അന്തര്ഭാവ "unicode/parsepos.h"
 
 U_NAMESPACE_USE
 
 U_CAPI USet* U_EXPORT2
 uset_openEmpty() {
-    return (USet*) new UnicodeSet();
+    തിരികെ (USet*) പുതിയ UnicodeSet();
 }
 
 U_CAPI USet* U_EXPORT2
 uset_open(UChar32 start, UChar32 end) {
-    return (USet*) new UnicodeSet(start, end);
+    തിരികെ (USet*) പുതിയ UnicodeSet(start, end);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 uset_close(USet* set) {
     delete (UnicodeSet*) set;
 }
 
 U_CAPI USet * U_EXPORT2
-uset_clone(const USet *set) {
-    return (USet*) (((UnicodeSet*) set)->UnicodeSet::clone());
+uset_clone(സ്ഥിരം USet *set) {
+    തിരികെ (USet*) (((UnicodeSet*) set)->UnicodeSet::clone());
 }
 
 U_CAPI UBool U_EXPORT2
-uset_isFrozen(const USet *set) {
-    return ((UnicodeSet*) set)->UnicodeSet::isFrozen();
+uset_isFrozen(സ്ഥിരം USet *set) {
+    തിരികെ ((UnicodeSet*) set)->UnicodeSet::isFrozen();
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 uset_freeze(USet *set) {
     ((UnicodeSet*) set)->UnicodeSet::freeze();
 }
 
 U_CAPI USet * U_EXPORT2
-uset_cloneAsThawed(const USet *set) {
-    return (USet*) (((UnicodeSet*) set)->UnicodeSet::cloneAsThawed());
+uset_cloneAsThawed(സ്ഥിരം USet *set) {
+    തിരികെ (USet*) (((UnicodeSet*) set)->UnicodeSet::cloneAsThawed());
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 uset_set(USet* set,
      UChar32 start, UChar32 end) {
     ((UnicodeSet*) set)->UnicodeSet::set(start, end);
 }
 
-U_CAPI void U_EXPORT2
-uset_addAll(USet* set, const USet *additionalSet) {
-    ((UnicodeSet*) set)->UnicodeSet::addAll(*((const UnicodeSet*)additionalSet));
+U_CAPI ശൂന്യം U_EXPORT2
+uset_addAll(USet* set, സ്ഥിരം USet *additionalSet) {
+    ((UnicodeSet*) set)->UnicodeSet::addAll(*((സ്ഥിരം UnicodeSet*)additionalSet));
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 uset_add(USet* set, UChar32 c) {
     ((UnicodeSet*) set)->UnicodeSet::add(c);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 uset_addRange(USet* set, UChar32 start, UChar32 end) {
     ((UnicodeSet*) set)->UnicodeSet::add(start, end);    
 }
 
-U_CAPI void U_EXPORT2
-uset_addString(USet* set, const char16_t* str, int32_t strLen) {
+U_CAPI ശൂന്യം U_EXPORT2
+uset_addString(USet* set, സ്ഥിരം char16_t* str, int32_t strLen) {
     // UnicodeString handles -1 for strLen
     UnicodeString s(strLen<0, str, strLen);
     ((UnicodeSet*) set)->UnicodeSet::add(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_addAllCodePoints(USet* set, const char16_t *str, int32_t strLen) {
+U_CAPI ശൂന്യം U_EXPORT2
+uset_addAllCodePoints(USet* set, സ്ഥിരം char16_t *str, int32_t strLen) {
     // UnicodeString handles -1 for strLen
     UnicodeString s(str, strLen);
     ((UnicodeSet*) set)->UnicodeSet::addAll(s);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 uset_remove(USet* set, UChar32 c) {
     ((UnicodeSet*) set)->UnicodeSet::remove(c);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 uset_removeRange(USet* set, UChar32 start, UChar32 end) {
     ((UnicodeSet*) set)->UnicodeSet::remove(start, end);
 }
 
-U_CAPI void U_EXPORT2
-uset_removeString(USet* set, const char16_t* str, int32_t strLen) {
+U_CAPI ശൂന്യം U_EXPORT2
+uset_removeString(USet* set, സ്ഥിരം char16_t* str, int32_t strLen) {
     UnicodeString s(strLen==-1, str, strLen);
     ((UnicodeSet*) set)->UnicodeSet::remove(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_removeAllCodePoints(USet *set, const char16_t *str, int32_t length) {
+U_CAPI ശൂന്യം U_EXPORT2
+uset_removeAllCodePoints(USet *set, സ്ഥിരം char16_t *str, int32_t length) {
     UnicodeString s(length==-1, str, length);
     ((UnicodeSet*) set)->UnicodeSet::removeAll(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_removeAll(USet* set, const USet* remove) {
-    ((UnicodeSet*) set)->UnicodeSet::removeAll(*(const UnicodeSet*)remove);
+U_CAPI ശൂന്യം U_EXPORT2
+uset_removeAll(USet* set, സ്ഥിരം USet* remove) {
+    ((UnicodeSet*) set)->UnicodeSet::removeAll(*(സ്ഥിരം UnicodeSet*)remove);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 uset_retain(USet* set, UChar32 start, UChar32 end) {
     ((UnicodeSet*) set)->UnicodeSet::retain(start, end);
 }
 
-U_CAPI void U_EXPORT2
-uset_retainString(USet *set, const char16_t *str, int32_t length) {
+U_CAPI ശൂന്യം U_EXPORT2
+uset_retainString(USet *set, സ്ഥിരം char16_t *str, int32_t length) {
     UnicodeString s(length==-1, str, length);
     ((UnicodeSet*) set)->UnicodeSet::retain(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_retainAllCodePoints(USet *set, const char16_t *str, int32_t length) {
+U_CAPI ശൂന്യം U_EXPORT2
+uset_retainAllCodePoints(USet *set, സ്ഥിരം char16_t *str, int32_t length) {
     UnicodeString s(length==-1, str, length);
     ((UnicodeSet*) set)->UnicodeSet::retainAll(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_retainAll(USet* set, const USet* retain) {
-    ((UnicodeSet*) set)->UnicodeSet::retainAll(*(const UnicodeSet*)retain);
+U_CAPI ശൂന്യം U_EXPORT2
+uset_retainAll(USet* set, സ്ഥിരം USet* retain) {
+    ((UnicodeSet*) set)->UnicodeSet::retainAll(*(സ്ഥിരം UnicodeSet*)retain);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 uset_compact(USet* set) {
     ((UnicodeSet*) set)->UnicodeSet::compact();
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 uset_complement(USet* set) {
     ((UnicodeSet*) set)->UnicodeSet::complement();
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 uset_complementRange(USet *set, UChar32 start, UChar32 end) {
     ((UnicodeSet*) set)->UnicodeSet::complement(start, end);
 }
 
-U_CAPI void U_EXPORT2
-uset_complementString(USet *set, const char16_t *str, int32_t length) {
+U_CAPI ശൂന്യം U_EXPORT2
+uset_complementString(USet *set, സ്ഥിരം char16_t *str, int32_t length) {
     UnicodeString s(length==-1, str, length);
     ((UnicodeSet*) set)->UnicodeSet::complement(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_complementAllCodePoints(USet *set, const char16_t *str, int32_t length) {
+U_CAPI ശൂന്യം U_EXPORT2
+uset_complementAllCodePoints(USet *set, സ്ഥിരം char16_t *str, int32_t length) {
     UnicodeString s(length==-1, str, length);
     ((UnicodeSet*) set)->UnicodeSet::complementAll(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_complementAll(USet* set, const USet* complement) {
-    ((UnicodeSet*) set)->UnicodeSet::complementAll(*(const UnicodeSet*)complement);
+U_CAPI ശൂന്യം U_EXPORT2
+uset_complementAll(USet* set, സ്ഥിരം USet* complement) {
+    ((UnicodeSet*) set)->UnicodeSet::complementAll(*(സ്ഥിരം UnicodeSet*)complement);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 uset_clear(USet* set) {
     ((UnicodeSet*) set)->UnicodeSet::clear();
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 uset_removeAllStrings(USet* set) {
     ((UnicodeSet*) set)->UnicodeSet::removeAllStrings();
 }
 
 U_CAPI UBool U_EXPORT2
-uset_isEmpty(const USet* set) {
-    return ((const UnicodeSet*) set)->UnicodeSet::isEmpty();
+uset_isEmpty(സ്ഥിരം USet* set) {
+    തിരികെ ((സ്ഥിരം UnicodeSet*) set)->UnicodeSet::isEmpty();
 }
 
 U_CAPI UBool U_EXPORT2
-uset_hasStrings(const USet* set) {
-    return ((const UnicodeSet*) set)->UnicodeSet::hasStrings();
+uset_hasStrings(സ്ഥിരം USet* set) {
+    തിരികെ ((സ്ഥിരം UnicodeSet*) set)->UnicodeSet::hasStrings();
 }
 
 U_CAPI UBool U_EXPORT2
-uset_contains(const USet* set, UChar32 c) {
-    return ((const UnicodeSet*) set)->UnicodeSet::contains(c);
+uset_contains(സ്ഥിരം USet* set, UChar32 c) {
+    തിരികെ ((സ്ഥിരം UnicodeSet*) set)->UnicodeSet::contains(c);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_containsRange(const USet* set, UChar32 start, UChar32 end) {
-    return ((const UnicodeSet*) set)->UnicodeSet::contains(start, end);
+uset_containsRange(സ്ഥിരം USet* set, UChar32 start, UChar32 end) {
+    തിരികെ ((സ്ഥിരം UnicodeSet*) set)->UnicodeSet::contains(start, end);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_containsString(const USet* set, const char16_t* str, int32_t strLen) {
+uset_containsString(സ്ഥിരം USet* set, സ്ഥിരം char16_t* str, int32_t strLen) {
     UnicodeString s(strLen==-1, str, strLen);
-    return ((const UnicodeSet*) set)->UnicodeSet::contains(s);
+    തിരികെ ((സ്ഥിരം UnicodeSet*) set)->UnicodeSet::contains(s);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_containsAll(const USet* set1, const USet* set2) {
-    return ((const UnicodeSet*) set1)->UnicodeSet::containsAll(* (const UnicodeSet*) set2);
+uset_containsAll(സ്ഥിരം USet* set1, സ്ഥിരം USet* set2) {
+    തിരികെ ((സ്ഥിരം UnicodeSet*) set1)->UnicodeSet::containsAll(* (സ്ഥിരം UnicodeSet*) set2);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_containsAllCodePoints(const USet* set, const char16_t *str, int32_t strLen) {
+uset_containsAllCodePoints(സ്ഥിരം USet* set, സ്ഥിരം char16_t *str, int32_t strLen) {
     // Create a string alias, since nothing is being added to the set.
     UnicodeString s(strLen==-1, str, strLen);
-    return ((const UnicodeSet*) set)->UnicodeSet::containsAll(s);
+    തിരികെ ((സ്ഥിരം UnicodeSet*) set)->UnicodeSet::containsAll(s);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_containsNone(const USet* set1, const USet* set2) {
-    return ((const UnicodeSet*) set1)->UnicodeSet::containsNone(* (const UnicodeSet*) set2);
+uset_containsNone(സ്ഥിരം USet* set1, സ്ഥിരം USet* set2) {
+    തിരികെ ((സ്ഥിരം UnicodeSet*) set1)->UnicodeSet::containsNone(* (സ്ഥിരം UnicodeSet*) set2);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_containsSome(const USet* set1, const USet* set2) {
-    return ((const UnicodeSet*) set1)->UnicodeSet::containsSome(* (const UnicodeSet*) set2);
+uset_containsSome(സ്ഥിരം USet* set1, സ്ഥിരം USet* set2) {
+    തിരികെ ((സ്ഥിരം UnicodeSet*) set1)->UnicodeSet::containsSome(* (സ്ഥിരം UnicodeSet*) set2);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_span(const USet *set, const char16_t *s, int32_t length, USetSpanCondition spanCondition) {
-    return ((UnicodeSet*) set)->UnicodeSet::span(s, length, spanCondition);
+uset_span(സ്ഥിരം USet *set, സ്ഥിരം char16_t *s, int32_t length, USetSpanCondition spanCondition) {
+    തിരികെ ((UnicodeSet*) set)->UnicodeSet::span(s, length, spanCondition);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_spanBack(const USet *set, const char16_t *s, int32_t length, USetSpanCondition spanCondition) {
-    return ((UnicodeSet*) set)->UnicodeSet::spanBack(s, length, spanCondition);
+uset_spanBack(സ്ഥിരം USet *set, സ്ഥിരം char16_t *s, int32_t length, USetSpanCondition spanCondition) {
+    തിരികെ ((UnicodeSet*) set)->UnicodeSet::spanBack(s, length, spanCondition);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_spanUTF8(const USet *set, const char *s, int32_t length, USetSpanCondition spanCondition) {
-    return ((UnicodeSet*) set)->UnicodeSet::spanUTF8(s, length, spanCondition);
+uset_spanUTF8(സ്ഥിരം USet *set, സ്ഥിരം അക്ഷരം *s, int32_t length, USetSpanCondition spanCondition) {
+    തിരികെ ((UnicodeSet*) set)->UnicodeSet::spanUTF8(s, length, spanCondition);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_spanBackUTF8(const USet *set, const char *s, int32_t length, USetSpanCondition spanCondition) {
-    return ((UnicodeSet*) set)->UnicodeSet::spanBackUTF8(s, length, spanCondition);
+uset_spanBackUTF8(സ്ഥിരം USet *set, സ്ഥിരം അക്ഷരം *s, int32_t length, USetSpanCondition spanCondition) {
+    തിരികെ ((UnicodeSet*) set)->UnicodeSet::spanBackUTF8(s, length, spanCondition);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_equals(const USet* set1, const USet* set2) {
-    return *(const UnicodeSet*)set1 == *(const UnicodeSet*)set2;
+uset_equals(സ്ഥിരം USet* set1, സ്ഥിരം USet* set2) {
+    തിരികെ *(സ്ഥിരം UnicodeSet*)set1 == *(സ്ഥിരം UnicodeSet*)set2;
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_indexOf(const USet* set, UChar32 c) {
-    return ((UnicodeSet*) set)->UnicodeSet::indexOf(c);
+uset_indexOf(സ്ഥിരം USet* set, UChar32 c) {
+    തിരികെ ((UnicodeSet*) set)->UnicodeSet::indexOf(c);
 }
 
 U_CAPI UChar32 U_EXPORT2
-uset_charAt(const USet* set, int32_t index) {
-    return ((UnicodeSet*) set)->UnicodeSet::charAt(index);
+uset_charAt(സ്ഥിരം USet* set, int32_t index) {
+    തിരികെ ((UnicodeSet*) set)->UnicodeSet::charAt(index);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_size(const USet* set) {
-    return ((const UnicodeSet*) set)->UnicodeSet::size();
+uset_size(സ്ഥിരം USet* set) {
+    തിരികെ ((സ്ഥിരം UnicodeSet*) set)->UnicodeSet::size();
 }
 
 U_NAMESPACE_BEGIN
@@ -286,77 +286,77 @@ U_NAMESPACE_BEGIN
  * USet support API.  Declaring a class a friend is more portable than
  * trying to declare extern "C" functions as friends.
  */
-class USetAccess /* not : public UObject because all methods are static */ {
-public:
+വർഗ്ഗം USetAccess /* not : public UObject because all methods are static */ {
+പൊതു:
     /* Try to have the compiler inline these*/
-    inline static int32_t getStringCount(const UnicodeSet& set) {
-        return set.stringsSize();
+    വരിയിൽ സ്ഥിതം int32_t get_String_എണ്ണം(സ്ഥിരം UnicodeSet& set) {
+        തിരികെ set.stringsSize();
     }
-    inline static const UnicodeString* getString(const UnicodeSet& set U_LIFETIME_BOUND,
+    വരിയിൽ സ്ഥിതം സ്ഥിരം UnicodeString* getString(സ്ഥിരം UnicodeSet& set U_LIFETIME_BOUND,
                                                  int32_t i) {
-        return set.getString(i);
+        തിരികെ set.getString(i);
     }
-private:
+സ്വകാര്യ:
     /* do not instantiate*/
     USetAccess();
 };
 U_NAMESPACE_END
 
 U_CAPI int32_t U_EXPORT2
-uset_getRangeCount(const USet *set) {
-    return ((const UnicodeSet *)set)->UnicodeSet::getRangeCount();
+uset_get_Range_എണ്ണം(സ്ഥിരം USet *set) {
+    തിരികെ ((സ്ഥിരം UnicodeSet *)set)->UnicodeSet::get_Range_എണ്ണം();
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_getStringCount(const USet *uset) {
-    const UnicodeSet &set = *(const UnicodeSet *)uset;
-    return USetAccess::getStringCount(set);
+uset_get_String_എണ്ണം(സ്ഥിരം USet *uset) {
+    സ്ഥിരം UnicodeSet &set = *(സ്ഥിരം UnicodeSet *)uset;
+    തിരികെ USetAccess::get_String_എണ്ണം(set);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_getItemCount(const USet* uset) {
-    const UnicodeSet& set = *(const UnicodeSet*)uset;
-    return set.getRangeCount() + USetAccess::getStringCount(set);
+uset_get_Item_എണ്ണം(സ്ഥിരം USet* uset) {
+    സ്ഥിരം UnicodeSet& set = *(സ്ഥിരം UnicodeSet*)uset;
+    തിരികെ set.get_Range_എണ്ണം() + USetAccess::get_String_എണ്ണം(set);
 }
 
-U_CAPI const UChar* U_EXPORT2
-uset_getString(const USet* uset U_LIFETIME_BOUND, int32_t index, int32_t* pLength) {
-    if (pLength == nullptr) { return nullptr; }
-    const UnicodeSet &set = *(const UnicodeSet *)uset;
-    int32_t count = USetAccess::getStringCount(set);
-    if (index < 0 || count <= index) {
+U_CAPI സ്ഥിരം UChar* U_EXPORT2
+uset_getString(സ്ഥിരം USet* uset U_LIFETIME_BOUND, int32_t index, int32_t* pLength) {
+    എങ്കിൽ (pLength == nullptr) { തിരികെ nullptr; }
+    സ്ഥിരം UnicodeSet &set = *(സ്ഥിരം UnicodeSet *)uset;
+    int32_t count = USetAccess::get_String_എണ്ണം(set);
+    എങ്കിൽ (index < 0 || count <= index) {
         *pLength = 0;
-        return nullptr;
+        തിരികെ nullptr;
     }
-    const UnicodeString *s = USetAccess::getString(set, index);
+    സ്ഥിരം UnicodeString *s = USetAccess::getString(set, index);
     *pLength = s->length();
-    return toUCharPtr(s->getBuffer());
+    തിരികെ toUCharPtr(s->getBuffer());
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_getItem(const USet* uset, int32_t itemIndex,
+uset_getItem(സ്ഥിരം USet* uset, int32_t itemIndex,
              UChar32* start, UChar32* end,
              char16_t* str, int32_t strCapacity,
              UErrorCode* ec) {
-    if (U_FAILURE(*ec)) return 0;
-    const UnicodeSet& set = *(const UnicodeSet*)uset;
-    int32_t rangeCount;
+    എങ്കിൽ (U_FAILURE(*ec)) തിരികെ 0;
+    സ്ഥിരം UnicodeSet& set = *(സ്ഥിരം UnicodeSet*)uset;
+    int32_t range_എണ്ണം;
 
-    if (itemIndex < 0) {
+    എങ്കിൽ (itemIndex < 0) {
         *ec = U_ILLEGAL_ARGUMENT_ERROR;
-        return -1;
-    } else if (itemIndex < (rangeCount = set.getRangeCount())) {
+        തിരികെ -1;
+    } അല്ലെങ്കിൽ എങ്കിൽ (itemIndex < (range_എണ്ണം = set.get_Range_എണ്ണം())) {
         *start = set.getRangeStart(itemIndex);
         *end = set.getRangeEnd(itemIndex);
-        return 0;
-    } else {
-        itemIndex -= rangeCount;
-        if (itemIndex < USetAccess::getStringCount(set)) {
-            const UnicodeString* s = USetAccess::getString(set, itemIndex);
-            return s->extract(str, strCapacity, *ec);
-        } else {
+        തിരികെ 0;
+    } അല്ലെങ്കിൽ {
+        itemIndex -= range_എണ്ണം;
+        എങ്കിൽ (itemIndex < USetAccess::get_String_എണ്ണം(set)) {
+            സ്ഥിരം UnicodeString* s = USetAccess::getString(set, itemIndex);
+            തിരികെ s->extract(str, strCapacity, *ec);
+        } അല്ലെങ്കിൽ {
             *ec = U_INDEX_OUTOFBOUNDS_ERROR;
-            return -1;
+            തിരികെ -1;
         }
     }
 }
@@ -392,66 +392,66 @@ uset_getItem(const USet* uset, int32_t itemIndex,
  * - some supplementary: (length|0x8000) (bmpLength<length) BMP, .., BMP, supp-high, supp-low, ..
  */
 U_CAPI int32_t U_EXPORT2
-uset_serialize(const USet* set, uint16_t* dest, int32_t destCapacity, UErrorCode* ec) {
-    if (ec==nullptr || U_FAILURE(*ec)) {
-        return 0;
+uset_serialize(സ്ഥിരം USet* set, uint16_t* dest, int32_t destCapacity, UErrorCode* ec) {
+    എങ്കിൽ (ec==nullptr || U_FAILURE(*ec)) {
+        തിരികെ 0;
     }
 
-    return ((const UnicodeSet*) set)->UnicodeSet::serialize(dest, destCapacity,* ec);
+    തിരികെ ((സ്ഥിരം UnicodeSet*) set)->UnicodeSet::serialize(dest, destCapacity,* ec);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_getSerializedSet(USerializedSet* fillSet, const uint16_t* src, int32_t srcLength) {
+uset_getSerializedSet(USerializedSet* fillSet, സ്ഥിരം uint16_t* src, int32_t srcLength) {
     int32_t length;
 
-    if(fillSet==nullptr) {
-        return false;
+    എങ്കിൽ(fillSet==nullptr) {
+        തിരികെ അസത്യം;
     }
-    if(src==nullptr || srcLength<=0) {
+    എങ്കിൽ(src==nullptr || srcLength<=0) {
         fillSet->length=fillSet->bmpLength=0;
-        return false;
+        തിരികെ അസത്യം;
     }
 
     length=*src++;
-    if(length&0x8000) {
+    എങ്കിൽ(length&0x8000) {
         /* there are supplementary values */
         length&=0x7fff;
-        if(srcLength<(2+length)) {
+        എങ്കിൽ(srcLength<(2+length)) {
             fillSet->length=fillSet->bmpLength=0;
-            return false;
+            തിരികെ അസത്യം;
         }
         fillSet->bmpLength=*src++;
-    } else {
+    } അല്ലെങ്കിൽ {
         /* only BMP values */
-        if(srcLength<(1+length)) {
+        എങ്കിൽ(srcLength<(1+length)) {
             fillSet->length=fillSet->bmpLength=0;
-            return false;
+            തിരികെ അസത്യം;
         }
         fillSet->bmpLength=length;
     }
     fillSet->array=src;
     fillSet->length=length;
-    return true;
+    തിരികെ സത്യം;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 uset_setSerializedToOne(USerializedSet* fillSet, UChar32 c) {
-    if(fillSet==nullptr || (uint32_t)c>0x10ffff) {
-        return;
+    എങ്കിൽ(fillSet==nullptr || (uint32_t)c>0x10ffff) {
+        തിരികെ;
     }
 
     fillSet->array=fillSet->staticArray;
-    if(c<0xffff) {
+    എങ്കിൽ(c<0xffff) {
         fillSet->bmpLength=fillSet->length=2;
         fillSet->staticArray[0]=(uint16_t)c;
         fillSet->staticArray[1]=(uint16_t)c+1;
-    } else if(c==0xffff) {
+    } അല്ലെങ്കിൽ എങ്കിൽ(c==0xffff) {
         fillSet->bmpLength=1;
         fillSet->length=3;
         fillSet->staticArray[0]=0xffff;
         fillSet->staticArray[1]=1;
         fillSet->staticArray[2]=0;
-    } else if(c<0x10ffff) {
+    } അല്ലെങ്കിൽ എങ്കിൽ(c<0x10ffff) {
         fillSet->bmpLength=0;
         fillSet->length=4;
         fillSet->staticArray[0]=(uint16_t)(c>>16);
@@ -459,7 +459,7 @@ uset_setSerializedToOne(USerializedSet* fillSet, UChar32 c) {
         ++c;
         fillSet->staticArray[2]=(uint16_t)(c>>16);
         fillSet->staticArray[3]=(uint16_t)c;
-    } else /* c==0x10ffff */ {
+    } അല്ലെങ്കിൽ /* c==0x10ffff */ {
         fillSet->bmpLength=0;
         fillSet->length=2;
         fillSet->staticArray[0]=0x10;
@@ -468,80 +468,80 @@ uset_setSerializedToOne(USerializedSet* fillSet, UChar32 c) {
 }
 
 U_CAPI UBool U_EXPORT2
-uset_serializedContains(const USerializedSet* set, UChar32 c) {
-    const uint16_t* array;
+uset_serializedContains(സ്ഥിരം USerializedSet* set, UChar32 c) {
+    സ്ഥിരം uint16_t* array;
 
-    if(set==nullptr || (uint32_t)c>0x10ffff) {
-        return false;
+    എങ്കിൽ(set==nullptr || (uint32_t)c>0x10ffff) {
+        തിരികെ അസത്യം;
     }
 
     array=set->array;
-    if(c<=0xffff) {
+    എങ്കിൽ(c<=0xffff) {
         /* find c in the BMP part */
         int32_t lo = 0;
         int32_t hi = set->bmpLength-1;
-        if (c < array[0]) {
+        എങ്കിൽ (c < array[0]) {
             hi = 0;
-        } else if (c < array[hi]) {
-            for(;;) {
+        } അല്ലെങ്കിൽ എങ്കിൽ (c < array[hi]) {
+            വേണ്ടി(;;) {
                 int32_t i = (lo + hi) >> 1;
-                if (i == lo) {
-                    break;  // Done!
-                } else if (c < array[i]) {
+                എങ്കിൽ (i == lo) {
+                    നിർത്തുക;  // Done!
+                } അല്ലെങ്കിൽ എങ്കിൽ (c < array[i]) {
                     hi = i;
-                } else {
+                } അല്ലെങ്കിൽ {
                     lo = i;
                 }
             }
-        } else {
+        } അല്ലെങ്കിൽ {
             hi += 1;
         }
-        return hi&1;
-    } else {
+        തിരികെ hi&1;
+    } അല്ലെങ്കിൽ {
         /* find c in the supplementary part */
-        uint16_t high=(uint16_t)(c>>16), low=(uint16_t)c;
+        uint16_t മുകളിലെ=(uint16_t)(c>>16), താഴെയുള്ള=(uint16_t)c;
         int32_t base = set->bmpLength;
         int32_t lo = 0;
         int32_t hi = set->length - 2 - base;
-        if (high < array[base] || (high==array[base] && low<array[base+1])) {
+        എങ്കിൽ (മുകളിലെ < array[base] || (മുകളിലെ==array[base] && താഴെയുള്ള<array[base+1])) {
             hi = 0;
-        } else if (high < array[base+hi] || (high==array[base+hi] && low<array[base+hi+1])) {
-            for (;;) {
+        } അല്ലെങ്കിൽ എങ്കിൽ (മുകളിലെ < array[base+hi] || (മുകളിലെ==array[base+hi] && താഴെയുള്ള<array[base+hi+1])) {
+            വേണ്ടി (;;) {
                 int32_t i = ((lo + hi) >> 1) & ~1;  // Guarantee even result
                 int32_t iabs = i + base;
-                if (i == lo) {
-                    break;  // Done!
-                } else if (high < array[iabs] || (high==array[iabs] && low<array[iabs+1])) {
+                എങ്കിൽ (i == lo) {
+                    നിർത്തുക;  // Done!
+                } അല്ലെങ്കിൽ എങ്കിൽ (മുകളിലെ < array[iabs] || (മുകളിലെ==array[iabs] && താഴെയുള്ള<array[iabs+1])) {
                     hi = i;
-                } else {
+                } അല്ലെങ്കിൽ {
                     lo = i;
                 }
             }
-        } else {
+        } അല്ലെങ്കിൽ {
             hi += 2;
         }
         /* count pairs of 16-bit units even per BMP and check if the number of pairs is odd */
-        return ((hi+(base<<1))&2)!=0;
+        തിരികെ ((hi+(base<<1))&2)!=0;
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_getSerializedRangeCount(const USerializedSet* set) {
-    if(set==nullptr) {
-        return 0;
+uset_get_Serialized_Range_എണ്ണം(സ്ഥിരം USerializedSet* set) {
+    എങ്കിൽ(set==nullptr) {
+        തിരികെ 0;
     }
 
-    return (set->bmpLength+(set->length-set->bmpLength)/2+1)/2;
+    തിരികെ (set->bmpLength+(set->length-set->bmpLength)/2+1)/2;
 }
 
 U_CAPI UBool U_EXPORT2
-uset_getSerializedRange(const USerializedSet* set, int32_t rangeIndex,
+uset_getSerializedRange(സ്ഥിരം USerializedSet* set, int32_t rangeIndex,
                         UChar32* pStart, UChar32* pEnd) {
-    const uint16_t* array;
+    സ്ഥിരം uint16_t* array;
     int32_t bmpLength, length;
 
-    if(set==nullptr || rangeIndex<0 || pStart==nullptr || pEnd==nullptr) {
-        return false;
+    എങ്കിൽ(set==nullptr || rangeIndex<0 || pStart==nullptr || pEnd==nullptr) {
+        തിരികെ അസത്യം;
     }
 
     array=set->array;
@@ -549,32 +549,32 @@ uset_getSerializedRange(const USerializedSet* set, int32_t rangeIndex,
     bmpLength=set->bmpLength;
 
     rangeIndex*=2; /* address start/limit pairs */
-    if(rangeIndex<bmpLength) {
+    എങ്കിൽ(rangeIndex<bmpLength) {
         *pStart=array[rangeIndex++];
-        if(rangeIndex<bmpLength) {
+        എങ്കിൽ(rangeIndex<bmpLength) {
             *pEnd=array[rangeIndex]-1;
-        } else if(rangeIndex<length) {
+        } അല്ലെങ്കിൽ എങ്കിൽ(rangeIndex<length) {
             *pEnd=((((int32_t)array[rangeIndex])<<16)|array[rangeIndex+1])-1;
-        } else {
+        } അല്ലെങ്കിൽ {
             *pEnd=0x10ffff;
         }
-        return true;
-    } else {
+        തിരികെ സത്യം;
+    } അല്ലെങ്കിൽ {
         rangeIndex-=bmpLength;
         rangeIndex*=2; /* address pairs of pairs of units */
         length-=bmpLength;
-        if(rangeIndex<length) {
+        എങ്കിൽ(rangeIndex<length) {
             array+=bmpLength;
             *pStart=(((int32_t)array[rangeIndex])<<16)|array[rangeIndex+1];
             rangeIndex+=2;
-            if(rangeIndex<length) {
+            എങ്കിൽ(rangeIndex<length) {
                 *pEnd=((((int32_t)array[rangeIndex])<<16)|array[rangeIndex+1])-1;
-            } else {
+            } അല്ലെങ്കിൽ {
                 *pEnd=0x10ffff;
             }
-            return true;
-        } else {
-            return false;
+            തിരികെ സത്യം;
+        } അല്ലെങ്കിൽ {
+            തിരികെ അസത്യം;
         }
     }
 }

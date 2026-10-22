@@ -21,7 +21,7 @@
 #ifndef __UARRSORT_H__
 #define __UARRSORT_H__
 
-#include "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
 
 U_CDECL_BEGIN
 /**
@@ -38,8 +38,8 @@ U_CDECL_BEGIN
  *
  * @internal
  */
-typedef int32_t U_CALLCONV
-UComparator(const void *context, const void *left, const void *right);
+തരനിർവചനം int32_t U_CALLCONV
+UComparator(സ്ഥിരം ശൂന്യം *context, സ്ഥിരം ശൂന്യം *ഇടത്, സ്ഥിരം ശൂന്യം *വലത്);
 U_CDECL_END
 
 /**
@@ -57,9 +57,9 @@ U_CDECL_END
  *
  * @internal
  */
-U_CAPI void U_EXPORT2
-uprv_sortArray(void *array, int32_t length, int32_t itemSize,
-               UComparator *cmp, const void *context,
+U_CAPI ശൂന്യം U_EXPORT2
+uprv_sortArray(ശൂന്യം *array, int32_t length, int32_t itemSize,
+               UComparator *cmp, സ്ഥിരം ശൂന്യം *context,
                UBool sortStable, UErrorCode *pErrorCode);
 
 /**
@@ -67,21 +67,21 @@ uprv_sortArray(void *array, int32_t length, int32_t itemSize,
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uprv_uint16Comparator(const void *context, const void *left, const void *right);
+uprv_uint16Comparator(സ്ഥിരം ശൂന്യം *context, സ്ഥിരം ശൂന്യം *ഇടത്, സ്ഥിരം ശൂന്യം *വലത്);
 
 /**
  * Convenience UComparator implementation for int32_t arrays.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uprv_int32Comparator(const void *context, const void *left, const void *right);
+uprv_int32Comparator(സ്ഥിരം ശൂന്യം *context, സ്ഥിരം ശൂന്യം *ഇടത്, സ്ഥിരം ശൂന്യം *വലത്);
 
 /**
  * Convenience UComparator implementation for uint32_t arrays.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uprv_uint32Comparator(const void *context, const void *left, const void *right);
+uprv_uint32Comparator(സ്ഥിരം ശൂന്യം *context, സ്ഥിരം ശൂന്യം *ഇടത്, സ്ഥിരം ശൂന്യം *വലത്);
 
 /**
  * Much like Java Collections.binarySearch(list, key, comparator).
@@ -97,7 +97,7 @@ uprv_uint32Comparator(const void *context, const void *left, const void *right);
  *         or the index<0 for inserting the item at ~index in sorted order
  */
 U_CAPI int32_t U_EXPORT2
-uprv_stableBinarySearch(char *array, int32_t length, void *item, int32_t itemSize,
-                        UComparator *cmp, const void *context);
+uprv_stable_ദ്വിമാന_തിരയൽ(അക്ഷരം *array, int32_t length, ശൂന്യം *item, int32_t itemSize,
+                        UComparator *cmp, സ്ഥിരം ശൂന്യം *context);
 
 #endif

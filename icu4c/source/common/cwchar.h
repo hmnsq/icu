@@ -23,12 +23,12 @@
 #ifndef __CWCHAR_H__
 #define __CWCHAR_H__
 
-#include <string.h>
-#include <stdlib.h>
-#include "unicode/utypes.h"
+#അന്തര്ഭാവ <string.h>
+#അന്തര്ഭാവ <stdlib.h>
+#അന്തര്ഭാവ "unicode/utypes.h"
 
 /* Do this after utypes.h so that we have U_HAVE_WCHAR_H . */
-#if U_HAVE_WCHAR_H
+#എങ്കിൽ U_HAVE_WCHAR_H
 #   include <wchar.h>
 #endif
 
@@ -37,22 +37,22 @@
 /*===========================================================================*/
 
 /* The following are not available on all systems, defined in wchar.h or string.h. */
-#if U_HAVE_WCSCPY
+#എങ്കിൽ U_HAVE_WCSCPY
 #   define uprv_wcscpy wcscpy
 #   define uprv_wcscat wcscat
 #   define uprv_wcslen wcslen
-#else
+#അല്ലെങ്കിൽ
 U_CAPI wchar_t* U_EXPORT2 
-uprv_wcscpy(wchar_t *dst, const wchar_t *src);
+uprv_wcscpy(wchar_t *dst, സ്ഥിരം wchar_t *src);
 U_CAPI wchar_t* U_EXPORT2 
-uprv_wcscat(wchar_t *dst, const wchar_t *src);
+uprv_wcscat(wchar_t *dst, സ്ഥിരം wchar_t *src);
 U_CAPI size_t U_EXPORT2 
-uprv_wcslen(const wchar_t *src);
+uprv_wcslen(സ്ഥിരം wchar_t *src);
 #endif
 
 /* The following are part of the ANSI C standard, defined in stdlib.h . */
-#define uprv_wcstombs(mbstr, wcstr, count) U_STANDARD_CPP_NAMESPACE wcstombs(mbstr, wcstr, count)
-#define uprv_mbstowcs(wcstr, mbstr, count) U_STANDARD_CPP_NAMESPACE mbstowcs(wcstr, mbstr, count)
+#define uprv_wcstombs(mbstr, wcstr, എണ്ണം) U_STANDARD_CPP_NAMESPACE wcstombs(mbstr, wcstr, എണ്ണം)
+#define uprv_mbstowcs(wcstr, mbstr, എണ്ണം) U_STANDARD_CPP_NAMESPACE mbstowcs(wcstr, mbstr, എണ്ണം)
 
 
 #endif

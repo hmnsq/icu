@@ -19,21 +19,21 @@
 #ifndef SPRPIMPL_H
 #define SPRPIMPL_H
 
-#include "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
 
-#if !UCONFIG_NO_IDNA
+#എങ്കിൽ !UCONFIG_NO_IDNA
 
-#include "unicode/ustring.h"
-#include "unicode/parseerr.h"
-#include "unicode/usprep.h"
-#include "unicode/udata.h"
-#include "utrie.h"
-#include "udataswp.h"
-#include "ubidi_props.h"
+#അന്തര്ഭാവ "unicode/ustring.h"
+#അന്തര്ഭാവ "unicode/parseerr.h"
+#അന്തര്ഭാവ "unicode/usprep.h"
+#അന്തര്ഭാവ "unicode/udata.h"
+#അന്തര്ഭാവ "utrie.h"
+#അന്തര്ഭാവ "udataswp.h"
+#അന്തര്ഭാവ "ubidi_props.h"
 
 #define _SPREP_DATA_TYPE "spp"
 
-enum UStringPrepType{
+എണ്ണൽ UStringPrepType{
     USPREP_UNASSIGNED           = 0x0000 ,
     USPREP_MAP                  = 0x0001 ,
     USPREP_PROHIBITED           = 0x0002 , 
@@ -41,10 +41,10 @@ enum UStringPrepType{
     USPREP_TYPE_LIMIT           = 0x0004  
 };
 
-typedef enum UStringPrepType UStringPrepType;
+തരനിർവചനം എണ്ണൽ UStringPrepType UStringPrepType;
 
 #ifdef USPREP_TYPE_NAMES_ARRAY
-static const char* usprepTypeNames[] ={
+സ്ഥിതം സ്ഥിരം അക്ഷരം* usprepTypeNames[] ={
     "UNASSIGNED" ,          
     "MAP" , 
     "PROHIBITED" ,        
@@ -53,19 +53,19 @@ static const char* usprepTypeNames[] ={
 };
 #endif
 
-enum{
+എണ്ണൽ{
     _SPREP_NORMALIZATION_ON = 0x0001,
     _SPREP_CHECK_BIDI_ON    = 0x0002
 };
 
-enum{
+എണ്ണൽ{
     _SPREP_TYPE_THRESHOLD       = 0xFFF0,
-    _SPREP_MAX_INDEX_VALUE      = 0x3FBF,   /*16139*/ 
-    _SPREP_MAX_INDEX_TOP_LENGTH = 0x0003
+    SPREP_MAX_INDEX_മൂല്യം      = 0x3FBF,   /*16139*/ 
+    SPREP_MAX_INDEX_മുകൾ_LENGTH = 0x0003
 };
 
 /* indexes[] value names */
-enum {
+എണ്ണൽ {
     _SPREP_INDEX_TRIE_SIZE                  = 0, /* number of bytes in StringPrep trie */
     _SPREP_INDEX_MAPPING_DATA_SIZE          = 1, /* The array that contains the mapping   */
     _SPREP_NORM_CORRECTNS_LAST_UNI_VERSION  = 2, /* The index of Unicode version of last entry in NormalizationCorrections.txt */ 
@@ -74,23 +74,23 @@ enum {
     _SPREP_THREE_UCHARS_MAPPING_INDEX_START = 5, /* The starting index of 3 UChars mapping index in the mapping data array */
     _SPREP_FOUR_UCHARS_MAPPING_INDEX_START  = 6, /* The starting index of 4 UChars mapping index in the mapping data array */
     _SPREP_OPTIONS                          = 7, /* Bit set of options to turn on in the profile */
-    _SPREP_INDEX_TOP=16                          /* changing this requires a new formatVersion */
+    SPREP_INDEX_മുകൾ=16                          /* changing this requires a new formatVersion */
 };
 
-typedef struct UStringPrepKey UStringPrepKey;
+തരനിർവചനം ഘടന UString_Prep_താക്കോൽ UString_Prep_താക്കോൽ;
 
 
-struct UStringPrepKey{
-    char* name;
-    char* path;
+ഘടന UString_Prep_താക്കോൽ{
+    അക്ഷരം* name;
+    അക്ഷരം* path;
 };
 
-struct UStringPrepProfile{
-    int32_t indexes[_SPREP_INDEX_TOP];
+ഘടന UStringPrepProfile{
+    int32_t indexes[SPREP_INDEX_മുകൾ];
     UTrie sprepTrie;
-    const uint16_t* mappingData;
+    സ്ഥിരം uint16_t* mappingData;
     UDataMemory* sprepData;
-    int32_t refCount;
+    int32_t ref_എണ്ണം;
     UBool isDataLoaded;
     UBool doNFKC;
     UBool checkBiDi;
@@ -100,8 +100,8 @@ struct UStringPrepProfile{
  * Helper function for populating the UParseError struct
  * @internal
  */
-U_CAPI void U_EXPORT2
-uprv_syntaxError(const UChar* rules, 
+U_CAPI ശൂന്യം U_EXPORT2
+uprv_syntaxError(സ്ഥിരം UChar* rules, 
                  int32_t pos,
                  int32_t rulesLen,
                  UParseError* parseError);
@@ -112,8 +112,8 @@ uprv_syntaxError(const UChar* rules,
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-usprep_swap(const UDataSwapper *ds,
-            const void *inData, int32_t length, void *outData,
+usprep_swap(സ്ഥിരം UDataSwapper *ds,
+            സ്ഥിരം ശൂന്യം *inData, int32_t length, ശൂന്യം *outData,
             UErrorCode *pErrorCode);
 
 #endif /* #if !UCONFIG_NO_IDNA */

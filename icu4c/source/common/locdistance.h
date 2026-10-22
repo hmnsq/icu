@@ -7,45 +7,45 @@
 #ifndef __LOCDISTANCE_H__
 #define __LOCDISTANCE_H__
 
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/localematcher.h"
-#include "unicode/locid.h"
-#include "unicode/uobject.h"
-#include "lsr.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/bytestrie.h"
+#അന്തര്ഭാവ "unicode/localematcher.h"
+#അന്തര്ഭാവ "unicode/locid.h"
+#അന്തര്ഭാവ "unicode/uobject.h"
+#അന്തര്ഭാവ "lsr.h"
 
 U_NAMESPACE_BEGIN
 
-struct LocaleDistanceData;
+ഘടന LocaleDistanceData;
 
 /**
  * Offline-built data for LocaleMatcher.
  * Mostly but not only the data for mapping locales to their maximized forms.
  */
-class LocaleDistance final : public UMemory {
-public:
-    static const LocaleDistance *getSingleton(UErrorCode &errorCode);
+class LocaleDistance final : പൊതു UMemory {
+പൊതു:
+    സ്ഥിതം സ്ഥിരം LocaleDistance *getSingleton(UErrorCode &errorCode);
 
-    static int32_t shiftDistance(int32_t distance) {
-        return distance << DISTANCE_SHIFT;
+    സ്ഥിതം int32_t shiftDistance(int32_t distance) {
+        തിരികെ distance << DISTANCE_SHIFT;
     }
 
-    static int32_t getShiftedDistance(int32_t indexAndDistance) {
-        return indexAndDistance & DISTANCE_MASK;
+    സ്ഥിതം int32_t getShiftedDistance(int32_t indexAndDistance) {
+        തിരികെ indexAndDistance & DISTANCE_MASK;
     }
 
-    static double getDistanceDouble(int32_t indexAndDistance) {
-        double shiftedDistance = getShiftedDistance(indexAndDistance);
-        return shiftedDistance / (1 << DISTANCE_SHIFT);
+    സ്ഥിതം ഇരട്ട getDistanceDouble(int32_t indexAndDistance) {
+        ഇരട്ട shiftedDistance = getShiftedDistance(indexAndDistance);
+        തിരികെ shiftedDistance / (1 << DISTANCE_SHIFT);
     }
 
-    static int32_t getDistanceFloor(int32_t indexAndDistance) {
-        return (indexAndDistance & DISTANCE_MASK) >> DISTANCE_SHIFT;
+    സ്ഥിതം int32_t getDistanceFloor(int32_t indexAndDistance) {
+        തിരികെ (indexAndDistance & DISTANCE_MASK) >> DISTANCE_SHIFT;
     }
 
-    static int32_t getIndex(int32_t indexAndDistance) {
+    സ്ഥിതം int32_t getIndex(int32_t indexAndDistance) {
         // assert indexAndDistance >= 0;
-        return indexAndDistance >> INDEX_SHIFT;
+        തിരികെ indexAndDistance >> INDEX_SHIFT;
     }
 
     /**
@@ -56,70 +56,70 @@ public:
      * (negative if none has a distance below the threshold),
      * and its distance (0..ABOVE_THRESHOLD) in the low bits.
      */
-    int32_t getBestIndexAndDistance(const LSR &desired,
-                                    const LSR **supportedLSRs, int32_t supportedLSRsLength,
+    int32_t getBestIndexAndDistance(സ്ഥിരം LSR &desired,
+                                    സ്ഥിരം LSR **supportedLSRs, int32_t supportedLSRsLength,
                                     int32_t shiftedThreshold,
                                     ULocMatchFavorSubtag favorSubtag,
-                                    ULocMatchDirection direction) const;
+                                    ULocMatchDirection direction) സ്ഥിരം;
 
-    bool isParadigmLSR(const LSR &lsr) const;
+    bool isParadigmLSR(സ്ഥിരം LSR &lsr) സ്ഥിരം;
 
-    int32_t getDefaultScriptDistance() const {
-        return defaultScriptDistance;
+    int32_t getDefaultScriptDistance() സ്ഥിരം {
+        തിരികെ defaultScriptDistance;
     }
 
-    int32_t getDefaultDemotionPerDesiredLocale() const {
-        return defaultDemotionPerDesiredLocale;
+    int32_t getDefaultDemotionPerDesiredLocale() സ്ഥിരം {
+        തിരികെ defaultDemotionPerDesiredLocale;
     }
 
-private:
+സ്വകാര്യ:
     // The distance is shifted left to gain some fraction bits.
-    static constexpr int32_t DISTANCE_SHIFT = 3;
-    static constexpr int32_t DISTANCE_FRACTION_MASK = 7;
+    സ്ഥിതം constexpr int32_t DISTANCE_SHIFT = 3;
+    സ്ഥിതം constexpr int32_t DISTANCE_FRACTION_MASK = 7;
     // 7 bits for 0..100
-    static constexpr int32_t DISTANCE_INT_SHIFT = 7;
-    static constexpr int32_t INDEX_SHIFT = DISTANCE_INT_SHIFT + DISTANCE_SHIFT;
-    static constexpr int32_t DISTANCE_MASK = 0x3ff;
+    സ്ഥിതം constexpr int32_t DISTANCE_INT_SHIFT = 7;
+    സ്ഥിതം constexpr int32_t INDEX_SHIFT = DISTANCE_INT_SHIFT + DISTANCE_SHIFT;
+    സ്ഥിതം constexpr int32_t DISTANCE_MASK = 0x3ff;
     // tic constexpr int32_t MAX_INDEX = 0x1fffff;  // avoids sign bit
-    static constexpr int32_t INDEX_NEG_1 = 0xfffffc00;
+    സ്ഥിതം constexpr int32_t INDEX_NEG_1 = 0xfffffc00;
 
-    LocaleDistance(const LocaleDistanceData &data, const LikelySubtags &likely);
-    LocaleDistance(const LocaleDistance &other) = delete;
-    LocaleDistance &operator=(const LocaleDistance &other) = delete;
+    LocaleDistance(സ്ഥിരം LocaleDistanceData &data, സ്ഥിരം LikelySubtags &likely);
+    LocaleDistance(സ്ഥിരം LocaleDistance &other) = delete;
+    LocaleDistance &operator=(സ്ഥിരം LocaleDistance &other) = delete;
 
-    static void initLocaleDistance(UErrorCode &errorCode);
+    സ്ഥിതം ശൂന്യം initLocaleDistance(UErrorCode &errorCode);
 
-    bool isMatch(const LSR &desired, const LSR &supported,
-                 int32_t shiftedThreshold, ULocMatchFavorSubtag favorSubtag) const {
-        const LSR *pSupp = &supported;
-        return getBestIndexAndDistance(
+    bool isMatch(സ്ഥിരം LSR &desired, സ്ഥിരം LSR &supported,
+                 int32_t shiftedThreshold, ULocMatchFavorSubtag favorSubtag) സ്ഥിരം {
+        സ്ഥിരം LSR *pSupp = &supported;
+        തിരികെ getBestIndexAndDistance(
             desired, &pSupp, 1,
             shiftedThreshold, favorSubtag, ULOCMATCH_DIRECTION_WITH_ONE_WAY) >= 0;
     }
 
-    static int32_t getDesSuppScriptDistance(BytesTrie &iter, uint64_t startState,
-                                            const char *desired, const char *supported);
+    സ്ഥിതം int32_t getDesSuppScriptDistance(BytesTrie &iter, uint64_t startState,
+                                            സ്ഥിരം അക്ഷരം *desired, സ്ഥിരം അക്ഷരം *supported);
 
-    static int32_t getRegionPartitionsDistance(
+    സ്ഥിതം int32_t getRegionPartitionsDistance(
         BytesTrie &iter, uint64_t startState,
-        const char *desiredPartitions, const char *supportedPartitions,
+        സ്ഥിരം അക്ഷരം *desiredPartitions, സ്ഥിരം അക്ഷരം *supportedPartitions,
         int32_t threshold);
 
-    static int32_t getFallbackRegionDistance(BytesTrie &iter, uint64_t startState);
+    സ്ഥിതം int32_t getFallbackRegionDistance(BytesTrie &iter, uint64_t startState);
 
-    static int32_t trieNext(BytesTrie &iter, const char *s, bool wantValue);
+    സ്ഥിതം int32_t trieNext(BytesTrie &iter, സ്ഥിരം അക്ഷരം *s, bool want_മൂല്യം);
 
-    const char *partitionsForRegion(const LSR &lsr) const {
+    സ്ഥിരം അക്ഷരം *partitionsForRegion(സ്ഥിരം LSR &lsr) സ്ഥിരം {
         // ill-formed region -> one non-matching string
         int32_t pIndex = regionToPartitionsIndex[lsr.regionIndex];
-        return partitionArrays[pIndex];
+        തിരികെ partitionArrays[pIndex];
     }
 
-    int32_t getDefaultRegionDistance() const {
-        return defaultRegionDistance;
+    int32_t getDefaultRegionDistance() സ്ഥിരം {
+        തിരികെ defaultRegionDistance;
     }
 
-    const LikelySubtags &likelySubtags;
+    സ്ഥിരം LikelySubtags &likelySubtags;
 
     // The trie maps each dlang+slang+dscript+sscript+dregion+sregion
     // (encoded in ASCII with bit 7 set on the last character of each subtag) to a distance.
@@ -130,13 +130,13 @@ private:
     /**
      * Maps each region to zero or more single-character partitions.
      */
-    const uint8_t *regionToPartitionsIndex;
-    const char **partitionArrays;
+    സ്ഥിരം uint8_t *regionToPartitionsIndex;
+    സ്ഥിരം അക്ഷരം **partitionArrays;
 
     /**
      * Used to get the paradigm region for a cluster, if there is one.
      */
-    const LSR *paradigmLSRs;
+    സ്ഥിരം LSR *paradigmLSRs;
     int32_t paradigmLSRsLength;
 
     int32_t defaultLanguageDistance;

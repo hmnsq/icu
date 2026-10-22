@@ -40,26 +40,26 @@
 #endif
 
 /* NULL, size_t, wchar_t */
-#include <stddef.h>
+#അന്തര്ഭാവ <stddef.h>
 
 /* More platform-specific definitions. */
-#include "unicode/platform.h"
+#അന്തര്ഭാവ "unicode/platform.h"
 
 /*===========================================================================*/
 /* Generic data types                                                        */
 /*===========================================================================*/
 
-#include <stdint.h>
+#അന്തര്ഭാവ <stdint.h>
 
 // C++11 and C11 both specify that the data type char16_t should exist, C++11
 // as a keyword and C11 as a typedef in the uchar.h header file, but not all
 // implementations (looking at you, Apple, spring 2024) actually do this, so
 // ICU4C must detect and deal with that.
-#if !defined(__cplusplus) && !defined(U_IN_DOXYGEN)
-#   if U_HAVE_CHAR16_T
+#എങ്കിൽ !defined(__cplusplus) && !defined(U_IN_DOXYGEN)
+#   എങ്കിൽ U_HAVE_CHAR16_T
 #       include <uchar.h>
-#   else
-        typedef uint16_t char16_t;
+#   അല്ലെങ്കിൽ
+        തരനിർവചനം uint16_t char16_t;
 #   endif
 #endif
 

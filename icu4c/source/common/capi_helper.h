@@ -4,7 +4,7 @@
 #ifndef __CAPI_HELPER_H__
 #define __CAPI_HELPER_H__
 
-#include "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
 
 U_NAMESPACE_BEGIN
 
@@ -13,21 +13,21 @@ U_NAMESPACE_BEGIN
  */
 template<typename CType, typename CPPType, int32_t kMagic>
 class IcuCApiHelper {
-  public:
+  പൊതു:
     /**
      * Convert from the C type to the C++ type (const version).
      */
-    static const CPPType* validate(const CType* input, UErrorCode& status);
+    സ്ഥിതം സ്ഥിരം CPPType* validate(സ്ഥിരം CType* നിവേശം, UErrorCode& status);
 
     /**
      * Convert from the C type to the C++ type (non-const version).
      */
-    static CPPType* validate(CType* input, UErrorCode& status);
+    സ്ഥിതം CPPType* validate(CType* നിവേശം, UErrorCode& status);
 
     /**
      * Convert from the C++ type to the C type (const version).
      */
-    const CType* exportConstForC() const;
+    സ്ഥിരം CType* exportConstForC() സ്ഥിരം;
 
     /**
      * Convert from the C++ type to the C type (non-const version).
@@ -39,7 +39,7 @@ class IcuCApiHelper {
      */
     ~IcuCApiHelper();
 
-  private:
+  സ്വകാര്യ:
     /**
      * While the object is valid, fMagic equals kMagic.
      */
@@ -48,41 +48,41 @@ class IcuCApiHelper {
 
 
 template<typename CType, typename CPPType, int32_t kMagic>
-const CPPType*
-IcuCApiHelper<CType, CPPType, kMagic>::validate(const CType* input, UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return nullptr;
+സ്ഥിരം CPPType*
+IcuCApiHelper<CType, CPPType, kMagic>::validate(സ്ഥിരം CType* നിവേശം, UErrorCode& status) {
+    എങ്കിൽ (U_FAILURE(status)) {
+        തിരികെ nullptr;
     }
-    if (input == nullptr) {
+    എങ്കിൽ (നിവേശം == nullptr) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
-    auto* impl = reinterpret_cast<const CPPType*>(input);
-    if (static_cast<const IcuCApiHelper<CType, CPPType, kMagic>*>(impl)->fMagic != kMagic) {
+    auto* impl = reinterpret_cast<സ്ഥിരം CPPType*>(നിവേശം);
+    എങ്കിൽ (static_cast<സ്ഥിരം IcuCApiHelper<CType, CPPType, kMagic>*>(impl)->fMagic != kMagic) {
         status = U_INVALID_FORMAT_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
-    return impl;
+    തിരികെ impl;
 }
 
 template<typename CType, typename CPPType, int32_t kMagic>
 CPPType*
-IcuCApiHelper<CType, CPPType, kMagic>::validate(CType* input, UErrorCode& status) {
-    auto* constInput = static_cast<const CType*>(input);
-    auto* validated = validate(constInput, status);
-    return const_cast<CPPType*>(validated);
+IcuCApiHelper<CType, CPPType, kMagic>::validate(CType* നിവേശം, UErrorCode& status) {
+    auto* const_നിവേശം = static_cast<സ്ഥിരം CType*>(നിവേശം);
+    auto* validated = validate(const_നിവേശം, status);
+    തിരികെ const_cast<CPPType*>(validated);
 }
 
 template<typename CType, typename CPPType, int32_t kMagic>
-const CType*
-IcuCApiHelper<CType, CPPType, kMagic>::exportConstForC() const {
-    return reinterpret_cast<const CType*>(static_cast<const CPPType*>(this));
+സ്ഥിരം CType*
+IcuCApiHelper<CType, CPPType, kMagic>::exportConstForC() സ്ഥിരം {
+    തിരികെ reinterpret_cast<സ്ഥിരം CType*>(static_cast<സ്ഥിരം CPPType*>(this));
 }
 
 template<typename CType, typename CPPType, int32_t kMagic>
 CType*
 IcuCApiHelper<CType, CPPType, kMagic>::exportForC() {
-    return reinterpret_cast<CType*>(static_cast<CPPType*>(this));
+    തിരികെ reinterpret_cast<CType*>(static_cast<CPPType*>(this));
 }
 
 template<typename CType, typename CPPType, int32_t kMagic>

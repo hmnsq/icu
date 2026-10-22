@@ -12,12 +12,12 @@
 #ifndef UNIFILT_H
 #define UNIFILT_H
 
-#include "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#എങ്കിൽ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/unifunct.h"
-#include "unicode/unimatch.h"
+#അന്തര്ഭാവ "unicode/unifunct.h"
+#അന്തര്ഭാവ "unicode/unimatch.h"
 
 /**
  * \file 
@@ -62,14 +62,14 @@ U_NAMESPACE_BEGIN
  * @see UnicodeFilterLogic
  * @stable ICU 2.0
  */
-class U_COMMON_API UnicodeFilter : public UnicodeFunctor, public UnicodeMatcher {
+class U_COMMON_API UnicodeFilter : പൊതു UnicodeFunctor, പൊതു UnicodeMatcher {
 
-public:
+പൊതു:
     /**
      * Destructor
      * @stable ICU 2.0
      */
-    virtual ~UnicodeFilter();
+    മായാ ~UnicodeFilter();
 
     /**
      * Clones this object polymorphically.
@@ -77,7 +77,7 @@ public:
      * @return clone, or nullptr if an error occurred
      * @stable ICU 2.4
      */
-    virtual UnicodeFilter* clone() const override = 0;
+    മായാ UnicodeFilter* clone() സ്ഥിരം override = 0;
 
     /**
      * Returns <tt>true</tt> for characters that are in the selected
@@ -86,20 +86,20 @@ public:
      * <b><tt>false</tt></b>.
      * @stable ICU 2.0
      */
-    virtual UBool contains(UChar32 c) const = 0;
+    മായാ UBool contains(UChar32 c) സ്ഥിരം = 0;
 
     /**
      * UnicodeFunctor API.  Cast 'this' to a UnicodeMatcher* pointer
      * and return the pointer.
      * @stable ICU 2.4
      */
-    virtual UnicodeMatcher* toMatcher() const U_LIFETIME_BOUND override;
+    മായാ UnicodeMatcher* toMatcher() സ്ഥിരം U_LIFETIME_BOUND override;
 
     /**
      * Implement UnicodeMatcher API.
      * @stable ICU 2.4
      */
-    virtual UMatchDegree matches(const Replaceable& text,
+    മായാ UMatchDegree matches(സ്ഥിരം Replaceable& text,
                                  int32_t& offset,
                                  int32_t limit,
                                  UBool incremental) override;
@@ -108,16 +108,16 @@ public:
      * UnicodeFunctor API.  Nothing to do.
      * @stable ICU 2.4
      */
-    virtual void setData(const TransliterationRuleData*) override;
+    മായാ ശൂന്യം setData(സ്ഥിരം TransliterationRuleData*) override;
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      *
      * @stable ICU 2.2
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    സ്ഥിതം UClassID U_EXPORT2 getStaticClassID();
 
-protected:
+സംരക്ഷിത:
 
     /*
      * Since this class has pure virtual functions,

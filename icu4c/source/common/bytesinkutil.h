@@ -7,39 +7,39 @@
 #ifndef BYTESINKUTIL_H
 #define BYTESINKUTIL_H
 
-#include <type_traits>
+#അന്തര്ഭാവ <type_traits>
 
-#include "unicode/utypes.h"
-#include "unicode/bytestream.h"
-#include "unicode/edits.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "uassert.h"
-#include "ustr_imp.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/bytestream.h"
+#അന്തര്ഭാവ "unicode/edits.h"
+#അന്തര്ഭാവ "charstr.h"
+#അന്തര്ഭാവ "cmemory.h"
+#അന്തര്ഭാവ "uassert.h"
+#അന്തര്ഭാവ "ustr_imp.h"
 
 U_NAMESPACE_BEGIN
 
 class ByteSink;
 class Edits;
 
-class U_COMMON_API CharStringByteSink : public ByteSink {
-public:
+class U_COMMON_API CharStringByteSink : പൊതു ByteSink {
+പൊതു:
     CharStringByteSink(CharString* dest);
     ~CharStringByteSink() override;
 
     CharStringByteSink() = delete;
-    CharStringByteSink(const CharStringByteSink&) = delete;
-    CharStringByteSink& operator=(const CharStringByteSink&) = delete;
+    CharStringByteSink(സ്ഥിരം CharStringByteSink&) = delete;
+    CharStringByteSink& operator=(സ്ഥിരം CharStringByteSink&) = delete;
 
-    void Append(const char* bytes, int32_t n) override;
+    ശൂന്യം Append(സ്ഥിരം അക്ഷരം* bytes, int32_t n) override;
 
-    char* GetAppendBuffer(int32_t min_capacity,
+    അക്ഷരം* GetAppendBuffer(int32_t min_capacity,
                           int32_t desired_capacity_hint,
-                          char* scratch U_LIFETIME_BOUND,
+                          അക്ഷരം* scratch U_LIFETIME_BOUND,
                           int32_t scratch_capacity,
                           int32_t* result_capacity) U_LIFETIME_BOUND override;
 
-private:
+സ്വകാര്യ:
     CharString& dest_;
 };
 
@@ -47,47 +47,47 @@ private:
 // string class to have so this template specialization replaces the default
 // implementation of StringByteSink<CharString> with CharStringByteSink.
 template<>
-class StringByteSink<CharString> : public CharStringByteSink {
- public:
+class StringByteSink<CharString> : പൊതു CharStringByteSink {
+ പൊതു:
   StringByteSink(CharString* dest) : CharStringByteSink(dest) { }
   StringByteSink(CharString* dest, int32_t /*initialAppendCapacity*/) : CharStringByteSink(dest) { }
 };
 
 class U_COMMON_API ByteSinkUtil {
-public:
+പൊതു:
     ByteSinkUtil() = delete;  // all static
 
     /** (length) bytes were mapped to valid (s16, s16Length). */
-    static UBool appendChange(int32_t length,
-                              const char16_t *s16, int32_t s16Length,
+    സ്ഥിതം UBool appendChange(int32_t length,
+                              സ്ഥിരം char16_t *s16, int32_t s16Length,
                               ByteSink &sink, Edits *edits, UErrorCode &errorCode);
 
     /** The bytes at [s, limit[ were mapped to valid (s16, s16Length). */
-    static UBool appendChange(const uint8_t *s, const uint8_t *limit,
-                              const char16_t *s16, int32_t s16Length,
+    സ്ഥിതം UBool appendChange(സ്ഥിരം uint8_t *s, സ്ഥിരം uint8_t *limit,
+                              സ്ഥിരം char16_t *s16, int32_t s16Length,
                               ByteSink &sink, Edits *edits, UErrorCode &errorCode);
 
     /** (length) bytes were mapped/changed to valid code point c. */
-    static void appendCodePoint(int32_t length, UChar32 c, ByteSink &sink, Edits *edits = nullptr);
+    സ്ഥിതം ശൂന്യം appendCodePoint(int32_t length, UChar32 c, ByteSink &sink, Edits *edits = nullptr);
 
     /** The few bytes at [src, nextSrc[ were mapped/changed to valid code point c. */
-    static inline void appendCodePoint(const uint8_t *src, const uint8_t *nextSrc, UChar32 c,
+    സ്ഥിതം വരിയിൽ ശൂന്യം appendCodePoint(സ്ഥിരം uint8_t *src, സ്ഥിരം uint8_t *nextSrc, UChar32 c,
                                        ByteSink &sink, Edits *edits = nullptr) {
         appendCodePoint(static_cast<int32_t>(nextSrc - src), c, sink, edits);
     }
 
     /** Append the two-byte character (U+0080..U+07FF). */
-    static void appendTwoBytes(UChar32 c, ByteSink &sink);
+    സ്ഥിതം ശൂന്യം appendTwoBytes(UChar32 c, ByteSink &sink);
 
-    static UBool appendUnchanged(const uint8_t *s, int32_t length,
+    സ്ഥിതം UBool appendUnchanged(സ്ഥിരം uint8_t *s, int32_t length,
                                  ByteSink &sink, uint32_t options, Edits *edits,
                                  UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return false; }
-        if (length > 0) { appendNonEmptyUnchanged(s, length, sink, options, edits); }
-        return true;
+        എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ false; }
+        എങ്കിൽ (length > 0) { appendNonEmptyUnchanged(s, length, sink, options, edits); }
+        തിരികെ true;
     }
 
-    static UBool appendUnchanged(const uint8_t *s, const uint8_t *limit,
+    സ്ഥിതം UBool appendUnchanged(സ്ഥിരം uint8_t *s, സ്ഥിരം uint8_t *limit,
                                  ByteSink &sink, uint32_t options, Edits *edits,
                                  UErrorCode &errorCode);
 
@@ -106,23 +106,23 @@ public:
      */
     template <typename F,
               typename = std::enable_if_t<
-                  std::is_invocable_r_v<void, F, ByteSink&, UErrorCode&>>>
-    static int32_t viaByteSinkToTerminatedChars(char* buffer, int32_t capacity,
+                  std::is_invocable_r_v<ശൂന്യം, F, ByteSink&, UErrorCode&>>>
+    സ്ഥിതം int32_t viaByteSinkToTerminatedChars(അക്ഷരം* buffer, int32_t capacity,
                                                 F&& lambda,
                                                 UErrorCode& status) {
-        if (U_FAILURE(status)) { return 0; }
+        എങ്കിൽ (U_FAILURE(status)) { തിരികെ 0; }
         CheckedArrayByteSink sink(buffer, capacity);
         lambda(sink, status);
-        if (U_FAILURE(status)) { return 0; }
+        എങ്കിൽ (U_FAILURE(status)) { തിരികെ 0; }
 
-        int32_t reslen = sink.NumberOfBytesAppended();
+        int32_t reslen = sink.സംഖ്യ_Of_Bytes_Appended();
 
-        if (sink.Overflowed()) {
+        എങ്കിൽ (sink.Overflowed()) {
             status = U_BUFFER_OVERFLOW_ERROR;
-            return reslen;
+            തിരികെ reslen;
         }
 
-        return u_terminateChars(buffer, capacity, reslen, &status);
+        തിരികെ u_terminateChars(buffer, capacity, reslen, &status);
     }
 
     /**
@@ -137,17 +137,17 @@ public:
      */
     template <typename F,
               typename = std::enable_if_t<
-                  std::is_invocable_r_v<void, F, ByteSink&, UErrorCode&>>>
-    static CharString viaByteSinkToCharString(F&& lambda, UErrorCode& status) {
-        if (U_FAILURE(status)) { return {}; }
+                  std::is_invocable_r_v<ശൂന്യം, F, ByteSink&, UErrorCode&>>>
+    സ്ഥിതം CharString viaByteSinkToCharString(F&& lambda, UErrorCode& status) {
+        എങ്കിൽ (U_FAILURE(status)) { തിരികെ {}; }
         CharString result;
         CharStringByteSink sink(&result);
         lambda(sink, status);
-        return result;
+        തിരികെ result;
     }
 
-private:
-    static void appendNonEmptyUnchanged(const uint8_t *s, int32_t length,
+സ്വകാര്യ:
+    സ്ഥിതം ശൂന്യം appendNonEmptyUnchanged(സ്ഥിരം uint8_t *s, int32_t length,
                                         ByteSink &sink, uint32_t options, Edits *edits);
 };
 

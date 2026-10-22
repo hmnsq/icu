@@ -1,35 +1,35 @@
 // © 2019 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
 
-#include <optional>
-#include <string_view>
-#include <utility>
+#അന്തര്ഭാവ <optional>
+#അന്തര്ഭാവ <string_view>
+#അന്തര്ഭാവ <utility>
 
-#include "bytesinkutil.h"  // StringByteSink<CharString>
-#include "charstr.h"
-#include "cstring.h"
-#include "fixedstring.h"
-#include "ulocimp.h"
-#include "unicode/localebuilder.h"
-#include "unicode/locid.h"
+#അന്തര്ഭാവ "bytesinkutil.h"  // StringByteSink<CharString>
+#അന്തര്ഭാവ "charstr.h"
+#അന്തര്ഭാവ "cstring.h"
+#അന്തര്ഭാവ "fixedstring.h"
+#അന്തര്ഭാവ "ulocimp.h"
+#അന്തര്ഭാവ "unicode/localebuilder.h"
+#അന്തര്ഭാവ "unicode/locid.h"
 
-namespace {
+നാമാകാശ {
 
-inline bool UPRV_ISDIGIT(char c) { return c >= '0' && c <= '9'; }
-inline bool UPRV_ISALPHANUM(char c) { return uprv_isASCIILetter(c) || UPRV_ISDIGIT(c); }
+വരിയിൽ തർക്കം UPRV_ISDIGIT(അക്ഷരം c) { തിരികെ c >= '0' && c <= '9'; }
+വരിയിൽ തർക്കം UPRV_ISALPHANUM(അക്ഷരം c) { തിരികെ uprv_isASCIILetter(c) || UPRV_ISDIGIT(c); }
 
-constexpr const char* kAttributeKey = "attribute";
+constexpr സ്ഥിരം അക്ഷരം* k_Attribute_താക്കോൽ = "attribute";
 
-bool _isExtensionSubtags(char key, const char* s, int32_t len) {
-    switch (uprv_tolower(key)) {
-        case 'u':
-            return ultag_isUnicodeExtensionSubtags(s, len);
-        case 't':
-            return ultag_isTransformedExtensionSubtags(s, len);
-        case 'x':
-            return ultag_isPrivateuseValueSubtags(s, len);
-        default:
-            return ultag_isExtensionSubtags(s, len);
+തർക്കം _isExtensionSubtags(അക്ഷരം താക്കോൽ, സ്ഥിരം അക്ഷരം* s, int32_t len) {
+    തിരഞ്ഞെടുപ്പ് (uprv_tolower(താക്കോൽ)) {
+        അവസ്ഥ 'u':
+            തിരികെ ultag_isUnicodeExtensionSubtags(s, len);
+        അവസ്ഥ 't':
+            തിരികെ ultag_isTransformedExtensionSubtags(s, len);
+        അവസ്ഥ 'x':
+            തിരികെ ultag_is_Privateuse_മൂല്യം_Subtags(s, len);
+        സ്ഥിരസ്ഥിതി:
+            തിരികെ ultag_isExtensionSubtags(s, len);
     }
 }
 
@@ -51,7 +51,7 @@ LocaleBuilder::~LocaleBuilder()
     delete extensions_;
 }
 
-LocaleBuilder& LocaleBuilder::setLocale(const Locale& locale) U_LIFETIME_BOUND
+LocaleBuilder& LocaleBuilder::setLocale(സ്ഥിരം Locale& locale) U_LIFETIME_BOUND
 {
     clear();
     setLanguage(locale.getLanguage());
@@ -59,33 +59,33 @@ LocaleBuilder& LocaleBuilder::setLocale(const Locale& locale) U_LIFETIME_BOUND
     setRegion(locale.getCountry());
     setVariant(locale.getVariant());
     extensions_ = locale.clone();
-    if (extensions_ == nullptr) {
+    എങ്കിൽ (extensions_ == nullptr) {
         status_ = U_MEMORY_ALLOCATION_ERROR;
     }
-    return *this;
+    തിരികെ *ഇത്;
 }
 
 LocaleBuilder& LocaleBuilder::setLanguageTag(StringPiece tag) U_LIFETIME_BOUND
 {
     Locale l = Locale::forLanguageTag(tag, status_);
-    if (U_FAILURE(status_)) { return *this; }
+    എങ്കിൽ (U_FAILURE(status_)) { തിരികെ *ഇത്; }
     // Because setLocale will reset status_ we need to return
     // first if we have error in forLanguageTag.
     setLocale(l);
-    return *this;
+    തിരികെ *ഇത്;
 }
 
-namespace {
+നാമാകാശ {
 
-void setField(StringPiece input, char* dest, UErrorCode& errorCode,
-              bool (*test)(const char*, int32_t)) {
-    if (U_FAILURE(errorCode)) { return; }
-    if (input.empty()) {
+ശൂന്യം setField(StringPiece input, അക്ഷരം* dest, UErrorCode& errorCode,
+              തർക്കം (*test)(സ്ഥിരം അക്ഷരം*, int32_t)) {
+    എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ; }
+    എങ്കിൽ (input.empty()) {
         dest[0] = '\0';
-    } else if (test(input.data(), input.length())) {
+    } അല്ലെങ്കിൽ എങ്കിൽ (test(input.data(), input.length())) {
         uprv_memcpy(dest, input.data(), input.length());
         dest[input.length()] = '\0';
-    } else {
+    } അല്ലെങ്കിൽ {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
     }
 }
@@ -95,28 +95,28 @@ void setField(StringPiece input, char* dest, UErrorCode& errorCode,
 LocaleBuilder& LocaleBuilder::setLanguage(StringPiece language) U_LIFETIME_BOUND
 {
     setField(language, language_, status_, &ultag_isLanguageSubtag);
-    return *this;
+    തിരികെ *ഇത്;
 }
 
 LocaleBuilder& LocaleBuilder::setScript(StringPiece script) U_LIFETIME_BOUND
 {
     setField(script, script_, status_, &ultag_isScriptSubtag);
-    return *this;
+    തിരികെ *ഇത്;
 }
 
 LocaleBuilder& LocaleBuilder::setRegion(StringPiece region) U_LIFETIME_BOUND
 {
     setField(region, region_, status_, &ultag_isRegionSubtag);
-    return *this;
+    തിരികെ *ഇത്;
 }
 
-namespace {
+നാമാകാശ {
 
-void transform(char* data, int32_t len) {
-    for (int32_t i = 0; i < len; i++, data++) {
-        if (*data == '_') {
+ശൂന്യം transform(അക്ഷരം* data, int32_t len) {
+    വേണ്ടി (int32_t i = 0; i < len; i++, data++) {
+        എങ്കിൽ (*data == '_') {
             *data = '-';
-        } else {
+        } അല്ലെങ്കിൽ {
             *data = uprv_tolower(*data);
         }
     }
@@ -126,263 +126,263 @@ void transform(char* data, int32_t len) {
 
 LocaleBuilder& LocaleBuilder::setVariant(StringPiece variant) U_LIFETIME_BOUND
 {
-    if (U_FAILURE(status_)) { return *this; }
-    if (variant.empty()) {
+    എങ്കിൽ (U_FAILURE(status_)) { തിരികെ *ഇത്; }
+    എങ്കിൽ (variant.empty()) {
         delete variant_;
         variant_ = nullptr;
-        return *this;
+        തിരികെ *ഇത്;
     }
-    FixedString* new_variant = new FixedString(variant);
-    if (new_variant == nullptr || new_variant->isEmpty()) {
+    FixedString* new_variant = പുതിയ FixedString(variant);
+    എങ്കിൽ (new_variant == nullptr || new_variant->isEmpty()) {
         status_ = U_MEMORY_ALLOCATION_ERROR;
-        return *this;
+        തിരികെ *ഇത്;
     }
     transform(new_variant->getAlias(), variant.length());
-    if (!ultag_isVariantSubtags(new_variant->data(), variant.length())) {
+    എങ്കിൽ (!ultag_isVariantSubtags(new_variant->data(), variant.length())) {
         delete new_variant;
         status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        തിരികെ *ഇത്;
     }
     delete variant_;
     variant_ = new_variant;
-    return *this;
+    തിരികെ *ഇത്;
 }
 
-namespace {
+നാമാകാശ {
 
-bool
-_isKeywordValue(const char* key, const char* value, int32_t value_len)
+തർക്കം
+is_Keyword_മൂല്യം(സ്ഥിരം അക്ഷരം* താക്കോൽ, സ്ഥിരം അക്ഷരം* value, int32_t മൂല്യം_len)
 {
-    if (key[1] == '\0') {
+    എങ്കിൽ (താക്കോൽ[1] == '\0') {
         // one char key
-        return (UPRV_ISALPHANUM(uprv_tolower(key[0])) &&
-                _isExtensionSubtags(key[0], value, value_len));
-    } else if (uprv_strcmp(key, kAttributeKey) == 0) {
+        തിരികെ (UPRV_ISALPHANUM(uprv_tolower(താക്കോൽ[0])) &&
+                _isExtensionSubtags(താക്കോൽ[0], value, മൂല്യം_len));
+    } അല്ലെങ്കിൽ എങ്കിൽ (uprv_strcmp(താക്കോൽ, k_Attribute_താക്കോൽ) == 0) {
         // unicode attributes
-        return ultag_isUnicodeLocaleAttributes(value, value_len);
+        തിരികെ ultag_isUnicodeLocaleAttributes(value, മൂല്യം_len);
     }
     // otherwise: unicode extension value
     // We need to convert from legacy key/value to unicode
     // key/value
-    std::optional<std::string_view> unicode_locale_key = ulocimp_toBcpKeyWithFallback(key);
-    std::optional<std::string_view> unicode_locale_type = ulocimp_toBcpTypeWithFallback(key, value);
+    std::optional<std::string_view> unicode_locale_താക്കോൽ = ulocimp_to_Bcp_താക്കോൽ_With_Fallback(താക്കോൽ);
+    std::optional<std::string_view> unicode_locale_type = ulocimp_toBcpTypeWithFallback(താക്കോൽ, value);
 
-    return unicode_locale_key.has_value() &&
+    തിരികെ unicode_locale_താക്കോൽ.has_value() &&
            unicode_locale_type.has_value() &&
-           ultag_isUnicodeLocaleKey(unicode_locale_key->data(),
-                                    static_cast<int32_t>(unicode_locale_key->size())) &&
+           ultag_is_Unicode_Locale_താക്കോൽ(unicode_locale_താക്കോൽ->data(),
+                                    static_cast<int32_t>(unicode_locale_താക്കോൽ->size())) &&
            ultag_isUnicodeLocaleType(unicode_locale_type->data(),
                                      static_cast<int32_t>(unicode_locale_type->size()));
 }
 
-void
-_copyExtensions(const Locale& from, icu::StringEnumeration *keywords,
-                Locale& to, bool validate, UErrorCode& errorCode)
+ശൂന്യം
+_copyExtensions(സ്ഥിരം Locale& from, icu::StringEnumeration *keywords,
+                Locale& to, തർക്കം validate, UErrorCode& errorCode)
 {
-    if (U_FAILURE(errorCode)) { return; }
+    എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ; }
     LocalPointer<icu::StringEnumeration> ownedKeywords;
-    if (keywords == nullptr) {
+    എങ്കിൽ (keywords == nullptr) {
         ownedKeywords.adoptInstead(from.createKeywords(errorCode));
-        if (U_FAILURE(errorCode) || ownedKeywords.isNull()) { return; }
+        എങ്കിൽ (U_FAILURE(errorCode) || ownedKeywords.isNull()) { തിരികെ; }
         keywords = ownedKeywords.getAlias();
     }
-    const char* key;
-    while ((key = keywords->next(nullptr, errorCode)) != nullptr) {
-        auto value = from.getKeywordValue<CharString>(key, errorCode);
-        if (U_FAILURE(errorCode)) { return; }
-        if (uprv_strcmp(key, kAttributeKey) == 0) {
+    സ്ഥിരം അക്ഷരം* താക്കോൽ;
+    ആകുമ്പോൾ ((താക്കോൽ = keywords->next(nullptr, errorCode)) != nullptr) {
+        auto value = from.get_Keyword_മൂല്യം<CharString>(താക്കോൽ, errorCode);
+        എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ; }
+        എങ്കിൽ (uprv_strcmp(താക്കോൽ, k_Attribute_താക്കോൽ) == 0) {
             transform(value.data(), value.length());
         }
-        if (validate &&
-            !_isKeywordValue(key, value.data(), value.length())) {
+        എങ്കിൽ (validate &&
+            !is_Keyword_മൂല്യം(താക്കോൽ, value.data(), value.length())) {
             errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            തിരികെ;
         }
-        to.setKeywordValue(key, value.data(), errorCode);
-        if (U_FAILURE(errorCode)) { return; }
+        to.set_Keyword_മൂല്യം(താക്കോൽ, value.data(), errorCode);
+        എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ; }
     }
 }
 
-void
-_clearUAttributesAndKeyType(Locale& locale, UErrorCode& errorCode)
+ശൂന്യം
+clear_UAttributes_And_താക്കോൽ_Type(Locale& locale, UErrorCode& errorCode)
 {
-    if (U_FAILURE(errorCode)) { return; }
+    എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ; }
     // Clear Unicode attributes
-    locale.setKeywordValue(kAttributeKey, "", errorCode);
+    locale.set_Keyword_മൂല്യം(k_Attribute_താക്കോൽ, "", errorCode);
 
     // Clear all Unicode keyword values
     LocalPointer<icu::StringEnumeration> iter(locale.createUnicodeKeywords(errorCode));
-    if (U_FAILURE(errorCode) || iter.isNull()) { return; }
-    const char* key;
-    while ((key = iter->next(nullptr, errorCode)) != nullptr) {
-        locale.setUnicodeKeywordValue(key, nullptr, errorCode);
+    എങ്കിൽ (U_FAILURE(errorCode) || iter.isNull()) { തിരികെ; }
+    സ്ഥിരം അക്ഷരം* താക്കോൽ;
+    ആകുമ്പോൾ ((താക്കോൽ = iter->next(nullptr, errorCode)) != nullptr) {
+        locale.set_Unicode_Keyword_മൂല്യം(താക്കോൽ, nullptr, errorCode);
     }
 }
 
-void
-_setUnicodeExtensions(Locale& locale, const CharString& value, UErrorCode& errorCode)
+ശൂന്യം
+_setUnicodeExtensions(Locale& locale, സ്ഥിരം CharString& value, UErrorCode& errorCode)
 {
-    if (U_FAILURE(errorCode)) { return; }
+    എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ; }
     // Add the unicode extensions to extensions_
     CharString locale_str("und-u-", errorCode);
     locale_str.append(value, errorCode);
     _copyExtensions(
         Locale::forLanguageTag(locale_str.data(), errorCode), nullptr,
-        locale, false, errorCode);
+        locale, അസത്യം, errorCode);
 }
 
 }  // namespace
 
-LocaleBuilder& LocaleBuilder::setExtension(char key, StringPiece value) U_LIFETIME_BOUND
+LocaleBuilder& LocaleBuilder::setExtension(അക്ഷരം താക്കോൽ, StringPiece value) U_LIFETIME_BOUND
 {
-    if (U_FAILURE(status_)) { return *this; }
-    if (!UPRV_ISALPHANUM(key)) {
+    എങ്കിൽ (U_FAILURE(status_)) { തിരികെ *ഇത്; }
+    എങ്കിൽ (!UPRV_ISALPHANUM(താക്കോൽ)) {
         status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        തിരികെ *ഇത്;
     }
-    CharString value_str(value, status_);
-    if (U_FAILURE(status_)) { return *this; }
-    transform(value_str.data(), value_str.length());
-    if (!value_str.isEmpty() &&
-            !_isExtensionSubtags(key, value_str.data(), value_str.length())) {
+    CharString മൂല്യം_str(value, status_);
+    എങ്കിൽ (U_FAILURE(status_)) { തിരികെ *ഇത്; }
+    transform(മൂല്യം_str.data(), മൂല്യം_str.length());
+    എങ്കിൽ (!മൂല്യം_str.isEmpty() &&
+            !_isExtensionSubtags(താക്കോൽ, മൂല്യം_str.data(), മൂല്യം_str.length())) {
         status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        തിരികെ *ഇത്;
     }
-    if (extensions_ == nullptr) {
-        extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
+    എങ്കിൽ (extensions_ == nullptr) {
+        extensions_ = Locale::get_വേര്().clone();
+        എങ്കിൽ (extensions_ == nullptr) {
             status_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+            തിരികെ *ഇത്;
         }
     }
-    if (uprv_tolower(key) != 'u') {
+    എങ്കിൽ (uprv_tolower(താക്കോൽ) != 'u') {
         // for t, x and others extension.
-        extensions_->setKeywordValue(StringPiece(&key, 1), value_str.data(),
+        extensions_->set_Keyword_മൂല്യം(StringPiece(&താക്കോൽ, 1), മൂല്യം_str.data(),
                                      status_);
-        return *this;
+        തിരികെ *ഇത്;
     }
-    _clearUAttributesAndKeyType(*extensions_, status_);
-    if (U_FAILURE(status_)) { return *this; }
-    if (!value.empty()) {
-        _setUnicodeExtensions(*extensions_, value_str, status_);
+    clear_UAttributes_And_താക്കോൽ_Type(*extensions_, status_);
+    എങ്കിൽ (U_FAILURE(status_)) { തിരികെ *ഇത്; }
+    എങ്കിൽ (!value.empty()) {
+        _setUnicodeExtensions(*extensions_, മൂല്യം_str, status_);
     }
-    return *this;
+    തിരികെ *ഇത്;
 }
 
-LocaleBuilder& LocaleBuilder::setUnicodeLocaleKeyword(StringPiece key,
+LocaleBuilder& LocaleBuilder::setUnicodeLocaleKeyword(StringPiece താക്കോൽ,
                                                       StringPiece type) U_LIFETIME_BOUND
 {
-    if (U_FAILURE(status_)) { return *this; }
-    if (!ultag_isUnicodeLocaleKey(key.data(), key.length()) ||
+    എങ്കിൽ (U_FAILURE(status_)) { തിരികെ *ഇത്; }
+    എങ്കിൽ (!ultag_is_Unicode_Locale_താക്കോൽ(താക്കോൽ.data(), താക്കോൽ.length()) ||
             (!type.empty() &&
                  !ultag_isUnicodeLocaleType(type.data(), type.length()))) {
       status_ = U_ILLEGAL_ARGUMENT_ERROR;
-      return *this;
+      തിരികെ *ഇത്;
     }
-    if (extensions_ == nullptr) {
-        extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
+    എങ്കിൽ (extensions_ == nullptr) {
+        extensions_ = Locale::get_വേര്().clone();
+        എങ്കിൽ (extensions_ == nullptr) {
             status_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+            തിരികെ *ഇത്;
         }
     }
-    extensions_->setUnicodeKeywordValue(key, type, status_);
-    return *this;
+    extensions_->set_Unicode_Keyword_മൂല്യം(താക്കോൽ, type, status_);
+    തിരികെ *ഇത്;
 }
 
 LocaleBuilder& LocaleBuilder::addUnicodeLocaleAttribute(StringPiece value) U_LIFETIME_BOUND
 {
-    CharString value_str(value, status_);
-    if (U_FAILURE(status_)) { return *this; }
-    transform(value_str.data(), value_str.length());
-    if (!ultag_isUnicodeLocaleAttribute(value_str.data(), value_str.length())) {
+    CharString മൂല്യം_str(value, status_);
+    എങ്കിൽ (U_FAILURE(status_)) { തിരികെ *ഇത്; }
+    transform(മൂല്യം_str.data(), മൂല്യം_str.length());
+    എങ്കിൽ (!ultag_isUnicodeLocaleAttribute(മൂല്യം_str.data(), മൂല്യം_str.length())) {
         status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        തിരികെ *ഇത്;
     }
-    if (extensions_ == nullptr) {
-        extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
+    എങ്കിൽ (extensions_ == nullptr) {
+        extensions_ = Locale::get_വേര്().clone();
+        എങ്കിൽ (extensions_ == nullptr) {
             status_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+            തിരികെ *ഇത്;
         }
-        extensions_->setKeywordValue(kAttributeKey, value_str.data(), status_);
-        return *this;
+        extensions_->set_Keyword_മൂല്യം(k_Attribute_താക്കോൽ, മൂല്യം_str.data(), status_);
+        തിരികെ *ഇത്;
     }
 
     UErrorCode localErrorCode = U_ZERO_ERROR;
-    auto attributes = extensions_->getKeywordValue<CharString>(kAttributeKey, localErrorCode);
-    if (U_FAILURE(localErrorCode)) {
-        CharString new_attributes(value_str.data(), status_);
+    auto attributes = extensions_->get_Keyword_മൂല്യം<CharString>(k_Attribute_താക്കോൽ, localErrorCode);
+    എങ്കിൽ (U_FAILURE(localErrorCode)) {
+        CharString new_attributes(മൂല്യം_str.data(), status_);
         // No attributes, set the attribute.
-        extensions_->setKeywordValue(kAttributeKey, new_attributes.data(), status_);
-        return *this;
+        extensions_->set_Keyword_മൂല്യം(k_Attribute_താക്കോൽ, new_attributes.data(), status_);
+        തിരികെ *ഇത്;
     }
 
     transform(attributes.data(),attributes.length());
-    const char* start = attributes.data();
-    const char* limit = attributes.data() + attributes.length();
+    സ്ഥിരം അക്ഷരം* start = attributes.data();
+    സ്ഥിരം അക്ഷരം* limit = attributes.data() + attributes.length();
     CharString new_attributes;
-    bool inserted = false;
-    while (start < limit) {
-        if (!inserted) {
-            int cmp = uprv_strcmp(start, value_str.data());
-            if (cmp == 0) { return *this; }  // Found it in attributes: Just return
-            if (cmp > 0) {
-                if (!new_attributes.isEmpty()) new_attributes.append('_', status_);
-                new_attributes.append(value_str.data(), status_);
-                inserted = true;
+    തർക്കം inserted = അസത്യം;
+    ആകുമ്പോൾ (start < limit) {
+        എങ്കിൽ (!inserted) {
+            പൂർണ്ണസംഖ്യ cmp = uprv_strcmp(start, മൂല്യം_str.data());
+            എങ്കിൽ (cmp == 0) { തിരികെ *ഇത്; }  // Found it in attributes: Just return
+            എങ്കിൽ (cmp > 0) {
+                എങ്കിൽ (!new_attributes.isEmpty()) new_attributes.append('_', status_);
+                new_attributes.append(മൂല്യം_str.data(), status_);
+                inserted = സത്യം;
             }
         }
-        if (!new_attributes.isEmpty()) {
+        എങ്കിൽ (!new_attributes.isEmpty()) {
             new_attributes.append('_', status_);
         }
         new_attributes.append(start, status_);
         start += uprv_strlen(start) + 1;
     }
-    if (!inserted) {
-        if (!new_attributes.isEmpty()) {
+    എങ്കിൽ (!inserted) {
+        എങ്കിൽ (!new_attributes.isEmpty()) {
             new_attributes.append('_', status_);
         }
-        new_attributes.append(value_str.data(), status_);
+        new_attributes.append(മൂല്യം_str.data(), status_);
     }
     // Not yet in the attributes, set the attribute.
-    extensions_->setKeywordValue(kAttributeKey, new_attributes.data(), status_);
-    return *this;
+    extensions_->set_Keyword_മൂല്യം(k_Attribute_താക്കോൽ, new_attributes.data(), status_);
+    തിരികെ *ഇത്;
 }
 
 LocaleBuilder& LocaleBuilder::removeUnicodeLocaleAttribute(StringPiece value) U_LIFETIME_BOUND
 {
-    CharString value_str(value, status_);
-    if (U_FAILURE(status_)) { return *this; }
-    transform(value_str.data(), value_str.length());
-    if (!ultag_isUnicodeLocaleAttribute(value_str.data(), value_str.length())) {
+    CharString മൂല്യം_str(value, status_);
+    എങ്കിൽ (U_FAILURE(status_)) { തിരികെ *ഇത്; }
+    transform(മൂല്യം_str.data(), മൂല്യം_str.length());
+    എങ്കിൽ (!ultag_isUnicodeLocaleAttribute(മൂല്യം_str.data(), മൂല്യം_str.length())) {
         status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        തിരികെ *ഇത്;
     }
-    if (extensions_ == nullptr) { return *this; }
+    എങ്കിൽ (extensions_ == nullptr) { തിരികെ *ഇത്; }
     UErrorCode localErrorCode = U_ZERO_ERROR;
-    auto attributes = extensions_->getKeywordValue<CharString>(kAttributeKey, localErrorCode);
+    auto attributes = extensions_->get_Keyword_മൂല്യം<CharString>(k_Attribute_താക്കോൽ, localErrorCode);
     // get failure, just return
-    if (U_FAILURE(localErrorCode)) { return *this; }
+    എങ്കിൽ (U_FAILURE(localErrorCode)) { തിരികെ *ഇത്; }
     // Do not have any attributes, just return.
-    if (attributes.isEmpty()) { return *this; }
+    എങ്കിൽ (attributes.isEmpty()) { തിരികെ *ഇത്; }
 
-    char* p = attributes.data();
+    അക്ഷരം* p = attributes.data();
     // Replace null terminiator in place for _ and - so later
     // we can use uprv_strcmp to compare.
-    for (int32_t i = 0; i < attributes.length(); i++, p++) {
+    വേണ്ടി (int32_t i = 0; i < attributes.length(); i++, p++) {
         *p = (*p == '_' || *p == '-') ? '\0' : uprv_tolower(*p);
     }
 
-    const char* start = attributes.data();
-    const char* limit = attributes.data() + attributes.length();
+    സ്ഥിരം അക്ഷരം* start = attributes.data();
+    സ്ഥിരം അക്ഷരം* limit = attributes.data() + attributes.length();
     CharString new_attributes;
-    bool found = false;
-    while (start < limit) {
-        if (uprv_strcmp(start, value_str.data()) == 0) {
-            found = true;
-        } else {
-            if (!new_attributes.isEmpty()) {
+    തർക്കം found = അസത്യം;
+    ആകുമ്പോൾ (start < limit) {
+        എങ്കിൽ (uprv_strcmp(start, മൂല്യം_str.data()) == 0) {
+            found = സത്യം;
+        } അല്ലെങ്കിൽ {
+            എങ്കിൽ (!new_attributes.isEmpty()) {
                 new_attributes.append('_', status_);
             }
             new_attributes.append(start, status_);
@@ -390,10 +390,10 @@ LocaleBuilder& LocaleBuilder::removeUnicodeLocaleAttribute(StringPiece value) U_
         start += uprv_strlen(start) + 1;
     }
     // Found the value in attributes, set the attribute.
-    if (found) {
-        extensions_->setKeywordValue(kAttributeKey, new_attributes.data(), status_);
+    എങ്കിൽ (found) {
+        extensions_->set_Keyword_മൂല്യം(k_Attribute_താക്കോൽ, new_attributes.data(), status_);
     }
-    return *this;
+    തിരികെ *ഇത്;
 }
 
 LocaleBuilder& LocaleBuilder::clear() U_LIFETIME_BOUND
@@ -405,79 +405,79 @@ LocaleBuilder& LocaleBuilder::clear() U_LIFETIME_BOUND
     delete variant_;
     variant_ = nullptr;
     clearExtensions();
-    return *this;
+    തിരികെ *ഇത്;
 }
 
 LocaleBuilder& LocaleBuilder::clearExtensions() U_LIFETIME_BOUND
 {
     delete extensions_;
     extensions_ = nullptr;
-    return *this;
+    തിരികെ *ഇത്;
 }
 
 Locale makeBogusLocale() {
   Locale bogus;
   bogus.setToBogus();
-  return bogus;
+  തിരികെ bogus;
 }
 
-void LocaleBuilder::copyExtensionsFrom(const Locale& src, UErrorCode& errorCode)
+ശൂന്യം LocaleBuilder::copyExtensionsFrom(സ്ഥിരം Locale& src, UErrorCode& errorCode)
 {
-    if (U_FAILURE(errorCode)) { return; }
+    എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ; }
     LocalPointer<icu::StringEnumeration> keywords(src.createKeywords(errorCode));
-    if (U_FAILURE(errorCode) || keywords.isNull() || keywords->count(errorCode) == 0) {
+    എങ്കിൽ (U_FAILURE(errorCode) || keywords.isNull() || keywords->count(errorCode) == 0) {
         // Error, or no extensions to copy.
-        return;
+        തിരികെ;
     }
-    if (extensions_ == nullptr) {
-        extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
+    എങ്കിൽ (extensions_ == nullptr) {
+        extensions_ = Locale::get_വേര്().clone();
+        എങ്കിൽ (extensions_ == nullptr) {
             status_ = U_MEMORY_ALLOCATION_ERROR;
-            return;
+            തിരികെ;
         }
     }
-    _copyExtensions(src, keywords.getAlias(), *extensions_, false, errorCode);
+    _copyExtensions(src, keywords.getAlias(), *extensions_, അസത്യം, errorCode);
 }
 
 Locale LocaleBuilder::build(UErrorCode& errorCode)
 {
-    if (U_FAILURE(errorCode)) {
-        return makeBogusLocale();
+    എങ്കിൽ (U_FAILURE(errorCode)) {
+        തിരികെ makeBogusLocale();
     }
-    if (U_FAILURE(status_)) {
+    എങ്കിൽ (U_FAILURE(status_)) {
         errorCode = status_;
-        return makeBogusLocale();
+        തിരികെ makeBogusLocale();
     }
     CharString locale_str(language_, errorCode);
-    if (uprv_strlen(script_) > 0) {
+    എങ്കിൽ (uprv_strlen(script_) > 0) {
         locale_str.append('-', errorCode).append(StringPiece(script_), errorCode);
     }
-    if (uprv_strlen(region_) > 0) {
+    എങ്കിൽ (uprv_strlen(region_) > 0) {
         locale_str.append('-', errorCode).append(StringPiece(region_), errorCode);
     }
-    if (variant_ != nullptr) {
+    എങ്കിൽ (variant_ != nullptr) {
         locale_str.append('-', errorCode).append(StringPiece(variant_->data()), errorCode);
     }
-    if (U_FAILURE(errorCode)) {
-        return makeBogusLocale();
+    എങ്കിൽ (U_FAILURE(errorCode)) {
+        തിരികെ makeBogusLocale();
     }
     Locale product(locale_str.data());
-    if (extensions_ != nullptr) {
-        _copyExtensions(*extensions_, nullptr, product, true, errorCode);
+    എങ്കിൽ (extensions_ != nullptr) {
+        _copyExtensions(*extensions_, nullptr, product, സത്യം, errorCode);
     }
-    if (U_FAILURE(errorCode)) {
-        return makeBogusLocale();
+    എങ്കിൽ (U_FAILURE(errorCode)) {
+        തിരികെ makeBogusLocale();
     }
-    return product;
+    തിരികെ product;
 }
 
-UBool LocaleBuilder::copyErrorTo(UErrorCode &outErrorCode) const {
-    if (U_FAILURE(outErrorCode)) {
+UBool LocaleBuilder::copyErrorTo(UErrorCode &outErrorCode) സ്ഥിരം {
+    എങ്കിൽ (U_FAILURE(outErrorCode)) {
         // Do not overwrite the older error code
-        return true;
+        തിരികെ സത്യം;
     }
     outErrorCode = status_;
-    return U_FAILURE(outErrorCode);
+    തിരികെ U_FAILURE(outErrorCode);
 }
 
 U_NAMESPACE_END

@@ -7,36 +7,36 @@
 *******************************************************************************
 *   file name:  charstr.cpp
 */
-#include "unicode/utypes.h"
-#include "unicode/putil.h"
-#include "unicode/unistr.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/putil.h"
+#അന്തര്ഭാവ "unicode/unistr.h"
 
-#include "cstr.h"
+#അന്തര്ഭാവ "cstr.h"
 
-#include "charstr.h"
-#include "uinvchar.h"
+#അന്തര്ഭാവ "charstr.h"
+#അന്തര്ഭാവ "uinvchar.h"
 
 U_NAMESPACE_BEGIN
 
-CStr::CStr(const UnicodeString &in) {
+CStr::CStr(സ്ഥിരം UnicodeString &in) {
     UErrorCode status = U_ZERO_ERROR;
-#if !UCONFIG_NO_CONVERSION || U_CHARSET_IS_UTF8
-    int32_t length = in.extract(0, in.length(), static_cast<char *>(nullptr), static_cast<uint32_t>(0));
+#എങ്കിൽ !UCONFIG_NO_CONVERSION || U_CHARSET_IS_UTF8
+    int32_t length = in.extract(0, in.length(), static_cast<അക്ഷരം *>(nullptr), static_cast<uint32_t>(0));
     int32_t resultCapacity = 0;
-    char *buf = s.getAppendBuffer(length, length, resultCapacity, status);
-    if (U_SUCCESS(status)) {
+    അക്ഷരം *buf = s.getAppendBuffer(length, length, resultCapacity, status);
+    എങ്കിൽ (U_SUCCESS(status)) {
         in.extract(0, in.length(), buf, resultCapacity);
         s.append(buf, length, status);
     }
-#else
+#അല്ലെങ്കിൽ
     // No conversion available. Convert any invariant characters; substitute '?' for the rest.
     // Note: can't just call u_UCharsToChars() or CharString.appendInvariantChars() on the 
     //       whole string because they require that the entire input be invariant.
-    char buf[2];
-    for (int i=0; i<in.length(); i = in.moveIndex32(i, 1)) {
-        if (uprv_isInvariantUString(in.getBuffer()+i, 1)) {
+    അക്ഷരം buf[2];
+    വേണ്ടി (പൂർണ്ണസംഖ്യ i=0; i<in.length(); i = in.moveIndex32(i, 1)) {
+        എങ്കിൽ (uprv_isInvariantUString(in.getBuffer()+i, 1)) {
             u_UCharsToChars(in.getBuffer()+i, buf, 1);
-        } else {
+        } അല്ലെങ്കിൽ {
             buf[0] = '?';
         }
         s.append(buf, 1, status);
@@ -47,8 +47,8 @@ CStr::CStr(const UnicodeString &in) {
 CStr::~CStr() {
 }
 
-const char * CStr::operator ()() const {
-    return s.data();
+സ്ഥിരം അക്ഷരം * CStr::operator ()() സ്ഥിരം {
+    തിരികെ s.data();
 }
 
 U_NAMESPACE_END

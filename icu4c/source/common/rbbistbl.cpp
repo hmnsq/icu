@@ -10,19 +10,19 @@
 ***************************************************************************
 */
 
-#include "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#എങ്കിൽ !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/unistr.h"
-#include "unicode/uniset.h"
-#include "unicode/uchar.h"
-#include "unicode/parsepos.h"
+#അന്തര്ഭാവ "unicode/unistr.h"
+#അന്തര്ഭാവ "unicode/uniset.h"
+#അന്തര്ഭാവ "unicode/uchar.h"
+#അന്തര്ഭാവ "unicode/parsepos.h"
 
-#include "cstr.h"
-#include "rbbinode.h"
-#include "rbbirb.h"
-#include "umutex.h"
+#അന്തര്ഭാവ "cstr.h"
+#അന്തര്ഭാവ "rbbinode.h"
+#അന്തര്ഭാവ "rbbirb.h"
+#അന്തര്ഭാവ "umutex.h"
 
 
 //
@@ -30,7 +30,7 @@
 //                                  when the hash table is deleted.
 //
 U_CDECL_BEGIN
-static void U_CALLCONV RBBISymbolTableEntry_deleter(void *p) {
+സ്ഥിതം ശൂന്യം U_CALLCONV RBBISymbolTableEntry_deleter(ശൂന്യം *p) {
     icu::RBBISymbolTableEntry *px = (icu::RBBISymbolTableEntry *)p;
     delete px;
 }
@@ -40,17 +40,17 @@ U_CDECL_END
 
 U_NAMESPACE_BEGIN
 
-RBBISymbolTable::RBBISymbolTable(RBBIRuleScanner *rs, const UnicodeString &rules, UErrorCode &status)
+RBBISymbolTable::RBBISymbolTable(RBBIRuleScanner *rs, സ്ഥിരം UnicodeString &rules, UErrorCode &status)
     : fRules(rules), fRuleScanner(rs)
 {
     fHashTable       = nullptr;
 
     fHashTable = uhash_open(uhash_hashUnicodeString, uhash_compareUnicodeString, nullptr, &status);
     // uhash_open checks status
-    if (U_FAILURE(status)) {
-        return;
+    എങ്കിൽ (U_FAILURE(status)) {
+        തിരികെ;
     }
-    uhash_setValueDeleter(fHashTable, RBBISymbolTableEntry_deleter);
+    uhash_set_മൂല്യം_Deleter(fHashTable, RBBISymbolTableEntry_deleter);
 }
 
 
@@ -68,14 +68,14 @@ RBBISymbolTable::~RBBISymbolTable()
 //
 //                                The variable name does NOT include the leading $.
 //
-const UnicodeString  *RBBISymbolTable::lookup(const UnicodeString& s) const
+സ്ഥിരം UnicodeString  *RBBISymbolTable::lookup(സ്ഥിരം UnicodeString& s) സ്ഥിരം
 {
-    const RBBISymbolTableEntry* const el =
-        static_cast<const RBBISymbolTableEntry*>(uhash_get(fHashTable, &s));
-    if (el == nullptr) {
-        return nullptr;
+    സ്ഥിരം RBBISymbolTableEntry* സ്ഥിരം el =
+        static_cast<സ്ഥിരം RBBISymbolTableEntry*>(uhash_get(fHashTable, &s));
+    എങ്കിൽ (el == nullptr) {
+        തിരികെ nullptr;
     }
-    const RBBINode& exprNode = *el->val->fLeftChild; // Root node of expression for variable
+    സ്ഥിരം RBBINode& വ്യഞ്ജകം_കണ്ണി = *el->val->f_ഇടത്_Child; // Root node of expression for variable
     // Return the original source string for the expression.
     // Note that for set-valued variables used in UnicodeSet expressions, this would be rejected by
     // the UnicodeSet parser if the source itself contains variable references.  For instance, with
@@ -90,27 +90,27 @@ const UnicodeString  *RBBISymbolTable::lookup(const UnicodeString& s) const
     // to lookup() never happens; instead, lookupSet("CaseIgnorable") is called when computing
     // $Cased and returns the non-null value of $CaseIgnorable, and then when computing $NotCased,
     // lookupSet("Cased") returns the value computed for $Cased.
-    return &exprNode.fText;
+    തിരികെ &വ്യഞ്ജകം_കണ്ണി.fText;
 }
 
-const UnicodeSet* RBBISymbolTable::lookupSet(const UnicodeString& s) const {
-    const RBBISymbolTableEntry* const el = static_cast<const RBBISymbolTableEntry*>(uhash_get(fHashTable, &s));
-    if (el == nullptr) {
-        return nullptr;
+സ്ഥിരം UnicodeSet* RBBISymbolTable::lookupSet(സ്ഥിരം UnicodeString& s) സ്ഥിരം {
+    സ്ഥിരം RBBISymbolTableEntry* സ്ഥിരം el = static_cast<സ്ഥിരം RBBISymbolTableEntry*>(uhash_get(fHashTable, &s));
+    എങ്കിൽ (el == nullptr) {
+        തിരികെ nullptr;
     }
-    const RBBINode& exprNode = *el->val->fLeftChild;
-    if (exprNode.fType == RBBINode::setRef) {
-        return exprNode.fLeftChild->fInputSet;
-    } else {
-        return nullptr;
+    സ്ഥിരം RBBINode& വ്യഞ്ജകം_കണ്ണി = *el->val->f_ഇടത്_Child;
+    എങ്കിൽ (വ്യഞ്ജകം_കണ്ണി.fType == RBBINode::setRef) {
+        തിരികെ വ്യഞ്ജകം_കണ്ണി.f_ഇടത്_Child->f_നിവേശം_Set;
+    } അല്ലെങ്കിൽ {
+        തിരികെ nullptr;
     }
 }
 
 
 
 //  No longer used, see ICU-23297.
-const UnicodeFunctor* RBBISymbolTable::lookupMatcher(UChar32 /*ch*/) const {
-    return nullptr;
+സ്ഥിരം UnicodeFunctor* RBBISymbolTable::lookupMatcher(UChar32 /*ch*/) സ്ഥിരം {
+    തിരികെ nullptr;
 }
 
 //
@@ -123,25 +123,25 @@ const UnicodeFunctor* RBBISymbolTable::lookupMatcher(UChar32 /*ch*/) const {
 //                                   from the rules based transliterator implementation.
 //                                   I didn't see an obvious way of sharing it.
 //
-UnicodeString   RBBISymbolTable::parseReference(const UnicodeString& text,
-                                                ParsePosition& pos, int32_t limit) const
+UnicodeString   RBBISymbolTable::parseReference(സ്ഥിരം UnicodeString& text,
+                                                ParsePosition& pos, int32_t limit) സ്ഥിരം
 {
     int32_t start = pos.getIndex();
     int32_t i = start;
     UnicodeString result;
-    while (i < limit) {
+    ആകുമ്പോൾ (i < limit) {
         char16_t c = text.charAt(i);
-        if ((i==start && !u_isIDStart(c)) || !u_isIDPart(c)) {
-            break;
+        എങ്കിൽ ((i==start && !u_isIDStart(c)) || !u_isIDPart(c)) {
+            നിർത്തുക;
         }
         ++i;
     }
-    if (i == start) { // No valid name chars
-        return result; // Indicate failure with empty string
+    എങ്കിൽ (i == start) { // No valid name chars
+        തിരികെ result; // Indicate failure with empty string
     }
     pos.setIndex(i);
     text.extractBetween(start, i, result);
-    return result;
+    തിരികെ result;
 }
 
 
@@ -151,16 +151,16 @@ UnicodeString   RBBISymbolTable::parseReference(const UnicodeString& text,
 //                                  corresponding RBBI Node.  If there is no entry
 //                                  in the table for this name, return nullptr.
 //
-RBBINode       *RBBISymbolTable::lookupNode(const UnicodeString &key) const{
+RBBINode       *RBBISymbolTable::lookup_കണ്ണി(സ്ഥിരം UnicodeString &താക്കോൽ) സ്ഥിരം{
 
-    RBBINode             *retNode = nullptr;
+    RBBINode             *ret_കണ്ണി = nullptr;
     RBBISymbolTableEntry *el;
 
-    el = static_cast<RBBISymbolTableEntry*>(uhash_get(fHashTable, &key));
-    if (el != nullptr) {
-        retNode = el->val;
+    el = static_cast<RBBISymbolTableEntry*>(uhash_get(fHashTable, &താക്കോൽ));
+    എങ്കിൽ (el != nullptr) {
+        ret_കണ്ണി = el->val;
     }
-    return retNode;
+    തിരികെ ret_കണ്ണി;
 }
 
 
@@ -170,38 +170,38 @@ RBBINode       *RBBISymbolTable::lookupNode(const UnicodeString &key) const{
 //                                    this will only occur in the case of duplicate
 //                                    variable assignments.
 //
-void            RBBISymbolTable::addEntry  (const UnicodeString &key, RBBINode *val, UErrorCode &err) {
+ശൂന്യം            RBBISymbolTable::addEntry  (സ്ഥിരം UnicodeString &താക്കോൽ, RBBINode *val, UErrorCode &err) {
     RBBISymbolTableEntry *e;
     /* test for buffer overflows */
-    if (U_FAILURE(err)) {
-        return;
+    എങ്കിൽ (U_FAILURE(err)) {
+        തിരികെ;
     }
-    e = static_cast<RBBISymbolTableEntry*>(uhash_get(fHashTable, &key));
-    if (e != nullptr) {
+    e = static_cast<RBBISymbolTableEntry*>(uhash_get(fHashTable, &താക്കോൽ));
+    എങ്കിൽ (e != nullptr) {
         err = U_BRK_VARIABLE_REDFINITION;
-        return;
+        തിരികെ;
     }
 
-    e = new RBBISymbolTableEntry;
-    if (e == nullptr) {
+    e = പുതിയ RBBISymbolTableEntry;
+    എങ്കിൽ (e == nullptr) {
         err = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        തിരികെ;
     }
-    e->key = key;
+    e->താക്കോൽ = താക്കോൽ;
     e->val = val;
-    uhash_put( fHashTable, &e->key, e, &err);
+    uhash_put( fHashTable, &e->താക്കോൽ, e, &err);
 }
 
 
-RBBISymbolTableEntry::RBBISymbolTableEntry() : UMemory(), key(), val(nullptr) {}
+RBBISymbolTableEntry::RBBISymbolTableEntry() : UMemory(), താക്കോൽ(), val(nullptr) {}
 
 RBBISymbolTableEntry::~RBBISymbolTableEntry() {
     // The "val" of a symbol table entry is a variable reference node.
     // The l. child of the val is the rhs expression from the assignment.
     // Unlike other node types, children of variable reference nodes are not
     //    automatically recursively deleted.  We do it manually here.
-    delete val->fLeftChild;
-    val->fLeftChild = nullptr;
+    delete val->f_ഇടത്_Child;
+    val->f_ഇടത്_Child = nullptr;
 
     delete  val;
 
@@ -213,35 +213,35 @@ RBBISymbolTableEntry::~RBBISymbolTableEntry() {
 //  RBBISymbolTable::print    Debugging function, dump out the symbol table contents.
 //
 #ifdef RBBI_DEBUG
-void RBBISymbolTable::rbbiSymtablePrint() const {
+ശൂന്യം RBBISymbolTable::rbbiSymtablePrint() സ്ഥിരം {
     RBBIDebugPrintf("Variable Definitions Symbol Table\n"
            "Name                  Node         serial  String Val\n"
            "-------------------------------------------------------------------\n");
 
     int32_t pos = UHASH_FIRST;
-    const UHashElement  *e   = nullptr;
-    for (;;) {
+    സ്ഥിരം UHashElement  *e   = nullptr;
+    വേണ്ടി (;;) {
         e = uhash_nextElement(fHashTable,  &pos);
-        if (e == nullptr ) {
-            break;
+        എങ്കിൽ (e == nullptr ) {
+            നിർത്തുക;
         }
         RBBISymbolTableEntry  *s   = (RBBISymbolTableEntry *)e->value.pointer;
 
-        RBBIDebugPrintf("%-19s   %8p %7d ", CStr(s->key)(), (void *)s->val, s->val->fSerialNum);
-        RBBIDebugPrintf(" %s\n", CStr(s->val->fLeftChild->fText)());
+        RBBIDebugPrintf("%-19s   %8p %7d ", CStr(s->താക്കോൽ)(), (ശൂന്യം *)s->val, s->val->f_Serial_അക്കം);
+        RBBIDebugPrintf(" %s\n", CStr(s->val->f_ഇടത്_Child->fText)());
     }
 
     RBBIDebugPrintf("\nParsed Variable Definitions\n");
     pos = -1;
-    for (;;) {
+    വേണ്ടി (;;) {
         e = uhash_nextElement(fHashTable,  &pos);
-        if (e == nullptr ) {
-            break;
+        എങ്കിൽ (e == nullptr ) {
+            നിർത്തുക;
         }
         RBBISymbolTableEntry  *s   = (RBBISymbolTableEntry *)e->value.pointer;
-        RBBIDebugPrintf("%s\n", CStr(s->key)());
-        RBBINode::printTree(s->val, true);
-        RBBINode::printTree(s->val->fLeftChild, false);
+        RBBIDebugPrintf("%s\n", CStr(s->താക്കോൽ)());
+        RBBINode::print_വൃക്ഷം(s->val, സത്യം);
+        RBBINode::print_വൃക്ഷം(s->val->f_ഇടത്_Child, അസത്യം);
         RBBIDebugPrintf("\n");
     }
 }

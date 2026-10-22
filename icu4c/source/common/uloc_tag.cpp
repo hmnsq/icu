@@ -7,58 +7,58 @@
 **********************************************************************
 */
 
-#include <optional>
-#include <string_view>
-#include <utility>
+#അന്തര്ഭാവ <optional>
+#അന്തര്ഭാവ <string_view>
+#അന്തര്ഭാവ <utility>
 
-#include "unicode/bytestream.h"
-#include "unicode/utypes.h"
-#include "unicode/ures.h"
-#include "unicode/localpointer.h"
-#include "unicode/putil.h"
-#include "unicode/uenum.h"
-#include "unicode/uloc.h"
-#include "bytesinkutil.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "putilimp.h"
-#include "uinvchar.h"
-#include "ulocimp.h"
-#include "uassert.h"
+#അന്തര്ഭാവ "unicode/bytestream.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/ures.h"
+#അന്തര്ഭാവ "unicode/localpointer.h"
+#അന്തര്ഭാവ "unicode/putil.h"
+#അന്തര്ഭാവ "unicode/uenum.h"
+#അന്തര്ഭാവ "unicode/uloc.h"
+#അന്തര്ഭാവ "bytesinkutil.h"
+#അന്തര്ഭാവ "charstr.h"
+#അന്തര്ഭാവ "cmemory.h"
+#അന്തര്ഭാവ "cstring.h"
+#അന്തര്ഭാവ "putilimp.h"
+#അന്തര്ഭാവ "uinvchar.h"
+#അന്തര്ഭാവ "ulocimp.h"
+#അന്തര്ഭാവ "uassert.h"
 
-namespace {
+നാമാകാശ {
 
 /* struct holding a single variant */
-typedef struct VariantListEntry : public icu::UMemory {
-    const char              *variant;
-    struct VariantListEntry *next;
+തരനിർവചനം ഘടന VariantListEntry : പൊതു icu::UMemory {
+    സ്ഥിരം അക്ഷരം              *variant;
+    ഘടന VariantListEntry *next;
 } VariantListEntry;
 
 /* struct holding a single attribute value */
-struct AttributeListEntry : public icu::UMemory {
-    const char              *attribute;
-    struct AttributeListEntry *next;
+ഘടന AttributeListEntry : പൊതു icu::UMemory {
+    സ്ഥിരം അക്ഷരം              *attribute;
+    ഘടന AttributeListEntry *next;
 };
 
 /* struct holding a single extension */
-struct ExtensionListEntry : public icu::UMemory {
-    const char                  *key;
-    const char                  *value;
-    struct ExtensionListEntry   *next;
+ഘടന ExtensionListEntry : പൊതു icu::UMemory {
+    സ്ഥിരം അക്ഷരം                  *താക്കോൽ;
+    സ്ഥിരം അക്ഷരം                  *value;
+    ഘടന ExtensionListEntry   *next;
 };
 
 #define MAXEXTLANG 3
-typedef struct ULanguageTag {
-    char                *buf;   /* holding parsed subtags */
-    const char          *language;
-    const char          *extlang[MAXEXTLANG];
-    const char          *script;
-    const char          *region;
+തരനിർവചനം ഘടന ULanguageTag {
+    അക്ഷരം                *buf;   /* holding parsed subtags */
+    സ്ഥിരം അക്ഷരം          *language;
+    സ്ഥിരം അക്ഷരം          *extlang[MAXEXTLANG];
+    സ്ഥിരം അക്ഷരം          *script;
+    സ്ഥിരം അക്ഷരം          *region;
     VariantListEntry    *variants;
     ExtensionListEntry  *extensions;
-    const char          *privateuse;
-    const char          *legacy;
+    സ്ഥിരം അക്ഷരം          *privateuse;
+    സ്ഥിരം അക്ഷരം          *legacy;
 } ULanguageTag;
 
 #define MINLEN 2
@@ -69,20 +69,20 @@ typedef struct ULanguageTag {
 #define LOCALE_SEP '_'
 #define LOCALE_EXT_SEP '@'
 #define LOCALE_KEYWORD_SEP ';'
-#define LOCALE_KEY_TYPE_SEP '='
+#define LOCALE_താക്കോൽ_TYPE_SEP '='
 
 constexpr auto ISALPHA = uprv_isASCIILetter;
-inline bool ISNUMERIC(char c) { return c >= '0' && c <= '9'; }
+വരിയിൽ തർക്കം ISNUMERIC(അക്ഷരം c) { തിരികെ c >= '0' && c <= '9'; }
 
-constexpr char EMPTY[] = "";
-constexpr char LANG_UND[] = "und";
-constexpr char PRIVATEUSE_KEY[] = "x";
-constexpr char _POSIX[] = "_POSIX";
-constexpr char POSIX_KEY[] = "va";
-constexpr char POSIX_VALUE[] = "posix";
-constexpr char LOCALE_ATTRIBUTE_KEY[] = "attribute";
-constexpr char PRIVUSE_VARIANT_PREFIX[] = "lvariant";
-constexpr char LOCALE_TYPE_YES[] = "yes";
+constexpr അക്ഷരം EMPTY[] = "";
+constexpr അക്ഷരം LANG_UND[] = "und";
+constexpr അക്ഷരം PRIVATEUSE_താക്കോൽ[] = "x";
+constexpr അക്ഷരം _POSIX[] = "_POSIX";
+constexpr അക്ഷരം POSIX_താക്കോൽ[] = "va";
+constexpr അക്ഷരം POSIX_മൂല്യം[] = "posix";
+constexpr അക്ഷരം LOCALE_ATTRIBUTE_താക്കോൽ[] = "attribute";
+constexpr അക്ഷരം PRIVUSE_VARIANT_PREFIX[] = "lvariant";
+constexpr അക്ഷരം LOCALE_TYPE_YES[] = "yes";
 
 #define LANG_UND_LEN 3
 
@@ -106,7 +106,7 @@ constexpr char LOCALE_TYPE_YES[] = "yes";
  values. They may have to be removed for the strict BCP 47 compliance.
 
 */
-constexpr const char* LEGACY[] = {
+constexpr സ്ഥിരം അക്ഷരം* LEGACY[] = {
 /*  legacy          preferred */
     "art-lojban",   "jbo",
     "en-gb-oed",    "en-gb-oxendict",
@@ -155,7 +155,7 @@ constexpr const char* LEGACY[] = {
  a variant tag 'hepburn-heploc' has the preferred subtag, 'alaic97'.
 */
 
-constexpr const char* REDUNDANT[] = {
+constexpr സ്ഥിരം അക്ഷരം* REDUNDANT[] = {
 //  redundant       preferred
     "sgn-br",       "bzs",
     "sgn-co",       "csn",
@@ -197,7 +197,7 @@ constexpr const char* REDUNDANT[] = {
 
   Make sure that 2-letter language subtags come before 3-letter subtags.
 */
-constexpr char DEPRECATEDLANGS[][4] = {
+constexpr അക്ഷരം DEPRECATEDLANGS[][4] = {
 /*  deprecated  new */
     "in",       "id",
     "iw",       "he",
@@ -287,7 +287,7 @@ constexpr char DEPRECATEDLANGS[][4] = {
   grep -B1 'Preferred' | \
   awk -n '/Subtag/ {printf("    \"%s\",       ", $2);} /Preferred/ {printf("\"%s\",\n", $2);}'
 */
-constexpr char DEPRECATEDREGIONS[][3] = {
+constexpr അക്ഷരം DEPRECATEDREGIONS[][3] = {
 /*  deprecated  new */
     "BU",       "MM",
     "DD",       "DE",
@@ -306,52 +306,52 @@ constexpr char DEPRECATEDREGIONS[][3] = {
 */
 
 ULanguageTag*
-ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& status);
+ultag_parse(സ്ഥിരം അക്ഷരം* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& status);
 
-void
+ശൂന്യം
 ultag_close(ULanguageTag* langtag);
 
-const char*
-ultag_getLanguage(const ULanguageTag* langtag U_LIFETIME_BOUND);
+സ്ഥിരം അക്ഷരം*
+ultag_getLanguage(സ്ഥിരം ULanguageTag* langtag U_LIFETIME_BOUND);
 
-#if 0
-const char*
-ultag_getJDKLanguage(const ULanguageTag* langtag);
+#എങ്കിൽ 0
+സ്ഥിരം അക്ഷരം*
+ultag_getJDKLanguage(സ്ഥിരം ULanguageTag* langtag);
 #endif
 
-const char*
-ultag_getExtlang(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
+സ്ഥിരം അക്ഷരം*
+ultag_getExtlang(സ്ഥിരം ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
 
 int32_t
-ultag_getExtlangSize(const ULanguageTag* langtag);
+ultag_getExtlangSize(സ്ഥിരം ULanguageTag* langtag);
 
-const char*
-ultag_getScript(const ULanguageTag* langtag U_LIFETIME_BOUND);
+സ്ഥിരം അക്ഷരം*
+ultag_getScript(സ്ഥിരം ULanguageTag* langtag U_LIFETIME_BOUND);
 
-const char*
-ultag_getRegion(const ULanguageTag* langtag U_LIFETIME_BOUND);
+സ്ഥിരം അക്ഷരം*
+ultag_getRegion(സ്ഥിരം ULanguageTag* langtag U_LIFETIME_BOUND);
 
-const char*
-ultag_getVariant(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
-
-int32_t
-ultag_getVariantsSize(const ULanguageTag* langtag);
-
-const char*
-ultag_getExtensionKey(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
-
-const char*
-ultag_getExtensionValue(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
+സ്ഥിരം അക്ഷരം*
+ultag_getVariant(സ്ഥിരം ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
 
 int32_t
-ultag_getExtensionsSize(const ULanguageTag* langtag);
+ultag_getVariantsSize(സ്ഥിരം ULanguageTag* langtag);
 
-const char*
-ultag_getPrivateUse(const ULanguageTag* langtag U_LIFETIME_BOUND);
+സ്ഥിരം അക്ഷരം*
+ultag_get_Extension_താക്കോൽ(സ്ഥിരം ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
 
-#if 0
-const char*
-ultag_getLegacy(const ULanguageTag* langtag);
+സ്ഥിരം അക്ഷരം*
+ultag_get_Extension_മൂല്യം(സ്ഥിരം ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
+
+int32_t
+ultag_getExtensionsSize(സ്ഥിരം ULanguageTag* langtag);
+
+സ്ഥിരം അക്ഷരം*
+ultag_getPrivateUse(സ്ഥിരം ULanguageTag* langtag U_LIFETIME_BOUND);
+
+#എങ്കിൽ 0
+സ്ഥിരം അക്ഷരം*
+ultag_getLegacy(സ്ഥിരം ULanguageTag* langtag);
 #endif
 
 }  // namespace
@@ -379,191 +379,191 @@ U_NAMESPACE_END
 * -------------------------------------------------
 */
 
-namespace {
+നാമാകാശ {
 
-bool
-_isAlphaString(const char* s, int32_t len) {
+തർക്കം
+_isAlphaString(സ്ഥിരം അക്ഷരം* s, int32_t len) {
     int32_t i;
-    for (i = 0; i < len; i++) {
-        if (!ISALPHA(*(s + i))) {
-            return false;
+    വേണ്ടി (i = 0; i < len; i++) {
+        എങ്കിൽ (!ISALPHA(*(s + i))) {
+            തിരികെ അസത്യം;
         }
     }
-    return true;
+    തിരികെ സത്യം;
 }
 
-bool
-_isNumericString(const char* s, int32_t len) {
+തർക്കം
+_isNumericString(സ്ഥിരം അക്ഷരം* s, int32_t len) {
     int32_t i;
-    for (i = 0; i < len; i++) {
-        if (!ISNUMERIC(*(s + i))) {
-            return false;
+    വേണ്ടി (i = 0; i < len; i++) {
+        എങ്കിൽ (!ISNUMERIC(*(s + i))) {
+            തിരികെ അസത്യം;
         }
     }
-    return true;
+    തിരികെ സത്യം;
 }
 
-bool
-_isAlphaNumericString(const char* s, int32_t len) {
+തർക്കം
+_isAlphaNumericString(സ്ഥിരം അക്ഷരം* s, int32_t len) {
     int32_t i;
-    for (i = 0; i < len; i++) {
-        if (!ISALPHA(*(s + i)) && !ISNUMERIC(*(s + i))) {
-            return false;
+    വേണ്ടി (i = 0; i < len; i++) {
+        എങ്കിൽ (!ISALPHA(*(s + i)) && !ISNUMERIC(*(s + i))) {
+            തിരികെ അസത്യം;
         }
     }
-    return true;
+    തിരികെ സത്യം;
 }
 
-bool
-_isAlphaNumericStringLimitedLength(const char* s, int32_t len, int32_t min, int32_t max) {
-    if (len < 0) {
+തർക്കം
+_isAlphaNumericStringLimitedLength(സ്ഥിരം അക്ഷരം* s, int32_t len, int32_t min, int32_t max) {
+    എങ്കിൽ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len >= min && len <= max && _isAlphaNumericString(s, len)) {
-        return true;
+    എങ്കിൽ (len >= min && len <= max && _isAlphaNumericString(s, len)) {
+        തിരികെ സത്യം;
     }
-    return false;
+    തിരികെ അസത്യം;
 }
 
 }  // namespace
 
-bool
-ultag_isLanguageSubtag(const char* s, int32_t len) {
+തർക്കം
+ultag_isLanguageSubtag(സ്ഥിരം അക്ഷരം* s, int32_t len) {
     /*
      * unicode_language_subtag = alpha{2,3} | alpha{5,8};
      * NOTE: Per ICUTC 2019/01/23- accepting alpha 4
      * See ICU-20372
      */
-    if (len < 0) {
+    എങ്കിൽ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len >= 2 && len <= 8 && _isAlphaString(s, len)) {
-        return true;
+    എങ്കിൽ (len >= 2 && len <= 8 && _isAlphaString(s, len)) {
+        തിരികെ സത്യം;
     }
-    return false;
+    തിരികെ അസത്യം;
 }
 
-namespace {
+നാമാകാശ {
 
-bool
-_isExtlangSubtag(const char* s, int32_t len) {
+തർക്കം
+_isExtlangSubtag(സ്ഥിരം അക്ഷരം* s, int32_t len) {
     /*
      * extlang       = 3ALPHA              ; selected ISO 639 codes
      *                 *2("-" 3ALPHA)      ; permanently reserved
      */
-    if (len < 0) {
+    എങ്കിൽ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 3 && _isAlphaString(s, len)) {
-        return true;
+    എങ്കിൽ (len == 3 && _isAlphaString(s, len)) {
+        തിരികെ സത്യം;
     }
-    return false;
+    തിരികെ അസത്യം;
 }
 
 }  // namespace
 
-bool
-ultag_isScriptSubtag(const char* s, int32_t len) {
+തർക്കം
+ultag_isScriptSubtag(സ്ഥിരം അക്ഷരം* s, int32_t len) {
     /*
      * script        = 4ALPHA              ; ISO 15924 code
      */
-    if (len < 0) {
+    എങ്കിൽ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 4 && _isAlphaString(s, len)) {
-        return true;
+    എങ്കിൽ (len == 4 && _isAlphaString(s, len)) {
+        തിരികെ സത്യം;
     }
-    return false;
+    തിരികെ അസത്യം;
 }
 
-bool
-ultag_isRegionSubtag(const char* s, int32_t len) {
+തർക്കം
+ultag_isRegionSubtag(സ്ഥിരം അക്ഷരം* s, int32_t len) {
     /*
      * region        = 2ALPHA              ; ISO 3166-1 code
      *               / 3DIGIT              ; UN M.49 code
      */
-    if (len < 0) {
+    എങ്കിൽ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 2 && _isAlphaString(s, len)) {
-        return true;
+    എങ്കിൽ (len == 2 && _isAlphaString(s, len)) {
+        തിരികെ സത്യം;
     }
-    if (len == 3 && _isNumericString(s, len)) {
-        return true;
+    എങ്കിൽ (len == 3 && _isNumericString(s, len)) {
+        തിരികെ സത്യം;
     }
-    return false;
+    തിരികെ അസത്യം;
 }
 
-namespace {
+നാമാകാശ {
 
-bool
-_isVariantSubtag(const char* s, int32_t len) {
+തർക്കം
+_isVariantSubtag(സ്ഥിരം അക്ഷരം* s, int32_t len) {
     /*
      * variant       = 5*8alphanum         ; registered variants
      *               / (DIGIT 3alphanum)
      */
-    if (len < 0) {
+    എങ്കിൽ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (_isAlphaNumericStringLimitedLength(s, len, 5, 8)) {
-        return true;
+    എങ്കിൽ (_isAlphaNumericStringLimitedLength(s, len, 5, 8)) {
+        തിരികെ സത്യം;
     }
-    if (len == 4 && ISNUMERIC(*s) && _isAlphaNumericString(s + 1, 3)) {
-        return true;
+    എങ്കിൽ (len == 4 && ISNUMERIC(*s) && _isAlphaNumericString(s + 1, 3)) {
+        തിരികെ സത്യം;
     }
-    return false;
+    തിരികെ അസത്യം;
 }
 
-bool
-_isSepListOf(bool (*test)(const char*, int32_t), const char* s, int32_t len) {
-    const char *p = s;
-    const char *pSubtag = nullptr;
+തർക്കം
+_isSepListOf(തർക്കം (*test)(സ്ഥിരം അക്ഷരം*, int32_t), സ്ഥിരം അക്ഷരം* s, int32_t len) {
+    സ്ഥിരം അക്ഷരം *p = s;
+    സ്ഥിരം അക്ഷരം *pSubtag = nullptr;
 
-    if (len < 0) {
+    എങ്കിൽ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
 
-    while ((p - s) < len) {
-        if (*p == SEP) {
-            if (pSubtag == nullptr) {
-                return false;
+    ആകുമ്പോൾ ((p - s) < len) {
+        എങ്കിൽ (*p == SEP) {
+            എങ്കിൽ (pSubtag == nullptr) {
+                തിരികെ അസത്യം;
             }
-            if (!test(pSubtag, static_cast<int32_t>(p - pSubtag))) {
-                return false;
+            എങ്കിൽ (!test(pSubtag, static_cast<int32_t>(p - pSubtag))) {
+                തിരികെ അസത്യം;
             }
             pSubtag = nullptr;
-        } else if (pSubtag == nullptr) {
+        } അല്ലെങ്കിൽ എങ്കിൽ (pSubtag == nullptr) {
             pSubtag = p;
         }
         p++;
     }
-    if (pSubtag == nullptr) {
-        return false;
+    എങ്കിൽ (pSubtag == nullptr) {
+        തിരികെ അസത്യം;
     }
-    return test(pSubtag, static_cast<int32_t>(p - pSubtag));
+    തിരികെ test(pSubtag, static_cast<int32_t>(p - pSubtag));
 }
 
 }  // namespace
 
-bool
-ultag_isVariantSubtags(const char* s, int32_t len) {
-    return _isSepListOf(&_isVariantSubtag, s, len);
+തർക്കം
+ultag_isVariantSubtags(സ്ഥിരം അക്ഷരം* s, int32_t len) {
+    തിരികെ _isSepListOf(&_isVariantSubtag, s, len);
 }
 
-namespace {
+നാമാകാശ {
 
 // This is for the ICU-specific "lvariant" handling.
-bool
-_isPrivateuseVariantSubtag(const char* s, int32_t len) {
+തർക്കം
+_isPrivateuseVariantSubtag(സ്ഥിരം അക്ഷരം* s, int32_t len) {
     /*
      * variant       = 1*8alphanum         ; registered variants
      *               / (DIGIT 3alphanum)
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 1, 8);
+    തിരികെ _isAlphaNumericStringLimitedLength(s, len , 1, 8);
 }
 
-bool
-_isExtensionSingleton(const char* s, int32_t len) {
+തർക്കം
+_isExtensionSingleton(സ്ഥിരം അക്ഷരം* s, int32_t len) {
     /*
      * extension     = singleton 1*("-" (2*8alphanum))
      *
@@ -573,292 +573,292 @@ _isExtensionSingleton(const char* s, int32_t len) {
      *               / %x61-77             ; a - w
      *               / %x79-7A             ; y - z
      */
-    if (len < 0) {
+    എങ്കിൽ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 1 && (ISALPHA(*s) || ISNUMERIC(*s)) && (uprv_tolower(*s) != PRIVATEUSE)) {
-        return true;
+    എങ്കിൽ (len == 1 && (ISALPHA(*s) || ISNUMERIC(*s)) && (uprv_tolower(*s) != PRIVATEUSE)) {
+        തിരികെ സത്യം;
     }
-    return false;
+    തിരികെ അസത്യം;
 }
 
-bool
-_isExtensionSubtag(const char* s, int32_t len) {
+തർക്കം
+_isExtensionSubtag(സ്ഥിരം അക്ഷരം* s, int32_t len) {
     /*
      * extension     = singleton 1*("-" (2*8alphanum))
      */
-    return _isAlphaNumericStringLimitedLength(s, len, 2, 8);
+    തിരികെ _isAlphaNumericStringLimitedLength(s, len, 2, 8);
 }
 
 }  // namespace
 
-bool
-ultag_isExtensionSubtags(const char* s, int32_t len) {
-    return _isSepListOf(&_isExtensionSubtag, s, len);
+തർക്കം
+ultag_isExtensionSubtags(സ്ഥിരം അക്ഷരം* s, int32_t len) {
+    തിരികെ _isSepListOf(&_isExtensionSubtag, s, len);
 }
 
-namespace {
+നാമാകാശ {
 
-bool
-_isPrivateuseValueSubtag(const char* s, int32_t len) {
+തർക്കം
+is_Privateuse_മൂല്യം_Subtag(സ്ഥിരം അക്ഷരം* s, int32_t len) {
     /*
      * privateuse    = "x" 1*("-" (1*8alphanum))
      */
-    return _isAlphaNumericStringLimitedLength(s, len, 1, 8);
+    തിരികെ _isAlphaNumericStringLimitedLength(s, len, 1, 8);
 }
 
 }  // namespace
 
-bool
-ultag_isPrivateuseValueSubtags(const char* s, int32_t len) {
-    return _isSepListOf(&_isPrivateuseValueSubtag, s, len);
+തർക്കം
+ultag_is_Privateuse_മൂല്യം_Subtags(സ്ഥിരം അക്ഷരം* s, int32_t len) {
+    തിരികെ _isSepListOf(&is_Privateuse_മൂല്യം_Subtag, s, len);
 }
 
-bool
-ultag_isUnicodeLocaleAttribute(const char* s, int32_t len) {
+തർക്കം
+ultag_isUnicodeLocaleAttribute(സ്ഥിരം അക്ഷരം* s, int32_t len) {
     /*
      * attribute = alphanum{3,8} ;
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 3, 8);
+    തിരികെ _isAlphaNumericStringLimitedLength(s, len , 3, 8);
 }
 
-bool
-ultag_isUnicodeLocaleAttributes(const char* s, int32_t len) {
-    return _isSepListOf(&ultag_isUnicodeLocaleAttribute, s, len);
+തർക്കം
+ultag_isUnicodeLocaleAttributes(സ്ഥിരം അക്ഷരം* s, int32_t len) {
+    തിരികെ _isSepListOf(&ultag_isUnicodeLocaleAttribute, s, len);
 }
 
-bool
-ultag_isUnicodeLocaleKey(const char* s, int32_t len) {
+തർക്കം
+ultag_is_Unicode_Locale_താക്കോൽ(സ്ഥിരം അക്ഷരം* s, int32_t len) {
     /*
      * key = alphanum alpha ;
      */
-    if (len < 0) {
+    എങ്കിൽ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 2 && (ISALPHA(*s) || ISNUMERIC(*s)) && ISALPHA(s[1])) {
-        return true;
+    എങ്കിൽ (len == 2 && (ISALPHA(*s) || ISNUMERIC(*s)) && ISALPHA(s[1])) {
+        തിരികെ സത്യം;
     }
-    return false;
+    തിരികെ അസത്യം;
 }
 
-bool
-_isUnicodeLocaleTypeSubtag(const char*s, int32_t len) {
+തർക്കം
+_isUnicodeLocaleTypeSubtag(സ്ഥിരം അക്ഷരം*s, int32_t len) {
     /*
      * alphanum{3,8}
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 3, 8);
+    തിരികെ _isAlphaNumericStringLimitedLength(s, len , 3, 8);
 }
 
-bool
-ultag_isUnicodeLocaleType(const char*s, int32_t len) {
+തർക്കം
+ultag_isUnicodeLocaleType(സ്ഥിരം അക്ഷരം*s, int32_t len) {
     /*
      * type = alphanum{3,8} (sep alphanum{3,8})* ;
      */
-    return _isSepListOf(&_isUnicodeLocaleTypeSubtag, s, len);
+    തിരികെ _isSepListOf(&_isUnicodeLocaleTypeSubtag, s, len);
 }
 
-namespace {
+നാമാകാശ {
 
-bool
-_isTKey(const char* s, int32_t len)
+തർക്കം
+_isTKey(സ്ഥിരം അക്ഷരം* s, int32_t len)
 {
     /*
      * tkey = alpha digit ;
      */
-    if (len < 0) {
+    എങ്കിൽ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 2 && ISALPHA(*s) && ISNUMERIC(*(s + 1))) {
-        return true;
+    എങ്കിൽ (len == 2 && ISALPHA(*s) && ISNUMERIC(*(s + 1))) {
+        തിരികെ സത്യം;
     }
-    return false;
+    തിരികെ അസത്യം;
 }
 
 }  // namespace
 
-const char*
-ultag_getTKeyStart(const char* localeID U_LIFETIME_BOUND) {
-    const char *result = localeID;
-    const char *sep;
-    while((sep = uprv_strchr(result, SEP)) != nullptr) {
-        if (_isTKey(result, static_cast<int32_t>(sep - result))) {
-            return result;
+സ്ഥിരം അക്ഷരം*
+ultag_getTKeyStart(സ്ഥിരം അക്ഷരം* localeID U_LIFETIME_BOUND) {
+    സ്ഥിരം അക്ഷരം *result = localeID;
+    സ്ഥിരം അക്ഷരം *sep;
+    ആകുമ്പോൾ((sep = uprv_strchr(result, SEP)) != nullptr) {
+        എങ്കിൽ (_isTKey(result, static_cast<int32_t>(sep - result))) {
+            തിരികെ result;
         }
         result = ++sep;
     }
-    if (_isTKey(result, -1)) {
-        return result;
+    എങ്കിൽ (_isTKey(result, -1)) {
+        തിരികെ result;
     }
-    return nullptr;
+    തിരികെ nullptr;
 }
 
-namespace {
+നാമാകാശ {
 
-bool
-_isTValue(const char* s, int32_t len)
+തർക്കം
+_isTValue(സ്ഥിരം അക്ഷരം* s, int32_t len)
 {
     /*
      * tvalue = (sep alphanum{3,8})+ ;
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 3, 8);
+    തിരികെ _isAlphaNumericStringLimitedLength(s, len , 3, 8);
 }
 
-bool
-_isTransformedExtensionSubtag(int32_t& state, const char* s, int32_t len)
+തർക്കം
+_isTransformedExtensionSubtag(int32_t& state, സ്ഥിരം അക്ഷരം* s, int32_t len)
 {
-    const int32_t kStart = 0;       // Start, wait for unicode_language_subtag, tkey or end
-    const int32_t kGotLanguage = 1; // Got unicode_language_subtag, wait for unicode_script_subtag,
+    സ്ഥിരം int32_t kStart = 0;       // Start, wait for unicode_language_subtag, tkey or end
+    സ്ഥിരം int32_t kGotLanguage = 1; // Got unicode_language_subtag, wait for unicode_script_subtag,
                                     // unicode_region_subtag, unicode_variant_subtag, tkey or end
-    const int32_t kGotScript = 2;   // Got unicode_script_subtag, wait for unicode_region_subtag,
+    സ്ഥിരം int32_t kGotScript = 2;   // Got unicode_script_subtag, wait for unicode_region_subtag,
                                     // unicode_variant_subtag, tkey, or end
-    const int32_t kGotRegion = 3;   // Got unicode_region_subtag, wait for unicode_variant_subtag,
+    സ്ഥിരം int32_t kGotRegion = 3;   // Got unicode_region_subtag, wait for unicode_variant_subtag,
                                     // tkey, or end.
-    const int32_t kGotVariant = 4;  // Got unicode_variant_subtag, wait for unicode_variant_subtag
+    സ്ഥിരം int32_t kGotVariant = 4;  // Got unicode_variant_subtag, wait for unicode_variant_subtag
                                     // tkey or end.
-    const int32_t kGotTKey = -1;    // Got tkey, wait for tvalue. ERROR if stop here.
-    const int32_t kGotTValue = 6;   // Got tvalue, wait for tkey, tvalue or end
+    സ്ഥിരം int32_t kGotTKey = -1;    // Got tkey, wait for tvalue. ERROR if stop here.
+    സ്ഥിരം int32_t kGotTValue = 6;   // Got tvalue, wait for tkey, tvalue or end
 
 
-    if (len < 0) {
+    എങ്കിൽ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    switch (state) {
-        case kStart:
-            if (ultag_isLanguageSubtag(s, len) && len != 4) {
+    തിരഞ്ഞെടുപ്പ് (state) {
+        അവസ്ഥ kStart:
+            എങ്കിൽ (ultag_isLanguageSubtag(s, len) && len != 4) {
                 state = kGotLanguage;
-                return true;
+                തിരികെ സത്യം;
             }
-            if (_isTKey(s, len)) {
+            എങ്കിൽ (_isTKey(s, len)) {
                 state = kGotTKey;
-                return true;
+                തിരികെ സത്യം;
             }
-            return false;
-        case kGotLanguage:
-            if (ultag_isScriptSubtag(s, len)) {
+            തിരികെ അസത്യം;
+        അവസ്ഥ kGotLanguage:
+            എങ്കിൽ (ultag_isScriptSubtag(s, len)) {
                 state = kGotScript;
-                return true;
+                തിരികെ സത്യം;
             }
             U_FALLTHROUGH;
-        case kGotScript:
-            if (ultag_isRegionSubtag(s, len)) {
+        അവസ്ഥ kGotScript:
+            എങ്കിൽ (ultag_isRegionSubtag(s, len)) {
                 state = kGotRegion;
-                return true;
+                തിരികെ സത്യം;
             }
             U_FALLTHROUGH;
-        case kGotRegion:
+        അവസ്ഥ kGotRegion:
             U_FALLTHROUGH;
-        case kGotVariant:
-            if (_isVariantSubtag(s, len)) {
+        അവസ്ഥ kGotVariant:
+            എങ്കിൽ (_isVariantSubtag(s, len)) {
                 state = kGotVariant;
-                return true;
+                തിരികെ സത്യം;
             }
-            if (_isTKey(s, len)) {
+            എങ്കിൽ (_isTKey(s, len)) {
                 state = kGotTKey;
-                return true;
+                തിരികെ സത്യം;
             }
-            return false;
-        case kGotTKey:
-            if (_isTValue(s, len)) {
+            തിരികെ അസത്യം;
+        അവസ്ഥ kGotTKey:
+            എങ്കിൽ (_isTValue(s, len)) {
                 state = kGotTValue;
-                return true;
+                തിരികെ സത്യം;
             }
-            return false;
-        case kGotTValue:
-            if (_isTKey(s, len)) {
+            തിരികെ അസത്യം;
+        അവസ്ഥ kGotTValue:
+            എങ്കിൽ (_isTKey(s, len)) {
                 state = kGotTKey;
-                return true;
+                തിരികെ സത്യം;
             }
-            if (_isTValue(s, len)) {
-                return true;
+            എങ്കിൽ (_isTValue(s, len)) {
+                തിരികെ സത്യം;
             }
-            return false;
+            തിരികെ അസത്യം;
     }
-    return false;
+    തിരികെ അസത്യം;
 }
 
-bool
-_isUnicodeExtensionSubtag(int32_t& state, const char* s, int32_t len)
+തർക്കം
+_isUnicodeExtensionSubtag(int32_t& state, സ്ഥിരം അക്ഷരം* s, int32_t len)
 {
-    const int32_t kStart = 0;         // Start, wait for a key or attribute or end
-    const int32_t kGotKey = 1;        // Got a key, wait for type or key or end
-    const int32_t kGotType = 2;       // Got a type, wait for key or end
+    സ്ഥിരം int32_t kStart = 0;         // Start, wait for a key or attribute or end
+    സ്ഥിരം int32_t k_Got_താക്കോൽ = 1;        // Got a key, wait for type or key or end
+    സ്ഥിരം int32_t kGotType = 2;       // Got a type, wait for key or end
 
-    switch (state) {
-        case kStart:
-            if (ultag_isUnicodeLocaleKey(s, len)) {
-                state = kGotKey;
-                return true;
+    തിരഞ്ഞെടുപ്പ് (state) {
+        അവസ്ഥ kStart:
+            എങ്കിൽ (ultag_is_Unicode_Locale_താക്കോൽ(s, len)) {
+                state = k_Got_താക്കോൽ;
+                തിരികെ സത്യം;
             }
-            if (ultag_isUnicodeLocaleAttribute(s, len)) {
-                return true;
+            എങ്കിൽ (ultag_isUnicodeLocaleAttribute(s, len)) {
+                തിരികെ സത്യം;
             }
-            return false;
-        case kGotKey:
-            if (ultag_isUnicodeLocaleKey(s, len)) {
-                return true;
+            തിരികെ അസത്യം;
+        അവസ്ഥ k_Got_താക്കോൽ:
+            എങ്കിൽ (ultag_is_Unicode_Locale_താക്കോൽ(s, len)) {
+                തിരികെ സത്യം;
             }
-            if (_isUnicodeLocaleTypeSubtag(s, len)) {
+            എങ്കിൽ (_isUnicodeLocaleTypeSubtag(s, len)) {
                 state = kGotType;
-                return true;
+                തിരികെ സത്യം;
             }
-            return false;
-        case kGotType:
-            if (ultag_isUnicodeLocaleKey(s, len)) {
-                state = kGotKey;
-                return true;
+            തിരികെ അസത്യം;
+        അവസ്ഥ kGotType:
+            എങ്കിൽ (ultag_is_Unicode_Locale_താക്കോൽ(s, len)) {
+                state = k_Got_താക്കോൽ;
+                തിരികെ സത്യം;
             }
-            if (_isUnicodeLocaleTypeSubtag(s, len)) {
-                return true;
+            എങ്കിൽ (_isUnicodeLocaleTypeSubtag(s, len)) {
+                തിരികെ സത്യം;
             }
-            return false;
+            തിരികെ അസത്യം;
     }
-    return false;
+    തിരികെ അസത്യം;
 }
 
-bool
-_isStatefulSepListOf(bool (*test)(int32_t&, const char*, int32_t), const char* s, int32_t len)
+തർക്കം
+_isStatefulSepListOf(തർക്കം (*test)(int32_t&, സ്ഥിരം അക്ഷരം*, int32_t), സ്ഥിരം അക്ഷരം* s, int32_t len)
 {
     int32_t state = 0;
-    const char* p;
-    const char* start = s;
+    സ്ഥിരം അക്ഷരം* p;
+    സ്ഥിരം അക്ഷരം* start = s;
     int32_t subtagLen = 0;
 
-    if (len < 0) {
+    എങ്കിൽ (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
 
-    for (p = s; len > 0; p++, len--) {
-        if (*p == SEP) {
-            if (!test(state, start, subtagLen)) {
-                return false;
+    വേണ്ടി (p = s; len > 0; p++, len--) {
+        എങ്കിൽ (*p == SEP) {
+            എങ്കിൽ (!test(state, start, subtagLen)) {
+                തിരികെ അസത്യം;
             }
             subtagLen = 0;
             start = p + 1;
-        } else {
+        } അല്ലെങ്കിൽ {
             subtagLen++;
         }
     }
 
-    if (test(state, start, subtagLen) && state >= 0) {
-        return true;
+    എങ്കിൽ (test(state, start, subtagLen) && state >= 0) {
+        തിരികെ സത്യം;
     }
-    return false;
+    തിരികെ അസത്യം;
 }
 
 }  // namespace
 
-bool
-ultag_isTransformedExtensionSubtags(const char* s, int32_t len)
+തർക്കം
+ultag_isTransformedExtensionSubtags(സ്ഥിരം അക്ഷരം* s, int32_t len)
 {
-    return _isStatefulSepListOf(&_isTransformedExtensionSubtag, s, len);
+    തിരികെ _isStatefulSepListOf(&_isTransformedExtensionSubtag, s, len);
 }
 
-bool
-ultag_isUnicodeExtensionSubtags(const char* s, int32_t len) {
-    return _isStatefulSepListOf(&_isUnicodeExtensionSubtag, s, len);
+തർക്കം
+ultag_isUnicodeExtensionSubtags(സ്ഥിരം അക്ഷരം* s, int32_t len) {
+    തിരികെ _isStatefulSepListOf(&_isUnicodeExtensionSubtag, s, len);
 }
 
-namespace {
+നാമാകാശ {
 
 /*
 * -------------------------------------------------
@@ -868,167 +868,167 @@ namespace {
 * -------------------------------------------------
 */
 
-bool
+തർക്കം
 _addVariantToList(VariantListEntry **first, icu::LocalPointer<VariantListEntry> var) {
-    if (*first == nullptr) {
+    എങ്കിൽ (*first == nullptr) {
         var->next = nullptr;
         *first = var.orphan();
-    } else {
+    } അല്ലെങ്കിൽ {
         VariantListEntry *prev, *cur;
         int32_t cmp;
 
         /* variants order should be preserved */
         prev = nullptr;
         cur = *first;
-        while (true) {
-            if (cur == nullptr) {
+        ആകുമ്പോൾ (സത്യം) {
+            എങ്കിൽ (cur == nullptr) {
                 var->next = nullptr;
                 prev->next = var.orphan();
-                break;
+                നിർത്തുക;
             }
 
             /* Checking for duplicate variant */
             cmp = uprv_compareInvCharsAsAscii(var->variant, cur->variant);
-            if (cmp == 0) {
+            എങ്കിൽ (cmp == 0) {
                 /* duplicated variant */
-                return false;
+                തിരികെ അസത്യം;
             }
             prev = cur;
             cur = cur->next;
         }
     }
 
-    return true;
+    തിരികെ സത്യം;
 }
 
-bool
+തർക്കം
 _addAttributeToList(AttributeListEntry **first, AttributeListEntry *attr) {
-    bool bAdded = true;
+    തർക്കം bAdded = സത്യം;
 
-    if (*first == nullptr) {
+    എങ്കിൽ (*first == nullptr) {
         attr->next = nullptr;
         *first = attr;
-    } else {
+    } അല്ലെങ്കിൽ {
         AttributeListEntry *prev, *cur;
         int32_t cmp;
 
         /* reorder variants in alphabetical order */
         prev = nullptr;
         cur = *first;
-        while (true) {
-            if (cur == nullptr) {
+        ആകുമ്പോൾ (സത്യം) {
+            എങ്കിൽ (cur == nullptr) {
                 prev->next = attr;
                 attr->next = nullptr;
-                break;
+                നിർത്തുക;
             }
             cmp = uprv_compareInvCharsAsAscii(attr->attribute, cur->attribute);
-            if (cmp < 0) {
-                if (prev == nullptr) {
+            എങ്കിൽ (cmp < 0) {
+                എങ്കിൽ (prev == nullptr) {
                     *first = attr;
-                } else {
+                } അല്ലെങ്കിൽ {
                     prev->next = attr;
                 }
                 attr->next = cur;
-                break;
+                നിർത്തുക;
             }
-            if (cmp == 0) {
+            എങ്കിൽ (cmp == 0) {
                 /* duplicated variant */
-                bAdded = false;
-                break;
+                bAdded = അസത്യം;
+                നിർത്തുക;
             }
             prev = cur;
             cur = cur->next;
         }
     }
 
-    return bAdded;
+    തിരികെ bAdded;
 }
 
-bool
-_addExtensionToList(ExtensionListEntry **first, ExtensionListEntry *ext, bool localeToBCP) {
-    bool bAdded = true;
+തർക്കം
+_addExtensionToList(ExtensionListEntry **first, ExtensionListEntry *ext, തർക്കം localeToBCP) {
+    തർക്കം bAdded = സത്യം;
 
-    if (*first == nullptr) {
+    എങ്കിൽ (*first == nullptr) {
         ext->next = nullptr;
         *first = ext;
-    } else {
+    } അല്ലെങ്കിൽ {
         ExtensionListEntry *prev, *cur;
         int32_t cmp;
 
         /* reorder variants in alphabetical order */
         prev = nullptr;
         cur = *first;
-        while (true) {
-            if (cur == nullptr) {
+        ആകുമ്പോൾ (സത്യം) {
+            എങ്കിൽ (cur == nullptr) {
                 prev->next = ext;
                 ext->next = nullptr;
-                break;
+                നിർത്തുക;
             }
-            if (localeToBCP) {
+            എങ്കിൽ (localeToBCP) {
                 /* special handling for locale to bcp conversion */
                 int32_t len, curlen;
 
-                len = static_cast<int32_t>(uprv_strlen(ext->key));
-                curlen = static_cast<int32_t>(uprv_strlen(cur->key));
+                len = static_cast<int32_t>(uprv_strlen(ext->താക്കോൽ));
+                curlen = static_cast<int32_t>(uprv_strlen(cur->താക്കോൽ));
 
-                if (len == 1 && curlen == 1) {
-                    if (*(ext->key) == *(cur->key)) {
+                എങ്കിൽ (len == 1 && curlen == 1) {
+                    എങ്കിൽ (*(ext->താക്കോൽ) == *(cur->താക്കോൽ)) {
                         cmp = 0;
-                    } else if (*(ext->key) == PRIVATEUSE) {
+                    } അല്ലെങ്കിൽ എങ്കിൽ (*(ext->താക്കോൽ) == PRIVATEUSE) {
                         cmp = 1;
-                    } else if (*(cur->key) == PRIVATEUSE) {
+                    } അല്ലെങ്കിൽ എങ്കിൽ (*(cur->താക്കോൽ) == PRIVATEUSE) {
                         cmp = -1;
-                    } else {
-                        cmp = *(ext->key) - *(cur->key);
+                    } അല്ലെങ്കിൽ {
+                        cmp = *(ext->താക്കോൽ) - *(cur->താക്കോൽ);
                     }
-                } else if (len == 1) {
-                    cmp = *(ext->key) - LDMLEXT; 
-                } else if (curlen == 1) {
-                    cmp = LDMLEXT - *(cur->key);
-                } else {
-                    cmp = uprv_compareInvCharsAsAscii(ext->key, cur->key);
+                } അല്ലെങ്കിൽ എങ്കിൽ (len == 1) {
+                    cmp = *(ext->താക്കോൽ) - LDMLEXT; 
+                } അല്ലെങ്കിൽ എങ്കിൽ (curlen == 1) {
+                    cmp = LDMLEXT - *(cur->താക്കോൽ);
+                } അല്ലെങ്കിൽ {
+                    cmp = uprv_compareInvCharsAsAscii(ext->താക്കോൽ, cur->താക്കോൽ);
                     /* Both are u extension keys - we need special handling for 'attribute' */
-                    if (cmp != 0) {
-                        if (uprv_strcmp(cur->key, LOCALE_ATTRIBUTE_KEY) == 0) {
+                    എങ്കിൽ (cmp != 0) {
+                        എങ്കിൽ (uprv_strcmp(cur->താക്കോൽ, LOCALE_ATTRIBUTE_താക്കോൽ) == 0) {
                             cmp = 1;
-                        } else if (uprv_strcmp(ext->key, LOCALE_ATTRIBUTE_KEY) == 0) {
+                        } അല്ലെങ്കിൽ എങ്കിൽ (uprv_strcmp(ext->താക്കോൽ, LOCALE_ATTRIBUTE_താക്കോൽ) == 0) {
                             cmp = -1;
                         }
                     }
                 }
-            } else {
-                cmp = uprv_compareInvCharsAsAscii(ext->key, cur->key);
+            } അല്ലെങ്കിൽ {
+                cmp = uprv_compareInvCharsAsAscii(ext->താക്കോൽ, cur->താക്കോൽ);
             }
-            if (cmp < 0) {
-                if (prev == nullptr) {
+            എങ്കിൽ (cmp < 0) {
+                എങ്കിൽ (prev == nullptr) {
                     *first = ext;
-                } else {
+                } അല്ലെങ്കിൽ {
                     prev->next = ext;
                 }
                 ext->next = cur;
-                break;
+                നിർത്തുക;
             }
-            if (cmp == 0) {
+            എങ്കിൽ (cmp == 0) {
                 /* duplicated extension key */
-                bAdded = false;
-                break;
+                bAdded = അസത്യം;
+                നിർത്തുക;
             }
             prev = cur;
             cur = cur->next;
         }
     }
 
-    return bAdded;
+    തിരികെ bAdded;
 }
 
-void
+ശൂന്യം
 _initializeULanguageTag(ULanguageTag* langtag) {
     int32_t i;
 
     langtag->buf = nullptr;
 
     langtag->language = EMPTY;
-    for (i = 0; i < MAXEXTLANG; i++) {
+    വേണ്ടി (i = 0; i < MAXEXTLANG; i++) {
         langtag->extlang[i] = nullptr;
     }
 
@@ -1042,112 +1042,112 @@ _initializeULanguageTag(ULanguageTag* langtag) {
     langtag->privateuse = EMPTY;
 }
 
-void
-_appendLanguageToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, UErrorCode& status) {
+ശൂന്യം
+_appendLanguageToLanguageTag(std::string_view localeID, icu::ByteSink& sink, തർക്കം strict, UErrorCode& status) {
     UErrorCode tmpStatus = U_ZERO_ERROR;
 
-    if (U_FAILURE(status)) {
-        return;
+    എങ്കിൽ (U_FAILURE(status)) {
+        തിരികെ;
     }
 
     icu::CharString buf = ulocimp_getLanguage(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
+    എങ്കിൽ (U_FAILURE(tmpStatus)) {
+        എങ്കിൽ (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            തിരികെ;
         }
     }
 
     /* Note: returned language code is in lower case letters */
 
-    if (buf.isEmpty()) {
+    എങ്കിൽ (buf.isEmpty()) {
         sink.Append(LANG_UND, LANG_UND_LEN);
-    } else if (!ultag_isLanguageSubtag(buf.data(), buf.length())) {
+    } അല്ലെങ്കിൽ എങ്കിൽ (!ultag_isLanguageSubtag(buf.data(), buf.length())) {
             /* invalid language code */
-        if (strict) {
+        എങ്കിൽ (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            തിരികെ;
         }
         sink.Append(LANG_UND, LANG_UND_LEN);
-    } else {
+    } അല്ലെങ്കിൽ {
         /* resolve deprecated */
-        for (int32_t i = 0; i < UPRV_LENGTHOF(DEPRECATEDLANGS); i += 2) {
+        വേണ്ടി (int32_t i = 0; i < UPRV_LENGTHOF(DEPRECATEDLANGS); i += 2) {
             // 2-letter deprecated subtags are listede before 3-letter
             // ones in DEPRECATEDLANGS[]. Get out of loop on coming
             // across the 1st 3-letter subtag, if the input is a 2-letter code.
             // to avoid continuing to try when there's no match.
-            if (buf.length() < static_cast<int32_t>(uprv_strlen(DEPRECATEDLANGS[i]))) break;
-            if (uprv_compareInvCharsAsAscii(buf.data(), DEPRECATEDLANGS[i]) == 0) {
-                const char* const resolved = DEPRECATEDLANGS[i + 1];
+            എങ്കിൽ (buf.length() < static_cast<int32_t>(uprv_strlen(DEPRECATEDLANGS[i]))) നിർത്തുക;
+            എങ്കിൽ (uprv_compareInvCharsAsAscii(buf.data(), DEPRECATEDLANGS[i]) == 0) {
+                സ്ഥിരം അക്ഷരം* സ്ഥിരം resolved = DEPRECATEDLANGS[i + 1];
                 sink.Append(resolved, static_cast<int32_t>(uprv_strlen(resolved)));
-                return;
+                തിരികെ;
             }
         }
         sink.Append(buf.data(), buf.length());
     }
 }
 
-void
-_appendScriptToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, UErrorCode& status) {
+ശൂന്യം
+_appendScriptToLanguageTag(std::string_view localeID, icu::ByteSink& sink, തർക്കം strict, UErrorCode& status) {
     UErrorCode tmpStatus = U_ZERO_ERROR;
 
-    if (U_FAILURE(status)) {
-        return;
+    എങ്കിൽ (U_FAILURE(status)) {
+        തിരികെ;
     }
 
     icu::CharString buf = ulocimp_getScript(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
+    എങ്കിൽ (U_FAILURE(tmpStatus)) {
+        എങ്കിൽ (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return;
+        തിരികെ;
     }
 
-    if (!buf.isEmpty()) {
-        if (!ultag_isScriptSubtag(buf.data(), buf.length())) {
+    എങ്കിൽ (!buf.isEmpty()) {
+        എങ്കിൽ (!ultag_isScriptSubtag(buf.data(), buf.length())) {
             /* invalid script code */
-            if (strict) {
+            എങ്കിൽ (strict) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
             }
-            return;
-        } else {
+            തിരികെ;
+        } അല്ലെങ്കിൽ {
             sink.Append("-", 1);
             sink.Append(buf.data(), buf.length());
         }
     }
 }
 
-void
-_appendRegionToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, UErrorCode& status) {
+ശൂന്യം
+_appendRegionToLanguageTag(std::string_view localeID, icu::ByteSink& sink, തർക്കം strict, UErrorCode& status) {
     UErrorCode tmpStatus = U_ZERO_ERROR;
 
-    if (U_FAILURE(status)) {
-        return;
+    എങ്കിൽ (U_FAILURE(status)) {
+        തിരികെ;
     }
 
     icu::CharString buf = ulocimp_getRegion(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
+    എങ്കിൽ (U_FAILURE(tmpStatus)) {
+        എങ്കിൽ (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return;
+        തിരികെ;
     }
 
-    if (!buf.isEmpty()) {
-        if (!ultag_isRegionSubtag(buf.data(), buf.length())) {
+    എങ്കിൽ (!buf.isEmpty()) {
+        എങ്കിൽ (!ultag_isRegionSubtag(buf.data(), buf.length())) {
             /* invalid region code */
-            if (strict) {
+            എങ്കിൽ (strict) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
             }
-            return;
-        } else {
+            തിരികെ;
+        } അല്ലെങ്കിൽ {
             sink.Append("-", 1);
             /* resolve deprecated */
-            for (int32_t i = 0; i < UPRV_LENGTHOF(DEPRECATEDREGIONS); i += 2) {
-                if (uprv_compareInvCharsAsAscii(buf.data(), DEPRECATEDREGIONS[i]) == 0) {
-                    const char* const resolved = DEPRECATEDREGIONS[i + 1];
+            വേണ്ടി (int32_t i = 0; i < UPRV_LENGTHOF(DEPRECATEDREGIONS); i += 2) {
+                എങ്കിൽ (uprv_compareInvCharsAsAscii(buf.data(), DEPRECATEDREGIONS[i]) == 0) {
+                    സ്ഥിരം അക്ഷരം* സ്ഥിരം resolved = DEPRECATEDREGIONS[i + 1];
                     sink.Append(resolved, static_cast<int32_t>(uprv_strlen(resolved)));
-                    return;
+                    തിരികെ;
                 }
             }
             sink.Append(buf.data(), buf.length());
@@ -1155,12 +1155,12 @@ _appendRegionToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool 
     }
 }
 
-void _sortVariants(VariantListEntry* first) {
-    for (VariantListEntry* var1 = first; var1 != nullptr; var1 = var1->next) {
-        for (VariantListEntry* var2 = var1->next; var2 != nullptr; var2 = var2->next) {
+ശൂന്യം _sortVariants(VariantListEntry* first) {
+    വേണ്ടി (VariantListEntry* var1 = first; var1 != nullptr; var1 = var1->next) {
+        വേണ്ടി (VariantListEntry* var2 = var1->next; var2 != nullptr; var2 = var2->next) {
             // Swap var1->variant and var2->variant.
-            if (uprv_compareInvCharsAsAscii(var1->variant, var2->variant) > 0) {
-                const char* temp = var1->variant;
+            എങ്കിൽ (uprv_compareInvCharsAsAscii(var1->variant, var2->variant) > 0) {
+                സ്ഥിരം അക്ഷരം* temp = var1->variant;
                 var1->variant = var2->variant;
                 var2->variant = temp;
             }
@@ -1168,85 +1168,85 @@ void _sortVariants(VariantListEntry* first) {
     }
 }
 
-void
-_appendVariantsToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, bool& hadPosix, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+ശൂന്യം
+_appendVariantsToLanguageTag(std::string_view localeID, icu::ByteSink& sink, തർക്കം strict, തർക്കം& hadPosix, UErrorCode& status) {
+    എങ്കിൽ (U_FAILURE(status)) { തിരികെ; }
 
     UErrorCode tmpStatus = U_ZERO_ERROR;
     icu::CharString buf = ulocimp_getVariant(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus) || tmpStatus == U_STRING_NOT_TERMINATED_WARNING) {
-        if (strict) {
+    എങ്കിൽ (U_FAILURE(tmpStatus) || tmpStatus == U_STRING_NOT_TERMINATED_WARNING) {
+        എങ്കിൽ (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return;
+        തിരികെ;
     }
 
-    if (!buf.isEmpty()) {
-        char *p, *pVar;
-        bool bNext = true;
+    എങ്കിൽ (!buf.isEmpty()) {
+        അക്ഷരം *p, *pVar;
+        തർക്കം bNext = സത്യം;
         VariantListEntry *varFirst = nullptr;
 
         pVar = nullptr;
         p = buf.data();
-        while (bNext) {
-            if (*p == SEP || *p == LOCALE_SEP || *p == 0) {
-                if (*p == 0) {
-                    bNext = false;
-                } else {
+        ആകുമ്പോൾ (bNext) {
+            എങ്കിൽ (*p == SEP || *p == LOCALE_SEP || *p == 0) {
+                എങ്കിൽ (*p == 0) {
+                    bNext = അസത്യം;
+                } അല്ലെങ്കിൽ {
                     *p = 0; /* terminate */
                 }
-                if (pVar == nullptr) {
-                    if (strict) {
+                എങ്കിൽ (pVar == nullptr) {
+                    എങ്കിൽ (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
+                        നിർത്തുക;
                     }
                     /* ignore empty variant */
-                } else {
+                } അല്ലെങ്കിൽ {
                     /* ICU uses upper case letters for variants, but
                        the canonical format is lowercase in BCP47 */
-                    for (int32_t i = 0; *(pVar + i) != 0; i++) {
+                    വേണ്ടി (int32_t i = 0; *(pVar + i) != 0; i++) {
                         *(pVar + i) = uprv_tolower(*(pVar + i));
                     }
 
                     /* validate */
-                    if (_isVariantSubtag(pVar, -1)) {
-                        if (uprv_strcmp(pVar, POSIX_VALUE) || buf.length() != static_cast<int32_t>(uprv_strlen(POSIX_VALUE))) {
+                    എങ്കിൽ (_isVariantSubtag(pVar, -1)) {
+                        എങ്കിൽ (uprv_strcmp(pVar, POSIX_മൂല്യം) || buf.length() != static_cast<int32_t>(uprv_strlen(POSIX_മൂല്യം))) {
                             /* emit the variant to the list */
-                            icu::LocalPointer<VariantListEntry> var(new VariantListEntry, status);
-                            if (U_FAILURE(status)) {
-                                break;
+                            icu::LocalPointer<VariantListEntry> var(പുതിയ VariantListEntry, status);
+                            എങ്കിൽ (U_FAILURE(status)) {
+                                നിർത്തുക;
                             }
                             var->variant = pVar;
-                            if (!_addVariantToList(&varFirst, std::move(var))) {
+                            എങ്കിൽ (!_addVariantToList(&varFirst, std::move(var))) {
                                 /* duplicated variant */
-                                if (strict) {
+                                എങ്കിൽ (strict) {
                                     status = U_ILLEGAL_ARGUMENT_ERROR;
-                                    break;
+                                    നിർത്തുക;
                                 }
                             }
-                        } else {
+                        } അല്ലെങ്കിൽ {
                             /* Special handling for POSIX variant, need to remember that we had it and then */
                             /* treat it like an extension later. */
-                            hadPosix = true;
+                            hadPosix = സത്യം;
                         }
-                    } else if (strict) {
+                    } അല്ലെങ്കിൽ എങ്കിൽ (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
-                    } else if (_isPrivateuseValueSubtag(pVar, -1)) {
+                        നിർത്തുക;
+                    } അല്ലെങ്കിൽ എങ്കിൽ (is_Privateuse_മൂല്യം_Subtag(pVar, -1)) {
                         /* Handle private use subtags separately */
-                        break;
+                        നിർത്തുക;
                     }
                 }
                 /* reset variant starting position */
                 pVar = nullptr;
-            } else if (pVar == nullptr) {
+            } അല്ലെങ്കിൽ എങ്കിൽ (pVar == nullptr) {
                 pVar = p;
             }
             p++;
         }
 
-        if (U_SUCCESS(status)) {
-            if (varFirst != nullptr) {
+        എങ്കിൽ (U_SUCCESS(status)) {
+            എങ്കിൽ (varFirst != nullptr) {
                 int32_t varLen;
 
                 /* per UTS35, we should sort the variants */
@@ -1254,7 +1254,7 @@ _appendVariantsToLanguageTag(std::string_view localeID, icu::ByteSink& sink, boo
 
                 /* write out validated/normalized variants to the target */
                 VariantListEntry* var = varFirst;
-                while (var != nullptr) {
+                ആകുമ്പോൾ (var != nullptr) {
                     sink.Append("-", 1);
                     varLen = static_cast<int32_t>(uprv_strlen(var->variant));
                     sink.Append(var->variant, varLen);
@@ -1264,138 +1264,138 @@ _appendVariantsToLanguageTag(std::string_view localeID, icu::ByteSink& sink, boo
         }
 
         /* clean up */
-        for (VariantListEntry* var = varFirst; var != nullptr; ) {
+        വേണ്ടി (VariantListEntry* var = varFirst; var != nullptr; ) {
             VariantListEntry *tmpVar = var->next;
             delete var;
             var = tmpVar;
         }
 
-        if (U_FAILURE(status)) {
-            return;
+        എങ്കിൽ (U_FAILURE(status)) {
+            തിരികെ;
         }
     }
 }
 
-void
-_appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool strict, bool hadPosix, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+ശൂന്യം
+_appendKeywordsToLanguageTag(സ്ഥിരം അക്ഷരം* localeID, icu::ByteSink& sink, തർക്കം strict, തർക്കം hadPosix, UErrorCode& status) {
+    എങ്കിൽ (U_FAILURE(status)) { തിരികെ; }
 
     icu::MemoryPool<AttributeListEntry> attrPool;
     icu::MemoryPool<ExtensionListEntry> extPool;
     icu::MemoryPool<icu::CharString> strPool;
 
     icu::LocalUEnumerationPointer keywordEnum(uloc_openKeywords(localeID, &status));
-    if (U_FAILURE(status) && !hadPosix) {
-        return;
+    എങ്കിൽ (U_FAILURE(status) && !hadPosix) {
+        തിരികെ;
     }
-    if (keywordEnum.isValid() || hadPosix) {
+    എങ്കിൽ (keywordEnum.isValid() || hadPosix) {
         /* reorder extensions */
         int32_t len;
-        const char *key;
+        സ്ഥിരം അക്ഷരം *താക്കോൽ;
         ExtensionListEntry *firstExt = nullptr;
         ExtensionListEntry *ext;
         AttributeListEntry *firstAttr = nullptr;
         AttributeListEntry *attr;
         icu::MemoryPool<icu::CharString> extBufPool;
-        const char *bcpKey=nullptr, *bcpValue=nullptr;
+        സ്ഥിരം അക്ഷരം *bcp_താക്കോൽ=nullptr, *bcp_മൂല്യം=nullptr;
         UErrorCode tmpStatus = U_ZERO_ERROR;
         int32_t keylen;
-        bool isBcpUExt;
+        തർക്കം isBcpUExt;
 
-        while (true) {
-            key = uenum_next(keywordEnum.getAlias(), nullptr, &status);
-            if (key == nullptr) {
-                break;
+        ആകുമ്പോൾ (സത്യം) {
+            താക്കോൽ = uenum_next(keywordEnum.getAlias(), nullptr, &status);
+            എങ്കിൽ (താക്കോൽ == nullptr) {
+                നിർത്തുക;
             }
 
-            icu::CharString buf = ulocimp_getKeywordValue(localeID, key, tmpStatus);
+            icu::CharString buf = ulocimp_get_Keyword_മൂല്യം(localeID, താക്കോൽ, tmpStatus);
             len = buf.length();
 
-            if (U_FAILURE(tmpStatus)) {
-                if (tmpStatus == U_MEMORY_ALLOCATION_ERROR) {
+            എങ്കിൽ (U_FAILURE(tmpStatus)) {
+                എങ്കിൽ (tmpStatus == U_MEMORY_ALLOCATION_ERROR) {
                     status = U_MEMORY_ALLOCATION_ERROR;
-                    break;
+                    നിർത്തുക;
                 }
-                if (strict) {
+                എങ്കിൽ (strict) {
                     status = U_ILLEGAL_ARGUMENT_ERROR;
-                    break;
+                    നിർത്തുക;
                 }
                 /* ignore this keyword */
                 tmpStatus = U_ZERO_ERROR;
-                continue;
+                തുടരുക;
             }
 
-            keylen = static_cast<int32_t>(uprv_strlen(key));
+            keylen = static_cast<int32_t>(uprv_strlen(താക്കോൽ));
             isBcpUExt = (keylen > 1);
 
             /* special keyword used for representing Unicode locale attributes */
-            if (uprv_strcmp(key, LOCALE_ATTRIBUTE_KEY) == 0) {
-                if (len > 0) {
+            എങ്കിൽ (uprv_strcmp(താക്കോൽ, LOCALE_ATTRIBUTE_താക്കോൽ) == 0) {
+                എങ്കിൽ (len > 0) {
                     int32_t i = 0;
-                    while (true) {
+                    ആകുമ്പോൾ (സത്യം) {
                         icu::CharString attrBuf;
-                        for (; i < len; i++) {
-                            if (buf[i] != '-') {
+                        വേണ്ടി (; i < len; i++) {
+                            എങ്കിൽ (buf[i] != '-') {
                                 attrBuf.append(buf[i], status);
-                            } else {
+                            } അല്ലെങ്കിൽ {
                                 i++;
-                                break;
+                                നിർത്തുക;
                             }
                         }
-                        if (U_FAILURE(status)) {
-                            return;
+                        എങ്കിൽ (U_FAILURE(status)) {
+                            തിരികെ;
                         }
-                        if (attrBuf.isEmpty() && i >= len) {
-                            break;
+                        എങ്കിൽ (attrBuf.isEmpty() && i >= len) {
+                            നിർത്തുക;
                         }
 
                         /* create AttributeListEntry */
                         attr = attrPool.create();
-                        if (attr == nullptr) {
+                        എങ്കിൽ (attr == nullptr) {
                             status = U_MEMORY_ALLOCATION_ERROR;
-                            break;
+                            നിർത്തുക;
                         }
-                        if (icu::CharString* str =
+                        എങ്കിൽ (icu::CharString* str =
                                 strPool.create(std::move(attrBuf), status)) {
-                            if (U_FAILURE(status)) { break; }
+                            എങ്കിൽ (U_FAILURE(status)) { നിർത്തുക; }
                             attr->attribute = str->data();
-                        } else {
+                        } അല്ലെങ്കിൽ {
                             status = U_MEMORY_ALLOCATION_ERROR;
-                            break;
+                            നിർത്തുക;
                         }
 
-                        if (!_addAttributeToList(&firstAttr, attr)) {
-                            if (strict) {
+                        എങ്കിൽ (!_addAttributeToList(&firstAttr, attr)) {
+                            എങ്കിൽ (strict) {
                                 status = U_ILLEGAL_ARGUMENT_ERROR;
-                                break;
+                                നിർത്തുക;
                             }
                         }
                     }
                     /* for a place holder ExtensionListEntry */
-                    bcpKey = LOCALE_ATTRIBUTE_KEY;
-                    bcpValue = nullptr;
+                    bcp_താക്കോൽ = LOCALE_ATTRIBUTE_താക്കോൽ;
+                    bcp_മൂല്യം = nullptr;
                 }
-            } else if (isBcpUExt) {
-                std::optional<std::string_view> optBcpKey = ulocimp_toBcpKeyWithFallback(key);
-                if (!optBcpKey.has_value()) {
-                    if (strict) {
+            } അല്ലെങ്കിൽ എങ്കിൽ (isBcpUExt) {
+                std::optional<std::string_view> opt_Bcp_താക്കോൽ = ulocimp_to_Bcp_താക്കോൽ_With_Fallback(താക്കോൽ);
+                എങ്കിൽ (!opt_Bcp_താക്കോൽ.has_value()) {
+                    എങ്കിൽ (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
+                        നിർത്തുക;
                     }
-                    continue;
+                    തുടരുക;
                 }
-                bcpKey = optBcpKey->data();
+                bcp_താക്കോൽ = opt_Bcp_താക്കോൽ->data();
 
-                std::optional<std::string_view> optBcpValue =
-                    ulocimp_toBcpTypeWithFallback(key, buf.toStringPiece());
-                if (!optBcpValue.has_value()) {
-                    if (strict) {
+                std::optional<std::string_view> opt_Bcp_മൂല്യം =
+                    ulocimp_toBcpTypeWithFallback(താക്കോൽ, buf.toStringPiece());
+                എങ്കിൽ (!opt_Bcp_മൂല്യം.has_value()) {
+                    എങ്കിൽ (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
+                        നിർത്തുക;
                     }
-                    continue;
+                    തുടരുക;
                 }
-                if (optBcpValue->data() == buf.data()) {
+                എങ്കിൽ (opt_Bcp_മൂല്യം->data() == buf.data()) {
                     /*
                     When ulocimp_toBcpTypeWithFallback(key, buf) returns the
                     input value as is, the value is well-formed, but has
@@ -1404,106 +1404,106 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool str
                     */
                     icu::CharString* extBuf = extBufPool.create(buf, tmpStatus);
 
-                    if (extBuf == nullptr) {
+                    എങ്കിൽ (extBuf == nullptr) {
                         status = U_MEMORY_ALLOCATION_ERROR;
-                        break;
+                        നിർത്തുക;
                     }
-                    if (U_FAILURE(tmpStatus)) {
+                    എങ്കിൽ (U_FAILURE(tmpStatus)) {
                         status = tmpStatus;
-                        break;
+                        നിർത്തുക;
                     }
 
                     T_CString_toLowerCase(extBuf->data());
-                    bcpValue = extBuf->data();
-                } else {
-                    bcpValue = optBcpValue->data();
+                    bcp_മൂല്യം = extBuf->data();
+                } അല്ലെങ്കിൽ {
+                    bcp_മൂല്യം = opt_Bcp_മൂല്യം->data();
                 }
-            } else {
-                if (*key == PRIVATEUSE) {
-                    if (!ultag_isPrivateuseValueSubtags(buf.data(), len)) {
-                        if (strict) {
+            } അല്ലെങ്കിൽ {
+                എങ്കിൽ (*താക്കോൽ == PRIVATEUSE) {
+                    എങ്കിൽ (!ultag_is_Privateuse_മൂല്യം_Subtags(buf.data(), len)) {
+                        എങ്കിൽ (strict) {
                             status = U_ILLEGAL_ARGUMENT_ERROR;
-                            break;
+                            നിർത്തുക;
                         }
-                        continue;
+                        തുടരുക;
                     }
-                } else {
-                    if (!_isExtensionSingleton(key, keylen) || !ultag_isExtensionSubtags(buf.data(), len)) {
-                        if (strict) {
+                } അല്ലെങ്കിൽ {
+                    എങ്കിൽ (!_isExtensionSingleton(താക്കോൽ, keylen) || !ultag_isExtensionSubtags(buf.data(), len)) {
+                        എങ്കിൽ (strict) {
                             status = U_ILLEGAL_ARGUMENT_ERROR;
-                            break;
+                            നിർത്തുക;
                         }
-                        continue;
+                        തുടരുക;
                     }
                 }
-                bcpKey = key;
+                bcp_താക്കോൽ = താക്കോൽ;
                 icu::CharString* extBuf =
                     extBufPool.create(buf.data(), len, tmpStatus);
-                if (extBuf == nullptr) {
+                എങ്കിൽ (extBuf == nullptr) {
                     status = U_MEMORY_ALLOCATION_ERROR;
-                    break;
+                    നിർത്തുക;
                 }
-                if (U_FAILURE(tmpStatus)) {
+                എങ്കിൽ (U_FAILURE(tmpStatus)) {
                     status = tmpStatus;
-                    break;
+                    നിർത്തുക;
                 }
-                bcpValue = extBuf->data();
+                bcp_മൂല്യം = extBuf->data();
             }
 
             /* create ExtensionListEntry */
             ext = extPool.create();
-            if (ext == nullptr) {
+            എങ്കിൽ (ext == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                break;
+                നിർത്തുക;
             }
-            ext->key = bcpKey;
-            ext->value = bcpValue;
+            ext->താക്കോൽ = bcp_താക്കോൽ;
+            ext->value = bcp_മൂല്യം;
 
-            if (!_addExtensionToList(&firstExt, ext, true)) {
-                if (strict) {
+            എങ്കിൽ (!_addExtensionToList(&firstExt, ext, സത്യം)) {
+                എങ്കിൽ (strict) {
                     status = U_ILLEGAL_ARGUMENT_ERROR;
-                    break;
+                    നിർത്തുക;
                 }
             }
         }
 
         /* Special handling for POSIX variant - add the keywords for POSIX */
-        if (hadPosix) {
+        എങ്കിൽ (hadPosix) {
             /* create ExtensionListEntry for POSIX */
             ext = extPool.create();
-            if (ext == nullptr) {
+            എങ്കിൽ (ext == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                തിരികെ;
             }
-            ext->key = POSIX_KEY;
-            ext->value = POSIX_VALUE;
+            ext->താക്കോൽ = POSIX_താക്കോൽ;
+            ext->value = POSIX_മൂല്യം;
 
-            if (!_addExtensionToList(&firstExt, ext, true)) {
+            എങ്കിൽ (!_addExtensionToList(&firstExt, ext, സത്യം)) {
                 // Silently ignore errors.
             }
         }
 
-        if (U_SUCCESS(status) && (firstExt != nullptr || firstAttr != nullptr)) {
-            bool startLDMLExtension = false;
-            for (ext = firstExt; ext; ext = ext->next) {
-                if (!startLDMLExtension && uprv_strlen(ext->key) > 1) {
+        എങ്കിൽ (U_SUCCESS(status) && (firstExt != nullptr || firstAttr != nullptr)) {
+            തർക്കം startLDMLExtension = അസത്യം;
+            വേണ്ടി (ext = firstExt; ext; ext = ext->next) {
+                എങ്കിൽ (!startLDMLExtension && uprv_strlen(ext->താക്കോൽ) > 1) {
                     /* first LDML u singlton extension */
                    sink.Append("-u", 2);
-                   startLDMLExtension = true;
+                   startLDMLExtension = സത്യം;
                 }
 
                 /* write out the sorted BCP47 attributes, extensions and private use */
-                if (uprv_strcmp(ext->key, LOCALE_ATTRIBUTE_KEY) == 0) {
+                എങ്കിൽ (uprv_strcmp(ext->താക്കോൽ, LOCALE_ATTRIBUTE_താക്കോൽ) == 0) {
                     /* write the value for the attributes */
-                    for (attr = firstAttr; attr; attr = attr->next) {
+                    വേണ്ടി (attr = firstAttr; attr; attr = attr->next) {
                         sink.Append("-", 1);
                         sink.Append(
                                 attr->attribute, static_cast<int32_t>(uprv_strlen(attr->attribute)));
                     }
-                } else {
+                } അല്ലെങ്കിൽ {
                     sink.Append("-", 1);
-                    sink.Append(ext->key, static_cast<int32_t>(uprv_strlen(ext->key)));
-                    if (uprv_strcmp(ext->value, "true") != 0 &&
+                    sink.Append(ext->താക്കോൽ, static_cast<int32_t>(uprv_strlen(ext->താക്കോൽ)));
+                    എങ്കിൽ (uprv_strcmp(ext->value, "true") != 0 &&
                         uprv_strcmp(ext->value, "yes") != 0) {
                       sink.Append("-", 1);
                       sink.Append(ext->value, static_cast<int32_t>(uprv_strlen(ext->value)));
@@ -1519,13 +1519,13 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool str
  * e.g. "u-ca-gregory-co-trad" -> {calendar = gregorian} {collation = traditional}
  * Note: char* buf is used for storing keywords
  */
-void
-_appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendTo, icu::MemoryPool<ExtensionListEntry>& extPool, icu::MemoryPool<icu::CharString>& kwdBuf, bool& posixVariant, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+ശൂന്യം
+_appendLDMLExtensionAsKeywords(സ്ഥിരം അക്ഷരം* ldmlext, ExtensionListEntry** appendTo, icu::MemoryPool<ExtensionListEntry>& extPool, icu::MemoryPool<icu::CharString>& kwdBuf, തർക്കം& posixVariant, UErrorCode& status) {
+    എങ്കിൽ (U_FAILURE(status)) { തിരികെ; }
 
-    const char *pTag;   /* beginning of current subtag */
-    const char *pKwds;  /* beginning of key-type pairs */
-    bool variantExists = posixVariant;
+    സ്ഥിരം അക്ഷരം *pTag;   /* beginning of current subtag */
+    സ്ഥിരം അക്ഷരം *pKwds;  /* beginning of key-type pairs */
+    തർക്കം variantExists = posixVariant;
 
     ExtensionListEntry *kwdFirst = nullptr;    /* first LDML keyword */
     ExtensionListEntry *kwd, *nextKwd;
@@ -1533,7 +1533,7 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
     int32_t len;
 
     /* Reset the posixVariant value */
-    posixVariant = false;
+    posixVariant = അസത്യം;
 
     pTag = ldmlext;
     pKwds = nullptr;
@@ -1546,28 +1546,28 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
         icu::MemoryPool<AttributeListEntry> attrPool;
 
         /* Iterate through u extension attributes */
-        while (*pTag) {
+        ആകുമ്പോൾ (*pTag) {
             /* locate next separator char */
-            for (len = 0; *(pTag + len) && *(pTag + len) != SEP; len++);
+            വേണ്ടി (len = 0; *(pTag + len) && *(pTag + len) != SEP; len++);
 
-            if (ultag_isUnicodeLocaleKey(pTag, len)) {
+            എങ്കിൽ (ultag_is_Unicode_Locale_താക്കോൽ(pTag, len)) {
                 pKwds = pTag;
-                break;
+                നിർത്തുക;
             }
 
             /* add this attribute to the list */
             attr = attrPool.create();
-            if (attr == nullptr) {
+            എങ്കിൽ (attr == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                തിരികെ;
             }
 
-            if (icu::CharString* str = strPool.create(pTag, len, status)) {
-                if (U_FAILURE(status)) { return; }
+            എങ്കിൽ (icu::CharString* str = strPool.create(pTag, len, status)) {
+                എങ്കിൽ (U_FAILURE(status)) { തിരികെ; }
                 attr->attribute = str->data();
-            } else {
+            } അല്ലെങ്കിൽ {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                തിരികെ;
             }
 
             // duplicate attribute is ignored, causes no error.
@@ -1575,84 +1575,84 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
 
             /* next tag */
             pTag += len;
-            if (*pTag) {
+            എങ്കിൽ (*pTag) {
                 /* next to the separator */
                 pTag++;
             }
         }
 
-        if (attrFirst) {
+        എങ്കിൽ (attrFirst) {
             /* emit attributes as an LDML keyword, e.g. attribute=attr1-attr2 */
 
             kwd = extPool.create();
-            if (kwd == nullptr) {
+            എങ്കിൽ (kwd == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                തിരികെ;
             }
 
             icu::CharString* value = kwdBuf.create();
-            if (value == nullptr) {
+            എങ്കിൽ (value == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                തിരികെ;
             }
 
             /* attribute subtags sorted in alphabetical order as type */
             attr = attrFirst;
-            while (attr != nullptr) {
+            ആകുമ്പോൾ (attr != nullptr) {
                 nextAttr = attr->next;
-                if (attr != attrFirst) {
+                എങ്കിൽ (attr != attrFirst) {
                     value->append('-', status);
                 }
                 value->append(attr->attribute, status);
                 attr = nextAttr;
             }
-            if (U_FAILURE(status)) {
-                return;
+            എങ്കിൽ (U_FAILURE(status)) {
+                തിരികെ;
             }
 
-            kwd->key = LOCALE_ATTRIBUTE_KEY;
+            kwd->താക്കോൽ = LOCALE_ATTRIBUTE_താക്കോൽ;
             kwd->value = value->data();
 
-            if (!_addExtensionToList(&kwdFirst, kwd, false)) {
+            എങ്കിൽ (!_addExtensionToList(&kwdFirst, kwd, അസത്യം)) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
-                return;
+                തിരികെ;
             }
         }
     }
 
-    if (pKwds) {
-        const char *pBcpKey = nullptr;     /* u extension key subtag */
-        const char *pBcpType = nullptr;    /* beginning of u extension type subtag(s) */
-        int32_t bcpKeyLen = 0;
+    എങ്കിൽ (pKwds) {
+        സ്ഥിരം അക്ഷരം *p_Bcp_താക്കോൽ = nullptr;     /* u extension key subtag */
+        സ്ഥിരം അക്ഷരം *pBcpType = nullptr;    /* beginning of u extension type subtag(s) */
+        int32_t bcp_താക്കോൽ_Len = 0;
         int32_t bcpTypeLen = 0;
-        bool isDone = false;
+        തർക്കം isDone = അസത്യം;
 
         pTag = pKwds;
         /* BCP47 representation of LDML key/type pairs */
-        while (!isDone) {
-            const char *pNextBcpKey = nullptr;
-            int32_t nextBcpKeyLen = 0;
-            bool emitKeyword = false;
+        ആകുമ്പോൾ (!isDone) {
+            സ്ഥിരം അക്ഷരം *p_Next_Bcp_താക്കോൽ = nullptr;
+            int32_t next_Bcp_താക്കോൽ_Len = 0;
+            തർക്കം emitKeyword = അസത്യം;
 
-            if (*pTag) {
+            എങ്കിൽ (*pTag) {
                 /* locate next separator char */
-                for (len = 0; *(pTag + len) && *(pTag + len) != SEP; len++);
+                വേണ്ടി (len = 0; *(pTag + len) && *(pTag + len) != SEP; len++);
 
-                if (ultag_isUnicodeLocaleKey(pTag, len)) {
-                    if (pBcpKey) {
-                        emitKeyword = true;
-                        pNextBcpKey = pTag;
-                        nextBcpKeyLen = len;
-                    } else {
-                        pBcpKey = pTag;
-                        bcpKeyLen = len;
+                എങ്കിൽ (ultag_is_Unicode_Locale_താക്കോൽ(pTag, len)) {
+                    എങ്കിൽ (p_Bcp_താക്കോൽ) {
+                        emitKeyword = സത്യം;
+                        p_Next_Bcp_താക്കോൽ = pTag;
+                        next_Bcp_താക്കോൽ_Len = len;
+                    } അല്ലെങ്കിൽ {
+                        p_Bcp_താക്കോൽ = pTag;
+                        bcp_താക്കോൽ_Len = len;
                     }
-                } else {
-                    U_ASSERT(pBcpKey != nullptr);
+                } അല്ലെങ്കിൽ {
+                    U_ASSERT(p_Bcp_താക്കോൽ != nullptr);
                     /* within LDML type subtags */
-                    if (pBcpType) {
+                    എങ്കിൽ (pBcpType) {
                         bcpTypeLen += (len + 1);
-                    } else {
+                    } അല്ലെങ്കിൽ {
                         pBcpType = pTag;
                         bcpTypeLen = len;
                     }
@@ -1660,109 +1660,109 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
 
                 /* next tag */
                 pTag += len;
-                if (*pTag) {
+                എങ്കിൽ (*pTag) {
                     /* next to the separator */
                     pTag++;
                 }
-            } else {
+            } അല്ലെങ്കിൽ {
                 /* processing last one */
-                emitKeyword = true;
-                isDone = true;
+                emitKeyword = സത്യം;
+                isDone = സത്യം;
             }
 
-            if (emitKeyword) {
-                const char *pKey = nullptr;    /* LDML key */
-                const char *pType = nullptr;   /* LDML type */
+            എങ്കിൽ (emitKeyword) {
+                സ്ഥിരം അക്ഷരം *p_താക്കോൽ = nullptr;    /* LDML key */
+                സ്ഥിരം അക്ഷരം *pType = nullptr;   /* LDML type */
 
-                U_ASSERT(pBcpKey != nullptr);
+                U_ASSERT(p_Bcp_താക്കോൽ != nullptr);
 
                 /* BCP key length is always 2 for now */
-                if (bcpKeyLen != 2) {
+                എങ്കിൽ (bcp_താക്കോൽ_Len != 2) {
                     /* the BCP key is invalid */
                     status = U_ILLEGAL_ARGUMENT_ERROR;
-                    return;
+                    തിരികെ;
                 }
 
                 /* u extension key to LDML key */
-                std::optional<std::string_view> legacyKey = ulocimp_toLegacyKeyWithFallback(
-                    {pBcpKey, static_cast<std::string_view::size_type>(bcpKeyLen)});
-                if (!legacyKey.has_value()) {
+                std::optional<std::string_view> legacy_താക്കോൽ_2 = ulocimp_to_Legacy_താക്കോൽ_With_Fallback(
+                    {p_Bcp_താക്കോൽ, static_cast<std::string_view::size_type>(bcp_താക്കോൽ_Len)});
+                എങ്കിൽ (!legacy_താക്കോൽ_2.has_value()) {
                     status = U_ILLEGAL_ARGUMENT_ERROR;
-                    return;
+                    തിരികെ;
                 }
-                if (legacyKey->data() == pBcpKey) {
+                എങ്കിൽ (legacy_താക്കോൽ_2->data() == p_Bcp_താക്കോൽ) {
                     /*
                     The key returned by toLegacyKey points to the input buffer.
                     We normalize the result key to lower case.
                     */
-                    icu::CharString* key = kwdBuf.create(pBcpKey, bcpKeyLen, status);
-                    if (key == nullptr) {
+                    icu::CharString* താക്കോൽ = kwdBuf.create(p_Bcp_താക്കോൽ, bcp_താക്കോൽ_Len, status);
+                    എങ്കിൽ (താക്കോൽ == nullptr) {
                         status = U_MEMORY_ALLOCATION_ERROR;
-                        return;
+                        തിരികെ;
                     }
-                    if (U_FAILURE(status)) {
-                        return;
+                    എങ്കിൽ (U_FAILURE(status)) {
+                        തിരികെ;
                     }
-                    T_CString_toLowerCase(key->data());
-                    pKey = key->data();
-                } else {
-                    pKey = legacyKey->data();
+                    T_CString_toLowerCase(താക്കോൽ->data());
+                    p_താക്കോൽ = താക്കോൽ->data();
+                } അല്ലെങ്കിൽ {
+                    p_താക്കോൽ = legacy_താക്കോൽ_2->data();
                 }
 
-                if (pBcpType) {
+                എങ്കിൽ (pBcpType) {
                     /* BCP type to locale type */
                     std::optional<std::string_view> legacyType = ulocimp_toLegacyTypeWithFallback(
-                        pKey, {pBcpType, static_cast<std::string_view::size_type>(bcpTypeLen)});
-                    if (!legacyType.has_value()) {
+                        p_താക്കോൽ, {pBcpType, static_cast<std::string_view::size_type>(bcpTypeLen)});
+                    എങ്കിൽ (!legacyType.has_value()) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        return;
+                        തിരികെ;
                     }
-                    if (legacyType->data() == pBcpType) {
+                    എങ്കിൽ (legacyType->data() == pBcpType) {
                         /*
                         The type returned by toLegacyType points to the input buffer.
                         We normalize the result type to lower case.
                         */
                         icu::CharString* type = kwdBuf.create(pBcpType, bcpTypeLen, status);
-                        if (type == nullptr) {
+                        എങ്കിൽ (type == nullptr) {
                             status = U_MEMORY_ALLOCATION_ERROR;
-                            return;
+                            തിരികെ;
                         }
-                        if (U_FAILURE(status)) {
-                            return;
+                        എങ്കിൽ (U_FAILURE(status)) {
+                            തിരികെ;
                         }
                         T_CString_toLowerCase(type->data());
                         pType = type->data();
-                    } else {
+                    } അല്ലെങ്കിൽ {
                         pType = legacyType->data();
                     }
-                } else {
+                } അല്ലെങ്കിൽ {
                     /* typeless - default type value is "yes" */
                     pType = LOCALE_TYPE_YES;
                 }
 
                 /* Special handling for u-va-posix, since we want to treat this as a variant, 
                    not as a keyword */
-                if (!variantExists && !uprv_strcmp(pKey, POSIX_KEY) && !uprv_strcmp(pType, POSIX_VALUE) ) {
-                    posixVariant = true;
-                } else {
+                എങ്കിൽ (!variantExists && !uprv_strcmp(p_താക്കോൽ, POSIX_താക്കോൽ) && !uprv_strcmp(pType, POSIX_മൂല്യം) ) {
+                    posixVariant = സത്യം;
+                } അല്ലെങ്കിൽ {
                     /* create an ExtensionListEntry for this keyword */
                     kwd = extPool.create();
-                    if (kwd == nullptr) {
+                    എങ്കിൽ (kwd == nullptr) {
                         status = U_MEMORY_ALLOCATION_ERROR;
-                        return;
+                        തിരികെ;
                     }
 
-                    kwd->key = pKey;
+                    kwd->താക്കോൽ = p_താക്കോൽ;
                     kwd->value = pType;
 
-                    if (!_addExtensionToList(&kwdFirst, kwd, false)) {
+                    എങ്കിൽ (!_addExtensionToList(&kwdFirst, kwd, അസത്യം)) {
                         // duplicate keyword is allowed, Only the first
                         // is honored.
                     }
                 }
 
-                pBcpKey = pNextBcpKey;
-                bcpKeyLen = pNextBcpKey != nullptr ? nextBcpKeyLen : 0;
+                p_Bcp_താക്കോൽ = p_Next_Bcp_താക്കോൽ;
+                bcp_താക്കോൽ_Len = p_Next_Bcp_താക്കോൽ != nullptr ? next_Bcp_താക്കോൽ_Len : 0;
                 pBcpType = nullptr;
                 bcpTypeLen = 0;
             }
@@ -1770,68 +1770,68 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
     }
 
     kwd = kwdFirst;
-    while (kwd != nullptr) {
+    ആകുമ്പോൾ (kwd != nullptr) {
         nextKwd = kwd->next;
-        _addExtensionToList(appendTo, kwd, false);
+        _addExtensionToList(appendTo, kwd, അസത്യം);
         kwd = nextKwd;
     }
 }
 
-void
+ശൂന്യം
 _appendKeywords(ULanguageTag* langtag, icu::ByteSink& sink, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    എങ്കിൽ (U_FAILURE(status)) { തിരികെ; }
 
     int32_t i, n;
     int32_t len;
     ExtensionListEntry *kwdFirst = nullptr;
     ExtensionListEntry *kwd;
-    const char *key, *type;
+    സ്ഥിരം അക്ഷരം *താക്കോൽ, *type;
     icu::MemoryPool<ExtensionListEntry> extPool;
     icu::MemoryPool<icu::CharString> kwdBuf;
-    bool posixVariant = false;
+    തർക്കം posixVariant = അസത്യം;
 
     n = ultag_getExtensionsSize(langtag);
 
     /* resolve locale keywords and reordering keys */
-    for (i = 0; i < n; i++) {
-        key = ultag_getExtensionKey(langtag, i);
-        type = ultag_getExtensionValue(langtag, i);
-        if (*key == LDMLEXT) {
+    വേണ്ടി (i = 0; i < n; i++) {
+        താക്കോൽ = ultag_get_Extension_താക്കോൽ(langtag, i);
+        type = ultag_get_Extension_മൂല്യം(langtag, i);
+        എങ്കിൽ (*താക്കോൽ == LDMLEXT) {
             /* Determine if variants already exists */
-            if (ultag_getVariantsSize(langtag)) {
-                posixVariant = true;
+            എങ്കിൽ (ultag_getVariantsSize(langtag)) {
+                posixVariant = സത്യം;
             }
 
             _appendLDMLExtensionAsKeywords(type, &kwdFirst, extPool, kwdBuf, posixVariant, status);
-            if (U_FAILURE(status)) {
-                break;
+            എങ്കിൽ (U_FAILURE(status)) {
+                നിർത്തുക;
             }
-        } else {
+        } അല്ലെങ്കിൽ {
             kwd = extPool.create();
-            if (kwd == nullptr) {
+            എങ്കിൽ (kwd == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                break;
+                നിർത്തുക;
             }
-            kwd->key = key;
+            kwd->താക്കോൽ = താക്കോൽ;
             kwd->value = type;
-            if (!_addExtensionToList(&kwdFirst, kwd, false)) {
+            എങ്കിൽ (!_addExtensionToList(&kwdFirst, kwd, അസത്യം)) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
-                break;
+                നിർത്തുക;
             }
         }
     }
 
-    if (U_SUCCESS(status)) {
+    എങ്കിൽ (U_SUCCESS(status)) {
         type = ultag_getPrivateUse(langtag);
-        if (static_cast<int32_t>(uprv_strlen(type)) > 0) {
+        എങ്കിൽ (static_cast<int32_t>(uprv_strlen(type)) > 0) {
             /* add private use as a keyword */
             kwd = extPool.create();
-            if (kwd == nullptr) {
+            എങ്കിൽ (kwd == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-            } else {
-                kwd->key = PRIVATEUSE_KEY;
+            } അല്ലെങ്കിൽ {
+                kwd->താക്കോൽ = PRIVATEUSE_താക്കോൽ;
                 kwd->value = type;
-                if (!_addExtensionToList(&kwdFirst, kwd, false)) {
+                എങ്കിൽ (!_addExtensionToList(&kwdFirst, kwd, അസത്യം)) {
                     status = U_ILLEGAL_ARGUMENT_ERROR;
                 }
             }
@@ -1840,26 +1840,26 @@ _appendKeywords(ULanguageTag* langtag, icu::ByteSink& sink, UErrorCode& status) 
 
     /* If a POSIX variant was in the extensions, write it out before writing the keywords. */
 
-    if (U_SUCCESS(status) && posixVariant) {
+    എങ്കിൽ (U_SUCCESS(status) && posixVariant) {
         len = static_cast<int32_t>(uprv_strlen(_POSIX));
         sink.Append(_POSIX, len);
     }
 
-    if (U_SUCCESS(status) && kwdFirst != nullptr) {
+    എങ്കിൽ (U_SUCCESS(status) && kwdFirst != nullptr) {
         /* write out the sorted keywords */
-        bool firstValue = true;
+        തർക്കം first_മൂല്യം = സത്യം;
         kwd = kwdFirst;
-        do {
-            if (firstValue) {
+        ചെയ്യുക {
+            എങ്കിൽ (first_മൂല്യം) {
                 sink.Append("@", 1);
-                firstValue = false;
-            } else {
+                first_മൂല്യം = അസത്യം;
+            } അല്ലെങ്കിൽ {
                 sink.Append(";", 1);
             }
 
-            /* key */
-            len = static_cast<int32_t>(uprv_strlen(kwd->key));
-            sink.Append(kwd->key, len);
+            /*താക്കോൽ*/
+            len = static_cast<int32_t>(uprv_strlen(kwd->താക്കോൽ));
+            sink.Append(kwd->താക്കോൽ, len);
             sink.Append("=", 1);
 
             /* type */
@@ -1867,70 +1867,70 @@ _appendKeywords(ULanguageTag* langtag, icu::ByteSink& sink, UErrorCode& status) 
             sink.Append(kwd->value, len);
 
             kwd = kwd->next;
-        } while (kwd);
+        } ആകുമ്പോൾ (kwd);
     }
 }
 
-void
-_appendPrivateuseToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, bool /*hadPosix*/, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+ശൂന്യം
+_appendPrivateuseToLanguageTag(std::string_view localeID, icu::ByteSink& sink, തർക്കം strict, തർക്കം /*hadPosix*/, UErrorCode& status) {
+    എങ്കിൽ (U_FAILURE(status)) { തിരികെ; }
 
     UErrorCode tmpStatus = U_ZERO_ERROR;
     icu::CharString buf = ulocimp_getVariant(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
+    എങ്കിൽ (U_FAILURE(tmpStatus)) {
+        എങ്കിൽ (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return;
+        തിരികെ;
     }
 
-    if (!buf.isEmpty()) {
-        char *p, *pPriv;
-        bool bNext = true;
-        bool firstValue = true;
-        bool writeValue;
+    എങ്കിൽ (!buf.isEmpty()) {
+        അക്ഷരം *p, *pPriv;
+        തർക്കം bNext = സത്യം;
+        തർക്കം first_മൂല്യം = സത്യം;
+        തർക്കം write_മൂല്യം;
 
         pPriv = nullptr;
         p = buf.data();
-        while (bNext) {
-            writeValue = false;
-            if (*p == SEP || *p == LOCALE_SEP || *p == 0) {
-                if (*p == 0) {
-                    bNext = false;
-                } else {
+        ആകുമ്പോൾ (bNext) {
+            write_മൂല്യം = അസത്യം;
+            എങ്കിൽ (*p == SEP || *p == LOCALE_SEP || *p == 0) {
+                എങ്കിൽ (*p == 0) {
+                    bNext = അസത്യം;
+                } അല്ലെങ്കിൽ {
                     *p = 0; /* terminate */
                 }
-                if (pPriv != nullptr) {
+                എങ്കിൽ (pPriv != nullptr) {
                     /* Private use in the canonical format is lowercase in BCP47 */
-                    for (int32_t i = 0; *(pPriv + i) != 0; i++) {
+                    വേണ്ടി (int32_t i = 0; *(pPriv + i) != 0; i++) {
                         *(pPriv + i) = uprv_tolower(*(pPriv + i));
                     }
 
                     /* validate */
-                    if (_isPrivateuseValueSubtag(pPriv, -1)) {
-                        if (firstValue) {
-                            if (!_isVariantSubtag(pPriv, -1)) {
-                                writeValue = true;
+                    എങ്കിൽ (is_Privateuse_മൂല്യം_Subtag(pPriv, -1)) {
+                        എങ്കിൽ (first_മൂല്യം) {
+                            എങ്കിൽ (!_isVariantSubtag(pPriv, -1)) {
+                                write_മൂല്യം = സത്യം;
                             }
-                        } else {
-                            writeValue = true;
+                        } അല്ലെങ്കിൽ {
+                            write_മൂല്യം = സത്യം;
                         }
-                    } else if (strict) {
+                    } അല്ലെങ്കിൽ എങ്കിൽ (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
-                    } else {
-                        break;
+                        നിർത്തുക;
+                    } അല്ലെങ്കിൽ {
+                        നിർത്തുക;
                     }
 
-                    if (writeValue) {
+                    എങ്കിൽ (write_മൂല്യം) {
                         sink.Append("-", 1);
 
-                        if (firstValue) {
-                            sink.Append(PRIVATEUSE_KEY, UPRV_LENGTHOF(PRIVATEUSE_KEY) - 1);
+                        എങ്കിൽ (first_മൂല്യം) {
+                            sink.Append(PRIVATEUSE_താക്കോൽ, UPRV_LENGTHOF(PRIVATEUSE_താക്കോൽ) - 1);
                             sink.Append("-", 1);
                             sink.Append(PRIVUSE_VARIANT_PREFIX, UPRV_LENGTHOF(PRIVUSE_VARIANT_PREFIX) - 1);
                             sink.Append("-", 1);
-                            firstValue = false;
+                            first_മൂല്യം = അസത്യം;
                         }
 
                         int32_t len = static_cast<int32_t>(uprv_strlen(pPriv));
@@ -1939,7 +1939,7 @@ _appendPrivateuseToLanguageTag(std::string_view localeID, icu::ByteSink& sink, b
                 }
                 /* reset private use starting position */
                 pPriv = nullptr;
-            } else if (pPriv == nullptr) {
+            } അല്ലെങ്കിൽ എങ്കിൽ (pPriv == nullptr) {
                 pPriv = p;
             }
             p++;
@@ -1971,59 +1971,59 @@ _appendPrivateuseToLanguageTag(std::string_view localeID, icu::ByteSink& sink, b
  * This work-around should be removed once the following versions of Visual Studio are no
  * longer supported: All versions of VS2015/VS2017, and versions of VS2019 below 16.4.
  */
-#if defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
+#എങ്കിൽ defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
 #pragma optimize( "", off )
 #endif
 
 ULanguageTag*
-ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& status) {
-    if (U_FAILURE(status)) { return nullptr; }
+ultag_parse(സ്ഥിരം അക്ഷരം* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& status) {
+    എങ്കിൽ (U_FAILURE(status)) { തിരികെ nullptr; }
 
-    char *tagBuf;
+    അക്ഷരം *tagBuf;
     int16_t next;
-    char *pSubtag, *pNext, *pLastGoodPosition;
+    അക്ഷരം *pSubtag, *pNext, *pLastGoodPosition;
     int32_t subtagLen;
     int32_t extlangIdx;
     icu::LocalPointer<ExtensionListEntry> pExtension;
-    char *pExtValueSubtag, *pExtValueSubtagEnd;
+    അക്ഷരം *p_Ext_മൂല്യം_Subtag, *p_Ext_മൂല്യം_Subtag_End;
     int32_t i;
-    bool privateuseVar = false;
+    തർക്കം privateuseVar = അസത്യം;
     int32_t legacyLen = 0;
 
-    if (parsedLen != nullptr) {
+    എങ്കിൽ (parsedLen != nullptr) {
         *parsedLen = 0;
     }
 
-    if (tagLen < 0) {
+    എങ്കിൽ (tagLen < 0) {
         tagLen = static_cast<int32_t>(uprv_strlen(tag));
     }
 
     /* copy the entire string */
-    tagBuf = static_cast<char*>(uprv_malloc(tagLen + 1));
-    if (tagBuf == nullptr) {
+    tagBuf = static_cast<അക്ഷരം*>(uprv_malloc(tagLen + 1));
+    എങ്കിൽ (tagBuf == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
     
-    if (tagLen > 0) {
+    എങ്കിൽ (tagLen > 0) {
         uprv_memcpy(tagBuf, tag, tagLen);
     }
     *(tagBuf + tagLen) = 0;
 
     /* create a ULanguageTag */
     icu::LocalULanguageTagPointer t(
-            static_cast<ULanguageTag*>(uprv_malloc(sizeof(ULanguageTag))));
-    if (t.isNull()) {
+            static_cast<ULanguageTag*>(uprv_malloc(വലുപ്പം(ULanguageTag))));
+    എങ്കിൽ (t.isNull()) {
         uprv_free(tagBuf);
         status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
     _initializeULanguageTag(t.getAlias());
     t->buf = tagBuf;
 
-    if (tagLen < MINLEN) {
+    എങ്കിൽ (tagLen < MINLEN) {
         /* the input tag is too short - return empty ULanguageTag */
-        return t.orphan();
+        തിരികെ t.orphan();
     }
 
     size_t parsedLenDelta = 0;
@@ -2031,70 +2031,70 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
     // script and region such as art-DE-lojban or art-Latn-lojban won't be
     // matched.
     /* check if the tag is legacy */
-    for (i = 0; i < UPRV_LENGTHOF(LEGACY); i += 2) {
+    വേണ്ടി (i = 0; i < UPRV_LENGTHOF(LEGACY); i += 2) {
         int32_t checkLegacyLen = static_cast<int32_t>(uprv_strlen(LEGACY[i]));
-        if (tagLen < checkLegacyLen) {
-            continue;
+        എങ്കിൽ (tagLen < checkLegacyLen) {
+            തുടരുക;
         }
-        if (tagLen > checkLegacyLen && tagBuf[checkLegacyLen] != '-') {
+        എങ്കിൽ (tagLen > checkLegacyLen && tagBuf[checkLegacyLen] != '-') {
             // make sure next char is '-'.
-            continue;
+            തുടരുക;
         }
-        if (uprv_strnicmp(LEGACY[i], tagBuf, checkLegacyLen) == 0) {
+        എങ്കിൽ (uprv_strnicmp(LEGACY[i], tagBuf, checkLegacyLen) == 0) {
             int32_t newTagLength;
 
             legacyLen = checkLegacyLen;  /* back up for output parsedLen */
             int32_t replacementLen = static_cast<int32_t>(uprv_strlen(LEGACY[i+1]));
             newTagLength = replacementLen + tagLen - checkLegacyLen;
             int32_t oldTagLength = tagLen;
-            if (tagLen < newTagLength) {
+            എങ്കിൽ (tagLen < newTagLength) {
                 uprv_free(tagBuf);
                 // Change t->buf after the free and before return to avoid the second double free in
                 // the destructor of t when t is out of scope.
-                t->buf = tagBuf = static_cast<char*>(uprv_malloc(newTagLength + 1));
-                if (tagBuf == nullptr) {
+                t->buf = tagBuf = static_cast<അക്ഷരം*>(uprv_malloc(newTagLength + 1));
+                എങ്കിൽ (tagBuf == nullptr) {
                     status = U_MEMORY_ALLOCATION_ERROR;
-                    return nullptr;
+                    തിരികെ nullptr;
                 }
                 tagLen = newTagLength;
             }
             parsedLenDelta = checkLegacyLen - replacementLen;
             uprv_strcpy(t->buf, LEGACY[i + 1]);
-            if (checkLegacyLen != tagLen) {
+            എങ്കിൽ (checkLegacyLen != tagLen) {
                 uprv_memcpy(t->buf + replacementLen, tag + checkLegacyLen,
                             oldTagLength - checkLegacyLen);
                 // NUL-terminate after memcpy().
                 t->buf[replacementLen + oldTagLength - checkLegacyLen] = 0;
             }
-            break;
+            നിർത്തുക;
         }
     }
 
-    if (legacyLen == 0) {
-        for (i = 0; i < UPRV_LENGTHOF(REDUNDANT); i += 2) {
-            const char* redundantTag = REDUNDANT[i];
+    എങ്കിൽ (legacyLen == 0) {
+        വേണ്ടി (i = 0; i < UPRV_LENGTHOF(REDUNDANT); i += 2) {
+            സ്ഥിരം അക്ഷരം* redundantTag = REDUNDANT[i];
             size_t redundantTagLen = uprv_strlen(redundantTag);
             // The preferred tag for a redundant tag is always shorter than redundant
             // tag. A redundant tag may or may not be followed by other subtags.
             // (i.e. "zh-yue" or "zh-yue-u-co-pinyin").
-            if (uprv_strnicmp(redundantTag, tagBuf, static_cast<uint32_t>(redundantTagLen)) == 0) {
-                const char* redundantTagEnd = tagBuf + redundantTagLen;
-                if (*redundantTagEnd  == '\0' || *redundantTagEnd == SEP) {
-                    const char* preferredTag = REDUNDANT[i + 1];
+            എങ്കിൽ (uprv_strnicmp(redundantTag, tagBuf, static_cast<uint32_t>(redundantTagLen)) == 0) {
+                സ്ഥിരം അക്ഷരം* redundantTagEnd = tagBuf + redundantTagLen;
+                എങ്കിൽ (*redundantTagEnd  == '\0' || *redundantTagEnd == SEP) {
+                    സ്ഥിരം അക്ഷരം* preferredTag = REDUNDANT[i + 1];
                     size_t preferredTagLen = uprv_strlen(preferredTag);
                     uprv_memcpy(t->buf, preferredTag, preferredTagLen);
-                    if (*redundantTagEnd == SEP) {
+                    എങ്കിൽ (*redundantTagEnd == SEP) {
                         uprv_memmove(tagBuf + preferredTagLen,
                                      redundantTagEnd,
                                      tagLen - redundantTagLen + 1);
-                    } else {
+                    } അല്ലെങ്കിൽ {
                         tagBuf[preferredTagLen] = '\0';
                     }
                     // parsedLen should be the length of the input
                     // before redundantTag is replaced by preferredTag.
                     // Save the delta to add it back later.
                     parsedLenDelta = redundantTagLen - preferredTagLen;
-                    break;
+                    നിർത്തുക;
                 }
             }
         }
@@ -2112,67 +2112,67 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
     next = LANG | PRIV;
     pNext = pLastGoodPosition = tagBuf;
     extlangIdx = 0;
-    pExtValueSubtag = nullptr;
-    pExtValueSubtagEnd = nullptr;
+    p_Ext_മൂല്യം_Subtag = nullptr;
+    p_Ext_മൂല്യം_Subtag_End = nullptr;
 
-    while (pNext) {
-        char *pSep;
+    ആകുമ്പോൾ (pNext) {
+        അക്ഷരം *pSep;
 
         pSubtag = pNext;
 
         /* locate next separator char */
         pSep = pSubtag;
-        while (*pSep) {
-            if (*pSep == SEP) {
-                break;
+        ആകുമ്പോൾ (*pSep) {
+            എങ്കിൽ (*pSep == SEP) {
+                നിർത്തുക;
             }
             pSep++;
         }
-        if (*pSep == 0) {
+        എങ്കിൽ (*pSep == 0) {
             /* last subtag */
             pNext = nullptr;
-        } else {
+        } അല്ലെങ്കിൽ {
             pNext = pSep + 1;
         }
         subtagLen = static_cast<int32_t>(pSep - pSubtag);
 
-        if (next & LANG) {
-            if (ultag_isLanguageSubtag(pSubtag, subtagLen)) {
+        എങ്കിൽ (next & LANG) {
+            എങ്കിൽ (ultag_isLanguageSubtag(pSubtag, subtagLen)) {
                 *pSep = 0;  /* terminate */
                 // TODO: move deprecated language code handling here.
                 t->language = T_CString_toLowerCase(pSubtag);
 
                 pLastGoodPosition = pSep;
                 next = SCRT | REGN | VART | EXTS | PRIV;
-                if (subtagLen <= 3)
+                എങ്കിൽ (subtagLen <= 3)
                   next |= EXTL;
-                continue;
+                തുടരുക;
             }
         }
-        if (next & EXTL) {
-            if (_isExtlangSubtag(pSubtag, subtagLen)) {
+        എങ്കിൽ (next & EXTL) {
+            എങ്കിൽ (_isExtlangSubtag(pSubtag, subtagLen)) {
                 *pSep = 0;
                 t->extlang[extlangIdx++] = T_CString_toLowerCase(pSubtag);
 
                 pLastGoodPosition = pSep;
-                if (extlangIdx < 3) {
+                എങ്കിൽ (extlangIdx < 3) {
                     next = EXTL | SCRT | REGN | VART | EXTS | PRIV;
-                } else {
+                } അല്ലെങ്കിൽ {
                     next = SCRT | REGN | VART | EXTS | PRIV;
                 }
-                continue;
+                തുടരുക;
             }
         }
-        if (next & SCRT) {
-            if (ultag_isScriptSubtag(pSubtag, subtagLen)) {
-                char *p = pSubtag;
+        എങ്കിൽ (next & SCRT) {
+            എങ്കിൽ (ultag_isScriptSubtag(pSubtag, subtagLen)) {
+                അക്ഷരം *p = pSubtag;
 
                 *pSep = 0;
 
                 /* to title case */
                 *p = uprv_toupper(*p);
                 p++;
-                for (; *p; p++) {
+                വേണ്ടി (; *p; p++) {
                     *p = uprv_tolower(*p);
                 }
 
@@ -2180,232 +2180,232 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
 
                 pLastGoodPosition = pSep;
                 next = REGN | VART | EXTS | PRIV;
-                continue;
+                തുടരുക;
             }
         }
-        if (next & REGN) {
-            if (ultag_isRegionSubtag(pSubtag, subtagLen)) {
+        എങ്കിൽ (next & REGN) {
+            എങ്കിൽ (ultag_isRegionSubtag(pSubtag, subtagLen)) {
                 *pSep = 0;
                 // TODO: move deprecated region code handling here.
                 t->region = T_CString_toUpperCase(pSubtag);
 
                 pLastGoodPosition = pSep;
                 next = VART | EXTS | PRIV;
-                continue;
+                തുടരുക;
             }
         }
-        if (next & VART) {
-            if (_isVariantSubtag(pSubtag, subtagLen) ||
+        എങ്കിൽ (next & VART) {
+            എങ്കിൽ (_isVariantSubtag(pSubtag, subtagLen) ||
                (privateuseVar && _isPrivateuseVariantSubtag(pSubtag, subtagLen))) {
-                icu::LocalPointer<VariantListEntry> var(new VariantListEntry, status);
-                if (U_FAILURE(status)) {
-                    return nullptr;
+                icu::LocalPointer<VariantListEntry> var(പുതിയ VariantListEntry, status);
+                എങ്കിൽ (U_FAILURE(status)) {
+                    തിരികെ nullptr;
                 }
                 *pSep = 0;
                 var->variant = T_CString_toUpperCase(pSubtag);
-                if (!_addVariantToList(&(t->variants), std::move(var))) {
+                എങ്കിൽ (!_addVariantToList(&(t->variants), std::move(var))) {
                     /* duplicated variant entry */
-                    break;
+                    നിർത്തുക;
                 }
                 pLastGoodPosition = pSep;
                 next = VART | EXTS | PRIV;
-                continue;
+                തുടരുക;
             }
         }
-        if (next & EXTS) {
-            if (_isExtensionSingleton(pSubtag, subtagLen)) {
-                if (pExtension.isValid()) {
-                    if (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
+        എങ്കിൽ (next & EXTS) {
+            എങ്കിൽ (_isExtensionSingleton(pSubtag, subtagLen)) {
+                എങ്കിൽ (pExtension.isValid()) {
+                    എങ്കിൽ (p_Ext_മൂല്യം_Subtag == nullptr || p_Ext_മൂല്യം_Subtag_End == nullptr) {
                         /* the previous extension is incomplete */
                         delete pExtension.orphan();
-                        break;
+                        നിർത്തുക;
                     }
 
                     /* terminate the previous extension value */
-                    *pExtValueSubtagEnd = 0;
-                    pExtension->value = T_CString_toLowerCase(pExtValueSubtag);
+                    *p_Ext_മൂല്യം_Subtag_End = 0;
+                    pExtension->value = T_CString_toLowerCase(p_Ext_മൂല്യം_Subtag);
 
                     /* insert the extension to the list */
-                    if (_addExtensionToList(&(t->extensions), pExtension.getAlias(), false)) {
+                    എങ്കിൽ (_addExtensionToList(&(t->extensions), pExtension.getAlias(), അസത്യം)) {
                         pExtension.orphan();
-                        pLastGoodPosition = pExtValueSubtagEnd;
-                    } else {
+                        pLastGoodPosition = p_Ext_മൂല്യം_Subtag_End;
+                    } അല്ലെങ്കിൽ {
                         /* stop parsing here */
                         delete pExtension.orphan();
-                        break;
+                        നിർത്തുക;
                     }
                 }
 
                 /* create a new extension */
-                pExtension.adoptInsteadAndCheckErrorCode(new ExtensionListEntry, status);
-                if (U_FAILURE(status)) {
-                    return nullptr;
+                pExtension.adoptInsteadAndCheckErrorCode(പുതിയ ExtensionListEntry, status);
+                എങ്കിൽ (U_FAILURE(status)) {
+                    തിരികെ nullptr;
                 }
                 *pSep = 0;
-                pExtension->key = T_CString_toLowerCase(pSubtag);
+                pExtension->താക്കോൽ = T_CString_toLowerCase(pSubtag);
                 pExtension->value = nullptr;   /* will be set later */
 
                 /*
                  * reset the start and the end location of extension value
                  * subtags for this extension
                  */
-                pExtValueSubtag = nullptr;
-                pExtValueSubtagEnd = nullptr;
+                p_Ext_മൂല്യം_Subtag = nullptr;
+                p_Ext_മൂല്യം_Subtag_End = nullptr;
 
                 next = EXTV;
-                continue;
+                തുടരുക;
             }
         }
-        if (next & EXTV) {
-            if (_isExtensionSubtag(pSubtag, subtagLen)) {
-                if (pExtValueSubtag == nullptr) {
+        എങ്കിൽ (next & EXTV) {
+            എങ്കിൽ (_isExtensionSubtag(pSubtag, subtagLen)) {
+                എങ്കിൽ (p_Ext_മൂല്യം_Subtag == nullptr) {
                     /* if the start position of this extension's value is not yet,
                         this one is the first value subtag */
-                    pExtValueSubtag = pSubtag;
+                    p_Ext_മൂല്യം_Subtag = pSubtag;
                 }
 
                 /* Mark the end of this subtag */
-                pExtValueSubtagEnd = pSep;
+                p_Ext_മൂല്യം_Subtag_End = pSep;
                 next = EXTS | EXTV | PRIV;
 
-                continue;
+                തുടരുക;
             }
         }
-        if (next & PRIV) {
-            if (uprv_tolower(*pSubtag) == PRIVATEUSE && subtagLen == 1) {
-                char *pPrivuseVal;
+        എങ്കിൽ (next & PRIV) {
+            എങ്കിൽ (uprv_tolower(*pSubtag) == PRIVATEUSE && subtagLen == 1) {
+                അക്ഷരം *pPrivuseVal;
 
-                if (pExtension.isValid()) {
+                എങ്കിൽ (pExtension.isValid()) {
                     /* Process the last extension */
-                    if (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
+                    എങ്കിൽ (p_Ext_മൂല്യം_Subtag == nullptr || p_Ext_മൂല്യം_Subtag_End == nullptr) {
                         /* the previous extension is incomplete */
                         delete pExtension.orphan();
-                        break;
-                    } else {
+                        നിർത്തുക;
+                    } അല്ലെങ്കിൽ {
                         /* terminate the previous extension value */
-                        *pExtValueSubtagEnd = 0;
-                        pExtension->value = T_CString_toLowerCase(pExtValueSubtag);
+                        *p_Ext_മൂല്യം_Subtag_End = 0;
+                        pExtension->value = T_CString_toLowerCase(p_Ext_മൂല്യം_Subtag);
 
                         /* insert the extension to the list */
-                        if (_addExtensionToList(&(t->extensions), pExtension.getAlias(), false)) {
+                        എങ്കിൽ (_addExtensionToList(&(t->extensions), pExtension.getAlias(), അസത്യം)) {
                             pExtension.orphan();
-                            pLastGoodPosition = pExtValueSubtagEnd;
-                        } else {
+                            pLastGoodPosition = p_Ext_മൂല്യം_Subtag_End;
+                        } അല്ലെങ്കിൽ {
                         /* stop parsing here */
                             delete pExtension.orphan();
-                            break;
+                            നിർത്തുക;
                         }
                     }
                 }
 
                 /* The rest of part will be private use value subtags */
-                if (pNext == nullptr) {
+                എങ്കിൽ (pNext == nullptr) {
                     /* empty private use subtag */
-                    break;
+                    നിർത്തുക;
                 }
                 /* back up the private use value start position */
                 pPrivuseVal = pNext;
 
                 /* validate private use value subtags */
-                while (pNext) {
+                ആകുമ്പോൾ (pNext) {
                     pSubtag = pNext;
                     pSep = pSubtag;
-                    while (*pSep) {
-                        if (*pSep == SEP) {
-                            break;
+                    ആകുമ്പോൾ (*pSep) {
+                        എങ്കിൽ (*pSep == SEP) {
+                            നിർത്തുക;
                         }
                         pSep++;
                     }
-                    if (*pSep == 0) {
+                    എങ്കിൽ (*pSep == 0) {
                         /* last subtag */
                         pNext = nullptr;
-                    } else {
+                    } അല്ലെങ്കിൽ {
                         pNext = pSep + 1;
                     }
                     subtagLen = static_cast<int32_t>(pSep - pSubtag);
 
-                    if (uprv_strncmp(pSubtag, PRIVUSE_VARIANT_PREFIX, uprv_strlen(PRIVUSE_VARIANT_PREFIX)) == 0) {
+                    എങ്കിൽ (uprv_strncmp(pSubtag, PRIVUSE_VARIANT_PREFIX, uprv_strlen(PRIVUSE_VARIANT_PREFIX)) == 0) {
                         *pSep = 0;
                         next = VART;
-                        privateuseVar = true;
-                        break;
-                    } else if (_isPrivateuseValueSubtag(pSubtag, subtagLen)) {
+                        privateuseVar = സത്യം;
+                        നിർത്തുക;
+                    } അല്ലെങ്കിൽ എങ്കിൽ (is_Privateuse_മൂല്യം_Subtag(pSubtag, subtagLen)) {
                         pLastGoodPosition = pSep;
-                    } else {
-                        break;
+                    } അല്ലെങ്കിൽ {
+                        നിർത്തുക;
                     }
                 }
 
-                if (next == VART) {
-                    continue;
+                എങ്കിൽ (next == VART) {
+                    തുടരുക;
                 }
 
-                if (pLastGoodPosition - pPrivuseVal > 0) {
+                എങ്കിൽ (pLastGoodPosition - pPrivuseVal > 0) {
                     *pLastGoodPosition = 0;
                     t->privateuse = T_CString_toLowerCase(pPrivuseVal);
                 }
                 /* No more subtags, exiting the parse loop */
-                break;
+                നിർത്തുക;
             }
-            break;
+            നിർത്തുക;
         }
 
         /* If we fell through here, it means this subtag is illegal - quit parsing */
-        break;
+        നിർത്തുക;
     }
 
-    if (pExtension.isValid()) {
+    എങ്കിൽ (pExtension.isValid()) {
         /* Process the last extension */
-        if (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
+        എങ്കിൽ (p_Ext_മൂല്യം_Subtag == nullptr || p_Ext_മൂല്യം_Subtag_End == nullptr) {
             /* the previous extension is incomplete */
             delete pExtension.orphan();
-        } else {
+        } അല്ലെങ്കിൽ {
             /* terminate the previous extension value */
-            *pExtValueSubtagEnd = 0;
-            pExtension->value = T_CString_toLowerCase(pExtValueSubtag);
+            *p_Ext_മൂല്യം_Subtag_End = 0;
+            pExtension->value = T_CString_toLowerCase(p_Ext_മൂല്യം_Subtag);
             /* insert the extension to the list */
-            if (_addExtensionToList(&(t->extensions), pExtension.getAlias(), false)) {
+            എങ്കിൽ (_addExtensionToList(&(t->extensions), pExtension.getAlias(), അസത്യം)) {
                 pExtension.orphan();
-                pLastGoodPosition = pExtValueSubtagEnd;
-            } else {
+                pLastGoodPosition = p_Ext_മൂല്യം_Subtag_End;
+            } അല്ലെങ്കിൽ {
                 delete pExtension.orphan();
             }
         }
     }
 
-    if (parsedLen != nullptr) {
+    എങ്കിൽ (parsedLen != nullptr) {
         *parsedLen = static_cast<int32_t>(pLastGoodPosition - t->buf + parsedLenDelta);
     }
 
-    return t.orphan();
+    തിരികെ t.orphan();
 }
 
 // Ticket #12705 - Turn optimization back on.
-#if defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
+#എങ്കിൽ defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
 #pragma optimize( "", on )
 #endif
 
-void
+ശൂന്യം
 ultag_close(ULanguageTag* langtag) {
 
-    if (langtag == nullptr) {
-        return;
+    എങ്കിൽ (langtag == nullptr) {
+        തിരികെ;
     }
 
     uprv_free(langtag->buf);
 
-    if (langtag->variants) {
+    എങ്കിൽ (langtag->variants) {
         VariantListEntry *curVar = langtag->variants;
-        while (curVar) {
+        ആകുമ്പോൾ (curVar) {
             VariantListEntry *nextVar = curVar->next;
             delete curVar;
             curVar = nextVar;
         }
     }
 
-    if (langtag->extensions) {
+    എങ്കിൽ (langtag->extensions) {
         ExtensionListEntry *curExt = langtag->extensions;
-        while (curExt) {
+        ആകുമ്പോൾ (curExt) {
             ExtensionListEntry *nextExt = curExt->next;
             delete curExt;
             curExt = nextExt;
@@ -2415,139 +2415,139 @@ ultag_close(ULanguageTag* langtag) {
     uprv_free(langtag);
 }
 
-const char*
-ultag_getLanguage(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->language;
+സ്ഥിരം അക്ഷരം*
+ultag_getLanguage(സ്ഥിരം ULanguageTag* langtag U_LIFETIME_BOUND) {
+    തിരികെ langtag->language;
 }
 
-#if 0
-const char*
-ultag_getJDKLanguage(const ULanguageTag* langtag) {
+#എങ്കിൽ 0
+സ്ഥിരം അക്ഷരം*
+ultag_getJDKLanguage(സ്ഥിരം ULanguageTag* langtag) {
     int32_t i;
-    for (i = 0; DEPRECATEDLANGS[i] != nullptr; i += 2) {
-        if (uprv_compareInvCharsAsAscii(DEPRECATEDLANGS[i], langtag->language) == 0) {
-            return DEPRECATEDLANGS[i + 1];
+    വേണ്ടി (i = 0; DEPRECATEDLANGS[i] != nullptr; i += 2) {
+        എങ്കിൽ (uprv_compareInvCharsAsAscii(DEPRECATEDLANGS[i], langtag->language) == 0) {
+            തിരികെ DEPRECATEDLANGS[i + 1];
         }
     }
-    return langtag->language;
+    തിരികെ langtag->language;
 }
 #endif
 
-const char*
-ultag_getExtlang(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
-    if (idx >= 0 && idx < MAXEXTLANG) {
-        return langtag->extlang[idx];
+സ്ഥിരം അക്ഷരം*
+ultag_getExtlang(സ്ഥിരം ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
+    എങ്കിൽ (idx >= 0 && idx < MAXEXTLANG) {
+        തിരികെ langtag->extlang[idx];
     }
-    return nullptr;
+    തിരികെ nullptr;
 }
 
 int32_t
-ultag_getExtlangSize(const ULanguageTag* langtag) {
+ultag_getExtlangSize(സ്ഥിരം ULanguageTag* langtag) {
     int32_t size = 0;
     int32_t i;
-    for (i = 0; i < MAXEXTLANG; i++) {
-        if (langtag->extlang[i]) {
+    വേണ്ടി (i = 0; i < MAXEXTLANG; i++) {
+        എങ്കിൽ (langtag->extlang[i]) {
             size++;
         }
     }
-    return size;
+    തിരികെ size;
 }
 
-const char*
-ultag_getScript(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->script;
+സ്ഥിരം അക്ഷരം*
+ultag_getScript(സ്ഥിരം ULanguageTag* langtag U_LIFETIME_BOUND) {
+    തിരികെ langtag->script;
 }
 
-const char*
-ultag_getRegion(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->region;
+സ്ഥിരം അക്ഷരം*
+ultag_getRegion(സ്ഥിരം ULanguageTag* langtag U_LIFETIME_BOUND) {
+    തിരികെ langtag->region;
 }
 
-const char*
-ultag_getVariant(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
-    const char *var = nullptr;
+സ്ഥിരം അക്ഷരം*
+ultag_getVariant(സ്ഥിരം ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
+    സ്ഥിരം അക്ഷരം *var = nullptr;
     VariantListEntry *cur = langtag->variants;
     int32_t i = 0;
-    while (cur) {
-        if (i == idx) {
+    ആകുമ്പോൾ (cur) {
+        എങ്കിൽ (i == idx) {
             var = cur->variant;
-            break;
+            നിർത്തുക;
         }
         cur = cur->next;
         i++;
     }
-    return var;
+    തിരികെ var;
 }
 
 int32_t
-ultag_getVariantsSize(const ULanguageTag* langtag) {
+ultag_getVariantsSize(സ്ഥിരം ULanguageTag* langtag) {
     int32_t size = 0;
     VariantListEntry *cur = langtag->variants;
-    while (true) {
-        if (cur == nullptr) {
-            break;
+    ആകുമ്പോൾ (സത്യം) {
+        എങ്കിൽ (cur == nullptr) {
+            നിർത്തുക;
         }
         size++;
         cur = cur->next;
     }
-    return size;
+    തിരികെ size;
 }
 
-const char*
-ultag_getExtensionKey(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
-    const char *key = nullptr;
+സ്ഥിരം അക്ഷരം*
+ultag_get_Extension_താക്കോൽ(സ്ഥിരം ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
+    സ്ഥിരം അക്ഷരം *താക്കോൽ = nullptr;
     ExtensionListEntry *cur = langtag->extensions;
     int32_t i = 0;
-    while (cur) {
-        if (i == idx) {
-            key = cur->key;
-            break;
+    ആകുമ്പോൾ (cur) {
+        എങ്കിൽ (i == idx) {
+            താക്കോൽ = cur->താക്കോൽ;
+            നിർത്തുക;
         }
         cur = cur->next;
         i++;
     }
-    return key;
+    തിരികെ താക്കോൽ;
 }
 
-const char*
-ultag_getExtensionValue(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
-    const char *val = nullptr;
+സ്ഥിരം അക്ഷരം*
+ultag_get_Extension_മൂല്യം(സ്ഥിരം ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
+    സ്ഥിരം അക്ഷരം *val = nullptr;
     ExtensionListEntry *cur = langtag->extensions;
     int32_t i = 0;
-    while (cur) {
-        if (i == idx) {
+    ആകുമ്പോൾ (cur) {
+        എങ്കിൽ (i == idx) {
             val = cur->value;
-            break;
+            നിർത്തുക;
         }
         cur = cur->next;
         i++;
     }
-    return val;
+    തിരികെ val;
 }
 
 int32_t
-ultag_getExtensionsSize(const ULanguageTag* langtag) {
+ultag_getExtensionsSize(സ്ഥിരം ULanguageTag* langtag) {
     int32_t size = 0;
     ExtensionListEntry *cur = langtag->extensions;
-    while (true) {
-        if (cur == nullptr) {
-            break;
+    ആകുമ്പോൾ (സത്യം) {
+        എങ്കിൽ (cur == nullptr) {
+            നിർത്തുക;
         }
         size++;
         cur = cur->next;
     }
-    return size;
+    തിരികെ size;
 }
 
-const char*
-ultag_getPrivateUse(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->privateuse;
+സ്ഥിരം അക്ഷരം*
+ultag_getPrivateUse(സ്ഥിരം ULanguageTag* langtag U_LIFETIME_BOUND) {
+    തിരികെ langtag->privateuse;
 }
 
-#if 0
-const char*
-ultag_getLegacy(const ULanguageTag* langtag) {
-    return langtag->legacy;
+#എങ്കിൽ 0
+സ്ഥിരം അക്ഷരം*
+ultag_getLegacy(സ്ഥിരം ULanguageTag* langtag) {
+    തിരികെ langtag->legacy;
 }
 #endif
 
@@ -2561,12 +2561,12 @@ ultag_getLegacy(const ULanguageTag* langtag) {
 * -------------------------------------------------
 */
 U_CAPI int32_t U_EXPORT2
-uloc_toLanguageTag(const char* localeID,
-                   char* langtag,
+uloc_toLanguageTag(സ്ഥിരം അക്ഷരം* localeID,
+                   അക്ഷരം* langtag,
                    int32_t langtagCapacity,
                    UBool strict,
                    UErrorCode* status) {
-    return icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
+    തിരികെ icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
         langtag, langtagCapacity,
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_toLanguageTag(localeID, sink, strict, status);
@@ -2575,72 +2575,72 @@ uloc_toLanguageTag(const char* localeID,
 }
 
 U_EXPORT icu::CharString
-ulocimp_toLanguageTag(const char* localeID,
-                      bool strict,
+ulocimp_toLanguageTag(സ്ഥിരം അക്ഷരം* localeID,
+                      തർക്കം strict,
                       UErrorCode& status) {
-    return icu::ByteSinkUtil::viaByteSinkToCharString(
+    തിരികെ icu::ByteSinkUtil::viaByteSinkToCharString(
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_toLanguageTag(localeID, sink, strict, status);
         },
         status);
 }
 
-U_EXPORT void
-ulocimp_toLanguageTag(const char* localeID,
+U_EXPORT ശൂന്യം
+ulocimp_toLanguageTag(സ്ഥിരം അക്ഷരം* localeID,
                       icu::ByteSink& sink,
-                      bool strict,
+                      തർക്കം strict,
                       UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    എങ്കിൽ (U_FAILURE(status)) { തിരികെ; }
 
     UErrorCode tmpStatus = U_ZERO_ERROR;
-    bool hadPosix = false;
-    const char* pKeywordStart;
+    തർക്കം hadPosix = അസത്യം;
+    സ്ഥിരം അക്ഷരം* pKeywordStart;
 
-    if (localeID == nullptr) {
+    എങ്കിൽ (localeID == nullptr) {
         localeID = uloc_getDefault();
     }
     /* Note: uloc_canonicalize returns "en_US_POSIX" for input locale ID "".  See #6835 */
     icu::CharString canonical = ulocimp_canonicalize(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
+    എങ്കിൽ (U_FAILURE(tmpStatus)) {
         status = tmpStatus;
-        return;
+        തിരികെ;
     }
 
     /* For handling special case - private use only tag */
     pKeywordStart = locale_getKeywordsStart(canonical.toStringPiece());
-    if (pKeywordStart == canonical.data()) {
-        int kwdCnt = 0;
-        bool done = false;
+    എങ്കിൽ (pKeywordStart == canonical.data()) {
+        പൂർണ്ണസംഖ്യ kwdCnt = 0;
+        തർക്കം done = അസത്യം;
 
         icu::LocalUEnumerationPointer kwdEnum(uloc_openKeywords(canonical.data(), &tmpStatus));
-        if (U_SUCCESS(tmpStatus)) {
-            kwdCnt = uenum_count(kwdEnum.getAlias(), &tmpStatus);
-            if (kwdCnt == 1) {
-                const char *key;
+        എങ്കിൽ (U_SUCCESS(tmpStatus)) {
+            kwdCnt = uenum_എണ്ണം(kwdEnum.getAlias(), &tmpStatus);
+            എങ്കിൽ (kwdCnt == 1) {
+                സ്ഥിരം അക്ഷരം *താക്കോൽ;
                 int32_t len = 0;
 
-                key = uenum_next(kwdEnum.getAlias(), &len, &tmpStatus);
-                if (len == 1 && *key == PRIVATEUSE) {
-                    icu::CharString buf = ulocimp_getKeywordValue(localeID, key, tmpStatus);
-                    if (U_SUCCESS(tmpStatus)) {
-                        if (ultag_isPrivateuseValueSubtags(buf.data(), buf.length())) {
+                താക്കോൽ = uenum_next(kwdEnum.getAlias(), &len, &tmpStatus);
+                എങ്കിൽ (len == 1 && *താക്കോൽ == PRIVATEUSE) {
+                    icu::CharString buf = ulocimp_get_Keyword_മൂല്യം(localeID, താക്കോൽ, tmpStatus);
+                    എങ്കിൽ (U_SUCCESS(tmpStatus)) {
+                        എങ്കിൽ (ultag_is_Privateuse_മൂല്യം_Subtags(buf.data(), buf.length())) {
                             /* return private use only tag */
                             sink.Append("und-x-", 6);
                             sink.Append(buf.data(), buf.length());
-                            done = true;
-                        } else if (strict) {
+                            done = സത്യം;
+                        } അല്ലെങ്കിൽ എങ്കിൽ (strict) {
                             status = U_ILLEGAL_ARGUMENT_ERROR;
-                            done = true;
+                            done = സത്യം;
                         }
                         /* if not strict mode, then "und" will be returned */
-                    } else {
+                    } അല്ലെങ്കിൽ {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        done = true;
+                        done = സത്യം;
                     }
                 }
             }
-            if (done) {
-                return;
+            എങ്കിൽ (done) {
+                തിരികെ;
             }
         }
     }
@@ -2655,12 +2655,12 @@ ulocimp_toLanguageTag(const char* localeID,
 
 
 U_CAPI int32_t U_EXPORT2
-uloc_forLanguageTag(const char* langtag,
-                    char* localeID,
+uloc_forLanguageTag(സ്ഥിരം അക്ഷരം* langtag,
+                    അക്ഷരം* localeID,
                     int32_t localeIDCapacity,
                     int32_t* parsedLength,
                     UErrorCode* status) {
-    return icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
+    തിരികെ icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
         localeID, localeIDCapacity,
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_forLanguageTag(langtag, -1, sink, parsedLength, status);
@@ -2669,55 +2669,55 @@ uloc_forLanguageTag(const char* langtag,
 }
 
 U_EXPORT icu::CharString
-ulocimp_forLanguageTag(const char* langtag,
+ulocimp_forLanguageTag(സ്ഥിരം അക്ഷരം* langtag,
                        int32_t tagLen,
                        int32_t* parsedLength,
                        UErrorCode& status) {
-    return icu::ByteSinkUtil::viaByteSinkToCharString(
+    തിരികെ icu::ByteSinkUtil::viaByteSinkToCharString(
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_forLanguageTag(langtag, tagLen, sink, parsedLength, status);
         },
         status);
 }
 
-U_EXPORT void
-ulocimp_forLanguageTag(const char* langtag,
+U_EXPORT ശൂന്യം
+ulocimp_forLanguageTag(സ്ഥിരം അക്ഷരം* langtag,
                        int32_t tagLen,
                        icu::ByteSink& sink,
                        int32_t* parsedLength,
                        UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    എങ്കിൽ (U_FAILURE(status)) { തിരികെ; }
 
-    bool isEmpty = true;
-    const char *subtag, *p;
+    തർക്കം isEmpty = സത്യം;
+    സ്ഥിരം അക്ഷരം *subtag, *p;
     int32_t len;
     int32_t i, n;
-    bool noRegion = true;
+    തർക്കം noRegion = സത്യം;
 
     icu::LocalULanguageTagPointer lt(ultag_parse(langtag, tagLen, parsedLength, status));
-    if (U_FAILURE(status)) {
-        return;
+    എങ്കിൽ (U_FAILURE(status)) {
+        തിരികെ;
     }
 
     /* language */
     subtag = ultag_getExtlangSize(lt.getAlias()) > 0 ? ultag_getExtlang(lt.getAlias(), 0) : ultag_getLanguage(lt.getAlias());
-    if (uprv_compareInvCharsAsAscii(subtag, LANG_UND) != 0) {
+    എങ്കിൽ (uprv_compareInvCharsAsAscii(subtag, LANG_UND) != 0) {
         len = static_cast<int32_t>(uprv_strlen(subtag));
-        if (len > 0) {
+        എങ്കിൽ (len > 0) {
             sink.Append(subtag, len);
-            isEmpty = false;
+            isEmpty = അസത്യം;
         }
     }
 
     /* script */
     subtag = ultag_getScript(lt.getAlias());
     len = static_cast<int32_t>(uprv_strlen(subtag));
-    if (len > 0) {
+    എങ്കിൽ (len > 0) {
         sink.Append("_", 1);
-        isEmpty = false;
+        isEmpty = അസത്യം;
 
         /* write out the script in title case */
-        char c = uprv_toupper(*subtag);
+        അക്ഷരം c = uprv_toupper(*subtag);
         sink.Append(&c, 1);
         sink.Append(subtag + 1, len - 1);
     }
@@ -2725,37 +2725,37 @@ ulocimp_forLanguageTag(const char* langtag,
     /* region */
     subtag = ultag_getRegion(lt.getAlias());
     len = static_cast<int32_t>(uprv_strlen(subtag));
-    if (len > 0) {
+    എങ്കിൽ (len > 0) {
         sink.Append("_", 1);
-        isEmpty = false;
+        isEmpty = അസത്യം;
 
         /* write out the region in upper case */
         p = subtag;
-        while (*p) {
-            char c = uprv_toupper(*p);
+        ആകുമ്പോൾ (*p) {
+            അക്ഷരം c = uprv_toupper(*p);
             sink.Append(&c, 1);
             p++;
         }
-        noRegion = false;
+        noRegion = അസത്യം;
     }
 
     /* variants */
     _sortVariants(lt.getAlias()->variants);
     n = ultag_getVariantsSize(lt.getAlias());
-    if (n > 0) {
-        if (noRegion) {
+    എങ്കിൽ (n > 0) {
+        എങ്കിൽ (noRegion) {
             sink.Append("_", 1);
-            isEmpty = false;
+            isEmpty = അസത്യം;
         }
 
-        for (i = 0; i < n; i++) {
+        വേണ്ടി (i = 0; i < n; i++) {
             subtag = ultag_getVariant(lt.getAlias(), i);
             sink.Append("_", 1);
 
             /* write out the variant in upper case */
             p = subtag;
-            while (*p) {
-                char c = uprv_toupper(*p);
+            ആകുമ്പോൾ (*p) {
+                അക്ഷരം c = uprv_toupper(*p);
                 sink.Append(&c, 1);
                 p++;
             }
@@ -2765,8 +2765,8 @@ ulocimp_forLanguageTag(const char* langtag,
     /* keywords */
     n = ultag_getExtensionsSize(lt.getAlias());
     subtag = ultag_getPrivateUse(lt.getAlias());
-    if (n > 0 || uprv_strlen(subtag) > 0) {
-        if (isEmpty && n > 0) {
+    എങ്കിൽ (n > 0 || uprv_strlen(subtag) > 0) {
+        എങ്കിൽ (isEmpty && n > 0) {
             /* need a language */
             sink.Append(LANG_UND, LANG_UND_LEN);
         }

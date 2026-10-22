@@ -4,24 +4,24 @@
 // localematcher.cpp
 // created: 2019may08 Markus W. Scherer
 
-#include <optional>
+#അന്തര്ഭാവ <optional>
 
-#include "unicode/utypes.h"
-#include "unicode/localebuilder.h"
-#include "unicode/localematcher.h"
-#include "unicode/locid.h"
-#include "unicode/stringpiece.h"
-#include "unicode/uloc.h"
-#include "unicode/uobject.h"
-#include "cstring.h"
-#include "localeprioritylist.h"
-#include "loclikelysubtags.h"
-#include "locdistance.h"
-#include "lsr.h"
-#include "uassert.h"
-#include "uhash.h"
-#include "ustr_imp.h"
-#include "uvector.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/localebuilder.h"
+#അന്തര്ഭാവ "unicode/localematcher.h"
+#അന്തര്ഭാവ "unicode/locid.h"
+#അന്തര്ഭാവ "unicode/stringpiece.h"
+#അന്തര്ഭാവ "unicode/uloc.h"
+#അന്തര്ഭാവ "unicode/uobject.h"
+#അന്തര്ഭാവ "cstring.h"
+#അന്തര്ഭാവ "localeprioritylist.h"
+#അന്തര്ഭാവ "loclikelysubtags.h"
+#അന്തര്ഭാവ "locdistance.h"
+#അന്തര്ഭാവ "lsr.h"
+#അന്തര്ഭാവ "uassert.h"
+#അന്തര്ഭാവ "uhash.h"
+#അന്തര്ഭാവ "ustr_imp.h"
+#അന്തര്ഭാവ "uvector.h"
 
 #define UND_LSR LSR("und", "", "", LSR::EXPLICIT_LSR)
 
@@ -30,7 +30,7 @@
  *
  * @draft ICU 65
  */
-enum ULocMatchLifetime {
+എണ്ണൽ ULocMatchLifetime {
     /**
      * Locale objects are temporary.
      * The matcher will make a copy of a locale that will be used beyond one function call.
@@ -48,7 +48,7 @@ enum ULocMatchLifetime {
     ULOCMATCH_STORED_LOCALES  // TODO: permanent? cached? clone?
 };
 #ifndef U_IN_DOXYGEN
-typedef enum ULocMatchLifetime ULocMatchLifetime;
+തരനിർവചനം എണ്ണൽ ULocMatchLifetime ULocMatchLifetime;
 #endif
 
 U_NAMESPACE_BEGIN
@@ -59,22 +59,22 @@ LocaleMatcher::Result::Result(LocaleMatcher::Result &&src) noexcept :
         desiredIndex(src.desiredIndex),
         supportedIndex(src.supportedIndex),
         desiredIsOwned(src.desiredIsOwned) {
-    if (desiredIsOwned) {
+    എങ്കിൽ (desiredIsOwned) {
         src.desiredLocale = nullptr;
         src.desiredIndex = -1;
-        src.desiredIsOwned = false;
+        src.desiredIsOwned = അസത്യം;
     }
 }
 
 LocaleMatcher::Result::~Result() {
-    if (desiredIsOwned) {
+    എങ്കിൽ (desiredIsOwned) {
         delete desiredLocale;
     }
 }
 
 LocaleMatcher::Result&
 LocaleMatcher::Result::operator=(LocaleMatcher::Result&& src) noexcept U_LIFETIME_BOUND {
-    this->~Result();
+    ഇത്->~Result();
 
     desiredLocale = src.desiredLocale;
     supportedLocale = src.supportedLocale;
@@ -82,36 +82,36 @@ LocaleMatcher::Result::operator=(LocaleMatcher::Result&& src) noexcept U_LIFETIM
     supportedIndex = src.supportedIndex;
     desiredIsOwned = src.desiredIsOwned;
 
-    if (desiredIsOwned) {
+    എങ്കിൽ (desiredIsOwned) {
         src.desiredLocale = nullptr;
         src.desiredIndex = -1;
-        src.desiredIsOwned = false;
+        src.desiredIsOwned = അസത്യം;
     }
-    return *this;
+    തിരികെ *ഇത്;
 }
 
-Locale LocaleMatcher::Result::makeResolvedLocale(UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode) || supportedLocale == nullptr) {
-        return Locale::getRoot();
+Locale LocaleMatcher::Result::makeResolvedLocale(UErrorCode &errorCode) സ്ഥിരം {
+    എങ്കിൽ (U_FAILURE(errorCode) || supportedLocale == nullptr) {
+        തിരികെ Locale::get_വേര്();
     }
-    const Locale *bestDesired = getDesiredLocale();
-    if (bestDesired == nullptr || *supportedLocale == *bestDesired) {
-        return *supportedLocale;
+    സ്ഥിരം Locale *bestDesired = getDesiredLocale();
+    എങ്കിൽ (bestDesired == nullptr || *supportedLocale == *bestDesired) {
+        തിരികെ *supportedLocale;
     }
     LocaleBuilder b;
     b.setLocale(*supportedLocale);
 
     // Copy the region from bestDesired, if there is one.
-    const char *region = bestDesired->getCountry();
-    if (*region != 0) {
+    സ്ഥിരം അക്ഷരം *region = bestDesired->getCountry();
+    എങ്കിൽ (*region != 0) {
         b.setRegion(region);
     }
 
     // Copy the variants from bestDesired, if there are any.
     // Note that this will override any supportedLocale variants.
     // For example, "sco-ulster-fonipa" + "...-fonupa" => "sco-fonupa" (replacing ulster).
-    const char *variants = bestDesired->getVariant();
-    if (*variants != 0) {
+    സ്ഥിരം അക്ഷരം *variants = bestDesired->getVariant();
+    എങ്കിൽ (*variants != 0) {
         b.setVariant(variants);
     }
 
@@ -122,7 +122,7 @@ Locale LocaleMatcher::Result::makeResolvedLocale(UErrorCode &errorCode) const {
     // For example, "th-u-nu-latn-ca-buddhist" + "...-u-nu-native" => "th-u-nu-native"
     // (replacing calendar).
     b.copyExtensionsFrom(*bestDesired, errorCode);
-    return b.build(errorCode);
+    തിരികെ b.build(errorCode);
 }
 
 LocaleMatcher::Builder::Builder(LocaleMatcher::Builder &&src) noexcept :
@@ -147,7 +147,7 @@ LocaleMatcher::Builder::~Builder() {
 
 LocaleMatcher::Builder&
 LocaleMatcher::Builder::operator=(LocaleMatcher::Builder&& src) noexcept U_LIFETIME_BOUND {
-    this->~Builder();
+    ഇത്->~Builder();
 
     errorCode_ = src.errorCode_;
     supportedLocales_ = src.supportedLocales_;
@@ -160,123 +160,123 @@ LocaleMatcher::Builder::operator=(LocaleMatcher::Builder&& src) noexcept U_LIFET
 
     src.supportedLocales_ = nullptr;
     src.defaultLocale_ = nullptr;
-    return *this;
+    തിരികെ *ഇത്;
 }
 
-void LocaleMatcher::Builder::clearSupportedLocales() {
-    if (supportedLocales_ != nullptr) {
+ശൂന്യം LocaleMatcher::Builder::clearSupportedLocales() {
+    എങ്കിൽ (supportedLocales_ != nullptr) {
         supportedLocales_->removeAllElements();
     }
 }
 
-bool LocaleMatcher::Builder::ensureSupportedLocaleVector() {
-    if (U_FAILURE(errorCode_)) { return false; }
-    if (supportedLocales_ != nullptr) { return true; }
-    LocalPointer<UVector> lpSupportedLocales(new UVector(uprv_deleteUObject, nullptr, errorCode_), errorCode_);
-    if (U_FAILURE(errorCode_)) { return false; }
+തർക്കം LocaleMatcher::Builder::ensureSupportedLocaleVector() {
+    എങ്കിൽ (U_FAILURE(errorCode_)) { തിരികെ അസത്യം; }
+    എങ്കിൽ (supportedLocales_ != nullptr) { തിരികെ സത്യം; }
+    LocalPointer<UVector> lpSupportedLocales(പുതിയ UVector(uprv_deleteUObject, nullptr, errorCode_), errorCode_);
+    എങ്കിൽ (U_FAILURE(errorCode_)) { തിരികെ അസത്യം; }
     supportedLocales_ = lpSupportedLocales.orphan();
-    return true;
+    തിരികെ സത്യം;
 }
 
 LocaleMatcher::Builder&
 LocaleMatcher::Builder::setSupportedLocalesFromListString(StringPiece locales) U_LIFETIME_BOUND {
     LocalePriorityList list(locales, errorCode_);
-    if (U_FAILURE(errorCode_)) { return *this; }
+    എങ്കിൽ (U_FAILURE(errorCode_)) { തിരികെ *ഇത്; }
     clearSupportedLocales();
-    if (!ensureSupportedLocaleVector()) { return *this; }
+    എങ്കിൽ (!ensureSupportedLocaleVector()) { തിരികെ *ഇത്; }
     int32_t length = list.getLengthIncludingRemoved();
-    for (int32_t i = 0; i < length; ++i) {
+    വേണ്ടി (int32_t i = 0; i < length; ++i) {
         Locale *locale = list.orphanLocaleAt(i);
-        if (locale == nullptr) { continue; }
+        എങ്കിൽ (locale == nullptr) { തുടരുക; }
         supportedLocales_->adoptElement(locale, errorCode_);
-        if (U_FAILURE(errorCode_)) {
-            break;
+        എങ്കിൽ (U_FAILURE(errorCode_)) {
+            നിർത്തുക;
         }
     }
-    return *this;
+    തിരികെ *ഇത്;
 }
 
 LocaleMatcher::Builder&
 LocaleMatcher::Builder::setSupportedLocales(Locale::Iterator& locales) U_LIFETIME_BOUND {
-    if (ensureSupportedLocaleVector()) {
+    എങ്കിൽ (ensureSupportedLocaleVector()) {
         clearSupportedLocales();
-        while (locales.hasNext() && U_SUCCESS(errorCode_)) {
-            const Locale &locale = locales.next();
+        ആകുമ്പോൾ (locales.hasNext() && U_SUCCESS(errorCode_)) {
+            സ്ഥിരം Locale &locale = locales.next();
             LocalPointer<Locale> clone (locale.clone(), errorCode_);
             supportedLocales_->adoptElement(clone.orphan(), errorCode_);
         }
     }
-    return *this;
+    തിരികെ *ഇത്;
 }
 
 LocaleMatcher::Builder&
-LocaleMatcher::Builder::addSupportedLocale(const Locale& locale) U_LIFETIME_BOUND {
-    if (ensureSupportedLocaleVector()) {
+LocaleMatcher::Builder::addSupportedLocale(സ്ഥിരം Locale& locale) U_LIFETIME_BOUND {
+    എങ്കിൽ (ensureSupportedLocaleVector()) {
         LocalPointer<Locale> clone(locale.clone(), errorCode_);
         supportedLocales_->adoptElement(clone.orphan(), errorCode_);
     }
-    return *this;
+    തിരികെ *ഇത്;
 }
 
 LocaleMatcher::Builder& LocaleMatcher::Builder::setNoDefaultLocale() U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode_)) { return *this; }
+    എങ്കിൽ (U_FAILURE(errorCode_)) { തിരികെ *ഇത്; }
     delete defaultLocale_;
     defaultLocale_ = nullptr;
-    withDefault_ = false;
-    return *this;
+    withDefault_ = അസത്യം;
+    തിരികെ *ഇത്;
 }
 
 LocaleMatcher::Builder&
-LocaleMatcher::Builder::setDefaultLocale(const Locale* defaultLocale) U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode_)) { return *this; }
+LocaleMatcher::Builder::setDefaultLocale(സ്ഥിരം Locale* defaultLocale) U_LIFETIME_BOUND {
+    എങ്കിൽ (U_FAILURE(errorCode_)) { തിരികെ *ഇത്; }
     Locale *clone = nullptr;
-    if (defaultLocale != nullptr) {
+    എങ്കിൽ (defaultLocale != nullptr) {
         clone = defaultLocale->clone();
-        if (clone == nullptr) {
+        എങ്കിൽ (clone == nullptr) {
             errorCode_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+            തിരികെ *ഇത്;
         }
     }
     delete defaultLocale_;
     defaultLocale_ = clone;
-    withDefault_ = true;
-    return *this;
+    withDefault_ = സത്യം;
+    തിരികെ *ഇത്;
 }
 
 LocaleMatcher::Builder&
 LocaleMatcher::Builder::setFavorSubtag(ULocMatchFavorSubtag subtag) U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode_)) { return *this; }
+    എങ്കിൽ (U_FAILURE(errorCode_)) { തിരികെ *ഇത്; }
     favor_ = subtag;
-    return *this;
+    തിരികെ *ഇത്;
 }
 
 LocaleMatcher::Builder&
 LocaleMatcher::Builder::setDemotionPerDesiredLocale(ULocMatchDemotion demotion) U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode_)) { return *this; }
+    എങ്കിൽ (U_FAILURE(errorCode_)) { തിരികെ *ഇത്; }
     demotion_ = demotion;
-    return *this;
+    തിരികെ *ഇത്;
 }
 
 LocaleMatcher::Builder&
-LocaleMatcher::Builder::setMaxDistance(const Locale& desired,
-                                       const Locale& supported) U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode_)) { return *this; }
+LocaleMatcher::Builder::setMaxDistance(സ്ഥിരം Locale& desired,
+                                       സ്ഥിരം Locale& supported) U_LIFETIME_BOUND {
+    എങ്കിൽ (U_FAILURE(errorCode_)) { തിരികെ *ഇത്; }
     Locale *desiredClone = desired.clone();
     Locale *supportedClone = supported.clone();
-    if (desiredClone == nullptr || supportedClone == nullptr) {
+    എങ്കിൽ (desiredClone == nullptr || supportedClone == nullptr) {
         delete desiredClone;  // in case only one could not be allocated
         delete supportedClone;
         errorCode_ = U_MEMORY_ALLOCATION_ERROR;
-        return *this;
+        തിരികെ *ഇത്;
     }
     delete maxDistanceDesired_;
     delete maxDistanceSupported_;
     maxDistanceDesired_ = desiredClone;
     maxDistanceSupported_ = supportedClone;
-    return *this;
+    തിരികെ *ഇത്;
 }
 
-#if 0
+#എങ്കിൽ 0
 /**
  * <i>Internal only!</i>
  *
@@ -287,67 +287,67 @@ LocaleMatcher::Builder::setMaxDistance(const Locale& desired,
  */
 @Deprecated
 LocaleMatcher::Builder &LocaleMatcher::Builder::internalSetThresholdDistance(int32_t thresholdDistance) {
-    if (U_FAILURE(errorCode_)) { return *this; }
-    if (thresholdDistance > 100) {
+    എങ്കിൽ (U_FAILURE(errorCode_)) { തിരികെ *ഇത്; }
+    എങ്കിൽ (thresholdDistance > 100) {
         thresholdDistance = 100;
     }
     thresholdDistance_ = thresholdDistance;
-    return *this;
+    തിരികെ *ഇത്;
 }
 #endif
 
-UBool LocaleMatcher::Builder::copyErrorTo(UErrorCode &outErrorCode) const {
-    if (U_FAILURE(outErrorCode)) { return true; }
-    if (U_SUCCESS(errorCode_)) { return false; }
+UBool LocaleMatcher::Builder::copyErrorTo(UErrorCode &outErrorCode) സ്ഥിരം {
+    എങ്കിൽ (U_FAILURE(outErrorCode)) { തിരികെ സത്യം; }
+    എങ്കിൽ (U_SUCCESS(errorCode_)) { തിരികെ അസത്യം; }
     outErrorCode = errorCode_;
-    return true;
+    തിരികെ സത്യം;
 }
 
-LocaleMatcher LocaleMatcher::Builder::build(UErrorCode &errorCode) const {
-    if (U_SUCCESS(errorCode) && U_FAILURE(errorCode_)) {
+LocaleMatcher LocaleMatcher::Builder::build(UErrorCode &errorCode) സ്ഥിരം {
+    എങ്കിൽ (U_SUCCESS(errorCode) && U_FAILURE(errorCode_)) {
         errorCode = errorCode_;
     }
-    return LocaleMatcher(*this, errorCode);
+    തിരികെ LocaleMatcher(*ഇത്, errorCode);
 }
 
-namespace {
+നാമാകാശ {
 
-LSR getMaximalLsrOrUnd(const LikelySubtags &likelySubtags, const Locale &locale,
+LSR getMaximalLsrOrUnd(സ്ഥിരം LikelySubtags &likelySubtags, സ്ഥിരം Locale &locale,
                        UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode) || locale.isBogus() || *locale.getName() == 0 /* "und" */) {
-        return UND_LSR;
-    } else {
-        return likelySubtags.makeMaximizedLsrFrom(locale, false, errorCode);
+    എങ്കിൽ (U_FAILURE(errorCode) || locale.isBogus() || *locale.getName() == 0 /* "und" */) {
+        തിരികെ UND_LSR;
+    } അല്ലെങ്കിൽ {
+        തിരികെ likelySubtags.makeMaximizedLsrFrom(locale, അസത്യം, errorCode);
     }
 }
 
-int32_t hashLSR(const UHashTok token) {
-    const LSR *lsr = static_cast<const LSR *>(token.pointer);
-    return lsr->hashCode;
+int32_t hashLSR(സ്ഥിരം UHashTok token) {
+    സ്ഥിരം LSR *lsr = static_cast<സ്ഥിരം LSR *>(token.pointer);
+    തിരികെ lsr->hashCode;
 }
 
-UBool compareLSRs(const UHashTok t1, const UHashTok t2) {
-    const LSR *lsr1 = static_cast<const LSR *>(t1.pointer);
-    const LSR *lsr2 = static_cast<const LSR *>(t2.pointer);
-    return *lsr1 == *lsr2;
+UBool compareLSRs(സ്ഥിരം UHashTok t1, സ്ഥിരം UHashTok t2) {
+    സ്ഥിരം LSR *lsr1 = static_cast<സ്ഥിരം LSR *>(t1.pointer);
+    സ്ഥിരം LSR *lsr2 = static_cast<സ്ഥിരം LSR *>(t2.pointer);
+    തിരികെ *lsr1 == *lsr2;
 }
 
 }  // namespace
 
-int32_t LocaleMatcher::putIfAbsent(const LSR &lsr, int32_t i, int32_t suppLength,
+int32_t LocaleMatcher::putIfAbsent(സ്ഥിരം LSR &lsr, int32_t i, int32_t suppLength,
                                    UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return suppLength; }
-    if (!uhash_containsKey(supportedLsrToIndex, &lsr)) {
+    എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ suppLength; }
+    എങ്കിൽ (!uhash_contains_താക്കോൽ(supportedLsrToIndex, &lsr)) {
         uhash_putiAllowZero(supportedLsrToIndex, const_cast<LSR *>(&lsr), i, &errorCode);
-        if (U_SUCCESS(errorCode)) {
+        എങ്കിൽ (U_SUCCESS(errorCode)) {
             supportedLSRs[suppLength] = &lsr;
             supportedIndexes[suppLength++] = i;
         }
     }
-    return suppLength;
+    തിരികെ suppLength;
 }
 
-LocaleMatcher::LocaleMatcher(const Builder &builder, UErrorCode &errorCode) :
+LocaleMatcher::LocaleMatcher(സ്ഥിരം Builder &builder, UErrorCode &errorCode) :
         likelySubtags(*LikelySubtags::getSingleton(errorCode)),
         localeDistance(*LocaleDistance::getSingleton(errorCode)),
         thresholdDistance(builder.thresholdDistance_),
@@ -358,50 +358,50 @@ LocaleMatcher::LocaleMatcher(const Builder &builder, UErrorCode &errorCode) :
         supportedLsrToIndex(nullptr),
         supportedLSRs(nullptr), supportedIndexes(nullptr), supportedLSRsLength(0),
         ownedDefaultLocale(nullptr), defaultLocale(nullptr) {
-    if (U_FAILURE(errorCode)) { return; }
-    const Locale *def = builder.defaultLocale_;
+    എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ; }
+    സ്ഥിരം Locale *def = builder.defaultLocale_;
     LSR builderDefaultLSR;
-    const LSR *defLSR = nullptr;
-    if (def != nullptr) {
+    സ്ഥിരം LSR *defLSR = nullptr;
+    എങ്കിൽ (def != nullptr) {
         ownedDefaultLocale = def->clone();
-        if (ownedDefaultLocale == nullptr) {
+        എങ്കിൽ (ownedDefaultLocale == nullptr) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return;
+            തിരികെ;
         }
         def = ownedDefaultLocale;
         builderDefaultLSR = getMaximalLsrOrUnd(likelySubtags, *def, errorCode);
-        if (U_FAILURE(errorCode)) { return; }
+        എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ; }
         defLSR = &builderDefaultLSR;
     }
     supportedLocalesLength = builder.supportedLocales_ != nullptr ?
         builder.supportedLocales_->size() : 0;
-    if (supportedLocalesLength > 0) {
+    എങ്കിൽ (supportedLocalesLength > 0) {
         // Store the supported locales in input order,
         // so that when different types are used (e.g., language tag strings)
         // we can return those by parallel index.
-        supportedLocales = static_cast<const Locale **>(
-            uprv_malloc(supportedLocalesLength * sizeof(const Locale *)));
+        supportedLocales = static_cast<സ്ഥിരം Locale **>(
+            uprv_malloc(supportedLocalesLength * വലുപ്പം(സ്ഥിരം Locale *)));
         // Supported LRSs in input order.
         // In C++, we store these permanently to simplify ownership management
         // in the hash tables. Duplicate LSRs (if any) are unused overhead.
-        lsrs = new LSR[supportedLocalesLength];
-        if (supportedLocales == nullptr || lsrs == nullptr) {
+        lsrs = പുതിയ LSR[supportedLocalesLength];
+        എങ്കിൽ (supportedLocales == nullptr || lsrs == nullptr) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return;
+            തിരികെ;
         }
         // If the constructor fails partway, we need null pointers for destructibility.
-        uprv_memset(supportedLocales, 0, supportedLocalesLength * sizeof(const Locale *));
-        for (int32_t i = 0; i < supportedLocalesLength; ++i) {
-            const Locale &locale = *static_cast<Locale *>(builder.supportedLocales_->elementAt(i));
+        uprv_memset(supportedLocales, 0, supportedLocalesLength * വലുപ്പം(സ്ഥിരം Locale *));
+        വേണ്ടി (int32_t i = 0; i < supportedLocalesLength; ++i) {
+            സ്ഥിരം Locale &locale = *static_cast<Locale *>(builder.supportedLocales_->elementAt(i));
             supportedLocales[i] = locale.clone();
-            if (supportedLocales[i] == nullptr) {
+            എങ്കിൽ (supportedLocales[i] == nullptr) {
                 errorCode = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                തിരികെ;
             }
-            const Locale &supportedLocale = *supportedLocales[i];
+            സ്ഥിരം Locale &supportedLocale = *supportedLocales[i];
             LSR &lsr = lsrs[i] = getMaximalLsrOrUnd(likelySubtags, supportedLocale, errorCode);
             lsr.setHashCode();
-            if (U_FAILURE(errorCode)) { return; }
+            എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ; }
         }
 
         // We need an unordered map from LSR to first supported locale with that LSR,
@@ -412,52 +412,52 @@ LocaleMatcher::LocaleMatcher(const Builder &builder, UErrorCode &errorCode) :
         // 3. Remaining locales in builder order.
         supportedLsrToIndex = uhash_openSize(hashLSR, compareLSRs, uhash_compareLong,
                                              supportedLocalesLength, &errorCode);
-        if (U_FAILURE(errorCode)) { return; }
-        supportedLSRs = static_cast<const LSR **>(
-            uprv_malloc(supportedLocalesLength * sizeof(const LSR *)));
+        എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ; }
+        supportedLSRs = static_cast<സ്ഥിരം LSR **>(
+            uprv_malloc(supportedLocalesLength * വലുപ്പം(സ്ഥിരം LSR *)));
         supportedIndexes = static_cast<int32_t *>(
-            uprv_malloc(supportedLocalesLength * sizeof(int32_t)));
-        if (supportedLSRs == nullptr || supportedIndexes == nullptr) {
+            uprv_malloc(supportedLocalesLength * വലുപ്പം(int32_t)));
+        എങ്കിൽ (supportedLSRs == nullptr || supportedIndexes == nullptr) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return;
+            തിരികെ;
         }
         int32_t suppLength = 0;
         // Determine insertion order.
         // Add locales immediately that are equivalent to the default.
-        MaybeStackArray<int8_t, 100> order(supportedLocalesLength, errorCode);
-        if (U_FAILURE(errorCode)) { return; }
-        int32_t numParadigms = 0;
-        for (int32_t i = 0; i < supportedLocalesLength; ++i) {
-            const Locale &locale = *supportedLocales[i];
-            const LSR &lsr = lsrs[i];
-            if (defLSR == nullptr && builder.withDefault_) {
+        Maybe_അട്ടി_Array<int8_t, 100> order(supportedLocalesLength, errorCode);
+        എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ; }
+        int32_t അക്കം_Paradigms = 0;
+        വേണ്ടി (int32_t i = 0; i < supportedLocalesLength; ++i) {
+            സ്ഥിരം Locale &locale = *supportedLocales[i];
+            സ്ഥിരം LSR &lsr = lsrs[i];
+            എങ്കിൽ (defLSR == nullptr && builder.withDefault_) {
                 // Implicit default locale = first supported locale, if not turned off.
                 U_ASSERT(i == 0);
                 def = &locale;
                 defLSR = &lsr;
                 order[i] = 1;
                 suppLength = putIfAbsent(lsr, 0, suppLength, errorCode);
-            } else if (defLSR != nullptr && lsr.isEquivalentTo(*defLSR)) {
+            } അല്ലെങ്കിൽ എങ്കിൽ (defLSR != nullptr && lsr.isEquivalentTo(*defLSR)) {
                 order[i] = 1;
                 suppLength = putIfAbsent(lsr, i, suppLength, errorCode);
-            } else if (localeDistance.isParadigmLSR(lsr)) {
+            } അല്ലെങ്കിൽ എങ്കിൽ (localeDistance.isParadigmLSR(lsr)) {
                 order[i] = 2;
-                ++numParadigms;
-            } else {
+                ++അക്കം_Paradigms;
+            } അല്ലെങ്കിൽ {
                 order[i] = 3;
             }
-            if (U_FAILURE(errorCode)) { return; }
+            എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ; }
         }
         // Add supported paradigm locales.
-        int32_t paradigmLimit = suppLength + numParadigms;
-        for (int32_t i = 0; i < supportedLocalesLength && suppLength < paradigmLimit; ++i) {
-            if (order[i] == 2) {
+        int32_t paradigmLimit = suppLength + അക്കം_Paradigms;
+        വേണ്ടി (int32_t i = 0; i < supportedLocalesLength && suppLength < paradigmLimit; ++i) {
+            എങ്കിൽ (order[i] == 2) {
                 suppLength = putIfAbsent(lsrs[i], i, suppLength, errorCode);
             }
         }
         // Add remaining supported locales.
-        for (int32_t i = 0; i < supportedLocalesLength; ++i) {
-            if (order[i] == 3) {
+        വേണ്ടി (int32_t i = 0; i < supportedLocalesLength; ++i) {
+            എങ്കിൽ (order[i] == 3) {
                 suppLength = putIfAbsent(lsrs[i], i, suppLength, errorCode);
             }
         }
@@ -469,26 +469,26 @@ LocaleMatcher::LocaleMatcher(const Builder &builder, UErrorCode &errorCode) :
 
     defaultLocale = def;
 
-    if (builder.demotion_ == ULOCMATCH_DEMOTION_REGION) {
+    എങ്കിൽ (builder.demotion_ == ULOCMATCH_DEMOTION_REGION) {
         demotionPerDesiredLocale = localeDistance.getDefaultDemotionPerDesiredLocale();
     }
 
-    if (thresholdDistance >= 0) {
+    എങ്കിൽ (thresholdDistance >= 0) {
         // already copied
-    } else if (builder.maxDistanceDesired_ != nullptr) {
+    } അല്ലെങ്കിൽ എങ്കിൽ (builder.maxDistanceDesired_ != nullptr) {
         LSR suppLSR = getMaximalLsrOrUnd(likelySubtags, *builder.maxDistanceSupported_, errorCode);
-        const LSR *pSuppLSR = &suppLSR;
+        സ്ഥിരം LSR *pSuppLSR = &suppLSR;
         int32_t indexAndDistance = localeDistance.getBestIndexAndDistance(
                 getMaximalLsrOrUnd(likelySubtags, *builder.maxDistanceDesired_, errorCode),
                 &pSuppLSR, 1,
                 LocaleDistance::shiftDistance(100), favorSubtag, direction);
-        if (U_SUCCESS(errorCode)) {
+        എങ്കിൽ (U_SUCCESS(errorCode)) {
             // +1 for an exclusive threshold from an inclusive max.
             thresholdDistance = LocaleDistance::getDistanceFloor(indexAndDistance) + 1;
-        } else {
+        } അല്ലെങ്കിൽ {
             thresholdDistance = 0;
         }
-    } else {
+    } അല്ലെങ്കിൽ {
         thresholdDistance = localeDistance.getDefaultScriptDistance();
     }
 }
@@ -519,7 +519,7 @@ LocaleMatcher::LocaleMatcher(LocaleMatcher &&src) noexcept :
 }
 
 LocaleMatcher::~LocaleMatcher() {
-    for (int32_t i = 0; i < supportedLocalesLength; ++i) {
+    വേണ്ടി (int32_t i = 0; i < supportedLocalesLength; ++i) {
         delete supportedLocales[i];
     }
     uprv_free(supportedLocales);
@@ -531,7 +531,7 @@ LocaleMatcher::~LocaleMatcher() {
 }
 
 LocaleMatcher& LocaleMatcher::operator=(LocaleMatcher&& src) noexcept U_LIFETIME_BOUND {
-    this->~LocaleMatcher();
+    ഇത്->~LocaleMatcher();
 
     thresholdDistance = src.thresholdDistance;
     demotionPerDesiredLocale = src.demotionPerDesiredLocale;
@@ -556,198 +556,198 @@ LocaleMatcher& LocaleMatcher::operator=(LocaleMatcher&& src) noexcept U_LIFETIME
     src.supportedLSRsLength = 0;
     src.ownedDefaultLocale = nullptr;
     src.defaultLocale = nullptr;
-    return *this;
+    തിരികെ *ഇത്;
 }
 
-class LocaleLsrIterator {
-public:
-    LocaleLsrIterator(const LikelySubtags &likelySubtags, Locale::Iterator &locales,
+വർഗ്ഗം LocaleLsrIterator {
+പൊതു:
+    LocaleLsrIterator(സ്ഥിരം LikelySubtags &likelySubtags, Locale::Iterator &locales,
                       ULocMatchLifetime lifetime) :
             likelySubtags(likelySubtags), locales(locales), lifetime(lifetime) {}
 
     ~LocaleLsrIterator() {
-        if (lifetime == ULOCMATCH_TEMPORARY_LOCALES) {
+        എങ്കിൽ (lifetime == ULOCMATCH_TEMPORARY_LOCALES) {
             delete remembered;
         }
     }
 
-    bool hasNext() const {
-        return locales.hasNext();
+    തർക്കം hasNext() സ്ഥിരം {
+        തിരികെ locales.hasNext();
     }
 
     LSR next(UErrorCode &errorCode) {
         current = &locales.next();
-        return getMaximalLsrOrUnd(likelySubtags, *current, errorCode);
+        തിരികെ getMaximalLsrOrUnd(likelySubtags, *current, errorCode);
     }
 
-    void rememberCurrent(int32_t desiredIndex, UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return; }
+    ശൂന്യം rememberCurrent(int32_t desiredIndex, UErrorCode &errorCode) {
+        എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ; }
         bestDesiredIndex = desiredIndex;
-        if (lifetime == ULOCMATCH_STORED_LOCALES) {
+        എങ്കിൽ (lifetime == ULOCMATCH_STORED_LOCALES) {
             remembered = current;
-        } else {
+        } അല്ലെങ്കിൽ {
             // ULOCMATCH_TEMPORARY_LOCALES
             delete remembered;
-            remembered = new Locale(*current);
-            if (remembered == nullptr) {
+            remembered = പുതിയ Locale(*current);
+            എങ്കിൽ (remembered == nullptr) {
                 errorCode = U_MEMORY_ALLOCATION_ERROR;
             }
         }
     }
 
-    const Locale *orphanRemembered() {
-        const Locale *rem = remembered;
+    സ്ഥിരം Locale *orphanRemembered() {
+        സ്ഥിരം Locale *rem = remembered;
         remembered = nullptr;
-        return rem;
+        തിരികെ rem;
     }
 
-    int32_t getBestDesiredIndex() const {
-        return bestDesiredIndex;
+    int32_t getBestDesiredIndex() സ്ഥിരം {
+        തിരികെ bestDesiredIndex;
     }
 
-private:
-    const LikelySubtags &likelySubtags;
+സ്വകാര്യ:
+    സ്ഥിരം LikelySubtags &likelySubtags;
     Locale::Iterator &locales;
     ULocMatchLifetime lifetime;
-    const Locale *current = nullptr, *remembered = nullptr;
+    സ്ഥിരം Locale *current = nullptr, *remembered = nullptr;
     int32_t bestDesiredIndex = -1;
 };
 
-const Locale* LocaleMatcher::getBestMatch(const Locale& desiredLocale,
-                                          UErrorCode& errorCode) const U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode)) { return nullptr; }
+സ്ഥിരം Locale* LocaleMatcher::getBestMatch(സ്ഥിരം Locale& desiredLocale,
+                                          UErrorCode& errorCode) സ്ഥിരം U_LIFETIME_BOUND {
+    എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ nullptr; }
     std::optional<int32_t> suppIndex = getBestSuppIndex(
         getMaximalLsrOrUnd(likelySubtags, desiredLocale, errorCode),
         nullptr, errorCode);
-    return U_SUCCESS(errorCode) && suppIndex.has_value() ? supportedLocales[*suppIndex]
+    തിരികെ U_SUCCESS(errorCode) && suppIndex.has_value() ? supportedLocales[*suppIndex]
                                                          : defaultLocale;
 }
 
-const Locale* LocaleMatcher::getBestMatch(Locale::Iterator& desiredLocales,
-                                          UErrorCode& errorCode) const U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    if (!desiredLocales.hasNext()) {
-        return defaultLocale;
+സ്ഥിരം Locale* LocaleMatcher::getBestMatch(Locale::Iterator& desiredLocales,
+                                          UErrorCode& errorCode) സ്ഥിരം U_LIFETIME_BOUND {
+    എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ nullptr; }
+    എങ്കിൽ (!desiredLocales.hasNext()) {
+        തിരികെ defaultLocale;
     }
     LocaleLsrIterator lsrIter(likelySubtags, desiredLocales, ULOCMATCH_TEMPORARY_LOCALES);
     std::optional<int32_t> suppIndex = getBestSuppIndex(lsrIter.next(errorCode), &lsrIter, errorCode);
-    return U_SUCCESS(errorCode) && suppIndex.has_value() ? supportedLocales[*suppIndex]
+    തിരികെ U_SUCCESS(errorCode) && suppIndex.has_value() ? supportedLocales[*suppIndex]
                                                          : defaultLocale;
 }
 
-const Locale*
+സ്ഥിരം Locale*
 LocaleMatcher::getBestMatchForListString(StringPiece desiredLocaleList,
-                                         UErrorCode& errorCode) const U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode)) { return nullptr; }
+                                         UErrorCode& errorCode) സ്ഥിരം U_LIFETIME_BOUND {
+    എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ nullptr; }
     LocalePriorityList list(desiredLocaleList, errorCode);
     LocalePriorityList::Iterator iter = list.iterator();
-    return getBestMatch(iter, errorCode);
+    തിരികെ getBestMatch(iter, errorCode);
 }
 
 LocaleMatcher::Result
-LocaleMatcher::getBestMatchResult(const Locale& desiredLocale U_LIFETIME_BOUND,
-                                  UErrorCode& errorCode) const U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode)) {
-        return Result(nullptr, defaultLocale, -1, -1, false);
+LocaleMatcher::getBestMatchResult(സ്ഥിരം Locale& desiredLocale U_LIFETIME_BOUND,
+                                  UErrorCode& errorCode) സ്ഥിരം U_LIFETIME_BOUND {
+    എങ്കിൽ (U_FAILURE(errorCode)) {
+        തിരികെ Result(nullptr, defaultLocale, -1, -1, അസത്യം);
     }
     std::optional<int32_t> suppIndex = getBestSuppIndex(
         getMaximalLsrOrUnd(likelySubtags, desiredLocale, errorCode),
         nullptr, errorCode);
-    if (U_FAILURE(errorCode) || !suppIndex.has_value()) {
-        return Result(nullptr, defaultLocale, -1, -1, false);
-    } else {
-        return Result(&desiredLocale, supportedLocales[*suppIndex], 0, *suppIndex, false);
+    എങ്കിൽ (U_FAILURE(errorCode) || !suppIndex.has_value()) {
+        തിരികെ Result(nullptr, defaultLocale, -1, -1, അസത്യം);
+    } അല്ലെങ്കിൽ {
+        തിരികെ Result(&desiredLocale, supportedLocales[*suppIndex], 0, *suppIndex, അസത്യം);
     }
 }
 
 LocaleMatcher::Result
 LocaleMatcher::getBestMatchResult(Locale::Iterator& desiredLocales,
-                                  UErrorCode& errorCode) const U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode) || !desiredLocales.hasNext()) {
-        return Result(nullptr, defaultLocale, -1, -1, false);
+                                  UErrorCode& errorCode) സ്ഥിരം U_LIFETIME_BOUND {
+    എങ്കിൽ (U_FAILURE(errorCode) || !desiredLocales.hasNext()) {
+        തിരികെ Result(nullptr, defaultLocale, -1, -1, അസത്യം);
     }
     LocaleLsrIterator lsrIter(likelySubtags, desiredLocales, ULOCMATCH_TEMPORARY_LOCALES);
     std::optional<int32_t> suppIndex = getBestSuppIndex(lsrIter.next(errorCode), &lsrIter, errorCode);
-    if (U_FAILURE(errorCode) || !suppIndex.has_value()) {
-        return Result(nullptr, defaultLocale, -1, -1, false);
-    } else {
-        return Result(lsrIter.orphanRemembered(), supportedLocales[*suppIndex],
-                      lsrIter.getBestDesiredIndex(), *suppIndex, true);
+    എങ്കിൽ (U_FAILURE(errorCode) || !suppIndex.has_value()) {
+        തിരികെ Result(nullptr, defaultLocale, -1, -1, അസത്യം);
+    } അല്ലെങ്കിൽ {
+        തിരികെ Result(lsrIter.orphanRemembered(), supportedLocales[*suppIndex],
+                      lsrIter.getBestDesiredIndex(), *suppIndex, സത്യം);
     }
 }
 
 std::optional<int32_t> LocaleMatcher::getBestSuppIndex(LSR desiredLSR,
                                                        LocaleLsrIterator *remainingIter,
-                                                       UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return std::nullopt; }
+                                                       UErrorCode &errorCode) സ്ഥിരം {
+    എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ std::nullopt; }
     int32_t desiredIndex = 0;
     int32_t bestSupportedLsrIndex = -1;
-    for (int32_t bestShiftedDistance = LocaleDistance::shiftDistance(thresholdDistance);;) {
+    വേണ്ടി (int32_t bestShiftedDistance = LocaleDistance::shiftDistance(thresholdDistance);;) {
         // Quick check for exact maximized LSR.
-        if (supportedLsrToIndex != nullptr) {
+        എങ്കിൽ (supportedLsrToIndex != nullptr) {
             desiredLSR.setHashCode();
-            UBool found = false;
+            UBool found = അസത്യം;
             int32_t suppIndex = uhash_getiAndFound(supportedLsrToIndex, &desiredLSR, &found);
-            if (found) {
-                if (remainingIter != nullptr) {
+            എങ്കിൽ (found) {
+                എങ്കിൽ (remainingIter != nullptr) {
                     remainingIter->rememberCurrent(desiredIndex, errorCode);
                 }
-                return suppIndex;
+                തിരികെ suppIndex;
             }
         }
         int32_t bestIndexAndDistance = localeDistance.getBestIndexAndDistance(
                 desiredLSR, supportedLSRs, supportedLSRsLength,
                 bestShiftedDistance, favorSubtag, direction);
-        if (bestIndexAndDistance >= 0) {
+        എങ്കിൽ (bestIndexAndDistance >= 0) {
             bestShiftedDistance = LocaleDistance::getShiftedDistance(bestIndexAndDistance);
-            if (remainingIter != nullptr) {
+            എങ്കിൽ (remainingIter != nullptr) {
                 remainingIter->rememberCurrent(desiredIndex, errorCode);
-                if (U_FAILURE(errorCode)) { return std::nullopt; }
+                എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ std::nullopt; }
             }
             bestSupportedLsrIndex = LocaleDistance::getIndex(bestIndexAndDistance);
         }
-        if ((bestShiftedDistance -= LocaleDistance::shiftDistance(demotionPerDesiredLocale)) <= 0) {
-            break;
+        എങ്കിൽ ((bestShiftedDistance -= LocaleDistance::shiftDistance(demotionPerDesiredLocale)) <= 0) {
+            നിർത്തുക;
         }
-        if (remainingIter == nullptr || !remainingIter->hasNext()) {
-            break;
+        എങ്കിൽ (remainingIter == nullptr || !remainingIter->hasNext()) {
+            നിർത്തുക;
         }
         desiredLSR = remainingIter->next(errorCode);
-        if (U_FAILURE(errorCode)) { return std::nullopt; }
+        എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ std::nullopt; }
         ++desiredIndex;
     }
-    if (bestSupportedLsrIndex < 0) {
+    എങ്കിൽ (bestSupportedLsrIndex < 0) {
         // no good match
-        return std::nullopt;
+        തിരികെ std::nullopt;
     }
-    return supportedIndexes[bestSupportedLsrIndex];
+    തിരികെ supportedIndexes[bestSupportedLsrIndex];
 }
 
-UBool LocaleMatcher::isMatch(const Locale &desired, const Locale &supported,
-                             UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return false; }
+UBool LocaleMatcher::isMatch(സ്ഥിരം Locale &desired, സ്ഥിരം Locale &supported,
+                             UErrorCode &errorCode) സ്ഥിരം {
+    എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ അസത്യം; }
     LSR suppLSR = getMaximalLsrOrUnd(likelySubtags, supported, errorCode);
-    if (U_FAILURE(errorCode)) { return false; }
-    const LSR *pSuppLSR = &suppLSR;
+    എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ അസത്യം; }
+    സ്ഥിരം LSR *pSuppLSR = &suppLSR;
     int32_t indexAndDistance = localeDistance.getBestIndexAndDistance(
             getMaximalLsrOrUnd(likelySubtags, desired, errorCode),
             &pSuppLSR, 1,
             LocaleDistance::shiftDistance(thresholdDistance), favorSubtag, direction);
-    return indexAndDistance >= 0;
+    തിരികെ indexAndDistance >= 0;
 }
 
-double LocaleMatcher::internalMatch(const Locale &desired, const Locale &supported, UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return 0.; }
+ഇരട്ട LocaleMatcher::internalMatch(സ്ഥിരം Locale &desired, സ്ഥിരം Locale &supported, UErrorCode &errorCode) സ്ഥിരം {
+    എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ 0.; }
     // Returns the inverse of the distance: That is, 1-distance(desired, supported).
     LSR suppLSR = getMaximalLsrOrUnd(likelySubtags, supported, errorCode);
-    if (U_FAILURE(errorCode)) { return 0.; }
-    const LSR *pSuppLSR = &suppLSR;
+    എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ 0.; }
+    സ്ഥിരം LSR *pSuppLSR = &suppLSR;
     int32_t indexAndDistance = localeDistance.getBestIndexAndDistance(
             getMaximalLsrOrUnd(likelySubtags, desired, errorCode),
             &pSuppLSR, 1,
             LocaleDistance::shiftDistance(thresholdDistance), favorSubtag, direction);
-    double distance = LocaleDistance::getDistanceDouble(indexAndDistance);
-    return (100.0 - distance) / 100.0;
+    ഇരട്ട distance = LocaleDistance::getDistanceDouble(indexAndDistance);
+    തിരികെ (100.0 - distance) / 100.0;
 }
 
 U_NAMESPACE_END
@@ -756,91 +756,91 @@ U_NAMESPACE_END
 
 U_NAMESPACE_USE
 
-namespace {
+നാമാകാശ {
 
-class LocaleFromTag {
-public:
-    LocaleFromTag() : locale(Locale::getRoot()) {}
-    const Locale& operator()(const char* tag) U_LIFETIME_BOUND { return locale = Locale(tag); }
+വർഗ്ഗം LocaleFromTag {
+പൊതു:
+    LocaleFromTag() : locale(Locale::get_വേര്()) {}
+    സ്ഥിരം Locale& operator()(സ്ഥിരം അക്ഷരം* tag) U_LIFETIME_BOUND { തിരികെ locale = Locale(tag); }
 
-private:
+സ്വകാര്യ:
     // Store the locale in the converter, rather than return a reference to a temporary,
     // or a value which could go out of scope with the caller's reference to it.
     Locale locale;
 };
 
 int32_t acceptLanguage(UEnumeration &supportedLocales, Locale::Iterator &desiredLocales,
-                       char *dest, int32_t capacity, UAcceptResult *acceptResult,
+                       അക്ഷരം *dest, int32_t capacity, UAcceptResult *acceptResult,
                        UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return 0; }
+    എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ 0; }
     LocaleMatcher::Builder builder;
-    const char *locString;
-    while ((locString = uenum_next(&supportedLocales, nullptr, &errorCode)) != nullptr) {
+    സ്ഥിരം അക്ഷരം *locString;
+    ആകുമ്പോൾ ((locString = uenum_next(&supportedLocales, nullptr, &errorCode)) != nullptr) {
         Locale loc(locString);
-        if (loc.isBogus()) {
+        എങ്കിൽ (loc.isBogus()) {
             errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-            return 0;
+            തിരികെ 0;
         }
         builder.addSupportedLocale(loc);
     }
     LocaleMatcher matcher = builder.build(errorCode);
     LocaleMatcher::Result result = matcher.getBestMatchResult(desiredLocales, errorCode);
-    if (U_FAILURE(errorCode)) { return 0; }
-    if (result.getDesiredIndex() >= 0) {
-        if (acceptResult != nullptr) {
+    എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ 0; }
+    എങ്കിൽ (result.getDesiredIndex() >= 0) {
+        എങ്കിൽ (acceptResult != nullptr) {
             *acceptResult = *result.getDesiredLocale() == *result.getSupportedLocale() ?
                 ULOC_ACCEPT_VALID : ULOC_ACCEPT_FALLBACK;
         }
-        const char *bestStr = result.getSupportedLocale()->getName();
+        സ്ഥിരം അക്ഷരം *bestStr = result.getSupportedLocale()->getName();
         int32_t bestLength = static_cast<int32_t>(uprv_strlen(bestStr));
-        if (bestLength <= capacity) {
+        എങ്കിൽ (bestLength <= capacity) {
             uprv_memcpy(dest, bestStr, bestLength);
         }
-        return u_terminateChars(dest, capacity, bestLength, &errorCode);
-    } else {
-        if (acceptResult != nullptr) {
+        തിരികെ u_terminateChars(dest, capacity, bestLength, &errorCode);
+    } അല്ലെങ്കിൽ {
+        എങ്കിൽ (acceptResult != nullptr) {
             *acceptResult = ULOC_ACCEPT_FAILED;
         }
-        return u_terminateChars(dest, capacity, 0, &errorCode);
+        തിരികെ u_terminateChars(dest, capacity, 0, &errorCode);
     }
 }
 
 }  // namespace
 
 U_CAPI int32_t U_EXPORT2
-uloc_acceptLanguage(char *result, int32_t resultAvailable,
+uloc_acceptLanguage(അക്ഷരം *result, int32_t resultAvailable,
                     UAcceptResult *outResult,
-                    const char **acceptList, int32_t acceptListCount,
+                    സ്ഥിരം അക്ഷരം **acceptList, int32_t accept_List_എണ്ണം,
                     UEnumeration *availableLocales,
                     UErrorCode *status) {
-    if (U_FAILURE(*status)) { return 0; }
-    if ((result == nullptr ? resultAvailable != 0 : resultAvailable < 0) ||
-            (acceptList == nullptr ? acceptListCount != 0 : acceptListCount < 0) ||
+    എങ്കിൽ (U_FAILURE(*status)) { തിരികെ 0; }
+    എങ്കിൽ ((result == nullptr ? resultAvailable != 0 : resultAvailable < 0) ||
+            (acceptList == nullptr ? accept_List_എണ്ണം != 0 : accept_List_എണ്ണം < 0) ||
             availableLocales == nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        തിരികെ 0;
     }
     LocaleFromTag converter;
-    Locale::ConvertingIterator<const char **, LocaleFromTag> desiredLocales(
-        acceptList, acceptList + acceptListCount, converter);
-    return acceptLanguage(*availableLocales, desiredLocales,
+    Locale::ConvertingIterator<സ്ഥിരം അക്ഷരം **, LocaleFromTag> desiredLocales(
+        acceptList, acceptList + accept_List_എണ്ണം, converter);
+    തിരികെ acceptLanguage(*availableLocales, desiredLocales,
                           result, resultAvailable, outResult, *status);
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_acceptLanguageFromHTTP(char *result, int32_t resultAvailable,
+uloc_acceptLanguageFromHTTP(അക്ഷരം *result, int32_t resultAvailable,
                             UAcceptResult *outResult,
-                            const char *httpAcceptLanguage,
+                            സ്ഥിരം അക്ഷരം *httpAcceptLanguage,
                             UEnumeration *availableLocales,
                             UErrorCode *status) {
-    if (U_FAILURE(*status)) { return 0; }
-    if ((result == nullptr ? resultAvailable != 0 : resultAvailable < 0) ||
+    എങ്കിൽ (U_FAILURE(*status)) { തിരികെ 0; }
+    എങ്കിൽ ((result == nullptr ? resultAvailable != 0 : resultAvailable < 0) ||
             httpAcceptLanguage == nullptr || availableLocales == nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        തിരികെ 0;
     }
     LocalePriorityList list(httpAcceptLanguage, *status);
     LocalePriorityList::Iterator desiredLocales = list.iterator();
-    return acceptLanguage(*availableLocales, desiredLocales,
+    തിരികെ acceptLanguage(*availableLocales, desiredLocales,
                           result, resultAvailable, outResult, *status);
 }

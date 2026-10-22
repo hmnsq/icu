@@ -12,14 +12,14 @@
 ******************************************************************************
 */
 
-#include <string_view>
+#അന്തര്ഭാവ <string_view>
 
-#include "uhash.h"
-#include "unicode/ustring.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "uassert.h"
-#include "ustr_imp.h"
+#അന്തര്ഭാവ "uhash.h"
+#അന്തര്ഭാവ "unicode/ustring.h"
+#അന്തര്ഭാവ "cstring.h"
+#അന്തര്ഭാവ "cmemory.h"
+#അന്തര്ഭാവ "uassert.h"
+#അന്തര്ഭാവ "ustr_imp.h"
 
 /* This hashtable is implemented as a double hash.  All elements are
  * stored in a single array with no secondary storage for collision
@@ -80,7 +80,7 @@
  * These prime numbers were also chosen so that they are the largest
  * prime number while being less than a power of two.
  */
-static const int32_t PRIMES[] = {
+സ്ഥിതം സ്ഥിരം int32_t PRIMES[] = {
     7, 13, 31, 61, 127, 251, 509, 1021, 2039, 4093, 8191, 16381, 32749,
     65521, 131071, 262139, 524287, 1048573, 2097143, 4194301, 8388593,
     16777213, 33554393, 67108859, 134217689, 268435399, 536870909,
@@ -88,7 +88,7 @@ static const int32_t PRIMES[] = {
 };
 
 #define PRIMES_LENGTH UPRV_LENGTHOF(PRIMES)
-#define DEFAULT_PRIME_INDEX 4
+#define DEFAULT_അഭാജ്യം_INDEX 4
 
 /* These ratios are tuned to the PRIMES array such that a resize
  * places the table back into the zone of non-resizing.  That is,
@@ -96,7 +96,7 @@ static const int32_t PRIMES[] = {
  * _uhash_rehash() should do nothing (should not churn).  This is only
  * a potential problem with U_GROW_AND_SHRINK.
  */
-static const float RESIZE_POLICY_RATIO_TABLE[6] = {
+സ്ഥിതം സ്ഥിരം ദശാംശം RESIZE_POLICY_RATIO_TABLE[6] = {
     /* low, high water ratio */
     0.0F, 0.5F, /* U_GROW: Grow on demand, do not shrink */
     0.1F, 0.5F, /* U_GROW_AND_SHRINK: Grow and shrink on demand */
@@ -121,12 +121,12 @@ static const float RESIZE_POLICY_RATIO_TABLE[6] = {
 
 /* This macro expects a UHashTok.pointer as its keypointer and
    valuepointer parameters */
-#define HASH_DELETE_KEY_VALUE(hash, keypointer, valuepointer) UPRV_BLOCK_MACRO_BEGIN { \
-    if (hash->keyDeleter != nullptr && keypointer != nullptr) { \
-        (*hash->keyDeleter)(keypointer); \
+#define HASH_DELETE_താക്കോൽ_മൂല്യം(hash, keypointer, valuepointer) UPRV_BLOCK_MACRO_BEGIN { \
+    എങ്കിൽ (hash->താക്കോൽ_Deleter != nullptr && keypointer != nullptr) { \
+        (*hash->താക്കോൽ_Deleter)(keypointer); \
     } \
-    if (hash->valueDeleter != nullptr && valuepointer != nullptr) { \
-        (*hash->valueDeleter)(valuepointer); \
+    എങ്കിൽ (hash->മൂല്യം_Deleter != nullptr && valuepointer != nullptr) { \
+        (*hash->മൂല്യം_Deleter)(valuepointer); \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -136,30 +136,30 @@ static const float RESIZE_POLICY_RATIO_TABLE[6] = {
  * token is assumed to be an integer.
  */
 #define HINT_BOTH_INTEGERS (0)
-#define HINT_KEY_POINTER   (1)
-#define HINT_VALUE_POINTER (2)
+#define HINT_താക്കോൽ_POINTER   (1)
+#define HINT_മൂല്യം_POINTER (2)
 #define HINT_ALLOW_ZERO    (4)
 
 /********************************************************************
  * PRIVATE Implementation
  ********************************************************************/
 
-static UHashTok
+സ്ഥിതം UHashTok
 _uhash_setElement(UHashtable *hash, UHashElement* e,
                   int32_t hashcode,
-                  UHashTok key, UHashTok value, int8_t hint) {
+                  UHashTok താക്കോൽ, UHashTok value, int8_t hint) {
 
-    UHashTok oldValue = e->value;
-    if (hash->keyDeleter != nullptr && e->key.pointer != nullptr &&
-        e->key.pointer != key.pointer) { /* Avoid double deletion */
-        (*hash->keyDeleter)(e->key.pointer);
+    UHashTok old_മൂല്യം = e->value;
+    എങ്കിൽ (hash->താക്കോൽ_Deleter != nullptr && e->താക്കോൽ.pointer != nullptr &&
+        e->താക്കോൽ.pointer != താക്കോൽ.pointer) { /* Avoid double deletion */
+        (*hash->താക്കോൽ_Deleter)(e->താക്കോൽ.pointer);
     }
-    if (hash->valueDeleter != nullptr) {
-        if (oldValue.pointer != nullptr &&
-            oldValue.pointer != value.pointer) { /* Avoid double deletion */
-            (*hash->valueDeleter)(oldValue.pointer);
+    എങ്കിൽ (hash->മൂല്യം_Deleter != nullptr) {
+        എങ്കിൽ (old_മൂല്യം.pointer != nullptr &&
+            old_മൂല്യം.pointer != value.pointer) { /* Avoid double deletion */
+            (*hash->മൂല്യം_Deleter)(old_മൂല്യം.pointer);
         }
-        oldValue.pointer = nullptr;
+        old_മൂല്യം.pointer = nullptr;
     }
     /* Compilers should copy the UHashTok union correctly, but even if
      * they do, memory heap tools (e.g. BoundsChecker) can get
@@ -167,39 +167,39 @@ _uhash_setElement(UHashtable *hash, UHashElement* e,
      * TO ALLEVIATE THIS, we use hints (based on what API the user is
      * calling) to copy pointers when we know the user thinks
      * something is a pointer. */
-    if (hint & HINT_KEY_POINTER) {
-        e->key.pointer = key.pointer;
-    } else {
-        e->key = key;
+    എങ്കിൽ (hint & HINT_താക്കോൽ_POINTER) {
+        e->താക്കോൽ.pointer = താക്കോൽ.pointer;
+    } അല്ലെങ്കിൽ {
+        e->താക്കോൽ = താക്കോൽ;
     }
-    if (hint & HINT_VALUE_POINTER) {
+    എങ്കിൽ (hint & HINT_മൂല്യം_POINTER) {
         e->value.pointer = value.pointer;
-    } else {
+    } അല്ലെങ്കിൽ {
         e->value = value;
     }
     e->hashcode = hashcode;
-    return oldValue;
+    തിരികെ old_മൂല്യം;
 }
 
 /**
  * Assumes that the given element is not empty or deleted.
  */
-static UHashTok
+സ്ഥിതം UHashTok
 _uhash_internalRemoveElement(UHashtable *hash, UHashElement* e) {
     UHashTok empty;
     U_ASSERT(!IS_EMPTY_OR_DELETED(e->hashcode));
     --hash->count;
     empty.pointer = nullptr; empty.integer = 0;
-    return _uhash_setElement(hash, e, HASH_DELETED, empty, empty, 0);
+    തിരികെ _uhash_setElement(hash, e, HASH_DELETED, empty, empty, 0);
 }
 
-static void
-_uhash_internalSetResizePolicy(UHashtable *hash, enum UHashResizePolicy policy) {
+സ്ഥിതം ശൂന്യം
+_uhash_internalSetResizePolicy(UHashtable *hash, എണ്ണൽ UHashResizePolicy policy) {
     U_ASSERT(hash != nullptr);
     U_ASSERT(((int32_t)policy) >= 0);
     U_ASSERT(((int32_t)policy) < 3);
-    hash->lowWaterRatio  = RESIZE_POLICY_RATIO_TABLE[policy * 2];
-    hash->highWaterRatio = RESIZE_POLICY_RATIO_TABLE[policy * 2 + 1];
+    hash->താഴെയുള്ള_Water_Ratio  = RESIZE_POLICY_RATIO_TABLE[policy * 2];
+    hash->മുകളിലെ_Water_Ratio = RESIZE_POLICY_RATIO_TABLE[policy * 2 + 1];
 }
 
 /**
@@ -211,99 +211,99 @@ _uhash_internalSetResizePolicy(UHashtable *hash, enum UHashResizePolicy policy) 
  *
  * Caller must ensure primeIndex is in range 0..PRIME_LENGTH-1.
  */
-static void
+സ്ഥിതം ശൂന്യം
 _uhash_allocate(UHashtable *hash,
-                int32_t primeIndex,
+                int32_t അഭാജ്യം_Index,
                 UErrorCode *status) {
 
     UHashElement *p, *limit;
     UHashTok emptytok;
 
-    if (U_FAILURE(*status)) return;
+    എങ്കിൽ (U_FAILURE(*status)) തിരികെ;
 
-    U_ASSERT(primeIndex >= 0 && primeIndex < PRIMES_LENGTH);
+    U_ASSERT(അഭാജ്യം_Index >= 0 && അഭാജ്യം_Index < PRIMES_LENGTH);
 
-    hash->primeIndex = static_cast<int8_t>(primeIndex);
-    hash->length = PRIMES[primeIndex];
+    hash->അഭാജ്യം_Index = static_cast<int8_t>(അഭാജ്യം_Index);
+    hash->length = PRIMES[അഭാജ്യം_Index];
 
     p = hash->elements = static_cast<UHashElement*>(
-        uprv_malloc(sizeof(UHashElement) * hash->length));
+        uprv_malloc(വലുപ്പം(UHashElement) * hash->length));
 
-    if (hash->elements == nullptr) {
+    എങ്കിൽ (hash->elements == nullptr) {
         *status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        തിരികെ;
     }
 
     emptytok.pointer = nullptr; /* Only one of these two is needed */
     emptytok.integer = 0;    /* but we don't know which one. */
 
     limit = p + hash->length;
-    while (p < limit) {
-        p->key = emptytok;
+    ആകുമ്പോൾ (p < limit) {
+        p->താക്കോൽ = emptytok;
         p->value = emptytok;
         p->hashcode = HASH_EMPTY;
         ++p;
     }
 
     hash->count = 0;
-    hash->lowWaterMark = static_cast<int32_t>(hash->length * hash->lowWaterRatio);
-    hash->highWaterMark = static_cast<int32_t>(hash->length * hash->highWaterRatio);
+    hash->താഴെയുള്ള_Water_Mark = static_cast<int32_t>(hash->length * hash->താഴെയുള്ള_Water_Ratio);
+    hash->മുകളിലെ_Water_Mark = static_cast<int32_t>(hash->length * hash->മുകളിലെ_Water_Ratio);
 }
 
-static UHashtable*
+സ്ഥിതം UHashtable*
 _uhash_init(UHashtable *result,
-              UHashFunction *keyHash,
-              UKeyComparator *keyComp,
-              UValueComparator *valueComp,
-              int32_t primeIndex,
+              UHashFunction *താക്കോൽ_Hash,
+              UKeyComparator *താക്കോൽ_Comp,
+              UValueComparator *മൂല്യം_Comp,
+              int32_t അഭാജ്യം_Index,
               UErrorCode *status)
 {
-    if (U_FAILURE(*status)) return nullptr;
-    U_ASSERT(keyHash != nullptr);
-    U_ASSERT(keyComp != nullptr);
+    എങ്കിൽ (U_FAILURE(*status)) തിരികെ nullptr;
+    U_ASSERT(താക്കോൽ_Hash != nullptr);
+    U_ASSERT(താക്കോൽ_Comp != nullptr);
 
-    result->keyHasher       = keyHash;
-    result->keyComparator   = keyComp;
-    result->valueComparator = valueComp;
-    result->keyDeleter      = nullptr;
-    result->valueDeleter    = nullptr;
-    result->allocated       = false;
+    result->താക്കോൽ_Hasher       = താക്കോൽ_Hash;
+    result->താക്കോൽ_Comparator   = താക്കോൽ_Comp;
+    result->മൂല്യം_Comparator = മൂല്യം_Comp;
+    result->താക്കോൽ_Deleter      = nullptr;
+    result->മൂല്യം_Deleter    = nullptr;
+    result->allocated       = അസത്യം;
     _uhash_internalSetResizePolicy(result, U_GROW);
 
-    _uhash_allocate(result, primeIndex, status);
+    _uhash_allocate(result, അഭാജ്യം_Index, status);
 
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    എങ്കിൽ (U_FAILURE(*status)) {
+        തിരികെ nullptr;
     }
 
-    return result;
+    തിരികെ result;
 }
 
-static UHashtable*
-_uhash_create(UHashFunction *keyHash,
-              UKeyComparator *keyComp,
-              UValueComparator *valueComp,
-              int32_t primeIndex,
+സ്ഥിതം UHashtable*
+_uhash_create(UHashFunction *താക്കോൽ_Hash,
+              UKeyComparator *താക്കോൽ_Comp,
+              UValueComparator *മൂല്യം_Comp,
+              int32_t അഭാജ്യം_Index,
               UErrorCode *status) {
     UHashtable *result;
 
-    if (U_FAILURE(*status)) return nullptr;
+    എങ്കിൽ (U_FAILURE(*status)) തിരികെ nullptr;
 
-    result = static_cast<UHashtable*>(uprv_malloc(sizeof(UHashtable)));
-    if (result == nullptr) {
+    result = static_cast<UHashtable*>(uprv_malloc(വലുപ്പം(UHashtable)));
+    എങ്കിൽ (result == nullptr) {
         *status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
 
-    _uhash_init(result, keyHash, keyComp, valueComp, primeIndex, status);
-    result->allocated       = true;
+    _uhash_init(result, താക്കോൽ_Hash, താക്കോൽ_Comp, മൂല്യം_Comp, അഭാജ്യം_Index, status);
+    result->allocated       = സത്യം;
 
-    if (U_FAILURE(*status)) {
+    എങ്കിൽ (U_FAILURE(*status)) {
         uprv_free(result);
-        return nullptr;
+        തിരികെ nullptr;
     }
 
-    return result;
+    തിരികെ result;
 }
 
 /**
@@ -334,8 +334,8 @@ _uhash_create(UHashFunction *keyHash,
  * otherwise we are not guaranteed that the jump value (the secondary
  * hash) is relatively prime to the table length.
  */
-static UHashElement*
-_uhash_find(const UHashtable *hash, UHashTok key,
+സ്ഥിതം UHashElement*
+_uhash_find(സ്ഥിരം UHashtable *hash, UHashTok താക്കോൽ,
             int32_t hashcode) {
 
     int32_t firstDeleted = -1;  /* assume invalid index */
@@ -347,23 +347,23 @@ _uhash_find(const UHashtable *hash, UHashTok key,
     hashcode &= 0x7FFFFFFF; /* must be positive */
     startIndex = theIndex = (hashcode ^ 0x4000000) % hash->length;
 
-    do {
+    ചെയ്യുക {
         tableHash = elements[theIndex].hashcode;
-        if (tableHash == hashcode) {          /* quick check */
-            if ((*hash->keyComparator)(key, elements[theIndex].key)) {
-                return &(elements[theIndex]);
+        എങ്കിൽ (tableHash == hashcode) {          /* quick check */
+            എങ്കിൽ ((*hash->താക്കോൽ_Comparator)(താക്കോൽ, elements[theIndex].താക്കോൽ)) {
+                തിരികെ &(elements[theIndex]);
             }
-        } else if (!IS_EMPTY_OR_DELETED(tableHash)) {
+        } അല്ലെങ്കിൽ എങ്കിൽ (!IS_EMPTY_OR_DELETED(tableHash)) {
             /* We have hit a slot which contains a key-value pair,
              * but for which the hash code does not match.  Keep
              * looking.
              */
-        } else if (tableHash == HASH_EMPTY) { /* empty, end o' the line */
-            break;
-        } else if (firstDeleted < 0) { /* remember first deleted */
+        } അല്ലെങ്കിൽ എങ്കിൽ (tableHash == HASH_EMPTY) { /* empty, end o' the line */
+            നിർത്തുക;
+        } അല്ലെങ്കിൽ എങ്കിൽ (firstDeleted < 0) { /* remember first deleted */
             firstDeleted = theIndex;
         }
-        if (jump == 0) { /* lazy compute jump */
+        എങ്കിൽ (jump == 0) { /* lazy compute jump */
             /* The jump value must be relatively prime to the table
              * length.  As long as the length is prime, then any value
              * 1..length-1 will be relatively prime to it.
@@ -371,11 +371,11 @@ _uhash_find(const UHashtable *hash, UHashTok key,
             jump = (hashcode % (hash->length - 1)) + 1;
         }
         theIndex = (theIndex + jump) % hash->length;
-    } while (theIndex != startIndex);
+    } ആകുമ്പോൾ (theIndex != startIndex);
 
-    if (firstDeleted >= 0) {
+    എങ്കിൽ (firstDeleted >= 0) {
         theIndex = firstDeleted; /* reset if had deleted slot */
-    } else if (tableHash != HASH_EMPTY) {
+    } അല്ലെങ്കിൽ എങ്കിൽ (tableHash != HASH_EMPTY) {
         /* We get to this point if the hashtable is full (no empty or
          * deleted slots), and we've failed to find a match.  THIS
          * WILL NEVER HAPPEN as long as uhash_put() makes sure that
@@ -383,7 +383,7 @@ _uhash_find(const UHashtable *hash, UHashTok key,
          */
         UPRV_UNREACHABLE_EXIT;
     }
-    return &(elements[theIndex]);
+    തിരികെ &(elements[theIndex]);
 }
 
 /**
@@ -395,40 +395,40 @@ _uhash_find(const UHashtable *hash, UHashTok key,
  * already at the low or high limit.  In any case, upon return the
  * arrays will be valid.
  */
-static void
+സ്ഥിതം ശൂന്യം
 _uhash_rehash(UHashtable *hash, UErrorCode *status) {
 
     UHashElement *old = hash->elements;
     int32_t oldLength = hash->length;
-    int32_t newPrimeIndex = hash->primeIndex;
+    int32_t new_അഭാജ്യം_Index = hash->അഭാജ്യം_Index;
     int32_t i;
 
-    if (hash->count > hash->highWaterMark) {
-        if (++newPrimeIndex >= PRIMES_LENGTH) {
-            return;
+    എങ്കിൽ (hash->count > hash->മുകളിലെ_Water_Mark) {
+        എങ്കിൽ (++new_അഭാജ്യം_Index >= PRIMES_LENGTH) {
+            തിരികെ;
         }
-    } else if (hash->count < hash->lowWaterMark) {
-        if (--newPrimeIndex < 0) {
-            return;
+    } അല്ലെങ്കിൽ എങ്കിൽ (hash->count < hash->താഴെയുള്ള_Water_Mark) {
+        എങ്കിൽ (--new_അഭാജ്യം_Index < 0) {
+            തിരികെ;
         }
-    } else {
-        return;
+    } അല്ലെങ്കിൽ {
+        തിരികെ;
     }
 
-    _uhash_allocate(hash, newPrimeIndex, status);
+    _uhash_allocate(hash, new_അഭാജ്യം_Index, status);
 
-    if (U_FAILURE(*status)) {
+    എങ്കിൽ (U_FAILURE(*status)) {
         hash->elements = old;
         hash->length = oldLength;
-        return;
+        തിരികെ;
     }
 
-    for (i = oldLength - 1; i >= 0; --i) {
-        if (!IS_EMPTY_OR_DELETED(old[i].hashcode)) {
-            UHashElement *e = _uhash_find(hash, old[i].key, old[i].hashcode);
+    വേണ്ടി (i = oldLength - 1; i >= 0; --i) {
+        എങ്കിൽ (!IS_EMPTY_OR_DELETED(old[i].hashcode)) {
+            UHashElement *e = _uhash_find(hash, old[i].താക്കോൽ, old[i].hashcode);
             U_ASSERT(e != nullptr);
             U_ASSERT(e->hashcode == HASH_EMPTY);
-            e->key = old[i].key;
+            e->താക്കോൽ = old[i].താക്കോൽ;
             e->value = old[i].value;
             e->hashcode = old[i].hashcode;
             ++hash->count;
@@ -438,9 +438,9 @@ _uhash_rehash(UHashtable *hash, UErrorCode *status) {
     uprv_free(old);
 }
 
-static UHashTok
+സ്ഥിതം UHashTok
 _uhash_remove(UHashtable *hash,
-              UHashTok key) {
+              UHashTok താക്കോൽ) {
     /* First find the position of the key in the table.  If the object
      * has not been removed already, remove it.  If the user wanted
      * keys deleted, then delete it also.  We have to put a special
@@ -449,23 +449,23 @@ _uhash_remove(UHashtable *hash,
      * deleted values.
      */
     UHashTok result;
-    UHashElement* e = _uhash_find(hash, key, hash->keyHasher(key));
+    UHashElement* e = _uhash_find(hash, താക്കോൽ, hash->താക്കോൽ_Hasher(താക്കോൽ));
     U_ASSERT(e != nullptr);
     result.pointer = nullptr;
     result.integer = 0;
-    if (!IS_EMPTY_OR_DELETED(e->hashcode)) {
+    എങ്കിൽ (!IS_EMPTY_OR_DELETED(e->hashcode)) {
         result = _uhash_internalRemoveElement(hash, e);
-        if (hash->count < hash->lowWaterMark) {
+        എങ്കിൽ (hash->count < hash->താഴെയുള്ള_Water_Mark) {
             UErrorCode status = U_ZERO_ERROR;
             _uhash_rehash(hash, &status);
         }
     }
-    return result;
+    തിരികെ result;
 }
 
-static UHashTok
+സ്ഥിതം UHashTok
 _uhash_put(UHashtable *hash,
-           UHashTok key,
+           UHashTok താക്കോൽ,
            UHashTok value,
            int8_t hint,
            UErrorCode *status) {
@@ -479,30 +479,30 @@ _uhash_put(UHashtable *hash,
     UHashElement* e;
     UHashTok emptytok;
 
-    if (U_FAILURE(*status)) {
-        goto err;
+    എങ്കിൽ (U_FAILURE(*status)) {
+        പോകുക err;
     }
     U_ASSERT(hash != nullptr);
-    if ((hint & HINT_VALUE_POINTER) ?
+    എങ്കിൽ ((hint & HINT_മൂല്യം_POINTER) ?
             value.pointer == nullptr :
             value.integer == 0 && (hint & HINT_ALLOW_ZERO) == 0) {
         /* Disallow storage of nullptr values, since nullptr is returned by
          * get() to indicate an absent key.  Storing nullptr == removing.
          */
-        return _uhash_remove(hash, key);
+        തിരികെ _uhash_remove(hash, താക്കോൽ);
     }
-    if (hash->count > hash->highWaterMark) {
+    എങ്കിൽ (hash->count > hash->മുകളിലെ_Water_Mark) {
         _uhash_rehash(hash, status);
-        if (U_FAILURE(*status)) {
-            goto err;
+        എങ്കിൽ (U_FAILURE(*status)) {
+            പോകുക err;
         }
     }
 
-    hashcode = (*hash->keyHasher)(key);
-    e = _uhash_find(hash, key, hashcode);
+    hashcode = (*hash->താക്കോൽ_Hasher)(താക്കോൽ);
+    e = _uhash_find(hash, താക്കോൽ, hashcode);
     U_ASSERT(e != nullptr);
 
-    if (IS_EMPTY_OR_DELETED(e->hashcode)) {
+    എങ്കിൽ (IS_EMPTY_OR_DELETED(e->hashcode)) {
         /* Important: We must never actually fill the table up.  If we
          * do so, then _uhash_find() will return nullptr, and we'll have
          * to check for nullptr after every call to _uhash_find().  To
@@ -511,11 +511,11 @@ _uhash_put(UHashtable *hash,
          * are out of memory and rehash isn't working.
          */
         ++hash->count;
-        if (hash->count == hash->length) {
+        എങ്കിൽ (hash->count == hash->length) {
             /* Don't allow count to reach length */
             --hash->count;
             *status = U_MEMORY_ALLOCATION_ERROR;
-            goto err;
+            പോകുക err;
         }
     }
 
@@ -523,16 +523,16 @@ _uhash_put(UHashtable *hash,
      * old key, then it must be deleted (if the deleter != nullptr).
      * Make hashcodes stored in table positive.
      */
-    return _uhash_setElement(hash, e, hashcode & 0x7FFFFFFF, key, value, hint);
+    തിരികെ _uhash_setElement(hash, e, hashcode & 0x7FFFFFFF, താക്കോൽ, value, hint);
 
  err:
     /* If the deleters are non-nullptr, this method adopts its key and/or
      * value arguments, and we must be sure to delete the key and/or
      * value in all cases, even upon failure.
      */
-    HASH_DELETE_KEY_VALUE(hash, key.pointer, value.pointer);
+    HASH_DELETE_താക്കോൽ_മൂല്യം(hash, താക്കോൽ.pointer, value.pointer);
     emptytok.pointer = nullptr; emptytok.integer = 0;
-    return emptytok;
+    തിരികെ emptytok;
 }
 
 
@@ -541,298 +541,298 @@ _uhash_put(UHashtable *hash,
  ********************************************************************/
 
 U_CAPI UHashtable* U_EXPORT2
-uhash_open(UHashFunction *keyHash,
-           UKeyComparator *keyComp,
-           UValueComparator *valueComp,
+uhash_open(UHashFunction *താക്കോൽ_Hash,
+           UKeyComparator *താക്കോൽ_Comp,
+           UValueComparator *മൂല്യം_Comp,
            UErrorCode *status) {
 
-    return _uhash_create(keyHash, keyComp, valueComp, DEFAULT_PRIME_INDEX, status);
+    തിരികെ _uhash_create(താക്കോൽ_Hash, താക്കോൽ_Comp, മൂല്യം_Comp, DEFAULT_അഭാജ്യം_INDEX, status);
 }
 
 U_CAPI UHashtable* U_EXPORT2
-uhash_openSize(UHashFunction *keyHash,
-               UKeyComparator *keyComp,
-               UValueComparator *valueComp,
+uhash_openSize(UHashFunction *താക്കോൽ_Hash,
+               UKeyComparator *താക്കോൽ_Comp,
+               UValueComparator *മൂല്യം_Comp,
                int32_t size,
                UErrorCode *status) {
 
     /* Find the smallest index i for which PRIMES[i] >= size. */
     int32_t i = 0;
-    while (i<(PRIMES_LENGTH-1) && PRIMES[i]<size) {
+    ആകുമ്പോൾ (i<(PRIMES_LENGTH-1) && PRIMES[i]<size) {
         ++i;
     }
 
-    return _uhash_create(keyHash, keyComp, valueComp, i, status);
+    തിരികെ _uhash_create(താക്കോൽ_Hash, താക്കോൽ_Comp, മൂല്യം_Comp, i, status);
 }
 
 U_CAPI UHashtable* U_EXPORT2
 uhash_init(UHashtable *fillinResult,
-           UHashFunction *keyHash,
-           UKeyComparator *keyComp,
-           UValueComparator *valueComp,
+           UHashFunction *താക്കോൽ_Hash,
+           UKeyComparator *താക്കോൽ_Comp,
+           UValueComparator *മൂല്യം_Comp,
            UErrorCode *status) {
 
-    return _uhash_init(fillinResult, keyHash, keyComp, valueComp, DEFAULT_PRIME_INDEX, status);
+    തിരികെ _uhash_init(fillinResult, താക്കോൽ_Hash, താക്കോൽ_Comp, മൂല്യം_Comp, DEFAULT_അഭാജ്യം_INDEX, status);
 }
 
 U_CAPI UHashtable* U_EXPORT2
 uhash_initSize(UHashtable *fillinResult,
-               UHashFunction *keyHash,
-               UKeyComparator *keyComp,
-               UValueComparator *valueComp,
+               UHashFunction *താക്കോൽ_Hash,
+               UKeyComparator *താക്കോൽ_Comp,
+               UValueComparator *മൂല്യം_Comp,
                int32_t size,
                UErrorCode *status) {
 
     // Find the smallest index i for which PRIMES[i] >= size.
     int32_t i = 0;
-    while (i<(PRIMES_LENGTH-1) && PRIMES[i]<size) {
+    ആകുമ്പോൾ (i<(PRIMES_LENGTH-1) && PRIMES[i]<size) {
         ++i;
     }
-    return _uhash_init(fillinResult, keyHash, keyComp, valueComp, i, status);
+    തിരികെ _uhash_init(fillinResult, താക്കോൽ_Hash, താക്കോൽ_Comp, മൂല്യം_Comp, i, status);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 uhash_close(UHashtable *hash) {
-    if (hash == nullptr) {
-        return;
+    എങ്കിൽ (hash == nullptr) {
+        തിരികെ;
     }
-    if (hash->elements != nullptr) {
-        if (hash->keyDeleter != nullptr || hash->valueDeleter != nullptr) {
+    എങ്കിൽ (hash->elements != nullptr) {
+        എങ്കിൽ (hash->താക്കോൽ_Deleter != nullptr || hash->മൂല്യം_Deleter != nullptr) {
             int32_t pos=UHASH_FIRST;
             UHashElement *e;
-            while ((e = (UHashElement*) uhash_nextElement(hash, &pos)) != nullptr) {
-                HASH_DELETE_KEY_VALUE(hash, e->key.pointer, e->value.pointer);
+            ആകുമ്പോൾ ((e = (UHashElement*) uhash_nextElement(hash, &pos)) != nullptr) {
+                HASH_DELETE_താക്കോൽ_മൂല്യം(hash, e->താക്കോൽ.pointer, e->value.pointer);
             }
         }
         uprv_free(hash->elements);
         hash->elements = nullptr;
     }
-    if (hash->allocated) {
+    എങ്കിൽ (hash->allocated) {
         uprv_free(hash);
     }
 }
 
 U_CAPI UHashFunction *U_EXPORT2
-uhash_setKeyHasher(UHashtable *hash, UHashFunction *fn) {
-    UHashFunction *result = hash->keyHasher;
-    hash->keyHasher = fn;
-    return result;
+uhash_set_താക്കോൽ_Hasher(UHashtable *hash, UHashFunction *fn) {
+    UHashFunction *result = hash->താക്കോൽ_Hasher;
+    hash->താക്കോൽ_Hasher = fn;
+    തിരികെ result;
 }
 
 U_CAPI UKeyComparator *U_EXPORT2
-uhash_setKeyComparator(UHashtable *hash, UKeyComparator *fn) {
-    UKeyComparator *result = hash->keyComparator;
-    hash->keyComparator = fn;
-    return result;
+uhash_set_താക്കോൽ_Comparator(UHashtable *hash, UKeyComparator *fn) {
+    UKeyComparator *result = hash->താക്കോൽ_Comparator;
+    hash->താക്കോൽ_Comparator = fn;
+    തിരികെ result;
 }
 U_CAPI UValueComparator *U_EXPORT2
-uhash_setValueComparator(UHashtable *hash, UValueComparator *fn){
-    UValueComparator *result = hash->valueComparator;
-    hash->valueComparator = fn;
-    return result;
+uhash_set_മൂല്യം_Comparator(UHashtable *hash, UValueComparator *fn){
+    UValueComparator *result = hash->മൂല്യം_Comparator;
+    hash->മൂല്യം_Comparator = fn;
+    തിരികെ result;
 }
 
 U_CAPI UObjectDeleter *U_EXPORT2
-uhash_setKeyDeleter(UHashtable *hash, UObjectDeleter *fn) {
-    UObjectDeleter *result = hash->keyDeleter;
-    hash->keyDeleter = fn;
-    return result;
+uhash_set_താക്കോൽ_Deleter(UHashtable *hash, UObjectDeleter *fn) {
+    UObjectDeleter *result = hash->താക്കോൽ_Deleter;
+    hash->താക്കോൽ_Deleter = fn;
+    തിരികെ result;
 }
 
 U_CAPI UObjectDeleter *U_EXPORT2
-uhash_setValueDeleter(UHashtable *hash, UObjectDeleter *fn) {
-    UObjectDeleter *result = hash->valueDeleter;
-    hash->valueDeleter = fn;
-    return result;
+uhash_set_മൂല്യം_Deleter(UHashtable *hash, UObjectDeleter *fn) {
+    UObjectDeleter *result = hash->മൂല്യം_Deleter;
+    hash->മൂല്യം_Deleter = fn;
+    തിരികെ result;
 }
 
-U_CAPI void U_EXPORT2
-uhash_setResizePolicy(UHashtable *hash, enum UHashResizePolicy policy) {
+U_CAPI ശൂന്യം U_EXPORT2
+uhash_setResizePolicy(UHashtable *hash, എണ്ണൽ UHashResizePolicy policy) {
     UErrorCode status = U_ZERO_ERROR;
     _uhash_internalSetResizePolicy(hash, policy);
-    hash->lowWaterMark  = (int32_t)(hash->length * hash->lowWaterRatio);
-    hash->highWaterMark = (int32_t)(hash->length * hash->highWaterRatio);
+    hash->താഴെയുള്ള_Water_Mark  = (int32_t)(hash->length * hash->താഴെയുള്ള_Water_Ratio);
+    hash->മുകളിലെ_Water_Mark = (int32_t)(hash->length * hash->മുകളിലെ_Water_Ratio);
     _uhash_rehash(hash, &status);
 }
 
 U_CAPI int32_t U_EXPORT2
-uhash_count(const UHashtable *hash) {
-    return hash->count;
+uhash_എണ്ണം(സ്ഥിരം UHashtable *hash) {
+    തിരികെ hash->count;
 }
 
-U_CAPI void* U_EXPORT2
-uhash_get(const UHashtable *hash,
-          const void* key) {
+U_CAPI ശൂന്യം* U_EXPORT2
+uhash_get(സ്ഥിരം UHashtable *hash,
+          സ്ഥിരം ശൂന്യം* താക്കോൽ) {
     UHashTok keyholder;
-    keyholder.pointer = (void*) key;
-    return _uhash_find(hash, keyholder, hash->keyHasher(keyholder))->value.pointer;
+    keyholder.pointer = (ശൂന്യം*) താക്കോൽ;
+    തിരികെ _uhash_find(hash, keyholder, hash->താക്കോൽ_Hasher(keyholder))->value.pointer;
 }
 
-U_CAPI void* U_EXPORT2
-uhash_iget(const UHashtable *hash,
-           int32_t key) {
+U_CAPI ശൂന്യം* U_EXPORT2
+uhash_iget(സ്ഥിരം UHashtable *hash,
+           int32_t താക്കോൽ) {
     UHashTok keyholder;
-    keyholder.integer = key;
-    return _uhash_find(hash, keyholder, hash->keyHasher(keyholder))->value.pointer;
+    keyholder.integer = താക്കോൽ;
+    തിരികെ _uhash_find(hash, keyholder, hash->താക്കോൽ_Hasher(keyholder))->value.pointer;
 }
 
 U_CAPI int32_t U_EXPORT2
-uhash_geti(const UHashtable *hash,
-           const void* key) {
+uhash_geti(സ്ഥിരം UHashtable *hash,
+           സ്ഥിരം ശൂന്യം* താക്കോൽ) {
     UHashTok keyholder;
-    keyholder.pointer = (void*) key;
-    return _uhash_find(hash, keyholder, hash->keyHasher(keyholder))->value.integer;
+    keyholder.pointer = (ശൂന്യം*) താക്കോൽ;
+    തിരികെ _uhash_find(hash, keyholder, hash->താക്കോൽ_Hasher(keyholder))->value.integer;
 }
 
 U_CAPI int32_t U_EXPORT2
-uhash_igeti(const UHashtable *hash,
-           int32_t key) {
+uhash_igeti(സ്ഥിരം UHashtable *hash,
+           int32_t താക്കോൽ) {
     UHashTok keyholder;
-    keyholder.integer = key;
-    return _uhash_find(hash, keyholder, hash->keyHasher(keyholder))->value.integer;
+    keyholder.integer = താക്കോൽ;
+    തിരികെ _uhash_find(hash, keyholder, hash->താക്കോൽ_Hasher(keyholder))->value.integer;
 }
 
 U_CAPI int32_t U_EXPORT2
-uhash_getiAndFound(const UHashtable *hash,
-                   const void *key,
+uhash_getiAndFound(സ്ഥിരം UHashtable *hash,
+                   സ്ഥിരം ശൂന്യം *താക്കോൽ,
                    UBool *found) {
     UHashTok keyholder;
-    keyholder.pointer = (void *)key;
-    const UHashElement *e = _uhash_find(hash, keyholder, hash->keyHasher(keyholder));
+    keyholder.pointer = (ശൂന്യം *)താക്കോൽ;
+    സ്ഥിരം UHashElement *e = _uhash_find(hash, keyholder, hash->താക്കോൽ_Hasher(keyholder));
     *found = !IS_EMPTY_OR_DELETED(e->hashcode);
-    return e->value.integer;
+    തിരികെ e->value.integer;
 }
 
 U_CAPI int32_t U_EXPORT2
-uhash_igetiAndFound(const UHashtable *hash,
-                    int32_t key,
+uhash_igetiAndFound(സ്ഥിരം UHashtable *hash,
+                    int32_t താക്കോൽ,
                     UBool *found) {
     UHashTok keyholder;
-    keyholder.integer = key;
-    const UHashElement *e = _uhash_find(hash, keyholder, hash->keyHasher(keyholder));
+    keyholder.integer = താക്കോൽ;
+    സ്ഥിരം UHashElement *e = _uhash_find(hash, keyholder, hash->താക്കോൽ_Hasher(keyholder));
     *found = !IS_EMPTY_OR_DELETED(e->hashcode);
-    return e->value.integer;
+    തിരികെ e->value.integer;
 }
 
-U_CAPI void* U_EXPORT2
+U_CAPI ശൂന്യം* U_EXPORT2
 uhash_put(UHashtable *hash,
-          void* key,
-          void* value,
+          ശൂന്യം* താക്കോൽ,
+          ശൂന്യം* value,
           UErrorCode *status) {
     UHashTok keyholder, valueholder;
-    keyholder.pointer = key;
+    keyholder.pointer = താക്കോൽ;
     valueholder.pointer = value;
-    return _uhash_put(hash, keyholder, valueholder,
-                      HINT_KEY_POINTER | HINT_VALUE_POINTER,
+    തിരികെ _uhash_put(hash, keyholder, valueholder,
+                      HINT_താക്കോൽ_POINTER | HINT_മൂല്യം_POINTER,
                       status).pointer;
 }
 
-U_CAPI void* U_EXPORT2
+U_CAPI ശൂന്യം* U_EXPORT2
 uhash_iput(UHashtable *hash,
-           int32_t key,
-           void* value,
+           int32_t താക്കോൽ,
+           ശൂന്യം* value,
            UErrorCode *status) {
     UHashTok keyholder, valueholder;
-    keyholder.integer = key;
+    keyholder.integer = താക്കോൽ;
     valueholder.pointer = value;
-    return _uhash_put(hash, keyholder, valueholder,
-                      HINT_VALUE_POINTER,
+    തിരികെ _uhash_put(hash, keyholder, valueholder,
+                      HINT_മൂല്യം_POINTER,
                       status).pointer;
 }
 
 U_CAPI int32_t U_EXPORT2
 uhash_puti(UHashtable *hash,
-           void* key,
+           ശൂന്യം* താക്കോൽ,
            int32_t value,
            UErrorCode *status) {
     UHashTok keyholder, valueholder;
-    keyholder.pointer = key;
+    keyholder.pointer = താക്കോൽ;
     valueholder.integer = value;
-    return _uhash_put(hash, keyholder, valueholder,
-                      HINT_KEY_POINTER,
+    തിരികെ _uhash_put(hash, keyholder, valueholder,
+                      HINT_താക്കോൽ_POINTER,
                       status).integer;
 }
 
 
 U_CAPI int32_t U_EXPORT2
 uhash_iputi(UHashtable *hash,
-           int32_t key,
+           int32_t താക്കോൽ,
            int32_t value,
            UErrorCode *status) {
     UHashTok keyholder, valueholder;
-    keyholder.integer = key;
+    keyholder.integer = താക്കോൽ;
     valueholder.integer = value;
-    return _uhash_put(hash, keyholder, valueholder,
+    തിരികെ _uhash_put(hash, keyholder, valueholder,
                       HINT_BOTH_INTEGERS,
                       status).integer;
 }
 
 U_CAPI int32_t U_EXPORT2
 uhash_putiAllowZero(UHashtable *hash,
-                    void *key,
+                    ശൂന്യം *താക്കോൽ,
                     int32_t value,
                     UErrorCode *status) {
     UHashTok keyholder, valueholder;
-    keyholder.pointer = key;
+    keyholder.pointer = താക്കോൽ;
     valueholder.integer = value;
-    return _uhash_put(hash, keyholder, valueholder,
-                      HINT_KEY_POINTER | HINT_ALLOW_ZERO,
+    തിരികെ _uhash_put(hash, keyholder, valueholder,
+                      HINT_താക്കോൽ_POINTER | HINT_ALLOW_ZERO,
                       status).integer;
 }
 
 
 U_CAPI int32_t U_EXPORT2
 uhash_iputiAllowZero(UHashtable *hash,
-                     int32_t key,
+                     int32_t താക്കോൽ,
                      int32_t value,
                      UErrorCode *status) {
     UHashTok keyholder, valueholder;
-    keyholder.integer = key;
+    keyholder.integer = താക്കോൽ;
     valueholder.integer = value;
-    return _uhash_put(hash, keyholder, valueholder,
+    തിരികെ _uhash_put(hash, keyholder, valueholder,
                       HINT_BOTH_INTEGERS | HINT_ALLOW_ZERO,
                       status).integer;
 }
 
-U_CAPI void* U_EXPORT2
+U_CAPI ശൂന്യം* U_EXPORT2
 uhash_remove(UHashtable *hash,
-             const void* key) {
+             സ്ഥിരം ശൂന്യം* താക്കോൽ) {
     UHashTok keyholder;
-    keyholder.pointer = (void*) key;
-    return _uhash_remove(hash, keyholder).pointer;
+    keyholder.pointer = (ശൂന്യം*) താക്കോൽ;
+    തിരികെ _uhash_remove(hash, keyholder).pointer;
 }
 
-U_CAPI void* U_EXPORT2
+U_CAPI ശൂന്യം* U_EXPORT2
 uhash_iremove(UHashtable *hash,
-              int32_t key) {
+              int32_t താക്കോൽ) {
     UHashTok keyholder;
-    keyholder.integer = key;
-    return _uhash_remove(hash, keyholder).pointer;
+    keyholder.integer = താക്കോൽ;
+    തിരികെ _uhash_remove(hash, keyholder).pointer;
 }
 
 U_CAPI int32_t U_EXPORT2
 uhash_removei(UHashtable *hash,
-              const void* key) {
+              സ്ഥിരം ശൂന്യം* താക്കോൽ) {
     UHashTok keyholder;
-    keyholder.pointer = (void*) key;
-    return _uhash_remove(hash, keyholder).integer;
+    keyholder.pointer = (ശൂന്യം*) താക്കോൽ;
+    തിരികെ _uhash_remove(hash, keyholder).integer;
 }
 
 U_CAPI int32_t U_EXPORT2
 uhash_iremovei(UHashtable *hash,
-               int32_t key) {
+               int32_t താക്കോൽ) {
     UHashTok keyholder;
-    keyholder.integer = key;
-    return _uhash_remove(hash, keyholder).integer;
+    keyholder.integer = താക്കോൽ;
+    തിരികെ _uhash_remove(hash, keyholder).integer;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 uhash_removeAll(UHashtable *hash) {
     int32_t pos = UHASH_FIRST;
-    const UHashElement *e;
+    സ്ഥിരം UHashElement *e;
     U_ASSERT(hash != nullptr);
-    if (hash->count != 0) {
-        while ((e = uhash_nextElement(hash, &pos)) != nullptr) {
+    എങ്കിൽ (hash->count != 0) {
+        ആകുമ്പോൾ ((e = uhash_nextElement(hash, &pos)) != nullptr) {
             uhash_removeElement(hash, e);
         }
     }
@@ -840,11 +840,11 @@ uhash_removeAll(UHashtable *hash) {
 }
 
 U_CAPI UBool U_EXPORT2
-uhash_containsKey(const UHashtable *hash, const void *key) {
+uhash_contains_താക്കോൽ(സ്ഥിരം UHashtable *hash, സ്ഥിരം ശൂന്യം *താക്കോൽ) {
     UHashTok keyholder;
-    keyholder.pointer = (void *)key;
-    const UHashElement *e = _uhash_find(hash, keyholder, hash->keyHasher(keyholder));
-    return !IS_EMPTY_OR_DELETED(e->hashcode);
+    keyholder.pointer = (ശൂന്യം *)താക്കോൽ;
+    സ്ഥിരം UHashElement *e = _uhash_find(hash, keyholder, hash->താക്കോൽ_Hasher(keyholder));
+    തിരികെ !IS_EMPTY_OR_DELETED(e->hashcode);
 }
 
 /**
@@ -855,49 +855,49 @@ uhash_containsKey(const UHashtable *hash, const void *key) {
  * @return true if the key is found.
  */
 U_CAPI UBool U_EXPORT2
-uhash_icontainsKey(const UHashtable *hash, int32_t key) {
+uhash_icontains_താക്കോൽ(സ്ഥിരം UHashtable *hash, int32_t താക്കോൽ) {
     UHashTok keyholder;
-    keyholder.integer = key;
-    const UHashElement *e = _uhash_find(hash, keyholder, hash->keyHasher(keyholder));
-    return !IS_EMPTY_OR_DELETED(e->hashcode);
+    keyholder.integer = താക്കോൽ;
+    സ്ഥിരം UHashElement *e = _uhash_find(hash, keyholder, hash->താക്കോൽ_Hasher(keyholder));
+    തിരികെ !IS_EMPTY_OR_DELETED(e->hashcode);
 }
 
-U_CAPI const UHashElement* U_EXPORT2
-uhash_find(const UHashtable *hash, const void* key) {
+U_CAPI സ്ഥിരം UHashElement* U_EXPORT2
+uhash_find(സ്ഥിരം UHashtable *hash, സ്ഥിരം ശൂന്യം* താക്കോൽ) {
     UHashTok keyholder;
-    const UHashElement *e;
-    keyholder.pointer = (void*) key;
-    e = _uhash_find(hash, keyholder, hash->keyHasher(keyholder));
-    return IS_EMPTY_OR_DELETED(e->hashcode) ? nullptr : e;
+    സ്ഥിരം UHashElement *e;
+    keyholder.pointer = (ശൂന്യം*) താക്കോൽ;
+    e = _uhash_find(hash, keyholder, hash->താക്കോൽ_Hasher(keyholder));
+    തിരികെ IS_EMPTY_OR_DELETED(e->hashcode) ? nullptr : e;
 }
 
-U_CAPI const UHashElement* U_EXPORT2
-uhash_nextElement(const UHashtable *hash, int32_t *pos) {
+U_CAPI സ്ഥിരം UHashElement* U_EXPORT2
+uhash_nextElement(സ്ഥിരം UHashtable *hash, int32_t *pos) {
     /* Walk through the array until we find an element that is not
      * EMPTY and not DELETED.
      */
     int32_t i;
     U_ASSERT(hash != nullptr);
-    for (i = *pos + 1; i < hash->length; ++i) {
-        if (!IS_EMPTY_OR_DELETED(hash->elements[i].hashcode)) {
+    വേണ്ടി (i = *pos + 1; i < hash->length; ++i) {
+        എങ്കിൽ (!IS_EMPTY_OR_DELETED(hash->elements[i].hashcode)) {
             *pos = i;
-            return &(hash->elements[i]);
+            തിരികെ &(hash->elements[i]);
         }
     }
 
     /* No more elements */
-    return nullptr;
+    തിരികെ nullptr;
 }
 
-U_CAPI void* U_EXPORT2
-uhash_removeElement(UHashtable *hash, const UHashElement* e) {
+U_CAPI ശൂന്യം* U_EXPORT2
+uhash_removeElement(UHashtable *hash, സ്ഥിരം UHashElement* e) {
     U_ASSERT(hash != nullptr);
     U_ASSERT(e != nullptr);
-    if (!IS_EMPTY_OR_DELETED(e->hashcode)) {
+    എങ്കിൽ (!IS_EMPTY_OR_DELETED(e->hashcode)) {
         UHashElement *nce = (UHashElement *)e;
-        return _uhash_internalRemoveElement(hash, nce).pointer;
+        തിരികെ _uhash_internalRemoveElement(hash, nce).pointer;
     }
-    return nullptr;
+    തിരികെ nullptr;
 }
 
 /********************************************************************
@@ -929,35 +929,35 @@ uhash_tokp(void* p) {
  ********************************************************************/
 
 U_CAPI int32_t U_EXPORT2
-uhash_hashUChars(const UHashTok key) {
-    const char16_t *s = (const char16_t *)key.pointer;
-    return s == nullptr ? 0 : ustr_hashUCharsN(s, u_strlen(s));
+uhash_hashUChars(സ്ഥിരം UHashTok താക്കോൽ) {
+    സ്ഥിരം char16_t *s = (സ്ഥിരം char16_t *)താക്കോൽ.pointer;
+    തിരികെ s == nullptr ? 0 : ustr_hashUCharsN(s, u_strlen(s));
 }
 
 U_CAPI int32_t U_EXPORT2
-uhash_hashChars(const UHashTok key) {
-    const char *s = (const char *)key.pointer;
-    return s == nullptr ? 0 : static_cast<int32_t>(ustr_hashCharsN(s, static_cast<int32_t>(uprv_strlen(s))));
+uhash_hashChars(സ്ഥിരം UHashTok താക്കോൽ) {
+    സ്ഥിരം അക്ഷരം *s = (സ്ഥിരം അക്ഷരം *)താക്കോൽ.pointer;
+    തിരികെ s == nullptr ? 0 : static_cast<int32_t>(ustr_hashCharsN(s, static_cast<int32_t>(uprv_strlen(s))));
 }
 
 U_CAPI int32_t U_EXPORT2
-uhash_hashIChars(const UHashTok key) {
-    const char *s = (const char *)key.pointer;
-    return s == nullptr ? 0 : ustr_hashICharsN(s, static_cast<int32_t>(uprv_strlen(s)));
+uhash_hashIChars(സ്ഥിരം UHashTok താക്കോൽ) {
+    സ്ഥിരം അക്ഷരം *s = (സ്ഥിരം അക്ഷരം *)താക്കോൽ.pointer;
+    തിരികെ s == nullptr ? 0 : ustr_hashICharsN(s, static_cast<int32_t>(uprv_strlen(s)));
 }
 
 U_CAPI int32_t U_EXPORT2
-uhash_hashIStringView(const UHashTok key) {
-    const std::string_view* s = static_cast<std::string_view*>(key.pointer);
-    return s == nullptr ? 0 : ustr_hashICharsN(s->data(), static_cast<int32_t>(s->size()));
+uhash_hashIStringView(സ്ഥിരം UHashTok താക്കോൽ) {
+    സ്ഥിരം std::string_view* s = static_cast<std::string_view*>(താക്കോൽ.pointer);
+    തിരികെ s == nullptr ? 0 : ustr_hashICharsN(s->data(), static_cast<int32_t>(s->size()));
 }
 
 U_CAPI UBool U_EXPORT2
-uhash_equals(const UHashtable* hash1, const UHashtable* hash2){
+uhash_equals(സ്ഥിരം UHashtable* hash1, സ്ഥിരം UHashtable* hash2){
     int32_t count1, count2, pos, i;
 
-    if(hash1==hash2){
-        return true;
+    എങ്കിൽ(hash1==hash2){
+        തിരികെ സത്യം;
     }
 
     /*
@@ -968,40 +968,40 @@ uhash_equals(const UHashtable* hash1, const UHashtable* hash2){
      * with 64-bit pointers and 32-bit integer hashes.
      * A valueComparator is normally optional.
      */
-    if (hash1==nullptr || hash2==nullptr ||
-        hash1->keyComparator != hash2->keyComparator ||
-        hash1->valueComparator != hash2->valueComparator ||
-        hash1->valueComparator == nullptr)
+    എങ്കിൽ (hash1==nullptr || hash2==nullptr ||
+        hash1->താക്കോൽ_Comparator != hash2->താക്കോൽ_Comparator ||
+        hash1->മൂല്യം_Comparator != hash2->മൂല്യം_Comparator ||
+        hash1->മൂല്യം_Comparator == nullptr)
     {
         /*
         Normally we would return an error here about incompatible hash tables,
         but we return false instead.
         */
-        return false;
+        തിരികെ അസത്യം;
     }
 
-    count1 = uhash_count(hash1);
-    count2 = uhash_count(hash2);
-    if(count1!=count2){
-        return false;
+    count1 = uhash_എണ്ണം(hash1);
+    count2 = uhash_എണ്ണം(hash2);
+    എങ്കിൽ(count1!=count2){
+        തിരികെ അസത്യം;
     }
 
     pos=UHASH_FIRST;
-    for(i=0; i<count1; i++){
-        const UHashElement* elem1 = uhash_nextElement(hash1, &pos);
-        const UHashTok key1 = elem1->key;
-        const UHashTok val1 = elem1->value;
+    വേണ്ടി(i=0; i<count1; i++){
+        സ്ഥിരം UHashElement* elem1 = uhash_nextElement(hash1, &pos);
+        സ്ഥിരം UHashTok key1 = elem1->താക്കോൽ;
+        സ്ഥിരം UHashTok val1 = elem1->value;
         /* here the keys are not compared, instead the key form hash1 is used to fetch
          * value from hash2. If the hashes are equal then then both hashes should
          * contain equal values for the same key!
          */
-        const UHashElement* elem2 = _uhash_find(hash2, key1, hash2->keyHasher(key1));
-        const UHashTok val2 = elem2->value;
-        if(hash1->valueComparator(val1, val2)==false){
-            return false;
+        സ്ഥിരം UHashElement* elem2 = _uhash_find(hash2, key1, hash2->താക്കോൽ_Hasher(key1));
+        സ്ഥിരം UHashTok val2 = elem2->value;
+        എങ്കിൽ(hash1->മൂല്യം_Comparator(val1, val2)==അസത്യം){
+            തിരികെ അസത്യം;
         }
     }
-    return true;
+    തിരികെ സത്യം;
 }
 
 /********************************************************************
@@ -1009,77 +1009,77 @@ uhash_equals(const UHashtable* hash1, const UHashtable* hash2){
  ********************************************************************/
 
 U_CAPI UBool U_EXPORT2
-uhash_compareUChars(const UHashTok key1, const UHashTok key2) {
-    const char16_t *p1 = (const char16_t*) key1.pointer;
-    const char16_t *p2 = (const char16_t*) key2.pointer;
-    if (p1 == p2) {
-        return true;
+uhash_compareUChars(സ്ഥിരം UHashTok key1, സ്ഥിരം UHashTok key2) {
+    സ്ഥിരം char16_t *p1 = (സ്ഥിരം char16_t*) key1.pointer;
+    സ്ഥിരം char16_t *p2 = (സ്ഥിരം char16_t*) key2.pointer;
+    എങ്കിൽ (p1 == p2) {
+        തിരികെ സത്യം;
     }
-    if (p1 == nullptr || p2 == nullptr) {
-        return false;
+    എങ്കിൽ (p1 == nullptr || p2 == nullptr) {
+        തിരികെ അസത്യം;
     }
-    while (*p1 != 0 && *p1 == *p2) {
+    ആകുമ്പോൾ (*p1 != 0 && *p1 == *p2) {
         ++p1;
         ++p2;
     }
-    return *p1 == *p2;
+    തിരികെ *p1 == *p2;
 }
 
 U_CAPI UBool U_EXPORT2
-uhash_compareChars(const UHashTok key1, const UHashTok key2) {
-    const char *p1 = (const char*) key1.pointer;
-    const char *p2 = (const char*) key2.pointer;
-    if (p1 == p2) {
-        return true;
+uhash_compareChars(സ്ഥിരം UHashTok key1, സ്ഥിരം UHashTok key2) {
+    സ്ഥിരം അക്ഷരം *p1 = (സ്ഥിരം അക്ഷരം*) key1.pointer;
+    സ്ഥിരം അക്ഷരം *p2 = (സ്ഥിരം അക്ഷരം*) key2.pointer;
+    എങ്കിൽ (p1 == p2) {
+        തിരികെ സത്യം;
     }
-    if (p1 == nullptr || p2 == nullptr) {
-        return false;
+    എങ്കിൽ (p1 == nullptr || p2 == nullptr) {
+        തിരികെ അസത്യം;
     }
-    while (*p1 != 0 && *p1 == *p2) {
+    ആകുമ്പോൾ (*p1 != 0 && *p1 == *p2) {
         ++p1;
         ++p2;
     }
-    return *p1 == *p2;
+    തിരികെ *p1 == *p2;
 }
 
 U_CAPI UBool U_EXPORT2
-uhash_compareIChars(const UHashTok key1, const UHashTok key2) {
-    const char *p1 = (const char*) key1.pointer;
-    const char *p2 = (const char*) key2.pointer;
-    if (p1 == p2) {
-        return true;
+uhash_compareIChars(സ്ഥിരം UHashTok key1, സ്ഥിരം UHashTok key2) {
+    സ്ഥിരം അക്ഷരം *p1 = (സ്ഥിരം അക്ഷരം*) key1.pointer;
+    സ്ഥിരം അക്ഷരം *p2 = (സ്ഥിരം അക്ഷരം*) key2.pointer;
+    എങ്കിൽ (p1 == p2) {
+        തിരികെ സത്യം;
     }
-    if (p1 == nullptr || p2 == nullptr) {
-        return false;
+    എങ്കിൽ (p1 == nullptr || p2 == nullptr) {
+        തിരികെ അസത്യം;
     }
-    while (*p1 != 0 && uprv_tolower(*p1) == uprv_tolower(*p2)) {
+    ആകുമ്പോൾ (*p1 != 0 && uprv_tolower(*p1) == uprv_tolower(*p2)) {
         ++p1;
         ++p2;
     }
-    return *p1 == *p2;
+    തിരികെ *p1 == *p2;
 }
 
 U_CAPI UBool U_EXPORT2
-uhash_compareIStringView(const UHashTok key1, const UHashTok key2) {
-    const std::string_view* p1 = static_cast<std::string_view*>(key1.pointer);
-    const std::string_view* p2 = static_cast<std::string_view*>(key2.pointer);
-    if (p1 == p2) {
-        return true;
+uhash_compareIStringView(സ്ഥിരം UHashTok key1, സ്ഥിരം UHashTok key2) {
+    സ്ഥിരം std::string_view* p1 = static_cast<std::string_view*>(key1.pointer);
+    സ്ഥിരം std::string_view* p2 = static_cast<std::string_view*>(key2.pointer);
+    എങ്കിൽ (p1 == p2) {
+        തിരികെ സത്യം;
     }
-    if (p1 == nullptr || p2 == nullptr) {
-        return false;
+    എങ്കിൽ (p1 == nullptr || p2 == nullptr) {
+        തിരികെ അസത്യം;
     }
-    const std::string_view& v1 = *p1;
-    const std::string_view& v2 = *p2;
-    if (v1.size() != v2.size()) {
-        return false;
+    സ്ഥിരം std::string_view& v1 = *p1;
+    സ്ഥിരം std::string_view& v2 = *p2;
+    എങ്കിൽ (v1.size() != v2.size()) {
+        തിരികെ അസത്യം;
     }
-    for (size_t i = 0; i < v1.size(); ++i) {
-        if (uprv_tolower(v1[i]) != uprv_tolower(v2[i])) {
-            return false;
+    വേണ്ടി (size_t i = 0; i < v1.size(); ++i) {
+        എങ്കിൽ (uprv_tolower(v1[i]) != uprv_tolower(v2[i])) {
+            തിരികെ അസത്യം;
         }
     }
-    return true;
+    തിരികെ സത്യം;
 }
 
 /********************************************************************
@@ -1087,11 +1087,11 @@ uhash_compareIStringView(const UHashTok key1, const UHashTok key2) {
  ********************************************************************/
 
 U_CAPI int32_t U_EXPORT2
-uhash_hashLong(const UHashTok key) {
-    return key.integer;
+uhash_hashLong(സ്ഥിരം UHashTok താക്കോൽ) {
+    തിരികെ താക്കോൽ.integer;
 }
 
 U_CAPI UBool U_EXPORT2
-uhash_compareLong(const UHashTok key1, const UHashTok key2) {
-    return key1.integer == key2.integer;
+uhash_compareLong(സ്ഥിരം UHashTok key1, സ്ഥിരം UHashTok key2) {
+    തിരികെ key1.integer == key2.integer;
 }

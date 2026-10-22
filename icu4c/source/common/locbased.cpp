@@ -10,39 +10,39 @@
 * Since: ICU 2.8
 **********************************************************************
 */
-#include "locbased.h"
-#include "uresimp.h"
+#അന്തര്ഭാവ "locbased.h"
+#അന്തര്ഭാവ "uresimp.h"
 
 U_NAMESPACE_BEGIN
 
-const Locale& LocaleBased::getLocale(const Locale& valid U_LIFETIME_BOUND,
-                                     const Locale& actual U_LIFETIME_BOUND,
+സ്ഥിരം Locale& LocaleBased::getLocale(സ്ഥിരം Locale& valid U_LIFETIME_BOUND,
+                                     സ്ഥിരം Locale& actual U_LIFETIME_BOUND,
                                      ULocDataLocaleType type,
                                      UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return Locale::getRoot();
+    എങ്കിൽ (U_FAILURE(status)) {
+        തിരികെ Locale::get_വേര്();
     }
 
-    switch(type) {
-    case ULOC_VALID_LOCALE:
-        return valid;
-    case ULOC_ACTUAL_LOCALE:
-        return actual;
-    default:
+    തിരഞ്ഞെടുപ്പ്(type) {
+    അവസ്ഥ ULOC_VALID_LOCALE:
+        തിരികെ valid;
+    അവസ്ഥ ULOC_ACTUAL_LOCALE:
+        തിരികെ actual;
+    സ്ഥിരസ്ഥിതി:
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return Locale::getRoot();
+        തിരികെ Locale::get_വേര്();
     }
 }
 
-const char* LocaleBased::getLocaleID(const Locale& valid, const Locale& actual,
+സ്ഥിരം അക്ഷരം* LocaleBased::getLocaleID(സ്ഥിരം Locale& valid, സ്ഥിരം Locale& actual,
                                      ULocDataLocaleType type, UErrorCode& status) {
-    const Locale& locale = getLocale(valid, actual, type, status);
+    സ്ഥിരം Locale& locale = getLocale(valid, actual, type, status);
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    എങ്കിൽ (U_FAILURE(status)) {
+        തിരികെ nullptr;
     }
 
-    return locale == Locale::getRoot() ? kRootLocaleName : locale.getName();
+    തിരികെ locale == Locale::get_വേര്() ? k_വേര്_Locale_Name : locale.getName();
 }
 
 U_NAMESPACE_END

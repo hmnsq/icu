@@ -7,7 +7,7 @@
 #ifndef __UCPMAP_H__
 #define __UCPMAP_H__
 
-#include "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
 
 U_CDECL_BEGIN
 
@@ -27,7 +27,7 @@ U_CDECL_BEGIN
  * @see UMutableCPTrie
  * @stable ICU 63
  */
-typedef struct UCPMap UCPMap;
+തരനിർവചനം ഘടന UCPMap UCPMap;
 
 /**
  * Selectors for how ucpmap_getRange() etc. should report value ranges overlapping with surrogates.
@@ -38,7 +38,7 @@ typedef struct UCPMap UCPMap;
  * @see umutablecptrie_getRange
  * @stable ICU 63
  */
-enum UCPMapRangeOption {
+എണ്ണൽ UCPMapRangeOption {
     /**
      * ucpmap_getRange() enumerates all same-value ranges as stored in the map.
      * Most users should use this option.
@@ -79,7 +79,7 @@ enum UCPMapRangeOption {
     UCPMAP_RANGE_FIXED_ALL_SURROGATES
 };
 #ifndef U_IN_DOXYGEN
-typedef enum UCPMapRangeOption UCPMapRangeOption;
+തരനിർവചനം എണ്ണൽ UCPMapRangeOption UCPMapRangeOption;
 #endif
 
 /**
@@ -93,7 +93,7 @@ typedef enum UCPMapRangeOption UCPMapRangeOption;
  * @stable ICU 63
  */
 U_CAPI uint32_t U_EXPORT2
-ucpmap_get(const UCPMap *map, UChar32 c);
+ucpmap_get(സ്ഥിരം UCPMap *map, UChar32 c);
 
 /**
  * Callback function type: Modifies a map value.
@@ -109,8 +109,8 @@ ucpmap_get(const UCPMap *map, UChar32 c);
  * @return the modified value
  * @stable ICU 63
  */
-typedef uint32_t U_CALLCONV
-UCPMapValueFilter(const void *context, uint32_t value);
+തരനിർവചനം uint32_t U_CALLCONV
+UCPMap_മൂല്യം_Filter(സ്ഥിരം ശൂന്യം *context, uint32_t മൂല്യം_2);
 
 /**
  * Returns the last code point such that all those from start to there have the same value.
@@ -149,9 +149,9 @@ UCPMapValueFilter(const void *context, uint32_t value);
  * @stable ICU 63
  */
 U_CAPI UChar32 U_EXPORT2
-ucpmap_getRange(const UCPMap *map, UChar32 start,
-                UCPMapRangeOption option, uint32_t surrogateValue,
-                UCPMapValueFilter *filter, const void *context, uint32_t *pValue);
+ucpmap_getRange(സ്ഥിരം UCPMap *map, UChar32 start,
+                UCPMapRangeOption option, uint32_t surrogate_മൂല്യം,
+                UCPMap_മൂല്യം_Filter *filter, സ്ഥിരം ശൂന്യം *context, uint32_t *p_മൂല്യം);
 
 U_CDECL_END
 

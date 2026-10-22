@@ -7,49 +7,49 @@
 #ifndef __LOCLIKELYSUBTAGS_H__
 #define __LOCLIKELYSUBTAGS_H__
 
-#include <utility>
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/locid.h"
-#include "unicode/stringpiece.h"
-#include "unicode/uobject.h"
-#include "unicode/ures.h"
-#include "charstrmap.h"
-#include "lsr.h"
+#അന്തര്ഭാവ <utility>
+#അന്തര്ഭാവ "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/bytestrie.h"
+#അന്തര്ഭാവ "unicode/locid.h"
+#അന്തര്ഭാവ "unicode/stringpiece.h"
+#അന്തര്ഭാവ "unicode/uobject.h"
+#അന്തര്ഭാവ "unicode/ures.h"
+#അന്തര്ഭാവ "charstrmap.h"
+#അന്തര്ഭാവ "lsr.h"
 
 U_NAMESPACE_BEGIN
 
-struct LikelySubtagsData;
+ഘടന LikelySubtagsData;
 
-struct LocaleDistanceData {
-    LocaleDistanceData() = default;
+ഘടന LocaleDistanceData {
+    LocaleDistanceData() = സ്ഥിരസ്ഥിതി;
     LocaleDistanceData(LocaleDistanceData &&data);
     ~LocaleDistanceData();
 
-    const uint8_t *distanceTrieBytes = nullptr;
-    const uint8_t *regionToPartitions = nullptr;
-    const char **partitions = nullptr;
-    const LSR *paradigms = nullptr;
+    സ്ഥിരം uint8_t *distanceTrieBytes = nullptr;
+    സ്ഥിരം uint8_t *regionToPartitions = nullptr;
+    സ്ഥിരം അക്ഷരം **partitions = nullptr;
+    സ്ഥിരം LSR *paradigms = nullptr;
     int32_t paradigmsLength = 0;
-    const int32_t *distances = nullptr;
+    സ്ഥിരം int32_t *distances = nullptr;
 
-private:
-    LocaleDistanceData &operator=(const LocaleDistanceData &) = delete;
+സ്വകാര്യ:
+    LocaleDistanceData &operator=(സ്ഥിരം LocaleDistanceData &) = delete;
 };
 
-class LikelySubtags final : public UMemory {
-public:
+class LikelySubtags final : പൊതു UMemory {
+പൊതു:
     ~LikelySubtags();
 
-    static constexpr int32_t SKIP_SCRIPT = 1;
+    സ്ഥിതം constexpr int32_t SKIP_SCRIPT = 1;
 
     // VisibleForTesting
-    static const LikelySubtags *getSingleton(UErrorCode &errorCode);
+    സ്ഥിതം സ്ഥിരം LikelySubtags *getSingleton(UErrorCode &errorCode);
 
     // VisibleForTesting
-    LSR makeMaximizedLsrFrom(const Locale &locale,
-                             bool returnInputIfUnmatch,
-                             UErrorCode &errorCode) const;
+    LSR makeMaximizedLsrFrom(സ്ഥിരം Locale &locale,
+                             bool return_നിവേശം_If_Unmatch,
+                             UErrorCode &errorCode) സ്ഥിരം;
 
     /**
      * Tests whether lsr is "more likely" than other.
@@ -61,42 +61,42 @@ public:
      * with bit 0 set if lsr is "more likely".
      * The initial value of likelyInfo must be negative.
      */
-    int32_t compareLikely(const LSR &lsr, const LSR &other, int32_t likelyInfo) const;
+    int32_t compareLikely(സ്ഥിരം LSR &lsr, സ്ഥിരം LSR &other, int32_t likelyInfo) സ്ഥിരം;
 
     LSR minimizeSubtags(StringPiece language, StringPiece script, StringPiece region,
                         bool favorScript,
-                        UErrorCode &errorCode) const;
+                        UErrorCode &errorCode) സ്ഥിരം;
 
     // visible for LocaleDistance
-    const LocaleDistanceData& getDistanceData() const U_LIFETIME_BOUND { return distanceData; }
+    സ്ഥിരം LocaleDistanceData& getDistanceData() സ്ഥിരം U_LIFETIME_BOUND { തിരികെ distanceData; }
 
-private:
+സ്വകാര്യ:
     LikelySubtags(LikelySubtagsData &data);
-    LikelySubtags(const LikelySubtags &other) = delete;
-    LikelySubtags &operator=(const LikelySubtags &other) = delete;
+    LikelySubtags(സ്ഥിരം LikelySubtags &other) = delete;
+    LikelySubtags &operator=(സ്ഥിരം LikelySubtags &other) = delete;
 
-    static void initLikelySubtags(UErrorCode &errorCode);
+    സ്ഥിതം ശൂന്യം initLikelySubtags(UErrorCode &errorCode);
 
-    LSR makeMaximizedLsr(const char *language, const char *script, const char *region,
-                         const char *variant,
-                         bool returnInputIfUnmatch,
-                         UErrorCode &errorCode) const;
+    LSR makeMaximizedLsr(സ്ഥിരം അക്ഷരം *language, സ്ഥിരം അക്ഷരം *script, സ്ഥിരം അക്ഷരം *region,
+                         സ്ഥിരം അക്ഷരം *variant,
+                         bool return_നിവേശം_If_Unmatch,
+                         UErrorCode &errorCode) സ്ഥിരം;
 
     /**
      * Raw access to addLikelySubtags. Input must be in canonical format, eg "en", not "eng" or "EN".
      */
-    LSR maximize(const char *language, const char *script, const char *region,
-                 bool returnInputIfUnmatch,
-                 UErrorCode &errorCode) const;
+    LSR maximize(സ്ഥിരം അക്ഷരം *language, സ്ഥിരം അക്ഷരം *script, സ്ഥിരം അക്ഷരം *region,
+                 bool return_നിവേശം_If_Unmatch,
+                 UErrorCode &errorCode) സ്ഥിരം;
     LSR maximize(StringPiece language, StringPiece script, StringPiece region,
-                 bool returnInputIfUnmatch,
-                 UErrorCode &errorCode) const;
+                 bool return_നിവേശം_If_Unmatch,
+                 UErrorCode &errorCode) സ്ഥിരം;
 
-    int32_t getLikelyIndex(const char *language, const char *script) const;
-    bool isMacroregion(StringPiece& region, UErrorCode &errorCode) const;
+    int32_t getLikelyIndex(സ്ഥിരം അക്ഷരം *language, സ്ഥിരം അക്ഷരം *script) സ്ഥിരം;
+    bool isMacroregion(StringPiece& region, UErrorCode &errorCode) സ്ഥിരം;
 
-    static int32_t trieNext(BytesTrie &iter, const char *s, int32_t i);
-    static int32_t trieNext(BytesTrie &iter, StringPiece s, int32_t i);
+    സ്ഥിതം int32_t trieNext(BytesTrie &iter, സ്ഥിരം അക്ഷരം *s, int32_t i);
+    സ്ഥിതം int32_t trieNext(BytesTrie &iter, StringPiece s, int32_t i);
 
     UResourceBundle *langInfoBundle;
     // We could store the strings by value, except that if there were few enough strings,
@@ -114,8 +114,8 @@ private:
     uint64_t trieUndZzzzState;
     int32_t defaultLsrIndex;
     uint64_t trieFirstLetterStates[26];
-    const LSR *lsrs;
-#if U_DEBUG
+    സ്ഥിരം LSR *lsrs;
+#എങ്കിൽ U_DEBUG
     int32_t lsrsLength;
 #endif
 

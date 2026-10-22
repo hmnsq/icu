@@ -37,14 +37,14 @@
  * \brief C++ API: Interface for writing bytes, and implementation classes.
  */
 
-#include "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#എങ്കിൽ U_SHOW_CPLUSPLUS_API
 
-#include <type_traits>
+#അന്തര്ഭാവ <type_traits>
 
-#include "unicode/uobject.h"
-#include "unicode/std_string.h"
+#അന്തര്ഭാവ "unicode/uobject.h"
+#അന്തര്ഭാവ "unicode/std_string.h"
 
 U_NAMESPACE_BEGIN
 
@@ -52,8 +52,8 @@ U_NAMESPACE_BEGIN
  * A ByteSink can be filled with bytes.
  * @stable ICU 4.2
  */
-class U_COMMON_API ByteSink : public UMemory {
-public:
+class U_COMMON_API ByteSink : പൊതു UMemory {
+പൊതു:
   /**
    * Default constructor.
    * @stable ICU 4.2
@@ -63,7 +63,7 @@ public:
    * Virtual destructor.
    * @stable ICU 4.2
    */
-  virtual ~ByteSink();
+  മായാ ~ByteSink();
 
   /**
    * Append "bytes[0,n-1]" to this.
@@ -71,7 +71,7 @@ public:
    * @param n the number of bytes; must be non-negative
    * @stable ICU 4.2
    */
-  virtual void Append(const char* bytes, int32_t n) = 0;
+  മായാ ശൂന്യം Append(സ്ഥിരം അക്ഷരം* bytes, int32_t n) = 0;
 
   /**
    * Appends n bytes to this. Same as Append().
@@ -84,11 +84,11 @@ public:
    * @param n the number of bytes; must be non-negative
    * @stable ICU 67
    */
-  inline void AppendU8(const char* bytes, int32_t n) {
+  വരിയിൽ ശൂന്യം AppendU8(സ്ഥിരം അക്ഷരം* bytes, int32_t n) {
     Append(bytes, n);
   }
 
-#if defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
+#എങ്കിൽ defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
   /**
    * Appends n bytes to this. Same as Append() but for a const char8_t * pointer.
    * Call AppendU8() with u8"string literals" which are const char * in C++11
@@ -100,8 +100,8 @@ public:
    * @param n the number of bytes; must be non-negative
    * @stable ICU 67
    */
-  inline void AppendU8(const char8_t* bytes, int32_t n) {
-    Append(reinterpret_cast<const char*>(bytes), n);
+  വരിയിൽ ശൂന്യം AppendU8(സ്ഥിരം char8_t* bytes, int32_t n) {
+    Append(reinterpret_cast<സ്ഥിരം അക്ഷരം*>(bytes), n);
   }
 #endif
 
@@ -147,9 +147,9 @@ public:
    * @return a buffer with *result_capacity>=min_capacity
    * @stable ICU 4.2
    */
-  virtual char* GetAppendBuffer(int32_t min_capacity,
+  മായാ അക്ഷരം* GetAppendBuffer(int32_t min_capacity,
                                 int32_t desired_capacity_hint,
-                                char* scratch U_LIFETIME_BOUND,
+                                അക്ഷരം* scratch U_LIFETIME_BOUND,
                                 int32_t scratch_capacity,
                                 int32_t* result_capacity) U_LIFETIME_BOUND;
 
@@ -161,11 +161,11 @@ public:
    * The default implementation of Flush() does nothing.
    * @stable ICU 4.2
    */
-  virtual void Flush();
+  മായാ ശൂന്യം Flush();
 
-private:
-  ByteSink(const ByteSink &) = delete;
-  ByteSink &operator=(const ByteSink &) = delete;
+സ്വകാര്യ:
+  ByteSink(സ്ഥിരം ByteSink &) = delete;
+  ByteSink &operator=(സ്ഥിരം ByteSink &) = delete;
 };
 
 // -------------------------------------------------------------
@@ -180,20 +180,20 @@ private:
  * Overflow does not cause a runtime error.
  * @stable ICU 4.2
  */
-class U_COMMON_API CheckedArrayByteSink : public ByteSink {
-public:
+class U_COMMON_API CheckedArrayByteSink : പൊതു ByteSink {
+പൊതു:
   /**
    * Constructs a ByteSink that will write to outbuf[0..capacity-1].
    * @param outbuf buffer to write to
    * @param capacity size of the buffer
    * @stable ICU 4.2
    */
-  CheckedArrayByteSink(char* outbuf, int32_t capacity);
+  CheckedArrayByteSink(അക്ഷരം* outbuf, int32_t capacity);
   /**
    * Destructor.
    * @stable ICU 4.2
    */
-  virtual ~CheckedArrayByteSink();
+  മായാ ~CheckedArrayByteSink();
   /**
    * Returns the sink to its original state, without modifying the buffer.
    * Useful for reusing both the buffer and the sink for multiple streams.
@@ -202,14 +202,14 @@ public:
    * @return *this
    * @stable ICU 4.6
    */
-  virtual CheckedArrayByteSink& Reset() U_LIFETIME_BOUND;
+  മായാ CheckedArrayByteSink& Reset() U_LIFETIME_BOUND;
   /**
    * Append "bytes[0,n-1]" to this.
    * @param bytes the pointer to the bytes
    * @param n the number of bytes; must be non-negative
    * @stable ICU 4.2
    */
-  virtual void Append(const char* bytes, int32_t n) override;
+  മായാ ശൂന്യം Append(സ്ഥിരം അക്ഷരം* bytes, int32_t n) override;
   /**
    * Returns a writable buffer for appending and writes the buffer's capacity to
    * *result_capacity. For details see the base class documentation.
@@ -224,9 +224,9 @@ public:
    * @return a buffer with *result_capacity>=min_capacity
    * @stable ICU 4.2
    */
-  virtual char* GetAppendBuffer(int32_t min_capacity,
+  മായാ അക്ഷരം* GetAppendBuffer(int32_t min_capacity,
                                 int32_t desired_capacity_hint,
-                                char* scratch U_LIFETIME_BOUND,
+                                അക്ഷരം* scratch U_LIFETIME_BOUND,
                                 int32_t scratch_capacity,
                                 int32_t* result_capacity) U_LIFETIME_BOUND override;
   /**
@@ -234,14 +234,14 @@ public:
    * @return number of bytes written to the buffer
    * @stable ICU 4.2
    */
-  int32_t NumberOfBytesWritten() const { return size_; }
+  int32_t സംഖ്യ_Of_Bytes_Written() സ്ഥിരം { തിരികെ size_; }
   /**
    * Returns true if any bytes were discarded, i.e., if there was an
    * attempt to write more than 'capacity' bytes.
    * @return true if more than 'capacity' bytes were Append()ed
    * @stable ICU 4.2
    */
-  UBool Overflowed() const { return overflowed_; }
+  UBool Overflowed() സ്ഥിരം { തിരികെ overflowed_; }
   /**
    * Returns the number of bytes appended to the sink.
    * If Overflowed() then NumberOfBytesAppended()>NumberOfBytesWritten()
@@ -249,35 +249,35 @@ public:
    * @return number of bytes written to the buffer
    * @stable ICU 4.6
    */
-  int32_t NumberOfBytesAppended() const { return appended_; }
-private:
-  char* outbuf_;
-  const int32_t capacity_;
+  int32_t സംഖ്യ_Of_Bytes_Appended() സ്ഥിരം { തിരികെ appended_; }
+സ്വകാര്യ:
+  അക്ഷരം* outbuf_;
+  സ്ഥിരം int32_t capacity_;
   int32_t size_;
   int32_t appended_;
   UBool overflowed_;
 
   CheckedArrayByteSink() = delete;
-  CheckedArrayByteSink(const CheckedArrayByteSink &) = delete;
-  CheckedArrayByteSink &operator=(const CheckedArrayByteSink &) = delete;
+  CheckedArrayByteSink(സ്ഥിരം CheckedArrayByteSink &) = delete;
+  CheckedArrayByteSink &operator=(സ്ഥിരം CheckedArrayByteSink &) = delete;
 };
 
 namespace prv {
 /** @internal */
-template<typename StringClass, typename = void>
-struct value_type_or_char {
+template<typename StringClass, typename = ശൂന്യം>
+ഘടന മൂല്യം_type_or_char {
   /** @internal */
-  using type = char;
+  using type = അക്ഷരം;
 };
 /** @internal */
 template<typename StringClass>
-struct value_type_or_char<StringClass, std::void_t<typename StringClass::value_type>> {
+ഘടന മൂല്യം_type_or_char<StringClass, std::void_t<typename StringClass::മൂല്യം_type>> {
   /** @internal */
-  using type = typename StringClass::value_type;
+  using type = typename StringClass::മൂല്യം_type;
 };
 /** @internal */
 template<typename StringClass>
-using value_type_or_char_t = typename value_type_or_char<StringClass>::type;
+using മൂല്യം_type_or_char_t = typename മൂല്യം_type_or_char<StringClass>::type;
 }
 
 /** 
@@ -290,9 +290,9 @@ using value_type_or_char_t = typename value_type_or_char<StringClass>::type;
  * @stable ICU 4.2
  */
 template<typename StringClass>
-class StringByteSink : public ByteSink {
-  using Unit = typename prv::value_type_or_char_t<StringClass>;
- public:
+class StringByteSink : പൊതു ByteSink {
+  using Unit = typename prv::മൂല്യം_type_or_char_t<StringClass>;
+ പൊതു:
   /**
    * Constructs a ByteSink that will append bytes to the dest string.
    * @param dest pointer to string object to append to
@@ -307,7 +307,7 @@ class StringByteSink : public ByteSink {
    * @stable ICU 60
    */
   StringByteSink(StringClass* dest, int32_t initialAppendCapacity) : dest_(dest) {
-    if (initialAppendCapacity > 0 &&
+    എങ്കിൽ (initialAppendCapacity > 0 &&
         static_cast<uint32_t>(initialAppendCapacity) > dest->capacity() - dest->length()) {
       dest->reserve(dest->length() + initialAppendCapacity);
     }
@@ -318,19 +318,19 @@ class StringByteSink : public ByteSink {
    * @param n the number of bytes; must be non-negative
    * @stable ICU 4.2
    */
-  virtual void Append(const char* data, int32_t n) override {
-    if constexpr (std::is_same_v<Unit, char>) {
+  മായാ ശൂന്യം Append(സ്ഥിരം അക്ഷരം* data, int32_t n) override {
+    എങ്കിൽ constexpr (std::is_same_v<Unit, അക്ഷരം>) {
       dest_->append(data, n);
-    } else {
-      dest_->append(reinterpret_cast<const Unit*>(data), n);
+    } അല്ലെങ്കിൽ {
+      dest_->append(reinterpret_cast<സ്ഥിരം Unit*>(data), n);
     }
   }
- private:
+ സ്വകാര്യ:
   StringClass* dest_;
 
   StringByteSink() = delete;
-  StringByteSink(const StringByteSink &) = delete;
-  StringByteSink &operator=(const StringByteSink &) = delete;
+  StringByteSink(സ്ഥിരം StringByteSink &) = delete;
+  StringByteSink &operator=(സ്ഥിരം StringByteSink &) = delete;
 };
 
 U_NAMESPACE_END

@@ -7,13 +7,13 @@
 #ifndef __CHAR16PTR_H__
 #define __CHAR16PTR_H__
 
-#include "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
+#എങ്കിൽ U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
 
-#include <cstddef>
-#include <string_view>
-#include <type_traits>
+#അന്തര്ഭാവ <cstddef>
+#അന്തര്ഭാവ <string_view>
+#അന്തര്ഭാവ <type_traits>
 
 #endif
 
@@ -31,14 +31,14 @@
  */
 #ifdef U_ALIASING_BARRIER
     // Use the predefined value.
-#elif (defined(__clang__) || defined(__GNUC__)) && U_PLATFORM != U_PF_BROWSER_NATIVE_CLIENT
-#   define U_ALIASING_BARRIER(ptr) asm volatile("" : : "rm"(ptr) : "memory")
-#elif defined(U_IN_DOXYGEN)
+#അല്ലെങ്കിലെങ്കിൽ (defined(__clang__) || defined(__GNUC__)) && U_PLATFORM != U_PF_BROWSER_NATIVE_CLIENT
+#   define U_ALIASING_BARRIER(ptr) asm അസ്ഥിര("" : : "rm"(ptr) : "memory")
+#അല്ലെങ്കിലെങ്കിൽ defined(U_IN_DOXYGEN)
 #   define U_ALIASING_BARRIER(ptr)
 #endif
 
 // ICU DLL-exported
-#if U_SHOW_CPLUSPLUS_API
+#എങ്കിൽ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -47,67 +47,67 @@ U_NAMESPACE_BEGIN
  * @stable ICU 59
  */
 class U_COMMON_API Char16Ptr final {
-public:
+പൊതു:
     /**
      * Copies the pointer.
      * @param p pointer
      * @stable ICU 59
      */
-    inline Char16Ptr(char16_t *p);
-#if !U_CHAR16_IS_TYPEDEF
+    വരിയിൽ Char16Ptr(char16_t *p);
+#എങ്കിൽ !U_CHAR16_IS_TYPEDEF
     /**
      * Converts the pointer to char16_t *.
      * @param p pointer to be converted
      * @stable ICU 59
      */
-    inline Char16Ptr(uint16_t *p);
+    വരിയിൽ Char16Ptr(uint16_t *p);
 #endif
-#if U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
+#എങ്കിൽ U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
     /**
      * Converts the pointer to char16_t *.
      * (Only defined if U_SIZEOF_WCHAR_T==2.)
      * @param p pointer to be converted
      * @stable ICU 59
      */
-    inline Char16Ptr(wchar_t *p);
+    വരിയിൽ Char16Ptr(wchar_t *p);
 #endif
     /**
      * nullptr constructor.
      * @param p nullptr
      * @stable ICU 59
      */
-    inline Char16Ptr(std::nullptr_t p);
+    വരിയിൽ Char16Ptr(std::nullptr_t p);
     /**
      * Destructor.
      * @stable ICU 59
      */
-    inline ~Char16Ptr();
+    വരിയിൽ ~Char16Ptr();
 
     /**
      * Pointer access.
      * @return the wrapped pointer
      * @stable ICU 59
      */
-    inline char16_t *get() const;
+    വരിയിൽ char16_t *get() സ്ഥിരം;
     /**
      * char16_t pointer access via type conversion (e.g., static_cast).
      * @return the wrapped pointer
      * @stable ICU 59
      */
-    inline operator char16_t *() const { return get(); }
+    വരിയിൽ operator char16_t *() സ്ഥിരം { തിരികെ get(); }
 
-private:
+സ്വകാര്യ:
     Char16Ptr() = delete;
 
 #ifdef U_ALIASING_BARRIER
-    template<typename T> static char16_t *cast(T *t) {
+    template<typename T> സ്ഥിതം char16_t *cast(T *t) {
         U_ALIASING_BARRIER(t);
-        return reinterpret_cast<char16_t *>(t);
+        തിരികെ reinterpret_cast<char16_t *>(t);
     }
 
     char16_t *p_;
-#else
-    union {
+#അല്ലെങ്കിൽ
+    സംഘം {
         char16_t *cp;
         uint16_t *up;
         wchar_t *wp;
@@ -119,10 +119,10 @@ private:
 #ifdef U_ALIASING_BARRIER
 
 Char16Ptr::Char16Ptr(char16_t *p) : p_(p) {}
-#if !U_CHAR16_IS_TYPEDEF
+#എങ്കിൽ !U_CHAR16_IS_TYPEDEF
 Char16Ptr::Char16Ptr(uint16_t *p) : p_(cast(p)) {}
 #endif
-#if U_SIZEOF_WCHAR_T==2
+#എങ്കിൽ U_SIZEOF_WCHAR_T==2
 Char16Ptr::Char16Ptr(wchar_t *p) : p_(cast(p)) {}
 #endif
 Char16Ptr::Char16Ptr(std::nullptr_t p) : p_(p) {}
@@ -130,21 +130,21 @@ Char16Ptr::~Char16Ptr() {
     U_ALIASING_BARRIER(p_);
 }
 
-char16_t *Char16Ptr::get() const { return p_; }
+char16_t *Char16Ptr::get() സ്ഥിരം { തിരികെ p_; }
 
-#else
+#അല്ലെങ്കിൽ
 
 Char16Ptr::Char16Ptr(char16_t *p) { u_.cp = p; }
-#if !U_CHAR16_IS_TYPEDEF
+#എങ്കിൽ !U_CHAR16_IS_TYPEDEF
 Char16Ptr::Char16Ptr(uint16_t *p) { u_.up = p; }
 #endif
-#if U_SIZEOF_WCHAR_T==2
+#എങ്കിൽ U_SIZEOF_WCHAR_T==2
 Char16Ptr::Char16Ptr(wchar_t *p) { u_.wp = p; }
 #endif
 Char16Ptr::Char16Ptr(std::nullptr_t p) { u_.cp = p; }
 Char16Ptr::~Char16Ptr() {}
 
-char16_t *Char16Ptr::get() const { return u_.cp; }
+char16_t *Char16Ptr::get() സ്ഥിരം { തിരികെ u_.cp; }
 
 #endif
 /// \endcond
@@ -154,71 +154,71 @@ char16_t *Char16Ptr::get() const { return u_.cp; }
  * @stable ICU 59
  */
 class U_COMMON_API ConstChar16Ptr final {
-public:
+പൊതു:
     /**
      * Copies the pointer.
      * @param p pointer
      * @stable ICU 59
      */
-    inline ConstChar16Ptr(const char16_t *p);
-#if !U_CHAR16_IS_TYPEDEF
+    വരിയിൽ ConstChar16Ptr(സ്ഥിരം char16_t *p);
+#എങ്കിൽ !U_CHAR16_IS_TYPEDEF
     /**
      * Converts the pointer to char16_t *.
      * @param p pointer to be converted
      * @stable ICU 59
      */
-    inline ConstChar16Ptr(const uint16_t *p);
+    വരിയിൽ ConstChar16Ptr(സ്ഥിരം uint16_t *p);
 #endif
-#if U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
+#എങ്കിൽ U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
     /**
      * Converts the pointer to char16_t *.
      * (Only defined if U_SIZEOF_WCHAR_T==2.)
      * @param p pointer to be converted
      * @stable ICU 59
      */
-    inline ConstChar16Ptr(const wchar_t *p);
+    വരിയിൽ ConstChar16Ptr(സ്ഥിരം wchar_t *p);
 #endif
     /**
      * nullptr constructor.
      * @param p nullptr
      * @stable ICU 59
      */
-    inline ConstChar16Ptr(const std::nullptr_t p);
+    വരിയിൽ ConstChar16Ptr(സ്ഥിരം std::nullptr_t p);
 
     /**
      * Destructor.
      * @stable ICU 59
      */
-    inline ~ConstChar16Ptr();
+    വരിയിൽ ~ConstChar16Ptr();
 
     /**
      * Pointer access.
      * @return the wrapped pointer
      * @stable ICU 59
      */
-    inline const char16_t *get() const;
+    വരിയിൽ സ്ഥിരം char16_t *get() സ്ഥിരം;
     /**
      * char16_t pointer access via type conversion (e.g., static_cast).
      * @return the wrapped pointer
      * @stable ICU 59
      */
-    inline operator const char16_t *() const { return get(); }
+    വരിയിൽ operator സ്ഥിരം char16_t *() സ്ഥിരം { തിരികെ get(); }
 
-private:
+സ്വകാര്യ:
     ConstChar16Ptr() = delete;
 
 #ifdef U_ALIASING_BARRIER
-    template<typename T> static const char16_t *cast(const T *t) {
+    template<typename T> സ്ഥിതം സ്ഥിരം char16_t *cast(സ്ഥിരം T *t) {
         U_ALIASING_BARRIER(t);
-        return reinterpret_cast<const char16_t *>(t);
+        തിരികെ reinterpret_cast<സ്ഥിരം char16_t *>(t);
     }
 
-    const char16_t *p_;
-#else
-    union {
-        const char16_t *cp;
-        const uint16_t *up;
-        const wchar_t *wp;
+    സ്ഥിരം char16_t *p_;
+#അല്ലെങ്കിൽ
+    സംഘം {
+        സ്ഥിരം char16_t *cp;
+        സ്ഥിരം uint16_t *up;
+        സ്ഥിരം wchar_t *wp;
     } u_;
 #endif
 };
@@ -226,33 +226,33 @@ private:
 /// \cond
 #ifdef U_ALIASING_BARRIER
 
-ConstChar16Ptr::ConstChar16Ptr(const char16_t *p) : p_(p) {}
-#if !U_CHAR16_IS_TYPEDEF
-ConstChar16Ptr::ConstChar16Ptr(const uint16_t *p) : p_(cast(p)) {}
+ConstChar16Ptr::ConstChar16Ptr(സ്ഥിരം char16_t *p) : p_(p) {}
+#എങ്കിൽ !U_CHAR16_IS_TYPEDEF
+ConstChar16Ptr::ConstChar16Ptr(സ്ഥിരം uint16_t *p) : p_(cast(p)) {}
 #endif
-#if U_SIZEOF_WCHAR_T==2
-ConstChar16Ptr::ConstChar16Ptr(const wchar_t *p) : p_(cast(p)) {}
+#എങ്കിൽ U_SIZEOF_WCHAR_T==2
+ConstChar16Ptr::ConstChar16Ptr(സ്ഥിരം wchar_t *p) : p_(cast(p)) {}
 #endif
-ConstChar16Ptr::ConstChar16Ptr(const std::nullptr_t p) : p_(p) {}
+ConstChar16Ptr::ConstChar16Ptr(സ്ഥിരം std::nullptr_t p) : p_(p) {}
 ConstChar16Ptr::~ConstChar16Ptr() {
     U_ALIASING_BARRIER(p_);
 }
 
-const char16_t *ConstChar16Ptr::get() const { return p_; }
+സ്ഥിരം char16_t *ConstChar16Ptr::get() സ്ഥിരം { തിരികെ p_; }
 
-#else
+#അല്ലെങ്കിൽ
 
-ConstChar16Ptr::ConstChar16Ptr(const char16_t *p) { u_.cp = p; }
-#if !U_CHAR16_IS_TYPEDEF
-ConstChar16Ptr::ConstChar16Ptr(const uint16_t *p) { u_.up = p; }
+ConstChar16Ptr::ConstChar16Ptr(സ്ഥിരം char16_t *p) { u_.cp = p; }
+#എങ്കിൽ !U_CHAR16_IS_TYPEDEF
+ConstChar16Ptr::ConstChar16Ptr(സ്ഥിരം uint16_t *p) { u_.up = p; }
 #endif
-#if U_SIZEOF_WCHAR_T==2
-ConstChar16Ptr::ConstChar16Ptr(const wchar_t *p) { u_.wp = p; }
+#എങ്കിൽ U_SIZEOF_WCHAR_T==2
+ConstChar16Ptr::ConstChar16Ptr(സ്ഥിരം wchar_t *p) { u_.wp = p; }
 #endif
-ConstChar16Ptr::ConstChar16Ptr(const std::nullptr_t p) { u_.cp = p; }
+ConstChar16Ptr::ConstChar16Ptr(സ്ഥിരം std::nullptr_t p) { u_.cp = p; }
 ConstChar16Ptr::~ConstChar16Ptr() {}
 
-const char16_t *ConstChar16Ptr::get() const { return u_.cp; }
+സ്ഥിരം char16_t *ConstChar16Ptr::get() സ്ഥിരം { തിരികെ u_.cp; }
 
 #endif
 /// \endcond
@@ -262,50 +262,50 @@ U_NAMESPACE_END
 #endif  // U_SHOW_CPLUSPLUS_API
 
 // Usable in header-only definitions
-#if U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
+#എങ്കിൽ U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
 
 namespace U_ICU_NAMESPACE_OR_INTERNAL {
 
 #ifndef U_FORCE_HIDE_INTERNAL_API
 /** @internal */
 template <typename T, typename = std::enable_if_t<std::is_same_v<T, UChar>>>
-inline const char16_t* uprv_char16PtrFromUChar(const T* p U_LIFETIME_BOUND) {
-    if constexpr (std::is_same_v<UChar, char16_t>) {
-        return p;
-    } else {
-#if U_SHOW_CPLUSPLUS_API
-        return ConstChar16Ptr(p).get();
-#else
+വരിയിൽ സ്ഥിരം char16_t* uprv_char16PtrFromUChar(സ്ഥിരം T* p U_LIFETIME_BOUND) {
+    എങ്കിൽ constexpr (std::is_same_v<UChar, char16_t>) {
+        തിരികെ p;
+    } അല്ലെങ്കിൽ {
+#എങ്കിൽ U_SHOW_CPLUSPLUS_API
+        തിരികെ ConstChar16Ptr(p).get();
+#അല്ലെങ്കിൽ
 #ifdef U_ALIASING_BARRIER
         U_ALIASING_BARRIER(p);
 #endif
-        return reinterpret_cast<const char16_t *>(p);
+        തിരികെ reinterpret_cast<സ്ഥിരം char16_t *>(p);
 #endif
     }
 }
-#if !U_CHAR16_IS_TYPEDEF && (!defined(_LIBCPP_VERSION) || _LIBCPP_VERSION < 180000)
+#എങ്കിൽ !U_CHAR16_IS_TYPEDEF && (!defined(_LIBCPP_VERSION) || _LIBCPP_VERSION < 180000)
 /** @internal */
-inline const char16_t* uprv_char16PtrFromUint16(const uint16_t* p U_LIFETIME_BOUND) {
-#if U_SHOW_CPLUSPLUS_API
-    return ConstChar16Ptr(p).get();
-#else
+വരിയിൽ സ്ഥിരം char16_t* uprv_char16PtrFromUint16(സ്ഥിരം uint16_t* p U_LIFETIME_BOUND) {
+#എങ്കിൽ U_SHOW_CPLUSPLUS_API
+    തിരികെ ConstChar16Ptr(p).get();
+#അല്ലെങ്കിൽ
 #ifdef U_ALIASING_BARRIER
     U_ALIASING_BARRIER(p);
 #endif
-    return reinterpret_cast<const char16_t *>(p);
+    തിരികെ reinterpret_cast<സ്ഥിരം char16_t *>(p);
 #endif
 }
 #endif
-#if U_SIZEOF_WCHAR_T==2
+#എങ്കിൽ U_SIZEOF_WCHAR_T==2
 /** @internal */
-inline const char16_t* uprv_char16PtrFromWchar(const wchar_t* p U_LIFETIME_BOUND) {
-#if U_SHOW_CPLUSPLUS_API
-    return ConstChar16Ptr(p).get();
-#else
+വരിയിൽ സ്ഥിരം char16_t* uprv_char16PtrFromWchar(സ്ഥിരം wchar_t* p U_LIFETIME_BOUND) {
+#എങ്കിൽ U_SHOW_CPLUSPLUS_API
+    തിരികെ ConstChar16Ptr(p).get();
+#അല്ലെങ്കിൽ
 #ifdef U_ALIASING_BARRIER
     U_ALIASING_BARRIER(p);
 #endif
-    return reinterpret_cast<const char16_t *>(p);
+    തിരികെ reinterpret_cast<സ്ഥിരം char16_t *>(p);
 #endif
 }
 #endif
@@ -318,11 +318,11 @@ inline const char16_t* uprv_char16PtrFromWchar(const wchar_t* p U_LIFETIME_BOUND
  * @return p as const UChar *
  * @stable ICU 59
  */
-inline const UChar* toUCharPtr(const char16_t* p U_LIFETIME_BOUND) {
+വരിയിൽ സ്ഥിരം UChar* toUCharPtr(സ്ഥിരം char16_t* p U_LIFETIME_BOUND) {
 #ifdef U_ALIASING_BARRIER
     U_ALIASING_BARRIER(p);
 #endif
-    return reinterpret_cast<const UChar *>(p);
+    തിരികെ reinterpret_cast<സ്ഥിരം UChar *>(p);
 }
 
 /**
@@ -332,11 +332,11 @@ inline const UChar* toUCharPtr(const char16_t* p U_LIFETIME_BOUND) {
  * @return p as UChar *
  * @stable ICU 59
  */
-inline UChar* toUCharPtr(char16_t* p U_LIFETIME_BOUND) {
+വരിയിൽ UChar* toUCharPtr(char16_t* p U_LIFETIME_BOUND) {
 #ifdef U_ALIASING_BARRIER
     U_ALIASING_BARRIER(p);
 #endif
-    return reinterpret_cast<UChar *>(p);
+    തിരികെ reinterpret_cast<UChar *>(p);
 }
 
 /**
@@ -346,11 +346,11 @@ inline UChar* toUCharPtr(char16_t* p U_LIFETIME_BOUND) {
  * @return p as const OldUChar *
  * @stable ICU 59
  */
-inline const OldUChar* toOldUCharPtr(const char16_t* p U_LIFETIME_BOUND) {
+വരിയിൽ സ്ഥിരം OldUChar* toOldUCharPtr(സ്ഥിരം char16_t* p U_LIFETIME_BOUND) {
 #ifdef U_ALIASING_BARRIER
     U_ALIASING_BARRIER(p);
 #endif
-    return reinterpret_cast<const OldUChar *>(p);
+    തിരികെ reinterpret_cast<സ്ഥിരം OldUChar *>(p);
 }
 
 /**
@@ -360,11 +360,11 @@ inline const OldUChar* toOldUCharPtr(const char16_t* p U_LIFETIME_BOUND) {
  * @return p as OldUChar *
  * @stable ICU 59
  */
-inline OldUChar* toOldUCharPtr(char16_t* p U_LIFETIME_BOUND) {
+വരിയിൽ OldUChar* toOldUCharPtr(char16_t* p U_LIFETIME_BOUND) {
 #ifdef U_ALIASING_BARRIER
     U_ALIASING_BARRIER(p);
 #endif
-    return reinterpret_cast<OldUChar *>(p);
+    തിരികെ reinterpret_cast<OldUChar *>(p);
 }
 
 }  // U_ICU_NAMESPACE_OR_INTERNAL
@@ -372,7 +372,7 @@ inline OldUChar* toOldUCharPtr(char16_t* p U_LIFETIME_BOUND) {
 #endif  // U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API
 
 // ICU DLL-exported
-#if U_SHOW_CPLUSPLUS_API
+#എങ്കിൽ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -384,10 +384,10 @@ U_NAMESPACE_BEGIN
 template<typename T>
 constexpr bool ConvertibleToU16StringView =
     std::is_convertible_v<T, std::u16string_view>
-#if !U_CHAR16_IS_TYPEDEF && (!defined(_LIBCPP_VERSION) || _LIBCPP_VERSION < 180000)
+#എങ്കിൽ !U_CHAR16_IS_TYPEDEF && (!defined(_LIBCPP_VERSION) || _LIBCPP_VERSION < 180000)
     || std::is_convertible_v<T, std::basic_string_view<uint16_t>>
 #endif
-#if U_SIZEOF_WCHAR_T==2
+#എങ്കിൽ U_SIZEOF_WCHAR_T==2
     || std::is_convertible_v<T, std::wstring_view>
 #endif
     ;
@@ -397,27 +397,27 @@ namespace internal {
  * Pass-through overload.
  * @internal
  */
-inline std::u16string_view toU16StringView(std::u16string_view sv U_LIFETIME_BOUND) { return sv; }
+വരിയിൽ std::u16string_view toU16StringView(std::u16string_view sv U_LIFETIME_BOUND) { തിരികെ sv; }
 
-#if !U_CHAR16_IS_TYPEDEF && (!defined(_LIBCPP_VERSION) || _LIBCPP_VERSION < 180000)
+#എങ്കിൽ !U_CHAR16_IS_TYPEDEF && (!defined(_LIBCPP_VERSION) || _LIBCPP_VERSION < 180000)
 /**
  * Basically undefined behavior but sometimes necessary conversion
  * from std::basic_string_view<uint16_t> to std::u16string_view.
  * @internal
  */
-inline std::u16string_view toU16StringView(std::basic_string_view<uint16_t> sv U_LIFETIME_BOUND) {
-    return { ConstChar16Ptr(sv.data()), sv.length() };
+വരിയിൽ std::u16string_view toU16StringView(std::basic_string_view<uint16_t> sv U_LIFETIME_BOUND) {
+    തിരികെ { ConstChar16Ptr(sv.data()), sv.length() };
 }
 #endif
 
-#if U_SIZEOF_WCHAR_T==2
+#എങ്കിൽ U_SIZEOF_WCHAR_T==2
 /**
  * Basically undefined behavior but sometimes necessary conversion
  * from std::wstring_view to std::u16string_view.
  * @internal
  */
-inline std::u16string_view toU16StringView(std::wstring_view sv U_LIFETIME_BOUND) {
-    return { ConstChar16Ptr(sv.data()), sv.length() };
+വരിയിൽ std::u16string_view toU16StringView(std::wstring_view sv U_LIFETIME_BOUND) {
+    തിരികെ { ConstChar16Ptr(sv.data()), sv.length() };
 }
 #endif
 
@@ -427,8 +427,8 @@ inline std::u16string_view toU16StringView(std::wstring_view sv U_LIFETIME_BOUND
  */
 template <typename T,
           typename = typename std::enable_if_t<!std::is_pointer_v<std::remove_reference_t<T>>>>
-inline std::u16string_view toU16StringViewNullable(const T& text U_LIFETIME_BOUND) {
-    return toU16StringView(text);
+വരിയിൽ std::u16string_view toU16StringViewNullable(സ്ഥിരം T& text U_LIFETIME_BOUND) {
+    തിരികെ toU16StringView(text);
 }
 
 /**
@@ -437,10 +437,10 @@ inline std::u16string_view toU16StringViewNullable(const T& text U_LIFETIME_BOUN
  */
 template <typename T,
           typename = typename std::enable_if_t<std::is_pointer_v<std::remove_reference_t<T>>>,
-          typename = void>
-inline std::u16string_view toU16StringViewNullable(const T& text U_LIFETIME_BOUND) {
-    if (text == nullptr) return {};  // For backward compatibility.
-    return toU16StringView(text);
+          typename = ശൂന്യം>
+വരിയിൽ std::u16string_view toU16StringViewNullable(സ്ഥിരം T& text U_LIFETIME_BOUND) {
+    എങ്കിൽ (text == nullptr) തിരികെ {};  // For backward compatibility.
+    തിരികെ toU16StringView(text);
 }
 
 }  // internal

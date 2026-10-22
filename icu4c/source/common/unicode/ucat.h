@@ -13,8 +13,8 @@
 #ifndef UCAT_H
 #define UCAT_H
 
-#include "unicode/utypes.h"
-#include "unicode/ures.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/ures.h"
 
 /**
  * \file
@@ -70,7 +70,7 @@ U_CDECL_BEGIN
  * 
  * @stable ICU 2.6
  */
-typedef UResourceBundle* u_nl_catd;
+തരനിർവചനം UResourceBundle* u_nl_catd;
 
 /**
  * Open and return an ICU message catalog descriptor. The descriptor
@@ -104,7 +104,7 @@ typedef UResourceBundle* u_nl_catd;
  * @stable ICU 2.6
  */
 U_CAPI u_nl_catd U_EXPORT2
-u_catopen(const char* name, const char* locale, UErrorCode* ec);
+u_catopen(സ്ഥിരം അക്ഷരം* name, സ്ഥിരം അക്ഷരം* locale, UErrorCode* ec);
 
 /**
  * Close an ICU message catalog, given its descriptor.
@@ -114,7 +114,7 @@ u_catopen(const char* name, const char* locale, UErrorCode* ec);
  * 
  * @stable ICU 2.6
  */
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 u_catclose(u_nl_catd catd);
 
 /**
@@ -149,11 +149,11 @@ u_catclose(u_nl_catd catd);
  * 
  * @stable ICU 2.6
  */
-U_CAPI const UChar* U_EXPORT2
+U_CAPI സ്ഥിരം UChar* U_EXPORT2
 u_catgets(u_nl_catd catd U_LIFETIME_BOUND,
-          int32_t set_num,
-          int32_t msg_num,
-          const UChar* s U_LIFETIME_BOUND,
+          int32_t set_അക്കം,
+          int32_t സന്ദേശം_അക്കം,
+          സ്ഥിരം UChar* s U_LIFETIME_BOUND,
           int32_t* len,
           UErrorCode* ec);
 

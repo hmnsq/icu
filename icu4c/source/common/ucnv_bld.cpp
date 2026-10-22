@@ -21,98 +21,98 @@
  *   06/29/2000  helena      Major rewrite of the callback interface.
 */
 
-#include "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#എങ്കിൽ !UCONFIG_NO_CONVERSION
 
-#include "unicode/putil.h"
-#include "unicode/udata.h"
-#include "unicode/ucnv.h"
-#include "unicode/uloc.h"
-#include "mutex.h"
-#include "putilimp.h"
-#include "uassert.h"
-#include "utracimp.h"
-#include "ucnv_io.h"
-#include "ucnv_bld.h"
-#include "ucnvmbcs.h"
-#include "ucnv_ext.h"
-#include "ucnv_cnv.h"
-#include "ucnv_imp.h"
-#include "uhash.h"
-#include "umutex.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "ucln_cmn.h"
-#include "ustr_cnv.h"
+#അന്തര്ഭാവ "unicode/putil.h"
+#അന്തര്ഭാവ "unicode/udata.h"
+#അന്തര്ഭാവ "unicode/ucnv.h"
+#അന്തര്ഭാവ "unicode/uloc.h"
+#അന്തര്ഭാവ "mutex.h"
+#അന്തര്ഭാവ "putilimp.h"
+#അന്തര്ഭാവ "uassert.h"
+#അന്തര്ഭാവ "utracimp.h"
+#അന്തര്ഭാവ "ucnv_io.h"
+#അന്തര്ഭാവ "ucnv_bld.h"
+#അന്തര്ഭാവ "ucnvmbcs.h"
+#അന്തര്ഭാവ "ucnv_ext.h"
+#അന്തര്ഭാവ "ucnv_cnv.h"
+#അന്തര്ഭാവ "ucnv_imp.h"
+#അന്തര്ഭാവ "uhash.h"
+#അന്തര്ഭാവ "umutex.h"
+#അന്തര്ഭാവ "cstring.h"
+#അന്തര്ഭാവ "cmemory.h"
+#അന്തര്ഭാവ "ucln_cmn.h"
+#അന്തര്ഭാവ "ustr_cnv.h"
 
 
-#if 0
-#include <stdio.h>
-extern void UCNV_DEBUG_LOG(char *what, char *who, void *p, int l);
+#എങ്കിൽ 0
+#അന്തര്ഭാവ <stdio.h>
+ബാഹ്യ ശൂന്യം UCNV_DEBUG_LOG(അക്ഷരം *what, അക്ഷരം *who, ശൂന്യം *p, പൂർണ്ണസംഖ്യ l);
 #define UCNV_DEBUG_LOG(x,y,z) UCNV_DEBUG_LOG(x,y,z,__LINE__)
-#else
+#അല്ലെങ്കിൽ
 # define UCNV_DEBUG_LOG(x,y,z)
 #endif
 
-static const UConverterSharedData * const
-converterData[UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES]={
+സ്ഥിതം സ്ഥിരം UConverterSharedData * സ്ഥിരം
+converterData[UCNV_സംഖ്യ_OF_SUPPORTED_CONVERTER_TYPES]={
     nullptr, nullptr,
 
-#if UCONFIG_NO_LEGACY_CONVERSION
+#എങ്കിൽ UCONFIG_NO_LEGACY_CONVERSION
     nullptr,
-#else
+#അല്ലെങ്കിൽ
     &_MBCSData,
 #endif
 
     &_Latin1Data,
     &_UTF8Data, &_UTF16BEData, &_UTF16LEData,
-#if UCONFIG_ONLY_HTML_CONVERSION
+#എങ്കിൽ UCONFIG_ONLY_HTML_CONVERSION
     nullptr, nullptr,
-#else
+#അല്ലെങ്കിൽ
     &_UTF32BEData, &_UTF32LEData,
 #endif
     nullptr,
 
-#if UCONFIG_NO_LEGACY_CONVERSION
+#എങ്കിൽ UCONFIG_NO_LEGACY_CONVERSION
     nullptr,
-#else
+#അല്ലെങ്കിൽ
     &_ISO2022Data,
 #endif
 
-#if UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
+#എങ്കിൽ UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
     nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
     nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
     nullptr,
-#else
+#അല്ലെങ്കിൽ
     &_LMBCSData1,&_LMBCSData2, &_LMBCSData3, &_LMBCSData4, &_LMBCSData5, &_LMBCSData6,
     &_LMBCSData8,&_LMBCSData11,&_LMBCSData16,&_LMBCSData17,&_LMBCSData18,&_LMBCSData19,
     &_HZData,
 #endif
 
-#if UCONFIG_ONLY_HTML_CONVERSION
+#എങ്കിൽ UCONFIG_ONLY_HTML_CONVERSION
     nullptr,
-#else
+#അല്ലെങ്കിൽ
     &_SCSUData,
 #endif
 
 
-#if UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
+#എങ്കിൽ UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
     nullptr,
-#else
+#അല്ലെങ്കിൽ
     &_ISCIIData,
 #endif
 
     &_ASCIIData,
-#if UCONFIG_ONLY_HTML_CONVERSION
+#എങ്കിൽ UCONFIG_ONLY_HTML_CONVERSION
     nullptr, nullptr, &_UTF16Data, nullptr, nullptr, nullptr,
-#else
+#അല്ലെങ്കിൽ
     &_UTF7Data, &_Bocu1Data, &_UTF16Data, &_UTF32Data, &_CESU8Data, &_IMAPData,
 #endif
 
-#if UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
+#എങ്കിൽ UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
     nullptr,
-#else
+#അല്ലെങ്കിൽ
     &_CompoundTextData
 #endif
 };
@@ -121,28 +121,28 @@ converterData[UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES]={
    Also the name should be in lower case and all spaces, dashes and underscores
    removed
 */
-static struct {
-  const char *name;
-  const UConverterType type;
-} const cnvNameType[] = {
-#if !UCONFIG_ONLY_HTML_CONVERSION
+സ്ഥിതം ഘടന {
+  സ്ഥിരം അക്ഷരം *name;
+  സ്ഥിരം UConverterType type;
+} സ്ഥിരം cnvNameType[] = {
+#എങ്കിൽ !UCONFIG_ONLY_HTML_CONVERSION
   { "bocu1", UCNV_BOCU1 },
   { "cesu8", UCNV_CESU8 },
 #endif
-#if !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#എങ്കിൽ !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
   { "hz",UCNV_HZ },
 #endif
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#എങ്കിൽ !UCONFIG_ONLY_HTML_CONVERSION
   { "imapmailboxname", UCNV_IMAP_MAILBOX },
 #endif
-#if !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#എങ്കിൽ !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
   { "iscii", UCNV_ISCII },
 #endif
-#if !UCONFIG_NO_LEGACY_CONVERSION
+#എങ്കിൽ !UCONFIG_NO_LEGACY_CONVERSION
   { "iso2022", UCNV_ISO_2022 },
 #endif
   { "iso88591", UCNV_LATIN_1 },
-#if !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#എങ്കിൽ !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
   { "lmbcs1", UCNV_LMBCS_1 },
   { "lmbcs11",UCNV_LMBCS_11 },
   { "lmbcs16",UCNV_LMBCS_16 },
@@ -156,57 +156,57 @@ static struct {
   { "lmbcs6", UCNV_LMBCS_6 },
   { "lmbcs8", UCNV_LMBCS_8 },
 #endif
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#എങ്കിൽ !UCONFIG_ONLY_HTML_CONVERSION
   { "scsu", UCNV_SCSU },
 #endif
   { "usascii", UCNV_US_ASCII },
   { "utf16", UCNV_UTF16 },
   { "utf16be", UCNV_UTF16_BigEndian },
   { "utf16le", UCNV_UTF16_LittleEndian },
-#if U_IS_BIG_ENDIAN
+#എങ്കിൽ U_IS_BIG_ENDIAN
   { "utf16oppositeendian", UCNV_UTF16_LittleEndian },
   { "utf16platformendian", UCNV_UTF16_BigEndian },
-#else
+#അല്ലെങ്കിൽ
   { "utf16oppositeendian", UCNV_UTF16_BigEndian},
   { "utf16platformendian", UCNV_UTF16_LittleEndian },
 #endif
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#എങ്കിൽ !UCONFIG_ONLY_HTML_CONVERSION
   { "utf32", UCNV_UTF32 },
   { "utf32be", UCNV_UTF32_BigEndian },
   { "utf32le", UCNV_UTF32_LittleEndian },
-#if U_IS_BIG_ENDIAN
+#എങ്കിൽ U_IS_BIG_ENDIAN
   { "utf32oppositeendian", UCNV_UTF32_LittleEndian },
   { "utf32platformendian", UCNV_UTF32_BigEndian },
-#else
+#അല്ലെങ്കിൽ
   { "utf32oppositeendian", UCNV_UTF32_BigEndian },
   { "utf32platformendian", UCNV_UTF32_LittleEndian },
 #endif
 #endif
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#എങ്കിൽ !UCONFIG_ONLY_HTML_CONVERSION
   { "utf7", UCNV_UTF7 },
 #endif
   { "utf8", UCNV_UTF8 },
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#എങ്കിൽ !UCONFIG_ONLY_HTML_CONVERSION
   { "x11compoundtext", UCNV_COMPOUND_TEXT}
 #endif
 };
 
 
 /*initializes some global variables */
-static UHashtable *SHARED_DATA_HASHTABLE = nullptr;
-static icu::UMutex cnvCacheMutex;
+സ്ഥിതം UHashtable *SHARED_DATA_HASHTABLE = nullptr;
+സ്ഥിതം icu::UMutex cnvCacheMutex;
 /*  Note:  the global mutex is used for      */
 /*         reference count updates.          */
 
-static const char **gAvailableConverters = nullptr;
-static uint16_t gAvailableConverterCount = 0;
-static icu::UInitOnce gAvailableConvertersInitOnce {};
+സ്ഥിതം സ്ഥിരം അക്ഷരം **gAvailableConverters = nullptr;
+സ്ഥിതം uint16_t g_Available_Converter_എണ്ണം = 0;
+സ്ഥിതം icu::UInitOnce gAvailableConvertersInitOnce {};
 
-#if !U_CHARSET_IS_UTF8
+#എങ്കിൽ !U_CHARSET_IS_UTF8
 
 /* This contains the resolved converter name. So no further alias lookup is needed again. */
-static char gDefaultConverterNameBuffer[UCNV_MAX_CONVERTER_NAME_LENGTH + 1]; /* +1 for nullptr */
-static const char *gDefaultConverterName = nullptr;
+സ്ഥിതം അക്ഷരം gDefaultConverterNameBuffer[UCNV_MAX_CONVERTER_NAME_LENGTH + 1]; /* +1 for nullptr */
+സ്ഥിതം സ്ഥിരം അക്ഷരം *gDefaultConverterName = nullptr;
 
 /*
 If the default converter is an algorithmic converter, this is the cached value.
@@ -214,24 +214,24 @@ We don't cache a full UConverter and clone it because ucnv_clone doesn't have
 less overhead than an algorithmic open. We don't cache non-algorithmic converters
 because ucnv_flushCache must be able to unload the default converter and its table.
 */
-static const UConverterSharedData *gDefaultAlgorithmicSharedData = nullptr;
+സ്ഥിതം സ്ഥിരം UConverterSharedData *gDefaultAlgorithmicSharedData = nullptr;
 
 /* Does gDefaultConverterName have a converter option and require extra parsing? */
-static UBool gDefaultConverterContainsOption;
+സ്ഥിതം UBool gDefaultConverterContainsOption;
 
 #endif  /* !U_CHARSET_IS_UTF8 */
 
-static const char DATA_TYPE[] = "cnv";
+സ്ഥിതം സ്ഥിരം അക്ഷരം DATA_TYPE[] = "cnv";
 
 /* ucnv_flushAvailableConverterCache. This is only called from ucnv_cleanup().
  *                       If it is ever to be called from elsewhere, synchronization
  *                       will need to be considered.
  */
-static void
+സ്ഥിതം ശൂന്യം
 ucnv_flushAvailableConverterCache() {
-    gAvailableConverterCount = 0;
-    if (gAvailableConverters) {
-        uprv_free(const_cast<char**>(gAvailableConverters));
+    g_Available_Converter_എണ്ണം = 0;
+    എങ്കിൽ (gAvailableConverters) {
+        uprv_free(const_cast<അക്ഷരം**>(gAvailableConverters));
         gAvailableConverters = nullptr;
     }
     gAvailableConvertersInitOnce.reset();
@@ -241,9 +241,9 @@ ucnv_flushAvailableConverterCache() {
 /*                in use by open converters.                                  */
 /*                Not thread safe.                                            */
 /*                Not supported API.                                          */
-static UBool U_CALLCONV ucnv_cleanup() {
+സ്ഥിതം UBool U_CALLCONV ucnv_cleanup() {
     ucnv_flushCache();
-    if (SHARED_DATA_HASHTABLE != nullptr && uhash_count(SHARED_DATA_HASHTABLE) == 0) {
+    എങ്കിൽ (SHARED_DATA_HASHTABLE != nullptr && uhash_എണ്ണം(SHARED_DATA_HASHTABLE) == 0) {
         uhash_close(SHARED_DATA_HASHTABLE);
         SHARED_DATA_HASHTABLE = nullptr;
     }
@@ -251,26 +251,26 @@ static UBool U_CALLCONV ucnv_cleanup() {
     /* Isn't called from flushCache because other threads may have preexisting references to the table. */
     ucnv_flushAvailableConverterCache();
 
-#if !U_CHARSET_IS_UTF8
+#എങ്കിൽ !U_CHARSET_IS_UTF8
     gDefaultConverterName = nullptr;
     gDefaultConverterNameBuffer[0] = 0;
-    gDefaultConverterContainsOption = false;
+    gDefaultConverterContainsOption = അസത്യം;
     gDefaultAlgorithmicSharedData = nullptr;
 #endif
 
-    return (SHARED_DATA_HASHTABLE == nullptr);
+    തിരികെ (SHARED_DATA_HASHTABLE == nullptr);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 ucnv_enableCleanup() {
     ucln_common_registerCleanup(UCLN_COMMON_UCNV, ucnv_cleanup);
 }
 
-static UBool U_CALLCONV
-isCnvAcceptable(void * /*context*/,
-                const char * /*type*/, const char * /*name*/,
-                const UDataInfo *pInfo) {
-    return
+സ്ഥിതം UBool U_CALLCONV
+isCnvAcceptable(ശൂന്യം * /*context*/,
+                സ്ഥിരം അക്ഷരം * /*type*/, സ്ഥിരം അക്ഷരം * /*name*/,
+                സ്ഥിരം UDataInfo *pInfo) {
+    തിരികെ
         pInfo->size>=20 &&
         pInfo->isBigEndian==U_IS_BIG_ENDIAN &&
         pInfo->charsetFamily==U_CHARSET_FAMILY &&
@@ -285,85 +285,85 @@ isCnvAcceptable(void * /*context*/,
 /**
  * Un flatten shared data from a UDATA..
  */
-static UConverterSharedData*
+സ്ഥിതം UConverterSharedData*
 ucnv_data_unFlattenClone(UConverterLoadArgs *pArgs, UDataMemory *pData, UErrorCode *status)
 {
     /* UDataInfo info; -- necessary only if some converters have different formatVersion */
-    const uint8_t* raw = static_cast<const uint8_t*>(udata_getMemory(pData));
-    const UConverterStaticData* source = reinterpret_cast<const UConverterStaticData*>(raw);
+    സ്ഥിരം uint8_t* raw = static_cast<സ്ഥിരം uint8_t*>(udata_getMemory(pData));
+    സ്ഥിരം UConverterStaticData* source = reinterpret_cast<സ്ഥിരം UConverterStaticData*>(raw);
     UConverterSharedData *data;
     UConverterType type = static_cast<UConverterType>(source->conversionType);
 
-    if(U_FAILURE(*status))
-        return nullptr;
+    എങ്കിൽ(U_FAILURE(*status))
+        തിരികെ nullptr;
 
-    if (static_cast<uint16_t>(type) >= UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES ||
+    എങ്കിൽ (static_cast<uint16_t>(type) >= UCNV_സംഖ്യ_OF_SUPPORTED_CONVERTER_TYPES ||
         converterData[type] == nullptr ||
         !converterData[type]->isReferenceCounted ||
         converterData[type]->referenceCounter != 1 ||
-        source->structSize != sizeof(UConverterStaticData))
+        source->structSize != വലുപ്പം(UConverterStaticData))
     {
         *status = U_INVALID_TABLE_FORMAT;
-        return nullptr;
+        തിരികെ nullptr;
     }
 
-    data = static_cast<UConverterSharedData*>(uprv_malloc(sizeof(UConverterSharedData)));
-    if(data == nullptr) {
+    data = static_cast<UConverterSharedData*>(uprv_malloc(വലുപ്പം(UConverterSharedData)));
+    എങ്കിൽ(data == nullptr) {
         *status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
 
     /* copy initial values from the static structure for this type */
-    uprv_memcpy(data, converterData[type], sizeof(UConverterSharedData));
+    uprv_memcpy(data, converterData[type], വലുപ്പം(UConverterSharedData));
 
     data->staticData = source;
 
-    data->sharedDataCached = false;
+    data->sharedDataCached = അസത്യം;
 
     /* fill in fields from the loaded data */
-    data->dataMemory = (void*)pData; /* for future use */
+    data->dataMemory = (ശൂന്യം*)pData; /* for future use */
 
-    if(data->impl->load != nullptr) {
+    എങ്കിൽ(data->impl->load != nullptr) {
         data->impl->load(data, pArgs, raw + source->structSize, status);
-        if(U_FAILURE(*status)) {
+        എങ്കിൽ(U_FAILURE(*status)) {
             uprv_free(data);
-            return nullptr;
+            തിരികെ nullptr;
         }
     }
-    return data;
+    തിരികെ data;
 }
 
 /*Takes an alias name gets an actual converter file name
  *goes to disk and opens it.
  *allocates the memory and returns a new UConverter object
  */
-static UConverterSharedData *createConverterFromFile(UConverterLoadArgs *pArgs, UErrorCode * err)
+സ്ഥിതം UConverterSharedData *createConverterFromFile(UConverterLoadArgs *pArgs, UErrorCode * err)
 {
     UDataMemory *data;
     UConverterSharedData *sharedData;
 
     UTRACE_ENTRY_OC(UTRACE_UCNV_LOAD);
 
-    if (U_FAILURE (*err)) {
+    എങ്കിൽ (U_FAILURE (*err)) {
         UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        തിരികെ nullptr;
     }
 
     UTRACE_DATA2(UTRACE_OPEN_CLOSE, "load converter %s from package %s", pArgs->name, pArgs->pkg);
 
     data = udata_openChoice(pArgs->pkg, DATA_TYPE, pArgs->name, isCnvAcceptable, nullptr, err);
-    if(U_FAILURE(*err))
+    എങ്കിൽ(U_FAILURE(*err))
     {
         UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        തിരികെ nullptr;
     }
 
     sharedData = ucnv_data_unFlattenClone(pArgs, data, err);
-    if(U_FAILURE(*err))
+    എങ്കിൽ(U_FAILURE(*err))
     {
         udata_close(data);
         UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        തിരികെ nullptr;
     }
 
     /*
@@ -374,18 +374,18 @@ static UConverterSharedData *createConverterFromFile(UConverterLoadArgs *pArgs, 
      */
 
     UTRACE_EXIT_PTR_STATUS(sharedData, *err);
-    return sharedData;
+    തിരികെ sharedData;
 }
 
 /*returns a converter type from a string
  */
-static const UConverterSharedData *
-getAlgorithmicTypeFromName(const char *realName)
+സ്ഥിതം സ്ഥിരം UConverterSharedData *
+getAlgorithmicTypeFromName(സ്ഥിരം അക്ഷരം *realName)
 {
     uint32_t mid, start, limit;
     uint32_t lastMid;
-    int result;
-    char strippedName[UCNV_MAX_CONVERTER_NAME_LENGTH];
+    പൂർണ്ണസംഖ്യ result;
+    അക്ഷരം strippedName[UCNV_MAX_CONVERTER_NAME_LENGTH];
 
     /* Lower case and remove ignoreable characters. */
     ucnv_io_stripForCompare(strippedName, realName);
@@ -396,24 +396,24 @@ getAlgorithmicTypeFromName(const char *realName)
     mid = limit;
     lastMid = UINT32_MAX;
 
-    for (;;) {
+    വേണ്ടി (;;) {
         mid = (start + limit) / 2;
-        if (lastMid == mid) {   /* Have we moved? */
-            break;  /* We haven't moved, and it wasn't found. */
+        എങ്കിൽ (lastMid == mid) {   /* Have we moved? */
+            നിർത്തുക;  /* We haven't moved, and it wasn't found. */
         }
         lastMid = mid;
         result = uprv_strcmp(strippedName, cnvNameType[mid].name);
 
-        if (result < 0) {
+        എങ്കിൽ (result < 0) {
             limit = mid;
-        } else if (result > 0) {
+        } അല്ലെങ്കിൽ എങ്കിൽ (result > 0) {
             start = mid;
-        } else {
-            return converterData[cnvNameType[mid].type];
+        } അല്ലെങ്കിൽ {
+            തിരികെ converterData[cnvNameType[mid].type];
         }
     }
 
-    return nullptr;
+    തിരികെ nullptr;
 }
 
 /*
@@ -432,22 +432,22 @@ getAlgorithmicTypeFromName(const char *realName)
 /* Stores the shared data in the SHARED_DATA_HASHTABLE
  * @param data The shared data
  */
-static void
+സ്ഥിതം ശൂന്യം
 ucnv_shareConverterData(UConverterSharedData * data)
 {
     UErrorCode err = U_ZERO_ERROR;
     /*Lazy evaluates the Hashtable itself */
     /*void *sanity = nullptr;*/
 
-    if (SHARED_DATA_HASHTABLE == nullptr)
+    എങ്കിൽ (SHARED_DATA_HASHTABLE == nullptr)
     {
         SHARED_DATA_HASHTABLE = uhash_openSize(uhash_hashChars, uhash_compareChars, nullptr,
-                            ucnv_io_countKnownConverters(&err)*UCNV_CACHE_LOAD_FACTOR,
+                            ucnv_io_എണ്ണം_Known_Converters(&err)*UCNV_CACHE_LOAD_FACTOR,
                             &err);
         ucnv_enableCleanup();
 
-        if (U_FAILURE(err))
-            return;
+        എങ്കിൽ (U_FAILURE(err))
+            തിരികെ;
     }
 
     /* ### check to see if the element is not already there! */
@@ -462,10 +462,10 @@ ucnv_shareConverterData(UConverterSharedData * data)
     */
 
     /* Mark it shared */
-    data->sharedDataCached = true;
+    data->sharedDataCached = സത്യം;
 
     uhash_put(SHARED_DATA_HASHTABLE,
-            (void*) data->staticData->name, /* Okay to cast away const as long as
+            (ശൂന്യം*) data->staticData->name, /* Okay to cast away const as long as
             keyDeleter == nullptr */
             data,
             &err);
@@ -479,21 +479,21 @@ ucnv_shareConverterData(UConverterSharedData * data)
  * @param name The name of the shared data
  * @return the shared data from the SHARED_DATA_HASHTABLE
  */
-static UConverterSharedData *
-ucnv_getSharedConverterData(const char *name)
+സ്ഥിതം UConverterSharedData *
+ucnv_getSharedConverterData(സ്ഥിരം അക്ഷരം *name)
 {
     /*special case when no Table has yet been created we return nullptr */
-    if (SHARED_DATA_HASHTABLE == nullptr)
+    എങ്കിൽ (SHARED_DATA_HASHTABLE == nullptr)
     {
-        return nullptr;
+        തിരികെ nullptr;
     }
-    else
+    അല്ലെങ്കിൽ
     {
         UConverterSharedData *rc;
 
         rc = static_cast<UConverterSharedData*>(uhash_get(SHARED_DATA_HASHTABLE, name));
         UCNV_DEBUG_LOG("get",name,rc);
-        return rc;
+        തിരികെ rc;
     }
 }
 
@@ -508,22 +508,22 @@ ucnv_getSharedConverterData(const char *name)
  * @return if not it frees all the memory stemming from sharedConverterData and
  * returns true, otherwise returns false
  */
-static UBool
+സ്ഥിതം UBool
 ucnv_deleteSharedConverterData(UConverterSharedData * deadSharedData)
 {
     UTRACE_ENTRY_OC(UTRACE_UCNV_UNLOAD);
     UTRACE_DATA2(UTRACE_OPEN_CLOSE, "unload converter %s shared data %p", deadSharedData->staticData->name, deadSharedData);
 
-    if (deadSharedData->referenceCounter > 0) {
-        UTRACE_EXIT_VALUE((int32_t)false);
-        return false;
+    എങ്കിൽ (deadSharedData->referenceCounter > 0) {
+        UTRACE_EXIT_മൂല്യം((int32_t)അസത്യം);
+        തിരികെ അസത്യം;
     }
 
-    if (deadSharedData->impl->unload != nullptr) {
+    എങ്കിൽ (deadSharedData->impl->unload != nullptr) {
         deadSharedData->impl->unload(deadSharedData);
     }
 
-    if(deadSharedData->dataMemory != nullptr)
+    എങ്കിൽ(deadSharedData->dataMemory != nullptr)
     {
         UDataMemory *data = (UDataMemory*)deadSharedData->dataMemory;
         udata_close(data);
@@ -531,8 +531,8 @@ ucnv_deleteSharedConverterData(UConverterSharedData * deadSharedData)
 
     uprv_free(deadSharedData);
 
-    UTRACE_EXIT_VALUE((int32_t)true);
-    return true;
+    UTRACE_EXIT_മൂല്യം((int32_t)സത്യം);
+    തിരികെ സത്യം;
 }
 
 /**
@@ -543,38 +543,38 @@ UConverterSharedData *
 ucnv_load(UConverterLoadArgs *pArgs, UErrorCode *err) {
     UConverterSharedData *mySharedConverterData;
 
-    if(err == nullptr || U_FAILURE(*err)) {
-        return nullptr;
+    എങ്കിൽ(err == nullptr || U_FAILURE(*err)) {
+        തിരികെ nullptr;
     }
 
-    if(pArgs->pkg != nullptr && *pArgs->pkg != 0) {
+    എങ്കിൽ(pArgs->pkg != nullptr && *pArgs->pkg != 0) {
         /* application-provided converters are not currently cached */
-        return createConverterFromFile(pArgs, err);
+        തിരികെ createConverterFromFile(pArgs, err);
     }
 
     mySharedConverterData = ucnv_getSharedConverterData(pArgs->name);
-    if (mySharedConverterData == nullptr)
+    എങ്കിൽ (mySharedConverterData == nullptr)
     {
         /*Not cached, we need to stream it in from file */
         mySharedConverterData = createConverterFromFile(pArgs, err);
-        if (U_FAILURE (*err) || (mySharedConverterData == nullptr))
+        എങ്കിൽ (U_FAILURE (*err) || (mySharedConverterData == nullptr))
         {
-            return nullptr;
+            തിരികെ nullptr;
         }
-        else if (!pArgs->onlyTestIsLoadable)
+        അല്ലെങ്കിൽ എങ്കിൽ (!pArgs->onlyTestIsLoadable)
         {
             /* share it with other library clients */
             ucnv_shareConverterData(mySharedConverterData);
         }
     }
-    else
+    അല്ലെങ്കിൽ
     {
         /* The data for this converter was already in the cache.            */
         /* Update the reference counter on the shared data: one more client */
         mySharedConverterData->referenceCounter++;
     }
 
-    return mySharedConverterData;
+    തിരികെ mySharedConverterData;
 }
 
 /**
@@ -582,33 +582,33 @@ ucnv_load(UConverterLoadArgs *pArgs, UErrorCode *err) {
  * It must be sharedData->isReferenceCounted
  * and this function must be called inside umtx_lock(&cnvCacheMutex).
  */
-U_CAPI void
+U_CAPI ശൂന്യം
 ucnv_unload(UConverterSharedData *sharedData) {
-    if(sharedData != nullptr) {
-        if (sharedData->referenceCounter > 0) {
+    എങ്കിൽ(sharedData != nullptr) {
+        എങ്കിൽ (sharedData->referenceCounter > 0) {
             sharedData->referenceCounter--;
         }
 
-        if((sharedData->referenceCounter <= 0)&&(sharedData->sharedDataCached == false)) {
+        എങ്കിൽ((sharedData->referenceCounter <= 0)&&(sharedData->sharedDataCached == അസത്യം)) {
             ucnv_deleteSharedConverterData(sharedData);
         }
     }
 }
 
-U_CFUNC void
+U_CFUNC ശൂന്യം
 ucnv_unloadSharedDataIfReady(UConverterSharedData *sharedData)
 {
-    if(sharedData != nullptr && sharedData->isReferenceCounted) {
+    എങ്കിൽ(sharedData != nullptr && sharedData->isReferenceCounted) {
         umtx_lock(&cnvCacheMutex);
         ucnv_unload(sharedData);
         umtx_unlock(&cnvCacheMutex);
     }
 }
 
-U_CFUNC void
-ucnv_incrementRefCount(UConverterSharedData *sharedData)
+U_CFUNC ശൂന്യം
+ucnv_increment_Ref_എണ്ണം(UConverterSharedData *sharedData)
 {
-    if(sharedData != nullptr && sharedData->isReferenceCounted) {
+    എങ്കിൽ(sharedData != nullptr && sharedData->isReferenceCounted) {
         umtx_lock(&cnvCacheMutex);
         sharedData->referenceCounter++;
         umtx_unlock(&cnvCacheMutex);
@@ -622,14 +622,14 @@ ucnv_incrementRefCount(UConverterSharedData *sharedData)
  * otherwise the existing values in pPieces remain.
  * *pArgs will be set to the pPieces values.
  */
-static void
-parseConverterOptions(const char *inName,
+സ്ഥിതം ശൂന്യം
+parseConverterOptions(സ്ഥിരം അക്ഷരം *inName,
                       UConverterNamePieces *pPieces,
                       UConverterLoadArgs *pArgs,
                       UErrorCode *err)
 {
-    char *cnvName = pPieces->cnvName;
-    char c;
+    അക്ഷരം *cnvName = pPieces->cnvName;
+    അക്ഷരം c;
     int32_t len = 0;
 
     pArgs->name=inName;
@@ -637,11 +637,11 @@ parseConverterOptions(const char *inName,
     pArgs->options=pPieces->options;
 
     /* copy the converter name itself to cnvName */
-    while((c=*inName)!=0 && c!=UCNV_OPTION_SEP_CHAR) {
-        if (++len>=UCNV_MAX_CONVERTER_NAME_LENGTH) {
+    ആകുമ്പോൾ((c=*inName)!=0 && c!=UCNV_OPTION_SEP_CHAR) {
+        എങ്കിൽ (++len>=UCNV_MAX_CONVERTER_NAME_LENGTH) {
             *err = U_ILLEGAL_ARGUMENT_ERROR;    /* bad name */
             pPieces->cnvName[0]=0;
-            return;
+            തിരികെ;
         }
         *cnvName++=c;
         inName++;
@@ -650,52 +650,52 @@ parseConverterOptions(const char *inName,
     pArgs->name=pPieces->cnvName;
 
     /* parse options. No more name copying should occur. */
-    while((c=*inName)!=0) {
-        if(c==UCNV_OPTION_SEP_CHAR) {
+    ആകുമ്പോൾ((c=*inName)!=0) {
+        എങ്കിൽ(c==UCNV_OPTION_SEP_CHAR) {
             ++inName;
         }
 
         /* inName is behind an option separator */
-        if(uprv_strncmp(inName, "locale=", 7)==0) {
+        എങ്കിൽ(uprv_strncmp(inName, "locale=", 7)==0) {
             /* do not modify locale itself in case we have multiple locale options */
-            char *dest=pPieces->locale;
+            അക്ഷരം *dest=pPieces->locale;
 
             /* copy the locale option value */
             inName+=7;
             len=0;
-            while((c=*inName)!=0 && c!=UCNV_OPTION_SEP_CHAR) {
+            ആകുമ്പോൾ((c=*inName)!=0 && c!=UCNV_OPTION_SEP_CHAR) {
                 ++inName;
 
-                if(++len>=ULOC_FULLNAME_CAPACITY) {
+                എങ്കിൽ(++len>=ULOC_FULLNAME_CAPACITY) {
                     *err=U_ILLEGAL_ARGUMENT_ERROR;    /* bad name */
                     pPieces->locale[0]=0;
-                    return;
+                    തിരികെ;
                 }
 
                 *dest++=c;
             }
             *dest=0;
-        } else if(uprv_strncmp(inName, "version=", 8)==0) {
+        } അല്ലെങ്കിൽ എങ്കിൽ(uprv_strncmp(inName, "version=", 8)==0) {
             /* copy the version option value into bits 3..0 of pPieces->options */
             inName+=8;
             c=*inName;
-            if(c==0) {
+            എങ്കിൽ(c==0) {
                 pArgs->options=(pPieces->options&=~UCNV_OPTION_VERSION);
-                return;
-            } else if (static_cast<uint8_t>(c - '0') < 10) {
+                തിരികെ;
+            } അല്ലെങ്കിൽ എങ്കിൽ (static_cast<uint8_t>(c - '0') < 10) {
                 pArgs->options = pPieces->options = (pPieces->options & ~UCNV_OPTION_VERSION) | static_cast<uint32_t>(c - '0');
                 ++inName;
             }
-        } else if(uprv_strncmp(inName, "swaplfnl", 8)==0) {
+        } അല്ലെങ്കിൽ എങ്കിൽ(uprv_strncmp(inName, "swaplfnl", 8)==0) {
             inName+=8;
             pArgs->options=(pPieces->options|=UCNV_OPTION_SWAP_LFNL);
         /* add processing for new options here with another } else if(uprv_strncmp(inName, "option-name=", XX)==0) { */
-        } else {
+        } അല്ലെങ്കിൽ {
             /* ignore any other options until we define some */
-            while(((c = *inName++) != 0) && (c != UCNV_OPTION_SEP_CHAR)) {
+            ആകുമ്പോൾ(((c = *inName++) != 0) && (c != UCNV_OPTION_SEP_CHAR)) {
             }
-            if(c==0) {
-                return;
+            എങ്കിൽ(c==0) {
+                തിരികെ;
             }
         }
     }
@@ -709,36 +709,36 @@ parseConverterOptions(const char *inName,
  * -Call AlgorithmicConverter initializer (Data=false, Cached=true)
  */
 U_CFUNC UConverterSharedData *
-ucnv_loadSharedData(const char *converterName,
+ucnv_loadSharedData(സ്ഥിരം അക്ഷരം *converterName,
                     UConverterNamePieces *pPieces,
                     UConverterLoadArgs *pArgs,
                     UErrorCode * err) {
-    UConverterNamePieces stackPieces;
-    UConverterLoadArgs stackArgs;
+    UConverterNamePieces അട്ടി_Pieces;
+    UConverterLoadArgs അട്ടി_Args;
     UConverterSharedData *mySharedConverterData = nullptr;
     UErrorCode internalErrorCode = U_ZERO_ERROR;
-    UBool mayContainOption = true;
-    UBool checkForAlgorithmic = true;
+    UBool mayContainOption = സത്യം;
+    UBool checkForAlgorithmic = സത്യം;
 
-    if (U_FAILURE (*err)) {
-        return nullptr;
+    എങ്കിൽ (U_FAILURE (*err)) {
+        തിരികെ nullptr;
     }
 
-    if(pPieces == nullptr) {
-        if(pArgs != nullptr) {
+    എങ്കിൽ(pPieces == nullptr) {
+        എങ്കിൽ(pArgs != nullptr) {
             /*
              * Bad: We may set pArgs pointers to stackPieces fields
              * which will be invalid after this function returns.
              */
             *err = U_INTERNAL_PROGRAM_ERROR;
-            return nullptr;
+            തിരികെ nullptr;
         }
-        pPieces = &stackPieces;
+        pPieces = &അട്ടി_Pieces;
     }
-    if(pArgs == nullptr) {
-        uprv_memset(&stackArgs, 0, sizeof(stackArgs));
-        stackArgs.size = (int32_t)sizeof(stackArgs);
-        pArgs = &stackArgs;
+    എങ്കിൽ(pArgs == nullptr) {
+        uprv_memset(&അട്ടി_Args, 0, വലുപ്പം(അട്ടി_Args));
+        അട്ടി_Args.size = (int32_t)വലുപ്പം(അട്ടി_Args);
+        pArgs = &അട്ടി_Args;
     }
 
     pPieces->cnvName[0] = 0;
@@ -750,59 +750,59 @@ ucnv_loadSharedData(const char *converterName,
     pArgs->options = pPieces->options;
 
     /* In case "name" is nullptr we want to open the default converter. */
-    if (converterName == nullptr) {
-#if U_CHARSET_IS_UTF8
+    എങ്കിൽ (converterName == nullptr) {
+#എങ്കിൽ U_CHARSET_IS_UTF8
         pArgs->name = "UTF-8";
-        return (UConverterSharedData *)converterData[UCNV_UTF8];
-#else
+        തിരികെ (UConverterSharedData *)converterData[UCNV_UTF8];
+#അല്ലെങ്കിൽ
         /* Call ucnv_getDefaultName first to query the name from the OS. */
         pArgs->name = ucnv_getDefaultName();
-        if (pArgs->name == nullptr) {
+        എങ്കിൽ (pArgs->name == nullptr) {
             *err = U_MISSING_RESOURCE_ERROR;
-            return nullptr;
+            തിരികെ nullptr;
         }
         mySharedConverterData = (UConverterSharedData *)gDefaultAlgorithmicSharedData;
-        checkForAlgorithmic = false;
+        checkForAlgorithmic = അസത്യം;
         mayContainOption = gDefaultConverterContainsOption;
         /* the default converter name is already canonical */
 #endif
     }
-    else if(UCNV_FAST_IS_UTF8(converterName)) {
+    അല്ലെങ്കിൽ എങ്കിൽ(UCNV_FAST_IS_UTF8(converterName)) {
         /* fastpath for UTF-8 */
         pArgs->name = "UTF-8";
-        return (UConverterSharedData *)converterData[UCNV_UTF8];
+        തിരികെ (UConverterSharedData *)converterData[UCNV_UTF8];
     }
-    else {
+    അല്ലെങ്കിൽ {
         /* separate the converter name from the options */
         parseConverterOptions(converterName, pPieces, pArgs, err);
-        if (U_FAILURE(*err)) {
+        എങ്കിൽ (U_FAILURE(*err)) {
             /* Very bad name used. */
-            return nullptr;
+            തിരികെ nullptr;
         }
 
         /* get the canonical converter name */
         pArgs->name = ucnv_io_getConverterName(pArgs->name, &mayContainOption, &internalErrorCode);
-        if (U_FAILURE(internalErrorCode) || pArgs->name == nullptr) {
+        എങ്കിൽ (U_FAILURE(internalErrorCode) || pArgs->name == nullptr) {
             /*
             * set the input name in case the converter was added
             * without updating the alias table, or when there is no alias table
             */
             pArgs->name = pPieces->cnvName;
-        } else if (internalErrorCode == U_AMBIGUOUS_ALIAS_WARNING) {
+        } അല്ലെങ്കിൽ എങ്കിൽ (internalErrorCode == U_AMBIGUOUS_ALIAS_WARNING) {
             *err = U_AMBIGUOUS_ALIAS_WARNING;
         }
     }
 
     /* separate the converter name from the options */
-    if(mayContainOption && pArgs->name != pPieces->cnvName) {
+    എങ്കിൽ(mayContainOption && pArgs->name != pPieces->cnvName) {
         parseConverterOptions(pArgs->name, pPieces, pArgs, err);
     }
 
     /* get the shared data for an algorithmic converter, if it is one */
-    if (checkForAlgorithmic) {
+    എങ്കിൽ (checkForAlgorithmic) {
         mySharedConverterData = (UConverterSharedData *)getAlgorithmicTypeFromName(pArgs->name);
     }
-    if (mySharedConverterData == nullptr)
+    എങ്കിൽ (mySharedConverterData == nullptr)
     {
         /* it is a data-based converter, get its shared data.               */
         /* Hold the cnvCacheMutex through the whole process of checking the */
@@ -815,159 +815,159 @@ ucnv_loadSharedData(const char *converterName,
         umtx_lock(&cnvCacheMutex);
         mySharedConverterData = ucnv_load(pArgs, err);
         umtx_unlock(&cnvCacheMutex);
-        if (U_FAILURE (*err) || (mySharedConverterData == nullptr))
+        എങ്കിൽ (U_FAILURE (*err) || (mySharedConverterData == nullptr))
         {
-            return nullptr;
+            തിരികെ nullptr;
         }
     }
 
-    return mySharedConverterData;
+    തിരികെ mySharedConverterData;
 }
 
 U_CAPI UConverter*
 ucnv_createConverter(UConverter* myUConverter U_LIFETIME_BOUND,
-                     const char* converterName,
+                     സ്ഥിരം അക്ഷരം* converterName,
                      UErrorCode* err)
 {
-    UConverterNamePieces stackPieces;
-    UConverterLoadArgs stackArgs=UCNV_LOAD_ARGS_INITIALIZER;
+    UConverterNamePieces അട്ടി_Pieces;
+    UConverterLoadArgs അട്ടി_Args=UCNV_LOAD_ARGS_INITIALIZER;
     UConverterSharedData *mySharedConverterData;
 
     UTRACE_ENTRY_OC(UTRACE_UCNV_OPEN);
 
-    if(U_SUCCESS(*err)) {
+    എങ്കിൽ(U_SUCCESS(*err)) {
         UTRACE_DATA1(UTRACE_OPEN_CLOSE, "open converter %s", converterName);
 
-        mySharedConverterData = ucnv_loadSharedData(converterName, &stackPieces, &stackArgs, err);
+        mySharedConverterData = ucnv_loadSharedData(converterName, &അട്ടി_Pieces, &അട്ടി_Args, err);
 
         myUConverter = ucnv_createConverterFromSharedData(
             myUConverter, mySharedConverterData,
-            &stackArgs,
+            &അട്ടി_Args,
             err);
 
-        if(U_SUCCESS(*err)) {
+        എങ്കിൽ(U_SUCCESS(*err)) {
             UTRACE_EXIT_PTR_STATUS(myUConverter, *err);
-            return myUConverter;
+            തിരികെ myUConverter;
         }
     }
 
     /* exit with error */
     UTRACE_EXIT_STATUS(*err);
-    return nullptr;
+    തിരികെ nullptr;
 }
 
 U_CFUNC UBool
-ucnv_canCreateConverter(const char *converterName, UErrorCode *err) {
+ucnv_canCreateConverter(സ്ഥിരം അക്ഷരം *converterName, UErrorCode *err) {
     UConverter myUConverter;
-    UConverterNamePieces stackPieces;
-    UConverterLoadArgs stackArgs=UCNV_LOAD_ARGS_INITIALIZER;
+    UConverterNamePieces അട്ടി_Pieces;
+    UConverterLoadArgs അട്ടി_Args=UCNV_LOAD_ARGS_INITIALIZER;
     UConverterSharedData *mySharedConverterData;
 
     UTRACE_ENTRY_OC(UTRACE_UCNV_OPEN);
 
-    if(U_SUCCESS(*err)) {
+    എങ്കിൽ(U_SUCCESS(*err)) {
         UTRACE_DATA1(UTRACE_OPEN_CLOSE, "test if can open converter %s", converterName);
 
-        stackArgs.onlyTestIsLoadable=true;
-        mySharedConverterData = ucnv_loadSharedData(converterName, &stackPieces, &stackArgs, err);
+        അട്ടി_Args.onlyTestIsLoadable=സത്യം;
+        mySharedConverterData = ucnv_loadSharedData(converterName, &അട്ടി_Pieces, &അട്ടി_Args, err);
         ucnv_createConverterFromSharedData(
             &myUConverter, mySharedConverterData,
-            &stackArgs,
+            &അട്ടി_Args,
             err);
         ucnv_unloadSharedDataIfReady(mySharedConverterData);
     }
 
     UTRACE_EXIT_STATUS(*err);
-    return U_SUCCESS(*err);
+    തിരികെ U_SUCCESS(*err);
 }
 
 UConverter*
 ucnv_createAlgorithmicConverter(UConverter* myUConverter U_LIFETIME_BOUND,
                                 UConverterType type,
-                                const char* locale,
+                                സ്ഥിരം അക്ഷരം* locale,
                                 uint32_t options,
                                 UErrorCode* err) {
     UConverter *cnv;
-    const UConverterSharedData *sharedData;
-    UConverterLoadArgs stackArgs=UCNV_LOAD_ARGS_INITIALIZER;
+    സ്ഥിരം UConverterSharedData *sharedData;
+    UConverterLoadArgs അട്ടി_Args=UCNV_LOAD_ARGS_INITIALIZER;
 
     UTRACE_ENTRY_OC(UTRACE_UCNV_OPEN_ALGORITHMIC);
     UTRACE_DATA1(UTRACE_OPEN_CLOSE, "open algorithmic converter type %d", (int32_t)type);
 
-    if(type<0 || UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES<=type) {
+    എങ്കിൽ(type<0 || UCNV_സംഖ്യ_OF_SUPPORTED_CONVERTER_TYPES<=type) {
         *err = U_ILLEGAL_ARGUMENT_ERROR;
         UTRACE_EXIT_STATUS(U_ILLEGAL_ARGUMENT_ERROR);
-        return nullptr;
+        തിരികെ nullptr;
     }
 
     sharedData = converterData[type];
-    if(sharedData == nullptr || sharedData->isReferenceCounted) {
+    എങ്കിൽ(sharedData == nullptr || sharedData->isReferenceCounted) {
         /* not a valid type, or not an algorithmic converter */
         *err = U_ILLEGAL_ARGUMENT_ERROR;
         UTRACE_EXIT_STATUS(U_ILLEGAL_ARGUMENT_ERROR);
-        return nullptr;
+        തിരികെ nullptr;
     }
 
-    stackArgs.name = "";
-    stackArgs.options = options;
-    stackArgs.locale=locale;
+    അട്ടി_Args.name = "";
+    അട്ടി_Args.options = options;
+    അട്ടി_Args.locale=locale;
     cnv = ucnv_createConverterFromSharedData(
             myUConverter, const_cast<UConverterSharedData*>(sharedData),
-            &stackArgs, err);
+            &അട്ടി_Args, err);
 
     UTRACE_EXIT_PTR_STATUS(cnv, *err);
-    return cnv;
+    തിരികെ cnv;
 }
 
 U_CFUNC UConverter*
-ucnv_createConverterFromPackage(const char *packageName, const char *converterName, UErrorCode * err)
+ucnv_createConverterFromPackage(സ്ഥിരം അക്ഷരം *packageName, സ്ഥിരം അക്ഷരം *converterName, UErrorCode * err)
 {
     UConverter *myUConverter;
     UConverterSharedData *mySharedConverterData;
-    UConverterNamePieces stackPieces;
-    UConverterLoadArgs stackArgs=UCNV_LOAD_ARGS_INITIALIZER;
+    UConverterNamePieces അട്ടി_Pieces;
+    UConverterLoadArgs അട്ടി_Args=UCNV_LOAD_ARGS_INITIALIZER;
 
     UTRACE_ENTRY_OC(UTRACE_UCNV_OPEN_PACKAGE);
 
-    if(U_FAILURE(*err)) {
+    എങ്കിൽ(U_FAILURE(*err)) {
         UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        തിരികെ nullptr;
     }
 
     UTRACE_DATA2(UTRACE_OPEN_CLOSE, "open converter %s from package %s", converterName, packageName);
 
     /* first, get the options out of the converterName string */
-    stackPieces.cnvName[0] = 0;
-    stackPieces.locale[0] = 0;
-    stackPieces.options = 0;
-    parseConverterOptions(converterName, &stackPieces, &stackArgs, err);
-    if (U_FAILURE(*err)) {
+    അട്ടി_Pieces.cnvName[0] = 0;
+    അട്ടി_Pieces.locale[0] = 0;
+    അട്ടി_Pieces.options = 0;
+    parseConverterOptions(converterName, &അട്ടി_Pieces, &അട്ടി_Args, err);
+    എങ്കിൽ (U_FAILURE(*err)) {
         /* Very bad name used. */
         UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        തിരികെ nullptr;
     }
-    stackArgs.nestedLoads=1;
-    stackArgs.pkg=packageName;
+    അട്ടി_Args.nestedLoads=1;
+    അട്ടി_Args.pkg=packageName;
 
     /* open the data, unflatten the shared structure */
-    mySharedConverterData = createConverterFromFile(&stackArgs, err);
+    mySharedConverterData = createConverterFromFile(&അട്ടി_Args, err);
 
-    if (U_FAILURE(*err)) {
+    എങ്കിൽ (U_FAILURE(*err)) {
         UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        തിരികെ nullptr;
     }
 
     /* create the actual converter */
-    myUConverter = ucnv_createConverterFromSharedData(nullptr, mySharedConverterData, &stackArgs, err);
+    myUConverter = ucnv_createConverterFromSharedData(nullptr, mySharedConverterData, &അട്ടി_Args, err);
 
-    if (U_FAILURE(*err)) {
+    എങ്കിൽ (U_FAILURE(*err)) {
         ucnv_close(myUConverter);
         UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        തിരികെ nullptr;
     }
 
     UTRACE_EXIT_PTR_STATUS(myUConverter, *err);
-    return myUConverter;
+    തിരികെ myUConverter;
 }
 
 
@@ -979,31 +979,31 @@ ucnv_createConverterFromSharedData(UConverter* myUConverter U_LIFETIME_BOUND,
 {
     UBool isCopyLocal;
 
-    if(U_FAILURE(*err)) {
+    എങ്കിൽ(U_FAILURE(*err)) {
         ucnv_unloadSharedDataIfReady(mySharedConverterData);
-        return myUConverter;
+        തിരികെ myUConverter;
     }
-    if(myUConverter == nullptr)
+    എങ്കിൽ(myUConverter == nullptr)
     {
-        myUConverter = (UConverter *) uprv_malloc (sizeof (UConverter));
-        if(myUConverter == nullptr)
+        myUConverter = (UConverter *) uprv_malloc (വലുപ്പം (UConverter));
+        എങ്കിൽ(myUConverter == nullptr)
         {
             *err = U_MEMORY_ALLOCATION_ERROR;
             ucnv_unloadSharedDataIfReady(mySharedConverterData);
-            return nullptr;
+            തിരികെ nullptr;
         }
-        isCopyLocal = false;
-    } else {
-        isCopyLocal = true;
+        isCopyLocal = അസത്യം;
+    } അല്ലെങ്കിൽ {
+        isCopyLocal = സത്യം;
     }
 
     /* initialize the converter */
-    uprv_memset(myUConverter, 0, sizeof(UConverter));
+    uprv_memset(myUConverter, 0, വലുപ്പം(UConverter));
     myUConverter->isCopyLocal = isCopyLocal;
     /*myUConverter->isExtraLocal = false;*/ /* Set by the memset call */
     myUConverter->sharedData = mySharedConverterData;
     myUConverter->options = pArgs->options;
-    if(!pArgs->onlyTestIsLoadable) {
+    എങ്കിൽ(!pArgs->onlyTestIsLoadable) {
         myUConverter->preFromUFirstCP = U_SENTINEL;
         myUConverter->fromCharErrorBehaviour = UCNV_TO_U_DEFAULT_CALLBACK;
         myUConverter->fromUCharErrorBehaviour = UCNV_FROM_U_DEFAULT_CALLBACK;
@@ -1016,16 +1016,16 @@ ucnv_createConverterFromSharedData(UConverter* myUConverter U_LIFETIME_BOUND,
         myUConverter->toUCallbackReason = UCNV_ILLEGAL; /* default reason to invoke (*fromCharErrorBehaviour) */
     }
 
-    if(mySharedConverterData->impl->open != nullptr) {
+    എങ്കിൽ(mySharedConverterData->impl->open != nullptr) {
         mySharedConverterData->impl->open(myUConverter, pArgs, err);
-        if(U_FAILURE(*err) && !pArgs->onlyTestIsLoadable) {
+        എങ്കിൽ(U_FAILURE(*err) && !pArgs->onlyTestIsLoadable) {
             /* don't ucnv_close() if onlyTestIsLoadable because not fully initialized */
             ucnv_close(myUConverter);
-            return nullptr;
+            തിരികെ nullptr;
         }
     }
 
-    return myUConverter;
+    തിരികെ myUConverter;
 }
 
 /*Frees all shared immutable objects that aren't referred to (reference count = 0)
@@ -1035,8 +1035,8 @@ ucnv_flushCache ()
 {
     UConverterSharedData *mySharedData = nullptr;
     int32_t pos;
-    int32_t tableDeletedNum = 0;
-    const UHashElement *e;
+    int32_t table_Deleted_അക്കം = 0;
+    സ്ഥിരം UHashElement *e;
     /*UErrorCode status = U_ILLEGAL_ARGUMENT_ERROR;*/
     int32_t i, remaining;
 
@@ -1048,9 +1048,9 @@ ucnv_flushCache ()
     /*if shared data hasn't even been lazy evaluated yet
     * return 0
     */
-    if (SHARED_DATA_HASHTABLE == nullptr) {
-        UTRACE_EXIT_VALUE((int32_t)0);
-        return 0;
+    എങ്കിൽ (SHARED_DATA_HASHTABLE == nullptr) {
+        UTRACE_EXIT_മൂല്യം((int32_t)0);
+        തിരികെ 0;
     }
 
     /*creates an enumeration to iterate through every element in the
@@ -1072,53 +1072,53 @@ ucnv_flushCache ()
      * converter's reference counter down to 0.
      */
     i = 0;
-    do {
+    ചെയ്യുക {
         remaining = 0;
         pos = UHASH_FIRST;
-        while ((e = uhash_nextElement (SHARED_DATA_HASHTABLE, &pos)) != nullptr)
+        ആകുമ്പോൾ ((e = uhash_nextElement (SHARED_DATA_HASHTABLE, &pos)) != nullptr)
         {
             mySharedData = (UConverterSharedData *) e->value.pointer;
             /*deletes only if reference counter == 0 */
-            if (mySharedData->referenceCounter == 0)
+            എങ്കിൽ (mySharedData->referenceCounter == 0)
             {
-                tableDeletedNum++;
+                table_Deleted_അക്കം++;
 
                 UCNV_DEBUG_LOG("del",mySharedData->staticData->name,mySharedData);
 
                 uhash_removeElement(SHARED_DATA_HASHTABLE, e);
-                mySharedData->sharedDataCached = false;
+                mySharedData->sharedDataCached = അസത്യം;
                 ucnv_deleteSharedConverterData (mySharedData);
-            } else {
+            } അല്ലെങ്കിൽ {
                 ++remaining;
             }
         }
-    } while(++i == 1 && remaining > 0);
+    } ആകുമ്പോൾ(++i == 1 && remaining > 0);
     umtx_unlock(&cnvCacheMutex);
 
     UTRACE_DATA1(UTRACE_INFO, "ucnv_flushCache() exits with %d converters remaining", remaining);
 
-    UTRACE_EXIT_VALUE(tableDeletedNum);
-    return tableDeletedNum;
+    UTRACE_EXIT_മൂല്യം(table_Deleted_അക്കം);
+    തിരികെ table_Deleted_അക്കം;
 }
 
 /* available converters list --------------------------------------------------- */
 
-static void U_CALLCONV initAvailableConvertersList(UErrorCode &errCode) {
-    U_ASSERT(gAvailableConverterCount == 0);
+സ്ഥിതം ശൂന്യം U_CALLCONV initAvailableConvertersList(UErrorCode &errCode) {
+    U_ASSERT(g_Available_Converter_എണ്ണം == 0);
     U_ASSERT(gAvailableConverters == nullptr);
 
     ucnv_enableCleanup();
     UEnumeration *allConvEnum = ucnv_openAllNames(&errCode);
-    int32_t allConverterCount = uenum_count(allConvEnum, &errCode);
-    if (U_FAILURE(errCode)) {
-        return;
+    int32_t all_Converter_എണ്ണം = uenum_എണ്ണം(allConvEnum, &errCode);
+    എങ്കിൽ (U_FAILURE(errCode)) {
+        തിരികെ;
     }
 
     /* We can't have more than "*converterTable" converters to open */
-    gAvailableConverters = static_cast<const char**>(uprv_malloc(allConverterCount * sizeof(char*)));
-    if (!gAvailableConverters) {
+    gAvailableConverters = static_cast<സ്ഥിരം അക്ഷരം**>(uprv_malloc(all_Converter_എണ്ണം * വലുപ്പം(അക്ഷരം*)));
+    എങ്കിൽ (!gAvailableConverters) {
         errCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        തിരികെ;
     }
 
     /* Open the default converter to make sure that it has first dibs in the hash table. */
@@ -1126,13 +1126,13 @@ static void U_CALLCONV initAvailableConvertersList(UErrorCode &errCode) {
     UConverter tempConverter;
     ucnv_close(ucnv_createConverter(&tempConverter, nullptr, &localStatus));
 
-    gAvailableConverterCount = 0;
+    g_Available_Converter_എണ്ണം = 0;
 
-    for (int32_t idx = 0; idx < allConverterCount; idx++) {
+    വേണ്ടി (int32_t idx = 0; idx < all_Converter_എണ്ണം; idx++) {
         localStatus = U_ZERO_ERROR;
-        const char *converterName = uenum_next(allConvEnum, nullptr, &localStatus);
-        if (ucnv_canCreateConverter(converterName, &localStatus)) {
-            gAvailableConverters[gAvailableConverterCount++] = converterName;
+        സ്ഥിരം അക്ഷരം *converterName = uenum_next(allConvEnum, nullptr, &localStatus);
+        എങ്കിൽ (ucnv_canCreateConverter(converterName, &localStatus)) {
+            gAvailableConverters[g_Available_Converter_എണ്ണം++] = converterName;
         }
     }
 
@@ -1140,33 +1140,33 @@ static void U_CALLCONV initAvailableConvertersList(UErrorCode &errCode) {
 }
 
 
-static UBool haveAvailableConverterList(UErrorCode *pErrorCode) {
+സ്ഥിതം UBool haveAvailableConverterList(UErrorCode *pErrorCode) {
     umtx_initOnce(gAvailableConvertersInitOnce, &initAvailableConvertersList, *pErrorCode);
-    return U_SUCCESS(*pErrorCode);
+    തിരികെ U_SUCCESS(*pErrorCode);
 }
 
 U_CFUNC uint16_t
-ucnv_bld_countAvailableConverters(UErrorCode *pErrorCode) {
-    if (haveAvailableConverterList(pErrorCode)) {
-        return gAvailableConverterCount;
+ucnv_bld_എണ്ണം_Available_Converters(UErrorCode *pErrorCode) {
+    എങ്കിൽ (haveAvailableConverterList(pErrorCode)) {
+        തിരികെ g_Available_Converter_എണ്ണം;
     }
-    return 0;
+    തിരികെ 0;
 }
 
-U_CFUNC const char *
+U_CFUNC സ്ഥിരം അക്ഷരം *
 ucnv_bld_getAvailableConverter(uint16_t n, UErrorCode *pErrorCode) {
-    if (haveAvailableConverterList(pErrorCode)) {
-        if (n < gAvailableConverterCount) {
-            return gAvailableConverters[n];
+    എങ്കിൽ (haveAvailableConverterList(pErrorCode)) {
+        എങ്കിൽ (n < g_Available_Converter_എണ്ണം) {
+            തിരികെ gAvailableConverters[n];
         }
         *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
     }
-    return nullptr;
+    തിരികെ nullptr;
 }
 
 /* default converter name --------------------------------------------------- */
 
-#if !U_CHARSET_IS_UTF8
+#എങ്കിൽ !U_CHARSET_IS_UTF8
 /*
 Copy the canonical converter name.
 ucnv_getDefaultName must be thread safe, which can call this function.
@@ -1179,25 +1179,25 @@ would be the same type of default converter for a successive string.
 Since the name is a returned via ucnv_getDefaultName without copying,
 you shouldn't be modifying or deleting the string from a separate thread.
 */
-static inline void
-internalSetName(const char *name, UErrorCode *status) {
-    UConverterNamePieces stackPieces;
-    UConverterLoadArgs stackArgs=UCNV_LOAD_ARGS_INITIALIZER;
+സ്ഥിതം വരിയിൽ ശൂന്യം
+internalSetName(സ്ഥിരം അക്ഷരം *name, UErrorCode *status) {
+    UConverterNamePieces അട്ടി_Pieces;
+    UConverterLoadArgs അട്ടി_Args=UCNV_LOAD_ARGS_INITIALIZER;
     int32_t length=(int32_t)(uprv_strlen(name));
     UBool containsOption = (UBool)(uprv_strchr(name, UCNV_OPTION_SEP_CHAR) != nullptr);
-    const UConverterSharedData *algorithmicSharedData;
+    സ്ഥിരം UConverterSharedData *algorithmicSharedData;
 
-    stackArgs.name = name;
-    if(containsOption) {
-        stackPieces.cnvName[0] = 0;
-        stackPieces.locale[0] = 0;
-        stackPieces.options = 0;
-        parseConverterOptions(name, &stackPieces, &stackArgs, status);
-        if(U_FAILURE(*status)) {
-            return;
+    അട്ടി_Args.name = name;
+    എങ്കിൽ(containsOption) {
+        അട്ടി_Pieces.cnvName[0] = 0;
+        അട്ടി_Pieces.locale[0] = 0;
+        അട്ടി_Pieces.options = 0;
+        parseConverterOptions(name, &അട്ടി_Pieces, &അട്ടി_Args, status);
+        എങ്കിൽ(U_FAILURE(*status)) {
+            തിരികെ;
         }
     }
-    algorithmicSharedData = getAlgorithmicTypeFromName(stackArgs.name);
+    algorithmicSharedData = getAlgorithmicTypeFromName(അട്ടി_Args.name);
 
     umtx_lock(&cnvCacheMutex);
 
@@ -1227,13 +1227,13 @@ internalSetName(const char *name, UErrorCode *status) {
  * It assumes that setting a pointer is atomic.
  */
 
-U_CAPI const char*  U_EXPORT2
+U_CAPI സ്ഥിരം അക്ഷരം*  U_EXPORT2
 ucnv_getDefaultName() {
-#if U_CHARSET_IS_UTF8
-    return "UTF-8";
-#else
+#എങ്കിൽ U_CHARSET_IS_UTF8
+    തിരികെ "UTF-8";
+#അല്ലെങ്കിൽ
     /* local variable to be thread-safe */
-    const char *name;
+    സ്ഥിരം അക്ഷരം *name;
 
     /*
     Concurrent calls to ucnv_getDefaultName must be thread safe,
@@ -1243,31 +1243,31 @@ ucnv_getDefaultName() {
         icu::Mutex lock(&cnvCacheMutex);
         name = gDefaultConverterName;
     }
-    if(name==nullptr) {
+    എങ്കിൽ(name==nullptr) {
         UErrorCode errorCode = U_ZERO_ERROR;
         UConverter *cnv = nullptr;
 
         name = uprv_getDefaultCodepage();
 
         /* if the name is there, test it out and get the canonical name with options */
-        if(name != nullptr) {
+        എങ്കിൽ(name != nullptr) {
             cnv = ucnv_open(name, &errorCode);
-            if(U_SUCCESS(errorCode) && cnv != nullptr) {
+            എങ്കിൽ(U_SUCCESS(errorCode) && cnv != nullptr) {
                 name = ucnv_getName(cnv, &errorCode);
             }
         }
 
-        if(name == nullptr || name[0] == 0
+        എങ്കിൽ(name == nullptr || name[0] == 0
             || U_FAILURE(errorCode) || cnv == nullptr
-            || uprv_strlen(name)>=sizeof(gDefaultConverterNameBuffer))
+            || uprv_strlen(name)>=വലുപ്പം(gDefaultConverterNameBuffer))
         {
             /* Panic time, let's use a fallback. */
-#if (U_CHARSET_FAMILY == U_ASCII_FAMILY)
+#എങ്കിൽ (U_CHARSET_FAMILY == U_ASCII_FAMILY)
             name = "US-ASCII";
             /* there is no 'algorithmic' converter for EBCDIC */
-#elif U_PLATFORM == U_PF_OS390
+#അല്ലെങ്കിലെങ്കിൽ U_PLATFORM == U_PF_OS390
             name = "ibm-1047_P100-1995" UCNV_SWAP_LFNL_OPTION_STRING;
-#else
+#അല്ലെങ്കിൽ
             name = "ibm-37_P100-1995";
 #endif
         }
@@ -1278,34 +1278,34 @@ ucnv_getDefaultName() {
         ucnv_close(cnv);
     }
 
-    return name;
+    തിരികെ name;
 #endif
 }
 
-#if U_CHARSET_IS_UTF8
-U_CAPI void U_EXPORT2 ucnv_setDefaultName(const char *) {}
-#else
+#എങ്കിൽ U_CHARSET_IS_UTF8
+U_CAPI ശൂന്യം U_EXPORT2 ucnv_setDefaultName(സ്ഥിരം അക്ഷരം *) {}
+#അല്ലെങ്കിൽ
 /*
 This function is not thread safe, and it can't be thread safe.
 See internalSetName or the API reference for details.
 */
-U_CAPI void U_EXPORT2
-ucnv_setDefaultName(const char *converterName) {
-    if(converterName==nullptr) {
+U_CAPI ശൂന്യം U_EXPORT2
+ucnv_setDefaultName(സ്ഥിരം അക്ഷരം *converterName) {
+    എങ്കിൽ(converterName==nullptr) {
         /* reset to the default codepage */
         gDefaultConverterName=nullptr;
-    } else {
+    } അല്ലെങ്കിൽ {
         UErrorCode errorCode = U_ZERO_ERROR;
         UConverter *cnv = nullptr;
-        const char *name = nullptr;
+        സ്ഥിരം അക്ഷരം *name = nullptr;
 
         /* if the name is there, test it out and get the canonical name with options */
         cnv = ucnv_open(converterName, &errorCode);
-        if(U_SUCCESS(errorCode) && cnv != nullptr) {
+        എങ്കിൽ(U_SUCCESS(errorCode) && cnv != nullptr) {
             name = ucnv_getName(cnv, &errorCode);
         }
 
-        if(U_SUCCESS(errorCode) && name!=nullptr) {
+        എങ്കിൽ(U_SUCCESS(errorCode) && name!=nullptr) {
             internalSetName(name, &errorCode);
         }
         /* else this converter is bad to use. Don't change it to a bad value. */
@@ -1323,46 +1323,46 @@ ucnv_setDefaultName(const char *converterName) {
 
 /* most of this might belong more properly into ucnvmbcs.c, but that is so large */
 
-#if !UCONFIG_NO_LEGACY_CONVERSION
+#എങ്കിൽ !UCONFIG_NO_LEGACY_CONVERSION
 
 U_CAPI int32_t U_EXPORT2
-ucnv_swap(const UDataSwapper *ds,
-          const void *inData, int32_t length, void *outData,
+ucnv_swap(സ്ഥിരം UDataSwapper *ds,
+          സ്ഥിരം ശൂന്യം *inData, int32_t length, ശൂന്യം *outData,
           UErrorCode *pErrorCode) {
-    const UDataInfo *pInfo;
+    സ്ഥിരം UDataInfo *pInfo;
     int32_t headerSize;
 
-    const uint8_t *inBytes;
+    സ്ഥിരം uint8_t *inBytes;
     uint8_t *outBytes;
 
     uint32_t offset, count, staticDataSize;
     int32_t size;
 
-    const UConverterStaticData *inStaticData;
+    സ്ഥിരം UConverterStaticData *inStaticData;
     UConverterStaticData *outStaticData;
 
-    const _MBCSHeader *inMBCSHeader;
+    സ്ഥിരം _MBCSHeader *inMBCSHeader;
     _MBCSHeader *outMBCSHeader;
     _MBCSHeader mbcsHeader;
     uint32_t mbcsHeaderLength;
-    UBool noFromU=false;
+    UBool noFromU=അസത്യം;
 
     uint8_t outputType;
 
     int32_t maxFastUChar, mbcsIndexLength;
 
-    const int32_t *inExtIndexes;
+    സ്ഥിരം int32_t *inExtIndexes;
     int32_t extOffset;
 
     /* udata_swapDataHeader checks the arguments */
     headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    എങ്കിൽ(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        തിരികെ 0;
     }
 
     /* check data format and format version */
-    pInfo=(const UDataInfo *)((const char *)inData+4);
-    if(!(
+    pInfo=(സ്ഥിരം UDataInfo *)((സ്ഥിരം അക്ഷരം *)inData+4);
+    എങ്കിൽ(!(
         pInfo->dataFormat[0]==0x63 &&   /* dataFormat="cnvt" */
         pInfo->dataFormat[1]==0x6e &&
         pInfo->dataFormat[2]==0x76 &&
@@ -1375,33 +1375,33 @@ ucnv_swap(const UDataSwapper *ds,
                          pInfo->dataFormat[2], pInfo->dataFormat[3],
                          pInfo->formatVersion[0], pInfo->formatVersion[1]);
         *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+        തിരികെ 0;
     }
 
-    inBytes=(const uint8_t *)inData+headerSize;
+    inBytes=(സ്ഥിരം uint8_t *)inData+headerSize;
     outBytes=(outData == nullptr) ? nullptr : (uint8_t *)outData+headerSize;
 
     /* read the initial UConverterStaticData structure after the UDataInfo header */
-    inStaticData=(const UConverterStaticData *)inBytes;
+    inStaticData=(സ്ഥിരം UConverterStaticData *)inBytes;
     outStaticData=(UConverterStaticData *)outBytes;
 
-    if(length<0) {
+    എങ്കിൽ(length<0) {
         staticDataSize=ds->readUInt32(inStaticData->structSize);
-    } else {
+    } അല്ലെങ്കിൽ {
         length-=headerSize;
-        if( length<(int32_t)sizeof(UConverterStaticData) ||
+        എങ്കിൽ( length<(int32_t)വലുപ്പം(UConverterStaticData) ||
             (uint32_t)length<(staticDataSize=ds->readUInt32(inStaticData->structSize))
         ) {
             udata_printError(ds, "ucnv_swap(): too few bytes (%d after header) for an ICU .cnv conversion table\n",
                              length);
             *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            തിരികെ 0;
         }
     }
 
-    if(length>=0) {
+    എങ്കിൽ(length>=0) {
         /* swap the static data */
-        if(inStaticData!=outStaticData) {
+        എങ്കിൽ(inStaticData!=outStaticData) {
             uprv_memcpy(outStaticData, inStaticData, staticDataSize);
         }
 
@@ -1412,48 +1412,48 @@ ucnv_swap(const UDataSwapper *ds,
 
         ds->swapInvChars(ds, inStaticData->name, (int32_t)uprv_strlen(inStaticData->name),
                             outStaticData->name, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
+        എങ്കിൽ(U_FAILURE(*pErrorCode)) {
             udata_printError(ds, "ucnv_swap(): error swapping converter name\n");
-            return 0;
+            തിരികെ 0;
         }
     }
 
     inBytes+=staticDataSize;
-    if (outBytes != nullptr) outBytes+=staticDataSize;
-    if(length>=0) {
+    എങ്കിൽ (outBytes != nullptr) outBytes+=staticDataSize;
+    എങ്കിൽ(length>=0) {
         length-=(int32_t)staticDataSize;
     }
 
     /* check for supported conversionType values */
-    if(inStaticData->conversionType==UCNV_MBCS) {
+    എങ്കിൽ(inStaticData->conversionType==UCNV_MBCS) {
         /* swap MBCS data */
-        inMBCSHeader=(const _MBCSHeader *)inBytes;
+        inMBCSHeader=(സ്ഥിരം _MBCSHeader *)inBytes;
         outMBCSHeader=(_MBCSHeader *)outBytes;
 
-        if(0<=length && length<(int32_t)sizeof(_MBCSHeader)) {
+        എങ്കിൽ(0<=length && length<(int32_t)വലുപ്പം(_MBCSHeader)) {
             udata_printError(ds, "ucnv_swap(): too few bytes (%d after headers) for an ICU MBCS .cnv conversion table\n",
                                 length);
             *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            തിരികെ 0;
         }
-        if(inMBCSHeader->version[0]==4 && inMBCSHeader->version[1]>=1) {
+        എങ്കിൽ(inMBCSHeader->version[0]==4 && inMBCSHeader->version[1]>=1) {
             mbcsHeaderLength=MBCS_HEADER_V4_LENGTH;
-        } else if(inMBCSHeader->version[0]==5 && inMBCSHeader->version[1]>=3 &&
+        } അല്ലെങ്കിൽ എങ്കിൽ(inMBCSHeader->version[0]==5 && inMBCSHeader->version[1]>=3 &&
                   ((mbcsHeader.options=ds->readUInt32(inMBCSHeader->options))&
                    MBCS_OPT_UNKNOWN_INCOMPATIBLE_MASK)==0
         ) {
             mbcsHeaderLength=mbcsHeader.options&MBCS_OPT_LENGTH_MASK;
             noFromU = (mbcsHeader.options & MBCS_OPT_NO_FROM_U) != 0;
-        } else {
+        } അല്ലെങ്കിൽ {
             udata_printError(ds, "ucnv_swap(): unsupported _MBCSHeader.version %d.%d\n",
                              inMBCSHeader->version[0], inMBCSHeader->version[1]);
             *pErrorCode=U_UNSUPPORTED_ERROR;
-            return 0;
+            തിരികെ 0;
         }
 
         uprv_memcpy(mbcsHeader.version, inMBCSHeader->version, 4);
-        mbcsHeader.countStates=         ds->readUInt32(inMBCSHeader->countStates);
-        mbcsHeader.countToUFallbacks=   ds->readUInt32(inMBCSHeader->countToUFallbacks);
+        mbcsHeader.എണ്ണം_States=         ds->readUInt32(inMBCSHeader->എണ്ണം_States);
+        mbcsHeader.എണ്ണം_To_UFallbacks=   ds->readUInt32(inMBCSHeader->എണ്ണം_To_UFallbacks);
         mbcsHeader.offsetToUCodeUnits=  ds->readUInt32(inMBCSHeader->offsetToUCodeUnits);
         mbcsHeader.offsetFromUTable=    ds->readUInt32(inMBCSHeader->offsetFromUTable);
         mbcsHeader.offsetFromUBytes=    ds->readUInt32(inMBCSHeader->offsetFromUBytes);
@@ -1463,29 +1463,29 @@ ucnv_swap(const UDataSwapper *ds,
 
         extOffset=(int32_t)(mbcsHeader.flags>>8);
         outputType=(uint8_t)mbcsHeader.flags;
-        if(noFromU && outputType==MBCS_OUTPUT_1) {
+        എങ്കിൽ(noFromU && outputType==MBCS_OUTPUT_1) {
             udata_printError(ds, "ucnv_swap(): unsupported combination of makeconv --small with SBCS\n");
             *pErrorCode=U_UNSUPPORTED_ERROR;
-            return 0;
+            തിരികെ 0;
         }
 
         /* make sure that the output type is known */
-        switch(outputType) {
-        case MBCS_OUTPUT_1:
-        case MBCS_OUTPUT_2:
-        case MBCS_OUTPUT_3:
-        case MBCS_OUTPUT_4:
-        case MBCS_OUTPUT_3_EUC:
-        case MBCS_OUTPUT_4_EUC:
-        case MBCS_OUTPUT_2_SISO:
-        case MBCS_OUTPUT_EXT_ONLY:
+        തിരഞ്ഞെടുപ്പ്(outputType) {
+        അവസ്ഥ MBCS_OUTPUT_1:
+        അവസ്ഥ MBCS_OUTPUT_2:
+        അവസ്ഥ MBCS_OUTPUT_3:
+        അവസ്ഥ MBCS_OUTPUT_4:
+        അവസ്ഥ MBCS_OUTPUT_3_EUC:
+        അവസ്ഥ MBCS_OUTPUT_4_EUC:
+        അവസ്ഥ MBCS_OUTPUT_2_SISO:
+        അവസ്ഥ MBCS_OUTPUT_EXT_ONLY:
             /* OK */
-            break;
-        default:
+            നിർത്തുക;
+        സ്ഥിരസ്ഥിതി:
             udata_printError(ds, "ucnv_swap(): unsupported MBCS output type 0x%x\n",
                              outputType);
             *pErrorCode=U_UNSUPPORTED_ERROR;
-            return 0;
+            തിരികെ 0;
         }
 
         /* calculate the length of the MBCS data */
@@ -1498,75 +1498,75 @@ ucnv_swap(const UDataSwapper *ds,
          */
         maxFastUChar=0;
         mbcsIndexLength=0;
-        if( outputType!=MBCS_OUTPUT_EXT_ONLY && outputType!=MBCS_OUTPUT_1 &&
+        എങ്കിൽ( outputType!=MBCS_OUTPUT_EXT_ONLY && outputType!=MBCS_OUTPUT_1 &&
             mbcsHeader.version[1]>=3 && (maxFastUChar=mbcsHeader.version[2])!=0
         ) {
             maxFastUChar=(maxFastUChar<<8)|0xff;
             mbcsIndexLength=((maxFastUChar+1)>>6)*2;  /* number of bytes */
         }
 
-        if(extOffset==0) {
+        എങ്കിൽ(extOffset==0) {
             size=(int32_t)(mbcsHeader.offsetFromUBytes+mbcsIndexLength);
-            if(!noFromU) {
+            എങ്കിൽ(!noFromU) {
                 size+=(int32_t)mbcsHeader.fromUBytesLength;
             }
 
             /* avoid compiler warnings - not otherwise necessary, and the value does not matter */
             inExtIndexes=nullptr;
-        } else {
+        } അല്ലെങ്കിൽ {
             /* there is extension data after the base data, see ucnv_ext.h */
-            if(length>=0 && length<(extOffset+UCNV_EXT_INDEXES_MIN_LENGTH*4)) {
+            എങ്കിൽ(length>=0 && length<(extOffset+UCNV_EXT_INDEXES_MIN_LENGTH*4)) {
                 udata_printError(ds, "ucnv_swap(): too few bytes (%d after headers) for an ICU MBCS .cnv conversion table with extension data\n",
                                  length);
                 *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                return 0;
+                തിരികെ 0;
             }
 
-            inExtIndexes=(const int32_t *)(inBytes+extOffset);
+            inExtIndexes=(സ്ഥിരം int32_t *)(inBytes+extOffset);
             size=extOffset+udata_readInt32(ds, inExtIndexes[UCNV_EXT_SIZE]);
         }
 
-        if(length>=0) {
-            if(length<size) {
+        എങ്കിൽ(length>=0) {
+            എങ്കിൽ(length<size) {
                 udata_printError(ds, "ucnv_swap(): too few bytes (%d after headers) for an ICU MBCS .cnv conversion table\n",
                                  length);
                 *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                return 0;
+                തിരികെ 0;
             }
 
             /* copy the data for inaccessible bytes */
-            if(inBytes!=outBytes) {
+            എങ്കിൽ(inBytes!=outBytes) {
                 uprv_memcpy(outBytes, inBytes, size);
             }
 
             /* swap the MBCSHeader, except for the version field */
             count=mbcsHeaderLength*4;
-            ds->swapArray32(ds, &inMBCSHeader->countStates, count-4,
-                               &outMBCSHeader->countStates, pErrorCode);
+            ds->swapArray32(ds, &inMBCSHeader->എണ്ണം_States, count-4,
+                               &outMBCSHeader->എണ്ണം_States, pErrorCode);
 
-            if(outputType==MBCS_OUTPUT_EXT_ONLY) {
+            എങ്കിൽ(outputType==MBCS_OUTPUT_EXT_ONLY) {
                 /*
                  * extension-only file,
                  * contains a base name instead of normal base table data
                  */
 
                 /* swap the base name, between the header and the extension data */
-                const char *inBaseName=(const char *)inBytes+count;
-                char *outBaseName=(char *)outBytes+count;
+                സ്ഥിരം അക്ഷരം *inBaseName=(സ്ഥിരം അക്ഷരം *)inBytes+count;
+                അക്ഷരം *outBaseName=(അക്ഷരം *)outBytes+count;
                 ds->swapInvChars(ds, inBaseName, (int32_t)uprv_strlen(inBaseName),
                                     outBaseName, pErrorCode);
-            } else {
+            } അല്ലെങ്കിൽ {
                 /* normal file with base table data */
 
                 /* swap the state table, 1kB per state */
                 offset=count;
-                count=mbcsHeader.countStates*1024;
+                count=mbcsHeader.എണ്ണം_States*1024;
                 ds->swapArray32(ds, inBytes+offset, (int32_t)count,
                                    outBytes+offset, pErrorCode);
 
                 /* swap the toUFallbacks[] */
                 offset+=count;
-                count=mbcsHeader.countToUFallbacks*8;
+                count=mbcsHeader.എണ്ണം_To_UFallbacks*8;
                 ds->swapArray32(ds, inBytes+offset, (int32_t)count,
                                    outBytes+offset, pErrorCode);
 
@@ -1579,18 +1579,18 @@ ucnv_swap(const UDataSwapper *ds,
                 /* offset to the stage 1 table, independent of the outputType */
                 offset=mbcsHeader.offsetFromUTable;
 
-                if(outputType==MBCS_OUTPUT_1) {
+                എങ്കിൽ(outputType==MBCS_OUTPUT_1) {
                     /* SBCS: swap the fromU tables, all 16 bits wide */
                     count=(mbcsHeader.offsetFromUBytes-offset)+mbcsHeader.fromUBytesLength;
                     ds->swapArray16(ds, inBytes+offset, (int32_t)count,
                                        outBytes+offset, pErrorCode);
-                } else {
+                } അല്ലെങ്കിൽ {
                     /* otherwise: swap the stage tables separately */
 
                     /* stage 1 table: uint16_t[0x440 or 0x40] */
-                    if(inStaticData->unicodeMask&UCNV_HAS_SUPPLEMENTARY) {
+                    എങ്കിൽ(inStaticData->unicodeMask&UCNV_HAS_SUPPLEMENTARY) {
                         count=0x440*2; /* for all of Unicode */
-                    } else {
+                    } അല്ലെങ്കിൽ {
                         count=0x40*2; /* only BMP */
                     }
                     ds->swapArray16(ds, inBytes+offset, (int32_t)count,
@@ -1605,23 +1605,23 @@ ucnv_swap(const UDataSwapper *ds,
                     /* stage 3/result bytes: sometimes uint16_t[] or uint32_t[] */
                     offset=mbcsHeader.offsetFromUBytes;
                     count= noFromU ? 0 : mbcsHeader.fromUBytesLength;
-                    switch(outputType) {
-                    case MBCS_OUTPUT_2:
-                    case MBCS_OUTPUT_3_EUC:
-                    case MBCS_OUTPUT_2_SISO:
+                    തിരഞ്ഞെടുപ്പ്(outputType) {
+                    അവസ്ഥ MBCS_OUTPUT_2:
+                    അവസ്ഥ MBCS_OUTPUT_3_EUC:
+                    അവസ്ഥ MBCS_OUTPUT_2_SISO:
                         ds->swapArray16(ds, inBytes+offset, (int32_t)count,
                                            outBytes+offset, pErrorCode);
-                        break;
-                    case MBCS_OUTPUT_4:
+                        നിർത്തുക;
+                    അവസ്ഥ MBCS_OUTPUT_4:
                         ds->swapArray32(ds, inBytes+offset, (int32_t)count,
                                            outBytes+offset, pErrorCode);
-                        break;
-                    default:
+                        നിർത്തുക;
+                    സ്ഥിരസ്ഥിതി:
                         /* just uint8_t[], nothing to swap */
-                        break;
+                        നിർത്തുക;
                     }
 
-                    if(mbcsIndexLength!=0) {
+                    എങ്കിൽ(mbcsIndexLength!=0) {
                         offset+=count;
                         count=mbcsIndexLength;
                         ds->swapArray16(ds, inBytes+offset, (int32_t)count,
@@ -1630,7 +1630,7 @@ ucnv_swap(const UDataSwapper *ds,
                 }
             }
 
-            if(extOffset!=0) {
+            എങ്കിൽ(extOffset!=0) {
                 /* swap the extension data */
                 inBytes+=extOffset;
                 outBytes+=extOffset;
@@ -1651,7 +1651,7 @@ ucnv_swap(const UDataSwapper *ds,
                 ds->swapArray16(ds, inBytes+offset, length*2, outBytes+offset, pErrorCode);
 
                 /* swap fromUTableValues[] */
-                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_VALUES_INDEX]);
+                offset=udata_readInt32(ds, inExtIndexes[UCNV_EXT_FROM_U_മൂല്യങ്ങൾ_INDEX]);
                 /* same length as for fromUTableUChars[] */
                 ds->swapArray32(ds, inBytes+offset, length*4, outBytes+offset, pErrorCode);
 
@@ -1677,14 +1677,14 @@ ucnv_swap(const UDataSwapper *ds,
                 ds->swapArray32(ds, inBytes, length*4, outBytes, pErrorCode);
             }
         }
-    } else {
+    } അല്ലെങ്കിൽ {
         udata_printError(ds, "ucnv_swap(): unknown conversionType=%d!=UCNV_MBCS\n",
                          inStaticData->conversionType);
         *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+        തിരികെ 0;
     }
 
-    return headerSize+(int32_t)staticDataSize+size;
+    തിരികെ headerSize+(int32_t)staticDataSize+size;
 }
 
 #endif /* #if !UCONFIG_NO_LEGACY_CONVERSION */

@@ -18,13 +18,13 @@
 *   Internal function for sorting arrays.
 */
 
-#include <cstddef>
+#അന്തര്ഭാവ <cstddef>
 
-#include "unicode/utypes.h"
-#include "cmemory.h"
-#include "uarrsort.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
+#അന്തര്ഭാവ "cmemory.h"
+#അന്തര്ഭാവ "uarrsort.h"
 
-enum {
+എണ്ണൽ {
     /**
      * "from Knuth"
      *
@@ -33,55 +33,55 @@ enum {
      * A linear search over 8 items on average also performs 4 comparisons.
      */
     MIN_QSORT=9,
-    STACK_ITEM_SIZE=200
+    അട്ടി_ITEM_SIZE=200
 };
 
-static constexpr int32_t sizeInMaxAlignTs(int32_t sizeInBytes) {
-    return (sizeInBytes + sizeof(std::max_align_t) - 1) / sizeof(std::max_align_t);
+സ്ഥിതം constexpr int32_t sizeInMaxAlignTs(int32_t sizeInBytes) {
+    തിരികെ (sizeInBytes + വലുപ്പം(std::max_align_t) - 1) / വലുപ്പം(std::max_align_t);
 }
 
 /* UComparator convenience implementations ---------------------------------- */
 
 U_CAPI int32_t U_EXPORT2
-uprv_uint16Comparator(const void *context, const void *left, const void *right) {
-    (void)context;
-    return (int32_t)*(const uint16_t *)left - (int32_t)*(const uint16_t *)right;
+uprv_uint16Comparator(സ്ഥിരം ശൂന്യം *context, സ്ഥിരം ശൂന്യം *left, സ്ഥിരം ശൂന്യം *വലത്) {
+    (ശൂന്യം)context;
+    തിരികെ (int32_t)*(സ്ഥിരം uint16_t *)left - (int32_t)*(സ്ഥിരം uint16_t *)വലത്;
 }
 
 U_CAPI int32_t U_EXPORT2
-uprv_int32Comparator(const void *context, const void *left, const void *right) {
-    (void)context;
-    return *(const int32_t *)left - *(const int32_t *)right;
+uprv_int32Comparator(സ്ഥിരം ശൂന്യം *context, സ്ഥിരം ശൂന്യം *left, സ്ഥിരം ശൂന്യം *വലത്) {
+    (ശൂന്യം)context;
+    തിരികെ *(സ്ഥിരം int32_t *)left - *(സ്ഥിരം int32_t *)വലത്;
 }
 
 U_CAPI int32_t U_EXPORT2
-uprv_uint32Comparator(const void *context, const void *left, const void *right) {
-    (void)context;
-    uint32_t l=*(const uint32_t *)left, r=*(const uint32_t *)right;
+uprv_uint32Comparator(സ്ഥിരം ശൂന്യം *context, സ്ഥിരം ശൂന്യം *left, സ്ഥിരം ശൂന്യം *വലത്) {
+    (ശൂന്യം)context;
+    uint32_t l=*(സ്ഥിരം uint32_t *)left, r=*(സ്ഥിരം uint32_t *)വലത്;
 
     /* compare directly because (l-r) would overflow the int32_t result */
-    if(l<r) {
-        return -1;
-    } else if(l==r) {
-        return 0;
-    } else /* l>r */ {
-        return 1;
+    എങ്കിൽ(l<r) {
+        തിരികെ -1;
+    } അല്ലെങ്കിൽ എങ്കിൽ(l==r) {
+        തിരികെ 0;
+    } അല്ലെങ്കിൽ /* l>r */ {
+        തിരികെ 1;
     }
 }
 
 /* Insertion sort using binary search --------------------------------------- */
 
 U_CAPI int32_t U_EXPORT2
-uprv_stableBinarySearch(char *array, int32_t limit, void *item, int32_t itemSize,
-                        UComparator *cmp, const void *context) {
+uprv_stable_ദ്വിമാന_തിരയൽ(അക്ഷരം *array, int32_t limit, ശൂന്യം *item, int32_t itemSize,
+                        UComparator *cmp, സ്ഥിരം ശൂന്യം *context) {
     int32_t start=0;
-    UBool found=false;
+    UBool found=അസത്യം;
 
     /* Binary search until we get down to a tiny sub-array. */
-    while((limit-start)>=MIN_QSORT) {
+    ആകുമ്പോൾ((limit-start)>=MIN_QSORT) {
         int32_t i=(start+limit)/2;
         int32_t diff=cmp(context, item, array+i*itemSize);
-        if(diff==0) {
+        എങ്കിൽ(diff==0) {
             /*
              * Found the item. We look for the *last* occurrence of such
              * an item, for stable sorting.
@@ -93,43 +93,43 @@ uprv_stableBinarySearch(char *array, int32_t limit, void *item, int32_t itemSize
              * (where found will never become true in the insertion sort)
              * or potentially many duplicates.
              */
-            found=true;
+            found=സത്യം;
             start=i+1;
-        } else if(diff<0) {
+        } അല്ലെങ്കിൽ എങ്കിൽ(diff<0) {
             limit=i;
-        } else {
+        } അല്ലെങ്കിൽ {
             start=i;
         }
     }
 
     /* Linear search over the remaining tiny sub-array. */
-    while(start<limit) {
+    ആകുമ്പോൾ(start<limit) {
         int32_t diff=cmp(context, item, array+start*itemSize);
-        if(diff==0) {
-            found=true;
-        } else if(diff<0) {
-            break;
+        എങ്കിൽ(diff==0) {
+            found=സത്യം;
+        } അല്ലെങ്കിൽ എങ്കിൽ(diff<0) {
+            നിർത്തുക;
         }
         ++start;
     }
-    return found ? (start-1) : ~start;
+    തിരികെ found ? (start-1) : ~start;
 }
 
-static void
-doInsertionSort(char *array, int32_t length, int32_t itemSize,
-                UComparator *cmp, const void *context, void *pv) {
+സ്ഥിതം ശൂന്യം
+doInsertionSort(അക്ഷരം *array, int32_t length, int32_t itemSize,
+                UComparator *cmp, സ്ഥിരം ശൂന്യം *context, ശൂന്യം *pv) {
     int32_t j;
 
-    for(j=1; j<length; ++j) {
-        char *item=array+j*itemSize;
-        int32_t insertionPoint=uprv_stableBinarySearch(array, j, item, itemSize, cmp, context);
-        if(insertionPoint<0) {
+    വേണ്ടി(j=1; j<length; ++j) {
+        അക്ഷരം *item=array+j*itemSize;
+        int32_t insertionPoint=uprv_stable_ദ്വിമാന_തിരയൽ(array, j, item, itemSize, cmp, context);
+        എങ്കിൽ(insertionPoint<0) {
             insertionPoint=~insertionPoint;
-        } else {
+        } അല്ലെങ്കിൽ {
             ++insertionPoint;  /* one past the last equal item */
         }
-        if(insertionPoint<j) {
-            char *dest=array+insertionPoint*itemSize;
+        എങ്കിൽ(insertionPoint<j) {
+            അക്ഷരം *dest=array+insertionPoint*itemSize;
             uprv_memcpy(pv, item, itemSize);  /* v=array[j] */
             uprv_memmove(dest+itemSize, dest, (j-insertionPoint)*(size_t)itemSize);
             uprv_memcpy(dest, pv, itemSize);  /* array[insertionPoint]=v */
@@ -137,15 +137,15 @@ doInsertionSort(char *array, int32_t length, int32_t itemSize,
     }
 }
 
-static void
-insertionSort(char *array, int32_t length, int32_t itemSize,
-              UComparator *cmp, const void *context, UErrorCode *pErrorCode) {
+സ്ഥിതം ശൂന്യം
+insertionSort(അക്ഷരം *array, int32_t length, int32_t itemSize,
+              UComparator *cmp, സ്ഥിരം ശൂന്യം *context, UErrorCode *pErrorCode) {
 
-    icu::MaybeStackArray<std::max_align_t, sizeInMaxAlignTs(STACK_ITEM_SIZE)> v;
-    if (sizeInMaxAlignTs(itemSize) > v.getCapacity() &&
+    icu::Maybe_അട്ടി_Array<std::max_align_t, sizeInMaxAlignTs(അട്ടി_ITEM_SIZE)> v;
+    എങ്കിൽ (sizeInMaxAlignTs(itemSize) > v.getCapacity() &&
             v.resize(sizeInMaxAlignTs(itemSize)) == nullptr) {
         *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        തിരികെ;
     }
 
     doInsertionSort(array, length, itemSize, cmp, context, v.getAlias());
@@ -165,81 +165,81 @@ insertionSort(char *array, int32_t length, int32_t itemSize,
  * 4. Auflage 1986
  * ISBN 3-519-02260-5
  */
-static void
-subQuickSort(char *array, int32_t start, int32_t limit, int32_t itemSize,
-             UComparator *cmp, const void *context,
-             void *px, void *pw) {
-    int32_t left, right;
+സ്ഥിതം ശൂന്യം
+subQuickSort(അക്ഷരം *array, int32_t start, int32_t limit, int32_t itemSize,
+             UComparator *cmp, സ്ഥിരം ശൂന്യം *context,
+             ശൂന്യം *px, ശൂന്യം *pw) {
+    int32_t left, വലത്;
 
     /* start and left are inclusive, limit and right are exclusive */
-    do {
-        if((start+MIN_QSORT)>=limit) {
+    ചെയ്യുക {
+        എങ്കിൽ((start+MIN_QSORT)>=limit) {
             doInsertionSort(array+start*itemSize, limit-start, itemSize, cmp, context, px);
-            break;
+            നിർത്തുക;
         }
 
         left=start;
-        right=limit;
+        വലത്=limit;
 
         /* x=array[middle] */
         uprv_memcpy(px, array+(size_t)((start+limit)/2)*itemSize, itemSize);
 
-        do {
-            while(/* array[left]<x */
+        ചെയ്യുക {
+            ആകുമ്പോൾ(/* array[left]<x */
                   cmp(context, array+left*itemSize, px)<0
             ) {
                 ++left;
             }
-            while(/* x<array[right-1] */
-                  cmp(context, px, array+(right-1)*itemSize)<0
+            ആകുമ്പോൾ(/* x<array[right-1] */
+                  cmp(context, px, array+(വലത്-1)*itemSize)<0
             ) {
-                --right;
+                --വലത്;
             }
 
             /* swap array[left] and array[right-1] via w; ++left; --right */
-            if(left<right) {
-                --right;
+            എങ്കിൽ(left<വലത്) {
+                --വലത്;
 
-                if(left<right) {
+                എങ്കിൽ(left<വലത്) {
                     uprv_memcpy(pw, array+(size_t)left*itemSize, itemSize);
-                    uprv_memcpy(array+(size_t)left*itemSize, array+(size_t)right*itemSize, itemSize);
-                    uprv_memcpy(array+(size_t)right*itemSize, pw, itemSize);
+                    uprv_memcpy(array+(size_t)left*itemSize, array+(size_t)വലത്*itemSize, itemSize);
+                    uprv_memcpy(array+(size_t)വലത്*itemSize, pw, itemSize);
                 }
 
                 ++left;
             }
-        } while(left<right);
+        } ആകുമ്പോൾ(left<വലത്);
 
         /* sort sub-arrays */
-        if((right-start)<(limit-left)) {
+        എങ്കിൽ((വലത്-start)<(limit-left)) {
             /* sort [start..right[ */
-            if(start<(right-1)) {
-                subQuickSort(array, start, right, itemSize, cmp, context, px, pw);
+            എങ്കിൽ(start<(വലത്-1)) {
+                subQuickSort(array, start, വലത്, itemSize, cmp, context, px, pw);
             }
 
             /* sort [left..limit[ */
             start=left;
-        } else {
+        } അല്ലെങ്കിൽ {
             /* sort [left..limit[ */
-            if(left<(limit-1)) {
+            എങ്കിൽ(left<(limit-1)) {
                 subQuickSort(array, left, limit, itemSize, cmp, context, px, pw);
             }
 
             /* sort [start..right[ */
-            limit=right;
+            limit=വലത്;
         }
-    } while(start<(limit-1));
+    } ആകുമ്പോൾ(start<(limit-1));
 }
 
-static void
-quickSort(char *array, int32_t length, int32_t itemSize,
-            UComparator *cmp, const void *context, UErrorCode *pErrorCode) {
+സ്ഥിതം ശൂന്യം
+quickSort(അക്ഷരം *array, int32_t length, int32_t itemSize,
+            UComparator *cmp, സ്ഥിരം ശൂന്യം *context, UErrorCode *pErrorCode) {
     /* allocate two intermediate item variables (x and w) */
-    icu::MaybeStackArray<std::max_align_t, sizeInMaxAlignTs(STACK_ITEM_SIZE) * 2> xw;
-    if(sizeInMaxAlignTs(itemSize)*2 > xw.getCapacity() &&
+    icu::Maybe_അട്ടി_Array<std::max_align_t, sizeInMaxAlignTs(അട്ടി_ITEM_SIZE) * 2> xw;
+    എങ്കിൽ(sizeInMaxAlignTs(itemSize)*2 > xw.getCapacity() &&
             xw.resize(sizeInMaxAlignTs(itemSize) * 2) == nullptr) {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return;
+        തിരികെ;
     }
 
     subQuickSort(array, 0, length, itemSize, cmp, context,
@@ -252,23 +252,23 @@ quickSort(char *array, int32_t length, int32_t itemSize,
  * Check arguments, select an appropriate implementation,
  * cast the array to char * so that array+i*itemSize works.
  */
-U_CAPI void U_EXPORT2
-uprv_sortArray(void *array, int32_t length, int32_t itemSize,
-               UComparator *cmp, const void *context,
+U_CAPI ശൂന്യം U_EXPORT2
+uprv_sortArray(ശൂന്യം *array, int32_t length, int32_t itemSize,
+               UComparator *cmp, സ്ഥിരം ശൂന്യം *context,
                UBool sortStable, UErrorCode *pErrorCode) {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    എങ്കിൽ(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        തിരികെ;
     }
-    if((length>0 && array==nullptr) || length<0 || itemSize<=0 || cmp==nullptr) {
+    എങ്കിൽ((length>0 && array==nullptr) || length<0 || itemSize<=0 || cmp==nullptr) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        തിരികെ;
     }
 
-    if(length<=1) {
-        return;
-    } else if(length<MIN_QSORT || sortStable) {
-        insertionSort((char *)array, length, itemSize, cmp, context, pErrorCode);
-    } else {
-        quickSort((char *)array, length, itemSize, cmp, context, pErrorCode);
+    എങ്കിൽ(length<=1) {
+        തിരികെ;
+    } അല്ലെങ്കിൽ എങ്കിൽ(length<MIN_QSORT || sortStable) {
+        insertionSort((അക്ഷരം *)array, length, itemSize, cmp, context, pErrorCode);
+    } അല്ലെങ്കിൽ {
+        quickSort((അക്ഷരം *)array, length, itemSize, cmp, context, pErrorCode);
     }
 }

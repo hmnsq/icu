@@ -14,22 +14,22 @@
 *   created by: Markus W. Scherer
 */
 
-#include "utypeinfo.h"  // for 'typeid' to work
-#include "unicode/utypes.h"
-#include "unicode/stringtriebuilder.h"
-#include "uassert.h"
-#include "uhash.h"
+#അന്തര്ഭാവ "utypeinfo.h"  // for 'typeid' to work
+#അന്തര്ഭാവ "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/stringtriebuilder.h"
+#അന്തര്ഭാവ "uassert.h"
+#അന്തര്ഭാവ "uhash.h"
 
 U_CDECL_BEGIN
 
-static int32_t U_CALLCONV
-hashStringTrieNode(const UHashTok key) {
-    return icu::StringTrieBuilder::hashNode(key.pointer);
+സ്ഥിതം int32_t U_CALLCONV
+hash_String_Trie_കണ്ണി(സ്ഥിരം UHashTok താക്കോൽ) {
+    തിരികെ icu::StringTrieBuilder::hash_കണ്ണി(താക്കോൽ.pointer);
 }
 
-static UBool U_CALLCONV
-equalStringTrieNodes(const UHashTok key1, const UHashTok key2) {
-    return icu::StringTrieBuilder::equalNodes(key1.pointer, key2.pointer);
+സ്ഥിതം UBool U_CALLCONV
+equalStringTrieNodes(സ്ഥിരം UHashTok key1, സ്ഥിരം UHashTok key2) {
+    തിരികെ icu::StringTrieBuilder::equalNodes(key1.pointer, key2.pointer);
 }
 
 U_CDECL_END
@@ -42,39 +42,39 @@ StringTrieBuilder::~StringTrieBuilder() {
     deleteCompactBuilder();
 }
 
-void
+ശൂന്യം
 StringTrieBuilder::createCompactBuilder(int32_t sizeGuess, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        തിരികെ;
     }
-    nodes=uhash_openSize(hashStringTrieNode, equalStringTrieNodes, nullptr,
+    nodes=uhash_openSize(hash_String_Trie_കണ്ണി, equalStringTrieNodes, nullptr,
                          sizeGuess, &errorCode);
-    if(U_SUCCESS(errorCode)) {
-        if(nodes==nullptr) {
+    എങ്കിൽ(U_SUCCESS(errorCode)) {
+        എങ്കിൽ(nodes==nullptr) {
           errorCode=U_MEMORY_ALLOCATION_ERROR;
-        } else {
-          uhash_setKeyDeleter(nodes, uprv_deleteUObject);
+        } അല്ലെങ്കിൽ {
+          uhash_set_താക്കോൽ_Deleter(nodes, uprv_deleteUObject);
         }
     }
 }
 
-void
+ശൂന്യം
 StringTrieBuilder::deleteCompactBuilder() {
     uhash_close(nodes);
     nodes=nullptr;
 }
 
-void
+ശൂന്യം
 StringTrieBuilder::build(UStringTrieBuildOption buildOption, int32_t elementsLength,
                        UErrorCode &errorCode) {
-    if(buildOption==USTRINGTRIE_BUILD_FAST) {
-        writeNode(0, elementsLength, 0);
-    } else /* USTRINGTRIE_BUILD_SMALL */ {
+    എങ്കിൽ(buildOption==USTRINGTRIE_BUILD_FAST) {
+        write_കണ്ണി(0, elementsLength, 0);
+    } അല്ലെങ്കിൽ /* USTRINGTRIE_BUILD_SMALL */ {
         createCompactBuilder(2*elementsLength, errorCode);
-        Node *root=makeNode(0, elementsLength, 0, errorCode);
-        if(U_SUCCESS(errorCode)) {
-            root->markRightEdgesFirst(-1);
-            root->write(*this);
+        Node *വേര്=make_കണ്ണി(0, elementsLength, 0, errorCode);
+        എങ്കിൽ(U_SUCCESS(errorCode)) {
+            വേര്->mark_വലത്_Edges_First(-1);
+            വേര്->ലിഖ(*ഇത്);
         }
         deleteCompactBuilder();
     }
@@ -84,540 +84,540 @@ StringTrieBuilder::build(UStringTrieBuildOption buildOption, int32_t elementsLen
 // and all strings of the [start..limit[ elements must be sorted and
 // have a common prefix of length unitIndex.
 int32_t
-StringTrieBuilder::writeNode(int32_t start, int32_t limit, int32_t unitIndex) {
-    UBool hasValue=false;
+StringTrieBuilder::write_കണ്ണി(int32_t start, int32_t limit, int32_t unitIndex) {
+    UBool has_മൂല്യം=അസത്യം;
     int32_t value=0;
     int32_t type;
-    if(unitIndex==getElementStringLength(start)) {
+    എങ്കിൽ(unitIndex==getElementStringLength(start)) {
         // An intermediate or final value.
-        value=getElementValue(start++);
-        if(start==limit) {
-            return writeValueAndFinal(value, true);  // final-value node
+        value=get_Element_മൂല്യം(start++);
+        എങ്കിൽ(start==limit) {
+            തിരികെ write_മൂല്യം_And_Final(value, സത്യം);  // final-value node
         }
-        hasValue=true;
+        has_മൂല്യം=സത്യം;
     }
     // Now all [start..limit[ strings are longer than unitIndex.
     int32_t minUnit=getElementUnit(start, unitIndex);
     int32_t maxUnit=getElementUnit(limit-1, unitIndex);
-    if(minUnit==maxUnit) {
+    എങ്കിൽ(minUnit==maxUnit) {
         // Linear-match node: All strings have the same character at unitIndex.
         int32_t lastUnitIndex=getLimitOfLinearMatch(start, limit-1, unitIndex);
-        writeNode(start, limit, lastUnitIndex);
+        write_കണ്ണി(start, limit, lastUnitIndex);
         // Break the linear-match sequence into chunks of at most kMaxLinearMatchLength.
         int32_t length=lastUnitIndex-unitIndex;
         int32_t maxLinearMatchLength=getMaxLinearMatchLength();
-        while(length>maxLinearMatchLength) {
+        ആകുമ്പോൾ(length>maxLinearMatchLength) {
             lastUnitIndex-=maxLinearMatchLength;
             length-=maxLinearMatchLength;
             writeElementUnits(start, lastUnitIndex, maxLinearMatchLength);
-            write(getMinLinearMatch()+maxLinearMatchLength-1);
+            ലിഖ(getMinLinearMatch()+maxLinearMatchLength-1);
         }
         writeElementUnits(start, unitIndex, length);
         type=getMinLinearMatch()+length-1;
-    } else {
+    } അല്ലെങ്കിൽ {
         // Branch node.
-        int32_t length=countElementUnits(start, limit, unitIndex);
+        int32_t length=എണ്ണം_Element_Units(start, limit, unitIndex);
         // length>=2 because minUnit!=maxUnit.
-        writeBranchSubNode(start, limit, unitIndex, length);
-        if(--length<getMinLinearMatch()) {
+        write_Branch_Sub_കണ്ണി(start, limit, unitIndex, length);
+        എങ്കിൽ(--length<getMinLinearMatch()) {
             type=length;
-        } else {
-            write(length);
+        } അല്ലെങ്കിൽ {
+            ലിഖ(length);
             type=0;
         }
     }
-    return writeValueAndType(hasValue, value, type);
+    തിരികെ write_മൂല്യം_And_Type(has_മൂല്യം, value, type);
 }
 
 // start<limit && all strings longer than unitIndex &&
 // length different units at unitIndex
 int32_t
-StringTrieBuilder::writeBranchSubNode(int32_t start, int32_t limit, int32_t unitIndex, int32_t length) {
-    char16_t middleUnits[kMaxSplitBranchLevels];
+StringTrieBuilder::write_Branch_Sub_കണ്ണി(int32_t start, int32_t limit, int32_t unitIndex, int32_t length) {
+    char16_t നടുവ്_Units[kMaxSplitBranchLevels];
     int32_t lessThan[kMaxSplitBranchLevels];
     int32_t ltLength=0;
-    while(length>getMaxBranchLinearSubNodeLength()) {
+    ആകുമ്പോൾ(length>get_Max_Branch_Linear_Sub_കണ്ണി_Length()) {
         // Branch on the middle unit.
         // First, find the middle unit.
         int32_t i=skipElementsBySomeUnits(start, unitIndex, length/2);
         // Encode the less-than branch first.
-        middleUnits[ltLength]=getElementUnit(i, unitIndex);  // middle unit
-        lessThan[ltLength]=writeBranchSubNode(start, i, unitIndex, length/2);
+        നടുവ്_Units[ltLength]=getElementUnit(i, unitIndex);  // middle unit
+        lessThan[ltLength]=write_Branch_Sub_കണ്ണി(start, i, unitIndex, length/2);
         ++ltLength;
         // Continue for the greater-or-equal branch.
         start=i;
         length=length-length/2;
     }
     // For each unit, find its elements array start and whether it has a final value.
-    int32_t starts[kMaxBranchLinearSubNodeLength];
-    UBool isFinal[kMaxBranchLinearSubNodeLength-1];
-    int32_t unitNumber=0;
-    do {
-        int32_t i=starts[unitNumber]=start;
+    int32_t starts[k_Max_Branch_Linear_Sub_കണ്ണി_Length];
+    UBool isFinal[k_Max_Branch_Linear_Sub_കണ്ണി_Length-1];
+    int32_t unit_സംഖ്യ=0;
+    ചെയ്യുക {
+        int32_t i=starts[unit_സംഖ്യ]=start;
         char16_t unit=getElementUnit(i++, unitIndex);
         i=indexOfElementWithNextUnit(i, unitIndex, unit);
-        isFinal[unitNumber]= start==i-1 && unitIndex+1==getElementStringLength(start);
+        isFinal[unit_സംഖ്യ]= start==i-1 && unitIndex+1==getElementStringLength(start);
         start=i;
-    } while(++unitNumber<length-1);
+    } ആകുമ്പോൾ(++unit_സംഖ്യ<length-1);
     // unitNumber==length-1, and the maxUnit elements range is [start..limit[
-    starts[unitNumber]=start;
+    starts[unit_സംഖ്യ]=start;
 
     // Write the sub-nodes in reverse order: The jump lengths are deltas from
     // after their own positions, so if we wrote the minUnit sub-node first,
     // then its jump delta would be larger.
     // Instead we write the minUnit sub-node last, for a shorter delta.
-    int32_t jumpTargets[kMaxBranchLinearSubNodeLength-1];
-    do {
-        --unitNumber;
-        if(!isFinal[unitNumber]) {
-            jumpTargets[unitNumber]=writeNode(starts[unitNumber], starts[unitNumber+1], unitIndex+1);
+    int32_t jumpTargets[k_Max_Branch_Linear_Sub_കണ്ണി_Length-1];
+    ചെയ്യുക {
+        --unit_സംഖ്യ;
+        എങ്കിൽ(!isFinal[unit_സംഖ്യ]) {
+            jumpTargets[unit_സംഖ്യ]=write_കണ്ണി(starts[unit_സംഖ്യ], starts[unit_സംഖ്യ+1], unitIndex+1);
         }
-    } while(unitNumber>0);
+    } ആകുമ്പോൾ(unit_സംഖ്യ>0);
     // The maxUnit sub-node is written as the very last one because we do
     // not jump for it at all.
-    unitNumber=length-1;
-    writeNode(start, limit, unitIndex+1);
-    int32_t offset=write(getElementUnit(start, unitIndex));
+    unit_സംഖ്യ=length-1;
+    write_കണ്ണി(start, limit, unitIndex+1);
+    int32_t offset=ലിഖ(getElementUnit(start, unitIndex));
     // Write the rest of this node's unit-value pairs.
-    while(--unitNumber>=0) {
-        start=starts[unitNumber];
+    ആകുമ്പോൾ(--unit_സംഖ്യ>=0) {
+        start=starts[unit_സംഖ്യ];
         int32_t value;
-        if(isFinal[unitNumber]) {
+        എങ്കിൽ(isFinal[unit_സംഖ്യ]) {
             // Write the final value for the one string ending with this unit.
-            value=getElementValue(start);
-        } else {
+            value=get_Element_മൂല്യം(start);
+        } അല്ലെങ്കിൽ {
             // Write the delta to the start position of the sub-node.
-            value=offset-jumpTargets[unitNumber];
+            value=offset-jumpTargets[unit_സംഖ്യ];
         }
-        writeValueAndFinal(value, isFinal[unitNumber]);
-        offset=write(getElementUnit(start, unitIndex));
+        write_മൂല്യം_And_Final(value, isFinal[unit_സംഖ്യ]);
+        offset=ലിഖ(getElementUnit(start, unitIndex));
     }
     // Write the split-branch nodes.
-    while(ltLength>0) {
+    ആകുമ്പോൾ(ltLength>0) {
         --ltLength;
         writeDeltaTo(lessThan[ltLength]);
-        offset=write(middleUnits[ltLength]);
+        offset=ലിഖ(നടുവ്_Units[ltLength]);
     }
-    return offset;
+    തിരികെ offset;
 }
 
 // Requires start<limit,
 // and all strings of the [start..limit[ elements must be sorted and
 // have a common prefix of length unitIndex.
 StringTrieBuilder::Node*
-StringTrieBuilder::makeNode(int32_t start,
+StringTrieBuilder::make_കണ്ണി(int32_t start,
                             int32_t limit,
                             int32_t unitIndex,
                             UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        തിരികെ nullptr;
     }
-    UBool hasValue=false;
+    UBool has_മൂല്യം=അസത്യം;
     int32_t value=0;
-    if(unitIndex==getElementStringLength(start)) {
+    എങ്കിൽ(unitIndex==getElementStringLength(start)) {
         // An intermediate or final value.
-        value=getElementValue(start++);
-        if(start==limit) {
-            return registerFinalValue(value, errorCode);
+        value=get_Element_മൂല്യം(start++);
+        എങ്കിൽ(start==limit) {
+            തിരികെ register_Final_മൂല്യം(value, errorCode);
         }
-        hasValue=true;
+        has_മൂല്യം=സത്യം;
     }
-    Node *node;
+    Node *കണ്ണി;
     // Now all [start..limit[ strings are longer than unitIndex.
     int32_t minUnit=getElementUnit(start, unitIndex);
     int32_t maxUnit=getElementUnit(limit-1, unitIndex);
-    if(minUnit==maxUnit) {
+    എങ്കിൽ(minUnit==maxUnit) {
         // Linear-match node: All strings have the same character at unitIndex.
         int32_t lastUnitIndex=getLimitOfLinearMatch(start, limit-1, unitIndex);
-        Node *nextNode=makeNode(start, limit, lastUnitIndex, errorCode);
+        Node *next_കണ്ണി=make_കണ്ണി(start, limit, lastUnitIndex, errorCode);
         // Break the linear-match sequence into chunks of at most kMaxLinearMatchLength.
         int32_t length=lastUnitIndex-unitIndex;
         int32_t maxLinearMatchLength=getMaxLinearMatchLength();
-        while(length>maxLinearMatchLength) {
+        ആകുമ്പോൾ(length>maxLinearMatchLength) {
             lastUnitIndex-=maxLinearMatchLength;
             length-=maxLinearMatchLength;
-            node=createLinearMatchNode(start, lastUnitIndex, maxLinearMatchLength, nextNode);
-            nextNode=registerNode(node, errorCode);
+            കണ്ണി=create_Linear_Match_കണ്ണി(start, lastUnitIndex, maxLinearMatchLength, next_കണ്ണി);
+            next_കണ്ണി=register_കണ്ണി(കണ്ണി, errorCode);
         }
-        node=createLinearMatchNode(start, unitIndex, length, nextNode);
-    } else {
+        കണ്ണി=create_Linear_Match_കണ്ണി(start, unitIndex, length, next_കണ്ണി);
+    } അല്ലെങ്കിൽ {
         // Branch node.
-        int32_t length=countElementUnits(start, limit, unitIndex);
+        int32_t length=എണ്ണം_Element_Units(start, limit, unitIndex);
         // length>=2 because minUnit!=maxUnit.
-        Node *subNode=makeBranchSubNode(start, limit, unitIndex, length, errorCode);
-        node=new BranchHeadNode(length, subNode);
+        Node *sub_കണ്ണി=make_Branch_Sub_കണ്ണി(start, limit, unitIndex, length, errorCode);
+        കണ്ണി=പുതിയ Branch_Head_കണ്ണി(length, sub_കണ്ണി);
     }
-    if(hasValue && node!=nullptr) {
-        if(matchNodesCanHaveValues()) {
-            ((ValueNode *)node)->setValue(value);
-        } else {
-            node=new IntermediateValueNode(value, registerNode(node, errorCode));
+    എങ്കിൽ(has_മൂല്യം && കണ്ണി!=nullptr) {
+        എങ്കിൽ(match_Nodes_Can_Have_മൂല്യങ്ങൾ()) {
+            ((മൂല്യം_കണ്ണി *)കണ്ണി)->set_മൂല്യം(value);
+        } അല്ലെങ്കിൽ {
+            കണ്ണി=പുതിയ Intermediate_മൂല്യം_കണ്ണി(value, register_കണ്ണി(കണ്ണി, errorCode));
         }
     }
-    return registerNode(node, errorCode);
+    തിരികെ register_കണ്ണി(കണ്ണി, errorCode);
 }
 
 // start<limit && all strings longer than unitIndex &&
 // length different units at unitIndex
 StringTrieBuilder::Node*
-StringTrieBuilder::makeBranchSubNode(int32_t start,
+StringTrieBuilder::make_Branch_Sub_കണ്ണി(int32_t start,
                                      int32_t limit,
                                      int32_t unitIndex,
                                      int32_t length,
                                      UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        തിരികെ nullptr;
     }
-    char16_t middleUnits[kMaxSplitBranchLevels];
+    char16_t നടുവ്_Units[kMaxSplitBranchLevels];
     Node *lessThan[kMaxSplitBranchLevels];
     int32_t ltLength=0;
-    while(length>getMaxBranchLinearSubNodeLength()) {
+    ആകുമ്പോൾ(length>get_Max_Branch_Linear_Sub_കണ്ണി_Length()) {
         // Branch on the middle unit.
         // First, find the middle unit.
         int32_t i=skipElementsBySomeUnits(start, unitIndex, length/2);
         // Create the less-than branch.
-        middleUnits[ltLength]=getElementUnit(i, unitIndex);  // middle unit
-        lessThan[ltLength]=makeBranchSubNode(start, i, unitIndex, length/2, errorCode);
+        നടുവ്_Units[ltLength]=getElementUnit(i, unitIndex);  // middle unit
+        lessThan[ltLength]=make_Branch_Sub_കണ്ണി(start, i, unitIndex, length/2, errorCode);
         ++ltLength;
         // Continue for the greater-or-equal branch.
         start=i;
         length=length-length/2;
     }
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        തിരികെ nullptr;
     }
-    ListBranchNode *listNode=new ListBranchNode();
-    if(listNode==nullptr) {
+    List_Branch_കണ്ണി *list_കണ്ണി=പുതിയ List_Branch_കണ്ണി();
+    എങ്കിൽ(list_കണ്ണി==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
     // For each unit, find its elements array start and whether it has a final value.
-    int32_t unitNumber=0;
-    do {
+    int32_t unit_സംഖ്യ=0;
+    ചെയ്യുക {
         int32_t i=start;
         char16_t unit=getElementUnit(i++, unitIndex);
         i=indexOfElementWithNextUnit(i, unitIndex, unit);
-        if(start==i-1 && unitIndex+1==getElementStringLength(start)) {
-            listNode->add(unit, getElementValue(start));
-        } else {
-            listNode->add(unit, makeNode(start, i, unitIndex+1, errorCode));
+        എങ്കിൽ(start==i-1 && unitIndex+1==getElementStringLength(start)) {
+            list_കണ്ണി->add(unit, get_Element_മൂല്യം(start));
+        } അല്ലെങ്കിൽ {
+            list_കണ്ണി->add(unit, make_കണ്ണി(start, i, unitIndex+1, errorCode));
         }
         start=i;
-    } while(++unitNumber<length-1);
+    } ആകുമ്പോൾ(++unit_സംഖ്യ<length-1);
     // unitNumber==length-1, and the maxUnit elements range is [start..limit[
     char16_t unit=getElementUnit(start, unitIndex);
-    if(start==limit-1 && unitIndex+1==getElementStringLength(start)) {
-        listNode->add(unit, getElementValue(start));
-    } else {
-        listNode->add(unit, makeNode(start, limit, unitIndex+1, errorCode));
+    എങ്കിൽ(start==limit-1 && unitIndex+1==getElementStringLength(start)) {
+        list_കണ്ണി->add(unit, get_Element_മൂല്യം(start));
+    } അല്ലെങ്കിൽ {
+        list_കണ്ണി->add(unit, make_കണ്ണി(start, limit, unitIndex+1, errorCode));
     }
-    Node *node=registerNode(listNode, errorCode);
+    Node *കണ്ണി=register_കണ്ണി(list_കണ്ണി, errorCode);
     // Create the split-branch nodes.
-    while(ltLength>0) {
+    ആകുമ്പോൾ(ltLength>0) {
         --ltLength;
-        node=registerNode(
-            new SplitBranchNode(middleUnits[ltLength], lessThan[ltLength], node), errorCode);
+        കണ്ണി=register_കണ്ണി(
+            പുതിയ Split_Branch_കണ്ണി(നടുവ്_Units[ltLength], lessThan[ltLength], കണ്ണി), errorCode);
     }
-    return node;
+    തിരികെ കണ്ണി;
 }
 
 StringTrieBuilder::Node*
-StringTrieBuilder::registerNode(Node* newNode, UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if(U_FAILURE(errorCode)) {
-        delete newNode;
-        return nullptr;
+StringTrieBuilder::register_കണ്ണി(Node* new_കണ്ണി, UErrorCode& errorCode) U_LIFETIME_BOUND {
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        delete new_കണ്ണി;
+        തിരികെ nullptr;
     }
-    if(newNode==nullptr) {
+    എങ്കിൽ(new_കണ്ണി==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
-    const UHashElement *old=uhash_find(nodes, newNode);
-    if(old!=nullptr) {
-        delete newNode;
-        return static_cast<Node*>(old->key.pointer);
+    സ്ഥിരം UHashElement *old=uhash_find(nodes, new_കണ്ണി);
+    എങ്കിൽ(old!=nullptr) {
+        delete new_കണ്ണി;
+        തിരികെ static_cast<Node*>(old->താക്കോൽ.pointer);
     }
     // If uhash_puti() returns a non-zero value from an equivalent, previously
     // registered node, then uhash_find() failed to find that and we will leak newNode.
-#if U_DEBUG
-    int32_t oldValue=  // Only in debug mode to avoid a compiler warning about unused oldValue.
+#എങ്കിൽ U_DEBUG
+    int32_t old_മൂല്യം=  // Only in debug mode to avoid a compiler warning about unused oldValue.
 #endif
-    uhash_puti(nodes, newNode, 1, &errorCode);
-    U_ASSERT(oldValue==0);
-    if(U_FAILURE(errorCode)) {
-        delete newNode;
-        return nullptr;
+    uhash_puti(nodes, new_കണ്ണി, 1, &errorCode);
+    U_ASSERT(old_മൂല്യം==0);
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        delete new_കണ്ണി;
+        തിരികെ nullptr;
     }
-    return newNode;
+    തിരികെ new_കണ്ണി;
 }
 
 StringTrieBuilder::Node*
-StringTrieBuilder::registerFinalValue(int32_t value, UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+StringTrieBuilder::register_Final_മൂല്യം(int32_t value, UErrorCode& errorCode) U_LIFETIME_BOUND {
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        തിരികെ nullptr;
     }
-    FinalValueNode key(value);
-    const UHashElement *old=uhash_find(nodes, &key);
-    if(old!=nullptr) {
-        return static_cast<Node*>(old->key.pointer);
+    Final_മൂല്യം_കണ്ണി താക്കോൽ(value);
+    സ്ഥിരം UHashElement *old=uhash_find(nodes, &താക്കോൽ);
+    എങ്കിൽ(old!=nullptr) {
+        തിരികെ static_cast<Node*>(old->താക്കോൽ.pointer);
     }
-    Node *newNode=new FinalValueNode(value);
-    if(newNode==nullptr) {
+    Node *new_കണ്ണി=പുതിയ Final_മൂല്യം_കണ്ണി(value);
+    എങ്കിൽ(new_കണ്ണി==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
     // If uhash_puti() returns a non-zero value from an equivalent, previously
     // registered node, then uhash_find() failed to find that and we will leak newNode.
-#if U_DEBUG
-    int32_t oldValue=  // Only in debug mode to avoid a compiler warning about unused oldValue.
+#എങ്കിൽ U_DEBUG
+    int32_t old_മൂല്യം=  // Only in debug mode to avoid a compiler warning about unused oldValue.
 #endif
-    uhash_puti(nodes, newNode, 1, &errorCode);
-    U_ASSERT(oldValue==0);
-    if(U_FAILURE(errorCode)) {
-        delete newNode;
-        return nullptr;
+    uhash_puti(nodes, new_കണ്ണി, 1, &errorCode);
+    U_ASSERT(old_മൂല്യം==0);
+    എങ്കിൽ(U_FAILURE(errorCode)) {
+        delete new_കണ്ണി;
+        തിരികെ nullptr;
     }
-    return newNode;
+    തിരികെ new_കണ്ണി;
 }
 
 int32_t
-StringTrieBuilder::hashNode(const void *node) {
-    return static_cast<const Node*>(node)->hashCode();
+StringTrieBuilder::hash_കണ്ണി(സ്ഥിരം ശൂന്യം *കണ്ണി) {
+    തിരികെ static_cast<സ്ഥിരം Node*>(കണ്ണി)->hashCode();
 }
 
 UBool
-StringTrieBuilder::equalNodes(const void *left, const void *right) {
-    return *static_cast<const Node*>(left) == *static_cast<const Node*>(right);
+StringTrieBuilder::equalNodes(സ്ഥിരം ശൂന്യം *left, സ്ഥിരം ശൂന്യം *വലത്) {
+    തിരികെ *static_cast<സ്ഥിരം Node*>(left) == *static_cast<സ്ഥിരം Node*>(വലത്);
 }
 
-bool
-StringTrieBuilder::Node::operator==(const Node &other) const {
-    return this==&other || (typeid(*this)==typeid(other) && hash==other.hash);
-}
-
-int32_t
-StringTrieBuilder::Node::markRightEdgesFirst(int32_t edgeNumber) {
-    if(offset==0) {
-        offset=edgeNumber;
-    }
-    return edgeNumber;
-}
-
-bool
-StringTrieBuilder::FinalValueNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
-    }
-    if(!Node::operator==(other)) {
-        return false;
-    }
-    const FinalValueNode &o=static_cast<const FinalValueNode &>(other);
-    return value==o.value;
-}
-
-void
-StringTrieBuilder::FinalValueNode::write(StringTrieBuilder &builder) {
-    offset=builder.writeValueAndFinal(value, true);
-}
-
-bool
-StringTrieBuilder::ValueNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
-    }
-    if(!Node::operator==(other)) {
-        return false;
-    }
-    const ValueNode &o=static_cast<const ValueNode &>(other);
-    return hasValue==o.hasValue && (!hasValue || value==o.value);
-}
-
-bool
-StringTrieBuilder::IntermediateValueNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
-    }
-    if(!ValueNode::operator==(other)) {
-        return false;
-    }
-    const IntermediateValueNode &o=static_cast<const IntermediateValueNode &>(other);
-    return next==o.next;
+തർക്കം
+StringTrieBuilder::Node::operator==(സ്ഥിരം Node &other) സ്ഥിരം {
+    തിരികെ ഇത്==&other || (typeid(*ഇത്)==typeid(other) && hash==other.hash);
 }
 
 int32_t
-StringTrieBuilder::IntermediateValueNode::markRightEdgesFirst(int32_t edgeNumber) {
-    if(offset==0) {
-        offset=edgeNumber=next->markRightEdgesFirst(edgeNumber);
+StringTrieBuilder::Node::mark_വലത്_Edges_First(int32_t edge_സംഖ്യ) {
+    എങ്കിൽ(offset==0) {
+        offset=edge_സംഖ്യ;
     }
-    return edgeNumber;
+    തിരികെ edge_സംഖ്യ;
 }
 
-void
-StringTrieBuilder::IntermediateValueNode::write(StringTrieBuilder &builder) {
-    next->write(builder);
-    offset=builder.writeValueAndFinal(value, false);
+തർക്കം
+StringTrieBuilder::Final_മൂല്യം_കണ്ണി::operator==(സ്ഥിരം Node &other) സ്ഥിരം {
+    എങ്കിൽ(ഇത്==&other) {
+        തിരികെ സത്യം;
+    }
+    എങ്കിൽ(!Node::operator==(other)) {
+        തിരികെ അസത്യം;
+    }
+    സ്ഥിരം Final_മൂല്യം_കണ്ണി &o=static_cast<സ്ഥിരം Final_മൂല്യം_കണ്ണി &>(other);
+    തിരികെ value==o.value;
 }
 
-bool
-StringTrieBuilder::LinearMatchNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
+ശൂന്യം
+StringTrieBuilder::Final_മൂല്യം_കണ്ണി::ലിഖ(StringTrieBuilder &builder) {
+    offset=builder.write_മൂല്യം_And_Final(value, സത്യം);
+}
+
+തർക്കം
+StringTrieBuilder::മൂല്യം_കണ്ണി::operator==(സ്ഥിരം Node &other) സ്ഥിരം {
+    എങ്കിൽ(ഇത്==&other) {
+        തിരികെ സത്യം;
     }
-    if(!ValueNode::operator==(other)) {
-        return false;
+    എങ്കിൽ(!Node::operator==(other)) {
+        തിരികെ അസത്യം;
     }
-    const LinearMatchNode &o=static_cast<const LinearMatchNode &>(other);
-    return length==o.length && next==o.next;
+    സ്ഥിരം മൂല്യം_കണ്ണി &o=static_cast<സ്ഥിരം മൂല്യം_കണ്ണി &>(other);
+    തിരികെ has_മൂല്യം==o.has_മൂല്യം && (!has_മൂല്യം || value==o.value);
+}
+
+തർക്കം
+StringTrieBuilder::Intermediate_മൂല്യം_കണ്ണി::operator==(സ്ഥിരം Node &other) സ്ഥിരം {
+    എങ്കിൽ(ഇത്==&other) {
+        തിരികെ സത്യം;
+    }
+    എങ്കിൽ(!മൂല്യം_കണ്ണി::operator==(other)) {
+        തിരികെ അസത്യം;
+    }
+    സ്ഥിരം Intermediate_മൂല്യം_കണ്ണി &o=static_cast<സ്ഥിരം Intermediate_മൂല്യം_കണ്ണി &>(other);
+    തിരികെ next==o.next;
 }
 
 int32_t
-StringTrieBuilder::LinearMatchNode::markRightEdgesFirst(int32_t edgeNumber) {
-    if(offset==0) {
-        offset=edgeNumber=next->markRightEdgesFirst(edgeNumber);
+StringTrieBuilder::Intermediate_മൂല്യം_കണ്ണി::mark_വലത്_Edges_First(int32_t edge_സംഖ്യ) {
+    എങ്കിൽ(offset==0) {
+        offset=edge_സംഖ്യ=next->mark_വലത്_Edges_First(edge_സംഖ്യ);
     }
-    return edgeNumber;
+    തിരികെ edge_സംഖ്യ;
 }
 
-bool
-StringTrieBuilder::ListBranchNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
+ശൂന്യം
+StringTrieBuilder::Intermediate_മൂല്യം_കണ്ണി::ലിഖ(StringTrieBuilder &builder) {
+    next->ലിഖ(builder);
+    offset=builder.write_മൂല്യം_And_Final(value, അസത്യം);
+}
+
+തർക്കം
+StringTrieBuilder::Linear_Match_കണ്ണി::operator==(സ്ഥിരം Node &other) സ്ഥിരം {
+    എങ്കിൽ(ഇത്==&other) {
+        തിരികെ സത്യം;
     }
-    if(!Node::operator==(other)) {
-        return false;
+    എങ്കിൽ(!മൂല്യം_കണ്ണി::operator==(other)) {
+        തിരികെ അസത്യം;
     }
-    const ListBranchNode &o=static_cast<const ListBranchNode &>(other);
-    for(int32_t i=0; i<length; ++i) {
-        if(units[i]!=o.units[i] || values[i]!=o.values[i] || equal[i]!=o.equal[i]) {
-            return false;
+    സ്ഥിരം Linear_Match_കണ്ണി &o=static_cast<സ്ഥിരം Linear_Match_കണ്ണി &>(other);
+    തിരികെ length==o.length && next==o.next;
+}
+
+int32_t
+StringTrieBuilder::Linear_Match_കണ്ണി::mark_വലത്_Edges_First(int32_t edge_സംഖ്യ) {
+    എങ്കിൽ(offset==0) {
+        offset=edge_സംഖ്യ=next->mark_വലത്_Edges_First(edge_സംഖ്യ);
+    }
+    തിരികെ edge_സംഖ്യ;
+}
+
+തർക്കം
+StringTrieBuilder::List_Branch_കണ്ണി::operator==(സ്ഥിരം Node &other) സ്ഥിരം {
+    എങ്കിൽ(ഇത്==&other) {
+        തിരികെ സത്യം;
+    }
+    എങ്കിൽ(!Node::operator==(other)) {
+        തിരികെ അസത്യം;
+    }
+    സ്ഥിരം List_Branch_കണ്ണി &o=static_cast<സ്ഥിരം List_Branch_കണ്ണി &>(other);
+    വേണ്ടി(int32_t i=0; i<length; ++i) {
+        എങ്കിൽ(units[i]!=o.units[i] || മൂല്യങ്ങൾ[i]!=o.മൂല്യങ്ങൾ[i] || equal[i]!=o.equal[i]) {
+            തിരികെ അസത്യം;
         }
     }
-    return true;
+    തിരികെ സത്യം;
 }
 
 int32_t
-StringTrieBuilder::ListBranchNode::markRightEdgesFirst(int32_t edgeNumber) {
-    if(offset==0) {
-        firstEdgeNumber=edgeNumber;
+StringTrieBuilder::List_Branch_കണ്ണി::mark_വലത്_Edges_First(int32_t edge_സംഖ്യ) {
+    എങ്കിൽ(offset==0) {
+        first_Edge_സംഖ്യ=edge_സംഖ്യ;
         int32_t step=0;
         int32_t i=length;
-        do {
+        ചെയ്യുക {
             Node *edge=equal[--i];
-            if(edge!=nullptr) {
-                edgeNumber=edge->markRightEdgesFirst(edgeNumber-step);
+            എങ്കിൽ(edge!=nullptr) {
+                edge_സംഖ്യ=edge->mark_വലത്_Edges_First(edge_സംഖ്യ-step);
             }
             // For all but the rightmost edge, decrement the edge number.
             step=1;
-        } while(i>0);
-        offset=edgeNumber;
+        } ആകുമ്പോൾ(i>0);
+        offset=edge_സംഖ്യ;
     }
-    return edgeNumber;
+    തിരികെ edge_സംഖ്യ;
 }
 
-void
-StringTrieBuilder::ListBranchNode::write(StringTrieBuilder &builder) {
+ശൂന്യം
+StringTrieBuilder::List_Branch_കണ്ണി::ലിഖ(StringTrieBuilder &builder) {
     // Write the sub-nodes in reverse order: The jump lengths are deltas from
     // after their own positions, so if we wrote the minUnit sub-node first,
     // then its jump delta would be larger.
     // Instead we write the minUnit sub-node last, for a shorter delta.
-    int32_t unitNumber=length-1;
-    Node *rightEdge=equal[unitNumber];
-    int32_t rightEdgeNumber= rightEdge==nullptr ? firstEdgeNumber : rightEdge->getOffset();
-    do {
-        --unitNumber;
-        if(equal[unitNumber]!=nullptr) {
-            equal[unitNumber]->writeUnlessInsideRightEdge(firstEdgeNumber, rightEdgeNumber, builder);
+    int32_t unit_സംഖ്യ=length-1;
+    Node *വലത്_Edge=equal[unit_സംഖ്യ];
+    int32_t വലത്_Edge_സംഖ്യ= വലത്_Edge==nullptr ? first_Edge_സംഖ്യ : വലത്_Edge->getOffset();
+    ചെയ്യുക {
+        --unit_സംഖ്യ;
+        എങ്കിൽ(equal[unit_സംഖ്യ]!=nullptr) {
+            equal[unit_സംഖ്യ]->write_Unless_Inside_വലത്_Edge(first_Edge_സംഖ്യ, വലത്_Edge_സംഖ്യ, builder);
         }
-    } while(unitNumber>0);
+    } ആകുമ്പോൾ(unit_സംഖ്യ>0);
     // The maxUnit sub-node is written as the very last one because we do
     // not jump for it at all.
-    unitNumber=length-1;
-    if(rightEdge==nullptr) {
-        builder.writeValueAndFinal(values[unitNumber], true);
-    } else {
-        rightEdge->write(builder);
+    unit_സംഖ്യ=length-1;
+    എങ്കിൽ(വലത്_Edge==nullptr) {
+        builder.write_മൂല്യം_And_Final(മൂല്യങ്ങൾ[unit_സംഖ്യ], സത്യം);
+    } അല്ലെങ്കിൽ {
+        വലത്_Edge->ലിഖ(builder);
     }
-    offset=builder.write(units[unitNumber]);
+    offset=builder.ലിഖ(units[unit_സംഖ്യ]);
     // Write the rest of this node's unit-value pairs.
-    while(--unitNumber>=0) {
+    ആകുമ്പോൾ(--unit_സംഖ്യ>=0) {
         int32_t value;
         UBool isFinal;
-        if(equal[unitNumber]==nullptr) {
+        എങ്കിൽ(equal[unit_സംഖ്യ]==nullptr) {
             // Write the final value for the one string ending with this unit.
-            value=values[unitNumber];
-            isFinal=true;
-        } else {
+            value=മൂല്യങ്ങൾ[unit_സംഖ്യ];
+            isFinal=സത്യം;
+        } അല്ലെങ്കിൽ {
             // Write the delta to the start position of the sub-node.
-            U_ASSERT(equal[unitNumber]->getOffset()>0);
-            value=offset-equal[unitNumber]->getOffset();
-            isFinal=false;
+            U_ASSERT(equal[unit_സംഖ്യ]->getOffset()>0);
+            value=offset-equal[unit_സംഖ്യ]->getOffset();
+            isFinal=അസത്യം;
         }
-        builder.writeValueAndFinal(value, isFinal);
-        offset=builder.write(units[unitNumber]);
+        builder.write_മൂല്യം_And_Final(value, isFinal);
+        offset=builder.ലിഖ(units[unit_സംഖ്യ]);
     }
 }
 
-bool
-StringTrieBuilder::SplitBranchNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
+തർക്കം
+StringTrieBuilder::Split_Branch_കണ്ണി::operator==(സ്ഥിരം Node &other) സ്ഥിരം {
+    എങ്കിൽ(ഇത്==&other) {
+        തിരികെ സത്യം;
     }
-    if(!Node::operator==(other)) {
-        return false;
+    എങ്കിൽ(!Node::operator==(other)) {
+        തിരികെ അസത്യം;
     }
-    const SplitBranchNode &o=static_cast<const SplitBranchNode &>(other);
-    return unit==o.unit && lessThan==o.lessThan && greaterOrEqual==o.greaterOrEqual;
+    സ്ഥിരം Split_Branch_കണ്ണി &o=static_cast<സ്ഥിരം Split_Branch_കണ്ണി &>(other);
+    തിരികെ unit==o.unit && lessThan==o.lessThan && greaterOrEqual==o.greaterOrEqual;
 }
 
 int32_t
-StringTrieBuilder::SplitBranchNode::markRightEdgesFirst(int32_t edgeNumber) {
-    if(offset==0) {
-        firstEdgeNumber=edgeNumber;
-        edgeNumber=greaterOrEqual->markRightEdgesFirst(edgeNumber);
-        offset=edgeNumber=lessThan->markRightEdgesFirst(edgeNumber-1);
+StringTrieBuilder::Split_Branch_കണ്ണി::mark_വലത്_Edges_First(int32_t edge_സംഖ്യ) {
+    എങ്കിൽ(offset==0) {
+        first_Edge_സംഖ്യ=edge_സംഖ്യ;
+        edge_സംഖ്യ=greaterOrEqual->mark_വലത്_Edges_First(edge_സംഖ്യ);
+        offset=edge_സംഖ്യ=lessThan->mark_വലത്_Edges_First(edge_സംഖ്യ-1);
     }
-    return edgeNumber;
+    തിരികെ edge_സംഖ്യ;
 }
 
-void
-StringTrieBuilder::SplitBranchNode::write(StringTrieBuilder &builder) {
+ശൂന്യം
+StringTrieBuilder::Split_Branch_കണ്ണി::ലിഖ(StringTrieBuilder &builder) {
     // Encode the less-than branch first.
-    lessThan->writeUnlessInsideRightEdge(firstEdgeNumber, greaterOrEqual->getOffset(), builder);
+    lessThan->write_Unless_Inside_വലത്_Edge(first_Edge_സംഖ്യ, greaterOrEqual->getOffset(), builder);
     // Encode the greater-or-equal branch last because we do not jump for it at all.
-    greaterOrEqual->write(builder);
+    greaterOrEqual->ലിഖ(builder);
     // Write this node.
     U_ASSERT(lessThan->getOffset()>0);
     builder.writeDeltaTo(lessThan->getOffset());  // less-than
-    offset=builder.write(unit);
+    offset=builder.ലിഖ(unit);
 }
 
-bool
-StringTrieBuilder::BranchHeadNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
+തർക്കം
+StringTrieBuilder::Branch_Head_കണ്ണി::operator==(സ്ഥിരം Node &other) സ്ഥിരം {
+    എങ്കിൽ(ഇത്==&other) {
+        തിരികെ സത്യം;
     }
-    if(!ValueNode::operator==(other)) {
-        return false;
+    എങ്കിൽ(!മൂല്യം_കണ്ണി::operator==(other)) {
+        തിരികെ അസത്യം;
     }
-    const BranchHeadNode &o=static_cast<const BranchHeadNode &>(other);
-    return length==o.length && next==o.next;
+    സ്ഥിരം Branch_Head_കണ്ണി &o=static_cast<സ്ഥിരം Branch_Head_കണ്ണി &>(other);
+    തിരികെ length==o.length && next==o.next;
 }
 
 int32_t
-StringTrieBuilder::BranchHeadNode::markRightEdgesFirst(int32_t edgeNumber) {
-    if(offset==0) {
-        offset=edgeNumber=next->markRightEdgesFirst(edgeNumber);
+StringTrieBuilder::Branch_Head_കണ്ണി::mark_വലത്_Edges_First(int32_t edge_സംഖ്യ) {
+    എങ്കിൽ(offset==0) {
+        offset=edge_സംഖ്യ=next->mark_വലത്_Edges_First(edge_സംഖ്യ);
     }
-    return edgeNumber;
+    തിരികെ edge_സംഖ്യ;
 }
 
-void
-StringTrieBuilder::BranchHeadNode::write(StringTrieBuilder &builder) {
-    next->write(builder);
-    if(length<=builder.getMinLinearMatch()) {
-        offset=builder.writeValueAndType(hasValue, value, length-1);
-    } else {
-        builder.write(length-1);
-        offset=builder.writeValueAndType(hasValue, value, 0);
+ശൂന്യം
+StringTrieBuilder::Branch_Head_കണ്ണി::ലിഖ(StringTrieBuilder &builder) {
+    next->ലിഖ(builder);
+    എങ്കിൽ(length<=builder.getMinLinearMatch()) {
+        offset=builder.write_മൂല്യം_And_Type(has_മൂല്യം, value, length-1);
+    } അല്ലെങ്കിൽ {
+        builder.ലിഖ(length-1);
+        offset=builder.write_മൂല്യം_And_Type(has_മൂല്യം, value, 0);
     }
 }
 

@@ -6,10 +6,10 @@
 * Corporation and others.  All Rights Reserved.
 **********************************************************************
 */
-#include "unicode/usetiter.h"
-#include "unicode/uniset.h"
-#include "unicode/unistr.h"
-#include "uvector.h"
+#അന്തര്ഭാവ "unicode/usetiter.h"
+#അന്തര്ഭാവ "unicode/uniset.h"
+#അന്തര്ഭാവ "unicode/unistr.h"
+#അന്തര്ഭാവ "uvector.h"
 
 U_NAMESPACE_BEGIN
 
@@ -19,7 +19,7 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(UnicodeSetIterator)
  * Create an iterator
  * @param set set to iterate over
  */
-UnicodeSetIterator::UnicodeSetIterator(const UnicodeSet& uSet U_LIFETIME_BOUND) {
+UnicodeSetIterator::UnicodeSetIterator(സ്ഥിരം UnicodeSet& uSet U_LIFETIME_BOUND) {
     cpString  = nullptr;
     reset(uSet);
 }
@@ -28,7 +28,7 @@ UnicodeSetIterator::UnicodeSetIterator(const UnicodeSet& uSet U_LIFETIME_BOUND) 
  * Create an iterator. Convenience for when the contents are to be set later.
  */
 UnicodeSetIterator::UnicodeSetIterator() {
-    this->set = nullptr;
+    ഇത്->set = nullptr;
     cpString  = nullptr;
     reset();
 }
@@ -47,22 +47,22 @@ UnicodeSetIterator::~UnicodeSetIterator() {
  * <br>Note also that the codepointEnd is undefined after calling this method.
  */
 UBool UnicodeSetIterator::next() {
-    if (nextElement <= endElement) {
+    എങ്കിൽ (nextElement <= endElement) {
         codepoint = codepointEnd = nextElement++;
         string = nullptr;
-        return true;
+        തിരികെ സത്യം;
     }
-    if (range < endRange) {
+    എങ്കിൽ (range < endRange) {
         loadRange(++range);
         codepoint = codepointEnd = nextElement++;
         string = nullptr;
-        return true;
+        തിരികെ സത്യം;
     }
 
-    if (nextString >= stringCount) return false;
+    എങ്കിൽ (nextString >= string_എണ്ണം) തിരികെ അസത്യം;
     codepoint = static_cast<UChar32>(IS_STRING); // signal that value is actually a string
-    string = static_cast<const UnicodeString*>(set->strings_->elementAt(nextString++));
-    return true;
+    string = static_cast<സ്ഥിരം UnicodeString*>(set->strings_->elementAt(nextString++));
+    തിരികെ സത്യം;
 }
 
 /**
@@ -78,73 +78,73 @@ UBool UnicodeSetIterator::next() {
  */
 UBool UnicodeSetIterator::nextRange() {
     string = nullptr;
-    if (nextElement <= endElement) {
+    എങ്കിൽ (nextElement <= endElement) {
         codepointEnd = endElement;
         codepoint = nextElement;
         nextElement = endElement+1;
-        return true;
+        തിരികെ സത്യം;
     }
-    if (range < endRange) {
+    എങ്കിൽ (range < endRange) {
         loadRange(++range);
         codepointEnd = endElement;
         codepoint = nextElement;
         nextElement = endElement+1;
-        return true;
+        തിരികെ സത്യം;
     }
 
-    if (nextString >= stringCount) return false;
+    എങ്കിൽ (nextString >= string_എണ്ണം) തിരികെ അസത്യം;
     codepoint = static_cast<UChar32>(IS_STRING); // signal that value is actually a string
-    string = static_cast<const UnicodeString*>(set->strings_->elementAt(nextString++));
-    return true;
+    string = static_cast<സ്ഥിരം UnicodeString*>(set->strings_->elementAt(nextString++));
+    തിരികെ സത്യം;
 }
 
 /**
  *@param set the set to iterate over. This allows reuse of the iterator.
  */
-void UnicodeSetIterator::reset(const UnicodeSet& uSet) {
-    this->set = &uSet;
+ശൂന്യം UnicodeSetIterator::reset(സ്ഥിരം UnicodeSet& uSet) {
+    ഇത്->set = &uSet;
     reset();
 }
 
 /**
  * Resets to the start, to allow the iteration to start over again.
  */
-void UnicodeSetIterator::reset() {
-    if (set == nullptr) {
+ശൂന്യം UnicodeSetIterator::reset() {
+    എങ്കിൽ (set == nullptr) {
         // Set up indices to empty iteration
         endRange = -1;
-        stringCount = 0;
-    } else {
-        endRange = set->getRangeCount() - 1;
-        stringCount = set->stringsSize();
+        string_എണ്ണം = 0;
+    } അല്ലെങ്കിൽ {
+        endRange = set->get_Range_എണ്ണം() - 1;
+        string_എണ്ണം = set->stringsSize();
     }
     range = 0;
     endElement = -1;
     nextElement = 0;            
-    if (endRange >= 0) {
+    എങ്കിൽ (endRange >= 0) {
         loadRange(range);
     }
     nextString = 0;
     string = nullptr;
 }
 
-void UnicodeSetIterator::loadRange(int32_t iRange) {
+ശൂന്യം UnicodeSetIterator::loadRange(int32_t iRange) {
     nextElement = set->getRangeStart(iRange);
     endElement = set->getRangeEnd(iRange);
 }
 
 
-const UnicodeString& UnicodeSetIterator::getString() U_LIFETIME_BOUND {
-    if (string == nullptr && codepoint != static_cast<UChar32>(IS_STRING)) {
-       if (cpString == nullptr) {
-          cpString = new UnicodeString();
+സ്ഥിരം UnicodeString& UnicodeSetIterator::getString() U_LIFETIME_BOUND {
+    എങ്കിൽ (string == nullptr && codepoint != static_cast<UChar32>(IS_STRING)) {
+       എങ്കിൽ (cpString == nullptr) {
+          cpString = പുതിയ UnicodeString();
        }
-       if (cpString != nullptr) {
+       എങ്കിൽ (cpString != nullptr) {
           cpString->setTo(codepoint);
        }
        string = cpString;
     }
-    return *string;
+    തിരികെ *string;
 }
 
 U_NAMESPACE_END

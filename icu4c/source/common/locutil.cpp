@@ -6,23 +6,23 @@
  * others. All Rights Reserved.
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE || !UCONFIG_NO_TRANSLITERATION
+#എങ്കിൽ !UCONFIG_NO_SERVICE || !UCONFIG_NO_TRANSLITERATION
 
-#include "unicode/resbund.h"
-#include "unicode/uenum.h"
-#include "cmemory.h"
-#include "ustrfmt.h"
-#include "locutil.h"
-#include "charstr.h"
-#include "ucln_cmn.h"
-#include "uassert.h"
-#include "umutex.h"
+#അന്തര്ഭാവ "unicode/resbund.h"
+#അന്തര്ഭാവ "unicode/uenum.h"
+#അന്തര്ഭാവ "cmemory.h"
+#അന്തര്ഭാവ "ustrfmt.h"
+#അന്തര്ഭാവ "locutil.h"
+#അന്തര്ഭാവ "charstr.h"
+#അന്തര്ഭാവ "ucln_cmn.h"
+#അന്തര്ഭാവ "uassert.h"
+#അന്തര്ഭാവ "umutex.h"
 
 // see LocaleUtility::getAvailableLocaleNames
-static icu::UInitOnce   LocaleUtilityInitOnce {};
-static icu::Hashtable * LocaleUtility_cache = nullptr;
+സ്ഥിതം icu::UInitOnce   LocaleUtilityInitOnce {};
+സ്ഥിതം icu::Hashtable * LocaleUtility_cache = nullptr;
 
 #define UNDERSCORE_CHAR ((char16_t)0x005f)
 #define AT_SIGN_CHAR    ((char16_t)64)
@@ -36,30 +36,30 @@ static icu::Hashtable * LocaleUtility_cache = nullptr;
  * Release all static memory held by Locale Utility.  
  */
 U_CDECL_BEGIN
-static UBool U_CALLCONV service_cleanup() {
-    if (LocaleUtility_cache) {
+സ്ഥിതം UBool U_CALLCONV service_cleanup() {
+    എങ്കിൽ (LocaleUtility_cache) {
         delete LocaleUtility_cache;
         LocaleUtility_cache = nullptr;
     }
-    return true;
+    തിരികെ സത്യം;
 }
 
 
-static void U_CALLCONV locale_utility_init(UErrorCode &status) {
-    using namespace icu;
+സ്ഥിതം ശൂന്യം U_CALLCONV locale_utility_init(UErrorCode &status) {
+    using നാമാകാശ icu;
     U_ASSERT(LocaleUtility_cache == nullptr);
     ucln_common_registerCleanup(UCLN_COMMON_SERVICE, service_cleanup);
-    LocaleUtility_cache = new Hashtable(status);
-    if (U_FAILURE(status)) {
+    LocaleUtility_cache = പുതിയ Hashtable(status);
+    എങ്കിൽ (U_FAILURE(status)) {
         delete LocaleUtility_cache;
         LocaleUtility_cache = nullptr;
-        return;
+        തിരികെ;
     }
-    if (LocaleUtility_cache == nullptr) {
+    എങ്കിൽ (LocaleUtility_cache == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        തിരികെ;
     }
-    LocaleUtility_cache->setValueDeleter(uhash_deleteHashtable);
+    LocaleUtility_cache->set_മൂല്യം_Deleter(uhash_deleteHashtable);
 }
 
 U_CDECL_END
@@ -67,11 +67,11 @@ U_CDECL_END
 U_NAMESPACE_BEGIN
 
 UnicodeString&
-LocaleUtility::canonicalLocaleString(const UnicodeString* id, UnicodeString& result)
+LocaleUtility::canonicalLocaleString(സ്ഥിരം UnicodeString* id, UnicodeString& result)
 {
-  if (id == nullptr) {
+  എങ്കിൽ (id == nullptr) {
     result.setToBogus();
-  } else {
+  } അല്ലെങ്കിൽ {
     // Fix case only (no other changes) up to the first '@' or '.' or
     // end of string, whichever comes first.  In 3.0 I changed this to
     // stop at first '@' or '.'.  It used to run out to the end of
@@ -83,34 +83,34 @@ LocaleUtility::canonicalLocaleString(const UnicodeString* id, UnicodeString& res
     int32_t i = 0;
     int32_t end = result.indexOf(AT_SIGN_CHAR);
     int32_t n = result.indexOf(PERIOD_CHAR);
-    if (n >= 0 && n < end) {
+    എങ്കിൽ (n >= 0 && n < end) {
         end = n;
     }
-    if (end < 0) {
+    എങ്കിൽ (end < 0) {
         end = result.length();
     }
     n = result.indexOf(UNDERSCORE_CHAR);
-    if (n < 0) {
+    എങ്കിൽ (n < 0) {
       n = end;
     }
-    for (; i < n; ++i) {
+    വേണ്ടി (; i < n; ++i) {
       char16_t c = result.charAt(i);
-      if (c >= 0x0041 && c <= 0x005a) {
+      എങ്കിൽ (c >= 0x0041 && c <= 0x005a) {
         c += 0x20;
         result.setCharAt(i, c);
       }
     }
-    for (n = end; i < n; ++i) {
+    വേണ്ടി (n = end; i < n; ++i) {
       char16_t c = result.charAt(i);
-      if (c >= 0x0061 && c <= 0x007a) {
+      എങ്കിൽ (c >= 0x0061 && c <= 0x007a) {
         c -= 0x20;
         result.setCharAt(i, c);
       }
     }
   }
-  return result;
+  തിരികെ result;
 
-#if 0
+#എങ്കിൽ 0
     // This code does a proper full level 2 canonicalization of id.
     // It's nasty to go from char16_t to char to char to char16_t -- but
     // that's what you have to do to use the uloc_canonicalize
@@ -123,31 +123,31 @@ LocaleUtility::canonicalLocaleString(const UnicodeString* id, UnicodeString& res
 
     // TODO: Doug, you might want to revisit this...
     result.setToBogus();
-    if (id != 0) {
+    എങ്കിൽ (id != 0) {
         int32_t buflen = id->length() + 8; // space for NUL
-        char* buf = (char*) uprv_malloc(buflen);
-        char* canon = (buf == 0) ? 0 : (char*) uprv_malloc(buflen);
-        if (buf != 0 && canon != 0) {
+        അക്ഷരം* buf = (അക്ഷരം*) uprv_malloc(buflen);
+        അക്ഷരം* canon = (buf == 0) ? 0 : (അക്ഷരം*) uprv_malloc(buflen);
+        എങ്കിൽ (buf != 0 && canon != 0) {
             U_ASSERT(id->extract(0, INT32_MAX, buf, buflen) < buflen);
             UErrorCode ec = U_ZERO_ERROR;
             uloc_canonicalize(buf, canon, buflen, &ec);
-            if (U_SUCCESS(ec)) {
+            എങ്കിൽ (U_SUCCESS(ec)) {
                 result = UnicodeString(canon);
             }
         }
         uprv_free(buf);
         uprv_free(canon);
     }
-    return result;
+    തിരികെ result;
 #endif
 }
 
 Locale&
-LocaleUtility::initLocaleFromName(const UnicodeString& id, Locale& result)
+LocaleUtility::initLocaleFromName(സ്ഥിരം UnicodeString& id, Locale& result)
 {
-    if (id.isBogus()) {
+    എങ്കിൽ (id.isBogus()) {
         result.setToBogus();
-    } else {
+    } അല്ലെങ്കിൽ {
         /*
          * We need to convert from a UnicodeString to char * in order to
          * create a Locale.
@@ -170,42 +170,42 @@ LocaleUtility::initLocaleFromName(const UnicodeString& id, Locale& result)
         int32_t prev, i;
         prev = 0;
         UErrorCode status = U_ZERO_ERROR;
-        do {
+        ചെയ്യുക {
             i = id.indexOf(static_cast<char16_t>(0x40), prev);
-            if(i < 0) {
+            എങ്കിൽ(i < 0) {
                 // no @ between prev and the rest of the string
                 buffer.appendInvariantChars(id.tempSubString(prev), status);
-                break; // done
-            } else {
+                നിർത്തുക; // done
+            } അല്ലെങ്കിൽ {
                 // normal invariant-character conversion for text between @s
                 buffer.appendInvariantChars(id.tempSubString(prev, i - prev), status);
                 // manually "convert" U+0040 at id[i] into '@' at buffer[i]
                 buffer.append('@', status);
                 prev = i + 1;
             }
-        } while (U_SUCCESS(status));
-        if (U_FAILURE(status)) {
+        } ആകുമ്പോൾ (U_SUCCESS(status));
+        എങ്കിൽ (U_FAILURE(status)) {
             result.setToBogus();
-        } else {
+        } അല്ലെങ്കിൽ {
             result = Locale::createFromName(buffer.data());
         }
     }
-    return result;
+    തിരികെ result;
 }
 
 UnicodeString&
-LocaleUtility::initNameFromLocale(const Locale& locale, UnicodeString& result)
+LocaleUtility::initNameFromLocale(സ്ഥിരം Locale& locale, UnicodeString& result)
 {
-    if (locale.isBogus()) {
+    എങ്കിൽ (locale.isBogus()) {
         result.setToBogus();
-    } else {
+    } അല്ലെങ്കിൽ {
         result.append(UnicodeString(locale.getName(), -1, US_INV));
     }
-    return result;
+    തിരികെ result;
 }
 
-const Hashtable*
-LocaleUtility::getAvailableLocaleNames(const UnicodeString& bundleID)
+സ്ഥിരം Hashtable*
+LocaleUtility::getAvailableLocaleNames(സ്ഥിരം UnicodeString& bundleID)
 {
     // LocaleUtility_cache is a hash-of-hashes.  The top-level keys
     // are path strings ('bundleID') passed to
@@ -217,9 +217,9 @@ LocaleUtility::getAvailableLocaleNames(const UnicodeString& bundleID)
     UErrorCode status = U_ZERO_ERROR;
     umtx_initOnce(LocaleUtilityInitOnce, locale_utility_init, status);
     Hashtable *cache = LocaleUtility_cache;
-    if (cache == nullptr) {
+    എങ്കിൽ (cache == nullptr) {
         // Catastrophic failure.
-        return nullptr;
+        തിരികെ nullptr;
     }
 
     Hashtable* htp;
@@ -227,47 +227,47 @@ LocaleUtility::getAvailableLocaleNames(const UnicodeString& bundleID)
     htp = static_cast<Hashtable*>(cache->get(bundleID));
     umtx_unlock(nullptr);
 
-    if (htp == nullptr) {
-        htp = new Hashtable(status);
-        if (htp && U_SUCCESS(status)) {
+    എങ്കിൽ (htp == nullptr) {
+        htp = പുതിയ Hashtable(status);
+        എങ്കിൽ (htp && U_SUCCESS(status)) {
             CharString cbundleID;
             cbundleID.appendInvariantChars(bundleID, status);
-            const char* path = cbundleID.isEmpty() ? nullptr : cbundleID.data();
+            സ്ഥിരം അക്ഷരം* path = cbundleID.isEmpty() ? nullptr : cbundleID.data();
             icu::LocalUEnumerationPointer uenum(ures_openAvailableLocales(path, &status));
-            for (;;) {
-                const char16_t* id = uenum_unext(uenum.getAlias(), nullptr, &status);
-                if (id == nullptr) {
-                    break;
+            വേണ്ടി (;;) {
+                സ്ഥിരം char16_t* id = uenum_unext(uenum.getAlias(), nullptr, &status);
+                എങ്കിൽ (id == nullptr) {
+                    നിർത്തുക;
                 }
-                htp->put(UnicodeString(id), (void*)htp, status);
+                htp->put(UnicodeString(id), (ശൂന്യം*)htp, status);
             }
-            if (U_FAILURE(status)) {
+            എങ്കിൽ (U_FAILURE(status)) {
                 delete htp;
-                return nullptr;
+                തിരികെ nullptr;
             }
             umtx_lock(nullptr);
             Hashtable *t = static_cast<Hashtable *>(cache->get(bundleID));
-            if (t != nullptr) {
+            എങ്കിൽ (t != nullptr) {
                 // Another thread raced through this code, creating the cache entry first.
                 // Discard ours and return theirs.
                 umtx_unlock(nullptr);
                 delete htp;
                 htp = t;
-            } else {
-                cache->put(bundleID, (void*)htp, status);
+            } അല്ലെങ്കിൽ {
+                cache->put(bundleID, (ശൂന്യം*)htp, status);
                 umtx_unlock(nullptr);
             }
         }
     }
-    return htp;
+    തിരികെ htp;
 }
 
-bool
-LocaleUtility::isFallbackOf(const UnicodeString& root, const UnicodeString& child)
+തർക്കം
+LocaleUtility::isFallbackOf(സ്ഥിരം UnicodeString& വേര്, സ്ഥിരം UnicodeString& child)
 {
-    return child.indexOf(root) == 0 &&
-      (child.length() == root.length() ||
-       child.charAt(root.length()) == UNDERSCORE_CHAR);
+    തിരികെ child.indexOf(വേര്) == 0 &&
+      (child.length() == വേര്.length() ||
+       child.charAt(വേര്.length()) == UNDERSCORE_CHAR);
 }
 
 U_NAMESPACE_END

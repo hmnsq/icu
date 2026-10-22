@@ -12,8 +12,8 @@
 #define __SHAREDOBJECT_H__
 
 
-#include "unicode/uobject.h"
-#include "umutex.h"
+#അന്തര്ഭാവ "unicode/uobject.h"
+#അന്തര്ഭാവ "umutex.h"
 
 U_NAMESPACE_BEGIN
 
@@ -25,8 +25,8 @@ class SharedObject;
  * update cache metrics. No other part of ICU, except for SharedObject,
  * should directly call the methods of this base class.
  */
-class U_COMMON_API UnifiedCacheBase : public UObject {
-public:
+class U_COMMON_API UnifiedCacheBase : പൊതു UObject {
+പൊതു:
     UnifiedCacheBase() { }
 
     /**
@@ -34,12 +34,12 @@ public:
      * zero hard references. The cache may use this to keep track the number of
      * unreferenced SharedObjects, and to trigger evictions.
      */
-    virtual void handleUnreferencedObject() const = 0;
+    മായാ ശൂന്യം handleUnreferencedObject() സ്ഥിരം = 0;
 
-    virtual ~UnifiedCacheBase();
-private:
-    UnifiedCacheBase(const UnifiedCacheBase &) = delete;
-    UnifiedCacheBase &operator=(const UnifiedCacheBase &) = delete;
+    മായാ ~UnifiedCacheBase();
+സ്വകാര്യ:
+    UnifiedCacheBase(സ്ഥിരം UnifiedCacheBase &) = delete;
+    UnifiedCacheBase &operator=(സ്ഥിരം UnifiedCacheBase &) = delete;
 };
 
 /**
@@ -51,28 +51,28 @@ private:
  * Either stack-allocate, use LocalPointer, or use addRef()/removeRef().
  * Sharing requires reference-counting.
  */
-class U_COMMON_API_CLASS SharedObject : public UObject {
-public:
+class U_COMMON_API_CLASS SharedObject : പൊതു UObject {
+പൊതു:
     /** Initializes totalRefCount, softRefCount to 0. */
     U_COMMON_API SharedObject() :
-            softRefCount(0),
-            hardRefCount(0),
+            soft_Ref_എണ്ണം(0),
+            hard_Ref_എണ്ണം(0),
             cachePtr(nullptr) {}
 
     /** Initializes totalRefCount, softRefCount to 0. */
-    U_COMMON_API SharedObject(const SharedObject &other) :
+    U_COMMON_API SharedObject(സ്ഥിരം SharedObject &other) :
             UObject(other),
-            softRefCount(0),
-            hardRefCount(0),
+            soft_Ref_എണ്ണം(0),
+            hard_Ref_എണ്ണം(0),
             cachePtr(nullptr) {}
 
-    U_COMMON_API virtual ~SharedObject();
+    U_COMMON_API മായാ ~SharedObject();
 
     /**
      * Increments the number of hard references to this object. Thread-safe.
      * Not for use from within the Unified Cache implementation.
      */
-    U_COMMON_API void addRef() const;
+    U_COMMON_API ശൂന്യം addRef() സ്ഥിരം;
 
     /**
      * Decrements the number of hard references to this object, and
@@ -81,32 +81,32 @@ public:
      * 
      * Not for use from within the UnifiedCache implementation.
      */
-    U_COMMON_API void removeRef() const;
+    U_COMMON_API ശൂന്യം removeRef() സ്ഥിരം;
 
     /**
      * Returns the number of hard references for this object.
      * Uses a memory barrier.
      */
-    U_COMMON_API int32_t getRefCount() const;
+    U_COMMON_API int32_t get_Ref_എണ്ണം() സ്ഥിരം;
 
     /**
      * If noHardReferences() == true then this object has no hard references.
      * Must be called only from within the internals of UnifiedCache.
      */
-    U_COMMON_API inline UBool noHardReferences() const { return getRefCount() == 0; }
+    U_COMMON_API വരിയിൽ UBool noHardReferences() സ്ഥിരം { തിരികെ get_Ref_എണ്ണം() == 0; }
 
     /**
      * If hasHardReferences() == true then this object has hard references.
      * Must be called only from within the internals of UnifiedCache.
      */
-    U_COMMON_API inline UBool hasHardReferences() const { return getRefCount() != 0; }
+    U_COMMON_API വരിയിൽ UBool hasHardReferences() സ്ഥിരം { തിരികെ get_Ref_എണ്ണം() != 0; }
 
     /**
      * Deletes this object if it has no references.
      * Available for non-cached SharedObjects only. Ownership of cached objects
      * is with the UnifiedCache, which is solely responsible for eviction and deletion.
      */
-    U_COMMON_API void deleteIfZeroRefCount() const;
+    U_COMMON_API ശൂന്യം delete_If_Zero_Ref_എണ്ണം() സ്ഥിരം;
 
         
     /**
@@ -121,15 +121,15 @@ public:
      * T must be a subclass of SharedObject.
      */
     template<typename T>
-    static T *copyOnWrite(const T *&ptr) {
-        const T *p = ptr;
-        if(p->getRefCount() <= 1) { return const_cast<T *>(p); }
+    സ്ഥിതം T *copyOnWrite(സ്ഥിരം T *&ptr) {
+        സ്ഥിരം T *p = ptr;
+        എങ്കിൽ(p->get_Ref_എണ്ണം() <= 1) { തിരികെ const_cast<T *>(p); }
         T *p2 = new T(*p);
-        if(p2 == nullptr) { return nullptr; }
+        എങ്കിൽ(p2 == nullptr) { തിരികെ nullptr; }
         p->removeRef();
         ptr = p2;
         p2->addRef();
-        return p2;
+        തിരികെ p2;
     }
 
     /**
@@ -141,11 +141,11 @@ public:
      * T must be a subclass of SharedObject.
      */
     template<typename T>
-    static void copyPtr(const T *src, const T *&dest) {
-        if(src != dest) {
-            if(dest != nullptr) { dest->removeRef(); }
+    സ്ഥിതം ശൂന്യം copyPtr(സ്ഥിരം T *src, സ്ഥിരം T *&dest) {
+        എങ്കിൽ(src != dest) {
+            എങ്കിൽ(dest != nullptr) { dest->removeRef(); }
             dest = src;
-            if(src != nullptr) { src->addRef(); }
+            എങ്കിൽ(src != nullptr) { src->addRef(); }
         }
     }
 
@@ -153,29 +153,29 @@ public:
      * Equivalent to copyPtr(nullptr, dest).
      */
     template<typename T>
-    static void clearPtr(const T *&ptr) {
-        if (ptr != nullptr) {
+    സ്ഥിതം ശൂന്യം clearPtr(സ്ഥിരം T *&ptr) {
+        എങ്കിൽ (ptr != nullptr) {
             ptr->removeRef();
             ptr = nullptr;
         }
     }
 
-private:
+സ്വകാര്യ:
     /**
      * The number of references from the UnifiedCache, which is
      * the number of times that the sharedObject is stored as a hash table value.
      * For use by UnifiedCache implementation code only.
      * All access is synchronized by UnifiedCache's gCacheMutex
      */
-    mutable int32_t softRefCount;
+    mutable int32_t soft_Ref_എണ്ണം;
     friend class UnifiedCache;
 
     /**
      * Reference count, excluding references from within the UnifiedCache implementation.
      */
-    mutable u_atomic_int32_t hardRefCount;
+    mutable u_atomic_int32_t hard_Ref_എണ്ണം;
     
-    mutable const UnifiedCacheBase *cachePtr;
+    mutable സ്ഥിരം UnifiedCacheBase *cachePtr;
 
 };
 

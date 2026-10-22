@@ -41,47 +41,47 @@
 
 // Defines _XOPEN_SOURCE for access to POSIX functions.
 // Must be before any other #includes.
-#include "uposixdefs.h"
+#അന്തര്ഭാവ "uposixdefs.h"
 
 // First, the platform type. Need this for U_PLATFORM.
-#include "unicode/platform.h"
+#അന്തര്ഭാവ "unicode/platform.h"
 
 /*
  * Cygwin with GCC requires inclusion of time.h after the above disabling strict asci mode statement.
  */
-#include <time.h>
+#അന്തര്ഭാവ <time.h>
 
-#if !U_PLATFORM_USES_ONLY_WIN32_API
-#include <sys/time.h>
+#എങ്കിൽ !U_PLATFORM_USES_ONLY_WIN32_API
+#അന്തര്ഭാവ <sys/time.h>
 #endif
 
 /* include the rest of the ICU headers */
-#include "unicode/putil.h"
-#include "unicode/ustring.h"
-#include "putilimp.h"
-#include "uassert.h"
-#include "umutex.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "locmap.h"
-#include "ucln_cmn.h"
-#include "charstr.h"
+#അന്തര്ഭാവ "unicode/putil.h"
+#അന്തര്ഭാവ "unicode/ustring.h"
+#അന്തര്ഭാവ "putilimp.h"
+#അന്തര്ഭാവ "uassert.h"
+#അന്തര്ഭാവ "umutex.h"
+#അന്തര്ഭാവ "cmemory.h"
+#അന്തര്ഭാവ "cstring.h"
+#അന്തര്ഭാവ "locmap.h"
+#അന്തര്ഭാവ "ucln_cmn.h"
+#അന്തര്ഭാവ "charstr.h"
 
 /* Include standard headers. */
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <locale.h>
-#include <float.h>
+#അന്തര്ഭാവ <stdio.h>
+#അന്തര്ഭാവ <stdlib.h>
+#അന്തര്ഭാവ <string.h>
+#അന്തര്ഭാവ <math.h>
+#അന്തര്ഭാവ <locale.h>
+#അന്തര്ഭാവ <float.h>
 
 #ifndef U_COMMON_IMPLEMENTATION
-#error U_COMMON_IMPLEMENTATION not set - must be set for all ICU source files in common/ - see https://unicode-org.github.io/icu/userguide/icu/howtouseicu.html
+#error U_COMMON_IMPLEMENTATION not set - must be set വേണ്ടി all ICU source files in common/ - see https://unicode-org.github.io/icu/userguide/icu/howtouseicu.html
 #endif
 
 
 /* include system headers */
-#if U_PLATFORM_USES_ONLY_WIN32_API
+#എങ്കിൽ U_PLATFORM_USES_ONLY_WIN32_API
     /*
      * TODO: U_PLATFORM_USES_ONLY_WIN32_API includes MinGW.
      * Should Cygwin be included as well (U_PLATFORM_HAS_WIN32_API)
@@ -98,18 +98,18 @@
 #   include <windows.h>
 #   include "unicode/uloc.h"
 #   include "wintz.h"
-#elif U_PLATFORM == U_PF_OS400
+#അല്ലെങ്കിലെങ്കിൽ U_PLATFORM == U_PF_OS400
 #   include <float.h>
 #   include <qusec.h>       /* error code structure */
 #   include <qusrjobi.h>
 #   include <qliept.h>      /* EPT_CALL macro  - this include must be after all other "QSYSINCs" */
 #   include <mih/testptr.h> /* For uprv_maximumPtr */
-#elif U_PLATFORM == U_PF_OS390
+#അല്ലെങ്കിലെങ്കിൽ U_PLATFORM == U_PF_OS390
 #   include "unicode/ucnv.h"   /* Needed for UCNV_SWAP_LFNL_OPTION_STRING */
-#elif U_PLATFORM_IS_DARWIN_BASED || U_PLATFORM_IS_LINUX_BASED || U_PLATFORM == U_PF_BSD || U_PLATFORM == U_PF_SOLARIS
+#അല്ലെങ്കിലെങ്കിൽ U_PLATFORM_IS_DARWIN_BASED || U_PLATFORM_IS_LINUX_BASED || U_PLATFORM == U_PF_BSD || U_PLATFORM == U_PF_SOLARIS
 #   include <limits.h>
 #   include <unistd.h>
-#   if U_PLATFORM == U_PF_SOLARIS
+#   എങ്കിൽ U_PLATFORM == U_PF_SOLARIS
 #       ifndef _XPG4_2
 #           define _XPG4_2
 #       endif
@@ -117,7 +117,7 @@
 #       include <sys/system_properties.h>
 #       include <dlfcn.h>
 #   endif
-#elif U_PLATFORM == U_PF_QNX
+#അല്ലെങ്കിലെങ്കിൽ U_PLATFORM == U_PF_QNX
 #   include <sys/neutrino.h>
 #endif
 
@@ -128,19 +128,19 @@
  *
  */
 
-#if U_HAVE_NL_LANGINFO_CODESET
-#include <langinfo.h>
+#എങ്കിൽ U_HAVE_NL_LANGINFO_CODESET
+#അന്തര്ഭാവ <langinfo.h>
 #endif
 
 /**
  * Simple things (presence of functions, etc) should just go in configure.in and be added to
  * icucfg.h via autoheader.
  */
-#if U_PLATFORM_IMPLEMENTS_POSIX
-#   if U_PLATFORM == U_PF_OS400
+#എങ്കിൽ U_PLATFORM_IMPLEMENTS_POSIX
+#   എങ്കിൽ U_PLATFORM == U_PF_OS400
 #    define HAVE_DLFCN_H 0
 #    define HAVE_DLOPEN 0
-#   else
+#   അല്ലെങ്കിൽ
 #   ifndef HAVE_DLFCN_H
 #    define HAVE_DLFCN_H 1
 #   endif
@@ -151,7 +151,7 @@
 #   ifndef HAVE_GETTIMEOFDAY
 #    define HAVE_GETTIMEOFDAY 1
 #   endif
-#else
+#അല്ലെങ്കിൽ
 #   define HAVE_DLFCN_H 0
 #   define HAVE_DLOPEN 0
 #   define HAVE_GETTIMEOFDAY 0
@@ -163,7 +163,7 @@ U_NAMESPACE_USE
 #define DATA_TYPE "dat"
 
 /* Leave this copyright notice here! */
-static const char copyright[] = U_COPYRIGHT_STRING;
+സ്ഥിതം സ്ഥിരം അക്ഷരം copyright[] = U_COPYRIGHT_STRING;
 
 /* floating point implementations ------------------------------------------- */
 
@@ -171,12 +171,12 @@ static const char copyright[] = U_COPYRIGHT_STRING;
 #define SIGN 0x80000000U
 
 /* Make it easy to define certain types of constants */
-typedef union {
+തരനിർവചനം സംഘം {
     int64_t i64; /* This must be defined first in order to allow the initialization to work. This is a C89 feature. */
-    double d64;
+    ഇരട്ട d64;
 } BitPatternConversion;
-static const BitPatternConversion gNan = {static_cast<int64_t>(INT64_C(0x7FF8000000000000))};
-static const BitPatternConversion gInf = {static_cast<int64_t>(INT64_C(0x7FF0000000000000))};
+സ്ഥിതം സ്ഥിരം BitPatternConversion gNan = {static_cast<int64_t>(INT64_C(0x7FF8000000000000))};
+സ്ഥിതം സ്ഥിരം BitPatternConversion gInf = {static_cast<int64_t>(INT64_C(0x7FF0000000000000))};
 
 /*---------------------------------------------------------------------------
   Platform utilities
@@ -186,9 +186,9 @@ static const BitPatternConversion gInf = {static_cast<int64_t>(INT64_C(0x7FF0000
   functions).
   ---------------------------------------------------------------------------*/
 
-#if U_PLATFORM_USES_ONLY_WIN32_API || U_PLATFORM == U_PF_OS400
+#എങ്കിൽ U_PLATFORM_USES_ONLY_WIN32_API || U_PLATFORM == U_PF_OS400
 #   undef U_POSIX_LOCALE
-#else
+#അല്ലെങ്കിൽ
 #   define U_POSIX_LOCALE    1
 #endif
 
@@ -196,84 +196,84 @@ static const BitPatternConversion gInf = {static_cast<int64_t>(INT64_C(0x7FF0000
     WARNING! u_topNBytesOfDouble and u_bottomNBytesOfDouble
     can't be properly optimized by the gcc compiler sometimes (i.e. gcc 3.2).
 */
-#if !IEEE_754
-static char*
-u_topNBytesOfDouble(double* d, int n)
+#എങ്കിൽ !IEEE_754
+സ്ഥിതം അക്ഷരം*
+u_മുകൾ_NBytes_Of_Double(ഇരട്ട* d, പൂർണ്ണസംഖ്യ n)
 {
-#if U_IS_BIG_ENDIAN
-    return (char*)d;
-#else
-    return (char*)(d + 1) - n;
+#എങ്കിൽ U_IS_BIG_ENDIAN
+    തിരികെ (അക്ഷരം*)d;
+#അല്ലെങ്കിൽ
+    തിരികെ (അക്ഷരം*)(d + 1) - n;
 #endif
 }
 
-static char*
-u_bottomNBytesOfDouble(double* d, int n)
+സ്ഥിതം അക്ഷരം*
+u_bottomNBytesOfDouble(ഇരട്ട* d, പൂർണ്ണസംഖ്യ n)
 {
-#if U_IS_BIG_ENDIAN
-    return (char*)(d + 1) - n;
-#else
-    return (char*)d;
+#എങ്കിൽ U_IS_BIG_ENDIAN
+    തിരികെ (അക്ഷരം*)(d + 1) - n;
+#അല്ലെങ്കിൽ
+    തിരികെ (അക്ഷരം*)d;
 #endif
 }
 #endif   /* !IEEE_754 */
 
-#if IEEE_754
-static UBool
-u_signBit(double d) {
+#എങ്കിൽ IEEE_754
+സ്ഥിതം UBool
+u_signBit(ഇരട്ട d) {
     uint8_t hiByte;
-#if U_IS_BIG_ENDIAN
+#എങ്കിൽ U_IS_BIG_ENDIAN
     hiByte = *(uint8_t *)&d;
-#else
-    hiByte = *(reinterpret_cast<uint8_t*>(&d) + sizeof(double) - 1);
+#അല്ലെങ്കിൽ
+    hiByte = *(reinterpret_cast<uint8_t*>(&d) + വലുപ്പം(ഇരട്ട) - 1);
 #endif
-    return (hiByte & 0x80) != 0;
+    തിരികെ (hiByte & 0x80) != 0;
 }
 #endif
 
 
 
-#if defined (U_DEBUG_FAKETIME)
+#എങ്കിൽ defined (U_DEBUG_FAKETIME)
 /* Override the clock to test things without having to move the system clock.
  * Assumes POSIX gettimeofday() will function
  */
 UDate fakeClock_t0 = 0; /** Time to start the clock from **/
 UDate fakeClock_dt = 0; /** Offset (fake time - real time) **/
-UBool fakeClock_set = false; /** True if fake clock has spun up **/
+UBool fakeClock_set = അസത്യം; /** True if fake clock has spun up **/
 
-static UDate getUTCtime_real() {
-    struct timeval posixTime;
+സ്ഥിതം UDate getUTCtime_real() {
+    ഘടന timeval posixTime;
     gettimeofday(&posixTime, nullptr);
-    return (UDate)(((int64_t)posixTime.tv_sec * U_MILLIS_PER_SECOND) + (posixTime.tv_usec/1000));
+    തിരികെ (UDate)(((int64_t)posixTime.tv_sec * U_MILLIS_PER_SECOND) + (posixTime.tv_usec/1000));
 }
 
-static UDate getUTCtime_fake() {
-    static UMutex fakeClockMutex;
+സ്ഥിതം UDate getUTCtime_fake() {
+    സ്ഥിതം UMutex fakeClockMutex;
     umtx_lock(&fakeClockMutex);
-    if(!fakeClock_set) {
+    എങ്കിൽ(!fakeClock_set) {
         UDate real = getUTCtime_real();
-        const char *fake_start = getenv("U_FAKETIME_START");
-        if((fake_start!=nullptr) && (fake_start[0]!=0)) {
+        സ്ഥിരം അക്ഷരം *fake_start = getenv("U_FAKETIME_START");
+        എങ്കിൽ((fake_start!=nullptr) && (fake_start[0]!=0)) {
             sscanf(fake_start,"%lf",&fakeClock_t0);
             fakeClock_dt = fakeClock_t0 - real;
             fprintf(stderr,"U_DEBUG_FAKETIME was set at compile time, so the ICU clock will start at a preset value\n"
                     "env variable U_FAKETIME_START=%.0f (%s) for an offset of %.0f ms from the current time %.0f\n",
                     fakeClock_t0, fake_start, fakeClock_dt, real);
-        } else {
+        } അല്ലെങ്കിൽ {
           fakeClock_dt = 0;
             fprintf(stderr,"U_DEBUG_FAKETIME was set at compile time, but U_FAKETIME_START was not set.\n"
                     "Set U_FAKETIME_START to the number of milliseconds since 1/1/1970 to set the ICU clock.\n");
         }
-        fakeClock_set = true;
+        fakeClock_set = സത്യം;
     }
     umtx_unlock(&fakeClockMutex);
 
-    return getUTCtime_real() + fakeClock_dt;
+    തിരികെ getUTCtime_real() + fakeClock_dt;
 }
 #endif
 
-#if U_PLATFORM_USES_ONLY_WIN32_API
-typedef union {
+#എങ്കിൽ U_PLATFORM_USES_ONLY_WIN32_API
+തരനിർവചനം സംഘം {
     int64_t int64;
     FILETIME fileTime;
 } FileTimeConversion;   /* This is like a ULARGE_INTEGER */
@@ -294,10 +294,10 @@ typedef union {
 U_CAPI UDate U_EXPORT2
 uprv_getUTCtime()
 {
-#if defined(U_DEBUG_FAKETIME)
-    return getUTCtime_fake(); /* Hook for overriding the clock */
-#else
-    return uprv_getRawUTCtime();
+#എങ്കിൽ defined(U_DEBUG_FAKETIME)
+    തിരികെ getUTCtime_fake(); /* Hook for overriding the clock */
+#അല്ലെങ്കിൽ
+    തിരികെ uprv_getRawUTCtime();
 #endif
 }
 
@@ -305,21 +305,21 @@ uprv_getUTCtime()
 U_CAPI UDate U_EXPORT2
 uprv_getRawUTCtime()
 {
-#if U_PLATFORM_USES_ONLY_WIN32_API
+#എങ്കിൽ U_PLATFORM_USES_ONLY_WIN32_API
 
     FileTimeConversion winTime;
     GetSystemTimeAsFileTime(&winTime.fileTime);
-    return (UDate)((winTime.int64 - EPOCH_BIAS) / HECTONANOSECOND_PER_MILLISECOND);
-#else
+    തിരികെ (UDate)((winTime.int64 - EPOCH_BIAS) / HECTONANOSECOND_PER_MILLISECOND);
+#അല്ലെങ്കിൽ
 
-#if HAVE_GETTIMEOFDAY
-    struct timeval posixTime;
+#എങ്കിൽ HAVE_GETTIMEOFDAY
+    ഘടന timeval posixTime;
     gettimeofday(&posixTime, nullptr);
-    return (UDate)(((int64_t)posixTime.tv_sec * U_MILLIS_PER_SECOND) + (posixTime.tv_usec/1000));
-#else
+    തിരികെ (UDate)(((int64_t)posixTime.tv_sec * U_MILLIS_PER_SECOND) + (posixTime.tv_usec/1000));
+#അല്ലെങ്കിൽ
     time_t epochtime;
     time(&epochtime);
-    return (UDate)epochtime * U_MILLIS_PER_SECOND;
+    തിരികെ (UDate)epochtime * U_MILLIS_PER_SECOND;
 #endif
 
 #endif
@@ -336,188 +336,188 @@ uprv_getRawUTCtime()
   ---------------------------------------------------------------------------*/
 
 U_CAPI UBool U_EXPORT2
-uprv_isNaN(double number)
+uprv_isNaN(ഇരട്ട number)
 {
-#if IEEE_754
-    BitPatternConversion convertedNumber;
-    convertedNumber.d64 = number;
+#എങ്കിൽ IEEE_754
+    BitPatternConversion converted_സംഖ്യ;
+    converted_സംഖ്യ.d64 = number;
     /* Infinity is 0x7FF0000000000000U. Anything greater than that is a NaN */
-    return (convertedNumber.i64 & U_INT64_MAX) > gInf.i64;
+    തിരികെ (converted_സംഖ്യ.i64 & U_INT64_MAX) > gInf.i64;
 
-#elif U_PLATFORM == U_PF_OS390
-    uint32_t highBits = *(uint32_t*)u_topNBytesOfDouble(&number,
-                        sizeof(uint32_t));
-    uint32_t lowBits  = *(uint32_t*)u_bottomNBytesOfDouble(&number,
-                        sizeof(uint32_t));
+#അല്ലെങ്കിലെങ്കിൽ U_PLATFORM == U_PF_OS390
+    uint32_t മുകളിലെ_Bits = *(uint32_t*)u_മുകൾ_NBytes_Of_Double(&number,
+                        വലുപ്പം(uint32_t));
+    uint32_t താഴെയുള്ള_Bits  = *(uint32_t*)u_bottomNBytesOfDouble(&number,
+                        വലുപ്പം(uint32_t));
 
-    return ((highBits & 0x7F080000L) == 0x7F080000L) &&
-      (lowBits == 0x00000000L);
+    തിരികെ ((മുകളിലെ_Bits & 0x7F080000L) == 0x7F080000L) &&
+      (താഴെയുള്ള_Bits == 0x00000000L);
 
-#else
+#അല്ലെങ്കിൽ
     /* If your platform doesn't support IEEE 754 but *does* have an NaN value,*/
     /* you'll need to replace this default implementation with what's correct*/
     /* for your platform.*/
-    return number != number;
+    തിരികെ number != number;
 #endif
 }
 
 U_CAPI UBool U_EXPORT2
-uprv_isInfinite(double number)
+uprv_isInfinite(ഇരട്ട number)
 {
-#if IEEE_754
-    BitPatternConversion convertedNumber;
-    convertedNumber.d64 = number;
+#എങ്കിൽ IEEE_754
+    BitPatternConversion converted_സംഖ്യ;
+    converted_സംഖ്യ.d64 = number;
     /* Infinity is exactly 0x7FF0000000000000U. */
-    return (convertedNumber.i64 & U_INT64_MAX) == gInf.i64;
-#elif U_PLATFORM == U_PF_OS390
-    uint32_t highBits = *(uint32_t*)u_topNBytesOfDouble(&number,
-                        sizeof(uint32_t));
-    uint32_t lowBits  = *(uint32_t*)u_bottomNBytesOfDouble(&number,
-                        sizeof(uint32_t));
+    തിരികെ (converted_സംഖ്യ.i64 & U_INT64_MAX) == gInf.i64;
+#അല്ലെങ്കിലെങ്കിൽ U_PLATFORM == U_PF_OS390
+    uint32_t മുകളിലെ_Bits = *(uint32_t*)u_മുകൾ_NBytes_Of_Double(&number,
+                        വലുപ്പം(uint32_t));
+    uint32_t താഴെയുള്ള_Bits  = *(uint32_t*)u_bottomNBytesOfDouble(&number,
+                        വലുപ്പം(uint32_t));
 
-    return ((highBits  & ~SIGN) == 0x70FF0000L) && (lowBits == 0x00000000L);
+    തിരികെ ((മുകളിലെ_Bits  & ~SIGN) == 0x70FF0000L) && (താഴെയുള്ള_Bits == 0x00000000L);
 
-#else
+#അല്ലെങ്കിൽ
     /* If your platform doesn't support IEEE 754 but *does* have an infinity*/
     /* value, you'll need to replace this default implementation with what's*/
     /* correct for your platform.*/
-    return number == (2.0 * number);
+    തിരികെ number == (2.0 * number);
 #endif
 }
 
 U_CAPI UBool U_EXPORT2
-uprv_isPositiveInfinity(double number)
+uprv_isPositiveInfinity(ഇരട്ട number)
 {
-#if IEEE_754 || U_PLATFORM == U_PF_OS390
-    return number > 0 && uprv_isInfinite(number);
-#else
-    return uprv_isInfinite(number);
+#എങ്കിൽ IEEE_754 || U_PLATFORM == U_PF_OS390
+    തിരികെ number > 0 && uprv_isInfinite(number);
+#അല്ലെങ്കിൽ
+    തിരികെ uprv_isInfinite(number);
 #endif
 }
 
 U_CAPI UBool U_EXPORT2
-uprv_isNegativeInfinity(double number)
+uprv_isNegativeInfinity(ഇരട്ട number)
 {
-#if IEEE_754 || U_PLATFORM == U_PF_OS390
-    return number < 0 && uprv_isInfinite(number);
+#എങ്കിൽ IEEE_754 || U_PLATFORM == U_PF_OS390
+    തിരികെ number < 0 && uprv_isInfinite(number);
 
-#else
-    uint32_t highBits = *(uint32_t*)u_topNBytesOfDouble(&number,
-                        sizeof(uint32_t));
-    return((highBits & SIGN) && uprv_isInfinite(number));
+#അല്ലെങ്കിൽ
+    uint32_t മുകളിലെ_Bits = *(uint32_t*)u_മുകൾ_NBytes_Of_Double(&number,
+                        വലുപ്പം(uint32_t));
+    തിരികെ((മുകളിലെ_Bits & SIGN) && uprv_isInfinite(number));
 
 #endif
 }
 
-U_CAPI double U_EXPORT2
+U_CAPI ഇരട്ട U_EXPORT2
 uprv_getNaN()
 {
-#if IEEE_754 || U_PLATFORM == U_PF_OS390
-    return gNan.d64;
-#else
+#എങ്കിൽ IEEE_754 || U_PLATFORM == U_PF_OS390
+    തിരികെ gNan.d64;
+#അല്ലെങ്കിൽ
     /* If your platform doesn't support IEEE 754 but *does* have an NaN value,*/
     /* you'll need to replace this default implementation with what's correct*/
     /* for your platform.*/
-    return 0.0;
+    തിരികെ 0.0;
 #endif
 }
 
-U_CAPI double U_EXPORT2
+U_CAPI ഇരട്ട U_EXPORT2
 uprv_getInfinity()
 {
-#if IEEE_754 || U_PLATFORM == U_PF_OS390
-    return gInf.d64;
-#else
+#എങ്കിൽ IEEE_754 || U_PLATFORM == U_PF_OS390
+    തിരികെ gInf.d64;
+#അല്ലെങ്കിൽ
     /* If your platform doesn't support IEEE 754 but *does* have an infinity*/
     /* value, you'll need to replace this default implementation with what's*/
     /* correct for your platform.*/
-    return 0.0;
+    തിരികെ 0.0;
 #endif
 }
 
-U_CAPI double U_EXPORT2
-uprv_floor(double x)
+U_CAPI ഇരട്ട U_EXPORT2
+uprv_floor(ഇരട്ട x)
 {
-    return floor(x);
+    തിരികെ floor(x);
 }
 
-U_CAPI double U_EXPORT2
-uprv_ceil(double x)
+U_CAPI ഇരട്ട U_EXPORT2
+uprv_ceil(ഇരട്ട x)
 {
-    return ceil(x);
+    തിരികെ ceil(x);
 }
 
-U_CAPI double U_EXPORT2
-uprv_round(double x)
+U_CAPI ഇരട്ട U_EXPORT2
+uprv_round(ഇരട്ട x)
 {
-    return uprv_floor(x + 0.5);
+    തിരികെ uprv_floor(x + 0.5);
 }
 
-U_CAPI double U_EXPORT2
-uprv_fabs(double x)
+U_CAPI ഇരട്ട U_EXPORT2
+uprv_fabs(ഇരട്ട x)
 {
-    return fabs(x);
+    തിരികെ fabs(x);
 }
 
-U_CAPI double U_EXPORT2
-uprv_modf(double x, double* y)
+U_CAPI ഇരട്ട U_EXPORT2
+uprv_modf(ഇരട്ട x, ഇരട്ട* y)
 {
-    return modf(x, y);
+    തിരികെ modf(x, y);
 }
 
-U_CAPI double U_EXPORT2
-uprv_fmod(double x, double y)
+U_CAPI ഇരട്ട U_EXPORT2
+uprv_fmod(ഇരട്ട x, ഇരട്ട y)
 {
-    return fmod(x, y);
+    തിരികെ fmod(x, y);
 }
 
-U_CAPI double U_EXPORT2
-uprv_pow(double x, double y)
+U_CAPI ഇരട്ട U_EXPORT2
+uprv_pow(ഇരട്ട x, ഇരട്ട y)
 {
     /* This is declared as "double pow(double x, double y)" */
-    return pow(x, y);
+    തിരികെ pow(x, y);
 }
 
-U_CAPI double U_EXPORT2
+U_CAPI ഇരട്ട U_EXPORT2
 uprv_pow10(int32_t x)
 {
-    return pow(10.0, (double)x);
+    തിരികെ pow(10.0, (ഇരട്ട)x);
 }
 
-U_CAPI double U_EXPORT2
-uprv_fmax(double x, double y)
+U_CAPI ഇരട്ട U_EXPORT2
+uprv_fmax(ഇരട്ട x, ഇരട്ട y)
 {
-#if IEEE_754
+#എങ്കിൽ IEEE_754
     /* first handle NaN*/
-    if(uprv_isNaN(x) || uprv_isNaN(y))
-        return uprv_getNaN();
+    എങ്കിൽ(uprv_isNaN(x) || uprv_isNaN(y))
+        തിരികെ uprv_getNaN();
 
     /* check for -0 and 0*/
-    if(x == 0.0 && y == 0.0 && u_signBit(x))
-        return y;
+    എങ്കിൽ(x == 0.0 && y == 0.0 && u_signBit(x))
+        തിരികെ y;
 
 #endif
 
     /* this should work for all flt point w/o NaN and Inf special cases */
-    return (x > y ? x : y);
+    തിരികെ (x > y ? x : y);
 }
 
-U_CAPI double U_EXPORT2
-uprv_fmin(double x, double y)
+U_CAPI ഇരട്ട U_EXPORT2
+uprv_fmin(ഇരട്ട x, ഇരട്ട y)
 {
-#if IEEE_754
+#എങ്കിൽ IEEE_754
     /* first handle NaN*/
-    if(uprv_isNaN(x) || uprv_isNaN(y))
-        return uprv_getNaN();
+    എങ്കിൽ(uprv_isNaN(x) || uprv_isNaN(y))
+        തിരികെ uprv_getNaN();
 
     /* check for -0 and 0*/
-    if(x == 0.0 && y == 0.0 && u_signBit(y))
-        return y;
+    എങ്കിൽ(x == 0.0 && y == 0.0 && u_signBit(y))
+        തിരികെ y;
 
 #endif
 
     /* this should work for all flt point w/o NaN and Inf special cases */
-    return (x > y ? y : x);
+    തിരികെ (x > y ? y : x);
 }
 
 U_CAPI UBool U_EXPORT2
@@ -528,7 +528,7 @@ uprv_add32_overflow(int32_t a, int32_t b, int32_t* res) {
     auto b64 = static_cast<int64_t>(b);
     int64_t res64 = a64 + b64;
     *res = static_cast<int32_t>(res64);
-    return res64 != *res;
+    തിരികെ res64 != *res;
 }
 
 U_CAPI UBool U_EXPORT2
@@ -539,7 +539,7 @@ uprv_mul32_overflow(int32_t a, int32_t b, int32_t* res) {
     auto b64 = static_cast<int64_t>(b);
     int64_t res64 = a64 * b64;
     *res = static_cast<int32_t>(res64);
-    return res64 != *res;
+    തിരികെ res64 != *res;
 }
 
 /**
@@ -549,23 +549,23 @@ uprv_mul32_overflow(int32_t a, int32_t b, int32_t* res) {
  * floor(3.3) = 3, floor(-3.3) = -4
  * ceil(3.3) = 4, ceil(-3.3) = -3
  */
-U_CAPI double U_EXPORT2
-uprv_trunc(double d)
+U_CAPI ഇരട്ട U_EXPORT2
+uprv_trunc(ഇരട്ട d)
 {
-#if IEEE_754
+#എങ്കിൽ IEEE_754
     /* handle error cases*/
-    if(uprv_isNaN(d))
-        return uprv_getNaN();
-    if(uprv_isInfinite(d))
-        return uprv_getInfinity();
+    എങ്കിൽ(uprv_isNaN(d))
+        തിരികെ uprv_getNaN();
+    എങ്കിൽ(uprv_isInfinite(d))
+        തിരികെ uprv_getInfinity();
 
-    if(u_signBit(d))    /* Signbit() picks up -0.0;  d<0 does not. */
-        return ceil(d);
-    else
-        return floor(d);
+    എങ്കിൽ(u_signBit(d))    /* Signbit() picks up -0.0;  d<0 does not. */
+        തിരികെ ceil(d);
+    അല്ലെങ്കിൽ
+        തിരികെ floor(d);
 
-#else
-    return d >= 0 ? floor(d) : ceil(d);
+#അല്ലെങ്കിൽ
+    തിരികെ d >= 0 ? floor(d) : ceil(d);
 
 #endif
 }
@@ -574,22 +574,22 @@ uprv_trunc(double d)
  * Return the largest positive number that can be represented by an integer
  * type of arbitrary bit length.
  */
-U_CAPI double U_EXPORT2
+U_CAPI ഇരട്ട U_EXPORT2
 uprv_maxMantissa()
 {
-    return pow(2.0, DBL_MANT_DIG + 1.0) - 1.0;
+    തിരികെ pow(2.0, DBL_MANT_DIG + 1.0) - 1.0;
 }
 
-U_CAPI double U_EXPORT2
-uprv_log(double d)
+U_CAPI ഇരട്ട U_EXPORT2
+uprv_log(ഇരട്ട d)
 {
-    return log(d);
+    തിരികെ log(d);
 }
 
-U_CAPI void * U_EXPORT2
-uprv_maximumPtr(void * base)
+U_CAPI ശൂന്യം * U_EXPORT2
+uprv_maximumPtr(ശൂന്യം * base)
 {
-#if U_PLATFORM == U_PF_OS400
+#എങ്കിൽ U_PLATFORM == U_PF_OS400
     /*
      * With the provided function we should never be out of range of a given segment
      * (a traditional/typical segment that is).  Our segments have 5 bytes for the
@@ -607,15 +607,15 @@ uprv_maximumPtr(void * base)
      * Unlike other operating systems, the pointer model isn't determined at
      * compile time on i5/OS.
      */
-    if ((base != nullptr) && (_TESTPTR(base, _C_TERASPACE_CHECK))) {
+    എങ്കിൽ ((base != nullptr) && (_TESTPTR(base, _C_TERASPACE_CHECK))) {
         /* if it is a TERASPACE pointer the max is 2GB - 4k */
-        return ((void *)(((char *)base)-((uint32_t)(base))+((uint32_t)0x7fffefff)));
+        തിരികെ ((ശൂന്യം *)(((അക്ഷരം *)base)-((uint32_t)(base))+((uint32_t)0x7fffefff)));
     }
     /* otherwise 16MB since nullptr ptr is not checkable or the ptr is not TERASPACE */
-    return ((void *)(((char *)base)-((uint32_t)(base))+((uint32_t)0xffefff)));
+    തിരികെ ((ശൂന്യം *)(((അക്ഷരം *)base)-((uint32_t)(base))+((uint32_t)0xffefff)));
 
-#else
-    return U_MAX_PTR(base);
+#അല്ലെങ്കിൽ
+    തിരികെ U_MAX_PTR(base);
 #endif
 }
 
@@ -628,12 +628,12 @@ uprv_maximumPtr(void * base)
 /* Generic time zone layer -------------------------------------------------- */
 
 /* Time zone utilities */
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 uprv_tzset()
 {
-#if defined(U_TZSET)
+#എങ്കിൽ defined(U_TZSET)
     U_TZSET();
-#else
+#അല്ലെങ്കിൽ
     /* no initialization*/
 #endif
 }
@@ -642,23 +642,23 @@ U_CAPI int32_t U_EXPORT2
 uprv_timezone()
 {
 #ifdef U_TIMEZONE
-    return U_TIMEZONE;
-#else
+    തിരികെ U_TIMEZONE;
+#അല്ലെങ്കിൽ
     time_t t, t1, t2;
-    struct tm tmrec;
+    ഘടന tm tmrec;
     int32_t tdiff = 0;
 
     time(&t);
-    uprv_memcpy( &tmrec, localtime(&t), sizeof(tmrec) );
-#if U_PLATFORM != U_PF_IPHONE
+    uprv_memcpy( &tmrec, localtime(&t), വലുപ്പം(tmrec) );
+#എങ്കിൽ U_PLATFORM != U_PF_IPHONE
     UBool dst_checked = (tmrec.tm_isdst != 0); /* daylight savings time is checked*/
 #endif
     t1 = mktime(&tmrec);                 /* local time in seconds*/
-    uprv_memcpy( &tmrec, gmtime(&t), sizeof(tmrec) );
+    uprv_memcpy( &tmrec, gmtime(&t), വലുപ്പം(tmrec) );
     t2 = mktime(&tmrec);                 /* GMT (or UTC) in seconds*/
     tdiff = t2 - t1;
 
-#if U_PLATFORM != U_PF_IPHONE
+#എങ്കിൽ U_PLATFORM != U_PF_IPHONE
     /* imitate NT behaviour, which returns same timezone offset to GMT for
        winter and summer.
        This does not work on all platforms. For instance, on glibc on Linux
@@ -667,22 +667,22 @@ uprv_timezone()
        platform where this does not work. Linux + glibc and Mac OS 10.5
        have U_TIMEZONE defined so that this code is not reached.
     */
-    if (dst_checked)
+    എങ്കിൽ (dst_checked)
         tdiff += 3600;
 #endif
-    return tdiff;
+    തിരികെ tdiff;
 #endif
 }
 
 /* Note that U_TZNAME does *not* have to be tzname, but if it is,
    some platforms need to have it declared here. */
 
-#if defined(U_TZNAME) && (U_PLATFORM == U_PF_IRIX || U_PLATFORM_IS_DARWIN_BASED)
+#എങ്കിൽ defined(U_TZNAME) && (U_PLATFORM == U_PF_IRIX || U_PLATFORM_IS_DARWIN_BASED)
 /* RS6000 and others reject char **tzname.  */
-extern U_IMPORT char *U_TZNAME[];
+ബാഹ്യ U_IMPORT അക്ഷരം *U_TZNAME[];
 #endif
 
-#if !UCONFIG_NO_FILE_IO && ((U_PLATFORM_IS_DARWIN_BASED && (U_PLATFORM != U_PF_IPHONE || defined(U_TIMEZONE))) || U_PLATFORM_IS_LINUX_BASED || U_PLATFORM == U_PF_BSD || U_PLATFORM == U_PF_SOLARIS)
+#എങ്കിൽ !UCONFIG_NO_FILE_IO && ((U_PLATFORM_IS_DARWIN_BASED && (U_PLATFORM != U_PF_IPHONE || defined(U_TIMEZONE))) || U_PLATFORM_IS_LINUX_BASED || U_PLATFORM == U_PF_BSD || U_PLATFORM == U_PF_SOLARIS)
 /* These platforms are likely to use Olson timezone IDs. */
 /* common targets of the symbolic link at TZDEFAULT are:
  * "/usr/share/zoneinfo/<olsonID>" default, older Linux distros, macOS to 10.12
@@ -695,48 +695,48 @@ extern U_IMPORT char *U_TZNAME[];
  */
 
 #define CHECK_LOCALTIME_LINK 1
-#if U_PLATFORM_IS_DARWIN_BASED
-#include <tzfile.h>
+#എങ്കിൽ U_PLATFORM_IS_DARWIN_BASED
+#അന്തര്ഭാവ <tzfile.h>
 #define TZZONEINFO      (TZDIR "/")
-#elif U_PLATFORM == U_PF_SOLARIS
+#അല്ലെങ്കിലെങ്കിൽ U_PLATFORM == U_PF_SOLARIS
 #define TZDEFAULT       "/etc/localtime"
 #define TZZONEINFO      "/usr/share/lib/zoneinfo/"
 #define TZ_ENV_CHECK    "localtime"
-#else
+#അല്ലെങ്കിൽ
 #define TZDEFAULT       "/etc/localtime"
 #define TZZONEINFO      "/usr/share/zoneinfo/"
 #endif
 #define TZZONEINFOTAIL  "/zoneinfo/"
-#if U_HAVE_DIRENT_H
+#എങ്കിൽ U_HAVE_DIRENT_H
 #define TZFILE_SKIP     "posixrules" /* tz file to skip when searching. */
 /* Some Linux distributions have 'localtime' in /usr/share/zoneinfo
    symlinked to /etc/localtime, which makes searchForTZFile return
    'localtime' when it's the first match. */
 #define TZFILE_SKIP2    "localtime"
-#define SEARCH_TZFILE
-#include <dirent.h>  /* Needed to search through system timezone files */
+#define തിരയൽ_TZFILE
+#അന്തര്ഭാവ <dirent.h>  /* Needed to search through system timezone files */
 #endif
-static char gTimeZoneBuffer[PATH_MAX];
-static const char *gTimeZoneBufferPtr = nullptr;
+സ്ഥിതം അക്ഷരം gTimeZoneBuffer[PATH_MAX];
+സ്ഥിതം സ്ഥിരം അക്ഷരം *gTimeZoneBufferPtr = nullptr;
 #endif
 
-#if !U_PLATFORM_USES_ONLY_WIN32_API
+#എങ്കിൽ !U_PLATFORM_USES_ONLY_WIN32_API
 #define isNonDigit(ch) (ch < '0' || '9' < ch)
 #define isDigit(ch) ('0' <= ch && ch <= '9')
-static UBool isValidOlsonID(const char *id) {
+സ്ഥിതം UBool isValidOlsonID(സ്ഥിരം അക്ഷരം *id) {
     int32_t idx = 0;
     int32_t idxMax = 0;
 
     /* Determine if this is something like Iceland (Olson ID)
     or AST4ADT (non-Olson ID) */
-    while (id[idx] && isNonDigit(id[idx]) && id[idx] != ',') {
+    ആകുമ്പോൾ (id[idx] && isNonDigit(id[idx]) && id[idx] != ',') {
         idx++;
     }
 
     /* Allow at maximum 2 numbers at the end of the id to support zone id's
     like GMT+11. */
     idxMax = idx + 2;
-    while (id[idx] && isDigit(id[idx]) && idx < idxMax) {
+    ആകുമ്പോൾ (id[idx] && isDigit(id[idx]) && idx < idxMax) {
         idx++;
     }
 
@@ -744,7 +744,7 @@ static UBool isValidOlsonID(const char *id) {
     The timezone is sometimes set to "CST-7CDT", "CST6CDT5,J129,J131/19:30",
     "GRNLNDST3GRNLNDDT" or similar, so we cannot use it.
     The rest of the time it could be an Olson ID. George */
-    return id[idx] == 0
+    തിരികെ id[idx] == 0
         || uprv_strcmp(id, "PST8PDT") == 0
         || uprv_strcmp(id, "MST7MDT") == 0
         || uprv_strcmp(id, "CST6CDT") == 0
@@ -763,8 +763,8 @@ static UBool isValidOlsonID(const char *id) {
    fails because, say, 'posix/America/New_York' is not an Olson
    timezone id ('America/New_York' is). So, we have to skip
    'posix/' and 'right/' at the beginning. */
-static void skipZoneIDPrefix(const char** id) {
-    if (uprv_strncmp(*id, "posix/", 6) == 0
+സ്ഥിതം ശൂന്യം skipZoneIDPrefix(സ്ഥിരം അക്ഷരം** id) {
+    എങ്കിൽ (uprv_strncmp(*id, "posix/", 6) == 0
         || uprv_strncmp(*id, "right/", 6) == 0)
     {
         *id += 6;
@@ -772,18 +772,18 @@ static void skipZoneIDPrefix(const char** id) {
 }
 #endif
 
-#if defined(U_TZNAME) && !U_PLATFORM_USES_ONLY_WIN32_API
+#എങ്കിൽ defined(U_TZNAME) && !U_PLATFORM_USES_ONLY_WIN32_API
 
 #define CONVERT_HOURS_TO_SECONDS(offset) (int32_t)(offset*3600)
-typedef struct OffsetZoneMapping {
+തരനിർവചനം ഘടന OffsetZoneMapping {
     int32_t offsetSeconds;
     int32_t daylightType; /* 0=U_DAYLIGHT_NONE, 1=daylight in June-U_DAYLIGHT_JUNE, 2=daylight in December=U_DAYLIGHT_DECEMBER*/
-    const char *stdID;
-    const char *dstID;
-    const char *olsonID;
+    സ്ഥിരം അക്ഷരം *stdID;
+    സ്ഥിരം അക്ഷരം *dstID;
+    സ്ഥിരം അക്ഷരം *olsonID;
 } OffsetZoneMapping;
 
-enum { U_DAYLIGHT_NONE=0,U_DAYLIGHT_JUNE=1,U_DAYLIGHT_DECEMBER=2 };
+എണ്ണൽ { U_DAYLIGHT_NONE=0,U_DAYLIGHT_JUNE=1,U_DAYLIGHT_DECEMBER=2 };
 
 /*
 This list tries to disambiguate a set of abbreviated timezone IDs and offsets
@@ -794,7 +794,7 @@ Sometimes no daylight savings (0) is important to define due to aliases.
 This list can be tested with icu/source/test/compat/tzone.pl
 More values could be added to daylightType to increase precision.
 */
-static const struct OffsetZoneMapping OFFSET_ZONE_MAPPINGS[] = {
+സ്ഥിതം സ്ഥിരം ഘടന OffsetZoneMapping OFFSET_ZONE_MAPPINGS[] = {
     {-45900, 2, "CHAST", "CHADT", "Pacific/Chatham"},
     {-43200, 1, "PETT", "PETST", "Asia/Kamchatka"},
     {-43200, 2, "NZST", "NZDT", "Pacific/Auckland"},
@@ -858,31 +858,31 @@ static const struct OffsetZoneMapping OFFSET_ZONE_MAPPINGS[] = {
 
 /*#define DEBUG_TZNAME*/
 
-static const char* remapShortTimeZone(const char *stdID, const char *dstID, int32_t daylightType, int32_t offset)
+സ്ഥിതം സ്ഥിരം അക്ഷരം* remapShortTimeZone(സ്ഥിരം അക്ഷരം *stdID, സ്ഥിരം അക്ഷരം *dstID, int32_t daylightType, int32_t offset)
 {
     int32_t idx;
 #ifdef DEBUG_TZNAME
     fprintf(stderr, "TZ=%s std=%s dst=%s daylight=%d offset=%d\n", getenv("TZ"), stdID, dstID, daylightType, offset);
 #endif
-    for (idx = 0; idx < UPRV_LENGTHOF(OFFSET_ZONE_MAPPINGS); idx++)
+    വേണ്ടി (idx = 0; idx < UPRV_LENGTHOF(OFFSET_ZONE_MAPPINGS); idx++)
     {
-        if (offset == OFFSET_ZONE_MAPPINGS[idx].offsetSeconds
+        എങ്കിൽ (offset == OFFSET_ZONE_MAPPINGS[idx].offsetSeconds
             && daylightType == OFFSET_ZONE_MAPPINGS[idx].daylightType
             && strcmp(OFFSET_ZONE_MAPPINGS[idx].stdID, stdID) == 0
             && strcmp(OFFSET_ZONE_MAPPINGS[idx].dstID, dstID) == 0)
         {
-            return OFFSET_ZONE_MAPPINGS[idx].olsonID;
+            തിരികെ OFFSET_ZONE_MAPPINGS[idx].olsonID;
         }
     }
-    return nullptr;
+    തിരികെ nullptr;
 }
 #endif
 
-#ifdef SEARCH_TZFILE
+#ifdef തിരയൽ_TZFILE
 #define MAX_READ_SIZE 512
 
-typedef struct DefaultTZInfo {
-    char* defaultTZBuffer;
+തരനിർവചനം ഘടന DefaultTZInfo {
+    അക്ഷരം* defaultTZBuffer;
     int64_t defaultTZFileSize;
     FILE* defaultTZFilePtr;
     int32_t defaultTZPosition;
@@ -892,145 +892,145 @@ typedef struct DefaultTZInfo {
  * This method compares the two files given to see if they are a match.
  * It is currently use to compare two TZ files.
  */
-static UBool compareBinaryFiles(const char* TZFileName, DefaultTZInfo* tzInfo) {
+സ്ഥിതം UBool compare_ദ്വിമാന_Files(സ്ഥിരം അക്ഷരം* TZFileName, DefaultTZInfo* tzInfo) {
     FILE* file;
     int64_t sizeFile;
-    int64_t sizeFileLeft;
+    int64_t size_File_ഇടത്;
     int32_t sizeFileRead;
     int32_t sizeFileToRead;
-    char bufferFile[MAX_READ_SIZE];
-    UBool result = true;
+    അക്ഷരം bufferFile[MAX_READ_SIZE];
+    UBool result = സത്യം;
 
     U_ASSERT(tzInfo->defaultTZFilePtr != nullptr);
     file = fopen(TZFileName, "r");
 
     tzInfo->defaultTZPosition = 0; /* reset position to begin search */
 
-    if (file != nullptr) {
+    എങ്കിൽ (file != nullptr) {
         /* First check that the file size are equal. */
-        if (tzInfo->defaultTZFileSize == 0) {
+        എങ്കിൽ (tzInfo->defaultTZFileSize == 0) {
             fseek(tzInfo->defaultTZFilePtr, 0, SEEK_END);
             tzInfo->defaultTZFileSize = ftell(tzInfo->defaultTZFilePtr);
         }
-        if (fseek(file, 0, SEEK_END) != 0) {
+        എങ്കിൽ (fseek(file, 0, SEEK_END) != 0) {
             fclose(file);
-            return false;
+            തിരികെ അസത്യം;
         }
         sizeFile = ftell(file);
-        if (sizeFile == -1) {
+        എങ്കിൽ (sizeFile == -1) {
             fclose(file);
-            return false;
+            തിരികെ അസത്യം;
         }
-        sizeFileLeft = sizeFile;
+        size_File_ഇടത് = sizeFile;
 
-        if (sizeFile != tzInfo->defaultTZFileSize) {
-            result = false;
-        } else {
+        എങ്കിൽ (sizeFile != tzInfo->defaultTZFileSize) {
+            result = അസത്യം;
+        } അല്ലെങ്കിൽ {
             /* Store the data from the files in separate buffers and
              * compare each byte to determine equality.
              */
-            if (tzInfo->defaultTZBuffer == nullptr) {
-                if (fseek(tzInfo->defaultTZFilePtr, 0, SEEK_SET) != 0) {
+            എങ്കിൽ (tzInfo->defaultTZBuffer == nullptr) {
+                എങ്കിൽ (fseek(tzInfo->defaultTZFilePtr, 0, SEEK_SET) != 0) {
                     fclose(file);
-                    return false;
+                    തിരികെ അസത്യം;
                 }
-                tzInfo->defaultTZBuffer = static_cast<char*>(uprv_malloc(sizeof(char) * tzInfo->defaultTZFileSize));
+                tzInfo->defaultTZBuffer = static_cast<അക്ഷരം*>(uprv_malloc(വലുപ്പം(അക്ഷരം) * tzInfo->defaultTZFileSize));
                 sizeFileRead = fread(tzInfo->defaultTZBuffer, 1, tzInfo->defaultTZFileSize, tzInfo->defaultTZFilePtr);
             }
-            if (fseek(file, 0, SEEK_SET) != 0) {
+            എങ്കിൽ (fseek(file, 0, SEEK_SET) != 0) {
                 fclose(file);
-                return false;
+                തിരികെ അസത്യം;
             }
-            while(sizeFileLeft > 0) {
+            ആകുമ്പോൾ(size_File_ഇടത് > 0) {
                 uprv_memset(bufferFile, 0, MAX_READ_SIZE);
-                sizeFileToRead = sizeFileLeft < MAX_READ_SIZE ? sizeFileLeft : MAX_READ_SIZE;
+                sizeFileToRead = size_File_ഇടത് < MAX_READ_SIZE ? size_File_ഇടത് : MAX_READ_SIZE;
 
                 sizeFileRead = fread(bufferFile, 1, sizeFileToRead, file);
-                if (sizeFileRead == -1) {
+                എങ്കിൽ (sizeFileRead == -1) {
                     fclose(file);
-                    return false;
+                    തിരികെ അസത്യം;
                 }
-                if (memcmp(tzInfo->defaultTZBuffer + tzInfo->defaultTZPosition, bufferFile, sizeFileRead) != 0) {
-                    result = false;
-                    break;
+                എങ്കിൽ (memcmp(tzInfo->defaultTZBuffer + tzInfo->defaultTZPosition, bufferFile, sizeFileRead) != 0) {
+                    result = അസത്യം;
+                    നിർത്തുക;
                 }
-                sizeFileLeft -= sizeFileRead;
+                size_File_ഇടത് -= sizeFileRead;
                 tzInfo->defaultTZPosition += sizeFileRead;
             }
         }
-    } else {
-        result = false;
+    } അല്ലെങ്കിൽ {
+        result = അസത്യം;
     }
 
-    if (file != nullptr) {
+    എങ്കിൽ (file != nullptr) {
         fclose(file);
     }
 
-    return result;
+    തിരികെ result;
 }
 
 
 /* dirent also lists two entries: "." and ".." that we can safely ignore. */
 #define SKIP1 "."
 #define SKIP2 ".."
-static UBool U_CALLCONV putil_cleanup();
-static CharString *gSearchTZFileResult = nullptr;
+സ്ഥിതം UBool U_CALLCONV putil_cleanup();
+സ്ഥിതം CharString *g_തിരയൽ_TZFile_Result = nullptr;
 
 /*
  * This method recursively traverses the directory given for a matching TZ file and returns the first match.
  * This function is not thread safe - it uses a global, gSearchTZFileResult, to hold its results.
  */
-static char* searchForTZFile(const char* path, DefaultTZInfo* tzInfo) {
+സ്ഥിതം അക്ഷരം* തിരയൽ_For_TZFile(സ്ഥിരം അക്ഷരം* path, DefaultTZInfo* tzInfo) {
     DIR* dirp = nullptr;
-    struct dirent* dirEntry = nullptr;
-    char* result = nullptr;
+    ഘടന dirent* dirEntry = nullptr;
+    അക്ഷരം* result = nullptr;
     UErrorCode status = U_ZERO_ERROR;
 
     /* There is no reference file to compare against, so do not traverse the zoneinfo tree. */
-    if (tzInfo->defaultTZFilePtr == nullptr) {
-        return nullptr;
+    എങ്കിൽ (tzInfo->defaultTZFilePtr == nullptr) {
+        തിരികെ nullptr;
     }
 
     /* Save the current path */
     CharString curpath(path, -1, status);
-    if (U_FAILURE(status)) {
-        goto cleanupAndReturn;
+    എങ്കിൽ (U_FAILURE(status)) {
+        പോകുക cleanupAndReturn;
     }
 
     dirp = opendir(path);
-    if (dirp == nullptr) {
-        goto cleanupAndReturn;
+    എങ്കിൽ (dirp == nullptr) {
+        പോകുക cleanupAndReturn;
     }
 
-    if (gSearchTZFileResult == nullptr) {
-        gSearchTZFileResult = new CharString;
-        if (gSearchTZFileResult == nullptr) {
-            goto cleanupAndReturn;
+    എങ്കിൽ (g_തിരയൽ_TZFile_Result == nullptr) {
+        g_തിരയൽ_TZFile_Result = പുതിയ CharString;
+        എങ്കിൽ (g_തിരയൽ_TZFile_Result == nullptr) {
+            പോകുക cleanupAndReturn;
         }
         ucln_common_registerCleanup(UCLN_COMMON_PUTIL, putil_cleanup);
     }
 
     /* Check each entry in the directory. */
-    while((dirEntry = readdir(dirp)) != nullptr) {
-        const char* dirName = dirEntry->d_name;
-        if (uprv_strcmp(dirName, SKIP1) != 0 && uprv_strcmp(dirName, SKIP2) != 0
+    ആകുമ്പോൾ((dirEntry = readdir(dirp)) != nullptr) {
+        സ്ഥിരം അക്ഷരം* dirName = dirEntry->d_name;
+        എങ്കിൽ (uprv_strcmp(dirName, SKIP1) != 0 && uprv_strcmp(dirName, SKIP2) != 0
             && uprv_strcmp(TZFILE_SKIP, dirName) != 0 && uprv_strcmp(TZFILE_SKIP2, dirName) != 0) {
             /* Create a newpath with the new entry to test each entry in the directory. */
             CharString newpath(curpath, status);
             newpath.append(dirName, -1, status);
-            if (U_FAILURE(status)) {
-                break;
+            എങ്കിൽ (U_FAILURE(status)) {
+                നിർത്തുക;
             }
 
             DIR* subDirp = nullptr;
-            if ((subDirp = opendir(newpath.data())) != nullptr) {
+            എങ്കിൽ ((subDirp = opendir(newpath.data())) != nullptr) {
                 /* If this new path is a directory, make a recursive call with the newpath. */
                 closedir(subDirp);
                 newpath.append('/', status);
-                if (U_FAILURE(status)) {
-                    break;
+                എങ്കിൽ (U_FAILURE(status)) {
+                    നിർത്തുക;
                 }
-                result = searchForTZFile(newpath.data(), tzInfo);
+                result = തിരയൽ_For_TZFile(newpath.data(), tzInfo);
                 /*
                  Have to get out here. Otherwise, we'd keep looking
                  and return the first match in the top-level directory
@@ -1039,77 +1039,77 @@ static char* searchForTZFile(const char* path, DefaultTZInfo* tzInfo) {
                  It worked without this in most cases because we have a fallback of calling
                  localtime_r to figure out the default timezone.
                 */
-                if (result != nullptr)
-                    break;
-            } else {
-                if(compareBinaryFiles(newpath.data(), tzInfo)) {
-                    int32_t amountToSkip = sizeof(TZZONEINFO) - 1;
-                    if (amountToSkip > newpath.length()) {
+                എങ്കിൽ (result != nullptr)
+                    നിർത്തുക;
+            } അല്ലെങ്കിൽ {
+                എങ്കിൽ(compare_ദ്വിമാന_Files(newpath.data(), tzInfo)) {
+                    int32_t amountToSkip = വലുപ്പം(TZZONEINFO) - 1;
+                    എങ്കിൽ (amountToSkip > newpath.length()) {
                         amountToSkip = newpath.length();
                     }
-                    const char* zoneid = newpath.data() + amountToSkip;
+                    സ്ഥിരം അക്ഷരം* zoneid = newpath.data() + amountToSkip;
                     skipZoneIDPrefix(&zoneid);
-                    gSearchTZFileResult->clear();
-                    gSearchTZFileResult->append(zoneid, -1, status);
-                    if (U_FAILURE(status)) {
-                        break;
+                    g_തിരയൽ_TZFile_Result->clear();
+                    g_തിരയൽ_TZFile_Result->append(zoneid, -1, status);
+                    എങ്കിൽ (U_FAILURE(status)) {
+                        നിർത്തുക;
                     }
-                    result = gSearchTZFileResult->data();
+                    result = g_തിരയൽ_TZFile_Result->data();
                     /* Get out after the first one found. */
-                    break;
+                    നിർത്തുക;
                 }
             }
         }
     }
 
   cleanupAndReturn:
-    if (dirp) {
+    എങ്കിൽ (dirp) {
         closedir(dirp);
     }
-    return result;
+    തിരികെ result;
 }
 #endif
 
-#if U_PLATFORM == U_PF_ANDROID
-typedef int(system_property_read_callback)(const prop_info* info,
-                                           void (*callback)(void* cookie,
-                                                            const char* name,
-                                                            const char* value,
+#എങ്കിൽ U_PLATFORM == U_PF_ANDROID
+തരനിർവചനം പൂർണ്ണസംഖ്യ(system_property_read_callback)(സ്ഥിരം prop_info* info,
+                                           ശൂന്യം (*callback)(ശൂന്യം* cookie,
+                                                            സ്ഥിരം അക്ഷരം* name,
+                                                            സ്ഥിരം അക്ഷരം* value,
                                                             uint32_t serial),
-                                           void* cookie);
-typedef int(system_property_get)(const char*, char*);
+                                           ശൂന്യം* cookie);
+തരനിർവചനം പൂർണ്ണസംഖ്യ(system_property_get)(സ്ഥിരം അക്ഷരം*, അക്ഷരം*);
 
-static char gAndroidTimeZone[PROP_VALUE_MAX] = { '\0' };
+സ്ഥിതം അക്ഷരം gAndroidTimeZone[PROP_മൂല്യം_MAX] = { '\0' };
 
-static void u_property_read(void* cookie, const char* name, const char* value,
+സ്ഥിതം ശൂന്യം u_property_read(ശൂന്യം* cookie, സ്ഥിരം അക്ഷരം* name, സ്ഥിരം അക്ഷരം* value,
                             uint32_t serial) {
-    uprv_strcpy((char* )cookie, value);
+    uprv_strcpy((അക്ഷരം* )cookie, value);
 }
 #endif
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 uprv_tzname_clear_cache()
 {
-#if U_PLATFORM == U_PF_ANDROID
+#എങ്കിൽ U_PLATFORM == U_PF_ANDROID
     /* Android's timezone is stored in system property. */
     gAndroidTimeZone[0] = '\0';
-    void* libc = dlopen("libc.so", RTLD_NOLOAD);
-    if (libc) {
+    ശൂന്യം* libc = dlopen("libc.so", RTLD_NOLOAD);
+    എങ്കിൽ (libc) {
         /* Android API 26+ has new API to get system property and old API
          * (__system_property_get) is deprecated */
         system_property_read_callback* property_read_callback =
             (system_property_read_callback*)dlsym(
                 libc, "__system_property_read_callback");
-        if (property_read_callback) {
-            const prop_info* info =
+        എങ്കിൽ (property_read_callback) {
+            സ്ഥിരം prop_info* info =
                 __system_property_find("persist.sys.timezone");
-            if (info) {
+            എങ്കിൽ (info) {
                 property_read_callback(info, &u_property_read, gAndroidTimeZone);
             }
-        } else {
+        } അല്ലെങ്കിൽ {
             system_property_get* property_get =
                 (system_property_get*)dlsym(libc, "__system_property_get");
-            if (property_get) {
+            എങ്കിൽ (property_get) {
                 property_get("persist.sys.timezone", gAndroidTimeZone);
             }
         }
@@ -1117,21 +1117,21 @@ uprv_tzname_clear_cache()
     }
 #endif
 
-#if defined(CHECK_LOCALTIME_LINK) && !defined(DEBUG_SKIP_LOCALTIME_LINK)
+#എങ്കിൽ defined(CHECK_LOCALTIME_LINK) && !defined(DEBUG_SKIP_LOCALTIME_LINK)
     gTimeZoneBufferPtr = nullptr;
 #endif
 }
 
-U_CAPI const char* U_EXPORT2
-uprv_tzname(int n)
+U_CAPI സ്ഥിരം അക്ഷരം* U_EXPORT2
+uprv_tzname(പൂർണ്ണസംഖ്യ n)
 {
-    (void)n; // Avoid unreferenced parameter warning.
-    const char *tzid = nullptr;
-#if U_PLATFORM_USES_ONLY_WIN32_API
+    (ശൂന്യം)n; // Avoid unreferenced parameter warning.
+    സ്ഥിരം അക്ഷരം *tzid = nullptr;
+#എങ്കിൽ U_PLATFORM_USES_ONLY_WIN32_API
     tzid = uprv_detectWindowsTimeZone();
 
-    if (tzid != nullptr) {
-        return tzid;
+    എങ്കിൽ (tzid != nullptr) {
+        തിരികെ tzid;
     }
 
 #ifndef U_TZNAME
@@ -1139,10 +1139,10 @@ uprv_tzname(int n)
     // the other code path returns a pointer to a heap location.
     // If we don't have a name already, then tzname wouldn't be any
     // better, so just fall back.
-    return uprv_strdup("");
+    തിരികെ uprv_strdup("");
 #endif // !U_TZNAME
 
-#else
+#അല്ലെങ്കിൽ
 
 /*#if U_PLATFORM_IS_DARWIN_BASED
     int ret;
@@ -1155,40 +1155,40 @@ uprv_tzname(int n)
 
 /* This code can be temporarily disabled to test tzname resolution later on. */
 #ifndef DEBUG_TZNAME
-#if U_PLATFORM == U_PF_ANDROID
+#എങ്കിൽ U_PLATFORM == U_PF_ANDROID
     tzid = gAndroidTimeZone;
-#else
+#അല്ലെങ്കിൽ
     tzid = getenv("TZ");
 #endif
-    if (tzid != nullptr && isValidOlsonID(tzid)
-#if U_PLATFORM == U_PF_SOLARIS
+    എങ്കിൽ (tzid != nullptr && isValidOlsonID(tzid)
+#എങ്കിൽ U_PLATFORM == U_PF_SOLARIS
     /* Don't misinterpret TZ "localtime" on Solaris as a time zone name. */
         && uprv_strcmp(tzid, TZ_ENV_CHECK) != 0
 #endif
     ) {
         /* The colon forces tzset() to treat the remainder as zoneinfo path */
-        if (tzid[0] == ':') {
+        എങ്കിൽ (tzid[0] == ':') {
             tzid++;
         }
         /* This might be a good Olson ID. */
         skipZoneIDPrefix(&tzid);
-        return tzid;
+        തിരികെ tzid;
     }
     /* else U_TZNAME will give a better result. */
 #endif
 
-#if defined(CHECK_LOCALTIME_LINK) && !defined(DEBUG_SKIP_LOCALTIME_LINK)
+#എങ്കിൽ defined(CHECK_LOCALTIME_LINK) && !defined(DEBUG_SKIP_LOCALTIME_LINK)
     /* Caller must handle threading issues */
-    if (gTimeZoneBufferPtr == nullptr) {
+    എങ്കിൽ (gTimeZoneBufferPtr == nullptr) {
         /*
         This is a trick to look at the name of the link to get the Olson ID
         because the tzfile contents is underspecified.
         This isn't guaranteed to work because it may not be a symlink.
         */
-        char *ret = realpath(TZDEFAULT, gTimeZoneBuffer);
-        if (ret != nullptr && uprv_strcmp(TZDEFAULT, gTimeZoneBuffer) != 0) {
+        അക്ഷരം *ret = realpath(TZDEFAULT, gTimeZoneBuffer);
+        എങ്കിൽ (ret != nullptr && uprv_strcmp(TZDEFAULT, gTimeZoneBuffer) != 0) {
             int32_t tzZoneInfoTailLen = uprv_strlen(TZZONEINFOTAIL);
-            const char *tzZoneInfoTailPtr = uprv_strstr(gTimeZoneBuffer, TZZONEINFOTAIL);
+            സ്ഥിരം അക്ഷരം *tzZoneInfoTailPtr = uprv_strstr(gTimeZoneBuffer, TZZONEINFOTAIL);
             // MacOS14 has the realpath as something like
             // /usr/share/zoneinfo.default/Australia/Melbourne
             // which will not have "/zoneinfo/" in the path.
@@ -1196,60 +1196,60 @@ uprv_tzname(int n)
             // /var/db/timezone/zoneinfo/Australia/Melbourne
             // We also fall back to reading the link if the realpath leads to something like
             // /usr/share/zoneinfo/posixrules
-            if (tzZoneInfoTailPtr == nullptr ||
+            എങ്കിൽ (tzZoneInfoTailPtr == nullptr ||
                     uprv_strcmp(tzZoneInfoTailPtr + tzZoneInfoTailLen, "posixrules") == 0) {
-                ssize_t size = readlink(TZDEFAULT, gTimeZoneBuffer, sizeof(gTimeZoneBuffer)-1);
-                if (size > 0) {
+                ssize_t size = readlink(TZDEFAULT, gTimeZoneBuffer, വലുപ്പം(gTimeZoneBuffer)-1);
+                എങ്കിൽ (size > 0) {
                     gTimeZoneBuffer[size] = 0;
                     tzZoneInfoTailPtr = uprv_strstr(gTimeZoneBuffer, TZZONEINFOTAIL);
                 }
             }
-            if (tzZoneInfoTailPtr != nullptr) {
+            എങ്കിൽ (tzZoneInfoTailPtr != nullptr) {
                 tzZoneInfoTailPtr += tzZoneInfoTailLen;
                 skipZoneIDPrefix(&tzZoneInfoTailPtr);
-                if (isValidOlsonID(tzZoneInfoTailPtr)) {
-                    return (gTimeZoneBufferPtr = tzZoneInfoTailPtr);
+                എങ്കിൽ (isValidOlsonID(tzZoneInfoTailPtr)) {
+                    തിരികെ (gTimeZoneBufferPtr = tzZoneInfoTailPtr);
                 }
             }
-        } else {
-#if defined(SEARCH_TZFILE)
-            DefaultTZInfo* tzInfo = (DefaultTZInfo*)uprv_malloc(sizeof(DefaultTZInfo));
-            if (tzInfo != nullptr) {
+        } അല്ലെങ്കിൽ {
+#എങ്കിൽ defined(തിരയൽ_TZFILE)
+            DefaultTZInfo* tzInfo = (DefaultTZInfo*)uprv_malloc(വലുപ്പം(DefaultTZInfo));
+            എങ്കിൽ (tzInfo != nullptr) {
                 tzInfo->defaultTZBuffer = nullptr;
                 tzInfo->defaultTZFileSize = 0;
                 tzInfo->defaultTZFilePtr = fopen(TZDEFAULT, "r");
                 tzInfo->defaultTZPosition = 0;
 
-                gTimeZoneBufferPtr = searchForTZFile(TZZONEINFO, tzInfo);
+                gTimeZoneBufferPtr = തിരയൽ_For_TZFile(TZZONEINFO, tzInfo);
 
                 /* Free previously allocated memory */
-                if (tzInfo->defaultTZBuffer != nullptr) {
+                എങ്കിൽ (tzInfo->defaultTZBuffer != nullptr) {
                     uprv_free(tzInfo->defaultTZBuffer);
                 }
-                if (tzInfo->defaultTZFilePtr != nullptr) {
+                എങ്കിൽ (tzInfo->defaultTZFilePtr != nullptr) {
                     fclose(tzInfo->defaultTZFilePtr);
                 }
                 uprv_free(tzInfo);
             }
 
-            if (gTimeZoneBufferPtr != nullptr && isValidOlsonID(gTimeZoneBufferPtr)) {
-                return gTimeZoneBufferPtr;
+            എങ്കിൽ (gTimeZoneBufferPtr != nullptr && isValidOlsonID(gTimeZoneBufferPtr)) {
+                തിരികെ gTimeZoneBufferPtr;
             }
 #endif
         }
     }
-    else {
-        return gTimeZoneBufferPtr;
+    അല്ലെങ്കിൽ {
+        തിരികെ gTimeZoneBufferPtr;
     }
 #endif
 #endif
 
 #ifdef U_TZNAME
-#if U_PLATFORM_USES_ONLY_WIN32_API
+#എങ്കിൽ U_PLATFORM_USES_ONLY_WIN32_API
     /* The return value is free'd in timezone.cpp on Windows because
      * the other code path returns a pointer to a heap location. */
-    return uprv_strdup(U_TZNAME[n]);
-#else
+    തിരികെ uprv_strdup(U_TZNAME[n]);
+#അല്ലെങ്കിൽ
     /*
     U_TZNAME is usually a non-unique abbreviation, which isn't normally usable.
     So we remap the abbreviation to an olson ID.
@@ -1259,49 +1259,49 @@ uprv_tzname(int n)
     uprv_detectWindowsTimeZone should have already given the correct answer.
     */
     {
-        struct tm juneSol, decemberSol;
-        int daylightType;
-        static const time_t juneSolstice=1182478260; /*2007-06-21 18:11 UT*/
-        static const time_t decemberSolstice=1198332540; /*2007-12-22 06:09 UT*/
+        ഘടന tm juneSol, decemberSol;
+        പൂർണ്ണസംഖ്യ daylightType;
+        സ്ഥിതം സ്ഥിരം time_t juneSolstice=1182478260; /*2007-06-21 18:11 UT*/
+        സ്ഥിതം സ്ഥിരം time_t decemberSolstice=1198332540; /*2007-12-22 06:09 UT*/
 
         /* This probing will tell us when daylight savings occurs.  */
         localtime_r(&juneSolstice, &juneSol);
         localtime_r(&decemberSolstice, &decemberSol);
-        if(decemberSol.tm_isdst > 0) {
+        എങ്കിൽ(decemberSol.tm_isdst > 0) {
           daylightType = U_DAYLIGHT_DECEMBER;
-        } else if(juneSol.tm_isdst > 0) {
+        } അല്ലെങ്കിൽ എങ്കിൽ(juneSol.tm_isdst > 0) {
           daylightType = U_DAYLIGHT_JUNE;
-        } else {
+        } അല്ലെങ്കിൽ {
           daylightType = U_DAYLIGHT_NONE;
         }
         tzid = remapShortTimeZone(U_TZNAME[0], U_TZNAME[1], daylightType, uprv_timezone());
-        if (tzid != nullptr) {
-            return tzid;
+        എങ്കിൽ (tzid != nullptr) {
+            തിരികെ tzid;
         }
     }
-    return U_TZNAME[n];
+    തിരികെ U_TZNAME[n];
 #endif
-#else
-    return "";
+#അല്ലെങ്കിൽ
+    തിരികെ "";
 #endif
 }
 
 /* Get and set the ICU data directory --------------------------------------- */
 
-static icu::UInitOnce gDataDirInitOnce {};
-static char *gDataDirectory = nullptr;
+സ്ഥിതം icu::UInitOnce gDataDirInitOnce {};
+സ്ഥിതം അക്ഷരം *gDataDirectory = nullptr;
 
 UInitOnce gTimeZoneFilesInitOnce {};
-static CharString *gTimeZoneFilesDirectory = nullptr;
+സ്ഥിതം CharString *gTimeZoneFilesDirectory = nullptr;
 
-#if U_POSIX_LOCALE || U_PLATFORM_USES_ONLY_WIN32_API
- static const char *gCorrectedPOSIXLocale = nullptr; /* Sometimes heap allocated */
- static bool gCorrectedPOSIXLocaleHeapAllocated = false;
+#എങ്കിൽ U_POSIX_LOCALE || U_PLATFORM_USES_ONLY_WIN32_API
+ സ്ഥിതം സ്ഥിരം അക്ഷരം *gCorrectedPOSIXLocale = nullptr; /* Sometimes heap allocated */
+ സ്ഥിതം തർക്കം gCorrectedPOSIXLocaleHeapAllocated = അസത്യം;
 #endif
 
-static UBool U_CALLCONV putil_cleanup()
+സ്ഥിതം UBool U_CALLCONV putil_cleanup()
 {
-    if (gDataDirectory && *gDataDirectory) {
+    എങ്കിൽ (gDataDirectory && *gDataDirectory) {
         uprv_free(gDataDirectory);
     }
     gDataDirectory = nullptr;
@@ -1311,57 +1311,57 @@ static UBool U_CALLCONV putil_cleanup()
     gTimeZoneFilesDirectory = nullptr;
     gTimeZoneFilesInitOnce.reset();
 
-#ifdef SEARCH_TZFILE
-    delete gSearchTZFileResult;
-    gSearchTZFileResult = nullptr;
+#ifdef തിരയൽ_TZFILE
+    delete g_തിരയൽ_TZFile_Result;
+    g_തിരയൽ_TZFile_Result = nullptr;
 #endif
 
-#if U_POSIX_LOCALE || U_PLATFORM_USES_ONLY_WIN32_API
-    if (gCorrectedPOSIXLocale && gCorrectedPOSIXLocaleHeapAllocated) {
-        uprv_free(const_cast<char *>(gCorrectedPOSIXLocale));
+#എങ്കിൽ U_POSIX_LOCALE || U_PLATFORM_USES_ONLY_WIN32_API
+    എങ്കിൽ (gCorrectedPOSIXLocale && gCorrectedPOSIXLocaleHeapAllocated) {
+        uprv_free(const_cast<അക്ഷരം *>(gCorrectedPOSIXLocale));
         gCorrectedPOSIXLocale = nullptr;
-        gCorrectedPOSIXLocaleHeapAllocated = false;
+        gCorrectedPOSIXLocaleHeapAllocated = അസത്യം;
     }
 #endif
-    return true;
+    തിരികെ സത്യം;
 }
 
 /*
  * Set the data directory.
  *    Make a copy of the passed string, and set the global data dir to point to it.
  */
-U_CAPI void U_EXPORT2
-u_setDataDirectory(const char *directory) {
-    char *newDataDir;
+U_CAPI ശൂന്യം U_EXPORT2
+u_setDataDirectory(സ്ഥിരം അക്ഷരം *directory) {
+    അക്ഷരം *newDataDir;
     int32_t length;
 
-    if(directory==nullptr || *directory==0) {
+    എങ്കിൽ(directory==nullptr || *directory==0) {
         /* A small optimization to prevent the malloc and copy when the
         shared library is used, and this is a way to make sure that nullptr
         is never returned.
         */
-        newDataDir = (char *)"";
+        newDataDir = (അക്ഷരം *)"";
     }
-    else {
+    അല്ലെങ്കിൽ {
         length=(int32_t)uprv_strlen(directory);
-        newDataDir = (char *)uprv_malloc(length + 2);
+        newDataDir = (അക്ഷരം *)uprv_malloc(length + 2);
         /* Exit out if newDataDir could not be created. */
-        if (newDataDir == nullptr) {
-            return;
+        എങ്കിൽ (newDataDir == nullptr) {
+            തിരികെ;
         }
         uprv_strcpy(newDataDir, directory);
 
-#if (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
+#എങ്കിൽ (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
         {
-            char *p;
-            while((p = uprv_strchr(newDataDir, U_FILE_ALT_SEP_CHAR)) != nullptr) {
+            അക്ഷരം *p;
+            ആകുമ്പോൾ((p = uprv_strchr(newDataDir, U_FILE_ALT_SEP_CHAR)) != nullptr) {
                 *p = U_FILE_SEP_CHAR;
             }
         }
 #endif
     }
 
-    if (gDataDirectory && *gDataDirectory) {
+    എങ്കിൽ (gDataDirectory && *gDataDirectory) {
         uprv_free(gDataDirectory);
     }
     gDataDirectory = newDataDir;
@@ -1369,85 +1369,85 @@ u_setDataDirectory(const char *directory) {
 }
 
 U_CAPI UBool U_EXPORT2
-uprv_pathIsAbsolute(const char *path)
+uprv_pathIsAbsolute(സ്ഥിരം അക്ഷരം *path)
 {
-  if(!path || !*path) {
-    return false;
+  എങ്കിൽ(!path || !*path) {
+    തിരികെ അസത്യം;
   }
 
-  if(*path == U_FILE_SEP_CHAR) {
-    return true;
+  എങ്കിൽ(*path == U_FILE_SEP_CHAR) {
+    തിരികെ സത്യം;
   }
 
-#if (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
-  if(*path == U_FILE_ALT_SEP_CHAR) {
-    return true;
+#എങ്കിൽ (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
+  എങ്കിൽ(*path == U_FILE_ALT_SEP_CHAR) {
+    തിരികെ സത്യം;
   }
 #endif
 
-#if U_PLATFORM_USES_ONLY_WIN32_API
-  if( (((path[0] >= 'A') && (path[0] <= 'Z')) ||
+#എങ്കിൽ U_PLATFORM_USES_ONLY_WIN32_API
+  എങ്കിൽ( (((path[0] >= 'A') && (path[0] <= 'Z')) ||
        ((path[0] >= 'a') && (path[0] <= 'z'))) &&
       path[1] == ':' ) {
-    return true;
+    തിരികെ സത്യം;
   }
 #endif
 
-  return false;
+  തിരികെ അസത്യം;
 }
 
 /* Backup setting of ICU_DATA_DIR_PREFIX_ENV_VAR
    (needed for some Darwin ICU build environments) */
-#if U_PLATFORM_IS_DARWIN_BASED && defined(TARGET_OS_SIMULATOR) && TARGET_OS_SIMULATOR
-# if !defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
+#എങ്കിൽ U_PLATFORM_IS_DARWIN_BASED && defined(TARGET_OS_SIMULATOR) && TARGET_OS_SIMULATOR
+# എങ്കിൽ !defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
 #  define ICU_DATA_DIR_PREFIX_ENV_VAR "IPHONE_SIMULATOR_ROOT"
 # endif
 #endif
 
-#if defined(ICU_DATA_DIR_WINDOWS)
+#എങ്കിൽ defined(ICU_DATA_DIR_WINDOWS)
 // Helper function to get the ICU Data Directory under the Windows directory location.
-static BOOL U_CALLCONV getIcuDataDirectoryUnderWindowsDirectory(char* directoryBuffer, UINT bufferLength)
+സ്ഥിതം BOOL U_CALLCONV getIcuDataDirectoryUnderWindowsDirectory(അക്ഷരം* directoryBuffer, UINT bufferLength)
 {
     wchar_t windowsPath[MAX_PATH];
-    char windowsPathUtf8[MAX_PATH];
+    അക്ഷരം windowsPathUtf8[MAX_PATH];
 
     UINT length = GetSystemWindowsDirectoryW(windowsPath, UPRV_LENGTHOF(windowsPath));
-    if ((length > 0) && (length < (UPRV_LENGTHOF(windowsPath) - 1))) {
+    എങ്കിൽ ((length > 0) && (length < (UPRV_LENGTHOF(windowsPath) - 1))) {
         // Convert UTF-16 to a UTF-8 string.
         UErrorCode status = U_ZERO_ERROR;
         int32_t windowsPathUtf8Len = 0;
         u_strToUTF8(windowsPathUtf8, static_cast<int32_t>(UPRV_LENGTHOF(windowsPathUtf8)),
-            &windowsPathUtf8Len, reinterpret_cast<const char16_t*>(windowsPath), -1, &status);
+            &windowsPathUtf8Len, reinterpret_cast<സ്ഥിരം char16_t*>(windowsPath), -1, &status);
 
-        if (U_SUCCESS(status) && (status != U_STRING_NOT_TERMINATED_WARNING) &&
+        എങ്കിൽ (U_SUCCESS(status) && (status != U_STRING_NOT_TERMINATED_WARNING) &&
             (windowsPathUtf8Len < (UPRV_LENGTHOF(windowsPathUtf8) - 1))) {
             // Ensure it always has a separator, so we can append the ICU data path.
-            if (windowsPathUtf8[windowsPathUtf8Len - 1] != U_FILE_SEP_CHAR) {
+            എങ്കിൽ (windowsPathUtf8[windowsPathUtf8Len - 1] != U_FILE_SEP_CHAR) {
                 windowsPathUtf8[windowsPathUtf8Len++] = U_FILE_SEP_CHAR;
                 windowsPathUtf8[windowsPathUtf8Len] = '\0';
             }
             // Check if the concatenated string will fit.
-            if ((windowsPathUtf8Len + UPRV_LENGTHOF(ICU_DATA_DIR_WINDOWS)) < bufferLength) {
+            എങ്കിൽ ((windowsPathUtf8Len + UPRV_LENGTHOF(ICU_DATA_DIR_WINDOWS)) < bufferLength) {
                 uprv_strcpy(directoryBuffer, windowsPathUtf8);
                 uprv_strcat(directoryBuffer, ICU_DATA_DIR_WINDOWS);
-                return true;
+                തിരികെ സത്യം;
             }
         }
     }
 
-    return false;
+    തിരികെ അസത്യം;
 }
 #endif
 
-static void U_CALLCONV dataDirectoryInitFn() {
+സ്ഥിതം ശൂന്യം U_CALLCONV dataDirectoryInitFn() {
     /* If we already have the directory, then return immediately. Will happen if user called
      * u_setDataDirectory().
      */
-    if (gDataDirectory) {
-        return;
+    എങ്കിൽ (gDataDirectory) {
+        തിരികെ;
     }
 
-    const char *path = nullptr;
+    സ്ഥിരം അക്ഷരം *path = nullptr;
 
     /*
     When ICU_NO_USER_DATA_OVERRIDE is defined, users aren't allowed to
@@ -1462,9 +1462,9 @@ static void U_CALLCONV dataDirectoryInitFn() {
     There may also be some platforms where environment variables
     are not allowed.
     */
-#   if !defined(ICU_NO_USER_DATA_OVERRIDE) && !UCONFIG_NO_FILE_IO
+#   എങ്കിൽ !defined(ICU_NO_USER_DATA_OVERRIDE) && !UCONFIG_NO_FILE_IO
     /* First try to get the environment variable */
-#     if U_PLATFORM_HAS_WINUWP_API == 0  // Windows UWP does not support getenv
+#     എങ്കിൽ U_PLATFORM_HAS_WINUWP_API == 0  // Windows UWP does not support getenv
         path=getenv("ICU_DATA");
 #     endif
 #   endif
@@ -1476,36 +1476,36 @@ static void U_CALLCONV dataDirectoryInitFn() {
      * directory of the data dat file. Users should use ICU_DATA_DIR if they want to
      * set their own path.
      */
-#if defined(ICU_DATA_DIR) || defined(U_ICU_DATA_DEFAULT_DIR)
-# if defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
-    char datadir_path_buffer[PATH_MAX];
+#എങ്കിൽ defined(ICU_DATA_DIR) || defined(U_ICU_DATA_DEFAULT_DIR)
+# എങ്കിൽ defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
+    അക്ഷരം datadir_path_buffer[PATH_MAX];
 # endif
-    if(path==nullptr || *path==0) {
-# if defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
-        const char *prefix = getenv(ICU_DATA_DIR_PREFIX_ENV_VAR);
+    എങ്കിൽ(path==nullptr || *path==0) {
+# എങ്കിൽ defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
+        സ്ഥിരം അക്ഷരം *prefix = getenv(ICU_DATA_DIR_PREFIX_ENV_VAR);
 # endif
 # ifdef ICU_DATA_DIR
         path=ICU_DATA_DIR;
-# else
+# അല്ലെങ്കിൽ
         path=U_ICU_DATA_DEFAULT_DIR;
 # endif
-# if defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
-        if (prefix != nullptr) {
-            snprintf(datadir_path_buffer, sizeof(datadir_path_buffer), "%s%s", prefix, path);
+# എങ്കിൽ defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
+        എങ്കിൽ (prefix != nullptr) {
+            snprintf(datadir_path_buffer, വലുപ്പം(datadir_path_buffer), "%s%s", prefix, path);
             path=datadir_path_buffer;
         }
 # endif
     }
 #endif
 
-#if defined(ICU_DATA_DIR_WINDOWS)
-    char datadir_path_buffer[MAX_PATH];
-    if (getIcuDataDirectoryUnderWindowsDirectory(datadir_path_buffer, UPRV_LENGTHOF(datadir_path_buffer))) {
+#എങ്കിൽ defined(ICU_DATA_DIR_WINDOWS)
+    അക്ഷരം datadir_path_buffer[MAX_PATH];
+    എങ്കിൽ (getIcuDataDirectoryUnderWindowsDirectory(datadir_path_buffer, UPRV_LENGTHOF(datadir_path_buffer))) {
         path = datadir_path_buffer;
     }
 #endif
 
-    if(path==nullptr) {
+    എങ്കിൽ(path==nullptr) {
         /* It looks really bad, set it to something. */
         path = "";
     }
@@ -1513,21 +1513,21 @@ static void U_CALLCONV dataDirectoryInitFn() {
     u_setDataDirectory(path);
 }
 
-U_CAPI const char * U_EXPORT2
+U_CAPI സ്ഥിരം അക്ഷരം * U_EXPORT2
 u_getDataDirectory() {
     umtx_initOnce(gDataDirInitOnce, &dataDirectoryInitFn);
-    return gDataDirectory;
+    തിരികെ gDataDirectory;
 }
 
-static void setTimeZoneFilesDir(const char *path, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return;
+സ്ഥിതം ശൂന്യം setTimeZoneFilesDir(സ്ഥിരം അക്ഷരം *path, UErrorCode &status) {
+    എങ്കിൽ (U_FAILURE(status)) {
+        തിരികെ;
     }
     gTimeZoneFilesDirectory->clear();
     gTimeZoneFilesDirectory->append(path, status);
-#if (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
-    char *p = gTimeZoneFilesDirectory->data();
-    while ((p = uprv_strchr(p, U_FILE_ALT_SEP_CHAR)) != nullptr) {
+#എങ്കിൽ (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
+    അക്ഷരം *p = gTimeZoneFilesDirectory->data();
+    ആകുമ്പോൾ ((p = uprv_strchr(p, U_FILE_ALT_SEP_CHAR)) != nullptr) {
         *p = U_FILE_SEP_CHAR;
     }
 #endif
@@ -1536,51 +1536,51 @@ static void setTimeZoneFilesDir(const char *path, UErrorCode &status) {
 #define TO_STRING(x) TO_STRING_2(x)
 #define TO_STRING_2(x) #x
 
-static void U_CALLCONV TimeZoneDataDirInitFn(UErrorCode &status) {
+സ്ഥിതം ശൂന്യം U_CALLCONV TimeZoneDataDirInitFn(UErrorCode &status) {
     U_ASSERT(gTimeZoneFilesDirectory == nullptr);
     ucln_common_registerCleanup(UCLN_COMMON_PUTIL, putil_cleanup);
-    gTimeZoneFilesDirectory = new CharString();
-    if (gTimeZoneFilesDirectory == nullptr) {
+    gTimeZoneFilesDirectory = പുതിയ CharString();
+    എങ്കിൽ (gTimeZoneFilesDirectory == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        തിരികെ;
     }
 
-    const char *dir = "";
+    സ്ഥിരം അക്ഷരം *dir = "";
 
-#if defined(ICU_TIMEZONE_FILES_DIR_PREFIX_ENV_VAR)
-    char timezonefilesdir_path_buffer[PATH_MAX];
-    const char *prefix = getenv(ICU_TIMEZONE_FILES_DIR_PREFIX_ENV_VAR);
+#എങ്കിൽ defined(ICU_TIMEZONE_FILES_DIR_PREFIX_ENV_VAR)
+    അക്ഷരം timezonefilesdir_path_buffer[PATH_MAX];
+    സ്ഥിരം അക്ഷരം *prefix = getenv(ICU_TIMEZONE_FILES_DIR_PREFIX_ENV_VAR);
 #endif
 
-#if U_PLATFORM_HAS_WINUWP_API == 1
+#എങ്കിൽ U_PLATFORM_HAS_WINUWP_API == 1
 // The UWP version does not support the environment variable setting.
 
-# if defined(ICU_DATA_DIR_WINDOWS)
+# എങ്കിൽ defined(ICU_DATA_DIR_WINDOWS)
     // When using the Windows system data, we can possibly pick up time zone data from the Windows directory.
-    char datadir_path_buffer[MAX_PATH];
-    if (getIcuDataDirectoryUnderWindowsDirectory(datadir_path_buffer, UPRV_LENGTHOF(datadir_path_buffer))) {
+    അക്ഷരം datadir_path_buffer[MAX_PATH];
+    എങ്കിൽ (getIcuDataDirectoryUnderWindowsDirectory(datadir_path_buffer, UPRV_LENGTHOF(datadir_path_buffer))) {
         dir = datadir_path_buffer;
     }
 # endif
 
-#else
+#അല്ലെങ്കിൽ
     dir = getenv("ICU_TIMEZONE_FILES_DIR");
 #endif // U_PLATFORM_HAS_WINUWP_API
 
-#if defined(U_TIMEZONE_FILES_DIR)
-    if (dir == nullptr) {
+#എങ്കിൽ defined(U_TIMEZONE_FILES_DIR)
+    എങ്കിൽ (dir == nullptr) {
         // Build time configuration setting.
         dir = TO_STRING(U_TIMEZONE_FILES_DIR);
     }
 #endif
 
-    if (dir == nullptr) {
+    എങ്കിൽ (dir == nullptr) {
         dir = "";
     }
 
-#if defined(ICU_TIMEZONE_FILES_DIR_PREFIX_ENV_VAR)
-    if (prefix != nullptr) {
-        snprintf(timezonefilesdir_path_buffer, sizeof(timezonefilesdir_path_buffer), "%s%s", prefix, dir);
+#എങ്കിൽ defined(ICU_TIMEZONE_FILES_DIR_PREFIX_ENV_VAR)
+    എങ്കിൽ (prefix != nullptr) {
+        snprintf(timezonefilesdir_path_buffer, വലുപ്പം(timezonefilesdir_path_buffer), "%s%s", prefix, dir);
         dir = timezonefilesdir_path_buffer;
     }
 #endif
@@ -1589,14 +1589,14 @@ static void U_CALLCONV TimeZoneDataDirInitFn(UErrorCode &status) {
 }
 
 
-U_CAPI const char * U_EXPORT2
+U_CAPI സ്ഥിരം അക്ഷരം * U_EXPORT2
 u_getTimeZoneFilesDirectory(UErrorCode *status) {
     umtx_initOnce(gTimeZoneFilesInitOnce, &TimeZoneDataDirInitFn, *status);
-    return U_SUCCESS(*status) ? gTimeZoneFilesDirectory->data() : "";
+    തിരികെ U_SUCCESS(*status) ? gTimeZoneFilesDirectory->data() : "";
 }
 
-U_CAPI void U_EXPORT2
-u_setTimeZoneFilesDirectory(const char *path, UErrorCode *status) {
+U_CAPI ശൂന്യം U_EXPORT2
+u_setTimeZoneFilesDirectory(സ്ഥിരം അക്ഷരം *path, UErrorCode *status) {
     umtx_initOnce(gTimeZoneFilesInitOnce, &TimeZoneDataDirInitFn, *status);
     setTimeZoneFilesDir(path, *status);
 
@@ -1606,15 +1606,15 @@ u_setTimeZoneFilesDirectory(const char *path, UErrorCode *status) {
 }
 
 
-#if U_POSIX_LOCALE
+#എങ്കിൽ U_POSIX_LOCALE
 /* A helper function used by uprv_getPOSIXIDForDefaultLocale and
  * uprv_getPOSIXIDForDefaultCodepage. Returns the posix locale id for
  * LC_CTYPE and LC_MESSAGES. It doesn't support other locale categories.
  */
-static const char *uprv_getPOSIXIDForCategory(int category)
+സ്ഥിതം സ്ഥിരം അക്ഷരം *uprv_getPOSIXIDForCategory(പൂർണ്ണസംഖ്യ category)
 {
-    const char* posixID = nullptr;
-    if (category == LC_MESSAGES || category == LC_CTYPE) {
+    സ്ഥിരം അക്ഷരം* posixID = nullptr;
+    എങ്കിൽ (category == LC_MESSAGES || category == LC_CTYPE) {
         /*
         * On Solaris two different calls to setlocale can result in
         * different values. Only get this value once.
@@ -1634,7 +1634,7 @@ static const char *uprv_getPOSIXIDForCategory(int category)
         * of nullptr, will modify the libc behavior.
         */
         posixID = setlocale(category, nullptr);
-        if ((posixID == nullptr)
+        എങ്കിൽ ((posixID == nullptr)
             || (uprv_strcmp("C", posixID) == 0)
             || (uprv_strcmp("POSIX", posixID) == 0))
         {
@@ -1643,21 +1643,21 @@ static const char *uprv_getPOSIXIDForCategory(int category)
             /* Solaris speaks POSIX -  See IEEE Std 1003.1-2008
              * This is needed to properly handle empty env. variables
              */
-#if U_PLATFORM == U_PF_SOLARIS
-            if ((posixID == 0) || (posixID[0] == '\0')) {
+#എങ്കിൽ U_PLATFORM == U_PF_SOLARIS
+            എങ്കിൽ ((posixID == 0) || (posixID[0] == '\0')) {
                 posixID = getenv(category == LC_MESSAGES ? "LC_MESSAGES" : "LC_CTYPE");
-                if ((posixID == 0) || (posixID[0] == '\0')) {
-#else
-            if (posixID == nullptr) {
+                എങ്കിൽ ((posixID == 0) || (posixID[0] == '\0')) {
+#അല്ലെങ്കിൽ
+            എങ്കിൽ (posixID == nullptr) {
                 posixID = getenv(category == LC_MESSAGES ? "LC_MESSAGES" : "LC_CTYPE");
-                if (posixID == nullptr) {
+                എങ്കിൽ (posixID == nullptr) {
 #endif
                     posixID = getenv("LANG");
                 }
             }
         }
     }
-    if ((posixID == nullptr)
+    എങ്കിൽ ((posixID == nullptr)
         || (uprv_strcmp("C", posixID) == 0)
         || (uprv_strcmp("POSIX", posixID) == 0))
     {
@@ -1668,41 +1668,41 @@ static const char *uprv_getPOSIXIDForCategory(int category)
         // Leave this mapping here for the uprv_getPOSIXIDForDefaultCodepage()
         // caller which expects to see "en_US_POSIX" in many branches.
     }
-    return posixID;
+    തിരികെ posixID;
 }
 
 /* Return just the POSIX id for the default locale, whatever happens to be in
  * it. It gets the value from LC_MESSAGES and indirectly from LC_ALL and LANG.
  */
-static const char *uprv_getPOSIXIDForDefaultLocale()
+സ്ഥിതം സ്ഥിരം അക്ഷരം *uprv_getPOSIXIDForDefaultLocale()
 {
-    static const char* posixID = nullptr;
-    if (posixID == nullptr) {
+    സ്ഥിതം സ്ഥിരം അക്ഷരം* posixID = nullptr;
+    എങ്കിൽ (posixID == nullptr) {
         posixID = uprv_getPOSIXIDForCategory(LC_MESSAGES);
     }
-    return posixID;
+    തിരികെ posixID;
 }
 
-#if !U_CHARSET_IS_UTF8
+#എങ്കിൽ !U_CHARSET_IS_UTF8
 /* Return just the POSIX id for the default codepage, whatever happens to be in
  * it. It gets the value from LC_CTYPE and indirectly from LC_ALL and LANG.
  */
-static const char *uprv_getPOSIXIDForDefaultCodepage()
+സ്ഥിതം സ്ഥിരം അക്ഷരം *uprv_getPOSIXIDForDefaultCodepage()
 {
-    static const char* posixID = nullptr;
-    if (posixID == 0) {
+    സ്ഥിതം സ്ഥിരം അക്ഷരം* posixID = nullptr;
+    എങ്കിൽ (posixID == 0) {
         posixID = uprv_getPOSIXIDForCategory(LC_CTYPE);
     }
-    return posixID;
+    തിരികെ posixID;
 }
 #endif
 #endif
 
 /* NOTE: The caller should handle thread safety */
-U_CAPI const char* U_EXPORT2
+U_CAPI സ്ഥിരം അക്ഷരം* U_EXPORT2
 uprv_getDefaultLocaleID()
 {
-#if U_POSIX_LOCALE
+#എങ്കിൽ U_POSIX_LOCALE
 /*
   Note that:  (a '!' means the ID is improper somehow)
      LC_ALL  ---->     default_loc          codepage
@@ -1725,7 +1725,7 @@ The variant cannot have dots in it.
 The 'rightmost' variant (@xxx) wins.
 The leftmost codepage (.xxx) wins.
 */
-    const char* posixID = uprv_getPOSIXIDForDefaultLocale();
+    സ്ഥിരം അക്ഷരം* posixID = uprv_getPOSIXIDForDefaultLocale();
 
     /* Format: (no spaces)
     ll [ _CC ] [ . MM ] [ @ VV]
@@ -1733,27 +1733,27 @@ The leftmost codepage (.xxx) wins.
       l = lang, C = ctry, M = charmap, V = variant
     */
 
-    if (gCorrectedPOSIXLocale != nullptr) {
-        return gCorrectedPOSIXLocale;
+    എങ്കിൽ (gCorrectedPOSIXLocale != nullptr) {
+        തിരികെ gCorrectedPOSIXLocale;
     }
 
     // Copy the ID into owned memory.
     // Over-allocate in case we replace "C" with "en_US_POSIX" (+10), + null termination
-    char *correctedPOSIXLocale = static_cast<char *>(uprv_malloc(uprv_strlen(posixID) + 10 + 1));
-    if (correctedPOSIXLocale == nullptr) {
-        return nullptr;
+    അക്ഷരം *correctedPOSIXLocale = static_cast<അക്ഷരം *>(uprv_malloc(uprv_strlen(posixID) + 10 + 1));
+    എങ്കിൽ (correctedPOSIXLocale == nullptr) {
+        തിരികെ nullptr;
     }
     uprv_strcpy(correctedPOSIXLocale, posixID);
 
-    char *limit;
-    if ((limit = uprv_strchr(correctedPOSIXLocale, '.')) != nullptr) {
+    അക്ഷരം *limit;
+    എങ്കിൽ ((limit = uprv_strchr(correctedPOSIXLocale, '.')) != nullptr) {
         *limit = 0;
     }
-    if ((limit = uprv_strchr(correctedPOSIXLocale, '@')) != nullptr) {
+    എങ്കിൽ ((limit = uprv_strchr(correctedPOSIXLocale, '@')) != nullptr) {
         *limit = 0;
     }
 
-    if ((uprv_strcmp("C", correctedPOSIXLocale) == 0) // no @ variant
+    എങ്കിൽ ((uprv_strcmp("C", correctedPOSIXLocale) == 0) // no @ variant
         || (uprv_strcmp("POSIX", correctedPOSIXLocale) == 0)) {
       // Raw input was C.* or POSIX.*, Give it a nice POSIX default value.
       // (The "C"/"POSIX" case is handled in uprv_getPOSIXIDForCategory())
@@ -1761,31 +1761,31 @@ The leftmost codepage (.xxx) wins.
     }
 
     /* Note that we scan the *uncorrected* ID. */
-    const char *p;
-    if ((p = uprv_strrchr(posixID, '@')) != nullptr) {
+    സ്ഥിരം അക്ഷരം *p;
+    എങ്കിൽ ((p = uprv_strrchr(posixID, '@')) != nullptr) {
         p++;
 
         /* Take care of any special cases here.. */
-        if (!uprv_strcmp(p, "nynorsk")) {
+        എങ്കിൽ (!uprv_strcmp(p, "nynorsk")) {
             p = "NY";
             /* Don't worry about no__NY. In practice, it won't appear. */
         }
 
-        if (uprv_strchr(correctedPOSIXLocale,'_') == nullptr) {
+        എങ്കിൽ (uprv_strchr(correctedPOSIXLocale,'_') == nullptr) {
             uprv_strcat(correctedPOSIXLocale, "__"); /* aa@b -> aa__b (note this can make the new locale 1 char longer) */
         }
-        else {
+        അല്ലെങ്കിൽ {
             uprv_strcat(correctedPOSIXLocale, "_"); /* aa_CC@b -> aa_CC_b */
         }
 
-        const char *q;
-        if ((q = uprv_strchr(p, '.')) != nullptr) {
+        സ്ഥിരം അക്ഷരം *q;
+        എങ്കിൽ ((q = uprv_strchr(p, '.')) != nullptr) {
             /* How big will the resulting string be? */
             int32_t len = (int32_t)(uprv_strlen(correctedPOSIXLocale) + (q-p));
             uprv_strncat(correctedPOSIXLocale, p, q-p); // do not include charset
             correctedPOSIXLocale[len] = 0;
         }
-        else {
+        അല്ലെങ്കിൽ {
             /* Anything following the @ sign */
             uprv_strcat(correctedPOSIXLocale, p);
         }
@@ -1797,59 +1797,59 @@ The leftmost codepage (.xxx) wins.
          */
     }
 
-    if (gCorrectedPOSIXLocale == nullptr) {
+    എങ്കിൽ (gCorrectedPOSIXLocale == nullptr) {
         gCorrectedPOSIXLocale = correctedPOSIXLocale;
-        gCorrectedPOSIXLocaleHeapAllocated = true;
+        gCorrectedPOSIXLocaleHeapAllocated = സത്യം;
         ucln_common_registerCleanup(UCLN_COMMON_PUTIL, putil_cleanup);
         correctedPOSIXLocale = nullptr;
     }
     posixID = gCorrectedPOSIXLocale;
 
-    if (correctedPOSIXLocale != nullptr) {  /* Was already set - clean up. */
+    എങ്കിൽ (correctedPOSIXLocale != nullptr) {  /* Was already set - clean up. */
         uprv_free(correctedPOSIXLocale);
     }
 
-    return posixID;
+    തിരികെ posixID;
 
-#elif U_PLATFORM_USES_ONLY_WIN32_API
+#അല്ലെങ്കിലെങ്കിൽ U_PLATFORM_USES_ONLY_WIN32_API
 #define POSIX_LOCALE_CAPACITY 64
     UErrorCode status = U_ZERO_ERROR;
-    char *correctedPOSIXLocale = nullptr;
+    അക്ഷരം *correctedPOSIXLocale = nullptr;
 
     // If we have already figured this out just use the cached value
-    if (gCorrectedPOSIXLocale != nullptr) {
-        return gCorrectedPOSIXLocale;
+    എങ്കിൽ (gCorrectedPOSIXLocale != nullptr) {
+        തിരികെ gCorrectedPOSIXLocale;
     }
 
     // No cached value, need to determine the current value
-    static WCHAR windowsLocale[LOCALE_NAME_MAX_LENGTH] = {};
-    int length = GetLocaleInfoEx(LOCALE_NAME_USER_DEFAULT, LOCALE_SNAME, windowsLocale, LOCALE_NAME_MAX_LENGTH);
+    സ്ഥിതം WCHAR windowsLocale[LOCALE_NAME_MAX_LENGTH] = {};
+    പൂർണ്ണസംഖ്യ length = GetLocaleInfoEx(LOCALE_NAME_USER_DEFAULT, LOCALE_SNAME, windowsLocale, LOCALE_NAME_MAX_LENGTH);
 
     // Now we should have a Windows locale name that needs converted to the POSIX style.
-    if (length > 0) // If length is 0, then the GetLocaleInfoEx failed.
+    എങ്കിൽ (length > 0) // If length is 0, then the GetLocaleInfoEx failed.
     {
         // First we need to go from UTF-16 to char (and also convert from _ to - while we're at it.)
-        char modifiedWindowsLocale[LOCALE_NAME_MAX_LENGTH] = {};
+        അക്ഷരം modifiedWindowsLocale[LOCALE_NAME_MAX_LENGTH] = {};
 
         int32_t i;
-        for (i = 0; i < UPRV_LENGTHOF(modifiedWindowsLocale); i++)
+        വേണ്ടി (i = 0; i < UPRV_LENGTHOF(modifiedWindowsLocale); i++)
         {
-            if (windowsLocale[i] == '_')
+            എങ്കിൽ (windowsLocale[i] == '_')
             {
                 modifiedWindowsLocale[i] = '-';
             }
-            else
+            അല്ലെങ്കിൽ
             {
-                modifiedWindowsLocale[i] = static_cast<char>(windowsLocale[i]);
+                modifiedWindowsLocale[i] = static_cast<അക്ഷരം>(windowsLocale[i]);
             }
 
-            if (modifiedWindowsLocale[i] == '\0')
+            എങ്കിൽ (modifiedWindowsLocale[i] == '\0')
             {
-                break;
+                നിർത്തുക;
             }
         }
 
-        if (i >= UPRV_LENGTHOF(modifiedWindowsLocale))
+        എങ്കിൽ (i >= UPRV_LENGTHOF(modifiedWindowsLocale))
         {
             // Ran out of room, can't really happen, maybe we'll be lucky about a matching
             // locale when tags are dropped
@@ -1857,19 +1857,19 @@ The leftmost codepage (.xxx) wins.
         }
 
         // Now normalize the resulting name
-        correctedPOSIXLocale = static_cast<char *>(uprv_malloc(POSIX_LOCALE_CAPACITY + 1));
+        correctedPOSIXLocale = static_cast<അക്ഷരം *>(uprv_malloc(POSIX_LOCALE_CAPACITY + 1));
         /* TODO: Should we just exit on memory allocation failure? */
-        if (correctedPOSIXLocale)
+        എങ്കിൽ (correctedPOSIXLocale)
         {
             int32_t posixLen = uloc_canonicalize(modifiedWindowsLocale, correctedPOSIXLocale, POSIX_LOCALE_CAPACITY, &status);
-            if (U_SUCCESS(status))
+            എങ്കിൽ (U_SUCCESS(status))
             {
                 *(correctedPOSIXLocale + posixLen) = 0;
                 gCorrectedPOSIXLocale = correctedPOSIXLocale;
-                gCorrectedPOSIXLocaleHeapAllocated = true;
+                gCorrectedPOSIXLocaleHeapAllocated = സത്യം;
                 ucln_common_registerCleanup(UCLN_COMMON_PUTIL, putil_cleanup);
             }
-            else
+            അല്ലെങ്കിൽ
             {
                 uprv_free(correctedPOSIXLocale);
             }
@@ -1877,27 +1877,27 @@ The leftmost codepage (.xxx) wins.
     }
 
     // If unable to find a locale we can agree upon, use en-US by default
-    if (gCorrectedPOSIXLocale == nullptr) {
+    എങ്കിൽ (gCorrectedPOSIXLocale == nullptr) {
         gCorrectedPOSIXLocale = "en_US";
     }
-    return gCorrectedPOSIXLocale;
+    തിരികെ gCorrectedPOSIXLocale;
 
-#elif U_PLATFORM == U_PF_OS400
+#അല്ലെങ്കിലെങ്കിൽ U_PLATFORM == U_PF_OS400
     /* locales are process scoped and are by definition thread safe */
-    static char correctedLocale[64];
-    const  char *localeID = getenv("LC_ALL");
-           char *p;
+    സ്ഥിതം അക്ഷരം correctedLocale[64];
+    സ്ഥിരം  അക്ഷരം *localeID = getenv("LC_ALL");
+           അക്ഷരം *p;
 
-    if (localeID == nullptr)
+    എങ്കിൽ (localeID == nullptr)
         localeID = getenv("LANG");
-    if (localeID == nullptr)
+    എങ്കിൽ (localeID == nullptr)
         localeID = setlocale(LC_ALL, nullptr);
     /* Make sure we have something... */
-    if (localeID == nullptr)
-        return "en_US_POSIX";
+    എങ്കിൽ (localeID == nullptr)
+        തിരികെ "en_US_POSIX";
 
     /* Extract the locale name from the path. */
-    if((p = uprv_strrchr(localeID, '/')) != nullptr)
+    എങ്കിൽ((p = uprv_strrchr(localeID, '/')) != nullptr)
     {
         /* Increment p to start of locale name. */
         p++;
@@ -1908,7 +1908,7 @@ The leftmost codepage (.xxx) wins.
     uprv_strcpy(correctedLocale, localeID);
 
     /* Strip off the '.locale' extension. */
-    if((p = uprv_strchr(correctedLocale, '.')) != nullptr) {
+    എങ്കിൽ((p = uprv_strchr(correctedLocale, '.')) != nullptr) {
         *p = 0;
     }
 
@@ -1922,25 +1922,25 @@ The leftmost codepage (.xxx) wins.
     * QLGPGCMA_4 means UTF-32
     * QLGPGCMA_8 means UTF-8
     */
-    if ((uprv_strcmp("C", correctedLocale) == 0) ||
+    എങ്കിൽ ((uprv_strcmp("C", correctedLocale) == 0) ||
         (uprv_strcmp("POSIX", correctedLocale) == 0) ||
         (uprv_strncmp("QLGPGCMA", correctedLocale, 8) == 0))
     {
         uprv_strcpy(correctedLocale, "en_US_POSIX");
     }
-    else
+    അല്ലെങ്കിൽ
     {
         int16_t LocaleLen;
 
         /* Lower case the lang portion. */
-        for(p = correctedLocale; *p != 0 && *p != '_'; p++)
+        വേണ്ടി(p = correctedLocale; *p != 0 && *p != '_'; p++)
         {
             *p = uprv_tolower(*p);
         }
 
         /* Adjust for Euro.  After '_E' add 'URO'. */
         LocaleLen = uprv_strlen(correctedLocale);
-        if (correctedLocale[LocaleLen - 2] == '_' &&
+        എങ്കിൽ (correctedLocale[LocaleLen - 2] == '_' &&
             correctedLocale[LocaleLen - 1] == 'E')
         {
             uprv_strcat(correctedLocale, "URO");
@@ -1949,7 +1949,7 @@ The leftmost codepage (.xxx) wins.
         /* If using Lotus-based locale then convert to
          * equivalent non Lotus.
          */
-        else if (correctedLocale[LocaleLen - 2] == '_' &&
+        അല്ലെങ്കിൽ എങ്കിൽ (correctedLocale[LocaleLen - 2] == '_' &&
             correctedLocale[LocaleLen - 1] == 'L')
         {
             correctedLocale[LocaleLen - 2] = 0;
@@ -1958,27 +1958,27 @@ The leftmost codepage (.xxx) wins.
         /* There are separate simplified and traditional
          * locales called zh_HK_S and zh_HK_T.
          */
-        else if (uprv_strncmp(correctedLocale, "zh_HK", 5) == 0)
+        അല്ലെങ്കിൽ എങ്കിൽ (uprv_strncmp(correctedLocale, "zh_HK", 5) == 0)
         {
             uprv_strcpy(correctedLocale, "zh_HK");
         }
 
         /* A special zh_CN_GBK locale...
         */
-        else if (uprv_strcmp(correctedLocale, "zh_CN_GBK") == 0)
+        അല്ലെങ്കിൽ എങ്കിൽ (uprv_strcmp(correctedLocale, "zh_CN_GBK") == 0)
         {
             uprv_strcpy(correctedLocale, "zh_CN");
         }
 
     }
 
-    return correctedLocale;
+    തിരികെ correctedLocale;
 #endif
 
 }
 
-#if !U_CHARSET_IS_UTF8
-#if U_POSIX_LOCALE
+#എങ്കിൽ !U_CHARSET_IS_UTF8
+#എങ്കിൽ U_POSIX_LOCALE
 /*
 Due to various platform differences, one platform may specify a charset,
 when they really mean a different charset. Remap the names so that they are
@@ -1986,53 +1986,53 @@ compatible with ICU. Only conflicting/ambiguous aliases should be resolved
 here. Before adding anything to this function, please consider adding unique
 names to the ICU alias table in the data directory.
 */
-static const char*
-remapPlatformDependentCodepage(const char *locale, const char *name) {
-    if (locale != nullptr && *locale == 0) {
+സ്ഥിതം സ്ഥിരം അക്ഷരം*
+remapPlatformDependentCodepage(സ്ഥിരം അക്ഷരം *locale, സ്ഥിരം അക്ഷരം *name) {
+    എങ്കിൽ (locale != nullptr && *locale == 0) {
         /* Make sure that an empty locale is handled the same way. */
         locale = nullptr;
     }
-    if (name == nullptr) {
-        return nullptr;
+    എങ്കിൽ (name == nullptr) {
+        തിരികെ nullptr;
     }
-#if U_PLATFORM == U_PF_AIX
-    if (uprv_strcmp(name, "IBM-943") == 0) {
+#എങ്കിൽ U_PLATFORM == U_PF_AIX
+    എങ്കിൽ (uprv_strcmp(name, "IBM-943") == 0) {
         /* Use the ASCII compatible ibm-943 */
         name = "Shift-JIS";
     }
-    else if (uprv_strcmp(name, "IBM-1252") == 0) {
+    അല്ലെങ്കിൽ എങ്കിൽ (uprv_strcmp(name, "IBM-1252") == 0) {
         /* Use the windows-1252 that contains the Euro */
         name = "IBM-5348";
     }
-#elif U_PLATFORM == U_PF_SOLARIS
-    if (locale != nullptr && uprv_strcmp(name, "EUC") == 0) {
+#അല്ലെങ്കിലെങ്കിൽ U_PLATFORM == U_PF_SOLARIS
+    എങ്കിൽ (locale != nullptr && uprv_strcmp(name, "EUC") == 0) {
         /* Solaris underspecifies the "EUC" name. */
-        if (uprv_strcmp(locale, "zh_CN") == 0) {
+        എങ്കിൽ (uprv_strcmp(locale, "zh_CN") == 0) {
             name = "EUC-CN";
         }
-        else if (uprv_strcmp(locale, "zh_TW") == 0) {
+        അല്ലെങ്കിൽ എങ്കിൽ (uprv_strcmp(locale, "zh_TW") == 0) {
             name = "EUC-TW";
         }
-        else if (uprv_strcmp(locale, "ko_KR") == 0) {
+        അല്ലെങ്കിൽ എങ്കിൽ (uprv_strcmp(locale, "ko_KR") == 0) {
             name = "EUC-KR";
         }
     }
-    else if (uprv_strcmp(name, "eucJP") == 0) {
+    അല്ലെങ്കിൽ എങ്കിൽ (uprv_strcmp(name, "eucJP") == 0) {
         /*
         ibm-954 is the best match.
         ibm-33722 is the default for eucJP (similar to Windows).
         */
         name = "eucjis";
     }
-    else if (uprv_strcmp(name, "646") == 0) {
+    അല്ലെങ്കിൽ എങ്കിൽ (uprv_strcmp(name, "646") == 0) {
         /*
          * The default codepage given by Solaris is 646 but the C library routines treat it as if it was
          * ISO-8859-1 instead of US-ASCII(646).
          */
         name = "ISO-8859-1";
     }
-#elif U_PLATFORM_IS_DARWIN_BASED
-    if (locale == nullptr && *name == 0) {
+#അല്ലെങ്കിലെങ്കിൽ U_PLATFORM_IS_DARWIN_BASED
+    എങ്കിൽ (locale == nullptr && *name == 0) {
         /*
         No locale was specified, and an empty name was passed in.
         This usually indicates that nl_langinfo didn't return valid information.
@@ -2040,28 +2040,28 @@ remapPlatformDependentCodepage(const char *locale, const char *name) {
         */
         name = "UTF-8";
     }
-    else if (uprv_strcmp(name, "CP949") == 0) {
+    അല്ലെങ്കിൽ എങ്കിൽ (uprv_strcmp(name, "CP949") == 0) {
         /* Remap CP949 to a similar codepage to avoid issues with backslash and won symbol. */
         name = "EUC-KR";
     }
-    else if (locale != nullptr && uprv_strcmp(locale, "en_US_POSIX") != 0 && uprv_strcmp(name, "US-ASCII") == 0) {
+    അല്ലെങ്കിൽ എങ്കിൽ (locale != nullptr && uprv_strcmp(locale, "en_US_POSIX") != 0 && uprv_strcmp(name, "US-ASCII") == 0) {
         /*
          * For non C/POSIX locale, default the code page to UTF-8 instead of US-ASCII.
          */
         name = "UTF-8";
     }
-#elif U_PLATFORM == U_PF_BSD
-    if (uprv_strcmp(name, "CP949") == 0) {
+#അല്ലെങ്കിലെങ്കിൽ U_PLATFORM == U_PF_BSD
+    എങ്കിൽ (uprv_strcmp(name, "CP949") == 0) {
         /* Remap CP949 to a similar codepage to avoid issues with backslash and won symbol. */
         name = "EUC-KR";
     }
-#elif U_PLATFORM == U_PF_HPUX
-    if (locale != nullptr && uprv_strcmp(locale, "zh_HK") == 0 && uprv_strcmp(name, "big5") == 0) {
+#അല്ലെങ്കിലെങ്കിൽ U_PLATFORM == U_PF_HPUX
+    എങ്കിൽ (locale != nullptr && uprv_strcmp(locale, "zh_HK") == 0 && uprv_strcmp(name, "big5") == 0) {
         /* HP decided to extend big5 as hkbig5 even though it's not compatible :-( */
         /* zh_TW.big5 is not the same charset as zh_HK.big5! */
         name = "hkbig5";
     }
-    else if (uprv_strcmp(name, "eucJP") == 0) {
+    അല്ലെങ്കിൽ എങ്കിൽ (uprv_strcmp(name, "eucJP") == 0) {
         /*
         ibm-1350 is the best match, but unavailable.
         ibm-954 is mostly a superset of ibm-1350.
@@ -2069,18 +2069,18 @@ remapPlatformDependentCodepage(const char *locale, const char *name) {
         */
         name = "eucjis";
     }
-#elif U_PLATFORM == U_PF_LINUX
-    if (locale != nullptr && uprv_strcmp(name, "euc") == 0) {
+#അല്ലെങ്കിലെങ്കിൽ U_PLATFORM == U_PF_LINUX
+    എങ്കിൽ (locale != nullptr && uprv_strcmp(name, "euc") == 0) {
         /* Linux underspecifies the "EUC" name. */
-        if (uprv_strcmp(locale, "korean") == 0) {
+        എങ്കിൽ (uprv_strcmp(locale, "korean") == 0) {
             name = "EUC-KR";
         }
-        else if (uprv_strcmp(locale, "japanese") == 0) {
+        അല്ലെങ്കിൽ എങ്കിൽ (uprv_strcmp(locale, "japanese") == 0) {
             /* See comment below about eucJP */
             name = "eucjis";
         }
     }
-    else if (uprv_strcmp(name, "eucjp") == 0) {
+    അല്ലെങ്കിൽ എങ്കിൽ (uprv_strcmp(name, "eucjp") == 0) {
         /*
         ibm-1350 is the best match, but unavailable.
         ibm-954 is mostly a superset of ibm-1350.
@@ -2088,7 +2088,7 @@ remapPlatformDependentCodepage(const char *locale, const char *name) {
         */
         name = "eucjis";
     }
-    else if (locale != nullptr && uprv_strcmp(locale, "en_US_POSIX") != 0 &&
+    അല്ലെങ്കിൽ എങ്കിൽ (locale != nullptr && uprv_strcmp(locale, "en_US_POSIX") != 0 &&
             (uprv_strcmp(name, "ANSI_X3.4-1968") == 0 || uprv_strcmp(name, "US-ASCII") == 0)) {
         /*
          * For non C/POSIX locale, default the code page to UTF-8 instead of US-ASCII.
@@ -2102,131 +2102,131 @@ remapPlatformDependentCodepage(const char *locale, const char *name) {
      */
 #endif
     /* return nullptr when "" is passed in */
-    if (*name == 0) {
+    എങ്കിൽ (*name == 0) {
         name = nullptr;
     }
-    return name;
+    തിരികെ name;
 }
 
-static const char*
-getCodepageFromPOSIXID(const char *localeName, char * buffer, int32_t buffCapacity)
+സ്ഥിതം സ്ഥിരം അക്ഷരം*
+getCodepageFromPOSIXID(സ്ഥിരം അക്ഷരം *localeName, അക്ഷരം * buffer, int32_t buffCapacity)
 {
-    char localeBuf[100];
-    const char *name = nullptr;
-    char *variant = nullptr;
+    അക്ഷരം localeBuf[100];
+    സ്ഥിരം അക്ഷരം *name = nullptr;
+    അക്ഷരം *variant = nullptr;
 
-    if (localeName != nullptr && (name = (uprv_strchr(localeName, '.'))) != nullptr) {
-        size_t localeCapacity = uprv_min(sizeof(localeBuf), (name-localeName)+1);
+    എങ്കിൽ (localeName != nullptr && (name = (uprv_strchr(localeName, '.'))) != nullptr) {
+        size_t localeCapacity = uprv_min(വലുപ്പം(localeBuf), (name-localeName)+1);
         uprv_strncpy(localeBuf, localeName, localeCapacity);
         localeBuf[localeCapacity-1] = 0; /* ensure NUL termination */
         name = uprv_strncpy(buffer, name+1, buffCapacity);
         buffer[buffCapacity-1] = 0; /* ensure NUL termination */
-        if ((variant = const_cast<char *>(uprv_strchr(name, '@'))) != nullptr) {
+        എങ്കിൽ ((variant = const_cast<അക്ഷരം *>(uprv_strchr(name, '@'))) != nullptr) {
             *variant = 0;
         }
         name = remapPlatformDependentCodepage(localeBuf, name);
     }
-    return name;
+    തിരികെ name;
 }
 #endif
 
-static const char*
+സ്ഥിതം സ്ഥിരം അക്ഷരം*
 int_getDefaultCodepage()
 {
-#if U_PLATFORM == U_PF_OS400
+#എങ്കിൽ U_PLATFORM == U_PF_OS400
     uint32_t ccsid = 37; /* Default to ibm-37 */
-    static char codepage[64];
+    സ്ഥിതം അക്ഷരം codepage[64];
     Qwc_JOBI0400_t jobinfo;
-    Qus_EC_t error = { sizeof(Qus_EC_t) }; /* SPI error code */
+    Qus_EC_t error = { വലുപ്പം(Qus_EC_t) }; /* SPI error code */
 
-    EPT_CALL(QUSRJOBI)(&jobinfo, sizeof(jobinfo), "JOBI0400",
+    EPT_CALL(QUSRJOBI)(&jobinfo, വലുപ്പം(jobinfo), "JOBI0400",
         "*                         ", "                ", &error);
 
-    if (error.Bytes_Available == 0) {
-        if (jobinfo.Coded_Char_Set_ID != 0xFFFF) {
+    എങ്കിൽ (error.Bytes_Available == 0) {
+        എങ്കിൽ (jobinfo.Coded_Char_Set_ID != 0xFFFF) {
             ccsid = (uint32_t)jobinfo.Coded_Char_Set_ID;
         }
-        else if (jobinfo.Default_Coded_Char_Set_Id != 0xFFFF) {
+        അല്ലെങ്കിൽ എങ്കിൽ (jobinfo.Default_Coded_Char_Set_Id != 0xFFFF) {
             ccsid = (uint32_t)jobinfo.Default_Coded_Char_Set_Id;
         }
         /* else use the default */
     }
-    snprintf(codepage, sizeof(codepage), "ibm-%d", ccsid);
-    return codepage;
+    snprintf(codepage, വലുപ്പം(codepage), "ibm-%d", ccsid);
+    തിരികെ codepage;
 
-#elif U_PLATFORM == U_PF_OS390
-    static char codepage[64];
+#അല്ലെങ്കിലെങ്കിൽ U_PLATFORM == U_PF_OS390
+    സ്ഥിതം അക്ഷരം codepage[64];
 
     strncpy(codepage, nl_langinfo(CODESET),63-strlen(UCNV_SWAP_LFNL_OPTION_STRING));
     strcat(codepage,UCNV_SWAP_LFNL_OPTION_STRING);
     codepage[63] = 0; /* NUL terminate */
 
-    return codepage;
+    തിരികെ codepage;
 
-#elif U_PLATFORM_USES_ONLY_WIN32_API
-    static char codepage[64];
-    DWORD codepageNumber = 0;
+#അല്ലെങ്കിലെങ്കിൽ U_PLATFORM_USES_ONLY_WIN32_API
+    സ്ഥിതം അക്ഷരം codepage[64];
+    DWORD codepage_സംഖ്യ = 0;
 
-#if U_PLATFORM_HAS_WINUWP_API == 1
+#എങ്കിൽ U_PLATFORM_HAS_WINUWP_API == 1
     // UWP doesn't have a direct API to get the default ACP as Microsoft would rather
     // have folks use Unicode than a "system" code page, however this is the same
     // codepage as the system default locale codepage.  (FWIW, the system locale is
     // ONLY used for codepage, it should never be used for anything else)
-    GetLocaleInfoEx(LOCALE_NAME_SYSTEM_DEFAULT, LOCALE_IDEFAULTANSICODEPAGE | LOCALE_RETURN_NUMBER,
-        (LPWSTR)&codepageNumber, sizeof(codepageNumber) / sizeof(WCHAR));
-#else
+    GetLocaleInfoEx(LOCALE_NAME_SYSTEM_DEFAULT, LOCALE_IDEFAULTANSICODEPAGE | LOCALE_RETURN_സംഖ്യ,
+        (LPWSTR)&codepage_സംഖ്യ, വലുപ്പം(codepage_സംഖ്യ) / വലുപ്പം(WCHAR));
+#അല്ലെങ്കിൽ
     // Win32 apps can call GetACP
-    codepageNumber = GetACP();
+    codepage_സംഖ്യ = GetACP();
 #endif
     // Special case for UTF-8
-    if (codepageNumber == 65001)
+    എങ്കിൽ (codepage_സംഖ്യ == 65001)
     {
-        return "UTF-8";
+        തിരികെ "UTF-8";
     }
     // Windows codepages can look like windows-1252, so format the found number
     // the numbers are eclectic, however all valid system code pages, besides UTF-8
     // are between 3 and 19999
-    if (codepageNumber > 0 && codepageNumber < 20000)
+    എങ്കിൽ (codepage_സംഖ്യ > 0 && codepage_സംഖ്യ < 20000)
     {
-        snprintf(codepage, sizeof(codepage), "windows-%ld", codepageNumber);
-        return codepage;
+        snprintf(codepage, വലുപ്പം(codepage), "windows-%ld", codepage_സംഖ്യ);
+        തിരികെ codepage;
     }
     // If the codepage number call failed then return UTF-8
-    return "UTF-8";
+    തിരികെ "UTF-8";
 
-#elif U_POSIX_LOCALE
-    static char codesetName[100];
-    const char *localeName = nullptr;
-    const char *name = nullptr;
+#അല്ലെങ്കിലെങ്കിൽ U_POSIX_LOCALE
+    സ്ഥിതം അക്ഷരം codesetName[100];
+    സ്ഥിരം അക്ഷരം *localeName = nullptr;
+    സ്ഥിരം അക്ഷരം *name = nullptr;
 
     localeName = uprv_getPOSIXIDForDefaultCodepage();
-    uprv_memset(codesetName, 0, sizeof(codesetName));
+    uprv_memset(codesetName, 0, വലുപ്പം(codesetName));
     /* On Solaris nl_langinfo returns C locale values unless setlocale
      * was called earlier.
      */
-#if (U_HAVE_NL_LANGINFO_CODESET && U_PLATFORM != U_PF_SOLARIS)
+#എങ്കിൽ (U_HAVE_NL_LANGINFO_CODESET && U_PLATFORM != U_PF_SOLARIS)
     /* When available, check nl_langinfo first because it usually gives more
        useful names. It depends on LC_CTYPE.
        nl_langinfo may use the same buffer as setlocale. */
     {
-        const char *codeset = nl_langinfo(U_NL_LANGINFO_CODESET);
-#if U_PLATFORM_IS_DARWIN_BASED || U_PLATFORM_IS_LINUX_BASED
+        സ്ഥിരം അക്ഷരം *codeset = nl_langinfo(U_NL_LANGINFO_CODESET);
+#എങ്കിൽ U_PLATFORM_IS_DARWIN_BASED || U_PLATFORM_IS_LINUX_BASED
         /*
          * On Linux and MacOSX, ensure that default codepage for non C/POSIX locale is UTF-8
          * instead of ASCII.
          */
-        if (uprv_strcmp(localeName, "en_US_POSIX") != 0) {
+        എങ്കിൽ (uprv_strcmp(localeName, "en_US_POSIX") != 0) {
             codeset = remapPlatformDependentCodepage(localeName, codeset);
-        } else
+        } അല്ലെങ്കിൽ
 #endif
         {
             codeset = remapPlatformDependentCodepage(nullptr, codeset);
         }
 
-        if (codeset != nullptr) {
-            uprv_strncpy(codesetName, codeset, sizeof(codesetName));
-            codesetName[sizeof(codesetName)-1] = 0;
-            return codesetName;
+        എങ്കിൽ (codeset != nullptr) {
+            uprv_strncpy(codesetName, codeset, വലുപ്പം(codesetName));
+            codesetName[വലുപ്പം(codesetName)-1] = 0;
+            തിരികെ codesetName;
         }
     }
 #endif
@@ -2234,35 +2234,35 @@ int_getDefaultCodepage()
     /* Use setlocale in a nice way, and then check some environment variables.
        Maybe the application used setlocale already.
     */
-    uprv_memset(codesetName, 0, sizeof(codesetName));
-    name = getCodepageFromPOSIXID(localeName, codesetName, sizeof(codesetName));
-    if (name) {
+    uprv_memset(codesetName, 0, വലുപ്പം(codesetName));
+    name = getCodepageFromPOSIXID(localeName, codesetName, വലുപ്പം(codesetName));
+    എങ്കിൽ (name) {
         /* if we can find the codeset name from setlocale, return that. */
-        return name;
+        തിരികെ name;
     }
 
-    if (*codesetName == 0)
+    എങ്കിൽ (*codesetName == 0)
     {
         /* Everything failed. Return US ASCII (ISO 646). */
-        (void)uprv_strcpy(codesetName, "US-ASCII");
+        (ശൂന്യം)uprv_strcpy(codesetName, "US-ASCII");
     }
-    return codesetName;
-#else
-    return "US-ASCII";
+    തിരികെ codesetName;
+#അല്ലെങ്കിൽ
+    തിരികെ "US-ASCII";
 #endif
 }
 
 
-U_CAPI const char*  U_EXPORT2
+U_CAPI സ്ഥിരം അക്ഷരം*  U_EXPORT2
 uprv_getDefaultCodepage()
 {
-    static char const  *name = nullptr;
+    സ്ഥിതം അക്ഷരം സ്ഥിരം  *name = nullptr;
     umtx_lock(nullptr);
-    if (name == nullptr) {
+    എങ്കിൽ (name == nullptr) {
         name = int_getDefaultCodepage();
     }
     umtx_unlock(nullptr);
-    return name;
+    തിരികെ name;
 }
 #endif  /* !U_CHARSET_IS_UTF8 */
 
@@ -2271,36 +2271,36 @@ uprv_getDefaultCodepage()
 
 /* version handling --------------------------------------------------------- */
 
-U_CAPI void U_EXPORT2
-u_versionFromString(UVersionInfo versionArray, const char *versionString) {
-    char *end;
+U_CAPI ശൂന്യം U_EXPORT2
+u_versionFromString(UVersionInfo versionArray, സ്ഥിരം അക്ഷരം *versionString) {
+    അക്ഷരം *end;
     uint16_t part=0;
 
-    if(versionArray==nullptr) {
-        return;
+    എങ്കിൽ(versionArray==nullptr) {
+        തിരികെ;
     }
 
-    if(versionString!=nullptr) {
-        for(;;) {
+    എങ്കിൽ(versionString!=nullptr) {
+        വേണ്ടി(;;) {
             versionArray[part]=(uint8_t)uprv_strtoul(versionString, &end, 10);
-            if(end==versionString || ++part==U_MAX_VERSION_LENGTH || *end!=U_VERSION_DELIMITER) {
-                break;
+            എങ്കിൽ(end==versionString || ++part==U_MAX_VERSION_LENGTH || *end!=U_VERSION_DELIMITER) {
+                നിർത്തുക;
             }
             versionString=end+1;
         }
     }
 
-    while(part<U_MAX_VERSION_LENGTH) {
+    ആകുമ്പോൾ(part<U_MAX_VERSION_LENGTH) {
         versionArray[part++]=0;
     }
 }
 
-U_CAPI void U_EXPORT2
-u_versionFromUString(UVersionInfo versionArray, const char16_t *versionString) {
-    if(versionArray!=nullptr && versionString!=nullptr) {
-        char versionChars[U_MAX_VERSION_STRING_LENGTH+1];
+U_CAPI ശൂന്യം U_EXPORT2
+u_versionFromUString(UVersionInfo versionArray, സ്ഥിരം char16_t *versionString) {
+    എങ്കിൽ(versionArray!=nullptr && versionString!=nullptr) {
+        അക്ഷരം versionChars[U_MAX_VERSION_STRING_LENGTH+1];
         int32_t len = u_strlen(versionString);
-        if(len>U_MAX_VERSION_STRING_LENGTH) {
+        എങ്കിൽ(len>U_MAX_VERSION_STRING_LENGTH) {
             len = U_MAX_VERSION_STRING_LENGTH;
         }
         u_UCharsToChars(versionString, versionChars, len);
@@ -2309,66 +2309,66 @@ u_versionFromUString(UVersionInfo versionArray, const char16_t *versionString) {
     }
 }
 
-U_CAPI void U_EXPORT2
-u_versionToString(const UVersionInfo versionArray, char *versionString) {
+U_CAPI ശൂന്യം U_EXPORT2
+u_versionToString(സ്ഥിരം UVersionInfo versionArray, അക്ഷരം *versionString) {
     uint16_t count, part;
     uint8_t field;
 
-    if(versionString==nullptr) {
-        return;
+    എങ്കിൽ(versionString==nullptr) {
+        തിരികെ;
     }
 
-    if(versionArray==nullptr) {
+    എങ്കിൽ(versionArray==nullptr) {
         versionString[0]=0;
-        return;
+        തിരികെ;
     }
 
     /* count how many fields need to be written */
-    for(count=4; count>0 && versionArray[count-1]==0; --count) {
+    വേണ്ടി(count=4; count>0 && versionArray[count-1]==0; --count) {
     }
 
-    if(count <= 1) {
+    എങ്കിൽ(count <= 1) {
         count = 2;
     }
 
     /* write the first part */
     /* write the decimal field value */
     field=versionArray[0];
-    if(field>=100) {
-        *versionString++=(char)('0'+field/100);
+    എങ്കിൽ(field>=100) {
+        *versionString++=(അക്ഷരം)('0'+field/100);
         field%=100;
     }
-    if(field>=10) {
-        *versionString++=(char)('0'+field/10);
+    എങ്കിൽ(field>=10) {
+        *versionString++=(അക്ഷരം)('0'+field/10);
         field%=10;
     }
-    *versionString++=(char)('0'+field);
+    *versionString++=(അക്ഷരം)('0'+field);
 
     /* write the following parts */
-    for(part=1; part<count; ++part) {
+    വേണ്ടി(part=1; part<count; ++part) {
         /* write a dot first */
         *versionString++=U_VERSION_DELIMITER;
 
         /* write the decimal field value */
         field=versionArray[part];
-        if(field>=100) {
-            *versionString++=(char)('0'+field/100);
+        എങ്കിൽ(field>=100) {
+            *versionString++=(അക്ഷരം)('0'+field/100);
             field%=100;
         }
-        if(field>=10) {
-            *versionString++=(char)('0'+field/10);
+        എങ്കിൽ(field>=10) {
+            *versionString++=(അക്ഷരം)('0'+field/10);
             field%=10;
         }
-        *versionString++=(char)('0'+field);
+        *versionString++=(അക്ഷരം)('0'+field);
     }
 
     /* NUL-terminate */
     *versionString=0;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 u_getVersion(UVersionInfo versionArray) {
-    (void)copyright;   // Suppress unused variable warning from clang.
+    (ശൂന്യം)copyright;   // Suppress unused variable warning from clang.
     u_versionFromString(versionArray, U_ICU_VERSION);
 }
 
@@ -2376,134 +2376,134 @@ u_getVersion(UVersionInfo versionArray) {
  * icucfg.h dependent code
  */
 
-#if U_ENABLE_DYLOAD && HAVE_DLOPEN && !U_PLATFORM_USES_ONLY_WIN32_API
+#എങ്കിൽ U_ENABLE_DYLOAD && HAVE_DLOPEN && !U_PLATFORM_USES_ONLY_WIN32_API
 
-#if HAVE_DLFCN_H
+#എങ്കിൽ HAVE_DLFCN_H
 #ifdef __MVS__
 #ifndef __SUSV3
 #define __SUSV3 1
 #endif
 #endif
-#include <dlfcn.h>
+#അന്തര്ഭാവ <dlfcn.h>
 #endif /* HAVE_DLFCN_H */
 
-U_CAPI void * U_EXPORT2
-uprv_dl_open(const char *libName, UErrorCode *status) {
-  void *ret = nullptr;
-  if(U_FAILURE(*status)) return ret;
+U_CAPI ശൂന്യം * U_EXPORT2
+uprv_dl_open(സ്ഥിരം അക്ഷരം *libName, UErrorCode *status) {
+  ശൂന്യം *ret = nullptr;
+  എങ്കിൽ(U_FAILURE(*status)) തിരികെ ret;
   ret =  dlopen(libName, RTLD_NOW|RTLD_GLOBAL);
-  if(ret==nullptr) {
+  എങ്കിൽ(ret==nullptr) {
 #ifdef U_TRACE_DYLOAD
     printf("dlerror on dlopen(%s): %s\n", libName, dlerror());
 #endif
     *status = U_MISSING_RESOURCE_ERROR;
   }
-  return ret;
+  തിരികെ ret;
 }
 
-U_CAPI void U_EXPORT2
-uprv_dl_close(void *lib, UErrorCode *status) {
-  if(U_FAILURE(*status)) return;
+U_CAPI ശൂന്യം U_EXPORT2
+uprv_dl_close(ശൂന്യം *lib, UErrorCode *status) {
+  എങ്കിൽ(U_FAILURE(*status)) തിരികെ;
   dlclose(lib);
 }
 
 U_CAPI UVoidFunction* U_EXPORT2
-uprv_dlsym_func(void *lib, const char* sym, UErrorCode *status) {
-  union {
+uprv_dlsym_func(ശൂന്യം *lib, സ്ഥിരം അക്ഷരം* sym, UErrorCode *status) {
+  സംഘം {
       UVoidFunction *fp;
-      void *vp;
+      ശൂന്യം *vp;
   } uret;
   uret.fp = nullptr;
-  if(U_FAILURE(*status)) return uret.fp;
+  എങ്കിൽ(U_FAILURE(*status)) തിരികെ uret.fp;
   uret.vp = dlsym(lib, sym);
-  if(uret.vp == nullptr) {
+  എങ്കിൽ(uret.vp == nullptr) {
 #ifdef U_TRACE_DYLOAD
     printf("dlerror on dlsym(%p,%s): %s\n", lib,sym, dlerror());
 #endif
     *status = U_MISSING_RESOURCE_ERROR;
   }
-  return uret.fp;
+  തിരികെ uret.fp;
 }
 
-#elif U_ENABLE_DYLOAD && U_PLATFORM_USES_ONLY_WIN32_API && !U_PLATFORM_HAS_WINUWP_API
+#അല്ലെങ്കിലെങ്കിൽ U_ENABLE_DYLOAD && U_PLATFORM_USES_ONLY_WIN32_API && !U_PLATFORM_HAS_WINUWP_API
 
 /* Windows API implementation. */
 // Note: UWP does not expose/allow these APIs, so the UWP version gets the null implementation. */
 
-U_CAPI void * U_EXPORT2
-uprv_dl_open(const char *libName, UErrorCode *status) {
+U_CAPI ശൂന്യം * U_EXPORT2
+uprv_dl_open(സ്ഥിരം അക്ഷരം *libName, UErrorCode *status) {
   HMODULE lib = nullptr;
 
-  if(U_FAILURE(*status)) return nullptr;
+  എങ്കിൽ(U_FAILURE(*status)) തിരികെ nullptr;
 
   lib = LoadLibraryA(libName);
 
-  if(lib==nullptr) {
+  എങ്കിൽ(lib==nullptr) {
     *status = U_MISSING_RESOURCE_ERROR;
   }
 
-  return (void*)lib;
+  തിരികെ (ശൂന്യം*)lib;
 }
 
-U_CAPI void U_EXPORT2
-uprv_dl_close(void *lib, UErrorCode *status) {
+U_CAPI ശൂന്യം U_EXPORT2
+uprv_dl_close(ശൂന്യം *lib, UErrorCode *status) {
   HMODULE handle = (HMODULE)lib;
-  if(U_FAILURE(*status)) return;
+  എങ്കിൽ(U_FAILURE(*status)) തിരികെ;
 
   FreeLibrary(handle);
 
-  return;
+  തിരികെ;
 }
 
 U_CAPI UVoidFunction* U_EXPORT2
-uprv_dlsym_func(void *lib, const char* sym, UErrorCode *status) {
+uprv_dlsym_func(ശൂന്യം *lib, സ്ഥിരം അക്ഷരം* sym, UErrorCode *status) {
   HMODULE handle = (HMODULE)lib;
   UVoidFunction* addr = nullptr;
 
-  if(U_FAILURE(*status) || lib==nullptr) return nullptr;
+  എങ്കിൽ(U_FAILURE(*status) || lib==nullptr) തിരികെ nullptr;
 
   addr = (UVoidFunction*)GetProcAddress(handle, sym);
 
-  if(addr==nullptr) {
+  എങ്കിൽ(addr==nullptr) {
     DWORD lastError = GetLastError();
-    if(lastError == ERROR_PROC_NOT_FOUND) {
+    എങ്കിൽ(lastError == ERROR_PROC_NOT_FOUND) {
       *status = U_MISSING_RESOURCE_ERROR;
-    } else {
+    } അല്ലെങ്കിൽ {
       *status = U_UNSUPPORTED_ERROR; /* other unknown error. */
     }
   }
 
-  return addr;
+  തിരികെ addr;
 }
 
-#else
+#അല്ലെങ്കിൽ
 
 /* No dynamic loading, null (nonexistent) implementation. */
 
-U_CAPI void * U_EXPORT2
-uprv_dl_open(const char *libName, UErrorCode *status) {
-    (void)libName;
-    if(U_FAILURE(*status)) return nullptr;
+U_CAPI ശൂന്യം * U_EXPORT2
+uprv_dl_open(സ്ഥിരം അക്ഷരം *libName, UErrorCode *status) {
+    (ശൂന്യം)libName;
+    എങ്കിൽ(U_FAILURE(*status)) തിരികെ nullptr;
     *status = U_UNSUPPORTED_ERROR;
-    return nullptr;
+    തിരികെ nullptr;
 }
 
-U_CAPI void U_EXPORT2
-uprv_dl_close(void *lib, UErrorCode *status) {
-    (void)lib;
-    if(U_FAILURE(*status)) return;
+U_CAPI ശൂന്യം U_EXPORT2
+uprv_dl_close(ശൂന്യം *lib, UErrorCode *status) {
+    (ശൂന്യം)lib;
+    എങ്കിൽ(U_FAILURE(*status)) തിരികെ;
     *status = U_UNSUPPORTED_ERROR;
-    return;
+    തിരികെ;
 }
 
 U_CAPI UVoidFunction* U_EXPORT2
-uprv_dlsym_func(void *lib, const char* sym, UErrorCode *status) {
-  (void)lib;
-  (void)sym;
-  if(U_SUCCESS(*status)) {
+uprv_dlsym_func(ശൂന്യം *lib, സ്ഥിരം അക്ഷരം* sym, UErrorCode *status) {
+  (ശൂന്യം)lib;
+  (ശൂന്യം)sym;
+  എങ്കിൽ(U_SUCCESS(*status)) {
     *status = U_UNSUPPORTED_ERROR;
   }
-  return (UVoidFunction*)nullptr;
+  തിരികെ (UVoidFunction*)nullptr;
 }
 
 #endif

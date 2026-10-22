@@ -13,17 +13,17 @@
 #ifndef __UNIFIED_CACHE_H__
 #define __UNIFIED_CACHE_H__
 
-#include "utypeinfo.h"  // for 'typeid' to work
+#അന്തര്ഭാവ "utypeinfo.h"  // for 'typeid' to work
 
-#include "unicode/uobject.h"
-#include "unicode/locid.h"
-#include "sharedobject.h"
-#include "unicode/unistr.h"
-#include "cstring.h"
-#include "ustr_imp.h"
+#അന്തര്ഭാവ "unicode/uobject.h"
+#അന്തര്ഭാവ "unicode/locid.h"
+#അന്തര്ഭാവ "sharedobject.h"
+#അന്തര്ഭാവ "unicode/unistr.h"
+#അന്തര്ഭാവ "cstring.h"
+#അന്തര്ഭാവ "ustr_imp.h"
 
-struct UHashtable;
-struct UHashElement;
+ഘടന UHashtable;
+ഘടന UHashElement;
 
 U_NAMESPACE_BEGIN
 
@@ -32,26 +32,26 @@ class UnifiedCache;
 /**
  * A base class for all cache keys.
  */
-class U_COMMON_API CacheKeyBase : public UObject {
- public:
-   CacheKeyBase() : fCreationStatus(U_ZERO_ERROR), fIsPrimary(false) {}
+class U_COMMON_API Cache_താക്കോൽ_Base : പൊതു UObject {
+ പൊതു:
+   Cache_താക്കോൽ_Base() : fCreationStatus(U_ZERO_ERROR), fIsPrimary(false) {}
 
    /**
     * Copy constructor. Needed to support cloning.
     */
-   CacheKeyBase(const CacheKeyBase &other) 
+   Cache_താക്കോൽ_Base(സ്ഥിരം Cache_താക്കോൽ_Base &other) 
            : UObject(other), fCreationStatus(other.fCreationStatus), fIsPrimary(false) { }
-   virtual ~CacheKeyBase();
+   മായാ ~Cache_താക്കോൽ_Base();
 
    /**
     * Returns the hash code for this object.
     */
-   virtual int32_t hashCode() const = 0;
+   മായാ int32_t hashCode() സ്ഥിരം = 0;
 
    /**
     * Clones this object polymorphically. Caller owns returned value.
     */
-   virtual CacheKeyBase *clone() const = 0;
+   മായാ Cache_താക്കോൽ_Base *clone() സ്ഥിരം = 0;
 
    /**
     * Create a new object for this key. Called by cache on cache miss.
@@ -66,29 +66,29 @@ class U_COMMON_API CacheKeyBase : public UObject {
     *                        In addition, implementations may return a
     *                        non nullptr object and set a warning status.
     */
-   virtual const SharedObject *createObject(
-           const void *creationContext, UErrorCode &status) const = 0;
+   മായാ സ്ഥിരം SharedObject *createObject(
+           സ്ഥിരം ശൂന്യം *creationContext, UErrorCode &status) സ്ഥിരം = 0;
 
    /**
     * Writes a description of this key to buffer and returns buffer. Written
     * description is nullptr terminated.
     */
-   virtual char *writeDescription(char *buffer, int32_t bufSize) const = 0;
+   മായാ അക്ഷരം *writeDescription(അക്ഷരം *buffer, int32_t bufSize) സ്ഥിരം = 0;
 
-   friend inline bool operator==(const CacheKeyBase& lhs,
-                                 const CacheKeyBase& rhs) {
-       return lhs.equals(rhs);
+   friend വരിയിൽ bool operator==(സ്ഥിരം Cache_താക്കോൽ_Base& lhs,
+                                 സ്ഥിരം Cache_താക്കോൽ_Base& rhs) {
+       തിരികെ lhs.equals(rhs);
    }
 
-   friend inline bool operator!=(const CacheKeyBase& lhs,
-                                 const CacheKeyBase& rhs) {
-       return !lhs.equals(rhs);
+   friend വരിയിൽ bool operator!=(സ്ഥിരം Cache_താക്കോൽ_Base& lhs,
+                                 സ്ഥിരം Cache_താക്കോൽ_Base& rhs) {
+       തിരികെ !lhs.equals(rhs);
    }
 
- protected:
-   virtual bool equals(const CacheKeyBase& other) const = 0;
+ സംരക്ഷിത:
+   മായാ bool equals(സ്ഥിരം Cache_താക്കോൽ_Base& other) സ്ഥിരം = 0;
 
- private:
+ സ്വകാര്യ:
    mutable UErrorCode fCreationStatus;
    mutable UBool fIsPrimary;
    friend class UnifiedCache;
@@ -101,33 +101,33 @@ class U_COMMON_API CacheKeyBase : public UObject {
  * A key of type LocaleCacheKey<T> maps to a value of type T.
  */
 template<typename T>
-class CacheKey : public CacheKeyBase {
- public:
-   virtual ~CacheKey() { }
+class Cache_താക്കോൽ : പൊതു Cache_താക്കോൽ_Base {
+ പൊതു:
+   മായാ ~Cache_താക്കോൽ() { }
    /**
     * The template parameter, T, determines the hash code returned.
     */
-   virtual int32_t hashCode() const override {
-       const char *s = typeid(T).name();
-       return ustr_hashCharsN(s, static_cast<int32_t>(uprv_strlen(s)));
+   മായാ int32_t hashCode() സ്ഥിരം override {
+       സ്ഥിരം അക്ഷരം *s = typeid(T).name();
+       തിരികെ ustr_hashCharsN(s, static_cast<int32_t>(uprv_strlen(s)));
    }
 
    /**
     * Use the value type, T,  as the description.
     */
-   virtual char *writeDescription(char *buffer, int32_t bufLen) const override {
-       const char *s = typeid(T).name();
+   മായാ അക്ഷരം *writeDescription(അക്ഷരം *buffer, int32_t bufLen) സ്ഥിരം override {
+       സ്ഥിരം അക്ഷരം *s = typeid(T).name();
        uprv_strncpy(buffer, s, bufLen);
        buffer[bufLen - 1] = 0;
-       return buffer;
+       തിരികെ buffer;
    }
 
- protected:
+ സംരക്ഷിത:
    /**
     * Two objects are equal if they are of the same type.
     */
-   virtual bool equals(const CacheKeyBase &other) const override {
-       return this == &other || typeid(*this) == typeid(other);
+   മായാ bool equals(സ്ഥിരം Cache_താക്കോൽ_Base &other) സ്ഥിരം override {
+       തിരികെ this == &other || typeid(*this) == typeid(other);
    }
 };
 
@@ -136,41 +136,41 @@ class CacheKey : public CacheKeyBase {
  * A key of type LocaleCacheKey<T> maps to a value of type T.
  */
 template<typename T>
-class LocaleCacheKey : public CacheKey<T> {
- protected:
+class Locale_Cache_താക്കോൽ : പൊതു Cache_താക്കോൽ<T> {
+ സംരക്ഷിത:
    Locale   fLoc;
-   virtual bool equals(const CacheKeyBase &other) const override {
-       if (!CacheKey<T>::equals(other)) {
-           return false;
+   മായാ bool equals(സ്ഥിരം Cache_താക്കോൽ_Base &other) സ്ഥിരം override {
+       എങ്കിൽ (!Cache_താക്കോൽ<T>::equals(other)) {
+           തിരികെ false;
        }
        // We know this and other are of same class because equals() on
        // CacheKey returned true.
-       return operator==(static_cast<const LocaleCacheKey<T> &>(other));
+       തിരികെ operator==(static_cast<സ്ഥിരം Locale_Cache_താക്കോൽ<T> &>(other));
    }
- public:
-   LocaleCacheKey(const Locale &loc) : fLoc(loc) {}
-   LocaleCacheKey(const LocaleCacheKey<T> &other)
-           : CacheKey<T>(other), fLoc(other.fLoc) { }
-   virtual ~LocaleCacheKey() { }
-   virtual int32_t hashCode() const override {
-       return (int32_t)(37u * (uint32_t)CacheKey<T>::hashCode() + (uint32_t)fLoc.hashCode());
+ പൊതു:
+   Locale_Cache_താക്കോൽ(സ്ഥിരം Locale &loc) : fLoc(loc) {}
+   Locale_Cache_താക്കോൽ(സ്ഥിരം Locale_Cache_താക്കോൽ<T> &other)
+           : Cache_താക്കോൽ<T>(other), fLoc(other.fLoc) { }
+   മായാ ~Locale_Cache_താക്കോൽ() { }
+   മായാ int32_t hashCode() സ്ഥിരം override {
+       തിരികെ (int32_t)(37u * (uint32_t)Cache_താക്കോൽ<T>::hashCode() + (uint32_t)fLoc.hashCode());
    }
-   inline bool operator == (const LocaleCacheKey<T> &other) const {
-       return fLoc == other.fLoc;
+   വരിയിൽ bool operator == (സ്ഥിരം Locale_Cache_താക്കോൽ<T> &other) സ്ഥിരം {
+       തിരികെ fLoc == other.fLoc;
    }
-   virtual CacheKeyBase *clone() const override {
-       return new LocaleCacheKey<T>(*this);
+   മായാ Cache_താക്കോൽ_Base *clone() സ്ഥിരം override {
+       തിരികെ new Locale_Cache_താക്കോൽ<T>(*this);
    }
-   virtual const T *createObject(
-           const void *creationContext, UErrorCode &status) const override;
+   മായാ സ്ഥിരം T *createObject(
+           സ്ഥിരം ശൂന്യം *creationContext, UErrorCode &status) സ്ഥിരം override;
    /**
     * Use the locale id as the description.
     */
-   virtual char *writeDescription(char *buffer, int32_t bufLen) const override {
-       const char *s = fLoc.getName();
+   മായാ അക്ഷരം *writeDescription(അക്ഷരം *buffer, int32_t bufLen) സ്ഥിരം override {
+       സ്ഥിരം അക്ഷരം *s = fLoc.getName();
        uprv_strncpy(buffer, s, bufLen);
        buffer[bufLen - 1] = 0;
-       return buffer;
+       തിരികെ buffer;
    }
 
 };
@@ -180,8 +180,8 @@ class LocaleCacheKey : public CacheKey<T> {
  * Design doc here:
  * https://docs.google.com/document/d/1RwGQJs4N4tawNbf809iYDRCvXoMKqDJihxzYt1ysmd8/edit?usp=sharing
  */
-class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
- public:
+class U_COMMON_API UnifiedCache : പൊതു UnifiedCacheBase {
+ പൊതു:
    /**
     * @internal
     * Do not call directly. Instead use UnifiedCache::getInstance() as
@@ -192,18 +192,18 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
    /**
     * Return a pointer to the global cache instance.
     */
-   static UnifiedCache *getInstance(UErrorCode &status);
+   സ്ഥിതം UnifiedCache *getInstance(UErrorCode &status);
 
    /**
     * Fetches a value from the cache by key. Equivalent to
     * get(key, nullptr, ptr, status);
     */
    template<typename T>
-   void get(
-           const CacheKey<T>& key,
-           const T *&ptr,
-           UErrorCode &status) const {
-       get(key, nullptr, ptr, status);
+   ശൂന്യം get(
+           സ്ഥിരം Cache_താക്കോൽ<T>& താക്കോൽ,
+           സ്ഥിരം T *&ptr,
+           UErrorCode &status) സ്ഥിരം {
+       get(താക്കോൽ, nullptr, ptr, status);
    }
 
    /**
@@ -221,25 +221,25 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     *                        warning value even if ptr is set.
     */
    template<typename T>
-   void get(
-           const CacheKey<T>& key,
-           const void *creationContext,
-           const T *&ptr,
-           UErrorCode &status) const {
-       if (U_FAILURE(status)) {
-           return;
+   ശൂന്യം get(
+           സ്ഥിരം Cache_താക്കോൽ<T>& താക്കോൽ,
+           സ്ഥിരം ശൂന്യം *creationContext,
+           സ്ഥിരം T *&ptr,
+           UErrorCode &status) സ്ഥിരം {
+       എങ്കിൽ (U_FAILURE(status)) {
+           തിരികെ;
        }
        UErrorCode creationStatus = U_ZERO_ERROR;
-       const SharedObject *value = nullptr;
-       _get(key, value, creationContext, creationStatus);
-       const T *tvalue = (const T *) value;
-       if (U_SUCCESS(creationStatus)) {
+       സ്ഥിരം SharedObject *മൂല്യം_2 = nullptr;
+       _get(താക്കോൽ, മൂല്യം_2, creationContext, creationStatus);
+       സ്ഥിരം T *tvalue = (സ്ഥിരം T *) മൂല്യം_2;
+       എങ്കിൽ (U_SUCCESS(creationStatus)) {
            SharedObject::copyPtr(tvalue, ptr);
        }
        SharedObject::clearPtr(tvalue);
        // Take care not to overwrite a warning status passed in with
        // another warning or U_ZERO_ERROR.
-       if (status == U_ZERO_ERROR || U_FAILURE(creationStatus)) {
+       എങ്കിൽ (status == U_ZERO_ERROR || U_FAILURE(creationStatus)) {
            status = creationStatus;
        }
    }
@@ -249,7 +249,7 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * Dumps the contents of this cache to standard error. Used for testing of
     * cache only.
     */
-   void dumpContents() const;
+   ശൂന്യം dumpContents() സ്ഥിരം;
 #endif
 
    /**
@@ -265,32 +265,32 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     *               warning value even if ptr is set.
     */
    template<typename T>
-   static void getByLocale(
-           const Locale &loc, const T *&ptr, UErrorCode &status) {
-       const UnifiedCache *cache = getInstance(status);
-       if (U_FAILURE(status)) {
-           return;
+   സ്ഥിതം ശൂന്യം getByLocale(
+           സ്ഥിരം Locale &loc, സ്ഥിരം T *&ptr, UErrorCode &status) {
+       സ്ഥിരം UnifiedCache *cache = getInstance(status);
+       എങ്കിൽ (U_FAILURE(status)) {
+           തിരികെ;
        }
-       cache->get(LocaleCacheKey<T>(loc), ptr, status);
+       cache->get(Locale_Cache_താക്കോൽ<T>(loc), ptr, status);
    }
 
 #ifdef UNIFIED_CACHE_DEBUG
    /**
     * Dumps the cache contents to stderr. For testing only.
     */
-   static void dump();
+   സ്ഥിതം ശൂന്യം dump();
 #endif
 
    /**
     * Returns the number of keys in this cache. For testing only.
     */
-   int32_t keyCount() const;
+   int32_t താക്കോൽ_എണ്ണം() സ്ഥിരം;
 
    /**
     * Removes any values from cache that are not referenced outside
     * the cache.
     */
-   void flush() const;
+   ശൂന്യം flush() സ്ഥിരം;
 
    /**
     * Configures at what point eviction of unused entries will begin.
@@ -324,8 +324,8 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * If the parameters passed are negative, setEvctionPolicy sets status to
     * U_ILLEGAL_ARGUMENT_ERROR.
     */
-   void setEvictionPolicy(
-           int32_t count, int32_t percentageOfInUseItems, UErrorCode &status);
+   ശൂന്യം setEvictionPolicy(
+           int32_t എണ്ണം, int32_t percentage_Of_In_Use_ഇനങ്ങൾ, UErrorCode &status);
 
 
    /**
@@ -333,29 +333,29 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * of this cache. This only includes auto evicted entries, not
     * entries evicted because of a call to flush().
     */
-   int64_t autoEvictedCount() const;
+   int64_t auto_Evicted_എണ്ണം() സ്ഥിരം;
 
    /**
     * Returns the unused entry count in this cache. For testing only,
     * Regular clients will not need this.
     */
-   int32_t unusedCount() const;
+   int32_t unused_എണ്ണം() സ്ഥിരം;
 
-   virtual void handleUnreferencedObject() const override;
-   virtual ~UnifiedCache();
+   മായാ ശൂന്യം handleUnreferencedObject() സ്ഥിരം override;
+   മായാ ~UnifiedCache();
    
- private:
+ സ്വകാര്യ:
    UHashtable *fHashtable;
    mutable int32_t fEvictPos;
-   mutable int32_t fNumValuesTotal;
-   mutable int32_t fNumValuesInUse;
+   mutable int32_t f_അക്കം_മൂല്യങ്ങൾ_Total;
+   mutable int32_t f_അക്കം_മൂല്യങ്ങൾ_In_Use;
    int32_t fMaxUnused;
    int32_t fMaxPercentageOfInUse;
-   mutable int64_t fAutoEvictedCount;
-   SharedObject *fNoValue;
+   mutable int64_t f_Auto_Evicted_എണ്ണം;
+   SharedObject *f_No_മൂല്യം;
    
-   UnifiedCache(const UnifiedCache &other) = delete;
-   UnifiedCache &operator=(const UnifiedCache &other) = delete;
+   UnifiedCache(സ്ഥിരം UnifiedCache &other) = delete;
+   UnifiedCache &operator=(സ്ഥിരം UnifiedCache &other) = delete;
    
    /**
     * Flushes the contents of the cache. If cache values hold references to other
@@ -372,7 +372,7 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     *                     _flush is not thread safe when all is true.
     *   @return true if any value in cache was flushed or false otherwise.
     */
-   UBool _flush(UBool all) const;
+   UBool _flush(UBool all) സ്ഥിരം;
    
    /**
     * Gets value out of cache.
@@ -385,11 +385,11 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * fNoValue is stored in cache, and value is set to nullptr. Caller must call
     * removeRef on value if non nullptr.
     */
-   void _get(
-           const CacheKeyBase &key,
-           const SharedObject *&value,
-           const void *creationContext,
-           UErrorCode &status) const;
+   ശൂന്യം _get(
+           സ്ഥിരം Cache_താക്കോൽ_Base &താക്കോൽ,
+           സ്ഥിരം SharedObject *&മൂല്യം_2,
+           സ്ഥിരം ശൂന്യം *creationContext,
+           UErrorCode &status) സ്ഥിരം;
 
     /**
      * Attempts to fetch value and status for key from cache.
@@ -403,9 +403,9 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
      * returned, caller must call removeRef() on value.
      */
     UBool _poll(
-            const CacheKeyBase &key,
-            const SharedObject *&value,
-            UErrorCode &status) const;
+            സ്ഥിരം Cache_താക്കോൽ_Base &താക്കോൽ,
+            സ്ഥിരം SharedObject *&മൂല്യം_2,
+            UErrorCode &status) സ്ഥിരം;
     
     /**
      * Places a new value and creationStatus in the cache for the given key.
@@ -413,11 +413,11 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
      * On exit, value and creation status placed under key. Soft reference added
      * to value on successful add. On error sets status.
      */
-    void _putNew(
-        const CacheKeyBase &key,
-        const SharedObject *value,
-        const UErrorCode creationStatus,
-        UErrorCode &status) const;
+    ശൂന്യം _putNew(
+        സ്ഥിരം Cache_താക്കോൽ_Base &താക്കോൽ,
+        സ്ഥിരം SharedObject *മൂല്യം_2,
+        സ്ഥിരം UErrorCode creationStatus,
+        UErrorCode &status) സ്ഥിരം;
            
     /**
      * Places value and status at key if there is no value at key or if cache
@@ -432,17 +432,17 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
      * unchanged in which case they are placed in the cache on a best-effort basis.
      * Caller must call removeRef() on value.
      */
-   void _putIfAbsentAndGet(
-           const CacheKeyBase &key,
-           const SharedObject *&value,
-           UErrorCode &status) const;
+   ശൂന്യം _putIfAbsentAndGet(
+           സ്ഥിരം Cache_താക്കോൽ_Base &താക്കോൽ,
+           സ്ഥിരം SharedObject *&മൂല്യം_2,
+           UErrorCode &status) സ്ഥിരം;
 
     /**
      * Returns the next element in the cache round robin style.
      * Returns nullptr if the cache is empty.
      * On entry, gCacheMutex must be held.
      */
-    const UHashElement *_nextElement() const;
+    സ്ഥിരം UHashElement *_nextElement() സ്ഥിരം;
    
    /**
     * Return the number of cache items that would need to be evicted
@@ -452,7 +452,7 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * 
     * On entry, gCacheMutex must be held.
     */
-   int32_t _computeCountOfItemsToEvict() const;
+   int32_t compute_എണ്ണം_Of_ഇനങ്ങൾ_To_Evict() സ്ഥിരം;
    
    /**
     * Run an eviction slice.
@@ -460,7 +460,7 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * _runEvictionSlice runs a slice of the evict pipeline by examining the next
     * 10 entries in the cache round robin style evicting them if they are eligible.
     */
-   void _runEvictionSlice() const;
+   ശൂന്യം _runEvictionSlice() സ്ഥിരം;
  
    /**
     * Register a primary cache entry. A primary key is the first key to create
@@ -473,7 +473,7 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * entry, and value registered with cache so that subsequent calls to
     * addRef() and removeRef() on it correctly interact with the cache.
     */
-   void _registerPrimary(const CacheKeyBase *theKey, const SharedObject *value) const;
+   ശൂന്യം _registerPrimary(സ്ഥിരം Cache_താക്കോൽ_Base *the_താക്കോൽ, സ്ഥിരം SharedObject *മൂല്യം_2) സ്ഥിരം;
         
    /**
     * Store a value and creation error status in given hash entry.
@@ -483,17 +483,17 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * entry. Soft reference removed from previous stored value. Waiting
     * threads notified.
     */
-   void _put(
-           const UHashElement *element,
-           const SharedObject *value,
-           const UErrorCode status) const;
+   ശൂന്യം _put(
+           സ്ഥിരം UHashElement *element,
+           സ്ഥിരം SharedObject *മൂല്യം_2,
+           സ്ഥിരം UErrorCode status) സ്ഥിരം;
     /**
      * Remove a soft reference, and delete the SharedObject if no references remain.
      * To be used from within the UnifiedCache implementation only.
      * gCacheMutex must be held by caller.
      * @param value the SharedObject to be acted on.
      */
-   void removeSoftRef(const SharedObject *value) const;
+   ശൂന്യം removeSoftRef(സ്ഥിരം SharedObject *മൂല്യം_2) സ്ഥിരം;
    
    /**
     * Increment the hard reference count of the given SharedObject.
@@ -503,7 +503,7 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * @param value The SharedObject to be referenced.
     * @return the hard reference count after the addition.
     */
-   int32_t addHardRef(const SharedObject *value) const;
+   int32_t addHardRef(സ്ഥിരം SharedObject *മൂല്യം_2) സ്ഥിരം;
    
   /**
     * Decrement the hard reference count of the given SharedObject.
@@ -513,11 +513,11 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * @param value The SharedObject to be referenced.
     * @return the hard reference count after the removal.
     */
-   int32_t removeHardRef(const SharedObject *value) const;
+   int32_t removeHardRef(സ്ഥിരം SharedObject *മൂല്യം_2) സ്ഥിരം;
 
    
 #ifdef UNIFIED_CACHE_DEBUG
-   void _dumpContents() const;
+   ശൂന്യം _dumpContents() സ്ഥിരം;
 #endif
    
    /**
@@ -529,26 +529,26 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     *  If hash entry is in progress, value will be set to gNoValue and status will
     *  be set to U_ZERO_ERROR.
     */
-   void _fetch(const UHashElement *element, const SharedObject *&value,
-                       UErrorCode &status) const;
+   ശൂന്യം _fetch(സ്ഥിരം UHashElement *element, സ്ഥിരം SharedObject *&മൂല്യം_2,
+                       UErrorCode &status) സ്ഥിരം;
                        
     /**
      * Determine if given hash entry is in progress.
      * On entry, gCacheMutex must be held.
      */
-   UBool _inProgress(const UHashElement *element) const;
+   UBool _inProgress(സ്ഥിരം UHashElement *element) സ്ഥിരം;
    
    /**
     * Determine if given hash entry is in progress.
     * On entry, gCacheMutex must be held.
     */
-   UBool _inProgress(const SharedObject *theValue, UErrorCode creationStatus) const;
+   UBool _inProgress(സ്ഥിരം SharedObject *the_മൂല്യം, UErrorCode creationStatus) സ്ഥിരം;
    
    /**
     * Determine if given hash entry is eligible for eviction.
     * On entry, gCacheMutex must be held.
     */
-   UBool _isEvictable(const UHashElement *element) const;
+   UBool _isEvictable(സ്ഥിരം UHashElement *element) സ്ഥിരം;
 };
 
 U_NAMESPACE_END

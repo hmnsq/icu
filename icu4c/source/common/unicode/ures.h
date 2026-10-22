@@ -25,12 +25,12 @@
 #ifndef URES_H
 #define URES_H
 
-#include "unicode/char16ptr.h"
-#include "unicode/utypes.h"
-#include "unicode/uloc.h"
+#അന്തര്ഭാവ "unicode/char16ptr.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/uloc.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
+#എങ്കിൽ U_SHOW_CPLUSPLUS_API
+#അന്തര്ഭാവ "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
 /**
@@ -55,19 +55,19 @@
  * UResourceBundle is an opaque type for handles for resource bundles in C APIs.
  * @stable ICU 2.0
  */
-struct UResourceBundle;
+ഘടന UResourceBundle;
 
 /**
  * @stable ICU 2.0
  */
-typedef struct UResourceBundle UResourceBundle;
+തരനിർവചനം ഘടന UResourceBundle UResourceBundle;
 
 /**
  * Numeric constants for types of resource items.
  * @see ures_getType
  * @stable ICU 2.0
  */
-typedef enum {
+തരനിർവചനം എണ്ണൽ {
     /** Resource type constant for "no resource". @stable ICU 2.6 */
     URES_NONE=-1,
 
@@ -75,7 +75,7 @@ typedef enum {
     URES_STRING=0,
 
     /** Resource type constant for binary data. @stable ICU 2.6 */
-    URES_BINARY=1,
+    URES_ദ്വിമാന=1,
 
     /** Resource type constant for tables of key-value pairs. @stable ICU 2.6 */
     URES_TABLE=2,
@@ -113,7 +113,7 @@ typedef enum {
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
     RES_STRING=URES_STRING,
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
-    RES_BINARY=URES_BINARY,
+    RES_ദ്വിമാന=URES_ദ്വിമാന,
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
     RES_TABLE=URES_TABLE,
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
@@ -168,8 +168,8 @@ typedef enum {
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle*  U_EXPORT2
-ures_open(const char*    packageName,
-          const char*  locale,
+ures_open(സ്ഥിരം അക്ഷരം*    packageName,
+          സ്ഥിരം അക്ഷരം*  locale,
           UErrorCode*     status);
 
 
@@ -191,8 +191,8 @@ ures_open(const char*    packageName,
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_openDirect(const char* packageName,
-                const char* locale,
+ures_openDirect(സ്ഥിരം അക്ഷരം* packageName,
+                സ്ഥിരം അക്ഷരം* locale,
                 UErrorCode* status);
 
 /**
@@ -214,8 +214,8 @@ ures_openDirect(const char* packageName,
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_openU(const UChar* packageName,
-           const char* locale,
+ures_openU(സ്ഥിരം UChar* packageName,
+           സ്ഥിരം അക്ഷരം* locale,
            UErrorCode* status);
 
 #ifndef U_HIDE_DEPRECATED_API
@@ -236,8 +236,8 @@ ures_openU(const UChar* packageName,
  * @deprecated ICU 2.8 User ures_getSize instead
  */
 U_DEPRECATED int32_t U_EXPORT2
-ures_countArrayItems(const UResourceBundle* resourceBundle,
-                     const char* resourceKey,
+ures_എണ്ണം_Array_ഇനങ്ങൾ(സ്ഥിരം UResourceBundle* resourceBundle,
+                     സ്ഥിരം അക്ഷരം* resource_താക്കോൽ,
                      UErrorCode* err);
 #endif  /* U_HIDE_DEPRECATED_API */
 
@@ -249,10 +249,10 @@ ures_countArrayItems(const UResourceBundle* resourceBundle,
  * @see ures_open
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 ures_close(UResourceBundle* resourceBundle);
 
-#if U_SHOW_CPLUSPLUS_API
+#എങ്കിൽ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -282,8 +282,8 @@ U_NAMESPACE_END
  * @see ures_getVersion
  * @deprecated ICU 2.8 Use ures_getVersion instead.
  */
-U_DEPRECATED const char* U_EXPORT2
-ures_getVersionNumber(const UResourceBundle* resourceBundle U_LIFETIME_BOUND);
+U_DEPRECATED സ്ഥിരം അക്ഷരം* U_EXPORT2
+ures_get_Version_സംഖ്യ(സ്ഥിരം UResourceBundle* resourceBundle U_LIFETIME_BOUND);
 #endif  /* U_HIDE_DEPRECATED_API */
 
 /**
@@ -295,8 +295,8 @@ ures_getVersionNumber(const UResourceBundle* resourceBundle U_LIFETIME_BOUND);
  *                    as specified in the resource bundle or its parent.
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ures_getVersion(const UResourceBundle* resB,
+U_CAPI ശൂന്യം U_EXPORT2
+ures_getVersion(സ്ഥിരം UResourceBundle* resB,
                 UVersionInfo versionInfo);
 
 #ifndef U_HIDE_DEPRECATED_API
@@ -312,8 +312,8 @@ ures_getVersion(const UResourceBundle* resB,
  * @return  A Locale name
  * @deprecated ICU 2.8 Use ures_getLocaleByType instead.
  */
-U_DEPRECATED const char* U_EXPORT2
-ures_getLocale(const UResourceBundle* resourceBundle U_LIFETIME_BOUND, UErrorCode* status);
+U_DEPRECATED സ്ഥിരം അക്ഷരം* U_EXPORT2
+ures_getLocale(സ്ഥിരം UResourceBundle* resourceBundle U_LIFETIME_BOUND, UErrorCode* status);
 #endif  /* U_HIDE_DEPRECATED_API */
 
 /**
@@ -328,8 +328,8 @@ ures_getLocale(const UResourceBundle* resourceBundle U_LIFETIME_BOUND, UErrorCod
  * @return  A Locale name
  * @stable ICU 2.8
  */
-U_CAPI const char* U_EXPORT2
-ures_getLocaleByType(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+U_CAPI സ്ഥിരം അക്ഷരം* U_EXPORT2
+ures_getLocaleByType(സ്ഥിരം UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                      ULocDataLocaleType type,
                      UErrorCode* status);
 
@@ -351,10 +351,10 @@ ures_getLocaleByType(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @param status The error code.
  * @internal
  */
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 ures_openFillIn(UResourceBundle *r,
-                const char* packageName,
-                const char* localeID,
+                സ്ഥിരം അക്ഷരം* packageName,
+                സ്ഥിരം അക്ഷരം* localeID,
                 UErrorCode* status);
 #endif  /* U_HIDE_INTERNAL_API */
 
@@ -375,8 +375,8 @@ ures_openFillIn(UResourceBundle *r,
  * @see ures_getUInt
  * @stable ICU 2.0
  */
-U_CAPI const UChar* U_EXPORT2
-ures_getString(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+U_CAPI സ്ഥിരം UChar* U_EXPORT2
+ures_getString(സ്ഥിരം UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                int32_t* len,
                UErrorCode* status);
 
@@ -427,9 +427,9 @@ ures_getString(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @see u_strToUTF8
  * @stable ICU 3.6
  */
-U_CAPI const char* U_EXPORT2
-ures_getUTF8String(const UResourceBundle* resB,
-                   char* dest U_LIFETIME_BOUND,
+U_CAPI സ്ഥിരം അക്ഷരം* U_EXPORT2
+ures_getUTF8String(സ്ഥിരം UResourceBundle* resB,
+                   അക്ഷരം* dest U_LIFETIME_BOUND,
                    int32_t* length,
                    UBool forceCopy,
                    UErrorCode* status);
@@ -451,8 +451,8 @@ ures_getUTF8String(const UResourceBundle* resB,
  * @see ures_getUInt
  * @stable ICU 2.0
  */
-U_CAPI const uint8_t* U_EXPORT2
-ures_getBinary(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+U_CAPI സ്ഥിരം uint8_t* U_EXPORT2
+ures_get_ദ്വിമാന(സ്ഥിരം UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                int32_t* len,
                UErrorCode* status);
 
@@ -473,8 +473,8 @@ ures_getBinary(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @see ures_getUInt
  * @stable ICU 2.0
  */
-U_CAPI const int32_t* U_EXPORT2
-ures_getIntVector(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+U_CAPI സ്ഥിരം int32_t* U_EXPORT2
+ures_getIntVector(സ്ഥിരം UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                   int32_t* len,
                   UErrorCode* status);
 
@@ -495,7 +495,7 @@ ures_getIntVector(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @stable ICU 2.0
  */
 U_CAPI uint32_t U_EXPORT2
-ures_getUInt(const UResourceBundle* resourceBundle,
+ures_getUInt(സ്ഥിരം UResourceBundle* resourceBundle,
              UErrorCode *status);
 
 /**
@@ -515,7 +515,7 @@ ures_getUInt(const UResourceBundle* resourceBundle,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ures_getInt(const UResourceBundle* resourceBundle,
+ures_getInt(സ്ഥിരം UResourceBundle* resourceBundle,
             UErrorCode *status);
 
 /**
@@ -529,7 +529,7 @@ ures_getInt(const UResourceBundle* resourceBundle,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ures_getSize(const UResourceBundle *resourceBundle);
+ures_getSize(സ്ഥിരം UResourceBundle *resourceBundle);
 
 /**
  * Returns the type of a resource. Available types are defined in enum UResType
@@ -540,7 +540,7 @@ ures_getSize(const UResourceBundle *resourceBundle);
  * @stable ICU 2.0
  */
 U_CAPI UResType U_EXPORT2
-ures_getType(const UResourceBundle *resourceBundle);
+ures_getType(സ്ഥിരം UResourceBundle *resourceBundle);
 
 /**
  * Returns the key associated with a given resource. Not all the resources have a key - only
@@ -550,8 +550,8 @@ ures_getType(const UResourceBundle *resourceBundle);
  * @return a key associated to this resource, or NULL if it doesn't have a key
  * @stable ICU 2.0
  */
-U_CAPI const char* U_EXPORT2
-ures_getKey(const UResourceBundle* resourceBundle U_LIFETIME_BOUND);
+U_CAPI സ്ഥിരം അക്ഷരം* U_EXPORT2
+ures_get_താക്കോൽ(സ്ഥിരം UResourceBundle* resourceBundle U_LIFETIME_BOUND);
 
 /* ITERATION API
     This API provides means for iterating through a resource
@@ -563,7 +563,7 @@ ures_getKey(const UResourceBundle* resourceBundle U_LIFETIME_BOUND);
  * @param resourceBundle a resource
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 ures_resetIterator(UResourceBundle *resourceBundle);
 
 /**
@@ -574,7 +574,7 @@ ures_resetIterator(UResourceBundle *resourceBundle);
  * @stable ICU 2.0
  */
 U_CAPI UBool U_EXPORT2
-ures_hasNext(const UResourceBundle *resourceBundle);
+ures_hasNext(സ്ഥിരം UResourceBundle *resourceBundle);
 
 /**
  * Returns the next resource in a given resource or NULL if there are no more resources
@@ -605,10 +605,10 @@ ures_getNextResource(UResourceBundle* resourceBundle,
  * @return a pointer to a zero-terminated UChar array which lives in a memory mapped/DLL file.
  * @stable ICU 2.0
  */
-U_CAPI const UChar* U_EXPORT2
+U_CAPI സ്ഥിരം UChar* U_EXPORT2
 ures_getNextString(UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                    int32_t* len,
-                   const char** key,
+                   സ്ഥിരം അക്ഷരം** താക്കോൽ,
                    UErrorCode* status);
 
 /**
@@ -624,7 +624,7 @@ ures_getNextString(UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getByIndex(const UResourceBundle* resourceBundle,
+ures_getByIndex(സ്ഥിരം UResourceBundle* resourceBundle,
                 int32_t indexR,
                 UResourceBundle* fillIn U_LIFETIME_BOUND,
                 UErrorCode* status);
@@ -640,8 +640,8 @@ ures_getByIndex(const UResourceBundle* resourceBundle,
  * @return                  a pointer to a zero-terminated UChar array which lives in a memory mapped/DLL file.
  * @stable ICU 2.0
  */
-U_CAPI const UChar* U_EXPORT2
-ures_getStringByIndex(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+U_CAPI സ്ഥിരം UChar* U_EXPORT2
+ures_getStringByIndex(സ്ഥിരം UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                       int32_t indexS,
                       int32_t* len,
                       UErrorCode* status);
@@ -694,10 +694,10 @@ ures_getStringByIndex(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @see u_strToUTF8
  * @stable ICU 3.6
  */
-U_CAPI const char* U_EXPORT2
-ures_getUTF8StringByIndex(const UResourceBundle* resB,
+U_CAPI സ്ഥിരം അക്ഷരം* U_EXPORT2
+ures_getUTF8StringByIndex(സ്ഥിരം UResourceBundle* resB,
                           int32_t stringIndex,
-                          char* dest U_LIFETIME_BOUND,
+                          അക്ഷരം* dest U_LIFETIME_BOUND,
                           int32_t* pLength,
                           UBool forceCopy,
                           UErrorCode* status);
@@ -715,8 +715,8 @@ ures_getUTF8StringByIndex(const UResourceBundle* resB,
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getByKey(const UResourceBundle* resourceBundle,
-              const char* key,
+ures_get_By_താക്കോൽ(സ്ഥിരം UResourceBundle* resourceBundle,
+              സ്ഥിരം അക്ഷരം* താക്കോൽ,
               UResourceBundle* fillIn U_LIFETIME_BOUND,
               UErrorCode* status);
 
@@ -732,9 +732,9 @@ ures_getByKey(const UResourceBundle* resourceBundle,
  * @return                  a pointer to a zero-terminated UChar array which lives in a memory mapped/DLL file.
  * @stable ICU 2.0
  */
-U_CAPI const UChar* U_EXPORT2
-ures_getStringByKey(const UResourceBundle* resB U_LIFETIME_BOUND,
-                    const char* key,
+U_CAPI സ്ഥിരം UChar* U_EXPORT2
+ures_get_String_By_താക്കോൽ(സ്ഥിരം UResourceBundle* resB U_LIFETIME_BOUND,
+                    സ്ഥിരം അക്ഷരം* താക്കോൽ,
                     int32_t* len,
                     UErrorCode* status);
 
@@ -788,16 +788,16 @@ ures_getStringByKey(const UResourceBundle* resB U_LIFETIME_BOUND,
  * @see u_strToUTF8
  * @stable ICU 3.6
  */
-U_CAPI const char* U_EXPORT2
-ures_getUTF8StringByKey(const UResourceBundle* resB,
-                        const char* key,
-                        char* dest U_LIFETIME_BOUND,
+U_CAPI സ്ഥിരം അക്ഷരം* U_EXPORT2
+ures_get_UTF8_String_By_താക്കോൽ(സ്ഥിരം UResourceBundle* resB,
+                        സ്ഥിരം അക്ഷരം* താക്കോൽ,
+                        അക്ഷരം* dest U_LIFETIME_BOUND,
                         int32_t* pLength,
                         UBool forceCopy,
                         UErrorCode* status);
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/unistr.h"
+#എങ്കിൽ U_SHOW_CPLUSPLUS_API
+#അന്തര്ഭാവ "unicode/unistr.h"
 
 U_NAMESPACE_BEGIN
 /**
@@ -811,17 +811,17 @@ U_NAMESPACE_BEGIN
  * @return The string value, or a bogus string if there is a failure UErrorCode.
  * @stable ICU 2.0
  */
-inline UnicodeString
-ures_getUnicodeString(const UResourceBundle* resB U_LIFETIME_BOUND, UErrorCode* status) {
+വരിയിൽ UnicodeString
+ures_getUnicodeString(സ്ഥിരം UResourceBundle* resB U_LIFETIME_BOUND, UErrorCode* status) {
     UnicodeString result;
     int32_t len = 0;
-    const char16_t *r = ConstChar16Ptr(ures_getString(resB, &len, status));
-    if(U_SUCCESS(*status)) {
+    സ്ഥിരം char16_t *r = ConstChar16Ptr(ures_getString(resB, &len, status));
+    എങ്കിൽ(U_SUCCESS(*status)) {
         result.setTo(true, r, len);
-    } else {
+    } അല്ലെങ്കിൽ {
         result.setToBogus();
     }
-    return result;
+    തിരികെ result;
 }
 
 /**
@@ -836,19 +836,19 @@ ures_getUnicodeString(const UResourceBundle* resB U_LIFETIME_BOUND, UErrorCode* 
  * @return The string value, or a bogus string if there is a failure UErrorCode.
  * @stable ICU 2.0
  */
-inline UnicodeString
+വരിയിൽ UnicodeString
 ures_getNextUnicodeString(UResourceBundle* resB U_LIFETIME_BOUND,
-                          const char** key,
+                          സ്ഥിരം അക്ഷരം** താക്കോൽ,
                           UErrorCode* status) {
     UnicodeString result;
     int32_t len = 0;
-    const char16_t* r = ConstChar16Ptr(ures_getNextString(resB, &len, key, status));
-    if(U_SUCCESS(*status)) {
+    സ്ഥിരം char16_t* r = ConstChar16Ptr(ures_getNextString(resB, &len, താക്കോൽ, status));
+    എങ്കിൽ(U_SUCCESS(*status)) {
         result.setTo(true, r, len);
-    } else {
+    } അല്ലെങ്കിൽ {
         result.setToBogus();
     }
-    return result;
+    തിരികെ result;
 }
 
 /**
@@ -860,19 +860,19 @@ ures_getNextUnicodeString(UResourceBundle* resB U_LIFETIME_BOUND,
  * @return The string value, or a bogus string if there is a failure UErrorCode.
  * @stable ICU 2.0
  */
-inline UnicodeString
-ures_getUnicodeStringByIndex(const UResourceBundle* resB U_LIFETIME_BOUND,
+വരിയിൽ UnicodeString
+ures_getUnicodeStringByIndex(സ്ഥിരം UResourceBundle* resB U_LIFETIME_BOUND,
                              int32_t indexS,
                              UErrorCode* status) {
     UnicodeString result;
     int32_t len = 0;
-    const char16_t* r = ConstChar16Ptr(ures_getStringByIndex(resB, indexS, &len, status));
-    if(U_SUCCESS(*status)) {
+    സ്ഥിരം char16_t* r = ConstChar16Ptr(ures_getStringByIndex(resB, indexS, &len, status));
+    എങ്കിൽ(U_SUCCESS(*status)) {
         result.setTo(true, r, len);
-    } else {
+    } അല്ലെങ്കിൽ {
         result.setToBogus();
     }
-    return result;
+    തിരികെ result;
 }
 
 /**
@@ -885,19 +885,19 @@ ures_getUnicodeStringByIndex(const UResourceBundle* resB U_LIFETIME_BOUND,
  * @return The string value, or a bogus string if there is a failure UErrorCode.
  * @stable ICU 2.0
  */
-inline UnicodeString
-ures_getUnicodeStringByKey(const UResourceBundle* resB U_LIFETIME_BOUND,
-                           const char* key,
+വരിയിൽ UnicodeString
+ures_get_Unicode_String_By_താക്കോൽ(സ്ഥിരം UResourceBundle* resB U_LIFETIME_BOUND,
+                           സ്ഥിരം അക്ഷരം* താക്കോൽ,
                            UErrorCode* status) {
     UnicodeString result;
     int32_t len = 0;
-    const char16_t* r = ConstChar16Ptr(ures_getStringByKey(resB, key, &len, status));
-    if(U_SUCCESS(*status)) {
+    സ്ഥിരം char16_t* r = ConstChar16Ptr(ures_get_String_By_താക്കോൽ(resB, താക്കോൽ, &len, status));
+    എങ്കിൽ(U_SUCCESS(*status)) {
         result.setTo(true, r, len);
-    } else {
+    } അല്ലെങ്കിൽ {
         result.setToBogus();
     }
-    return result;
+    തിരികെ result;
 }
 
 U_NAMESPACE_END
@@ -913,7 +913,7 @@ U_NAMESPACE_END
  * @stable ICU 3.2
  */
 U_CAPI UEnumeration* U_EXPORT2
-ures_openAvailableLocales(const char *packageName, UErrorCode *status);
+ures_openAvailableLocales(സ്ഥിരം അക്ഷരം *packageName, UErrorCode *status);
 
 
 #endif /*_URES*/

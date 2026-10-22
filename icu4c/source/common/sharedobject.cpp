@@ -7,11 +7,11 @@
 ******************************************************************************
 * sharedobject.cpp
 */
-#include "sharedobject.h"
-#include "mutex.h"
-#include "uassert.h"
-#include "umutex.h"
-#include "unifiedcache.h"
+#അന്തര്ഭാവ "sharedobject.h"
+#അന്തര്ഭാവ "mutex.h"
+#അന്തര്ഭാവ "uassert.h"
+#അന്തര്ഭാവ "umutex.h"
+#അന്തര്ഭാവ "unifiedcache.h"
 
 U_NAMESPACE_BEGIN
 
@@ -19,9 +19,9 @@ SharedObject::~SharedObject() {}
 
 UnifiedCacheBase::~UnifiedCacheBase() {}
 
-void
-SharedObject::addRef() const {
-    umtx_atomic_inc(&hardRefCount);
+ശൂന്യം
+SharedObject::addRef() സ്ഥിരം {
+    umtx_atomic_inc(&hard_Ref_എണ്ണം);
 }
 
 // removeRef Decrement the reference count and delete if it is zero.
@@ -32,30 +32,30 @@ SharedObject::addRef() const {
 //           a cache eviction cycle concurrently.
 //           NO ACCESS TO *this PERMITTED AFTER REFERENCE COUNT == 0 for cached objects.
 //           THE OBJECT MAY ALREADY BE GONE.
-void
-SharedObject::removeRef() const {
-    const UnifiedCacheBase *cache = this->cachePtr;
-    int32_t updatedRefCount = umtx_atomic_dec(&hardRefCount);
-    U_ASSERT(updatedRefCount >= 0);
-    if (updatedRefCount == 0) {
-        if (cache) {
+ശൂന്യം
+SharedObject::removeRef() സ്ഥിരം {
+    സ്ഥിരം UnifiedCacheBase *cache = ഇത്->cachePtr;
+    int32_t updated_Ref_എണ്ണം = umtx_atomic_dec(&hard_Ref_എണ്ണം);
+    U_ASSERT(updated_Ref_എണ്ണം >= 0);
+    എങ്കിൽ (updated_Ref_എണ്ണം == 0) {
+        എങ്കിൽ (cache) {
             cache->handleUnreferencedObject();
-        } else {
-            delete this;
+        } അല്ലെങ്കിൽ {
+            delete ഇത്;
         }
     }
 }
 
 
 int32_t
-SharedObject::getRefCount() const {
-    return umtx_loadAcquire(hardRefCount);
+SharedObject::get_Ref_എണ്ണം() സ്ഥിരം {
+    തിരികെ umtx_loadAcquire(hard_Ref_എണ്ണം);
 }
 
-void
-SharedObject::deleteIfZeroRefCount() const {
-    if (this->cachePtr == nullptr && getRefCount() == 0) {
-        delete this;
+ശൂന്യം
+SharedObject::delete_If_Zero_Ref_എണ്ണം() സ്ഥിരം {
+    എങ്കിൽ (ഇത്->cachePtr == nullptr && get_Ref_എണ്ണം() == 0) {
+        delete ഇത്;
     }
 }
 

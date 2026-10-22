@@ -9,14 +9,14 @@
 #   include <stdio.h>
 #endif
 
-#include "unicode/utypes.h"
-#include "unicode/ucptrie.h"
-#include "unicode/umutablecptrie.h"
-#include "unicode/uobject.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "uassert.h"
-#include "ucptrie_impl.h"
+#അന്തര്ഭാവ "unicode/utypes.h"
+#അന്തര്ഭാവ "unicode/ucptrie.h"
+#അന്തര്ഭാവ "unicode/umutablecptrie.h"
+#അന്തര്ഭാവ "unicode/uobject.h"
+#അന്തര്ഭാവ "unicode/utf16.h"
+#അന്തര്ഭാവ "cmemory.h"
+#അന്തര്ഭാവ "uassert.h"
+#അന്തര്ഭാവ "ucptrie_impl.h"
 
 // ICU-20235 In case Microsoft math.h has defined this, undefine it.
 #ifdef OVERFLOW
@@ -25,7 +25,7 @@
 
 U_NAMESPACE_BEGIN
 
-namespace {
+നാമാകാശ {
 
 constexpr int32_t MAX_UNICODE = 0x10ffff;
 
@@ -64,39 +64,39 @@ constexpr uint8_t I3_18 = 3;
 
 constexpr int32_t INDEX_3_18BIT_BLOCK_LENGTH = UCPTRIE_INDEX_3_BLOCK_LENGTH + UCPTRIE_INDEX_3_BLOCK_LENGTH / 8;
 
-class AllSameBlocks;
-class MixedBlocks;
+വർഗ്ഗം AllSameBlocks;
+വർഗ്ഗം MixedBlocks;
 
-class MutableCodePointTrie : public UMemory {
-public:
-    MutableCodePointTrie(uint32_t initialValue, uint32_t errorValue, UErrorCode &errorCode);
-    MutableCodePointTrie(const MutableCodePointTrie &other, UErrorCode &errorCode);
-    MutableCodePointTrie(const MutableCodePointTrie &other) = delete;
+വർഗ്ഗം MutableCodePointTrie : പൊതു UMemory {
+പൊതു:
+    MutableCodePointTrie(uint32_t initial_മൂല്യം, uint32_t error_മൂല്യം, UErrorCode &errorCode);
+    MutableCodePointTrie(സ്ഥിരം MutableCodePointTrie &other, UErrorCode &errorCode);
+    MutableCodePointTrie(സ്ഥിരം MutableCodePointTrie &other) = delete;
     ~MutableCodePointTrie();
 
-    MutableCodePointTrie &operator=(const MutableCodePointTrie &other) = delete;
+    MutableCodePointTrie &operator=(സ്ഥിരം MutableCodePointTrie &other) = delete;
 
-    static MutableCodePointTrie *fromUCPMap(const UCPMap *map, UErrorCode &errorCode);
-    static MutableCodePointTrie *fromUCPTrie(const UCPTrie *trie, UErrorCode &errorCode);
+    സ്ഥിതം MutableCodePointTrie *fromUCPMap(സ്ഥിരം UCPMap *map, UErrorCode &errorCode);
+    സ്ഥിതം MutableCodePointTrie *fromUCPTrie(സ്ഥിരം UCPTrie *trie, UErrorCode &errorCode);
 
-    uint32_t get(UChar32 c) const;
-    int32_t getRange(UChar32 start, UCPMapValueFilter *filter, const void *context,
-                     uint32_t *pValue) const;
+    uint32_t get(UChar32 c) സ്ഥിരം;
+    int32_t getRange(UChar32 start, UCPMap_മൂല്യം_Filter *filter, സ്ഥിരം ശൂന്യം *context,
+                     uint32_t *p_മൂല്യം) സ്ഥിരം;
 
-    void set(UChar32 c, uint32_t value, UErrorCode &errorCode);
-    void setRange(UChar32 start, UChar32 end, uint32_t value, UErrorCode &errorCode);
+    ശൂന്യം set(UChar32 c, uint32_t value, UErrorCode &errorCode);
+    ശൂന്യം setRange(UChar32 start, UChar32 end, uint32_t value, UErrorCode &errorCode);
 
-    UCPTrie *build(UCPTrieType type, UCPTrieValueWidth valueWidth, UErrorCode &errorCode);
+    UCPTrie *build(UCPTrieType type, UCPTrie_മൂല്യം_Width മൂല്യം_Width, UErrorCode &errorCode);
 
-private:
-    void clear();
+സ്വകാര്യ:
+    ശൂന്യം clear();
 
-    bool ensureHighStart(UChar32 c);
+    തർക്കം ensure_മുകളിലെ_Start(UChar32 c);
     int32_t allocDataBlock(int32_t blockLength);
     int32_t getDataBlock(int32_t i);
 
-    void maskValues(uint32_t mask);
-    UChar32 findHighStart() const;
+    ശൂന്യം mask_മൂല്യങ്ങൾ(uint32_t mask);
+    UChar32 find_മുകളിലെ_Start() സ്ഥിരം;
     int32_t compactWholeDataBlocks(int32_t fastILimit, AllSameBlocks &allSameBlocks);
     int32_t compactData(
             int32_t fastILimit, uint32_t *newData, int32_t newDataCapacity,
@@ -112,61 +112,61 @@ private:
     int32_t dataLength = 0;
     int32_t dataNullOffset = -1;
 
-    uint32_t origInitialValue;
-    uint32_t initialValue;
-    uint32_t errorValue;
-    UChar32 highStart;
-    uint32_t highValue;
+    uint32_t orig_Initial_മൂല്യം;
+    uint32_t initial_മൂല്യം;
+    uint32_t error_മൂല്യം;
+    UChar32 മുകളിലെ_Start;
+    uint32_t മുകളിലെ_മൂല്യം;
 #ifdef UCPTRIE_DEBUG
-public:
-    const char *name;
+പൊതു:
+    സ്ഥിരം അക്ഷരം *name;
 #endif
-private:
+സ്വകാര്യ:
     /** Temporary array while building the final data. */
     uint16_t *index16 = nullptr;
     uint8_t flags[UNICODE_LIMIT >> UCPTRIE_SHIFT_3];
 };
 
-MutableCodePointTrie::MutableCodePointTrie(uint32_t iniValue, uint32_t errValue, UErrorCode &errorCode) :
-        origInitialValue(iniValue), initialValue(iniValue), errorValue(errValue),
-        highStart(0), highValue(initialValue)
+MutableCodePointTrie::MutableCodePointTrie(uint32_t ini_മൂല്യം, uint32_t err_മൂല്യം, UErrorCode &errorCode) :
+        orig_Initial_മൂല്യം(ini_മൂല്യം), initial_മൂല്യം(ini_മൂല്യം), error_മൂല്യം(err_മൂല്യം),
+        മുകളിലെ_Start(0), മുകളിലെ_മൂല്യം(initial_മൂല്യം)
 #ifdef UCPTRIE_DEBUG
         , name("open")
 #endif
         {
-    if (U_FAILURE(errorCode)) { return; }
+    എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ; }
     index = static_cast<uint32_t*>(uprv_malloc(BMP_I_LIMIT * 4));
     data = static_cast<uint32_t*>(uprv_malloc(INITIAL_DATA_LENGTH * 4));
-    if (index == nullptr || data == nullptr) {
+    എങ്കിൽ (index == nullptr || data == nullptr) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        തിരികെ;
     }
     indexCapacity = BMP_I_LIMIT;
     dataCapacity = INITIAL_DATA_LENGTH;
 }
 
-MutableCodePointTrie::MutableCodePointTrie(const MutableCodePointTrie &other, UErrorCode &errorCode) :
+MutableCodePointTrie::MutableCodePointTrie(സ്ഥിരം MutableCodePointTrie &other, UErrorCode &errorCode) :
         index3NullOffset(other.index3NullOffset),
         dataNullOffset(other.dataNullOffset),
-        origInitialValue(other.origInitialValue), initialValue(other.initialValue),
-        errorValue(other.errorValue),
-        highStart(other.highStart), highValue(other.highValue)
+        orig_Initial_മൂല്യം(other.orig_Initial_മൂല്യം), initial_മൂല്യം(other.initial_മൂല്യം),
+        error_മൂല്യം(other.error_മൂല്യം),
+        മുകളിലെ_Start(other.മുകളിലെ_Start), മുകളിലെ_മൂല്യം(other.മുകളിലെ_മൂല്യം)
 #ifdef UCPTRIE_DEBUG
         , name("mutable clone")
 #endif
         {
-    if (U_FAILURE(errorCode)) { return; }
-    int32_t iCapacity = highStart <= BMP_LIMIT ? BMP_I_LIMIT : I_LIMIT;
+    എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ; }
+    int32_t iCapacity = മുകളിലെ_Start <= BMP_LIMIT ? BMP_I_LIMIT : I_LIMIT;
     index = static_cast<uint32_t*>(uprv_malloc(iCapacity * 4));
     data = static_cast<uint32_t*>(uprv_malloc(other.dataCapacity * 4));
-    if (index == nullptr || data == nullptr) {
+    എങ്കിൽ (index == nullptr || data == nullptr) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        തിരികെ;
     }
     indexCapacity = iCapacity;
     dataCapacity = other.dataCapacity;
 
-    int32_t iLimit = highStart >> UCPTRIE_SHIFT_3;
+    int32_t iLimit = മുകളിലെ_Start >> UCPTRIE_SHIFT_3;
     uprv_memcpy(flags, other.flags, iLimit);
     uprv_memcpy(index, other.index, iLimit * 4);
     uprv_memcpy(data, other.data, (size_t)other.dataLength * 4);
@@ -180,255 +180,255 @@ MutableCodePointTrie::~MutableCodePointTrie() {
     uprv_free(index16);
 }
 
-MutableCodePointTrie *MutableCodePointTrie::fromUCPMap(const UCPMap *map, UErrorCode &errorCode) {
+MutableCodePointTrie *MutableCodePointTrie::fromUCPMap(സ്ഥിരം UCPMap *map, UErrorCode &errorCode) {
     // Use the highValue as the initialValue to reduce the highStart.
-    uint32_t errorValue = ucpmap_get(map, -1);
-    uint32_t initialValue = ucpmap_get(map, 0x10ffff);
+    uint32_t error_മൂല്യം = ucpmap_get(map, -1);
+    uint32_t initial_മൂല്യം = ucpmap_get(map, 0x10ffff);
     LocalPointer<MutableCodePointTrie> mutableTrie(
-        new MutableCodePointTrie(initialValue, errorValue, errorCode),
+        പുതിയ MutableCodePointTrie(initial_മൂല്യം, error_മൂല്യം, errorCode),
         errorCode);
-    if (U_FAILURE(errorCode)) {
-        return nullptr;
+    എങ്കിൽ (U_FAILURE(errorCode)) {
+        തിരികെ nullptr;
     }
     UChar32 start = 0, end;
     uint32_t value;
-    while ((end = ucpmap_getRange(map, start, UCPMAP_RANGE_NORMAL, 0,
+    ആകുമ്പോൾ ((end = ucpmap_getRange(map, start, UCPMAP_RANGE_NORMAL, 0,
                                   nullptr, nullptr, &value)) >= 0) {
-        if (value != initialValue) {
-            if (start == end) {
+        എങ്കിൽ (value != initial_മൂല്യം) {
+            എങ്കിൽ (start == end) {
                 mutableTrie->set(start, value, errorCode);
-            } else {
+            } അല്ലെങ്കിൽ {
                 mutableTrie->setRange(start, end, value, errorCode);
             }
         }
         start = end + 1;
     }
-    if (U_SUCCESS(errorCode)) {
-        return mutableTrie.orphan();
-    } else {
-        return nullptr;
+    എങ്കിൽ (U_SUCCESS(errorCode)) {
+        തിരികെ mutableTrie.orphan();
+    } അല്ലെങ്കിൽ {
+        തിരികെ nullptr;
     }
 }
 
-MutableCodePointTrie *MutableCodePointTrie::fromUCPTrie(const UCPTrie *trie, UErrorCode &errorCode) {
+MutableCodePointTrie *MutableCodePointTrie::fromUCPTrie(സ്ഥിരം UCPTrie *trie, UErrorCode &errorCode) {
     // Use the highValue as the initialValue to reduce the highStart.
-    uint32_t errorValue;
-    uint32_t initialValue;
-    switch (trie->valueWidth) {
-    case UCPTRIE_VALUE_BITS_16:
-        errorValue = trie->data.ptr16[trie->dataLength - UCPTRIE_ERROR_VALUE_NEG_DATA_OFFSET];
-        initialValue = trie->data.ptr16[trie->dataLength - UCPTRIE_HIGH_VALUE_NEG_DATA_OFFSET];
-        break;
-    case UCPTRIE_VALUE_BITS_32:
-        errorValue = trie->data.ptr32[trie->dataLength - UCPTRIE_ERROR_VALUE_NEG_DATA_OFFSET];
-        initialValue = trie->data.ptr32[trie->dataLength - UCPTRIE_HIGH_VALUE_NEG_DATA_OFFSET];
-        break;
-    case UCPTRIE_VALUE_BITS_8:
-        errorValue = trie->data.ptr8[trie->dataLength - UCPTRIE_ERROR_VALUE_NEG_DATA_OFFSET];
-        initialValue = trie->data.ptr8[trie->dataLength - UCPTRIE_HIGH_VALUE_NEG_DATA_OFFSET];
-        break;
-    default:
+    uint32_t error_മൂല്യം;
+    uint32_t initial_മൂല്യം;
+    തിരഞ്ഞെടുപ്പ് (trie->മൂല്യം_Width) {
+    അവസ്ഥ UCPTRIE_മൂല്യം_BITS_16:
+        error_മൂല്യം = trie->data.ptr16[trie->dataLength - UCPTRIE_ERROR_മൂല്യം_NEG_DATA_OFFSET];
+        initial_മൂല്യം = trie->data.ptr16[trie->dataLength - UCPTRIE_മുകളിലെ_മൂല്യം_NEG_DATA_OFFSET];
+        നിർത്തുക;
+    അവസ്ഥ UCPTRIE_മൂല്യം_BITS_32:
+        error_മൂല്യം = trie->data.ptr32[trie->dataLength - UCPTRIE_ERROR_മൂല്യം_NEG_DATA_OFFSET];
+        initial_മൂല്യം = trie->data.ptr32[trie->dataLength - UCPTRIE_മുകളിലെ_മൂല്യം_NEG_DATA_OFFSET];
+        നിർത്തുക;
+    അവസ്ഥ UCPTRIE_മൂല്യം_BITS_8:
+        error_മൂല്യം = trie->data.ptr8[trie->dataLength - UCPTRIE_ERROR_മൂല്യം_NEG_DATA_OFFSET];
+        initial_മൂല്യം = trie->data.ptr8[trie->dataLength - UCPTRIE_മുകളിലെ_മൂല്യം_NEG_DATA_OFFSET];
+        നിർത്തുക;
+    സ്ഥിരസ്ഥിതി:
         // Unreachable if the trie is properly initialized.
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
     LocalPointer<MutableCodePointTrie> mutableTrie(
-        new MutableCodePointTrie(initialValue, errorValue, errorCode),
+        പുതിയ MutableCodePointTrie(initial_മൂല്യം, error_മൂല്യം, errorCode),
         errorCode);
-    if (U_FAILURE(errorCode)) {
-        return nullptr;
+    എങ്കിൽ (U_FAILURE(errorCode)) {
+        തിരികെ nullptr;
     }
     UChar32 start = 0, end;
     uint32_t value;
-    while ((end = ucptrie_getRange(trie, start, UCPMAP_RANGE_NORMAL, 0,
+    ആകുമ്പോൾ ((end = ucptrie_getRange(trie, start, UCPMAP_RANGE_NORMAL, 0,
                                    nullptr, nullptr, &value)) >= 0) {
-        if (value != initialValue) {
-            if (start == end) {
+        എങ്കിൽ (value != initial_മൂല്യം) {
+            എങ്കിൽ (start == end) {
                 mutableTrie->set(start, value, errorCode);
-            } else {
+            } അല്ലെങ്കിൽ {
                 mutableTrie->setRange(start, end, value, errorCode);
             }
         }
         start = end + 1;
     }
-    if (U_SUCCESS(errorCode)) {
-        return mutableTrie.orphan();
-    } else {
-        return nullptr;
+    എങ്കിൽ (U_SUCCESS(errorCode)) {
+        തിരികെ mutableTrie.orphan();
+    } അല്ലെങ്കിൽ {
+        തിരികെ nullptr;
     }
 }
 
-void MutableCodePointTrie::clear() {
+ശൂന്യം MutableCodePointTrie::clear() {
     index3NullOffset = dataNullOffset = -1;
     dataLength = 0;
-    highValue = initialValue = origInitialValue;
-    highStart = 0;
+    മുകളിലെ_മൂല്യം = initial_മൂല്യം = orig_Initial_മൂല്യം;
+    മുകളിലെ_Start = 0;
     uprv_free(index16);
     index16 = nullptr;
 }
 
-uint32_t MutableCodePointTrie::get(UChar32 c) const {
-    if (static_cast<uint32_t>(c) > MAX_UNICODE) {
-        return errorValue;
+uint32_t MutableCodePointTrie::get(UChar32 c) സ്ഥിരം {
+    എങ്കിൽ (static_cast<uint32_t>(c) > MAX_UNICODE) {
+        തിരികെ error_മൂല്യം;
     }
-    if (c >= highStart) {
-        return highValue;
+    എങ്കിൽ (c >= മുകളിലെ_Start) {
+        തിരികെ മുകളിലെ_മൂല്യം;
     }
     int32_t i = c >> UCPTRIE_SHIFT_3;
-    if (flags[i] == ALL_SAME) {
-        return index[i];
-    } else {
-        return data[index[i] + (c & UCPTRIE_SMALL_DATA_MASK)];
+    എങ്കിൽ (flags[i] == ALL_SAME) {
+        തിരികെ index[i];
+    } അല്ലെങ്കിൽ {
+        തിരികെ data[index[i] + (c & UCPTRIE_SMALL_DATA_MASK)];
     }
 }
 
-inline uint32_t maybeFilterValue(uint32_t value, uint32_t initialValue, uint32_t nullValue,
-                                 UCPMapValueFilter *filter, const void *context) {
-    if (value == initialValue) {
-        value = nullValue;
-    } else if (filter != nullptr) {
+വരിയിൽ uint32_t maybe_Filter_മൂല്യം(uint32_t value, uint32_t initial_മൂല്യം, uint32_t null_മൂല്യം,
+                                 UCPMap_മൂല്യം_Filter *filter, സ്ഥിരം ശൂന്യം *context) {
+    എങ്കിൽ (value == initial_മൂല്യം) {
+        value = null_മൂല്യം;
+    } അല്ലെങ്കിൽ എങ്കിൽ (filter != nullptr) {
         value = filter(context, value);
     }
-    return value;
+    തിരികെ value;
 }
 
 UChar32 MutableCodePointTrie::getRange(
-        UChar32 start, UCPMapValueFilter *filter, const void *context,
-        uint32_t *pValue) const {
-    if (static_cast<uint32_t>(start) > MAX_UNICODE) {
-        return U_SENTINEL;
+        UChar32 start, UCPMap_മൂല്യം_Filter *filter, സ്ഥിരം ശൂന്യം *context,
+        uint32_t *p_മൂല്യം) സ്ഥിരം {
+    എങ്കിൽ (static_cast<uint32_t>(start) > MAX_UNICODE) {
+        തിരികെ U_SENTINEL;
     }
-    if (start >= highStart) {
-        if (pValue != nullptr) {
-            uint32_t value = highValue;
-            if (filter != nullptr) { value = filter(context, value); }
-            *pValue = value;
+    എങ്കിൽ (start >= മുകളിലെ_Start) {
+        എങ്കിൽ (p_മൂല്യം != nullptr) {
+            uint32_t value = മുകളിലെ_മൂല്യം;
+            എങ്കിൽ (filter != nullptr) { value = filter(context, value); }
+            *p_മൂല്യം = value;
         }
-        return MAX_UNICODE;
+        തിരികെ MAX_UNICODE;
     }
-    uint32_t nullValue = initialValue;
-    if (filter != nullptr) { nullValue = filter(context, nullValue); }
+    uint32_t null_മൂല്യം = initial_മൂല്യം;
+    എങ്കിൽ (filter != nullptr) { null_മൂല്യം = filter(context, null_മൂല്യം); }
     UChar32 c = start;
-    uint32_t trieValue, value;
-    bool haveValue = false;
+    uint32_t trie_മൂല്യം, value;
+    തർക്കം have_മൂല്യം = അസത്യം;
     int32_t i = c >> UCPTRIE_SHIFT_3;
-    do {
-        if (flags[i] == ALL_SAME) {
+    ചെയ്യുക {
+        എങ്കിൽ (flags[i] == ALL_SAME) {
             uint32_t trieValue2 = index[i];
-            if (haveValue) {
-                if (trieValue2 != trieValue) {
-                    if (filter == nullptr ||
-                            maybeFilterValue(trieValue2, initialValue, nullValue,
+            എങ്കിൽ (have_മൂല്യം) {
+                എങ്കിൽ (trieValue2 != trie_മൂല്യം) {
+                    എങ്കിൽ (filter == nullptr ||
+                            maybe_Filter_മൂല്യം(trieValue2, initial_മൂല്യം, null_മൂല്യം,
                                              filter, context) != value) {
-                        return c - 1;
+                        തിരികെ c - 1;
                     }
-                    trieValue = trieValue2;  // may or may not help
+                    trie_മൂല്യം = trieValue2;  // may or may not help
                 }
-            } else {
-                trieValue = trieValue2;
-                value = maybeFilterValue(trieValue2, initialValue, nullValue, filter, context);
-                if (pValue != nullptr) { *pValue = value; }
-                haveValue = true;
+            } അല്ലെങ്കിൽ {
+                trie_മൂല്യം = trieValue2;
+                value = maybe_Filter_മൂല്യം(trieValue2, initial_മൂല്യം, null_മൂല്യം, filter, context);
+                എങ്കിൽ (p_മൂല്യം != nullptr) { *p_മൂല്യം = value; }
+                have_മൂല്യം = സത്യം;
             }
             c = (c + UCPTRIE_SMALL_DATA_BLOCK_LENGTH) & ~UCPTRIE_SMALL_DATA_MASK;
-        } else /* MIXED */ {
+        } അല്ലെങ്കിൽ /* MIXED */ {
             int32_t di = index[i] + (c & UCPTRIE_SMALL_DATA_MASK);
             uint32_t trieValue2 = data[di];
-            if (haveValue) {
-                if (trieValue2 != trieValue) {
-                    if (filter == nullptr ||
-                            maybeFilterValue(trieValue2, initialValue, nullValue,
+            എങ്കിൽ (have_മൂല്യം) {
+                എങ്കിൽ (trieValue2 != trie_മൂല്യം) {
+                    എങ്കിൽ (filter == nullptr ||
+                            maybe_Filter_മൂല്യം(trieValue2, initial_മൂല്യം, null_മൂല്യം,
                                              filter, context) != value) {
-                        return c - 1;
+                        തിരികെ c - 1;
                     }
-                    trieValue = trieValue2;  // may or may not help
+                    trie_മൂല്യം = trieValue2;  // may or may not help
                 }
-            } else {
-                trieValue = trieValue2;
-                value = maybeFilterValue(trieValue2, initialValue, nullValue, filter, context);
-                if (pValue != nullptr) { *pValue = value; }
-                haveValue = true;
+            } അല്ലെങ്കിൽ {
+                trie_മൂല്യം = trieValue2;
+                value = maybe_Filter_മൂല്യം(trieValue2, initial_മൂല്യം, null_മൂല്യം, filter, context);
+                എങ്കിൽ (p_മൂല്യം != nullptr) { *p_മൂല്യം = value; }
+                have_മൂല്യം = സത്യം;
             }
-            while ((++c & UCPTRIE_SMALL_DATA_MASK) != 0) {
+            ആകുമ്പോൾ ((++c & UCPTRIE_SMALL_DATA_MASK) != 0) {
                 trieValue2 = data[++di];
-                if (trieValue2 != trieValue) {
-                    if (filter == nullptr ||
-                            maybeFilterValue(trieValue2, initialValue, nullValue,
+                എങ്കിൽ (trieValue2 != trie_മൂല്യം) {
+                    എങ്കിൽ (filter == nullptr ||
+                            maybe_Filter_മൂല്യം(trieValue2, initial_മൂല്യം, null_മൂല്യം,
                                              filter, context) != value) {
-                        return c - 1;
+                        തിരികെ c - 1;
                     }
                 }
-                trieValue = trieValue2;  // may or may not help
+                trie_മൂല്യം = trieValue2;  // may or may not help
             }
         }
         ++i;
-    } while (c < highStart);
-    U_ASSERT(haveValue);
-    if (maybeFilterValue(highValue, initialValue, nullValue,
+    } ആകുമ്പോൾ (c < മുകളിലെ_Start);
+    U_ASSERT(have_മൂല്യം);
+    എങ്കിൽ (maybe_Filter_മൂല്യം(മുകളിലെ_മൂല്യം, initial_മൂല്യം, null_മൂല്യം,
                          filter, context) != value) {
-        return c - 1;
-    } else {
-        return MAX_UNICODE;
+        തിരികെ c - 1;
+    } അല്ലെങ്കിൽ {
+        തിരികെ MAX_UNICODE;
     }
 }
 
-void
+ശൂന്യം
 writeBlock(uint32_t *block, uint32_t value) {
     uint32_t *limit = block + UCPTRIE_SMALL_DATA_BLOCK_LENGTH;
-    while (block < limit) {
+    ആകുമ്പോൾ (block < limit) {
         *block++ = value;
     }
 }
 
-bool MutableCodePointTrie::ensureHighStart(UChar32 c) {
-    if (c >= highStart) {
+തർക്കം MutableCodePointTrie::ensure_മുകളിലെ_Start(UChar32 c) {
+    എങ്കിൽ (c >= മുകളിലെ_Start) {
         // Round up to a UCPTRIE_CP_PER_INDEX_2_ENTRY boundary to simplify compaction.
         c = (c + UCPTRIE_CP_PER_INDEX_2_ENTRY) & ~(UCPTRIE_CP_PER_INDEX_2_ENTRY - 1);
-        int32_t i = highStart >> UCPTRIE_SHIFT_3;
+        int32_t i = മുകളിലെ_Start >> UCPTRIE_SHIFT_3;
         int32_t iLimit = c >> UCPTRIE_SHIFT_3;
-        if (iLimit > indexCapacity) {
+        എങ്കിൽ (iLimit > indexCapacity) {
             uint32_t* newIndex = static_cast<uint32_t*>(uprv_malloc(I_LIMIT * 4));
-            if (newIndex == nullptr) { return false; }
+            എങ്കിൽ (newIndex == nullptr) { തിരികെ അസത്യം; }
             uprv_memcpy(newIndex, index, i * 4);
             uprv_free(index);
             index = newIndex;
             indexCapacity = I_LIMIT;
         }
-        do {
+        ചെയ്യുക {
             flags[i] = ALL_SAME;
-            index[i] = initialValue;
-        } while(++i < iLimit);
-        highStart = c;
+            index[i] = initial_മൂല്യം;
+        } ആകുമ്പോൾ(++i < iLimit);
+        മുകളിലെ_Start = c;
     }
-    return true;
+    തിരികെ സത്യം;
 }
 
 int32_t MutableCodePointTrie::allocDataBlock(int32_t blockLength) {
     int32_t newBlock = dataLength;
-    int32_t newTop = newBlock + blockLength;
-    if (newTop > dataCapacity) {
+    int32_t new_മുകൾ = newBlock + blockLength;
+    എങ്കിൽ (new_മുകൾ > dataCapacity) {
         int32_t capacity;
-        if (dataCapacity < MEDIUM_DATA_LENGTH) {
+        എങ്കിൽ (dataCapacity < MEDIUM_DATA_LENGTH) {
             capacity = MEDIUM_DATA_LENGTH;
-        } else if (dataCapacity < MAX_DATA_LENGTH) {
+        } അല്ലെങ്കിൽ എങ്കിൽ (dataCapacity < MAX_DATA_LENGTH) {
             capacity = MAX_DATA_LENGTH;
-        } else {
+        } അല്ലെങ്കിൽ {
             // Should never occur.
             // Either MAX_DATA_LENGTH is incorrect,
             // or the code writes more values than should be possible.
-            return -1;
+            തിരികെ -1;
         }
         uint32_t* newData = static_cast<uint32_t*>(uprv_malloc(capacity * 4));
-        if (newData == nullptr) {
-            return -1;
+        എങ്കിൽ (newData == nullptr) {
+            തിരികെ -1;
         }
         uprv_memcpy(newData, data, (size_t)dataLength * 4);
         uprv_free(data);
         data = newData;
         dataCapacity = capacity;
     }
-    dataLength = newTop;
-    return newBlock;
+    dataLength = new_മുകൾ;
+    തിരികെ newBlock;
 }
 
 /**
@@ -438,90 +438,90 @@ int32_t MutableCodePointTrie::allocDataBlock(int32_t blockLength) {
  * @internal
  */
 int32_t MutableCodePointTrie::getDataBlock(int32_t i) {
-    if (flags[i] == MIXED) {
-        return index[i];
+    എങ്കിൽ (flags[i] == MIXED) {
+        തിരികെ index[i];
     }
-    if (i < BMP_I_LIMIT) {
+    എങ്കിൽ (i < BMP_I_LIMIT) {
         int32_t newBlock = allocDataBlock(UCPTRIE_FAST_DATA_BLOCK_LENGTH);
-        if (newBlock < 0) { return newBlock; }
+        എങ്കിൽ (newBlock < 0) { തിരികെ newBlock; }
         int32_t iStart = i & ~(SMALL_DATA_BLOCKS_PER_BMP_BLOCK -1);
         int32_t iLimit = iStart + SMALL_DATA_BLOCKS_PER_BMP_BLOCK;
-        do {
+        ചെയ്യുക {
             U_ASSERT(flags[iStart] == ALL_SAME);
             writeBlock(data + newBlock, index[iStart]);
             flags[iStart] = MIXED;
             index[iStart++] = newBlock;
             newBlock += UCPTRIE_SMALL_DATA_BLOCK_LENGTH;
-        } while (iStart < iLimit);
-        return index[i];
-    } else {
+        } ആകുമ്പോൾ (iStart < iLimit);
+        തിരികെ index[i];
+    } അല്ലെങ്കിൽ {
         int32_t newBlock = allocDataBlock(UCPTRIE_SMALL_DATA_BLOCK_LENGTH);
-        if (newBlock < 0) { return newBlock; }
+        എങ്കിൽ (newBlock < 0) { തിരികെ newBlock; }
         writeBlock(data + newBlock, index[i]);
         flags[i] = MIXED;
         index[i] = newBlock;
-        return newBlock;
+        തിരികെ newBlock;
     }
 }
 
-void MutableCodePointTrie::set(UChar32 c, uint32_t value, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) {
-        return;
+ശൂന്യം MutableCodePointTrie::set(UChar32 c, uint32_t value, UErrorCode &errorCode) {
+    എങ്കിൽ (U_FAILURE(errorCode)) {
+        തിരികെ;
     }
-    if (static_cast<uint32_t>(c) > MAX_UNICODE) {
+    എങ്കിൽ (static_cast<uint32_t>(c) > MAX_UNICODE) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        തിരികെ;
     }
 
     int32_t block;
-    if (!ensureHighStart(c) || (block = getDataBlock(c >> UCPTRIE_SHIFT_3)) < 0) {
+    എങ്കിൽ (!ensure_മുകളിലെ_Start(c) || (block = getDataBlock(c >> UCPTRIE_SHIFT_3)) < 0) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        തിരികെ;
     }
 
     data[block + (c & UCPTRIE_SMALL_DATA_MASK)] = value;
 }
 
-void
+ശൂന്യം
 fillBlock(uint32_t *block, UChar32 start, UChar32 limit, uint32_t value) {
     uint32_t *pLimit = block + limit;
     block += start;
-    while (block < pLimit) {
+    ആകുമ്പോൾ (block < pLimit) {
         *block++ = value;
     }
 }
 
-void MutableCodePointTrie::setRange(UChar32 start, UChar32 end, uint32_t value, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) {
-        return;
+ശൂന്യം MutableCodePointTrie::setRange(UChar32 start, UChar32 end, uint32_t value, UErrorCode &errorCode) {
+    എങ്കിൽ (U_FAILURE(errorCode)) {
+        തിരികെ;
     }
-    if (static_cast<uint32_t>(start) > MAX_UNICODE || static_cast<uint32_t>(end) > MAX_UNICODE || start > end) {
+    എങ്കിൽ (static_cast<uint32_t>(start) > MAX_UNICODE || static_cast<uint32_t>(end) > MAX_UNICODE || start > end) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        തിരികെ;
     }
-    if (!ensureHighStart(end)) {
+    എങ്കിൽ (!ensure_മുകളിലെ_Start(end)) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        തിരികെ;
     }
 
     UChar32 limit = end + 1;
-    if (start & UCPTRIE_SMALL_DATA_MASK) {
+    എങ്കിൽ (start & UCPTRIE_SMALL_DATA_MASK) {
         // Set partial block at [start..following block boundary[.
         int32_t block = getDataBlock(start >> UCPTRIE_SHIFT_3);
-        if (block < 0) {
+        എങ്കിൽ (block < 0) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return;
+            തിരികെ;
         }
 
         UChar32 nextStart = (start + UCPTRIE_SMALL_DATA_MASK) & ~UCPTRIE_SMALL_DATA_MASK;
-        if (nextStart <= limit) {
+        എങ്കിൽ (nextStart <= limit) {
             fillBlock(data + block, start & UCPTRIE_SMALL_DATA_MASK, UCPTRIE_SMALL_DATA_BLOCK_LENGTH,
                       value);
             start = nextStart;
-        } else {
+        } അല്ലെങ്കിൽ {
             fillBlock(data + block, start & UCPTRIE_SMALL_DATA_MASK, limit & UCPTRIE_SMALL_DATA_MASK,
                       value);
-            return;
+            തിരികെ;
         }
     }
 
@@ -532,22 +532,22 @@ void MutableCodePointTrie::setRange(UChar32 start, UChar32 end, uint32_t value, 
     limit &= ~UCPTRIE_SMALL_DATA_MASK;
 
     // Iterate over all-value blocks.
-    while (start < limit) {
+    ആകുമ്പോൾ (start < limit) {
         int32_t i = start >> UCPTRIE_SHIFT_3;
-        if (flags[i] == ALL_SAME) {
+        എങ്കിൽ (flags[i] == ALL_SAME) {
             index[i] = value;
-        } else /* MIXED */ {
+        } അല്ലെങ്കിൽ /* MIXED */ {
             fillBlock(data + index[i], 0, UCPTRIE_SMALL_DATA_BLOCK_LENGTH, value);
         }
         start += UCPTRIE_SMALL_DATA_BLOCK_LENGTH;
     }
 
-    if (rest > 0) {
+    എങ്കിൽ (rest > 0) {
         // Set partial block at [last block boundary..limit[.
         int32_t block = getDataBlock(start >> UCPTRIE_SHIFT_3);
-        if (block < 0) {
+        എങ്കിൽ (block < 0) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return;
+            തിരികെ;
         }
 
         fillBlock(data + block, 0, rest, value);
@@ -556,72 +556,72 @@ void MutableCodePointTrie::setRange(UChar32 start, UChar32 end, uint32_t value, 
 
 /* compaction --------------------------------------------------------------- */
 
-void MutableCodePointTrie::maskValues(uint32_t mask) {
-    initialValue &= mask;
-    errorValue &= mask;
-    highValue &= mask;
-    int32_t iLimit = highStart >> UCPTRIE_SHIFT_3;
-    for (int32_t i = 0; i < iLimit; ++i) {
-        if (flags[i] == ALL_SAME) {
+ശൂന്യം MutableCodePointTrie::mask_മൂല്യങ്ങൾ(uint32_t mask) {
+    initial_മൂല്യം &= mask;
+    error_മൂല്യം &= mask;
+    മുകളിലെ_മൂല്യം &= mask;
+    int32_t iLimit = മുകളിലെ_Start >> UCPTRIE_SHIFT_3;
+    വേണ്ടി (int32_t i = 0; i < iLimit; ++i) {
+        എങ്കിൽ (flags[i] == ALL_SAME) {
             index[i] &= mask;
         }
     }
-    for (int32_t i = 0; i < dataLength; ++i) {
+    വേണ്ടി (int32_t i = 0; i < dataLength; ++i) {
         data[i] &= mask;
     }
 }
 
 template<typename UIntA, typename UIntB>
-bool equalBlocks(const UIntA *s, const UIntB *t, int32_t length) {
-    while (length > 0 && *s == *t) {
+തർക്കം equalBlocks(സ്ഥിരം UIntA *s, സ്ഥിരം UIntB *t, int32_t length) {
+    ആകുമ്പോൾ (length > 0 && *s == *t) {
         ++s;
         ++t;
         --length;
     }
-    return length == 0;
+    തിരികെ length == 0;
 }
 
-bool allValuesSameAs(const uint32_t *p, int32_t length, uint32_t value) {
-    const uint32_t *pLimit = p + length;
-    while (p < pLimit && *p == value) { ++p; }
-    return p == pLimit;
+തർക്കം all_മൂല്യങ്ങൾ_Same_As(സ്ഥിരം uint32_t *p, int32_t length, uint32_t value) {
+    സ്ഥിരം uint32_t *pLimit = p + length;
+    ആകുമ്പോൾ (p < pLimit && *p == value) { ++p; }
+    തിരികെ p == pLimit;
 }
 
 /** Search for an identical block. */
-int32_t findSameBlock(const uint16_t *p, int32_t pStart, int32_t length,
-                      const uint16_t *q, int32_t qStart, int32_t blockLength) {
+int32_t findSameBlock(സ്ഥിരം uint16_t *p, int32_t pStart, int32_t length,
+                      സ്ഥിരം uint16_t *q, int32_t qStart, int32_t blockLength) {
     // Ensure that we do not even partially get past length.
     length -= blockLength;
 
     q += qStart;
-    while (pStart <= length) {
-        if (equalBlocks(p + pStart, q, blockLength)) {
-            return pStart;
+    ആകുമ്പോൾ (pStart <= length) {
+        എങ്കിൽ (equalBlocks(p + pStart, q, blockLength)) {
+            തിരികെ pStart;
         }
         ++pStart;
     }
-    return -1;
+    തിരികെ -1;
 }
 
-int32_t findAllSameBlock(const uint32_t *p, int32_t start, int32_t limit,
+int32_t findAllSameBlock(സ്ഥിരം uint32_t *p, int32_t start, int32_t limit,
                          uint32_t value, int32_t blockLength) {
     // Ensure that we do not even partially get past limit.
     limit -= blockLength;
 
-    for (int32_t block = start; block <= limit; ++block) {
-        if (p[block] == value) {
-            for (int32_t i = 1;; ++i) {
-                if (i == blockLength) {
-                    return block;
+    വേണ്ടി (int32_t block = start; block <= limit; ++block) {
+        എങ്കിൽ (p[block] == value) {
+            വേണ്ടി (int32_t i = 1;; ++i) {
+                എങ്കിൽ (i == blockLength) {
+                    തിരികെ block;
                 }
-                if (p[block + i] != value) {
+                എങ്കിൽ (p[block + i] != value) {
                     block += i;
-                    break;
+                    നിർത്തുക;
                 }
             }
         }
     }
-    return -1;
+    തിരികെ -1;
 }
 
 /**
@@ -629,172 +629,172 @@ int32_t findAllSameBlock(const uint32_t *p, int32_t start, int32_t limit,
  * with the previous, adjacent block.
  */
 template<typename UIntA, typename UIntB>
-int32_t getOverlap(const UIntA *p, int32_t length,
-                   const UIntB *q, int32_t qStart, int32_t blockLength) {
+int32_t getOverlap(സ്ഥിരം UIntA *p, int32_t length,
+                   സ്ഥിരം UIntB *q, int32_t qStart, int32_t blockLength) {
     int32_t overlap = blockLength - 1;
     U_ASSERT(overlap <= length);
     q += qStart;
-    while (overlap > 0 && !equalBlocks(p + (length - overlap), q, overlap)) {
+    ആകുമ്പോൾ (overlap > 0 && !equalBlocks(p + (length - overlap), q, overlap)) {
         --overlap;
     }
-    return overlap;
+    തിരികെ overlap;
 }
 
-int32_t getAllSameOverlap(const uint32_t *p, int32_t length, uint32_t value,
+int32_t getAllSameOverlap(സ്ഥിരം uint32_t *p, int32_t length, uint32_t value,
                           int32_t blockLength) {
     int32_t min = length - (blockLength - 1);
     int32_t i = length;
-    while (min < i && p[i - 1] == value) { --i; }
-    return length - i;
+    ആകുമ്പോൾ (min < i && p[i - 1] == value) { --i; }
+    തിരികെ length - i;
 }
 
-bool isStartOfSomeFastBlock(uint32_t dataOffset, const uint32_t index[], int32_t fastILimit) {
-    for (int32_t i = 0; i < fastILimit; i += SMALL_DATA_BLOCKS_PER_BMP_BLOCK) {
-        if (index[i] == dataOffset) {
-            return true;
+തർക്കം isStartOfSomeFastBlock(uint32_t dataOffset, സ്ഥിരം uint32_t index[], int32_t fastILimit) {
+    വേണ്ടി (int32_t i = 0; i < fastILimit; i += SMALL_DATA_BLOCKS_PER_BMP_BLOCK) {
+        എങ്കിൽ (index[i] == dataOffset) {
+            തിരികെ സത്യം;
         }
     }
-    return false;
+    തിരികെ അസത്യം;
 }
 
 /**
  * Finds the start of the last range in the trie by enumerating backward.
  * Indexes for code points higher than this will be omitted.
  */
-UChar32 MutableCodePointTrie::findHighStart() const {
-    int32_t i = highStart >> UCPTRIE_SHIFT_3;
-    while (i > 0) {
-        bool match;
-        if (flags[--i] == ALL_SAME) {
-            match = index[i] == highValue;
-        } else /* MIXED */ {
-            const uint32_t *p = data + index[i];
-            for (int32_t j = 0;; ++j) {
-                if (j == UCPTRIE_SMALL_DATA_BLOCK_LENGTH) {
-                    match = true;
-                    break;
+UChar32 MutableCodePointTrie::find_മുകളിലെ_Start() സ്ഥിരം {
+    int32_t i = മുകളിലെ_Start >> UCPTRIE_SHIFT_3;
+    ആകുമ്പോൾ (i > 0) {
+        തർക്കം match;
+        എങ്കിൽ (flags[--i] == ALL_SAME) {
+            match = index[i] == മുകളിലെ_മൂല്യം;
+        } അല്ലെങ്കിൽ /* MIXED */ {
+            സ്ഥിരം uint32_t *p = data + index[i];
+            വേണ്ടി (int32_t j = 0;; ++j) {
+                എങ്കിൽ (j == UCPTRIE_SMALL_DATA_BLOCK_LENGTH) {
+                    match = സത്യം;
+                    നിർത്തുക;
                 }
-                if (p[j] != highValue) {
-                    match = false;
-                    break;
+                എങ്കിൽ (p[j] != മുകളിലെ_മൂല്യം) {
+                    match = അസത്യം;
+                    നിർത്തുക;
                 }
             }
         }
-        if (!match) {
-            return (i + 1) << UCPTRIE_SHIFT_3;
+        എങ്കിൽ (!match) {
+            തിരികെ (i + 1) << UCPTRIE_SHIFT_3;
         }
     }
-    return 0;
+    തിരികെ 0;
 }
 
-class AllSameBlocks {
-public:
-    static constexpr int32_t NEW_UNIQUE = -1;
-    static constexpr int32_t OVERFLOW = -2;
+വർഗ്ഗം AllSameBlocks {
+പൊതു:
+    സ്ഥിതം constexpr int32_t NEW_UNIQUE = -1;
+    സ്ഥിതം constexpr int32_t OVERFLOW = -2;
 
     AllSameBlocks() : length(0), mostRecent(-1) {}
 
     int32_t findOrAdd(int32_t index, int32_t count, uint32_t value) {
-        if (mostRecent >= 0 && values[mostRecent] == value) {
+        എങ്കിൽ (mostRecent >= 0 && മൂല്യങ്ങൾ[mostRecent] == value) {
             refCounts[mostRecent] += count;
-            return indexes[mostRecent];
+            തിരികെ indexes[mostRecent];
         }
-        for (int32_t i = 0; i < length; ++i) {
-            if (values[i] == value) {
+        വേണ്ടി (int32_t i = 0; i < length; ++i) {
+            എങ്കിൽ (മൂല്യങ്ങൾ[i] == value) {
                 mostRecent = i;
                 refCounts[i] += count;
-                return indexes[i];
+                തിരികെ indexes[i];
             }
         }
-        if (length == CAPACITY) {
-            return OVERFLOW;
+        എങ്കിൽ (length == CAPACITY) {
+            തിരികെ OVERFLOW;
         }
         mostRecent = length;
         indexes[length] = index;
-        values[length] = value;
+        മൂല്യങ്ങൾ[length] = value;
         refCounts[length++] = count;
-        return NEW_UNIQUE;
+        തിരികെ NEW_UNIQUE;
     }
 
     /** Replaces the block which has the lowest reference count. */
-    void add(int32_t index, int32_t count, uint32_t value) {
+    ശൂന്യം add(int32_t index, int32_t count, uint32_t value) {
         U_ASSERT(length == CAPACITY);
         int32_t least = -1;
-        int32_t leastCount = I_LIMIT;
-        for (int32_t i = 0; i < length; ++i) {
-            U_ASSERT(values[i] != value);
-            if (refCounts[i] < leastCount) {
+        int32_t least_എണ്ണം = I_LIMIT;
+        വേണ്ടി (int32_t i = 0; i < length; ++i) {
+            U_ASSERT(മൂല്യങ്ങൾ[i] != value);
+            എങ്കിൽ (refCounts[i] < least_എണ്ണം) {
                 least = i;
-                leastCount = refCounts[i];
+                least_എണ്ണം = refCounts[i];
             }
         }
         U_ASSERT(least >= 0);
         mostRecent = least;
         indexes[least] = index;
-        values[least] = value;
+        മൂല്യങ്ങൾ[least] = value;
         refCounts[least] = count;
     }
 
-    int32_t findMostUsed() const {
-        if (length == 0) { return -1; }
+    int32_t findMostUsed() സ്ഥിരം {
+        എങ്കിൽ (length == 0) { തിരികെ -1; }
         int32_t max = -1;
-        int32_t maxCount = 0;
-        for (int32_t i = 0; i < length; ++i) {
-            if (refCounts[i] > maxCount) {
+        int32_t max_എണ്ണം = 0;
+        വേണ്ടി (int32_t i = 0; i < length; ++i) {
+            എങ്കിൽ (refCounts[i] > max_എണ്ണം) {
                 max = i;
-                maxCount = refCounts[i];
+                max_എണ്ണം = refCounts[i];
             }
         }
-        return indexes[max];
+        തിരികെ indexes[max];
     }
 
-private:
-    static constexpr int32_t CAPACITY = 32;
+സ്വകാര്യ:
+    സ്ഥിതം constexpr int32_t CAPACITY = 32;
 
     int32_t length;
     int32_t mostRecent;
 
     int32_t indexes[CAPACITY];
-    uint32_t values[CAPACITY];
+    uint32_t മൂല്യങ്ങൾ[CAPACITY];
     int32_t refCounts[CAPACITY];
 };
 
 // Custom hash table for mixed-value blocks to be found anywhere in the
 // compacted data or index so far.
-class MixedBlocks {
-public:
+വർഗ്ഗം MixedBlocks {
+പൊതു:
     MixedBlocks() {}
     ~MixedBlocks() {
         uprv_free(table);
     }
 
-    bool init(int32_t maxLength, int32_t newBlockLength) {
+    തർക്കം init(int32_t maxLength, int32_t newBlockLength) {
         // We store actual data indexes + 1 to reserve 0 for empty entries.
         int32_t maxDataIndex = maxLength - newBlockLength + 1;
         int32_t newLength;
-        if (maxDataIndex <= 0xfff) {  // 4k
+        എങ്കിൽ (maxDataIndex <= 0xfff) {  // 4k
             newLength = 6007;
             shift = 12;
             mask = 0xfff;
-        } else if (maxDataIndex <= 0x7fff) {  // 32k
+        } അല്ലെങ്കിൽ എങ്കിൽ (maxDataIndex <= 0x7fff) {  // 32k
             newLength = 50021;
             shift = 15;
             mask = 0x7fff;
-        } else if (maxDataIndex <= 0x1ffff) {  // 128k
+        } അല്ലെങ്കിൽ എങ്കിൽ (maxDataIndex <= 0x1ffff) {  // 128k
             newLength = 200003;
             shift = 17;
             mask = 0x1ffff;
-        } else {
+        } അല്ലെങ്കിൽ {
             // maxDataIndex up to around MAX_DATA_LENGTH, ca. 1.1M
             newLength = 1500007;
             shift = 21;
             mask = 0x1fffff;
         }
-        if (newLength > capacity) {
+        എങ്കിൽ (newLength > capacity) {
             uprv_free(table);
             table = static_cast<uint32_t*>(uprv_malloc(newLength * 4));
-            if (table == nullptr) {
-                return false;
+            എങ്കിൽ (table == nullptr) {
+                തിരികെ അസത്യം;
             }
             capacity = newLength;
         }
@@ -802,113 +802,113 @@ public:
         uprv_memset(table, 0, length * 4);
 
         blockLength = newBlockLength;
-        return true;
+        തിരികെ സത്യം;
     }
 
     template<typename UInt>
-    void extend(const UInt *data, int32_t minStart, int32_t prevDataLength, int32_t newDataLength) {
+    ശൂന്യം extend(സ്ഥിരം UInt *data, int32_t minStart, int32_t prevDataLength, int32_t newDataLength) {
         int32_t start = prevDataLength - blockLength;
-        if (start >= minStart) {
+        എങ്കിൽ (start >= minStart) {
             ++start;  // Skip the last block that we added last time.
-        } else {
+        } അല്ലെങ്കിൽ {
             start = minStart;  // Begin with the first full block.
         }
-        for (int32_t end = newDataLength - blockLength; start <= end; ++start) {
+        വേണ്ടി (int32_t end = newDataLength - blockLength; start <= end; ++start) {
             uint32_t hashCode = makeHashCode(data, start);
             addEntry(data, start, hashCode, start);
         }
     }
 
     template<typename UIntA, typename UIntB>
-    int32_t findBlock(const UIntA *data, const UIntB *blockData, int32_t blockStart) const {
+    int32_t findBlock(സ്ഥിരം UIntA *data, സ്ഥിരം UIntB *blockData, int32_t blockStart) സ്ഥിരം {
         uint32_t hashCode = makeHashCode(blockData, blockStart);
         int32_t entryIndex = findEntry(data, blockData, blockStart, hashCode);
-        if (entryIndex >= 0) {
-            return (table[entryIndex] & mask) - 1;
-        } else {
-            return -1;
+        എങ്കിൽ (entryIndex >= 0) {
+            തിരികെ (table[entryIndex] & mask) - 1;
+        } അല്ലെങ്കിൽ {
+            തിരികെ -1;
         }
     }
 
-    int32_t findAllSameBlock(const uint32_t *data, uint32_t blockValue) const {
-        uint32_t hashCode = makeHashCode(blockValue);
-        int32_t entryIndex = findEntry(data, blockValue, hashCode);
-        if (entryIndex >= 0) {
-            return (table[entryIndex] & mask) - 1;
-        } else {
-            return -1;
+    int32_t findAllSameBlock(സ്ഥിരം uint32_t *data, uint32_t block_മൂല്യം) സ്ഥിരം {
+        uint32_t hashCode = makeHashCode(block_മൂല്യം);
+        int32_t entryIndex = findEntry(data, block_മൂല്യം, hashCode);
+        എങ്കിൽ (entryIndex >= 0) {
+            തിരികെ (table[entryIndex] & mask) - 1;
+        } അല്ലെങ്കിൽ {
+            തിരികെ -1;
         }
     }
 
-private:
+സ്വകാര്യ:
     template<typename UInt>
-    uint32_t makeHashCode(const UInt *blockData, int32_t blockStart) const {
+    uint32_t makeHashCode(സ്ഥിരം UInt *blockData, int32_t blockStart) സ്ഥിരം {
         int32_t blockLimit = blockStart + blockLength;
         uint32_t hashCode = blockData[blockStart++];
-        do {
+        ചെയ്യുക {
             hashCode = 37 * hashCode + blockData[blockStart++];
-        } while (blockStart < blockLimit);
-        return hashCode;
+        } ആകുമ്പോൾ (blockStart < blockLimit);
+        തിരികെ hashCode;
     }
 
-    uint32_t makeHashCode(uint32_t blockValue) const {
-        uint32_t hashCode = blockValue;
-        for (int32_t i = 1; i < blockLength; ++i) {
-            hashCode = 37 * hashCode + blockValue;
+    uint32_t makeHashCode(uint32_t block_മൂല്യം) സ്ഥിരം {
+        uint32_t hashCode = block_മൂല്യം;
+        വേണ്ടി (int32_t i = 1; i < blockLength; ++i) {
+            hashCode = 37 * hashCode + block_മൂല്യം;
         }
-        return hashCode;
+        തിരികെ hashCode;
     }
 
     template<typename UInt>
-    void addEntry(const UInt *data, int32_t blockStart, uint32_t hashCode, int32_t dataIndex) {
+    ശൂന്യം addEntry(സ്ഥിരം UInt *data, int32_t blockStart, uint32_t hashCode, int32_t dataIndex) {
         U_ASSERT(0 <= dataIndex && dataIndex < (int32_t)mask);
         int32_t entryIndex = findEntry(data, data, blockStart, hashCode);
-        if (entryIndex < 0) {
+        എങ്കിൽ (entryIndex < 0) {
             table[~entryIndex] = (hashCode << shift) | (dataIndex + 1);
         }
     }
 
     template<typename UIntA, typename UIntB>
-    int32_t findEntry(const UIntA *data, const UIntB *blockData, int32_t blockStart,
-                      uint32_t hashCode) const {
+    int32_t findEntry(സ്ഥിരം UIntA *data, സ്ഥിരം UIntB *blockData, int32_t blockStart,
+                      uint32_t hashCode) സ്ഥിരം {
         uint32_t shiftedHashCode = hashCode << shift;
         int32_t initialEntryIndex = (hashCode % (length - 1)) + 1;  // 1..length-1
-        for (int32_t entryIndex = initialEntryIndex;;) {
+        വേണ്ടി (int32_t entryIndex = initialEntryIndex;;) {
             uint32_t entry = table[entryIndex];
-            if (entry == 0) {
-                return ~entryIndex;
+            എങ്കിൽ (entry == 0) {
+                തിരികെ ~entryIndex;
             }
-            if ((entry & ~mask) == shiftedHashCode) {
+            എങ്കിൽ ((entry & ~mask) == shiftedHashCode) {
                 int32_t dataIndex = (entry & mask) - 1;
-                if (equalBlocks(data + dataIndex, blockData + blockStart, blockLength)) {
-                    return entryIndex;
+                എങ്കിൽ (equalBlocks(data + dataIndex, blockData + blockStart, blockLength)) {
+                    തിരികെ entryIndex;
                 }
             }
             entryIndex = nextIndex(initialEntryIndex, entryIndex);
         }
     }
 
-    int32_t findEntry(const uint32_t *data, uint32_t blockValue, uint32_t hashCode) const {
+    int32_t findEntry(സ്ഥിരം uint32_t *data, uint32_t block_മൂല്യം, uint32_t hashCode) സ്ഥിരം {
         uint32_t shiftedHashCode = hashCode << shift;
         int32_t initialEntryIndex = (hashCode % (length - 1)) + 1;  // 1..length-1
-        for (int32_t entryIndex = initialEntryIndex;;) {
+        വേണ്ടി (int32_t entryIndex = initialEntryIndex;;) {
             uint32_t entry = table[entryIndex];
-            if (entry == 0) {
-                return ~entryIndex;
+            എങ്കിൽ (entry == 0) {
+                തിരികെ ~entryIndex;
             }
-            if ((entry & ~mask) == shiftedHashCode) {
+            എങ്കിൽ ((entry & ~mask) == shiftedHashCode) {
                 int32_t dataIndex = (entry & mask) - 1;
-                if (allValuesSameAs(data + dataIndex, blockLength, blockValue)) {
-                    return entryIndex;
+                എങ്കിൽ (all_മൂല്യങ്ങൾ_Same_As(data + dataIndex, blockLength, block_മൂല്യം)) {
+                    തിരികെ entryIndex;
                 }
             }
             entryIndex = nextIndex(initialEntryIndex, entryIndex);
         }
     }
 
-    inline int32_t nextIndex(int32_t initialEntryIndex, int32_t entryIndex) const {
+    വരിയിൽ int32_t nextIndex(int32_t initialEntryIndex, int32_t entryIndex) സ്ഥിരം {
         // U_ASSERT(0 < initialEntryIndex && initialEntryIndex < length);
-        return (entryIndex + initialEntryIndex) % length;
+        തിരികെ (entryIndex + initialEntryIndex) % length;
     }
 
     // Hash table.
@@ -926,7 +926,7 @@ private:
 
 int32_t MutableCodePointTrie::compactWholeDataBlocks(int32_t fastILimit, AllSameBlocks &allSameBlocks) {
 #ifdef UCPTRIE_DEBUG
-    bool overflow = false;
+    തർക്കം overflow = അസത്യം;
 #endif
 
     // ASCII data will be stored as a linear table, even if the following code
@@ -937,132 +937,132 @@ int32_t MutableCodePointTrie::compactWholeDataBlocks(int32_t fastILimit, AllSame
     newDataCapacity += UCPTRIE_SMALL_DATA_BLOCK_LENGTH;
     // Add room for special values (errorValue, highValue) and padding.
     newDataCapacity += 4;
-    int32_t iLimit = highStart >> UCPTRIE_SHIFT_3;
+    int32_t iLimit = മുകളിലെ_Start >> UCPTRIE_SHIFT_3;
     int32_t blockLength = UCPTRIE_FAST_DATA_BLOCK_LENGTH;
     int32_t inc = SMALL_DATA_BLOCKS_PER_BMP_BLOCK;
-    for (int32_t i = 0; i < iLimit; i += inc) {
-        if (i == fastILimit) {
+    വേണ്ടി (int32_t i = 0; i < iLimit; i += inc) {
+        എങ്കിൽ (i == fastILimit) {
             blockLength = UCPTRIE_SMALL_DATA_BLOCK_LENGTH;
             inc = 1;
         }
         uint32_t value = index[i];
-        if (flags[i] == MIXED) {
+        എങ്കിൽ (flags[i] == MIXED) {
             // Really mixed?
-            const uint32_t *p = data + value;
+            സ്ഥിരം uint32_t *p = data + value;
             value = *p;
-            if (allValuesSameAs(p + 1, blockLength - 1, value)) {
+            എങ്കിൽ (all_മൂല്യങ്ങൾ_Same_As(p + 1, blockLength - 1, value)) {
                 flags[i] = ALL_SAME;
                 index[i] = value;
                 // Fall through to ALL_SAME handling.
-            } else {
+            } അല്ലെങ്കിൽ {
                 newDataCapacity += blockLength;
-                continue;
+                തുടരുക;
             }
-        } else {
+        } അല്ലെങ്കിൽ {
             U_ASSERT(flags[i] == ALL_SAME);
-            if (inc > 1) {
+            എങ്കിൽ (inc > 1) {
                 // Do all of the fast-range data block's ALL_SAME parts have the same value?
-                bool allSame = true;
+                തർക്കം allSame = സത്യം;
                 int32_t next_i = i + inc;
-                for (int32_t j = i + 1; j < next_i; ++j) {
+                വേണ്ടി (int32_t j = i + 1; j < next_i; ++j) {
                     U_ASSERT(flags[j] == ALL_SAME);
-                    if (index[j] != value) {
-                        allSame = false;
-                        break;
+                    എങ്കിൽ (index[j] != value) {
+                        allSame = അസത്യം;
+                        നിർത്തുക;
                     }
                 }
-                if (!allSame) {
+                എങ്കിൽ (!allSame) {
                     // Turn it into a MIXED block.
-                    if (getDataBlock(i) < 0) {
-                        return -1;
+                    എങ്കിൽ (getDataBlock(i) < 0) {
+                        തിരികെ -1;
                     }
                     newDataCapacity += blockLength;
-                    continue;
+                    തുടരുക;
                 }
             }
         }
         // Is there another ALL_SAME block with the same value?
         int32_t other = allSameBlocks.findOrAdd(i, inc, value);
-        if (other == AllSameBlocks::OVERFLOW) {
+        എങ്കിൽ (other == AllSameBlocks::OVERFLOW) {
             // The fixed-size array overflowed. Slow check for a duplicate block.
 #ifdef UCPTRIE_DEBUG
-            if (!overflow) {
+            എങ്കിൽ (!overflow) {
                 puts("UCPTrie AllSameBlocks overflow");
-                overflow = true;
+                overflow = സത്യം;
             }
 #endif
             int32_t jInc = SMALL_DATA_BLOCKS_PER_BMP_BLOCK;
-            for (int32_t j = 0;; j += jInc) {
-                if (j == i) {
+            വേണ്ടി (int32_t j = 0;; j += jInc) {
+                എങ്കിൽ (j == i) {
                     allSameBlocks.add(i, inc, value);
-                    break;
+                    നിർത്തുക;
                 }
-                if (j == fastILimit) {
+                എങ്കിൽ (j == fastILimit) {
                     jInc = 1;
                 }
-                if (flags[j] == ALL_SAME && index[j] == value) {
+                എങ്കിൽ (flags[j] == ALL_SAME && index[j] == value) {
                     allSameBlocks.add(j, jInc + inc, value);
                     other = j;
-                    break;
+                    നിർത്തുക;
                     // We could keep counting blocks with the same value
                     // before we add the first one, which may improve compaction in rare cases,
                     // but it would make it slower.
                 }
             }
         }
-        if (other >= 0) {
+        എങ്കിൽ (other >= 0) {
             flags[i] = SAME_AS;
             index[i] = other;
-        } else {
+        } അല്ലെങ്കിൽ {
             // New unique same-value block.
             newDataCapacity += blockLength;
         }
     }
-    return newDataCapacity;
+    തിരികെ newDataCapacity;
 }
 
 #ifdef UCPTRIE_DEBUG
-#   define DEBUG_DO(expr) expr
-#else
-#   define DEBUG_DO(expr)
+#   define DEBUG_DO(വ്യഞ്ജകം) വ്യഞ്ജകം
+#അല്ലെങ്കിൽ
+#   define DEBUG_DO(വ്യഞ്ജകം)
 #endif
 
 #ifdef UCPTRIE_DEBUG
 // Braille symbols: U+28xx = UTF-8 E2 A0 80..E2 A3 BF
-int32_t appendValue(char s[], int32_t length, uint32_t value) {
+int32_t append_മൂല്യം(അക്ഷരം s[], int32_t length, uint32_t value) {
     value ^= value >> 16;
     value ^= value >> 8;
     s[length] = 0xE2;
-    s[length + 1] = (char)(0xA0 + ((value >> 6) & 3));
-    s[length + 2] = (char)(0x80 + (value & 0x3F));
-    return length + 3;
+    s[length + 1] = (അക്ഷരം)(0xA0 + ((value >> 6) & 3));
+    s[length + 2] = (അക്ഷരം)(0x80 + (value & 0x3F));
+    തിരികെ length + 3;
 }
 
-void printBlock(const uint32_t *block, int32_t blockLength, uint32_t value,
-                UChar32 start, int32_t overlap, uint32_t initialValue) {
-    char s[UCPTRIE_FAST_DATA_BLOCK_LENGTH * 3 + 3];
+ശൂന്യം printBlock(സ്ഥിരം uint32_t *block, int32_t blockLength, uint32_t value,
+                UChar32 start, int32_t overlap, uint32_t initial_മൂല്യം) {
+    അക്ഷരം s[UCPTRIE_FAST_DATA_BLOCK_LENGTH * 3 + 3];
     int32_t length = 0;
     int32_t i;
-    for (i = 0; i < overlap; ++i) {
-        length = appendValue(s, length, 0);  // Braille blank
+    വേണ്ടി (i = 0; i < overlap; ++i) {
+        length = append_മൂല്യം(s, length, 0);  // Braille blank
     }
     s[length++] = '|';
-    for (; i < blockLength; ++i) {
-        if (block != nullptr) {
+    വേണ്ടി (; i < blockLength; ++i) {
+        എങ്കിൽ (block != nullptr) {
             value = block[i];
         }
-        if (value == initialValue) {
+        എങ്കിൽ (value == initial_മൂല്യം) {
             value = 0x40;  // Braille lower left dot
         }
-        length = appendValue(s, length, value);
+        length = append_മൂല്യം(s, length, value);
     }
     s[length] = 0;
     start += overlap;
-    if (start <= 0xffff) {
+    എങ്കിൽ (start <= 0xffff) {
         printf("    %04lX  %s|\n", (long)start, s);
-    } else if (start <= 0xfffff) {
+    } അല്ലെങ്കിൽ എങ്കിൽ (start <= 0xfffff) {
         printf("   %5lX  %s|\n", (long)start, s);
-    } else {
+    } അല്ലെങ്കിൽ {
         printf("  %6lX  %s|\n", (long)start, s);
     }
 }
@@ -1083,46 +1083,46 @@ int32_t MutableCodePointTrie::compactData(
         int32_t fastILimit, uint32_t *newData, int32_t newDataCapacity,
         int32_t dataNullIndex, MixedBlocks &mixedBlocks, UErrorCode &errorCode) {
 #ifdef UCPTRIE_DEBUG
-    int32_t countSame=0, sumOverlaps=0;
-    bool printData = dataLength == 29088 /* line.brk */ ||
+    int32_t എണ്ണം_Same=0, sumOverlaps=0;
+    തർക്കം printData = dataLength == 29088 /* line.brk */ ||
         // dataLength == 30048 /* CanonIterData */ ||
         dataLength == 50400 /* zh.txt~stroke */;
 #endif
 
     // The linear ASCII data has been copied into newData already.
     int32_t newDataLength = 0;
-    for (int32_t i = 0; newDataLength < ASCII_LIMIT;
+    വേണ്ടി (int32_t i = 0; newDataLength < ASCII_LIMIT;
             newDataLength += UCPTRIE_FAST_DATA_BLOCK_LENGTH, i += SMALL_DATA_BLOCKS_PER_BMP_BLOCK) {
         index[i] = newDataLength;
 #ifdef UCPTRIE_DEBUG
-        if (printData) {
-            printBlock(newData + newDataLength, UCPTRIE_FAST_DATA_BLOCK_LENGTH, 0, newDataLength, 0, initialValue);
+        എങ്കിൽ (printData) {
+            printBlock(newData + newDataLength, UCPTRIE_FAST_DATA_BLOCK_LENGTH, 0, newDataLength, 0, initial_മൂല്യം);
         }
 #endif
     }
 
     int32_t blockLength = UCPTRIE_FAST_DATA_BLOCK_LENGTH;
-    if (!mixedBlocks.init(newDataCapacity, blockLength)) {
+    എങ്കിൽ (!mixedBlocks.init(newDataCapacity, blockLength)) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return 0;
+        തിരികെ 0;
     }
     mixedBlocks.extend(newData, 0, 0, newDataLength);
 
-    int32_t iLimit = highStart >> UCPTRIE_SHIFT_3;
+    int32_t iLimit = മുകളിലെ_Start >> UCPTRIE_SHIFT_3;
     int32_t inc = SMALL_DATA_BLOCKS_PER_BMP_BLOCK;
     int32_t fastLength = 0;
-    for (int32_t i = ASCII_I_LIMIT; i < iLimit; i += inc) {
-        if (i == fastILimit) {
+    വേണ്ടി (int32_t i = ASCII_I_LIMIT; i < iLimit; i += inc) {
+        എങ്കിൽ (i == fastILimit) {
             blockLength = UCPTRIE_SMALL_DATA_BLOCK_LENGTH;
             inc = 1;
             fastLength = newDataLength;
-            if (!mixedBlocks.init(newDataCapacity, blockLength)) {
+            എങ്കിൽ (!mixedBlocks.init(newDataCapacity, blockLength)) {
                 errorCode = U_MEMORY_ALLOCATION_ERROR;
-                return 0;
+                തിരികെ 0;
             }
             mixedBlocks.extend(newData, 0, 0, newDataLength);
         }
-        if (flags[i] == ALL_SAME) {
+        എങ്കിൽ (flags[i] == ALL_SAME) {
             uint32_t value = index[i];
             // Find an earlier part of the data array of length blockLength
             // that is filled with this value.
@@ -1134,51 +1134,51 @@ int32_t MutableCodePointTrie::compactData(
             // and not all of the rest of the fast block is filled with this value.
             // Otherwise trie.getRange() would detect that the fast block starts at
             // dataNullOffset and assume incorrectly that it is filled with the null value.
-            while (n >= 0 && i == dataNullIndex && i >= fastILimit && n < fastLength &&
+            ആകുമ്പോൾ (n >= 0 && i == dataNullIndex && i >= fastILimit && n < fastLength &&
                     isStartOfSomeFastBlock(n, index, fastILimit)) {
                 n = findAllSameBlock(newData, n + 1, newDataLength, value, blockLength);
             }
-            if (n >= 0) {
-                DEBUG_DO(++countSame);
+            എങ്കിൽ (n >= 0) {
+                DEBUG_DO(++എണ്ണം_Same);
                 index[i] = n;
-            } else {
+            } അല്ലെങ്കിൽ {
                 n = getAllSameOverlap(newData, newDataLength, value, blockLength);
                 DEBUG_DO(sumOverlaps += n);
 #ifdef UCPTRIE_DEBUG
-                if (printData) {
-                    printBlock(nullptr, blockLength, value, i << UCPTRIE_SHIFT_3, n, initialValue);
+                എങ്കിൽ (printData) {
+                    printBlock(nullptr, blockLength, value, i << UCPTRIE_SHIFT_3, n, initial_മൂല്യം);
                 }
 #endif
                 index[i] = newDataLength - n;
                 int32_t prevDataLength = newDataLength;
-                while (n < blockLength) {
+                ആകുമ്പോൾ (n < blockLength) {
                     newData[newDataLength++] = value;
                     ++n;
                 }
                 mixedBlocks.extend(newData, 0, prevDataLength, newDataLength);
             }
-        } else if (flags[i] == MIXED) {
-            const uint32_t *block = data + index[i];
+        } അല്ലെങ്കിൽ എങ്കിൽ (flags[i] == MIXED) {
+            സ്ഥിരം uint32_t *block = data + index[i];
             int32_t n = mixedBlocks.findBlock(newData, block, 0);
-            if (n >= 0) {
-                DEBUG_DO(++countSame);
+            എങ്കിൽ (n >= 0) {
+                DEBUG_DO(++എണ്ണം_Same);
                 index[i] = n;
-            } else {
+            } അല്ലെങ്കിൽ {
                 n = getOverlap(newData, newDataLength, block, 0, blockLength);
                 DEBUG_DO(sumOverlaps += n);
 #ifdef UCPTRIE_DEBUG
-                if (printData) {
-                    printBlock(block, blockLength, 0, i << UCPTRIE_SHIFT_3, n, initialValue);
+                എങ്കിൽ (printData) {
+                    printBlock(block, blockLength, 0, i << UCPTRIE_SHIFT_3, n, initial_മൂല്യം);
                 }
 #endif
                 index[i] = newDataLength - n;
                 int32_t prevDataLength = newDataLength;
-                while (n < blockLength) {
+                ആകുമ്പോൾ (n < blockLength) {
                     newData[newDataLength++] = block[n++];
                 }
                 mixedBlocks.extend(newData, 0, prevDataLength, newDataLength);
             }
-        } else /* SAME_AS */ {
+        } അല്ലെങ്കിൽ /* SAME_AS */ {
             uint32_t j = index[i];
             index[i] = index[j];
         }
@@ -1187,49 +1187,49 @@ int32_t MutableCodePointTrie::compactData(
 #ifdef UCPTRIE_DEBUG
     /* we saved some space */
     printf("compacting UCPTrie: count of 32-bit data words %lu->%lu  countSame=%ld  sumOverlaps=%ld\n",
-            (long)dataLength, (long)newDataLength, (long)countSame, (long)sumOverlaps);
+            (long)dataLength, (long)newDataLength, (long)എണ്ണം_Same, (long)sumOverlaps);
 #endif
-    return newDataLength;
+    തിരികെ newDataLength;
 }
 
 int32_t MutableCodePointTrie::compactIndex(int32_t fastILimit, MixedBlocks &mixedBlocks,
                                            UErrorCode &errorCode) {
     int32_t fastIndexLength = fastILimit >> (UCPTRIE_FAST_SHIFT - UCPTRIE_SHIFT_3);
-    if ((highStart >> UCPTRIE_FAST_SHIFT) <= fastIndexLength) {
+    എങ്കിൽ ((മുകളിലെ_Start >> UCPTRIE_FAST_SHIFT) <= fastIndexLength) {
         // Only the linear fast index, no multi-stage index tables.
         index3NullOffset = UCPTRIE_NO_INDEX3_NULL_OFFSET;
-        return fastIndexLength;
+        തിരികെ fastIndexLength;
     }
 
     // Condense the fast index table.
     // Also, does it contain an index-3 block with all dataNullOffset?
     uint16_t fastIndex[UCPTRIE_BMP_INDEX_LENGTH];  // fastIndexLength
     int32_t i3FirstNull = -1;
-    for (int32_t i = 0, j = 0; i < fastILimit; ++j) {
+    വേണ്ടി (int32_t i = 0, j = 0; i < fastILimit; ++j) {
         uint32_t i3 = index[i];
         fastIndex[j] = static_cast<uint16_t>(i3);
-        if (i3 == static_cast<uint32_t>(dataNullOffset)) {
-            if (i3FirstNull < 0) {
+        എങ്കിൽ (i3 == static_cast<uint32_t>(dataNullOffset)) {
+            എങ്കിൽ (i3FirstNull < 0) {
                 i3FirstNull = j;
-            } else if (index3NullOffset < 0 &&
+            } അല്ലെങ്കിൽ എങ്കിൽ (index3NullOffset < 0 &&
                     (j - i3FirstNull + 1) == UCPTRIE_INDEX_3_BLOCK_LENGTH) {
                 index3NullOffset = i3FirstNull;
             }
-        } else {
+        } അല്ലെങ്കിൽ {
             i3FirstNull = -1;
         }
         // Set the index entries that compactData() skipped.
         // Needed when the multi-stage index covers the fast index range as well.
         int32_t iNext = i + SMALL_DATA_BLOCKS_PER_BMP_BLOCK;
-        while (++i < iNext) {
+        ആകുമ്പോൾ (++i < iNext) {
             i3 += UCPTRIE_SMALL_DATA_BLOCK_LENGTH;
             index[i] = i3;
         }
     }
 
-    if (!mixedBlocks.init(fastIndexLength, UCPTRIE_INDEX_3_BLOCK_LENGTH)) {
+    എങ്കിൽ (!mixedBlocks.init(fastIndexLength, UCPTRIE_INDEX_3_BLOCK_LENGTH)) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return 0;
+        തിരികെ 0;
     }
     mixedBlocks.extend(fastIndex, 0, 0, fastIndexLength);
 
@@ -1243,49 +1243,49 @@ int32_t MutableCodePointTrie::compactIndex(int32_t fastILimit, MixedBlocks &mixe
     // Also determine an upper limit for the index-3 table length.
     int32_t index3Capacity = 0;
     i3FirstNull = index3NullOffset;
-    bool hasLongI3Blocks = false;
+    തർക്കം hasLongI3Blocks = അസത്യം;
     // If the fast index covers the whole BMP, then
     // the multi-stage index is only for supplementary code points.
     // Otherwise, the multi-stage index covers all of Unicode.
     int32_t iStart = fastILimit < BMP_I_LIMIT ? 0 : BMP_I_LIMIT;
-    int32_t iLimit = highStart >> UCPTRIE_SHIFT_3;
-    for (int32_t i = iStart; i < iLimit;) {
+    int32_t iLimit = മുകളിലെ_Start >> UCPTRIE_SHIFT_3;
+    വേണ്ടി (int32_t i = iStart; i < iLimit;) {
         int32_t j = i;
         int32_t jLimit = i + UCPTRIE_INDEX_3_BLOCK_LENGTH;
         uint32_t oredI3 = 0;
-        bool isNull = true;
-        do {
+        തർക്കം isNull = സത്യം;
+        ചെയ്യുക {
             uint32_t i3 = index[j];
             oredI3 |= i3;
-            if (i3 != static_cast<uint32_t>(dataNullOffset)) {
-                isNull = false;
+            എങ്കിൽ (i3 != static_cast<uint32_t>(dataNullOffset)) {
+                isNull = അസത്യം;
             }
-        } while (++j < jLimit);
-        if (isNull) {
+        } ആകുമ്പോൾ (++j < jLimit);
+        എങ്കിൽ (isNull) {
             flags[i] = I3_NULL;
-            if (i3FirstNull < 0) {
-                if (oredI3 <= 0xffff) {
+            എങ്കിൽ (i3FirstNull < 0) {
+                എങ്കിൽ (oredI3 <= 0xffff) {
                     index3Capacity += UCPTRIE_INDEX_3_BLOCK_LENGTH;
-                } else {
+                } അല്ലെങ്കിൽ {
                     index3Capacity += INDEX_3_18BIT_BLOCK_LENGTH;
-                    hasLongI3Blocks = true;
+                    hasLongI3Blocks = സത്യം;
                 }
                 i3FirstNull = 0;
             }
-        } else {
-            if (oredI3 <= 0xffff) {
+        } അല്ലെങ്കിൽ {
+            എങ്കിൽ (oredI3 <= 0xffff) {
                 int32_t n = mixedBlocks.findBlock(fastIndex, index, i);
-                if (n >= 0) {
+                എങ്കിൽ (n >= 0) {
                     flags[i] = I3_BMP;
                     index[i] = n;
-                } else {
+                } അല്ലെങ്കിൽ {
                     flags[i] = I3_16;
                     index3Capacity += UCPTRIE_INDEX_3_BLOCK_LENGTH;
                 }
-            } else {
+            } അല്ലെങ്കിൽ {
                 flags[i] = I3_18;
                 index3Capacity += INDEX_3_18BIT_BLOCK_LENGTH;
-                hasLongI3Blocks = true;
+                hasLongI3Blocks = സത്യം;
             }
         }
         i = j;
@@ -1300,21 +1300,21 @@ int32_t MutableCodePointTrie::compactIndex(int32_t fastILimit, MixedBlocks &mixe
     // +1 for possible index table padding.
     int32_t index16Capacity = fastIndexLength + index1Length + index3Capacity + index2Capacity + 1;
     index16 = static_cast<uint16_t*>(uprv_malloc(index16Capacity * 2));
-    if (index16 == nullptr) {
+    എങ്കിൽ (index16 == nullptr) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return 0;
+        തിരികെ 0;
     }
     uprv_memcpy(index16, fastIndex, fastIndexLength * 2);
 
-    if (!mixedBlocks.init(index16Capacity, UCPTRIE_INDEX_3_BLOCK_LENGTH)) {
+    എങ്കിൽ (!mixedBlocks.init(index16Capacity, UCPTRIE_INDEX_3_BLOCK_LENGTH)) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return 0;
+        തിരികെ 0;
     }
     MixedBlocks longI3Blocks;
-    if (hasLongI3Blocks) {
-        if (!longI3Blocks.init(index16Capacity, INDEX_3_18BIT_BLOCK_LENGTH)) {
+    എങ്കിൽ (hasLongI3Blocks) {
+        എങ്കിൽ (!longI3Blocks.init(index16Capacity, INDEX_3_18BIT_BLOCK_LENGTH)) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return 0;
+            തിരികെ 0;
         }
     }
 
@@ -1324,48 +1324,48 @@ int32_t MutableCodePointTrie::compactIndex(int32_t fastILimit, MixedBlocks &mixe
     i3FirstNull = index3NullOffset;
     int32_t index3Start = fastIndexLength + index1Length;
     int32_t indexLength = index3Start;
-    for (int32_t i = iStart; i < iLimit; i += UCPTRIE_INDEX_3_BLOCK_LENGTH) {
+    വേണ്ടി (int32_t i = iStart; i < iLimit; i += UCPTRIE_INDEX_3_BLOCK_LENGTH) {
         int32_t i3;
         uint8_t f = flags[i];
-        if (f == I3_NULL && i3FirstNull < 0) {
+        എങ്കിൽ (f == I3_NULL && i3FirstNull < 0) {
             // First index-3 null block. Write & overlap it like a normal block, then remember it.
             f = dataNullOffset <= 0xffff ? I3_16 : I3_18;
             i3FirstNull = 0;
         }
-        if (f == I3_NULL) {
+        എങ്കിൽ (f == I3_NULL) {
             i3 = index3NullOffset;
-        } else if (f == I3_BMP) {
+        } അല്ലെങ്കിൽ എങ്കിൽ (f == I3_BMP) {
             i3 = index[i];
-        } else if (f == I3_16) {
+        } അല്ലെങ്കിൽ എങ്കിൽ (f == I3_16) {
             int32_t n = mixedBlocks.findBlock(index16, index, i);
-            if (n >= 0) {
+            എങ്കിൽ (n >= 0) {
                 i3 = n;
-            } else {
-                if (indexLength == index3Start) {
+            } അല്ലെങ്കിൽ {
+                എങ്കിൽ (indexLength == index3Start) {
                     // No overlap at the boundary between the index-1 and index-3 tables.
                     n = 0;
-                } else {
+                } അല്ലെങ്കിൽ {
                     n = getOverlap(index16, indexLength,
                                    index, i, UCPTRIE_INDEX_3_BLOCK_LENGTH);
                 }
                 i3 = indexLength - n;
                 int32_t prevIndexLength = indexLength;
-                while (n < UCPTRIE_INDEX_3_BLOCK_LENGTH) {
+                ആകുമ്പോൾ (n < UCPTRIE_INDEX_3_BLOCK_LENGTH) {
                     index16[indexLength++] = index[i + n++];
                 }
                 mixedBlocks.extend(index16, index3Start, prevIndexLength, indexLength);
-                if (hasLongI3Blocks) {
+                എങ്കിൽ (hasLongI3Blocks) {
                     longI3Blocks.extend(index16, index3Start, prevIndexLength, indexLength);
                 }
             }
-        } else {
+        } അല്ലെങ്കിൽ {
             U_ASSERT(f == I3_18);
             U_ASSERT(hasLongI3Blocks);
             // Encode an index-3 block that contains one or more data indexes exceeding 16 bits.
             int32_t j = i;
             int32_t jLimit = i + UCPTRIE_INDEX_3_BLOCK_LENGTH;
             int32_t k = indexLength;
-            do {
+            ചെയ്യുക {
                 ++k;
                 uint32_t v = index[j++];
                 uint32_t upperBits = (v & 0x30000) >> 2;
@@ -1392,35 +1392,35 @@ int32_t MutableCodePointTrie::compactIndex(int32_t fastILimit, MixedBlocks &mixe
                 upperBits |= (v & 0x30000) >> 16;
                 index16[k++] = v;
                 index16[k - 9] = upperBits;
-            } while (j < jLimit);
+            } ആകുമ്പോൾ (j < jLimit);
             int32_t n = longI3Blocks.findBlock(index16, index16, indexLength);
-            if (n >= 0) {
+            എങ്കിൽ (n >= 0) {
                 i3 = n | 0x8000;
-            } else {
-                if (indexLength == index3Start) {
+            } അല്ലെങ്കിൽ {
+                എങ്കിൽ (indexLength == index3Start) {
                     // No overlap at the boundary between the index-1 and index-3 tables.
                     n = 0;
-                } else {
+                } അല്ലെങ്കിൽ {
                     n = getOverlap(index16, indexLength,
                                    index16, indexLength, INDEX_3_18BIT_BLOCK_LENGTH);
                 }
                 i3 = (indexLength - n) | 0x8000;
                 int32_t prevIndexLength = indexLength;
-                if (n > 0) {
+                എങ്കിൽ (n > 0) {
                     int32_t start = indexLength;
-                    while (n < INDEX_3_18BIT_BLOCK_LENGTH) {
+                    ആകുമ്പോൾ (n < INDEX_3_18BIT_BLOCK_LENGTH) {
                         index16[indexLength++] = index16[start + n++];
                     }
-                } else {
+                } അല്ലെങ്കിൽ {
                     indexLength += INDEX_3_18BIT_BLOCK_LENGTH;
                 }
                 mixedBlocks.extend(index16, index3Start, prevIndexLength, indexLength);
-                if (hasLongI3Blocks) {
+                എങ്കിൽ (hasLongI3Blocks) {
                     longI3Blocks.extend(index16, index3Start, prevIndexLength, indexLength);
                 }
             }
         }
-        if (index3NullOffset < 0 && i3FirstNull >= 0) {
+        എങ്കിൽ (index3NullOffset < 0 && i3FirstNull >= 0) {
             index3NullOffset = i3;
         }
         // Set the index-2 table entry.
@@ -1429,14 +1429,14 @@ int32_t MutableCodePointTrie::compactIndex(int32_t fastILimit, MixedBlocks &mixe
     U_ASSERT(i2Length == index2Capacity);
     U_ASSERT(indexLength <= index3Start + index3Capacity);
 
-    if (index3NullOffset < 0) {
+    എങ്കിൽ (index3NullOffset < 0) {
         index3NullOffset = UCPTRIE_NO_INDEX3_NULL_OFFSET;
     }
-    if (indexLength >= (UCPTRIE_NO_INDEX3_NULL_OFFSET + UCPTRIE_INDEX_3_BLOCK_LENGTH)) {
+    എങ്കിൽ (indexLength >= (UCPTRIE_NO_INDEX3_NULL_OFFSET + UCPTRIE_INDEX_3_BLOCK_LENGTH)) {
         // The index-3 offsets exceed 15 bits, or
         // the last one cannot be distinguished from the no-null-block value.
         errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        തിരികെ 0;
     }
 
     // Compact the index-2 table and write the index-1 table.
@@ -1444,31 +1444,31 @@ int32_t MutableCodePointTrie::compactIndex(int32_t fastILimit, MixedBlocks &mixe
                   "must re-init mixedBlocks");
     int32_t blockLength = UCPTRIE_INDEX_2_BLOCK_LENGTH;
     int32_t i1 = fastIndexLength;
-    for (int32_t i = 0; i < i2Length; i += blockLength) {
+    വേണ്ടി (int32_t i = 0; i < i2Length; i += blockLength) {
         int32_t n;
-        if ((i2Length - i) >= blockLength) {
+        എങ്കിൽ ((i2Length - i) >= blockLength) {
             // normal block
             U_ASSERT(blockLength == UCPTRIE_INDEX_2_BLOCK_LENGTH);
             n = mixedBlocks.findBlock(index16, index2, i);
-        } else {
+        } അല്ലെങ്കിൽ {
             // highStart is inside the last index-2 block. Shorten it.
             blockLength = i2Length - i;
             n = findSameBlock(index16, index3Start, indexLength,
                               index2, i, blockLength);
         }
         int32_t i2;
-        if (n >= 0) {
+        എങ്കിൽ (n >= 0) {
             i2 = n;
-        } else {
-            if (indexLength == index3Start) {
+        } അല്ലെങ്കിൽ {
+            എങ്കിൽ (indexLength == index3Start) {
                 // No overlap at the boundary between the index-1 and index-3/2 tables.
                 n = 0;
-            } else {
+            } അല്ലെങ്കിൽ {
                 n = getOverlap(index16, indexLength, index2, i, blockLength);
             }
             i2 = indexLength - n;
             int32_t prevIndexLength = indexLength;
-            while (n < blockLength) {
+            ആകുമ്പോൾ (n < blockLength) {
                 index16[indexLength++] = index2[i + n++];
             }
             mixedBlocks.extend(index16, index3Start, prevIndexLength, indexLength);
@@ -1485,40 +1485,40 @@ int32_t MutableCodePointTrie::compactIndex(int32_t fastILimit, MixedBlocks &mixe
             (long)iLimit, (long)indexLength);
 #endif
 
-    return indexLength;
+    തിരികെ indexLength;
 }
 
 int32_t MutableCodePointTrie::compactTrie(int32_t fastILimit, UErrorCode &errorCode) {
     // Find the real highStart and round it up.
-    U_ASSERT((highStart & (UCPTRIE_CP_PER_INDEX_2_ENTRY - 1)) == 0);
-    highValue = get(MAX_UNICODE);
-    int32_t realHighStart = findHighStart();
-    realHighStart = (realHighStart + (UCPTRIE_CP_PER_INDEX_2_ENTRY - 1)) &
+    U_ASSERT((മുകളിലെ_Start & (UCPTRIE_CP_PER_INDEX_2_ENTRY - 1)) == 0);
+    മുകളിലെ_മൂല്യം = get(MAX_UNICODE);
+    int32_t real_മുകളിലെ_Start = find_മുകളിലെ_Start();
+    real_മുകളിലെ_Start = (real_മുകളിലെ_Start + (UCPTRIE_CP_PER_INDEX_2_ENTRY - 1)) &
         ~(UCPTRIE_CP_PER_INDEX_2_ENTRY - 1);
-    if (realHighStart == UNICODE_LIMIT) {
-        highValue = initialValue;
+    എങ്കിൽ (real_മുകളിലെ_Start == UNICODE_LIMIT) {
+        മുകളിലെ_മൂല്യം = initial_മൂല്യം;
     }
 
 #ifdef UCPTRIE_DEBUG
     printf("UCPTrie: highStart U+%06lx  highValue 0x%lx  initialValue 0x%lx\n",
-            (long)realHighStart, (long)highValue, (long)initialValue);
+            (long)real_മുകളിലെ_Start, (long)മുകളിലെ_മൂല്യം, (long)initial_മൂല്യം);
 #endif
 
     // We always store indexes and data values for the fast range.
     // Pin highStart to the top of that range while building.
     UChar32 fastLimit = fastILimit << UCPTRIE_SHIFT_3;
-    if (realHighStart < fastLimit) {
-        for (int32_t i = (realHighStart >> UCPTRIE_SHIFT_3); i < fastILimit; ++i) {
+    എങ്കിൽ (real_മുകളിലെ_Start < fastLimit) {
+        വേണ്ടി (int32_t i = (real_മുകളിലെ_Start >> UCPTRIE_SHIFT_3); i < fastILimit; ++i) {
             flags[i] = ALL_SAME;
-            index[i] = highValue;
+            index[i] = മുകളിലെ_മൂല്യം;
         }
-        highStart = fastLimit;
-    } else {
-        highStart = realHighStart;
+        മുകളിലെ_Start = fastLimit;
+    } അല്ലെങ്കിൽ {
+        മുകളിലെ_Start = real_മുകളിലെ_Start;
     }
 
     uint32_t asciiData[ASCII_LIMIT];
-    for (int32_t i = 0; i < ASCII_LIMIT; ++i) {
+    വേണ്ടി (int32_t i = 0; i < ASCII_LIMIT; ++i) {
         asciiData[i] = get(i);
     }
 
@@ -1527,197 +1527,197 @@ int32_t MutableCodePointTrie::compactTrie(int32_t fastILimit, UErrorCode &errorC
     // and get an upper bound for the necessary data array length.
     AllSameBlocks allSameBlocks;
     int32_t newDataCapacity = compactWholeDataBlocks(fastILimit, allSameBlocks);
-    if (newDataCapacity < 0) {
+    എങ്കിൽ (newDataCapacity < 0) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return 0;
+        തിരികെ 0;
     }
     uint32_t* newData = static_cast<uint32_t*>(uprv_malloc(newDataCapacity * 4));
-    if (newData == nullptr) {
+    എങ്കിൽ (newData == nullptr) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return 0;
+        തിരികെ 0;
     }
-    uprv_memcpy(newData, asciiData, sizeof(asciiData));
+    uprv_memcpy(newData, asciiData, വലുപ്പം(asciiData));
 
     int32_t dataNullIndex = allSameBlocks.findMostUsed();
 
     MixedBlocks mixedBlocks;
     int32_t newDataLength = compactData(fastILimit, newData, newDataCapacity,
                                         dataNullIndex, mixedBlocks, errorCode);
-    if (U_FAILURE(errorCode)) { return 0; }
+    എങ്കിൽ (U_FAILURE(errorCode)) { തിരികെ 0; }
     U_ASSERT(newDataLength <= newDataCapacity);
     uprv_free(data);
     data = newData;
     dataCapacity = newDataCapacity;
     dataLength = newDataLength;
-    if (dataLength > (0x3ffff + UCPTRIE_SMALL_DATA_BLOCK_LENGTH)) {
+    എങ്കിൽ (dataLength > (0x3ffff + UCPTRIE_SMALL_DATA_BLOCK_LENGTH)) {
         // The offset of the last data block is too high to be stored in the index table.
         errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        തിരികെ 0;
     }
 
-    if (dataNullIndex >= 0) {
+    എങ്കിൽ (dataNullIndex >= 0) {
         dataNullOffset = index[dataNullIndex];
 #ifdef UCPTRIE_DEBUG
-        if (data[dataNullOffset] != initialValue) {
+        എങ്കിൽ (data[dataNullOffset] != initial_മൂല്യം) {
             printf("UCPTrie initialValue %lx -> more common nullValue %lx\n",
-                   (long)initialValue, (long)data[dataNullOffset]);
+                   (long)initial_മൂല്യം, (long)data[dataNullOffset]);
         }
 #endif
-        initialValue = data[dataNullOffset];
-    } else {
+        initial_മൂല്യം = data[dataNullOffset];
+    } അല്ലെങ്കിൽ {
         dataNullOffset = UCPTRIE_NO_DATA_NULL_OFFSET;
     }
 
     int32_t indexLength = compactIndex(fastILimit, mixedBlocks, errorCode);
-    highStart = realHighStart;
-    return indexLength;
+    മുകളിലെ_Start = real_മുകളിലെ_Start;
+    തിരികെ indexLength;
 }
 
-UCPTrie *MutableCodePointTrie::build(UCPTrieType type, UCPTrieValueWidth valueWidth, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) {
-        return nullptr;
+UCPTrie *MutableCodePointTrie::build(UCPTrieType type, UCPTrie_മൂല്യം_Width മൂല്യം_Width, UErrorCode &errorCode) {
+    എങ്കിൽ (U_FAILURE(errorCode)) {
+        തിരികെ nullptr;
     }
-    if (type < UCPTRIE_TYPE_FAST || UCPTRIE_TYPE_SMALL < type ||
-            valueWidth < UCPTRIE_VALUE_BITS_16 || UCPTRIE_VALUE_BITS_8 < valueWidth) {
+    എങ്കിൽ (type < UCPTRIE_TYPE_FAST || UCPTRIE_TYPE_SMALL < type ||
+            മൂല്യം_Width < UCPTRIE_മൂല്യം_BITS_16 || UCPTRIE_മൂല്യം_BITS_8 < മൂല്യം_Width) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
 
     // The mutable trie always stores 32-bit values.
     // When we build a UCPTrie for a smaller value width, we first mask off unused bits
     // before compacting the data.
-    switch (valueWidth) {
-    case UCPTRIE_VALUE_BITS_32:
-        break;
-    case UCPTRIE_VALUE_BITS_16:
-        maskValues(0xffff);
-        break;
-    case UCPTRIE_VALUE_BITS_8:
-        maskValues(0xff);
-        break;
-    default:
-        break;
+    തിരഞ്ഞെടുപ്പ് (മൂല്യം_Width) {
+    അവസ്ഥ UCPTRIE_മൂല്യം_BITS_32:
+        നിർത്തുക;
+    അവസ്ഥ UCPTRIE_മൂല്യം_BITS_16:
+        mask_മൂല്യങ്ങൾ(0xffff);
+        നിർത്തുക;
+    അവസ്ഥ UCPTRIE_മൂല്യം_BITS_8:
+        mask_മൂല്യങ്ങൾ(0xff);
+        നിർത്തുക;
+    സ്ഥിരസ്ഥിതി:
+        നിർത്തുക;
     }
 
     UChar32 fastLimit = type == UCPTRIE_TYPE_FAST ? BMP_LIMIT : UCPTRIE_SMALL_LIMIT;
     int32_t indexLength = compactTrie(fastLimit >> UCPTRIE_SHIFT_3, errorCode);
-    if (U_FAILURE(errorCode)) {
+    എങ്കിൽ (U_FAILURE(errorCode)) {
         clear();
-        return nullptr;
+        തിരികെ nullptr;
     }
 
     // Ensure data table alignment: The index length must be even for uint32_t data.
-    if (valueWidth == UCPTRIE_VALUE_BITS_32 && (indexLength & 1) != 0) {
+    എങ്കിൽ (മൂല്യം_Width == UCPTRIE_മൂല്യം_BITS_32 && (indexLength & 1) != 0) {
         index16[indexLength++] = 0xffee;  // arbitrary value
     }
 
     // Make the total trie structure length a multiple of 4 bytes by padding the data table,
     // and store special values as the last two data values.
     int32_t length = indexLength * 2;
-    if (valueWidth == UCPTRIE_VALUE_BITS_16) {
-        if (((indexLength ^ dataLength) & 1) != 0) {
+    എങ്കിൽ (മൂല്യം_Width == UCPTRIE_മൂല്യം_BITS_16) {
+        എങ്കിൽ (((indexLength ^ dataLength) & 1) != 0) {
             // padding
-            data[dataLength++] = errorValue;
+            data[dataLength++] = error_മൂല്യം;
         }
-        if (data[dataLength - 1] != errorValue || data[dataLength - 2] != highValue) {
-            data[dataLength++] = highValue;
-            data[dataLength++] = errorValue;
+        എങ്കിൽ (data[dataLength - 1] != error_മൂല്യം || data[dataLength - 2] != മുകളിലെ_മൂല്യം) {
+            data[dataLength++] = മുകളിലെ_മൂല്യം;
+            data[dataLength++] = error_മൂല്യം;
         }
         length += dataLength * 2;
-    } else if (valueWidth == UCPTRIE_VALUE_BITS_32) {
+    } അല്ലെങ്കിൽ എങ്കിൽ (മൂല്യം_Width == UCPTRIE_മൂല്യം_BITS_32) {
         // 32-bit data words never need padding to a multiple of 4 bytes.
-        if (data[dataLength - 1] != errorValue || data[dataLength - 2] != highValue) {
-            if (data[dataLength - 1] != highValue) {
-                data[dataLength++] = highValue;
+        എങ്കിൽ (data[dataLength - 1] != error_മൂല്യം || data[dataLength - 2] != മുകളിലെ_മൂല്യം) {
+            എങ്കിൽ (data[dataLength - 1] != മുകളിലെ_മൂല്യം) {
+                data[dataLength++] = മുകളിലെ_മൂല്യം;
             }
-            data[dataLength++] = errorValue;
+            data[dataLength++] = error_മൂല്യം;
         }
         length += dataLength * 4;
-    } else {
+    } അല്ലെങ്കിൽ {
         int32_t and3 = (length + dataLength) & 3;
-        if (and3 == 0 && data[dataLength - 1] == errorValue && data[dataLength - 2] == highValue) {
+        എങ്കിൽ (and3 == 0 && data[dataLength - 1] == error_മൂല്യം && data[dataLength - 2] == മുകളിലെ_മൂല്യം) {
             // all set
-        } else if(and3 == 3 && data[dataLength - 1] == highValue) {
-            data[dataLength++] = errorValue;
-        } else {
-            while (and3 != 2) {
-                data[dataLength++] = highValue;
+        } അല്ലെങ്കിൽ എങ്കിൽ(and3 == 3 && data[dataLength - 1] == മുകളിലെ_മൂല്യം) {
+            data[dataLength++] = error_മൂല്യം;
+        } അല്ലെങ്കിൽ {
+            ആകുമ്പോൾ (and3 != 2) {
+                data[dataLength++] = മുകളിലെ_മൂല്യം;
                 and3 = (and3 + 1) & 3;
             }
-            data[dataLength++] = highValue;
-            data[dataLength++] = errorValue;
+            data[dataLength++] = മുകളിലെ_മൂല്യം;
+            data[dataLength++] = error_മൂല്യം;
         }
         length += dataLength;
     }
 
     // Calculate the total length of the UCPTrie as a single memory block.
-    length += sizeof(UCPTrie);
+    length += വലുപ്പം(UCPTrie);
     U_ASSERT((length & 3) == 0);
 
     uint8_t* bytes = static_cast<uint8_t*>(uprv_malloc(length));
-    if (bytes == nullptr) {
+    എങ്കിൽ (bytes == nullptr) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
         clear();
-        return nullptr;
+        തിരികെ nullptr;
     }
     UCPTrie *trie = reinterpret_cast<UCPTrie *>(bytes);
-    uprv_memset(trie, 0, sizeof(UCPTrie));
+    uprv_memset(trie, 0, വലുപ്പം(UCPTrie));
     trie->indexLength = indexLength;
     trie->dataLength = dataLength;
 
-    trie->highStart = highStart;
+    trie->മുകളിലെ_Start = മുകളിലെ_Start;
     // Round up shifted12HighStart to a multiple of 0x1000 for easy testing from UTF-8 lead bytes.
     // Runtime code needs to then test for the real highStart as well.
-    trie->shifted12HighStart = (highStart + 0xfff) >> 12;
+    trie->shifted12_മുകളിലെ_Start = (മുകളിലെ_Start + 0xfff) >> 12;
     trie->type = type;
-    trie->valueWidth = valueWidth;
+    trie->മൂല്യം_Width = മൂല്യം_Width;
 
     trie->index3NullOffset = index3NullOffset;
     trie->dataNullOffset = dataNullOffset;
-    trie->nullValue = initialValue;
+    trie->null_മൂല്യം = initial_മൂല്യം;
 
-    bytes += sizeof(UCPTrie);
+    bytes += വലുപ്പം(UCPTrie);
 
     // Fill the index and data arrays.
     uint16_t* dest16 = reinterpret_cast<uint16_t*>(bytes);
     trie->index = dest16;
 
-    if (highStart <= fastLimit) {
+    എങ്കിൽ (മുകളിലെ_Start <= fastLimit) {
         // Condense only the fast index from the mutable-trie index.
-        for (int32_t i = 0, j = 0; j < indexLength; i += SMALL_DATA_BLOCKS_PER_BMP_BLOCK, ++j) {
+        വേണ്ടി (int32_t i = 0, j = 0; j < indexLength; i += SMALL_DATA_BLOCKS_PER_BMP_BLOCK, ++j) {
             *dest16++ = static_cast<uint16_t>(index[i]); // dest16[j]
         }
-    } else {
+    } അല്ലെങ്കിൽ {
         uprv_memcpy(dest16, index16, indexLength * 2);
         dest16 += indexLength;
     }
     bytes += indexLength * 2;
 
     // Write the data array.
-    const uint32_t *p = data;
-    switch (valueWidth) {
-    case UCPTRIE_VALUE_BITS_16:
+    സ്ഥിരം uint32_t *p = data;
+    തിരഞ്ഞെടുപ്പ് (മൂല്യം_Width) {
+    അവസ്ഥ UCPTRIE_മൂല്യം_BITS_16:
         // Write 16-bit data values.
         trie->data.ptr16 = dest16;
-        for (int32_t i = dataLength; i > 0; --i) {
+        വേണ്ടി (int32_t i = dataLength; i > 0; --i) {
             *dest16++ = static_cast<uint16_t>(*p++);
         }
-        break;
-    case UCPTRIE_VALUE_BITS_32:
+        നിർത്തുക;
+    അവസ്ഥ UCPTRIE_മൂല്യം_BITS_32:
         // Write 32-bit data values.
         trie->data.ptr32 = reinterpret_cast<uint32_t*>(bytes);
         uprv_memcpy(bytes, p, (size_t)dataLength * 4);
-        break;
-    case UCPTRIE_VALUE_BITS_8:
+        നിർത്തുക;
+    അവസ്ഥ UCPTRIE_മൂല്യം_BITS_8:
         // Write 8-bit data values.
         trie->data.ptr8 = bytes;
-        for (int32_t i = dataLength; i > 0; --i) {
+        വേണ്ടി (int32_t i = dataLength; i > 0; --i) {
             *bytes++ = static_cast<uint8_t>(*p++);
         }
-        break;
-    default:
+        നിർത്തുക;
+    സ്ഥിരസ്ഥിതി:
         // Will not occur, valueWidth checked at the beginning.
-        break;
+        നിർത്തുക;
     }
 
 #ifdef UCPTRIE_DEBUG
@@ -1727,7 +1727,7 @@ UCPTrie *MutableCodePointTrie::build(UCPTrieType type, UCPTrieValueWidth valueWi
 #endif
 
     clear();
-    return trie;
+    തിരികെ trie;
 }
 
 }  // namespace
@@ -1737,116 +1737,116 @@ U_NAMESPACE_END
 U_NAMESPACE_USE
 
 U_CAPI UMutableCPTrie * U_EXPORT2
-umutablecptrie_open(uint32_t initialValue, uint32_t errorValue, UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+umutablecptrie_open(uint32_t initial_മൂല്യം, uint32_t error_മൂല്യം, UErrorCode *pErrorCode) {
+    എങ്കിൽ (U_FAILURE(*pErrorCode)) {
+        തിരികെ nullptr;
     }
     LocalPointer<MutableCodePointTrie> trie(
-        new MutableCodePointTrie(initialValue, errorValue, *pErrorCode), *pErrorCode);
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+        പുതിയ MutableCodePointTrie(initial_മൂല്യം, error_മൂല്യം, *pErrorCode), *pErrorCode);
+    എങ്കിൽ (U_FAILURE(*pErrorCode)) {
+        തിരികെ nullptr;
     }
-    return reinterpret_cast<UMutableCPTrie *>(trie.orphan());
+    തിരികെ reinterpret_cast<UMutableCPTrie *>(trie.orphan());
 }
 
 U_CAPI UMutableCPTrie * U_EXPORT2
-umutablecptrie_clone(const UMutableCPTrie *other, UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+umutablecptrie_clone(സ്ഥിരം UMutableCPTrie *other, UErrorCode *pErrorCode) {
+    എങ്കിൽ (U_FAILURE(*pErrorCode)) {
+        തിരികെ nullptr;
     }
-    if (other == nullptr) {
-        return nullptr;
+    എങ്കിൽ (other == nullptr) {
+        തിരികെ nullptr;
     }
     LocalPointer<MutableCodePointTrie> clone(
-        new MutableCodePointTrie(*reinterpret_cast<const MutableCodePointTrie *>(other), *pErrorCode), *pErrorCode);
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+        പുതിയ MutableCodePointTrie(*reinterpret_cast<സ്ഥിരം MutableCodePointTrie *>(other), *pErrorCode), *pErrorCode);
+    എങ്കിൽ (U_FAILURE(*pErrorCode)) {
+        തിരികെ nullptr;
     }
-    return reinterpret_cast<UMutableCPTrie *>(clone.orphan());
+    തിരികെ reinterpret_cast<UMutableCPTrie *>(clone.orphan());
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 umutablecptrie_close(UMutableCPTrie *trie) {
     delete reinterpret_cast<MutableCodePointTrie *>(trie);
 }
 
 U_CAPI UMutableCPTrie * U_EXPORT2
-umutablecptrie_fromUCPMap(const UCPMap *map, UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+umutablecptrie_fromUCPMap(സ്ഥിരം UCPMap *map, UErrorCode *pErrorCode) {
+    എങ്കിൽ (U_FAILURE(*pErrorCode)) {
+        തിരികെ nullptr;
     }
-    if (map == nullptr) {
+    എങ്കിൽ (map == nullptr) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
-    return reinterpret_cast<UMutableCPTrie *>(MutableCodePointTrie::fromUCPMap(map, *pErrorCode));
+    തിരികെ reinterpret_cast<UMutableCPTrie *>(MutableCodePointTrie::fromUCPMap(map, *pErrorCode));
 }
 
 U_CAPI UMutableCPTrie * U_EXPORT2
-umutablecptrie_fromUCPTrie(const UCPTrie *trie, UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+umutablecptrie_fromUCPTrie(സ്ഥിരം UCPTrie *trie, UErrorCode *pErrorCode) {
+    എങ്കിൽ (U_FAILURE(*pErrorCode)) {
+        തിരികെ nullptr;
     }
-    if (trie == nullptr) {
+    എങ്കിൽ (trie == nullptr) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        തിരികെ nullptr;
     }
-    return reinterpret_cast<UMutableCPTrie *>(MutableCodePointTrie::fromUCPTrie(trie, *pErrorCode));
+    തിരികെ reinterpret_cast<UMutableCPTrie *>(MutableCodePointTrie::fromUCPTrie(trie, *pErrorCode));
 }
 
 U_CAPI uint32_t U_EXPORT2
-umutablecptrie_get(const UMutableCPTrie *trie, UChar32 c) {
-    return reinterpret_cast<const MutableCodePointTrie *>(trie)->get(c);
+umutablecptrie_get(സ്ഥിരം UMutableCPTrie *trie, UChar32 c) {
+    തിരികെ reinterpret_cast<സ്ഥിരം MutableCodePointTrie *>(trie)->get(c);
 }
 
-namespace {
+നാമാകാശ {
 
-UChar32 getRange(const void *trie, UChar32 start,
-                 UCPMapValueFilter *filter, const void *context, uint32_t *pValue) {
-    return reinterpret_cast<const MutableCodePointTrie *>(trie)->
-        getRange(start, filter, context, pValue);
+UChar32 getRange(സ്ഥിരം ശൂന്യം *trie, UChar32 start,
+                 UCPMap_മൂല്യം_Filter *filter, സ്ഥിരം ശൂന്യം *context, uint32_t *p_മൂല്യം) {
+    തിരികെ reinterpret_cast<സ്ഥിരം MutableCodePointTrie *>(trie)->
+        getRange(start, filter, context, p_മൂല്യം);
 }
 
 }  // namespace
 
 U_CAPI UChar32 U_EXPORT2
-umutablecptrie_getRange(const UMutableCPTrie *trie, UChar32 start,
-                        UCPMapRangeOption option, uint32_t surrogateValue,
-                        UCPMapValueFilter *filter, const void *context, uint32_t *pValue) {
-    return ucptrie_internalGetRange(getRange, trie, start,
-                                    option, surrogateValue,
-                                    filter, context, pValue);
+umutablecptrie_getRange(സ്ഥിരം UMutableCPTrie *trie, UChar32 start,
+                        UCPMapRangeOption option, uint32_t surrogate_മൂല്യം,
+                        UCPMap_മൂല്യം_Filter *filter, സ്ഥിരം ശൂന്യം *context, uint32_t *p_മൂല്യം) {
+    തിരികെ ucptrie_internalGetRange(getRange, trie, start,
+                                    option, surrogate_മൂല്യം,
+                                    filter, context, p_മൂല്യം);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 umutablecptrie_set(UMutableCPTrie *trie, UChar32 c, uint32_t value, UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return;
+    എങ്കിൽ (U_FAILURE(*pErrorCode)) {
+        തിരികെ;
     }
     reinterpret_cast<MutableCodePointTrie *>(trie)->set(c, value, *pErrorCode);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ശൂന്യം U_EXPORT2
 umutablecptrie_setRange(UMutableCPTrie *trie, UChar32 start, UChar32 end,
                    uint32_t value, UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return;
+    എങ്കിൽ (U_FAILURE(*pErrorCode)) {
+        തിരികെ;
     }
     reinterpret_cast<MutableCodePointTrie *>(trie)->setRange(start, end, value, *pErrorCode);
 }
 
 /* Compact and internally serialize the trie. */
 U_CAPI UCPTrie * U_EXPORT2
-umutablecptrie_buildImmutable(UMutableCPTrie *trie, UCPTrieType type, UCPTrieValueWidth valueWidth,
+umutablecptrie_buildImmutable(UMutableCPTrie *trie, UCPTrieType type, UCPTrie_മൂല്യം_Width മൂല്യം_Width,
                               UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    എങ്കിൽ (U_FAILURE(*pErrorCode)) {
+        തിരികെ nullptr;
     }
-    return reinterpret_cast<MutableCodePointTrie *>(trie)->build(type, valueWidth, *pErrorCode);
+    തിരികെ reinterpret_cast<MutableCodePointTrie *>(trie)->build(type, മൂല്യം_Width, *pErrorCode);
 }
 
 #ifdef UCPTRIE_DEBUG
-U_CFUNC void umutablecptrie_setName(UMutableCPTrie *trie, const char *name) {
+U_CFUNC ശൂന്യം umutablecptrie_setName(UMutableCPTrie *trie, സ്ഥിരം അക്ഷരം *name) {
     reinterpret_cast<MutableCodePointTrie *>(trie)->name = name;
 }
 #endif
