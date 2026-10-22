@@ -7,13 +7,13 @@
  *******************************************************************************
  */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#𐡄𐡍 !UCONFIG_NO_SERVICE
 
-#include "servnotf.h"
+#ضمن "servnotf.h"
 #ifdef NOTIFIER_DEBUG
-#include <stdio.h>
+#ضمن <stdio.h>
 #endif
 
 U_NAMESPACE_BEGIN
@@ -21,7 +21,7 @@ U_NAMESPACE_BEGIN
 EventListener::~EventListener() {}
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(EventListener)
 
-static UMutex notifyLock;
+ساكن UMutex notifyLock;
 
 ICUNotifier::ICUNotifier() 
 : listeners(nullptr) 
@@ -37,36 +37,36 @@ ICUNotifier::~ICUNotifier() {
 }
 
 
-void 
-ICUNotifier::addListener(const EventListener* l, UErrorCode& status) 
+فراغ 
+ICUNotifier::addListener(ثابت EventListener* l, UErrorCode& status) 
 {
-    if (U_SUCCESS(status)) {
-        if (l == nullptr) {
+    𐡄𐡍 (U_SUCCESS(status)) {
+        𐡄𐡍 (l == nullptr) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            أرجع;
         }
 
-        if (acceptsListener(*l)) {
+        𐡄𐡍 (acceptsListener(*l)) {
             Mutex lmx(&notifyLock);
-            if (listeners == nullptr) {
-                LocalPointer<UVector> lpListeners(new UVector(5, status), status);
-                if (U_FAILURE(status)) {
-                    return;
+            𐡄𐡍 (listeners == nullptr) {
+                LocalPointer<UVector> lpListeners(جديد UVector(5, status), status);
+                𐡄𐡍 (U_FAILURE(status)) {
+                    أرجع;
                 }
                 listeners = lpListeners.orphan();
-            } else {
-                for (int i = 0, e = listeners->size(); i < e; ++i) {
-                    const EventListener* el = static_cast<const EventListener*>(listeners->elementAt(i));
-                    if (l == el) {
-                        return;
+            } وإلا {
+                لكل (صحيح i = 0, e = listeners->size(); i < e; ++i) {
+                    ثابت EventListener* el = static_cast<ثابت EventListener*>(listeners->elementAt(i));
+                    𐡄𐡍 (l == el) {
+                        أرجع;
                     }
                 }
             }
 
-            listeners->addElement((void*)l, status); // cast away const
+            listeners->addElement((فراغ*)l, status); // cast away const
         }
 #ifdef NOTIFIER_DEBUG
-        else {
+        وإلا {
             fprintf(stderr, "Listener invalid for this notifier.");
             exit(1);
         }
@@ -74,28 +74,28 @@ ICUNotifier::addListener(const EventListener* l, UErrorCode& status)
     }
 }
 
-void 
-ICUNotifier::removeListener(const EventListener *l, UErrorCode& status) 
+فراغ 
+ICUNotifier::removeListener(ثابت EventListener *l, UErrorCode& status) 
 {
-    if (U_SUCCESS(status)) {
-        if (l == nullptr) {
+    𐡄𐡍 (U_SUCCESS(status)) {
+        𐡄𐡍 (l == nullptr) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            أرجع;
         }
 
         {
             Mutex lmx(&notifyLock);
-            if (listeners != nullptr) {
+            𐡄𐡍 (listeners != nullptr) {
                 // identity equality check
-                for (int i = 0, e = listeners->size(); i < e; ++i) {
-                    const EventListener* el = static_cast<const EventListener*>(listeners->elementAt(i));
-                    if (l == el) {
+                لكل (صحيح i = 0, e = listeners->size(); i < e; ++i) {
+                    ثابت EventListener* el = static_cast<ثابت EventListener*>(listeners->elementAt(i));
+                    𐡄𐡍 (l == el) {
                         listeners->removeElementAt(i);
-                        if (listeners->size() == 0) {
+                        𐡄𐡍 (listeners->size() == 0) {
                             delete listeners;
                             listeners = nullptr;
                         }
-                        return;
+                        أرجع;
                     }
                 }
             }
@@ -103,12 +103,12 @@ ICUNotifier::removeListener(const EventListener *l, UErrorCode& status)
     }
 }
 
-void 
+فراغ 
 ICUNotifier::notifyChanged() 
 {
     Mutex lmx(&notifyLock);
-    if (listeners != nullptr) {
-        for (int i = 0, e = listeners->size(); i < e; ++i) {
+    𐡄𐡍 (listeners != nullptr) {
+        لكل (صحيح i = 0, e = listeners->size(); i < e; ++i) {
             EventListener* el = static_cast<EventListener*>(listeners->elementAt(i));
             notifyListener(*el);
         }

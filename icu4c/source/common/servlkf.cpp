@@ -8,19 +8,19 @@
  *
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#𐡄𐡍 !UCONFIG_NO_SERVICE
 
-#include "unicode/resbund.h"
-#include "uresimp.h"
-#include "cmemory.h"
-#include "servloc.h"
-#include "ustrfmt.h"
-#include "uhash.h"
-#include "charstr.h"
-#include "ucln_cmn.h"
-#include "uassert.h"
+#ضمن "unicode/resbund.h"
+#ضمن "uresimp.h"
+#ضمن "cmemory.h"
+#ضمن "servloc.h"
+#ضمن "ustrfmt.h"
+#ضمن "uhash.h"
+#ضمن "charstr.h"
+#ضمن "ucln_cmn.h"
+#ضمن "uassert.h"
 
 #define UNDERSCORE_CHAR ((char16_t)0x005f)
 #define AT_SIGN_CHAR    ((char16_t)64)
@@ -35,7 +35,7 @@ LocaleKeyFactory::LocaleKeyFactory(int32_t coverage)
 {
 }
 
-LocaleKeyFactory::LocaleKeyFactory(int32_t coverage, const UnicodeString& name)
+LocaleKeyFactory::LocaleKeyFactory(int32_t coverage, ثابت UnicodeString& name)
   : _name(name)
   , _coverage(coverage)
 {
@@ -45,44 +45,44 @@ LocaleKeyFactory::~LocaleKeyFactory() {
 }
 
 UObject*
-LocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const {
-    if (handlesKey(key, status)) {
-        const LocaleKey& lkey = static_cast<const LocaleKey&>(key);
+LocaleKeyFactory::create(ثابت ICUServiceKey& key, ثابت ICUService* service, UErrorCode& status) ثابت {
+    𐡄𐡍 (handlesKey(key, status)) {
+        ثابت LocaleKey& lkey = static_cast<ثابت LocaleKey&>(key);
         int32_t kind = lkey.kind();
         Locale loc;
         lkey.currentLocale(loc);
 
-        return handleCreate(loc, kind, service, status);
+        أرجع handleCreate(loc, kind, service, status);
     }
-    return nullptr;
+    أرجع nullptr;
 }
 
 UBool
-LocaleKeyFactory::handlesKey(const ICUServiceKey& key, UErrorCode& status) const {
-    const Hashtable* supported = getSupportedIDs(status);
-    if (supported) {
+LocaleKeyFactory::handlesKey(ثابت ICUServiceKey& key, UErrorCode& status) ثابت {
+    ثابت Hashtable* supported = getSupportedIDs(status);
+    𐡄𐡍 (supported) {
         UnicodeString id;
         key.currentID(id);
-        return supported->get(id) != nullptr;
+        أرجع supported->get(id) != nullptr;
     }
-    return false;
+    أرجع خطأ;
 }
 
-void
-LocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const {
-    const Hashtable* supported = getSupportedIDs(status);
-    if (supported) {
+فراغ
+LocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) ثابت {
+    ثابت Hashtable* supported = getSupportedIDs(status);
+    𐡄𐡍 (supported) {
         UBool visible = (_coverage & 0x1) == 0;
-        const UHashElement* elem = nullptr;
+        ثابت UHashElement* elem = nullptr;
         int32_t pos = UHASH_FIRST;
-        while ((elem = supported->nextElement(pos)) != nullptr) {
-            const UnicodeString& id = *static_cast<const UnicodeString*>(elem->key.pointer);
-            if (!visible) {
+        طالما ((elem = supported->nextElement(pos)) != nullptr) {
+            ثابت UnicodeString& id = *static_cast<ثابت UnicodeString*>(elem->key.pointer);
+            𐡄𐡍 (!visible) {
                 result.remove(id);
-            } else {
-                result.put(id, (void*)this, status); // this is dummy non-void marker used for set semantics
-                if (U_FAILURE(status)) {
-                    break;
+            } وإلا {
+                result.put(id, (فراغ*)هذا, status); // this is dummy non-void marker used for set semantics
+                𐡄𐡍 (U_FAILURE(status)) {
+                    اكسر;
                 }
             }
         }
@@ -90,26 +90,26 @@ LocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const 
 }
 
 UnicodeString&
-LocaleKeyFactory::getDisplayName(const UnicodeString& id, const Locale& locale, UnicodeString& result) const {
-    if ((_coverage & 0x1) == 0) {
+LocaleKeyFactory::getDisplayName(ثابت UnicodeString& id, ثابت Locale& locale, UnicodeString& result) ثابت {
+    𐡄𐡍 ((_coverage & 0x1) == 0) {
         //UErrorCode status = U_ZERO_ERROR;
         // assume if this is called on us, we support some fallback of this id
         // if (isSupportedID(id, status)) {
             Locale loc;
             LocaleUtility::initLocaleFromName(id, loc);
-            return loc.getDisplayName(locale, result);
+            أرجع loc.getDisplayName(locale, result);
         // }
     }
     result.setToBogus();
-    return result;
+    أرجع result;
 }
 
 UObject*
-LocaleKeyFactory::handleCreate(const Locale& /* loc */, 
+LocaleKeyFactory::handleCreate(ثابت Locale& /* loc */, 
                    int32_t /* kind */, 
-                   const ICUService* /* service */, 
-                   UErrorCode& /* status */) const {
-    return nullptr;
+                   ثابت ICUService* /* service */, 
+                   UErrorCode& /* status */) ثابت {
+    أرجع nullptr;
 }
 
 //UBool
@@ -118,27 +118,27 @@ LocaleKeyFactory::handleCreate(const Locale& /* loc */,
 //    return ids && ids->get(id);
 //}
 
-const Hashtable*
-LocaleKeyFactory::getSupportedIDs(UErrorCode& /* status */) const {
-    return nullptr;
+ثابت Hashtable*
+LocaleKeyFactory::getSupportedIDs(UErrorCode& /* status */) ثابت {
+    أرجع nullptr;
 }
 
 #ifdef SERVICE_DEBUG
 UnicodeString&
-LocaleKeyFactory::debug(UnicodeString& result) const
+LocaleKeyFactory::debug(UnicodeString& result) ثابت
 {
     debugClass(result);
     result.append((UnicodeString)", name: ");
     result.append(_name);
     result.append((UnicodeString)", coverage: ");
     result.append(_coverage);
-    return result;
+    أرجع result;
 }
 
 UnicodeString&
-LocaleKeyFactory::debugClass(UnicodeString& result) const
+LocaleKeyFactory::debugClass(UnicodeString& result) ثابت
 {
-  return result.append((UnicodeString)"LocaleKeyFactory");
+  أرجع result.append((UnicodeString)"LocaleKeyFactory");
 }
 #endif
 

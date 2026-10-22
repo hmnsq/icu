@@ -8,18 +8,18 @@
  *
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#𐡄𐡍 !UCONFIG_NO_SERVICE
 
-#include "unicode/resbund.h"
-#include "uresimp.h"
-#include "cmemory.h"
-#include "servloc.h"
-#include "ustrfmt.h"
-#include "uhash.h"
-#include "charstr.h"
-#include "uassert.h"
+#ضمن "unicode/resbund.h"
+#ضمن "uresimp.h"
+#ضمن "cmemory.h"
+#ضمن "servloc.h"
+#ضمن "ustrfmt.h"
+#ضمن "uhash.h"
+#ضمن "charstr.h"
+#ضمن "uassert.h"
 
 #define UNDERSCORE_CHAR ((char16_t)0x005f)
 #define AT_SIGN_CHAR    ((char16_t)64)
@@ -32,7 +32,7 @@ U_NAMESPACE_BEGIN
  */
 
 SimpleLocaleKeyFactory::SimpleLocaleKeyFactory(UObject* objToAdopt,
-                                               const UnicodeString& locale,
+                                               ثابت UnicodeString& locale,
                                                int32_t kind,
                                                int32_t coverage)
   : LocaleKeyFactory(coverage)
@@ -43,7 +43,7 @@ SimpleLocaleKeyFactory::SimpleLocaleKeyFactory(UObject* objToAdopt,
 }
 
 SimpleLocaleKeyFactory::SimpleLocaleKeyFactory(UObject* objToAdopt,
-                                               const Locale& locale,
+                                               ثابت Locale& locale,
                                                int32_t kind,
                                                int32_t coverage)
   : LocaleKeyFactory(coverage)
@@ -61,19 +61,19 @@ SimpleLocaleKeyFactory::~SimpleLocaleKeyFactory()
 }
 
 UObject*
-SimpleLocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const
+SimpleLocaleKeyFactory::create(ثابت ICUServiceKey& key, ثابت ICUService* service, UErrorCode& status) ثابت
 {
-    if (U_SUCCESS(status)) {
-        const LocaleKey& lkey = static_cast<const LocaleKey&>(key);
-        if (_kind == LocaleKey::KIND_ANY || _kind == lkey.kind()) {
+    𐡄𐡍 (U_SUCCESS(status)) {
+        ثابت LocaleKey& lkey = static_cast<ثابت LocaleKey&>(key);
+        𐡄𐡍 (_kind == LocaleKey::KIND_ANY || _kind == lkey.kind()) {
             UnicodeString keyID;
             lkey.currentID(keyID);
-            if (_id == keyID) {
-                return service->cloneInstance(_obj);
+            𐡄𐡍 (_id == keyID) {
+                أرجع service->cloneInstance(_obj);
             }
         }
     }
-    return nullptr;
+    أرجع nullptr;
 }
 
 //UBool
@@ -82,34 +82,34 @@ SimpleLocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* servi
 //    return id == _id;
 //}
 
-void
-SimpleLocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const
+فراغ
+SimpleLocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) ثابت
 {
-    if (U_SUCCESS(status)) {
-        if (_coverage & 0x1) {
+    𐡄𐡍 (U_SUCCESS(status)) {
+        𐡄𐡍 (_coverage & 0x1) {
             result.remove(_id);
-        } else {
-            result.put(_id, (void*)this, status);
+        } وإلا {
+            result.put(_id, (فراغ*)هذا, status);
         }
     }
 }
 
 #ifdef SERVICE_DEBUG
 UnicodeString&
-SimpleLocaleKeyFactory::debug(UnicodeString& result) const
+SimpleLocaleKeyFactory::debug(UnicodeString& result) ثابت
 {
     LocaleKeyFactory::debug(result);
     result.append((UnicodeString)", id: ");
     result.append(_id);
     result.append((UnicodeString)", kind: ");
     result.append(_kind);
-    return result;
+    أرجع result;
 }
 
 UnicodeString&
-SimpleLocaleKeyFactory::debugClass(UnicodeString& result) const
+SimpleLocaleKeyFactory::debugClass(UnicodeString& result) ثابت
 {
-    return result.append((UnicodeString)"SimpleLocaleKeyFactory");
+    أرجع result.append((UnicodeString)"SimpleLocaleKeyFactory");
 }
 #endif
 

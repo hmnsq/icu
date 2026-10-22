@@ -7,7 +7,7 @@
 #ifndef __ULAYOUT_PROPS_H__
 #define __ULAYOUT_PROPS_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
 // file definitions ------------------------------------------------------------
 
@@ -21,7 +21,7 @@
 #define ULAYOUT_FMT_3 0x6f
 
 // indexes into indexes[]
-enum {
+تعداد {
     // Element 0 stores the length of the indexes[] array.
     ULAYOUT_IX_INDEXES_LENGTH,
     // Elements 1..7 store the tops of consecutive code point tries.

@@ -20,8 +20,8 @@
 #ifndef __UCLN_IMP_H__
 #define __UCLN_IMP_H__
 
-#include "ucln.h"
-#include <stdlib.h>
+#ضمن "ucln.h"
+#ضمن <stdlib.h>
 
 /**
  * Auto cleanup of ICU libraries
@@ -39,7 +39,7 @@
  * For option 3, follow option 1 and also define UCLN_AUTO_LOCAL (see below for more information)
  */
 
-#if !UCLN_NO_AUTO_CLEANUP
+#𐡄𐡍 !UCLN_NO_AUTO_CLEANUP
 
 /*
  * The following declarations are for when UCLN_AUTO_LOCAL or UCLN_AUTO_ATEXIT
@@ -59,60 +59,60 @@
 
 #ifdef UCLN_TYPE_IS_COMMON
 #   define UCLN_CLEAN_ME_UP u_cleanup()
-#else
+#وإلا
 #   define UCLN_CLEAN_ME_UP ucln_cleanupOne(UCLN_TYPE)
 #endif
 
 /* ------------ automatic cleanup: registration. Choose ONE ------- */
-#if defined(UCLN_AUTO_LOCAL)
+#𐡄𐡍 defined(UCLN_AUTO_LOCAL)
 /* To use:
  *  1. define UCLN_AUTO_LOCAL,
  *  2. create ucln_local_hook.c containing implementations of
  *           static void ucln_registerAutomaticCleanup()
  *           static void ucln_unRegisterAutomaticCleanup()
  */
-#include "ucln_local_hook.c"
+#ضمن "ucln_local_hook.c"
 
-#elif defined(UCLN_AUTO_ATEXIT)
+#وإلاإذا defined(UCLN_AUTO_ATEXIT)
 /*
  * Use the ANSI C 'atexit' function. Note that this mechanism does not
  * guarantee the order of cleanup relative to other users of ICU!
  */
-static UBool gAutoCleanRegistered = false;
+ساكن UBool gAutoCleanRegistered = false;
 
-static void ucln_atexit_handler()
+ساكن فراغ ucln_atexit_handler()
 {
     UCLN_CLEAN_ME_UP;
 }
 
-static void ucln_registerAutomaticCleanup()
+ساكن فراغ ucln_registerAutomaticCleanup()
 {
-    if(!gAutoCleanRegistered) {
+    𐡄𐡍(!gAutoCleanRegistered) {
         gAutoCleanRegistered = true;
         atexit(&ucln_atexit_handler);
     }
 }
 
-static void ucln_unRegisterAutomaticCleanup () {
+ساكن فراغ ucln_unRegisterAutomaticCleanup () {
 }
 /* ------------end of automatic cleanup: registration. ------- */
 
-#elif defined (UCLN_FINI)
+#وإلاإذا defined (UCLN_FINI)
 /**
  * If UCLN_FINI is defined, it is the (versioned, etc) name of a cleanup
  * entrypoint. Add a stub to call ucln_cleanupOne
  * Used on AIX, Solaris, and HP-UX
  */
-U_CAPI void U_EXPORT2 UCLN_FINI (void);
+U_CAPI فراغ U_EXPORT2 UCLN_FINI (فراغ);
 
-U_CAPI void U_EXPORT2 UCLN_FINI ()
+U_CAPI فراغ U_EXPORT2 UCLN_FINI ()
 {
     /* This function must be defined, if UCLN_FINI is defined, else link error. */
      UCLN_CLEAN_ME_UP;
 }
 
 /* Windows: DllMain */
-#elif U_PLATFORM_HAS_WIN32_API
+#وإلاإذا U_PLATFORM_HAS_WIN32_API
 /* 
  * ICU's own DllMain.
  */
@@ -137,38 +137,38 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
     BOOL status = true;
 
-    switch(fdwReason) {
-        case DLL_PROCESS_ATTACH:
+    بدل(fdwReason) {
+        حالة DLL_PROCESS_ATTACH:
              /* ICU does not trap process attach, but must pass these through properly. */
             /* ICU specific process attach could go here */
-            break;
+            اكسر;
 
-        case DLL_PROCESS_DETACH:
+        حالة DLL_PROCESS_DETACH:
             /* Here is the one we actually care about. */
 
             UCLN_CLEAN_ME_UP;
 
-            break;
+            اكسر;
 
-        case DLL_THREAD_ATTACH:
+        حالة DLL_THREAD_ATTACH:
             /* ICU does not trap thread attach, but must pass these through properly. */
             /* ICU specific thread attach could go here */
-            break;
+            اكسر;
 
-        case DLL_THREAD_DETACH:
+        حالة DLL_THREAD_DETACH:
             /* ICU does not trap thread detach, but must pass these through properly. */
             /* ICU specific thread detach could go here */
-            break;
+            اكسر;
 
     }
-    return status;
+    أرجع status;
 }
 
-#elif defined(__GNUC__)
+#وإلاإذا defined(__GNUC__)
 /* GCC - use __attribute((destructor)) */
-static void ucln_destructor()   __attribute__((destructor)) ;
+ساكن فراغ ucln_destructor()   __attribute__((destructor)) ;
 
-static void ucln_destructor() 
+ساكن فراغ ucln_destructor() 
 {
     UCLN_CLEAN_ME_UP;
 }
@@ -177,6 +177,6 @@ static void ucln_destructor()
 
 #endif /* UCLN_NO_AUTO_CLEANUP */
 
-#else
+#وإلا
 #error This file can only be included once.
 #endif

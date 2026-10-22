@@ -22,11 +22,11 @@
  * \brief C++ API: Appendable class: Sink for Unicode code points and 16-bit code units (char16_ts).
  */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#𐡄𐡍 U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#ضمن "unicode/uobject.h"
 
 U_NAMESPACE_BEGIN
 
@@ -51,8 +51,8 @@ class UnicodeString;
  * (e.g., store a UErrorCode, make/keep a UnicodeString bogus).
  * @stable ICU 4.8
  */
-class U_COMMON_API Appendable : public UObject {
-public:
+class U_COMMON_API Appendable : عام UObject {
+عام:
     /**
      * Destructor.
      * @stable ICU 4.8
@@ -84,7 +84,7 @@ public:
      * @return true if the operation succeeded
      * @stable ICU 4.8
      */
-    virtual UBool appendString(const char16_t *s, int32_t length);
+    virtual UBool appendString(ثابت char16_t *s, int32_t length);
 
     /**
      * Tells the object that the caller is going to append roughly
@@ -154,8 +154,8 @@ public:
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API UnicodeStringAppendable : public Appendable {
-public:
+class U_COMMON_API UnicodeStringAppendable : عام Appendable {
+عام:
     /**
      * Aliases the UnicodeString (keeps its reference) for writing.
      * @param s The UnicodeString to which this Appendable will write.
@@ -192,7 +192,7 @@ public:
      * @return true if the operation succeeded
      * @stable ICU 4.8
      */
-    virtual UBool appendString(const char16_t *s, int32_t length) override;
+    virtual UBool appendString(ثابت char16_t *s, int32_t length) override;
 
     /**
      * Tells the UnicodeString that the caller is going to append roughly
@@ -229,7 +229,7 @@ public:
                                       char16_t* scratch U_LIFETIME_BOUND, int32_t scratchCapacity,
                                       int32_t* resultCapacity) U_LIFETIME_BOUND override;
 
-private:
+خاص:
     UnicodeString &str;
 };
 

@@ -11,25 +11,25 @@
 * created by: Markus W. Scherer & Maxime Serrano
 */
 
-#include "dictionarydata.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/bytestrie.h"
-#include "unicode/udata.h"
-#include "cmemory.h"
+#ضمن "dictionarydata.h"
+#ضمن "unicode/ucharstrie.h"
+#ضمن "unicode/bytestrie.h"
+#ضمن "unicode/udata.h"
+#ضمن "cmemory.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#𐡄𐡍 !UCONFIG_NO_BREAK_ITERATION
 
 U_NAMESPACE_BEGIN
 
-const int32_t  DictionaryData::TRIE_TYPE_BYTES = 0;
-const int32_t  DictionaryData::TRIE_TYPE_UCHARS = 1;
-const int32_t  DictionaryData::TRIE_TYPE_MASK = 7;
-const int32_t  DictionaryData::TRIE_HAS_VALUES = 8;
+ثابت int32_t  DictionaryData::TRIE_TYPE_BYTES = 0;
+ثابت int32_t  DictionaryData::TRIE_TYPE_UCHARS = 1;
+ثابت int32_t  DictionaryData::TRIE_TYPE_MASK = 7;
+ثابت int32_t  DictionaryData::TRIE_HAS_VALUES = 8;
 
-const int32_t  DictionaryData::TRANSFORM_NONE = 0;
-const int32_t  DictionaryData::TRANSFORM_TYPE_OFFSET = 0x1000000;
-const int32_t  DictionaryData::TRANSFORM_TYPE_MASK = 0x7f000000;
-const int32_t  DictionaryData::TRANSFORM_OFFSET_MASK = 0x1fffff;
+ثابت int32_t  DictionaryData::TRANSFORM_NONE = 0;
+ثابت int32_t  DictionaryData::TRANSFORM_TYPE_OFFSET = 0x1000000;
+ثابت int32_t  DictionaryData::TRANSFORM_TYPE_MASK = 0x7f000000;
+ثابت int32_t  DictionaryData::TRANSFORM_OFFSET_MASK = 0x1fffff;
     
 DictionaryMatcher::~DictionaryMatcher() {
 }
@@ -38,119 +38,119 @@ UCharsDictionaryMatcher::~UCharsDictionaryMatcher() {
     udata_close(file);
 }
 
-int32_t UCharsDictionaryMatcher::getType() const {
-    return DictionaryData::TRIE_TYPE_UCHARS;
+int32_t UCharsDictionaryMatcher::getType() ثابت {
+    أرجع DictionaryData::TRIE_TYPE_UCHARS;
 }
 
 int32_t UCharsDictionaryMatcher::matches(UText *text, int32_t maxLength, int32_t limit,
                             int32_t *lengths, int32_t *cpLengths, int32_t *values,
-                            int32_t *prefix) const {
+                            int32_t *prefix) ثابت {
 
     UCharsTrie uct(characters);
     int32_t startingTextIndex = static_cast<int32_t>(utext_getNativeIndex(text));
     int32_t wordCount = 0;
     int32_t codePointsMatched = 0;
 
-    for (UChar32 c = utext_next32(text); c >= 0; c=utext_next32(text)) {
+    لكل (UChar32 c = utext_next32(text); c >= 0; c=utext_next32(text)) {
         UStringTrieResult result = (codePointsMatched == 0) ? uct.first(c) : uct.next(c);
         int32_t lengthMatched = static_cast<int32_t>(utext_getNativeIndex(text)) - startingTextIndex;
         codePointsMatched += 1;
-        if (USTRINGTRIE_HAS_VALUE(result)) {
-            if (wordCount < limit) {
-                if (values != nullptr) {
+        𐡄𐡍 (USTRINGTRIE_HAS_VALUE(result)) {
+            𐡄𐡍 (wordCount < limit) {
+                𐡄𐡍 (values != nullptr) {
                     values[wordCount] = uct.getValue();
                 }
-                if (lengths != nullptr) {
+                𐡄𐡍 (lengths != nullptr) {
                     lengths[wordCount] = lengthMatched;
                 }
-                if (cpLengths != nullptr) {
+                𐡄𐡍 (cpLengths != nullptr) {
                     cpLengths[wordCount] = codePointsMatched;
                 }
                 ++wordCount;
             }
-            if (result == USTRINGTRIE_FINAL_VALUE) {
-                break;
+            𐡄𐡍 (result == USTRINGTRIE_FINAL_VALUE) {
+                اكسر;
             }
         }
-        else if (result == USTRINGTRIE_NO_MATCH) {
-            break;
+        وإلا 𐡄𐡍 (result == USTRINGTRIE_NO_MATCH) {
+            اكسر;
         }
-        if (lengthMatched >= maxLength) {
-            break;
+        𐡄𐡍 (lengthMatched >= maxLength) {
+            اكسر;
         }
     }
 
-    if (prefix != nullptr) {
+    𐡄𐡍 (prefix != nullptr) {
         *prefix = codePointsMatched;
     }
-    return wordCount;
+    أرجع wordCount;
 }
 
 BytesDictionaryMatcher::~BytesDictionaryMatcher() {
     udata_close(file);
 }
 
-UChar32 BytesDictionaryMatcher::transform(UChar32 c) const {
-    if ((transformConstant & DictionaryData::TRANSFORM_TYPE_MASK) == DictionaryData::TRANSFORM_TYPE_OFFSET) {
-        if (c == 0x200D) {
-            return 0xFF;
-        } else if (c == 0x200C) {
-            return 0xFE;
+UChar32 BytesDictionaryMatcher::transform(UChar32 c) ثابت {
+    𐡄𐡍 ((transformConstant & DictionaryData::TRANSFORM_TYPE_MASK) == DictionaryData::TRANSFORM_TYPE_OFFSET) {
+        𐡄𐡍 (c == 0x200D) {
+            أرجع 0xFF;
+        } وإلا 𐡄𐡍 (c == 0x200C) {
+            أرجع 0xFE;
         }
         int32_t delta = c - (transformConstant & DictionaryData::TRANSFORM_OFFSET_MASK);
-        if (delta < 0 || 0xFD < delta) {
-            return U_SENTINEL;
+        𐡄𐡍 (delta < 0 || 0xFD < delta) {
+            أرجع U_SENTINEL;
         }
-        return static_cast<UChar32>(delta);
+        أرجع static_cast<UChar32>(delta);
     }
-    return c;
+    أرجع c;
 }
 
-int32_t BytesDictionaryMatcher::getType() const {
-    return DictionaryData::TRIE_TYPE_BYTES;
+int32_t BytesDictionaryMatcher::getType() ثابت {
+    أرجع DictionaryData::TRIE_TYPE_BYTES;
 }
 
 int32_t BytesDictionaryMatcher::matches(UText *text, int32_t maxLength, int32_t limit,
                             int32_t *lengths, int32_t *cpLengths, int32_t *values,
-                            int32_t *prefix) const {
+                            int32_t *prefix) ثابت {
     BytesTrie bt(characters);
     int32_t startingTextIndex = static_cast<int32_t>(utext_getNativeIndex(text));
     int32_t wordCount = 0;
     int32_t codePointsMatched = 0;
 
-    for (UChar32 c = utext_next32(text); c >= 0; c=utext_next32(text)) {
+    لكل (UChar32 c = utext_next32(text); c >= 0; c=utext_next32(text)) {
         UStringTrieResult result = (codePointsMatched == 0) ? bt.first(transform(c)) : bt.next(transform(c));
         int32_t lengthMatched = static_cast<int32_t>(utext_getNativeIndex(text)) - startingTextIndex;
         codePointsMatched += 1;
-        if (USTRINGTRIE_HAS_VALUE(result)) {
-            if (wordCount < limit) {
-                if (values != nullptr) {
+        𐡄𐡍 (USTRINGTRIE_HAS_VALUE(result)) {
+            𐡄𐡍 (wordCount < limit) {
+                𐡄𐡍 (values != nullptr) {
                     values[wordCount] = bt.getValue();
                 }
-                if (lengths != nullptr) {
+                𐡄𐡍 (lengths != nullptr) {
                     lengths[wordCount] = lengthMatched;
                 }
-                if (cpLengths != nullptr) {
+                𐡄𐡍 (cpLengths != nullptr) {
                     cpLengths[wordCount] = codePointsMatched;
                 }
                 ++wordCount;
             }
-            if (result == USTRINGTRIE_FINAL_VALUE) {
-                break;
+            𐡄𐡍 (result == USTRINGTRIE_FINAL_VALUE) {
+                اكسر;
             }
         }
-        else if (result == USTRINGTRIE_NO_MATCH) {
-            break;
+        وإلا 𐡄𐡍 (result == USTRINGTRIE_NO_MATCH) {
+            اكسر;
         }
-        if (lengthMatched >= maxLength) {
-            break;
+        𐡄𐡍 (lengthMatched >= maxLength) {
+            اكسر;
         }
     }
 
-    if (prefix != nullptr) {
+    𐡄𐡍 (prefix != nullptr) {
         *prefix = codePointsMatched;
     }
-    return wordCount;
+    أرجع wordCount;
 }
 
 
@@ -159,20 +159,20 @@ U_NAMESPACE_END
 U_NAMESPACE_USE
 
 U_CAPI int32_t U_EXPORT2
-udict_swap(const UDataSwapper *ds, const void *inData, int32_t length,
-           void *outData, UErrorCode *pErrorCode) {
-    const UDataInfo *pInfo;
+udict_swap(ثابت UDataSwapper *ds, ثابت فراغ *inData, int32_t length,
+           فراغ *outData, UErrorCode *pErrorCode) {
+    ثابت UDataInfo *pInfo;
     int32_t headerSize;
-    const uint8_t *inBytes;
+    ثابت uint8_t *inBytes;
     uint8_t *outBytes;
-    const int32_t *inIndexes;
+    ثابت int32_t *inIndexes;
     int32_t indexes[DictionaryData::IX_COUNT];
     int32_t i, offset, size;
 
     headerSize = udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) return 0;
-    pInfo = (const UDataInfo *)((const char *)inData + 4);
-    if (!(pInfo->dataFormat[0] == 0x44 && 
+    𐡄𐡍 (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) أرجع 0;
+    pInfo = (ثابت UDataInfo *)((ثابت حرف *)inData + 4);
+    𐡄𐡍 (!(pInfo->dataFormat[0] == 0x44 && 
           pInfo->dataFormat[1] == 0x69 && 
           pInfo->dataFormat[2] == 0x63 && 
           pInfo->dataFormat[3] == 0x74 && 
@@ -180,53 +180,53 @@ udict_swap(const UDataSwapper *ds, const void *inData, int32_t length,
         udata_printError(ds, "udict_swap(): data format %02x.%02x.%02x.%02x (format version %02x) is not recognized as dictionary data\n",
                          pInfo->dataFormat[0], pInfo->dataFormat[1], pInfo->dataFormat[2], pInfo->dataFormat[3], pInfo->formatVersion[0]);
         *pErrorCode = U_UNSUPPORTED_ERROR;
-        return 0;
+        أرجع 0;
     }
 
-    inBytes = (const uint8_t *)inData + headerSize;
+    inBytes = (ثابت uint8_t *)inData + headerSize;
     outBytes = (outData == nullptr) ? nullptr : (uint8_t *)outData + headerSize;
 
-    inIndexes = (const int32_t *)inBytes;
-    if (length >= 0) {
+    inIndexes = (ثابت int32_t *)inBytes;
+    𐡄𐡍 (length >= 0) {
         length -= headerSize;
-        if (length < (int32_t)(sizeof(indexes))) {
+        𐡄𐡍 (length < (int32_t)(حجم(indexes))) {
             udata_printError(ds, "udict_swap(): too few bytes (%d after header) for dictionary data\n", length);
             *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            أرجع 0;
         }
     }
 
-    for (i = 0; i < DictionaryData::IX_COUNT; i++) {
+    لكل (i = 0; i < DictionaryData::IX_COUNT; i++) {
         indexes[i] = udata_readInt32(ds, inIndexes[i]);
     }
 
     size = indexes[DictionaryData::IX_TOTAL_SIZE];
 
-    if (length >= 0) {
-        if (length < size) {
+    𐡄𐡍 (length >= 0) {
+        𐡄𐡍 (length < size) {
             udata_printError(ds, "udict_swap(): too few bytes (%d after header) for all of dictionary data\n", length);
             *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            أرجع 0;
         }
 
-        if (inBytes != outBytes) {
+        𐡄𐡍 (inBytes != outBytes) {
             uprv_memcpy(outBytes, inBytes, size);
         }
 
         offset = 0;
-        ds->swapArray32(ds, inBytes, sizeof(indexes), outBytes, pErrorCode);
-        offset = (int32_t)sizeof(indexes);
+        ds->swapArray32(ds, inBytes, حجم(indexes), outBytes, pErrorCode);
+        offset = (int32_t)حجم(indexes);
         int32_t trieType = indexes[DictionaryData::IX_TRIE_TYPE] & DictionaryData::TRIE_TYPE_MASK;
         int32_t nextOffset = indexes[DictionaryData::IX_RESERVED1_OFFSET];
 
-        if (trieType == DictionaryData::TRIE_TYPE_UCHARS) {
+        𐡄𐡍 (trieType == DictionaryData::TRIE_TYPE_UCHARS) {
             ds->swapArray16(ds, inBytes + offset, nextOffset - offset, outBytes + offset, pErrorCode);
-        } else if (trieType == DictionaryData::TRIE_TYPE_BYTES) {
+        } وإلا 𐡄𐡍 (trieType == DictionaryData::TRIE_TYPE_BYTES) {
             // nothing to do
-        } else {
+        } وإلا {
             udata_printError(ds, "udict_swap(): unknown trie type!\n");
             *pErrorCode = U_UNSUPPORTED_ERROR;
-            return 0;
+            أرجع 0;
         }
 
         // these next two sections are empty in the current format,
@@ -237,6 +237,6 @@ udict_swap(const UDataSwapper *ds, const void *inData, int32_t length,
         nextOffset = indexes[DictionaryData::IX_TOTAL_SIZE];
         offset = nextOffset;
     }
-    return headerSize + size;
+    أرجع headerSize + size;
 }
 #endif
