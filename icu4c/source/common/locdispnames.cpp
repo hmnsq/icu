@@ -44,7 +44,7 @@ U_NAMESPACE_BEGIN
 UnicodeString&
 Locale::getDisplayLanguage(UnicodeString& dispLang U_LIFETIME_BOUND) const
 {
-    return this->getDisplayLanguage(getDefault(), dispLang);
+    ꦮꦭꦶ this->getDisplayLanguage(getDefault(), dispLang);
 }
 
 /*We cannot make any assumptions on the size of the output display strings
@@ -61,9 +61,9 @@ Locale::getDisplayLanguage(const Locale& displayLocale,
     int32_t length;
 
     buffer=result.getBuffer(ULOC_FULLNAME_CAPACITY);
-    if (buffer == nullptr) {
+    ꦪꦼꦤ꧀ (buffer == nullptr) {
         result.truncate(0);
-        return result;
+        ꦮꦭꦶ result;
     }
 
     length=uloc_getDisplayLanguage(getName(), displayLocale.getName(),
@@ -71,11 +71,11 @@ Locale::getDisplayLanguage(const Locale& displayLocale,
                                    &errorCode);
     result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
 
-    if(errorCode==U_BUFFER_OVERFLOW_ERROR) {
+    ꦪꦼꦤ꧀(errorCode==U_BUFFER_OVERFLOW_ERROR) {
         buffer=result.getBuffer(length);
-        if (buffer == nullptr) {
+        ꦪꦼꦤ꧀ (buffer == nullptr) {
             result.truncate(0);
-            return result;
+            ꦮꦭꦶ result;
         }
         errorCode=U_ZERO_ERROR;
         length=uloc_getDisplayLanguage(getName(), displayLocale.getName(),
@@ -84,13 +84,13 @@ Locale::getDisplayLanguage(const Locale& displayLocale,
         result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
     }
 
-    return result;
+    ꦮꦭꦶ result;
 }
 
 UnicodeString&
 Locale::getDisplayScript(UnicodeString& dispScript U_LIFETIME_BOUND) const
 {
-    return this->getDisplayScript(getDefault(), dispScript);
+    ꦮꦭꦶ this->getDisplayScript(getDefault(), dispScript);
 }
 
 UnicodeString&
@@ -101,9 +101,9 @@ Locale::getDisplayScript(const Locale& displayLocale,
     int32_t length;
 
     buffer=result.getBuffer(ULOC_FULLNAME_CAPACITY);
-    if (buffer == nullptr) {
+    ꦪꦼꦤ꧀ (buffer == nullptr) {
         result.truncate(0);
-        return result;
+        ꦮꦭꦶ result;
     }
 
     length=uloc_getDisplayScript(getName(), displayLocale.getName(),
@@ -111,11 +111,11 @@ Locale::getDisplayScript(const Locale& displayLocale,
                                   &errorCode);
     result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
 
-    if(errorCode==U_BUFFER_OVERFLOW_ERROR) {
+    ꦪꦼꦤ꧀(errorCode==U_BUFFER_OVERFLOW_ERROR) {
         buffer=result.getBuffer(length);
-        if (buffer == nullptr) {
+        ꦪꦼꦤ꧀ (buffer == nullptr) {
             result.truncate(0);
-            return result;
+            ꦮꦭꦶ result;
         }
         errorCode=U_ZERO_ERROR;
         length=uloc_getDisplayScript(getName(), displayLocale.getName(),
@@ -124,13 +124,13 @@ Locale::getDisplayScript(const Locale& displayLocale,
         result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
     }
 
-    return result;
+    ꦮꦭꦶ result;
 }
 
 UnicodeString&
 Locale::getDisplayCountry(UnicodeString& dispCntry U_LIFETIME_BOUND) const
 {
-    return this->getDisplayCountry(getDefault(), dispCntry);
+    ꦮꦭꦶ this->getDisplayCountry(getDefault(), dispCntry);
 }
 
 UnicodeString&
@@ -141,9 +141,9 @@ Locale::getDisplayCountry(const Locale& displayLocale,
     int32_t length;
 
     buffer=result.getBuffer(ULOC_FULLNAME_CAPACITY);
-    if (buffer == nullptr) {
+    ꦪꦼꦤ꧀ (buffer == nullptr) {
         result.truncate(0);
-        return result;
+        ꦮꦭꦶ result;
     }
 
     length=uloc_getDisplayCountry(getName(), displayLocale.getName(),
@@ -151,11 +151,11 @@ Locale::getDisplayCountry(const Locale& displayLocale,
                                   &errorCode);
     result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
 
-    if(errorCode==U_BUFFER_OVERFLOW_ERROR) {
+    ꦪꦼꦤ꧀(errorCode==U_BUFFER_OVERFLOW_ERROR) {
         buffer=result.getBuffer(length);
-        if (buffer == nullptr) {
+        ꦪꦼꦤ꧀ (buffer == nullptr) {
             result.truncate(0);
-            return result;
+            ꦮꦭꦶ result;
         }
         errorCode=U_ZERO_ERROR;
         length=uloc_getDisplayCountry(getName(), displayLocale.getName(),
@@ -164,13 +164,13 @@ Locale::getDisplayCountry(const Locale& displayLocale,
         result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
     }
 
-    return result;
+    ꦮꦭꦶ result;
 }
 
 UnicodeString&
 Locale::getDisplayVariant(UnicodeString& dispVar U_LIFETIME_BOUND) const
 {
-    return this->getDisplayVariant(getDefault(), dispVar);
+    ꦮꦭꦶ this->getDisplayVariant(getDefault(), dispVar);
 }
 
 UnicodeString&
@@ -181,9 +181,9 @@ Locale::getDisplayVariant(const Locale& displayLocale,
     int32_t length;
 
     buffer=result.getBuffer(ULOC_FULLNAME_CAPACITY);
-    if (buffer == nullptr) {
+    ꦪꦼꦤ꧀ (buffer == nullptr) {
         result.truncate(0);
-        return result;
+        ꦮꦭꦶ result;
     }
 
     length=uloc_getDisplayVariant(getName(), displayLocale.getName(),
@@ -191,11 +191,11 @@ Locale::getDisplayVariant(const Locale& displayLocale,
                                   &errorCode);
     result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
 
-    if(errorCode==U_BUFFER_OVERFLOW_ERROR) {
+    ꦪꦼꦤ꧀(errorCode==U_BUFFER_OVERFLOW_ERROR) {
         buffer=result.getBuffer(length);
-        if (buffer == nullptr) {
+        ꦪꦼꦤ꧀ (buffer == nullptr) {
             result.truncate(0);
-            return result;
+            ꦮꦭꦶ result;
         }
         errorCode=U_ZERO_ERROR;
         length=uloc_getDisplayVariant(getName(), displayLocale.getName(),
@@ -204,13 +204,13 @@ Locale::getDisplayVariant(const Locale& displayLocale,
         result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
     }
 
-    return result;
+    ꦮꦭꦶ result;
 }
 
 UnicodeString&
 Locale::getDisplayName(UnicodeString& name U_LIFETIME_BOUND) const
 {
-    return this->getDisplayName(getDefault(), name);
+    ꦮꦭꦶ this->getDisplayName(getDefault(), name);
 }
 
 UnicodeString&
@@ -221,9 +221,9 @@ Locale::getDisplayName(const Locale& displayLocale,
     int32_t length;
 
     buffer=result.getBuffer(ULOC_FULLNAME_CAPACITY);
-    if (buffer == nullptr) {
+    ꦪꦼꦤ꧀ (buffer == nullptr) {
         result.truncate(0);
-        return result;
+        ꦮꦭꦶ result;
     }
 
     length=uloc_getDisplayName(getName(), displayLocale.getName(),
@@ -231,11 +231,11 @@ Locale::getDisplayName(const Locale& displayLocale,
                                &errorCode);
     result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
 
-    if(errorCode==U_BUFFER_OVERFLOW_ERROR) {
+    ꦪꦼꦤ꧀(errorCode==U_BUFFER_OVERFLOW_ERROR) {
         buffer=result.getBuffer(length);
-        if (buffer == nullptr) {
+        ꦪꦼꦤ꧀ (buffer == nullptr) {
             result.truncate(0);
-            return result;
+            ꦮꦭꦶ result;
         }
         errorCode=U_ZERO_ERROR;
         length=uloc_getDisplayName(getName(), displayLocale.getName(),
@@ -244,10 +244,10 @@ Locale::getDisplayName(const Locale& displayLocale,
         result.releaseBuffer(U_SUCCESS(errorCode) ? length : 0);
     }
 
-    return result;
+    ꦮꦭꦶ result;
 }
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ꦪꦼꦤ꧀ !UCONFIG_NO_BREAK_ITERATION
 
 // -------------------------------------
 // Gets the objectLocale display name in the default locale language.
@@ -255,7 +255,7 @@ UnicodeString& U_EXPORT2
 BreakIterator::getDisplayName(const Locale& objectLocale,
                               UnicodeString& name U_LIFETIME_BOUND)
 {
-    return objectLocale.getDisplayName(name);
+    ꦮꦭꦶ objectLocale.getDisplayName(name);
 }
 
 // -------------------------------------
@@ -265,7 +265,7 @@ BreakIterator::getDisplayName(const Locale& objectLocale,
                               const Locale& displayLocale,
                               UnicodeString& name U_LIFETIME_BOUND)
 {
-    return objectLocale.getDisplayName(displayLocale, name);
+    ꦮꦭꦶ objectLocale.getDisplayName(displayLocale, name);
 }
 
 #endif
@@ -283,48 +283,48 @@ namespace {
 
 /* These strings describe the resources we attempt to load from
  the locale ResourceBundle data file.*/
-constexpr char _kLanguages[]       = "Languages";
-constexpr char _kScripts[]         = "Scripts";
-constexpr char _kScriptsStandAlone[] = "Scripts%stand-alone";
-constexpr char _kCountries[]       = "Countries";
-constexpr char _kVariants[]        = "Variants";
-constexpr char _kKeys[]            = "Keys";
-constexpr char _kTypes[]           = "Types";
+constexpr var_na _kLanguages[]       = "Languages";
+constexpr var_na _kScripts[]         = "Scripts";
+constexpr var_na _kScriptsStandAlone[] = "Scripts%stand-alone";
+constexpr var_na _kCountries[]       = "Countries";
+constexpr var_na _kVariants[]        = "Variants";
+constexpr var_na _kKeys[]            = "Keys";
+constexpr var_na _kTypes[]           = "Types";
 //constexpr char _kRootName[]        = "root";
-constexpr char _kCurrency[]        = "currency";
-constexpr char _kCurrencies[]      = "Currencies";
-constexpr char _kLocaleDisplayPattern[] = "localeDisplayPattern";
-constexpr char _kPattern[]         = "pattern";
-constexpr char _kSeparator[]       = "separator";
+constexpr var_na _kCurrency[]        = "currency";
+constexpr var_na _kCurrencies[]      = "Currencies";
+constexpr var_na _kLocaleDisplayPattern[] = "localeDisplayPattern";
+constexpr var_na _kPattern[]         = "pattern";
+constexpr var_na _kSeparator[]       = "separator";
 
 /* ### Display name **************************************************/
 
 int32_t
-_getStringOrCopyKey(const char *path, const char *locale,
-                    const char *tableKey, 
-                    const char* subTableKey,
-                    const char *itemKey,
-                    const char *substitute,
+_getStringOrCopyKey(const var_na *path, const var_na *locale,
+                    const var_na *tableKey, 
+                    const var_na* subTableKey,
+                    const var_na *itemKey,
+                    const var_na *substitute,
                     char16_t *dest, int32_t destCapacity,
                     UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return 0; }
+    ꦪꦼꦤ꧀ (U_FAILURE(errorCode)) { ꦮꦭꦶ 0; }
     const char16_t *s = nullptr;
     int32_t length = 0;
 
-    if(itemKey==nullptr) {
+    ꦪꦼꦤ꧀(itemKey==nullptr) {
         /* top-level item: normal resource bundle access */
         icu::LocalUResourceBundlePointer rb(ures_open(path, locale, &errorCode));
 
-        if(U_SUCCESS(errorCode)) {
+        ꦪꦼꦤ꧀(U_SUCCESS(errorCode)) {
             s=ures_getStringByKey(rb.getAlias(), tableKey, &length, &errorCode);
             /* see comment about closing rb near "return item;" in _res_getTableStringWithFallback() */
         }
-    } else {
+    } ꦭꦶꦪ {
         bool isLanguageCode = (uprv_strncmp(tableKey, _kLanguages, 9) == 0);
         /* Language code should not be a number. If it is, set the error code. */
-        if (isLanguageCode && uprv_strtol(itemKey, nullptr, 10)) {
+        ꦪꦼꦤ꧀ (isLanguageCode && uprv_strtol(itemKey, nullptr, 10)) {
             errorCode = U_MISSING_RESOURCE_ERROR;
-        } else {
+        } ꦭꦶꦪ {
             /* second-level item, use special fallback */
             s=uloc_getTableStringWithFallback(path, locale,
                                                tableKey,
@@ -332,7 +332,7 @@ _getStringOrCopyKey(const char *path, const char *locale,
                                                itemKey,
                                                &length,
                                                &errorCode);
-            if (U_FAILURE(errorCode) && isLanguageCode && itemKey != nullptr) {
+            ꦪꦼꦤ꧀ (U_FAILURE(errorCode) && isLanguageCode && itemKey != nullptr) {
                 // convert itemKey locale code to canonical form and try again, ICU-20870
                 errorCode = U_ZERO_ERROR;
                 Locale canonKey = Locale::createCanonical(itemKey);
@@ -346,61 +346,61 @@ _getStringOrCopyKey(const char *path, const char *locale,
         }
     }
 
-    if(U_SUCCESS(errorCode)) {
+    ꦪꦼꦤ꧀(U_SUCCESS(errorCode)) {
         int32_t copyLength=uprv_min(length, destCapacity);
-        if(copyLength>0 && s != nullptr) {
+        ꦪꦼꦤ꧀(copyLength>0 && s != nullptr) {
             u_memcpy(dest, s, copyLength);
         }
-    } else {
+    } ꦭꦶꦪ {
         /* no string from a resource bundle: convert the substitute */
         length = static_cast<int32_t>(uprv_strlen(substitute));
         u_charsToUChars(substitute, dest, uprv_min(length, destCapacity));
         errorCode = U_USING_DEFAULT_WARNING;
     }
 
-    return u_terminateUChars(dest, destCapacity, length, &errorCode);
+    ꦮꦭꦶ u_terminateUChars(dest, destCapacity, length, &errorCode);
 }
 
 using UDisplayNameGetter = icu::CharString(std::string_view, UErrorCode&);
 
 int32_t
-_getDisplayNameForComponent(const char *locale,
-                            const char *displayLocale,
+_getDisplayNameForComponent(const var_na *locale,
+                            const var_na *displayLocale,
                             char16_t *dest, int32_t destCapacity,
                             UDisplayNameGetter *getter,
-                            const char *tag,
+                            const var_na *tag,
                             UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return 0; }
+    ꦪꦼꦤ꧀ (U_FAILURE(errorCode)) { ꦮꦭꦶ 0; }
     UErrorCode localStatus;
-    const char* root = nullptr;
+    const var_na* root = nullptr;
 
-    if(destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
+    ꦪꦼꦤ꧀(destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        ꦮꦭꦶ 0;
     }
 
-    if (locale == nullptr) {
+    ꦪꦼꦤ꧀ (locale == nullptr) {
         locale = uloc_getDefault();
     }
 
     localStatus = U_ZERO_ERROR;
     icu::CharString localeBuffer = (*getter)(locale, localStatus);
-    if (U_FAILURE(localStatus)) {
+    ꦪꦼꦤ꧀ (U_FAILURE(localStatus)) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        ꦮꦭꦶ 0;
     }
-    if (localeBuffer.isEmpty()) {
+    ꦪꦼꦤ꧀ (localeBuffer.isEmpty()) {
         // For the display name, we treat this as unknown language (ICU-20273).
-        if (getter == ulocimp_getLanguage) {
+        ꦪꦼꦤ꧀ (getter == ulocimp_getLanguage) {
             localeBuffer.append("und", errorCode);
-        } else {
-            return u_terminateUChars(dest, destCapacity, 0, &errorCode);
+        } ꦭꦶꦪ {
+            ꦮꦭꦶ u_terminateUChars(dest, destCapacity, 0, &errorCode);
         }
     }
 
     root = tag == _kCountries ? U_ICUDATA_REGION : U_ICUDATA_LANG;
 
-    return _getStringOrCopyKey(root, displayLocale,
+    ꦮꦭꦶ _getStringOrCopyKey(root, displayLocale,
                                tag, nullptr, localeBuffer.data(),
                                localeBuffer.data(),
                                dest, destCapacity,
@@ -410,56 +410,56 @@ _getDisplayNameForComponent(const char *locale,
 }  // namespace
 
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayLanguage(const char *locale,
-                        const char *displayLocale,
+uloc_getDisplayLanguage(const var_na *locale,
+                        const var_na *displayLocale,
                         char16_t *dest, int32_t destCapacity,
                         UErrorCode *pErrorCode) {
-    return _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
+    ꦮꦭꦶ _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
                 ulocimp_getLanguage, _kLanguages, *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayScript(const char* locale,
-                      const char* displayLocale,
+uloc_getDisplayScript(const var_na* locale,
+                      const var_na* displayLocale,
                       char16_t *dest, int32_t destCapacity,
                       UErrorCode *pErrorCode)
 {
-    if (U_FAILURE(*pErrorCode)) { return 0; }
+    ꦪꦼꦤ꧀ (U_FAILURE(*pErrorCode)) { ꦮꦭꦶ 0; }
     UErrorCode err = U_ZERO_ERROR;
     int32_t res = _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
                 ulocimp_getScript, _kScriptsStandAlone, err);
 
-    if (destCapacity == 0 && err == U_BUFFER_OVERFLOW_ERROR) {
+    ꦪꦼꦤ꧀ (destCapacity == 0 && err == U_BUFFER_OVERFLOW_ERROR) {
         // For preflight, return the max of the value and the fallback.
         int32_t fallback_res = _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
                                                            ulocimp_getScript, _kScripts, *pErrorCode);
-        return (fallback_res > res) ? fallback_res : res;
+        ꦮꦭꦶ (fallback_res > res) ? fallback_res : res;
     }
-    if ( err == U_USING_DEFAULT_WARNING ) {
-        return _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
+    ꦪꦼꦤ꧀ ( err == U_USING_DEFAULT_WARNING ) {
+        ꦮꦭꦶ _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
                                            ulocimp_getScript, _kScripts, *pErrorCode);
-    } else {
+    } ꦭꦶꦪ {
         *pErrorCode = err;
-        return res;
+        ꦮꦭꦶ res;
     }
 }
 
 static int32_t
-uloc_getDisplayScriptInContext(const char* locale,
-                      const char* displayLocale,
+uloc_getDisplayScriptInContext(const var_na* locale,
+                      const var_na* displayLocale,
                       char16_t *dest, int32_t destCapacity,
                       UErrorCode *pErrorCode)
 {
-    return _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
+    ꦮꦭꦶ _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
                     ulocimp_getScript, _kScripts, *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayCountry(const char *locale,
-                       const char *displayLocale,
+uloc_getDisplayCountry(const var_na *locale,
+                       const var_na *displayLocale,
                        char16_t *dest, int32_t destCapacity,
                        UErrorCode *pErrorCode) {
-    return _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
+    ꦮꦭꦶ _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
                 ulocimp_getRegion, _kCountries, *pErrorCode);
 }
 
@@ -469,11 +469,11 @@ uloc_getDisplayCountry(const char *locale,
  * in between - similar to uloc_getDisplayName()
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayVariant(const char *locale,
-                       const char *displayLocale,
+uloc_getDisplayVariant(const var_na *locale,
+                       const var_na *displayLocale,
                        char16_t *dest, int32_t destCapacity,
                        UErrorCode *pErrorCode) {
-    return _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
+    ꦮꦭꦶ _getDisplayNameForComponent(locale, displayLocale, dest, destCapacity,
                 ulocimp_getVariant, _kVariants, *pErrorCode);
 }
 
@@ -490,8 +490,8 @@ uloc_getDisplayVariant(const char *locale,
  * chars than the standard open/close paren (which ja and ko use, btw).
  */
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayName(const char *locale,
-                    const char *displayLocale,
+uloc_getDisplayName(const var_na *locale,
+                    const var_na *displayLocale,
                     char16_t *dest, int32_t destCapacity,
                     UErrorCode *pErrorCode)
 {
@@ -527,13 +527,13 @@ uloc_getDisplayName(const char *locale,
 
     int32_t langi = 0; /* index of the language substitution (0 or 1), virtually always 0 */
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ꦪꦼꦤ꧀(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        ꦮꦭꦶ 0;
     }
 
-    if(destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
+    ꦪꦼꦤ꧀(destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        ꦮꦭꦶ 0;
     }
 
     {
@@ -549,7 +549,7 @@ uloc_getDisplayName(const char *locale,
     }
 
     /* If we couldn't find any data, then use the defaults */
-    if(sepLen == 0) {
+    ꦪꦼꦤ꧀(sepLen == 0) {
        separator = defaultSeparator;
     }
     /* #10244: Even though separator is now a pattern, it is awkward to handle it as such
@@ -564,34 +564,34 @@ uloc_getDisplayName(const char *locale,
     {
         char16_t *p0=u_strstr(separator, sub0);
         char16_t *p1=u_strstr(separator, sub1);
-        if (p0==nullptr || p1==nullptr || p1<p0) {
+        ꦪꦼꦤ꧀ (p0==nullptr || p1==nullptr || p1<p0) {
             *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-            return 0;
+            ꦮꦭꦶ 0;
         }
         separator = (const char16_t *)p0 + subLen;
         sepLen = static_cast<int32_t>(p1 - separator);
     }
 
-    if(patLen==0 || (patLen==defaultPatLen && !u_strncmp(pattern, defaultPattern, patLen))) {
+    ꦪꦼꦤ꧀(patLen==0 || (patLen==defaultPatLen && !u_strncmp(pattern, defaultPattern, patLen))) {
         pattern=defaultPattern;
         patLen=defaultPatLen;
         sub0Pos=defaultSub0Pos;
         sub1Pos=defaultSub1Pos;
         // use default formatOpenParen etc. set above
-    } else { /* non-default pattern */
+    } ꦭꦶꦪ { /* non-default pattern */
         char16_t *p0=u_strstr(pattern, sub0);
         char16_t *p1=u_strstr(pattern, sub1);
-        if (p0==nullptr || p1==nullptr) {
+        ꦪꦼꦤ꧀ (p0==nullptr || p1==nullptr) {
             *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-            return 0;
+            ꦮꦭꦶ 0;
         }
         sub0Pos = static_cast<int32_t>(p0-pattern);
         sub1Pos = static_cast<int32_t>(p1-pattern);
-        if (sub1Pos < sub0Pos) { /* a very odd pattern */
+        ꦪꦼꦤ꧀ (sub1Pos < sub0Pos) { /* a very odd pattern */
             int32_t t=sub0Pos; sub0Pos=sub1Pos; sub1Pos=t;
             langi=1;
         }
-        if (u_strchr(pattern, 0xFF08) != nullptr) {
+        ꦪꦼꦤ꧀ (u_strchr(pattern, 0xFF08) != nullptr) {
             formatOpenParen         = 0xFF08; // fullwidth (
             formatReplaceOpenParen  = 0xFF3B; // fullwidth [
             formatCloseParen        = 0xFF09; // fullwidth )
@@ -616,123 +616,123 @@ uloc_getDisplayName(const char *locale,
         icu::LocalUEnumerationPointer kenum; /* keyword enumeration */
 
         /* prefix of pattern, extremely likely to be empty */
-        if(sub0Pos) {
-            if(destCapacity >= sub0Pos) {
-                while (patPos < sub0Pos) {
+        ꦪꦼꦤ꧀(sub0Pos) {
+            ꦪꦼꦤ꧀(destCapacity >= sub0Pos) {
+                ꦱꦼꦢꦼꦭ (patPos < sub0Pos) {
                     *p++ = pattern[patPos++];
                 }
-            } else {
+            } ꦭꦶꦪ {
                 patPos=sub0Pos;
             }
             length=sub0Pos;
-        } else {
+        } ꦭꦶꦪ {
             length=0;
         }
 
-        for(int32_t subi=0,resti=0;subi<2;) { /* iterate through patterns 0 and 1*/
+        ꦏꦁꦒꦺꦴ(int32_t subi=0,resti=0;subi<2;) { /* iterate through patterns 0 and 1*/
             UBool subdone = false; /* set true when ready to move to next substitution */
 
             /* prep p and cap for calls to get display components, pin cap to 0 since
                they complain if cap is negative */
             int32_t cap=destCapacity-length;
-            if (cap <= 0) {
+            ꦪꦼꦤ꧀ (cap <= 0) {
                 cap=0;
-            } else {
+            } ꦭꦶꦪ {
                 p=dest+length;
             }
 
-            if (subi == langi) { /* {0}*/
-                if(haveLang) {
+            ꦪꦼꦤ꧀ (subi == langi) { /* {0}*/
+                ꦪꦼꦤ꧀(haveLang) {
                     langPos=length;
                     langLen=uloc_getDisplayLanguage(locale, displayLocale, p, cap, pErrorCode);
                     length+=langLen;
                     haveLang=langLen>0;
                 }
                 subdone=true;
-            } else { /* {1} */
-                if(!haveRest) {
+            } ꦭꦶꦪ { /* {1} */
+                ꦪꦼꦤ꧀(!haveRest) {
                     subdone=true;
-                } else {
+                } ꦭꦶꦪ {
                     int32_t len; /* length of component (plus other stuff) we just fetched */
                     switch(resti++) {
-                        case 0:
+                        pak_sa 0:
                             restPos=length;
                             len=uloc_getDisplayScriptInContext(locale, displayLocale, p, cap, pErrorCode);
-                            break;
-                        case 1:
+                            bha_nga;
+                        pak_sa 1:
                             len=uloc_getDisplayCountry(locale, displayLocale, p, cap, pErrorCode);
-                            break;
-                        case 2:
+                            bha_nga;
+                        pak_sa 2:
                             len=uloc_getDisplayVariant(locale, displayLocale, p, cap, pErrorCode);
-                            break;
-                        case 3:
+                            bha_nga;
+                        pak_sa 3:
                             kenum.adoptInstead(uloc_openKeywords(locale, pErrorCode));
                             U_FALLTHROUGH;
                         default: {
-                            const char* kw=uenum_next(kenum.getAlias(), &len, pErrorCode);
-                            if (kw == nullptr) {
+                            const var_na* kw=uenum_next(kenum.getAlias(), &len, pErrorCode);
+                            ꦪꦼꦤ꧀ (kw == nullptr) {
                                 len=0; /* mark that we didn't add a component */
                                 subdone=true;
-                            } else {
+                            } ꦭꦶꦪ {
                                 /* incorporating this behavior into the loop made it even more complex,
                                    so just special case it here */
                                 len = uloc_getDisplayKeyword(kw, displayLocale, p, cap, pErrorCode);
-                                if(len) {
-                                    if(len < cap) {
+                                ꦪꦼꦤ꧀(len) {
+                                    ꦪꦼꦤ꧀(len < cap) {
                                         p[len]=0x3d; /* '=', assume we'll need it */
                                     }
                                     len+=1;
 
                                     /* adjust for call to get keyword */
                                     cap-=len;
-                                    if(cap <= 0) {
+                                    ꦪꦼꦤ꧀(cap <= 0) {
                                         cap=0;
-                                    } else {
+                                    } ꦭꦶꦪ {
                                         p+=len;
                                     }
                                 }
                                 /* reset for call below */
-                                if(*pErrorCode == U_BUFFER_OVERFLOW_ERROR) {
+                                ꦪꦼꦤ꧀(*pErrorCode == U_BUFFER_OVERFLOW_ERROR) {
                                     *pErrorCode=U_ZERO_ERROR;
                                 }
                                 int32_t vlen = uloc_getDisplayKeywordValue(locale, kw, displayLocale,
                                                                            p, cap, pErrorCode);
-                                if(len) {
-                                    if(vlen==0) {
+                                ꦪꦼꦤ꧀(len) {
+                                    ꦪꦼꦤ꧀(vlen==0) {
                                         --len; /* remove unneeded '=' */
                                     }
                                     /* restore cap and p to what they were at start */
                                     cap=destCapacity-length;
-                                    if(cap <= 0) {
+                                    ꦪꦼꦤ꧀(cap <= 0) {
                                         cap=0;
-                                    } else {
+                                    } ꦭꦶꦪ {
                                         p=dest+length;
                                     }
                                 }
                                 len+=vlen; /* total we added for key + '=' + value */
                             }
-                        } break;
+                        } bha_nga;
                     } /* end switch */
 
-                    if (len>0) {
+                    ꦪꦼꦤ꧀ (len>0) {
                         /* we added a component, so add separator and write it if there's room. */
-                        if(len+sepLen<=cap) {
+                        ꦪꦼꦤ꧀(len+sepLen<=cap) {
                             const char16_t * plimit = p + len;
-                            for (; p < plimit; p++) {
-                                if (*p == formatOpenParen) {
+                            ꦏꦁꦒꦺꦴ (; p < plimit; p++) {
+                                ꦪꦼꦤ꧀ (*p == formatOpenParen) {
                                     *p = formatReplaceOpenParen;
-                                } else if (*p == formatCloseParen) {
+                                } ꦭꦶꦪ ꦪꦼꦤ꧀ (*p == formatCloseParen) {
                                     *p = formatReplaceCloseParen;
                                 }
                             }
-                            for(int32_t i=0;i<sepLen;++i) {
+                            ꦏꦁꦒꦺꦴ(int32_t i=0;i<sepLen;++i) {
                                 *p++=separator[i];
                             }
                         }
                         length+=len+sepLen;
-                    } else if(subdone) {
+                    } ꦭꦶꦪ ꦪꦼꦤ꧀(subdone) {
                         /* remove separator if we added it */
-                        if (length!=restPos) {
+                        ꦪꦼꦤ꧀ (length!=restPos) {
                             length-=sepLen;
                         }
                         restLen=length-restPos;
@@ -741,39 +741,39 @@ uloc_getDisplayName(const char *locale,
                 }
             }
 
-            if(*pErrorCode == U_BUFFER_OVERFLOW_ERROR) {
+            ꦪꦼꦤ꧀(*pErrorCode == U_BUFFER_OVERFLOW_ERROR) {
                 *pErrorCode=U_ZERO_ERROR;
             }
 
-            if(subdone) {
-                if(haveLang && haveRest) {
+            ꦪꦼꦤ꧀(subdone) {
+                ꦪꦼꦤ꧀(haveLang && haveRest) {
                     /* append internal portion of pattern, the first time,
                        or last portion of pattern the second time */
                     int32_t padLen;
                     patPos+=subLen;
                     padLen=(subi==0 ? sub1Pos : patLen)-patPos;
-                    if(length+padLen <= destCapacity) {
+                    ꦪꦼꦤ꧀(length+padLen <= destCapacity) {
                         p=dest+length;
-                        for(int32_t i=0;i<padLen;++i) {
+                        ꦏꦁꦒꦺꦴ(int32_t i=0;i<padLen;++i) {
                             *p++=pattern[patPos++];
                         }
-                    } else {
+                    } ꦭꦶꦪ {
                         patPos+=padLen;
                     }
                     length+=padLen;
-                } else if(subi==0) {
+                } ꦭꦶꦪ ꦪꦼꦤ꧀(subi==0) {
                     /* don't have first component, reset for second component */
                     sub0Pos=0;
                     length=0;
-                } else if(length>0) {
+                } ꦭꦶꦪ ꦪꦼꦤ꧀(length>0) {
                     /* true length is the length of just the component we got. */
                     length=haveLang?langLen:restLen;
-                    if(dest && sub0Pos!=0) {
-                        if (sub0Pos+length<=destCapacity) {
+                    ꦪꦼꦤ꧀(dest && sub0Pos!=0) {
+                        ꦪꦼꦤ꧀ (sub0Pos+length<=destCapacity) {
                             /* first component not at start of result,
                                but we have full component in buffer. */
                             u_memmove(dest, dest+(haveLang?langPos:restPos), length);
-                        } else {
+                        } ꦭꦶꦪ {
                             /* would have fit, but didn't because of pattern prefix. */
                             sub0Pos=0; /* stops initial padding (and a second retry,
                                           so we won't end up here again) */
@@ -785,31 +785,31 @@ uloc_getDisplayName(const char *locale,
                 ++subi; /* move on to next substitution */
             }
         }
-    } while(retry);
+    } ꦱꦼꦢꦼꦭ(retry);
 
-    return u_terminateUChars(dest, destCapacity, length, pErrorCode);
+    ꦮꦭꦶ u_terminateUChars(dest, destCapacity, length, pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayKeyword(const char* keyword,
-                       const char* displayLocale,
+uloc_getDisplayKeyword(const var_na* keyword,
+                       const var_na* displayLocale,
                        char16_t* dest,
                        int32_t destCapacity,
                        UErrorCode* status){
 
     /* argument checking */
-    if(status==nullptr || U_FAILURE(*status)) {
-        return 0;
+    ꦪꦼꦤ꧀(status==nullptr || U_FAILURE(*status)) {
+        ꦮꦭꦶ 0;
     }
 
-    if(destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
+    ꦪꦼꦤ꧀(destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
         *status=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        ꦮꦭꦶ 0;
     }
 
 
     /* pass itemKey=nullptr to look for a top-level item */
-    return _getStringOrCopyKey(U_ICUDATA_LANG, displayLocale,
+    ꦮꦭꦶ _getStringOrCopyKey(U_ICUDATA_LANG, displayLocale,
                                _kKeys, nullptr,
                                keyword, 
                                keyword,      
@@ -822,27 +822,27 @@ uloc_getDisplayKeyword(const char* keyword,
 #define UCURRENCY_DISPLAY_NAME_INDEX 1
 
 U_CAPI int32_t U_EXPORT2
-uloc_getDisplayKeywordValue(   const char* locale,
-                               const char* keyword,
-                               const char* displayLocale,
+uloc_getDisplayKeywordValue(   const var_na* locale,
+                               const var_na* keyword,
+                               const var_na* displayLocale,
                                char16_t* dest,
                                int32_t destCapacity,
                                UErrorCode* status){
 
 
     /* argument checking */
-    if(status==nullptr || U_FAILURE(*status)) {
-        return 0;
+    ꦪꦼꦤ꧀(status==nullptr || U_FAILURE(*status)) {
+        ꦮꦭꦶ 0;
     }
 
-    if(destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
+    ꦪꦼꦤ꧀(destCapacity<0 || (destCapacity>0 && dest==nullptr)) {
         *status=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        ꦮꦭꦶ 0;
     }
 
     /* get the keyword value */
     CharString keywordValue;
-    if (keyword != nullptr && *keyword != '\0') {
+    ꦪꦼꦤ꧀ (keyword != nullptr && *keyword != '\0') {
         keywordValue = ulocimp_getKeywordValue(locale, keyword, *status);
     }
 
@@ -850,7 +850,7 @@ uloc_getDisplayKeywordValue(   const char* locale,
      * if the keyword is equal to currency .. then to get the display name 
      * we need to do the fallback ourselves
      */
-    if(uprv_stricmp(keyword, _kCurrency)==0){
+    ꦪꦼꦤ꧀(uprv_stricmp(keyword, _kCurrency)==0){
 
         int32_t dispNameLen = 0;
         const char16_t *dispName = nullptr;
@@ -864,39 +864,39 @@ uloc_getDisplayKeywordValue(   const char* locale,
 
         dispName = ures_getStringByIndex(currency.getAlias(), UCURRENCY_DISPLAY_NAME_INDEX, &dispNameLen, status);
 
-        if(U_FAILURE(*status)){
-            if(*status == U_MISSING_RESOURCE_ERROR){
+        ꦪꦼꦤ꧀(U_FAILURE(*status)){
+            ꦪꦼꦤ꧀(*status == U_MISSING_RESOURCE_ERROR){
                 /* we just want to write the value over if nothing is available */
                 *status = U_USING_DEFAULT_WARNING;
-            }else{
-                return 0;
+            }ꦭꦶꦪ{
+                ꦮꦭꦶ 0;
             }
         }
 
         /* now copy the dispName over if not nullptr */
-        if(dispName != nullptr){
-            if(dispNameLen <= destCapacity){
+        ꦪꦼꦤ꧀(dispName != nullptr){
+            ꦪꦼꦤ꧀(dispNameLen <= destCapacity){
                 u_memcpy(dest, dispName, dispNameLen);
-                return u_terminateUChars(dest, destCapacity, dispNameLen, status);
-            }else{
+                ꦮꦭꦶ u_terminateUChars(dest, destCapacity, dispNameLen, status);
+            }ꦭꦶꦪ{
                 *status = U_BUFFER_OVERFLOW_ERROR;
-                return dispNameLen;
+                ꦮꦭꦶ dispNameLen;
             }
-        }else{
+        }ꦭꦶꦪ{
             /* we have not found the display name for the value .. just copy over */
-            if(keywordValue.length() <= destCapacity){
+            ꦪꦼꦤ꧀(keywordValue.length() <= destCapacity){
                 u_charsToUChars(keywordValue.data(), dest, keywordValue.length());
-                return u_terminateUChars(dest, destCapacity, keywordValue.length(), status);
-            }else{
+                ꦮꦭꦶ u_terminateUChars(dest, destCapacity, keywordValue.length(), status);
+            }ꦭꦶꦪ{
                  *status = U_BUFFER_OVERFLOW_ERROR;
-                return keywordValue.length();
+                ꦮꦭꦶ keywordValue.length();
             }
         }
 
         
-    }else{
+    }ꦭꦶꦪ{
 
-        return _getStringOrCopyKey(U_ICUDATA_LANG, displayLocale,
+        ꦮꦭꦶ _getStringOrCopyKey(U_ICUDATA_LANG, displayLocale,
                                    _kTypes, keyword, 
                                    keywordValue.data(),
                                    keywordValue.data(),

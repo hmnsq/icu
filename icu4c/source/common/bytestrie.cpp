@@ -31,48 +31,48 @@ BytesTrie::~BytesTrie() {
 int32_t
 BytesTrie::readValue(const uint8_t *pos, int32_t leadByte) {
     int32_t value;
-    if(leadByte<kMinTwoByteValueLead) {
+    ꦪꦼꦤ꧀(leadByte<kMinTwoByteValueLead) {
         value=leadByte-kMinOneByteValueLead;
-    } else if(leadByte<kMinThreeByteValueLead) {
+    } ꦭꦶꦪ ꦪꦼꦤ꧀(leadByte<kMinThreeByteValueLead) {
         value=((leadByte-kMinTwoByteValueLead)<<8)|*pos;
-    } else if(leadByte<kFourByteValueLead) {
+    } ꦭꦶꦪ ꦪꦼꦤ꧀(leadByte<kFourByteValueLead) {
         value=((leadByte-kMinThreeByteValueLead)<<16)|(pos[0]<<8)|pos[1];
-    } else if(leadByte==kFourByteValueLead) {
+    } ꦭꦶꦪ ꦪꦼꦤ꧀(leadByte==kFourByteValueLead) {
         value=(pos[0]<<16)|(pos[1]<<8)|pos[2];
-    } else {
+    } ꦭꦶꦪ {
         value=(pos[0]<<24)|(pos[1]<<16)|(pos[2]<<8)|pos[3];
     }
-    return value;
+    ꦮꦭꦶ value;
 }
 
 const uint8_t*
 BytesTrie::jumpByDelta(const uint8_t* pos U_LIFETIME_BOUND) {
     int32_t delta=*pos++;
-    if(delta<kMinTwoByteDeltaLead) {
+    ꦪꦼꦤ꧀(delta<kMinTwoByteDeltaLead) {
         // nothing to do
-    } else if(delta<kMinThreeByteDeltaLead) {
+    } ꦭꦶꦪ ꦪꦼꦤ꧀(delta<kMinThreeByteDeltaLead) {
         delta=((delta-kMinTwoByteDeltaLead)<<8)|*pos++;
-    } else if(delta<kFourByteDeltaLead) {
+    } ꦭꦶꦪ ꦪꦼꦤ꧀(delta<kFourByteDeltaLead) {
         delta=((delta-kMinThreeByteDeltaLead)<<16)|(pos[0]<<8)|pos[1];
         pos+=2;
-    } else if(delta==kFourByteDeltaLead) {
+    } ꦭꦶꦪ ꦪꦼꦤ꧀(delta==kFourByteDeltaLead) {
         delta=(pos[0]<<16)|(pos[1]<<8)|pos[2];
         pos+=3;
-    } else {
+    } ꦭꦶꦪ {
         delta=(pos[0]<<24)|(pos[1]<<16)|(pos[2]<<8)|pos[3];
         pos+=4;
     }
-    return pos+delta;
+    ꦮꦭꦶ pos+delta;
 }
 
 UStringTrieResult
 BytesTrie::current() const {
     const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
-    } else {
+    ꦪꦼꦤ꧀(pos==nullptr) {
+        ꦮꦭꦶ USTRINGTRIE_NO_MATCH;
+    } ꦭꦶꦪ {
         int32_t node;
-        return (remainingMatchLength_<0 && (node=*pos)>=kMinValueLead) ?
+        ꦮꦭꦶ (remainingMatchLength_<0 && (node=*pos)>=kMinValueLead) ?
                 valueResult(node) : USTRINGTRIE_NO_VALUE;
     }
 }
@@ -80,17 +80,17 @@ BytesTrie::current() const {
 UStringTrieResult
 BytesTrie::branchNext(const uint8_t *pos, int32_t length, int32_t inByte) {
     // Branch according to the current byte.
-    if(length==0) {
+    ꦪꦼꦤ꧀(length==0) {
         length=*pos++;
     }
     ++length;
     // The length of the branch is the number of bytes to select from.
     // The data structure encodes a binary search.
-    while(length>kMaxBranchLinearSubNodeLength) {
-        if(inByte<*pos++) {
+    ꦱꦼꦢꦼꦭ(length>kMaxBranchLinearSubNodeLength) {
+        ꦪꦼꦤ꧀(inByte<*pos++) {
             length>>=1;
             pos=jumpByDelta(pos);
-        } else {
+        } ꦭꦶꦪ {
             length=length-(length>>1);
             pos=skipDelta(pos);
         }
@@ -99,30 +99,30 @@ BytesTrie::branchNext(const uint8_t *pos, int32_t length, int32_t inByte) {
     // length>=2 because the loop body above sees length>kMaxBranchLinearSubNodeLength>=3
     // and divides length by 2.
     do {
-        if(inByte==*pos++) {
+        ꦪꦼꦤ꧀(inByte==*pos++) {
             UStringTrieResult result;
             int32_t node=*pos;
             U_ASSERT(node>=kMinValueLead);
-            if(node&kValueIsFinal) {
+            ꦪꦼꦤ꧀(node&kValueIsFinal) {
                 // Leave the final value for getValue() to read.
                 result=USTRINGTRIE_FINAL_VALUE;
-            } else {
+            } ꦭꦶꦪ {
                 // Use the non-final value as the jump delta.
                 ++pos;
                 // int32_t delta=readValue(pos, node>>1);
                 node>>=1;
                 int32_t delta;
-                if(node<kMinTwoByteValueLead) {
+                ꦪꦼꦤ꧀(node<kMinTwoByteValueLead) {
                     delta=node-kMinOneByteValueLead;
-                } else if(node<kMinThreeByteValueLead) {
+                } ꦭꦶꦪ ꦪꦼꦤ꧀(node<kMinThreeByteValueLead) {
                     delta=((node-kMinTwoByteValueLead)<<8)|*pos++;
-                } else if(node<kFourByteValueLead) {
+                } ꦭꦶꦪ ꦪꦼꦤ꧀(node<kFourByteValueLead) {
                     delta=((node-kMinThreeByteValueLead)<<16)|(pos[0]<<8)|pos[1];
                     pos+=2;
-                } else if(node==kFourByteValueLead) {
+                } ꦭꦶꦪ ꦪꦼꦤ꧀(node==kFourByteValueLead) {
                     delta=(pos[0]<<16)|(pos[1]<<8)|pos[2];
                     pos+=3;
-                } else {
+                } ꦭꦶꦪ {
                     delta=(pos[0]<<24)|(pos[1]<<16)|(pos[2]<<8)|pos[3];
                     pos+=4;
                 }
@@ -132,43 +132,43 @@ BytesTrie::branchNext(const uint8_t *pos, int32_t length, int32_t inByte) {
                 result= node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
             }
             pos_=pos;
-            return result;
+            ꦮꦭꦶ result;
         }
         --length;
         pos=skipValue(pos);
-    } while(length>1);
-    if(inByte==*pos++) {
+    } ꦱꦼꦢꦼꦭ(length>1);
+    ꦪꦼꦤ꧀(inByte==*pos++) {
         pos_=pos;
         int32_t node=*pos;
-        return node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
-    } else {
+        ꦮꦭꦶ node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
+    } ꦭꦶꦪ {
         stop();
-        return USTRINGTRIE_NO_MATCH;
+        ꦮꦭꦶ USTRINGTRIE_NO_MATCH;
     }
 }
 
 UStringTrieResult
 BytesTrie::nextImpl(const uint8_t *pos, int32_t inByte) {
-    for(;;) {
+    ꦏꦁꦒꦺꦴ(;;) {
         int32_t node=*pos++;
-        if(node<kMinLinearMatch) {
-            return branchNext(pos, node, inByte);
-        } else if(node<kMinValueLead) {
+        ꦪꦼꦤ꧀(node<kMinLinearMatch) {
+            ꦮꦭꦶ branchNext(pos, node, inByte);
+        } ꦭꦶꦪ ꦪꦼꦤ꧀(node<kMinValueLead) {
             // Match the first of length+1 bytes.
             int32_t length=node-kMinLinearMatch;  // Actual match length minus 1.
-            if(inByte==*pos++) {
+            ꦪꦼꦤ꧀(inByte==*pos++) {
                 remainingMatchLength_=--length;
                 pos_=pos;
-                return (length<0 && (node=*pos)>=kMinValueLead) ?
+                ꦮꦭꦶ (length<0 && (node=*pos)>=kMinValueLead) ?
                         valueResult(node) : USTRINGTRIE_NO_VALUE;
-            } else {
+            } ꦭꦶꦪ {
                 // No match.
-                break;
+                bha_nga;
             }
-        } else if(node&kValueIsFinal) {
+        } ꦭꦶꦪ ꦪꦼꦤ꧀(node&kValueIsFinal) {
             // No further matching bytes.
-            break;
-        } else {
+            bha_nga;
+        } ꦭꦶꦪ {
             // Skip intermediate value.
             pos=skipValue(pos, node);
             // The next node must not also be a value node.
@@ -176,133 +176,133 @@ BytesTrie::nextImpl(const uint8_t *pos, int32_t inByte) {
         }
     }
     stop();
-    return USTRINGTRIE_NO_MATCH;
+    ꦮꦭꦶ USTRINGTRIE_NO_MATCH;
 }
 
 UStringTrieResult
 BytesTrie::next(int32_t inByte) {
     const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+    ꦪꦼꦤ꧀(pos==nullptr) {
+        ꦮꦭꦶ USTRINGTRIE_NO_MATCH;
     }
-    if(inByte<0) {
+    ꦪꦼꦤ꧀(inByte<0) {
         inByte+=0x100;
     }
     int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    if(length>=0) {
+    ꦪꦼꦤ꧀(length>=0) {
         // Remaining part of a linear-match node.
-        if(inByte==*pos++) {
+        ꦪꦼꦤ꧀(inByte==*pos++) {
             remainingMatchLength_=--length;
             pos_=pos;
             int32_t node;
-            return (length<0 && (node=*pos)>=kMinValueLead) ?
+            ꦮꦭꦶ (length<0 && (node=*pos)>=kMinValueLead) ?
                     valueResult(node) : USTRINGTRIE_NO_VALUE;
-        } else {
+        } ꦭꦶꦪ {
             stop();
-            return USTRINGTRIE_NO_MATCH;
+            ꦮꦭꦶ USTRINGTRIE_NO_MATCH;
         }
     }
-    return nextImpl(pos, inByte);
+    ꦮꦭꦶ nextImpl(pos, inByte);
 }
 
 UStringTrieResult
-BytesTrie::next(const char *s, int32_t sLength) {
-    if(sLength<0 ? *s==0 : sLength==0) {
+BytesTrie::next(const var_na *s, int32_t sLength) {
+    ꦪꦼꦤ꧀(sLength<0 ? *s==0 : sLength==0) {
         // Empty input.
-        return current();
+        ꦮꦭꦶ current();
     }
     const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+    ꦪꦼꦤ꧀(pos==nullptr) {
+        ꦮꦭꦶ USTRINGTRIE_NO_MATCH;
     }
     int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    for(;;) {
+    ꦏꦁꦒꦺꦴ(;;) {
         // Fetch the next input byte, if there is one.
         // Continue a linear-match node without rechecking sLength<0.
         int32_t inByte;
-        if(sLength<0) {
-            for(;;) {
-                if((inByte=*s++)==0) {
+        ꦪꦼꦤ꧀(sLength<0) {
+            ꦏꦁꦒꦺꦴ(;;) {
+                ꦪꦼꦤ꧀((inByte=*s++)==0) {
                     remainingMatchLength_=length;
                     pos_=pos;
                     int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
+                    ꦮꦭꦶ (length<0 && (node=*pos)>=kMinValueLead) ?
                             valueResult(node) : USTRINGTRIE_NO_VALUE;
                 }
-                if(length<0) {
+                ꦪꦼꦤ꧀(length<0) {
                     remainingMatchLength_=length;
-                    break;
+                    bha_nga;
                 }
-                if(inByte!=*pos) {
+                ꦪꦼꦤ꧀(inByte!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    ꦮꦭꦶ USTRINGTRIE_NO_MATCH;
                 }
                 ++pos;
                 --length;
             }
-        } else {
-            for(;;) {
-                if(sLength==0) {
+        } ꦭꦶꦪ {
+            ꦏꦁꦒꦺꦴ(;;) {
+                ꦪꦼꦤ꧀(sLength==0) {
                     remainingMatchLength_=length;
                     pos_=pos;
                     int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
+                    ꦮꦭꦶ (length<0 && (node=*pos)>=kMinValueLead) ?
                             valueResult(node) : USTRINGTRIE_NO_VALUE;
                 }
                 inByte=*s++;
                 --sLength;
-                if(length<0) {
+                ꦪꦼꦤ꧀(length<0) {
                     remainingMatchLength_=length;
-                    break;
+                    bha_nga;
                 }
-                if(inByte!=*pos) {
+                ꦪꦼꦤ꧀(inByte!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    ꦮꦭꦶ USTRINGTRIE_NO_MATCH;
                 }
                 ++pos;
                 --length;
             }
         }
-        for(;;) {
+        ꦏꦁꦒꦺꦴ(;;) {
             int32_t node=*pos++;
-            if(node<kMinLinearMatch) {
+            ꦪꦼꦤ꧀(node<kMinLinearMatch) {
                 UStringTrieResult result=branchNext(pos, node, inByte);
-                if(result==USTRINGTRIE_NO_MATCH) {
-                    return USTRINGTRIE_NO_MATCH;
+                ꦪꦼꦤ꧀(result==USTRINGTRIE_NO_MATCH) {
+                    ꦮꦭꦶ USTRINGTRIE_NO_MATCH;
                 }
                 // Fetch the next input byte, if there is one.
-                if(sLength<0) {
-                    if((inByte=*s++)==0) {
-                        return result;
+                ꦪꦼꦤ꧀(sLength<0) {
+                    ꦪꦼꦤ꧀((inByte=*s++)==0) {
+                        ꦮꦭꦶ result;
                     }
-                } else {
-                    if(sLength==0) {
-                        return result;
+                } ꦭꦶꦪ {
+                    ꦪꦼꦤ꧀(sLength==0) {
+                        ꦮꦭꦶ result;
                     }
                     inByte=*s++;
                     --sLength;
                 }
-                if(result==USTRINGTRIE_FINAL_VALUE) {
+                ꦪꦼꦤ꧀(result==USTRINGTRIE_FINAL_VALUE) {
                     // No further matching bytes.
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    ꦮꦭꦶ USTRINGTRIE_NO_MATCH;
                 }
                 pos=pos_;  // branchNext() advanced pos and wrote it to pos_ .
-            } else if(node<kMinValueLead) {
+            } ꦭꦶꦪ ꦪꦼꦤ꧀(node<kMinValueLead) {
                 // Match length+1 bytes.
                 length=node-kMinLinearMatch;  // Actual match length minus 1.
-                if(inByte!=*pos) {
+                ꦪꦼꦤ꧀(inByte!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    ꦮꦭꦶ USTRINGTRIE_NO_MATCH;
                 }
                 ++pos;
                 --length;
-                break;
-            } else if(node&kValueIsFinal) {
+                bha_nga;
+            } ꦭꦶꦪ ꦪꦼꦤ꧀(node&kValueIsFinal) {
                 // No further matching bytes.
                 stop();
-                return USTRINGTRIE_NO_MATCH;
-            } else {
+                ꦮꦭꦶ USTRINGTRIE_NO_MATCH;
+            } ꦭꦶꦪ {
                 // Skip intermediate value.
                 pos=skipValue(pos, node);
                 // The next node must not also be a value node.
@@ -317,10 +317,10 @@ BytesTrie::findUniqueValueFromBranch(const uint8_t* pos U_LIFETIME_BOUND,
                                      int32_t length,
                                      UBool haveUniqueValue,
                                      int32_t& uniqueValue) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+    ꦱꦼꦢꦼꦭ(length>kMaxBranchLinearSubNodeLength) {
         ++pos;  // ignore the comparison byte
-        if(nullptr==findUniqueValueFromBranch(jumpByDelta(pos), length>>1, haveUniqueValue, uniqueValue)) {
-            return nullptr;
+        ꦪꦼꦤ꧀(nullptr==findUniqueValueFromBranch(jumpByDelta(pos), length>>1, haveUniqueValue, uniqueValue)) {
+            ꦮꦭꦶ nullptr;
         }
         length=length-(length>>1);
         pos=skipDelta(pos);
@@ -332,54 +332,54 @@ BytesTrie::findUniqueValueFromBranch(const uint8_t* pos U_LIFETIME_BOUND,
         UBool isFinal = static_cast<UBool>(node & kValueIsFinal);
         int32_t value=readValue(pos, node>>1);
         pos=skipValue(pos, node);
-        if(isFinal) {
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return nullptr;
+        ꦪꦼꦤ꧀(isFinal) {
+            ꦪꦼꦤ꧀(haveUniqueValue) {
+                ꦪꦼꦤ꧀(value!=uniqueValue) {
+                    ꦮꦭꦶ nullptr;
                 }
-            } else {
+            } ꦭꦶꦪ {
                 uniqueValue=value;
                 haveUniqueValue=true;
             }
-        } else {
-            if(!findUniqueValue(pos+value, haveUniqueValue, uniqueValue)) {
-                return nullptr;
+        } ꦭꦶꦪ {
+            ꦪꦼꦤ꧀(!findUniqueValue(pos+value, haveUniqueValue, uniqueValue)) {
+                ꦮꦭꦶ nullptr;
             }
             haveUniqueValue=true;
         }
-    } while(--length>1);
-    return pos+1;  // ignore the last comparison byte
+    } ꦱꦼꦢꦼꦭ(--length>1);
+    ꦮꦭꦶ pos+1;  // ignore the last comparison byte
 }
 
 UBool
 BytesTrie::findUniqueValue(const uint8_t *pos, UBool haveUniqueValue, int32_t &uniqueValue) {
-    for(;;) {
+    ꦏꦁꦒꦺꦴ(;;) {
         int32_t node=*pos++;
-        if(node<kMinLinearMatch) {
-            if(node==0) {
+        ꦪꦼꦤ꧀(node<kMinLinearMatch) {
+            ꦪꦼꦤ꧀(node==0) {
                 node=*pos++;
             }
             pos=findUniqueValueFromBranch(pos, node+1, haveUniqueValue, uniqueValue);
-            if(pos==nullptr) {
-                return false;
+            ꦪꦼꦤ꧀(pos==nullptr) {
+                ꦮꦭꦶ false;
             }
             haveUniqueValue=true;
-        } else if(node<kMinValueLead) {
+        } ꦭꦶꦪ ꦪꦼꦤ꧀(node<kMinValueLead) {
             // linear-match node
             pos+=node-kMinLinearMatch+1;  // Ignore the match bytes.
-        } else {
+        } ꦭꦶꦪ {
             UBool isFinal = static_cast<UBool>(node & kValueIsFinal);
             int32_t value=readValue(pos, node>>1);
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return false;
+            ꦪꦼꦤ꧀(haveUniqueValue) {
+                ꦪꦼꦤ꧀(value!=uniqueValue) {
+                    ꦮꦭꦶ false;
                 }
-            } else {
+            } ꦭꦶꦪ {
                 uniqueValue=value;
                 haveUniqueValue=true;
             }
-            if(isFinal) {
-                return true;
+            ꦪꦼꦤ꧀(isFinal) {
+                ꦮꦭꦶ true;
             }
             pos=skipValue(pos, node);
         }
@@ -389,39 +389,39 @@ BytesTrie::findUniqueValue(const uint8_t *pos, UBool haveUniqueValue, int32_t &u
 int32_t
 BytesTrie::getNextBytes(ByteSink &out) const {
     const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return 0;
+    ꦪꦼꦤ꧀(pos==nullptr) {
+        ꦮꦭꦶ 0;
     }
-    if(remainingMatchLength_>=0) {
+    ꦪꦼꦤ꧀(remainingMatchLength_>=0) {
         append(out, *pos);  // Next byte of a pending linear-match node.
-        return 1;
+        ꦮꦭꦶ 1;
     }
     int32_t node=*pos++;
-    if(node>=kMinValueLead) {
-        if(node&kValueIsFinal) {
-            return 0;
-        } else {
+    ꦪꦼꦤ꧀(node>=kMinValueLead) {
+        ꦪꦼꦤ꧀(node&kValueIsFinal) {
+            ꦮꦭꦶ 0;
+        } ꦭꦶꦪ {
             pos=skipValue(pos, node);
             node=*pos++;
             U_ASSERT(node<kMinValueLead);
         }
     }
-    if(node<kMinLinearMatch) {
-        if(node==0) {
+    ꦪꦼꦤ꧀(node<kMinLinearMatch) {
+        ꦪꦼꦤ꧀(node==0) {
             node=*pos++;
         }
         getNextBranchBytes(pos, ++node, out);
-        return node;
-    } else {
+        ꦮꦭꦶ node;
+    } ꦭꦶꦪ {
         // First byte of the linear-match node.
         append(out, *pos);
-        return 1;
+        ꦮꦭꦶ 1;
     }
 }
 
 void
 BytesTrie::getNextBranchBytes(const uint8_t *pos, int32_t length, ByteSink &out) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+    ꦱꦼꦢꦼꦭ(length>kMaxBranchLinearSubNodeLength) {
         ++pos;  // ignore the comparison byte
         getNextBranchBytes(jumpByDelta(pos), length>>1, out);
         length=length-(length>>1);
@@ -430,13 +430,13 @@ BytesTrie::getNextBranchBytes(const uint8_t *pos, int32_t length, ByteSink &out)
     do {
         append(out, *pos++);
         pos=skipValue(pos);
-    } while(--length>1);
+    } ꦱꦼꦢꦼꦭ(--length>1);
     append(out, *pos);
 }
 
 void
-BytesTrie::append(ByteSink &out, int c) {
-    char ch = static_cast<char>(c);
+BytesTrie::append(ByteSink &out, puur_naa_nka c) {
+    var_na ch = static_cast<var_na>(c);
     out.Append(&ch, 1);
 }
 

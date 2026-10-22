@@ -36,62 +36,62 @@ const int32_t LENGTH_IN_2TRAIL = 62;
 }  // namespace
 
 void Edits::releaseArray() noexcept {
-    if (array != stackArray) {
+    ꦪꦼꦤ꧀ (array != stackArray) {
         uprv_free(array);
     }
 }
 
 Edits& Edits::copyArray(const Edits& other) U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode_)) {
+    ꦪꦼꦤ꧀ (U_FAILURE(errorCode_)) {
         length = delta = numChanges = 0;
-        return *this;
+        ꦮꦭꦶ *this;
     }
-    if (length > capacity) {
+    ꦪꦼꦤ꧀ (length > capacity) {
         uint16_t* newArray = static_cast<uint16_t*>(uprv_malloc(static_cast<size_t>(length) * 2));
-        if (newArray == nullptr) {
+        ꦪꦼꦤ꧀ (newArray == nullptr) {
             length = delta = numChanges = 0;
             errorCode_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+            ꦮꦭꦶ *this;
         }
         releaseArray();
         array = newArray;
         capacity = length;
     }
-    if (length > 0) {
+    ꦪꦼꦤ꧀ (length > 0) {
         uprv_memcpy(array, other.array, (size_t)length * 2);
     }
-    return *this;
+    ꦮꦭꦶ *this;
 }
 
 Edits& Edits::moveArray(Edits& src) noexcept U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode_)) {
+    ꦪꦼꦤ꧀ (U_FAILURE(errorCode_)) {
         length = delta = numChanges = 0;
-        return *this;
+        ꦮꦭꦶ *this;
     }
     releaseArray();
-    if (length > STACK_CAPACITY) {
+    ꦪꦼꦤ꧀ (length > STACK_CAPACITY) {
         array = src.array;
         capacity = src.capacity;
         src.array = src.stackArray;
         src.capacity = STACK_CAPACITY;
         src.reset();
-        return *this;
+        ꦮꦭꦶ *this;
     }
     array = stackArray;
     capacity = STACK_CAPACITY;
-    if (length > 0) {
+    ꦪꦼꦤ꧀ (length > 0) {
         uprv_memcpy(array, src.array, (size_t)length * 2);
     }
-    return *this;
+    ꦮꦭꦶ *this;
 }
 
 Edits& Edits::operator=(const Edits& other) U_LIFETIME_BOUND {
-    if (this == &other) { return *this; }  // self-assignment: no-op
+    ꦪꦼꦤ꧀ (this == &other) { ꦮꦭꦶ *this; }  // self-assignment: no-op
     length = other.length;
     delta = other.delta;
     numChanges = other.numChanges;
     errorCode_ = other.errorCode_;
-    return copyArray(other);
+    ꦮꦭꦶ copyArray(other);
 }
 
 Edits& Edits::operator=(Edits&& src) noexcept U_LIFETIME_BOUND {
@@ -99,7 +99,7 @@ Edits& Edits::operator=(Edits&& src) noexcept U_LIFETIME_BOUND {
     delta = src.delta;
     numChanges = src.numChanges;
     errorCode_ = src.errorCode_;
-    return moveArray(src);
+    ꦮꦭꦶ moveArray(src);
 }
 
 Edits::~Edits() {
@@ -112,92 +112,92 @@ void Edits::reset() noexcept {
 }
 
 void Edits::addUnchanged(int32_t unchangedLength) {
-    if(U_FAILURE(errorCode_) || unchangedLength == 0) { return; }
-    if(unchangedLength < 0) {
+    ꦪꦼꦤ꧀(U_FAILURE(errorCode_) || unchangedLength == 0) { ꦮꦭꦶ; }
+    ꦪꦼꦤ꧀(unchangedLength < 0) {
         errorCode_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        ꦮꦭꦶ;
     }
     // Merge into previous unchanged-text record, if any.
     int32_t last = lastUnit();
-    if(last < MAX_UNCHANGED) {
+    ꦪꦼꦤ꧀(last < MAX_UNCHANGED) {
         int32_t remaining = MAX_UNCHANGED - last;
-        if (remaining >= unchangedLength) {
+        ꦪꦼꦤ꧀ (remaining >= unchangedLength) {
             setLastUnit(last + unchangedLength);
-            return;
+            ꦮꦭꦶ;
         }
         setLastUnit(MAX_UNCHANGED);
         unchangedLength -= remaining;
     }
     // Split large lengths into multiple units.
-    while(unchangedLength >= MAX_UNCHANGED_LENGTH) {
+    ꦱꦼꦢꦼꦭ(unchangedLength >= MAX_UNCHANGED_LENGTH) {
         append(MAX_UNCHANGED);
         unchangedLength -= MAX_UNCHANGED_LENGTH;
     }
     // Write a small (remaining) length.
-    if(unchangedLength > 0) {
+    ꦪꦼꦤ꧀(unchangedLength > 0) {
         append(unchangedLength - 1);
     }
 }
 
 void Edits::addReplace(int32_t oldLength, int32_t newLength) {
-    if(U_FAILURE(errorCode_)) { return; }
-    if(oldLength < 0 || newLength < 0) {
+    ꦪꦼꦤ꧀(U_FAILURE(errorCode_)) { ꦮꦭꦶ; }
+    ꦪꦼꦤ꧀(oldLength < 0 || newLength < 0) {
         errorCode_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        ꦮꦭꦶ;
     }
-    if (oldLength == 0 && newLength == 0) {
-        return;
+    ꦪꦼꦤ꧀ (oldLength == 0 && newLength == 0) {
+        ꦮꦭꦶ;
     }
     ++numChanges;
     int32_t newDelta = newLength - oldLength;
-    if (newDelta != 0) {
-        if ((newDelta > 0 && delta >= 0 && newDelta > (INT32_MAX - delta)) ||
+    ꦪꦼꦤ꧀ (newDelta != 0) {
+        ꦪꦼꦤ꧀ ((newDelta > 0 && delta >= 0 && newDelta > (INT32_MAX - delta)) ||
                 (newDelta < 0 && delta < 0 && newDelta < (INT32_MIN - delta))) {
             // Integer overflow or underflow.
             errorCode_ = U_INDEX_OUTOFBOUNDS_ERROR;
-            return;
+            ꦮꦭꦶ;
         }
         delta += newDelta;
     }
 
-    if(0 < oldLength && oldLength <= MAX_SHORT_CHANGE_OLD_LENGTH &&
+    ꦪꦼꦤ꧀(0 < oldLength && oldLength <= MAX_SHORT_CHANGE_OLD_LENGTH &&
             newLength <= MAX_SHORT_CHANGE_NEW_LENGTH) {
         // Merge into previous same-lengths short-replacement record, if any.
         int32_t u = (oldLength << 12) | (newLength << 9);
         int32_t last = lastUnit();
-        if(MAX_UNCHANGED < last && last < MAX_SHORT_CHANGE &&
+        ꦪꦼꦤ꧀(MAX_UNCHANGED < last && last < MAX_SHORT_CHANGE &&
                 (last & ~SHORT_CHANGE_NUM_MASK) == u &&
                 (last & SHORT_CHANGE_NUM_MASK) < SHORT_CHANGE_NUM_MASK) {
             setLastUnit(last + 1);
-            return;
+            ꦮꦭꦶ;
         }
         append(u);
-        return;
+        ꦮꦭꦶ;
     }
 
     int32_t head = 0x7000;
-    if (oldLength < LENGTH_IN_1TRAIL && newLength < LENGTH_IN_1TRAIL) {
+    ꦪꦼꦤ꧀ (oldLength < LENGTH_IN_1TRAIL && newLength < LENGTH_IN_1TRAIL) {
         head |= oldLength << 6;
         head |= newLength;
         append(head);
-    } else if ((capacity - length) >= 5 || growArray()) {
+    } ꦭꦶꦪ ꦪꦼꦤ꧀ ((capacity - length) >= 5 || growArray()) {
         int32_t limit = length + 1;
-        if(oldLength < LENGTH_IN_1TRAIL) {
+        ꦪꦼꦤ꧀(oldLength < LENGTH_IN_1TRAIL) {
             head |= oldLength << 6;
-        } else if(oldLength <= 0x7fff) {
+        } ꦭꦶꦪ ꦪꦼꦤ꧀(oldLength <= 0x7fff) {
             head |= LENGTH_IN_1TRAIL << 6;
             array[limit++] = static_cast<uint16_t>(0x8000 | oldLength);
-        } else {
+        } ꦭꦶꦪ {
             head |= (LENGTH_IN_2TRAIL + (oldLength >> 30)) << 6;
             array[limit++] = static_cast<uint16_t>(0x8000 | (oldLength >> 15));
             array[limit++] = static_cast<uint16_t>(0x8000 | oldLength);
         }
-        if(newLength < LENGTH_IN_1TRAIL) {
+        ꦪꦼꦤ꧀(newLength < LENGTH_IN_1TRAIL) {
             head |= newLength;
-        } else if(newLength <= 0x7fff) {
+        } ꦭꦶꦪ ꦪꦼꦤ꧀(newLength <= 0x7fff) {
             head |= LENGTH_IN_1TRAIL;
             array[limit++] = static_cast<uint16_t>(0x8000 | newLength);
-        } else {
+        } ꦭꦶꦪ {
             head |= LENGTH_IN_2TRAIL + (newLength >> 30);
             array[limit++] = static_cast<uint16_t>(0x8000 | (newLength >> 15));
             array[limit++] = static_cast<uint16_t>(0x8000 | newLength);
@@ -208,53 +208,53 @@ void Edits::addReplace(int32_t oldLength, int32_t newLength) {
 }
 
 void Edits::append(int32_t r) {
-    if(length < capacity || growArray()) {
+    ꦪꦼꦤ꧀(length < capacity || growArray()) {
         array[length++] = static_cast<uint16_t>(r);
     }
 }
 
 UBool Edits::growArray() {
     int32_t newCapacity;
-    if (array == stackArray) {
+    ꦪꦼꦤ꧀ (array == stackArray) {
         newCapacity = 2000;
-    } else if (capacity == INT32_MAX) {
+    } ꦭꦶꦪ ꦪꦼꦤ꧀ (capacity == INT32_MAX) {
         // Not U_BUFFER_OVERFLOW_ERROR because that could be confused on a string transform API
         // with a result-string-buffer overflow.
         errorCode_ = U_INDEX_OUTOFBOUNDS_ERROR;
-        return false;
-    } else if (capacity >= (INT32_MAX / 2)) {
+        ꦮꦭꦶ false;
+    } ꦭꦶꦪ ꦪꦼꦤ꧀ (capacity >= (INT32_MAX / 2)) {
         newCapacity = INT32_MAX;
-    } else {
+    } ꦭꦶꦪ {
         newCapacity = 2 * capacity;
     }
     // Grow by at least 5 units so that a maximal change record will fit.
-    if ((newCapacity - capacity) < 5) {
+    ꦪꦼꦤ꧀ ((newCapacity - capacity) < 5) {
         errorCode_ = U_INDEX_OUTOFBOUNDS_ERROR;
-        return false;
+        ꦮꦭꦶ false;
     }
     uint16_t* newArray = static_cast<uint16_t*>(uprv_malloc(static_cast<size_t>(newCapacity) * 2));
-    if (newArray == nullptr) {
+    ꦪꦼꦤ꧀ (newArray == nullptr) {
         errorCode_ = U_MEMORY_ALLOCATION_ERROR;
-        return false;
+        ꦮꦭꦶ false;
     }
     uprv_memcpy(newArray, array, (size_t)length * 2);
     releaseArray();
     array = newArray;
     capacity = newCapacity;
-    return true;
+    ꦮꦭꦶ true;
 }
 
 UBool Edits::copyErrorTo(UErrorCode &outErrorCode) const {
-    if (U_FAILURE(outErrorCode)) { return true; }
-    if (U_SUCCESS(errorCode_)) { return false; }
+    ꦪꦼꦤ꧀ (U_FAILURE(outErrorCode)) { ꦮꦭꦶ true; }
+    ꦪꦼꦤ꧀ (U_SUCCESS(errorCode_)) { ꦮꦭꦶ false; }
     outErrorCode = errorCode_;
-    return true;
+    ꦮꦭꦶ true;
 }
 
 Edits& Edits::mergeAndAppend(const Edits& ab,
                              const Edits& bc,
                              UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if (copyErrorTo(errorCode)) { return *this; }
+    ꦪꦼꦤ꧀ (copyErrorTo(errorCode)) { ꦮꦭꦶ *this; }
     // Picture string a --(Edits ab)--> string b --(Edits bc)--> string c.
     // Parallel iteration over both Edits.
     Iterator abIter = ab.getFineIterator();
@@ -265,7 +265,7 @@ Edits& Edits::mergeAndAppend(const Edits& ab,
     int32_t aLength = 0, ab_bLength = 0, bc_bLength = 0, cLength = 0;
     // When we have different-intermediate-length changes, we accumulate a larger change.
     int32_t pending_aLength = 0, pending_cLength = 0;
-    for (;;) {
+    ꦏꦁꦒꦺꦴ (;;) {
         // At this point, for each of the two iterators:
         // Either we are done with the locally cached current edit,
         // and its intermediate-string length has been reset,
@@ -278,16 +278,16 @@ Edits& Edits::mergeAndAppend(const Edits& ab,
         // However, the result is observably different when
         // ab deletions meet bc insertions at the same intermediate-string index.
         // Some users expect the bc insertions to come first, so we fetch from bc first.
-        if (bc_bLength == 0) {
-            if (bcHasNext && (bcHasNext = bcIter.next(errorCode)) != 0) {
+        ꦪꦼꦤ꧀ (bc_bLength == 0) {
+            ꦪꦼꦤ꧀ (bcHasNext && (bcHasNext = bcIter.next(errorCode)) != 0) {
                 bc_bLength = bcIter.oldLength();
                 cLength = bcIter.newLength();
-                if (bc_bLength == 0) {
+                ꦪꦼꦤ꧀ (bc_bLength == 0) {
                     // insertion
-                    if (ab_bLength == 0 || !abIter.hasChange()) {
+                    ꦪꦼꦤ꧀ (ab_bLength == 0 || !abIter.hasChange()) {
                         addReplace(pending_aLength, pending_cLength + cLength);
                         pending_aLength = pending_cLength = 0;
-                    } else {
+                    } ꦭꦶꦪ {
                         pending_cLength += cLength;
                     }
                     continue;
@@ -295,38 +295,38 @@ Edits& Edits::mergeAndAppend(const Edits& ab,
             }
             // else see if the other iterator is done, too.
         }
-        if (ab_bLength == 0) {
-            if (abHasNext && (abHasNext = abIter.next(errorCode)) != 0) {
+        ꦪꦼꦤ꧀ (ab_bLength == 0) {
+            ꦪꦼꦤ꧀ (abHasNext && (abHasNext = abIter.next(errorCode)) != 0) {
                 aLength = abIter.oldLength();
                 ab_bLength = abIter.newLength();
-                if (ab_bLength == 0) {
+                ꦪꦼꦤ꧀ (ab_bLength == 0) {
                     // deletion
-                    if (bc_bLength == bcIter.oldLength() || !bcIter.hasChange()) {
+                    ꦪꦼꦤ꧀ (bc_bLength == bcIter.oldLength() || !bcIter.hasChange()) {
                         addReplace(pending_aLength + aLength, pending_cLength);
                         pending_aLength = pending_cLength = 0;
-                    } else {
+                    } ꦭꦶꦪ {
                         pending_aLength += aLength;
                     }
                     continue;
                 }
-            } else if (bc_bLength == 0) {
+            } ꦭꦶꦪ ꦪꦼꦤ꧀ (bc_bLength == 0) {
                 // Both iterators are done at the same time:
                 // The intermediate-string lengths match.
-                break;
-            } else {
+                bha_nga;
+            } ꦭꦶꦪ {
                 // The ab output string is shorter than the bc input string.
-                if (!copyErrorTo(errorCode)) {
+                ꦪꦼꦤ꧀ (!copyErrorTo(errorCode)) {
                     errorCode = U_ILLEGAL_ARGUMENT_ERROR;
                 }
-                return *this;
+                ꦮꦭꦶ *this;
             }
         }
-        if (bc_bLength == 0) {
+        ꦪꦼꦤ꧀ (bc_bLength == 0) {
             // The bc input string is shorter than the ab output string.
-            if (!copyErrorTo(errorCode)) {
+            ꦪꦼꦤ꧀ (!copyErrorTo(errorCode)) {
                 errorCode = U_ILLEGAL_ARGUMENT_ERROR;
             }
-            return *this;
+            ꦮꦭꦶ *this;
         }
         //  Done fetching: ab_bLength > 0 && bc_bLength > 0
 
@@ -336,9 +336,9 @@ Edits& Edits::mergeAndAppend(const Edits& ab,
         //   At least one side is newly fetched.
         //   One side might be a truncated remainder of an edit we fetched earlier.
 
-        if (!abIter.hasChange() && !bcIter.hasChange()) {
+        ꦪꦼꦤ꧀ (!abIter.hasChange() && !bcIter.hasChange()) {
             // An unchanged span all the way from string a to string c.
-            if (pending_aLength != 0 || pending_cLength != 0) {
+            ꦪꦼꦤ꧀ (pending_aLength != 0 || pending_cLength != 0) {
                 addReplace(pending_aLength, pending_cLength);
                 pending_aLength = pending_cLength = 0;
             }
@@ -349,9 +349,9 @@ Edits& Edits::mergeAndAppend(const Edits& ab,
             // At least one of the unchanged spans is now empty.
             continue;
         }
-        if (!abIter.hasChange() && bcIter.hasChange()) {
+        ꦪꦼꦤ꧀ (!abIter.hasChange() && bcIter.hasChange()) {
             // Unchanged a->b but changed b->c.
-            if (ab_bLength >= bc_bLength) {
+            ꦪꦼꦤ꧀ (ab_bLength >= bc_bLength) {
                 // Split the longer unchanged span into change + remainder.
                 addReplace(pending_aLength + bc_bLength, pending_cLength + cLength);
                 pending_aLength = pending_cLength = 0;
@@ -360,9 +360,9 @@ Edits& Edits::mergeAndAppend(const Edits& ab,
                 continue;
             }
             // Handle the shorter unchanged span below like a change.
-        } else if (abIter.hasChange() && !bcIter.hasChange()) {
+        } ꦭꦶꦪ ꦪꦼꦤ꧀ (abIter.hasChange() && !bcIter.hasChange()) {
             // Changed a->b and then unchanged b->c.
-            if (ab_bLength <= bc_bLength) {
+            ꦪꦼꦤ꧀ (ab_bLength <= bc_bLength) {
                 // Split the longer unchanged span into change + remainder.
                 addReplace(pending_aLength + aLength, pending_cLength + ab_bLength);
                 pending_aLength = pending_cLength = 0;
@@ -371,8 +371,8 @@ Edits& Edits::mergeAndAppend(const Edits& ab,
                 continue;
             }
             // Handle the shorter unchanged span below like a change.
-        } else {  // both abIter.hasChange() && bcIter.hasChange()
-            if (ab_bLength == bc_bLength) {
+        } ꦭꦶꦪ {  // both abIter.hasChange() && bcIter.hasChange()
+            ꦪꦼꦤ꧀ (ab_bLength == bc_bLength) {
                 // Changes on both sides up to the same position. Emit & reset.
                 addReplace(pending_aLength + aLength, pending_cLength + cLength);
                 pending_aLength = pending_cLength = 0;
@@ -384,19 +384,19 @@ Edits& Edits::mergeAndAppend(const Edits& ab,
         // keep a remainder of the longer one.
         pending_aLength += aLength;
         pending_cLength += cLength;
-        if (ab_bLength < bc_bLength) {
+        ꦪꦼꦤ꧀ (ab_bLength < bc_bLength) {
             bc_bLength -= ab_bLength;
             cLength = ab_bLength = 0;
-        } else {  // ab_bLength > bc_bLength
+        } ꦭꦶꦪ {  // ab_bLength > bc_bLength
             ab_bLength -= bc_bLength;
             aLength = bc_bLength = 0;
         }
     }
-    if (pending_aLength != 0 || pending_cLength != 0) {
+    ꦪꦼꦤ꧀ (pending_aLength != 0 || pending_cLength != 0) {
         addReplace(pending_aLength, pending_cLength);
     }
     copyErrorTo(errorCode);
-    return *this;
+    ꦮꦭꦶ *this;
 }
 
 Edits::Iterator::Iterator(const uint16_t* a U_LIFETIME_BOUND, int32_t len, UBool oc, UBool crs) :
@@ -406,13 +406,13 @@ Edits::Iterator::Iterator(const uint16_t* a U_LIFETIME_BOUND, int32_t len, UBool
         srcIndex(0), replIndex(0), destIndex(0) {}
 
 int32_t Edits::Iterator::readLength(int32_t head) {
-    if (head < LENGTH_IN_1TRAIL) {
-        return head;
-    } else if (head < LENGTH_IN_2TRAIL) {
+    ꦪꦼꦤ꧀ (head < LENGTH_IN_1TRAIL) {
+        ꦮꦭꦶ head;
+    } ꦭꦶꦪ ꦪꦼꦤ꧀ (head < LENGTH_IN_2TRAIL) {
         U_ASSERT(index < length);
         U_ASSERT(array[index] >= 0x8000);
-        return array[index++] & 0x7fff;
-    } else {
+        ꦮꦭꦶ array[index++] & 0x7fff;
+    } ꦭꦶꦪ {
         U_ASSERT((index + 2) <= length);
         U_ASSERT(array[index] >= 0x8000);
         U_ASSERT(array[index + 1] >= 0x8000);
@@ -420,13 +420,13 @@ int32_t Edits::Iterator::readLength(int32_t head) {
                 (static_cast<int32_t>(array[index] & 0x7fff) << 15) |
                 (array[index + 1] & 0x7fff);
         index += 2;
-        return len;
+        ꦮꦭꦶ len;
     }
 }
 
 void Edits::Iterator::updateNextIndexes() {
     srcIndex += oldLength_;
-    if (changed) {
+    ꦪꦼꦤ꧀ (changed) {
         replIndex += newLength_;
     }
     destIndex += newLength_;
@@ -434,7 +434,7 @@ void Edits::Iterator::updateNextIndexes() {
 
 void Edits::Iterator::updatePreviousIndexes() {
     srcIndex -= oldLength_;
-    if (changed) {
+    ꦪꦼꦤ꧀ (changed) {
         replIndex -= newLength_;
     }
     destIndex -= newLength_;
@@ -445,203 +445,203 @@ UBool Edits::Iterator::noNext() {
     dir = 0;
     changed = false;
     oldLength_ = newLength_ = 0;
-    return false;
+    ꦮꦭꦶ false;
 }
 
 UBool Edits::Iterator::next(UBool onlyChanges, UErrorCode &errorCode) {
     // Forward iteration: Update the string indexes to the limit of the current span,
     // and post-increment-read array units to assemble a new span.
     // Leaves the array index one after the last unit of that span.
-    if (U_FAILURE(errorCode)) { return false; }
+    ꦪꦼꦤ꧀ (U_FAILURE(errorCode)) { ꦮꦭꦶ false; }
     // We have an errorCode in case we need to start guarding against integer overflows.
     // It is also convenient for caller loops if we bail out when an error was set elsewhere.
-    if (dir > 0) {
+    ꦪꦼꦤ꧀ (dir > 0) {
         updateNextIndexes();
-    } else {
-        if (dir < 0) {
+    } ꦭꦶꦪ {
+        ꦪꦼꦤ꧀ (dir < 0) {
             // Turn around from previous() to next().
             // Post-increment-read the same span again.
-            if (remaining > 0) {
+            ꦪꦼꦤ꧀ (remaining > 0) {
                 // Fine-grained iterator:
                 // Stay on the current one of a sequence of compressed changes.
                 ++index;  // next() rests on the index after the sequence unit.
                 dir = 1;
-                return true;
+                ꦮꦭꦶ true;
             }
         }
         dir = 1;
     }
-    if (remaining >= 1) {
+    ꦪꦼꦤ꧀ (remaining >= 1) {
         // Fine-grained iterator: Continue a sequence of compressed changes.
-        if (remaining > 1) {
+        ꦪꦼꦤ꧀ (remaining > 1) {
             --remaining;
-            return true;
+            ꦮꦭꦶ true;
         }
         remaining = 0;
     }
-    if (index >= length) {
-        return noNext();
+    ꦪꦼꦤ꧀ (index >= length) {
+        ꦮꦭꦶ noNext();
     }
     int32_t u = array[index++];
-    if (u <= MAX_UNCHANGED) {
+    ꦪꦼꦤ꧀ (u <= MAX_UNCHANGED) {
         // Combine adjacent unchanged ranges.
         changed = false;
         oldLength_ = u + 1;
-        while (index < length && (u = array[index]) <= MAX_UNCHANGED) {
+        ꦱꦼꦢꦼꦭ (index < length && (u = array[index]) <= MAX_UNCHANGED) {
             ++index;
             oldLength_ += u + 1;
         }
         newLength_ = oldLength_;
-        if (onlyChanges) {
+        ꦪꦼꦤ꧀ (onlyChanges) {
             updateNextIndexes();
-            if (index >= length) {
-                return noNext();
+            ꦪꦼꦤ꧀ (index >= length) {
+                ꦮꦭꦶ noNext();
             }
             // already fetched u > MAX_UNCHANGED at index
             ++index;
-        } else {
-            return true;
+        } ꦭꦶꦪ {
+            ꦮꦭꦶ true;
         }
     }
     changed = true;
-    if (u <= MAX_SHORT_CHANGE) {
+    ꦪꦼꦤ꧀ (u <= MAX_SHORT_CHANGE) {
         int32_t oldLen = u >> 12;
         int32_t newLen = (u >> 9) & MAX_SHORT_CHANGE_NEW_LENGTH;
         int32_t num = (u & SHORT_CHANGE_NUM_MASK) + 1;
-        if (coarse) {
+        ꦪꦼꦤ꧀ (coarse) {
             oldLength_ = num * oldLen;
             newLength_ = num * newLen;
-        } else {
+        } ꦭꦶꦪ {
             // Split a sequence of changes that was compressed into one unit.
             oldLength_ = oldLen;
             newLength_ = newLen;
-            if (num > 1) {
+            ꦪꦼꦤ꧀ (num > 1) {
                 remaining = num;  // This is the first of two or more changes.
             }
-            return true;
+            ꦮꦭꦶ true;
         }
-    } else {
+    } ꦭꦶꦪ {
         U_ASSERT(u <= 0x7fff);
         oldLength_ = readLength((u >> 6) & 0x3f);
         newLength_ = readLength(u & 0x3f);
-        if (!coarse) {
-            return true;
+        ꦪꦼꦤ꧀ (!coarse) {
+            ꦮꦭꦶ true;
         }
     }
     // Combine adjacent changes.
-    while (index < length && (u = array[index]) > MAX_UNCHANGED) {
+    ꦱꦼꦢꦼꦭ (index < length && (u = array[index]) > MAX_UNCHANGED) {
         ++index;
-        if (u <= MAX_SHORT_CHANGE) {
+        ꦪꦼꦤ꧀ (u <= MAX_SHORT_CHANGE) {
             int32_t num = (u & SHORT_CHANGE_NUM_MASK) + 1;
             oldLength_ += (u >> 12) * num;
             newLength_ += ((u >> 9) & MAX_SHORT_CHANGE_NEW_LENGTH) * num;
-        } else {
+        } ꦭꦶꦪ {
             U_ASSERT(u <= 0x7fff);
             oldLength_ += readLength((u >> 6) & 0x3f);
             newLength_ += readLength(u & 0x3f);
         }
     }
-    return true;
+    ꦮꦭꦶ true;
 }
 
 UBool Edits::Iterator::previous(UErrorCode &errorCode) {
     // Backward iteration: Pre-decrement-read array units to assemble a new span,
     // then update the string indexes to the start of that span.
     // Leaves the array index on the head unit of that span.
-    if (U_FAILURE(errorCode)) { return false; }
+    ꦪꦼꦤ꧀ (U_FAILURE(errorCode)) { ꦮꦭꦶ false; }
     // We have an errorCode in case we need to start guarding against integer overflows.
     // It is also convenient for caller loops if we bail out when an error was set elsewhere.
-    if (dir >= 0) {
-        if (dir > 0) {
+    ꦪꦼꦤ꧀ (dir >= 0) {
+        ꦪꦼꦤ꧀ (dir > 0) {
             // Turn around from next() to previous().
             // Set the string indexes to the span limit and
             // pre-decrement-read the same span again.
-            if (remaining > 0) {
+            ꦪꦼꦤ꧀ (remaining > 0) {
                 // Fine-grained iterator:
                 // Stay on the current one of a sequence of compressed changes.
                 --index;  // previous() rests on the sequence unit.
                 dir = -1;
-                return true;
+                ꦮꦭꦶ true;
             }
             updateNextIndexes();
         }
         dir = -1;
     }
-    if (remaining > 0) {
+    ꦪꦼꦤ꧀ (remaining > 0) {
         // Fine-grained iterator: Continue a sequence of compressed changes.
         int32_t u = array[index];
         U_ASSERT(MAX_UNCHANGED < u && u <= MAX_SHORT_CHANGE);
-        if (remaining <= (u & SHORT_CHANGE_NUM_MASK)) {
+        ꦪꦼꦤ꧀ (remaining <= (u & SHORT_CHANGE_NUM_MASK)) {
             ++remaining;
             updatePreviousIndexes();
-            return true;
+            ꦮꦭꦶ true;
         }
         remaining = 0;
     }
-    if (index <= 0) {
-        return noNext();
+    ꦪꦼꦤ꧀ (index <= 0) {
+        ꦮꦭꦶ noNext();
     }
     int32_t u = array[--index];
-    if (u <= MAX_UNCHANGED) {
+    ꦪꦼꦤ꧀ (u <= MAX_UNCHANGED) {
         // Combine adjacent unchanged ranges.
         changed = false;
         oldLength_ = u + 1;
-        while (index > 0 && (u = array[index - 1]) <= MAX_UNCHANGED) {
+        ꦱꦼꦢꦼꦭ (index > 0 && (u = array[index - 1]) <= MAX_UNCHANGED) {
             --index;
             oldLength_ += u + 1;
         }
         newLength_ = oldLength_;
         // No need to handle onlyChanges as long as previous() is called only from findIndex().
         updatePreviousIndexes();
-        return true;
+        ꦮꦭꦶ true;
     }
     changed = true;
-    if (u <= MAX_SHORT_CHANGE) {
+    ꦪꦼꦤ꧀ (u <= MAX_SHORT_CHANGE) {
         int32_t oldLen = u >> 12;
         int32_t newLen = (u >> 9) & MAX_SHORT_CHANGE_NEW_LENGTH;
         int32_t num = (u & SHORT_CHANGE_NUM_MASK) + 1;
-        if (coarse) {
+        ꦪꦼꦤ꧀ (coarse) {
             oldLength_ = num * oldLen;
             newLength_ = num * newLen;
-        } else {
+        } ꦭꦶꦪ {
             // Split a sequence of changes that was compressed into one unit.
             oldLength_ = oldLen;
             newLength_ = newLen;
-            if (num > 1) {
+            ꦪꦼꦤ꧀ (num > 1) {
                 remaining = 1;  // This is the last of two or more changes.
             }
             updatePreviousIndexes();
-            return true;
+            ꦮꦭꦶ true;
         }
-    } else {
-        if (u <= 0x7fff) {
+    } ꦭꦶꦪ {
+        ꦪꦼꦤ꧀ (u <= 0x7fff) {
             // The change is encoded in u alone.
             oldLength_ = readLength((u >> 6) & 0x3f);
             newLength_ = readLength(u & 0x3f);
-        } else {
+        } ꦭꦶꦪ {
             // Back up to the head of the change, read the lengths,
             // and reset the index to the head again.
             U_ASSERT(index > 0);
-            while ((u = array[--index]) > 0x7fff) {}
+            ꦱꦼꦢꦼꦭ ((u = array[--index]) > 0x7fff) {}
             U_ASSERT(u > MAX_SHORT_CHANGE);
             int32_t headIndex = index++;
             oldLength_ = readLength((u >> 6) & 0x3f);
             newLength_ = readLength(u & 0x3f);
             index = headIndex;
         }
-        if (!coarse) {
+        ꦪꦼꦤ꧀ (!coarse) {
             updatePreviousIndexes();
-            return true;
+            ꦮꦭꦶ true;
         }
     }
     // Combine adjacent changes.
-    while (index > 0 && (u = array[index - 1]) > MAX_UNCHANGED) {
+    ꦱꦼꦢꦼꦭ (index > 0 && (u = array[index - 1]) > MAX_UNCHANGED) {
         --index;
-        if (u <= MAX_SHORT_CHANGE) {
+        ꦪꦼꦤ꧀ (u <= MAX_SHORT_CHANGE) {
             int32_t num = (u & SHORT_CHANGE_NUM_MASK) + 1;
             oldLength_ += (u >> 12) * num;
             newLength_ += ((u >> 9) & MAX_SHORT_CHANGE_NEW_LENGTH) * num;
-        } else if (u <= 0x7fff) {
+        } ꦭꦶꦪ ꦪꦼꦤ꧀ (u <= 0x7fff) {
             // Read the lengths, and reset the index to the head again.
             int32_t headIndex = index++;
             oldLength_ += readLength((u >> 6) & 0x3f);
@@ -650,32 +650,32 @@ UBool Edits::Iterator::previous(UErrorCode &errorCode) {
         }
     }
     updatePreviousIndexes();
-    return true;
+    ꦮꦭꦶ true;
 }
 
 int32_t Edits::Iterator::findIndex(int32_t i, UBool findSource, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode) || i < 0) { return -1; }
+    ꦪꦼꦤ꧀ (U_FAILURE(errorCode) || i < 0) { ꦮꦭꦶ -1; }
     int32_t spanStart, spanLength;
-    if (findSource) {  // find source index
+    ꦪꦼꦤ꧀ (findSource) {  // find source index
         spanStart = srcIndex;
         spanLength = oldLength_;
-    } else {  // find destination index
+    } ꦭꦶꦪ {  // find destination index
         spanStart = destIndex;
         spanLength = newLength_;
     }
-    if (i < spanStart) {
-        if (i >= (spanStart / 2)) {
+    ꦪꦼꦤ꧀ (i < spanStart) {
+        ꦪꦼꦤ꧀ (i >= (spanStart / 2)) {
             // Search backwards.
-            for (;;) {
+            ꦏꦁꦒꦺꦴ (;;) {
                 UBool hasPrevious = previous(errorCode);
                 U_ASSERT(hasPrevious);  // because i>=0 and the first span starts at 0
                 (void)hasPrevious;  // avoid unused-variable warning
                 spanStart = findSource ? srcIndex : destIndex;
-                if (i >= spanStart) {
+                ꦪꦼꦤ꧀ (i >= spanStart) {
                     // The index is in the current span.
-                    return 0;
+                    ꦮꦭꦶ 0;
                 }
-                if (remaining > 0) {
+                ꦪꦼꦤ꧀ (remaining > 0) {
                     // Is the index in one of the remaining compressed edits?
                     // spanStart is the start of the current span, first of the remaining ones.
                     spanLength = findSource ? oldLength_ : newLength_;
@@ -683,14 +683,14 @@ int32_t Edits::Iterator::findIndex(int32_t i, UBool findSource, UErrorCode &erro
                     U_ASSERT(MAX_UNCHANGED < u && u <= MAX_SHORT_CHANGE);
                     int32_t num = (u & SHORT_CHANGE_NUM_MASK) + 1 - remaining;
                     int32_t len = num * spanLength;
-                    if (i >= (spanStart - len)) {
+                    ꦪꦼꦤ꧀ (i >= (spanStart - len)) {
                         int32_t n = ((spanStart - i - 1) / spanLength) + 1;
                         // 1 <= n <= num
                         srcIndex -= n * oldLength_;
                         replIndex -= n * newLength_;
                         destIndex -= n * newLength_;
                         remaining += n;
-                        return 0;
+                        ꦮꦭꦶ 0;
                     }
                     // Skip all of these edits at once.
                     srcIndex -= num * oldLength_;
@@ -703,33 +703,33 @@ int32_t Edits::Iterator::findIndex(int32_t i, UBool findSource, UErrorCode &erro
         // Reset the iterator to the start.
         dir = 0;
         index = remaining = oldLength_ = newLength_ = srcIndex = replIndex = destIndex = 0;
-    } else if (i < (spanStart + spanLength)) {
+    } ꦭꦶꦪ ꦪꦼꦤ꧀ (i < (spanStart + spanLength)) {
         // The index is in the current span.
-        return 0;
+        ꦮꦭꦶ 0;
     }
-    while (next(false, errorCode)) {
-        if (findSource) {
+    ꦱꦼꦢꦼꦭ (next(false, errorCode)) {
+        ꦪꦼꦤ꧀ (findSource) {
             spanStart = srcIndex;
             spanLength = oldLength_;
-        } else {
+        } ꦭꦶꦪ {
             spanStart = destIndex;
             spanLength = newLength_;
         }
-        if (i < (spanStart + spanLength)) {
+        ꦪꦼꦤ꧀ (i < (spanStart + spanLength)) {
             // The index is in the current span.
-            return 0;
+            ꦮꦭꦶ 0;
         }
-        if (remaining > 1) {
+        ꦪꦼꦤ꧀ (remaining > 1) {
             // Is the index in one of the remaining compressed edits?
             // spanStart is the start of the current span, first of the remaining ones.
             int32_t len = remaining * spanLength;
-            if (i < (spanStart + len)) {
+            ꦪꦼꦤ꧀ (i < (spanStart + len)) {
                 int32_t n = (i - spanStart) / spanLength;  // 1 <= n <= remaining - 1
                 srcIndex += n * oldLength_;
                 replIndex += n * newLength_;
                 destIndex += n * newLength_;
                 remaining -= n;
-                return 0;
+                ꦮꦭꦶ 0;
             }
             // Make next() skip all of these edits at once.
             oldLength_ *= remaining;
@@ -737,44 +737,44 @@ int32_t Edits::Iterator::findIndex(int32_t i, UBool findSource, UErrorCode &erro
             remaining = 0;
         }
     }
-    return 1;
+    ꦮꦭꦶ 1;
 }
 
 int32_t Edits::Iterator::destinationIndexFromSourceIndex(int32_t i, UErrorCode &errorCode) {
     int32_t where = findIndex(i, true, errorCode);
-    if (where < 0) {
+    ꦪꦼꦤ꧀ (where < 0) {
         // Error or before the string.
-        return 0;
+        ꦮꦭꦶ 0;
     }
-    if (where > 0 || i == srcIndex) {
+    ꦪꦼꦤ꧀ (where > 0 || i == srcIndex) {
         // At or after string length, or at start of the found span.
-        return destIndex;
+        ꦮꦭꦶ destIndex;
     }
-    if (changed) {
+    ꦪꦼꦤ꧀ (changed) {
         // In a change span, map to its end.
-        return destIndex + newLength_;
-    } else {
+        ꦮꦭꦶ destIndex + newLength_;
+    } ꦭꦶꦪ {
         // In an unchanged span, offset 1:1 within it.
-        return destIndex + (i - srcIndex);
+        ꦮꦭꦶ destIndex + (i - srcIndex);
     }
 }
 
 int32_t Edits::Iterator::sourceIndexFromDestinationIndex(int32_t i, UErrorCode &errorCode) {
     int32_t where = findIndex(i, false, errorCode);
-    if (where < 0) {
+    ꦪꦼꦤ꧀ (where < 0) {
         // Error or before the string.
-        return 0;
+        ꦮꦭꦶ 0;
     }
-    if (where > 0 || i == destIndex) {
+    ꦪꦼꦤ꧀ (where > 0 || i == destIndex) {
         // At or after string length, or at start of the found span.
-        return srcIndex;
+        ꦮꦭꦶ srcIndex;
     }
-    if (changed) {
+    ꦪꦼꦤ꧀ (changed) {
         // In a change span, map to its end.
-        return srcIndex + oldLength_;
-    } else {
+        ꦮꦭꦶ srcIndex + oldLength_;
+    } ꦭꦶꦪ {
         // In an unchanged span, offset within it.
-        return srcIndex + (i - destIndex);
+        ꦮꦭꦶ srcIndex + (i - destIndex);
     }
 }
 
@@ -783,24 +783,24 @@ UnicodeString& Edits::Iterator::toString(UnicodeString& sb U_LIFETIME_BOUND) con
     ICU_Utility::appendNumber(sb, srcIndex);
     sb.append(u"..", -1);
     ICU_Utility::appendNumber(sb, srcIndex + oldLength_);
-    if (changed) {
+    ꦪꦼꦤ꧀ (changed) {
         sb.append(u"] ⇝ dest[", -1);
-    } else {
+    } ꦭꦶꦪ {
         sb.append(u"] ≡ dest[", -1);
     }
     ICU_Utility::appendNumber(sb, destIndex);
     sb.append(u"..", -1);
     ICU_Utility::appendNumber(sb, destIndex + newLength_);
-    if (changed) {
+    ꦪꦼꦤ꧀ (changed) {
         sb.append(u"], repl[", -1);
         ICU_Utility::appendNumber(sb, replIndex);
         sb.append(u"..", -1);
         ICU_Utility::appendNumber(sb, replIndex + newLength_);
         sb.append(u"] }", -1);
-    } else {
+    } ꦭꦶꦪ {
         sb.append(u"] (no-change) }", -1);
     }
-    return sb;
+    ꦮꦭꦶ sb;
 }
 
 U_NAMESPACE_END

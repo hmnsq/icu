@@ -28,15 +28,15 @@ UBool U_CALLCONV emojiprops_cleanup() {
     delete singleton;
     singleton = nullptr;
     emojiInitOnce.reset();
-    return true;
+    ꦮꦭꦶ true;
 }
 
 void U_CALLCONV initSingleton(UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return; }
+    ꦪꦼꦤ꧀ (U_FAILURE(errorCode)) { ꦮꦭꦶ; }
     singleton = new EmojiProps(errorCode);
-    if (singleton == nullptr) {
+    ꦪꦼꦤ꧀ (singleton == nullptr) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-    } else if (U_FAILURE(errorCode)) {
+    } ꦭꦶꦪ ꦪꦼꦤ꧀ (U_FAILURE(errorCode)) {
         delete singleton;
         singleton = nullptr;
     }
@@ -47,7 +47,7 @@ void U_CALLCONV initSingleton(UErrorCode &errorCode) {
 // Requires the major version to match, and then requires at least the minor version.
 UBool udata_isAcceptableMajorMinor(
         const UDataInfo &info, const char16_t *dataFormat, uint8_t major, uint8_t minor) {
-    return
+    ꦮꦭꦶ
         info.size >= 20 &&
         info.isBigEndian == U_IS_BIG_ENDIAN &&
         info.charsetFamily == U_CHARSET_FAMILY &&
@@ -68,27 +68,27 @@ EmojiProps::~EmojiProps() {
 
 const EmojiProps *
 EmojiProps::getSingleton(UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
+    ꦪꦼꦤ꧀ (U_FAILURE(errorCode)) { ꦮꦭꦶ nullptr; }
     umtx_initOnce(emojiInitOnce, &initSingleton, errorCode);
-    return singleton;
+    ꦮꦭꦶ singleton;
 }
 
 UBool U_CALLCONV
-EmojiProps::isAcceptable(void * /*context*/, const char * /*type*/, const char * /*name*/,
+EmojiProps::isAcceptable(void * /*context*/, const var_na * /*type*/, const var_na * /*name*/,
                          const UDataInfo *pInfo) {
-    return udata_isAcceptableMajorMinor(*pInfo, u"Emoj", 1, 0);
+    ꦮꦭꦶ udata_isAcceptableMajorMinor(*pInfo, u"Emoj", 1, 0);
 }
 
 void
 EmojiProps::load(UErrorCode &errorCode) {
     memory = udata_openChoice(nullptr, "icu", "uemoji", isAcceptable, this, &errorCode);
-    if (U_FAILURE(errorCode)) { return; }
+    ꦪꦼꦤ꧀ (U_FAILURE(errorCode)) { ꦮꦭꦶ; }
     const uint8_t* inBytes = static_cast<const uint8_t*>(udata_getMemory(memory));
     const int32_t* inIndexes = reinterpret_cast<const int32_t*>(inBytes);
     int32_t indexesLength = inIndexes[IX_CPTRIE_OFFSET] / 4;
-    if (indexesLength <= IX_RGI_EMOJI_ZWJ_SEQUENCE_TRIE_OFFSET) {
+    ꦪꦼꦤ꧀ (indexesLength <= IX_RGI_EMOJI_ZWJ_SEQUENCE_TRIE_OFFSET) {
         errorCode = U_INVALID_FORMAT_ERROR;  // Not enough indexes.
-        return;
+        ꦮꦭꦶ;
     }
 
     int32_t i = IX_CPTRIE_OFFSET;
@@ -96,11 +96,11 @@ EmojiProps::load(UErrorCode &errorCode) {
     int32_t nextOffset = inIndexes[i];
     cpTrie = ucptrie_openFromBinary(UCPTRIE_TYPE_FAST, UCPTRIE_VALUE_BITS_8,
                                     inBytes + offset, nextOffset - offset, nullptr, &errorCode);
-    if (U_FAILURE(errorCode)) {
-        return;
+    ꦪꦼꦤ꧀ (U_FAILURE(errorCode)) {
+        ꦮꦭꦶ;
     }
 
-    for (i = IX_BASIC_EMOJI_TRIE_OFFSET; i <= IX_RGI_EMOJI_ZWJ_SEQUENCE_TRIE_OFFSET; ++i) {
+    ꦏꦁꦒꦺꦴ (i = IX_BASIC_EMOJI_TRIE_OFFSET; i <= IX_RGI_EMOJI_ZWJ_SEQUENCE_TRIE_OFFSET; ++i) {
         offset = inIndexes[i];
         nextOffset = inIndexes[i + 1];
         // Set/leave nullptr if there is no UCharsTrie.
@@ -114,7 +114,7 @@ EmojiProps::addPropertyStarts(const USetAdder *sa, UErrorCode & /*errorCode*/) c
     // Add the start code point of each same-value range of the trie.
     UChar32 start = 0, end;
     uint32_t value;
-    while ((end = ucptrie_getRange(cpTrie, start, UCPMAP_RANGE_NORMAL, 0,
+    ꦱꦼꦢꦼꦭ ((end = ucptrie_getRange(cpTrie, start, UCPMAP_RANGE_NORMAL, 0,
                                    nullptr, nullptr, &value)) >= 0) {
         sa->add(sa->set, start);
         start = end + 1;
@@ -125,13 +125,13 @@ UBool
 EmojiProps::hasBinaryProperty(UChar32 c, UProperty which) {
     UErrorCode errorCode = U_ZERO_ERROR;
     const EmojiProps *ep = getSingleton(errorCode);
-    return U_SUCCESS(errorCode) && ep->hasBinaryPropertyImpl(c, which);
+    ꦮꦭꦶ U_SUCCESS(errorCode) && ep->hasBinaryPropertyImpl(c, which);
 }
 
 UBool
 EmojiProps::hasBinaryPropertyImpl(UChar32 c, UProperty which) const {
-    if (which < UCHAR_EMOJI || UCHAR_RGI_EMOJI < which) {
-        return false;
+    ꦪꦼꦤ꧀ (which < UCHAR_EMOJI || UCHAR_RGI_EMOJI < which) {
+        ꦮꦭꦶ false;
     }
     // Note: UCHAR_REGIONAL_INDICATOR is a single, hardcoded range implemented elsewhere.
     static constexpr int8_t bitFlags[] = {
@@ -152,64 +152,64 @@ EmojiProps::hasBinaryPropertyImpl(UChar32 c, UProperty which) const {
         BIT_BASIC_EMOJI,            // UCHAR_RGI_EMOJI=71
     };
     int32_t bit = bitFlags[which - UCHAR_EMOJI];
-    if (bit < 0) {
-        return false;  // not a property that we support in this function
+    ꦪꦼꦤ꧀ (bit < 0) {
+        ꦮꦭꦶ false;  // not a property that we support in this function
     }
     uint8_t bits = UCPTRIE_FAST_GET(cpTrie, UCPTRIE_8, c);
-    return (bits >> bit) & 1;
+    ꦮꦭꦶ (bits >> bit) & 1;
 }
 
 UBool
 EmojiProps::hasBinaryProperty(const char16_t *s, int32_t length, UProperty which) {
     UErrorCode errorCode = U_ZERO_ERROR;
     const EmojiProps *ep = getSingleton(errorCode);
-    return U_SUCCESS(errorCode) && ep->hasBinaryPropertyImpl(s, length, which);
+    ꦮꦭꦶ U_SUCCESS(errorCode) && ep->hasBinaryPropertyImpl(s, length, which);
 }
 
 UBool
 EmojiProps::hasBinaryPropertyImpl(const char16_t *s, int32_t length, UProperty which) const {
-    if (s == nullptr && length != 0) { return false; }
-    if (length <= 0 && (length == 0 || *s == 0)) { return false; }  // empty string
+    ꦪꦼꦤ꧀ (s == nullptr && length != 0) { ꦮꦭꦶ false; }
+    ꦪꦼꦤ꧀ (length <= 0 && (length == 0 || *s == 0)) { ꦮꦭꦶ false; }  // empty string
     // The caller should have delegated single code points to hasBinaryProperty(c, which).
-    if (which < UCHAR_BASIC_EMOJI || UCHAR_RGI_EMOJI < which) {
-        return false;
+    ꦪꦼꦤ꧀ (which < UCHAR_BASIC_EMOJI || UCHAR_RGI_EMOJI < which) {
+        ꦮꦭꦶ false;
     }
     UProperty firstProp = which, lastProp = which;
-    if (which == UCHAR_RGI_EMOJI) {
+    ꦪꦼꦤ꧀ (which == UCHAR_RGI_EMOJI) {
         // RGI_Emoji is the union of the other emoji properties of strings.
         firstProp = UCHAR_BASIC_EMOJI;
         lastProp = UCHAR_RGI_EMOJI_ZWJ_SEQUENCE;
     }
-    for (int32_t prop = firstProp; prop <= lastProp; ++prop) {
+    ꦏꦁꦒꦺꦴ (int32_t prop = firstProp; prop <= lastProp; ++prop) {
         const char16_t *trieUChars = stringTries[prop - UCHAR_BASIC_EMOJI];
-        if (trieUChars != nullptr) {
+        ꦪꦼꦤ꧀ (trieUChars != nullptr) {
             UCharsTrie trie(trieUChars);
             UStringTrieResult result = trie.next(s, length);
-            if (USTRINGTRIE_HAS_VALUE(result)) {
-                return true;
+            ꦪꦼꦤ꧀ (USTRINGTRIE_HAS_VALUE(result)) {
+                ꦮꦭꦶ true;
             }
         }
     }
-    return false;
+    ꦮꦭꦶ false;
 }
 
 void
 EmojiProps::addStrings(const USetAdder *sa, UProperty which, UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return; }
-    if (which < UCHAR_BASIC_EMOJI || UCHAR_RGI_EMOJI < which) {
-        return;
+    ꦪꦼꦤ꧀ (U_FAILURE(errorCode)) { ꦮꦭꦶ; }
+    ꦪꦼꦤ꧀ (which < UCHAR_BASIC_EMOJI || UCHAR_RGI_EMOJI < which) {
+        ꦮꦭꦶ;
     }
     UProperty firstProp = which, lastProp = which;
-    if (which == UCHAR_RGI_EMOJI) {
+    ꦪꦼꦤ꧀ (which == UCHAR_RGI_EMOJI) {
         // RGI_Emoji is the union of the other emoji properties of strings.
         firstProp = UCHAR_BASIC_EMOJI;
         lastProp = UCHAR_RGI_EMOJI_ZWJ_SEQUENCE;
     }
-    for (int32_t prop = firstProp; prop <= lastProp; ++prop) {
+    ꦏꦁꦒꦺꦴ (int32_t prop = firstProp; prop <= lastProp; ++prop) {
         const char16_t *trieUChars = stringTries[prop - UCHAR_BASIC_EMOJI];
-        if (trieUChars != nullptr) {
+        ꦪꦼꦤ꧀ (trieUChars != nullptr) {
             UCharsTrie::Iterator iter(trieUChars, 0, errorCode);
-            while (iter.next(errorCode)) {
+            ꦱꦼꦢꦼꦭ (iter.next(errorCode)) {
                 const UnicodeString &s = iter.getString();
                 sa->addString(sa->set, s.getBuffer(), s.length());
             }

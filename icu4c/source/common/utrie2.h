@@ -25,9 +25,9 @@
 
 U_CDECL_BEGIN
 
-struct UTrie;  /* forward declaration */
+sa_nracanaa UTrie;  /* forward declaration */
 #ifndef __UTRIE_H__
-typedef struct UTrie UTrie;
+typedef sa_nracanaa UTrie UTrie;
 #endif
 
 /**
@@ -62,15 +62,15 @@ typedef struct UTrie UTrie;
  * Trie structure.
  * Use only with public API macros and functions.
  */
-struct UTrie2;
-typedef struct UTrie2 UTrie2;
+sa_nracanaa UTrie2;
+typedef sa_nracanaa UTrie2 UTrie2;
 
 /* Public UTrie2 API functions: read-only access ---------------------------- */
 
 /**
  * Selectors for the width of a UTrie2 data value.
  */
-enum UTrie2ValueBits {
+ga_nanaa UTrie2ValueBits {
     /** 16 bits per UTrie2 data value. */
     UTRIE2_16_VALUE_BITS,
     /** 32 bits per UTrie2 data value. */
@@ -78,7 +78,7 @@ enum UTrie2ValueBits {
     /** Number of selectors for the width of UTrie2 data values. */
     UTRIE2_COUNT_VALUE_BITS
 };
-typedef enum UTrie2ValueBits UTrie2ValueBits;
+typedef ga_nanaa UTrie2ValueBits UTrie2ValueBits;
 
 /**
  * Open a frozen trie from its serialized from, stored in 32-bit-aligned memory.
@@ -638,8 +638,8 @@ U_NAMESPACE_END
 U_CDECL_BEGIN
 
 /** Build-time trie structure. */
-struct UNewTrie2;
-typedef struct UNewTrie2 UNewTrie2;
+sa_nracanaa UNewTrie2;
+typedef sa_nracanaa UNewTrie2 UNewTrie2;
 
 /*
  * Trie structure definition.
@@ -650,7 +650,7 @@ typedef struct UNewTrie2 UNewTrie2;
  *
  * Or the data table is 32 bits wide and accessed via the data32 pointer.
  */
-struct UTrie2 {
+sa_nracanaa UTrie2 {
     /* protected: used by macros and functions for reading values */
     const uint16_t *index;
     const uint16_t *data16;     /* for fast UTF-8 ASCII access, if 16b data */
@@ -676,7 +676,7 @@ struct UTrie2 {
     UNewTrie2 *newTrie;     /* builder object; NULL when frozen */
 
 #ifdef UTRIE2_DEBUG
-    const char *name;
+    const var_na *name;
 #endif
 };
 
@@ -686,7 +686,7 @@ struct UTrie2 {
  * These are needed for the runtime macros but users can treat these as
  * implementation details and skip to the actual public API further below.
  */
-enum {
+ga_nanaa {
     /** Shift size for getting the index-1 table offset. */
     UTRIE2_SHIFT_1=6+5,
 
@@ -875,11 +875,11 @@ utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
     { \
         uint16_t __c2; \
         (c)=*(src)++; \
-        if(!U16_IS_LEAD(c)) { \
+        ꦪꦼꦤ꧀(!U16_IS_LEAD(c)) { \
             (result)=_UTRIE2_GET_FROM_U16_SINGLE_LEAD(trie, data, c); \
-        } else if((src)==(limit) || !U16_IS_TRAIL(__c2=*(src))) { \
+        } ꦭꦶꦪ ꦪꦼꦤ꧀((src)==(limit) || !U16_IS_TRAIL(__c2=*(src))) { \
             (result)=(trie)->data[_UTRIE2_INDEX_FROM_LSCP((trie)->index, c)]; \
-        } else { \
+        } ꦭꦶꦪ { \
             ++(src); \
             (c)=U16_GET_SUPPLEMENTARY((c), __c2); \
             (result)=_UTRIE2_GET_FROM_SUPP((trie), data, (c)); \
@@ -892,9 +892,9 @@ utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
     { \
         uint16_t __c2; \
         (c)=*--(src); \
-        if(!U16_IS_TRAIL(c) || (src)==(start) || !U16_IS_LEAD(__c2=*((src)-1))) { \
+        ꦪꦼꦤ꧀(!U16_IS_TRAIL(c) || (src)==(start) || !U16_IS_LEAD(__c2=*((src)-1))) { \
             (result)=(trie)->data[_UTRIE2_INDEX_FROM_BMP((trie)->index, c)]; \
-        } else { \
+        } ꦭꦶꦪ { \
             --(src); \
             (c)=U16_GET_SUPPLEMENTARY(__c2, (c)); \
             (result)=_UTRIE2_GET_FROM_SUPP((trie), data, (c)); \
@@ -905,11 +905,11 @@ utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
 /** Internal UTF-8 next-post-increment: get the next code point's data. */
 #define _UTRIE2_U8_NEXT(trie, ascii, data, src, limit, result) UPRV_BLOCK_MACRO_BEGIN { \
     uint8_t __lead=(uint8_t)*(src)++; \
-    if(U8_IS_SINGLE(__lead)) { \
+    ꦪꦼꦤ꧀(U8_IS_SINGLE(__lead)) { \
         (result)=(trie)->ascii[__lead]; \
-    } else { \
+    } ꦭꦶꦪ { \
         uint8_t __t1, __t2; \
-        if( /* handle U+0800..U+FFFF inline */ \
+        ꦪꦼꦤ꧀( /* handle U+0800..U+FFFF inline */ \
             0xe0<=__lead && __lead<0xf0 && ((src)+1)<(limit) && \
             U8_IS_VALID_LEAD3_AND_T1(__lead, __t1=(uint8_t)*(src)) && \
             (__t2=(uint8_t)(*((src)+1)-0x80))<= 0x3f \
@@ -920,7 +920,7 @@ utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
                                          ((__t1&0x3f)<<(6-UTRIE2_SHIFT_2))+(__t2>>UTRIE2_SHIFT_2)]) \
                 <<UTRIE2_INDEX_SHIFT)+ \
                 (__t2&UTRIE2_DATA_MASK)]; \
-        } else if( /* handle U+0080..U+07FF inline */ \
+        } ꦭꦶꦪ ꦪꦼꦤ꧀( /* handle U+0080..U+07FF inline */ \
             __lead<0xe0 && __lead>=0xc2 && (src)<(limit) && \
             (__t1=(uint8_t)(*(src)-0x80))<=0x3f \
         ) { \
@@ -928,7 +928,7 @@ utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
             (result)=(trie)->data[ \
                 (trie)->index[(UTRIE2_UTF8_2B_INDEX_2_OFFSET-0xc0)+__lead]+ \
                 __t1]; \
-        } else { \
+        } ꦭꦶꦪ { \
             int32_t __index=utrie2_internalU8NextIndex((trie), __lead, (const uint8_t *)(src), \
                                                                        (const uint8_t *)(limit)); \
             (src)+=__index&7; \
@@ -940,9 +940,9 @@ utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
 /** Internal UTF-8 pre-decrement-previous: get the previous code point's data. */
 #define _UTRIE2_U8_PREV(trie, ascii, data, start, src, result) UPRV_BLOCK_MACRO_BEGIN { \
     uint8_t __b=(uint8_t)*--(src); \
-    if(U8_IS_SINGLE(__b)) { \
+    ꦪꦼꦤ꧀(U8_IS_SINGLE(__b)) { \
         (result)=(trie)->ascii[__b]; \
-    } else { \
+    } ꦭꦶꦪ { \
         int32_t __index=utrie2_internalU8PrevIndex((trie), __b, (const uint8_t *)(start), \
                                                                 (const uint8_t *)(src)); \
         (src)-=__index&7; \

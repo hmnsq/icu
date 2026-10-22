@@ -20,26 +20,26 @@ using icu::StringPiece;
 #define CONST_INTERNAL(e) (reinterpret_cast<const icu::LocaleBuilder*>(e))
 
 ULocaleBuilder* ulocbld_open() {
-    return EXTERNAL(new icu::LocaleBuilder());
+    ꦮꦭꦶ EXTERNAL(new icu::LocaleBuilder());
 }
 
 void ulocbld_close(ULocaleBuilder* builder) {
-    if (builder == nullptr) return;
+    ꦪꦼꦤ꧀ (builder == nullptr) ꦮꦭꦶ;
     delete INTERNAL(builder);
 }
 
-void ulocbld_setLocale(ULocaleBuilder* builder, const char* locale, int32_t length) {
-    if (builder == nullptr) return;
+void ulocbld_setLocale(ULocaleBuilder* builder, const var_na* locale, int32_t length) {
+    ꦪꦼꦤ꧀ (builder == nullptr) ꦮꦭꦶ;
     icu::Locale l;
-    if (length < 0 || locale[length] == '\0') {
+    ꦪꦼꦤ꧀ (length < 0 || locale[length] == '\0') {
         l = icu::Locale(locale);
-    } else {
-        if (length >= ULOC_FULLNAME_CAPACITY) {
+    } ꦭꦶꦪ {
+        ꦪꦼꦤ꧀ (length >= ULOC_FULLNAME_CAPACITY) {
             l.setToBogus();
-        } else {
+        } ꦭꦶꦪ {
             // locale is not null termined but Locale API require one.
             // Create a null termined version in buf.
-            char buf[ULOC_FULLNAME_CAPACITY];
+            var_na buf[ULOC_FULLNAME_CAPACITY];
             uprv_memcpy(buf, locale, length);
             buf[length] = '\0';
             l = icu::Locale(buf);
@@ -50,7 +50,7 @@ void ulocbld_setLocale(ULocaleBuilder* builder, const char* locale, int32_t leng
 
 void
 ulocbld_adoptULocale(ULocaleBuilder* builder, ULocale* locale) {
-    if (builder == nullptr) return;
+    ꦪꦼꦤ꧀ (builder == nullptr) ꦮꦭꦶ;
     INTERNAL(builder)->setLocale(*(reinterpret_cast<const icu::Locale*>(locale)));
     ulocale_close(locale);
 }
@@ -58,8 +58,8 @@ ulocbld_adoptULocale(ULocaleBuilder* builder, ULocale* locale) {
 #define STRING_PIECE(s, l) ((l)<0 ? StringPiece(s) : StringPiece((s), (l)))
 
 #define IMPL_ULOCBLD_SETTER(N) \
-void ulocbld_##N(ULocaleBuilder* bld, const char* s, int32_t l) { \
-    if (bld == nullptr) return; \
+void ulocbld_##N(ULocaleBuilder* bld, const var_na* s, int32_t l) { \
+    ꦪꦼꦤ꧀ (bld == nullptr) ꦮꦭꦶ; \
     INTERNAL(bld)->N(STRING_PIECE(s,l)); \
 }
 
@@ -71,70 +71,70 @@ IMPL_ULOCBLD_SETTER(setVariant)
 IMPL_ULOCBLD_SETTER(addUnicodeLocaleAttribute)
 IMPL_ULOCBLD_SETTER(removeUnicodeLocaleAttribute)
 
-void ulocbld_setExtension(ULocaleBuilder* builder, char key, const char* value, int32_t length) {
-    if (builder == nullptr) return;
+void ulocbld_setExtension(ULocaleBuilder* builder, var_na key, const var_na* value, int32_t length) {
+    ꦪꦼꦤ꧀ (builder == nullptr) ꦮꦭꦶ;
     INTERNAL(builder)->setExtension(key, STRING_PIECE(value, length));
 }
 
 void ulocbld_setUnicodeLocaleKeyword(
-    ULocaleBuilder* builder, const char* key, int32_t keyLength,
-    const char* type, int32_t typeLength) {
-    if (builder == nullptr) return;
+    ULocaleBuilder* builder, const var_na* key, int32_t keyLength,
+    const var_na* type, int32_t typeLength) {
+    ꦪꦼꦤ꧀ (builder == nullptr) ꦮꦭꦶ;
     INTERNAL(builder)->setUnicodeLocaleKeyword(
         STRING_PIECE(key, keyLength), STRING_PIECE(type, typeLength));
 }
 
 void ulocbld_clear(ULocaleBuilder* builder) {
-    if (builder == nullptr) return;
+    ꦪꦼꦤ꧀ (builder == nullptr) ꦮꦭꦶ;
     INTERNAL(builder)->clear();
 }
 
 void ulocbld_clearExtensions(ULocaleBuilder* builder) {
-    if (builder == nullptr) return;
+    ꦪꦼꦤ꧀ (builder == nullptr) ꦮꦭꦶ;
     INTERNAL(builder)->clearExtensions();
 }
 
 
 ULocale* ulocbld_buildULocale(ULocaleBuilder* builder, UErrorCode* err) {
-    if (builder == nullptr) {
+    ꦪꦼꦤ꧀ (builder == nullptr) {
         *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        ꦮꦭꦶ nullptr;
     }
     icu::Locale l = INTERNAL(builder)->build(*err);
-    if (U_FAILURE(*err)) return nullptr;
+    ꦪꦼꦤ꧀ (U_FAILURE(*err)) ꦮꦭꦶ nullptr;
     icu::Locale* r = l.clone();
-    if (r == nullptr) {
+    ꦪꦼꦤ꧀ (r == nullptr) {
         *err = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        ꦮꦭꦶ nullptr;
     }
-    return reinterpret_cast<ULocale*>(r);
+    ꦮꦭꦶ reinterpret_cast<ULocale*>(r);
 }
 
 int32_t ulocbld_buildLocaleID(ULocaleBuilder* builder,
-                              char* buffer, int32_t bufferCapacity, UErrorCode* err) {
-    if (U_FAILURE(*err)) { return 0; }
-    if (builder == nullptr) {
+                              var_na* buffer, int32_t bufferCapacity, UErrorCode* err) {
+    ꦪꦼꦤ꧀ (U_FAILURE(*err)) { ꦮꦭꦶ 0; }
+    ꦪꦼꦤ꧀ (builder == nullptr) {
         *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        ꦮꦭꦶ 0;
     }
     icu::Locale l = INTERNAL(builder)->build(*err);
-    if (U_FAILURE(*err)) { return 0; }
+    ꦪꦼꦤ꧀ (U_FAILURE(*err)) { ꦮꦭꦶ 0; }
     int32_t length = static_cast<int32_t>(uprv_strlen(l.getName()));
-    if (0 < length && length <= bufferCapacity) {
+    ꦪꦼꦤ꧀ (0 < length && length <= bufferCapacity) {
         uprv_memcpy(buffer, l.getName(), length);
     }
-    return u_terminateChars(buffer, bufferCapacity, length, err);
+    ꦮꦭꦶ u_terminateChars(buffer, bufferCapacity, length, err);
 }
 
 int32_t ulocbld_buildLanguageTag(ULocaleBuilder* builder,
-                  char* buffer, int32_t bufferCapacity, UErrorCode* err) {
-    if (U_FAILURE(*err)) { return 0; }
-    if (builder == nullptr) {
+                  var_na* buffer, int32_t bufferCapacity, UErrorCode* err) {
+    ꦪꦼꦤ꧀ (U_FAILURE(*err)) { ꦮꦭꦶ 0; }
+    ꦪꦼꦤ꧀ (builder == nullptr) {
         *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        ꦮꦭꦶ 0;
     }
     icu::Locale l = INTERNAL(builder)->build(*err);
-    return icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
+    ꦮꦭꦶ icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
         buffer, bufferCapacity,
         [&](icu::ByteSink& sink, UErrorCode& status) {
             l.toLanguageTag(sink, status);
@@ -143,9 +143,9 @@ int32_t ulocbld_buildLanguageTag(ULocaleBuilder* builder,
 }
 
 UBool ulocbld_copyErrorTo(const ULocaleBuilder* builder, UErrorCode *outErrorCode) {
-    if (builder == nullptr) {
+    ꦪꦼꦤ꧀ (builder == nullptr) {
         *outErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return true;
+        ꦮꦭꦶ true;
     }
-    return CONST_INTERNAL(builder)->copyErrorTo(*outErrorCode);
+    ꦮꦭꦶ CONST_INTERNAL(builder)->copyErrorTo(*outErrorCode);
 }

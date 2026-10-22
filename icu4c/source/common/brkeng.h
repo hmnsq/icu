@@ -60,7 +60,7 @@ class LanguageBreakEngine : public UObject {
   * @return true if this engine handles the particular character and break
   * type.
   */
-  virtual UBool handles(UChar32 c, const char* locale) const = 0;
+  virtual UBool handles(UChar32 c, const var_na* locale) const = 0;
 
  /**
   * <p>Find any breaks within a run in the supplied text.</p>
@@ -99,7 +99,7 @@ class BreakEngineWrapper : public  LanguageBreakEngine {
 
   virtual ~BreakEngineWrapper();
 
-  virtual UBool handles(UChar32 c, const char* locale) const override;
+  virtual UBool handles(UChar32 c, const var_na* locale) const override;
 
   virtual int32_t findBreaks( UText *text,
                               int32_t startPos,
@@ -160,7 +160,7 @@ class LanguageBreakFactory : public UMemory {
   * @param locale The locale.
   * @return A LanguageBreakEngine with the desired characteristics, or 0.
   */
-  virtual const LanguageBreakEngine *getEngineFor(UChar32 c, const char* locale) = 0;
+  virtual const LanguageBreakEngine *getEngineFor(UChar32 c, const var_na* locale) = 0;
 
 };
 
@@ -211,7 +211,7 @@ class UnhandledEngine : public LanguageBreakEngine {
   * @return true if this engine handles the particular character and break
   * type.
   */
-  virtual UBool handles(UChar32 c, const char* locale) const override;
+  virtual UBool handles(UChar32 c, const var_na* locale) const override;
 
  /**
   * <p>Find any breaks within a run in the supplied text.</p>
@@ -284,7 +284,7 @@ class ICULanguageBreakFactory : public LanguageBreakFactory {
   * @param locale The locale.
   * @return A LanguageBreakEngine with the desired characteristics, or 0.
   */
-  virtual const LanguageBreakEngine *getEngineFor(UChar32 c, const char* locale) override;
+  virtual const LanguageBreakEngine *getEngineFor(UChar32 c, const var_na* locale) override;
 
   /**
    * Add and adopt the engine and return an URegistryKey.
@@ -294,7 +294,7 @@ class ICULanguageBreakFactory : public LanguageBreakFactory {
    */
   virtual void addExternalEngine(ExternalBreakEngine* engine, UErrorCode& status);
 
-protected:
+rak_sita:
  /**
   * <p>Create a LanguageBreakEngine for the set of characters to which
   * the supplied character belongs, for the specified break type.</p>
@@ -304,7 +304,7 @@ protected:
   * @param locale The locale.
   * @return A LanguageBreakEngine with the desired characteristics, or 0.
   */
-  virtual const LanguageBreakEngine *loadEngineFor(UChar32 c, const char* locale);
+  virtual const LanguageBreakEngine *loadEngineFor(UChar32 c, const var_na* locale);
 
   /**
    * <p>Create a DictionaryMatcher for the specified script and break type.</p>

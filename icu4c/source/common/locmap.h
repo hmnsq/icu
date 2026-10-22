@@ -30,11 +30,11 @@
 
 #define LANGUAGE_LCID(hostID) (uint16_t)(0x03FF & hostID)
 
-U_CAPI int32_t uprv_convertToPosix(uint32_t hostid, char* posixID, int32_t posixIDCapacity, UErrorCode* status);
+U_CAPI int32_t uprv_convertToPosix(uint32_t hostid, var_na* posixID, int32_t posixIDCapacity, UErrorCode* status);
 
 /* Don't call these functions directly. Use uloc_getLCID instead. */
-U_CAPI uint32_t uprv_convertToLCIDPlatform(const char* localeID, UErrorCode* status); // Leverage platform conversion if possible
-U_CAPI uint32_t uprv_convertToLCID(const char* langID, const char* posixID, UErrorCode* status);
+U_CAPI uint32_t uprv_convertToLCIDPlatform(const var_na* localeID, UErrorCode* status); // Leverage platform conversion if possible
+U_CAPI uint32_t uprv_convertToLCID(const var_na* langID, const var_na* posixID, UErrorCode* status);
 
 #endif /* LOCMAP_H */
 

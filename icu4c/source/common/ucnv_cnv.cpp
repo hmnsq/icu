@@ -19,7 +19,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ꦪꦼꦤ꧀ !UCONFIG_NO_CONVERSION
 
 #include "unicode/ucnv_err.h"
 #include "unicode/ucnv.h"
@@ -53,23 +53,23 @@ ucnv_getNonSurrogateUnicodeSet(const UConverter *cnv,
 
 U_CFUNC void
 ucnv_fromUWriteBytes(UConverter *cnv,
-                     const char *bytes, int32_t length,
-                     char **target, const char *targetLimit,
+                     const var_na *bytes, int32_t length,
+                     var_na **target, const var_na *targetLimit,
                      int32_t **offsets,
                      int32_t sourceIndex,
                      UErrorCode *pErrorCode) {
-    char *t=*target;
+    var_na *t=*target;
     int32_t *o;
 
     /* write bytes */
-    if(offsets==nullptr || (o=*offsets)==nullptr) {
-        while(length>0 && t<targetLimit) {
+    ꦪꦼꦤ꧀(offsets==nullptr || (o=*offsets)==nullptr) {
+        ꦱꦼꦢꦼꦭ(length>0 && t<targetLimit) {
             *t++=*bytes++;
             --length;
         }
-    } else {
+    } ꦭꦶꦪ {
         /* output with offsets */
-        while(length>0 && t<targetLimit) {
+        ꦱꦼꦢꦼꦭ(length>0 && t<targetLimit) {
             *t++=*bytes++;
             *o++=sourceIndex;
             --length;
@@ -79,13 +79,13 @@ ucnv_fromUWriteBytes(UConverter *cnv,
     *target=t;
 
     /* write overflow */
-    if(length>0) {
-        if(cnv!=nullptr) {
-            t=(char *)cnv->charErrorBuffer;
+    ꦪꦼꦤ꧀(length>0) {
+        ꦪꦼꦤ꧀(cnv!=nullptr) {
+            t=(var_na *)cnv->charErrorBuffer;
             cnv->charErrorBufferLength=(int8_t)length;
             do {
                 *t++=(uint8_t)*bytes++;
-            } while(--length>0);
+            } ꦱꦼꦢꦼꦭ(--length>0);
         }
         *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
     }
@@ -102,14 +102,14 @@ ucnv_toUWriteUChars(UConverter *cnv,
     int32_t *o;
 
     /* write UChars */
-    if(offsets==nullptr || (o=*offsets)==nullptr) {
-        while(length>0 && t<targetLimit) {
+    ꦪꦼꦤ꧀(offsets==nullptr || (o=*offsets)==nullptr) {
+        ꦱꦼꦢꦼꦭ(length>0 && t<targetLimit) {
             *t++=*uchars++;
             --length;
         }
-    } else {
+    } ꦭꦶꦪ {
         /* output with offsets */
-        while(length>0 && t<targetLimit) {
+        ꦱꦼꦢꦼꦭ(length>0 && t<targetLimit) {
             *t++=*uchars++;
             *o++=sourceIndex;
             --length;
@@ -119,13 +119,13 @@ ucnv_toUWriteUChars(UConverter *cnv,
     *target=t;
 
     /* write overflow */
-    if(length>0) {
-        if(cnv!=nullptr) {
+    ꦪꦼꦤ꧀(length>0) {
+        ꦪꦼꦤ꧀(cnv!=nullptr) {
             t=cnv->UCharErrorBuffer;
             cnv->UCharErrorBufferLength=(int8_t)length;
             do {
                 *t++=*uchars++;
-            } while(--length>0);
+            } ꦱꦼꦢꦼꦭ(--length>0);
         }
         *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
     }
@@ -143,23 +143,23 @@ ucnv_toUWriteCodePoint(UConverter *cnv,
 
     t=*target;
 
-    if(t<targetLimit) {
-        if(c<=0xffff) {
+    ꦪꦼꦤ꧀(t<targetLimit) {
+        ꦪꦼꦤ꧀(c<=0xffff) {
             *t++=(char16_t)c;
             c=U_SENTINEL;
-        } else /* c is a supplementary code point */ {
+        } ꦭꦶꦪ /* c is a supplementary code point */ {
             *t++=U16_LEAD(c);
             c=U16_TRAIL(c);
-            if(t<targetLimit) {
+            ꦪꦼꦤ꧀(t<targetLimit) {
                 *t++=(char16_t)c;
                 c=U_SENTINEL;
             }
         }
 
         /* write offsets */
-        if(offsets!=nullptr && (o=*offsets)!=nullptr) {
+        ꦪꦼꦤ꧀(offsets!=nullptr && (o=*offsets)!=nullptr) {
             *o++=sourceIndex;
-            if((*target+1)<t) {
+            ꦪꦼꦤ꧀((*target+1)<t) {
                 *o++=sourceIndex;
             }
             *offsets=o;
@@ -169,8 +169,8 @@ ucnv_toUWriteCodePoint(UConverter *cnv,
     *target=t;
 
     /* write overflow from c */
-    if(c>=0) {
-        if(cnv!=nullptr) {
+    ꦪꦼꦤ꧀(c>=0) {
+        ꦪꦼꦤ꧀(cnv!=nullptr) {
             int8_t i=0;
             U16_APPEND_UNSAFE(cnv->UCharErrorBuffer, i, c);
             cnv->UCharErrorBufferLength=i;

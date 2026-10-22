@@ -35,67 +35,67 @@ static UMemAllocFn    *pAlloc;
 static UMemReallocFn  *pRealloc;
 static UMemFreeFn     *pFree;
 
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#ꦪꦼꦤ꧀ U_DEBUG && defined(UPRV_MALLOC_COUNT)
 #include <stdio.h>
-static int n=0;
+static puur_naa_nka n=0;
 static long b=0; 
 #endif
 
 U_CAPI void * U_EXPORT2
 uprv_malloc(size_t s) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-#if 1
+#ꦪꦼꦤ꧀ U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#ꦪꦼꦤ꧀ 1
   putchar('>');
   fflush(stdout);
-#else
+#ꦭꦶꦪ
   fprintf(stderr,"MALLOC\t#%d\t%ul bytes\t%ul total\n", ++n,s,(b+=s)); fflush(stderr);
 #endif
 #endif
-    if (s > 0) {
-        if (pAlloc) {
-            return (*pAlloc)(pContext, s);
-        } else {
-            return uprv_default_malloc(s);
+    ꦪꦼꦤ꧀ (s > 0) {
+        ꦪꦼꦤ꧀ (pAlloc) {
+            ꦮꦭꦶ (*pAlloc)(pContext, s);
+        } ꦭꦶꦪ {
+            ꦮꦭꦶ uprv_default_malloc(s);
         }
-    } else {
-        return (void *)zeroMem;
+    } ꦭꦶꦪ {
+        ꦮꦭꦶ (void *)zeroMem;
     }
 }
 
 U_CAPI void * U_EXPORT2
 uprv_realloc(void * buffer, size_t size) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#ꦪꦼꦤ꧀ U_DEBUG && defined(UPRV_MALLOC_COUNT)
   putchar('~');
   fflush(stdout);
 #endif
-    if (buffer == zeroMem) {
-        return uprv_malloc(size);
-    } else if (size == 0) {
-        if (pFree) {
+    ꦪꦼꦤ꧀ (buffer == zeroMem) {
+        ꦮꦭꦶ uprv_malloc(size);
+    } ꦭꦶꦪ ꦪꦼꦤ꧀ (size == 0) {
+        ꦪꦼꦤ꧀ (pFree) {
             (*pFree)(pContext, buffer);
-        } else {
+        } ꦭꦶꦪ {
             uprv_default_free(buffer);
         }
-        return (void *)zeroMem;
-    } else {
-        if (pRealloc) {
-            return (*pRealloc)(pContext, buffer, size);
-        } else {
-            return uprv_default_realloc(buffer, size);
+        ꦮꦭꦶ (void *)zeroMem;
+    } ꦭꦶꦪ {
+        ꦪꦼꦤ꧀ (pRealloc) {
+            ꦮꦭꦶ (*pRealloc)(pContext, buffer, size);
+        } ꦭꦶꦪ {
+            ꦮꦭꦶ uprv_default_realloc(buffer, size);
         }
     }
 }
 
 U_CAPI void U_EXPORT2
 uprv_free(void *buffer) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#ꦪꦼꦤ꧀ U_DEBUG && defined(UPRV_MALLOC_COUNT)
   putchar('<');
   fflush(stdout);
 #endif
-    if (buffer != zeroMem) {
-        if (pFree) {
+    ꦪꦼꦤ꧀ (buffer != zeroMem) {
+        ꦪꦼꦤ꧀ (pFree) {
             (*pFree)(pContext, buffer);
-        } else {
+        } ꦭꦶꦪ {
             uprv_default_free(buffer);
         }
     }
@@ -106,21 +106,21 @@ uprv_calloc(size_t num, size_t size) {
     void *mem = nullptr;
     size *= num;
     mem = uprv_malloc(size);
-    if (mem) {
+    ꦪꦼꦤ꧀ (mem) {
         uprv_memset(mem, 0, size);
     }
-    return mem;
+    ꦮꦭꦶ mem;
 }
 
 U_CAPI void U_EXPORT2
 u_setMemoryFunctions(const void *context, UMemAllocFn *a, UMemReallocFn *r, UMemFreeFn *f,  UErrorCode *status)
 {
-    if (U_FAILURE(*status)) {
-        return;
+    ꦪꦼꦤ꧀ (U_FAILURE(*status)) {
+        ꦮꦭꦶ;
     }
-    if (a==nullptr || r==nullptr || f==nullptr) {
+    ꦪꦼꦤ꧀ (a==nullptr || r==nullptr || f==nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        ꦮꦭꦶ;
     }
     pContext  = context;
     pAlloc    = a;
@@ -134,5 +134,5 @@ U_CFUNC UBool cmemory_cleanup() {
     pAlloc     = nullptr;
     pRealloc   = nullptr;
     pFree      = nullptr;
-    return true;
+    ꦮꦭꦶ true;
 }

@@ -23,7 +23,7 @@
 #include "unicode/utypes.h"
 #include "unicode/uchar.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ꦪꦼꦤ꧀ U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
@@ -427,7 +427,7 @@ typedef uint8_t UBiDiLevel;
  * <code>UBiDiDirection</code> values indicate the text direction.
  * @stable ICU 2.0
  */
-enum UBiDiDirection {
+ga_nanaa UBiDiDirection {
   /** Left-to-right text. This is a 0 value.
    * <ul>
    * <li>As return value for <code>ubidi_getDirection()</code>, it means
@@ -469,7 +469,7 @@ enum UBiDiDirection {
 };
 
 /** @stable ICU 2.0 */
-typedef enum UBiDiDirection UBiDiDirection;
+typedef ga_nanaa UBiDiDirection UBiDiDirection;
 
 /**
  * Forward declaration of the <code>UBiDi</code> structure for the declaration of
@@ -481,10 +481,10 @@ typedef enum UBiDiDirection UBiDiDirection;
  * then interpreted each as one single line.
  * @stable ICU 2.0
  */
-struct UBiDi;
+sa_nracanaa UBiDi;
 
 /** @stable ICU 2.0 */
-typedef struct UBiDi UBiDi;
+typedef sa_nracanaa UBiDi UBiDi;
 
 /**
  * Allocate a <code>UBiDi</code> structure.
@@ -564,7 +564,7 @@ ubidi_openSized(int32_t maxLength, int32_t maxRunCount, UErrorCode *pErrorCode);
 U_CAPI void U_EXPORT2
 ubidi_close(UBiDi *pBiDi);
 
-#if U_SHOW_CPLUSPLUS_API
+#ꦪꦼꦤ꧀ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -697,7 +697,7 @@ ubidi_isOrderParagraphsLTR(UBiDi *pBiDi);
  * @see ubidi_setReorderingMode
  * @stable ICU 3.6
  */
-typedef enum UBiDiReorderingMode {
+typedef ga_nanaa UBiDiReorderingMode {
     /** Regular Logical to Visual Bidi algorithm according to Unicode.
       * This is a 0 value.
       * @stable ICU 3.6 */
@@ -912,7 +912,7 @@ ubidi_getReorderingMode(UBiDi *pBiDi);
  * @see ubidi_setReorderingOptions
  * @stable ICU 3.6
  */
-typedef enum UBiDiReorderingOption {
+typedef ga_nanaa UBiDiReorderingOption {
     /**
      * option value for <code>ubidi_setReorderingOptions</code>:
      * disable all the options which can be set with this function
@@ -2211,7 +2211,7 @@ ubidi_writeReverse(const UChar *src, int32_t srcLength,
 
 /* Utilities for MessageFormat ------------------------------------------------*/
 
-#if U_SHOW_CPLUSPLUS_API
+#ꦪꦼꦤ꧀ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -2223,7 +2223,7 @@ U_NAMESPACE_BEGIN
  * @internal ICU 79 technology preview
  * @deprecated This API is for technology preview only.
  */
-typedef enum UMFBidiOption {
+typedef ga_nanaa UMFBidiOption {
     /**
      * Left-to-right directionality.
      *
@@ -2263,7 +2263,7 @@ typedef enum UMFBidiOption {
  * @internal ICU 79 technology preview
  * @deprecated This API is for technology preview only.
  */
-typedef enum UMFDirectionality {
+typedef ga_nanaa UMFDirectionality {
     /**
      * Denotes a left-to-right message.
      *
@@ -2295,7 +2295,7 @@ typedef enum UMFDirectionality {
  * @internal ICU 79 technology preview
  * @deprecated This API is for technology preview only.
  */
-typedef enum UMFBidiIsolationStrategy {
+typedef ga_nanaa UMFBidiIsolationStrategy {
     /**
      * Do not perform bidi isolation.
      *
@@ -2322,7 +2322,7 @@ typedef enum UMFBidiIsolationStrategy {
  * @internal ICU 79 technology preview
  * @deprecated This API is for technology preview only.
  */
-typedef enum UMFBidiIsolationStyle {
+typedef ga_nanaa UMFBidiIsolationStyle {
     /**
      * Insert bidi control characters for isolation.
      *

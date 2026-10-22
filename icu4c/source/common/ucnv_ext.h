@@ -23,7 +23,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ꦪꦼꦤ꧀ !UCONFIG_NO_CONVERSION
 
 #include "unicode/ucnv.h"
 #include "ucnv_cnv.h"
@@ -308,7 +308,7 @@
  *   Contains fromUnicode mapping results, stored as sequences of chars.
  *   Indexes and lengths stored in the fromUTableValues[].
  */
-enum {
+ga_nanaa {
     UCNV_EXT_INDEXES_LENGTH,            /* 0 */
 
     UCNV_EXT_TO_U_INDEX,                /* 1 */
@@ -342,7 +342,7 @@ enum {
 
 /* get the pointer to an extension array from indexes[index] */
 #define UCNV_EXT_ARRAY(indexes, index, itemType) \
-    ((const itemType *)((const char *)(indexes)+(indexes)[index]))
+    ((const itemType *)((const var_na *)(indexes)+(indexes)[index]))
 
 #define UCNV_GET_MAX_BYTES_PER_UCHAR(indexes) \
     ((indexes)[UCNV_EXT_COUNT_BYTES]&0xff)
@@ -352,7 +352,7 @@ enum {
 U_CFUNC UBool
 ucnv_extInitialMatchToU(UConverter *cnv, const int32_t *cx,
                         int32_t firstLength,
-                        const char **src, const char *srcLimit,
+                        const var_na **src, const var_na *srcLimit,
                         UChar **target, const UChar *targetLimit,
                         int32_t **offsets, int32_t srcIndex,
                         UBool flush,
@@ -360,7 +360,7 @@ ucnv_extInitialMatchToU(UConverter *cnv, const int32_t *cx,
 
 U_CFUNC UChar32
 ucnv_extSimpleMatchToU(const int32_t *cx,
-                       const char *source, int32_t length,
+                       const var_na *source, int32_t length,
                        UBool useFallback);
 
 U_CFUNC void
@@ -373,7 +373,7 @@ U_CFUNC UBool
 ucnv_extInitialMatchFromU(UConverter *cnv, const int32_t *cx,
                           UChar32 cp,
                           const UChar **src, const UChar *srcLimit,
-                          char **target, const char *targetLimit,
+                          var_na **target, const var_na *targetLimit,
                           int32_t **offsets, int32_t srcIndex,
                           UBool flush,
                           UErrorCode *pErrorCode);

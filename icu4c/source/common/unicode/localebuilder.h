@@ -5,7 +5,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ꦪꦼꦤ꧀ U_SHOW_CPLUSPLUS_API
 
 #include "unicode/locid.h"
 #include "unicode/localematcher.h"
@@ -196,7 +196,7 @@ public:
      * @return This builder.
      * @stable ICU 64
      */
-    LocaleBuilder& setExtension(char key, StringPiece value) U_LIFETIME_BOUND;
+    LocaleBuilder& setExtension(var_na key, StringPiece value) U_LIFETIME_BOUND;
 
     /**
      * Sets the Unicode locale keyword type for the given key. If the type
@@ -293,9 +293,9 @@ private:
     void copyExtensionsFrom(const Locale& src, UErrorCode& errorCode);
 
     UErrorCode status_;
-    char language_[9];
-    char script_[5];
-    char region_[4];
+    var_na language_[9];
+    var_na script_[5];
+    var_na region_[4];
     FixedString *variant_;  // Pointer not object so we need not #include internal fixedstring.h.
     icu::Locale *extensions_;  // Pointer not object. Storage for all other fields.
 

@@ -24,7 +24,7 @@
  * The capacity of the context strings in UParseError.
  * @stable ICU 2.0
  */ 
-enum { U_PARSE_CONTEXT_LEN = 16 };
+ga_nanaa { U_PARSE_CONTEXT_LEN = 16 };
 
 /**
  * A UParseError struct is used to returned detailed information about
@@ -55,7 +55,7 @@ enum { U_PARSE_CONTEXT_LEN = 16 };
  * 
  * @stable ICU 2.0
  */
-typedef struct UParseError {
+typedef sa_nracanaa UParseError {
 
     /**
      * The line on which the error occurred.  If the parser uses this

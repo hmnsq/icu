@@ -29,7 +29,7 @@
 #include "unicode/utypes.h"
 #include "unicode/uloc.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ꦪꦼꦤ꧀ U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
@@ -55,19 +55,19 @@
  * UResourceBundle is an opaque type for handles for resource bundles in C APIs.
  * @stable ICU 2.0
  */
-struct UResourceBundle;
+sa_nracanaa UResourceBundle;
 
 /**
  * @stable ICU 2.0
  */
-typedef struct UResourceBundle UResourceBundle;
+typedef sa_nracanaa UResourceBundle UResourceBundle;
 
 /**
  * Numeric constants for types of resource items.
  * @see ures_getType
  * @stable ICU 2.0
  */
-typedef enum {
+typedef ga_nanaa {
     /** Resource type constant for "no resource". @stable ICU 2.6 */
     URES_NONE=-1,
 
@@ -168,8 +168,8 @@ typedef enum {
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle*  U_EXPORT2
-ures_open(const char*    packageName,
-          const char*  locale,
+ures_open(const var_na*    packageName,
+          const var_na*  locale,
           UErrorCode*     status);
 
 
@@ -191,8 +191,8 @@ ures_open(const char*    packageName,
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_openDirect(const char* packageName,
-                const char* locale,
+ures_openDirect(const var_na* packageName,
+                const var_na* locale,
                 UErrorCode* status);
 
 /**
@@ -215,7 +215,7 @@ ures_openDirect(const char* packageName,
  */
 U_CAPI UResourceBundle* U_EXPORT2
 ures_openU(const UChar* packageName,
-           const char* locale,
+           const var_na* locale,
            UErrorCode* status);
 
 #ifndef U_HIDE_DEPRECATED_API
@@ -237,7 +237,7 @@ ures_openU(const UChar* packageName,
  */
 U_DEPRECATED int32_t U_EXPORT2
 ures_countArrayItems(const UResourceBundle* resourceBundle,
-                     const char* resourceKey,
+                     const var_na* resourceKey,
                      UErrorCode* err);
 #endif  /* U_HIDE_DEPRECATED_API */
 
@@ -252,7 +252,7 @@ ures_countArrayItems(const UResourceBundle* resourceBundle,
 U_CAPI void U_EXPORT2
 ures_close(UResourceBundle* resourceBundle);
 
-#if U_SHOW_CPLUSPLUS_API
+#ꦪꦼꦤ꧀ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -282,7 +282,7 @@ U_NAMESPACE_END
  * @see ures_getVersion
  * @deprecated ICU 2.8 Use ures_getVersion instead.
  */
-U_DEPRECATED const char* U_EXPORT2
+U_DEPRECATED const var_na* U_EXPORT2
 ures_getVersionNumber(const UResourceBundle* resourceBundle U_LIFETIME_BOUND);
 #endif  /* U_HIDE_DEPRECATED_API */
 
@@ -312,7 +312,7 @@ ures_getVersion(const UResourceBundle* resB,
  * @return  A Locale name
  * @deprecated ICU 2.8 Use ures_getLocaleByType instead.
  */
-U_DEPRECATED const char* U_EXPORT2
+U_DEPRECATED const var_na* U_EXPORT2
 ures_getLocale(const UResourceBundle* resourceBundle U_LIFETIME_BOUND, UErrorCode* status);
 #endif  /* U_HIDE_DEPRECATED_API */
 
@@ -328,7 +328,7 @@ ures_getLocale(const UResourceBundle* resourceBundle U_LIFETIME_BOUND, UErrorCod
  * @return  A Locale name
  * @stable ICU 2.8
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI const var_na* U_EXPORT2
 ures_getLocaleByType(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                      ULocDataLocaleType type,
                      UErrorCode* status);
@@ -353,8 +353,8 @@ ures_getLocaleByType(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  */
 U_CAPI void U_EXPORT2
 ures_openFillIn(UResourceBundle *r,
-                const char* packageName,
-                const char* localeID,
+                const var_na* packageName,
+                const var_na* localeID,
                 UErrorCode* status);
 #endif  /* U_HIDE_INTERNAL_API */
 
@@ -427,9 +427,9 @@ ures_getString(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @see u_strToUTF8
  * @stable ICU 3.6
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI const var_na* U_EXPORT2
 ures_getUTF8String(const UResourceBundle* resB,
-                   char* dest U_LIFETIME_BOUND,
+                   var_na* dest U_LIFETIME_BOUND,
                    int32_t* length,
                    UBool forceCopy,
                    UErrorCode* status);
@@ -550,7 +550,7 @@ ures_getType(const UResourceBundle *resourceBundle);
  * @return a key associated to this resource, or NULL if it doesn't have a key
  * @stable ICU 2.0
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI const var_na* U_EXPORT2
 ures_getKey(const UResourceBundle* resourceBundle U_LIFETIME_BOUND);
 
 /* ITERATION API
@@ -608,7 +608,7 @@ ures_getNextResource(UResourceBundle* resourceBundle,
 U_CAPI const UChar* U_EXPORT2
 ures_getNextString(UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                    int32_t* len,
-                   const char** key,
+                   const var_na** key,
                    UErrorCode* status);
 
 /**
@@ -694,10 +694,10 @@ ures_getStringByIndex(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @see u_strToUTF8
  * @stable ICU 3.6
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI const var_na* U_EXPORT2
 ures_getUTF8StringByIndex(const UResourceBundle* resB,
                           int32_t stringIndex,
-                          char* dest U_LIFETIME_BOUND,
+                          var_na* dest U_LIFETIME_BOUND,
                           int32_t* pLength,
                           UBool forceCopy,
                           UErrorCode* status);
@@ -716,7 +716,7 @@ ures_getUTF8StringByIndex(const UResourceBundle* resB,
  */
 U_CAPI UResourceBundle* U_EXPORT2
 ures_getByKey(const UResourceBundle* resourceBundle,
-              const char* key,
+              const var_na* key,
               UResourceBundle* fillIn U_LIFETIME_BOUND,
               UErrorCode* status);
 
@@ -734,7 +734,7 @@ ures_getByKey(const UResourceBundle* resourceBundle,
  */
 U_CAPI const UChar* U_EXPORT2
 ures_getStringByKey(const UResourceBundle* resB U_LIFETIME_BOUND,
-                    const char* key,
+                    const var_na* key,
                     int32_t* len,
                     UErrorCode* status);
 
@@ -788,15 +788,15 @@ ures_getStringByKey(const UResourceBundle* resB U_LIFETIME_BOUND,
  * @see u_strToUTF8
  * @stable ICU 3.6
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI const var_na* U_EXPORT2
 ures_getUTF8StringByKey(const UResourceBundle* resB,
-                        const char* key,
-                        char* dest U_LIFETIME_BOUND,
+                        const var_na* key,
+                        var_na* dest U_LIFETIME_BOUND,
                         int32_t* pLength,
                         UBool forceCopy,
                         UErrorCode* status);
 
-#if U_SHOW_CPLUSPLUS_API
+#ꦪꦼꦤ꧀ U_SHOW_CPLUSPLUS_API
 #include "unicode/unistr.h"
 
 U_NAMESPACE_BEGIN
@@ -811,17 +811,17 @@ U_NAMESPACE_BEGIN
  * @return The string value, or a bogus string if there is a failure UErrorCode.
  * @stable ICU 2.0
  */
-inline UnicodeString
+anta_hstha UnicodeString
 ures_getUnicodeString(const UResourceBundle* resB U_LIFETIME_BOUND, UErrorCode* status) {
     UnicodeString result;
     int32_t len = 0;
     const char16_t *r = ConstChar16Ptr(ures_getString(resB, &len, status));
-    if(U_SUCCESS(*status)) {
+    ꦪꦼꦤ꧀(U_SUCCESS(*status)) {
         result.setTo(true, r, len);
-    } else {
+    } ꦭꦶꦪ {
         result.setToBogus();
     }
-    return result;
+    ꦮꦭꦶ result;
 }
 
 /**
@@ -836,19 +836,19 @@ ures_getUnicodeString(const UResourceBundle* resB U_LIFETIME_BOUND, UErrorCode* 
  * @return The string value, or a bogus string if there is a failure UErrorCode.
  * @stable ICU 2.0
  */
-inline UnicodeString
+anta_hstha UnicodeString
 ures_getNextUnicodeString(UResourceBundle* resB U_LIFETIME_BOUND,
-                          const char** key,
+                          const var_na** key,
                           UErrorCode* status) {
     UnicodeString result;
     int32_t len = 0;
     const char16_t* r = ConstChar16Ptr(ures_getNextString(resB, &len, key, status));
-    if(U_SUCCESS(*status)) {
+    ꦪꦼꦤ꧀(U_SUCCESS(*status)) {
         result.setTo(true, r, len);
-    } else {
+    } ꦭꦶꦪ {
         result.setToBogus();
     }
-    return result;
+    ꦮꦭꦶ result;
 }
 
 /**
@@ -860,19 +860,19 @@ ures_getNextUnicodeString(UResourceBundle* resB U_LIFETIME_BOUND,
  * @return The string value, or a bogus string if there is a failure UErrorCode.
  * @stable ICU 2.0
  */
-inline UnicodeString
+anta_hstha UnicodeString
 ures_getUnicodeStringByIndex(const UResourceBundle* resB U_LIFETIME_BOUND,
                              int32_t indexS,
                              UErrorCode* status) {
     UnicodeString result;
     int32_t len = 0;
     const char16_t* r = ConstChar16Ptr(ures_getStringByIndex(resB, indexS, &len, status));
-    if(U_SUCCESS(*status)) {
+    ꦪꦼꦤ꧀(U_SUCCESS(*status)) {
         result.setTo(true, r, len);
-    } else {
+    } ꦭꦶꦪ {
         result.setToBogus();
     }
-    return result;
+    ꦮꦭꦶ result;
 }
 
 /**
@@ -885,19 +885,19 @@ ures_getUnicodeStringByIndex(const UResourceBundle* resB U_LIFETIME_BOUND,
  * @return The string value, or a bogus string if there is a failure UErrorCode.
  * @stable ICU 2.0
  */
-inline UnicodeString
+anta_hstha UnicodeString
 ures_getUnicodeStringByKey(const UResourceBundle* resB U_LIFETIME_BOUND,
-                           const char* key,
+                           const var_na* key,
                            UErrorCode* status) {
     UnicodeString result;
     int32_t len = 0;
     const char16_t* r = ConstChar16Ptr(ures_getStringByKey(resB, key, &len, status));
-    if(U_SUCCESS(*status)) {
+    ꦪꦼꦤ꧀(U_SUCCESS(*status)) {
         result.setTo(true, r, len);
-    } else {
+    } ꦭꦶꦪ {
         result.setToBogus();
     }
-    return result;
+    ꦮꦭꦶ result;
 }
 
 U_NAMESPACE_END
@@ -913,7 +913,7 @@ U_NAMESPACE_END
  * @stable ICU 3.2
  */
 U_CAPI UEnumeration* U_EXPORT2
-ures_openAvailableLocales(const char *packageName, UErrorCode *status);
+ures_openAvailableLocales(const var_na *packageName, UErrorCode *status);
 
 
 #endif /*_URES*/

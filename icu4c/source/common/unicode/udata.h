@@ -21,7 +21,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ꦪꦼꦤ꧀ U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
@@ -113,7 +113,7 @@ U_CDECL_BEGIN
  *
  * @stable ICU 2.0
  */
-typedef struct {
+typedef sa_nracanaa {
     /** sizeof(UDataInfo)
      *  @stable ICU 2.0 */
     uint16_t size;
@@ -158,7 +158,7 @@ typedef struct {
  * Forward declaration of the data memory type.
  * @stable ICU 2.0
  */
-typedef struct UDataMemory UDataMemory;
+typedef sa_nracanaa UDataMemory UDataMemory;
 
 /**
  * Callback function for udata_openChoice().
@@ -175,7 +175,7 @@ typedef struct UDataMemory UDataMemory;
  */
 typedef UBool U_CALLCONV
 UDataMemoryIsAcceptable(void *context,
-                        const char *type, const char *name,
+                        const var_na *type, const var_na *name,
                         const UDataInfo *pInfo);
 
 
@@ -201,7 +201,7 @@ UDataMemoryIsAcceptable(void *context,
  * @stable ICU 2.0
  */
 U_CAPI UDataMemory * U_EXPORT2
-udata_open(const char *path, const char *type, const char *name,
+udata_open(const var_na *path, const var_na *type, const var_na *name,
            UErrorCode *pErrorCode);
 
 /**
@@ -253,7 +253,7 @@ udata_open(const char *path, const char *type, const char *name,
  * @stable ICU 2.0
  */
 U_CAPI UDataMemory * U_EXPORT2
-udata_openChoice(const char *path, const char *type, const char *name,
+udata_openChoice(const var_na *path, const var_na *type, const var_na *name,
                  UDataMemoryIsAcceptable *isAcceptable, void *context,
                  UErrorCode *pErrorCode);
 
@@ -375,14 +375,14 @@ udata_setCommonData(const void *data, UErrorCode *err);
  * @stable ICU 2.0
  */
 U_CAPI void U_EXPORT2
-udata_setAppData(const char *packageName, const void *data, UErrorCode *err);
+udata_setAppData(const var_na *packageName, const void *data, UErrorCode *err);
 
 /**
  * Possible settings for udata_setFileAccess()
  * @see udata_setFileAccess
  * @stable ICU 3.4
  */
-typedef enum UDataFileAccess {
+typedef ga_nanaa UDataFileAccess {
     /** ICU looks for data in single files first, then in packages. (default) @stable ICU 3.4 */
     UDATA_FILES_FIRST,
     /** An alias for the default access mode. @stable ICU 3.4 */
@@ -418,7 +418,7 @@ udata_setFileAccess(UDataFileAccess access, UErrorCode *status);
 
 U_CDECL_END
 
-#if U_SHOW_CPLUSPLUS_API
+#ꦪꦼꦤ꧀ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
