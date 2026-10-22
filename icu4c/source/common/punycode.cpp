@@ -46,7 +46,7 @@ Disclaimer and license
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_IDNA
+#якщо !UCONFIG_NO_IDNA
 
 #include "unicode/ustring.h"
 #include "unicode/utf.h"
@@ -95,14 +95,14 @@ static inline char
 digitToBasic(int32_t digit, UBool uppercase) {
     /*  0..25 map to ASCII a..z or A..Z */
     /* 26..35 map to ASCII 0..9         */
-    if(digit<26) {
-        if(uppercase) {
-            return static_cast<char>(_CAPITAL_A + digit);
-        } else {
-            return static_cast<char>(_SMALL_A + digit);
+    якщо(digit<26) {
+        якщо(uppercase) {
+            повернути static_cast<char>(_CAPITAL_A + digit);
+        } інакше {
+            повернути static_cast<char>(_SMALL_A + digit);
         }
-    } else {
-        return static_cast<char>((_ZERO_ - 26) + digit);
+    } інакше {
+        повернути static_cast<char>((_ZERO_ - 26) + digit);
     }
 }
 
@@ -111,35 +111,35 @@ digitToBasic(int32_t digit, UBool uppercase) {
  *         in the range 0 to BASE-1, or a negative value if cp is invalid.
  */
 static int32_t decodeDigit(int32_t cp) {
-    if(cp<=u'Z') {
-        if(cp<=u'9') {
-            if(cp<u'0') {
-                return -1;
-            } else {
-                return cp-u'0'+26;  // 0..9 -> 26..35
+    якщо(cp<=u'Z') {
+        якщо(cp<=u'9') {
+            якщо(cp<u'0') {
+                повернути -1;
+            } інакше {
+                повернути cp-u'0'+26;  // 0..9 -> 26..35
             }
-        } else {
-            return cp-u'A';  // A-Z -> 0..25
+        } інакше {
+            повернути cp-u'A';  // A-Z -> 0..25
         }
-    } else if(cp<=u'z') {
-        return cp-'a';  // a..z -> 0..25
-    } else {
-        return -1;
+    } інакше якщо(cp<=u'z') {
+        повернути cp-'a';  // a..z -> 0..25
+    } інакше {
+        повернути -1;
     }
 }
 
 static inline char
 asciiCaseMap(char b, UBool uppercase) {
-    if(uppercase) {
-        if(_SMALL_A<=b && b<=_SMALL_Z) {
+    якщо(uppercase) {
+        якщо(_SMALL_A<=b && b<=_SMALL_Z) {
             b-=(_SMALL_A-_CAPITAL_A);
         }
-    } else {
-        if(_CAPITAL_A<=b && b<=_CAPITAL_Z) {
+    } інакше {
+        якщо(_CAPITAL_A<=b && b<=_CAPITAL_Z) {
             b+=(_SMALL_A-_CAPITAL_A);
         }
     }
-    return b;
+    повернути b;
 }
 
 /* Punycode-specific Bootstring code ---------------------------------------- */
@@ -154,18 +154,18 @@ static int32_t
 adaptBias(int32_t delta, int32_t length, UBool firstTime) {
     int32_t count;
 
-    if(firstTime) {
+    якщо(firstTime) {
         delta/=DAMP;
-    } else {
+    } інакше {
         delta/=2;
     }
 
     delta+=delta/length;
-    for(count=0; delta>((BASE-TMIN)*TMAX)/2; count+=BASE) {
+    для(count=0; delta>((BASE-TMIN)*TMAX)/2; count+=BASE) {
         delta/=(BASE-TMIN);
     }
 
-    return count+(((BASE-TMIN+1)*delta)/(delta+SKEW));
+    повернути count+(((BASE-TMIN+1)*delta)/(delta+SKEW));
 }
 
 namespace {
@@ -189,17 +189,17 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
     char16_t c, c2;
 
     /* argument checking */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    якщо(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        повернути 0;
     }
 
-    if(src==nullptr || srcLength<-1 || destCapacity<0 || (dest==nullptr && destCapacity!=0)) {
+    якщо(src==nullptr || srcLength<-1 || destCapacity<0 || (dest==nullptr && destCapacity!=0)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        повернути 0;
     }
-    if (srcLength>ENCODE_MAX_CODE_UNITS) {
+    якщо (srcLength>ENCODE_MAX_CODE_UNITS) {
         *pErrorCode=U_INPUT_TOO_LONG_ERROR;
-        return 0;
+        повернути 0;
     }
 
     /*
@@ -207,64 +207,64 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
      * convert extended ones to UTF-32 in cpBuffer (caseFlag in sign bit):
      */
     srcCPCount=destLength=0;
-    if(srcLength==-1) {
+    якщо(srcLength==-1) {
         /* NUL-terminated input */
-        for(j=0; /* no condition */; ++j) {
-            if((c=src[j])==0) {
+        для(j=0; /* no condition */; ++j) {
+            якщо((c=src[j])==0) {
                 break;
             }
-            if(j>=ENCODE_MAX_CODE_UNITS) {
+            якщо(j>=ENCODE_MAX_CODE_UNITS) {
                 *pErrorCode=U_INPUT_TOO_LONG_ERROR;
-                return 0;
+                повернути 0;
             }
-            if(IS_BASIC(c)) {
+            якщо(IS_BASIC(c)) {
                 cpBuffer[srcCPCount++]=0;
-                if(destLength<destCapacity) {
+                якщо(destLength<destCapacity) {
                     dest[destLength]=
                         caseFlags!=nullptr ?
                             asciiCaseMap((char)c, caseFlags[j]) :
                             (char)c;
                 }
                 ++destLength;
-            } else {
+            } інакше {
                 n=(caseFlags!=nullptr && caseFlags[j])<<31L;
-                if(U16_IS_SINGLE(c)) {
+                якщо(U16_IS_SINGLE(c)) {
                     n|=c;
-                } else if(U16_IS_LEAD(c) && U16_IS_TRAIL(c2=src[j+1])) {
+                } інакше якщо(U16_IS_LEAD(c) && U16_IS_TRAIL(c2=src[j+1])) {
                     ++j;
                     n|=(int32_t)U16_GET_SUPPLEMENTARY(c, c2);
-                } else {
+                } інакше {
                     /* error: unmatched surrogate */
                     *pErrorCode=U_INVALID_CHAR_FOUND;
-                    return 0;
+                    повернути 0;
                 }
                 cpBuffer[srcCPCount++]=n;
             }
         }
-    } else {
+    } інакше {
         /* length-specified input */
-        for(j=0; j<srcLength; ++j) {
+        для(j=0; j<srcLength; ++j) {
             c=src[j];
-            if(IS_BASIC(c)) {
+            якщо(IS_BASIC(c)) {
                 cpBuffer[srcCPCount++]=0;
-                if(destLength<destCapacity) {
+                якщо(destLength<destCapacity) {
                     dest[destLength]=
                         caseFlags!=nullptr ?
                             asciiCaseMap((char)c, caseFlags[j]) :
                             (char)c;
                 }
                 ++destLength;
-            } else {
+            } інакше {
                 n=(caseFlags!=nullptr && caseFlags[j])<<31L;
-                if(U16_IS_SINGLE(c)) {
+                якщо(U16_IS_SINGLE(c)) {
                     n|=c;
-                } else if(U16_IS_LEAD(c) && (j+1)<srcLength && U16_IS_TRAIL(c2=src[j+1])) {
+                } інакше якщо(U16_IS_LEAD(c) && (j+1)<srcLength && U16_IS_TRAIL(c2=src[j+1])) {
                     ++j;
                     n|=(int32_t)U16_GET_SUPPLEMENTARY(c, c2);
-                } else {
+                } інакше {
                     /* error: unmatched surrogate */
                     *pErrorCode=U_INVALID_CHAR_FOUND;
-                    return 0;
+                    повернути 0;
                 }
                 cpBuffer[srcCPCount++]=n;
             }
@@ -273,8 +273,8 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
 
     /* Finish the basic string - if it is not empty - with a delimiter. */
     basicLength=destLength;
-    if(basicLength>0) {
-        if(destLength<destCapacity) {
+    якщо(basicLength>0) {
+        якщо(destLength<destCapacity) {
             dest[destLength]=DELIMITER;
         }
         ++destLength;
@@ -292,14 +292,14 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
     bias=INITIAL_BIAS;
 
     /* Main encoding loop: */
-    for(handledCPCount=basicLength; handledCPCount<srcCPCount; /* no op */) {
+    для(handledCPCount=basicLength; handledCPCount<srcCPCount; /* no op */) {
         /*
          * All non-basic code points < n have been handled already.
          * Find the next larger one:
          */
-        for(m=0x7fffffff, j=0; j<srcCPCount; ++j) {
+        для(m=0x7fffffff, j=0; j<srcCPCount; ++j) {
             q=cpBuffer[j]&0x7fffffff; /* remove case flag from the sign bit */
-            if(n<=q && q<m) {
+            якщо(n<=q && q<m) {
                 m=q;
             }
         }
@@ -308,21 +308,21 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
          * Increase delta enough to advance the decoder's
          * <n,i> state to <m,0>, but guard against overflow:
          */
-        if(m-n>(0x7fffffff-handledCPCount-delta)/(handledCPCount+1)) {
+        якщо(m-n>(0x7fffffff-handledCPCount-delta)/(handledCPCount+1)) {
             *pErrorCode=U_INTERNAL_PROGRAM_ERROR;
-            return 0;
+            повернути 0;
         }
         delta+=(m-n)*(handledCPCount+1);
         n=m;
 
         /* Encode a sequence of same code points n */
-        for(j=0; j<srcCPCount; ++j) {
+        для(j=0; j<srcCPCount; ++j) {
             q=cpBuffer[j]&0x7fffffff; /* remove case flag from the sign bit */
-            if(q<n) {
+            якщо(q<n) {
                 ++delta;
-            } else if(q==n) {
+            } інакше якщо(q==n) {
                 /* Represent delta as a generalized variable-length integer: */
-                for(q=delta, k=BASE; /* no condition */; k+=BASE) {
+                для(q=delta, k=BASE; /* no condition */; k+=BASE) {
 
                     /** RAM: comment out the old code for conformance with draft-ietf-idn-punycode-03.txt
 
@@ -335,24 +335,24 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
                     */
 
                     t=k-bias;
-                    if(t<TMIN) {
+                    якщо(t<TMIN) {
                         t=TMIN;
-                    } else if(k>=(bias+TMAX)) {
+                    } інакше якщо(k>=(bias+TMAX)) {
                         t=TMAX;
                     }
 
-                    if(q<t) {
+                    якщо(q<t) {
                         break;
                     }
 
-                    if(destLength<destCapacity) {
+                    якщо(destLength<destCapacity) {
                         dest[destLength]=digitToBasic(t+(q-t)%(BASE-t), 0);
                     }
                     ++destLength;
                     q=(q-t)/(BASE-t);
                 }
 
-                if(destLength<destCapacity) {
+                якщо(destLength<destCapacity) {
                     dest[destLength] = digitToBasic(q, cpBuffer[j] < 0);
                 }
                 ++destLength;
@@ -366,7 +366,7 @@ u_strToPunycode(const char16_t *src, int32_t srcLength,
         ++n;
     }
 
-    return u_terminateUChars(dest, destCapacity, destLength, pErrorCode);
+    повернути u_terminateUChars(dest, destCapacity, destLength, pErrorCode);
 }
 
 // decode
@@ -380,21 +380,21 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
     char16_t b;
 
     /* argument checking */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    якщо(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        повернути 0;
     }
 
-    if(src==nullptr || srcLength<-1 || (dest==nullptr && destCapacity!=0)) {
+    якщо(src==nullptr || srcLength<-1 || (dest==nullptr && destCapacity!=0)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        повернути 0;
     }
 
-    if(srcLength==-1) {
+    якщо(srcLength==-1) {
         srcLength=u_strlen(src);
     }
-    if (srcLength>DECODE_MAX_CHARS) {
+    якщо (srcLength>DECODE_MAX_CHARS) {
         *pErrorCode=U_INPUT_TOO_LONG_ERROR;
-        return 0;
+        повернути 0;
     }
 
     /*
@@ -405,25 +405,25 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
      *
      * The two following loops iterate backward.
      */
-    for(j=srcLength; j>0;) {
-        if(src[--j]==DELIMITER) {
+    для(j=srcLength; j>0;) {
+        якщо(src[--j]==DELIMITER) {
             break;
         }
     }
     destLength=basicLength=destCPCount=j;
     U_ASSERT(destLength>=0);
 
-    while(j>0) {
+    поки(j>0) {
         b=src[--j];
-        if(!IS_BASIC(b)) {
+        якщо(!IS_BASIC(b)) {
             *pErrorCode=U_INVALID_CHAR_FOUND;
-            return 0;
+            повернути 0;
         }
 
-        if(j<destCapacity) {
+        якщо(j<destCapacity) {
             dest[j] = b;
 
-            if(caseFlags!=nullptr) {
+            якщо(caseFlags!=nullptr) {
                 caseFlags[j]=IS_BASIC_UPPERCASE(b);
             }
         }
@@ -440,7 +440,7 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
      * Start just after the last delimiter if any
      * basic code points were copied; start at the beginning otherwise.
      */
-    for(in=basicLength>0 ? basicLength+1 : 0; in<srcLength; /* no op */) {
+    для(in=basicLength>0 ? basicLength+1 : 0; in<srcLength; /* no op */) {
         /*
          * in is the index of the next character to be consumed, and
          * destCPCount is the number of code points in the output array.
@@ -450,21 +450,21 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
          * if we increase i as we go, then subtract off its starting
          * value at the end to obtain delta.
          */
-        for(oldi=i, w=1, k=BASE; /* no condition */; k+=BASE) {
-            if(in>=srcLength) {
+        для(oldi=i, w=1, k=BASE; /* no condition */; k+=BASE) {
+            якщо(in>=srcLength) {
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                return 0;
+                повернути 0;
             }
 
             digit=decodeDigit(src[in++]);
-            if(digit<0) {
+            якщо(digit<0) {
                 *pErrorCode=U_INVALID_CHAR_FOUND;
-                return 0;
+                повернути 0;
             }
-            if(digit>(0x7fffffff-i)/w) {
+            якщо(digit>(0x7fffffff-i)/w) {
                 /* integer overflow */
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                return 0;
+                повернути 0;
             }
 
             i+=digit*w;
@@ -477,19 +477,19 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
             }
             */
             t=k-bias;
-            if(t<TMIN) {
+            якщо(t<TMIN) {
                 t=TMIN;
-            } else if(k>=(bias+TMAX)) {
+            } інакше якщо(k>=(bias+TMAX)) {
                 t=TMAX;
             }
-            if(digit<t) {
+            якщо(digit<t) {
                 break;
             }
 
-            if(w>0x7fffffff/(BASE-t)) {
+            якщо(w>0x7fffffff/(BASE-t)) {
                 /* integer overflow */
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                return 0;
+                повернути 0;
             }
             w*=BASE-t;
         }
@@ -506,10 +506,10 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
          * i was supposed to wrap around from (incremented) destCPCount to 0,
          * incrementing n each time, so we'll fix that now:
          */
-        if(i/destCPCount>(0x7fffffff-n)) {
+        якщо(i/destCPCount>(0x7fffffff-n)) {
             /* integer overflow */
             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-            return 0;
+            повернути 0;
         }
 
         n+=i/destCPCount;
@@ -517,15 +517,15 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
         /* not needed for Punycode: */
         /* if (decode_digit(n) <= BASE) return punycode_invalid_input; */
 
-        if(n>0x10ffff || U_IS_SURROGATE(n)) {
+        якщо(n>0x10ffff || U_IS_SURROGATE(n)) {
             /* Unicode code point overflow */
             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-            return 0;
+            повернути 0;
         }
 
         /* Insert n at position i of the output: */
         cpLength=U16_LENGTH(n);
-        if(dest!=nullptr && ((destLength+cpLength)<=destCapacity)) {
+        якщо(dest!=nullptr && ((destLength+cpLength)<=destCapacity)) {
             int32_t codeUnitIndex;
 
             /*
@@ -538,41 +538,41 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
              * Only the rare cases with supplementary code points are handled
              * more slowly - but not too bad since this is an insertion anyway.
              */
-            if(i<=firstSupplementaryIndex) {
+            якщо(i<=firstSupplementaryIndex) {
                 codeUnitIndex=i;
-                if(cpLength>1) {
+                якщо(cpLength>1) {
                     firstSupplementaryIndex=codeUnitIndex;
-                } else {
+                } інакше {
                     ++firstSupplementaryIndex;
                 }
-            } else {
+            } інакше {
                 codeUnitIndex=firstSupplementaryIndex;
                 U16_FWD_N(dest, codeUnitIndex, destLength, i-codeUnitIndex);
             }
 
             /* use the char16_t index codeUnitIndex instead of the code point index i */
-            if(codeUnitIndex<destLength) {
+            якщо(codeUnitIndex<destLength) {
                 uprv_memmove(dest+codeUnitIndex+cpLength,
                              dest+codeUnitIndex,
                              (destLength-codeUnitIndex)*U_SIZEOF_UCHAR);
-                if(caseFlags!=nullptr) {
+                якщо(caseFlags!=nullptr) {
                     uprv_memmove(caseFlags+codeUnitIndex+cpLength,
                                  caseFlags+codeUnitIndex,
                                  destLength-codeUnitIndex);
                 }
             }
-            if(cpLength==1) {
+            якщо(cpLength==1) {
                 /* BMP, insert one code unit */
                 dest[codeUnitIndex]=(char16_t)n;
-            } else {
+            } інакше {
                 /* supplementary character, insert two code units */
                 dest[codeUnitIndex]=U16_LEAD(n);
                 dest[codeUnitIndex+1]=U16_TRAIL(n);
             }
-            if(caseFlags!=nullptr) {
+            якщо(caseFlags!=nullptr) {
                 /* Case of last character determines uppercase flag: */
                 caseFlags[codeUnitIndex]=IS_BASIC_UPPERCASE(src[in-1]);
-                if(cpLength==2) {
+                якщо(cpLength==2) {
                     caseFlags[codeUnitIndex+1]=false;
                 }
             }
@@ -582,7 +582,7 @@ u_strFromPunycode(const char16_t *src, int32_t srcLength,
         ++i;
     }
 
-    return u_terminateUChars(dest, destCapacity, destLength, pErrorCode);
+    повернути u_terminateUChars(dest, destCapacity, destLength, pErrorCode);
 }
 
 /* ### check notes on overflow handling - only necessary if not IDNA? are these Punycode functions to be public? */

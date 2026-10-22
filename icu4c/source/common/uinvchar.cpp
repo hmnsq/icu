@@ -170,13 +170,13 @@ static const uint32_t invariantChars[4]={
 /* test signed types for invariant characters, adds test for positive values */
 #define SCHAR_IS_INVARIANT(c) ((0<=(c)) && UCHAR_IS_INVARIANT(c))
 
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
+#якщо U_CHARSET_FAMILY==U_ASCII_FAMILY
 #define CHAR_TO_UCHAR(c) c
 #define UCHAR_TO_CHAR(c) c
 #elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
 #define CHAR_TO_UCHAR(u) asciiFromEbcdic[u]
 #define UCHAR_TO_CHAR(u) ebcdicFromAscii[u]
-#else
+#інакше
 #   error U_CHARSET_FAMILY is not valid
 #endif
 
@@ -191,7 +191,7 @@ u_charsToUChars(const char *cs, char16_t *us, int32_t length) {
      * For EBCDIC systems, this works for characters with codes from
      * codepages 37 and 1047 or compatible.
      */
-    while(length>0) {
+    поки(length>0) {
         c=(uint8_t)(*cs++);
         u=(char16_t)CHAR_TO_UCHAR(c);
         U_ASSERT((u!=0 || c==0)); /* only invariant chars converted? */
@@ -204,9 +204,9 @@ U_CAPI void U_EXPORT2
 u_UCharsToChars(const char16_t *us, char *cs, int32_t length) {
     char16_t u;
 
-    while(length>0) {
+    поки(length>0) {
         u=*us++;
-        if(!UCHAR_IS_INVARIANT(u)) {
+        якщо(!UCHAR_IS_INVARIANT(u)) {
             U_ASSERT(false); /* Variant characters were used. These are not portable in ICU. */
             u=0;
         }
@@ -219,21 +219,21 @@ U_CAPI UBool U_EXPORT2
 uprv_isInvariantString(const char *s, int32_t length) {
     uint8_t c;
 
-    for(;;) {
-        if(length<0) {
+    для(;;) {
+        якщо(length<0) {
             /* NUL-terminated */
             c=(uint8_t)*s++;
-            if(c==0) {
+            якщо(c==0) {
                 break;
             }
-        } else {
+        } інакше {
             /* count length */
-            if(length==0) {
+            якщо(length==0) {
                 break;
             }
             --length;
             c=(uint8_t)*s++;
-            if(c==0) {
+            якщо(c==0) {
                 continue; /* NUL is invariant */
             }
         }
@@ -243,36 +243,36 @@ uprv_isInvariantString(const char *s, int32_t length) {
          * no assertions here because these functions are legitimately called
          * for strings with variant characters
          */
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
-        if(!UCHAR_IS_INVARIANT(c)) {
-            return false; /* found a variant char */
+#якщо U_CHARSET_FAMILY==U_ASCII_FAMILY
+        якщо(!UCHAR_IS_INVARIANT(c)) {
+            повернути false; /* found a variant char */
         }
 #elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
         c=CHAR_TO_UCHAR(c);
-        if(c==0 || !UCHAR_IS_INVARIANT(c)) {
-            return false; /* found a variant char */
+        якщо(c==0 || !UCHAR_IS_INVARIANT(c)) {
+            повернути false; /* found a variant char */
         }
-#else
+#інакше
 #   error U_CHARSET_FAMILY is not valid
 #endif
     }
-    return true;
+    повернути true;
 }
 
 U_CAPI UBool U_EXPORT2
 uprv_isInvariantUString(const char16_t *s, int32_t length) {
     char16_t c;
 
-    for(;;) {
-        if(length<0) {
+    для(;;) {
+        якщо(length<0) {
             /* NUL-terminated */
             c=*s++;
-            if(c==0) {
+            якщо(c==0) {
                 break;
             }
-        } else {
+        } інакше {
             /* count length */
-            if(length==0) {
+            якщо(length==0) {
                 break;
             }
             --length;
@@ -283,11 +283,11 @@ uprv_isInvariantUString(const char16_t *s, int32_t length) {
          * no assertions here because these functions are legitimately called
          * for strings with variant characters
          */
-        if(!UCHAR_IS_INVARIANT(c)) {
-            return false; /* found a variant char */
+        якщо(!UCHAR_IS_INVARIANT(c)) {
+            повернути false; /* found a variant char */
         }
     }
-    return true;
+    повернути true;
 }
 
 /* UDataSwapFn implementations used in udataswp.c ------- */
@@ -303,31 +303,31 @@ uprv_ebcdicFromAscii(const UDataSwapper *ds,
 
     int32_t count;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    якщо(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        повернути 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length>0 && outData==nullptr)) {
+    якщо(ds==nullptr || inData==nullptr || length<0 || (length>0 && outData==nullptr)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        повернути 0;
     }
 
     /* setup and swapping */
     s=(const uint8_t *)inData;
     t=(uint8_t *)outData;
     count=length;
-    while(count>0) {
+    поки(count>0) {
         c=*s++;
-        if(!UCHAR_IS_INVARIANT(c)) {
+        якщо(!UCHAR_IS_INVARIANT(c)) {
             udata_printError(ds, "uprv_ebcdicFromAscii() string[%d] contains a variant character in position %d\n",
                              length, length-count);
             *pErrorCode=U_INVALID_CHAR_FOUND;
-            return 0;
+            повернути 0;
         }
         *t++=ebcdicFromAscii[c];
         --count;
     }
 
-    return length;
+    повернути length;
 }
 
 /* this function only checks and copies ASCII strings without conversion */
@@ -340,33 +340,33 @@ uprv_copyAscii(const UDataSwapper *ds,
 
     int32_t count;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    якщо(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        повернути 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length>0 && outData==nullptr)) {
+    якщо(ds==nullptr || inData==nullptr || length<0 || (length>0 && outData==nullptr)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        повернути 0;
     }
 
     /* setup and checking */
     s=(const uint8_t *)inData;
     count=length;
-    while(count>0) {
+    поки(count>0) {
         c=*s++;
-        if(!UCHAR_IS_INVARIANT(c)) {
+        якщо(!UCHAR_IS_INVARIANT(c)) {
             udata_printError(ds, "uprv_copyFromAscii() string[%d] contains a variant character in position %d\n",
                              length, length-count);
             *pErrorCode=U_INVALID_CHAR_FOUND;
-            return 0;
+            повернути 0;
         }
         --count;
     }
 
-    if(length>0 && inData!=outData) {
+    якщо(length>0 && inData!=outData) {
         uprv_memcpy(outData, inData, length);
     }
 
-    return length;
+    повернути length;
 }
 
 /* convert EBCDIC to ASCII and verify that all characters are invariant */
@@ -380,31 +380,31 @@ uprv_asciiFromEbcdic(const UDataSwapper *ds,
 
     int32_t count;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    якщо(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        повернути 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 ||  (length>0 && outData==nullptr)) {
+    якщо(ds==nullptr || inData==nullptr || length<0 ||  (length>0 && outData==nullptr)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        повернути 0;
     }
 
     /* setup and swapping */
     s=(const uint8_t *)inData;
     t=(uint8_t *)outData;
     count=length;
-    while(count>0) {
+    поки(count>0) {
         c=*s++;
-        if(c!=0 && ((c=asciiFromEbcdic[c])==0 || !UCHAR_IS_INVARIANT(c))) {
+        якщо(c!=0 && ((c=asciiFromEbcdic[c])==0 || !UCHAR_IS_INVARIANT(c))) {
             udata_printError(ds, "uprv_asciiFromEbcdic() string[%d] contains a variant character in position %d\n",
                              length, length-count);
             *pErrorCode=U_INVALID_CHAR_FOUND;
-            return 0;
+            повернути 0;
         }
         *t++=c;
         --count;
     }
 
-    return length;
+    повернути length;
 }
 
 /* this function only checks and copies EBCDIC strings without conversion */
@@ -417,40 +417,40 @@ uprv_copyEbcdic(const UDataSwapper *ds,
 
     int32_t count;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    якщо(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        повернути 0;
     }
-    if(ds==nullptr || inData==nullptr || length<0 || (length>0 && outData==nullptr)) {
+    якщо(ds==nullptr || inData==nullptr || length<0 || (length>0 && outData==nullptr)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        повернути 0;
     }
 
     /* setup and checking */
     s=(const uint8_t *)inData;
     count=length;
-    while(count>0) {
+    поки(count>0) {
         c=*s++;
-        if(c!=0 && ((c=asciiFromEbcdic[c])==0 || !UCHAR_IS_INVARIANT(c))) {
+        якщо(c!=0 && ((c=asciiFromEbcdic[c])==0 || !UCHAR_IS_INVARIANT(c))) {
             udata_printError(ds, "uprv_copyEbcdic() string[%] contains a variant character in position %d\n",
                              length, length-count);
             *pErrorCode=U_INVALID_CHAR_FOUND;
-            return 0;
+            повернути 0;
         }
         --count;
     }
 
-    if(length>0 && inData!=outData) {
+    якщо(length>0 && inData!=outData) {
         uprv_memcpy(outData, inData, length);
     }
 
-    return length;
+    повернути length;
 }
 
 U_CAPI UBool
 uprv_isEbcdicAtSign(char c) {
     static const uint8_t ebcdicAtSigns[] = {
         0x7C, 0x44, 0x66, 0x80, 0xAC, 0xAE, 0xAF, 0xB5, 0xEC, 0xEF, 0x00 };
-    return c != 0 && uprv_strchr((const char *)ebcdicAtSigns, c) != nullptr;
+    повернути c != 0 && uprv_strchr((const char *)ebcdicAtSigns, c) != nullptr;
 }
 
 /* compare invariant strings; variant characters compare less than others and unlike each other */
@@ -463,41 +463,41 @@ uprv_compareInvAscii(const UDataSwapper *ds,
     UChar32 c1, c2;
     uint8_t c;
 
-    if(outString==nullptr || outLength<-1 || localString==nullptr || localLength<-1) {
-        return 0;
+    якщо(outString==nullptr || outLength<-1 || localString==nullptr || localLength<-1) {
+        повернути 0;
     }
 
-    if(outLength<0) {
+    якщо(outLength<0) {
         outLength=(int32_t)uprv_strlen(outString);
     }
-    if(localLength<0) {
+    якщо(localLength<0) {
         localLength=u_strlen(localString);
     }
 
     minLength= outLength<localLength ? outLength : localLength;
 
-    while(minLength>0) {
+    поки(minLength>0) {
         c=(uint8_t)*outString++;
-        if(UCHAR_IS_INVARIANT(c)) {
+        якщо(UCHAR_IS_INVARIANT(c)) {
             c1=c;
-        } else {
+        } інакше {
             c1=-1;
         }
 
         c2=*localString++;
-        if(!UCHAR_IS_INVARIANT(c2)) {
+        якщо(!UCHAR_IS_INVARIANT(c2)) {
             c2=-2;
         }
 
-        if((c1-=c2)!=0) {
-            return c1;
+        якщо((c1-=c2)!=0) {
+            повернути c1;
         }
 
         --minLength;
     }
 
     /* strings start with same prefix, compare lengths */
-    return outLength-localLength;
+    повернути outLength-localLength;
 }
 
 U_CFUNC int32_t
@@ -509,74 +509,74 @@ uprv_compareInvEbcdic(const UDataSwapper *ds,
     UChar32 c1, c2;
     uint8_t c;
 
-    if(outString==nullptr || outLength<-1 || localString==nullptr || localLength<-1) {
-        return 0;
+    якщо(outString==nullptr || outLength<-1 || localString==nullptr || localLength<-1) {
+        повернути 0;
     }
 
-    if(outLength<0) {
+    якщо(outLength<0) {
         outLength=(int32_t)uprv_strlen(outString);
     }
-    if(localLength<0) {
+    якщо(localLength<0) {
         localLength=u_strlen(localString);
     }
 
     minLength= outLength<localLength ? outLength : localLength;
 
-    while(minLength>0) {
+    поки(minLength>0) {
         c=(uint8_t)*outString++;
-        if(c==0) {
+        якщо(c==0) {
             c1=0;
-        } else if((c1=asciiFromEbcdic[c])!=0 && UCHAR_IS_INVARIANT(c1)) {
+        } інакше якщо((c1=asciiFromEbcdic[c])!=0 && UCHAR_IS_INVARIANT(c1)) {
             /* c1 is set */
-        } else {
+        } інакше {
             c1=-1;
         }
 
         c2=*localString++;
-        if(!UCHAR_IS_INVARIANT(c2)) {
+        якщо(!UCHAR_IS_INVARIANT(c2)) {
             c2=-2;
         }
 
-        if((c1-=c2)!=0) {
-            return c1;
+        якщо((c1-=c2)!=0) {
+            повернути c1;
         }
 
         --minLength;
     }
 
     /* strings start with same prefix, compare lengths */
-    return outLength-localLength;
+    повернути outLength-localLength;
 }
 
 U_CAPI int32_t U_EXPORT2
 uprv_compareInvEbcdicAsAscii(const char *s1, const char *s2) {
     int32_t c1, c2;
 
-    for(;; ++s1, ++s2) {
+    для(;; ++s1, ++s2) {
         c1=(uint8_t)*s1;
         c2=(uint8_t)*s2;
-        if(c1!=c2) {
-            if(c1!=0 && ((c1=asciiFromEbcdic[c1])==0 || !UCHAR_IS_INVARIANT(c1))) {
+        якщо(c1!=c2) {
+            якщо(c1!=0 && ((c1=asciiFromEbcdic[c1])==0 || !UCHAR_IS_INVARIANT(c1))) {
                 c1=-(int32_t)(uint8_t)*s1;
             }
-            if(c2!=0 && ((c2=asciiFromEbcdic[c2])==0 || !UCHAR_IS_INVARIANT(c2))) {
+            якщо(c2!=0 && ((c2=asciiFromEbcdic[c2])==0 || !UCHAR_IS_INVARIANT(c2))) {
                 c2=-(int32_t)(uint8_t)*s2;
             }
-            return c1-c2;
-        } else if(c1==0) {
-            return 0;
+            повернути c1-c2;
+        } інакше якщо(c1==0) {
+            повернути 0;
         }
     }
 }
 
 U_CAPI char U_EXPORT2
 uprv_ebcdicToAscii(char c) {
-    return (char)asciiFromEbcdic[(uint8_t)c];
+    повернути (char)asciiFromEbcdic[(uint8_t)c];
 }
 
 U_CAPI char U_EXPORT2
 uprv_ebcdicToLowercaseAscii(char c) {
-    return (char)lowercaseAsciiFromEbcdic[(uint8_t)c];
+    повернути (char)lowercaseAsciiFromEbcdic[(uint8_t)c];
 }
 
 U_CAPI uint8_t* U_EXPORT2
@@ -584,20 +584,20 @@ uprv_aestrncpy(uint8_t *dst, const uint8_t *src, int32_t n)
 {
   uint8_t *orig_dst = dst;
 
-  if(n==-1) { 
+  якщо(n==-1) { 
     n = static_cast<int32_t>(uprv_strlen((const char*)src)+1); /* copy NUL */
   }
   /* copy non-null */
-  while(*src && n>0) {
+  поки(*src && n>0) {
     *(dst++) = asciiFromEbcdic[*(src++)];
     n--;
   }
   /* pad */
-  while(n>0) {
+  поки(n>0) {
     *(dst++) = 0;
     n--;
   }
-  return orig_dst;
+  повернути orig_dst;
 }
 
 U_CAPI uint8_t* U_EXPORT2
@@ -605,23 +605,23 @@ uprv_eastrncpy(uint8_t *dst, const uint8_t *src, int32_t n)
 {
   uint8_t *orig_dst = dst;
 
-  if(n==-1) { 
+  якщо(n==-1) { 
     n = static_cast<int32_t>(uprv_strlen((const char*)src)+1); /* copy NUL */
   }
   /* copy non-null */
-  while(*src && n>0) {
+  поки(*src && n>0) {
     char ch = ebcdicFromAscii[*(src++)];
-    if(ch == 0) {
+    якщо(ch == 0) {
       ch = ebcdicFromAscii[0x3f]; /* questionmark (subchar) */
     }
     *(dst++) = ch;
     n--;
   }
   /* pad */
-  while(n>0) {
+  поки(n>0) {
     *(dst++) = 0;
     n--;
   }
-  return orig_dst;
+  повернути orig_dst;
 }
 

@@ -39,7 +39,7 @@
  * For option 3, follow option 1 and also define UCLN_AUTO_LOCAL (see below for more information)
  */
 
-#if !UCLN_NO_AUTO_CLEANUP
+#якщо !UCLN_NO_AUTO_CLEANUP
 
 /*
  * The following declarations are for when UCLN_AUTO_LOCAL or UCLN_AUTO_ATEXIT
@@ -59,12 +59,12 @@
 
 #ifdef UCLN_TYPE_IS_COMMON
 #   define UCLN_CLEAN_ME_UP u_cleanup()
-#else
+#інакше
 #   define UCLN_CLEAN_ME_UP ucln_cleanupOne(UCLN_TYPE)
 #endif
 
 /* ------------ automatic cleanup: registration. Choose ONE ------- */
-#if defined(UCLN_AUTO_LOCAL)
+#якщо defined(UCLN_AUTO_LOCAL)
 /* To use:
  *  1. define UCLN_AUTO_LOCAL,
  *  2. create ucln_local_hook.c containing implementations of
@@ -87,7 +87,7 @@ static void ucln_atexit_handler()
 
 static void ucln_registerAutomaticCleanup()
 {
-    if(!gAutoCleanRegistered) {
+    якщо(!gAutoCleanRegistered) {
         gAutoCleanRegistered = true;
         atexit(&ucln_atexit_handler);
     }
@@ -161,7 +161,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
             break;
 
     }
-    return status;
+    повернути status;
 }
 
 #elif defined(__GNUC__)
@@ -177,6 +177,6 @@ static void ucln_destructor()
 
 #endif /* UCLN_NO_AUTO_CLEANUP */
 
-#else
+#інакше
 #error This file can only be included once.
 #endif

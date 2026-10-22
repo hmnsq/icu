@@ -19,7 +19,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#якщо !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/unistr.h"
 #include "unicode/uniset.h"
@@ -38,7 +38,7 @@
 U_NAMESPACE_BEGIN
 
 #ifdef RBBI_DEBUG
-static int  gLastSerial = 0;
+static ціле  gLastSerial = 0;
 #endif
 
 
@@ -48,8 +48,8 @@ static int  gLastSerial = 0;
 //
 //-------------------------------------------------------------------------
 RBBINode::RBBINode(NodeType t, UErrorCode& status) : UMemory() {
-    if (U_FAILURE(status)) {
-        return;
+    якщо (U_FAILURE(status)) {
+        повернути;
     }
 #ifdef RBBI_DEBUG
     fSerialNum    = ++gLastSerial;
@@ -71,21 +71,21 @@ RBBINode::RBBINode(NodeType t, UErrorCode& status) : UMemory() {
     fFirstPosSet  = new UVector(status);
     fLastPosSet   = new UVector(status);
     fFollowPos    = new UVector(status);
-    if (U_SUCCESS(status) &&
+    якщо (U_SUCCESS(status) &&
         (fFirstPosSet == nullptr || fLastPosSet == nullptr || fFollowPos == nullptr)) {
         status =  U_MEMORY_ALLOCATION_ERROR;
     }
-    if      (t==opCat)    {fPrecedence = precOpCat;}
-    else if (t==opOr)     {fPrecedence = precOpOr;}
-    else if (t==opStart)  {fPrecedence = precStart;}
-    else if (t==opLParen) {fPrecedence = precLParen;}
+    якщо      (t==opCat)    {fPrecedence = precOpCat;}
+    інакше якщо (t==opOr)     {fPrecedence = precOpOr;}
+    інакше якщо (t==opStart)  {fPrecedence = precStart;}
+    інакше якщо (t==opLParen) {fPrecedence = precLParen;}
 
 }
 
 
 RBBINode::RBBINode(const RBBINode &other, UErrorCode& status) : UMemory(other) {
-    if (U_FAILURE(status)) {
-        return;
+    якщо (U_FAILURE(status)) {
+        повернути;
     }
 #ifdef RBBI_DEBUG
     fSerialNum   = ++gLastSerial;
@@ -106,7 +106,7 @@ RBBINode::RBBINode(const RBBINode &other, UErrorCode& status) : UMemory(other) {
     fFirstPosSet = new UVector(status);   // TODO - get a real status from somewhere
     fLastPosSet  = new UVector(status);
     fFollowPos   = new UVector(status);
-    if (U_SUCCESS(status) &&
+    якщо (U_SUCCESS(status) &&
         (fFirstPosSet == nullptr || fLastPosSet == nullptr || fFollowPos == nullptr)) {
         status =  U_MEMORY_ALLOCATION_ERROR;
     }
@@ -156,38 +156,38 @@ RBBINode::~RBBINode() {
  * stack overflow with some perverse test rule data (from fuzzing).
  */
 void RBBINode::NRDeleteNode(RBBINode *node) {
-    if (node == nullptr) {
-        return;
+    якщо (node == nullptr) {
+        повернути;
     }
 
     RBBINode *stopNode = node->fParent;
     RBBINode *nextNode = node;
-    while (nextNode != stopNode && nextNode != nullptr) {
+    поки (nextNode != stopNode && nextNode != nullptr) {
         RBBINode *currentNode = nextNode;
 
-        if ((currentNode->fLeftChild == nullptr && currentNode->fRightChild == nullptr) ||
+        якщо ((currentNode->fLeftChild == nullptr && currentNode->fRightChild == nullptr) ||
                 currentNode->fType == varRef ||      // varRef and setRef nodes do not
                 currentNode->fType == setRef) {      // own their children nodes.
             // CurrentNode is effectively a leaf node; it's safe to go ahead and delete it.
             nextNode = currentNode->fParent;
-            if (nextNode) {
-                if (nextNode->fLeftChild == currentNode) {
+            якщо (nextNode) {
+                якщо (nextNode->fLeftChild == currentNode) {
                     nextNode->fLeftChild = nullptr;
-                } else if (nextNode->fRightChild == currentNode) {
+                } інакше якщо (nextNode->fRightChild == currentNode) {
                     nextNode->fRightChild = nullptr;
                 }
             }
             delete currentNode;
-        } else if (currentNode->fLeftChild) {
+        } інакше якщо (currentNode->fLeftChild) {
             nextNode = currentNode->fLeftChild;
-            if (nextNode->fParent == nullptr) {
+            якщо (nextNode->fParent == nullptr) {
                 nextNode->fParent = currentNode;
                 // fParent isn't always set; do it now if not.
             }
             U_ASSERT(nextNode->fParent == currentNode);
-        } else if (currentNode->fRightChild) {
+        } інакше якщо (currentNode->fRightChild) {
             nextNode = currentNode->fRightChild;
-            if (nextNode->fParent == nullptr) {
+            якщо (nextNode->fParent == nullptr) {
                 nextNode->fParent = currentNode;
                 // fParent isn't always set; do it now if not.
             }
@@ -205,57 +205,57 @@ void RBBINode::NRDeleteNode(RBBINode *node) {
 //                  references in preparation for generating the DFA tables.
 //
 //-------------------------------------------------------------------------
-constexpr int kRecursiveDepthLimit = 3500;
-RBBINode *RBBINode::cloneTree(UErrorCode &status, int depth) {
-    if (U_FAILURE(status)) {
-        return nullptr;
+constexpr ціле kRecursiveDepthLimit = 3500;
+RBBINode *RBBINode::cloneTree(UErrorCode &status, ціле depth) {
+    якщо (U_FAILURE(status)) {
+        повернути nullptr;
     }
     // If the depth of the stack is too deep, we return U_INPUT_TOO_LONG_ERROR
     // to avoid stack overflow crash.
-    if (depth > kRecursiveDepthLimit) {
+    якщо (depth > kRecursiveDepthLimit) {
         status = U_INPUT_TOO_LONG_ERROR;
-        return nullptr;
+        повернути nullptr;
     }
     RBBINode    *n;
 
-    if (fType == RBBINode::varRef) {
+    якщо (fType == RBBINode::varRef) {
         // If the current node is a variable reference, skip over it
         //   and clone the definition of the variable instead.
         n = fLeftChild->cloneTree(status, depth+1);
-        if (U_FAILURE(status)) {
-            return nullptr;
+        якщо (U_FAILURE(status)) {
+            повернути nullptr;
         }
-    } else if (fType == RBBINode::uset) {
+    } інакше якщо (fType == RBBINode::uset) {
         n = this;
-    } else {
+    } інакше {
         n = new RBBINode(*this, status);
-        if (U_FAILURE(status)) {
+        якщо (U_FAILURE(status)) {
             delete n;
-            return nullptr;
+            повернути nullptr;
         }
         // Check for null pointer.
-        if (n == nullptr) {
+        якщо (n == nullptr) {
             status =  U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+            повернути nullptr;
         }
-        if (fLeftChild != nullptr) {
+        якщо (fLeftChild != nullptr) {
             n->fLeftChild          = fLeftChild->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
+            якщо (U_FAILURE(status)) {
                 delete n;
-                return nullptr;
+                повернути nullptr;
             }
             n->fLeftChild->fParent = n;
         }
-        if (fRightChild != nullptr) {
+        якщо (fRightChild != nullptr) {
             n->fRightChild          = fRightChild->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
+            якщо (U_FAILURE(status)) {
                 delete n;
-                return nullptr;
+                повернути nullptr;
             }
             n->fRightChild->fParent = n;
         }
     }
-    return n;
+    повернути n;
 }
 
 
@@ -278,48 +278,48 @@ RBBINode *RBBINode::cloneTree(UErrorCode &status, int depth) {
 //                      nested references are handled by cloneTree(), not here.
 //
 //-------------------------------------------------------------------------
-RBBINode *RBBINode::flattenVariables(UErrorCode& status, int depth) {
-    if (U_FAILURE(status)) {
-        return this;
+RBBINode *RBBINode::flattenVariables(UErrorCode& status, ціле depth) {
+    якщо (U_FAILURE(status)) {
+        повернути this;
     }
     // If the depth of the stack is too deep, we return U_INPUT_TOO_LONG_ERROR
     // to avoid stack overflow crash.
-    if (depth > kRecursiveDepthLimit) {
+    якщо (depth > kRecursiveDepthLimit) {
         status = U_INPUT_TOO_LONG_ERROR;
-        return this;
+        повернути this;
     }
-    if (fType == varRef) {
+    якщо (fType == varRef) {
         RBBINode *retNode  = fLeftChild->cloneTree(status, depth+1);
-        if (U_FAILURE(status)) {
-            return this;
+        якщо (U_FAILURE(status)) {
+            повернути this;
         }
         retNode->fRuleRoot = this->fRuleRoot;
         retNode->fChainIn  = this->fChainIn;
         delete this;   // TODO: undefined behavior. Fix.
-        return retNode;
+        повернути retNode;
     }
 
-    if (fLeftChild != nullptr) {
+    якщо (fLeftChild != nullptr) {
         fLeftChild = fLeftChild->flattenVariables(status, depth+1);
-        if (fLeftChild == nullptr) {
+        якщо (fLeftChild == nullptr) {
             status = U_MEMORY_ALLOCATION_ERROR;
         }
-        if (U_FAILURE(status)) {
-            return this;
+        якщо (U_FAILURE(status)) {
+            повернути this;
         }
         fLeftChild->fParent  = this;
     }
-    if (fRightChild != nullptr) {
+    якщо (fRightChild != nullptr) {
         fRightChild = fRightChild->flattenVariables(status, depth+1);
-        if (fRightChild == nullptr) {
+        якщо (fRightChild == nullptr) {
             status = U_MEMORY_ALLOCATION_ERROR;
         }
-        if (U_FAILURE(status)) {
-            return this;
+        якщо (U_FAILURE(status)) {
+            повернути this;
         }
         fRightChild->fParent = this;
     }
-    return this;
+    повернути this;
 }
 
 
@@ -331,48 +331,48 @@ RBBINode *RBBINode::flattenVariables(UErrorCode& status, int depth) {
 //                 the left child of the uset node.
 //
 //-------------------------------------------------------------------------
-void RBBINode::flattenSets(UErrorCode &status, int depth) {
-    if (U_FAILURE(status)) {
-        return;
+void RBBINode::flattenSets(UErrorCode &status, ціле depth) {
+    якщо (U_FAILURE(status)) {
+        повернути;
     }
     // If the depth of the stack is too deep, we return U_INPUT_TOO_LONG_ERROR
     // to avoid stack overflow crash.
-    if (depth > kRecursiveDepthLimit) {
+    якщо (depth > kRecursiveDepthLimit) {
         status = U_INPUT_TOO_LONG_ERROR;
-        return;
+        повернути;
     }
     U_ASSERT(fType != setRef);
 
-    if (fLeftChild != nullptr) {
-        if (fLeftChild->fType==setRef) {
+    якщо (fLeftChild != nullptr) {
+        якщо (fLeftChild->fType==setRef) {
             RBBINode *setRefNode = fLeftChild;
             RBBINode *usetNode   = setRefNode->fLeftChild;
             RBBINode *replTree   = usetNode->fLeftChild;
             fLeftChild           = replTree->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
+            якщо (U_FAILURE(status)) {
                 delete setRefNode;
-                return;
+                повернути;
             }
             fLeftChild->fParent  = this;
             delete setRefNode;
-        } else {
+        } інакше {
             fLeftChild->flattenSets(status, depth+1);
         }
     }
 
-    if (fRightChild != nullptr) {
-        if (fRightChild->fType==setRef) {
+    якщо (fRightChild != nullptr) {
+        якщо (fRightChild->fType==setRef) {
             RBBINode *setRefNode = fRightChild;
             RBBINode *usetNode   = setRefNode->fLeftChild;
             RBBINode *replTree   = usetNode->fLeftChild;
             fRightChild           = replTree->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
+            якщо (U_FAILURE(status)) {
                 delete setRefNode;
-                return;
+                повернути;
             }
             fRightChild->fParent  = this;
             delete setRefNode;
-        } else {
+        } інакше {
             fRightChild->flattenSets(status, depth+1);
         }
     }
@@ -388,17 +388,17 @@ void RBBINode::flattenSets(UErrorCode &status, int depth) {
 //-------------------------------------------------------------------------
 void   RBBINode::findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &status) {
     /* test for buffer overflows */
-    if (U_FAILURE(status)) {
-        return;
+    якщо (U_FAILURE(status)) {
+        повернути;
     }
     U_ASSERT(!dest->hasDeleter());
-    if (fType == kind) {
+    якщо (fType == kind) {
         dest->addElement(this, status);
     }
-    if (fLeftChild != nullptr) {
+    якщо (fLeftChild != nullptr) {
         fLeftChild->findNodes(dest, kind, status);
     }
-    if (fRightChild != nullptr) {
+    якщо (fRightChild != nullptr) {
         fRightChild->findNodes(dest, kind, status);
     }
 }
@@ -412,7 +412,7 @@ void   RBBINode::findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &s
 #ifdef RBBI_DEBUG
 
 static int32_t serial(const RBBINode *node) {
-    return (node == nullptr? -1 : node->fSerialNum);
+    повернути (node == nullptr? -1 : node->fSerialNum);
 }
 
 
@@ -436,15 +436,15 @@ void RBBINode::printNode(const RBBINode *node) {
                 "opLParen"
     };
 
-    if (node==nullptr) {
+    якщо (node==nullptr) {
         RBBIDebugPrintf("%10p", (void *)node);
-    } else {
+    } інакше {
         RBBIDebugPrintf("%10p %5d %12s %c%c  %5d       %5d     %5d       %6d     %d ",
             (void *)node, node->fSerialNum, nodeTypeNames[node->fType],
             node->fRuleRoot?'R':' ', node->fChainIn?'C':' ',
             serial(node->fLeftChild), serial(node->fRightChild), serial(node->fParent),
             node->fFirstPos, node->fVal);
-        if (node->fType == varRef) {
+        якщо (node->fType == varRef) {
             RBBI_DEBUG_printUnicodeString(node->fText);
         }
     }
@@ -454,7 +454,7 @@ void RBBINode::printNode(const RBBINode *node) {
 
 
 #ifdef RBBI_DEBUG
-U_CFUNC void RBBI_DEBUG_printUnicodeString(const UnicodeString &s, int minWidth) {
+U_CFUNC void RBBI_DEBUG_printUnicodeString(const UnicodeString &s, ціле minWidth) {
     RBBIDebugPrintf("%*s", minWidth, CStr(s)());
 }
 #endif
@@ -471,19 +471,19 @@ void RBBINode::printNodeHeader() {
 }
     
 void RBBINode::printTree(const RBBINode *node, UBool printHeading) {
-    if (printHeading) {
+    якщо (printHeading) {
         printNodeHeader();
     }
     printNode(node);
-    if (node != nullptr) {
+    якщо (node != nullptr) {
         // Only dump the definition under a variable reference if asked to.
         // Unconditionally dump children of all other node types.
-        if (node->fType != varRef) {
-            if (node->fLeftChild != nullptr) {
+        якщо (node->fType != varRef) {
+            якщо (node->fLeftChild != nullptr) {
                 printTree(node->fLeftChild, false);
             }
             
-            if (node->fRightChild != nullptr) {
+            якщо (node->fRightChild != nullptr) {
                 printTree(node->fRightChild, false);
             }
         }

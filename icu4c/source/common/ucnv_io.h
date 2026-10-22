@@ -17,7 +17,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#якщо !UCONFIG_NO_CONVERSION
 
 #include "udataswp.h"
 
@@ -69,11 +69,11 @@ typedef struct UConverterAlias {
  * @see ucnv_compareNames
  * @return the destination buffer.
  */
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
+#якщо U_CHARSET_FAMILY==U_ASCII_FAMILY
 #   define ucnv_io_stripForCompare ucnv_io_stripASCIIForCompare
 #elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
 #   define ucnv_io_stripForCompare ucnv_io_stripEBCDICForCompare
-#else
+#інакше
 #   error U_CHARSET_FAMILY is not valid
 #endif
 

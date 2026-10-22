@@ -72,7 +72,7 @@ typedef struct ULanguageTag {
 #define LOCALE_KEY_TYPE_SEP '='
 
 constexpr auto ISALPHA = uprv_isASCIILetter;
-inline bool ISNUMERIC(char c) { return c >= '0' && c <= '9'; }
+inline bool ISNUMERIC(char c) { повернути c >= '0' && c <= '9'; }
 
 constexpr char EMPTY[] = "";
 constexpr char LANG_UND[] = "und";
@@ -314,7 +314,7 @@ ultag_close(ULanguageTag* langtag);
 const char*
 ultag_getLanguage(const ULanguageTag* langtag U_LIFETIME_BOUND);
 
-#if 0
+#якщо 0
 const char*
 ultag_getJDKLanguage(const ULanguageTag* langtag);
 #endif
@@ -349,7 +349,7 @@ ultag_getExtensionsSize(const ULanguageTag* langtag);
 const char*
 ultag_getPrivateUse(const ULanguageTag* langtag U_LIFETIME_BOUND);
 
-#if 0
+#якщо 0
 const char*
 ultag_getLegacy(const ULanguageTag* langtag);
 #endif
@@ -384,45 +384,45 @@ namespace {
 bool
 _isAlphaString(const char* s, int32_t len) {
     int32_t i;
-    for (i = 0; i < len; i++) {
-        if (!ISALPHA(*(s + i))) {
-            return false;
+    для (i = 0; i < len; i++) {
+        якщо (!ISALPHA(*(s + i))) {
+            повернути false;
         }
     }
-    return true;
+    повернути true;
 }
 
 bool
 _isNumericString(const char* s, int32_t len) {
     int32_t i;
-    for (i = 0; i < len; i++) {
-        if (!ISNUMERIC(*(s + i))) {
-            return false;
+    для (i = 0; i < len; i++) {
+        якщо (!ISNUMERIC(*(s + i))) {
+            повернути false;
         }
     }
-    return true;
+    повернути true;
 }
 
 bool
 _isAlphaNumericString(const char* s, int32_t len) {
     int32_t i;
-    for (i = 0; i < len; i++) {
-        if (!ISALPHA(*(s + i)) && !ISNUMERIC(*(s + i))) {
-            return false;
+    для (i = 0; i < len; i++) {
+        якщо (!ISALPHA(*(s + i)) && !ISNUMERIC(*(s + i))) {
+            повернути false;
         }
     }
-    return true;
+    повернути true;
 }
 
 bool
 _isAlphaNumericStringLimitedLength(const char* s, int32_t len, int32_t min, int32_t max) {
-    if (len < 0) {
+    якщо (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len >= min && len <= max && _isAlphaNumericString(s, len)) {
-        return true;
+    якщо (len >= min && len <= max && _isAlphaNumericString(s, len)) {
+        повернути true;
     }
-    return false;
+    повернути false;
 }
 
 }  // namespace
@@ -434,13 +434,13 @@ ultag_isLanguageSubtag(const char* s, int32_t len) {
      * NOTE: Per ICUTC 2019/01/23- accepting alpha 4
      * See ICU-20372
      */
-    if (len < 0) {
+    якщо (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len >= 2 && len <= 8 && _isAlphaString(s, len)) {
-        return true;
+    якщо (len >= 2 && len <= 8 && _isAlphaString(s, len)) {
+        повернути true;
     }
-    return false;
+    повернути false;
 }
 
 namespace {
@@ -451,13 +451,13 @@ _isExtlangSubtag(const char* s, int32_t len) {
      * extlang       = 3ALPHA              ; selected ISO 639 codes
      *                 *2("-" 3ALPHA)      ; permanently reserved
      */
-    if (len < 0) {
+    якщо (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 3 && _isAlphaString(s, len)) {
-        return true;
+    якщо (len == 3 && _isAlphaString(s, len)) {
+        повернути true;
     }
-    return false;
+    повернути false;
 }
 
 }  // namespace
@@ -467,13 +467,13 @@ ultag_isScriptSubtag(const char* s, int32_t len) {
     /*
      * script        = 4ALPHA              ; ISO 15924 code
      */
-    if (len < 0) {
+    якщо (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 4 && _isAlphaString(s, len)) {
-        return true;
+    якщо (len == 4 && _isAlphaString(s, len)) {
+        повернути true;
     }
-    return false;
+    повернути false;
 }
 
 bool
@@ -482,16 +482,16 @@ ultag_isRegionSubtag(const char* s, int32_t len) {
      * region        = 2ALPHA              ; ISO 3166-1 code
      *               / 3DIGIT              ; UN M.49 code
      */
-    if (len < 0) {
+    якщо (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 2 && _isAlphaString(s, len)) {
-        return true;
+    якщо (len == 2 && _isAlphaString(s, len)) {
+        повернути true;
     }
-    if (len == 3 && _isNumericString(s, len)) {
-        return true;
+    якщо (len == 3 && _isNumericString(s, len)) {
+        повернути true;
     }
-    return false;
+    повернути false;
 }
 
 namespace {
@@ -502,16 +502,16 @@ _isVariantSubtag(const char* s, int32_t len) {
      * variant       = 5*8alphanum         ; registered variants
      *               / (DIGIT 3alphanum)
      */
-    if (len < 0) {
+    якщо (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (_isAlphaNumericStringLimitedLength(s, len, 5, 8)) {
-        return true;
+    якщо (_isAlphaNumericStringLimitedLength(s, len, 5, 8)) {
+        повернути true;
     }
-    if (len == 4 && ISNUMERIC(*s) && _isAlphaNumericString(s + 1, 3)) {
-        return true;
+    якщо (len == 4 && ISNUMERIC(*s) && _isAlphaNumericString(s + 1, 3)) {
+        повернути true;
     }
-    return false;
+    повернути false;
 }
 
 bool
@@ -519,35 +519,35 @@ _isSepListOf(bool (*test)(const char*, int32_t), const char* s, int32_t len) {
     const char *p = s;
     const char *pSubtag = nullptr;
 
-    if (len < 0) {
+    якщо (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
 
-    while ((p - s) < len) {
-        if (*p == SEP) {
-            if (pSubtag == nullptr) {
-                return false;
+    поки ((p - s) < len) {
+        якщо (*p == SEP) {
+            якщо (pSubtag == nullptr) {
+                повернути false;
             }
-            if (!test(pSubtag, static_cast<int32_t>(p - pSubtag))) {
-                return false;
+            якщо (!test(pSubtag, static_cast<int32_t>(p - pSubtag))) {
+                повернути false;
             }
             pSubtag = nullptr;
-        } else if (pSubtag == nullptr) {
+        } інакше якщо (pSubtag == nullptr) {
             pSubtag = p;
         }
         p++;
     }
-    if (pSubtag == nullptr) {
-        return false;
+    якщо (pSubtag == nullptr) {
+        повернути false;
     }
-    return test(pSubtag, static_cast<int32_t>(p - pSubtag));
+    повернути test(pSubtag, static_cast<int32_t>(p - pSubtag));
 }
 
 }  // namespace
 
 bool
 ultag_isVariantSubtags(const char* s, int32_t len) {
-    return _isSepListOf(&_isVariantSubtag, s, len);
+    повернути _isSepListOf(&_isVariantSubtag, s, len);
 }
 
 namespace {
@@ -559,7 +559,7 @@ _isPrivateuseVariantSubtag(const char* s, int32_t len) {
      * variant       = 1*8alphanum         ; registered variants
      *               / (DIGIT 3alphanum)
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 1, 8);
+    повернути _isAlphaNumericStringLimitedLength(s, len , 1, 8);
 }
 
 bool
@@ -573,13 +573,13 @@ _isExtensionSingleton(const char* s, int32_t len) {
      *               / %x61-77             ; a - w
      *               / %x79-7A             ; y - z
      */
-    if (len < 0) {
+    якщо (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 1 && (ISALPHA(*s) || ISNUMERIC(*s)) && (uprv_tolower(*s) != PRIVATEUSE)) {
-        return true;
+    якщо (len == 1 && (ISALPHA(*s) || ISNUMERIC(*s)) && (uprv_tolower(*s) != PRIVATEUSE)) {
+        повернути true;
     }
-    return false;
+    повернути false;
 }
 
 bool
@@ -587,14 +587,14 @@ _isExtensionSubtag(const char* s, int32_t len) {
     /*
      * extension     = singleton 1*("-" (2*8alphanum))
      */
-    return _isAlphaNumericStringLimitedLength(s, len, 2, 8);
+    повернути _isAlphaNumericStringLimitedLength(s, len, 2, 8);
 }
 
 }  // namespace
 
 bool
 ultag_isExtensionSubtags(const char* s, int32_t len) {
-    return _isSepListOf(&_isExtensionSubtag, s, len);
+    повернути _isSepListOf(&_isExtensionSubtag, s, len);
 }
 
 namespace {
@@ -604,14 +604,14 @@ _isPrivateuseValueSubtag(const char* s, int32_t len) {
     /*
      * privateuse    = "x" 1*("-" (1*8alphanum))
      */
-    return _isAlphaNumericStringLimitedLength(s, len, 1, 8);
+    повернути _isAlphaNumericStringLimitedLength(s, len, 1, 8);
 }
 
 }  // namespace
 
 bool
 ultag_isPrivateuseValueSubtags(const char* s, int32_t len) {
-    return _isSepListOf(&_isPrivateuseValueSubtag, s, len);
+    повернути _isSepListOf(&_isPrivateuseValueSubtag, s, len);
 }
 
 bool
@@ -619,12 +619,12 @@ ultag_isUnicodeLocaleAttribute(const char* s, int32_t len) {
     /*
      * attribute = alphanum{3,8} ;
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 3, 8);
+    повернути _isAlphaNumericStringLimitedLength(s, len , 3, 8);
 }
 
 bool
 ultag_isUnicodeLocaleAttributes(const char* s, int32_t len) {
-    return _isSepListOf(&ultag_isUnicodeLocaleAttribute, s, len);
+    повернути _isSepListOf(&ultag_isUnicodeLocaleAttribute, s, len);
 }
 
 bool
@@ -632,13 +632,13 @@ ultag_isUnicodeLocaleKey(const char* s, int32_t len) {
     /*
      * key = alphanum alpha ;
      */
-    if (len < 0) {
+    якщо (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 2 && (ISALPHA(*s) || ISNUMERIC(*s)) && ISALPHA(s[1])) {
-        return true;
+    якщо (len == 2 && (ISALPHA(*s) || ISNUMERIC(*s)) && ISALPHA(s[1])) {
+        повернути true;
     }
-    return false;
+    повернути false;
 }
 
 bool
@@ -646,7 +646,7 @@ _isUnicodeLocaleTypeSubtag(const char*s, int32_t len) {
     /*
      * alphanum{3,8}
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 3, 8);
+    повернути _isAlphaNumericStringLimitedLength(s, len , 3, 8);
 }
 
 bool
@@ -654,7 +654,7 @@ ultag_isUnicodeLocaleType(const char*s, int32_t len) {
     /*
      * type = alphanum{3,8} (sep alphanum{3,8})* ;
      */
-    return _isSepListOf(&_isUnicodeLocaleTypeSubtag, s, len);
+    повернути _isSepListOf(&_isUnicodeLocaleTypeSubtag, s, len);
 }
 
 namespace {
@@ -665,13 +665,13 @@ _isTKey(const char* s, int32_t len)
     /*
      * tkey = alpha digit ;
      */
-    if (len < 0) {
+    якщо (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 2 && ISALPHA(*s) && ISNUMERIC(*(s + 1))) {
-        return true;
+    якщо (len == 2 && ISALPHA(*s) && ISNUMERIC(*(s + 1))) {
+        повернути true;
     }
-    return false;
+    повернути false;
 }
 
 }  // namespace
@@ -680,16 +680,16 @@ const char*
 ultag_getTKeyStart(const char* localeID U_LIFETIME_BOUND) {
     const char *result = localeID;
     const char *sep;
-    while((sep = uprv_strchr(result, SEP)) != nullptr) {
-        if (_isTKey(result, static_cast<int32_t>(sep - result))) {
-            return result;
+    поки((sep = uprv_strchr(result, SEP)) != nullptr) {
+        якщо (_isTKey(result, static_cast<int32_t>(sep - result))) {
+            повернути result;
         }
         result = ++sep;
     }
-    if (_isTKey(result, -1)) {
-        return result;
+    якщо (_isTKey(result, -1)) {
+        повернути result;
     }
-    return nullptr;
+    повернути nullptr;
 }
 
 namespace {
@@ -700,7 +700,7 @@ _isTValue(const char* s, int32_t len)
     /*
      * tvalue = (sep alphanum{3,8})+ ;
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 3, 8);
+    повернути _isAlphaNumericStringLimitedLength(s, len , 3, 8);
 }
 
 bool
@@ -719,61 +719,61 @@ _isTransformedExtensionSubtag(int32_t& state, const char* s, int32_t len)
     const int32_t kGotTValue = 6;   // Got tvalue, wait for tkey, tvalue or end
 
 
-    if (len < 0) {
+    якщо (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
     switch (state) {
         case kStart:
-            if (ultag_isLanguageSubtag(s, len) && len != 4) {
+            якщо (ultag_isLanguageSubtag(s, len) && len != 4) {
                 state = kGotLanguage;
-                return true;
+                повернути true;
             }
-            if (_isTKey(s, len)) {
+            якщо (_isTKey(s, len)) {
                 state = kGotTKey;
-                return true;
+                повернути true;
             }
-            return false;
+            повернути false;
         case kGotLanguage:
-            if (ultag_isScriptSubtag(s, len)) {
+            якщо (ultag_isScriptSubtag(s, len)) {
                 state = kGotScript;
-                return true;
+                повернути true;
             }
             U_FALLTHROUGH;
         case kGotScript:
-            if (ultag_isRegionSubtag(s, len)) {
+            якщо (ultag_isRegionSubtag(s, len)) {
                 state = kGotRegion;
-                return true;
+                повернути true;
             }
             U_FALLTHROUGH;
         case kGotRegion:
             U_FALLTHROUGH;
         case kGotVariant:
-            if (_isVariantSubtag(s, len)) {
+            якщо (_isVariantSubtag(s, len)) {
                 state = kGotVariant;
-                return true;
+                повернути true;
             }
-            if (_isTKey(s, len)) {
+            якщо (_isTKey(s, len)) {
                 state = kGotTKey;
-                return true;
+                повернути true;
             }
-            return false;
+            повернути false;
         case kGotTKey:
-            if (_isTValue(s, len)) {
+            якщо (_isTValue(s, len)) {
                 state = kGotTValue;
-                return true;
+                повернути true;
             }
-            return false;
+            повернути false;
         case kGotTValue:
-            if (_isTKey(s, len)) {
+            якщо (_isTKey(s, len)) {
                 state = kGotTKey;
-                return true;
+                повернути true;
             }
-            if (_isTValue(s, len)) {
-                return true;
+            якщо (_isTValue(s, len)) {
+                повернути true;
             }
-            return false;
+            повернути false;
     }
-    return false;
+    повернути false;
 }
 
 bool
@@ -785,34 +785,34 @@ _isUnicodeExtensionSubtag(int32_t& state, const char* s, int32_t len)
 
     switch (state) {
         case kStart:
-            if (ultag_isUnicodeLocaleKey(s, len)) {
+            якщо (ultag_isUnicodeLocaleKey(s, len)) {
                 state = kGotKey;
-                return true;
+                повернути true;
             }
-            if (ultag_isUnicodeLocaleAttribute(s, len)) {
-                return true;
+            якщо (ultag_isUnicodeLocaleAttribute(s, len)) {
+                повернути true;
             }
-            return false;
+            повернути false;
         case kGotKey:
-            if (ultag_isUnicodeLocaleKey(s, len)) {
-                return true;
+            якщо (ultag_isUnicodeLocaleKey(s, len)) {
+                повернути true;
             }
-            if (_isUnicodeLocaleTypeSubtag(s, len)) {
+            якщо (_isUnicodeLocaleTypeSubtag(s, len)) {
                 state = kGotType;
-                return true;
+                повернути true;
             }
-            return false;
+            повернути false;
         case kGotType:
-            if (ultag_isUnicodeLocaleKey(s, len)) {
+            якщо (ultag_isUnicodeLocaleKey(s, len)) {
                 state = kGotKey;
-                return true;
+                повернути true;
             }
-            if (_isUnicodeLocaleTypeSubtag(s, len)) {
-                return true;
+            якщо (_isUnicodeLocaleTypeSubtag(s, len)) {
+                повернути true;
             }
-            return false;
+            повернути false;
     }
-    return false;
+    повернути false;
 }
 
 bool
@@ -823,26 +823,26 @@ _isStatefulSepListOf(bool (*test)(int32_t&, const char*, int32_t), const char* s
     const char* start = s;
     int32_t subtagLen = 0;
 
-    if (len < 0) {
+    якщо (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
 
-    for (p = s; len > 0; p++, len--) {
-        if (*p == SEP) {
-            if (!test(state, start, subtagLen)) {
-                return false;
+    для (p = s; len > 0; p++, len--) {
+        якщо (*p == SEP) {
+            якщо (!test(state, start, subtagLen)) {
+                повернути false;
             }
             subtagLen = 0;
             start = p + 1;
-        } else {
+        } інакше {
             subtagLen++;
         }
     }
 
-    if (test(state, start, subtagLen) && state >= 0) {
-        return true;
+    якщо (test(state, start, subtagLen) && state >= 0) {
+        повернути true;
     }
-    return false;
+    повернути false;
 }
 
 }  // namespace
@@ -850,12 +850,12 @@ _isStatefulSepListOf(bool (*test)(int32_t&, const char*, int32_t), const char* s
 bool
 ultag_isTransformedExtensionSubtags(const char* s, int32_t len)
 {
-    return _isStatefulSepListOf(&_isTransformedExtensionSubtag, s, len);
+    повернути _isStatefulSepListOf(&_isTransformedExtensionSubtag, s, len);
 }
 
 bool
 ultag_isUnicodeExtensionSubtags(const char* s, int32_t len) {
-    return _isStatefulSepListOf(&_isUnicodeExtensionSubtag, s, len);
+    повернути _isStatefulSepListOf(&_isUnicodeExtensionSubtag, s, len);
 }
 
 namespace {
@@ -870,18 +870,18 @@ namespace {
 
 bool
 _addVariantToList(VariantListEntry **first, icu::LocalPointer<VariantListEntry> var) {
-    if (*first == nullptr) {
+    якщо (*first == nullptr) {
         var->next = nullptr;
         *first = var.orphan();
-    } else {
+    } інакше {
         VariantListEntry *prev, *cur;
         int32_t cmp;
 
         /* variants order should be preserved */
         prev = nullptr;
         cur = *first;
-        while (true) {
-            if (cur == nullptr) {
+        поки (true) {
+            якщо (cur == nullptr) {
                 var->next = nullptr;
                 prev->next = var.orphan();
                 break;
@@ -889,49 +889,49 @@ _addVariantToList(VariantListEntry **first, icu::LocalPointer<VariantListEntry> 
 
             /* Checking for duplicate variant */
             cmp = uprv_compareInvCharsAsAscii(var->variant, cur->variant);
-            if (cmp == 0) {
+            якщо (cmp == 0) {
                 /* duplicated variant */
-                return false;
+                повернути false;
             }
             prev = cur;
             cur = cur->next;
         }
     }
 
-    return true;
+    повернути true;
 }
 
 bool
 _addAttributeToList(AttributeListEntry **first, AttributeListEntry *attr) {
     bool bAdded = true;
 
-    if (*first == nullptr) {
+    якщо (*first == nullptr) {
         attr->next = nullptr;
         *first = attr;
-    } else {
+    } інакше {
         AttributeListEntry *prev, *cur;
         int32_t cmp;
 
         /* reorder variants in alphabetical order */
         prev = nullptr;
         cur = *first;
-        while (true) {
-            if (cur == nullptr) {
+        поки (true) {
+            якщо (cur == nullptr) {
                 prev->next = attr;
                 attr->next = nullptr;
                 break;
             }
             cmp = uprv_compareInvCharsAsAscii(attr->attribute, cur->attribute);
-            if (cmp < 0) {
-                if (prev == nullptr) {
+            якщо (cmp < 0) {
+                якщо (prev == nullptr) {
                     *first = attr;
-                } else {
+                } інакше {
                     prev->next = attr;
                 }
                 attr->next = cur;
                 break;
             }
-            if (cmp == 0) {
+            якщо (cmp == 0) {
                 /* duplicated variant */
                 bAdded = false;
                 break;
@@ -941,74 +941,74 @@ _addAttributeToList(AttributeListEntry **first, AttributeListEntry *attr) {
         }
     }
 
-    return bAdded;
+    повернути bAdded;
 }
 
 bool
 _addExtensionToList(ExtensionListEntry **first, ExtensionListEntry *ext, bool localeToBCP) {
     bool bAdded = true;
 
-    if (*first == nullptr) {
+    якщо (*first == nullptr) {
         ext->next = nullptr;
         *first = ext;
-    } else {
+    } інакше {
         ExtensionListEntry *prev, *cur;
         int32_t cmp;
 
         /* reorder variants in alphabetical order */
         prev = nullptr;
         cur = *first;
-        while (true) {
-            if (cur == nullptr) {
+        поки (true) {
+            якщо (cur == nullptr) {
                 prev->next = ext;
                 ext->next = nullptr;
                 break;
             }
-            if (localeToBCP) {
+            якщо (localeToBCP) {
                 /* special handling for locale to bcp conversion */
                 int32_t len, curlen;
 
                 len = static_cast<int32_t>(uprv_strlen(ext->key));
                 curlen = static_cast<int32_t>(uprv_strlen(cur->key));
 
-                if (len == 1 && curlen == 1) {
-                    if (*(ext->key) == *(cur->key)) {
+                якщо (len == 1 && curlen == 1) {
+                    якщо (*(ext->key) == *(cur->key)) {
                         cmp = 0;
-                    } else if (*(ext->key) == PRIVATEUSE) {
+                    } інакше якщо (*(ext->key) == PRIVATEUSE) {
                         cmp = 1;
-                    } else if (*(cur->key) == PRIVATEUSE) {
+                    } інакше якщо (*(cur->key) == PRIVATEUSE) {
                         cmp = -1;
-                    } else {
+                    } інакше {
                         cmp = *(ext->key) - *(cur->key);
                     }
-                } else if (len == 1) {
+                } інакше якщо (len == 1) {
                     cmp = *(ext->key) - LDMLEXT; 
-                } else if (curlen == 1) {
+                } інакше якщо (curlen == 1) {
                     cmp = LDMLEXT - *(cur->key);
-                } else {
+                } інакше {
                     cmp = uprv_compareInvCharsAsAscii(ext->key, cur->key);
                     /* Both are u extension keys - we need special handling for 'attribute' */
-                    if (cmp != 0) {
-                        if (uprv_strcmp(cur->key, LOCALE_ATTRIBUTE_KEY) == 0) {
+                    якщо (cmp != 0) {
+                        якщо (uprv_strcmp(cur->key, LOCALE_ATTRIBUTE_KEY) == 0) {
                             cmp = 1;
-                        } else if (uprv_strcmp(ext->key, LOCALE_ATTRIBUTE_KEY) == 0) {
+                        } інакше якщо (uprv_strcmp(ext->key, LOCALE_ATTRIBUTE_KEY) == 0) {
                             cmp = -1;
                         }
                     }
                 }
-            } else {
+            } інакше {
                 cmp = uprv_compareInvCharsAsAscii(ext->key, cur->key);
             }
-            if (cmp < 0) {
-                if (prev == nullptr) {
+            якщо (cmp < 0) {
+                якщо (prev == nullptr) {
                     *first = ext;
-                } else {
+                } інакше {
                     prev->next = ext;
                 }
                 ext->next = cur;
                 break;
             }
-            if (cmp == 0) {
+            якщо (cmp == 0) {
                 /* duplicated extension key */
                 bAdded = false;
                 break;
@@ -1018,7 +1018,7 @@ _addExtensionToList(ExtensionListEntry **first, ExtensionListEntry *ext, bool lo
         }
     }
 
-    return bAdded;
+    повернути bAdded;
 }
 
 void
@@ -1028,7 +1028,7 @@ _initializeULanguageTag(ULanguageTag* langtag) {
     langtag->buf = nullptr;
 
     langtag->language = EMPTY;
-    for (i = 0; i < MAXEXTLANG; i++) {
+    для (i = 0; i < MAXEXTLANG; i++) {
         langtag->extlang[i] = nullptr;
     }
 
@@ -1046,41 +1046,41 @@ void
 _appendLanguageToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, UErrorCode& status) {
     UErrorCode tmpStatus = U_ZERO_ERROR;
 
-    if (U_FAILURE(status)) {
-        return;
+    якщо (U_FAILURE(status)) {
+        повернути;
     }
 
     icu::CharString buf = ulocimp_getLanguage(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
+    якщо (U_FAILURE(tmpStatus)) {
+        якщо (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            повернути;
         }
     }
 
     /* Note: returned language code is in lower case letters */
 
-    if (buf.isEmpty()) {
+    якщо (buf.isEmpty()) {
         sink.Append(LANG_UND, LANG_UND_LEN);
-    } else if (!ultag_isLanguageSubtag(buf.data(), buf.length())) {
+    } інакше якщо (!ultag_isLanguageSubtag(buf.data(), buf.length())) {
             /* invalid language code */
-        if (strict) {
+        якщо (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            повернути;
         }
         sink.Append(LANG_UND, LANG_UND_LEN);
-    } else {
+    } інакше {
         /* resolve deprecated */
-        for (int32_t i = 0; i < UPRV_LENGTHOF(DEPRECATEDLANGS); i += 2) {
+        для (int32_t i = 0; i < UPRV_LENGTHOF(DEPRECATEDLANGS); i += 2) {
             // 2-letter deprecated subtags are listede before 3-letter
             // ones in DEPRECATEDLANGS[]. Get out of loop on coming
             // across the 1st 3-letter subtag, if the input is a 2-letter code.
             // to avoid continuing to try when there's no match.
-            if (buf.length() < static_cast<int32_t>(uprv_strlen(DEPRECATEDLANGS[i]))) break;
-            if (uprv_compareInvCharsAsAscii(buf.data(), DEPRECATEDLANGS[i]) == 0) {
+            якщо (buf.length() < static_cast<int32_t>(uprv_strlen(DEPRECATEDLANGS[i]))) break;
+            якщо (uprv_compareInvCharsAsAscii(buf.data(), DEPRECATEDLANGS[i]) == 0) {
                 const char* const resolved = DEPRECATEDLANGS[i + 1];
                 sink.Append(resolved, static_cast<int32_t>(uprv_strlen(resolved)));
-                return;
+                повернути;
             }
         }
         sink.Append(buf.data(), buf.length());
@@ -1091,26 +1091,26 @@ void
 _appendScriptToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, UErrorCode& status) {
     UErrorCode tmpStatus = U_ZERO_ERROR;
 
-    if (U_FAILURE(status)) {
-        return;
+    якщо (U_FAILURE(status)) {
+        повернути;
     }
 
     icu::CharString buf = ulocimp_getScript(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
+    якщо (U_FAILURE(tmpStatus)) {
+        якщо (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return;
+        повернути;
     }
 
-    if (!buf.isEmpty()) {
-        if (!ultag_isScriptSubtag(buf.data(), buf.length())) {
+    якщо (!buf.isEmpty()) {
+        якщо (!ultag_isScriptSubtag(buf.data(), buf.length())) {
             /* invalid script code */
-            if (strict) {
+            якщо (strict) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
             }
-            return;
-        } else {
+            повернути;
+        } інакше {
             sink.Append("-", 1);
             sink.Append(buf.data(), buf.length());
         }
@@ -1121,33 +1121,33 @@ void
 _appendRegionToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, UErrorCode& status) {
     UErrorCode tmpStatus = U_ZERO_ERROR;
 
-    if (U_FAILURE(status)) {
-        return;
+    якщо (U_FAILURE(status)) {
+        повернути;
     }
 
     icu::CharString buf = ulocimp_getRegion(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
+    якщо (U_FAILURE(tmpStatus)) {
+        якщо (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return;
+        повернути;
     }
 
-    if (!buf.isEmpty()) {
-        if (!ultag_isRegionSubtag(buf.data(), buf.length())) {
+    якщо (!buf.isEmpty()) {
+        якщо (!ultag_isRegionSubtag(buf.data(), buf.length())) {
             /* invalid region code */
-            if (strict) {
+            якщо (strict) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
             }
-            return;
-        } else {
+            повернути;
+        } інакше {
             sink.Append("-", 1);
             /* resolve deprecated */
-            for (int32_t i = 0; i < UPRV_LENGTHOF(DEPRECATEDREGIONS); i += 2) {
-                if (uprv_compareInvCharsAsAscii(buf.data(), DEPRECATEDREGIONS[i]) == 0) {
+            для (int32_t i = 0; i < UPRV_LENGTHOF(DEPRECATEDREGIONS); i += 2) {
+                якщо (uprv_compareInvCharsAsAscii(buf.data(), DEPRECATEDREGIONS[i]) == 0) {
                     const char* const resolved = DEPRECATEDREGIONS[i + 1];
                     sink.Append(resolved, static_cast<int32_t>(uprv_strlen(resolved)));
-                    return;
+                    повернути;
                 }
             }
             sink.Append(buf.data(), buf.length());
@@ -1156,10 +1156,10 @@ _appendRegionToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool 
 }
 
 void _sortVariants(VariantListEntry* first) {
-    for (VariantListEntry* var1 = first; var1 != nullptr; var1 = var1->next) {
-        for (VariantListEntry* var2 = var1->next; var2 != nullptr; var2 = var2->next) {
+    для (VariantListEntry* var1 = first; var1 != nullptr; var1 = var1->next) {
+        для (VariantListEntry* var2 = var1->next; var2 != nullptr; var2 = var2->next) {
             // Swap var1->variant and var2->variant.
-            if (uprv_compareInvCharsAsAscii(var1->variant, var2->variant) > 0) {
+            якщо (uprv_compareInvCharsAsAscii(var1->variant, var2->variant) > 0) {
                 const char* temp = var1->variant;
                 var1->variant = var2->variant;
                 var2->variant = temp;
@@ -1170,83 +1170,83 @@ void _sortVariants(VariantListEntry* first) {
 
 void
 _appendVariantsToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, bool& hadPosix, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    якщо (U_FAILURE(status)) { повернути; }
 
     UErrorCode tmpStatus = U_ZERO_ERROR;
     icu::CharString buf = ulocimp_getVariant(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus) || tmpStatus == U_STRING_NOT_TERMINATED_WARNING) {
-        if (strict) {
+    якщо (U_FAILURE(tmpStatus) || tmpStatus == U_STRING_NOT_TERMINATED_WARNING) {
+        якщо (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return;
+        повернути;
     }
 
-    if (!buf.isEmpty()) {
+    якщо (!buf.isEmpty()) {
         char *p, *pVar;
         bool bNext = true;
         VariantListEntry *varFirst = nullptr;
 
         pVar = nullptr;
         p = buf.data();
-        while (bNext) {
-            if (*p == SEP || *p == LOCALE_SEP || *p == 0) {
-                if (*p == 0) {
+        поки (bNext) {
+            якщо (*p == SEP || *p == LOCALE_SEP || *p == 0) {
+                якщо (*p == 0) {
                     bNext = false;
-                } else {
+                } інакше {
                     *p = 0; /* terminate */
                 }
-                if (pVar == nullptr) {
-                    if (strict) {
+                якщо (pVar == nullptr) {
+                    якщо (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
                         break;
                     }
                     /* ignore empty variant */
-                } else {
+                } інакше {
                     /* ICU uses upper case letters for variants, but
                        the canonical format is lowercase in BCP47 */
-                    for (int32_t i = 0; *(pVar + i) != 0; i++) {
+                    для (int32_t i = 0; *(pVar + i) != 0; i++) {
                         *(pVar + i) = uprv_tolower(*(pVar + i));
                     }
 
                     /* validate */
-                    if (_isVariantSubtag(pVar, -1)) {
-                        if (uprv_strcmp(pVar, POSIX_VALUE) || buf.length() != static_cast<int32_t>(uprv_strlen(POSIX_VALUE))) {
+                    якщо (_isVariantSubtag(pVar, -1)) {
+                        якщо (uprv_strcmp(pVar, POSIX_VALUE) || buf.length() != static_cast<int32_t>(uprv_strlen(POSIX_VALUE))) {
                             /* emit the variant to the list */
                             icu::LocalPointer<VariantListEntry> var(new VariantListEntry, status);
-                            if (U_FAILURE(status)) {
+                            якщо (U_FAILURE(status)) {
                                 break;
                             }
                             var->variant = pVar;
-                            if (!_addVariantToList(&varFirst, std::move(var))) {
+                            якщо (!_addVariantToList(&varFirst, std::move(var))) {
                                 /* duplicated variant */
-                                if (strict) {
+                                якщо (strict) {
                                     status = U_ILLEGAL_ARGUMENT_ERROR;
                                     break;
                                 }
                             }
-                        } else {
+                        } інакше {
                             /* Special handling for POSIX variant, need to remember that we had it and then */
                             /* treat it like an extension later. */
                             hadPosix = true;
                         }
-                    } else if (strict) {
+                    } інакше якщо (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
                         break;
-                    } else if (_isPrivateuseValueSubtag(pVar, -1)) {
+                    } інакше якщо (_isPrivateuseValueSubtag(pVar, -1)) {
                         /* Handle private use subtags separately */
                         break;
                     }
                 }
                 /* reset variant starting position */
                 pVar = nullptr;
-            } else if (pVar == nullptr) {
+            } інакше якщо (pVar == nullptr) {
                 pVar = p;
             }
             p++;
         }
 
-        if (U_SUCCESS(status)) {
-            if (varFirst != nullptr) {
+        якщо (U_SUCCESS(status)) {
+            якщо (varFirst != nullptr) {
                 int32_t varLen;
 
                 /* per UTS35, we should sort the variants */
@@ -1254,7 +1254,7 @@ _appendVariantsToLanguageTag(std::string_view localeID, icu::ByteSink& sink, boo
 
                 /* write out validated/normalized variants to the target */
                 VariantListEntry* var = varFirst;
-                while (var != nullptr) {
+                поки (var != nullptr) {
                     sink.Append("-", 1);
                     varLen = static_cast<int32_t>(uprv_strlen(var->variant));
                     sink.Append(var->variant, varLen);
@@ -1264,31 +1264,31 @@ _appendVariantsToLanguageTag(std::string_view localeID, icu::ByteSink& sink, boo
         }
 
         /* clean up */
-        for (VariantListEntry* var = varFirst; var != nullptr; ) {
+        для (VariantListEntry* var = varFirst; var != nullptr; ) {
             VariantListEntry *tmpVar = var->next;
             delete var;
             var = tmpVar;
         }
 
-        if (U_FAILURE(status)) {
-            return;
+        якщо (U_FAILURE(status)) {
+            повернути;
         }
     }
 }
 
 void
 _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool strict, bool hadPosix, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    якщо (U_FAILURE(status)) { повернути; }
 
     icu::MemoryPool<AttributeListEntry> attrPool;
     icu::MemoryPool<ExtensionListEntry> extPool;
     icu::MemoryPool<icu::CharString> strPool;
 
     icu::LocalUEnumerationPointer keywordEnum(uloc_openKeywords(localeID, &status));
-    if (U_FAILURE(status) && !hadPosix) {
-        return;
+    якщо (U_FAILURE(status) && !hadPosix) {
+        повернути;
     }
-    if (keywordEnum.isValid() || hadPosix) {
+    якщо (keywordEnum.isValid() || hadPosix) {
         /* reorder extensions */
         int32_t len;
         const char *key;
@@ -1302,21 +1302,21 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool str
         int32_t keylen;
         bool isBcpUExt;
 
-        while (true) {
+        поки (true) {
             key = uenum_next(keywordEnum.getAlias(), nullptr, &status);
-            if (key == nullptr) {
+            якщо (key == nullptr) {
                 break;
             }
 
             icu::CharString buf = ulocimp_getKeywordValue(localeID, key, tmpStatus);
             len = buf.length();
 
-            if (U_FAILURE(tmpStatus)) {
-                if (tmpStatus == U_MEMORY_ALLOCATION_ERROR) {
+            якщо (U_FAILURE(tmpStatus)) {
+                якщо (tmpStatus == U_MEMORY_ALLOCATION_ERROR) {
                     status = U_MEMORY_ALLOCATION_ERROR;
                     break;
                 }
-                if (strict) {
+                якщо (strict) {
                     status = U_ILLEGAL_ARGUMENT_ERROR;
                     break;
                 }
@@ -1329,43 +1329,43 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool str
             isBcpUExt = (keylen > 1);
 
             /* special keyword used for representing Unicode locale attributes */
-            if (uprv_strcmp(key, LOCALE_ATTRIBUTE_KEY) == 0) {
-                if (len > 0) {
+            якщо (uprv_strcmp(key, LOCALE_ATTRIBUTE_KEY) == 0) {
+                якщо (len > 0) {
                     int32_t i = 0;
-                    while (true) {
+                    поки (true) {
                         icu::CharString attrBuf;
-                        for (; i < len; i++) {
-                            if (buf[i] != '-') {
+                        для (; i < len; i++) {
+                            якщо (buf[i] != '-') {
                                 attrBuf.append(buf[i], status);
-                            } else {
+                            } інакше {
                                 i++;
                                 break;
                             }
                         }
-                        if (U_FAILURE(status)) {
-                            return;
+                        якщо (U_FAILURE(status)) {
+                            повернути;
                         }
-                        if (attrBuf.isEmpty() && i >= len) {
+                        якщо (attrBuf.isEmpty() && i >= len) {
                             break;
                         }
 
                         /* create AttributeListEntry */
                         attr = attrPool.create();
-                        if (attr == nullptr) {
+                        якщо (attr == nullptr) {
                             status = U_MEMORY_ALLOCATION_ERROR;
                             break;
                         }
-                        if (icu::CharString* str =
+                        якщо (icu::CharString* str =
                                 strPool.create(std::move(attrBuf), status)) {
-                            if (U_FAILURE(status)) { break; }
+                            якщо (U_FAILURE(status)) { break; }
                             attr->attribute = str->data();
-                        } else {
+                        } інакше {
                             status = U_MEMORY_ALLOCATION_ERROR;
                             break;
                         }
 
-                        if (!_addAttributeToList(&firstAttr, attr)) {
-                            if (strict) {
+                        якщо (!_addAttributeToList(&firstAttr, attr)) {
+                            якщо (strict) {
                                 status = U_ILLEGAL_ARGUMENT_ERROR;
                                 break;
                             }
@@ -1375,10 +1375,10 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool str
                     bcpKey = LOCALE_ATTRIBUTE_KEY;
                     bcpValue = nullptr;
                 }
-            } else if (isBcpUExt) {
+            } інакше якщо (isBcpUExt) {
                 std::optional<std::string_view> optBcpKey = ulocimp_toBcpKeyWithFallback(key);
-                if (!optBcpKey.has_value()) {
-                    if (strict) {
+                якщо (!optBcpKey.has_value()) {
+                    якщо (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
                         break;
                     }
@@ -1388,14 +1388,14 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool str
 
                 std::optional<std::string_view> optBcpValue =
                     ulocimp_toBcpTypeWithFallback(key, buf.toStringPiece());
-                if (!optBcpValue.has_value()) {
-                    if (strict) {
+                якщо (!optBcpValue.has_value()) {
+                    якщо (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
                         break;
                     }
                     continue;
                 }
-                if (optBcpValue->data() == buf.data()) {
+                якщо (optBcpValue->data() == buf.data()) {
                     /*
                     When ulocimp_toBcpTypeWithFallback(key, buf) returns the
                     input value as is, the value is well-formed, but has
@@ -1404,32 +1404,32 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool str
                     */
                     icu::CharString* extBuf = extBufPool.create(buf, tmpStatus);
 
-                    if (extBuf == nullptr) {
+                    якщо (extBuf == nullptr) {
                         status = U_MEMORY_ALLOCATION_ERROR;
                         break;
                     }
-                    if (U_FAILURE(tmpStatus)) {
+                    якщо (U_FAILURE(tmpStatus)) {
                         status = tmpStatus;
                         break;
                     }
 
                     T_CString_toLowerCase(extBuf->data());
                     bcpValue = extBuf->data();
-                } else {
+                } інакше {
                     bcpValue = optBcpValue->data();
                 }
-            } else {
-                if (*key == PRIVATEUSE) {
-                    if (!ultag_isPrivateuseValueSubtags(buf.data(), len)) {
-                        if (strict) {
+            } інакше {
+                якщо (*key == PRIVATEUSE) {
+                    якщо (!ultag_isPrivateuseValueSubtags(buf.data(), len)) {
+                        якщо (strict) {
                             status = U_ILLEGAL_ARGUMENT_ERROR;
                             break;
                         }
                         continue;
                     }
-                } else {
-                    if (!_isExtensionSingleton(key, keylen) || !ultag_isExtensionSubtags(buf.data(), len)) {
-                        if (strict) {
+                } інакше {
+                    якщо (!_isExtensionSingleton(key, keylen) || !ultag_isExtensionSubtags(buf.data(), len)) {
+                        якщо (strict) {
                             status = U_ILLEGAL_ARGUMENT_ERROR;
                             break;
                         }
@@ -1439,11 +1439,11 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool str
                 bcpKey = key;
                 icu::CharString* extBuf =
                     extBufPool.create(buf.data(), len, tmpStatus);
-                if (extBuf == nullptr) {
+                якщо (extBuf == nullptr) {
                     status = U_MEMORY_ALLOCATION_ERROR;
                     break;
                 }
-                if (U_FAILURE(tmpStatus)) {
+                якщо (U_FAILURE(tmpStatus)) {
                     status = tmpStatus;
                     break;
                 }
@@ -1452,15 +1452,15 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool str
 
             /* create ExtensionListEntry */
             ext = extPool.create();
-            if (ext == nullptr) {
+            якщо (ext == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
                 break;
             }
             ext->key = bcpKey;
             ext->value = bcpValue;
 
-            if (!_addExtensionToList(&firstExt, ext, true)) {
-                if (strict) {
+            якщо (!_addExtensionToList(&firstExt, ext, true)) {
+                якщо (strict) {
                     status = U_ILLEGAL_ARGUMENT_ERROR;
                     break;
                 }
@@ -1468,42 +1468,42 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool str
         }
 
         /* Special handling for POSIX variant - add the keywords for POSIX */
-        if (hadPosix) {
+        якщо (hadPosix) {
             /* create ExtensionListEntry for POSIX */
             ext = extPool.create();
-            if (ext == nullptr) {
+            якщо (ext == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                повернути;
             }
             ext->key = POSIX_KEY;
             ext->value = POSIX_VALUE;
 
-            if (!_addExtensionToList(&firstExt, ext, true)) {
+            якщо (!_addExtensionToList(&firstExt, ext, true)) {
                 // Silently ignore errors.
             }
         }
 
-        if (U_SUCCESS(status) && (firstExt != nullptr || firstAttr != nullptr)) {
+        якщо (U_SUCCESS(status) && (firstExt != nullptr || firstAttr != nullptr)) {
             bool startLDMLExtension = false;
-            for (ext = firstExt; ext; ext = ext->next) {
-                if (!startLDMLExtension && uprv_strlen(ext->key) > 1) {
+            для (ext = firstExt; ext; ext = ext->next) {
+                якщо (!startLDMLExtension && uprv_strlen(ext->key) > 1) {
                     /* first LDML u singlton extension */
                    sink.Append("-u", 2);
                    startLDMLExtension = true;
                 }
 
                 /* write out the sorted BCP47 attributes, extensions and private use */
-                if (uprv_strcmp(ext->key, LOCALE_ATTRIBUTE_KEY) == 0) {
+                якщо (uprv_strcmp(ext->key, LOCALE_ATTRIBUTE_KEY) == 0) {
                     /* write the value for the attributes */
-                    for (attr = firstAttr; attr; attr = attr->next) {
+                    для (attr = firstAttr; attr; attr = attr->next) {
                         sink.Append("-", 1);
                         sink.Append(
                                 attr->attribute, static_cast<int32_t>(uprv_strlen(attr->attribute)));
                     }
-                } else {
+                } інакше {
                     sink.Append("-", 1);
                     sink.Append(ext->key, static_cast<int32_t>(uprv_strlen(ext->key)));
-                    if (uprv_strcmp(ext->value, "true") != 0 &&
+                    якщо (uprv_strcmp(ext->value, "true") != 0 &&
                         uprv_strcmp(ext->value, "yes") != 0) {
                       sink.Append("-", 1);
                       sink.Append(ext->value, static_cast<int32_t>(uprv_strlen(ext->value)));
@@ -1521,7 +1521,7 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool str
  */
 void
 _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendTo, icu::MemoryPool<ExtensionListEntry>& extPool, icu::MemoryPool<icu::CharString>& kwdBuf, bool& posixVariant, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    якщо (U_FAILURE(status)) { повернути; }
 
     const char *pTag;   /* beginning of current subtag */
     const char *pKwds;  /* beginning of key-type pairs */
@@ -1546,28 +1546,28 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
         icu::MemoryPool<AttributeListEntry> attrPool;
 
         /* Iterate through u extension attributes */
-        while (*pTag) {
+        поки (*pTag) {
             /* locate next separator char */
-            for (len = 0; *(pTag + len) && *(pTag + len) != SEP; len++);
+            для (len = 0; *(pTag + len) && *(pTag + len) != SEP; len++);
 
-            if (ultag_isUnicodeLocaleKey(pTag, len)) {
+            якщо (ultag_isUnicodeLocaleKey(pTag, len)) {
                 pKwds = pTag;
                 break;
             }
 
             /* add this attribute to the list */
             attr = attrPool.create();
-            if (attr == nullptr) {
+            якщо (attr == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                повернути;
             }
 
-            if (icu::CharString* str = strPool.create(pTag, len, status)) {
-                if (U_FAILURE(status)) { return; }
+            якщо (icu::CharString* str = strPool.create(pTag, len, status)) {
+                якщо (U_FAILURE(status)) { повернути; }
                 attr->attribute = str->data();
-            } else {
+            } інакше {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                повернути;
             }
 
             // duplicate attribute is ignored, causes no error.
@@ -1575,52 +1575,52 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
 
             /* next tag */
             pTag += len;
-            if (*pTag) {
+            якщо (*pTag) {
                 /* next to the separator */
                 pTag++;
             }
         }
 
-        if (attrFirst) {
+        якщо (attrFirst) {
             /* emit attributes as an LDML keyword, e.g. attribute=attr1-attr2 */
 
             kwd = extPool.create();
-            if (kwd == nullptr) {
+            якщо (kwd == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                повернути;
             }
 
             icu::CharString* value = kwdBuf.create();
-            if (value == nullptr) {
+            якщо (value == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                повернути;
             }
 
             /* attribute subtags sorted in alphabetical order as type */
             attr = attrFirst;
-            while (attr != nullptr) {
+            поки (attr != nullptr) {
                 nextAttr = attr->next;
-                if (attr != attrFirst) {
+                якщо (attr != attrFirst) {
                     value->append('-', status);
                 }
                 value->append(attr->attribute, status);
                 attr = nextAttr;
             }
-            if (U_FAILURE(status)) {
-                return;
+            якщо (U_FAILURE(status)) {
+                повернути;
             }
 
             kwd->key = LOCALE_ATTRIBUTE_KEY;
             kwd->value = value->data();
 
-            if (!_addExtensionToList(&kwdFirst, kwd, false)) {
+            якщо (!_addExtensionToList(&kwdFirst, kwd, false)) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
-                return;
+                повернути;
             }
         }
     }
 
-    if (pKwds) {
+    якщо (pKwds) {
         const char *pBcpKey = nullptr;     /* u extension key subtag */
         const char *pBcpType = nullptr;    /* beginning of u extension type subtag(s) */
         int32_t bcpKeyLen = 0;
@@ -1629,30 +1629,30 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
 
         pTag = pKwds;
         /* BCP47 representation of LDML key/type pairs */
-        while (!isDone) {
+        поки (!isDone) {
             const char *pNextBcpKey = nullptr;
             int32_t nextBcpKeyLen = 0;
             bool emitKeyword = false;
 
-            if (*pTag) {
+            якщо (*pTag) {
                 /* locate next separator char */
-                for (len = 0; *(pTag + len) && *(pTag + len) != SEP; len++);
+                для (len = 0; *(pTag + len) && *(pTag + len) != SEP; len++);
 
-                if (ultag_isUnicodeLocaleKey(pTag, len)) {
-                    if (pBcpKey) {
+                якщо (ultag_isUnicodeLocaleKey(pTag, len)) {
+                    якщо (pBcpKey) {
                         emitKeyword = true;
                         pNextBcpKey = pTag;
                         nextBcpKeyLen = len;
-                    } else {
+                    } інакше {
                         pBcpKey = pTag;
                         bcpKeyLen = len;
                     }
-                } else {
+                } інакше {
                     U_ASSERT(pBcpKey != nullptr);
                     /* within LDML type subtags */
-                    if (pBcpType) {
+                    якщо (pBcpType) {
                         bcpTypeLen += (len + 1);
-                    } else {
+                    } інакше {
                         pBcpType = pTag;
                         bcpTypeLen = len;
                     }
@@ -1660,102 +1660,102 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
 
                 /* next tag */
                 pTag += len;
-                if (*pTag) {
+                якщо (*pTag) {
                     /* next to the separator */
                     pTag++;
                 }
-            } else {
+            } інакше {
                 /* processing last one */
                 emitKeyword = true;
                 isDone = true;
             }
 
-            if (emitKeyword) {
+            якщо (emitKeyword) {
                 const char *pKey = nullptr;    /* LDML key */
                 const char *pType = nullptr;   /* LDML type */
 
                 U_ASSERT(pBcpKey != nullptr);
 
                 /* BCP key length is always 2 for now */
-                if (bcpKeyLen != 2) {
+                якщо (bcpKeyLen != 2) {
                     /* the BCP key is invalid */
                     status = U_ILLEGAL_ARGUMENT_ERROR;
-                    return;
+                    повернути;
                 }
 
                 /* u extension key to LDML key */
                 std::optional<std::string_view> legacyKey = ulocimp_toLegacyKeyWithFallback(
                     {pBcpKey, static_cast<std::string_view::size_type>(bcpKeyLen)});
-                if (!legacyKey.has_value()) {
+                якщо (!legacyKey.has_value()) {
                     status = U_ILLEGAL_ARGUMENT_ERROR;
-                    return;
+                    повернути;
                 }
-                if (legacyKey->data() == pBcpKey) {
+                якщо (legacyKey->data() == pBcpKey) {
                     /*
                     The key returned by toLegacyKey points to the input buffer.
                     We normalize the result key to lower case.
                     */
                     icu::CharString* key = kwdBuf.create(pBcpKey, bcpKeyLen, status);
-                    if (key == nullptr) {
+                    якщо (key == nullptr) {
                         status = U_MEMORY_ALLOCATION_ERROR;
-                        return;
+                        повернути;
                     }
-                    if (U_FAILURE(status)) {
-                        return;
+                    якщо (U_FAILURE(status)) {
+                        повернути;
                     }
                     T_CString_toLowerCase(key->data());
                     pKey = key->data();
-                } else {
+                } інакше {
                     pKey = legacyKey->data();
                 }
 
-                if (pBcpType) {
+                якщо (pBcpType) {
                     /* BCP type to locale type */
                     std::optional<std::string_view> legacyType = ulocimp_toLegacyTypeWithFallback(
                         pKey, {pBcpType, static_cast<std::string_view::size_type>(bcpTypeLen)});
-                    if (!legacyType.has_value()) {
+                    якщо (!legacyType.has_value()) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        return;
+                        повернути;
                     }
-                    if (legacyType->data() == pBcpType) {
+                    якщо (legacyType->data() == pBcpType) {
                         /*
                         The type returned by toLegacyType points to the input buffer.
                         We normalize the result type to lower case.
                         */
                         icu::CharString* type = kwdBuf.create(pBcpType, bcpTypeLen, status);
-                        if (type == nullptr) {
+                        якщо (type == nullptr) {
                             status = U_MEMORY_ALLOCATION_ERROR;
-                            return;
+                            повернути;
                         }
-                        if (U_FAILURE(status)) {
-                            return;
+                        якщо (U_FAILURE(status)) {
+                            повернути;
                         }
                         T_CString_toLowerCase(type->data());
                         pType = type->data();
-                    } else {
+                    } інакше {
                         pType = legacyType->data();
                     }
-                } else {
+                } інакше {
                     /* typeless - default type value is "yes" */
                     pType = LOCALE_TYPE_YES;
                 }
 
                 /* Special handling for u-va-posix, since we want to treat this as a variant, 
                    not as a keyword */
-                if (!variantExists && !uprv_strcmp(pKey, POSIX_KEY) && !uprv_strcmp(pType, POSIX_VALUE) ) {
+                якщо (!variantExists && !uprv_strcmp(pKey, POSIX_KEY) && !uprv_strcmp(pType, POSIX_VALUE) ) {
                     posixVariant = true;
-                } else {
+                } інакше {
                     /* create an ExtensionListEntry for this keyword */
                     kwd = extPool.create();
-                    if (kwd == nullptr) {
+                    якщо (kwd == nullptr) {
                         status = U_MEMORY_ALLOCATION_ERROR;
-                        return;
+                        повернути;
                     }
 
                     kwd->key = pKey;
                     kwd->value = pType;
 
-                    if (!_addExtensionToList(&kwdFirst, kwd, false)) {
+                    якщо (!_addExtensionToList(&kwdFirst, kwd, false)) {
                         // duplicate keyword is allowed, Only the first
                         // is honored.
                     }
@@ -1770,7 +1770,7 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
     }
 
     kwd = kwdFirst;
-    while (kwd != nullptr) {
+    поки (kwd != nullptr) {
         nextKwd = kwd->next;
         _addExtensionToList(appendTo, kwd, false);
         kwd = nextKwd;
@@ -1779,7 +1779,7 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
 
 void
 _appendKeywords(ULanguageTag* langtag, icu::ByteSink& sink, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    якщо (U_FAILURE(status)) { повернути; }
 
     int32_t i, n;
     int32_t len;
@@ -1793,45 +1793,45 @@ _appendKeywords(ULanguageTag* langtag, icu::ByteSink& sink, UErrorCode& status) 
     n = ultag_getExtensionsSize(langtag);
 
     /* resolve locale keywords and reordering keys */
-    for (i = 0; i < n; i++) {
+    для (i = 0; i < n; i++) {
         key = ultag_getExtensionKey(langtag, i);
         type = ultag_getExtensionValue(langtag, i);
-        if (*key == LDMLEXT) {
+        якщо (*key == LDMLEXT) {
             /* Determine if variants already exists */
-            if (ultag_getVariantsSize(langtag)) {
+            якщо (ultag_getVariantsSize(langtag)) {
                 posixVariant = true;
             }
 
             _appendLDMLExtensionAsKeywords(type, &kwdFirst, extPool, kwdBuf, posixVariant, status);
-            if (U_FAILURE(status)) {
+            якщо (U_FAILURE(status)) {
                 break;
             }
-        } else {
+        } інакше {
             kwd = extPool.create();
-            if (kwd == nullptr) {
+            якщо (kwd == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
                 break;
             }
             kwd->key = key;
             kwd->value = type;
-            if (!_addExtensionToList(&kwdFirst, kwd, false)) {
+            якщо (!_addExtensionToList(&kwdFirst, kwd, false)) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
                 break;
             }
         }
     }
 
-    if (U_SUCCESS(status)) {
+    якщо (U_SUCCESS(status)) {
         type = ultag_getPrivateUse(langtag);
-        if (static_cast<int32_t>(uprv_strlen(type)) > 0) {
+        якщо (static_cast<int32_t>(uprv_strlen(type)) > 0) {
             /* add private use as a keyword */
             kwd = extPool.create();
-            if (kwd == nullptr) {
+            якщо (kwd == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-            } else {
+            } інакше {
                 kwd->key = PRIVATEUSE_KEY;
                 kwd->value = type;
-                if (!_addExtensionToList(&kwdFirst, kwd, false)) {
+                якщо (!_addExtensionToList(&kwdFirst, kwd, false)) {
                     status = U_ILLEGAL_ARGUMENT_ERROR;
                 }
             }
@@ -1840,20 +1840,20 @@ _appendKeywords(ULanguageTag* langtag, icu::ByteSink& sink, UErrorCode& status) 
 
     /* If a POSIX variant was in the extensions, write it out before writing the keywords. */
 
-    if (U_SUCCESS(status) && posixVariant) {
+    якщо (U_SUCCESS(status) && posixVariant) {
         len = static_cast<int32_t>(uprv_strlen(_POSIX));
         sink.Append(_POSIX, len);
     }
 
-    if (U_SUCCESS(status) && kwdFirst != nullptr) {
+    якщо (U_SUCCESS(status) && kwdFirst != nullptr) {
         /* write out the sorted keywords */
         bool firstValue = true;
         kwd = kwdFirst;
         do {
-            if (firstValue) {
+            якщо (firstValue) {
                 sink.Append("@", 1);
                 firstValue = false;
-            } else {
+            } інакше {
                 sink.Append(";", 1);
             }
 
@@ -1867,24 +1867,24 @@ _appendKeywords(ULanguageTag* langtag, icu::ByteSink& sink, UErrorCode& status) 
             sink.Append(kwd->value, len);
 
             kwd = kwd->next;
-        } while (kwd);
+        } поки (kwd);
     }
 }
 
 void
 _appendPrivateuseToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, bool /*hadPosix*/, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    якщо (U_FAILURE(status)) { повернути; }
 
     UErrorCode tmpStatus = U_ZERO_ERROR;
     icu::CharString buf = ulocimp_getVariant(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
+    якщо (U_FAILURE(tmpStatus)) {
+        якщо (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return;
+        повернути;
     }
 
-    if (!buf.isEmpty()) {
+    якщо (!buf.isEmpty()) {
         char *p, *pPriv;
         bool bNext = true;
         bool firstValue = true;
@@ -1892,40 +1892,40 @@ _appendPrivateuseToLanguageTag(std::string_view localeID, icu::ByteSink& sink, b
 
         pPriv = nullptr;
         p = buf.data();
-        while (bNext) {
+        поки (bNext) {
             writeValue = false;
-            if (*p == SEP || *p == LOCALE_SEP || *p == 0) {
-                if (*p == 0) {
+            якщо (*p == SEP || *p == LOCALE_SEP || *p == 0) {
+                якщо (*p == 0) {
                     bNext = false;
-                } else {
+                } інакше {
                     *p = 0; /* terminate */
                 }
-                if (pPriv != nullptr) {
+                якщо (pPriv != nullptr) {
                     /* Private use in the canonical format is lowercase in BCP47 */
-                    for (int32_t i = 0; *(pPriv + i) != 0; i++) {
+                    для (int32_t i = 0; *(pPriv + i) != 0; i++) {
                         *(pPriv + i) = uprv_tolower(*(pPriv + i));
                     }
 
                     /* validate */
-                    if (_isPrivateuseValueSubtag(pPriv, -1)) {
-                        if (firstValue) {
-                            if (!_isVariantSubtag(pPriv, -1)) {
+                    якщо (_isPrivateuseValueSubtag(pPriv, -1)) {
+                        якщо (firstValue) {
+                            якщо (!_isVariantSubtag(pPriv, -1)) {
                                 writeValue = true;
                             }
-                        } else {
+                        } інакше {
                             writeValue = true;
                         }
-                    } else if (strict) {
+                    } інакше якщо (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
                         break;
-                    } else {
+                    } інакше {
                         break;
                     }
 
-                    if (writeValue) {
+                    якщо (writeValue) {
                         sink.Append("-", 1);
 
-                        if (firstValue) {
+                        якщо (firstValue) {
                             sink.Append(PRIVATEUSE_KEY, UPRV_LENGTHOF(PRIVATEUSE_KEY) - 1);
                             sink.Append("-", 1);
                             sink.Append(PRIVUSE_VARIANT_PREFIX, UPRV_LENGTHOF(PRIVUSE_VARIANT_PREFIX) - 1);
@@ -1939,7 +1939,7 @@ _appendPrivateuseToLanguageTag(std::string_view localeID, icu::ByteSink& sink, b
                 }
                 /* reset private use starting position */
                 pPriv = nullptr;
-            } else if (pPriv == nullptr) {
+            } інакше якщо (pPriv == nullptr) {
                 pPriv = p;
             }
             p++;
@@ -1971,13 +1971,13 @@ _appendPrivateuseToLanguageTag(std::string_view localeID, icu::ByteSink& sink, b
  * This work-around should be removed once the following versions of Visual Studio are no
  * longer supported: All versions of VS2015/VS2017, and versions of VS2019 below 16.4.
  */
-#if defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
+#якщо defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
 #pragma optimize( "", off )
 #endif
 
 ULanguageTag*
 ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& status) {
-    if (U_FAILURE(status)) { return nullptr; }
+    якщо (U_FAILURE(status)) { повернути nullptr; }
 
     char *tagBuf;
     int16_t next;
@@ -1990,22 +1990,22 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
     bool privateuseVar = false;
     int32_t legacyLen = 0;
 
-    if (parsedLen != nullptr) {
+    якщо (parsedLen != nullptr) {
         *parsedLen = 0;
     }
 
-    if (tagLen < 0) {
+    якщо (tagLen < 0) {
         tagLen = static_cast<int32_t>(uprv_strlen(tag));
     }
 
     /* copy the entire string */
     tagBuf = static_cast<char*>(uprv_malloc(tagLen + 1));
-    if (tagBuf == nullptr) {
+    якщо (tagBuf == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        повернути nullptr;
     }
     
-    if (tagLen > 0) {
+    якщо (tagLen > 0) {
         uprv_memcpy(tagBuf, tag, tagLen);
     }
     *(tagBuf + tagLen) = 0;
@@ -2013,17 +2013,17 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
     /* create a ULanguageTag */
     icu::LocalULanguageTagPointer t(
             static_cast<ULanguageTag*>(uprv_malloc(sizeof(ULanguageTag))));
-    if (t.isNull()) {
+    якщо (t.isNull()) {
         uprv_free(tagBuf);
         status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        повернути nullptr;
     }
     _initializeULanguageTag(t.getAlias());
     t->buf = tagBuf;
 
-    if (tagLen < MINLEN) {
+    якщо (tagLen < MINLEN) {
         /* the input tag is too short - return empty ULanguageTag */
-        return t.orphan();
+        повернути t.orphan();
     }
 
     size_t parsedLenDelta = 0;
@@ -2031,36 +2031,36 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
     // script and region such as art-DE-lojban or art-Latn-lojban won't be
     // matched.
     /* check if the tag is legacy */
-    for (i = 0; i < UPRV_LENGTHOF(LEGACY); i += 2) {
+    для (i = 0; i < UPRV_LENGTHOF(LEGACY); i += 2) {
         int32_t checkLegacyLen = static_cast<int32_t>(uprv_strlen(LEGACY[i]));
-        if (tagLen < checkLegacyLen) {
+        якщо (tagLen < checkLegacyLen) {
             continue;
         }
-        if (tagLen > checkLegacyLen && tagBuf[checkLegacyLen] != '-') {
+        якщо (tagLen > checkLegacyLen && tagBuf[checkLegacyLen] != '-') {
             // make sure next char is '-'.
             continue;
         }
-        if (uprv_strnicmp(LEGACY[i], tagBuf, checkLegacyLen) == 0) {
+        якщо (uprv_strnicmp(LEGACY[i], tagBuf, checkLegacyLen) == 0) {
             int32_t newTagLength;
 
             legacyLen = checkLegacyLen;  /* back up for output parsedLen */
             int32_t replacementLen = static_cast<int32_t>(uprv_strlen(LEGACY[i+1]));
             newTagLength = replacementLen + tagLen - checkLegacyLen;
             int32_t oldTagLength = tagLen;
-            if (tagLen < newTagLength) {
+            якщо (tagLen < newTagLength) {
                 uprv_free(tagBuf);
                 // Change t->buf after the free and before return to avoid the second double free in
                 // the destructor of t when t is out of scope.
                 t->buf = tagBuf = static_cast<char*>(uprv_malloc(newTagLength + 1));
-                if (tagBuf == nullptr) {
+                якщо (tagBuf == nullptr) {
                     status = U_MEMORY_ALLOCATION_ERROR;
-                    return nullptr;
+                    повернути nullptr;
                 }
                 tagLen = newTagLength;
             }
             parsedLenDelta = checkLegacyLen - replacementLen;
             uprv_strcpy(t->buf, LEGACY[i + 1]);
-            if (checkLegacyLen != tagLen) {
+            якщо (checkLegacyLen != tagLen) {
                 uprv_memcpy(t->buf + replacementLen, tag + checkLegacyLen,
                             oldTagLength - checkLegacyLen);
                 // NUL-terminate after memcpy().
@@ -2070,24 +2070,24 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
         }
     }
 
-    if (legacyLen == 0) {
-        for (i = 0; i < UPRV_LENGTHOF(REDUNDANT); i += 2) {
+    якщо (legacyLen == 0) {
+        для (i = 0; i < UPRV_LENGTHOF(REDUNDANT); i += 2) {
             const char* redundantTag = REDUNDANT[i];
             size_t redundantTagLen = uprv_strlen(redundantTag);
             // The preferred tag for a redundant tag is always shorter than redundant
             // tag. A redundant tag may or may not be followed by other subtags.
             // (i.e. "zh-yue" or "zh-yue-u-co-pinyin").
-            if (uprv_strnicmp(redundantTag, tagBuf, static_cast<uint32_t>(redundantTagLen)) == 0) {
+            якщо (uprv_strnicmp(redundantTag, tagBuf, static_cast<uint32_t>(redundantTagLen)) == 0) {
                 const char* redundantTagEnd = tagBuf + redundantTagLen;
-                if (*redundantTagEnd  == '\0' || *redundantTagEnd == SEP) {
+                якщо (*redundantTagEnd  == '\0' || *redundantTagEnd == SEP) {
                     const char* preferredTag = REDUNDANT[i + 1];
                     size_t preferredTagLen = uprv_strlen(preferredTag);
                     uprv_memcpy(t->buf, preferredTag, preferredTagLen);
-                    if (*redundantTagEnd == SEP) {
+                    якщо (*redundantTagEnd == SEP) {
                         uprv_memmove(tagBuf + preferredTagLen,
                                      redundantTagEnd,
                                      tagLen - redundantTagLen + 1);
-                    } else {
+                    } інакше {
                         tagBuf[preferredTagLen] = '\0';
                     }
                     // parsedLen should be the length of the input
@@ -2115,56 +2115,56 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
     pExtValueSubtag = nullptr;
     pExtValueSubtagEnd = nullptr;
 
-    while (pNext) {
+    поки (pNext) {
         char *pSep;
 
         pSubtag = pNext;
 
         /* locate next separator char */
         pSep = pSubtag;
-        while (*pSep) {
-            if (*pSep == SEP) {
+        поки (*pSep) {
+            якщо (*pSep == SEP) {
                 break;
             }
             pSep++;
         }
-        if (*pSep == 0) {
+        якщо (*pSep == 0) {
             /* last subtag */
             pNext = nullptr;
-        } else {
+        } інакше {
             pNext = pSep + 1;
         }
         subtagLen = static_cast<int32_t>(pSep - pSubtag);
 
-        if (next & LANG) {
-            if (ultag_isLanguageSubtag(pSubtag, subtagLen)) {
+        якщо (next & LANG) {
+            якщо (ultag_isLanguageSubtag(pSubtag, subtagLen)) {
                 *pSep = 0;  /* terminate */
                 // TODO: move deprecated language code handling here.
                 t->language = T_CString_toLowerCase(pSubtag);
 
                 pLastGoodPosition = pSep;
                 next = SCRT | REGN | VART | EXTS | PRIV;
-                if (subtagLen <= 3)
+                якщо (subtagLen <= 3)
                   next |= EXTL;
                 continue;
             }
         }
-        if (next & EXTL) {
-            if (_isExtlangSubtag(pSubtag, subtagLen)) {
+        якщо (next & EXTL) {
+            якщо (_isExtlangSubtag(pSubtag, subtagLen)) {
                 *pSep = 0;
                 t->extlang[extlangIdx++] = T_CString_toLowerCase(pSubtag);
 
                 pLastGoodPosition = pSep;
-                if (extlangIdx < 3) {
+                якщо (extlangIdx < 3) {
                     next = EXTL | SCRT | REGN | VART | EXTS | PRIV;
-                } else {
+                } інакше {
                     next = SCRT | REGN | VART | EXTS | PRIV;
                 }
                 continue;
             }
         }
-        if (next & SCRT) {
-            if (ultag_isScriptSubtag(pSubtag, subtagLen)) {
+        якщо (next & SCRT) {
+            якщо (ultag_isScriptSubtag(pSubtag, subtagLen)) {
                 char *p = pSubtag;
 
                 *pSep = 0;
@@ -2172,7 +2172,7 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
                 /* to title case */
                 *p = uprv_toupper(*p);
                 p++;
-                for (; *p; p++) {
+                для (; *p; p++) {
                     *p = uprv_tolower(*p);
                 }
 
@@ -2183,8 +2183,8 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
                 continue;
             }
         }
-        if (next & REGN) {
-            if (ultag_isRegionSubtag(pSubtag, subtagLen)) {
+        якщо (next & REGN) {
+            якщо (ultag_isRegionSubtag(pSubtag, subtagLen)) {
                 *pSep = 0;
                 // TODO: move deprecated region code handling here.
                 t->region = T_CString_toUpperCase(pSubtag);
@@ -2194,16 +2194,16 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
                 continue;
             }
         }
-        if (next & VART) {
-            if (_isVariantSubtag(pSubtag, subtagLen) ||
+        якщо (next & VART) {
+            якщо (_isVariantSubtag(pSubtag, subtagLen) ||
                (privateuseVar && _isPrivateuseVariantSubtag(pSubtag, subtagLen))) {
                 icu::LocalPointer<VariantListEntry> var(new VariantListEntry, status);
-                if (U_FAILURE(status)) {
-                    return nullptr;
+                якщо (U_FAILURE(status)) {
+                    повернути nullptr;
                 }
                 *pSep = 0;
                 var->variant = T_CString_toUpperCase(pSubtag);
-                if (!_addVariantToList(&(t->variants), std::move(var))) {
+                якщо (!_addVariantToList(&(t->variants), std::move(var))) {
                     /* duplicated variant entry */
                     break;
                 }
@@ -2212,10 +2212,10 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
                 continue;
             }
         }
-        if (next & EXTS) {
-            if (_isExtensionSingleton(pSubtag, subtagLen)) {
-                if (pExtension.isValid()) {
-                    if (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
+        якщо (next & EXTS) {
+            якщо (_isExtensionSingleton(pSubtag, subtagLen)) {
+                якщо (pExtension.isValid()) {
+                    якщо (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
                         /* the previous extension is incomplete */
                         delete pExtension.orphan();
                         break;
@@ -2226,10 +2226,10 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
                     pExtension->value = T_CString_toLowerCase(pExtValueSubtag);
 
                     /* insert the extension to the list */
-                    if (_addExtensionToList(&(t->extensions), pExtension.getAlias(), false)) {
+                    якщо (_addExtensionToList(&(t->extensions), pExtension.getAlias(), false)) {
                         pExtension.orphan();
                         pLastGoodPosition = pExtValueSubtagEnd;
-                    } else {
+                    } інакше {
                         /* stop parsing here */
                         delete pExtension.orphan();
                         break;
@@ -2238,8 +2238,8 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
 
                 /* create a new extension */
                 pExtension.adoptInsteadAndCheckErrorCode(new ExtensionListEntry, status);
-                if (U_FAILURE(status)) {
-                    return nullptr;
+                якщо (U_FAILURE(status)) {
+                    повернути nullptr;
                 }
                 *pSep = 0;
                 pExtension->key = T_CString_toLowerCase(pSubtag);
@@ -2256,9 +2256,9 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
                 continue;
             }
         }
-        if (next & EXTV) {
-            if (_isExtensionSubtag(pSubtag, subtagLen)) {
-                if (pExtValueSubtag == nullptr) {
+        якщо (next & EXTV) {
+            якщо (_isExtensionSubtag(pSubtag, subtagLen)) {
+                якщо (pExtValueSubtag == nullptr) {
                     /* if the start position of this extension's value is not yet,
                         this one is the first value subtag */
                     pExtValueSubtag = pSubtag;
@@ -2271,26 +2271,26 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
                 continue;
             }
         }
-        if (next & PRIV) {
-            if (uprv_tolower(*pSubtag) == PRIVATEUSE && subtagLen == 1) {
+        якщо (next & PRIV) {
+            якщо (uprv_tolower(*pSubtag) == PRIVATEUSE && subtagLen == 1) {
                 char *pPrivuseVal;
 
-                if (pExtension.isValid()) {
+                якщо (pExtension.isValid()) {
                     /* Process the last extension */
-                    if (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
+                    якщо (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
                         /* the previous extension is incomplete */
                         delete pExtension.orphan();
                         break;
-                    } else {
+                    } інакше {
                         /* terminate the previous extension value */
                         *pExtValueSubtagEnd = 0;
                         pExtension->value = T_CString_toLowerCase(pExtValueSubtag);
 
                         /* insert the extension to the list */
-                        if (_addExtensionToList(&(t->extensions), pExtension.getAlias(), false)) {
+                        якщо (_addExtensionToList(&(t->extensions), pExtension.getAlias(), false)) {
                             pExtension.orphan();
                             pLastGoodPosition = pExtValueSubtagEnd;
-                        } else {
+                        } інакше {
                         /* stop parsing here */
                             delete pExtension.orphan();
                             break;
@@ -2299,7 +2299,7 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
                 }
 
                 /* The rest of part will be private use value subtags */
-                if (pNext == nullptr) {
+                якщо (pNext == nullptr) {
                     /* empty private use subtag */
                     break;
                 }
@@ -2307,40 +2307,40 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
                 pPrivuseVal = pNext;
 
                 /* validate private use value subtags */
-                while (pNext) {
+                поки (pNext) {
                     pSubtag = pNext;
                     pSep = pSubtag;
-                    while (*pSep) {
-                        if (*pSep == SEP) {
+                    поки (*pSep) {
+                        якщо (*pSep == SEP) {
                             break;
                         }
                         pSep++;
                     }
-                    if (*pSep == 0) {
+                    якщо (*pSep == 0) {
                         /* last subtag */
                         pNext = nullptr;
-                    } else {
+                    } інакше {
                         pNext = pSep + 1;
                     }
                     subtagLen = static_cast<int32_t>(pSep - pSubtag);
 
-                    if (uprv_strncmp(pSubtag, PRIVUSE_VARIANT_PREFIX, uprv_strlen(PRIVUSE_VARIANT_PREFIX)) == 0) {
+                    якщо (uprv_strncmp(pSubtag, PRIVUSE_VARIANT_PREFIX, uprv_strlen(PRIVUSE_VARIANT_PREFIX)) == 0) {
                         *pSep = 0;
                         next = VART;
                         privateuseVar = true;
                         break;
-                    } else if (_isPrivateuseValueSubtag(pSubtag, subtagLen)) {
+                    } інакше якщо (_isPrivateuseValueSubtag(pSubtag, subtagLen)) {
                         pLastGoodPosition = pSep;
-                    } else {
+                    } інакше {
                         break;
                     }
                 }
 
-                if (next == VART) {
+                якщо (next == VART) {
                     continue;
                 }
 
-                if (pLastGoodPosition - pPrivuseVal > 0) {
+                якщо (pLastGoodPosition - pPrivuseVal > 0) {
                     *pLastGoodPosition = 0;
                     t->privateuse = T_CString_toLowerCase(pPrivuseVal);
                 }
@@ -2354,58 +2354,58 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
         break;
     }
 
-    if (pExtension.isValid()) {
+    якщо (pExtension.isValid()) {
         /* Process the last extension */
-        if (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
+        якщо (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
             /* the previous extension is incomplete */
             delete pExtension.orphan();
-        } else {
+        } інакше {
             /* terminate the previous extension value */
             *pExtValueSubtagEnd = 0;
             pExtension->value = T_CString_toLowerCase(pExtValueSubtag);
             /* insert the extension to the list */
-            if (_addExtensionToList(&(t->extensions), pExtension.getAlias(), false)) {
+            якщо (_addExtensionToList(&(t->extensions), pExtension.getAlias(), false)) {
                 pExtension.orphan();
                 pLastGoodPosition = pExtValueSubtagEnd;
-            } else {
+            } інакше {
                 delete pExtension.orphan();
             }
         }
     }
 
-    if (parsedLen != nullptr) {
+    якщо (parsedLen != nullptr) {
         *parsedLen = static_cast<int32_t>(pLastGoodPosition - t->buf + parsedLenDelta);
     }
 
-    return t.orphan();
+    повернути t.orphan();
 }
 
 // Ticket #12705 - Turn optimization back on.
-#if defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
+#якщо defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
 #pragma optimize( "", on )
 #endif
 
 void
 ultag_close(ULanguageTag* langtag) {
 
-    if (langtag == nullptr) {
-        return;
+    якщо (langtag == nullptr) {
+        повернути;
     }
 
     uprv_free(langtag->buf);
 
-    if (langtag->variants) {
+    якщо (langtag->variants) {
         VariantListEntry *curVar = langtag->variants;
-        while (curVar) {
+        поки (curVar) {
             VariantListEntry *nextVar = curVar->next;
             delete curVar;
             curVar = nextVar;
         }
     }
 
-    if (langtag->extensions) {
+    якщо (langtag->extensions) {
         ExtensionListEntry *curExt = langtag->extensions;
-        while (curExt) {
+        поки (curExt) {
             ExtensionListEntry *nextExt = curExt->next;
             delete curExt;
             curExt = nextExt;
@@ -2417,50 +2417,50 @@ ultag_close(ULanguageTag* langtag) {
 
 const char*
 ultag_getLanguage(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->language;
+    повернути langtag->language;
 }
 
-#if 0
+#якщо 0
 const char*
 ultag_getJDKLanguage(const ULanguageTag* langtag) {
     int32_t i;
-    for (i = 0; DEPRECATEDLANGS[i] != nullptr; i += 2) {
-        if (uprv_compareInvCharsAsAscii(DEPRECATEDLANGS[i], langtag->language) == 0) {
-            return DEPRECATEDLANGS[i + 1];
+    для (i = 0; DEPRECATEDLANGS[i] != nullptr; i += 2) {
+        якщо (uprv_compareInvCharsAsAscii(DEPRECATEDLANGS[i], langtag->language) == 0) {
+            повернути DEPRECATEDLANGS[i + 1];
         }
     }
-    return langtag->language;
+    повернути langtag->language;
 }
 #endif
 
 const char*
 ultag_getExtlang(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
-    if (idx >= 0 && idx < MAXEXTLANG) {
-        return langtag->extlang[idx];
+    якщо (idx >= 0 && idx < MAXEXTLANG) {
+        повернути langtag->extlang[idx];
     }
-    return nullptr;
+    повернути nullptr;
 }
 
 int32_t
 ultag_getExtlangSize(const ULanguageTag* langtag) {
     int32_t size = 0;
     int32_t i;
-    for (i = 0; i < MAXEXTLANG; i++) {
-        if (langtag->extlang[i]) {
+    для (i = 0; i < MAXEXTLANG; i++) {
+        якщо (langtag->extlang[i]) {
             size++;
         }
     }
-    return size;
+    повернути size;
 }
 
 const char*
 ultag_getScript(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->script;
+    повернути langtag->script;
 }
 
 const char*
 ultag_getRegion(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->region;
+    повернути langtag->region;
 }
 
 const char*
@@ -2468,29 +2468,29 @@ ultag_getVariant(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
     const char *var = nullptr;
     VariantListEntry *cur = langtag->variants;
     int32_t i = 0;
-    while (cur) {
-        if (i == idx) {
+    поки (cur) {
+        якщо (i == idx) {
             var = cur->variant;
             break;
         }
         cur = cur->next;
         i++;
     }
-    return var;
+    повернути var;
 }
 
 int32_t
 ultag_getVariantsSize(const ULanguageTag* langtag) {
     int32_t size = 0;
     VariantListEntry *cur = langtag->variants;
-    while (true) {
-        if (cur == nullptr) {
+    поки (true) {
+        якщо (cur == nullptr) {
             break;
         }
         size++;
         cur = cur->next;
     }
-    return size;
+    повернути size;
 }
 
 const char*
@@ -2498,15 +2498,15 @@ ultag_getExtensionKey(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx)
     const char *key = nullptr;
     ExtensionListEntry *cur = langtag->extensions;
     int32_t i = 0;
-    while (cur) {
-        if (i == idx) {
+    поки (cur) {
+        якщо (i == idx) {
             key = cur->key;
             break;
         }
         cur = cur->next;
         i++;
     }
-    return key;
+    повернути key;
 }
 
 const char*
@@ -2514,40 +2514,40 @@ ultag_getExtensionValue(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t id
     const char *val = nullptr;
     ExtensionListEntry *cur = langtag->extensions;
     int32_t i = 0;
-    while (cur) {
-        if (i == idx) {
+    поки (cur) {
+        якщо (i == idx) {
             val = cur->value;
             break;
         }
         cur = cur->next;
         i++;
     }
-    return val;
+    повернути val;
 }
 
 int32_t
 ultag_getExtensionsSize(const ULanguageTag* langtag) {
     int32_t size = 0;
     ExtensionListEntry *cur = langtag->extensions;
-    while (true) {
-        if (cur == nullptr) {
+    поки (true) {
+        якщо (cur == nullptr) {
             break;
         }
         size++;
         cur = cur->next;
     }
-    return size;
+    повернути size;
 }
 
 const char*
 ultag_getPrivateUse(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->privateuse;
+    повернути langtag->privateuse;
 }
 
-#if 0
+#якщо 0
 const char*
 ultag_getLegacy(const ULanguageTag* langtag) {
-    return langtag->legacy;
+    повернути langtag->legacy;
 }
 #endif
 
@@ -2566,7 +2566,7 @@ uloc_toLanguageTag(const char* localeID,
                    int32_t langtagCapacity,
                    UBool strict,
                    UErrorCode* status) {
-    return icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
+    повернути icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
         langtag, langtagCapacity,
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_toLanguageTag(localeID, sink, strict, status);
@@ -2578,7 +2578,7 @@ U_EXPORT icu::CharString
 ulocimp_toLanguageTag(const char* localeID,
                       bool strict,
                       UErrorCode& status) {
-    return icu::ByteSinkUtil::viaByteSinkToCharString(
+    повернути icu::ByteSinkUtil::viaByteSinkToCharString(
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_toLanguageTag(localeID, sink, strict, status);
         },
@@ -2590,57 +2590,57 @@ ulocimp_toLanguageTag(const char* localeID,
                       icu::ByteSink& sink,
                       bool strict,
                       UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    якщо (U_FAILURE(status)) { повернути; }
 
     UErrorCode tmpStatus = U_ZERO_ERROR;
     bool hadPosix = false;
     const char* pKeywordStart;
 
-    if (localeID == nullptr) {
+    якщо (localeID == nullptr) {
         localeID = uloc_getDefault();
     }
     /* Note: uloc_canonicalize returns "en_US_POSIX" for input locale ID "".  See #6835 */
     icu::CharString canonical = ulocimp_canonicalize(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
+    якщо (U_FAILURE(tmpStatus)) {
         status = tmpStatus;
-        return;
+        повернути;
     }
 
     /* For handling special case - private use only tag */
     pKeywordStart = locale_getKeywordsStart(canonical.toStringPiece());
-    if (pKeywordStart == canonical.data()) {
-        int kwdCnt = 0;
+    якщо (pKeywordStart == canonical.data()) {
+        ціле kwdCnt = 0;
         bool done = false;
 
         icu::LocalUEnumerationPointer kwdEnum(uloc_openKeywords(canonical.data(), &tmpStatus));
-        if (U_SUCCESS(tmpStatus)) {
+        якщо (U_SUCCESS(tmpStatus)) {
             kwdCnt = uenum_count(kwdEnum.getAlias(), &tmpStatus);
-            if (kwdCnt == 1) {
+            якщо (kwdCnt == 1) {
                 const char *key;
                 int32_t len = 0;
 
                 key = uenum_next(kwdEnum.getAlias(), &len, &tmpStatus);
-                if (len == 1 && *key == PRIVATEUSE) {
+                якщо (len == 1 && *key == PRIVATEUSE) {
                     icu::CharString buf = ulocimp_getKeywordValue(localeID, key, tmpStatus);
-                    if (U_SUCCESS(tmpStatus)) {
-                        if (ultag_isPrivateuseValueSubtags(buf.data(), buf.length())) {
+                    якщо (U_SUCCESS(tmpStatus)) {
+                        якщо (ultag_isPrivateuseValueSubtags(buf.data(), buf.length())) {
                             /* return private use only tag */
                             sink.Append("und-x-", 6);
                             sink.Append(buf.data(), buf.length());
                             done = true;
-                        } else if (strict) {
+                        } інакше якщо (strict) {
                             status = U_ILLEGAL_ARGUMENT_ERROR;
                             done = true;
                         }
                         /* if not strict mode, then "und" will be returned */
-                    } else {
+                    } інакше {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
                         done = true;
                     }
                 }
             }
-            if (done) {
-                return;
+            якщо (done) {
+                повернути;
             }
         }
     }
@@ -2660,7 +2660,7 @@ uloc_forLanguageTag(const char* langtag,
                     int32_t localeIDCapacity,
                     int32_t* parsedLength,
                     UErrorCode* status) {
-    return icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
+    повернути icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
         localeID, localeIDCapacity,
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_forLanguageTag(langtag, -1, sink, parsedLength, status);
@@ -2673,7 +2673,7 @@ ulocimp_forLanguageTag(const char* langtag,
                        int32_t tagLen,
                        int32_t* parsedLength,
                        UErrorCode& status) {
-    return icu::ByteSinkUtil::viaByteSinkToCharString(
+    повернути icu::ByteSinkUtil::viaByteSinkToCharString(
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_forLanguageTag(langtag, tagLen, sink, parsedLength, status);
         },
@@ -2686,7 +2686,7 @@ ulocimp_forLanguageTag(const char* langtag,
                        icu::ByteSink& sink,
                        int32_t* parsedLength,
                        UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    якщо (U_FAILURE(status)) { повернути; }
 
     bool isEmpty = true;
     const char *subtag, *p;
@@ -2695,15 +2695,15 @@ ulocimp_forLanguageTag(const char* langtag,
     bool noRegion = true;
 
     icu::LocalULanguageTagPointer lt(ultag_parse(langtag, tagLen, parsedLength, status));
-    if (U_FAILURE(status)) {
-        return;
+    якщо (U_FAILURE(status)) {
+        повернути;
     }
 
     /* language */
     subtag = ultag_getExtlangSize(lt.getAlias()) > 0 ? ultag_getExtlang(lt.getAlias(), 0) : ultag_getLanguage(lt.getAlias());
-    if (uprv_compareInvCharsAsAscii(subtag, LANG_UND) != 0) {
+    якщо (uprv_compareInvCharsAsAscii(subtag, LANG_UND) != 0) {
         len = static_cast<int32_t>(uprv_strlen(subtag));
-        if (len > 0) {
+        якщо (len > 0) {
             sink.Append(subtag, len);
             isEmpty = false;
         }
@@ -2712,7 +2712,7 @@ ulocimp_forLanguageTag(const char* langtag,
     /* script */
     subtag = ultag_getScript(lt.getAlias());
     len = static_cast<int32_t>(uprv_strlen(subtag));
-    if (len > 0) {
+    якщо (len > 0) {
         sink.Append("_", 1);
         isEmpty = false;
 
@@ -2725,13 +2725,13 @@ ulocimp_forLanguageTag(const char* langtag,
     /* region */
     subtag = ultag_getRegion(lt.getAlias());
     len = static_cast<int32_t>(uprv_strlen(subtag));
-    if (len > 0) {
+    якщо (len > 0) {
         sink.Append("_", 1);
         isEmpty = false;
 
         /* write out the region in upper case */
         p = subtag;
-        while (*p) {
+        поки (*p) {
             char c = uprv_toupper(*p);
             sink.Append(&c, 1);
             p++;
@@ -2742,19 +2742,19 @@ ulocimp_forLanguageTag(const char* langtag,
     /* variants */
     _sortVariants(lt.getAlias()->variants);
     n = ultag_getVariantsSize(lt.getAlias());
-    if (n > 0) {
-        if (noRegion) {
+    якщо (n > 0) {
+        якщо (noRegion) {
             sink.Append("_", 1);
             isEmpty = false;
         }
 
-        for (i = 0; i < n; i++) {
+        для (i = 0; i < n; i++) {
             subtag = ultag_getVariant(lt.getAlias(), i);
             sink.Append("_", 1);
 
             /* write out the variant in upper case */
             p = subtag;
-            while (*p) {
+            поки (*p) {
                 char c = uprv_toupper(*p);
                 sink.Append(&c, 1);
                 p++;
@@ -2765,8 +2765,8 @@ ulocimp_forLanguageTag(const char* langtag,
     /* keywords */
     n = ultag_getExtensionsSize(lt.getAlias());
     subtag = ultag_getPrivateUse(lt.getAlias());
-    if (n > 0 || uprv_strlen(subtag) > 0) {
-        if (isEmpty && n > 0) {
+    якщо (n > 0 || uprv_strlen(subtag) > 0) {
+        якщо (isEmpty && n > 0) {
             /* need a language */
             sink.Append(LANG_UND, LANG_UND_LEN);
         }

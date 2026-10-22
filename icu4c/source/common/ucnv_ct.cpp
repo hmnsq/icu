@@ -16,7 +16,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#якщо !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
 #include "unicode/ucnv.h"
 #include "unicode/uset.h"
@@ -182,45 +182,45 @@ _CompoundTextgetName(const UConverter* cnv);
 static int32_t findNextEsc(const char *source, const char *sourceLimit) {
     int32_t length = static_cast<int32_t>(sourceLimit - source);
     int32_t i;
-    for (i = 1; i < length; i++) {
-        if (*(source + i) == 0x1B) {
-            return i;
+    для (i = 1; i < length; i++) {
+        якщо (*(source + i) == 0x1B) {
+            повернути i;
         }
     }
 
-    return length;
+    повернути length;
 }
 
-static COMPOUND_TEXT_CONVERTERS getState(int codepoint) {
+static COMPOUND_TEXT_CONVERTERS getState(ціле codepoint) {
     COMPOUND_TEXT_CONVERTERS state = DO_SEARCH;
 
-    if (isASCIIRange(codepoint)) {
+    якщо (isASCIIRange(codepoint)) {
         state = COMPOUND_TEXT_SINGLE_0;
-    } else if (isIBM912(codepoint)) {
+    } інакше якщо (isIBM912(codepoint)) {
         state = IBM_912;
-    }else if (isIBM913(codepoint)) {
+    }інакше якщо (isIBM913(codepoint)) {
         state = IBM_913;
-    } else if (isISO8859_14(codepoint)) {
+    } інакше якщо (isISO8859_14(codepoint)) {
         state = ISO_8859_14;
-    } else if (isIBM923(codepoint)) {
+    } інакше якщо (isIBM923(codepoint)) {
         state = IBM_923;
-    } else if (isIBM874(codepoint)) {
+    } інакше якщо (isIBM874(codepoint)) {
         state = IBM_874;
-    } else if (isIBM914(codepoint)) {
+    } інакше якщо (isIBM914(codepoint)) {
         state = IBM_914;
-    } else if (isCompoundS2(codepoint)) {
+    } інакше якщо (isCompoundS2(codepoint)) {
         state = COMPOUND_TEXT_SINGLE_2;
-    } else if (isCompoundS3(codepoint)) {
+    } інакше якщо (isCompoundS3(codepoint)) {
         state = COMPOUND_TEXT_SINGLE_3;
-    } else if (isIBM916(codepoint)) {
+    } інакше якщо (isIBM916(codepoint)) {
         state = IBM_916;
-    } else if (isIBM915(codepoint)) {
+    } інакше якщо (isIBM915(codepoint)) {
         state = IBM_915;
-    } else if (isCompoundS1(codepoint)) {
+    } інакше якщо (isCompoundS1(codepoint)) {
         state = COMPOUND_TEXT_SINGLE_1;
     }
 
-    return state;
+    повернути state;
 }
 
 static COMPOUND_TEXT_CONVERTERS findStateFromEscSeq(const char* source, const char* sourceLimit, const uint8_t* toUBytesBuffer, int32_t toUBytesBufferLength, UErrorCode *err) {
@@ -228,40 +228,40 @@ static COMPOUND_TEXT_CONVERTERS findStateFromEscSeq(const char* source, const ch
     UBool matchFound = false;
     int32_t i, n, offset = toUBytesBufferLength;
 
-    for (i = 0; i < NUM_OF_CONVERTERS; i++) {
+    для (i = 0; i < NUM_OF_CONVERTERS; i++) {
         matchFound = true;
-        for (n = 0; escSeqCompoundText[i][n] != 0; n++) {
-            if (n < toUBytesBufferLength) {
-                if (toUBytesBuffer[n] != escSeqCompoundText[i][n]) {
+        для (n = 0; escSeqCompoundText[i][n] != 0; n++) {
+            якщо (n < toUBytesBufferLength) {
+                якщо (toUBytesBuffer[n] != escSeqCompoundText[i][n]) {
                     matchFound = false;
                     break;
                 }
-            } else if ((source + (n - offset)) >= sourceLimit) {
+            } інакше якщо ((source + (n - offset)) >= sourceLimit) {
                 *err = U_TRUNCATED_CHAR_FOUND;
                 matchFound = false;
                 break;
-            } else if (*(source + (n - offset)) != escSeqCompoundText[i][n]) {
+            } інакше якщо (*(source + (n - offset)) != escSeqCompoundText[i][n]) {
                 matchFound = false;
                 break;
             }
         }
 
-        if (matchFound) {
+        якщо (matchFound) {
             break;
         }
     }
 
-    if (matchFound) {
+    якщо (matchFound) {
         state = (COMPOUND_TEXT_CONVERTERS)i;
     }
 
-    return state;
+    повернути state;
 }
 
 static void U_CALLCONV
 _CompoundTextOpen(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode){
     cnv->extraInfo = uprv_malloc (sizeof (UConverterDataCompoundText));
-    if (cnv->extraInfo != nullptr) {
+    якщо (cnv->extraInfo != nullptr) {
         UConverterDataCompoundText *myConverterData = (UConverterDataCompoundText *) cnv->extraInfo;
 
         UConverterNamePieces stackPieces;
@@ -289,13 +289,13 @@ _CompoundTextOpen(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorC
         myConverterData->myConverterArray[ISO_8859_14] = ucnv_loadSharedData("iso-8859_14-1998", &stackPieces, &stackArgs, errorCode);
         myConverterData->myConverterArray[IBM_923] = ucnv_loadSharedData("ibm-923_P100-1998", &stackPieces, &stackArgs, errorCode);
 
-        if (U_FAILURE(*errorCode) || pArgs->onlyTestIsLoadable) {
+        якщо (U_FAILURE(*errorCode) || pArgs->onlyTestIsLoadable) {
             _CompoundTextClose(cnv);
-            return;
+            повернути;
         }
 
         myConverterData->state = (COMPOUND_TEXT_CONVERTERS)0;
-    } else {
+    } інакше {
         *errorCode = U_MEMORY_ALLOCATION_ERROR;
     }
 }
@@ -306,10 +306,10 @@ _CompoundTextClose(UConverter *converter) {
     UConverterDataCompoundText* myConverterData = (UConverterDataCompoundText*)(converter->extraInfo);
     int32_t i;
 
-    if (converter->extraInfo != nullptr) {
+    якщо (converter->extraInfo != nullptr) {
         /*close the array of converter pointers and free the memory*/
-        for (i = 0; i < NUM_OF_CONVERTERS; i++) {
-            if (myConverterData->myConverterArray[i] != nullptr) {
+        для (i = 0; i < NUM_OF_CONVERTERS; i++) {
+            якщо (myConverterData->myConverterArray[i] != nullptr) {
                 ucnv_unloadSharedDataIfReady(myConverterData->myConverterArray[i]);
             }
         }
@@ -328,7 +328,7 @@ _CompoundTextReset(UConverter *converter, UConverterResetChoice choice) {
 static const char* U_CALLCONV
 _CompoundTextgetName(const UConverter* cnv){
     (void)cnv;
-    return "x11-compound-text";
+    повернути "x11-compound-text";
 }
 
 static void U_CALLCONV
@@ -353,41 +353,41 @@ UConverter_fromUnicode_CompoundText_OFFSETS(UConverterFromUnicodeArgs* args, UEr
     currentState = myConverterData->state;
 
     /* check if the last codepoint of previous buffer was a lead surrogate*/
-    if((sourceChar = cnv->fromUChar32)!=0 && target< targetLimit) {
+    якщо((sourceChar = cnv->fromUChar32)!=0 && target< targetLimit) {
         goto getTrail;
     }
 
-    while( source < sourceLimit){
-        if(target < targetLimit){
+    поки( source < sourceLimit){
+        якщо(target < targetLimit){
 
             sourceChar  = *(source++);
             /*check if the char is a First surrogate*/
-             if(U16_IS_SURROGATE(sourceChar)) {
-                if(U16_IS_SURROGATE_LEAD(sourceChar)) {
+             якщо(U16_IS_SURROGATE(sourceChar)) {
+                якщо(U16_IS_SURROGATE_LEAD(sourceChar)) {
 getTrail:
                     /*look ahead to find the trail surrogate*/
-                    if(source < sourceLimit) {
+                    якщо(source < sourceLimit) {
                         /* test the following code unit */
                         char16_t trail = *source;
-                        if(U16_IS_TRAIL(trail)) {
+                        якщо(U16_IS_TRAIL(trail)) {
                             source++;
                             sourceChar=U16_GET_SUPPLEMENTARY(sourceChar, trail);
                             cnv->fromUChar32=0x00;
                             /* convert this supplementary code point */
                             /* exit this condition tree */
-                        } else {
+                        } інакше {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
                             *err=U_ILLEGAL_CHAR_FOUND;
                             cnv->fromUChar32=sourceChar;
                             break;
                         }
-                    } else {
+                    } інакше {
                         /* no more input */
                         cnv->fromUChar32=sourceChar;
                         break;
                     }
-                } else {
+                } інакше {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
                     *err=U_ILLEGAL_CHAR_FOUND;
@@ -399,58 +399,58 @@ getTrail:
              tmpTargetBufferLength = 0;
              tmpState = getState(sourceChar);
 
-             if (tmpState != DO_SEARCH && currentState != tmpState) {
+             якщо (tmpState != DO_SEARCH && currentState != tmpState) {
                  /* Get escape sequence if necessary */
                  currentState = tmpState;
-                 for (i = 0; escSeqCompoundText[currentState][i] != 0; i++) {
+                 для (i = 0; escSeqCompoundText[currentState][i] != 0; i++) {
                      tmpTargetBuffer[tmpTargetBufferLength++] = escSeqCompoundText[currentState][i];
                  }
              }
 
-             if (tmpState == DO_SEARCH) {
+             якщо (tmpState == DO_SEARCH) {
                  /* Test all available converters */
-                 for (i = 1; i < SEARCH_LENGTH; i++) {
+                 для (i = 1; i < SEARCH_LENGTH; i++) {
                      pValueLength = ucnv_MBCSFromUChar32(myConverterData->myConverterArray[i], sourceChar, &pValue, useFallback);
-                     if (pValueLength > 0) {
+                     якщо (pValueLength > 0) {
                          tmpState = (COMPOUND_TEXT_CONVERTERS)i;
-                         if (currentState != tmpState) {
+                         якщо (currentState != tmpState) {
                              currentState = tmpState;
-                             for (j = 0; escSeqCompoundText[currentState][j] != 0; j++) {
+                             для (j = 0; escSeqCompoundText[currentState][j] != 0; j++) {
                                  tmpTargetBuffer[tmpTargetBufferLength++] = escSeqCompoundText[currentState][j];
                              }
                          }
-                         for (n = (pValueLength - 1); n >= 0; n--) {
+                         для (n = (pValueLength - 1); n >= 0; n--) {
                              tmpTargetBuffer[tmpTargetBufferLength++] = (uint8_t)(pValue >> (n * 8));
                          }
                          break;
                      }
                  }
-             } else if (tmpState == COMPOUND_TEXT_SINGLE_0) {
+             } інакше якщо (tmpState == COMPOUND_TEXT_SINGLE_0) {
                  tmpTargetBuffer[tmpTargetBufferLength++] = (uint8_t)sourceChar;
-             } else {
+             } інакше {
                  pValueLength = ucnv_MBCSFromUChar32(myConverterData->myConverterArray[currentState], sourceChar, &pValue, useFallback);
-                 if (pValueLength > 0) {
-                     for (n = (pValueLength - 1); n >= 0; n--) {
+                 якщо (pValueLength > 0) {
+                     для (n = (pValueLength - 1); n >= 0; n--) {
                          tmpTargetBuffer[tmpTargetBufferLength++] = (uint8_t)(pValue >> (n * 8));
                      }
                  }
              }
 
-             for (i = 0; i < tmpTargetBufferLength; i++) {
-                 if (target < targetLimit) {
+             для (i = 0; i < tmpTargetBufferLength; i++) {
+                 якщо (target < targetLimit) {
                      *target++ = tmpTargetBuffer[i];
-                 } else {
+                 } інакше {
                      *err = U_BUFFER_OVERFLOW_ERROR;
                      break;
                  }
              }
 
-             if (*err == U_BUFFER_OVERFLOW_ERROR) {
-                 for (; i < tmpTargetBufferLength; i++) {
+             якщо (*err == U_BUFFER_OVERFLOW_ERROR) {
+                 для (; i < tmpTargetBufferLength; i++) {
                      args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = tmpTargetBuffer[i];
                  }
              }
-        } else {
+        } інакше {
             *err = U_BUFFER_OVERFLOW_ERROR;
             break;
         }
@@ -480,9 +480,9 @@ UConverter_toUnicode_CompoundText_OFFSETS(UConverterToUnicodeArgs *args,
     int32_t minArgsSize;
 
     /* set up the subconverter arguments */
-    if(args->size<sizeof(UConverterToUnicodeArgs)) {
+    якщо(args->size<sizeof(UConverterToUnicodeArgs)) {
         minArgsSize = args->size;
-    } else {
+    } інакше {
         minArgsSize = (int32_t)sizeof(UConverterToUnicodeArgs);
     }
 
@@ -491,32 +491,32 @@ UConverter_toUnicode_CompoundText_OFFSETS(UConverterToUnicodeArgs *args,
 
     currentState = tmpState =  myConverterData->state;
 
-    while(mySource < mySourceLimit){
-        if(myTarget < args->targetLimit){
-            if (args->converter->toULength > 0) {
+    поки(mySource < mySourceLimit){
+        якщо(myTarget < args->targetLimit){
+            якщо (args->converter->toULength > 0) {
                 mySourceChar = args->converter->toUBytes[0];
-            } else {
+            } інакше {
                 mySourceChar = (uint8_t)*mySource;
             }
 
-            if (mySourceChar == ESC_START) {
+            якщо (mySourceChar == ESC_START) {
                 tmpState = findStateFromEscSeq(mySource, mySourceLimit, args->converter->toUBytes, args->converter->toULength, err);
 
-                if (*err == U_TRUNCATED_CHAR_FOUND) {
-                    for (; mySource < mySourceLimit;) {
+                якщо (*err == U_TRUNCATED_CHAR_FOUND) {
+                    для (; mySource < mySourceLimit;) {
                         args->converter->toUBytes[args->converter->toULength++] = *mySource++;
                     }
                     *err = U_ZERO_ERROR;
                     break;
-                } else if (tmpState == INVALID) {
-                    if (args->converter->toULength == 0) {
+                } інакше якщо (tmpState == INVALID) {
+                    якщо (args->converter->toULength == 0) {
                         mySource++; /* skip over the 0x1b byte */
                     }
                     *err = U_ILLEGAL_CHAR_FOUND;
                     break;
                 }
 
-                if (tmpState != currentState) {
+                якщо (tmpState != currentState) {
                     currentState = tmpState;
                 }
 
@@ -527,19 +527,19 @@ UConverter_toUnicode_CompoundText_OFFSETS(UConverterToUnicodeArgs *args,
                 args->converter->toULength = 0;
             }
 
-            if (currentState == COMPOUND_TEXT_SINGLE_0) {
-                while (mySource < mySourceLimit) {
-                    if (*mySource == ESC_START) {
+            якщо (currentState == COMPOUND_TEXT_SINGLE_0) {
+                поки (mySource < mySourceLimit) {
+                    якщо (*mySource == ESC_START) {
                         break;
                     }
-                    if (myTarget < args->targetLimit) {
+                    якщо (myTarget < args->targetLimit) {
                         *myTarget++ = 0x00ff&(*mySource++);
-                    } else {
+                    } інакше {
                         *err = U_BUFFER_OVERFLOW_ERROR;
                         break;
                     }
                 }
-            } else if (mySource < mySourceLimit){
+            } інакше якщо (mySource < mySourceLimit){
                 sourceOffset = findNextEsc(mySource, mySourceLimit);
 
                 tmpSourceLimit = mySource + sourceOffset;
@@ -557,9 +557,9 @@ UConverter_toUnicode_CompoundText_OFFSETS(UConverterToUnicodeArgs *args,
                 mySource = subArgs.source;
                 myTarget = subArgs.target;
 
-                if (U_FAILURE(*err)) {
-                    if(*err == U_BUFFER_OVERFLOW_ERROR) {
-                        if(subArgs.converter->UCharErrorBufferLength > 0) {
+                якщо (U_FAILURE(*err)) {
+                    якщо(*err == U_BUFFER_OVERFLOW_ERROR) {
+                        якщо(subArgs.converter->UCharErrorBufferLength > 0) {
                             uprv_memcpy(args->converter->UCharErrorBuffer, subArgs.converter->UCharErrorBuffer,
                                         subArgs.converter->UCharErrorBufferLength);
                         }
@@ -569,7 +569,7 @@ UConverter_toUnicode_CompoundText_OFFSETS(UConverterToUnicodeArgs *args,
                     break;
                 }
             }
-        } else {
+        } інакше {
             *err = U_BUFFER_OVERFLOW_ERROR;
             break;
         }
@@ -587,7 +587,7 @@ _CompoundText_GetUnicodeSet(const UConverter *cnv,
     UConverterDataCompoundText *myConverterData = (UConverterDataCompoundText *)cnv->extraInfo;
     int32_t i;
 
-    for (i = 1; i < NUM_OF_CONVERTERS; i++) {
+    для (i = 1; i < NUM_OF_CONVERTERS; i++) {
         ucnv_MBCSGetUnicodeSetForUnicode(myConverterData->myConverterArray[i], sa, which, pErrorCode);
     }
     sa->add(sa->set, 0x0000);

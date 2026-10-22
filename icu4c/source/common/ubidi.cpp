@@ -130,7 +130,7 @@ U_CAPI UBiDi * U_EXPORT2
 ubidi_open()
 {
     UErrorCode errorCode=U_ZERO_ERROR;
-    return ubidi_openSized(0, 0, &errorCode);
+    повернути ubidi_openSized(0, 0, &errorCode);
 }
 
 U_CAPI UBiDi * U_EXPORT2
@@ -138,50 +138,50 @@ ubidi_openSized(int32_t maxLength, int32_t maxRunCount, UErrorCode *pErrorCode) 
     UBiDi *pBiDi;
 
     /* check the argument values */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return nullptr;
-    } else if(maxLength<0 || maxRunCount<0) {
+    якщо(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        повернути nullptr;
+    } інакше якщо(maxLength<0 || maxRunCount<0) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;    /* invalid arguments */
+        повернути nullptr;    /* invalid arguments */
     }
 
     /* allocate memory for the object */
     pBiDi=(UBiDi *)uprv_malloc(sizeof(UBiDi));
-    if(pBiDi==nullptr) {
+    якщо(pBiDi==nullptr) {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        повернути nullptr;
     }
 
     /* reset the object, all pointers nullptr, all flags false, all sizes 0 */
     uprv_memset(pBiDi, 0, sizeof(UBiDi));
 
     /* allocate memory for arrays as requested */
-    if(maxLength>0) {
-        if( !getInitialDirPropsMemory(pBiDi, maxLength) ||
+    якщо(maxLength>0) {
+        якщо( !getInitialDirPropsMemory(pBiDi, maxLength) ||
             !getInitialLevelsMemory(pBiDi, maxLength)
         ) {
             *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
         }
-    } else {
+    } інакше {
         pBiDi->mayAllocateText=true;
     }
 
-    if(maxRunCount>0) {
-        if(maxRunCount==1) {
+    якщо(maxRunCount>0) {
+        якщо(maxRunCount==1) {
             /* use simpleRuns[] */
             pBiDi->runsSize=sizeof(Run);
-        } else if(!getInitialRunsMemory(pBiDi, maxRunCount)) {
+        } інакше якщо(!getInitialRunsMemory(pBiDi, maxRunCount)) {
             *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
         }
-    } else {
+    } інакше {
         pBiDi->mayAllocateRuns=true;
     }
 
-    if(U_SUCCESS(*pErrorCode)) {
-        return pBiDi;
-    } else {
+    якщо(U_SUCCESS(*pErrorCode)) {
+        повернути pBiDi;
+    } інакше {
         ubidi_close(pBiDi);
-        return nullptr;
+        повернути nullptr;
     }
 }
 
@@ -200,44 +200,44 @@ ubidi_openSized(int32_t maxLength, int32_t maxRunCount, UErrorCode *pErrorCode) 
  */
 U_CFUNC UBool
 ubidi_getMemory(BidiMemoryForAllocation *bidiMem, int32_t *pSize, UBool mayAllocate, size_t sizeNeeded) {
-    if (sizeNeeded > std::numeric_limits<int32_t>::max()) {
+    якщо (sizeNeeded > std::numeric_limits<int32_t>::max()) {
       // TODO(egg): Ugly guard for ICU-23397.  A cleaner fix would be to change the pSize to size_t*
       // and update callers throughout to use size_t for sizes (just like uprv_malloc already does).
       // Not that anyone should be running the UBA on text with that many runs…
-      return false;
+      повернути false;
     }
     void **pMemory = (void **)bidiMem;
     /* check for existing memory */
-    if(*pMemory==nullptr) {
+    якщо(*pMemory==nullptr) {
         /* we need to allocate memory */
-        if(mayAllocate && (*pMemory=uprv_malloc(sizeNeeded))!=nullptr) {
+        якщо(mayAllocate && (*pMemory=uprv_malloc(sizeNeeded))!=nullptr) {
             *pSize=static_cast<int32_t>(sizeNeeded);
-            return true;
-        } else {
-            return false;
+            повернути true;
+        } інакше {
+            повернути false;
         }
-    } else {
-        if(sizeNeeded<=static_cast<size_t>(*pSize)) {
+    } інакше {
+        якщо(sizeNeeded<=static_cast<size_t>(*pSize)) {
             /* there is already enough memory */
-            return true;
+            повернути true;
         }
-        else if(!mayAllocate) {
+        інакше якщо(!mayAllocate) {
             /* not enough memory, and we must not allocate */
-            return false;
-        } else {
+            повернути false;
+        } інакше {
             /* we try to grow */
             void *memory;
             /* in most cases, we do not need the copy-old-data part of
              * realloc, but it is needed when adding runs using getRunsMemory()
              * in setParaRunsOnly()
              */
-            if((memory=uprv_realloc(*pMemory, sizeNeeded))!=nullptr) {
+            якщо((memory=uprv_realloc(*pMemory, sizeNeeded))!=nullptr) {
                 *pMemory=memory;
                 *pSize=static_cast<int32_t>(sizeNeeded);
-                return true;
-            } else {
+                повернути true;
+            } інакше {
                 /* we failed to grow */
-                return false;
+                повернути false;
             }
         }
     }
@@ -245,27 +245,27 @@ ubidi_getMemory(BidiMemoryForAllocation *bidiMem, int32_t *pSize, UBool mayAlloc
 
 U_CAPI void U_EXPORT2
 ubidi_close(UBiDi *pBiDi) {
-    if(pBiDi!=nullptr) {
+    якщо(pBiDi!=nullptr) {
         pBiDi->pParaBiDi=nullptr;          /* in case one tries to reuse this block */
-        if(pBiDi->dirPropsMemory!=nullptr) {
+        якщо(pBiDi->dirPropsMemory!=nullptr) {
             uprv_free(pBiDi->dirPropsMemory);
         }
-        if(pBiDi->levelsMemory!=nullptr) {
+        якщо(pBiDi->levelsMemory!=nullptr) {
             uprv_free(pBiDi->levelsMemory);
         }
-        if(pBiDi->openingsMemory!=nullptr) {
+        якщо(pBiDi->openingsMemory!=nullptr) {
             uprv_free(pBiDi->openingsMemory);
         }
-        if(pBiDi->parasMemory!=nullptr) {
+        якщо(pBiDi->parasMemory!=nullptr) {
             uprv_free(pBiDi->parasMemory);
         }
-        if(pBiDi->runsMemory!=nullptr) {
+        якщо(pBiDi->runsMemory!=nullptr) {
             uprv_free(pBiDi->runsMemory);
         }
-        if(pBiDi->isolatesMemory!=nullptr) {
+        якщо(pBiDi->isolatesMemory!=nullptr) {
             uprv_free(pBiDi->isolatesMemory);
         }
-        if(pBiDi->insertPoints.points!=nullptr) {
+        якщо(pBiDi->insertPoints.points!=nullptr) {
             uprv_free(pBiDi->insertPoints.points);
         }
 
@@ -277,7 +277,7 @@ ubidi_close(UBiDi *pBiDi) {
 
 U_CAPI void U_EXPORT2
 ubidi_setInverse(UBiDi *pBiDi, UBool isInverse) {
-    if(pBiDi!=nullptr) {
+    якщо(pBiDi!=nullptr) {
         pBiDi->isInverse=isInverse;
         pBiDi->reorderingMode = isInverse ? UBIDI_REORDER_INVERSE_NUMBERS_AS_L
                                           : UBIDI_REORDER_DEFAULT;
@@ -286,10 +286,10 @@ ubidi_setInverse(UBiDi *pBiDi, UBool isInverse) {
 
 U_CAPI UBool U_EXPORT2
 ubidi_isInverse(UBiDi *pBiDi) {
-    if(pBiDi!=nullptr) {
-        return pBiDi->isInverse;
-    } else {
-        return false;
+    якщо(pBiDi!=nullptr) {
+        повернути pBiDi->isInverse;
+    } інакше {
+        повернути false;
     }
 }
 
@@ -310,7 +310,7 @@ ubidi_isInverse(UBiDi *pBiDi) {
  */
 U_CAPI void U_EXPORT2
 ubidi_setReorderingMode(UBiDi *pBiDi, UBiDiReorderingMode reorderingMode) UPRV_NO_SANITIZE_UNDEFINED {
-    if ((pBiDi!=nullptr) && (reorderingMode >= UBIDI_REORDER_DEFAULT)
+    якщо ((pBiDi!=nullptr) && (reorderingMode >= UBIDI_REORDER_DEFAULT)
                         && (reorderingMode < UBIDI_REORDER_COUNT)) {
         pBiDi->reorderingMode = reorderingMode;
         pBiDi->isInverse = reorderingMode == UBIDI_REORDER_INVERSE_NUMBERS_AS_L;
@@ -319,29 +319,29 @@ ubidi_setReorderingMode(UBiDi *pBiDi, UBiDiReorderingMode reorderingMode) UPRV_N
 
 U_CAPI UBiDiReorderingMode U_EXPORT2
 ubidi_getReorderingMode(UBiDi *pBiDi) {
-    if (pBiDi!=nullptr) {
-        return pBiDi->reorderingMode;
-    } else {
-        return UBIDI_REORDER_DEFAULT;
+    якщо (pBiDi!=nullptr) {
+        повернути pBiDi->reorderingMode;
+    } інакше {
+        повернути UBIDI_REORDER_DEFAULT;
     }
 }
 
 U_CAPI void U_EXPORT2
 ubidi_setReorderingOptions(UBiDi *pBiDi, uint32_t reorderingOptions) {
-    if (reorderingOptions & UBIDI_OPTION_REMOVE_CONTROLS) {
+    якщо (reorderingOptions & UBIDI_OPTION_REMOVE_CONTROLS) {
         reorderingOptions&=~UBIDI_OPTION_INSERT_MARKS;
     }
-    if (pBiDi!=nullptr) {
+    якщо (pBiDi!=nullptr) {
         pBiDi->reorderingOptions=reorderingOptions;
     }
 }
 
 U_CAPI uint32_t U_EXPORT2
 ubidi_getReorderingOptions(UBiDi *pBiDi) {
-    if (pBiDi!=nullptr) {
-        return pBiDi->reorderingOptions;
-    } else {
-        return 0;
+    якщо (pBiDi!=nullptr) {
+        повернути pBiDi->reorderingOptions;
+    } інакше {
+        повернути 0;
     }
 }
 
@@ -353,24 +353,24 @@ int32_t length){
     UChar32 uchar;
     UCharDirection dir;
 
-    if( text==nullptr || length<-1 ){
-        return UBIDI_NEUTRAL;
+    якщо( text==nullptr || length<-1 ){
+        повернути UBIDI_NEUTRAL;
     }
 
-    if(length==-1) {
+    якщо(length==-1) {
         length=u_strlen(text);
     }
 
-    for( i = 0 ; i < length; ) {
+    для( i = 0 ; i < length; ) {
         /* i is incremented by U16_NEXT */
         U16_NEXT(text, i, length, uchar);
         dir = u_charDirection(uchar);
-        if( dir == U_LEFT_TO_RIGHT )
-                return UBIDI_LTR;
-        if( dir == U_RIGHT_TO_LEFT || dir ==U_RIGHT_TO_LEFT_ARABIC )
-                return UBIDI_RTL;
+        якщо( dir == U_LEFT_TO_RIGHT )
+                повернути UBIDI_LTR;
+        якщо( dir == U_RIGHT_TO_LEFT || dir ==U_RIGHT_TO_LEFT_ARABIC )
+                повернути UBIDI_RTL;
     }
-    return UBIDI_NEUTRAL;
+    повернути UBIDI_NEUTRAL;
 }
 
 /* perform (P2)..(P3) ------------------------------------------------------- */
@@ -387,21 +387,21 @@ firstL_R_AL(UBiDi *pBiDi) {
     int32_t i;
     UChar32 uchar;
     DirProp dirProp, result=ON;
-    for(i=0; i<length; ) {
+    для(i=0; i<length; ) {
         /* i is incremented by U16_NEXT */
         U16_NEXT(text, i, length, uchar);
         dirProp = static_cast<DirProp>(ubidi_getCustomizedClass(pBiDi, uchar));
-        if(result==ON) {
-            if(dirProp==L || dirProp==R || dirProp==AL) {
+        якщо(result==ON) {
+            якщо(dirProp==L || dirProp==R || dirProp==AL) {
                 result=dirProp;
             }
-        } else {
-            if(dirProp==B) {
+        } інакше {
+            якщо(dirProp==B) {
                 result=ON;
             }
         }
     }
-    return result;
+    повернути result;
 }
 
 /*
@@ -410,19 +410,19 @@ firstL_R_AL(UBiDi *pBiDi) {
 static UBool
 checkParaCount(UBiDi *pBiDi) {
     int32_t count=pBiDi->paraCount;
-    if(pBiDi->paras==pBiDi->simpleParas) {
-        if(count<=SIMPLE_PARAS_COUNT)
-            return true;
-        if(!getInitialParasMemory(pBiDi, SIMPLE_PARAS_COUNT * 2))
-            return false;
+    якщо(pBiDi->paras==pBiDi->simpleParas) {
+        якщо(count<=SIMPLE_PARAS_COUNT)
+            повернути true;
+        якщо(!getInitialParasMemory(pBiDi, SIMPLE_PARAS_COUNT * 2))
+            повернути false;
         pBiDi->paras=pBiDi->parasMemory;
         uprv_memcpy(pBiDi->parasMemory, pBiDi->simpleParas, SIMPLE_PARAS_COUNT * sizeof(Para));
-        return true;
+        повернути true;
     }
-    if(!getInitialParasMemory(pBiDi, count * 2))
-        return false;
+    якщо(!getInitialParasMemory(pBiDi, count * 2))
+        повернути false;
     pBiDi->paras=pBiDi->parasMemory;
-    return true;
+    повернути true;
 }
 
 /*
@@ -475,23 +475,23 @@ getDirProps(UBiDi *pBiDi) {
     State  previousStateStack[UBIDI_MAX_EXPLICIT_LEVEL+1];
     int32_t stackLast=-1;
 
-    if(pBiDi->reorderingOptions & UBIDI_OPTION_STREAMING)
+    якщо(pBiDi->reorderingOptions & UBIDI_OPTION_STREAMING)
         pBiDi->length=0;
     defaultParaLevel=pBiDi->paraLevel&1;
-    if(isDefaultLevel) {
+    якщо(isDefaultLevel) {
         pBiDi->paras[0].level=defaultParaLevel;
         lastStrong=defaultParaLevel;
-        if(pBiDi->proLength>0 &&                    /* there is a prologue */
+        якщо(pBiDi->proLength>0 &&                    /* there is a prologue */
            (dirProp=firstL_R_AL(pBiDi))!=ON) {  /* with a strong character */
-            if(dirProp==L)
+            якщо(dirProp==L)
                 pBiDi->paras[0].level=0;    /* set the default para level */
-            else
+            інакше
                 pBiDi->paras[0].level=1;    /* set the default para level */
             state=NOT_SEEKING_STRONG;
-        } else {
+        } інакше {
             state=SEEKING_STRONG_FOR_PARA;
         }
-    } else {
+    } інакше {
         pBiDi->paras[0].level=pBiDi->paraLevel;
         state=NOT_SEEKING_STRONG;
     }
@@ -501,24 +501,24 @@ getDirProps(UBiDi *pBiDi) {
      * the UBIDI_DEFAULT_XXX values are designed so that
      * their bit 0 alone yields the intended default
      */
-    for( /* i=0 above */ ; i<originalLength; ) {
+    для( /* i=0 above */ ; i<originalLength; ) {
         /* i is incremented by U16_NEXT */
         U16_NEXT(text, i, originalLength, uchar);
         flags|=DIRPROP_FLAG(dirProp=(DirProp)ubidi_getCustomizedClass(pBiDi, uchar));
         dirProps[i-1]=dirProp;
-        if(uchar>0xffff) {  /* set the lead surrogate's property to BN */
+        якщо(uchar>0xffff) {  /* set the lead surrogate's property to BN */
             flags|=DIRPROP_FLAG(BN);
             dirProps[i-2]=BN;
         }
-        if(removeBiDiControls && IS_BIDI_CONTROL_CHAR(uchar))
+        якщо(removeBiDiControls && IS_BIDI_CONTROL_CHAR(uchar))
             controlCount++;
-        if(dirProp==L) {
-            if(state==SEEKING_STRONG_FOR_PARA) {
+        якщо(dirProp==L) {
+            якщо(state==SEEKING_STRONG_FOR_PARA) {
                 pBiDi->paras[pBiDi->paraCount-1].level=0;
                 state=NOT_SEEKING_STRONG;
             }
-            else if(state==SEEKING_STRONG_FOR_FSI) {
-                if(stackLast<=UBIDI_MAX_EXPLICIT_LEVEL) {
+            інакше якщо(state==SEEKING_STRONG_FOR_FSI) {
+                якщо(stackLast<=UBIDI_MAX_EXPLICIT_LEVEL) {
                     /* no need for next statement, already set by default */
                     /* dirProps[isolateStartStack[stackLast]]=LRI; */
                     flags|=DIRPROP_FLAG(LRI);
@@ -528,73 +528,73 @@ getDirProps(UBiDi *pBiDi) {
             lastStrong=L;
             continue;
         }
-        if(dirProp==R || dirProp==AL) {
-            if(state==SEEKING_STRONG_FOR_PARA) {
+        якщо(dirProp==R || dirProp==AL) {
+            якщо(state==SEEKING_STRONG_FOR_PARA) {
                 pBiDi->paras[pBiDi->paraCount-1].level=1;
                 state=NOT_SEEKING_STRONG;
             }
-            else if(state==SEEKING_STRONG_FOR_FSI) {
-                if(stackLast<=UBIDI_MAX_EXPLICIT_LEVEL) {
+            інакше якщо(state==SEEKING_STRONG_FOR_FSI) {
+                якщо(stackLast<=UBIDI_MAX_EXPLICIT_LEVEL) {
                     dirProps[isolateStartStack[stackLast]]=RLI;
                     flags|=DIRPROP_FLAG(RLI);
                 }
                 state=LOOKING_FOR_PDI;
             }
             lastStrong=R;
-            if(dirProp==AL)
+            якщо(dirProp==AL)
                 lastArabicPos=i-1;
             continue;
         }
-        if(dirProp>=FSI && dirProp<=RLI) {  /* FSI, LRI or RLI */
+        якщо(dirProp>=FSI && dirProp<=RLI) {  /* FSI, LRI or RLI */
             stackLast++;
-            if(stackLast<=UBIDI_MAX_EXPLICIT_LEVEL) {
+            якщо(stackLast<=UBIDI_MAX_EXPLICIT_LEVEL) {
                 isolateStartStack[stackLast]=i-1;
                 previousStateStack[stackLast]=state;
             }
-            if(dirProp==FSI) {
+            якщо(dirProp==FSI) {
                 dirProps[i-1]=LRI;      /* default if no strong char */
                 state=SEEKING_STRONG_FOR_FSI;
             }
-            else
+            інакше
                 state=LOOKING_FOR_PDI;
             continue;
         }
-        if(dirProp==PDI) {
-            if(state==SEEKING_STRONG_FOR_FSI) {
-                if(stackLast<=UBIDI_MAX_EXPLICIT_LEVEL) {
+        якщо(dirProp==PDI) {
+            якщо(state==SEEKING_STRONG_FOR_FSI) {
+                якщо(stackLast<=UBIDI_MAX_EXPLICIT_LEVEL) {
                     /* no need for next statement, already set by default */
                     /* dirProps[isolateStartStack[stackLast]]=LRI; */
                     flags|=DIRPROP_FLAG(LRI);
                 }
             }
-            if(stackLast>=0) {
-                if(stackLast<=UBIDI_MAX_EXPLICIT_LEVEL)
+            якщо(stackLast>=0) {
+                якщо(stackLast<=UBIDI_MAX_EXPLICIT_LEVEL)
                     state=previousStateStack[stackLast];
                 stackLast--;
             }
             continue;
         }
-        if(dirProp==B) {
-            if(i<originalLength && uchar==CR && text[i]==LF) /* do nothing on the CR */
+        якщо(dirProp==B) {
+            якщо(i<originalLength && uchar==CR && text[i]==LF) /* do nothing on the CR */
                 continue;
             pBiDi->paras[pBiDi->paraCount-1].limit=i;
-            if(isDefaultLevelInverse && lastStrong==R)
+            якщо(isDefaultLevelInverse && lastStrong==R)
                 pBiDi->paras[pBiDi->paraCount-1].level=1;
-            if(pBiDi->reorderingOptions & UBIDI_OPTION_STREAMING) {
+            якщо(pBiDi->reorderingOptions & UBIDI_OPTION_STREAMING) {
                 /* When streaming, we only process whole paragraphs
                    thus some updates are only done on paragraph boundaries */
                 pBiDi->length=i;        /* i is index to next character */
                 pBiDi->controlCount=controlCount;
             }
-            if(i<originalLength) {              /* B not last char in text */
+            якщо(i<originalLength) {              /* B not last char in text */
                 pBiDi->paraCount++;
-                if(checkParaCount(pBiDi)==false)    /* not enough memory for a new para entry */
-                    return false;
-                if(isDefaultLevel) {
+                якщо(checkParaCount(pBiDi)==false)    /* not enough memory for a new para entry */
+                    повернути false;
+                якщо(isDefaultLevel) {
                     pBiDi->paras[pBiDi->paraCount-1].level=defaultParaLevel;
                     state=SEEKING_STRONG_FOR_PARA;
                     lastStrong=defaultParaLevel;
-                } else {
+                } інакше {
                     pBiDi->paras[pBiDi->paraCount-1].level=pBiDi->paraLevel;
                     state=NOT_SEEKING_STRONG;
                 }
@@ -604,13 +604,13 @@ getDirProps(UBiDi *pBiDi) {
         }
     }
     /* Ignore still open isolate sequences with overflow */
-    if(stackLast>UBIDI_MAX_EXPLICIT_LEVEL) {
+    якщо(stackLast>UBIDI_MAX_EXPLICIT_LEVEL) {
         stackLast=UBIDI_MAX_EXPLICIT_LEVEL;
         state=SEEKING_STRONG_FOR_FSI;   /* to be on the safe side */
     }
     /* Resolve direction of still unresolved open FSI sequences */
-    while(stackLast>=0) {
-        if(state==SEEKING_STRONG_FOR_FSI) {
+    поки(stackLast>=0) {
+        якщо(state==SEEKING_STRONG_FOR_FSI) {
             /* no need for next statement, already set by default */
             /* dirProps[isolateStartStack[stackLast]]=LRI; */
             flags|=DIRPROP_FLAG(LRI);
@@ -620,44 +620,44 @@ getDirProps(UBiDi *pBiDi) {
         stackLast--;
     }
     /* When streaming, ignore text after the last paragraph separator */
-    if(pBiDi->reorderingOptions & UBIDI_OPTION_STREAMING) {
-        if(pBiDi->length<originalLength)
+    якщо(pBiDi->reorderingOptions & UBIDI_OPTION_STREAMING) {
+        якщо(pBiDi->length<originalLength)
             pBiDi->paraCount--;
-    } else {
+    } інакше {
         pBiDi->paras[pBiDi->paraCount-1].limit=originalLength;
         pBiDi->controlCount=controlCount;
     }
     /* For inverse bidi, default para direction is RTL if there is
        a strong R or AL at either end of the paragraph */
-    if(isDefaultLevelInverse && lastStrong==R) {
+    якщо(isDefaultLevelInverse && lastStrong==R) {
         pBiDi->paras[pBiDi->paraCount-1].level=1;
     }
-    if(isDefaultLevel) {
+    якщо(isDefaultLevel) {
         pBiDi->paraLevel=static_cast<UBiDiLevel>(pBiDi->paras[0].level);
     }
     /* The following is needed to resolve the text direction for default level
        paragraphs containing no strong character */
-    for(i=0; i<pBiDi->paraCount; i++)
+    для(i=0; i<pBiDi->paraCount; i++)
         flags|=DIRPROP_FLAG_LR(pBiDi->paras[i].level);
 
-    if(pBiDi->orderParagraphsLTR && (flags&DIRPROP_FLAG(B))) {
+    якщо(pBiDi->orderParagraphsLTR && (flags&DIRPROP_FLAG(B))) {
         flags|=DIRPROP_FLAG(L);
     }
     pBiDi->flags=flags;
     pBiDi->lastArabicPos=lastArabicPos;
-    return true;
+    повернути true;
 }
 
 /* determine the paragraph level at position index */
 U_CFUNC UBiDiLevel
 ubidi_getParaLevelAtIndex(const UBiDi *pBiDi, int32_t pindex) {
     int32_t i;
-    for(i=0; i<pBiDi->paraCount; i++)
-        if(pindex<pBiDi->paras[i].limit)
+    для(i=0; i<pBiDi->paraCount; i++)
+        якщо(pindex<pBiDi->paras[i].limit)
             break;
-    if(i>=pBiDi->paraCount)
+    якщо(i>=pBiDi->paraCount)
         i=pBiDi->paraCount-1;
-    return (UBiDiLevel)(pBiDi->paras[i].level);
+    повернути (UBiDiLevel)(pBiDi->paras[i].level);
 }
 
 /* Functions for handling paired brackets ----------------------------------- */
@@ -687,10 +687,10 @@ bracketInit(UBiDi *pBiDi, BracketData *bd) {
     bd->isoRuns[0].lastStrong = bd->isoRuns[0].lastBase = t;
     bd->isoRuns[0].contextDir = static_cast<UBiDiDirection>(t);
     bd->isoRuns[0].contextPos=0;
-    if(pBiDi->openingsMemory) {
+    якщо(pBiDi->openingsMemory) {
         bd->openings=pBiDi->openingsMemory;
         bd->openingsCount=pBiDi->openingsSize / sizeof(Opening);
-    } else {
+    } інакше {
         bd->openings=bd->simpleOpenings;
         bd->openingsCount=SIMPLE_OPENINGS_COUNT;
     }
@@ -715,9 +715,9 @@ bracketProcessBoundary(BracketData *bd, int32_t lastCcPos,
                        UBiDiLevel contextLevel, UBiDiLevel embeddingLevel) {
     IsoRun *pLastIsoRun=&bd->isoRuns[bd->isoRunLast];
     DirProp *dirProps=bd->pBiDi->dirProps;
-    if(DIRPROP_FLAG(dirProps[lastCcPos])&MASK_ISO)  /* after an isolate */
-        return;
-    if(NO_OVERRIDE(embeddingLevel)>NO_OVERRIDE(contextLevel))   /* not a PDF */
+    якщо(DIRPROP_FLAG(dirProps[lastCcPos])&MASK_ISO)  /* after an isolate */
+        повернути;
+    якщо(NO_OVERRIDE(embeddingLevel)>NO_OVERRIDE(contextLevel))   /* not a PDF */
         contextLevel=embeddingLevel;
     pLastIsoRun->limit=pLastIsoRun->start;
     pLastIsoRun->level=embeddingLevel;
@@ -756,11 +756,11 @@ static UBool                            /* return true if success */
 bracketAddOpening(BracketData *bd, char16_t match, int32_t position) {
     IsoRun *pLastIsoRun=&bd->isoRuns[bd->isoRunLast];
     Opening *pOpening;
-    if(pLastIsoRun->limit>=bd->openingsCount) {  /* no available new entry */
+    якщо(pLastIsoRun->limit>=bd->openingsCount) {  /* no available new entry */
         UBiDi *pBiDi=bd->pBiDi;
-        if(!getInitialOpeningsMemory(pBiDi, pLastIsoRun->limit * 2))
-            return false;
-        if(bd->openings==bd->simpleOpenings)
+        якщо(!getInitialOpeningsMemory(pBiDi, pLastIsoRun->limit * 2))
+            повернути false;
+        якщо(bd->openings==bd->simpleOpenings)
             uprv_memcpy(pBiDi->openingsMemory, bd->simpleOpenings,
                         SIMPLE_OPENINGS_COUNT * sizeof(Opening));
         bd->openings=pBiDi->openingsMemory;     /* may have changed */
@@ -773,7 +773,7 @@ bracketAddOpening(BracketData *bd, char16_t match, int32_t position) {
     pOpening->contextPos=pLastIsoRun->contextPos;
     pOpening->flags=0;
     pLastIsoRun->limit++;
-    return true;
+    повернути true;
 }
 
 /* change N0c1 to N0c2 when a preceding bracket is assigned the embedding level */
@@ -784,14 +784,14 @@ fixN0c(BracketData *bd, int32_t openingIndex, int32_t newPropPosition, DirProp n
     Opening *qOpening;
     DirProp *dirProps=bd->pBiDi->dirProps;
     int32_t k, openingPosition, closingPosition;
-    for(k=openingIndex+1, qOpening=&bd->openings[k]; k<pLastIsoRun->limit; k++, qOpening++) {
-        if(qOpening->match>=0)      /* not an N0c match */
+    для(k=openingIndex+1, qOpening=&bd->openings[k]; k<pLastIsoRun->limit; k++, qOpening++) {
+        якщо(qOpening->match>=0)      /* not an N0c match */
             continue;
-        if(newPropPosition<qOpening->contextPos)
+        якщо(newPropPosition<qOpening->contextPos)
             break;
-        if(newPropPosition>=qOpening->position)
+        якщо(newPropPosition>=qOpening->position)
             continue;
-        if(newProp==qOpening->contextDir)
+        якщо(newProp==qOpening->contextDir)
             break;
         openingPosition=qOpening->position;
         dirProps[openingPosition]=newProp;
@@ -833,52 +833,52 @@ bracketProcessClosing(BracketData *bd, int32_t openIdx, int32_t position) {
        that N0c2 must be applied to the parentheses rather than
        N0c1. */
 
-    if((direction==0 && pOpening->flags&FOUND_L) ||
+    якщо((direction==0 && pOpening->flags&FOUND_L) ||
        (direction==1 && pOpening->flags&FOUND_R)) {                         /* N0b */
         newProp=static_cast<DirProp>(direction);
     }
-    else if(pOpening->flags&(FOUND_L|FOUND_R)) {                            /* N0c */
+    інакше якщо(pOpening->flags&(FOUND_L|FOUND_R)) {                            /* N0c */
         /* it is stable if there is no containing pair or in
            conditions too complicated and not worth checking */
         stable=(openIdx==pLastIsoRun->start);
-        if(direction!=pOpening->contextDir)
+        якщо(direction!=pOpening->contextDir)
             newProp= static_cast<DirProp>(pOpening->contextDir);           /* N0c1 */
-        else
+        інакше
             newProp= static_cast<DirProp>(direction);                      /* N0c2 */
-    } else {
+    } інакше {
         /* forget this and any brackets nested within this pair */
         pLastIsoRun->limit= static_cast<uint16_t>(openIdx);
-        return ON;                                                          /* N0d */
+        повернути ON;                                                          /* N0d */
     }
     bd->pBiDi->dirProps[pOpening->position]=newProp;
     bd->pBiDi->dirProps[position]=newProp;
     /* Update nested N0c pairs that may be affected */
     fixN0c(bd, openIdx, pOpening->position, newProp);
-    if(stable) {
+    якщо(stable) {
         pLastIsoRun->limit= static_cast<uint16_t>(openIdx); /* forget any brackets nested within this pair */
         /* remove lower located synonyms if any */
-        while(pLastIsoRun->limit>pLastIsoRun->start &&
+        поки(pLastIsoRun->limit>pLastIsoRun->start &&
               bd->openings[pLastIsoRun->limit-1].position==pOpening->position)
             pLastIsoRun->limit--;
-    } else {
+    } інакше {
         int32_t k;
         pOpening->match=-position;
         /* neutralize lower located synonyms if any */
         k=openIdx-1;
-        while(k>=pLastIsoRun->start &&
+        поки(k>=pLastIsoRun->start &&
               bd->openings[k].position==pOpening->position)
             bd->openings[k--].match=0;
         /* neutralize any unmatched opening between the current pair;
            this will also neutralize higher located synonyms if any */
-        for(k=openIdx+1; k<pLastIsoRun->limit; k++) {
+        для(k=openIdx+1; k<pLastIsoRun->limit; k++) {
             qOpening=&bd->openings[k];
-            if(qOpening->position>=position)
+            якщо(qOpening->position>=position)
                 break;
-            if(qOpening->match>0)
+            якщо(qOpening->match>0)
                 qOpening->match=0;
         }
     }
-    return newProp;
+    повернути newProp;
 }
 
 /* handle strong characters, digits and candidates for closing brackets */
@@ -889,18 +889,18 @@ bracketProcessChar(BracketData *bd, int32_t position) {
     UBiDiLevel level;
     dirProps=bd->pBiDi->dirProps;
     dirProp=dirProps[position];
-    if(dirProp==ON) {
+    якщо(dirProp==ON) {
         char16_t c, match;
         int32_t idx;
         /* First see if it is a matching closing bracket. Hopefully, this is
            more efficient than checking if it is a closing bracket at all */
         c=bd->pBiDi->text[position];
-        for(idx=pLastIsoRun->limit-1; idx>=pLastIsoRun->start; idx--) {
-            if(bd->openings[idx].match!=c)
+        для(idx=pLastIsoRun->limit-1; idx>=pLastIsoRun->start; idx--) {
+            якщо(bd->openings[idx].match!=c)
                 continue;
             /* We have a match */
             newProp=bracketProcessClosing(bd, idx, position);
-            if(newProp==ON) {           /* N0d */
+            якщо(newProp==ON) {           /* N0d */
                 c=0;        /* prevent handling as an opening */
                 break;
             }
@@ -908,106 +908,106 @@ bracketProcessChar(BracketData *bd, int32_t position) {
             pLastIsoRun->contextDir = static_cast<UBiDiDirection>(newProp);
             pLastIsoRun->contextPos=position;
             level=bd->pBiDi->levels[position];
-            if(level&UBIDI_LEVEL_OVERRIDE) {    /* X4, X5 */
+            якщо(level&UBIDI_LEVEL_OVERRIDE) {    /* X4, X5 */
                 uint16_t flag;
                 int32_t i;
                 newProp=level&1;
                 pLastIsoRun->lastStrong=newProp;
                 flag=DIRPROP_FLAG(newProp);
-                for(i=pLastIsoRun->start; i<idx; i++)
+                для(i=pLastIsoRun->start; i<idx; i++)
                     bd->openings[i].flags|=flag;
                 /* matching brackets are not overridden by LRO/RLO */
                 bd->pBiDi->levels[position]&=~UBIDI_LEVEL_OVERRIDE;
             }
             /* matching brackets are not overridden by LRO/RLO */
             bd->pBiDi->levels[bd->openings[idx].position]&=~UBIDI_LEVEL_OVERRIDE;
-            return true;
+            повернути true;
         }
         /* We get here only if the ON character is not a matching closing
            bracket or it is a case of N0d */
         /* Now see if it is an opening bracket */
-        if(c)
+        якщо(c)
             match= static_cast<char16_t>(u_getBidiPairedBracket(c));    /* get the matching char */
-        else
+        інакше
             match=0;
-        if(match!=c &&                  /* has a matching char */
+        якщо(match!=c &&                  /* has a matching char */
            ubidi_getPairedBracketType(c)==U_BPT_OPEN) { /* opening bracket */
             /* special case: process synonyms
                create an opening entry for each synonym */
-            if(match==0x232A) {     /* RIGHT-POINTING ANGLE BRACKET */
-                if(!bracketAddOpening(bd, 0x3009, position))
-                    return false;
+            якщо(match==0x232A) {     /* RIGHT-POINTING ANGLE BRACKET */
+                якщо(!bracketAddOpening(bd, 0x3009, position))
+                    повернути false;
             }
-            else if(match==0x3009) {         /* RIGHT ANGLE BRACKET */
-                if(!bracketAddOpening(bd, 0x232A, position))
-                    return false;
+            інакше якщо(match==0x3009) {         /* RIGHT ANGLE BRACKET */
+                якщо(!bracketAddOpening(bd, 0x232A, position))
+                    повернути false;
             }
-            if(!bracketAddOpening(bd, match, position))
-                return false;
+            якщо(!bracketAddOpening(bd, match, position))
+                повернути false;
         }
     }
     level=bd->pBiDi->levels[position];
-    if(level&UBIDI_LEVEL_OVERRIDE) {    /* X4, X5 */
+    якщо(level&UBIDI_LEVEL_OVERRIDE) {    /* X4, X5 */
         newProp=level&1;
-        if(dirProp!=S && dirProp!=WS && dirProp!=ON)
+        якщо(dirProp!=S && dirProp!=WS && dirProp!=ON)
             dirProps[position]=newProp;
         pLastIsoRun->lastBase=newProp;
         pLastIsoRun->lastStrong=newProp;
         pLastIsoRun->contextDir = static_cast<UBiDiDirection>(newProp);
         pLastIsoRun->contextPos=position;
     }
-    else if(dirProp<=R || dirProp==AL) {
+    інакше якщо(dirProp<=R || dirProp==AL) {
         newProp= static_cast<DirProp>(DIR_FROM_STRONG(dirProp));
         pLastIsoRun->lastBase=dirProp;
         pLastIsoRun->lastStrong=dirProp;
         pLastIsoRun->contextDir = static_cast<UBiDiDirection>(newProp);
         pLastIsoRun->contextPos=position;
     }
-    else if(dirProp==EN) {
+    інакше якщо(dirProp==EN) {
         pLastIsoRun->lastBase=EN;
-        if(pLastIsoRun->lastStrong==L) {
+        якщо(pLastIsoRun->lastStrong==L) {
             newProp=L;                  /* W7 */
-            if(!bd->isNumbersSpecial)
+            якщо(!bd->isNumbersSpecial)
                 dirProps[position]=ENL;
             pLastIsoRun->contextDir = static_cast<UBiDiDirection>(L);
             pLastIsoRun->contextPos=position;
         }
-        else {
+        інакше {
             newProp=R;                  /* N0 */
-            if(pLastIsoRun->lastStrong==AL)
+            якщо(pLastIsoRun->lastStrong==AL)
                 dirProps[position]=AN;  /* W2 */
-            else
+            інакше
                 dirProps[position]=ENR;
             pLastIsoRun->contextDir = static_cast<UBiDiDirection>(R);
             pLastIsoRun->contextPos=position;
         }
     }
-    else if(dirProp==AN) {
+    інакше якщо(dirProp==AN) {
         newProp=R;                      /* N0 */
         pLastIsoRun->lastBase=AN;
         pLastIsoRun->contextDir = static_cast<UBiDiDirection>(R);
         pLastIsoRun->contextPos=position;
     }
-    else if(dirProp==NSM) {
+    інакше якщо(dirProp==NSM) {
         /* if the last real char was ON, change NSM to ON so that it
            will stay ON even if the last real char is a bracket which
            may be changed to L or R */
         newProp=pLastIsoRun->lastBase;
-        if(newProp==ON)
+        якщо(newProp==ON)
             dirProps[position]=newProp;
     }
-    else {
+    інакше {
         newProp=dirProp;
         pLastIsoRun->lastBase=dirProp;
     }
-    if(newProp<=R || newProp==AL) {
+    якщо(newProp<=R || newProp==AL) {
         int32_t i;
         uint16_t flag=DIRPROP_FLAG(DIR_FROM_STRONG(newProp));
-        for(i=pLastIsoRun->start; i<pLastIsoRun->limit; i++)
-            if(position>bd->openings[i].position)
+        для(i=pLastIsoRun->start; i<pLastIsoRun->limit; i++)
+            якщо(position>bd->openings[i].position)
                 bd->openings[i].flags|=flag;
     }
-    return true;
+    повернути true;
 }
 
 /* perform (X1)..(X9) ------------------------------------------------------- */
@@ -1017,12 +1017,12 @@ static UBiDiDirection
 directionFromFlags(UBiDi *pBiDi) {
     Flags flags=pBiDi->flags;
     /* if the text contains AN and neutrals, then some neutrals may become RTL */
-    if(!(flags&MASK_RTL || ((flags&DIRPROP_FLAG(AN)) && (flags&MASK_POSSIBLE_N)))) {
-        return UBIDI_LTR;
-    } else if(!(flags&MASK_LTR)) {
-        return UBIDI_RTL;
-    } else {
-        return UBIDI_MIXED;
+    якщо(!(flags&MASK_RTL || ((flags&DIRPROP_FLAG(AN)) && (flags&MASK_POSSIBLE_N)))) {
+        повернути UBIDI_LTR;
+    } інакше якщо(!(flags&MASK_LTR)) {
+        повернути UBIDI_RTL;
+    } інакше {
+        повернути UBIDI_MIXED;
     }
 }
 
@@ -1090,65 +1090,65 @@ resolveExplicitLevels(UBiDi *pBiDi, UErrorCode *pErrorCode) {
     UBiDiDirection direction;
     pBiDi->isolateCount=0;
 
-    if(U_FAILURE(*pErrorCode)) { return UBIDI_LTR; }
+    якщо(U_FAILURE(*pErrorCode)) { повернути UBIDI_LTR; }
 
     /* determine if the text is mixed-directional or single-directional */
     direction=directionFromFlags(pBiDi);
 
     /* we may not need to resolve any explicit levels */
-    if((direction!=UBIDI_MIXED)) {
+    якщо((direction!=UBIDI_MIXED)) {
         /* not mixed directionality: levels don't matter - trailingWSStart will be 0 */
-        return direction;
+        повернути direction;
     }
-    if(pBiDi->reorderingMode > UBIDI_REORDER_LAST_LOGICAL_TO_VISUAL) {
+    якщо(pBiDi->reorderingMode > UBIDI_REORDER_LAST_LOGICAL_TO_VISUAL) {
         /* inverse BiDi: mixed, but all characters are at the same embedding level */
         /* set all levels to the paragraph level */
         int32_t paraIndex, start, limit;
-        for(paraIndex=0; paraIndex<pBiDi->paraCount; paraIndex++) {
-            if(paraIndex==0)
+        для(paraIndex=0; paraIndex<pBiDi->paraCount; paraIndex++) {
+            якщо(paraIndex==0)
                 start=0;
-            else
+            інакше
                 start=pBiDi->paras[paraIndex-1].limit;
             limit=pBiDi->paras[paraIndex].limit;
             level= static_cast<UBiDiLevel>(pBiDi->paras[paraIndex].level);
-            for(i=start; i<limit; i++)
+            для(i=start; i<limit; i++)
                 levels[i]=level;
         }
-        return direction;   /* no bracket matching for inverse BiDi */
+        повернути direction;   /* no bracket matching for inverse BiDi */
     }
-    if(!(flags&(MASK_EXPLICIT|MASK_ISO))) {
+    якщо(!(flags&(MASK_EXPLICIT|MASK_ISO))) {
         /* no embeddings, set all levels to the paragraph level */
         /* we still have to perform bracket matching */
         int32_t paraIndex, start, limit;
         BracketData bracketData;
         bracketInit(pBiDi, &bracketData);
-        for(paraIndex=0; paraIndex<pBiDi->paraCount; paraIndex++) {
-            if(paraIndex==0)
+        для(paraIndex=0; paraIndex<pBiDi->paraCount; paraIndex++) {
+            якщо(paraIndex==0)
                 start=0;
-            else
+            інакше
                 start=pBiDi->paras[paraIndex-1].limit;
             limit=pBiDi->paras[paraIndex].limit;
             level= static_cast<UBiDiLevel>(pBiDi->paras[paraIndex].level);
-            for(i=start; i<limit; i++) {
+            для(i=start; i<limit; i++) {
                 levels[i]=level;
                 dirProp=dirProps[i];
-                if(dirProp==BN)
+                якщо(dirProp==BN)
                     continue;
-                if(dirProp==B) {
-                    if((i+1)<length) {
-                        if(text[i]==CR && text[i+1]==LF)
+                якщо(dirProp==B) {
+                    якщо((i+1)<length) {
+                        якщо(text[i]==CR && text[i+1]==LF)
                             continue;   /* skip CR when followed by LF */
                         bracketProcessB(&bracketData, level);
                     }
                     continue;
                 }
-                if(!bracketProcessChar(&bracketData, i)) {
+                якщо(!bracketProcessChar(&bracketData, i)) {
                     *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                    return UBIDI_LTR;
+                    повернути UBIDI_LTR;
                 }
             }
         }
-        return direction;
+        повернути direction;
     }
     {
         /* continue to perform (Xn) */
@@ -1174,7 +1174,7 @@ resolveExplicitLevels(UBiDi *pBiDi, UErrorCode *pErrorCode) {
         /* recalculate the flags */
         flags=0;
 
-        for(i=0; i<length; ++i) {
+        для(i=0; i<length; ++i) {
             dirProp=dirProps[i];
             switch(dirProp) {
             case LRE:
@@ -1184,17 +1184,17 @@ resolveExplicitLevels(UBiDi *pBiDi, UErrorCode *pErrorCode) {
                 /* (X2, X3, X4, X5) */
                 flags|=DIRPROP_FLAG(BN);
                 levels[i]=previousLevel;
-                if (dirProp==LRE || dirProp==LRO)
+                якщо (dirProp==LRE || dirProp==LRO)
                     /* least greater even level */
                     newLevel = static_cast<UBiDiLevel>((embeddingLevel + 2) & ~(UBIDI_LEVEL_OVERRIDE | 1));
-                else
+                інакше
                     /* least greater odd level */
                     newLevel = static_cast<UBiDiLevel>((NO_OVERRIDE(embeddingLevel) + 1) | 1);
-                if(newLevel<=UBIDI_MAX_EXPLICIT_LEVEL && overflowIsolateCount==0 &&
+                якщо(newLevel<=UBIDI_MAX_EXPLICIT_LEVEL && overflowIsolateCount==0 &&
                                                          overflowEmbeddingCount==0) {
                     lastCcPos=i;
                     embeddingLevel=newLevel;
-                    if(dirProp==LRO || dirProp==RLO)
+                    якщо(dirProp==LRO || dirProp==RLO)
                         embeddingLevel|=UBIDI_LEVEL_OVERRIDE;
                     stackLast++;
                     stack[stackLast]=embeddingLevel;
@@ -1202,8 +1202,8 @@ resolveExplicitLevels(UBiDi *pBiDi, UErrorCode *pErrorCode) {
                        since this has already been done for newLevel which is
                        the source for embeddingLevel.
                      */
-                } else {
-                    if(overflowIsolateCount==0)
+                } інакше {
+                    якщо(overflowIsolateCount==0)
                         overflowEmbeddingCount++;
                 }
                 break;
@@ -1212,14 +1212,14 @@ resolveExplicitLevels(UBiDi *pBiDi, UErrorCode *pErrorCode) {
                 flags|=DIRPROP_FLAG(BN);
                 levels[i]=previousLevel;
                 /* handle all the overflow cases first */
-                if(overflowIsolateCount) {
+                якщо(overflowIsolateCount) {
                     break;
                 }
-                if(overflowEmbeddingCount) {
+                якщо(overflowEmbeddingCount) {
                     overflowEmbeddingCount--;
                     break;
                 }
-                if(stackLast>0 && stack[stackLast]<ISOLATE) {   /* not an isolate entry */
+                якщо(stackLast>0 && stack[stackLast]<ISOLATE) {   /* not an isolate entry */
                     lastCcPos=i;
                     stackLast--;
                     embeddingLevel = static_cast<UBiDiLevel>(stack[stackLast]);
@@ -1229,25 +1229,25 @@ resolveExplicitLevels(UBiDi *pBiDi, UErrorCode *pErrorCode) {
             case RLI:
                 flags|=(DIRPROP_FLAG(ON)|DIRPROP_FLAG_LR(embeddingLevel));
                 levels[i]=NO_OVERRIDE(embeddingLevel);
-                if(NO_OVERRIDE(embeddingLevel)!=NO_OVERRIDE(previousLevel)) {
+                якщо(NO_OVERRIDE(embeddingLevel)!=NO_OVERRIDE(previousLevel)) {
                     bracketProcessBoundary(&bracketData, lastCcPos,
                                            previousLevel, embeddingLevel);
                     flags|=DIRPROP_FLAG_MULTI_RUNS;
                 }
                 previousLevel=embeddingLevel;
                 /* (X5a, X5b) */
-                if(dirProp==LRI)
+                якщо(dirProp==LRI)
                     /* least greater even level */
                     newLevel = static_cast<UBiDiLevel>((embeddingLevel + 2) & ~(UBIDI_LEVEL_OVERRIDE | 1));
-                else
+                інакше
                     /* least greater odd level */
                     newLevel = static_cast<UBiDiLevel>((NO_OVERRIDE(embeddingLevel) + 1) | 1);
-                if(newLevel<=UBIDI_MAX_EXPLICIT_LEVEL && overflowIsolateCount==0 &&
+                якщо(newLevel<=UBIDI_MAX_EXPLICIT_LEVEL && overflowIsolateCount==0 &&
                                                          overflowEmbeddingCount==0) {
                     flags|=DIRPROP_FLAG(dirProp);
                     lastCcPos=i;
                     validIsolateCount++;
-                    if(validIsolateCount>pBiDi->isolateCount)
+                    якщо(validIsolateCount>pBiDi->isolateCount)
                         pBiDi->isolateCount=validIsolateCount;
                     embeddingLevel=newLevel;
                     /* we can increment stackLast without checking because newLevel
@@ -1255,34 +1255,34 @@ resolveExplicitLevels(UBiDi *pBiDi, UErrorCode *pErrorCode) {
                     stackLast++;
                     stack[stackLast]=embeddingLevel+ISOLATE;
                     bracketProcessLRI_RLI(&bracketData, embeddingLevel);
-                } else {
+                } інакше {
                     /* make it WS so that it is handled by adjustWSLevels() */
                     dirProps[i]=WS;
                     overflowIsolateCount++;
                 }
                 break;
             case PDI:
-                if(NO_OVERRIDE(embeddingLevel)!=NO_OVERRIDE(previousLevel)) {
+                якщо(NO_OVERRIDE(embeddingLevel)!=NO_OVERRIDE(previousLevel)) {
                     bracketProcessBoundary(&bracketData, lastCcPos,
                                            previousLevel, embeddingLevel);
                     flags|=DIRPROP_FLAG_MULTI_RUNS;
                 }
                 /* (X6a) */
-                if(overflowIsolateCount) {
+                якщо(overflowIsolateCount) {
                     overflowIsolateCount--;
                     /* make it WS so that it is handled by adjustWSLevels() */
                     dirProps[i]=WS;
                 }
-                else if(validIsolateCount) {
+                інакше якщо(validIsolateCount) {
                     flags|=DIRPROP_FLAG(PDI);
                     lastCcPos=i;
                     overflowEmbeddingCount=0;
-                    while(stack[stackLast]<ISOLATE) /* pop embedding entries */
+                    поки(stack[stackLast]<ISOLATE) /* pop embedding entries */
                         stackLast--;                /* until the last isolate entry */
                     stackLast--;                    /* pop also the last isolate entry */
                     validIsolateCount--;
                     bracketProcessPDI(&bracketData);
-                } else
+                } інакше
                     /* make it WS so that it is handled by adjustWSLevels() */
                     dirProps[i]=WS;
                 embeddingLevel = static_cast<UBiDiLevel>(stack[stackLast]) & ~ISOLATE;
@@ -1293,8 +1293,8 @@ resolveExplicitLevels(UBiDi *pBiDi, UErrorCode *pErrorCode) {
             case B:
                 flags|=DIRPROP_FLAG(B);
                 levels[i]=GET_PARALEVEL(pBiDi, i);
-                if((i+1)<length) {
-                    if(text[i]==CR && text[i+1]==LF)
+                якщо((i+1)<length) {
+                    якщо(text[i]==CR && text[i+1]==LF)
                         break;          /* skip CR when followed by LF */
                     overflowEmbeddingCount=overflowIsolateCount=0;
                     validIsolateCount=0;
@@ -1312,33 +1312,33 @@ resolveExplicitLevels(UBiDi *pBiDi, UErrorCode *pErrorCode) {
                 break;
             default:
                 /* all other types are normal characters and get the "real" level */
-                if(NO_OVERRIDE(embeddingLevel)!=NO_OVERRIDE(previousLevel)) {
+                якщо(NO_OVERRIDE(embeddingLevel)!=NO_OVERRIDE(previousLevel)) {
                     bracketProcessBoundary(&bracketData, lastCcPos,
                                            previousLevel, embeddingLevel);
                     flags|=DIRPROP_FLAG_MULTI_RUNS;
-                    if(embeddingLevel&UBIDI_LEVEL_OVERRIDE)
+                    якщо(embeddingLevel&UBIDI_LEVEL_OVERRIDE)
                         flags|=DIRPROP_FLAG_O(embeddingLevel);
-                    else
+                    інакше
                         flags|=DIRPROP_FLAG_E(embeddingLevel);
                 }
                 previousLevel=embeddingLevel;
                 levels[i]=embeddingLevel;
-                if(!bracketProcessChar(&bracketData, i))
-                    return static_cast<UBiDiDirection>(-1);
+                якщо(!bracketProcessChar(&bracketData, i))
+                    повернути static_cast<UBiDiDirection>(-1);
                 /* the dirProp may have been changed in bracketProcessChar() */
                 flags|=DIRPROP_FLAG(dirProps[i]);
                 break;
             }
         }
-        if(flags&MASK_EMBEDDING)
+        якщо(flags&MASK_EMBEDDING)
             flags|=DIRPROP_FLAG_LR(pBiDi->paraLevel);
-        if(pBiDi->orderParagraphsLTR && (flags&DIRPROP_FLAG(B)))
+        якщо(pBiDi->orderParagraphsLTR && (flags&DIRPROP_FLAG(B)))
             flags|=DIRPROP_FLAG(L);
         /* again, determine if the text is mixed-directional or single-directional */
         pBiDi->flags=flags;
         direction=directionFromFlags(pBiDi);
     }
-    return direction;
+    повернути direction;
 }
 
 /*
@@ -1365,21 +1365,21 @@ checkExplicitLevels(UBiDi *pBiDi, UErrorCode *pErrorCode) {
     int32_t currentParaLimit = pBiDi->paras[0].limit;
     int32_t currentParaLevel = pBiDi->paraLevel;
 
-    for(int32_t i=0; i<length; ++i) {
+    для(int32_t i=0; i<length; ++i) {
         UBiDiLevel level=levels[i];
         DirProp dirProp=dirProps[i];
-        if(dirProp==LRI || dirProp==RLI) {
+        якщо(dirProp==LRI || dirProp==RLI) {
             isolateCount++;
-            if(isolateCount>pBiDi->isolateCount)
+            якщо(isolateCount>pBiDi->isolateCount)
                 pBiDi->isolateCount=isolateCount;
         }
-        else if(dirProp==PDI)
+        інакше якщо(dirProp==PDI)
             isolateCount--;
-        else if(dirProp==B)
+        інакше якщо(dirProp==B)
             isolateCount=0;
 
         // optimized version of  int32_t currentParaLevel = GET_PARALEVEL(pBiDi, i);
-        if (pBiDi->defaultParaLevel != 0 &&
+        якщо (pBiDi->defaultParaLevel != 0 &&
                 i == currentParaLimit && (currentParaIndex + 1) < pBiDi->paraCount) {
             currentParaLevel = pBiDi->paras[++currentParaIndex].level;
             currentParaLimit = pBiDi->paras[currentParaIndex].limit;
@@ -1387,37 +1387,37 @@ checkExplicitLevels(UBiDi *pBiDi, UErrorCode *pErrorCode) {
 
         UBiDiLevel overrideFlag = level & UBIDI_LEVEL_OVERRIDE;
         level &= ~UBIDI_LEVEL_OVERRIDE;
-        if (level < currentParaLevel || UBIDI_MAX_EXPLICIT_LEVEL < level) {
-            if (level == 0) {
-                if (dirProp == B) {
+        якщо (level < currentParaLevel || UBIDI_MAX_EXPLICIT_LEVEL < level) {
+            якщо (level == 0) {
+                якщо (dirProp == B) {
                     // Paragraph separators are ok with explicit level 0.
                     // Prevents reordering of paragraphs.
-                } else {
+                } інакше {
                     // Treat explicit level 0 as a wildcard for the paragraph level.
                     // Avoid making the caller guess what the paragraph level would be.
                     level = static_cast<UBiDiLevel>(currentParaLevel);
                     levels[i] = level | overrideFlag;
                 }
-            } else {
+            } інакше {
                 // 1 <= level < currentParaLevel or UBIDI_MAX_EXPLICIT_LEVEL < level
                 /* level out of bounds */
                 *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-                return UBIDI_LTR;
+                повернути UBIDI_LTR;
             }
         }
-        if (overrideFlag != 0) {
+        якщо (overrideFlag != 0) {
             /* keep the override flag in levels[i] but adjust the flags */
             flags|=DIRPROP_FLAG_O(level);
-        } else {
+        } інакше {
             /* set the flags */
             flags|=DIRPROP_FLAG_E(level)|DIRPROP_FLAG(dirProp);
         }
     }
-    if(flags&MASK_EMBEDDING)
+    якщо(flags&MASK_EMBEDDING)
         flags|=DIRPROP_FLAG_LR(pBiDi->paraLevel);
     /* determine if the text is mixed-directional or single-directional */
     pBiDi->flags=flags;
-    return directionFromFlags(pBiDi);
+    повернути directionFromFlags(pBiDi);
 }
 
 /******************************************************************
@@ -1803,28 +1803,28 @@ addPoint(UBiDi *pBiDi, int32_t pos, int32_t flag)
     Point point;
     InsertPoints * pInsertPoints=&(pBiDi->insertPoints);
 
-    if (pInsertPoints->capacity == 0)
+    якщо (pInsertPoints->capacity == 0)
     {
         pInsertPoints->points=static_cast<Point *>(uprv_malloc(sizeof(Point)*FIRSTALLOC));
-        if (pInsertPoints->points == nullptr)
+        якщо (pInsertPoints->points == nullptr)
         {
             pInsertPoints->errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+            повернути;
         }
         pInsertPoints->capacity=FIRSTALLOC;
     }
-    if (pInsertPoints->size >= pInsertPoints->capacity) /* no room for new point */
+    якщо (pInsertPoints->size >= pInsertPoints->capacity) /* no room for new point */
     {
         Point * savePoints=pInsertPoints->points;
         pInsertPoints->points=static_cast<Point *>(uprv_realloc(pInsertPoints->points,
                                            pInsertPoints->capacity*2*sizeof(Point)));
-        if (pInsertPoints->points == nullptr)
+        якщо (pInsertPoints->points == nullptr)
         {
             pInsertPoints->points=savePoints;
             pInsertPoints->errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+            повернути;
         }
-        else  pInsertPoints->capacity*=2;
+        інакше  pInsertPoints->capacity*=2;
     }
     point.pos=pos;
     point.flag=flag;
@@ -1839,13 +1839,13 @@ setLevelsOutsideIsolates(UBiDi *pBiDi, int32_t start, int32_t limit, UBiDiLevel 
     DirProp *dirProps=pBiDi->dirProps, dirProp;
     UBiDiLevel *levels=pBiDi->levels;
     int32_t isolateCount=0, k;
-    for(k=start; k<limit; k++) {
+    для(k=start; k<limit; k++) {
         dirProp=dirProps[k];
-        if(dirProp==PDI)
+        якщо(dirProp==PDI)
             isolateCount--;
-        if(isolateCount==0)
+        якщо(isolateCount==0)
             levels[k]=level;
-        if(dirProp==LRI || dirProp==RLI)
+        якщо(dirProp==LRI || dirProp==RLI)
             isolateCount++;
     }
 }
@@ -1883,7 +1883,7 @@ processPropertySeq(UBiDi *pBiDi, LevState *pLevState, uint8_t _prop,
     actionSeq=(*pImpAct)[GET_ACTION(cell)]; /* isolate the action */
     addLevel=(*pImpTab)[pLevState->state][IMPTABLEVELS_RES];
 
-    if(actionSeq) {
+    якщо(actionSeq) {
         switch(actionSeq) {
         case 1:                         /* init ON seq */
             pLevState->startON=start0;
@@ -1905,23 +1905,23 @@ processPropertySeq(UBiDi *pBiDi, LevState *pLevState, uint8_t _prop,
 
         case 5:                         /* L or S after possible relevant EN/AN */
             /* check if we had EN after R/AL */
-            if (pLevState->startL2EN >= 0) {
+            якщо (pLevState->startL2EN >= 0) {
                 addPoint(pBiDi, pLevState->startL2EN, LRM_BEFORE);
             }
             pLevState->startL2EN=-1;  /* not within previous if since could also be -2 */
             /* check if we had any relevant EN/AN after R/AL */
             pInsertPoints=&(pBiDi->insertPoints);
-            if ((pInsertPoints->capacity == 0) ||
+            якщо ((pInsertPoints->capacity == 0) ||
                 (pInsertPoints->size <= pInsertPoints->confirmed))
             {
                 /* nothing, just clean up */
                 pLevState->lastStrongRTL=-1;
                 /* check if we have a pending conditional segment */
                 level=(*pImpTab)[oldStateSeq][IMPTABLEVELS_RES];
-                if ((level & 1) && (pLevState->startON > 0)) {  /* after ON */
+                якщо ((level & 1) && (pLevState->startON > 0)) {  /* after ON */
                     start=pLevState->startON;   /* reset to basic run level */
                 }
-                if (_prop == DirProp_S)                /* add LRM before S */
+                якщо (_prop == DirProp_S)                /* add LRM before S */
                 {
                     addPoint(pBiDi, start0, LRM_BEFORE);
                     pInsertPoints->confirmed=pInsertPoints->size;
@@ -1929,7 +1929,7 @@ processPropertySeq(UBiDi *pBiDi, LevState *pLevState, uint8_t _prop,
                 break;
             }
             /* reset previous RTL cont to level for LTR text */
-            for (k=pLevState->lastStrongRTL+1; k<start0; k++)
+            для (k=pLevState->lastStrongRTL+1; k<start0; k++)
             {
                 /* reset odd level, leave runLevel+2 as is */
                 levels[k]=(levels[k] - 2) & ~1;
@@ -1937,7 +1937,7 @@ processPropertySeq(UBiDi *pBiDi, LevState *pLevState, uint8_t _prop,
             /* mark insert points as confirmed */
             pInsertPoints->confirmed=pInsertPoints->size;
             pLevState->lastStrongRTL=-1;
-            if (_prop == DirProp_S)            /* add LRM before S */
+            якщо (_prop == DirProp_S)            /* add LRM before S */
             {
                 addPoint(pBiDi, start0, LRM_BEFORE);
                 pInsertPoints->confirmed=pInsertPoints->size;
@@ -1947,7 +1947,7 @@ processPropertySeq(UBiDi *pBiDi, LevState *pLevState, uint8_t _prop,
         case 6:                         /* R/AL after possible relevant EN/AN */
             /* just clean up */
             pInsertPoints=&(pBiDi->insertPoints);
-            if (pInsertPoints->capacity > 0)
+            якщо (pInsertPoints->capacity > 0)
                 /* remove all non confirmed insert points */
                 pInsertPoints->size=pInsertPoints->confirmed;
             pLevState->startON=-1;
@@ -1957,17 +1957,17 @@ processPropertySeq(UBiDi *pBiDi, LevState *pLevState, uint8_t _prop,
 
         case 7:                         /* EN/AN after R/AL + possible cont */
             /* check for real AN */
-            if ((_prop == DirProp_AN) && (pBiDi->dirProps[start0] == AN) &&
+            якщо ((_prop == DirProp_AN) && (pBiDi->dirProps[start0] == AN) &&
                 (pBiDi->reorderingMode!=UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL))
             {
                 /* real AN */
-                if (pLevState->startL2EN == -1) /* if no relevant EN already found */
+                якщо (pLevState->startL2EN == -1) /* if no relevant EN already found */
                 {
                     /* just note the righmost digit as a strong RTL */
                     pLevState->lastStrongRTL=limit - 1;
                     break;
                 }
-                if (pLevState->startL2EN >= 0)  /* after EN, no AN */
+                якщо (pLevState->startL2EN >= 0)  /* after EN, no AN */
                 {
                     addPoint(pBiDi, pLevState->startL2EN, LRM_BEFORE);
                     pLevState->startL2EN=-2;
@@ -1977,7 +1977,7 @@ processPropertySeq(UBiDi *pBiDi, LevState *pLevState, uint8_t _prop,
                 break;
             }
             /* if first EN/AN after R/AL */
-            if (pLevState->startL2EN == -1) {
+            якщо (pLevState->startL2EN == -1) {
                 pLevState->startL2EN=start0;
             }
             break;
@@ -1989,8 +1989,8 @@ processPropertySeq(UBiDi *pBiDi, LevState *pLevState, uint8_t _prop,
 
         case 9:                         /* L after R+ON/EN/AN */
             /* include possible adjacent number on the left */
-            for (k=start0-1; k>=0 && !(levels[k]&1); k--);
-            if(k>=0) {
+            для (k=start0-1; k>=0 && !(levels[k]&1); k--);
+            якщо(k>=0) {
                 addPoint(pBiDi, k, RLM_BEFORE);             /* add RLM before */
                 pInsertPoints=&(pBiDi->insertPoints);
                 pInsertPoints->confirmed=pInsertPoints->size;   /* confirm it */
@@ -2009,7 +2009,7 @@ processPropertySeq(UBiDi *pBiDi, LevState *pLevState, uint8_t _prop,
             /* false alert, infirm LRMs around previous AN */
             pInsertPoints=&(pBiDi->insertPoints);
             pInsertPoints->size=pInsertPoints->confirmed;
-            if (_prop == DirProp_S)            /* add RLM before S */
+            якщо (_prop == DirProp_S)            /* add RLM before S */
             {
                 addPoint(pBiDi, start0, RLM_BEFORE);
                 pInsertPoints->confirmed=pInsertPoints->size;
@@ -2018,8 +2018,8 @@ processPropertySeq(UBiDi *pBiDi, LevState *pLevState, uint8_t _prop,
 
         case 12:                        /* L after L+ON/AN */
             level=pLevState->runLevel + addLevel;
-            for(k=pLevState->startON; k<start0; k++) {
-                if (levels[k]<level)
+            для(k=pLevState->startON; k<start0; k++) {
+                якщо (levels[k]<level)
                     levels[k]=level;
             }
             pInsertPoints=&(pBiDi->insertPoints);
@@ -2029,16 +2029,16 @@ processPropertySeq(UBiDi *pBiDi, LevState *pLevState, uint8_t _prop,
 
         case 13:                        /* L after L+ON+EN/AN/ON */
             level=pLevState->runLevel;
-            for(k=start0-1; k>=pLevState->startON; k--) {
-                if(levels[k]==level+3) {
-                    while(levels[k]==level+3) {
+            для(k=start0-1; k>=pLevState->startON; k--) {
+                якщо(levels[k]==level+3) {
+                    поки(levels[k]==level+3) {
                         levels[k--]-=2;
                     }
-                    while(levels[k]==level) {
+                    поки(levels[k]==level) {
                         k--;
                     }
                 }
-                if(levels[k]==level+2) {
+                якщо(levels[k]==level+2) {
                     levels[k]=level;
                     continue;
                 }
@@ -2048,8 +2048,8 @@ processPropertySeq(UBiDi *pBiDi, LevState *pLevState, uint8_t _prop,
 
         case 14:                        /* R after L+ON+EN/AN/ON */
             level=pLevState->runLevel+1;
-            for(k=start0-1; k>=pLevState->startON; k--) {
-                if(levels[k]>level) {
+            для(k=start0-1; k>=pLevState->startON; k--) {
+                якщо(levels[k]>level) {
                     levels[k]-=2;
                 }
             }
@@ -2059,13 +2059,13 @@ processPropertySeq(UBiDi *pBiDi, LevState *pLevState, uint8_t _prop,
             UPRV_UNREACHABLE_EXIT;
         }
     }
-    if((addLevel) || (start < start0)) {
+    якщо((addLevel) || (start < start0)) {
         level=pLevState->runLevel + addLevel;
-        if(start>=pLevState->runStart) {
-            for(k=start; k<limit; k++) {
+        якщо(start>=pLevState->runStart) {
+            для(k=start; k<limit; k++) {
                 levels[k]=level;
             }
-        } else {
+        } інакше {
             setLevelsOutsideIsolates(pBiDi, start, limit, level);
         }
     }
@@ -2082,21 +2082,21 @@ lastL_R_AL(UBiDi *pBiDi) {
     int32_t i;
     UChar32 uchar;
     DirProp dirProp;
-    for(i=length; i>0; ) {
+    для(i=length; i>0; ) {
         /* i is decremented by U16_PREV */
         U16_PREV(text, 0, i, uchar);
         dirProp = static_cast<DirProp>(ubidi_getCustomizedClass(pBiDi, uchar));
-        if(dirProp==L) {
-            return DirProp_L;
+        якщо(dirProp==L) {
+            повернути DirProp_L;
         }
-        if(dirProp==R || dirProp==AL) {
-            return DirProp_R;
+        якщо(dirProp==R || dirProp==AL) {
+            повернути DirProp_R;
         }
-        if(dirProp==B) {
-            return DirProp_ON;
+        якщо(dirProp==B) {
+            повернути DirProp_ON;
         }
     }
-    return DirProp_ON;
+    повернути DirProp_ON;
 }
 
 /**
@@ -2110,24 +2110,24 @@ firstL_R_AL_EN_AN(UBiDi *pBiDi) {
     int32_t i;
     UChar32 uchar;
     DirProp dirProp;
-    for(i=0; i<length; ) {
+    для(i=0; i<length; ) {
         /* i is incremented by U16_NEXT */
         U16_NEXT(text, i, length, uchar);
         dirProp = static_cast<DirProp>(ubidi_getCustomizedClass(pBiDi, uchar));
-        if(dirProp==L) {
-            return DirProp_L;
+        якщо(dirProp==L) {
+            повернути DirProp_L;
         }
-        if(dirProp==R || dirProp==AL) {
-            return DirProp_R;
+        якщо(dirProp==R || dirProp==AL) {
+            повернути DirProp_R;
         }
-        if(dirProp==EN) {
-            return DirProp_EN;
+        якщо(dirProp==EN) {
+            повернути DirProp_EN;
         }
-        if(dirProp==AN) {
-            return DirProp_AN;
+        якщо(dirProp==AN) {
+            повернути DirProp_AN;
         }
     }
-    return DirProp_ON;
+    повернути DirProp_ON;
 }
 
 static void
@@ -2163,67 +2163,67 @@ resolveImplicitLevels(UBiDi *pBiDi,
     levState.runLevel=pBiDi->levels[start];
     levState.pImpTab = static_cast<const ImpTab*>(((pBiDi->pImpTabPair)->pImpTab)[levState.runLevel & 1]);
     levState.pImpAct = static_cast<const ImpAct*>(((pBiDi->pImpTabPair)->pImpAct)[levState.runLevel & 1]);
-    if(start==0 && pBiDi->proLength>0) {
+    якщо(start==0 && pBiDi->proLength>0) {
         DirProp lastStrong=lastL_R_AL(pBiDi);
-        if(lastStrong!=DirProp_ON) {
+        якщо(lastStrong!=DirProp_ON) {
             sor=lastStrong;
         }
     }
     /* The isolates[] entries contain enough information to
        resume the bidi algorithm in the same state as it was
        when it was interrupted by an isolate sequence. */
-    if(dirProps[start]==PDI  && pBiDi->isolateCount >= 0) {
+    якщо(dirProps[start]==PDI  && pBiDi->isolateCount >= 0) {
         levState.startON=pBiDi->isolates[pBiDi->isolateCount].startON;
         start1=pBiDi->isolates[pBiDi->isolateCount].start1;
         stateImp=pBiDi->isolates[pBiDi->isolateCount].stateImp;
         levState.state=pBiDi->isolates[pBiDi->isolateCount].state;
         pBiDi->isolateCount--;
-    } else {
+    } інакше {
         levState.startON=-1;
         start1=start;
-        if(dirProps[start]==NSM)
+        якщо(dirProps[start]==NSM)
             stateImp = 1 + sor;
-        else
+        інакше
             stateImp=0;
         levState.state=0;
         processPropertySeq(pBiDi, &levState, sor, start, start);
     }
     start2=start;                       /* to make Java compiler happy */
 
-    for(i=start; i<=limit; i++) {
-        if(i>=limit) {
+    для(i=start; i<=limit; i++) {
+        якщо(i>=limit) {
             int32_t k;
-            for(k=limit-1; k>start&&(DIRPROP_FLAG(dirProps[k])&MASK_BN_EXPLICIT); k--);
+            для(k=limit-1; k>start&&(DIRPROP_FLAG(dirProps[k])&MASK_BN_EXPLICIT); k--);
             dirProp=dirProps[k];
-            if(dirProp==LRI || dirProp==RLI)
+            якщо(dirProp==LRI || dirProp==RLI)
                 break;      /* no forced closing for sequence ending with LRI/RLI */
             gprop=eor;
-        } else {
+        } інакше {
             DirProp prop, prop1;
             prop=dirProps[i];
-            if(prop==B) {
+            якщо(prop==B) {
                 pBiDi->isolateCount=-1; /* current isolates stack entry == none */
             }
-            if(inverseRTL) {
-                if(prop==AL) {
+            якщо(inverseRTL) {
+                якщо(prop==AL) {
                     /* AL before EN does not make it AN */
                     prop=R;
-                } else if(prop==EN) {
-                    if(nextStrongPos<=i) {
+                } інакше якщо(prop==EN) {
+                    якщо(nextStrongPos<=i) {
                         /* look for next strong char (L/R/AL) */
                         int32_t j;
                         nextStrongProp=R;   /* set default */
                         nextStrongPos=limit;
-                        for(j=i+1; j<limit; j++) {
+                        для(j=i+1; j<limit; j++) {
                             prop1=dirProps[j];
-                            if(prop1==L || prop1==R || prop1==AL) {
+                            якщо(prop1==L || prop1==R || prop1==AL) {
                                 nextStrongProp=prop1;
                                 nextStrongPos=j;
                                 break;
                             }
                         }
                     }
-                    if(nextStrongProp==AL) {
+                    якщо(nextStrongProp==AL) {
                         prop=AN;
                     }
                 }
@@ -2234,11 +2234,11 @@ resolveImplicitLevels(UBiDi *pBiDi,
         cell=impTabProps[oldStateImp][gprop];
         stateImp=GET_STATEPROPS(cell);      /* isolate the new state */
         actionImp=GET_ACTIONPROPS(cell);    /* isolate the action */
-        if((i==limit) && (actionImp==0)) {
+        якщо((i==limit) && (actionImp==0)) {
             /* there is an unprocessed sequence if its property == eor   */
             actionImp=1;                    /* process the last sequence */
         }
-        if(actionImp) {
+        якщо(actionImp) {
             resProp=impTabProps[oldStateImp][IMPTABPROPS_RES];
             switch(actionImp) {
             case 1:             /* process current seq1, init new seq1 */
@@ -2265,24 +2265,24 @@ resolveImplicitLevels(UBiDi *pBiDi,
     }
 
     /* flush possible pending sequence, e.g. ON */
-    if(limit==pBiDi->length && pBiDi->epiLength>0) {
+    якщо(limit==pBiDi->length && pBiDi->epiLength>0) {
         DirProp firstStrong=firstL_R_AL_EN_AN(pBiDi);
-        if(firstStrong!=DirProp_ON) {
+        якщо(firstStrong!=DirProp_ON) {
             eor=firstStrong;
         }
     }
 
     /* look for the last char not a BN or LRE/RLE/LRO/RLO/PDF */
-    for(i=limit-1; i>start&&(DIRPROP_FLAG(dirProps[i])&MASK_BN_EXPLICIT); i--);
+    для(i=limit-1; i>start&&(DIRPROP_FLAG(dirProps[i])&MASK_BN_EXPLICIT); i--);
     dirProp=dirProps[i];
-    if((dirProp==LRI || dirProp==RLI) && limit<pBiDi->length) {
+    якщо((dirProp==LRI || dirProp==RLI) && limit<pBiDi->length) {
         pBiDi->isolateCount++;
         pBiDi->isolates[pBiDi->isolateCount].stateImp=stateImp;
         pBiDi->isolates[pBiDi->isolateCount].state=levState.state;
         pBiDi->isolates[pBiDi->isolateCount].start1=start1;
         pBiDi->isolates[pBiDi->isolateCount].startON=levState.startON;
     }
-    else
+    інакше
         processPropertySeq(pBiDi, &levState, eor, limit, limit);
 }
 
@@ -2300,31 +2300,31 @@ adjustWSLevels(UBiDi *pBiDi) {
     UBiDiLevel *levels=pBiDi->levels;
     int32_t i;
 
-    if(pBiDi->flags&MASK_WS) {
+    якщо(pBiDi->flags&MASK_WS) {
         UBool orderParagraphsLTR=pBiDi->orderParagraphsLTR;
         Flags flag;
 
         i=pBiDi->trailingWSStart;
-        while(i>0) {
+        поки(i>0) {
             /* reset a sequence of WS/BN before eop and B/S to the paragraph paraLevel */
-            while(i>0 && (flag=DIRPROP_FLAG(dirProps[--i]))&MASK_WS) {
-                if(orderParagraphsLTR&&(flag&DIRPROP_FLAG(B))) {
+            поки(i>0 && (flag=DIRPROP_FLAG(dirProps[--i]))&MASK_WS) {
+                якщо(orderParagraphsLTR&&(flag&DIRPROP_FLAG(B))) {
                     levels[i]=0;
-                } else {
+                } інакше {
                     levels[i]=GET_PARALEVEL(pBiDi, i);
                 }
             }
 
             /* reset BN to the next character's paraLevel until B/S, which restarts above loop */
             /* here, i+1 is guaranteed to be <length */
-            while(i>0) {
+            поки(i>0) {
                 flag=DIRPROP_FLAG(dirProps[--i]);
-                if(flag&MASK_BN_EXPLICIT) {
+                якщо(flag&MASK_BN_EXPLICIT) {
                     levels[i]=levels[i+1];
-                } else if(orderParagraphsLTR&&(flag&DIRPROP_FLAG(B))) {
+                } інакше якщо(orderParagraphsLTR&&(flag&DIRPROP_FLAG(B))) {
                     levels[i]=0;
                     break;
-                } else if(flag&MASK_B_S) {
+                } інакше якщо(flag&MASK_B_S) {
                     levels[i]=GET_PARALEVEL(pBiDi, i);
                     break;
                 }
@@ -2340,20 +2340,20 @@ ubidi_setContext(UBiDi *pBiDi,
                  UErrorCode *pErrorCode) {
     /* check the argument values */
     RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(pErrorCode);
-    if(pBiDi==nullptr || proLength<-1 || epiLength<-1 ||
+    якщо(pBiDi==nullptr || proLength<-1 || epiLength<-1 ||
        (prologue==nullptr && proLength!=0) || (epilogue==nullptr && epiLength!=0)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        повернути;
     }
 
-    if(proLength==-1) {
+    якщо(proLength==-1) {
         pBiDi->proLength=u_strlen(prologue);
-    } else {
+    } інакше {
         pBiDi->proLength=proLength;
     }
-    if(epiLength==-1) {
+    якщо(epiLength==-1) {
         pBiDi->epiLength=u_strlen(epilogue);
-    } else {
+    } інакше {
         pBiDi->epiLength=epiLength;
     }
     pBiDi->prologue=prologue;
@@ -2389,13 +2389,13 @@ setParaRunsOnly(UBiDi *pBiDi, const char16_t *text, int32_t length,
     uint32_t saveOptions;
 
     pBiDi->reorderingMode=UBIDI_REORDER_DEFAULT;
-    if(length==0) {
+    якщо(length==0) {
         ubidi_setPara(pBiDi, text, length, paraLevel, nullptr, pErrorCode);
         goto cleanup3;
     }
     /* obtain memory for mapping table and visual text */
     runsOnlyMemory=static_cast<int32_t *>(uprv_malloc(length*(sizeof(int32_t)+sizeof(char16_t)+sizeof(UBiDiLevel))));
-    if(runsOnlyMemory==nullptr) {
+    якщо(runsOnlyMemory==nullptr) {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
         goto cleanup3;
     }
@@ -2403,13 +2403,13 @@ setParaRunsOnly(UBiDi *pBiDi, const char16_t *text, int32_t length,
     visualText = reinterpret_cast<char16_t*>(&visualMap[length]);
     saveLevels = reinterpret_cast<UBiDiLevel*>(&visualText[length]);
     saveOptions=pBiDi->reorderingOptions;
-    if(saveOptions & UBIDI_OPTION_INSERT_MARKS) {
+    якщо(saveOptions & UBIDI_OPTION_INSERT_MARKS) {
         pBiDi->reorderingOptions&=~UBIDI_OPTION_INSERT_MARKS;
         pBiDi->reorderingOptions|=UBIDI_OPTION_REMOVE_CONTROLS;
     }
     paraLevel&=1;                       /* accept only 0 or 1 */
     ubidi_setPara(pBiDi, text, length, paraLevel, nullptr, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
+    якщо(U_FAILURE(*pErrorCode)) {
         goto cleanup3;
     }
     /* we cannot access directly pBiDi->levels since it is not yet set if
@@ -2437,7 +2437,7 @@ setParaRunsOnly(UBiDi *pBiDi, const char16_t *text, int32_t length,
     visualLength=ubidi_writeReordered(pBiDi, visualText, length,
                                       (saveOptions & UBIDI_DO_MIRRORING) | UBIDI_INTERNAL_RUNS_ONLY, pErrorCode);
     ubidi_getVisualMap(pBiDi, visualMap, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
+    якщо(U_FAILURE(*pErrorCode)) {
         goto cleanup2;
     }
     pBiDi->reorderingOptions=saveOptions;
@@ -2456,7 +2456,7 @@ setParaRunsOnly(UBiDi *pBiDi, const char16_t *text, int32_t length,
     ubidi_setPara(pBiDi, visualText, visualLength, paraLevel, nullptr, pErrorCode);
     pBiDi->mayAllocateText=saveMayAllocateText;
     ubidi_getRuns(pBiDi, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
+    якщо(U_FAILURE(*pErrorCode)) {
         goto cleanup1;
     }
     /* check if some runs must be split, count how many splits */
@@ -2464,42 +2464,42 @@ setParaRunsOnly(UBiDi *pBiDi, const char16_t *text, int32_t length,
     runCount=pBiDi->runCount;
     runs=pBiDi->runs;
     visualStart=0;
-    for(i=0; i<runCount; i++, visualStart+=runLength) {
+    для(i=0; i<runCount; i++, visualStart+=runLength) {
         runLength=runs[i].visualLimit-visualStart;
-        if(runLength<2) {
+        якщо(runLength<2) {
             continue;
         }
         logicalStart=GET_INDEX(runs[i].logicalStart);
-        for(j=logicalStart+1; j<logicalStart+runLength; j++) {
+        для(j=logicalStart+1; j<logicalStart+runLength; j++) {
             index0=visualMap[j];
             index1=visualMap[j-1];
-            if((BIDI_ABS(index0-index1)!=1) || (saveLevels[index0]!=saveLevels[index1])) {
+            якщо((BIDI_ABS(index0-index1)!=1) || (saveLevels[index0]!=saveLevels[index1])) {
                 addedRuns++;
             }
         }
     }
-    if(addedRuns) {
-        if(getRunsMemory(pBiDi, runCount+addedRuns)) {
-            if(runCount==1) {
+    якщо(addedRuns) {
+        якщо(getRunsMemory(pBiDi, runCount+addedRuns)) {
+            якщо(runCount==1) {
                 /* because we switch from UBiDi.simpleRuns to UBiDi.runs */
                 pBiDi->runsMemory[0]=runs[0];
             }
             runs=pBiDi->runs=pBiDi->runsMemory;
             pBiDi->runCount+=addedRuns;
-        } else {
+        } інакше {
             *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
             goto cleanup1;
         }
     }
     /* split runs which are not consecutive in source text */
-    for(i=runCount-1; i>=0; i--) {
+    для(i=runCount-1; i>=0; i--) {
         runLength= i==0 ? runs[0].visualLimit :
                           runs[i].visualLimit-runs[i-1].visualLimit;
         logicalStart=runs[i].logicalStart;
         indexOddBit=GET_ODD_BIT(logicalStart);
         logicalStart=GET_INDEX(logicalStart);
-        if(runLength<2) {
-            if(addedRuns) {
+        якщо(runLength<2) {
+            якщо(addedRuns) {
                 runs[i+addedRuns]=runs[i];
             }
             logicalPos=visualMap[logicalStart];
@@ -2507,19 +2507,19 @@ setParaRunsOnly(UBiDi *pBiDi, const char16_t *text, int32_t length,
                                             saveLevels[logicalPos]^indexOddBit);
             continue;
         }
-        if(indexOddBit) {
+        якщо(indexOddBit) {
             start=logicalStart;
             limit=logicalStart+runLength-1;
             step=1;
-        } else {
+        } інакше {
             start=logicalStart+runLength-1;
             limit=logicalStart;
             step=-1;
         }
-        for(j=start; j!=limit; j+=step) {
+        для(j=start; j!=limit; j+=step) {
             index0=visualMap[j];
             index1=visualMap[j+step];
-            if((BIDI_ABS(index0-index1)!=1) || (saveLevels[index0]!=saveLevels[index1])) {
+            якщо((BIDI_ABS(index0-index1)!=1) || (saveLevels[index0]!=saveLevels[index1])) {
                 logicalPos=BIDI_MIN(visualMap[start], index0);
                 runs[i+addedRuns].logicalStart=MAKE_INDEX_ODD_PAIR(logicalPos,
                                             saveLevels[logicalPos]^indexOddBit);
@@ -2532,7 +2532,7 @@ setParaRunsOnly(UBiDi *pBiDi, const char16_t *text, int32_t length,
                 addedRuns--;
             }
         }
-        if(addedRuns) {
+        якщо(addedRuns) {
             runs[i+addedRuns]=runs[i];
         }
         logicalPos=BIDI_MIN(visualMap[start], visualMap[limit]);
@@ -2550,12 +2550,12 @@ setParaRunsOnly(UBiDi *pBiDi, const char16_t *text, int32_t length,
     pBiDi->originalLength=length;
     pBiDi->direction=saveDirection;
     /* the saved levels should never excess levelsSize, but we check anyway */
-    if(saveLength>pBiDi->levelsSize) {
+    якщо(saveLength>pBiDi->levelsSize) {
         saveLength=pBiDi->levelsSize;
     }
     uprv_memcpy(pBiDi->levels, saveLevels, (size_t)saveLength*sizeof(UBiDiLevel));
     pBiDi->trailingWSStart=saveTrailingWSStart;
-    if(pBiDi->runCount>1) {
+    якщо(pBiDi->runCount>1) {
         pBiDi->direction=UBIDI_MIXED;
     }
   cleanup3:
@@ -2576,20 +2576,20 @@ ubidi_setPara(UBiDi *pBiDi, const char16_t *text, int32_t length,
 
     /* check the argument values */
     RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(pErrorCode);
-    if(pBiDi==nullptr || text==nullptr || length<-1 ||
+    якщо(pBiDi==nullptr || text==nullptr || length<-1 ||
        (paraLevel>UBIDI_MAX_EXPLICIT_LEVEL && paraLevel<UBIDI_DEFAULT_LTR)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        повернути;
     }
 
-    if(length==-1) {
+    якщо(length==-1) {
         length=u_strlen(text);
     }
 
     /* special treatment for RUNS_ONLY mode */
-    if(pBiDi->reorderingMode==UBIDI_REORDER_RUNS_ONLY) {
+    якщо(pBiDi->reorderingMode==UBIDI_REORDER_RUNS_ONLY) {
         setParaRunsOnly(pBiDi, text, length, paraLevel, pErrorCode);
-        return;
+        повернути;
     }
 
     /* initialize the UBiDi structure */
@@ -2611,13 +2611,13 @@ ubidi_setPara(UBiDi *pBiDi, const char16_t *text, int32_t length,
      */
     pBiDi->defaultParaLevel=IS_DEFAULT_LEVEL(paraLevel);
 
-    if(length==0) {
+    якщо(length==0) {
         /*
          * For an empty paragraph, create a UBiDi object with the paraLevel and
          * the flags and the direction set but without allocating zero-length arrays.
          * There is nothing more to do.
          */
-        if(IS_DEFAULT_LEVEL(paraLevel)) {
+        якщо(IS_DEFAULT_LEVEL(paraLevel)) {
             pBiDi->paraLevel&=1;
             pBiDi->defaultParaLevel=0;
         }
@@ -2625,15 +2625,15 @@ ubidi_setPara(UBiDi *pBiDi, const char16_t *text, int32_t length,
         pBiDi->runCount=0;
         pBiDi->paraCount=0;
         setParaSuccess(pBiDi);          /* mark successful setPara */
-        return;
+        повернути;
     }
 
     pBiDi->runCount=-1;
 
     /* allocate paras memory */
-    if(pBiDi->parasMemory)
+    якщо(pBiDi->parasMemory)
         pBiDi->paras=pBiDi->parasMemory;
-    else
+    інакше
         pBiDi->paras=pBiDi->simpleParas;
 
     /*
@@ -2641,15 +2641,15 @@ ubidi_setPara(UBiDi *pBiDi, const char16_t *text, int32_t length,
      * the flags bit-set, and
      * determine the paragraph level if necessary.
      */
-    if(getDirPropsMemory(pBiDi, length)) {
+    якщо(getDirPropsMemory(pBiDi, length)) {
         pBiDi->dirProps=pBiDi->dirPropsMemory;
-        if(!getDirProps(pBiDi)) {
+        якщо(!getDirProps(pBiDi)) {
             *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+            повернути;
         }
-    } else {
+    } інакше {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return;
+        повернути;
     }
     dirProps=pBiDi->dirProps;
     /* the processed length may have changed if UBIDI_OPTION_STREAMING */
@@ -2657,39 +2657,39 @@ ubidi_setPara(UBiDi *pBiDi, const char16_t *text, int32_t length,
     pBiDi->trailingWSStart=length;  /* the levels[] will reflect the WS run */
 
     /* are explicit levels specified? */
-    if(embeddingLevels==nullptr) {
+    якщо(embeddingLevels==nullptr) {
         /* no: determine explicit levels according to the (Xn) rules */\
-        if(getLevelsMemory(pBiDi, length)) {
+        якщо(getLevelsMemory(pBiDi, length)) {
             pBiDi->levels=pBiDi->levelsMemory;
             direction=resolveExplicitLevels(pBiDi, pErrorCode);
-            if(U_FAILURE(*pErrorCode)) {
-                return;
+            якщо(U_FAILURE(*pErrorCode)) {
+                повернути;
             }
-        } else {
+        } інакше {
             *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+            повернути;
         }
-    } else {
+    } інакше {
         /* set BN for all explicit codes, check that all levels are 0 or paraLevel..UBIDI_MAX_EXPLICIT_LEVEL */
         pBiDi->levels=embeddingLevels;
         direction=checkExplicitLevels(pBiDi, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
-            return;
+        якщо(U_FAILURE(*pErrorCode)) {
+            повернути;
         }
     }
 
     /* allocate isolate memory */
-    if(pBiDi->isolateCount<=SIMPLE_ISOLATES_COUNT)
+    якщо(pBiDi->isolateCount<=SIMPLE_ISOLATES_COUNT)
         pBiDi->isolates=pBiDi->simpleIsolates;
-    else
-        if((int32_t)(pBiDi->isolateCount*sizeof(Isolate))<=pBiDi->isolatesSize)
+    інакше
+        якщо((int32_t)(pBiDi->isolateCount*sizeof(Isolate))<=pBiDi->isolatesSize)
             pBiDi->isolates=pBiDi->isolatesMemory;
-        else {
-            if(getInitialIsolatesMemory(pBiDi, pBiDi->isolateCount)) {
+        інакше {
+            якщо(getInitialIsolatesMemory(pBiDi, pBiDi->isolateCount)) {
                 pBiDi->isolates=pBiDi->isolatesMemory;
-            } else {
+            } інакше {
                 *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                return;
+                повернути;
             }
         }
     pBiDi->isolateCount=-1;             /* current isolates stack entry == none */
@@ -2726,16 +2726,16 @@ ubidi_setPara(UBiDi *pBiDi, const char16_t *text, int32_t length,
             pBiDi->pImpTabPair=&impTab_INVERSE_NUMBERS_AS_L;
             break;
         case UBIDI_REORDER_INVERSE_LIKE_DIRECT:
-            if (pBiDi->reorderingOptions & UBIDI_OPTION_INSERT_MARKS) {
+            якщо (pBiDi->reorderingOptions & UBIDI_OPTION_INSERT_MARKS) {
                 pBiDi->pImpTabPair=&impTab_INVERSE_LIKE_DIRECT_WITH_MARKS;
-            } else {
+            } інакше {
                 pBiDi->pImpTabPair=&impTab_INVERSE_LIKE_DIRECT;
             }
             break;
         case UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL:
-            if (pBiDi->reorderingOptions & UBIDI_OPTION_INSERT_MARKS) {
+            якщо (pBiDi->reorderingOptions & UBIDI_OPTION_INSERT_MARKS) {
                 pBiDi->pImpTabPair=&impTab_INVERSE_FOR_NUMBERS_SPECIAL_WITH_MARKS;
-            } else {
+            } інакше {
                 pBiDi->pImpTabPair=&impTab_INVERSE_FOR_NUMBERS_SPECIAL;
             }
             break;
@@ -2754,12 +2754,12 @@ ubidi_setPara(UBiDi *pBiDi, const char16_t *text, int32_t length,
          * Examples for "insignificant" ones are empty embeddings
          * LRE-PDF, LRE-RLE-PDF-PDF, etc.
          */
-        if(embeddingLevels==nullptr && pBiDi->paraCount<=1 &&
+        якщо(embeddingLevels==nullptr && pBiDi->paraCount<=1 &&
                                    !(pBiDi->flags&DIRPROP_FLAG_MULTI_RUNS)) {
             resolveImplicitLevels(pBiDi, 0, length,
                                     GET_LR_FROM_LEVEL(GET_PARALEVEL(pBiDi, 0)),
                                     GET_LR_FROM_LEVEL(GET_PARALEVEL(pBiDi, length-1)));
-        } else {
+        } інакше {
             /* sor, eor: start and end types of same-level-run */
             UBiDiLevel *levels=pBiDi->levels;
             int32_t start, limit=0;
@@ -2769,9 +2769,9 @@ ubidi_setPara(UBiDi *pBiDi, const char16_t *text, int32_t length,
             /* determine the first sor and set eor to it because of the loop body (sor=eor there) */
             level=GET_PARALEVEL(pBiDi, 0);
             nextLevel=levels[0];
-            if(level<nextLevel) {
+            якщо(level<nextLevel) {
                 eor=GET_LR_FROM_LEVEL(nextLevel);
-            } else {
+            } інакше {
                 eor=GET_LR_FROM_LEVEL(level);
             }
 
@@ -2781,49 +2781,49 @@ ubidi_setPara(UBiDi *pBiDi, const char16_t *text, int32_t length,
                 /* the values for this run's start are the same as for the previous run's end */
                 start=limit;
                 level=nextLevel;
-                if((start>0) && (dirProps[start-1]==B)) {
+                якщо((start>0) && (dirProps[start-1]==B)) {
                     /* except if this is a new paragraph, then set sor = para level */
                     sor=GET_LR_FROM_LEVEL(GET_PARALEVEL(pBiDi, start));
-                } else {
+                } інакше {
                     sor=eor;
                 }
 
                 /* search for the limit of this run */
-                while((++limit<length) &&
+                поки((++limit<length) &&
                       ((levels[limit]==level) ||
                        (DIRPROP_FLAG(dirProps[limit])&MASK_BN_EXPLICIT))) {}
 
                 /* get the correct level of the next run */
-                if(limit<length) {
+                якщо(limit<length) {
                     nextLevel=levels[limit];
-                } else {
+                } інакше {
                     nextLevel=GET_PARALEVEL(pBiDi, length-1);
                 }
 
                 /* determine eor from max(level, nextLevel); sor is last run's eor */
-                if(NO_OVERRIDE(level)<NO_OVERRIDE(nextLevel)) {
+                якщо(NO_OVERRIDE(level)<NO_OVERRIDE(nextLevel)) {
                     eor=GET_LR_FROM_LEVEL(nextLevel);
-                } else {
+                } інакше {
                     eor=GET_LR_FROM_LEVEL(level);
                 }
 
                 /* if the run consists of overridden directional types, then there
                    are no implicit types to be resolved */
-                if(!(level&UBIDI_LEVEL_OVERRIDE)) {
+                якщо(!(level&UBIDI_LEVEL_OVERRIDE)) {
                     resolveImplicitLevels(pBiDi, start, limit, sor, eor);
-                } else {
+                } інакше {
                     /* remove the UBIDI_LEVEL_OVERRIDE flags */
                     do {
                         levels[start++]&=~UBIDI_LEVEL_OVERRIDE;
-                    } while(start<limit);
+                    } поки(start<limit);
                 }
-            } while(limit<length);
+            } поки(limit<length);
         }
         /* check if we got any memory shortage while adding insert points */
-        if (U_FAILURE(pBiDi->insertPoints.errorCode))
+        якщо (U_FAILURE(pBiDi->insertPoints.errorCode))
         {
             *pErrorCode=pBiDi->insertPoints.errorCode;
-            return;
+            повернути;
         }
         /* reset the embedding levels for some non-graphic characters (L1), (X9) */
         adjustWSLevels(pBiDi);
@@ -2832,40 +2832,40 @@ ubidi_setPara(UBiDi *pBiDi, const char16_t *text, int32_t length,
     /* add RLM for inverse Bidi with contextual orientation resolving
      * to RTL which would not round-trip otherwise
      */
-    if((pBiDi->defaultParaLevel>0) &&
+    якщо((pBiDi->defaultParaLevel>0) &&
        (pBiDi->reorderingOptions & UBIDI_OPTION_INSERT_MARKS) &&
        ((pBiDi->reorderingMode==UBIDI_REORDER_INVERSE_LIKE_DIRECT) ||
         (pBiDi->reorderingMode==UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL))) {
         int32_t i, j, start, last;
         UBiDiLevel level;
         DirProp dirProp;
-        for(i=0; i<pBiDi->paraCount; i++) {
+        для(i=0; i<pBiDi->paraCount; i++) {
             last=(pBiDi->paras[i].limit)-1;
             level= static_cast<UBiDiLevel>(pBiDi->paras[i].level);
-            if(level==0)
+            якщо(level==0)
                 continue;           /* LTR paragraph */
             start= i==0 ? 0 : pBiDi->paras[i-1].limit;
-            for(j=last; j>=start; j--) {
+            для(j=last; j>=start; j--) {
                 dirProp=dirProps[j];
-                if(dirProp==L) {
-                    if(j<last) {
-                        while(dirProps[last]==B) {
+                якщо(dirProp==L) {
+                    якщо(j<last) {
+                        поки(dirProps[last]==B) {
                             last--;
                         }
                     }
                     addPoint(pBiDi, last, RLM_BEFORE);
                     break;
                 }
-                if(DIRPROP_FLAG(dirProp) & MASK_R_AL) {
+                якщо(DIRPROP_FLAG(dirProp) & MASK_R_AL) {
                     break;
                 }
             }
         }
     }
 
-    if(pBiDi->reorderingOptions & UBIDI_OPTION_REMOVE_CONTROLS) {
+    якщо(pBiDi->reorderingOptions & UBIDI_OPTION_REMOVE_CONTROLS) {
         pBiDi->resultLength -= pBiDi->controlCount;
-    } else {
+    } інакше {
         pBiDi->resultLength += pBiDi->insertPoints.size;
     }
     setParaSuccess(pBiDi);              /* mark successful setPara */
@@ -2873,62 +2873,62 @@ ubidi_setPara(UBiDi *pBiDi, const char16_t *text, int32_t length,
 
 U_CAPI void U_EXPORT2
 ubidi_orderParagraphsLTR(UBiDi *pBiDi, UBool orderParagraphsLTR) {
-    if(pBiDi!=nullptr) {
+    якщо(pBiDi!=nullptr) {
         pBiDi->orderParagraphsLTR=orderParagraphsLTR;
     }
 }
 
 U_CAPI UBool U_EXPORT2
 ubidi_isOrderParagraphsLTR(UBiDi *pBiDi) {
-    if(pBiDi!=nullptr) {
-        return pBiDi->orderParagraphsLTR;
-    } else {
-        return false;
+    якщо(pBiDi!=nullptr) {
+        повернути pBiDi->orderParagraphsLTR;
+    } інакше {
+        повернути false;
     }
 }
 
 U_CAPI UBiDiDirection U_EXPORT2
 ubidi_getDirection(const UBiDi *pBiDi) {
-    if(IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return pBiDi->direction;
-    } else {
-        return UBIDI_LTR;
+    якщо(IS_VALID_PARA_OR_LINE(pBiDi)) {
+        повернути pBiDi->direction;
+    } інакше {
+        повернути UBIDI_LTR;
     }
 }
 
 U_CAPI const char16_t* U_EXPORT2
 ubidi_getText(const UBiDi* pBiDi) {
-    if(IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return pBiDi->text;
-    } else {
-        return nullptr;
+    якщо(IS_VALID_PARA_OR_LINE(pBiDi)) {
+        повернути pBiDi->text;
+    } інакше {
+        повернути nullptr;
     }
 }
 
 U_CAPI int32_t U_EXPORT2
 ubidi_getLength(const UBiDi *pBiDi) {
-    if(IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return pBiDi->originalLength;
-    } else {
-        return 0;
+    якщо(IS_VALID_PARA_OR_LINE(pBiDi)) {
+        повернути pBiDi->originalLength;
+    } інакше {
+        повернути 0;
     }
 }
 
 U_CAPI int32_t U_EXPORT2
 ubidi_getProcessedLength(const UBiDi *pBiDi) {
-    if(IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return pBiDi->length;
-    } else {
-        return 0;
+    якщо(IS_VALID_PARA_OR_LINE(pBiDi)) {
+        повернути pBiDi->length;
+    } інакше {
+        повернути 0;
     }
 }
 
 U_CAPI int32_t U_EXPORT2
 ubidi_getResultLength(const UBiDi *pBiDi) {
-    if(IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return pBiDi->resultLength;
-    } else {
-        return 0;
+    якщо(IS_VALID_PARA_OR_LINE(pBiDi)) {
+        повернути pBiDi->resultLength;
+    } інакше {
+        повернути 0;
     }
 }
 
@@ -2936,19 +2936,19 @@ ubidi_getResultLength(const UBiDi *pBiDi) {
 
 U_CAPI UBiDiLevel U_EXPORT2
 ubidi_getParaLevel(const UBiDi *pBiDi) {
-    if(IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return pBiDi->paraLevel;
-    } else {
-        return 0;
+    якщо(IS_VALID_PARA_OR_LINE(pBiDi)) {
+        повернути pBiDi->paraLevel;
+    } інакше {
+        повернути 0;
     }
 }
 
 U_CAPI int32_t U_EXPORT2
 ubidi_countParagraphs(UBiDi *pBiDi) {
-    if(!IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return 0;
-    } else {
-        return pBiDi->paraCount;
+    якщо(!IS_VALID_PARA_OR_LINE(pBiDi)) {
+        повернути 0;
+    } інакше {
+        повернути pBiDi->paraCount;
     }
 }
 
@@ -2964,18 +2964,18 @@ ubidi_getParagraphByIndex(const UBiDi *pBiDi, int32_t paraIndex,
     RETURN_VOID_IF_BAD_RANGE(paraIndex, 0, pBiDi->paraCount, *pErrorCode);
 
     pBiDi=pBiDi->pParaBiDi;             /* get Para object if Line object */
-    if(paraIndex) {
+    якщо(paraIndex) {
         paraStart=pBiDi->paras[paraIndex-1].limit;
-    } else {
+    } інакше {
         paraStart=0;
     }
-    if(pParaStart!=nullptr) {
+    якщо(pParaStart!=nullptr) {
         *pParaStart=paraStart;
     }
-    if(pParaLimit!=nullptr) {
+    якщо(pParaLimit!=nullptr) {
         *pParaLimit=pBiDi->paras[paraIndex].limit;
     }
-    if(pParaLevel!=nullptr) {
+    якщо(pParaLevel!=nullptr) {
         *pParaLevel=GET_PARALEVEL(pBiDi, paraStart);
     }
 }
@@ -2993,9 +2993,9 @@ ubidi_getParagraph(const UBiDi *pBiDi, int32_t charIndex,
     pBiDi=pBiDi->pParaBiDi;             /* get Para object if Line object */
     RETURN_IF_BAD_RANGE(charIndex, 0, pBiDi->length, *pErrorCode, -1);
 
-    for(paraIndex=0; charIndex>=pBiDi->paras[paraIndex].limit; paraIndex++);
+    для(paraIndex=0; charIndex>=pBiDi->paras[paraIndex].limit; paraIndex++);
     ubidi_getParagraphByIndex(pBiDi, paraIndex, pParaStart, pParaLimit, pParaLevel, pErrorCode);
-    return paraIndex;
+    повернути paraIndex;
 }
 
 U_CAPI void U_EXPORT2
@@ -3004,15 +3004,15 @@ ubidi_setClassCallback(UBiDi *pBiDi, UBiDiClassCallback *newFn,
                        const void **oldContext, UErrorCode *pErrorCode)
 {
     RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(pErrorCode);
-    if(pBiDi==nullptr) {
+    якщо(pBiDi==nullptr) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        повернути;
     }
-    if( oldFn )
+    якщо( oldFn )
     {
         *oldFn = pBiDi->fnClassCallback;
     }
-    if( oldContext )
+    якщо( oldContext )
     {
         *oldContext = pBiDi->coClassCallback;
     }
@@ -3023,14 +3023,14 @@ ubidi_setClassCallback(UBiDi *pBiDi, UBiDiClassCallback *newFn,
 U_CAPI void U_EXPORT2
 ubidi_getClassCallback(UBiDi *pBiDi, UBiDiClassCallback **fn, const void **context)
 {
-    if(pBiDi==nullptr) {
-        return;
+    якщо(pBiDi==nullptr) {
+        повернути;
     }
-    if( fn )
+    якщо( fn )
     {
         *fn = pBiDi->fnClassCallback;
     }
-    if( context )
+    якщо( context )
     {
         *context = pBiDi->coClassCallback;
     }
@@ -3041,35 +3041,35 @@ ubidi_getCustomizedClass(UBiDi *pBiDi, UChar32 c)
 {
     UCharDirection dir;
 
-    if( pBiDi->fnClassCallback == nullptr ||
+    якщо( pBiDi->fnClassCallback == nullptr ||
         (dir = (*pBiDi->fnClassCallback)(pBiDi->coClassCallback, c)) == U_BIDI_CLASS_DEFAULT )
     {
         dir = ubidi_getClass(c);
     }
-    if(dir >= U_CHAR_DIRECTION_COUNT) {
+    якщо(dir >= U_CHAR_DIRECTION_COUNT) {
         dir = (UCharDirection)ON;
     }
-    return dir;
+    повернути dir;
 }
 
 /* Utilities for MessageFormat ------------------------------------------------*/
 
-#if U_SHOW_CPLUSPLUS_API
+#якщо U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
 U_CAPI UMFBidiOption U_EXPORT2
 ubidi_getMFOption(const UnicodeString& s) {
-    if (s == u"ltr") {
-        return U_MF_BIDI_OPTION_LTR;
+    якщо (s == u"ltr") {
+        повернути U_MF_BIDI_OPTION_LTR;
     }
-    if (s == u"rtl") {
-        return U_MF_BIDI_OPTION_RTL;
+    якщо (s == u"rtl") {
+        повернути U_MF_BIDI_OPTION_RTL;
     }
-    if (s == u"auto") {
-        return U_MF_BIDI_OPTION_AUTO;
+    якщо (s == u"auto") {
+        повернути U_MF_BIDI_OPTION_AUTO;
     }
-    return U_MF_BIDI_OPTION_INHERIT; // inherit is default
+    повернути U_MF_BIDI_OPTION_INHERIT; // inherit is default
 }
 
 // BiDi isolation
@@ -3090,8 +3090,8 @@ ubidi_isolate(UMFBidiIsolationStrategy bidiIsolationStrategy,
     // https://github.com/unicode-org/message-format-wg/blob/main/spec/formatting.md#handling-bidirectional-text
 
     // If strategy is 'none', just return the string
-    if (bidiIsolationStrategy == U_MF_BIDI_OFF)
-        return &fmt;
+    якщо (bidiIsolationStrategy == U_MF_BIDI_OFF)
+        повернути &fmt;
 
     /* 1. Let msgdir be the directionality of the whole message, one of « 'LTR', 'RTL', 'unknown' ». These correspond to the message having left-to-right directionality, right-to-left directionality, and to the message's directionality not being known. */
 
@@ -3110,15 +3110,15 @@ ubidi_isolate(UMFBidiIsolationStrategy bidiIsolationStrategy,
     // 2iv. If dir is 'LTR'
     switch (dir) {
         case U_MF_DIRECTIONALITY_LTR:
-            if (msgdir == U_MF_DIRECTIONALITY_LTR && !isolate) {
+            якщо (msgdir == U_MF_DIRECTIONALITY_LTR && !isolate) {
                 // 2iv(a). If msgdir is 'LTR' in the formatted output, let fmt be itself
-                return &fmt;
+                повернути &fmt;
             }
             // 2iii(b) Else, in the formatted output, prefix fmt with U+2066 LEFT-TO-RIGHT ISOLATE and postfix it with U+2069 POP DIRECTIONAL ISOLATE.
-            if (bidiIsolationStyle == U_MF_BIDI_STYLE_CONTROL) {
+            якщо (bidiIsolationStyle == U_MF_BIDI_STYLE_CONTROL) {
                 fmt.insert(0, LRI_CHAR);
                 fmt.insert(fmt.length(), PDI_CHAR);
-            } else {
+            } інакше {
                 fmt.insert(0, bdiOpen);
                 fmt.insert(fmt.length(), bdiClose);
             }
@@ -3126,10 +3126,10 @@ ubidi_isolate(UMFBidiIsolationStrategy bidiIsolationStrategy,
         // 2iv. Else, if dir is 'RTL':
         case U_MF_DIRECTIONALITY_RTL:
             // 2iv(a). In the formatted output, prefix fmt with U+2067 RIGHT-TO-LEFT ISOLATE and postfix it with U+2069 POP DIRECTIONAL ISOLATE.
-            if (bidiIsolationStyle == U_MF_BIDI_STYLE_CONTROL) {
+            якщо (bidiIsolationStyle == U_MF_BIDI_STYLE_CONTROL) {
                 fmt.insert(0, RLI_CHAR);
                 fmt.insert(fmt.length(), PDI_CHAR);
-            } else {
+            } інакше {
                 fmt.insert(0, bdiOpen);
                 fmt.insert(fmt.length(), bdiClose);
             }
@@ -3137,16 +3137,16 @@ ubidi_isolate(UMFBidiIsolationStrategy bidiIsolationStrategy,
         // 2v. Else:
         default:
             // 2v(a). In the formatted output, prefix fmt with U+2068 FIRST STRONG ISOLATE and postfix it with U+2069 POP DIRECTIONAL ISOLATE.
-            if (bidiIsolationStyle == U_MF_BIDI_STYLE_CONTROL) {
+            якщо (bidiIsolationStyle == U_MF_BIDI_STYLE_CONTROL) {
                 fmt.insert(0, FSI_CHAR);
                 fmt.insert(fmt.length(), PDI_CHAR);
-            } else {
+            } інакше {
                 fmt.insert(0, bdiOpen);
                 fmt.insert(fmt.length(), bdiClose);
             }
             break; // End of 2v
     } // `fmt` now contains the isolated string
-    return &fmt;
+    повернути &fmt;
 }
 
 U_NAMESPACE_END

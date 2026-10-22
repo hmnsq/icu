@@ -23,7 +23,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#якщо !UCONFIG_NO_CONVERSION
 
 #include "unicode/putil.h"
 #include "unicode/udata.h"
@@ -47,11 +47,11 @@
 #include "ustr_cnv.h"
 
 
-#if 0
+#якщо 0
 #include <stdio.h>
-extern void UCNV_DEBUG_LOG(char *what, char *who, void *p, int l);
+extern void UCNV_DEBUG_LOG(char *what, char *who, void *p, ціле l);
 #define UCNV_DEBUG_LOG(x,y,z) UCNV_DEBUG_LOG(x,y,z,__LINE__)
-#else
+#інакше
 # define UCNV_DEBUG_LOG(x,y,z)
 #endif
 
@@ -59,60 +59,60 @@ static const UConverterSharedData * const
 converterData[UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES]={
     nullptr, nullptr,
 
-#if UCONFIG_NO_LEGACY_CONVERSION
+#якщо UCONFIG_NO_LEGACY_CONVERSION
     nullptr,
-#else
+#інакше
     &_MBCSData,
 #endif
 
     &_Latin1Data,
     &_UTF8Data, &_UTF16BEData, &_UTF16LEData,
-#if UCONFIG_ONLY_HTML_CONVERSION
+#якщо UCONFIG_ONLY_HTML_CONVERSION
     nullptr, nullptr,
-#else
+#інакше
     &_UTF32BEData, &_UTF32LEData,
 #endif
     nullptr,
 
-#if UCONFIG_NO_LEGACY_CONVERSION
+#якщо UCONFIG_NO_LEGACY_CONVERSION
     nullptr,
-#else
+#інакше
     &_ISO2022Data,
 #endif
 
-#if UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
+#якщо UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
     nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
     nullptr, nullptr, nullptr, nullptr, nullptr, nullptr,
     nullptr,
-#else
+#інакше
     &_LMBCSData1,&_LMBCSData2, &_LMBCSData3, &_LMBCSData4, &_LMBCSData5, &_LMBCSData6,
     &_LMBCSData8,&_LMBCSData11,&_LMBCSData16,&_LMBCSData17,&_LMBCSData18,&_LMBCSData19,
     &_HZData,
 #endif
 
-#if UCONFIG_ONLY_HTML_CONVERSION
+#якщо UCONFIG_ONLY_HTML_CONVERSION
     nullptr,
-#else
+#інакше
     &_SCSUData,
 #endif
 
 
-#if UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
+#якщо UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
     nullptr,
-#else
+#інакше
     &_ISCIIData,
 #endif
 
     &_ASCIIData,
-#if UCONFIG_ONLY_HTML_CONVERSION
+#якщо UCONFIG_ONLY_HTML_CONVERSION
     nullptr, nullptr, &_UTF16Data, nullptr, nullptr, nullptr,
-#else
+#інакше
     &_UTF7Data, &_Bocu1Data, &_UTF16Data, &_UTF32Data, &_CESU8Data, &_IMAPData,
 #endif
 
-#if UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
+#якщо UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
     nullptr,
-#else
+#інакше
     &_CompoundTextData
 #endif
 };
@@ -125,24 +125,24 @@ static struct {
   const char *name;
   const UConverterType type;
 } const cnvNameType[] = {
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#якщо !UCONFIG_ONLY_HTML_CONVERSION
   { "bocu1", UCNV_BOCU1 },
   { "cesu8", UCNV_CESU8 },
 #endif
-#if !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#якщо !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
   { "hz",UCNV_HZ },
 #endif
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#якщо !UCONFIG_ONLY_HTML_CONVERSION
   { "imapmailboxname", UCNV_IMAP_MAILBOX },
 #endif
-#if !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#якщо !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
   { "iscii", UCNV_ISCII },
 #endif
-#if !UCONFIG_NO_LEGACY_CONVERSION
+#якщо !UCONFIG_NO_LEGACY_CONVERSION
   { "iso2022", UCNV_ISO_2022 },
 #endif
   { "iso88591", UCNV_LATIN_1 },
-#if !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#якщо !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
   { "lmbcs1", UCNV_LMBCS_1 },
   { "lmbcs11",UCNV_LMBCS_11 },
   { "lmbcs16",UCNV_LMBCS_16 },
@@ -156,37 +156,37 @@ static struct {
   { "lmbcs6", UCNV_LMBCS_6 },
   { "lmbcs8", UCNV_LMBCS_8 },
 #endif
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#якщо !UCONFIG_ONLY_HTML_CONVERSION
   { "scsu", UCNV_SCSU },
 #endif
   { "usascii", UCNV_US_ASCII },
   { "utf16", UCNV_UTF16 },
   { "utf16be", UCNV_UTF16_BigEndian },
   { "utf16le", UCNV_UTF16_LittleEndian },
-#if U_IS_BIG_ENDIAN
+#якщо U_IS_BIG_ENDIAN
   { "utf16oppositeendian", UCNV_UTF16_LittleEndian },
   { "utf16platformendian", UCNV_UTF16_BigEndian },
-#else
+#інакше
   { "utf16oppositeendian", UCNV_UTF16_BigEndian},
   { "utf16platformendian", UCNV_UTF16_LittleEndian },
 #endif
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#якщо !UCONFIG_ONLY_HTML_CONVERSION
   { "utf32", UCNV_UTF32 },
   { "utf32be", UCNV_UTF32_BigEndian },
   { "utf32le", UCNV_UTF32_LittleEndian },
-#if U_IS_BIG_ENDIAN
+#якщо U_IS_BIG_ENDIAN
   { "utf32oppositeendian", UCNV_UTF32_LittleEndian },
   { "utf32platformendian", UCNV_UTF32_BigEndian },
-#else
+#інакше
   { "utf32oppositeendian", UCNV_UTF32_BigEndian },
   { "utf32platformendian", UCNV_UTF32_LittleEndian },
 #endif
 #endif
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#якщо !UCONFIG_ONLY_HTML_CONVERSION
   { "utf7", UCNV_UTF7 },
 #endif
   { "utf8", UCNV_UTF8 },
-#if !UCONFIG_ONLY_HTML_CONVERSION
+#якщо !UCONFIG_ONLY_HTML_CONVERSION
   { "x11compoundtext", UCNV_COMPOUND_TEXT}
 #endif
 };
@@ -202,7 +202,7 @@ static const char **gAvailableConverters = nullptr;
 static uint16_t gAvailableConverterCount = 0;
 static icu::UInitOnce gAvailableConvertersInitOnce {};
 
-#if !U_CHARSET_IS_UTF8
+#якщо !U_CHARSET_IS_UTF8
 
 /* This contains the resolved converter name. So no further alias lookup is needed again. */
 static char gDefaultConverterNameBuffer[UCNV_MAX_CONVERTER_NAME_LENGTH + 1]; /* +1 for nullptr */
@@ -230,7 +230,7 @@ static const char DATA_TYPE[] = "cnv";
 static void
 ucnv_flushAvailableConverterCache() {
     gAvailableConverterCount = 0;
-    if (gAvailableConverters) {
+    якщо (gAvailableConverters) {
         uprv_free(const_cast<char**>(gAvailableConverters));
         gAvailableConverters = nullptr;
     }
@@ -243,7 +243,7 @@ ucnv_flushAvailableConverterCache() {
 /*                Not supported API.                                          */
 static UBool U_CALLCONV ucnv_cleanup() {
     ucnv_flushCache();
-    if (SHARED_DATA_HASHTABLE != nullptr && uhash_count(SHARED_DATA_HASHTABLE) == 0) {
+    якщо (SHARED_DATA_HASHTABLE != nullptr && uhash_count(SHARED_DATA_HASHTABLE) == 0) {
         uhash_close(SHARED_DATA_HASHTABLE);
         SHARED_DATA_HASHTABLE = nullptr;
     }
@@ -251,14 +251,14 @@ static UBool U_CALLCONV ucnv_cleanup() {
     /* Isn't called from flushCache because other threads may have preexisting references to the table. */
     ucnv_flushAvailableConverterCache();
 
-#if !U_CHARSET_IS_UTF8
+#якщо !U_CHARSET_IS_UTF8
     gDefaultConverterName = nullptr;
     gDefaultConverterNameBuffer[0] = 0;
     gDefaultConverterContainsOption = false;
     gDefaultAlgorithmicSharedData = nullptr;
 #endif
 
-    return (SHARED_DATA_HASHTABLE == nullptr);
+    повернути (SHARED_DATA_HASHTABLE == nullptr);
 }
 
 U_CAPI void U_EXPORT2
@@ -270,7 +270,7 @@ static UBool U_CALLCONV
 isCnvAcceptable(void * /*context*/,
                 const char * /*type*/, const char * /*name*/,
                 const UDataInfo *pInfo) {
-    return
+    повернути
         pInfo->size>=20 &&
         pInfo->isBigEndian==U_IS_BIG_ENDIAN &&
         pInfo->charsetFamily==U_CHARSET_FAMILY &&
@@ -294,23 +294,23 @@ ucnv_data_unFlattenClone(UConverterLoadArgs *pArgs, UDataMemory *pData, UErrorCo
     UConverterSharedData *data;
     UConverterType type = static_cast<UConverterType>(source->conversionType);
 
-    if(U_FAILURE(*status))
-        return nullptr;
+    якщо(U_FAILURE(*status))
+        повернути nullptr;
 
-    if (static_cast<uint16_t>(type) >= UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES ||
+    якщо (static_cast<uint16_t>(type) >= UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES ||
         converterData[type] == nullptr ||
         !converterData[type]->isReferenceCounted ||
         converterData[type]->referenceCounter != 1 ||
         source->structSize != sizeof(UConverterStaticData))
     {
         *status = U_INVALID_TABLE_FORMAT;
-        return nullptr;
+        повернути nullptr;
     }
 
     data = static_cast<UConverterSharedData*>(uprv_malloc(sizeof(UConverterSharedData)));
-    if(data == nullptr) {
+    якщо(data == nullptr) {
         *status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        повернути nullptr;
     }
 
     /* copy initial values from the static structure for this type */
@@ -323,14 +323,14 @@ ucnv_data_unFlattenClone(UConverterLoadArgs *pArgs, UDataMemory *pData, UErrorCo
     /* fill in fields from the loaded data */
     data->dataMemory = (void*)pData; /* for future use */
 
-    if(data->impl->load != nullptr) {
+    якщо(data->impl->load != nullptr) {
         data->impl->load(data, pArgs, raw + source->structSize, status);
-        if(U_FAILURE(*status)) {
+        якщо(U_FAILURE(*status)) {
             uprv_free(data);
-            return nullptr;
+            повернути nullptr;
         }
     }
-    return data;
+    повернути data;
 }
 
 /*Takes an alias name gets an actual converter file name
@@ -344,26 +344,26 @@ static UConverterSharedData *createConverterFromFile(UConverterLoadArgs *pArgs, 
 
     UTRACE_ENTRY_OC(UTRACE_UCNV_LOAD);
 
-    if (U_FAILURE (*err)) {
+    якщо (U_FAILURE (*err)) {
         UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        повернути nullptr;
     }
 
     UTRACE_DATA2(UTRACE_OPEN_CLOSE, "load converter %s from package %s", pArgs->name, pArgs->pkg);
 
     data = udata_openChoice(pArgs->pkg, DATA_TYPE, pArgs->name, isCnvAcceptable, nullptr, err);
-    if(U_FAILURE(*err))
+    якщо(U_FAILURE(*err))
     {
         UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        повернути nullptr;
     }
 
     sharedData = ucnv_data_unFlattenClone(pArgs, data, err);
-    if(U_FAILURE(*err))
+    якщо(U_FAILURE(*err))
     {
         udata_close(data);
         UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        повернути nullptr;
     }
 
     /*
@@ -374,7 +374,7 @@ static UConverterSharedData *createConverterFromFile(UConverterLoadArgs *pArgs, 
      */
 
     UTRACE_EXIT_PTR_STATUS(sharedData, *err);
-    return sharedData;
+    повернути sharedData;
 }
 
 /*returns a converter type from a string
@@ -384,7 +384,7 @@ getAlgorithmicTypeFromName(const char *realName)
 {
     uint32_t mid, start, limit;
     uint32_t lastMid;
-    int result;
+    ціле result;
     char strippedName[UCNV_MAX_CONVERTER_NAME_LENGTH];
 
     /* Lower case and remove ignoreable characters. */
@@ -396,24 +396,24 @@ getAlgorithmicTypeFromName(const char *realName)
     mid = limit;
     lastMid = UINT32_MAX;
 
-    for (;;) {
+    для (;;) {
         mid = (start + limit) / 2;
-        if (lastMid == mid) {   /* Have we moved? */
+        якщо (lastMid == mid) {   /* Have we moved? */
             break;  /* We haven't moved, and it wasn't found. */
         }
         lastMid = mid;
         result = uprv_strcmp(strippedName, cnvNameType[mid].name);
 
-        if (result < 0) {
+        якщо (result < 0) {
             limit = mid;
-        } else if (result > 0) {
+        } інакше якщо (result > 0) {
             start = mid;
-        } else {
-            return converterData[cnvNameType[mid].type];
+        } інакше {
+            повернути converterData[cnvNameType[mid].type];
         }
     }
 
-    return nullptr;
+    повернути nullptr;
 }
 
 /*
@@ -439,15 +439,15 @@ ucnv_shareConverterData(UConverterSharedData * data)
     /*Lazy evaluates the Hashtable itself */
     /*void *sanity = nullptr;*/
 
-    if (SHARED_DATA_HASHTABLE == nullptr)
+    якщо (SHARED_DATA_HASHTABLE == nullptr)
     {
         SHARED_DATA_HASHTABLE = uhash_openSize(uhash_hashChars, uhash_compareChars, nullptr,
                             ucnv_io_countKnownConverters(&err)*UCNV_CACHE_LOAD_FACTOR,
                             &err);
         ucnv_enableCleanup();
 
-        if (U_FAILURE(err))
-            return;
+        якщо (U_FAILURE(err))
+            повернути;
     }
 
     /* ### check to see if the element is not already there! */
@@ -483,17 +483,17 @@ static UConverterSharedData *
 ucnv_getSharedConverterData(const char *name)
 {
     /*special case when no Table has yet been created we return nullptr */
-    if (SHARED_DATA_HASHTABLE == nullptr)
+    якщо (SHARED_DATA_HASHTABLE == nullptr)
     {
-        return nullptr;
+        повернути nullptr;
     }
-    else
+    інакше
     {
         UConverterSharedData *rc;
 
         rc = static_cast<UConverterSharedData*>(uhash_get(SHARED_DATA_HASHTABLE, name));
         UCNV_DEBUG_LOG("get",name,rc);
-        return rc;
+        повернути rc;
     }
 }
 
@@ -514,16 +514,16 @@ ucnv_deleteSharedConverterData(UConverterSharedData * deadSharedData)
     UTRACE_ENTRY_OC(UTRACE_UCNV_UNLOAD);
     UTRACE_DATA2(UTRACE_OPEN_CLOSE, "unload converter %s shared data %p", deadSharedData->staticData->name, deadSharedData);
 
-    if (deadSharedData->referenceCounter > 0) {
+    якщо (deadSharedData->referenceCounter > 0) {
         UTRACE_EXIT_VALUE((int32_t)false);
-        return false;
+        повернути false;
     }
 
-    if (deadSharedData->impl->unload != nullptr) {
+    якщо (deadSharedData->impl->unload != nullptr) {
         deadSharedData->impl->unload(deadSharedData);
     }
 
-    if(deadSharedData->dataMemory != nullptr)
+    якщо(deadSharedData->dataMemory != nullptr)
     {
         UDataMemory *data = (UDataMemory*)deadSharedData->dataMemory;
         udata_close(data);
@@ -532,7 +532,7 @@ ucnv_deleteSharedConverterData(UConverterSharedData * deadSharedData)
     uprv_free(deadSharedData);
 
     UTRACE_EXIT_VALUE((int32_t)true);
-    return true;
+    повернути true;
 }
 
 /**
@@ -543,38 +543,38 @@ UConverterSharedData *
 ucnv_load(UConverterLoadArgs *pArgs, UErrorCode *err) {
     UConverterSharedData *mySharedConverterData;
 
-    if(err == nullptr || U_FAILURE(*err)) {
-        return nullptr;
+    якщо(err == nullptr || U_FAILURE(*err)) {
+        повернути nullptr;
     }
 
-    if(pArgs->pkg != nullptr && *pArgs->pkg != 0) {
+    якщо(pArgs->pkg != nullptr && *pArgs->pkg != 0) {
         /* application-provided converters are not currently cached */
-        return createConverterFromFile(pArgs, err);
+        повернути createConverterFromFile(pArgs, err);
     }
 
     mySharedConverterData = ucnv_getSharedConverterData(pArgs->name);
-    if (mySharedConverterData == nullptr)
+    якщо (mySharedConverterData == nullptr)
     {
         /*Not cached, we need to stream it in from file */
         mySharedConverterData = createConverterFromFile(pArgs, err);
-        if (U_FAILURE (*err) || (mySharedConverterData == nullptr))
+        якщо (U_FAILURE (*err) || (mySharedConverterData == nullptr))
         {
-            return nullptr;
+            повернути nullptr;
         }
-        else if (!pArgs->onlyTestIsLoadable)
+        інакше якщо (!pArgs->onlyTestIsLoadable)
         {
             /* share it with other library clients */
             ucnv_shareConverterData(mySharedConverterData);
         }
     }
-    else
+    інакше
     {
         /* The data for this converter was already in the cache.            */
         /* Update the reference counter on the shared data: one more client */
         mySharedConverterData->referenceCounter++;
     }
 
-    return mySharedConverterData;
+    повернути mySharedConverterData;
 }
 
 /**
@@ -584,12 +584,12 @@ ucnv_load(UConverterLoadArgs *pArgs, UErrorCode *err) {
  */
 U_CAPI void
 ucnv_unload(UConverterSharedData *sharedData) {
-    if(sharedData != nullptr) {
-        if (sharedData->referenceCounter > 0) {
+    якщо(sharedData != nullptr) {
+        якщо (sharedData->referenceCounter > 0) {
             sharedData->referenceCounter--;
         }
 
-        if((sharedData->referenceCounter <= 0)&&(sharedData->sharedDataCached == false)) {
+        якщо((sharedData->referenceCounter <= 0)&&(sharedData->sharedDataCached == false)) {
             ucnv_deleteSharedConverterData(sharedData);
         }
     }
@@ -598,7 +598,7 @@ ucnv_unload(UConverterSharedData *sharedData) {
 U_CFUNC void
 ucnv_unloadSharedDataIfReady(UConverterSharedData *sharedData)
 {
-    if(sharedData != nullptr && sharedData->isReferenceCounted) {
+    якщо(sharedData != nullptr && sharedData->isReferenceCounted) {
         umtx_lock(&cnvCacheMutex);
         ucnv_unload(sharedData);
         umtx_unlock(&cnvCacheMutex);
@@ -608,7 +608,7 @@ ucnv_unloadSharedDataIfReady(UConverterSharedData *sharedData)
 U_CFUNC void
 ucnv_incrementRefCount(UConverterSharedData *sharedData)
 {
-    if(sharedData != nullptr && sharedData->isReferenceCounted) {
+    якщо(sharedData != nullptr && sharedData->isReferenceCounted) {
         umtx_lock(&cnvCacheMutex);
         sharedData->referenceCounter++;
         umtx_unlock(&cnvCacheMutex);
@@ -637,11 +637,11 @@ parseConverterOptions(const char *inName,
     pArgs->options=pPieces->options;
 
     /* copy the converter name itself to cnvName */
-    while((c=*inName)!=0 && c!=UCNV_OPTION_SEP_CHAR) {
-        if (++len>=UCNV_MAX_CONVERTER_NAME_LENGTH) {
+    поки((c=*inName)!=0 && c!=UCNV_OPTION_SEP_CHAR) {
+        якщо (++len>=UCNV_MAX_CONVERTER_NAME_LENGTH) {
             *err = U_ILLEGAL_ARGUMENT_ERROR;    /* bad name */
             pPieces->cnvName[0]=0;
-            return;
+            повернути;
         }
         *cnvName++=c;
         inName++;
@@ -650,52 +650,52 @@ parseConverterOptions(const char *inName,
     pArgs->name=pPieces->cnvName;
 
     /* parse options. No more name copying should occur. */
-    while((c=*inName)!=0) {
-        if(c==UCNV_OPTION_SEP_CHAR) {
+    поки((c=*inName)!=0) {
+        якщо(c==UCNV_OPTION_SEP_CHAR) {
             ++inName;
         }
 
         /* inName is behind an option separator */
-        if(uprv_strncmp(inName, "locale=", 7)==0) {
+        якщо(uprv_strncmp(inName, "locale=", 7)==0) {
             /* do not modify locale itself in case we have multiple locale options */
             char *dest=pPieces->locale;
 
             /* copy the locale option value */
             inName+=7;
             len=0;
-            while((c=*inName)!=0 && c!=UCNV_OPTION_SEP_CHAR) {
+            поки((c=*inName)!=0 && c!=UCNV_OPTION_SEP_CHAR) {
                 ++inName;
 
-                if(++len>=ULOC_FULLNAME_CAPACITY) {
+                якщо(++len>=ULOC_FULLNAME_CAPACITY) {
                     *err=U_ILLEGAL_ARGUMENT_ERROR;    /* bad name */
                     pPieces->locale[0]=0;
-                    return;
+                    повернути;
                 }
 
                 *dest++=c;
             }
             *dest=0;
-        } else if(uprv_strncmp(inName, "version=", 8)==0) {
+        } інакше якщо(uprv_strncmp(inName, "version=", 8)==0) {
             /* copy the version option value into bits 3..0 of pPieces->options */
             inName+=8;
             c=*inName;
-            if(c==0) {
+            якщо(c==0) {
                 pArgs->options=(pPieces->options&=~UCNV_OPTION_VERSION);
-                return;
-            } else if (static_cast<uint8_t>(c - '0') < 10) {
+                повернути;
+            } інакше якщо (static_cast<uint8_t>(c - '0') < 10) {
                 pArgs->options = pPieces->options = (pPieces->options & ~UCNV_OPTION_VERSION) | static_cast<uint32_t>(c - '0');
                 ++inName;
             }
-        } else if(uprv_strncmp(inName, "swaplfnl", 8)==0) {
+        } інакше якщо(uprv_strncmp(inName, "swaplfnl", 8)==0) {
             inName+=8;
             pArgs->options=(pPieces->options|=UCNV_OPTION_SWAP_LFNL);
         /* add processing for new options here with another } else if(uprv_strncmp(inName, "option-name=", XX)==0) { */
-        } else {
+        } інакше {
             /* ignore any other options until we define some */
-            while(((c = *inName++) != 0) && (c != UCNV_OPTION_SEP_CHAR)) {
+            поки(((c = *inName++) != 0) && (c != UCNV_OPTION_SEP_CHAR)) {
             }
-            if(c==0) {
-                return;
+            якщо(c==0) {
+                повернути;
             }
         }
     }
@@ -720,22 +720,22 @@ ucnv_loadSharedData(const char *converterName,
     UBool mayContainOption = true;
     UBool checkForAlgorithmic = true;
 
-    if (U_FAILURE (*err)) {
-        return nullptr;
+    якщо (U_FAILURE (*err)) {
+        повернути nullptr;
     }
 
-    if(pPieces == nullptr) {
-        if(pArgs != nullptr) {
+    якщо(pPieces == nullptr) {
+        якщо(pArgs != nullptr) {
             /*
              * Bad: We may set pArgs pointers to stackPieces fields
              * which will be invalid after this function returns.
              */
             *err = U_INTERNAL_PROGRAM_ERROR;
-            return nullptr;
+            повернути nullptr;
         }
         pPieces = &stackPieces;
     }
-    if(pArgs == nullptr) {
+    якщо(pArgs == nullptr) {
         uprv_memset(&stackArgs, 0, sizeof(stackArgs));
         stackArgs.size = (int32_t)sizeof(stackArgs);
         pArgs = &stackArgs;
@@ -750,16 +750,16 @@ ucnv_loadSharedData(const char *converterName,
     pArgs->options = pPieces->options;
 
     /* In case "name" is nullptr we want to open the default converter. */
-    if (converterName == nullptr) {
-#if U_CHARSET_IS_UTF8
+    якщо (converterName == nullptr) {
+#якщо U_CHARSET_IS_UTF8
         pArgs->name = "UTF-8";
-        return (UConverterSharedData *)converterData[UCNV_UTF8];
-#else
+        повернути (UConverterSharedData *)converterData[UCNV_UTF8];
+#інакше
         /* Call ucnv_getDefaultName first to query the name from the OS. */
         pArgs->name = ucnv_getDefaultName();
-        if (pArgs->name == nullptr) {
+        якщо (pArgs->name == nullptr) {
             *err = U_MISSING_RESOURCE_ERROR;
-            return nullptr;
+            повернути nullptr;
         }
         mySharedConverterData = (UConverterSharedData *)gDefaultAlgorithmicSharedData;
         checkForAlgorithmic = false;
@@ -767,42 +767,42 @@ ucnv_loadSharedData(const char *converterName,
         /* the default converter name is already canonical */
 #endif
     }
-    else if(UCNV_FAST_IS_UTF8(converterName)) {
+    інакше якщо(UCNV_FAST_IS_UTF8(converterName)) {
         /* fastpath for UTF-8 */
         pArgs->name = "UTF-8";
-        return (UConverterSharedData *)converterData[UCNV_UTF8];
+        повернути (UConverterSharedData *)converterData[UCNV_UTF8];
     }
-    else {
+    інакше {
         /* separate the converter name from the options */
         parseConverterOptions(converterName, pPieces, pArgs, err);
-        if (U_FAILURE(*err)) {
+        якщо (U_FAILURE(*err)) {
             /* Very bad name used. */
-            return nullptr;
+            повернути nullptr;
         }
 
         /* get the canonical converter name */
         pArgs->name = ucnv_io_getConverterName(pArgs->name, &mayContainOption, &internalErrorCode);
-        if (U_FAILURE(internalErrorCode) || pArgs->name == nullptr) {
+        якщо (U_FAILURE(internalErrorCode) || pArgs->name == nullptr) {
             /*
             * set the input name in case the converter was added
             * without updating the alias table, or when there is no alias table
             */
             pArgs->name = pPieces->cnvName;
-        } else if (internalErrorCode == U_AMBIGUOUS_ALIAS_WARNING) {
+        } інакше якщо (internalErrorCode == U_AMBIGUOUS_ALIAS_WARNING) {
             *err = U_AMBIGUOUS_ALIAS_WARNING;
         }
     }
 
     /* separate the converter name from the options */
-    if(mayContainOption && pArgs->name != pPieces->cnvName) {
+    якщо(mayContainOption && pArgs->name != pPieces->cnvName) {
         parseConverterOptions(pArgs->name, pPieces, pArgs, err);
     }
 
     /* get the shared data for an algorithmic converter, if it is one */
-    if (checkForAlgorithmic) {
+    якщо (checkForAlgorithmic) {
         mySharedConverterData = (UConverterSharedData *)getAlgorithmicTypeFromName(pArgs->name);
     }
-    if (mySharedConverterData == nullptr)
+    якщо (mySharedConverterData == nullptr)
     {
         /* it is a data-based converter, get its shared data.               */
         /* Hold the cnvCacheMutex through the whole process of checking the */
@@ -815,13 +815,13 @@ ucnv_loadSharedData(const char *converterName,
         umtx_lock(&cnvCacheMutex);
         mySharedConverterData = ucnv_load(pArgs, err);
         umtx_unlock(&cnvCacheMutex);
-        if (U_FAILURE (*err) || (mySharedConverterData == nullptr))
+        якщо (U_FAILURE (*err) || (mySharedConverterData == nullptr))
         {
-            return nullptr;
+            повернути nullptr;
         }
     }
 
-    return mySharedConverterData;
+    повернути mySharedConverterData;
 }
 
 U_CAPI UConverter*
@@ -835,7 +835,7 @@ ucnv_createConverter(UConverter* myUConverter U_LIFETIME_BOUND,
 
     UTRACE_ENTRY_OC(UTRACE_UCNV_OPEN);
 
-    if(U_SUCCESS(*err)) {
+    якщо(U_SUCCESS(*err)) {
         UTRACE_DATA1(UTRACE_OPEN_CLOSE, "open converter %s", converterName);
 
         mySharedConverterData = ucnv_loadSharedData(converterName, &stackPieces, &stackArgs, err);
@@ -845,15 +845,15 @@ ucnv_createConverter(UConverter* myUConverter U_LIFETIME_BOUND,
             &stackArgs,
             err);
 
-        if(U_SUCCESS(*err)) {
+        якщо(U_SUCCESS(*err)) {
             UTRACE_EXIT_PTR_STATUS(myUConverter, *err);
-            return myUConverter;
+            повернути myUConverter;
         }
     }
 
     /* exit with error */
     UTRACE_EXIT_STATUS(*err);
-    return nullptr;
+    повернути nullptr;
 }
 
 U_CFUNC UBool
@@ -865,7 +865,7 @@ ucnv_canCreateConverter(const char *converterName, UErrorCode *err) {
 
     UTRACE_ENTRY_OC(UTRACE_UCNV_OPEN);
 
-    if(U_SUCCESS(*err)) {
+    якщо(U_SUCCESS(*err)) {
         UTRACE_DATA1(UTRACE_OPEN_CLOSE, "test if can open converter %s", converterName);
 
         stackArgs.onlyTestIsLoadable=true;
@@ -878,7 +878,7 @@ ucnv_canCreateConverter(const char *converterName, UErrorCode *err) {
     }
 
     UTRACE_EXIT_STATUS(*err);
-    return U_SUCCESS(*err);
+    повернути U_SUCCESS(*err);
 }
 
 UConverter*
@@ -894,18 +894,18 @@ ucnv_createAlgorithmicConverter(UConverter* myUConverter U_LIFETIME_BOUND,
     UTRACE_ENTRY_OC(UTRACE_UCNV_OPEN_ALGORITHMIC);
     UTRACE_DATA1(UTRACE_OPEN_CLOSE, "open algorithmic converter type %d", (int32_t)type);
 
-    if(type<0 || UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES<=type) {
+    якщо(type<0 || UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES<=type) {
         *err = U_ILLEGAL_ARGUMENT_ERROR;
         UTRACE_EXIT_STATUS(U_ILLEGAL_ARGUMENT_ERROR);
-        return nullptr;
+        повернути nullptr;
     }
 
     sharedData = converterData[type];
-    if(sharedData == nullptr || sharedData->isReferenceCounted) {
+    якщо(sharedData == nullptr || sharedData->isReferenceCounted) {
         /* not a valid type, or not an algorithmic converter */
         *err = U_ILLEGAL_ARGUMENT_ERROR;
         UTRACE_EXIT_STATUS(U_ILLEGAL_ARGUMENT_ERROR);
-        return nullptr;
+        повернути nullptr;
     }
 
     stackArgs.name = "";
@@ -916,7 +916,7 @@ ucnv_createAlgorithmicConverter(UConverter* myUConverter U_LIFETIME_BOUND,
             &stackArgs, err);
 
     UTRACE_EXIT_PTR_STATUS(cnv, *err);
-    return cnv;
+    повернути cnv;
 }
 
 U_CFUNC UConverter*
@@ -929,9 +929,9 @@ ucnv_createConverterFromPackage(const char *packageName, const char *converterNa
 
     UTRACE_ENTRY_OC(UTRACE_UCNV_OPEN_PACKAGE);
 
-    if(U_FAILURE(*err)) {
+    якщо(U_FAILURE(*err)) {
         UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        повернути nullptr;
     }
 
     UTRACE_DATA2(UTRACE_OPEN_CLOSE, "open converter %s from package %s", converterName, packageName);
@@ -941,10 +941,10 @@ ucnv_createConverterFromPackage(const char *packageName, const char *converterNa
     stackPieces.locale[0] = 0;
     stackPieces.options = 0;
     parseConverterOptions(converterName, &stackPieces, &stackArgs, err);
-    if (U_FAILURE(*err)) {
+    якщо (U_FAILURE(*err)) {
         /* Very bad name used. */
         UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        повернути nullptr;
     }
     stackArgs.nestedLoads=1;
     stackArgs.pkg=packageName;
@@ -952,22 +952,22 @@ ucnv_createConverterFromPackage(const char *packageName, const char *converterNa
     /* open the data, unflatten the shared structure */
     mySharedConverterData = createConverterFromFile(&stackArgs, err);
 
-    if (U_FAILURE(*err)) {
+    якщо (U_FAILURE(*err)) {
         UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        повернути nullptr;
     }
 
     /* create the actual converter */
     myUConverter = ucnv_createConverterFromSharedData(nullptr, mySharedConverterData, &stackArgs, err);
 
-    if (U_FAILURE(*err)) {
+    якщо (U_FAILURE(*err)) {
         ucnv_close(myUConverter);
         UTRACE_EXIT_STATUS(*err);
-        return nullptr;
+        повернути nullptr;
     }
 
     UTRACE_EXIT_PTR_STATUS(myUConverter, *err);
-    return myUConverter;
+    повернути myUConverter;
 }
 
 
@@ -979,21 +979,21 @@ ucnv_createConverterFromSharedData(UConverter* myUConverter U_LIFETIME_BOUND,
 {
     UBool isCopyLocal;
 
-    if(U_FAILURE(*err)) {
+    якщо(U_FAILURE(*err)) {
         ucnv_unloadSharedDataIfReady(mySharedConverterData);
-        return myUConverter;
+        повернути myUConverter;
     }
-    if(myUConverter == nullptr)
+    якщо(myUConverter == nullptr)
     {
         myUConverter = (UConverter *) uprv_malloc (sizeof (UConverter));
-        if(myUConverter == nullptr)
+        якщо(myUConverter == nullptr)
         {
             *err = U_MEMORY_ALLOCATION_ERROR;
             ucnv_unloadSharedDataIfReady(mySharedConverterData);
-            return nullptr;
+            повернути nullptr;
         }
         isCopyLocal = false;
-    } else {
+    } інакше {
         isCopyLocal = true;
     }
 
@@ -1003,7 +1003,7 @@ ucnv_createConverterFromSharedData(UConverter* myUConverter U_LIFETIME_BOUND,
     /*myUConverter->isExtraLocal = false;*/ /* Set by the memset call */
     myUConverter->sharedData = mySharedConverterData;
     myUConverter->options = pArgs->options;
-    if(!pArgs->onlyTestIsLoadable) {
+    якщо(!pArgs->onlyTestIsLoadable) {
         myUConverter->preFromUFirstCP = U_SENTINEL;
         myUConverter->fromCharErrorBehaviour = UCNV_TO_U_DEFAULT_CALLBACK;
         myUConverter->fromUCharErrorBehaviour = UCNV_FROM_U_DEFAULT_CALLBACK;
@@ -1016,16 +1016,16 @@ ucnv_createConverterFromSharedData(UConverter* myUConverter U_LIFETIME_BOUND,
         myUConverter->toUCallbackReason = UCNV_ILLEGAL; /* default reason to invoke (*fromCharErrorBehaviour) */
     }
 
-    if(mySharedConverterData->impl->open != nullptr) {
+    якщо(mySharedConverterData->impl->open != nullptr) {
         mySharedConverterData->impl->open(myUConverter, pArgs, err);
-        if(U_FAILURE(*err) && !pArgs->onlyTestIsLoadable) {
+        якщо(U_FAILURE(*err) && !pArgs->onlyTestIsLoadable) {
             /* don't ucnv_close() if onlyTestIsLoadable because not fully initialized */
             ucnv_close(myUConverter);
-            return nullptr;
+            повернути nullptr;
         }
     }
 
-    return myUConverter;
+    повернути myUConverter;
 }
 
 /*Frees all shared immutable objects that aren't referred to (reference count = 0)
@@ -1048,9 +1048,9 @@ ucnv_flushCache ()
     /*if shared data hasn't even been lazy evaluated yet
     * return 0
     */
-    if (SHARED_DATA_HASHTABLE == nullptr) {
+    якщо (SHARED_DATA_HASHTABLE == nullptr) {
         UTRACE_EXIT_VALUE((int32_t)0);
-        return 0;
+        повернути 0;
     }
 
     /*creates an enumeration to iterate through every element in the
@@ -1075,11 +1075,11 @@ ucnv_flushCache ()
     do {
         remaining = 0;
         pos = UHASH_FIRST;
-        while ((e = uhash_nextElement (SHARED_DATA_HASHTABLE, &pos)) != nullptr)
+        поки ((e = uhash_nextElement (SHARED_DATA_HASHTABLE, &pos)) != nullptr)
         {
             mySharedData = (UConverterSharedData *) e->value.pointer;
             /*deletes only if reference counter == 0 */
-            if (mySharedData->referenceCounter == 0)
+            якщо (mySharedData->referenceCounter == 0)
             {
                 tableDeletedNum++;
 
@@ -1088,17 +1088,17 @@ ucnv_flushCache ()
                 uhash_removeElement(SHARED_DATA_HASHTABLE, e);
                 mySharedData->sharedDataCached = false;
                 ucnv_deleteSharedConverterData (mySharedData);
-            } else {
+            } інакше {
                 ++remaining;
             }
         }
-    } while(++i == 1 && remaining > 0);
+    } поки(++i == 1 && remaining > 0);
     umtx_unlock(&cnvCacheMutex);
 
     UTRACE_DATA1(UTRACE_INFO, "ucnv_flushCache() exits with %d converters remaining", remaining);
 
     UTRACE_EXIT_VALUE(tableDeletedNum);
-    return tableDeletedNum;
+    повернути tableDeletedNum;
 }
 
 /* available converters list --------------------------------------------------- */
@@ -1110,15 +1110,15 @@ static void U_CALLCONV initAvailableConvertersList(UErrorCode &errCode) {
     ucnv_enableCleanup();
     UEnumeration *allConvEnum = ucnv_openAllNames(&errCode);
     int32_t allConverterCount = uenum_count(allConvEnum, &errCode);
-    if (U_FAILURE(errCode)) {
-        return;
+    якщо (U_FAILURE(errCode)) {
+        повернути;
     }
 
     /* We can't have more than "*converterTable" converters to open */
     gAvailableConverters = static_cast<const char**>(uprv_malloc(allConverterCount * sizeof(char*)));
-    if (!gAvailableConverters) {
+    якщо (!gAvailableConverters) {
         errCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        повернути;
     }
 
     /* Open the default converter to make sure that it has first dibs in the hash table. */
@@ -1128,10 +1128,10 @@ static void U_CALLCONV initAvailableConvertersList(UErrorCode &errCode) {
 
     gAvailableConverterCount = 0;
 
-    for (int32_t idx = 0; idx < allConverterCount; idx++) {
+    для (int32_t idx = 0; idx < allConverterCount; idx++) {
         localStatus = U_ZERO_ERROR;
         const char *converterName = uenum_next(allConvEnum, nullptr, &localStatus);
-        if (ucnv_canCreateConverter(converterName, &localStatus)) {
+        якщо (ucnv_canCreateConverter(converterName, &localStatus)) {
             gAvailableConverters[gAvailableConverterCount++] = converterName;
         }
     }
@@ -1142,31 +1142,31 @@ static void U_CALLCONV initAvailableConvertersList(UErrorCode &errCode) {
 
 static UBool haveAvailableConverterList(UErrorCode *pErrorCode) {
     umtx_initOnce(gAvailableConvertersInitOnce, &initAvailableConvertersList, *pErrorCode);
-    return U_SUCCESS(*pErrorCode);
+    повернути U_SUCCESS(*pErrorCode);
 }
 
 U_CFUNC uint16_t
 ucnv_bld_countAvailableConverters(UErrorCode *pErrorCode) {
-    if (haveAvailableConverterList(pErrorCode)) {
-        return gAvailableConverterCount;
+    якщо (haveAvailableConverterList(pErrorCode)) {
+        повернути gAvailableConverterCount;
     }
-    return 0;
+    повернути 0;
 }
 
 U_CFUNC const char *
 ucnv_bld_getAvailableConverter(uint16_t n, UErrorCode *pErrorCode) {
-    if (haveAvailableConverterList(pErrorCode)) {
-        if (n < gAvailableConverterCount) {
-            return gAvailableConverters[n];
+    якщо (haveAvailableConverterList(pErrorCode)) {
+        якщо (n < gAvailableConverterCount) {
+            повернути gAvailableConverters[n];
         }
         *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
     }
-    return nullptr;
+    повернути nullptr;
 }
 
 /* default converter name --------------------------------------------------- */
 
-#if !U_CHARSET_IS_UTF8
+#якщо !U_CHARSET_IS_UTF8
 /*
 Copy the canonical converter name.
 ucnv_getDefaultName must be thread safe, which can call this function.
@@ -1188,13 +1188,13 @@ internalSetName(const char *name, UErrorCode *status) {
     const UConverterSharedData *algorithmicSharedData;
 
     stackArgs.name = name;
-    if(containsOption) {
+    якщо(containsOption) {
         stackPieces.cnvName[0] = 0;
         stackPieces.locale[0] = 0;
         stackPieces.options = 0;
         parseConverterOptions(name, &stackPieces, &stackArgs, status);
-        if(U_FAILURE(*status)) {
-            return;
+        якщо(U_FAILURE(*status)) {
+            повернути;
         }
     }
     algorithmicSharedData = getAlgorithmicTypeFromName(stackArgs.name);
@@ -1229,9 +1229,9 @@ internalSetName(const char *name, UErrorCode *status) {
 
 U_CAPI const char*  U_EXPORT2
 ucnv_getDefaultName() {
-#if U_CHARSET_IS_UTF8
-    return "UTF-8";
-#else
+#якщо U_CHARSET_IS_UTF8
+    повернути "UTF-8";
+#інакше
     /* local variable to be thread-safe */
     const char *name;
 
@@ -1243,31 +1243,31 @@ ucnv_getDefaultName() {
         icu::Mutex lock(&cnvCacheMutex);
         name = gDefaultConverterName;
     }
-    if(name==nullptr) {
+    якщо(name==nullptr) {
         UErrorCode errorCode = U_ZERO_ERROR;
         UConverter *cnv = nullptr;
 
         name = uprv_getDefaultCodepage();
 
         /* if the name is there, test it out and get the canonical name with options */
-        if(name != nullptr) {
+        якщо(name != nullptr) {
             cnv = ucnv_open(name, &errorCode);
-            if(U_SUCCESS(errorCode) && cnv != nullptr) {
+            якщо(U_SUCCESS(errorCode) && cnv != nullptr) {
                 name = ucnv_getName(cnv, &errorCode);
             }
         }
 
-        if(name == nullptr || name[0] == 0
+        якщо(name == nullptr || name[0] == 0
             || U_FAILURE(errorCode) || cnv == nullptr
             || uprv_strlen(name)>=sizeof(gDefaultConverterNameBuffer))
         {
             /* Panic time, let's use a fallback. */
-#if (U_CHARSET_FAMILY == U_ASCII_FAMILY)
+#якщо (U_CHARSET_FAMILY == U_ASCII_FAMILY)
             name = "US-ASCII";
             /* there is no 'algorithmic' converter for EBCDIC */
 #elif U_PLATFORM == U_PF_OS390
             name = "ibm-1047_P100-1995" UCNV_SWAP_LFNL_OPTION_STRING;
-#else
+#інакше
             name = "ibm-37_P100-1995";
 #endif
         }
@@ -1278,34 +1278,34 @@ ucnv_getDefaultName() {
         ucnv_close(cnv);
     }
 
-    return name;
+    повернути name;
 #endif
 }
 
-#if U_CHARSET_IS_UTF8
+#якщо U_CHARSET_IS_UTF8
 U_CAPI void U_EXPORT2 ucnv_setDefaultName(const char *) {}
-#else
+#інакше
 /*
 This function is not thread safe, and it can't be thread safe.
 See internalSetName or the API reference for details.
 */
 U_CAPI void U_EXPORT2
 ucnv_setDefaultName(const char *converterName) {
-    if(converterName==nullptr) {
+    якщо(converterName==nullptr) {
         /* reset to the default codepage */
         gDefaultConverterName=nullptr;
-    } else {
+    } інакше {
         UErrorCode errorCode = U_ZERO_ERROR;
         UConverter *cnv = nullptr;
         const char *name = nullptr;
 
         /* if the name is there, test it out and get the canonical name with options */
         cnv = ucnv_open(converterName, &errorCode);
-        if(U_SUCCESS(errorCode) && cnv != nullptr) {
+        якщо(U_SUCCESS(errorCode) && cnv != nullptr) {
             name = ucnv_getName(cnv, &errorCode);
         }
 
-        if(U_SUCCESS(errorCode) && name!=nullptr) {
+        якщо(U_SUCCESS(errorCode) && name!=nullptr) {
             internalSetName(name, &errorCode);
         }
         /* else this converter is bad to use. Don't change it to a bad value. */
@@ -1323,7 +1323,7 @@ ucnv_setDefaultName(const char *converterName) {
 
 /* most of this might belong more properly into ucnvmbcs.c, but that is so large */
 
-#if !UCONFIG_NO_LEGACY_CONVERSION
+#якщо !UCONFIG_NO_LEGACY_CONVERSION
 
 U_CAPI int32_t U_EXPORT2
 ucnv_swap(const UDataSwapper *ds,
@@ -1356,13 +1356,13 @@ ucnv_swap(const UDataSwapper *ds,
 
     /* udata_swapDataHeader checks the arguments */
     headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    якщо(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        повернути 0;
     }
 
     /* check data format and format version */
     pInfo=(const UDataInfo *)((const char *)inData+4);
-    if(!(
+    якщо(!(
         pInfo->dataFormat[0]==0x63 &&   /* dataFormat="cnvt" */
         pInfo->dataFormat[1]==0x6e &&
         pInfo->dataFormat[2]==0x76 &&
@@ -1375,7 +1375,7 @@ ucnv_swap(const UDataSwapper *ds,
                          pInfo->dataFormat[2], pInfo->dataFormat[3],
                          pInfo->formatVersion[0], pInfo->formatVersion[1]);
         *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+        повернути 0;
     }
 
     inBytes=(const uint8_t *)inData+headerSize;
@@ -1385,23 +1385,23 @@ ucnv_swap(const UDataSwapper *ds,
     inStaticData=(const UConverterStaticData *)inBytes;
     outStaticData=(UConverterStaticData *)outBytes;
 
-    if(length<0) {
+    якщо(length<0) {
         staticDataSize=ds->readUInt32(inStaticData->structSize);
-    } else {
+    } інакше {
         length-=headerSize;
-        if( length<(int32_t)sizeof(UConverterStaticData) ||
+        якщо( length<(int32_t)sizeof(UConverterStaticData) ||
             (uint32_t)length<(staticDataSize=ds->readUInt32(inStaticData->structSize))
         ) {
             udata_printError(ds, "ucnv_swap(): too few bytes (%d after header) for an ICU .cnv conversion table\n",
                              length);
             *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            повернути 0;
         }
     }
 
-    if(length>=0) {
+    якщо(length>=0) {
         /* swap the static data */
-        if(inStaticData!=outStaticData) {
+        якщо(inStaticData!=outStaticData) {
             uprv_memcpy(outStaticData, inStaticData, staticDataSize);
         }
 
@@ -1412,43 +1412,43 @@ ucnv_swap(const UDataSwapper *ds,
 
         ds->swapInvChars(ds, inStaticData->name, (int32_t)uprv_strlen(inStaticData->name),
                             outStaticData->name, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
+        якщо(U_FAILURE(*pErrorCode)) {
             udata_printError(ds, "ucnv_swap(): error swapping converter name\n");
-            return 0;
+            повернути 0;
         }
     }
 
     inBytes+=staticDataSize;
-    if (outBytes != nullptr) outBytes+=staticDataSize;
-    if(length>=0) {
+    якщо (outBytes != nullptr) outBytes+=staticDataSize;
+    якщо(length>=0) {
         length-=(int32_t)staticDataSize;
     }
 
     /* check for supported conversionType values */
-    if(inStaticData->conversionType==UCNV_MBCS) {
+    якщо(inStaticData->conversionType==UCNV_MBCS) {
         /* swap MBCS data */
         inMBCSHeader=(const _MBCSHeader *)inBytes;
         outMBCSHeader=(_MBCSHeader *)outBytes;
 
-        if(0<=length && length<(int32_t)sizeof(_MBCSHeader)) {
+        якщо(0<=length && length<(int32_t)sizeof(_MBCSHeader)) {
             udata_printError(ds, "ucnv_swap(): too few bytes (%d after headers) for an ICU MBCS .cnv conversion table\n",
                                 length);
             *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            повернути 0;
         }
-        if(inMBCSHeader->version[0]==4 && inMBCSHeader->version[1]>=1) {
+        якщо(inMBCSHeader->version[0]==4 && inMBCSHeader->version[1]>=1) {
             mbcsHeaderLength=MBCS_HEADER_V4_LENGTH;
-        } else if(inMBCSHeader->version[0]==5 && inMBCSHeader->version[1]>=3 &&
+        } інакше якщо(inMBCSHeader->version[0]==5 && inMBCSHeader->version[1]>=3 &&
                   ((mbcsHeader.options=ds->readUInt32(inMBCSHeader->options))&
                    MBCS_OPT_UNKNOWN_INCOMPATIBLE_MASK)==0
         ) {
             mbcsHeaderLength=mbcsHeader.options&MBCS_OPT_LENGTH_MASK;
             noFromU = (mbcsHeader.options & MBCS_OPT_NO_FROM_U) != 0;
-        } else {
+        } інакше {
             udata_printError(ds, "ucnv_swap(): unsupported _MBCSHeader.version %d.%d\n",
                              inMBCSHeader->version[0], inMBCSHeader->version[1]);
             *pErrorCode=U_UNSUPPORTED_ERROR;
-            return 0;
+            повернути 0;
         }
 
         uprv_memcpy(mbcsHeader.version, inMBCSHeader->version, 4);
@@ -1463,10 +1463,10 @@ ucnv_swap(const UDataSwapper *ds,
 
         extOffset=(int32_t)(mbcsHeader.flags>>8);
         outputType=(uint8_t)mbcsHeader.flags;
-        if(noFromU && outputType==MBCS_OUTPUT_1) {
+        якщо(noFromU && outputType==MBCS_OUTPUT_1) {
             udata_printError(ds, "ucnv_swap(): unsupported combination of makeconv --small with SBCS\n");
             *pErrorCode=U_UNSUPPORTED_ERROR;
-            return 0;
+            повернути 0;
         }
 
         /* make sure that the output type is known */
@@ -1485,7 +1485,7 @@ ucnv_swap(const UDataSwapper *ds,
             udata_printError(ds, "ucnv_swap(): unsupported MBCS output type 0x%x\n",
                              outputType);
             *pErrorCode=U_UNSUPPORTED_ERROR;
-            return 0;
+            повернути 0;
         }
 
         /* calculate the length of the MBCS data */
@@ -1498,44 +1498,44 @@ ucnv_swap(const UDataSwapper *ds,
          */
         maxFastUChar=0;
         mbcsIndexLength=0;
-        if( outputType!=MBCS_OUTPUT_EXT_ONLY && outputType!=MBCS_OUTPUT_1 &&
+        якщо( outputType!=MBCS_OUTPUT_EXT_ONLY && outputType!=MBCS_OUTPUT_1 &&
             mbcsHeader.version[1]>=3 && (maxFastUChar=mbcsHeader.version[2])!=0
         ) {
             maxFastUChar=(maxFastUChar<<8)|0xff;
             mbcsIndexLength=((maxFastUChar+1)>>6)*2;  /* number of bytes */
         }
 
-        if(extOffset==0) {
+        якщо(extOffset==0) {
             size=(int32_t)(mbcsHeader.offsetFromUBytes+mbcsIndexLength);
-            if(!noFromU) {
+            якщо(!noFromU) {
                 size+=(int32_t)mbcsHeader.fromUBytesLength;
             }
 
             /* avoid compiler warnings - not otherwise necessary, and the value does not matter */
             inExtIndexes=nullptr;
-        } else {
+        } інакше {
             /* there is extension data after the base data, see ucnv_ext.h */
-            if(length>=0 && length<(extOffset+UCNV_EXT_INDEXES_MIN_LENGTH*4)) {
+            якщо(length>=0 && length<(extOffset+UCNV_EXT_INDEXES_MIN_LENGTH*4)) {
                 udata_printError(ds, "ucnv_swap(): too few bytes (%d after headers) for an ICU MBCS .cnv conversion table with extension data\n",
                                  length);
                 *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                return 0;
+                повернути 0;
             }
 
             inExtIndexes=(const int32_t *)(inBytes+extOffset);
             size=extOffset+udata_readInt32(ds, inExtIndexes[UCNV_EXT_SIZE]);
         }
 
-        if(length>=0) {
-            if(length<size) {
+        якщо(length>=0) {
+            якщо(length<size) {
                 udata_printError(ds, "ucnv_swap(): too few bytes (%d after headers) for an ICU MBCS .cnv conversion table\n",
                                  length);
                 *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                return 0;
+                повернути 0;
             }
 
             /* copy the data for inaccessible bytes */
-            if(inBytes!=outBytes) {
+            якщо(inBytes!=outBytes) {
                 uprv_memcpy(outBytes, inBytes, size);
             }
 
@@ -1544,7 +1544,7 @@ ucnv_swap(const UDataSwapper *ds,
             ds->swapArray32(ds, &inMBCSHeader->countStates, count-4,
                                &outMBCSHeader->countStates, pErrorCode);
 
-            if(outputType==MBCS_OUTPUT_EXT_ONLY) {
+            якщо(outputType==MBCS_OUTPUT_EXT_ONLY) {
                 /*
                  * extension-only file,
                  * contains a base name instead of normal base table data
@@ -1555,7 +1555,7 @@ ucnv_swap(const UDataSwapper *ds,
                 char *outBaseName=(char *)outBytes+count;
                 ds->swapInvChars(ds, inBaseName, (int32_t)uprv_strlen(inBaseName),
                                     outBaseName, pErrorCode);
-            } else {
+            } інакше {
                 /* normal file with base table data */
 
                 /* swap the state table, 1kB per state */
@@ -1579,18 +1579,18 @@ ucnv_swap(const UDataSwapper *ds,
                 /* offset to the stage 1 table, independent of the outputType */
                 offset=mbcsHeader.offsetFromUTable;
 
-                if(outputType==MBCS_OUTPUT_1) {
+                якщо(outputType==MBCS_OUTPUT_1) {
                     /* SBCS: swap the fromU tables, all 16 bits wide */
                     count=(mbcsHeader.offsetFromUBytes-offset)+mbcsHeader.fromUBytesLength;
                     ds->swapArray16(ds, inBytes+offset, (int32_t)count,
                                        outBytes+offset, pErrorCode);
-                } else {
+                } інакше {
                     /* otherwise: swap the stage tables separately */
 
                     /* stage 1 table: uint16_t[0x440 or 0x40] */
-                    if(inStaticData->unicodeMask&UCNV_HAS_SUPPLEMENTARY) {
+                    якщо(inStaticData->unicodeMask&UCNV_HAS_SUPPLEMENTARY) {
                         count=0x440*2; /* for all of Unicode */
-                    } else {
+                    } інакше {
                         count=0x40*2; /* only BMP */
                     }
                     ds->swapArray16(ds, inBytes+offset, (int32_t)count,
@@ -1621,7 +1621,7 @@ ucnv_swap(const UDataSwapper *ds,
                         break;
                     }
 
-                    if(mbcsIndexLength!=0) {
+                    якщо(mbcsIndexLength!=0) {
                         offset+=count;
                         count=mbcsIndexLength;
                         ds->swapArray16(ds, inBytes+offset, (int32_t)count,
@@ -1630,7 +1630,7 @@ ucnv_swap(const UDataSwapper *ds,
                 }
             }
 
-            if(extOffset!=0) {
+            якщо(extOffset!=0) {
                 /* swap the extension data */
                 inBytes+=extOffset;
                 outBytes+=extOffset;
@@ -1677,14 +1677,14 @@ ucnv_swap(const UDataSwapper *ds,
                 ds->swapArray32(ds, inBytes, length*4, outBytes, pErrorCode);
             }
         }
-    } else {
+    } інакше {
         udata_printError(ds, "ucnv_swap(): unknown conversionType=%d!=UCNV_MBCS\n",
                          inStaticData->conversionType);
         *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+        повернути 0;
     }
 
-    return headerSize+(int32_t)staticDataSize+size;
+    повернути headerSize+(int32_t)staticDataSize+size;
 }
 
 #endif /* #if !UCONFIG_NO_LEGACY_CONVERSION */

@@ -418,33 +418,33 @@ int32_t getShortestSubtagLength(std::string_view localeID) {
     int32_t i;
     bool reset = true;
 
-    for (i = 0; i < localeIDLength; i++) {
-        if (localeID[i] != '_' && localeID[i] != '-') {
-            if (reset) {
+    для (i = 0; i < localeIDLength; i++) {
+        якщо (localeID[i] != '_' && localeID[i] != '-') {
+            якщо (reset) {
                 tmpLength = 0;
                 reset = false;
             }
             tmpLength++;
-        } else {
-            if (tmpLength != 0 && tmpLength < length) {
+        } інакше {
+            якщо (tmpLength != 0 && tmpLength < length) {
                 length = tmpLength;
             }
             reset = true;
         }
     }
 
-    return length;
+    повернути length;
 }
 /* Test if the locale id has BCP47 u extension and does not have '@' */
 inline bool _hasBCP47Extension(std::string_view id) {
-    return id.find('@') == std::string_view::npos && getShortestSubtagLength(id) == 1;
+    повернути id.find('@') == std::string_view::npos && getShortestSubtagLength(id) == 1;
 }
 
 /* ### Keywords **************************************************/
-inline bool UPRV_ISDIGIT(char c) { return c >= '0' && c <= '9'; }
-inline bool UPRV_ISALPHANUM(char c) { return uprv_isASCIILetter(c) || UPRV_ISDIGIT(c); }
+inline bool UPRV_ISDIGIT(char c) { повернути c >= '0' && c <= '9'; }
+inline bool UPRV_ISALPHANUM(char c) { повернути uprv_isASCIILetter(c) || UPRV_ISDIGIT(c); }
 /* Punctuation/symbols allowed in legacy key values */
-inline bool UPRV_OK_VALUE_PUNCTUATION(char c) { return c == '_' || c == '-' || c == '+' || c == '/'; }
+inline bool UPRV_OK_VALUE_PUNCTUATION(char c) { повернути c == '_' || c == '-' || c == '+' || c == '/'; }
 
 }  // namespace
 
@@ -453,25 +453,25 @@ inline bool UPRV_OK_VALUE_PUNCTUATION(char c) { return c == '_' || c == '-' || c
 
 U_CAPI const char* U_EXPORT2
 locale_getKeywordsStart(std::string_view localeID U_LIFETIME_BOUND) {
-    if (size_t pos = localeID.find('@'); pos != std::string_view::npos) {
-        return localeID.data() + pos;
+    якщо (size_t pos = localeID.find('@'); pos != std::string_view::npos) {
+        повернути localeID.data() + pos;
     }
-#if (U_CHARSET_FAMILY == U_EBCDIC_FAMILY)
-    else {
+#якщо (U_CHARSET_FAMILY == U_EBCDIC_FAMILY)
+    інакше {
         /* We do this because the @ sign is variant, and the @ sign used on one
         EBCDIC machine won't be compiled the same way on other EBCDIC based
         machines. */
         static const uint8_t ebcdicSigns[] = { 0x7C, 0x44, 0x66, 0x80, 0xAC, 0xAE, 0xAF, 0xB5, 0xEC, 0xEF, 0x00 };
         const uint8_t *charToFind = ebcdicSigns;
-        while(*charToFind) {
-            if (size_t pos = localeID.find(*charToFind); pos != std::string_view::npos) {
-                return localeID.data() + pos;
+        поки(*charToFind) {
+            якщо (size_t pos = localeID.find(*charToFind); pos != std::string_view::npos) {
+                повернути localeID.data() + pos;
             }
             charToFind++;
         }
     }
 #endif
-    return nullptr;
+    повернути nullptr;
 }
 
 namespace {
@@ -483,22 +483,22 @@ namespace {
  */
 CharString locale_canonKeywordName(std::string_view keywordName, UErrorCode& status)
 {
-  if (U_FAILURE(status)) { return {}; }
+  якщо (U_FAILURE(status)) { повернути {}; }
   CharString result;
 
-  for (char c : keywordName) {
-    if (!UPRV_ISALPHANUM(c)) {
+  для (char c : keywordName) {
+    якщо (!UPRV_ISALPHANUM(c)) {
       status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed keyword name */
-      return {};
+      повернути {};
     }
     result.append(uprv_tolower(c), status);
   }
-  if (result.isEmpty()) {
+  якщо (result.isEmpty()) {
     status = U_ILLEGAL_ARGUMENT_ERROR; /* empty keyword name */
-    return {};
+    повернути {};
   }
 
-  return result;
+  повернути result;
 }
 
 typedef struct {
@@ -512,7 +512,7 @@ int32_t U_CALLCONV
 compareKeywordStructs(const void * /*context*/, const void *left, const void *right) {
     const char* leftString = static_cast<const KeywordStruct*>(left)->keyword;
     const char* rightString = static_cast<const KeywordStruct*>(right)->keyword;
-    return uprv_strcmp(leftString, rightString);
+    повернути uprv_strcmp(leftString, rightString);
 }
 
 }  // namespace
@@ -523,7 +523,7 @@ ulocimp_getKeywords(std::string_view localeID,
                     bool valuesToo,
                     UErrorCode& status)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
+    повернути ByteSinkUtil::viaByteSinkToCharString(
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getKeywords(localeID,
                                 prev,
@@ -541,7 +541,7 @@ ulocimp_getKeywords(std::string_view localeID,
                     bool valuesToo,
                     UErrorCode& status)
 {
-    if (U_FAILURE(status)) { return; }
+    якщо (U_FAILURE(status)) { повернути; }
 
     KeywordStruct keywordList[ULOC_MAX_NO_KEYWORDS];
 
@@ -551,43 +551,43 @@ ulocimp_getKeywords(std::string_view localeID,
     size_t semicolon = std::string_view::npos;
     int32_t i = 0, j, n;
 
-    if(prev == '@') { /* start of keyword definition */
+    якщо(prev == '@') { /* start of keyword definition */
         /* we will grab pairs, trim spaces, lowercase keywords, sort and return */
         do {
             bool duplicate = false;
             /* skip leading spaces */
-            while (!localeID.empty() && localeID.front() == ' ') {
+            поки (!localeID.empty() && localeID.front() == ' ') {
                 localeID.remove_prefix(1);
             }
-            if (localeID.empty()) { /* handle trailing "; " */
+            якщо (localeID.empty()) { /* handle trailing "; " */
                 break;
             }
-            if(numKeywords == maxKeywords) {
+            якщо(numKeywords == maxKeywords) {
                 status = U_INTERNAL_PROGRAM_ERROR;
-                return;
+                повернути;
             }
             equalSign = localeID.find('=');
             semicolon = localeID.find(';');
             /* lack of '=' [foo@currency] is illegal */
             /* ';' before '=' [foo@currency;collation=pinyin] is illegal */
-            if (equalSign == std::string_view::npos ||
+            якщо (equalSign == std::string_view::npos ||
                 (semicolon != std::string_view::npos && semicolon < equalSign)) {
                 status = U_INVALID_FORMAT_ERROR;
-                return;
+                повернути;
             }
             /* zero-length keyword is an error. */
-            if (equalSign == 0) {
+            якщо (equalSign == 0) {
                 status = U_INVALID_FORMAT_ERROR;
-                return;
+                повернути;
             }
             /* need to normalize both keyword and keyword name */
-            if (equalSign >= ULOC_KEYWORD_BUFFER_LEN) {
+            якщо (equalSign >= ULOC_KEYWORD_BUFFER_LEN) {
                 /* keyword name too long for internal buffer */
                 status = U_INTERNAL_PROGRAM_ERROR;
-                return;
+                повернути;
             }
-            for (i = 0, n = 0; static_cast<size_t>(i) < equalSign; ++i) {
-                if (localeID[i] != ' ') {
+            для (i = 0, n = 0; static_cast<size_t>(i) < equalSign; ++i) {
+                якщо (localeID[i] != ' ') {
                     keywordList[numKeywords].keyword[n++] = uprv_tolower(localeID[i]);
                 }
             }
@@ -597,57 +597,57 @@ ulocimp_getKeywords(std::string_view localeID,
             /* now grab the value part. First we skip the '=' */
             equalSign++;
             /* then we leading spaces */
-            while (equalSign < localeID.length() && localeID[equalSign] == ' ') {
+            поки (equalSign < localeID.length() && localeID[equalSign] == ' ') {
                 equalSign++;
             }
 
             /* Premature end or zero-length value */
-            if (equalSign == localeID.length() || equalSign == semicolon) {
+            якщо (equalSign == localeID.length() || equalSign == semicolon) {
                 status = U_INVALID_FORMAT_ERROR;
-                return;
+                повернути;
             }
 
             keywordList[numKeywords].valueStart = localeID.data() + equalSign;
 
             std::string_view value = localeID;
-            if (semicolon != std::string_view::npos) {
+            якщо (semicolon != std::string_view::npos) {
                 value.remove_suffix(value.length() - semicolon);
                 localeID.remove_prefix(semicolon + 1);
-            } else {
+            } інакше {
                 localeID = {};
             }
             value.remove_prefix(equalSign);
-            if (size_t last = value.find_last_not_of(' '); last != std::string_view::npos) {
+            якщо (size_t last = value.find_last_not_of(' '); last != std::string_view::npos) {
                 value.remove_suffix(value.length() - last - 1);
             }
             keywordList[numKeywords].valueLen = static_cast<int32_t>(value.length());
 
             /* If this is a duplicate keyword, then ignore it */
-            for (j=0; j<numKeywords; ++j) {
-                if (uprv_strcmp(keywordList[j].keyword, keywordList[numKeywords].keyword) == 0) {
+            для (j=0; j<numKeywords; ++j) {
+                якщо (uprv_strcmp(keywordList[j].keyword, keywordList[numKeywords].keyword) == 0) {
                     duplicate = true;
                     break;
                 }
             }
-            if (!duplicate) {
+            якщо (!duplicate) {
                 ++numKeywords;
             }
-        } while (!localeID.empty());
+        } поки (!localeID.empty());
 
         /* now we have a list of keywords */
         /* we need to sort it */
         uprv_sortArray(keywordList, numKeywords, sizeof(KeywordStruct), compareKeywordStructs, nullptr, false, &status);
 
         /* Now construct the keyword part */
-        for(i = 0; i < numKeywords; i++) {
+        для(i = 0; i < numKeywords; i++) {
             sink.Append(keywordList[i].keyword, keywordList[i].keywordLen);
-            if(valuesToo) {
+            якщо(valuesToo) {
                 sink.Append("=", 1);
                 sink.Append(keywordList[i].valueStart, keywordList[i].valueLen);
-                if(i < numKeywords - 1) {
+                якщо(i < numKeywords - 1) {
                     sink.Append(";", 1);
                 }
-            } else {
+            } інакше {
                 sink.Append("\0", 1);
             }
         }
@@ -660,12 +660,12 @@ uloc_getKeywordValue(const char* localeID,
                      char* buffer, int32_t bufferCapacity,
                      UErrorCode* status)
 {
-    if (U_FAILURE(*status)) { return 0; }
-    if (keywordName == nullptr || *keywordName == '\0') {
+    якщо (U_FAILURE(*status)) { повернути 0; }
+    якщо (keywordName == nullptr || *keywordName == '\0') {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        повернути 0;
     }
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
+    повернути ByteSinkUtil::viaByteSinkToTerminatedChars(
         buffer, bufferCapacity,
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getKeywordValue(localeID, keywordName, sink, status);
@@ -678,7 +678,7 @@ ulocimp_getKeywordValue(const char* localeID,
                         std::string_view keywordName,
                         UErrorCode& status)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
+    повернути ByteSinkUtil::viaByteSinkToCharString(
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getKeywordValue(localeID, keywordName, sink, status);
         },
@@ -691,11 +691,11 @@ ulocimp_getKeywordValue(const char* localeID,
                         icu::ByteSink& sink,
                         UErrorCode& status)
 {
-    if (U_FAILURE(status)) { return; }
+    якщо (U_FAILURE(status)) { повернути; }
 
-    if (localeID == nullptr || keywordName.empty()) {
+    якщо (localeID == nullptr || keywordName.empty()) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        повернути;
     }
 
     const char* startSearchHere = nullptr;
@@ -705,86 +705,86 @@ ulocimp_getKeywordValue(const char* localeID,
     const char* tmpLocaleID;
 
     CharString canonKeywordName = locale_canonKeywordName(keywordName, status);
-    if (U_FAILURE(status)) {
-      return;
+    якщо (U_FAILURE(status)) {
+      повернути;
     }
 
-    if (localeID != nullptr && _hasBCP47Extension(localeID)) {
+    якщо (localeID != nullptr && _hasBCP47Extension(localeID)) {
         tempBuffer = ulocimp_forLanguageTag(localeID, -1, nullptr, status);
         tmpLocaleID = U_SUCCESS(status) && !tempBuffer.isEmpty() ? tempBuffer.data() : localeID;
-    } else {
+    } інакше {
         tmpLocaleID=localeID;
     }
 
     startSearchHere = locale_getKeywordsStart(tmpLocaleID);
-    if(startSearchHere == nullptr) {
+    якщо(startSearchHere == nullptr) {
         /* no keywords, return at once */
-        return;
+        повернути;
     }
 
     /* find the first keyword */
-    while(startSearchHere) {
+    поки(startSearchHere) {
         const char* keyValueTail;
 
         startSearchHere++; /* skip @ or ; */
         nextSeparator = uprv_strchr(startSearchHere, '=');
-        if(!nextSeparator) {
+        якщо(!nextSeparator) {
             status = U_ILLEGAL_ARGUMENT_ERROR; /* key must have =value */
-            return;
+            повернути;
         }
         /* strip leading & trailing spaces (TC decided to tolerate these) */
-        while(*startSearchHere == ' ') {
+        поки(*startSearchHere == ' ') {
             startSearchHere++;
         }
         keyValueTail = nextSeparator;
-        while (keyValueTail > startSearchHere && *(keyValueTail-1) == ' ') {
+        поки (keyValueTail > startSearchHere && *(keyValueTail-1) == ' ') {
             keyValueTail--;
         }
         /* now keyValueTail points to first char after the keyName */
         /* copy & normalize keyName from locale */
-        if (startSearchHere == keyValueTail) {
+        якщо (startSearchHere == keyValueTail) {
             status = U_ILLEGAL_ARGUMENT_ERROR; /* empty keyword name in passed-in locale */
-            return;
+            повернути;
         }
         CharString localeKeywordName;
-        while (startSearchHere < keyValueTail) {
-          if (!UPRV_ISALPHANUM(*startSearchHere)) {
+        поки (startSearchHere < keyValueTail) {
+          якщо (!UPRV_ISALPHANUM(*startSearchHere)) {
             status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed keyword name */
-            return;
+            повернути;
           }
           localeKeywordName.append(uprv_tolower(*startSearchHere++), status);
         }
-        if (U_FAILURE(status)) {
-            return;
+        якщо (U_FAILURE(status)) {
+            повернути;
         }
 
         startSearchHere = uprv_strchr(nextSeparator, ';');
 
-        if (canonKeywordName == localeKeywordName) {
+        якщо (canonKeywordName == localeKeywordName) {
              /* current entry matches the keyword. */
            nextSeparator++; /* skip '=' */
             /* First strip leading & trailing spaces (TC decided to tolerate these) */
-            while(*nextSeparator == ' ') {
+            поки(*nextSeparator == ' ') {
               nextSeparator++;
             }
             keyValueTail = (startSearchHere)? startSearchHere: nextSeparator + uprv_strlen(nextSeparator);
-            while(keyValueTail > nextSeparator && *(keyValueTail-1) == ' ') {
+            поки(keyValueTail > nextSeparator && *(keyValueTail-1) == ' ') {
               keyValueTail--;
             }
             /* Now copy the value, but check well-formedness */
-            if (nextSeparator == keyValueTail) {
+            якщо (nextSeparator == keyValueTail) {
               status = U_ILLEGAL_ARGUMENT_ERROR; /* empty key value name in passed-in locale */
-              return;
+              повернути;
             }
-            while (nextSeparator < keyValueTail) {
-              if (!UPRV_ISALPHANUM(*nextSeparator) && !UPRV_OK_VALUE_PUNCTUATION(*nextSeparator)) {
+            поки (nextSeparator < keyValueTail) {
+              якщо (!UPRV_ISALPHANUM(*nextSeparator) && !UPRV_OK_VALUE_PUNCTUATION(*nextSeparator)) {
                 status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed key value */
-                return;
+                повернути;
               }
               /* Should we lowercase value to return here? Tests expect as-is. */
               sink.Append(nextSeparator++, 1);
             }
-            return;
+            повернути;
         }
     }
 }
@@ -795,23 +795,23 @@ uloc_setKeywordValue(const char* keywordName,
                      char* buffer, int32_t bufferCapacity,
                      UErrorCode* status)
 {
-    if (U_FAILURE(*status)) { return 0; }
+    якщо (U_FAILURE(*status)) { повернути 0; }
 
-    if (keywordName == nullptr || *keywordName == 0) {
+    якщо (keywordName == nullptr || *keywordName == 0) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        повернути 0;
     }
 
-    if (bufferCapacity <= 1) {
+    якщо (bufferCapacity <= 1) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        повернути 0;
     }
 
     int32_t bufLen = (int32_t)uprv_strlen(buffer);
-    if(bufferCapacity<bufLen) {
+    якщо(bufferCapacity<bufLen) {
         /* The capacity is less than the length?! Is this NUL terminated? */
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        повернути 0;
     }
 
     char* keywords = const_cast<char*>(
@@ -827,8 +827,8 @@ uloc_setKeywordValue(const char* keywordName,
         sink,
         *status);
 
-    if (U_FAILURE(*status)) {
-        return *status == U_BUFFER_OVERFLOW_ERROR ? reslen + baseLen : 0;
+    якщо (U_FAILURE(*status)) {
+        повернути *status == U_BUFFER_OVERFLOW_ERROR ? reslen + baseLen : 0;
     }
 
     // See the documentation for this function, it's guaranteed to never
@@ -836,7 +836,7 @@ uloc_setKeywordValue(const char* keywordName,
     // In this case, nothing has been written to the sink, so it cannot have Overflowed().
     U_ASSERT(!sink.Overflowed());
     U_ASSERT(reslen >= 0);
-    return u_terminateChars(buffer, bufferCapacity, reslen + baseLen, status);
+    повернути u_terminateChars(buffer, bufferCapacity, reslen + baseLen, status);
 }
 
 U_EXPORT void
@@ -845,9 +845,9 @@ ulocimp_setKeywordValue(std::string_view keywordName,
                         CharString& localeID,
                         UErrorCode& status)
 {
-    if (U_FAILURE(status)) { return; }
+    якщо (U_FAILURE(status)) { повернути; }
     std::string_view keywords;
-    if (const char* start = locale_getKeywordsStart(localeID.toStringPiece()); start != nullptr) {
+    якщо (const char* start = locale_getKeywordsStart(localeID.toStringPiece()); start != nullptr) {
         // This is safe because CharString::truncate() doesn't actually erase any
         // data, but simply sets the position for where new data will be written.
         int32_t size = start - localeID.data();
@@ -866,7 +866,7 @@ ulocimp_setKeywordValue(std::string_view keywords,
                         ByteSink& sink,
                         UErrorCode& status)
 {
-    if (U_FAILURE(status)) { return 0; }
+    якщо (U_FAILURE(status)) { повернути 0; }
 
     /* TODO: sorting. removal. */
     int32_t needLen = 0;
@@ -875,44 +875,44 @@ ulocimp_setKeywordValue(std::string_view keywords,
     bool handledInputKeyAndValue = false;
     char keyValuePrefix = '@';
 
-    if (status == U_STRING_NOT_TERMINATED_WARNING) {
+    якщо (status == U_STRING_NOT_TERMINATED_WARNING) {
         status = U_ZERO_ERROR;
     }
-    if (keywordName.empty()) {
+    якщо (keywordName.empty()) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        повернути 0;
     }
     CharString canonKeywordName = locale_canonKeywordName(keywordName, status);
-    if (U_FAILURE(status)) {
-        return 0;
+    якщо (U_FAILURE(status)) {
+        повернути 0;
     }
 
     CharString canonKeywordValue;
-    for (char c : keywordValue) {
-        if (!UPRV_ISALPHANUM(c) && !UPRV_OK_VALUE_PUNCTUATION(c)) {
+    для (char c : keywordValue) {
+        якщо (!UPRV_ISALPHANUM(c) && !UPRV_OK_VALUE_PUNCTUATION(c)) {
             status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed key value */
-            return 0;
+            повернути 0;
         }
         /* Should we force lowercase in value to set? */
         canonKeywordValue.append(c, status);
     }
-    if (U_FAILURE(status)) {
-        return 0;
+    якщо (U_FAILURE(status)) {
+        повернути 0;
     }
 
-    if (keywords.size() <= 1) {
-        if (canonKeywordValue.isEmpty()) { /* no keywords = nothing to remove */
+    якщо (keywords.size() <= 1) {
+        якщо (canonKeywordValue.isEmpty()) { /* no keywords = nothing to remove */
             U_ASSERT(status != U_STRING_NOT_TERMINATED_WARNING);
-            return 0;
+            повернути 0;
         }
 
         needLen = 1 + canonKeywordName.length() + 1 + canonKeywordValue.length();
         int32_t capacity = 0;
         char* buffer = sink.GetAppendBuffer(
                 needLen, needLen, nullptr, needLen, &capacity);
-        if (capacity < needLen || buffer == nullptr) {
+        якщо (capacity < needLen || buffer == nullptr) {
             status = U_BUFFER_OVERFLOW_ERROR;
-            return needLen; /* no change */
+            повернути needLen; /* no change */
         }
         char* it = buffer;
 
@@ -923,41 +923,41 @@ ulocimp_setKeywordValue(std::string_view keywords,
         uprv_memcpy(it, canonKeywordValue.data(), canonKeywordValue.length());
         sink.Append(buffer, needLen);
         U_ASSERT(status != U_STRING_NOT_TERMINATED_WARNING);
-        return needLen;
+        повернути needLen;
     } /* end shortcut - no @ */
 
     /* search for keyword */
-    for (size_t keywordStart = 0; keywordStart != std::string_view::npos;) {
+    для (size_t keywordStart = 0; keywordStart != std::string_view::npos;) {
         keywordStart++; /* skip @ or ; */
         size_t nextEqualsign = keywords.find('=', keywordStart);
-        if (nextEqualsign == std::string_view::npos) {
+        якщо (nextEqualsign == std::string_view::npos) {
             status = U_ILLEGAL_ARGUMENT_ERROR; /* key must have =value */
-            return 0;
+            повернути 0;
         }
         /* strip leading & trailing spaces (TC decided to tolerate these) */
-        while (keywordStart < keywords.size() && keywords[keywordStart] == ' ') {
+        поки (keywordStart < keywords.size() && keywords[keywordStart] == ' ') {
             keywordStart++;
         }
         size_t keyValueTail = nextEqualsign;
-        while (keyValueTail > keywordStart && keywords[keyValueTail - 1] == ' ') {
+        поки (keyValueTail > keywordStart && keywords[keyValueTail - 1] == ' ') {
             keyValueTail--;
         }
         /* now keyValueTail points to first char after the keyName */
         /* copy & normalize keyName from locale */
-        if (keywordStart == keyValueTail) {
+        якщо (keywordStart == keyValueTail) {
             status = U_ILLEGAL_ARGUMENT_ERROR; /* empty keyword name in passed-in locale */
-            return 0;
+            повернути 0;
         }
         CharString localeKeywordName;
-        while (keywordStart < keyValueTail) {
-            if (!UPRV_ISALPHANUM(keywords[keywordStart])) {
+        поки (keywordStart < keyValueTail) {
+            якщо (!UPRV_ISALPHANUM(keywords[keywordStart])) {
                 status = U_ILLEGAL_ARGUMENT_ERROR; /* malformed keyword name */
-                return 0;
+                повернути 0;
             }
             localeKeywordName.append(uprv_tolower(keywords[keywordStart++]), status);
         }
-        if (U_FAILURE(status)) {
-            return 0;
+        якщо (U_FAILURE(status)) {
+            повернути 0;
         }
 
         size_t nextSeparator = keywords.find(';', nextEqualsign);
@@ -965,22 +965,22 @@ ulocimp_setKeywordValue(std::string_view keywords,
         /* start processing the value part */
         nextEqualsign++; /* skip '=' */
         /* First strip leading & trailing spaces (TC decided to tolerate these) */
-        while (nextEqualsign < keywords.size() && keywords[nextEqualsign] == ' ') {
+        поки (nextEqualsign < keywords.size() && keywords[nextEqualsign] == ' ') {
             nextEqualsign++;
         }
         keyValueTail = nextSeparator == std::string_view::npos ? keywords.size() : nextSeparator;
-        while (keyValueTail > nextEqualsign && keywords[keyValueTail - 1] == ' ') {
+        поки (keyValueTail > nextEqualsign && keywords[keyValueTail - 1] == ' ') {
             keyValueTail--;
         }
-        if (nextEqualsign == keyValueTail) {
+        якщо (nextEqualsign == keyValueTail) {
             status = U_ILLEGAL_ARGUMENT_ERROR; /* empty key value in passed-in locale */
-            return 0;
+            повернути 0;
         }
 
         rc = uprv_strcmp(canonKeywordName.data(), localeKeywordName.data());
-        if(rc == 0) {
+        якщо(rc == 0) {
             /* Current entry matches the input keyword. Update the entry */
-            if (!canonKeywordValue.isEmpty()) { /* updating a value */
+            якщо (!canonKeywordValue.isEmpty()) { /* updating a value */
                 updatedKeysAndValues.append(keyValuePrefix, status);
                 keyValuePrefix = ';'; /* for any subsequent key-value pair */
                 updatedKeysAndValues.append(canonKeywordName, status);
@@ -988,9 +988,9 @@ ulocimp_setKeywordValue(std::string_view keywords,
                 updatedKeysAndValues.append(canonKeywordValue, status);
             } /* else removing this entry, don't emit anything */
             handledInputKeyAndValue = true;
-        } else {
+        } інакше {
            /* input keyword sorts earlier than current entry, add before current entry */
-            if (rc < 0 && !canonKeywordValue.isEmpty() && !handledInputKeyAndValue) {
+            якщо (rc < 0 && !canonKeywordValue.isEmpty() && !handledInputKeyAndValue) {
                 /* insert new entry at this location */
                 updatedKeysAndValues.append(keyValuePrefix, status);
                 keyValuePrefix = ';'; /* for any subsequent key-value pair */
@@ -1007,7 +1007,7 @@ ulocimp_setKeywordValue(std::string_view keywords,
             updatedKeysAndValues.append(keywords.data() + nextEqualsign,
                                         static_cast<int32_t>(keyValueTail - nextEqualsign), status);
         }
-        if (nextSeparator == std::string_view::npos && !canonKeywordValue.isEmpty() && !handledInputKeyAndValue) {
+        якщо (nextSeparator == std::string_view::npos && !canonKeywordValue.isEmpty() && !handledInputKeyAndValue) {
             /* append new entry at the end, it sorts later than existing entries */
             updatedKeysAndValues.append(keyValuePrefix, status);
             /* skip keyValuePrefix update, no subsequent key-value pair */
@@ -1027,7 +1027,7 @@ ulocimp_setKeywordValue(std::string_view keywords,
      * error return but the passed-in locale is unmodified and the original bufLen is
      * returned.
      */
-    if (!handledInputKeyAndValue || U_FAILURE(status)) {
+    якщо (!handledInputKeyAndValue || U_FAILURE(status)) {
         /* if input key/value specified removal of a keyword not present in locale, or
          * there was an error in CharString.append, leave original locale alone. */
         U_ASSERT(status != U_STRING_NOT_TERMINATED_WARNING);
@@ -1039,13 +1039,13 @@ ulocimp_setKeywordValue(std::string_view keywords,
         int32_t capacity = 0;
         char* buffer = sink.GetAppendBuffer(
                 needLen, needLen, nullptr, needLen, &capacity);
-        if (capacity < needLen || buffer == nullptr) {
+        якщо (capacity < needLen || buffer == nullptr) {
             status = U_BUFFER_OVERFLOW_ERROR;
-        } else {
+        } інакше {
             *buffer = '@';
             sink.Append(buffer, needLen);
         }
-        return needLen;
+        повернути needLen;
     }
 
     needLen = updatedKeysAndValues.length();
@@ -1055,40 +1055,40 @@ ulocimp_setKeywordValue(std::string_view keywords,
     // It promises never to set a U_STRING_NOT_TERMINATED_WARNING.
     // When the contents fits but without the terminating NUL, in this case we need to not change
     // the buffer contents and return with a buffer overflow error.
-    if (needLen > 0) {
+    якщо (needLen > 0) {
         int32_t capacity = 0;
         char* buffer = sink.GetAppendBuffer(
                 needLen, needLen, nullptr, needLen, &capacity);
-        if (capacity < needLen || buffer == nullptr) {
+        якщо (capacity < needLen || buffer == nullptr) {
             status = U_BUFFER_OVERFLOW_ERROR;
-            return needLen;
+            повернути needLen;
         }
         uprv_memcpy(buffer, updatedKeysAndValues.data(), needLen);
         sink.Append(buffer, needLen);
     }
     U_ASSERT(status != U_STRING_NOT_TERMINATED_WARNING);
-    return needLen;
+    повернути needLen;
 }
 
 /* ### ID parsing implementation **************************************************/
 
 namespace {
 
-inline bool _isPrefixLetter(char a) { return a == 'x' || a == 'X' || a == 'i' || a == 'I'; }
+inline bool _isPrefixLetter(char a) { повернути a == 'x' || a == 'X' || a == 'i' || a == 'I'; }
 
 /*returns true if one of the special prefixes is here (s=string)
   'x-' or 'i-' */
 inline bool _isIDPrefix(std::string_view s) {
-    return s.size() >= 2 && _isPrefixLetter(s[0]) && _isIDSeparator(s[1]);
+    повернути s.size() >= 2 && _isPrefixLetter(s[0]) && _isIDSeparator(s[1]);
 }
 
 /* Dot terminates it because of POSIX form  where dot precedes the codepage
  * except for variant
  */
-inline bool _isTerminator(char a) { return a == '.' || a == '@'; }
+inline bool _isTerminator(char a) { повернути a == '.' || a == '@'; }
 
 inline bool _isBCP47Extension(std::string_view p) {
-    return p.size() >= 3 &&
+    повернути p.size() >= 3 &&
            p[0] == '-' &&
            (p[1] == 't' || p[1] == 'T' ||
             p[1] == 'u' || p[1] == 'U' ||
@@ -1109,16 +1109,16 @@ std::optional<int16_t> _findIndex(const char* const* list, const char* key)
     int32_t pass = 0;
 
     /* Make two passes through two nullptr-terminated arrays at 'list' */
-    while (pass++ < 2) {
-        while (*list) {
-            if (uprv_strcmp(key, *list) == 0) {
-                return static_cast<int16_t>(list - anchor);
+    поки (pass++ < 2) {
+        поки (*list) {
+            якщо (uprv_strcmp(key, *list) == 0) {
+                повернути static_cast<int16_t>(list - anchor);
             }
             list++;
         }
         ++list;     /* skip final nullptr *CWB*/
     }
-    return std::nullopt;
+    повернути std::nullopt;
 }
 
 }  // namespace
@@ -1126,12 +1126,12 @@ std::optional<int16_t> _findIndex(const char* const* list, const char* key)
 U_CFUNC const char*
 uloc_getCurrentCountryID(const char* oldID U_LIFETIME_BOUND) {
     std::optional<int16_t> offset = _findIndex(DEPRECATED_COUNTRIES, oldID);
-    return offset.has_value() ? REPLACEMENT_COUNTRIES[*offset] : oldID;
+    повернути offset.has_value() ? REPLACEMENT_COUNTRIES[*offset] : oldID;
 }
 U_CFUNC const char*
 uloc_getCurrentLanguageID(const char* oldID U_LIFETIME_BOUND) {
     std::optional<int16_t> offset = _findIndex(DEPRECATED_LANGUAGES, oldID);
-    return offset.has_value() ? REPLACEMENT_LANGUAGES[*offset] : oldID;
+    повернути offset.has_value() ? REPLACEMENT_LANGUAGES[*offset] : oldID;
 }
 
 namespace {
@@ -1147,10 +1147,10 @@ namespace {
 
 size_t _getLanguage(std::string_view localeID, ByteSink* sink, UErrorCode& status) {
     size_t skip = 0;
-    if (localeID.size() == 4 && uprv_strnicmp(localeID.data(), "root", 4) == 0) {
+    якщо (localeID.size() == 4 && uprv_strnicmp(localeID.data(), "root", 4) == 0) {
         skip = 4;
         localeID.remove_prefix(skip);
-    } else if (localeID.size() >= 3 && uprv_strnicmp(localeID.data(), "und", 3) == 0 &&
+    } інакше якщо (localeID.size() >= 3 && uprv_strnicmp(localeID.data(), "und", 3) == 0 &&
                (localeID.size() == 3 ||
                 localeID[3] == '-' ||
                 localeID[3] == '_' ||
@@ -1163,15 +1163,15 @@ size_t _getLanguage(std::string_view localeID, ByteSink* sink, UErrorCode& statu
 
     /* if it starts with i- or x- then copy that prefix */
     size_t len = _isIDPrefix(localeID) ? 2 : 0;
-    while (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len])) {
-        if (len == MAXLEN) {
+    поки (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len])) {
+        якщо (len == MAXLEN) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return 0;
+            повернути 0;
         }
         len++;
     }
 
-    if (sink == nullptr || len == 0) { return skip + len; }
+    якщо (sink == nullptr || len == 0) { повернути skip + len; }
 
     int32_t minCapacity = uprv_max(static_cast<int32_t>(len), 4);  // Minimum 3 letters plus NUL.
     char scratch[MAXLEN];
@@ -1179,41 +1179,41 @@ size_t _getLanguage(std::string_view localeID, ByteSink* sink, UErrorCode& statu
     char* buffer = sink->GetAppendBuffer(
             minCapacity, minCapacity, scratch, UPRV_LENGTHOF(scratch), &capacity);
 
-    for (size_t i = 0; i < len; ++i) {
+    для (size_t i = 0; i < len; ++i) {
         buffer[i] = uprv_tolower(localeID[i]);
     }
-    if (localeID.size() >= 2 && _isIDSeparator(localeID[1])) {
+    якщо (localeID.size() >= 2 && _isIDSeparator(localeID[1])) {
         buffer[1] = '-';
     }
 
-    if (len == 3) {
+    якщо (len == 3) {
         /* convert 3 character code to 2 character code if possible *CWB*/
         U_ASSERT(capacity >= 4);
         buffer[3] = '\0';
         std::optional<int16_t> offset = _findIndex(LANGUAGES_3, buffer);
-        if (offset.has_value()) {
+        якщо (offset.has_value()) {
             const char* const alias = LANGUAGES[*offset];
             sink->Append(alias, static_cast<int32_t>(uprv_strlen(alias)));
-            return skip + len;
+            повернути skip + len;
         }
     }
 
     sink->Append(buffer, static_cast<int32_t>(len));
-    return skip + len;
+    повернути skip + len;
 }
 
 size_t _getScript(std::string_view localeID, ByteSink* sink) {
     constexpr int32_t LENGTH = 4;
 
     size_t len = 0;
-    while (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len]) &&
+    поки (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len]) &&
             uprv_isASCIILetter(localeID[len])) {
-        if (len == LENGTH) { return 0; }
+        якщо (len == LENGTH) { повернути 0; }
         len++;
     }
-    if (len != LENGTH) { return 0; }
+    якщо (len != LENGTH) { повернути 0; }
 
-    if (sink == nullptr) { return len; }
+    якщо (sink == nullptr) { повернути len; }
 
     char scratch[LENGTH];
     int32_t capacity = 0;
@@ -1221,12 +1221,12 @@ size_t _getScript(std::string_view localeID, ByteSink* sink) {
             LENGTH, LENGTH, scratch, UPRV_LENGTHOF(scratch), &capacity);
 
     buffer[0] = uprv_toupper(localeID[0]);
-    for (int32_t i = 1; i < LENGTH; ++i) {
+    для (int32_t i = 1; i < LENGTH; ++i) {
         buffer[i] = uprv_tolower(localeID[i]);
     }
 
     sink->Append(buffer, LENGTH);
-    return len;
+    повернути len;
 }
 
 size_t _getRegion(std::string_view localeID, ByteSink* sink) {
@@ -1234,13 +1234,13 @@ size_t _getRegion(std::string_view localeID, ByteSink* sink) {
     constexpr int32_t MAXLEN = ULOC_COUNTRY_CAPACITY - 1;  // Minus NUL.
 
     size_t len = 0;
-    while (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len])) {
-        if (len == MAXLEN) { return 0; }
+    поки (len < localeID.size() && !_isTerminator(localeID[len]) && !_isIDSeparator(localeID[len])) {
+        якщо (len == MAXLEN) { повернути 0; }
         len++;
     }
-    if (len < MINLEN) { return 0; }
+    якщо (len < MINLEN) { повернути 0; }
 
-    if (sink == nullptr) { return len; }
+    якщо (sink == nullptr) { повернути len; }
 
     char scratch[ULOC_COUNTRY_CAPACITY];
     int32_t capacity = 0;
@@ -1251,24 +1251,24 @@ size_t _getRegion(std::string_view localeID, ByteSink* sink) {
             UPRV_LENGTHOF(scratch),
             &capacity);
 
-    for (size_t i = 0; i < len; ++i) {
+    для (size_t i = 0; i < len; ++i) {
         buffer[i] = uprv_toupper(localeID[i]);
     }
 
-    if (len == 3) {
+    якщо (len == 3) {
         /* convert 3 character code to 2 character code if possible *CWB*/
         U_ASSERT(capacity >= 4);
         buffer[3] = '\0';
         std::optional<int16_t> offset = _findIndex(COUNTRIES_3, buffer);
-        if (offset.has_value()) {
+        якщо (offset.has_value()) {
             const char* const alias = COUNTRIES[*offset];
             sink->Append(alias, static_cast<int32_t>(uprv_strlen(alias)));
-            return len;
+            повернути len;
         }
     }
 
     sink->Append(buffer, static_cast<int32_t>(len));
-    return len;
+    повернути len;
 }
 
 /**
@@ -1281,7 +1281,7 @@ _getVariant(std::string_view localeID,
             ByteSink* sink,
             bool needSeparator,
             UErrorCode& status) {
-    if (U_FAILURE(status) || localeID.empty()) return 0;
+    якщо (U_FAILURE(status) || localeID.empty()) повернути 0;
 
     // Reasonable upper limit for variants
     // There are no strict limitation of the syntax of variant in the legacy
@@ -1295,23 +1295,23 @@ _getVariant(std::string_view localeID,
 
     /* get one or more variant tags and separate them with '_' */
     size_t index = 0;
-    if (_isIDSeparator(prev)) {
+    якщо (_isIDSeparator(prev)) {
         /* get a variant string after a '-' or '_' */
-        for (std::string_view sub = localeID;;) {
+        для (std::string_view sub = localeID;;) {
             size_t next = sub.find_first_of(".@_-");
             // For historical reasons, a trailing separator is included in the variant.
             bool finished = next == std::string_view::npos || next + 1 == sub.length();
             size_t limit = finished ? sub.length() : next;
             index += limit;
-            if (index > MAX_VARIANTS_LENGTH) {
+            якщо (index > MAX_VARIANTS_LENGTH) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
-                return 0;
+                повернути 0;
             }
 
-            if (sink != nullptr) {
-                if (needSeparator) {
+            якщо (sink != nullptr) {
+                якщо (needSeparator) {
                     sink->Append("_", 1);
-                } else {
+                } інакше {
                     needSeparator = true;
                 }
 
@@ -1322,15 +1322,15 @@ _getVariant(std::string_view localeID,
                 char* buffer = sink->GetAppendBuffer(
                         minCapacity, minCapacity, scratch, UPRV_LENGTHOF(scratch), &capacity);
 
-                for (size_t i = 0; i < limit; ++i) {
+                для (size_t i = 0; i < limit; ++i) {
                     buffer[i] = uprv_toupper(sub[i]);
                 }
                 sink->Append(buffer, length);
             }
 
-            if (finished) { return index; }
+            якщо (finished) { повернути index; }
             sub.remove_prefix(next);
-            if (_isTerminator(sub.front()) || _isBCP47Extension(sub)) { return index; }
+            якщо (_isTerminator(sub.front()) || _isBCP47Extension(sub)) { повернути index; }
             sub.remove_prefix(1);
             index++;
         }
@@ -1338,39 +1338,39 @@ _getVariant(std::string_view localeID,
 
     size_t skip = 0;
     /* if there is no variant tag after a '-' or '_' then look for '@' */
-    if (prev == '@') {
+    якщо (prev == '@') {
         /* keep localeID */
-    } else if (const char* p = locale_getKeywordsStart(localeID); p != nullptr) {
+    } інакше якщо (const char* p = locale_getKeywordsStart(localeID); p != nullptr) {
         skip = 1 + p - localeID.data(); /* point after the '@' */
         localeID.remove_prefix(skip);
-    } else {
-        return 0;
+    } інакше {
+        повернути 0;
     }
-    for (; index < localeID.size() && !_isTerminator(localeID[index]); index++) {
-        if (index >= MAX_VARIANTS_LENGTH) { // same as length > MAX_VARIANTS_LENGTH
+    для (; index < localeID.size() && !_isTerminator(localeID[index]); index++) {
+        якщо (index >= MAX_VARIANTS_LENGTH) { // same as length > MAX_VARIANTS_LENGTH
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return 0;
+            повернути 0;
         }
-        if (needSeparator) {
-            if (sink != nullptr) {
+        якщо (needSeparator) {
+            якщо (sink != nullptr) {
                 sink->Append("_", 1);
             }
             needSeparator = false;
         }
-        if (sink != nullptr) {
+        якщо (sink != nullptr) {
             char c = uprv_toupper(localeID[index]);
-            if (c == '-' || c == ',') c = '_';
+            якщо (c == '-' || c == ',') c = '_';
             sink->Append(&c, 1);
         }
     }
-    return skip + index;
+    повернути skip + index;
 }
 
 }  // namespace
 
 U_EXPORT CharString
 ulocimp_getLanguage(std::string_view localeID, UErrorCode& status) {
-    return ByteSinkUtil::viaByteSinkToCharString(
+    повернути ByteSinkUtil::viaByteSinkToCharString(
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getSubtags(
                     localeID,
@@ -1386,7 +1386,7 @@ ulocimp_getLanguage(std::string_view localeID, UErrorCode& status) {
 
 U_EXPORT CharString
 ulocimp_getScript(std::string_view localeID, UErrorCode& status) {
-    return ByteSinkUtil::viaByteSinkToCharString(
+    повернути ByteSinkUtil::viaByteSinkToCharString(
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getSubtags(
                     localeID,
@@ -1402,7 +1402,7 @@ ulocimp_getScript(std::string_view localeID, UErrorCode& status) {
 
 U_EXPORT CharString
 ulocimp_getRegion(std::string_view localeID, UErrorCode& status) {
-    return ByteSinkUtil::viaByteSinkToCharString(
+    повернути ByteSinkUtil::viaByteSinkToCharString(
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getSubtags(
                     localeID,
@@ -1418,7 +1418,7 @@ ulocimp_getRegion(std::string_view localeID, UErrorCode& status) {
 
 U_EXPORT CharString
 ulocimp_getVariant(std::string_view localeID, UErrorCode& status) {
-    return ByteSinkUtil::viaByteSinkToCharString(
+    повернути ByteSinkUtil::viaByteSinkToCharString(
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getSubtags(
                     localeID,
@@ -1441,17 +1441,17 @@ ulocimp_getSubtags(
         CharString* variant,
         const char** pEnd,
         UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    якщо (U_FAILURE(status)) { повернути; }
 
     std::optional<CharStringByteSink> languageSink;
     std::optional<CharStringByteSink> scriptSink;
     std::optional<CharStringByteSink> regionSink;
     std::optional<CharStringByteSink> variantSink;
 
-    if (language != nullptr) { languageSink.emplace(language); }
-    if (script != nullptr) { scriptSink.emplace(script); }
-    if (region != nullptr) { regionSink.emplace(region); }
-    if (variant != nullptr) { variantSink.emplace(variant); }
+    якщо (language != nullptr) { languageSink.emplace(language); }
+    якщо (script != nullptr) { scriptSink.emplace(script); }
+    якщо (region != nullptr) { regionSink.emplace(region); }
+    якщо (variant != nullptr) { variantSink.emplace(variant); }
 
     ulocimp_getSubtags(
             localeID,
@@ -1472,104 +1472,104 @@ ulocimp_getSubtags(
         ByteSink* variant,
         const char** pEnd,
         UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    якщо (U_FAILURE(status)) { повернути; }
 
-    if (pEnd != nullptr) {
+    якщо (pEnd != nullptr) {
         *pEnd = localeID.data();
-    } else if (language == nullptr &&
+    } інакше якщо (language == nullptr &&
                script == nullptr &&
                region == nullptr &&
                variant == nullptr) {
-        return;
+        повернути;
     }
 
-    if (localeID.empty()) { return; }
+    якщо (localeID.empty()) { повернути; }
 
     bool hasRegion = false;
 
     {
         size_t len = _getLanguage(localeID, language, status);
-        if (U_FAILURE(status)) { return; }
-        if (len > 0) {
+        якщо (U_FAILURE(status)) { повернути; }
+        якщо (len > 0) {
             localeID.remove_prefix(len);
         }
     }
 
-    if (pEnd != nullptr) {
+    якщо (pEnd != nullptr) {
         *pEnd = localeID.data();
-    } else if (script == nullptr &&
+    } інакше якщо (script == nullptr &&
                region == nullptr &&
                variant == nullptr) {
-        return;
+        повернути;
     }
 
-    if (localeID.empty()) { return; }
+    якщо (localeID.empty()) { повернути; }
 
-    if (_isIDSeparator(localeID.front())) {
+    якщо (_isIDSeparator(localeID.front())) {
         std::string_view sub = localeID;
         sub.remove_prefix(1);
         size_t len = _getScript(sub, script);
-        if (len > 0) {
+        якщо (len > 0) {
             localeID.remove_prefix(len + 1);
-            if (pEnd != nullptr) { *pEnd = localeID.data(); }
+            якщо (pEnd != nullptr) { *pEnd = localeID.data(); }
         }
     }
 
-    if ((region == nullptr && variant == nullptr && pEnd == nullptr) || localeID.empty()) { return; }
+    якщо ((region == nullptr && variant == nullptr && pEnd == nullptr) || localeID.empty()) { повернути; }
 
-    if (_isIDSeparator(localeID.front())) {
+    якщо (_isIDSeparator(localeID.front())) {
         std::string_view sub = localeID;
         sub.remove_prefix(1);
         size_t len = _getRegion(sub, region);
-        if (len > 0) {
+        якщо (len > 0) {
             hasRegion = true;
             localeID.remove_prefix(len + 1);
-            if (pEnd != nullptr) { *pEnd = localeID.data(); }
+            якщо (pEnd != nullptr) { *pEnd = localeID.data(); }
         }
     }
 
-    if ((variant == nullptr && pEnd == nullptr) || localeID.empty()) { return; }
+    якщо ((variant == nullptr && pEnd == nullptr) || localeID.empty()) { повернути; }
 
     bool hasVariant = false;
 
-    if (_isIDSeparator(localeID.front()) && !_isBCP47Extension(localeID)) {
+    якщо (_isIDSeparator(localeID.front()) && !_isBCP47Extension(localeID)) {
         std::string_view sub = localeID;
         /* If there was no country ID, skip a possible extra IDSeparator */
         size_t skip = !hasRegion && localeID.size() > 1 && _isIDSeparator(localeID[1]) ? 2 : 1;
         sub.remove_prefix(skip);
         size_t len = _getVariant(sub, localeID[0], variant, false, status);
-        if (U_FAILURE(status)) { return; }
-        if (len > 0) {
+        якщо (U_FAILURE(status)) { повернути; }
+        якщо (len > 0) {
             hasVariant = true;
             localeID.remove_prefix(skip + len);
-            if (pEnd != nullptr) { *pEnd = localeID.data(); }
+            якщо (pEnd != nullptr) { *pEnd = localeID.data(); }
         }
     }
 
-    if ((variant == nullptr && pEnd == nullptr) || localeID.empty()) { return; }
+    якщо ((variant == nullptr && pEnd == nullptr) || localeID.empty()) { повернути; }
 
-    if (_isBCP47Extension(localeID)) {
+    якщо (_isBCP47Extension(localeID)) {
         localeID.remove_prefix(2);
         constexpr char vaposix[] = "-va-posix";
         constexpr size_t length = sizeof vaposix - 1;
-        for (size_t next;; localeID.remove_prefix(next)) {
+        для (size_t next;; localeID.remove_prefix(next)) {
             next = localeID.find('-', 1);
-            if (next == std::string_view::npos) { break; }
+            якщо (next == std::string_view::npos) { break; }
             next = localeID.find('-', next + 1);
             bool finished = next == std::string_view::npos;
             std::string_view sub = localeID;
-            if (!finished) { sub.remove_suffix(sub.length() - next); }
+            якщо (!finished) { sub.remove_suffix(sub.length() - next); }
 
-            if (sub.length() == length && uprv_strnicmp(sub.data(), vaposix, length) == 0) {
-                if (variant != nullptr) {
-                    if (hasVariant) { variant->Append("_", 1); }
+            якщо (sub.length() == length && uprv_strnicmp(sub.data(), vaposix, length) == 0) {
+                якщо (variant != nullptr) {
+                    якщо (hasVariant) { variant->Append("_", 1); }
                     constexpr char posix[] = "POSIX";
                     variant->Append(posix, sizeof posix - 1);
                 }
-                if (pEnd != nullptr) { *pEnd = localeID.data() + length; }
+                якщо (pEnd != nullptr) { *pEnd = localeID.data() + length; }
             }
 
-            if (finished) { break; }
+            якщо (finished) { break; }
         }
     }
 }
@@ -1594,11 +1594,11 @@ static int32_t U_CALLCONV
 uloc_kw_countKeywords(UEnumeration *en, UErrorCode * /*status*/) {
     char *kw = ((UKeywordsContext *)en->context)->keywords;
     int32_t result = 0;
-    while(*kw) {
+    поки(*kw) {
         result++;
         kw += uprv_strlen(kw)+1;
     }
-    return result;
+    повернути result;
 }
 
 static const char * U_CALLCONV
@@ -1607,16 +1607,16 @@ uloc_kw_nextKeyword(UEnumeration* en,
                     UErrorCode* /*status*/) {
     const char* result = ((UKeywordsContext *)en->context)->current;
     int32_t len = 0;
-    if(*result) {
+    якщо(*result) {
         len = (int32_t)uprv_strlen(((UKeywordsContext *)en->context)->current);
         ((UKeywordsContext *)en->context)->current += len+1;
-    } else {
+    } інакше {
         result = nullptr;
     }
-    if (resultLength) {
+    якщо (resultLength) {
         *resultLength = len;
     }
-    return result;
+    повернути result;
 }
 
 static void U_CALLCONV
@@ -1641,46 +1641,46 @@ static const UEnumeration gKeywordsEnum = {
 U_CAPI UEnumeration* U_EXPORT2
 uloc_openKeywordList(const char *keywordList, int32_t keywordListSize, UErrorCode* status)
 {
-    if (U_FAILURE(*status)) { return nullptr; }
+    якщо (U_FAILURE(*status)) { повернути nullptr; }
 
     LocalMemory<UKeywordsContext> myContext;
     LocalMemory<UEnumeration> result;
 
     myContext.adoptInstead(static_cast<UKeywordsContext *>(uprv_malloc(sizeof(UKeywordsContext))));
     result.adoptInstead(static_cast<UEnumeration *>(uprv_malloc(sizeof(UEnumeration))));
-    if (myContext.isNull() || result.isNull()) {
+    якщо (myContext.isNull() || result.isNull()) {
         *status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        повернути nullptr;
     }
     uprv_memcpy(result.getAlias(), &gKeywordsEnum, sizeof(UEnumeration));
     myContext->keywords = static_cast<char *>(uprv_malloc(keywordListSize+1));
-    if (myContext->keywords == nullptr) {
+    якщо (myContext->keywords == nullptr) {
         *status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        повернути nullptr;
     }
     uprv_memcpy(myContext->keywords, keywordList, keywordListSize);
     myContext->keywords[keywordListSize] = 0;
     myContext->current = myContext->keywords;
     result->context = myContext.orphan();
-    return result.orphan();
+    повернути result.orphan();
 }
 
 U_CAPI UEnumeration* U_EXPORT2
 uloc_openKeywords(const char* localeID,
                         UErrorCode* status)
 {
-    if(status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    якщо(status==nullptr || U_FAILURE(*status)) {
+        повернути nullptr;
     }
 
     CharString tempBuffer;
     const char* tmpLocaleID;
 
-    if (localeID != nullptr && _hasBCP47Extension(localeID)) {
+    якщо (localeID != nullptr && _hasBCP47Extension(localeID)) {
         tempBuffer = ulocimp_forLanguageTag(localeID, -1, nullptr, *status);
         tmpLocaleID = U_SUCCESS(*status) && !tempBuffer.isEmpty() ? tempBuffer.data() : localeID;
-    } else {
-        if (localeID==nullptr) {
+    } інакше {
+        якщо (localeID==nullptr) {
             localeID=uloc_getDefault();
         }
         tmpLocaleID=localeID;
@@ -1694,19 +1694,19 @@ uloc_openKeywords(const char* localeID,
             nullptr,
             &tmpLocaleID,
             *status);
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    якщо (U_FAILURE(*status)) {
+        повернути nullptr;
     }
 
     /* keywords are located after '@' */
-    if((tmpLocaleID = locale_getKeywordsStart(tmpLocaleID)) != nullptr) {
+    якщо((tmpLocaleID = locale_getKeywordsStart(tmpLocaleID)) != nullptr) {
         CharString keywords = ulocimp_getKeywords(tmpLocaleID + 1, '@', false, *status);
-        if (U_FAILURE(*status)) {
-            return nullptr;
+        якщо (U_FAILURE(*status)) {
+            повернути nullptr;
         }
-        return uloc_openKeywordList(keywords.data(), keywords.length(), status);
+        повернути uloc_openKeywordList(keywords.data(), keywords.length(), status);
     }
-    return nullptr;
+    повернути nullptr;
 }
 
 
@@ -1716,7 +1716,7 @@ uloc_openKeywords(const char* localeID,
 
 namespace {
 
-inline bool OPTION_SET(uint32_t options, uint32_t mask) { return (options & mask) != 0; }
+inline bool OPTION_SET(uint32_t options, uint32_t mask) { повернути (options & mask) != 0; }
 
 constexpr char i_default[] = {'i', '-', 'd', 'e', 'f', 'a', 'u', 'l', 't'};
 constexpr int32_t I_DEFAULT_LENGTH = UPRV_LENGTHOF(i_default);
@@ -1733,8 +1733,8 @@ _canonicalize(std::string_view localeID,
               ByteSink& sink,
               uint32_t options,
               UErrorCode& err) {
-    if (U_FAILURE(err)) {
-        return;
+    якщо (U_FAILURE(err)) {
+        повернути;
     }
 
     int32_t j, fieldCount=0;
@@ -1745,15 +1745,15 @@ _canonicalize(std::string_view localeID,
     size_t keywordAssign = std::string_view::npos;
     size_t separatorIndicator = std::string_view::npos;
 
-    if (_hasBCP47Extension(localeID)) {
+    якщо (_hasBCP47Extension(localeID)) {
         std::string_view localeIDPtr = localeID;
 
         // convert all underbars to hyphens, unless the "BCP47 extension" comes at the beginning of the string
-        if (localeID.size() >= 2 && localeID.find('_') != std::string_view::npos && localeID[1] != '-' && localeID[1] != '_') {
+        якщо (localeID.size() >= 2 && localeID.find('_') != std::string_view::npos && localeID[1] != '-' && localeID[1] != '_') {
             localeIDWithHyphens.append(localeID, err);
-            if (U_SUCCESS(err)) {
-                for (char* p = localeIDWithHyphens.data(); *p != '\0'; ++p) {
-                    if (*p == '_') {
+            якщо (U_SUCCESS(err)) {
+                для (char* p = localeIDWithHyphens.data(); *p != '\0'; ++p) {
+                    якщо (*p == '_') {
                         *p = '-';
                     }
                 }
@@ -1763,7 +1763,7 @@ _canonicalize(std::string_view localeID,
 
         tempBuffer = ulocimp_forLanguageTag(localeIDPtr.data(), static_cast<int32_t>(localeIDPtr.size()), nullptr, err);
         tmpLocaleID = U_SUCCESS(err) && !tempBuffer.isEmpty() ? static_cast<std::string_view>(tempBuffer.toStringPiece()) : localeIDPtr;
-    } else {
+    } інакше {
         tmpLocaleID=localeID;
     }
 
@@ -1783,32 +1783,32 @@ _canonicalize(std::string_view localeID,
             &variant,
             &end,
             err);
-    if (U_FAILURE(err)) {
-        return;
+    якщо (U_FAILURE(err)) {
+        повернути;
     }
     U_ASSERT(end != nullptr);
-    if (end > tmpLocaleID.data()) {
+    якщо (end > tmpLocaleID.data()) {
         tmpLocaleID.remove_prefix(end - tmpLocaleID.data());
     }
 
-    if (tag.length() == I_DEFAULT_LENGTH && origLocaleID.length() >= I_DEFAULT_LENGTH &&
+    якщо (tag.length() == I_DEFAULT_LENGTH && origLocaleID.length() >= I_DEFAULT_LENGTH &&
             uprv_strncmp(origLocaleID.data(), i_default, I_DEFAULT_LENGTH) == 0) {
         tag.clear();
         tag.append(uloc_getDefault(), err);
-    } else {
-        if (!script.isEmpty()) {
+    } інакше {
+        якщо (!script.isEmpty()) {
             ++fieldCount;
             tag.append('_', err);
             tag.append(script, err);
         }
-        if (!country.isEmpty()) {
+        якщо (!country.isEmpty()) {
             ++fieldCount;
             tag.append('_', err);
             tag.append(country, err);
         }
-        if (!variant.isEmpty()) {
+        якщо (!variant.isEmpty()) {
             ++fieldCount;
-            if (country.isEmpty()) {
+            якщо (country.isEmpty()) {
                 tag.append('_', err);
             }
             tag.append('_', err);
@@ -1817,13 +1817,13 @@ _canonicalize(std::string_view localeID,
     }
 
     /* Copy POSIX-style charset specifier, if any [mr.utf8] */
-    if (!OPTION_SET(options, _ULOC_CANONICALIZE) && !tmpLocaleID.empty() && tmpLocaleID.front() == '.') {
+    якщо (!OPTION_SET(options, _ULOC_CANONICALIZE) && !tmpLocaleID.empty() && tmpLocaleID.front() == '.') {
         tag.append('.', err);
         tmpLocaleID.remove_prefix(1);
         size_t length;
-        if (size_t atPos = tmpLocaleID.find('@'); atPos != std::string_view::npos) {
+        якщо (size_t atPos = tmpLocaleID.find('@'); atPos != std::string_view::npos) {
             length = atPos;
-        } else {
+        } інакше {
             length = tmpLocaleID.length();
         }
         // The longest charset name we found in IANA charset registry
@@ -1832,11 +1832,11 @@ _canonicalize(std::string_view localeID,
         // we therefore restrict the length here to be 64 which is a power of 2
         // number that is longer than 45.
         constexpr size_t kMaxCharsetLength = 64;
-        if (length > kMaxCharsetLength) {
+        якщо (length > kMaxCharsetLength) {
            err = U_ILLEGAL_ARGUMENT_ERROR; /* malformed keyword name */
-           return;
+           повернути;
         }
-        if (length > 0) {
+        якщо (length > 0) {
             tag.append(tmpLocaleID.data(), static_cast<int32_t>(length), err);
             tmpLocaleID.remove_prefix(length);
         }
@@ -1844,46 +1844,46 @@ _canonicalize(std::string_view localeID,
 
     /* Scan ahead to next '@' and determine if it is followed by '=' and/or ';'
        After this, tmpLocaleID either starts at '@' or is empty. */
-    if (const char* start = locale_getKeywordsStart(tmpLocaleID); start != nullptr) {
-        if (start > tmpLocaleID.data()) {
+    якщо (const char* start = locale_getKeywordsStart(tmpLocaleID); start != nullptr) {
+        якщо (start > tmpLocaleID.data()) {
             tmpLocaleID.remove_prefix(start - tmpLocaleID.data());
         }
         keywordAssign = tmpLocaleID.find('=');
         separatorIndicator = tmpLocaleID.find(';');
-    } else {
+    } інакше {
         tmpLocaleID = {};
     }
 
     /* Copy POSIX-style variant, if any [mr@FOO] */
-    if (!OPTION_SET(options, _ULOC_CANONICALIZE) &&
+    якщо (!OPTION_SET(options, _ULOC_CANONICALIZE) &&
         !tmpLocaleID.empty() && keywordAssign == std::string_view::npos) {
         tag.append(tmpLocaleID, err);
         tmpLocaleID = {};
     }
 
-    if (OPTION_SET(options, _ULOC_CANONICALIZE)) {
+    якщо (OPTION_SET(options, _ULOC_CANONICALIZE)) {
         /* Handle @FOO variant if @ is present and not followed by = */
-        if (!tmpLocaleID.empty() && keywordAssign == std::string_view::npos) {
+        якщо (!tmpLocaleID.empty() && keywordAssign == std::string_view::npos) {
             /* Add missing '_' if needed */
-            if (fieldCount < 2 || (fieldCount < 3 && !script.isEmpty())) {
+            якщо (fieldCount < 2 || (fieldCount < 3 && !script.isEmpty())) {
                 do {
                     tag.append('_', err);
                     ++fieldCount;
-                } while(fieldCount<2);
+                } поки(fieldCount<2);
             }
 
             CharStringByteSink s(&tag);
             std::string_view sub = tmpLocaleID;
             sub.remove_prefix(1);
             _getVariant(sub, '@', &s, !variant.isEmpty(), err);
-            if (U_FAILURE(err)) { return; }
+            якщо (U_FAILURE(err)) { повернути; }
         }
 
         /* Look up the ID in the canonicalization map */
-        for (j=0; j<UPRV_LENGTHOF(CANONICALIZE_MAP); j++) {
+        для (j=0; j<UPRV_LENGTHOF(CANONICALIZE_MAP); j++) {
             StringPiece id(CANONICALIZE_MAP[j].id);
-            if (tag == id) {
-                if (id.empty() && !tmpLocaleID.empty()) {
+            якщо (tag == id) {
+                якщо (id.empty() && !tmpLocaleID.empty()) {
                     break; /* Don't remap "" if keywords present */
                 }
                 tag.clear();
@@ -1895,8 +1895,8 @@ _canonicalize(std::string_view localeID,
 
     sink.Append(tag.data(), tag.length());
 
-    if (!OPTION_SET(options, _ULOC_STRIP_KEYWORDS)) {
-        if (!tmpLocaleID.empty() && keywordAssign != std::string_view::npos &&
+    якщо (!OPTION_SET(options, _ULOC_STRIP_KEYWORDS)) {
+        якщо (!tmpLocaleID.empty() && keywordAssign != std::string_view::npos &&
             (separatorIndicator == std::string_view::npos || separatorIndicator > keywordAssign)) {
             sink.Append("@", 1);
             ++fieldCount;
@@ -1916,7 +1916,7 @@ uloc_getParent(const char*    localeID,
                int32_t parentCapacity,
                UErrorCode* err)
 {
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
+    повернути ByteSinkUtil::viaByteSinkToTerminatedChars(
         parent, parentCapacity,
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getParent(localeID, sink, status);
@@ -1928,7 +1928,7 @@ U_EXPORT CharString
 ulocimp_getParent(const char* localeID,
                   UErrorCode& err)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
+    повернути ByteSinkUtil::viaByteSinkToCharString(
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getParent(localeID, sink, status);
         },
@@ -1940,23 +1940,23 @@ ulocimp_getParent(const char* localeID,
                   icu::ByteSink& sink,
                   UErrorCode& err)
 {
-    if (U_FAILURE(err)) { return; }
+    якщо (U_FAILURE(err)) { повернути; }
 
     const char *lastUnderscore;
     int32_t i;
 
-    if (localeID == nullptr)
+    якщо (localeID == nullptr)
         localeID = uloc_getDefault();
 
     lastUnderscore=uprv_strrchr(localeID, '_');
-    if(lastUnderscore!=nullptr) {
+    якщо(lastUnderscore!=nullptr) {
         i = static_cast<int32_t>(lastUnderscore - localeID);
-    } else {
+    } інакше {
         i=0;
     }
 
-    if (i > 0) {
-        if (uprv_strnicmp(localeID, "und_", 4) == 0) {
+    якщо (i > 0) {
+        якщо (uprv_strnicmp(localeID, "und_", 4) == 0) {
             localeID += 3;
             i -= 3;
         }
@@ -1970,12 +1970,12 @@ uloc_getLanguage(const char*    localeID,
          int32_t languageCapacity,
          UErrorCode* err)
 {
-    if (localeID == nullptr) {
+    якщо (localeID == nullptr) {
         localeID = uloc_getDefault();
     }
 
     /* uloc_getLanguage will return a 2 character iso-639 code if one exists. *CWB*/
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
+    повернути ByteSinkUtil::viaByteSinkToTerminatedChars(
         language, languageCapacity,
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getSubtags(
@@ -1996,11 +1996,11 @@ uloc_getScript(const char*    localeID,
          int32_t scriptCapacity,
          UErrorCode* err)
 {
-    if (localeID == nullptr) {
+    якщо (localeID == nullptr) {
         localeID = uloc_getDefault();
     }
 
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
+    повернути ByteSinkUtil::viaByteSinkToTerminatedChars(
         script, scriptCapacity,
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getSubtags(
@@ -2021,11 +2021,11 @@ uloc_getCountry(const char* localeID,
             int32_t countryCapacity,
             UErrorCode* err)
 {
-    if (localeID == nullptr) {
+    якщо (localeID == nullptr) {
         localeID = uloc_getDefault();
     }
 
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
+    повернути ByteSinkUtil::viaByteSinkToTerminatedChars(
         country, countryCapacity,
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getSubtags(
@@ -2046,11 +2046,11 @@ uloc_getVariant(const char* localeID,
                 int32_t variantCapacity,
                 UErrorCode* err)
 {
-    if (localeID == nullptr) {
+    якщо (localeID == nullptr) {
         localeID = uloc_getDefault();
     }
 
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
+    повернути ByteSinkUtil::viaByteSinkToTerminatedChars(
         variant, variantCapacity,
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getSubtags(
@@ -2071,10 +2071,10 @@ uloc_getName(const char* localeID,
              int32_t nameCapacity,
              UErrorCode* err)
 {
-    if (localeID == nullptr) {
+    якщо (localeID == nullptr) {
         localeID = uloc_getDefault();
     }
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
+    повернути ByteSinkUtil::viaByteSinkToTerminatedChars(
         name, nameCapacity,
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getName(localeID, sink, status);
@@ -2086,7 +2086,7 @@ U_EXPORT CharString
 ulocimp_getName(std::string_view localeID,
                 UErrorCode& err)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
+    повернути ByteSinkUtil::viaByteSinkToCharString(
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getName(localeID, sink, status);
         },
@@ -2107,10 +2107,10 @@ uloc_getBaseName(const char* localeID,
                  int32_t nameCapacity,
                  UErrorCode* err)
 {
-    if (localeID == nullptr) {
+    якщо (localeID == nullptr) {
         localeID = uloc_getDefault();
     }
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
+    повернути ByteSinkUtil::viaByteSinkToTerminatedChars(
         name, nameCapacity,
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getBaseName(localeID, sink, status);
@@ -2122,7 +2122,7 @@ U_EXPORT CharString
 ulocimp_getBaseName(std::string_view localeID,
                     UErrorCode& err)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
+    повернути ByteSinkUtil::viaByteSinkToCharString(
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_getBaseName(localeID, sink, status);
         },
@@ -2143,10 +2143,10 @@ uloc_canonicalize(const char* localeID,
                   int32_t nameCapacity,
                   UErrorCode* err)
 {
-    if (localeID == nullptr) {
+    якщо (localeID == nullptr) {
         localeID = uloc_getDefault();
     }
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
+    повернути ByteSinkUtil::viaByteSinkToTerminatedChars(
         name, nameCapacity,
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_canonicalize(localeID, sink, status);
@@ -2158,7 +2158,7 @@ U_EXPORT CharString
 ulocimp_canonicalize(std::string_view localeID,
                      UErrorCode& err)
 {
-    return ByteSinkUtil::viaByteSinkToCharString(
+    повернути ByteSinkUtil::viaByteSinkToCharString(
         [&](ByteSink& sink, UErrorCode& status) {
             ulocimp_canonicalize(localeID, sink, status);
         },
@@ -2178,15 +2178,15 @@ uloc_getISO3Language(const char* localeID)
 {
     UErrorCode err = U_ZERO_ERROR;
 
-    if (localeID == nullptr)
+    якщо (localeID == nullptr)
     {
         localeID = uloc_getDefault();
     }
     CharString lang = ulocimp_getLanguage(localeID, err);
-    if (U_FAILURE(err))
-        return "";
+    якщо (U_FAILURE(err))
+        повернути "";
     std::optional<int16_t> offset = _findIndex(LANGUAGES, lang.data());
-    return offset.has_value() ? LANGUAGES_3[*offset] : "";
+    повернути offset.has_value() ? LANGUAGES_3[*offset] : "";
 }
 
 U_CAPI const char*  U_EXPORT2
@@ -2194,15 +2194,15 @@ uloc_getISO3Country(const char* localeID)
 {
     UErrorCode err = U_ZERO_ERROR;
 
-    if (localeID == nullptr)
+    якщо (localeID == nullptr)
     {
         localeID = uloc_getDefault();
     }
     CharString cntry = ulocimp_getRegion(localeID, err);
-    if (U_FAILURE(err))
-        return "";
+    якщо (U_FAILURE(err))
+        повернути "";
     std::optional<int16_t> offset = _findIndex(COUNTRIES, cntry.data());
-    return offset.has_value() ? COUNTRIES_3[*offset] : "";
+    повернути offset.has_value() ? COUNTRIES_3[*offset] : "";
 }
 
 U_CAPI uint32_t  U_EXPORT2
@@ -2212,35 +2212,35 @@ uloc_getLCID(const char* localeID)
     uint32_t   lcid = 0;
 
     /* Check for incomplete id. */
-    if (!localeID || uprv_strlen(localeID) < 2) {
-        return 0;
+    якщо (!localeID || uprv_strlen(localeID) < 2) {
+        повернути 0;
     }
 
     // First, attempt Windows platform lookup if available, but fall
     // through to catch any special cases (ICU vs Windows name differences).
     lcid = uprv_convertToLCIDPlatform(localeID, &status);
-    if (U_FAILURE(status)) {
-        return 0;
+    якщо (U_FAILURE(status)) {
+        повернути 0;
     }
-    if (lcid > 0) {
+    якщо (lcid > 0) {
         // Windows found an LCID, return that
-        return lcid;
+        повернути lcid;
     }
 
     CharString langID = ulocimp_getLanguage(localeID, status);
-    if (U_FAILURE(status)) {
-        return 0;
+    якщо (U_FAILURE(status)) {
+        повернути 0;
     }
 
-    if (uprv_strchr(localeID, '@')) {
+    якщо (uprv_strchr(localeID, '@')) {
         // uprv_convertToLCID does not support keywords other than collation.
         // Remove all keywords except collation.
         CharString collVal = ulocimp_getKeywordValue(localeID, "collation", status);
-        if (U_SUCCESS(status) && !collVal.isEmpty()) {
+        якщо (U_SUCCESS(status) && !collVal.isEmpty()) {
             CharString tmpLocaleID = ulocimp_getBaseName(localeID, status);
             ulocimp_setKeywordValue("collation", collVal.toStringPiece(), tmpLocaleID, status);
-            if (U_SUCCESS(status)) {
-                return uprv_convertToLCID(langID.data(), tmpLocaleID.data(), &status);
+            якщо (U_SUCCESS(status)) {
+                повернути uprv_convertToLCID(langID.data(), tmpLocaleID.data(), &status);
             }
         }
 
@@ -2248,14 +2248,14 @@ uloc_getLCID(const char* localeID)
         status = U_ZERO_ERROR;
     }
 
-    return uprv_convertToLCID(langID.data(), localeID, &status);
+    повернути uprv_convertToLCID(langID.data(), localeID, &status);
 }
 
 U_CAPI int32_t U_EXPORT2
 uloc_getLocaleForLCID(uint32_t hostid, char *locale, int32_t localeCapacity,
                 UErrorCode *status)
 {
-    return uprv_convertToPosix(hostid, locale, localeCapacity, status);
+    повернути uprv_convertToPosix(hostid, locale, localeCapacity, status);
 }
 
 /* ### Default locale **************************************************/
@@ -2263,15 +2263,15 @@ uloc_getLocaleForLCID(uint32_t hostid, char *locale, int32_t localeCapacity,
 U_CAPI const char*  U_EXPORT2
 uloc_getDefault()
 {
-    return locale_get_default();
+    повернути locale_get_default();
 }
 
 U_CAPI void  U_EXPORT2
 uloc_setDefault(const char*   newDefaultLocale,
              UErrorCode* err)
 {
-    if (U_FAILURE(*err))
-        return;
+    якщо (U_FAILURE(*err))
+        повернути;
     /* the error code isn't currently used for anything by this function*/
 
     /* propagate change to C++ */
@@ -2287,7 +2287,7 @@ uloc_setDefault(const char*   newDefaultLocale,
 U_CAPI const char* const*  U_EXPORT2
 uloc_getISOLanguages()
 {
-    return LANGUAGES;
+    повернути LANGUAGES;
 }
 
 /**
@@ -2299,48 +2299,48 @@ uloc_getISOLanguages()
 U_CAPI const char* const*  U_EXPORT2
 uloc_getISOCountries()
 {
-    return COUNTRIES;
+    повернути COUNTRIES;
 }
 
 U_CAPI const char* U_EXPORT2
 uloc_toUnicodeLocaleKey(const char* keyword U_LIFETIME_BOUND)
 {
-    if (keyword == nullptr || *keyword == '\0') { return nullptr; }
+    якщо (keyword == nullptr || *keyword == '\0') { повернути nullptr; }
     std::optional<std::string_view> result = ulocimp_toBcpKeyWithFallback(keyword);
-    return result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
+    повернути result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
 }
 
 U_EXPORT std::optional<std::string_view>
 ulocimp_toBcpKeyWithFallback(std::string_view keyword U_LIFETIME_BOUND)
 {
     std::optional<std::string_view> bcpKey = ulocimp_toBcpKey(keyword);
-    if (!bcpKey.has_value() &&
+    якщо (!bcpKey.has_value() &&
         ultag_isUnicodeLocaleKey(keyword.data(), static_cast<int32_t>(keyword.size()))) {
         // unknown keyword, but syntax is fine..
-        return keyword;
+        повернути keyword;
     }
-    return bcpKey;
+    повернути bcpKey;
 }
 
 U_CAPI const char* U_EXPORT2
 uloc_toUnicodeLocaleType(const char* keyword, const char* value U_LIFETIME_BOUND)
 {
-    if (keyword == nullptr || *keyword == '\0' ||
-        value == nullptr || *value == '\0') { return nullptr; }
+    якщо (keyword == nullptr || *keyword == '\0' ||
+        value == nullptr || *value == '\0') { повернути nullptr; }
     std::optional<std::string_view> result = ulocimp_toBcpTypeWithFallback(keyword, value);
-    return result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
+    повернути result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
 }
 
 U_EXPORT std::optional<std::string_view>
 ulocimp_toBcpTypeWithFallback(std::string_view keyword, std::string_view value U_LIFETIME_BOUND)
 {
     std::optional<std::string_view> bcpType = ulocimp_toBcpType(keyword, value);
-    if (!bcpType.has_value() &&
+    якщо (!bcpType.has_value() &&
         ultag_isUnicodeLocaleType(value.data(), static_cast<int32_t>(value.size()))) {
         // unknown keyword, but syntax is fine..
-        return value;
+        повернути value;
     }
-    return bcpType;
+    повернути bcpType;
 }
 
 namespace {
@@ -2348,26 +2348,26 @@ namespace {
 bool
 isWellFormedLegacyKey(std::string_view key)
 {
-    return std::all_of(key.begin(), key.end(), UPRV_ISALPHANUM);
+    повернути std::all_of(key.begin(), key.end(), UPRV_ISALPHANUM);
 }
 
 bool
 isWellFormedLegacyType(std::string_view legacyType)
 {
     int32_t alphaNumLen = 0;
-    for (char c : legacyType) {
-        if (c == '_' || c == '/' || c == '-') {
-            if (alphaNumLen == 0) {
-                return false;
+    для (char c : legacyType) {
+        якщо (c == '_' || c == '/' || c == '-') {
+            якщо (alphaNumLen == 0) {
+                повернути false;
             }
             alphaNumLen = 0;
-        } else if (UPRV_ISALPHANUM(c)) {
+        } інакше якщо (UPRV_ISALPHANUM(c)) {
             alphaNumLen++;
-        } else {
-            return false;
+        } інакше {
+            повернути false;
         }
     }
-    return alphaNumLen != 0;
+    повернути alphaNumLen != 0;
 }
 
 }  // namespace
@@ -2375,16 +2375,16 @@ isWellFormedLegacyType(std::string_view legacyType)
 U_CAPI const char* U_EXPORT2
 uloc_toLegacyKey(const char* keyword U_LIFETIME_BOUND)
 {
-    if (keyword == nullptr || *keyword == '\0') { return nullptr; }
+    якщо (keyword == nullptr || *keyword == '\0') { повернути nullptr; }
     std::optional<std::string_view> result = ulocimp_toLegacyKeyWithFallback(keyword);
-    return result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
+    повернути result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
 }
 
 U_EXPORT std::optional<std::string_view>
 ulocimp_toLegacyKeyWithFallback(std::string_view keyword U_LIFETIME_BOUND)
 {
     std::optional<std::string_view> legacyKey = ulocimp_toLegacyKey(keyword);
-    if (!legacyKey.has_value() && isWellFormedLegacyKey(keyword)) {
+    якщо (!legacyKey.has_value() && isWellFormedLegacyKey(keyword)) {
         // Checks if the specified locale key is well-formed with the legacy locale syntax.
         //
         // Note:
@@ -2392,25 +2392,25 @@ ulocimp_toLegacyKeyWithFallback(std::string_view keyword U_LIFETIME_BOUND)
         //  * http://www.unicode.org/reports/tr35/#Unicode_locale_identifier and
         //  * http://www.unicode.org/reports/tr35/#Old_Locale_Extension_Syntax
         //  Keys can only consist of [0-9a-zA-Z].
-        return keyword;
+        повернути keyword;
     }
-    return legacyKey;
+    повернути legacyKey;
 }
 
 U_CAPI const char* U_EXPORT2
 uloc_toLegacyType(const char* keyword, const char* value U_LIFETIME_BOUND)
 {
-    if (keyword == nullptr || *keyword == '\0' ||
-        value == nullptr || *value == '\0') { return nullptr; }
+    якщо (keyword == nullptr || *keyword == '\0' ||
+        value == nullptr || *value == '\0') { повернути nullptr; }
     std::optional<std::string_view> result = ulocimp_toLegacyTypeWithFallback(keyword, value);
-    return result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
+    повернути result.has_value() ? result->data() : nullptr;  // Known to be NUL terminated.
 }
 
 U_EXPORT std::optional<std::string_view>
 ulocimp_toLegacyTypeWithFallback(std::string_view keyword, std::string_view value U_LIFETIME_BOUND)
 {
     std::optional<std::string_view> legacyType = ulocimp_toLegacyType(keyword, value);
-    if (!legacyType.has_value() && isWellFormedLegacyType(value)) {
+    якщо (!legacyType.has_value() && isWellFormedLegacyType(value)) {
         // Checks if the specified locale type is well-formed with the legacy locale syntax.
         //
         // Note:
@@ -2419,9 +2419,9 @@ ulocimp_toLegacyTypeWithFallback(std::string_view keyword, std::string_view valu
         //  * http://www.unicode.org/reports/tr35/#Old_Locale_Extension_Syntax
         //  Values (types) can only consist of [0-9a-zA-Z], plus for legacy values
         //  we allow [/_-+] in the middle (e.g. "Etc/GMT+1", "Asia/Tel_Aviv")
-        return value;
+        повернути value;
     }
-    return legacyType;
+    повернути legacyType;
 }
 
 /*eof*/

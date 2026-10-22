@@ -263,10 +263,10 @@ const int32_t SCRIPT_PROPS[] = {
 };
 
 int32_t getScriptProps(UScriptCode script) {
-    if (0 <= script && script < UPRV_LENGTHOF(SCRIPT_PROPS)) {
-        return SCRIPT_PROPS[script];
-    } else {
-        return 0;
+    якщо (0 <= script && script < UPRV_LENGTHOF(SCRIPT_PROPS)) {
+        повернути SCRIPT_PROPS[script];
+    } інакше {
+        повернути 0;
     }
 }
 
@@ -274,51 +274,51 @@ int32_t getScriptProps(UScriptCode script) {
 
 U_CAPI int32_t U_EXPORT2
 uscript_getSampleString(UScriptCode script, char16_t *dest, int32_t capacity, UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) { return 0; }
-    if(capacity < 0 || (capacity > 0 && dest == nullptr)) {
+    якщо(U_FAILURE(*pErrorCode)) { повернути 0; }
+    якщо(capacity < 0 || (capacity > 0 && dest == nullptr)) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        повернути 0;
     }
     int32_t sampleChar = getScriptProps(script) & 0x1fffff;
     int32_t length;
-    if(sampleChar == 0) {
+    якщо(sampleChar == 0) {
         length = 0;
-    } else {
+    } інакше {
         length = U16_LENGTH(sampleChar);
-        if(length <= capacity) {
+        якщо(length <= capacity) {
             int32_t i = 0;
             U16_APPEND_UNSAFE(dest, i, sampleChar);
         }
     }
-    return u_terminateUChars(dest, capacity, length, pErrorCode);
+    повернути u_terminateUChars(dest, capacity, length, pErrorCode);
 }
 
 U_COMMON_API icu::UnicodeString U_EXPORT2
 uscript_getSampleUnicodeString(UScriptCode script) {
     icu::UnicodeString sample;
     int32_t sampleChar = getScriptProps(script) & 0x1fffff;
-    if(sampleChar != 0) {
+    якщо(sampleChar != 0) {
         sample.append(sampleChar);
     }
-    return sample;
+    повернути sample;
 }
 
 U_CAPI UScriptUsage U_EXPORT2
 uscript_getUsage(UScriptCode script) {
-    return (UScriptUsage)((getScriptProps(script) >> 21) & 7);
+    повернути (UScriptUsage)((getScriptProps(script) >> 21) & 7);
 }
 
 U_CAPI UBool U_EXPORT2
 uscript_isRightToLeft(UScriptCode script) {
-    return (getScriptProps(script) & RTL) != 0;
+    повернути (getScriptProps(script) & RTL) != 0;
 }
 
 U_CAPI UBool U_EXPORT2
 uscript_breaksBetweenLetters(UScriptCode script) {
-    return (getScriptProps(script) & LB_LETTERS) != 0;
+    повернути (getScriptProps(script) & LB_LETTERS) != 0;
 }
 
 U_CAPI UBool U_EXPORT2
 uscript_isCased(UScriptCode script) {
-    return (getScriptProps(script) & CASED) != 0;
+    повернути (getScriptProps(script) & CASED) != 0;
 }

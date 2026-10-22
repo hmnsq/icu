@@ -91,7 +91,7 @@ struct UResourceBundle {
     int32_t fIndex;
     int32_t fSize;
 
-    inline const ResourceData &getResData() const { return fData->fData; }
+    inline const ResourceData &getResData() const { повернути fData->fData; }
 };
 
 U_NAMESPACE_BEGIN
@@ -125,10 +125,10 @@ public:
     StackUResourceBundle();
     ~StackUResourceBundle();
 
-    UResourceBundle* getAlias() U_LIFETIME_BOUND { return &bundle; }
+    UResourceBundle* getAlias() U_LIFETIME_BOUND { повернути &bundle; }
 
-    UResourceBundle& ref() U_LIFETIME_BOUND { return bundle; }
-    const UResourceBundle& ref() const U_LIFETIME_BOUND { return bundle; }
+    UResourceBundle& ref() U_LIFETIME_BOUND { повернути bundle; }
+    const UResourceBundle& ref() const U_LIFETIME_BOUND { повернути bundle; }
 
     StackUResourceBundle(const StackUResourceBundle&) = delete;
     StackUResourceBundle& operator=(const StackUResourceBundle&) = delete;

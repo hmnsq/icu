@@ -16,7 +16,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
+#якщо !UCONFIG_NO_FORMATTING
 
 #include "unicode/messagepattern.h"
 #include "unicode/unistr.h"
@@ -96,10 +96,10 @@ public:
                   UErrorCode &errorCode);
     UBool ensureCapacityForOneMore(int32_t oldLength, UErrorCode &errorCode);
     UBool equals(const MessagePatternList<T, stackCapacity> &other, int32_t length) const {
-        for(int32_t i=0; i<length; ++i) {
-            if(a[i]!=other.a[i]) { return false; }
+        для(int32_t i=0; i<length; ++i) {
+            якщо(a[i]!=other.a[i]) { повернути false; }
         }
-        return true;
+        повернути true;
     }
 
     MaybeStackArray<T, stackCapacity> a;
@@ -111,10 +111,10 @@ MessagePatternList<T, stackCapacity>::copyFrom(
         const MessagePatternList<T, stackCapacity> &other,
         int32_t length,
         UErrorCode &errorCode) {
-    if(U_SUCCESS(errorCode) && length>0) {
-        if(length>a.getCapacity() && nullptr==a.resize(length)) {
+    якщо(U_SUCCESS(errorCode) && length>0) {
+        якщо(length>a.getCapacity() && nullptr==a.resize(length)) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+            повернути;
         }
         uprv_memcpy(a.getAlias(), other.a.getAlias(), (size_t)length*sizeof(T));
     }
@@ -123,14 +123,14 @@ MessagePatternList<T, stackCapacity>::copyFrom(
 template<typename T, int32_t stackCapacity>
 UBool
 MessagePatternList<T, stackCapacity>::ensureCapacityForOneMore(int32_t oldLength, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return false;
+    якщо(U_FAILURE(errorCode)) {
+        повернути false;
     }
-    if(a.getCapacity()>oldLength || a.resize(2*oldLength, oldLength)!=nullptr) {
-        return true;
+    якщо(a.getCapacity()>oldLength || a.resize(2*oldLength, oldLength)!=nullptr) {
+        повернути true;
     }
     errorCode=U_MEMORY_ALLOCATION_ERROR;
-    return false;
+    повернути false;
 }
 
 // MessagePatternList specializations -------------------------------------- ***
@@ -164,23 +164,23 @@ MessagePattern::MessagePattern(const UnicodeString &pattern, UParseError *parseE
           partsList(nullptr), parts(nullptr), partsLength(0),
           numericValuesList(nullptr), numericValues(nullptr), numericValuesLength(0),
           hasArgNames(false), hasArgNumbers(false), needsAutoQuoting(false) {
-    if(init(errorCode)) {
+    якщо(init(errorCode)) {
         parse(pattern, parseError, errorCode);
     }
 }
 
 UBool
 MessagePattern::init(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return false;
+    якщо(U_FAILURE(errorCode)) {
+        повернути false;
     }
     partsList=new MessagePatternPartsList();
-    if(partsList==nullptr) {
+    якщо(partsList==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return false;
+        повернути false;
     }
     parts=partsList->a.getAlias();
-    return true;
+    повернути true;
 }
 
 MessagePattern::MessagePattern(const MessagePattern &other)
@@ -190,15 +190,15 @@ MessagePattern::MessagePattern(const MessagePattern &other)
           hasArgNames(other.hasArgNames), hasArgNumbers(other.hasArgNumbers),
           needsAutoQuoting(other.needsAutoQuoting) {
     UErrorCode errorCode=U_ZERO_ERROR;
-    if(!copyStorage(other, errorCode)) {
+    якщо(!copyStorage(other, errorCode)) {
         clear();
     }
 }
 
 MessagePattern&
 MessagePattern::operator=(const MessagePattern& other) U_LIFETIME_BOUND {
-    if(this==&other) {
-        return *this;
+    якщо(this==&other) {
+        повернути *this;
     }
     aposMode=other.aposMode;
     msg=other.msg;
@@ -206,55 +206,55 @@ MessagePattern::operator=(const MessagePattern& other) U_LIFETIME_BOUND {
     hasArgNumbers=other.hasArgNumbers;
     needsAutoQuoting=other.needsAutoQuoting;
     UErrorCode errorCode=U_ZERO_ERROR;
-    if(!copyStorage(other, errorCode)) {
+    якщо(!copyStorage(other, errorCode)) {
         clear();
     }
-    return *this;
+    повернути *this;
 }
 
 UBool
 MessagePattern::copyStorage(const MessagePattern &other, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return false;
+    якщо(U_FAILURE(errorCode)) {
+        повернути false;
     }
     parts=nullptr;
     partsLength=0;
     numericValues=nullptr;
     numericValuesLength=0;
-    if(partsList==nullptr) {
+    якщо(partsList==nullptr) {
         partsList=new MessagePatternPartsList();
-        if(partsList==nullptr) {
+        якщо(partsList==nullptr) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return false;
+            повернути false;
         }
         parts=partsList->a.getAlias();
     }
-    if(other.partsLength>0) {
+    якщо(other.partsLength>0) {
         partsList->copyFrom(*other.partsList, other.partsLength, errorCode);
-        if(U_FAILURE(errorCode)) {
-            return false;
+        якщо(U_FAILURE(errorCode)) {
+            повернути false;
         }
         parts=partsList->a.getAlias();
         partsLength=other.partsLength;
     }
-    if(other.numericValuesLength>0) {
-        if(numericValuesList==nullptr) {
+    якщо(other.numericValuesLength>0) {
+        якщо(numericValuesList==nullptr) {
             numericValuesList=new MessagePatternDoubleList();
-            if(numericValuesList==nullptr) {
+            якщо(numericValuesList==nullptr) {
                 errorCode=U_MEMORY_ALLOCATION_ERROR;
-                return false;
+                повернути false;
             }
             numericValues=numericValuesList->a.getAlias();
         }
         numericValuesList->copyFrom(
             *other.numericValuesList, other.numericValuesLength, errorCode);
-        if(U_FAILURE(errorCode)) {
-            return false;
+        якщо(U_FAILURE(errorCode)) {
+            повернути false;
         }
         numericValues=numericValuesList->a.getAlias();
         numericValuesLength=other.numericValuesLength;
     }
-    return true;
+    повернути true;
 }
 
 MessagePattern::~MessagePattern() {
@@ -271,7 +271,7 @@ MessagePattern::parse(const UnicodeString& pattern,
     preParse(pattern, parseError, errorCode);
     parseMessage(0, 0, 0, UMSGPAT_ARG_TYPE_NONE, parseError, errorCode);
     postParse();
-    return *this;
+    повернути *this;
 }
 
 MessagePattern&
@@ -281,7 +281,7 @@ MessagePattern::parseChoiceStyle(const UnicodeString& pattern,
     preParse(pattern, parseError, errorCode);
     parseChoiceStyle(0, 0, parseError, errorCode);
     postParse();
-    return *this;
+    повернути *this;
 }
 
 MessagePattern&
@@ -291,7 +291,7 @@ MessagePattern::parsePluralStyle(const UnicodeString& pattern,
     preParse(pattern, parseError, errorCode);
     parsePluralOrSelectStyle(UMSGPAT_ARG_TYPE_PLURAL, 0, 0, parseError, errorCode);
     postParse();
-    return *this;
+    повернути *this;
 }
 
 MessagePattern&
@@ -301,7 +301,7 @@ MessagePattern::parseSelectStyle(const UnicodeString& pattern,
     preParse(pattern, parseError, errorCode);
     parsePluralOrSelectStyle(UMSGPAT_ARG_TYPE_SELECT, 0, 0, parseError, errorCode);
     postParse();
-    return *this;
+    повернути *this;
 }
 
 void
@@ -316,10 +316,10 @@ MessagePattern::clear() {
 
 bool
 MessagePattern::operator==(const MessagePattern &other) const {
-    if(this==&other) {
-        return true;
+    якщо(this==&other) {
+        повернути true;
     }
-    return
+    повернути
         aposMode==other.aposMode &&
         msg==other.msg &&
         // parts.equals(o.parts)
@@ -331,46 +331,46 @@ MessagePattern::operator==(const MessagePattern &other) const {
 int32_t
 MessagePattern::hashCode() const {
     int32_t hash=(aposMode*37+msg.hashCode())*37+partsLength;
-    for(int32_t i=0; i<partsLength; ++i) {
+    для(int32_t i=0; i<partsLength; ++i) {
         hash=hash*37+parts[i].hashCode();
     }
-    return hash;
+    повернути hash;
 }
 
 int32_t
 MessagePattern::validateArgumentName(const UnicodeString &name) {
-    if(!PatternProps::isIdentifier(name.getBuffer(), name.length())) {
-        return UMSGPAT_ARG_NAME_NOT_VALID;
+    якщо(!PatternProps::isIdentifier(name.getBuffer(), name.length())) {
+        повернути UMSGPAT_ARG_NAME_NOT_VALID;
     }
-    return parseArgNumber(name, 0, name.length());
+    повернути parseArgNumber(name, 0, name.length());
 }
 
 UnicodeString
 MessagePattern::autoQuoteApostropheDeep() const {
-    if(!needsAutoQuoting) {
-        return msg;
+    якщо(!needsAutoQuoting) {
+        повернути msg;
     }
     UnicodeString modified(msg);
     // Iterate backward so that the insertion indexes do not change.
     int32_t count=countParts();
-    for(int32_t i=count; i>0;) {
+    для(int32_t i=count; i>0;) {
         const Part &part=getPart(--i);
-        if(part.getType()==UMSGPAT_PART_TYPE_INSERT_CHAR) {
+        якщо(part.getType()==UMSGPAT_PART_TYPE_INSERT_CHAR) {
            modified.insert(part.index, static_cast<char16_t>(part.value));
         }
     }
-    return modified;
+    повернути modified;
 }
 
 double
 MessagePattern::getNumericValue(const Part &part) const {
     UMessagePatternPartType type=part.type;
-    if(type==UMSGPAT_PART_TYPE_ARG_INT) {
-        return part.value;
-    } else if(type==UMSGPAT_PART_TYPE_ARG_DOUBLE) {
-        return numericValues[part.value];
-    } else {
-        return UMSGPAT_NO_NUMERIC_VALUE;
+    якщо(type==UMSGPAT_PART_TYPE_ARG_INT) {
+        повернути part.value;
+    } інакше якщо(type==UMSGPAT_PART_TYPE_ARG_DOUBLE) {
+        повернути numericValues[part.value];
+    } інакше {
+        повернути UMSGPAT_NO_NUMERIC_VALUE;
     }
 }
 
@@ -383,10 +383,10 @@ MessagePattern::getNumericValue(const Part &part) const {
 double
 MessagePattern::getPluralOffset(int32_t pluralStart) const {
     const Part &part=getPart(pluralStart);
-    if(Part::hasNumericValue(part.type)) {
-        return getNumericValue(part);
-    } else {
-        return 0;
+    якщо(Part::hasNumericValue(part.type)) {
+        повернути getNumericValue(part);
+    } інакше {
+        повернути 0;
     }
 }
 
@@ -394,10 +394,10 @@ MessagePattern::getPluralOffset(int32_t pluralStart) const {
 
 bool
 MessagePattern::Part::operator==(const Part &other) const {
-    if(this==&other) {
-        return true;
+    якщо(this==&other) {
+        повернути true;
     }
-    return
+    повернути
         type==other.type &&
         index==other.index &&
         length==other.length &&
@@ -409,10 +409,10 @@ MessagePattern::Part::operator==(const Part &other) const {
 
 void
 MessagePattern::preParse(const UnicodeString &pattern, UParseError *parseError, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+    якщо(U_FAILURE(errorCode)) {
+        повернути;
     }
-    if(parseError!=nullptr) {
+    якщо(parseError!=nullptr) {
         parseError->line=0;
         parseError->offset=0;
         parseError->preContext[0]=0;
@@ -427,10 +427,10 @@ MessagePattern::preParse(const UnicodeString &pattern, UParseError *parseError, 
 
 void
 MessagePattern::postParse() {
-    if(partsList!=nullptr) {
+    якщо(partsList!=nullptr) {
         parts=partsList->a.getAlias();
     }
-    if(numericValuesList!=nullptr) {
+    якщо(numericValuesList!=nullptr) {
         numericValues=numericValuesList->a.getAlias();
     }
 }
@@ -439,37 +439,37 @@ int32_t
 MessagePattern::parseMessage(int32_t index, int32_t msgStartLength,
                              int32_t nestingLevel, UMessagePatternArgType parentType,
                              UParseError *parseError, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    якщо(U_FAILURE(errorCode)) {
+        повернути 0;
     }
-    if(nestingLevel>Part::MAX_NESTED_LEVELS) {
+    якщо(nestingLevel>Part::MAX_NESTED_LEVELS) {
         errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        повернути 0;
     }
     int32_t msgStart=partsLength;
     addPart(UMSGPAT_PART_TYPE_MSG_START, index, msgStartLength, nestingLevel, errorCode);
     index+=msgStartLength;
-    for(;;) {  // while(index<msg.length()) with U_FAILURE(errorCode) check
-        if(U_FAILURE(errorCode)) {
-            return 0;
+    для(;;) {  // while(index<msg.length()) with U_FAILURE(errorCode) check
+        якщо(U_FAILURE(errorCode)) {
+            повернути 0;
         }
-        if(index>=msg.length()) {
+        якщо(index>=msg.length()) {
             break;
         }
         char16_t c=msg.charAt(index++);
-        if(c==u_apos) {
-            if(index==msg.length()) {
+        якщо(c==u_apos) {
+            якщо(index==msg.length()) {
                 // The apostrophe is the last character in the pattern. 
                 // Add a Part for auto-quoting.
                 addPart(UMSGPAT_PART_TYPE_INSERT_CHAR, index, 0,
                         u_apos, errorCode);  // value=char to be inserted
                 needsAutoQuoting=true;
-            } else {
+            } інакше {
                 c=msg.charAt(index);
-                if(c==u_apos) {
+                якщо(c==u_apos) {
                     // double apostrophe, skip the second one
                     addPart(UMSGPAT_PART_TYPE_SKIP_SYNTAX, index++, 1, 0, errorCode);
-                } else if(
+                } інакше якщо(
                     aposMode==UMSGPAT_APOS_DOUBLE_REQUIRED ||
                     c==u_leftCurlyBrace || c==u_rightCurlyBrace ||
                     (parentType==UMSGPAT_ARG_TYPE_CHOICE && c==u_pipe) ||
@@ -478,19 +478,19 @@ MessagePattern::parseMessage(int32_t index, int32_t msgStartLength,
                     // skip the quote-starting apostrophe
                     addPart(UMSGPAT_PART_TYPE_SKIP_SYNTAX, index-1, 1, 0, errorCode);
                     // find the end of the quoted literal text
-                    for(;;) {
+                    для(;;) {
                         index=msg.indexOf(u_apos, index+1);
-                        if(index>=0) {
-                            if(/*(index+1)<msg.length() &&*/ msg.charAt(index+1)==u_apos) {
+                        якщо(index>=0) {
+                            якщо(/*(index+1)<msg.length() &&*/ msg.charAt(index+1)==u_apos) {
                                 // double apostrophe inside quoted literal text
                                 // still encodes a single apostrophe, skip the second one
                                 addPart(UMSGPAT_PART_TYPE_SKIP_SYNTAX, ++index, 1, 0, errorCode);
-                            } else {
+                            } інакше {
                                 // skip the quote-ending apostrophe
                                 addPart(UMSGPAT_PART_TYPE_SKIP_SYNTAX, index++, 1, 0, errorCode);
                                 break;
                             }
-                        } else {
+                        } інакше {
                             // The quoted text reaches to the end of the of the message.
                             index=msg.length();
                             // Add a Part for auto-quoting.
@@ -500,7 +500,7 @@ MessagePattern::parseMessage(int32_t index, int32_t msgStartLength,
                             break;
                         }
                     }
-                } else {
+                } інакше {
                     // Interpret the apostrophe as literal text.
                     // Add a Part for auto-quoting.
                     addPart(UMSGPAT_PART_TYPE_INSERT_CHAR, index, 0,
@@ -508,13 +508,13 @@ MessagePattern::parseMessage(int32_t index, int32_t msgStartLength,
                     needsAutoQuoting=true;
                 }
             }
-        } else if(UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(parentType) && c==u_pound) {
+        } інакше якщо(UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(parentType) && c==u_pound) {
             // The unquoted # in a plural message fragment will be replaced
             // with the (number-offset).
             addPart(UMSGPAT_PART_TYPE_REPLACE_NUMBER, index-1, 1, 0, errorCode);
-        } else if(c==u_leftCurlyBrace) {
+        } інакше якщо(c==u_leftCurlyBrace) {
             index=parseArg(index-1, 1, nestingLevel, parseError, errorCode);
-        } else if((nestingLevel>0 && c==u_rightCurlyBrace) ||
+        } інакше якщо((nestingLevel>0 && c==u_rightCurlyBrace) ||
                   (parentType==UMSGPAT_ARG_TYPE_CHOICE && c==u_pipe)) {
             // Finish the message before the terminator.
             // In a choice style, report the "}" substring only for the following ARG_LIMIT,
@@ -522,22 +522,22 @@ MessagePattern::parseMessage(int32_t index, int32_t msgStartLength,
             int32_t limitLength=(parentType==UMSGPAT_ARG_TYPE_CHOICE && c==u_rightCurlyBrace) ? 0 : 1;
             addLimitPart(msgStart, UMSGPAT_PART_TYPE_MSG_LIMIT, index-1, limitLength,
                          nestingLevel, errorCode);
-            if(parentType==UMSGPAT_ARG_TYPE_CHOICE) {
+            якщо(parentType==UMSGPAT_ARG_TYPE_CHOICE) {
                 // Let the choice style parser see the '}' or '|'.
-                return index-1;
-            } else {
+                повернути index-1;
+            } інакше {
                 // continue parsing after the '}'
-                return index;
+                повернути index;
             }
         }  // else: c is part of literal text
     }
-    if(nestingLevel>0 && !inTopLevelChoiceMessage(nestingLevel, parentType)) {
+    якщо(nestingLevel>0 && !inTopLevelChoiceMessage(nestingLevel, parentType)) {
         setParseError(parseError, 0);  // Unmatched '{' braces in message.
         errorCode=U_UNMATCHED_BRACES;
-        return 0;
+        повернути 0;
     }
     addLimitPart(msgStart, UMSGPAT_PART_TYPE_MSG_LIMIT, index, 0, nestingLevel, errorCode);
-    return index;
+    повернути index;
 }
 
 int32_t
@@ -546,226 +546,226 @@ MessagePattern::parseArg(int32_t index, int32_t argStartLength, int32_t nestingL
     int32_t argStart=partsLength;
     UMessagePatternArgType argType=UMSGPAT_ARG_TYPE_NONE;
     addPart(UMSGPAT_PART_TYPE_ARG_START, index, argStartLength, argType, errorCode);
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    якщо(U_FAILURE(errorCode)) {
+        повернути 0;
     }
     int32_t nameIndex=index=skipWhiteSpace(index+argStartLength);
-    if(index==msg.length()) {
+    якщо(index==msg.length()) {
         setParseError(parseError, 0);  // Unmatched '{' braces in message.
         errorCode=U_UNMATCHED_BRACES;
-        return 0;
+        повернути 0;
     }
     // parse argument name or number
     index=skipIdentifier(index);
     int32_t number=parseArgNumber(nameIndex, index);
-    if(number>=0) {
+    якщо(number>=0) {
         int32_t length=index-nameIndex;
-        if(length>Part::MAX_LENGTH || number>Part::MAX_VALUE) {
+        якщо(length>Part::MAX_LENGTH || number>Part::MAX_VALUE) {
             setParseError(parseError, nameIndex);  // Argument number too large.
             errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            повернути 0;
         }
         hasArgNumbers=true;
         addPart(UMSGPAT_PART_TYPE_ARG_NUMBER, nameIndex, length, number, errorCode);
-    } else if(number==UMSGPAT_ARG_NAME_NOT_NUMBER) {
+    } інакше якщо(number==UMSGPAT_ARG_NAME_NOT_NUMBER) {
         int32_t length=index-nameIndex;
-        if(length>Part::MAX_LENGTH) {
+        якщо(length>Part::MAX_LENGTH) {
             setParseError(parseError, nameIndex);  // Argument name too long.
             errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            повернути 0;
         }
         hasArgNames=true;
         addPart(UMSGPAT_PART_TYPE_ARG_NAME, nameIndex, length, 0, errorCode);
-    } else {  // number<-1 (ARG_NAME_NOT_VALID)
+    } інакше {  // number<-1 (ARG_NAME_NOT_VALID)
         setParseError(parseError, nameIndex);  // Bad argument syntax.
         errorCode=U_PATTERN_SYNTAX_ERROR;
-        return 0;
+        повернути 0;
     }
     index=skipWhiteSpace(index);
-    if(index==msg.length()) {
+    якщо(index==msg.length()) {
         setParseError(parseError, 0);  // Unmatched '{' braces in message.
         errorCode=U_UNMATCHED_BRACES;
-        return 0;
+        повернути 0;
     }
     char16_t c=msg.charAt(index);
-    if(c==u_rightCurlyBrace) {
+    якщо(c==u_rightCurlyBrace) {
         // all done
-    } else if(c!=u_comma) {
+    } інакше якщо(c!=u_comma) {
         setParseError(parseError, nameIndex);  // Bad argument syntax.
         errorCode=U_PATTERN_SYNTAX_ERROR;
-        return 0;
-    } else /* ',' */ {
+        повернути 0;
+    } інакше /* ',' */ {
         // parse argument type: case-sensitive a-zA-Z
         int32_t typeIndex=index=skipWhiteSpace(index+1);
-        while(index<msg.length() && isArgTypeChar(msg.charAt(index))) {
+        поки(index<msg.length() && isArgTypeChar(msg.charAt(index))) {
             ++index;
         }
         int32_t length=index-typeIndex;
         index=skipWhiteSpace(index);
-        if(index==msg.length()) {
+        якщо(index==msg.length()) {
             setParseError(parseError, 0);  // Unmatched '{' braces in message.
             errorCode=U_UNMATCHED_BRACES;
-            return 0;
+            повернути 0;
         }
-        if(length==0 || ((c=msg.charAt(index))!=u_comma && c!=u_rightCurlyBrace)) {
+        якщо(length==0 || ((c=msg.charAt(index))!=u_comma && c!=u_rightCurlyBrace)) {
             setParseError(parseError, nameIndex);  // Bad argument syntax.
             errorCode=U_PATTERN_SYNTAX_ERROR;
-            return 0;
+            повернути 0;
         }
-        if(length>Part::MAX_LENGTH) {
+        якщо(length>Part::MAX_LENGTH) {
             setParseError(parseError, nameIndex);  // Argument type name too long.
             errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            повернути 0;
         }
         argType=UMSGPAT_ARG_TYPE_SIMPLE;
-        if(length==6) {
+        якщо(length==6) {
             // case-insensitive comparisons for complex-type names
-            if(isChoice(typeIndex)) {
+            якщо(isChoice(typeIndex)) {
                 argType=UMSGPAT_ARG_TYPE_CHOICE;
-            } else if(isPlural(typeIndex)) {
+            } інакше якщо(isPlural(typeIndex)) {
                 argType=UMSGPAT_ARG_TYPE_PLURAL;
-            } else if(isSelect(typeIndex)) {
+            } інакше якщо(isSelect(typeIndex)) {
                 argType=UMSGPAT_ARG_TYPE_SELECT;
             }
-        } else if(length==13) {
-            if(isSelect(typeIndex) && isOrdinal(typeIndex+6)) {
+        } інакше якщо(length==13) {
+            якщо(isSelect(typeIndex) && isOrdinal(typeIndex+6)) {
                 argType=UMSGPAT_ARG_TYPE_SELECTORDINAL;
             }
         }
         // change the ARG_START type from NONE to argType
         partsList->a[argStart].value = static_cast<int16_t>(argType);
-        if(argType==UMSGPAT_ARG_TYPE_SIMPLE) {
+        якщо(argType==UMSGPAT_ARG_TYPE_SIMPLE) {
             addPart(UMSGPAT_PART_TYPE_ARG_TYPE, typeIndex, length, 0, errorCode);
         }
         // look for an argument style (pattern)
-        if(c==u_rightCurlyBrace) {
-            if(argType!=UMSGPAT_ARG_TYPE_SIMPLE) {
+        якщо(c==u_rightCurlyBrace) {
+            якщо(argType!=UMSGPAT_ARG_TYPE_SIMPLE) {
                 setParseError(parseError, nameIndex);  // No style field for complex argument.
                 errorCode=U_PATTERN_SYNTAX_ERROR;
-                return 0;
+                повернути 0;
             }
-        } else /* ',' */ {
+        } інакше /* ',' */ {
             ++index;
-            if(argType==UMSGPAT_ARG_TYPE_SIMPLE) {
+            якщо(argType==UMSGPAT_ARG_TYPE_SIMPLE) {
                 index=parseSimpleStyle(index, parseError, errorCode);
-            } else if(argType==UMSGPAT_ARG_TYPE_CHOICE) {
+            } інакше якщо(argType==UMSGPAT_ARG_TYPE_CHOICE) {
                 index=parseChoiceStyle(index, nestingLevel, parseError, errorCode);
-            } else {
+            } інакше {
                 index=parsePluralOrSelectStyle(argType, index, nestingLevel, parseError, errorCode);
             }
         }
     }
     // Argument parsing stopped on the '}'.
     addLimitPart(argStart, UMSGPAT_PART_TYPE_ARG_LIMIT, index, 1, argType, errorCode);
-    return index+1;
+    повернути index+1;
 }
 
 int32_t
 MessagePattern::parseSimpleStyle(int32_t index, UParseError *parseError, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    якщо(U_FAILURE(errorCode)) {
+        повернути 0;
     }
     int32_t start=index;
     int32_t nestedBraces=0;
-    while(index<msg.length()) {
+    поки(index<msg.length()) {
         char16_t c=msg.charAt(index++);
-        if(c==u_apos) {
+        якщо(c==u_apos) {
             // Treat apostrophe as quoting but include it in the style part.
             // Find the end of the quoted literal text.
             index=msg.indexOf(u_apos, index);
-            if(index<0) {
+            якщо(index<0) {
                 // Quoted literal argument style text reaches to the end of the message.
                 setParseError(parseError, start);
                 errorCode=U_PATTERN_SYNTAX_ERROR;
-                return 0;
+                повернути 0;
             }
             // skip the quote-ending apostrophe
             ++index;
-        } else if(c==u_leftCurlyBrace) {
+        } інакше якщо(c==u_leftCurlyBrace) {
             ++nestedBraces;
-        } else if(c==u_rightCurlyBrace) {
-            if(nestedBraces>0) {
+        } інакше якщо(c==u_rightCurlyBrace) {
+            якщо(nestedBraces>0) {
                 --nestedBraces;
-            } else {
+            } інакше {
                 int32_t length=--index-start;
-                if(length>Part::MAX_LENGTH) {
+                якщо(length>Part::MAX_LENGTH) {
                     setParseError(parseError, start);  // Argument style text too long.
                     errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                    return 0;
+                    повернути 0;
                 }
                 addPart(UMSGPAT_PART_TYPE_ARG_STYLE, start, length, 0, errorCode);
-                return index;
+                повернути index;
             }
         }  // c is part of literal text
     }
     setParseError(parseError, 0);  // Unmatched '{' braces in message.
     errorCode=U_UNMATCHED_BRACES;
-    return 0;
+    повернути 0;
 }
 
 int32_t
 MessagePattern::parseChoiceStyle(int32_t index, int32_t nestingLevel,
                                  UParseError *parseError, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    якщо(U_FAILURE(errorCode)) {
+        повернути 0;
     }
     int32_t start=index;
     index=skipWhiteSpace(index);
-    if(index==msg.length() || msg.charAt(index)==u_rightCurlyBrace) {
+    якщо(index==msg.length() || msg.charAt(index)==u_rightCurlyBrace) {
         setParseError(parseError, 0);  // Missing choice argument pattern.
         errorCode=U_PATTERN_SYNTAX_ERROR;
-        return 0;
+        повернути 0;
     }
-    for(;;) {
+    для(;;) {
         // The choice argument style contains |-separated (number, separator, message) triples.
         // Parse the number.
         int32_t numberIndex=index;
         index=skipDouble(index);
         int32_t length=index-numberIndex;
-        if(length==0) {
+        якщо(length==0) {
             setParseError(parseError, start);  // Bad choice pattern syntax.
             errorCode=U_PATTERN_SYNTAX_ERROR;
-            return 0;
+            повернути 0;
         }
-        if(length>Part::MAX_LENGTH) {
+        якщо(length>Part::MAX_LENGTH) {
             setParseError(parseError, numberIndex);  // Choice number too long.
             errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            повернути 0;
         }
         parseDouble(numberIndex, index, true, parseError, errorCode);  // adds ARG_INT or ARG_DOUBLE
-        if(U_FAILURE(errorCode)) {
-            return 0;
+        якщо(U_FAILURE(errorCode)) {
+            повернути 0;
         }
         // Parse the separator.
         index=skipWhiteSpace(index);
-        if(index==msg.length()) {
+        якщо(index==msg.length()) {
             setParseError(parseError, start);  // Bad choice pattern syntax.
             errorCode=U_PATTERN_SYNTAX_ERROR;
-            return 0;
+            повернути 0;
         }
         char16_t c=msg.charAt(index);
-        if(!(c==u_pound || c==u_lessThan || c==u_lessOrEqual)) {  // U+2264 is <=
+        якщо(!(c==u_pound || c==u_lessThan || c==u_lessOrEqual)) {  // U+2264 is <=
             setParseError(parseError, start);  // Expected choice separator (#<\u2264) instead of c.
             errorCode=U_PATTERN_SYNTAX_ERROR;
-            return 0;
+            повернути 0;
         }
         addPart(UMSGPAT_PART_TYPE_ARG_SELECTOR, index, 1, 0, errorCode);
         // Parse the message fragment.
         index=parseMessage(++index, 0, nestingLevel+1, UMSGPAT_ARG_TYPE_CHOICE, parseError, errorCode);
-        if(U_FAILURE(errorCode)) {
-            return 0;
+        якщо(U_FAILURE(errorCode)) {
+            повернути 0;
         }
         // parseMessage(..., CHOICE) returns the index of the terminator, or msg.length().
-        if(index==msg.length()) {
-            return index;
+        якщо(index==msg.length()) {
+            повернути index;
         }
-        if(msg.charAt(index)==u_rightCurlyBrace) {
-            if(!inMessageFormatPattern(nestingLevel)) {
+        якщо(msg.charAt(index)==u_rightCurlyBrace) {
+            якщо(!inMessageFormatPattern(nestingLevel)) {
                 setParseError(parseError, start);  // Bad choice pattern syntax.
                 errorCode=U_PATTERN_SYNTAX_ERROR;
-                return 0;
+                повернути 0;
             }
-            return index;
+            повернути index;
         }  // else the terminator is '|'
         index=skipWhiteSpace(index+1);
     }
@@ -775,115 +775,115 @@ int32_t
 MessagePattern::parsePluralOrSelectStyle(UMessagePatternArgType argType,
                                          int32_t index, int32_t nestingLevel,
                                          UParseError *parseError, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    якщо(U_FAILURE(errorCode)) {
+        повернути 0;
     }
     int32_t start=index;
     UBool isEmpty=true;
     UBool hasOther=false;
-    for(;;) {
+    для(;;) {
         // First, collect the selector looking for a small set of terminators.
         // It would be a little faster to consider the syntax of each possible
         // token right here, but that makes the code too complicated.
         index=skipWhiteSpace(index);
         UBool eos=index==msg.length();
-        if(eos || msg.charAt(index)==u_rightCurlyBrace) {
-            if(eos==inMessageFormatPattern(nestingLevel)) {
+        якщо(eos || msg.charAt(index)==u_rightCurlyBrace) {
+            якщо(eos==inMessageFormatPattern(nestingLevel)) {
                 setParseError(parseError, start);  // Bad plural/select pattern syntax.
                 errorCode=U_PATTERN_SYNTAX_ERROR;
-                return 0;
+                повернути 0;
             }
-            if(!hasOther) {
+            якщо(!hasOther) {
                 setParseError(parseError, 0);  // Missing 'other' keyword in plural/select pattern.
                 errorCode=U_DEFAULT_KEYWORD_MISSING;
-                return 0;
+                повернути 0;
             }
-            return index;
+            повернути index;
         }
         int32_t selectorIndex=index;
-        if(UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(argType) && msg.charAt(selectorIndex)==u_equal) {
+        якщо(UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(argType) && msg.charAt(selectorIndex)==u_equal) {
             // explicit-value plural selector: =double
             index=skipDouble(index+1);
             int32_t length=index-selectorIndex;
-            if(length==1) {
+            якщо(length==1) {
                 setParseError(parseError, start);  // Bad plural/select pattern syntax.
                 errorCode=U_PATTERN_SYNTAX_ERROR;
-                return 0;
+                повернути 0;
             }
-            if(length>Part::MAX_LENGTH) {
+            якщо(length>Part::MAX_LENGTH) {
                 setParseError(parseError, selectorIndex);  // Argument selector too long.
                 errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                return 0;
+                повернути 0;
             }
             addPart(UMSGPAT_PART_TYPE_ARG_SELECTOR, selectorIndex, length, 0, errorCode);
             parseDouble(selectorIndex+1, index, false,
                         parseError, errorCode);  // adds ARG_INT or ARG_DOUBLE
-        } else {
+        } інакше {
             index=skipIdentifier(index);
             int32_t length=index-selectorIndex;
-            if(length==0) {
+            якщо(length==0) {
                 setParseError(parseError, start);  // Bad plural/select pattern syntax.
                 errorCode=U_PATTERN_SYNTAX_ERROR;
-                return 0;
+                повернути 0;
             }
             // Note: The ':' in "offset:" is just beyond the skipIdentifier() range.
-            if( UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(argType) && length==6 && index<msg.length() &&
+            якщо( UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(argType) && length==6 && index<msg.length() &&
                 0==msg.compare(selectorIndex, 7, kOffsetColon, 0, 7)
             ) {
                 // plural offset, not a selector
-                if(!isEmpty) {
+                якщо(!isEmpty) {
                     // Plural argument 'offset:' (if present) must precede key-message pairs.
                     setParseError(parseError, start);
                     errorCode=U_PATTERN_SYNTAX_ERROR;
-                    return 0;
+                    повернути 0;
                 }
                 // allow whitespace between offset: and its value
                 int32_t valueIndex=skipWhiteSpace(index+1);  // The ':' is at index.
                 index=skipDouble(valueIndex);
-                if(index==valueIndex) {
+                якщо(index==valueIndex) {
                     setParseError(parseError, start);  // Missing value for plural 'offset:'.
                     errorCode=U_PATTERN_SYNTAX_ERROR;
-                    return 0;
+                    повернути 0;
                 }
-                if((index-valueIndex)>Part::MAX_LENGTH) {
+                якщо((index-valueIndex)>Part::MAX_LENGTH) {
                     setParseError(parseError, valueIndex);  // Plural offset value too long.
                     errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                    return 0;
+                    повернути 0;
                 }
                 parseDouble(valueIndex, index, false,
                             parseError, errorCode);  // adds ARG_INT or ARG_DOUBLE
-                if(U_FAILURE(errorCode)) {
-                    return 0;
+                якщо(U_FAILURE(errorCode)) {
+                    повернути 0;
                 }
                 isEmpty=false;
                 continue;  // no message fragment after the offset
-            } else {
+            } інакше {
                 // normal selector word
-                if(length>Part::MAX_LENGTH) {
+                якщо(length>Part::MAX_LENGTH) {
                     setParseError(parseError, selectorIndex);  // Argument selector too long.
                     errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                    return 0;
+                    повернути 0;
                 }
                 addPart(UMSGPAT_PART_TYPE_ARG_SELECTOR, selectorIndex, length, 0, errorCode);
-                if(0==msg.compare(selectorIndex, length, kOther, 0, 5)) {
+                якщо(0==msg.compare(selectorIndex, length, kOther, 0, 5)) {
                     hasOther=true;
                 }
             }
         }
-        if(U_FAILURE(errorCode)) {
-            return 0;
+        якщо(U_FAILURE(errorCode)) {
+            повернути 0;
         }
 
         // parse the message fragment following the selector
         index=skipWhiteSpace(index);
-        if(index==msg.length() || msg.charAt(index)!=u_leftCurlyBrace) {
+        якщо(index==msg.length() || msg.charAt(index)!=u_leftCurlyBrace) {
             setParseError(parseError, selectorIndex);  // No message fragment after plural/select selector.
             errorCode=U_PATTERN_SYNTAX_ERROR;
-            return 0;
+            повернути 0;
         }
         index=parseMessage(index, 1, nestingLevel+1, argType, parseError, errorCode);
-        if(U_FAILURE(errorCode)) {
-            return 0;
+        якщо(U_FAILURE(errorCode)) {
+            повернути 0;
         }
         isEmpty=false;
     }
@@ -894,93 +894,93 @@ MessagePattern::parseArgNumber(const UnicodeString &s, int32_t start, int32_t li
     // If the identifier contains only ASCII digits, then it is an argument _number_
     // and must not have leading zeros (except "0" itself).
     // Otherwise it is an argument _name_.
-    if(start>=limit) {
-        return UMSGPAT_ARG_NAME_NOT_VALID;
+    якщо(start>=limit) {
+        повернути UMSGPAT_ARG_NAME_NOT_VALID;
     }
     int32_t number;
     // Defer numeric errors until we know there are only digits.
     UBool badNumber;
     char16_t c=s.charAt(start++);
-    if(c==0x30) {
-        if(start==limit) {
-            return 0;
-        } else {
+    якщо(c==0x30) {
+        якщо(start==limit) {
+            повернути 0;
+        } інакше {
             number=0;
             badNumber=true;  // leading zero
         }
-    } else if(0x31<=c && c<=0x39) {
+    } інакше якщо(0x31<=c && c<=0x39) {
         number=c-0x30;
         badNumber=false;
-    } else {
-        return UMSGPAT_ARG_NAME_NOT_NUMBER;
+    } інакше {
+        повернути UMSGPAT_ARG_NAME_NOT_NUMBER;
     }
-    while(start<limit) {
+    поки(start<limit) {
         c=s.charAt(start++);
-        if(0x30<=c && c<=0x39) {
-            if(number>=INT32_MAX/10) {
+        якщо(0x30<=c && c<=0x39) {
+            якщо(number>=INT32_MAX/10) {
                 badNumber=true;  // overflow
-            } else {
+            } інакше {
                 number=number*10+(c-0x30);
             }
-        } else {
-            return UMSGPAT_ARG_NAME_NOT_NUMBER;
+        } інакше {
+            повернути UMSGPAT_ARG_NAME_NOT_NUMBER;
         }
     }
     // There are only ASCII digits.
-    if(badNumber) {
-        return UMSGPAT_ARG_NAME_NOT_VALID;
-    } else {
-        return number;
+    якщо(badNumber) {
+        повернути UMSGPAT_ARG_NAME_NOT_VALID;
+    } інакше {
+        повернути number;
     }
 }
 
 void
 MessagePattern::parseDouble(int32_t start, int32_t limit, UBool allowInfinity,
                             UParseError *parseError, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+    якщо(U_FAILURE(errorCode)) {
+        повернути;
     }
     U_ASSERT(start<limit);
     // fake loop for easy exit and single throw statement
-    for(;;) { /*loop doesn't iterate*/
+    для(;;) { /*loop doesn't iterate*/
         // fast path for small integers and infinity
         int32_t value=0;
         int32_t isNegative=0;  // not boolean so that we can easily add it to value
         int32_t index=start;
         char16_t c=msg.charAt(index++);
-        if(c==u_minus) {
+        якщо(c==u_minus) {
             isNegative=1;
-            if(index==limit) {
+            якщо(index==limit) {
                 break;  // no number
             }
             c=msg.charAt(index++);
-        } else if(c==u_plus) {
-            if(index==limit) {
+        } інакше якщо(c==u_plus) {
+            якщо(index==limit) {
                 break;  // no number
             }
             c=msg.charAt(index++);
         }
-        if(c==0x221e) {  // infinity
-            if(allowInfinity && index==limit) {
+        якщо(c==0x221e) {  // infinity
+            якщо(allowInfinity && index==limit) {
                 double infinity=uprv_getInfinity();
                 addArgDoublePart(
                     isNegative!=0 ? -infinity : infinity,
                     start, limit-start, errorCode);
-                return;
-            } else {
+                повернути;
+            } інакше {
                 break;
             }
         }
         // try to parse the number as a small integer but fall back to a double
-        while('0'<=c && c<='9') {
+        поки('0'<=c && c<='9') {
             value=value*10+(c-'0');
-            if(value>(Part::MAX_VALUE+isNegative)) {
+            якщо(value>(Part::MAX_VALUE+isNegative)) {
                 break;  // not a small-enough integer
             }
-            if(index==limit) {
+            якщо(index==limit) {
                 addPart(UMSGPAT_PART_TYPE_ARG_INT, start, limit-start,
                         isNegative!=0 ? -value : value, errorCode);
-                return;
+                повернути;
             }
             c=msg.charAt(index++);
         }
@@ -988,20 +988,20 @@ MessagePattern::parseDouble(int32_t start, int32_t limit, UBool allowInfinity,
         char numberChars[128];
         int32_t capacity = static_cast<int32_t>(sizeof(numberChars));
         int32_t length=limit-start;
-        if(length>=capacity) {
+        якщо(length>=capacity) {
             break;  // number too long
         }
         msg.extract(start, length, numberChars, capacity, US_INV);
-        if (static_cast<int32_t>(uprv_strlen(numberChars)) < length) {
+        якщо (static_cast<int32_t>(uprv_strlen(numberChars)) < length) {
             break;  // contains non-invariant character that was turned into NUL
         }
         char *end;
         double numericValue=uprv_strtod(numberChars, &end);
-        if(end!=(numberChars+length)) {
+        якщо(end!=(numberChars+length)) {
             break;  // parsing error
         }
         addArgDoublePart(numericValue, start, length, errorCode);
-        return;
+        повернути;
     }
     setParseError(parseError, start /*, limit*/);  // Bad syntax for numeric value.
     errorCode=U_PATTERN_SYNTAX_ERROR;
@@ -1012,7 +1012,7 @@ MessagePattern::skipWhiteSpace(int32_t index) {
     const char16_t *s=msg.getBuffer();
     int32_t msgLength=msg.length();
     const char16_t *t=PatternProps::skipWhiteSpace(s+index, msgLength-index);
-    return static_cast<int32_t>(t - s);
+    повернути static_cast<int32_t>(t - s);
 }
 
 int32_t
@@ -1020,32 +1020,32 @@ MessagePattern::skipIdentifier(int32_t index) {
     const char16_t *s=msg.getBuffer();
     int32_t msgLength=msg.length();
     const char16_t *t=PatternProps::skipIdentifier(s+index, msgLength-index);
-    return static_cast<int32_t>(t - s);
+    повернути static_cast<int32_t>(t - s);
 }
 
 int32_t
 MessagePattern::skipDouble(int32_t index) {
     int32_t msgLength=msg.length();
-    while(index<msgLength) {
+    поки(index<msgLength) {
         char16_t c=msg.charAt(index);
         // U+221E: Allow the infinity symbol, for ChoiceFormat patterns.
-        if((c<0x30 && c!=u_plus && c!=u_minus && c!=u_dot) || (c>0x39 && c!=u_e && c!=u_E && c!=0x221e)) {
+        якщо((c<0x30 && c!=u_plus && c!=u_minus && c!=u_dot) || (c>0x39 && c!=u_e && c!=u_E && c!=0x221e)) {
             break;
         }
         ++index;
     }
-    return index;
+    повернути index;
 }
 
 UBool
 MessagePattern::isArgTypeChar(UChar32 c) {
-    return (u_a<=c && c<=u_z) || (u_A<=c && c<=u_Z);
+    повернути (u_a<=c && c<=u_z) || (u_A<=c && c<=u_Z);
 }
 
 UBool
 MessagePattern::isChoice(int32_t index) {
     char16_t c;
-    return
+    повернути
         ((c=msg.charAt(index++))==u_c || c==u_C) &&
         ((c=msg.charAt(index++))==u_h || c==u_H) &&
         ((c=msg.charAt(index++))==u_o || c==u_O) &&
@@ -1057,7 +1057,7 @@ MessagePattern::isChoice(int32_t index) {
 UBool
 MessagePattern::isPlural(int32_t index) {
     char16_t c;
-    return
+    повернути
         ((c=msg.charAt(index++))==u_p || c==u_P) &&
         ((c=msg.charAt(index++))==u_l || c==u_L) &&
         ((c=msg.charAt(index++))==u_u || c==u_U) &&
@@ -1069,7 +1069,7 @@ MessagePattern::isPlural(int32_t index) {
 UBool
 MessagePattern::isSelect(int32_t index) {
     char16_t c;
-    return
+    повернути
         ((c=msg.charAt(index++))==u_s || c==u_S) &&
         ((c=msg.charAt(index++))==u_e || c==u_E) &&
         ((c=msg.charAt(index++))==u_l || c==u_L) &&
@@ -1081,7 +1081,7 @@ MessagePattern::isSelect(int32_t index) {
 UBool
 MessagePattern::isOrdinal(int32_t index) {
     char16_t c;
-    return
+    повернути
         ((c=msg.charAt(index++))==u_o || c==u_O) &&
         ((c=msg.charAt(index++))==u_r || c==u_R) &&
         ((c=msg.charAt(index++))==u_d || c==u_D) &&
@@ -1093,12 +1093,12 @@ MessagePattern::isOrdinal(int32_t index) {
 
 UBool
 MessagePattern::inMessageFormatPattern(int32_t nestingLevel) {
-    return nestingLevel>0 || partsList->a[0].type==UMSGPAT_PART_TYPE_MSG_START;
+    повернути nestingLevel>0 || partsList->a[0].type==UMSGPAT_PART_TYPE_MSG_START;
 }
 
 UBool
 MessagePattern::inTopLevelChoiceMessage(int32_t nestingLevel, UMessagePatternArgType parentType) {
-    return
+    повернути
         nestingLevel==1 &&
         parentType==UMSGPAT_ARG_TYPE_CHOICE &&
         partsList->a[0].type!=UMSGPAT_PART_TYPE_MSG_START;
@@ -1107,7 +1107,7 @@ MessagePattern::inTopLevelChoiceMessage(int32_t nestingLevel, UMessagePatternArg
 void
 MessagePattern::addPart(UMessagePatternPartType type, int32_t index, int32_t length,
                         int32_t value, UErrorCode &errorCode) {
-    if(partsList->ensureCapacityForOneMore(partsLength, errorCode)) {
+    якщо(partsList->ensureCapacityForOneMore(partsLength, errorCode)) {
         Part &part=partsList->a[partsLength++];
         part.type=type;
         part.index=index;
@@ -1128,22 +1128,22 @@ MessagePattern::addLimitPart(int32_t start,
 void
 MessagePattern::addArgDoublePart(double numericValue, int32_t start, int32_t length,
                                  UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+    якщо(U_FAILURE(errorCode)) {
+        повернути;
     }
     int32_t numericIndex=numericValuesLength;
-    if(numericValuesList==nullptr) {
+    якщо(numericValuesList==nullptr) {
         numericValuesList=new MessagePatternDoubleList();
-        if(numericValuesList==nullptr) {
+        якщо(numericValuesList==nullptr) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+            повернути;
         }
-    } else if(!numericValuesList->ensureCapacityForOneMore(numericValuesLength, errorCode)) {
-        return;
-    } else {
-        if(numericIndex>Part::MAX_VALUE) {
+    } інакше якщо(!numericValuesList->ensureCapacityForOneMore(numericValuesLength, errorCode)) {
+        повернути;
+    } інакше {
+        якщо(numericIndex>Part::MAX_VALUE) {
             errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return;
+            повернути;
         }
     }
     numericValuesList->a[numericValuesLength++]=numericValue;
@@ -1152,17 +1152,17 @@ MessagePattern::addArgDoublePart(double numericValue, int32_t start, int32_t len
 
 void
 MessagePattern::setParseError(UParseError *parseError, int32_t index) {
-    if(parseError==nullptr) {
-        return;
+    якщо(parseError==nullptr) {
+        повернути;
     }
     parseError->offset=index;
 
     // Set preContext to some of msg before index.
     // Avoid splitting a surrogate pair.
     int32_t length=index;
-    if(length>=U_PARSE_CONTEXT_LEN) {
+    якщо(length>=U_PARSE_CONTEXT_LEN) {
         length=U_PARSE_CONTEXT_LEN-1;
-        if(length>0 && U16_IS_TRAIL(msg[index-length])) {
+        якщо(length>0 && U16_IS_TRAIL(msg[index-length])) {
             --length;
         }
     }
@@ -1171,9 +1171,9 @@ MessagePattern::setParseError(UParseError *parseError, int32_t index) {
 
     // Set postContext to some of msg starting at index.
     length=msg.length()-index;
-    if(length>=U_PARSE_CONTEXT_LEN) {
+    якщо(length>=U_PARSE_CONTEXT_LEN) {
         length=U_PARSE_CONTEXT_LEN-1;
-        if(length>0 && U16_IS_LEAD(msg[index+length-1])) {
+        якщо(length>0 && U16_IS_LEAD(msg[index+length-1])) {
             --length;
         }
     }
@@ -1187,18 +1187,18 @@ void
 MessageImpl::appendReducedApostrophes(const UnicodeString &s, int32_t start, int32_t limit,
                                       UnicodeString &sb) {
     int32_t doubleApos=-1;
-    for(;;) {
+    для(;;) {
         int32_t i=s.indexOf(u_apos, start);
-        if(i<0 || i>=limit) {
+        якщо(i<0 || i>=limit) {
             sb.append(s, start, limit-start);
             break;
         }
-        if(i==doubleApos) {
+        якщо(i==doubleApos) {
             // Double apostrophe at start-1 and start==i, append one.
             sb.append(u_apos);
             ++start;
             doubleApos=-1;
-        } else {
+        } інакше {
             // Append text between apostrophes and skip this one.
             sb.append(s, start, i-start);
             doubleApos=start=i+1;
@@ -1213,16 +1213,16 @@ MessageImpl::appendSubMessageWithoutSkipSyntax(const MessagePattern& msgPattern,
                                                UnicodeString& result U_LIFETIME_BOUND) {
     const UnicodeString &msgString=msgPattern.getPatternString();
     int32_t prevIndex=msgPattern.getPart(msgStart).getLimit();
-    for(int32_t i=msgStart;;) {
+    для(int32_t i=msgStart;;) {
         const MessagePattern::Part &part=msgPattern.getPart(++i);
         UMessagePatternPartType type=part.getType();
         int32_t index=part.getIndex();
-        if(type==UMSGPAT_PART_TYPE_MSG_LIMIT) {
-            return result.append(msgString, prevIndex, index-prevIndex);
-        } else if(type==UMSGPAT_PART_TYPE_SKIP_SYNTAX) {
+        якщо(type==UMSGPAT_PART_TYPE_MSG_LIMIT) {
+            повернути result.append(msgString, prevIndex, index-prevIndex);
+        } інакше якщо(type==UMSGPAT_PART_TYPE_SKIP_SYNTAX) {
             result.append(msgString, prevIndex, index-prevIndex);
             prevIndex=part.getLimit();
-        } else if(type==UMSGPAT_PART_TYPE_ARG_START) {
+        } інакше якщо(type==UMSGPAT_PART_TYPE_ARG_START) {
             result.append(msgString, prevIndex, index-prevIndex);
             prevIndex=index;
             i=msgPattern.getLimitPartIndex(i);

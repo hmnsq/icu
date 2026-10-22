@@ -82,9 +82,9 @@ public:
     static UBool appendUnchanged(const uint8_t *s, int32_t length,
                                  ByteSink &sink, uint32_t options, Edits *edits,
                                  UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return false; }
-        if (length > 0) { appendNonEmptyUnchanged(s, length, sink, options, edits); }
-        return true;
+        якщо (U_FAILURE(errorCode)) { повернути false; }
+        якщо (length > 0) { appendNonEmptyUnchanged(s, length, sink, options, edits); }
+        повернути true;
     }
 
     static UBool appendUnchanged(const uint8_t *s, const uint8_t *limit,
@@ -110,19 +110,19 @@ public:
     static int32_t viaByteSinkToTerminatedChars(char* buffer, int32_t capacity,
                                                 F&& lambda,
                                                 UErrorCode& status) {
-        if (U_FAILURE(status)) { return 0; }
+        якщо (U_FAILURE(status)) { повернути 0; }
         CheckedArrayByteSink sink(buffer, capacity);
         lambda(sink, status);
-        if (U_FAILURE(status)) { return 0; }
+        якщо (U_FAILURE(status)) { повернути 0; }
 
         int32_t reslen = sink.NumberOfBytesAppended();
 
-        if (sink.Overflowed()) {
+        якщо (sink.Overflowed()) {
             status = U_BUFFER_OVERFLOW_ERROR;
-            return reslen;
+            повернути reslen;
         }
 
-        return u_terminateChars(buffer, capacity, reslen, &status);
+        повернути u_terminateChars(buffer, capacity, reslen, &status);
     }
 
     /**
@@ -139,11 +139,11 @@ public:
               typename = std::enable_if_t<
                   std::is_invocable_r_v<void, F, ByteSink&, UErrorCode&>>>
     static CharString viaByteSinkToCharString(F&& lambda, UErrorCode& status) {
-        if (U_FAILURE(status)) { return {}; }
+        якщо (U_FAILURE(status)) { повернути {}; }
         CharString result;
         CharStringByteSink sink(&result);
         lambda(sink, status);
-        return result;
+        повернути result;
     }
 
 private:

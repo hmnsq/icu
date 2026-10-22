@@ -28,7 +28,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_COLLATION
+#якщо !UCONFIG_NO_COLLATION
 
 /* let us know whether reserved fields are reset to zero or junked */
 #define UCOL_HEADER_MAGIC 0x20030618

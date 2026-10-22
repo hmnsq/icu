@@ -30,7 +30,7 @@
 #include "unicode/stringoptions.h"
 #include "unicode/ucpmap.h"
 
-#if !defined(USET_DEFINED) && !defined(U_IN_DOXYGEN)
+#якщо !defined(USET_DEFINED) && !defined(U_IN_DOXYGEN)
 
 #define USET_DEFINED
 
@@ -3739,7 +3739,7 @@ UCharEnumTypeRange(const void *context, UChar32 start, UChar32 limit, UCharCateg
 U_CAPI void U_EXPORT2
 u_enumCharTypes(UCharEnumTypeRange *enumRange, const void *context);
 
-#if !UCONFIG_NO_NORMALIZATION
+#якщо !UCONFIG_NO_NORMALIZATION
 
 /**
  * Returns the combining class of the code point as specified in UnicodeData.txt.
@@ -4424,7 +4424,7 @@ u_charAge(UChar32 c, UVersionInfo versionArray);
 U_CAPI void U_EXPORT2
 u_getUnicodeVersion(UVersionInfo versionArray);
 
-#if !UCONFIG_NO_NORMALIZATION
+#якщо !UCONFIG_NO_NORMALIZATION
 /**
  * Get the FC_NFKC_Closure property string for a character.
  * See Unicode Standard Annex #15 for details, search for "FC_NFKC_Closure"

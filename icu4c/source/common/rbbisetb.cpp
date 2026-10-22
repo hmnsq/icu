@@ -32,7 +32,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#якщо !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/uniset.h"
 #include "uvector.h"
@@ -73,7 +73,7 @@ RBBISetBuilder::~RBBISetBuilder()
     RangeDescriptor   *nextRangeDesc;
 
     // Walk through & delete the linked list of RangeDescriptors
-    for (nextRangeDesc = fRangeList; nextRangeDesc!=nullptr;) {
+    для (nextRangeDesc = fRangeList; nextRangeDesc!=nullptr;) {
         RangeDescriptor *r = nextRangeDesc;
         nextRangeDesc      = r->fNext;
         delete r;
@@ -96,41 +96,41 @@ void RBBISetBuilder::buildRanges() {
     RBBINode        *usetNode;
     RangeDescriptor *rlRange;
 
-    if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "usets")) {printSets();}
+    якщо (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "usets")) {printSets();}
 
     //
     //  Initialize the process by creating a single range encompassing all characters
     //  that is in no sets.
     //
     fRangeList                = new RangeDescriptor(*fStatus); // will check for status here
-    if (fRangeList == nullptr) {
+    якщо (fRangeList == nullptr) {
         *fStatus = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        повернути;
     }
     fRangeList->fStartChar    = 0;
     fRangeList->fEndChar      = 0x10ffff;
 
-    if (U_FAILURE(*fStatus)) {
-        return;
+    якщо (U_FAILURE(*fStatus)) {
+        повернути;
     }
 
     //
     //  Find the set of non-overlapping ranges of characters
     //
-    int  ni;
-    for (ni=0; ; ni++) {        // Loop over each of the UnicodeSets encountered in the input rules
+    ціле  ni;
+    для (ni=0; ; ni++) {        // Loop over each of the UnicodeSets encountered in the input rules
         usetNode = static_cast<RBBINode*>(this->fRB->fUSetNodes->elementAt(ni));
-        if (usetNode==nullptr) {
+        якщо (usetNode==nullptr) {
             break;
         }
 
         UnicodeSet      *inputSet             = usetNode->fInputSet;
         int32_t          inputSetRangeCount   = inputSet->getRangeCount();
-        int              inputSetRangeIndex   = 0;
+        ціле              inputSetRangeIndex   = 0;
                          rlRange              = fRangeList;
 
-        for (;;) {
-            if (inputSetRangeIndex >= inputSetRangeCount) {
+        для (;;) {
+            якщо (inputSetRangeIndex >= inputSetRangeCount) {
                 break;
             }
             UChar32      inputSetRangeBegin  = inputSet->getRangeStart(inputSetRangeIndex);
@@ -138,7 +138,7 @@ void RBBISetBuilder::buildRanges() {
 
             // skip over ranges from the range list that are completely
             //   below the current range from the input unicode set.
-            while (rlRange->fEndChar < inputSetRangeBegin) {
+            поки (rlRange->fEndChar < inputSetRangeBegin) {
                 rlRange = rlRange->fNext;
             }
 
@@ -148,10 +148,10 @@ void RBBISetBuilder::buildRanges() {
             //   and the other containing the rest.
             //   Then continue the loop; the post-split current range will then be skipped
             //     over
-            if (rlRange->fStartChar < inputSetRangeBegin) {
+            якщо (rlRange->fStartChar < inputSetRangeBegin) {
                 rlRange->split(inputSetRangeBegin, *fStatus);
-                if (U_FAILURE(*fStatus)) {
-                    return;
+                якщо (U_FAILURE(*fStatus)) {
+                    повернути;
                 }
                 continue;
             }
@@ -161,31 +161,31 @@ void RBBISetBuilder::buildRanges() {
             //   the end of the range from the unicode set, split the range list
             //   range in two.  The first part of the split range will be
             //   wholly inside the Unicode set.
-            if (rlRange->fEndChar > inputSetRangeEnd) {
+            якщо (rlRange->fEndChar > inputSetRangeEnd) {
                 rlRange->split(inputSetRangeEnd+1, *fStatus);
-                if (U_FAILURE(*fStatus)) {
-                    return;
+                якщо (U_FAILURE(*fStatus)) {
+                    повернути;
                 }
             }
 
             // The current rlRange is now entirely within the UnicodeSet range.
             // Add this unicode set to the list of sets for this rlRange
-            if (rlRange->fIncludesSets->indexOf(usetNode) == -1) {
+            якщо (rlRange->fIncludesSets->indexOf(usetNode) == -1) {
                 rlRange->fIncludesSets->addElement(usetNode, *fStatus);
-                if (U_FAILURE(*fStatus)) {
-                    return;
+                якщо (U_FAILURE(*fStatus)) {
+                    повернути;
                 }
             }
 
             // Advance over ranges that we are finished with.
-            if (inputSetRangeEnd == rlRange->fEndChar) {
+            якщо (inputSetRangeEnd == rlRange->fEndChar) {
                 inputSetRangeIndex++;
             }
             rlRange = rlRange->fNext;
         }
     }
 
-    if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "range")) { printRanges();}
+    якщо (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "range")) { printRanges();}
 
     //
     //  Group the above ranges, with each group consisting of one or more
@@ -201,20 +201,20 @@ void RBBISetBuilder::buildRanges() {
     RangeDescriptor *rlSearchRange;
     int32_t dictGroupCount = 0;
 
-    for (rlRange = fRangeList; rlRange!=nullptr; rlRange=rlRange->fNext) {
-        for (rlSearchRange=fRangeList; rlSearchRange != rlRange; rlSearchRange=rlSearchRange->fNext) {
-            if (rlRange->fIncludesSets->equals(*rlSearchRange->fIncludesSets)) {
+    для (rlRange = fRangeList; rlRange!=nullptr; rlRange=rlRange->fNext) {
+        для (rlSearchRange=fRangeList; rlSearchRange != rlRange; rlSearchRange=rlSearchRange->fNext) {
+            якщо (rlRange->fIncludesSets->equals(*rlSearchRange->fIncludesSets)) {
                 rlRange->fNum = rlSearchRange->fNum;
                 rlRange->fIncludesDict = rlSearchRange->fIncludesDict;
                 break;
             }
         }
-        if (rlRange->fNum == 0) {
+        якщо (rlRange->fNum == 0) {
             rlRange->fFirstInGroup = true;
-            if (rlRange->isDictionaryRange()) {
+            якщо (rlRange->isDictionaryRange()) {
                 rlRange->fNum = ++dictGroupCount;
                 rlRange->fIncludesDict = true;
-            } else {
+            } інакше {
                 fGroupCount++;
                 rlRange->fNum = fGroupCount+2;
                 addValToSets(rlRange->fIncludesSets, rlRange->fNum);
@@ -226,10 +226,10 @@ void RBBISetBuilder::buildRanges() {
     // immediately follow the non-dictionary ranges.
 
     fDictCategoriesStart = fGroupCount + 3;
-    for (rlRange = fRangeList; rlRange!=nullptr; rlRange=rlRange->fNext) {
-        if (rlRange->fIncludesDict) {
+    для (rlRange = fRangeList; rlRange!=nullptr; rlRange=rlRange->fNext) {
+        якщо (rlRange->fIncludesDict) {
             rlRange->fNum += fDictCategoriesStart - 1;
-            if (rlRange->fFirstInGroup) {
+            якщо (rlRange->fFirstInGroup) {
                 addValToSets(rlRange->fIncludesSets, rlRange->fNum);
             }
         }
@@ -245,20 +245,20 @@ void RBBISetBuilder::buildRanges() {
     //   it doesn’t affect the computation of ranges or TRIE.
 
     UnicodeString eofString(u"eof");
-    for (ni=0; ; ni++) {        // Loop over each of the UnicodeSets encountered in the input rules
+    для (ni=0; ; ni++) {        // Loop over each of the UnicodeSets encountered in the input rules
         usetNode = static_cast<RBBINode*>(this->fRB->fUSetNodes->elementAt(ni));
-        if (usetNode==nullptr) {
+        якщо (usetNode==nullptr) {
             break;
         }
         UnicodeSet      *inputSet = usetNode->fInputSet;
-        if (inputSet->contains(eofString)) {
+        якщо (inputSet->contains(eofString)) {
             addValToSet(usetNode, 1);
         }
     }
 
 
-    if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "rgroup")) {printRangeGroups();}
-    if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "esets")) {printSets();}
+    якщо (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "rgroup")) {printRangeGroups();}
+    якщо (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "esets")) {printSets();}
 }
 
 
@@ -272,7 +272,7 @@ void RBBISetBuilder::buildTrie() {
                         0,       //  Error value for out-of-range input.
                         fStatus);
 
-    for (RangeDescriptor *range = fRangeList; range!=nullptr && U_SUCCESS(*fStatus); range=range->fNext) {
+    для (RangeDescriptor *range = fRangeList; range!=nullptr && U_SUCCESS(*fStatus); range=range->fNext) {
         umutablecptrie_setRange(fMutableTrie,
                                 range->fStartChar,     // Range start
                                 range->fEndChar,       // Range end (inclusive)
@@ -288,16 +288,16 @@ void RBBISetBuilder::mergeCategories(IntPair categories) {
     U_ASSERT((categories.first <  fDictCategoriesStart && categories.second <  fDictCategoriesStart) ||
              (categories.first >= fDictCategoriesStart && categories.second >= fDictCategoriesStart));
 
-    for (RangeDescriptor *rd = fRangeList; rd != nullptr; rd = rd->fNext) {
+    для (RangeDescriptor *rd = fRangeList; rd != nullptr; rd = rd->fNext) {
         int32_t rangeNum = rd->fNum;
-        if (rangeNum == categories.second) {
+        якщо (rangeNum == categories.second) {
             rd->fNum = categories.first;
-        } else if (rangeNum > categories.second) {
+        } інакше якщо (rangeNum > categories.second) {
             rd->fNum--;
         }
     }
     --fGroupCount;
-    if (categories.second <= fDictCategoriesStart) {
+    якщо (categories.second <= fDictCategoriesStart) {
         --fDictCategoriesStart;
     }
 }
@@ -309,10 +309,10 @@ void RBBISetBuilder::mergeCategories(IntPair categories) {
 //
 //-----------------------------------------------------------------------------------
 int32_t RBBISetBuilder::getTrieSize()  {
-    if (U_FAILURE(*fStatus)) {
-        return 0;
+    якщо (U_FAILURE(*fStatus)) {
+        повернути 0;
     }
-    if (fTrie == nullptr) {
+    якщо (fTrie == nullptr) {
         bool use8Bits = getNumCharCategories() <= kMaxCharCategoriesFor8BitsTrie;
         fTrie = umutablecptrie_buildImmutable(
             fMutableTrie,
@@ -321,11 +321,11 @@ int32_t RBBISetBuilder::getTrieSize()  {
             fStatus);
         UErrorCode bufferStatus = *fStatus;
         fTrieSize = ucptrie_toBinary(fTrie, nullptr, 0, &bufferStatus);
-        if (bufferStatus != U_BUFFER_OVERFLOW_ERROR && U_FAILURE(bufferStatus)) {
+        якщо (bufferStatus != U_BUFFER_OVERFLOW_ERROR && U_FAILURE(bufferStatus)) {
             *fStatus = bufferStatus;
         }
     }
-    return fTrieSize;
+    повернути fTrieSize;
 }
 
 
@@ -360,7 +360,7 @@ void RBBISetBuilder::serializeTrie(uint8_t *where) {
 void  RBBISetBuilder::addValToSets(UVector *sets, uint32_t val) {
     int32_t       ix;
 
-    for (ix=0; ix<sets->size(); ix++) {
+    для (ix=0; ix<sets->size(); ix++) {
         RBBINode* usetNode = static_cast<RBBINode*>(sets->elementAt(ix));
         addValToSet(usetNode, val);
     }
@@ -368,30 +368,30 @@ void  RBBISetBuilder::addValToSets(UVector *sets, uint32_t val) {
 
 void  RBBISetBuilder::addValToSet(RBBINode *usetNode, uint32_t val) {
     RBBINode *leafNode = new RBBINode(RBBINode::leafChar, *fStatus);
-    if (U_FAILURE(*fStatus)) {
+    якщо (U_FAILURE(*fStatus)) {
         delete leafNode;
-        return;
+        повернути;
     }
-    if (leafNode == nullptr) {
+    якщо (leafNode == nullptr) {
         *fStatus = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        повернути;
     }
     leafNode->fVal = static_cast<unsigned short>(val);
-    if (usetNode->fLeftChild == nullptr) {
+    якщо (usetNode->fLeftChild == nullptr) {
         usetNode->fLeftChild = leafNode;
         leafNode->fParent    = usetNode;
-    } else {
+    } інакше {
         // There are already input symbols present for this set.
         // Set up an OR node, with the previous stuff as the left child
         //   and the new value as the right child.
         RBBINode *orNode = new RBBINode(RBBINode::opOr, *fStatus);
-        if (orNode == nullptr) {
+        якщо (orNode == nullptr) {
             *fStatus = U_MEMORY_ALLOCATION_ERROR;
         }
-        if (U_FAILURE(*fStatus)) {
+        якщо (U_FAILURE(*fStatus)) {
             delete orNode;
             delete leafNode;
-            return;
+            повернути;
         }
         orNode->fLeftChild  = usetNode->fLeftChild;
         orNode->fRightChild = leafNode;
@@ -409,7 +409,7 @@ void  RBBISetBuilder::addValToSet(RBBINode *usetNode, uint32_t val) {
 //
 //------------------------------------------------------------------------
 int32_t  RBBISetBuilder::getNumCharCategories() const {
-    return fGroupCount + 3;
+    повернути fGroupCount + 3;
 }
 
 
@@ -419,7 +419,7 @@ int32_t  RBBISetBuilder::getNumCharCategories() const {
 //
 //------------------------------------------------------------------------
 int32_t  RBBISetBuilder::getDictCategoriesStart() const {
-    return fDictCategoriesStart;
+    повернути fDictCategoriesStart;
 }
 
 
@@ -432,13 +432,13 @@ int32_t  RBBISetBuilder::getDictCategoriesStart() const {
 UChar32  RBBISetBuilder::getFirstChar(int32_t category) const {
     RangeDescriptor   *rlRange;
     UChar32 retVal = static_cast<UChar32>(-1);
-    for (rlRange = fRangeList; rlRange!=nullptr; rlRange=rlRange->fNext) {
-        if (rlRange->fNum == category) {
+    для (rlRange = fRangeList; rlRange!=nullptr; rlRange=rlRange->fNext) {
+        якщо (rlRange->fNum == category) {
             retVal = rlRange->fStartChar;
             break;
         }
     }
-    return retVal;
+    повернути retVal;
 }
 
 
@@ -451,19 +451,19 @@ UChar32  RBBISetBuilder::getFirstChar(int32_t category) const {
 #ifdef RBBI_DEBUG
 void RBBISetBuilder::printRanges() {
     RangeDescriptor       *rlRange;
-    int                    i;
+    ціле                    i;
 
     RBBIDebugPrintf("\n\n Nonoverlapping Ranges ...\n");
-    for (rlRange = fRangeList; rlRange!=nullptr; rlRange=rlRange->fNext) {
+    для (rlRange = fRangeList; rlRange!=nullptr; rlRange=rlRange->fNext) {
         RBBIDebugPrintf("%4x-%4x  ", rlRange->fStartChar, rlRange->fEndChar);
 
-        for (i=0; i<rlRange->fIncludesSets->size(); i++) {
+        для (i=0; i<rlRange->fIncludesSets->size(); i++) {
             RBBINode       *usetNode    = (RBBINode *)rlRange->fIncludesSets->elementAt(i);
             UnicodeString   setName {u"anon"};
             RBBINode       *setRef = usetNode->fParent;
-            if (setRef != nullptr) {
+            якщо (setRef != nullptr) {
                 RBBINode *varRef = setRef->fParent;
-                if (varRef != nullptr  &&  varRef->fType == RBBINode::varRef) {
+                якщо (varRef != nullptr  &&  varRef->fType == RBBINode::varRef) {
                     setName = varRef->fText;
                 }
             }
@@ -483,23 +483,23 @@ void RBBISetBuilder::printRanges() {
 //------------------------------------------------------------------------
 #ifdef RBBI_DEBUG
 void RBBISetBuilder::printRangeGroups() {
-    int                    i;
+    ціле                    i;
 
     RBBIDebugPrintf("\nRanges grouped by Unicode Set Membership...\n");
-    for (RangeDescriptor *rlRange = fRangeList; rlRange!=nullptr; rlRange=rlRange->fNext) {
-        if (rlRange->fFirstInGroup) {
-            int groupNum = rlRange->fNum;
+    для (RangeDescriptor *rlRange = fRangeList; rlRange!=nullptr; rlRange=rlRange->fNext) {
+        якщо (rlRange->fFirstInGroup) {
+            ціле groupNum = rlRange->fNum;
             RBBIDebugPrintf("%2i  ", groupNum);
 
-            if (groupNum >= fDictCategoriesStart) { RBBIDebugPrintf(" <DICT> ");}
+            якщо (groupNum >= fDictCategoriesStart) { RBBIDebugPrintf(" <DICT> ");}
 
-            for (i=0; i<rlRange->fIncludesSets->size(); i++) {
+            для (i=0; i<rlRange->fIncludesSets->size(); i++) {
                 RBBINode       *usetNode    = (RBBINode *)rlRange->fIncludesSets->elementAt(i);
                 UnicodeString   setName = UNICODE_STRING("anon", 4);
                 RBBINode       *setRef = usetNode->fParent;
-                if (setRef != nullptr) {
+                якщо (setRef != nullptr) {
                     RBBINode *varRef = setRef->fParent;
-                    if (varRef != nullptr  &&  varRef->fType == RBBINode::varRef) {
+                    якщо (varRef != nullptr  &&  varRef->fType == RBBINode::varRef) {
                         setName = varRef->fText;
                     }
                 }
@@ -507,9 +507,9 @@ void RBBISetBuilder::printRangeGroups() {
             }
 
             i = 0;
-            for (RangeDescriptor *tRange = rlRange; tRange != nullptr; tRange = tRange->fNext) {
-                if (tRange->fNum == rlRange->fNum) {
-                    if (i++ % 5 == 0) {
+            для (RangeDescriptor *tRange = rlRange; tRange != nullptr; tRange = tRange->fNext) {
+                якщо (tRange->fNum == rlRange->fNum) {
+                    якщо (i++ % 5 == 0) {
                         RBBIDebugPrintf("\n    ");
                     }
                     RBBIDebugPrintf("  %05x-%05x", tRange->fStartChar, tRange->fEndChar);
@@ -531,26 +531,26 @@ void RBBISetBuilder::printRangeGroups() {
 //------------------------------------------------------------------------
 #ifdef RBBI_DEBUG
 void RBBISetBuilder::printSets() {
-    int                   i;
+    ціле                   i;
 
     RBBIDebugPrintf("\n\nUnicode Sets List\n------------------\n");
-    for (i=0; ; i++) {
+    для (i=0; ; i++) {
         RBBINode        *usetNode;
         RBBINode        *setRef;
         RBBINode        *varRef;
         UnicodeString    setName;
 
         usetNode = (RBBINode *)fRB->fUSetNodes->elementAt(i);
-        if (usetNode == nullptr) {
+        якщо (usetNode == nullptr) {
             break;
         }
 
         RBBIDebugPrintf("%3d    ", i);
         setName = UNICODE_STRING("anonymous", 9);
         setRef = usetNode->fParent;
-        if (setRef != nullptr) {
+        якщо (setRef != nullptr) {
             varRef = setRef->fParent;
-            if (varRef != nullptr  &&  varRef->fType == RBBINode::varRef) {
+            якщо (varRef != nullptr  &&  varRef->fType == RBBINode::varRef) {
                 setName = varRef->fText;
             }
         }
@@ -558,7 +558,7 @@ void RBBISetBuilder::printSets() {
         RBBIDebugPrintf("   ");
         RBBI_DEBUG_printUnicodeString(usetNode->fText);
         RBBIDebugPrintf("\n");
-        if (usetNode->fLeftChild != nullptr) {
+        якщо (usetNode->fLeftChild != nullptr) {
             RBBINode::printTree(usetNode->fLeftChild, true);
         }
     }
@@ -578,18 +578,18 @@ RangeDescriptor::RangeDescriptor(const RangeDescriptor &other, UErrorCode &statu
         fStartChar(other.fStartChar), fEndChar {other.fEndChar}, fNum {other.fNum},
         fIncludesDict{other.fIncludesDict}, fFirstInGroup{other.fFirstInGroup} {
 
-    if (U_FAILURE(status)) {
-        return;
+    якщо (U_FAILURE(status)) {
+        повернути;
     }
     fIncludesSets = new UVector(status);
-    if (this->fIncludesSets == nullptr) {
+    якщо (this->fIncludesSets == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
     }
-    if (U_FAILURE(status)) {
-        return;
+    якщо (U_FAILURE(status)) {
+        повернути;
     }
 
-    for (int32_t i=0; i<other.fIncludesSets->size(); i++) {
+    для (int32_t i=0; i<other.fIncludesSets->size(); i++) {
         this->fIncludesSets->addElement(other.fIncludesSets->elementAt(i), status);
     }
 }
@@ -601,11 +601,11 @@ RangeDescriptor::RangeDescriptor(const RangeDescriptor &other, UErrorCode &statu
 //
 //-------------------------------------------------------------------------------------
 RangeDescriptor::RangeDescriptor(UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return;
+    якщо (U_FAILURE(status)) {
+        повернути;
     }
     fIncludesSets = new UVector(status);
-    if (fIncludesSets == nullptr) {
+    якщо (fIncludesSets == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
     }
 }
@@ -629,13 +629,13 @@ RangeDescriptor::~RangeDescriptor() {
 void RangeDescriptor::split(UChar32 where, UErrorCode &status) {
     U_ASSERT(where>fStartChar && where<=fEndChar);
     RangeDescriptor *nr = new RangeDescriptor(*this, status);
-    if(nr == nullptr) {
+    якщо(nr == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        повернути;
     }
-    if (U_FAILURE(status)) {
+    якщо (U_FAILURE(status)) {
         delete nr;
-        return;
+        повернути;
     }
     //  RangeDescriptor copy constructor copies all fields.
     //  Only need to update those that are different after the split.
@@ -663,20 +663,20 @@ void RangeDescriptor::split(UChar32 where, UErrorCode &status) {
 //-------------------------------------------------------------------------------------
 bool RangeDescriptor::isDictionaryRange() {
     static const char16_t *dictionary = u"dictionary";
-    for (int32_t i=0; i<fIncludesSets->size(); i++) {
+    для (int32_t i=0; i<fIncludesSets->size(); i++) {
         RBBINode* usetNode = static_cast<RBBINode*>(fIncludesSets->elementAt(i));
         RBBINode *setRef = usetNode->fParent;
-        if (setRef != nullptr) {
+        якщо (setRef != nullptr) {
             RBBINode *varRef = setRef->fParent;
-            if (varRef && varRef->fType == RBBINode::varRef) {
+            якщо (varRef && varRef->fType == RBBINode::varRef) {
                 const UnicodeString *setName = &varRef->fText;
-                if (setName->compare(dictionary, -1) == 0) {
-                    return true;
+                якщо (setName->compare(dictionary, -1) == 0) {
+                    повернути true;
                 }
             }
         }
     }
-    return false;
+    повернути false;
 }
 
 U_NAMESPACE_END

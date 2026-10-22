@@ -33,7 +33,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#якщо U_SHOW_CPLUSPLUS_API
 
 #include <cstdint>
 #include <string_view>
@@ -1075,13 +1075,13 @@ public:
          * @return true if next() can be called again.
          * @stable ICU 65
          */
-        UBool hasNext() const override { return it_ != end_; }
+        UBool hasNext() const override { повернути it_ != end_; }
 
         /**
          * @return the next locale.
          * @stable ICU 65
          */
-        const Locale &next() override { return *it_++; }
+        const Locale &next() override { повернути *it_++; }
 
     private:
         Iter it_;
@@ -1113,13 +1113,13 @@ public:
          * @return true if next() can be called again.
          * @stable ICU 65
          */
-        UBool hasNext() const override { return it_ != end_; }
+        UBool hasNext() const override { повернути it_ != end_; }
 
         /**
          * @return the next locale.
          * @stable ICU 65
          */
-        const Locale &next() override { return converter_(*it_++); }
+        const Locale &next() override { повернути converter_(*it_++); }
 
     private:
         Iter it_;
@@ -1195,13 +1195,13 @@ private:
                       sizeof region -
                       sizeof variantBegin];
 
-        const char* getLanguage() const U_LIFETIME_BOUND { return language; }
-        const char* getScript() const U_LIFETIME_BOUND { return script; }
-        const char* getRegion() const U_LIFETIME_BOUND { return region; }
+        const char* getLanguage() const U_LIFETIME_BOUND { повернути language; }
+        const char* getScript() const U_LIFETIME_BOUND { повернути script; }
+        const char* getRegion() const U_LIFETIME_BOUND { повернути region; }
         const char* getVariant() const U_LIFETIME_BOUND {
-            return variantBegin == 0 ? "" : getBaseName() + variantBegin;
+            повернути variantBegin == 0 ? "" : getBaseName() + variantBegin;
         }
-        const char* getBaseName() const U_LIFETIME_BOUND { return baseName; }
+        const char* getBaseName() const U_LIFETIME_BOUND { повернути baseName; }
 
         // Doesn't inherit from UMemory, shouldn't be heap allocated.
         static void* U_EXPORT2 operator new(size_t) noexcept = delete;
@@ -1218,7 +1218,7 @@ private:
                          std::string_view language,
                          std::string_view script,
                          std::string_view region) {
-            return length < static_cast<int32_t>(sizeof Nest::baseName) &&
+            повернути length < static_cast<int32_t>(sizeof Nest::baseName) &&
                    language.size() < sizeof Nest::language &&
                    script.size() < sizeof Nest::script &&
                    region.size() < sizeof Nest::region;
@@ -1242,9 +1242,9 @@ private:
         char region[ULOC_COUNTRY_CAPACITY];
         Alloc* ptr;
 
-        const char* getLanguage() const U_LIFETIME_BOUND { return language; }
-        const char* getScript() const U_LIFETIME_BOUND { return script; }
-        const char* getRegion() const U_LIFETIME_BOUND { return region; }
+        const char* getLanguage() const U_LIFETIME_BOUND { повернути language; }
+        const char* getScript() const U_LIFETIME_BOUND { повернути script; }
+        const char* getRegion() const U_LIFETIME_BOUND { повернути region; }
         const char* getVariant() const U_LIFETIME_BOUND;
         const char* getFullName() const U_LIFETIME_BOUND;
         const char* getBaseName() const U_LIFETIME_BOUND;
@@ -1292,7 +1292,7 @@ private:
         Payload& operator=(Payload&& other) noexcept U_LIFETIME_BOUND;
 
         void setToBogus();
-        bool isBogus() const { return type == eBOGUS; }
+        bool isBogus() const { повернути type == eBOGUS; }
 
         template <typename T, typename... Args> T& emplace(Args&&... args) U_LIFETIME_BOUND;
 
@@ -1314,7 +1314,7 @@ private:
               const char* (Heap::*const HEAP)() const>
     const char* getField() const U_LIFETIME_BOUND;
 
-    static const Locale &getLocale(int locid);
+    static const Locale &getLocale(ціле locid);
 
     /**
      * A friend to allow the default locale to be set by either the C or C++ API.
@@ -1329,32 +1329,32 @@ private:
 U_COMMON_API inline bool
 Locale::operator!=(const    Locale&     other) const
 {
-    return !operator==(other);
+    повернути !operator==(other);
 }
 
 template<typename StringClass> inline StringClass
 Locale::toLanguageTag(UErrorCode& status) const
 {
-    if (U_FAILURE(status)) { return {}; }
+    якщо (U_FAILURE(status)) { повернути {}; }
     StringClass result;
     StringByteSink<StringClass> sink(&result);
     toLanguageTag(sink, status);
-    return result;
+    повернути result;
 }
 
 template<typename StringClass, typename OutputIterator> inline void
 Locale::getKeywords(OutputIterator iterator, UErrorCode& status) const
 {
-    if (U_FAILURE(status)) { return; }
+    якщо (U_FAILURE(status)) { повернути; }
     LocalPointer<StringEnumeration> keys(createKeywords(status));
-    if (U_FAILURE(status) || keys.isNull()) {
-        return;
+    якщо (U_FAILURE(status) || keys.isNull()) {
+        повернути;
     }
-    for (;;) {
+    для (;;) {
         int32_t resultLength;
         const char* buffer = keys->next(&resultLength, status);
-        if (U_FAILURE(status) || buffer == nullptr) {
-            return;
+        якщо (U_FAILURE(status) || buffer == nullptr) {
+            повернути;
         }
         *iterator++ = StringClass(buffer, resultLength);
     }
@@ -1363,16 +1363,16 @@ Locale::getKeywords(OutputIterator iterator, UErrorCode& status) const
 template<typename StringClass, typename OutputIterator> inline void
 Locale::getUnicodeKeywords(OutputIterator iterator, UErrorCode& status) const
 {
-    if (U_FAILURE(status)) { return; }
+    якщо (U_FAILURE(status)) { повернути; }
     LocalPointer<StringEnumeration> keys(createUnicodeKeywords(status));
-    if (U_FAILURE(status) || keys.isNull()) {
-        return;
+    якщо (U_FAILURE(status) || keys.isNull()) {
+        повернути;
     }
-    for (;;) {
+    для (;;) {
         int32_t resultLength;
         const char* buffer = keys->next(&resultLength, status);
-        if (U_FAILURE(status) || buffer == nullptr) {
-            return;
+        якщо (U_FAILURE(status) || buffer == nullptr) {
+            повернути;
         }
         *iterator++ = StringClass(buffer, resultLength);
     }
@@ -1381,26 +1381,26 @@ Locale::getUnicodeKeywords(OutputIterator iterator, UErrorCode& status) const
 template<typename StringClass> inline StringClass
 Locale::getKeywordValue(StringPiece keywordName, UErrorCode& status) const
 {
-    if (U_FAILURE(status)) { return {}; }
+    якщо (U_FAILURE(status)) { повернути {}; }
     StringClass result;
     StringByteSink<StringClass> sink(&result);
     getKeywordValue(keywordName, sink, status);
-    return result;
+    повернути result;
 }
 
 template<typename StringClass> inline StringClass
 Locale::getUnicodeKeywordValue(StringPiece keywordName, UErrorCode& status) const
 {
-    if (U_FAILURE(status)) { return {}; }
+    якщо (U_FAILURE(status)) { повернути {}; }
     StringClass result;
     StringByteSink<StringClass> sink(&result);
     getUnicodeKeywordValue(keywordName, sink, status);
-    return result;
+    повернути result;
 }
 
 U_COMMON_API inline UBool
 Locale::isBogus() const {
-    return payload.isBogus();
+    повернути payload.isBogus();
 }
 
 U_NAMESPACE_END

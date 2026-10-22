@@ -209,24 +209,24 @@ _uPluginErrorName[U_PLUGIN_ERROR_LIMIT - U_PLUGIN_ERROR_START] = {
 
 U_CAPI const char * U_EXPORT2
 u_errorName(UErrorCode code) {
-    if(U_ZERO_ERROR <= code && code < U_STANDARD_ERROR_LIMIT) {
-        return _uErrorName[code];
-    } else if(U_ERROR_WARNING_START <= code && code < U_ERROR_WARNING_LIMIT) {
-        return _uErrorInfoName[code - U_ERROR_WARNING_START];
-    } else if(U_PARSE_ERROR_START <= code && code < U_PARSE_ERROR_LIMIT){
-        return _uTransErrorName[code - U_PARSE_ERROR_START];
-    } else if(U_FMT_PARSE_ERROR_START <= code && code < U_FMT_PARSE_ERROR_LIMIT){
-        return _uFmtErrorName[code - U_FMT_PARSE_ERROR_START];
-    } else if (U_BRK_ERROR_START <= code  && code < U_BRK_ERROR_LIMIT){
-        return _uBrkErrorName[code - U_BRK_ERROR_START];
-    } else if (U_REGEX_ERROR_START <= code && code < U_REGEX_ERROR_LIMIT) {
-        return _uRegexErrorName[code - U_REGEX_ERROR_START];
-    } else if(U_IDNA_ERROR_START <= code && code < U_IDNA_ERROR_LIMIT) {
-        return _uIDNAErrorName[code - U_IDNA_ERROR_START];
-    } else if(U_PLUGIN_ERROR_START <= code && code < U_PLUGIN_ERROR_LIMIT) {
-        return _uPluginErrorName[code - U_PLUGIN_ERROR_START];
-    } else {
-        return "[BOGUS UErrorCode]";
+    якщо(U_ZERO_ERROR <= code && code < U_STANDARD_ERROR_LIMIT) {
+        повернути _uErrorName[code];
+    } інакше якщо(U_ERROR_WARNING_START <= code && code < U_ERROR_WARNING_LIMIT) {
+        повернути _uErrorInfoName[code - U_ERROR_WARNING_START];
+    } інакше якщо(U_PARSE_ERROR_START <= code && code < U_PARSE_ERROR_LIMIT){
+        повернути _uTransErrorName[code - U_PARSE_ERROR_START];
+    } інакше якщо(U_FMT_PARSE_ERROR_START <= code && code < U_FMT_PARSE_ERROR_LIMIT){
+        повернути _uFmtErrorName[code - U_FMT_PARSE_ERROR_START];
+    } інакше якщо (U_BRK_ERROR_START <= code  && code < U_BRK_ERROR_LIMIT){
+        повернути _uBrkErrorName[code - U_BRK_ERROR_START];
+    } інакше якщо (U_REGEX_ERROR_START <= code && code < U_REGEX_ERROR_LIMIT) {
+        повернути _uRegexErrorName[code - U_REGEX_ERROR_START];
+    } інакше якщо(U_IDNA_ERROR_START <= code && code < U_IDNA_ERROR_LIMIT) {
+        повернути _uIDNAErrorName[code - U_IDNA_ERROR_START];
+    } інакше якщо(U_PLUGIN_ERROR_START <= code && code < U_PLUGIN_ERROR_LIMIT) {
+        повернути _uPluginErrorName[code - U_PLUGIN_ERROR_START];
+    } інакше {
+        повернути "[BOGUS UErrorCode]";
     }
 }
 

@@ -42,40 +42,40 @@ public:
     StringPiece getString(const CharString& strings U_LIFETIME_BOUND) const {
         int32_t offset=stringOffset;
         int32_t length;
-        if(offset>=0) {
+        якщо(offset>=0) {
             length = static_cast<uint8_t>(strings[offset++]);
-        } else {
+        } інакше {
             offset=~offset;
             length = (static_cast<int32_t>(static_cast<uint8_t>(strings[offset])) << 8) | static_cast<uint8_t>(strings[offset + 1]);
             offset+=2;
         }
-        return StringPiece(strings.data()+offset, length);
+        повернути StringPiece(strings.data()+offset, length);
     }
     int32_t getStringLength(const CharString &strings) const {
         int32_t offset=stringOffset;
-        if(offset>=0) {
-            return static_cast<uint8_t>(strings[offset]);
-        } else {
+        якщо(offset>=0) {
+            повернути static_cast<uint8_t>(strings[offset]);
+        } інакше {
             offset=~offset;
-            return (static_cast<int32_t>(static_cast<uint8_t>(strings[offset])) << 8) | static_cast<uint8_t>(strings[offset + 1]);
+            повернути (static_cast<int32_t>(static_cast<uint8_t>(strings[offset])) << 8) | static_cast<uint8_t>(strings[offset + 1]);
         }
     }
 
-    char charAt(int32_t index, const CharString &strings) const { return data(strings)[index]; }
+    char charAt(int32_t index, const CharString &strings) const { повернути data(strings)[index]; }
 
-    int32_t getValue() const { return value; }
+    int32_t getValue() const { повернути value; }
 
     int32_t compareStringTo(const BytesTrieElement &o, const CharString &strings) const;
 
 private:
     const char* data(const CharString& strings U_LIFETIME_BOUND) const {
         int32_t offset=stringOffset;
-        if(offset>=0) {
+        якщо(offset>=0) {
             ++offset;
-        } else {
+        } інакше {
             offset=~offset+2;
         }
-        return strings.data()+offset;
+        повернути strings.data()+offset;
     }
 
     // If the stringOffset is non-negative, then the first strings byte contains
@@ -90,17 +90,17 @@ private:
 void
 BytesTrieElement::setTo(StringPiece s, int32_t val,
                         CharString &strings, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+    якщо(U_FAILURE(errorCode)) {
+        повернути;
     }
     int32_t length=s.length();
-    if(length>0xffff) {
+    якщо(length>0xffff) {
         // Too long: We store the length in 1 or 2 bytes.
         errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+        повернути;
     }
     int32_t offset=strings.length();
-    if(length>0xff) {
+    якщо(length>0xff) {
         offset=~offset;
         strings.append(static_cast<char>(length >> 8), errorCode);
     }
@@ -117,23 +117,23 @@ BytesTrieElement::compareStringTo(const BytesTrieElement &other, const CharStrin
     StringPiece otherString=other.getString(strings);
     int32_t lengthDiff=thisString.length()-otherString.length();
     int32_t commonLength;
-    if(lengthDiff<=0) {
+    якщо(lengthDiff<=0) {
         commonLength=thisString.length();
-    } else {
+    } інакше {
         commonLength=otherString.length();
     }
     int32_t diff=uprv_memcmp(thisString.data(), otherString.data(), commonLength);
-    return diff!=0 ? diff : lengthDiff;
+    повернути diff!=0 ? diff : lengthDiff;
 }
 
 BytesTrieBuilder::BytesTrieBuilder(UErrorCode &errorCode)
         : strings(nullptr), elements(nullptr), elementsCapacity(0), elementsLength(0),
           bytes(nullptr), bytesCapacity(0), bytesLength(0) {
-    if(U_FAILURE(errorCode)) {
-        return;
+    якщо(U_FAILURE(errorCode)) {
+        повернути;
     }
     strings=new CharString();
-    if(strings==nullptr) {
+    якщо(strings==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
     }
 }
@@ -146,27 +146,27 @@ BytesTrieBuilder::~BytesTrieBuilder() {
 
 BytesTrieBuilder&
 BytesTrieBuilder::add(StringPiece s, int32_t value, UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if(U_FAILURE(errorCode)) {
-        return *this;
+    якщо(U_FAILURE(errorCode)) {
+        повернути *this;
     }
-    if(bytesLength>0) {
+    якщо(bytesLength>0) {
         // Cannot add elements after building.
         errorCode=U_NO_WRITE_PERMISSION;
-        return *this;
+        повернути *this;
     }
-    if(elementsLength==elementsCapacity) {
+    якщо(elementsLength==elementsCapacity) {
         int32_t newCapacity;
-        if(elementsCapacity==0) {
+        якщо(elementsCapacity==0) {
             newCapacity=1024;
-        } else {
+        } інакше {
             newCapacity=4*elementsCapacity;
         }
         BytesTrieElement *newElements=new BytesTrieElement[newCapacity];
-        if(newElements==nullptr) {
+        якщо(newElements==nullptr) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return *this; // error instead of dereferencing null
+            повернути *this; // error instead of dereferencing null
         }
-        if(elementsLength>0) {
+        якщо(elementsLength>0) {
             uprv_memcpy(newElements, elements, (size_t)elementsLength*sizeof(BytesTrieElement));
         }
         delete[] elements;
@@ -174,7 +174,7 @@ BytesTrieBuilder::add(StringPiece s, int32_t value, UErrorCode& errorCode) U_LIF
         elementsCapacity=newCapacity;
     }
     elements[elementsLength++].setTo(s, value, *strings, errorCode);
-    return *this;
+    повернути *this;
 }
 
 U_CDECL_BEGIN
@@ -184,7 +184,7 @@ compareElementStrings(const void *context, const void *left, const void *right) 
     const CharString *strings=static_cast<const CharString *>(context);
     const BytesTrieElement *leftElement=static_cast<const BytesTrieElement *>(left);
     const BytesTrieElement *rightElement=static_cast<const BytesTrieElement *>(right);
-    return leftElement->compareStringTo(*rightElement, *strings);
+    повернути leftElement->compareStringTo(*rightElement, *strings);
 }
 
 U_CDECL_END
@@ -193,16 +193,16 @@ BytesTrie *
 BytesTrieBuilder::build(UStringTrieBuildOption buildOption, UErrorCode &errorCode) {
     buildBytes(buildOption, errorCode);
     BytesTrie *newTrie=nullptr;
-    if(U_SUCCESS(errorCode)) {
+    якщо(U_SUCCESS(errorCode)) {
         newTrie=new BytesTrie(bytes, bytes+(bytesCapacity-bytesLength));
-        if(newTrie==nullptr) {
+        якщо(newTrie==nullptr) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-        } else {
+        } інакше {
             bytes=nullptr;  // The new trie now owns the array.
             bytesCapacity=0;
         }
     }
-    return newTrie;
+    повернути newTrie;
 }
 
 StringPiece
@@ -210,40 +210,40 @@ BytesTrieBuilder::buildStringPiece(UStringTrieBuildOption buildOption,
                                    UErrorCode& errorCode) U_LIFETIME_BOUND {
     buildBytes(buildOption, errorCode);
     StringPiece result;
-    if(U_SUCCESS(errorCode)) {
+    якщо(U_SUCCESS(errorCode)) {
         result.set(bytes+(bytesCapacity-bytesLength), bytesLength);
     }
-    return result;
+    повернути result;
 }
 
 void
 BytesTrieBuilder::buildBytes(UStringTrieBuildOption buildOption, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+    якщо(U_FAILURE(errorCode)) {
+        повернути;
     }
-    if(bytes!=nullptr && bytesLength>0) {
+    якщо(bytes!=nullptr && bytesLength>0) {
         // Already built.
-        return;
+        повернути;
     }
-    if(bytesLength==0) {
-        if(elementsLength==0) {
+    якщо(bytesLength==0) {
+        якщо(elementsLength==0) {
             errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return;
+            повернути;
         }
         uprv_sortArray(elements, elementsLength, static_cast<int32_t>(sizeof(BytesTrieElement)),
                       compareElementStrings, strings,
                       false,  // need not be a stable sort
                       &errorCode);
-        if(U_FAILURE(errorCode)) {
-            return;
+        якщо(U_FAILURE(errorCode)) {
+            повернути;
         }
         // Duplicate strings are not allowed.
         StringPiece prev=elements[0].getString(*strings);
-        for(int32_t i=1; i<elementsLength; ++i) {
+        для(int32_t i=1; i<elementsLength; ++i) {
             StringPiece current=elements[i].getString(*strings);
-            if(prev==current) {
+            якщо(prev==current) {
                 errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-                return;
+                повернути;
             }
             prev=current;
         }
@@ -251,21 +251,21 @@ BytesTrieBuilder::buildBytes(UStringTrieBuildOption buildOption, UErrorCode &err
     // Create and byte-serialize the trie for the elements.
     bytesLength=0;
     int32_t capacity=strings->length();
-    if(capacity<1024) {
+    якщо(capacity<1024) {
         capacity=1024;
     }
-    if(bytesCapacity<capacity) {
+    якщо(bytesCapacity<capacity) {
         uprv_free(bytes);
         bytes=static_cast<char *>(uprv_malloc(capacity));
-        if(bytes==nullptr) {
+        якщо(bytes==nullptr) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
             bytesCapacity=0;
-            return;
+            повернути;
         }
         bytesCapacity=capacity;
     }
     StringTrieBuilder::build(buildOption, elementsLength, errorCode);
-    if(bytes==nullptr) {
+    якщо(bytes==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
     }
 }
@@ -275,22 +275,22 @@ BytesTrieBuilder::clear() U_LIFETIME_BOUND {
     strings->clear();
     elementsLength=0;
     bytesLength=0;
-    return *this;
+    повернути *this;
 }
 
 int32_t
 BytesTrieBuilder::getElementStringLength(int32_t i) const {
-    return elements[i].getStringLength(*strings);
+    повернути elements[i].getStringLength(*strings);
 }
 
 char16_t
 BytesTrieBuilder::getElementUnit(int32_t i, int32_t byteIndex) const {
-    return static_cast<uint8_t>(elements[i].charAt(byteIndex, *strings));
+    повернути static_cast<uint8_t>(elements[i].charAt(byteIndex, *strings));
 }
 
 int32_t
 BytesTrieBuilder::getElementValue(int32_t i) const {
-    return elements[i].getValue();
+    повернути elements[i].getValue();
 }
 
 int32_t
@@ -298,10 +298,10 @@ BytesTrieBuilder::getLimitOfLinearMatch(int32_t first, int32_t last, int32_t byt
     const BytesTrieElement &firstElement=elements[first];
     const BytesTrieElement &lastElement=elements[last];
     int32_t minStringLength=firstElement.getStringLength(*strings);
-    while(++byteIndex<minStringLength &&
+    поки(++byteIndex<minStringLength &&
             firstElement.charAt(byteIndex, *strings)==
             lastElement.charAt(byteIndex, *strings)) {}
-    return byteIndex;
+    повернути byteIndex;
 }
 
 int32_t
@@ -310,32 +310,32 @@ BytesTrieBuilder::countElementUnits(int32_t start, int32_t limit, int32_t byteIn
     int32_t i=start;
     do {
         char byte=elements[i++].charAt(byteIndex, *strings);
-        while(i<limit && byte==elements[i].charAt(byteIndex, *strings)) {
+        поки(i<limit && byte==elements[i].charAt(byteIndex, *strings)) {
             ++i;
         }
         ++length;
-    } while(i<limit);
-    return length;
+    } поки(i<limit);
+    повернути length;
 }
 
 int32_t
 BytesTrieBuilder::skipElementsBySomeUnits(int32_t i, int32_t byteIndex, int32_t count) const {
     do {
         char byte=elements[i++].charAt(byteIndex, *strings);
-        while(byte==elements[i].charAt(byteIndex, *strings)) {
+        поки(byte==elements[i].charAt(byteIndex, *strings)) {
             ++i;
         }
-    } while(--count>0);
-    return i;
+    } поки(--count>0);
+    повернути i;
 }
 
 int32_t
 BytesTrieBuilder::indexOfElementWithNextUnit(int32_t i, int32_t byteIndex, char16_t byte) const {
     char b = static_cast<char>(byte);
-    while(b==elements[i].charAt(byteIndex, *strings)) {
+    поки(b==elements[i].charAt(byteIndex, *strings)) {
         ++i;
     }
-    return i;
+    повернути i;
 }
 
 BytesTrieBuilder::BTLinearMatchNode::BTLinearMatchNode(const char *bytes, int32_t len, Node *nextNode)
@@ -346,14 +346,14 @@ BytesTrieBuilder::BTLinearMatchNode::BTLinearMatchNode(const char *bytes, int32_
 
 bool
 BytesTrieBuilder::BTLinearMatchNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
+    якщо(this==&other) {
+        повернути true;
     }
-    if(!LinearMatchNode::operator==(other)) {
-        return false;
+    якщо(!LinearMatchNode::operator==(other)) {
+        повернути false;
     }
     const BTLinearMatchNode &o=static_cast<const BTLinearMatchNode &>(other);
-    return 0==uprv_memcmp(s, o.s, length);
+    повернути 0==uprv_memcmp(s, o.s, length);
 }
 
 void
@@ -367,7 +367,7 @@ BytesTrieBuilder::BTLinearMatchNode::write(StringTrieBuilder &builder) {
 StringTrieBuilder::Node *
 BytesTrieBuilder::createLinearMatchNode(int32_t i, int32_t byteIndex, int32_t length,
                                         Node *nextNode) const {
-    return new BTLinearMatchNode(
+    повернути new BTLinearMatchNode(
             elements[i].getString(*strings).data()+byteIndex,
             length,
             nextNode);
@@ -375,21 +375,21 @@ BytesTrieBuilder::createLinearMatchNode(int32_t i, int32_t byteIndex, int32_t le
 
 UBool
 BytesTrieBuilder::ensureCapacity(int32_t length) {
-    if(bytes==nullptr) {
-        return false;  // previous memory allocation had failed
+    якщо(bytes==nullptr) {
+        повернути false;  // previous memory allocation had failed
     }
-    if(length>bytesCapacity) {
+    якщо(length>bytesCapacity) {
         int32_t newCapacity=bytesCapacity;
         do {
             newCapacity*=2;
-        } while(newCapacity<=length);
+        } поки(newCapacity<=length);
         char *newBytes=static_cast<char *>(uprv_malloc(newCapacity));
-        if(newBytes==nullptr) {
+        якщо(newBytes==nullptr) {
             // unable to allocate memory
             uprv_free(bytes);
             bytes=nullptr;
             bytesCapacity=0;
-            return false;
+            повернути false;
         }
         uprv_memcpy(newBytes+(newCapacity-bytesLength),
                     bytes+(bytesCapacity-bytesLength), bytesLength);
@@ -397,42 +397,42 @@ BytesTrieBuilder::ensureCapacity(int32_t length) {
         bytes=newBytes;
         bytesCapacity=newCapacity;
     }
-    return true;
+    повернути true;
 }
 
 int32_t
 BytesTrieBuilder::write(int32_t byte) {
     int32_t newLength=bytesLength+1;
-    if(ensureCapacity(newLength)) {
+    якщо(ensureCapacity(newLength)) {
         bytesLength=newLength;
         bytes[bytesCapacity - bytesLength] = static_cast<char>(byte);
     }
-    return bytesLength;
+    повернути bytesLength;
 }
 
 int32_t
 BytesTrieBuilder::write(const char *b, int32_t length) {
     int32_t newLength=bytesLength+length;
-    if(ensureCapacity(newLength)) {
+    якщо(ensureCapacity(newLength)) {
         bytesLength=newLength;
         uprv_memcpy(bytes+(bytesCapacity-bytesLength), b, length);
     }
-    return bytesLength;
+    повернути bytesLength;
 }
 
 int32_t
 BytesTrieBuilder::writeElementUnits(int32_t i, int32_t byteIndex, int32_t length) {
-    return write(elements[i].getString(*strings).data()+byteIndex, length);
+    повернути write(elements[i].getString(*strings).data()+byteIndex, length);
 }
 
 int32_t
 BytesTrieBuilder::writeValueAndFinal(int32_t i, UBool isFinal) {
-    if(0<=i && i<=BytesTrie::kMaxOneByteValue) {
-        return write(((BytesTrie::kMinOneByteValueLead+i)<<1)|isFinal);
+    якщо(0<=i && i<=BytesTrie::kMaxOneByteValue) {
+        повернути write(((BytesTrie::kMinOneByteValueLead+i)<<1)|isFinal);
     }
     char intBytes[5];
     int32_t length=1;
-    if(i<0 || i>0xffffff) {
+    якщо(i<0 || i>0xffffff) {
         intBytes[0] = static_cast<char>(BytesTrie::kFiveByteValueLead);
         intBytes[1] = static_cast<char>(static_cast<uint32_t>(i) >> 24);
         intBytes[2] = static_cast<char>(static_cast<uint32_t>(i) >> 16);
@@ -441,13 +441,13 @@ BytesTrieBuilder::writeValueAndFinal(int32_t i, UBool isFinal) {
         length=5;
     // } else if(i<=BytesTrie::kMaxOneByteValue) {
     //     intBytes[0]=(char)(BytesTrie::kMinOneByteValueLead+i);
-    } else {
-        if(i<=BytesTrie::kMaxTwoByteValue) {
+    } інакше {
+        якщо(i<=BytesTrie::kMaxTwoByteValue) {
             intBytes[0] = static_cast<char>(BytesTrie::kMinTwoByteValueLead + (i >> 8));
-        } else {
-            if(i<=BytesTrie::kMaxThreeByteValue) {
+        } інакше {
+            якщо(i<=BytesTrie::kMaxThreeByteValue) {
                 intBytes[0] = static_cast<char>(BytesTrie::kMinThreeByteValueLead + (i >> 16));
-            } else {
+            } інакше {
                 intBytes[0] = static_cast<char>(BytesTrie::kFourByteValueLead);
                 intBytes[1] = static_cast<char>(i >> 16);
                 length=2;
@@ -457,47 +457,47 @@ BytesTrieBuilder::writeValueAndFinal(int32_t i, UBool isFinal) {
         intBytes[length++] = static_cast<char>(i);
     }
     intBytes[0] = static_cast<char>((intBytes[0] << 1) | isFinal);
-    return write(intBytes, length);
+    повернути write(intBytes, length);
 }
 
 int32_t
 BytesTrieBuilder::writeValueAndType(UBool hasValue, int32_t value, int32_t node) {
     int32_t offset=write(node);
-    if(hasValue) {
+    якщо(hasValue) {
         offset=writeValueAndFinal(value, false);
     }
-    return offset;
+    повернути offset;
 }
 
 int32_t
 BytesTrieBuilder::writeDeltaTo(int32_t jumpTarget) {
     int32_t i=bytesLength-jumpTarget;
     U_ASSERT(i>=0);
-    if(i<=BytesTrie::kMaxOneByteDelta) {
-        return write(i);
-    } else {
+    якщо(i<=BytesTrie::kMaxOneByteDelta) {
+        повернути write(i);
+    } інакше {
         char intBytes[5];
-        return write(intBytes, internalEncodeDelta(i, intBytes));
+        повернути write(intBytes, internalEncodeDelta(i, intBytes));
     }
 }
 
 int32_t
 BytesTrieBuilder::internalEncodeDelta(int32_t i, char intBytes[]) {
     U_ASSERT(i>=0);
-    if(i<=BytesTrie::kMaxOneByteDelta) {
+    якщо(i<=BytesTrie::kMaxOneByteDelta) {
         intBytes[0] = static_cast<char>(i);
-        return 1;
+        повернути 1;
     }
     int32_t length=1;
-    if(i<=BytesTrie::kMaxTwoByteDelta) {
+    якщо(i<=BytesTrie::kMaxTwoByteDelta) {
         intBytes[0] = static_cast<char>(BytesTrie::kMinTwoByteDeltaLead + (i >> 8));
-    } else {
-        if(i<=BytesTrie::kMaxThreeByteDelta) {
+    } інакше {
+        якщо(i<=BytesTrie::kMaxThreeByteDelta) {
             intBytes[0] = static_cast<char>(BytesTrie::kMinThreeByteDeltaLead + (i >> 16));
-        } else {
-            if(i<=0xffffff) {
+        } інакше {
+            якщо(i<=0xffffff) {
                 intBytes[0] = static_cast<char>(BytesTrie::kFourByteDeltaLead);
-            } else {
+            } інакше {
                 intBytes[0] = static_cast<char>(BytesTrie::kFiveByteDeltaLead);
                 intBytes[1] = static_cast<char>(i >> 24);
                 length=2;
@@ -507,7 +507,7 @@ BytesTrieBuilder::internalEncodeDelta(int32_t i, char intBytes[]) {
         intBytes[length++] = static_cast<char>(i >> 8);
     }
     intBytes[length++] = static_cast<char>(i);
-    return length;
+    повернути length;
 }
 
 U_NAMESPACE_END

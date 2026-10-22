@@ -35,7 +35,7 @@ public:
 
     FixedString(std::string_view init) {
         size_t size = init.size();
-        if (size > 0 && reserve(size + 1)) {
+        якщо (size > 0 && reserve(size + 1)) {
             uprv_memcpy(ptr, init.data(), size);
             ptr[size] = '\0';
         }
@@ -43,21 +43,21 @@ public:
 
     FixedString& operator=(const FixedString& other) {
         *this = other.data();
-        return *this;
+        повернути *this;
     }
 
     FixedString& operator=(std::string_view init) {
-        if (init.empty()) {
+        якщо (init.empty()) {
             operator delete[](ptr);
             ptr = nullptr;
-        } else {
+        } інакше {
             size_t size = init.size();
-            if (reserve(size + 1)) {
+            якщо (reserve(size + 1)) {
                 uprv_memcpy(ptr, init.data(), size);
                 ptr[size] = '\0';
             }
         }
-        return *this;
+        повернути *this;
     }
 
     FixedString(FixedString&& other) noexcept : ptr(std::exchange(other.ptr, nullptr)) {}
@@ -66,7 +66,7 @@ public:
         operator delete[](ptr);
         ptr = other.ptr;
         other.ptr = nullptr;
-        return *this;
+        повернути *this;
     }
 
     void clear() {
@@ -75,22 +75,22 @@ public:
     }
 
     const char* data() const {
-        return isEmpty() ? "" : ptr;
+        повернути isEmpty() ? "" : ptr;
     }
 
     char* getAlias() {
-        return ptr;
+        повернути ptr;
     }
 
     bool isEmpty() const {
-        return ptr == nullptr;
+        повернути ptr == nullptr;
     }
 
     /** Allocate storage for a new string, without initializing it. */
     bool reserve(size_t size) {
         operator delete[](ptr);
         ptr = static_cast<char*>(operator new[](size));
-        return ptr != nullptr;
+        повернути ptr != nullptr;
     }
 
 private:

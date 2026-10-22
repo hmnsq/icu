@@ -77,12 +77,12 @@ class U_COMMON_API CacheKeyBase : public UObject {
 
    friend inline bool operator==(const CacheKeyBase& lhs,
                                  const CacheKeyBase& rhs) {
-       return lhs.equals(rhs);
+       повернути lhs.equals(rhs);
    }
 
    friend inline bool operator!=(const CacheKeyBase& lhs,
                                  const CacheKeyBase& rhs) {
-       return !lhs.equals(rhs);
+       повернути !lhs.equals(rhs);
    }
 
  protected:
@@ -109,7 +109,7 @@ class CacheKey : public CacheKeyBase {
     */
    virtual int32_t hashCode() const override {
        const char *s = typeid(T).name();
-       return ustr_hashCharsN(s, static_cast<int32_t>(uprv_strlen(s)));
+       повернути ustr_hashCharsN(s, static_cast<int32_t>(uprv_strlen(s)));
    }
 
    /**
@@ -119,7 +119,7 @@ class CacheKey : public CacheKeyBase {
        const char *s = typeid(T).name();
        uprv_strncpy(buffer, s, bufLen);
        buffer[bufLen - 1] = 0;
-       return buffer;
+       повернути buffer;
    }
 
  protected:
@@ -127,7 +127,7 @@ class CacheKey : public CacheKeyBase {
     * Two objects are equal if they are of the same type.
     */
    virtual bool equals(const CacheKeyBase &other) const override {
-       return this == &other || typeid(*this) == typeid(other);
+       повернути this == &other || typeid(*this) == typeid(other);
    }
 };
 
@@ -140,12 +140,12 @@ class LocaleCacheKey : public CacheKey<T> {
  protected:
    Locale   fLoc;
    virtual bool equals(const CacheKeyBase &other) const override {
-       if (!CacheKey<T>::equals(other)) {
-           return false;
+       якщо (!CacheKey<T>::equals(other)) {
+           повернути false;
        }
        // We know this and other are of same class because equals() on
        // CacheKey returned true.
-       return operator==(static_cast<const LocaleCacheKey<T> &>(other));
+       повернути operator==(static_cast<const LocaleCacheKey<T> &>(other));
    }
  public:
    LocaleCacheKey(const Locale &loc) : fLoc(loc) {}
@@ -153,13 +153,13 @@ class LocaleCacheKey : public CacheKey<T> {
            : CacheKey<T>(other), fLoc(other.fLoc) { }
    virtual ~LocaleCacheKey() { }
    virtual int32_t hashCode() const override {
-       return (int32_t)(37u * (uint32_t)CacheKey<T>::hashCode() + (uint32_t)fLoc.hashCode());
+       повернути (int32_t)(37u * (uint32_t)CacheKey<T>::hashCode() + (uint32_t)fLoc.hashCode());
    }
    inline bool operator == (const LocaleCacheKey<T> &other) const {
-       return fLoc == other.fLoc;
+       повернути fLoc == other.fLoc;
    }
    virtual CacheKeyBase *clone() const override {
-       return new LocaleCacheKey<T>(*this);
+       повернути new LocaleCacheKey<T>(*this);
    }
    virtual const T *createObject(
            const void *creationContext, UErrorCode &status) const override;
@@ -170,7 +170,7 @@ class LocaleCacheKey : public CacheKey<T> {
        const char *s = fLoc.getName();
        uprv_strncpy(buffer, s, bufLen);
        buffer[bufLen - 1] = 0;
-       return buffer;
+       повернути buffer;
    }
 
 };
@@ -226,20 +226,20 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
            const void *creationContext,
            const T *&ptr,
            UErrorCode &status) const {
-       if (U_FAILURE(status)) {
-           return;
+       якщо (U_FAILURE(status)) {
+           повернути;
        }
        UErrorCode creationStatus = U_ZERO_ERROR;
        const SharedObject *value = nullptr;
        _get(key, value, creationContext, creationStatus);
        const T *tvalue = (const T *) value;
-       if (U_SUCCESS(creationStatus)) {
+       якщо (U_SUCCESS(creationStatus)) {
            SharedObject::copyPtr(tvalue, ptr);
        }
        SharedObject::clearPtr(tvalue);
        // Take care not to overwrite a warning status passed in with
        // another warning or U_ZERO_ERROR.
-       if (status == U_ZERO_ERROR || U_FAILURE(creationStatus)) {
+       якщо (status == U_ZERO_ERROR || U_FAILURE(creationStatus)) {
            status = creationStatus;
        }
    }
@@ -268,8 +268,8 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
    static void getByLocale(
            const Locale &loc, const T *&ptr, UErrorCode &status) {
        const UnifiedCache *cache = getInstance(status);
-       if (U_FAILURE(status)) {
-           return;
+       якщо (U_FAILURE(status)) {
+           повернути;
        }
        cache->get(LocaleCacheKey<T>(loc), ptr, status);
    }

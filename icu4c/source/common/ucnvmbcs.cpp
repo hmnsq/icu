@@ -44,7 +44,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION
+#якщо !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION
 
 #include "unicode/ucnv.h"
 #include "unicode/ucnv_cb.h"
@@ -587,35 +587,35 @@ static int32_t getSISOBytes(SISO_Option option, uint32_t cnvOption, uint8_t *val
 
     switch (option) {
         case SI:
-            if ((cnvOption&_MBCS_OPTION_KEIS)!=0) {
+            якщо ((cnvOption&_MBCS_OPTION_KEIS)!=0) {
                 value[0] = KEIS_SI_CHAR_1;
                 value[1] = KEIS_SI_CHAR_2;
                 SISOLength = 2;
-            } else if ((cnvOption&_MBCS_OPTION_JEF)!=0) {
+            } інакше якщо ((cnvOption&_MBCS_OPTION_JEF)!=0) {
                 value[0] = JEF_SI_CHAR;
                 SISOLength = 1;
-            } else if ((cnvOption&_MBCS_OPTION_JIPS)!=0) {
+            } інакше якщо ((cnvOption&_MBCS_OPTION_JIPS)!=0) {
                 value[0] = JIPS_SI_CHAR_1;
                 value[1] = JIPS_SI_CHAR_2;
                 SISOLength = 2;
-            } else {
+            } інакше {
                 value[0] = UCNV_SI;
                 SISOLength = 1;
             }
             break;
         case SO:
-            if ((cnvOption&_MBCS_OPTION_KEIS)!=0) {
+            якщо ((cnvOption&_MBCS_OPTION_KEIS)!=0) {
                 value[0] = KEIS_SO_CHAR_1;
                 value[1] = KEIS_SO_CHAR_2;
                 SISOLength = 2;
-            } else if ((cnvOption&_MBCS_OPTION_JEF)!=0) {
+            } інакше якщо ((cnvOption&_MBCS_OPTION_JEF)!=0) {
                 value[0] = JEF_SO_CHAR;
                 SISOLength = 1;
-            } else if ((cnvOption&_MBCS_OPTION_JIPS)!=0) {
+            } інакше якщо ((cnvOption&_MBCS_OPTION_JIPS)!=0) {
                 value[0] = JIPS_SO_CHAR_1;
                 value[1] = JIPS_SO_CHAR_2;
                 SISOLength = 2;
-            } else {
+            } інакше {
                 value[0] = UCNV_SO;
                 SISOLength = 1;
             }
@@ -625,7 +625,7 @@ static int32_t getSISOBytes(SISO_Option option, uint32_t cnvOption, uint8_t *val
             break;
     }
 
-    return SISOLength;
+    повернути SISOLength;
 }
 
 /* Miscellaneous ------------------------------------------------------------ */
@@ -650,29 +650,29 @@ enumToU(UConverterMBCSTable *mbcsTable, int8_t stateProps[],
     anyCodePoints=-1;  /* becomes non-negative if there is a mapping */
 
     b=(stateProps[state]&0x38)<<2;
-    if(b==0 && stateProps[state]>=0x40) {
+    якщо(b==0 && stateProps[state]>=0x40) {
         /* skip byte sequences with leading zeros because they are not stored in the fromUnicode table */
         codePoints[0]=U_SENTINEL;
         b=1;
     }
     limit=((stateProps[state]&7)+1)<<5;
-    while(b<limit) {
+    поки(b<limit) {
         int32_t entry=row[b];
-        if(MBCS_ENTRY_IS_TRANSITION(entry)) {
+        якщо(MBCS_ENTRY_IS_TRANSITION(entry)) {
             int32_t nextState=MBCS_ENTRY_TRANSITION_STATE(entry);
-            if(stateProps[nextState]>=0) {
+            якщо(stateProps[nextState]>=0) {
                 /* recurse to a state with non-ignorable actions */
-                if(!enumToU(
+                якщо(!enumToU(
                         mbcsTable, stateProps, nextState,
                         offset+MBCS_ENTRY_TRANSITION_OFFSET(entry),
                         value | static_cast<uint32_t>(b),
                         callback, context,
                         pErrorCode)) {
-                    return false;
+                    повернути false;
                 }
             }
             codePoints[b&0x1f]=U_SENTINEL;
-        } else {
+        } інакше {
             UChar32 c;
             int32_t action;
 
@@ -681,51 +681,51 @@ enumToU(UConverterMBCSTable *mbcsTable, int8_t stateProps[],
              * the most common cases compared to a switch.
              */
             action=MBCS_ENTRY_FINAL_ACTION(entry);
-            if(action==MBCS_STATE_VALID_DIRECT_16) {
+            якщо(action==MBCS_STATE_VALID_DIRECT_16) {
                 /* output BMP code point */
                 c = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            } else if(action==MBCS_STATE_VALID_16) {
+            } інакше якщо(action==MBCS_STATE_VALID_16) {
                 int32_t finalOffset=offset+MBCS_ENTRY_FINAL_VALUE_16(entry);
                 c=unicodeCodeUnits[finalOffset];
-                if(c<0xfffe) {
+                якщо(c<0xfffe) {
                     /* output BMP code point */
-                } else {
+                } інакше {
                     c=U_SENTINEL;
                 }
-            } else if(action==MBCS_STATE_VALID_16_PAIR) {
+            } інакше якщо(action==MBCS_STATE_VALID_16_PAIR) {
                 int32_t finalOffset=offset+MBCS_ENTRY_FINAL_VALUE_16(entry);
                 c=unicodeCodeUnits[finalOffset++];
-                if(c<0xd800) {
+                якщо(c<0xd800) {
                     /* output BMP code point below 0xd800 */
-                } else if(c<=0xdbff) {
+                } інакше якщо(c<=0xdbff) {
                     /* output roundtrip or fallback supplementary code point */
                     c=((c&0x3ff)<<10)+unicodeCodeUnits[finalOffset]+(0x10000-0xdc00);
-                } else if(c==0xe000) {
+                } інакше якщо(c==0xe000) {
                     /* output roundtrip BMP code point above 0xd800 or fallback BMP code point */
                     c=unicodeCodeUnits[finalOffset];
-                } else {
+                } інакше {
                     c=U_SENTINEL;
                 }
-            } else if(action==MBCS_STATE_VALID_DIRECT_20) {
+            } інакше якщо(action==MBCS_STATE_VALID_DIRECT_20) {
                 /* output supplementary code point */
                 c = static_cast<UChar32>(MBCS_ENTRY_FINAL_VALUE(entry) + 0x10000);
-            } else {
+            } інакше {
                 c=U_SENTINEL;
             }
 
             codePoints[b&0x1f]=c;
             anyCodePoints&=c;
         }
-        if(((++b)&0x1f)==0) {
-            if(anyCodePoints>=0) {
-                if (!callback(context, value | static_cast<uint32_t>(b - 0x20), codePoints)) {
-                    return false;
+        якщо(((++b)&0x1f)==0) {
+            якщо(anyCodePoints>=0) {
+                якщо (!callback(context, value | static_cast<uint32_t>(b - 0x20), codePoints)) {
+                    повернути false;
                 }
                 anyCodePoints=-1;
             }
         }
     }
-    return true;
+    повернути true;
 }
 
 /*
@@ -734,7 +734,7 @@ enumToU(UConverterMBCSTable *mbcsTable, int8_t stateProps[],
  * MBCS_STATE_CHANGE_ONLY.
  */
 static int8_t
-getStateProp(const int32_t (*stateTable)[256], int8_t stateProps[], int state) {
+getStateProp(const int32_t (*stateTable)[256], int8_t stateProps[], ціле state) {
     const int32_t *row;
     int32_t min, max, entry, nextState;
 
@@ -742,59 +742,59 @@ getStateProp(const int32_t (*stateTable)[256], int8_t stateProps[], int state) {
     stateProps[state]=0;
 
     /* find first non-ignorable state */
-    for(min=0;; ++min) {
+    для(min=0;; ++min) {
         entry=row[min];
         nextState=MBCS_ENTRY_STATE(entry);
-        if(stateProps[nextState]==-1) {
+        якщо(stateProps[nextState]==-1) {
             getStateProp(stateTable, stateProps, nextState);
         }
-        if(MBCS_ENTRY_IS_TRANSITION(entry)) {
-            if(stateProps[nextState]>=0) {
+        якщо(MBCS_ENTRY_IS_TRANSITION(entry)) {
+            якщо(stateProps[nextState]>=0) {
                 break;
             }
-        } else if(MBCS_ENTRY_FINAL_ACTION(entry)<MBCS_STATE_UNASSIGNED) {
+        } інакше якщо(MBCS_ENTRY_FINAL_ACTION(entry)<MBCS_STATE_UNASSIGNED) {
             break;
         }
-        if(min==0xff) {
+        якщо(min==0xff) {
             stateProps[state]=-0x40;  /* (int8_t)0xc0 */
-            return stateProps[state];
+            повернути stateProps[state];
         }
     }
     stateProps[state] |= static_cast<int8_t>((min >> 5) << 3);
 
     /* find last non-ignorable state */
-    for(max=0xff; min<max; --max) {
+    для(max=0xff; min<max; --max) {
         entry=row[max];
         nextState=MBCS_ENTRY_STATE(entry);
-        if(stateProps[nextState]==-1) {
+        якщо(stateProps[nextState]==-1) {
             getStateProp(stateTable, stateProps, nextState);
         }
-        if(MBCS_ENTRY_IS_TRANSITION(entry)) {
-            if(stateProps[nextState]>=0) {
+        якщо(MBCS_ENTRY_IS_TRANSITION(entry)) {
+            якщо(stateProps[nextState]>=0) {
                 break;
             }
-        } else if(MBCS_ENTRY_FINAL_ACTION(entry)<MBCS_STATE_UNASSIGNED) {
+        } інакше якщо(MBCS_ENTRY_FINAL_ACTION(entry)<MBCS_STATE_UNASSIGNED) {
             break;
         }
     }
     stateProps[state] |= static_cast<int8_t>(max >> 5);
 
     /* recurse further and collect direct-state information */
-    while(min<=max) {
+    поки(min<=max) {
         entry=row[min];
         nextState=MBCS_ENTRY_STATE(entry);
-        if(stateProps[nextState]==-1) {
+        якщо(stateProps[nextState]==-1) {
             getStateProp(stateTable, stateProps, nextState);
         }
-        if(MBCS_ENTRY_IS_FINAL(entry)) {
+        якщо(MBCS_ENTRY_IS_FINAL(entry)) {
             stateProps[nextState]|=0x40;
-            if(MBCS_ENTRY_FINAL_ACTION(entry)<=MBCS_STATE_FALLBACK_DIRECT_20) {
+            якщо(MBCS_ENTRY_FINAL_ACTION(entry)<=MBCS_STATE_FALLBACK_DIRECT_20) {
                 stateProps[state]|=0x40;
             }
         }
         ++min;
     }
-    return stateProps[state];
+    повернути stateProps[state];
 }
 
 /*
@@ -835,11 +835,11 @@ ucnv_MBCSEnumToUnicode(UConverterMBCSTable *mbcsTable,
     /* recurse from state 0 and set all stateProps */
     getStateProp(mbcsTable->stateTable, stateProps, 0);
 
-    for(state=0; state<mbcsTable->countStates; ++state) {
+    для(state=0; state<mbcsTable->countStates; ++state) {
         /*if(stateProps[state]==-1) {
             printf("unused/unreachable <icu:state> %d\n", state);
         }*/
-        if(stateProps[state]>=0x40) {
+        якщо(stateProps[state]>=0x40) {
             /* start from each direct state */
             enumToU(
                 mbcsTable, stateProps, state, 0, 0,
@@ -866,15 +866,15 @@ ucnv_MBCSGetFilteredUnicodeSetForUnicode(const UConverterSharedData *sharedData,
     /* enumerate the from-Unicode trie table */
     mbcsTable=&sharedData->mbcs;
     table=mbcsTable->fromUnicodeTable;
-    if(mbcsTable->unicodeMask&UCNV_HAS_SUPPLEMENTARY) {
+    якщо(mbcsTable->unicodeMask&UCNV_HAS_SUPPLEMENTARY) {
         maxStage1=0x440;
-    } else {
+    } інакше {
         maxStage1=0x40;
     }
 
     c=0; /* keep track of the current code point while enumerating */
 
-    if(mbcsTable->outputType==MBCS_OUTPUT_1) {
+    якщо(mbcsTable->outputType==MBCS_OUTPUT_1) {
         const uint16_t *stage2, *stage3, *results;
         uint16_t minValue;
 
@@ -885,37 +885,37 @@ ucnv_MBCSGetFilteredUnicodeSetForUnicode(const UConverterSharedData *sharedData,
          * See ucnv_MBCSSingleFromBMPWithOffsets() and
          * MBCS_SINGLE_RESULT_FROM_U() for details.
          */
-        if(which==UCNV_ROUNDTRIP_SET) {
+        якщо(which==UCNV_ROUNDTRIP_SET) {
             /* use only roundtrips */
             minValue=0xf00;
-        } else /* UCNV_ROUNDTRIP_AND_FALLBACK_SET */ {
+        } інакше /* UCNV_ROUNDTRIP_AND_FALLBACK_SET */ {
             /* use all roundtrip and fallback results */
             minValue=0x800;
         }
 
-        for(st1=0; st1<maxStage1; ++st1) {
+        для(st1=0; st1<maxStage1; ++st1) {
             st2=table[st1];
-            if(st2>maxStage1) {
+            якщо(st2>maxStage1) {
                 stage2=table+st2;
-                for(st2=0; st2<64; ++st2) {
-                    if((st3=stage2[st2])!=0) {
+                для(st2=0; st2<64; ++st2) {
+                    якщо((st3=stage2[st2])!=0) {
                         /* read the stage 3 block */
                         stage3=results+st3;
 
                         do {
-                            if(*stage3++>=minValue) {
+                            якщо(*stage3++>=minValue) {
                                 sa->add(sa->set, c);
                             }
-                        } while((++c&0xf)!=0);
-                    } else {
+                        } поки((++c&0xf)!=0);
+                    } інакше {
                         c+=16; /* empty stage 3 block */
                     }
                 }
-            } else {
+            } інакше {
                 c+=1024; /* empty stage 2 block */
             }
         }
-    } else {
+    } інакше {
         const uint32_t *stage2;
         const uint8_t *stage3, *bytes;
         uint32_t st3Multiplier;
@@ -939,12 +939,12 @@ ucnv_MBCSGetFilteredUnicodeSetForUnicode(const UConverterSharedData *sharedData,
             break;
         }
 
-        for(st1=0; st1<maxStage1; ++st1) {
+        для(st1=0; st1<maxStage1; ++st1) {
             st2=table[st1];
-            if(st2>(maxStage1>>1)) {
+            якщо(st2>(maxStage1>>1)) {
                 stage2=(const uint32_t *)table+st2;
-                for(st2=0; st2<64; ++st2) {
-                    if((st3=stage2[st2])!=0) {
+                для(st2=0; st2<64; ++st2) {
+                    якщо((st3=stage2[st2])!=0) {
                         /* read the stage 3 block */
                         stage3=bytes+st3Multiplier*16*(uint32_t)(uint16_t)st3;
 
@@ -959,10 +959,10 @@ ucnv_MBCSGetFilteredUnicodeSetForUnicode(const UConverterSharedData *sharedData,
                         switch(filter) {
                         case UCNV_SET_FILTER_NONE:
                             do {
-                                if(st3&1) {
+                                якщо(st3&1) {
                                     sa->add(sa->set, c);
                                     stage3+=st3Multiplier;
-                                } else if(useFallback) {
+                                } інакше якщо(useFallback) {
                                     uint8_t b=0;
                                     switch(st3Multiplier) {
                                     case 4:
@@ -978,47 +978,47 @@ ucnv_MBCSGetFilteredUnicodeSetForUnicode(const UConverterSharedData *sharedData,
                                     default:
                                         break;
                                     }
-                                    if(b!=0) {
+                                    якщо(b!=0) {
                                         sa->add(sa->set, c);
                                     }
                                 }
                                 st3>>=1;
-                            } while((++c&0xf)!=0);
+                            } поки((++c&0xf)!=0);
                             break;
                         case UCNV_SET_FILTER_DBCS_ONLY:
                              /* Ignore single-byte results (<0x100). */
                             do {
-                                if(((st3&1)!=0 || useFallback) && *((const uint16_t *)stage3)>=0x100) {
+                                якщо(((st3&1)!=0 || useFallback) && *((const uint16_t *)stage3)>=0x100) {
                                     sa->add(sa->set, c);
                                 }
                                 st3>>=1;
                                 stage3+=2;  /* +=st3Multiplier */
-                            } while((++c&0xf)!=0);
+                            } поки((++c&0xf)!=0);
                             break;
                         case UCNV_SET_FILTER_2022_CN:
                              /* Only add code points that map to CNS 11643 planes 1 & 2 for non-EXT ISO-2022-CN. */
                             do {
-                                if(((st3&1)!=0 || useFallback) && ((value=*stage3)==0x81 || value==0x82)) {
+                                якщо(((st3&1)!=0 || useFallback) && ((value=*stage3)==0x81 || value==0x82)) {
                                     sa->add(sa->set, c);
                                 }
                                 st3>>=1;
                                 stage3+=3;  /* +=st3Multiplier */
-                            } while((++c&0xf)!=0);
+                            } поки((++c&0xf)!=0);
                             break;
                         case UCNV_SET_FILTER_SJIS:
                              /* Only add code points that map to Shift-JIS codes corresponding to JIS X 0208. */
                             do {
-                                if(((st3&1)!=0 || useFallback) && (value=*((const uint16_t *)stage3))>=0x8140 && value<=0xeffc) {
+                                якщо(((st3&1)!=0 || useFallback) && (value=*((const uint16_t *)stage3))>=0x8140 && value<=0xeffc) {
                                     sa->add(sa->set, c);
                                 }
                                 st3>>=1;
                                 stage3+=2;  /* +=st3Multiplier */
-                            } while((++c&0xf)!=0);
+                            } поки((++c&0xf)!=0);
                             break;
                         case UCNV_SET_FILTER_GR94DBCS:
                             /* Only add code points that map to ISO 2022 GR 94 DBCS codes (each byte A1..FE). */
                             do {
-                                if( ((st3&1)!=0 || useFallback) &&
+                                якщо( ((st3&1)!=0 || useFallback) &&
                                     (uint16_t)((value=*((const uint16_t *)stage3)) - 0xa1a1)<=(0xfefe - 0xa1a1) &&
                                     (uint8_t)(value-0xa1)<=(0xfe - 0xa1)
                                 ) {
@@ -1026,12 +1026,12 @@ ucnv_MBCSGetFilteredUnicodeSetForUnicode(const UConverterSharedData *sharedData,
                                 }
                                 st3>>=1;
                                 stage3+=2;  /* +=st3Multiplier */
-                            } while((++c&0xf)!=0);
+                            } поки((++c&0xf)!=0);
                             break;
                         case UCNV_SET_FILTER_HZ:
                             /* Only add code points that are suitable for HZ DBCS (lead byte A1..FD). */
                             do {
-                                if( ((st3&1)!=0 || useFallback) &&
+                                якщо( ((st3&1)!=0 || useFallback) &&
                                     (uint16_t)((value=*((const uint16_t *)stage3))-0xa1a1)<=(0xfdfe - 0xa1a1) &&
                                     (uint8_t)(value-0xa1)<=(0xfe - 0xa1)
                                 ) {
@@ -1039,17 +1039,17 @@ ucnv_MBCSGetFilteredUnicodeSetForUnicode(const UConverterSharedData *sharedData,
                                 }
                                 st3>>=1;
                                 stage3+=2;  /* +=st3Multiplier */
-                            } while((++c&0xf)!=0);
+                            } поки((++c&0xf)!=0);
                             break;
                         default:
                             *pErrorCode=U_INTERNAL_PROGRAM_ERROR;
-                            return;
+                            повернути;
                         }
-                    } else {
+                    } інакше {
                         c+=16; /* empty stage 3 block */
                     }
                 }
-            } else {
+            } інакше {
                 c+=1024; /* empty stage 2 block */
             }
         }
@@ -1076,10 +1076,10 @@ ucnv_MBCSGetUnicodeSet(const UConverter *cnv,
                    const USetAdder *sa,
                    UConverterUnicodeSet which,
                    UErrorCode *pErrorCode) {
-    if(cnv->options&_MBCS_OPTION_GB18030) {
+    якщо(cnv->options&_MBCS_OPTION_GB18030) {
         sa->addRange(sa->set, 0, 0xd7ff);
         sa->addRange(sa->set, 0xe000, 0x10ffff);
-    } else {
+    } інакше {
         ucnv_MBCSGetUnicodeSetForUnicode(cnv->sharedData, sa, which, pErrorCode);
     }
 }
@@ -1113,7 +1113,7 @@ _extFromU(UConverter *cnv, const UConverterSharedData *sharedData,
 
     cnv->useSubChar1=false;
 
-    if( (cx=sharedData->mbcs.extIndexes)!=nullptr &&
+    якщо( (cx=sharedData->mbcs.extIndexes)!=nullptr &&
         ucnv_extInitialMatchFromU(
             cnv, cx,
             cp, source, sourceLimit,
@@ -1122,17 +1122,17 @@ _extFromU(UConverter *cnv, const UConverterSharedData *sharedData,
             flush,
             pErrorCode)
     ) {
-        return 0; /* an extension mapping handled the input */
+        повернути 0; /* an extension mapping handled the input */
     }
 
     /* GB 18030 */
-    if((cnv->options&_MBCS_OPTION_GB18030)!=0) {
+    якщо((cnv->options&_MBCS_OPTION_GB18030)!=0) {
         const uint32_t *range;
         int32_t i;
 
         range=gb18030Ranges[0];
-        for(i=0; i<UPRV_LENGTHOF(gb18030Ranges); range+=4, ++i) {
-            if (range[0] <= static_cast<uint32_t>(cp) && static_cast<uint32_t>(cp) <= range[1]) {
+        для(i=0; i<UPRV_LENGTHOF(gb18030Ranges); range+=4, ++i) {
+            якщо (range[0] <= static_cast<uint32_t>(cp) && static_cast<uint32_t>(cp) <= range[1]) {
                 /* found the Unicode code point, output the four-byte sequence for it */
                 uint32_t linear;
                 char bytes[4];
@@ -1153,14 +1153,14 @@ _extFromU(UConverter *cnv, const UConverterSharedData *sharedData,
                 ucnv_fromUWriteBytes(cnv,
                                      bytes, 4, reinterpret_cast<char**>(target), reinterpret_cast<const char*>(targetLimit),
                                      offsets, sourceIndex, pErrorCode);
-                return 0;
+                повернути 0;
             }
         }
     }
 
     /* no mapping */
     *pErrorCode=U_INVALID_CHAR_FOUND;
-    return cp;
+    повернути cp;
 }
 
 /*
@@ -1178,7 +1178,7 @@ _extToU(UConverter *cnv, const UConverterSharedData *sharedData,
         UErrorCode *pErrorCode) {
     const int32_t *cx;
 
-    if( (cx=sharedData->mbcs.extIndexes)!=nullptr &&
+    якщо( (cx=sharedData->mbcs.extIndexes)!=nullptr &&
         ucnv_extInitialMatchToU(
             cnv, cx,
             length, reinterpret_cast<const char**>(source), reinterpret_cast<const char*>(sourceLimit),
@@ -1187,19 +1187,19 @@ _extToU(UConverter *cnv, const UConverterSharedData *sharedData,
             flush,
             pErrorCode)
     ) {
-        return 0; /* an extension mapping handled the input */
+        повернути 0; /* an extension mapping handled the input */
     }
 
     /* GB 18030 */
-    if(length==4 && (cnv->options&_MBCS_OPTION_GB18030)!=0) {
+    якщо(length==4 && (cnv->options&_MBCS_OPTION_GB18030)!=0) {
         const uint32_t *range;
         uint32_t linear;
         int32_t i;
 
         linear=LINEAR_18030(cnv->toUBytes[0], cnv->toUBytes[1], cnv->toUBytes[2], cnv->toUBytes[3]);
         range=gb18030Ranges[0];
-        for(i=0; i<UPRV_LENGTHOF(gb18030Ranges); range+=4, ++i) {
-            if(range[2]<=linear && linear<=range[3]) {
+        для(i=0; i<UPRV_LENGTHOF(gb18030Ranges); range+=4, ++i) {
+            якщо(range[2]<=linear && linear<=range[3]) {
                 /* found the sequence, output the Unicode code point for it */
                 *pErrorCode=U_ZERO_ERROR;
 
@@ -1209,14 +1209,14 @@ _extToU(UConverter *cnv, const UConverterSharedData *sharedData,
                 /* output this code point */
                 ucnv_toUWriteCodePoint(cnv, linear, target, targetLimit, offsets, sourceIndex, pErrorCode);
 
-                return 0;
+                повернути 0;
             }
         }
     }
 
     /* no mapping */
     *pErrorCode=U_INVALID_CHAR_FOUND;
-    return length;
+    повернути length;
 }
 
 /* EBCDIC swap LF<->NL ------------------------------------------------------ */
@@ -1281,46 +1281,46 @@ _EBCDICSwapLFNL(UConverterSharedData *sharedData, UErrorCode *pErrorCode) {
      *
      * If not, ignore the option. Options are always ignored if they do not apply.
      */
-    if(!(
+    якщо(!(
          (mbcsTable->outputType==MBCS_OUTPUT_1 || mbcsTable->outputType==MBCS_OUTPUT_2_SISO) &&
          mbcsTable->stateTable[0][EBCDIC_LF]==MBCS_ENTRY_FINAL(0, MBCS_STATE_VALID_DIRECT_16, U_LF) &&
          mbcsTable->stateTable[0][EBCDIC_NL]==MBCS_ENTRY_FINAL(0, MBCS_STATE_VALID_DIRECT_16, U_NL)
     )) {
-        return false;
+        повернути false;
     }
 
-    if(mbcsTable->outputType==MBCS_OUTPUT_1) {
-        if(!(
+    якщо(mbcsTable->outputType==MBCS_OUTPUT_1) {
+        якщо(!(
              EBCDIC_RT_LF==MBCS_SINGLE_RESULT_FROM_U(table, results, U_LF) &&
              EBCDIC_RT_NL==MBCS_SINGLE_RESULT_FROM_U(table, results, U_NL)
         )) {
-            return false;
+            повернути false;
         }
-    } else /* MBCS_OUTPUT_2_SISO */ {
+    } інакше /* MBCS_OUTPUT_2_SISO */ {
         stage2Entry=MBCS_STAGE_2_FROM_U(table, U_LF);
-        if(!(
+        якщо(!(
              MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, U_LF)!=0 &&
              EBCDIC_LF==MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, U_LF)
         )) {
-            return false;
+            повернути false;
         }
 
         stage2Entry=MBCS_STAGE_2_FROM_U(table, U_NL);
-        if(!(
+        якщо(!(
              MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, U_NL)!=0 &&
              EBCDIC_NL==MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, U_NL)
         )) {
-            return false;
+            повернути false;
         }
     }
 
-    if(mbcsTable->fromUBytesLength>0) {
+    якщо(mbcsTable->fromUBytesLength>0) {
         /*
          * We _know_ the number of bytes in the fromUnicodeBytes array
          * starting with header.version 4.1.
          */
         sizeofFromUBytes=mbcsTable->fromUBytesLength;
-    } else {
+    } інакше {
         /*
          * Otherwise:
          * There used to be code to enumerate the fromUnicode
@@ -1334,7 +1334,7 @@ _EBCDICSwapLFNL(UConverterSharedData *sharedData, UErrorCode *pErrorCode) {
          * ucnv_MBCSSizeofFromUBytes() function.
          */
         *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return false;
+        повернути false;
     }
 
     /*
@@ -1349,9 +1349,9 @@ _EBCDICSwapLFNL(UConverterSharedData *sharedData, UErrorCode *pErrorCode) {
         sizeofFromUBytes+
         UCNV_MAX_CONVERTER_NAME_LENGTH+20;
     p = static_cast<uint8_t*>(uprv_malloc(size));
-    if(p==nullptr) {
+    якщо(p==nullptr) {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return false;
+        повернути false;
     }
 
     /* copy and modify the to-Unicode state table */
@@ -1366,10 +1366,10 @@ _EBCDICSwapLFNL(UConverterSharedData *sharedData, UErrorCode *pErrorCode) {
     uprv_memcpy(newResults, bytes, sizeofFromUBytes);
 
     /* conveniently, the table access macros work on the left side of expressions */
-    if(mbcsTable->outputType==MBCS_OUTPUT_1) {
+    якщо(mbcsTable->outputType==MBCS_OUTPUT_1) {
         MBCS_SINGLE_RESULT_FROM_U(table, newResults, U_LF)=EBCDIC_RT_NL;
         MBCS_SINGLE_RESULT_FROM_U(table, newResults, U_NL)=EBCDIC_RT_LF;
-    } else /* MBCS_OUTPUT_2_SISO */ {
+    } інакше /* MBCS_OUTPUT_2_SISO */ {
         stage2Entry=MBCS_STAGE_2_FROM_U(table, U_LF);
         MBCS_VALUE_2_FROM_STAGE_2(newResults, stage2Entry, U_LF)=EBCDIC_NL;
 
@@ -1384,7 +1384,7 @@ _EBCDICSwapLFNL(UConverterSharedData *sharedData, UErrorCode *pErrorCode) {
 
     /* set the pointers */
     icu::umtx_lock(nullptr);
-    if(mbcsTable->swapLFNLStateTable==nullptr) {
+    якщо(mbcsTable->swapLFNLStateTable==nullptr) {
         mbcsTable->swapLFNLStateTable=newStateTable;
         mbcsTable->swapLFNLFromUnicodeBytes = reinterpret_cast<uint8_t*>(newResults);
         mbcsTable->swapLFNLName=name;
@@ -1394,10 +1394,10 @@ _EBCDICSwapLFNL(UConverterSharedData *sharedData, UErrorCode *pErrorCode) {
     icu::umtx_unlock(nullptr);
 
     /* release the allocated memory if another thread beat us to it */
-    if(newStateTable!=nullptr) {
+    якщо(newStateTable!=nullptr) {
         uprv_free(newStateTable);
     }
-    return true;
+    повернути true;
 }
 
 /* reconstitute omitted fromUnicode data ------------------------------------ */
@@ -1418,25 +1418,25 @@ writeStage3Roundtrip(const void *context, uint32_t value, UChar32 codePoints[32]
     /* for EUC outputTypes, modify the value like genmbcs.c's transformEUC() */
     switch(mbcsTable->outputType) {
     case MBCS_OUTPUT_3_EUC:
-        if(value<=0xffff) {
+        якщо(value<=0xffff) {
             /* short sequences are stored directly */
             /* code set 0 or 1 */
-        } else if(value<=0x8effff) {
+        } інакше якщо(value<=0x8effff) {
             /* code set 2 */
             value&=0x7fff;
-        } else /* first byte is 0x8f */ {
+        } інакше /* first byte is 0x8f */ {
             /* code set 3 */
             value&=0xff7f;
         }
         break;
     case MBCS_OUTPUT_4_EUC:
-        if(value<=0xffffff) {
+        якщо(value<=0xffffff) {
             /* short sequences are stored directly */
             /* code set 0 or 1 */
-        } else if(value<=0x8effffff) {
+        } інакше якщо(value<=0x8effffff) {
             /* code set 2 */
             value&=0x7fffff;
-        } else /* first byte is 0x8f */ {
+        } інакше /* first byte is 0x8f */ {
             /* code set 3 */
             value&=0xff7fff;
         }
@@ -1445,9 +1445,9 @@ writeStage3Roundtrip(const void *context, uint32_t value, UChar32 codePoints[32]
         break;
     }
 
-    for(i=0; i<=0x1f; ++value, ++i) {
+    для(i=0; i<=0x1f; ++value, ++i) {
         c=codePoints[i];
-        if(c<0) {
+        якщо(c<0) {
             continue;
         }
 
@@ -1477,7 +1477,7 @@ writeStage3Roundtrip(const void *context, uint32_t value, UChar32 codePoints[32]
         /* set the roundtrip flag */
         *stage2|=(1UL<<(16+(c&0xf)));
     }
-    return true;
+    повернути true;
  }
 
 static void
@@ -1489,9 +1489,9 @@ reconstituteData(UConverterMBCSTable *mbcsTable,
     uint32_t *stage2;
     uint32_t dataLength=stage1Length*2+fullStage2Length*4+mbcsTable->fromUBytesLength;
     mbcsTable->reconstitutedData = static_cast<uint8_t*>(uprv_malloc(dataLength));
-    if(mbcsTable->reconstitutedData==nullptr) {
+    якщо(mbcsTable->reconstitutedData==nullptr) {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return;
+        повернути;
     }
     uprv_memset(mbcsTable->reconstitutedData, 0, dataLength);
 
@@ -1516,13 +1516,13 @@ reconstituteData(UConverterMBCSTable *mbcsTable,
         int32_t stageUTF8Index=0;
         int32_t st1, st2, st3, i;
 
-        for(st1=0; stageUTF8Index<stageUTF8Length; ++st1) {
+        для(st1=0; stageUTF8Index<stageUTF8Length; ++st1) {
             st2=stage1[st1];
-            if (st2 != static_cast<int32_t>(stage1Length) / 2) {
+            якщо (st2 != static_cast<int32_t>(stage1Length) / 2) {
                 /* each stage 2 block has 64 entries corresponding to 16 entries in the mbcsIndex */
-                for(i=0; i<16; ++i) {
+                для(i=0; i<16; ++i) {
                     st3=mbcsTable->mbcsIndex[stageUTF8Index++];
-                    if(st3!=0) {
+                    якщо(st3!=0) {
                         /* an stage 2 entry's index is per stage 3 16-block, not per stage 3 entry */
                         st3>>=4;
                         /*
@@ -1533,12 +1533,12 @@ reconstituteData(UConverterMBCSTable *mbcsTable,
                         stage2[st2++]=st3++;
                         stage2[st2++]=st3++;
                         stage2[st2++]=st3;
-                    } else {
+                    } інакше {
                         /* no stage 3 block, skip */
                         st2+=4;
                     }
                 }
-            } else {
+            } інакше {
                 /* no stage 2 block, skip */
                 stageUTF8Index+=16;
             }
@@ -1563,54 +1563,54 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
     uint32_t headerLength;
     UBool noFromU=false;
 
-    if(header->version[0]==4) {
+    якщо(header->version[0]==4) {
         headerLength=MBCS_HEADER_V4_LENGTH;
-    } else if(header->version[0]==5 && header->version[1]>=3 &&
+    } інакше якщо(header->version[0]==5 && header->version[1]>=3 &&
               (header->options&MBCS_OPT_UNKNOWN_INCOMPATIBLE_MASK)==0) {
         headerLength=header->options&MBCS_OPT_LENGTH_MASK;
         noFromU = static_cast<UBool>((header->options & MBCS_OPT_NO_FROM_U) != 0);
-    } else {
+    } інакше {
         *pErrorCode=U_INVALID_TABLE_FORMAT;
-        return;
+        повернути;
     }
 
     mbcsTable->outputType = static_cast<uint8_t>(header->flags);
-    if(noFromU && mbcsTable->outputType==MBCS_OUTPUT_1) {
+    якщо(noFromU && mbcsTable->outputType==MBCS_OUTPUT_1) {
         *pErrorCode=U_INVALID_TABLE_FORMAT;
-        return;
+        повернути;
     }
 
     /* extension data, header version 4.2 and higher */
     offset=header->flags>>8;
-    if(offset!=0) {
+    якщо(offset!=0) {
         mbcsTable->extIndexes = reinterpret_cast<const int32_t*>(raw + offset);
     }
 
-    if(mbcsTable->outputType==MBCS_OUTPUT_EXT_ONLY) {
+    якщо(mbcsTable->outputType==MBCS_OUTPUT_EXT_ONLY) {
         UConverterLoadArgs args=UCNV_LOAD_ARGS_INITIALIZER;
         UConverterSharedData *baseSharedData;
         const int32_t *extIndexes;
         const char *baseName;
 
         /* extension-only file, load the base table and set values appropriately */
-        if((extIndexes=mbcsTable->extIndexes)==nullptr) {
+        якщо((extIndexes=mbcsTable->extIndexes)==nullptr) {
             /* extension-only file without extension */
             *pErrorCode=U_INVALID_TABLE_FORMAT;
-            return;
+            повернути;
         }
 
-        if(pArgs->nestedLoads!=1) {
+        якщо(pArgs->nestedLoads!=1) {
             /* an extension table must not be loaded as a base table */
             *pErrorCode=U_INVALID_TABLE_FILE;
-            return;
+            повернути;
         }
 
         /* load the base table */
         baseName = reinterpret_cast<const char*>(header) + headerLength * 4;
-        if(0==uprv_strcmp(baseName, sharedData->staticData->name)) {
+        якщо(0==uprv_strcmp(baseName, sharedData->staticData->name)) {
             /* forbid loading this same extension-only file */
             *pErrorCode=U_INVALID_TABLE_FORMAT;
-            return;
+            повернути;
         }
 
         /* TODO parse package name out of the prefix of the base name in the extension .cnv file? */
@@ -1622,17 +1622,17 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
         args.pkg=pArgs->pkg;
         args.name=baseName;
         baseSharedData=ucnv_load(&args, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
-            return;
+        якщо(U_FAILURE(*pErrorCode)) {
+            повернути;
         }
-        if( baseSharedData->staticData->conversionType!=UCNV_MBCS ||
+        якщо( baseSharedData->staticData->conversionType!=UCNV_MBCS ||
             baseSharedData->mbcs.baseSharedData!=nullptr
         ) {
             ucnv_unload(baseSharedData);
             *pErrorCode=U_INVALID_TABLE_FORMAT;
-            return;
+            повернути;
         }
-        if(pArgs->onlyTestIsLoadable) {
+        якщо(pArgs->onlyTestIsLoadable) {
             /*
              * Exit as soon as we know that we can load the converter
              * and the format is valid and supported.
@@ -1640,7 +1640,7 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
              * allocation error.
              */
             ucnv_unload(baseSharedData);
-            return;
+            повернути;
         }
 
         /* copy the base table data */
@@ -1671,17 +1671,17 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
          * Set a special, runtime-only outputType if the extension converter
          * is a DBCS version of a base converter that also maps single bytes.
          */
-        if( sharedData->staticData->conversionType==UCNV_DBCS ||
+        якщо( sharedData->staticData->conversionType==UCNV_DBCS ||
                 (sharedData->staticData->conversionType==UCNV_MBCS &&
                  sharedData->staticData->minBytesPerChar>=2)
         ) {
-            if(baseSharedData->mbcs.outputType==MBCS_OUTPUT_2_SISO) {
+            якщо(baseSharedData->mbcs.outputType==MBCS_OUTPUT_2_SISO) {
                 /* the base converter is SI/SO-stateful */
                 int32_t entry;
 
                 /* get the dbcs state from the state table entry for SO=0x0e */
                 entry=mbcsTable->stateTable[0][0xe];
-                if( MBCS_ENTRY_IS_FINAL(entry) &&
+                якщо( MBCS_ENTRY_IS_FINAL(entry) &&
                     MBCS_ENTRY_FINAL_ACTION(entry)==MBCS_STATE_CHANGE_ONLY &&
                     MBCS_ENTRY_FINAL_STATE(entry)!=0
                 ) {
@@ -1689,7 +1689,7 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
 
                     mbcsTable->outputType=MBCS_OUTPUT_DBCS_ONLY;
                 }
-            } else if(
+            } інакше якщо(
                 baseSharedData->staticData->conversionType==UCNV_MBCS &&
                 baseSharedData->staticData->minBytesPerChar==1 &&
                 baseSharedData->staticData->maxBytesPerChar==2 &&
@@ -1703,25 +1703,25 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
                 /* allocate a new state table and copy the base state table contents */
                 count=mbcsTable->countStates;
                 newStateTable = static_cast<int32_t(*)[256]>(uprv_malloc((count + 1) * 1024));
-                if(newStateTable==nullptr) {
+                якщо(newStateTable==nullptr) {
                     ucnv_unload(baseSharedData);
                     *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                    return;
+                    повернути;
                 }
 
                 uprv_memcpy(newStateTable, mbcsTable->stateTable, count*1024);
 
                 /* change all final single-byte entries to go to a new all-illegal state */
                 state=newStateTable[0];
-                for(i=0; i<256; ++i) {
-                    if(MBCS_ENTRY_IS_FINAL(state[i])) {
+                для(i=0; i<256; ++i) {
+                    якщо(MBCS_ENTRY_IS_FINAL(state[i])) {
                         state[i]=MBCS_ENTRY_TRANSITION(count, 0);
                     }
                 }
 
                 /* build the new all-illegal state */
                 state=newStateTable[count];
-                for(i=0; i<256; ++i) {
+                для(i=0; i<256; ++i) {
                     state[i]=MBCS_ENTRY_FINAL(0, MBCS_STATE_ILLEGAL, 0);
                 }
                 mbcsTable->stateTable=(const int32_t (*)[256])newStateTable;
@@ -1739,7 +1739,7 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
          * this is necessary because the static data unicodeMask, especially
          * the UCNV_HAS_SUPPLEMENTARY flag, is part of the base table data
          */
-    } else {
+    } інакше {
         /* conversion file with a base table; an additional extension table is optional */
         /* make sure that the output type is known */
         switch(mbcsTable->outputType) {
@@ -1754,16 +1754,16 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
             break;
         default:
             *pErrorCode=U_INVALID_TABLE_FORMAT;
-            return;
+            повернути;
         }
-        if(pArgs->onlyTestIsLoadable) {
+        якщо(pArgs->onlyTestIsLoadable) {
             /*
              * Exit as soon as we know that we can load the converter
              * and the format is valid and supported.
              * The worst that can happen in the following code is a memory
              * allocation error.
              */
-            return;
+            повернути;
         }
 
         mbcsTable->countStates = static_cast<uint8_t>(header->countStates);
@@ -1782,10 +1782,10 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
          */
         info.size=sizeof(UDataInfo);
         udata_getInfo((UDataMemory *)sharedData->dataMemory, &info);
-        if(info.formatVersion[0]>6 || (info.formatVersion[0]==6 && info.formatVersion[1]>=1)) {
+        якщо(info.formatVersion[0]>6 || (info.formatVersion[0]==6 && info.formatVersion[1]>=1)) {
             /* mask off possible future extensions to be safe */
             mbcsTable->unicodeMask = static_cast<uint8_t>(sharedData->staticData->unicodeMask & 3);
-        } else {
+        } інакше {
             /* for older versions, assume worst case: contains anything possible (prevent over-optimizations) */
             mbcsTable->unicodeMask=UCNV_HAS_SUPPLEMENTARY|UCNV_HAS_SURROGATES;
         }
@@ -1798,7 +1798,7 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
          * The implementation does not handle mapping tables with entries for
          * unpaired surrogates.
          */
-        if( header->version[1]>=3 &&
+        якщо( header->version[1]>=3 &&
             (mbcsTable->unicodeMask&UCNV_HAS_SURROGATES)==0 &&
             (mbcsTable->countStates==1 ?
                 (header->version[2]>=(SBCS_FAST_MAX>>8)) :
@@ -1807,19 +1807,19 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
         ) {
             mbcsTable->utf8Friendly=true;
 
-            if(mbcsTable->countStates==1) {
+            якщо(mbcsTable->countStates==1) {
                 /*
                  * SBCS: Stage 3 is allocated in 64-entry blocks for U+0000..SBCS_FAST_MAX or higher.
                  * Build a table with indexes to each block, to be used instead of
                  * the regular stage 1/2 table.
                  */
                 int32_t i;
-                for(i=0; i<(SBCS_FAST_LIMIT>>6); ++i) {
+                для(i=0; i<(SBCS_FAST_LIMIT>>6); ++i) {
                     mbcsTable->sbcsIndex[i]=mbcsTable->fromUnicodeTable[mbcsTable->fromUnicodeTable[i>>4]+((i<<2)&0x3c)];
                 }
                 /* set SBCS_FAST_MAX to reflect the reach of sbcsIndex[] even if header->version[2]>(SBCS_FAST_MAX>>8) */
                 mbcsTable->maxFastUChar=SBCS_FAST_MAX;
-            } else {
+            } інакше {
                 /*
                  * MBCS: Stage 3 is allocated in 64-entry blocks for U+0000..MBCS_FAST_MAX or higher.
                  * The .cnv file is prebuilt with an additional stage table with indexes
@@ -1837,15 +1837,15 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
             uint32_t asciiRoundtrips=0xffffffff;
             int32_t i;
 
-            for(i=0; i<0x80; ++i) {
-                if(mbcsTable->stateTable[0][i]!=MBCS_ENTRY_FINAL(0, MBCS_STATE_VALID_DIRECT_16, i)) {
+            для(i=0; i<0x80; ++i) {
+                якщо(mbcsTable->stateTable[0][i]!=MBCS_ENTRY_FINAL(0, MBCS_STATE_VALID_DIRECT_16, i)) {
                     asciiRoundtrips &= ~(static_cast<uint32_t>(1) << (i >> 2));
                 }
             }
             mbcsTable->asciiRoundtrips=asciiRoundtrips;
         }
 
-        if(noFromU) {
+        якщо(noFromU) {
             uint32_t stage1Length=
                 mbcsTable->unicodeMask&UCNV_HAS_SUPPLEMENTARY ?
                     0x440 : 0x40;
@@ -1857,17 +1857,17 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
     }
 
     /* Set the impl pointer here so that it is set for both extension-only and base tables. */
-    if(mbcsTable->utf8Friendly) {
-        if(mbcsTable->countStates==1) {
+    якщо(mbcsTable->utf8Friendly) {
+        якщо(mbcsTable->countStates==1) {
             sharedData->impl=&_SBCSUTF8Impl;
-        } else {
-            if(mbcsTable->outputType==MBCS_OUTPUT_2) {
+        } інакше {
+            якщо(mbcsTable->outputType==MBCS_OUTPUT_2) {
                 sharedData->impl=&_DBCSUTF8Impl;
             }
         }
     }
 
-    if(mbcsTable->outputType==MBCS_OUTPUT_DBCS_ONLY || mbcsTable->outputType==MBCS_OUTPUT_2_SISO) {
+    якщо(mbcsTable->outputType==MBCS_OUTPUT_DBCS_ONLY || mbcsTable->outputType==MBCS_OUTPUT_2_SISO) {
         /*
          * MBCS_OUTPUT_DBCS_ONLY: No SBCS mappings, therefore ASCII does not roundtrip.
          * MBCS_OUTPUT_2_SISO: Bypass the ASCII fastpath to handle prevLength correctly.
@@ -1880,16 +1880,16 @@ static void U_CALLCONV
 ucnv_MBCSUnload(UConverterSharedData *sharedData) {
     UConverterMBCSTable *mbcsTable=&sharedData->mbcs;
 
-    if(mbcsTable->swapLFNLStateTable!=nullptr) {
+    якщо(mbcsTable->swapLFNLStateTable!=nullptr) {
         uprv_free(mbcsTable->swapLFNLStateTable);
     }
-    if(mbcsTable->stateTableOwned) {
+    якщо(mbcsTable->stateTableOwned) {
         uprv_free((void *)mbcsTable->stateTable);
     }
-    if(mbcsTable->baseSharedData!=nullptr) {
+    якщо(mbcsTable->baseSharedData!=nullptr) {
         ucnv_unload(mbcsTable->baseSharedData);
     }
-    if(mbcsTable->reconstitutedData!=nullptr) {
+    якщо(mbcsTable->reconstitutedData!=nullptr) {
         uprv_free(mbcsTable->reconstitutedData);
     }
 }
@@ -1903,19 +1903,19 @@ ucnv_MBCSOpen(UConverter *cnv,
     uint8_t outputType;
     int8_t maxBytesPerUChar;
 
-    if(pArgs->onlyTestIsLoadable) {
-        return;
+    якщо(pArgs->onlyTestIsLoadable) {
+        повернути;
     }
 
     mbcsTable=&cnv->sharedData->mbcs;
     outputType=mbcsTable->outputType;
 
-    if(outputType==MBCS_OUTPUT_DBCS_ONLY) {
+    якщо(outputType==MBCS_OUTPUT_DBCS_ONLY) {
         /* the swaplfnl option does not apply, remove it */
         cnv->options=pArgs->options&=~UCNV_OPTION_SWAP_LFNL;
     }
 
-    if((pArgs->options&UCNV_OPTION_SWAP_LFNL)!=0) {
+    якщо((pArgs->options&UCNV_OPTION_SWAP_LFNL)!=0) {
         /* do this because double-checked locking is broken */
         UBool isCached;
 
@@ -1923,10 +1923,10 @@ ucnv_MBCSOpen(UConverter *cnv,
         isCached=mbcsTable->swapLFNLStateTable!=nullptr;
         icu::umtx_unlock(nullptr);
 
-        if(!isCached) {
-            if(!_EBCDICSwapLFNL(cnv->sharedData, pErrorCode)) {
-                if(U_FAILURE(*pErrorCode)) {
-                    return; /* something went wrong */
+        якщо(!isCached) {
+            якщо(!_EBCDICSwapLFNL(cnv->sharedData, pErrorCode)) {
+                якщо(U_FAILURE(*pErrorCode)) {
+                    повернути; /* something went wrong */
                 }
 
                 /* the option does not apply, remove it */
@@ -1935,40 +1935,40 @@ ucnv_MBCSOpen(UConverter *cnv,
         }
     }
 
-    if(uprv_strstr(pArgs->name, "18030")!=nullptr) {
-        if(uprv_strstr(pArgs->name, "gb18030")!=nullptr || uprv_strstr(pArgs->name, "GB18030")!=nullptr) {
+    якщо(uprv_strstr(pArgs->name, "18030")!=nullptr) {
+        якщо(uprv_strstr(pArgs->name, "gb18030")!=nullptr || uprv_strstr(pArgs->name, "GB18030")!=nullptr) {
             /* set a flag for GB 18030 mode, which changes the callback behavior */
             cnv->options|=_MBCS_OPTION_GB18030;
         }
-    } else if((uprv_strstr(pArgs->name, "KEIS")!=nullptr) || (uprv_strstr(pArgs->name, "keis")!=nullptr)) {
+    } інакше якщо((uprv_strstr(pArgs->name, "KEIS")!=nullptr) || (uprv_strstr(pArgs->name, "keis")!=nullptr)) {
         /* set a flag for KEIS converter, which changes the SI/SO character sequence */
         cnv->options|=_MBCS_OPTION_KEIS;
-    } else if((uprv_strstr(pArgs->name, "JEF")!=nullptr) || (uprv_strstr(pArgs->name, "jef")!=nullptr)) {
+    } інакше якщо((uprv_strstr(pArgs->name, "JEF")!=nullptr) || (uprv_strstr(pArgs->name, "jef")!=nullptr)) {
         /* set a flag for JEF converter, which changes the SI/SO character sequence */
         cnv->options|=_MBCS_OPTION_JEF;
-    } else if((uprv_strstr(pArgs->name, "JIPS")!=nullptr) || (uprv_strstr(pArgs->name, "jips")!=nullptr)) {
+    } інакше якщо((uprv_strstr(pArgs->name, "JIPS")!=nullptr) || (uprv_strstr(pArgs->name, "jips")!=nullptr)) {
         /* set a flag for JIPS converter, which changes the SI/SO character sequence */
         cnv->options|=_MBCS_OPTION_JIPS;
     }
 
     /* fix maxBytesPerUChar depending on outputType and options etc. */
-    if(outputType==MBCS_OUTPUT_2_SISO) {
+    якщо(outputType==MBCS_OUTPUT_2_SISO) {
         cnv->maxBytesPerUChar=3; /* SO+DBCS */
     }
 
     extIndexes=mbcsTable->extIndexes;
-    if(extIndexes!=nullptr) {
+    якщо(extIndexes!=nullptr) {
         maxBytesPerUChar = static_cast<int8_t>(UCNV_GET_MAX_BYTES_PER_UCHAR(extIndexes));
-        if(outputType==MBCS_OUTPUT_2_SISO) {
+        якщо(outputType==MBCS_OUTPUT_2_SISO) {
             ++maxBytesPerUChar; /* SO + multiple DBCS */
         }
 
-        if(maxBytesPerUChar>cnv->maxBytesPerUChar) {
+        якщо(maxBytesPerUChar>cnv->maxBytesPerUChar) {
             cnv->maxBytesPerUChar=maxBytesPerUChar;
         }
     }
 
-#if 0
+#якщо 0
     /*
      * documentation of UConverter fields used for status
      * all of these fields are (re)set to 0 by ucnv_bld.c and ucnv_reset()
@@ -1989,10 +1989,10 @@ U_CDECL_BEGIN
 
 static const char* U_CALLCONV
 ucnv_MBCSGetName(const UConverter *cnv) {
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0 && cnv->sharedData->mbcs.swapLFNLName!=nullptr) {
-        return cnv->sharedData->mbcs.swapLFNLName;
-    } else {
-        return cnv->sharedData->staticData->name;
+    якщо((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0 && cnv->sharedData->mbcs.swapLFNLName!=nullptr) {
+        повернути cnv->sharedData->mbcs.swapLFNLName;
+    } інакше {
+        повернути cnv->sharedData->staticData->name;
     }
 }
 U_CDECL_END
@@ -2006,26 +2006,26 @@ ucnv_MBCSGetFallback(UConverterMBCSTable *mbcsTable, uint32_t offset) {
     uint32_t i, start, limit;
 
     limit=mbcsTable->countToUFallbacks;
-    if(limit>0) {
+    якщо(limit>0) {
         /* do a binary search for the fallback mapping */
         toUFallbacks=mbcsTable->toUFallbacks;
         start=0;
-        while(start<limit-1) {
+        поки(start<limit-1) {
             i=(start+limit)/2;
-            if(offset<toUFallbacks[i].offset) {
+            якщо(offset<toUFallbacks[i].offset) {
                 limit=i;
-            } else {
+            } інакше {
                 start=i;
             }
         }
 
         /* did we really find it? */
-        if(offset==toUFallbacks[start].offset) {
-            return toUFallbacks[start].codePoint;
+        якщо(offset==toUFallbacks[start].offset) {
+            повернути toUFallbacks[start].codePoint;
         }
     }
 
-    return 0xfffe;
+    повернути 0xfffe;
 }
 
 /* This version of ucnv_MBCSToUnicodeWithOffsets() is optimized for single-byte, single-state codepages. */
@@ -2054,9 +2054,9 @@ ucnv_MBCSSingleToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     targetLimit=pArgs->targetLimit;
     offsets=pArgs->offsets;
 
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
+    якщо((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
         stateTable=(const int32_t (*)[256])cnv->sharedData->mbcs.swapLFNLStateTable;
-    } else {
+    } інакше {
         stateTable=cnv->sharedData->mbcs.stateTable;
     }
 
@@ -2064,7 +2064,7 @@ ucnv_MBCSSingleToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     sourceIndex=0;
 
     /* conversion loop */
-    while(source<sourceLimit) {
+    поки(source<sourceLimit) {
         /*
          * This following test is to see if available input would overflow the output.
          * It does not catch output of more than one code unit that
@@ -2073,7 +2073,7 @@ ucnv_MBCSSingleToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
          * Therefore, those situations also test for overflows and will
          * then break the loop, too.
          */
-        if(target>=targetLimit) {
+        якщо(target>=targetLimit) {
             /* target is full */
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
             break;
@@ -2083,10 +2083,10 @@ ucnv_MBCSSingleToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
         /* MBCS_ENTRY_IS_FINAL(entry) */
 
         /* test the most common case first */
-        if(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
+        якщо(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
             /* output BMP code point */
             *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            if(offsets!=nullptr) {
+            якщо(offsets!=nullptr) {
                 *offsets++=sourceIndex;
             }
 
@@ -2100,22 +2100,22 @@ ucnv_MBCSSingleToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
          * the most common cases compared to a switch.
          */
         action = static_cast<uint8_t>(MBCS_ENTRY_FINAL_ACTION(entry));
-        if(action==MBCS_STATE_VALID_DIRECT_20 ||
+        якщо(action==MBCS_STATE_VALID_DIRECT_20 ||
            (action==MBCS_STATE_FALLBACK_DIRECT_20 && UCNV_TO_U_USE_FALLBACK(cnv))
         ) {
             entry=MBCS_ENTRY_FINAL_VALUE(entry);
             /* output surrogate pair */
             *target++ = static_cast<char16_t>(0xd800 | static_cast<char16_t>(entry >> 10));
-            if(offsets!=nullptr) {
+            якщо(offsets!=nullptr) {
                 *offsets++=sourceIndex;
             }
             c = static_cast<char16_t>(0xdc00 | static_cast<char16_t>(entry & 0x3ff));
-            if(target<targetLimit) {
+            якщо(target<targetLimit) {
                 *target++=c;
-                if(offsets!=nullptr) {
+                якщо(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
-            } else {
+            } інакше {
                 /* target overflow */
                 cnv->UCharErrorBuffer[0]=c;
                 cnv->UCharErrorBufferLength=1;
@@ -2125,32 +2125,32 @@ ucnv_MBCSSingleToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
 
             ++sourceIndex;
             continue;
-        } else if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-            if(UCNV_TO_U_USE_FALLBACK(cnv)) {
+        } інакше якщо(action==MBCS_STATE_FALLBACK_DIRECT_16) {
+            якщо(UCNV_TO_U_USE_FALLBACK(cnv)) {
                 /* output BMP code point */
                 *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-                if(offsets!=nullptr) {
+                якщо(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
 
                 ++sourceIndex;
                 continue;
             }
-        } else if(action==MBCS_STATE_UNASSIGNED) {
+        } інакше якщо(action==MBCS_STATE_UNASSIGNED) {
             /* just fall through */
-        } else if(action==MBCS_STATE_ILLEGAL) {
+        } інакше якщо(action==MBCS_STATE_ILLEGAL) {
             /* callback(illegal) */
             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-        } else {
+        } інакше {
             /* reserved, must never occur */
             ++sourceIndex;
             continue;
         }
 
-        if(U_FAILURE(*pErrorCode)) {
+        якщо(U_FAILURE(*pErrorCode)) {
             /* callback(illegal) */
             break;
-        } else /* unassigned sequences indicated with byteIndex>0 */ {
+        } інакше /* unassigned sequences indicated with byteIndex>0 */ {
             /* try an extension mapping */
             pArgs->source = reinterpret_cast<const char*>(source);
             cnv->toUBytes[0]=*(source-1);
@@ -2162,7 +2162,7 @@ ucnv_MBCSSingleToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
                                     pErrorCode);
             sourceIndex += 1 + static_cast<int32_t>(source - reinterpret_cast<const uint8_t*>(pArgs->source));
 
-            if(U_FAILURE(*pErrorCode)) {
+            якщо(U_FAILURE(*pErrorCode)) {
                 /* not mappable or buffer overflow */
                 break;
             }
@@ -2205,9 +2205,9 @@ ucnv_MBCSSingleToBMPWithOffsets(UConverterToUnicodeArgs *pArgs,
     targetCapacity = static_cast<int32_t>(pArgs->targetLimit - pArgs->target);
     offsets=pArgs->offsets;
 
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
+    якщо((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
         stateTable=(const int32_t (*)[256])cnv->sharedData->mbcs.swapLFNLStateTable;
-    } else {
+    } інакше {
         stateTable=cnv->sharedData->mbcs.stateTable;
     }
 
@@ -2220,15 +2220,15 @@ ucnv_MBCSSingleToBMPWithOffsets(UConverterToUnicodeArgs *pArgs,
      * for the minimum of the sourceLength and targetCapacity
      */
     length = static_cast<int32_t>(sourceLimit - source);
-    if(length<targetCapacity) {
+    якщо(length<targetCapacity) {
         targetCapacity=length;
     }
 
-#if MBCS_UNROLL_SINGLE_TO_BMP
+#якщо MBCS_UNROLL_SINGLE_TO_BMP
     /* unrolling makes it faster on Pentium III/Windows 2000 */
     /* unroll the loop with the most common case */
 unrolled:
-    if(targetCapacity>=16) {
+    якщо(targetCapacity>=16) {
         int32_t count, loops, oredEntries;
 
         loops=count=targetCapacity>>4;
@@ -2267,19 +2267,19 @@ unrolled:
             *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
 
             /* were all 16 entries really valid? */
-            if(!MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(oredEntries)) {
+            якщо(!MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(oredEntries)) {
                 /* no, return to the first of these 16 */
                 source-=16;
                 target-=16;
                 break;
             }
-        } while(--count>0);
+        } поки(--count>0);
         count=loops-count;
         targetCapacity-=16*count;
 
-        if(offsets!=nullptr) {
+        якщо(offsets!=nullptr) {
             lastSource+=16*count;
-            while(count>0) {
+            поки(count>0) {
                 *offsets++=sourceIndex++;
                 *offsets++=sourceIndex++;
                 *offsets++=sourceIndex++;
@@ -2303,12 +2303,12 @@ unrolled:
 #endif
 
     /* conversion loop */
-    while(targetCapacity > 0 && source < sourceLimit) {
+    поки(targetCapacity > 0 && source < sourceLimit) {
         entry=stateTable[0][*source++];
         /* MBCS_ENTRY_IS_FINAL(entry) */
 
         /* test the most common case first */
-        if(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
+        якщо(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
             /* output BMP code point */
             *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
             --targetCapacity;
@@ -2320,38 +2320,38 @@ unrolled:
          * the most common cases compared to a switch.
          */
         action = static_cast<uint8_t>(MBCS_ENTRY_FINAL_ACTION(entry));
-        if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-            if(UCNV_TO_U_USE_FALLBACK(cnv)) {
+        якщо(action==MBCS_STATE_FALLBACK_DIRECT_16) {
+            якщо(UCNV_TO_U_USE_FALLBACK(cnv)) {
                 /* output BMP code point */
                 *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
                 --targetCapacity;
                 continue;
             }
-        } else if(action==MBCS_STATE_UNASSIGNED) {
+        } інакше якщо(action==MBCS_STATE_UNASSIGNED) {
             /* just fall through */
-        } else if(action==MBCS_STATE_ILLEGAL) {
+        } інакше якщо(action==MBCS_STATE_ILLEGAL) {
             /* callback(illegal) */
             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-        } else {
+        } інакше {
             /* reserved, must never occur */
             continue;
         }
 
         /* set offsets since the start or the last extension */
-        if(offsets!=nullptr) {
+        якщо(offsets!=nullptr) {
             int32_t count = static_cast<int32_t>(source - lastSource);
 
             /* predecrement: do not set the offset for the callback-causing character */
-            while(--count>0) {
+            поки(--count>0) {
                 *offsets++=sourceIndex++;
             }
             /* offset and sourceIndex are now set for the current character */
         }
 
-        if(U_FAILURE(*pErrorCode)) {
+        якщо(U_FAILURE(*pErrorCode)) {
             /* callback(illegal) */
             break;
-        } else /* unassigned sequences indicated with byteIndex>0 */ {
+        } інакше /* unassigned sequences indicated with byteIndex>0 */ {
             /* try an extension mapping */
             lastSource=source;
             cnv->toUBytes[0]=*(source-1);
@@ -2363,7 +2363,7 @@ unrolled:
                                     pErrorCode);
             sourceIndex += 1 + static_cast<int32_t>(source - lastSource);
 
-            if(U_FAILURE(*pErrorCode)) {
+            якщо(U_FAILURE(*pErrorCode)) {
                 /* not mappable or buffer overflow */
                 break;
             }
@@ -2371,26 +2371,26 @@ unrolled:
             /* recalculate the targetCapacity after an extension mapping */
             targetCapacity = static_cast<int32_t>(pArgs->targetLimit - target);
             length = static_cast<int32_t>(sourceLimit - source);
-            if(length<targetCapacity) {
+            якщо(length<targetCapacity) {
                 targetCapacity=length;
             }
         }
 
-#if MBCS_UNROLL_SINGLE_TO_BMP
+#якщо MBCS_UNROLL_SINGLE_TO_BMP
         /* unrolling makes it faster on Pentium III/Windows 2000 */
         goto unrolled;
 #endif
     }
 
-    if(U_SUCCESS(*pErrorCode) && source<sourceLimit && target>=pArgs->targetLimit) {
+    якщо(U_SUCCESS(*pErrorCode) && source<sourceLimit && target>=pArgs->targetLimit) {
         /* target is full */
         *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
     }
 
     /* set offsets since the start or the last callback */
-    if(offsets!=nullptr) {
+    якщо(offsets!=nullptr) {
         size_t count=source-lastSource;
-        while(count>0) {
+        поки(count>0) {
             *offsets++=sourceIndex++;
             --count;
         }
@@ -2408,36 +2408,36 @@ hasValidTrailBytes(const int32_t (*stateTable)[256], uint8_t state) {
     int32_t b, entry;
     /* First test for final entries in this state for some commonly valid byte values. */
     entry=row[0xa1];
-    if( !MBCS_ENTRY_IS_TRANSITION(entry) &&
+    якщо( !MBCS_ENTRY_IS_TRANSITION(entry) &&
         MBCS_ENTRY_FINAL_ACTION(entry)!=MBCS_STATE_ILLEGAL
     ) {
-        return true;
+        повернути true;
     }
     entry=row[0x41];
-    if( !MBCS_ENTRY_IS_TRANSITION(entry) &&
+    якщо( !MBCS_ENTRY_IS_TRANSITION(entry) &&
         MBCS_ENTRY_FINAL_ACTION(entry)!=MBCS_STATE_ILLEGAL
     ) {
-        return true;
+        повернути true;
     }
     /* Then test for final entries in this state. */
-    for(b=0; b<=0xff; ++b) {
+    для(b=0; b<=0xff; ++b) {
         entry=row[b];
-        if( !MBCS_ENTRY_IS_TRANSITION(entry) &&
+        якщо( !MBCS_ENTRY_IS_TRANSITION(entry) &&
             MBCS_ENTRY_FINAL_ACTION(entry)!=MBCS_STATE_ILLEGAL
         ) {
-            return true;
+            повернути true;
         }
     }
     /* Then recurse for transition entries. */
-    for(b=0; b<=0xff; ++b) {
+    для(b=0; b<=0xff; ++b) {
         entry=row[b];
-        if( MBCS_ENTRY_IS_TRANSITION(entry) &&
+        якщо( MBCS_ENTRY_IS_TRANSITION(entry) &&
             hasValidTrailBytes(stateTable, static_cast<uint8_t>(MBCS_ENTRY_TRANSITION_STATE(entry)))
         ) {
-            return true;
+            повернути true;
         }
     }
-    return false;
+    повернути false;
 }
 
 /*
@@ -2449,14 +2449,14 @@ static UBool
 isSingleOrLead(const int32_t (*stateTable)[256], uint8_t state, UBool isDBCSOnly, uint8_t b) {
     const int32_t *row=stateTable[state];
     int32_t entry=row[b];
-    if(MBCS_ENTRY_IS_TRANSITION(entry)) {   /* lead byte */
-        return hasValidTrailBytes(stateTable, static_cast<uint8_t>(MBCS_ENTRY_TRANSITION_STATE(entry)));
-    } else {
+    якщо(MBCS_ENTRY_IS_TRANSITION(entry)) {   /* lead byte */
+        повернути hasValidTrailBytes(stateTable, static_cast<uint8_t>(MBCS_ENTRY_TRANSITION_STATE(entry)));
+    } інакше {
         uint8_t action = static_cast<uint8_t>(MBCS_ENTRY_FINAL_ACTION(entry));
-        if(action==MBCS_STATE_CHANGE_ONLY && isDBCSOnly) {
-            return false;   /* SI/SO are illegal for DBCS-only conversion */
-        } else {
-            return action!=MBCS_STATE_ILLEGAL;
+        якщо(action==MBCS_STATE_CHANGE_ONLY && isDBCSOnly) {
+            повернути false;   /* SI/SO are illegal for DBCS-only conversion */
+        } інакше {
+            повернути action!=MBCS_STATE_ILLEGAL;
         }
     }
 }
@@ -2487,25 +2487,25 @@ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     /* use optimized function if possible */
     cnv=pArgs->converter;
 
-    if(cnv->preToULength>0) {
+    якщо(cnv->preToULength>0) {
         /*
          * pass sourceIndex=-1 because we continue from an earlier buffer
          * in the future, this may change with continuous offsets
          */
         ucnv_extContinueMatchToU(cnv, pArgs, -1, pErrorCode);
 
-        if(U_FAILURE(*pErrorCode) || cnv->preToULength<0) {
-            return;
+        якщо(U_FAILURE(*pErrorCode) || cnv->preToULength<0) {
+            повернути;
         }
     }
 
-    if(cnv->sharedData->mbcs.countStates==1) {
-        if(!(cnv->sharedData->mbcs.unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
+    якщо(cnv->sharedData->mbcs.countStates==1) {
+        якщо(!(cnv->sharedData->mbcs.unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
             ucnv_MBCSSingleToBMPWithOffsets(pArgs, pErrorCode);
-        } else {
+        } інакше {
             ucnv_MBCSSingleToUnicodeWithOffsets(pArgs, pErrorCode);
         }
-        return;
+        повернути;
     }
 
     /* set up the local pointers */
@@ -2515,9 +2515,9 @@ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     targetLimit=pArgs->targetLimit;
     offsets=pArgs->offsets;
 
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
+    якщо((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
         stateTable=(const int32_t (*)[256])cnv->sharedData->mbcs.swapLFNLStateTable;
-    } else {
+    } інакше {
         stateTable=cnv->sharedData->mbcs.stateTable;
     }
     unicodeCodeUnits=cnv->sharedData->mbcs.unicodeCodeUnits;
@@ -2532,7 +2532,7 @@ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
      * then load the DBCS state from the MBCS data
      * (dbcsOnlyState==0 if it is not a DBCS-only converter)
      */
-    if((state=(uint8_t)(cnv->mode))==0) {
+    якщо((state=(uint8_t)(cnv->mode))==0) {
         state=cnv->sharedData->mbcs.dbcsOnlyState;
     }
 
@@ -2541,7 +2541,7 @@ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     nextSourceIndex=0;
 
     /* conversion loop */
-    while(source<sourceLimit) {
+    поки(source<sourceLimit) {
         /*
          * This following test is to see if available input would overflow the output.
          * It does not catch output of more than one code unit that
@@ -2550,23 +2550,23 @@ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
          * Therefore, those situations also test for overflows and will
          * then break the loop, too.
          */
-        if(target>=targetLimit) {
+        якщо(target>=targetLimit) {
             /* target is full */
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
             break;
         }
 
-        if(byteIndex==0) {
+        якщо(byteIndex==0) {
             /* optimized loop for 1/2-byte input and BMP output */
-            if(offsets==nullptr) {
+            якщо(offsets==nullptr) {
                 do {
                     entry=stateTable[state][*source];
-                    if(MBCS_ENTRY_IS_TRANSITION(entry)) {
+                    якщо(MBCS_ENTRY_IS_TRANSITION(entry)) {
                         state=(uint8_t)MBCS_ENTRY_TRANSITION_STATE(entry);
                         offset=MBCS_ENTRY_TRANSITION_OFFSET(entry);
 
                         ++source;
-                        if( source<sourceLimit &&
+                        якщо( source<sourceLimit &&
                             MBCS_ENTRY_IS_FINAL(entry=stateTable[state][*source]) &&
                             MBCS_ENTRY_FINAL_ACTION(entry)==MBCS_STATE_VALID_16 &&
                             (c=unicodeCodeUnits[offset+MBCS_ENTRY_FINAL_VALUE_16(entry)])<0xfffe
@@ -2575,78 +2575,78 @@ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
                             *target++=c;
                             state=(uint8_t)MBCS_ENTRY_FINAL_STATE(entry); /* typically 0 */
                             offset=0;
-                        } else {
+                        } інакше {
                             /* set the state and leave the optimized loop */
                             bytes[0]=*(source-1);
                             byteIndex=1;
                             break;
                         }
-                    } else {
-                        if(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
+                    } інакше {
+                        якщо(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
                             /* output BMP code point */
                             ++source;
                             *target++=(char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
                             state=(uint8_t)MBCS_ENTRY_FINAL_STATE(entry); /* typically 0 */
-                        } else {
+                        } інакше {
                             /* leave the optimized loop */
                             break;
                         }
                     }
-                } while(source<sourceLimit && target<targetLimit);
-            } else /* offsets!=nullptr */ {
+                } поки(source<sourceLimit && target<targetLimit);
+            } інакше /* offsets!=nullptr */ {
                 do {
                     entry=stateTable[state][*source];
-                    if(MBCS_ENTRY_IS_TRANSITION(entry)) {
+                    якщо(MBCS_ENTRY_IS_TRANSITION(entry)) {
                         state=(uint8_t)MBCS_ENTRY_TRANSITION_STATE(entry);
                         offset=MBCS_ENTRY_TRANSITION_OFFSET(entry);
 
                         ++source;
-                        if( source<sourceLimit &&
+                        якщо( source<sourceLimit &&
                             MBCS_ENTRY_IS_FINAL(entry=stateTable[state][*source]) &&
                             MBCS_ENTRY_FINAL_ACTION(entry)==MBCS_STATE_VALID_16 &&
                             (c=unicodeCodeUnits[offset+MBCS_ENTRY_FINAL_VALUE_16(entry)])<0xfffe
                         ) {
                             ++source;
                             *target++=c;
-                            if(offsets!=nullptr) {
+                            якщо(offsets!=nullptr) {
                                 *offsets++=sourceIndex;
                                 sourceIndex=(nextSourceIndex+=2);
                             }
                             state=(uint8_t)MBCS_ENTRY_FINAL_STATE(entry); /* typically 0 */
                             offset=0;
-                        } else {
+                        } інакше {
                             /* set the state and leave the optimized loop */
                             ++nextSourceIndex;
                             bytes[0]=*(source-1);
                             byteIndex=1;
                             break;
                         }
-                    } else {
-                        if(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
+                    } інакше {
+                        якщо(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
                             /* output BMP code point */
                             ++source;
                             *target++=(char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
-                            if(offsets!=nullptr) {
+                            якщо(offsets!=nullptr) {
                                 *offsets++=sourceIndex;
                                 sourceIndex=++nextSourceIndex;
                             }
                             state=(uint8_t)MBCS_ENTRY_FINAL_STATE(entry); /* typically 0 */
-                        } else {
+                        } інакше {
                             /* leave the optimized loop */
                             break;
                         }
                     }
-                } while(source<sourceLimit && target<targetLimit);
+                } поки(source<sourceLimit && target<targetLimit);
             }
 
             /*
              * these tests and break statements could be put inside the loop
              * if C had "break outerLoop" like Java
              */
-            if(source>=sourceLimit) {
+            якщо(source>=sourceLimit) {
                 break;
             }
-            if(target>=targetLimit) {
+            якщо(target>=targetLimit) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                 break;
@@ -2654,12 +2654,12 @@ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
 
             ++nextSourceIndex;
             bytes[byteIndex++]=*source++;
-        } else /* byteIndex>0 */ {
+        } інакше /* byteIndex>0 */ {
             ++nextSourceIndex;
             entry=stateTable[state][bytes[byteIndex++]=*source++];
         }
 
-        if(MBCS_ENTRY_IS_TRANSITION(entry)) {
+        якщо(MBCS_ENTRY_IS_TRANSITION(entry)) {
             state=(uint8_t)MBCS_ENTRY_TRANSITION_STATE(entry);
             offset+=MBCS_ENTRY_TRANSITION_OFFSET(entry);
             continue;
@@ -2676,59 +2676,59 @@ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
          * the most common cases compared to a switch.
          */
         action=(uint8_t)(MBCS_ENTRY_FINAL_ACTION(entry));
-        if(action==MBCS_STATE_VALID_16) {
+        якщо(action==MBCS_STATE_VALID_16) {
             offset+=MBCS_ENTRY_FINAL_VALUE_16(entry);
             c=unicodeCodeUnits[offset];
-            if(c<0xfffe) {
+            якщо(c<0xfffe) {
                 /* output BMP code point */
                 *target++=c;
-                if(offsets!=nullptr) {
+                якщо(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 byteIndex=0;
-            } else if(c==0xfffe) {
-                if(UCNV_TO_U_USE_FALLBACK(cnv) && (entry=(int32_t)ucnv_MBCSGetFallback(&cnv->sharedData->mbcs, offset))!=0xfffe) {
+            } інакше якщо(c==0xfffe) {
+                якщо(UCNV_TO_U_USE_FALLBACK(cnv) && (entry=(int32_t)ucnv_MBCSGetFallback(&cnv->sharedData->mbcs, offset))!=0xfffe) {
                     /* output fallback BMP code point */
                     *target++=(char16_t)entry;
-                    if(offsets!=nullptr) {
+                    якщо(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
                     byteIndex=0;
                 }
-            } else {
+            } інакше {
                 /* callback(illegal) */
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
             }
-        } else if(action==MBCS_STATE_VALID_DIRECT_16) {
+        } інакше якщо(action==MBCS_STATE_VALID_DIRECT_16) {
             /* output BMP code point */
             *target++=(char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
-            if(offsets!=nullptr) {
+            якщо(offsets!=nullptr) {
                 *offsets++=sourceIndex;
             }
             byteIndex=0;
-        } else if(action==MBCS_STATE_VALID_16_PAIR) {
+        } інакше якщо(action==MBCS_STATE_VALID_16_PAIR) {
             offset+=MBCS_ENTRY_FINAL_VALUE_16(entry);
             c=unicodeCodeUnits[offset++];
-            if(c<0xd800) {
+            якщо(c<0xd800) {
                 /* output BMP code point below 0xd800 */
                 *target++=c;
-                if(offsets!=nullptr) {
+                якщо(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 byteIndex=0;
-            } else if(UCNV_TO_U_USE_FALLBACK(cnv) ? c<=0xdfff : c<=0xdbff) {
+            } інакше якщо(UCNV_TO_U_USE_FALLBACK(cnv) ? c<=0xdfff : c<=0xdbff) {
                 /* output roundtrip or fallback surrogate pair */
                 *target++=(char16_t)(c&0xdbff);
-                if(offsets!=nullptr) {
+                якщо(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 byteIndex=0;
-                if(target<targetLimit) {
+                якщо(target<targetLimit) {
                     *target++=unicodeCodeUnits[offset];
-                    if(offsets!=nullptr) {
+                    якщо(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
-                } else {
+                } інакше {
                     /* target overflow */
                     cnv->UCharErrorBuffer[0]=unicodeCodeUnits[offset];
                     cnv->UCharErrorBufferLength=1;
@@ -2737,34 +2737,34 @@ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
                     offset=0;
                     break;
                 }
-            } else if(UCNV_TO_U_USE_FALLBACK(cnv) ? (c&0xfffe)==0xe000 : c==0xe000) {
+            } інакше якщо(UCNV_TO_U_USE_FALLBACK(cnv) ? (c&0xfffe)==0xe000 : c==0xe000) {
                 /* output roundtrip BMP code point above 0xd800 or fallback BMP code point */
                 *target++=unicodeCodeUnits[offset];
-                if(offsets!=nullptr) {
+                якщо(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 byteIndex=0;
-            } else if(c==0xffff) {
+            } інакше якщо(c==0xffff) {
                 /* callback(illegal) */
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
             }
-        } else if(action==MBCS_STATE_VALID_DIRECT_20 ||
+        } інакше якщо(action==MBCS_STATE_VALID_DIRECT_20 ||
                   (action==MBCS_STATE_FALLBACK_DIRECT_20 && UCNV_TO_U_USE_FALLBACK(cnv))
         ) {
             entry=MBCS_ENTRY_FINAL_VALUE(entry);
             /* output surrogate pair */
             *target++=(char16_t)(0xd800|(char16_t)(entry>>10));
-            if(offsets!=nullptr) {
+            якщо(offsets!=nullptr) {
                 *offsets++=sourceIndex;
             }
             byteIndex=0;
             c=(char16_t)(0xdc00|(char16_t)(entry&0x3ff));
-            if(target<targetLimit) {
+            якщо(target<targetLimit) {
                 *target++=c;
-                if(offsets!=nullptr) {
+                якщо(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
-            } else {
+            } інакше {
                 /* target overflow */
                 cnv->UCharErrorBuffer[0]=c;
                 cnv->UCharErrorBufferLength=1;
@@ -2773,7 +2773,7 @@ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
                 offset=0;
                 break;
             }
-        } else if(action==MBCS_STATE_CHANGE_ONLY) {
+        } інакше якщо(action==MBCS_STATE_CHANGE_ONLY) {
             /*
              * This serves as a state change without any output.
              * It is useful for reading simple stateful encodings,
@@ -2781,30 +2781,30 @@ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
              * The 21 unused bits may later be used for more sophisticated
              * state transitions.
              */
-            if(cnv->sharedData->mbcs.dbcsOnlyState==0) {
+            якщо(cnv->sharedData->mbcs.dbcsOnlyState==0) {
                 byteIndex=0;
-            } else {
+            } інакше {
                 /* SI/SO are illegal for DBCS-only conversion */
                 state=(uint8_t)(cnv->mode); /* restore the previous state */
 
                 /* callback(illegal) */
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
             }
-        } else if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-            if(UCNV_TO_U_USE_FALLBACK(cnv)) {
+        } інакше якщо(action==MBCS_STATE_FALLBACK_DIRECT_16) {
+            якщо(UCNV_TO_U_USE_FALLBACK(cnv)) {
                 /* output BMP code point */
                 *target++=(char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
-                if(offsets!=nullptr) {
+                якщо(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 byteIndex=0;
             }
-        } else if(action==MBCS_STATE_UNASSIGNED) {
+        } інакше якщо(action==MBCS_STATE_UNASSIGNED) {
             /* just fall through */
-        } else if(action==MBCS_STATE_ILLEGAL) {
+        } інакше якщо(action==MBCS_STATE_ILLEGAL) {
             /* callback(illegal) */
             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-        } else {
+        } інакше {
             /* reserved, must never occur */
             byteIndex=0;
         }
@@ -2812,11 +2812,11 @@ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
         /* end of action codes: prepare for a new character */
         offset=0;
 
-        if(byteIndex==0) {
+        якщо(byteIndex==0) {
             sourceIndex=nextSourceIndex;
-        } else if(U_FAILURE(*pErrorCode)) {
+        } інакше якщо(U_FAILURE(*pErrorCode)) {
             /* callback(illegal) */
-            if(byteIndex>1) {
+            якщо(byteIndex>1) {
                 /*
                  * Ticket 5691: consistent illegal sequences:
                  * - We include at least the first byte in the illegal sequence.
@@ -2825,17 +2825,17 @@ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
                  */
                 UBool isDBCSOnly = cnv->sharedData->mbcs.dbcsOnlyState != 0;
                 int8_t i;
-                for(i=1;
+                для(i=1;
                     i<byteIndex && !isSingleOrLead(stateTable, state, isDBCSOnly, bytes[i]);
                     ++i) {}
-                if(i<byteIndex) {
+                якщо(i<byteIndex) {
                     /* Back out some bytes. */
                     int8_t backOutDistance=byteIndex-i;
                     int32_t bytesFromThisBuffer=(int32_t)(source-(const uint8_t *)pArgs->source);
                     byteIndex=i;  /* length of reported illegal byte sequence */
-                    if(backOutDistance<=bytesFromThisBuffer) {
+                    якщо(backOutDistance<=bytesFromThisBuffer) {
                         source-=backOutDistance;
-                    } else {
+                    } інакше {
                         /* Back out bytes from the previous buffer: Need to replay them. */
                         cnv->preToULength=(int8_t)(bytesFromThisBuffer-backOutDistance);
                         /* preToULength is negative! */
@@ -2845,7 +2845,7 @@ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
                 }
             }
             break;
-        } else /* unassigned sequences indicated with byteIndex>0 */ {
+        } інакше /* unassigned sequences indicated with byteIndex>0 */ {
             /* try an extension mapping */
             pArgs->source=(const char *)source;
             byteIndex=_extToU(cnv, cnv->sharedData,
@@ -2856,7 +2856,7 @@ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
                               pErrorCode);
             sourceIndex=nextSourceIndex+=(int32_t)(source-(const uint8_t *)pArgs->source);
 
-            if(U_FAILURE(*pErrorCode)) {
+            якщо(U_FAILURE(*pErrorCode)) {
                 /* not mappable or buffer overflow */
                 break;
             }
@@ -2892,23 +2892,23 @@ ucnv_MBCSSingleGetNextUChar(UConverterToUnicodeArgs *pArgs,
     cnv=pArgs->converter;
     source = reinterpret_cast<const uint8_t*>(pArgs->source);
     sourceLimit = reinterpret_cast<const uint8_t*>(pArgs->sourceLimit);
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
+    якщо((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
         stateTable=(const int32_t (*)[256])cnv->sharedData->mbcs.swapLFNLStateTable;
-    } else {
+    } інакше {
         stateTable=cnv->sharedData->mbcs.stateTable;
     }
 
     /* conversion loop */
-    while(source<sourceLimit) {
+    поки(source<sourceLimit) {
         entry=stateTable[0][*source++];
         /* MBCS_ENTRY_IS_FINAL(entry) */
 
         /* write back the updated pointer early so that we can return directly */
         pArgs->source = reinterpret_cast<const char*>(source);
 
-        if(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
+        якщо(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
             /* output BMP code point */
-            return static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+            повернути static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
         }
 
         /*
@@ -2916,39 +2916,39 @@ ucnv_MBCSSingleGetNextUChar(UConverterToUnicodeArgs *pArgs,
          * the most common cases compared to a switch.
          */
         action = static_cast<uint8_t>(MBCS_ENTRY_FINAL_ACTION(entry));
-        if( action==MBCS_STATE_VALID_DIRECT_20 ||
+        якщо( action==MBCS_STATE_VALID_DIRECT_20 ||
             (action==MBCS_STATE_FALLBACK_DIRECT_20 && UCNV_TO_U_USE_FALLBACK(cnv))
         ) {
             /* output supplementary code point */
-            return static_cast<UChar32>(MBCS_ENTRY_FINAL_VALUE(entry) + 0x10000);
-        } else if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-            if(UCNV_TO_U_USE_FALLBACK(cnv)) {
+            повернути static_cast<UChar32>(MBCS_ENTRY_FINAL_VALUE(entry) + 0x10000);
+        } інакше якщо(action==MBCS_STATE_FALLBACK_DIRECT_16) {
+            якщо(UCNV_TO_U_USE_FALLBACK(cnv)) {
                 /* output BMP code point */
-                return static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+                повернути static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
             }
-        } else if(action==MBCS_STATE_UNASSIGNED) {
+        } інакше якщо(action==MBCS_STATE_UNASSIGNED) {
             /* just fall through */
-        } else if(action==MBCS_STATE_ILLEGAL) {
+        } інакше якщо(action==MBCS_STATE_ILLEGAL) {
             /* callback(illegal) */
             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-        } else {
+        } інакше {
             /* reserved, must never occur */
             continue;
         }
 
-        if(U_FAILURE(*pErrorCode)) {
+        якщо(U_FAILURE(*pErrorCode)) {
             /* callback(illegal) */
             break;
-        } else /* unassigned sequence */ {
+        } інакше /* unassigned sequence */ {
             /* defer to the generic implementation */
             pArgs->source = reinterpret_cast<const char*>(source) - 1;
-            return UCNV_GET_NEXT_UCHAR_USE_TO_U;
+            повернути UCNV_GET_NEXT_UCHAR_USE_TO_U;
         }
     }
 
     /* no output because of empty input or only state changes */
     *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-    return 0xffff;
+    повернути 0xffff;
 }
 
 /*
@@ -2982,29 +2982,29 @@ ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
     /* use optimized function if possible */
     cnv=pArgs->converter;
 
-    if(cnv->preToULength>0) {
+    якщо(cnv->preToULength>0) {
         /* use the generic code in ucnv_getNextUChar() to continue with a partial match */
-        return UCNV_GET_NEXT_UCHAR_USE_TO_U;
+        повернути UCNV_GET_NEXT_UCHAR_USE_TO_U;
     }
 
-    if(cnv->sharedData->mbcs.unicodeMask&UCNV_HAS_SURROGATES) {
+    якщо(cnv->sharedData->mbcs.unicodeMask&UCNV_HAS_SURROGATES) {
         /*
          * Using the generic ucnv_getNextUChar() code lets us deal correctly
          * with the rare case of a codepage that maps single surrogates
          * without adding the complexity to this already complicated function here.
          */
-        return UCNV_GET_NEXT_UCHAR_USE_TO_U;
-    } else if(cnv->sharedData->mbcs.countStates==1) {
-        return ucnv_MBCSSingleGetNextUChar(pArgs, pErrorCode);
+        повернути UCNV_GET_NEXT_UCHAR_USE_TO_U;
+    } інакше якщо(cnv->sharedData->mbcs.countStates==1) {
+        повернути ucnv_MBCSSingleGetNextUChar(pArgs, pErrorCode);
     }
 
     /* set up the local pointers */
     source = lastSource = reinterpret_cast<const uint8_t*>(pArgs->source);
     sourceLimit = reinterpret_cast<const uint8_t*>(pArgs->sourceLimit);
 
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
+    якщо((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
         stateTable=(const int32_t (*)[256])cnv->sharedData->mbcs.swapLFNLStateTable;
-    } else {
+    } інакше {
         stateTable=cnv->sharedData->mbcs.stateTable;
     }
     unicodeCodeUnits=cnv->sharedData->mbcs.unicodeCodeUnits;
@@ -3017,20 +3017,20 @@ ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
      * then load the DBCS state from the MBCS data
      * (dbcsOnlyState==0 if it is not a DBCS-only converter)
      */
-    if ((state = static_cast<uint8_t>(cnv->mode)) == 0) {
+    якщо ((state = static_cast<uint8_t>(cnv->mode)) == 0) {
         state=cnv->sharedData->mbcs.dbcsOnlyState;
     }
 
     /* conversion loop */
     c=U_SENTINEL;
-    while(source<sourceLimit) {
+    поки(source<sourceLimit) {
         entry=stateTable[state][*source++];
-        if(MBCS_ENTRY_IS_TRANSITION(entry)) {
+        якщо(MBCS_ENTRY_IS_TRANSITION(entry)) {
             state = static_cast<uint8_t>(MBCS_ENTRY_TRANSITION_STATE(entry));
             offset+=MBCS_ENTRY_TRANSITION_OFFSET(entry);
 
             /* optimization for 1/2-byte input and BMP output */
-            if( source<sourceLimit &&
+            якщо( source<sourceLimit &&
                 MBCS_ENTRY_IS_FINAL(entry=stateTable[state][*source]) &&
                 MBCS_ENTRY_FINAL_ACTION(entry)==MBCS_STATE_VALID_16 &&
                 (c=unicodeCodeUnits[offset+MBCS_ENTRY_FINAL_VALUE_16(entry)])<0xfffe
@@ -3040,7 +3040,7 @@ ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
                 /* output BMP code point */
                 break;
             }
-        } else {
+        } інакше {
             /* save the previous state for proper extension mapping with SI/SO-stateful converters */
             cnv->mode=state;
 
@@ -3052,49 +3052,49 @@ ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
              * the most common cases compared to a switch.
              */
             action = static_cast<uint8_t>(MBCS_ENTRY_FINAL_ACTION(entry));
-            if(action==MBCS_STATE_VALID_DIRECT_16) {
+            якщо(action==MBCS_STATE_VALID_DIRECT_16) {
                 /* output BMP code point */
                 c = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
                 break;
-            } else if(action==MBCS_STATE_VALID_16) {
+            } інакше якщо(action==MBCS_STATE_VALID_16) {
                 offset+=MBCS_ENTRY_FINAL_VALUE_16(entry);
                 c=unicodeCodeUnits[offset];
-                if(c<0xfffe) {
+                якщо(c<0xfffe) {
                     /* output BMP code point */
                     break;
-                } else if(c==0xfffe) {
-                    if(UCNV_TO_U_USE_FALLBACK(cnv) && (c=ucnv_MBCSGetFallback(&cnv->sharedData->mbcs, offset))!=0xfffe) {
+                } інакше якщо(c==0xfffe) {
+                    якщо(UCNV_TO_U_USE_FALLBACK(cnv) && (c=ucnv_MBCSGetFallback(&cnv->sharedData->mbcs, offset))!=0xfffe) {
                         break;
                     }
-                } else {
+                } інакше {
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                 }
-            } else if(action==MBCS_STATE_VALID_16_PAIR) {
+            } інакше якщо(action==MBCS_STATE_VALID_16_PAIR) {
                 offset+=MBCS_ENTRY_FINAL_VALUE_16(entry);
                 c=unicodeCodeUnits[offset++];
-                if(c<0xd800) {
+                якщо(c<0xd800) {
                     /* output BMP code point below 0xd800 */
                     break;
-                } else if(UCNV_TO_U_USE_FALLBACK(cnv) ? c<=0xdfff : c<=0xdbff) {
+                } інакше якщо(UCNV_TO_U_USE_FALLBACK(cnv) ? c<=0xdfff : c<=0xdbff) {
                     /* output roundtrip or fallback supplementary code point */
                     c=((c&0x3ff)<<10)+unicodeCodeUnits[offset]+(0x10000-0xdc00);
                     break;
-                } else if(UCNV_TO_U_USE_FALLBACK(cnv) ? (c&0xfffe)==0xe000 : c==0xe000) {
+                } інакше якщо(UCNV_TO_U_USE_FALLBACK(cnv) ? (c&0xfffe)==0xe000 : c==0xe000) {
                     /* output roundtrip BMP code point above 0xd800 or fallback BMP code point */
                     c=unicodeCodeUnits[offset];
                     break;
-                } else if(c==0xffff) {
+                } інакше якщо(c==0xffff) {
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                 }
-            } else if(action==MBCS_STATE_VALID_DIRECT_20 ||
+            } інакше якщо(action==MBCS_STATE_VALID_DIRECT_20 ||
                       (action==MBCS_STATE_FALLBACK_DIRECT_20 && UCNV_TO_U_USE_FALLBACK(cnv))
             ) {
                 /* output supplementary code point */
                 c = static_cast<UChar32>(MBCS_ENTRY_FINAL_VALUE(entry) + 0x10000);
                 break;
-            } else if(action==MBCS_STATE_CHANGE_ONLY) {
+            } інакше якщо(action==MBCS_STATE_CHANGE_ONLY) {
                 /*
                  * This serves as a state change without any output.
                  * It is useful for reading simple stateful encodings,
@@ -3102,25 +3102,25 @@ ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
                  * The 21 unused bits may later be used for more sophisticated
                  * state transitions.
                  */
-                if(cnv->sharedData->mbcs.dbcsOnlyState!=0) {
+                якщо(cnv->sharedData->mbcs.dbcsOnlyState!=0) {
                     /* SI/SO are illegal for DBCS-only conversion */
                     state = static_cast<uint8_t>(cnv->mode); /* restore the previous state */
 
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                 }
-            } else if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-                if(UCNV_TO_U_USE_FALLBACK(cnv)) {
+            } інакше якщо(action==MBCS_STATE_FALLBACK_DIRECT_16) {
+                якщо(UCNV_TO_U_USE_FALLBACK(cnv)) {
                     /* output BMP code point */
                     c = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
                     break;
                 }
-            } else if(action==MBCS_STATE_UNASSIGNED) {
+            } інакше якщо(action==MBCS_STATE_UNASSIGNED) {
                 /* just fall through */
-            } else if(action==MBCS_STATE_ILLEGAL) {
+            } інакше якщо(action==MBCS_STATE_ILLEGAL) {
                 /* callback(illegal) */
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-            } else {
+            } інакше {
                 /* reserved (must never occur), or only state change */
                 offset=0;
                 lastSource=source;
@@ -3130,26 +3130,26 @@ ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
             /* end of action codes: prepare for a new character */
             offset=0;
 
-            if(U_FAILURE(*pErrorCode)) {
+            якщо(U_FAILURE(*pErrorCode)) {
                 /* callback(illegal) */
                 break;
-            } else /* unassigned sequence */ {
+            } інакше /* unassigned sequence */ {
                 /* defer to the generic implementation */
                 cnv->toUnicodeStatus=0;
                 cnv->mode=state;
                 pArgs->source = reinterpret_cast<const char*>(lastSource);
-                return UCNV_GET_NEXT_UCHAR_USE_TO_U;
+                повернути UCNV_GET_NEXT_UCHAR_USE_TO_U;
             }
         }
     }
 
-    if(c<0) {
-        if(U_SUCCESS(*pErrorCode) && source==sourceLimit && lastSource<source) {
+    якщо(c<0) {
+        якщо(U_SUCCESS(*pErrorCode) && source==sourceLimit && lastSource<source) {
             /* incomplete character byte sequence */
             cnv->toULength = static_cast<int8_t>(source - lastSource);
             uprv_memcpy(cnv->toUBytes, lastSource, cnv->toULength);
             *pErrorCode=U_TRUNCATED_CHAR_FOUND;
-        } else if(U_FAILURE(*pErrorCode)) {
+        } інакше якщо(U_FAILURE(*pErrorCode)) {
             /* callback(illegal) */
             /*
              * Ticket 5691: consistent illegal sequences:
@@ -3160,11 +3160,11 @@ ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
             UBool isDBCSOnly = static_cast<UBool>(cnv->sharedData->mbcs.dbcsOnlyState != 0);
             uint8_t *bytes=cnv->toUBytes;
             *bytes++=*lastSource++;     /* first byte */
-            if(lastSource==source) {
+            якщо(lastSource==source) {
                 cnv->toULength=1;
-            } else /* lastSource<source: multi-byte character */ {
+            } інакше /* lastSource<source: multi-byte character */ {
                 int8_t i;
-                for(i=1;
+                для(i=1;
                     lastSource<source && !isSingleOrLead(stateTable, state, isDBCSOnly, *lastSource);
                     ++i
                 ) {
@@ -3173,7 +3173,7 @@ ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
                 cnv->toULength=i;
                 source=lastSource;
             }
-        } else {
+        } інакше {
             /* no output because of empty input or only state changes */
             *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
         }
@@ -3186,10 +3186,10 @@ ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
 
     /* write back the updated pointer */
     pArgs->source = reinterpret_cast<const char*>(source);
-    return c;
+    повернути c;
 }
 
-#if 0
+#якщо 0
 /*
  * Code disabled 2002dec09 (ICU 2.4) because it is not currently used in ICU. markus
  * Removal improves code coverage.
@@ -3208,9 +3208,9 @@ ucnv_MBCSSingleSimpleGetNextUChar(UConverterSharedData *sharedData,
     entry=sharedData->mbcs.stateTable[0][b];
     /* MBCS_ENTRY_IS_FINAL(entry) */
 
-    if(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
+    якщо(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
         /* output BMP code point */
-        return (char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
+        повернути (char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
     }
 
     /*
@@ -3218,28 +3218,28 @@ ucnv_MBCSSingleSimpleGetNextUChar(UConverterSharedData *sharedData,
      * the most common cases compared to a switch.
      */
     action=(uint8_t)(MBCS_ENTRY_FINAL_ACTION(entry));
-    if(action==MBCS_STATE_VALID_DIRECT_20) {
+    якщо(action==MBCS_STATE_VALID_DIRECT_20) {
         /* output supplementary code point */
-        return 0x10000+MBCS_ENTRY_FINAL_VALUE(entry);
-    } else if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-        if(!TO_U_USE_FALLBACK(useFallback)) {
-            return 0xfffe;
+        повернути 0x10000+MBCS_ENTRY_FINAL_VALUE(entry);
+    } інакше якщо(action==MBCS_STATE_FALLBACK_DIRECT_16) {
+        якщо(!TO_U_USE_FALLBACK(useFallback)) {
+            повернути 0xfffe;
         }
         /* output BMP code point */
-        return (char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
-    } else if(action==MBCS_STATE_FALLBACK_DIRECT_20) {
-        if(!TO_U_USE_FALLBACK(useFallback)) {
-            return 0xfffe;
+        повернути (char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
+    } інакше якщо(action==MBCS_STATE_FALLBACK_DIRECT_20) {
+        якщо(!TO_U_USE_FALLBACK(useFallback)) {
+            повернути 0xfffe;
         }
         /* output supplementary code point */
-        return 0x10000+MBCS_ENTRY_FINAL_VALUE(entry);
-    } else if(action==MBCS_STATE_UNASSIGNED) {
-        return 0xfffe;
-    } else if(action==MBCS_STATE_ILLEGAL) {
-        return 0xffff;
-    } else {
+        повернути 0x10000+MBCS_ENTRY_FINAL_VALUE(entry);
+    } інакше якщо(action==MBCS_STATE_UNASSIGNED) {
+        повернути 0xfffe;
+    } інакше якщо(action==MBCS_STATE_ILLEGAL) {
+        повернути 0xffff;
+    } інакше {
         /* reserved, must never occur */
-        return 0xffff;
+        повернути 0xffff;
     }
 }
 #endif
@@ -3270,12 +3270,12 @@ ucnv_MBCSSimpleGetNextUChar(UConverterSharedData *sharedData,
     UChar32 c;
     int32_t i, entry;
 
-    if(length<=0) {
+    якщо(length<=0) {
         /* no input at all: "illegal" */
-        return 0xffff;
+        повернути 0xffff;
     }
 
-#if 0
+#якщо 0
 /*
  * Code disabled 2002dec09 (ICU 2.4) because it is not currently used in ICU. markus
  * TODO In future releases, verify that this function is never called for SBCS
@@ -3283,11 +3283,11 @@ ucnv_MBCSSimpleGetNextUChar(UConverterSharedData *sharedData,
  * Removal improves code coverage.
  */
     /* use optimized function if possible */
-    if(sharedData->mbcs.countStates==1) {
-        if(length==1) {
-            return ucnv_MBCSSingleSimpleGetNextUChar(sharedData, (uint8_t)*source, useFallback);
-        } else {
-            return 0xffff; /* illegal: more than a single byte for an SBCS converter */
+    якщо(sharedData->mbcs.countStates==1) {
+        якщо(length==1) {
+            повернути ucnv_MBCSSingleSimpleGetNextUChar(sharedData, (uint8_t)*source, useFallback);
+        } інакше {
+            повернути 0xffff; /* illegal: more than a single byte for an SBCS converter */
         }
     }
 #endif
@@ -3301,73 +3301,73 @@ ucnv_MBCSSimpleGetNextUChar(UConverterSharedData *sharedData,
     state=sharedData->mbcs.dbcsOnlyState;
 
     /* conversion loop */
-    for(i=0;;) {
+    для(i=0;;) {
         entry=stateTable[state][(uint8_t)source[i++]];
-        if(MBCS_ENTRY_IS_TRANSITION(entry)) {
+        якщо(MBCS_ENTRY_IS_TRANSITION(entry)) {
             state=(uint8_t)MBCS_ENTRY_TRANSITION_STATE(entry);
             offset+=MBCS_ENTRY_TRANSITION_OFFSET(entry);
 
-            if(i==length) {
-                return 0xffff; /* truncated character */
+            якщо(i==length) {
+                повернути 0xffff; /* truncated character */
             }
-        } else {
+        } інакше {
             /*
              * An if-else-if chain provides more reliable performance for
              * the most common cases compared to a switch.
              */
             action=(uint8_t)(MBCS_ENTRY_FINAL_ACTION(entry));
-            if(action==MBCS_STATE_VALID_16) {
+            якщо(action==MBCS_STATE_VALID_16) {
                 offset+=MBCS_ENTRY_FINAL_VALUE_16(entry);
                 c=unicodeCodeUnits[offset];
-                if(c!=0xfffe) {
+                якщо(c!=0xfffe) {
                     /* done */
-                } else if(UCNV_TO_U_USE_FALLBACK(cnv)) {
+                } інакше якщо(UCNV_TO_U_USE_FALLBACK(cnv)) {
                     c=ucnv_MBCSGetFallback(&sharedData->mbcs, offset);
                 /* else done with 0xfffe */
                 }
                 break;
-            } else if(action==MBCS_STATE_VALID_DIRECT_16) {
+            } інакше якщо(action==MBCS_STATE_VALID_DIRECT_16) {
                 /* output BMP code point */
                 c=(char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
                 break;
-            } else if(action==MBCS_STATE_VALID_16_PAIR) {
+            } інакше якщо(action==MBCS_STATE_VALID_16_PAIR) {
                 offset+=MBCS_ENTRY_FINAL_VALUE_16(entry);
                 c=unicodeCodeUnits[offset++];
-                if(c<0xd800) {
+                якщо(c<0xd800) {
                     /* output BMP code point below 0xd800 */
-                } else if(UCNV_TO_U_USE_FALLBACK(cnv) ? c<=0xdfff : c<=0xdbff) {
+                } інакше якщо(UCNV_TO_U_USE_FALLBACK(cnv) ? c<=0xdfff : c<=0xdbff) {
                     /* output roundtrip or fallback supplementary code point */
                     c=(UChar32)(((c&0x3ff)<<10)+unicodeCodeUnits[offset]+(0x10000-0xdc00));
-                } else if(UCNV_TO_U_USE_FALLBACK(cnv) ? (c&0xfffe)==0xe000 : c==0xe000) {
+                } інакше якщо(UCNV_TO_U_USE_FALLBACK(cnv) ? (c&0xfffe)==0xe000 : c==0xe000) {
                     /* output roundtrip BMP code point above 0xd800 or fallback BMP code point */
                     c=unicodeCodeUnits[offset];
-                } else if(c==0xffff) {
-                    return 0xffff;
-                } else {
+                } інакше якщо(c==0xffff) {
+                    повернути 0xffff;
+                } інакше {
                     c=0xfffe;
                 }
                 break;
-            } else if(action==MBCS_STATE_VALID_DIRECT_20) {
+            } інакше якщо(action==MBCS_STATE_VALID_DIRECT_20) {
                 /* output supplementary code point */
                 c=0x10000+MBCS_ENTRY_FINAL_VALUE(entry);
                 break;
-            } else if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-                if(!TO_U_USE_FALLBACK(useFallback)) {
+            } інакше якщо(action==MBCS_STATE_FALLBACK_DIRECT_16) {
+                якщо(!TO_U_USE_FALLBACK(useFallback)) {
                     c=0xfffe;
                     break;
                 }
                 /* output BMP code point */
                 c=(char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
                 break;
-            } else if(action==MBCS_STATE_FALLBACK_DIRECT_20) {
-                if(!TO_U_USE_FALLBACK(useFallback)) {
+            } інакше якщо(action==MBCS_STATE_FALLBACK_DIRECT_20) {
+                якщо(!TO_U_USE_FALLBACK(useFallback)) {
                     c=0xfffe;
                     break;
                 }
                 /* output supplementary code point */
                 c=0x10000+MBCS_ENTRY_FINAL_VALUE(entry);
                 break;
-            } else if(action==MBCS_STATE_UNASSIGNED) {
+            } інакше якщо(action==MBCS_STATE_UNASSIGNED) {
                 c=0xfffe;
                 break;
             }
@@ -3376,24 +3376,24 @@ ucnv_MBCSSimpleGetNextUChar(UConverterSharedData *sharedData,
              * forbid MBCS_STATE_CHANGE_ONLY for this function,
              * and MBCS_STATE_ILLEGAL and reserved action codes
              */
-            return 0xffff;
+            повернути 0xffff;
         }
     }
 
-    if(i!=length) {
+    якщо(i!=length) {
         /* illegal for this function: not all input consumed */
-        return 0xffff;
+        повернути 0xffff;
     }
 
-    if(c==0xfffe) {
+    якщо(c==0xfffe) {
         /* try an extension mapping */
         const int32_t *cx=sharedData->mbcs.extIndexes;
-        if(cx!=nullptr) {
-            return ucnv_extSimpleMatchToU(cx, source, length, useFallback);
+        якщо(cx!=nullptr) {
+            повернути ucnv_extSimpleMatchToU(cx, source, length, useFallback);
         }
     }
 
-    return c;
+    повернути c;
 }
 
 /* MBCS-from-Unicode conversion functions ----------------------------------- */
@@ -3434,9 +3434,9 @@ ucnv_MBCSDoubleFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
 
     table=cnv->sharedData->mbcs.fromUnicodeTable;
     mbcsIndex=cnv->sharedData->mbcs.mbcsIndex;
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
+    якщо((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
         bytes=cnv->sharedData->mbcs.swapLFNLFromUnicodeBytes;
-    } else {
+    } інакше {
         bytes=cnv->sharedData->mbcs.fromUnicodeBytes;
     }
     asciiRoundtrips=cnv->sharedData->mbcs.asciiRoundtrips;
@@ -3449,11 +3449,11 @@ ucnv_MBCSDoubleFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     nextSourceIndex=0;
 
     /* conversion loop */
-    if(c!=0 && targetCapacity>0) {
+    якщо(c!=0 && targetCapacity>0) {
         goto getTrail;
     }
 
-    while(source<sourceLimit) {
+    поки(source<sourceLimit) {
         /*
          * This following test is to see if available input would overflow the output.
          * It does not catch output of more than one byte that
@@ -3462,7 +3462,7 @@ ucnv_MBCSDoubleFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
          * Therefore, those situations also test for overflows and will
          * then break the loop, too.
          */
-        if(targetCapacity>0) {
+        якщо(targetCapacity>0) {
             /*
              * Get a correct Unicode code point:
              * a single char16_t for a BMP code point or
@@ -3470,9 +3470,9 @@ ucnv_MBCSDoubleFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
              */
             c=*source++;
             ++nextSourceIndex;
-            if(c<=0x7f && IS_ASCII_ROUNDTRIP(c, asciiRoundtrips)) {
+            якщо(c<=0x7f && IS_ASCII_ROUNDTRIP(c, asciiRoundtrips)) {
                 *target++ = static_cast<uint8_t>(c);
-                if(offsets!=nullptr) {
+                якщо(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                     sourceIndex=nextSourceIndex;
                 }
@@ -3485,47 +3485,47 @@ ucnv_MBCSDoubleFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
              * to avoid dealing with surrogates.
              * MBCS_FAST_MAX must be >=0xd7ff.
              */
-            if(c<=0xd7ff) {
+            якщо(c<=0xd7ff) {
                 value=DBCS_RESULT_FROM_MOST_BMP(mbcsIndex, (const uint16_t *)bytes, c);
                 /* There are only roundtrips (!=0) and no-mapping (==0) entries. */
-                if(value==0) {
+                якщо(value==0) {
                     goto unassigned;
                 }
                 /* output the value */
-            } else {
+            } інакше {
                 /*
                  * This also tests if the codepage maps single surrogates.
                  * If it does, then surrogates are not paired but mapped separately.
                  * Note that in this case unmatched surrogates are not detected.
                  */
-                if(U16_IS_SURROGATE(c) && !(unicodeMask&UCNV_HAS_SURROGATES)) {
-                    if(U16_IS_SURROGATE_LEAD(c)) {
+                якщо(U16_IS_SURROGATE(c) && !(unicodeMask&UCNV_HAS_SURROGATES)) {
+                    якщо(U16_IS_SURROGATE_LEAD(c)) {
 getTrail:
-                        if(source<sourceLimit) {
+                        якщо(source<sourceLimit) {
                             /* test the following code unit */
                             char16_t trail=*source;
-                            if(U16_IS_TRAIL(trail)) {
+                            якщо(U16_IS_TRAIL(trail)) {
                                 ++source;
                                 ++nextSourceIndex;
                                 c=U16_GET_SUPPLEMENTARY(c, trail);
-                                if(!(unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
+                                якщо(!(unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
                                     /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
                                     /* callback(unassigned) */
                                     goto unassigned;
                                 }
                                 /* convert this supplementary code point */
                                 /* exit this condition tree */
-                            } else {
+                            } інакше {
                                 /* this is an unmatched lead code unit (1st surrogate) */
                                 /* callback(illegal) */
                                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                                 break;
                             }
-                        } else {
+                        } інакше {
                             /* no more input */
                             break;
                         }
-                    } else {
+                    } інакше {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
                         *pErrorCode=U_ILLEGAL_CHAR_FOUND;
@@ -3541,7 +3541,7 @@ getTrail:
                 value=MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, c);
 
                 /* is this code point assigned, or do we use fallbacks? */
-                if(!(MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c) ||
+                якщо(!(MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c) ||
                      (UCNV_FROM_U_USE_FALLBACK(cnv, c) && value!=0))
                 ) {
                     /*
@@ -3561,10 +3561,10 @@ unassigned:
                                 pErrorCode);
                     nextSourceIndex += static_cast<int32_t>(source - pArgs->source);
 
-                    if(U_FAILURE(*pErrorCode)) {
+                    якщо(U_FAILURE(*pErrorCode)) {
                         /* not mappable or buffer overflow */
                         break;
-                    } else {
+                    } інакше {
                         /* a mapping was written to the target, continue */
 
                         /* recalculate the targetCapacity after an extension mapping */
@@ -3579,24 +3579,24 @@ unassigned:
 
             /* write the output character bytes from value and length */
             /* from the first if in the loop we know that targetCapacity>0 */
-            if(value<=0xff) {
+            якщо(value<=0xff) {
                 /* this is easy because we know that there is enough space */
                 *target++ = static_cast<uint8_t>(value);
-                if(offsets!=nullptr) {
+                якщо(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 --targetCapacity;
-            } else /* length==2 */ {
+            } інакше /* length==2 */ {
                 *target++ = static_cast<uint8_t>(value >> 8);
-                if(2<=targetCapacity) {
+                якщо(2<=targetCapacity) {
                     *target++ = static_cast<uint8_t>(value);
-                    if(offsets!=nullptr) {
+                    якщо(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                         *offsets++=sourceIndex;
                     }
                     targetCapacity-=2;
-                } else {
-                    if(offsets!=nullptr) {
+                } інакше {
+                    якщо(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
                     cnv->charErrorBuffer[0] = static_cast<char>(value);
@@ -3614,7 +3614,7 @@ unassigned:
             c=0;
             sourceIndex=nextSourceIndex;
             continue;
-        } else {
+        } інакше {
             /* target is full */
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
             break;
@@ -3659,16 +3659,16 @@ ucnv_MBCSSingleFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     offsets=pArgs->offsets;
 
     table=cnv->sharedData->mbcs.fromUnicodeTable;
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
+    якщо((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
         results = reinterpret_cast<uint16_t*>(cnv->sharedData->mbcs.swapLFNLFromUnicodeBytes);
-    } else {
+    } інакше {
         results=(uint16_t *)cnv->sharedData->mbcs.fromUnicodeBytes;
     }
 
-    if(cnv->useFallback) {
+    якщо(cnv->useFallback) {
         /* use all roundtrip and fallback results */
         minValue=0x800;
-    } else {
+    } інакше {
         /* use only roundtrips and fallbacks from private-use characters */
         minValue=0xc00;
     }
@@ -3682,11 +3682,11 @@ ucnv_MBCSSingleFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     nextSourceIndex=0;
 
     /* conversion loop */
-    if(c!=0 && targetCapacity>0) {
+    якщо(c!=0 && targetCapacity>0) {
         goto getTrail;
     }
 
-    while(source<sourceLimit) {
+    поки(source<sourceLimit) {
         /*
          * This following test is to see if available input would overflow the output.
          * It does not catch output of more than one byte that
@@ -3695,7 +3695,7 @@ ucnv_MBCSSingleFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
          * Therefore, those situations also test for overflows and will
          * then break the loop, too.
          */
-        if(targetCapacity>0) {
+        якщо(targetCapacity>0) {
             /*
              * Get a correct Unicode code point:
              * a single char16_t for a BMP code point or
@@ -3703,34 +3703,34 @@ ucnv_MBCSSingleFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
              */
             c=*source++;
             ++nextSourceIndex;
-            if(U16_IS_SURROGATE(c)) {
-                if(U16_IS_SURROGATE_LEAD(c)) {
+            якщо(U16_IS_SURROGATE(c)) {
+                якщо(U16_IS_SURROGATE_LEAD(c)) {
 getTrail:
-                    if(source<sourceLimit) {
+                    якщо(source<sourceLimit) {
                         /* test the following code unit */
                         char16_t trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
+                        якщо(U16_IS_TRAIL(trail)) {
                             ++source;
                             ++nextSourceIndex;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
-                            if(!hasSupplementary) {
+                            якщо(!hasSupplementary) {
                                 /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
                                 /* callback(unassigned) */
                                 goto unassigned;
                             }
                             /* convert this supplementary code point */
                             /* exit this condition tree */
-                        } else {
+                        } інакше {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                             break;
                         }
-                    } else {
+                    } інакше {
                         /* no more input */
                         break;
                     }
-                } else {
+                } інакше {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
@@ -3742,12 +3742,12 @@ getTrail:
             value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
 
             /* is this code point assigned, or do we use fallbacks? */
-            if(value>=minValue) {
+            якщо(value>=minValue) {
                 /* assigned, write the output character bytes from value and length */
                 /* length==1 */
                 /* this is easy because we know that there is enough space */
                 *target++ = static_cast<uint8_t>(value);
-                if(offsets!=nullptr) {
+                якщо(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 --targetCapacity;
@@ -3755,7 +3755,7 @@ getTrail:
                 /* normal end of conversion: prepare for a new character */
                 c=0;
                 sourceIndex=nextSourceIndex;
-            } else { /* unassigned */
+            } інакше { /* unassigned */
 unassigned:
                 /* try an extension mapping */
                 pArgs->source=source;
@@ -3767,10 +3767,10 @@ unassigned:
                             pErrorCode);
                 nextSourceIndex += static_cast<int32_t>(source - pArgs->source);
 
-                if(U_FAILURE(*pErrorCode)) {
+                якщо(U_FAILURE(*pErrorCode)) {
                     /* not mappable or buffer overflow */
                     break;
-                } else {
+                } інакше {
                     /* a mapping was written to the target, continue */
 
                     /* recalculate the targetCapacity after an extension mapping */
@@ -3780,7 +3780,7 @@ unassigned:
                     sourceIndex=nextSourceIndex;
                 }
             }
-        } else {
+        } інакше {
             /* target is full */
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
             break;
@@ -3835,17 +3835,17 @@ ucnv_MBCSSingleFromBMPWithOffsets(UConverterFromUnicodeArgs *pArgs,
     offsets=pArgs->offsets;
 
     table=cnv->sharedData->mbcs.fromUnicodeTable;
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
+    якщо((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
         results = reinterpret_cast<uint16_t*>(cnv->sharedData->mbcs.swapLFNLFromUnicodeBytes);
-    } else {
+    } інакше {
         results=(uint16_t *)cnv->sharedData->mbcs.fromUnicodeBytes;
     }
     asciiRoundtrips=cnv->sharedData->mbcs.asciiRoundtrips;
 
-    if(cnv->useFallback) {
+    якщо(cnv->useFallback) {
         /* use all roundtrip and fallback results */
         minValue=0x800;
-    } else {
+    } інакше {
         /* use only roundtrips and fallbacks from private-use characters */
         minValue=0xc00;
     }
@@ -3862,20 +3862,20 @@ ucnv_MBCSSingleFromBMPWithOffsets(UConverterFromUnicodeArgs *pArgs,
      * for the minimum of the sourceLength and targetCapacity
      */
     length = static_cast<int32_t>(sourceLimit - source);
-    if(length<targetCapacity) {
+    якщо(length<targetCapacity) {
         targetCapacity=length;
     }
 
     /* conversion loop */
-    if(c!=0 && targetCapacity>0) {
+    якщо(c!=0 && targetCapacity>0) {
         goto getTrail;
     }
 
-#if MBCS_UNROLL_SINGLE_FROM_BMP
+#якщо MBCS_UNROLL_SINGLE_FROM_BMP
     /* unrolling makes it slower on Pentium III/Windows 2000?! */
     /* unroll the loop with the most common case */
 unrolled:
-    if(targetCapacity>=4) {
+    якщо(targetCapacity>=4) {
         int32_t count, loops;
         uint16_t andedValues;
 
@@ -3895,19 +3895,19 @@ unrolled:
             *target++=(uint8_t)value;
 
             /* were all 4 entries really valid? */
-            if(andedValues<minValue) {
+            якщо(andedValues<minValue) {
                 /* no, return to the first of these 4 */
                 source-=4;
                 target-=4;
                 break;
             }
-        } while(--count>0);
+        } поки(--count>0);
         count=loops-count;
         targetCapacity-=4*count;
 
-        if(offsets!=nullptr) {
+        якщо(offsets!=nullptr) {
             lastSource+=4*count;
-            while(count>0) {
+            поки(count>0) {
                 *offsets++=sourceIndex++;
                 *offsets++=sourceIndex++;
                 *offsets++=sourceIndex++;
@@ -3920,7 +3920,7 @@ unrolled:
     }
 #endif
 
-    while(targetCapacity>0) {
+    поки(targetCapacity>0) {
         /*
          * Get a correct Unicode code point:
          * a single char16_t for a BMP code point or
@@ -3933,7 +3933,7 @@ unrolled:
          * This speeds up the conversion of assigned characters.
          */
         /* convert the Unicode code point in c into codepage bytes */
-        if(c<=0x7f && IS_ASCII_ROUNDTRIP(c, asciiRoundtrips)) {
+        якщо(c<=0x7f && IS_ASCII_ROUNDTRIP(c, asciiRoundtrips)) {
             *target++ = static_cast<uint8_t>(c);
             --targetCapacity;
             c=0;
@@ -3941,7 +3941,7 @@ unrolled:
         }
         value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
         /* is this code point assigned, or do we use fallbacks? */
-        if(value>=minValue) {
+        якщо(value>=minValue) {
             /* assigned, write the output character bytes from value and length */
             /* length==1 */
             /* this is easy because we know that there is enough space */
@@ -3951,32 +3951,32 @@ unrolled:
             /* normal end of conversion: prepare for a new character */
             c=0;
             continue;
-        } else if(!U16_IS_SURROGATE(c)) {
+        } інакше якщо(!U16_IS_SURROGATE(c)) {
             /* normal, unassigned BMP character */
-        } else if(U16_IS_SURROGATE_LEAD(c)) {
+        } інакше якщо(U16_IS_SURROGATE_LEAD(c)) {
 getTrail:
-            if(source<sourceLimit) {
+            якщо(source<sourceLimit) {
                 /* test the following code unit */
                 char16_t trail=*source;
-                if(U16_IS_TRAIL(trail)) {
+                якщо(U16_IS_TRAIL(trail)) {
                     ++source;
                     c=U16_GET_SUPPLEMENTARY(c, trail);
                     /* this codepage does not map supplementary code points */
                     /* callback(unassigned) */
-                } else {
+                } інакше {
                     /* this is an unmatched lead code unit (1st surrogate) */
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                     break;
                 }
-            } else {
+            } інакше {
                 /* no more input */
-                if (pArgs->flush) {
+                якщо (pArgs->flush) {
                     *pErrorCode=U_TRUNCATED_CHAR_FOUND;
                 }
                 break;
             }
-        } else {
+        } інакше {
             /* this is an unmatched trail code unit (2nd surrogate) */
             /* callback(illegal) */
             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
@@ -3989,13 +3989,13 @@ getTrail:
         length=U16_LENGTH(c);
 
         /* set offsets since the start or the last extension */
-        if(offsets!=nullptr) {
+        якщо(offsets!=nullptr) {
             int32_t count = static_cast<int32_t>(source - lastSource);
 
             /* do not set the offset for this character */
             count-=length;
 
-            while(count>0) {
+            поки(count>0) {
                 *offsets++=sourceIndex++;
                 --count;
             }
@@ -4013,35 +4013,35 @@ getTrail:
         sourceIndex += length + static_cast<int32_t>(source - lastSource);
         lastSource=source;
 
-        if(U_FAILURE(*pErrorCode)) {
+        якщо(U_FAILURE(*pErrorCode)) {
             /* not mappable or buffer overflow */
             break;
-        } else {
+        } інакше {
             /* a mapping was written to the target, continue */
 
             /* recalculate the targetCapacity after an extension mapping */
             targetCapacity = static_cast<int32_t>(pArgs->targetLimit - reinterpret_cast<char*>(target));
             length = static_cast<int32_t>(sourceLimit - source);
-            if(length<targetCapacity) {
+            якщо(length<targetCapacity) {
                 targetCapacity=length;
             }
         }
 
-#if MBCS_UNROLL_SINGLE_FROM_BMP
+#якщо MBCS_UNROLL_SINGLE_FROM_BMP
         /* unrolling makes it slower on Pentium III/Windows 2000?! */
         goto unrolled;
 #endif
     }
 
-    if(U_SUCCESS(*pErrorCode) && source<sourceLimit && target>=(uint8_t *)pArgs->targetLimit) {
+    якщо(U_SUCCESS(*pErrorCode) && source<sourceLimit && target>=(uint8_t *)pArgs->targetLimit) {
         /* target is full */
         *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
     }
 
     /* set offsets since the start or the last callback */
-    if(offsets!=nullptr) {
+    якщо(offsets!=nullptr) {
         size_t count=source-lastSource;
-        if (count > 0 && *pErrorCode == U_TRUNCATED_CHAR_FOUND) {
+        якщо (count > 0 && *pErrorCode == U_TRUNCATED_CHAR_FOUND) {
             /*
             Caller gave us a partial supplementary character,
             which this function couldn't convert in any case.
@@ -4049,7 +4049,7 @@ getTrail:
             */
             count--;
         }
-        while(count>0) {
+        поки(count>0) {
             *offsets++=sourceIndex++;
             --count;
         }
@@ -4094,31 +4094,31 @@ ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
 
     cnv=pArgs->converter;
 
-    if(cnv->preFromUFirstCP>=0) {
+    якщо(cnv->preFromUFirstCP>=0) {
         /*
          * pass sourceIndex=-1 because we continue from an earlier buffer
          * in the future, this may change with continuous offsets
          */
         ucnv_extContinueMatchFromU(cnv, pArgs, -1, pErrorCode);
 
-        if(U_FAILURE(*pErrorCode) || cnv->preFromULength<0) {
-            return;
+        якщо(U_FAILURE(*pErrorCode) || cnv->preFromULength<0) {
+            повернути;
         }
     }
 
     /* use optimized function if possible */
     outputType=cnv->sharedData->mbcs.outputType;
     unicodeMask=cnv->sharedData->mbcs.unicodeMask;
-    if(outputType==MBCS_OUTPUT_1 && !(unicodeMask&UCNV_HAS_SURROGATES)) {
-        if(!(unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
+    якщо(outputType==MBCS_OUTPUT_1 && !(unicodeMask&UCNV_HAS_SURROGATES)) {
+        якщо(!(unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
             ucnv_MBCSSingleFromBMPWithOffsets(pArgs, pErrorCode);
-        } else {
+        } інакше {
             ucnv_MBCSSingleFromUnicodeWithOffsets(pArgs, pErrorCode);
         }
-        return;
-    } else if(outputType==MBCS_OUTPUT_2 && cnv->sharedData->mbcs.utf8Friendly) {
+        повернути;
+    } інакше якщо(outputType==MBCS_OUTPUT_2 && cnv->sharedData->mbcs.utf8Friendly) {
         ucnv_MBCSDoubleFromUnicodeWithOffsets(pArgs, pErrorCode);
-        return;
+        повернути;
     }
 
     /* set up the local pointers */
@@ -4129,14 +4129,14 @@ ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     offsets=pArgs->offsets;
 
     table=cnv->sharedData->mbcs.fromUnicodeTable;
-    if(cnv->sharedData->mbcs.utf8Friendly) {
+    якщо(cnv->sharedData->mbcs.utf8Friendly) {
         mbcsIndex=cnv->sharedData->mbcs.mbcsIndex;
-    } else {
+    } інакше {
         mbcsIndex=nullptr;
     }
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
+    якщо((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
         bytes=cnv->sharedData->mbcs.swapLFNLFromUnicodeBytes;
-    } else {
+    } інакше {
         bytes=cnv->sharedData->mbcs.fromUnicodeBytes;
     }
     asciiRoundtrips=cnv->sharedData->mbcs.asciiRoundtrips;
@@ -4144,13 +4144,13 @@ ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     /* get the converter state from UConverter */
     c=cnv->fromUChar32;
 
-    if(outputType==MBCS_OUTPUT_2_SISO) {
+    якщо(outputType==MBCS_OUTPUT_2_SISO) {
         prevLength=cnv->fromUnicodeStatus;
-        if(prevLength==0) {
+        якщо(prevLength==0) {
             /* set the real value */
             prevLength=1;
         }
-    } else {
+    } інакше {
         /* prevent fromUnicodeStatus from being set to something non-0 */
         prevLength=0;
     }
@@ -4178,11 +4178,11 @@ ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
      *
      * Markus Scherer 2000-jul-19
      */
-    if(c!=0 && targetCapacity>0) {
+    якщо(c!=0 && targetCapacity>0) {
         goto getTrail;
     }
 
-    while(source<sourceLimit) {
+    поки(source<sourceLimit) {
         /*
          * This following test is to see if available input would overflow the output.
          * It does not catch output of more than one byte that
@@ -4191,7 +4191,7 @@ ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
          * Therefore, those situations also test for overflows and will
          * then break the loop, too.
          */
-        if(targetCapacity>0) {
+        якщо(targetCapacity>0) {
             /*
              * Get a correct Unicode code point:
              * a single char16_t for a BMP code point or
@@ -4199,9 +4199,9 @@ ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
              */
             c=*source++;
             ++nextSourceIndex;
-            if(c<=0x7f && IS_ASCII_ROUNDTRIP(c, asciiRoundtrips)) {
+            якщо(c<=0x7f && IS_ASCII_ROUNDTRIP(c, asciiRoundtrips)) {
                 *target++=(uint8_t)c;
-                if(offsets!=nullptr) {
+                якщо(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                     prevSourceIndex=sourceIndex;
                     sourceIndex=nextSourceIndex;
@@ -4215,7 +4215,7 @@ ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
              * to avoid dealing with surrogates.
              * MBCS_FAST_MAX must be >=0xd7ff.
              */
-            if(c<=0xd7ff && mbcsIndex!=nullptr) {
+            якщо(c<=0xd7ff && mbcsIndex!=nullptr) {
                 value=mbcsIndex[c>>6];
 
                 /* get the bytes and the length for the output (copied from below and adapted for utf8Friendly data) */
@@ -4223,13 +4223,13 @@ ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
                 switch(outputType) {
                 case MBCS_OUTPUT_2:
                     value=((const uint16_t *)bytes)[value +(c&0x3f)];
-                    if(value<=0xff) {
-                        if(value==0) {
+                    якщо(value<=0xff) {
+                        якщо(value==0) {
                             goto unassigned;
-                        } else {
+                        } інакше {
                             length=1;
                         }
-                    } else {
+                    } інакше {
                         length=2;
                     }
                     break;
@@ -4246,32 +4246,32 @@ ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
                      */
                     cnv->fromUnicodeStatus=prevLength; /* save the old state */
                     value=((const uint16_t *)bytes)[value +(c&0x3f)];
-                    if(value<=0xff) {
-                        if(value==0) {
+                    якщо(value<=0xff) {
+                        якщо(value==0) {
                             goto unassigned;
-                        } else if(prevLength<=1) {
+                        } інакше якщо(prevLength<=1) {
                             length=1;
-                        } else {
+                        } інакше {
                             /* change from double-byte mode to single-byte */
-                            if (siLength == 1) {
+                            якщо (siLength == 1) {
                                 value|=(uint32_t)siBytes[0]<<8;
                                 length = 2;
-                            } else if (siLength == 2) {
+                            } інакше якщо (siLength == 2) {
                                 value|=(uint32_t)siBytes[1]<<8;
                                 value|=(uint32_t)siBytes[0]<<16;
                                 length = 3;
                             }
                             prevLength=1;
                         }
-                    } else {
-                        if(prevLength==2) {
+                    } інакше {
+                        якщо(prevLength==2) {
                             length=2;
-                        } else {
+                        } інакше {
                             /* change from single-byte mode to double-byte */
-                            if (soLength == 1) {
+                            якщо (soLength == 1) {
                                 value|=(uint32_t)soBytes[0]<<16;
                                 length = 3;
-                            } else if (soLength == 2) {
+                            } інакше якщо (soLength == 2) {
                                 value|=(uint32_t)soBytes[1]<<16;
                                 value|=(uint32_t)soBytes[0]<<24;
                                 length = 4;
@@ -4283,60 +4283,60 @@ ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
                 case MBCS_OUTPUT_DBCS_ONLY:
                     /* table with single-byte results, but only DBCS mappings used */
                     value=((const uint16_t *)bytes)[value +(c&0x3f)];
-                    if(value<=0xff) {
+                    якщо(value<=0xff) {
                         /* no mapping or SBCS result, not taken for DBCS-only */
                         goto unassigned;
-                    } else {
+                    } інакше {
                         length=2;
                     }
                     break;
                 case MBCS_OUTPUT_3:
                     p=bytes+(value+(c&0x3f))*3;
                     value=((uint32_t)*p<<16)|((uint32_t)p[1]<<8)|p[2];
-                    if(value<=0xff) {
-                        if(value==0) {
+                    якщо(value<=0xff) {
+                        якщо(value==0) {
                             goto unassigned;
-                        } else {
+                        } інакше {
                             length=1;
                         }
-                    } else if(value<=0xffff) {
+                    } інакше якщо(value<=0xffff) {
                         length=2;
-                    } else {
+                    } інакше {
                         length=3;
                     }
                     break;
                 case MBCS_OUTPUT_4:
                     value=((const uint32_t *)bytes)[value +(c&0x3f)];
-                    if(value<=0xff) {
-                        if(value==0) {
+                    якщо(value<=0xff) {
+                        якщо(value==0) {
                             goto unassigned;
-                        } else {
+                        } інакше {
                             length=1;
                         }
-                    } else if(value<=0xffff) {
+                    } інакше якщо(value<=0xffff) {
                         length=2;
-                    } else if(value<=0xffffff) {
+                    } інакше якщо(value<=0xffffff) {
                         length=3;
-                    } else {
+                    } інакше {
                         length=4;
                     }
                     break;
                 case MBCS_OUTPUT_3_EUC:
                     value=((const uint16_t *)bytes)[value +(c&0x3f)];
                     /* EUC 16-bit fixed-length representation */
-                    if(value<=0xff) {
-                        if(value==0) {
+                    якщо(value<=0xff) {
+                        якщо(value==0) {
                             goto unassigned;
-                        } else {
+                        } інакше {
                             length=1;
                         }
-                    } else if((value&0x8000)==0) {
+                    } інакше якщо((value&0x8000)==0) {
                         value|=0x8e8000;
                         length=3;
-                    } else if((value&0x80)==0) {
+                    } інакше якщо((value&0x80)==0) {
                         value|=0x8f0080;
                         length=3;
-                    } else {
+                    } інакше {
                         length=2;
                     }
                     break;
@@ -4344,21 +4344,21 @@ ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
                     p=bytes+(value+(c&0x3f))*3;
                     value=((uint32_t)*p<<16)|((uint32_t)p[1]<<8)|p[2];
                     /* EUC 16-bit fixed-length representation applied to the first two bytes */
-                    if(value<=0xff) {
-                        if(value==0) {
+                    якщо(value<=0xff) {
+                        якщо(value==0) {
                             goto unassigned;
-                        } else {
+                        } інакше {
                             length=1;
                         }
-                    } else if(value<=0xffff) {
+                    } інакше якщо(value<=0xffff) {
                         length=2;
-                    } else if((value&0x800000)==0) {
+                    } інакше якщо((value&0x800000)==0) {
                         value|=0x8e800000;
                         length=4;
-                    } else if((value&0x8000)==0) {
+                    } інакше якщо((value&0x8000)==0) {
                         value|=0x8f008000;
                         length=4;
-                    } else {
+                    } інакше {
                         length=3;
                     }
                     break;
@@ -4376,23 +4376,23 @@ ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
                     break;
                 }
                 /* output the value */
-            } else {
+            } інакше {
                 /*
                  * This also tests if the codepage maps single surrogates.
                  * If it does, then surrogates are not paired but mapped separately.
                  * Note that in this case unmatched surrogates are not detected.
                  */
-                if(U16_IS_SURROGATE(c) && !(unicodeMask&UCNV_HAS_SURROGATES)) {
-                    if(U16_IS_SURROGATE_LEAD(c)) {
+                якщо(U16_IS_SURROGATE(c) && !(unicodeMask&UCNV_HAS_SURROGATES)) {
+                    якщо(U16_IS_SURROGATE_LEAD(c)) {
 getTrail:
-                        if(source<sourceLimit) {
+                        якщо(source<sourceLimit) {
                             /* test the following code unit */
                             char16_t trail=*source;
-                            if(U16_IS_TRAIL(trail)) {
+                            якщо(U16_IS_TRAIL(trail)) {
                                 ++source;
                                 ++nextSourceIndex;
                                 c=U16_GET_SUPPLEMENTARY(c, trail);
-                                if(!(unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
+                                якщо(!(unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
                                     /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
                                     cnv->fromUnicodeStatus=prevLength; /* save the old state */
                                     /* callback(unassigned) */
@@ -4400,17 +4400,17 @@ getTrail:
                                 }
                                 /* convert this supplementary code point */
                                 /* exit this condition tree */
-                            } else {
+                            } інакше {
                                 /* this is an unmatched lead code unit (1st surrogate) */
                                 /* callback(illegal) */
                                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                                 break;
                             }
-                        } else {
+                        } інакше {
                             /* no more input */
                             break;
                         }
-                    } else {
+                    } інакше {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
                         *pErrorCode=U_ILLEGAL_CHAR_FOUND;
@@ -4458,9 +4458,9 @@ getTrail:
                 switch(outputType) {
                 case MBCS_OUTPUT_2:
                     value=MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, c);
-                    if(value<=0xff) {
+                    якщо(value<=0xff) {
                         length=1;
-                    } else {
+                    } інакше {
                         length=2;
                     }
                     break;
@@ -4477,33 +4477,33 @@ getTrail:
                      */
                     cnv->fromUnicodeStatus=prevLength; /* save the old state */
                     value=MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, c);
-                    if(value<=0xff) {
-                        if(value==0 && MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c)==0) {
+                    якщо(value<=0xff) {
+                        якщо(value==0 && MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c)==0) {
                             /* no mapping, leave value==0 */
                             length=0;
-                        } else if(prevLength<=1) {
+                        } інакше якщо(prevLength<=1) {
                             length=1;
-                        } else {
+                        } інакше {
                             /* change from double-byte mode to single-byte */
-                            if (siLength == 1) {
+                            якщо (siLength == 1) {
                                 value|=(uint32_t)siBytes[0]<<8;
                                 length = 2;
-                            } else if (siLength == 2) {
+                            } інакше якщо (siLength == 2) {
                                 value|=(uint32_t)siBytes[1]<<8;
                                 value|=(uint32_t)siBytes[0]<<16;
                                 length = 3;
                             }
                             prevLength=1;
                         }
-                    } else {
-                        if(prevLength==2) {
+                    } інакше {
+                        якщо(prevLength==2) {
                             length=2;
-                        } else {
+                        } інакше {
                             /* change from single-byte mode to double-byte */
-                            if (soLength == 1) {
+                            якщо (soLength == 1) {
                                 value|=(uint32_t)soBytes[0]<<16;
                                 length = 3;
-                            } else if (soLength == 2) {
+                            } інакше якщо (soLength == 2) {
                                 value|=(uint32_t)soBytes[1]<<16;
                                 value|=(uint32_t)soBytes[0]<<24;
                                 length = 4;
@@ -4515,49 +4515,49 @@ getTrail:
                 case MBCS_OUTPUT_DBCS_ONLY:
                     /* table with single-byte results, but only DBCS mappings used */
                     value=MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, c);
-                    if(value<=0xff) {
+                    якщо(value<=0xff) {
                         /* no mapping or SBCS result, not taken for DBCS-only */
                         value=stage2Entry=0; /* stage2Entry=0 to reset roundtrip flags */
                         length=0;
-                    } else {
+                    } інакше {
                         length=2;
                     }
                     break;
                 case MBCS_OUTPUT_3:
                     p=MBCS_POINTER_3_FROM_STAGE_2(bytes, stage2Entry, c);
                     value=((uint32_t)*p<<16)|((uint32_t)p[1]<<8)|p[2];
-                    if(value<=0xff) {
+                    якщо(value<=0xff) {
                         length=1;
-                    } else if(value<=0xffff) {
+                    } інакше якщо(value<=0xffff) {
                         length=2;
-                    } else {
+                    } інакше {
                         length=3;
                     }
                     break;
                 case MBCS_OUTPUT_4:
                     value=MBCS_VALUE_4_FROM_STAGE_2(bytes, stage2Entry, c);
-                    if(value<=0xff) {
+                    якщо(value<=0xff) {
                         length=1;
-                    } else if(value<=0xffff) {
+                    } інакше якщо(value<=0xffff) {
                         length=2;
-                    } else if(value<=0xffffff) {
+                    } інакше якщо(value<=0xffffff) {
                         length=3;
-                    } else {
+                    } інакше {
                         length=4;
                     }
                     break;
                 case MBCS_OUTPUT_3_EUC:
                     value=MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, c);
                     /* EUC 16-bit fixed-length representation */
-                    if(value<=0xff) {
+                    якщо(value<=0xff) {
                         length=1;
-                    } else if((value&0x8000)==0) {
+                    } інакше якщо((value&0x8000)==0) {
                         value|=0x8e8000;
                         length=3;
-                    } else if((value&0x80)==0) {
+                    } інакше якщо((value&0x80)==0) {
                         value|=0x8f0080;
                         length=3;
-                    } else {
+                    } інакше {
                         length=2;
                     }
                     break;
@@ -4565,17 +4565,17 @@ getTrail:
                     p=MBCS_POINTER_3_FROM_STAGE_2(bytes, stage2Entry, c);
                     value=((uint32_t)*p<<16)|((uint32_t)p[1]<<8)|p[2];
                     /* EUC 16-bit fixed-length representation applied to the first two bytes */
-                    if(value<=0xff) {
+                    якщо(value<=0xff) {
                         length=1;
-                    } else if(value<=0xffff) {
+                    } інакше якщо(value<=0xffff) {
                         length=2;
-                    } else if((value&0x800000)==0) {
+                    } інакше якщо((value&0x800000)==0) {
                         value|=0x8e800000;
                         length=4;
-                    } else if((value&0x8000)==0) {
+                    } інакше якщо((value&0x8000)==0) {
                         value|=0x8f008000;
                         length=4;
-                    } else {
+                    } інакше {
                         length=3;
                     }
                     break;
@@ -4594,7 +4594,7 @@ getTrail:
                 }
 
                 /* is this code point assigned, or do we use fallbacks? */
-                if(!(MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c)!=0 ||
+                якщо(!(MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c)!=0 ||
                      (UCNV_FROM_U_USE_FALLBACK(cnv, c) && value!=0))
                 ) {
                     /*
@@ -4615,17 +4615,17 @@ unassigned:
                     nextSourceIndex+=(int32_t)(source-pArgs->source);
                     prevLength=cnv->fromUnicodeStatus; /* restore SISO state */
 
-                    if(U_FAILURE(*pErrorCode)) {
+                    якщо(U_FAILURE(*pErrorCode)) {
                         /* not mappable or buffer overflow */
                         break;
-                    } else {
+                    } інакше {
                         /* a mapping was written to the target, continue */
 
                         /* recalculate the targetCapacity after an extension mapping */
                         targetCapacity=(int32_t)(pArgs->targetLimit-(char *)target);
 
                         /* normal end of conversion: prepare for a new character */
-                        if(offsets!=nullptr) {
+                        якщо(offsets!=nullptr) {
                             prevSourceIndex=sourceIndex;
                             sourceIndex=nextSourceIndex;
                         }
@@ -4636,8 +4636,8 @@ unassigned:
 
             /* write the output character bytes from value and length */
             /* from the first if in the loop we know that targetCapacity>0 */
-            if(length<=targetCapacity) {
-                if(offsets==nullptr) {
+            якщо(length<=targetCapacity) {
+                якщо(offsets==nullptr) {
                     switch(length) {
                         /* each branch falls through to the next one */
                     case 4:
@@ -4656,7 +4656,7 @@ unassigned:
                         /* will never occur */
                         break;
                     }
-                } else {
+                } інакше {
                     switch(length) {
                         /* each branch falls through to the next one */
                     case 4:
@@ -4681,7 +4681,7 @@ unassigned:
                     }
                 }
                 targetCapacity-=length;
-            } else {
+            } інакше {
                 uint8_t *charErrorBuffer;
 
                 /*
@@ -4716,19 +4716,19 @@ unassigned:
                     /* each branch falls through to the next one */
                 case 3:
                     *target++=(uint8_t)(value>>16);
-                    if(offsets!=nullptr) {
+                    якщо(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
                     U_FALLTHROUGH;
                 case 2:
                     *target++=(uint8_t)(value>>8);
-                    if(offsets!=nullptr) {
+                    якщо(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
                     U_FALLTHROUGH;
                 case 1:
                     *target++=(uint8_t)value;
-                    if(offsets!=nullptr) {
+                    якщо(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
                     U_FALLTHROUGH;
@@ -4746,12 +4746,12 @@ unassigned:
 
             /* normal end of conversion: prepare for a new character */
             c=0;
-            if(offsets!=nullptr) {
+            якщо(offsets!=nullptr) {
                 prevSourceIndex=sourceIndex;
                 sourceIndex=nextSourceIndex;
             }
             continue;
-        } else {
+        } інакше {
             /* target is full */
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
             break;
@@ -4768,30 +4768,30 @@ unassigned:
      *   EBCDIC_STATEFUL in DBCS mode
      *   end of input and no truncated input
      */
-    if( U_SUCCESS(*pErrorCode) &&
+    якщо( U_SUCCESS(*pErrorCode) &&
         outputType==MBCS_OUTPUT_2_SISO && prevLength==2 &&
         pArgs->flush && source>=sourceLimit && c==0
     ) {
         /* EBCDIC_STATEFUL ending with DBCS: emit an SI to return the output stream to SBCS */
-        if(targetCapacity>0) {
+        якщо(targetCapacity>0) {
             *target++ = siBytes[0];
-            if (siLength == 2) {
-                if (targetCapacity<2) {
+            якщо (siLength == 2) {
+                якщо (targetCapacity<2) {
                     cnv->charErrorBuffer[0] = siBytes[1];
                     cnv->charErrorBufferLength=1;
                     *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                } else {
+                } інакше {
                     *target++ = siBytes[1];
                 }
             }
-            if(offsets!=nullptr) {
+            якщо(offsets!=nullptr) {
                 /* set the last source character's index (sourceIndex points at sourceLimit now) */
                 *offsets++=prevSourceIndex;
             }
-        } else {
+        } інакше {
             /* target is full */
             cnv->charErrorBuffer[0] = siBytes[0];
-            if (siLength == 2) {
+            якщо (siLength == 2) {
                 cnv->charErrorBuffer[1] = siBytes[1];
             }
             cnv->charErrorBufferLength=siLength;
@@ -4833,7 +4833,7 @@ ucnv_MBCSFromUChar32(UConverterSharedData *sharedData,
                  UBool useFallback) {
     const int32_t *cx;
     const uint16_t *table;
-#if 0
+#якщо 0
 /* #if 0 because this is not currently used in ICU - reduce code, increase code coverage */
     const uint8_t *p;
 #endif
@@ -4842,78 +4842,78 @@ ucnv_MBCSFromUChar32(UConverterSharedData *sharedData,
     int32_t length;
 
     /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
-    if(c<=0xffff || (sharedData->mbcs.unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
+    якщо(c<=0xffff || (sharedData->mbcs.unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
         table=sharedData->mbcs.fromUnicodeTable;
 
         /* convert the Unicode code point in c into codepage bytes (same as in _MBCSFromUnicodeWithOffsets) */
-        if(sharedData->mbcs.outputType==MBCS_OUTPUT_1) {
+        якщо(sharedData->mbcs.outputType==MBCS_OUTPUT_1) {
             value=MBCS_SINGLE_RESULT_FROM_U(table, (uint16_t *)sharedData->mbcs.fromUnicodeBytes, c);
             /* is this code point assigned, or do we use fallbacks? */
-            if(useFallback ? value>=0x800 : value>=0xc00) {
+            якщо(useFallback ? value>=0x800 : value>=0xc00) {
                 *pValue=value&0xff;
-                return 1;
+                повернути 1;
             }
-        } else /* outputType!=MBCS_OUTPUT_1 */ {
+        } інакше /* outputType!=MBCS_OUTPUT_1 */ {
             stage2Entry=MBCS_STAGE_2_FROM_U(table, c);
 
             /* get the bytes and the length for the output */
             switch(sharedData->mbcs.outputType) {
             case MBCS_OUTPUT_2:
                 value=MBCS_VALUE_2_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
-                if(value<=0xff) {
+                якщо(value<=0xff) {
                     length=1;
-                } else {
+                } інакше {
                     length=2;
                 }
                 break;
-#if 0
+#якщо 0
 /* #if 0 because this is not currently used in ICU - reduce code, increase code coverage */
             case MBCS_OUTPUT_DBCS_ONLY:
                 /* table with single-byte results, but only DBCS mappings used */
                 value=MBCS_VALUE_2_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
-                if(value<=0xff) {
+                якщо(value<=0xff) {
                     /* no mapping or SBCS result, not taken for DBCS-only */
                     value=stage2Entry=0; /* stage2Entry=0 to reset roundtrip flags */
                     length=0;
-                } else {
+                } інакше {
                     length=2;
                 }
                 break;
             case MBCS_OUTPUT_3:
                 p=MBCS_POINTER_3_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
                 value=((uint32_t)*p<<16)|((uint32_t)p[1]<<8)|p[2];
-                if(value<=0xff) {
+                якщо(value<=0xff) {
                     length=1;
-                } else if(value<=0xffff) {
+                } інакше якщо(value<=0xffff) {
                     length=2;
-                } else {
+                } інакше {
                     length=3;
                 }
                 break;
             case MBCS_OUTPUT_4:
                 value=MBCS_VALUE_4_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
-                if(value<=0xff) {
+                якщо(value<=0xff) {
                     length=1;
-                } else if(value<=0xffff) {
+                } інакше якщо(value<=0xffff) {
                     length=2;
-                } else if(value<=0xffffff) {
+                } інакше якщо(value<=0xffffff) {
                     length=3;
-                } else {
+                } інакше {
                     length=4;
                 }
                 break;
             case MBCS_OUTPUT_3_EUC:
                 value=MBCS_VALUE_2_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
                 /* EUC 16-bit fixed-length representation */
-                if(value<=0xff) {
+                якщо(value<=0xff) {
                     length=1;
-                } else if((value&0x8000)==0) {
+                } інакше якщо((value&0x8000)==0) {
                     value|=0x8e8000;
                     length=3;
-                } else if((value&0x80)==0) {
+                } інакше якщо((value&0x80)==0) {
                     value|=0x8f0080;
                     length=3;
-                } else {
+                } інакше {
                     length=2;
                 }
                 break;
@@ -4921,28 +4921,28 @@ ucnv_MBCSFromUChar32(UConverterSharedData *sharedData,
                 p=MBCS_POINTER_3_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
                 value=((uint32_t)*p<<16)|((uint32_t)p[1]<<8)|p[2];
                 /* EUC 16-bit fixed-length representation applied to the first two bytes */
-                if(value<=0xff) {
+                якщо(value<=0xff) {
                     length=1;
-                } else if(value<=0xffff) {
+                } інакше якщо(value<=0xffff) {
                     length=2;
-                } else if((value&0x800000)==0) {
+                } інакше якщо((value&0x800000)==0) {
                     value|=0x8e800000;
                     length=4;
-                } else if((value&0x8000)==0) {
+                } інакше якщо((value&0x8000)==0) {
                     value|=0x8f008000;
                     length=4;
-                } else {
+                } інакше {
                     length=3;
                 }
                 break;
 #endif
             default:
                 /* must not occur */
-                return -1;
+                повернути -1;
             }
 
             /* is this code point assigned, or do we use fallbacks? */
-            if( MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c) ||
+            якщо( MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c) ||
                 (FROM_U_USE_FALLBACK(useFallback, c) && value!=0)
             ) {
                 /*
@@ -4952,23 +4952,23 @@ ucnv_MBCSFromUChar32(UConverterSharedData *sharedData,
                  */
                 /* assigned */
                 *pValue=value;
-                return length;
+                повернути length;
             }
         }
     }
 
     cx=sharedData->mbcs.extIndexes;
-    if(cx!=nullptr) {
+    якщо(cx!=nullptr) {
         length=ucnv_extSimpleMatchFromU(cx, c, pValue, useFallback);
-        return length>=0 ? length : -length;  /* return abs(length); */
+        повернути length>=0 ? length : -length;  /* return abs(length); */
     }
 
     /* unassigned */
-    return 0;
+    повернути 0;
 }
 
 
-#if 0
+#якщо 0
 /*
  * This function has been moved to ucnv2022.c for inlining.
  * This implementation is here only for documentation purposes
@@ -4989,8 +4989,8 @@ ucnv_MBCSSingleFromUChar32(UConverterSharedData *sharedData,
     int32_t value;
 
     /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
-    if(c>=0x10000 && !(sharedData->mbcs.unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
-        return -1;
+    якщо(c>=0x10000 && !(sharedData->mbcs.unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
+        повернути -1;
     }
 
     /* convert the Unicode code point in c into codepage bytes (same as in _MBCSFromUnicodeWithOffsets) */
@@ -4999,10 +4999,10 @@ ucnv_MBCSSingleFromUChar32(UConverterSharedData *sharedData,
     /* get the byte for the output */
     value=MBCS_SINGLE_RESULT_FROM_U(table, (uint16_t *)sharedData->mbcs.fromUnicodeBytes, c);
     /* is this code point assigned, or do we use fallbacks? */
-    if(useFallback ? value>=0x800 : value>=0xc00) {
-        return value&0xff;
-    } else {
-        return -1;
+    якщо(useFallback ? value>=0x800 : value>=0xc00) {
+        повернути value&0xff;
+    } інакше {
+        повернути -1;
     }
 }
 #endif
@@ -5044,28 +5044,28 @@ ucnv_SBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
 
     table=cnv->sharedData->mbcs.fromUnicodeTable;
     sbcsIndex=cnv->sharedData->mbcs.sbcsIndex;
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
+    якщо((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
         results = reinterpret_cast<uint16_t*>(cnv->sharedData->mbcs.swapLFNLFromUnicodeBytes);
-    } else {
+    } інакше {
         results=(uint16_t *)cnv->sharedData->mbcs.fromUnicodeBytes;
     }
     asciiRoundtrips=cnv->sharedData->mbcs.asciiRoundtrips;
 
-    if(cnv->useFallback) {
+    якщо(cnv->useFallback) {
         /* use all roundtrip and fallback results */
         minValue=0x800;
-    } else {
+    } інакше {
         /* use only roundtrips and fallbacks from private-use characters */
         minValue=0xc00;
     }
     hasSupplementary = static_cast<UBool>(cnv->sharedData->mbcs.unicodeMask & UCNV_HAS_SUPPLEMENTARY);
 
     /* get the converter state from the UTF-8 UConverter */
-    if(utf8->toULength > 0) {
+    якщо(utf8->toULength > 0) {
         toULength=oldToULength=utf8->toULength;
         toULimit = static_cast<int8_t>(utf8->mode);
         c = static_cast<UChar32>(utf8->toUnicodeStatus);
-    } else {
+    } інакше {
         toULength=oldToULength=toULimit=0;
         c = 0;
     }
@@ -5078,24 +5078,24 @@ ucnv_SBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
         // Do not go back into the bytes that will be read for finishing a partial
         // sequence from the previous buffer.
         int32_t length = static_cast<int32_t>(sourceLimit - source) - (toULimit - oldToULength);
-        if(length>0) {
+        якщо(length>0) {
             uint8_t b1=*(sourceLimit-1);
-            if(U8_IS_SINGLE(b1)) {
+            якщо(U8_IS_SINGLE(b1)) {
                 // common ASCII character
-            } else if(U8_IS_TRAIL(b1) && length>=2) {
+            } інакше якщо(U8_IS_TRAIL(b1) && length>=2) {
                 uint8_t b2=*(sourceLimit-2);
-                if(0xe0<=b2 && b2<0xf0 && U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
+                якщо(0xe0<=b2 && b2<0xf0 && U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
                     // truncated 3-byte sequence
                     sourceLimit-=2;
                 }
-            } else if(0xc2<=b1 && b1<0xf0) {
+            } інакше якщо(0xc2<=b1 && b1<0xf0) {
                 // truncated 2- or 3-byte sequence
                 --sourceLimit;
             }
         }
     }
 
-    if(c!=0 && targetCapacity>0) {
+    якщо(c!=0 && targetCapacity>0) {
         utf8->toUnicodeStatus=0;
         utf8->toULength=0;
         goto moreBytes;
@@ -5121,68 +5121,68 @@ ucnv_SBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
     }
 
     /* conversion loop */
-    while(source<sourceLimit) {
-        if(targetCapacity>0) {
+    поки(source<sourceLimit) {
+        якщо(targetCapacity>0) {
             b=*source++;
-            if(U8_IS_SINGLE(b)) {
+            якщо(U8_IS_SINGLE(b)) {
                 /* convert ASCII */
-                if(IS_ASCII_ROUNDTRIP(b, asciiRoundtrips)) {
+                якщо(IS_ASCII_ROUNDTRIP(b, asciiRoundtrips)) {
                     *target++ = b;
                     --targetCapacity;
                     continue;
-                } else {
+                } інакше {
                     c=b;
                     value=SBCS_RESULT_FROM_UTF8(sbcsIndex, results, 0, c);
                 }
-            } else {
-                if(b<0xe0) {
-                    if( /* handle U+0080..U+07FF inline */
+            } інакше {
+                якщо(b<0xe0) {
+                    якщо( /* handle U+0080..U+07FF inline */
                         b>=0xc2 &&
                         (t1 = static_cast<uint8_t>(*source - 0x80)) <= 0x3f
                     ) {
                         c=b&0x1f;
                         ++source;
                         value=SBCS_RESULT_FROM_UTF8(sbcsIndex, results, c, t1);
-                        if(value>=minValue) {
+                        якщо(value>=minValue) {
                             *target++ = static_cast<uint8_t>(value);
                             --targetCapacity;
                             continue;
-                        } else {
+                        } інакше {
                             c=(c<<6)|t1;
                         }
-                    } else {
+                    } інакше {
                         c=-1;
                     }
-                } else if(b==0xe0) {
-                    if( /* handle U+0800..U+0FFF inline */
+                } інакше якщо(b==0xe0) {
+                    якщо( /* handle U+0800..U+0FFF inline */
                         (t1 = static_cast<uint8_t>(source[0] - 0x80)) <= 0x3f && t1 >= 0x20 &&
                         (t2 = static_cast<uint8_t>(source[1] - 0x80)) <= 0x3f
                     ) {
                         c=t1;
                         source+=2;
                         value=SBCS_RESULT_FROM_UTF8(sbcsIndex, results, c, t2);
-                        if(value>=minValue) {
+                        якщо(value>=minValue) {
                             *target++ = static_cast<uint8_t>(value);
                             --targetCapacity;
                             continue;
-                        } else {
+                        } інакше {
                             c=(c<<6)|t2;
                         }
-                    } else {
+                    } інакше {
                         c=-1;
                     }
-                } else {
+                } інакше {
                     c=-1;
                 }
 
-                if(c<0) {
+                якщо(c<0) {
                     /* handle "complicated" and error cases, and continuing partial characters */
                     oldToULength=0;
                     toULength=1;
                     toULimit=U8_COUNT_BYTES_NON_ASCII(b);
                     c=b;
 moreBytes:
-                    while(toULength<toULimit) {
+                    поки(toULength<toULimit) {
                         /*
                          * The sourceLimit may have been adjusted before the conversion loop
                          * to stop before a truncated sequence.
@@ -5190,19 +5190,19 @@ moreBytes:
                          * sequences at the end.
                          * See ticket #7492.
                          */
-                        if(source<(uint8_t *)pToUArgs->sourceLimit) {
+                        якщо(source<(uint8_t *)pToUArgs->sourceLimit) {
                             b=*source;
-                            if(icu::UTF8::isValidTrail(c, b, toULength, toULimit)) {
+                            якщо(icu::UTF8::isValidTrail(c, b, toULength, toULimit)) {
                                 ++source;
                                 ++toULength;
                                 c=(c<<6)+b;
-                            } else {
+                            } інакше {
                                 break; /* sequence too short, stop with toULength<toULimit */
                             }
-                        } else {
+                        } інакше {
                             /* store the partial UTF-8 character, compatible with the regular UTF-8 converter */
                             source-=(toULength-oldToULength);
-                            while(oldToULength<toULength) {
+                            поки(oldToULength<toULength) {
                                 utf8->toUBytes[oldToULength++]=*source++;
                             }
                             utf8->toUnicodeStatus=c;
@@ -5210,43 +5210,43 @@ moreBytes:
                             utf8->mode=toULimit;
                             pToUArgs->source=(char *)source;
                             pFromUArgs->target = reinterpret_cast<char*>(target);
-                            return;
+                            повернути;
                         }
                     }
 
-                    if(toULength==toULimit) {
+                    якщо(toULength==toULimit) {
                         c-=utf8_offsets[toULength];
-                        if(toULength<=3) {  /* BMP */
+                        якщо(toULength<=3) {  /* BMP */
                             value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
-                        } else {
+                        } інакше {
                             /* supplementary code point */
-                            if(!hasSupplementary) {
+                            якщо(!hasSupplementary) {
                                 /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
                                 value=0;
-                            } else {
+                            } інакше {
                                 value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
                             }
                         }
-                    } else {
+                    } інакше {
                         /* error handling: illegal UTF-8 byte sequence */
                         source-=(toULength-oldToULength);
-                        while(oldToULength<toULength) {
+                        поки(oldToULength<toULength) {
                             utf8->toUBytes[oldToULength++]=*source++;
                         }
                         utf8->toULength=toULength;
                         pToUArgs->source=(char *)source;
                         pFromUArgs->target = reinterpret_cast<char*>(target);
                         *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        return;
+                        повернути;
                     }
                 }
             }
 
-            if(value>=minValue) {
+            якщо(value>=minValue) {
                 /* output the mapping for c */
                 *target++ = static_cast<uint8_t>(value);
                 --targetCapacity;
-            } else {
+            } інакше {
                 /* value<minValue means c is unassigned (unmappable) */
                 /*
                  * Try an extension mapping.
@@ -5263,11 +5263,11 @@ moreBytes:
                             pFromUArgs->flush,
                             pErrorCode);
 
-                if(U_FAILURE(*pErrorCode)) {
+                якщо(U_FAILURE(*pErrorCode)) {
                     /* not mappable or buffer overflow */
                     cnv->fromUChar32=c;
                     break;
-                } else if(cnv->preFromUFirstCP>=0) {
+                } інакше якщо(cnv->preFromUFirstCP>=0) {
                     /*
                      * Partial match, return and revert to pivoting.
                      * In normal from-UTF-16 conversion, we would just continue
@@ -5276,14 +5276,14 @@ moreBytes:
                      */
                     *pErrorCode=U_USING_DEFAULT_WARNING;
                     break;
-                } else {
+                } інакше {
                     /* a mapping was written to the target, continue */
 
                     /* recalculate the targetCapacity after an extension mapping */
                     targetCapacity = static_cast<int32_t>(pFromUArgs->targetLimit - reinterpret_cast<char*>(target));
                 }
             }
-        } else {
+        } інакше {
             /* target is full */
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
             break;
@@ -5295,13 +5295,13 @@ moreBytes:
      * to stop before a truncated sequence.
      * If so, then collect the truncated sequence now.
      */
-    if(U_SUCCESS(*pErrorCode) &&
+    якщо(U_SUCCESS(*pErrorCode) &&
             cnv->preFromUFirstCP<0 &&
             source<(sourceLimit=(uint8_t *)pToUArgs->sourceLimit)) {
         c=utf8->toUBytes[0]=b=*source++;
         toULength=1;
         toULimit=U8_COUNT_BYTES(b);
-        while(source<sourceLimit) {
+        поки(source<sourceLimit) {
             utf8->toUBytes[toULength++]=b=*source++;
             c=(c<<6)+b;
         }
@@ -5347,9 +5347,9 @@ ucnv_DBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
 
     table=cnv->sharedData->mbcs.fromUnicodeTable;
     mbcsIndex=cnv->sharedData->mbcs.mbcsIndex;
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
+    якщо((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
         results = reinterpret_cast<uint16_t*>(cnv->sharedData->mbcs.swapLFNLFromUnicodeBytes);
-    } else {
+    } інакше {
         results=(uint16_t *)cnv->sharedData->mbcs.fromUnicodeBytes;
     }
     asciiRoundtrips=cnv->sharedData->mbcs.asciiRoundtrips;
@@ -5357,11 +5357,11 @@ ucnv_DBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
     hasSupplementary = static_cast<UBool>(cnv->sharedData->mbcs.unicodeMask & UCNV_HAS_SUPPLEMENTARY);
 
     /* get the converter state from the UTF-8 UConverter */
-    if(utf8->toULength > 0) {
+    якщо(utf8->toULength > 0) {
         toULength=oldToULength=utf8->toULength;
         toULimit = static_cast<int8_t>(utf8->mode);
         c = static_cast<UChar32>(utf8->toUnicodeStatus);
-    } else {
+    } інакше {
         toULength=oldToULength=toULimit=0;
         c = 0;
     }
@@ -5374,24 +5374,24 @@ ucnv_DBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
         // Do not go back into the bytes that will be read for finishing a partial
         // sequence from the previous buffer.
         int32_t length = static_cast<int32_t>(sourceLimit - source) - (toULimit - oldToULength);
-        if(length>0) {
+        якщо(length>0) {
             uint8_t b1=*(sourceLimit-1);
-            if(U8_IS_SINGLE(b1)) {
+            якщо(U8_IS_SINGLE(b1)) {
                 // common ASCII character
-            } else if(U8_IS_TRAIL(b1) && length>=2) {
+            } інакше якщо(U8_IS_TRAIL(b1) && length>=2) {
                 uint8_t b2=*(sourceLimit-2);
-                if(0xe0<=b2 && b2<0xf0 && U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
+                якщо(0xe0<=b2 && b2<0xf0 && U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
                     // truncated 3-byte sequence
                     sourceLimit-=2;
                 }
-            } else if(0xc2<=b1 && b1<0xf0) {
+            } інакше якщо(0xc2<=b1 && b1<0xf0) {
                 // truncated 2- or 3-byte sequence
                 --sourceLimit;
             }
         }
     }
 
-    if(c!=0 && targetCapacity>0) {
+    якщо(c!=0 && targetCapacity>0) {
         utf8->toUnicodeStatus=0;
         utf8->toULength=0;
         goto moreBytes;
@@ -5399,25 +5399,25 @@ ucnv_DBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
     }
 
     /* conversion loop */
-    while(source<sourceLimit) {
-        if(targetCapacity>0) {
+    поки(source<sourceLimit) {
+        якщо(targetCapacity>0) {
             b=*source++;
-            if(U8_IS_SINGLE(b)) {
+            якщо(U8_IS_SINGLE(b)) {
                 /* convert ASCII */
-                if(IS_ASCII_ROUNDTRIP(b, asciiRoundtrips)) {
+                якщо(IS_ASCII_ROUNDTRIP(b, asciiRoundtrips)) {
                     *target++=b;
                     --targetCapacity;
                     continue;
-                } else {
+                } інакше {
                     value=DBCS_RESULT_FROM_UTF8(mbcsIndex, results, 0, b);
-                    if(value==0) {
+                    якщо(value==0) {
                         c=b;
                         goto unassigned;
                     }
                 }
-            } else {
-                if(b>=0xe0) {
-                    if( /* handle U+0800..U+D7FF inline */
+            } інакше {
+                якщо(b>=0xe0) {
+                    якщо( /* handle U+0800..U+D7FF inline */
                         b<=0xed &&  // do not assume maxFastUChar>0xd7ff
                         U8_IS_VALID_LEAD3_AND_T1(b, t1=source[0]) &&
                         (t2 = static_cast<uint8_t>(source[1] - 0x80)) <= 0x3f
@@ -5425,38 +5425,38 @@ ucnv_DBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
                         c=((b&0xf)<<6)|(t1&0x3f);
                         source+=2;
                         value=DBCS_RESULT_FROM_UTF8(mbcsIndex, results, c, t2);
-                        if(value==0) {
+                        якщо(value==0) {
                             c=(c<<6)|t2;
                             goto unassigned;
                         }
-                    } else {
+                    } інакше {
                         c=-1;
                     }
-                } else {
-                    if( /* handle U+0080..U+07FF inline */
+                } інакше {
+                    якщо( /* handle U+0080..U+07FF inline */
                         b>=0xc2 &&
                         (t1 = static_cast<uint8_t>(*source - 0x80)) <= 0x3f
                     ) {
                         c=b&0x1f;
                         ++source;
                         value=DBCS_RESULT_FROM_UTF8(mbcsIndex, results, c, t1);
-                        if(value==0) {
+                        якщо(value==0) {
                             c=(c<<6)|t1;
                             goto unassigned;
                         }
-                    } else {
+                    } інакше {
                         c=-1;
                     }
                 }
 
-                if(c<0) {
+                якщо(c<0) {
                     /* handle "complicated" and error cases, and continuing partial characters */
                     oldToULength=0;
                     toULength=1;
                     toULimit=U8_COUNT_BYTES_NON_ASCII(b);
                     c=b;
 moreBytes:
-                    while(toULength<toULimit) {
+                    поки(toULength<toULimit) {
                         /*
                          * The sourceLimit may have been adjusted before the conversion loop
                          * to stop before a truncated sequence.
@@ -5464,19 +5464,19 @@ moreBytes:
                          * sequences at the end.
                          * See ticket #7492.
                          */
-                        if(source<(uint8_t *)pToUArgs->sourceLimit) {
+                        якщо(source<(uint8_t *)pToUArgs->sourceLimit) {
                             b=*source;
-                            if(icu::UTF8::isValidTrail(c, b, toULength, toULimit)) {
+                            якщо(icu::UTF8::isValidTrail(c, b, toULength, toULimit)) {
                                 ++source;
                                 ++toULength;
                                 c=(c<<6)+b;
-                            } else {
+                            } інакше {
                                 break; /* sequence too short, stop with toULength<toULimit */
                             }
-                        } else {
+                        } інакше {
                             /* store the partial UTF-8 character, compatible with the regular UTF-8 converter */
                             source-=(toULength-oldToULength);
-                            while(oldToULength<toULength) {
+                            поки(oldToULength<toULength) {
                                 utf8->toUBytes[oldToULength++]=*source++;
                             }
                             utf8->toUnicodeStatus=c;
@@ -5484,34 +5484,34 @@ moreBytes:
                             utf8->mode=toULimit;
                             pToUArgs->source=(char *)source;
                             pFromUArgs->target = reinterpret_cast<char*>(target);
-                            return;
+                            повернути;
                         }
                     }
 
-                    if(toULength==toULimit) {
+                    якщо(toULength==toULimit) {
                         c-=utf8_offsets[toULength];
-                        if(toULength<=3) {  /* BMP */
+                        якщо(toULength<=3) {  /* BMP */
                             stage2Entry=MBCS_STAGE_2_FROM_U(table, c);
-                        } else {
+                        } інакше {
                             /* supplementary code point */
-                            if(!hasSupplementary) {
+                            якщо(!hasSupplementary) {
                                 /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
                                 stage2Entry=0;
-                            } else {
+                            } інакше {
                                 stage2Entry=MBCS_STAGE_2_FROM_U(table, c);
                             }
                         }
-                    } else {
+                    } інакше {
                         /* error handling: illegal UTF-8 byte sequence */
                         source-=(toULength-oldToULength);
-                        while(oldToULength<toULength) {
+                        поки(oldToULength<toULength) {
                             utf8->toUBytes[oldToULength++]=*source++;
                         }
                         utf8->toULength=toULength;
                         pToUArgs->source=(char *)source;
                         pFromUArgs->target = reinterpret_cast<char*>(target);
                         *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        return;
+                        повернути;
                     }
 
                     /* get the bytes and the length for the output */
@@ -5519,7 +5519,7 @@ moreBytes:
                     value=MBCS_VALUE_2_FROM_STAGE_2(results, stage2Entry, c);
 
                     /* is this code point assigned, or do we use fallbacks? */
-                    if(!(MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c) ||
+                    якщо(!(MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c) ||
                          (UCNV_FROM_U_USE_FALLBACK(cnv, c) && value!=0))
                     ) {
                         goto unassigned;
@@ -5529,16 +5529,16 @@ moreBytes:
 
             /* write the output character bytes from value and length */
             /* from the first if in the loop we know that targetCapacity>0 */
-            if(value<=0xff) {
+            якщо(value<=0xff) {
                 /* this is easy because we know that there is enough space */
                 *target++ = static_cast<uint8_t>(value);
                 --targetCapacity;
-            } else /* length==2 */ {
+            } інакше /* length==2 */ {
                 *target++ = static_cast<uint8_t>(value >> 8);
-                if(2<=targetCapacity) {
+                якщо(2<=targetCapacity) {
                     *target++ = static_cast<uint8_t>(value);
                     targetCapacity-=2;
-                } else {
+                } інакше {
                     cnv->charErrorBuffer[0] = static_cast<char>(value);
                     cnv->charErrorBufferLength=1;
 
@@ -5566,11 +5566,11 @@ unassigned:
                             pFromUArgs->flush,
                             pErrorCode);
 
-                if(U_FAILURE(*pErrorCode)) {
+                якщо(U_FAILURE(*pErrorCode)) {
                     /* not mappable or buffer overflow */
                     cnv->fromUChar32=c;
                     break;
-                } else if(cnv->preFromUFirstCP>=0) {
+                } інакше якщо(cnv->preFromUFirstCP>=0) {
                     /*
                      * Partial match, return and revert to pivoting.
                      * In normal from-UTF-16 conversion, we would just continue
@@ -5579,7 +5579,7 @@ unassigned:
                      */
                     *pErrorCode=U_USING_DEFAULT_WARNING;
                     break;
-                } else {
+                } інакше {
                     /* a mapping was written to the target, continue */
 
                     /* recalculate the targetCapacity after an extension mapping */
@@ -5587,7 +5587,7 @@ unassigned:
                     continue;
                 }
             }
-        } else {
+        } інакше {
             /* target is full */
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
             break;
@@ -5599,13 +5599,13 @@ unassigned:
      * to stop before a truncated sequence.
      * If so, then collect the truncated sequence now.
      */
-    if(U_SUCCESS(*pErrorCode) &&
+    якщо(U_SUCCESS(*pErrorCode) &&
             cnv->preFromUFirstCP<0 &&
             source<(sourceLimit=(uint8_t *)pToUArgs->sourceLimit)) {
         c=utf8->toUBytes[0]=b=*source++;
         toULength=1;
         toULimit=U8_COUNT_BYTES(b);
-        while(source<sourceLimit) {
+        поки(source<sourceLimit) {
             utf8->toUBytes[toULength++]=b=*source++;
             c=(c<<6)+b;
         }
@@ -5626,10 +5626,10 @@ ucnv_MBCSGetStarters(const UConverter* cnv,
                  UBool starters[256],
                  UErrorCode *) {
     const int32_t *state0;
-    int i;
+    ціле i;
 
     state0=cnv->sharedData->mbcs.stateTable[cnv->sharedData->mbcs.dbcsOnlyState];
-    for(i=0; i<256; ++i) {
+    для(i=0; i<256; ++i) {
         /* all bytes that cause a state transition from state 0 are lead bytes */
         starters[i] = static_cast<UBool>(MBCS_ENTRY_IS_TRANSITION(state0[i]));
     }
@@ -5641,7 +5641,7 @@ ucnv_MBCSGetStarters(const UConverter* cnv,
  */
 U_CFUNC UBool
 ucnv_MBCSIsLeadByte(UConverterSharedData *sharedData, char byte) {
-    return MBCS_ENTRY_IS_TRANSITION(sharedData->mbcs.stateTable[0][(uint8_t)byte]);
+    повернути MBCS_ENTRY_IS_TRANSITION(sharedData->mbcs.stateTable[0][(uint8_t)byte]);
 }
 
 static void U_CALLCONV
@@ -5654,7 +5654,7 @@ ucnv_MBCSWriteSub(UConverterFromUnicodeArgs *pArgs,
     int32_t length;
 
     /* first, select between subChar and subChar1 */
-    if( cnv->subChar1!=0 &&
+    якщо( cnv->subChar1!=0 &&
         (cnv->sharedData->mbcs.extIndexes!=nullptr ?
             cnv->useSubChar1 :
             (cnv->invalidUCharBuffer[0]<=0xff))
@@ -5662,7 +5662,7 @@ ucnv_MBCSWriteSub(UConverterFromUnicodeArgs *pArgs,
         /* select subChar1 if it is set (not 0) and the unmappable Unicode code point is up to U+00ff (IBM MBCS behavior) */
         subchar = reinterpret_cast<char*>(&cnv->subChar1);
         length=1;
-    } else {
+    } інакше {
         /* select subChar in all other cases */
         subchar = reinterpret_cast<char*>(cnv->subChars);
         length=cnv->subCharLen;
@@ -5671,13 +5671,13 @@ ucnv_MBCSWriteSub(UConverterFromUnicodeArgs *pArgs,
     /* reset the selector for the next code point */
     cnv->useSubChar1=false;
 
-    if (cnv->sharedData->mbcs.outputType == MBCS_OUTPUT_2_SISO) {
+    якщо (cnv->sharedData->mbcs.outputType == MBCS_OUTPUT_2_SISO) {
         p=buffer;
 
         /* fromUnicodeStatus contains prevLength */
         switch(length) {
         case 1:
-            if(cnv->fromUnicodeStatus==2) {
+            якщо(cnv->fromUnicodeStatus==2) {
                 /* DBCS mode and SBCS sub char: change to SBCS */
                 cnv->fromUnicodeStatus=1;
                 *p++=UCNV_SI;
@@ -5685,7 +5685,7 @@ ucnv_MBCSWriteSub(UConverterFromUnicodeArgs *pArgs,
             *p++=subchar[0];
             break;
         case 2:
-            if(cnv->fromUnicodeStatus<=1) {
+            якщо(cnv->fromUnicodeStatus<=1) {
                 /* SBCS mode and DBCS sub char: change to DBCS */
                 cnv->fromUnicodeStatus=2;
                 *p++=UCNV_SO;
@@ -5695,7 +5695,7 @@ ucnv_MBCSWriteSub(UConverterFromUnicodeArgs *pArgs,
             break;
         default:
             *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            повернути;
         }
         subchar=buffer;
         length = static_cast<int32_t>(p - buffer);
@@ -5707,14 +5707,14 @@ ucnv_MBCSWriteSub(UConverterFromUnicodeArgs *pArgs,
 U_CFUNC UConverterType
 ucnv_MBCSGetType(const UConverter* converter) {
     /* SBCS, DBCS, and EBCDIC_STATEFUL are replaced by MBCS, but here we cheat a little */
-    if(converter->sharedData->mbcs.countStates==1) {
-        return (UConverterType)UCNV_SBCS;
-    } else if((converter->sharedData->mbcs.outputType&0xff)==MBCS_OUTPUT_2_SISO) {
-        return (UConverterType)UCNV_EBCDIC_STATEFUL;
-    } else if(converter->sharedData->staticData->minBytesPerChar==2 && converter->sharedData->staticData->maxBytesPerChar==2) {
-        return (UConverterType)UCNV_DBCS;
+    якщо(converter->sharedData->mbcs.countStates==1) {
+        повернути (UConverterType)UCNV_SBCS;
+    } інакше якщо((converter->sharedData->mbcs.outputType&0xff)==MBCS_OUTPUT_2_SISO) {
+        повернути (UConverterType)UCNV_EBCDIC_STATEFUL;
+    } інакше якщо(converter->sharedData->staticData->minBytesPerChar==2 && converter->sharedData->staticData->maxBytesPerChar==2) {
+        повернути (UConverterType)UCNV_DBCS;
     }
-    return (UConverterType)UCNV_MBCS;
+    повернути (UConverterType)UCNV_MBCS;
 }
 
 #endif /* #if !UCONFIG_NO_LEGACY_CONVERSION */

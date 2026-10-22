@@ -35,67 +35,67 @@ static UMemAllocFn    *pAlloc;
 static UMemReallocFn  *pRealloc;
 static UMemFreeFn     *pFree;
 
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#якщо U_DEBUG && defined(UPRV_MALLOC_COUNT)
 #include <stdio.h>
-static int n=0;
+static ціле n=0;
 static long b=0; 
 #endif
 
 U_CAPI void * U_EXPORT2
 uprv_malloc(size_t s) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-#if 1
+#якщо U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#якщо 1
   putchar('>');
   fflush(stdout);
-#else
+#інакше
   fprintf(stderr,"MALLOC\t#%d\t%ul bytes\t%ul total\n", ++n,s,(b+=s)); fflush(stderr);
 #endif
 #endif
-    if (s > 0) {
-        if (pAlloc) {
-            return (*pAlloc)(pContext, s);
-        } else {
-            return uprv_default_malloc(s);
+    якщо (s > 0) {
+        якщо (pAlloc) {
+            повернути (*pAlloc)(pContext, s);
+        } інакше {
+            повернути uprv_default_malloc(s);
         }
-    } else {
-        return (void *)zeroMem;
+    } інакше {
+        повернути (void *)zeroMem;
     }
 }
 
 U_CAPI void * U_EXPORT2
 uprv_realloc(void * buffer, size_t size) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#якщо U_DEBUG && defined(UPRV_MALLOC_COUNT)
   putchar('~');
   fflush(stdout);
 #endif
-    if (buffer == zeroMem) {
-        return uprv_malloc(size);
-    } else if (size == 0) {
-        if (pFree) {
+    якщо (buffer == zeroMem) {
+        повернути uprv_malloc(size);
+    } інакше якщо (size == 0) {
+        якщо (pFree) {
             (*pFree)(pContext, buffer);
-        } else {
+        } інакше {
             uprv_default_free(buffer);
         }
-        return (void *)zeroMem;
-    } else {
-        if (pRealloc) {
-            return (*pRealloc)(pContext, buffer, size);
-        } else {
-            return uprv_default_realloc(buffer, size);
+        повернути (void *)zeroMem;
+    } інакше {
+        якщо (pRealloc) {
+            повернути (*pRealloc)(pContext, buffer, size);
+        } інакше {
+            повернути uprv_default_realloc(buffer, size);
         }
     }
 }
 
 U_CAPI void U_EXPORT2
 uprv_free(void *buffer) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#якщо U_DEBUG && defined(UPRV_MALLOC_COUNT)
   putchar('<');
   fflush(stdout);
 #endif
-    if (buffer != zeroMem) {
-        if (pFree) {
+    якщо (buffer != zeroMem) {
+        якщо (pFree) {
             (*pFree)(pContext, buffer);
-        } else {
+        } інакше {
             uprv_default_free(buffer);
         }
     }
@@ -106,21 +106,21 @@ uprv_calloc(size_t num, size_t size) {
     void *mem = nullptr;
     size *= num;
     mem = uprv_malloc(size);
-    if (mem) {
+    якщо (mem) {
         uprv_memset(mem, 0, size);
     }
-    return mem;
+    повернути mem;
 }
 
 U_CAPI void U_EXPORT2
 u_setMemoryFunctions(const void *context, UMemAllocFn *a, UMemReallocFn *r, UMemFreeFn *f,  UErrorCode *status)
 {
-    if (U_FAILURE(*status)) {
-        return;
+    якщо (U_FAILURE(*status)) {
+        повернути;
     }
-    if (a==nullptr || r==nullptr || f==nullptr) {
+    якщо (a==nullptr || r==nullptr || f==nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        повернути;
     }
     pContext  = context;
     pAlloc    = a;
@@ -134,5 +134,5 @@ U_CFUNC UBool cmemory_cleanup() {
     pAlloc     = nullptr;
     pRealloc   = nullptr;
     pFree      = nullptr;
-    return true;
+    повернути true;
 }

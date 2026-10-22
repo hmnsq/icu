@@ -49,7 +49,7 @@ uloc_getTableStringWithFallback(const char *path, const char *locale,
                               int32_t *pLength,
                               UErrorCode *pErrorCode)
 {
-    if (U_FAILURE(*pErrorCode)) { return nullptr; }
+    якщо (U_FAILURE(*pErrorCode)) { повернути nullptr; }
 /*    char localeBuffer[ULOC_FULLNAME_CAPACITY*4];*/
     const char16_t *item=nullptr;
     UErrorCode errorCode;
@@ -61,23 +61,23 @@ uloc_getTableStringWithFallback(const char *path, const char *locale,
     errorCode=U_ZERO_ERROR;
     icu::LocalUResourceBundlePointer rb(ures_open(path, locale, &errorCode));
 
-    if(U_FAILURE(errorCode)) {
+    якщо(U_FAILURE(errorCode)) {
         /* total failure, not even root could be opened */
         *pErrorCode=errorCode;
-        return nullptr;
-    } else if(errorCode==U_USING_DEFAULT_WARNING ||
+        повернути nullptr;
+    } інакше якщо(errorCode==U_USING_DEFAULT_WARNING ||
                 (errorCode==U_USING_FALLBACK_WARNING && *pErrorCode!=U_USING_DEFAULT_WARNING)
     ) {
         /* set the "strongest" error code (success->fallback->default->failure) */
         *pErrorCode=errorCode;
     }
 
-    for(;;){
+    для(;;){
         icu::StackUResourceBundle table;
         icu::StackUResourceBundle subTable;
         ures_getByKeyWithFallback(rb.getAlias(), tableKey, table.getAlias(), &errorCode);
 
-        if (subTableKey != nullptr) {
+        якщо (subTableKey != nullptr) {
             /*
             ures_getByKeyWithFallback(table.getAlias(), subTableKey, subTable.getAlias(), &errorCode);
             item = ures_getStringByKeyWithFallback(subTable.getAlias(), itemKey, pLength, &errorCode);
@@ -89,32 +89,32 @@ uloc_getTableStringWithFallback(const char *path, const char *locale,
             
             ures_getByKeyWithFallback(table.getAlias(), subTableKey, table.getAlias(), &errorCode);
         }
-        if(U_SUCCESS(errorCode)){
+        якщо(U_SUCCESS(errorCode)){
             item = ures_getStringByKeyWithFallback(table.getAlias(), itemKey, pLength, &errorCode);
-            if(U_FAILURE(errorCode)){
+            якщо(U_FAILURE(errorCode)){
                 const char* replacement = nullptr;
                 *pErrorCode = errorCode; /*save the errorCode*/
                 errorCode = U_ZERO_ERROR;
                 /* may be a deprecated code */
-                if(uprv_strcmp(tableKey, "Countries")==0){
+                якщо(uprv_strcmp(tableKey, "Countries")==0){
                     replacement =  uloc_getCurrentCountryID(itemKey);
-                }else if(uprv_strcmp(tableKey, "Languages")==0){
+                }інакше якщо(uprv_strcmp(tableKey, "Languages")==0){
                     replacement =  uloc_getCurrentLanguageID(itemKey);
                 }
                 /*pointer comparison is ok since uloc_getCurrentCountryID & uloc_getCurrentLanguageID return the key itself is replacement is not found*/
-                if(replacement!=nullptr && itemKey != replacement){
+                якщо(replacement!=nullptr && itemKey != replacement){
                     item = ures_getStringByKeyWithFallback(table.getAlias(), replacement, pLength, &errorCode);
-                    if(U_SUCCESS(errorCode)){
+                    якщо(U_SUCCESS(errorCode)){
                         *pErrorCode = errorCode;
                         break;
                     }
                 }
-            }else{
+            }інакше{
                 break;
             }
         }
         
-        if(U_FAILURE(errorCode)){    
+        якщо(U_FAILURE(errorCode)){    
 
             /* still can't figure out ?.. try the fallback mechanism */
             int32_t len = 0;
@@ -123,7 +123,7 @@ uloc_getTableStringWithFallback(const char *path, const char *locale,
             errorCode = U_ZERO_ERROR;
 
             fallbackLocale = ures_getStringByKeyWithFallback(table.getAlias(), "Fallback", &len, &errorCode);
-            if(U_FAILURE(errorCode)){
+            якщо(U_FAILURE(errorCode)){
                *pErrorCode = errorCode;
                 break;
             }
@@ -132,22 +132,22 @@ uloc_getTableStringWithFallback(const char *path, const char *locale,
             explicitFallbackName.appendInvariantChars(fallbackLocale, len, errorCode);
 
             /* guard against recursive fallback */
-            if (explicitFallbackName == locale) {
+            якщо (explicitFallbackName == locale) {
                 *pErrorCode = U_INTERNAL_PROGRAM_ERROR;
                 break;
             }
             rb.adoptInstead(ures_open(path, explicitFallbackName.data(), &errorCode));
-            if(U_FAILURE(errorCode)){
+            якщо(U_FAILURE(errorCode)){
                 *pErrorCode = errorCode;
                 break;
             }
             /* succeeded in opening the fallback bundle .. continue and try to fetch the item */
-        }else{
+        }інакше{
             break;
         }
     }
 
-    return item;
+    повернути item;
 }
 
 namespace {
@@ -159,14 +159,14 @@ _uloc_getOrientationHelper(const char* localeId,
 {
     ULayoutType result = ULOC_LAYOUT_UNKNOWN;
 
-    if (U_FAILURE(status)) { return result; }
+    якщо (U_FAILURE(status)) { повернути result; }
 
-    if (localeId == nullptr) {
+    якщо (localeId == nullptr) {
         localeId = uloc_getDefault();
     }
     icu::CharString localeBuffer = ulocimp_canonicalize(localeId, status);
 
-    if (U_FAILURE(status)) { return result; }
+    якщо (U_FAILURE(status)) { повернути result; }
 
     int32_t length = 0;
     const char16_t* const value =
@@ -179,9 +179,9 @@ _uloc_getOrientationHelper(const char* localeId,
             &length,
             &status);
 
-    if (U_FAILURE(status)) { return result; }
+    якщо (U_FAILURE(status)) { повернути result; }
 
-    if (length != 0) {
+    якщо (length != 0) {
         switch(value[0])
         {
         case 0x0062: /* 'b' */
@@ -202,7 +202,7 @@ _uloc_getOrientationHelper(const char* localeId,
         }
     }
 
-    return result;
+    повернути result;
 }
 
 }  // namespace
@@ -211,7 +211,7 @@ U_CAPI ULayoutType U_EXPORT2
 uloc_getCharacterOrientation(const char* localeId,
                              UErrorCode *status)
 {
-    return _uloc_getOrientationHelper(localeId, "characters", *status);
+    повернути _uloc_getOrientationHelper(localeId, "characters", *status);
 }
 
 /**
@@ -225,5 +225,5 @@ U_CAPI ULayoutType U_EXPORT2
 uloc_getLineOrientation(const char* localeId,
                         UErrorCode *status)
 {
-    return _uloc_getOrientationHelper(localeId, "lines", *status);
+    повернути _uloc_getOrientationHelper(localeId, "lines", *status);
 }

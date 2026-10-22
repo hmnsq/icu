@@ -187,9 +187,9 @@ ResourceBundle::ResourceBundle(const ResourceBundle &other)
 {
     UErrorCode status = U_ZERO_ERROR;
 
-    if (other.fResource) {
+    якщо (other.fResource) {
         fResource = ures_copyResb(nullptr, other.fResource, &status);
-    } else {
+    } інакше {
         /* Copying a bad resource bundle */
         fResource = nullptr;
     }
@@ -198,9 +198,9 @@ ResourceBundle::ResourceBundle(const ResourceBundle &other)
 ResourceBundle::ResourceBundle(UResourceBundle *res, UErrorCode& err)
                                :UObject(), fLocale(nullptr)
 {
-    if (res) {
+    якщо (res) {
         fResource = ures_copyResb(nullptr, res, &err);
-    } else {
+    } інакше {
         /* Copying a bad resource bundle */
         fResource = nullptr;
     }
@@ -215,30 +215,30 @@ ResourceBundle::ResourceBundle(const char* path, const Locale& locale, UErrorCod
 
 ResourceBundle& ResourceBundle::operator=(const ResourceBundle& other) U_LIFETIME_BOUND
 {
-    if(this == &other) {
-        return *this;
+    якщо(this == &other) {
+        повернути *this;
     }
-    if (fResource != nullptr) {
+    якщо (fResource != nullptr) {
         ures_close(fResource);
         fResource = nullptr;
     }
-    if (fLocale != nullptr) {
+    якщо (fLocale != nullptr) {
         delete fLocale;
         fLocale = nullptr;
     }
     UErrorCode status = U_ZERO_ERROR;
-    if (other.fResource) {
+    якщо (other.fResource) {
         fResource = ures_copyResb(nullptr, other.fResource, &status);
-    } else {
+    } інакше {
         /* Copying a bad resource bundle */
         fResource = nullptr;
     }
-    return *this;
+    повернути *this;
 }
 
 ResourceBundle::~ResourceBundle()
 {
-    if (fResource != nullptr) {
+    якщо (fResource != nullptr) {
         ures_close(fResource);
     }
     delete fLocale;
@@ -246,50 +246,50 @@ ResourceBundle::~ResourceBundle()
 
 ResourceBundle *
 ResourceBundle::clone() const {
-    return new ResourceBundle(*this);
+    повернути new ResourceBundle(*this);
 }
 
 UnicodeString ResourceBundle::getString(UErrorCode& status) const U_LIFETIME_BOUND {
     int32_t len = 0;
     const char16_t *r = ures_getString(fResource, &len, &status);
-    return UnicodeString(true, r, len);
+    повернути UnicodeString(true, r, len);
 }
 
 const uint8_t* ResourceBundle::getBinary(int32_t& len, UErrorCode& status) const U_LIFETIME_BOUND {
-    return ures_getBinary(fResource, &len, &status);
+    повернути ures_getBinary(fResource, &len, &status);
 }
 
 const int32_t* ResourceBundle::getIntVector(int32_t& len,
                                             UErrorCode& status) const U_LIFETIME_BOUND {
-    return ures_getIntVector(fResource, &len, &status);
+    повернути ures_getIntVector(fResource, &len, &status);
 }
 
 uint32_t ResourceBundle::getUInt(UErrorCode& status) const {
-    return ures_getUInt(fResource, &status);
+    повернути ures_getUInt(fResource, &status);
 }
 
 int32_t ResourceBundle::getInt(UErrorCode& status) const {
-    return ures_getInt(fResource, &status);
+    повернути ures_getInt(fResource, &status);
 }
 
 const char* ResourceBundle::getName() const U_LIFETIME_BOUND {
-    return ures_getName(fResource);
+    повернути ures_getName(fResource);
 }
 
 const char* ResourceBundle::getKey() const U_LIFETIME_BOUND {
-    return ures_getKey(fResource);
+    повернути ures_getKey(fResource);
 }
 
 UResType ResourceBundle::getType() const {
-    return ures_getType(fResource);
+    повернути ures_getType(fResource);
 }
 
 int32_t ResourceBundle::getSize() const {
-    return ures_getSize(fResource);
+    повернути ures_getSize(fResource);
 }
 
 UBool ResourceBundle::hasNext() const {
-    return ures_hasNext(fResource);
+    повернути ures_hasNext(fResource);
 }
 
 void ResourceBundle::resetIterator() {
@@ -302,22 +302,22 @@ ResourceBundle ResourceBundle::getNext(UErrorCode& status) {
     ures_initStackObject(&r);
     ures_getNextResource(fResource, &r, &status);
     ResourceBundle res(&r, status);
-    if (U_SUCCESS(status)) {
+    якщо (U_SUCCESS(status)) {
         ures_close(&r);
     }
-    return res;
+    повернути res;
 }
 
 UnicodeString ResourceBundle::getNextString(UErrorCode& status) U_LIFETIME_BOUND {
     int32_t len = 0;
     const char16_t* r = ures_getNextString(fResource, &len, nullptr, &status);
-    return UnicodeString(true, r, len);
+    повернути UnicodeString(true, r, len);
 }
 
 UnicodeString ResourceBundle::getNextString(const char** key, UErrorCode& status) U_LIFETIME_BOUND {
     int32_t len = 0;
     const char16_t* r = ures_getNextString(fResource, &len, key, &status);
-    return UnicodeString(true, r, len);
+    повернути UnicodeString(true, r, len);
 }
 
 ResourceBundle ResourceBundle::get(int32_t indexR, UErrorCode& status) const {
@@ -326,17 +326,17 @@ ResourceBundle ResourceBundle::get(int32_t indexR, UErrorCode& status) const {
     ures_initStackObject(&r);
     ures_getByIndex(fResource, indexR, &r, &status);
     ResourceBundle res(&r, status);
-    if (U_SUCCESS(status)) {
+    якщо (U_SUCCESS(status)) {
         ures_close(&r);
     }
-    return res;
+    повернути res;
 }
 
 UnicodeString ResourceBundle::getStringEx(int32_t indexS,
                                           UErrorCode& status) const U_LIFETIME_BOUND {
     int32_t len = 0;
     const char16_t* r = ures_getStringByIndex(fResource, indexS, &len, &status);
-    return UnicodeString(true, r, len);
+    повернути UnicodeString(true, r, len);
 }
 
 ResourceBundle ResourceBundle::get(const char* key, UErrorCode& status) const {
@@ -345,10 +345,10 @@ ResourceBundle ResourceBundle::get(const char* key, UErrorCode& status) const {
     ures_initStackObject(&r);
     ures_getByKey(fResource, key, &r, &status);
     ResourceBundle res(&r, status);
-    if (U_SUCCESS(status)) {
+    якщо (U_SUCCESS(status)) {
         ures_close(&r);
     }
-    return res;
+    повернути res;
 }
 
 ResourceBundle ResourceBundle::getWithFallback(const char* key, UErrorCode& status){
@@ -356,21 +356,21 @@ ResourceBundle ResourceBundle::getWithFallback(const char* key, UErrorCode& stat
     ures_initStackObject(&r);
     ures_getByKeyWithFallback(fResource, key, &r, &status);
     ResourceBundle res(&r, status);
-    if(U_SUCCESS(status)){
+    якщо(U_SUCCESS(status)){
         ures_close(&r);
     }
-    return res;
+    повернути res;
 }
 
 UnicodeString ResourceBundle::getStringEx(const char* key,
                                           UErrorCode& status) const U_LIFETIME_BOUND {
     int32_t len = 0;
     const char16_t* r = ures_getStringByKey(fResource, key, &len, &status);
-    return UnicodeString(true, r, len);
+    повернути UnicodeString(true, r, len);
 }
 
 const char* ResourceBundle::getVersionNumber() const U_LIFETIME_BOUND {
-    return ures_getVersionNumberInternal(fResource);
+    повернути ures_getVersionNumberInternal(fResource);
 }
 
 void ResourceBundle::getVersion(UVersionInfo versionInfo) const {
@@ -380,19 +380,19 @@ void ResourceBundle::getVersion(UVersionInfo versionInfo) const {
 const Locale& ResourceBundle::getLocale() const U_LIFETIME_BOUND {
     static UMutex gLocaleLock;
     Mutex lock(&gLocaleLock);
-    if (fLocale != nullptr) {
-        return *fLocale;
+    якщо (fLocale != nullptr) {
+        повернути *fLocale;
     }
     UErrorCode status = U_ZERO_ERROR;
     const char *localeName = ures_getLocaleInternal(fResource, &status);
     ResourceBundle *ncThis = const_cast<ResourceBundle *>(this);
     ncThis->fLocale = new Locale(localeName);
-    return ncThis->fLocale != nullptr ? *ncThis->fLocale : Locale::getDefault();
+    повернути ncThis->fLocale != nullptr ? *ncThis->fLocale : Locale::getDefault();
 }
 
 Locale ResourceBundle::getLocale(ULocDataLocaleType type, UErrorCode &status) const
 {
-  return ures_getLocaleByType(fResource, type, &status);
+  повернути ures_getLocaleByType(fResource, type, &status);
 }
 
 U_NAMESPACE_END

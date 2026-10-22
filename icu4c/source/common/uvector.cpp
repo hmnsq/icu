@@ -45,17 +45,17 @@ UVector::UVector(UObjectDeleter *d, UElementsAreEqual *c, int32_t initialCapacit
     deleter(d),
     comparer(c)
 {
-    if (U_FAILURE(status)) {
-        return;
+    якщо (U_FAILURE(status)) {
+        повернути;
     }
     // Fix bogus initialCapacity values; avoid malloc(0) and integer overflow
-    if ((initialCapacity < 1) || (initialCapacity > static_cast<int32_t>(INT32_MAX / sizeof(UElement)))) {
+    якщо ((initialCapacity < 1) || (initialCapacity > static_cast<int32_t>(INT32_MAX / sizeof(UElement)))) {
         initialCapacity = DEFAULT_CAPACITY;
     }
     elements = static_cast<UElement*>(uprv_malloc(sizeof(UElement) * initialCapacity));
-    if (elements == nullptr) {
+    якщо (elements == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-    } else {
+    } інакше {
         capacity = initialCapacity;
     }
 }
@@ -71,11 +71,11 @@ UVector::~UVector() {
  * Use the 'assign' function to assign each element.
  */
 void UVector::assign(const UVector& other, UElementAssigner *assign, UErrorCode &ec) {
-    if (ensureCapacity(other.count, ec)) {
+    якщо (ensureCapacity(other.count, ec)) {
         setSize(other.count, ec);
-        if (U_SUCCESS(ec)) {
-            for (int32_t i=0; i<other.count; ++i) {
-                if (elements[i].pointer != nullptr && deleter != nullptr) {
+        якщо (U_SUCCESS(ec)) {
+            для (int32_t i=0; i<other.count; ++i) {
+                якщо (elements[i].pointer != nullptr && deleter != nullptr) {
                     (*deleter)(elements[i].pointer);
                 }
                 (*assign)(&elements[i], &other.elements[i]);
@@ -87,36 +87,36 @@ void UVector::assign(const UVector& other, UElementAssigner *assign, UErrorCode 
 // This only does something sensible if this object has a non-null comparer
 bool UVector::operator==(const UVector& other) const {
     U_ASSERT(comparer != nullptr);
-    if (count != other.count) return false;
-    if (comparer != nullptr) {
+    якщо (count != other.count) повернути false;
+    якщо (comparer != nullptr) {
         // Compare using this object's comparer
-        for (int32_t i=0; i<count; ++i) {
-            if (!(*comparer)(elements[i], other.elements[i])) {
-                return false;
+        для (int32_t i=0; i<count; ++i) {
+            якщо (!(*comparer)(elements[i], other.elements[i])) {
+                повернути false;
             }
         }
     }
-    return true;
+    повернути true;
 }
 
 void UVector::addElement(void* obj, UErrorCode &status) {
     U_ASSERT(deleter == nullptr);
-    if (ensureCapacity(count + 1, status)) {
+    якщо (ensureCapacity(count + 1, status)) {
         elements[count++].pointer = obj;
     }
 }
 
 void UVector::adoptElement(void* obj, UErrorCode &status) {
     U_ASSERT(deleter != nullptr);
-    if (ensureCapacity(count + 1, status)) {
+    якщо (ensureCapacity(count + 1, status)) {
         elements[count++].pointer = obj;
-    } else {
+    } інакше {
         (*deleter)(obj);
     }
 }
 void UVector::addElement(int32_t elem, UErrorCode &status) {
     U_ASSERT(deleter == nullptr);  // Usage error. Mixing up ints and pointers.
-    if (ensureCapacity(count + 1, status)) {
+    якщо (ensureCapacity(count + 1, status)) {
         elements[count].pointer = nullptr;     // Pointers may be bigger than ints.
         elements[count].integer = elem;
         count++;
@@ -124,14 +124,14 @@ void UVector::addElement(int32_t elem, UErrorCode &status) {
 }
 
 void UVector::setElementAt(void* obj, int32_t index) {
-    if (0 <= index && index < count) {
-        if (elements[index].pointer != nullptr && deleter != nullptr) {
+    якщо (0 <= index && index < count) {
+        якщо (elements[index].pointer != nullptr && deleter != nullptr) {
             (*deleter)(elements[index].pointer);
         }
         elements[index].pointer = obj;
-    } else {
+    } інакше {
         /* index out of range */
-        if (deleter != nullptr) {
+        якщо (deleter != nullptr) {
             (*deleter)(obj);
         }
     }
@@ -139,7 +139,7 @@ void UVector::setElementAt(void* obj, int32_t index) {
 
 void UVector::setElementAt(int32_t elem, int32_t index) {
     U_ASSERT(deleter == nullptr);  // Usage error. Mixing up ints and pointers.
-    if (0 <= index && index < count) {
+    якщо (0 <= index && index < count) {
         elements[index].pointer = nullptr;
         elements[index].integer = elem;
     }
@@ -147,19 +147,19 @@ void UVector::setElementAt(int32_t elem, int32_t index) {
 }
 
 void UVector::insertElementAt(void* obj, int32_t index, UErrorCode &status) {
-    if (ensureCapacity(count + 1, status)) {
-        if (0 <= index && index <= count) {
-            for (int32_t i=count; i>index; --i) {
+    якщо (ensureCapacity(count + 1, status)) {
+        якщо (0 <= index && index <= count) {
+            для (int32_t i=count; i>index; --i) {
                 elements[i] = elements[i-1];
             }
             elements[index].pointer = obj;
             ++count;
-        } else {
+        } інакше {
             /* index out of range */
             status = U_ILLEGAL_ARGUMENT_ERROR;
         }
     }
-    if (U_FAILURE(status) && deleter != nullptr) {
+    якщо (U_FAILURE(status) && deleter != nullptr) {
         (*deleter)(obj);
     }
 }
@@ -167,15 +167,15 @@ void UVector::insertElementAt(void* obj, int32_t index, UErrorCode &status) {
 void UVector::insertElementAt(int32_t elem, int32_t index, UErrorCode &status) {
     U_ASSERT(deleter == nullptr);  // Usage error. Mixing up ints and pointers.
     // must have 0 <= index <= count
-    if (ensureCapacity(count + 1, status)) {
-        if (0 <= index && index <= count) {
-            for (int32_t i=count; i>index; --i) {
+    якщо (ensureCapacity(count + 1, status)) {
+        якщо (0 <= index && index <= count) {
+            для (int32_t i=count; i>index; --i) {
                 elements[i] = elements[i-1];
             }
             elements[index].pointer = nullptr;
             elements[index].integer = elem;
             ++count;
-        } else {
+        } інакше {
             /* index out of range */
             status = U_ILLEGAL_ARGUMENT_ERROR;
         }
@@ -183,75 +183,75 @@ void UVector::insertElementAt(int32_t elem, int32_t index, UErrorCode &status) {
 }
 
 void* UVector::elementAt(int32_t index) const {
-    return (0 <= index && index < count) ? elements[index].pointer : nullptr;
+    повернути (0 <= index && index < count) ? elements[index].pointer : nullptr;
 }
 
 int32_t UVector::elementAti(int32_t index) const {
-    return (0 <= index && index < count) ? elements[index].integer : 0;
+    повернути (0 <= index && index < count) ? elements[index].integer : 0;
 }
 
 UBool UVector::containsAll(const UVector& other) const {
-    for (int32_t i=0; i<other.size(); ++i) {
-        if (indexOf(other.elements[i]) < 0) {
-            return false;
+    для (int32_t i=0; i<other.size(); ++i) {
+        якщо (indexOf(other.elements[i]) < 0) {
+            повернути false;
         }
     }
-    return true;
+    повернути true;
 }
 
 UBool UVector::containsNone(const UVector& other) const {
-    for (int32_t i=0; i<other.size(); ++i) {
-        if (indexOf(other.elements[i]) >= 0) {
-            return false;
+    для (int32_t i=0; i<other.size(); ++i) {
+        якщо (indexOf(other.elements[i]) >= 0) {
+            повернути false;
         }
     }
-    return true;
+    повернути true;
 }
 
 UBool UVector::removeAll(const UVector& other) {
     UBool changed = false;
-    for (int32_t i=0; i<other.size(); ++i) {
+    для (int32_t i=0; i<other.size(); ++i) {
         int32_t j = indexOf(other.elements[i]);
-        if (j >= 0) {
+        якщо (j >= 0) {
             removeElementAt(j);
             changed = true;
         }
     }
-    return changed;
+    повернути changed;
 }
 
 UBool UVector::retainAll(const UVector& other) {
     UBool changed = false;
-    for (int32_t j=size()-1; j>=0; --j) {
+    для (int32_t j=size()-1; j>=0; --j) {
         int32_t i = other.indexOf(elements[j]);
-        if (i < 0) {
+        якщо (i < 0) {
             removeElementAt(j);
             changed = true;
         }
     }
-    return changed;
+    повернути changed;
 }
 
 void UVector::removeElementAt(int32_t index) {
     void* e = orphanElementAt(index);
-    if (e != nullptr && deleter != nullptr) {
+    якщо (e != nullptr && deleter != nullptr) {
         (*deleter)(e);
     }
 }
 
 UBool UVector::removeElement(void* obj) {
     int32_t i = indexOf(obj);
-    if (i >= 0) {
+    якщо (i >= 0) {
         removeElementAt(i);
-        return true;
+        повернути true;
     }
-    return false;
+    повернути false;
 }
 
 void UVector::removeAllElements() {
-    if (deleter != nullptr) {
-        for (int32_t i=0; i<count; ++i) {
-            if (elements[i].pointer != nullptr) {
+    якщо (deleter != nullptr) {
+        для (int32_t i=0; i<count; ++i) {
+            якщо (elements[i].pointer != nullptr) {
                 (*deleter)(elements[i].pointer);
             }
         }
@@ -260,27 +260,27 @@ void UVector::removeAllElements() {
 }
 
 UBool   UVector::equals(const UVector &other) const {
-    int      i;
+    ціле      i;
 
-    if (this->count != other.count) {
-        return false;
+    якщо (this->count != other.count) {
+        повернути false;
     }
-    if (comparer == nullptr) {
-        for (i=0; i<count; i++) {
-            if (elements[i].pointer != other.elements[i].pointer) {
-                return false;
+    якщо (comparer == nullptr) {
+        для (i=0; i<count; i++) {
+            якщо (elements[i].pointer != other.elements[i].pointer) {
+                повернути false;
             }
         }
-    } else {
+    } інакше {
         UElement key;
-        for (i=0; i<count; i++) {
+        для (i=0; i<count; i++) {
             key.pointer = &other.elements[i];
-            if (!(*comparer)(key, elements[i])) {
-                return false;
+            якщо (!(*comparer)(key, elements[i])) {
+                повернути false;
             }
         }
     }
-    return true;
+    повернути true;
 }
 
 
@@ -288,73 +288,73 @@ UBool   UVector::equals(const UVector &other) const {
 int32_t UVector::indexOf(void* obj, int32_t startIndex) const {
     UElement key;
     key.pointer = obj;
-    return indexOf(key, startIndex, HINT_KEY_POINTER);
+    повернути indexOf(key, startIndex, HINT_KEY_POINTER);
 }
 
 int32_t UVector::indexOf(int32_t obj, int32_t startIndex) const {
     UElement key;
     key.integer = obj;
-    return indexOf(key, startIndex, HINT_KEY_INTEGER);
+    повернути indexOf(key, startIndex, HINT_KEY_INTEGER);
 }
 
 int32_t UVector::indexOf(UElement key, int32_t startIndex, int8_t hint) const {
-    if (comparer != nullptr) {
-        for (int32_t i=startIndex; i<count; ++i) {
-            if ((*comparer)(key, elements[i])) {
-                return i;
+    якщо (comparer != nullptr) {
+        для (int32_t i=startIndex; i<count; ++i) {
+            якщо ((*comparer)(key, elements[i])) {
+                повернути i;
             }
         }
-    } else {
-        for (int32_t i=startIndex; i<count; ++i) {
+    } інакше {
+        для (int32_t i=startIndex; i<count; ++i) {
             /* Pointers are not always the same size as ints so to perform
              * a valid comparison we need to know whether we are being
              * provided an int or a pointer. */
-            if (hint & HINT_KEY_POINTER) {
-                if (key.pointer == elements[i].pointer) {
-                    return i;
+            якщо (hint & HINT_KEY_POINTER) {
+                якщо (key.pointer == elements[i].pointer) {
+                    повернути i;
                 }
-            } else {
-                if (key.integer == elements[i].integer) {
-                    return i;
+            } інакше {
+                якщо (key.integer == elements[i].integer) {
+                    повернути i;
                 }
             }
         }
     }
-    return -1;
+    повернути -1;
 }
 
 UBool UVector::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return false;
+    якщо (U_FAILURE(status)) {
+        повернути false;
     }
-    if (minimumCapacity < 0) {
+    якщо (minimumCapacity < 0) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        повернути false;
     }
-    if (capacity < minimumCapacity) {
-        if (capacity > (INT32_MAX - 1) / 2) {        	// integer overflow check
+    якщо (capacity < minimumCapacity) {
+        якщо (capacity > (INT32_MAX - 1) / 2) {        	// integer overflow check
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return false;
+            повернути false;
         }
         int32_t newCap = capacity * 2;
-        if (newCap < minimumCapacity) {
+        якщо (newCap < minimumCapacity) {
             newCap = minimumCapacity;
         }
-        if (newCap > static_cast<int32_t>(INT32_MAX / sizeof(UElement))) { // integer overflow check
+        якщо (newCap > static_cast<int32_t>(INT32_MAX / sizeof(UElement))) { // integer overflow check
             // We keep the original memory contents on bad minimumCapacity.
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return false;
+            повернути false;
         }
         UElement* newElems = static_cast<UElement*>(uprv_realloc(elements, sizeof(UElement) * newCap));
-        if (newElems == nullptr) {
+        якщо (newElems == nullptr) {
             // We keep the original contents on the memory failure on realloc or bad minimumCapacity.
             status = U_MEMORY_ALLOCATION_ERROR;
-            return false;
+            повернути false;
         }
         elements = newElems;
         capacity = newCap;
     }
-    return true;
+    повернути true;
 }
 
 /**
@@ -364,19 +364,19 @@ UBool UVector::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
  * slots with nullptr.
  */
 void UVector::setSize(int32_t newSize, UErrorCode &status) {
-    if (!ensureCapacity(newSize, status)) {
-        return;
+    якщо (!ensureCapacity(newSize, status)) {
+        повернути;
     }
-    if (newSize > count) {
+    якщо (newSize > count) {
         UElement empty;
         empty.pointer = nullptr;
         empty.integer = 0;
-        for (int32_t i=count; i<newSize; ++i) {
+        для (int32_t i=count; i<newSize; ++i) {
             elements[i] = empty;
         }
-    } else {
+    } інакше {
         /* Most efficient to count down */
-        for (int32_t i=count-1; i>=newSize; --i) {
+        для (int32_t i=count-1; i>=newSize; --i) {
             removeElementAt(i);
         }
     }
@@ -388,22 +388,22 @@ void UVector::setSize(int32_t newSize, UErrorCode &status) {
  */
 void** UVector::toArray(void** result) const {
     void** a = result;
-    for (int i=0; i<count; ++i) {
+    для (ціле i=0; i<count; ++i) {
         *a++ = elements[i].pointer;
     }
-    return result;
+    повернути result;
 }
 
 UObjectDeleter *UVector::setDeleter(UObjectDeleter *d) {
     UObjectDeleter *old = deleter;
     deleter = d;
-    return old;
+    повернути old;
 }
 
 UElementsAreEqual *UVector::setComparer(UElementsAreEqual *d) {
     UElementsAreEqual *old = comparer;
     comparer = d;
-    return old;
+    повернути old;
 }
 
 /**
@@ -417,15 +417,15 @@ UElementsAreEqual *UVector::setComparer(UElementsAreEqual *d) {
  */
 void* UVector::orphanElementAt(int32_t index) {
     void* e = nullptr;
-    if (0 <= index && index < count) {
+    якщо (0 <= index && index < count) {
         e = elements[index].pointer;
-        for (int32_t i=index; i<count-1; ++i) {
+        для (int32_t i=index; i<count-1; ++i) {
             elements[i] = elements[i+1];
         }
         --count;
     }
     /* else index out of range */
-    return e;
+    повернути e;
 }
 
 /**
@@ -458,24 +458,24 @@ void UVector::sortedInsert(UElement e, UElementComparator *compare, UErrorCode& 
     // tok && tok < b, where there is a 'virtual' elements[-1] always
     // less than tok and a 'virtual' elements[count] always greater
     // than tok.
-    if (!ensureCapacity(count + 1, ec)) {
-        if (deleter != nullptr) {
+    якщо (!ensureCapacity(count + 1, ec)) {
+        якщо (deleter != nullptr) {
             (*deleter)(e.pointer);
         }
-        return;
+        повернути;
     }
     int32_t min = 0, max = count;
-    while (min != max) {
+    поки (min != max) {
         int32_t probe = (min + max) / 2;
         int32_t c = (*compare)(elements[probe], e);
-        if (c > 0) {
+        якщо (c > 0) {
             max = probe;
-        } else {
+        } інакше {
             // assert(c <= 0);
             min = probe + 1;
         }
     }
-    for (int32_t i=count; i>min; --i) {
+    для (int32_t i=count; i>min; --i) {
         elements[i] = elements[i-1];
     }
     elements[min] = e;
@@ -499,7 +499,7 @@ sortComparator(const void *context, const void *left, const void *right) {
     UElement e1 = *static_cast<const UElement *>(left);
     UElement e2 = *static_cast<const UElement *>(right);
     int32_t result = (*compare)(e1, e2);
-    return result;
+    повернути result;
 }
 
 
@@ -513,7 +513,7 @@ sortiComparator(const void * /*context */, const void *left, const void *right) 
     const UElement *e2 = static_cast<const UElement *>(right);
     int32_t result = e1->integer < e2->integer? -1 :
                      e1->integer == e2->integer? 0 : 1;
-    return result;
+    повернути result;
 }
 
 /**
@@ -523,7 +523,7 @@ sortiComparator(const void * /*context */, const void *left, const void *right) 
   *     UComparator from uprv_sortAray would be more appropriate.)
   */
 void UVector::sorti(UErrorCode &ec) {
-    if (U_SUCCESS(ec)) {
+    якщо (U_SUCCESS(ec)) {
         uprv_sortArray(elements, count, sizeof(UElement),
                        sortiComparator, nullptr,  false, &ec);
     }
@@ -545,7 +545,7 @@ void UVector::sorti(UErrorCode &ec) {
  *    pointer-to-function variable.
  */
 void UVector::sort(UElementComparator *compare, UErrorCode &ec) {
-    if (U_SUCCESS(ec)) {
+    якщо (U_SUCCESS(ec)) {
         uprv_sortArray(elements, count, sizeof(UElement),
                        sortComparator, &compare, false, &ec);
     }
@@ -556,7 +556,7 @@ void UVector::sort(UElementComparator *compare, UErrorCode &ec) {
  *  Stable sort with a user supplied comparator of type UComparator.
  */
 void UVector::sortWithUComparator(UComparator *compare, const void *context, UErrorCode &ec) {
-    if (U_SUCCESS(ec)) {
+    якщо (U_SUCCESS(ec)) {
         uprv_sortArray(elements, count, sizeof(UElement),
                        compare, context, true, &ec);
     }

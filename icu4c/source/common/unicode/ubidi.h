@@ -23,7 +23,7 @@
 #include "unicode/utypes.h"
 #include "unicode/uchar.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#якщо U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
@@ -564,7 +564,7 @@ ubidi_openSized(int32_t maxLength, int32_t maxRunCount, UErrorCode *pErrorCode);
 U_CAPI void U_EXPORT2
 ubidi_close(UBiDi *pBiDi);
 
-#if U_SHOW_CPLUSPLUS_API
+#якщо U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -2211,7 +2211,7 @@ ubidi_writeReverse(const UChar *src, int32_t srcLength,
 
 /* Utilities for MessageFormat ------------------------------------------------*/
 
-#if U_SHOW_CPLUSPLUS_API
+#якщо U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

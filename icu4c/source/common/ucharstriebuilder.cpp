@@ -41,17 +41,17 @@ public:
 
     UnicodeString getString(const UnicodeString& strings U_LIFETIME_BOUND) const {
         int32_t length=strings[stringOffset];
-        return strings.tempSubString(stringOffset+1, length);
+        повернути strings.tempSubString(stringOffset+1, length);
     }
     int32_t getStringLength(const UnicodeString &strings) const {
-        return strings[stringOffset];
+        повернути strings[stringOffset];
     }
 
     char16_t charAt(int32_t index, const UnicodeString &strings) const {
-        return strings[stringOffset+1+index];
+        повернути strings[stringOffset+1+index];
     }
 
-    int32_t getValue() const { return value; }
+    int32_t getValue() const { повернути value; }
 
     int32_t compareStringTo(const UCharsTrieElement &o, const UnicodeString &strings) const;
 
@@ -65,14 +65,14 @@ private:
 void
 UCharsTrieElement::setTo(const UnicodeString &s, int32_t val,
                          UnicodeString &strings, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+    якщо(U_FAILURE(errorCode)) {
+        повернути;
     }
     int32_t length=s.length();
-    if(length>0xffff) {
+    якщо(length>0xffff) {
         // Too long: We store the length in 1 unit.
         errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+        повернути;
     }
     stringOffset=strings.length();
     strings.append(static_cast<char16_t>(length));
@@ -82,7 +82,7 @@ UCharsTrieElement::setTo(const UnicodeString &s, int32_t val,
 
 int32_t
 UCharsTrieElement::compareStringTo(const UCharsTrieElement &other, const UnicodeString &strings) const {
-    return getString(strings).compare(other.getString(strings));
+    повернути getString(strings).compare(other.getString(strings));
 }
 
 UCharsTrieBuilder::UCharsTrieBuilder(UErrorCode & /*errorCode*/)
@@ -98,27 +98,27 @@ UCharsTrieBuilder&
 UCharsTrieBuilder::add(const UnicodeString& s,
                        int32_t value,
                        UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if(U_FAILURE(errorCode)) {
-        return *this;
+    якщо(U_FAILURE(errorCode)) {
+        повернути *this;
     }
-    if(ucharsLength>0) {
+    якщо(ucharsLength>0) {
         // Cannot add elements after building.
         errorCode=U_NO_WRITE_PERMISSION;
-        return *this;
+        повернути *this;
     }
-    if(elementsLength==elementsCapacity) {
+    якщо(elementsLength==elementsCapacity) {
         int32_t newCapacity;
-        if(elementsCapacity==0) {
+        якщо(elementsCapacity==0) {
             newCapacity=1024;
-        } else {
+        } інакше {
             newCapacity=4*elementsCapacity;
         }
         UCharsTrieElement *newElements=new UCharsTrieElement[newCapacity];
-        if(newElements==nullptr) {
+        якщо(newElements==nullptr) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+            повернути *this;
         }
-        if(elementsLength>0) {
+        якщо(elementsLength>0) {
             uprv_memcpy(newElements, elements, (size_t)elementsLength*sizeof(UCharsTrieElement));
         }
         delete[] elements;
@@ -126,10 +126,10 @@ UCharsTrieBuilder::add(const UnicodeString& s,
         elementsCapacity=newCapacity;
     }
     elements[elementsLength++].setTo(s, value, strings, errorCode);
-    if(U_SUCCESS(errorCode) && strings.isBogus()) {
+    якщо(U_SUCCESS(errorCode) && strings.isBogus()) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
     }
-    return *this;
+    повернути *this;
 }
 
 U_CDECL_BEGIN
@@ -139,7 +139,7 @@ compareElementStrings(const void *context, const void *left, const void *right) 
     const UnicodeString *strings=static_cast<const UnicodeString *>(context);
     const UCharsTrieElement *leftElement=static_cast<const UCharsTrieElement *>(left);
     const UCharsTrieElement *rightElement=static_cast<const UCharsTrieElement *>(right);
-    return leftElement->compareStringTo(*rightElement, *strings);
+    повернути leftElement->compareStringTo(*rightElement, *strings);
 }
 
 U_CDECL_END
@@ -148,16 +148,16 @@ UCharsTrie *
 UCharsTrieBuilder::build(UStringTrieBuildOption buildOption, UErrorCode &errorCode) {
     buildUChars(buildOption, errorCode);
     UCharsTrie *newTrie=nullptr;
-    if(U_SUCCESS(errorCode)) {
+    якщо(U_SUCCESS(errorCode)) {
         newTrie=new UCharsTrie(uchars, uchars+(ucharsCapacity-ucharsLength));
-        if(newTrie==nullptr) {
+        якщо(newTrie==nullptr) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-        } else {
+        } інакше {
             uchars=nullptr;  // The new trie now owns the array.
             ucharsCapacity=0;
         }
     }
-    return newTrie;
+    повернути newTrie;
 }
 
 UnicodeString&
@@ -165,44 +165,44 @@ UCharsTrieBuilder::buildUnicodeString(UStringTrieBuildOption buildOption,
                                       UnicodeString& result U_LIFETIME_BOUND,
                                       UErrorCode& errorCode) U_LIFETIME_BOUND {
     buildUChars(buildOption, errorCode);
-    if(U_SUCCESS(errorCode)) {
+    якщо(U_SUCCESS(errorCode)) {
         result.setTo(false, uchars+(ucharsCapacity-ucharsLength), ucharsLength);
     }
-    return result;
+    повернути result;
 }
 
 void
 UCharsTrieBuilder::buildUChars(UStringTrieBuildOption buildOption, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+    якщо(U_FAILURE(errorCode)) {
+        повернути;
     }
-    if(uchars!=nullptr && ucharsLength>0) {
+    якщо(uchars!=nullptr && ucharsLength>0) {
         // Already built.
-        return;
+        повернути;
     }
-    if(ucharsLength==0) {
-        if(elementsLength==0) {
+    якщо(ucharsLength==0) {
+        якщо(elementsLength==0) {
             errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return;
+            повернути;
         }
-        if(strings.isBogus()) {
+        якщо(strings.isBogus()) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+            повернути;
         }
         uprv_sortArray(elements, elementsLength, static_cast<int32_t>(sizeof(UCharsTrieElement)),
                       compareElementStrings, &strings,
                       false,  // need not be a stable sort
                       &errorCode);
-        if(U_FAILURE(errorCode)) {
-            return;
+        якщо(U_FAILURE(errorCode)) {
+            повернути;
         }
         // Duplicate strings are not allowed.
         UnicodeString prev=elements[0].getString(strings);
-        for(int32_t i=1; i<elementsLength; ++i) {
+        для(int32_t i=1; i<elementsLength; ++i) {
             UnicodeString current=elements[i].getString(strings);
-            if(prev==current) {
+            якщо(prev==current) {
                 errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-                return;
+                повернути;
             }
             prev.fastCopyFrom(current);
         }
@@ -210,38 +210,38 @@ UCharsTrieBuilder::buildUChars(UStringTrieBuildOption buildOption, UErrorCode &e
     // Create and char16_t-serialize the trie for the elements.
     ucharsLength=0;
     int32_t capacity=strings.length();
-    if(capacity<1024) {
+    якщо(capacity<1024) {
         capacity=1024;
     }
-    if(ucharsCapacity<capacity) {
+    якщо(ucharsCapacity<capacity) {
         uprv_free(uchars);
         uchars=static_cast<char16_t *>(uprv_malloc(capacity*2));
-        if(uchars==nullptr) {
+        якщо(uchars==nullptr) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
             ucharsCapacity=0;
-            return;
+            повернути;
         }
         ucharsCapacity=capacity;
     }
     StringTrieBuilder::build(buildOption, elementsLength, errorCode);
-    if(uchars==nullptr) {
+    якщо(uchars==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
     }
 }
 
 int32_t
 UCharsTrieBuilder::getElementStringLength(int32_t i) const {
-    return elements[i].getStringLength(strings);
+    повернути elements[i].getStringLength(strings);
 }
 
 char16_t
 UCharsTrieBuilder::getElementUnit(int32_t i, int32_t unitIndex) const {
-    return elements[i].charAt(unitIndex, strings);
+    повернути elements[i].charAt(unitIndex, strings);
 }
 
 int32_t
 UCharsTrieBuilder::getElementValue(int32_t i) const {
-    return elements[i].getValue();
+    повернути elements[i].getValue();
 }
 
 int32_t
@@ -249,10 +249,10 @@ UCharsTrieBuilder::getLimitOfLinearMatch(int32_t first, int32_t last, int32_t un
     const UCharsTrieElement &firstElement=elements[first];
     const UCharsTrieElement &lastElement=elements[last];
     int32_t minStringLength=firstElement.getStringLength(strings);
-    while(++unitIndex<minStringLength &&
+    поки(++unitIndex<minStringLength &&
             firstElement.charAt(unitIndex, strings)==
             lastElement.charAt(unitIndex, strings)) {}
-    return unitIndex;
+    повернути unitIndex;
 }
 
 int32_t
@@ -261,31 +261,31 @@ UCharsTrieBuilder::countElementUnits(int32_t start, int32_t limit, int32_t unitI
     int32_t i=start;
     do {
         char16_t unit=elements[i++].charAt(unitIndex, strings);
-        while(i<limit && unit==elements[i].charAt(unitIndex, strings)) {
+        поки(i<limit && unit==elements[i].charAt(unitIndex, strings)) {
             ++i;
         }
         ++length;
-    } while(i<limit);
-    return length;
+    } поки(i<limit);
+    повернути length;
 }
 
 int32_t
 UCharsTrieBuilder::skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t count) const {
     do {
         char16_t unit=elements[i++].charAt(unitIndex, strings);
-        while(unit==elements[i].charAt(unitIndex, strings)) {
+        поки(unit==elements[i].charAt(unitIndex, strings)) {
             ++i;
         }
-    } while(--count>0);
-    return i;
+    } поки(--count>0);
+    повернути i;
 }
 
 int32_t
 UCharsTrieBuilder::indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) const {
-    while(unit==elements[i].charAt(unitIndex, strings)) {
+    поки(unit==elements[i].charAt(unitIndex, strings)) {
         ++i;
     }
-    return i;
+    повернути i;
 }
 
 UCharsTrieBuilder::UCTLinearMatchNode::UCTLinearMatchNode(const char16_t *units, int32_t len, Node *nextNode)
@@ -295,14 +295,14 @@ UCharsTrieBuilder::UCTLinearMatchNode::UCTLinearMatchNode(const char16_t *units,
 
 bool
 UCharsTrieBuilder::UCTLinearMatchNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
+    якщо(this==&other) {
+        повернути true;
     }
-    if(!LinearMatchNode::operator==(other)) {
-        return false;
+    якщо(!LinearMatchNode::operator==(other)) {
+        повернути false;
     }
     const UCTLinearMatchNode &o=static_cast<const UCTLinearMatchNode &>(other);
-    return 0==u_memcmp(s, o.s, length);
+    повернути 0==u_memcmp(s, o.s, length);
 }
 
 void
@@ -316,7 +316,7 @@ UCharsTrieBuilder::UCTLinearMatchNode::write(StringTrieBuilder &builder) {
 StringTrieBuilder::Node *
 UCharsTrieBuilder::createLinearMatchNode(int32_t i, int32_t unitIndex, int32_t length,
                                          Node *nextNode) const {
-    return new UCTLinearMatchNode(
+    повернути new UCTLinearMatchNode(
             elements[i].getString(strings).getBuffer()+unitIndex,
             length,
             nextNode);
@@ -324,21 +324,21 @@ UCharsTrieBuilder::createLinearMatchNode(int32_t i, int32_t unitIndex, int32_t l
 
 UBool
 UCharsTrieBuilder::ensureCapacity(int32_t length) {
-    if(uchars==nullptr) {
-        return false;  // previous memory allocation had failed
+    якщо(uchars==nullptr) {
+        повернути false;  // previous memory allocation had failed
     }
-    if(length>ucharsCapacity) {
+    якщо(length>ucharsCapacity) {
         int32_t newCapacity=ucharsCapacity;
         do {
             newCapacity*=2;
-        } while(newCapacity<=length);
+        } поки(newCapacity<=length);
         char16_t *newUChars=static_cast<char16_t *>(uprv_malloc(newCapacity*2));
-        if(newUChars==nullptr) {
+        якщо(newUChars==nullptr) {
             // unable to allocate memory
             uprv_free(uchars);
             uchars=nullptr;
             ucharsCapacity=0;
-            return false;
+            повернути false;
         }
         u_memcpy(newUChars+(newCapacity-ucharsLength),
                  uchars+(ucharsCapacity-ucharsLength), ucharsLength);
@@ -346,42 +346,42 @@ UCharsTrieBuilder::ensureCapacity(int32_t length) {
         uchars=newUChars;
         ucharsCapacity=newCapacity;
     }
-    return true;
+    повернути true;
 }
 
 int32_t
 UCharsTrieBuilder::write(int32_t unit) {
     int32_t newLength=ucharsLength+1;
-    if(ensureCapacity(newLength)) {
+    якщо(ensureCapacity(newLength)) {
         ucharsLength=newLength;
         uchars[ucharsCapacity - ucharsLength] = static_cast<char16_t>(unit);
     }
-    return ucharsLength;
+    повернути ucharsLength;
 }
 
 int32_t
 UCharsTrieBuilder::write(const char16_t *s, int32_t length) {
     int32_t newLength=ucharsLength+length;
-    if(ensureCapacity(newLength)) {
+    якщо(ensureCapacity(newLength)) {
         ucharsLength=newLength;
         u_memcpy(uchars+(ucharsCapacity-ucharsLength), s, length);
     }
-    return ucharsLength;
+    повернути ucharsLength;
 }
 
 int32_t
 UCharsTrieBuilder::writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) {
-    return write(elements[i].getString(strings).getBuffer()+unitIndex, length);
+    повернути write(elements[i].getString(strings).getBuffer()+unitIndex, length);
 }
 
 int32_t
 UCharsTrieBuilder::writeValueAndFinal(int32_t i, UBool isFinal) {
-    if(0<=i && i<=UCharsTrie::kMaxOneUnitValue) {
-        return write(i|(isFinal<<15));
+    якщо(0<=i && i<=UCharsTrie::kMaxOneUnitValue) {
+        повернути write(i|(isFinal<<15));
     }
     char16_t intUnits[3];
     int32_t length;
-    if(i<0 || i>UCharsTrie::kMaxTwoUnitValue) {
+    якщо(i<0 || i>UCharsTrie::kMaxTwoUnitValue) {
         intUnits[0] = static_cast<char16_t>(UCharsTrie::kThreeUnitValueLead);
         intUnits[1] = static_cast<char16_t>(static_cast<uint32_t>(i) >> 16);
         intUnits[2] = static_cast<char16_t>(i);
@@ -389,58 +389,58 @@ UCharsTrieBuilder::writeValueAndFinal(int32_t i, UBool isFinal) {
     // } else if(i<=UCharsTrie::kMaxOneUnitValue) {
     //     intUnits[0]=(char16_t)(i);
     //     length=1;
-    } else {
+    } інакше {
         intUnits[0] = static_cast<char16_t>(UCharsTrie::kMinTwoUnitValueLead + (i >> 16));
         intUnits[1] = static_cast<char16_t>(i);
         length=2;
     }
     intUnits[0] = static_cast<char16_t>(intUnits[0] | (isFinal << 15));
-    return write(intUnits, length);
+    повернути write(intUnits, length);
 }
 
 int32_t
 UCharsTrieBuilder::writeValueAndType(UBool hasValue, int32_t value, int32_t node) {
-    if(!hasValue) {
-        return write(node);
+    якщо(!hasValue) {
+        повернути write(node);
     }
     char16_t intUnits[3];
     int32_t length;
-    if(value<0 || value>UCharsTrie::kMaxTwoUnitNodeValue) {
+    якщо(value<0 || value>UCharsTrie::kMaxTwoUnitNodeValue) {
         intUnits[0] = static_cast<char16_t>(UCharsTrie::kThreeUnitNodeValueLead);
         intUnits[1] = static_cast<char16_t>(static_cast<uint32_t>(value) >> 16);
         intUnits[2] = static_cast<char16_t>(value);
         length=3;
-    } else if(value<=UCharsTrie::kMaxOneUnitNodeValue) {
+    } інакше якщо(value<=UCharsTrie::kMaxOneUnitNodeValue) {
         intUnits[0] = static_cast<char16_t>((value + 1) << 6);
         length=1;
-    } else {
+    } інакше {
         intUnits[0] = static_cast<char16_t>(UCharsTrie::kMinTwoUnitNodeValueLead + ((value >> 10) & 0x7fc0));
         intUnits[1] = static_cast<char16_t>(value);
         length=2;
     }
     intUnits[0] |= static_cast<char16_t>(node);
-    return write(intUnits, length);
+    повернути write(intUnits, length);
 }
 
 int32_t
 UCharsTrieBuilder::writeDeltaTo(int32_t jumpTarget) {
     int32_t i=ucharsLength-jumpTarget;
     U_ASSERT(i>=0);
-    if(i<=UCharsTrie::kMaxOneUnitDelta) {
-        return write(i);
+    якщо(i<=UCharsTrie::kMaxOneUnitDelta) {
+        повернути write(i);
     }
     char16_t intUnits[3];
     int32_t length;
-    if(i<=UCharsTrie::kMaxTwoUnitDelta) {
+    якщо(i<=UCharsTrie::kMaxTwoUnitDelta) {
         intUnits[0] = static_cast<char16_t>(UCharsTrie::kMinTwoUnitDeltaLead + (i >> 16));
         length=1;
-    } else {
+    } інакше {
         intUnits[0] = static_cast<char16_t>(UCharsTrie::kThreeUnitDeltaLead);
         intUnits[1] = static_cast<char16_t>(i >> 16);
         length=2;
     }
     intUnits[length++] = static_cast<char16_t>(i);
-    return write(intUnits, length);
+    повернути write(intUnits, length);
 }
 
 U_NAMESPACE_END

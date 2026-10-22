@@ -61,7 +61,7 @@ UCharCharacterIterator&
 UCharCharacterIterator::operator=(const UCharCharacterIterator& that) U_LIFETIME_BOUND {
     CharacterIterator::operator=(that);
     text = that.text;
-    return *this;
+    повернути *this;
 }
 
 UCharCharacterIterator::~UCharCharacterIterator() {
@@ -69,16 +69,16 @@ UCharCharacterIterator::~UCharCharacterIterator() {
 
 bool
 UCharCharacterIterator::operator==(const ForwardCharacterIterator& that) const {
-    if (this == &that) {
-        return true;
+    якщо (this == &that) {
+        повернути true;
     }
-    if (typeid(*this) != typeid(that)) {
-        return false;
+    якщо (typeid(*this) != typeid(that)) {
+        повернути false;
     }
 
     const UCharCharacterIterator&    realThat = static_cast<const UCharCharacterIterator&>(that);
 
-    return text == realThat.text
+    повернути text == realThat.text
         && textLength == realThat.textLength
         && pos == realThat.pos
         && begin == realThat.begin
@@ -87,210 +87,210 @@ UCharCharacterIterator::operator==(const ForwardCharacterIterator& that) const {
 
 int32_t
 UCharCharacterIterator::hashCode() const {
-    return ustr_hashUCharsN(text, textLength) ^ pos ^ begin ^ end;
+    повернути ustr_hashUCharsN(text, textLength) ^ pos ^ begin ^ end;
 }
 
 UCharCharacterIterator*
 UCharCharacterIterator::clone() const {
-    return new UCharCharacterIterator(*this);
+    повернути new UCharCharacterIterator(*this);
 }
 
 char16_t
 UCharCharacterIterator::first() {
     pos = begin;
-    if(pos < end) {
-        return text[pos];
-    } else {
-        return DONE;
+    якщо(pos < end) {
+        повернути text[pos];
+    } інакше {
+        повернути DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::firstPostInc() {
     pos = begin;
-    if(pos < end) {
-        return text[pos++];
-    } else {
-        return DONE;
+    якщо(pos < end) {
+        повернути text[pos++];
+    } інакше {
+        повернути DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::last() {
     pos = end;
-    if(pos > begin) {
-        return text[--pos];
-    } else {
-        return DONE;
+    якщо(pos > begin) {
+        повернути text[--pos];
+    } інакше {
+        повернути DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::setIndex(int32_t position) {
-    if(position < begin) {
+    якщо(position < begin) {
         pos = begin;
-    } else if(position > end) {
+    } інакше якщо(position > end) {
         pos = end;
-    } else {
+    } інакше {
         pos = position;
     }
-    if(pos < end) {
-        return text[pos];
-    } else {
-        return DONE;
+    якщо(pos < end) {
+        повернути text[pos];
+    } інакше {
+        повернути DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::current() const {
-    if (pos >= begin && pos < end) {
-        return text[pos];
-    } else {
-        return DONE;
+    якщо (pos >= begin && pos < end) {
+        повернути text[pos];
+    } інакше {
+        повернути DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::next() {
-    if (pos + 1 < end) {
-        return text[++pos];
-    } else {
+    якщо (pos + 1 < end) {
+        повернути text[++pos];
+    } інакше {
         /* make current() return DONE */
         pos = end;
-        return DONE;
+        повернути DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::nextPostInc() {
-    if (pos < end) {
-        return text[pos++];
-    } else {
-        return DONE;
+    якщо (pos < end) {
+        повернути text[pos++];
+    } інакше {
+        повернути DONE;
     }
 }
 
 UBool
 UCharCharacterIterator::hasNext() {
-    return pos < end;
+    повернути pos < end;
 }
 
 char16_t
 UCharCharacterIterator::previous() {
-    if (pos > begin) {
-        return text[--pos];
-    } else {
-        return DONE;
+    якщо (pos > begin) {
+        повернути text[--pos];
+    } інакше {
+        повернути DONE;
     }
 }
 
 UBool
 UCharCharacterIterator::hasPrevious() {
-    return pos > begin;
+    повернути pos > begin;
 }
 
 UChar32
 UCharCharacterIterator::first32() {
     pos = begin;
-    if(pos < end) {
+    якщо(pos < end) {
         int32_t i = pos;
         UChar32 c;
         U16_NEXT(text, i, end, c);
-        return c;
-    } else {
-        return DONE;
+        повернути c;
+    } інакше {
+        повернути DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::first32PostInc() {
     pos = begin;
-    if(pos < end) {
+    якщо(pos < end) {
         UChar32 c;
         U16_NEXT(text, pos, end, c);
-        return c;
-    } else {
-        return DONE;
+        повернути c;
+    } інакше {
+        повернути DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::last32() {
     pos = end;
-    if(pos > begin) {
+    якщо(pos > begin) {
         UChar32 c;
         U16_PREV(text, begin, pos, c);
-        return c;
-    } else {
-        return DONE;
+        повернути c;
+    } інакше {
+        повернути DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::setIndex32(int32_t position) {
-    if(position < begin) {
+    якщо(position < begin) {
         position = begin;
-    } else if(position > end) {
+    } інакше якщо(position > end) {
         position = end;
     }
-    if(position < end) {
+    якщо(position < end) {
         U16_SET_CP_START(text, begin, position);
         int32_t i = this->pos = position;
         UChar32 c;
         U16_NEXT(text, i, end, c);
-        return c;
-    } else {
+        повернути c;
+    } інакше {
         this->pos = position;
-        return DONE;
+        повернути DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::current32() const {
-    if (pos >= begin && pos < end) {
+    якщо (pos >= begin && pos < end) {
         UChar32 c;
         U16_GET(text, begin, pos, end, c);
-        return c;
-    } else {
-        return DONE;
+        повернути c;
+    } інакше {
+        повернути DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::next32() {
-    if (pos < end) {
+    якщо (pos < end) {
         U16_FWD_1(text, pos, end);
-        if(pos < end) {
+        якщо(pos < end) {
             int32_t i = pos;
             UChar32 c;
             U16_NEXT(text, i, end, c);
-            return c;
+            повернути c;
         }
     }
     /* make current() return DONE */
     pos = end;
-    return DONE;
+    повернути DONE;
 }
 
 UChar32
 UCharCharacterIterator::next32PostInc() {
-    if (pos < end) {
+    якщо (pos < end) {
         UChar32 c;
         U16_NEXT(text, pos, end, c);
-        return c;
-    } else {
-        return DONE;
+        повернути c;
+    } інакше {
+        повернути DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::previous32() {
-    if (pos > begin) {
+    якщо (pos > begin) {
         UChar32 c;
         U16_PREV(text, begin, pos, c);
-        return c;
-    } else {
-        return DONE;
+        повернути c;
+    } інакше {
+        повернути DONE;
     }
 }
 
@@ -310,13 +310,13 @@ UCharCharacterIterator::move(int32_t delta, CharacterIterator::EOrigin origin) {
         break;
     }
 
-    if(pos < begin) {
+    якщо(pos < begin) {
         pos = begin;
-    } else if(pos > end) {
+    } інакше якщо(pos > end) {
         pos = end;
     }
 
-    return pos;
+    повернути pos;
 }
 
 int32_t
@@ -326,20 +326,20 @@ UCharCharacterIterator::move32(int32_t delta, CharacterIterator::EOrigin origin)
     switch(origin) {
     case kStart:
         pos = begin;
-        if(delta > 0) {
+        якщо(delta > 0) {
             U16_FWD_N(text, pos, end, delta);
         }
         break;
     case kCurrent:
-        if(delta > 0) {
+        якщо(delta > 0) {
             U16_FWD_N(text, pos, end, delta);
-        } else {
+        } інакше {
             U16_BACK_N(text, begin, pos, -delta);
         }
         break;
     case kEnd:
         pos = end;
-        if(delta < 0) {
+        якщо(delta < 0) {
             U16_BACK_N(text, begin, pos, -delta);
         }
         break;
@@ -347,13 +347,13 @@ UCharCharacterIterator::move32(int32_t delta, CharacterIterator::EOrigin origin)
         break;
     }
 
-    return pos;
+    повернути pos;
 }
 
 void UCharCharacterIterator::setText(ConstChar16Ptr newText,
                                      int32_t      newTextLength) {
     text = newText;
-    if (newText == nullptr || newTextLength < 0) {
+    якщо (newText == nullptr || newTextLength < 0) {
         newTextLength = 0;
     }
     end = textLength = newTextLength;

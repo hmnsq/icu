@@ -22,7 +22,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#якщо !UCONFIG_NO_CONVERSION
 
 #include "unicode/ucnv_cb.h"
 #include "ucnv_bld.h"
@@ -40,8 +40,8 @@ ucnv_cbFromUWriteBytes (UConverterFromUnicodeArgs *args,
                        int32_t offsetIndex,
                        UErrorCode * err)
 {
-    if(U_FAILURE(*err)) {
-        return;
+    якщо(U_FAILURE(*err)) {
+        повернути;
     }
 
     ucnv_fromUWriteBytes(
@@ -73,9 +73,9 @@ ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
 
     char *oldTarget;
 
-    if(U_FAILURE(*err))
+    якщо(U_FAILURE(*err))
     {
-        return;
+        повернути;
     }
 
     oldTarget = args->target;
@@ -89,9 +89,9 @@ ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
         false, /* no flush */
         err);
 
-    if(args->offsets)
+    якщо(args->offsets)
     {
-        while (args->target != oldTarget)  /* if it moved at all.. */
+        поки (args->target != oldTarget)  /* if it moved at all.. */
         {
             *(args->offsets)++ = offsetIndex;
             oldTarget++;
@@ -102,7 +102,7 @@ ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
     Note, if you did something like used a Stop subcallback, things would get interesting.
     In fact, here's where we want to return the partially consumed in-source!
     */
-    if(*err == U_BUFFER_OVERFLOW_ERROR)
+    якщо(*err == U_BUFFER_OVERFLOW_ERROR)
     /* && (*source < sourceLimit && args->target >= args->targetLimit)
     -- S. Hrcek */
     {
@@ -122,10 +122,10 @@ ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
         newTargetLimit = (char *)(args->converter->charErrorBuffer +
             sizeof(args->converter->charErrorBuffer));
 
-        if(newTarget >= newTargetLimit)
+        якщо(newTarget >= newTargetLimit)
         {
             *err = U_INTERNAL_PROGRAM_ERROR;
-            return;
+            повернути;
         }
 
         /* We're going to tell the converter that the errbuff len is empty.
@@ -150,14 +150,14 @@ ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
         args->converter->charErrorBufferLength = (int8_t)(
             newTarget - (char*)args->converter->charErrorBuffer);
 
-        if((newTarget >= newTargetLimit) || (err2 == U_BUFFER_OVERFLOW_ERROR))
+        якщо((newTarget >= newTargetLimit) || (err2 == U_BUFFER_OVERFLOW_ERROR))
         {
             /* now we're REALLY in trouble.
             Internal program error - callback shouldn't have written this much
             data!
             */
             *err = U_INTERNAL_PROGRAM_ERROR;
-            return;
+            повернути;
         }
         /*else {*/
             /* sub errs could be invalid/truncated/illegal chars or w/e.
@@ -181,17 +181,17 @@ ucnv_cbFromUWriteSub (UConverterFromUnicodeArgs *args,
     UConverter *converter;
     int32_t length;
 
-    if(U_FAILURE(*err)) {
-        return;
+    якщо(U_FAILURE(*err)) {
+        повернути;
     }
     converter = args->converter;
     length = converter->subCharLen;
 
-    if(length == 0) {
-        return;
+    якщо(length == 0) {
+        повернути;
     }
 
-    if(length < 0) {
+    якщо(length < 0) {
         /*
          * Write/convert the substitution string. Its real length is -length.
          * Unlike the escape callback, we need not change the converter's
@@ -202,13 +202,13 @@ ucnv_cbFromUWriteSub (UConverterFromUnicodeArgs *args,
          */
         const char16_t *source = (const char16_t *)converter->subChars;
         ucnv_cbFromUWriteUChars(args, &source, source - length, offsetIndex, err);
-        return;
+        повернути;
     }
 
-    if(converter->sharedData->impl->writeSub!=nullptr) {
+    якщо(converter->sharedData->impl->writeSub!=nullptr) {
         converter->sharedData->impl->writeSub(args, offsetIndex, err);
     }
-    else if(converter->subChar1!=0 && (uint16_t)converter->invalidUCharBuffer[0]<=(uint16_t)0xffu) {
+    інакше якщо(converter->subChar1!=0 && (uint16_t)converter->invalidUCharBuffer[0]<=(uint16_t)0xffu) {
         /*
         TODO: Is this untestable because the MBCS converter has a writeSub function to call
         and the other converters don't use subChar1?
@@ -217,7 +217,7 @@ ucnv_cbFromUWriteSub (UConverterFromUnicodeArgs *args,
                                (const char *)&converter->subChar1, 1,
                                offsetIndex, err);
     }
-    else {
+    інакше {
         ucnv_cbFromUWriteBytes(args,
                                (const char *)converter->subChars, length,
                                offsetIndex, err);
@@ -231,8 +231,8 @@ ucnv_cbToUWriteUChars (UConverterToUnicodeArgs *args,
                             int32_t offsetIndex,
                             UErrorCode * err)
 {
-    if(U_FAILURE(*err)) {
-        return;
+    якщо(U_FAILURE(*err)) {
+        повернути;
     }
 
     ucnv_toUWriteUChars(
@@ -251,9 +251,9 @@ ucnv_cbToUWriteSub (UConverterToUnicodeArgs *args,
     static const char16_t kSubstituteChar1 = 0x1A, kSubstituteChar = 0xFFFD;
 
     /* could optimize this case, just one uchar */
-    if(args->converter->invalidCharLength == 1 && args->converter->subChar1 != 0) {
+    якщо(args->converter->invalidCharLength == 1 && args->converter->subChar1 != 0) {
         ucnv_cbToUWriteUChars(args, &kSubstituteChar1, 1, offsetIndex, err);
-    } else {
+    } інакше {
         ucnv_cbToUWriteUChars(args, &kSubstituteChar, 1, offsetIndex, err);
     }
 }

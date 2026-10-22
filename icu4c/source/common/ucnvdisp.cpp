@@ -22,7 +22,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#якщо !UCONFIG_NO_CONVERSION
 
 #include "unicode/ustring.h"
 #include "unicode/ures.h"
@@ -43,37 +43,37 @@ ucnv_getDisplayName(const UConverter *cnv,
     UErrorCode localStatus = U_ZERO_ERROR;
 
     /* check arguments */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    якщо(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        повернути 0;
     }
 
-    if(cnv==nullptr || displayNameCapacity<0 || (displayNameCapacity>0 && displayName==nullptr)) {
+    якщо(cnv==nullptr || displayNameCapacity<0 || (displayNameCapacity>0 && displayName==nullptr)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        повернути 0;
     }
 
     /* open the resource bundle and get the display name string */
     rb=ures_open(nullptr, displayLocale, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    якщо(U_FAILURE(*pErrorCode)) {
+        повернути 0;
     }
 
     /* use the internal name as the key */
     name=ures_getStringByKey(rb, cnv->sharedData->staticData->name, &length, &localStatus);
     ures_close(rb);
 
-    if(U_SUCCESS(localStatus)) {
+    якщо(U_SUCCESS(localStatus)) {
         /* copy the string */
-        if (*pErrorCode == U_ZERO_ERROR) {
+        якщо (*pErrorCode == U_ZERO_ERROR) {
             *pErrorCode = localStatus;
         }
         u_memcpy(displayName, name, uprv_min(length, displayNameCapacity)*U_SIZEOF_UCHAR);
-    } else {
+    } інакше {
         /* convert the internal name into a Unicode string */
         length=(int32_t)uprv_strlen(cnv->sharedData->staticData->name);
         u_charsToUChars(cnv->sharedData->staticData->name, displayName, uprv_min(length, displayNameCapacity));
     }
-    return u_terminateUChars(displayName, displayNameCapacity, length, pErrorCode);
+    повернути u_terminateUChars(displayName, displayNameCapacity, length, pErrorCode);
 }
 
 #endif

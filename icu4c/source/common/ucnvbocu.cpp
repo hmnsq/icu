@@ -21,7 +21,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#якщо !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
 #include "unicode/ucnv.h"
 #include "unicode/ucnv_cb.h"
@@ -205,7 +205,7 @@ bocu1TrailToByte[BOCU1_TRAIL_CONTROLS_COUNT]={
 #define NEGDIVMOD(n, d, m) UPRV_BLOCK_MACRO_BEGIN { \
     (m)=(n)%(d); \
     (n)/=(d); \
-    if((m)<0) { \
+    якщо((m)<0) { \
         --(n); \
         (m)+=(d); \
     } \
@@ -236,18 +236,18 @@ bocu1TrailToByte[BOCU1_TRAIL_CONTROLS_COUNT]={
 static inline int32_t
 bocu1Prev(int32_t c) {
     /* compute new prev */
-    if(/* 0x3040<=c && */ c<=0x309f) {
+    якщо(/* 0x3040<=c && */ c<=0x309f) {
         /* Hiragana is not 128-aligned */
-        return 0x3070;
-    } else if(0x4e00<=c && c<=0x9fa5) {
+        повернути 0x3070;
+    } інакше якщо(0x4e00<=c && c<=0x9fa5) {
         /* CJK Unihan */
-        return 0x4e00-BOCU1_REACH_NEG_2;
-    } else if(0xac00<=c /* && c<=0xd7a3 */) {
+        повернути 0x4e00-BOCU1_REACH_NEG_2;
+    } інакше якщо(0xac00<=c /* && c<=0xd7a3 */) {
         /* Korean Hangul */
-        return (0xd7a3+0xac00)/2;
-    } else {
+        повернути (0xd7a3+0xac00)/2;
+    } інакше {
         /* mostly small scripts */
-        return BOCU1_SIMPLE_PREV(c);
+        повернути BOCU1_SIMPLE_PREV(c);
     }
 }
 
@@ -288,15 +288,15 @@ packDiff(int32_t diff) {
     int32_t result, m;
 
     U_ASSERT(!DIFF_IS_SINGLE(diff)); /* assume we won't be called where diff==BOCU1_REACH_NEG_1=-64 */
-    if(diff>=BOCU1_REACH_NEG_1) {
+    якщо(diff>=BOCU1_REACH_NEG_1) {
         /* mostly positive differences, and single-byte negative ones */
-#if 0   /* single-byte case handled in macros, see below */
-        if(diff<=BOCU1_REACH_POS_1) {
+#якщо 0   /* single-byte case handled in macros, see below */
+        якщо(diff<=BOCU1_REACH_POS_1) {
             /* single byte */
-            return 0x01000000|(BOCU1_MIDDLE+diff);
-        } else
+            повернути 0x01000000|(BOCU1_MIDDLE+diff);
+        } інакше
 #endif
-        if(diff<=BOCU1_REACH_POS_2) {
+        якщо(diff<=BOCU1_REACH_POS_2) {
             /* two bytes */
             diff-=BOCU1_REACH_POS_1+1;
             result=0x02000000;
@@ -306,7 +306,7 @@ packDiff(int32_t diff) {
             result|=BOCU1_TRAIL_TO_BYTE(m);
 
             result|=(BOCU1_START_POS_2+diff)<<8;
-        } else if(diff<=BOCU1_REACH_POS_3) {
+        } інакше якщо(diff<=BOCU1_REACH_POS_3) {
             /* three bytes */
             diff-=BOCU1_REACH_POS_2+1;
             result=0x03000000;
@@ -320,7 +320,7 @@ packDiff(int32_t diff) {
             result|=BOCU1_TRAIL_TO_BYTE(m)<<8;
 
             result|=(BOCU1_START_POS_3+diff)<<16;
-        } else {
+        } інакше {
             /* four bytes */
             diff-=BOCU1_REACH_POS_3+1;
 
@@ -340,9 +340,9 @@ packDiff(int32_t diff) {
 
             result |= static_cast<uint32_t>(BOCU1_START_POS_4) << 24;
         }
-    } else {
+    } інакше {
         /* two- to four-byte negative differences */
-        if(diff>=BOCU1_REACH_NEG_2) {
+        якщо(diff>=BOCU1_REACH_NEG_2) {
             /* two bytes */
             diff-=BOCU1_REACH_NEG_1;
             result=0x02000000;
@@ -351,7 +351,7 @@ packDiff(int32_t diff) {
             result|=BOCU1_TRAIL_TO_BYTE(m);
 
             result|=(BOCU1_START_NEG_2+diff)<<8;
-        } else if(diff>=BOCU1_REACH_NEG_3) {
+        } інакше якщо(diff>=BOCU1_REACH_NEG_3) {
             /* three bytes */
             diff-=BOCU1_REACH_NEG_2;
             result=0x03000000;
@@ -363,7 +363,7 @@ packDiff(int32_t diff) {
             result|=BOCU1_TRAIL_TO_BYTE(m)<<8;
 
             result|=(BOCU1_START_NEG_3+diff)<<16;
-        } else {
+        } інакше {
             /* four bytes */
             diff-=BOCU1_REACH_NEG_3;
 
@@ -384,7 +384,7 @@ packDiff(int32_t diff) {
             result|=BOCU1_MIN<<24;
         }
     }
-    return result;
+    повернути result;
 }
 
 
@@ -412,7 +412,7 @@ _Bocu1FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     /* get the converter state from UConverter */
     c=cnv->fromUChar32;
     prev = static_cast<int32_t>(cnv->fromUnicodeStatus);
-    if(prev==0) {
+    якщо(prev==0) {
         prev=BOCU1_ASCII_PREV;
     }
 
@@ -421,7 +421,7 @@ _Bocu1FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     nextSourceIndex=0;
 
     /* conversion loop */
-    if(c!=0 && targetCapacity>0) {
+    якщо(c!=0 && targetCapacity>0) {
         goto getTrail;
     }
 
@@ -429,27 +429,27 @@ fastSingle:
     /* fast loop for single-byte differences */
     /* use only one loop counter variable, targetCapacity, not also source */
     diff = static_cast<int32_t>(sourceLimit - source);
-    if(targetCapacity>diff) {
+    якщо(targetCapacity>diff) {
         targetCapacity=diff;
     }
-    while(targetCapacity>0 && (c=*source)<0x3000) {
-        if(c<=0x20) {
-            if(c!=0x20) {
+    поки(targetCapacity>0 && (c=*source)<0x3000) {
+        якщо(c<=0x20) {
+            якщо(c!=0x20) {
                 prev=BOCU1_ASCII_PREV;
             }
             *target++ = static_cast<uint8_t>(c);
             *offsets++=nextSourceIndex++;
             ++source;
             --targetCapacity;
-        } else {
+        } інакше {
             diff=c-prev;
-            if(DIFF_IS_SINGLE(diff)) {
+            якщо(DIFF_IS_SINGLE(diff)) {
                 prev=BOCU1_SIMPLE_PREV(c);
                 *target++ = static_cast<uint8_t>(PACK_SINGLE_DIFF(diff));
                 *offsets++=nextSourceIndex++;
                 ++source;
                 --targetCapacity;
-            } else {
+            } інакше {
                 break;
             }
         }
@@ -459,18 +459,18 @@ fastSingle:
     sourceIndex=nextSourceIndex; /* wrong if offsets==nullptr but does not matter */
 
     /* regular loop for all cases */
-    while(source<sourceLimit) {
-        if(targetCapacity>0) {
+    поки(source<sourceLimit) {
+        якщо(targetCapacity>0) {
             c=*source++;
             ++nextSourceIndex;
 
-            if(c<=0x20) {
+            якщо(c<=0x20) {
                 /*
                  * ISO C0 control & space:
                  * Encode directly for MIME compatibility,
                  * and reset state except for space, to not disrupt compression.
                  */
-                if(c!=0x20) {
+                якщо(c!=0x20) {
                     prev=BOCU1_ASCII_PREV;
                 }
                 *target++ = static_cast<uint8_t>(c);
@@ -481,17 +481,17 @@ fastSingle:
                 continue;
             }
 
-            if(U16_IS_LEAD(c)) {
+            якщо(U16_IS_LEAD(c)) {
 getTrail:
-                if(source<sourceLimit) {
+                якщо(source<sourceLimit) {
                     /* test the following code unit */
                     char16_t trail=*source;
-                    if(U16_IS_TRAIL(trail)) {
+                    якщо(U16_IS_TRAIL(trail)) {
                         ++source;
                         ++nextSourceIndex;
                         c=U16_GET_SUPPLEMENTARY(c, trail);
                     }
-                } else {
+                } інакше {
                     /* no more input */
                     c=-c; /* negative lead surrogate as "incomplete" indicator to avoid c=0 everywhere else */
                     break;
@@ -509,24 +509,24 @@ getTrail:
              */
             diff=c-prev;
             prev=BOCU1_PREV(c);
-            if(DIFF_IS_SINGLE(diff)) {
+            якщо(DIFF_IS_SINGLE(diff)) {
                 *target++ = static_cast<uint8_t>(PACK_SINGLE_DIFF(diff));
                 *offsets++=sourceIndex;
                 --targetCapacity;
                 sourceIndex=nextSourceIndex;
-                if(c<0x3000) {
+                якщо(c<0x3000) {
                     goto fastSingle;
                 }
-            } else if(DIFF_IS_DOUBLE(diff) && 2<=targetCapacity) {
+            } інакше якщо(DIFF_IS_DOUBLE(diff) && 2<=targetCapacity) {
                 /* optimize 2-byte case */
                 int32_t m;
 
-                if(diff>=0) {
+                якщо(diff>=0) {
                     diff-=BOCU1_REACH_POS_1+1;
                     m=diff%BOCU1_TRAIL_COUNT;
                     diff/=BOCU1_TRAIL_COUNT;
                     diff+=BOCU1_START_POS_2;
-                } else {
+                } інакше {
                     diff-=BOCU1_REACH_NEG_1;
                     NEGDIVMOD(diff, BOCU1_TRAIL_COUNT, m);
                     diff+=BOCU1_START_NEG_2;
@@ -537,7 +537,7 @@ getTrail:
                 *offsets++=sourceIndex;
                 targetCapacity-=2;
                 sourceIndex=nextSourceIndex;
-            } else {
+            } інакше {
                 int32_t length; /* will be 2..4 */
 
                 diff=packDiff(diff);
@@ -545,7 +545,7 @@ getTrail:
 
                 /* write the output character bytes from diff and length */
                 /* from the first if in the loop we know that targetCapacity>0 */
-                if(length<=targetCapacity) {
+                якщо(length<=targetCapacity) {
                     switch(length) {
                         /* each branch falls through to the next one */
                     case 4:
@@ -569,7 +569,7 @@ getTrail:
                     }
                     targetCapacity-=length;
                     sourceIndex=nextSourceIndex;
-                } else {
+                } інакше {
                     uint8_t *charErrorBuffer;
 
                     /*
@@ -625,7 +625,7 @@ getTrail:
                     break;
                 }
             }
-        } else {
+        } інакше {
             /* target is full */
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
             break;
@@ -669,12 +669,12 @@ _Bocu1FromUnicode(UConverterFromUnicodeArgs *pArgs,
     /* get the converter state from UConverter */
     c=cnv->fromUChar32;
     prev = static_cast<int32_t>(cnv->fromUnicodeStatus);
-    if(prev==0) {
+    якщо(prev==0) {
         prev=BOCU1_ASCII_PREV;
     }
 
     /* conversion loop */
-    if(c!=0 && targetCapacity>0) {
+    якщо(c!=0 && targetCapacity>0) {
         goto getTrail;
     }
 
@@ -682,21 +682,21 @@ fastSingle:
     /* fast loop for single-byte differences */
     /* use only one loop counter variable, targetCapacity, not also source */
     diff = static_cast<int32_t>(sourceLimit - source);
-    if(targetCapacity>diff) {
+    якщо(targetCapacity>diff) {
         targetCapacity=diff;
     }
-    while(targetCapacity>0 && (c=*source)<0x3000) {
-        if(c<=0x20) {
-            if(c!=0x20) {
+    поки(targetCapacity>0 && (c=*source)<0x3000) {
+        якщо(c<=0x20) {
+            якщо(c!=0x20) {
                 prev=BOCU1_ASCII_PREV;
             }
             *target++ = static_cast<uint8_t>(c);
-        } else {
+        } інакше {
             diff=c-prev;
-            if(DIFF_IS_SINGLE(diff)) {
+            якщо(DIFF_IS_SINGLE(diff)) {
                 prev=BOCU1_SIMPLE_PREV(c);
                 *target++ = static_cast<uint8_t>(PACK_SINGLE_DIFF(diff));
-            } else {
+            } інакше {
                 break;
             }
         }
@@ -707,17 +707,17 @@ fastSingle:
     targetCapacity = static_cast<int32_t>(reinterpret_cast<const uint8_t*>(pArgs->targetLimit) - target);
 
     /* regular loop for all cases */
-    while(source<sourceLimit) {
-        if(targetCapacity>0) {
+    поки(source<sourceLimit) {
+        якщо(targetCapacity>0) {
             c=*source++;
 
-            if(c<=0x20) {
+            якщо(c<=0x20) {
                 /*
                  * ISO C0 control & space:
                  * Encode directly for MIME compatibility,
                  * and reset state except for space, to not disrupt compression.
                  */
-                if(c!=0x20) {
+                якщо(c!=0x20) {
                     prev=BOCU1_ASCII_PREV;
                 }
                 *target++ = static_cast<uint8_t>(c);
@@ -725,16 +725,16 @@ fastSingle:
                 continue;
             }
 
-            if(U16_IS_LEAD(c)) {
+            якщо(U16_IS_LEAD(c)) {
 getTrail:
-                if(source<sourceLimit) {
+                якщо(source<sourceLimit) {
                     /* test the following code unit */
                     char16_t trail=*source;
-                    if(U16_IS_TRAIL(trail)) {
+                    якщо(U16_IS_TRAIL(trail)) {
                         ++source;
                         c=U16_GET_SUPPLEMENTARY(c, trail);
                     }
-                } else {
+                } інакше {
                     /* no more input */
                     c=-c; /* negative lead surrogate as "incomplete" indicator to avoid c=0 everywhere else */
                     break;
@@ -752,22 +752,22 @@ getTrail:
              */
             diff=c-prev;
             prev=BOCU1_PREV(c);
-            if(DIFF_IS_SINGLE(diff)) {
+            якщо(DIFF_IS_SINGLE(diff)) {
                 *target++ = static_cast<uint8_t>(PACK_SINGLE_DIFF(diff));
                 --targetCapacity;
-                if(c<0x3000) {
+                якщо(c<0x3000) {
                     goto fastSingle;
                 }
-            } else if(DIFF_IS_DOUBLE(diff) && 2<=targetCapacity) {
+            } інакше якщо(DIFF_IS_DOUBLE(diff) && 2<=targetCapacity) {
                 /* optimize 2-byte case */
                 int32_t m;
 
-                if(diff>=0) {
+                якщо(diff>=0) {
                     diff-=BOCU1_REACH_POS_1+1;
                     m=diff%BOCU1_TRAIL_COUNT;
                     diff/=BOCU1_TRAIL_COUNT;
                     diff+=BOCU1_START_POS_2;
-                } else {
+                } інакше {
                     diff-=BOCU1_REACH_NEG_1;
                     NEGDIVMOD(diff, BOCU1_TRAIL_COUNT, m);
                     diff+=BOCU1_START_NEG_2;
@@ -775,7 +775,7 @@ getTrail:
                 *target++ = static_cast<uint8_t>(diff);
                 *target++ = static_cast<uint8_t>(BOCU1_TRAIL_TO_BYTE(m));
                 targetCapacity-=2;
-            } else {
+            } інакше {
                 int32_t length; /* will be 2..4 */
 
                 diff=packDiff(diff);
@@ -783,7 +783,7 @@ getTrail:
 
                 /* write the output character bytes from diff and length */
                 /* from the first if in the loop we know that targetCapacity>0 */
-                if(length<=targetCapacity) {
+                якщо(length<=targetCapacity) {
                     switch(length) {
                         /* each branch falls through to the next one */
                     case 4:
@@ -801,7 +801,7 @@ getTrail:
                         break;
                     }
                     targetCapacity-=length;
-                } else {
+                } інакше {
                     uint8_t *charErrorBuffer;
 
                     /*
@@ -854,7 +854,7 @@ getTrail:
                     break;
                 }
             }
-        } else {
+        } інакше {
             /* target is full */
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
             break;
@@ -883,32 +883,32 @@ static inline int32_t
 decodeBocu1LeadByte(int32_t b) {
     int32_t diff, count;
 
-    if(b>=BOCU1_START_NEG_2) {
+    якщо(b>=BOCU1_START_NEG_2) {
         /* positive difference */
-        if(b<BOCU1_START_POS_3) {
+        якщо(b<BOCU1_START_POS_3) {
             /* two bytes */
             diff = (b - BOCU1_START_POS_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_POS_1 + 1;
             count=1;
-        } else if(b<BOCU1_START_POS_4) {
+        } інакше якщо(b<BOCU1_START_POS_4) {
             /* three bytes */
             diff = (b - BOCU1_START_POS_3) * BOCU1_TRAIL_COUNT * BOCU1_TRAIL_COUNT + BOCU1_REACH_POS_2 + 1;
             count=2;
-        } else {
+        } інакше {
             /* four bytes */
             diff=BOCU1_REACH_POS_3+1;
             count=3;
         }
-    } else {
+    } інакше {
         /* negative difference */
-        if(b>=BOCU1_START_NEG_3) {
+        якщо(b>=BOCU1_START_NEG_3) {
             /* two bytes */
             diff = (b - BOCU1_START_NEG_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_NEG_1;
             count=1;
-        } else if(b>BOCU1_MIN) {
+        } інакше якщо(b>BOCU1_MIN) {
             /* three bytes */
             diff = (b - BOCU1_START_NEG_3) * BOCU1_TRAIL_COUNT * BOCU1_TRAIL_COUNT + BOCU1_REACH_NEG_2;
             count=2;
-        } else {
+        } інакше {
             /* four bytes */
             diff=-BOCU1_TRAIL_COUNT*BOCU1_TRAIL_COUNT*BOCU1_TRAIL_COUNT+BOCU1_REACH_NEG_3;
             count=3;
@@ -916,7 +916,7 @@ decodeBocu1LeadByte(int32_t b) {
     }
 
     /* return the state for decoding the trail byte(s) */
-    return (static_cast<uint32_t>(diff) << 2) | count;
+    повернути (static_cast<uint32_t>(diff) << 2) | count;
 }
 
 /**
@@ -930,25 +930,25 @@ decodeBocu1LeadByte(int32_t b) {
  */
 static inline int32_t
 decodeBocu1TrailByte(int32_t count, int32_t b) {
-    if(b<=0x20) {
+    якщо(b<=0x20) {
         /* skip some C0 controls and make the trail byte range contiguous */
         b=bocu1ByteToTrail[b];
         /* b<0 for an illegal trail byte value will result in return<0 below */
-#if BOCU1_MAX_TRAIL<0xff
-    } else if(b>BOCU1_MAX_TRAIL) {
-        return -99;
+#якщо BOCU1_MAX_TRAIL<0xff
+    } інакше якщо(b>BOCU1_MAX_TRAIL) {
+        повернути -99;
 #endif
-    } else {
+    } інакше {
         b-=BOCU1_TRAIL_BYTE_OFFSET;
     }
 
     /* add trail byte into difference and decrement count */
-    if(count==1) {
-        return b;
-    } else if(count==2) {
-        return b*BOCU1_TRAIL_COUNT;
-    } else /* count==3 */ {
-        return b*(BOCU1_TRAIL_COUNT*BOCU1_TRAIL_COUNT);
+    якщо(count==1) {
+        повернути b;
+    } інакше якщо(count==2) {
+        повернути b*BOCU1_TRAIL_COUNT;
+    } інакше /* count==3 */ {
+        повернути b*(BOCU1_TRAIL_COUNT*BOCU1_TRAIL_COUNT);
     }
 }
 
@@ -978,7 +978,7 @@ _Bocu1ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
 
     /* get the converter state from UConverter */
     prev = static_cast<int32_t>(cnv->toUnicodeStatus);
-    if(prev==0) {
+    якщо(prev==0) {
         prev=BOCU1_ASCII_PREV;
     }
     diff=cnv->mode; /* mode may be set to UCNV_SI by ucnv_bld.c but then toULength==0 */
@@ -993,7 +993,7 @@ _Bocu1ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     nextSourceIndex=0;
 
     /* conversion "loop" similar to _SCSUToUnicodeWithOffsets() */
-    if(count>0 && byteIndex>0 && target<targetLimit) {
+    якщо(count>0 && byteIndex>0 && target<targetLimit) {
         goto getTrail;
     }
 
@@ -1002,26 +1002,26 @@ fastSingle:
     /* use count as the only loop counter variable */
     diff = static_cast<int32_t>(sourceLimit - source);
     count = static_cast<int32_t>(pArgs->targetLimit - target);
-    if(count>diff) {
+    якщо(count>diff) {
         count=diff;
     }
-    while(count>0) {
-        if(BOCU1_START_NEG_2<=(c=*source) && c<BOCU1_START_POS_2) {
+    поки(count>0) {
+        якщо(BOCU1_START_NEG_2<=(c=*source) && c<BOCU1_START_POS_2) {
             c=prev+(c-BOCU1_MIDDLE);
-            if(c<0x3000) {
+            якщо(c<0x3000) {
                 *target++ = static_cast<char16_t>(c);
                 *offsets++=nextSourceIndex++;
                 prev=BOCU1_SIMPLE_PREV(c);
-            } else {
+            } інакше {
                 break;
             }
-        } else if(c<=0x20) {
-            if(c!=0x20) {
+        } інакше якщо(c<=0x20) {
+            якщо(c!=0x20) {
                 prev=BOCU1_ASCII_PREV;
             }
             *target++ = static_cast<char16_t>(c);
             *offsets++=nextSourceIndex++;
-        } else {
+        } інакше {
             break;
         }
         ++source;
@@ -1030,8 +1030,8 @@ fastSingle:
     sourceIndex=nextSourceIndex; /* wrong if offsets==nullptr but does not matter */
 
     /* decode a sequence of single and lead bytes */
-    while(source<sourceLimit) {
-        if(target>=targetLimit) {
+    поки(source<sourceLimit) {
+        якщо(target>=targetLimit) {
             /* target is full */
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
             break;
@@ -1039,52 +1039,52 @@ fastSingle:
 
         ++nextSourceIndex;
         c=*source++;
-        if(BOCU1_START_NEG_2<=c && c<BOCU1_START_POS_2) {
+        якщо(BOCU1_START_NEG_2<=c && c<BOCU1_START_POS_2) {
             /* Write a code point directly from a single-byte difference. */
             c=prev+(c-BOCU1_MIDDLE);
-            if(c<0x3000) {
+            якщо(c<0x3000) {
                 *target++ = static_cast<char16_t>(c);
                 *offsets++=sourceIndex;
                 prev=BOCU1_SIMPLE_PREV(c);
                 sourceIndex=nextSourceIndex;
                 goto fastSingle;
             }
-        } else if(c<=0x20) {
+        } інакше якщо(c<=0x20) {
             /*
              * Direct-encoded C0 control code or space.
              * Reset prev for C0 control codes but not for space.
              */
-            if(c!=0x20) {
+            якщо(c!=0x20) {
                 prev=BOCU1_ASCII_PREV;
             }
             *target++ = static_cast<char16_t>(c);
             *offsets++=sourceIndex;
             sourceIndex=nextSourceIndex;
             continue;
-        } else if(BOCU1_START_NEG_3<=c && c<BOCU1_START_POS_3 && source<sourceLimit) {
+        } інакше якщо(BOCU1_START_NEG_3<=c && c<BOCU1_START_POS_3 && source<sourceLimit) {
             /* Optimize two-byte case. */
-            if(c>=BOCU1_MIDDLE) {
+            якщо(c>=BOCU1_MIDDLE) {
                 diff = (c - BOCU1_START_POS_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_POS_1 + 1;
-            } else {
+            } інакше {
                 diff = (c - BOCU1_START_NEG_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_NEG_1;
             }
 
             /* trail byte */
             ++nextSourceIndex;
             c=decodeBocu1TrailByte(1, *source++);
-            if (c < 0 || static_cast<uint32_t>(c = prev + diff + c) > 0x10ffff) {
+            якщо (c < 0 || static_cast<uint32_t>(c = prev + diff + c) > 0x10ffff) {
                 bytes[0]=source[-2];
                 bytes[1]=source[-1];
                 byteIndex=2;
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                 break;
             }
-        } else if(c==BOCU1_RESET) {
+        } інакше якщо(c==BOCU1_RESET) {
             /* only reset the state, no code point */
             prev=BOCU1_ASCII_PREV;
             sourceIndex=nextSourceIndex;
             continue;
-        } else {
+        } інакше {
             /*
              * For multi-byte difference lead bytes, set the decoder state
              * with the partial difference value from the lead byte and
@@ -1097,8 +1097,8 @@ fastSingle:
             count=diff&3;
             diff>>=2;
 getTrail:
-            for(;;) {
-                if(source>=sourceLimit) {
+            для(;;) {
+                якщо(source>=sourceLimit) {
                     goto endloop;
                 }
                 ++nextSourceIndex;
@@ -1106,17 +1106,17 @@ getTrail:
 
                 /* trail byte in any position */
                 c=decodeBocu1TrailByte(count, c);
-                if(c<0) {
+                якщо(c<0) {
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                     goto endloop;
                 }
 
                 diff+=c;
-                if(--count==0) {
+                якщо(--count==0) {
                     /* final trail byte, deliver a code point */
                     byteIndex=0;
                     c=prev+diff;
-                    if (static_cast<uint32_t>(c) > 0x10ffff) {
+                    якщо (static_cast<uint32_t>(c) > 0x10ffff) {
                         *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                         goto endloop;
                     }
@@ -1127,17 +1127,17 @@ getTrail:
 
         /* calculate the next prev and output c */
         prev=BOCU1_PREV(c);
-        if(c<=0xffff) {
+        якщо(c<=0xffff) {
             *target++ = static_cast<char16_t>(c);
             *offsets++=sourceIndex;
-        } else {
+        } інакше {
             /* output surrogate pair */
             *target++=U16_LEAD(c);
-            if(target<targetLimit) {
+            якщо(target<targetLimit) {
                 *target++=U16_TRAIL(c);
                 *offsets++=sourceIndex;
                 *offsets++=sourceIndex;
-            } else {
+            } інакше {
                 /* target overflow */
                 *offsets++=sourceIndex;
                 cnv->UCharErrorBuffer[0]=U16_TRAIL(c);
@@ -1150,11 +1150,11 @@ getTrail:
     }
 endloop:
 
-    if(*pErrorCode==U_ILLEGAL_CHAR_FOUND) {
+    якщо(*pErrorCode==U_ILLEGAL_CHAR_FOUND) {
         /* set the converter state in UConverter to deal with the next character */
         cnv->toUnicodeStatus=BOCU1_ASCII_PREV;
         cnv->mode=0;
-    } else {
+    } інакше {
         /* set the converter state back into UConverter */
         cnv->toUnicodeStatus = static_cast<uint32_t>(prev);
         cnv->mode = static_cast<int32_t>(static_cast<uint32_t>(diff) << 2) | count;
@@ -1196,7 +1196,7 @@ _Bocu1ToUnicode(UConverterToUnicodeArgs *pArgs,
 
     /* get the converter state from UConverter */
     prev = static_cast<int32_t>(cnv->toUnicodeStatus);
-    if(prev==0) {
+    якщо(prev==0) {
         prev=BOCU1_ASCII_PREV;
     }
     diff=cnv->mode; /* mode may be set to UCNV_SI by ucnv_bld.c but then toULength==0 */
@@ -1207,7 +1207,7 @@ _Bocu1ToUnicode(UConverterToUnicodeArgs *pArgs,
     bytes=cnv->toUBytes;
 
     /* conversion "loop" similar to _SCSUToUnicodeWithOffsets() */
-    if(count>0 && byteIndex>0 && target<targetLimit) {
+    якщо(count>0 && byteIndex>0 && target<targetLimit) {
         goto getTrail;
     }
 
@@ -1216,24 +1216,24 @@ fastSingle:
     /* use count as the only loop counter variable */
     diff = static_cast<int32_t>(sourceLimit - source);
     count = static_cast<int32_t>(pArgs->targetLimit - target);
-    if(count>diff) {
+    якщо(count>diff) {
         count=diff;
     }
-    while(count>0) {
-        if(BOCU1_START_NEG_2<=(c=*source) && c<BOCU1_START_POS_2) {
+    поки(count>0) {
+        якщо(BOCU1_START_NEG_2<=(c=*source) && c<BOCU1_START_POS_2) {
             c=prev+(c-BOCU1_MIDDLE);
-            if(c<0x3000) {
+            якщо(c<0x3000) {
                 *target++ = static_cast<char16_t>(c);
                 prev=BOCU1_SIMPLE_PREV(c);
-            } else {
+            } інакше {
                 break;
             }
-        } else if(c<=0x20) {
-            if(c!=0x20) {
+        } інакше якщо(c<=0x20) {
+            якщо(c!=0x20) {
                 prev=BOCU1_ASCII_PREV;
             }
             *target++ = static_cast<char16_t>(c);
-        } else {
+        } інакше {
             break;
         }
         ++source;
@@ -1241,54 +1241,54 @@ fastSingle:
     }
 
     /* decode a sequence of single and lead bytes */
-    while(source<sourceLimit) {
-        if(target>=targetLimit) {
+    поки(source<sourceLimit) {
+        якщо(target>=targetLimit) {
             /* target is full */
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
             break;
         }
 
         c=*source++;
-        if(BOCU1_START_NEG_2<=c && c<BOCU1_START_POS_2) {
+        якщо(BOCU1_START_NEG_2<=c && c<BOCU1_START_POS_2) {
             /* Write a code point directly from a single-byte difference. */
             c=prev+(c-BOCU1_MIDDLE);
-            if(c<0x3000) {
+            якщо(c<0x3000) {
                 *target++ = static_cast<char16_t>(c);
                 prev=BOCU1_SIMPLE_PREV(c);
                 goto fastSingle;
             }
-        } else if(c<=0x20) {
+        } інакше якщо(c<=0x20) {
             /*
              * Direct-encoded C0 control code or space.
              * Reset prev for C0 control codes but not for space.
              */
-            if(c!=0x20) {
+            якщо(c!=0x20) {
                 prev=BOCU1_ASCII_PREV;
             }
             *target++ = static_cast<char16_t>(c);
             continue;
-        } else if(BOCU1_START_NEG_3<=c && c<BOCU1_START_POS_3 && source<sourceLimit) {
+        } інакше якщо(BOCU1_START_NEG_3<=c && c<BOCU1_START_POS_3 && source<sourceLimit) {
             /* Optimize two-byte case. */
-            if(c>=BOCU1_MIDDLE) {
+            якщо(c>=BOCU1_MIDDLE) {
                 diff = (c - BOCU1_START_POS_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_POS_1 + 1;
-            } else {
+            } інакше {
                 diff = (c - BOCU1_START_NEG_2) * BOCU1_TRAIL_COUNT + BOCU1_REACH_NEG_1;
             }
 
             /* trail byte */
             c=decodeBocu1TrailByte(1, *source++);
-            if (c < 0 || static_cast<uint32_t>(c = prev + diff + c) > 0x10ffff) {
+            якщо (c < 0 || static_cast<uint32_t>(c = prev + diff + c) > 0x10ffff) {
                 bytes[0]=source[-2];
                 bytes[1]=source[-1];
                 byteIndex=2;
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                 break;
             }
-        } else if(c==BOCU1_RESET) {
+        } інакше якщо(c==BOCU1_RESET) {
             /* only reset the state, no code point */
             prev=BOCU1_ASCII_PREV;
             continue;
-        } else {
+        } інакше {
             /*
              * For multi-byte difference lead bytes, set the decoder state
              * with the partial difference value from the lead byte and
@@ -1301,25 +1301,25 @@ fastSingle:
             count=diff&3;
             diff>>=2;
 getTrail:
-            for(;;) {
-                if(source>=sourceLimit) {
+            для(;;) {
+                якщо(source>=sourceLimit) {
                     goto endloop;
                 }
                 c=bytes[byteIndex++]=*source++;
 
                 /* trail byte in any position */
                 c=decodeBocu1TrailByte(count, c);
-                if(c<0) {
+                якщо(c<0) {
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                     goto endloop;
                 }
 
                 diff+=c;
-                if(--count==0) {
+                якщо(--count==0) {
                     /* final trail byte, deliver a code point */
                     byteIndex=0;
                     c=prev+diff;
-                    if (static_cast<uint32_t>(c) > 0x10ffff) {
+                    якщо (static_cast<uint32_t>(c) > 0x10ffff) {
                         *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                         goto endloop;
                     }
@@ -1330,14 +1330,14 @@ getTrail:
 
         /* calculate the next prev and output c */
         prev=BOCU1_PREV(c);
-        if(c<=0xffff) {
+        якщо(c<=0xffff) {
             *target++ = static_cast<char16_t>(c);
-        } else {
+        } інакше {
             /* output surrogate pair */
             *target++=U16_LEAD(c);
-            if(target<targetLimit) {
+            якщо(target<targetLimit) {
                 *target++=U16_TRAIL(c);
-            } else {
+            } інакше {
                 /* target overflow */
                 cnv->UCharErrorBuffer[0]=U16_TRAIL(c);
                 cnv->UCharErrorBufferLength=1;
@@ -1348,11 +1348,11 @@ getTrail:
     }
 endloop:
 
-    if(*pErrorCode==U_ILLEGAL_CHAR_FOUND) {
+    якщо(*pErrorCode==U_ILLEGAL_CHAR_FOUND) {
         /* set the converter state in UConverter to deal with the next character */
         cnv->toUnicodeStatus=BOCU1_ASCII_PREV;
         cnv->mode=0;
-    } else {
+    } інакше {
         /* set the converter state back into UConverter */
         cnv->toUnicodeStatus = static_cast<uint32_t>(prev);
         cnv->mode = (static_cast<uint32_t>(diff) << 2) | count;

@@ -10,7 +10,7 @@
  */
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#якщо !UCONFIG_NO_SERVICE
 
 #include "unicode/resbund.h"
 #include "uresimp.h"
@@ -63,17 +63,17 @@ SimpleLocaleKeyFactory::~SimpleLocaleKeyFactory()
 UObject*
 SimpleLocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const
 {
-    if (U_SUCCESS(status)) {
+    якщо (U_SUCCESS(status)) {
         const LocaleKey& lkey = static_cast<const LocaleKey&>(key);
-        if (_kind == LocaleKey::KIND_ANY || _kind == lkey.kind()) {
+        якщо (_kind == LocaleKey::KIND_ANY || _kind == lkey.kind()) {
             UnicodeString keyID;
             lkey.currentID(keyID);
-            if (_id == keyID) {
-                return service->cloneInstance(_obj);
+            якщо (_id == keyID) {
+                повернути service->cloneInstance(_obj);
             }
         }
     }
-    return nullptr;
+    повернути nullptr;
 }
 
 //UBool
@@ -85,10 +85,10 @@ SimpleLocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* servi
 void
 SimpleLocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const
 {
-    if (U_SUCCESS(status)) {
-        if (_coverage & 0x1) {
+    якщо (U_SUCCESS(status)) {
+        якщо (_coverage & 0x1) {
             result.remove(_id);
-        } else {
+        } інакше {
             result.put(_id, (void*)this, status);
         }
     }
@@ -103,13 +103,13 @@ SimpleLocaleKeyFactory::debug(UnicodeString& result) const
     result.append(_id);
     result.append((UnicodeString)", kind: ");
     result.append(_kind);
-    return result;
+    повернути result;
 }
 
 UnicodeString&
 SimpleLocaleKeyFactory::debugClass(UnicodeString& result) const
 {
-    return result.append((UnicodeString)"SimpleLocaleKeyFactory");
+    повернути result.append((UnicodeString)"SimpleLocaleKeyFactory");
 }
 #endif
 

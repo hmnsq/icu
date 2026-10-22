@@ -17,7 +17,7 @@
 #include "unicode/udata.h"
 #include "cmemory.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#якщо !UCONFIG_NO_BREAK_ITERATION
 
 U_NAMESPACE_BEGIN
 
@@ -39,7 +39,7 @@ UCharsDictionaryMatcher::~UCharsDictionaryMatcher() {
 }
 
 int32_t UCharsDictionaryMatcher::getType() const {
-    return DictionaryData::TRIE_TYPE_UCHARS;
+    повернути DictionaryData::TRIE_TYPE_UCHARS;
 }
 
 int32_t UCharsDictionaryMatcher::matches(UText *text, int32_t maxLength, int32_t limit,
@@ -51,39 +51,39 @@ int32_t UCharsDictionaryMatcher::matches(UText *text, int32_t maxLength, int32_t
     int32_t wordCount = 0;
     int32_t codePointsMatched = 0;
 
-    for (UChar32 c = utext_next32(text); c >= 0; c=utext_next32(text)) {
+    для (UChar32 c = utext_next32(text); c >= 0; c=utext_next32(text)) {
         UStringTrieResult result = (codePointsMatched == 0) ? uct.first(c) : uct.next(c);
         int32_t lengthMatched = static_cast<int32_t>(utext_getNativeIndex(text)) - startingTextIndex;
         codePointsMatched += 1;
-        if (USTRINGTRIE_HAS_VALUE(result)) {
-            if (wordCount < limit) {
-                if (values != nullptr) {
+        якщо (USTRINGTRIE_HAS_VALUE(result)) {
+            якщо (wordCount < limit) {
+                якщо (values != nullptr) {
                     values[wordCount] = uct.getValue();
                 }
-                if (lengths != nullptr) {
+                якщо (lengths != nullptr) {
                     lengths[wordCount] = lengthMatched;
                 }
-                if (cpLengths != nullptr) {
+                якщо (cpLengths != nullptr) {
                     cpLengths[wordCount] = codePointsMatched;
                 }
                 ++wordCount;
             }
-            if (result == USTRINGTRIE_FINAL_VALUE) {
+            якщо (result == USTRINGTRIE_FINAL_VALUE) {
                 break;
             }
         }
-        else if (result == USTRINGTRIE_NO_MATCH) {
+        інакше якщо (result == USTRINGTRIE_NO_MATCH) {
             break;
         }
-        if (lengthMatched >= maxLength) {
+        якщо (lengthMatched >= maxLength) {
             break;
         }
     }
 
-    if (prefix != nullptr) {
+    якщо (prefix != nullptr) {
         *prefix = codePointsMatched;
     }
-    return wordCount;
+    повернути wordCount;
 }
 
 BytesDictionaryMatcher::~BytesDictionaryMatcher() {
@@ -91,23 +91,23 @@ BytesDictionaryMatcher::~BytesDictionaryMatcher() {
 }
 
 UChar32 BytesDictionaryMatcher::transform(UChar32 c) const {
-    if ((transformConstant & DictionaryData::TRANSFORM_TYPE_MASK) == DictionaryData::TRANSFORM_TYPE_OFFSET) {
-        if (c == 0x200D) {
-            return 0xFF;
-        } else if (c == 0x200C) {
-            return 0xFE;
+    якщо ((transformConstant & DictionaryData::TRANSFORM_TYPE_MASK) == DictionaryData::TRANSFORM_TYPE_OFFSET) {
+        якщо (c == 0x200D) {
+            повернути 0xFF;
+        } інакше якщо (c == 0x200C) {
+            повернути 0xFE;
         }
         int32_t delta = c - (transformConstant & DictionaryData::TRANSFORM_OFFSET_MASK);
-        if (delta < 0 || 0xFD < delta) {
-            return U_SENTINEL;
+        якщо (delta < 0 || 0xFD < delta) {
+            повернути U_SENTINEL;
         }
-        return static_cast<UChar32>(delta);
+        повернути static_cast<UChar32>(delta);
     }
-    return c;
+    повернути c;
 }
 
 int32_t BytesDictionaryMatcher::getType() const {
-    return DictionaryData::TRIE_TYPE_BYTES;
+    повернути DictionaryData::TRIE_TYPE_BYTES;
 }
 
 int32_t BytesDictionaryMatcher::matches(UText *text, int32_t maxLength, int32_t limit,
@@ -118,39 +118,39 @@ int32_t BytesDictionaryMatcher::matches(UText *text, int32_t maxLength, int32_t 
     int32_t wordCount = 0;
     int32_t codePointsMatched = 0;
 
-    for (UChar32 c = utext_next32(text); c >= 0; c=utext_next32(text)) {
+    для (UChar32 c = utext_next32(text); c >= 0; c=utext_next32(text)) {
         UStringTrieResult result = (codePointsMatched == 0) ? bt.first(transform(c)) : bt.next(transform(c));
         int32_t lengthMatched = static_cast<int32_t>(utext_getNativeIndex(text)) - startingTextIndex;
         codePointsMatched += 1;
-        if (USTRINGTRIE_HAS_VALUE(result)) {
-            if (wordCount < limit) {
-                if (values != nullptr) {
+        якщо (USTRINGTRIE_HAS_VALUE(result)) {
+            якщо (wordCount < limit) {
+                якщо (values != nullptr) {
                     values[wordCount] = bt.getValue();
                 }
-                if (lengths != nullptr) {
+                якщо (lengths != nullptr) {
                     lengths[wordCount] = lengthMatched;
                 }
-                if (cpLengths != nullptr) {
+                якщо (cpLengths != nullptr) {
                     cpLengths[wordCount] = codePointsMatched;
                 }
                 ++wordCount;
             }
-            if (result == USTRINGTRIE_FINAL_VALUE) {
+            якщо (result == USTRINGTRIE_FINAL_VALUE) {
                 break;
             }
         }
-        else if (result == USTRINGTRIE_NO_MATCH) {
+        інакше якщо (result == USTRINGTRIE_NO_MATCH) {
             break;
         }
-        if (lengthMatched >= maxLength) {
+        якщо (lengthMatched >= maxLength) {
             break;
         }
     }
 
-    if (prefix != nullptr) {
+    якщо (prefix != nullptr) {
         *prefix = codePointsMatched;
     }
-    return wordCount;
+    повернути wordCount;
 }
 
 
@@ -170,9 +170,9 @@ udict_swap(const UDataSwapper *ds, const void *inData, int32_t length,
     int32_t i, offset, size;
 
     headerSize = udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) return 0;
+    якщо (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) повернути 0;
     pInfo = (const UDataInfo *)((const char *)inData + 4);
-    if (!(pInfo->dataFormat[0] == 0x44 && 
+    якщо (!(pInfo->dataFormat[0] == 0x44 && 
           pInfo->dataFormat[1] == 0x69 && 
           pInfo->dataFormat[2] == 0x63 && 
           pInfo->dataFormat[3] == 0x74 && 
@@ -180,36 +180,36 @@ udict_swap(const UDataSwapper *ds, const void *inData, int32_t length,
         udata_printError(ds, "udict_swap(): data format %02x.%02x.%02x.%02x (format version %02x) is not recognized as dictionary data\n",
                          pInfo->dataFormat[0], pInfo->dataFormat[1], pInfo->dataFormat[2], pInfo->dataFormat[3], pInfo->formatVersion[0]);
         *pErrorCode = U_UNSUPPORTED_ERROR;
-        return 0;
+        повернути 0;
     }
 
     inBytes = (const uint8_t *)inData + headerSize;
     outBytes = (outData == nullptr) ? nullptr : (uint8_t *)outData + headerSize;
 
     inIndexes = (const int32_t *)inBytes;
-    if (length >= 0) {
+    якщо (length >= 0) {
         length -= headerSize;
-        if (length < (int32_t)(sizeof(indexes))) {
+        якщо (length < (int32_t)(sizeof(indexes))) {
             udata_printError(ds, "udict_swap(): too few bytes (%d after header) for dictionary data\n", length);
             *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            повернути 0;
         }
     }
 
-    for (i = 0; i < DictionaryData::IX_COUNT; i++) {
+    для (i = 0; i < DictionaryData::IX_COUNT; i++) {
         indexes[i] = udata_readInt32(ds, inIndexes[i]);
     }
 
     size = indexes[DictionaryData::IX_TOTAL_SIZE];
 
-    if (length >= 0) {
-        if (length < size) {
+    якщо (length >= 0) {
+        якщо (length < size) {
             udata_printError(ds, "udict_swap(): too few bytes (%d after header) for all of dictionary data\n", length);
             *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            повернути 0;
         }
 
-        if (inBytes != outBytes) {
+        якщо (inBytes != outBytes) {
             uprv_memcpy(outBytes, inBytes, size);
         }
 
@@ -219,14 +219,14 @@ udict_swap(const UDataSwapper *ds, const void *inData, int32_t length,
         int32_t trieType = indexes[DictionaryData::IX_TRIE_TYPE] & DictionaryData::TRIE_TYPE_MASK;
         int32_t nextOffset = indexes[DictionaryData::IX_RESERVED1_OFFSET];
 
-        if (trieType == DictionaryData::TRIE_TYPE_UCHARS) {
+        якщо (trieType == DictionaryData::TRIE_TYPE_UCHARS) {
             ds->swapArray16(ds, inBytes + offset, nextOffset - offset, outBytes + offset, pErrorCode);
-        } else if (trieType == DictionaryData::TRIE_TYPE_BYTES) {
+        } інакше якщо (trieType == DictionaryData::TRIE_TYPE_BYTES) {
             // nothing to do
-        } else {
+        } інакше {
             udata_printError(ds, "udict_swap(): unknown trie type!\n");
             *pErrorCode = U_UNSUPPORTED_ERROR;
-            return 0;
+            повернути 0;
         }
 
         // these next two sections are empty in the current format,
@@ -237,6 +237,6 @@ udict_swap(const UDataSwapper *ds, const void *inData, int32_t length,
         nextOffset = indexes[DictionaryData::IX_TOTAL_SIZE];
         offset = nextOffset;
     }
-    return headerSize + size;
+    повернути headerSize + size;
 }
 #endif

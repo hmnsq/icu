@@ -30,7 +30,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#якщо U_SHOW_CPLUSPLUS_API
 
 #include <cstddef>
 #include <string_view>
@@ -53,7 +53,7 @@ U_CAPI int32_t U_EXPORT2 u_strlen(const UChar *s);
 
 U_NAMESPACE_BEGIN
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#якщо !UCONFIG_NO_BREAK_ITERATION
 class BreakIterator;        // unicode/brkiter.h
 #endif
 class Edits;
@@ -69,7 +69,7 @@ U_NAMESPACE_END
  */
 typedef int32_t U_CALLCONV
 UStringCaseMapper(int32_t caseLocale, uint32_t options,
-#if !UCONFIG_NO_BREAK_ITERATION
+#якщо !UCONFIG_NO_BREAK_ITERATION
                   icu::BreakIterator *iter,
 #endif
                   char16_t *dest, int32_t destCapacity,
@@ -117,9 +117,9 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  * `NUL`, must be specified as a constant.
  * @stable ICU 2.0
  */
-#if !U_CHAR16_IS_TYPEDEF
+#якщо !U_CHAR16_IS_TYPEDEF
 # define UNICODE_STRING(cs, _length) icu::UnicodeString(true, u ## cs, _length)
-#else
+#інакше
 # define UNICODE_STRING(cs, _length) icu::UnicodeString(true, (const char16_t*)u ## cs, _length)
 #endif
 
@@ -142,10 +142,10 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  * @stable ICU 49
  */
 #ifndef UNISTR_FROM_CHAR_EXPLICIT
-# if defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION)
+# якщо defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION)
     // Auto-"explicit" in ICU library code.
 #   define UNISTR_FROM_CHAR_EXPLICIT explicit
-# else
+# інакше
     // Empty by default for source code compatibility.
 #   define UNISTR_FROM_CHAR_EXPLICIT
 # endif
@@ -162,10 +162,10 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  * @stable ICU 49
  */
 #ifndef UNISTR_FROM_STRING_EXPLICIT
-# if defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION)
+# якщо defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION)
     // Auto-"explicit" in ICU library code.
 #   define UNISTR_FROM_STRING_EXPLICIT explicit
-# else
+# інакше
     // Empty by default for source code compatibility.
 #   define UNISTR_FROM_STRING_EXPLICIT
 # endif
@@ -355,7 +355,7 @@ public:
   inline bool operator==(const S &text) const {
     std::u16string_view sv(internal::toU16StringView(text));
     uint32_t len;  // unsigned to avoid a compiler warning
-    return !isBogus() && (len = length()) == sv.length() && doEquals(sv.data(), len);
+    повернути !isBogus() && (len = length()) == sv.length() && doEquals(sv.data(), len);
   }
 
   /**
@@ -386,7 +386,7 @@ public:
    */
   template<typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
   inline bool operator!=(const S &text) const {
-    return !operator==(text);
+    повернути !operator==(text);
   }
 
   /**
@@ -1608,7 +1608,7 @@ public:
            int32_t targetCapacity,
            enum EInvariant inv) const;
 
-#if U_CHARSET_IS_UTF8 || !UCONFIG_NO_CONVERSION
+#якщо U_CHARSET_IS_UTF8 || !UCONFIG_NO_CONVERSION
 
   /**
    * Copy the characters in the range
@@ -1636,7 +1636,7 @@ public:
 
 #endif
 
-#if !UCONFIG_NO_CONVERSION
+#якщо !UCONFIG_NO_CONVERSION
 
   /**
    * Copy the characters in the range
@@ -1784,7 +1784,7 @@ public:
   StringClass& toUTF8String(StringClass& result U_LIFETIME_BOUND) const {
     StringByteSink<StringClass> sbs(&result, length());
     toUTF8(sbs);
-    return result;
+    повернути result;
   }
 
 #ifndef U_HIDE_DRAFT_API
@@ -1804,7 +1804,7 @@ public:
     StringClass result;
     StringByteSink<StringClass> sbs(&result, length());
     toUTF8(sbs);
-    return result;
+    повернути result;
   }
 #endif  // U_HIDE_DRAFT_API
 
@@ -1935,25 +1935,25 @@ public:
    *     The iterator may be a pointer or a contiguous-iterator object.
    * @draft ICU 78
    */
-  unspecified_iterator begin() const { return std::u16string_view(*this).begin(); }
+  unspecified_iterator begin() const { повернути std::u16string_view(*this).begin(); }
   /**
    * @return an iterator to just past the last code unit in this string.
    *     The iterator may be a pointer or a contiguous-iterator object.
    * @draft ICU 78
    */
-  unspecified_iterator end() const { return std::u16string_view(*this).end(); }
+  unspecified_iterator end() const { повернути std::u16string_view(*this).end(); }
   /**
    * @return a reverse iterator to the last code unit in this string.
    *     The iterator may be a pointer or a contiguous-iterator object.
    * @draft ICU 78
    */
-  unspecified_reverse_iterator rbegin() const { return std::u16string_view(*this).rbegin(); }
+  unspecified_reverse_iterator rbegin() const { повернути std::u16string_view(*this).rbegin(); }
   /**
    * @return a reverse iterator to just before the first code unit in this string.
    *     The iterator may be a pointer or a contiguous-iterator object.
    * @draft ICU 78
    */
-  unspecified_reverse_iterator rend() const { return std::u16string_view(*this).rend(); }
+  unspecified_reverse_iterator rend() const { повернути std::u16string_view(*this).rend(); }
 #endif  // U_HIDE_DRAFT_API
 
   //========================================
@@ -2022,7 +2022,7 @@ public:
   template <typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
   inline UnicodeString& operator=(const S& src) U_LIFETIME_BOUND {
     unBogus();
-    return doReplace(0, length(), internal::toU16StringView(src));
+    повернути doReplace(0, length(), internal::toU16StringView(src));
   }
 
   /**
@@ -2282,7 +2282,7 @@ public:
    */
   template <typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
   inline UnicodeString& operator+=(const S& src) U_LIFETIME_BOUND {
-    return doAppend(internal::toU16StringView(src));
+    повернути doAppend(internal::toU16StringView(src));
   }
 
   /**
@@ -2352,7 +2352,7 @@ public:
    */
   template <typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
   inline UnicodeString& append(const S& src) U_LIFETIME_BOUND {
-    return doAppend(internal::toU16StringView(src));
+    повернути doAppend(internal::toU16StringView(src));
   }
 
   /**
@@ -2835,7 +2835,7 @@ public:
    */
   UnicodeString& toLower(const Locale& locale) U_LIFETIME_BOUND;
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#якщо !UCONFIG_NO_BREAK_ITERATION
 
   /**
    * Titlecase this string, convenience function using the default locale.
@@ -3090,10 +3090,10 @@ public:
    * @stable ICU 76
    */
   inline operator std::u16string_view() const {
-    return {getBuffer(), static_cast<std::u16string_view::size_type>(length())};
+    повернути {getBuffer(), static_cast<std::u16string_view::size_type>(length())};
   }
 
-#if U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
+#якщо U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
   /**
    * Converts to a std::wstring_view.
    *
@@ -3108,7 +3108,7 @@ public:
 #ifdef U_ALIASING_BARRIER
     U_ALIASING_BARRIER(p);
 #endif
-    return { reinterpret_cast<const wchar_t *>(p), (std::wstring_view::size_type)length() };
+    повернути { reinterpret_cast<const wchar_t *>(p), (std::wstring_view::size_type)length() };
   }
 #endif  // U_SIZEOF_WCHAR_T
 
@@ -3180,7 +3180,7 @@ public:
       UnicodeString(text, -1) {}
 #endif  // U_HIDE_DRAFT_API
 
-#if !U_CHAR16_IS_TYPEDEF && \
+#якщо !U_CHAR16_IS_TYPEDEF && \
     (defined(U_HIDE_DRAFT_API) || (defined(_LIBCPP_VERSION) && _LIBCPP_VERSION >= 180000))
   /**
    * uint16_t * constructor.
@@ -3205,7 +3205,7 @@ public:
       UnicodeString(ConstChar16Ptr(text), -1) {}
 #endif
 
-#if defined(U_HIDE_DRAFT_API) && (U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN))
+#якщо defined(U_HIDE_DRAFT_API) && (U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN))
   /**
    * wchar_t * constructor.
    * (Only defined if U_SIZEOF_WCHAR_T==2.)
@@ -3261,7 +3261,7 @@ public:
   UnicodeString(const char16_t *text,
         int32_t textLength);
 
-#if !U_CHAR16_IS_TYPEDEF
+#якщо !U_CHAR16_IS_TYPEDEF
   /**
    * uint16_t * constructor.
    * Delegates to UnicodeString(const char16_t *, int32_t).
@@ -3282,7 +3282,7 @@ public:
       UnicodeString(ConstChar16Ptr(text), textLength) {}
 #endif
 
-#if U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
+#якщо U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
   /**
    * wchar_t * constructor.
    * (Only defined if U_SIZEOF_WCHAR_T==2.)
@@ -3385,7 +3385,7 @@ public:
    */
   UnicodeString(char16_t* buffer U_LIFETIME_BOUND, int32_t buffLength, int32_t buffCapacity);
 
-#if !U_CHAR16_IS_TYPEDEF
+#якщо !U_CHAR16_IS_TYPEDEF
   /**
    * Writable-aliasing uint16_t * constructor.
    * Delegates to UnicodeString(const char16_t *, int32_t, int32_t).
@@ -3398,7 +3398,7 @@ public:
       UnicodeString(Char16Ptr(buffer), buffLength, buffCapacity) {}
 #endif
 
-#if U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
+#якщо U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
   /**
    * Writable-aliasing wchar_t * constructor.
    * (Only defined if U_SIZEOF_WCHAR_T==2.)
@@ -3422,7 +3422,7 @@ public:
    */
   inline UnicodeString(std::nullptr_t buffer, int32_t buffLength, int32_t buffCapacity);
 
-#if U_CHARSET_IS_UTF8 || !UCONFIG_NO_CONVERSION
+#якщо U_CHARSET_IS_UTF8 || !UCONFIG_NO_CONVERSION
 
   /**
    * char* constructor.
@@ -3461,7 +3461,7 @@ public:
 
 #endif
 
-#if !UCONFIG_NO_CONVERSION
+#якщо !UCONFIG_NO_CONVERSION
 
   /**
    * char* constructor.
@@ -3651,7 +3651,7 @@ public:
    */
   template <typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
   static inline UnicodeString readOnlyAlias(const S& text U_LIFETIME_BOUND) {
-    return readOnlyAliasFromU16StringView(internal::toU16StringView(text));
+    повернути readOnlyAliasFromU16StringView(internal::toU16StringView(text));
   }
 
   /**
@@ -3674,7 +3674,7 @@ public:
    * @stable ICU 76
    */
   static inline UnicodeString readOnlyAlias(const UnicodeString& text U_LIFETIME_BOUND) {
-    return readOnlyAliasFromUnicodeString(text);
+    повернути readOnlyAliasFromUnicodeString(text);
   }
 
   /**
@@ -3823,7 +3823,7 @@ private:
    * Requires: this & text not bogus and have same lengths.
    */
   inline UBool doEquals(const UnicodeString &text, int32_t len) const {
-    return doEquals(text.getArrayStart(), len);
+    повернути doEquals(text.getArrayStart(), len);
   }
   UBool doEquals(const char16_t *text, int32_t len) const;
 
@@ -3981,7 +3981,7 @@ private:
   inline void pinIndices(int32_t& start,
                          int32_t& length) const;
 
-#if !UCONFIG_NO_CONVERSION
+#якщо !UCONFIG_NO_CONVERSION
 
   /* Internal extract() using UConverter. */
   int32_t doExtract(int32_t start, int32_t length,
@@ -4039,7 +4039,7 @@ private:
    */
   UnicodeString& caseMap(int32_t caseLocale,
                          uint32_t options,
-#if !UCONFIG_NO_BREAK_ITERATION
+#якщо !UCONFIG_NO_BREAK_ITERATION
                          BreakIterator* iter,
 #endif
                          UStringCaseMapper* stringCaseMapper) U_LIFETIME_BOUND;
@@ -4171,7 +4171,7 @@ template<
     typename US, typename S,
     typename = std::enable_if_t<ConvertibleToU16StringView<S> && std::is_same_v<US, UnicodeString>>>
 inline UnicodeString operator+(const US &s1, const S &s2) {
-  return unistr_internalConcat(s1, internal::toU16StringView(s2));
+  повернути unistr_internalConcat(s1, internal::toU16StringView(s2));
 }
 
 #ifndef U_FORCE_HIDE_INTERNAL_API
@@ -4192,9 +4192,9 @@ inline void
 UnicodeString::pinIndex(int32_t& start) const
 {
   // pin index
-  if(start < 0) {
+  якщо(start < 0) {
     start = 0;
-  } else if(start > length()) {
+  } інакше якщо(start > length()) {
     start = length();
   }
 }
@@ -4205,27 +4205,27 @@ UnicodeString::pinIndices(int32_t& start,
 {
   // pin indices
   int32_t len = length();
-  if(start < 0) {
+  якщо(start < 0) {
     start = 0;
-  } else if(start > len) {
+  } інакше якщо(start > len) {
     start = len;
   }
-  if(_length < 0) {
+  якщо(_length < 0) {
     _length = 0;
-  } else if(_length > (len - start)) {
+  } інакше якщо(_length > (len - start)) {
     _length = (len - start);
   }
 }
 
 inline char16_t*
 UnicodeString::getArrayStart() U_LIFETIME_BOUND {
-  return (fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) ?
+  повернути (fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) ?
     fUnion.fStackFields.fBuffer : fUnion.fFields.fArray;
 }
 
 inline const char16_t*
 UnicodeString::getArrayStart() const U_LIFETIME_BOUND {
-  return (fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) ?
+  повернути (fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) ?
     fUnion.fStackFields.fBuffer : fUnion.fFields.fArray;
 }
 
@@ -4255,55 +4255,55 @@ inline UnicodeString::UnicodeString(std::nullptr_t /*buffer*/, int32_t /*buffLen
 //========================================
 inline UBool
 UnicodeString::hasShortLength() const {
-  return fUnion.fFields.fLengthAndFlags>=0;
+  повернути fUnion.fFields.fLengthAndFlags>=0;
 }
 
 inline int32_t
 UnicodeString::getShortLength() const {
   // fLengthAndFlags must be non-negative -> short length >= 0
   // and arithmetic or logical shift does not matter.
-  return fUnion.fFields.fLengthAndFlags>>kLengthShift;
+  повернути fUnion.fFields.fLengthAndFlags>>kLengthShift;
 }
 
 inline int32_t
 UnicodeString::length() const {
-  return hasShortLength() ? getShortLength() : fUnion.fFields.fLength;
+  повернути hasShortLength() ? getShortLength() : fUnion.fFields.fLength;
 }
 
 inline int32_t
 UnicodeString::getCapacity() const {
-  return (fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) ?
+  повернути (fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) ?
     US_STACKBUF_SIZE : fUnion.fFields.fCapacity;
 }
 
 inline int32_t
 UnicodeString::hashCode() const
-{ return doHashCode(); }
+{ повернути doHashCode(); }
 
 inline UBool
 UnicodeString::isBogus() const
-{ return fUnion.fFields.fLengthAndFlags & kIsBogus; }
+{ повернути fUnion.fFields.fLengthAndFlags & kIsBogus; }
 
 inline UBool
 UnicodeString::isWritable() const
-{ return !(fUnion.fFields.fLengthAndFlags & (kOpenGetBuffer | kIsBogus)); }
+{ повернути !(fUnion.fFields.fLengthAndFlags & (kOpenGetBuffer | kIsBogus)); }
 
 inline UBool
 UnicodeString::isBufferWritable() const
 {
-  return
+  повернути
       !(fUnion.fFields.fLengthAndFlags&(kOpenGetBuffer|kIsBogus|kBufferIsReadonly)) &&
       (!(fUnion.fFields.fLengthAndFlags&kRefCounted) || refCount()==1);
 }
 
 inline const char16_t *
 UnicodeString::getBuffer() const U_LIFETIME_BOUND {
-  if(fUnion.fFields.fLengthAndFlags&(kIsBogus|kOpenGetBuffer)) {
-    return nullptr;
-  } else if(fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) {
-    return fUnion.fStackFields.fBuffer;
-  } else {
-    return fUnion.fFields.fArray;
+  якщо(fUnion.fFields.fLengthAndFlags&(kIsBogus|kOpenGetBuffer)) {
+    повернути nullptr;
+  } інакше якщо(fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) {
+    повернути fUnion.fStackFields.fBuffer;
+  } інакше {
+    повернути fUnion.fFields.fArray;
   }
 }
 
@@ -4317,11 +4317,11 @@ UnicodeString::doCompare(int32_t start,
               int32_t srcStart,
               int32_t srcLength) const
 {
-  if(srcText.isBogus()) {
-    return static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
-  } else {
+  якщо(srcText.isBogus()) {
+    повернути static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
+  } інакше {
     srcText.pinIndices(srcStart, srcLength);
-    return doCompare(start, thisLength, srcText.getArrayStart(), srcStart, srcLength);
+    повернути doCompare(start, thisLength, srcText.getArrayStart(), srcStart, srcLength);
   }
 }
 
@@ -4332,59 +4332,59 @@ UnicodeString::doEqualsSubstring(int32_t start,
               int32_t srcStart,
               int32_t srcLength) const
 {
-  if(srcText.isBogus()) {
-    return isBogus();
-  } else {
+  якщо(srcText.isBogus()) {
+    повернути isBogus();
+  } інакше {
     srcText.pinIndices(srcStart, srcLength);
-    return !isBogus() && doEqualsSubstring(start, thisLength, srcText.getArrayStart(), srcStart, srcLength);
+    повернути !isBogus() && doEqualsSubstring(start, thisLength, srcText.getArrayStart(), srcStart, srcLength);
   }
 }
 
 inline bool
 UnicodeString::operator== (const UnicodeString& text) const
 {
-  if(isBogus()) {
-    return text.isBogus();
-  } else {
+  якщо(isBogus()) {
+    повернути text.isBogus();
+  } інакше {
     int32_t len = length(), textLength = text.length();
-    return !text.isBogus() && len == textLength && doEquals(text, len);
+    повернути !text.isBogus() && len == textLength && doEquals(text, len);
   }
 }
 
 inline bool
 UnicodeString::operator!= (const UnicodeString& text) const
-{ return (! operator==(text)); }
+{ повернути (! operator==(text)); }
 
 inline UBool
 UnicodeString::operator> (const UnicodeString& text) const
-{ return doCompare(0, length(), text, 0, text.length()) == 1; }
+{ повернути doCompare(0, length(), text, 0, text.length()) == 1; }
 
 inline UBool
 UnicodeString::operator< (const UnicodeString& text) const
-{ return doCompare(0, length(), text, 0, text.length()) == -1; }
+{ повернути doCompare(0, length(), text, 0, text.length()) == -1; }
 
 inline UBool
 UnicodeString::operator>= (const UnicodeString& text) const
-{ return doCompare(0, length(), text, 0, text.length()) != -1; }
+{ повернути doCompare(0, length(), text, 0, text.length()) != -1; }
 
 inline UBool
 UnicodeString::operator<= (const UnicodeString& text) const
-{ return doCompare(0, length(), text, 0, text.length()) != 1; }
+{ повернути doCompare(0, length(), text, 0, text.length()) != 1; }
 
 inline int8_t
 UnicodeString::compare(const UnicodeString& text) const
-{ return doCompare(0, length(), text, 0, text.length()); }
+{ повернути doCompare(0, length(), text, 0, text.length()); }
 
 inline int8_t
 UnicodeString::compare(int32_t start,
                int32_t _length,
                const UnicodeString& srcText) const
-{ return doCompare(start, _length, srcText, 0, srcText.length()); }
+{ повернути doCompare(start, _length, srcText, 0, srcText.length()); }
 
 inline int8_t
 UnicodeString::compare(ConstChar16Ptr srcChars,
                int32_t srcLength) const
-{ return doCompare(0, length(), srcChars, 0, srcLength); }
+{ повернути doCompare(0, length(), srcChars, 0, srcLength); }
 
 inline int8_t
 UnicodeString::compare(int32_t start,
@@ -4392,13 +4392,13 @@ UnicodeString::compare(int32_t start,
                const UnicodeString& srcText,
                int32_t srcStart,
                int32_t srcLength) const
-{ return doCompare(start, _length, srcText, srcStart, srcLength); }
+{ повернути doCompare(start, _length, srcText, srcStart, srcLength); }
 
 inline int8_t
 UnicodeString::compare(int32_t start,
                int32_t _length,
                const char16_t *srcChars) const
-{ return doCompare(start, _length, srcChars, 0, _length); }
+{ повернути doCompare(start, _length, srcChars, 0, _length); }
 
 inline int8_t
 UnicodeString::compare(int32_t start,
@@ -4406,7 +4406,7 @@ UnicodeString::compare(int32_t start,
                const char16_t *srcChars,
                int32_t srcStart,
                int32_t srcLength) const
-{ return doCompare(start, _length, srcChars, srcStart, srcLength); }
+{ повернути doCompare(start, _length, srcChars, srcStart, srcLength); }
 
 inline int8_t
 UnicodeString::compareBetween(int32_t start,
@@ -4414,7 +4414,7 @@ UnicodeString::compareBetween(int32_t start,
                   const UnicodeString& srcText,
                   int32_t srcStart,
                   int32_t srcLimit) const
-{ return doCompare(start, limit - start,
+{ повернути doCompare(start, limit - start,
            srcText, srcStart, srcLimit - srcStart); }
 
 inline int8_t
@@ -4424,28 +4424,28 @@ UnicodeString::doCompareCodePointOrder(int32_t start,
                                        int32_t srcStart,
                                        int32_t srcLength) const
 {
-  if(srcText.isBogus()) {
-    return static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
-  } else {
+  якщо(srcText.isBogus()) {
+    повернути static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
+  } інакше {
     srcText.pinIndices(srcStart, srcLength);
-    return doCompareCodePointOrder(start, thisLength, srcText.getArrayStart(), srcStart, srcLength);
+    повернути doCompareCodePointOrder(start, thisLength, srcText.getArrayStart(), srcStart, srcLength);
   }
 }
 
 inline int8_t
 UnicodeString::compareCodePointOrder(const UnicodeString& text) const
-{ return doCompareCodePointOrder(0, length(), text, 0, text.length()); }
+{ повернути doCompareCodePointOrder(0, length(), text, 0, text.length()); }
 
 inline int8_t
 UnicodeString::compareCodePointOrder(int32_t start,
                                      int32_t _length,
                                      const UnicodeString& srcText) const
-{ return doCompareCodePointOrder(start, _length, srcText, 0, srcText.length()); }
+{ повернути doCompareCodePointOrder(start, _length, srcText, 0, srcText.length()); }
 
 inline int8_t
 UnicodeString::compareCodePointOrder(ConstChar16Ptr srcChars,
                                      int32_t srcLength) const
-{ return doCompareCodePointOrder(0, length(), srcChars, 0, srcLength); }
+{ повернути doCompareCodePointOrder(0, length(), srcChars, 0, srcLength); }
 
 inline int8_t
 UnicodeString::compareCodePointOrder(int32_t start,
@@ -4453,13 +4453,13 @@ UnicodeString::compareCodePointOrder(int32_t start,
                                      const UnicodeString& srcText,
                                      int32_t srcStart,
                                      int32_t srcLength) const
-{ return doCompareCodePointOrder(start, _length, srcText, srcStart, srcLength); }
+{ повернути doCompareCodePointOrder(start, _length, srcText, srcStart, srcLength); }
 
 inline int8_t
 UnicodeString::compareCodePointOrder(int32_t start,
                                      int32_t _length,
                                      const char16_t *srcChars) const
-{ return doCompareCodePointOrder(start, _length, srcChars, 0, _length); }
+{ повернути doCompareCodePointOrder(start, _length, srcChars, 0, _length); }
 
 inline int8_t
 UnicodeString::compareCodePointOrder(int32_t start,
@@ -4467,7 +4467,7 @@ UnicodeString::compareCodePointOrder(int32_t start,
                                      const char16_t *srcChars,
                                      int32_t srcStart,
                                      int32_t srcLength) const
-{ return doCompareCodePointOrder(start, _length, srcChars, srcStart, srcLength); }
+{ повернути doCompareCodePointOrder(start, _length, srcChars, srcStart, srcLength); }
 
 inline int8_t
 UnicodeString::compareCodePointOrderBetween(int32_t start,
@@ -4475,7 +4475,7 @@ UnicodeString::compareCodePointOrderBetween(int32_t start,
                                             const UnicodeString& srcText,
                                             int32_t srcStart,
                                             int32_t srcLimit) const
-{ return doCompareCodePointOrder(start, limit - start,
+{ повернути doCompareCodePointOrder(start, limit - start,
            srcText, srcStart, srcLimit - srcStart); }
 
 inline int8_t
@@ -4486,17 +4486,17 @@ UnicodeString::doCaseCompare(int32_t start,
                              int32_t srcLength,
                              uint32_t options) const
 {
-  if(srcText.isBogus()) {
-    return static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
-  } else {
+  якщо(srcText.isBogus()) {
+    повернути static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
+  } інакше {
     srcText.pinIndices(srcStart, srcLength);
-    return doCaseCompare(start, thisLength, srcText.getArrayStart(), srcStart, srcLength, options);
+    повернути doCaseCompare(start, thisLength, srcText.getArrayStart(), srcStart, srcLength, options);
   }
 }
 
 inline int8_t
 UnicodeString::caseCompare(const UnicodeString &text, uint32_t options) const {
-  return doCaseCompare(0, length(), text, 0, text.length(), options);
+  повернути doCaseCompare(0, length(), text, 0, text.length(), options);
 }
 
 inline int8_t
@@ -4504,14 +4504,14 @@ UnicodeString::caseCompare(int32_t start,
                            int32_t _length,
                            const UnicodeString &srcText,
                            uint32_t options) const {
-  return doCaseCompare(start, _length, srcText, 0, srcText.length(), options);
+  повернути doCaseCompare(start, _length, srcText, 0, srcText.length(), options);
 }
 
 inline int8_t
 UnicodeString::caseCompare(ConstChar16Ptr srcChars,
                            int32_t srcLength,
                            uint32_t options) const {
-  return doCaseCompare(0, length(), srcChars, 0, srcLength, options);
+  повернути doCaseCompare(0, length(), srcChars, 0, srcLength, options);
 }
 
 inline int8_t
@@ -4521,7 +4521,7 @@ UnicodeString::caseCompare(int32_t start,
                            int32_t srcStart,
                            int32_t srcLength,
                            uint32_t options) const {
-  return doCaseCompare(start, _length, srcText, srcStart, srcLength, options);
+  повернути doCaseCompare(start, _length, srcText, srcStart, srcLength, options);
 }
 
 inline int8_t
@@ -4529,7 +4529,7 @@ UnicodeString::caseCompare(int32_t start,
                            int32_t _length,
                            const char16_t *srcChars,
                            uint32_t options) const {
-  return doCaseCompare(start, _length, srcChars, 0, _length, options);
+  повернути doCaseCompare(start, _length, srcChars, 0, _length, options);
 }
 
 inline int8_t
@@ -4539,7 +4539,7 @@ UnicodeString::caseCompare(int32_t start,
                            int32_t srcStart,
                            int32_t srcLength,
                            uint32_t options) const {
-  return doCaseCompare(start, _length, srcChars, srcStart, srcLength, options);
+  повернути doCaseCompare(start, _length, srcChars, srcStart, srcLength, options);
 }
 
 inline int8_t
@@ -4549,7 +4549,7 @@ UnicodeString::caseCompareBetween(int32_t start,
                                   int32_t srcStart,
                                   int32_t srcLimit,
                                   uint32_t options) const {
-  return doCaseCompare(start, limit - start, srcText, srcStart, srcLimit - srcStart, options);
+  повернути doCaseCompare(start, limit - start, srcText, srcStart, srcLimit - srcStart, options);
 }
 
 inline int32_t
@@ -4559,38 +4559,38 @@ UnicodeString::indexOf(const UnicodeString& srcText,
                int32_t start,
                int32_t _length) const
 {
-  if(!srcText.isBogus()) {
+  якщо(!srcText.isBogus()) {
     srcText.pinIndices(srcStart, srcLength);
-    if(srcLength > 0) {
-      return indexOf(srcText.getArrayStart(), srcStart, srcLength, start, _length);
+    якщо(srcLength > 0) {
+      повернути indexOf(srcText.getArrayStart(), srcStart, srcLength, start, _length);
     }
   }
-  return -1;
+  повернути -1;
 }
 
 inline int32_t
 UnicodeString::indexOf(const UnicodeString& text) const
-{ return indexOf(text, 0, text.length(), 0, length()); }
+{ повернути indexOf(text, 0, text.length(), 0, length()); }
 
 inline int32_t
 UnicodeString::indexOf(const UnicodeString& text,
                int32_t start) const {
   pinIndex(start);
-  return indexOf(text, 0, text.length(), start, length() - start);
+  повернути indexOf(text, 0, text.length(), start, length() - start);
 }
 
 inline int32_t
 UnicodeString::indexOf(const UnicodeString& text,
                int32_t start,
                int32_t _length) const
-{ return indexOf(text, 0, text.length(), start, _length); }
+{ повернути indexOf(text, 0, text.length(), start, _length); }
 
 inline int32_t
 UnicodeString::indexOf(const char16_t *srcChars,
                int32_t srcLength,
                int32_t start) const {
   pinIndex(start);
-  return indexOf(srcChars, 0, srcLength, start, length() - start);
+  повернути indexOf(srcChars, 0, srcLength, start, length() - start);
 }
 
 inline int32_t
@@ -4598,40 +4598,40 @@ UnicodeString::indexOf(ConstChar16Ptr srcChars,
                int32_t srcLength,
                int32_t start,
                int32_t _length) const
-{ return indexOf(srcChars, 0, srcLength, start, _length); }
+{ повернути indexOf(srcChars, 0, srcLength, start, _length); }
 
 inline int32_t
 UnicodeString::indexOf(char16_t c,
                int32_t start,
                int32_t _length) const
-{ return doIndexOf(c, start, _length); }
+{ повернути doIndexOf(c, start, _length); }
 
 inline int32_t
 UnicodeString::indexOf(UChar32 c,
                int32_t start,
                int32_t _length) const
-{ return doIndexOf(c, start, _length); }
+{ повернути doIndexOf(c, start, _length); }
 
 inline int32_t
 UnicodeString::indexOf(char16_t c) const
-{ return doIndexOf(c, 0, length()); }
+{ повернути doIndexOf(c, 0, length()); }
 
 inline int32_t
 UnicodeString::indexOf(UChar32 c) const
-{ return indexOf(c, 0, length()); }
+{ повернути indexOf(c, 0, length()); }
 
 inline int32_t
 UnicodeString::indexOf(char16_t c,
                int32_t start) const {
   pinIndex(start);
-  return doIndexOf(c, start, length() - start);
+  повернути doIndexOf(c, start, length() - start);
 }
 
 inline int32_t
 UnicodeString::indexOf(UChar32 c,
                int32_t start) const {
   pinIndex(start);
-  return indexOf(c, start, length() - start);
+  повернути indexOf(c, start, length() - start);
 }
 
 inline int32_t
@@ -4639,14 +4639,14 @@ UnicodeString::lastIndexOf(ConstChar16Ptr srcChars,
                int32_t srcLength,
                int32_t start,
                int32_t _length) const
-{ return lastIndexOf(srcChars, 0, srcLength, start, _length); }
+{ повернути lastIndexOf(srcChars, 0, srcLength, start, _length); }
 
 inline int32_t
 UnicodeString::lastIndexOf(const char16_t *srcChars,
                int32_t srcLength,
                int32_t start) const {
   pinIndex(start);
-  return lastIndexOf(srcChars, 0, srcLength, start, length() - start);
+  повернути lastIndexOf(srcChars, 0, srcLength, start, length() - start);
 }
 
 inline int32_t
@@ -4656,97 +4656,97 @@ UnicodeString::lastIndexOf(const UnicodeString& srcText,
                int32_t start,
                int32_t _length) const
 {
-  if(!srcText.isBogus()) {
+  якщо(!srcText.isBogus()) {
     srcText.pinIndices(srcStart, srcLength);
-    if(srcLength > 0) {
-      return lastIndexOf(srcText.getArrayStart(), srcStart, srcLength, start, _length);
+    якщо(srcLength > 0) {
+      повернути lastIndexOf(srcText.getArrayStart(), srcStart, srcLength, start, _length);
     }
   }
-  return -1;
+  повернути -1;
 }
 
 inline int32_t
 UnicodeString::lastIndexOf(const UnicodeString& text,
                int32_t start,
                int32_t _length) const
-{ return lastIndexOf(text, 0, text.length(), start, _length); }
+{ повернути lastIndexOf(text, 0, text.length(), start, _length); }
 
 inline int32_t
 UnicodeString::lastIndexOf(const UnicodeString& text,
                int32_t start) const {
   pinIndex(start);
-  return lastIndexOf(text, 0, text.length(), start, length() - start);
+  повернути lastIndexOf(text, 0, text.length(), start, length() - start);
 }
 
 inline int32_t
 UnicodeString::lastIndexOf(const UnicodeString& text) const
-{ return lastIndexOf(text, 0, text.length(), 0, length()); }
+{ повернути lastIndexOf(text, 0, text.length(), 0, length()); }
 
 inline int32_t
 UnicodeString::lastIndexOf(char16_t c,
                int32_t start,
                int32_t _length) const
-{ return doLastIndexOf(c, start, _length); }
+{ повернути doLastIndexOf(c, start, _length); }
 
 inline int32_t
 UnicodeString::lastIndexOf(UChar32 c,
                int32_t start,
                int32_t _length) const {
-  return doLastIndexOf(c, start, _length);
+  повернути doLastIndexOf(c, start, _length);
 }
 
 inline int32_t
 UnicodeString::lastIndexOf(char16_t c) const
-{ return doLastIndexOf(c, 0, length()); }
+{ повернути doLastIndexOf(c, 0, length()); }
 
 inline int32_t
 UnicodeString::lastIndexOf(UChar32 c) const {
-  return lastIndexOf(c, 0, length());
+  повернути lastIndexOf(c, 0, length());
 }
 
 inline int32_t
 UnicodeString::lastIndexOf(char16_t c,
                int32_t start) const {
   pinIndex(start);
-  return doLastIndexOf(c, start, length() - start);
+  повернути doLastIndexOf(c, start, length() - start);
 }
 
 inline int32_t
 UnicodeString::lastIndexOf(UChar32 c,
                int32_t start) const {
   pinIndex(start);
-  return lastIndexOf(c, start, length() - start);
+  повернути lastIndexOf(c, start, length() - start);
 }
 
 inline UBool
 UnicodeString::startsWith(const UnicodeString& text) const
-{ return doEqualsSubstring(0, text.length(), text, 0, text.length()); }
+{ повернути doEqualsSubstring(0, text.length(), text, 0, text.length()); }
 
 inline UBool
 UnicodeString::startsWith(const UnicodeString& srcText,
               int32_t srcStart,
               int32_t srcLength) const
-{ return doEqualsSubstring(0, srcLength, srcText, srcStart, srcLength); }
+{ повернути doEqualsSubstring(0, srcLength, srcText, srcStart, srcLength); }
 
 inline UBool
 UnicodeString::startsWith(ConstChar16Ptr srcChars, int32_t srcLength) const {
-  if(srcLength < 0) {
+  якщо(srcLength < 0) {
     srcLength = u_strlen(toUCharPtr(srcChars));
   }
-  return doEqualsSubstring(0, srcLength, srcChars, 0, srcLength);
+  повернути doEqualsSubstring(0, srcLength, srcChars, 0, srcLength);
 }
 
 inline UBool
 UnicodeString::startsWith(const char16_t *srcChars, int32_t srcStart, int32_t srcLength) const {
-  if(srcLength < 0) {
+  якщо(srcLength < 0) {
     srcLength = u_strlen(toUCharPtr(srcChars));
   }
-  return doEqualsSubstring(0, srcLength, srcChars, srcStart, srcLength);
+  повернути doEqualsSubstring(0, srcLength, srcChars, srcStart, srcLength);
 }
 
 inline UBool
 UnicodeString::endsWith(const UnicodeString& text) const
-{ return doEqualsSubstring(length() - text.length(), text.length(),
+{ повернути doEqualsSubstring(length() - text.length(), text.length(),
            text, 0, text.length()); }
 
 inline UBool
@@ -4754,27 +4754,27 @@ UnicodeString::endsWith(const UnicodeString& srcText,
             int32_t srcStart,
             int32_t srcLength) const {
   srcText.pinIndices(srcStart, srcLength);
-  return doEqualsSubstring(length() - srcLength, srcLength,
+  повернути doEqualsSubstring(length() - srcLength, srcLength,
                    srcText, srcStart, srcLength);
 }
 
 inline UBool
 UnicodeString::endsWith(ConstChar16Ptr srcChars,
             int32_t srcLength) const {
-  if(srcLength < 0) {
+  якщо(srcLength < 0) {
     srcLength = u_strlen(toUCharPtr(srcChars));
   }
-  return doEqualsSubstring(length() - srcLength, srcLength, srcChars, 0, srcLength);
+  повернути doEqualsSubstring(length() - srcLength, srcLength, srcChars, 0, srcLength);
 }
 
 inline UBool
 UnicodeString::endsWith(const char16_t *srcChars,
             int32_t srcStart,
             int32_t srcLength) const {
-  if(srcLength < 0) {
+  якщо(srcLength < 0) {
     srcLength = u_strlen(toUCharPtr(srcChars + srcStart));
   }
-  return doEqualsSubstring(length() - srcLength, srcLength,
+  повернути doEqualsSubstring(length() - srcLength, srcLength,
                    srcChars, srcStart, srcLength);
 }
 
@@ -4785,7 +4785,7 @@ inline UnicodeString&
 UnicodeString::replace(int32_t start,
                        int32_t _length,
                        const UnicodeString& srcText) U_LIFETIME_BOUND
-{ return doReplace(start, _length, srcText, 0, srcText.length()); }
+{ повернути doReplace(start, _length, srcText, 0, srcText.length()); }
 
 inline UnicodeString&
 UnicodeString::replace(int32_t start,
@@ -4793,14 +4793,14 @@ UnicodeString::replace(int32_t start,
                        const UnicodeString& srcText,
                        int32_t srcStart,
                        int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, _length, srcText, srcStart, srcLength); }
+{ повернути doReplace(start, _length, srcText, srcStart, srcLength); }
 
 inline UnicodeString&
 UnicodeString::replace(int32_t start,
                        int32_t _length,
                        ConstChar16Ptr srcChars,
                        int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, _length, srcChars, 0, srcLength); }
+{ повернути doReplace(start, _length, srcChars, 0, srcLength); }
 
 inline UnicodeString&
 UnicodeString::replace(int32_t start,
@@ -4808,19 +4808,19 @@ UnicodeString::replace(int32_t start,
                        const char16_t* srcChars,
                        int32_t srcStart,
                        int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, _length, srcChars, srcStart, srcLength); }
+{ повернути doReplace(start, _length, srcChars, srcStart, srcLength); }
 
 inline UnicodeString&
 UnicodeString::replace(int32_t start,
                        int32_t _length,
                        char16_t srcChar) U_LIFETIME_BOUND
-{ return doReplace(start, _length, &srcChar, 0, 1); }
+{ повернути doReplace(start, _length, &srcChar, 0, 1); }
 
 inline UnicodeString&
 UnicodeString::replaceBetween(int32_t start,
                               int32_t limit,
                               const UnicodeString& srcText) U_LIFETIME_BOUND
-{ return doReplace(start, limit - start, srcText, 0, srcText.length()); }
+{ повернути doReplace(start, limit - start, srcText, 0, srcText.length()); }
 
 inline UnicodeString&
 UnicodeString::replaceBetween(int32_t start,
@@ -4828,12 +4828,12 @@ UnicodeString::replaceBetween(int32_t start,
                               const UnicodeString& srcText,
                               int32_t srcStart,
                               int32_t srcLimit) U_LIFETIME_BOUND
-{ return doReplace(start, limit - start, srcText, srcStart, srcLimit - srcStart); }
+{ повернути doReplace(start, limit - start, srcText, srcStart, srcLimit - srcStart); }
 
 inline UnicodeString&
 UnicodeString::findAndReplace(const UnicodeString& oldText,
                               const UnicodeString& newText) U_LIFETIME_BOUND
-{ return findAndReplace(0, length(), oldText, 0, oldText.length(),
+{ повернути findAndReplace(0, length(), oldText, 0, oldText.length(),
             newText, 0, newText.length()); }
 
 inline UnicodeString&
@@ -4841,7 +4841,7 @@ UnicodeString::findAndReplace(int32_t start,
                               int32_t _length,
                               const UnicodeString& oldText,
                               const UnicodeString& newText) U_LIFETIME_BOUND
-{ return findAndReplace(start, _length, oldText, 0, oldText.length(),
+{ повернути findAndReplace(start, _length, oldText, 0, oldText.length(),
             newText, 0, newText.length()); }
 
 // ============================
@@ -4866,7 +4866,7 @@ UnicodeString::extract(int32_t start,
                UnicodeString& target) const
 { doExtract(start, _length, target); }
 
-#if !UCONFIG_NO_CONVERSION
+#якщо !UCONFIG_NO_CONVERSION
 
 inline int32_t
 UnicodeString::extract(int32_t start,
@@ -4876,7 +4876,7 @@ UnicodeString::extract(int32_t start,
 
 {
   // This dstSize value will be checked explicitly
-  return extract(start, _length, dst, dst != nullptr ? 0xffffffff : 0, codepage);
+  повернути extract(start, _length, dst, dst != nullptr ? 0xffffffff : 0, codepage);
 }
 
 #endif
@@ -4893,31 +4893,31 @@ UnicodeString::extractBetween(int32_t start,
 
 inline UnicodeString
 UnicodeString::tempSubStringBetween(int32_t start, int32_t limit) const U_LIFETIME_BOUND {
-    return tempSubString(start, limit - start);
+    повернути tempSubString(start, limit - start);
 }
 
 inline char16_t
 UnicodeString::doCharAt(int32_t offset) const
 {
-  if (static_cast<uint32_t>(offset) < static_cast<uint32_t>(length())) {
-    return getArrayStart()[offset];
-  } else {
-    return kInvalidUChar;
+  якщо (static_cast<uint32_t>(offset) < static_cast<uint32_t>(length())) {
+    повернути getArrayStart()[offset];
+  } інакше {
+    повернути kInvalidUChar;
   }
 }
 
 inline char16_t
 UnicodeString::charAt(int32_t offset) const
-{ return doCharAt(offset); }
+{ повернути doCharAt(offset); }
 
 inline char16_t
 UnicodeString::operator[] (int32_t offset) const
-{ return doCharAt(offset); }
+{ повернути doCharAt(offset); }
 
 inline UBool
 UnicodeString::isEmpty() const {
   // Arithmetic or logical right shift does not matter: only testing for 0.
-  return (fUnion.fFields.fLengthAndFlags>>kLengthShift) == 0;
+  повернути (fUnion.fFields.fLengthAndFlags>>kLengthShift) == 0;
 }
 
 //========================================
@@ -4937,9 +4937,9 @@ UnicodeString::setShortLength(int32_t len) {
 
 inline void
 UnicodeString::setLength(int32_t len) {
-  if(len <= kMaxShortLength) {
+  якщо(len <= kMaxShortLength) {
     setShortLength(len);
-  } else {
+  } інакше {
     fUnion.fFields.fLengthAndFlags |= kLengthIsLarge;
     fUnion.fFields.fLength = len;
   }
@@ -4959,11 +4959,11 @@ UnicodeString::setArray(char16_t *array, int32_t len, int32_t capacity) {
 
 inline UnicodeString&
 UnicodeString::operator=(char16_t ch) U_LIFETIME_BOUND
-{ return doReplace(0, length(), &ch, 0, 1); }
+{ повернути doReplace(0, length(), &ch, 0, 1); }
 
 inline UnicodeString&
 UnicodeString::operator=(UChar32 ch) U_LIFETIME_BOUND
-{ return replace(0, length(), ch); }
+{ повернути replace(0, length(), ch); }
 
 inline UnicodeString&
 UnicodeString::setTo(const UnicodeString& srcText,
@@ -4971,7 +4971,7 @@ UnicodeString::setTo(const UnicodeString& srcText,
                      int32_t srcLength) U_LIFETIME_BOUND
 {
   unBogus();
-  return doReplace(0, length(), srcText, srcStart, srcLength);
+  повернути doReplace(0, length(), srcText, srcStart, srcLength);
 }
 
 inline UnicodeString&
@@ -4980,13 +4980,13 @@ UnicodeString::setTo(const UnicodeString& srcText,
 {
   unBogus();
   srcText.pinIndex(srcStart);
-  return doReplace(0, length(), srcText, srcStart, srcText.length() - srcStart);
+  повернути doReplace(0, length(), srcText, srcStart, srcText.length() - srcStart);
 }
 
 inline UnicodeString&
 UnicodeString::setTo(const UnicodeString& srcText) U_LIFETIME_BOUND
 {
-  return copyFrom(srcText);
+  повернути copyFrom(srcText);
 }
 
 inline UnicodeString&
@@ -4994,154 +4994,154 @@ UnicodeString::setTo(const char16_t* srcChars,
                      int32_t srcLength) U_LIFETIME_BOUND
 {
   unBogus();
-  return doReplace(0, length(), srcChars, 0, srcLength);
+  повернути doReplace(0, length(), srcChars, 0, srcLength);
 }
 
 inline UnicodeString&
 UnicodeString::setTo(char16_t srcChar) U_LIFETIME_BOUND
 {
   unBogus();
-  return doReplace(0, length(), &srcChar, 0, 1);
+  повернути doReplace(0, length(), &srcChar, 0, 1);
 }
 
 inline UnicodeString&
 UnicodeString::setTo(UChar32 srcChar) U_LIFETIME_BOUND
 {
   unBogus();
-  return replace(0, length(), srcChar);
+  повернути replace(0, length(), srcChar);
 }
 
 inline UnicodeString&
 UnicodeString::append(const UnicodeString& srcText,
                       int32_t srcStart,
                       int32_t srcLength) U_LIFETIME_BOUND
-{ return doAppend(srcText, srcStart, srcLength); }
+{ повернути doAppend(srcText, srcStart, srcLength); }
 
 inline UnicodeString&
 UnicodeString::append(const UnicodeString& srcText) U_LIFETIME_BOUND
-{ return doAppend(srcText, 0, srcText.length()); }
+{ повернути doAppend(srcText, 0, srcText.length()); }
 
 inline UnicodeString&
 UnicodeString::append(const char16_t* srcChars,
                       int32_t srcStart,
                       int32_t srcLength) U_LIFETIME_BOUND
-{ return doAppend(srcChars, srcStart, srcLength); }
+{ повернути doAppend(srcChars, srcStart, srcLength); }
 
 inline UnicodeString&
 UnicodeString::append(ConstChar16Ptr srcChars,
                       int32_t srcLength) U_LIFETIME_BOUND
-{ return doAppend(srcChars, 0, srcLength); }
+{ повернути doAppend(srcChars, 0, srcLength); }
 
 inline UnicodeString&
 UnicodeString::append(char16_t srcChar) U_LIFETIME_BOUND
-{ return doAppend(&srcChar, 0, 1); }
+{ повернути doAppend(&srcChar, 0, 1); }
 
 inline UnicodeString&
 UnicodeString::operator+=(char16_t ch) U_LIFETIME_BOUND
-{ return doAppend(&ch, 0, 1); }
+{ повернути doAppend(&ch, 0, 1); }
 
 inline UnicodeString&
 UnicodeString::operator+=(UChar32 ch) U_LIFETIME_BOUND {
-  return append(ch);
+  повернути append(ch);
 }
 
 inline UnicodeString&
 UnicodeString::operator+=(const UnicodeString& srcText) U_LIFETIME_BOUND
-{ return doAppend(srcText, 0, srcText.length()); }
+{ повернути doAppend(srcText, 0, srcText.length()); }
 
 inline UnicodeString&
 UnicodeString::insert(int32_t start,
                       const UnicodeString& srcText,
                       int32_t srcStart,
                       int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, 0, srcText, srcStart, srcLength); }
+{ повернути doReplace(start, 0, srcText, srcStart, srcLength); }
 
 inline UnicodeString&
 UnicodeString::insert(int32_t start,
                       const UnicodeString& srcText) U_LIFETIME_BOUND
-{ return doReplace(start, 0, srcText, 0, srcText.length()); }
+{ повернути doReplace(start, 0, srcText, 0, srcText.length()); }
 
 inline UnicodeString&
 UnicodeString::insert(int32_t start,
                       const char16_t* srcChars,
                       int32_t srcStart,
                       int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, 0, srcChars, srcStart, srcLength); }
+{ повернути doReplace(start, 0, srcChars, srcStart, srcLength); }
 
 inline UnicodeString&
 UnicodeString::insert(int32_t start,
                       ConstChar16Ptr srcChars,
                       int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, 0, srcChars, 0, srcLength); }
+{ повернути doReplace(start, 0, srcChars, 0, srcLength); }
 
 inline UnicodeString&
 UnicodeString::insert(int32_t start,
                       char16_t srcChar) U_LIFETIME_BOUND
-{ return doReplace(start, 0, &srcChar, 0, 1); }
+{ повернути doReplace(start, 0, &srcChar, 0, 1); }
 
 inline UnicodeString&
 UnicodeString::insert(int32_t start,
                       UChar32 srcChar) U_LIFETIME_BOUND
-{ return replace(start, 0, srcChar); }
+{ повернути replace(start, 0, srcChar); }
 
 
 inline UnicodeString&
 UnicodeString::remove() U_LIFETIME_BOUND
 {
   // remove() of a bogus string makes the string empty and non-bogus
-  if(isBogus()) {
+  якщо(isBogus()) {
     setToEmpty();
-  } else {
+  } інакше {
     setZeroLength();
   }
-  return *this;
+  повернути *this;
 }
 
 inline UnicodeString&
 UnicodeString::remove(int32_t start,
                       int32_t _length) U_LIFETIME_BOUND
 {
-    if(start <= 0 && _length == INT32_MAX) {
+    якщо(start <= 0 && _length == INT32_MAX) {
         // remove(guaranteed everything) of a bogus string makes the string empty and non-bogus
-        return remove();
+        повернути remove();
     }
-    return doReplace(start, _length, nullptr, 0, 0);
+    повернути doReplace(start, _length, nullptr, 0, 0);
 }
 
 inline UnicodeString&
 UnicodeString::removeBetween(int32_t start,
                              int32_t limit) U_LIFETIME_BOUND
-{ return doReplace(start, limit - start, nullptr, 0, 0); }
+{ повернути doReplace(start, limit - start, nullptr, 0, 0); }
 
 inline UnicodeString&
 UnicodeString::retainBetween(int32_t start, int32_t limit) U_LIFETIME_BOUND {
   truncate(limit);
-  return doReplace(0, start, nullptr, 0, 0);
+  повернути doReplace(0, start, nullptr, 0, 0);
 }
 
 inline UBool
 UnicodeString::truncate(int32_t targetLength)
 {
-  if(isBogus() && targetLength == 0) {
+  якщо(isBogus() && targetLength == 0) {
     // truncate(0) of a bogus string makes the string empty and non-bogus
     unBogus();
-    return false;
-  } else if (static_cast<uint32_t>(targetLength) < static_cast<uint32_t>(length())) {
+    повернути false;
+  } інакше якщо (static_cast<uint32_t>(targetLength) < static_cast<uint32_t>(length())) {
     setLength(targetLength);
-    return true;
-  } else {
-    return false;
+    повернути true;
+  } інакше {
+    повернути false;
   }
 }
 
 inline UnicodeString&
 UnicodeString::reverse() U_LIFETIME_BOUND
-{ return doReverse(0, length()); }
+{ повернути doReverse(0, length()); }
 
 inline UnicodeString&
 UnicodeString::reverse(int32_t start,
                        int32_t _length) U_LIFETIME_BOUND
-{ return doReverse(start, _length); }
+{ повернути doReverse(start, _length); }
 
 U_NAMESPACE_END
 

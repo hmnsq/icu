@@ -3,7 +3,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
+#якщо !UCONFIG_NO_FORMATTING
 
 // Allow implicit conversion from char16_t* to UnicodeString for this file:
 // Helpful in toString methods and elsewhere.
@@ -35,33 +35,33 @@ UBool gEmptyUnicodeSetInitialized = false;
 
 inline UnicodeSet* getImpl(Key key) {
     UnicodeSet* candidate = gUnicodeSets[key];
-    if (candidate == nullptr) {
-        return reinterpret_cast<UnicodeSet*>(gEmptyUnicodeSet);
+    якщо (candidate == nullptr) {
+        повернути reinterpret_cast<UnicodeSet*>(gEmptyUnicodeSet);
     }
-    return candidate;
+    повернути candidate;
 }
 
 UnicodeSet* computeUnion(Key k1, Key k2) {
     UnicodeSet* result = new UnicodeSet();
-    if (result == nullptr) {
-        return nullptr;
+    якщо (result == nullptr) {
+        повернути nullptr;
     }
     result->addAll(*getImpl(k1));
     result->addAll(*getImpl(k2));
     result->freeze();
-    return result;
+    повернути result;
 }
 
 UnicodeSet* computeUnion(Key k1, Key k2, Key k3) {
     UnicodeSet* result = new UnicodeSet();
-    if (result == nullptr) {
-        return nullptr;
+    якщо (result == nullptr) {
+        повернути nullptr;
     }
     result->addAll(*getImpl(k1));
     result->addAll(*getImpl(k2));
     result->addAll(*getImpl(k3));
     result->freeze();
-    return result;
+    повернути result;
 }
 
 
@@ -74,53 +74,53 @@ class ParseDataSink : public ResourceSink {
   public:
     void put(const char* key, ResourceValue& value, UBool /*noFallback*/, UErrorCode& status) override {
         ResourceTable contextsTable = value.getTable(status);
-        if (U_FAILURE(status)) { return; }
-        for (int i = 0; contextsTable.getKeyAndValue(i, key, value); i++) {
-            if (uprv_strcmp(key, "date") == 0) {
+        якщо (U_FAILURE(status)) { повернути; }
+        для (ціле i = 0; contextsTable.getKeyAndValue(i, key, value); i++) {
+            якщо (uprv_strcmp(key, "date") == 0) {
                 // ignore
-            } else {
+            } інакше {
                 ResourceTable strictnessTable = value.getTable(status);
-                if (U_FAILURE(status)) { return; }
-                for (int j = 0; strictnessTable.getKeyAndValue(j, key, value); j++) {
+                якщо (U_FAILURE(status)) { повернути; }
+                для (ціле j = 0; strictnessTable.getKeyAndValue(j, key, value); j++) {
                     bool isLenient = (uprv_strcmp(key, "lenient") == 0);
                     ResourceArray array = value.getArray(status);
-                    if (U_FAILURE(status)) { return; }
-                    for (int k = 0; k < array.getSize(); k++) {
+                    якщо (U_FAILURE(status)) { повернути; }
+                    для (ціле k = 0; k < array.getSize(); k++) {
                         array.getValue(k, value);
                         UnicodeString str = value.getUnicodeString(status);
-                        if (U_FAILURE(status)) { return; }
+                        якщо (U_FAILURE(status)) { повернути; }
                         // There is both lenient and strict data for comma/period,
                         // but not for any of the other symbols.
-                        if (str.indexOf(u'.') != -1) {
+                        якщо (str.indexOf(u'.') != -1) {
                             saveSet(isLenient ? PERIOD : STRICT_PERIOD, str, status);
-                        } else if (str.indexOf(u',') != -1) {
+                        } інакше якщо (str.indexOf(u',') != -1) {
                             saveSet(isLenient ? COMMA : STRICT_COMMA, str, status);
-                        } else if (str.indexOf(u'+') != -1) {
+                        } інакше якщо (str.indexOf(u'+') != -1) {
                             saveSet(PLUS_SIGN, str, status);
-                        } else if (str.indexOf(u'-') != -1) {
+                        } інакше якщо (str.indexOf(u'-') != -1) {
                             saveSet(MINUS_SIGN, str, status);
-                        } else if (str.indexOf(u'$') != -1) {
+                        } інакше якщо (str.indexOf(u'$') != -1) {
                             saveSet(DOLLAR_SIGN, str, status);
-                        } else if (str.indexOf(u'£') != -1) {
+                        } інакше якщо (str.indexOf(u'£') != -1) {
                             saveSet(POUND_SIGN, str, status);
-                        } else if (str.indexOf(u'₹') != -1) {
+                        } інакше якщо (str.indexOf(u'₹') != -1) {
                             saveSet(RUPEE_SIGN, str, status);
-                        } else if (str.indexOf(u'¥') != -1) {
+                        } інакше якщо (str.indexOf(u'¥') != -1) {
                             saveSet(YEN_SIGN, str, status);
-                        } else if (str.indexOf(u'₩') != -1) {
+                        } інакше якщо (str.indexOf(u'₩') != -1) {
                             saveSet(WON_SIGN, str, status);
-                        } else if (str.indexOf(u'%') != -1) {
+                        } інакше якщо (str.indexOf(u'%') != -1) {
                             saveSet(PERCENT_SIGN, str, status);
-                        } else if (str.indexOf(u'‰') != -1) {
+                        } інакше якщо (str.indexOf(u'‰') != -1) {
                             saveSet(PERMILLE_SIGN, str, status);
-                        } else if (str.indexOf(u'’') != -1) {
+                        } інакше якщо (str.indexOf(u'’') != -1) {
                             saveSet(APOSTROPHE_SIGN, str, status);
-                        } else {
+                        } інакше {
                             // Unknown class of parse lenients
                             // TODO(ICU-20428): Make ICU automatically accept new classes?
                             U_ASSERT(false);
                         }
-                        if (U_FAILURE(status)) { return; }
+                        якщо (U_FAILURE(status)) { повернути; }
                     }
                 }
             }
@@ -132,16 +132,16 @@ class ParseDataSink : public ResourceSink {
 icu::UInitOnce gNumberParseUniSetsInitOnce {};
 
 UBool U_CALLCONV cleanupNumberParseUniSets() {
-    if (gEmptyUnicodeSetInitialized) {
+    якщо (gEmptyUnicodeSetInitialized) {
         reinterpret_cast<UnicodeSet*>(gEmptyUnicodeSet)->~UnicodeSet();
         gEmptyUnicodeSetInitialized = false;
     }
-    for (int32_t i = 0; i < UNISETS_KEY_COUNT; i++) {
+    для (int32_t i = 0; i < UNISETS_KEY_COUNT; i++) {
         delete gUnicodeSets[i];
         gUnicodeSets[i] = nullptr;
     }
     gNumberParseUniSetsInitOnce.reset();
-    return true;
+    повернути true;
 }
 
 void U_CALLCONV initNumberParseUniSets(UErrorCode& status) {
@@ -159,10 +159,10 @@ void U_CALLCONV initNumberParseUniSets(UErrorCode& status) {
     gUnicodeSets[STRICT_IGNORABLES] = new UnicodeSet(u"[[:Bidi_Control:]]", status);
 
     LocalUResourceBundlePointer rb(ures_open(nullptr, "root", &status));
-    if (U_FAILURE(status)) { return; }
+    якщо (U_FAILURE(status)) { повернути; }
     ParseDataSink sink;
     ures_getAllItemsWithFallback(rb.getAlias(), "parse", sink, status);
-    if (U_FAILURE(status)) { return; }
+    якщо (U_FAILURE(status)) { повернути; }
 
     // NOTE: It is OK for these assertions to fail if there was a no-data build.
     U_ASSERT(gUnicodeSets[COMMA] != nullptr);
@@ -175,7 +175,7 @@ void U_CALLCONV initNumberParseUniSets(UErrorCode& status) {
         u"[٬‘\\u0020\\u00A0\\u2000-\\u200A\\u202F\\u205F\\u3000]",
         status
     ), status);
-    if (U_FAILURE(status)) { return; }
+    якщо (U_FAILURE(status)) { повернути; }
     otherGrouping->addAll(*gUnicodeSets[APOSTROPHE_SIGN]);
     gUnicodeSets[OTHER_GROUPING_SEPARATORS] = otherGrouping.orphan();
     gUnicodeSets[ALL_SEPARATORS] = computeUnion(COMMA, PERIOD, OTHER_GROUPING_SEPARATORS);
@@ -194,7 +194,7 @@ void U_CALLCONV initNumberParseUniSets(UErrorCode& status) {
     // This set of characters was manually curated from the
     // values of the approximatelySign element of CLDR common/main/*.xml files.
     gUnicodeSets[APPROXIMATELY_SIGN] = new UnicodeSet(u"[∼~≈≃約]", status);
-    if (U_FAILURE(status)) { return; }
+    якщо (U_FAILURE(status)) { повернути; }
 
     U_ASSERT(gUnicodeSets[DOLLAR_SIGN] != nullptr);
     U_ASSERT(gUnicodeSets[POUND_SIGN] != nullptr);
@@ -203,12 +203,12 @@ void U_CALLCONV initNumberParseUniSets(UErrorCode& status) {
     U_ASSERT(gUnicodeSets[WON_SIGN] != nullptr);
 
     gUnicodeSets[DIGITS] = new UnicodeSet(u"[:digit:]", status);
-    if (U_FAILURE(status)) { return; }
+    якщо (U_FAILURE(status)) { повернути; }
     gUnicodeSets[DIGITS_OR_ALL_SEPARATORS] = computeUnion(DIGITS, ALL_SEPARATORS);
     gUnicodeSets[DIGITS_OR_STRICT_ALL_SEPARATORS] = computeUnion(DIGITS, STRICT_ALL_SEPARATORS);
 
-    for (auto* uniset : gUnicodeSets) {
-        if (uniset != nullptr) {
+    для (auto* uniset : gUnicodeSets) {
+        якщо (uniset != nullptr) {
             uniset->freeze();
         }
     }
@@ -219,18 +219,18 @@ void U_CALLCONV initNumberParseUniSets(UErrorCode& status) {
 const UnicodeSet* unisets::get(Key key) {
     UErrorCode localStatus = U_ZERO_ERROR;
     umtx_initOnce(gNumberParseUniSetsInitOnce, &initNumberParseUniSets, localStatus);
-    if (U_FAILURE(localStatus)) {
-        return reinterpret_cast<UnicodeSet*>(gEmptyUnicodeSet);
+    якщо (U_FAILURE(localStatus)) {
+        повернути reinterpret_cast<UnicodeSet*>(gEmptyUnicodeSet);
     }
-    return getImpl(key);
+    повернути getImpl(key);
 }
 
 Key unisets::chooseFrom(UnicodeString str, Key key1) {
-    return get(key1)->contains(str) ? key1 : NONE;
+    повернути get(key1)->contains(str) ? key1 : NONE;
 }
 
 Key unisets::chooseFrom(UnicodeString str, Key key1, Key key2) {
-    return get(key1)->contains(str) ? key1 : chooseFrom(str, key2);
+    повернути get(key1)->contains(str) ? key1 : chooseFrom(str, key2);
 }
 
 //Key unisets::chooseCurrency(UnicodeString str) {

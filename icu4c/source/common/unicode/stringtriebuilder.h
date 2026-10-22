@@ -19,7 +19,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#якщо U_SHOW_CPLUSPLUS_API
 
 #include "unicode/uobject.h"
 
@@ -206,12 +206,12 @@ protected:
     class Node : public UObject {
     public:
         Node(int32_t initialHash) : hash(initialHash), offset(0) {}
-        inline int32_t hashCode() const { return hash; }
+        inline int32_t hashCode() const { повернути hash; }
         // Handles node==nullptr.
-        static inline int32_t hashCode(const Node *node) { return node==nullptr ? 0 : node->hashCode(); }
+        static inline int32_t hashCode(const Node *node) { повернути node==nullptr ? 0 : node->hashCode(); }
         // Base class operator==() compares the actual class types.
         virtual bool operator==(const Node &other) const;
-        inline bool operator!=(const Node &other) const { return !operator==(other); }
+        inline bool operator!=(const Node &other) const { повернути !operator==(other); }
         /**
          * Traverses the Node graph and numbers branch edges, with rightmost edges first.
          * This is to avoid writing a duplicate node twice.
@@ -250,11 +250,11 @@ protected:
             // and we need not write them again.
             // If this node is part of the unwritten right branch edge,
             // then we wait until that is written.
-            if(offset<0 && (offset<lastRight || firstRight<offset)) {
+            якщо(offset<0 && (offset<lastRight || firstRight<offset)) {
                 write(builder);
             }
         }
-        inline int32_t getOffset() const { return offset; }
+        inline int32_t getOffset() const { повернути offset; }
     protected:
         int32_t hash;
         int32_t offset;

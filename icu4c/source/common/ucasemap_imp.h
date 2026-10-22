@@ -71,13 +71,13 @@ class Locale;               // unicode/locid.h
 
 /** Returns true if the options are valid. Otherwise false, and sets an error. */
 inline UBool ustrcase_checkTitleAdjustmentOptions(uint32_t options, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return false; }
-    if ((options & U_TITLECASE_ADJUSTMENT_MASK) == U_TITLECASE_ADJUSTMENT_MASK) {
+    якщо (U_FAILURE(errorCode)) { повернути false; }
+    якщо ((options & U_TITLECASE_ADJUSTMENT_MASK) == U_TITLECASE_ADJUSTMENT_MASK) {
         // Both options together.
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        повернути false;
     }
-    return true;
+    повернути true;
 }
 
 inline UBool ustrcase_isLNS(UChar32 c) {
@@ -85,11 +85,11 @@ inline UBool ustrcase_isLNS(UChar32 c) {
     // or a private use code point because those are typically used as letters or numbers.
     // Consider modifier letters only if they are cased.
     const uint32_t LNS = (U_GC_L_MASK|U_GC_N_MASK|U_GC_S_MASK|U_GC_CO_MASK) & ~U_GC_LM_MASK;
-    int gc = u_charType(c);
-    return (U_MASK(gc) & LNS) != 0 || (gc == U_MODIFIER_LETTER && ucase_getType(c) != UCASE_NONE);
+    ціле gc = u_charType(c);
+    повернути (U_MASK(gc) & LNS) != 0 || (gc == U_MODIFIER_LETTER && ucase_getType(c) != UCASE_NONE);
 }
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#якщо !UCONFIG_NO_BREAK_ITERATION
 
 /** Returns nullptr if error. Pass in either locale or locID, not both. */
 U_CFUNC
@@ -112,7 +112,7 @@ struct UCaseMapImpl : public icu::UMemory {
     UCaseMapImpl(const char *localeID, uint32_t opts, UErrorCode *pErrorCode);
     ~UCaseMapImpl();
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#якщо !UCONFIG_NO_BREAK_ITERATION
     icu::BreakIterator *iter;  /* We adopt the iterator, so we own it. */
 #endif
     char locale[32];
@@ -122,12 +122,12 @@ struct UCaseMapImpl : public icu::UMemory {
 
 U_NAMESPACE_END
 
-#if UCONFIG_NO_BREAK_ITERATION
+#якщо UCONFIG_NO_BREAK_ITERATION
 #   define UCASEMAP_BREAK_ITERATOR_PARAM
 #   define UCASEMAP_BREAK_ITERATOR_UNUSED
 #   define UCASEMAP_BREAK_ITERATOR
 #   define UCASEMAP_BREAK_ITERATOR_NULL
-#else
+#інакше
 #   define UCASEMAP_BREAK_ITERATOR_PARAM icu::BreakIterator *iter,
 #   define UCASEMAP_BREAK_ITERATOR_UNUSED icu::BreakIterator *,
 #   define UCASEMAP_BREAK_ITERATOR iter,
@@ -154,7 +154,7 @@ ustrcase_internalToUpper(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_IT
                          icu::Edits *edits,
                          UErrorCode &errorCode);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#якщо !UCONFIG_NO_BREAK_ITERATION
 
 /** Implements UStringCaseMapper. */
 U_CFUNC int32_t U_CALLCONV
@@ -206,14 +206,14 @@ ustrcase_mapWithOverlap(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITE
  */
 typedef void U_CALLCONV
 UTF8CaseMapper(int32_t caseLocale, uint32_t options,
-#if !UCONFIG_NO_BREAK_ITERATION
+#якщо !UCONFIG_NO_BREAK_ITERATION
                icu::BreakIterator *iter,
 #endif
                const uint8_t *src, int32_t srcLength,
                icu::ByteSink &sink, icu::Edits *edits,
                UErrorCode &errorCode);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#якщо !UCONFIG_NO_BREAK_ITERATION
 
 /** Implements UTF8CaseMapper. */
 U_CFUNC void U_CALLCONV

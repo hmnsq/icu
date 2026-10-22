@@ -3,7 +3,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_ENABLE_TRACING
+#якщо U_ENABLE_TRACING
 
 #include "restrace.h"
 #include "charstr.h"
@@ -53,7 +53,7 @@ void ResourceTracer::traceOpen() const {
 }
 
 CharString& ResourceTracer::getFilePath(CharString& output, UErrorCode& status) const {
-    if (fResB) {
+    якщо (fResB) {
         // Note: if you get a segfault around here, check that ResourceTable and
         // ResourceArray instances outlive ResourceValue instances referring to
         // their contents:
@@ -61,40 +61,40 @@ CharString& ResourceTracer::getFilePath(CharString& output, UErrorCode& status) 
         output.append('/', status);
         output.append(fResB->fData->fName, status);
         output.append(".res", status);
-    } else {
+    } інакше {
         fParent->getFilePath(output, status);
     }
-    return output;
+    повернути output;
 }
 
 CharString& ResourceTracer::getResPath(CharString& output, UErrorCode& status) const {
-    if (fResB) {
+    якщо (fResB) {
         output.append('/', status);
         output.append(fResB->fResPath, status);
         // removing the trailing /
         U_ASSERT(output[output.length()-1] == '/');
         output.truncate(output.length()-1);
-    } else {
+    } інакше {
         fParent->getResPath(output, status);
     }
-    if (fKey) {
+    якщо (fKey) {
         output.append('/', status);
         output.append(fKey, status);
     }
-    if (fIndex != -1) {
+    якщо (fIndex != -1) {
         output.append('[', status);
         UnicodeString indexString;
         ICU_Utility::appendNumber(indexString, fIndex);
         output.appendInvariantChars(indexString, status);
         output.append(']', status);
     }
-    return output;
+    повернути output;
 }
 
 void FileTracer::traceOpen(const char* path, const char* type, const char* name) {
-    if (uprv_strcmp(type, "res") == 0) {
+    якщо (uprv_strcmp(type, "res") == 0) {
         traceOpenResFile(path, name);
-    } else {
+    } інакше {
         traceOpenDataFile(path, type, name);
     }
 }
