@@ -10,9 +10,9 @@
 **********************************************************************
 */
 
-#include "unicode/unifilt.h"
-#include "unicode/rep.h"
-#include "unicode/utf16.h"
+#समावेश "unicode/unifilt.h"
+#समावेश "unicode/rep.h"
+#समावेश "unicode/utf16.h"
 
 U_NAMESPACE_BEGIN
 UOBJECT_DEFINE_ABSTRACT_RTTI_IMPLEMENTATION(UnicodeFilter)
@@ -28,42 +28,42 @@ UnicodeFilter::~UnicodeFilter() {}
  * UnicodeFunctor API.
  *   Note that UnicodeMatcher is a base class of UnicodeFilter.
  */
-UnicodeMatcher* UnicodeFilter::toMatcher() const U_LIFETIME_BOUND {
-  return const_cast<UnicodeFilter *>(this);
+UnicodeMatcher* UnicodeFilter::toMatcher() स्थिर U_LIFETIME_BOUND {
+  वापस const_cast<UnicodeFilter *>(यह);
 }
 
-void UnicodeFilter::setData(const TransliterationRuleData*) {}
+व्योम UnicodeFilter::set_तथ्य(स्थिर Transliteration_Rule_तथ्य*) {}
 
 /**
  * Default implementation of UnicodeMatcher::matches() for Unicode
  * filters.  Matches a single code point at offset (either one or
  * two 16-bit code units).
  */
-UMatchDegree UnicodeFilter::matches(const Replaceable& text,
+UMatchDegree UnicodeFilter::matches(स्थिर Replaceable& text,
                                     int32_t& offset,
                                     int32_t limit,
                                     UBool incremental) {
     UChar32 c;
-    if (offset < limit &&
+    अगर (offset < limit &&
         contains(c = text.char32At(offset))) {
-        offset += U16_LENGTH(c);
-        return U_MATCH;
+        offset += U16_लंबाई(c);
+        वापस U_MATCH;
     }
-    if (offset > limit &&
+    अगर (offset > limit &&
         contains(c = text.char32At(offset))) {
         // Backup offset by 1, unless the preceding character is a
         // surrogate pair -- then backup by 2 (keep offset pointing at
         // the lead surrogate).
         --offset;
-        if (offset >= 0) {
-            offset -= U16_LENGTH(text.char32At(offset)) - 1;
+        अगर (offset >= 0) {
+            offset -= U16_लंबाई(text.char32At(offset)) - 1;
         }
-        return U_MATCH;
+        वापस U_MATCH;
     }
-    if (incremental && offset == limit) {
-        return U_PARTIAL_MATCH;
+    अगर (incremental && offset == limit) {
+        वापस U_PARTIAL_MATCH;
     }
-    return U_MISMATCH;
+    वापस U_MISMATCH;
 }
 
 U_NAMESPACE_END

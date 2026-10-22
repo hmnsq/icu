@@ -6,80 +6,80 @@
 // Copyright 2007 Google Inc. All Rights Reserved.
 // Author: sanjay@google.com (Sanjay Ghemawat)
 
-#include "unicode/utypes.h"
-#include "unicode/bytestream.h"
-#include "cmemory.h"
+#समावेश "unicode/utypes.h"
+#समावेश "unicode/bytestream.h"
+#समावेश "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
 ByteSink::~ByteSink() {}
 
-char* ByteSink::GetAppendBuffer(int32_t min_capacity,
+अक्षर* ByteSink::Get_Append_बफर(int32_t min_capacity,
                                 int32_t /*desired_capacity_hint*/,
-                                char* scratch U_LIFETIME_BOUND,
+                                अक्षर* scratch U_LIFETIME_BOUND,
                                 int32_t scratch_capacity,
-                                int32_t* result_capacity) U_LIFETIME_BOUND {
-  if (min_capacity < 1 || scratch_capacity < min_capacity) {
-    *result_capacity = 0;
-    return nullptr;
+                                int32_t* परिणाम_capacity) U_LIFETIME_BOUND {
+  अगर (min_capacity < 1 || scratch_capacity < min_capacity) {
+    *परिणाम_capacity = 0;
+    वापस nullptr;
   }
-  *result_capacity = scratch_capacity;
-  return scratch;
+  *परिणाम_capacity = scratch_capacity;
+  वापस scratch;
 }
 
-void ByteSink::Flush() {}
+व्योम ByteSink::Flush() {}
 
-CheckedArrayByteSink::CheckedArrayByteSink(char* outbuf, int32_t capacity)
+CheckedArrayByteSink::CheckedArrayByteSink(अक्षर* outbuf, int32_t capacity)
     : outbuf_(outbuf), capacity_(capacity < 0 ? 0 : capacity),
-      size_(0), appended_(0), overflowed_(false) {
+      आकार(0), appended_(0), overflowed_(false) {
 }
 
 CheckedArrayByteSink::~CheckedArrayByteSink() {}
 
 CheckedArrayByteSink& CheckedArrayByteSink::Reset() U_LIFETIME_BOUND {
-  size_ = appended_ = 0;
+  आकार = appended_ = 0;
   overflowed_ = false;
-  return *this;
+  वापस *यह;
 }
 
-void CheckedArrayByteSink::Append(const char* bytes, int32_t n) {
-  if (n <= 0) {
-    return;
+व्योम CheckedArrayByteSink::Append(स्थिर अक्षर* bytes, int32_t n) {
+  अगर (n <= 0) {
+    वापस;
   }
-  if (n > (INT32_MAX - appended_)) {
+  अगर (n > (INT32_MAX - appended_)) {
     // TODO: Report as integer overflow, not merely buffer overflow.
     appended_ = INT32_MAX;
     overflowed_ = true;
-    return;
+    वापस;
   }
   appended_ += n;
-  int32_t available = capacity_ - size_;
-  if (n > available) {
+  int32_t available = capacity_ - आकार;
+  अगर (n > available) {
     n = available;
     overflowed_ = true;
   }
-  if (n > 0 && bytes != (outbuf_ + size_)) {
-    uprv_memcpy(outbuf_ + size_, bytes, n);
+  अगर (n > 0 && bytes != (outbuf_ + आकार)) {
+    uprv_memcpy(outbuf_ + आकार, bytes, n);
   }
-  size_ += n;
+  आकार += n;
 }
 
-char* CheckedArrayByteSink::GetAppendBuffer(int32_t min_capacity,
+अक्षर* CheckedArrayByteSink::Get_Append_बफर(int32_t min_capacity,
                                             int32_t /*desired_capacity_hint*/,
-                                            char* scratch U_LIFETIME_BOUND,
+                                            अक्षर* scratch U_LIFETIME_BOUND,
                                             int32_t scratch_capacity,
-                                            int32_t* result_capacity) U_LIFETIME_BOUND {
-  if (min_capacity < 1 || scratch_capacity < min_capacity) {
-    *result_capacity = 0;
-    return nullptr;
+                                            int32_t* परिणाम_capacity) U_LIFETIME_BOUND {
+  अगर (min_capacity < 1 || scratch_capacity < min_capacity) {
+    *परिणाम_capacity = 0;
+    वापस nullptr;
   }
-  int32_t available = capacity_ - size_;
-  if (available >= min_capacity) {
-    *result_capacity = available;
-    return outbuf_ + size_;
-  } else {
-    *result_capacity = scratch_capacity;
-    return scratch;
+  int32_t available = capacity_ - आकार;
+  अगर (available >= min_capacity) {
+    *परिणाम_capacity = available;
+    वापस outbuf_ + आकार;
+  } अन्यथा {
+    *परिणाम_capacity = scratch_capacity;
+    वापस scratch;
   }
 }
 

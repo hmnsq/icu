@@ -22,16 +22,16 @@
 ******************************************************************************
 */
 
-#ifndef URES_H
-#define URES_H
+#अगर_अघोषित URES_H
+#घोषणा URES_H
 
-#include "unicode/char16ptr.h"
-#include "unicode/utypes.h"
-#include "unicode/uloc.h"
+#समावेश "unicode/char16ptr.h"
+#समावेश "unicode/utypes.h"
+#समावेश "unicode/uloc.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#अगर U_SHOW_CPLUSPLUS_API
+#समावेश "unicode/localpointer.h"
+#पूर्ण_अगर   // U_SHOW_CPLUSPLUS_API
 
 /**
  * \file
@@ -55,19 +55,19 @@
  * UResourceBundle is an opaque type for handles for resource bundles in C APIs.
  * @stable ICU 2.0
  */
-struct UResourceBundle;
+काष्ठा UResourceBundle;
 
 /**
  * @stable ICU 2.0
  */
-typedef struct UResourceBundle UResourceBundle;
+प्रकार काष्ठा UResourceBundle UResourceBundle;
 
 /**
  * Numeric constants for types of resource items.
  * @see ures_getType
  * @stable ICU 2.0
  */
-typedef enum {
+प्रकार क्रमागत {
     /** Resource type constant for "no resource". @stable ICU 2.6 */
     URES_NONE=-1,
 
@@ -75,7 +75,7 @@ typedef enum {
     URES_STRING=0,
 
     /** Resource type constant for binary data. @stable ICU 2.6 */
-    URES_BINARY=1,
+    URES_द्विआधारी=1,
 
     /** Resource type constant for tables of key-value pairs. @stable ICU 2.6 */
     URES_TABLE=2,
@@ -107,13 +107,13 @@ typedef enum {
      * @stable ICU 2.6
      */
     URES_INT_VECTOR = 14,
-#ifndef U_HIDE_DEPRECATED_API
+#अगर_अघोषित U_HIDE_DEPRECATED_API
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
     RES_NONE=URES_NONE,
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
     RES_STRING=URES_STRING,
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
-    RES_BINARY=URES_BINARY,
+    RES_द्विआधारी=URES_द्विआधारी,
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
     RES_TABLE=URES_TABLE,
     /** @deprecated ICU 2.6 Use the URES_ constant instead. */
@@ -132,7 +132,7 @@ typedef enum {
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
     URES_LIMIT = 16
-#endif  // U_HIDE_DEPRECATED_API
+#पूर्ण_अगर  // U_HIDE_DEPRECATED_API
 } UResType;
 
 /*
@@ -168,8 +168,8 @@ typedef enum {
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle*  U_EXPORT2
-ures_open(const char*    packageName,
-          const char*  locale,
+ures_open(स्थिर अक्षर*    packageName,
+          स्थिर अक्षर*  locale,
           UErrorCode*     status);
 
 
@@ -191,8 +191,8 @@ ures_open(const char*    packageName,
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_openDirect(const char* packageName,
-                const char* locale,
+ures_openDirect(स्थिर अक्षर* packageName,
+                स्थिर अक्षर* locale,
                 UErrorCode* status);
 
 /**
@@ -214,11 +214,11 @@ ures_openDirect(const char* packageName,
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_openU(const UChar* packageName,
-           const char* locale,
+ures_openU(स्थिर UChar* packageName,
+           स्थिर अक्षर* locale,
            UErrorCode* status);
 
-#ifndef U_HIDE_DEPRECATED_API
+#अगर_अघोषित U_HIDE_DEPRECATED_API
 /**
  * Returns the number of strings/arrays in resource bundles.
  * Better to use ures_getSize, as this function will be deprecated.
@@ -236,10 +236,10 @@ ures_openU(const UChar* packageName,
  * @deprecated ICU 2.8 User ures_getSize instead
  */
 U_DEPRECATED int32_t U_EXPORT2
-ures_countArrayItems(const UResourceBundle* resourceBundle,
-                     const char* resourceKey,
+ures_गिनती_Array_वस्तुएँ(स्थिर UResourceBundle* resourceBundle,
+                     स्थिर अक्षर* resource_कुंजी,
                      UErrorCode* err);
-#endif  /* U_HIDE_DEPRECATED_API */
+#पूर्ण_अगर  /* U_HIDE_DEPRECATED_API */
 
 /**
  * Close a resource bundle, all pointers returned from the various ures_getXXX calls
@@ -249,10 +249,10 @@ ures_countArrayItems(const UResourceBundle* resourceBundle,
  * @see ures_open
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
+U_CAPI व्योम U_EXPORT2
 ures_close(UResourceBundle* resourceBundle);
 
-#if U_SHOW_CPLUSPLUS_API
+#अगर U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -269,9 +269,9 @@ U_DEFINE_LOCAL_OPEN_POINTER(LocalUResourceBundlePointer, UResourceBundle, ures_c
 
 U_NAMESPACE_END
 
-#endif
+#पूर्ण_अगर
 
-#ifndef U_HIDE_DEPRECATED_API
+#अगर_अघोषित U_HIDE_DEPRECATED_API
 /**
  * Return the version number associated with this ResourceBundle as a string. Please
  * use ures_getVersion as this function is going to be deprecated.
@@ -282,9 +282,9 @@ U_NAMESPACE_END
  * @see ures_getVersion
  * @deprecated ICU 2.8 Use ures_getVersion instead.
  */
-U_DEPRECATED const char* U_EXPORT2
-ures_getVersionNumber(const UResourceBundle* resourceBundle U_LIFETIME_BOUND);
-#endif  /* U_HIDE_DEPRECATED_API */
+U_DEPRECATED स्थिर अक्षर* U_EXPORT2
+ures_get_Version_संख्या(स्थिर UResourceBundle* resourceBundle U_LIFETIME_BOUND);
+#पूर्ण_अगर  /* U_HIDE_DEPRECATED_API */
 
 /**
  * Return the version number associated with this ResourceBundle as an
@@ -295,11 +295,11 @@ ures_getVersionNumber(const UResourceBundle* resourceBundle U_LIFETIME_BOUND);
  *                    as specified in the resource bundle or its parent.
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-ures_getVersion(const UResourceBundle* resB,
+U_CAPI व्योम U_EXPORT2
+ures_getVersion(स्थिर UResourceBundle* resB,
                 UVersionInfo versionInfo);
 
-#ifndef U_HIDE_DEPRECATED_API
+#अगर_अघोषित U_HIDE_DEPRECATED_API
 /**
  * Return the name of the Locale associated with this ResourceBundle. This API allows
  * you to query for the real locale of the resource. For example, if you requested
@@ -312,9 +312,9 @@ ures_getVersion(const UResourceBundle* resB,
  * @return  A Locale name
  * @deprecated ICU 2.8 Use ures_getLocaleByType instead.
  */
-U_DEPRECATED const char* U_EXPORT2
-ures_getLocale(const UResourceBundle* resourceBundle U_LIFETIME_BOUND, UErrorCode* status);
-#endif  /* U_HIDE_DEPRECATED_API */
+U_DEPRECATED स्थिर अक्षर* U_EXPORT2
+ures_getLocale(स्थिर UResourceBundle* resourceBundle U_LIFETIME_BOUND, UErrorCode* status);
+#पूर्ण_अगर  /* U_HIDE_DEPRECATED_API */
 
 /**
  * Return the name of the Locale associated with this ResourceBundle.
@@ -328,13 +328,13 @@ ures_getLocale(const UResourceBundle* resourceBundle U_LIFETIME_BOUND, UErrorCod
  * @return  A Locale name
  * @stable ICU 2.8
  */
-U_CAPI const char* U_EXPORT2
-ures_getLocaleByType(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
-                     ULocDataLocaleType type,
+U_CAPI स्थिर अक्षर* U_EXPORT2
+ures_getLocaleByType(स्थिर UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+                     ULoc_तथ्य_Locale_Type type,
                      UErrorCode* status);
 
 
-#ifndef U_HIDE_INTERNAL_API
+#अगर_अघोषित U_HIDE_INTERNAL_API
 /**
  * Same as ures_open() but uses the fill-in parameter instead of allocating a new bundle.
  *
@@ -351,12 +351,12 @@ ures_getLocaleByType(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @param status The error code.
  * @internal
  */
-U_CAPI void U_EXPORT2
+U_CAPI व्योम U_EXPORT2
 ures_openFillIn(UResourceBundle *r,
-                const char* packageName,
-                const char* localeID,
+                स्थिर अक्षर* packageName,
+                स्थिर अक्षर* localeID,
                 UErrorCode* status);
-#endif  /* U_HIDE_INTERNAL_API */
+#पूर्ण_अगर  /* U_HIDE_INTERNAL_API */
 
 /**
  * Returns a string from a string resource type
@@ -375,8 +375,8 @@ ures_openFillIn(UResourceBundle *r,
  * @see ures_getUInt
  * @stable ICU 2.0
  */
-U_CAPI const UChar* U_EXPORT2
-ures_getString(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+U_CAPI स्थिर UChar* U_EXPORT2
+ures_getString(स्थिर UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                int32_t* len,
                UErrorCode* status);
 
@@ -427,10 +427,10 @@ ures_getString(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @see u_strToUTF8
  * @stable ICU 3.6
  */
-U_CAPI const char* U_EXPORT2
-ures_getUTF8String(const UResourceBundle* resB,
-                   char* dest U_LIFETIME_BOUND,
-                   int32_t* length,
+U_CAPI स्थिर अक्षर* U_EXPORT2
+ures_getUTF8String(स्थिर UResourceBundle* resB,
+                   अक्षर* dest U_LIFETIME_BOUND,
+                   int32_t* लंबाई,
                    UBool forceCopy,
                    UErrorCode* status);
 
@@ -451,8 +451,8 @@ ures_getUTF8String(const UResourceBundle* resB,
  * @see ures_getUInt
  * @stable ICU 2.0
  */
-U_CAPI const uint8_t* U_EXPORT2
-ures_getBinary(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+U_CAPI स्थिर uint8_t* U_EXPORT2
+ures_get_द्विआधारी(स्थिर UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                int32_t* len,
                UErrorCode* status);
 
@@ -473,8 +473,8 @@ ures_getBinary(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @see ures_getUInt
  * @stable ICU 2.0
  */
-U_CAPI const int32_t* U_EXPORT2
-ures_getIntVector(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+U_CAPI स्थिर int32_t* U_EXPORT2
+ures_getIntVector(स्थिर UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                   int32_t* len,
                   UErrorCode* status);
 
@@ -495,7 +495,7 @@ ures_getIntVector(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @stable ICU 2.0
  */
 U_CAPI uint32_t U_EXPORT2
-ures_getUInt(const UResourceBundle* resourceBundle,
+ures_getUInt(स्थिर UResourceBundle* resourceBundle,
              UErrorCode *status);
 
 /**
@@ -515,7 +515,7 @@ ures_getUInt(const UResourceBundle* resourceBundle,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ures_getInt(const UResourceBundle* resourceBundle,
+ures_getInt(स्थिर UResourceBundle* resourceBundle,
             UErrorCode *status);
 
 /**
@@ -529,7 +529,7 @@ ures_getInt(const UResourceBundle* resourceBundle,
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-ures_getSize(const UResourceBundle *resourceBundle);
+ures_get_आकार(स्थिर UResourceBundle *resourceBundle);
 
 /**
  * Returns the type of a resource. Available types are defined in enum UResType
@@ -540,7 +540,7 @@ ures_getSize(const UResourceBundle *resourceBundle);
  * @stable ICU 2.0
  */
 U_CAPI UResType U_EXPORT2
-ures_getType(const UResourceBundle *resourceBundle);
+ures_getType(स्थिर UResourceBundle *resourceBundle);
 
 /**
  * Returns the key associated with a given resource. Not all the resources have a key - only
@@ -550,8 +550,8 @@ ures_getType(const UResourceBundle *resourceBundle);
  * @return a key associated to this resource, or NULL if it doesn't have a key
  * @stable ICU 2.0
  */
-U_CAPI const char* U_EXPORT2
-ures_getKey(const UResourceBundle* resourceBundle U_LIFETIME_BOUND);
+U_CAPI स्थिर अक्षर* U_EXPORT2
+ures_get_कुंजी(स्थिर UResourceBundle* resourceBundle U_LIFETIME_BOUND);
 
 /* ITERATION API
     This API provides means for iterating through a resource
@@ -563,7 +563,7 @@ ures_getKey(const UResourceBundle* resourceBundle U_LIFETIME_BOUND);
  * @param resourceBundle a resource
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
+U_CAPI व्योम U_EXPORT2
 ures_resetIterator(UResourceBundle *resourceBundle);
 
 /**
@@ -574,7 +574,7 @@ ures_resetIterator(UResourceBundle *resourceBundle);
  * @stable ICU 2.0
  */
 U_CAPI UBool U_EXPORT2
-ures_hasNext(const UResourceBundle *resourceBundle);
+ures_has_अग्र(स्थिर UResourceBundle *resourceBundle);
 
 /**
  * Returns the next resource in a given resource or NULL if there are no more resources
@@ -589,7 +589,7 @@ ures_hasNext(const UResourceBundle *resourceBundle);
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getNextResource(UResourceBundle* resourceBundle,
+ures_get_अग्र_Resource(UResourceBundle* resourceBundle,
                      UResourceBundle* fillIn U_LIFETIME_BOUND,
                      UErrorCode* status);
 
@@ -605,10 +605,10 @@ ures_getNextResource(UResourceBundle* resourceBundle,
  * @return a pointer to a zero-terminated UChar array which lives in a memory mapped/DLL file.
  * @stable ICU 2.0
  */
-U_CAPI const UChar* U_EXPORT2
-ures_getNextString(UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+U_CAPI स्थिर UChar* U_EXPORT2
+ures_get_अग्र_String(UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                    int32_t* len,
-                   const char** key,
+                   स्थिर अक्षर** कुंजी,
                    UErrorCode* status);
 
 /**
@@ -624,8 +624,8 @@ ures_getNextString(UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getByIndex(const UResourceBundle* resourceBundle,
-                int32_t indexR,
+ures_get_By_सूचकांक(स्थिर UResourceBundle* resourceBundle,
+                int32_t सूचकांक_R,
                 UResourceBundle* fillIn U_LIFETIME_BOUND,
                 UErrorCode* status);
 
@@ -640,9 +640,9 @@ ures_getByIndex(const UResourceBundle* resourceBundle,
  * @return                  a pointer to a zero-terminated UChar array which lives in a memory mapped/DLL file.
  * @stable ICU 2.0
  */
-U_CAPI const UChar* U_EXPORT2
-ures_getStringByIndex(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
-                      int32_t indexS,
+U_CAPI स्थिर UChar* U_EXPORT2
+ures_get_String_By_सूचकांक(स्थिर UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+                      int32_t सूचकांक_S,
                       int32_t* len,
                       UErrorCode* status);
 
@@ -694,11 +694,11 @@ ures_getStringByIndex(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
  * @see u_strToUTF8
  * @stable ICU 3.6
  */
-U_CAPI const char* U_EXPORT2
-ures_getUTF8StringByIndex(const UResourceBundle* resB,
-                          int32_t stringIndex,
-                          char* dest U_LIFETIME_BOUND,
-                          int32_t* pLength,
+U_CAPI स्थिर अक्षर* U_EXPORT2
+ures_get_UTF8_String_By_सूचकांक(स्थिर UResourceBundle* resB,
+                          int32_t string_सूचकांक,
+                          अक्षर* dest U_LIFETIME_BOUND,
+                          int32_t* p_लंबाई,
                           UBool forceCopy,
                           UErrorCode* status);
 
@@ -715,8 +715,8 @@ ures_getUTF8StringByIndex(const UResourceBundle* resB,
  * @stable ICU 2.0
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getByKey(const UResourceBundle* resourceBundle,
-              const char* key,
+ures_get_By_कुंजी(स्थिर UResourceBundle* resourceBundle,
+              स्थिर अक्षर* कुंजी,
               UResourceBundle* fillIn U_LIFETIME_BOUND,
               UErrorCode* status);
 
@@ -732,9 +732,9 @@ ures_getByKey(const UResourceBundle* resourceBundle,
  * @return                  a pointer to a zero-terminated UChar array which lives in a memory mapped/DLL file.
  * @stable ICU 2.0
  */
-U_CAPI const UChar* U_EXPORT2
-ures_getStringByKey(const UResourceBundle* resB U_LIFETIME_BOUND,
-                    const char* key,
+U_CAPI स्थिर UChar* U_EXPORT2
+ures_get_String_By_कुंजी(स्थिर UResourceBundle* resB U_LIFETIME_BOUND,
+                    स्थिर अक्षर* कुंजी,
                     int32_t* len,
                     UErrorCode* status);
 
@@ -788,16 +788,16 @@ ures_getStringByKey(const UResourceBundle* resB U_LIFETIME_BOUND,
  * @see u_strToUTF8
  * @stable ICU 3.6
  */
-U_CAPI const char* U_EXPORT2
-ures_getUTF8StringByKey(const UResourceBundle* resB,
-                        const char* key,
-                        char* dest U_LIFETIME_BOUND,
-                        int32_t* pLength,
+U_CAPI स्थिर अक्षर* U_EXPORT2
+ures_get_UTF8_String_By_कुंजी(स्थिर UResourceBundle* resB,
+                        स्थिर अक्षर* कुंजी,
+                        अक्षर* dest U_LIFETIME_BOUND,
+                        int32_t* p_लंबाई,
                         UBool forceCopy,
                         UErrorCode* status);
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/unistr.h"
+#अगर U_SHOW_CPLUSPLUS_API
+#समावेश "unicode/unistr.h"
 
 U_NAMESPACE_BEGIN
 /**
@@ -811,17 +811,17 @@ U_NAMESPACE_BEGIN
  * @return The string value, or a bogus string if there is a failure UErrorCode.
  * @stable ICU 2.0
  */
-inline UnicodeString
-ures_getUnicodeString(const UResourceBundle* resB U_LIFETIME_BOUND, UErrorCode* status) {
-    UnicodeString result;
+अंतरभूत UnicodeString
+ures_getUnicodeString(स्थिर UResourceBundle* resB U_LIFETIME_BOUND, UErrorCode* status) {
+    UnicodeString परिणाम;
     int32_t len = 0;
-    const char16_t *r = ConstChar16Ptr(ures_getString(resB, &len, status));
-    if(U_SUCCESS(*status)) {
-        result.setTo(true, r, len);
-    } else {
-        result.setToBogus();
+    स्थिर char16_t *r = ConstChar16Ptr(ures_getString(resB, &len, status));
+    अगर(U_SUCCESS(*status)) {
+        परिणाम.setTo(true, r, len);
+    } अन्यथा {
+        परिणाम.setToBogus();
     }
-    return result;
+    वापस परिणाम;
 }
 
 /**
@@ -836,19 +836,19 @@ ures_getUnicodeString(const UResourceBundle* resB U_LIFETIME_BOUND, UErrorCode* 
  * @return The string value, or a bogus string if there is a failure UErrorCode.
  * @stable ICU 2.0
  */
-inline UnicodeString
-ures_getNextUnicodeString(UResourceBundle* resB U_LIFETIME_BOUND,
-                          const char** key,
+अंतरभूत UnicodeString
+ures_get_अग्र_Unicode_String(UResourceBundle* resB U_LIFETIME_BOUND,
+                          स्थिर अक्षर** कुंजी,
                           UErrorCode* status) {
-    UnicodeString result;
+    UnicodeString परिणाम;
     int32_t len = 0;
-    const char16_t* r = ConstChar16Ptr(ures_getNextString(resB, &len, key, status));
-    if(U_SUCCESS(*status)) {
-        result.setTo(true, r, len);
-    } else {
-        result.setToBogus();
+    स्थिर char16_t* r = ConstChar16Ptr(ures_get_अग्र_String(resB, &len, कुंजी, status));
+    अगर(U_SUCCESS(*status)) {
+        परिणाम.setTo(true, r, len);
+    } अन्यथा {
+        परिणाम.setToBogus();
     }
-    return result;
+    वापस परिणाम;
 }
 
 /**
@@ -860,19 +860,19 @@ ures_getNextUnicodeString(UResourceBundle* resB U_LIFETIME_BOUND,
  * @return The string value, or a bogus string if there is a failure UErrorCode.
  * @stable ICU 2.0
  */
-inline UnicodeString
-ures_getUnicodeStringByIndex(const UResourceBundle* resB U_LIFETIME_BOUND,
-                             int32_t indexS,
+अंतरभूत UnicodeString
+ures_get_Unicode_String_By_सूचकांक(स्थिर UResourceBundle* resB U_LIFETIME_BOUND,
+                             int32_t सूचकांक_S,
                              UErrorCode* status) {
-    UnicodeString result;
+    UnicodeString परिणाम;
     int32_t len = 0;
-    const char16_t* r = ConstChar16Ptr(ures_getStringByIndex(resB, indexS, &len, status));
-    if(U_SUCCESS(*status)) {
-        result.setTo(true, r, len);
-    } else {
-        result.setToBogus();
+    स्थिर char16_t* r = ConstChar16Ptr(ures_get_String_By_सूचकांक(resB, सूचकांक_S, &len, status));
+    अगर(U_SUCCESS(*status)) {
+        परिणाम.setTo(true, r, len);
+    } अन्यथा {
+        परिणाम.setToBogus();
     }
-    return result;
+    वापस परिणाम;
 }
 
 /**
@@ -885,24 +885,24 @@ ures_getUnicodeStringByIndex(const UResourceBundle* resB U_LIFETIME_BOUND,
  * @return The string value, or a bogus string if there is a failure UErrorCode.
  * @stable ICU 2.0
  */
-inline UnicodeString
-ures_getUnicodeStringByKey(const UResourceBundle* resB U_LIFETIME_BOUND,
-                           const char* key,
+अंतरभूत UnicodeString
+ures_get_Unicode_String_By_कुंजी(स्थिर UResourceBundle* resB U_LIFETIME_BOUND,
+                           स्थिर अक्षर* कुंजी,
                            UErrorCode* status) {
-    UnicodeString result;
+    UnicodeString परिणाम;
     int32_t len = 0;
-    const char16_t* r = ConstChar16Ptr(ures_getStringByKey(resB, key, &len, status));
-    if(U_SUCCESS(*status)) {
-        result.setTo(true, r, len);
-    } else {
-        result.setToBogus();
+    स्थिर char16_t* r = ConstChar16Ptr(ures_get_String_By_कुंजी(resB, कुंजी, &len, status));
+    अगर(U_SUCCESS(*status)) {
+        परिणाम.setTo(true, r, len);
+    } अन्यथा {
+        परिणाम.setToBogus();
     }
-    return result;
+    वापस परिणाम;
 }
 
 U_NAMESPACE_END
 
-#endif
+#पूर्ण_अगर
 
 /**
  * Create a string enumerator, owned by the caller, of all locales located within
@@ -913,8 +913,8 @@ U_NAMESPACE_END
  * @stable ICU 3.2
  */
 U_CAPI UEnumeration* U_EXPORT2
-ures_openAvailableLocales(const char *packageName, UErrorCode *status);
+ures_openAvailableLocales(स्थिर अक्षर *packageName, UErrorCode *status);
 
 
-#endif /*_URES*/
+#पूर्ण_अगर /*_URES*/
 /*eof*/

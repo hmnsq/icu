@@ -16,40 +16,40 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
+#समावेश "unicode/utypes.h"
 
-#if !U_HAVE_WCSCPY
+#अगर !U_HAVE_WCSCPY
 
-#include "cwchar.h"
+#समावेश "cwchar.h"
 
-U_CAPI wchar_t *uprv_wcscat(wchar_t *dst, const wchar_t *src) {
-    wchar_t *start=dst;
-    while(*dst!=0) {
+U_CAPI ब_अक्षर_प्रकार *uprv_wcscat(ब_अक्षर_प्रकार *dst, स्थिर ब_अक्षर_प्रकार *src) {
+    ब_अक्षर_प्रकार *start=dst;
+    जबतक(*dst!=0) {
         ++dst;
     }
-    while((*dst=*src)!=0) {
-        ++dst;
-        ++src;
-    }
-    return start;
-}
-
-U_CAPI wchar_t *uprv_wcscpy(wchar_t *dst, const wchar_t *src) {
-    wchar_t *start=dst;
-    while((*dst=*src)!=0) {
+    जबतक((*dst=*src)!=0) {
         ++dst;
         ++src;
     }
-    return start;
+    वापस start;
 }
 
-U_CAPI size_t uprv_wcslen(const wchar_t *src) {
-    const wchar_t *start=src;
-    while(*src!=0) {
+U_CAPI ब_अक्षर_प्रकार *uprv_wcscpy(ब_अक्षर_प्रकार *dst, स्थिर ब_अक्षर_प्रकार *src) {
+    ब_अक्षर_प्रकार *start=dst;
+    जबतक((*dst=*src)!=0) {
+        ++dst;
         ++src;
     }
-    return src-start;
+    वापस start;
 }
 
-#endif
+U_CAPI माप_प्रकार uprv_wcslen(स्थिर ब_अक्षर_प्रकार *src) {
+    स्थिर ब_अक्षर_प्रकार *start=src;
+    जबतक(*src!=0) {
+        ++src;
+    }
+    वापस src-start;
+}
+
+#पूर्ण_अगर
 

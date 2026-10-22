@@ -18,19 +18,19 @@
 *   Case-mapping functions moved here from unistr.cpp
 */
 
-#include "unicode/utypes.h"
-#include "unicode/brkiter.h"
-#include "unicode/casemap.h"
-#include "unicode/edits.h"
-#include "unicode/putil.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "unicode/ustring.h"
-#include "unicode/unistr.h"
-#include "unicode/uchar.h"
-#include "uassert.h"
-#include "ucasemap_imp.h"
-#include "uelement.h"
+#समावेश "unicode/utypes.h"
+#समावेश "unicode/brkiter.h"
+#समावेश "unicode/casemap.h"
+#समावेश "unicode/edits.h"
+#समावेश "unicode/putil.h"
+#समावेश "cstring.h"
+#समावेश "cmemory.h"
+#समावेश "unicode/ustring.h"
+#समावेश "unicode/unistr.h"
+#समावेश "unicode/uchar.h"
+#समावेश "uassert.h"
+#समावेश "ucasemap_imp.h"
+#समावेश "uelement.h"
 
 U_NAMESPACE_BEGIN
 
@@ -41,49 +41,49 @@ U_NAMESPACE_BEGIN
 int8_t
 UnicodeString::doCaseCompare(int32_t start,
                              int32_t length,
-                             const char16_t *srcChars,
+                             स्थिर char16_t *srcChars,
                              int32_t srcStart,
-                             int32_t srcLength,
-                             uint32_t options) const
+                             int32_t src_लंबाई,
+                             uint32_t options) स्थिर
 {
   // compare illegal string values
   // treat const char16_t *srcChars==nullptr as an empty string
-  if(isBogus()) {
-    return -1;
+  अगर(isBogus()) {
+    वापस -1;
   }
 
   // pin indices to legal values
   pinIndices(start, length);
 
-  if(srcChars == nullptr) {
-    srcStart = srcLength = 0;
+  अगर(srcChars == nullptr) {
+    srcStart = src_लंबाई = 0;
   }
 
   // get the correct pointer
-  const char16_t *chars = getArrayStart();
+  स्थिर char16_t *chars = getArrayStart();
 
   chars += start;
-  if(srcStart!=0) {
+  अगर(srcStart!=0) {
     srcChars += srcStart;
   }
 
-  if(chars != srcChars) {
+  अगर(chars != srcChars) {
     UErrorCode errorCode=U_ZERO_ERROR;
-    int32_t result=u_strcmpFold(chars, length, srcChars, srcLength,
+    int32_t परिणाम=u_strcmpFold(chars, length, srcChars, src_लंबाई,
                                 options|U_COMPARE_IGNORE_CASE, &errorCode);
-    if(result!=0) {
-      return static_cast<int8_t>(result >> 24 | 1);
+    अगर(परिणाम!=0) {
+      वापस static_cast<int8_t>(परिणाम >> 24 | 1);
     }
-  } else {
+  } अन्यथा {
     // get the srcLength if necessary
-    if(srcLength < 0) {
-      srcLength = u_strlen(srcChars + srcStart);
+    अगर(src_लंबाई < 0) {
+      src_लंबाई = u_strlen(srcChars + srcStart);
     }
-    if(length != srcLength) {
-      return static_cast<int8_t>((length - srcLength) >> 24 | 1);
+    अगर(length != src_लंबाई) {
+      वापस static_cast<int8_t>((length - src_लंबाई) >> 24 | 1);
     }
   }
-  return 0;
+  वापस 0;
 }
 
 //========================================
@@ -95,62 +95,62 @@ UnicodeString::caseMap(
     int32_t caseLocale,
     uint32_t options,
     UCASEMAP_BREAK_ITERATOR_PARAM UStringCaseMapper* stringCaseMapper) U_LIFETIME_BOUND {
-  if(isEmpty() || !isWritable()) {
+  अगर(isEmpty() || !isWritable()) {
     // nothing to do
-    return *this;
+    वापस *यह;
   }
 
-  char16_t oldBuffer[2 * US_STACKBUF_SIZE];
+  char16_t old_बफर[2 * US_STACKBUF_आकार];
   char16_t *oldArray;
-  int32_t oldLength = length();
-  int32_t newLength;
-  UBool writable = isBufferWritable();
+  int32_t old_लंबाई = length();
+  int32_t new_लंबाई;
+  UBool writable = is_बफर_Writable();
   UErrorCode errorCode = U_ZERO_ERROR;
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#अगर !UCONFIG_NO_BREAK_ITERATION
   // Read-only alias to the original string contents for the titlecasing BreakIterator.
   // We cannot set the iterator simply to *this because *this is being modified.
   UnicodeString oldString;
-#endif
+#पूर्ण_अगर
 
   // Try to avoid heap-allocating a new character array for this string.
-  if (writable ? oldLength <= UPRV_LENGTHOF(oldBuffer) : oldLength < US_STACKBUF_SIZE) {
+  अगर (writable ? old_लंबाई <= UPRV_LENGTHOF(old_बफर) : old_लंबाई < US_STACKBUF_आकार) {
     // Short string: Copy the contents into a temporary buffer and
     // case-map back into the current array, or into the stack buffer.
-    char16_t *buffer = getArrayStart();
+    char16_t *बफर = getArrayStart();
     int32_t capacity;
-    oldArray = oldBuffer;
-    u_memcpy(oldBuffer, buffer, oldLength);
-    if (writable) {
+    oldArray = old_बफर;
+    u_memcpy(old_बफर, बफर, old_लंबाई);
+    अगर (writable) {
       capacity = getCapacity();
-    } else {
+    } अन्यथा {
       // Switch from the read-only alias or shared heap buffer to the stack buffer.
-      if (!cloneArrayIfNeeded(US_STACKBUF_SIZE, US_STACKBUF_SIZE, /* doCopyArray= */ false)) {
-        return *this;
+      अगर (!cloneArrayIfNeeded(US_STACKBUF_आकार, US_STACKBUF_आकार, /* doCopyArray= */ false)) {
+        वापस *यह;
       }
-      U_ASSERT(fUnion.fFields.fLengthAndFlags & kUsingStackBuffer);
-      buffer = fUnion.fStackFields.fBuffer;
-      capacity = US_STACKBUF_SIZE;
+      U_ASSERT(fUnion.fFields.f_लंबाई_And_Flags & k_Using_ढेर_बफर);
+      बफर = fUnion.f_ढेर_Fields.f_बफर;
+      capacity = US_STACKBUF_आकार;
     }
-#if !UCONFIG_NO_BREAK_ITERATION
-    if (iter != nullptr) {
-      oldString.setTo(false, oldArray, oldLength);
+#अगर !UCONFIG_NO_BREAK_ITERATION
+    अगर (iter != nullptr) {
+      oldString.setTo(false, oldArray, old_लंबाई);
       iter->setText(oldString);
     }
-#endif
-    newLength = stringCaseMapper(caseLocale, options, UCASEMAP_BREAK_ITERATOR
-                                 buffer, capacity,
-                                 oldArray, oldLength, nullptr, errorCode);
-    if (U_SUCCESS(errorCode)) {
-      setLength(newLength);
-      return *this;
-    } else if (errorCode == U_BUFFER_OVERFLOW_ERROR) {
+#पूर्ण_अगर
+    new_लंबाई = stringCaseMapper(caseLocale, options, UCASEMAP_BREAK_ITERATOR
+                                 बफर, capacity,
+                                 oldArray, old_लंबाई, nullptr, errorCode);
+    अगर (U_SUCCESS(errorCode)) {
+      set_लंबाई(new_लंबाई);
+      वापस *यह;
+    } अन्यथा अगर (errorCode == U_बफर_OVERFLOW_ERROR) {
       // common overflow handling below
-    } else {
+    } अन्यथा {
       setToBogus();
-      return *this;
+      वापस *यह;
     }
-  } else {
+  } अन्यथा {
     // Longer string or read-only buffer:
     // Collect only changes and then apply them to this string.
     // Case mapping often changes only small parts of a string,
@@ -158,35 +158,35 @@ UnicodeString::caseMap(
     oldArray = getArrayStart();
     Edits edits;
     char16_t replacementChars[200];
-#if !UCONFIG_NO_BREAK_ITERATION
-    if (iter != nullptr) {
-      oldString.setTo(false, oldArray, oldLength);
+#अगर !UCONFIG_NO_BREAK_ITERATION
+    अगर (iter != nullptr) {
+      oldString.setTo(false, oldArray, old_लंबाई);
       iter->setText(oldString);
     }
-#endif
+#पूर्ण_अगर
     stringCaseMapper(caseLocale, options | U_OMIT_UNCHANGED_TEXT, UCASEMAP_BREAK_ITERATOR
                      replacementChars, UPRV_LENGTHOF(replacementChars),
-                     oldArray, oldLength, &edits, errorCode);
-    if (U_SUCCESS(errorCode)) {
+                     oldArray, old_लंबाई, &edits, errorCode);
+    अगर (U_SUCCESS(errorCode)) {
       // Grow the buffer at most once, not for multiple doReplace() calls.
-      newLength = oldLength + edits.lengthDelta();
-      if (newLength > oldLength && !cloneArrayIfNeeded(newLength, newLength)) {
-        return *this;
+      new_लंबाई = old_लंबाई + edits.लंबाई_Delta();
+      अगर (new_लंबाई > old_लंबाई && !cloneArrayIfNeeded(new_लंबाई, new_लंबाई)) {
+        वापस *यह;
       }
-      for (Edits::Iterator ei = edits.getCoarseChangesIterator(); ei.next(errorCode);) {
-        doReplace(ei.destinationIndex(), ei.oldLength(),
-                  replacementChars, ei.replacementIndex(), ei.newLength());
+      क्रम (Edits::Iterator ei = edits.getCoarseChangesIterator(); ei.next(errorCode);) {
+        doReplace(ei.destination_सूचकांक(), ei.old_लंबाई(),
+                  replacementChars, ei.replacement_सूचकांक(), ei.new_लंबाई());
       }
-      if (U_FAILURE(errorCode)) {
+      अगर (U_FAILURE(errorCode)) {
         setToBogus();
       }
-      return *this;
-    } else if (errorCode == U_BUFFER_OVERFLOW_ERROR) {
+      वापस *यह;
+    } अन्यथा अगर (errorCode == U_बफर_OVERFLOW_ERROR) {
       // common overflow handling below
-      newLength = oldLength + edits.lengthDelta();
-    } else {
+      new_लंबाई = old_लंबाई + edits.लंबाई_Delta();
+    } अन्यथा {
       setToBogus();
-      return *this;
+      वापस *यह;
     }
   }
 
@@ -195,58 +195,58 @@ UnicodeString::caseMap(
   // This is very similar to how doReplace() keeps the old array pointer
   // and deletes the old array itself after it is done.
   // In addition, we are forcing cloneArrayIfNeeded() to always allocate a new array.
-  int32_t *bufferToDelete = nullptr;
-  if (!cloneArrayIfNeeded(newLength, newLength, false, &bufferToDelete, true)) {
-    return *this;
+  int32_t *बफर_To_Delete = nullptr;
+  अगर (!cloneArrayIfNeeded(new_लंबाई, new_लंबाई, false, &बफर_To_Delete, true)) {
+    वापस *यह;
   }
   errorCode = U_ZERO_ERROR;
   // No need to iter->setText() again: The case mapper restarts via iter->first().
-  newLength = stringCaseMapper(caseLocale, options, UCASEMAP_BREAK_ITERATOR
+  new_लंबाई = stringCaseMapper(caseLocale, options, UCASEMAP_BREAK_ITERATOR
                                getArrayStart(), getCapacity(),
-                               oldArray, oldLength, nullptr, errorCode);
-  if (bufferToDelete) {
-    uprv_free(bufferToDelete);
+                               oldArray, old_लंबाई, nullptr, errorCode);
+  अगर (बफर_To_Delete) {
+    uprv_free(बफर_To_Delete);
   }
-  if (U_SUCCESS(errorCode)) {
-    setLength(newLength);
-  } else {
+  अगर (U_SUCCESS(errorCode)) {
+    set_लंबाई(new_लंबाई);
+  } अन्यथा {
     setToBogus();
   }
-  return *this;
+  वापस *यह;
 }
 
 UnicodeString&
 UnicodeString::foldCase(uint32_t options) U_LIFETIME_BOUND {
-  return caseMap(UCASE_LOC_ROOT, options, UCASEMAP_BREAK_ITERATOR_NULL ustrcase_internalFold);
+  वापस caseMap(UCASE_LOC_मूल, options, UCASEMAP_BREAK_ITERATOR_NULL ustrcase_internalFold);
 }
 
 U_NAMESPACE_END
 
 // Defined here to reduce dependencies on break iterator
 U_CAPI int32_t U_EXPORT2
-uhash_hashCaselessUnicodeString(const UElement key) {
+uhash_hashCaselessUnicodeString(स्थिर UElement कुंजी) {
     U_NAMESPACE_USE
-    const UnicodeString *str = (const UnicodeString*) key.pointer;
-    if (str == nullptr) {
-        return 0;
+    स्थिर UnicodeString *str = (स्थिर UnicodeString*) कुंजी.pointer;
+    अगर (str == nullptr) {
+        वापस 0;
     }
     // Inefficient; a better way would be to have a hash function in
     // UnicodeString that does case folding on the fly.
     UnicodeString copy(*str);
-    return copy.foldCase().hashCode();
+    वापस copy.foldCase().hashCode();
 }
 
 // Defined here to reduce dependencies on break iterator
 U_CAPI UBool U_EXPORT2
-uhash_compareCaselessUnicodeString(const UElement key1, const UElement key2) {
+uhash_compareCaselessUnicodeString(स्थिर UElement key1, स्थिर UElement key2) {
     U_NAMESPACE_USE
-    const UnicodeString *str1 = (const UnicodeString*) key1.pointer;
-    const UnicodeString *str2 = (const UnicodeString*) key2.pointer;
-    if (str1 == str2) {
-        return true;
+    स्थिर UnicodeString *str1 = (स्थिर UnicodeString*) key1.pointer;
+    स्थिर UnicodeString *str2 = (स्थिर UnicodeString*) key2.pointer;
+    अगर (str1 == str2) {
+        वापस true;
     }
-    if (str1 == nullptr || str2 == nullptr) {
-        return false;
+    अगर (str1 == nullptr || str2 == nullptr) {
+        वापस false;
     }
-    return str1->caseCompare(*str2, U_FOLD_CASE_DEFAULT) == 0;
+    वापस str1->caseCompare(*str2, U_FOLD_CASE_DEFAULT) == 0;
 }

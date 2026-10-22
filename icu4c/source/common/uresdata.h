@@ -15,14 +15,14 @@
 *   06/24/02    weiv        Added support for resource sharing
 */
 
-#ifndef __RESDATA_H__
-#define __RESDATA_H__
+#अगर_अघोषित __RESDATA_H__
+#घोषणा __RESDATA_H__
 
-#include "unicode/utypes.h"
-#include "unicode/udata.h"
-#include "unicode/ures.h"
-#include "putilimp.h"
-#include "udataswp.h"
+#समावेश "unicode/utypes.h"
+#समावेश "unicode/udata.h"
+#समावेश "unicode/ures.h"
+#समावेश "putilimp.h"
+#समावेश "udataswp.h"
 
 /**
  * Numeric constants for internal-only types of resource items.
@@ -30,7 +30,7 @@
  * because they are used together.
  * Internal types are never returned by ures_getType().
  */
-typedef enum {
+प्रकार क्रमागत {
     /** Include a negative value so that the compiler uses the same int type as for UResType. */
     URES_INTERNAL_NONE=-1,
 
@@ -60,35 +60,35 @@ typedef enum {
  * 31..28   4-bit type, see enum below
  * 27..0    28-bit four-byte-offset or value according to the type
  */
-typedef uint32_t Resource;
+प्रकार uint32_t Resource;
 
-#define RES_BOGUS 0xffffffff
-#define RES_MAX_OFFSET 0x0fffffff
+#घोषणा RES_BOGUS 0xffffffff
+#घोषणा RES_MAX_OFFSET 0x0fffffff
 
-#define RES_GET_TYPE(res) ((int32_t)((res)>>28UL))
-#define RES_GET_OFFSET(res) ((res)&0x0fffffff)
-#define RES_GET_POINTER(pRoot, res) ((pRoot)+RES_GET_OFFSET(res))
+#घोषणा RES_GET_TYPE(res) ((int32_t)((res)>>28UL))
+#घोषणा RES_GET_OFFSET(res) ((res)&0x0fffffff)
+#घोषणा RES_GET_POINTER(p_मूल, res) ((p_मूल)+RES_GET_OFFSET(res))
 
 /* get signed and unsigned integer values directly from the Resource handle
  * NOTE: For proper logging, please use the res_getInt() constexpr
  */
-#if U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
+#अगर U_SIGNED_दायाँ_SHIFT_IS_ARITHMETIC
 #   define RES_GET_INT_NO_TRACE(res) (((int32_t)((res)<<4L))>>4L)
-#else
+#अन्यथा
 #   define RES_GET_INT_NO_TRACE(res) (int32_t)(((res)&0x08000000) ? (res)|0xf0000000 : (res)&0x07ffffff)
-#endif
+#पूर्ण_अगर
 
-#define RES_GET_UINT_NO_TRACE(res) ((res)&0x0fffffff)
+#घोषणा RES_GET_UINT_NO_TRACE(res) ((res)&0x0fffffff)
 
-#define URES_IS_ARRAY(type) ((int32_t)(type)==URES_ARRAY || (int32_t)(type)==URES_ARRAY16)
-#define URES_IS_TABLE(type) ((int32_t)(type)==URES_TABLE || (int32_t)(type)==URES_TABLE16 || (int32_t)(type)==URES_TABLE32)
-#define URES_IS_CONTAINER(type) (URES_IS_TABLE(type) || URES_IS_ARRAY(type))
+#घोषणा URES_IS_ARRAY(type) ((int32_t)(type)==URES_ARRAY || (int32_t)(type)==URES_ARRAY16)
+#घोषणा URES_IS_TABLE(type) ((int32_t)(type)==URES_TABLE || (int32_t)(type)==URES_TABLE16 || (int32_t)(type)==URES_TABLE32)
+#घोषणा URES_IS_CONTAINER(type) (URES_IS_TABLE(type) || URES_IS_ARRAY(type))
 
-#define URES_MAKE_RESOURCE(type, offset) (((Resource)(type)<<28)|(Resource)(offset))
-#define URES_MAKE_EMPTY_RESOURCE(type) ((Resource)(type)<<28)
+#घोषणा URES_MAKE_RESOURCE(type, offset) (((Resource)(type)<<28)|(Resource)(offset))
+#घोषणा URES_MAKE_EMPTY_RESOURCE(type) ((Resource)(type)<<28)
 
 /* indexes[] value names; indexes are generally 32-bit (Resource) indexes */
-enum {
+क्रमागत {
     /**
      * [0] contains the length of indexes[]
      * which is at most URES_INDEX_TOP of the latest format version
@@ -101,21 +101,21 @@ enum {
      * formatVersion>=3:
      *        bits 31..8 poolStringIndexLimit bits 23..0
      */
-    URES_INDEX_LENGTH,
+    URES_सूचकांक_लंबाई,
     /**
      * [1] contains the top of the key strings,
      *     same as the bottom of resources or UTF-16 strings, rounded up
      */
-    URES_INDEX_KEYS_TOP,
+    URES_सूचकांक_कुंजियाँ_शीर्ष,
     /** [2] contains the top of all resources */
-    URES_INDEX_RESOURCES_TOP,
+    URES_सूचकांक_RESOURCES_शीर्ष,
     /**
      * [3] contains the top of the bundle,
      *     in case it were ever different from [2]
      */
-    URES_INDEX_BUNDLE_TOP,
+    URES_सूचकांक_BUNDLE_शीर्ष,
     /** [4] max. length of any table */
-    URES_INDEX_MAX_TABLE_LENGTH,
+    URES_सूचकांक_MAX_TABLE_लंबाई,
     /**
      * [5] attributes bit set, see URES_ATT_* (new in formatVersion 1.2)
      *
@@ -123,15 +123,15 @@ enum {
      *   bits 31..16 poolStringIndex16Limit
      *   bits 15..12 poolStringIndexLimit bits 27..24
      */
-    URES_INDEX_ATTRIBUTES,
+    URES_सूचकांक_ATTRIBUTES,
     /**
      * [6] top of the 16-bit units (UTF-16 string v2 UChars, URES_TABLE16, URES_ARRAY16),
      *     rounded up (new in formatVersion 2.0, ICU 4.4)
      */
-    URES_INDEX_16BIT_TOP,
+    URES_सूचकांक_16_BIT_शीर्ष,
     /** [7] checksum of the pool bundle (new in formatVersion 2.0, ICU 4.4) */
-    URES_INDEX_POOL_CHECKSUM,
-    URES_INDEX_TOP
+    URES_सूचकांक_POOL_CHECKSUM,
+    URES_सूचकांक_शीर्ष
 };
 
 /*
@@ -145,7 +145,7 @@ enum {
  * reliably. Dependency checking should ignore such bundles, and loading should
  * use fallbacks.
  */
-#define URES_ATT_NO_FALLBACK 1
+#घोषणा URES_ATT_NO_FALLBACK 1
 
 /*
  * Attributes for bundles that are, or use, a pool bundle.
@@ -153,8 +153,8 @@ enum {
  * to reduce their total size.
  * New in formatVersion 2 (ICU 4.4).
  */
-#define URES_ATT_IS_POOL_BUNDLE 2
-#define URES_ATT_USES_POOL_BUNDLE 4
+#घोषणा URES_ATT_IS_POOL_BUNDLE 2
+#घोषणा URES_ATT_USES_POOL_BUNDLE 4
 
 /*
  * File format for .res resource bundle files
@@ -383,46 +383,46 @@ enum {
 /*
  * Structure for a single, memory-mapped ResourceBundle.
  */
-typedef struct ResourceData {
-    UDataMemory *data;
-    const int32_t *pRoot;
-    const uint16_t *p16BitUnits;
-    const char *poolBundleKeys;
-    Resource rootRes;
-    int32_t localKeyLimit;
-    const uint16_t *poolBundleStrings;
-    int32_t poolStringIndexLimit;
+प्रकार काष्ठा Resource_तथ्य {
+    UDataMemory *तथ्य;
+    स्थिर int32_t *p_मूल;
+    स्थिर uint16_t *p16BitUnits;
+    स्थिर अक्षर *pool_Bundle_कुंजियाँ;
+    Resource मूल_Res;
+    int32_t local_कुंजी_Limit;
+    स्थिर uint16_t *poolBundleStrings;
+    int32_t pool_String_सूचकांक_Limit;
     int32_t poolStringIndex16Limit;
     UBool noFallback; /* see URES_ATT_NO_FALLBACK */
     UBool isPoolBundle;
     UBool usesPoolBundle;
     UBool useNativeStrcmp;
-} ResourceData;
+} Resource_तथ्य;
 
-struct UResourceDataEntry;   // forward declared for ResoureDataValue below; actually defined in uresimp.h
+काष्ठा UResource_तथ्य_Entry;   // forward declared for ResoureDataValue below; actually defined in uresimp.h
 
 /*
  * Read a resource bundle from memory.
  */
-U_CAPI void U_EXPORT2
-res_read(ResourceData *pResData,
-         const UDataInfo *pInfo, const void *inBytes, int32_t length,
+U_CAPI व्योम U_EXPORT2
+res_read(Resource_तथ्य *p_Res_तथ्य,
+         स्थिर UDataInfo *pInfo, स्थिर व्योम *inBytes, int32_t लंबाई,
          UErrorCode *errorCode);
 
 /*
  * Load a resource bundle file.
  * The ResourceData structure must be allocated externally.
  */
-U_CFUNC void
-res_load(ResourceData *pResData,
-         const char *path, const char *name, UErrorCode *errorCode);
+U_CFUNC व्योम
+res_load(Resource_तथ्य *p_Res_तथ्य,
+         स्थिर अक्षर *path, स्थिर अक्षर *name, UErrorCode *errorCode);
 
 /*
  * Release a resource bundle file.
  * This does not release the ResourceData structure itself.
  */
-U_CFUNC void
-res_unload(ResourceData *pResData);
+U_CFUNC व्योम
+res_unload(Resource_तथ्य *p_Res_तथ्य);
 
 U_CAPI UResType U_EXPORT2
 res_getPublicType(Resource res);
@@ -436,32 +436,32 @@ res_getPublicType(Resource res);
  * and set its length in *pLength.
  * Returns NULL if not found.
  */
-U_CAPI const UChar * U_EXPORT2
-res_getStringNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength);
+U_CAPI स्थिर UChar * U_EXPORT2
+res_getStringNoTrace(स्थिर Resource_तथ्य *p_Res_तथ्य, Resource res, int32_t *p_लंबाई);
 
-U_CAPI const uint8_t * U_EXPORT2
-res_getBinaryNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength);
+U_CAPI स्थिर uint8_t * U_EXPORT2
+res_get_द्विआधारी_No_Trace(स्थिर Resource_तथ्य *p_Res_तथ्य, Resource res, int32_t *p_लंबाई);
 
-U_CAPI const int32_t * U_EXPORT2
-res_getIntVectorNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength);
+U_CAPI स्थिर int32_t * U_EXPORT2
+res_getIntVectorNoTrace(स्थिर Resource_तथ्य *p_Res_तथ्य, Resource res, int32_t *p_लंबाई);
 
-U_CAPI const UChar * U_EXPORT2
-res_getAlias(const ResourceData *pResData, Resource res, int32_t *pLength);
+U_CAPI स्थिर UChar * U_EXPORT2
+res_getAlias(स्थिर Resource_तथ्य *p_Res_तथ्य, Resource res, int32_t *p_लंबाई);
 
 U_CAPI Resource U_EXPORT2
-res_getResource(const ResourceData *pResData, const char *key);
+res_getResource(स्थिर Resource_तथ्य *p_Res_तथ्य, स्थिर अक्षर *कुंजी);
 
 U_CAPI int32_t U_EXPORT2
-res_countArrayItems(const ResourceData *pResData, Resource res);
+res_गिनती_Array_वस्तुएँ(स्थिर Resource_तथ्य *p_Res_तथ्य, Resource res);
 
 U_CAPI Resource U_EXPORT2
-res_getArrayItem(const ResourceData *pResData, Resource array, int32_t indexS);
+res_getArrayItem(स्थिर Resource_तथ्य *p_Res_तथ्य, Resource array, int32_t सूचकांक_S);
 
 U_CAPI Resource U_EXPORT2
-res_getTableItemByIndex(const ResourceData *pResData, Resource table, int32_t indexS, const char ** key);
+res_get_Table_Item_By_सूचकांक(स्थिर Resource_तथ्य *p_Res_तथ्य, Resource table, int32_t सूचकांक_S, स्थिर अक्षर ** कुंजी);
 
 U_CAPI Resource U_EXPORT2
-res_getTableItemByKey(const ResourceData *pResData, Resource table, int32_t *indexS, const char* * key);
+res_get_Table_Item_By_कुंजी(स्थिर Resource_तथ्य *p_Res_तथ्य, Resource table, int32_t *सूचकांक_S, स्थिर अक्षर* * कुंजी);
 
 /**
  * Iterates over the path and stops when a scalar resource is found.
@@ -472,103 +472,103 @@ res_getTableItemByKey(const ResourceData *pResData, Resource table, int32_t *ind
  * @param path input: "CollationElements/Sequence" or "zoneStrings/3/2" etc.;
  *             output: points to the part that has not yet been processed
  */
-U_CFUNC Resource res_findResource(const ResourceData *pResData, Resource r,
-                                  char** path, const char** key);
+U_CFUNC Resource res_findResource(स्थिर Resource_तथ्य *p_Res_तथ्य, Resource r,
+                                  अक्षर** path, स्थिर अक्षर** कुंजी);
 
-#ifdef __cplusplus
+#अगर_घोषित __cplusplus
 
-#include "resource.h"
-#include "restrace.h"
+#समावेश "resource.h"
+#समावेश "restrace.h"
 
 U_NAMESPACE_BEGIN
 
-inline const char16_t* res_getString(const ResourceTracer& traceInfo,
-        const ResourceData *pResData, Resource res, int32_t *pLength) {
+अंतरभूत स्थिर char16_t* res_getString(स्थिर ResourceTracer& traceInfo,
+        स्थिर Resource_तथ्य *p_Res_तथ्य, Resource res, int32_t *p_लंबाई) {
     traceInfo.trace("string");
-    return res_getStringNoTrace(pResData, res, pLength);
+    वापस res_getStringNoTrace(p_Res_तथ्य, res, p_लंबाई);
 }
 
-inline const uint8_t* res_getBinary(const ResourceTracer& traceInfo,
-        const ResourceData *pResData, Resource res, int32_t *pLength) {
+अंतरभूत स्थिर uint8_t* res_get_द्विआधारी(स्थिर ResourceTracer& traceInfo,
+        स्थिर Resource_तथ्य *p_Res_तथ्य, Resource res, int32_t *p_लंबाई) {
     traceInfo.trace("binary");
-    return res_getBinaryNoTrace(pResData, res, pLength);
+    वापस res_get_द्विआधारी_No_Trace(p_Res_तथ्य, res, p_लंबाई);
 }
 
-inline const int32_t* res_getIntVector(const ResourceTracer& traceInfo,
-        const ResourceData *pResData, Resource res, int32_t *pLength) {
+अंतरभूत स्थिर int32_t* res_getIntVector(स्थिर ResourceTracer& traceInfo,
+        स्थिर Resource_तथ्य *p_Res_तथ्य, Resource res, int32_t *p_लंबाई) {
     traceInfo.trace("intvector");
-    return res_getIntVectorNoTrace(pResData, res, pLength);
+    वापस res_getIntVectorNoTrace(p_Res_तथ्य, res, p_लंबाई);
 }
 
-inline int32_t res_getInt(const ResourceTracer& traceInfo, Resource res) {
+अंतरभूत int32_t res_getInt(स्थिर ResourceTracer& traceInfo, Resource res) {
     traceInfo.trace("int");
-    return RES_GET_INT_NO_TRACE(res);
+    वापस RES_GET_INT_NO_TRACE(res);
 }
 
-inline uint32_t res_getUInt(const ResourceTracer& traceInfo, Resource res) {
+अंतरभूत uint32_t res_getUInt(स्थिर ResourceTracer& traceInfo, Resource res) {
     traceInfo.trace("uint");
-    return RES_GET_UINT_NO_TRACE(res);
+    वापस RES_GET_UINT_NO_TRACE(res);
 }
 
-class ResourceDataValue : public ResourceValue {
-public:
-    ResourceDataValue() :
-        pResData(nullptr),
-        validLocaleDataEntry(nullptr),
+class Resource_तथ्य_मूल्य : खुला Resource_मूल्य {
+खुला:
+    Resource_तथ्य_मूल्य() :
+        p_Res_तथ्य(nullptr),
+        valid_Locale_तथ्य_Entry(nullptr),
         res(static_cast<Resource>(URES_NONE)),
         fTraceInfo() {}
-    virtual ~ResourceDataValue();
+    भव ~Resource_तथ्य_मूल्य();
 
-    void setData(const ResourceData &data) {
-        pResData = &data;
+    व्योम set_तथ्य(स्थिर Resource_तथ्य &तथ्य) {
+        p_Res_तथ्य = &तथ्य;
     }
     
-    void setValidLocaleDataEntry(UResourceDataEntry *entry) {
-        validLocaleDataEntry = entry;
+    व्योम set_Valid_Locale_तथ्य_Entry(UResource_तथ्य_Entry *entry) {
+        valid_Locale_तथ्य_Entry = entry;
     }
 
-    void setResource(Resource r, ResourceTracer&& traceInfo) {
+    व्योम setResource(Resource r, ResourceTracer&& traceInfo) {
         res = r;
         fTraceInfo = traceInfo;
     }
 
-    const ResourceData &getData() const { return *pResData; }
-    UResourceDataEntry *getValidLocaleDataEntry() const { return validLocaleDataEntry; }
-    Resource getResource() const { return res; }
-    virtual UResType getType() const override;
-    virtual const char16_t *getString(int32_t &length, UErrorCode &errorCode) const override;
-    virtual const char16_t *getAliasString(int32_t &length, UErrorCode &errorCode) const override;
-    virtual int32_t getInt(UErrorCode &errorCode) const override;
-    virtual uint32_t getUInt(UErrorCode &errorCode) const override;
-    virtual const int32_t *getIntVector(int32_t &length, UErrorCode &errorCode) const override;
-    virtual const uint8_t *getBinary(int32_t &length, UErrorCode &errorCode) const override;
-    virtual ResourceArray getArray(UErrorCode &errorCode) const override;
-    virtual ResourceTable getTable(UErrorCode &errorCode) const override;
-    virtual UBool isNoInheritanceMarker() const override;
-    virtual int32_t getStringArray(UnicodeString *dest, int32_t capacity,
-                                   UErrorCode &errorCode) const override;
-    virtual int32_t getStringArrayOrStringAsArray(UnicodeString *dest, int32_t capacity,
-                                                  UErrorCode &errorCode) const override;
-    virtual UnicodeString getStringOrFirstOfArray(UErrorCode &errorCode) const override;
+    स्थिर Resource_तथ्य &get_तथ्य() स्थिर { वापस *p_Res_तथ्य; }
+    UResource_तथ्य_Entry *get_Valid_Locale_तथ्य_Entry() स्थिर { वापस valid_Locale_तथ्य_Entry; }
+    Resource getResource() स्थिर { वापस res; }
+    भव UResType getType() स्थिर override;
+    भव स्थिर char16_t *getString(int32_t &लंबाई, UErrorCode &errorCode) स्थिर override;
+    भव स्थिर char16_t *getAliasString(int32_t &लंबाई, UErrorCode &errorCode) स्थिर override;
+    भव int32_t getInt(UErrorCode &errorCode) स्थिर override;
+    भव uint32_t getUInt(UErrorCode &errorCode) स्थिर override;
+    भव स्थिर int32_t *getIntVector(int32_t &लंबाई, UErrorCode &errorCode) स्थिर override;
+    भव स्थिर uint8_t *get_द्विआधारी(int32_t &लंबाई, UErrorCode &errorCode) स्थिर override;
+    भव ResourceArray getArray(UErrorCode &errorCode) स्थिर override;
+    भव ResourceTable getTable(UErrorCode &errorCode) स्थिर override;
+    भव UBool isNoInheritanceMarker() स्थिर override;
+    भव int32_t getStringArray(UnicodeString *dest, int32_t capacity,
+                                   UErrorCode &errorCode) स्थिर override;
+    भव int32_t getStringArrayOrStringAsArray(UnicodeString *dest, int32_t capacity,
+                                                  UErrorCode &errorCode) स्थिर override;
+    भव UnicodeString getStringOrFirstOfArray(UErrorCode &errorCode) स्थिर override;
 
-private:
-    const ResourceData *pResData;
-    UResourceDataEntry *validLocaleDataEntry;
+निजी:
+    स्थिर Resource_तथ्य *p_Res_तथ्य;
+    UResource_तथ्य_Entry *valid_Locale_तथ्य_Entry;
     Resource res;
     ResourceTracer fTraceInfo;
 };
 
 U_NAMESPACE_END
 
-#endif  /* __cplusplus */
+#पूर्ण_अगर  /* __cplusplus */
 
 /**
  * Swap an ICU resource bundle. See udataswp.h.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-ures_swap(const UDataSwapper *ds,
-          const void *inData, int32_t length, void *outData,
+ures_swap(स्थिर UDataSwapper *ds,
+          स्थिर व्योम *in_तथ्य, int32_t लंबाई, व्योम *out_तथ्य,
           UErrorCode *pErrorCode);
 
-#endif
+#पूर्ण_अगर

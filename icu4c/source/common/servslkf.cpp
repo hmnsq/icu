@@ -8,22 +8,22 @@
  *
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#समावेश "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#अगर !UCONFIG_NO_SERVICE
 
-#include "unicode/resbund.h"
-#include "uresimp.h"
-#include "cmemory.h"
-#include "servloc.h"
-#include "ustrfmt.h"
-#include "uhash.h"
-#include "charstr.h"
-#include "uassert.h"
+#समावेश "unicode/resbund.h"
+#समावेश "uresimp.h"
+#समावेश "cmemory.h"
+#समावेश "servloc.h"
+#समावेश "ustrfmt.h"
+#समावेश "uhash.h"
+#समावेश "charstr.h"
+#समावेश "uassert.h"
 
-#define UNDERSCORE_CHAR ((char16_t)0x005f)
-#define AT_SIGN_CHAR    ((char16_t)64)
-#define PERIOD_CHAR     ((char16_t)46)
+#घोषणा UNDERSCORE_CHAR ((char16_t)0x005f)
+#घोषणा AT_SIGN_CHAR    ((char16_t)64)
+#घोषणा PERIOD_CHAR     ((char16_t)46)
 
 U_NAMESPACE_BEGIN
 
@@ -31,22 +31,22 @@ U_NAMESPACE_BEGIN
  ******************************************************************
  */
 
-SimpleLocaleKeyFactory::SimpleLocaleKeyFactory(UObject* objToAdopt,
-                                               const UnicodeString& locale,
+Simple_Locale_कुंजी_Factory::Simple_Locale_कुंजी_Factory(UObject* objToAdopt,
+                                               स्थिर UnicodeString& locale,
                                                int32_t kind,
                                                int32_t coverage)
-  : LocaleKeyFactory(coverage)
+  : Locale_कुंजी_Factory(coverage)
   , _obj(objToAdopt)
   , _id(locale)
   , _kind(kind)
 {
 }
 
-SimpleLocaleKeyFactory::SimpleLocaleKeyFactory(UObject* objToAdopt,
-                                               const Locale& locale,
+Simple_Locale_कुंजी_Factory::Simple_Locale_कुंजी_Factory(UObject* objToAdopt,
+                                               स्थिर Locale& locale,
                                                int32_t kind,
                                                int32_t coverage)
-  : LocaleKeyFactory(coverage)
+  : Locale_कुंजी_Factory(coverage)
   , _obj(objToAdopt)
   , _id()
   , _kind(kind)
@@ -54,26 +54,26 @@ SimpleLocaleKeyFactory::SimpleLocaleKeyFactory(UObject* objToAdopt,
     LocaleUtility::initNameFromLocale(locale, _id);
 }
 
-SimpleLocaleKeyFactory::~SimpleLocaleKeyFactory()
+Simple_Locale_कुंजी_Factory::~Simple_Locale_कुंजी_Factory()
 {
-  delete _obj;
+  मिटाओ _obj;
   _obj = nullptr;
 }
 
 UObject*
-SimpleLocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const
+Simple_Locale_कुंजी_Factory::create(स्थिर ICUService_कुंजी& कुंजी, स्थिर ICUService* service, UErrorCode& status) स्थिर
 {
-    if (U_SUCCESS(status)) {
-        const LocaleKey& lkey = static_cast<const LocaleKey&>(key);
-        if (_kind == LocaleKey::KIND_ANY || _kind == lkey.kind()) {
-            UnicodeString keyID;
-            lkey.currentID(keyID);
-            if (_id == keyID) {
-                return service->cloneInstance(_obj);
+    अगर (U_SUCCESS(status)) {
+        स्थिर Locale_कुंजी& lkey = static_cast<स्थिर Locale_कुंजी&>(कुंजी);
+        अगर (_kind == Locale_कुंजी::KIND_ANY || _kind == lkey.kind()) {
+            UnicodeString कुंजी_ID;
+            lkey.currentID(कुंजी_ID);
+            अगर (_id == कुंजी_ID) {
+                वापस service->cloneInstance(_obj);
             }
         }
     }
-    return nullptr;
+    वापस nullptr;
 }
 
 //UBool
@@ -82,42 +82,42 @@ SimpleLocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* servi
 //    return id == _id;
 //}
 
-void
-SimpleLocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const
+व्योम
+Simple_Locale_कुंजी_Factory::updateVisibleIDs(Hashtable& परिणाम, UErrorCode& status) स्थिर
 {
-    if (U_SUCCESS(status)) {
-        if (_coverage & 0x1) {
-            result.remove(_id);
-        } else {
-            result.put(_id, (void*)this, status);
+    अगर (U_SUCCESS(status)) {
+        अगर (_coverage & 0x1) {
+            परिणाम.हटाओ(_id);
+        } अन्यथा {
+            परिणाम.दो(_id, (व्योम*)यह, status);
         }
     }
 }
 
-#ifdef SERVICE_DEBUG
+#अगर_घोषित SERVICE_DEBUG
 UnicodeString&
-SimpleLocaleKeyFactory::debug(UnicodeString& result) const
+Simple_Locale_कुंजी_Factory::debug(UnicodeString& परिणाम) स्थिर
 {
-    LocaleKeyFactory::debug(result);
-    result.append((UnicodeString)", id: ");
-    result.append(_id);
-    result.append((UnicodeString)", kind: ");
-    result.append(_kind);
-    return result;
+    Locale_कुंजी_Factory::debug(परिणाम);
+    परिणाम.append((UnicodeString)", id: ");
+    परिणाम.append(_id);
+    परिणाम.append((UnicodeString)", kind: ");
+    परिणाम.append(_kind);
+    वापस परिणाम;
 }
 
 UnicodeString&
-SimpleLocaleKeyFactory::debugClass(UnicodeString& result) const
+Simple_Locale_कुंजी_Factory::debugClass(UnicodeString& परिणाम) स्थिर
 {
-    return result.append((UnicodeString)"SimpleLocaleKeyFactory");
+    वापस परिणाम.append((UnicodeString)"SimpleLocaleKeyFactory");
 }
-#endif
+#पूर्ण_अगर
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(SimpleLocaleKeyFactory)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Simple_Locale_कुंजी_Factory)
 
 U_NAMESPACE_END
 
 /* !UCONFIG_NO_SERVICE */
-#endif
+#पूर्ण_अगर
 
 

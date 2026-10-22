@@ -4,31 +4,31 @@
 // emojiprops.h
 // created: 2021sep03 Markus W. Scherer
 
-#ifndef __EMOJIPROPS_H__
-#define __EMOJIPROPS_H__
+#अगर_अघोषित __EMOJIPROPS_H__
+#घोषणा __EMOJIPROPS_H__
 
-#include "unicode/utypes.h"
-#include "unicode/ucptrie.h"
-#include "unicode/udata.h"
-#include "unicode/uobject.h"
-#include "uset_imp.h"
+#समावेश "unicode/utypes.h"
+#समावेश "unicode/ucptrie.h"
+#समावेश "unicode/udata.h"
+#समावेश "unicode/uobject.h"
+#समावेश "uset_imp.h"
 
 U_NAMESPACE_BEGIN
 
-class EmojiProps : public UMemory {
-public:
+class EmojiProps : खुला UMemory {
+खुला:
     // @internal
     EmojiProps(UErrorCode &errorCode) { load(errorCode); }
     ~EmojiProps();
 
-    static const EmojiProps *getSingleton(UErrorCode &errorCode);
-    static UBool hasBinaryProperty(UChar32 c, UProperty which);
-    static UBool hasBinaryProperty(const char16_t *s, int32_t length, UProperty which);
+    अटल स्थिर EmojiProps *getSingleton(UErrorCode &errorCode);
+    अटल UBool has_द्विआधारी_Property(UChar32 c, UProperty which);
+    अटल UBool has_द्विआधारी_Property(स्थिर char16_t *s, int32_t लंबाई, UProperty which);
 
-    void addPropertyStarts(const USetAdder *sa, UErrorCode &errorCode) const;
-    void addStrings(const USetAdder *sa, UProperty which, UErrorCode &errorCode) const;
+    व्योम addPropertyStarts(स्थिर USetAdder *sa, UErrorCode &errorCode) स्थिर;
+    व्योम addStrings(स्थिर USetAdder *sa, UProperty which, UErrorCode &errorCode) स्थिर;
 
-    enum {
+    क्रमागत {
         // Byte offsets from the start of the data, after the generic header,
         // in ascending order.
         // UCPTrie=CodePointTrie, follows the indexes
@@ -47,16 +47,16 @@ public:
         IX_RESERVED10,
         IX_RESERVED11,
         IX_RESERVED12,
-        IX_TOTAL_SIZE,
+        IX_योग_आकार,
 
         // Not initially byte offsets.
         IX_RESERVED14,
         IX_RESERVED15,
-        IX_COUNT  // 16
+        IX_गिनती  // 16
     };
 
     // Properties in the code point trie.
-    enum {
+    क्रमागत {
         // https://www.unicode.org/reports/tr51/#Emoji_Properties
         BIT_EMOJI,
         BIT_EMOJI_PRESENTATION,
@@ -68,23 +68,23 @@ public:
         BIT_BASIC_EMOJI
     };
 
-private:
-    static UBool U_CALLCONV
-    isAcceptable(void *context, const char *type, const char *name, const UDataInfo *pInfo);
+निजी:
+    अटल UBool U_CALLCONV
+    isAcceptable(व्योम *context, स्थिर अक्षर *type, स्थिर अक्षर *name, स्थिर UDataInfo *pInfo);
     /** Input i: One of the IX_..._TRIE_OFFSET indexes into the data file indexes[] array. */
-    static int32_t getStringTrieIndex(int32_t i) {
-        return i - IX_BASIC_EMOJI_TRIE_OFFSET;
+    अटल int32_t get_String_Trie_सूचकांक(int32_t i) {
+        वापस i - IX_BASIC_EMOJI_TRIE_OFFSET;
     }
 
-    void load(UErrorCode &errorCode);
-    UBool hasBinaryPropertyImpl(UChar32 c, UProperty which) const;
-    UBool hasBinaryPropertyImpl(const char16_t *s, int32_t length, UProperty which) const;
+    व्योम load(UErrorCode &errorCode);
+    UBool has_द्विआधारी_Property_Impl(UChar32 c, UProperty which) स्थिर;
+    UBool has_द्विआधारी_Property_Impl(स्थिर char16_t *s, int32_t लंबाई, UProperty which) स्थिर;
 
     UDataMemory *memory = nullptr;
     UCPTrie *cpTrie = nullptr;
-    const char16_t *stringTries[6] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
+    स्थिर char16_t *stringTries[6] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 };
 
 U_NAMESPACE_END
 
-#endif  // __EMOJIPROPS_H__
+#पूर्ण_अगर  // __EMOJIPROPS_H__

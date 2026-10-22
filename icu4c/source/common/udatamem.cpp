@@ -19,49 +19,49 @@
  *
  *----------------------------------------------------------------------------------*/
 
-#include "unicode/utypes.h"
-#include "cmemory.h"
-#include "unicode/udata.h"
+#समावेश "unicode/utypes.h"
+#समावेश "cmemory.h"
+#समावेश "unicode/udata.h"
 
-#include "udatamem.h"
+#समावेश "udatamem.h"
 
-U_CFUNC void UDataMemory_init(UDataMemory *This) {
-    uprv_memset(This, 0, sizeof(UDataMemory));
+U_CFUNC व्योम UDataMemory_init(UDataMemory *This) {
+    uprv_memset(This, 0, माप(UDataMemory));
     This->length=-1;
 }
 
 
-U_CFUNC void UDatamemory_assign(UDataMemory *dest, UDataMemory *source) {
+U_CFUNC व्योम UDatamemory_assign(UDataMemory *dest, UDataMemory *source) {
     /* UDataMemory Assignment.  Destination UDataMemory must be initialized first.  */
     UBool mallocedFlag = dest->heapAllocated;
-    uprv_memcpy(dest, source, sizeof(UDataMemory));
+    uprv_memcpy(dest, source, माप(UDataMemory));
     dest->heapAllocated = mallocedFlag;
 }
 
 U_CFUNC UDataMemory *UDataMemory_createNewInstance(UErrorCode *pErr) {
     UDataMemory *This;
 
-    if (U_FAILURE(*pErr)) {
-        return nullptr;
+    अगर (U_FAILURE(*pErr)) {
+        वापस nullptr;
     }
-    This = (UDataMemory *)uprv_malloc(sizeof(UDataMemory));
-    if (This == nullptr) {
+    This = (UDataMemory *)uprv_malloc(माप(UDataMemory));
+    अगर (This == nullptr) {
         *pErr = U_MEMORY_ALLOCATION_ERROR; }
-    else {
+    अन्यथा {
         UDataMemory_init(This);
         This->heapAllocated = true;
     }
-    return This;
+    वापस This;
 }
 
-U_CFUNC const DataHeader*
-UDataMemory_normalizeDataPointer(const void* p U_LIFETIME_BOUND) {
+U_CFUNC स्थिर तथ्य_Header*
+UData_Memory_normalize_तथ्य_Pointer(स्थिर व्योम* p U_LIFETIME_BOUND) {
     /* allow the data to be optionally prepended with an alignment-forcing double value */
-    const DataHeader *pdh = (const DataHeader *)p;
-    if(pdh==nullptr || (pdh->dataHeader.magic1==0xda && pdh->dataHeader.magic2==0x27)) {
-        return pdh;
-    } else {
-#if U_PLATFORM == U_PF_OS400
+    स्थिर तथ्य_Header *pdh = (स्थिर तथ्य_Header *)p;
+    अगर(pdh==nullptr || (pdh->तथ्य_Header_2.magic1==0xda && pdh->तथ्य_Header_2.magic2==0x27)) {
+        वापस pdh;
+    } अन्यथा {
+#अगर U_PLATFORM == U_PF_OS400
         /*
         TODO: Fix this once the compiler implements this feature. Keep in sync with genccode.c
 
@@ -74,37 +74,37 @@ UDataMemory_normalizeDataPointer(const void* p U_LIFETIME_BOUND) {
         magic numbers we must skip the initial double.
         [grhoten 4/24/2003]
         */
-        return (const DataHeader *)*((const void **)p+1);
-#else
-        return (const DataHeader *)((const double *)p+1);
-#endif
+        वापस (स्थिर तथ्य_Header *)*((स्थिर व्योम **)p+1);
+#अन्यथा
+        वापस (स्थिर तथ्य_Header *)((स्थिर द्विगुन *)p+1);
+#पूर्ण_अगर
     }
 }
 
 
-U_CFUNC void UDataMemory_setData (UDataMemory *This, const void *dataAddr) {
-    This->pHeader = UDataMemory_normalizeDataPointer(dataAddr);
+U_CFUNC व्योम UData_Memory_set_तथ्य (UDataMemory *This, स्थिर व्योम *तथ्य_Addr) {
+    This->pHeader = UData_Memory_normalize_तथ्य_Pointer(तथ्य_Addr);
 }
 
 
-U_CAPI void U_EXPORT2
-udata_close(UDataMemory *pData) {
-    if(pData!=nullptr) {
-        uprv_unmapFile(pData);
-        if(pData->heapAllocated ) {
-            uprv_free(pData);
-        } else {
-            UDataMemory_init(pData);
+U_CAPI व्योम U_EXPORT2
+udata_close(UDataMemory *p_तथ्य) {
+    अगर(p_तथ्य!=nullptr) {
+        uprv_unmapFile(p_तथ्य);
+        अगर(p_तथ्य->heapAllocated ) {
+            uprv_free(p_तथ्य);
+        } अन्यथा {
+            UDataMemory_init(p_तथ्य);
         }
     }
 }
 
-U_CAPI const void* U_EXPORT2
-udata_getMemory(UDataMemory* pData U_LIFETIME_BOUND) {
-    if(pData!=nullptr && pData->pHeader!=nullptr) {
-        return (char *)(pData->pHeader)+udata_getHeaderSize(pData->pHeader);
-    } else {
-        return nullptr;
+U_CAPI स्थिर व्योम* U_EXPORT2
+udata_getMemory(UDataMemory* p_तथ्य U_LIFETIME_BOUND) {
+    अगर(p_तथ्य!=nullptr && p_तथ्य->pHeader!=nullptr) {
+        वापस (अक्षर *)(p_तथ्य->pHeader)+udata_get_Header_आकार(p_तथ्य->pHeader);
+    } अन्यथा {
+        वापस nullptr;
     }
 }
 
@@ -129,15 +129,15 @@ udata_getMemory(UDataMemory* pData U_LIFETIME_BOUND) {
  * @internal Currently used only in cintltst/udatatst.c
  */
 U_CAPI int32_t U_EXPORT2
-udata_getLength(const UDataMemory *pData) {
-    if(pData!=nullptr && pData->pHeader!=nullptr && pData->length>=0) {
+udata_get_लंबाई(स्थिर UDataMemory *p_तथ्य) {
+    अगर(p_तथ्य!=nullptr && p_तथ्य->pHeader!=nullptr && p_तथ्य->length>=0) {
         /*
          * subtract the header size,
          * return only the size of the actual data starting at udata_getMemory()
          */
-        return pData->length-udata_getHeaderSize(pData->pHeader);
-    } else {
-        return -1;
+        वापस p_तथ्य->length-udata_get_Header_आकार(p_तथ्य->pHeader);
+    } अन्यथा {
+        वापस -1;
     }
 }
 
@@ -146,15 +146,15 @@ udata_getLength(const UDataMemory *pData) {
  * Used in cintltst/udatatst.c
  * @internal
  */
-U_CAPI const void* U_EXPORT2
-udata_getRawMemory(const UDataMemory* pData U_LIFETIME_BOUND) {
-    if(pData!=nullptr && pData->pHeader!=nullptr) {
-        return pData->pHeader;
-    } else {
-        return nullptr;
+U_CAPI स्थिर व्योम* U_EXPORT2
+udata_getRawMemory(स्थिर UDataMemory* p_तथ्य U_LIFETIME_BOUND) {
+    अगर(p_तथ्य!=nullptr && p_तथ्य->pHeader!=nullptr) {
+        वापस p_तथ्य->pHeader;
+    } अन्यथा {
+        वापस nullptr;
     }
 }
 
-U_CFUNC UBool UDataMemory_isLoaded(const UDataMemory *This) {
-    return This->pHeader != nullptr;
+U_CFUNC UBool UDataMemory_isLoaded(स्थिर UDataMemory *This) {
+    वापस This->pHeader != nullptr;
 }

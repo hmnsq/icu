@@ -12,15 +12,15 @@
 ******************************************************************************
 */
 
-#include "hash.h"
+#समावेश "hash.h"
 
 /**
  * Deleter for Hashtable objects.
  */
-U_CAPI void U_EXPORT2
-uhash_deleteHashtable(void *obj) {
+U_CAPI व्योम U_EXPORT2
+uhash_deleteHashtable(व्योम *obj) {
     U_NAMESPACE_USE
-    delete (Hashtable*) obj;
+    मिटाओ (Hashtable*) obj;
 }
 
 //eof

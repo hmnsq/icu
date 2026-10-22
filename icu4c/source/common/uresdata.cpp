@@ -19,48 +19,48 @@
 *   06/24/02    weiv        Added support for resource sharing
 */
 
-#include "unicode/utypes.h"
-#include "unicode/udata.h"
-#include "unicode/ustring.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "resource.h"
-#include "uarrsort.h"
-#include "uassert.h"
-#include "ucol_swp.h"
-#include "udataswp.h"
-#include "uinvchar.h"
-#include "uresdata.h"
-#include "uresimp.h"
-#include "utracimp.h"
+#समावेश "unicode/utypes.h"
+#समावेश "unicode/udata.h"
+#समावेश "unicode/ustring.h"
+#समावेश "unicode/utf16.h"
+#समावेश "cmemory.h"
+#समावेश "cstring.h"
+#समावेश "resource.h"
+#समावेश "uarrsort.h"
+#समावेश "uassert.h"
+#समावेश "ucol_swp.h"
+#समावेश "udataswp.h"
+#समावेश "uinvchar.h"
+#समावेश "uresdata.h"
+#समावेश "uresimp.h"
+#समावेश "utracimp.h"
 
 /*
  * Resource access helpers
  */
 
 /* get a const char* pointer to the key with the keyOffset byte offset from pRoot */
-#define RES_GET_KEY16(pResData, keyOffset) \
-    ((keyOffset)<(pResData)->localKeyLimit ? \
-        (const char *)(pResData)->pRoot+(keyOffset) : \
-        (pResData)->poolBundleKeys+(keyOffset)-(pResData)->localKeyLimit)
+#घोषणा RES_GET_KEY16(p_Res_तथ्य, कुंजी_Offset) \
+    ((कुंजी_Offset)<(p_Res_तथ्य)->local_कुंजी_Limit ? \
+        (स्थिर अक्षर *)(p_Res_तथ्य)->p_मूल+(कुंजी_Offset) : \
+        (p_Res_तथ्य)->pool_Bundle_कुंजियाँ+(कुंजी_Offset)-(p_Res_तथ्य)->local_कुंजी_Limit)
 
-#define RES_GET_KEY32(pResData, keyOffset) \
-    ((keyOffset)>=0 ? \
-        (const char *)(pResData)->pRoot+(keyOffset) : \
-        (pResData)->poolBundleKeys+((keyOffset)&0x7fffffff))
+#घोषणा RES_GET_KEY32(p_Res_तथ्य, कुंजी_Offset) \
+    ((कुंजी_Offset)>=0 ? \
+        (स्थिर अक्षर *)(p_Res_तथ्य)->p_मूल+(कुंजी_Offset) : \
+        (p_Res_तथ्य)->pool_Bundle_कुंजियाँ+((कुंजी_Offset)&0x7fffffff))
 
-#define URESDATA_ITEM_NOT_FOUND -1
+#घोषणा URESDATA_ITEM_NOT_FOUND -1
 
 /* empty resources, returned when the resource offset is 0 */
-static const uint16_t gEmpty16=0;
+अटल स्थिर uint16_t gEmpty16=0;
 
-static const struct {
+अटल स्थिर काष्ठा {
     int32_t length;
     int32_t res;
 } gEmpty32={ 0, 0 };
 
-static const struct {
+अटल स्थिर काष्ठा {
     int32_t length;
     char16_t nul;
     char16_t pad;
@@ -71,218 +71,218 @@ static const struct {
  * the resource is of the expected type.
  */
 
-static int32_t
-_res_findTableItem(const ResourceData *pResData, const uint16_t *keyOffsets, int32_t length,
-                   const char *key, const char **realKey) {
-    const char *tableKey;
+अटल int32_t
+_res_findTableItem(स्थिर Resource_तथ्य *p_Res_तथ्य, स्थिर uint16_t *कुंजी_Offsets, int32_t length,
+                   स्थिर अक्षर *कुंजी, स्थिर अक्षर **real_कुंजी) {
+    स्थिर अक्षर *table_कुंजी;
     int32_t mid, start, limit;
-    int result;
+    पूर्णांक परिणाम;
 
     /* do a binary search for the key */
     start=0;
     limit=length;
-    while(start<limit) {
+    जबतक(start<limit) {
         mid = (start + limit) / 2;
-        tableKey = RES_GET_KEY16(pResData, keyOffsets[mid]);
-        if (pResData->useNativeStrcmp) {
-            result = uprv_strcmp(key, tableKey);
-        } else {
-            result = uprv_compareInvCharsAsAscii(key, tableKey);
+        table_कुंजी = RES_GET_KEY16(p_Res_तथ्य, कुंजी_Offsets[mid]);
+        अगर (p_Res_तथ्य->useNativeStrcmp) {
+            परिणाम = uprv_strcmp(कुंजी, table_कुंजी);
+        } अन्यथा {
+            परिणाम = uprv_compareInvCharsAsAscii(कुंजी, table_कुंजी);
         }
-        if (result < 0) {
+        अगर (परिणाम < 0) {
             limit = mid;
-        } else if (result > 0) {
+        } अन्यथा अगर (परिणाम > 0) {
             start = mid + 1;
-        } else {
+        } अन्यथा {
             /* We found it! */
-            *realKey=tableKey;
-            return mid;
+            *real_कुंजी=table_कुंजी;
+            वापस mid;
         }
     }
-    return URESDATA_ITEM_NOT_FOUND;  /* not found or table is empty. */
+    वापस URESDATA_ITEM_NOT_FOUND;  /* not found or table is empty. */
 }
 
-static int32_t
-_res_findTable32Item(const ResourceData *pResData, const int32_t *keyOffsets, int32_t length,
-                     const char *key, const char **realKey) {
-    const char *tableKey;
+अटल int32_t
+_res_findTable32Item(स्थिर Resource_तथ्य *p_Res_तथ्य, स्थिर int32_t *कुंजी_Offsets, int32_t length,
+                     स्थिर अक्षर *कुंजी, स्थिर अक्षर **real_कुंजी) {
+    स्थिर अक्षर *table_कुंजी;
     int32_t mid, start, limit;
-    int result;
+    पूर्णांक परिणाम;
 
     /* do a binary search for the key */
     start=0;
     limit=length;
-    while(start<limit) {
+    जबतक(start<limit) {
         mid = (start + limit) / 2;
-        tableKey = RES_GET_KEY32(pResData, keyOffsets[mid]);
-        if (pResData->useNativeStrcmp) {
-            result = uprv_strcmp(key, tableKey);
-        } else {
-            result = uprv_compareInvCharsAsAscii(key, tableKey);
+        table_कुंजी = RES_GET_KEY32(p_Res_तथ्य, कुंजी_Offsets[mid]);
+        अगर (p_Res_तथ्य->useNativeStrcmp) {
+            परिणाम = uprv_strcmp(कुंजी, table_कुंजी);
+        } अन्यथा {
+            परिणाम = uprv_compareInvCharsAsAscii(कुंजी, table_कुंजी);
         }
-        if (result < 0) {
+        अगर (परिणाम < 0) {
             limit = mid;
-        } else if (result > 0) {
+        } अन्यथा अगर (परिणाम > 0) {
             start = mid + 1;
-        } else {
+        } अन्यथा {
             /* We found it! */
-            *realKey=tableKey;
-            return mid;
+            *real_कुंजी=table_कुंजी;
+            वापस mid;
         }
     }
-    return URESDATA_ITEM_NOT_FOUND;  /* not found or table is empty. */
+    वापस URESDATA_ITEM_NOT_FOUND;  /* not found or table is empty. */
 }
 
 /* helper for res_load() ---------------------------------------------------- */
 
-static UBool U_CALLCONV
-isAcceptable(void *context,
-             const char * /*type*/, const char * /*name*/,
-             const UDataInfo *pInfo) {
+अटल UBool U_CALLCONV
+isAcceptable(व्योम *context,
+             स्थिर अक्षर * /*type*/, स्थिर अक्षर * /*name*/,
+             स्थिर UDataInfo *pInfo) {
     uprv_memcpy(context, pInfo->formatVersion, 4);
-    return
+    वापस
         pInfo->size>=20 &&
         pInfo->isBigEndian==U_IS_BIG_ENDIAN &&
         pInfo->charsetFamily==U_CHARSET_FAMILY &&
         pInfo->sizeofUChar==U_SIZEOF_UCHAR &&
-        pInfo->dataFormat[0]==0x52 &&   /* dataFormat="ResB" */
-        pInfo->dataFormat[1]==0x65 &&
-        pInfo->dataFormat[2]==0x73 &&
-        pInfo->dataFormat[3]==0x42 &&
+        pInfo->तथ्य_Format[0]==0x52 &&   /* dataFormat="ResB" */
+        pInfo->तथ्य_Format[1]==0x65 &&
+        pInfo->तथ्य_Format[2]==0x73 &&
+        pInfo->तथ्य_Format[3]==0x42 &&
         (1<=pInfo->formatVersion[0] && pInfo->formatVersion[0]<=3);
 }
 
 /* semi-public functions ---------------------------------------------------- */
 
-static void
-res_init(ResourceData *pResData,
-         UVersionInfo formatVersion, const void *inBytes, int32_t length,
+अटल व्योम
+res_init(Resource_तथ्य *p_Res_तथ्य,
+         UVersionInfo formatVersion, स्थिर व्योम *inBytes, int32_t length,
          UErrorCode *errorCode) {
-    UResType rootType;
+    UResType मूल_Type;
 
     /* get the root resource */
-    pResData->pRoot = static_cast<const int32_t*>(inBytes);
-    pResData->rootRes = static_cast<Resource>(*pResData->pRoot);
-    pResData->p16BitUnits=&gEmpty16;
+    p_Res_तथ्य->p_मूल = static_cast<स्थिर int32_t*>(inBytes);
+    p_Res_तथ्य->मूल_Res = static_cast<Resource>(*p_Res_तथ्य->p_मूल);
+    p_Res_तथ्य->p16BitUnits=&gEmpty16;
 
     /* formatVersion 1.1 must have a root item and at least 5 indexes */
-    if(length>=0 && (length/4)<((formatVersion[0]==1 && formatVersion[1]==0) ? 1 : 1+5)) {
+    अगर(length>=0 && (length/4)<((formatVersion[0]==1 && formatVersion[1]==0) ? 1 : 1+5)) {
         *errorCode=U_INVALID_FORMAT_ERROR;
-        res_unload(pResData);
-        return;
+        res_unload(p_Res_तथ्य);
+        वापस;
     }
 
     /* currently, we accept only resources that have a Table as their roots */
-    rootType = static_cast<UResType>(RES_GET_TYPE(pResData->rootRes));
-    if(!URES_IS_TABLE(rootType)) {
+    मूल_Type = static_cast<UResType>(RES_GET_TYPE(p_Res_तथ्य->मूल_Res));
+    अगर(!URES_IS_TABLE(मूल_Type)) {
         *errorCode=U_INVALID_FORMAT_ERROR;
-        res_unload(pResData);
-        return;
+        res_unload(p_Res_तथ्य);
+        वापस;
     }
 
-    if(formatVersion[0]==1 && formatVersion[1]==0) {
-        pResData->localKeyLimit=0x10000;  /* greater than any 16-bit key string offset */
-    } else {
+    अगर(formatVersion[0]==1 && formatVersion[1]==0) {
+        p_Res_तथ्य->local_कुंजी_Limit=0x10000;  /* greater than any 16-bit key string offset */
+    } अन्यथा {
         /* bundles with formatVersion 1.1 and later contain an indexes[] array */
-        const int32_t *indexes=pResData->pRoot+1;
-        int32_t indexLength=indexes[URES_INDEX_LENGTH]&0xff;
-        if(indexLength<=URES_INDEX_MAX_TABLE_LENGTH) {
+        स्थिर int32_t *indexes=p_Res_तथ्य->p_मूल+1;
+        int32_t सूचकांक_लंबाई=indexes[URES_सूचकांक_लंबाई]&0xff;
+        अगर(सूचकांक_लंबाई<=URES_सूचकांक_MAX_TABLE_लंबाई) {
             *errorCode=U_INVALID_FORMAT_ERROR;
-            res_unload(pResData);
-            return;
+            res_unload(p_Res_तथ्य);
+            वापस;
         }
-        if( length>=0 &&
-            (length<((1+indexLength)<<2) ||
-             length<(indexes[URES_INDEX_BUNDLE_TOP]<<2))
+        अगर( length>=0 &&
+            (length<((1+सूचकांक_लंबाई)<<2) ||
+             length<(indexes[URES_सूचकांक_BUNDLE_शीर्ष]<<2))
         ) {
             *errorCode=U_INVALID_FORMAT_ERROR;
-            res_unload(pResData);
-            return;
+            res_unload(p_Res_तथ्य);
+            वापस;
         }
-        if(indexes[URES_INDEX_KEYS_TOP]>(1+indexLength)) {
-            pResData->localKeyLimit=indexes[URES_INDEX_KEYS_TOP]<<2;
+        अगर(indexes[URES_सूचकांक_कुंजियाँ_शीर्ष]>(1+सूचकांक_लंबाई)) {
+            p_Res_तथ्य->local_कुंजी_Limit=indexes[URES_सूचकांक_कुंजियाँ_शीर्ष]<<2;
         }
-        if(formatVersion[0]>=3) {
+        अगर(formatVersion[0]>=3) {
             // In formatVersion 1, the indexLength took up this whole int.
             // In version 2, bits 31..8 were reserved and always 0.
             // In version 3, they contain bits 23..0 of the poolStringIndexLimit.
             // Bits 27..24 are in indexes[URES_INDEX_ATTRIBUTES] bits 15..12.
-            pResData->poolStringIndexLimit = static_cast<int32_t>(static_cast<uint32_t>(indexes[URES_INDEX_LENGTH]) >> 8);
+            p_Res_तथ्य->pool_String_सूचकांक_Limit = static_cast<int32_t>(static_cast<uint32_t>(indexes[URES_सूचकांक_लंबाई]) >> 8);
         }
-        if(indexLength>URES_INDEX_ATTRIBUTES) {
-            int32_t att=indexes[URES_INDEX_ATTRIBUTES];
-            pResData->noFallback = static_cast<UBool>(att & URES_ATT_NO_FALLBACK);
-            pResData->isPoolBundle = static_cast<UBool>((att & URES_ATT_IS_POOL_BUNDLE) != 0);
-            pResData->usesPoolBundle = static_cast<UBool>((att & URES_ATT_USES_POOL_BUNDLE) != 0);
-            pResData->poolStringIndexLimit|=(att&0xf000)<<12;  // bits 15..12 -> 27..24
-            pResData->poolStringIndex16Limit = static_cast<int32_t>(static_cast<uint32_t>(att) >> 16);
+        अगर(सूचकांक_लंबाई>URES_सूचकांक_ATTRIBUTES) {
+            int32_t att=indexes[URES_सूचकांक_ATTRIBUTES];
+            p_Res_तथ्य->noFallback = static_cast<UBool>(att & URES_ATT_NO_FALLBACK);
+            p_Res_तथ्य->isPoolBundle = static_cast<UBool>((att & URES_ATT_IS_POOL_BUNDLE) != 0);
+            p_Res_तथ्य->usesPoolBundle = static_cast<UBool>((att & URES_ATT_USES_POOL_BUNDLE) != 0);
+            p_Res_तथ्य->pool_String_सूचकांक_Limit|=(att&0xf000)<<12;  // bits 15..12 -> 27..24
+            p_Res_तथ्य->poolStringIndex16Limit = static_cast<int32_t>(static_cast<uint32_t>(att) >> 16);
         }
-        if((pResData->isPoolBundle || pResData->usesPoolBundle) && indexLength<=URES_INDEX_POOL_CHECKSUM) {
+        अगर((p_Res_तथ्य->isPoolBundle || p_Res_तथ्य->usesPoolBundle) && सूचकांक_लंबाई<=URES_सूचकांक_POOL_CHECKSUM) {
             *errorCode=U_INVALID_FORMAT_ERROR;
-            res_unload(pResData);
-            return;
+            res_unload(p_Res_तथ्य);
+            वापस;
         }
-        if( indexLength>URES_INDEX_16BIT_TOP &&
-            indexes[URES_INDEX_16BIT_TOP]>indexes[URES_INDEX_KEYS_TOP]
+        अगर( सूचकांक_लंबाई>URES_सूचकांक_16_BIT_शीर्ष &&
+            indexes[URES_सूचकांक_16_BIT_शीर्ष]>indexes[URES_सूचकांक_कुंजियाँ_शीर्ष]
         ) {
-            pResData->p16BitUnits = reinterpret_cast<const uint16_t*>(pResData->pRoot + indexes[URES_INDEX_KEYS_TOP]);
+            p_Res_तथ्य->p16BitUnits = reinterpret_cast<स्थिर uint16_t*>(p_Res_तथ्य->p_मूल + indexes[URES_सूचकांक_कुंजियाँ_शीर्ष]);
         }
     }
 
-    if(formatVersion[0]==1 || U_CHARSET_FAMILY==U_ASCII_FAMILY) {
+    अगर(formatVersion[0]==1 || U_CHARSET_FAMILY==U_ASCII_FAMILY) {
         /*
          * formatVersion 1: compare key strings in native-charset order
          * formatVersion 2 and up: compare key strings in ASCII order
          */
-        pResData->useNativeStrcmp=true;
+        p_Res_तथ्य->useNativeStrcmp=true;
     }
 }
 
-U_CAPI void U_EXPORT2
-res_read(ResourceData *pResData,
-         const UDataInfo *pInfo, const void *inBytes, int32_t length,
+U_CAPI व्योम U_EXPORT2
+res_read(Resource_तथ्य *p_Res_तथ्य,
+         स्थिर UDataInfo *pInfo, स्थिर व्योम *inBytes, int32_t length,
          UErrorCode *errorCode) {
     UVersionInfo formatVersion;
 
-    uprv_memset(pResData, 0, sizeof(ResourceData));
-    if(U_FAILURE(*errorCode)) {
-        return;
+    uprv_memset(p_Res_तथ्य, 0, माप(Resource_तथ्य));
+    अगर(U_FAILURE(*errorCode)) {
+        वापस;
     }
-    if(!isAcceptable(formatVersion, nullptr, nullptr, pInfo)) {
+    अगर(!isAcceptable(formatVersion, nullptr, nullptr, pInfo)) {
         *errorCode=U_INVALID_FORMAT_ERROR;
-        return;
+        वापस;
     }
-    res_init(pResData, formatVersion, inBytes, length, errorCode);
+    res_init(p_Res_तथ्य, formatVersion, inBytes, length, errorCode);
 }
 
-U_CFUNC void
-res_load(ResourceData *pResData,
-         const char *path, const char *name, UErrorCode *errorCode) {
+U_CFUNC व्योम
+res_load(Resource_तथ्य *p_Res_तथ्य,
+         स्थिर अक्षर *path, स्थिर अक्षर *name, UErrorCode *errorCode) {
     UVersionInfo formatVersion;
 
-    uprv_memset(pResData, 0, sizeof(ResourceData));
+    uprv_memset(p_Res_तथ्य, 0, माप(Resource_तथ्य));
 
     /* load the ResourceBundle file */
-    pResData->data=udata_openChoice(path, "res", name, isAcceptable, formatVersion, errorCode);
-    if(U_FAILURE(*errorCode)) {
-        return;
+    p_Res_तथ्य->तथ्य=udata_openChoice(path, "res", name, isAcceptable, formatVersion, errorCode);
+    अगर(U_FAILURE(*errorCode)) {
+        वापस;
     }
 
     /* get its memory and initialize *pResData */
-    res_init(pResData, formatVersion, udata_getMemory(pResData->data), -1, errorCode);
+    res_init(p_Res_तथ्य, formatVersion, udata_getMemory(p_Res_तथ्य->तथ्य), -1, errorCode);
 }
 
-U_CFUNC void
-res_unload(ResourceData *pResData) {
-    if(pResData->data!=nullptr) {
-        udata_close(pResData->data);
-        pResData->data=nullptr;
+U_CFUNC व्योम
+res_unload(Resource_तथ्य *p_Res_तथ्य) {
+    अगर(p_Res_तथ्य->तथ्य!=nullptr) {
+        udata_close(p_Res_तथ्य->तथ्य);
+        p_Res_तथ्य->तथ्य=nullptr;
     }
 }
 
-static const int8_t gPublicTypes[URES_LIMIT] = {
+अटल स्थिर int8_t gPublicTypes[URES_LIMIT] = {
     URES_STRING,
-    URES_BINARY,
+    URES_द्विआधारी,
     URES_TABLE,
     URES_ALIAS,
 
@@ -304,46 +304,46 @@ static const int8_t gPublicTypes[URES_LIMIT] = {
 
 U_CAPI UResType U_EXPORT2
 res_getPublicType(Resource res) {
-    return (UResType)gPublicTypes[RES_GET_TYPE(res)];
+    वापस (UResType)gPublicTypes[RES_GET_TYPE(res)];
 }
 
-U_CAPI const char16_t * U_EXPORT2
-res_getStringNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength) {
-    const char16_t *p;
+U_CAPI स्थिर char16_t * U_EXPORT2
+res_getStringNoTrace(स्थिर Resource_तथ्य *p_Res_तथ्य, Resource res, int32_t *p_लंबाई) {
+    स्थिर char16_t *p;
     uint32_t offset=RES_GET_OFFSET(res);
     int32_t length;
-    if(RES_GET_TYPE(res)==URES_STRING_V2) {
+    अगर(RES_GET_TYPE(res)==URES_STRING_V2) {
         int32_t first;
-        if((int32_t)offset<pResData->poolStringIndexLimit) {
-            p=(const char16_t *)pResData->poolBundleStrings+offset;
-        } else {
-            p=(const char16_t *)pResData->p16BitUnits+(offset-pResData->poolStringIndexLimit);
+        अगर((int32_t)offset<p_Res_तथ्य->pool_String_सूचकांक_Limit) {
+            p=(स्थिर char16_t *)p_Res_तथ्य->poolBundleStrings+offset;
+        } अन्यथा {
+            p=(स्थिर char16_t *)p_Res_तथ्य->p16BitUnits+(offset-p_Res_तथ्य->pool_String_सूचकांक_Limit);
         }
         first=*p;
-        if(!U16_IS_TRAIL(first)) {
+        अगर(!U16_IS_TRAIL(first)) {
             length=u_strlen(p);
-        } else if(first<0xdfef) {
+        } अन्यथा अगर(first<0xdfef) {
             length=first&0x3ff;
             ++p;
-        } else if(first<0xdfff) {
+        } अन्यथा अगर(first<0xdfff) {
             length=((first-0xdfef)<<16)|p[1];
             p+=2;
-        } else {
+        } अन्यथा {
             length=((int32_t)p[1]<<16)|p[2];
             p+=3;
         }
-    } else if(res==offset) /* RES_GET_TYPE(res)==URES_STRING */ {
-        const int32_t *p32= res==0 ? &gEmptyString.length : pResData->pRoot+res;
+    } अन्यथा अगर(res==offset) /* RES_GET_TYPE(res)==URES_STRING */ {
+        स्थिर int32_t *p32= res==0 ? &gEmptyString.length : p_Res_तथ्य->p_मूल+res;
         length=*p32++;
-        p=(const char16_t *)p32;
-    } else {
+        p=(स्थिर char16_t *)p32;
+    } अन्यथा {
         p=nullptr;
         length=0;
     }
-    if(pLength) {
-        *pLength=length;
+    अगर(p_लंबाई) {
+        *p_लंबाई=length;
     }
-    return p;
+    वापस p;
 }
 
 namespace {
@@ -354,621 +354,621 @@ namespace {
  * TODO: combine with other code that handles this marker, use EMPTY_SET constant.
  * TODO: maybe move to uresbund.cpp?
  */
-UBool isNoInheritanceMarker(const ResourceData *pResData, Resource res) {
+UBool isNoInheritanceMarker(स्थिर Resource_तथ्य *p_Res_तथ्य, Resource res) {
     uint32_t offset=RES_GET_OFFSET(res);
-    if (offset == 0) {
+    अगर (offset == 0) {
         // empty string
-    } else if (res == offset) {
-        const int32_t *p32=pResData->pRoot+res;
+    } अन्यथा अगर (res == offset) {
+        स्थिर int32_t *p32=p_Res_तथ्य->p_मूल+res;
         int32_t length=*p32;
-        const char16_t* p = reinterpret_cast<const char16_t*>(p32);
-        return length == 3 && p[2] == 0x2205 && p[3] == 0x2205 && p[4] == 0x2205;
-    } else if (RES_GET_TYPE(res) == URES_STRING_V2) {
-        const char16_t *p;
-        if (static_cast<int32_t>(offset) < pResData->poolStringIndexLimit) {
-            p = reinterpret_cast<const char16_t*>(pResData->poolBundleStrings) + offset;
-        } else {
-            p = reinterpret_cast<const char16_t*>(pResData->p16BitUnits) + (offset - pResData->poolStringIndexLimit);
+        स्थिर char16_t* p = reinterpret_cast<स्थिर char16_t*>(p32);
+        वापस length == 3 && p[2] == 0x2205 && p[3] == 0x2205 && p[4] == 0x2205;
+    } अन्यथा अगर (RES_GET_TYPE(res) == URES_STRING_V2) {
+        स्थिर char16_t *p;
+        अगर (static_cast<int32_t>(offset) < p_Res_तथ्य->pool_String_सूचकांक_Limit) {
+            p = reinterpret_cast<स्थिर char16_t*>(p_Res_तथ्य->poolBundleStrings) + offset;
+        } अन्यथा {
+            p = reinterpret_cast<स्थिर char16_t*>(p_Res_तथ्य->p16BitUnits) + (offset - p_Res_तथ्य->pool_String_सूचकांक_Limit);
         }
         int32_t first=*p;
-        if (first == 0x2205) {  // implicit length
-            return p[1] == 0x2205 && p[2] == 0x2205 && p[3] == 0;
-        } else if (first == 0xdc03) {  // explicit length 3 (should not occur)
-            return p[1] == 0x2205 && p[2] == 0x2205 && p[3] == 0x2205;
-        } else {
+        अगर (first == 0x2205) {  // implicit length
+            वापस p[1] == 0x2205 && p[2] == 0x2205 && p[3] == 0;
+        } अन्यथा अगर (first == 0xdc03) {  // explicit length 3 (should not occur)
+            वापस p[1] == 0x2205 && p[2] == 0x2205 && p[3] == 0x2205;
+        } अन्यथा {
             // Assume that the string has not been stored with more length units than necessary.
-            return false;
+            वापस false;
         }
     }
-    return false;
+    वापस false;
 }
 
-int32_t getStringArray(const ResourceData *pResData, const icu::ResourceArray &array,
+int32_t getStringArray(स्थिर Resource_तथ्य *p_Res_तथ्य, स्थिर icu::ResourceArray &array,
                        icu::UnicodeString *dest, int32_t capacity,
                        UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    अगर(U_FAILURE(errorCode)) {
+        वापस 0;
     }
-    if(dest == nullptr ? capacity != 0 : capacity < 0) {
+    अगर(dest == nullptr ? capacity != 0 : capacity < 0) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        वापस 0;
     }
-    int32_t length = array.getSize();
-    if(length == 0) {
-        return 0;
+    int32_t length = array.get_आकार();
+    अगर(length == 0) {
+        वापस 0;
     }
-    if(length > capacity) {
-        errorCode = U_BUFFER_OVERFLOW_ERROR;
-        return length;
+    अगर(length > capacity) {
+        errorCode = U_बफर_OVERFLOW_ERROR;
+        वापस length;
     }
-    for(int32_t i = 0; i < length; ++i) {
-        int32_t sLength;
+    क्रम(int32_t i = 0; i < length; ++i) {
+        int32_t s_लंबाई;
         // No tracing: handled by the caller
-        const char16_t *s = res_getStringNoTrace(pResData, array.internalGetResource(pResData, i), &sLength);
-        if(s == nullptr) {
+        स्थिर char16_t *s = res_getStringNoTrace(p_Res_तथ्य, array.internalGetResource(p_Res_तथ्य, i), &s_लंबाई);
+        अगर(s == nullptr) {
             errorCode = U_RESOURCE_TYPE_MISMATCH;
-            return 0;
+            वापस 0;
         }
-        dest[i].setTo(true, s, sLength);
+        dest[i].setTo(true, s, s_लंबाई);
     }
-    return length;
+    वापस length;
 }
 
 }  // namespace
 
-U_CAPI const char16_t * U_EXPORT2
-res_getAlias(const ResourceData *pResData, Resource res, int32_t *pLength) {
-    const char16_t *p;
+U_CAPI स्थिर char16_t * U_EXPORT2
+res_getAlias(स्थिर Resource_तथ्य *p_Res_तथ्य, Resource res, int32_t *p_लंबाई) {
+    स्थिर char16_t *p;
     uint32_t offset=RES_GET_OFFSET(res);
     int32_t length;
-    if(RES_GET_TYPE(res)==URES_ALIAS) {
-        const int32_t *p32= offset==0 ? &gEmptyString.length : pResData->pRoot+offset;
+    अगर(RES_GET_TYPE(res)==URES_ALIAS) {
+        स्थिर int32_t *p32= offset==0 ? &gEmptyString.length : p_Res_तथ्य->p_मूल+offset;
         length=*p32++;
-        p=(const char16_t *)p32;
-    } else {
+        p=(स्थिर char16_t *)p32;
+    } अन्यथा {
         p=nullptr;
         length=0;
     }
-    if(pLength) {
-        *pLength=length;
+    अगर(p_लंबाई) {
+        *p_लंबाई=length;
     }
-    return p;
+    वापस p;
 }
 
-U_CAPI const uint8_t * U_EXPORT2
-res_getBinaryNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength) {
-    const uint8_t *p;
+U_CAPI स्थिर uint8_t * U_EXPORT2
+res_get_द्विआधारी_No_Trace(स्थिर Resource_तथ्य *p_Res_तथ्य, Resource res, int32_t *p_लंबाई) {
+    स्थिर uint8_t *p;
     uint32_t offset=RES_GET_OFFSET(res);
     int32_t length;
-    if(RES_GET_TYPE(res)==URES_BINARY) {
-        const int32_t *p32= offset==0 ? (const int32_t*)&gEmpty32 : pResData->pRoot+offset;
+    अगर(RES_GET_TYPE(res)==URES_द्विआधारी) {
+        स्थिर int32_t *p32= offset==0 ? (स्थिर int32_t*)&gEmpty32 : p_Res_तथ्य->p_मूल+offset;
         length=*p32++;
-        p=(const uint8_t *)p32;
-    } else {
+        p=(स्थिर uint8_t *)p32;
+    } अन्यथा {
         p=nullptr;
         length=0;
     }
-    if(pLength) {
-        *pLength=length;
+    अगर(p_लंबाई) {
+        *p_लंबाई=length;
     }
-    return p;
+    वापस p;
 }
 
 
-U_CAPI const int32_t * U_EXPORT2
-res_getIntVectorNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength) {
-    const int32_t *p;
+U_CAPI स्थिर int32_t * U_EXPORT2
+res_getIntVectorNoTrace(स्थिर Resource_तथ्य *p_Res_तथ्य, Resource res, int32_t *p_लंबाई) {
+    स्थिर int32_t *p;
     uint32_t offset=RES_GET_OFFSET(res);
     int32_t length;
-    if(RES_GET_TYPE(res)==URES_INT_VECTOR) {
-        p= offset==0 ? (const int32_t *)&gEmpty32 : pResData->pRoot+offset;
+    अगर(RES_GET_TYPE(res)==URES_INT_VECTOR) {
+        p= offset==0 ? (स्थिर int32_t *)&gEmpty32 : p_Res_तथ्य->p_मूल+offset;
         length=*p++;
-    } else {
+    } अन्यथा {
         p=nullptr;
         length=0;
     }
-    if(pLength) {
-        *pLength=length;
+    अगर(p_लंबाई) {
+        *p_लंबाई=length;
     }
-    return p;
+    वापस p;
 }
 
 U_CAPI int32_t U_EXPORT2
-res_countArrayItems(const ResourceData *pResData, Resource res) {
+res_गिनती_Array_वस्तुएँ(स्थिर Resource_तथ्य *p_Res_तथ्य, Resource res) {
     uint32_t offset=RES_GET_OFFSET(res);
-    switch(RES_GET_TYPE(res)) {
-    case URES_STRING:
-    case URES_STRING_V2:
-    case URES_BINARY:
-    case URES_ALIAS:
-    case URES_INT:
-    case URES_INT_VECTOR:
-        return 1;
-    case URES_ARRAY:
-    case URES_TABLE32:
-        return offset==0 ? 0 : *(pResData->pRoot+offset);
-    case URES_TABLE:
-        return offset==0 ? 0 : *((const uint16_t *)(pResData->pRoot+offset));
-    case URES_ARRAY16:
-    case URES_TABLE16:
-        return pResData->p16BitUnits[offset];
-    default:
-        return 0;
+    चयन(RES_GET_TYPE(res)) {
+    हाल URES_STRING:
+    हाल URES_STRING_V2:
+    हाल URES_द्विआधारी:
+    हाल URES_ALIAS:
+    हाल URES_INT:
+    हाल URES_INT_VECTOR:
+        वापस 1;
+    हाल URES_ARRAY:
+    हाल URES_TABLE32:
+        वापस offset==0 ? 0 : *(p_Res_तथ्य->p_मूल+offset);
+    हाल URES_TABLE:
+        वापस offset==0 ? 0 : *((स्थिर uint16_t *)(p_Res_तथ्य->p_मूल+offset));
+    हाल URES_ARRAY16:
+    हाल URES_TABLE16:
+        वापस p_Res_तथ्य->p16BitUnits[offset];
+    शेष:
+        वापस 0;
     }
 }
 
 U_NAMESPACE_BEGIN
 
-ResourceDataValue::~ResourceDataValue() {}
+Resource_तथ्य_मूल्य::~Resource_तथ्य_मूल्य() {}
 
-UResType ResourceDataValue::getType() const {
-    return res_getPublicType(res);
+UResType Resource_तथ्य_मूल्य::getType() स्थिर {
+    वापस res_getPublicType(res);
 }
 
-const char16_t *ResourceDataValue::getString(int32_t &length, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+स्थिर char16_t *Resource_तथ्य_मूल्य::getString(int32_t &length, UErrorCode &errorCode) स्थिर {
+    अगर(U_FAILURE(errorCode)) {
+        वापस nullptr;
     }
-    const char16_t *s = res_getString(fTraceInfo, &getData(), res, &length);
-    if(s == nullptr) {
+    स्थिर char16_t *s = res_getString(fTraceInfo, &get_तथ्य(), res, &length);
+    अगर(s == nullptr) {
         errorCode = U_RESOURCE_TYPE_MISMATCH;
     }
-    return s;
+    वापस s;
 }
 
-const char16_t *ResourceDataValue::getAliasString(int32_t &length, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+स्थिर char16_t *Resource_तथ्य_मूल्य::getAliasString(int32_t &length, UErrorCode &errorCode) स्थिर {
+    अगर(U_FAILURE(errorCode)) {
+        वापस nullptr;
     }
-    const char16_t *s = res_getAlias(&getData(), res, &length);
-    if(s == nullptr) {
+    स्थिर char16_t *s = res_getAlias(&get_तथ्य(), res, &length);
+    अगर(s == nullptr) {
         errorCode = U_RESOURCE_TYPE_MISMATCH;
     }
-    return s;
+    वापस s;
 }
 
-int32_t ResourceDataValue::getInt(UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+int32_t Resource_तथ्य_मूल्य::getInt(UErrorCode &errorCode) स्थिर {
+    अगर(U_FAILURE(errorCode)) {
+        वापस 0;
     }
-    if(RES_GET_TYPE(res) != URES_INT) {
+    अगर(RES_GET_TYPE(res) != URES_INT) {
         errorCode = U_RESOURCE_TYPE_MISMATCH;
     }
-    return res_getInt(fTraceInfo, res);
+    वापस res_getInt(fTraceInfo, res);
 }
 
-uint32_t ResourceDataValue::getUInt(UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+uint32_t Resource_तथ्य_मूल्य::getUInt(UErrorCode &errorCode) स्थिर {
+    अगर(U_FAILURE(errorCode)) {
+        वापस 0;
     }
-    if(RES_GET_TYPE(res) != URES_INT) {
+    अगर(RES_GET_TYPE(res) != URES_INT) {
         errorCode = U_RESOURCE_TYPE_MISMATCH;
     }
-    return res_getUInt(fTraceInfo, res);
+    वापस res_getUInt(fTraceInfo, res);
 }
 
-const int32_t *ResourceDataValue::getIntVector(int32_t &length, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+स्थिर int32_t *Resource_तथ्य_मूल्य::getIntVector(int32_t &length, UErrorCode &errorCode) स्थिर {
+    अगर(U_FAILURE(errorCode)) {
+        वापस nullptr;
     }
-    const int32_t *iv = res_getIntVector(fTraceInfo, &getData(), res, &length);
-    if(iv == nullptr) {
+    स्थिर int32_t *iv = res_getIntVector(fTraceInfo, &get_तथ्य(), res, &length);
+    अगर(iv == nullptr) {
         errorCode = U_RESOURCE_TYPE_MISMATCH;
     }
-    return iv;
+    वापस iv;
 }
 
-const uint8_t *ResourceDataValue::getBinary(int32_t &length, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+स्थिर uint8_t *Resource_तथ्य_मूल्य::get_द्विआधारी(int32_t &length, UErrorCode &errorCode) स्थिर {
+    अगर(U_FAILURE(errorCode)) {
+        वापस nullptr;
     }
-    const uint8_t *b = res_getBinary(fTraceInfo, &getData(), res, &length);
-    if(b == nullptr) {
+    स्थिर uint8_t *b = res_get_द्विआधारी(fTraceInfo, &get_तथ्य(), res, &length);
+    अगर(b == nullptr) {
         errorCode = U_RESOURCE_TYPE_MISMATCH;
     }
-    return b;
+    वापस b;
 }
 
-ResourceArray ResourceDataValue::getArray(UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return {};
+ResourceArray Resource_तथ्य_मूल्य::getArray(UErrorCode &errorCode) स्थिर {
+    अगर(U_FAILURE(errorCode)) {
+        वापस {};
     }
-    const uint16_t *items16 = nullptr;
-    const Resource *items32 = nullptr;
+    स्थिर uint16_t *items16 = nullptr;
+    स्थिर Resource *items32 = nullptr;
     uint32_t offset=RES_GET_OFFSET(res);
     int32_t length = 0;
-    switch(RES_GET_TYPE(res)) {
-    case URES_ARRAY:
-        if (offset!=0) {  // empty if offset==0
-            items32 = reinterpret_cast<const Resource*>(getData().pRoot) + offset;
+    चयन(RES_GET_TYPE(res)) {
+    हाल URES_ARRAY:
+        अगर (offset!=0) {  // empty if offset==0
+            items32 = reinterpret_cast<स्थिर Resource*>(get_तथ्य().p_मूल) + offset;
             length = *items32++;
         }
-        break;
-    case URES_ARRAY16:
-        items16 = getData().p16BitUnits+offset;
+        अवरोध;
+    हाल URES_ARRAY16:
+        items16 = get_तथ्य().p16BitUnits+offset;
         length = *items16++;
-        break;
-    default:
+        अवरोध;
+    शेष:
         errorCode = U_RESOURCE_TYPE_MISMATCH;
-        return {};
+        वापस {};
     }
-    return ResourceArray(items16, items32, length, fTraceInfo);
+    वापस ResourceArray(items16, items32, length, fTraceInfo);
 }
 
-ResourceTable ResourceDataValue::getTable(UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return {};
+ResourceTable Resource_तथ्य_मूल्य::getTable(UErrorCode &errorCode) स्थिर {
+    अगर(U_FAILURE(errorCode)) {
+        वापस {};
     }
-    const uint16_t *keys16 = nullptr;
-    const int32_t *keys32 = nullptr;
-    const uint16_t *items16 = nullptr;
-    const Resource *items32 = nullptr;
+    स्थिर uint16_t *keys16 = nullptr;
+    स्थिर int32_t *keys32 = nullptr;
+    स्थिर uint16_t *items16 = nullptr;
+    स्थिर Resource *items32 = nullptr;
     uint32_t offset = RES_GET_OFFSET(res);
     int32_t length = 0;
-    switch(RES_GET_TYPE(res)) {
-    case URES_TABLE:
-        if (offset != 0) {  // empty if offset==0
-            keys16 = reinterpret_cast<const uint16_t*>(getData().pRoot + offset);
+    चयन(RES_GET_TYPE(res)) {
+    हाल URES_TABLE:
+        अगर (offset != 0) {  // empty if offset==0
+            keys16 = reinterpret_cast<स्थिर uint16_t*>(get_तथ्य().p_मूल + offset);
             length = *keys16++;
-            items32 = reinterpret_cast<const Resource*>(keys16 + length + (~length & 1));
+            items32 = reinterpret_cast<स्थिर Resource*>(keys16 + length + (~length & 1));
         }
-        break;
-    case URES_TABLE16:
-        keys16 = getData().p16BitUnits+offset;
+        अवरोध;
+    हाल URES_TABLE16:
+        keys16 = get_तथ्य().p16BitUnits+offset;
         length = *keys16++;
         items16 = keys16 + length;
-        break;
-    case URES_TABLE32:
-        if (offset != 0) {  // empty if offset==0
-            keys32 = getData().pRoot+offset;
+        अवरोध;
+    हाल URES_TABLE32:
+        अगर (offset != 0) {  // empty if offset==0
+            keys32 = get_तथ्य().p_मूल+offset;
             length = *keys32++;
-            items32 = reinterpret_cast<const Resource*>(keys32) + length;
+            items32 = reinterpret_cast<स्थिर Resource*>(keys32) + length;
         }
-        break;
-    default:
+        अवरोध;
+    शेष:
         errorCode = U_RESOURCE_TYPE_MISMATCH;
-        return {};
+        वापस {};
     }
-    return ResourceTable(keys16, keys32, items16, items32, length, fTraceInfo);
+    वापस ResourceTable(keys16, keys32, items16, items32, length, fTraceInfo);
 }
 
-UBool ResourceDataValue::isNoInheritanceMarker() const {
-    return ::isNoInheritanceMarker(&getData(), res);
+UBool Resource_तथ्य_मूल्य::isNoInheritanceMarker() स्थिर {
+    वापस ::isNoInheritanceMarker(&get_तथ्य(), res);
 }
 
-int32_t ResourceDataValue::getStringArray(UnicodeString *dest, int32_t capacity,
-                                          UErrorCode &errorCode) const {
-    return ::getStringArray(&getData(), getArray(errorCode), dest, capacity, errorCode);
+int32_t Resource_तथ्य_मूल्य::getStringArray(UnicodeString *dest, int32_t capacity,
+                                          UErrorCode &errorCode) स्थिर {
+    वापस ::getStringArray(&get_तथ्य(), getArray(errorCode), dest, capacity, errorCode);
 }
 
-int32_t ResourceDataValue::getStringArrayOrStringAsArray(UnicodeString *dest, int32_t capacity,
-                                                         UErrorCode &errorCode) const {
-    if(URES_IS_ARRAY(res)) {
-        return ::getStringArray(&getData(), getArray(errorCode), dest, capacity, errorCode);
+int32_t Resource_तथ्य_मूल्य::getStringArrayOrStringAsArray(UnicodeString *dest, int32_t capacity,
+                                                         UErrorCode &errorCode) स्थिर {
+    अगर(URES_IS_ARRAY(res)) {
+        वापस ::getStringArray(&get_तथ्य(), getArray(errorCode), dest, capacity, errorCode);
     }
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    अगर(U_FAILURE(errorCode)) {
+        वापस 0;
     }
-    if(dest == nullptr ? capacity != 0 : capacity < 0) {
+    अगर(dest == nullptr ? capacity != 0 : capacity < 0) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        वापस 0;
     }
-    if(capacity < 1) {
-        errorCode = U_BUFFER_OVERFLOW_ERROR;
-        return 1;
+    अगर(capacity < 1) {
+        errorCode = U_बफर_OVERFLOW_ERROR;
+        वापस 1;
     }
-    int32_t sLength;
-    const char16_t *s = res_getString(fTraceInfo, &getData(), res, &sLength);
-    if(s != nullptr) {
-        dest[0].setTo(true, s, sLength);
-        return 1;
+    int32_t s_लंबाई;
+    स्थिर char16_t *s = res_getString(fTraceInfo, &get_तथ्य(), res, &s_लंबाई);
+    अगर(s != nullptr) {
+        dest[0].setTo(true, s, s_लंबाई);
+        वापस 1;
     }
     errorCode = U_RESOURCE_TYPE_MISMATCH;
-    return 0;
+    वापस 0;
 }
 
-UnicodeString ResourceDataValue::getStringOrFirstOfArray(UErrorCode &errorCode) const {
+UnicodeString Resource_तथ्य_मूल्य::getStringOrFirstOfArray(UErrorCode &errorCode) स्थिर {
     UnicodeString us;
-    if(U_FAILURE(errorCode)) {
-        return us;
+    अगर(U_FAILURE(errorCode)) {
+        वापस us;
     }
-    int32_t sLength;
-    const char16_t *s = res_getString(fTraceInfo, &getData(), res, &sLength);
-    if(s != nullptr) {
-        us.setTo(true, s, sLength);
-        return us;
+    int32_t s_लंबाई;
+    स्थिर char16_t *s = res_getString(fTraceInfo, &get_तथ्य(), res, &s_लंबाई);
+    अगर(s != nullptr) {
+        us.setTo(true, s, s_लंबाई);
+        वापस us;
     }
     ResourceArray array = getArray(errorCode);
-    if(U_FAILURE(errorCode)) {
-        return us;
+    अगर(U_FAILURE(errorCode)) {
+        वापस us;
     }
-    if(array.getSize() > 0) {
+    अगर(array.get_आकार() > 0) {
         // Tracing is already performed above (unimportant for trace that this is an array)
-        s = res_getStringNoTrace(&getData(), array.internalGetResource(&getData(), 0), &sLength);
-        if(s != nullptr) {
-            us.setTo(true, s, sLength);
-            return us;
+        s = res_getStringNoTrace(&get_तथ्य(), array.internalGetResource(&get_तथ्य(), 0), &s_लंबाई);
+        अगर(s != nullptr) {
+            us.setTo(true, s, s_लंबाई);
+            वापस us;
         }
     }
     errorCode = U_RESOURCE_TYPE_MISMATCH;
-    return us;
+    वापस us;
 }
 
 U_NAMESPACE_END
 
-static Resource
-makeResourceFrom16(const ResourceData *pResData, int32_t res16) {
-    if(res16<pResData->poolStringIndex16Limit) {
+अटल Resource
+makeResourceFrom16(स्थिर Resource_तथ्य *p_Res_तथ्य, int32_t res16) {
+    अगर(res16<p_Res_तथ्य->poolStringIndex16Limit) {
         // Pool string, nothing to do.
-    } else {
+    } अन्यथा {
         // Local string, adjust the 16-bit offset to a regular one,
         // with a larger pool string index limit.
-        res16=res16-pResData->poolStringIndex16Limit+pResData->poolStringIndexLimit;
+        res16=res16-p_Res_तथ्य->poolStringIndex16Limit+p_Res_तथ्य->pool_String_सूचकांक_Limit;
     }
-    return URES_MAKE_RESOURCE(URES_STRING_V2, res16);
+    वापस URES_MAKE_RESOURCE(URES_STRING_V2, res16);
 }
 
 U_CAPI Resource U_EXPORT2
-res_getTableItemByKey(const ResourceData *pResData, Resource table,
-                      int32_t *indexR, const char **key) {
+res_get_Table_Item_By_कुंजी(स्थिर Resource_तथ्य *p_Res_तथ्य, Resource table,
+                      int32_t *सूचकांक_R, स्थिर अक्षर **कुंजी) {
     uint32_t offset=RES_GET_OFFSET(table);
     int32_t length;
     int32_t idx;
-    if(key == nullptr || *key == nullptr) {
-        return RES_BOGUS;
+    अगर(कुंजी == nullptr || *कुंजी == nullptr) {
+        वापस RES_BOGUS;
     }
-    switch(RES_GET_TYPE(table)) {
-    case URES_TABLE: {
-        if (offset!=0) { /* empty if offset==0 */
-            const uint16_t *p= (const uint16_t *)(pResData->pRoot+offset);
+    चयन(RES_GET_TYPE(table)) {
+    हाल URES_TABLE: {
+        अगर (offset!=0) { /* empty if offset==0 */
+            स्थिर uint16_t *p= (स्थिर uint16_t *)(p_Res_तथ्य->p_मूल+offset);
             length=*p++;
-            *indexR=idx=_res_findTableItem(pResData, p, length, *key, key);
-            if(idx>=0) {
-                const Resource *p32=(const Resource *)(p+length+(~length&1));
-                return p32[idx];
+            *सूचकांक_R=idx=_res_findTableItem(p_Res_तथ्य, p, length, *कुंजी, कुंजी);
+            अगर(idx>=0) {
+                स्थिर Resource *p32=(स्थिर Resource *)(p+length+(~length&1));
+                वापस p32[idx];
             }
         }
-        break;
+        अवरोध;
     }
-    case URES_TABLE16: {
-        const uint16_t *p=pResData->p16BitUnits+offset;
+    हाल URES_TABLE16: {
+        स्थिर uint16_t *p=p_Res_तथ्य->p16BitUnits+offset;
         length=*p++;
-        *indexR=idx=_res_findTableItem(pResData, p, length, *key, key);
-        if(idx>=0) {
-            return makeResourceFrom16(pResData, p[length+idx]);
+        *सूचकांक_R=idx=_res_findTableItem(p_Res_तथ्य, p, length, *कुंजी, कुंजी);
+        अगर(idx>=0) {
+            वापस makeResourceFrom16(p_Res_तथ्य, p[length+idx]);
         }
-        break;
+        अवरोध;
     }
-    case URES_TABLE32: {
-        if (offset!=0) { /* empty if offset==0 */
-            const int32_t *p= pResData->pRoot+offset;
+    हाल URES_TABLE32: {
+        अगर (offset!=0) { /* empty if offset==0 */
+            स्थिर int32_t *p= p_Res_तथ्य->p_मूल+offset;
             length=*p++;
-            *indexR=idx=_res_findTable32Item(pResData, p, length, *key, key);
-            if(idx>=0) {
-                return (Resource)p[length+idx];
+            *सूचकांक_R=idx=_res_findTable32Item(p_Res_तथ्य, p, length, *कुंजी, कुंजी);
+            अगर(idx>=0) {
+                वापस (Resource)p[length+idx];
             }
         }
-        break;
+        अवरोध;
     }
-    default:
-        break;
+    शेष:
+        अवरोध;
     }
-    return RES_BOGUS;
+    वापस RES_BOGUS;
 }
 
 U_CAPI Resource U_EXPORT2
-res_getTableItemByIndex(const ResourceData *pResData, Resource table,
-                        int32_t indexR, const char **key) {
+res_get_Table_Item_By_सूचकांक(स्थिर Resource_तथ्य *p_Res_तथ्य, Resource table,
+                        int32_t सूचकांक_R, स्थिर अक्षर **कुंजी) {
     uint32_t offset=RES_GET_OFFSET(table);
     int32_t length;
-    if (indexR < 0) {
-        return RES_BOGUS;
+    अगर (सूचकांक_R < 0) {
+        वापस RES_BOGUS;
     }
-    switch(RES_GET_TYPE(table)) {
-    case URES_TABLE: {
-        if (offset != 0) { /* empty if offset==0 */
-            const uint16_t *p= (const uint16_t *)(pResData->pRoot+offset);
+    चयन(RES_GET_TYPE(table)) {
+    हाल URES_TABLE: {
+        अगर (offset != 0) { /* empty if offset==0 */
+            स्थिर uint16_t *p= (स्थिर uint16_t *)(p_Res_तथ्य->p_मूल+offset);
             length=*p++;
-            if(indexR<length) {
-                const Resource *p32=(const Resource *)(p+length+(~length&1));
-                if(key!=nullptr) {
-                    *key=RES_GET_KEY16(pResData, p[indexR]);
+            अगर(सूचकांक_R<length) {
+                स्थिर Resource *p32=(स्थिर Resource *)(p+length+(~length&1));
+                अगर(कुंजी!=nullptr) {
+                    *कुंजी=RES_GET_KEY16(p_Res_तथ्य, p[सूचकांक_R]);
                 }
-                return p32[indexR];
+                वापस p32[सूचकांक_R];
             }
         }
-        break;
+        अवरोध;
     }
-    case URES_TABLE16: {
-        const uint16_t *p=pResData->p16BitUnits+offset;
+    हाल URES_TABLE16: {
+        स्थिर uint16_t *p=p_Res_तथ्य->p16BitUnits+offset;
         length=*p++;
-        if(indexR<length) {
-            if(key!=nullptr) {
-                *key=RES_GET_KEY16(pResData, p[indexR]);
+        अगर(सूचकांक_R<length) {
+            अगर(कुंजी!=nullptr) {
+                *कुंजी=RES_GET_KEY16(p_Res_तथ्य, p[सूचकांक_R]);
             }
-            return makeResourceFrom16(pResData, p[length+indexR]);
+            वापस makeResourceFrom16(p_Res_तथ्य, p[length+सूचकांक_R]);
         }
-        break;
+        अवरोध;
     }
-    case URES_TABLE32: {
-        if (offset != 0) { /* empty if offset==0 */
-            const int32_t *p= pResData->pRoot+offset;
+    हाल URES_TABLE32: {
+        अगर (offset != 0) { /* empty if offset==0 */
+            स्थिर int32_t *p= p_Res_तथ्य->p_मूल+offset;
             length=*p++;
-            if(indexR<length) {
-                if(key!=nullptr) {
-                    *key=RES_GET_KEY32(pResData, p[indexR]);
+            अगर(सूचकांक_R<length) {
+                अगर(कुंजी!=nullptr) {
+                    *कुंजी=RES_GET_KEY32(p_Res_तथ्य, p[सूचकांक_R]);
                 }
-                return (Resource)p[length+indexR];
+                वापस (Resource)p[length+सूचकांक_R];
             }
         }
-        break;
+        अवरोध;
     }
-    default:
-        break;
+    शेष:
+        अवरोध;
     }
-    return RES_BOGUS;
+    वापस RES_BOGUS;
 }
 
 U_CAPI Resource U_EXPORT2
-res_getResource(const ResourceData *pResData, const char *key) {
-    const char *realKey=key;
+res_getResource(स्थिर Resource_तथ्य *p_Res_तथ्य, स्थिर अक्षर *कुंजी) {
+    स्थिर अक्षर *real_कुंजी=कुंजी;
     int32_t idx;
-    return res_getTableItemByKey(pResData, pResData->rootRes, &idx, &realKey);
+    वापस res_get_Table_Item_By_कुंजी(p_Res_तथ्य, p_Res_तथ्य->मूल_Res, &idx, &real_कुंजी);
 }
 
 
-UBool icu::ResourceTable::getKeyAndValue(int32_t i,
-                                         const char *&key, icu::ResourceValue &value) const {
-    if(0 <= i && i < length) {
-        icu::ResourceDataValue &rdValue = static_cast<icu::ResourceDataValue &>(value);
-        if (keys16 != nullptr) {
-            key = RES_GET_KEY16(&rdValue.getData(), keys16[i]);
-        } else {
-            key = RES_GET_KEY32(&rdValue.getData(), keys32[i]);
+UBool icu::ResourceTable::get_कुंजी_And_मूल्य(int32_t i,
+                                         स्थिर अक्षर *&कुंजी, icu::Resource_मूल्य &value) स्थिर {
+    अगर(0 <= i && i < length) {
+        icu::Resource_तथ्य_मूल्य &rd_मूल्य = static_cast<icu::Resource_तथ्य_मूल्य &>(value);
+        अगर (keys16 != nullptr) {
+            कुंजी = RES_GET_KEY16(&rd_मूल्य.get_तथ्य(), keys16[i]);
+        } अन्यथा {
+            कुंजी = RES_GET_KEY32(&rd_मूल्य.get_तथ्य(), keys32[i]);
         }
         Resource res;
-        if (items16 != nullptr) {
-            res = makeResourceFrom16(&rdValue.getData(), items16[i]);
-        } else {
+        अगर (items16 != nullptr) {
+            res = makeResourceFrom16(&rd_मूल्य.get_तथ्य(), items16[i]);
+        } अन्यथा {
             res = items32[i];
         }
         // Note: the ResourceTracer keeps a reference to the field of this
         // ResourceTable. This is OK because the ResourceTable should remain
         // alive for the duration that fields are being read from it
         // (including nested fields).
-        rdValue.setResource(res, ResourceTracer(fTraceInfo, key));
-        return true;
+        rd_मूल्य.setResource(res, ResourceTracer(fTraceInfo, कुंजी));
+        वापस true;
     }
-    return false;
+    वापस false;
 }
 
-UBool icu::ResourceTable::findValue(const char *key, ResourceValue &value) const {
-    icu::ResourceDataValue &rdValue = static_cast<icu::ResourceDataValue &>(value);
-    const char *realKey = nullptr;
+UBool icu::ResourceTable::find_मूल्य(स्थिर अक्षर *कुंजी, Resource_मूल्य &value) स्थिर {
+    icu::Resource_तथ्य_मूल्य &rd_मूल्य = static_cast<icu::Resource_तथ्य_मूल्य &>(value);
+    स्थिर अक्षर *real_कुंजी = nullptr;
     int32_t i;
-    if (keys16 != nullptr) {
-        i = _res_findTableItem(&rdValue.getData(), keys16, length, key, &realKey);
-    } else {
-        i = _res_findTable32Item(&rdValue.getData(), keys32, length, key, &realKey);
+    अगर (keys16 != nullptr) {
+        i = _res_findTableItem(&rd_मूल्य.get_तथ्य(), keys16, length, कुंजी, &real_कुंजी);
+    } अन्यथा {
+        i = _res_findTable32Item(&rd_मूल्य.get_तथ्य(), keys32, length, कुंजी, &real_कुंजी);
     }
-    if (i >= 0) {
+    अगर (i >= 0) {
         Resource res;
-        if (items16 != nullptr) {
-            res = makeResourceFrom16(&rdValue.getData(), items16[i]);
-        } else {
+        अगर (items16 != nullptr) {
+            res = makeResourceFrom16(&rd_मूल्य.get_तथ्य(), items16[i]);
+        } अन्यथा {
             res = items32[i];
         }
         // Same note about lifetime as in getKeyAndValue().
-        rdValue.setResource(res, ResourceTracer(fTraceInfo, key));
-        return true;
+        rd_मूल्य.setResource(res, ResourceTracer(fTraceInfo, कुंजी));
+        वापस true;
     }
-    return false;
+    वापस false;
 }
 
 U_CAPI Resource U_EXPORT2
-res_getArrayItem(const ResourceData *pResData, Resource array, int32_t indexR) {
+res_getArrayItem(स्थिर Resource_तथ्य *p_Res_तथ्य, Resource array, int32_t सूचकांक_R) {
     uint32_t offset=RES_GET_OFFSET(array);
-    if (indexR < 0) {
-        return RES_BOGUS;
+    अगर (सूचकांक_R < 0) {
+        वापस RES_BOGUS;
     }
-    switch(RES_GET_TYPE(array)) {
-    case URES_ARRAY: {
-        if (offset!=0) { /* empty if offset==0 */
-            const int32_t *p= pResData->pRoot+offset;
-            if(indexR<*p) {
-                return (Resource)p[1+indexR];
+    चयन(RES_GET_TYPE(array)) {
+    हाल URES_ARRAY: {
+        अगर (offset!=0) { /* empty if offset==0 */
+            स्थिर int32_t *p= p_Res_तथ्य->p_मूल+offset;
+            अगर(सूचकांक_R<*p) {
+                वापस (Resource)p[1+सूचकांक_R];
             }
         }
-        break;
+        अवरोध;
     }
-    case URES_ARRAY16: {
-        const uint16_t *p=pResData->p16BitUnits+offset;
-        if(indexR<*p) {
-            return makeResourceFrom16(pResData, p[1+indexR]);
+    हाल URES_ARRAY16: {
+        स्थिर uint16_t *p=p_Res_तथ्य->p16BitUnits+offset;
+        अगर(सूचकांक_R<*p) {
+            वापस makeResourceFrom16(p_Res_तथ्य, p[1+सूचकांक_R]);
         }
-        break;
+        अवरोध;
     }
-    default:
-        break;
+    शेष:
+        अवरोध;
     }
-    return RES_BOGUS;
+    वापस RES_BOGUS;
 }
 
-uint32_t icu::ResourceArray::internalGetResource(const ResourceData *pResData, int32_t i) const {
-    if (items16 != nullptr) {
-        return makeResourceFrom16(pResData, items16[i]);
-    } else {
-        return items32[i];
+uint32_t icu::ResourceArray::internalGetResource(स्थिर Resource_तथ्य *p_Res_तथ्य, int32_t i) स्थिर {
+    अगर (items16 != nullptr) {
+        वापस makeResourceFrom16(p_Res_तथ्य, items16[i]);
+    } अन्यथा {
+        वापस items32[i];
     }
 }
 
-UBool icu::ResourceArray::getValue(int32_t i, icu::ResourceValue &value) const {
-    if(0 <= i && i < length) {
-        icu::ResourceDataValue &rdValue = static_cast<icu::ResourceDataValue &>(value);
+UBool icu::ResourceArray::get_मूल्य(int32_t i, icu::Resource_मूल्य &value) स्थिर {
+    अगर(0 <= i && i < length) {
+        icu::Resource_तथ्य_मूल्य &rd_मूल्य = static_cast<icu::Resource_तथ्य_मूल्य &>(value);
         // Note: the ResourceTracer keeps a reference to the field of this
         // ResourceArray. This is OK because the ResourceArray should remain
         // alive for the duration that fields are being read from it
         // (including nested fields).
-        rdValue.setResource(
-            internalGetResource(&rdValue.getData(), i),
+        rd_मूल्य.setResource(
+            internalGetResource(&rd_मूल्य.get_तथ्य(), i),
             ResourceTracer(fTraceInfo, i));
-        return true;
+        वापस true;
     }
-    return false;
+    वापस false;
 }
 
 U_CFUNC Resource
-res_findResource(const ResourceData *pResData, Resource r, char** path, const char** key) {
-  char *pathP = *path, *nextSepP = *path;
-  char *closeIndex = nullptr;
+res_findResource(स्थिर Resource_तथ्य *p_Res_तथ्य, Resource r, अक्षर** path, स्थिर अक्षर** कुंजी) {
+  अक्षर *pathP = *path, *अग्र_Sep_P = *path;
+  अक्षर *close_सूचकांक = nullptr;
   Resource t1 = r;
   Resource t2;
-  int32_t indexR = 0;
+  int32_t सूचकांक_R = 0;
   UResType type = (UResType)RES_GET_TYPE(t1);
 
   /* if you come in with an empty path, you'll be getting back the same resource */
-  if(!uprv_strlen(pathP)) {
-      return r;
+  अगर(!uprv_strlen(pathP)) {
+      वापस r;
   }
 
   /* one needs to have an aggregate resource in order to search in it */
-  if(!URES_IS_CONTAINER(type)) {
-      return RES_BOGUS;
+  अगर(!URES_IS_CONTAINER(type)) {
+      वापस RES_BOGUS;
   }
   
-  while(nextSepP && *pathP && t1 != RES_BOGUS && URES_IS_CONTAINER(type)) {
+  जबतक(अग्र_Sep_P && *pathP && t1 != RES_BOGUS && URES_IS_CONTAINER(type)) {
     /* Iteration stops if: the path has been consumed, we found a non-existing
      * resource (t1 == RES_BOGUS) or we found a scalar resource (including alias)
      */
-    nextSepP = uprv_strchr(pathP, RES_PATH_SEPARATOR);
+    अग्र_Sep_P = uprv_strchr(pathP, RES_PATH_SEPARATOR);
     /* if there are more separators, terminate string 
      * and set path to the remaining part of the string
      */
-    if(nextSepP != nullptr) {
-      if(nextSepP == pathP) {
+    अगर(अग्र_Sep_P != nullptr) {
+      अगर(अग्र_Sep_P == pathP) {
         // Empty key string.
-        return RES_BOGUS;
+        वापस RES_BOGUS;
       }
-      *nextSepP = 0; /* overwrite the separator with a NUL to terminate the key */
-      *path = nextSepP+1;
-    } else {
+      *अग्र_Sep_P = 0; /* overwrite the separator with a NUL to terminate the key */
+      *path = अग्र_Sep_P+1;
+    } अन्यथा {
       *path = uprv_strchr(pathP, 0);
     }
 
     /* if the resource is a table */
     /* try the key based access */
-    if(URES_IS_TABLE(type)) {
-      *key = pathP;
-      t2 = res_getTableItemByKey(pResData, t1, &indexR, key);
-    } else if(URES_IS_ARRAY(type)) {
-      indexR = uprv_strtol(pathP, &closeIndex, 10);
-      if(indexR >= 0 && *closeIndex == 0) {
-        t2 = res_getArrayItem(pResData, t1, indexR);
-      } else {
+    अगर(URES_IS_TABLE(type)) {
+      *कुंजी = pathP;
+      t2 = res_get_Table_Item_By_कुंजी(p_Res_तथ्य, t1, &सूचकांक_R, कुंजी);
+    } अन्यथा अगर(URES_IS_ARRAY(type)) {
+      सूचकांक_R = uprv_strtol(pathP, &close_सूचकांक, 10);
+      अगर(सूचकांक_R >= 0 && *close_सूचकांक == 0) {
+        t2 = res_getArrayItem(p_Res_तथ्य, t1, सूचकांक_R);
+      } अन्यथा {
         t2 = RES_BOGUS; /* have an array, but don't have a valid index */
       }
-      *key = nullptr;
-    } else { /* can't do much here, except setting t2 to bogus */
+      *कुंजी = nullptr;
+    } अन्यथा { /* can't do much here, except setting t2 to bogus */
       t2 = RES_BOGUS;
     }
     t1 = t2;
@@ -977,7 +977,7 @@ res_findResource(const ResourceData *pResData, Resource r, char** path, const ch
     pathP = *path;
   }
 
-  return t1;
+  वापस t1;
 }
 
 /* resource bundle swapping ------------------------------------------------- */
@@ -1013,126 +1013,126 @@ res_findResource(const ResourceData *pResData, Resource r, char** path, const ch
  * after sorting this array by keys, the actual key/value arrays are permutated
  * according to the sorting indexes
  */
-typedef struct Row {
-    int32_t keyIndex, sortIndex;
+प्रकार काष्ठा Row {
+    int32_t कुंजी_सूचकांक, sort_सूचकांक;
 } Row;
 
-static int32_t U_CALLCONV
-ures_compareRows(const void *context, const void *left, const void *right) {
-    const char* keyChars = static_cast<const char*>(context);
-    return static_cast<int32_t>(uprv_strcmp(keyChars + static_cast<const Row*>(left)->keyIndex,
-                                            keyChars + static_cast<const Row*>(right)->keyIndex));
+अटल int32_t U_CALLCONV
+ures_compareRows(स्थिर व्योम *context, स्थिर व्योम *बाँए, स्थिर व्योम *दाँए) {
+    स्थिर अक्षर* कुंजी_Chars = static_cast<स्थिर अक्षर*>(context);
+    वापस static_cast<int32_t>(uprv_strcmp(कुंजी_Chars + static_cast<स्थिर Row*>(बाँए)->कुंजी_सूचकांक,
+                                            कुंजी_Chars + static_cast<स्थिर Row*>(दाँए)->कुंजी_सूचकांक));
 }
 
-typedef struct TempTable {
-    const char *keyChars;
+प्रकार काष्ठा अस्थायी_Table_2 {
+    स्थिर अक्षर *कुंजी_Chars;
     Row *rows;
     int32_t *resort;
     uint32_t *resFlags;
-    int32_t localKeyLimit;
+    int32_t local_कुंजी_Limit;
     uint8_t majorFormatVersion;
-} TempTable;
+} अस्थायी_Table_2;
 
-enum {
-    STACK_ROW_CAPACITY=200
+क्रमागत {
+    ढेर_ROW_CAPACITY=200
 };
 
 /* The table item key string is not locally available. */
-static const char *const gUnknownKey="";
+अटल स्थिर अक्षर *स्थिर g_Unknown_कुंजी="";
 
-#if !UCONFIG_NO_COLLATION
+#अगर !UCONFIG_NO_COLLATION
 // resource table key for collation binaries
-static const char16_t gCollationBinKey[]=u"%%CollationBin";
-#endif
+अटल स्थिर char16_t g_Collation_Bin_कुंजी[]=u"%%CollationBin";
+#पूर्ण_अगर
 
 /*
  * swap one resource item
  */
-static void
-ures_swapResource(const UDataSwapper *ds,
-                  const Resource *inBundle, Resource *outBundle,
+अटल व्योम
+ures_swapResource(स्थिर UDataSwapper *ds,
+                  स्थिर Resource *inBundle, Resource *outBundle,
                   Resource res, /* caller swaps res itself */
-                  const char *key,
-                  TempTable *pTempTable,
+                  स्थिर अक्षर *कुंजी,
+                  अस्थायी_Table_2 *p_अस्थायी_Table,
                   UErrorCode *pErrorCode) {
-    const Resource *p;
+    स्थिर Resource *p;
     Resource *q;
     int32_t offset, count;
 
-    switch(RES_GET_TYPE(res)) {
-    case URES_TABLE16:
-    case URES_STRING_V2:
-    case URES_INT:
-    case URES_ARRAY16:
+    चयन(RES_GET_TYPE(res)) {
+    हाल URES_TABLE16:
+    हाल URES_STRING_V2:
+    हाल URES_INT:
+    हाल URES_ARRAY16:
         /* integer, or points to 16-bit units, nothing to do here */
-        return;
-    default:
-        break;
+        वापस;
+    शेष:
+        अवरोध;
     }
 
     /* all other types use an offset to point to their data */
     offset = static_cast<int32_t>(RES_GET_OFFSET(res));
-    if(offset==0) {
+    अगर(offset==0) {
         /* special offset indicating an empty item */
-        return;
+        वापस;
     }
-    if (pTempTable->resFlags[offset >> 5] & (static_cast<uint32_t>(1) << (offset & 0x1f))) {
+    अगर (p_अस्थायी_Table->resFlags[offset >> 5] & (static_cast<uint32_t>(1) << (offset & 0x1f))) {
         /* we already swapped this resource item */
-        return;
-    } else {
+        वापस;
+    } अन्यथा {
         /* mark it as swapped now */
-        pTempTable->resFlags[offset >> 5] |= static_cast<uint32_t>(1) << (offset & 0x1f);
+        p_अस्थायी_Table->resFlags[offset >> 5] |= static_cast<uint32_t>(1) << (offset & 0x1f);
     }
 
     p=inBundle+offset;
     q=outBundle+offset;
 
-    switch(RES_GET_TYPE(res)) {
-    case URES_ALIAS:
+    चयन(RES_GET_TYPE(res)) {
+    हाल URES_ALIAS:
         /* physically same value layout as string, fall through */
         U_FALLTHROUGH;
-    case URES_STRING:
+    हाल URES_STRING:
         count = udata_readInt32(ds, static_cast<int32_t>(*p));
         /* swap length */
         ds->swapArray32(ds, p, 4, q, pErrorCode);
         /* swap each char16_t (the terminating NUL would not change) */
         ds->swapArray16(ds, p+1, 2*count, q+1, pErrorCode);
-        break;
-    case URES_BINARY:
+        अवरोध;
+    हाल URES_द्विआधारी:
         count = udata_readInt32(ds, static_cast<int32_t>(*p));
         /* swap length */
         ds->swapArray32(ds, p, 4, q, pErrorCode);
         /* no need to swap or copy bytes - ures_swap() copied them all */
 
         /* swap known formats */
-#if !UCONFIG_NO_COLLATION
-        if( key!=nullptr &&  /* the binary is in a table */
-            (key!=gUnknownKey ?
+#अगर !UCONFIG_NO_COLLATION
+        अगर( कुंजी!=nullptr &&  /* the binary is in a table */
+            (कुंजी!=g_Unknown_कुंजी ?
                 /* its table key string is "%%CollationBin" */
-                0==ds->compareInvChars(ds, key, -1,
-                                       gCollationBinKey, UPRV_LENGTHOF(gCollationBinKey)-1) :
+                0==ds->compareInvChars(ds, कुंजी, -1,
+                                       g_Collation_Bin_कुंजी, UPRV_LENGTHOF(g_Collation_Bin_कुंजी)-1) :
                 /* its table key string is unknown but it looks like a collation binary */
-                ucol_looksLikeCollationBinary(ds, p+1, count))
+                ucol_looks_Like_Collation_द्विआधारी(ds, p+1, count))
         ) {
             ucol_swap(ds, p+1, count, q+1, pErrorCode);
         }
-#endif
-        break;
-    case URES_TABLE:
-    case URES_TABLE32:
+#पूर्ण_अगर
+        अवरोध;
+    हाल URES_TABLE:
+    हाल URES_TABLE32:
         {
-            const uint16_t *pKey16;
+            स्थिर uint16_t *pKey16;
             uint16_t *qKey16;
 
-            const int32_t *pKey32;
+            स्थिर int32_t *pKey32;
             int32_t *qKey32;
 
             Resource item;
-            int32_t i, oldIndex;
+            int32_t i, old_सूचकांक;
 
-            if(RES_GET_TYPE(res)==URES_TABLE) {
+            अगर(RES_GET_TYPE(res)==URES_TABLE) {
                 /* get table item count */
-                pKey16 = reinterpret_cast<const uint16_t*>(p);
+                pKey16 = reinterpret_cast<स्थिर uint16_t*>(p);
                 qKey16 = reinterpret_cast<uint16_t*>(q);
                 count=ds->readUInt16(*pKey16);
 
@@ -1142,9 +1142,9 @@ ures_swapResource(const UDataSwapper *ds,
                 ds->swapArray16(ds, pKey16++, 2, qKey16++, pErrorCode);
 
                 offset+=((1+count)+1)/2;
-            } else {
+            } अन्यथा {
                 /* get table item count */
-                pKey32 = reinterpret_cast<const int32_t*>(p);
+                pKey32 = reinterpret_cast<स्थिर int32_t*>(p);
                 qKey32 = reinterpret_cast<int32_t*>(q);
                 count=udata_readInt32(ds, *pKey32);
 
@@ -1156,46 +1156,46 @@ ures_swapResource(const UDataSwapper *ds,
                 offset+=1+count;
             }
 
-            if(count==0) {
-                break;
+            अगर(count==0) {
+                अवरोध;
             }
 
             p=inBundle+offset; /* pointer to table resources */
             q=outBundle+offset;
 
             /* recurse */
-            for(i=0; i<count; ++i) {
-                const char *itemKey=gUnknownKey;
-                if(pKey16!=nullptr) {
-                    int32_t keyOffset=ds->readUInt16(pKey16[i]);
-                    if(keyOffset<pTempTable->localKeyLimit) {
-                        itemKey = reinterpret_cast<const char*>(outBundle) + keyOffset;
+            क्रम(i=0; i<count; ++i) {
+                स्थिर अक्षर *item_कुंजी=g_Unknown_कुंजी;
+                अगर(pKey16!=nullptr) {
+                    int32_t कुंजी_Offset=ds->readUInt16(pKey16[i]);
+                    अगर(कुंजी_Offset<p_अस्थायी_Table->local_कुंजी_Limit) {
+                        item_कुंजी = reinterpret_cast<स्थिर अक्षर*>(outBundle) + कुंजी_Offset;
                     }
-                } else {
-                    int32_t keyOffset=udata_readInt32(ds, pKey32[i]);
-                    if(keyOffset>=0) {
-                        itemKey = reinterpret_cast<const char*>(outBundle) + keyOffset;
+                } अन्यथा {
+                    int32_t कुंजी_Offset=udata_readInt32(ds, pKey32[i]);
+                    अगर(कुंजी_Offset>=0) {
+                        item_कुंजी = reinterpret_cast<स्थिर अक्षर*>(outBundle) + कुंजी_Offset;
                     }
                 }
                 item=ds->readUInt32(p[i]);
-                ures_swapResource(ds, inBundle, outBundle, item, itemKey, pTempTable, pErrorCode);
-                if(U_FAILURE(*pErrorCode)) {
+                ures_swapResource(ds, inBundle, outBundle, item, item_कुंजी, p_अस्थायी_Table, pErrorCode);
+                अगर(U_FAILURE(*pErrorCode)) {
                     udata_printError(ds, "ures_swapResource(table res=%08x)[%d].recurse(%08x) failed\n",
                                      res, i, item);
-                    return;
+                    वापस;
                 }
             }
 
-            if(pTempTable->majorFormatVersion>1 || ds->inCharset==ds->outCharset) {
+            अगर(p_अस्थायी_Table->majorFormatVersion>1 || ds->inCharset==ds->outCharset) {
                 /* no need to sort, just swap the offset/value arrays */
-                if(pKey16!=nullptr) {
+                अगर(pKey16!=nullptr) {
                     ds->swapArray16(ds, pKey16, count*2, qKey16, pErrorCode);
                     ds->swapArray32(ds, p, count*4, q, pErrorCode);
-                } else {
+                } अन्यथा {
                     /* swap key offsets and items as one array */
                     ds->swapArray32(ds, pKey32, count*2*4, qKey32, pErrorCode);
                 }
-                break;
+                अवरोध;
             }
 
             /*
@@ -1206,24 +1206,24 @@ ures_swapResource(const UDataSwapper *ds,
              * sorting indexes and sort that.
              * Then we permutate and copy/swap the actual values.
              */
-            if(pKey16!=nullptr) {
-                for(i=0; i<count; ++i) {
-                    pTempTable->rows[i].keyIndex=ds->readUInt16(pKey16[i]);
-                    pTempTable->rows[i].sortIndex=i;
+            अगर(pKey16!=nullptr) {
+                क्रम(i=0; i<count; ++i) {
+                    p_अस्थायी_Table->rows[i].कुंजी_सूचकांक=ds->readUInt16(pKey16[i]);
+                    p_अस्थायी_Table->rows[i].sort_सूचकांक=i;
                 }
-            } else {
-                for(i=0; i<count; ++i) {
-                    pTempTable->rows[i].keyIndex=udata_readInt32(ds, pKey32[i]);
-                    pTempTable->rows[i].sortIndex=i;
+            } अन्यथा {
+                क्रम(i=0; i<count; ++i) {
+                    p_अस्थायी_Table->rows[i].कुंजी_सूचकांक=udata_readInt32(ds, pKey32[i]);
+                    p_अस्थायी_Table->rows[i].sort_सूचकांक=i;
                 }
             }
-            uprv_sortArray(pTempTable->rows, count, sizeof(Row),
-                           ures_compareRows, pTempTable->keyChars,
+            uprv_sortArray(p_अस्थायी_Table->rows, count, माप(Row),
+                           ures_compareRows, p_अस्थायी_Table->कुंजी_Chars,
                            false, pErrorCode);
-            if(U_FAILURE(*pErrorCode)) {
+            अगर(U_FAILURE(*pErrorCode)) {
                 udata_printError(ds, "ures_swapResource(table res=%08x).uprv_sortArray(%d items) failed\n",
                                  res, count);
-                return;
+                वापस;
             }
 
             /*
@@ -1233,35 +1233,35 @@ ures_swapResource(const UDataSwapper *ds,
              * temporary array (pTempTable->resort)
              * before the results are copied to the outBundle.
              */
-            /* keys */
-            if(pKey16!=nullptr) {
+            /*कुंजियाँ*/
+            अगर(pKey16!=nullptr) {
                 uint16_t *rKey16;
 
-                if(pKey16!=qKey16) {
+                अगर(pKey16!=qKey16) {
                     rKey16=qKey16;
-                } else {
-                    rKey16 = reinterpret_cast<uint16_t*>(pTempTable->resort);
+                } अन्यथा {
+                    rKey16 = reinterpret_cast<uint16_t*>(p_अस्थायी_Table->resort);
                 }
-                for(i=0; i<count; ++i) {
-                    oldIndex=pTempTable->rows[i].sortIndex;
-                    ds->swapArray16(ds, pKey16+oldIndex, 2, rKey16+i, pErrorCode);
+                क्रम(i=0; i<count; ++i) {
+                    old_सूचकांक=p_अस्थायी_Table->rows[i].sort_सूचकांक;
+                    ds->swapArray16(ds, pKey16+old_सूचकांक, 2, rKey16+i, pErrorCode);
                 }
-                if(qKey16!=rKey16) {
+                अगर(qKey16!=rKey16) {
                     uprv_memcpy(qKey16, rKey16, 2*count);
                 }
-            } else {
+            } अन्यथा {
                 int32_t *rKey32;
 
-                if(pKey32!=qKey32) {
+                अगर(pKey32!=qKey32) {
                     rKey32=qKey32;
-                } else {
-                    rKey32=pTempTable->resort;
+                } अन्यथा {
+                    rKey32=p_अस्थायी_Table->resort;
                 }
-                for(i=0; i<count; ++i) {
-                    oldIndex=pTempTable->rows[i].sortIndex;
-                    ds->swapArray32(ds, pKey32+oldIndex, 4, rKey32+i, pErrorCode);
+                क्रम(i=0; i<count; ++i) {
+                    old_सूचकांक=p_अस्थायी_Table->rows[i].sort_सूचकांक;
+                    ds->swapArray32(ds, pKey32+old_सूचकांक, 4, rKey32+i, pErrorCode);
                 }
-                if(qKey32!=rKey32) {
+                अगर(qKey32!=rKey32) {
                     uprv_memcpy(qKey32, rKey32, 4*count);
                 }
             }
@@ -1271,22 +1271,22 @@ ures_swapResource(const UDataSwapper *ds,
                 Resource *r;
 
 
-                if(p!=q) {
+                अगर(p!=q) {
                     r=q;
-                } else {
-                    r = reinterpret_cast<Resource*>(pTempTable->resort);
+                } अन्यथा {
+                    r = reinterpret_cast<Resource*>(p_अस्थायी_Table->resort);
                 }
-                for(i=0; i<count; ++i) {
-                    oldIndex=pTempTable->rows[i].sortIndex;
-                    ds->swapArray32(ds, p+oldIndex, 4, r+i, pErrorCode);
+                क्रम(i=0; i<count; ++i) {
+                    old_सूचकांक=p_अस्थायी_Table->rows[i].sort_सूचकांक;
+                    ds->swapArray32(ds, p+old_सूचकांक, 4, r+i, pErrorCode);
                 }
-                if(q!=r) {
+                अगर(q!=r) {
                     uprv_memcpy(q, r, 4*count);
                 }
             }
         }
-        break;
-    case URES_ARRAY:
+        अवरोध;
+    हाल URES_ARRAY:
         {
             Resource item;
             int32_t i;
@@ -1296,131 +1296,131 @@ ures_swapResource(const UDataSwapper *ds,
             ds->swapArray32(ds, p++, 4, q++, pErrorCode);
 
             /* recurse */
-            for(i=0; i<count; ++i) {
+            क्रम(i=0; i<count; ++i) {
                 item=ds->readUInt32(p[i]);
-                ures_swapResource(ds, inBundle, outBundle, item, nullptr, pTempTable, pErrorCode);
-                if(U_FAILURE(*pErrorCode)) {
+                ures_swapResource(ds, inBundle, outBundle, item, nullptr, p_अस्थायी_Table, pErrorCode);
+                अगर(U_FAILURE(*pErrorCode)) {
                     udata_printError(ds, "ures_swapResource(array res=%08x)[%d].recurse(%08x) failed\n",
                                      res, i, item);
-                    return;
+                    वापस;
                 }
             }
 
             /* swap items */
             ds->swapArray32(ds, p, 4*count, q, pErrorCode);
         }
-        break;
-    case URES_INT_VECTOR:
+        अवरोध;
+    हाल URES_INT_VECTOR:
         count = udata_readInt32(ds, static_cast<int32_t>(*p));
         /* swap length and each integer */
         ds->swapArray32(ds, p, 4*(1+count), q, pErrorCode);
-        break;
-    default:
+        अवरोध;
+    शेष:
         /* also catches RES_BOGUS */
         *pErrorCode=U_UNSUPPORTED_ERROR;
-        break;
+        अवरोध;
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-ures_swap(const UDataSwapper *ds,
-          const void *inData, int32_t length, void *outData,
+ures_swap(स्थिर UDataSwapper *ds,
+          स्थिर व्योम *in_तथ्य, int32_t length, व्योम *out_तथ्य,
           UErrorCode *pErrorCode) {
-    const UDataInfo *pInfo;
-    const Resource *inBundle;
-    Resource rootRes;
-    int32_t headerSize, maxTableLength;
+    स्थिर UDataInfo *pInfo;
+    स्थिर Resource *inBundle;
+    Resource मूल_Res;
+    int32_t header_आकार, max_Table_लंबाई;
 
-    Row rows[STACK_ROW_CAPACITY];
-    int32_t resort[STACK_ROW_CAPACITY];
-    TempTable tempTable;
+    Row rows[ढेर_ROW_CAPACITY];
+    int32_t resort[ढेर_ROW_CAPACITY];
+    अस्थायी_Table_2 अस्थायी_Table;
 
-    const int32_t *inIndexes;
+    स्थिर int32_t *inIndexes;
 
     /* the following integers count Resource item offsets (4 bytes each), not bytes */
-    int32_t bundleLength, indexLength, keysBottom, keysTop, resBottom, top;
+    int32_t bundle_लंबाई, सूचकांक_लंबाई, कुंजियाँ_Bottom, कुंजियाँ_शीर्ष, resBottom, शीर्ष_2;
 
     /* udata_swapDataHeader checks the arguments */
-    headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    header_आकार=udata_swap_तथ्य_Header(ds, in_तथ्य, length, out_तथ्य, pErrorCode);
+    अगर(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        वापस 0;
     }
 
     /* check data format and format version */
-    pInfo=(const UDataInfo *)((const char *)inData+4);
-    if(!(
-        pInfo->dataFormat[0]==0x52 &&   /* dataFormat="ResB" */
-        pInfo->dataFormat[1]==0x65 &&
-        pInfo->dataFormat[2]==0x73 &&
-        pInfo->dataFormat[3]==0x42 &&
+    pInfo=(स्थिर UDataInfo *)((स्थिर अक्षर *)in_तथ्य+4);
+    अगर(!(
+        pInfo->तथ्य_Format[0]==0x52 &&   /* dataFormat="ResB" */
+        pInfo->तथ्य_Format[1]==0x65 &&
+        pInfo->तथ्य_Format[2]==0x73 &&
+        pInfo->तथ्य_Format[3]==0x42 &&
         /* formatVersion 1.1+ or 2.x or 3.x */
         ((pInfo->formatVersion[0]==1 && pInfo->formatVersion[1]>=1) ||
             pInfo->formatVersion[0]==2 || pInfo->formatVersion[0]==3)
     )) {
         udata_printError(ds, "ures_swap(): data format %02x.%02x.%02x.%02x (format version %02x.%02x) is not a resource bundle\n",
-                         pInfo->dataFormat[0], pInfo->dataFormat[1],
-                         pInfo->dataFormat[2], pInfo->dataFormat[3],
+                         pInfo->तथ्य_Format[0], pInfo->तथ्य_Format[1],
+                         pInfo->तथ्य_Format[2], pInfo->तथ्य_Format[3],
                          pInfo->formatVersion[0], pInfo->formatVersion[1]);
         *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+        वापस 0;
     }
-    tempTable.majorFormatVersion=pInfo->formatVersion[0];
+    अस्थायी_Table.majorFormatVersion=pInfo->formatVersion[0];
 
     /* a resource bundle must contain at least one resource item */
-    if(length<0) {
-        bundleLength=-1;
-    } else {
-        bundleLength=(length-headerSize)/4;
+    अगर(length<0) {
+        bundle_लंबाई=-1;
+    } अन्यथा {
+        bundle_लंबाई=(length-header_आकार)/4;
 
         /* formatVersion 1.1 must have a root item and at least 5 indexes */
-        if(bundleLength<(1+5)) {
+        अगर(bundle_लंबाई<(1+5)) {
             udata_printError(ds, "ures_swap(): too few bytes (%d after header) for a resource bundle\n",
-                             length-headerSize);
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+                             length-header_आकार);
+            *pErrorCode=U_सूचकांक_OUTOFBOUNDS_ERROR;
+            वापस 0;
         }
     }
 
-    inBundle=(const Resource *)((const char *)inData+headerSize);
-    rootRes=ds->readUInt32(*inBundle);
+    inBundle=(स्थिर Resource *)((स्थिर अक्षर *)in_तथ्य+header_आकार);
+    मूल_Res=ds->readUInt32(*inBundle);
 
     /* formatVersion 1.1 adds the indexes[] array */
-    inIndexes=(const int32_t *)(inBundle+1);
+    inIndexes=(स्थिर int32_t *)(inBundle+1);
 
-    indexLength=udata_readInt32(ds, inIndexes[URES_INDEX_LENGTH])&0xff;
-    if(indexLength<=URES_INDEX_MAX_TABLE_LENGTH) {
+    सूचकांक_लंबाई=udata_readInt32(ds, inIndexes[URES_सूचकांक_लंबाई])&0xff;
+    अगर(सूचकांक_लंबाई<=URES_सूचकांक_MAX_TABLE_लंबाई) {
         udata_printError(ds, "ures_swap(): too few indexes for a 1.1+ resource bundle\n");
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        *pErrorCode=U_सूचकांक_OUTOFBOUNDS_ERROR;
+        वापस 0;
     }
-    keysBottom=1+indexLength;
-    keysTop=udata_readInt32(ds, inIndexes[URES_INDEX_KEYS_TOP]);
-    if(indexLength>URES_INDEX_16BIT_TOP) {
-        resBottom=udata_readInt32(ds, inIndexes[URES_INDEX_16BIT_TOP]);
-    } else {
-        resBottom=keysTop;
+    कुंजियाँ_Bottom=1+सूचकांक_लंबाई;
+    कुंजियाँ_शीर्ष=udata_readInt32(ds, inIndexes[URES_सूचकांक_कुंजियाँ_शीर्ष]);
+    अगर(सूचकांक_लंबाई>URES_सूचकांक_16_BIT_शीर्ष) {
+        resBottom=udata_readInt32(ds, inIndexes[URES_सूचकांक_16_BIT_शीर्ष]);
+    } अन्यथा {
+        resBottom=कुंजियाँ_शीर्ष;
     }
-    top=udata_readInt32(ds, inIndexes[URES_INDEX_BUNDLE_TOP]);
-    maxTableLength=udata_readInt32(ds, inIndexes[URES_INDEX_MAX_TABLE_LENGTH]);
+    शीर्ष_2=udata_readInt32(ds, inIndexes[URES_सूचकांक_BUNDLE_शीर्ष]);
+    max_Table_लंबाई=udata_readInt32(ds, inIndexes[URES_सूचकांक_MAX_TABLE_लंबाई]);
 
-    if(0<=bundleLength && bundleLength<top) {
+    अगर(0<=bundle_लंबाई && bundle_लंबाई<शीर्ष_2) {
         udata_printError(ds, "ures_swap(): resource top %d exceeds bundle length %d\n",
-                         top, bundleLength);
-        *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+                         शीर्ष_2, bundle_लंबाई);
+        *pErrorCode=U_सूचकांक_OUTOFBOUNDS_ERROR;
+        वापस 0;
     }
-    if(keysTop>(1+indexLength)) {
-        tempTable.localKeyLimit=keysTop<<2;
-    } else {
-        tempTable.localKeyLimit=0;
+    अगर(कुंजियाँ_शीर्ष>(1+सूचकांक_लंबाई)) {
+        अस्थायी_Table.local_कुंजी_Limit=कुंजियाँ_शीर्ष<<2;
+    } अन्यथा {
+        अस्थायी_Table.local_कुंजी_Limit=0;
     }
 
-    if(length>=0) {
-        Resource *outBundle=(Resource *)((char *)outData+headerSize);
+    अगर(length>=0) {
+        Resource *outBundle=(Resource *)((अक्षर *)out_तथ्य+header_आकार);
 
         /* track which resources we have already swapped */
-        uint32_t stackResFlags[STACK_ROW_CAPACITY];
-        int32_t resFlagsLength;
+        uint32_t ढेर_Res_Flags[ढेर_ROW_CAPACITY];
+        int32_t res_Flags_लंबाई;
 
         /*
          * We need one bit per 4 resource bundle bytes so that we can track
@@ -1430,84 +1430,84 @@ ures_swap(const UDataSwapper *ds,
          * We could optimize this by allocating only for locations above
          * where Resource values are stored (above keys & strings).
          */
-        resFlagsLength=(length+31)>>5;          /* number of bytes needed */
-        resFlagsLength=(resFlagsLength+3)&~3;   /* multiple of 4 bytes for uint32_t */
-        if(resFlagsLength<=(int32_t)sizeof(stackResFlags)) {
-            tempTable.resFlags=stackResFlags;
-        } else {
-            tempTable.resFlags=(uint32_t *)uprv_malloc(resFlagsLength);
-            if(tempTable.resFlags==nullptr) {
+        res_Flags_लंबाई=(length+31)>>5;          /* number of bytes needed */
+        res_Flags_लंबाई=(res_Flags_लंबाई+3)&~3;   /* multiple of 4 bytes for uint32_t */
+        अगर(res_Flags_लंबाई<=(int32_t)माप(ढेर_Res_Flags)) {
+            अस्थायी_Table.resFlags=ढेर_Res_Flags;
+        } अन्यथा {
+            अस्थायी_Table.resFlags=(uint32_t *)uprv_malloc(res_Flags_लंबाई);
+            अगर(अस्थायी_Table.resFlags==nullptr) {
                 udata_printError(ds, "ures_swap(): unable to allocate memory for tracking resources\n");
                 *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                return 0;
+                वापस 0;
             }
         }
-        uprv_memset(tempTable.resFlags, 0, resFlagsLength);
+        uprv_memset(अस्थायी_Table.resFlags, 0, res_Flags_लंबाई);
 
         /* copy the bundle for binary and inaccessible data */
-        if(inData!=outData) {
-            uprv_memcpy(outBundle, inBundle, 4*top);
+        अगर(in_तथ्य!=out_तथ्य) {
+            uprv_memcpy(outBundle, inBundle, 4*शीर्ष_2);
         }
 
         /* swap the key strings, but not the padding bytes (0xaa) after the last string and its NUL */
-        udata_swapInvStringBlock(ds, inBundle+keysBottom, 4*(keysTop-keysBottom),
-                                    outBundle+keysBottom, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
-            udata_printError(ds, "ures_swap().udata_swapInvStringBlock(keys[%d]) failed\n", 4*(keysTop-keysBottom));
-            if(tempTable.resFlags!=stackResFlags) {
-                uprv_free(tempTable.resFlags);
+        udata_swapInvStringBlock(ds, inBundle+कुंजियाँ_Bottom, 4*(कुंजियाँ_शीर्ष-कुंजियाँ_Bottom),
+                                    outBundle+कुंजियाँ_Bottom, pErrorCode);
+        अगर(U_FAILURE(*pErrorCode)) {
+            udata_printError(ds, "ures_swap().udata_swapInvStringBlock(keys[%d]) failed\n", 4*(कुंजियाँ_शीर्ष-कुंजियाँ_Bottom));
+            अगर(अस्थायी_Table.resFlags!=ढेर_Res_Flags) {
+                uprv_free(अस्थायी_Table.resFlags);
             }
-            return 0;
+            वापस 0;
         }
 
         /* swap the 16-bit units (strings, table16, array16) */
-        if(keysTop<resBottom) {
-            ds->swapArray16(ds, inBundle+keysTop, (resBottom-keysTop)*4, outBundle+keysTop, pErrorCode);
-            if(U_FAILURE(*pErrorCode)) {
-                udata_printError(ds, "ures_swap().swapArray16(16-bit units[%d]) failed\n", 2*(resBottom-keysTop));
-                if(tempTable.resFlags!=stackResFlags) {
-                    uprv_free(tempTable.resFlags);
+        अगर(कुंजियाँ_शीर्ष<resBottom) {
+            ds->swapArray16(ds, inBundle+कुंजियाँ_शीर्ष, (resBottom-कुंजियाँ_शीर्ष)*4, outBundle+कुंजियाँ_शीर्ष, pErrorCode);
+            अगर(U_FAILURE(*pErrorCode)) {
+                udata_printError(ds, "ures_swap().swapArray16(16-bit units[%d]) failed\n", 2*(resBottom-कुंजियाँ_शीर्ष));
+                अगर(अस्थायी_Table.resFlags!=ढेर_Res_Flags) {
+                    uprv_free(अस्थायी_Table.resFlags);
                 }
-                return 0;
+                वापस 0;
             }
         }
 
         /* allocate the temporary table for sorting resource tables */
-        tempTable.keyChars=(const char *)outBundle; /* sort by outCharset */
-        if(tempTable.majorFormatVersion>1 || maxTableLength<=STACK_ROW_CAPACITY) {
-            tempTable.rows=rows;
-            tempTable.resort=resort;
-        } else {
-            tempTable.rows=(Row *)uprv_malloc(maxTableLength*sizeof(Row)+maxTableLength*4);
-            if(tempTable.rows==nullptr) {
+        अस्थायी_Table.कुंजी_Chars=(स्थिर अक्षर *)outBundle; /* sort by outCharset */
+        अगर(अस्थायी_Table.majorFormatVersion>1 || max_Table_लंबाई<=ढेर_ROW_CAPACITY) {
+            अस्थायी_Table.rows=rows;
+            अस्थायी_Table.resort=resort;
+        } अन्यथा {
+            अस्थायी_Table.rows=(Row *)uprv_malloc(max_Table_लंबाई*माप(Row)+max_Table_लंबाई*4);
+            अगर(अस्थायी_Table.rows==nullptr) {
                 udata_printError(ds, "ures_swap(): unable to allocate memory for sorting tables (max length: %d)\n",
-                                 maxTableLength);
+                                 max_Table_लंबाई);
                 *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                if(tempTable.resFlags!=stackResFlags) {
-                    uprv_free(tempTable.resFlags);
+                अगर(अस्थायी_Table.resFlags!=ढेर_Res_Flags) {
+                    uprv_free(अस्थायी_Table.resFlags);
                 }
-                return 0;
+                वापस 0;
             }
-            tempTable.resort=(int32_t *)(tempTable.rows+maxTableLength);
+            अस्थायी_Table.resort=(int32_t *)(अस्थायी_Table.rows+max_Table_लंबाई);
         }
 
         /* swap the resources */
-        ures_swapResource(ds, inBundle, outBundle, rootRes, nullptr, &tempTable, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
+        ures_swapResource(ds, inBundle, outBundle, मूल_Res, nullptr, &अस्थायी_Table, pErrorCode);
+        अगर(U_FAILURE(*pErrorCode)) {
             udata_printError(ds, "ures_swapResource(root res=%08x) failed\n",
-                             rootRes);
+                             मूल_Res);
         }
 
-        if(tempTable.rows!=rows) {
-            uprv_free(tempTable.rows);
+        अगर(अस्थायी_Table.rows!=rows) {
+            uprv_free(अस्थायी_Table.rows);
         }
-        if(tempTable.resFlags!=stackResFlags) {
-            uprv_free(tempTable.resFlags);
+        अगर(अस्थायी_Table.resFlags!=ढेर_Res_Flags) {
+            uprv_free(अस्थायी_Table.resFlags);
         }
 
         /* swap the root resource and indexes */
-        ds->swapArray32(ds, inBundle, keysBottom*4, outBundle, pErrorCode);
+        ds->swapArray32(ds, inBundle, कुंजियाँ_Bottom*4, outBundle, pErrorCode);
     }
 
-    return headerSize+4*top;
+    वापस header_आकार+4*शीर्ष_2;
 }

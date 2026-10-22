@@ -18,21 +18,21 @@
  * Started 09-April-2008
  */
 
-#ifndef __ICU_UCNV_SEL_H__
-#define __ICU_UCNV_SEL_H__
+#अगर_अघोषित __ICU_UCNV_SEL_H__
+#घोषणा __ICU_UCNV_SEL_H__
 
-#include "unicode/utypes.h"
+#समावेश "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#अगर !UCONFIG_NO_CONVERSION
 
-#include "unicode/uset.h"
-#include "unicode/utf16.h"
-#include "unicode/uenum.h"
-#include "unicode/ucnv.h"
+#समावेश "unicode/uset.h"
+#समावेश "unicode/utf16.h"
+#समावेश "unicode/uenum.h"
+#समावेश "unicode/ucnv.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#अगर U_SHOW_CPLUSPLUS_API
+#समावेश "unicode/localpointer.h"
+#पूर्ण_अगर   // U_SHOW_CPLUSPLUS_API
 
 /**
  * \file
@@ -46,12 +46,12 @@
  * from the serialized form.
  */
 
-struct UConverterSelector;
+काष्ठा UConverterSelector;
 /**
  * @{
  * Typedef for selector data structure.
  */
-typedef struct UConverterSelector UConverterSelector;
+प्रकार काष्ठा UConverterSelector UConverterSelector;
 /** @} */
 
 /**
@@ -77,9 +77,9 @@ typedef struct UConverterSelector UConverterSelector;
  * @stable ICU 4.2
  */
 U_CAPI UConverterSelector* U_EXPORT2
-ucnvsel_open(const char* const*  converterList, int32_t converterListSize,
-             const USet* excludedCodePoints,
-             const UConverterUnicodeSet whichSet, UErrorCode* status);
+ucnvsel_open(स्थिर अक्षर* स्थिर*  converterList, int32_t converter_List_आकार,
+             स्थिर USet* excludedCodePoints,
+             स्थिर UConverterUnicodeSet whichSet, UErrorCode* status);
 
 /**
  * Closes a selector.
@@ -94,10 +94,10 @@ ucnvsel_open(const char* const*  converterList, int32_t converterListSize,
  *
  * @stable ICU 4.2
  */
-U_CAPI void U_EXPORT2
+U_CAPI व्योम U_EXPORT2
 ucnvsel_close(UConverterSelector *sel);
 
-#if U_SHOW_CPLUSPLUS_API
+#अगर U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -114,7 +114,7 @@ U_DEFINE_LOCAL_OPEN_POINTER(LocalUConverterSelectorPointer, UConverterSelector, 
 
 U_NAMESPACE_END
 
-#endif
+#पूर्ण_अगर
 
 /**
  * Open a selector from its serialized form.
@@ -132,7 +132,7 @@ U_NAMESPACE_END
  * @stable ICU 4.2
  */
 U_CAPI UConverterSelector* U_EXPORT2
-ucnvsel_openFromSerialized(const void* buffer U_LIFETIME_BOUND, int32_t length, UErrorCode* status);
+ucnvsel_openFromSerialized(स्थिर व्योम* बफर U_LIFETIME_BOUND, int32_t लंबाई, UErrorCode* status);
 
 /**
  * Serialize a selector into a linear buffer.
@@ -149,8 +149,8 @@ ucnvsel_openFromSerialized(const void* buffer U_LIFETIME_BOUND, int32_t length, 
  * @stable ICU 4.2
  */
 U_CAPI int32_t U_EXPORT2
-ucnvsel_serialize(const UConverterSelector* sel,
-                  void* buffer, int32_t bufferCapacity, UErrorCode* status);
+ucnvsel_serialize(स्थिर UConverterSelector* sel,
+                  व्योम* बफर, int32_t बफर_Capacity, UErrorCode* status);
 
 /**
  * Select converters that can map all characters in a UTF-16 string,
@@ -167,9 +167,9 @@ ucnvsel_serialize(const UConverterSelector* sel,
  * @stable ICU 4.2
  */
 U_CAPI UEnumeration* U_EXPORT2
-ucnvsel_selectForString(const UConverterSelector* sel U_LIFETIME_BOUND,
-                        const UChar* s,
-                        int32_t length,
+ucnvsel_selectForString(स्थिर UConverterSelector* sel U_LIFETIME_BOUND,
+                        स्थिर UChar* s,
+                        int32_t लंबाई,
                         UErrorCode* status);
 
 /**
@@ -187,11 +187,11 @@ ucnvsel_selectForString(const UConverterSelector* sel U_LIFETIME_BOUND,
  * @stable ICU 4.2
  */
 U_CAPI UEnumeration* U_EXPORT2
-ucnvsel_selectForUTF8(const UConverterSelector* sel U_LIFETIME_BOUND,
-                      const char* s,
-                      int32_t length,
+ucnvsel_selectForUTF8(स्थिर UConverterSelector* sel U_LIFETIME_BOUND,
+                      स्थिर अक्षर* s,
+                      int32_t लंबाई,
                       UErrorCode* status);
 
-#endif  /* !UCONFIG_NO_CONVERSION */
+#पूर्ण_अगर  /* !UCONFIG_NO_CONVERSION */
 
-#endif  /* __ICU_UCNV_SEL_H__ */
+#पूर्ण_अगर  /* __ICU_UCNV_SEL_H__ */

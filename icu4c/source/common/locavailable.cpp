@@ -19,67 +19,67 @@
 *   that then do not depend on resource bundle code and res_index bundles.
 */
 
-#include "unicode/errorcode.h"
-#include "unicode/utypes.h"
-#include "unicode/locid.h"
-#include "unicode/uloc.h"
-#include "unicode/ures.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "ucln_cmn.h"
-#include "uassert.h"
-#include "umutex.h"
-#include "uresimp.h"
+#समावेश "unicode/errorcode.h"
+#समावेश "unicode/utypes.h"
+#समावेश "unicode/locid.h"
+#समावेश "unicode/uloc.h"
+#समावेश "unicode/ures.h"
+#समावेश "cmemory.h"
+#समावेश "cstring.h"
+#समावेश "ucln_cmn.h"
+#समावेश "uassert.h"
+#समावेश "umutex.h"
+#समावेश "uresimp.h"
 
 // C++ API ----------------------------------------------------------------- ***
 
 U_NAMESPACE_BEGIN
 
-static icu::Locale*  availableLocaleList = nullptr;
-static int32_t  availableLocaleListCount;
-static icu::UInitOnce gInitOnceLocale {};
+अटल icu::Locale*  availableLocaleList = nullptr;
+अटल int32_t  available_Locale_List_गिनती;
+अटल icu::UInitOnce gInitOnceLocale {};
 
 namespace {
 
 UBool U_CALLCONV locale_available_cleanup()
 {
-    if (availableLocaleList) {
-        delete []availableLocaleList;
+    अगर (availableLocaleList) {
+        मिटाओ []availableLocaleList;
         availableLocaleList = nullptr;
     }
-    availableLocaleListCount = 0;
+    available_Locale_List_गिनती = 0;
     gInitOnceLocale.reset();
 
-    return true;
+    वापस true;
 }
 
 }  // namespace
 
-void U_CALLCONV locale_available_init() {
+व्योम U_CALLCONV locale_available_init() {
     // This function is a friend of class Locale.
     // This function is only invoked via umtx_initOnce().
     
     // for now, there is a hardcoded list, so just walk through that list and set it up.
     //  Note: this function is a friend of class Locale.
-    availableLocaleListCount = uloc_countAvailable();
-    if(availableLocaleListCount) {
-       availableLocaleList = new Locale[availableLocaleListCount];
+    available_Locale_List_गिनती = uloc_गिनती_Available();
+    अगर(available_Locale_List_गिनती) {
+       availableLocaleList = नया Locale[available_Locale_List_गिनती];
     }
-    if (availableLocaleList == nullptr) {
-        availableLocaleListCount= 0;
+    अगर (availableLocaleList == nullptr) {
+        available_Locale_List_गिनती= 0;
     }
-    for (int32_t locCount=availableLocaleListCount-1; locCount>=0; --locCount) {
-        availableLocaleList[locCount].setFromPOSIXID(uloc_getAvailable(locCount));
+    क्रम (int32_t loc_गिनती=available_Locale_List_गिनती-1; loc_गिनती>=0; --loc_गिनती) {
+        availableLocaleList[loc_गिनती].setFromPOSIXID(uloc_getAvailable(loc_गिनती));
     }
     ucln_common_registerCleanup(UCLN_COMMON_LOCALE_AVAILABLE, locale_available_cleanup);
 }
 
-const Locale* U_EXPORT2
+स्थिर Locale* U_EXPORT2
 Locale::getAvailableLocales(int32_t& count)
 {
     umtx_initOnce(gInitOnceLocale, &locale_available_init);
-    count = availableLocaleListCount;
-    return availableLocaleList;
+    count = available_Locale_List_गिनती;
+    वापस availableLocaleList;
 }
 
 
@@ -94,172 +94,172 @@ U_NAMESPACE_USE
 namespace {
 
 // Enough capacity for the two lists in the res_index.res file
-const char** gAvailableLocaleNames[2] = {};
+स्थिर अक्षर** gAvailableLocaleNames[2] = {};
 int32_t gAvailableLocaleCounts[2] = {};
 icu::UInitOnce ginstalledLocalesInitOnce {};
 
-class AvailableLocalesSink : public ResourceSink {
-  public:
-    void put(const char *key, ResourceValue &value, UBool /*noFallback*/, UErrorCode &status) override {
-        if (U_FAILURE(status)) { return; }
-        ResourceTable resIndexTable = value.getTable(status);
-        if (U_FAILURE(status)) { return; }
-        for (int32_t i = 0; resIndexTable.getKeyAndValue(i, key, value); ++i) {
+श्रेणी AvailableLocalesSink : खुला ResourceSink {
+  खुला:
+    व्योम दो(स्थिर अक्षर *कुंजी, Resource_मूल्य &value, UBool /*noFallback*/, UErrorCode &status) override {
+        अगर (U_FAILURE(status)) { वापस; }
+        ResourceTable res_सूचकांक_Table = value.getTable(status);
+        अगर (U_FAILURE(status)) { वापस; }
+        क्रम (int32_t i = 0; res_सूचकांक_Table.get_कुंजी_And_मूल्य(i, कुंजी, value); ++i) {
             ULocAvailableType type;
-            if (uprv_strcmp(key, "InstalledLocales") == 0) {
+            अगर (uprv_strcmp(कुंजी, "InstalledLocales") == 0) {
                 type = ULOC_AVAILABLE_DEFAULT;
-            } else if (uprv_strcmp(key, "AliasLocales") == 0) {
+            } अन्यथा अगर (uprv_strcmp(कुंजी, "AliasLocales") == 0) {
                 type = ULOC_AVAILABLE_ONLY_LEGACY_ALIASES;
-            } else {
+            } अन्यथा {
                 // CLDRVersion, etc.
-                continue;
+                जारी;
             }
             ResourceTable availableLocalesTable = value.getTable(status);
-            if (U_FAILURE(status)) {
-                return;
+            अगर (U_FAILURE(status)) {
+                वापस;
             }
-            gAvailableLocaleCounts[type] = availableLocalesTable.getSize();
-            gAvailableLocaleNames[type] = static_cast<const char**>(
-                uprv_malloc(gAvailableLocaleCounts[type] * sizeof(const char*)));
-            if (gAvailableLocaleNames[type] == nullptr) {
+            gAvailableLocaleCounts[type] = availableLocalesTable.get_आकार();
+            gAvailableLocaleNames[type] = static_cast<स्थिर अक्षर**>(
+                uprv_malloc(gAvailableLocaleCounts[type] * माप(स्थिर अक्षर*)));
+            अगर (gAvailableLocaleNames[type] == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                वापस;
             }
-            for (int32_t j = 0; availableLocalesTable.getKeyAndValue(j, key, value); ++j) {
-                gAvailableLocaleNames[type][j] = key;
+            क्रम (int32_t j = 0; availableLocalesTable.get_कुंजी_And_मूल्य(j, कुंजी, value); ++j) {
+                gAvailableLocaleNames[type][j] = कुंजी;
             }
         }
     }
 };
 
-class AvailableLocalesStringEnumeration : public StringEnumeration {
-  public:
+श्रेणी AvailableLocalesStringEnumeration : खुला StringEnumeration {
+  खुला:
     AvailableLocalesStringEnumeration(ULocAvailableType type) : fType(type) {
     }
 
-    const char* next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND override {
-        if (U_FAILURE(status)) { return nullptr; }
+    स्थिर अक्षर* next(int32_t* परिणाम_लंबाई, UErrorCode& status) U_LIFETIME_BOUND override {
+        अगर (U_FAILURE(status)) { वापस nullptr; }
         ULocAvailableType actualType = fType;
-        int32_t actualIndex = fIndex++;
+        int32_t actual_सूचकांक = f_सूचकांक++;
 
         // If the "combined" list was requested, resolve that now
-        if (fType == ULOC_AVAILABLE_WITH_LEGACY_ALIASES) {
-            int32_t defaultLocalesCount = gAvailableLocaleCounts[ULOC_AVAILABLE_DEFAULT];
-            if (actualIndex < defaultLocalesCount) {
+        अगर (fType == ULOC_AVAILABLE_WITH_LEGACY_ALIASES) {
+            int32_t default_Locales_गिनती = gAvailableLocaleCounts[ULOC_AVAILABLE_DEFAULT];
+            अगर (actual_सूचकांक < default_Locales_गिनती) {
                 actualType = ULOC_AVAILABLE_DEFAULT;
-            } else {
-                actualIndex -= defaultLocalesCount;
+            } अन्यथा {
+                actual_सूचकांक -= default_Locales_गिनती;
                 actualType = ULOC_AVAILABLE_ONLY_LEGACY_ALIASES;
             }
         }
 
         // Return the requested string
         int32_t count = gAvailableLocaleCounts[actualType];
-        const char* result;
-        if (actualIndex < count) {
-            result = gAvailableLocaleNames[actualType][actualIndex];
-            if (resultLength != nullptr) {
-                *resultLength = static_cast<int32_t>(uprv_strlen(result));
+        स्थिर अक्षर* परिणाम;
+        अगर (actual_सूचकांक < count) {
+            परिणाम = gAvailableLocaleNames[actualType][actual_सूचकांक];
+            अगर (परिणाम_लंबाई != nullptr) {
+                *परिणाम_लंबाई = static_cast<int32_t>(uprv_strlen(परिणाम));
             }
-        } else {
-            result = nullptr;
-            if (resultLength != nullptr) {
-                *resultLength = 0;
+        } अन्यथा {
+            परिणाम = nullptr;
+            अगर (परिणाम_लंबाई != nullptr) {
+                *परिणाम_लंबाई = 0;
             }
         }
-        return result;
+        वापस परिणाम;
     }
 
-    void reset(UErrorCode &status) override {
-        if (U_FAILURE(status)) { return; }
-        fIndex = 0;
+    व्योम reset(UErrorCode &status) override {
+        अगर (U_FAILURE(status)) { वापस; }
+        f_सूचकांक = 0;
     }
 
-    int32_t count(UErrorCode &status) const override {
-        if (U_FAILURE(status)) { return 0; }
-        if (fType == ULOC_AVAILABLE_WITH_LEGACY_ALIASES) {
-            return gAvailableLocaleCounts[ULOC_AVAILABLE_DEFAULT]
+    int32_t count(UErrorCode &status) स्थिर override {
+        अगर (U_FAILURE(status)) { वापस 0; }
+        अगर (fType == ULOC_AVAILABLE_WITH_LEGACY_ALIASES) {
+            वापस gAvailableLocaleCounts[ULOC_AVAILABLE_DEFAULT]
                 + gAvailableLocaleCounts[ULOC_AVAILABLE_ONLY_LEGACY_ALIASES];
-        } else {
-            return gAvailableLocaleCounts[fType];
+        } अन्यथा {
+            वापस gAvailableLocaleCounts[fType];
         }
     }
 
-  private:
+  निजी:
     ULocAvailableType fType;
-    int32_t fIndex = 0;
+    int32_t f_सूचकांक = 0;
 };
 
 /* ### Get available **************************************************/
 
 UBool U_CALLCONV uloc_cleanup() {
-    for (int32_t i = 0; i < UPRV_LENGTHOF(gAvailableLocaleNames); i++) {
+    क्रम (int32_t i = 0; i < UPRV_LENGTHOF(gAvailableLocaleNames); i++) {
         uprv_free(gAvailableLocaleNames[i]);
         gAvailableLocaleNames[i] = nullptr;
         gAvailableLocaleCounts[i] = 0;
     }
     ginstalledLocalesInitOnce.reset();
-    return true;
+    वापस true;
 }
 
 // Load Installed Locales. This function will be called exactly once
 //   via the initOnce mechanism.
 
-void U_CALLCONV loadInstalledLocales(UErrorCode& status) {
+व्योम U_CALLCONV loadInstalledLocales(UErrorCode& status) {
     ucln_common_registerCleanup(UCLN_COMMON_ULOC, uloc_cleanup);
 
     icu::LocalUResourceBundlePointer rb(ures_openDirect(nullptr, "res_index", &status));
     AvailableLocalesSink sink;
-    ures_getAllItemsWithFallback(rb.getAlias(), "", sink, status);
+    ures_get_All_वस्तुएँ_With_Fallback(rb.getAlias(), "", sink, status);
 }
 
-void _load_installedLocales(UErrorCode& status) {
+व्योम _load_installedLocales(UErrorCode& status) {
     umtx_initOnce(ginstalledLocalesInitOnce, &loadInstalledLocales, status);
 }
 
 } // namespace
 
-U_CAPI const char* U_EXPORT2
+U_CAPI स्थिर अक्षर* U_EXPORT2
 uloc_getAvailable(int32_t offset) {
     icu::ErrorCode status;
     _load_installedLocales(status);
-    if (status.isFailure()) {
-        return nullptr;
+    अगर (status.isFailure()) {
+        वापस nullptr;
     }
-    if (offset > gAvailableLocaleCounts[0]) {
+    अगर (offset > gAvailableLocaleCounts[0]) {
         // *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        वापस nullptr;
     }
-    return gAvailableLocaleNames[0][offset];
+    वापस gAvailableLocaleNames[0][offset];
 }
 
 U_CAPI int32_t  U_EXPORT2
-uloc_countAvailable() {
+uloc_गिनती_Available() {
     icu::ErrorCode status;
     _load_installedLocales(status);
-    if (status.isFailure()) {
-        return 0;
+    अगर (status.isFailure()) {
+        वापस 0;
     }
-    return gAvailableLocaleCounts[0];
+    वापस gAvailableLocaleCounts[0];
 }
 
 U_CAPI UEnumeration* U_EXPORT2
 uloc_openAvailableByType(ULocAvailableType type, UErrorCode* status) {
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    अगर (U_FAILURE(*status)) {
+        वापस nullptr;
     }
-    if (type < 0 || type >= ULOC_AVAILABLE_COUNT) {
+    अगर (type < 0 || type >= ULOC_AVAILABLE_गिनती) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        वापस nullptr;
     }
     _load_installedLocales(*status);
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    अगर (U_FAILURE(*status)) {
+        वापस nullptr;
     }
-    LocalPointer<AvailableLocalesStringEnumeration> result(
-        new AvailableLocalesStringEnumeration(type), *status);
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    LocalPointer<AvailableLocalesStringEnumeration> परिणाम(
+        नया AvailableLocalesStringEnumeration(type), *status);
+    अगर (U_FAILURE(*status)) {
+        वापस nullptr;
     }
-    return uenum_openFromStringEnumeration(result.orphan(), status);
+    वापस uenum_openFromStringEnumeration(परिणाम.orphan(), status);
 }

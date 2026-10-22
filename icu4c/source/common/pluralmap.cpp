@@ -5,38 +5,38 @@
  * others. All Rights Reserved.
  */
 
-#include "unicode/unistr.h"
-#include "charstr.h"
-#include "cstring.h"
-#include "pluralmap.h"
+#समावेश "unicode/unistr.h"
+#समावेश "charstr.h"
+#समावेश "cstring.h"
+#समावेश "pluralmap.h"
 
 U_NAMESPACE_BEGIN
 
-static const char * const gPluralForms[] = {
+अटल स्थिर अक्षर * स्थिर gPluralForms[] = {
         "other", "zero", "one", "two", "few", "many"};
 
 PluralMapBase::Category
-PluralMapBase::toCategory(const char *pluralForm) {
-    for (int32_t i = 0; i < UPRV_LENGTHOF(gPluralForms); ++i) {
-        if (uprv_strcmp(pluralForm, gPluralForms[i]) == 0) {
-            return static_cast<Category>(i);
+PluralMapBase::toCategory(स्थिर अक्षर *pluralForm) {
+    क्रम (int32_t i = 0; i < UPRV_LENGTHOF(gPluralForms); ++i) {
+        अगर (uprv_strcmp(pluralForm, gPluralForms[i]) == 0) {
+            वापस static_cast<Category>(i);
         }
     }
-    return NONE;
+    वापस NONE;
 }
 
 PluralMapBase::Category
-PluralMapBase::toCategory(const UnicodeString &pluralForm) {
+PluralMapBase::toCategory(स्थिर UnicodeString &pluralForm) {
     CharString cCategory;
     UErrorCode status = U_ZERO_ERROR;
     cCategory.appendInvariantChars(pluralForm, status);    
-    return U_FAILURE(status) ? NONE : toCategory(cCategory.data());
+    वापस U_FAILURE(status) ? NONE : toCategory(cCategory.तथ्य());
 }
 
-const char *PluralMapBase::getCategoryName(Category c) {
-    int32_t index = c;
-    return (index < 0 || index >= UPRV_LENGTHOF(gPluralForms)) ?
-            nullptr : gPluralForms[index];
+स्थिर अक्षर *PluralMapBase::getCategoryName(Category c) {
+    int32_t सूचकांक = c;
+    वापस (सूचकांक < 0 || सूचकांक >= UPRV_LENGTHOF(gPluralForms)) ?
+            nullptr : gPluralForms[सूचकांक];
 }
 
 

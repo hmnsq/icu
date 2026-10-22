@@ -20,17 +20,17 @@
 *   Allows unorm.cpp to not depend on any character properties code.
 */
 
-#include "unicode/utypes.h"
+#समावेश "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#अगर !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/unorm.h"
-#include "unicode/ustring.h"
-#include "cmemory.h"
-#include "normalizer2impl.h"
-#include "ucase.h"
-#include "uprops.h"
-#include "ustr_imp.h"
+#समावेश "unicode/unorm.h"
+#समावेश "unicode/ustring.h"
+#समावेश "cmemory.h"
+#समावेश "normalizer2impl.h"
+#समावेश "ucase.h"
+#समावेश "uprops.h"
+#समावेश "ustr_imp.h"
 
 U_NAMESPACE_USE
 
@@ -127,30 +127,30 @@ U_NAMESPACE_USE
  */
 
 /* stack element for previous-level source/decomposition pointers */
-struct CmpEquivLevel {
-    const char16_t *start, *s, *limit;
+काष्ठा CmpEquivLevel {
+    स्थिर char16_t *start, *s, *limit;
 };
-typedef struct CmpEquivLevel CmpEquivLevel;
+प्रकार काष्ठा CmpEquivLevel CmpEquivLevel;
 
 /**
  * Internal option for unorm_cmpEquivFold() for decomposing.
  * If not set, just do strcasecmp().
  */
-#define _COMPARE_EQUIV 0x80000
+#घोषणा _COMPARE_EQUIV 0x80000
 
 /* internal function */
-static int32_t
-unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
-                   const char16_t *s2, int32_t length2,
+अटल int32_t
+unorm_cmpEquivFold(स्थिर char16_t *s1, int32_t length1,
+                   स्थिर char16_t *s2, int32_t length2,
                    uint32_t options,
                    UErrorCode *pErrorCode) {
-    const Normalizer2Impl *nfcImpl;
+    स्थिर Normalizer2Impl *nfcImpl;
 
     /* current-level start/limit - s1/s2 as current */
-    const char16_t *start1, *start2, *limit1, *limit2;
+    स्थिर char16_t *start1, *start2, *limit1, *limit2;
 
     /* decomposition and case folding variables */
-    const char16_t *p;
+    स्थिर char16_t *p;
     int32_t length;
 
     /* stacks of previous-level start/current/limit */
@@ -160,7 +160,7 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
     char16_t decomp1[4], decomp2[4];
 
     /* case folding buffers, only use current-level start/limit */
-    char16_t fold1[UCASE_MAX_STRING_LENGTH+1], fold2[UCASE_MAX_STRING_LENGTH+1];
+    char16_t fold1[UCASE_MAX_STRING_लंबाई+1], fold2[UCASE_MAX_STRING_लंबाई+1];
 
     /* track which is the current level per string */
     int32_t level1, level2;
@@ -177,27 +177,27 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
      */
 
     /* normalization/properties data loaded? */
-    if((options&_COMPARE_EQUIV)!=0) {
+    अगर((options&_COMPARE_EQUIV)!=0) {
         nfcImpl=Normalizer2Factory::getNFCImpl(*pErrorCode);
-    } else {
+    } अन्यथा {
         nfcImpl=nullptr;
     }
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    अगर(U_FAILURE(*pErrorCode)) {
+        वापस 0;
     }
 
     /* initialize */
     start1=s1;
-    if(length1==-1) {
+    अगर(length1==-1) {
         limit1=nullptr;
-    } else {
+    } अन्यथा {
         limit1=s1+length1;
     }
 
     start2=s2;
-    if(length2==-1) {
+    अगर(length2==-1) {
         limit2=nullptr;
-    } else {
+    } अन्यथा {
         limit2=s2+length2;
     }
 
@@ -205,53 +205,53 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
     c1=c2=-1;
 
     /* comparison loop */
-    for(;;) {
+    क्रम(;;) {
         /*
          * here a code unit value of -1 means "get another code unit"
          * below it will mean "this source is finished"
          */
 
-        if(c1<0) {
+        अगर(c1<0) {
             /* get next code unit from string 1, post-increment */
-            for(;;) {
-                if(s1==limit1 || ((c1=*s1)==0 && (limit1==nullptr || (options&_STRNCMP_STYLE)))) {
-                    if(level1==0) {
+            क्रम(;;) {
+                अगर(s1==limit1 || ((c1=*s1)==0 && (limit1==nullptr || (options&_STRNCMP_STYLE)))) {
+                    अगर(level1==0) {
                         c1=-1;
-                        break;
+                        अवरोध;
                     }
-                } else {
+                } अन्यथा {
                     ++s1;
-                    break;
+                    अवरोध;
                 }
 
                 /* reached end of level buffer, pop one level */
-                do {
+                करो {
                     --level1;
                     start1=stack1[level1].start;    /*Not uninitialized*/
-                } while(start1==nullptr);
+                } जबतक(start1==nullptr);
                 s1=stack1[level1].s;                /*Not uninitialized*/
                 limit1=stack1[level1].limit;        /*Not uninitialized*/
             }
         }
 
-        if(c2<0) {
+        अगर(c2<0) {
             /* get next code unit from string 2, post-increment */
-            for(;;) {
-                if(s2==limit2 || ((c2=*s2)==0 && (limit2==nullptr || (options&_STRNCMP_STYLE)))) {
-                    if(level2==0) {
+            क्रम(;;) {
+                अगर(s2==limit2 || ((c2=*s2)==0 && (limit2==nullptr || (options&_STRNCMP_STYLE)))) {
+                    अगर(level2==0) {
                         c2=-1;
-                        break;
+                        अवरोध;
                     }
-                } else {
+                } अन्यथा {
                     ++s2;
-                    break;
+                    अवरोध;
                 }
 
                 /* reached end of level buffer, pop one level */
-                do {
+                करो {
                     --level2;
                     start2=stack2[level2].start;    /*Not uninitialized*/
-                } while(start2==nullptr);
+                } जबतक(start2==nullptr);
                 s2=stack2[level2].s;                /*Not uninitialized*/
                 limit2=stack2[level2].limit;        /*Not uninitialized*/
             }
@@ -261,47 +261,47 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
          * compare c1 and c2
          * either variable c1, c2 is -1 only if the corresponding string is finished
          */
-        if(c1==c2) {
-            if(c1<0) {
-                return 0;   /* c1==c2==-1 indicating end of strings */
+        अगर(c1==c2) {
+            अगर(c1<0) {
+                वापस 0;   /* c1==c2==-1 indicating end of strings */
             }
             c1=c2=-1;       /* make us fetch new code units */
-            continue;
-        } else if(c1<0) {
-            return -1;      /* string 1 ends before string 2 */
-        } else if(c2<0) {
-            return 1;       /* string 2 ends before string 1 */
+            जारी;
+        } अन्यथा अगर(c1<0) {
+            वापस -1;      /* string 1 ends before string 2 */
+        } अन्यथा अगर(c2<0) {
+            वापस 1;       /* string 2 ends before string 1 */
         }
         /* c1!=c2 && c1>=0 && c2>=0 */
 
         /* get complete code points for c1, c2 for lookups if either is a surrogate */
         cp1=c1;
-        if(U_IS_SURROGATE(c1)) {
+        अगर(U_IS_SURROGATE(c1)) {
             char16_t c;
 
-            if(U_IS_SURROGATE_LEAD(c1)) {
-                if(s1!=limit1 && U16_IS_TRAIL(c=*s1)) {
+            अगर(U_IS_SURROGATE_LEAD(c1)) {
+                अगर(s1!=limit1 && U16_IS_TRAIL(c=*s1)) {
                     /* advance ++s1; only below if cp1 decomposes/case-folds */
                     cp1=U16_GET_SUPPLEMENTARY(c1, c);
                 }
-            } else /* isTrail(c1) */ {
-                if(start1<=(s1-2) && U16_IS_LEAD(c=*(s1-2))) {
+            } अन्यथा /* isTrail(c1) */ {
+                अगर(start1<=(s1-2) && U16_IS_LEAD(c=*(s1-2))) {
                     cp1=U16_GET_SUPPLEMENTARY(c, c1);
                 }
             }
         }
 
         cp2=c2;
-        if(U_IS_SURROGATE(c2)) {
+        अगर(U_IS_SURROGATE(c2)) {
             char16_t c;
 
-            if(U_IS_SURROGATE_LEAD(c2)) {
-                if(s2!=limit2 && U16_IS_TRAIL(c=*s2)) {
+            अगर(U_IS_SURROGATE_LEAD(c2)) {
+                अगर(s2!=limit2 && U16_IS_TRAIL(c=*s2)) {
                     /* advance ++s2; only below if cp2 decomposes/case-folds */
                     cp2=U16_GET_SUPPLEMENTARY(c2, c);
                 }
-            } else /* isTrail(c2) */ {
-                if(start2<=(s2-2) && U16_IS_LEAD(c=*(s2-2))) {
+            } अन्यथा /* isTrail(c2) */ {
+                अगर(start2<=(s2-2) && U16_IS_LEAD(c=*(s2-2))) {
                     cp2=U16_GET_SUPPLEMENTARY(c, c2);
                 }
             }
@@ -312,15 +312,15 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
          * continue with the main loop as soon as there is a real change
          */
 
-        if( level1==0 && (options&U_COMPARE_IGNORE_CASE) &&
+        अगर( level1==0 && (options&U_COMPARE_IGNORE_CASE) &&
             (length = ucase_toFullFolding(cp1, &p, options)) >= 0
         ) {
             /* cp1 case-folds to the code point "length" or to p[length] */
-            if(U_IS_SURROGATE(c1)) {
-                if(U_IS_SURROGATE_LEAD(c1)) {
+            अगर(U_IS_SURROGATE(c1)) {
+                अगर(U_IS_SURROGATE_LEAD(c1)) {
                     /* advance beyond source surrogate pair if it case-folds */
                     ++s1;
-                } else /* isTrail(c1) */ {
+                } अन्यथा /* isTrail(c1) */ {
                     /*
                      * we got a supplementary code point when hitting its trail surrogate,
                      * therefore the lead surrogate must have been the same as in the other string;
@@ -340,9 +340,9 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
             ++level1;
 
             /* copy the folding result to fold1[] */
-            if(length<=UCASE_MAX_STRING_LENGTH) {
+            अगर(length<=UCASE_MAX_STRING_लंबाई) {
                 u_memcpy(fold1, p, length);
-            } else {
+            } अन्यथा {
                 int32_t i=0;
                 U16_APPEND_UNSAFE(fold1, i, length);
                 length=i;
@@ -354,18 +354,18 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
 
             /* get ready to read from decomposition, continue with loop */
             c1=-1;
-            continue;
+            जारी;
         }
 
-        if( level2==0 && (options&U_COMPARE_IGNORE_CASE) &&
+        अगर( level2==0 && (options&U_COMPARE_IGNORE_CASE) &&
             (length = ucase_toFullFolding(cp2, &p, options)) >= 0
         ) {
             /* cp2 case-folds to the code point "length" or to p[length] */
-            if(U_IS_SURROGATE(c2)) {
-                if(U_IS_SURROGATE_LEAD(c2)) {
+            अगर(U_IS_SURROGATE(c2)) {
+                अगर(U_IS_SURROGATE_LEAD(c2)) {
                     /* advance beyond source surrogate pair if it case-folds */
                     ++s2;
-                } else /* isTrail(c2) */ {
+                } अन्यथा /* isTrail(c2) */ {
                     /*
                      * we got a supplementary code point when hitting its trail surrogate,
                      * therefore the lead surrogate must have been the same as in the other string;
@@ -385,9 +385,9 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
             ++level2;
 
             /* copy the folding result to fold2[] */
-            if(length<=UCASE_MAX_STRING_LENGTH) {
+            अगर(length<=UCASE_MAX_STRING_लंबाई) {
                 u_memcpy(fold2, p, length);
-            } else {
+            } अन्यथा {
                 int32_t i=0;
                 U16_APPEND_UNSAFE(fold2, i, length);
                 length=i;
@@ -399,18 +399,18 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
 
             /* get ready to read from decomposition, continue with loop */
             c2=-1;
-            continue;
+            जारी;
         }
 
-        if( level1<2 && (options&_COMPARE_EQUIV) &&
+        अगर( level1<2 && (options&_COMPARE_EQUIV) &&
             nullptr != (p = nfcImpl->getDecomposition(cp1, decomp1, length))
         ) {
             /* cp1 decomposes into p[length] */
-            if(U_IS_SURROGATE(c1)) {
-                if(U_IS_SURROGATE_LEAD(c1)) {
+            अगर(U_IS_SURROGATE(c1)) {
+                अगर(U_IS_SURROGATE_LEAD(c1)) {
                     /* advance beyond source surrogate pair if it decomposes */
                     ++s1;
-                } else /* isTrail(c1) */ {
+                } अन्यथा /* isTrail(c1) */ {
                     /*
                      * we got a supplementary code point when hitting its trail surrogate,
                      * therefore the lead surrogate must have been the same as in the other string;
@@ -430,7 +430,7 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
             ++level1;
 
             /* set empty intermediate level if skipped */
-            if(level1<2) {
+            अगर(level1<2) {
                 stack1[level1++].start=nullptr;
             }
 
@@ -440,18 +440,18 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
 
             /* get ready to read from decomposition, continue with loop */
             c1=-1;
-            continue;
+            जारी;
         }
 
-        if( level2<2 && (options&_COMPARE_EQUIV) &&
+        अगर( level2<2 && (options&_COMPARE_EQUIV) &&
             nullptr != (p = nfcImpl->getDecomposition(cp2, decomp2, length))
         ) {
             /* cp2 decomposes into p[length] */
-            if(U_IS_SURROGATE(c2)) {
-                if(U_IS_SURROGATE_LEAD(c2)) {
+            अगर(U_IS_SURROGATE(c2)) {
+                अगर(U_IS_SURROGATE_LEAD(c2)) {
                     /* advance beyond source surrogate pair if it decomposes */
                     ++s2;
-                } else /* isTrail(c2) */ {
+                } अन्यथा /* isTrail(c2) */ {
                     /*
                      * we got a supplementary code point when hitting its trail surrogate,
                      * therefore the lead surrogate must have been the same as in the other string;
@@ -471,7 +471,7 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
             ++level2;
 
             /* set empty intermediate level if skipped */
-            if(level2<2) {
+            अगर(level2<2) {
                 stack2[level2++].start=nullptr;
             }
 
@@ -481,7 +481,7 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
 
             /* get ready to read from decomposition, continue with loop */
             c2=-1;
-            continue;
+            जारी;
         }
 
         /*
@@ -501,42 +501,42 @@ unorm_cmpEquivFold(const char16_t *s1, int32_t length1,
          * so we have slightly different pointer/start/limit comparisons here
          */
 
-        if(c1>=0xd800 && c2>=0xd800 && (options&U_COMPARE_CODE_POINT_ORDER)) {
+        अगर(c1>=0xd800 && c2>=0xd800 && (options&U_COMPARE_CODE_POINT_ORDER)) {
             /* subtract 0x2800 from BMP code points to make them smaller than supplementary ones */
-            if(
+            अगर(
                 (c1<=0xdbff && s1!=limit1 && U16_IS_TRAIL(*s1)) ||
                 (U16_IS_TRAIL(c1) && start1!=(s1-1) && U16_IS_LEAD(*(s1-2)))
             ) {
                 /* part of a surrogate pair, leave >=d800 */
-            } else {
+            } अन्यथा {
                 /* BMP code point - may be surrogate code point - make <d800 */
                 c1-=0x2800;
             }
 
-            if(
+            अगर(
                 (c2<=0xdbff && s2!=limit2 && U16_IS_TRAIL(*s2)) ||
                 (U16_IS_TRAIL(c2) && start2!=(s2-1) && U16_IS_LEAD(*(s2-2)))
             ) {
                 /* part of a surrogate pair, leave >=d800 */
-            } else {
+            } अन्यथा {
                 /* BMP code point - may be surrogate code point - make <d800 */
                 c2-=0x2800;
             }
         }
 
-        return c1-c2;
+        वापस c1-c2;
     }
 }
 
-static
-UBool _normalize(const Normalizer2 *n2, const char16_t *s, int32_t length,
+अटल
+UBool _normalize(स्थिर Normalizer2 *n2, स्थिर char16_t *s, int32_t length,
                 UnicodeString &normalized, UErrorCode *pErrorCode) {
     UnicodeString str(length<0, s, length);
 
     // check if s fulfill the conditions
     int32_t spanQCYes=n2->spanQuickCheckYes(str, *pErrorCode);
-    if (U_FAILURE(*pErrorCode)) {
-        return false;
+    अगर (U_FAILURE(*pErrorCode)) {
+        वापस false;
     }
     /*
      * ICU 2.4 had a further optimization:
@@ -546,29 +546,29 @@ UBool _normalize(const Normalizer2 *n2, const char16_t *s, int32_t length,
      * definition of the canonical caseless match.
      * Therefore, ICU 2.6 removes that optimization.
      */
-    if(spanQCYes<str.length()) {
-        UnicodeString unnormalized=str.tempSubString(spanQCYes);
-        normalized.setTo(false, str.getBuffer(), spanQCYes);
+    अगर(spanQCYes<str.length()) {
+        UnicodeString unnormalized=str.अस्थायी_Sub_String(spanQCYes);
+        normalized.setTo(false, str.get_बफर(), spanQCYes);
         n2->normalizeSecondAndAppend(normalized, unnormalized, *pErrorCode);
-        if (U_SUCCESS(*pErrorCode)) {
-            return true;
+        अगर (U_SUCCESS(*pErrorCode)) {
+            वापस true;
         }
     }
-    return false;
+    वापस false;
 }
 
 U_CAPI int32_t U_EXPORT2
-unorm_compare(const char16_t *s1, int32_t length1,
-              const char16_t *s2, int32_t length2,
+unorm_compare(स्थिर char16_t *s1, int32_t length1,
+              स्थिर char16_t *s2, int32_t length2,
               uint32_t options,
               UErrorCode *pErrorCode) {
     /* argument checking */
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    अगर(U_FAILURE(*pErrorCode)) {
+        वापस 0;
     }
-    if (s1 == nullptr || length1 < -1 || s2 == nullptr || length2 < -1) {
+    अगर (s1 == nullptr || length1 < -1 || s2 == nullptr || length2 < -1) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        वापस 0;
     }
 
     UnicodeString fcd1, fcd2;
@@ -596,45 +596,45 @@ unorm_compare(const char16_t *s1, int32_t length1,
      * are first decomposed or not, so an FCD check - a check only for
      * canonical order - is not sufficient.
      */
-    if(!(options&UNORM_INPUT_IS_FCD) || (options&U_FOLD_CASE_EXCLUDE_SPECIAL_I)) {
-        const Normalizer2 *n2;
-        if(options&U_FOLD_CASE_EXCLUDE_SPECIAL_I) {
+    अगर(!(options&UNORM_निवेश_IS_FCD) || (options&U_FOLD_CASE_EXCLUDE_SPECIAL_I)) {
+        स्थिर Normalizer2 *n2;
+        अगर(options&U_FOLD_CASE_EXCLUDE_SPECIAL_I) {
             n2=Normalizer2::getNFDInstance(*pErrorCode);
-        } else {
+        } अन्यथा {
             n2=Normalizer2Factory::getFCDInstance(*pErrorCode);
         }
-        if (U_FAILURE(*pErrorCode)) {
-            return 0;
+        अगर (U_FAILURE(*pErrorCode)) {
+            वापस 0;
         }
 
-        if(normOptions&UNORM_UNICODE_3_2) {
-            const UnicodeSet *uni32=uniset_getUnicode32Instance(*pErrorCode);
+        अगर(normOptions&UNORM_UNICODE_3_2) {
+            स्थिर UnicodeSet *uni32=uniset_getUnicode32Instance(*pErrorCode);
             FilteredNormalizer2 fn2(*n2, *uni32);
-            if(_normalize(&fn2, s1, length1, fcd1, pErrorCode)) {
-                s1=fcd1.getBuffer();
+            अगर(_normalize(&fn2, s1, length1, fcd1, pErrorCode)) {
+                s1=fcd1.get_बफर();
                 length1=fcd1.length();
             }
-            if(_normalize(&fn2, s2, length2, fcd2, pErrorCode)) {
-                s2=fcd2.getBuffer();
+            अगर(_normalize(&fn2, s2, length2, fcd2, pErrorCode)) {
+                s2=fcd2.get_बफर();
                 length2=fcd2.length();
             }
-        } else {
-            if(_normalize(n2, s1, length1, fcd1, pErrorCode)) {
-                s1=fcd1.getBuffer();
+        } अन्यथा {
+            अगर(_normalize(n2, s1, length1, fcd1, pErrorCode)) {
+                s1=fcd1.get_बफर();
                 length1=fcd1.length();
             }
-            if(_normalize(n2, s2, length2, fcd2, pErrorCode)) {
-                s2=fcd2.getBuffer();
+            अगर(_normalize(n2, s2, length2, fcd2, pErrorCode)) {
+                s2=fcd2.get_बफर();
                 length2=fcd2.length();
             }
         }
     }
 
-    if(U_SUCCESS(*pErrorCode)) {
-        return unorm_cmpEquivFold(s1, length1, s2, length2, options, pErrorCode);
-    } else {
-        return 0;
+    अगर(U_SUCCESS(*pErrorCode)) {
+        वापस unorm_cmpEquivFold(s1, length1, s2, length2, options, pErrorCode);
+    } अन्यथा {
+        वापस 0;
     }
 }
 
-#endif /* #if !UCONFIG_NO_NORMALIZATION */
+#पूर्ण_अगर /* #if !UCONFIG_NO_NORMALIZATION */

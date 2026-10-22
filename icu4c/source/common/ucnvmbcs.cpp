@@ -42,28 +42,28 @@
 *                             macros to ucnvmbcs.h file
 */
 
-#include "unicode/utypes.h"
+#समावेश "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION
+#अगर !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/ucnv_cb.h"
-#include "unicode/udata.h"
-#include "unicode/uset.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "ucnv_bld.h"
-#include "ucnvmbcs.h"
-#include "ucnv_ext.h"
-#include "ucnv_cnv.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "umutex.h"
-#include "ustr_imp.h"
+#समावेश "unicode/ucnv.h"
+#समावेश "unicode/ucnv_cb.h"
+#समावेश "unicode/udata.h"
+#समावेश "unicode/uset.h"
+#समावेश "unicode/utf8.h"
+#समावेश "unicode/utf16.h"
+#समावेश "ucnv_bld.h"
+#समावेश "ucnvmbcs.h"
+#समावेश "ucnv_ext.h"
+#समावेश "ucnv_cnv.h"
+#समावेश "cmemory.h"
+#समावेश "cstring.h"
+#समावेश "umutex.h"
+#समावेश "ustr_imp.h"
 
 /* control optimizations according to the platform */
-#define MBCS_UNROLL_SINGLE_TO_BMP 1
-#define MBCS_UNROLL_SINGLE_FROM_BMP 0
+#घोषणा MBCS_UNROLL_SINGLE_TO_BMP 1
+#घोषणा MBCS_UNROLL_SINGLE_FROM_BMP 0
 
 /*
  * _MBCSHeader versions 5.3 & 4.3
@@ -375,63 +375,63 @@
  *        not map to anything
  * @return true to continue enumeration, false to stop
  */
-typedef UBool U_CALLCONV
-UConverterEnumToUCallback(const void *context, uint32_t value, UChar32 codePoints[32]);
+प्रकार UBool U_CALLCONV
+UConverterEnumToUCallback(स्थिर व्योम *context, uint32_t value, UChar32 codePoints[32]);
 
-static void U_CALLCONV
-ucnv_MBCSLoad(UConverterSharedData *sharedData,
+अटल व्योम U_CALLCONV
+ucnv_MBCSLoad(UConverter_Shared_तथ्य *shared_तथ्य,
           UConverterLoadArgs *pArgs,
-          const uint8_t *raw,
+          स्थिर uint8_t *raw,
           UErrorCode *pErrorCode);
 
-static void U_CALLCONV
-ucnv_MBCSUnload(UConverterSharedData *sharedData);
+अटल व्योम U_CALLCONV
+ucnv_MBCSUnload(UConverter_Shared_तथ्य *shared_तथ्य);
 
-static void U_CALLCONV
+अटल व्योम U_CALLCONV
 ucnv_MBCSOpen(UConverter *cnv,
               UConverterLoadArgs *pArgs,
               UErrorCode *pErrorCode);
 
-static UChar32 U_CALLCONV
-ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
+अटल UChar32 U_CALLCONV
+ucnv_MBCSGet_अग्र_UChar(UConverterToUnicodeArgs *pArgs,
                   UErrorCode *pErrorCode);
 
-static void U_CALLCONV
-ucnv_MBCSGetStarters(const UConverter* cnv,
+अटल व्योम U_CALLCONV
+ucnv_MBCSGetStarters(स्थिर UConverter* cnv,
                  UBool starters[256],
                  UErrorCode *pErrorCode);
 
 U_CDECL_BEGIN
-static const char* U_CALLCONV
-ucnv_MBCSGetName(const UConverter *cnv);
+अटल स्थिर अक्षर* U_CALLCONV
+ucnv_MBCSGetName(स्थिर UConverter *cnv);
 U_CDECL_END
 
-static void U_CALLCONV
+अटल व्योम U_CALLCONV
 ucnv_MBCSWriteSub(UConverterFromUnicodeArgs *pArgs,
-              int32_t offsetIndex,
+              int32_t offset_सूचकांक,
               UErrorCode *pErrorCode);
 
-static UChar32 U_CALLCONV
-ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
+अटल UChar32 U_CALLCONV
+ucnv_MBCSGet_अग्र_UChar(UConverterToUnicodeArgs *pArgs,
                   UErrorCode *pErrorCode);
 
-static void U_CALLCONV
+अटल व्योम U_CALLCONV
 ucnv_SBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
                   UConverterToUnicodeArgs *pToUArgs,
                   UErrorCode *pErrorCode);
 
-static void U_CALLCONV
-ucnv_MBCSGetUnicodeSet(const UConverter *cnv,
-                   const USetAdder *sa,
+अटल व्योम U_CALLCONV
+ucnv_MBCSGetUnicodeSet(स्थिर UConverter *cnv,
+                   स्थिर USetAdder *sa,
                    UConverterUnicodeSet which,
                    UErrorCode *pErrorCode);
 
-static void U_CALLCONV
+अटल व्योम U_CALLCONV
 ucnv_DBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
                   UConverterToUnicodeArgs *pToUArgs,
                   UErrorCode *pErrorCode);
 
-static const UConverterImpl _SBCSUTF8Impl={
+अटल स्थिर UConverterImpl _SBCSUTF8Impl={
     UCNV_MBCS,
 
     ucnv_MBCSLoad,
@@ -445,7 +445,7 @@ static const UConverterImpl _SBCSUTF8Impl={
     ucnv_MBCSToUnicodeWithOffsets,
     ucnv_MBCSFromUnicodeWithOffsets,
     ucnv_MBCSFromUnicodeWithOffsets,
-    ucnv_MBCSGetNextUChar,
+    ucnv_MBCSGet_अग्र_UChar,
 
     ucnv_MBCSGetStarters,
     ucnv_MBCSGetName,
@@ -457,7 +457,7 @@ static const UConverterImpl _SBCSUTF8Impl={
     ucnv_SBCSFromUTF8
 };
 
-static const UConverterImpl _DBCSUTF8Impl={
+अटल स्थिर UConverterImpl _DBCSUTF8Impl={
     UCNV_MBCS,
 
     ucnv_MBCSLoad,
@@ -471,7 +471,7 @@ static const UConverterImpl _DBCSUTF8Impl={
     ucnv_MBCSToUnicodeWithOffsets,
     ucnv_MBCSFromUnicodeWithOffsets,
     ucnv_MBCSFromUnicodeWithOffsets,
-    ucnv_MBCSGetNextUChar,
+    ucnv_MBCSGet_अग्र_UChar,
 
     ucnv_MBCSGetStarters,
     ucnv_MBCSGetName,
@@ -483,7 +483,7 @@ static const UConverterImpl _DBCSUTF8Impl={
     ucnv_DBCSFromUTF8
 };
 
-static const UConverterImpl _MBCSImpl={
+अटल स्थिर UConverterImpl _MBCSImpl={
     UCNV_MBCS,
 
     ucnv_MBCSLoad,
@@ -497,7 +497,7 @@ static const UConverterImpl _MBCSImpl={
     ucnv_MBCSToUnicodeWithOffsets,
     ucnv_MBCSFromUnicodeWithOffsets,
     ucnv_MBCSFromUnicodeWithOffsets,
-    ucnv_MBCSGetNextUChar,
+    ucnv_MBCSGet_अग्र_UChar,
 
     ucnv_MBCSGetStarters,
     ucnv_MBCSGetName,
@@ -512,8 +512,8 @@ static const UConverterImpl _MBCSImpl={
  * converters. Be sure to update it as well.
  */
 
-const UConverterSharedData _MBCSData={
-    sizeof(UConverterSharedData), 1,
+स्थिर UConverter_Shared_तथ्य _MBCSData={
+    माप(UConverter_Shared_तथ्य), 1,
     nullptr, nullptr, false, true, &_MBCSImpl,
     0, UCNV_MBCS_TABLE_INITIALIZER
 };
@@ -522,11 +522,11 @@ const UConverterSharedData _MBCSData={
 /* GB 18030 data ------------------------------------------------------------ */
 
 /* helper macros for linear values for GB 18030 four-byte sequences */
-#define LINEAR_18030(a, b, c, d) ((((a)*10+(b))*126L+(c))*10L+(d))
+#घोषणा LINEAR_18030(a, b, c, d) ((((a)*10+(b))*126L+(c))*10L+(d))
 
-#define LINEAR_18030_BASE LINEAR_18030(0x81, 0x30, 0x81, 0x30)
+#घोषणा LINEAR_18030_BASE LINEAR_18030(0x81, 0x30, 0x81, 0x30)
 
-#define LINEAR(x) LINEAR_18030(x>>24, (x>>16)&0xff, (x>>8)&0xff, x&0xff)
+#घोषणा LINEAR(x) LINEAR_18030(x>>24, (x>>16)&0xff, (x>>8)&0xff, x&0xff)
 
 /*
  * Some ranges of GB 18030 where both the Unicode code points and the
@@ -537,7 +537,7 @@ const UConverterSharedData _MBCSData={
  * Note that single surrogates are not mapped by GB 18030
  * as of the re-released mapping tables from 2000-nov-30.
  */
-static const uint32_t
+अटल स्थिर uint32_t
 gb18030Ranges[14][4]={
     {0x10000, 0x10FFFF, LINEAR(0x90308130), LINEAR(0xE3329A35)},
     {0x9FA6, 0xD7FF, LINEAR(0x82358F33), LINEAR(0x8336C738)},
@@ -556,90 +556,90 @@ gb18030Ranges[14][4]={
 };
 
 /* bit flag for UConverter.options indicating GB 18030 special handling */
-#define _MBCS_OPTION_GB18030 0x8000
+#घोषणा _MBCS_OPTION_GB18030 0x8000
 
 /* bit flag for UConverter.options indicating KEIS,JEF,JIF special handling */
-#define _MBCS_OPTION_KEIS 0x01000
-#define _MBCS_OPTION_JEF  0x02000
-#define _MBCS_OPTION_JIPS 0x04000
+#घोषणा _MBCS_OPTION_KEIS 0x01000
+#घोषणा _MBCS_OPTION_JEF  0x02000
+#घोषणा _MBCS_OPTION_JIPS 0x04000
 
-#define KEIS_SO_CHAR_1 0x0A
-#define KEIS_SO_CHAR_2 0x42
-#define KEIS_SI_CHAR_1 0x0A
-#define KEIS_SI_CHAR_2 0x41
+#घोषणा KEIS_SO_CHAR_1 0x0A
+#घोषणा KEIS_SO_CHAR_2 0x42
+#घोषणा KEIS_SI_CHAR_1 0x0A
+#घोषणा KEIS_SI_CHAR_2 0x41
 
-#define JEF_SO_CHAR 0x28
-#define JEF_SI_CHAR 0x29
+#घोषणा JEF_SO_CHAR 0x28
+#घोषणा JEF_SI_CHAR 0x29
 
-#define JIPS_SO_CHAR_1 0x1A
-#define JIPS_SO_CHAR_2 0x70
-#define JIPS_SI_CHAR_1 0x1A
-#define JIPS_SI_CHAR_2 0x71
+#घोषणा JIPS_SO_CHAR_1 0x1A
+#घोषणा JIPS_SO_CHAR_2 0x70
+#घोषणा JIPS_SI_CHAR_1 0x1A
+#घोषणा JIPS_SI_CHAR_2 0x71
 
-enum SISO_Option {
+क्रमागत SISO_Option {
     SI,
     SO
 };
-typedef enum SISO_Option SISO_Option;
+प्रकार क्रमागत SISO_Option SISO_Option;
 
-static int32_t getSISOBytes(SISO_Option option, uint32_t cnvOption, uint8_t *value) {
+अटल int32_t getSISOBytes(SISO_Option option, uint32_t cnvOption, uint8_t *value) {
     int32_t SISOLength = 0;
 
-    switch (option) {
-        case SI:
-            if ((cnvOption&_MBCS_OPTION_KEIS)!=0) {
+    चयन (option) {
+        हाल SI:
+            अगर ((cnvOption&_MBCS_OPTION_KEIS)!=0) {
                 value[0] = KEIS_SI_CHAR_1;
                 value[1] = KEIS_SI_CHAR_2;
                 SISOLength = 2;
-            } else if ((cnvOption&_MBCS_OPTION_JEF)!=0) {
+            } अन्यथा अगर ((cnvOption&_MBCS_OPTION_JEF)!=0) {
                 value[0] = JEF_SI_CHAR;
                 SISOLength = 1;
-            } else if ((cnvOption&_MBCS_OPTION_JIPS)!=0) {
+            } अन्यथा अगर ((cnvOption&_MBCS_OPTION_JIPS)!=0) {
                 value[0] = JIPS_SI_CHAR_1;
                 value[1] = JIPS_SI_CHAR_2;
                 SISOLength = 2;
-            } else {
+            } अन्यथा {
                 value[0] = UCNV_SI;
                 SISOLength = 1;
             }
-            break;
-        case SO:
-            if ((cnvOption&_MBCS_OPTION_KEIS)!=0) {
+            अवरोध;
+        हाल SO:
+            अगर ((cnvOption&_MBCS_OPTION_KEIS)!=0) {
                 value[0] = KEIS_SO_CHAR_1;
                 value[1] = KEIS_SO_CHAR_2;
                 SISOLength = 2;
-            } else if ((cnvOption&_MBCS_OPTION_JEF)!=0) {
+            } अन्यथा अगर ((cnvOption&_MBCS_OPTION_JEF)!=0) {
                 value[0] = JEF_SO_CHAR;
                 SISOLength = 1;
-            } else if ((cnvOption&_MBCS_OPTION_JIPS)!=0) {
+            } अन्यथा अगर ((cnvOption&_MBCS_OPTION_JIPS)!=0) {
                 value[0] = JIPS_SO_CHAR_1;
                 value[1] = JIPS_SO_CHAR_2;
                 SISOLength = 2;
-            } else {
+            } अन्यथा {
                 value[0] = UCNV_SO;
                 SISOLength = 1;
             }
-            break;
-        default:
+            अवरोध;
+        शेष:
             /* Should never happen. */
-            break;
+            अवरोध;
     }
 
-    return SISOLength;
+    वापस SISOLength;
 }
 
 /* Miscellaneous ------------------------------------------------------------ */
 
 /* similar to ucnv_MBCSGetNextUChar() but recursive */
-static UBool
+अटल UBool
 enumToU(UConverterMBCSTable *mbcsTable, int8_t stateProps[],
         int32_t state, uint32_t offset,
         uint32_t value,
-        UConverterEnumToUCallback *callback, const void *context,
+        UConverterEnumToUCallback *callback, स्थिर व्योम *context,
         UErrorCode *pErrorCode) {
     UChar32 codePoints[32];
-    const int32_t *row;
-    const uint16_t *unicodeCodeUnits;
+    स्थिर int32_t *row;
+    स्थिर uint16_t *unicodeCodeUnits;
     UChar32 anyCodePoints;
     int32_t b, limit;
 
@@ -650,29 +650,29 @@ enumToU(UConverterMBCSTable *mbcsTable, int8_t stateProps[],
     anyCodePoints=-1;  /* becomes non-negative if there is a mapping */
 
     b=(stateProps[state]&0x38)<<2;
-    if(b==0 && stateProps[state]>=0x40) {
+    अगर(b==0 && stateProps[state]>=0x40) {
         /* skip byte sequences with leading zeros because they are not stored in the fromUnicode table */
         codePoints[0]=U_SENTINEL;
         b=1;
     }
     limit=((stateProps[state]&7)+1)<<5;
-    while(b<limit) {
+    जबतक(b<limit) {
         int32_t entry=row[b];
-        if(MBCS_ENTRY_IS_TRANSITION(entry)) {
-            int32_t nextState=MBCS_ENTRY_TRANSITION_STATE(entry);
-            if(stateProps[nextState]>=0) {
+        अगर(MBCS_ENTRY_IS_TRANSITION(entry)) {
+            int32_t अग्र_State=MBCS_ENTRY_TRANSITION_STATE(entry);
+            अगर(stateProps[अग्र_State]>=0) {
                 /* recurse to a state with non-ignorable actions */
-                if(!enumToU(
-                        mbcsTable, stateProps, nextState,
+                अगर(!enumToU(
+                        mbcsTable, stateProps, अग्र_State,
                         offset+MBCS_ENTRY_TRANSITION_OFFSET(entry),
                         value | static_cast<uint32_t>(b),
                         callback, context,
                         pErrorCode)) {
-                    return false;
+                    वापस false;
                 }
             }
             codePoints[b&0x1f]=U_SENTINEL;
-        } else {
+        } अन्यथा {
             UChar32 c;
             int32_t action;
 
@@ -681,51 +681,51 @@ enumToU(UConverterMBCSTable *mbcsTable, int8_t stateProps[],
              * the most common cases compared to a switch.
              */
             action=MBCS_ENTRY_FINAL_ACTION(entry);
-            if(action==MBCS_STATE_VALID_DIRECT_16) {
+            अगर(action==MBCS_STATE_VALID_DIRECT_16) {
                 /* output BMP code point */
-                c = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            } else if(action==MBCS_STATE_VALID_16) {
-                int32_t finalOffset=offset+MBCS_ENTRY_FINAL_VALUE_16(entry);
+                c = static_cast<char16_t>(MBCS_ENTRY_FINAL_मूल्य_16(entry));
+            } अन्यथा अगर(action==MBCS_STATE_VALID_16) {
+                int32_t finalOffset=offset+MBCS_ENTRY_FINAL_मूल्य_16(entry);
                 c=unicodeCodeUnits[finalOffset];
-                if(c<0xfffe) {
+                अगर(c<0xfffe) {
                     /* output BMP code point */
-                } else {
+                } अन्यथा {
                     c=U_SENTINEL;
                 }
-            } else if(action==MBCS_STATE_VALID_16_PAIR) {
-                int32_t finalOffset=offset+MBCS_ENTRY_FINAL_VALUE_16(entry);
+            } अन्यथा अगर(action==MBCS_STATE_VALID_16_PAIR) {
+                int32_t finalOffset=offset+MBCS_ENTRY_FINAL_मूल्य_16(entry);
                 c=unicodeCodeUnits[finalOffset++];
-                if(c<0xd800) {
+                अगर(c<0xd800) {
                     /* output BMP code point below 0xd800 */
-                } else if(c<=0xdbff) {
+                } अन्यथा अगर(c<=0xdbff) {
                     /* output roundtrip or fallback supplementary code point */
                     c=((c&0x3ff)<<10)+unicodeCodeUnits[finalOffset]+(0x10000-0xdc00);
-                } else if(c==0xe000) {
+                } अन्यथा अगर(c==0xe000) {
                     /* output roundtrip BMP code point above 0xd800 or fallback BMP code point */
                     c=unicodeCodeUnits[finalOffset];
-                } else {
+                } अन्यथा {
                     c=U_SENTINEL;
                 }
-            } else if(action==MBCS_STATE_VALID_DIRECT_20) {
+            } अन्यथा अगर(action==MBCS_STATE_VALID_DIRECT_20) {
                 /* output supplementary code point */
-                c = static_cast<UChar32>(MBCS_ENTRY_FINAL_VALUE(entry) + 0x10000);
-            } else {
+                c = static_cast<UChar32>(MBCS_ENTRY_FINAL_मूल्य(entry) + 0x10000);
+            } अन्यथा {
                 c=U_SENTINEL;
             }
 
             codePoints[b&0x1f]=c;
             anyCodePoints&=c;
         }
-        if(((++b)&0x1f)==0) {
-            if(anyCodePoints>=0) {
-                if (!callback(context, value | static_cast<uint32_t>(b - 0x20), codePoints)) {
-                    return false;
+        अगर(((++b)&0x1f)==0) {
+            अगर(anyCodePoints>=0) {
+                अगर (!callback(context, value | static_cast<uint32_t>(b - 0x20), codePoints)) {
+                    वापस false;
                 }
                 anyCodePoints=-1;
             }
         }
     }
-    return true;
+    वापस true;
 }
 
 /*
@@ -733,68 +733,68 @@ enumToU(UConverterMBCSTable *mbcsTable, int8_t stateProps[],
  * A recursive call may do stateProps[state]|=0x40 if this state is the target of an
  * MBCS_STATE_CHANGE_ONLY.
  */
-static int8_t
-getStateProp(const int32_t (*stateTable)[256], int8_t stateProps[], int state) {
-    const int32_t *row;
-    int32_t min, max, entry, nextState;
+अटल int8_t
+getStateProp(स्थिर int32_t (*stateTable)[256], int8_t stateProps[], पूर्णांक state) {
+    स्थिर int32_t *row;
+    int32_t min, max, entry, अग्र_State;
 
     row=stateTable[state];
     stateProps[state]=0;
 
     /* find first non-ignorable state */
-    for(min=0;; ++min) {
+    क्रम(min=0;; ++min) {
         entry=row[min];
-        nextState=MBCS_ENTRY_STATE(entry);
-        if(stateProps[nextState]==-1) {
-            getStateProp(stateTable, stateProps, nextState);
+        अग्र_State=MBCS_ENTRY_STATE(entry);
+        अगर(stateProps[अग्र_State]==-1) {
+            getStateProp(stateTable, stateProps, अग्र_State);
         }
-        if(MBCS_ENTRY_IS_TRANSITION(entry)) {
-            if(stateProps[nextState]>=0) {
-                break;
+        अगर(MBCS_ENTRY_IS_TRANSITION(entry)) {
+            अगर(stateProps[अग्र_State]>=0) {
+                अवरोध;
             }
-        } else if(MBCS_ENTRY_FINAL_ACTION(entry)<MBCS_STATE_UNASSIGNED) {
-            break;
+        } अन्यथा अगर(MBCS_ENTRY_FINAL_ACTION(entry)<MBCS_STATE_UNASSIGNED) {
+            अवरोध;
         }
-        if(min==0xff) {
+        अगर(min==0xff) {
             stateProps[state]=-0x40;  /* (int8_t)0xc0 */
-            return stateProps[state];
+            वापस stateProps[state];
         }
     }
     stateProps[state] |= static_cast<int8_t>((min >> 5) << 3);
 
     /* find last non-ignorable state */
-    for(max=0xff; min<max; --max) {
+    क्रम(max=0xff; min<max; --max) {
         entry=row[max];
-        nextState=MBCS_ENTRY_STATE(entry);
-        if(stateProps[nextState]==-1) {
-            getStateProp(stateTable, stateProps, nextState);
+        अग्र_State=MBCS_ENTRY_STATE(entry);
+        अगर(stateProps[अग्र_State]==-1) {
+            getStateProp(stateTable, stateProps, अग्र_State);
         }
-        if(MBCS_ENTRY_IS_TRANSITION(entry)) {
-            if(stateProps[nextState]>=0) {
-                break;
+        अगर(MBCS_ENTRY_IS_TRANSITION(entry)) {
+            अगर(stateProps[अग्र_State]>=0) {
+                अवरोध;
             }
-        } else if(MBCS_ENTRY_FINAL_ACTION(entry)<MBCS_STATE_UNASSIGNED) {
-            break;
+        } अन्यथा अगर(MBCS_ENTRY_FINAL_ACTION(entry)<MBCS_STATE_UNASSIGNED) {
+            अवरोध;
         }
     }
     stateProps[state] |= static_cast<int8_t>(max >> 5);
 
     /* recurse further and collect direct-state information */
-    while(min<=max) {
+    जबतक(min<=max) {
         entry=row[min];
-        nextState=MBCS_ENTRY_STATE(entry);
-        if(stateProps[nextState]==-1) {
-            getStateProp(stateTable, stateProps, nextState);
+        अग्र_State=MBCS_ENTRY_STATE(entry);
+        अगर(stateProps[अग्र_State]==-1) {
+            getStateProp(stateTable, stateProps, अग्र_State);
         }
-        if(MBCS_ENTRY_IS_FINAL(entry)) {
-            stateProps[nextState]|=0x40;
-            if(MBCS_ENTRY_FINAL_ACTION(entry)<=MBCS_STATE_FALLBACK_DIRECT_20) {
+        अगर(MBCS_ENTRY_IS_FINAL(entry)) {
+            stateProps[अग्र_State]|=0x40;
+            अगर(MBCS_ENTRY_FINAL_ACTION(entry)<=MBCS_STATE_FALLBACK_DIRECT_20) {
                 stateProps[state]|=0x40;
             }
         }
         ++min;
     }
-    return stateProps[state];
+    वापस stateProps[state];
 }
 
 /*
@@ -805,9 +805,9 @@ getStateProp(const int32_t (*stateTable)[256], int8_t stateProps[], int state) {
  * Currently only handles roundtrip mappings.
  * Does not currently handle extensions.
  */
-static void
+अटल व्योम
 ucnv_MBCSEnumToUnicode(UConverterMBCSTable *mbcsTable,
-                       UConverterEnumToUCallback *callback, const void *context,
+                       UConverterEnumToUCallback *callback, स्थिर व्योम *context,
                        UErrorCode *pErrorCode) {
     /*
      * Properties for each state, to speed up the enumeration.
@@ -827,19 +827,19 @@ ucnv_MBCSEnumToUnicode(UConverterMBCSTable *mbcsTable,
      * The highest byte value with non-ignorable actions is
      * (value<<5)&0x1f (rounded up).
      */
-    int8_t stateProps[MBCS_MAX_STATE_COUNT];
+    int8_t stateProps[MBCS_MAX_STATE_गिनती];
     int32_t state;
 
-    uprv_memset(stateProps, -1, sizeof(stateProps));
+    uprv_memset(stateProps, -1, माप(stateProps));
 
     /* recurse from state 0 and set all stateProps */
     getStateProp(mbcsTable->stateTable, stateProps, 0);
 
-    for(state=0; state<mbcsTable->countStates; ++state) {
+    क्रम(state=0; state<mbcsTable->गिनती_States; ++state) {
         /*if(stateProps[state]==-1) {
             printf("unused/unreachable <icu:state> %d\n", state);
         }*/
-        if(stateProps[state]>=0x40) {
+        अगर(stateProps[state]>=0x40) {
             /* start from each direct state */
             enumToU(
                 mbcsTable, stateProps, state, 0, 0,
@@ -849,14 +849,14 @@ ucnv_MBCSEnumToUnicode(UConverterMBCSTable *mbcsTable,
     }
 }
 
-U_CFUNC void 
-ucnv_MBCSGetFilteredUnicodeSetForUnicode(const UConverterSharedData *sharedData,
-                                         const USetAdder *sa,
+U_CFUNC व्योम 
+ucnv_MBCSGetFilteredUnicodeSetForUnicode(स्थिर UConverter_Shared_तथ्य *shared_तथ्य,
+                                         स्थिर USetAdder *sa,
                                          UConverterUnicodeSet which,
                                          UConverterSetFilter filter,
                                          UErrorCode *pErrorCode) {
-    const UConverterMBCSTable *mbcsTable;
-    const uint16_t *table;
+    स्थिर UConverterMBCSTable *mbcsTable;
+    स्थिर uint16_t *table;
 
     uint32_t st3;
     uint16_t st1, maxStage1, st2;
@@ -864,60 +864,60 @@ ucnv_MBCSGetFilteredUnicodeSetForUnicode(const UConverterSharedData *sharedData,
     UChar32 c;
 
     /* enumerate the from-Unicode trie table */
-    mbcsTable=&sharedData->mbcs;
+    mbcsTable=&shared_तथ्य->mbcs;
     table=mbcsTable->fromUnicodeTable;
-    if(mbcsTable->unicodeMask&UCNV_HAS_SUPPLEMENTARY) {
+    अगर(mbcsTable->unicodeMask&UCNV_HAS_SUPPLEMENTARY) {
         maxStage1=0x440;
-    } else {
+    } अन्यथा {
         maxStage1=0x40;
     }
 
     c=0; /* keep track of the current code point while enumerating */
 
-    if(mbcsTable->outputType==MBCS_OUTPUT_1) {
-        const uint16_t *stage2, *stage3, *results;
-        uint16_t minValue;
+    अगर(mbcsTable->outputType==MBCS_OUTPUT_1) {
+        स्थिर uint16_t *stage2, *stage3, *results;
+        uint16_t min_मूल्य;
 
-        results=(const uint16_t *)mbcsTable->fromUnicodeBytes;
+        results=(स्थिर uint16_t *)mbcsTable->fromUnicodeBytes;
 
         /*
          * Set a threshold variable for selecting which mappings to use.
          * See ucnv_MBCSSingleFromBMPWithOffsets() and
          * MBCS_SINGLE_RESULT_FROM_U() for details.
          */
-        if(which==UCNV_ROUNDTRIP_SET) {
+        अगर(which==UCNV_ROUNDTRIP_SET) {
             /* use only roundtrips */
-            minValue=0xf00;
-        } else /* UCNV_ROUNDTRIP_AND_FALLBACK_SET */ {
+            min_मूल्य=0xf00;
+        } अन्यथा /* UCNV_ROUNDTRIP_AND_FALLBACK_SET */ {
             /* use all roundtrip and fallback results */
-            minValue=0x800;
+            min_मूल्य=0x800;
         }
 
-        for(st1=0; st1<maxStage1; ++st1) {
+        क्रम(st1=0; st1<maxStage1; ++st1) {
             st2=table[st1];
-            if(st2>maxStage1) {
+            अगर(st2>maxStage1) {
                 stage2=table+st2;
-                for(st2=0; st2<64; ++st2) {
-                    if((st3=stage2[st2])!=0) {
+                क्रम(st2=0; st2<64; ++st2) {
+                    अगर((st3=stage2[st2])!=0) {
                         /* read the stage 3 block */
                         stage3=results+st3;
 
-                        do {
-                            if(*stage3++>=minValue) {
+                        करो {
+                            अगर(*stage3++>=min_मूल्य) {
                                 sa->add(sa->set, c);
                             }
-                        } while((++c&0xf)!=0);
-                    } else {
+                        } जबतक((++c&0xf)!=0);
+                    } अन्यथा {
                         c+=16; /* empty stage 3 block */
                     }
                 }
-            } else {
+            } अन्यथा {
                 c+=1024; /* empty stage 2 block */
             }
         }
-    } else {
-        const uint32_t *stage2;
-        const uint8_t *stage3, *bytes;
+    } अन्यथा {
+        स्थिर uint32_t *stage2;
+        स्थिर uint8_t *stage3, *bytes;
         uint32_t st3Multiplier;
         uint32_t value;
         UBool useFallback;
@@ -926,25 +926,25 @@ ucnv_MBCSGetFilteredUnicodeSetForUnicode(const UConverterSharedData *sharedData,
 
         useFallback = which == UCNV_ROUNDTRIP_AND_FALLBACK_SET;
 
-        switch(mbcsTable->outputType) {
-        case MBCS_OUTPUT_3:
-        case MBCS_OUTPUT_4_EUC:
+        चयन(mbcsTable->outputType) {
+        हाल MBCS_OUTPUT_3:
+        हाल MBCS_OUTPUT_4_EUC:
             st3Multiplier=3;
-            break;
-        case MBCS_OUTPUT_4:
+            अवरोध;
+        हाल MBCS_OUTPUT_4:
             st3Multiplier=4;
-            break;
-        default:
+            अवरोध;
+        शेष:
             st3Multiplier=2;
-            break;
+            अवरोध;
         }
 
-        for(st1=0; st1<maxStage1; ++st1) {
+        क्रम(st1=0; st1<maxStage1; ++st1) {
             st2=table[st1];
-            if(st2>(maxStage1>>1)) {
-                stage2=(const uint32_t *)table+st2;
-                for(st2=0; st2<64; ++st2) {
-                    if((st3=stage2[st2])!=0) {
+            अगर(st2>(maxStage1>>1)) {
+                stage2=(स्थिर uint32_t *)table+st2;
+                क्रम(st2=0; st2<64; ++st2) {
+                    अगर((st3=stage2[st2])!=0) {
                         /* read the stage 3 block */
                         stage3=bytes+st3Multiplier*16*(uint32_t)(uint16_t)st3;
 
@@ -956,131 +956,131 @@ ucnv_MBCSGetFilteredUnicodeSetForUnicode(const UConverterSharedData *sharedData,
                          * or which map to non-zero bytes if we use fallbacks.
                          * See ucnv_MBCSFromUnicodeWithOffsets() for details.
                          */
-                        switch(filter) {
-                        case UCNV_SET_FILTER_NONE:
-                            do {
-                                if(st3&1) {
+                        चयन(filter) {
+                        हाल UCNV_SET_FILTER_NONE:
+                            करो {
+                                अगर(st3&1) {
                                     sa->add(sa->set, c);
                                     stage3+=st3Multiplier;
-                                } else if(useFallback) {
+                                } अन्यथा अगर(useFallback) {
                                     uint8_t b=0;
-                                    switch(st3Multiplier) {
-                                    case 4:
+                                    चयन(st3Multiplier) {
+                                    हाल 4:
                                         b|=*stage3++;
                                         U_FALLTHROUGH;
-                                    case 3:
+                                    हाल 3:
                                         b|=*stage3++;
                                         U_FALLTHROUGH;
-                                    case 2:
+                                    हाल 2:
                                         b|=stage3[0]|stage3[1];
                                         stage3+=2;
                                         U_FALLTHROUGH;
-                                    default:
-                                        break;
+                                    शेष:
+                                        अवरोध;
                                     }
-                                    if(b!=0) {
+                                    अगर(b!=0) {
                                         sa->add(sa->set, c);
                                     }
                                 }
                                 st3>>=1;
-                            } while((++c&0xf)!=0);
-                            break;
-                        case UCNV_SET_FILTER_DBCS_ONLY:
+                            } जबतक((++c&0xf)!=0);
+                            अवरोध;
+                        हाल UCNV_SET_FILTER_DBCS_ONLY:
                              /* Ignore single-byte results (<0x100). */
-                            do {
-                                if(((st3&1)!=0 || useFallback) && *((const uint16_t *)stage3)>=0x100) {
+                            करो {
+                                अगर(((st3&1)!=0 || useFallback) && *((स्थिर uint16_t *)stage3)>=0x100) {
                                     sa->add(sa->set, c);
                                 }
                                 st3>>=1;
                                 stage3+=2;  /* +=st3Multiplier */
-                            } while((++c&0xf)!=0);
-                            break;
-                        case UCNV_SET_FILTER_2022_CN:
+                            } जबतक((++c&0xf)!=0);
+                            अवरोध;
+                        हाल UCNV_SET_FILTER_2022_CN:
                              /* Only add code points that map to CNS 11643 planes 1 & 2 for non-EXT ISO-2022-CN. */
-                            do {
-                                if(((st3&1)!=0 || useFallback) && ((value=*stage3)==0x81 || value==0x82)) {
+                            करो {
+                                अगर(((st3&1)!=0 || useFallback) && ((value=*stage3)==0x81 || value==0x82)) {
                                     sa->add(sa->set, c);
                                 }
                                 st3>>=1;
                                 stage3+=3;  /* +=st3Multiplier */
-                            } while((++c&0xf)!=0);
-                            break;
-                        case UCNV_SET_FILTER_SJIS:
+                            } जबतक((++c&0xf)!=0);
+                            अवरोध;
+                        हाल UCNV_SET_FILTER_SJIS:
                              /* Only add code points that map to Shift-JIS codes corresponding to JIS X 0208. */
-                            do {
-                                if(((st3&1)!=0 || useFallback) && (value=*((const uint16_t *)stage3))>=0x8140 && value<=0xeffc) {
+                            करो {
+                                अगर(((st3&1)!=0 || useFallback) && (value=*((स्थिर uint16_t *)stage3))>=0x8140 && value<=0xeffc) {
                                     sa->add(sa->set, c);
                                 }
                                 st3>>=1;
                                 stage3+=2;  /* +=st3Multiplier */
-                            } while((++c&0xf)!=0);
-                            break;
-                        case UCNV_SET_FILTER_GR94DBCS:
+                            } जबतक((++c&0xf)!=0);
+                            अवरोध;
+                        हाल UCNV_SET_FILTER_GR94DBCS:
                             /* Only add code points that map to ISO 2022 GR 94 DBCS codes (each byte A1..FE). */
-                            do {
-                                if( ((st3&1)!=0 || useFallback) &&
-                                    (uint16_t)((value=*((const uint16_t *)stage3)) - 0xa1a1)<=(0xfefe - 0xa1a1) &&
+                            करो {
+                                अगर( ((st3&1)!=0 || useFallback) &&
+                                    (uint16_t)((value=*((स्थिर uint16_t *)stage3)) - 0xa1a1)<=(0xfefe - 0xa1a1) &&
                                     (uint8_t)(value-0xa1)<=(0xfe - 0xa1)
                                 ) {
                                     sa->add(sa->set, c);
                                 }
                                 st3>>=1;
                                 stage3+=2;  /* +=st3Multiplier */
-                            } while((++c&0xf)!=0);
-                            break;
-                        case UCNV_SET_FILTER_HZ:
+                            } जबतक((++c&0xf)!=0);
+                            अवरोध;
+                        हाल UCNV_SET_FILTER_HZ:
                             /* Only add code points that are suitable for HZ DBCS (lead byte A1..FD). */
-                            do {
-                                if( ((st3&1)!=0 || useFallback) &&
-                                    (uint16_t)((value=*((const uint16_t *)stage3))-0xa1a1)<=(0xfdfe - 0xa1a1) &&
+                            करो {
+                                अगर( ((st3&1)!=0 || useFallback) &&
+                                    (uint16_t)((value=*((स्थिर uint16_t *)stage3))-0xa1a1)<=(0xfdfe - 0xa1a1) &&
                                     (uint8_t)(value-0xa1)<=(0xfe - 0xa1)
                                 ) {
                                     sa->add(sa->set, c);
                                 }
                                 st3>>=1;
                                 stage3+=2;  /* +=st3Multiplier */
-                            } while((++c&0xf)!=0);
-                            break;
-                        default:
+                            } जबतक((++c&0xf)!=0);
+                            अवरोध;
+                        शेष:
                             *pErrorCode=U_INTERNAL_PROGRAM_ERROR;
-                            return;
+                            वापस;
                         }
-                    } else {
+                    } अन्यथा {
                         c+=16; /* empty stage 3 block */
                     }
                 }
-            } else {
+            } अन्यथा {
                 c+=1024; /* empty stage 2 block */
             }
         }
     }
 
-    ucnv_extGetUnicodeSet(sharedData, sa, which, filter, pErrorCode);
+    ucnv_extGetUnicodeSet(shared_तथ्य, sa, which, filter, pErrorCode);
 }
 
-U_CFUNC void
-ucnv_MBCSGetUnicodeSetForUnicode(const UConverterSharedData *sharedData,
-                                 const USetAdder *sa,
+U_CFUNC व्योम
+ucnv_MBCSGetUnicodeSetForUnicode(स्थिर UConverter_Shared_तथ्य *shared_तथ्य,
+                                 स्थिर USetAdder *sa,
                                  UConverterUnicodeSet which,
                                  UErrorCode *pErrorCode) {
     ucnv_MBCSGetFilteredUnicodeSetForUnicode(
-        sharedData, sa, which,
-        sharedData->mbcs.outputType==MBCS_OUTPUT_DBCS_ONLY ?
+        shared_तथ्य, sa, which,
+        shared_तथ्य->mbcs.outputType==MBCS_OUTPUT_DBCS_ONLY ?
             UCNV_SET_FILTER_DBCS_ONLY :
             UCNV_SET_FILTER_NONE,
         pErrorCode);
 }
 
-static void U_CALLCONV
-ucnv_MBCSGetUnicodeSet(const UConverter *cnv,
-                   const USetAdder *sa,
+अटल व्योम U_CALLCONV
+ucnv_MBCSGetUnicodeSet(स्थिर UConverter *cnv,
+                   स्थिर USetAdder *sa,
                    UConverterUnicodeSet which,
                    UErrorCode *pErrorCode) {
-    if(cnv->options&_MBCS_OPTION_GB18030) {
+    अगर(cnv->options&_MBCS_OPTION_GB18030) {
         sa->addRange(sa->set, 0, 0xd7ff);
         sa->addRange(sa->set, 0xe000, 0x10ffff);
-    } else {
-        ucnv_MBCSGetUnicodeSetForUnicode(cnv->sharedData, sa, which, pErrorCode);
+    } अन्यथा {
+        ucnv_MBCSGetUnicodeSetForUnicode(cnv->shared_तथ्य, sa, which, pErrorCode);
     }
 }
 
@@ -1101,41 +1101,41 @@ ucnv_MBCSGetUnicodeSet(const UConverter *cnv,
  * @return if(U_FAILURE) return the code point for cnv->fromUChar32
  *         else return 0 after output has been written to the target
  */
-static UChar32
-_extFromU(UConverter *cnv, const UConverterSharedData *sharedData,
+अटल UChar32
+_extFromU(UConverter *cnv, स्थिर UConverter_Shared_तथ्य *shared_तथ्य,
           UChar32 cp,
-          const char16_t **source, const char16_t *sourceLimit,
-          uint8_t **target, const uint8_t *targetLimit,
-          int32_t **offsets, int32_t sourceIndex,
-          UBool flush,
+          स्थिर char16_t **source, स्थिर char16_t *sourceLimit,
+          uint8_t **target, स्थिर uint8_t *targetLimit,
+          int32_t **offsets, int32_t source_सूचकांक,
+          UBool सफाई,
           UErrorCode *pErrorCode) {
-    const int32_t *cx;
+    स्थिर int32_t *cx;
 
     cnv->useSubChar1=false;
 
-    if( (cx=sharedData->mbcs.extIndexes)!=nullptr &&
+    अगर( (cx=shared_तथ्य->mbcs.extIndexes)!=nullptr &&
         ucnv_extInitialMatchFromU(
             cnv, cx,
             cp, source, sourceLimit,
-            reinterpret_cast<char**>(target), reinterpret_cast<const char*>(targetLimit),
-            offsets, sourceIndex,
-            flush,
+            reinterpret_cast<अक्षर**>(target), reinterpret_cast<स्थिर अक्षर*>(targetLimit),
+            offsets, source_सूचकांक,
+            सफाई,
             pErrorCode)
     ) {
-        return 0; /* an extension mapping handled the input */
+        वापस 0; /* an extension mapping handled the input */
     }
 
     /* GB 18030 */
-    if((cnv->options&_MBCS_OPTION_GB18030)!=0) {
-        const uint32_t *range;
+    अगर((cnv->options&_MBCS_OPTION_GB18030)!=0) {
+        स्थिर uint32_t *range;
         int32_t i;
 
         range=gb18030Ranges[0];
-        for(i=0; i<UPRV_LENGTHOF(gb18030Ranges); range+=4, ++i) {
-            if (range[0] <= static_cast<uint32_t>(cp) && static_cast<uint32_t>(cp) <= range[1]) {
+        क्रम(i=0; i<UPRV_LENGTHOF(gb18030Ranges); range+=4, ++i) {
+            अगर (range[0] <= static_cast<uint32_t>(cp) && static_cast<uint32_t>(cp) <= range[1]) {
                 /* found the Unicode code point, output the four-byte sequence for it */
                 uint32_t linear;
-                char bytes[4];
+                अक्षर bytes[4];
 
                 /* get the linear value of the first GB 18030 code in this range */
                 linear=range[2]-LINEAR_18030_BASE;
@@ -1144,23 +1144,23 @@ _extFromU(UConverter *cnv, const UConverterSharedData *sharedData,
                 linear += (static_cast<uint32_t>(cp) - range[0]);
 
                 /* turn this into a four-byte sequence */
-                bytes[3] = static_cast<char>(0x30 + linear % 10); linear /= 10;
-                bytes[2] = static_cast<char>(0x81 + linear % 126); linear /= 126;
-                bytes[1] = static_cast<char>(0x30 + linear % 10); linear /= 10;
-                bytes[0] = static_cast<char>(0x81 + linear);
+                bytes[3] = static_cast<अक्षर>(0x30 + linear % 10); linear /= 10;
+                bytes[2] = static_cast<अक्षर>(0x81 + linear % 126); linear /= 126;
+                bytes[1] = static_cast<अक्षर>(0x30 + linear % 10); linear /= 10;
+                bytes[0] = static_cast<अक्षर>(0x81 + linear);
 
                 /* output this sequence */
                 ucnv_fromUWriteBytes(cnv,
-                                     bytes, 4, reinterpret_cast<char**>(target), reinterpret_cast<const char*>(targetLimit),
-                                     offsets, sourceIndex, pErrorCode);
-                return 0;
+                                     bytes, 4, reinterpret_cast<अक्षर**>(target), reinterpret_cast<स्थिर अक्षर*>(targetLimit),
+                                     offsets, source_सूचकांक, pErrorCode);
+                वापस 0;
             }
         }
     }
 
     /* no mapping */
     *pErrorCode=U_INVALID_CHAR_FOUND;
-    return cp;
+    वापस cp;
 }
 
 /*
@@ -1168,38 +1168,38 @@ _extFromU(UConverter *cnv, const UConverterSharedData *sharedData,
  * @return if(U_FAILURE) return the length (toULength, byteIndex) for the input
  *         else return 0 after output has been written to the target
  */
-static int8_t
-_extToU(UConverter *cnv, const UConverterSharedData *sharedData,
+अटल int8_t
+_extToU(UConverter *cnv, स्थिर UConverter_Shared_तथ्य *shared_तथ्य,
         int8_t length,
-        const uint8_t **source, const uint8_t *sourceLimit,
-        char16_t **target, const char16_t *targetLimit,
-        int32_t **offsets, int32_t sourceIndex,
-        UBool flush,
+        स्थिर uint8_t **source, स्थिर uint8_t *sourceLimit,
+        char16_t **target, स्थिर char16_t *targetLimit,
+        int32_t **offsets, int32_t source_सूचकांक,
+        UBool सफाई,
         UErrorCode *pErrorCode) {
-    const int32_t *cx;
+    स्थिर int32_t *cx;
 
-    if( (cx=sharedData->mbcs.extIndexes)!=nullptr &&
+    अगर( (cx=shared_तथ्य->mbcs.extIndexes)!=nullptr &&
         ucnv_extInitialMatchToU(
             cnv, cx,
-            length, reinterpret_cast<const char**>(source), reinterpret_cast<const char*>(sourceLimit),
+            length, reinterpret_cast<स्थिर अक्षर**>(source), reinterpret_cast<स्थिर अक्षर*>(sourceLimit),
             target, targetLimit,
-            offsets, sourceIndex,
-            flush,
+            offsets, source_सूचकांक,
+            सफाई,
             pErrorCode)
     ) {
-        return 0; /* an extension mapping handled the input */
+        वापस 0; /* an extension mapping handled the input */
     }
 
     /* GB 18030 */
-    if(length==4 && (cnv->options&_MBCS_OPTION_GB18030)!=0) {
-        const uint32_t *range;
+    अगर(length==4 && (cnv->options&_MBCS_OPTION_GB18030)!=0) {
+        स्थिर uint32_t *range;
         uint32_t linear;
         int32_t i;
 
         linear=LINEAR_18030(cnv->toUBytes[0], cnv->toUBytes[1], cnv->toUBytes[2], cnv->toUBytes[3]);
         range=gb18030Ranges[0];
-        for(i=0; i<UPRV_LENGTHOF(gb18030Ranges); range+=4, ++i) {
-            if(range[2]<=linear && linear<=range[3]) {
+        क्रम(i=0; i<UPRV_LENGTHOF(gb18030Ranges); range+=4, ++i) {
+            अगर(range[2]<=linear && linear<=range[3]) {
                 /* found the sequence, output the Unicode code point for it */
                 *pErrorCode=U_ZERO_ERROR;
 
@@ -1207,16 +1207,16 @@ _extToU(UConverter *cnv, const UConverterSharedData *sharedData,
                 linear=range[0]+(linear-range[2]);
 
                 /* output this code point */
-                ucnv_toUWriteCodePoint(cnv, linear, target, targetLimit, offsets, sourceIndex, pErrorCode);
+                ucnv_toUWriteCodePoint(cnv, linear, target, targetLimit, offsets, source_सूचकांक, pErrorCode);
 
-                return 0;
+                वापस 0;
             }
         }
     }
 
     /* no mapping */
     *pErrorCode=U_INVALID_CHAR_FOUND;
-    return length;
+    वापस length;
 }
 
 /* EBCDIC swap LF<->NL ------------------------------------------------------ */
@@ -1243,37 +1243,37 @@ _extToU(UConverter *cnv, const UConverterSharedData *sharedData,
  */
 
 /* standard EBCDIC codes */
-#define EBCDIC_LF 0x25
-#define EBCDIC_NL 0x15
+#घोषणा EBCDIC_LF 0x25
+#घोषणा EBCDIC_NL 0x15
 
 /* standard EBCDIC codes with roundtrip flag as stored in Unicode-to-single-byte tables */
-#define EBCDIC_RT_LF 0xf25
-#define EBCDIC_RT_NL 0xf15
+#घोषणा EBCDIC_RT_LF 0xf25
+#घोषणा EBCDIC_RT_NL 0xf15
 
 /* Unicode code points */
-#define U_LF 0x0a
-#define U_NL 0x85
+#घोषणा U_LF 0x0a
+#घोषणा U_NL 0x85
 
-static UBool
-_EBCDICSwapLFNL(UConverterSharedData *sharedData, UErrorCode *pErrorCode) {
+अटल UBool
+_EBCDICSwapLFNL(UConverter_Shared_तथ्य *shared_तथ्य, UErrorCode *pErrorCode) {
     UConverterMBCSTable *mbcsTable;
 
-    const uint16_t *table, *results;
-    const uint8_t *bytes;
+    स्थिर uint16_t *table, *results;
+    स्थिर uint8_t *bytes;
 
     int32_t (*newStateTable)[256];
     uint16_t *newResults;
     uint8_t *p;
-    char *name;
+    अक्षर *name;
 
     uint32_t stage2Entry;
     uint32_t size, sizeofFromUBytes;
 
-    mbcsTable=&sharedData->mbcs;
+    mbcsTable=&shared_तथ्य->mbcs;
 
     table=mbcsTable->fromUnicodeTable;
     bytes=mbcsTable->fromUnicodeBytes;
-    results = reinterpret_cast<const uint16_t*>(bytes);
+    results = reinterpret_cast<स्थिर uint16_t*>(bytes);
 
     /*
      * Check that this is an EBCDIC table with SBCS portion -
@@ -1281,46 +1281,46 @@ _EBCDICSwapLFNL(UConverterSharedData *sharedData, UErrorCode *pErrorCode) {
      *
      * If not, ignore the option. Options are always ignored if they do not apply.
      */
-    if(!(
+    अगर(!(
          (mbcsTable->outputType==MBCS_OUTPUT_1 || mbcsTable->outputType==MBCS_OUTPUT_2_SISO) &&
          mbcsTable->stateTable[0][EBCDIC_LF]==MBCS_ENTRY_FINAL(0, MBCS_STATE_VALID_DIRECT_16, U_LF) &&
          mbcsTable->stateTable[0][EBCDIC_NL]==MBCS_ENTRY_FINAL(0, MBCS_STATE_VALID_DIRECT_16, U_NL)
     )) {
-        return false;
+        वापस false;
     }
 
-    if(mbcsTable->outputType==MBCS_OUTPUT_1) {
-        if(!(
-             EBCDIC_RT_LF==MBCS_SINGLE_RESULT_FROM_U(table, results, U_LF) &&
-             EBCDIC_RT_NL==MBCS_SINGLE_RESULT_FROM_U(table, results, U_NL)
+    अगर(mbcsTable->outputType==MBCS_OUTPUT_1) {
+        अगर(!(
+             EBCDIC_RT_LF==MBCS_SINGLE_परिणाम_FROM_U(table, results, U_LF) &&
+             EBCDIC_RT_NL==MBCS_SINGLE_परिणाम_FROM_U(table, results, U_NL)
         )) {
-            return false;
+            वापस false;
         }
-    } else /* MBCS_OUTPUT_2_SISO */ {
+    } अन्यथा /* MBCS_OUTPUT_2_SISO */ {
         stage2Entry=MBCS_STAGE_2_FROM_U(table, U_LF);
-        if(!(
+        अगर(!(
              MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, U_LF)!=0 &&
-             EBCDIC_LF==MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, U_LF)
+             EBCDIC_LF==MBCS_मूल्य_2_FROM_STAGE_2(bytes, stage2Entry, U_LF)
         )) {
-            return false;
+            वापस false;
         }
 
         stage2Entry=MBCS_STAGE_2_FROM_U(table, U_NL);
-        if(!(
+        अगर(!(
              MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, U_NL)!=0 &&
-             EBCDIC_NL==MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, U_NL)
+             EBCDIC_NL==MBCS_मूल्य_2_FROM_STAGE_2(bytes, stage2Entry, U_NL)
         )) {
-            return false;
+            वापस false;
         }
     }
 
-    if(mbcsTable->fromUBytesLength>0) {
+    अगर(mbcsTable->from_UBytes_लंबाई>0) {
         /*
          * We _know_ the number of bytes in the fromUnicodeBytes array
          * starting with header.version 4.1.
          */
-        sizeofFromUBytes=mbcsTable->fromUBytesLength;
-    } else {
+        sizeofFromUBytes=mbcsTable->from_UBytes_लंबाई;
+    } अन्यथा {
         /*
          * Otherwise:
          * There used to be code to enumerate the fromUnicode
@@ -1334,7 +1334,7 @@ _EBCDICSwapLFNL(UConverterSharedData *sharedData, UErrorCode *pErrorCode) {
          * ucnv_MBCSSizeofFromUBytes() function.
          */
         *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return false;
+        वापस false;
     }
 
     /*
@@ -1345,46 +1345,46 @@ _EBCDICSwapLFNL(UConverterSharedData *sharedData, UErrorCode *pErrorCode) {
      * - a converter name string with the swap option appended
      */
     size=
-        mbcsTable->countStates*1024+
+        mbcsTable->गिनती_States*1024+
         sizeofFromUBytes+
-        UCNV_MAX_CONVERTER_NAME_LENGTH+20;
+        UCNV_MAX_CONVERTER_NAME_लंबाई+20;
     p = static_cast<uint8_t*>(uprv_malloc(size));
-    if(p==nullptr) {
+    अगर(p==nullptr) {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return false;
+        वापस false;
     }
 
     /* copy and modify the to-Unicode state table */
     newStateTable = reinterpret_cast<int32_t(*)[256]>(p);
-    uprv_memcpy(newStateTable, mbcsTable->stateTable, mbcsTable->countStates*1024);
+    uprv_memcpy(newStateTable, mbcsTable->stateTable, mbcsTable->गिनती_States*1024);
 
     newStateTable[0][EBCDIC_LF]=MBCS_ENTRY_FINAL(0, MBCS_STATE_VALID_DIRECT_16, U_NL);
     newStateTable[0][EBCDIC_NL]=MBCS_ENTRY_FINAL(0, MBCS_STATE_VALID_DIRECT_16, U_LF);
 
     /* copy and modify the from-Unicode result table */
-    newResults = reinterpret_cast<uint16_t*>(newStateTable[mbcsTable->countStates]);
+    newResults = reinterpret_cast<uint16_t*>(newStateTable[mbcsTable->गिनती_States]);
     uprv_memcpy(newResults, bytes, sizeofFromUBytes);
 
     /* conveniently, the table access macros work on the left side of expressions */
-    if(mbcsTable->outputType==MBCS_OUTPUT_1) {
-        MBCS_SINGLE_RESULT_FROM_U(table, newResults, U_LF)=EBCDIC_RT_NL;
-        MBCS_SINGLE_RESULT_FROM_U(table, newResults, U_NL)=EBCDIC_RT_LF;
-    } else /* MBCS_OUTPUT_2_SISO */ {
+    अगर(mbcsTable->outputType==MBCS_OUTPUT_1) {
+        MBCS_SINGLE_परिणाम_FROM_U(table, newResults, U_LF)=EBCDIC_RT_NL;
+        MBCS_SINGLE_परिणाम_FROM_U(table, newResults, U_NL)=EBCDIC_RT_LF;
+    } अन्यथा /* MBCS_OUTPUT_2_SISO */ {
         stage2Entry=MBCS_STAGE_2_FROM_U(table, U_LF);
-        MBCS_VALUE_2_FROM_STAGE_2(newResults, stage2Entry, U_LF)=EBCDIC_NL;
+        MBCS_मूल्य_2_FROM_STAGE_2(newResults, stage2Entry, U_LF)=EBCDIC_NL;
 
         stage2Entry=MBCS_STAGE_2_FROM_U(table, U_NL);
-        MBCS_VALUE_2_FROM_STAGE_2(newResults, stage2Entry, U_NL)=EBCDIC_LF;
+        MBCS_मूल्य_2_FROM_STAGE_2(newResults, stage2Entry, U_NL)=EBCDIC_LF;
     }
 
     /* set the canonical converter name */
-    name = reinterpret_cast<char*>(newResults) + sizeofFromUBytes;
-    uprv_strcpy(name, sharedData->staticData->name);
+    name = reinterpret_cast<अक्षर*>(newResults) + sizeofFromUBytes;
+    uprv_strcpy(name, shared_तथ्य->static_तथ्य->name);
     uprv_strcat(name, UCNV_SWAP_LFNL_OPTION_STRING);
 
     /* set the pointers */
     icu::umtx_lock(nullptr);
-    if(mbcsTable->swapLFNLStateTable==nullptr) {
+    अगर(mbcsTable->swapLFNLStateTable==nullptr) {
         mbcsTable->swapLFNLStateTable=newStateTable;
         mbcsTable->swapLFNLFromUnicodeBytes = reinterpret_cast<uint8_t*>(newResults);
         mbcsTable->swapLFNLName=name;
@@ -1394,19 +1394,19 @@ _EBCDICSwapLFNL(UConverterSharedData *sharedData, UErrorCode *pErrorCode) {
     icu::umtx_unlock(nullptr);
 
     /* release the allocated memory if another thread beat us to it */
-    if(newStateTable!=nullptr) {
+    अगर(newStateTable!=nullptr) {
         uprv_free(newStateTable);
     }
-    return true;
+    वापस true;
 }
 
 /* reconstitute omitted fromUnicode data ------------------------------------ */
 
 /* for details, compare with genmbcs.c MBCSAddFromUnicode() and transformEUC() */
-static UBool U_CALLCONV
-writeStage3Roundtrip(const void *context, uint32_t value, UChar32 codePoints[32]) {
+अटल UBool U_CALLCONV
+writeStage3Roundtrip(स्थिर व्योम *context, uint32_t value, UChar32 codePoints[32]) {
     UConverterMBCSTable *mbcsTable=(UConverterMBCSTable *)context;
-    const uint16_t *table;
+    स्थिर uint16_t *table;
     uint32_t *stage2;
     uint8_t *bytes, *p;
     UChar32 c;
@@ -1416,39 +1416,39 @@ writeStage3Roundtrip(const void *context, uint32_t value, UChar32 codePoints[32]
     bytes = const_cast<uint8_t*>(mbcsTable->fromUnicodeBytes);
 
     /* for EUC outputTypes, modify the value like genmbcs.c's transformEUC() */
-    switch(mbcsTable->outputType) {
-    case MBCS_OUTPUT_3_EUC:
-        if(value<=0xffff) {
+    चयन(mbcsTable->outputType) {
+    हाल MBCS_OUTPUT_3_EUC:
+        अगर(value<=0xffff) {
             /* short sequences are stored directly */
             /* code set 0 or 1 */
-        } else if(value<=0x8effff) {
+        } अन्यथा अगर(value<=0x8effff) {
             /* code set 2 */
             value&=0x7fff;
-        } else /* first byte is 0x8f */ {
+        } अन्यथा /* first byte is 0x8f */ {
             /* code set 3 */
             value&=0xff7f;
         }
-        break;
-    case MBCS_OUTPUT_4_EUC:
-        if(value<=0xffffff) {
+        अवरोध;
+    हाल MBCS_OUTPUT_4_EUC:
+        अगर(value<=0xffffff) {
             /* short sequences are stored directly */
             /* code set 0 or 1 */
-        } else if(value<=0x8effffff) {
+        } अन्यथा अगर(value<=0x8effffff) {
             /* code set 2 */
             value&=0x7fffff;
-        } else /* first byte is 0x8f */ {
+        } अन्यथा /* first byte is 0x8f */ {
             /* code set 3 */
             value&=0xff7fff;
         }
-        break;
-    default:
-        break;
+        अवरोध;
+    शेष:
+        अवरोध;
     }
 
-    for(i=0; i<=0x1f; ++value, ++i) {
+    क्रम(i=0; i<=0x1f; ++value, ++i) {
         c=codePoints[i];
-        if(c<0) {
-            continue;
+        अगर(c<0) {
+            जारी;
         }
 
         /* locate the stage 2 & 3 data */
@@ -1457,72 +1457,72 @@ writeStage3Roundtrip(const void *context, uint32_t value, UChar32 codePoints[32]
         st3 = static_cast<int32_t>(static_cast<uint16_t>(*stage2)) * 16 + (c & 0xf);
 
         /* write the codepage bytes into stage 3 */
-        switch(mbcsTable->outputType) {
-        case MBCS_OUTPUT_3:
-        case MBCS_OUTPUT_4_EUC:
+        चयन(mbcsTable->outputType) {
+        हाल MBCS_OUTPUT_3:
+        हाल MBCS_OUTPUT_4_EUC:
             p+=st3*3;
             p[0] = static_cast<uint8_t>(value >> 16);
             p[1] = static_cast<uint8_t>(value >> 8);
             p[2] = static_cast<uint8_t>(value);
-            break;
-        case MBCS_OUTPUT_4:
+            अवरोध;
+        हाल MBCS_OUTPUT_4:
             reinterpret_cast<uint32_t*>(p)[st3] = value;
-            break;
-        default:
+            अवरोध;
+        शेष:
             /* 2 bytes per character */
             reinterpret_cast<uint16_t*>(p)[st3] = static_cast<uint16_t>(value);
-            break;
+            अवरोध;
         }
 
         /* set the roundtrip flag */
         *stage2|=(1UL<<(16+(c&0xf)));
     }
-    return true;
+    वापस true;
  }
 
-static void
-reconstituteData(UConverterMBCSTable *mbcsTable,
-                 uint32_t stage1Length, uint32_t stage2Length,
-                 uint32_t fullStage2Length,  /* lengths are numbers of units, not bytes */
+अटल व्योम
+reconstitute_तथ्य(UConverterMBCSTable *mbcsTable,
+                 uint32_t stage1_लंबाई, uint32_t stage2_लंबाई,
+                 uint32_t full_Stage2_लंबाई,  /* lengths are numbers of units, not bytes */
                  UErrorCode *pErrorCode) {
     uint16_t *stage1;
     uint32_t *stage2;
-    uint32_t dataLength=stage1Length*2+fullStage2Length*4+mbcsTable->fromUBytesLength;
-    mbcsTable->reconstitutedData = static_cast<uint8_t*>(uprv_malloc(dataLength));
-    if(mbcsTable->reconstitutedData==nullptr) {
+    uint32_t तथ्य_लंबाई=stage1_लंबाई*2+full_Stage2_लंबाई*4+mbcsTable->from_UBytes_लंबाई;
+    mbcsTable->reconstituted_तथ्य = static_cast<uint8_t*>(uprv_malloc(तथ्य_लंबाई));
+    अगर(mbcsTable->reconstituted_तथ्य==nullptr) {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return;
+        वापस;
     }
-    uprv_memset(mbcsTable->reconstitutedData, 0, dataLength);
+    uprv_memset(mbcsTable->reconstituted_तथ्य, 0, तथ्य_लंबाई);
 
     /* copy existing data and reroute the pointers */
-    stage1 = reinterpret_cast<uint16_t*>(mbcsTable->reconstitutedData);
-    uprv_memcpy(stage1, mbcsTable->fromUnicodeTable, stage1Length*2);
+    stage1 = reinterpret_cast<uint16_t*>(mbcsTable->reconstituted_तथ्य);
+    uprv_memcpy(stage1, mbcsTable->fromUnicodeTable, stage1_लंबाई*2);
 
-    stage2 = reinterpret_cast<uint32_t*>(stage1 + stage1Length);
-    uprv_memcpy(stage2+(fullStage2Length-stage2Length),
-                mbcsTable->fromUnicodeTable+stage1Length,
-                stage2Length*4);
+    stage2 = reinterpret_cast<uint32_t*>(stage1 + stage1_लंबाई);
+    uprv_memcpy(stage2+(full_Stage2_लंबाई-stage2_लंबाई),
+                mbcsTable->fromUnicodeTable+stage1_लंबाई,
+                stage2_लंबाई*4);
 
     mbcsTable->fromUnicodeTable=stage1;
-    mbcsTable->fromUnicodeBytes = reinterpret_cast<uint8_t*>(stage2 + fullStage2Length);
+    mbcsTable->fromUnicodeBytes = reinterpret_cast<uint8_t*>(stage2 + full_Stage2_लंबाई);
 
     /* indexes into stage 2 count from the bottom of the fromUnicodeTable */
     stage2 = reinterpret_cast<uint32_t*>(stage1);
 
     /* reconstitute the initial part of stage 2 from the mbcsIndex */
     {
-        int32_t stageUTF8Length = (static_cast<int32_t>(mbcsTable->maxFastUChar) + 1) >> 6;
-        int32_t stageUTF8Index=0;
+        int32_t stage_UTF8_लंबाई = (static_cast<int32_t>(mbcsTable->maxFastUChar) + 1) >> 6;
+        int32_t stage_UTF8_सूचकांक=0;
         int32_t st1, st2, st3, i;
 
-        for(st1=0; stageUTF8Index<stageUTF8Length; ++st1) {
+        क्रम(st1=0; stage_UTF8_सूचकांक<stage_UTF8_लंबाई; ++st1) {
             st2=stage1[st1];
-            if (st2 != static_cast<int32_t>(stage1Length) / 2) {
+            अगर (st2 != static_cast<int32_t>(stage1_लंबाई) / 2) {
                 /* each stage 2 block has 64 entries corresponding to 16 entries in the mbcsIndex */
-                for(i=0; i<16; ++i) {
-                    st3=mbcsTable->mbcsIndex[stageUTF8Index++];
-                    if(st3!=0) {
+                क्रम(i=0; i<16; ++i) {
+                    st3=mbcsTable->mbcs_सूचकांक[stage_UTF8_सूचकांक++];
+                    अगर(st3!=0) {
                         /* an stage 2 entry's index is per stage 3 16-block, not per stage 3 entry */
                         st3>>=4;
                         /*
@@ -1533,14 +1533,14 @@ reconstituteData(UConverterMBCSTable *mbcsTable,
                         stage2[st2++]=st3++;
                         stage2[st2++]=st3++;
                         stage2[st2++]=st3;
-                    } else {
+                    } अन्यथा {
                         /* no stage 3 block, skip */
                         st2+=4;
                     }
                 }
-            } else {
+            } अन्यथा {
                 /* no stage 2 block, skip */
-                stageUTF8Index+=16;
+                stage_UTF8_सूचकांक+=16;
             }
         }
     }
@@ -1551,103 +1551,103 @@ reconstituteData(UConverterMBCSTable *mbcsTable,
 
 /* MBCS setup functions ----------------------------------------------------- */
 
-static void U_CALLCONV
-ucnv_MBCSLoad(UConverterSharedData *sharedData,
+अटल व्योम U_CALLCONV
+ucnv_MBCSLoad(UConverter_Shared_तथ्य *shared_तथ्य,
           UConverterLoadArgs *pArgs,
-          const uint8_t *raw,
+          स्थिर uint8_t *raw,
           UErrorCode *pErrorCode) {
     UDataInfo info;
-    UConverterMBCSTable *mbcsTable=&sharedData->mbcs;
+    UConverterMBCSTable *mbcsTable=&shared_तथ्य->mbcs;
     _MBCSHeader *header=(_MBCSHeader *)raw;
     uint32_t offset;
-    uint32_t headerLength;
+    uint32_t header_लंबाई;
     UBool noFromU=false;
 
-    if(header->version[0]==4) {
-        headerLength=MBCS_HEADER_V4_LENGTH;
-    } else if(header->version[0]==5 && header->version[1]>=3 &&
+    अगर(header->version[0]==4) {
+        header_लंबाई=MBCS_HEADER_V4_लंबाई;
+    } अन्यथा अगर(header->version[0]==5 && header->version[1]>=3 &&
               (header->options&MBCS_OPT_UNKNOWN_INCOMPATIBLE_MASK)==0) {
-        headerLength=header->options&MBCS_OPT_LENGTH_MASK;
+        header_लंबाई=header->options&MBCS_OPT_लंबाई_MASK;
         noFromU = static_cast<UBool>((header->options & MBCS_OPT_NO_FROM_U) != 0);
-    } else {
+    } अन्यथा {
         *pErrorCode=U_INVALID_TABLE_FORMAT;
-        return;
+        वापस;
     }
 
     mbcsTable->outputType = static_cast<uint8_t>(header->flags);
-    if(noFromU && mbcsTable->outputType==MBCS_OUTPUT_1) {
+    अगर(noFromU && mbcsTable->outputType==MBCS_OUTPUT_1) {
         *pErrorCode=U_INVALID_TABLE_FORMAT;
-        return;
+        वापस;
     }
 
     /* extension data, header version 4.2 and higher */
     offset=header->flags>>8;
-    if(offset!=0) {
-        mbcsTable->extIndexes = reinterpret_cast<const int32_t*>(raw + offset);
+    अगर(offset!=0) {
+        mbcsTable->extIndexes = reinterpret_cast<स्थिर int32_t*>(raw + offset);
     }
 
-    if(mbcsTable->outputType==MBCS_OUTPUT_EXT_ONLY) {
+    अगर(mbcsTable->outputType==MBCS_OUTPUT_EXT_ONLY) {
         UConverterLoadArgs args=UCNV_LOAD_ARGS_INITIALIZER;
-        UConverterSharedData *baseSharedData;
-        const int32_t *extIndexes;
-        const char *baseName;
+        UConverter_Shared_तथ्य *base_Shared_तथ्य;
+        स्थिर int32_t *extIndexes;
+        स्थिर अक्षर *baseName;
 
         /* extension-only file, load the base table and set values appropriately */
-        if((extIndexes=mbcsTable->extIndexes)==nullptr) {
+        अगर((extIndexes=mbcsTable->extIndexes)==nullptr) {
             /* extension-only file without extension */
             *pErrorCode=U_INVALID_TABLE_FORMAT;
-            return;
+            वापस;
         }
 
-        if(pArgs->nestedLoads!=1) {
+        अगर(pArgs->nestedLoads!=1) {
             /* an extension table must not be loaded as a base table */
             *pErrorCode=U_INVALID_TABLE_FILE;
-            return;
+            वापस;
         }
 
         /* load the base table */
-        baseName = reinterpret_cast<const char*>(header) + headerLength * 4;
-        if(0==uprv_strcmp(baseName, sharedData->staticData->name)) {
+        baseName = reinterpret_cast<स्थिर अक्षर*>(header) + header_लंबाई * 4;
+        अगर(0==uprv_strcmp(baseName, shared_तथ्य->static_तथ्य->name)) {
             /* forbid loading this same extension-only file */
             *pErrorCode=U_INVALID_TABLE_FORMAT;
-            return;
+            वापस;
         }
 
         /* TODO parse package name out of the prefix of the base name in the extension .cnv file? */
-        args.size=sizeof(UConverterLoadArgs);
+        args.size=माप(UConverterLoadArgs);
         args.nestedLoads=2;
         args.onlyTestIsLoadable=pArgs->onlyTestIsLoadable;
         args.reserved=pArgs->reserved;
         args.options=pArgs->options;
         args.pkg=pArgs->pkg;
         args.name=baseName;
-        baseSharedData=ucnv_load(&args, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
-            return;
+        base_Shared_तथ्य=ucnv_load(&args, pErrorCode);
+        अगर(U_FAILURE(*pErrorCode)) {
+            वापस;
         }
-        if( baseSharedData->staticData->conversionType!=UCNV_MBCS ||
-            baseSharedData->mbcs.baseSharedData!=nullptr
+        अगर( base_Shared_तथ्य->static_तथ्य->conversionType!=UCNV_MBCS ||
+            base_Shared_तथ्य->mbcs.base_Shared_तथ्य!=nullptr
         ) {
-            ucnv_unload(baseSharedData);
+            ucnv_unload(base_Shared_तथ्य);
             *pErrorCode=U_INVALID_TABLE_FORMAT;
-            return;
+            वापस;
         }
-        if(pArgs->onlyTestIsLoadable) {
+        अगर(pArgs->onlyTestIsLoadable) {
             /*
              * Exit as soon as we know that we can load the converter
              * and the format is valid and supported.
              * The worst that can happen in the following code is a memory
              * allocation error.
              */
-            ucnv_unload(baseSharedData);
-            return;
+            ucnv_unload(base_Shared_तथ्य);
+            वापस;
         }
 
         /* copy the base table data */
-        uprv_memcpy(mbcsTable, &baseSharedData->mbcs, sizeof(UConverterMBCSTable));
+        uprv_memcpy(mbcsTable, &base_Shared_तथ्य->mbcs, माप(UConverterMBCSTable));
 
         /* overwrite values with relevant ones for the extension converter */
-        mbcsTable->baseSharedData=baseSharedData;
+        mbcsTable->base_Shared_तथ्य=base_Shared_तथ्य;
         mbcsTable->extIndexes=extIndexes;
 
         /*
@@ -1665,23 +1665,23 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
          * The reconstitutedData must be deleted only when the base converter
          * is unloaded.
          */
-        mbcsTable->reconstitutedData=nullptr;
+        mbcsTable->reconstituted_तथ्य=nullptr;
 
         /*
          * Set a special, runtime-only outputType if the extension converter
          * is a DBCS version of a base converter that also maps single bytes.
          */
-        if( sharedData->staticData->conversionType==UCNV_DBCS ||
-                (sharedData->staticData->conversionType==UCNV_MBCS &&
-                 sharedData->staticData->minBytesPerChar>=2)
+        अगर( shared_तथ्य->static_तथ्य->conversionType==UCNV_DBCS ||
+                (shared_तथ्य->static_तथ्य->conversionType==UCNV_MBCS &&
+                 shared_तथ्य->static_तथ्य->minBytesPerChar>=2)
         ) {
-            if(baseSharedData->mbcs.outputType==MBCS_OUTPUT_2_SISO) {
+            अगर(base_Shared_तथ्य->mbcs.outputType==MBCS_OUTPUT_2_SISO) {
                 /* the base converter is SI/SO-stateful */
                 int32_t entry;
 
                 /* get the dbcs state from the state table entry for SO=0x0e */
                 entry=mbcsTable->stateTable[0][0xe];
-                if( MBCS_ENTRY_IS_FINAL(entry) &&
+                अगर( MBCS_ENTRY_IS_FINAL(entry) &&
                     MBCS_ENTRY_FINAL_ACTION(entry)==MBCS_STATE_CHANGE_ONLY &&
                     MBCS_ENTRY_FINAL_STATE(entry)!=0
                 ) {
@@ -1689,11 +1689,11 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
 
                     mbcsTable->outputType=MBCS_OUTPUT_DBCS_ONLY;
                 }
-            } else if(
-                baseSharedData->staticData->conversionType==UCNV_MBCS &&
-                baseSharedData->staticData->minBytesPerChar==1 &&
-                baseSharedData->staticData->maxBytesPerChar==2 &&
-                mbcsTable->countStates<=127
+            } अन्यथा अगर(
+                base_Shared_तथ्य->static_तथ्य->conversionType==UCNV_MBCS &&
+                base_Shared_तथ्य->static_तथ्य->minBytesPerChar==1 &&
+                base_Shared_तथ्य->static_तथ्य->maxBytesPerChar==2 &&
+                mbcsTable->गिनती_States<=127
             ) {
                 /* non-stateful base converter, need to modify the state table */
                 int32_t (*newStateTable)[256];
@@ -1701,31 +1701,31 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
                 int32_t i, count;
 
                 /* allocate a new state table and copy the base state table contents */
-                count=mbcsTable->countStates;
+                count=mbcsTable->गिनती_States;
                 newStateTable = static_cast<int32_t(*)[256]>(uprv_malloc((count + 1) * 1024));
-                if(newStateTable==nullptr) {
-                    ucnv_unload(baseSharedData);
+                अगर(newStateTable==nullptr) {
+                    ucnv_unload(base_Shared_तथ्य);
                     *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                    return;
+                    वापस;
                 }
 
                 uprv_memcpy(newStateTable, mbcsTable->stateTable, count*1024);
 
                 /* change all final single-byte entries to go to a new all-illegal state */
                 state=newStateTable[0];
-                for(i=0; i<256; ++i) {
-                    if(MBCS_ENTRY_IS_FINAL(state[i])) {
+                क्रम(i=0; i<256; ++i) {
+                    अगर(MBCS_ENTRY_IS_FINAL(state[i])) {
                         state[i]=MBCS_ENTRY_TRANSITION(count, 0);
                     }
                 }
 
                 /* build the new all-illegal state */
                 state=newStateTable[count];
-                for(i=0; i<256; ++i) {
+                क्रम(i=0; i<256; ++i) {
                     state[i]=MBCS_ENTRY_FINAL(0, MBCS_STATE_ILLEGAL, 0);
                 }
-                mbcsTable->stateTable=(const int32_t (*)[256])newStateTable;
-                mbcsTable->countStates = static_cast<uint8_t>(count + 1);
+                mbcsTable->stateTable=(स्थिर int32_t (*)[256])newStateTable;
+                mbcsTable->गिनती_States = static_cast<uint8_t>(count + 1);
                 mbcsTable->stateTableOwned=true;
 
                 mbcsTable->outputType=MBCS_OUTPUT_DBCS_ONLY;
@@ -1739,53 +1739,53 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
          * this is necessary because the static data unicodeMask, especially
          * the UCNV_HAS_SUPPLEMENTARY flag, is part of the base table data
          */
-    } else {
+    } अन्यथा {
         /* conversion file with a base table; an additional extension table is optional */
         /* make sure that the output type is known */
-        switch(mbcsTable->outputType) {
-        case MBCS_OUTPUT_1:
-        case MBCS_OUTPUT_2:
-        case MBCS_OUTPUT_3:
-        case MBCS_OUTPUT_4:
-        case MBCS_OUTPUT_3_EUC:
-        case MBCS_OUTPUT_4_EUC:
-        case MBCS_OUTPUT_2_SISO:
+        चयन(mbcsTable->outputType) {
+        हाल MBCS_OUTPUT_1:
+        हाल MBCS_OUTPUT_2:
+        हाल MBCS_OUTPUT_3:
+        हाल MBCS_OUTPUT_4:
+        हाल MBCS_OUTPUT_3_EUC:
+        हाल MBCS_OUTPUT_4_EUC:
+        हाल MBCS_OUTPUT_2_SISO:
             /* OK */
-            break;
-        default:
+            अवरोध;
+        शेष:
             *pErrorCode=U_INVALID_TABLE_FORMAT;
-            return;
+            वापस;
         }
-        if(pArgs->onlyTestIsLoadable) {
+        अगर(pArgs->onlyTestIsLoadable) {
             /*
              * Exit as soon as we know that we can load the converter
              * and the format is valid and supported.
              * The worst that can happen in the following code is a memory
              * allocation error.
              */
-            return;
+            वापस;
         }
 
-        mbcsTable->countStates = static_cast<uint8_t>(header->countStates);
-        mbcsTable->countToUFallbacks=header->countToUFallbacks;
-        mbcsTable->stateTable = reinterpret_cast<const int32_t(*)[256]>(raw + headerLength * 4);
-        mbcsTable->toUFallbacks = reinterpret_cast<const _MBCSToUFallback*>(mbcsTable->stateTable + header->countStates);
-        mbcsTable->unicodeCodeUnits = reinterpret_cast<const uint16_t*>(raw + header->offsetToUCodeUnits);
+        mbcsTable->गिनती_States = static_cast<uint8_t>(header->गिनती_States);
+        mbcsTable->गिनती_To_UFallbacks=header->गिनती_To_UFallbacks;
+        mbcsTable->stateTable = reinterpret_cast<स्थिर int32_t(*)[256]>(raw + header_लंबाई * 4);
+        mbcsTable->toUFallbacks = reinterpret_cast<स्थिर _MBCSToUFallback*>(mbcsTable->stateTable + header->गिनती_States);
+        mbcsTable->unicodeCodeUnits = reinterpret_cast<स्थिर uint16_t*>(raw + header->offsetToUCodeUnits);
 
-        mbcsTable->fromUnicodeTable = reinterpret_cast<const uint16_t*>(raw + header->offsetFromUTable);
+        mbcsTable->fromUnicodeTable = reinterpret_cast<स्थिर uint16_t*>(raw + header->offsetFromUTable);
         mbcsTable->fromUnicodeBytes = raw + header->offsetFromUBytes;
-        mbcsTable->fromUBytesLength=header->fromUBytesLength;
+        mbcsTable->from_UBytes_लंबाई=header->from_UBytes_लंबाई;
 
         /*
          * converter versions 6.1 and up contain a unicodeMask that is
          * used here to select the most efficient function implementations
          */
-        info.size=sizeof(UDataInfo);
-        udata_getInfo((UDataMemory *)sharedData->dataMemory, &info);
-        if(info.formatVersion[0]>6 || (info.formatVersion[0]==6 && info.formatVersion[1]>=1)) {
+        info.size=माप(UDataInfo);
+        udata_getInfo((UDataMemory *)shared_तथ्य->तथ्य_Memory, &info);
+        अगर(info.formatVersion[0]>6 || (info.formatVersion[0]==6 && info.formatVersion[1]>=1)) {
             /* mask off possible future extensions to be safe */
-            mbcsTable->unicodeMask = static_cast<uint8_t>(sharedData->staticData->unicodeMask & 3);
-        } else {
+            mbcsTable->unicodeMask = static_cast<uint8_t>(shared_तथ्य->static_तथ्य->unicodeMask & 3);
+        } अन्यथा {
             /* for older versions, assume worst case: contains anything possible (prevent over-optimizations) */
             mbcsTable->unicodeMask=UCNV_HAS_SUPPLEMENTARY|UCNV_HAS_SURROGATES;
         }
@@ -1798,36 +1798,36 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
          * The implementation does not handle mapping tables with entries for
          * unpaired surrogates.
          */
-        if( header->version[1]>=3 &&
+        अगर( header->version[1]>=3 &&
             (mbcsTable->unicodeMask&UCNV_HAS_SURROGATES)==0 &&
-            (mbcsTable->countStates==1 ?
+            (mbcsTable->गिनती_States==1 ?
                 (header->version[2]>=(SBCS_FAST_MAX>>8)) :
                 (header->version[2]>=(MBCS_FAST_MAX>>8))
             )
         ) {
             mbcsTable->utf8Friendly=true;
 
-            if(mbcsTable->countStates==1) {
+            अगर(mbcsTable->गिनती_States==1) {
                 /*
                  * SBCS: Stage 3 is allocated in 64-entry blocks for U+0000..SBCS_FAST_MAX or higher.
                  * Build a table with indexes to each block, to be used instead of
                  * the regular stage 1/2 table.
                  */
                 int32_t i;
-                for(i=0; i<(SBCS_FAST_LIMIT>>6); ++i) {
-                    mbcsTable->sbcsIndex[i]=mbcsTable->fromUnicodeTable[mbcsTable->fromUnicodeTable[i>>4]+((i<<2)&0x3c)];
+                क्रम(i=0; i<(SBCS_FAST_LIMIT>>6); ++i) {
+                    mbcsTable->sbcs_सूचकांक[i]=mbcsTable->fromUnicodeTable[mbcsTable->fromUnicodeTable[i>>4]+((i<<2)&0x3c)];
                 }
                 /* set SBCS_FAST_MAX to reflect the reach of sbcsIndex[] even if header->version[2]>(SBCS_FAST_MAX>>8) */
                 mbcsTable->maxFastUChar=SBCS_FAST_MAX;
-            } else {
+            } अन्यथा {
                 /*
                  * MBCS: Stage 3 is allocated in 64-entry blocks for U+0000..MBCS_FAST_MAX or higher.
                  * The .cnv file is prebuilt with an additional stage table with indexes
                  * to each block.
                  */
-                mbcsTable->mbcsIndex = reinterpret_cast<const uint16_t*>(
+                mbcsTable->mbcs_सूचकांक = reinterpret_cast<स्थिर uint16_t*>(
                     mbcsTable->fromUnicodeBytes +
-                     (noFromU ? 0 : mbcsTable->fromUBytesLength));
+                     (noFromU ? 0 : mbcsTable->from_UBytes_लंबाई));
                 mbcsTable->maxFastUChar = (static_cast<char16_t>(header->version[2]) << 8) | 0xff;
             }
         }
@@ -1837,37 +1837,37 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
             uint32_t asciiRoundtrips=0xffffffff;
             int32_t i;
 
-            for(i=0; i<0x80; ++i) {
-                if(mbcsTable->stateTable[0][i]!=MBCS_ENTRY_FINAL(0, MBCS_STATE_VALID_DIRECT_16, i)) {
+            क्रम(i=0; i<0x80; ++i) {
+                अगर(mbcsTable->stateTable[0][i]!=MBCS_ENTRY_FINAL(0, MBCS_STATE_VALID_DIRECT_16, i)) {
                     asciiRoundtrips &= ~(static_cast<uint32_t>(1) << (i >> 2));
                 }
             }
             mbcsTable->asciiRoundtrips=asciiRoundtrips;
         }
 
-        if(noFromU) {
-            uint32_t stage1Length=
+        अगर(noFromU) {
+            uint32_t stage1_लंबाई=
                 mbcsTable->unicodeMask&UCNV_HAS_SUPPLEMENTARY ?
                     0x440 : 0x40;
-            uint32_t stage2Length=
+            uint32_t stage2_लंबाई=
                 (header->offsetFromUBytes-header->offsetFromUTable)/4-
-                stage1Length/2;
-            reconstituteData(mbcsTable, stage1Length, stage2Length, header->fullStage2Length, pErrorCode);
+                stage1_लंबाई/2;
+            reconstitute_तथ्य(mbcsTable, stage1_लंबाई, stage2_लंबाई, header->full_Stage2_लंबाई, pErrorCode);
         }
     }
 
     /* Set the impl pointer here so that it is set for both extension-only and base tables. */
-    if(mbcsTable->utf8Friendly) {
-        if(mbcsTable->countStates==1) {
-            sharedData->impl=&_SBCSUTF8Impl;
-        } else {
-            if(mbcsTable->outputType==MBCS_OUTPUT_2) {
-                sharedData->impl=&_DBCSUTF8Impl;
+    अगर(mbcsTable->utf8Friendly) {
+        अगर(mbcsTable->गिनती_States==1) {
+            shared_तथ्य->impl=&_SBCSUTF8Impl;
+        } अन्यथा {
+            अगर(mbcsTable->outputType==MBCS_OUTPUT_2) {
+                shared_तथ्य->impl=&_DBCSUTF8Impl;
             }
         }
     }
 
-    if(mbcsTable->outputType==MBCS_OUTPUT_DBCS_ONLY || mbcsTable->outputType==MBCS_OUTPUT_2_SISO) {
+    अगर(mbcsTable->outputType==MBCS_OUTPUT_DBCS_ONLY || mbcsTable->outputType==MBCS_OUTPUT_2_SISO) {
         /*
          * MBCS_OUTPUT_DBCS_ONLY: No SBCS mappings, therefore ASCII does not roundtrip.
          * MBCS_OUTPUT_2_SISO: Bypass the ASCII fastpath to handle prevLength correctly.
@@ -1876,46 +1876,46 @@ ucnv_MBCSLoad(UConverterSharedData *sharedData,
     }
 }
 
-static void U_CALLCONV
-ucnv_MBCSUnload(UConverterSharedData *sharedData) {
-    UConverterMBCSTable *mbcsTable=&sharedData->mbcs;
+अटल व्योम U_CALLCONV
+ucnv_MBCSUnload(UConverter_Shared_तथ्य *shared_तथ्य) {
+    UConverterMBCSTable *mbcsTable=&shared_तथ्य->mbcs;
 
-    if(mbcsTable->swapLFNLStateTable!=nullptr) {
+    अगर(mbcsTable->swapLFNLStateTable!=nullptr) {
         uprv_free(mbcsTable->swapLFNLStateTable);
     }
-    if(mbcsTable->stateTableOwned) {
-        uprv_free((void *)mbcsTable->stateTable);
+    अगर(mbcsTable->stateTableOwned) {
+        uprv_free((व्योम *)mbcsTable->stateTable);
     }
-    if(mbcsTable->baseSharedData!=nullptr) {
-        ucnv_unload(mbcsTable->baseSharedData);
+    अगर(mbcsTable->base_Shared_तथ्य!=nullptr) {
+        ucnv_unload(mbcsTable->base_Shared_तथ्य);
     }
-    if(mbcsTable->reconstitutedData!=nullptr) {
-        uprv_free(mbcsTable->reconstitutedData);
+    अगर(mbcsTable->reconstituted_तथ्य!=nullptr) {
+        uprv_free(mbcsTable->reconstituted_तथ्य);
     }
 }
 
-static void U_CALLCONV
+अटल व्योम U_CALLCONV
 ucnv_MBCSOpen(UConverter *cnv,
               UConverterLoadArgs *pArgs,
               UErrorCode *pErrorCode) {
     UConverterMBCSTable *mbcsTable;
-    const int32_t *extIndexes;
+    स्थिर int32_t *extIndexes;
     uint8_t outputType;
     int8_t maxBytesPerUChar;
 
-    if(pArgs->onlyTestIsLoadable) {
-        return;
+    अगर(pArgs->onlyTestIsLoadable) {
+        वापस;
     }
 
-    mbcsTable=&cnv->sharedData->mbcs;
+    mbcsTable=&cnv->shared_तथ्य->mbcs;
     outputType=mbcsTable->outputType;
 
-    if(outputType==MBCS_OUTPUT_DBCS_ONLY) {
+    अगर(outputType==MBCS_OUTPUT_DBCS_ONLY) {
         /* the swaplfnl option does not apply, remove it */
         cnv->options=pArgs->options&=~UCNV_OPTION_SWAP_LFNL;
     }
 
-    if((pArgs->options&UCNV_OPTION_SWAP_LFNL)!=0) {
+    अगर((pArgs->options&UCNV_OPTION_SWAP_LFNL)!=0) {
         /* do this because double-checked locking is broken */
         UBool isCached;
 
@@ -1923,10 +1923,10 @@ ucnv_MBCSOpen(UConverter *cnv,
         isCached=mbcsTable->swapLFNLStateTable!=nullptr;
         icu::umtx_unlock(nullptr);
 
-        if(!isCached) {
-            if(!_EBCDICSwapLFNL(cnv->sharedData, pErrorCode)) {
-                if(U_FAILURE(*pErrorCode)) {
-                    return; /* something went wrong */
+        अगर(!isCached) {
+            अगर(!_EBCDICSwapLFNL(cnv->shared_तथ्य, pErrorCode)) {
+                अगर(U_FAILURE(*pErrorCode)) {
+                    वापस; /* something went wrong */
                 }
 
                 /* the option does not apply, remove it */
@@ -1935,40 +1935,40 @@ ucnv_MBCSOpen(UConverter *cnv,
         }
     }
 
-    if(uprv_strstr(pArgs->name, "18030")!=nullptr) {
-        if(uprv_strstr(pArgs->name, "gb18030")!=nullptr || uprv_strstr(pArgs->name, "GB18030")!=nullptr) {
+    अगर(uprv_strstr(pArgs->name, "18030")!=nullptr) {
+        अगर(uprv_strstr(pArgs->name, "gb18030")!=nullptr || uprv_strstr(pArgs->name, "GB18030")!=nullptr) {
             /* set a flag for GB 18030 mode, which changes the callback behavior */
             cnv->options|=_MBCS_OPTION_GB18030;
         }
-    } else if((uprv_strstr(pArgs->name, "KEIS")!=nullptr) || (uprv_strstr(pArgs->name, "keis")!=nullptr)) {
+    } अन्यथा अगर((uprv_strstr(pArgs->name, "KEIS")!=nullptr) || (uprv_strstr(pArgs->name, "keis")!=nullptr)) {
         /* set a flag for KEIS converter, which changes the SI/SO character sequence */
         cnv->options|=_MBCS_OPTION_KEIS;
-    } else if((uprv_strstr(pArgs->name, "JEF")!=nullptr) || (uprv_strstr(pArgs->name, "jef")!=nullptr)) {
+    } अन्यथा अगर((uprv_strstr(pArgs->name, "JEF")!=nullptr) || (uprv_strstr(pArgs->name, "jef")!=nullptr)) {
         /* set a flag for JEF converter, which changes the SI/SO character sequence */
         cnv->options|=_MBCS_OPTION_JEF;
-    } else if((uprv_strstr(pArgs->name, "JIPS")!=nullptr) || (uprv_strstr(pArgs->name, "jips")!=nullptr)) {
+    } अन्यथा अगर((uprv_strstr(pArgs->name, "JIPS")!=nullptr) || (uprv_strstr(pArgs->name, "jips")!=nullptr)) {
         /* set a flag for JIPS converter, which changes the SI/SO character sequence */
         cnv->options|=_MBCS_OPTION_JIPS;
     }
 
     /* fix maxBytesPerUChar depending on outputType and options etc. */
-    if(outputType==MBCS_OUTPUT_2_SISO) {
+    अगर(outputType==MBCS_OUTPUT_2_SISO) {
         cnv->maxBytesPerUChar=3; /* SO+DBCS */
     }
 
     extIndexes=mbcsTable->extIndexes;
-    if(extIndexes!=nullptr) {
+    अगर(extIndexes!=nullptr) {
         maxBytesPerUChar = static_cast<int8_t>(UCNV_GET_MAX_BYTES_PER_UCHAR(extIndexes));
-        if(outputType==MBCS_OUTPUT_2_SISO) {
+        अगर(outputType==MBCS_OUTPUT_2_SISO) {
             ++maxBytesPerUChar; /* SO + multiple DBCS */
         }
 
-        if(maxBytesPerUChar>cnv->maxBytesPerUChar) {
+        अगर(maxBytesPerUChar>cnv->maxBytesPerUChar) {
             cnv->maxBytesPerUChar=maxBytesPerUChar;
         }
     }
 
-#if 0
+#अगर 0
     /*
      * documentation of UConverter fields used for status
      * all of these fields are (re)set to 0 by ucnv_bld.c and ucnv_reset()
@@ -1982,17 +1982,17 @@ ucnv_MBCSOpen(UConverter *cnv,
     /* fromUnicode */
     cnv->fromUChar32=0;
     cnv->fromUnicodeStatus=1;   /* prevLength */
-#endif
+#पूर्ण_अगर
 }
 
 U_CDECL_BEGIN
 
-static const char* U_CALLCONV
-ucnv_MBCSGetName(const UConverter *cnv) {
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0 && cnv->sharedData->mbcs.swapLFNLName!=nullptr) {
-        return cnv->sharedData->mbcs.swapLFNLName;
-    } else {
-        return cnv->sharedData->staticData->name;
+अटल स्थिर अक्षर* U_CALLCONV
+ucnv_MBCSGetName(स्थिर UConverter *cnv) {
+    अगर((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0 && cnv->shared_तथ्य->mbcs.swapLFNLName!=nullptr) {
+        वापस cnv->shared_तथ्य->mbcs.swapLFNLName;
+    } अन्यथा {
+        वापस cnv->shared_तथ्य->static_तथ्य->name;
     }
 }
 U_CDECL_END
@@ -2000,47 +2000,47 @@ U_CDECL_END
 
 /* MBCS-to-Unicode conversion functions ------------------------------------- */
 
-static UChar32 U_CALLCONV
+अटल UChar32 U_CALLCONV
 ucnv_MBCSGetFallback(UConverterMBCSTable *mbcsTable, uint32_t offset) {
-    const _MBCSToUFallback *toUFallbacks;
+    स्थिर _MBCSToUFallback *toUFallbacks;
     uint32_t i, start, limit;
 
-    limit=mbcsTable->countToUFallbacks;
-    if(limit>0) {
+    limit=mbcsTable->गिनती_To_UFallbacks;
+    अगर(limit>0) {
         /* do a binary search for the fallback mapping */
         toUFallbacks=mbcsTable->toUFallbacks;
         start=0;
-        while(start<limit-1) {
+        जबतक(start<limit-1) {
             i=(start+limit)/2;
-            if(offset<toUFallbacks[i].offset) {
+            अगर(offset<toUFallbacks[i].offset) {
                 limit=i;
-            } else {
+            } अन्यथा {
                 start=i;
             }
         }
 
         /* did we really find it? */
-        if(offset==toUFallbacks[start].offset) {
-            return toUFallbacks[start].codePoint;
+        अगर(offset==toUFallbacks[start].offset) {
+            वापस toUFallbacks[start].codePoint;
         }
     }
 
-    return 0xfffe;
+    वापस 0xfffe;
 }
 
 /* This version of ucnv_MBCSToUnicodeWithOffsets() is optimized for single-byte, single-state codepages. */
-static void
+अटल व्योम
 ucnv_MBCSSingleToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
                                 UErrorCode *pErrorCode) {
     UConverter *cnv;
-    const uint8_t *source, *sourceLimit;
+    स्थिर uint8_t *source, *sourceLimit;
     char16_t *target;
-    const char16_t *targetLimit;
+    स्थिर char16_t *targetLimit;
     int32_t *offsets;
 
-    const int32_t (*stateTable)[256];
+    स्थिर int32_t (*stateTable)[256];
 
-    int32_t sourceIndex;
+    int32_t source_सूचकांक;
 
     int32_t entry;
     char16_t c;
@@ -2048,23 +2048,23 @@ ucnv_MBCSSingleToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
 
     /* set up the local pointers */
     cnv=pArgs->converter;
-    source = reinterpret_cast<const uint8_t*>(pArgs->source);
-    sourceLimit = reinterpret_cast<const uint8_t*>(pArgs->sourceLimit);
+    source = reinterpret_cast<स्थिर uint8_t*>(pArgs->source);
+    sourceLimit = reinterpret_cast<स्थिर uint8_t*>(pArgs->sourceLimit);
     target=pArgs->target;
     targetLimit=pArgs->targetLimit;
     offsets=pArgs->offsets;
 
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        stateTable=(const int32_t (*)[256])cnv->sharedData->mbcs.swapLFNLStateTable;
-    } else {
-        stateTable=cnv->sharedData->mbcs.stateTable;
+    अगर((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
+        stateTable=(स्थिर int32_t (*)[256])cnv->shared_तथ्य->mbcs.swapLFNLStateTable;
+    } अन्यथा {
+        stateTable=cnv->shared_तथ्य->mbcs.stateTable;
     }
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex=0;
+    source_सूचकांक=0;
 
     /* conversion loop */
-    while(source<sourceLimit) {
+    जबतक(source<sourceLimit) {
         /*
          * This following test is to see if available input would overflow the output.
          * It does not catch output of more than one code unit that
@@ -2073,26 +2073,26 @@ ucnv_MBCSSingleToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
          * Therefore, those situations also test for overflows and will
          * then break the loop, too.
          */
-        if(target>=targetLimit) {
+        अगर(target>=targetLimit) {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *pErrorCode=U_बफर_OVERFLOW_ERROR;
+            अवरोध;
         }
 
         entry=stateTable[0][*source++];
         /* MBCS_ENTRY_IS_FINAL(entry) */
 
         /* test the most common case first */
-        if(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
+        अगर(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
             /* output BMP code point */
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-            if(offsets!=nullptr) {
-                *offsets++=sourceIndex;
+            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_मूल्य_16(entry));
+            अगर(offsets!=nullptr) {
+                *offsets++=source_सूचकांक;
             }
 
             /* normal end of action codes: prepare for a new character */
-            ++sourceIndex;
-            continue;
+            ++source_सूचकांक;
+            जारी;
         }
 
         /*
@@ -2100,77 +2100,77 @@ ucnv_MBCSSingleToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
          * the most common cases compared to a switch.
          */
         action = static_cast<uint8_t>(MBCS_ENTRY_FINAL_ACTION(entry));
-        if(action==MBCS_STATE_VALID_DIRECT_20 ||
+        अगर(action==MBCS_STATE_VALID_DIRECT_20 ||
            (action==MBCS_STATE_FALLBACK_DIRECT_20 && UCNV_TO_U_USE_FALLBACK(cnv))
         ) {
-            entry=MBCS_ENTRY_FINAL_VALUE(entry);
+            entry=MBCS_ENTRY_FINAL_मूल्य(entry);
             /* output surrogate pair */
             *target++ = static_cast<char16_t>(0xd800 | static_cast<char16_t>(entry >> 10));
-            if(offsets!=nullptr) {
-                *offsets++=sourceIndex;
+            अगर(offsets!=nullptr) {
+                *offsets++=source_सूचकांक;
             }
             c = static_cast<char16_t>(0xdc00 | static_cast<char16_t>(entry & 0x3ff));
-            if(target<targetLimit) {
+            अगर(target<targetLimit) {
                 *target++=c;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                अगर(offsets!=nullptr) {
+                    *offsets++=source_सूचकांक;
                 }
-            } else {
+            } अन्यथा {
                 /* target overflow */
-                cnv->UCharErrorBuffer[0]=c;
-                cnv->UCharErrorBufferLength=1;
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                cnv->UChar_Error_बफर[0]=c;
+                cnv->UChar_Error_बफर_लंबाई=1;
+                *pErrorCode=U_बफर_OVERFLOW_ERROR;
+                अवरोध;
             }
 
-            ++sourceIndex;
-            continue;
-        } else if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-            if(UCNV_TO_U_USE_FALLBACK(cnv)) {
+            ++source_सूचकांक;
+            जारी;
+        } अन्यथा अगर(action==MBCS_STATE_FALLBACK_DIRECT_16) {
+            अगर(UCNV_TO_U_USE_FALLBACK(cnv)) {
                 /* output BMP code point */
-                *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_मूल्य_16(entry));
+                अगर(offsets!=nullptr) {
+                    *offsets++=source_सूचकांक;
                 }
 
-                ++sourceIndex;
-                continue;
+                ++source_सूचकांक;
+                जारी;
             }
-        } else if(action==MBCS_STATE_UNASSIGNED) {
+        } अन्यथा अगर(action==MBCS_STATE_UNASSIGNED) {
             /* just fall through */
-        } else if(action==MBCS_STATE_ILLEGAL) {
+        } अन्यथा अगर(action==MBCS_STATE_ILLEGAL) {
             /* callback(illegal) */
             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-        } else {
+        } अन्यथा {
             /* reserved, must never occur */
-            ++sourceIndex;
-            continue;
+            ++source_सूचकांक;
+            जारी;
         }
 
-        if(U_FAILURE(*pErrorCode)) {
+        अगर(U_FAILURE(*pErrorCode)) {
             /* callback(illegal) */
-            break;
-        } else /* unassigned sequences indicated with byteIndex>0 */ {
+            अवरोध;
+        } अन्यथा /* unassigned sequences indicated with byteIndex>0 */ {
             /* try an extension mapping */
-            pArgs->source = reinterpret_cast<const char*>(source);
+            pArgs->source = reinterpret_cast<स्थिर अक्षर*>(source);
             cnv->toUBytes[0]=*(source-1);
-            cnv->toULength=_extToU(cnv, cnv->sharedData,
+            cnv->toULength=_extToU(cnv, cnv->shared_तथ्य,
                                     1, &source, sourceLimit,
                                     &target, targetLimit,
-                                    &offsets, sourceIndex,
-                                    pArgs->flush,
+                                    &offsets, source_सूचकांक,
+                                    pArgs->सफाई,
                                     pErrorCode);
-            sourceIndex += 1 + static_cast<int32_t>(source - reinterpret_cast<const uint8_t*>(pArgs->source));
+            source_सूचकांक += 1 + static_cast<int32_t>(source - reinterpret_cast<स्थिर uint8_t*>(pArgs->source));
 
-            if(U_FAILURE(*pErrorCode)) {
+            अगर(U_FAILURE(*pErrorCode)) {
                 /* not mappable or buffer overflow */
-                break;
+                अवरोध;
             }
         }
     }
 
     /* write back the updated pointers */
-    pArgs->source = reinterpret_cast<const char*>(source);
+    pArgs->source = reinterpret_cast<स्थिर अक्षर*>(source);
     pArgs->target=target;
     pArgs->offsets=offsets;
 }
@@ -2181,38 +2181,38 @@ ucnv_MBCSSingleToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
  * In addition to single-byte optimizations, the offset calculations
  * become much easier.
  */
-static void
+अटल व्योम
 ucnv_MBCSSingleToBMPWithOffsets(UConverterToUnicodeArgs *pArgs,
                             UErrorCode *pErrorCode) {
     UConverter *cnv;
-    const uint8_t *source, *sourceLimit, *lastSource;
+    स्थिर uint8_t *source, *sourceLimit, *lastSource;
     char16_t *target;
     int32_t targetCapacity, length;
     int32_t *offsets;
 
-    const int32_t (*stateTable)[256];
+    स्थिर int32_t (*stateTable)[256];
 
-    int32_t sourceIndex;
+    int32_t source_सूचकांक;
 
     int32_t entry;
     uint8_t action;
 
     /* set up the local pointers */
     cnv=pArgs->converter;
-    source = reinterpret_cast<const uint8_t*>(pArgs->source);
-    sourceLimit = reinterpret_cast<const uint8_t*>(pArgs->sourceLimit);
+    source = reinterpret_cast<स्थिर uint8_t*>(pArgs->source);
+    sourceLimit = reinterpret_cast<स्थिर uint8_t*>(pArgs->sourceLimit);
     target=pArgs->target;
     targetCapacity = static_cast<int32_t>(pArgs->targetLimit - pArgs->target);
     offsets=pArgs->offsets;
 
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        stateTable=(const int32_t (*)[256])cnv->sharedData->mbcs.swapLFNLStateTable;
-    } else {
-        stateTable=cnv->sharedData->mbcs.stateTable;
+    अगर((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
+        stateTable=(स्थिर int32_t (*)[256])cnv->shared_तथ्य->mbcs.swapLFNLStateTable;
+    } अन्यथा {
+        stateTable=cnv->shared_तथ्य->mbcs.stateTable;
     }
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex=0;
+    source_सूचकांक=0;
     lastSource=source;
 
     /*
@@ -2220,99 +2220,99 @@ ucnv_MBCSSingleToBMPWithOffsets(UConverterToUnicodeArgs *pArgs,
      * for the minimum of the sourceLength and targetCapacity
      */
     length = static_cast<int32_t>(sourceLimit - source);
-    if(length<targetCapacity) {
+    अगर(length<targetCapacity) {
         targetCapacity=length;
     }
 
-#if MBCS_UNROLL_SINGLE_TO_BMP
+#अगर MBCS_UNROLL_SINGLE_TO_BMP
     /* unrolling makes it faster on Pentium III/Windows 2000 */
     /* unroll the loop with the most common case */
 unrolled:
-    if(targetCapacity>=16) {
+    अगर(targetCapacity>=16) {
         int32_t count, loops, oredEntries;
 
         loops=count=targetCapacity>>4;
-        do {
+        करो {
             oredEntries=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_मूल्य_16(entry));
             oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_मूल्य_16(entry));
             oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_मूल्य_16(entry));
             oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_मूल्य_16(entry));
             oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_मूल्य_16(entry));
             oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_मूल्य_16(entry));
             oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_मूल्य_16(entry));
             oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_मूल्य_16(entry));
             oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_मूल्य_16(entry));
             oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_मूल्य_16(entry));
             oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_मूल्य_16(entry));
             oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_मूल्य_16(entry));
             oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_मूल्य_16(entry));
             oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_मूल्य_16(entry));
             oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_मूल्य_16(entry));
             oredEntries|=entry=stateTable[0][*source++];
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_मूल्य_16(entry));
 
             /* were all 16 entries really valid? */
-            if(!MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(oredEntries)) {
+            अगर(!MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(oredEntries)) {
                 /* no, return to the first of these 16 */
                 source-=16;
                 target-=16;
-                break;
+                अवरोध;
             }
-        } while(--count>0);
+        } जबतक(--count>0);
         count=loops-count;
         targetCapacity-=16*count;
 
-        if(offsets!=nullptr) {
+        अगर(offsets!=nullptr) {
             lastSource+=16*count;
-            while(count>0) {
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
+            जबतक(count>0) {
+                *offsets++=source_सूचकांक++;
+                *offsets++=source_सूचकांक++;
+                *offsets++=source_सूचकांक++;
+                *offsets++=source_सूचकांक++;
+                *offsets++=source_सूचकांक++;
+                *offsets++=source_सूचकांक++;
+                *offsets++=source_सूचकांक++;
+                *offsets++=source_सूचकांक++;
+                *offsets++=source_सूचकांक++;
+                *offsets++=source_सूचकांक++;
+                *offsets++=source_सूचकांक++;
+                *offsets++=source_सूचकांक++;
+                *offsets++=source_सूचकांक++;
+                *offsets++=source_सूचकांक++;
+                *offsets++=source_सूचकांक++;
+                *offsets++=source_सूचकांक++;
                 --count;
             }
         }
     }
-#endif
+#पूर्ण_अगर
 
     /* conversion loop */
-    while(targetCapacity > 0 && source < sourceLimit) {
+    जबतक(targetCapacity > 0 && source < sourceLimit) {
         entry=stateTable[0][*source++];
         /* MBCS_ENTRY_IS_FINAL(entry) */
 
         /* test the most common case first */
-        if(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
+        अगर(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
             /* output BMP code point */
-            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+            *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_मूल्य_16(entry));
             --targetCapacity;
-            continue;
+            जारी;
         }
 
         /*
@@ -2320,124 +2320,124 @@ unrolled:
          * the most common cases compared to a switch.
          */
         action = static_cast<uint8_t>(MBCS_ENTRY_FINAL_ACTION(entry));
-        if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-            if(UCNV_TO_U_USE_FALLBACK(cnv)) {
+        अगर(action==MBCS_STATE_FALLBACK_DIRECT_16) {
+            अगर(UCNV_TO_U_USE_FALLBACK(cnv)) {
                 /* output BMP code point */
-                *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+                *target++ = static_cast<char16_t>(MBCS_ENTRY_FINAL_मूल्य_16(entry));
                 --targetCapacity;
-                continue;
+                जारी;
             }
-        } else if(action==MBCS_STATE_UNASSIGNED) {
+        } अन्यथा अगर(action==MBCS_STATE_UNASSIGNED) {
             /* just fall through */
-        } else if(action==MBCS_STATE_ILLEGAL) {
+        } अन्यथा अगर(action==MBCS_STATE_ILLEGAL) {
             /* callback(illegal) */
             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-        } else {
+        } अन्यथा {
             /* reserved, must never occur */
-            continue;
+            जारी;
         }
 
         /* set offsets since the start or the last extension */
-        if(offsets!=nullptr) {
+        अगर(offsets!=nullptr) {
             int32_t count = static_cast<int32_t>(source - lastSource);
 
             /* predecrement: do not set the offset for the callback-causing character */
-            while(--count>0) {
-                *offsets++=sourceIndex++;
+            जबतक(--count>0) {
+                *offsets++=source_सूचकांक++;
             }
             /* offset and sourceIndex are now set for the current character */
         }
 
-        if(U_FAILURE(*pErrorCode)) {
+        अगर(U_FAILURE(*pErrorCode)) {
             /* callback(illegal) */
-            break;
-        } else /* unassigned sequences indicated with byteIndex>0 */ {
+            अवरोध;
+        } अन्यथा /* unassigned sequences indicated with byteIndex>0 */ {
             /* try an extension mapping */
             lastSource=source;
             cnv->toUBytes[0]=*(source-1);
-            cnv->toULength=_extToU(cnv, cnv->sharedData,
+            cnv->toULength=_extToU(cnv, cnv->shared_तथ्य,
                                     1, &source, sourceLimit,
                                     &target, pArgs->targetLimit,
-                                    &offsets, sourceIndex,
-                                    pArgs->flush,
+                                    &offsets, source_सूचकांक,
+                                    pArgs->सफाई,
                                     pErrorCode);
-            sourceIndex += 1 + static_cast<int32_t>(source - lastSource);
+            source_सूचकांक += 1 + static_cast<int32_t>(source - lastSource);
 
-            if(U_FAILURE(*pErrorCode)) {
+            अगर(U_FAILURE(*pErrorCode)) {
                 /* not mappable or buffer overflow */
-                break;
+                अवरोध;
             }
 
             /* recalculate the targetCapacity after an extension mapping */
             targetCapacity = static_cast<int32_t>(pArgs->targetLimit - target);
             length = static_cast<int32_t>(sourceLimit - source);
-            if(length<targetCapacity) {
+            अगर(length<targetCapacity) {
                 targetCapacity=length;
             }
         }
 
-#if MBCS_UNROLL_SINGLE_TO_BMP
+#अगर MBCS_UNROLL_SINGLE_TO_BMP
         /* unrolling makes it faster on Pentium III/Windows 2000 */
-        goto unrolled;
-#endif
+        जाओ unrolled;
+#पूर्ण_अगर
     }
 
-    if(U_SUCCESS(*pErrorCode) && source<sourceLimit && target>=pArgs->targetLimit) {
+    अगर(U_SUCCESS(*pErrorCode) && source<sourceLimit && target>=pArgs->targetLimit) {
         /* target is full */
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        *pErrorCode=U_बफर_OVERFLOW_ERROR;
     }
 
     /* set offsets since the start or the last callback */
-    if(offsets!=nullptr) {
-        size_t count=source-lastSource;
-        while(count>0) {
-            *offsets++=sourceIndex++;
+    अगर(offsets!=nullptr) {
+        माप_प्रकार count=source-lastSource;
+        जबतक(count>0) {
+            *offsets++=source_सूचकांक++;
             --count;
         }
     }
 
     /* write back the updated pointers */
-    pArgs->source = reinterpret_cast<const char*>(source);
+    pArgs->source = reinterpret_cast<स्थिर अक्षर*>(source);
     pArgs->target=target;
     pArgs->offsets=offsets;
 }
 
-static UBool
-hasValidTrailBytes(const int32_t (*stateTable)[256], uint8_t state) {
-    const int32_t *row=stateTable[state];
+अटल UBool
+hasValidTrailBytes(स्थिर int32_t (*stateTable)[256], uint8_t state) {
+    स्थिर int32_t *row=stateTable[state];
     int32_t b, entry;
     /* First test for final entries in this state for some commonly valid byte values. */
     entry=row[0xa1];
-    if( !MBCS_ENTRY_IS_TRANSITION(entry) &&
+    अगर( !MBCS_ENTRY_IS_TRANSITION(entry) &&
         MBCS_ENTRY_FINAL_ACTION(entry)!=MBCS_STATE_ILLEGAL
     ) {
-        return true;
+        वापस true;
     }
     entry=row[0x41];
-    if( !MBCS_ENTRY_IS_TRANSITION(entry) &&
+    अगर( !MBCS_ENTRY_IS_TRANSITION(entry) &&
         MBCS_ENTRY_FINAL_ACTION(entry)!=MBCS_STATE_ILLEGAL
     ) {
-        return true;
+        वापस true;
     }
     /* Then test for final entries in this state. */
-    for(b=0; b<=0xff; ++b) {
+    क्रम(b=0; b<=0xff; ++b) {
         entry=row[b];
-        if( !MBCS_ENTRY_IS_TRANSITION(entry) &&
+        अगर( !MBCS_ENTRY_IS_TRANSITION(entry) &&
             MBCS_ENTRY_FINAL_ACTION(entry)!=MBCS_STATE_ILLEGAL
         ) {
-            return true;
+            वापस true;
         }
     }
     /* Then recurse for transition entries. */
-    for(b=0; b<=0xff; ++b) {
+    क्रम(b=0; b<=0xff; ++b) {
         entry=row[b];
-        if( MBCS_ENTRY_IS_TRANSITION(entry) &&
+        अगर( MBCS_ENTRY_IS_TRANSITION(entry) &&
             hasValidTrailBytes(stateTable, static_cast<uint8_t>(MBCS_ENTRY_TRANSITION_STATE(entry)))
         ) {
-            return true;
+            वापस true;
         }
     }
-    return false;
+    वापस false;
 }
 
 /*
@@ -2445,40 +2445,40 @@ hasValidTrailBytes(const int32_t (*stateTable)[256], uint8_t state) {
  * Recurse for transition states, because here we don't want to say that
  * b is a lead byte if all byte sequences that start with b are illegal.
  */
-static UBool
-isSingleOrLead(const int32_t (*stateTable)[256], uint8_t state, UBool isDBCSOnly, uint8_t b) {
-    const int32_t *row=stateTable[state];
+अटल UBool
+isSingleOrLead(स्थिर int32_t (*stateTable)[256], uint8_t state, UBool isDBCSOnly, uint8_t b) {
+    स्थिर int32_t *row=stateTable[state];
     int32_t entry=row[b];
-    if(MBCS_ENTRY_IS_TRANSITION(entry)) {   /* lead byte */
-        return hasValidTrailBytes(stateTable, static_cast<uint8_t>(MBCS_ENTRY_TRANSITION_STATE(entry)));
-    } else {
+    अगर(MBCS_ENTRY_IS_TRANSITION(entry)) {   /* lead byte */
+        वापस hasValidTrailBytes(stateTable, static_cast<uint8_t>(MBCS_ENTRY_TRANSITION_STATE(entry)));
+    } अन्यथा {
         uint8_t action = static_cast<uint8_t>(MBCS_ENTRY_FINAL_ACTION(entry));
-        if(action==MBCS_STATE_CHANGE_ONLY && isDBCSOnly) {
-            return false;   /* SI/SO are illegal for DBCS-only conversion */
-        } else {
-            return action!=MBCS_STATE_ILLEGAL;
+        अगर(action==MBCS_STATE_CHANGE_ONLY && isDBCSOnly) {
+            वापस false;   /* SI/SO are illegal for DBCS-only conversion */
+        } अन्यथा {
+            वापस action!=MBCS_STATE_ILLEGAL;
         }
     }
 }
 
-U_CFUNC void
+U_CFUNC व्योम
 ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
                           UErrorCode *pErrorCode) {
     UConverter *cnv;
-    const uint8_t *source, *sourceLimit;
+    स्थिर uint8_t *source, *sourceLimit;
     char16_t *target;
-    const char16_t *targetLimit;
+    स्थिर char16_t *targetLimit;
     int32_t *offsets;
 
-    const int32_t (*stateTable)[256];
-    const uint16_t *unicodeCodeUnits;
+    स्थिर int32_t (*stateTable)[256];
+    स्थिर uint16_t *unicodeCodeUnits;
 
     uint32_t offset;
     uint8_t state;
-    int8_t byteIndex;
+    int8_t byte_सूचकांक;
     uint8_t *bytes;
 
-    int32_t sourceIndex, nextSourceIndex;
+    int32_t source_सूचकांक, अग्र_Source_सूचकांक;
 
     int32_t entry;
     char16_t c;
@@ -2487,44 +2487,44 @@ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     /* use optimized function if possible */
     cnv=pArgs->converter;
 
-    if(cnv->preToULength>0) {
+    अगर(cnv->preToULength>0) {
         /*
          * pass sourceIndex=-1 because we continue from an earlier buffer
          * in the future, this may change with continuous offsets
          */
         ucnv_extContinueMatchToU(cnv, pArgs, -1, pErrorCode);
 
-        if(U_FAILURE(*pErrorCode) || cnv->preToULength<0) {
-            return;
+        अगर(U_FAILURE(*pErrorCode) || cnv->preToULength<0) {
+            वापस;
         }
     }
 
-    if(cnv->sharedData->mbcs.countStates==1) {
-        if(!(cnv->sharedData->mbcs.unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
+    अगर(cnv->shared_तथ्य->mbcs.गिनती_States==1) {
+        अगर(!(cnv->shared_तथ्य->mbcs.unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
             ucnv_MBCSSingleToBMPWithOffsets(pArgs, pErrorCode);
-        } else {
+        } अन्यथा {
             ucnv_MBCSSingleToUnicodeWithOffsets(pArgs, pErrorCode);
         }
-        return;
+        वापस;
     }
 
     /* set up the local pointers */
-    source=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
+    source=(स्थिर uint8_t *)pArgs->source;
+    sourceLimit=(स्थिर uint8_t *)pArgs->sourceLimit;
     target=pArgs->target;
     targetLimit=pArgs->targetLimit;
     offsets=pArgs->offsets;
 
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        stateTable=(const int32_t (*)[256])cnv->sharedData->mbcs.swapLFNLStateTable;
-    } else {
-        stateTable=cnv->sharedData->mbcs.stateTable;
+    अगर((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
+        stateTable=(स्थिर int32_t (*)[256])cnv->shared_तथ्य->mbcs.swapLFNLStateTable;
+    } अन्यथा {
+        stateTable=cnv->shared_तथ्य->mbcs.stateTable;
     }
-    unicodeCodeUnits=cnv->sharedData->mbcs.unicodeCodeUnits;
+    unicodeCodeUnits=cnv->shared_तथ्य->mbcs.unicodeCodeUnits;
 
     /* get the converter state from UConverter */
     offset=cnv->toUnicodeStatus;
-    byteIndex=cnv->toULength;
+    byte_सूचकांक=cnv->toULength;
     bytes=cnv->toUBytes;
 
     /*
@@ -2532,16 +2532,16 @@ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
      * then load the DBCS state from the MBCS data
      * (dbcsOnlyState==0 if it is not a DBCS-only converter)
      */
-    if((state=(uint8_t)(cnv->mode))==0) {
-        state=cnv->sharedData->mbcs.dbcsOnlyState;
+    अगर((state=(uint8_t)(cnv->mode))==0) {
+        state=cnv->shared_तथ्य->mbcs.dbcsOnlyState;
     }
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex=byteIndex==0 ? 0 : -1;
-    nextSourceIndex=0;
+    source_सूचकांक=byte_सूचकांक==0 ? 0 : -1;
+    अग्र_Source_सूचकांक=0;
 
     /* conversion loop */
-    while(source<sourceLimit) {
+    जबतक(source<sourceLimit) {
         /*
          * This following test is to see if available input would overflow the output.
          * It does not catch output of more than one code unit that
@@ -2550,119 +2550,119 @@ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
          * Therefore, those situations also test for overflows and will
          * then break the loop, too.
          */
-        if(target>=targetLimit) {
+        अगर(target>=targetLimit) {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *pErrorCode=U_बफर_OVERFLOW_ERROR;
+            अवरोध;
         }
 
-        if(byteIndex==0) {
+        अगर(byte_सूचकांक==0) {
             /* optimized loop for 1/2-byte input and BMP output */
-            if(offsets==nullptr) {
-                do {
+            अगर(offsets==nullptr) {
+                करो {
                     entry=stateTable[state][*source];
-                    if(MBCS_ENTRY_IS_TRANSITION(entry)) {
+                    अगर(MBCS_ENTRY_IS_TRANSITION(entry)) {
                         state=(uint8_t)MBCS_ENTRY_TRANSITION_STATE(entry);
                         offset=MBCS_ENTRY_TRANSITION_OFFSET(entry);
 
                         ++source;
-                        if( source<sourceLimit &&
+                        अगर( source<sourceLimit &&
                             MBCS_ENTRY_IS_FINAL(entry=stateTable[state][*source]) &&
                             MBCS_ENTRY_FINAL_ACTION(entry)==MBCS_STATE_VALID_16 &&
-                            (c=unicodeCodeUnits[offset+MBCS_ENTRY_FINAL_VALUE_16(entry)])<0xfffe
+                            (c=unicodeCodeUnits[offset+MBCS_ENTRY_FINAL_मूल्य_16(entry)])<0xfffe
                         ) {
                             ++source;
                             *target++=c;
                             state=(uint8_t)MBCS_ENTRY_FINAL_STATE(entry); /* typically 0 */
                             offset=0;
-                        } else {
+                        } अन्यथा {
                             /* set the state and leave the optimized loop */
                             bytes[0]=*(source-1);
-                            byteIndex=1;
-                            break;
+                            byte_सूचकांक=1;
+                            अवरोध;
                         }
-                    } else {
-                        if(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
+                    } अन्यथा {
+                        अगर(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
                             /* output BMP code point */
                             ++source;
-                            *target++=(char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
+                            *target++=(char16_t)MBCS_ENTRY_FINAL_मूल्य_16(entry);
                             state=(uint8_t)MBCS_ENTRY_FINAL_STATE(entry); /* typically 0 */
-                        } else {
+                        } अन्यथा {
                             /* leave the optimized loop */
-                            break;
+                            अवरोध;
                         }
                     }
-                } while(source<sourceLimit && target<targetLimit);
-            } else /* offsets!=nullptr */ {
-                do {
+                } जबतक(source<sourceLimit && target<targetLimit);
+            } अन्यथा /* offsets!=nullptr */ {
+                करो {
                     entry=stateTable[state][*source];
-                    if(MBCS_ENTRY_IS_TRANSITION(entry)) {
+                    अगर(MBCS_ENTRY_IS_TRANSITION(entry)) {
                         state=(uint8_t)MBCS_ENTRY_TRANSITION_STATE(entry);
                         offset=MBCS_ENTRY_TRANSITION_OFFSET(entry);
 
                         ++source;
-                        if( source<sourceLimit &&
+                        अगर( source<sourceLimit &&
                             MBCS_ENTRY_IS_FINAL(entry=stateTable[state][*source]) &&
                             MBCS_ENTRY_FINAL_ACTION(entry)==MBCS_STATE_VALID_16 &&
-                            (c=unicodeCodeUnits[offset+MBCS_ENTRY_FINAL_VALUE_16(entry)])<0xfffe
+                            (c=unicodeCodeUnits[offset+MBCS_ENTRY_FINAL_मूल्य_16(entry)])<0xfffe
                         ) {
                             ++source;
                             *target++=c;
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex;
-                                sourceIndex=(nextSourceIndex+=2);
+                            अगर(offsets!=nullptr) {
+                                *offsets++=source_सूचकांक;
+                                source_सूचकांक=(अग्र_Source_सूचकांक+=2);
                             }
                             state=(uint8_t)MBCS_ENTRY_FINAL_STATE(entry); /* typically 0 */
                             offset=0;
-                        } else {
+                        } अन्यथा {
                             /* set the state and leave the optimized loop */
-                            ++nextSourceIndex;
+                            ++अग्र_Source_सूचकांक;
                             bytes[0]=*(source-1);
-                            byteIndex=1;
-                            break;
+                            byte_सूचकांक=1;
+                            अवरोध;
                         }
-                    } else {
-                        if(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
+                    } अन्यथा {
+                        अगर(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
                             /* output BMP code point */
                             ++source;
-                            *target++=(char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
-                            if(offsets!=nullptr) {
-                                *offsets++=sourceIndex;
-                                sourceIndex=++nextSourceIndex;
+                            *target++=(char16_t)MBCS_ENTRY_FINAL_मूल्य_16(entry);
+                            अगर(offsets!=nullptr) {
+                                *offsets++=source_सूचकांक;
+                                source_सूचकांक=++अग्र_Source_सूचकांक;
                             }
                             state=(uint8_t)MBCS_ENTRY_FINAL_STATE(entry); /* typically 0 */
-                        } else {
+                        } अन्यथा {
                             /* leave the optimized loop */
-                            break;
+                            अवरोध;
                         }
                     }
-                } while(source<sourceLimit && target<targetLimit);
+                } जबतक(source<sourceLimit && target<targetLimit);
             }
 
             /*
              * these tests and break statements could be put inside the loop
              * if C had "break outerLoop" like Java
              */
-            if(source>=sourceLimit) {
-                break;
+            अगर(source>=sourceLimit) {
+                अवरोध;
             }
-            if(target>=targetLimit) {
+            अगर(target>=targetLimit) {
                 /* target is full */
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                *pErrorCode=U_बफर_OVERFLOW_ERROR;
+                अवरोध;
             }
 
-            ++nextSourceIndex;
-            bytes[byteIndex++]=*source++;
-        } else /* byteIndex>0 */ {
-            ++nextSourceIndex;
-            entry=stateTable[state][bytes[byteIndex++]=*source++];
+            ++अग्र_Source_सूचकांक;
+            bytes[byte_सूचकांक++]=*source++;
+        } अन्यथा /* byteIndex>0 */ {
+            ++अग्र_Source_सूचकांक;
+            entry=stateTable[state][bytes[byte_सूचकांक++]=*source++];
         }
 
-        if(MBCS_ENTRY_IS_TRANSITION(entry)) {
+        अगर(MBCS_ENTRY_IS_TRANSITION(entry)) {
             state=(uint8_t)MBCS_ENTRY_TRANSITION_STATE(entry);
             offset+=MBCS_ENTRY_TRANSITION_OFFSET(entry);
-            continue;
+            जारी;
         }
 
         /* save the previous state for proper extension mapping with SI/SO-stateful converters */
@@ -2676,104 +2676,104 @@ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
          * the most common cases compared to a switch.
          */
         action=(uint8_t)(MBCS_ENTRY_FINAL_ACTION(entry));
-        if(action==MBCS_STATE_VALID_16) {
-            offset+=MBCS_ENTRY_FINAL_VALUE_16(entry);
+        अगर(action==MBCS_STATE_VALID_16) {
+            offset+=MBCS_ENTRY_FINAL_मूल्य_16(entry);
             c=unicodeCodeUnits[offset];
-            if(c<0xfffe) {
+            अगर(c<0xfffe) {
                 /* output BMP code point */
                 *target++=c;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                अगर(offsets!=nullptr) {
+                    *offsets++=source_सूचकांक;
                 }
-                byteIndex=0;
-            } else if(c==0xfffe) {
-                if(UCNV_TO_U_USE_FALLBACK(cnv) && (entry=(int32_t)ucnv_MBCSGetFallback(&cnv->sharedData->mbcs, offset))!=0xfffe) {
+                byte_सूचकांक=0;
+            } अन्यथा अगर(c==0xfffe) {
+                अगर(UCNV_TO_U_USE_FALLBACK(cnv) && (entry=(int32_t)ucnv_MBCSGetFallback(&cnv->shared_तथ्य->mbcs, offset))!=0xfffe) {
                     /* output fallback BMP code point */
                     *target++=(char16_t)entry;
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                    अगर(offsets!=nullptr) {
+                        *offsets++=source_सूचकांक;
                     }
-                    byteIndex=0;
+                    byte_सूचकांक=0;
                 }
-            } else {
+            } अन्यथा {
                 /* callback(illegal) */
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
             }
-        } else if(action==MBCS_STATE_VALID_DIRECT_16) {
+        } अन्यथा अगर(action==MBCS_STATE_VALID_DIRECT_16) {
             /* output BMP code point */
-            *target++=(char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
-            if(offsets!=nullptr) {
-                *offsets++=sourceIndex;
+            *target++=(char16_t)MBCS_ENTRY_FINAL_मूल्य_16(entry);
+            अगर(offsets!=nullptr) {
+                *offsets++=source_सूचकांक;
             }
-            byteIndex=0;
-        } else if(action==MBCS_STATE_VALID_16_PAIR) {
-            offset+=MBCS_ENTRY_FINAL_VALUE_16(entry);
+            byte_सूचकांक=0;
+        } अन्यथा अगर(action==MBCS_STATE_VALID_16_PAIR) {
+            offset+=MBCS_ENTRY_FINAL_मूल्य_16(entry);
             c=unicodeCodeUnits[offset++];
-            if(c<0xd800) {
+            अगर(c<0xd800) {
                 /* output BMP code point below 0xd800 */
                 *target++=c;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                अगर(offsets!=nullptr) {
+                    *offsets++=source_सूचकांक;
                 }
-                byteIndex=0;
-            } else if(UCNV_TO_U_USE_FALLBACK(cnv) ? c<=0xdfff : c<=0xdbff) {
+                byte_सूचकांक=0;
+            } अन्यथा अगर(UCNV_TO_U_USE_FALLBACK(cnv) ? c<=0xdfff : c<=0xdbff) {
                 /* output roundtrip or fallback surrogate pair */
                 *target++=(char16_t)(c&0xdbff);
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                अगर(offsets!=nullptr) {
+                    *offsets++=source_सूचकांक;
                 }
-                byteIndex=0;
-                if(target<targetLimit) {
+                byte_सूचकांक=0;
+                अगर(target<targetLimit) {
                     *target++=unicodeCodeUnits[offset];
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                    अगर(offsets!=nullptr) {
+                        *offsets++=source_सूचकांक;
                     }
-                } else {
+                } अन्यथा {
                     /* target overflow */
-                    cnv->UCharErrorBuffer[0]=unicodeCodeUnits[offset];
-                    cnv->UCharErrorBufferLength=1;
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                    cnv->UChar_Error_बफर[0]=unicodeCodeUnits[offset];
+                    cnv->UChar_Error_बफर_लंबाई=1;
+                    *pErrorCode=U_बफर_OVERFLOW_ERROR;
 
                     offset=0;
-                    break;
+                    अवरोध;
                 }
-            } else if(UCNV_TO_U_USE_FALLBACK(cnv) ? (c&0xfffe)==0xe000 : c==0xe000) {
+            } अन्यथा अगर(UCNV_TO_U_USE_FALLBACK(cnv) ? (c&0xfffe)==0xe000 : c==0xe000) {
                 /* output roundtrip BMP code point above 0xd800 or fallback BMP code point */
                 *target++=unicodeCodeUnits[offset];
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                अगर(offsets!=nullptr) {
+                    *offsets++=source_सूचकांक;
                 }
-                byteIndex=0;
-            } else if(c==0xffff) {
+                byte_सूचकांक=0;
+            } अन्यथा अगर(c==0xffff) {
                 /* callback(illegal) */
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
             }
-        } else if(action==MBCS_STATE_VALID_DIRECT_20 ||
+        } अन्यथा अगर(action==MBCS_STATE_VALID_DIRECT_20 ||
                   (action==MBCS_STATE_FALLBACK_DIRECT_20 && UCNV_TO_U_USE_FALLBACK(cnv))
         ) {
-            entry=MBCS_ENTRY_FINAL_VALUE(entry);
+            entry=MBCS_ENTRY_FINAL_मूल्य(entry);
             /* output surrogate pair */
             *target++=(char16_t)(0xd800|(char16_t)(entry>>10));
-            if(offsets!=nullptr) {
-                *offsets++=sourceIndex;
+            अगर(offsets!=nullptr) {
+                *offsets++=source_सूचकांक;
             }
-            byteIndex=0;
+            byte_सूचकांक=0;
             c=(char16_t)(0xdc00|(char16_t)(entry&0x3ff));
-            if(target<targetLimit) {
+            अगर(target<targetLimit) {
                 *target++=c;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                अगर(offsets!=nullptr) {
+                    *offsets++=source_सूचकांक;
                 }
-            } else {
+            } अन्यथा {
                 /* target overflow */
-                cnv->UCharErrorBuffer[0]=c;
-                cnv->UCharErrorBufferLength=1;
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                cnv->UChar_Error_बफर[0]=c;
+                cnv->UChar_Error_बफर_लंबाई=1;
+                *pErrorCode=U_बफर_OVERFLOW_ERROR;
 
                 offset=0;
-                break;
+                अवरोध;
             }
-        } else if(action==MBCS_STATE_CHANGE_ONLY) {
+        } अन्यथा अगर(action==MBCS_STATE_CHANGE_ONLY) {
             /*
              * This serves as a state change without any output.
              * It is useful for reading simple stateful encodings,
@@ -2781,84 +2781,84 @@ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
              * The 21 unused bits may later be used for more sophisticated
              * state transitions.
              */
-            if(cnv->sharedData->mbcs.dbcsOnlyState==0) {
-                byteIndex=0;
-            } else {
+            अगर(cnv->shared_तथ्य->mbcs.dbcsOnlyState==0) {
+                byte_सूचकांक=0;
+            } अन्यथा {
                 /* SI/SO are illegal for DBCS-only conversion */
                 state=(uint8_t)(cnv->mode); /* restore the previous state */
 
                 /* callback(illegal) */
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
             }
-        } else if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-            if(UCNV_TO_U_USE_FALLBACK(cnv)) {
+        } अन्यथा अगर(action==MBCS_STATE_FALLBACK_DIRECT_16) {
+            अगर(UCNV_TO_U_USE_FALLBACK(cnv)) {
                 /* output BMP code point */
-                *target++=(char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                *target++=(char16_t)MBCS_ENTRY_FINAL_मूल्य_16(entry);
+                अगर(offsets!=nullptr) {
+                    *offsets++=source_सूचकांक;
                 }
-                byteIndex=0;
+                byte_सूचकांक=0;
             }
-        } else if(action==MBCS_STATE_UNASSIGNED) {
+        } अन्यथा अगर(action==MBCS_STATE_UNASSIGNED) {
             /* just fall through */
-        } else if(action==MBCS_STATE_ILLEGAL) {
+        } अन्यथा अगर(action==MBCS_STATE_ILLEGAL) {
             /* callback(illegal) */
             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-        } else {
+        } अन्यथा {
             /* reserved, must never occur */
-            byteIndex=0;
+            byte_सूचकांक=0;
         }
 
         /* end of action codes: prepare for a new character */
         offset=0;
 
-        if(byteIndex==0) {
-            sourceIndex=nextSourceIndex;
-        } else if(U_FAILURE(*pErrorCode)) {
+        अगर(byte_सूचकांक==0) {
+            source_सूचकांक=अग्र_Source_सूचकांक;
+        } अन्यथा अगर(U_FAILURE(*pErrorCode)) {
             /* callback(illegal) */
-            if(byteIndex>1) {
+            अगर(byte_सूचकांक>1) {
                 /*
                  * Ticket 5691: consistent illegal sequences:
                  * - We include at least the first byte in the illegal sequence.
                  * - If any of the non-initial bytes could be the start of a character,
                  *   we stop the illegal sequence before the first one of those.
                  */
-                UBool isDBCSOnly = cnv->sharedData->mbcs.dbcsOnlyState != 0;
+                UBool isDBCSOnly = cnv->shared_तथ्य->mbcs.dbcsOnlyState != 0;
                 int8_t i;
-                for(i=1;
-                    i<byteIndex && !isSingleOrLead(stateTable, state, isDBCSOnly, bytes[i]);
+                क्रम(i=1;
+                    i<byte_सूचकांक && !isSingleOrLead(stateTable, state, isDBCSOnly, bytes[i]);
                     ++i) {}
-                if(i<byteIndex) {
+                अगर(i<byte_सूचकांक) {
                     /* Back out some bytes. */
-                    int8_t backOutDistance=byteIndex-i;
-                    int32_t bytesFromThisBuffer=(int32_t)(source-(const uint8_t *)pArgs->source);
-                    byteIndex=i;  /* length of reported illegal byte sequence */
-                    if(backOutDistance<=bytesFromThisBuffer) {
+                    int8_t backOutDistance=byte_सूचकांक-i;
+                    int32_t bytes_From_This_बफर=(int32_t)(source-(स्थिर uint8_t *)pArgs->source);
+                    byte_सूचकांक=i;  /* length of reported illegal byte sequence */
+                    अगर(backOutDistance<=bytes_From_This_बफर) {
                         source-=backOutDistance;
-                    } else {
+                    } अन्यथा {
                         /* Back out bytes from the previous buffer: Need to replay them. */
-                        cnv->preToULength=(int8_t)(bytesFromThisBuffer-backOutDistance);
+                        cnv->preToULength=(int8_t)(bytes_From_This_बफर-backOutDistance);
                         /* preToULength is negative! */
                         uprv_memcpy(cnv->preToU, bytes+i, -cnv->preToULength);
-                        source=(const uint8_t *)pArgs->source;
+                        source=(स्थिर uint8_t *)pArgs->source;
                     }
                 }
             }
-            break;
-        } else /* unassigned sequences indicated with byteIndex>0 */ {
+            अवरोध;
+        } अन्यथा /* unassigned sequences indicated with byteIndex>0 */ {
             /* try an extension mapping */
-            pArgs->source=(const char *)source;
-            byteIndex=_extToU(cnv, cnv->sharedData,
-                              byteIndex, &source, sourceLimit,
+            pArgs->source=(स्थिर अक्षर *)source;
+            byte_सूचकांक=_extToU(cnv, cnv->shared_तथ्य,
+                              byte_सूचकांक, &source, sourceLimit,
                               &target, targetLimit,
-                              &offsets, sourceIndex,
-                              pArgs->flush,
+                              &offsets, source_सूचकांक,
+                              pArgs->सफाई,
                               pErrorCode);
-            sourceIndex=nextSourceIndex+=(int32_t)(source-(const uint8_t *)pArgs->source);
+            source_सूचकांक=अग्र_Source_सूचकांक+=(int32_t)(source-(स्थिर uint8_t *)pArgs->source);
 
-            if(U_FAILURE(*pErrorCode)) {
+            अगर(U_FAILURE(*pErrorCode)) {
                 /* not mappable or buffer overflow */
-                break;
+                अवरोध;
             }
         }
     }
@@ -2866,10 +2866,10 @@ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     /* set the converter state back into UConverter */
     cnv->toUnicodeStatus=offset;
     cnv->mode=state;
-    cnv->toULength=byteIndex;
+    cnv->toULength=byte_सूचकांक;
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
+    pArgs->source=(स्थिर अक्षर *)source;
     pArgs->target=target;
     pArgs->offsets=offsets;
 }
@@ -2878,37 +2878,37 @@ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
  * This version of ucnv_MBCSGetNextUChar() is optimized for single-byte, single-state codepages.
  * We still need a conversion loop in case we find reserved action codes, which are to be ignored.
  */
-static UChar32
-ucnv_MBCSSingleGetNextUChar(UConverterToUnicodeArgs *pArgs,
+अटल UChar32
+ucnv_MBCSSingle_Get_अग्र_UChar(UConverterToUnicodeArgs *pArgs,
                         UErrorCode *pErrorCode) {
     UConverter *cnv;
-    const int32_t (*stateTable)[256];
-    const uint8_t *source, *sourceLimit;
+    स्थिर int32_t (*stateTable)[256];
+    स्थिर uint8_t *source, *sourceLimit;
 
     int32_t entry;
     uint8_t action;
 
     /* set up the local pointers */
     cnv=pArgs->converter;
-    source = reinterpret_cast<const uint8_t*>(pArgs->source);
-    sourceLimit = reinterpret_cast<const uint8_t*>(pArgs->sourceLimit);
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        stateTable=(const int32_t (*)[256])cnv->sharedData->mbcs.swapLFNLStateTable;
-    } else {
-        stateTable=cnv->sharedData->mbcs.stateTable;
+    source = reinterpret_cast<स्थिर uint8_t*>(pArgs->source);
+    sourceLimit = reinterpret_cast<स्थिर uint8_t*>(pArgs->sourceLimit);
+    अगर((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
+        stateTable=(स्थिर int32_t (*)[256])cnv->shared_तथ्य->mbcs.swapLFNLStateTable;
+    } अन्यथा {
+        stateTable=cnv->shared_तथ्य->mbcs.stateTable;
     }
 
     /* conversion loop */
-    while(source<sourceLimit) {
+    जबतक(source<sourceLimit) {
         entry=stateTable[0][*source++];
         /* MBCS_ENTRY_IS_FINAL(entry) */
 
         /* write back the updated pointer early so that we can return directly */
-        pArgs->source = reinterpret_cast<const char*>(source);
+        pArgs->source = reinterpret_cast<स्थिर अक्षर*>(source);
 
-        if(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
+        अगर(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
             /* output BMP code point */
-            return static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+            वापस static_cast<char16_t>(MBCS_ENTRY_FINAL_मूल्य_16(entry));
         }
 
         /*
@@ -2916,39 +2916,39 @@ ucnv_MBCSSingleGetNextUChar(UConverterToUnicodeArgs *pArgs,
          * the most common cases compared to a switch.
          */
         action = static_cast<uint8_t>(MBCS_ENTRY_FINAL_ACTION(entry));
-        if( action==MBCS_STATE_VALID_DIRECT_20 ||
+        अगर( action==MBCS_STATE_VALID_DIRECT_20 ||
             (action==MBCS_STATE_FALLBACK_DIRECT_20 && UCNV_TO_U_USE_FALLBACK(cnv))
         ) {
             /* output supplementary code point */
-            return static_cast<UChar32>(MBCS_ENTRY_FINAL_VALUE(entry) + 0x10000);
-        } else if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-            if(UCNV_TO_U_USE_FALLBACK(cnv)) {
+            वापस static_cast<UChar32>(MBCS_ENTRY_FINAL_मूल्य(entry) + 0x10000);
+        } अन्यथा अगर(action==MBCS_STATE_FALLBACK_DIRECT_16) {
+            अगर(UCNV_TO_U_USE_FALLBACK(cnv)) {
                 /* output BMP code point */
-                return static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
+                वापस static_cast<char16_t>(MBCS_ENTRY_FINAL_मूल्य_16(entry));
             }
-        } else if(action==MBCS_STATE_UNASSIGNED) {
+        } अन्यथा अगर(action==MBCS_STATE_UNASSIGNED) {
             /* just fall through */
-        } else if(action==MBCS_STATE_ILLEGAL) {
+        } अन्यथा अगर(action==MBCS_STATE_ILLEGAL) {
             /* callback(illegal) */
             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-        } else {
+        } अन्यथा {
             /* reserved, must never occur */
-            continue;
+            जारी;
         }
 
-        if(U_FAILURE(*pErrorCode)) {
+        अगर(U_FAILURE(*pErrorCode)) {
             /* callback(illegal) */
-            break;
-        } else /* unassigned sequence */ {
+            अवरोध;
+        } अन्यथा /* unassigned sequence */ {
             /* defer to the generic implementation */
-            pArgs->source = reinterpret_cast<const char*>(source) - 1;
-            return UCNV_GET_NEXT_UCHAR_USE_TO_U;
+            pArgs->source = reinterpret_cast<स्थिर अक्षर*>(source) - 1;
+            वापस UCNV_GET_अग्र_UCHAR_USE_TO_U;
         }
     }
 
     /* no output because of empty input or only state changes */
-    *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-    return 0xffff;
+    *pErrorCode=U_सूचकांक_OUTOFBOUNDS_ERROR;
+    वापस 0xffff;
 }
 
 /*
@@ -2963,14 +2963,14 @@ ucnv_MBCSSingleGetNextUChar(UConverterToUnicodeArgs *pArgs,
  *
  * All normal mappings and errors are handled here.
  */
-static UChar32 U_CALLCONV
-ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
+अटल UChar32 U_CALLCONV
+ucnv_MBCSGet_अग्र_UChar(UConverterToUnicodeArgs *pArgs,
                   UErrorCode *pErrorCode) {
     UConverter *cnv;
-    const uint8_t *source, *sourceLimit, *lastSource;
+    स्थिर uint8_t *source, *sourceLimit, *lastSource;
 
-    const int32_t (*stateTable)[256];
-    const uint16_t *unicodeCodeUnits;
+    स्थिर int32_t (*stateTable)[256];
+    स्थिर uint16_t *unicodeCodeUnits;
 
     uint32_t offset;
     uint8_t state;
@@ -2982,32 +2982,32 @@ ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
     /* use optimized function if possible */
     cnv=pArgs->converter;
 
-    if(cnv->preToULength>0) {
+    अगर(cnv->preToULength>0) {
         /* use the generic code in ucnv_getNextUChar() to continue with a partial match */
-        return UCNV_GET_NEXT_UCHAR_USE_TO_U;
+        वापस UCNV_GET_अग्र_UCHAR_USE_TO_U;
     }
 
-    if(cnv->sharedData->mbcs.unicodeMask&UCNV_HAS_SURROGATES) {
+    अगर(cnv->shared_तथ्य->mbcs.unicodeMask&UCNV_HAS_SURROGATES) {
         /*
          * Using the generic ucnv_getNextUChar() code lets us deal correctly
          * with the rare case of a codepage that maps single surrogates
          * without adding the complexity to this already complicated function here.
          */
-        return UCNV_GET_NEXT_UCHAR_USE_TO_U;
-    } else if(cnv->sharedData->mbcs.countStates==1) {
-        return ucnv_MBCSSingleGetNextUChar(pArgs, pErrorCode);
+        वापस UCNV_GET_अग्र_UCHAR_USE_TO_U;
+    } अन्यथा अगर(cnv->shared_तथ्य->mbcs.गिनती_States==1) {
+        वापस ucnv_MBCSSingle_Get_अग्र_UChar(pArgs, pErrorCode);
     }
 
     /* set up the local pointers */
-    source = lastSource = reinterpret_cast<const uint8_t*>(pArgs->source);
-    sourceLimit = reinterpret_cast<const uint8_t*>(pArgs->sourceLimit);
+    source = lastSource = reinterpret_cast<स्थिर uint8_t*>(pArgs->source);
+    sourceLimit = reinterpret_cast<स्थिर uint8_t*>(pArgs->sourceLimit);
 
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        stateTable=(const int32_t (*)[256])cnv->sharedData->mbcs.swapLFNLStateTable;
-    } else {
-        stateTable=cnv->sharedData->mbcs.stateTable;
+    अगर((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
+        stateTable=(स्थिर int32_t (*)[256])cnv->shared_तथ्य->mbcs.swapLFNLStateTable;
+    } अन्यथा {
+        stateTable=cnv->shared_तथ्य->mbcs.stateTable;
     }
-    unicodeCodeUnits=cnv->sharedData->mbcs.unicodeCodeUnits;
+    unicodeCodeUnits=cnv->shared_तथ्य->mbcs.unicodeCodeUnits;
 
     /* get the converter state from UConverter */
     offset=cnv->toUnicodeStatus;
@@ -3017,30 +3017,30 @@ ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
      * then load the DBCS state from the MBCS data
      * (dbcsOnlyState==0 if it is not a DBCS-only converter)
      */
-    if ((state = static_cast<uint8_t>(cnv->mode)) == 0) {
-        state=cnv->sharedData->mbcs.dbcsOnlyState;
+    अगर ((state = static_cast<uint8_t>(cnv->mode)) == 0) {
+        state=cnv->shared_तथ्य->mbcs.dbcsOnlyState;
     }
 
     /* conversion loop */
     c=U_SENTINEL;
-    while(source<sourceLimit) {
+    जबतक(source<sourceLimit) {
         entry=stateTable[state][*source++];
-        if(MBCS_ENTRY_IS_TRANSITION(entry)) {
+        अगर(MBCS_ENTRY_IS_TRANSITION(entry)) {
             state = static_cast<uint8_t>(MBCS_ENTRY_TRANSITION_STATE(entry));
             offset+=MBCS_ENTRY_TRANSITION_OFFSET(entry);
 
             /* optimization for 1/2-byte input and BMP output */
-            if( source<sourceLimit &&
+            अगर( source<sourceLimit &&
                 MBCS_ENTRY_IS_FINAL(entry=stateTable[state][*source]) &&
                 MBCS_ENTRY_FINAL_ACTION(entry)==MBCS_STATE_VALID_16 &&
-                (c=unicodeCodeUnits[offset+MBCS_ENTRY_FINAL_VALUE_16(entry)])<0xfffe
+                (c=unicodeCodeUnits[offset+MBCS_ENTRY_FINAL_मूल्य_16(entry)])<0xfffe
             ) {
                 ++source;
                 state = static_cast<uint8_t>(MBCS_ENTRY_FINAL_STATE(entry)); /* typically 0 */
                 /* output BMP code point */
-                break;
+                अवरोध;
             }
-        } else {
+        } अन्यथा {
             /* save the previous state for proper extension mapping with SI/SO-stateful converters */
             cnv->mode=state;
 
@@ -3052,49 +3052,49 @@ ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
              * the most common cases compared to a switch.
              */
             action = static_cast<uint8_t>(MBCS_ENTRY_FINAL_ACTION(entry));
-            if(action==MBCS_STATE_VALID_DIRECT_16) {
+            अगर(action==MBCS_STATE_VALID_DIRECT_16) {
                 /* output BMP code point */
-                c = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-                break;
-            } else if(action==MBCS_STATE_VALID_16) {
-                offset+=MBCS_ENTRY_FINAL_VALUE_16(entry);
+                c = static_cast<char16_t>(MBCS_ENTRY_FINAL_मूल्य_16(entry));
+                अवरोध;
+            } अन्यथा अगर(action==MBCS_STATE_VALID_16) {
+                offset+=MBCS_ENTRY_FINAL_मूल्य_16(entry);
                 c=unicodeCodeUnits[offset];
-                if(c<0xfffe) {
+                अगर(c<0xfffe) {
                     /* output BMP code point */
-                    break;
-                } else if(c==0xfffe) {
-                    if(UCNV_TO_U_USE_FALLBACK(cnv) && (c=ucnv_MBCSGetFallback(&cnv->sharedData->mbcs, offset))!=0xfffe) {
-                        break;
+                    अवरोध;
+                } अन्यथा अगर(c==0xfffe) {
+                    अगर(UCNV_TO_U_USE_FALLBACK(cnv) && (c=ucnv_MBCSGetFallback(&cnv->shared_तथ्य->mbcs, offset))!=0xfffe) {
+                        अवरोध;
                     }
-                } else {
+                } अन्यथा {
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                 }
-            } else if(action==MBCS_STATE_VALID_16_PAIR) {
-                offset+=MBCS_ENTRY_FINAL_VALUE_16(entry);
+            } अन्यथा अगर(action==MBCS_STATE_VALID_16_PAIR) {
+                offset+=MBCS_ENTRY_FINAL_मूल्य_16(entry);
                 c=unicodeCodeUnits[offset++];
-                if(c<0xd800) {
+                अगर(c<0xd800) {
                     /* output BMP code point below 0xd800 */
-                    break;
-                } else if(UCNV_TO_U_USE_FALLBACK(cnv) ? c<=0xdfff : c<=0xdbff) {
+                    अवरोध;
+                } अन्यथा अगर(UCNV_TO_U_USE_FALLBACK(cnv) ? c<=0xdfff : c<=0xdbff) {
                     /* output roundtrip or fallback supplementary code point */
                     c=((c&0x3ff)<<10)+unicodeCodeUnits[offset]+(0x10000-0xdc00);
-                    break;
-                } else if(UCNV_TO_U_USE_FALLBACK(cnv) ? (c&0xfffe)==0xe000 : c==0xe000) {
+                    अवरोध;
+                } अन्यथा अगर(UCNV_TO_U_USE_FALLBACK(cnv) ? (c&0xfffe)==0xe000 : c==0xe000) {
                     /* output roundtrip BMP code point above 0xd800 or fallback BMP code point */
                     c=unicodeCodeUnits[offset];
-                    break;
-                } else if(c==0xffff) {
+                    अवरोध;
+                } अन्यथा अगर(c==0xffff) {
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                 }
-            } else if(action==MBCS_STATE_VALID_DIRECT_20 ||
+            } अन्यथा अगर(action==MBCS_STATE_VALID_DIRECT_20 ||
                       (action==MBCS_STATE_FALLBACK_DIRECT_20 && UCNV_TO_U_USE_FALLBACK(cnv))
             ) {
                 /* output supplementary code point */
-                c = static_cast<UChar32>(MBCS_ENTRY_FINAL_VALUE(entry) + 0x10000);
-                break;
-            } else if(action==MBCS_STATE_CHANGE_ONLY) {
+                c = static_cast<UChar32>(MBCS_ENTRY_FINAL_मूल्य(entry) + 0x10000);
+                अवरोध;
+            } अन्यथा अगर(action==MBCS_STATE_CHANGE_ONLY) {
                 /*
                  * This serves as a state change without any output.
                  * It is useful for reading simple stateful encodings,
@@ -3102,54 +3102,54 @@ ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
                  * The 21 unused bits may later be used for more sophisticated
                  * state transitions.
                  */
-                if(cnv->sharedData->mbcs.dbcsOnlyState!=0) {
+                अगर(cnv->shared_तथ्य->mbcs.dbcsOnlyState!=0) {
                     /* SI/SO are illegal for DBCS-only conversion */
                     state = static_cast<uint8_t>(cnv->mode); /* restore the previous state */
 
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                 }
-            } else if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-                if(UCNV_TO_U_USE_FALLBACK(cnv)) {
+            } अन्यथा अगर(action==MBCS_STATE_FALLBACK_DIRECT_16) {
+                अगर(UCNV_TO_U_USE_FALLBACK(cnv)) {
                     /* output BMP code point */
-                    c = static_cast<char16_t>(MBCS_ENTRY_FINAL_VALUE_16(entry));
-                    break;
+                    c = static_cast<char16_t>(MBCS_ENTRY_FINAL_मूल्य_16(entry));
+                    अवरोध;
                 }
-            } else if(action==MBCS_STATE_UNASSIGNED) {
+            } अन्यथा अगर(action==MBCS_STATE_UNASSIGNED) {
                 /* just fall through */
-            } else if(action==MBCS_STATE_ILLEGAL) {
+            } अन्यथा अगर(action==MBCS_STATE_ILLEGAL) {
                 /* callback(illegal) */
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-            } else {
+            } अन्यथा {
                 /* reserved (must never occur), or only state change */
                 offset=0;
                 lastSource=source;
-                continue;
+                जारी;
             }
 
             /* end of action codes: prepare for a new character */
             offset=0;
 
-            if(U_FAILURE(*pErrorCode)) {
+            अगर(U_FAILURE(*pErrorCode)) {
                 /* callback(illegal) */
-                break;
-            } else /* unassigned sequence */ {
+                अवरोध;
+            } अन्यथा /* unassigned sequence */ {
                 /* defer to the generic implementation */
                 cnv->toUnicodeStatus=0;
                 cnv->mode=state;
-                pArgs->source = reinterpret_cast<const char*>(lastSource);
-                return UCNV_GET_NEXT_UCHAR_USE_TO_U;
+                pArgs->source = reinterpret_cast<स्थिर अक्षर*>(lastSource);
+                वापस UCNV_GET_अग्र_UCHAR_USE_TO_U;
             }
         }
     }
 
-    if(c<0) {
-        if(U_SUCCESS(*pErrorCode) && source==sourceLimit && lastSource<source) {
+    अगर(c<0) {
+        अगर(U_SUCCESS(*pErrorCode) && source==sourceLimit && lastSource<source) {
             /* incomplete character byte sequence */
             cnv->toULength = static_cast<int8_t>(source - lastSource);
             uprv_memcpy(cnv->toUBytes, lastSource, cnv->toULength);
             *pErrorCode=U_TRUNCATED_CHAR_FOUND;
-        } else if(U_FAILURE(*pErrorCode)) {
+        } अन्यथा अगर(U_FAILURE(*pErrorCode)) {
             /* callback(illegal) */
             /*
              * Ticket 5691: consistent illegal sequences:
@@ -3157,14 +3157,14 @@ ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
              * - If any of the non-initial bytes could be the start of a character,
              *   we stop the illegal sequence before the first one of those.
              */
-            UBool isDBCSOnly = static_cast<UBool>(cnv->sharedData->mbcs.dbcsOnlyState != 0);
+            UBool isDBCSOnly = static_cast<UBool>(cnv->shared_तथ्य->mbcs.dbcsOnlyState != 0);
             uint8_t *bytes=cnv->toUBytes;
             *bytes++=*lastSource++;     /* first byte */
-            if(lastSource==source) {
+            अगर(lastSource==source) {
                 cnv->toULength=1;
-            } else /* lastSource<source: multi-byte character */ {
+            } अन्यथा /* lastSource<source: multi-byte character */ {
                 int8_t i;
-                for(i=1;
+                क्रम(i=1;
                     lastSource<source && !isSingleOrLead(stateTable, state, isDBCSOnly, *lastSource);
                     ++i
                 ) {
@@ -3173,9 +3173,9 @@ ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
                 cnv->toULength=i;
                 source=lastSource;
             }
-        } else {
+        } अन्यथा {
             /* no output because of empty input or only state changes */
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
+            *pErrorCode=U_सूचकांक_OUTOFBOUNDS_ERROR;
         }
         c=0xffff;
     }
@@ -3185,11 +3185,11 @@ ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
     cnv->mode=state;
 
     /* write back the updated pointer */
-    pArgs->source = reinterpret_cast<const char*>(source);
-    return c;
+    pArgs->source = reinterpret_cast<स्थिर अक्षर*>(source);
+    वापस c;
 }
 
-#if 0
+#अगर 0
 /*
  * Code disabled 2002dec09 (ICU 2.4) because it is not currently used in ICU. markus
  * Removal improves code coverage.
@@ -3200,17 +3200,17 @@ ucnv_MBCSGetNextUChar(UConverterToUnicodeArgs *pArgs,
  * It does not handle conversion extensions (_extToU()).
  */
 U_CFUNC UChar32
-ucnv_MBCSSingleSimpleGetNextUChar(UConverterSharedData *sharedData,
+ucnv_MBCSSingle_Simple_Get_अग्र_UChar(UConverter_Shared_तथ्य *shared_तथ्य,
                               uint8_t b, UBool useFallback) {
     int32_t entry;
     uint8_t action;
 
-    entry=sharedData->mbcs.stateTable[0][b];
+    entry=shared_तथ्य->mbcs.stateTable[0][b];
     /* MBCS_ENTRY_IS_FINAL(entry) */
 
-    if(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
+    अगर(MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry)) {
         /* output BMP code point */
-        return (char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
+        वापस (char16_t)MBCS_ENTRY_FINAL_मूल्य_16(entry);
     }
 
     /*
@@ -3218,31 +3218,31 @@ ucnv_MBCSSingleSimpleGetNextUChar(UConverterSharedData *sharedData,
      * the most common cases compared to a switch.
      */
     action=(uint8_t)(MBCS_ENTRY_FINAL_ACTION(entry));
-    if(action==MBCS_STATE_VALID_DIRECT_20) {
+    अगर(action==MBCS_STATE_VALID_DIRECT_20) {
         /* output supplementary code point */
-        return 0x10000+MBCS_ENTRY_FINAL_VALUE(entry);
-    } else if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-        if(!TO_U_USE_FALLBACK(useFallback)) {
-            return 0xfffe;
+        वापस 0x10000+MBCS_ENTRY_FINAL_मूल्य(entry);
+    } अन्यथा अगर(action==MBCS_STATE_FALLBACK_DIRECT_16) {
+        अगर(!TO_U_USE_FALLBACK(useFallback)) {
+            वापस 0xfffe;
         }
         /* output BMP code point */
-        return (char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
-    } else if(action==MBCS_STATE_FALLBACK_DIRECT_20) {
-        if(!TO_U_USE_FALLBACK(useFallback)) {
-            return 0xfffe;
+        वापस (char16_t)MBCS_ENTRY_FINAL_मूल्य_16(entry);
+    } अन्यथा अगर(action==MBCS_STATE_FALLBACK_DIRECT_20) {
+        अगर(!TO_U_USE_FALLBACK(useFallback)) {
+            वापस 0xfffe;
         }
         /* output supplementary code point */
-        return 0x10000+MBCS_ENTRY_FINAL_VALUE(entry);
-    } else if(action==MBCS_STATE_UNASSIGNED) {
-        return 0xfffe;
-    } else if(action==MBCS_STATE_ILLEGAL) {
-        return 0xffff;
-    } else {
+        वापस 0x10000+MBCS_ENTRY_FINAL_मूल्य(entry);
+    } अन्यथा अगर(action==MBCS_STATE_UNASSIGNED) {
+        वापस 0xfffe;
+    } अन्यथा अगर(action==MBCS_STATE_ILLEGAL) {
+        वापस 0xffff;
+    } अन्यथा {
         /* reserved, must never occur */
-        return 0xffff;
+        वापस 0xffff;
     }
 }
-#endif
+#पूर्ण_अगर
 
 /*
  * This is a simple version of _MBCSGetNextUChar() that is used
@@ -3258,11 +3258,11 @@ ucnv_MBCSSingleSimpleGetNextUChar(UConverterSharedData *sharedData,
  * otherwise the Unicode code point
  */
 U_CFUNC UChar32
-ucnv_MBCSSimpleGetNextUChar(UConverterSharedData *sharedData,
-                        const char *source, int32_t length,
+ucnv_MBCSSimple_Get_अग्र_UChar(UConverter_Shared_तथ्य *shared_तथ्य,
+                        स्थिर अक्षर *source, int32_t length,
                         UBool useFallback) {
-    const int32_t (*stateTable)[256];
-    const uint16_t *unicodeCodeUnits;
+    स्थिर int32_t (*stateTable)[256];
+    स्थिर uint16_t *unicodeCodeUnits;
 
     uint32_t offset;
     uint8_t state, action;
@@ -3270,12 +3270,12 @@ ucnv_MBCSSimpleGetNextUChar(UConverterSharedData *sharedData,
     UChar32 c;
     int32_t i, entry;
 
-    if(length<=0) {
+    अगर(length<=0) {
         /* no input at all: "illegal" */
-        return 0xffff;
+        वापस 0xffff;
     }
 
-#if 0
+#अगर 0
 /*
  * Code disabled 2002dec09 (ICU 2.4) because it is not currently used in ICU. markus
  * TODO In future releases, verify that this function is never called for SBCS
@@ -3283,138 +3283,138 @@ ucnv_MBCSSimpleGetNextUChar(UConverterSharedData *sharedData,
  * Removal improves code coverage.
  */
     /* use optimized function if possible */
-    if(sharedData->mbcs.countStates==1) {
-        if(length==1) {
-            return ucnv_MBCSSingleSimpleGetNextUChar(sharedData, (uint8_t)*source, useFallback);
-        } else {
-            return 0xffff; /* illegal: more than a single byte for an SBCS converter */
+    अगर(shared_तथ्य->mbcs.गिनती_States==1) {
+        अगर(length==1) {
+            वापस ucnv_MBCSSingle_Simple_Get_अग्र_UChar(shared_तथ्य, (uint8_t)*source, useFallback);
+        } अन्यथा {
+            वापस 0xffff; /* illegal: more than a single byte for an SBCS converter */
         }
     }
-#endif
+#पूर्ण_अगर
 
     /* set up the local pointers */
-    stateTable=sharedData->mbcs.stateTable;
-    unicodeCodeUnits=sharedData->mbcs.unicodeCodeUnits;
+    stateTable=shared_तथ्य->mbcs.stateTable;
+    unicodeCodeUnits=shared_तथ्य->mbcs.unicodeCodeUnits;
 
     /* converter state */
     offset=0;
-    state=sharedData->mbcs.dbcsOnlyState;
+    state=shared_तथ्य->mbcs.dbcsOnlyState;
 
     /* conversion loop */
-    for(i=0;;) {
+    क्रम(i=0;;) {
         entry=stateTable[state][(uint8_t)source[i++]];
-        if(MBCS_ENTRY_IS_TRANSITION(entry)) {
+        अगर(MBCS_ENTRY_IS_TRANSITION(entry)) {
             state=(uint8_t)MBCS_ENTRY_TRANSITION_STATE(entry);
             offset+=MBCS_ENTRY_TRANSITION_OFFSET(entry);
 
-            if(i==length) {
-                return 0xffff; /* truncated character */
+            अगर(i==length) {
+                वापस 0xffff; /* truncated character */
             }
-        } else {
+        } अन्यथा {
             /*
              * An if-else-if chain provides more reliable performance for
              * the most common cases compared to a switch.
              */
             action=(uint8_t)(MBCS_ENTRY_FINAL_ACTION(entry));
-            if(action==MBCS_STATE_VALID_16) {
-                offset+=MBCS_ENTRY_FINAL_VALUE_16(entry);
+            अगर(action==MBCS_STATE_VALID_16) {
+                offset+=MBCS_ENTRY_FINAL_मूल्य_16(entry);
                 c=unicodeCodeUnits[offset];
-                if(c!=0xfffe) {
+                अगर(c!=0xfffe) {
                     /* done */
-                } else if(UCNV_TO_U_USE_FALLBACK(cnv)) {
-                    c=ucnv_MBCSGetFallback(&sharedData->mbcs, offset);
+                } अन्यथा अगर(UCNV_TO_U_USE_FALLBACK(cnv)) {
+                    c=ucnv_MBCSGetFallback(&shared_तथ्य->mbcs, offset);
                 /* else done with 0xfffe */
                 }
-                break;
-            } else if(action==MBCS_STATE_VALID_DIRECT_16) {
+                अवरोध;
+            } अन्यथा अगर(action==MBCS_STATE_VALID_DIRECT_16) {
                 /* output BMP code point */
-                c=(char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
-                break;
-            } else if(action==MBCS_STATE_VALID_16_PAIR) {
-                offset+=MBCS_ENTRY_FINAL_VALUE_16(entry);
+                c=(char16_t)MBCS_ENTRY_FINAL_मूल्य_16(entry);
+                अवरोध;
+            } अन्यथा अगर(action==MBCS_STATE_VALID_16_PAIR) {
+                offset+=MBCS_ENTRY_FINAL_मूल्य_16(entry);
                 c=unicodeCodeUnits[offset++];
-                if(c<0xd800) {
+                अगर(c<0xd800) {
                     /* output BMP code point below 0xd800 */
-                } else if(UCNV_TO_U_USE_FALLBACK(cnv) ? c<=0xdfff : c<=0xdbff) {
+                } अन्यथा अगर(UCNV_TO_U_USE_FALLBACK(cnv) ? c<=0xdfff : c<=0xdbff) {
                     /* output roundtrip or fallback supplementary code point */
                     c=(UChar32)(((c&0x3ff)<<10)+unicodeCodeUnits[offset]+(0x10000-0xdc00));
-                } else if(UCNV_TO_U_USE_FALLBACK(cnv) ? (c&0xfffe)==0xe000 : c==0xe000) {
+                } अन्यथा अगर(UCNV_TO_U_USE_FALLBACK(cnv) ? (c&0xfffe)==0xe000 : c==0xe000) {
                     /* output roundtrip BMP code point above 0xd800 or fallback BMP code point */
                     c=unicodeCodeUnits[offset];
-                } else if(c==0xffff) {
-                    return 0xffff;
-                } else {
+                } अन्यथा अगर(c==0xffff) {
+                    वापस 0xffff;
+                } अन्यथा {
                     c=0xfffe;
                 }
-                break;
-            } else if(action==MBCS_STATE_VALID_DIRECT_20) {
+                अवरोध;
+            } अन्यथा अगर(action==MBCS_STATE_VALID_DIRECT_20) {
                 /* output supplementary code point */
-                c=0x10000+MBCS_ENTRY_FINAL_VALUE(entry);
-                break;
-            } else if(action==MBCS_STATE_FALLBACK_DIRECT_16) {
-                if(!TO_U_USE_FALLBACK(useFallback)) {
+                c=0x10000+MBCS_ENTRY_FINAL_मूल्य(entry);
+                अवरोध;
+            } अन्यथा अगर(action==MBCS_STATE_FALLBACK_DIRECT_16) {
+                अगर(!TO_U_USE_FALLBACK(useFallback)) {
                     c=0xfffe;
-                    break;
+                    अवरोध;
                 }
                 /* output BMP code point */
-                c=(char16_t)MBCS_ENTRY_FINAL_VALUE_16(entry);
-                break;
-            } else if(action==MBCS_STATE_FALLBACK_DIRECT_20) {
-                if(!TO_U_USE_FALLBACK(useFallback)) {
+                c=(char16_t)MBCS_ENTRY_FINAL_मूल्य_16(entry);
+                अवरोध;
+            } अन्यथा अगर(action==MBCS_STATE_FALLBACK_DIRECT_20) {
+                अगर(!TO_U_USE_FALLBACK(useFallback)) {
                     c=0xfffe;
-                    break;
+                    अवरोध;
                 }
                 /* output supplementary code point */
-                c=0x10000+MBCS_ENTRY_FINAL_VALUE(entry);
-                break;
-            } else if(action==MBCS_STATE_UNASSIGNED) {
+                c=0x10000+MBCS_ENTRY_FINAL_मूल्य(entry);
+                अवरोध;
+            } अन्यथा अगर(action==MBCS_STATE_UNASSIGNED) {
                 c=0xfffe;
-                break;
+                अवरोध;
             }
 
             /*
              * forbid MBCS_STATE_CHANGE_ONLY for this function,
              * and MBCS_STATE_ILLEGAL and reserved action codes
              */
-            return 0xffff;
+            वापस 0xffff;
         }
     }
 
-    if(i!=length) {
+    अगर(i!=length) {
         /* illegal for this function: not all input consumed */
-        return 0xffff;
+        वापस 0xffff;
     }
 
-    if(c==0xfffe) {
+    अगर(c==0xfffe) {
         /* try an extension mapping */
-        const int32_t *cx=sharedData->mbcs.extIndexes;
-        if(cx!=nullptr) {
-            return ucnv_extSimpleMatchToU(cx, source, length, useFallback);
+        स्थिर int32_t *cx=shared_तथ्य->mbcs.extIndexes;
+        अगर(cx!=nullptr) {
+            वापस ucnv_extSimpleMatchToU(cx, source, length, useFallback);
         }
     }
 
-    return c;
+    वापस c;
 }
 
 /* MBCS-from-Unicode conversion functions ----------------------------------- */
 
 /* This version of ucnv_MBCSFromUnicodeWithOffsets() is optimized for double-byte codepages. */
-static void
+अटल व्योम
 ucnv_MBCSDoubleFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
                                   UErrorCode *pErrorCode) {
     UConverter *cnv;
-    const char16_t *source, *sourceLimit;
+    स्थिर char16_t *source, *sourceLimit;
     uint8_t *target;
     int32_t targetCapacity;
     int32_t *offsets;
 
-    const uint16_t *table;
-    const uint16_t *mbcsIndex;
-    const uint8_t *bytes;
+    स्थिर uint16_t *table;
+    स्थिर uint16_t *mbcs_सूचकांक;
+    स्थिर uint8_t *bytes;
 
     UChar32 c;
 
-    int32_t sourceIndex, nextSourceIndex;
+    int32_t source_सूचकांक, अग्र_Source_सूचकांक;
 
     uint32_t stage2Entry;
     uint32_t asciiRoundtrips;
@@ -3423,7 +3423,7 @@ ucnv_MBCSDoubleFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
 
     /* use optimized function if possible */
     cnv=pArgs->converter;
-    unicodeMask=cnv->sharedData->mbcs.unicodeMask;
+    unicodeMask=cnv->shared_तथ्य->mbcs.unicodeMask;
 
     /* set up the local pointers */
     source=pArgs->source;
@@ -3432,28 +3432,28 @@ ucnv_MBCSDoubleFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     targetCapacity = static_cast<int32_t>(pArgs->targetLimit - pArgs->target);
     offsets=pArgs->offsets;
 
-    table=cnv->sharedData->mbcs.fromUnicodeTable;
-    mbcsIndex=cnv->sharedData->mbcs.mbcsIndex;
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        bytes=cnv->sharedData->mbcs.swapLFNLFromUnicodeBytes;
-    } else {
-        bytes=cnv->sharedData->mbcs.fromUnicodeBytes;
+    table=cnv->shared_तथ्य->mbcs.fromUnicodeTable;
+    mbcs_सूचकांक=cnv->shared_तथ्य->mbcs.mbcs_सूचकांक;
+    अगर((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
+        bytes=cnv->shared_तथ्य->mbcs.swapLFNLFromUnicodeBytes;
+    } अन्यथा {
+        bytes=cnv->shared_तथ्य->mbcs.fromUnicodeBytes;
     }
-    asciiRoundtrips=cnv->sharedData->mbcs.asciiRoundtrips;
+    asciiRoundtrips=cnv->shared_तथ्य->mbcs.asciiRoundtrips;
 
     /* get the converter state from UConverter */
     c=cnv->fromUChar32;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex= c==0 ? 0 : -1;
-    nextSourceIndex=0;
+    source_सूचकांक= c==0 ? 0 : -1;
+    अग्र_Source_सूचकांक=0;
 
     /* conversion loop */
-    if(c!=0 && targetCapacity>0) {
-        goto getTrail;
+    अगर(c!=0 && targetCapacity>0) {
+        जाओ getTrail;
     }
 
-    while(source<sourceLimit) {
+    जबतक(source<sourceLimit) {
         /*
          * This following test is to see if available input would overflow the output.
          * It does not catch output of more than one byte that
@@ -3462,74 +3462,74 @@ ucnv_MBCSDoubleFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
          * Therefore, those situations also test for overflows and will
          * then break the loop, too.
          */
-        if(targetCapacity>0) {
+        अगर(targetCapacity>0) {
             /*
              * Get a correct Unicode code point:
              * a single char16_t for a BMP code point or
              * a matched surrogate pair for a "supplementary code point".
              */
             c=*source++;
-            ++nextSourceIndex;
-            if(c<=0x7f && IS_ASCII_ROUNDTRIP(c, asciiRoundtrips)) {
+            ++अग्र_Source_सूचकांक;
+            अगर(c<=0x7f && IS_ASCII_ROUNDTRIP(c, asciiRoundtrips)) {
                 *target++ = static_cast<uint8_t>(c);
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
-                    sourceIndex=nextSourceIndex;
+                अगर(offsets!=nullptr) {
+                    *offsets++=source_सूचकांक;
+                    source_सूचकांक=अग्र_Source_सूचकांक;
                 }
                 --targetCapacity;
                 c=0;
-                continue;
+                जारी;
             }
             /*
              * utf8Friendly table: Test for <=0xd7ff rather than <=MBCS_FAST_MAX
              * to avoid dealing with surrogates.
              * MBCS_FAST_MAX must be >=0xd7ff.
              */
-            if(c<=0xd7ff) {
-                value=DBCS_RESULT_FROM_MOST_BMP(mbcsIndex, (const uint16_t *)bytes, c);
+            अगर(c<=0xd7ff) {
+                value=DBCS_परिणाम_FROM_MOST_BMP(mbcs_सूचकांक, (स्थिर uint16_t *)bytes, c);
                 /* There are only roundtrips (!=0) and no-mapping (==0) entries. */
-                if(value==0) {
-                    goto unassigned;
+                अगर(value==0) {
+                    जाओ unassigned;
                 }
                 /* output the value */
-            } else {
+            } अन्यथा {
                 /*
                  * This also tests if the codepage maps single surrogates.
                  * If it does, then surrogates are not paired but mapped separately.
                  * Note that in this case unmatched surrogates are not detected.
                  */
-                if(U16_IS_SURROGATE(c) && !(unicodeMask&UCNV_HAS_SURROGATES)) {
-                    if(U16_IS_SURROGATE_LEAD(c)) {
+                अगर(U16_IS_SURROGATE(c) && !(unicodeMask&UCNV_HAS_SURROGATES)) {
+                    अगर(U16_IS_SURROGATE_LEAD(c)) {
 getTrail:
-                        if(source<sourceLimit) {
+                        अगर(source<sourceLimit) {
                             /* test the following code unit */
                             char16_t trail=*source;
-                            if(U16_IS_TRAIL(trail)) {
+                            अगर(U16_IS_TRAIL(trail)) {
                                 ++source;
-                                ++nextSourceIndex;
+                                ++अग्र_Source_सूचकांक;
                                 c=U16_GET_SUPPLEMENTARY(c, trail);
-                                if(!(unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
+                                अगर(!(unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
                                     /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
                                     /* callback(unassigned) */
-                                    goto unassigned;
+                                    जाओ unassigned;
                                 }
                                 /* convert this supplementary code point */
                                 /* exit this condition tree */
-                            } else {
+                            } अन्यथा {
                                 /* this is an unmatched lead code unit (1st surrogate) */
                                 /* callback(illegal) */
                                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                                break;
+                                अवरोध;
                             }
-                        } else {
+                        } अन्यथा {
                             /* no more input */
-                            break;
+                            अवरोध;
                         }
-                    } else {
+                    } अन्यथा {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
                         *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        break;
+                        अवरोध;
                     }
                 }
 
@@ -3538,10 +3538,10 @@ getTrail:
 
                 /* get the bytes and the length for the output */
                 /* MBCS_OUTPUT_2 */
-                value=MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, c);
+                value=MBCS_मूल्य_2_FROM_STAGE_2(bytes, stage2Entry, c);
 
                 /* is this code point assigned, or do we use fallbacks? */
-                if(!(MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c) ||
+                अगर(!(MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c) ||
                      (UCNV_FROM_U_USE_FALLBACK(cnv, c) && value!=0))
                 ) {
                     /*
@@ -3553,71 +3553,71 @@ getTrail:
 unassigned:
                     /* try an extension mapping */
                     pArgs->source=source;
-                    c=_extFromU(cnv, cnv->sharedData,
+                    c=_extFromU(cnv, cnv->shared_तथ्य,
                                 c, &source, sourceLimit,
                                 &target, target+targetCapacity,
-                                &offsets, sourceIndex,
-                                pArgs->flush,
+                                &offsets, source_सूचकांक,
+                                pArgs->सफाई,
                                 pErrorCode);
-                    nextSourceIndex += static_cast<int32_t>(source - pArgs->source);
+                    अग्र_Source_सूचकांक += static_cast<int32_t>(source - pArgs->source);
 
-                    if(U_FAILURE(*pErrorCode)) {
+                    अगर(U_FAILURE(*pErrorCode)) {
                         /* not mappable or buffer overflow */
-                        break;
-                    } else {
+                        अवरोध;
+                    } अन्यथा {
                         /* a mapping was written to the target, continue */
 
                         /* recalculate the targetCapacity after an extension mapping */
-                        targetCapacity = static_cast<int32_t>(pArgs->targetLimit - reinterpret_cast<char*>(target));
+                        targetCapacity = static_cast<int32_t>(pArgs->targetLimit - reinterpret_cast<अक्षर*>(target));
 
                         /* normal end of conversion: prepare for a new character */
-                        sourceIndex=nextSourceIndex;
-                        continue;
+                        source_सूचकांक=अग्र_Source_सूचकांक;
+                        जारी;
                     }
                 }
             }
 
             /* write the output character bytes from value and length */
             /* from the first if in the loop we know that targetCapacity>0 */
-            if(value<=0xff) {
+            अगर(value<=0xff) {
                 /* this is easy because we know that there is enough space */
                 *target++ = static_cast<uint8_t>(value);
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                अगर(offsets!=nullptr) {
+                    *offsets++=source_सूचकांक;
                 }
                 --targetCapacity;
-            } else /* length==2 */ {
+            } अन्यथा /* length==2 */ {
                 *target++ = static_cast<uint8_t>(value >> 8);
-                if(2<=targetCapacity) {
+                अगर(2<=targetCapacity) {
                     *target++ = static_cast<uint8_t>(value);
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
-                        *offsets++=sourceIndex;
+                    अगर(offsets!=nullptr) {
+                        *offsets++=source_सूचकांक;
+                        *offsets++=source_सूचकांक;
                     }
                     targetCapacity-=2;
-                } else {
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                } अन्यथा {
+                    अगर(offsets!=nullptr) {
+                        *offsets++=source_सूचकांक;
                     }
-                    cnv->charErrorBuffer[0] = static_cast<char>(value);
-                    cnv->charErrorBufferLength=1;
+                    cnv->char_Error_बफर[0] = static_cast<अक्षर>(value);
+                    cnv->char_Error_बफर_लंबाई=1;
 
                     /* target overflow */
                     targetCapacity=0;
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                    *pErrorCode=U_बफर_OVERFLOW_ERROR;
                     c=0;
-                    break;
+                    अवरोध;
                 }
             }
 
             /* normal end of conversion: prepare for a new character */
             c=0;
-            sourceIndex=nextSourceIndex;
-            continue;
-        } else {
+            source_सूचकांक=अग्र_Source_सूचकांक;
+            जारी;
+        } अन्यथा {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *pErrorCode=U_बफर_OVERFLOW_ERROR;
+            अवरोध;
         }
     }
 
@@ -3626,28 +3626,28 @@ unassigned:
 
     /* write back the updated pointers */
     pArgs->source=source;
-    pArgs->target = reinterpret_cast<char*>(target);
+    pArgs->target = reinterpret_cast<अक्षर*>(target);
     pArgs->offsets=offsets;
 }
 
 /* This version of ucnv_MBCSFromUnicodeWithOffsets() is optimized for single-byte codepages. */
-static void
+अटल व्योम
 ucnv_MBCSSingleFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
                                   UErrorCode *pErrorCode) {
     UConverter *cnv;
-    const char16_t *source, *sourceLimit;
+    स्थिर char16_t *source, *sourceLimit;
     uint8_t *target;
     int32_t targetCapacity;
     int32_t *offsets;
 
-    const uint16_t *table;
-    const uint16_t *results;
+    स्थिर uint16_t *table;
+    स्थिर uint16_t *results;
 
     UChar32 c;
 
-    int32_t sourceIndex, nextSourceIndex;
+    int32_t source_सूचकांक, अग्र_Source_सूचकांक;
 
-    uint16_t value, minValue;
+    uint16_t value, min_मूल्य;
     UBool hasSupplementary;
 
     /* set up the local pointers */
@@ -3658,35 +3658,35 @@ ucnv_MBCSSingleFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     targetCapacity = static_cast<int32_t>(pArgs->targetLimit - pArgs->target);
     offsets=pArgs->offsets;
 
-    table=cnv->sharedData->mbcs.fromUnicodeTable;
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        results = reinterpret_cast<uint16_t*>(cnv->sharedData->mbcs.swapLFNLFromUnicodeBytes);
-    } else {
-        results=(uint16_t *)cnv->sharedData->mbcs.fromUnicodeBytes;
+    table=cnv->shared_तथ्य->mbcs.fromUnicodeTable;
+    अगर((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
+        results = reinterpret_cast<uint16_t*>(cnv->shared_तथ्य->mbcs.swapLFNLFromUnicodeBytes);
+    } अन्यथा {
+        results=(uint16_t *)cnv->shared_तथ्य->mbcs.fromUnicodeBytes;
     }
 
-    if(cnv->useFallback) {
+    अगर(cnv->useFallback) {
         /* use all roundtrip and fallback results */
-        minValue=0x800;
-    } else {
+        min_मूल्य=0x800;
+    } अन्यथा {
         /* use only roundtrips and fallbacks from private-use characters */
-        minValue=0xc00;
+        min_मूल्य=0xc00;
     }
-    hasSupplementary = static_cast<UBool>(cnv->sharedData->mbcs.unicodeMask & UCNV_HAS_SUPPLEMENTARY);
+    hasSupplementary = static_cast<UBool>(cnv->shared_तथ्य->mbcs.unicodeMask & UCNV_HAS_SUPPLEMENTARY);
 
     /* get the converter state from UConverter */
     c=cnv->fromUChar32;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex= c==0 ? 0 : -1;
-    nextSourceIndex=0;
+    source_सूचकांक= c==0 ? 0 : -1;
+    अग्र_Source_सूचकांक=0;
 
     /* conversion loop */
-    if(c!=0 && targetCapacity>0) {
-        goto getTrail;
+    अगर(c!=0 && targetCapacity>0) {
+        जाओ getTrail;
     }
 
-    while(source<sourceLimit) {
+    जबतक(source<sourceLimit) {
         /*
          * This following test is to see if available input would overflow the output.
          * It does not catch output of more than one byte that
@@ -3695,95 +3695,95 @@ ucnv_MBCSSingleFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
          * Therefore, those situations also test for overflows and will
          * then break the loop, too.
          */
-        if(targetCapacity>0) {
+        अगर(targetCapacity>0) {
             /*
              * Get a correct Unicode code point:
              * a single char16_t for a BMP code point or
              * a matched surrogate pair for a "supplementary code point".
              */
             c=*source++;
-            ++nextSourceIndex;
-            if(U16_IS_SURROGATE(c)) {
-                if(U16_IS_SURROGATE_LEAD(c)) {
+            ++अग्र_Source_सूचकांक;
+            अगर(U16_IS_SURROGATE(c)) {
+                अगर(U16_IS_SURROGATE_LEAD(c)) {
 getTrail:
-                    if(source<sourceLimit) {
+                    अगर(source<sourceLimit) {
                         /* test the following code unit */
                         char16_t trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
+                        अगर(U16_IS_TRAIL(trail)) {
                             ++source;
-                            ++nextSourceIndex;
+                            ++अग्र_Source_सूचकांक;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
-                            if(!hasSupplementary) {
+                            अगर(!hasSupplementary) {
                                 /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
                                 /* callback(unassigned) */
-                                goto unassigned;
+                                जाओ unassigned;
                             }
                             /* convert this supplementary code point */
                             /* exit this condition tree */
-                        } else {
+                        } अन्यथा {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            break;
+                            अवरोध;
                         }
-                    } else {
+                    } अन्यथा {
                         /* no more input */
-                        break;
+                        अवरोध;
                     }
-                } else {
+                } अन्यथा {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    break;
+                    अवरोध;
                 }
             }
 
             /* convert the Unicode code point in c into codepage bytes */
-            value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
+            value=MBCS_SINGLE_परिणाम_FROM_U(table, results, c);
 
             /* is this code point assigned, or do we use fallbacks? */
-            if(value>=minValue) {
+            अगर(value>=min_मूल्य) {
                 /* assigned, write the output character bytes from value and length */
                 /* length==1 */
                 /* this is easy because we know that there is enough space */
                 *target++ = static_cast<uint8_t>(value);
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
+                अगर(offsets!=nullptr) {
+                    *offsets++=source_सूचकांक;
                 }
                 --targetCapacity;
 
                 /* normal end of conversion: prepare for a new character */
                 c=0;
-                sourceIndex=nextSourceIndex;
-            } else { /* unassigned */
+                source_सूचकांक=अग्र_Source_सूचकांक;
+            } अन्यथा { /* unassigned */
 unassigned:
                 /* try an extension mapping */
                 pArgs->source=source;
-                c=_extFromU(cnv, cnv->sharedData,
+                c=_extFromU(cnv, cnv->shared_तथ्य,
                             c, &source, sourceLimit,
                             &target, target+targetCapacity,
-                            &offsets, sourceIndex,
-                            pArgs->flush,
+                            &offsets, source_सूचकांक,
+                            pArgs->सफाई,
                             pErrorCode);
-                nextSourceIndex += static_cast<int32_t>(source - pArgs->source);
+                अग्र_Source_सूचकांक += static_cast<int32_t>(source - pArgs->source);
 
-                if(U_FAILURE(*pErrorCode)) {
+                अगर(U_FAILURE(*pErrorCode)) {
                     /* not mappable or buffer overflow */
-                    break;
-                } else {
+                    अवरोध;
+                } अन्यथा {
                     /* a mapping was written to the target, continue */
 
                     /* recalculate the targetCapacity after an extension mapping */
-                    targetCapacity = static_cast<int32_t>(pArgs->targetLimit - reinterpret_cast<char*>(target));
+                    targetCapacity = static_cast<int32_t>(pArgs->targetLimit - reinterpret_cast<अक्षर*>(target));
 
                     /* normal end of conversion: prepare for a new character */
-                    sourceIndex=nextSourceIndex;
+                    source_सूचकांक=अग्र_Source_सूचकांक;
                 }
             }
-        } else {
+        } अन्यथा {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *pErrorCode=U_बफर_OVERFLOW_ERROR;
+            अवरोध;
         }
     }
 
@@ -3792,7 +3792,7 @@ unassigned:
 
     /* write back the updated pointers */
     pArgs->source=source;
-    pArgs->target = reinterpret_cast<char*>(target);
+    pArgs->target = reinterpret_cast<अक्षर*>(target);
     pArgs->offsets=offsets;
 }
 
@@ -3807,24 +3807,24 @@ unassigned:
  * See SVN revision 21013 (2007-feb-06) for the last version with #if switches
  * for various MBCS and SBCS optimizations.
  */
-static void
+अटल व्योम
 ucnv_MBCSSingleFromBMPWithOffsets(UConverterFromUnicodeArgs *pArgs,
                               UErrorCode *pErrorCode) {
     UConverter *cnv;
-    const char16_t *source, *sourceLimit, *lastSource;
+    स्थिर char16_t *source, *sourceLimit, *lastSource;
     uint8_t *target;
     int32_t targetCapacity, length;
     int32_t *offsets;
 
-    const uint16_t *table;
-    const uint16_t *results;
+    स्थिर uint16_t *table;
+    स्थिर uint16_t *results;
 
     UChar32 c;
 
-    int32_t sourceIndex;
+    int32_t source_सूचकांक;
 
     uint32_t asciiRoundtrips;
-    uint16_t value, minValue;
+    uint16_t value, min_मूल्य;
 
     /* set up the local pointers */
     cnv=pArgs->converter;
@@ -3834,27 +3834,27 @@ ucnv_MBCSSingleFromBMPWithOffsets(UConverterFromUnicodeArgs *pArgs,
     targetCapacity = static_cast<int32_t>(pArgs->targetLimit - pArgs->target);
     offsets=pArgs->offsets;
 
-    table=cnv->sharedData->mbcs.fromUnicodeTable;
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        results = reinterpret_cast<uint16_t*>(cnv->sharedData->mbcs.swapLFNLFromUnicodeBytes);
-    } else {
-        results=(uint16_t *)cnv->sharedData->mbcs.fromUnicodeBytes;
+    table=cnv->shared_तथ्य->mbcs.fromUnicodeTable;
+    अगर((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
+        results = reinterpret_cast<uint16_t*>(cnv->shared_तथ्य->mbcs.swapLFNLFromUnicodeBytes);
+    } अन्यथा {
+        results=(uint16_t *)cnv->shared_तथ्य->mbcs.fromUnicodeBytes;
     }
-    asciiRoundtrips=cnv->sharedData->mbcs.asciiRoundtrips;
+    asciiRoundtrips=cnv->shared_तथ्य->mbcs.asciiRoundtrips;
 
-    if(cnv->useFallback) {
+    अगर(cnv->useFallback) {
         /* use all roundtrip and fallback results */
-        minValue=0x800;
-    } else {
+        min_मूल्य=0x800;
+    } अन्यथा {
         /* use only roundtrips and fallbacks from private-use characters */
-        minValue=0xc00;
+        min_मूल्य=0xc00;
     }
 
     /* get the converter state from UConverter */
     c=cnv->fromUChar32;
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    sourceIndex= c==0 ? 0 : -1;
+    source_सूचकांक= c==0 ? 0 : -1;
     lastSource=source;
 
     /*
@@ -3862,65 +3862,65 @@ ucnv_MBCSSingleFromBMPWithOffsets(UConverterFromUnicodeArgs *pArgs,
      * for the minimum of the sourceLength and targetCapacity
      */
     length = static_cast<int32_t>(sourceLimit - source);
-    if(length<targetCapacity) {
+    अगर(length<targetCapacity) {
         targetCapacity=length;
     }
 
     /* conversion loop */
-    if(c!=0 && targetCapacity>0) {
-        goto getTrail;
+    अगर(c!=0 && targetCapacity>0) {
+        जाओ getTrail;
     }
 
-#if MBCS_UNROLL_SINGLE_FROM_BMP
+#अगर MBCS_UNROLL_SINGLE_FROM_BMP
     /* unrolling makes it slower on Pentium III/Windows 2000?! */
     /* unroll the loop with the most common case */
 unrolled:
-    if(targetCapacity>=4) {
+    अगर(targetCapacity>=4) {
         int32_t count, loops;
-        uint16_t andedValues;
+        uint16_t anded_मूल्यावली;
 
         loops=count=targetCapacity>>2;
-        do {
+        करो {
             c=*source++;
-            andedValues=value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
+            anded_मूल्यावली=value=MBCS_SINGLE_परिणाम_FROM_U(table, results, c);
             *target++=(uint8_t)value;
             c=*source++;
-            andedValues&=value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
+            anded_मूल्यावली&=value=MBCS_SINGLE_परिणाम_FROM_U(table, results, c);
             *target++=(uint8_t)value;
             c=*source++;
-            andedValues&=value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
+            anded_मूल्यावली&=value=MBCS_SINGLE_परिणाम_FROM_U(table, results, c);
             *target++=(uint8_t)value;
             c=*source++;
-            andedValues&=value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
+            anded_मूल्यावली&=value=MBCS_SINGLE_परिणाम_FROM_U(table, results, c);
             *target++=(uint8_t)value;
 
             /* were all 4 entries really valid? */
-            if(andedValues<minValue) {
+            अगर(anded_मूल्यावली<min_मूल्य) {
                 /* no, return to the first of these 4 */
                 source-=4;
                 target-=4;
-                break;
+                अवरोध;
             }
-        } while(--count>0);
+        } जबतक(--count>0);
         count=loops-count;
         targetCapacity-=4*count;
 
-        if(offsets!=nullptr) {
+        अगर(offsets!=nullptr) {
             lastSource+=4*count;
-            while(count>0) {
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
-                *offsets++=sourceIndex++;
+            जबतक(count>0) {
+                *offsets++=source_सूचकांक++;
+                *offsets++=source_सूचकांक++;
+                *offsets++=source_सूचकांक++;
+                *offsets++=source_सूचकांक++;
                 --count;
             }
         }
 
         c=0;
     }
-#endif
+#पूर्ण_अगर
 
-    while(targetCapacity>0) {
+    जबतक(targetCapacity>0) {
         /*
          * Get a correct Unicode code point:
          * a single char16_t for a BMP code point or
@@ -3933,15 +3933,15 @@ unrolled:
          * This speeds up the conversion of assigned characters.
          */
         /* convert the Unicode code point in c into codepage bytes */
-        if(c<=0x7f && IS_ASCII_ROUNDTRIP(c, asciiRoundtrips)) {
+        अगर(c<=0x7f && IS_ASCII_ROUNDTRIP(c, asciiRoundtrips)) {
             *target++ = static_cast<uint8_t>(c);
             --targetCapacity;
             c=0;
-            continue;
+            जारी;
         }
-        value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
+        value=MBCS_SINGLE_परिणाम_FROM_U(table, results, c);
         /* is this code point assigned, or do we use fallbacks? */
-        if(value>=minValue) {
+        अगर(value>=min_मूल्य) {
             /* assigned, write the output character bytes from value and length */
             /* length==1 */
             /* this is easy because we know that there is enough space */
@@ -3950,53 +3950,53 @@ unrolled:
 
             /* normal end of conversion: prepare for a new character */
             c=0;
-            continue;
-        } else if(!U16_IS_SURROGATE(c)) {
+            जारी;
+        } अन्यथा अगर(!U16_IS_SURROGATE(c)) {
             /* normal, unassigned BMP character */
-        } else if(U16_IS_SURROGATE_LEAD(c)) {
+        } अन्यथा अगर(U16_IS_SURROGATE_LEAD(c)) {
 getTrail:
-            if(source<sourceLimit) {
+            अगर(source<sourceLimit) {
                 /* test the following code unit */
                 char16_t trail=*source;
-                if(U16_IS_TRAIL(trail)) {
+                अगर(U16_IS_TRAIL(trail)) {
                     ++source;
                     c=U16_GET_SUPPLEMENTARY(c, trail);
                     /* this codepage does not map supplementary code points */
                     /* callback(unassigned) */
-                } else {
+                } अन्यथा {
                     /* this is an unmatched lead code unit (1st surrogate) */
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    break;
+                    अवरोध;
                 }
-            } else {
+            } अन्यथा {
                 /* no more input */
-                if (pArgs->flush) {
+                अगर (pArgs->सफाई) {
                     *pErrorCode=U_TRUNCATED_CHAR_FOUND;
                 }
-                break;
+                अवरोध;
             }
-        } else {
+        } अन्यथा {
             /* this is an unmatched trail code unit (2nd surrogate) */
             /* callback(illegal) */
             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-            break;
+            अवरोध;
         }
 
         /* c does not have a mapping */
 
         /* get the number of code units for c to correctly advance sourceIndex */
-        length=U16_LENGTH(c);
+        length=U16_लंबाई(c);
 
         /* set offsets since the start or the last extension */
-        if(offsets!=nullptr) {
+        अगर(offsets!=nullptr) {
             int32_t count = static_cast<int32_t>(source - lastSource);
 
             /* do not set the offset for this character */
             count-=length;
 
-            while(count>0) {
-                *offsets++=sourceIndex++;
+            जबतक(count>0) {
+                *offsets++=source_सूचकांक++;
                 --count;
             }
             /* offsets and sourceIndex are now set for the current character */
@@ -4004,44 +4004,44 @@ getTrail:
 
         /* try an extension mapping */
         lastSource=source;
-        c=_extFromU(cnv, cnv->sharedData,
+        c=_extFromU(cnv, cnv->shared_तथ्य,
                     c, &source, sourceLimit,
-                    &target, reinterpret_cast<const uint8_t*>(pArgs->targetLimit),
-                    &offsets, sourceIndex,
-                    pArgs->flush,
+                    &target, reinterpret_cast<स्थिर uint8_t*>(pArgs->targetLimit),
+                    &offsets, source_सूचकांक,
+                    pArgs->सफाई,
                     pErrorCode);
-        sourceIndex += length + static_cast<int32_t>(source - lastSource);
+        source_सूचकांक += length + static_cast<int32_t>(source - lastSource);
         lastSource=source;
 
-        if(U_FAILURE(*pErrorCode)) {
+        अगर(U_FAILURE(*pErrorCode)) {
             /* not mappable or buffer overflow */
-            break;
-        } else {
+            अवरोध;
+        } अन्यथा {
             /* a mapping was written to the target, continue */
 
             /* recalculate the targetCapacity after an extension mapping */
-            targetCapacity = static_cast<int32_t>(pArgs->targetLimit - reinterpret_cast<char*>(target));
+            targetCapacity = static_cast<int32_t>(pArgs->targetLimit - reinterpret_cast<अक्षर*>(target));
             length = static_cast<int32_t>(sourceLimit - source);
-            if(length<targetCapacity) {
+            अगर(length<targetCapacity) {
                 targetCapacity=length;
             }
         }
 
-#if MBCS_UNROLL_SINGLE_FROM_BMP
+#अगर MBCS_UNROLL_SINGLE_FROM_BMP
         /* unrolling makes it slower on Pentium III/Windows 2000?! */
-        goto unrolled;
-#endif
+        जाओ unrolled;
+#पूर्ण_अगर
     }
 
-    if(U_SUCCESS(*pErrorCode) && source<sourceLimit && target>=(uint8_t *)pArgs->targetLimit) {
+    अगर(U_SUCCESS(*pErrorCode) && source<sourceLimit && target>=(uint8_t *)pArgs->targetLimit) {
         /* target is full */
-        *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+        *pErrorCode=U_बफर_OVERFLOW_ERROR;
     }
 
     /* set offsets since the start or the last callback */
-    if(offsets!=nullptr) {
-        size_t count=source-lastSource;
-        if (count > 0 && *pErrorCode == U_TRUNCATED_CHAR_FOUND) {
+    अगर(offsets!=nullptr) {
+        माप_प्रकार count=source-lastSource;
+        अगर (count > 0 && *pErrorCode == U_TRUNCATED_CHAR_FOUND) {
             /*
             Caller gave us a partial supplementary character,
             which this function couldn't convert in any case.
@@ -4049,8 +4049,8 @@ getTrail:
             */
             count--;
         }
-        while(count>0) {
-            *offsets++=sourceIndex++;
+        जबतक(count>0) {
+            *offsets++=source_सूचकांक++;
             --count;
         }
     }
@@ -4060,27 +4060,27 @@ getTrail:
 
     /* write back the updated pointers */
     pArgs->source=source;
-    pArgs->target = reinterpret_cast<char*>(target);
+    pArgs->target = reinterpret_cast<अक्षर*>(target);
     pArgs->offsets=offsets;
 }
 
-U_CFUNC void
+U_CFUNC व्योम
 ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
                             UErrorCode *pErrorCode) {
     UConverter *cnv;
-    const char16_t *source, *sourceLimit;
+    स्थिर char16_t *source, *sourceLimit;
     uint8_t *target;
     int32_t targetCapacity;
     int32_t *offsets;
 
-    const uint16_t *table;
-    const uint16_t *mbcsIndex;
-    const uint8_t *p, *bytes;
+    स्थिर uint16_t *table;
+    स्थिर uint16_t *mbcs_सूचकांक;
+    स्थिर uint8_t *p, *bytes;
     uint8_t outputType;
 
     UChar32 c;
 
-    int32_t prevSourceIndex, sourceIndex, nextSourceIndex;
+    int32_t पूर्व_Source_सूचकांक, source_सूचकांक, अग्र_Source_सूचकांक;
 
     uint32_t stage2Entry;
     uint32_t asciiRoundtrips;
@@ -4088,37 +4088,37 @@ ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     /* Shift-In and Shift-Out byte sequences differ by encoding scheme. */
     uint8_t siBytes[2] = {0, 0};
     uint8_t soBytes[2] = {0, 0};
-    uint8_t siLength, soLength;
-    int32_t length = 0, prevLength;
+    uint8_t si_लंबाई, so_लंबाई;
+    int32_t length = 0, पूर्व_लंबाई;
     uint8_t unicodeMask;
 
     cnv=pArgs->converter;
 
-    if(cnv->preFromUFirstCP>=0) {
+    अगर(cnv->preFromUFirstCP>=0) {
         /*
          * pass sourceIndex=-1 because we continue from an earlier buffer
          * in the future, this may change with continuous offsets
          */
         ucnv_extContinueMatchFromU(cnv, pArgs, -1, pErrorCode);
 
-        if(U_FAILURE(*pErrorCode) || cnv->preFromULength<0) {
-            return;
+        अगर(U_FAILURE(*pErrorCode) || cnv->preFromULength<0) {
+            वापस;
         }
     }
 
     /* use optimized function if possible */
-    outputType=cnv->sharedData->mbcs.outputType;
-    unicodeMask=cnv->sharedData->mbcs.unicodeMask;
-    if(outputType==MBCS_OUTPUT_1 && !(unicodeMask&UCNV_HAS_SURROGATES)) {
-        if(!(unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
+    outputType=cnv->shared_तथ्य->mbcs.outputType;
+    unicodeMask=cnv->shared_तथ्य->mbcs.unicodeMask;
+    अगर(outputType==MBCS_OUTPUT_1 && !(unicodeMask&UCNV_HAS_SURROGATES)) {
+        अगर(!(unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
             ucnv_MBCSSingleFromBMPWithOffsets(pArgs, pErrorCode);
-        } else {
+        } अन्यथा {
             ucnv_MBCSSingleFromUnicodeWithOffsets(pArgs, pErrorCode);
         }
-        return;
-    } else if(outputType==MBCS_OUTPUT_2 && cnv->sharedData->mbcs.utf8Friendly) {
+        वापस;
+    } अन्यथा अगर(outputType==MBCS_OUTPUT_2 && cnv->shared_तथ्य->mbcs.utf8Friendly) {
         ucnv_MBCSDoubleFromUnicodeWithOffsets(pArgs, pErrorCode);
-        return;
+        वापस;
     }
 
     /* set up the local pointers */
@@ -4128,41 +4128,41 @@ ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     targetCapacity=(int32_t)(pArgs->targetLimit-pArgs->target);
     offsets=pArgs->offsets;
 
-    table=cnv->sharedData->mbcs.fromUnicodeTable;
-    if(cnv->sharedData->mbcs.utf8Friendly) {
-        mbcsIndex=cnv->sharedData->mbcs.mbcsIndex;
-    } else {
-        mbcsIndex=nullptr;
+    table=cnv->shared_तथ्य->mbcs.fromUnicodeTable;
+    अगर(cnv->shared_तथ्य->mbcs.utf8Friendly) {
+        mbcs_सूचकांक=cnv->shared_तथ्य->mbcs.mbcs_सूचकांक;
+    } अन्यथा {
+        mbcs_सूचकांक=nullptr;
     }
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        bytes=cnv->sharedData->mbcs.swapLFNLFromUnicodeBytes;
-    } else {
-        bytes=cnv->sharedData->mbcs.fromUnicodeBytes;
+    अगर((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
+        bytes=cnv->shared_तथ्य->mbcs.swapLFNLFromUnicodeBytes;
+    } अन्यथा {
+        bytes=cnv->shared_तथ्य->mbcs.fromUnicodeBytes;
     }
-    asciiRoundtrips=cnv->sharedData->mbcs.asciiRoundtrips;
+    asciiRoundtrips=cnv->shared_तथ्य->mbcs.asciiRoundtrips;
 
     /* get the converter state from UConverter */
     c=cnv->fromUChar32;
 
-    if(outputType==MBCS_OUTPUT_2_SISO) {
-        prevLength=cnv->fromUnicodeStatus;
-        if(prevLength==0) {
+    अगर(outputType==MBCS_OUTPUT_2_SISO) {
+        पूर्व_लंबाई=cnv->fromUnicodeStatus;
+        अगर(पूर्व_लंबाई==0) {
             /* set the real value */
-            prevLength=1;
+            पूर्व_लंबाई=1;
         }
-    } else {
+    } अन्यथा {
         /* prevent fromUnicodeStatus from being set to something non-0 */
-        prevLength=0;
+        पूर्व_लंबाई=0;
     }
 
     /* sourceIndex=-1 if the current character began in the previous buffer */
-    prevSourceIndex=-1;
-    sourceIndex= c==0 ? 0 : -1;
-    nextSourceIndex=0;
+    पूर्व_Source_सूचकांक=-1;
+    source_सूचकांक= c==0 ? 0 : -1;
+    अग्र_Source_सूचकांक=0;
 
     /* Get the SI/SO character for the converter */
-    siLength = static_cast<uint8_t>(getSISOBytes(SI, cnv->options, siBytes));
-    soLength = static_cast<uint8_t>(getSISOBytes(SO, cnv->options, soBytes));
+    si_लंबाई = static_cast<uint8_t>(getSISOBytes(SI, cnv->options, siBytes));
+    so_लंबाई = static_cast<uint8_t>(getSISOBytes(SO, cnv->options, soBytes));
 
     /* conversion loop */
     /*
@@ -4178,11 +4178,11 @@ ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
      *
      * Markus Scherer 2000-jul-19
      */
-    if(c!=0 && targetCapacity>0) {
-        goto getTrail;
+    अगर(c!=0 && targetCapacity>0) {
+        जाओ getTrail;
     }
 
-    while(source<sourceLimit) {
+    जबतक(source<sourceLimit) {
         /*
          * This following test is to see if available input would overflow the output.
          * It does not catch output of more than one byte that
@@ -4191,49 +4191,49 @@ ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
          * Therefore, those situations also test for overflows and will
          * then break the loop, too.
          */
-        if(targetCapacity>0) {
+        अगर(targetCapacity>0) {
             /*
              * Get a correct Unicode code point:
              * a single char16_t for a BMP code point or
              * a matched surrogate pair for a "supplementary code point".
              */
             c=*source++;
-            ++nextSourceIndex;
-            if(c<=0x7f && IS_ASCII_ROUNDTRIP(c, asciiRoundtrips)) {
+            ++अग्र_Source_सूचकांक;
+            अगर(c<=0x7f && IS_ASCII_ROUNDTRIP(c, asciiRoundtrips)) {
                 *target++=(uint8_t)c;
-                if(offsets!=nullptr) {
-                    *offsets++=sourceIndex;
-                    prevSourceIndex=sourceIndex;
-                    sourceIndex=nextSourceIndex;
+                अगर(offsets!=nullptr) {
+                    *offsets++=source_सूचकांक;
+                    पूर्व_Source_सूचकांक=source_सूचकांक;
+                    source_सूचकांक=अग्र_Source_सूचकांक;
                 }
                 --targetCapacity;
                 c=0;
-                continue;
+                जारी;
             }
             /*
              * utf8Friendly table: Test for <=0xd7ff rather than <=MBCS_FAST_MAX
              * to avoid dealing with surrogates.
              * MBCS_FAST_MAX must be >=0xd7ff.
              */
-            if(c<=0xd7ff && mbcsIndex!=nullptr) {
-                value=mbcsIndex[c>>6];
+            अगर(c<=0xd7ff && mbcs_सूचकांक!=nullptr) {
+                value=mbcs_सूचकांक[c>>6];
 
                 /* get the bytes and the length for the output (copied from below and adapted for utf8Friendly data) */
                 /* There are only roundtrips (!=0) and no-mapping (==0) entries. */
-                switch(outputType) {
-                case MBCS_OUTPUT_2:
-                    value=((const uint16_t *)bytes)[value +(c&0x3f)];
-                    if(value<=0xff) {
-                        if(value==0) {
-                            goto unassigned;
-                        } else {
+                चयन(outputType) {
+                हाल MBCS_OUTPUT_2:
+                    value=((स्थिर uint16_t *)bytes)[value +(c&0x3f)];
+                    अगर(value<=0xff) {
+                        अगर(value==0) {
+                            जाओ unassigned;
+                        } अन्यथा {
                             length=1;
                         }
-                    } else {
+                    } अन्यथा {
                         length=2;
                     }
-                    break;
-                case MBCS_OUTPUT_2_SISO:
+                    अवरोध;
+                हाल MBCS_OUTPUT_2_SISO:
                     /* 1/2-byte stateful with Shift-In/Shift-Out */
                     /*
                      * Save the old state in the converter object
@@ -4244,125 +4244,125 @@ ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
                      * However, the callback must still restore the state from the converter
                      * in case the callback function changed it for its output.
                      */
-                    cnv->fromUnicodeStatus=prevLength; /* save the old state */
-                    value=((const uint16_t *)bytes)[value +(c&0x3f)];
-                    if(value<=0xff) {
-                        if(value==0) {
-                            goto unassigned;
-                        } else if(prevLength<=1) {
+                    cnv->fromUnicodeStatus=पूर्व_लंबाई; /* save the old state */
+                    value=((स्थिर uint16_t *)bytes)[value +(c&0x3f)];
+                    अगर(value<=0xff) {
+                        अगर(value==0) {
+                            जाओ unassigned;
+                        } अन्यथा अगर(पूर्व_लंबाई<=1) {
                             length=1;
-                        } else {
+                        } अन्यथा {
                             /* change from double-byte mode to single-byte */
-                            if (siLength == 1) {
+                            अगर (si_लंबाई == 1) {
                                 value|=(uint32_t)siBytes[0]<<8;
                                 length = 2;
-                            } else if (siLength == 2) {
+                            } अन्यथा अगर (si_लंबाई == 2) {
                                 value|=(uint32_t)siBytes[1]<<8;
                                 value|=(uint32_t)siBytes[0]<<16;
                                 length = 3;
                             }
-                            prevLength=1;
+                            पूर्व_लंबाई=1;
                         }
-                    } else {
-                        if(prevLength==2) {
+                    } अन्यथा {
+                        अगर(पूर्व_लंबाई==2) {
                             length=2;
-                        } else {
+                        } अन्यथा {
                             /* change from single-byte mode to double-byte */
-                            if (soLength == 1) {
+                            अगर (so_लंबाई == 1) {
                                 value|=(uint32_t)soBytes[0]<<16;
                                 length = 3;
-                            } else if (soLength == 2) {
+                            } अन्यथा अगर (so_लंबाई == 2) {
                                 value|=(uint32_t)soBytes[1]<<16;
                                 value|=(uint32_t)soBytes[0]<<24;
                                 length = 4;
                             }
-                            prevLength=2;
+                            पूर्व_लंबाई=2;
                         }
                     }
-                    break;
-                case MBCS_OUTPUT_DBCS_ONLY:
+                    अवरोध;
+                हाल MBCS_OUTPUT_DBCS_ONLY:
                     /* table with single-byte results, but only DBCS mappings used */
-                    value=((const uint16_t *)bytes)[value +(c&0x3f)];
-                    if(value<=0xff) {
+                    value=((स्थिर uint16_t *)bytes)[value +(c&0x3f)];
+                    अगर(value<=0xff) {
                         /* no mapping or SBCS result, not taken for DBCS-only */
-                        goto unassigned;
-                    } else {
+                        जाओ unassigned;
+                    } अन्यथा {
                         length=2;
                     }
-                    break;
-                case MBCS_OUTPUT_3:
+                    अवरोध;
+                हाल MBCS_OUTPUT_3:
                     p=bytes+(value+(c&0x3f))*3;
                     value=((uint32_t)*p<<16)|((uint32_t)p[1]<<8)|p[2];
-                    if(value<=0xff) {
-                        if(value==0) {
-                            goto unassigned;
-                        } else {
+                    अगर(value<=0xff) {
+                        अगर(value==0) {
+                            जाओ unassigned;
+                        } अन्यथा {
                             length=1;
                         }
-                    } else if(value<=0xffff) {
+                    } अन्यथा अगर(value<=0xffff) {
                         length=2;
-                    } else {
+                    } अन्यथा {
                         length=3;
                     }
-                    break;
-                case MBCS_OUTPUT_4:
-                    value=((const uint32_t *)bytes)[value +(c&0x3f)];
-                    if(value<=0xff) {
-                        if(value==0) {
-                            goto unassigned;
-                        } else {
+                    अवरोध;
+                हाल MBCS_OUTPUT_4:
+                    value=((स्थिर uint32_t *)bytes)[value +(c&0x3f)];
+                    अगर(value<=0xff) {
+                        अगर(value==0) {
+                            जाओ unassigned;
+                        } अन्यथा {
                             length=1;
                         }
-                    } else if(value<=0xffff) {
+                    } अन्यथा अगर(value<=0xffff) {
                         length=2;
-                    } else if(value<=0xffffff) {
+                    } अन्यथा अगर(value<=0xffffff) {
                         length=3;
-                    } else {
+                    } अन्यथा {
                         length=4;
                     }
-                    break;
-                case MBCS_OUTPUT_3_EUC:
-                    value=((const uint16_t *)bytes)[value +(c&0x3f)];
+                    अवरोध;
+                हाल MBCS_OUTPUT_3_EUC:
+                    value=((स्थिर uint16_t *)bytes)[value +(c&0x3f)];
                     /* EUC 16-bit fixed-length representation */
-                    if(value<=0xff) {
-                        if(value==0) {
-                            goto unassigned;
-                        } else {
+                    अगर(value<=0xff) {
+                        अगर(value==0) {
+                            जाओ unassigned;
+                        } अन्यथा {
                             length=1;
                         }
-                    } else if((value&0x8000)==0) {
+                    } अन्यथा अगर((value&0x8000)==0) {
                         value|=0x8e8000;
                         length=3;
-                    } else if((value&0x80)==0) {
+                    } अन्यथा अगर((value&0x80)==0) {
                         value|=0x8f0080;
                         length=3;
-                    } else {
+                    } अन्यथा {
                         length=2;
                     }
-                    break;
-                case MBCS_OUTPUT_4_EUC:
+                    अवरोध;
+                हाल MBCS_OUTPUT_4_EUC:
                     p=bytes+(value+(c&0x3f))*3;
                     value=((uint32_t)*p<<16)|((uint32_t)p[1]<<8)|p[2];
                     /* EUC 16-bit fixed-length representation applied to the first two bytes */
-                    if(value<=0xff) {
-                        if(value==0) {
-                            goto unassigned;
-                        } else {
+                    अगर(value<=0xff) {
+                        अगर(value==0) {
+                            जाओ unassigned;
+                        } अन्यथा {
                             length=1;
                         }
-                    } else if(value<=0xffff) {
+                    } अन्यथा अगर(value<=0xffff) {
                         length=2;
-                    } else if((value&0x800000)==0) {
+                    } अन्यथा अगर((value&0x800000)==0) {
                         value|=0x8e800000;
                         length=4;
-                    } else if((value&0x8000)==0) {
+                    } अन्यथा अगर((value&0x8000)==0) {
                         value|=0x8f008000;
                         length=4;
-                    } else {
+                    } अन्यथा {
                         length=3;
                     }
-                    break;
-                default:
+                    अवरोध;
+                शेष:
                     /* must not occur */
                     /*
                      * To avoid compiler warnings that value & length may be
@@ -4373,48 +4373,48 @@ ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
                      */
                     value=0;
                     length=0;
-                    break;
+                    अवरोध;
                 }
                 /* output the value */
-            } else {
+            } अन्यथा {
                 /*
                  * This also tests if the codepage maps single surrogates.
                  * If it does, then surrogates are not paired but mapped separately.
                  * Note that in this case unmatched surrogates are not detected.
                  */
-                if(U16_IS_SURROGATE(c) && !(unicodeMask&UCNV_HAS_SURROGATES)) {
-                    if(U16_IS_SURROGATE_LEAD(c)) {
+                अगर(U16_IS_SURROGATE(c) && !(unicodeMask&UCNV_HAS_SURROGATES)) {
+                    अगर(U16_IS_SURROGATE_LEAD(c)) {
 getTrail:
-                        if(source<sourceLimit) {
+                        अगर(source<sourceLimit) {
                             /* test the following code unit */
                             char16_t trail=*source;
-                            if(U16_IS_TRAIL(trail)) {
+                            अगर(U16_IS_TRAIL(trail)) {
                                 ++source;
-                                ++nextSourceIndex;
+                                ++अग्र_Source_सूचकांक;
                                 c=U16_GET_SUPPLEMENTARY(c, trail);
-                                if(!(unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
+                                अगर(!(unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
                                     /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
-                                    cnv->fromUnicodeStatus=prevLength; /* save the old state */
+                                    cnv->fromUnicodeStatus=पूर्व_लंबाई; /* save the old state */
                                     /* callback(unassigned) */
-                                    goto unassigned;
+                                    जाओ unassigned;
                                 }
                                 /* convert this supplementary code point */
                                 /* exit this condition tree */
-                            } else {
+                            } अन्यथा {
                                 /* this is an unmatched lead code unit (1st surrogate) */
                                 /* callback(illegal) */
                                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                                break;
+                                अवरोध;
                             }
-                        } else {
+                        } अन्यथा {
                             /* no more input */
-                            break;
+                            अवरोध;
                         }
-                    } else {
+                    } अन्यथा {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
                         *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        break;
+                        अवरोध;
                     }
                 }
 
@@ -4455,16 +4455,16 @@ getTrail:
                 stage2Entry=MBCS_STAGE_2_FROM_U(table, c);
 
                 /* get the bytes and the length for the output */
-                switch(outputType) {
-                case MBCS_OUTPUT_2:
-                    value=MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, c);
-                    if(value<=0xff) {
+                चयन(outputType) {
+                हाल MBCS_OUTPUT_2:
+                    value=MBCS_मूल्य_2_FROM_STAGE_2(bytes, stage2Entry, c);
+                    अगर(value<=0xff) {
                         length=1;
-                    } else {
+                    } अन्यथा {
                         length=2;
                     }
-                    break;
-                case MBCS_OUTPUT_2_SISO:
+                    अवरोध;
+                हाल MBCS_OUTPUT_2_SISO:
                     /* 1/2-byte stateful with Shift-In/Shift-Out */
                     /*
                      * Save the old state in the converter object
@@ -4475,111 +4475,111 @@ getTrail:
                      * However, the callback must still restore the state from the converter
                      * in case the callback function changed it for its output.
                      */
-                    cnv->fromUnicodeStatus=prevLength; /* save the old state */
-                    value=MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, c);
-                    if(value<=0xff) {
-                        if(value==0 && MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c)==0) {
+                    cnv->fromUnicodeStatus=पूर्व_लंबाई; /* save the old state */
+                    value=MBCS_मूल्य_2_FROM_STAGE_2(bytes, stage2Entry, c);
+                    अगर(value<=0xff) {
+                        अगर(value==0 && MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c)==0) {
                             /* no mapping, leave value==0 */
                             length=0;
-                        } else if(prevLength<=1) {
+                        } अन्यथा अगर(पूर्व_लंबाई<=1) {
                             length=1;
-                        } else {
+                        } अन्यथा {
                             /* change from double-byte mode to single-byte */
-                            if (siLength == 1) {
+                            अगर (si_लंबाई == 1) {
                                 value|=(uint32_t)siBytes[0]<<8;
                                 length = 2;
-                            } else if (siLength == 2) {
+                            } अन्यथा अगर (si_लंबाई == 2) {
                                 value|=(uint32_t)siBytes[1]<<8;
                                 value|=(uint32_t)siBytes[0]<<16;
                                 length = 3;
                             }
-                            prevLength=1;
+                            पूर्व_लंबाई=1;
                         }
-                    } else {
-                        if(prevLength==2) {
+                    } अन्यथा {
+                        अगर(पूर्व_लंबाई==2) {
                             length=2;
-                        } else {
+                        } अन्यथा {
                             /* change from single-byte mode to double-byte */
-                            if (soLength == 1) {
+                            अगर (so_लंबाई == 1) {
                                 value|=(uint32_t)soBytes[0]<<16;
                                 length = 3;
-                            } else if (soLength == 2) {
+                            } अन्यथा अगर (so_लंबाई == 2) {
                                 value|=(uint32_t)soBytes[1]<<16;
                                 value|=(uint32_t)soBytes[0]<<24;
                                 length = 4;
                             }
-                            prevLength=2;
+                            पूर्व_लंबाई=2;
                         }
                     }
-                    break;
-                case MBCS_OUTPUT_DBCS_ONLY:
+                    अवरोध;
+                हाल MBCS_OUTPUT_DBCS_ONLY:
                     /* table with single-byte results, but only DBCS mappings used */
-                    value=MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, c);
-                    if(value<=0xff) {
+                    value=MBCS_मूल्य_2_FROM_STAGE_2(bytes, stage2Entry, c);
+                    अगर(value<=0xff) {
                         /* no mapping or SBCS result, not taken for DBCS-only */
                         value=stage2Entry=0; /* stage2Entry=0 to reset roundtrip flags */
                         length=0;
-                    } else {
+                    } अन्यथा {
                         length=2;
                     }
-                    break;
-                case MBCS_OUTPUT_3:
+                    अवरोध;
+                हाल MBCS_OUTPUT_3:
                     p=MBCS_POINTER_3_FROM_STAGE_2(bytes, stage2Entry, c);
                     value=((uint32_t)*p<<16)|((uint32_t)p[1]<<8)|p[2];
-                    if(value<=0xff) {
+                    अगर(value<=0xff) {
                         length=1;
-                    } else if(value<=0xffff) {
+                    } अन्यथा अगर(value<=0xffff) {
                         length=2;
-                    } else {
+                    } अन्यथा {
                         length=3;
                     }
-                    break;
-                case MBCS_OUTPUT_4:
-                    value=MBCS_VALUE_4_FROM_STAGE_2(bytes, stage2Entry, c);
-                    if(value<=0xff) {
+                    अवरोध;
+                हाल MBCS_OUTPUT_4:
+                    value=MBCS_मूल्य_4_FROM_STAGE_2(bytes, stage2Entry, c);
+                    अगर(value<=0xff) {
                         length=1;
-                    } else if(value<=0xffff) {
+                    } अन्यथा अगर(value<=0xffff) {
                         length=2;
-                    } else if(value<=0xffffff) {
+                    } अन्यथा अगर(value<=0xffffff) {
                         length=3;
-                    } else {
+                    } अन्यथा {
                         length=4;
                     }
-                    break;
-                case MBCS_OUTPUT_3_EUC:
-                    value=MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, c);
+                    अवरोध;
+                हाल MBCS_OUTPUT_3_EUC:
+                    value=MBCS_मूल्य_2_FROM_STAGE_2(bytes, stage2Entry, c);
                     /* EUC 16-bit fixed-length representation */
-                    if(value<=0xff) {
+                    अगर(value<=0xff) {
                         length=1;
-                    } else if((value&0x8000)==0) {
+                    } अन्यथा अगर((value&0x8000)==0) {
                         value|=0x8e8000;
                         length=3;
-                    } else if((value&0x80)==0) {
+                    } अन्यथा अगर((value&0x80)==0) {
                         value|=0x8f0080;
                         length=3;
-                    } else {
+                    } अन्यथा {
                         length=2;
                     }
-                    break;
-                case MBCS_OUTPUT_4_EUC:
+                    अवरोध;
+                हाल MBCS_OUTPUT_4_EUC:
                     p=MBCS_POINTER_3_FROM_STAGE_2(bytes, stage2Entry, c);
                     value=((uint32_t)*p<<16)|((uint32_t)p[1]<<8)|p[2];
                     /* EUC 16-bit fixed-length representation applied to the first two bytes */
-                    if(value<=0xff) {
+                    अगर(value<=0xff) {
                         length=1;
-                    } else if(value<=0xffff) {
+                    } अन्यथा अगर(value<=0xffff) {
                         length=2;
-                    } else if((value&0x800000)==0) {
+                    } अन्यथा अगर((value&0x800000)==0) {
                         value|=0x8e800000;
                         length=4;
-                    } else if((value&0x8000)==0) {
+                    } अन्यथा अगर((value&0x8000)==0) {
                         value|=0x8f008000;
                         length=4;
-                    } else {
+                    } अन्यथा {
                         length=3;
                     }
-                    break;
-                default:
+                    अवरोध;
+                शेष:
                     /* must not occur */
                     /*
                      * To avoid compiler warnings that value & length may be
@@ -4590,11 +4590,11 @@ getTrail:
                      */
                     value=stage2Entry=0; /* stage2Entry=0 to reset roundtrip flags */
                     length=0;
-                    break;
+                    अवरोध;
                 }
 
                 /* is this code point assigned, or do we use fallbacks? */
-                if(!(MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c)!=0 ||
+                अगर(!(MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c)!=0 ||
                      (UCNV_FROM_U_USE_FALLBACK(cnv, c) && value!=0))
                 ) {
                     /*
@@ -4606,83 +4606,83 @@ getTrail:
 unassigned:
                     /* try an extension mapping */
                     pArgs->source=source;
-                    c=_extFromU(cnv, cnv->sharedData,
+                    c=_extFromU(cnv, cnv->shared_तथ्य,
                                 c, &source, sourceLimit,
                                 &target, target+targetCapacity,
-                                &offsets, sourceIndex,
-                                pArgs->flush,
+                                &offsets, source_सूचकांक,
+                                pArgs->सफाई,
                                 pErrorCode);
-                    nextSourceIndex+=(int32_t)(source-pArgs->source);
-                    prevLength=cnv->fromUnicodeStatus; /* restore SISO state */
+                    अग्र_Source_सूचकांक+=(int32_t)(source-pArgs->source);
+                    पूर्व_लंबाई=cnv->fromUnicodeStatus; /* restore SISO state */
 
-                    if(U_FAILURE(*pErrorCode)) {
+                    अगर(U_FAILURE(*pErrorCode)) {
                         /* not mappable or buffer overflow */
-                        break;
-                    } else {
+                        अवरोध;
+                    } अन्यथा {
                         /* a mapping was written to the target, continue */
 
                         /* recalculate the targetCapacity after an extension mapping */
-                        targetCapacity=(int32_t)(pArgs->targetLimit-(char *)target);
+                        targetCapacity=(int32_t)(pArgs->targetLimit-(अक्षर *)target);
 
                         /* normal end of conversion: prepare for a new character */
-                        if(offsets!=nullptr) {
-                            prevSourceIndex=sourceIndex;
-                            sourceIndex=nextSourceIndex;
+                        अगर(offsets!=nullptr) {
+                            पूर्व_Source_सूचकांक=source_सूचकांक;
+                            source_सूचकांक=अग्र_Source_सूचकांक;
                         }
-                        continue;
+                        जारी;
                     }
                 }
             }
 
             /* write the output character bytes from value and length */
             /* from the first if in the loop we know that targetCapacity>0 */
-            if(length<=targetCapacity) {
-                if(offsets==nullptr) {
-                    switch(length) {
+            अगर(length<=targetCapacity) {
+                अगर(offsets==nullptr) {
+                    चयन(length) {
                         /* each branch falls through to the next one */
-                    case 4:
+                    हाल 4:
                         *target++=(uint8_t)(value>>24);
                         U_FALLTHROUGH;
-                    case 3:
+                    हाल 3:
                         *target++=(uint8_t)(value>>16);
                         U_FALLTHROUGH;
-                    case 2:
+                    हाल 2:
                         *target++=(uint8_t)(value>>8);
                         U_FALLTHROUGH;
-                    case 1:
+                    हाल 1:
                         *target++=(uint8_t)value;
                         U_FALLTHROUGH;
-                    default:
+                    शेष:
                         /* will never occur */
-                        break;
+                        अवरोध;
                     }
-                } else {
-                    switch(length) {
+                } अन्यथा {
+                    चयन(length) {
                         /* each branch falls through to the next one */
-                    case 4:
+                    हाल 4:
                         *target++=(uint8_t)(value>>24);
-                        *offsets++=sourceIndex;
+                        *offsets++=source_सूचकांक;
                         U_FALLTHROUGH;
-                    case 3:
+                    हाल 3:
                         *target++=(uint8_t)(value>>16);
-                        *offsets++=sourceIndex;
+                        *offsets++=source_सूचकांक;
                         U_FALLTHROUGH;
-                    case 2:
+                    हाल 2:
                         *target++=(uint8_t)(value>>8);
-                        *offsets++=sourceIndex;
+                        *offsets++=source_सूचकांक;
                         U_FALLTHROUGH;
-                    case 1:
+                    हाल 1:
                         *target++=(uint8_t)value;
-                        *offsets++=sourceIndex;
+                        *offsets++=source_सूचकांक;
                         U_FALLTHROUGH;
-                    default:
+                    शेष:
                         /* will never occur */
-                        break;
+                        अवरोध;
                     }
                 }
                 targetCapacity-=length;
-            } else {
-                uint8_t *charErrorBuffer;
+            } अन्यथा {
+                uint8_t *char_Error_बफर;
 
                 /*
                  * We actually do this backwards here:
@@ -4692,69 +4692,69 @@ unassigned:
                  */
                 /* we know that 1<=targetCapacity<length<=4 */
                 length-=targetCapacity;
-                charErrorBuffer=(uint8_t *)cnv->charErrorBuffer;
-                switch(length) {
+                char_Error_बफर=(uint8_t *)cnv->char_Error_बफर;
+                चयन(length) {
                     /* each branch falls through to the next one */
-                case 3:
-                    *charErrorBuffer++=(uint8_t)(value>>16);
+                हाल 3:
+                    *char_Error_बफर++=(uint8_t)(value>>16);
                     U_FALLTHROUGH;
-                case 2:
-                    *charErrorBuffer++=(uint8_t)(value>>8);
+                हाल 2:
+                    *char_Error_बफर++=(uint8_t)(value>>8);
                     U_FALLTHROUGH;
-                case 1:
-                    *charErrorBuffer=(uint8_t)value;
+                हाल 1:
+                    *char_Error_बफर=(uint8_t)value;
                     U_FALLTHROUGH;
-                default:
+                शेष:
                     /* will never occur */
-                    break;
+                    अवरोध;
                 }
-                cnv->charErrorBufferLength=(int8_t)length;
+                cnv->char_Error_बफर_लंबाई=(int8_t)length;
 
                 /* now output what fits into the regular target */
                 value>>=8*length; /* length was reduced by targetCapacity */
-                switch(targetCapacity) {
+                चयन(targetCapacity) {
                     /* each branch falls through to the next one */
-                case 3:
+                हाल 3:
                     *target++=(uint8_t)(value>>16);
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                    अगर(offsets!=nullptr) {
+                        *offsets++=source_सूचकांक;
                     }
                     U_FALLTHROUGH;
-                case 2:
+                हाल 2:
                     *target++=(uint8_t)(value>>8);
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                    अगर(offsets!=nullptr) {
+                        *offsets++=source_सूचकांक;
                     }
                     U_FALLTHROUGH;
-                case 1:
+                हाल 1:
                     *target++=(uint8_t)value;
-                    if(offsets!=nullptr) {
-                        *offsets++=sourceIndex;
+                    अगर(offsets!=nullptr) {
+                        *offsets++=source_सूचकांक;
                     }
                     U_FALLTHROUGH;
-                default:
+                शेष:
                     /* will never occur */
-                    break;
+                    अवरोध;
                 }
 
                 /* target overflow */
                 targetCapacity=0;
-                *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+                *pErrorCode=U_बफर_OVERFLOW_ERROR;
                 c=0;
-                break;
+                अवरोध;
             }
 
             /* normal end of conversion: prepare for a new character */
             c=0;
-            if(offsets!=nullptr) {
-                prevSourceIndex=sourceIndex;
-                sourceIndex=nextSourceIndex;
+            अगर(offsets!=nullptr) {
+                पूर्व_Source_सूचकांक=source_सूचकांक;
+                source_सूचकांक=अग्र_Source_सूचकांक;
             }
-            continue;
-        } else {
+            जारी;
+        } अन्यथा {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *pErrorCode=U_बफर_OVERFLOW_ERROR;
+            अवरोध;
         }
     }
 
@@ -4768,45 +4768,45 @@ unassigned:
      *   EBCDIC_STATEFUL in DBCS mode
      *   end of input and no truncated input
      */
-    if( U_SUCCESS(*pErrorCode) &&
-        outputType==MBCS_OUTPUT_2_SISO && prevLength==2 &&
-        pArgs->flush && source>=sourceLimit && c==0
+    अगर( U_SUCCESS(*pErrorCode) &&
+        outputType==MBCS_OUTPUT_2_SISO && पूर्व_लंबाई==2 &&
+        pArgs->सफाई && source>=sourceLimit && c==0
     ) {
         /* EBCDIC_STATEFUL ending with DBCS: emit an SI to return the output stream to SBCS */
-        if(targetCapacity>0) {
+        अगर(targetCapacity>0) {
             *target++ = siBytes[0];
-            if (siLength == 2) {
-                if (targetCapacity<2) {
-                    cnv->charErrorBuffer[0] = siBytes[1];
-                    cnv->charErrorBufferLength=1;
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                } else {
+            अगर (si_लंबाई == 2) {
+                अगर (targetCapacity<2) {
+                    cnv->char_Error_बफर[0] = siBytes[1];
+                    cnv->char_Error_बफर_लंबाई=1;
+                    *pErrorCode=U_बफर_OVERFLOW_ERROR;
+                } अन्यथा {
                     *target++ = siBytes[1];
                 }
             }
-            if(offsets!=nullptr) {
+            अगर(offsets!=nullptr) {
                 /* set the last source character's index (sourceIndex points at sourceLimit now) */
-                *offsets++=prevSourceIndex;
+                *offsets++=पूर्व_Source_सूचकांक;
             }
-        } else {
+        } अन्यथा {
             /* target is full */
-            cnv->charErrorBuffer[0] = siBytes[0];
-            if (siLength == 2) {
-                cnv->charErrorBuffer[1] = siBytes[1];
+            cnv->char_Error_बफर[0] = siBytes[0];
+            अगर (si_लंबाई == 2) {
+                cnv->char_Error_बफर[1] = siBytes[1];
             }
-            cnv->charErrorBufferLength=siLength;
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
+            cnv->char_Error_बफर_लंबाई=si_लंबाई;
+            *pErrorCode=U_बफर_OVERFLOW_ERROR;
         }
-        prevLength=1; /* we switched into SBCS */
+        पूर्व_लंबाई=1; /* we switched into SBCS */
     }
 
     /* set the converter state back into UConverter */
     cnv->fromUChar32=c;
-    cnv->fromUnicodeStatus=prevLength;
+    cnv->fromUnicodeStatus=पूर्व_लंबाई;
 
     /* write back the updated pointers */
     pArgs->source=source;
-    pArgs->target=(char *)target;
+    pArgs->target=(अक्षर *)target;
     pArgs->offsets=offsets;
 }
 
@@ -4828,121 +4828,121 @@ unassigned:
  * Currently, the function assumes but does not check that 0<=c<=0x10ffff.
  */
 U_CFUNC int32_t
-ucnv_MBCSFromUChar32(UConverterSharedData *sharedData,
-                 UChar32 c, uint32_t *pValue,
+ucnv_MBCSFromUChar32(UConverter_Shared_तथ्य *shared_तथ्य,
+                 UChar32 c, uint32_t *p_मूल्य,
                  UBool useFallback) {
-    const int32_t *cx;
-    const uint16_t *table;
-#if 0
+    स्थिर int32_t *cx;
+    स्थिर uint16_t *table;
+#अगर 0
 /* #if 0 because this is not currently used in ICU - reduce code, increase code coverage */
-    const uint8_t *p;
-#endif
+    स्थिर uint8_t *p;
+#पूर्ण_अगर
     uint32_t stage2Entry;
     uint32_t value;
     int32_t length;
 
     /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
-    if(c<=0xffff || (sharedData->mbcs.unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
-        table=sharedData->mbcs.fromUnicodeTable;
+    अगर(c<=0xffff || (shared_तथ्य->mbcs.unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
+        table=shared_तथ्य->mbcs.fromUnicodeTable;
 
         /* convert the Unicode code point in c into codepage bytes (same as in _MBCSFromUnicodeWithOffsets) */
-        if(sharedData->mbcs.outputType==MBCS_OUTPUT_1) {
-            value=MBCS_SINGLE_RESULT_FROM_U(table, (uint16_t *)sharedData->mbcs.fromUnicodeBytes, c);
+        अगर(shared_तथ्य->mbcs.outputType==MBCS_OUTPUT_1) {
+            value=MBCS_SINGLE_परिणाम_FROM_U(table, (uint16_t *)shared_तथ्य->mbcs.fromUnicodeBytes, c);
             /* is this code point assigned, or do we use fallbacks? */
-            if(useFallback ? value>=0x800 : value>=0xc00) {
-                *pValue=value&0xff;
-                return 1;
+            अगर(useFallback ? value>=0x800 : value>=0xc00) {
+                *p_मूल्य=value&0xff;
+                वापस 1;
             }
-        } else /* outputType!=MBCS_OUTPUT_1 */ {
+        } अन्यथा /* outputType!=MBCS_OUTPUT_1 */ {
             stage2Entry=MBCS_STAGE_2_FROM_U(table, c);
 
             /* get the bytes and the length for the output */
-            switch(sharedData->mbcs.outputType) {
-            case MBCS_OUTPUT_2:
-                value=MBCS_VALUE_2_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
-                if(value<=0xff) {
+            चयन(shared_तथ्य->mbcs.outputType) {
+            हाल MBCS_OUTPUT_2:
+                value=MBCS_मूल्य_2_FROM_STAGE_2(shared_तथ्य->mbcs.fromUnicodeBytes, stage2Entry, c);
+                अगर(value<=0xff) {
                     length=1;
-                } else {
+                } अन्यथा {
                     length=2;
                 }
-                break;
-#if 0
+                अवरोध;
+#अगर 0
 /* #if 0 because this is not currently used in ICU - reduce code, increase code coverage */
-            case MBCS_OUTPUT_DBCS_ONLY:
+            हाल MBCS_OUTPUT_DBCS_ONLY:
                 /* table with single-byte results, but only DBCS mappings used */
-                value=MBCS_VALUE_2_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
-                if(value<=0xff) {
+                value=MBCS_मूल्य_2_FROM_STAGE_2(shared_तथ्य->mbcs.fromUnicodeBytes, stage2Entry, c);
+                अगर(value<=0xff) {
                     /* no mapping or SBCS result, not taken for DBCS-only */
                     value=stage2Entry=0; /* stage2Entry=0 to reset roundtrip flags */
                     length=0;
-                } else {
+                } अन्यथा {
                     length=2;
                 }
-                break;
-            case MBCS_OUTPUT_3:
-                p=MBCS_POINTER_3_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
+                अवरोध;
+            हाल MBCS_OUTPUT_3:
+                p=MBCS_POINTER_3_FROM_STAGE_2(shared_तथ्य->mbcs.fromUnicodeBytes, stage2Entry, c);
                 value=((uint32_t)*p<<16)|((uint32_t)p[1]<<8)|p[2];
-                if(value<=0xff) {
+                अगर(value<=0xff) {
                     length=1;
-                } else if(value<=0xffff) {
+                } अन्यथा अगर(value<=0xffff) {
                     length=2;
-                } else {
+                } अन्यथा {
                     length=3;
                 }
-                break;
-            case MBCS_OUTPUT_4:
-                value=MBCS_VALUE_4_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
-                if(value<=0xff) {
+                अवरोध;
+            हाल MBCS_OUTPUT_4:
+                value=MBCS_मूल्य_4_FROM_STAGE_2(shared_तथ्य->mbcs.fromUnicodeBytes, stage2Entry, c);
+                अगर(value<=0xff) {
                     length=1;
-                } else if(value<=0xffff) {
+                } अन्यथा अगर(value<=0xffff) {
                     length=2;
-                } else if(value<=0xffffff) {
+                } अन्यथा अगर(value<=0xffffff) {
                     length=3;
-                } else {
+                } अन्यथा {
                     length=4;
                 }
-                break;
-            case MBCS_OUTPUT_3_EUC:
-                value=MBCS_VALUE_2_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
+                अवरोध;
+            हाल MBCS_OUTPUT_3_EUC:
+                value=MBCS_मूल्य_2_FROM_STAGE_2(shared_तथ्य->mbcs.fromUnicodeBytes, stage2Entry, c);
                 /* EUC 16-bit fixed-length representation */
-                if(value<=0xff) {
+                अगर(value<=0xff) {
                     length=1;
-                } else if((value&0x8000)==0) {
+                } अन्यथा अगर((value&0x8000)==0) {
                     value|=0x8e8000;
                     length=3;
-                } else if((value&0x80)==0) {
+                } अन्यथा अगर((value&0x80)==0) {
                     value|=0x8f0080;
                     length=3;
-                } else {
+                } अन्यथा {
                     length=2;
                 }
-                break;
-            case MBCS_OUTPUT_4_EUC:
-                p=MBCS_POINTER_3_FROM_STAGE_2(sharedData->mbcs.fromUnicodeBytes, stage2Entry, c);
+                अवरोध;
+            हाल MBCS_OUTPUT_4_EUC:
+                p=MBCS_POINTER_3_FROM_STAGE_2(shared_तथ्य->mbcs.fromUnicodeBytes, stage2Entry, c);
                 value=((uint32_t)*p<<16)|((uint32_t)p[1]<<8)|p[2];
                 /* EUC 16-bit fixed-length representation applied to the first two bytes */
-                if(value<=0xff) {
+                अगर(value<=0xff) {
                     length=1;
-                } else if(value<=0xffff) {
+                } अन्यथा अगर(value<=0xffff) {
                     length=2;
-                } else if((value&0x800000)==0) {
+                } अन्यथा अगर((value&0x800000)==0) {
                     value|=0x8e800000;
                     length=4;
-                } else if((value&0x8000)==0) {
+                } अन्यथा अगर((value&0x8000)==0) {
                     value|=0x8f008000;
                     length=4;
-                } else {
+                } अन्यथा {
                     length=3;
                 }
-                break;
-#endif
-            default:
+                अवरोध;
+#पूर्ण_अगर
+            शेष:
                 /* must not occur */
-                return -1;
+                वापस -1;
             }
 
             /* is this code point assigned, or do we use fallbacks? */
-            if( MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c) ||
+            अगर( MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c) ||
                 (FROM_U_USE_FALLBACK(useFallback, c) && value!=0)
             ) {
                 /*
@@ -4951,24 +4951,24 @@ ucnv_MBCSFromUChar32(UConverterSharedData *sharedData,
                  * to be a zero byte.
                  */
                 /* assigned */
-                *pValue=value;
-                return length;
+                *p_मूल्य=value;
+                वापस length;
             }
         }
     }
 
-    cx=sharedData->mbcs.extIndexes;
-    if(cx!=nullptr) {
-        length=ucnv_extSimpleMatchFromU(cx, c, pValue, useFallback);
-        return length>=0 ? length : -length;  /* return abs(length); */
+    cx=shared_तथ्य->mbcs.extIndexes;
+    अगर(cx!=nullptr) {
+        length=ucnv_extSimpleMatchFromU(cx, c, p_मूल्य, useFallback);
+        वापस length>=0 ? length : -length;  /* return abs(length); */
     }
 
     /* unassigned */
-    return 0;
+    वापस 0;
 }
 
 
-#if 0
+#अगर 0
 /*
  * This function has been moved to ucnv2022.c for inlining.
  * This implementation is here only for documentation purposes
@@ -4982,48 +4982,48 @@ ucnv_MBCSFromUChar32(UConverterSharedData *sharedData,
  * It returns the codepage byte for the code point, or -1 if it is unassigned.
  */
 U_CFUNC int32_t
-ucnv_MBCSSingleFromUChar32(UConverterSharedData *sharedData,
+ucnv_MBCSSingleFromUChar32(UConverter_Shared_तथ्य *shared_तथ्य,
                        UChar32 c,
                        UBool useFallback) {
-    const uint16_t *table;
+    स्थिर uint16_t *table;
     int32_t value;
 
     /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
-    if(c>=0x10000 && !(sharedData->mbcs.unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
-        return -1;
+    अगर(c>=0x10000 && !(shared_तथ्य->mbcs.unicodeMask&UCNV_HAS_SUPPLEMENTARY)) {
+        वापस -1;
     }
 
     /* convert the Unicode code point in c into codepage bytes (same as in _MBCSFromUnicodeWithOffsets) */
-    table=sharedData->mbcs.fromUnicodeTable;
+    table=shared_तथ्य->mbcs.fromUnicodeTable;
 
     /* get the byte for the output */
-    value=MBCS_SINGLE_RESULT_FROM_U(table, (uint16_t *)sharedData->mbcs.fromUnicodeBytes, c);
+    value=MBCS_SINGLE_परिणाम_FROM_U(table, (uint16_t *)shared_तथ्य->mbcs.fromUnicodeBytes, c);
     /* is this code point assigned, or do we use fallbacks? */
-    if(useFallback ? value>=0x800 : value>=0xc00) {
-        return value&0xff;
-    } else {
-        return -1;
+    अगर(useFallback ? value>=0x800 : value>=0xc00) {
+        वापस value&0xff;
+    } अन्यथा {
+        वापस -1;
     }
 }
-#endif
+#पूर्ण_अगर
 
 /* MBCS-from-UTF-8 conversion functions ------------------------------------- */
 
 /* offsets for n-byte UTF-8 sequences that were calculated with ((lead<<6)+trail)<<6+trail... */
-static const UChar32
+अटल स्थिर UChar32
 utf8_offsets[5]={ 0, 0, 0x3080, 0xE2080, 0x3C82080 };
 
-static void U_CALLCONV
+अटल व्योम U_CALLCONV
 ucnv_SBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
                   UConverterToUnicodeArgs *pToUArgs,
                   UErrorCode *pErrorCode) {
     UConverter *utf8, *cnv;
-    const uint8_t *source, *sourceLimit;
+    स्थिर uint8_t *source, *sourceLimit;
     uint8_t *target;
     int32_t targetCapacity;
 
-    const uint16_t *table, *sbcsIndex;
-    const uint16_t *results;
+    स्थिर uint16_t *table, *sbcs_सूचकांक;
+    स्थिर uint16_t *results;
 
     int8_t oldToULength, toULength, toULimit;
 
@@ -5031,7 +5031,7 @@ ucnv_SBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
     uint8_t b, t1, t2;
 
     uint32_t asciiRoundtrips;
-    uint16_t value, minValue = 0;
+    uint16_t value, min_मूल्य = 0;
     UBool hasSupplementary;
 
     /* set up the local pointers */
@@ -5042,30 +5042,30 @@ ucnv_SBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
     target = reinterpret_cast<uint8_t*>(pFromUArgs->target);
     targetCapacity = static_cast<int32_t>(pFromUArgs->targetLimit - pFromUArgs->target);
 
-    table=cnv->sharedData->mbcs.fromUnicodeTable;
-    sbcsIndex=cnv->sharedData->mbcs.sbcsIndex;
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        results = reinterpret_cast<uint16_t*>(cnv->sharedData->mbcs.swapLFNLFromUnicodeBytes);
-    } else {
-        results=(uint16_t *)cnv->sharedData->mbcs.fromUnicodeBytes;
+    table=cnv->shared_तथ्य->mbcs.fromUnicodeTable;
+    sbcs_सूचकांक=cnv->shared_तथ्य->mbcs.sbcs_सूचकांक;
+    अगर((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
+        results = reinterpret_cast<uint16_t*>(cnv->shared_तथ्य->mbcs.swapLFNLFromUnicodeBytes);
+    } अन्यथा {
+        results=(uint16_t *)cnv->shared_तथ्य->mbcs.fromUnicodeBytes;
     }
-    asciiRoundtrips=cnv->sharedData->mbcs.asciiRoundtrips;
+    asciiRoundtrips=cnv->shared_तथ्य->mbcs.asciiRoundtrips;
 
-    if(cnv->useFallback) {
+    अगर(cnv->useFallback) {
         /* use all roundtrip and fallback results */
-        minValue=0x800;
-    } else {
+        min_मूल्य=0x800;
+    } अन्यथा {
         /* use only roundtrips and fallbacks from private-use characters */
-        minValue=0xc00;
+        min_मूल्य=0xc00;
     }
-    hasSupplementary = static_cast<UBool>(cnv->sharedData->mbcs.unicodeMask & UCNV_HAS_SUPPLEMENTARY);
+    hasSupplementary = static_cast<UBool>(cnv->shared_तथ्य->mbcs.unicodeMask & UCNV_HAS_SUPPLEMENTARY);
 
     /* get the converter state from the UTF-8 UConverter */
-    if(utf8->toULength > 0) {
+    अगर(utf8->toULength > 0) {
         toULength=oldToULength=utf8->toULength;
         toULimit = static_cast<int8_t>(utf8->mode);
         c = static_cast<UChar32>(utf8->toUnicodeStatus);
-    } else {
+    } अन्यथा {
         toULength=oldToULength=toULimit=0;
         c = 0;
     }
@@ -5078,27 +5078,27 @@ ucnv_SBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
         // Do not go back into the bytes that will be read for finishing a partial
         // sequence from the previous buffer.
         int32_t length = static_cast<int32_t>(sourceLimit - source) - (toULimit - oldToULength);
-        if(length>0) {
+        अगर(length>0) {
             uint8_t b1=*(sourceLimit-1);
-            if(U8_IS_SINGLE(b1)) {
+            अगर(U8_IS_SINGLE(b1)) {
                 // common ASCII character
-            } else if(U8_IS_TRAIL(b1) && length>=2) {
+            } अन्यथा अगर(U8_IS_TRAIL(b1) && length>=2) {
                 uint8_t b2=*(sourceLimit-2);
-                if(0xe0<=b2 && b2<0xf0 && U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
+                अगर(0xe0<=b2 && b2<0xf0 && U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
                     // truncated 3-byte sequence
                     sourceLimit-=2;
                 }
-            } else if(0xc2<=b1 && b1<0xf0) {
+            } अन्यथा अगर(0xc2<=b1 && b1<0xf0) {
                 // truncated 2- or 3-byte sequence
                 --sourceLimit;
             }
         }
     }
 
-    if(c!=0 && targetCapacity>0) {
+    अगर(c!=0 && targetCapacity>0) {
         utf8->toUnicodeStatus=0;
         utf8->toULength=0;
-        goto moreBytes;
+        जाओ moreBytes;
         /*
          * Note: We could avoid the goto by duplicating some of the moreBytes
          * code, but only up to the point of collecting a complete UTF-8
@@ -5121,68 +5121,68 @@ ucnv_SBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
     }
 
     /* conversion loop */
-    while(source<sourceLimit) {
-        if(targetCapacity>0) {
+    जबतक(source<sourceLimit) {
+        अगर(targetCapacity>0) {
             b=*source++;
-            if(U8_IS_SINGLE(b)) {
+            अगर(U8_IS_SINGLE(b)) {
                 /* convert ASCII */
-                if(IS_ASCII_ROUNDTRIP(b, asciiRoundtrips)) {
+                अगर(IS_ASCII_ROUNDTRIP(b, asciiRoundtrips)) {
                     *target++ = b;
                     --targetCapacity;
-                    continue;
-                } else {
+                    जारी;
+                } अन्यथा {
                     c=b;
-                    value=SBCS_RESULT_FROM_UTF8(sbcsIndex, results, 0, c);
+                    value=SBCS_परिणाम_FROM_UTF8(sbcs_सूचकांक, results, 0, c);
                 }
-            } else {
-                if(b<0xe0) {
-                    if( /* handle U+0080..U+07FF inline */
+            } अन्यथा {
+                अगर(b<0xe0) {
+                    अगर( /* handle U+0080..U+07FF inline */
                         b>=0xc2 &&
                         (t1 = static_cast<uint8_t>(*source - 0x80)) <= 0x3f
                     ) {
                         c=b&0x1f;
                         ++source;
-                        value=SBCS_RESULT_FROM_UTF8(sbcsIndex, results, c, t1);
-                        if(value>=minValue) {
+                        value=SBCS_परिणाम_FROM_UTF8(sbcs_सूचकांक, results, c, t1);
+                        अगर(value>=min_मूल्य) {
                             *target++ = static_cast<uint8_t>(value);
                             --targetCapacity;
-                            continue;
-                        } else {
+                            जारी;
+                        } अन्यथा {
                             c=(c<<6)|t1;
                         }
-                    } else {
+                    } अन्यथा {
                         c=-1;
                     }
-                } else if(b==0xe0) {
-                    if( /* handle U+0800..U+0FFF inline */
+                } अन्यथा अगर(b==0xe0) {
+                    अगर( /* handle U+0800..U+0FFF inline */
                         (t1 = static_cast<uint8_t>(source[0] - 0x80)) <= 0x3f && t1 >= 0x20 &&
                         (t2 = static_cast<uint8_t>(source[1] - 0x80)) <= 0x3f
                     ) {
                         c=t1;
                         source+=2;
-                        value=SBCS_RESULT_FROM_UTF8(sbcsIndex, results, c, t2);
-                        if(value>=minValue) {
+                        value=SBCS_परिणाम_FROM_UTF8(sbcs_सूचकांक, results, c, t2);
+                        अगर(value>=min_मूल्य) {
                             *target++ = static_cast<uint8_t>(value);
                             --targetCapacity;
-                            continue;
-                        } else {
+                            जारी;
+                        } अन्यथा {
                             c=(c<<6)|t2;
                         }
-                    } else {
+                    } अन्यथा {
                         c=-1;
                     }
-                } else {
+                } अन्यथा {
                     c=-1;
                 }
 
-                if(c<0) {
+                अगर(c<0) {
                     /* handle "complicated" and error cases, and continuing partial characters */
                     oldToULength=0;
                     toULength=1;
-                    toULimit=U8_COUNT_BYTES_NON_ASCII(b);
+                    toULimit=U8_गिनती_BYTES_NON_ASCII(b);
                     c=b;
 moreBytes:
-                    while(toULength<toULimit) {
+                    जबतक(toULength<toULimit) {
                         /*
                          * The sourceLimit may have been adjusted before the conversion loop
                          * to stop before a truncated sequence.
@@ -5190,63 +5190,63 @@ moreBytes:
                          * sequences at the end.
                          * See ticket #7492.
                          */
-                        if(source<(uint8_t *)pToUArgs->sourceLimit) {
+                        अगर(source<(uint8_t *)pToUArgs->sourceLimit) {
                             b=*source;
-                            if(icu::UTF8::isValidTrail(c, b, toULength, toULimit)) {
+                            अगर(icu::UTF8::isValidTrail(c, b, toULength, toULimit)) {
                                 ++source;
                                 ++toULength;
                                 c=(c<<6)+b;
-                            } else {
-                                break; /* sequence too short, stop with toULength<toULimit */
+                            } अन्यथा {
+                                अवरोध; /* sequence too short, stop with toULength<toULimit */
                             }
-                        } else {
+                        } अन्यथा {
                             /* store the partial UTF-8 character, compatible with the regular UTF-8 converter */
                             source-=(toULength-oldToULength);
-                            while(oldToULength<toULength) {
+                            जबतक(oldToULength<toULength) {
                                 utf8->toUBytes[oldToULength++]=*source++;
                             }
                             utf8->toUnicodeStatus=c;
                             utf8->toULength=toULength;
                             utf8->mode=toULimit;
-                            pToUArgs->source=(char *)source;
-                            pFromUArgs->target = reinterpret_cast<char*>(target);
-                            return;
+                            pToUArgs->source=(अक्षर *)source;
+                            pFromUArgs->target = reinterpret_cast<अक्षर*>(target);
+                            वापस;
                         }
                     }
 
-                    if(toULength==toULimit) {
+                    अगर(toULength==toULimit) {
                         c-=utf8_offsets[toULength];
-                        if(toULength<=3) {  /* BMP */
-                            value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
-                        } else {
+                        अगर(toULength<=3) {  /* BMP */
+                            value=MBCS_SINGLE_परिणाम_FROM_U(table, results, c);
+                        } अन्यथा {
                             /* supplementary code point */
-                            if(!hasSupplementary) {
+                            अगर(!hasSupplementary) {
                                 /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
                                 value=0;
-                            } else {
-                                value=MBCS_SINGLE_RESULT_FROM_U(table, results, c);
+                            } अन्यथा {
+                                value=MBCS_SINGLE_परिणाम_FROM_U(table, results, c);
                             }
                         }
-                    } else {
+                    } अन्यथा {
                         /* error handling: illegal UTF-8 byte sequence */
                         source-=(toULength-oldToULength);
-                        while(oldToULength<toULength) {
+                        जबतक(oldToULength<toULength) {
                             utf8->toUBytes[oldToULength++]=*source++;
                         }
                         utf8->toULength=toULength;
-                        pToUArgs->source=(char *)source;
-                        pFromUArgs->target = reinterpret_cast<char*>(target);
+                        pToUArgs->source=(अक्षर *)source;
+                        pFromUArgs->target = reinterpret_cast<अक्षर*>(target);
                         *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        return;
+                        वापस;
                     }
                 }
             }
 
-            if(value>=minValue) {
+            अगर(value>=min_मूल्य) {
                 /* output the mapping for c */
                 *target++ = static_cast<uint8_t>(value);
                 --targetCapacity;
-            } else {
+            } अन्यथा {
                 /* value<minValue means c is unassigned (unmappable) */
                 /*
                  * Try an extension mapping.
@@ -5254,20 +5254,20 @@ moreBytes:
                  * If we have a partial match on c, we will return and revert
                  * to UTF-8->UTF-16->charset conversion.
                  */
-                static const char16_t nul=0;
-                const char16_t *noSource=&nul;
-                c=_extFromU(cnv, cnv->sharedData,
+                अटल स्थिर char16_t nul=0;
+                स्थिर char16_t *noSource=&nul;
+                c=_extFromU(cnv, cnv->shared_तथ्य,
                             c, &noSource, noSource,
                             &target, target+targetCapacity,
                             nullptr, -1,
-                            pFromUArgs->flush,
+                            pFromUArgs->सफाई,
                             pErrorCode);
 
-                if(U_FAILURE(*pErrorCode)) {
+                अगर(U_FAILURE(*pErrorCode)) {
                     /* not mappable or buffer overflow */
                     cnv->fromUChar32=c;
-                    break;
-                } else if(cnv->preFromUFirstCP>=0) {
+                    अवरोध;
+                } अन्यथा अगर(cnv->preFromUFirstCP>=0) {
                     /*
                      * Partial match, return and revert to pivoting.
                      * In normal from-UTF-16 conversion, we would just continue
@@ -5275,18 +5275,18 @@ moreBytes:
                      * have consumed the source.
                      */
                     *pErrorCode=U_USING_DEFAULT_WARNING;
-                    break;
-                } else {
+                    अवरोध;
+                } अन्यथा {
                     /* a mapping was written to the target, continue */
 
                     /* recalculate the targetCapacity after an extension mapping */
-                    targetCapacity = static_cast<int32_t>(pFromUArgs->targetLimit - reinterpret_cast<char*>(target));
+                    targetCapacity = static_cast<int32_t>(pFromUArgs->targetLimit - reinterpret_cast<अक्षर*>(target));
                 }
             }
-        } else {
+        } अन्यथा {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *pErrorCode=U_बफर_OVERFLOW_ERROR;
+            अवरोध;
         }
     }
 
@@ -5295,13 +5295,13 @@ moreBytes:
      * to stop before a truncated sequence.
      * If so, then collect the truncated sequence now.
      */
-    if(U_SUCCESS(*pErrorCode) &&
+    अगर(U_SUCCESS(*pErrorCode) &&
             cnv->preFromUFirstCP<0 &&
             source<(sourceLimit=(uint8_t *)pToUArgs->sourceLimit)) {
         c=utf8->toUBytes[0]=b=*source++;
         toULength=1;
-        toULimit=U8_COUNT_BYTES(b);
-        while(source<sourceLimit) {
+        toULimit=U8_गिनती_BYTES(b);
+        जबतक(source<sourceLimit) {
             utf8->toUBytes[toULength++]=b=*source++;
             c=(c<<6)+b;
         }
@@ -5311,21 +5311,21 @@ moreBytes:
     }
 
     /* write back the updated pointers */
-    pToUArgs->source=(char *)source;
-    pFromUArgs->target = reinterpret_cast<char*>(target);
+    pToUArgs->source=(अक्षर *)source;
+    pFromUArgs->target = reinterpret_cast<अक्षर*>(target);
 }
 
-static void U_CALLCONV
+अटल व्योम U_CALLCONV
 ucnv_DBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
                   UConverterToUnicodeArgs *pToUArgs,
                   UErrorCode *pErrorCode) {
     UConverter *utf8, *cnv;
-    const uint8_t *source, *sourceLimit;
+    स्थिर uint8_t *source, *sourceLimit;
     uint8_t *target;
     int32_t targetCapacity;
 
-    const uint16_t *table, *mbcsIndex;
-    const uint16_t *results;
+    स्थिर uint16_t *table, *mbcs_सूचकांक;
+    स्थिर uint16_t *results;
 
     int8_t oldToULength, toULength, toULimit;
 
@@ -5345,23 +5345,23 @@ ucnv_DBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
     target = reinterpret_cast<uint8_t*>(pFromUArgs->target);
     targetCapacity = static_cast<int32_t>(pFromUArgs->targetLimit - pFromUArgs->target);
 
-    table=cnv->sharedData->mbcs.fromUnicodeTable;
-    mbcsIndex=cnv->sharedData->mbcs.mbcsIndex;
-    if((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
-        results = reinterpret_cast<uint16_t*>(cnv->sharedData->mbcs.swapLFNLFromUnicodeBytes);
-    } else {
-        results=(uint16_t *)cnv->sharedData->mbcs.fromUnicodeBytes;
+    table=cnv->shared_तथ्य->mbcs.fromUnicodeTable;
+    mbcs_सूचकांक=cnv->shared_तथ्य->mbcs.mbcs_सूचकांक;
+    अगर((cnv->options&UCNV_OPTION_SWAP_LFNL)!=0) {
+        results = reinterpret_cast<uint16_t*>(cnv->shared_तथ्य->mbcs.swapLFNLFromUnicodeBytes);
+    } अन्यथा {
+        results=(uint16_t *)cnv->shared_तथ्य->mbcs.fromUnicodeBytes;
     }
-    asciiRoundtrips=cnv->sharedData->mbcs.asciiRoundtrips;
+    asciiRoundtrips=cnv->shared_तथ्य->mbcs.asciiRoundtrips;
 
-    hasSupplementary = static_cast<UBool>(cnv->sharedData->mbcs.unicodeMask & UCNV_HAS_SUPPLEMENTARY);
+    hasSupplementary = static_cast<UBool>(cnv->shared_तथ्य->mbcs.unicodeMask & UCNV_HAS_SUPPLEMENTARY);
 
     /* get the converter state from the UTF-8 UConverter */
-    if(utf8->toULength > 0) {
+    अगर(utf8->toULength > 0) {
         toULength=oldToULength=utf8->toULength;
         toULimit = static_cast<int8_t>(utf8->mode);
         c = static_cast<UChar32>(utf8->toUnicodeStatus);
-    } else {
+    } अन्यथा {
         toULength=oldToULength=toULimit=0;
         c = 0;
     }
@@ -5374,89 +5374,89 @@ ucnv_DBCSFromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
         // Do not go back into the bytes that will be read for finishing a partial
         // sequence from the previous buffer.
         int32_t length = static_cast<int32_t>(sourceLimit - source) - (toULimit - oldToULength);
-        if(length>0) {
+        अगर(length>0) {
             uint8_t b1=*(sourceLimit-1);
-            if(U8_IS_SINGLE(b1)) {
+            अगर(U8_IS_SINGLE(b1)) {
                 // common ASCII character
-            } else if(U8_IS_TRAIL(b1) && length>=2) {
+            } अन्यथा अगर(U8_IS_TRAIL(b1) && length>=2) {
                 uint8_t b2=*(sourceLimit-2);
-                if(0xe0<=b2 && b2<0xf0 && U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
+                अगर(0xe0<=b2 && b2<0xf0 && U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
                     // truncated 3-byte sequence
                     sourceLimit-=2;
                 }
-            } else if(0xc2<=b1 && b1<0xf0) {
+            } अन्यथा अगर(0xc2<=b1 && b1<0xf0) {
                 // truncated 2- or 3-byte sequence
                 --sourceLimit;
             }
         }
     }
 
-    if(c!=0 && targetCapacity>0) {
+    अगर(c!=0 && targetCapacity>0) {
         utf8->toUnicodeStatus=0;
         utf8->toULength=0;
-        goto moreBytes;
+        जाओ moreBytes;
         /* See note in ucnv_SBCSFromUTF8() about this goto. */
     }
 
     /* conversion loop */
-    while(source<sourceLimit) {
-        if(targetCapacity>0) {
+    जबतक(source<sourceLimit) {
+        अगर(targetCapacity>0) {
             b=*source++;
-            if(U8_IS_SINGLE(b)) {
+            अगर(U8_IS_SINGLE(b)) {
                 /* convert ASCII */
-                if(IS_ASCII_ROUNDTRIP(b, asciiRoundtrips)) {
+                अगर(IS_ASCII_ROUNDTRIP(b, asciiRoundtrips)) {
                     *target++=b;
                     --targetCapacity;
-                    continue;
-                } else {
-                    value=DBCS_RESULT_FROM_UTF8(mbcsIndex, results, 0, b);
-                    if(value==0) {
+                    जारी;
+                } अन्यथा {
+                    value=DBCS_परिणाम_FROM_UTF8(mbcs_सूचकांक, results, 0, b);
+                    अगर(value==0) {
                         c=b;
-                        goto unassigned;
+                        जाओ unassigned;
                     }
                 }
-            } else {
-                if(b>=0xe0) {
-                    if( /* handle U+0800..U+D7FF inline */
+            } अन्यथा {
+                अगर(b>=0xe0) {
+                    अगर( /* handle U+0800..U+D7FF inline */
                         b<=0xed &&  // do not assume maxFastUChar>0xd7ff
                         U8_IS_VALID_LEAD3_AND_T1(b, t1=source[0]) &&
                         (t2 = static_cast<uint8_t>(source[1] - 0x80)) <= 0x3f
                     ) {
                         c=((b&0xf)<<6)|(t1&0x3f);
                         source+=2;
-                        value=DBCS_RESULT_FROM_UTF8(mbcsIndex, results, c, t2);
-                        if(value==0) {
+                        value=DBCS_परिणाम_FROM_UTF8(mbcs_सूचकांक, results, c, t2);
+                        अगर(value==0) {
                             c=(c<<6)|t2;
-                            goto unassigned;
+                            जाओ unassigned;
                         }
-                    } else {
+                    } अन्यथा {
                         c=-1;
                     }
-                } else {
-                    if( /* handle U+0080..U+07FF inline */
+                } अन्यथा {
+                    अगर( /* handle U+0080..U+07FF inline */
                         b>=0xc2 &&
                         (t1 = static_cast<uint8_t>(*source - 0x80)) <= 0x3f
                     ) {
                         c=b&0x1f;
                         ++source;
-                        value=DBCS_RESULT_FROM_UTF8(mbcsIndex, results, c, t1);
-                        if(value==0) {
+                        value=DBCS_परिणाम_FROM_UTF8(mbcs_सूचकांक, results, c, t1);
+                        अगर(value==0) {
                             c=(c<<6)|t1;
-                            goto unassigned;
+                            जाओ unassigned;
                         }
-                    } else {
+                    } अन्यथा {
                         c=-1;
                     }
                 }
 
-                if(c<0) {
+                अगर(c<0) {
                     /* handle "complicated" and error cases, and continuing partial characters */
                     oldToULength=0;
                     toULength=1;
-                    toULimit=U8_COUNT_BYTES_NON_ASCII(b);
+                    toULimit=U8_गिनती_BYTES_NON_ASCII(b);
                     c=b;
 moreBytes:
-                    while(toULength<toULimit) {
+                    जबतक(toULength<toULimit) {
                         /*
                          * The sourceLimit may have been adjusted before the conversion loop
                          * to stop before a truncated sequence.
@@ -5464,90 +5464,90 @@ moreBytes:
                          * sequences at the end.
                          * See ticket #7492.
                          */
-                        if(source<(uint8_t *)pToUArgs->sourceLimit) {
+                        अगर(source<(uint8_t *)pToUArgs->sourceLimit) {
                             b=*source;
-                            if(icu::UTF8::isValidTrail(c, b, toULength, toULimit)) {
+                            अगर(icu::UTF8::isValidTrail(c, b, toULength, toULimit)) {
                                 ++source;
                                 ++toULength;
                                 c=(c<<6)+b;
-                            } else {
-                                break; /* sequence too short, stop with toULength<toULimit */
+                            } अन्यथा {
+                                अवरोध; /* sequence too short, stop with toULength<toULimit */
                             }
-                        } else {
+                        } अन्यथा {
                             /* store the partial UTF-8 character, compatible with the regular UTF-8 converter */
                             source-=(toULength-oldToULength);
-                            while(oldToULength<toULength) {
+                            जबतक(oldToULength<toULength) {
                                 utf8->toUBytes[oldToULength++]=*source++;
                             }
                             utf8->toUnicodeStatus=c;
                             utf8->toULength=toULength;
                             utf8->mode=toULimit;
-                            pToUArgs->source=(char *)source;
-                            pFromUArgs->target = reinterpret_cast<char*>(target);
-                            return;
+                            pToUArgs->source=(अक्षर *)source;
+                            pFromUArgs->target = reinterpret_cast<अक्षर*>(target);
+                            वापस;
                         }
                     }
 
-                    if(toULength==toULimit) {
+                    अगर(toULength==toULimit) {
                         c-=utf8_offsets[toULength];
-                        if(toULength<=3) {  /* BMP */
+                        अगर(toULength<=3) {  /* BMP */
                             stage2Entry=MBCS_STAGE_2_FROM_U(table, c);
-                        } else {
+                        } अन्यथा {
                             /* supplementary code point */
-                            if(!hasSupplementary) {
+                            अगर(!hasSupplementary) {
                                 /* BMP-only codepages are stored without stage 1 entries for supplementary code points */
                                 stage2Entry=0;
-                            } else {
+                            } अन्यथा {
                                 stage2Entry=MBCS_STAGE_2_FROM_U(table, c);
                             }
                         }
-                    } else {
+                    } अन्यथा {
                         /* error handling: illegal UTF-8 byte sequence */
                         source-=(toULength-oldToULength);
-                        while(oldToULength<toULength) {
+                        जबतक(oldToULength<toULength) {
                             utf8->toUBytes[oldToULength++]=*source++;
                         }
                         utf8->toULength=toULength;
-                        pToUArgs->source=(char *)source;
-                        pFromUArgs->target = reinterpret_cast<char*>(target);
+                        pToUArgs->source=(अक्षर *)source;
+                        pFromUArgs->target = reinterpret_cast<अक्षर*>(target);
                         *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        return;
+                        वापस;
                     }
 
                     /* get the bytes and the length for the output */
                     /* MBCS_OUTPUT_2 */
-                    value=MBCS_VALUE_2_FROM_STAGE_2(results, stage2Entry, c);
+                    value=MBCS_मूल्य_2_FROM_STAGE_2(results, stage2Entry, c);
 
                     /* is this code point assigned, or do we use fallbacks? */
-                    if(!(MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c) ||
+                    अगर(!(MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c) ||
                          (UCNV_FROM_U_USE_FALLBACK(cnv, c) && value!=0))
                     ) {
-                        goto unassigned;
+                        जाओ unassigned;
                     }
                 }
             }
 
             /* write the output character bytes from value and length */
             /* from the first if in the loop we know that targetCapacity>0 */
-            if(value<=0xff) {
+            अगर(value<=0xff) {
                 /* this is easy because we know that there is enough space */
                 *target++ = static_cast<uint8_t>(value);
                 --targetCapacity;
-            } else /* length==2 */ {
+            } अन्यथा /* length==2 */ {
                 *target++ = static_cast<uint8_t>(value >> 8);
-                if(2<=targetCapacity) {
+                अगर(2<=targetCapacity) {
                     *target++ = static_cast<uint8_t>(value);
                     targetCapacity-=2;
-                } else {
-                    cnv->charErrorBuffer[0] = static_cast<char>(value);
-                    cnv->charErrorBufferLength=1;
+                } अन्यथा {
+                    cnv->char_Error_बफर[0] = static_cast<अक्षर>(value);
+                    cnv->char_Error_बफर_लंबाई=1;
 
                     /* target overflow */
-                    *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    *pErrorCode=U_बफर_OVERFLOW_ERROR;
+                    अवरोध;
                 }
             }
-            continue;
+            जारी;
 
 unassigned:
             {
@@ -5557,20 +5557,20 @@ unassigned:
                  * If we have a partial match on c, we will return and revert
                  * to UTF-8->UTF-16->charset conversion.
                  */
-                static const char16_t nul=0;
-                const char16_t *noSource=&nul;
-                c=_extFromU(cnv, cnv->sharedData,
+                अटल स्थिर char16_t nul=0;
+                स्थिर char16_t *noSource=&nul;
+                c=_extFromU(cnv, cnv->shared_तथ्य,
                             c, &noSource, noSource,
                             &target, target+targetCapacity,
                             nullptr, -1,
-                            pFromUArgs->flush,
+                            pFromUArgs->सफाई,
                             pErrorCode);
 
-                if(U_FAILURE(*pErrorCode)) {
+                अगर(U_FAILURE(*pErrorCode)) {
                     /* not mappable or buffer overflow */
                     cnv->fromUChar32=c;
-                    break;
-                } else if(cnv->preFromUFirstCP>=0) {
+                    अवरोध;
+                } अन्यथा अगर(cnv->preFromUFirstCP>=0) {
                     /*
                      * Partial match, return and revert to pivoting.
                      * In normal from-UTF-16 conversion, we would just continue
@@ -5578,19 +5578,19 @@ unassigned:
                      * have consumed the source.
                      */
                     *pErrorCode=U_USING_DEFAULT_WARNING;
-                    break;
-                } else {
+                    अवरोध;
+                } अन्यथा {
                     /* a mapping was written to the target, continue */
 
                     /* recalculate the targetCapacity after an extension mapping */
-                    targetCapacity = static_cast<int32_t>(pFromUArgs->targetLimit - reinterpret_cast<char*>(target));
-                    continue;
+                    targetCapacity = static_cast<int32_t>(pFromUArgs->targetLimit - reinterpret_cast<अक्षर*>(target));
+                    जारी;
                 }
             }
-        } else {
+        } अन्यथा {
             /* target is full */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            break;
+            *pErrorCode=U_बफर_OVERFLOW_ERROR;
+            अवरोध;
         }
     }
 
@@ -5599,13 +5599,13 @@ unassigned:
      * to stop before a truncated sequence.
      * If so, then collect the truncated sequence now.
      */
-    if(U_SUCCESS(*pErrorCode) &&
+    अगर(U_SUCCESS(*pErrorCode) &&
             cnv->preFromUFirstCP<0 &&
             source<(sourceLimit=(uint8_t *)pToUArgs->sourceLimit)) {
         c=utf8->toUBytes[0]=b=*source++;
         toULength=1;
-        toULimit=U8_COUNT_BYTES(b);
-        while(source<sourceLimit) {
+        toULimit=U8_गिनती_BYTES(b);
+        जबतक(source<sourceLimit) {
             utf8->toUBytes[toULength++]=b=*source++;
             c=(c<<6)+b;
         }
@@ -5615,21 +5615,21 @@ unassigned:
     }
 
     /* write back the updated pointers */
-    pToUArgs->source=(char *)source;
-    pFromUArgs->target = reinterpret_cast<char*>(target);
+    pToUArgs->source=(अक्षर *)source;
+    pFromUArgs->target = reinterpret_cast<अक्षर*>(target);
 }
 
 /* miscellaneous ------------------------------------------------------------ */
 
-static void U_CALLCONV
-ucnv_MBCSGetStarters(const UConverter* cnv,
+अटल व्योम U_CALLCONV
+ucnv_MBCSGetStarters(स्थिर UConverter* cnv,
                  UBool starters[256],
                  UErrorCode *) {
-    const int32_t *state0;
-    int i;
+    स्थिर int32_t *state0;
+    पूर्णांक i;
 
-    state0=cnv->sharedData->mbcs.stateTable[cnv->sharedData->mbcs.dbcsOnlyState];
-    for(i=0; i<256; ++i) {
+    state0=cnv->shared_तथ्य->mbcs.stateTable[cnv->shared_तथ्य->mbcs.dbcsOnlyState];
+    क्रम(i=0; i<256; ++i) {
         /* all bytes that cause a state transition from state 0 are lead bytes */
         starters[i] = static_cast<UBool>(MBCS_ENTRY_IS_TRANSITION(state0[i]));
     }
@@ -5640,81 +5640,81 @@ ucnv_MBCSGetStarters(const UConverter* cnv,
  * to check whether a byte is a lead byte.
  */
 U_CFUNC UBool
-ucnv_MBCSIsLeadByte(UConverterSharedData *sharedData, char byte) {
-    return MBCS_ENTRY_IS_TRANSITION(sharedData->mbcs.stateTable[0][(uint8_t)byte]);
+ucnv_MBCSIsLeadByte(UConverter_Shared_तथ्य *shared_तथ्य, अक्षर byte) {
+    वापस MBCS_ENTRY_IS_TRANSITION(shared_तथ्य->mbcs.stateTable[0][(uint8_t)byte]);
 }
 
-static void U_CALLCONV
+अटल व्योम U_CALLCONV
 ucnv_MBCSWriteSub(UConverterFromUnicodeArgs *pArgs,
-              int32_t offsetIndex,
+              int32_t offset_सूचकांक,
               UErrorCode *pErrorCode) {
     UConverter *cnv=pArgs->converter;
-    char *p, *subchar;
-    char buffer[4];
+    अक्षर *p, *subchar;
+    अक्षर बफर[4];
     int32_t length;
 
     /* first, select between subChar and subChar1 */
-    if( cnv->subChar1!=0 &&
-        (cnv->sharedData->mbcs.extIndexes!=nullptr ?
+    अगर( cnv->subChar1!=0 &&
+        (cnv->shared_तथ्य->mbcs.extIndexes!=nullptr ?
             cnv->useSubChar1 :
-            (cnv->invalidUCharBuffer[0]<=0xff))
+            (cnv->invalid_UChar_बफर[0]<=0xff))
     ) {
         /* select subChar1 if it is set (not 0) and the unmappable Unicode code point is up to U+00ff (IBM MBCS behavior) */
-        subchar = reinterpret_cast<char*>(&cnv->subChar1);
+        subchar = reinterpret_cast<अक्षर*>(&cnv->subChar1);
         length=1;
-    } else {
+    } अन्यथा {
         /* select subChar in all other cases */
-        subchar = reinterpret_cast<char*>(cnv->subChars);
+        subchar = reinterpret_cast<अक्षर*>(cnv->subChars);
         length=cnv->subCharLen;
     }
 
     /* reset the selector for the next code point */
     cnv->useSubChar1=false;
 
-    if (cnv->sharedData->mbcs.outputType == MBCS_OUTPUT_2_SISO) {
-        p=buffer;
+    अगर (cnv->shared_तथ्य->mbcs.outputType == MBCS_OUTPUT_2_SISO) {
+        p=बफर;
 
         /* fromUnicodeStatus contains prevLength */
-        switch(length) {
-        case 1:
-            if(cnv->fromUnicodeStatus==2) {
+        चयन(length) {
+        हाल 1:
+            अगर(cnv->fromUnicodeStatus==2) {
                 /* DBCS mode and SBCS sub char: change to SBCS */
                 cnv->fromUnicodeStatus=1;
                 *p++=UCNV_SI;
             }
             *p++=subchar[0];
-            break;
-        case 2:
-            if(cnv->fromUnicodeStatus<=1) {
+            अवरोध;
+        हाल 2:
+            अगर(cnv->fromUnicodeStatus<=1) {
                 /* SBCS mode and DBCS sub char: change to DBCS */
                 cnv->fromUnicodeStatus=2;
                 *p++=UCNV_SO;
             }
             *p++=subchar[0];
             *p++=subchar[1];
-            break;
-        default:
+            अवरोध;
+        शेष:
             *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            वापस;
         }
-        subchar=buffer;
-        length = static_cast<int32_t>(p - buffer);
+        subchar=बफर;
+        length = static_cast<int32_t>(p - बफर);
     }
 
-    ucnv_cbFromUWriteBytes(pArgs, subchar, length, offsetIndex, pErrorCode);
+    ucnv_cbFromUWriteBytes(pArgs, subchar, length, offset_सूचकांक, pErrorCode);
 }
 
 U_CFUNC UConverterType
-ucnv_MBCSGetType(const UConverter* converter) {
+ucnv_MBCSGetType(स्थिर UConverter* converter) {
     /* SBCS, DBCS, and EBCDIC_STATEFUL are replaced by MBCS, but here we cheat a little */
-    if(converter->sharedData->mbcs.countStates==1) {
-        return (UConverterType)UCNV_SBCS;
-    } else if((converter->sharedData->mbcs.outputType&0xff)==MBCS_OUTPUT_2_SISO) {
-        return (UConverterType)UCNV_EBCDIC_STATEFUL;
-    } else if(converter->sharedData->staticData->minBytesPerChar==2 && converter->sharedData->staticData->maxBytesPerChar==2) {
-        return (UConverterType)UCNV_DBCS;
+    अगर(converter->shared_तथ्य->mbcs.गिनती_States==1) {
+        वापस (UConverterType)UCNV_SBCS;
+    } अन्यथा अगर((converter->shared_तथ्य->mbcs.outputType&0xff)==MBCS_OUTPUT_2_SISO) {
+        वापस (UConverterType)UCNV_EBCDIC_STATEFUL;
+    } अन्यथा अगर(converter->shared_तथ्य->static_तथ्य->minBytesPerChar==2 && converter->shared_तथ्य->static_तथ्य->maxBytesPerChar==2) {
+        वापस (UConverterType)UCNV_DBCS;
     }
-    return (UConverterType)UCNV_MBCS;
+    वापस (UConverterType)UCNV_MBCS;
 }
 
-#endif /* #if !UCONFIG_NO_LEGACY_CONVERSION */
+#पूर्ण_अगर /* #if !UCONFIG_NO_LEGACY_CONVERSION */

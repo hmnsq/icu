@@ -4,10 +4,10 @@
 // ucpmap.h
 // created: 2018sep03 Markus W. Scherer
 
-#ifndef __UCPMAP_H__
-#define __UCPMAP_H__
+#अगर_अघोषित __UCPMAP_H__
+#घोषणा __UCPMAP_H__
 
-#include "unicode/utypes.h"
+#समावेश "unicode/utypes.h"
 
 U_CDECL_BEGIN
 
@@ -27,7 +27,7 @@ U_CDECL_BEGIN
  * @see UMutableCPTrie
  * @stable ICU 63
  */
-typedef struct UCPMap UCPMap;
+प्रकार काष्ठा UCPMap UCPMap;
 
 /**
  * Selectors for how ucpmap_getRange() etc. should report value ranges overlapping with surrogates.
@@ -38,7 +38,7 @@ typedef struct UCPMap UCPMap;
  * @see umutablecptrie_getRange
  * @stable ICU 63
  */
-enum UCPMapRangeOption {
+क्रमागत UCPMapRangeOption {
     /**
      * ucpmap_getRange() enumerates all same-value ranges as stored in the map.
      * Most users should use this option.
@@ -78,9 +78,9 @@ enum UCPMapRangeOption {
      */
     UCPMAP_RANGE_FIXED_ALL_SURROGATES
 };
-#ifndef U_IN_DOXYGEN
-typedef enum UCPMapRangeOption UCPMapRangeOption;
-#endif
+#अगर_अघोषित U_IN_DOXYGEN
+प्रकार क्रमागत UCPMapRangeOption UCPMapRangeOption;
+#पूर्ण_अगर
 
 /**
  * Returns the value for a code point as stored in the map, with range checking.
@@ -93,7 +93,7 @@ typedef enum UCPMapRangeOption UCPMapRangeOption;
  * @stable ICU 63
  */
 U_CAPI uint32_t U_EXPORT2
-ucpmap_get(const UCPMap *map, UChar32 c);
+ucpmap_get(स्थिर UCPMap *map, UChar32 c);
 
 /**
  * Callback function type: Modifies a map value.
@@ -109,8 +109,8 @@ ucpmap_get(const UCPMap *map, UChar32 c);
  * @return the modified value
  * @stable ICU 63
  */
-typedef uint32_t U_CALLCONV
-UCPMapValueFilter(const void *context, uint32_t value);
+प्रकार uint32_t U_CALLCONV
+UCPMap_मूल्य_Filter(स्थिर व्योम *context, uint32_t मूल्य_2);
 
 /**
  * Returns the last code point such that all those from start to there have the same value.
@@ -149,10 +149,10 @@ UCPMapValueFilter(const void *context, uint32_t value);
  * @stable ICU 63
  */
 U_CAPI UChar32 U_EXPORT2
-ucpmap_getRange(const UCPMap *map, UChar32 start,
-                UCPMapRangeOption option, uint32_t surrogateValue,
-                UCPMapValueFilter *filter, const void *context, uint32_t *pValue);
+ucpmap_getRange(स्थिर UCPMap *map, UChar32 start,
+                UCPMapRangeOption option, uint32_t surrogate_मूल्य,
+                UCPMap_मूल्य_Filter *filter, स्थिर व्योम *context, uint32_t *p_मूल्य);
 
 U_CDECL_END
 
-#endif
+#पूर्ण_अगर

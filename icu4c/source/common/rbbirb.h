@@ -11,29 +11,29 @@
 //
 
 
-#ifndef RBBIRB_H
-#define RBBIRB_H
+#अगर_अघोषित RBBIRB_H
+#घोषणा RBBIRB_H
 
-#include "unicode/utypes.h"
+#समावेश "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#अगर !UCONFIG_NO_BREAK_ITERATION
 
-#include <utility>
+#समावेश <utility>
 
-#include "unicode/uobject.h"
-#include "unicode/rbbi.h"
-#include "unicode/uniset.h"
-#include "unicode/parseerr.h"
-#include "uhash.h"
-#include "uvector.h"
-#include "unicode/symtable.h"// For UnicodeSet parsing, is the interface that
+#समावेश "unicode/uobject.h"
+#समावेश "unicode/rbbi.h"
+#समावेश "unicode/uniset.h"
+#समावेश "unicode/parseerr.h"
+#समावेश "uhash.h"
+#समावेश "uvector.h"
+#समावेश "unicode/symtable.h"// For UnicodeSet parsing, is the interface that
                              //    looks up references to $variables within a set.
 
 
 U_NAMESPACE_BEGIN
 
 class               RBBIRuleScanner;
-struct              RBBIRuleTableEl;
+काष्ठा              RBBIRuleTableEl;
 class               RBBISetBuilder;
 class               RBBINode;
 class               RBBITableBuilder;
@@ -46,52 +46,52 @@ class               RBBITableBuilder;
 //                       UnicodeSet parser to resolve references to $variables.
 //
 //--------------------------------------------------------------------------------
-class RBBISymbolTableEntry : public UMemory { // The symbol table hash table contains one
-public:                                       //   of these structs for each entry.
+class RBBISymbolTableEntry : खुला UMemory { // The symbol table hash table contains one
+खुला:                                       //   of these structs for each entry.
     RBBISymbolTableEntry();
-    UnicodeString          key;
+    UnicodeString          कुंजी;
     RBBINode               *val;
     ~RBBISymbolTableEntry();
 
-private:
-    RBBISymbolTableEntry(const RBBISymbolTableEntry &other) = delete; // forbid copying of this class
-    RBBISymbolTableEntry &operator=(const RBBISymbolTableEntry &other) = delete; // forbid copying of this class
+निजी:
+    RBBISymbolTableEntry(स्थिर RBBISymbolTableEntry &other) = delete; // forbid copying of this class
+    RBBISymbolTableEntry &चालक=(स्थिर RBBISymbolTableEntry &other) = delete; // forbid copying of this class
 };
 
 
-class RBBISymbolTable : public UMemory, public SymbolTable {
-private:
-    const UnicodeString      &fRules;
+class RBBISymbolTable : खुला UMemory, खुला प्रतीक_Table {
+निजी:
+    स्थिर UnicodeString      &fRules;
     UHashtable               *fHashTable;
     RBBIRuleScanner          *fRuleScanner;
 
-public:
+खुला:
     //  API inherited from class SymbolTable
-    virtual const UnicodeString*  lookup(const UnicodeString& s) const override;
-    virtual const UnicodeSet* lookupSet(const UnicodeString& s) const override;
-    virtual const UnicodeFunctor* lookupMatcher(UChar32 ch) const override;
-    virtual UnicodeString parseReference(const UnicodeString& text,
-                                         ParsePosition& pos, int32_t limit) const override;
+    भव स्थिर UnicodeString*  lookup(स्थिर UnicodeString& s) स्थिर override;
+    भव स्थिर UnicodeSet* lookupSet(स्थिर UnicodeString& s) स्थिर override;
+    भव स्थिर UnicodeFunctor* lookupMatcher(UChar32 ch) स्थिर override;
+    भव UnicodeString parseReference(स्थिर UnicodeString& text,
+                                         ParsePosition& pos, int32_t limit) स्थिर override;
 
     //  Additional Functions
-    RBBISymbolTable(RBBIRuleScanner *, const UnicodeString &fRules, UErrorCode &status);
-    virtual ~RBBISymbolTable();
+    RBBISymbolTable(RBBIRuleScanner *, स्थिर UnicodeString &fRules, UErrorCode &status);
+    भव ~RBBISymbolTable();
 
-    virtual RBBINode *lookupNode(const UnicodeString &key) const;
-    virtual void      addEntry  (const UnicodeString &key, RBBINode *val, UErrorCode &err);
+    भव RBBINode *lookup_गाँठ(स्थिर UnicodeString &कुंजी) स्थिर;
+    भव व्योम      addEntry  (स्थिर UnicodeString &कुंजी, RBBINode *val, UErrorCode &err);
 
-#ifdef RBBI_DEBUG
-    virtual void      rbbiSymtablePrint() const;
-#else
+#अगर_घोषित RBBI_DEBUG
+    भव व्योम      rbbiSymtablePrint() स्थिर;
+#अन्यथा
     // A do-nothing inline function for non-debug builds.  Member funcs can't be empty
     //  or the call sites won't compile.
     int32_t fFakeField;
-    #define rbbiSymtablePrint() fFakeField=0;
-#endif
+    #घोषणा rbbiSymtablePrint() fFakeField=0;
+#पूर्ण_अगर
 
-private:
-    RBBISymbolTable(const RBBISymbolTable &other); // forbid copying of this class
-    RBBISymbolTable &operator=(const RBBISymbolTable &other); // forbid copying of this class
+निजी:
+    RBBISymbolTable(स्थिर RBBISymbolTable &other); // forbid copying of this class
+    RBBISymbolTable &चालक=(स्थिर RBBISymbolTable &other); // forbid copying of this class
 };
 
 
@@ -100,28 +100,28 @@ private:
 //  class RBBIRuleBuilder       The top-level class handling RBBI rule compiling.
 //
 //--------------------------------------------------------------------------------
-class RBBIRuleBuilder : public UMemory {
-public:
+class RBBIRuleBuilder : खुला UMemory {
+खुला:
 
     //  Create a rule based break iterator from a set of rules.
     //  This function is the main entry point into the rule builder.  The
     //   public ICU API for creating RBBIs uses this function to do the actual work.
     //
-    static BreakIterator * createRuleBasedBreakIterator( const UnicodeString    &rules,
+    अटल BreakIterator * createRuleBasedBreakIterator( स्थिर UnicodeString    &rules,
                                     UParseError      *parseError,
                                     UErrorCode       &status);
 
-public:
+खुला:
     // The "public" functions and data members that appear below are accessed
     //  (and shared) by the various parts that make up the rule builder.  They
     //  are NOT intended to be accessed by anything outside of the
     //  rule builder implementation.
-    RBBIRuleBuilder(const UnicodeString  &rules,
+    RBBIRuleBuilder(स्थिर UnicodeString  &rules,
                     UParseError          *parseErr,
                     UErrorCode           &status
     );
 
-    virtual    ~RBBIRuleBuilder();
+    भव    ~RBBIRuleBuilder();
 
     /**
      *  Build the state tables and char class Trie from the source rules.
@@ -134,21 +134,21 @@ public:
      * redundant states (table rows). Done after initial table generation,
      * before serializing the result.
      */
-    void optimizeTables();
+    व्योम optimizeTables();
 
-    char                          *fDebugEnv;        // controls debug trace output
+    अक्षर                          *fDebugEnv;        // controls debug trace output
     UErrorCode                    *fStatus;          // Error reporting.  Keeping status
     UParseError                   *fParseError;      //   here avoids passing it everywhere.
-    const UnicodeString           &fRules;           // The rule string that we are compiling
+    स्थिर UnicodeString           &fRules;           // The rule string that we are compiling
     UnicodeString                 fStrippedRules;    // The rule string, with comments stripped.
 
     RBBIRuleScanner               *fScanner;         // The scanner.
-    RBBINode                      *fForwardTree;     // The parse trees, generated by the scanner,
-    RBBINode                      *fReverseTree;     //   then manipulated by subsequent steps.
-    RBBINode                      *fSafeFwdTree;
-    RBBINode                      *fSafeRevTree;
+    RBBINode                      *f_Forward_वृक्ष;     // The parse trees, generated by the scanner,
+    RBBINode                      *f_Reverse_वृक्ष;     //   then manipulated by subsequent steps.
+    RBBINode                      *f_Safe_Fwd_वृक्ष;
+    RBBINode                      *f_Safe_Rev_वृक्ष;
 
-    RBBINode                      **fDefaultTree;    // For rules not qualified with a !
+    RBBINode                      **f_Default_वृक्ष;    // For rules not qualified with a !
                                                      //   the tree to which they belong to.
 
     UBool                         fChainRules;       // True for chained Unicode TR style rules.
@@ -166,11 +166,11 @@ public:
     UVector                       *fRuleStatusVals;  // The values that can be returned
                                                      //   from getRuleStatus().
 
-    RBBIDataHeader                *flattenData();    // Create the flattened (runtime format)
+    RBBIDataHeader                *flatten_तथ्य();    // Create the flattened (runtime format)
                                                      // data tables..
-private:
-    RBBIRuleBuilder(const RBBIRuleBuilder &other) = delete; // forbid copying of this class
-    RBBIRuleBuilder &operator=(const RBBIRuleBuilder &other) = delete; // forbid copying of this class
+निजी:
+    RBBIRuleBuilder(स्थिर RBBIRuleBuilder &other) = delete; // forbid copying of this class
+    RBBIRuleBuilder &चालक=(स्थिर RBBIRuleBuilder &other) = delete; // forbid copying of this class
 };
 
 
@@ -191,15 +191,15 @@ private:
 //                            the key strings.  It does NOT own the val nodes.
 //
 //----------------------------------------------------------------------------
-struct RBBISetTableEl {
-    UnicodeString *key;
+काष्ठा RBBISetTableEl {
+    UnicodeString *कुंजी;
     RBBINode      *val;
 };
 
 /**
  *   A pair of ints, used to bundle pairs of states or pairs of character classes.
  */
-typedef std::pair<int32_t, int32_t> IntPair;
+प्रकार std::pair<int32_t, int32_t> IntPair;
 
 
 //----------------------------------------------------------------------------
@@ -210,20 +210,20 @@ typedef std::pair<int32_t, int32_t> IntPair;
 //                      is unavailable.
 //
 //----------------------------------------------------------------------------
-#ifdef RBBI_DEBUG
-#include <stdio.h>
-#define RBBIDebugPrintf printf
-#define RBBIDebugPuts puts
-#else
-#undef RBBIDebugPrintf
-#define RBBIDebugPuts(arg)
-#endif
+#अगर_घोषित RBBI_DEBUG
+#समावेश <stdio.h>
+#घोषणा RBBIDebugPrintf म_लिखो
+#घोषणा RBBIDebugPuts माला_दो
+#अन्यथा
+#अघोषित RBBIDebugPrintf
+#घोषणा RBBIDebugPuts(arg)
+#पूर्ण_अगर
 
 U_NAMESPACE_END
 
-#endif /* #if !UCONFIG_NO_BREAK_ITERATION */
+#पूर्ण_अगर /* #if !UCONFIG_NO_BREAK_ITERATION */
 
-#endif
+#पूर्ण_अगर
 
 
 

@@ -7,35 +7,35 @@
 **********************************************************************
 */
 
-#ifndef URESIMP_H
-#define URESIMP_H
+#अगर_अघोषित URESIMP_H
+#घोषणा URESIMP_H
 
-#include "unicode/ures.h"
-#include "unicode/utypes.h"
+#समावेश "unicode/ures.h"
+#समावेश "unicode/utypes.h"
 
-#include "uresdata.h"
+#समावेश "uresdata.h"
 
-#define kRootLocaleName         "root"
-#define kPoolBundleName         "pool"
+#घोषणा k_मूल_Locale_Name         "root"
+#घोषणा kPoolBundleName         "pool"
 
 /*
  The default minor version and the version separator must be exactly one
  character long.
 */
 
-#define kDefaultMinorVersion    "0"
-#define kVersionSeparator       "."
-#define kVersionTag             "Version"
+#घोषणा kDefaultMinorVersion    "0"
+#घोषणा kVersionSeparator       "."
+#घोषणा kVersionTag             "Version"
 
-#define MAGIC1 19700503
-#define MAGIC2 19641227
+#घोषणा MAGIC1 19700503
+#घोषणा MAGIC2 19641227
 
-#define URES_MAX_ALIAS_LEVEL 256
+#घोषणा URES_MAX_ALIAS_LEVEL 256
 
-#define EMPTY_SET 0x2205
+#घोषणा EMPTY_SET 0x2205
 
-struct UResourceDataEntry;
-typedef struct UResourceDataEntry UResourceDataEntry;
+काष्ठा UResource_तथ्य_Entry;
+प्रकार काष्ठा UResource_तथ्य_Entry UResource_तथ्य_Entry;
 
 /*
  * Note: If we wanted to make this structure smaller, then we could try
@@ -43,55 +43,55 @@ typedef struct UResourceDataEntry UResourceDataEntry;
  * flag to distinguish whether this struct is for a real bundle with a pool,
  * or for an alias entry for which we won't use the pool after loading.
  */
-struct UResourceDataEntry {
-    char *fName; /* name of the locale for bundle - still to decide whether it is original or fallback */
-    char *fPath; /* path to bundle - used for distinguishing between resources with the same name */
-    UResourceDataEntry *fParent; /*next resource in fallback chain*/
-    UResourceDataEntry *fAlias;
-    UResourceDataEntry *fPool;
-    ResourceData fData; /* data for low level access */
-    char fNameBuffer[3]; /* A small buffer of free space for fName. The free space is due to struct padding. */
-    uint32_t fCountExisting; /* how much is this resource used */
+काष्ठा UResource_तथ्य_Entry {
+    अक्षर *fName; /* name of the locale for bundle - still to decide whether it is original or fallback */
+    अक्षर *fPath; /* path to bundle - used for distinguishing between resources with the same name */
+    UResource_तथ्य_Entry *fParent; /*next resource in fallback chain*/
+    UResource_तथ्य_Entry *fAlias;
+    UResource_तथ्य_Entry *fPool;
+    Resource_तथ्य f_तथ्य; /* data for low level access */
+    अक्षर f_Name_बफर[3]; /* A small buffer of free space for fName. The free space is due to struct padding. */
+    uint32_t f_गिनती_Existing; /* how much is this resource used */
     UErrorCode fBogus;
     /* int32_t fHashKey;*/ /* for faster access in the hashtable */
 };
 
-#define RES_BUFSIZE 64
-#define RES_PATH_SEPARATOR   '/'
-#define RES_PATH_SEPARATOR_S   "/"
+#घोषणा RES_BUFSIZE 64
+#घोषणा RES_PATH_SEPARATOR   '/'
+#घोषणा RES_PATH_SEPARATOR_S   "/"
 
-U_CAPI void U_EXPORT2 ures_initStackObject(UResourceBundle* resB);
+U_CAPI व्योम U_EXPORT2 ures_init_ढेर_Object(UResourceBundle* resB);
 
-#ifdef __cplusplus
+#अगर_घोषित __cplusplus
 
-struct UResourceBundle {
-    const char *fKey; /*tag*/
+काष्ठा UResourceBundle {
+    स्थिर अक्षर *f_कुंजी; /*tag*/
     /**
      * The dataEntry for the actual locale in which this item lives.
      * Used for accessing the item's data.
      * Non-const pointer for reference counting via entryIncrease().
      */
-    UResourceDataEntry *fData; /*for low-level access*/
-    char *fVersion;
+    UResource_तथ्य_Entry *f_तथ्य; /*for low-level access*/
+    अक्षर *fVersion;
     /**
      * The dataEntry for the valid locale.
      * Used for /LOCALE/path alias resolution that starts back from the valid locale,
      * rather than from the actual locale of this item which might live in
      * an ancestor bundle.
      */
-    UResourceDataEntry *fValidLocaleDataEntry;
-    char *fResPath; /* full path to the resource: "zh_TW/CollationElements/Sequence" */
-    char fResBuf[RES_BUFSIZE];
+    UResource_तथ्य_Entry *f_Valid_Locale_तथ्य_Entry;
+    अक्षर *fResPath; /* full path to the resource: "zh_TW/CollationElements/Sequence" */
+    अक्षर fResBuf[RES_BUFSIZE];
     int32_t fResPathLen;
     Resource fRes;
     UBool fHasFallback;
-    UBool fIsTopLevel;
+    UBool f_Is_शीर्ष_Level;
     uint32_t fMagic1;   /* For determining if it's a stack object */
     uint32_t fMagic2;   /* For determining if it's a stack object */
-    int32_t fIndex;
-    int32_t fSize;
+    int32_t f_सूचकांक;
+    int32_t f_आकार;
 
-    inline const ResourceData &getResData() const { return fData->fData; }
+    अंतरभूत स्थिर Resource_तथ्य &get_Res_तथ्य() स्थिर { वापस f_तथ्य->f_तथ्य; }
 };
 
 U_NAMESPACE_BEGIN
@@ -115,34 +115,34 @@ U_NAMESPACE_BEGIN
  * @see LocalUResourceBundlePointer
  * @internal
  */
-class U_COMMON_API StackUResourceBundle {
-public:
+class U_COMMON_API ढेर_UResource_Bundle {
+खुला:
     // No heap allocation. Use only on the stack.
-    static void* U_EXPORT2 operator new(size_t) noexcept = delete;
-    static void* U_EXPORT2 operator new[](size_t) noexcept = delete;
-    static void* U_EXPORT2 operator new(size_t, void*) noexcept = delete;
+    अटल व्योम* U_EXPORT2 चालक new(माप_प्रकार) noexcept = delete;
+    अटल व्योम* U_EXPORT2 चालक new[](माप_प्रकार) noexcept = delete;
+    अटल व्योम* U_EXPORT2 चालक new(माप_प्रकार, व्योम*) noexcept = delete;
 
-    StackUResourceBundle();
-    ~StackUResourceBundle();
+    ढेर_UResource_Bundle();
+    ~ढेर_UResource_Bundle();
 
-    UResourceBundle* getAlias() U_LIFETIME_BOUND { return &bundle; }
+    UResourceBundle* getAlias() U_LIFETIME_BOUND { वापस &bundle; }
 
-    UResourceBundle& ref() U_LIFETIME_BOUND { return bundle; }
-    const UResourceBundle& ref() const U_LIFETIME_BOUND { return bundle; }
+    UResourceBundle& ref() U_LIFETIME_BOUND { वापस bundle; }
+    स्थिर UResourceBundle& ref() स्थिर U_LIFETIME_BOUND { वापस bundle; }
 
-    StackUResourceBundle(const StackUResourceBundle&) = delete;
-    StackUResourceBundle& operator=(const StackUResourceBundle&) = delete;
+    ढेर_UResource_Bundle(स्थिर ढेर_UResource_Bundle&) = delete;
+    ढेर_UResource_Bundle& चालक=(स्थिर ढेर_UResource_Bundle&) = delete;
 
-    StackUResourceBundle(StackUResourceBundle&&) = delete;
-    StackUResourceBundle& operator=(StackUResourceBundle&&) = delete;
+    ढेर_UResource_Bundle(ढेर_UResource_Bundle&&) = delete;
+    ढेर_UResource_Bundle& चालक=(ढेर_UResource_Bundle&&) = delete;
 
-private:
+निजी:
     UResourceBundle bundle;
 };
 
 U_NAMESPACE_END
 
-#endif  /* __cplusplus */
+#पूर्ण_अगर  /* __cplusplus */
 
 /**
  * Opens a resource bundle for the locale;
@@ -153,23 +153,23 @@ U_NAMESPACE_END
  * such as case mappings, collation, and segmentation (BreakIterator).
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_openNoDefault(const char* path, const char* localeID, UErrorCode* status);
+ures_openNoDefault(स्थिर अक्षर* path, स्थिर अक्षर* localeID, UErrorCode* status);
 
 /* Some getters used by the copy constructor */
-U_CFUNC const char* ures_getName(const UResourceBundle* resB U_LIFETIME_BOUND);
-#ifdef URES_DEBUG
-U_CFUNC const char* ures_getPath(const UResourceBundle* resB U_LIFETIME_BOUND);
+U_CFUNC स्थिर अक्षर* ures_getName(स्थिर UResourceBundle* resB U_LIFETIME_BOUND);
+#अगर_घोषित URES_DEBUG
+U_CFUNC स्थिर अक्षर* ures_getPath(स्थिर UResourceBundle* resB U_LIFETIME_BOUND);
 /**
  * If anything was in the RB cache, dump it to the screen.
  * @return true if there was anything into the cache
  */
-U_CAPI UBool U_EXPORT2 ures_dumpCacheContents(void);
-#endif
+U_CAPI UBool U_EXPORT2 ures_dumpCacheContents(व्योम);
+#पूर्ण_अगर
 
 /* Candidates for export */
 U_CFUNC UResourceBundle*
 ures_copyResb(UResourceBundle* r U_LIFETIME_BOUND,
-              const UResourceBundle* original,
+              स्थिर UResourceBundle* original,
               UErrorCode* status);
 
 /**
@@ -188,7 +188,7 @@ ures_copyResb(UResourceBundle* r U_LIFETIME_BOUND,
  * @return                  a pointer to a UResourceBundle struct. If fill in param was NULL, caller must delete it
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_findResource(const char* pathToResource,
+ures_findResource(स्थिर अक्षर* pathToResource,
                   UResourceBundle* fillIn U_LIFETIME_BOUND,
                   UErrorCode* status);
 
@@ -208,8 +208,8 @@ ures_findResource(const char* pathToResource,
  * @return                  a pointer to a UResourceBundle struct. If fill in param was NULL, caller must delete it
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_findSubResource(const UResourceBundle* resB,
-                     char* pathToResource,
+ures_findSubResource(स्थिर UResourceBundle* resB,
+                     अक्षर* pathToResource,
                      UResourceBundle* fillIn U_LIFETIME_BOUND,
                      UErrorCode* status);
 
@@ -230,8 +230,8 @@ ures_findSubResource(const UResourceBundle* resB,
  * than resultCapacity, the returned full name will be truncated and an error code will be returned.
  */
 U_CAPI int32_t U_EXPORT2
-ures_getFunctionalEquivalent(char *result, int32_t resultCapacity, 
-                             const char *path, const char *resName, const char *keyword, const char *locid,
+ures_getFunctionalEquivalent(अक्षर *परिणाम, int32_t परिणाम_Capacity, 
+                             स्थिर अक्षर *path, स्थिर अक्षर *resName, स्थिर अक्षर *keyword, स्थिर अक्षर *locid,
                              UBool *isAvailable, UBool omitDefault, UErrorCode *status);
 
 /**
@@ -242,7 +242,7 @@ ures_getFunctionalEquivalent(char *result, int32_t resultCapacity,
  * @param status error code
  */
 U_CAPI UEnumeration* U_EXPORT2
-ures_getKeywordValues(const char *path, const char *keyword, UErrorCode *status);
+ures_get_Keyword_मूल्यावली(स्थिर अक्षर *path, स्थिर अक्षर *keyword, UErrorCode *status);
 
 
 /**
@@ -262,8 +262,8 @@ ures_getKeywordValues(const char *path, const char *keyword, UErrorCode *status)
  * @return                  a pointer to a UResourceBundle struct. If fill in param was NULL, caller must delete it
  */
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getByKeyWithFallback(const UResourceBundle* resB,
-                          const char* inKey,
+ures_get_By_कुंजी_With_Fallback(स्थिर UResourceBundle* resB,
+                          स्थिर अक्षर* in_कुंजी,
                           UResourceBundle* fillIn U_LIFETIME_BOUND,
                           UErrorCode* status);
 
@@ -283,18 +283,18 @@ ures_getByKeyWithFallback(const UResourceBundle* resB,
  * @return returns a pointer to a zero-terminated UChar array which lives in a
  *         memory mapped/DLL file.
  */
-U_CAPI const UChar* U_EXPORT2
-ures_getStringByKeyWithFallback(const UResourceBundle* resB U_LIFETIME_BOUND,
-                                const char* inKey,
+U_CAPI स्थिर UChar* U_EXPORT2
+ures_get_String_By_कुंजी_With_Fallback(स्थिर UResourceBundle* resB U_LIFETIME_BOUND,
+                                स्थिर अक्षर* in_कुंजी,
                                 int32_t* len,
                                 UErrorCode* status);
 
-#ifdef __cplusplus
+#अगर_घोषित __cplusplus
 
-U_CAPI void U_EXPORT2
-ures_getValueWithFallback(const UResourceBundle *bundle, const char *path,
-                          UResourceBundle *tempFillIn,
-                          icu::ResourceDataValue &value, UErrorCode &errorCode);
+U_CAPI व्योम U_EXPORT2
+ures_get_मूल्य_With_Fallback(स्थिर UResourceBundle *bundle, स्थिर अक्षर *path,
+                          UResourceBundle *अस्थायी_Fill_In,
+                          icu::Resource_तथ्य_मूल्य &मूल्य_2, UErrorCode &errorCode);
 
 /**
  * Locates the resource specified by `path` in the resource bundle specified by `bundle` (performing any
@@ -306,8 +306,8 @@ ures_getValueWithFallback(const UResourceBundle *bundle, const char *path,
  * @param sink A `ResourceSink` that gets called for each resource in the parent chain
  * @param errorCode The error code
  */
-U_CAPI void U_EXPORT2
-ures_getAllItemsWithFallback(const UResourceBundle *bundle, const char *path,
+U_CAPI व्योम U_EXPORT2
+ures_get_All_वस्तुएँ_With_Fallback(स्थिर UResourceBundle *bundle, स्थिर अक्षर *path,
                              icu::ResourceSink &sink, UErrorCode &errorCode);
 
 /**
@@ -325,11 +325,11 @@ ures_getAllItemsWithFallback(const UResourceBundle *bundle, const char *path,
  * @param errorCode The error code.  This will be U_RESOURCE_TYPE_MISMATCH if the resource the caller
  * is asking for isn't a table resource.
  */
-U_CAPI void U_EXPORT2
-ures_getAllChildrenWithFallback(const UResourceBundle *bundle, const char *path,
+U_CAPI व्योम U_EXPORT2
+ures_getAllChildrenWithFallback(स्थिर UResourceBundle *bundle, स्थिर अक्षर *path,
                                 icu::ResourceSink &sink, UErrorCode &errorCode);
 
-#endif  /* __cplusplus */
+#पूर्ण_अगर  /* __cplusplus */
 
 /**
  * Get a version number by key
@@ -338,9 +338,9 @@ ures_getAllChildrenWithFallback(const UResourceBundle *bundle, const char *path,
  * @param ver fillin for the version number
  * @param status error code
  */
-U_CAPI void U_EXPORT2
-ures_getVersionByKey(const UResourceBundle *resB,
-                     const char *key,
+U_CAPI व्योम U_EXPORT2
+ures_get_Version_By_कुंजी(स्थिर UResourceBundle *resB,
+                     स्थिर अक्षर *कुंजी,
                      UVersionInfo ver,
                      UErrorCode *status);
 
@@ -354,8 +354,8 @@ ures_getVersionByKey(const UResourceBundle *resB,
  *          The caller does not own this string.
  * @see ures_getVersion
  */
-U_CAPI const char* U_EXPORT2
-ures_getVersionNumberInternal(const UResourceBundle* resourceBundle U_LIFETIME_BOUND);
+U_CAPI स्थिर अक्षर* U_EXPORT2
+ures_get_Version_संख्या_Internal(स्थिर UResourceBundle* resourceBundle U_LIFETIME_BOUND);
 
 /**
  * Return the name of the Locale associated with this ResourceBundle. This API allows
@@ -370,8 +370,8 @@ ures_getVersionNumberInternal(const UResourceBundle* resourceBundle U_LIFETIME_B
  * @param status just for catching illegal arguments
  * @return  A Locale name
  */
-U_CAPI const char* U_EXPORT2
-ures_getLocaleInternal(const UResourceBundle* resourceBundle U_LIFETIME_BOUND, UErrorCode* status);
+U_CAPI स्थिर अक्षर* U_EXPORT2
+ures_getLocaleInternal(स्थिर UResourceBundle* resourceBundle U_LIFETIME_BOUND, UErrorCode* status);
 
 /**
  * Same as ures_openDirect() but uses the fill-in parameter instead of allocating a new bundle.
@@ -390,10 +390,10 @@ ures_getLocaleInternal(const UResourceBundle* resourceBundle U_LIFETIME_BOUND, U
  * @see ures_openDirect
  * @internal
  */
-U_CAPI void U_EXPORT2
+U_CAPI व्योम U_EXPORT2
 ures_openDirectFillIn(UResourceBundle *r,
-                      const char *packageName,
-                      const char *locale,
+                      स्थिर अक्षर *packageName,
+                      स्थिर अक्षर *locale,
                       UErrorCode *status);
 
-#endif /*URESIMP_H*/
+#पूर्ण_अगर /*URESIMP_H*/

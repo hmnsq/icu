@@ -16,10 +16,10 @@
 *   created by: Vladimir Weinstein
 */
 
-#ifndef __UENUMIMP_H
-#define __UENUMIMP_H
+#अगर_अघोषित __UENUMIMP_H
+#घोषणा __UENUMIMP_H
 
-#include "unicode/uenum.h"
+#समावेश "unicode/uenum.h"
 
 U_CDECL_BEGIN
 
@@ -41,7 +41,7 @@ U_CDECL_BEGIN
  *
  * @param en enumeration to be closed
  */
-typedef void U_CALLCONV
+प्रकार व्योम U_CALLCONV
 UEnumClose(UEnumeration *en);
 
 /**
@@ -54,8 +54,8 @@ UEnumClose(UEnumeration *en);
  * @param status pointer to UErrorCode variable
  * @return number of elements in enumeration
  */
-typedef int32_t U_CALLCONV
-UEnumCount(UEnumeration *en, UErrorCode *status);
+प्रकार int32_t U_CALLCONV
+UEnum_गिनती(UEnumeration *en, UErrorCode *status);
 
 /**
  * Function type declaration for uenum_unext().
@@ -69,9 +69,9 @@ UEnumCount(UEnumeration *en, UErrorCode *status);
  * @return next element as UChar *,
  *         or NULL after all elements haven been enumerated
  */
-typedef const UChar* U_CALLCONV 
+प्रकार स्थिर UChar* U_CALLCONV 
 UEnumUNext(UEnumeration* en,
-            int32_t* resultLength,
+            int32_t* परिणाम_लंबाई,
             UErrorCode* status);
 
 /**
@@ -86,9 +86,9 @@ UEnumUNext(UEnumeration* en,
  * @return next element as char *,
  *         or NULL after all elements haven been enumerated
  */
-typedef const char* U_CALLCONV 
-UEnumNext(UEnumeration* en,
-           int32_t* resultLength,
+प्रकार स्थिर अक्षर* U_CALLCONV 
+UEnum_अग्र(UEnumeration* en,
+           int32_t* परिणाम_लंबाई,
            UErrorCode* status);
 
 /**
@@ -100,30 +100,30 @@ UEnumNext(UEnumeration* en,
  * @param en enumeration 
  * @param status pointer to UErrorCode variable
  */
-typedef void U_CALLCONV 
+प्रकार व्योम U_CALLCONV 
 UEnumReset(UEnumeration* en, 
             UErrorCode* status);
 
 
-struct UEnumeration {
+काष्ठा UEnumeration {
     /* baseContext. For the base class only. Don't touch! */
-    void *baseContext;
+    व्योम *baseContext;
 
     /* context. Use it for what you need */
-    void *context;
+    व्योम *context;
 
     /** 
      * these are functions that will 
      * be used for APIs
      */
     /* called from uenum_close */
-    UEnumClose *close;
+    UEnumClose *बंद;
     /* called from uenum_count */
-    UEnumCount *count;
+    UEnum_गिनती *गिनती;
     /* called from uenum_unext */
-    UEnumUNext *uNext;
+    UEnumUNext *u_अग्र;
     /* called from uenum_next */
-    UEnumNext  *next;
+    UEnum_अग्र  *अग्र;
     /* called from uenum_reset */
     UEnumReset *reset;
 };
@@ -136,9 +136,9 @@ U_CDECL_END
  * when a UEnumeration is defined with 'uNext' pointing to this
  * function.
  */
-U_CAPI const UChar* U_EXPORT2
+U_CAPI स्थिर UChar* U_EXPORT2
 uenum_unextDefault(UEnumeration* en U_LIFETIME_BOUND,
-                   int32_t* resultLength,
+                   int32_t* परिणाम_लंबाई,
                    UErrorCode* status);
 
 /* This is the default implementation for uenum_next().
@@ -147,9 +147,9 @@ uenum_unextDefault(UEnumeration* en U_LIFETIME_BOUND,
  * when a UEnumeration is defined with 'next' pointing to this
  * function.
  */
-U_CAPI const char* U_EXPORT2
-uenum_nextDefault(UEnumeration* en U_LIFETIME_BOUND,
-                  int32_t* resultLength,
+U_CAPI स्थिर अक्षर* U_EXPORT2
+uenum_अग्र_Default(UEnumeration* en U_LIFETIME_BOUND,
+                  int32_t* परिणाम_लंबाई,
                   UErrorCode* status);
 
-#endif
+#पूर्ण_अगर

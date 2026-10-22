@@ -18,65 +18,65 @@
 *   Character property dependent functions moved here from uniset.cpp
 */
 
-#include <array>
-#include <optional>
+#समावेश <array>
+#समावेश <optional>
 
-#include "unicode/utypes.h"
-#include "unicode/uniset.h"
-#include "unicode/parsepos.h"
-#include "unicode/uchar.h"
-#include "unicode/uscript.h"
-#include "unicode/symtable.h"
-#include "unicode/uset.h"
-#include "unicode/locid.h"
-#include "unicode/brkiter.h"
-#include "unicode/utfiterator.h"
-#include "uset_imp.h"
-#include "ruleiter.h"
-#include "cmemory.h"
-#include "ucln_cmn.h"
-#include "util.h"
-#include "uvector.h"
-#include "uprops.h"
-#include "patternprops.h"
-#include "propname.h"
-#include "normalizer2impl.h"
-#include "uinvchar.h"
-#include "uprops.h"
-#include "charstr.h"
-#include "cstring.h"
-#include "mutex.h"
-#include "umutex.h"
-#include "uassert.h"
-#include "hash.h"
+#समावेश "unicode/utypes.h"
+#समावेश "unicode/uniset.h"
+#समावेश "unicode/parsepos.h"
+#समावेश "unicode/uchar.h"
+#समावेश "unicode/uscript.h"
+#समावेश "unicode/symtable.h"
+#समावेश "unicode/uset.h"
+#समावेश "unicode/locid.h"
+#समावेश "unicode/brkiter.h"
+#समावेश "unicode/utfiterator.h"
+#समावेश "uset_imp.h"
+#समावेश "ruleiter.h"
+#समावेश "cmemory.h"
+#समावेश "ucln_cmn.h"
+#समावेश "util.h"
+#समावेश "uvector.h"
+#समावेश "uprops.h"
+#समावेश "patternprops.h"
+#समावेश "propname.h"
+#समावेश "normalizer2impl.h"
+#समावेश "uinvchar.h"
+#समावेश "uprops.h"
+#समावेश "charstr.h"
+#समावेश "cstring.h"
+#समावेश "mutex.h"
+#समावेश "umutex.h"
+#समावेश "uassert.h"
+#समावेश "hash.h"
 
 U_NAMESPACE_USE
 
 namespace {
 
 // Special property set IDs
-constexpr char ANY[]   = "ANY";   // [\u0000-\U0010FFFF]
-constexpr char ASCII[] = "ASCII"; // [\u0000-\u007F]
-constexpr char ASSIGNED[] = "Assigned"; // [:^Cn:]
+constexpr अक्षर ANY[]   = "ANY";   // [\u0000-\U0010FFFF]
+constexpr अक्षर ASCII[] = "ASCII"; // [\u0000-\u007F]
+constexpr अक्षर ASSIGNED[] = "Assigned"; // [:^Cn:]
 
 }  // namespace
 
 // Cached sets ------------------------------------------------------------- ***
 
 U_CDECL_BEGIN
-static UBool U_CALLCONV uset_cleanup();
+अटल UBool U_CALLCONV uset_cleanup();
 
-static UnicodeSet *uni32Singleton;
-static icu::UInitOnce uni32InitOnce {};
+अटल UnicodeSet *uni32Singleton;
+अटल icu::UInitOnce uni32InitOnce {};
 
 /**
  * Cleanup function for UnicodeSet
  */
-static UBool U_CALLCONV uset_cleanup() {
-    delete uni32Singleton;
+अटल UBool U_CALLCONV uset_cleanup() {
+    मिटाओ uni32Singleton;
     uni32Singleton = nullptr;
     uni32InitOnce.reset();
-    return true;
+    वापस true;
 }
 
 U_CDECL_END
@@ -88,12 +88,12 @@ using U_HEADER_ONLY_NAMESPACE::utfStringCodePoints;
 namespace {
 
 // Cache some sets for other services -------------------------------------- ***
-void U_CALLCONV createUni32Set(UErrorCode &errorCode) {
+व्योम U_CALLCONV createUni32Set(UErrorCode &errorCode) {
     U_ASSERT(uni32Singleton == nullptr);
-    uni32Singleton = new UnicodeSet(UnicodeString(u"[:age=3.2:]"), errorCode);
-    if(uni32Singleton==nullptr) {
+    uni32Singleton = नया UnicodeSet(UnicodeString(u"[:age=3.2:]"), errorCode);
+    अगर(uni32Singleton==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
-    } else {
+    } अन्यथा {
         uni32Singleton->freeze();
     }
     ucln_common_registerCleanup(UCLN_COMMON_USET, uset_cleanup);
@@ -103,7 +103,7 @@ void U_CALLCONV createUni32Set(UErrorCode &errorCode) {
 U_CFUNC UnicodeSet *
 uniset_getUnicode32Instance(UErrorCode &errorCode) {
     umtx_initOnce(uni32InitOnce, &createUni32Set, errorCode);
-    return uni32Singleton;
+    वापस uni32Singleton;
 }
 
 // helper functions for matching of pattern syntax pieces ------------------ ***
@@ -113,10 +113,10 @@ uniset_getUnicode32Instance(UErrorCode &errorCode) {
 // caseCompare(), but they also make UnicodeSet work for simple patterns when
 // no Unicode properties data is available - when caseCompare() fails
 
-inline UBool
-isPerlOpen(const UnicodeString &pattern, int32_t pos) {
+अंतरभूत UBool
+isPerlOpen(स्थिर UnicodeString &pattern, int32_t pos) {
     char16_t c;
-    return pattern.charAt(pos)==u'\\' && ((c=pattern.charAt(pos+1))==u'p' || c==u'P');
+    वापस pattern.charAt(pos)==u'\\' && ((c=pattern.charAt(pos+1))==u'p' || c==u'P');
 }
 
 /*static inline UBool
@@ -124,14 +124,14 @@ isPerlClose(const UnicodeString &pattern, int32_t pos) {
     return pattern.charAt(pos)==u'}';
 }*/
 
-inline UBool
-isNameOpen(const UnicodeString &pattern, int32_t pos) {
-    return pattern.charAt(pos)==u'\\' && pattern.charAt(pos+1)==u'N';
+अंतरभूत UBool
+isNameOpen(स्थिर UnicodeString &pattern, int32_t pos) {
+    वापस pattern.charAt(pos)==u'\\' && pattern.charAt(pos+1)==u'N';
 }
 
-inline UBool
-isPOSIXOpen(const UnicodeString &pattern, int32_t pos) {
-    return pattern.charAt(pos)==u'[' && pattern.charAt(pos+1)==u':';
+अंतरभूत UBool
+isPOSIXOpen(स्थिर UnicodeString &pattern, int32_t pos) {
+    वापस pattern.charAt(pos)==u'[' && pattern.charAt(pos+1)==u':';
 }
 
 /*static inline UBool
@@ -142,19 +142,19 @@ isPOSIXClose(const UnicodeString &pattern, int32_t pos) {
 // TODO memory debugging provided inside uniset.cpp
 // could be made available here but probably obsolete with use of modern
 // memory leak checker tools
-#define _dbgct(me)
+#घोषणा _dbgct(me)
 
 // Returns the character with the given name or name alias, or U_SENTINEL if no such character
 // exists.
-UChar32 getCharacterByName(const CharString& name) {
-    for (const UCharNameChoice nameChoice : std::array{U_EXTENDED_CHAR_NAME, U_CHAR_NAME_ALIAS}) {
+UChar32 getCharacterByName(स्थिर CharString& name) {
+    क्रम (स्थिर UCharNameChoice nameChoice : std::array{U_EXTENDED_CHAR_NAME, U_CHAR_NAME_ALIAS}) {
         UErrorCode ec = U_ZERO_ERROR;
-        UChar32 ch = u_charFromName(nameChoice, name.data(), &ec);
-        if (U_SUCCESS(ec)) {
-            return ch;
+        UChar32 ch = u_charFromName(nameChoice, name.तथ्य(), &ec);
+        अगर (U_SUCCESS(ec)) {
+            वापस ch;
         }
     }
-    return U_SENTINEL;
+    वापस U_SENTINEL;
 }
 
 }  // namespace
@@ -169,56 +169,56 @@ UChar32 getCharacterByName(const CharString& name) {
  * pattern language.
  * @param pattern a string specifying what characters are in the set
  */
-UnicodeSet::UnicodeSet(const UnicodeString& pattern,
+UnicodeSet::UnicodeSet(स्थिर UnicodeString& pattern,
                        UErrorCode& status) {
     applyPattern(pattern, status);
-    _dbgct(this);
+    _dbgct(यह);
 }
 
 //----------------------------------------------------------------
 // Public API
 //----------------------------------------------------------------
 
-UnicodeSet& UnicodeSet::applyPattern(const UnicodeString& pattern,
+UnicodeSet& UnicodeSet::applyPattern(स्थिर UnicodeString& pattern,
                                      UErrorCode& status) U_LIFETIME_BOUND {
     // Equivalent to
     //   return applyPattern(pattern, USET_IGNORE_SPACE, nullptr, status);
     // but without dependency on closeOver().
     ParsePosition pos(0);
     applyPatternIgnoreSpace(pattern, pos, nullptr, status);
-    if (U_FAILURE(status)) return *this;
+    अगर (U_FAILURE(status)) वापस *यह;
 
-    int32_t i = pos.getIndex();
+    int32_t i = pos.get_सूचकांक();
     // Skip over trailing whitespace
     ICU_Utility::skipWhitespace(pattern, i, true);
-    if (i != pattern.length()) {
+    अगर (i != pattern.length()) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
     }
-    return *this;
+    वापस *यह;
 }
 
-void
-UnicodeSet::applyPatternIgnoreSpace(const UnicodeString& pattern,
+व्योम
+UnicodeSet::applyPatternIgnoreSpace(स्थिर UnicodeString& pattern,
                                     ParsePosition& pos,
-                                    const SymbolTable* symbols,
+                                    स्थिर प्रतीक_Table* symbols,
                                     UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return;
+    अगर (U_FAILURE(status)) {
+        वापस;
     }
-    if (isFrozen()) {
+    अगर (isFrozen()) {
         status = U_NO_WRITE_PERMISSION;
-        return;
+        वापस;
     }
     // Need to build the pattern in a temporary string because
     // _applyPattern calls add() etc., which set pat to empty.
     UnicodeString rebuiltPat;
     RuleCharacterIterator chars(pattern, symbols, pos);
     applyPattern(pattern, pos, chars, symbols, rebuiltPat, USET_IGNORE_SPACE, nullptr, status);
-    if (U_FAILURE(status)) return;
-    if (chars.inVariable()) {
+    अगर (U_FAILURE(status)) वापस;
+    अगर (chars.inVariable()) {
         // syntaxError(chars, "Extra chars in variable value");
         status = U_MALFORMED_SET;
-        return;
+        वापस;
     }
     setPattern(rebuiltPat);
 }
@@ -227,8 +227,8 @@ UnicodeSet::applyPatternIgnoreSpace(const UnicodeString& pattern,
  * Return true if the given position, in the given pattern, appears
  * to be the start of a UnicodeSet pattern.
  */
-UBool UnicodeSet::resemblesPattern(const UnicodeString& pattern, int32_t pos) {
-    return ((pos+1) < pattern.length() &&
+UBool UnicodeSet::resemblesPattern(स्थिर UnicodeString& pattern, int32_t pos) {
+    वापस ((pos+1) < pattern.length() &&
             pattern.charAt(pos) == static_cast<char16_t>(91)/*[*/) ||
         resemblesPropertyPattern(pattern, pos);
 }
@@ -237,15 +237,15 @@ UBool UnicodeSet::resemblesPattern(const UnicodeString& pattern, int32_t pos) {
 // Implementation: Pattern parsing
 //----------------------------------------------------------------
 
-#define U_DEBUGGING_UNICODESET_PARSING 0
+#घोषणा U_DEBUGGING_UNICODESET_PARSING 0
 
-class UnicodeSet::Lexer {
-  public:
-    Lexer(const UnicodeString &pattern,
-          const ParsePosition &parsePosition,
+श्रेणी UnicodeSet::Lexer {
+  खुला:
+    Lexer(स्थिर UnicodeString &pattern,
+          स्थिर ParsePosition &parsePosition,
           RuleCharacterIterator &chars,
           uint32_t unicodeSetOptions,
-          const SymbolTable *const symbols,
+          स्थिर प्रतीक_Table *स्थिर symbols,
           UnicodeSet &(UnicodeSet::*caseClosure)(int32_t attribute))
         : pattern_(pattern), parsePosition_(parsePosition), chars_(chars),
           unicodeSetOptions_(unicodeSetOptions),
@@ -256,79 +256,79 @@ class UnicodeSet::Lexer {
           symbols_(symbols),
           caseClosure_(caseClosure) {}
 
-    class LexicalElement {
-      public:
-        bool isSetOperator(const char16_t op) const {
-            return U_SUCCESS(errorCode_) && category_ == SET_OPERATOR && string_[0] == op;
+    श्रेणी LexicalElement {
+      खुला:
+        bool isSetOperator(स्थिर char16_t op) स्थिर {
+            वापस U_SUCCESS(errorCode_) && category_ == SET_OPERATOR && string_[0] == op;
         }
 
-        bool isStringLiteral() const {
-            return U_SUCCESS(errorCode_) && category_ == STRING_LITERAL;
+        bool isStringLiteral() स्थिर {
+            वापस U_SUCCESS(errorCode_) && category_ == STRING_LITERAL;
         }
 
-        bool isNamedElement() const {
-            return U_SUCCESS(errorCode_) && category_ == NAMED_ELEMENT;
+        bool isNamedElement() स्थिर {
+            वापस U_SUCCESS(errorCode_) && category_ == NAMED_ELEMENT;
         }
 
-        bool isBracketedElement() const {
-            return U_SUCCESS(errorCode_) && category_ == BRACKETED_ELEMENT;
+        bool isBracketedElement() स्थिर {
+            वापस U_SUCCESS(errorCode_) && category_ == BRACKETED_ELEMENT;
         }
 
-        std::optional<UnicodeString> element() const {
-            if (U_SUCCESS(errorCode_) &&
+        std::optional<UnicodeString> element() स्थिर {
+            अगर (U_SUCCESS(errorCode_) &&
                 (category_ == LITERAL_ELEMENT || category_ == ESCAPED_ELEMENT ||
                  category_ == BRACKETED_ELEMENT || category_ == STRING_LITERAL)) {
-                return string_;
+                वापस string_;
             }
-            return std::nullopt;
+            वापस std::nullopt;
         }
 
-        std::optional<UChar32> codePoint() const {
-            if (U_SUCCESS(errorCode_) && (category_ == LITERAL_ELEMENT || category_ == ESCAPED_ELEMENT ||
+        std::optional<UChar32> codePoint() स्थिर {
+            अगर (U_SUCCESS(errorCode_) && (category_ == LITERAL_ELEMENT || category_ == ESCAPED_ELEMENT ||
                                           category_ == BRACKETED_ELEMENT || category_ == NAMED_ELEMENT)) {
-                return string_.char32At(0);
+                वापस string_.char32At(0);
             }
-            return std::nullopt;
+            वापस std::nullopt;
         }
 
         // If `*this` is a valid property-query or set-valued-variable, returns the set represented
         // by this lexical element, which lives at least as long as `*this`.  Null otherwise.
-        const UnicodeSet *set() const {
-            if (U_FAILURE(errorCode_)) {
-                return nullptr;
+        स्थिर UnicodeSet *set() स्थिर {
+            अगर (U_FAILURE(errorCode_)) {
+                वापस nullptr;
             }
-            if (category_ == PROPERTY_QUERY || category_ == VARIABLE) {
-                if (precomputedSet_ != nullptr) {
-                    return precomputedSet_;
-                } else {
-                    return &set_;
+            अगर (category_ == PROPERTY_QUERY || category_ == VARIABLE) {
+                अगर (precomputedSet_ != nullptr) {
+                    वापस precomputedSet_;
+                } अन्यथा {
+                    वापस &set_;
                 }
             }
-            return nullptr;
+            वापस nullptr;
         }
 
-        const UErrorCode& errorCode() const{
-          return errorCode_;
+        स्थिर UErrorCode& errorCode() स्थिर{
+          वापस errorCode_;
         }
 
-#if U_DEBUGGING_UNICODESET_PARSING
-        UnicodeString debugString() const {
-            UnicodeString result;
-            if (U_FAILURE(errorCode_)) {
-                result.append(u"Ill-formed token (")
+#अगर U_DEBUGGING_UNICODESET_PARSING
+        UnicodeString debugString() स्थिर {
+            UnicodeString परिणाम;
+            अगर (U_FAILURE(errorCode_)) {
+                परिणाम.append(u"Ill-formed token (")
                     .append(UnicodeString::fromUTF8(u_errorName(errorCode_)))
                     .append(u"), possibly ");
             }
-            return result.append(category_names_[category_])
+            वापस परिणाम.append(category_names_[category_])
                 .append(u" '")
                 .append(sourceText_)
                 .append(u"'");
         }
-#endif
+#पूर्ण_अगर
 
-      private:
+      निजी:
         // See https://unicode.org/reports/tr61#Lexical-Elements.
-        enum Category : std::uint8_t {
+        क्रमागत Category : std::uint8_t {
             SET_OPERATOR,
             LITERAL_ELEMENT,
             ESCAPED_ELEMENT,
@@ -344,7 +344,7 @@ class UnicodeSet::Lexer {
             VARIABLE,
             END_OF_TEXT,
         };
-        static constexpr std::array<std::u16string_view, END_OF_TEXT + 1> category_names_{{
+        अटल constexpr std::array<std::u16string_view, END_OF_TEXT + 1> category_names_{{
             u"set-operator",
             u"literal-element",
             u"escaped-element",
@@ -356,31 +356,31 @@ class UnicodeSet::Lexer {
             u"(end of text)",
         }};
         LexicalElement(Category category, UnicodeString string, RuleCharacterIterator::Pos after,
-                       const UErrorCode errorCode, const UnicodeSet *precomputedSet, UnicodeSet set,
+                       स्थिर UErrorCode errorCode, स्थिर UnicodeSet *precomputedSet, UnicodeSet set,
                        std::u16string_view sourceText, bool separated,
-                       std::optional<LexicalElement> const &preceding)
+                       std::optional<LexicalElement> स्थिर &preceding)
             : category_(category), string_(std::move(string)), after_(after), errorCode_(errorCode),
               precomputedSet_(precomputedSet), set_(set), sourceText_(sourceText) {
-            if (U_FAILURE(errorCode_) || separated || !preceding.has_value()) {
-                return;
+            अगर (U_FAILURE(errorCode_) || separated || !preceding.has_value()) {
+                वापस;
             }
-            if (preceding->isSetOperator(u'[') && category == LITERAL_ELEMENT &&
+            अगर (preceding->isSetOperator(u'[') && category == LITERAL_ELEMENT &&
                 *codePoint() == u':') {
                 errorCode_ = U_MALFORMED_SET;
-            } else if (preceding->category_ == ESCAPED_ELEMENT) {
-                if (U_IS_LEAD(*preceding->codePoint()) && category_ == ESCAPED_ELEMENT &&
+            } अन्यथा अगर (preceding->category_ == ESCAPED_ELEMENT) {
+                अगर (U_IS_LEAD(*preceding->codePoint()) && category_ == ESCAPED_ELEMENT &&
                     U_IS_TRAIL(*codePoint())) {
                     errorCode_ = U_MALFORMED_SET;
-                } else if (preceding->sourceText_.length() <= 3 && category == LITERAL_ELEMENT) {
+                } अन्यथा अगर (preceding->sourceText_.length() <= 3 && category == LITERAL_ELEMENT) {
                     UChar32 cp = *codePoint();
-                    if (preceding->sourceText_[1] == u'x') {
-                        if ((cp >= u'0' && cp <= u'9') || (cp >= u'A' && cp <= u'F') ||
+                    अगर (preceding->sourceText_[1] == u'x') {
+                        अगर ((cp >= u'0' && cp <= u'9') || (cp >= u'A' && cp <= u'F') ||
                             (cp >= u'a' && cp <= u'f')) {
                             errorCode_ = U_MALFORMED_SET;
                         }
-                    } else if (preceding->sourceText_[1] >= u'0' &&
+                    } अन्यथा अगर (preceding->sourceText_[1] >= u'0' &&
                                preceding->sourceText_[1] <= u'7') {
-                        if (cp >= u'0' && cp <= u'7') {
+                        अगर (cp >= u'0' && cp <= u'7') {
                             errorCode_ = U_MALFORMED_SET;
                         }
                     }
@@ -391,46 +391,46 @@ class UnicodeSet::Lexer {
         UnicodeString string_;
         RuleCharacterIterator::Pos after_;
         UErrorCode errorCode_;
-        const UnicodeSet *precomputedSet_;
+        स्थिर UnicodeSet *precomputedSet_;
         UnicodeSet set_;
         std::u16string_view sourceText_;
 
-        friend class Lexer;
+        मित्र श्रेणी Lexer;
     };
 
-    UnicodeString getPositionForDebugging() const {
-        return pattern_.tempSubString(0, parsePosition_.getIndex()) + u"☞" +
-               pattern_.tempSubString(parsePosition_.getIndex(), 60);
+    UnicodeString getPositionForDebugging() स्थिर {
+        वापस pattern_.अस्थायी_Sub_String(0, parsePosition_.get_सूचकांक()) + u"☞" +
+               pattern_.अस्थायी_Sub_String(parsePosition_.get_सूचकांक(), 60);
     }
 
     bool acceptSetOperator(char16_t op) {
-        if (lookahead().isSetOperator(op)) {
+        अगर (lookahead().isSetOperator(op)) {
             advance();
-            return true;
+            वापस true;
         }
-        return false;
+        वापस false;
     }
 
-    const LexicalElement &lookahead() {
-        if (!ahead_.has_value()) {
-            const RuleCharacterIterator::Pos before = getPos();
-            ahead_.emplace(nextToken(behind_));
+    स्थिर LexicalElement &lookahead() {
+        अगर (!ahead_.has_value()) {
+            स्थिर RuleCharacterIterator::Pos before = getPos();
+            ahead_.emplace(अग्र_Token(behind_));
             chars_.setPos(before);
         }
-        return *ahead_;
+        वापस *ahead_;
     }
 
-    const LexicalElement &lookahead2() {
-        if (!ahead2_.has_value()) {
+    स्थिर LexicalElement &lookahead2() {
+        अगर (!ahead2_.has_value()) {
             // Note that if someone has called `getCharacterIterator` and played with the result,
             // `before` may not actually be before `ahead_`, but we do not actually depend on this here,
             // since we start from ahead_.after_.
-            const RuleCharacterIterator::Pos before = getPos();
+            स्थिर RuleCharacterIterator::Pos before = getPos();
             chars_.setPos(lookahead().after_);
-            ahead2_.emplace(nextToken(ahead_));
+            ahead2_.emplace(अग्र_Token(ahead_));
             chars_.setPos(before);
         }
-        return *ahead2_;
+        वापस *ahead2_;
     }
 
     // For use in older functions that take the `RuleCharacterIterator` directly.
@@ -443,18 +443,18 @@ class UnicodeSet::Lexer {
         // Make sure we compute a correct `ahead_.after_` so we do not depend on the current value of
         // `getPos()` for lexing.
         lookahead();
-        return chars_;
+        वापस chars_;
     }
 
     int32_t charsOptions() {
-        return charsOptions_;
+        वापस charsOptions_;
     }
 
-    bool atEnd() const {
-        return chars_.atEnd();
+    bool atEnd() स्थिर {
+        वापस chars_.atEnd();
     }
 
-    void advance() {
+    व्योम advance() {
         // If someone called `getCharacterIterator`, we are now changing the character iterator under
         // their feet; further, we may not have an `ahead_`, so if they keep playing with it we would be
         // working on incorrect values of `getPos`.  This is why the result of `getCharacterIterator`
@@ -465,92 +465,92 @@ class UnicodeSet::Lexer {
         ahead2_.reset();
     }
 
-  private:
+  निजी:
     // A version of getPos that returns its position instead of taking it as at out parameter, so we
     // can have const positions.
-    RuleCharacterIterator::Pos getPos() const {
-        RuleCharacterIterator::Pos result;
-        chars_.getPos(result);
-        return result;
+    RuleCharacterIterator::Pos getPos() स्थिर {
+        RuleCharacterIterator::Pos परिणाम;
+        chars_.getPos(परिणाम);
+        वापस परिणाम;
     }
 
-    LexicalElement nextToken(std::optional<LexicalElement> const& preceding) {
+    LexicalElement अग्र_Token(std::optional<LexicalElement> स्थिर& preceding) {
         UErrorCode errorCode = U_ZERO_ERROR;
         bool separated = false;
-        if (charsOptions_ & RuleCharacterIterator::SKIP_WHITESPACE) {
+        अगर (charsOptions_ & RuleCharacterIterator::SKIP_WHITESPACE) {
             UChar32 s;
             RuleCharacterIterator::Pos pos;
-            for (;;) {
+            क्रम (;;) {
                 UBool unusedEscaped;
                 chars_.getPos(pos);
                 s = chars_.next(charsOptions_ & ~(RuleCharacterIterator::PARSE_ESCAPES |
                                                   RuleCharacterIterator::SKIP_WHITESPACE),
                                 unusedEscaped, errorCode);
-                if (!PatternProps::isWhiteSpace(s)) {
+                अगर (!PatternProps::isWhiteSpace(s)) {
                     chars_.setPos(pos);
-                    break;
+                    अवरोध;
                 }
-                if (s != u'\u200E' && s != u'\u200F') {
+                अगर (s != u'\u200E' && s != u'\u200F') {
                     separated = true;
                 }
             }
         }
         chars_.skipIgnored(charsOptions_);
-        if (chars_.atEnd()) {
-            return LexicalElement(LexicalElement::END_OF_TEXT, {}, getPos(), errorCode,
+        अगर (chars_.atEnd()) {
+            वापस LexicalElement(LexicalElement::END_OF_TEXT, {}, getPos(), errorCode,
                                   /*precomputedSet=*/nullptr,
                                   /*set=*/{},
                                   u"", separated, preceding);
         }
-        const int32_t start = parsePosition_.getIndex();
-        const RuleCharacterIterator::Pos before = getPos();
+        स्थिर int32_t start = parsePosition_.get_सूचकांक();
+        स्थिर RuleCharacterIterator::Pos before = getPos();
         // First try to get the next character without parsing escapes.
         UBool unusedEscaped;
-        const UChar32 first =
+        स्थिर UChar32 first =
             chars_.next(charsOptions_ & ~RuleCharacterIterator::PARSE_ESCAPES, unusedEscaped, errorCode);
-        if (first == u'[' || first == u'\\') {
-            const RuleCharacterIterator::Pos afterFirst = getPos();
+        अगर (first == u'[' || first == u'\\') {
+            स्थिर RuleCharacterIterator::Pos afterFirst = getPos();
             // This could be a property-query or named-element.
-            const UChar32 second = chars_.next(charsOptions_ & ~(RuleCharacterIterator::PARSE_ESCAPES |
+            स्थिर UChar32 second = chars_.next(charsOptions_ & ~(RuleCharacterIterator::PARSE_ESCAPES |
                                                                  RuleCharacterIterator::SKIP_WHITESPACE),
                                                unusedEscaped, errorCode);
-            if ((first == u'[' && second == u':') ||
+            अगर ((first == u'[' && second == u':') ||
                 (first == u'\\' && (second == u'p' || second == u'P' || second == u'N'))) {
-                if (second == u'N') {
-                    UChar32 const queryResult = scanNamedElementBrackets(errorCode);
-                    return LexicalElement(
-                        LexicalElement::NAMED_ELEMENT, UnicodeString(queryResult), getPos(), errorCode,
+                अगर (second == u'N') {
+                    UChar32 स्थिर query_परिणाम = scanNamedElementBrackets(errorCode);
+                    वापस LexicalElement(
+                        LexicalElement::NAMED_ELEMENT, UnicodeString(query_परिणाम), getPos(), errorCode,
                         /*precomputedSet=*/nullptr,
                         /*set=*/{},
-                        std::u16string_view(pattern_).substr(start, parsePosition_.getIndex() - start),
+                        std::u16string_view(pattern_).substr(start, parsePosition_.get_सूचकांक() - start),
                         separated, preceding);
-                } else {
-                    UnicodeSet queryResult = scanPropertyQueryAfterStart(first, second, start, errorCode);
-                    return LexicalElement(
+                } अन्यथा {
+                    UnicodeSet query_परिणाम = scanPropertyQueryAfterStart(first, second, start, errorCode);
+                    वापस LexicalElement(
                         LexicalElement::PROPERTY_QUERY, {}, getPos(), errorCode,
-                        /*precomputedSet=*/nullptr, /*set=*/std::move(queryResult),
-                        std::u16string_view(pattern_).substr(start, parsePosition_.getIndex() - start),
+                        /*precomputedSet=*/nullptr, /*set=*/std::move(query_परिणाम),
+                        std::u16string_view(pattern_).substr(start, parsePosition_.get_सूचकांक() - start),
                         separated, preceding);
                 }
             }
             // Not a property-query.
             chars_.setPos(afterFirst);
         }
-        if (first == u'$' && symbols_ != nullptr) {
-            auto nameEnd = parsePosition_;
+        अगर (first == u'$' && symbols_ != nullptr) {
+            स्वतः nameEnd = parsePosition_;
             // The SymbolTable defines the lexing of variable names past the $.
-            if (UnicodeString name = symbols_->parseReference(pattern_, nameEnd, pattern_.length());
+            अगर (UnicodeString name = symbols_->parseReference(pattern_, nameEnd, pattern_.length());
                 // LexicalElements returned here and from evaluateVariable are always constructed
                 // with separated=true, preceding=nullopt: the separation constraints are lexical,
                 // and variables are their own lexical elements; their values are not affected by
                 // lexical constraints.
                 !name.isEmpty()) {
-                chars_.jumpahead(nameEnd.getIndex() - (start + 1));
-                const std::u16string_view source =
-                    std::u16string_view(pattern_).substr(start, parsePosition_.getIndex() - start);
-                const UnicodeSet *precomputedSet = symbols_->lookupSet(name);
-                if (precomputedSet != nullptr) {
-                    return LexicalElement(LexicalElement::VARIABLE, {}, getPos(), U_ZERO_ERROR,
+                chars_.jumpahead(nameEnd.get_सूचकांक() - (start + 1));
+                स्थिर std::u16string_view source =
+                    std::u16string_view(pattern_).substr(start, parsePosition_.get_सूचकांक() - start);
+                स्थिर UnicodeSet *precomputedSet = symbols_->lookupSet(name);
+                अगर (precomputedSet != nullptr) {
+                    वापस LexicalElement(LexicalElement::VARIABLE, {}, getPos(), U_ZERO_ERROR,
                                           precomputedSet, /*set=*/{}, source, /*separated=*/true,
                                           /*preceding=*/std::nullopt);
                 }
@@ -560,9 +560,9 @@ class UnicodeSet::Lexer {
                 // Implementers of higher-level syntaxes that pre-parse UnicodeSet-valued variables
                 // can use variables in their variable definitions, but those that simply use the
                 // source text substitution API cannot.
-                const UnicodeString *const expression = symbols_->lookup(name);
-                if (expression == nullptr) {
-                    return LexicalElement(
+                स्थिर UnicodeString *स्थिर expression = symbols_->lookup(name);
+                अगर (expression == nullptr) {
+                    वापस LexicalElement(
                         LexicalElement::VARIABLE, {}, getPos(), U_UNDEFINED_VARIABLE,
                         /*precomputedSet=*/nullptr,
                         /*set=*/{},
@@ -570,211 +570,211 @@ class UnicodeSet::Lexer {
                         /*separated=*/true,
                         /*preceding=*/std::nullopt);
                 }
-                return evaluateVariable(*expression, source);
+                वापस evaluateVariable(*expression, source);
             }
         }
-        switch (first) {
-        case u'[':
-            return LexicalElement(
+        चयन (first) {
+        हाल u'[':
+            वापस LexicalElement(
                 LexicalElement::SET_OPERATOR, UnicodeString(u'['), getPos(), errorCode,
                 /*precomputedSet=*/nullptr,
                 /*set=*/{},
-                std::u16string_view(pattern_).substr(start, parsePosition_.getIndex() - start),
+                std::u16string_view(pattern_).substr(start, parsePosition_.get_सूचकांक() - start),
                 separated, preceding);
-        case u'\\': {
+        हाल u'\\': {
             // Now try to parse the escape.
             chars_.setPos(before);
             UChar32 codePoint = chars_.next(charsOptions_, unusedEscaped, errorCode);
-            return LexicalElement(
+            वापस LexicalElement(
                 LexicalElement::ESCAPED_ELEMENT,
                 UnicodeString(codePoint), getPos(), errorCode,
                 nullptr,
                 /*set=*/{},
-                std::u16string_view(pattern_).substr(start, parsePosition_.getIndex() - start),
+                std::u16string_view(pattern_).substr(start, parsePosition_.get_सूचकांक() - start),
                 separated, preceding);
         }
-        case u'&':
-        case u'-':
-        case u']':
-        case u'^':
-        case u'$':
+        हाल u'&':
+        हाल u'-':
+        हाल u']':
+        हाल u'^':
+        हाल u'$':
             // We make $ a set-operator to handle the ICU extensions involving $.
-            return LexicalElement(
+            वापस LexicalElement(
                 LexicalElement::SET_OPERATOR, UnicodeString(first), getPos(), errorCode,
                 /*precomputedSet=*/nullptr,
                 /*set=*/{},
-                std::u16string_view(pattern_).substr(start, parsePosition_.getIndex() - start),
+                std::u16string_view(pattern_).substr(start, parsePosition_.get_सूचकांक() - start),
                 separated, preceding);
-        case u'{': {
+        हाल u'{': {
             UnicodeString string;
             UBool escaped;
             UChar32 next;
-            int32_t codePointCount = 0;
-            while (!chars_.atEnd() && U_SUCCESS(errorCode)) {
-                const RuleCharacterIterator::Pos beforeNext = getPos();
+            int32_t code_Point_गिनती = 0;
+            जबतक (!chars_.atEnd() && U_SUCCESS(errorCode)) {
+                स्थिर RuleCharacterIterator::Pos before_अग्र = getPos();
                 next = chars_.next(charsOptions_ & ~(RuleCharacterIterator::PARSE_ESCAPES |
                                                      RuleCharacterIterator::SKIP_WHITESPACE),
                                    unusedEscaped, errorCode);
-                if (next == u'\\') {
-                    const UChar32 afterBackslash =
+                अगर (next == u'\\') {
+                    स्थिर UChar32 afterBackslash =
                         chars_.next(charsOptions_ & ~(RuleCharacterIterator::PARSE_ESCAPES |
                                                       RuleCharacterIterator::SKIP_WHITESPACE),
                                     unusedEscaped, errorCode);
-                    if (afterBackslash == u'N') {
+                    अगर (afterBackslash == u'N') {
                         next = scanNamedElementBrackets(errorCode);
                         escaped = true;
-                    } else if (afterBackslash == u'p' || afterBackslash == u'P') {
-                        return LexicalElement(LexicalElement::STRING_LITERAL, {}, getPos(),
+                    } अन्यथा अगर (afterBackslash == u'p' || afterBackslash == u'P') {
+                        वापस LexicalElement(LexicalElement::STRING_LITERAL, {}, getPos(),
                                               U_MALFORMED_SET,
                                               /*precomputedSet=*/nullptr,
                                               /*set=*/{},
                                               std::u16string_view(pattern_).substr(
-                                                  start, parsePosition_.getIndex() - start),
+                                                  start, parsePosition_.get_सूचकांक() - start),
                                               separated, preceding);
-                    } else {
-                        chars_.setPos(beforeNext);
+                    } अन्यथा {
+                        chars_.setPos(before_अग्र);
                         // Parse the escape.
                         next = chars_.next(charsOptions_, escaped, errorCode);
                     }
-                } else {
-#if U_ICU_VERSION_MAJOR_NUM < 81
-                    if (U_SUCCESS(errorCode) && PatternProps::isWhiteSpace(next)) {
+                } अन्यथा {
+#अगर U_ICU_VERSION_MAJOR_अंक < 81
+                    अगर (U_SUCCESS(errorCode) && PatternProps::isWhiteSpace(next)) {
                         // Transitional prohibition of unescaped spaces in string literals (in
                         // ICU 78 and earlier, these were ignored; in ICU 81 they will mean
                         // themselves).
                         errorCode = UErrorCode::U_ILLEGAL_ARGUMENT_ERROR;
                     }
-#else
-#error Remove this transitional check, see ICU-23307 and ICU-TC minutes of 2026-01-16.
-#endif
+#अन्यथा
+#त्रुटि Remove यह transitional check, see ICU-23307 and ICU-TC minutes of 2026-01-16.
+#पूर्ण_अगर
                     escaped = false;
                 }
-                if (!escaped && next == u'}') {
-                    return LexicalElement(
-                        codePointCount == 1 ? LexicalElement::BRACKETED_ELEMENT
+                अगर (!escaped && next == u'}') {
+                    वापस LexicalElement(
+                        code_Point_गिनती == 1 ? LexicalElement::BRACKETED_ELEMENT
                                             : LexicalElement::STRING_LITERAL,
                         std::move(string), getPos(), errorCode,
                         /*precomputedSet=*/nullptr,
                         /*set=*/{},
-                        std::u16string_view(pattern_).substr(start, parsePosition_.getIndex() - start),
+                        std::u16string_view(pattern_).substr(start, parsePosition_.get_सूचकांक() - start),
                         separated, preceding);
                 }
                 string.append(next);
-                codePointCount += 1;
+                code_Point_गिनती += 1;
             }
-            return LexicalElement(
+            वापस LexicalElement(
                 LexicalElement::STRING_LITERAL, {}, getPos(), U_MALFORMED_SET,
                 /*precomputedSet=*/nullptr,
                 /*set=*/{},
-                std::u16string_view(pattern_).substr(start, parsePosition_.getIndex() - start),
+                std::u16string_view(pattern_).substr(start, parsePosition_.get_सूचकांक() - start),
                 separated, preceding);
         }
-        default:
-            return LexicalElement(
+        शेष:
+            वापस LexicalElement(
                 LexicalElement::LITERAL_ELEMENT, UnicodeString(first), getPos(), errorCode, nullptr,
                 /*set=*/{},
-                std::u16string_view(pattern_).substr(start, parsePosition_.getIndex() - start),
+                std::u16string_view(pattern_).substr(start, parsePosition_.get_सूचकांक() - start),
                 separated, preceding);
         }
     }
 
     UChar32 scanNamedElementBrackets(UErrorCode &errorCode) {
         UBool unusedEscaped;
-        const UChar32 open = chars_.next(charsOptions_ & ~(RuleCharacterIterator::PARSE_ESCAPES |
+        स्थिर UChar32 खोलो = chars_.next(charsOptions_ & ~(RuleCharacterIterator::PARSE_ESCAPES |
                                                            RuleCharacterIterator::SKIP_WHITESPACE),
                                          unusedEscaped, errorCode);
-        if (open == u'{') {
-            int32_t start = parsePosition_.getIndex();
-            std::optional<UChar32> hex;
+        अगर (खोलो == u'{') {
+            int32_t start = parsePosition_.get_सूचकांक();
+            std::optional<UChar32> षष्ठ;
             std::optional<UChar32> literal;
-            while (!chars_.atEnd() && U_SUCCESS(errorCode)) {
+            जबतक (!chars_.atEnd() && U_SUCCESS(errorCode)) {
                 UChar32 last = chars_.next(charsOptions_ & ~(RuleCharacterIterator::PARSE_ESCAPES |
                                                              RuleCharacterIterator::SKIP_WHITESPACE),
                                            unusedEscaped, errorCode);
-                if (last == u':') {
-                    if (!hex.has_value()) {
-                        hex.emplace();
-                        if (start == parsePosition_.getIndex() - 1) {
+                अगर (last == u':') {
+                    अगर (!षष्ठ.has_value()) {
+                        षष्ठ.emplace();
+                        अगर (start == parsePosition_.get_सूचकांक() - 1) {
                             errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                            return {};
+                            वापस {};
                         }
-                        for (char16_t digit : std::u16string_view(pattern_).substr(
-                                 start, parsePosition_.getIndex() - 1 - start)) {
+                        क्रम (char16_t digit : std::u16string_view(pattern_).substr(
+                                 start, parsePosition_.get_सूचकांक() - 1 - start)) {
                             uint8_t nibble;
-                            if (digit >= u'0' && digit <= u'9') {
+                            अगर (digit >= u'0' && digit <= u'9') {
                                 nibble = digit - '0';
-                            } else {
+                            } अन्यथा {
                                 digit = digit & ~0x20;
-                                if (digit >= u'A' && digit <= u'F') {
+                                अगर (digit >= u'A' && digit <= u'F') {
                                     nibble = digit - u'A' + 0xA;
-                                } else {
+                                } अन्यथा {
                                     errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                                    return {};
+                                    वापस {};
                                 }
                             }
-                            *hex = (*hex << 4) + nibble;
-                            if (hex > 0x10FFFF) {
+                            *षष्ठ = (*षष्ठ << 4) + nibble;
+                            अगर (षष्ठ > 0x10FFFF) {
                                 errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                                return {};
+                                वापस {};
                             }
                         }
-                    } else if (!literal.has_value()) {
-                        const auto literalCodePoints = utfStringCodePoints<UChar32, UTF_BEHAVIOR_FFFD>(
+                    } अन्यथा अगर (!literal.has_value()) {
+                        स्थिर स्वतः literalCodePoints = utfStringCodePoints<UChar32, UTF_BEHAVIOR_FFFD>(
                             std::u16string_view(pattern_).substr(start,
-                                                                 parsePosition_.getIndex() - 1 - start));
-                        auto it = literalCodePoints.begin();
-                        if (it == literalCodePoints.end() || !it->wellFormed() ||
+                                                                 parsePosition_.get_सूचकांक() - 1 - start));
+                        स्वतः it = literalCodePoints.begin();
+                        अगर (it == literalCodePoints.end() || !it->wellFormed() ||
                                 (literal = it->codePoint(), ++it) != literalCodePoints.end()) {
                             errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                            return {};
+                            वापस {};
                         }
-                    } else {
+                    } अन्यथा {
                         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                        return {};
+                        वापस {};
                     }
-                    start = parsePosition_.getIndex();
-                } else if (last == u'}') {
-                    const std::u16string_view u16name = std::u16string_view(pattern_).substr(
-                        start, parsePosition_.getIndex() - 1 - start);
-                    const UChar32 result = getCharacterByName(CharString().appendInvariantChars(
-                        u16name.data(), static_cast<int32_t>(u16name.length()), errorCode));
-                    if (!U_SUCCESS(errorCode)) {
+                    start = parsePosition_.get_सूचकांक();
+                } अन्यथा अगर (last == u'}') {
+                    स्थिर std::u16string_view u16name = std::u16string_view(pattern_).substr(
+                        start, parsePosition_.get_सूचकांक() - 1 - start);
+                    स्थिर UChar32 परिणाम = getCharacterByName(CharString().appendInvariantChars(
+                        u16name.तथ्य(), static_cast<int32_t>(u16name.length()), errorCode));
+                    अगर (!U_SUCCESS(errorCode)) {
                         // Convert U_INVARIANT_CONVERSION_ERROR to U_ILLEGAL_ARGUMENT_ERROR.
                         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                        return {};
+                        वापस {};
                     }
-                    if (result < 0 || (hex.has_value() && result != hex) ||
-                            (literal.has_value() && result != literal)) {
+                    अगर (परिणाम < 0 || (षष्ठ.has_value() && परिणाम != षष्ठ) ||
+                            (literal.has_value() && परिणाम != literal)) {
                         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                        return {};
+                        वापस {};
                     }
-                    return result;
+                    वापस परिणाम;
                 }
             }
         }
-        if (U_SUCCESS(errorCode)) {
+        अगर (U_SUCCESS(errorCode)) {
             errorCode = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return {};
+        वापस {};
     }
 
-    LexicalElement evaluateVariable(const UnicodeString &expression,
-                                    const std::u16string_view source) {
+    LexicalElement evaluateVariable(स्थिर UnicodeString &expression,
+                                    स्थिर std::u16string_view source) {
         UErrorCode errorCode = U_ZERO_ERROR;
         ParsePosition expressionPosition;
         RuleCharacterIterator expressionIterator(expression, symbols_, expressionPosition);
         // Do not pass the symbols: we do not support recursive expansion of variables.
         Lexer expressionLexer(expression, expressionPosition, expressionIterator, unicodeSetOptions_,
                               /*symbols=*/nullptr, caseClosure_);
-        auto variableToken = expressionLexer.lookahead();
-        if (variableToken.isSetOperator(u'[')) {
+        स्वतः variableToken = expressionLexer.lookahead();
+        अगर (variableToken.isSetOperator(u'[')) {
             UnicodeString rebuiltPattern;
-            UnicodeSet expressionValue =
+            UnicodeSet expression_मूल्य =
                 parseUnicodeSet(expressionLexer, rebuiltPattern, unicodeSetOptions_, caseClosure_,
                                 /*depth=*/0, errorCode);
-            expressionValue.setPattern(rebuiltPattern);
-            if (!expressionLexer.atEnd()) {
-                return LexicalElement(
+            expression_मूल्य.setPattern(rebuiltPattern);
+            अगर (!expressionLexer.atEnd()) {
+                वापस LexicalElement(
                     LexicalElement::VARIABLE, {}, getPos(), U_MALFORMED_VARIABLE_DEFINITION,
                     /*precomputedSet=*/nullptr,
                     /*set=*/{},
@@ -782,17 +782,17 @@ class UnicodeSet::Lexer {
                     /*separated=*/true,
                     /*preceding=*/std::nullopt);
             }
-            return LexicalElement(
+            वापस LexicalElement(
                 LexicalElement::VARIABLE, {}, getPos(), errorCode,
                 /*precomputedSet=*/nullptr,
-                /*set=*/std::move(expressionValue),
+                /*set=*/std::move(expression_मूल्य),
                 source,
                 /*separated=*/true,
                 /*preceding=*/std::nullopt);
-        } else {
+        } अन्यथा {
             expressionLexer.advance();
-            if (!expressionLexer.atEnd()) {
-                return LexicalElement(
+            अगर (!expressionLexer.atEnd()) {
+                वापस LexicalElement(
                     LexicalElement::VARIABLE, {}, getPos(), U_MALFORMED_VARIABLE_DEFINITION,
                     /*precomputedSet=*/nullptr,
                     /*set=*/{},
@@ -800,24 +800,24 @@ class UnicodeSet::Lexer {
                     /*separated=*/true,
                     /*preceding=*/std::nullopt);
             }
-            switch (variableToken.category_) {
-            case LexicalElement::LITERAL_ELEMENT:
-            case LexicalElement::ESCAPED_ELEMENT:
-            case LexicalElement::NAMED_ELEMENT:
-            case LexicalElement::BRACKETED_ELEMENT:
-            case LexicalElement::STRING_LITERAL:
-            case LexicalElement::PROPERTY_QUERY:
+            चयन (variableToken.category_) {
+            हाल LexicalElement::LITERAL_ELEMENT:
+            हाल LexicalElement::ESCAPED_ELEMENT:
+            हाल LexicalElement::NAMED_ELEMENT:
+            हाल LexicalElement::BRACKETED_ELEMENT:
+            हाल LexicalElement::STRING_LITERAL:
+            हाल LexicalElement::PROPERTY_QUERY:
                 // Return the same lexical element that we found while parsing the variable contents,
                 // except the source position corresponds to the position of the variable rather than 0
                 // in its expansion, and the source is the name of the variable rather than its
                 // expansion.
-                return LexicalElement(
+                वापस LexicalElement(
                     variableToken.category_, std::move(variableToken.string_), getPos(),
                     variableToken.errorCode_, variableToken.precomputedSet_, std::move(variableToken.set_), source,
                     /*separated=*/true,
                     /*preceding=*/std::nullopt);
-            default:
-                return LexicalElement(LexicalElement::VARIABLE, {}, getPos(),
+            शेष:
+                वापस LexicalElement(LexicalElement::VARIABLE, {}, getPos(),
                                       U_MALFORMED_VARIABLE_DEFINITION,
                                       /*precomputedSet=*/nullptr,
                                       /*set=*/{}, source,
@@ -829,7 +829,7 @@ class UnicodeSet::Lexer {
 
     UnicodeSet scanPropertyQueryAfterStart(UChar32 first, UChar32 second, int32_t queryStart, UErrorCode &errorCode) {
         std::optional<int32_t> queryOperatorPosition;
-        int32_t queryExpressionStart = parsePosition_.getIndex();
+        int32_t queryExpressionStart = parsePosition_.get_सूचकांक();
         bool exteriorlyNegated = false;
         bool interiorlyNegated = false;
         UBool unusedEscaped;
@@ -837,20 +837,20 @@ class UnicodeSet::Lexer {
         // named-element: while ICU does not support string-valued properties and thus has no
         // use for escapes, we still want to lex through escapes to allow downstream
         // implementations (mostly unicodetools) to implement string-valued properties.
-        const UChar32 third = chars_.next(charsOptions_ & ~(RuleCharacterIterator::PARSE_ESCAPES |
+        स्थिर UChar32 third = chars_.next(charsOptions_ & ~(RuleCharacterIterator::PARSE_ESCAPES |
                                                             RuleCharacterIterator::SKIP_WHITESPACE),
                                           unusedEscaped, errorCode);
-        if (first == u'\\') {
-            if (third != u'{') {
+        अगर (first == u'\\') {
+            अगर (third != u'{') {
                 errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                return {};
+                वापस {};
             }
             exteriorlyNegated = second == u'P';
-            queryExpressionStart = parsePosition_.getIndex();
-        } else {
-            if (third == u'^') {
+            queryExpressionStart = parsePosition_.get_सूचकांक();
+        } अन्यथा {
+            अगर (third == u'^') {
                 exteriorlyNegated = true;
-                queryExpressionStart = parsePosition_.getIndex();
+                queryExpressionStart = parsePosition_.get_सूचकांक();
             }
         }
         RuleCharacterIterator::Pos beforePenultimate = getPos();
@@ -859,19 +859,19 @@ class UnicodeSet::Lexer {
                                           RuleCharacterIterator::SKIP_WHITESPACE),
                         unusedEscaped, errorCode);
 
-        while (!chars_.atEnd() && U_SUCCESS(errorCode)) {
-            const RuleCharacterIterator::Pos beforeLast = getPos();
+        जबतक (!chars_.atEnd() && U_SUCCESS(errorCode)) {
+            स्थिर RuleCharacterIterator::Pos beforeLast = getPos();
             UChar32 lastUnescaped =
                 chars_.next(charsOptions_ & ~(RuleCharacterIterator::PARSE_ESCAPES |
                                               RuleCharacterIterator::SKIP_WHITESPACE),
                             unusedEscaped, errorCode);
-            if (penultimateUnescaped == u'\\') {
-                if (lastUnescaped == 'N') {
+            अगर (penultimateUnescaped == u'\\') {
+                अगर (lastUnescaped == 'N') {
                     scanNamedElementBrackets(errorCode);
-                    if (!U_SUCCESS(errorCode)) {
-                        return {};
+                    अगर (!U_SUCCESS(errorCode)) {
+                        वापस {};
                     }
-                } else {
+                } अन्यथा {
                     // There must be an escaped-element starting at beforePenultimate.  Go
                     // back there and advance through it.
                     chars_.setPos(beforePenultimate);
@@ -880,64 +880,64 @@ class UnicodeSet::Lexer {
                 }
                 // Neither a named-element nor an escaped-element can be part of a closing :].
                 lastUnescaped = -1;
-            } else if (!queryOperatorPosition.has_value() && lastUnescaped == u'=') {
-                queryOperatorPosition = parsePosition_.getIndex() - 1;
-            } else if (!queryOperatorPosition.has_value() && lastUnescaped == u'≠') {
-                if (exteriorlyNegated) {
+            } अन्यथा अगर (!queryOperatorPosition.has_value() && lastUnescaped == u'=') {
+                queryOperatorPosition = parsePosition_.get_सूचकांक() - 1;
+            } अन्यथा अगर (!queryOperatorPosition.has_value() && lastUnescaped == u'≠') {
+                अगर (exteriorlyNegated) {
                     // Reject doubly negated property queries.
                     errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                    return {};
+                    वापस {};
                 }
                 interiorlyNegated = true;
-                queryOperatorPosition = parsePosition_.getIndex() - 1;
-            } else if ((first == u'[' && penultimateUnescaped == u':' && lastUnescaped == u']') ||
+                queryOperatorPosition = parsePosition_.get_सूचकांक() - 1;
+            } अन्यथा अगर ((first == u'[' && penultimateUnescaped == u':' && lastUnescaped == u']') ||
                        (first == u'\\' && lastUnescaped == u'}')) {
                 // Note that no unescaping is performed here, as ICU does not support string-valued or
                 // or miscellaneous properties.
-                const int32_t queryExpressionLimit =
-                    first == u'[' ? parsePosition_.getIndex() - 2 : parsePosition_.getIndex() - 1;
+                स्थिर int32_t queryExpressionLimit =
+                    first == u'[' ? parsePosition_.get_सूचकांक() - 2 : parsePosition_.get_सूचकांक() - 1;
                 // Contrary to Java, applyPropertyAlias does not support a null property-predicate in
                 // C++; instead "" indicates the absence of a property-predicate.  This is OK with the
                 // properties supported by ICU, but not with string-valued or miscellaneous properties;
                 // see https://github.com/unicode-org/icu/pull/3456.
                 UnicodeString propertyPredicate;
-                if (queryOperatorPosition.has_value()) {
+                अगर (queryOperatorPosition.has_value()) {
                     propertyPredicate =
-                        pattern_.tempSubStringBetween(*queryOperatorPosition + 1, queryExpressionLimit);
-                    if (propertyPredicate.isEmpty()) {
+                        pattern_.अस्थायी_Sub_String_Between(*queryOperatorPosition + 1, queryExpressionLimit);
+                    अगर (propertyPredicate.isEmpty()) {
                         // \p{X=} is valid if X is a string-valued or miscellaneous property, but
                         // ICU does not support those.  Thus, it is invalid for ICU purposes, and
                         // passing an empty propertyPredicate to applyPropertyAlias can be valid
                         // (this is how we represent \p{X}), so we need to return the error here.
                         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-                        return {};
+                        वापस {};
                     }
                 }
-                UnicodeSet result;
-                result.applyPropertyAlias(
-                    pattern_.tempSubStringBetween(queryExpressionStart,
+                UnicodeSet परिणाम;
+                परिणाम.applyPropertyAlias(
+                    pattern_.अस्थायी_Sub_String_Between(queryExpressionStart,
                                                   queryOperatorPosition.value_or(queryExpressionLimit)),
                     propertyPredicate, errorCode);
-                if (exteriorlyNegated != interiorlyNegated) {
-                    result.complement().removeAllStrings();
+                अगर (exteriorlyNegated != interiorlyNegated) {
+                    परिणाम.complement().removeAllStrings();
                 }
-                result.setPattern(pattern_.tempSubStringBetween(queryStart, parsePosition_.getIndex()));
-                return result;
+                परिणाम.setPattern(pattern_.अस्थायी_Sub_String_Between(queryStart, parsePosition_.get_सूचकांक()));
+                वापस परिणाम;
             }
             beforePenultimate = beforeLast;
             penultimateUnescaped = lastUnescaped;
         }
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return {};
+        वापस {};
     }
 
-    const UnicodeString &pattern_;
-    const ParsePosition &parsePosition_;
+    स्थिर UnicodeString &pattern_;
+    स्थिर ParsePosition &parsePosition_;
     RuleCharacterIterator &chars_;
-    const uint32_t unicodeSetOptions_;
-    const int32_t charsOptions_;
-    const SymbolTable *const symbols_;
-    UnicodeSet &(UnicodeSet::* const caseClosure_)(int32_t attribute);
+    स्थिर uint32_t unicodeSetOptions_;
+    स्थिर int32_t charsOptions_;
+    स्थिर प्रतीक_Table *स्थिर symbols_;
+    UnicodeSet &(UnicodeSet::* स्थिर caseClosure_)(int32_t attribute);
     std::optional<LexicalElement> behind_;
     std::optional<LexicalElement> ahead_;
     std::optional<LexicalElement> ahead2_;
@@ -947,58 +947,58 @@ namespace {
 
 constexpr int32_t MAX_DEPTH = 100;
 
-#if U_DEBUGGING_UNICODESET_PARSING
+#अगर U_DEBUGGING_UNICODESET_PARSING
 
-#define U_UNICODESET_RETURN_IF_ERROR(result, ec)                                                   \
-    do {                                                                                           \
+#घोषणा U_UNICODESET_RETURN_IF_ERROR(परिणाम, ec)                                                   \
+    करो {                                                                                           \
         constexpr std::string_view functionName = __func__;                                        \
         static_assert(functionName.substr(0, 5) == "parse");                                       \
-        if (U_FAILURE(ec)) {                                                                       \
-            if (depth < 5) {                                                                       \
-                printf("--- in %s l. %d\n", __func__ + 5, __LINE__);                               \
-            } else if (depth == 5 && std::string_view(__func__ + 5) == "UnicodeSet") {             \
-                printf("--- [...]\n");                                                             \
+        अगर (U_FAILURE(ec)) {                                                                       \
+            अगर (depth < 5) {                                                                       \
+                म_लिखो("--- in %s l. %d\n", __func__ + 5, __LINE__);                               \
+            } अन्यथा अगर (depth == 5 && std::string_view(__func__ + 5) == "UnicodeSet") {             \
+                म_लिखो("--- [...]\n");                                                             \
             }                                                                                      \
-            return result;                                                                         \
+            वापस परिणाम;                                                                         \
         }                                                                                          \
-    } while (false)
-#define U_UNICODESET_RETURN_WITH_PARSE_ERROR(result, expected, actual, lexer, ec)                  \
-    do {                                                                                           \
+    } जबतक (false)
+#घोषणा U_UNICODESET_RETURN_WITH_PARSE_ERROR(परिणाम, expected, actual, lexer, ec)                  \
+    करो {                                                                                           \
         constexpr std::string_view functionName = __func__;                                        \
         static_assert(functionName.substr(0, 5) == "parse");                                       \
         std::string actualUTF8;                                                                    \
         std::string contextUTF8;                                                                   \
-        printf("*** Expected %s, got %s %s\n", (expected),                                         \
+        म_लिखो("*** Expected %s, got %s %s\n", (expected),                                         \
                UnicodeString(actual).toUTF8String(actualUTF8).c_str(),                             \
                lexer.getPositionForDebugging().toUTF8String(contextUTF8).c_str());                 \
-        printf("--- in %s l. %d\n", __func__ + 5, __LINE__);                                       \
-        if (U_FAILURE(lexer.lookahead().errorCode())) {                                            \
+        म_लिखो("--- in %s l. %d\n", __func__ + 5, __LINE__);                                       \
+        अगर (U_FAILURE(lexer.lookahead().errorCode())) {                                            \
             (ec) = lexer.lookahead().errorCode();                                                  \
-        } else {                                                                                   \
+        } अन्यथा {                                                                                   \
             (ec) = U_MALFORMED_SET;                                                                \
         }                                                                                          \
-        return result;                                                                             \
-    } while (false)
+        वापस परिणाम;                                                                             \
+    } जबतक (false)
 
-#else
+#अन्यथा
 
-#define U_UNICODESET_RETURN_IF_ERROR(result, ec)                                                   \
-    do {                                                                                           \
-        if (U_FAILURE(ec)) {                                                                       \
-            return result;                                                                         \
+#घोषणा U_UNICODESET_RETURN_IF_ERROR(परिणाम, ec)                                                   \
+    करो {                                                                                           \
+        अगर (U_FAILURE(ec)) {                                                                       \
+            वापस परिणाम;                                                                         \
         }                                                                                          \
-    } while (false)
-#define U_UNICODESET_RETURN_WITH_PARSE_ERROR(result, expected, actual, lexer, ec)                  \
-    do {                                                                                           \
-        if (U_FAILURE(lexer.lookahead().errorCode())) {                                            \
+    } जबतक (false)
+#घोषणा U_UNICODESET_RETURN_WITH_PARSE_ERROR(परिणाम, expected, actual, lexer, ec)                  \
+    करो {                                                                                           \
+        अगर (U_FAILURE(lexer.lookahead().errorCode())) {                                            \
             (ec) = lexer.lookahead().errorCode();                                                  \
-        } else {                                                                                   \
+        } अन्यथा {                                                                                   \
             (ec) = U_MALFORMED_SET;                                                                \
         }                                                                                          \
-        return result;                                                                             \
-    } while (false)
+        वापस परिणाम;                                                                             \
+    } जबतक (false)
 
-#endif
+#पूर्ण_अगर
 
 }  // namespace
 
@@ -1019,17 +1019,17 @@ constexpr int32_t MAX_DEPTH = 100;
  * IGNORE_SPACE, CASE.
  */
 
-void UnicodeSet::applyPattern(const UnicodeString &pattern,
-                              const ParsePosition &parsePosition,
+व्योम UnicodeSet::applyPattern(स्थिर UnicodeString &pattern,
+                              स्थिर ParsePosition &parsePosition,
                               RuleCharacterIterator &chars,
-                              const SymbolTable *symbols,
+                              स्थिर प्रतीक_Table *symbols,
                               UnicodeString &rebuiltPat,
                               uint32_t options,
                               UnicodeSet &(UnicodeSet::*caseClosure)(int32_t attribute),
                               UErrorCode &ec) {
-    if (U_FAILURE(ec)) return;
+    अगर (U_FAILURE(ec)) वापस;
     Lexer lexer(pattern, parsePosition, chars, options, symbols, caseClosure);
-    *this = parseUnicodeSet(lexer, rebuiltPat, options, caseClosure, /*depth=*/0, ec);
+    *यह = parseUnicodeSet(lexer, rebuiltPat, options, caseClosure, /*depth=*/0, ec);
 }
 
 UnicodeSet UnicodeSet::parseUnicodeSet(Lexer &lexer,
@@ -1038,9 +1038,9 @@ UnicodeSet UnicodeSet::parseUnicodeSet(Lexer &lexer,
                                        UnicodeSet& (UnicodeSet::*caseClosure)(int32_t attribute),
                                        int32_t depth,
                                        UErrorCode &ec) {
-    UnicodeSet result;
+    UnicodeSet परिणाम;
 
-    if (depth > MAX_DEPTH) {
+    अगर (depth > MAX_DEPTH) {
         U_UNICODESET_RETURN_WITH_PARSE_ERROR({}, ("depth <= " + std::to_string(MAX_DEPTH)).c_str(),
                                              ("depth = " + std::to_string(depth)).c_str(), lexer,
                                              ec);
@@ -1054,33 +1054,33 @@ UnicodeSet UnicodeSet::parseUnicodeSet(Lexer &lexer,
     bool preserveSyntaxInPattern = false;
     // A pattern that preserves the original syntax but strips spaces, normalizes escaping, etc.
     UnicodeString prettyPrintedPattern;
-    if (lexer.lookahead().set() != nullptr) {
+    अगर (lexer.lookahead().set() != nullptr) {
         // UnicodeSet ::= property-query
         // Extension:
         //              | set-valued-variable
-        result = *lexer.lookahead().set();
-        result._toPattern(prettyPrintedPattern, /*escapeUnprintable=*/false);
+        परिणाम = *lexer.lookahead().set();
+        परिणाम._toPattern(prettyPrintedPattern, /*escapeUnprintable=*/false);
         lexer.advance();
         preserveSyntaxInPattern = true;
-    } else {
+    } अन्यथा {
         // UnicodeSet ::=                [   Content ]
         //              | Complement ::= [ ^ Content ]
-        if (lexer.acceptSetOperator(u'[')) {
+        अगर (lexer.acceptSetOperator(u'[')) {
             prettyPrintedPattern.append(u'[');
-            if (lexer.acceptSetOperator(u'^')) {
+            अगर (lexer.acceptSetOperator(u'^')) {
                 prettyPrintedPattern.append(u'^');
                 isComplement = true;
             }
-            result = parseContent(lexer, prettyPrintedPattern, options, caseClosure, depth,
+            परिणाम = parseContent(lexer, prettyPrintedPattern, options, caseClosure, depth,
                                   /*containsSetOperation=*/preserveSyntaxInPattern, ec);
-            U_UNICODESET_RETURN_IF_ERROR(result, ec);
-            if (!lexer.acceptSetOperator(u']')) {
-                U_UNICODESET_RETURN_WITH_PARSE_ERROR(result, "]", lexer.lookahead().debugString(),
+            U_UNICODESET_RETURN_IF_ERROR(परिणाम, ec);
+            अगर (!lexer.acceptSetOperator(u']')) {
+                U_UNICODESET_RETURN_WITH_PARSE_ERROR(परिणाम, "]", lexer.lookahead().debugString(),
                                                      lexer, ec);
             }
             prettyPrintedPattern.append(u']');
-        } else {
-            U_UNICODESET_RETURN_WITH_PARSE_ERROR(result, "property-query | [",
+        } अन्यथा {
+            U_UNICODESET_RETURN_WITH_PARSE_ERROR(परिणाम, "property-query | [",
                                                  lexer.lookahead().debugString(), lexer, ec);
         }
     }
@@ -1091,18 +1091,18 @@ UnicodeSet UnicodeSet::parseUnicodeSet(Lexer &lexer,
      * to close over case BEFORE COMPLEMENTING.  This makes
      * patterns like /[^abc]/i work.
      */
-    if ((options & USET_CASE_MASK) != 0) {
-        (result.*caseClosure)(options);
+    अगर ((options & USET_CASE_MASK) != 0) {
+        (परिणाम.*caseClosure)(options);
     }
-    if (isComplement) {
-        result.complement().removeAllStrings(); // code point complement
+    अगर (isComplement) {
+        परिणाम.complement().removeAllStrings(); // code point complement
     }
-    if (preserveSyntaxInPattern) {
+    अगर (preserveSyntaxInPattern) {
         rebuiltPat.append(prettyPrintedPattern);
-    } else {
-        result._generatePattern(rebuiltPat, /*escapeUnprintable=*/false);
+    } अन्यथा {
+        परिणाम._generatePattern(rebuiltPat, /*escapeUnprintable=*/false);
     }
-    return result;
+    वापस परिणाम;
 }
 
 UnicodeSet UnicodeSet::parseContent(Lexer &lexer,
@@ -1112,7 +1112,7 @@ UnicodeSet UnicodeSet::parseContent(Lexer &lexer,
                                     int32_t depth,
                                     bool &containsSetOperation,
                                     UErrorCode &ec) {
-    UnicodeSet result;
+    UnicodeSet परिणाम;
     //   Content ::= ""
     //             | ElementList
     //             | ElementList UnescapedHyphenMinus
@@ -1158,44 +1158,44 @@ UnicodeSet UnicodeSet::parseContent(Lexer &lexer,
     //              | DollarElements  -- ICU extension
     //   FinalMutation ::= Elements
     //                   | SetOperations
-    if (lexer.acceptSetOperator(u'-')) {
-        result.add(u'-');
+    अगर (lexer.acceptSetOperator(u'-')) {
+        परिणाम.add(u'-');
         // When we otherwise preserve the syntax, we escape an initial UnescapedHyphenMinus, but not a
         // final one, for consistency with older ICU behaviour.
         rebuiltPat.append(u"\\-");
     }
-    while (!lexer.atEnd()) {
-        if (lexer.acceptSetOperator(u'-')) {
+    जबतक (!lexer.atEnd()) {
+        अगर (lexer.acceptSetOperator(u'-')) {
             // We can be here on the first iteration: [--] is allowed by the
             // grammar and by the old parser.
             rebuiltPat.append(u'-');
-            result.add(u'-');
-            return result;
-        } else if (lexer.lookahead().isSetOperator(u'$')) {
-            if (lexer.lookahead2().isSetOperator(u']')) {
+            परिणाम.add(u'-');
+            वापस परिणाम;
+        } अन्यथा अगर (lexer.lookahead().isSetOperator(u'$')) {
+            अगर (lexer.lookahead2().isSetOperator(u']')) {
                 // ICU extensions: A $ is allowed in an ElementList if followed by Elements, or
                 // if followed by UnicodeSet (in a Union).
                 // A $ at the end of a Content is an Æther.
                 rebuiltPat.append(u'$');
                 // Consume the dollar.
                 lexer.advance();
-                result.add(U_ETHER);
+                परिणाम.add(U_ETHER);
                 containsSetOperation = true;
-                return result;
+                वापस परिणाम;
             }
         }
-        if (lexer.lookahead().isSetOperator(u']')) {
-            return result;
+        अगर (lexer.lookahead().isSetOperator(u']')) {
+            वापस परिणाम;
         }
         // Also handles FinalMutation.
-        result.parseMutation(lexer, rebuiltPat, options, caseClosure, depth, containsSetOperation,
+        परिणाम.parseMutation(lexer, rebuiltPat, options, caseClosure, depth, containsSetOperation,
                              ec);
-        U_UNICODESET_RETURN_IF_ERROR(result, ec);
+        U_UNICODESET_RETURN_IF_ERROR(परिणाम, ec);
     }
-    return result;
+    वापस परिणाम;
 }
 
-void UnicodeSet::parseMutation(Lexer &lexer,
+व्योम UnicodeSet::parseMutation(Lexer &lexer,
                                UnicodeString &rebuiltPat,
                                uint32_t options,
                                UnicodeSet &(UnicodeSet::*caseClosure)(int32_t attribute),
@@ -1209,18 +1209,18 @@ void UnicodeSet::parseMutation(Lexer &lexer,
     //                   | SetOperations
     //   SetOperations ::= UnicodeSet RightHandSides
     // So if we see the beginning of a UnicodeSet, we have SetOperations.
-    if (lexer.lookahead().isSetOperator('[') || lexer.lookahead().set() != nullptr) {
+    अगर (lexer.lookahead().isSetOperator('[') || lexer.lookahead().set() != nullptr) {
         containsSetOperation = true;
         parseSetOperations(lexer, rebuiltPat, options, caseClosure, depth, ec);
         U_UNICODESET_RETURN_IF_ERROR(, ec);
-    } else {
+    } अन्यथा {
         // Also handles DollarElements.
         addAll(parseElements(lexer, rebuiltPat, ec));
         U_UNICODESET_RETURN_IF_ERROR(, ec);
     }
 }
 
-void UnicodeSet::parseSetOperations(Lexer &lexer,
+व्योम UnicodeSet::parseSetOperations(Lexer &lexer,
                                     UnicodeString &rebuiltPat,
                                     uint32_t options,
                                     UnicodeSet &(UnicodeSet::*caseClosure)(int32_t attribute),
@@ -1246,9 +1246,9 @@ void UnicodeSet::parseSetOperations(Lexer &lexer,
     // but note that the tree resulting from this LL version is not an expression tree: the
     // operations are left-associative.
     // Start by parsing the first UnicodeSet.
-    const UnicodeSet leftHandSide =
+    स्थिर UnicodeSet बायाँ_Hand_Side =
         parseUnicodeSet(lexer, rebuiltPat, options, caseClosure, depth + 1, ec);
-    addAll(leftHandSide);
+    addAll(बायाँ_Hand_Side);
     U_UNICODESET_RETURN_IF_ERROR(, ec);
     // In terms of the LR expression grammar, at this point this object is the Union, which is a
     // SetOperation.
@@ -1256,37 +1256,37 @@ void UnicodeSet::parseSetOperations(Lexer &lexer,
     // Keep looking for an operator that would continue the RightHandSides in the LL grammar.
     // The loop terminates because when we run out of source text, the lookahead token will not be a
     // set operator, so that we hit the else branch and return.
-    for (;;) {
+    क्रम (;;) {
         // In terms of the LR expression grammar, at this point this object is a SetOperation; if &
         // follows, we have an Intersection; if - follows, we have a Difference.
-        if (lexer.acceptSetOperator(u'&')) {
+        अगर (lexer.acceptSetOperator(u'&')) {
             // Intersection ::= SetOperation & UnicodeSet
             rebuiltPat.append(u'&');
-            const UnicodeSet rightHandSide =
+            स्थिर UnicodeSet दायाँ_Hand_Side =
                 parseUnicodeSet(lexer, rebuiltPat, options, caseClosure, depth + 1, ec);
             U_UNICODESET_RETURN_IF_ERROR(, ec);
-            retainAll(rightHandSide);
-        } else if (lexer.lookahead().isSetOperator(u'-')) {
+            retainAll(दायाँ_Hand_Side);
+        } अन्यथा अगर (lexer.lookahead().isSetOperator(u'-')) {
             // Here the grammar requires two tokens of lookahead to figure out whether the - is
             // the operator of a Difference or an UnescapedHyphenMinus in the enclosing Union.
-            if (lexer.lookahead2().isSetOperator(u']')) {
+            अगर (lexer.lookahead2().isSetOperator(u']')) {
                 // The operator is actually an UnescapedHyphenMinus; terminate the SetOperation
                 // before it.  We return to parseMutation, which immediately returns to
                 // parseContent, which will accept the - and add it to *this.
-                return;
+                वापस;
             }
             // Consume the hyphen-minus.
             lexer.advance();
             // Difference ::= SetOperation - UnicodeSet
             rebuiltPat.append(u'-');
-            const UnicodeSet rightHandSide =
+            स्थिर UnicodeSet दायाँ_Hand_Side =
                 parseUnicodeSet(lexer, rebuiltPat, options, caseClosure, depth + 1, ec);
             U_UNICODESET_RETURN_IF_ERROR(, ec);
-            removeAll(rightHandSide);
-        } else {
+            removeAll(दायाँ_Hand_Side);
+        } अन्यथा {
             // Not an operator, end of the SetOperation (and of the SetOperations in the LL
             // grammar).
-            return;
+            वापस;
         }
     }
 }
@@ -1310,67 +1310,67 @@ UnicodeSet UnicodeSet::parseElements(Lexer &lexer,
     // which cannot appear at the end of Content.
     // A Content-final $ would already have been interpreted as an Æther by parseContent, so we
     // only need to check that RangeElement - $ is not Content-final.
-    if (lexer.lookahead().isStringLiteral()) {
-        const UnicodeString element = *lexer.lookahead().element();
+    अगर (lexer.lookahead().isStringLiteral()) {
+        स्थिर UnicodeString element = *lexer.lookahead().element();
         rebuiltPat.append(u'{');
         _appendToPat(rebuiltPat, element, /*escapeUnprintable=*/false);
         rebuiltPat.append(u'}');
         lexer.advance();
-        return UnicodeSet().add(element);
+        वापस UnicodeSet().add(element);
     }
     UChar32 first;
-    if (lexer.lookahead().isSetOperator(u'$')) {
+    अगर (lexer.lookahead().isSetOperator(u'$')) {
         // Disallowed by UTS #61, but historically accepted by ICU.  This is an extension.
         first = u'$';
-    } else if (lexer.lookahead().codePoint().has_value()) {
+    } अन्यथा अगर (lexer.lookahead().codePoint().has_value()) {
         first = *lexer.lookahead().codePoint();
-    } else {
+    } अन्यथा {
         U_UNICODESET_RETURN_WITH_PARSE_ERROR({}, "RangeElement | string-literal",
                                              lexer.lookahead().debugString(), lexer, ec);
     }
     lexer.advance();
     _appendToPat(rebuiltPat, first, /*escapeUnprintable=*/false);
-    if (!lexer.lookahead().isSetOperator(u'-')) {
+    अगर (!lexer.lookahead().isSetOperator(u'-')) {
         // No operator,
         // Elements ::= Element
-        return UnicodeSet(first, first);
+        वापस UnicodeSet(first, first);
     }
     // Here the grammar requires two tokens of lookahead to figure out whether the - is the operator
     // of a Range or an UnescapedHyphenMinus in the enclosing Union.
-    if (lexer.lookahead2().isSetOperator(u']')) {
+    अगर (lexer.lookahead2().isSetOperator(u']')) {
         // The operator is actually an UnescapedHyphenMinus; terminate the Elements before it.
-        return UnicodeSet(first, first);
+        वापस UnicodeSet(first, first);
     }
     // Consume the hyphen-minus.
     lexer.advance();
     // Elements ::= Range ::= RangeElement - RangeElement
     rebuiltPat.append(u'-');
     UChar32 last;
-    if (lexer.lookahead().isSetOperator(u'$')) {
+    अगर (lexer.lookahead().isSetOperator(u'$')) {
         // Disallowed by UTS #61, but historically accepted by ICU except at the end of a Content.
         // This is an extension.
         last = u'$';
-        if (lexer.lookahead2().isSetOperator(u']')) {
+        अगर (lexer.lookahead2().isSetOperator(u']')) {
             U_UNICODESET_RETURN_WITH_PARSE_ERROR(
                 {}, "Elements or UnicodeSet after Range ending in unescaped $",
                 lexer.lookahead().debugString() + u" followed by " +
                     lexer.lookahead2().debugString(),
                 lexer, ec);
         }
-    } else if (lexer.lookahead().codePoint().has_value()) {
+    } अन्यथा अगर (lexer.lookahead().codePoint().has_value()) {
         last = *lexer.lookahead().codePoint();
-    } else {
+    } अन्यथा {
         U_UNICODESET_RETURN_WITH_PARSE_ERROR({}, "RangeElement", lexer.lookahead().debugString(),
                                              lexer, ec);
     }
-    if (last <= first) {
+    अगर (last <= first) {
         U_UNICODESET_RETURN_WITH_PARSE_ERROR({}, "first < last in Range",
                                              UnicodeString(last) + u"-" + UnicodeString(first),
                                              lexer, ec);
     }
     lexer.advance();
     _appendToPat(rebuiltPat, last, /*escapeUnprintable=*/false);
-    return UnicodeSet(first, last);
+    वापस UnicodeSet(first, last);
 }
 
 //----------------------------------------------------------------
@@ -1379,39 +1379,39 @@ UnicodeSet UnicodeSet::parseElements(Lexer &lexer,
 
 namespace {
 
-UBool numericValueFilter(UChar32 ch, void* context) {
-    return u_getNumericValue(ch) == *static_cast<double*>(context);
+UBool numeric_मूल्य_Filter(UChar32 ch, व्योम* context) {
+    वापस u_get_Numeric_मूल्य(ch) == *static_cast<द्विगुन*>(context);
 }
 
-UBool generalCategoryMaskFilter(UChar32 ch, void* context) {
+UBool generalCategoryMaskFilter(UChar32 ch, व्योम* context) {
     int32_t value = *static_cast<int32_t*>(context);
-    return (U_GET_GC_MASK((UChar32) ch) & value) != 0;
+    वापस (U_GET_GC_MASK((UChar32) ch) & value) != 0;
 }
 
-UBool versionFilter(UChar32 ch, void* context) {
-    static const UVersionInfo none = { 0, 0, 0, 0 };
+UBool versionFilter(UChar32 ch, व्योम* context) {
+    अटल स्थिर UVersionInfo none = { 0, 0, 0, 0 };
     UVersionInfo v;
     u_charAge(ch, v);
     UVersionInfo* version = static_cast<UVersionInfo*>(context);
-    return uprv_memcmp(&v, &none, sizeof(v)) > 0 && uprv_memcmp(&v, version, sizeof(v)) <= 0;
+    वापस uprv_memcmp(&v, &none, माप(v)) > 0 && uprv_memcmp(&v, version, माप(v)) <= 0;
 }
 
-typedef struct {
+प्रकार काष्ठा {
     UProperty prop;
     int32_t value;
 } IntPropertyContext;
 
-UBool intPropertyFilter(UChar32 ch, void* context) {
+UBool intPropertyFilter(UChar32 ch, व्योम* context) {
     IntPropertyContext* c = static_cast<IntPropertyContext*>(context);
-    return u_getIntPropertyValue(ch, c->prop) == c->value;
+    वापस u_get_Int_Property_मूल्य(ch, c->prop) == c->value;
 }
 
-UBool scriptExtensionsFilter(UChar32 ch, void* context) {
-    return uscript_hasScript(ch, *static_cast<UScriptCode*>(context));
+UBool scriptExtensionsFilter(UChar32 ch, व्योम* context) {
+    वापस uscript_hasScript(ch, *static_cast<UScriptCode*>(context));
 }
 
-UBool idTypeFilter(UChar32 ch, void* context) {
-    return u_hasIDType(ch, *static_cast<UIdentifierType*>(context));
+UBool idTypeFilter(UChar32 ch, व्योम* context) {
+    वापस u_hasIDType(ch, *static_cast<UIdentifierType*>(context));
 }
 
 }  // namespace
@@ -1419,11 +1419,11 @@ UBool idTypeFilter(UChar32 ch, void* context) {
 /**
  * Generic filter-based scanning code for UCD property UnicodeSets.
  */
-void UnicodeSet::applyFilter(UnicodeSet::Filter filter,
-                             void* context,
-                             const UnicodeSet* inclusions,
+व्योम UnicodeSet::applyFilter(UnicodeSet::Filter filter,
+                             व्योम* context,
+                             स्थिर UnicodeSet* inclusions,
                              UErrorCode &status) {
-    if (U_FAILURE(status)) return;
+    अगर (U_FAILURE(status)) वापस;
 
     // Logically, walk through all Unicode characters, noting the start
     // and end of each range for which filter.contain(c) is
@@ -1435,34 +1435,34 @@ void UnicodeSet::applyFilter(UnicodeSet::Filter filter,
     // inclusions contains the first characters of
     // same-value ranges for the given property.
 
-    clear();
+    सफा();
 
     UChar32 startHasProperty = -1;
-    int32_t limitRange = inclusions->getRangeCount();
+    int32_t limitRange = inclusions->get_Range_गिनती();
 
-    for (int j=0; j<limitRange; ++j) {
+    क्रम (पूर्णांक j=0; j<limitRange; ++j) {
         // get current range
         UChar32 start = inclusions->getRangeStart(j);
         UChar32 end = inclusions->getRangeEnd(j);
 
         // for all the code points in the range, process
-        for (UChar32 ch = start; ch <= end; ++ch) {
+        क्रम (UChar32 ch = start; ch <= end; ++ch) {
             // only add to this UnicodeSet on inflection points --
             // where the hasProperty value changes to false
-            if ((*filter)(ch, context)) {
-                if (startHasProperty < 0) {
+            अगर ((*filter)(ch, context)) {
+                अगर (startHasProperty < 0) {
                     startHasProperty = ch;
                 }
-            } else if (startHasProperty >= 0) {
+            } अन्यथा अगर (startHasProperty >= 0) {
                 add(startHasProperty, ch-1);
                 startHasProperty = -1;
             }
         }
     }
-    if (startHasProperty >= 0) {
+    अगर (startHasProperty >= 0) {
         add(startHasProperty, static_cast<UChar32>(0x10FFFF));
     }
-    if (isBogus() && U_SUCCESS(status)) {
+    अगर (isBogus() && U_SUCCESS(status)) {
         // We likely ran out of memory. AHHH!
         status = U_MEMORY_ALLOCATION_ERROR;
     }
@@ -1476,51 +1476,51 @@ namespace {
 // Property set API
 //----------------------------------------------------------------
 
-#define FAIL(ec) UPRV_BLOCK_MACRO_BEGIN { \
+#घोषणा FAIL(ec) UPRV_BLOCK_MACRO_BEGIN { \
     ec=U_ILLEGAL_ARGUMENT_ERROR; \
-    return *this; \
+    वापस *यह; \
 } UPRV_BLOCK_MACRO_END
 
 UnicodeSet&
-UnicodeSet::applyIntPropertyValue(UProperty prop, int32_t value, UErrorCode& ec) U_LIFETIME_BOUND {
-    if (U_FAILURE(ec) || isFrozen()) { return *this; }
-    if (prop == UCHAR_GENERAL_CATEGORY_MASK) {
-        const UnicodeSet* inclusions = CharacterProperties::getInclusionsForProperty(prop, ec);
+UnicodeSet::apply_Int_Property_मूल्य(UProperty prop, int32_t value, UErrorCode& ec) U_LIFETIME_BOUND {
+    अगर (U_FAILURE(ec) || isFrozen()) { वापस *यह; }
+    अगर (prop == UCHAR_GENERAL_CATEGORY_MASK) {
+        स्थिर UnicodeSet* inclusions = CharacterProperties::getInclusionsForProperty(prop, ec);
         applyFilter(generalCategoryMaskFilter, &value, inclusions, ec);
-    } else if (prop == UCHAR_SCRIPT_EXTENSIONS) {
-        const UnicodeSet* inclusions = CharacterProperties::getInclusionsForProperty(prop, ec);
+    } अन्यथा अगर (prop == UCHAR_SCRIPT_EXTENSIONS) {
+        स्थिर UnicodeSet* inclusions = CharacterProperties::getInclusionsForProperty(prop, ec);
         UScriptCode script = static_cast<UScriptCode>(value);
         applyFilter(scriptExtensionsFilter, &script, inclusions, ec);
-    } else if (prop == UCHAR_IDENTIFIER_TYPE) {
-        const UnicodeSet* inclusions = CharacterProperties::getInclusionsForProperty(prop, ec);
+    } अन्यथा अगर (prop == UCHAR_IDENTIFIER_TYPE) {
+        स्थिर UnicodeSet* inclusions = CharacterProperties::getInclusionsForProperty(prop, ec);
         UIdentifierType idType = static_cast<UIdentifierType>(value);
         applyFilter(idTypeFilter, &idType, inclusions, ec);
-    } else if (0 <= prop && prop < UCHAR_BINARY_LIMIT) {
-        if (value == 0 || value == 1) {
-            const USet *set = u_getBinaryPropertySet(prop, &ec);
-            if (U_FAILURE(ec)) { return *this; }
+    } अन्यथा अगर (0 <= prop && prop < UCHAR_द्विआधारी_LIMIT) {
+        अगर (value == 0 || value == 1) {
+            स्थिर USet *set = u_get_द्विआधारी_Property_Set(prop, &ec);
+            अगर (U_FAILURE(ec)) { वापस *यह; }
             copyFrom(*UnicodeSet::fromUSet(set), true);
-            if (value == 0) {
+            अगर (value == 0) {
                 complement().removeAllStrings();  // code point complement
             }
-        } else {
-            clear();
+        } अन्यथा {
+            सफा();
         }
-    } else if (UCHAR_INT_START <= prop && prop < UCHAR_INT_LIMIT) {
-        const UnicodeSet* inclusions = CharacterProperties::getInclusionsForProperty(prop, ec);
+    } अन्यथा अगर (UCHAR_INT_START <= prop && prop < UCHAR_INT_LIMIT) {
+        स्थिर UnicodeSet* inclusions = CharacterProperties::getInclusionsForProperty(prop, ec);
         IntPropertyContext c = {prop, value};
         applyFilter(intPropertyFilter, &c, inclusions, ec);
-    } else {
+    } अन्यथा {
         ec = U_ILLEGAL_ARGUMENT_ERROR;
     }
-    return *this;
+    वापस *यह;
 }
 
 UnicodeSet&
-UnicodeSet::applyPropertyAlias(const UnicodeString& prop,
-                               const UnicodeString& value,
+UnicodeSet::applyPropertyAlias(स्थिर UnicodeString& prop,
+                               स्थिर UnicodeString& value,
                                UErrorCode& ec) U_LIFETIME_BOUND {
-    if (U_FAILURE(ec) || isFrozen()) return *this;
+    अगर (U_FAILURE(ec) || isFrozen()) वापस *यह;
 
     // prop and value used to be converted to char * using the default
     // converter instead of the invariant conversion.
@@ -1528,105 +1528,105 @@ UnicodeSet::applyPropertyAlias(const UnicodeString& prop,
     // names use only invariant characters.
     // If there are any variant characters, then we won't find them anyway.
     // Checking first avoids assertion failures in the conversion.
-    if( !uprv_isInvariantUString(prop.getBuffer(), prop.length()) ||
-        !uprv_isInvariantUString(value.getBuffer(), value.length())
+    अगर( !uprv_isInvariantUString(prop.get_बफर(), prop.length()) ||
+        !uprv_isInvariantUString(value.get_बफर(), value.length())
     ) {
         FAIL(ec);
     }
     CharString pname, vname;
     pname.appendInvariantChars(prop, ec);
     vname.appendInvariantChars(value, ec);
-    if (U_FAILURE(ec)) return *this;
+    अगर (U_FAILURE(ec)) वापस *यह;
 
     UProperty p;
     int32_t v;
     UBool invert = false;
 
-    if (value.length() > 0) {
-        p = u_getPropertyEnum(pname.data());
-        if (p == UCHAR_INVALID_CODE) FAIL(ec);
+    अगर (value.length() > 0) {
+        p = u_getPropertyEnum(pname.तथ्य());
+        अगर (p == UCHAR_INVALID_CODE) FAIL(ec);
 
         // Treat gc as gcm
-        if (p == UCHAR_GENERAL_CATEGORY) {
+        अगर (p == UCHAR_GENERAL_CATEGORY) {
             p = UCHAR_GENERAL_CATEGORY_MASK;
         }
 
-        if ((p >= UCHAR_BINARY_START && p < UCHAR_BINARY_LIMIT) ||
+        अगर ((p >= UCHAR_द्विआधारी_START && p < UCHAR_द्विआधारी_LIMIT) ||
             (p >= UCHAR_INT_START && p < UCHAR_INT_LIMIT) ||
             (p >= UCHAR_MASK_START && p < UCHAR_MASK_LIMIT)) {
-            v = u_getPropertyValueEnum(p, vname.data());
-            if (v == UCHAR_INVALID_CODE) {
+            v = u_get_Property_मूल्य_Enum(p, vname.तथ्य());
+            अगर (v == UCHAR_INVALID_CODE) {
                 // Handle numeric CCC
-                if (p == UCHAR_CANONICAL_COMBINING_CLASS ||
+                अगर (p == UCHAR_CANONICAL_COMBINING_CLASS ||
                     p == UCHAR_TRAIL_CANONICAL_COMBINING_CLASS ||
                     p == UCHAR_LEAD_CANONICAL_COMBINING_CLASS) {
-                    char* end;
-                    double val = uprv_strtod(vname.data(), &end);
+                    अक्षर* end;
+                    द्विगुन val = uprv_strtod(vname.तथ्य(), &end);
                     // Anything between 0 and 255 is valid even if unused.
                     // Cast double->int only after range check.
                     // We catch NaN here because comparing it with both 0 and 255 will be false
                     // (as are all comparisons with NaN).
-                    if (*end != 0 || !(0 <= val && val <= 255) ||
+                    अगर (*end != 0 || !(0 <= val && val <= 255) ||
                             (v = static_cast<int32_t>(val)) != val) {
                         // non-integral value or outside 0..255, or trailing junk
                         FAIL(ec);
                     }
-                } else {
+                } अन्यथा {
                     FAIL(ec);
                 }
             }
         }
 
-        else {
+        अन्यथा {
 
-            switch (p) {
-            case UCHAR_NUMERIC_VALUE:
+            चयन (p) {
+            हाल UCHAR_NUMERIC_मूल्य:
                 {
-                    char* end;
-                    double val = uprv_strtod(vname.data(), &end);
-                    if (*end != 0) {
+                    अक्षर* end;
+                    द्विगुन val = uprv_strtod(vname.तथ्य(), &end);
+                    अगर (*end != 0) {
                         FAIL(ec);
                     }
-                    applyFilter(numericValueFilter, &val,
+                    applyFilter(numeric_मूल्य_Filter, &val,
                                 CharacterProperties::getInclusionsForProperty(p, ec), ec);
-                    return *this;
+                    वापस *यह;
                 }
-            case UCHAR_NAME:
+            हाल UCHAR_NAME:
                 {
-                    const UChar32 ch = getCharacterByName(vname);
-                    if (ch < 0) {
+                    स्थिर UChar32 ch = getCharacterByName(vname);
+                    अगर (ch < 0) {
                         FAIL(ec);
                     }
-                    clear();
+                    सफा();
                     add(ch);
-                    return *this;
+                    वापस *यह;
                 }
-            case UCHAR_UNICODE_1_NAME:
+            हाल UCHAR_UNICODE_1_NAME:
                 // ICU 49 deprecates the Unicode_1_Name property APIs.
                 FAIL(ec);
-            case UCHAR_AGE:
+            हाल UCHAR_AGE:
                 {
                     UVersionInfo version;
-                    u_versionFromString(version, vname.data());
+                    u_versionFromString(version, vname.तथ्य());
                     applyFilter(versionFilter, &version,
                                 CharacterProperties::getInclusionsForProperty(p, ec), ec);
-                    return *this;
+                    वापस *यह;
                 }
-            case UCHAR_SCRIPT_EXTENSIONS:
-                v = u_getPropertyValueEnum(UCHAR_SCRIPT, vname.data());
-                if (v == UCHAR_INVALID_CODE) {
+            हाल UCHAR_SCRIPT_EXTENSIONS:
+                v = u_get_Property_मूल्य_Enum(UCHAR_SCRIPT, vname.तथ्य());
+                अगर (v == UCHAR_INVALID_CODE) {
                     FAIL(ec);
                 }
                 // fall through to calling applyIntPropertyValue()
-                break;
-            case UCHAR_IDENTIFIER_TYPE:
-                v = u_getPropertyValueEnum(p, vname.data());
-                if (v == UCHAR_INVALID_CODE) {
+                अवरोध;
+            हाल UCHAR_IDENTIFIER_TYPE:
+                v = u_get_Property_मूल्य_Enum(p, vname.तथ्य());
+                अगर (v == UCHAR_INVALID_CODE) {
                     FAIL(ec);
                 }
                 // fall through to calling applyIntPropertyValue()
-                break;
-            default:
+                अवरोध;
+            शेष:
                 // p is a non-binary, non-enumerated property that we
                 // don't support (yet).
                 FAIL(ec);
@@ -1634,46 +1634,46 @@ UnicodeSet::applyPropertyAlias(const UnicodeString& prop,
         }
     }
 
-    else {
+    अन्यथा {
         // value is empty.  Interpret as General Category, Script, or
         // Binary property.
         p = UCHAR_GENERAL_CATEGORY_MASK;
-        v = u_getPropertyValueEnum(p, pname.data());
-        if (v == UCHAR_INVALID_CODE) {
+        v = u_get_Property_मूल्य_Enum(p, pname.तथ्य());
+        अगर (v == UCHAR_INVALID_CODE) {
             p = UCHAR_SCRIPT;
-            v = u_getPropertyValueEnum(p, pname.data());
-            if (v == UCHAR_INVALID_CODE) {
-                p = u_getPropertyEnum(pname.data());
-                if (p >= UCHAR_BINARY_START && p < UCHAR_BINARY_LIMIT) {
+            v = u_get_Property_मूल्य_Enum(p, pname.तथ्य());
+            अगर (v == UCHAR_INVALID_CODE) {
+                p = u_getPropertyEnum(pname.तथ्य());
+                अगर (p >= UCHAR_द्विआधारी_START && p < UCHAR_द्विआधारी_LIMIT) {
                     v = 1;
-                } else if (0 == uprv_comparePropertyNames(ANY, pname.data())) {
-                    set(MIN_VALUE, MAX_VALUE);
-                    return *this;
-                } else if (0 == uprv_comparePropertyNames(ASCII, pname.data())) {
+                } अन्यथा अगर (0 == uprv_comparePropertyNames(ANY, pname.तथ्य())) {
+                    set(MIN_मूल्य, MAX_मूल्य);
+                    वापस *यह;
+                } अन्यथा अगर (0 == uprv_comparePropertyNames(ASCII, pname.तथ्य())) {
                     set(0, 0x7F);
-                    return *this;
-                } else if (0 == uprv_comparePropertyNames(ASSIGNED, pname.data())) {
+                    वापस *यह;
+                } अन्यथा अगर (0 == uprv_comparePropertyNames(ASSIGNED, pname.तथ्य())) {
                     // [:Assigned:]=[:^Cn:]
                     p = UCHAR_GENERAL_CATEGORY_MASK;
                     v = U_GC_CN_MASK;
                     invert = true;
-                } else {
+                } अन्यथा {
                     FAIL(ec);
                 }
             }
         }
     }
 
-    applyIntPropertyValue(p, v, ec);
-    if(invert) {
+    apply_Int_Property_मूल्य(p, v, ec);
+    अगर(invert) {
         complement().removeAllStrings();  // code point complement
     }
 
-    if (isBogus() && U_SUCCESS(ec)) {
+    अगर (isBogus() && U_SUCCESS(ec)) {
         // We likely ran out of memory. AHHH!
         ec = U_MEMORY_ALLOCATION_ERROR;
     }
-    return *this;
+    वापस *यह;
 }
 
 //----------------------------------------------------------------
@@ -1684,15 +1684,15 @@ UnicodeSet::applyPropertyAlias(const UnicodeString& prop,
  * Return true if the given position, in the given pattern, appears
  * to be the start of a property set pattern.
  */
-UBool UnicodeSet::resemblesPropertyPattern(const UnicodeString& pattern,
+UBool UnicodeSet::resemblesPropertyPattern(स्थिर UnicodeString& pattern,
                                            int32_t pos) {
     // Patterns are at least 5 characters long
-    if ((pos+5) > pattern.length()) {
-        return false;
+    अगर ((pos+5) > pattern.length()) {
+        वापस false;
     }
 
     // Look for an opening [:, [:^, \p, or \P
-    return isPOSIXOpen(pattern, pos) || isPerlOpen(pattern, pos) || isNameOpen(pattern, pos);
+    वापस isPOSIXOpen(pattern, pos) || isPerlOpen(pattern, pos) || isNameOpen(pattern, pos);
 }
 
 U_NAMESPACE_END

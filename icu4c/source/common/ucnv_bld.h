@@ -16,59 +16,59 @@
 *   06/29/2000  helena      Major rewrite of the callback APIs.
 */
 
-#ifndef UCNV_BLD_H
-#define UCNV_BLD_H
+#अगर_अघोषित UCNV_BLD_H
+#घोषणा UCNV_BLD_H
 
-#include "unicode/utypes.h"
+#समावेश "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#अगर !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/ucnv_err.h"
-#include "unicode/utf16.h"
-#include "ucnv_cnv.h"
-#include "ucnvmbcs.h"
-#include "ucnv_ext.h"
-#include "udataswp.h"
+#समावेश "unicode/ucnv.h"
+#समावेश "unicode/ucnv_err.h"
+#समावेश "unicode/utf16.h"
+#समावेश "ucnv_cnv.h"
+#समावेश "ucnvmbcs.h"
+#समावेश "ucnv_ext.h"
+#समावेश "udataswp.h"
 
 /* size of the overflow buffers in UConverter, enough for escaping callbacks */
-#define UCNV_ERROR_BUFFER_LENGTH 32
+#घोषणा UCNV_ERROR_बफर_लंबाई 32
 
 /* at most 4 bytes per substitution character (part of .cnv file format! see UConverterStaticData) */
-#define UCNV_MAX_SUBCHAR_LEN 4
+#घोषणा UCNV_MAX_SUBCHAR_LEN 4
 
 /* at most 8 bytes per character in toUBytes[] (UTF-8 uses up to 6) */
-#define UCNV_MAX_CHAR_LEN 8
+#घोषणा UCNV_MAX_CHAR_LEN 8
 
 /* converter options bits */
-#define UCNV_OPTION_VERSION     0xf
-#define UCNV_OPTION_SWAP_LFNL   0x10
+#घोषणा UCNV_OPTION_VERSION     0xf
+#घोषणा UCNV_OPTION_SWAP_LFNL   0x10
 
-#define UCNV_GET_VERSION(cnv) ((cnv)->options&UCNV_OPTION_VERSION)
+#घोषणा UCNV_GET_VERSION(cnv) ((cnv)->options&UCNV_OPTION_VERSION)
 
 U_CDECL_BEGIN /* We must declare the following as 'extern "C"' so that if ucnv
                  itself is compiled under C++, the linkage of the funcptrs will
                  work.
               */
 
-union UConverterTable {
+जोड़ UConverterTable {
     UConverterMBCSTable mbcs;
 };
 
-typedef union UConverterTable UConverterTable;
+प्रकार जोड़ UConverterTable UConverterTable;
 
-struct UConverterImpl;
-typedef struct UConverterImpl UConverterImpl;
+काष्ठा UConverterImpl;
+प्रकार काष्ठा UConverterImpl UConverterImpl;
 
 /** values for the unicodeMask */
-#define UCNV_HAS_SUPPLEMENTARY 1
-#define UCNV_HAS_SURROGATES    2
+#घोषणा UCNV_HAS_SUPPLEMENTARY 1
+#घोषणा UCNV_HAS_SURROGATES    2
 
-typedef struct UConverterStaticData {   /* +offset: size */
-    uint32_t structSize;                /* +0: 4 Size of this structure */
+प्रकार काष्ठा UConverter_Static_तथ्य {   /* +offset: size */
+    uint32_t struct_आकार;                /* +0: 4 Size of this structure */
 
-    char name
-      [UCNV_MAX_CONVERTER_NAME_LENGTH]; /* +4: 60  internal name of the converter- invariant chars */
+    अक्षर name
+      [UCNV_MAX_CONVERTER_NAME_लंबाई]; /* +4: 60  internal name of the converter- invariant chars */
 
     int32_t codepage;               /* +64: 4 codepage # (now IBM-$codepage) */
 
@@ -87,25 +87,25 @@ typedef struct UConverterStaticData {   /* +offset: size */
     uint8_t subChar1;               /* +80: 1  single-byte substitution character for IBM MBCS (0 if none) */
     uint8_t reserved[19];           /* +81: 19 to round out the structure */
                                     /* total size: 100 */
-} UConverterStaticData;
+} UConverter_Static_तथ्य;
 
 /*
  * Defines the UConverterSharedData struct,
  * the immutable, shared part of UConverter.
  */
-struct UConverterSharedData {
-    uint32_t structSize;            /* Size of this structure */
-    uint32_t referenceCounter;      /* used to count number of clients, unused for static/immutable SharedData */
+काष्ठा UConverter_Shared_तथ्य {
+    uint32_t struct_आकार;            /* Size of this structure */
+    uint32_t reference_गणक;      /* used to count number of clients, unused for static/immutable SharedData */
 
-    const void *dataMemory;         /* from udata_openChoice() - for cleanup */
+    स्थिर व्योम *तथ्य_Memory;         /* from udata_openChoice() - for cleanup */
 
-    const UConverterStaticData *staticData; /* pointer to the static (non changing) data. */
+    स्थिर UConverter_Static_तथ्य *static_तथ्य; /* pointer to the static (non changing) data. */
 
-    UBool                sharedDataCached;   /* true:  shared data is in cache, don't destroy on ucnv_close() if 0 ref.  false: shared data isn't in the cache, do attempt to clean it up if the ref is 0 */
+    UBool                shared_तथ्य_Cached;   /* true:  shared data is in cache, don't destroy on ucnv_close() if 0 ref.  false: shared data isn't in the cache, do attempt to clean it up if the ref is 0 */
     /** If false, then referenceCounter is not used. Must not change after initialization. */
     UBool isReferenceCounted;
 
-    const UConverterImpl *impl;     /* vtable-style struct of mostly function pointers */
+    स्थिर UConverterImpl *impl;     /* vtable-style struct of mostly function pointers */
 
     /*initial values of some members of the mutable part of object */
     uint32_t toUnicodeStatus;
@@ -125,24 +125,24 @@ struct UConverterSharedData {
 };
 
 /** UConverterSharedData initializer for static, non-reference-counted converters. */
-#define UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(pStaticData, pImpl) \
+#घोषणा UCNV_IMMUTABLE_SHARED_तथ्य_INITIALIZER(p_Static_तथ्य, pImpl) \
     { \
-        sizeof(UConverterSharedData), ~((uint32_t)0), \
-        NULL, pStaticData, false, false, pImpl, \
+        माप(UConverter_Shared_तथ्य), ~((uint32_t)0), \
+        शून्य, p_Static_तथ्य, false, false, pImpl, \
         0, UCNV_MBCS_TABLE_INITIALIZER \
     }
 
 /* Defines a UConverter, the lightweight mutable part the user sees */
 
-struct UConverter {
+काष्ठा UConverter {
     /*
      * Error function pointer called when conversion issues
      * occur during a ucnv_fromUnicode call
      */
-    void (U_EXPORT2 *fromUCharErrorBehaviour) (const void *context,
+    व्योम (U_EXPORT2 *fromUCharErrorBehaviour) (स्थिर व्योम *context,
                                      UConverterFromUnicodeArgs *args,
-                                     const UChar *codeUnits,
-                                     int32_t length,
+                                     स्थिर UChar *codeUnits,
+                                     int32_t लंबाई,
                                      UChar32 codePoint,
                                      UConverterCallbackReason reason,
                                      UErrorCode *);
@@ -150,10 +150,10 @@ struct UConverter {
      * Error function pointer called when conversion issues
      * occur during a ucnv_toUnicode call
      */
-    void (U_EXPORT2 *fromCharErrorBehaviour) (const void *context,
+    व्योम (U_EXPORT2 *fromCharErrorBehaviour) (स्थिर व्योम *context,
                                     UConverterToUnicodeArgs *args,
-                                    const char *codeUnits,
-                                    int32_t length,
+                                    स्थिर अक्षर *codeUnits,
+                                    int32_t लंबाई,
                                     UConverterCallbackReason reason,
                                     UErrorCode *);
 
@@ -161,10 +161,10 @@ struct UConverter {
      * Pointer to additional data that depends on the converter type.
      * Used by ISO 2022, SCSU, GB 18030 converters, possibly more.
      */
-    void *extraInfo;
+    व्योम *extraInfo;
 
-    const void *fromUContext;
-    const void *toUContext;
+    स्थिर व्योम *fromUContext;
+    स्थिर व्योम *toUContext;
 
     /*
      * Pointer to charset bytes for substitution string if subCharLen>0,
@@ -177,11 +177,11 @@ struct UConverter {
      */
     uint8_t *subChars;
 
-    UConverterSharedData *sharedData;   /* Pointer to the shared immutable part of the converter object */
+    UConverter_Shared_तथ्य *shared_तथ्य;   /* Pointer to the shared immutable part of the converter object */
 
     uint32_t options; /* options flags from UConverterOpen, may contain additional bits */
 
-    UBool sharedDataIsCached;  /* true:  shared data is in cache, don't destroy on ucnv_close() if 0 ref.  false: shared data isn't in the cache, do attempt to clean it up if the ref is 0 */
+    UBool shared_तथ्य_Is_Cached;  /* true:  shared data is in cache, don't destroy on ucnv_close() if 0 ref.  false: shared data isn't in the cache, do attempt to clean it up if the ref is 0 */
     UBool isCopyLocal;  /* true if UConverter is not owned and not released in ucnv_close() (stack-allocated, safeClone(), etc.) */
     UBool isExtraLocal; /* true if extraInfo is not owned and not released in ucnv_close() (stack-allocated, safeClone(), etc.) */
 
@@ -212,29 +212,29 @@ struct UConverter {
     int8_t maxBytesPerUChar;
 
     int8_t subCharLen;                  /* length of the codepage specific character sequence */
-    int8_t invalidCharLength;
-    int8_t charErrorBufferLength;       /* number of valid bytes in charErrorBuffer */
+    int8_t invalid_Char_लंबाई;
+    int8_t char_Error_बफर_लंबाई;       /* number of valid bytes in charErrorBuffer */
 
-    int8_t invalidUCharLength;
-    int8_t UCharErrorBufferLength;      /* number of valid UChars in charErrorBuffer */
+    int8_t invalid_UChar_लंबाई;
+    int8_t UChar_Error_बफर_लंबाई;      /* number of valid UChars in charErrorBuffer */
 
     uint8_t subChar1;                                   /* single-byte substitution character if different from subChar */
     UBool useSubChar1;
-    char invalidCharBuffer[UCNV_MAX_CHAR_LEN];          /* bytes from last error/callback situation */
-    uint8_t charErrorBuffer[UCNV_ERROR_BUFFER_LENGTH];  /* codepage output from Error functions */
+    अक्षर invalid_Char_बफर[UCNV_MAX_CHAR_LEN];          /* bytes from last error/callback situation */
+    uint8_t char_Error_बफर[UCNV_ERROR_बफर_लंबाई];  /* codepage output from Error functions */
     UChar subUChars[UCNV_MAX_SUBCHAR_LEN/U_SIZEOF_UCHAR]; /* see subChars documentation */
 
-    UChar invalidUCharBuffer[U16_MAX_LENGTH];           /* UChars from last error/callback situation */
-    UChar UCharErrorBuffer[UCNV_ERROR_BUFFER_LENGTH];   /* unicode output from Error functions */
+    UChar invalid_UChar_बफर[U16_MAX_लंबाई];           /* UChars from last error/callback situation */
+    UChar UChar_Error_बफर[UCNV_ERROR_बफर_लंबाई];   /* unicode output from Error functions */
 
     /* fields for conversion extension */
 
     /* store previous UChars/chars to continue partial matches */
     UChar32 preFromUFirstCP;                /* >=0: partial match */
     UChar preFromU[UCNV_EXT_MAX_UCHARS];
-    char preToU[UCNV_EXT_MAX_BYTES];
+    अक्षर preToU[UCNV_EXT_MAX_BYTES];
     int8_t preFromULength, preToULength;    /* negative: replay */
-    int8_t preToUFirstLength;               /* length of first character */
+    int8_t pre_To_UFirst_लंबाई;               /* length of first character */
 
     /* new fields for ICU 4.0 */
     UConverterCallbackReason toUCallbackReason; /* (*fromCharErrorBehaviour) reason, set when error is detected */
@@ -242,7 +242,7 @@ struct UConverter {
 
 U_CDECL_END /* end of UConverter */
 
-#define CONVERTER_FILE_EXTENSION ".cnv"
+#घोषणा CONVERTER_FILE_EXTENSION ".cnv"
 
 
 /**
@@ -251,7 +251,7 @@ U_CDECL_END /* end of UConverter */
  * @return the number of all converter names
  */
 U_CFUNC uint16_t
-ucnv_bld_countAvailableConverters(UErrorCode *pErrorCode);
+ucnv_bld_गिनती_Available_Converters(UErrorCode *pErrorCode);
 
 /**
  * Return the (n)th converter name in mixed case, or NULL
@@ -261,14 +261,14 @@ ucnv_bld_countAvailableConverters(UErrorCode *pErrorCode);
  * @param pErrorCode The error code
  * @return the (n)th converter name in mixed case, or NULL if there is none.
  */
-U_CFUNC const char *
+U_CFUNC स्थिर अक्षर *
 ucnv_bld_getAvailableConverter(uint16_t n, UErrorCode *pErrorCode);
 
 /**
  * Load a non-algorithmic converter.
  * If pkg==NULL, then this function must be called inside umtx_lock(&cnvCacheMutex).
  */
-U_CAPI UConverterSharedData *
+U_CAPI UConverter_Shared_तथ्य *
 ucnv_load(UConverterLoadArgs *pArgs, UErrorCode *err);
 
 /**
@@ -276,21 +276,21 @@ ucnv_load(UConverterLoadArgs *pArgs, UErrorCode *err);
  * It must be sharedData->isReferenceCounted
  * and this function must be called inside umtx_lock(&cnvCacheMutex).
  */
-U_CAPI void
-ucnv_unload(UConverterSharedData *sharedData);
+U_CAPI व्योम
+ucnv_unload(UConverter_Shared_तथ्य *shared_तथ्य);
 
 /**
  * Swap ICU .cnv conversion tables. See udataswp.h.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-ucnv_swap(const UDataSwapper *ds,
-          const void *inData, int32_t length, void *outData,
+ucnv_swap(स्थिर UDataSwapper *ds,
+          स्थिर व्योम *in_तथ्य, int32_t लंबाई, व्योम *out_तथ्य,
           UErrorCode *pErrorCode);
 
-U_CAPI void U_EXPORT2
-ucnv_enableCleanup(void);
+U_CAPI व्योम U_EXPORT2
+ucnv_enableCleanup(व्योम);
 
-#endif
+#पूर्ण_अगर
 
-#endif /* _UCNV_BLD */
+#पूर्ण_अगर /* _UCNV_BLD */

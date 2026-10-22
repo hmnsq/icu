@@ -16,13 +16,13 @@
 *   created by: Markus W. Scherer, updated by Matitiahu Allouche
 */
 
-#ifndef UBIDIIMP_H
-#define UBIDIIMP_H
+#अगर_अघोषित UBIDIIMP_H
+#घोषणा UBIDIIMP_H
 
-#include "unicode/utypes.h"
-#include "unicode/ubidi.h"
-#include "unicode/uchar.h"
-#include "ubidi_props.h"
+#समावेश "unicode/utypes.h"
+#समावेश "unicode/ubidi.h"
+#समावेश "unicode/uchar.h"
+#समावेश "ubidi_props.h"
 
 /* miscellaneous definitions ---------------------------------------------- */
 /*
@@ -38,50 +38,50 @@
  * legacy ICU behavior where the trailing surrogate half (which has Bidi class LTR) is copied
  * into visualText, allowing ubidi_setPara to correctly split the run for reordering.
  */
-#define UBIDI_INTERNAL_RUNS_ONLY 64
+#घोषणा UBIDI_INTERNAL_RUNS_ONLY 64
 
 // ICU-20853=ICU-20935 Solaris #defines CS and ES in sys/regset.h
-#ifdef CS
+#अगर_घोषित CS
 #   undef CS
-#endif
-#ifdef ES
+#पूर्ण_अगर
+#अगर_घोषित ES
 #   undef ES
-#endif
+#पूर्ण_अगर
 
-typedef uint8_t DirProp;
-typedef uint32_t Flags;
+प्रकार uint8_t DirProp;
+प्रकार uint32_t Flags;
 
 /*  Comparing the description of the BiDi algorithm with this implementation
     is easier with the same names for the BiDi types in the code as there.
     See UCharDirection in uchar.h .
 */
-enum {
-    L=  U_LEFT_TO_RIGHT,                /*  0 */
-    R=  U_RIGHT_TO_LEFT,                /*  1 */
-    EN= U_EUROPEAN_NUMBER,              /*  2 */
-    ES= U_EUROPEAN_NUMBER_SEPARATOR,    /*  3 */
-    ET= U_EUROPEAN_NUMBER_TERMINATOR,   /*  4 */
-    AN= U_ARABIC_NUMBER,                /*  5 */
-    CS= U_COMMON_NUMBER_SEPARATOR,      /*  6 */
+क्रमागत {
+    L=  U_बायाँ_TO_दायाँ,                /*  0 */
+    R=  U_दायाँ_TO_बायाँ,                /*  1 */
+    EN= U_EUROPEAN_संख्या,              /*  2 */
+    ES= U_EUROPEAN_संख्या_SEPARATOR,    /*  3 */
+    ET= U_EUROPEAN_संख्या_TERMINATOR,   /*  4 */
+    AN= U_ARABIC_संख्या,                /*  5 */
+    CS= U_COMMON_संख्या_SEPARATOR,      /*  6 */
     B=  U_BLOCK_SEPARATOR,              /*  7 */
     S=  U_SEGMENT_SEPARATOR,            /*  8 */
     WS= U_WHITE_SPACE_NEUTRAL,          /*  9 */
     ON= U_OTHER_NEUTRAL,                /* 10 */
-    LRE=U_LEFT_TO_RIGHT_EMBEDDING,      /* 11 */
-    LRO=U_LEFT_TO_RIGHT_OVERRIDE,       /* 12 */
-    AL= U_RIGHT_TO_LEFT_ARABIC,         /* 13 */
-    RLE=U_RIGHT_TO_LEFT_EMBEDDING,      /* 14 */
-    RLO=U_RIGHT_TO_LEFT_OVERRIDE,       /* 15 */
-    PDF=U_POP_DIRECTIONAL_FORMAT,       /* 16 */
+    LRE=U_बायाँ_TO_दायाँ_EMBEDDING,      /* 11 */
+    LRO=U_बायाँ_TO_दायाँ_OVERRIDE,       /* 12 */
+    AL= U_दायाँ_TO_बायाँ_ARABIC,         /* 13 */
+    RLE=U_दायाँ_TO_बायाँ_EMBEDDING,      /* 14 */
+    RLO=U_दायाँ_TO_बायाँ_OVERRIDE,       /* 15 */
+    PDF=U_निकालो_DIRECTIONAL_FORMAT,       /* 16 */
     NSM=U_DIR_NON_SPACING_MARK,         /* 17 */
     BN= U_BOUNDARY_NEUTRAL,             /* 18 */
     FSI=U_FIRST_STRONG_ISOLATE,         /* 19 */
-    LRI=U_LEFT_TO_RIGHT_ISOLATE,        /* 20 */
-    RLI=U_RIGHT_TO_LEFT_ISOLATE,        /* 21 */
-    PDI=U_POP_DIRECTIONAL_ISOLATE,      /* 22 */
+    LRI=U_बायाँ_TO_दायाँ_ISOLATE,        /* 20 */
+    RLI=U_दायाँ_TO_बायाँ_ISOLATE,        /* 21 */
+    PDI=U_निकालो_DIRECTIONAL_ISOLATE,      /* 22 */
     ENL,    /* EN after W7 */           /* 23 */
     ENR,    /* EN not subject to W7 */  /* 24 */
-    dirPropCount
+    dir_Prop_गिनती
 };
 
 /*  Sometimes, bit values are more appropriate
@@ -89,89 +89,89 @@ enum {
     Abbreviations in these macro names refer to names
     used in the BiDi algorithm.
 */
-#define DIRPROP_FLAG(dir) (1UL<<(dir))
-#define PURE_DIRPROP(prop)  ((prop)&~0xE0)    ?????????????????????????
+#घोषणा DIRPROP_FLAG(dir) (1UL<<(dir))
+#घोषणा PURE_DIRPROP(prop)  ((prop)&~0xE0)    ?????????????????????????
 
 /* special flag for multiple runs from explicit embedding codes */
-#define DIRPROP_FLAG_MULTI_RUNS (1UL<<31)
+#घोषणा DIRPROP_FLAG_MULTI_RUNS (1UL<<31)
 
 /* are there any characters that are LTR or RTL? */
-#define MASK_LTR (DIRPROP_FLAG(L)|DIRPROP_FLAG(EN)|DIRPROP_FLAG(ENL)|DIRPROP_FLAG(ENR)|DIRPROP_FLAG(AN)|DIRPROP_FLAG(LRE)|DIRPROP_FLAG(LRO)|DIRPROP_FLAG(LRI))
-#define MASK_RTL (DIRPROP_FLAG(R)|DIRPROP_FLAG(AL)|DIRPROP_FLAG(RLE)|DIRPROP_FLAG(RLO)|DIRPROP_FLAG(RLI))
-#define MASK_R_AL (DIRPROP_FLAG(R)|DIRPROP_FLAG(AL))
-#define MASK_STRONG_EN_AN (DIRPROP_FLAG(L)|DIRPROP_FLAG(R)|DIRPROP_FLAG(AL)|DIRPROP_FLAG(EN)|DIRPROP_FLAG(AN))
+#घोषणा MASK_LTR (DIRPROP_FLAG(L)|DIRPROP_FLAG(EN)|DIRPROP_FLAG(ENL)|DIRPROP_FLAG(ENR)|DIRPROP_FLAG(AN)|DIRPROP_FLAG(LRE)|DIRPROP_FLAG(LRO)|DIRPROP_FLAG(LRI))
+#घोषणा MASK_RTL (DIRPROP_FLAG(R)|DIRPROP_FLAG(AL)|DIRPROP_FLAG(RLE)|DIRPROP_FLAG(RLO)|DIRPROP_FLAG(RLI))
+#घोषणा MASK_R_AL (DIRPROP_FLAG(R)|DIRPROP_FLAG(AL))
+#घोषणा MASK_STRONG_EN_AN (DIRPROP_FLAG(L)|DIRPROP_FLAG(R)|DIRPROP_FLAG(AL)|DIRPROP_FLAG(EN)|DIRPROP_FLAG(AN))
 
 /* explicit embedding codes */
-#define MASK_EXPLICIT (DIRPROP_FLAG(LRE)|DIRPROP_FLAG(LRO)|DIRPROP_FLAG(RLE)|DIRPROP_FLAG(RLO)|DIRPROP_FLAG(PDF))
+#घोषणा MASK_EXPLICIT (DIRPROP_FLAG(LRE)|DIRPROP_FLAG(LRO)|DIRPROP_FLAG(RLE)|DIRPROP_FLAG(RLO)|DIRPROP_FLAG(PDF))
 
 /* explicit isolate codes */
-#define MASK_ISO (DIRPROP_FLAG(LRI)|DIRPROP_FLAG(RLI)|DIRPROP_FLAG(FSI)|DIRPROP_FLAG(PDI))
+#घोषणा MASK_ISO (DIRPROP_FLAG(LRI)|DIRPROP_FLAG(RLI)|DIRPROP_FLAG(FSI)|DIRPROP_FLAG(PDI))
 
-#define MASK_BN_EXPLICIT (DIRPROP_FLAG(BN)|MASK_EXPLICIT)
+#घोषणा MASK_BN_EXPLICIT (DIRPROP_FLAG(BN)|MASK_EXPLICIT)
 
 /* paragraph and segment separators */
-#define MASK_B_S (DIRPROP_FLAG(B)|DIRPROP_FLAG(S))
+#घोषणा MASK_B_S (DIRPROP_FLAG(B)|DIRPROP_FLAG(S))
 
 /* all types that are counted as White Space or Neutral in some steps */
-#define MASK_WS (MASK_B_S|DIRPROP_FLAG(WS)|MASK_BN_EXPLICIT|MASK_ISO)
+#घोषणा MASK_WS (MASK_B_S|DIRPROP_FLAG(WS)|MASK_BN_EXPLICIT|MASK_ISO)
 
 /* types that are neutrals or could becomes neutrals in (Wn) */
-#define MASK_POSSIBLE_N (DIRPROP_FLAG(ON)|DIRPROP_FLAG(CS)|DIRPROP_FLAG(ES)|DIRPROP_FLAG(ET)|MASK_WS)
+#घोषणा MASK_POSSIBLE_N (DIRPROP_FLAG(ON)|DIRPROP_FLAG(CS)|DIRPROP_FLAG(ES)|DIRPROP_FLAG(ET)|MASK_WS)
 
 /*
  *  These types may be changed to "e",
  *  the embedding type (L or R) of the run,
  *  in the BiDi algorithm (N2)
  */
-#define MASK_EMBEDDING (DIRPROP_FLAG(NSM)|MASK_POSSIBLE_N)
+#घोषणा MASK_EMBEDDING (DIRPROP_FLAG(NSM)|MASK_POSSIBLE_N)
 
 /* the dirProp's L and R are defined to 0 and 1 values in UCharDirection */
-#define GET_LR_FROM_LEVEL(level) ((DirProp)((level)&1))
+#घोषणा GET_LR_FROM_LEVEL(level) ((DirProp)((level)&1))
 
-#define IS_DEFAULT_LEVEL(level) ((level)>=0xfe)
+#घोषणा IS_DEFAULT_LEVEL(level) ((level)>=0xfe)
 
 /*
  *  The following bit is used for the directional isolate status.
  *  Stack entries corresponding to isolate sequences are greater than ISOLATE.
  */
-#define ISOLATE  0x0100
+#घोषणा ISOLATE  0x0100
 
 U_CFUNC UBiDiLevel
-ubidi_getParaLevelAtIndex(const UBiDi *pBiDi, int32_t index);
+ubidi_get_Para_Level_At_सूचकांक(स्थिर UBiDi *pBiDi, int32_t सूचकांक);
 
-#define GET_PARALEVEL(ubidi, index) \
-            ((UBiDiLevel)(!(ubidi)->defaultParaLevel || (index)<(ubidi)->paras[0].limit ? \
-                         (ubidi)->paraLevel : ubidi_getParaLevelAtIndex((ubidi), (index))))
+#घोषणा GET_PARALEVEL(ubidi, सूचकांक) \
+            ((UBiDiLevel)(!(ubidi)->defaultParaLevel || (सूचकांक)<(ubidi)->paras[0].limit ? \
+                         (ubidi)->paraLevel : ubidi_get_Para_Level_At_सूचकांक((ubidi), (सूचकांक))))
 
 /* number of paras entries allocated initially without malloc */
-#define SIMPLE_PARAS_COUNT      10
+#घोषणा SIMPLE_PARAS_गिनती      10
 /* number of isolate entries allocated initially without malloc */
-#define SIMPLE_ISOLATES_COUNT   5
+#घोषणा SIMPLE_ISOLATES_गिनती   5
 /* number of isolate run entries for paired brackets allocated initially without malloc */
-#define SIMPLE_OPENINGS_COUNT   20
+#घोषणा SIMPLE_OPENINGS_गिनती   20
 
-#define CR  0x000D
-#define LF  0x000A
+#घोषणा CR  0x000D
+#घोषणा LF  0x000A
 
 /* Run structure for reordering --------------------------------------------- */
-enum {
+क्रमागत {
     LRM_BEFORE=1,
     LRM_AFTER=2,
     RLM_BEFORE=4,
     RLM_AFTER=8
 };
 
-typedef struct Para {
+प्रकार काष्ठा Para {
     int32_t limit;
     int32_t level;
 } Para;
 
-enum {                                  /* flags for Opening.flags */
+क्रमागत {                                  /* flags for Opening.flags */
     FOUND_L=DIRPROP_FLAG(L),
     FOUND_R=DIRPROP_FLAG(R)
 };
 
-typedef struct Opening {
+प्रकार काष्ठा Opening {
     int32_t position;                   /* position of opening bracket */
     int32_t match;                      /* matching char or -position of closing bracket */
     int32_t contextPos;                 /* position of last strong char found before opening */
@@ -180,7 +180,7 @@ typedef struct Opening {
     uint8_t filler;                     /* to complete a nice multiple of 4 chars */
 } Opening;
 
-typedef struct IsoRun {
+प्रकार काष्ठा IsoRun {
     int32_t  contextPos;                /* position of char determining context */
     uint16_t start;                     /* index of first opening entry for this run */
     uint16_t limit;                     /* index after last opening entry for this run */
@@ -190,50 +190,50 @@ typedef struct IsoRun {
     UBiDiDirection contextDir;          /* L or R to use as context for following openings */
 } IsoRun;
 
-typedef struct BracketData {
+प्रकार काष्ठा Bracket_तथ्य {
     UBiDi   *pBiDi;
     /* array of opening entries which should be enough in most cases; no malloc() */
-    Opening simpleOpenings[SIMPLE_OPENINGS_COUNT];
+    Opening simpleOpenings[SIMPLE_OPENINGS_गिनती];
     Opening *openings;                  /* pointer to current array of entries */
-    int32_t openingsCount;              /* number of allocated entries */
+    int32_t openings_गिनती;              /* number of allocated entries */
     int32_t isoRunLast;                 /* index of last used entry */
     /* array of nested isolated sequence entries; can never excess UBIDI_MAX_EXPLICIT_LEVEL
        + 1 for index 0, + 1 for before the first isolated sequence */
     IsoRun  isoRuns[UBIDI_MAX_EXPLICIT_LEVEL+2];
     UBool isNumbersSpecial;             /* reordering mode for NUMBERS_SPECIAL */
-} BracketData;
+} Bracket_तथ्य;
 
-typedef struct Isolate {
+प्रकार काष्ठा Isolate {
     int32_t startON;
     int32_t start1;
     int32_t state;
     int16_t stateImp;
 } Isolate;
 
-typedef struct Run {
+प्रकार काष्ठा Run {
     int32_t logicalStart,   /* first character of the run; b31 indicates even/odd level */
             visualLimit,    /* last visual position of the run +1 */
-            insertRemove;   /* if >0, flags for inserting LRM/RLM before/after run,
+            जोड़ो_Remove;   /* if >0, flags for inserting LRM/RLM before/after run,
                                if <0, count of bidi controls within run            */
 } Run;
 
 /* in a Run, logicalStart will get this bit set if the run level is odd */
-#define INDEX_ODD_BIT (1UL<<31)
+#घोषणा सूचकांक_ODD_BIT (1UL<<31)
 
-#define MAKE_INDEX_ODD_PAIR(index, level) ((index)|((int32_t)((level)&1)<<31))
-#define ADD_ODD_BIT_FROM_LEVEL(x, level)  ((x)|=((int32_t)((level)&1)<<31))
-#define REMOVE_ODD_BIT(x)                 ((x)&=~INDEX_ODD_BIT)
+#घोषणा MAKE_सूचकांक_ODD_PAIR(सूचकांक, level) ((सूचकांक)|((int32_t)((level)&1)<<31))
+#घोषणा ADD_ODD_BIT_FROM_LEVEL(x, level)  ((x)|=((int32_t)((level)&1)<<31))
+#घोषणा REMOVE_ODD_BIT(x)                 ((x)&=~सूचकांक_ODD_BIT)
 
-#define GET_INDEX(x)   ((x)&~INDEX_ODD_BIT)
-#define GET_ODD_BIT(x) ((uint32_t)(x)>>31)
-#define IS_ODD_RUN(x)  ((UBool)(((x)&INDEX_ODD_BIT)!=0))
-#define IS_EVEN_RUN(x) ((UBool)(((x)&INDEX_ODD_BIT)==0))
+#घोषणा GET_सूचकांक(x)   ((x)&~सूचकांक_ODD_BIT)
+#घोषणा GET_ODD_BIT(x) ((uint32_t)(x)>>31)
+#घोषणा IS_ODD_RUN(x)  ((UBool)(((x)&सूचकांक_ODD_BIT)!=0))
+#घोषणा IS_EVEN_RUN(x) ((UBool)(((x)&सूचकांक_ODD_BIT)==0))
 
 U_CFUNC UBool
 ubidi_getRuns(UBiDi *pBiDi, UErrorCode *pErrorCode);
 
 /** BiDi control code points */
-enum {
+क्रमागत {
     ZWNJ_CHAR=0x200c,
     ZWJ_CHAR,
     LRM_CHAR,
@@ -249,54 +249,54 @@ enum {
     PDI_CHAR
 };
 
-#define IS_BIDI_CONTROL_CHAR(c) (((uint32_t)(c)&0xfffffffc)==ZWNJ_CHAR || (uint32_t)((c)-LRE_CHAR)<5 || (uint32_t)((c)-LRI_CHAR)<4)
+#घोषणा IS_BIDI_CONTROL_CHAR(c) (((uint32_t)(c)&0xfffffffc)==ZWNJ_CHAR || (uint32_t)((c)-LRE_CHAR)<5 || (uint32_t)((c)-LRI_CHAR)<4)
 
 /* InsertPoints structure for noting where to put BiDi marks ---------------- */
 
-typedef struct Point {
+प्रकार काष्ठा Point {
     int32_t pos;            /* position in text */
     int32_t flag;           /* flag for LRM/RLM, before/after */
 } Point;
 
-typedef struct InsertPoints {
+प्रकार काष्ठा जोड़ो_Points_2 {
     int32_t capacity;       /* number of points allocated */
-    int32_t size;           /* number of points used */
+    int32_t आकार_2;           /* number of points used */
     int32_t confirmed;      /* number of points confirmed */
     UErrorCode errorCode;   /* for eventual memory shortage */
     Point *points;          /* pointer to array of points */
-} InsertPoints;
+} जोड़ो_Points_2;
 
 
 /* UBiDi structure ----------------------------------------------------------- */
 
-struct UBiDi {
+काष्ठा UBiDi {
     /* pointer to parent paragraph object (pointer to self if this object is
      * a paragraph object); set to NULL in a newly opened object; set to a
      * real value after a successful execution of ubidi_setPara or ubidi_setLine
      */
-    const UBiDi * pParaBiDi;
+    स्थिर UBiDi * pParaBiDi;
 
     /* alias pointer to the current text */
-    const UChar *text;
+    स्थिर UChar *text;
 
     /* length of the current text */
-    int32_t originalLength;
+    int32_t original_लंबाई;
 
     /* if the UBIDI_OPTION_STREAMING option is set, this is the length
      * of text actually processed by ubidi_setPara, which may be shorter than
      * the original length.
      * Otherwise, it is identical to the original length.
      */
-    int32_t length;
+    int32_t लंबाई;
 
     /* if the UBIDI_OPTION_REMOVE_CONTROLS option is set, and/or
      * marks are allowed to be inserted in one of the reordering mode, the
      * length of the result string may be different from the processed length.
      */
-    int32_t resultLength;
+    int32_t परिणाम_लंबाई;
 
     /* memory sizes in bytes */
-    int32_t dirPropsSize, levelsSize, openingsSize, parasSize, runsSize, isolatesSize;
+    int32_t dir_Props_आकार, levels_आकार, openings_आकार, paras_आकार, runs_आकार, isolates_आकार;
 
     /* allocated memory */
     DirProp *dirPropsMemory;
@@ -323,7 +323,7 @@ struct UBiDi {
      * logical to visual modes come first, and all inverse BiDi modes
      * come last.
      */
-    #define UBIDI_REORDER_LAST_LOGICAL_TO_VISUAL    UBIDI_REORDER_NUMBERS_SPECIAL
+    #घोषणा UBIDI_REORDER_LAST_LOGICAL_TO_VISUAL    UBIDI_REORDER_NUMBERS_SPECIAL
 
     /* bitmask for reordering options */
     uint32_t reorderingOptions;
@@ -338,13 +338,13 @@ struct UBiDi {
     UBiDiLevel defaultParaLevel;
 
     /* context data */
-    const UChar *prologue;
-    int32_t proLength;
-    const UChar *epilogue;
-    int32_t epiLength;
+    स्थिर UChar *prologue;
+    int32_t pro_लंबाई;
+    स्थिर UChar *epilogue;
+    int32_t epi_लंबाई;
 
     /* the following is set in ubidi_setPara, used in processPropertySeq */
-    const struct ImpTabPair * pImpTabPair;  /* pointer to levels state table pair */
+    स्थिर काष्ठा ImpTabPair * pImpTabPair;  /* pointer to levels state table pair */
 
     /* the overall paragraph or line directionality - see UBiDiDirection */
     UBiDiDirection direction;
@@ -360,15 +360,15 @@ struct UBiDi {
     int32_t trailingWSStart;
 
     /* fields for paragraph handling */
-    int32_t paraCount;                  /* set in getDirProps() */
+    int32_t para_गिनती;                  /* set in getDirProps() */
     /* filled in getDirProps() */
     Para *paras;
 
     /* for relatively short text, we only need a tiny array of paras (no malloc()) */
-    Para simpleParas[SIMPLE_PARAS_COUNT];
+    Para simpleParas[SIMPLE_PARAS_गिनती];
 
     /* fields for line reordering */
-    int32_t runCount;     /* ==-1: runs not set up yet */
+    int32_t run_गिनती;     /* ==-1: runs not set up yet */
     Run *runs;
 
     /* for non-mixed text, we only need a tiny array of runs (no malloc()) */
@@ -379,27 +379,27 @@ struct UBiDi {
        nesting encountered.
        Within resolveImplicitLevels(), this is the index of the current isolates
        stack entry. */
-    int32_t isolateCount;
+    int32_t isolate_गिनती;
     Isolate *isolates;
 
     /* for simple text, have a small stack (no malloc()) */
-    Isolate simpleIsolates[SIMPLE_ISOLATES_COUNT];
+    Isolate simpleIsolates[SIMPLE_ISOLATES_गिनती];
 
     /* for inverse Bidi with insertion of directional marks */
-    InsertPoints insertPoints;
+    जोड़ो_Points_2 जोड़ो_Points;
 
     /* for option UBIDI_OPTION_REMOVE_CONTROLS */
-    int32_t controlCount;
+    int32_t control_गिनती;
 
     /* for Bidi class callback */
     UBiDiClassCallback *fnClassCallback;    /* action pointer */
-    const void *coClassCallback;            /* context pointer */
+    स्थिर व्योम *coClassCallback;            /* context pointer */
 };
 
-#define IS_VALID_PARA(x) ((x) && ((x)->pParaBiDi==(x)))
-#define IS_VALID_PARA_OR_LINE(x) ((x) && ((x)->pParaBiDi==(x) || (((x)->pParaBiDi) && (x)->pParaBiDi->pParaBiDi==(x)->pParaBiDi)))
+#घोषणा IS_VALID_PARA(x) ((x) && ((x)->pParaBiDi==(x)))
+#घोषणा IS_VALID_PARA_OR_पंक्ति(x) ((x) && ((x)->pParaBiDi==(x) || (((x)->pParaBiDi) && (x)->pParaBiDi->pParaBiDi==(x)->pParaBiDi)))
 
-typedef union {
+प्रकार जोड़ {
     DirProp *dirPropsMemory;
     UBiDiLevel *levelsMemory;
     Opening *openingsMemory;
@@ -409,90 +409,90 @@ typedef union {
 } BidiMemoryForAllocation;
 
 /* Macros for initial checks at function entry */
-#define RETURN_IF_NULL_OR_FAILING_ERRCODE(pErrcode, retvalue) UPRV_BLOCK_MACRO_BEGIN { \
-    if((pErrcode)==NULL || U_FAILURE(*pErrcode)) return retvalue; \
+#घोषणा RETURN_IF_NULL_OR_FAILING_ERRCODE(pErrcode, retvalue) UPRV_BLOCK_MACRO_BEGIN { \
+    अगर((pErrcode)==शून्य || U_FAILURE(*pErrcode)) वापस retvalue; \
 } UPRV_BLOCK_MACRO_END
-#define RETURN_IF_NOT_VALID_PARA(bidi, errcode, retvalue) UPRV_BLOCK_MACRO_BEGIN { \
-    if(!IS_VALID_PARA(bidi)) { \
+#घोषणा RETURN_IF_NOT_VALID_PARA(bidi, errcode, retvalue) UPRV_BLOCK_MACRO_BEGIN { \
+    अगर(!IS_VALID_PARA(bidi)) { \
         errcode=U_INVALID_STATE_ERROR; \
-        return retvalue; \
+        वापस retvalue; \
     } \
 } UPRV_BLOCK_MACRO_END
-#define RETURN_IF_NOT_VALID_PARA_OR_LINE(bidi, errcode, retvalue) UPRV_BLOCK_MACRO_BEGIN { \
-    if(!IS_VALID_PARA_OR_LINE(bidi)) { \
+#घोषणा RETURN_IF_NOT_VALID_PARA_OR_पंक्ति(bidi, errcode, retvalue) UPRV_BLOCK_MACRO_BEGIN { \
+    अगर(!IS_VALID_PARA_OR_पंक्ति(bidi)) { \
         errcode=U_INVALID_STATE_ERROR; \
-        return retvalue; \
+        वापस retvalue; \
     } \
 } UPRV_BLOCK_MACRO_END
-#define RETURN_IF_BAD_RANGE(arg, start, limit, errcode, retvalue) UPRV_BLOCK_MACRO_BEGIN { \
-    if((arg)<(start) || (arg)>=(limit)) { \
+#घोषणा RETURN_IF_BAD_RANGE(arg, start, limit, errcode, retvalue) UPRV_BLOCK_MACRO_BEGIN { \
+    अगर((arg)<(start) || (arg)>=(limit)) { \
         (errcode)=U_ILLEGAL_ARGUMENT_ERROR; \
-        return retvalue; \
+        वापस retvalue; \
     } \
 } UPRV_BLOCK_MACRO_END
 
-#define RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(pErrcode) UPRV_BLOCK_MACRO_BEGIN { \
-    if((pErrcode)==NULL || U_FAILURE(*pErrcode)) return; \
+#घोषणा RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(pErrcode) UPRV_BLOCK_MACRO_BEGIN { \
+    अगर((pErrcode)==शून्य || U_FAILURE(*pErrcode)) वापस; \
 } UPRV_BLOCK_MACRO_END
-#define RETURN_VOID_IF_NOT_VALID_PARA(bidi, errcode) UPRV_BLOCK_MACRO_BEGIN { \
-    if(!IS_VALID_PARA(bidi)) { \
+#घोषणा RETURN_VOID_IF_NOT_VALID_PARA(bidi, errcode) UPRV_BLOCK_MACRO_BEGIN { \
+    अगर(!IS_VALID_PARA(bidi)) { \
         errcode=U_INVALID_STATE_ERROR; \
-        return; \
+        वापस; \
     } \
 } UPRV_BLOCK_MACRO_END
-#define RETURN_VOID_IF_NOT_VALID_PARA_OR_LINE(bidi, errcode) UPRV_BLOCK_MACRO_BEGIN { \
-    if(!IS_VALID_PARA_OR_LINE(bidi)) { \
+#घोषणा RETURN_VOID_IF_NOT_VALID_PARA_OR_पंक्ति(bidi, errcode) UPRV_BLOCK_MACRO_BEGIN { \
+    अगर(!IS_VALID_PARA_OR_पंक्ति(bidi)) { \
         errcode=U_INVALID_STATE_ERROR; \
-        return; \
+        वापस; \
     } \
 } UPRV_BLOCK_MACRO_END
-#define RETURN_VOID_IF_BAD_RANGE(arg, start, limit, errcode) UPRV_BLOCK_MACRO_BEGIN { \
-    if((arg)<(start) || (arg)>=(limit)) { \
+#घोषणा RETURN_VOID_IF_BAD_RANGE(arg, start, limit, errcode) UPRV_BLOCK_MACRO_BEGIN { \
+    अगर((arg)<(start) || (arg)>=(limit)) { \
         (errcode)=U_ILLEGAL_ARGUMENT_ERROR; \
-        return; \
+        वापस; \
     } \
 } UPRV_BLOCK_MACRO_END
 
 /* helper function to (re)allocate memory if allowed */
 U_CFUNC UBool
-ubidi_getMemory(BidiMemoryForAllocation *pMemory, int32_t *pSize, UBool mayAllocate, size_t sizeNeeded);
+ubidi_getMemory(BidiMemoryForAllocation *pMemory, int32_t *p_आकार, UBool mayAllocate, माप_प्रकार आकार_Needed);
 
 /* helper macros for each allocated array in UBiDi */
-#define getDirPropsMemory(pBiDi, length) \
-        ubidi_getMemory((BidiMemoryForAllocation *)&(pBiDi)->dirPropsMemory, &(pBiDi)->dirPropsSize, \
-                        (pBiDi)->mayAllocateText, (length))
+#घोषणा getDirPropsMemory(pBiDi, लंबाई) \
+        ubidi_getMemory((BidiMemoryForAllocation *)&(pBiDi)->dirPropsMemory, &(pBiDi)->dir_Props_आकार, \
+                        (pBiDi)->mayAllocateText, (लंबाई))
 
-#define getLevelsMemory(pBiDi, length) \
-        ubidi_getMemory((BidiMemoryForAllocation *)&(pBiDi)->levelsMemory, &(pBiDi)->levelsSize, \
-                        (pBiDi)->mayAllocateText, (length))
+#घोषणा getLevelsMemory(pBiDi, लंबाई) \
+        ubidi_getMemory((BidiMemoryForAllocation *)&(pBiDi)->levelsMemory, &(pBiDi)->levels_आकार, \
+                        (pBiDi)->mayAllocateText, (लंबाई))
 
-#define getRunsMemory(pBiDi, length) \
-        ubidi_getMemory((BidiMemoryForAllocation *)&(pBiDi)->runsMemory, &(pBiDi)->runsSize, \
-                        (pBiDi)->mayAllocateRuns, (length)*sizeof(Run))
+#घोषणा getRunsMemory(pBiDi, लंबाई) \
+        ubidi_getMemory((BidiMemoryForAllocation *)&(pBiDi)->runsMemory, &(pBiDi)->runs_आकार, \
+                        (pBiDi)->mayAllocateRuns, (लंबाई)*माप(Run))
 
 /* additional macros used by ubidi_open() - always allow allocation */
-#define getInitialDirPropsMemory(pBiDi, length) \
-        ubidi_getMemory((BidiMemoryForAllocation *)&(pBiDi)->dirPropsMemory, &(pBiDi)->dirPropsSize, \
-                        true, (length))
+#घोषणा getInitialDirPropsMemory(pBiDi, लंबाई) \
+        ubidi_getMemory((BidiMemoryForAllocation *)&(pBiDi)->dirPropsMemory, &(pBiDi)->dir_Props_आकार, \
+                        true, (लंबाई))
 
-#define getInitialLevelsMemory(pBiDi, length) \
-        ubidi_getMemory((BidiMemoryForAllocation *)&(pBiDi)->levelsMemory, &(pBiDi)->levelsSize, \
-                        true, (length))
+#घोषणा getInitialLevelsMemory(pBiDi, लंबाई) \
+        ubidi_getMemory((BidiMemoryForAllocation *)&(pBiDi)->levelsMemory, &(pBiDi)->levels_आकार, \
+                        true, (लंबाई))
 
-#define getInitialOpeningsMemory(pBiDi, length) \
-        ubidi_getMemory((BidiMemoryForAllocation *)&(pBiDi)->openingsMemory, &(pBiDi)->openingsSize, \
-                        true, (length)*sizeof(Opening))
+#घोषणा getInitialOpeningsMemory(pBiDi, लंबाई) \
+        ubidi_getMemory((BidiMemoryForAllocation *)&(pBiDi)->openingsMemory, &(pBiDi)->openings_आकार, \
+                        true, (लंबाई)*माप(Opening))
 
-#define getInitialParasMemory(pBiDi, length) \
-        ubidi_getMemory((BidiMemoryForAllocation *)&(pBiDi)->parasMemory, &(pBiDi)->parasSize, \
-                        true, (length)*sizeof(Para))
+#घोषणा getInitialParasMemory(pBiDi, लंबाई) \
+        ubidi_getMemory((BidiMemoryForAllocation *)&(pBiDi)->parasMemory, &(pBiDi)->paras_आकार, \
+                        true, (लंबाई)*माप(Para))
 
-#define getInitialRunsMemory(pBiDi, length) \
-        ubidi_getMemory((BidiMemoryForAllocation *)&(pBiDi)->runsMemory, &(pBiDi)->runsSize, \
-                        true, (length)*sizeof(Run))
+#घोषणा getInitialRunsMemory(pBiDi, लंबाई) \
+        ubidi_getMemory((BidiMemoryForAllocation *)&(pBiDi)->runsMemory, &(pBiDi)->runs_आकार, \
+                        true, (लंबाई)*माप(Run))
 
-#define getInitialIsolatesMemory(pBiDi, length) \
-        ubidi_getMemory((BidiMemoryForAllocation *)&(pBiDi)->isolatesMemory, &(pBiDi)->isolatesSize, \
-                        true, (length)*sizeof(Isolate))
+#घोषणा getInitialIsolatesMemory(pBiDi, लंबाई) \
+        ubidi_getMemory((BidiMemoryForAllocation *)&(pBiDi)->isolatesMemory, &(pBiDi)->isolates_आकार, \
+                        true, (लंबाई)*माप(Isolate))
 
-#endif
+#पूर्ण_अगर

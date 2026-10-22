@@ -7,27 +7,27 @@
 *******************************************************************************
 */
 
-#ifndef __ULDNAMES_H__
-#define __ULDNAMES_H__
+#अगर_अघोषित __ULDNAMES_H__
+#घोषणा __ULDNAMES_H__
 
 /**
  * \file
  * \brief C API: Provides display names of Locale ids and their components.
  */
 
-#include "unicode/utypes.h"
-#include "unicode/uscript.h"
-#include "unicode/udisplaycontext.h"
+#समावेश "unicode/utypes.h"
+#समावेश "unicode/uscript.h"
+#समावेश "unicode/udisplaycontext.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#अगर U_SHOW_CPLUSPLUS_API
+#समावेश "unicode/localpointer.h"
+#पूर्ण_अगर   // U_SHOW_CPLUSPLUS_API
 
 /**
  * Enum used in LocaleDisplayNames::createInstance.
  * @stable ICU 4.4
  */
-typedef enum {
+प्रकार क्रमागत {
     /**
      * Use standard names when generating a locale name,
      * e.g. en_GB displays as 'English (United Kingdom)'.
@@ -46,15 +46,15 @@ typedef enum {
  * Opaque C service object type for the locale display names API
  * @stable ICU 4.4
  */
-struct ULocaleDisplayNames;
+काष्ठा ULocaleDisplayNames;
 
 /** 
  * C typedef for struct ULocaleDisplayNames. 
  * @stable ICU 4.4 
  */
-typedef struct ULocaleDisplayNames ULocaleDisplayNames;  
+प्रकार काष्ठा ULocaleDisplayNames ULocaleDisplayNames;  
 
-#if !UCONFIG_NO_FORMATTING
+#अगर !UCONFIG_NO_FORMATTING
 
 /**
  * Returns an instance of LocaleDisplayNames that returns names
@@ -69,7 +69,7 @@ typedef struct ULocaleDisplayNames ULocaleDisplayNames;
  * @stable ICU 4.4
  */
 U_CAPI ULocaleDisplayNames * U_EXPORT2
-uldn_open(const char * locale,
+uldn_open(स्थिर अक्षर * locale,
           UDialectHandling dialectHandling,
           UErrorCode *pErrorCode);
 
@@ -78,10 +78,10 @@ uldn_open(const char * locale,
  * @param ldn the ULocaleDisplayNames instance to be closed
  * @stable ICU 4.4
  */
-U_CAPI void U_EXPORT2
+U_CAPI व्योम U_EXPORT2
 uldn_close(ULocaleDisplayNames *ldn);
 
-#if U_SHOW_CPLUSPLUS_API
+#अगर U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -98,7 +98,7 @@ U_DEFINE_LOCAL_OPEN_POINTER(LocalULocaleDisplayNamesPointer, ULocaleDisplayNames
 
 U_NAMESPACE_END
 
-#endif
+#पूर्ण_अगर
 
 /* getters for state */
 
@@ -109,8 +109,8 @@ U_NAMESPACE_END
  * @return the display locale 
  * @stable ICU 4.4
  */
-U_CAPI const char* U_EXPORT2
-uldn_getLocale(const ULocaleDisplayNames* ldn U_LIFETIME_BOUND);
+U_CAPI स्थिर अक्षर* U_EXPORT2
+uldn_getLocale(स्थिर ULocaleDisplayNames* ldn U_LIFETIME_BOUND);
 
 /**
  * Returns the dialect handling used in the display names.
@@ -119,7 +119,7 @@ uldn_getLocale(const ULocaleDisplayNames* ldn U_LIFETIME_BOUND);
  * @stable ICU 4.4
  */
 U_CAPI UDialectHandling U_EXPORT2
-uldn_getDialectHandling(const ULocaleDisplayNames *ldn);
+uldn_getDialectHandling(स्थिर ULocaleDisplayNames *ldn);
 
 /* names for entire locales */
 
@@ -135,10 +135,10 @@ uldn_getDialectHandling(const ULocaleDisplayNames *ldn);
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_localeDisplayName(const ULocaleDisplayNames *ldn,
-                       const char *locale,
-                       UChar *result,
-                       int32_t maxResultSize,
+uldn_localeDisplayName(स्थिर ULocaleDisplayNames *ldn,
+                       स्थिर अक्षर *locale,
+                       UChar *परिणाम,
+                       int32_t max_परिणाम_आकार,
                        UErrorCode *pErrorCode);
 
 /* names for components of a locale */
@@ -155,10 +155,10 @@ uldn_localeDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_languageDisplayName(const ULocaleDisplayNames *ldn,
-                         const char *lang,
-                         UChar *result,
-                         int32_t maxResultSize,
+uldn_languageDisplayName(स्थिर ULocaleDisplayNames *ldn,
+                         स्थिर अक्षर *lang,
+                         UChar *परिणाम,
+                         int32_t max_परिणाम_आकार,
                          UErrorCode *pErrorCode);
 
 /**
@@ -173,10 +173,10 @@ uldn_languageDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_scriptDisplayName(const ULocaleDisplayNames *ldn,
-                       const char *script,
-                       UChar *result,
-                       int32_t maxResultSize,
+uldn_scriptDisplayName(स्थिर ULocaleDisplayNames *ldn,
+                       स्थिर अक्षर *script,
+                       UChar *परिणाम,
+                       int32_t max_परिणाम_आकार,
                        UErrorCode *pErrorCode);
 
 /**
@@ -191,10 +191,10 @@ uldn_scriptDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_scriptCodeDisplayName(const ULocaleDisplayNames *ldn,
+uldn_scriptCodeDisplayName(स्थिर ULocaleDisplayNames *ldn,
                            UScriptCode scriptCode,
-                           UChar *result,
-                           int32_t maxResultSize,
+                           UChar *परिणाम,
+                           int32_t max_परिणाम_आकार,
                            UErrorCode *pErrorCode);
 
 /**
@@ -209,10 +209,10 @@ uldn_scriptCodeDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_regionDisplayName(const ULocaleDisplayNames *ldn,
-                       const char *region,
-                       UChar *result,
-                       int32_t maxResultSize,
+uldn_regionDisplayName(स्थिर ULocaleDisplayNames *ldn,
+                       स्थिर अक्षर *region,
+                       UChar *परिणाम,
+                       int32_t max_परिणाम_आकार,
                        UErrorCode *pErrorCode);
 
 /**
@@ -227,10 +227,10 @@ uldn_regionDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_variantDisplayName(const ULocaleDisplayNames *ldn,
-                        const char *variant,
-                        UChar *result,
-                        int32_t maxResultSize,
+uldn_variantDisplayName(स्थिर ULocaleDisplayNames *ldn,
+                        स्थिर अक्षर *variant,
+                        UChar *परिणाम,
+                        int32_t max_परिणाम_आकार,
                         UErrorCode *pErrorCode);
 
 /**
@@ -245,10 +245,10 @@ uldn_variantDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_keyDisplayName(const ULocaleDisplayNames *ldn,
-                    const char *key,
-                    UChar *result,
-                    int32_t maxResultSize,
+uldn_कुंजी_Display_Name(स्थिर ULocaleDisplayNames *ldn,
+                    स्थिर अक्षर *कुंजी,
+                    UChar *परिणाम,
+                    int32_t max_परिणाम_आकार,
                     UErrorCode *pErrorCode);
 
 /**
@@ -264,11 +264,11 @@ uldn_keyDisplayName(const ULocaleDisplayNames *ldn,
  * @stable ICU 4.4
  */
 U_CAPI int32_t U_EXPORT2
-uldn_keyValueDisplayName(const ULocaleDisplayNames *ldn,
-                         const char *key,
-                         const char *value,
-                         UChar *result,
-                         int32_t maxResultSize,
+uldn_कुंजी_मूल्य_Display_Name(स्थिर ULocaleDisplayNames *ldn,
+                         स्थिर अक्षर *कुंजी,
+                         स्थिर अक्षर *मूल्य_2,
+                         UChar *परिणाम,
+                         int32_t max_परिणाम_आकार,
                          UErrorCode *pErrorCode);
 
 /**
@@ -286,8 +286,8 @@ uldn_keyValueDisplayName(const ULocaleDisplayNames *ldn,
 * @stable ICU 51
 */
 U_CAPI ULocaleDisplayNames * U_EXPORT2
-uldn_openForContext(const char * locale, UDisplayContext *contexts,
-                    int32_t length, UErrorCode *pErrorCode);
+uldn_openForContext(स्थिर अक्षर * locale, UDisplayContext *contexts,
+                    int32_t लंबाई, UErrorCode *pErrorCode);
 
 /**
 * Returns the UDisplayContext value for the specified UDisplayContextType.
@@ -300,8 +300,8 @@ uldn_openForContext(const char * locale, UDisplayContext *contexts,
 * @stable ICU 51
 */
 U_CAPI UDisplayContext U_EXPORT2
-uldn_getContext(const ULocaleDisplayNames *ldn, UDisplayContextType type,
+uldn_getContext(स्थिर ULocaleDisplayNames *ldn, UDisplayContextType type,
                 UErrorCode *pErrorCode);
 
-#endif  /* !UCONFIG_NO_FORMATTING */
-#endif  /* __ULDNAMES_H__ */
+#पूर्ण_अगर  /* !UCONFIG_NO_FORMATTING */
+#पूर्ण_अगर  /* __ULDNAMES_H__ */

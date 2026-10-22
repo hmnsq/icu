@@ -39,47 +39,47 @@
   *                            for the Unicode version.
   */
 
-#ifndef UVERNUM_H
-#define UVERNUM_H
+#अगर_अघोषित UVERNUM_H
+#घोषणा UVERNUM_H
 
 /** The standard copyright notice that gets compiled into each library.
  *  This value will change in the subsequent releases of ICU
  *  @stable ICU 2.4
  */
-#define U_COPYRIGHT_STRING \
+#घोषणा U_COPYRIGHT_STRING \
   " Copyright (C) 2016 and later: Unicode, Inc. and others. License & terms of use: http://www.unicode.org/copyright.html "
 
 /** The current ICU major version as an integer.
  *  This value will change in the subsequent releases of ICU
  *  @stable ICU 2.4
  */
-#define U_ICU_VERSION_MAJOR_NUM 79
+#घोषणा U_ICU_VERSION_MAJOR_अंक 79
 
 /** The current ICU minor version as an integer.
  *  This value will change in the subsequent releases of ICU
  *  @stable ICU 2.6
  */
-#define U_ICU_VERSION_MINOR_NUM 1
+#घोषणा U_ICU_VERSION_MINOR_अंक 1
 
 /** The current ICU patchlevel version as an integer.
  *  This value will change in the subsequent releases of ICU
  *  @stable ICU 2.4
  */
-#define U_ICU_VERSION_PATCHLEVEL_NUM 0
+#घोषणा U_ICU_VERSION_PATCHLEVEL_अंक 0
 
 /** The current ICU build level version as an integer.
  *  This value is for use by ICU clients. It defaults to 0.
  *  @stable ICU 4.0
  */
-#ifndef U_ICU_VERSION_BUILDLEVEL_NUM
-#define U_ICU_VERSION_BUILDLEVEL_NUM 0
-#endif
+#अगर_अघोषित U_ICU_VERSION_BUILDLEVEL_अंक
+#घोषणा U_ICU_VERSION_BUILDLEVEL_अंक 0
+#पूर्ण_अगर
 
 /** Glued version suffix for renamers
  *  This value will change in the subsequent releases of ICU
  *  @stable ICU 2.6
  */
-#define U_ICU_VERSION_SUFFIX _79
+#घोषणा U_ICU_VERSION_SUFFIX _79
 
 /**
  * \def U_DEF2_ICU_ENTRY_POINT_RENAME
@@ -101,38 +101,38 @@
  * \def U_DISABLE_VERSION_SUFFIX
  * @internal
  */
-#ifndef U_DISABLE_VERSION_SUFFIX
-#define U_DISABLE_VERSION_SUFFIX 0
-#endif
+#अगर_अघोषित U_DISABLE_VERSION_SUFFIX
+#घोषणा U_DISABLE_VERSION_SUFFIX 0
+#पूर्ण_अगर
 
-#ifndef U_ICU_ENTRY_POINT_RENAME
-#ifdef U_HAVE_LIB_SUFFIX
-#   if !U_DISABLE_VERSION_SUFFIX
+#अगर_अघोषित U_ICU_ENTRY_POINT_RENAME
+#अगर_घोषित U_HAVE_LIB_SUFFIX
+#   अगर !U_DISABLE_VERSION_SUFFIX
 #       define U_DEF_ICU_ENTRY_POINT_RENAME(x,y,z) x ## y ##  z
 #       define U_DEF2_ICU_ENTRY_POINT_RENAME(x,y,z) U_DEF_ICU_ENTRY_POINT_RENAME(x,y,z)
 #       define U_ICU_ENTRY_POINT_RENAME(x)    U_DEF2_ICU_ENTRY_POINT_RENAME(x,U_ICU_VERSION_SUFFIX,U_LIB_SUFFIX_C_NAME)
-#   else
+#   अन्यथा
 #       define U_DEF_ICU_ENTRY_POINT_RENAME(x,y) x ## y
 #       define U_DEF2_ICU_ENTRY_POINT_RENAME(x,y) U_DEF_ICU_ENTRY_POINT_RENAME(x,y)
 #       define U_ICU_ENTRY_POINT_RENAME(x)    U_DEF2_ICU_ENTRY_POINT_RENAME(x,U_LIB_SUFFIX_C_NAME)
 #   endif
-#else
-#   if !U_DISABLE_VERSION_SUFFIX
+#अन्यथा
+#   अगर !U_DISABLE_VERSION_SUFFIX
 #       define U_DEF_ICU_ENTRY_POINT_RENAME(x,y) x ## y
 #       define U_DEF2_ICU_ENTRY_POINT_RENAME(x,y) U_DEF_ICU_ENTRY_POINT_RENAME(x,y)
 #       define U_ICU_ENTRY_POINT_RENAME(x)    U_DEF2_ICU_ENTRY_POINT_RENAME(x,U_ICU_VERSION_SUFFIX)
-#   else
+#   अन्यथा
 #       define U_ICU_ENTRY_POINT_RENAME(x)    x
 #   endif
-#endif
-#endif
+#पूर्ण_अगर
+#पूर्ण_अगर
 
 /** The current ICU library version as a dotted-decimal string. The patchlevel
  *  only appears in this string if it non-zero.
  *  This value will change in the subsequent releases of ICU
  *  @stable ICU 2.4
  */
-#define U_ICU_VERSION "79.1"
+#घोषणा U_ICU_VERSION "79.1"
 
 /**
  * The current ICU library major version number as a string, for library name suffixes.
@@ -145,14 +145,14 @@
  *
  * @stable ICU 2.6
  */
-#define U_ICU_VERSION_SHORT "79"
+#घोषणा U_ICU_VERSION_SHORT "79"
 
-#ifndef U_HIDE_INTERNAL_API
+#अगर_अघोषित U_HIDE_INTERNAL_API
 /** Data version in ICU4C.
  * @internal ICU 4.4 Internal Use Only
  **/
-#define U_ICU_DATA_VERSION "79.1"
-#endif  /* U_HIDE_INTERNAL_API */
+#घोषणा U_ICU_तथ्य_VERSION "79.1"
+#पूर्ण_अगर  /* U_HIDE_INTERNAL_API */
 
 /*===========================================================================
  * ICU collation framework version information
@@ -167,7 +167,7 @@
  * This value may change in subsequent releases of ICU.
  * @stable ICU 2.4
  */
-#define UCOL_RUNTIME_VERSION 9
+#घोषणा UCOL_RUNTIME_VERSION 9
 
 /**
  * Collation builder code version.
@@ -176,16 +176,16 @@
  * This value may change in subsequent releases of ICU.
  * @stable ICU 2.4
  */
-#define UCOL_BUILDER_VERSION 9
+#घोषणा UCOL_BUILDER_VERSION 9
 
-#ifndef U_HIDE_DEPRECATED_API
+#अगर_अघोषित U_HIDE_DEPRECATED_API
 /**
  * Constant 1.
  * This was intended to be the version of collation tailorings,
  * but instead the tailoring data carries a version number.
  * @deprecated ICU 54
  */
-#define UCOL_TAILORINGS_VERSION 1
-#endif  /* U_HIDE_DEPRECATED_API */
+#घोषणा UCOL_TAILORINGS_VERSION 1
+#पूर्ण_अगर  /* U_HIDE_DEPRECATED_API */
 
-#endif
+#पूर्ण_अगर

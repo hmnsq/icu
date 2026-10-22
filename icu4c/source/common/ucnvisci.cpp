@@ -17,56 +17,56 @@
 *   24/7/2001   Ram         Added support for EXT character handling
 */
 
-#include "unicode/utypes.h"
+#समावेश "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#अगर !UCONFIG_NO_CONVERSION && !UCONFIG_NO_LEGACY_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/ucnv_cb.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "cstring.h"
-#include "uassert.h"
+#समावेश "unicode/ucnv.h"
+#समावेश "unicode/ucnv_cb.h"
+#समावेश "unicode/utf16.h"
+#समावेश "cmemory.h"
+#समावेश "ucnv_bld.h"
+#समावेश "ucnv_cnv.h"
+#समावेश "cstring.h"
+#समावेश "uassert.h"
 
-#define UCNV_OPTIONS_VERSION_MASK 0xf
-#define NUKTA               0x093c
-#define HALANT              0x094d
-#define ZWNJ                0x200c /* Zero Width Non Joiner */
-#define ZWJ                 0x200d /* Zero width Joiner */
-#define INVALID_CHAR        0xffff
-#define ATR                 0xEF   /* Attribute code */
-#define EXT                 0xF0   /* Extension code */
-#define DANDA               0x0964
-#define DOUBLE_DANDA        0x0965
-#define ISCII_NUKTA         0xE9
-#define ISCII_HALANT        0xE8
-#define ISCII_DANDA         0xEA
-#define ISCII_INV           0xD9
-#define ISCII_VOWEL_SIGN_E  0xE0
-#define INDIC_BLOCK_BEGIN   0x0900
-#define INDIC_BLOCK_END     0x0D7F
-#define INDIC_RANGE         (INDIC_BLOCK_END - INDIC_BLOCK_BEGIN)
-#define VOCALLIC_RR         0x0931
-#define LF                  0x0A
-#define ASCII_END           0xA0
-#define NO_CHAR_MARKER      0xFFFE
-#define TELUGU_DELTA        DELTA * TELUGU
-#define DEV_ABBR_SIGN       0x0970
-#define DEV_ANUDATTA        0x0952
-#define EXT_RANGE_BEGIN     0xA1
-#define EXT_RANGE_END       0xEE
+#घोषणा UCNV_OPTIONS_VERSION_MASK 0xf
+#घोषणा NUKTA               0x093c
+#घोषणा HALANT              0x094d
+#घोषणा ZWNJ                0x200c /* Zero Width Non Joiner */
+#घोषणा ZWJ                 0x200d /* Zero width Joiner */
+#घोषणा INVALID_CHAR        0xffff
+#घोषणा ATR                 0xEF   /* Attribute code */
+#घोषणा EXT                 0xF0   /* Extension code */
+#घोषणा DANDA               0x0964
+#घोषणा DOUBLE_DANDA        0x0965
+#घोषणा ISCII_NUKTA         0xE9
+#घोषणा ISCII_HALANT        0xE8
+#घोषणा ISCII_DANDA         0xEA
+#घोषणा ISCII_INV           0xD9
+#घोषणा ISCII_VOWEL_SIGN_E  0xE0
+#घोषणा INDIC_BLOCK_BEGIN   0x0900
+#घोषणा INDIC_BLOCK_END     0x0D7F
+#घोषणा INDIC_RANGE         (INDIC_BLOCK_END - INDIC_BLOCK_BEGIN)
+#घोषणा VOCALLIC_RR         0x0931
+#घोषणा LF                  0x0A
+#घोषणा ASCII_END           0xA0
+#घोषणा NO_CHAR_MARKER      0xFFFE
+#घोषणा TELUGU_DELTA        DELTA * TELUGU
+#घोषणा DEV_ABBR_SIGN       0x0970
+#घोषणा DEV_ANUDATTA        0x0952
+#घोषणा EXT_RANGE_BEGIN     0xA1
+#घोषणा EXT_RANGE_END       0xEE
 
-#define PNJ_DELTA           0x0100
-#define PNJ_BINDI           0x0A02
-#define PNJ_TIPPI           0x0A70
-#define PNJ_SIGN_VIRAMA     0x0A4D
-#define PNJ_ADHAK           0x0A71
-#define PNJ_HA              0x0A39
-#define PNJ_RRA             0x0A5C
+#घोषणा PNJ_DELTA           0x0100
+#घोषणा PNJ_BINDI           0x0A02
+#घोषणा PNJ_TIPPI           0x0A70
+#घोषणा PNJ_SIGN_VIRAMA     0x0A4D
+#घोषणा PNJ_ADHAK           0x0A71
+#घोषणा PNJ_HA              0x0A39
+#घोषणा PNJ_RRA             0x0A5C
 
-typedef enum {
+प्रकार क्रमागत {
     DEVANAGARI =0,
     BENGALI,
     GURMUKHI,
@@ -83,7 +83,7 @@ typedef enum {
  * Enumeration for switching code pages if <ATR>+<one of below values>
  * is encountered
  */
-typedef enum {
+प्रकार क्रमागत {
     DEF = 0x40,
     RMN = 0x41,
     DEV = 0x42,
@@ -104,7 +104,7 @@ typedef enum {
     PST = 0x76
 }ISCIILang;
 
-typedef enum {
+प्रकार क्रमागत {
     DEV_MASK =0x80,
     PNJ_MASK =0x40,
     GJR_MASK =0x20,
@@ -116,9 +116,9 @@ typedef enum {
     ZERO =0x00
 }MaskEnum;
 
-#define ISCII_CNV_PREFIX "ISCII,version="
+#घोषणा ISCII_CNV_PREFIX "ISCII,version="
 
-typedef struct {
+प्रकार काष्ठा {
     char16_t contextCharToUnicode;         /* previous Unicode codepoint for contextual analysis */
     char16_t contextCharFromUnicode;       /* previous Unicode codepoint for contextual analysis */
     uint16_t defDeltaToUnicode;         /* delta for switching to default state when DEF is encountered  */
@@ -127,19 +127,19 @@ typedef struct {
     MaskEnum currentMaskFromUnicode;    /* mask for current state in toUnicode */
     MaskEnum currentMaskToUnicode;      /* mask for current state in toUnicode */
     MaskEnum defMaskToUnicode;          /* mask for default state in toUnicode */
-    UBool isFirstBuffer;                /* boolean for fromUnicode to see if we need to announce the first script */
+    UBool is_First_बफर;                /* boolean for fromUnicode to see if we need to announce the first script */
     UBool resetToDefaultToUnicode;      /* boolean for resetting to default delta and mask when a newline is encountered*/
-    char name[sizeof(ISCII_CNV_PREFIX) + 1];
-    UChar32 prevToUnicodeStatus;        /* Hold the previous toUnicodeStatus. This is necessary because we may need to know the last two code points. */
-} UConverterDataISCII;
+    अक्षर name[माप(ISCII_CNV_PREFIX) + 1];
+    UChar32 पूर्व_To_Unicode_Status;        /* Hold the previous toUnicodeStatus. This is necessary because we may need to know the last two code points. */
+} UConverter_तथ्य_ISCII;
 
-typedef struct LookupDataStruct {
+प्रकार काष्ठा Lookup_तथ्य_Struct {
     UniLang uniLang;
     MaskEnum maskEnum;
     ISCIILang isciiLang;
-} LookupDataStruct;
+} Lookup_तथ्य_Struct;
 
-static const LookupDataStruct lookupInitialData[]={
+अटल स्थिर Lookup_तथ्य_Struct lookup_Initial_तथ्य[]={
     { DEVANAGARI, DEV_MASK,  DEV },
     { BENGALI,    BNG_MASK,  BNG },
     { GURMUKHI,   PNJ_MASK,  PNJ },
@@ -156,7 +156,7 @@ static const LookupDataStruct lookupInitialData[]={
  * Bit 0 (value 1): PNJ consonant
  * Bit 1 (value 2): PNJ Bindi Tippi
  */
-static const uint8_t pnjMap[80] = {
+अटल स्थिर uint8_t pnjMap[80] = {
     /* 0A00..0A0F */
     0, 0, 0, 0, 0, 2, 0, 2,  0, 0, 0, 0, 0, 0, 0, 0,
     /* 0A10..0A1F */
@@ -169,106 +169,106 @@ static const uint8_t pnjMap[80] = {
     0, 2, 2, 0, 0, 0, 0, 0,  0, 0, 0, 0, 0, 0, 0, 0
 };
 
-static UBool
+अटल UBool
 isPNJConsonant(UChar32 c) {
-    if (c < 0xa00 || 0xa50 <= c) {
-        return false;
-    } else {
-        return pnjMap[c - 0xa00] & 1;
+    अगर (c < 0xa00 || 0xa50 <= c) {
+        वापस false;
+    } अन्यथा {
+        वापस pnjMap[c - 0xa00] & 1;
     }
 }
 
-static UBool
+अटल UBool
 isPNJBindiTippi(UChar32 c) {
-    if (c < 0xa00 || 0xa50 <= c) {
-        return false;
-    } else {
-        return pnjMap[c - 0xa00] >> 1;
+    अगर (c < 0xa00 || 0xa50 <= c) {
+        वापस false;
+    } अन्यथा {
+        वापस pnjMap[c - 0xa00] >> 1;
     }
 }
 U_CDECL_BEGIN
-static void  U_CALLCONV
+अटल व्योम  U_CALLCONV
 _ISCIIOpen(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode) {
-    if(pArgs->onlyTestIsLoadable) {
-        return;
+    अगर(pArgs->onlyTestIsLoadable) {
+        वापस;
     }
 
-    cnv->extraInfo = uprv_malloc(sizeof(UConverterDataISCII));
+    cnv->extraInfo = uprv_malloc(माप(UConverter_तथ्य_ISCII));
 
-    if (cnv->extraInfo != nullptr) {
+    अगर (cnv->extraInfo != nullptr) {
         int32_t len=0;
-        UConverterDataISCII *converterData=
-                (UConverterDataISCII *) cnv->extraInfo;
-        converterData->contextCharToUnicode=NO_CHAR_MARKER;
+        UConverter_तथ्य_ISCII *converter_तथ्य=
+                (UConverter_तथ्य_ISCII *) cnv->extraInfo;
+        converter_तथ्य->contextCharToUnicode=NO_CHAR_MARKER;
         cnv->toUnicodeStatus = missingCharMarker;
-        converterData->contextCharFromUnicode=0x0000;
-        converterData->resetToDefaultToUnicode=false;
+        converter_तथ्य->contextCharFromUnicode=0x0000;
+        converter_तथ्य->resetToDefaultToUnicode=false;
         /* check if the version requested is supported */
-        if ((pArgs->options & UCNV_OPTIONS_VERSION_MASK) < 9) {
+        अगर ((pArgs->options & UCNV_OPTIONS_VERSION_MASK) < 9) {
             /* initialize state variables */
-            converterData->currentDeltaFromUnicode
-                    = converterData->currentDeltaToUnicode
-                            = converterData->defDeltaToUnicode = (uint16_t)(lookupInitialData[pArgs->options & UCNV_OPTIONS_VERSION_MASK].uniLang * DELTA);
+            converter_तथ्य->currentDeltaFromUnicode
+                    = converter_तथ्य->currentDeltaToUnicode
+                            = converter_तथ्य->defDeltaToUnicode = (uint16_t)(lookup_Initial_तथ्य[pArgs->options & UCNV_OPTIONS_VERSION_MASK].uniLang * DELTA);
 
-            converterData->currentMaskFromUnicode
-                    = converterData->currentMaskToUnicode
-                            = converterData->defMaskToUnicode = lookupInitialData[pArgs->options & UCNV_OPTIONS_VERSION_MASK].maskEnum;
+            converter_तथ्य->currentMaskFromUnicode
+                    = converter_तथ्य->currentMaskToUnicode
+                            = converter_तथ्य->defMaskToUnicode = lookup_Initial_तथ्य[pArgs->options & UCNV_OPTIONS_VERSION_MASK].maskEnum;
             
-            converterData->isFirstBuffer=true;
-            (void)uprv_strcpy(converterData->name, ISCII_CNV_PREFIX);
-            len = (int32_t)uprv_strlen(converterData->name);
-            converterData->name[len]= (char)((pArgs->options & UCNV_OPTIONS_VERSION_MASK) + '0');
-            converterData->name[len+1]=0;
+            converter_तथ्य->is_First_बफर=true;
+            (व्योम)uprv_strcpy(converter_तथ्य->name, ISCII_CNV_PREFIX);
+            len = (int32_t)uprv_strlen(converter_तथ्य->name);
+            converter_तथ्य->name[len]= (अक्षर)((pArgs->options & UCNV_OPTIONS_VERSION_MASK) + '0');
+            converter_तथ्य->name[len+1]=0;
             
-            converterData->prevToUnicodeStatus = 0x0000;
-        } else {
+            converter_तथ्य->पूर्व_To_Unicode_Status = 0x0000;
+        } अन्यथा {
             uprv_free(cnv->extraInfo);
             cnv->extraInfo = nullptr;
             *errorCode = U_ILLEGAL_ARGUMENT_ERROR;
         }
 
-    } else {
+    } अन्यथा {
         *errorCode =U_MEMORY_ALLOCATION_ERROR;
     }
 }
 
-static void U_CALLCONV
+अटल व्योम U_CALLCONV
 _ISCIIClose(UConverter *cnv) {
-    if (cnv->extraInfo!=nullptr) {
-        if (!cnv->isExtraLocal) {
+    अगर (cnv->extraInfo!=nullptr) {
+        अगर (!cnv->isExtraLocal) {
             uprv_free(cnv->extraInfo);
         }
         cnv->extraInfo=nullptr;
     }
 }
 
-static const char*  U_CALLCONV
-_ISCIIgetName(const UConverter* cnv) {
-    if (cnv->extraInfo) {
-        UConverterDataISCII* myData= (UConverterDataISCII*)cnv->extraInfo;
-        return myData->name;
+अटल स्थिर अक्षर*  U_CALLCONV
+_ISCIIgetName(स्थिर UConverter* cnv) {
+    अगर (cnv->extraInfo) {
+        UConverter_तथ्य_ISCII* my_तथ्य= (UConverter_तथ्य_ISCII*)cnv->extraInfo;
+        वापस my_तथ्य->name;
     }
-    return nullptr;
+    वापस nullptr;
 }
 
-static void U_CALLCONV
+अटल व्योम U_CALLCONV
 _ISCIIReset(UConverter *cnv, UConverterResetChoice choice) {
-    UConverterDataISCII* data =(UConverterDataISCII *) (cnv->extraInfo);
-    if (choice<=UCNV_RESET_TO_UNICODE) {
+    UConverter_तथ्य_ISCII* तथ्य =(UConverter_तथ्य_ISCII *) (cnv->extraInfo);
+    अगर (choice<=UCNV_RESET_TO_UNICODE) {
         cnv->toUnicodeStatus = missingCharMarker;
         cnv->mode=0;
-        data->currentDeltaToUnicode=data->defDeltaToUnicode;
-        data->currentMaskToUnicode = data->defMaskToUnicode;
-        data->contextCharToUnicode=NO_CHAR_MARKER;
-        data->prevToUnicodeStatus = 0x0000;
+        तथ्य->currentDeltaToUnicode=तथ्य->defDeltaToUnicode;
+        तथ्य->currentMaskToUnicode = तथ्य->defMaskToUnicode;
+        तथ्य->contextCharToUnicode=NO_CHAR_MARKER;
+        तथ्य->पूर्व_To_Unicode_Status = 0x0000;
     }
-    if (choice!=UCNV_RESET_TO_UNICODE) {
+    अगर (choice!=UCNV_RESET_TO_UNICODE) {
         cnv->fromUChar32=0x0000;
-        data->contextCharFromUnicode=0x00;
-        data->currentMaskFromUnicode=data->defMaskToUnicode;
-        data->currentDeltaFromUnicode=data->defDeltaToUnicode;
-        data->isFirstBuffer=true;
-        data->resetToDefaultToUnicode=false;
+        तथ्य->contextCharFromUnicode=0x00;
+        तथ्य->currentMaskFromUnicode=तथ्य->defMaskToUnicode;
+        तथ्य->currentDeltaFromUnicode=तथ्य->defDeltaToUnicode;
+        तथ्य->is_First_बफर=true;
+        तथ्य->resetToDefaultToUnicode=false;
     }
 }
 
@@ -292,7 +292,7 @@ _ISCIIReset(UConverter *cnv, UConverterResetChoice choice) {
  * to use uint16_t and give each of the 9 Unicode/script blocks its own bit.
  */
 
-static const uint8_t validityTable[128] = {
+अटल स्थिर uint8_t validityTable[128] = {
 /* This state table is tool generated please do not edit unless you know exactly what you are doing */
 /* Note: This table was edited to mirror the Windows XP implementation */
 /*ISCII:Valid:Unicode */
@@ -417,7 +417,7 @@ static const uint8_t validityTable[128] = {
 /*0x00 : 0x00: 0x9yz  */ ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO     + ZERO
 };
 
-static const uint16_t fromUnicodeTable[128]={
+अटल स्थिर uint16_t fromUnicodeTable[128]={
     0x00a0 ,/* 0x0900 */
     0x00a1 ,/* 0x0901 */
     0x00a2 ,/* 0x0902 */
@@ -547,7 +547,7 @@ static const uint16_t fromUnicodeTable[128]={
     0xFFFF ,/* 0x097e */
     0xFFFF ,/* 0x097f */
 };
-static const uint16_t toUnicodeTable[256]={
+अटल स्थिर uint16_t toUnicodeTable[256]={
     0x0000,/* 0x00 */
     0x0001,/* 0x01 */
     0x0002,/* 0x02 */
@@ -806,12 +806,12 @@ static const uint16_t toUnicodeTable[256]={
     0xFFFF /* 0xff */
 };
 
-static const uint16_t vowelSignESpecialCases[][2]={
+अटल स्थिर uint16_t vowelSignESpecialCases[][2]={
 	{ 2 /*length of array*/    , 0      },
 	{ 0xA4 , 0x0904 },
 };
 
-static const uint16_t nuktaSpecialCases[][2]={
+अटल स्थिर uint16_t nuktaSpecialCases[][2]={
     { 16 /*length of array*/   , 0      },
     { 0xA6 , 0x090c },
     { 0xEA , 0x093D },
@@ -831,58 +831,58 @@ static const uint16_t nuktaSpecialCases[][2]={
 };
 
 
-#define WRITE_TO_TARGET_FROM_U(args,offsets,source,target,targetLimit,targetByteUnit,err) UPRV_BLOCK_MACRO_BEGIN { \
+#घोषणा WRITE_TO_TARGET_FROM_U(args,offsets,source,target,targetLimit,targetByteUnit,err) UPRV_BLOCK_MACRO_BEGIN { \
     int32_t offset = (int32_t)(source - args->source-1);                                        \
       /* write the targetUniChar  to target */                                                  \
-    if(target < targetLimit){                                                                   \
-        if(targetByteUnit <= 0xFF){                                                             \
+    अगर(target < targetLimit){                                                                   \
+        अगर(targetByteUnit <= 0xFF){                                                             \
             *(target)++ = (uint8_t)(targetByteUnit);                                            \
-            if(offsets){                                                                        \
+            अगर(offsets){                                                                        \
                 *(offsets++) = offset;                                                          \
             }                                                                                   \
-        }else{                                                                                  \
-            if (targetByteUnit > 0xFFFF) {                                                      \
+        }अन्यथा{                                                                                  \
+            अगर (targetByteUnit > 0xFFFF) {                                                      \
                 *(target)++ = (uint8_t)(targetByteUnit>>16);                                    \
-                if (offsets) {                                                                  \
+                अगर (offsets) {                                                                  \
                     --offset;                                                                   \
                     *(offsets++) = offset;                                                      \
                 }                                                                               \
             }                                                                                   \
-            if (!(target < targetLimit)) {                                                      \
-                args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] =    \
+            अगर (!(target < targetLimit)) {                                                      \
+                args->converter->char_Error_बफर[args->converter->char_Error_बफर_लंबाई++] =    \
                                 (uint8_t)(targetByteUnit >> 8);                                 \
-                args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] =    \
+                args->converter->char_Error_बफर[args->converter->char_Error_बफर_लंबाई++] =    \
                                 (uint8_t)targetByteUnit;                                        \
-                *err = U_BUFFER_OVERFLOW_ERROR;                                                 \
-            } else {                                                                            \
+                *err = U_बफर_OVERFLOW_ERROR;                                                 \
+            } अन्यथा {                                                                            \
                 *(target)++ = (uint8_t)(targetByteUnit>>8);                                     \
-                if(offsets){                                                                    \
+                अगर(offsets){                                                                    \
                     *(offsets++) = offset;                                                      \
                 }                                                                               \
-                if(target < targetLimit){                                                       \
+                अगर(target < targetLimit){                                                       \
                     *(target)++ = (uint8_t)  targetByteUnit;                                    \
-                    if(offsets){                                                                \
+                    अगर(offsets){                                                                \
                         *(offsets++) = offset                            ;                      \
                     }                                                                           \
-                }else{                                                                          \
-                    args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] =\
+                }अन्यथा{                                                                          \
+                    args->converter->char_Error_बफर[args->converter->char_Error_बफर_लंबाई++] =\
                                 (uint8_t) (targetByteUnit);                                     \
-                    *err = U_BUFFER_OVERFLOW_ERROR;                                             \
+                    *err = U_बफर_OVERFLOW_ERROR;                                             \
                 }                                                                               \
             }                                                                                   \
         }                                                                                       \
-    }else{                                                                                      \
-        if (targetByteUnit & 0xFF0000) {                                                        \
-            args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] =        \
+    }अन्यथा{                                                                                      \
+        अगर (targetByteUnit & 0xFF0000) {                                                        \
+            args->converter->char_Error_बफर[args->converter->char_Error_बफर_लंबाई++] =        \
                         (uint8_t) (targetByteUnit >>16);                                        \
         }                                                                                       \
-        if(targetByteUnit & 0xFF00){                                                            \
-            args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] =        \
+        अगर(targetByteUnit & 0xFF00){                                                            \
+            args->converter->char_Error_बफर[args->converter->char_Error_बफर_लंबाई++] =        \
                         (uint8_t) (targetByteUnit >>8);                                         \
         }                                                                                       \
-        args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] =            \
+        args->converter->char_Error_बफर[args->converter->char_Error_बफर_लंबाई++] =            \
                         (uint8_t) (targetByteUnit);                                             \
-        *err = U_BUFFER_OVERFLOW_ERROR;                                                         \
+        *err = U_बफर_OVERFLOW_ERROR;                                                         \
     }                                                                                           \
 } UPRV_BLOCK_MACRO_END
 
@@ -892,219 +892,219 @@ static const uint16_t nuktaSpecialCases[][2]={
  *    Soft Halant :
  *                      <HALANT> + <ZWJ>
  */
-static void U_CALLCONV
+अटल व्योम U_CALLCONV
 UConverter_fromUnicode_ISCII_OFFSETS_LOGIC(
         UConverterFromUnicodeArgs * args, UErrorCode * err) {
-    const char16_t *source = args->source;
-    const char16_t *sourceLimit = args->sourceLimit;
-    unsigned char *target = (unsigned char *) args->target;
-    unsigned char *targetLimit = (unsigned char *) args->targetLimit;
+    स्थिर char16_t *source = args->source;
+    स्थिर char16_t *sourceLimit = args->sourceLimit;
+    अचिन्हित अक्षर *target = (अचिन्हित अक्षर *) args->target;
+    अचिन्हित अक्षर *targetLimit = (अचिन्हित अक्षर *) args->targetLimit;
     int32_t* offsets = args->offsets;
     uint32_t targetByteUnit = 0x0000;
     UChar32 sourceChar = 0x0000;
-    UChar32 tempContextFromUnicode = 0x0000;    /* For special handling of the Gurmukhi script. */
-    UConverterDataISCII *converterData;
+    UChar32 अस्थायी_Context_From_Unicode = 0x0000;    /* For special handling of the Gurmukhi script. */
+    UConverter_तथ्य_ISCII *converter_तथ्य;
     uint16_t newDelta=0;
     uint16_t range = 0;
     UBool deltaChanged = false;
 
-    if ((args->converter == nullptr) || (args->targetLimit < args->target) || (args->sourceLimit < args->source)) {
+    अगर ((args->converter == nullptr) || (args->targetLimit < args->target) || (args->sourceLimit < args->source)) {
         *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        वापस;
     }
     /* initialize data */
-    converterData=(UConverterDataISCII*)args->converter->extraInfo;
-    newDelta=converterData->currentDeltaFromUnicode;
+    converter_तथ्य=(UConverter_तथ्य_ISCII*)args->converter->extraInfo;
+    newDelta=converter_तथ्य->currentDeltaFromUnicode;
     range = (uint16_t)(newDelta/DELTA);
 
-    if ((sourceChar = args->converter->fromUChar32)!=0) {
-        goto getTrail;
+    अगर ((sourceChar = args->converter->fromUChar32)!=0) {
+        जाओ getTrail;
     }
 
     /*writing the char to the output stream */
-    while (source < sourceLimit) {
+    जबतक (source < sourceLimit) {
         /* Write the language code following LF only if LF is not the last character. */
-        if (args->converter->fromUnicodeStatus == LF) {
+        अगर (args->converter->fromUnicodeStatus == LF) {
             targetByteUnit = ATR<<8;
-            targetByteUnit += (uint8_t) lookupInitialData[range].isciiLang;
+            targetByteUnit += (uint8_t) lookup_Initial_तथ्य[range].isciiLang;
             args->converter->fromUnicodeStatus = 0x0000;
             /* now append ATR and language code */
             WRITE_TO_TARGET_FROM_U(args,offsets,source,target,targetLimit,targetByteUnit,err);
-            if (U_FAILURE(*err)) {
-                break;
+            अगर (U_FAILURE(*err)) {
+                अवरोध;
             }
         }
         
         sourceChar = *source++;
-        tempContextFromUnicode = converterData->contextCharFromUnicode;
+        अस्थायी_Context_From_Unicode = converter_तथ्य->contextCharFromUnicode;
         
         targetByteUnit = missingCharMarker;
         
         /*check if input is in ASCII and C0 control codes range*/
-        if (sourceChar <= ASCII_END) {
+        अगर (sourceChar <= ASCII_END) {
             args->converter->fromUnicodeStatus = sourceChar;
             WRITE_TO_TARGET_FROM_U(args,offsets,source,target,targetLimit,sourceChar,err);
-            if (U_FAILURE(*err)) {
-                break;
+            अगर (U_FAILURE(*err)) {
+                अवरोध;
             }
-            continue;
+            जारी;
         }
-        switch (sourceChar) {
-        case ZWNJ:
+        चयन (sourceChar) {
+        हाल ZWNJ:
             /* contextChar has HALANT */
-            if (converterData->contextCharFromUnicode) {
-                converterData->contextCharFromUnicode = 0x00;
+            अगर (converter_तथ्य->contextCharFromUnicode) {
+                converter_तथ्य->contextCharFromUnicode = 0x00;
                 targetByteUnit = ISCII_HALANT;
-            } else {
+            } अन्यथा {
                 /* consume ZWNJ and continue */
-                converterData->contextCharFromUnicode = 0x00;
-                continue;
+                converter_तथ्य->contextCharFromUnicode = 0x00;
+                जारी;
             }
-            break;
-        case ZWJ:
+            अवरोध;
+        हाल ZWJ:
             /* contextChar has HALANT */
-            if (converterData->contextCharFromUnicode) {
+            अगर (converter_तथ्य->contextCharFromUnicode) {
                 targetByteUnit = ISCII_NUKTA;
-            } else {
+            } अन्यथा {
                 targetByteUnit =ISCII_INV;
             }
-            converterData->contextCharFromUnicode = 0x00;
-            break;
-        default:
+            converter_तथ्य->contextCharFromUnicode = 0x00;
+            अवरोध;
+        शेष:
             /* is the sourceChar in the INDIC_RANGE? */
-            if ((uint16_t)(INDIC_BLOCK_END-sourceChar) <= INDIC_RANGE) {
+            अगर ((uint16_t)(INDIC_BLOCK_END-sourceChar) <= INDIC_RANGE) {
                 /* Danda and Double Danda are valid in Northern scripts.. since Unicode
                  * does not include these codepoints in all Northern scrips we need to
                  * filter them out
                  */
-                if (sourceChar!= DANDA && sourceChar != DOUBLE_DANDA) {
+                अगर (sourceChar!= DANDA && sourceChar != DOUBLE_DANDA) {
                     /* find out to which block the souceChar belongs*/
                     range =(uint16_t)((sourceChar-INDIC_BLOCK_BEGIN)/DELTA);
                     newDelta =(uint16_t)(range*DELTA);
 
                     /* Now are we in the same block as the previous? */
-                    if (newDelta!= converterData->currentDeltaFromUnicode || converterData->isFirstBuffer) {
-                        converterData->currentDeltaFromUnicode = newDelta;
-                        converterData->currentMaskFromUnicode = lookupInitialData[range].maskEnum;
+                    अगर (newDelta!= converter_तथ्य->currentDeltaFromUnicode || converter_तथ्य->is_First_बफर) {
+                        converter_तथ्य->currentDeltaFromUnicode = newDelta;
+                        converter_तथ्य->currentMaskFromUnicode = lookup_Initial_तथ्य[range].maskEnum;
                         deltaChanged =true;
-                        converterData->isFirstBuffer=false;
+                        converter_तथ्य->is_First_बफर=false;
                     }
                     
-                    if (converterData->currentDeltaFromUnicode == PNJ_DELTA) { 
-                        if (sourceChar == PNJ_TIPPI) {
+                    अगर (converter_तथ्य->currentDeltaFromUnicode == PNJ_DELTA) { 
+                        अगर (sourceChar == PNJ_TIPPI) {
                             /* Make sure Tippi is converted to Bindi. */
                             sourceChar = PNJ_BINDI;
-                        } else if (sourceChar == PNJ_ADHAK) {
+                        } अन्यथा अगर (sourceChar == PNJ_ADHAK) {
                             /* This is for consonant cluster handling. */
-                            converterData->contextCharFromUnicode = PNJ_ADHAK;
+                            converter_तथ्य->contextCharFromUnicode = PNJ_ADHAK;
                         }
                         
                     }
                     /* Normalize all Indic codepoints to Devanagari and map them to ISCII */
                     /* now subtract the new delta from sourceChar*/
-                    sourceChar -= converterData->currentDeltaFromUnicode;
+                    sourceChar -= converter_तथ्य->currentDeltaFromUnicode;
                 }
 
                 /* get the target byte unit */
                 targetByteUnit=fromUnicodeTable[(uint8_t)sourceChar];
 
                 /* is the code point valid in current script? */
-                if ((validityTable[(uint8_t)sourceChar] & converterData->currentMaskFromUnicode)==0) {
+                अगर ((validityTable[(uint8_t)sourceChar] & converter_तथ्य->currentMaskFromUnicode)==0) {
                     /* Vocallic RR is assigned in ISCII Telugu and Unicode */
-                    if (converterData->currentDeltaFromUnicode!=(TELUGU_DELTA) || sourceChar!=VOCALLIC_RR) {
+                    अगर (converter_तथ्य->currentDeltaFromUnicode!=(TELUGU_DELTA) || sourceChar!=VOCALLIC_RR) {
                         targetByteUnit=missingCharMarker;
                     }
                 }
 
-                if (deltaChanged) {
+                अगर (deltaChanged) {
                     /* we are in a script block which is different than
                      * previous sourceChar's script block write ATR and language codes
                      */
-                    uint32_t temp=0;
-                    temp =(uint16_t)(ATR<<8);
-                    temp += (uint16_t)((uint8_t) lookupInitialData[range].isciiLang);
+                    uint32_t अस्थायी=0;
+                    अस्थायी =(uint16_t)(ATR<<8);
+                    अस्थायी += (uint16_t)((uint8_t) lookup_Initial_तथ्य[range].isciiLang);
                     /* reset */
                     deltaChanged=false;
                     /* now append ATR and language code */
-                    WRITE_TO_TARGET_FROM_U(args,offsets,source,target,targetLimit,temp,err);
-                    if (U_FAILURE(*err)) {
-                        break;
+                    WRITE_TO_TARGET_FROM_U(args,offsets,source,target,targetLimit,अस्थायी,err);
+                    अगर (U_FAILURE(*err)) {
+                        अवरोध;
                     }
                 }
                 
-                if (converterData->currentDeltaFromUnicode == PNJ_DELTA && (sourceChar + PNJ_DELTA) == PNJ_ADHAK) {
-                    continue;
+                अगर (converter_तथ्य->currentDeltaFromUnicode == PNJ_DELTA && (sourceChar + PNJ_DELTA) == PNJ_ADHAK) {
+                    जारी;
                 }
             }
             /* reset context char */
-            converterData->contextCharFromUnicode = 0x00;
-            break;
+            converter_तथ्य->contextCharFromUnicode = 0x00;
+            अवरोध;
         }
-        if (converterData->currentDeltaFromUnicode == PNJ_DELTA && tempContextFromUnicode == PNJ_ADHAK && isPNJConsonant((sourceChar + PNJ_DELTA))) {
+        अगर (converter_तथ्य->currentDeltaFromUnicode == PNJ_DELTA && अस्थायी_Context_From_Unicode == PNJ_ADHAK && isPNJConsonant((sourceChar + PNJ_DELTA))) {
             /* If the previous codepoint is Adhak and the current codepoint is a consonant, the targetByteUnit should be C + Halant + C. */
             /* reset context char */
-            converterData->contextCharFromUnicode = 0x0000;
+            converter_तथ्य->contextCharFromUnicode = 0x0000;
             targetByteUnit = targetByteUnit << 16 | ISCII_HALANT << 8 | targetByteUnit;
             /* write targetByteUnit to target */
             WRITE_TO_TARGET_FROM_U(args, offsets, source, target, targetLimit, targetByteUnit,err);
-            if (U_FAILURE(*err)) {
-                break;
+            अगर (U_FAILURE(*err)) {
+                अवरोध;
             }
-        } else if (targetByteUnit != missingCharMarker) {
-            if (targetByteUnit==ISCII_HALANT) {
-                converterData->contextCharFromUnicode = (char16_t)targetByteUnit;
+        } अन्यथा अगर (targetByteUnit != missingCharMarker) {
+            अगर (targetByteUnit==ISCII_HALANT) {
+                converter_तथ्य->contextCharFromUnicode = (char16_t)targetByteUnit;
             }
             /* write targetByteUnit to target*/
             WRITE_TO_TARGET_FROM_U(args,offsets,source,target,targetLimit,targetByteUnit,err);
-            if (U_FAILURE(*err)) {
-                break;
+            अगर (U_FAILURE(*err)) {
+                अवरोध;
             }
-        } else {
+        } अन्यथा {
             /* oops.. the code point is unassigned */
             /*check if the char is a First surrogate*/
-            if (U16_IS_SURROGATE(sourceChar)) {
-                if (U16_IS_SURROGATE_LEAD(sourceChar)) {
+            अगर (U16_IS_SURROGATE(sourceChar)) {
+                अगर (U16_IS_SURROGATE_LEAD(sourceChar)) {
 getTrail:
                     /*look ahead to find the trail surrogate*/
-                    if (source < sourceLimit) {
+                    अगर (source < sourceLimit) {
                         /* test the following code unit */
                         char16_t trail= (*source);
-                        if (U16_IS_TRAIL(trail)) {
+                        अगर (U16_IS_TRAIL(trail)) {
                             source++;
                             sourceChar=U16_GET_SUPPLEMENTARY(sourceChar, trail);
                             *err =U_INVALID_CHAR_FOUND;
                             /* convert this surrogate code point */
                             /* exit this condition tree */
-                        } else {
+                        } अन्यथा {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
                             *err=U_ILLEGAL_CHAR_FOUND;
                         }
-                    } else {
+                    } अन्यथा {
                         /* no more input */
                         *err = U_ZERO_ERROR;
                     }
-                } else {
+                } अन्यथा {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
                     *err=U_ILLEGAL_CHAR_FOUND;
                 }
-            } else {
+            } अन्यथा {
                 /* callback(unassigned) for a BMP code point */
                 *err = U_INVALID_CHAR_FOUND;
             }
 
             args->converter->fromUChar32=sourceChar;
-            break;
+            अवरोध;
         }
     }/* end while(mySourceIndex<mySourceLength) */
 
     /*save the state and return */
     args->source = source;
-    args->target = (char*)target;
+    args->target = (अक्षर*)target;
 }
 
-static const uint16_t lookupTable[][2]={
+अटल स्थिर uint16_t lookupTable[][2]={
     { ZERO,       ZERO     },     /*DEFAULT*/
     { ZERO,       ZERO     },     /*ROMAN*/
     { DEVANAGARI, DEV_MASK },
@@ -1119,9 +1119,9 @@ static const uint16_t lookupTable[][2]={
     { GURMUKHI,   PNJ_MASK }
 };
 
-#define WRITE_TO_TARGET_TO_U(args,source,target,offsets,offset,targetUniChar,delta, err) UPRV_BLOCK_MACRO_BEGIN { \
+#घोषणा WRITE_TO_TARGET_TO_U(args,source,target,offsets,offset,targetUniChar,delta, err) UPRV_BLOCK_MACRO_BEGIN { \
     /* add offset to current Indic Block */                                              \
-    if(targetUniChar>ASCII_END &&                                                        \
+    अगर(targetUniChar>ASCII_END &&                                                        \
            targetUniChar != ZWJ &&                                                       \
            targetUniChar != ZWNJ &&                                                      \
            targetUniChar != DANDA &&                                                     \
@@ -1130,25 +1130,25 @@ static const uint16_t lookupTable[][2]={
            targetUniChar+=(uint16_t)(delta);                                             \
     }                                                                                    \
     /* now write the targetUniChar */                                                    \
-    if(target<args->targetLimit){                                                        \
+    अगर(target<args->targetLimit){                                                        \
         *(target)++ = (char16_t)targetUniChar;                                              \
-        if(offsets){                                                                     \
+        अगर(offsets){                                                                     \
             *(offsets)++ = (int32_t)(offset);                                            \
         }                                                                                \
-    }else{                                                                               \
-        args->converter->UCharErrorBuffer[args->converter->UCharErrorBufferLength++] =   \
+    }अन्यथा{                                                                               \
+        args->converter->UChar_Error_बफर[args->converter->UChar_Error_बफर_लंबाई++] =   \
             (char16_t)targetUniChar;                                                        \
-        *err = U_BUFFER_OVERFLOW_ERROR;                                                  \
+        *err = U_बफर_OVERFLOW_ERROR;                                                  \
     }                                                                                    \
 } UPRV_BLOCK_MACRO_END
 
-#define GET_MAPPING(sourceChar,targetUniChar,data) UPRV_BLOCK_MACRO_BEGIN {              \
+#घोषणा GET_MAPPING(sourceChar,targetUniChar,तथ्य) UPRV_BLOCK_MACRO_BEGIN {              \
     targetUniChar = toUnicodeTable[(sourceChar)] ;                                       \
     /* is the code point valid in current script? */                                     \
-    if(sourceChar> ASCII_END &&                                                          \
-            (validityTable[(targetUniChar & 0x7F)] & data->currentMaskToUnicode)==0){    \
+    अगर(sourceChar> ASCII_END &&                                                          \
+            (validityTable[(targetUniChar & 0x7F)] & तथ्य->currentMaskToUnicode)==0){    \
         /* Vocallic RR is assigned in ISCII Telugu and Unicode */                         \
-        if(data->currentDeltaToUnicode!=(TELUGU_DELTA) ||                                \
+        अगर(तथ्य->currentDeltaToUnicode!=(TELUGU_DELTA) ||                                \
                     targetUniChar!=VOCALLIC_RR){                                         \
             targetUniChar=missingCharMarker;                                             \
         }                                                                                \
@@ -1176,308 +1176,308 @@ static const uint16_t lookupTable[][2]={
  *
  */
 
-static void U_CALLCONV
+अटल व्योम U_CALLCONV
 UConverter_toUnicode_ISCII_OFFSETS_LOGIC(UConverterToUnicodeArgs *args, UErrorCode* err) {
-    const char *source = ( char *) args->source;
+    स्थिर अक्षर *source = ( अक्षर *) args->source;
     char16_t *target = args->target;
-    const char *sourceLimit = args->sourceLimit;
-    const char16_t* targetLimit = args->targetLimit;
+    स्थिर अक्षर *sourceLimit = args->sourceLimit;
+    स्थिर char16_t* targetLimit = args->targetLimit;
     uint32_t targetUniChar = 0x0000;
     uint8_t sourceChar = 0x0000;
-    UConverterDataISCII* data;
+    UConverter_तथ्य_ISCII* तथ्य;
     UChar32* toUnicodeStatus=nullptr;
-    UChar32 tempTargetUniChar = 0x0000;
+    UChar32 अस्थायी_Target_Uni_Char = 0x0000;
     char16_t* contextCharToUnicode= nullptr;
     UBool found;
-    int i; 
-    int offset = 0;
+    पूर्णांक i; 
+    पूर्णांक offset = 0;
 
-    if ((args->converter == nullptr) || (target < args->target) || (source < args->source)) {
+    अगर ((args->converter == nullptr) || (target < args->target) || (source < args->source)) {
         *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        वापस;
     }
 
-    data = (UConverterDataISCII*)(args->converter->extraInfo);
-    contextCharToUnicode = &data->contextCharToUnicode; /* contains previous ISCII codepoint visited */
+    तथ्य = (UConverter_तथ्य_ISCII*)(args->converter->extraInfo);
+    contextCharToUnicode = &तथ्य->contextCharToUnicode; /* contains previous ISCII codepoint visited */
     toUnicodeStatus = (UChar32*)&args->converter->toUnicodeStatus;/* contains the mapping to Unicode of the above codepoint*/
 
-    while (U_SUCCESS(*err) && source<sourceLimit) {
+    जबतक (U_SUCCESS(*err) && source<sourceLimit) {
 
         targetUniChar = missingCharMarker;
 
-        if (target < targetLimit) {
-            sourceChar = (unsigned char)*(source)++;
+        अगर (target < targetLimit) {
+            sourceChar = (अचिन्हित अक्षर)*(source)++;
 
             /* look at the post-context perform special processing */
-            if (*contextCharToUnicode==ATR) {
+            अगर (*contextCharToUnicode==ATR) {
 
                 /* If we have ATR in *contextCharToUnicode then we need to change our
                  * state to the Indic Script specified by sourceChar
                  */
 
                 /* check if the sourceChar is supported script range*/
-                if ((uint8_t)(PNJ-sourceChar)<=PNJ-DEV) {
-                    data->currentDeltaToUnicode = (uint16_t)(lookupTable[sourceChar & 0x0F][0] * DELTA);
-                    data->currentMaskToUnicode = (MaskEnum)lookupTable[sourceChar & 0x0F][1];
-                } else if (sourceChar==DEF) {
+                अगर ((uint8_t)(PNJ-sourceChar)<=PNJ-DEV) {
+                    तथ्य->currentDeltaToUnicode = (uint16_t)(lookupTable[sourceChar & 0x0F][0] * DELTA);
+                    तथ्य->currentMaskToUnicode = (MaskEnum)lookupTable[sourceChar & 0x0F][1];
+                } अन्यथा अगर (sourceChar==DEF) {
                     /* switch back to default */
-                    data->currentDeltaToUnicode = data->defDeltaToUnicode;
-                    data->currentMaskToUnicode = data->defMaskToUnicode;
-                } else {
-                    if ((sourceChar >= 0x21 && sourceChar <= 0x3F)) {
+                    तथ्य->currentDeltaToUnicode = तथ्य->defDeltaToUnicode;
+                    तथ्य->currentMaskToUnicode = तथ्य->defMaskToUnicode;
+                } अन्यथा {
+                    अगर ((sourceChar >= 0x21 && sourceChar <= 0x3F)) {
                         /* these are display codes consume and continue */
-                    } else {
+                    } अन्यथा {
                         *err =U_ILLEGAL_CHAR_FOUND;
                         /* reset */
                         *contextCharToUnicode=NO_CHAR_MARKER;
-                        goto CALLBACK;
+                        जाओ CALLBACK;
                     }
                 }
 
                 /* reset */
                 *contextCharToUnicode=NO_CHAR_MARKER;
 
-                continue;
+                जारी;
 
-            } else if (*contextCharToUnicode==EXT) {
+            } अन्यथा अगर (*contextCharToUnicode==EXT) {
                 /* check if sourceChar is in 0xA1-0xEE range */
-                if ((uint8_t) (EXT_RANGE_END - sourceChar) <= (EXT_RANGE_END - EXT_RANGE_BEGIN)) {
+                अगर ((uint8_t) (EXT_RANGE_END - sourceChar) <= (EXT_RANGE_END - EXT_RANGE_BEGIN)) {
                     /* We currently support only Anudatta and Devanagari abbreviation sign */
-                    if (sourceChar==0xBF || sourceChar == 0xB8) {
+                    अगर (sourceChar==0xBF || sourceChar == 0xB8) {
                         targetUniChar = (sourceChar==0xBF) ? DEV_ABBR_SIGN : DEV_ANUDATTA;
                         
                         /* find out if the mapping is valid in this state */
-                        if (validityTable[(uint8_t)targetUniChar] & data->currentMaskToUnicode) {
+                        अगर (validityTable[(uint8_t)targetUniChar] & तथ्य->currentMaskToUnicode) {
                             *contextCharToUnicode= NO_CHAR_MARKER;
 
                             /* Write the previous toUnicodeStatus, this was delayed to handle consonant clustering for Gurmukhi script. */
-                            if (data->prevToUnicodeStatus) {
-                                WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -1),data->prevToUnicodeStatus,0,err);
-                                data->prevToUnicodeStatus = 0x0000;
+                            अगर (तथ्य->पूर्व_To_Unicode_Status) {
+                                WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -1),तथ्य->पूर्व_To_Unicode_Status,0,err);
+                                तथ्य->पूर्व_To_Unicode_Status = 0x0000;
                             }
                             /* write to target */
-                            WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -2),targetUniChar,data->currentDeltaToUnicode,err);
+                            WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -2),targetUniChar,तथ्य->currentDeltaToUnicode,err);
 
-                            continue;
+                            जारी;
                         }
                     }
                     /* byte unit is unassigned */
                     targetUniChar = missingCharMarker;
                     *err= U_INVALID_CHAR_FOUND;
-                } else {
+                } अन्यथा {
                     /* only 0xA1 - 0xEE are legal after EXT char */
                     *contextCharToUnicode= NO_CHAR_MARKER;
                     *err = U_ILLEGAL_CHAR_FOUND;
                 }
-                goto CALLBACK;
-            } else if (*contextCharToUnicode==ISCII_INV) {
-                if (sourceChar==ISCII_HALANT) {
+                जाओ CALLBACK;
+            } अन्यथा अगर (*contextCharToUnicode==ISCII_INV) {
+                अगर (sourceChar==ISCII_HALANT) {
                     targetUniChar = 0x0020; /* replace with space according to Indic FAQ */
-                } else {
+                } अन्यथा {
                     targetUniChar = ZWJ;
                 }
 
                 /* Write the previous toUnicodeStatus, this was delayed to handle consonant clustering for Gurmukhi script. */
-                if (data->prevToUnicodeStatus) {
-                    WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -1),data->prevToUnicodeStatus,0,err);
-                    data->prevToUnicodeStatus = 0x0000;
+                अगर (तथ्य->पूर्व_To_Unicode_Status) {
+                    WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -1),तथ्य->पूर्व_To_Unicode_Status,0,err);
+                    तथ्य->पूर्व_To_Unicode_Status = 0x0000;
                 }
                 /* write to target */
-                WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -2),targetUniChar,data->currentDeltaToUnicode,err);
+                WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -2),targetUniChar,तथ्य->currentDeltaToUnicode,err);
                 /* reset */
                 *contextCharToUnicode=NO_CHAR_MARKER;
             }
 
             /* look at the pre-context and perform special processing */
-            switch (sourceChar) {
-            case ISCII_INV:
-            case EXT:
-            case ATR:
+            चयन (sourceChar) {
+            हाल ISCII_INV:
+            हाल EXT:
+            हाल ATR:
                 *contextCharToUnicode = (char16_t)sourceChar;
 
-                if (*toUnicodeStatus != missingCharMarker) {
+                अगर (*toUnicodeStatus != missingCharMarker) {
                     /* Write the previous toUnicodeStatus, this was delayed to handle consonant clustering for Gurmukhi script. */
-                    if (data->prevToUnicodeStatus) {
-                        WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -1),data->prevToUnicodeStatus,0,err);
-                        data->prevToUnicodeStatus = 0x0000;
+                    अगर (तथ्य->पूर्व_To_Unicode_Status) {
+                        WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -1),तथ्य->पूर्व_To_Unicode_Status,0,err);
+                        तथ्य->पूर्व_To_Unicode_Status = 0x0000;
                     }
-                    WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -2),*toUnicodeStatus,data->currentDeltaToUnicode,err);
+                    WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -2),*toUnicodeStatus,तथ्य->currentDeltaToUnicode,err);
                     *toUnicodeStatus = missingCharMarker;
                 }
-                continue;
-            case ISCII_DANDA:
+                जारी;
+            हाल ISCII_DANDA:
                 /* handle double danda*/
-                if (*contextCharToUnicode== ISCII_DANDA) {
+                अगर (*contextCharToUnicode== ISCII_DANDA) {
                     targetUniChar = DOUBLE_DANDA;
                     /* clear the context */
                     *contextCharToUnicode = NO_CHAR_MARKER;
                     *toUnicodeStatus = missingCharMarker;
-                } else {
-                    GET_MAPPING(sourceChar,targetUniChar,data);
+                } अन्यथा {
+                    GET_MAPPING(sourceChar,targetUniChar,तथ्य);
                     *contextCharToUnicode = sourceChar;
                 }
-                break;
-            case ISCII_HALANT:
+                अवरोध;
+            हाल ISCII_HALANT:
                 /* handle explicit halant */
-                if (*contextCharToUnicode == ISCII_HALANT) {
+                अगर (*contextCharToUnicode == ISCII_HALANT) {
                     targetUniChar = ZWNJ;
                     /* clear the context */
                     *contextCharToUnicode = NO_CHAR_MARKER;
-                } else {
-                    GET_MAPPING(sourceChar,targetUniChar,data);
+                } अन्यथा {
+                    GET_MAPPING(sourceChar,targetUniChar,तथ्य);
                     *contextCharToUnicode = sourceChar;
                 }
-                break;
-            case 0x0A:
-            case 0x0D:
-                data->resetToDefaultToUnicode = true;
-                GET_MAPPING(sourceChar,targetUniChar,data)
+                अवरोध;
+            हाल 0x0A:
+            हाल 0x0D:
+                तथ्य->resetToDefaultToUnicode = true;
+                GET_MAPPING(sourceChar,targetUniChar,तथ्य)
                 ;
                 *contextCharToUnicode = sourceChar;
-                break;
+                अवरोध;
 
-            case ISCII_VOWEL_SIGN_E:
+            हाल ISCII_VOWEL_SIGN_E:
                 i=1;
                 found=false;
-                for (; i<vowelSignESpecialCases[0][0]; i++) {
+                क्रम (; i<vowelSignESpecialCases[0][0]; i++) {
                     U_ASSERT(i<UPRV_LENGTHOF(vowelSignESpecialCases));
-                    if (vowelSignESpecialCases[i][0]==(uint8_t)*contextCharToUnicode) {
+                    अगर (vowelSignESpecialCases[i][0]==(uint8_t)*contextCharToUnicode) {
                         targetUniChar=vowelSignESpecialCases[i][1];
                         found=true;
-                        break;
+                        अवरोध;
                     }
                 }
-                if (found) {
+                अगर (found) {
                     /* find out if the mapping is valid in this state */
-                    if (validityTable[(uint8_t)targetUniChar] & data->currentMaskToUnicode) {
+                    अगर (validityTable[(uint8_t)targetUniChar] & तथ्य->currentMaskToUnicode) {
                         /*targetUniChar += data->currentDeltaToUnicode ;*/
                         *contextCharToUnicode= NO_CHAR_MARKER;
                         *toUnicodeStatus = missingCharMarker;
-                        break;
+                        अवरोध;
                     }
                 }
-                GET_MAPPING(sourceChar,targetUniChar,data);
+                GET_MAPPING(sourceChar,targetUniChar,तथ्य);
                 *contextCharToUnicode = sourceChar;
-                break;
+                अवरोध;
 
-            case ISCII_NUKTA:
+            हाल ISCII_NUKTA:
                 /* handle soft halant */
-                if (*contextCharToUnicode == ISCII_HALANT) {
+                अगर (*contextCharToUnicode == ISCII_HALANT) {
                     targetUniChar = ZWJ;
                     /* clear the context */
                     *contextCharToUnicode = NO_CHAR_MARKER;
-                    break;
-                } else if (data->currentDeltaToUnicode == PNJ_DELTA && data->contextCharToUnicode == 0xc0) {
+                    अवरोध;
+                } अन्यथा अगर (तथ्य->currentDeltaToUnicode == PNJ_DELTA && तथ्य->contextCharToUnicode == 0xc0) {
                     /* Write the previous toUnicodeStatus, this was delayed to handle consonant clustering for Gurmukhi script. */
-                    if (data->prevToUnicodeStatus) {
-                        WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -1),data->prevToUnicodeStatus,0,err);
-                        data->prevToUnicodeStatus = 0x0000;
+                    अगर (तथ्य->पूर्व_To_Unicode_Status) {
+                        WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -1),तथ्य->पूर्व_To_Unicode_Status,0,err);
+                        तथ्य->पूर्व_To_Unicode_Status = 0x0000;
                     }
                     /* We got here because ISCII_NUKTA was preceded by 0xc0 and we are converting Gurmukhi.
                      * In that case we must convert (0xc0 0xe9) to (\u0a5c\u0a4d\u0a39).
                      */
                     targetUniChar = PNJ_RRA;
                     WRITE_TO_TARGET_TO_U(args, source, target, args->offsets, (source-args->source)-2, targetUniChar, 0, err);
-                    if (U_SUCCESS(*err)) {
+                    अगर (U_SUCCESS(*err)) {
                         targetUniChar = PNJ_SIGN_VIRAMA;
                         WRITE_TO_TARGET_TO_U(args, source, target, args->offsets, (source-args->source)-2, targetUniChar, 0, err);
-                        if (U_SUCCESS(*err)) {
+                        अगर (U_SUCCESS(*err)) {
                             targetUniChar = PNJ_HA;
                             WRITE_TO_TARGET_TO_U(args, source, target, args->offsets, (source-args->source)-2, targetUniChar, 0, err);
-                        } else {
-                            args->converter->UCharErrorBuffer[args->converter->UCharErrorBufferLength++]= PNJ_HA;
+                        } अन्यथा {
+                            args->converter->UChar_Error_बफर[args->converter->UChar_Error_बफर_लंबाई++]= PNJ_HA;
                         }
-                    } else {
-                        args->converter->UCharErrorBuffer[args->converter->UCharErrorBufferLength++]= PNJ_SIGN_VIRAMA;
-                        args->converter->UCharErrorBuffer[args->converter->UCharErrorBufferLength++]= PNJ_HA;
+                    } अन्यथा {
+                        args->converter->UChar_Error_बफर[args->converter->UChar_Error_बफर_लंबाई++]= PNJ_SIGN_VIRAMA;
+                        args->converter->UChar_Error_बफर[args->converter->UChar_Error_बफर_लंबाई++]= PNJ_HA;
                     }
                     *toUnicodeStatus = missingCharMarker;
-                    data->contextCharToUnicode = NO_CHAR_MARKER;
-                    continue;
-                } else {
+                    तथ्य->contextCharToUnicode = NO_CHAR_MARKER;
+                    जारी;
+                } अन्यथा {
                     /* try to handle <CHAR> + ISCII_NUKTA special mappings */
                     i=1;
                     found =false;
-                    for (; i<nuktaSpecialCases[0][0]; i++) {
-                        if (nuktaSpecialCases[i][0]==(uint8_t)
+                    क्रम (; i<nuktaSpecialCases[0][0]; i++) {
+                        अगर (nuktaSpecialCases[i][0]==(uint8_t)
                                 *contextCharToUnicode) {
                             targetUniChar=nuktaSpecialCases[i][1];
                             found =true;
-                            break;
+                            अवरोध;
                         }
                     }
-                    if (found) {
+                    अगर (found) {
                         /* find out if the mapping is valid in this state */
-                        if (validityTable[(uint8_t)targetUniChar] & data->currentMaskToUnicode) {
+                        अगर (validityTable[(uint8_t)targetUniChar] & तथ्य->currentMaskToUnicode) {
                             /*targetUniChar += data->currentDeltaToUnicode ;*/
                             *contextCharToUnicode= NO_CHAR_MARKER;
                             *toUnicodeStatus = missingCharMarker;
-                            if (data->currentDeltaToUnicode == PNJ_DELTA) {
+                            अगर (तथ्य->currentDeltaToUnicode == PNJ_DELTA) {
                                 /* Write the previous toUnicodeStatus, this was delayed to handle consonant clustering for Gurmukhi script. */
-                                if (data->prevToUnicodeStatus) {
-                                    WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -1),data->prevToUnicodeStatus,0,err);
-                                    data->prevToUnicodeStatus = 0x0000;
+                                अगर (तथ्य->पूर्व_To_Unicode_Status) {
+                                    WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -1),तथ्य->पूर्व_To_Unicode_Status,0,err);
+                                    तथ्य->पूर्व_To_Unicode_Status = 0x0000;
                                 }
-                                WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -2),targetUniChar,data->currentDeltaToUnicode,err);
-                                continue;
+                                WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -2),targetUniChar,तथ्य->currentDeltaToUnicode,err);
+                                जारी;
                             }
-                            break;
+                            अवरोध;
                         }
                         /* else fall through to default */
                     }
                     /* else fall through to default */
                     U_FALLTHROUGH;
                 }
-            default:GET_MAPPING(sourceChar,targetUniChar,data)
+            शेष:GET_MAPPING(sourceChar,targetUniChar,तथ्य)
                 ;
                 *contextCharToUnicode = sourceChar;
-                break;
+                अवरोध;
             }
 
-            if (*toUnicodeStatus != missingCharMarker) {
+            अगर (*toUnicodeStatus != missingCharMarker) {
                 /* Check to make sure that consonant clusters are handled correct for Gurmukhi script. */
-                if (data->currentDeltaToUnicode == PNJ_DELTA && data->prevToUnicodeStatus != 0 && isPNJConsonant(data->prevToUnicodeStatus) &&
-                        (*toUnicodeStatus + PNJ_DELTA) == PNJ_SIGN_VIRAMA && ((UChar32)(targetUniChar + PNJ_DELTA) == data->prevToUnicodeStatus)) {
+                अगर (तथ्य->currentDeltaToUnicode == PNJ_DELTA && तथ्य->पूर्व_To_Unicode_Status != 0 && isPNJConsonant(तथ्य->पूर्व_To_Unicode_Status) &&
+                        (*toUnicodeStatus + PNJ_DELTA) == PNJ_SIGN_VIRAMA && ((UChar32)(targetUniChar + PNJ_DELTA) == तथ्य->पूर्व_To_Unicode_Status)) {
                     /* Consonant clusters C + HALANT + C should be encoded as ADHAK + C */
-                    offset = (int)(source-args->source - 3);
-                    tempTargetUniChar = PNJ_ADHAK; /* This is necessary to avoid some compiler warnings. */
-                    WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,offset,tempTargetUniChar,0,err);
-                    WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,offset,data->prevToUnicodeStatus,0,err);
-                    data->prevToUnicodeStatus = 0x0000; /* reset the previous unicode code point */
+                    offset = (पूर्णांक)(source-args->source - 3);
+                    अस्थायी_Target_Uni_Char = PNJ_ADHAK; /* This is necessary to avoid some compiler warnings. */
+                    WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,offset,अस्थायी_Target_Uni_Char,0,err);
+                    WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,offset,तथ्य->पूर्व_To_Unicode_Status,0,err);
+                    तथ्य->पूर्व_To_Unicode_Status = 0x0000; /* reset the previous unicode code point */
                     *toUnicodeStatus = missingCharMarker;
-                    continue;
-                } else {
+                    जारी;
+                } अन्यथा {
                     /* Write the previous toUnicodeStatus, this was delayed to handle consonant clustering for Gurmukhi script. */
-                    if (data->prevToUnicodeStatus) {
-                        WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -1),data->prevToUnicodeStatus,0,err);
-                        data->prevToUnicodeStatus = 0x0000;
+                    अगर (तथ्य->पूर्व_To_Unicode_Status) {
+                        WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -1),तथ्य->पूर्व_To_Unicode_Status,0,err);
+                        तथ्य->पूर्व_To_Unicode_Status = 0x0000;
                     }
                     /* Check to make sure that Bindi and Tippi are handled correctly for Gurmukhi script. 
                      * If 0xA2 is preceded by a codepoint in the PNJ_BINDI_TIPPI_SET then the target codepoint should be Tippi instead of Bindi.
                      */
-                    if (data->currentDeltaToUnicode == PNJ_DELTA && (targetUniChar + PNJ_DELTA) == PNJ_BINDI && isPNJBindiTippi((*toUnicodeStatus + PNJ_DELTA))) {
+                    अगर (तथ्य->currentDeltaToUnicode == PNJ_DELTA && (targetUniChar + PNJ_DELTA) == PNJ_BINDI && isPNJBindiTippi((*toUnicodeStatus + PNJ_DELTA))) {
                         targetUniChar = PNJ_TIPPI - PNJ_DELTA;
                         WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -2),*toUnicodeStatus,PNJ_DELTA,err);
-                    } else if (data->currentDeltaToUnicode == PNJ_DELTA && (targetUniChar + PNJ_DELTA) == PNJ_SIGN_VIRAMA && isPNJConsonant((*toUnicodeStatus + PNJ_DELTA))) {
+                    } अन्यथा अगर (तथ्य->currentDeltaToUnicode == PNJ_DELTA && (targetUniChar + PNJ_DELTA) == PNJ_SIGN_VIRAMA && isPNJConsonant((*toUnicodeStatus + PNJ_DELTA))) {
                         /* Store the current toUnicodeStatus code point for later handling of consonant cluster in Gurmukhi. */
-                        data->prevToUnicodeStatus = *toUnicodeStatus + PNJ_DELTA;
-                    } else {
+                        तथ्य->पूर्व_To_Unicode_Status = *toUnicodeStatus + PNJ_DELTA;
+                    } अन्यथा {
                         /* write the previously mapped codepoint */
-                        WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -2),*toUnicodeStatus,data->currentDeltaToUnicode,err);
+                        WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source-args->source -2),*toUnicodeStatus,तथ्य->currentDeltaToUnicode,err);
                     }
                 }
                 *toUnicodeStatus = missingCharMarker;
             }
 
-            if (targetUniChar != missingCharMarker) {
+            अगर (targetUniChar != missingCharMarker) {
                 /* now save the targetUniChar for delayed write */
                 *toUnicodeStatus = (char16_t) targetUniChar;
-                if (data->resetToDefaultToUnicode) {
-                    data->currentDeltaToUnicode = data->defDeltaToUnicode;
-                    data->currentMaskToUnicode = data->defMaskToUnicode;
-                    data->resetToDefaultToUnicode=false;
+                अगर (तथ्य->resetToDefaultToUnicode) {
+                    तथ्य->currentDeltaToUnicode = तथ्य->defDeltaToUnicode;
+                    तथ्य->currentMaskToUnicode = तथ्य->defMaskToUnicode;
+                    तथ्य->resetToDefaultToUnicode=false;
                 }
-            } else {
+            } अन्यथा {
 
                 /* we reach here only if targetUniChar == missingCharMarker
                  * so assign codes to reason and err
@@ -1486,33 +1486,33 @@ UConverter_toUnicode_ISCII_OFFSETS_LOGIC(UConverterToUnicodeArgs *args, UErrorCo
 CALLBACK:
                 args->converter->toUBytes[0] = sourceChar;
                 args->converter->toULength = 1;
-                break;
+                अवरोध;
             }
 
-        } else {
-            *err =U_BUFFER_OVERFLOW_ERROR;
-            break;
+        } अन्यथा {
+            *err =U_बफर_OVERFLOW_ERROR;
+            अवरोध;
         }
     }
 
-    if (U_SUCCESS(*err) && args->flush && source == sourceLimit) {
+    अगर (U_SUCCESS(*err) && args->सफाई && source == sourceLimit) {
         /* end of the input stream */
         UConverter *cnv = args->converter;
 
-        if (*contextCharToUnicode==ATR || *contextCharToUnicode==EXT || *contextCharToUnicode==ISCII_INV) {
+        अगर (*contextCharToUnicode==ATR || *contextCharToUnicode==EXT || *contextCharToUnicode==ISCII_INV) {
             /* set toUBytes[] */
             cnv->toUBytes[0] = (uint8_t)*contextCharToUnicode;
             cnv->toULength = 1;
 
             /* avoid looping on truncated sequences */
             *contextCharToUnicode = NO_CHAR_MARKER;
-        } else {
+        } अन्यथा {
             cnv->toULength = 0;
         }
 
-        if (*toUnicodeStatus != missingCharMarker) {
+        अगर (*toUnicodeStatus != missingCharMarker) {
             /* output a remaining target character */
-            WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source - args->source -1),*toUnicodeStatus,data->currentDeltaToUnicode,err);
+            WRITE_TO_TARGET_TO_U(args,source,target,args->offsets,(source - args->source -1),*toUnicodeStatus,तथ्य->currentDeltaToUnicode,err);
             *toUnicodeStatus = missingCharMarker;
         }
     }
@@ -1522,59 +1522,59 @@ CALLBACK:
 }
 
 /* structure for SafeClone calculations */
-struct cloneISCIIStruct {
+काष्ठा cloneISCIIStruct {
     UConverter cnv;
-    UConverterDataISCII mydata;
+    UConverter_तथ्य_ISCII mydata;
 };
 
-static UConverter * U_CALLCONV
-_ISCII_SafeClone(const UConverter *cnv,
-              void *stackBuffer,
-              int32_t *pBufferSize,
+अटल UConverter * U_CALLCONV
+_ISCII_SafeClone(स्थिर UConverter *cnv,
+              व्योम *ढेर_बफर,
+              int32_t *p_बफर_आकार,
               UErrorCode *status)
 {
-    struct cloneISCIIStruct * localClone;
-    int32_t bufferSizeNeeded = sizeof(struct cloneISCIIStruct);
+    काष्ठा cloneISCIIStruct * localClone;
+    int32_t बफर_आकार_Needed = माप(काष्ठा cloneISCIIStruct);
 
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    अगर (U_FAILURE(*status)) {
+        वापस nullptr;
     }
 
-    if (*pBufferSize == 0) { /* 'preflighting' request - set needed size into *pBufferSize */
-        *pBufferSize = bufferSizeNeeded;
-        return nullptr;
+    अगर (*p_बफर_आकार == 0) { /* 'preflighting' request - set needed size into *pBufferSize */
+        *p_बफर_आकार = बफर_आकार_Needed;
+        वापस nullptr;
     }
 
-    localClone = (struct cloneISCIIStruct *)stackBuffer;
+    localClone = (काष्ठा cloneISCIIStruct *)ढेर_बफर;
     /* ucnv.c/ucnv_safeClone() copied the main UConverter already */
 
-    uprv_memcpy(&localClone->mydata, cnv->extraInfo, sizeof(UConverterDataISCII));
+    uprv_memcpy(&localClone->mydata, cnv->extraInfo, माप(UConverter_तथ्य_ISCII));
     localClone->cnv.extraInfo = &localClone->mydata;
     localClone->cnv.isExtraLocal = true;
 
-    return &localClone->cnv;
+    वापस &localClone->cnv;
 }
 
-static void U_CALLCONV
-_ISCIIGetUnicodeSet(const UConverter *cnv,
-                    const USetAdder *sa,
+अटल व्योम U_CALLCONV
+_ISCIIGetUnicodeSet(स्थिर UConverter *cnv,
+                    स्थिर USetAdder *sa,
                     UConverterUnicodeSet which,
                     UErrorCode *pErrorCode)
 {
-    (void)cnv;
-    (void)which;
-    (void)pErrorCode;
+    (व्योम)cnv;
+    (व्योम)which;
+    (व्योम)pErrorCode;
     int32_t idx, script;
     uint8_t mask;
 
     /* Since all ISCII versions allow switching to other ISCII
     scripts, we add all roundtrippable characters to this set. */
     sa->addRange(sa->set, 0, ASCII_END);
-    for (script = DEVANAGARI; script <= MALAYALAM; script++) {
-        mask = (uint8_t)(lookupInitialData[script].maskEnum);
-        for (idx = 0; idx < DELTA; idx++) {
+    क्रम (script = DEVANAGARI; script <= MALAYALAM; script++) {
+        mask = (uint8_t)(lookup_Initial_तथ्य[script].maskEnum);
+        क्रम (idx = 0; idx < DELTA; idx++) {
             /* added check for TELUGU character */
-            if ((validityTable[idx] & mask) || (script==TELUGU && idx==0x31)) {
+            अगर ((validityTable[idx] & mask) || (script==TELUGU && idx==0x31)) {
                 sa->add(sa->set, idx + (script * DELTA) + INDIC_BLOCK_BEGIN);
             }
         }
@@ -1585,7 +1585,7 @@ _ISCIIGetUnicodeSet(const UConverter *cnv,
     sa->add(sa->set, ZWJ);
 }
 U_CDECL_END
-static const UConverterImpl _ISCIIImpl={
+अटल स्थिर UConverterImpl _ISCIIImpl={
 
     UCNV_ISCII,
 
@@ -1611,8 +1611,8 @@ static const UConverterImpl _ISCIIImpl={
     nullptr
 };
 
-static const UConverterStaticData _ISCIIStaticData={
-    sizeof(UConverterStaticData),
+अटल स्थिर UConverter_Static_तथ्य ISCIIStatic_तथ्य={
+    माप(UConverter_Static_तथ्य),
         "ISCII",
          0,
          UCNV_IBM,
@@ -1629,7 +1629,7 @@ static const UConverterStaticData _ISCIIStaticData={
 
 };
 
-const UConverterSharedData _ISCIIData=
-        UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_ISCIIStaticData, &_ISCIIImpl);
+स्थिर UConverter_Shared_तथ्य _ISCIIData=
+        UCNV_IMMUTABLE_SHARED_तथ्य_INITIALIZER(&ISCIIStatic_तथ्य, &_ISCIIImpl);
 
-#endif /* #if !UCONFIG_NO_LEGACY_CONVERSION */
+#पूर्ण_अगर /* #if !UCONFIG_NO_LEGACY_CONVERSION */

@@ -16,19 +16,19 @@
  *   created by: Ram Viswanadha
  */
 
-#ifndef __USPREP_H__
-#define __USPREP_H__
+#अगर_अघोषित __USPREP_H__
+#घोषणा __USPREP_H__
 
 /**
  * \file 
  * \brief C API: Implements the StringPrep algorithm.
  */
 
-#include "unicode/utypes.h"
+#समावेश "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#अगर U_SHOW_CPLUSPLUS_API
+#समावेश "unicode/localpointer.h"
+#पूर्ण_अगर   // U_SHOW_CPLUSPLUS_API
 
 /**
  *
@@ -62,15 +62,15 @@
  * </ol>
  * @author Ram Viswanadha
  */
-#if !UCONFIG_NO_IDNA
+#अगर !UCONFIG_NO_IDNA
 
-#include "unicode/parseerr.h"
+#समावेश "unicode/parseerr.h"
 
 /**
  * The StringPrep profile
  * @stable ICU 2.8
  */
-typedef struct UStringPrepProfile UStringPrepProfile;
+प्रकार काष्ठा UStringPrepProfile UStringPrepProfile;
 
 
 /** 
@@ -79,7 +79,7 @@ typedef struct UStringPrepProfile UStringPrepProfile;
  * @see  usprep_prepare
  * @stable ICU 2.8
  */
-#define USPREP_DEFAULT 0x0000
+#घोषणा USPREP_DEFAULT 0x0000
 
 /** 
  * Option to allow processing of unassigned code points in the input
@@ -87,7 +87,7 @@ typedef struct UStringPrepProfile UStringPrepProfile;
  * @see  usprep_prepare
  * @stable ICU 2.8
  */
-#define USPREP_ALLOW_UNASSIGNED 0x0001
+#घोषणा USPREP_ALLOW_UNASSIGNED 0x0001
 
 /**
  * enums for the standard stringprep profile types
@@ -95,7 +95,7 @@ typedef struct UStringPrepProfile UStringPrepProfile;
  * @see usprep_openByType
  * @stable ICU 4.2
  */
-typedef enum UStringPrepProfileType {
+प्रकार क्रमागत UStringPrepProfileType {
     /**
      * RFC3491 Nameprep
      * @stable ICU 4.2
@@ -185,8 +185,8 @@ typedef enum UStringPrepProfileType {
  * @stable ICU 2.8
  */
 U_CAPI UStringPrepProfile* U_EXPORT2
-usprep_open(const char* path, 
-            const char* fileName,
+usprep_open(स्थिर अक्षर* path, 
+            स्थिर अक्षर* fileName,
             UErrorCode* status);
 
 /**
@@ -209,10 +209,10 @@ usprep_openByType(UStringPrepProfileType type,
  * @param profile The profile to close
  * @stable ICU 2.8
  */
-U_CAPI void U_EXPORT2
+U_CAPI व्योम U_EXPORT2
 usprep_close(UStringPrepProfile* profile);
 
-#if U_SHOW_CPLUSPLUS_API
+#अगर U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -229,7 +229,7 @@ U_DEFINE_LOCAL_OPEN_POINTER(LocalUStringPrepProfilePointer, UStringPrepProfile, 
 
 U_NAMESPACE_END
 
-#endif
+#पूर्ण_अगर
 
 /**
  * Prepare the input buffer for use in applications with the given profile. This operation maps, normalizes(NFKC),
@@ -261,14 +261,14 @@ U_NAMESPACE_END
  */
 
 U_CAPI int32_t U_EXPORT2
-usprep_prepare(   const UStringPrepProfile* prep,
-                  const UChar* src, int32_t srcLength, 
+usprep_prepare(   स्थिर UStringPrepProfile* prep,
+                  स्थिर UChar* src, int32_t src_लंबाई, 
                   UChar* dest, int32_t destCapacity,
                   int32_t options,
                   UParseError* parseError,
                   UErrorCode* status );
 
 
-#endif /* #if !UCONFIG_NO_IDNA */
+#पूर्ण_अगर /* #if !UCONFIG_NO_IDNA */
 
-#endif
+#पूर्ण_अगर

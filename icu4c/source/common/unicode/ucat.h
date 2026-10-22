@@ -10,11 +10,11 @@
 * Since: ICU 2.6
 **********************************************************************
 */
-#ifndef UCAT_H
-#define UCAT_H
+#अगर_अघोषित UCAT_H
+#घोषणा UCAT_H
 
-#include "unicode/utypes.h"
-#include "unicode/ures.h"
+#समावेश "unicode/utypes.h"
+#समावेश "unicode/ures.h"
 
 /**
  * \file
@@ -70,7 +70,7 @@ U_CDECL_BEGIN
  * 
  * @stable ICU 2.6
  */
-typedef UResourceBundle* u_nl_catd;
+प्रकार UResourceBundle* u_nl_catd;
 
 /**
  * Open and return an ICU message catalog descriptor. The descriptor
@@ -104,7 +104,7 @@ typedef UResourceBundle* u_nl_catd;
  * @stable ICU 2.6
  */
 U_CAPI u_nl_catd U_EXPORT2
-u_catopen(const char* name, const char* locale, UErrorCode* ec);
+u_catopen(स्थिर अक्षर* name, स्थिर अक्षर* locale, UErrorCode* ec);
 
 /**
  * Close an ICU message catalog, given its descriptor.
@@ -114,7 +114,7 @@ u_catopen(const char* name, const char* locale, UErrorCode* ec);
  * 
  * @stable ICU 2.6
  */
-U_CAPI void U_EXPORT2
+U_CAPI व्योम U_EXPORT2
 u_catclose(u_nl_catd catd);
 
 /**
@@ -149,15 +149,15 @@ u_catclose(u_nl_catd catd);
  * 
  * @stable ICU 2.6
  */
-U_CAPI const UChar* U_EXPORT2
+U_CAPI स्थिर UChar* U_EXPORT2
 u_catgets(u_nl_catd catd U_LIFETIME_BOUND,
-          int32_t set_num,
-          int32_t msg_num,
-          const UChar* s U_LIFETIME_BOUND,
+          int32_t set_अंक,
+          int32_t संदेश_अंक,
+          स्थिर UChar* s U_LIFETIME_BOUND,
           int32_t* len,
           UErrorCode* ec);
 
 U_CDECL_END
 
-#endif /*UCAT_H*/
+#पूर्ण_अगर /*UCAT_H*/
 /*eof*/

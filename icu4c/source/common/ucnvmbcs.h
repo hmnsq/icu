@@ -16,16 +16,16 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __UCNVMBCS_H__
-#define __UCNVMBCS_H__
+#अगर_अघोषित __UCNVMBCS_H__
+#घोषणा __UCNVMBCS_H__
 
-#include "unicode/utypes.h"
+#समावेश "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#अगर !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "ucnv_cnv.h"
-#include "ucnv_ext.h"
+#समावेश "unicode/ucnv.h"
+#समावेश "ucnv_cnv.h"
+#समावेश "ucnv_ext.h"
 
 /**
  * ICU conversion (.cnv) data file structure, following the usual UDataInfo
@@ -242,15 +242,15 @@
 
 /* MBCS converter data and state -------------------------------------------- */
 
-enum {
-    MBCS_MAX_STATE_COUNT=128
+क्रमागत {
+    MBCS_MAX_STATE_गिनती=128
 };
 
 /**
  * MBCS action codes for conversions to Unicode.
  * These values are in bits 23..20 of the state table entries.
  */
-enum {
+क्रमागत {
     MBCS_STATE_VALID_DIRECT_16,
     MBCS_STATE_VALID_DIRECT_20,
 
@@ -267,57 +267,57 @@ enum {
 };
 
 /* Macros for state table entries */
-#define MBCS_ENTRY_TRANSITION(state, offset) (int32_t)(((int32_t)(state)<<24L)|(offset))
-#define MBCS_ENTRY_TRANSITION_SET_OFFSET(entry, offset) (int32_t)(((entry)&0xff000000)|(offset))
-#define MBCS_ENTRY_TRANSITION_ADD_OFFSET(entry, offset) (int32_t)((entry)+(offset))
+#घोषणा MBCS_ENTRY_TRANSITION(state, offset) (int32_t)(((int32_t)(state)<<24L)|(offset))
+#घोषणा MBCS_ENTRY_TRANSITION_SET_OFFSET(entry, offset) (int32_t)(((entry)&0xff000000)|(offset))
+#घोषणा MBCS_ENTRY_TRANSITION_ADD_OFFSET(entry, offset) (int32_t)((entry)+(offset))
 
-#define MBCS_ENTRY_FINAL(state, action, value) (int32_t)(0x80000000|((int32_t)(state)<<24L)|((action)<<20L)|(value))
-#define MBCS_ENTRY_SET_FINAL(entry) (int32_t)((entry)|0x80000000)
-#define MBCS_ENTRY_FINAL_SET_ACTION(entry, action) (int32_t)(((entry)&0xff0fffff)|((int32_t)(action)<<20L))
-#define MBCS_ENTRY_FINAL_SET_VALUE(entry, value) (int32_t)(((entry)&0xfff00000)|(value))
-#define MBCS_ENTRY_FINAL_SET_ACTION_VALUE(entry, action, value) (int32_t)(((entry)&0xff000000)|((int32_t)(action)<<20L)|(value))
+#घोषणा MBCS_ENTRY_FINAL(state, action, मूल्य_2) (int32_t)(0x80000000|((int32_t)(state)<<24L)|((action)<<20L)|(मूल्य_2))
+#घोषणा MBCS_ENTRY_SET_FINAL(entry) (int32_t)((entry)|0x80000000)
+#घोषणा MBCS_ENTRY_FINAL_SET_ACTION(entry, action) (int32_t)(((entry)&0xff0fffff)|((int32_t)(action)<<20L))
+#घोषणा MBCS_ENTRY_FINAL_SET_मूल्य(entry, मूल्य_2) (int32_t)(((entry)&0xfff00000)|(मूल्य_2))
+#घोषणा MBCS_ENTRY_FINAL_SET_ACTION_मूल्य(entry, action, मूल्य_2) (int32_t)(((entry)&0xff000000)|((int32_t)(action)<<20L)|(मूल्य_2))
 
-#define MBCS_ENTRY_SET_STATE(entry, state) (int32_t)(((entry)&0x80ffffff)|((int32_t)(state)<<24L))
+#घोषणा MBCS_ENTRY_SET_STATE(entry, state) (int32_t)(((entry)&0x80ffffff)|((int32_t)(state)<<24L))
 
-#define MBCS_ENTRY_STATE(entry) ((((uint32_t)entry)>>24)&0x7f)
+#घोषणा MBCS_ENTRY_STATE(entry) ((((uint32_t)entry)>>24)&0x7f)
 
-#define MBCS_ENTRY_IS_TRANSITION(entry) ((entry)>=0)
-#define MBCS_ENTRY_IS_FINAL(entry) ((entry)<0)
+#घोषणा MBCS_ENTRY_IS_TRANSITION(entry) ((entry)>=0)
+#घोषणा MBCS_ENTRY_IS_FINAL(entry) ((entry)<0)
 
-#define MBCS_ENTRY_TRANSITION_STATE(entry) (((uint32_t)entry)>>24)
-#define MBCS_ENTRY_TRANSITION_OFFSET(entry) ((entry)&0xffffff)
+#घोषणा MBCS_ENTRY_TRANSITION_STATE(entry) (((uint32_t)entry)>>24)
+#घोषणा MBCS_ENTRY_TRANSITION_OFFSET(entry) ((entry)&0xffffff)
 
-#define MBCS_ENTRY_FINAL_STATE(entry) ((((uint32_t)entry)>>24)&0x7f)
-#define MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry) ((entry)<(int32_t)0x80100000)
-#define MBCS_ENTRY_FINAL_ACTION(entry) ((((uint32_t)entry)>>20)&0xf)
-#define MBCS_ENTRY_FINAL_VALUE(entry) ((entry)&0xfffff)
-#define MBCS_ENTRY_FINAL_VALUE_16(entry) (uint16_t)(entry)
+#घोषणा MBCS_ENTRY_FINAL_STATE(entry) ((((uint32_t)entry)>>24)&0x7f)
+#घोषणा MBCS_ENTRY_FINAL_IS_VALID_DIRECT_16(entry) ((entry)<(int32_t)0x80100000)
+#घोषणा MBCS_ENTRY_FINAL_ACTION(entry) ((((uint32_t)entry)>>20)&0xf)
+#घोषणा MBCS_ENTRY_FINAL_मूल्य(entry) ((entry)&0xfffff)
+#घोषणा MBCS_ENTRY_FINAL_मूल्य_16(entry) (uint16_t)(entry)
 
-#define IS_ASCII_ROUNDTRIP(b, asciiRoundtrips) (((asciiRoundtrips) & (1<<((b)>>2)))!=0)
+#घोषणा IS_ASCII_ROUNDTRIP(b, asciiRoundtrips) (((asciiRoundtrips) & (1<<((b)>>2)))!=0)
 
 /* single-byte fromUnicode: get the 16-bit result word */
-#define MBCS_SINGLE_RESULT_FROM_U(table, results, c) (results)[ (table)[ (table)[(c)>>10] +(((c)>>4)&0x3f) ] +((c)&0xf) ]
+#घोषणा MBCS_SINGLE_परिणाम_FROM_U(table, results, c) (results)[ (table)[ (table)[(c)>>10] +(((c)>>4)&0x3f) ] +((c)&0xf) ]
 
 /* single-byte fromUnicode using the sbcsIndex */
-#define SBCS_RESULT_FROM_LOW_BMP(table, results, c) (results)[ (table)[(c)>>6] +((c)&0x3f) ]
+#घोषणा SBCS_परिणाम_FROM_निचला_BMP(table, results, c) (results)[ (table)[(c)>>6] +((c)&0x3f) ]
 
 /* single-byte fromUTF8 using the sbcsIndex; l and t must be masked externally; can be l=0 and t<=0x7f */
-#define SBCS_RESULT_FROM_UTF8(table, results, l, t) (results)[ (table)[l] +(t) ]
+#घोषणा SBCS_परिणाम_FROM_UTF8(table, results, l, t) (results)[ (table)[l] +(t) ]
 
 /* multi-byte fromUnicode: get the 32-bit stage 2 entry */
-#define MBCS_STAGE_2_FROM_U(table, c) ((const uint32_t *)(table))[ (table)[(c)>>10] +(((c)>>4)&0x3f) ]
-#define MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c) ( ((stage2Entry) & ((uint32_t)1<< (16+((c)&0xf)) )) !=0)
+#घोषणा MBCS_STAGE_2_FROM_U(table, c) ((स्थिर uint32_t *)(table))[ (table)[(c)>>10] +(((c)>>4)&0x3f) ]
+#घोषणा MBCS_FROM_U_IS_ROUNDTRIP(stage2Entry, c) ( ((stage2Entry) & ((uint32_t)1<< (16+((c)&0xf)) )) !=0)
 
-#define MBCS_VALUE_2_FROM_STAGE_2(bytes, stage2Entry, c) ((uint16_t *)(bytes))[16*(uint32_t)(uint16_t)(stage2Entry)+((c)&0xf)]
-#define MBCS_VALUE_4_FROM_STAGE_2(bytes, stage2Entry, c) ((uint32_t *)(bytes))[16*(uint32_t)(uint16_t)(stage2Entry)+((c)&0xf)]
+#घोषणा MBCS_मूल्य_2_FROM_STAGE_2(bytes, stage2Entry, c) ((uint16_t *)(bytes))[16*(uint32_t)(uint16_t)(stage2Entry)+((c)&0xf)]
+#घोषणा MBCS_मूल्य_4_FROM_STAGE_2(bytes, stage2Entry, c) ((uint32_t *)(bytes))[16*(uint32_t)(uint16_t)(stage2Entry)+((c)&0xf)]
 
-#define MBCS_POINTER_3_FROM_STAGE_2(bytes, stage2Entry, c) ((bytes)+(16*(uint32_t)(uint16_t)(stage2Entry)+((c)&0xf))*3)
+#घोषणा MBCS_POINTER_3_FROM_STAGE_2(bytes, stage2Entry, c) ((bytes)+(16*(uint32_t)(uint16_t)(stage2Entry)+((c)&0xf))*3)
 
 /* double-byte fromUnicode using the mbcsIndex */
-#define DBCS_RESULT_FROM_MOST_BMP(table, results, c) (results)[ (table)[(c)>>6] +((c)&0x3f) ]
+#घोषणा DBCS_परिणाम_FROM_MOST_BMP(table, results, c) (results)[ (table)[(c)>>6] +((c)&0x3f) ]
 
 /* double-byte fromUTF8 using the mbcsIndex; l and t1 combined into lt1; lt1 and t2 must be masked externally */
-#define DBCS_RESULT_FROM_UTF8(table, results, lt1, t2) (results)[ (table)[lt1] +(t2) ]
+#घोषणा DBCS_परिणाम_FROM_UTF8(table, results, lt1, t2) (results)[ (table)[lt1] +(t2) ]
 
 
 /**
@@ -325,7 +325,7 @@ enum {
  * These per-converter types determine the storage method in stage 3 of the lookup table,
  * mostly how many bytes are stored per entry.
  */
-enum {
+क्रमागत {
     MBCS_OUTPUT_1,          /* 0 */
     MBCS_OUTPUT_2,          /* 1 */
     MBCS_OUTPUT_3,          /* 2 */
@@ -339,7 +339,7 @@ enum {
 
     MBCS_OUTPUT_EXT_ONLY,   /* e */
 
-    MBCS_OUTPUT_COUNT,
+    MBCS_OUTPUT_गिनती,
 
     MBCS_OUTPUT_DBCS_ONLY=0xdb  /* runtime-only type for DBCS-only handling of SISO tables */
 };
@@ -348,13 +348,13 @@ enum {
  * Fallbacks to Unicode are stored outside the normal state table and code point structures
  * in a vector of items of this type. They are sorted by offset.
  */
-typedef struct {
+प्रकार काष्ठा {
     uint32_t offset;
     UChar32 codePoint;
 } _MBCSToUFallback;
 
 /** Constants for fast and UTF-8-friendly conversion. */
-enum {
+क्रमागत {
     SBCS_FAST_MAX=0x0fff,               /* maximum code point with UTF-8-friendly SBCS runtime code, see makeconv SBCS_UTF8_MAX */
     SBCS_FAST_LIMIT=SBCS_FAST_MAX+1,    /* =0x1000 */
     MBCS_FAST_MAX=0xd7ff,               /* maximum code point with UTF-8-friendly MBCS runtime code, see makeconv MBCS_UTF8_MAX */
@@ -367,23 +367,23 @@ enum {
  *
  * utf8Friendly data structures added with _MBCSHeader.version 4.3
  */
-typedef struct UConverterMBCSTable {
+प्रकार काष्ठा UConverterMBCSTable {
     /* toUnicode */
-    uint8_t countStates, dbcsOnlyState, stateTableOwned;
-    uint32_t countToUFallbacks;
+    uint8_t गिनती_States, dbcsOnlyState, stateTableOwned;
+    uint32_t गिनती_To_UFallbacks;
 
-    const int32_t (*stateTable)/*[countStates]*/[256];
+    स्थिर int32_t (*stateTable)/*[countStates]*/[256];
     int32_t (*swapLFNLStateTable)/*[countStates]*/[256]; /* for swaplfnl */
-    const uint16_t *unicodeCodeUnits/*[countUnicodeResults]*/;
-    const _MBCSToUFallback *toUFallbacks;
+    स्थिर uint16_t *unicodeCodeUnits/*[countUnicodeResults]*/;
+    स्थिर _MBCSToUFallback *toUFallbacks;
 
     /* fromUnicode */
-    const uint16_t *fromUnicodeTable;
-    const uint16_t *mbcsIndex;              /* for fast conversion from most of BMP to MBCS (utf8Friendly data) */
-    uint16_t sbcsIndex[SBCS_FAST_LIMIT>>6]; /* for fast conversion from low BMP to SBCS (utf8Friendly data) */
-    const uint8_t *fromUnicodeBytes;
+    स्थिर uint16_t *fromUnicodeTable;
+    स्थिर uint16_t *mbcs_सूचकांक;              /* for fast conversion from most of BMP to MBCS (utf8Friendly data) */
+    uint16_t sbcs_सूचकांक[SBCS_FAST_LIMIT>>6]; /* for fast conversion from low BMP to SBCS (utf8Friendly data) */
+    स्थिर uint8_t *fromUnicodeBytes;
     uint8_t *swapLFNLFromUnicodeBytes;      /* for swaplfnl */
-    uint32_t fromUBytesLength;
+    uint32_t from_UBytes_लंबाई;
     uint8_t outputType, unicodeMask;
     UBool utf8Friendly;                     /* for utf8Friendly data */
     UChar maxFastUChar;                     /* for utf8Friendly data */
@@ -392,32 +392,32 @@ typedef struct UConverterMBCSTable {
     uint32_t asciiRoundtrips;
 
     /* reconstituted data that was omitted from the .cnv file */
-    uint8_t *reconstitutedData;
+    uint8_t *reconstituted_तथ्य;
 
     /* converter name for swaplfnl */
-    char *swapLFNLName;
+    अक्षर *swapLFNLName;
 
     /* extension data */
-    struct UConverterSharedData *baseSharedData;
-    const int32_t *extIndexes;
+    काष्ठा UConverter_Shared_तथ्य *base_Shared_तथ्य;
+    स्थिर int32_t *extIndexes;
 } UConverterMBCSTable;
 
-#define UCNV_MBCS_TABLE_INITIALIZER { \
+#घोषणा UCNV_MBCS_TABLE_INITIALIZER { \
     /* toUnicode */ \
     0, 0, 0, \
     0, \
      \
-    NULL, \
-    NULL, \
-    NULL, \
-    NULL, \
+    शून्य, \
+    शून्य, \
+    शून्य, \
+    शून्य, \
      \
     /* fromUnicode */ \
-    NULL, \
-    NULL, \
+    शून्य, \
+    शून्य, \
     { 0 }, \
-    NULL, \
-    NULL, \
+    शून्य, \
+    शून्य, \
     0, \
     0, 0, \
     false, \
@@ -427,18 +427,18 @@ typedef struct UConverterMBCSTable {
     0, \
      \
     /* reconstituted data that was omitted from the .cnv file */ \
-    NULL, \
+    शून्य, \
      \
     /* converter name for swaplfnl */ \
-    NULL, \
+    शून्य, \
      \
     /* extension data */ \
-    NULL, \
-    NULL \
+    शून्य, \
+    शून्य \
 }
 
-enum {
-    MBCS_OPT_LENGTH_MASK=0x3f,
+क्रमागत {
+    MBCS_OPT_लंबाई_MASK=0x3f,
     MBCS_OPT_NO_FROM_U=0x40,
     /*
      * If any of the following options bits are set,
@@ -452,32 +452,32 @@ enum {
     MBCS_OPT_UNKNOWN_INCOMPATIBLE_MASK=0xff80
 };
 
-enum {
-    MBCS_HEADER_V4_LENGTH=8,
-    MBCS_HEADER_V5_MIN_LENGTH=9
+क्रमागत {
+    MBCS_HEADER_V4_लंबाई=8,
+    MBCS_HEADER_V5_MIN_लंबाई=9
 };
 
 /**
  * MBCS data header. See data format description above.
  */
-typedef struct {
+प्रकार काष्ठा {
     UVersionInfo version;
-    uint32_t countStates,
-             countToUFallbacks,
+    uint32_t गिनती_States,
+             गिनती_To_UFallbacks,
              offsetToUCodeUnits,
              offsetFromUTable,
              offsetFromUBytes,
              flags,
-             fromUBytesLength;
+             from_UBytes_लंबाई;
 
     /* new and required in version 5 */
     uint32_t options;
 
     /* new and optional in version 5; used if options&MBCS_OPT_NO_FROM_U */
-    uint32_t fullStage2Length;  /* number of 32-bit units */
+    uint32_t full_Stage2_लंबाई;  /* number of 32-bit units */
 } _MBCSHeader;
 
-#define UCNV_MBCS_HEADER_INITIALIZER { { 0 },  0, 0, 0, 0, 0, 0, 0,  0,  0 }
+#घोषणा UCNV_MBCS_HEADER_INITIALIZER { { 0 },  0, 0, 0, 0, 0, 0, 0,  0,  0 }
 
 /*
  * This is a simple version of _MBCSGetNextUChar() that is used
@@ -493,8 +493,8 @@ typedef struct {
  * otherwise the Unicode code point
  */
 U_CFUNC UChar32
-ucnv_MBCSSimpleGetNextUChar(UConverterSharedData *sharedData,
-                        const char *source, int32_t length,
+ucnv_MBCSSimple_Get_अग्र_UChar(UConverter_Shared_तथ्य *shared_तथ्य,
+                        स्थिर अक्षर *source, int32_t लंबाई,
                         UBool useFallback);
 
 /**
@@ -503,7 +503,7 @@ ucnv_MBCSSimpleGetNextUChar(UConverterSharedData *sharedData,
  * It does not handle conversion extensions (_extToU()).
  */
 U_CFUNC UChar32
-ucnv_MBCSSingleSimpleGetNextUChar(UConverterSharedData *sharedData,
+ucnv_MBCSSingle_Simple_Get_अग्र_UChar(UConverter_Shared_तथ्य *shared_तथ्य,
                               uint8_t b, UBool useFallback);
 
 /**
@@ -512,19 +512,19 @@ ucnv_MBCSSingleSimpleGetNextUChar(UConverterSharedData *sharedData,
  * to and from BMP code points, and it always
  * returns fallback values.
  */
-#define _MBCS_SINGLE_SIMPLE_GET_NEXT_BMP(sharedData, b) \
-    (UChar)MBCS_ENTRY_FINAL_VALUE_16((sharedData)->mbcs.stateTable[0][(uint8_t)(b)])
+#घोषणा MBCS_SINGLE_SIMPLE_GET_अग्र_BMP(shared_तथ्य, b) \
+    (UChar)MBCS_ENTRY_FINAL_मूल्य_16((shared_तथ्य)->mbcs.stateTable[0][(uint8_t)(b)])
 
 /**
  * This is an internal function that allows other converter implementations
  * to check whether a byte is a lead byte.
  */
 U_CFUNC UBool
-ucnv_MBCSIsLeadByte(UConverterSharedData *sharedData, char byte);
+ucnv_MBCSIsLeadByte(UConverter_Shared_तथ्य *shared_तथ्य, अक्षर byte);
 
 /** This is a macro version of _MBCSIsLeadByte(). */
-#define _MBCS_IS_LEAD_BYTE(sharedData, byte) \
-    (UBool)MBCS_ENTRY_IS_TRANSITION((sharedData)->mbcs.stateTable[0][(uint8_t)(byte)])
+#घोषणा _MBCS_IS_LEAD_BYTE(shared_तथ्य, byte) \
+    (UBool)MBCS_ENTRY_IS_TRANSITION((shared_तथ्य)->mbcs.stateTable[0][(uint8_t)(byte)])
 
 /*
  * This is another simple conversion function for internal use by other
@@ -544,8 +544,8 @@ ucnv_MBCSIsLeadByte(UConverterSharedData *sharedData, char byte);
  * Currently, the function assumes but does not check that 0<=c<=0x10ffff.
  */
 U_CFUNC int32_t
-ucnv_MBCSFromUChar32(UConverterSharedData *sharedData,
-                 UChar32 c, uint32_t *pValue,
+ucnv_MBCSFromUChar32(UConverter_Shared_तथ्य *shared_तथ्य,
+                 UChar32 c, uint32_t *p_मूल्य,
                  UBool useFallback);
 
 /**
@@ -555,7 +555,7 @@ ucnv_MBCSFromUChar32(UConverterSharedData *sharedData,
  * It returns the codepage byte for the code point, or -1 if it is unassigned.
  */
 U_CFUNC int32_t
-ucnv_MBCSSingleFromUChar32(UConverterSharedData *sharedData,
+ucnv_MBCSSingleFromUChar32(UConverter_Shared_तथ्य *shared_तथ्य,
                        UChar32 c,
                        UBool useFallback);
 
@@ -564,12 +564,12 @@ ucnv_MBCSSingleFromUChar32(UConverterSharedData *sharedData,
  * we cheat a little about the type, returning the old types if appropriate.
  */
 U_CFUNC UConverterType
-ucnv_MBCSGetType(const UConverter* converter);
+ucnv_MBCSGetType(स्थिर UConverter* converter);
 
-U_CFUNC void 
+U_CFUNC व्योम 
 ucnv_MBCSFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
                             UErrorCode *pErrorCode);
-U_CFUNC void 
+U_CFUNC व्योम 
 ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
                           UErrorCode *pErrorCode);
 
@@ -581,9 +581,9 @@ ucnv_MBCSToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
  * Handles extensions.
  * Does not empty the set first.
  */
-U_CFUNC void
-ucnv_MBCSGetUnicodeSetForUnicode(const UConverterSharedData *sharedData,
-                                 const USetAdder *sa,
+U_CFUNC व्योम
+ucnv_MBCSGetUnicodeSetForUnicode(स्थिर UConverter_Shared_तथ्य *shared_तथ्य,
+                                 स्थिर USetAdder *sa,
                                  UConverterUnicodeSet which,
                                  UErrorCode *pErrorCode);
 
@@ -593,13 +593,13 @@ ucnv_MBCSGetUnicodeSetForUnicode(const UConverterSharedData *sharedData,
  * Used by stateful converters which share regular conversion tables
  * but only use a subset of their mappings.
  */
-U_CFUNC void
-ucnv_MBCSGetFilteredUnicodeSetForUnicode(const UConverterSharedData *sharedData,
-                                         const USetAdder *sa,
+U_CFUNC व्योम
+ucnv_MBCSGetFilteredUnicodeSetForUnicode(स्थिर UConverter_Shared_तथ्य *shared_तथ्य,
+                                         स्थिर USetAdder *sa,
                                          UConverterUnicodeSet which,
                                          UConverterSetFilter filter,
                                          UErrorCode *pErrorCode);
 
-#endif
+#पूर्ण_अगर
 
-#endif
+#पूर्ण_अगर

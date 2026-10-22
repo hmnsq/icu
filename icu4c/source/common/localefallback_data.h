@@ -6,11 +6,11 @@
 // (see tools/cldr/cldr-to-icu/src/main/java/org/unicode/icu/tool/cldrtoicu/generator/ResourceFallbackCodeGenerator.java).
 // DO NOT HAND EDIT!!!
 
-#ifdef INCLUDED_FROM_URESBUND_CPP
+#अगर_घोषित INCLUDED_FROM_URESBUND_CPP
 
 // ======================================================================
 // Default script table
-const char scriptCodeChars[] =
+स्थिर अक्षर scriptCodeChars[] =
     "Aghb\0Ahom\0Arab\0Armi\0Armn\0Avst\0Bali\0Bamu\0Batk\0Beng\0Bopo\0"
     "Brah\0Cakm\0Cans\0Cari\0Cham\0Cher\0Chrs\0Copt\0Cprt\0Cyrl\0Deva\0"
     "Egyp\0Elym\0Ethi\0Geor\0Gonm\0Goth\0Gran\0Grek\0Gujr\0Guru\0Hang\0"
@@ -23,7 +23,7 @@ const char scriptCodeChars[] =
     "Tagb\0Takr\0Tale\0Talu\0Taml\0Tang\0Tavt\0Telu\0Tfng\0Thaa\0Thai\0"
     "Tibt\0Tnsa\0Toto\0Ugar\0Vaii\0Wcho\0Xpeo\0Xsux\0Yiii\0";
 
-const char dsLocaleIDChars[] =
+स्थिर अक्षर dsLocaleIDChars[] =
     "aaf\0aao\0aat\0ab\0abh\0abl\0abq\0abv\0acm\0acq\0acw\0acx\0adf\0"
     "adx\0ady\0ae\0aeb\0aec\0aee\0aeq\0afb\0agi\0agj\0agx\0ahg\0aho\0"
     "ahr\0aib\0aii\0aij\0ain\0aio\0aiq\0akk\0akv\0alk\0all\0alr\0alt\0"
@@ -111,7 +111,7 @@ const char dsLocaleIDChars[] =
     "zh_US\0zh_VN\0zhd\0zkn\0zko\0zkt\0zkz\0zlj\0zln\0zlq\0zqe\0zrg\0"
     "zrp\0zum\0zwa\0zyg\0zyn\0zzj\0";
 
-const int32_t defaultScriptTable[] = {
+स्थिर int32_t defaultScriptTable[] = {
     0, 325,  // aaf -> Mlym
     4, 10,  // aao -> Arab
     8, 145,  // aat -> Grek
@@ -1199,7 +1199,7 @@ const int32_t defaultScriptTable[] = {
 
 // ======================================================================
 // Parent locale table
-const char parentLocaleChars[] =
+स्थिर अक्षर parentLocaleChars[] =
     "az_Arab\0az_Cyrl\0bal_Latn\0blt_Latn\0bm_Nkoo\0bs_Cyrl\0byn_Latn\0"
     "cu_Glag\0dje_Arab\0dyo_Arab\0en_001\0en_150\0en_AG\0en_AI\0en_AT\0"
     "en_AU\0en_BB\0en_BE\0en_BM\0en_BS\0en_BW\0en_BZ\0en_CC\0en_CH\0"
@@ -1226,7 +1226,7 @@ const char parentLocaleChars[] =
     "vai_Latn\0wo_Arab\0yo_Arab\0yue_Hans\0zh_Hant\0zh_Hant_HK\0zh_Hant_MO\0"
     "";
 
-const int32_t parentLocaleTable[] = {
+स्थिर int32_t parentLocaleTable[] = {
     0, 1167,  // az_Arab -> root
     8, 1167,  // az_Cyrl -> root
     16, 1167,  // bal_Latn -> root
@@ -1428,4 +1428,4 @@ const int32_t parentLocaleTable[] = {
 };
 
 
-#endif  // INCLUDED_FROM_URESBUND_CPP
+#पूर्ण_अगर  // INCLUDED_FROM_URESBUND_CPP

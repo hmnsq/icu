@@ -18,26 +18,26 @@
 *   Low-level Unicode bidi/shaping properties access.
 */
 
-#ifndef __UBIDI_PROPS_H__
-#define __UBIDI_PROPS_H__
+#अगर_अघोषित __UBIDI_PROPS_H__
+#घोषणा __UBIDI_PROPS_H__
 
-#include "unicode/utypes.h"
-#include "unicode/uset.h"
-#include "putilimp.h"
-#include "uset_imp.h"
-#include "udataswp.h"
+#समावेश "unicode/utypes.h"
+#समावेश "unicode/uset.h"
+#समावेश "putilimp.h"
+#समावेश "uset_imp.h"
+#समावेश "udataswp.h"
 
 U_CDECL_BEGIN
 
 /* library API -------------------------------------------------------------- */
 
-U_CFUNC void
-ubidi_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode);
+U_CFUNC व्योम
+ubidi_addPropertyStarts(स्थिर USetAdder *sa, UErrorCode *pErrorCode);
 
 /* property access functions */
 
 U_CFUNC int32_t
-ubidi_getMaxValue(UProperty which);
+ubidi_get_Max_मूल्य(UProperty which);
 
 U_CAPI UCharDirection
 ubidi_getClass(UChar32 c);
@@ -68,34 +68,34 @@ ubidi_getPairedBracket(UChar32 c);
 
 /* file definitions --------------------------------------------------------- */
 
-#define UBIDI_DATA_NAME "ubidi"
-#define UBIDI_DATA_TYPE "icu"
+#घोषणा UBIDI_तथ्य_NAME "ubidi"
+#घोषणा UBIDI_तथ्य_TYPE "icu"
 
 /* format "BiDi" */
-#define UBIDI_FMT_0 0x42
-#define UBIDI_FMT_1 0x69
-#define UBIDI_FMT_2 0x44
-#define UBIDI_FMT_3 0x69
+#घोषणा UBIDI_FMT_0 0x42
+#घोषणा UBIDI_FMT_1 0x69
+#घोषणा UBIDI_FMT_2 0x44
+#घोषणा UBIDI_FMT_3 0x69
 
 /* indexes into indexes[] */
-enum {
-    UBIDI_IX_INDEX_TOP,
-    UBIDI_IX_LENGTH,
-    UBIDI_IX_TRIE_SIZE,
-    UBIDI_IX_MIRROR_LENGTH,
+क्रमागत {
+    UBIDI_IX_सूचकांक_शीर्ष,
+    UBIDI_IX_लंबाई,
+    UBIDI_IX_TRIE_आकार,
+    UBIDI_IX_MIRROR_लंबाई,
 
     UBIDI_IX_JG_START,
     UBIDI_IX_JG_LIMIT,
     UBIDI_IX_JG_START2,  /* new in format version 2.2, ICU 54 */
     UBIDI_IX_JG_LIMIT2,
 
-    UBIDI_MAX_VALUES_INDEX=15,
-    UBIDI_IX_TOP=16
+    UBIDI_MAX_मूल्यावली_सूचकांक=15,
+    UBIDI_IX_शीर्ष=16
 };
 
 /* definitions for 16-bit bidi/shaping properties word ---------------------- */
 
-enum {
+क्रमागत {
  /* UBIDI_CLASS_SHIFT=0, */     /* bidi class: 5 bits (4..0) */
     UBIDI_JT_SHIFT=5,           /* joining type: 3 bits (7..5) */
 
@@ -110,22 +110,22 @@ enum {
     UBIDI_MAX_JG_SHIFT=16               /* max JG value in indexes[UBIDI_MAX_VALUES_INDEX] bits 23..16 */
 };
 
-#define UBIDI_CLASS_MASK        0x0000001f
-#define UBIDI_JT_MASK           0x000000e0
-#define UBIDI_BPT_MASK          0x00000300
+#घोषणा UBIDI_CLASS_MASK        0x0000001f
+#घोषणा UBIDI_JT_MASK           0x000000e0
+#घोषणा UBIDI_BPT_MASK          0x00000300
 
-#define UBIDI_MAX_JG_MASK       0x00ff0000
+#घोषणा UBIDI_MAX_JG_MASK       0x00ff0000
 
-#define UBIDI_GET_CLASS(props) ((props)&UBIDI_CLASS_MASK)
-#define UBIDI_GET_FLAG(props, shift) (((props)>>(shift))&1)
+#घोषणा UBIDI_GET_CLASS(props) ((props)&UBIDI_CLASS_MASK)
+#घोषणा UBIDI_GET_FLAG(props, shift) (((props)>>(shift))&1)
 
-#if U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
+#अगर U_SIGNED_दायाँ_SHIFT_IS_ARITHMETIC
 #   define UBIDI_GET_MIRROR_DELTA(props) ((int16_t)(props)>>UBIDI_MIRROR_DELTA_SHIFT)
-#else
+#अन्यथा
 #   define UBIDI_GET_MIRROR_DELTA(props) (int16_t)(((props)&0x8000) ? (((props)>>UBIDI_MIRROR_DELTA_SHIFT)|0xe000) : ((props)>>UBIDI_MIRROR_DELTA_SHIFT))
-#endif
+#पूर्ण_अगर
 
-enum {
+क्रमागत {
     UBIDI_ESC_MIRROR_DELTA=-4,
     UBIDI_MIN_MIRROR_DELTA=-3,
     UBIDI_MAX_MIRROR_DELTA=3
@@ -133,16 +133,16 @@ enum {
 
 /* definitions for 32-bit mirror table entry -------------------------------- */
 
-enum {
+क्रमागत {
     /* the source Unicode code point takes 21 bits (20..0) */
-    UBIDI_MIRROR_INDEX_SHIFT=21,
-    UBIDI_MAX_MIRROR_INDEX=0x7ff
+    UBIDI_MIRROR_सूचकांक_SHIFT=21,
+    UBIDI_MAX_MIRROR_सूचकांक=0x7ff
 };
 
-#define UBIDI_GET_MIRROR_CODE_POINT(m) (UChar32)((m)&0x1fffff)
+#घोषणा UBIDI_GET_MIRROR_CODE_POINT(m) (UChar32)((m)&0x1fffff)
 
-#define UBIDI_GET_MIRROR_INDEX(m) ((m)>>UBIDI_MIRROR_INDEX_SHIFT)
+#घोषणा UBIDI_GET_MIRROR_सूचकांक(m) ((m)>>UBIDI_MIRROR_सूचकांक_SHIFT)
 
 U_CDECL_END
 
-#endif
+#पूर्ण_अगर

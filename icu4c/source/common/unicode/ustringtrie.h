@@ -14,15 +14,15 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __USTRINGTRIE_H__
-#define __USTRINGTRIE_H__
+#अगर_अघोषित __USTRINGTRIE_H__
+#घोषणा __USTRINGTRIE_H__
 
 /**
  * \file
  * \brief C API: Helper definitions for dictionary trie APIs.
  */
 
-#include "unicode/utypes.h"
+#समावेश "unicode/utypes.h"
 
 
 /**
@@ -32,7 +32,7 @@
  * @see USTRINGTRIE_HAS_NEXT
  * @stable ICU 4.8
  */
-enum UStringTrieResult {
+क्रमागत UString_Trie_परिणाम {
     /**
      * The input unit(s) did not continue a matching string.
      * Once current()/next() return USTRINGTRIE_NO_MATCH,
@@ -47,7 +47,7 @@ enum UStringTrieResult {
      * (It is a prefix of a longer string.)
      * @stable ICU 4.8
      */
-    USTRINGTRIE_NO_VALUE,
+    USTRINGTRIE_NO_मूल्य,
     /**
      * The input unit(s) continued a matching string
      * and there is a value for the string so far.
@@ -55,7 +55,7 @@ enum UStringTrieResult {
      * No further input byte/unit can continue a matching string.
      * @stable ICU 4.8
      */
-    USTRINGTRIE_FINAL_VALUE,
+    USTRINGTRIE_FINAL_मूल्य,
     /**
      * The input unit(s) continued a matching string
      * and there is a value for the string so far.
@@ -63,7 +63,7 @@ enum UStringTrieResult {
      * Another input byte/unit can continue a matching string.
      * @stable ICU 4.8
      */
-    USTRINGTRIE_INTERMEDIATE_VALUE
+    USTRINGTRIE_INTERMEDIATE_मूल्य
 };
 
 /**
@@ -72,7 +72,7 @@ enum UStringTrieResult {
  * @return true if the input bytes/units so far are part of a matching string/byte sequence.
  * @stable ICU 4.8
  */
-#define USTRINGTRIE_MATCHES(result) ((result)!=USTRINGTRIE_NO_MATCH)
+#घोषणा USTRINGTRIE_MATCHES(परिणाम) ((परिणाम)!=USTRINGTRIE_NO_MATCH)
 
 /**
  * Equivalent to (result==USTRINGTRIE_INTERMEDIATE_VALUE || result==USTRINGTRIE_FINAL_VALUE) but
@@ -83,7 +83,7 @@ enum UStringTrieResult {
  * @see UCharsTrie::getValue
  * @stable ICU 4.8
  */
-#define USTRINGTRIE_HAS_VALUE(result) ((result)>=USTRINGTRIE_FINAL_VALUE)
+#घोषणा USTRINGTRIE_HAS_मूल्य(परिणाम) ((परिणाम)>=USTRINGTRIE_FINAL_मूल्य)
 
 /**
  * Equivalent to (result==USTRINGTRIE_NO_VALUE || result==USTRINGTRIE_INTERMEDIATE_VALUE) but
@@ -92,6 +92,6 @@ enum UStringTrieResult {
  * @return true if another input byte/unit can continue a matching string.
  * @stable ICU 4.8
  */
-#define USTRINGTRIE_HAS_NEXT(result) ((result)&1)
+#घोषणा USTRINGTRIE_HAS_अग्र(परिणाम) ((परिणाम)&1)
 
-#endif  /* __USTRINGTRIE_H__ */
+#पूर्ण_अगर  /* __USTRINGTRIE_H__ */

@@ -13,14 +13,14 @@
 **************************************************************************
 */
 
-#ifndef REP_H
-#define REP_H
+#अगर_अघोषित REP_H
+#घोषणा REP_H
 
-#include "unicode/utypes.h"
+#समावेश "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#अगर U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#समावेश "unicode/uobject.h"
 
 /**
  * \file 
@@ -74,21 +74,21 @@ class UnicodeString;
  * @author Alan Liu
  * @stable ICU 2.0
  */
-class U_COMMON_API Replaceable : public UObject {
+class U_COMMON_API Replaceable : खुला UObject {
 
-public:
+खुला:
     /**
      * Destructor.
      * @stable ICU 2.0
      */
-    virtual ~Replaceable();
+    भव ~Replaceable();
 
     /**
      * Returns the number of 16-bit code units in the text.
      * @return number of 16-bit code units in text
      * @stable ICU 1.8
      */ 
-    inline int32_t length() const;
+    अंतरभूत int32_t लंबाई() स्थिर;
 
     /**
      * Returns the 16-bit code unit at the given offset into the text.
@@ -97,7 +97,7 @@ public:
      * @return 16-bit code unit of text at given offset
      * @stable ICU 1.8
      */
-    inline char16_t charAt(int32_t offset) const;
+    अंतरभूत char16_t charAt(int32_t offset) स्थिर;
 
     /**
      * Returns the 32-bit code point at the given 16-bit offset into
@@ -111,7 +111,7 @@ public:
      * @return 32-bit code point of text at given offset
      * @stable ICU 1.8
      */
-    inline UChar32 char32At(int32_t offset) const;
+    अंतरभूत UChar32 char32At(int32_t offset) स्थिर;
 
     /**
      * Copies characters in the range [<tt>start</tt>, <tt>limit</tt>) 
@@ -122,9 +122,9 @@ public:
      * @param target UnicodeString into which to copy characters.
      * @stable ICU 2.1
      */
-    virtual void extractBetween(int32_t start,
+    भव व्योम extractBetween(int32_t start,
                                 int32_t limit,
-                                UnicodeString& target) const = 0;
+                                UnicodeString& target) स्थिर = 0;
 
     /**
      * Replaces a substring of this object with the given text.  If the
@@ -146,9 +146,9 @@ public:
      * to <code>limit - 1</code> 
      * @stable ICU 2.0
      */
-    virtual void handleReplaceBetween(int32_t start,
+    भव व्योम handleReplaceBetween(int32_t start,
                                       int32_t limit,
-                                      const UnicodeString& text) = 0;
+                                      स्थिर UnicodeString& text) = 0;
     // Note: All other methods in this class take the names of
     // existing UnicodeString methods.  This method is the exception.
     // It is named differently because all replace methods of
@@ -174,7 +174,7 @@ public:
      * dest >= limit</code>.
      * @stable ICU 2.0
      */
-    virtual void copy(int32_t start, int32_t limit, int32_t dest) = 0;
+    भव व्योम copy(int32_t start, int32_t limit, int32_t dest) = 0;
 
     /**
      * Returns true if this object contains metadata.  If a
@@ -185,7 +185,7 @@ public:
      * @return true if this object contains metadata
      * @stable ICU 2.2
      */
-    virtual UBool hasMetaData() const;
+    भव UBool has_Meta_तथ्य() स्थिर;
 
     /**
      * Clone this object, an instance of a subclass of Replaceable.
@@ -199,15 +199,15 @@ public:
      * @see getDynamicClassID
      * @stable ICU 2.6
      */
-    virtual Replaceable *clone() const;
+    भव Replaceable *clone() स्थिर;
 
-protected:
+रक्षित:
 
     /**
      * Default constructor.
      * @stable ICU 2.4
      */
-    inline Replaceable();
+    अंतरभूत Replaceable();
 
     /*
      * Assignment operator not declared. The compiler will provide one
@@ -224,42 +224,42 @@ protected:
      * Virtual version of length().
      * @stable ICU 2.4
      */ 
-    virtual int32_t getLength() const = 0;
+    भव int32_t get_लंबाई() स्थिर = 0;
 
     /**
      * Virtual version of charAt().
      * @stable ICU 2.4
      */
-    virtual char16_t getCharAt(int32_t offset) const = 0;
+    भव char16_t getCharAt(int32_t offset) स्थिर = 0;
 
     /**
      * Virtual version of char32At().
      * @stable ICU 2.4
      */
-    virtual UChar32 getChar32At(int32_t offset) const = 0;
+    भव UChar32 getChar32At(int32_t offset) स्थिर = 0;
 };
 
-inline Replaceable::Replaceable() {}
+अंतरभूत Replaceable::Replaceable() {}
 
-inline int32_t
-Replaceable::length() const {
-    return getLength();
+अंतरभूत int32_t
+Replaceable::लंबाई() स्थिर {
+    वापस get_लंबाई();
 }
 
-inline char16_t
-Replaceable::charAt(int32_t offset) const {
-    return getCharAt(offset);
+अंतरभूत char16_t
+Replaceable::charAt(int32_t offset) स्थिर {
+    वापस getCharAt(offset);
 }
 
-inline UChar32
-Replaceable::char32At(int32_t offset) const {
-    return getChar32At(offset);
+अंतरभूत UChar32
+Replaceable::char32At(int32_t offset) स्थिर {
+    वापस getChar32At(offset);
 }
 
 // There is no rep.cpp, see unistr.cpp for Replaceable function implementations.
 
 U_NAMESPACE_END
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#पूर्ण_अगर /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#पूर्ण_अगर

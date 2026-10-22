@@ -8,89 +8,89 @@
  *
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#समावेश "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#अगर !UCONFIG_NO_SERVICE
 
-#include "unicode/resbund.h"
-#include "uresimp.h"
-#include "cmemory.h"
-#include "servloc.h"
-#include "ustrfmt.h"
-#include "uhash.h"
-#include "charstr.h"
-#include "ucln_cmn.h"
-#include "uassert.h"
+#समावेश "unicode/resbund.h"
+#समावेश "uresimp.h"
+#समावेश "cmemory.h"
+#समावेश "servloc.h"
+#समावेश "ustrfmt.h"
+#समावेश "uhash.h"
+#समावेश "charstr.h"
+#समावेश "ucln_cmn.h"
+#समावेश "uassert.h"
 
-#define UNDERSCORE_CHAR ((char16_t)0x005f)
-#define AT_SIGN_CHAR    ((char16_t)64)
-#define PERIOD_CHAR     ((char16_t)46)
+#घोषणा UNDERSCORE_CHAR ((char16_t)0x005f)
+#घोषणा AT_SIGN_CHAR    ((char16_t)64)
+#घोषणा PERIOD_CHAR     ((char16_t)46)
 
 U_NAMESPACE_BEGIN
 
 ICUResourceBundleFactory::ICUResourceBundleFactory()
-  : LocaleKeyFactory(VISIBLE)
+  : Locale_कुंजी_Factory(VISIBLE)
   , _bundleName()
 {
 }
 
-ICUResourceBundleFactory::ICUResourceBundleFactory(const UnicodeString& bundleName)
-  : LocaleKeyFactory(VISIBLE)
+ICUResourceBundleFactory::ICUResourceBundleFactory(स्थिर UnicodeString& bundleName)
+  : Locale_कुंजी_Factory(VISIBLE)
   , _bundleName(bundleName)
 {
 }
 
 ICUResourceBundleFactory::~ICUResourceBundleFactory() {}
 
-const Hashtable*
-ICUResourceBundleFactory::getSupportedIDs(UErrorCode& status) const
+स्थिर Hashtable*
+ICUResourceBundleFactory::getSupportedIDs(UErrorCode& status) स्थिर
 {
-    if (U_SUCCESS(status)) {
-        return LocaleUtility::getAvailableLocaleNames(_bundleName);
+    अगर (U_SUCCESS(status)) {
+        वापस LocaleUtility::getAvailableLocaleNames(_bundleName);
     }
-    return nullptr;
+    वापस nullptr;
 }
 
 UObject*
-ICUResourceBundleFactory::handleCreate(const Locale& loc, int32_t /* kind */, const ICUService* /* service */, UErrorCode& status) const
+ICUResourceBundleFactory::handleCreate(स्थिर Locale& loc, int32_t /* kind */, स्थिर ICUService* /* service */, UErrorCode& status) स्थिर
 {
-    if (U_SUCCESS(status)) {
+    अगर (U_SUCCESS(status)) {
         // _bundleName is a package name
         // and should only contain invariant characters
                 // ??? is it always true that the max length of the bundle name is 19?
                 // who made this change? -- dlf
-        char pkg[20];
+        अक्षर pkg[20];
         int32_t length;
-        length = _bundleName.extract(0, INT32_MAX, pkg, static_cast<int32_t>(sizeof(pkg)), US_INV);
-        if (length >= static_cast<int32_t>(sizeof(pkg))) {
-            return nullptr;
+        length = _bundleName.extract(0, INT32_MAX, pkg, static_cast<int32_t>(माप(pkg)), US_INV);
+        अगर (length >= static_cast<int32_t>(माप(pkg))) {
+            वापस nullptr;
         }
-        return new ResourceBundle(pkg, loc, status);
+        वापस नया ResourceBundle(pkg, loc, status);
     }
-    return nullptr;
+    वापस nullptr;
 }
 
-#ifdef SERVICE_DEBUG
+#अगर_घोषित SERVICE_DEBUG
 UnicodeString&
-ICUResourceBundleFactory::debug(UnicodeString& result) const
+ICUResourceBundleFactory::debug(UnicodeString& परिणाम) स्थिर
 {
-    LocaleKeyFactory::debug(result);
-    result.append((UnicodeString)", bundle: ");
-    return result.append(_bundleName);
+    Locale_कुंजी_Factory::debug(परिणाम);
+    परिणाम.append((UnicodeString)", bundle: ");
+    वापस परिणाम.append(_bundleName);
 }
 
 UnicodeString&
-ICUResourceBundleFactory::debugClass(UnicodeString& result) const
+ICUResourceBundleFactory::debugClass(UnicodeString& परिणाम) स्थिर
 {
-    return result.append((UnicodeString)"ICUResourceBundleFactory");
+    वापस परिणाम.append((UnicodeString)"ICUResourceBundleFactory");
 }
-#endif
+#पूर्ण_अगर
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ICUResourceBundleFactory)
 
 U_NAMESPACE_END
 
 /* !UCONFIG_NO_SERVICE */
-#endif
+#पूर्ण_अगर
 
 

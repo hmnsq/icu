@@ -8,13 +8,13 @@
  *
  *******************************************************************************
  */
-#ifndef LOCUTIL_H
-#define LOCUTIL_H
+#अगर_अघोषित LOCUTIL_H
+#घोषणा LOCUTIL_H
 
-#include "unicode/utypes.h"
-#include "hash.h"
+#समावेश "unicode/utypes.h"
+#समावेश "hash.h"
 
-#if !UCONFIG_NO_SERVICE || !UCONFIG_NO_TRANSLITERATION
+#अगर !UCONFIG_NO_SERVICE || !UCONFIG_NO_TRANSLITERATION
 
 
 U_NAMESPACE_BEGIN
@@ -23,17 +23,17 @@ U_NAMESPACE_BEGIN
 // in header so tests can also access them
 
 class U_COMMON_API LocaleUtility {
-public:
-  static UnicodeString& canonicalLocaleString(const UnicodeString* id, UnicodeString& result);
-  static Locale& initLocaleFromName(const UnicodeString& id, Locale& result);
-  static UnicodeString& initNameFromLocale(const Locale& locale, UnicodeString& result);
-  static const Hashtable* getAvailableLocaleNames(const UnicodeString& bundleID);
-  static bool isFallbackOf(const UnicodeString& root, const UnicodeString& child);
+खुला:
+  अटल UnicodeString& canonicalLocaleString(स्थिर UnicodeString* id, UnicodeString& परिणाम);
+  अटल Locale& initLocaleFromName(स्थिर UnicodeString& id, Locale& परिणाम);
+  अटल UnicodeString& initNameFromLocale(स्थिर Locale& locale, UnicodeString& परिणाम);
+  अटल स्थिर Hashtable* getAvailableLocaleNames(स्थिर UnicodeString& bundleID);
+  अटल bool isFallbackOf(स्थिर UnicodeString& मूल, स्थिर UnicodeString& child);
 };
 
 U_NAMESPACE_END
 
 
-#endif
+#पूर्ण_अगर
 
-#endif
+#पूर्ण_अगर

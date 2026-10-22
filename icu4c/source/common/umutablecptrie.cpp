@@ -5,23 +5,23 @@
 // created: 2017dec29 Markus W. Scherer
 
 // #define UCPTRIE_DEBUG
-#ifdef UCPTRIE_DEBUG
+#अगर_घोषित UCPTRIE_DEBUG
 #   include <stdio.h>
-#endif
+#पूर्ण_अगर
 
-#include "unicode/utypes.h"
-#include "unicode/ucptrie.h"
-#include "unicode/umutablecptrie.h"
-#include "unicode/uobject.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "uassert.h"
-#include "ucptrie_impl.h"
+#समावेश "unicode/utypes.h"
+#समावेश "unicode/ucptrie.h"
+#समावेश "unicode/umutablecptrie.h"
+#समावेश "unicode/uobject.h"
+#समावेश "unicode/utf16.h"
+#समावेश "cmemory.h"
+#समावेश "uassert.h"
+#समावेश "ucptrie_impl.h"
 
 // ICU-20235 In case Microsoft math.h has defined this, undefine it.
-#ifdef OVERFLOW
-#undef OVERFLOW
-#endif
+#अगर_घोषित OVERFLOW
+#अघोषित OVERFLOW
+#पूर्ण_अगर
 
 U_NAMESPACE_BEGIN
 
@@ -37,7 +37,7 @@ constexpr int32_t I_LIMIT = UNICODE_LIMIT >> UCPTRIE_SHIFT_3;
 constexpr int32_t BMP_I_LIMIT = BMP_LIMIT >> UCPTRIE_SHIFT_3;
 constexpr int32_t ASCII_I_LIMIT = ASCII_LIMIT >> UCPTRIE_SHIFT_3;
 
-constexpr int32_t SMALL_DATA_BLOCKS_PER_BMP_BLOCK = (1 << (UCPTRIE_FAST_SHIFT - UCPTRIE_SHIFT_3));
+constexpr int32_t SMALL_तथ्य_BLOCKS_PER_BMP_BLOCK = (1 << (UCPTRIE_FAST_SHIFT - UCPTRIE_SHIFT_3));
 
 // Flag values for data blocks.
 constexpr uint8_t ALL_SAME = 0;
@@ -45,16 +45,16 @@ constexpr uint8_t MIXED = 1;
 constexpr uint8_t SAME_AS = 2;
 
 /** Start with allocation of 16k data entries. */
-constexpr int32_t INITIAL_DATA_LENGTH = static_cast<int32_t>(1) << 14;
+constexpr int32_t INITIAL_तथ्य_लंबाई = static_cast<int32_t>(1) << 14;
 
 /** Grow about 8x each time. */
-constexpr int32_t MEDIUM_DATA_LENGTH = static_cast<int32_t>(1) << 17;
+constexpr int32_t MEDIUM_तथ्य_लंबाई = static_cast<int32_t>(1) << 17;
 
 /**
  * Maximum length of the build-time data array.
  * One entry per 0x110000 code points.
  */
-constexpr int32_t MAX_DATA_LENGTH = UNICODE_LIMIT;
+constexpr int32_t MAX_तथ्य_लंबाई = UNICODE_LIMIT;
 
 // Flag values for index-3 blocks while compacting/building.
 constexpr uint8_t I3_NULL = 0;
@@ -62,373 +62,373 @@ constexpr uint8_t I3_BMP = 1;
 constexpr uint8_t I3_16 = 2;
 constexpr uint8_t I3_18 = 3;
 
-constexpr int32_t INDEX_3_18BIT_BLOCK_LENGTH = UCPTRIE_INDEX_3_BLOCK_LENGTH + UCPTRIE_INDEX_3_BLOCK_LENGTH / 8;
+constexpr int32_t सूचकांक_3_18_BIT_BLOCK_लंबाई = UCPTRIE_सूचकांक_3_BLOCK_लंबाई + UCPTRIE_सूचकांक_3_BLOCK_लंबाई / 8;
 
-class AllSameBlocks;
-class MixedBlocks;
+श्रेणी AllSameBlocks;
+श्रेणी MixedBlocks;
 
-class MutableCodePointTrie : public UMemory {
-public:
-    MutableCodePointTrie(uint32_t initialValue, uint32_t errorValue, UErrorCode &errorCode);
-    MutableCodePointTrie(const MutableCodePointTrie &other, UErrorCode &errorCode);
-    MutableCodePointTrie(const MutableCodePointTrie &other) = delete;
+श्रेणी MutableCodePointTrie : खुला UMemory {
+खुला:
+    MutableCodePointTrie(uint32_t initial_मूल्य, uint32_t error_मूल्य, UErrorCode &errorCode);
+    MutableCodePointTrie(स्थिर MutableCodePointTrie &other, UErrorCode &errorCode);
+    MutableCodePointTrie(स्थिर MutableCodePointTrie &other) = मिटाओ;
     ~MutableCodePointTrie();
 
-    MutableCodePointTrie &operator=(const MutableCodePointTrie &other) = delete;
+    MutableCodePointTrie &चालक=(स्थिर MutableCodePointTrie &other) = मिटाओ;
 
-    static MutableCodePointTrie *fromUCPMap(const UCPMap *map, UErrorCode &errorCode);
-    static MutableCodePointTrie *fromUCPTrie(const UCPTrie *trie, UErrorCode &errorCode);
+    अटल MutableCodePointTrie *fromUCPMap(स्थिर UCPMap *map, UErrorCode &errorCode);
+    अटल MutableCodePointTrie *fromUCPTrie(स्थिर UCPTrie *trie, UErrorCode &errorCode);
 
-    uint32_t get(UChar32 c) const;
-    int32_t getRange(UChar32 start, UCPMapValueFilter *filter, const void *context,
-                     uint32_t *pValue) const;
+    uint32_t लो(UChar32 c) स्थिर;
+    int32_t getRange(UChar32 start, UCPMap_मूल्य_Filter *filter, स्थिर व्योम *context,
+                     uint32_t *p_मूल्य) स्थिर;
 
-    void set(UChar32 c, uint32_t value, UErrorCode &errorCode);
-    void setRange(UChar32 start, UChar32 end, uint32_t value, UErrorCode &errorCode);
+    व्योम set(UChar32 c, uint32_t value, UErrorCode &errorCode);
+    व्योम setRange(UChar32 start, UChar32 end, uint32_t value, UErrorCode &errorCode);
 
-    UCPTrie *build(UCPTrieType type, UCPTrieValueWidth valueWidth, UErrorCode &errorCode);
+    UCPTrie *build(UCPTrieType type, UCPTrie_मूल्य_Width मूल्य_Width, UErrorCode &errorCode);
 
-private:
-    void clear();
+निजी:
+    व्योम सफा();
 
-    bool ensureHighStart(UChar32 c);
-    int32_t allocDataBlock(int32_t blockLength);
-    int32_t getDataBlock(int32_t i);
+    bool ensure_ऊपरी_Start(UChar32 c);
+    int32_t alloc_तथ्य_Block(int32_t block_लंबाई);
+    int32_t get_तथ्य_Block(int32_t i);
 
-    void maskValues(uint32_t mask);
-    UChar32 findHighStart() const;
-    int32_t compactWholeDataBlocks(int32_t fastILimit, AllSameBlocks &allSameBlocks);
-    int32_t compactData(
-            int32_t fastILimit, uint32_t *newData, int32_t newDataCapacity,
-            int32_t dataNullIndex, MixedBlocks &mixedBlocks, UErrorCode &errorCode);
-    int32_t compactIndex(int32_t fastILimit, MixedBlocks &mixedBlocks, UErrorCode &errorCode);
+    व्योम mask_मूल्यावली(uint32_t mask);
+    UChar32 find_ऊपरी_Start() स्थिर;
+    int32_t compact_Whole_तथ्य_Blocks(int32_t fastILimit, AllSameBlocks &allSameBlocks);
+    int32_t compact_तथ्य(
+            int32_t fastILimit, uint32_t *new_तथ्य, int32_t new_तथ्य_Capacity,
+            int32_t तथ्य_Null_सूचकांक, MixedBlocks &mixedBlocks, UErrorCode &errorCode);
+    int32_t compact_सूचकांक(int32_t fastILimit, MixedBlocks &mixedBlocks, UErrorCode &errorCode);
     int32_t compactTrie(int32_t fastILimit, UErrorCode &errorCode);
 
-    uint32_t *index = nullptr;
-    int32_t indexCapacity = 0;
+    uint32_t *सूचकांक = nullptr;
+    int32_t सूचकांक_Capacity = 0;
     int32_t index3NullOffset = -1;
-    uint32_t *data = nullptr;
-    int32_t dataCapacity = 0;
-    int32_t dataLength = 0;
-    int32_t dataNullOffset = -1;
+    uint32_t *तथ्य = nullptr;
+    int32_t तथ्य_Capacity = 0;
+    int32_t तथ्य_लंबाई = 0;
+    int32_t तथ्य_Null_Offset = -1;
 
-    uint32_t origInitialValue;
-    uint32_t initialValue;
-    uint32_t errorValue;
-    UChar32 highStart;
-    uint32_t highValue;
-#ifdef UCPTRIE_DEBUG
-public:
-    const char *name;
-#endif
-private:
+    uint32_t orig_Initial_मूल्य;
+    uint32_t initial_मूल्य;
+    uint32_t error_मूल्य;
+    UChar32 ऊपरी_Start;
+    uint32_t ऊपरी_मूल्य;
+#अगर_घोषित UCPTRIE_DEBUG
+खुला:
+    स्थिर अक्षर *name;
+#पूर्ण_अगर
+निजी:
     /** Temporary array while building the final data. */
     uint16_t *index16 = nullptr;
     uint8_t flags[UNICODE_LIMIT >> UCPTRIE_SHIFT_3];
 };
 
-MutableCodePointTrie::MutableCodePointTrie(uint32_t iniValue, uint32_t errValue, UErrorCode &errorCode) :
-        origInitialValue(iniValue), initialValue(iniValue), errorValue(errValue),
-        highStart(0), highValue(initialValue)
-#ifdef UCPTRIE_DEBUG
+MutableCodePointTrie::MutableCodePointTrie(uint32_t ini_मूल्य, uint32_t err_मूल्य, UErrorCode &errorCode) :
+        orig_Initial_मूल्य(ini_मूल्य), initial_मूल्य(ini_मूल्य), error_मूल्य(err_मूल्य),
+        ऊपरी_Start(0), ऊपरी_मूल्य(initial_मूल्य)
+#अगर_घोषित UCPTRIE_DEBUG
         , name("open")
-#endif
+#पूर्ण_अगर
         {
-    if (U_FAILURE(errorCode)) { return; }
-    index = static_cast<uint32_t*>(uprv_malloc(BMP_I_LIMIT * 4));
-    data = static_cast<uint32_t*>(uprv_malloc(INITIAL_DATA_LENGTH * 4));
-    if (index == nullptr || data == nullptr) {
+    अगर (U_FAILURE(errorCode)) { वापस; }
+    सूचकांक = static_cast<uint32_t*>(uprv_malloc(BMP_I_LIMIT * 4));
+    तथ्य = static_cast<uint32_t*>(uprv_malloc(INITIAL_तथ्य_लंबाई * 4));
+    अगर (सूचकांक == nullptr || तथ्य == nullptr) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        वापस;
     }
-    indexCapacity = BMP_I_LIMIT;
-    dataCapacity = INITIAL_DATA_LENGTH;
+    सूचकांक_Capacity = BMP_I_LIMIT;
+    तथ्य_Capacity = INITIAL_तथ्य_लंबाई;
 }
 
-MutableCodePointTrie::MutableCodePointTrie(const MutableCodePointTrie &other, UErrorCode &errorCode) :
+MutableCodePointTrie::MutableCodePointTrie(स्थिर MutableCodePointTrie &other, UErrorCode &errorCode) :
         index3NullOffset(other.index3NullOffset),
-        dataNullOffset(other.dataNullOffset),
-        origInitialValue(other.origInitialValue), initialValue(other.initialValue),
-        errorValue(other.errorValue),
-        highStart(other.highStart), highValue(other.highValue)
-#ifdef UCPTRIE_DEBUG
+        तथ्य_Null_Offset(other.तथ्य_Null_Offset),
+        orig_Initial_मूल्य(other.orig_Initial_मूल्य), initial_मूल्य(other.initial_मूल्य),
+        error_मूल्य(other.error_मूल्य),
+        ऊपरी_Start(other.ऊपरी_Start), ऊपरी_मूल्य(other.ऊपरी_मूल्य)
+#अगर_घोषित UCPTRIE_DEBUG
         , name("mutable clone")
-#endif
+#पूर्ण_अगर
         {
-    if (U_FAILURE(errorCode)) { return; }
-    int32_t iCapacity = highStart <= BMP_LIMIT ? BMP_I_LIMIT : I_LIMIT;
-    index = static_cast<uint32_t*>(uprv_malloc(iCapacity * 4));
-    data = static_cast<uint32_t*>(uprv_malloc(other.dataCapacity * 4));
-    if (index == nullptr || data == nullptr) {
+    अगर (U_FAILURE(errorCode)) { वापस; }
+    int32_t iCapacity = ऊपरी_Start <= BMP_LIMIT ? BMP_I_LIMIT : I_LIMIT;
+    सूचकांक = static_cast<uint32_t*>(uprv_malloc(iCapacity * 4));
+    तथ्य = static_cast<uint32_t*>(uprv_malloc(other.तथ्य_Capacity * 4));
+    अगर (सूचकांक == nullptr || तथ्य == nullptr) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        वापस;
     }
-    indexCapacity = iCapacity;
-    dataCapacity = other.dataCapacity;
+    सूचकांक_Capacity = iCapacity;
+    तथ्य_Capacity = other.तथ्य_Capacity;
 
-    int32_t iLimit = highStart >> UCPTRIE_SHIFT_3;
+    int32_t iLimit = ऊपरी_Start >> UCPTRIE_SHIFT_3;
     uprv_memcpy(flags, other.flags, iLimit);
-    uprv_memcpy(index, other.index, iLimit * 4);
-    uprv_memcpy(data, other.data, (size_t)other.dataLength * 4);
-    dataLength = other.dataLength;
+    uprv_memcpy(सूचकांक, other.सूचकांक, iLimit * 4);
+    uprv_memcpy(तथ्य, other.तथ्य, (माप_प्रकार)other.तथ्य_लंबाई * 4);
+    तथ्य_लंबाई = other.तथ्य_लंबाई;
     U_ASSERT(other.index16 == nullptr);
 }
 
 MutableCodePointTrie::~MutableCodePointTrie() {
-    uprv_free(index);
-    uprv_free(data);
+    uprv_free(सूचकांक);
+    uprv_free(तथ्य);
     uprv_free(index16);
 }
 
-MutableCodePointTrie *MutableCodePointTrie::fromUCPMap(const UCPMap *map, UErrorCode &errorCode) {
+MutableCodePointTrie *MutableCodePointTrie::fromUCPMap(स्थिर UCPMap *map, UErrorCode &errorCode) {
     // Use the highValue as the initialValue to reduce the highStart.
-    uint32_t errorValue = ucpmap_get(map, -1);
-    uint32_t initialValue = ucpmap_get(map, 0x10ffff);
+    uint32_t error_मूल्य = ucpmap_get(map, -1);
+    uint32_t initial_मूल्य = ucpmap_get(map, 0x10ffff);
     LocalPointer<MutableCodePointTrie> mutableTrie(
-        new MutableCodePointTrie(initialValue, errorValue, errorCode),
+        नया MutableCodePointTrie(initial_मूल्य, error_मूल्य, errorCode),
         errorCode);
-    if (U_FAILURE(errorCode)) {
-        return nullptr;
+    अगर (U_FAILURE(errorCode)) {
+        वापस nullptr;
     }
     UChar32 start = 0, end;
     uint32_t value;
-    while ((end = ucpmap_getRange(map, start, UCPMAP_RANGE_NORMAL, 0,
+    जबतक ((end = ucpmap_getRange(map, start, UCPMAP_RANGE_NORMAL, 0,
                                   nullptr, nullptr, &value)) >= 0) {
-        if (value != initialValue) {
-            if (start == end) {
+        अगर (value != initial_मूल्य) {
+            अगर (start == end) {
                 mutableTrie->set(start, value, errorCode);
-            } else {
+            } अन्यथा {
                 mutableTrie->setRange(start, end, value, errorCode);
             }
         }
         start = end + 1;
     }
-    if (U_SUCCESS(errorCode)) {
-        return mutableTrie.orphan();
-    } else {
-        return nullptr;
+    अगर (U_SUCCESS(errorCode)) {
+        वापस mutableTrie.orphan();
+    } अन्यथा {
+        वापस nullptr;
     }
 }
 
-MutableCodePointTrie *MutableCodePointTrie::fromUCPTrie(const UCPTrie *trie, UErrorCode &errorCode) {
+MutableCodePointTrie *MutableCodePointTrie::fromUCPTrie(स्थिर UCPTrie *trie, UErrorCode &errorCode) {
     // Use the highValue as the initialValue to reduce the highStart.
-    uint32_t errorValue;
-    uint32_t initialValue;
-    switch (trie->valueWidth) {
-    case UCPTRIE_VALUE_BITS_16:
-        errorValue = trie->data.ptr16[trie->dataLength - UCPTRIE_ERROR_VALUE_NEG_DATA_OFFSET];
-        initialValue = trie->data.ptr16[trie->dataLength - UCPTRIE_HIGH_VALUE_NEG_DATA_OFFSET];
-        break;
-    case UCPTRIE_VALUE_BITS_32:
-        errorValue = trie->data.ptr32[trie->dataLength - UCPTRIE_ERROR_VALUE_NEG_DATA_OFFSET];
-        initialValue = trie->data.ptr32[trie->dataLength - UCPTRIE_HIGH_VALUE_NEG_DATA_OFFSET];
-        break;
-    case UCPTRIE_VALUE_BITS_8:
-        errorValue = trie->data.ptr8[trie->dataLength - UCPTRIE_ERROR_VALUE_NEG_DATA_OFFSET];
-        initialValue = trie->data.ptr8[trie->dataLength - UCPTRIE_HIGH_VALUE_NEG_DATA_OFFSET];
-        break;
-    default:
+    uint32_t error_मूल्य;
+    uint32_t initial_मूल्य;
+    चयन (trie->मूल्य_Width) {
+    हाल UCPTRIE_मूल्य_BITS_16:
+        error_मूल्य = trie->तथ्य.ptr16[trie->तथ्य_लंबाई - UCPTRIE_ERROR_मूल्य_NEG_तथ्य_OFFSET];
+        initial_मूल्य = trie->तथ्य.ptr16[trie->तथ्य_लंबाई - UCPTRIE_ऊपरी_मूल्य_NEG_तथ्य_OFFSET];
+        अवरोध;
+    हाल UCPTRIE_मूल्य_BITS_32:
+        error_मूल्य = trie->तथ्य.ptr32[trie->तथ्य_लंबाई - UCPTRIE_ERROR_मूल्य_NEG_तथ्य_OFFSET];
+        initial_मूल्य = trie->तथ्य.ptr32[trie->तथ्य_लंबाई - UCPTRIE_ऊपरी_मूल्य_NEG_तथ्य_OFFSET];
+        अवरोध;
+    हाल UCPTRIE_मूल्य_BITS_8:
+        error_मूल्य = trie->तथ्य.ptr8[trie->तथ्य_लंबाई - UCPTRIE_ERROR_मूल्य_NEG_तथ्य_OFFSET];
+        initial_मूल्य = trie->तथ्य.ptr8[trie->तथ्य_लंबाई - UCPTRIE_ऊपरी_मूल्य_NEG_तथ्य_OFFSET];
+        अवरोध;
+    शेष:
         // Unreachable if the trie is properly initialized.
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        वापस nullptr;
     }
     LocalPointer<MutableCodePointTrie> mutableTrie(
-        new MutableCodePointTrie(initialValue, errorValue, errorCode),
+        नया MutableCodePointTrie(initial_मूल्य, error_मूल्य, errorCode),
         errorCode);
-    if (U_FAILURE(errorCode)) {
-        return nullptr;
+    अगर (U_FAILURE(errorCode)) {
+        वापस nullptr;
     }
     UChar32 start = 0, end;
     uint32_t value;
-    while ((end = ucptrie_getRange(trie, start, UCPMAP_RANGE_NORMAL, 0,
+    जबतक ((end = ucptrie_getRange(trie, start, UCPMAP_RANGE_NORMAL, 0,
                                    nullptr, nullptr, &value)) >= 0) {
-        if (value != initialValue) {
-            if (start == end) {
+        अगर (value != initial_मूल्य) {
+            अगर (start == end) {
                 mutableTrie->set(start, value, errorCode);
-            } else {
+            } अन्यथा {
                 mutableTrie->setRange(start, end, value, errorCode);
             }
         }
         start = end + 1;
     }
-    if (U_SUCCESS(errorCode)) {
-        return mutableTrie.orphan();
-    } else {
-        return nullptr;
+    अगर (U_SUCCESS(errorCode)) {
+        वापस mutableTrie.orphan();
+    } अन्यथा {
+        वापस nullptr;
     }
 }
 
-void MutableCodePointTrie::clear() {
-    index3NullOffset = dataNullOffset = -1;
-    dataLength = 0;
-    highValue = initialValue = origInitialValue;
-    highStart = 0;
+व्योम MutableCodePointTrie::सफा() {
+    index3NullOffset = तथ्य_Null_Offset = -1;
+    तथ्य_लंबाई = 0;
+    ऊपरी_मूल्य = initial_मूल्य = orig_Initial_मूल्य;
+    ऊपरी_Start = 0;
     uprv_free(index16);
     index16 = nullptr;
 }
 
-uint32_t MutableCodePointTrie::get(UChar32 c) const {
-    if (static_cast<uint32_t>(c) > MAX_UNICODE) {
-        return errorValue;
+uint32_t MutableCodePointTrie::लो(UChar32 c) स्थिर {
+    अगर (static_cast<uint32_t>(c) > MAX_UNICODE) {
+        वापस error_मूल्य;
     }
-    if (c >= highStart) {
-        return highValue;
+    अगर (c >= ऊपरी_Start) {
+        वापस ऊपरी_मूल्य;
     }
     int32_t i = c >> UCPTRIE_SHIFT_3;
-    if (flags[i] == ALL_SAME) {
-        return index[i];
-    } else {
-        return data[index[i] + (c & UCPTRIE_SMALL_DATA_MASK)];
+    अगर (flags[i] == ALL_SAME) {
+        वापस सूचकांक[i];
+    } अन्यथा {
+        वापस तथ्य[सूचकांक[i] + (c & UCPTRIE_SMALL_तथ्य_MASK)];
     }
 }
 
-inline uint32_t maybeFilterValue(uint32_t value, uint32_t initialValue, uint32_t nullValue,
-                                 UCPMapValueFilter *filter, const void *context) {
-    if (value == initialValue) {
-        value = nullValue;
-    } else if (filter != nullptr) {
+अंतरभूत uint32_t maybe_Filter_मूल्य(uint32_t value, uint32_t initial_मूल्य, uint32_t null_मूल्य,
+                                 UCPMap_मूल्य_Filter *filter, स्थिर व्योम *context) {
+    अगर (value == initial_मूल्य) {
+        value = null_मूल्य;
+    } अन्यथा अगर (filter != nullptr) {
         value = filter(context, value);
     }
-    return value;
+    वापस value;
 }
 
 UChar32 MutableCodePointTrie::getRange(
-        UChar32 start, UCPMapValueFilter *filter, const void *context,
-        uint32_t *pValue) const {
-    if (static_cast<uint32_t>(start) > MAX_UNICODE) {
-        return U_SENTINEL;
+        UChar32 start, UCPMap_मूल्य_Filter *filter, स्थिर व्योम *context,
+        uint32_t *p_मूल्य) स्थिर {
+    अगर (static_cast<uint32_t>(start) > MAX_UNICODE) {
+        वापस U_SENTINEL;
     }
-    if (start >= highStart) {
-        if (pValue != nullptr) {
-            uint32_t value = highValue;
-            if (filter != nullptr) { value = filter(context, value); }
-            *pValue = value;
+    अगर (start >= ऊपरी_Start) {
+        अगर (p_मूल्य != nullptr) {
+            uint32_t value = ऊपरी_मूल्य;
+            अगर (filter != nullptr) { value = filter(context, value); }
+            *p_मूल्य = value;
         }
-        return MAX_UNICODE;
+        वापस MAX_UNICODE;
     }
-    uint32_t nullValue = initialValue;
-    if (filter != nullptr) { nullValue = filter(context, nullValue); }
+    uint32_t null_मूल्य = initial_मूल्य;
+    अगर (filter != nullptr) { null_मूल्य = filter(context, null_मूल्य); }
     UChar32 c = start;
-    uint32_t trieValue, value;
-    bool haveValue = false;
+    uint32_t trie_मूल्य, value;
+    bool have_मूल्य = false;
     int32_t i = c >> UCPTRIE_SHIFT_3;
-    do {
-        if (flags[i] == ALL_SAME) {
-            uint32_t trieValue2 = index[i];
-            if (haveValue) {
-                if (trieValue2 != trieValue) {
-                    if (filter == nullptr ||
-                            maybeFilterValue(trieValue2, initialValue, nullValue,
+    करो {
+        अगर (flags[i] == ALL_SAME) {
+            uint32_t trieValue2 = सूचकांक[i];
+            अगर (have_मूल्य) {
+                अगर (trieValue2 != trie_मूल्य) {
+                    अगर (filter == nullptr ||
+                            maybe_Filter_मूल्य(trieValue2, initial_मूल्य, null_मूल्य,
                                              filter, context) != value) {
-                        return c - 1;
+                        वापस c - 1;
                     }
-                    trieValue = trieValue2;  // may or may not help
+                    trie_मूल्य = trieValue2;  // may or may not help
                 }
-            } else {
-                trieValue = trieValue2;
-                value = maybeFilterValue(trieValue2, initialValue, nullValue, filter, context);
-                if (pValue != nullptr) { *pValue = value; }
-                haveValue = true;
+            } अन्यथा {
+                trie_मूल्य = trieValue2;
+                value = maybe_Filter_मूल्य(trieValue2, initial_मूल्य, null_मूल्य, filter, context);
+                अगर (p_मूल्य != nullptr) { *p_मूल्य = value; }
+                have_मूल्य = true;
             }
-            c = (c + UCPTRIE_SMALL_DATA_BLOCK_LENGTH) & ~UCPTRIE_SMALL_DATA_MASK;
-        } else /* MIXED */ {
-            int32_t di = index[i] + (c & UCPTRIE_SMALL_DATA_MASK);
-            uint32_t trieValue2 = data[di];
-            if (haveValue) {
-                if (trieValue2 != trieValue) {
-                    if (filter == nullptr ||
-                            maybeFilterValue(trieValue2, initialValue, nullValue,
+            c = (c + UCPTRIE_SMALL_तथ्य_BLOCK_लंबाई) & ~UCPTRIE_SMALL_तथ्य_MASK;
+        } अन्यथा /* MIXED */ {
+            int32_t di = सूचकांक[i] + (c & UCPTRIE_SMALL_तथ्य_MASK);
+            uint32_t trieValue2 = तथ्य[di];
+            अगर (have_मूल्य) {
+                अगर (trieValue2 != trie_मूल्य) {
+                    अगर (filter == nullptr ||
+                            maybe_Filter_मूल्य(trieValue2, initial_मूल्य, null_मूल्य,
                                              filter, context) != value) {
-                        return c - 1;
+                        वापस c - 1;
                     }
-                    trieValue = trieValue2;  // may or may not help
+                    trie_मूल्य = trieValue2;  // may or may not help
                 }
-            } else {
-                trieValue = trieValue2;
-                value = maybeFilterValue(trieValue2, initialValue, nullValue, filter, context);
-                if (pValue != nullptr) { *pValue = value; }
-                haveValue = true;
+            } अन्यथा {
+                trie_मूल्य = trieValue2;
+                value = maybe_Filter_मूल्य(trieValue2, initial_मूल्य, null_मूल्य, filter, context);
+                अगर (p_मूल्य != nullptr) { *p_मूल्य = value; }
+                have_मूल्य = true;
             }
-            while ((++c & UCPTRIE_SMALL_DATA_MASK) != 0) {
-                trieValue2 = data[++di];
-                if (trieValue2 != trieValue) {
-                    if (filter == nullptr ||
-                            maybeFilterValue(trieValue2, initialValue, nullValue,
+            जबतक ((++c & UCPTRIE_SMALL_तथ्य_MASK) != 0) {
+                trieValue2 = तथ्य[++di];
+                अगर (trieValue2 != trie_मूल्य) {
+                    अगर (filter == nullptr ||
+                            maybe_Filter_मूल्य(trieValue2, initial_मूल्य, null_मूल्य,
                                              filter, context) != value) {
-                        return c - 1;
+                        वापस c - 1;
                     }
                 }
-                trieValue = trieValue2;  // may or may not help
+                trie_मूल्य = trieValue2;  // may or may not help
             }
         }
         ++i;
-    } while (c < highStart);
-    U_ASSERT(haveValue);
-    if (maybeFilterValue(highValue, initialValue, nullValue,
+    } जबतक (c < ऊपरी_Start);
+    U_ASSERT(have_मूल्य);
+    अगर (maybe_Filter_मूल्य(ऊपरी_मूल्य, initial_मूल्य, null_मूल्य,
                          filter, context) != value) {
-        return c - 1;
-    } else {
-        return MAX_UNICODE;
+        वापस c - 1;
+    } अन्यथा {
+        वापस MAX_UNICODE;
     }
 }
 
-void
+व्योम
 writeBlock(uint32_t *block, uint32_t value) {
-    uint32_t *limit = block + UCPTRIE_SMALL_DATA_BLOCK_LENGTH;
-    while (block < limit) {
+    uint32_t *limit = block + UCPTRIE_SMALL_तथ्य_BLOCK_लंबाई;
+    जबतक (block < limit) {
         *block++ = value;
     }
 }
 
-bool MutableCodePointTrie::ensureHighStart(UChar32 c) {
-    if (c >= highStart) {
+bool MutableCodePointTrie::ensure_ऊपरी_Start(UChar32 c) {
+    अगर (c >= ऊपरी_Start) {
         // Round up to a UCPTRIE_CP_PER_INDEX_2_ENTRY boundary to simplify compaction.
-        c = (c + UCPTRIE_CP_PER_INDEX_2_ENTRY) & ~(UCPTRIE_CP_PER_INDEX_2_ENTRY - 1);
-        int32_t i = highStart >> UCPTRIE_SHIFT_3;
+        c = (c + UCPTRIE_CP_PER_सूचकांक_2_ENTRY) & ~(UCPTRIE_CP_PER_सूचकांक_2_ENTRY - 1);
+        int32_t i = ऊपरी_Start >> UCPTRIE_SHIFT_3;
         int32_t iLimit = c >> UCPTRIE_SHIFT_3;
-        if (iLimit > indexCapacity) {
-            uint32_t* newIndex = static_cast<uint32_t*>(uprv_malloc(I_LIMIT * 4));
-            if (newIndex == nullptr) { return false; }
-            uprv_memcpy(newIndex, index, i * 4);
-            uprv_free(index);
-            index = newIndex;
-            indexCapacity = I_LIMIT;
+        अगर (iLimit > सूचकांक_Capacity) {
+            uint32_t* new_सूचकांक = static_cast<uint32_t*>(uprv_malloc(I_LIMIT * 4));
+            अगर (new_सूचकांक == nullptr) { वापस false; }
+            uprv_memcpy(new_सूचकांक, सूचकांक, i * 4);
+            uprv_free(सूचकांक);
+            सूचकांक = new_सूचकांक;
+            सूचकांक_Capacity = I_LIMIT;
         }
-        do {
+        करो {
             flags[i] = ALL_SAME;
-            index[i] = initialValue;
-        } while(++i < iLimit);
-        highStart = c;
+            सूचकांक[i] = initial_मूल्य;
+        } जबतक(++i < iLimit);
+        ऊपरी_Start = c;
     }
-    return true;
+    वापस true;
 }
 
-int32_t MutableCodePointTrie::allocDataBlock(int32_t blockLength) {
-    int32_t newBlock = dataLength;
-    int32_t newTop = newBlock + blockLength;
-    if (newTop > dataCapacity) {
+int32_t MutableCodePointTrie::alloc_तथ्य_Block(int32_t block_लंबाई) {
+    int32_t newBlock = तथ्य_लंबाई;
+    int32_t new_शीर्ष = newBlock + block_लंबाई;
+    अगर (new_शीर्ष > तथ्य_Capacity) {
         int32_t capacity;
-        if (dataCapacity < MEDIUM_DATA_LENGTH) {
-            capacity = MEDIUM_DATA_LENGTH;
-        } else if (dataCapacity < MAX_DATA_LENGTH) {
-            capacity = MAX_DATA_LENGTH;
-        } else {
+        अगर (तथ्य_Capacity < MEDIUM_तथ्य_लंबाई) {
+            capacity = MEDIUM_तथ्य_लंबाई;
+        } अन्यथा अगर (तथ्य_Capacity < MAX_तथ्य_लंबाई) {
+            capacity = MAX_तथ्य_लंबाई;
+        } अन्यथा {
             // Should never occur.
             // Either MAX_DATA_LENGTH is incorrect,
             // or the code writes more values than should be possible.
-            return -1;
+            वापस -1;
         }
-        uint32_t* newData = static_cast<uint32_t*>(uprv_malloc(capacity * 4));
-        if (newData == nullptr) {
-            return -1;
+        uint32_t* new_तथ्य = static_cast<uint32_t*>(uprv_malloc(capacity * 4));
+        अगर (new_तथ्य == nullptr) {
+            वापस -1;
         }
-        uprv_memcpy(newData, data, (size_t)dataLength * 4);
-        uprv_free(data);
-        data = newData;
-        dataCapacity = capacity;
+        uprv_memcpy(new_तथ्य, तथ्य, (माप_प्रकार)तथ्य_लंबाई * 4);
+        uprv_free(तथ्य);
+        तथ्य = new_तथ्य;
+        तथ्य_Capacity = capacity;
     }
-    dataLength = newTop;
-    return newBlock;
+    तथ्य_लंबाई = new_शीर्ष;
+    वापस newBlock;
 }
 
 /**
@@ -437,478 +437,478 @@ int32_t MutableCodePointTrie::allocDataBlock(int32_t blockLength) {
  * @return -1 if no new data block available (out of memory in data array)
  * @internal
  */
-int32_t MutableCodePointTrie::getDataBlock(int32_t i) {
-    if (flags[i] == MIXED) {
-        return index[i];
+int32_t MutableCodePointTrie::get_तथ्य_Block(int32_t i) {
+    अगर (flags[i] == MIXED) {
+        वापस सूचकांक[i];
     }
-    if (i < BMP_I_LIMIT) {
-        int32_t newBlock = allocDataBlock(UCPTRIE_FAST_DATA_BLOCK_LENGTH);
-        if (newBlock < 0) { return newBlock; }
-        int32_t iStart = i & ~(SMALL_DATA_BLOCKS_PER_BMP_BLOCK -1);
-        int32_t iLimit = iStart + SMALL_DATA_BLOCKS_PER_BMP_BLOCK;
-        do {
+    अगर (i < BMP_I_LIMIT) {
+        int32_t newBlock = alloc_तथ्य_Block(UCPTRIE_FAST_तथ्य_BLOCK_लंबाई);
+        अगर (newBlock < 0) { वापस newBlock; }
+        int32_t iStart = i & ~(SMALL_तथ्य_BLOCKS_PER_BMP_BLOCK -1);
+        int32_t iLimit = iStart + SMALL_तथ्य_BLOCKS_PER_BMP_BLOCK;
+        करो {
             U_ASSERT(flags[iStart] == ALL_SAME);
-            writeBlock(data + newBlock, index[iStart]);
+            writeBlock(तथ्य + newBlock, सूचकांक[iStart]);
             flags[iStart] = MIXED;
-            index[iStart++] = newBlock;
-            newBlock += UCPTRIE_SMALL_DATA_BLOCK_LENGTH;
-        } while (iStart < iLimit);
-        return index[i];
-    } else {
-        int32_t newBlock = allocDataBlock(UCPTRIE_SMALL_DATA_BLOCK_LENGTH);
-        if (newBlock < 0) { return newBlock; }
-        writeBlock(data + newBlock, index[i]);
+            सूचकांक[iStart++] = newBlock;
+            newBlock += UCPTRIE_SMALL_तथ्य_BLOCK_लंबाई;
+        } जबतक (iStart < iLimit);
+        वापस सूचकांक[i];
+    } अन्यथा {
+        int32_t newBlock = alloc_तथ्य_Block(UCPTRIE_SMALL_तथ्य_BLOCK_लंबाई);
+        अगर (newBlock < 0) { वापस newBlock; }
+        writeBlock(तथ्य + newBlock, सूचकांक[i]);
         flags[i] = MIXED;
-        index[i] = newBlock;
-        return newBlock;
+        सूचकांक[i] = newBlock;
+        वापस newBlock;
     }
 }
 
-void MutableCodePointTrie::set(UChar32 c, uint32_t value, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) {
-        return;
+व्योम MutableCodePointTrie::set(UChar32 c, uint32_t value, UErrorCode &errorCode) {
+    अगर (U_FAILURE(errorCode)) {
+        वापस;
     }
-    if (static_cast<uint32_t>(c) > MAX_UNICODE) {
+    अगर (static_cast<uint32_t>(c) > MAX_UNICODE) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        वापस;
     }
 
     int32_t block;
-    if (!ensureHighStart(c) || (block = getDataBlock(c >> UCPTRIE_SHIFT_3)) < 0) {
+    अगर (!ensure_ऊपरी_Start(c) || (block = get_तथ्य_Block(c >> UCPTRIE_SHIFT_3)) < 0) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        वापस;
     }
 
-    data[block + (c & UCPTRIE_SMALL_DATA_MASK)] = value;
+    तथ्य[block + (c & UCPTRIE_SMALL_तथ्य_MASK)] = value;
 }
 
-void
+व्योम
 fillBlock(uint32_t *block, UChar32 start, UChar32 limit, uint32_t value) {
     uint32_t *pLimit = block + limit;
     block += start;
-    while (block < pLimit) {
+    जबतक (block < pLimit) {
         *block++ = value;
     }
 }
 
-void MutableCodePointTrie::setRange(UChar32 start, UChar32 end, uint32_t value, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) {
-        return;
+व्योम MutableCodePointTrie::setRange(UChar32 start, UChar32 end, uint32_t value, UErrorCode &errorCode) {
+    अगर (U_FAILURE(errorCode)) {
+        वापस;
     }
-    if (static_cast<uint32_t>(start) > MAX_UNICODE || static_cast<uint32_t>(end) > MAX_UNICODE || start > end) {
+    अगर (static_cast<uint32_t>(start) > MAX_UNICODE || static_cast<uint32_t>(end) > MAX_UNICODE || start > end) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        वापस;
     }
-    if (!ensureHighStart(end)) {
+    अगर (!ensure_ऊपरी_Start(end)) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        वापस;
     }
 
     UChar32 limit = end + 1;
-    if (start & UCPTRIE_SMALL_DATA_MASK) {
+    अगर (start & UCPTRIE_SMALL_तथ्य_MASK) {
         // Set partial block at [start..following block boundary[.
-        int32_t block = getDataBlock(start >> UCPTRIE_SHIFT_3);
-        if (block < 0) {
+        int32_t block = get_तथ्य_Block(start >> UCPTRIE_SHIFT_3);
+        अगर (block < 0) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return;
+            वापस;
         }
 
-        UChar32 nextStart = (start + UCPTRIE_SMALL_DATA_MASK) & ~UCPTRIE_SMALL_DATA_MASK;
-        if (nextStart <= limit) {
-            fillBlock(data + block, start & UCPTRIE_SMALL_DATA_MASK, UCPTRIE_SMALL_DATA_BLOCK_LENGTH,
+        UChar32 अग्र_Start = (start + UCPTRIE_SMALL_तथ्य_MASK) & ~UCPTRIE_SMALL_तथ्य_MASK;
+        अगर (अग्र_Start <= limit) {
+            fillBlock(तथ्य + block, start & UCPTRIE_SMALL_तथ्य_MASK, UCPTRIE_SMALL_तथ्य_BLOCK_लंबाई,
                       value);
-            start = nextStart;
-        } else {
-            fillBlock(data + block, start & UCPTRIE_SMALL_DATA_MASK, limit & UCPTRIE_SMALL_DATA_MASK,
+            start = अग्र_Start;
+        } अन्यथा {
+            fillBlock(तथ्य + block, start & UCPTRIE_SMALL_तथ्य_MASK, limit & UCPTRIE_SMALL_तथ्य_MASK,
                       value);
-            return;
+            वापस;
         }
     }
 
     // Number of positions in the last, partial block.
-    int32_t rest = limit & UCPTRIE_SMALL_DATA_MASK;
+    int32_t rest = limit & UCPTRIE_SMALL_तथ्य_MASK;
 
     // Round down limit to a block boundary.
-    limit &= ~UCPTRIE_SMALL_DATA_MASK;
+    limit &= ~UCPTRIE_SMALL_तथ्य_MASK;
 
     // Iterate over all-value blocks.
-    while (start < limit) {
+    जबतक (start < limit) {
         int32_t i = start >> UCPTRIE_SHIFT_3;
-        if (flags[i] == ALL_SAME) {
-            index[i] = value;
-        } else /* MIXED */ {
-            fillBlock(data + index[i], 0, UCPTRIE_SMALL_DATA_BLOCK_LENGTH, value);
+        अगर (flags[i] == ALL_SAME) {
+            सूचकांक[i] = value;
+        } अन्यथा /* MIXED */ {
+            fillBlock(तथ्य + सूचकांक[i], 0, UCPTRIE_SMALL_तथ्य_BLOCK_लंबाई, value);
         }
-        start += UCPTRIE_SMALL_DATA_BLOCK_LENGTH;
+        start += UCPTRIE_SMALL_तथ्य_BLOCK_लंबाई;
     }
 
-    if (rest > 0) {
+    अगर (rest > 0) {
         // Set partial block at [last block boundary..limit[.
-        int32_t block = getDataBlock(start >> UCPTRIE_SHIFT_3);
-        if (block < 0) {
+        int32_t block = get_तथ्य_Block(start >> UCPTRIE_SHIFT_3);
+        अगर (block < 0) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return;
+            वापस;
         }
 
-        fillBlock(data + block, 0, rest, value);
+        fillBlock(तथ्य + block, 0, rest, value);
     }
 }
 
 /* compaction --------------------------------------------------------------- */
 
-void MutableCodePointTrie::maskValues(uint32_t mask) {
-    initialValue &= mask;
-    errorValue &= mask;
-    highValue &= mask;
-    int32_t iLimit = highStart >> UCPTRIE_SHIFT_3;
-    for (int32_t i = 0; i < iLimit; ++i) {
-        if (flags[i] == ALL_SAME) {
-            index[i] &= mask;
+व्योम MutableCodePointTrie::mask_मूल्यावली(uint32_t mask) {
+    initial_मूल्य &= mask;
+    error_मूल्य &= mask;
+    ऊपरी_मूल्य &= mask;
+    int32_t iLimit = ऊपरी_Start >> UCPTRIE_SHIFT_3;
+    क्रम (int32_t i = 0; i < iLimit; ++i) {
+        अगर (flags[i] == ALL_SAME) {
+            सूचकांक[i] &= mask;
         }
     }
-    for (int32_t i = 0; i < dataLength; ++i) {
-        data[i] &= mask;
+    क्रम (int32_t i = 0; i < तथ्य_लंबाई; ++i) {
+        तथ्य[i] &= mask;
     }
 }
 
-template<typename UIntA, typename UIntB>
-bool equalBlocks(const UIntA *s, const UIntB *t, int32_t length) {
-    while (length > 0 && *s == *t) {
+ढाँचा<typename UIntA, typename UIntB>
+bool equalBlocks(स्थिर UIntA *s, स्थिर UIntB *t, int32_t length) {
+    जबतक (length > 0 && *s == *t) {
         ++s;
         ++t;
         --length;
     }
-    return length == 0;
+    वापस length == 0;
 }
 
-bool allValuesSameAs(const uint32_t *p, int32_t length, uint32_t value) {
-    const uint32_t *pLimit = p + length;
-    while (p < pLimit && *p == value) { ++p; }
-    return p == pLimit;
+bool all_मूल्यावली_Same_As(स्थिर uint32_t *p, int32_t length, uint32_t value) {
+    स्थिर uint32_t *pLimit = p + length;
+    जबतक (p < pLimit && *p == value) { ++p; }
+    वापस p == pLimit;
 }
 
 /** Search for an identical block. */
-int32_t findSameBlock(const uint16_t *p, int32_t pStart, int32_t length,
-                      const uint16_t *q, int32_t qStart, int32_t blockLength) {
+int32_t findSameBlock(स्थिर uint16_t *p, int32_t pStart, int32_t length,
+                      स्थिर uint16_t *q, int32_t qStart, int32_t block_लंबाई) {
     // Ensure that we do not even partially get past length.
-    length -= blockLength;
+    length -= block_लंबाई;
 
     q += qStart;
-    while (pStart <= length) {
-        if (equalBlocks(p + pStart, q, blockLength)) {
-            return pStart;
+    जबतक (pStart <= length) {
+        अगर (equalBlocks(p + pStart, q, block_लंबाई)) {
+            वापस pStart;
         }
         ++pStart;
     }
-    return -1;
+    वापस -1;
 }
 
-int32_t findAllSameBlock(const uint32_t *p, int32_t start, int32_t limit,
-                         uint32_t value, int32_t blockLength) {
+int32_t findAllSameBlock(स्थिर uint32_t *p, int32_t start, int32_t limit,
+                         uint32_t value, int32_t block_लंबाई) {
     // Ensure that we do not even partially get past limit.
-    limit -= blockLength;
+    limit -= block_लंबाई;
 
-    for (int32_t block = start; block <= limit; ++block) {
-        if (p[block] == value) {
-            for (int32_t i = 1;; ++i) {
-                if (i == blockLength) {
-                    return block;
+    क्रम (int32_t block = start; block <= limit; ++block) {
+        अगर (p[block] == value) {
+            क्रम (int32_t i = 1;; ++i) {
+                अगर (i == block_लंबाई) {
+                    वापस block;
                 }
-                if (p[block + i] != value) {
+                अगर (p[block + i] != value) {
                     block += i;
-                    break;
+                    अवरोध;
                 }
             }
         }
     }
-    return -1;
+    वापस -1;
 }
 
 /**
  * Look for maximum overlap of the beginning of the other block
  * with the previous, adjacent block.
  */
-template<typename UIntA, typename UIntB>
-int32_t getOverlap(const UIntA *p, int32_t length,
-                   const UIntB *q, int32_t qStart, int32_t blockLength) {
-    int32_t overlap = blockLength - 1;
+ढाँचा<typename UIntA, typename UIntB>
+int32_t getOverlap(स्थिर UIntA *p, int32_t length,
+                   स्थिर UIntB *q, int32_t qStart, int32_t block_लंबाई) {
+    int32_t overlap = block_लंबाई - 1;
     U_ASSERT(overlap <= length);
     q += qStart;
-    while (overlap > 0 && !equalBlocks(p + (length - overlap), q, overlap)) {
+    जबतक (overlap > 0 && !equalBlocks(p + (length - overlap), q, overlap)) {
         --overlap;
     }
-    return overlap;
+    वापस overlap;
 }
 
-int32_t getAllSameOverlap(const uint32_t *p, int32_t length, uint32_t value,
-                          int32_t blockLength) {
-    int32_t min = length - (blockLength - 1);
+int32_t getAllSameOverlap(स्थिर uint32_t *p, int32_t length, uint32_t value,
+                          int32_t block_लंबाई) {
+    int32_t min = length - (block_लंबाई - 1);
     int32_t i = length;
-    while (min < i && p[i - 1] == value) { --i; }
-    return length - i;
+    जबतक (min < i && p[i - 1] == value) { --i; }
+    वापस length - i;
 }
 
-bool isStartOfSomeFastBlock(uint32_t dataOffset, const uint32_t index[], int32_t fastILimit) {
-    for (int32_t i = 0; i < fastILimit; i += SMALL_DATA_BLOCKS_PER_BMP_BLOCK) {
-        if (index[i] == dataOffset) {
-            return true;
+bool isStartOfSomeFastBlock(uint32_t तथ्य_Offset, स्थिर uint32_t सूचकांक[], int32_t fastILimit) {
+    क्रम (int32_t i = 0; i < fastILimit; i += SMALL_तथ्य_BLOCKS_PER_BMP_BLOCK) {
+        अगर (सूचकांक[i] == तथ्य_Offset) {
+            वापस true;
         }
     }
-    return false;
+    वापस false;
 }
 
 /**
  * Finds the start of the last range in the trie by enumerating backward.
  * Indexes for code points higher than this will be omitted.
  */
-UChar32 MutableCodePointTrie::findHighStart() const {
-    int32_t i = highStart >> UCPTRIE_SHIFT_3;
-    while (i > 0) {
+UChar32 MutableCodePointTrie::find_ऊपरी_Start() स्थिर {
+    int32_t i = ऊपरी_Start >> UCPTRIE_SHIFT_3;
+    जबतक (i > 0) {
         bool match;
-        if (flags[--i] == ALL_SAME) {
-            match = index[i] == highValue;
-        } else /* MIXED */ {
-            const uint32_t *p = data + index[i];
-            for (int32_t j = 0;; ++j) {
-                if (j == UCPTRIE_SMALL_DATA_BLOCK_LENGTH) {
+        अगर (flags[--i] == ALL_SAME) {
+            match = सूचकांक[i] == ऊपरी_मूल्य;
+        } अन्यथा /* MIXED */ {
+            स्थिर uint32_t *p = तथ्य + सूचकांक[i];
+            क्रम (int32_t j = 0;; ++j) {
+                अगर (j == UCPTRIE_SMALL_तथ्य_BLOCK_लंबाई) {
                     match = true;
-                    break;
+                    अवरोध;
                 }
-                if (p[j] != highValue) {
+                अगर (p[j] != ऊपरी_मूल्य) {
                     match = false;
-                    break;
+                    अवरोध;
                 }
             }
         }
-        if (!match) {
-            return (i + 1) << UCPTRIE_SHIFT_3;
+        अगर (!match) {
+            वापस (i + 1) << UCPTRIE_SHIFT_3;
         }
     }
-    return 0;
+    वापस 0;
 }
 
-class AllSameBlocks {
-public:
-    static constexpr int32_t NEW_UNIQUE = -1;
-    static constexpr int32_t OVERFLOW = -2;
+श्रेणी AllSameBlocks {
+खुला:
+    अटल constexpr int32_t NEW_UNIQUE = -1;
+    अटल constexpr int32_t OVERFLOW = -2;
 
     AllSameBlocks() : length(0), mostRecent(-1) {}
 
-    int32_t findOrAdd(int32_t index, int32_t count, uint32_t value) {
-        if (mostRecent >= 0 && values[mostRecent] == value) {
+    int32_t findOrAdd(int32_t सूचकांक, int32_t count, uint32_t value) {
+        अगर (mostRecent >= 0 && मूल्यावली[mostRecent] == value) {
             refCounts[mostRecent] += count;
-            return indexes[mostRecent];
+            वापस indexes[mostRecent];
         }
-        for (int32_t i = 0; i < length; ++i) {
-            if (values[i] == value) {
+        क्रम (int32_t i = 0; i < length; ++i) {
+            अगर (मूल्यावली[i] == value) {
                 mostRecent = i;
                 refCounts[i] += count;
-                return indexes[i];
+                वापस indexes[i];
             }
         }
-        if (length == CAPACITY) {
-            return OVERFLOW;
+        अगर (length == CAPACITY) {
+            वापस OVERFLOW;
         }
         mostRecent = length;
-        indexes[length] = index;
-        values[length] = value;
+        indexes[length] = सूचकांक;
+        मूल्यावली[length] = value;
         refCounts[length++] = count;
-        return NEW_UNIQUE;
+        वापस NEW_UNIQUE;
     }
 
     /** Replaces the block which has the lowest reference count. */
-    void add(int32_t index, int32_t count, uint32_t value) {
+    व्योम add(int32_t सूचकांक, int32_t count, uint32_t value) {
         U_ASSERT(length == CAPACITY);
         int32_t least = -1;
-        int32_t leastCount = I_LIMIT;
-        for (int32_t i = 0; i < length; ++i) {
-            U_ASSERT(values[i] != value);
-            if (refCounts[i] < leastCount) {
+        int32_t least_गिनती = I_LIMIT;
+        क्रम (int32_t i = 0; i < length; ++i) {
+            U_ASSERT(मूल्यावली[i] != value);
+            अगर (refCounts[i] < least_गिनती) {
                 least = i;
-                leastCount = refCounts[i];
+                least_गिनती = refCounts[i];
             }
         }
         U_ASSERT(least >= 0);
         mostRecent = least;
-        indexes[least] = index;
-        values[least] = value;
+        indexes[least] = सूचकांक;
+        मूल्यावली[least] = value;
         refCounts[least] = count;
     }
 
-    int32_t findMostUsed() const {
-        if (length == 0) { return -1; }
+    int32_t findMostUsed() स्थिर {
+        अगर (length == 0) { वापस -1; }
         int32_t max = -1;
-        int32_t maxCount = 0;
-        for (int32_t i = 0; i < length; ++i) {
-            if (refCounts[i] > maxCount) {
+        int32_t max_गिनती = 0;
+        क्रम (int32_t i = 0; i < length; ++i) {
+            अगर (refCounts[i] > max_गिनती) {
                 max = i;
-                maxCount = refCounts[i];
+                max_गिनती = refCounts[i];
             }
         }
-        return indexes[max];
+        वापस indexes[max];
     }
 
-private:
-    static constexpr int32_t CAPACITY = 32;
+निजी:
+    अटल constexpr int32_t CAPACITY = 32;
 
     int32_t length;
     int32_t mostRecent;
 
     int32_t indexes[CAPACITY];
-    uint32_t values[CAPACITY];
+    uint32_t मूल्यावली[CAPACITY];
     int32_t refCounts[CAPACITY];
 };
 
 // Custom hash table for mixed-value blocks to be found anywhere in the
 // compacted data or index so far.
-class MixedBlocks {
-public:
+श्रेणी MixedBlocks {
+खुला:
     MixedBlocks() {}
     ~MixedBlocks() {
         uprv_free(table);
     }
 
-    bool init(int32_t maxLength, int32_t newBlockLength) {
+    bool init(int32_t max_लंबाई_2, int32_t new_Block_लंबाई) {
         // We store actual data indexes + 1 to reserve 0 for empty entries.
-        int32_t maxDataIndex = maxLength - newBlockLength + 1;
-        int32_t newLength;
-        if (maxDataIndex <= 0xfff) {  // 4k
-            newLength = 6007;
+        int32_t max_तथ्य_सूचकांक = max_लंबाई_2 - new_Block_लंबाई + 1;
+        int32_t new_लंबाई;
+        अगर (max_तथ्य_सूचकांक <= 0xfff) {  // 4k
+            new_लंबाई = 6007;
             shift = 12;
             mask = 0xfff;
-        } else if (maxDataIndex <= 0x7fff) {  // 32k
-            newLength = 50021;
+        } अन्यथा अगर (max_तथ्य_सूचकांक <= 0x7fff) {  // 32k
+            new_लंबाई = 50021;
             shift = 15;
             mask = 0x7fff;
-        } else if (maxDataIndex <= 0x1ffff) {  // 128k
-            newLength = 200003;
+        } अन्यथा अगर (max_तथ्य_सूचकांक <= 0x1ffff) {  // 128k
+            new_लंबाई = 200003;
             shift = 17;
             mask = 0x1ffff;
-        } else {
+        } अन्यथा {
             // maxDataIndex up to around MAX_DATA_LENGTH, ca. 1.1M
-            newLength = 1500007;
+            new_लंबाई = 1500007;
             shift = 21;
             mask = 0x1fffff;
         }
-        if (newLength > capacity) {
+        अगर (new_लंबाई > capacity) {
             uprv_free(table);
-            table = static_cast<uint32_t*>(uprv_malloc(newLength * 4));
-            if (table == nullptr) {
-                return false;
+            table = static_cast<uint32_t*>(uprv_malloc(new_लंबाई * 4));
+            अगर (table == nullptr) {
+                वापस false;
             }
-            capacity = newLength;
+            capacity = new_लंबाई;
         }
-        length = newLength;
+        length = new_लंबाई;
         uprv_memset(table, 0, length * 4);
 
-        blockLength = newBlockLength;
-        return true;
+        block_लंबाई = new_Block_लंबाई;
+        वापस true;
     }
 
-    template<typename UInt>
-    void extend(const UInt *data, int32_t minStart, int32_t prevDataLength, int32_t newDataLength) {
-        int32_t start = prevDataLength - blockLength;
-        if (start >= minStart) {
+    ढाँचा<typename UInt>
+    व्योम extend(स्थिर UInt *तथ्य, int32_t minStart, int32_t पूर्व_तथ्य_लंबाई, int32_t new_तथ्य_लंबाई) {
+        int32_t start = पूर्व_तथ्य_लंबाई - block_लंबाई;
+        अगर (start >= minStart) {
             ++start;  // Skip the last block that we added last time.
-        } else {
+        } अन्यथा {
             start = minStart;  // Begin with the first full block.
         }
-        for (int32_t end = newDataLength - blockLength; start <= end; ++start) {
-            uint32_t hashCode = makeHashCode(data, start);
-            addEntry(data, start, hashCode, start);
+        क्रम (int32_t end = new_तथ्य_लंबाई - block_लंबाई; start <= end; ++start) {
+            uint32_t hashCode = makeHashCode(तथ्य, start);
+            addEntry(तथ्य, start, hashCode, start);
         }
     }
 
-    template<typename UIntA, typename UIntB>
-    int32_t findBlock(const UIntA *data, const UIntB *blockData, int32_t blockStart) const {
-        uint32_t hashCode = makeHashCode(blockData, blockStart);
-        int32_t entryIndex = findEntry(data, blockData, blockStart, hashCode);
-        if (entryIndex >= 0) {
-            return (table[entryIndex] & mask) - 1;
-        } else {
-            return -1;
+    ढाँचा<typename UIntA, typename UIntB>
+    int32_t findBlock(स्थिर UIntA *तथ्य, स्थिर UIntB *block_तथ्य, int32_t blockStart) स्थिर {
+        uint32_t hashCode = makeHashCode(block_तथ्य, blockStart);
+        int32_t entry_सूचकांक = findEntry(तथ्य, block_तथ्य, blockStart, hashCode);
+        अगर (entry_सूचकांक >= 0) {
+            वापस (table[entry_सूचकांक] & mask) - 1;
+        } अन्यथा {
+            वापस -1;
         }
     }
 
-    int32_t findAllSameBlock(const uint32_t *data, uint32_t blockValue) const {
-        uint32_t hashCode = makeHashCode(blockValue);
-        int32_t entryIndex = findEntry(data, blockValue, hashCode);
-        if (entryIndex >= 0) {
-            return (table[entryIndex] & mask) - 1;
-        } else {
-            return -1;
+    int32_t findAllSameBlock(स्थिर uint32_t *तथ्य, uint32_t block_मूल्य) स्थिर {
+        uint32_t hashCode = makeHashCode(block_मूल्य);
+        int32_t entry_सूचकांक = findEntry(तथ्य, block_मूल्य, hashCode);
+        अगर (entry_सूचकांक >= 0) {
+            वापस (table[entry_सूचकांक] & mask) - 1;
+        } अन्यथा {
+            वापस -1;
         }
     }
 
-private:
-    template<typename UInt>
-    uint32_t makeHashCode(const UInt *blockData, int32_t blockStart) const {
-        int32_t blockLimit = blockStart + blockLength;
-        uint32_t hashCode = blockData[blockStart++];
-        do {
-            hashCode = 37 * hashCode + blockData[blockStart++];
-        } while (blockStart < blockLimit);
-        return hashCode;
+निजी:
+    ढाँचा<typename UInt>
+    uint32_t makeHashCode(स्थिर UInt *block_तथ्य, int32_t blockStart) स्थिर {
+        int32_t blockLimit = blockStart + block_लंबाई;
+        uint32_t hashCode = block_तथ्य[blockStart++];
+        करो {
+            hashCode = 37 * hashCode + block_तथ्य[blockStart++];
+        } जबतक (blockStart < blockLimit);
+        वापस hashCode;
     }
 
-    uint32_t makeHashCode(uint32_t blockValue) const {
-        uint32_t hashCode = blockValue;
-        for (int32_t i = 1; i < blockLength; ++i) {
-            hashCode = 37 * hashCode + blockValue;
+    uint32_t makeHashCode(uint32_t block_मूल्य) स्थिर {
+        uint32_t hashCode = block_मूल्य;
+        क्रम (int32_t i = 1; i < block_लंबाई; ++i) {
+            hashCode = 37 * hashCode + block_मूल्य;
         }
-        return hashCode;
+        वापस hashCode;
     }
 
-    template<typename UInt>
-    void addEntry(const UInt *data, int32_t blockStart, uint32_t hashCode, int32_t dataIndex) {
-        U_ASSERT(0 <= dataIndex && dataIndex < (int32_t)mask);
-        int32_t entryIndex = findEntry(data, data, blockStart, hashCode);
-        if (entryIndex < 0) {
-            table[~entryIndex] = (hashCode << shift) | (dataIndex + 1);
+    ढाँचा<typename UInt>
+    व्योम addEntry(स्थिर UInt *तथ्य, int32_t blockStart, uint32_t hashCode, int32_t तथ्य_सूचकांक) {
+        U_ASSERT(0 <= तथ्य_सूचकांक && तथ्य_सूचकांक < (int32_t)mask);
+        int32_t entry_सूचकांक = findEntry(तथ्य, तथ्य, blockStart, hashCode);
+        अगर (entry_सूचकांक < 0) {
+            table[~entry_सूचकांक] = (hashCode << shift) | (तथ्य_सूचकांक + 1);
         }
     }
 
-    template<typename UIntA, typename UIntB>
-    int32_t findEntry(const UIntA *data, const UIntB *blockData, int32_t blockStart,
-                      uint32_t hashCode) const {
+    ढाँचा<typename UIntA, typename UIntB>
+    int32_t findEntry(स्थिर UIntA *तथ्य, स्थिर UIntB *block_तथ्य, int32_t blockStart,
+                      uint32_t hashCode) स्थिर {
         uint32_t shiftedHashCode = hashCode << shift;
-        int32_t initialEntryIndex = (hashCode % (length - 1)) + 1;  // 1..length-1
-        for (int32_t entryIndex = initialEntryIndex;;) {
-            uint32_t entry = table[entryIndex];
-            if (entry == 0) {
-                return ~entryIndex;
+        int32_t initial_Entry_सूचकांक = (hashCode % (length - 1)) + 1;  // 1..length-1
+        क्रम (int32_t entry_सूचकांक = initial_Entry_सूचकांक;;) {
+            uint32_t entry = table[entry_सूचकांक];
+            अगर (entry == 0) {
+                वापस ~entry_सूचकांक;
             }
-            if ((entry & ~mask) == shiftedHashCode) {
-                int32_t dataIndex = (entry & mask) - 1;
-                if (equalBlocks(data + dataIndex, blockData + blockStart, blockLength)) {
-                    return entryIndex;
+            अगर ((entry & ~mask) == shiftedHashCode) {
+                int32_t तथ्य_सूचकांक = (entry & mask) - 1;
+                अगर (equalBlocks(तथ्य + तथ्य_सूचकांक, block_तथ्य + blockStart, block_लंबाई)) {
+                    वापस entry_सूचकांक;
                 }
             }
-            entryIndex = nextIndex(initialEntryIndex, entryIndex);
+            entry_सूचकांक = अग्र_सूचकांक(initial_Entry_सूचकांक, entry_सूचकांक);
         }
     }
 
-    int32_t findEntry(const uint32_t *data, uint32_t blockValue, uint32_t hashCode) const {
+    int32_t findEntry(स्थिर uint32_t *तथ्य, uint32_t block_मूल्य, uint32_t hashCode) स्थिर {
         uint32_t shiftedHashCode = hashCode << shift;
-        int32_t initialEntryIndex = (hashCode % (length - 1)) + 1;  // 1..length-1
-        for (int32_t entryIndex = initialEntryIndex;;) {
-            uint32_t entry = table[entryIndex];
-            if (entry == 0) {
-                return ~entryIndex;
+        int32_t initial_Entry_सूचकांक = (hashCode % (length - 1)) + 1;  // 1..length-1
+        क्रम (int32_t entry_सूचकांक = initial_Entry_सूचकांक;;) {
+            uint32_t entry = table[entry_सूचकांक];
+            अगर (entry == 0) {
+                वापस ~entry_सूचकांक;
             }
-            if ((entry & ~mask) == shiftedHashCode) {
-                int32_t dataIndex = (entry & mask) - 1;
-                if (allValuesSameAs(data + dataIndex, blockLength, blockValue)) {
-                    return entryIndex;
+            अगर ((entry & ~mask) == shiftedHashCode) {
+                int32_t तथ्य_सूचकांक = (entry & mask) - 1;
+                अगर (all_मूल्यावली_Same_As(तथ्य + तथ्य_सूचकांक, block_लंबाई, block_मूल्य)) {
+                    वापस entry_सूचकांक;
                 }
             }
-            entryIndex = nextIndex(initialEntryIndex, entryIndex);
+            entry_सूचकांक = अग्र_सूचकांक(initial_Entry_सूचकांक, entry_सूचकांक);
         }
     }
 
-    inline int32_t nextIndex(int32_t initialEntryIndex, int32_t entryIndex) const {
+    अंतरभूत int32_t अग्र_सूचकांक(int32_t initial_Entry_सूचकांक, int32_t entry_सूचकांक) स्थिर {
         // U_ASSERT(0 < initialEntryIndex && initialEntryIndex < length);
-        return (entryIndex + initialEntryIndex) % length;
+        वापस (entry_सूचकांक + initial_Entry_सूचकांक) % length;
     }
 
     // Hash table.
@@ -921,152 +921,152 @@ private:
     int32_t shift = 0;
     uint32_t mask = 0;
 
-    int32_t blockLength = 0;
+    int32_t block_लंबाई = 0;
 };
 
-int32_t MutableCodePointTrie::compactWholeDataBlocks(int32_t fastILimit, AllSameBlocks &allSameBlocks) {
-#ifdef UCPTRIE_DEBUG
+int32_t MutableCodePointTrie::compact_Whole_तथ्य_Blocks(int32_t fastILimit, AllSameBlocks &allSameBlocks) {
+#अगर_घोषित UCPTRIE_DEBUG
     bool overflow = false;
-#endif
+#पूर्ण_अगर
 
     // ASCII data will be stored as a linear table, even if the following code
     // does not yet count it that way.
-    int32_t newDataCapacity = ASCII_LIMIT;
+    int32_t new_तथ्य_Capacity = ASCII_LIMIT;
     // Add room for a small data null block in case it would match the start of
     // a fast data block where dataNullOffset must not be set in that case.
-    newDataCapacity += UCPTRIE_SMALL_DATA_BLOCK_LENGTH;
+    new_तथ्य_Capacity += UCPTRIE_SMALL_तथ्य_BLOCK_लंबाई;
     // Add room for special values (errorValue, highValue) and padding.
-    newDataCapacity += 4;
-    int32_t iLimit = highStart >> UCPTRIE_SHIFT_3;
-    int32_t blockLength = UCPTRIE_FAST_DATA_BLOCK_LENGTH;
-    int32_t inc = SMALL_DATA_BLOCKS_PER_BMP_BLOCK;
-    for (int32_t i = 0; i < iLimit; i += inc) {
-        if (i == fastILimit) {
-            blockLength = UCPTRIE_SMALL_DATA_BLOCK_LENGTH;
+    new_तथ्य_Capacity += 4;
+    int32_t iLimit = ऊपरी_Start >> UCPTRIE_SHIFT_3;
+    int32_t block_लंबाई = UCPTRIE_FAST_तथ्य_BLOCK_लंबाई;
+    int32_t inc = SMALL_तथ्य_BLOCKS_PER_BMP_BLOCK;
+    क्रम (int32_t i = 0; i < iLimit; i += inc) {
+        अगर (i == fastILimit) {
+            block_लंबाई = UCPTRIE_SMALL_तथ्य_BLOCK_लंबाई;
             inc = 1;
         }
-        uint32_t value = index[i];
-        if (flags[i] == MIXED) {
+        uint32_t value = सूचकांक[i];
+        अगर (flags[i] == MIXED) {
             // Really mixed?
-            const uint32_t *p = data + value;
+            स्थिर uint32_t *p = तथ्य + value;
             value = *p;
-            if (allValuesSameAs(p + 1, blockLength - 1, value)) {
+            अगर (all_मूल्यावली_Same_As(p + 1, block_लंबाई - 1, value)) {
                 flags[i] = ALL_SAME;
-                index[i] = value;
+                सूचकांक[i] = value;
                 // Fall through to ALL_SAME handling.
-            } else {
-                newDataCapacity += blockLength;
-                continue;
+            } अन्यथा {
+                new_तथ्य_Capacity += block_लंबाई;
+                जारी;
             }
-        } else {
+        } अन्यथा {
             U_ASSERT(flags[i] == ALL_SAME);
-            if (inc > 1) {
+            अगर (inc > 1) {
                 // Do all of the fast-range data block's ALL_SAME parts have the same value?
                 bool allSame = true;
-                int32_t next_i = i + inc;
-                for (int32_t j = i + 1; j < next_i; ++j) {
+                int32_t अग्र_i = i + inc;
+                क्रम (int32_t j = i + 1; j < अग्र_i; ++j) {
                     U_ASSERT(flags[j] == ALL_SAME);
-                    if (index[j] != value) {
+                    अगर (सूचकांक[j] != value) {
                         allSame = false;
-                        break;
+                        अवरोध;
                     }
                 }
-                if (!allSame) {
+                अगर (!allSame) {
                     // Turn it into a MIXED block.
-                    if (getDataBlock(i) < 0) {
-                        return -1;
+                    अगर (get_तथ्य_Block(i) < 0) {
+                        वापस -1;
                     }
-                    newDataCapacity += blockLength;
-                    continue;
+                    new_तथ्य_Capacity += block_लंबाई;
+                    जारी;
                 }
             }
         }
         // Is there another ALL_SAME block with the same value?
         int32_t other = allSameBlocks.findOrAdd(i, inc, value);
-        if (other == AllSameBlocks::OVERFLOW) {
+        अगर (other == AllSameBlocks::OVERFLOW) {
             // The fixed-size array overflowed. Slow check for a duplicate block.
-#ifdef UCPTRIE_DEBUG
-            if (!overflow) {
-                puts("UCPTrie AllSameBlocks overflow");
+#अगर_घोषित UCPTRIE_DEBUG
+            अगर (!overflow) {
+                माला_दो("UCPTrie AllSameBlocks overflow");
                 overflow = true;
             }
-#endif
-            int32_t jInc = SMALL_DATA_BLOCKS_PER_BMP_BLOCK;
-            for (int32_t j = 0;; j += jInc) {
-                if (j == i) {
+#पूर्ण_अगर
+            int32_t jInc = SMALL_तथ्य_BLOCKS_PER_BMP_BLOCK;
+            क्रम (int32_t j = 0;; j += jInc) {
+                अगर (j == i) {
                     allSameBlocks.add(i, inc, value);
-                    break;
+                    अवरोध;
                 }
-                if (j == fastILimit) {
+                अगर (j == fastILimit) {
                     jInc = 1;
                 }
-                if (flags[j] == ALL_SAME && index[j] == value) {
+                अगर (flags[j] == ALL_SAME && सूचकांक[j] == value) {
                     allSameBlocks.add(j, jInc + inc, value);
                     other = j;
-                    break;
+                    अवरोध;
                     // We could keep counting blocks with the same value
                     // before we add the first one, which may improve compaction in rare cases,
                     // but it would make it slower.
                 }
             }
         }
-        if (other >= 0) {
+        अगर (other >= 0) {
             flags[i] = SAME_AS;
-            index[i] = other;
-        } else {
+            सूचकांक[i] = other;
+        } अन्यथा {
             // New unique same-value block.
-            newDataCapacity += blockLength;
+            new_तथ्य_Capacity += block_लंबाई;
         }
     }
-    return newDataCapacity;
+    वापस new_तथ्य_Capacity;
 }
 
-#ifdef UCPTRIE_DEBUG
-#   define DEBUG_DO(expr) expr
-#else
-#   define DEBUG_DO(expr)
-#endif
+#अगर_घोषित UCPTRIE_DEBUG
+#   define DEBUG_DO(व्यंजक) व्यंजक
+#अन्यथा
+#   define DEBUG_DO(व्यंजक)
+#पूर्ण_अगर
 
-#ifdef UCPTRIE_DEBUG
+#अगर_घोषित UCPTRIE_DEBUG
 // Braille symbols: U+28xx = UTF-8 E2 A0 80..E2 A3 BF
-int32_t appendValue(char s[], int32_t length, uint32_t value) {
+int32_t append_मूल्य(अक्षर s[], int32_t length, uint32_t value) {
     value ^= value >> 16;
     value ^= value >> 8;
     s[length] = 0xE2;
-    s[length + 1] = (char)(0xA0 + ((value >> 6) & 3));
-    s[length + 2] = (char)(0x80 + (value & 0x3F));
-    return length + 3;
+    s[length + 1] = (अक्षर)(0xA0 + ((value >> 6) & 3));
+    s[length + 2] = (अक्षर)(0x80 + (value & 0x3F));
+    वापस length + 3;
 }
 
-void printBlock(const uint32_t *block, int32_t blockLength, uint32_t value,
-                UChar32 start, int32_t overlap, uint32_t initialValue) {
-    char s[UCPTRIE_FAST_DATA_BLOCK_LENGTH * 3 + 3];
+व्योम printBlock(स्थिर uint32_t *block, int32_t block_लंबाई, uint32_t value,
+                UChar32 start, int32_t overlap, uint32_t initial_मूल्य) {
+    अक्षर s[UCPTRIE_FAST_तथ्य_BLOCK_लंबाई * 3 + 3];
     int32_t length = 0;
     int32_t i;
-    for (i = 0; i < overlap; ++i) {
-        length = appendValue(s, length, 0);  // Braille blank
+    क्रम (i = 0; i < overlap; ++i) {
+        length = append_मूल्य(s, length, 0);  // Braille blank
     }
     s[length++] = '|';
-    for (; i < blockLength; ++i) {
-        if (block != nullptr) {
+    क्रम (; i < block_लंबाई; ++i) {
+        अगर (block != nullptr) {
             value = block[i];
         }
-        if (value == initialValue) {
+        अगर (value == initial_मूल्य) {
             value = 0x40;  // Braille lower left dot
         }
-        length = appendValue(s, length, value);
+        length = append_मूल्य(s, length, value);
     }
     s[length] = 0;
     start += overlap;
-    if (start <= 0xffff) {
-        printf("    %04lX  %s|\n", (long)start, s);
-    } else if (start <= 0xfffff) {
-        printf("   %5lX  %s|\n", (long)start, s);
-    } else {
-        printf("  %6lX  %s|\n", (long)start, s);
+    अगर (start <= 0xffff) {
+        म_लिखो("    %04lX  %s|\n", (दीर्घ)start, s);
+    } अन्यथा अगर (start <= 0xfffff) {
+        म_लिखो("   %5lX  %s|\n", (दीर्घ)start, s);
+    } अन्यथा {
+        म_लिखो("  %6lX  %s|\n", (दीर्घ)start, s);
     }
 }
-#endif
+#पूर्ण_अगर
 
 /**
  * Compacts a build-time trie.
@@ -1079,54 +1079,54 @@ void printBlock(const uint32_t *block, int32_t blockLength, uint32_t value,
  *
  * It does not try to find an optimal order of writing, deduplicating, and overlapping blocks.
  */
-int32_t MutableCodePointTrie::compactData(
-        int32_t fastILimit, uint32_t *newData, int32_t newDataCapacity,
-        int32_t dataNullIndex, MixedBlocks &mixedBlocks, UErrorCode &errorCode) {
-#ifdef UCPTRIE_DEBUG
-    int32_t countSame=0, sumOverlaps=0;
-    bool printData = dataLength == 29088 /* line.brk */ ||
+int32_t MutableCodePointTrie::compact_तथ्य(
+        int32_t fastILimit, uint32_t *new_तथ्य, int32_t new_तथ्य_Capacity,
+        int32_t तथ्य_Null_सूचकांक, MixedBlocks &mixedBlocks, UErrorCode &errorCode) {
+#अगर_घोषित UCPTRIE_DEBUG
+    int32_t गिनती_Same=0, योग_Overlaps=0;
+    bool print_तथ्य = तथ्य_लंबाई == 29088 /* line.brk */ ||
         // dataLength == 30048 /* CanonIterData */ ||
-        dataLength == 50400 /* zh.txt~stroke */;
-#endif
+        तथ्य_लंबाई == 50400 /* zh.txt~stroke */;
+#पूर्ण_अगर
 
     // The linear ASCII data has been copied into newData already.
-    int32_t newDataLength = 0;
-    for (int32_t i = 0; newDataLength < ASCII_LIMIT;
-            newDataLength += UCPTRIE_FAST_DATA_BLOCK_LENGTH, i += SMALL_DATA_BLOCKS_PER_BMP_BLOCK) {
-        index[i] = newDataLength;
-#ifdef UCPTRIE_DEBUG
-        if (printData) {
-            printBlock(newData + newDataLength, UCPTRIE_FAST_DATA_BLOCK_LENGTH, 0, newDataLength, 0, initialValue);
+    int32_t new_तथ्य_लंबाई = 0;
+    क्रम (int32_t i = 0; new_तथ्य_लंबाई < ASCII_LIMIT;
+            new_तथ्य_लंबाई += UCPTRIE_FAST_तथ्य_BLOCK_लंबाई, i += SMALL_तथ्य_BLOCKS_PER_BMP_BLOCK) {
+        सूचकांक[i] = new_तथ्य_लंबाई;
+#अगर_घोषित UCPTRIE_DEBUG
+        अगर (print_तथ्य) {
+            printBlock(new_तथ्य + new_तथ्य_लंबाई, UCPTRIE_FAST_तथ्य_BLOCK_लंबाई, 0, new_तथ्य_लंबाई, 0, initial_मूल्य);
         }
-#endif
+#पूर्ण_अगर
     }
 
-    int32_t blockLength = UCPTRIE_FAST_DATA_BLOCK_LENGTH;
-    if (!mixedBlocks.init(newDataCapacity, blockLength)) {
+    int32_t block_लंबाई = UCPTRIE_FAST_तथ्य_BLOCK_लंबाई;
+    अगर (!mixedBlocks.init(new_तथ्य_Capacity, block_लंबाई)) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return 0;
+        वापस 0;
     }
-    mixedBlocks.extend(newData, 0, 0, newDataLength);
+    mixedBlocks.extend(new_तथ्य, 0, 0, new_तथ्य_लंबाई);
 
-    int32_t iLimit = highStart >> UCPTRIE_SHIFT_3;
-    int32_t inc = SMALL_DATA_BLOCKS_PER_BMP_BLOCK;
-    int32_t fastLength = 0;
-    for (int32_t i = ASCII_I_LIMIT; i < iLimit; i += inc) {
-        if (i == fastILimit) {
-            blockLength = UCPTRIE_SMALL_DATA_BLOCK_LENGTH;
+    int32_t iLimit = ऊपरी_Start >> UCPTRIE_SHIFT_3;
+    int32_t inc = SMALL_तथ्य_BLOCKS_PER_BMP_BLOCK;
+    int32_t fast_लंबाई = 0;
+    क्रम (int32_t i = ASCII_I_LIMIT; i < iLimit; i += inc) {
+        अगर (i == fastILimit) {
+            block_लंबाई = UCPTRIE_SMALL_तथ्य_BLOCK_लंबाई;
             inc = 1;
-            fastLength = newDataLength;
-            if (!mixedBlocks.init(newDataCapacity, blockLength)) {
+            fast_लंबाई = new_तथ्य_लंबाई;
+            अगर (!mixedBlocks.init(new_तथ्य_Capacity, block_लंबाई)) {
                 errorCode = U_MEMORY_ALLOCATION_ERROR;
-                return 0;
+                वापस 0;
             }
-            mixedBlocks.extend(newData, 0, 0, newDataLength);
+            mixedBlocks.extend(new_तथ्य, 0, 0, new_तथ्य_लंबाई);
         }
-        if (flags[i] == ALL_SAME) {
-            uint32_t value = index[i];
+        अगर (flags[i] == ALL_SAME) {
+            uint32_t value = सूचकांक[i];
             // Find an earlier part of the data array of length blockLength
             // that is filled with this value.
-            int32_t n = mixedBlocks.findAllSameBlock(newData, value);
+            int32_t n = mixedBlocks.findAllSameBlock(new_तथ्य, value);
             // If we find a match, and the current block is the data null block,
             // and it is not a fast block but matches the start of a fast block,
             // then we need to continue looking.
@@ -1134,104 +1134,104 @@ int32_t MutableCodePointTrie::compactData(
             // and not all of the rest of the fast block is filled with this value.
             // Otherwise trie.getRange() would detect that the fast block starts at
             // dataNullOffset and assume incorrectly that it is filled with the null value.
-            while (n >= 0 && i == dataNullIndex && i >= fastILimit && n < fastLength &&
-                    isStartOfSomeFastBlock(n, index, fastILimit)) {
-                n = findAllSameBlock(newData, n + 1, newDataLength, value, blockLength);
+            जबतक (n >= 0 && i == तथ्य_Null_सूचकांक && i >= fastILimit && n < fast_लंबाई &&
+                    isStartOfSomeFastBlock(n, सूचकांक, fastILimit)) {
+                n = findAllSameBlock(new_तथ्य, n + 1, new_तथ्य_लंबाई, value, block_लंबाई);
             }
-            if (n >= 0) {
-                DEBUG_DO(++countSame);
-                index[i] = n;
-            } else {
-                n = getAllSameOverlap(newData, newDataLength, value, blockLength);
-                DEBUG_DO(sumOverlaps += n);
-#ifdef UCPTRIE_DEBUG
-                if (printData) {
-                    printBlock(nullptr, blockLength, value, i << UCPTRIE_SHIFT_3, n, initialValue);
+            अगर (n >= 0) {
+                DEBUG_DO(++गिनती_Same);
+                सूचकांक[i] = n;
+            } अन्यथा {
+                n = getAllSameOverlap(new_तथ्य, new_तथ्य_लंबाई, value, block_लंबाई);
+                DEBUG_DO(योग_Overlaps += n);
+#अगर_घोषित UCPTRIE_DEBUG
+                अगर (print_तथ्य) {
+                    printBlock(nullptr, block_लंबाई, value, i << UCPTRIE_SHIFT_3, n, initial_मूल्य);
                 }
-#endif
-                index[i] = newDataLength - n;
-                int32_t prevDataLength = newDataLength;
-                while (n < blockLength) {
-                    newData[newDataLength++] = value;
+#पूर्ण_अगर
+                सूचकांक[i] = new_तथ्य_लंबाई - n;
+                int32_t पूर्व_तथ्य_लंबाई = new_तथ्य_लंबाई;
+                जबतक (n < block_लंबाई) {
+                    new_तथ्य[new_तथ्य_लंबाई++] = value;
                     ++n;
                 }
-                mixedBlocks.extend(newData, 0, prevDataLength, newDataLength);
+                mixedBlocks.extend(new_तथ्य, 0, पूर्व_तथ्य_लंबाई, new_तथ्य_लंबाई);
             }
-        } else if (flags[i] == MIXED) {
-            const uint32_t *block = data + index[i];
-            int32_t n = mixedBlocks.findBlock(newData, block, 0);
-            if (n >= 0) {
-                DEBUG_DO(++countSame);
-                index[i] = n;
-            } else {
-                n = getOverlap(newData, newDataLength, block, 0, blockLength);
-                DEBUG_DO(sumOverlaps += n);
-#ifdef UCPTRIE_DEBUG
-                if (printData) {
-                    printBlock(block, blockLength, 0, i << UCPTRIE_SHIFT_3, n, initialValue);
+        } अन्यथा अगर (flags[i] == MIXED) {
+            स्थिर uint32_t *block = तथ्य + सूचकांक[i];
+            int32_t n = mixedBlocks.findBlock(new_तथ्य, block, 0);
+            अगर (n >= 0) {
+                DEBUG_DO(++गिनती_Same);
+                सूचकांक[i] = n;
+            } अन्यथा {
+                n = getOverlap(new_तथ्य, new_तथ्य_लंबाई, block, 0, block_लंबाई);
+                DEBUG_DO(योग_Overlaps += n);
+#अगर_घोषित UCPTRIE_DEBUG
+                अगर (print_तथ्य) {
+                    printBlock(block, block_लंबाई, 0, i << UCPTRIE_SHIFT_3, n, initial_मूल्य);
                 }
-#endif
-                index[i] = newDataLength - n;
-                int32_t prevDataLength = newDataLength;
-                while (n < blockLength) {
-                    newData[newDataLength++] = block[n++];
+#पूर्ण_अगर
+                सूचकांक[i] = new_तथ्य_लंबाई - n;
+                int32_t पूर्व_तथ्य_लंबाई = new_तथ्य_लंबाई;
+                जबतक (n < block_लंबाई) {
+                    new_तथ्य[new_तथ्य_लंबाई++] = block[n++];
                 }
-                mixedBlocks.extend(newData, 0, prevDataLength, newDataLength);
+                mixedBlocks.extend(new_तथ्य, 0, पूर्व_तथ्य_लंबाई, new_तथ्य_लंबाई);
             }
-        } else /* SAME_AS */ {
-            uint32_t j = index[i];
-            index[i] = index[j];
+        } अन्यथा /* SAME_AS */ {
+            uint32_t j = सूचकांक[i];
+            सूचकांक[i] = सूचकांक[j];
         }
     }
 
-#ifdef UCPTRIE_DEBUG
+#अगर_घोषित UCPTRIE_DEBUG
     /* we saved some space */
-    printf("compacting UCPTrie: count of 32-bit data words %lu->%lu  countSame=%ld  sumOverlaps=%ld\n",
-            (long)dataLength, (long)newDataLength, (long)countSame, (long)sumOverlaps);
-#endif
-    return newDataLength;
+    म_लिखो("compacting UCPTrie: count of 32-bit data words %lu->%lu  countSame=%ld  sumOverlaps=%ld\n",
+            (दीर्घ)तथ्य_लंबाई, (दीर्घ)new_तथ्य_लंबाई, (दीर्घ)गिनती_Same, (दीर्घ)योग_Overlaps);
+#पूर्ण_अगर
+    वापस new_तथ्य_लंबाई;
 }
 
-int32_t MutableCodePointTrie::compactIndex(int32_t fastILimit, MixedBlocks &mixedBlocks,
+int32_t MutableCodePointTrie::compact_सूचकांक(int32_t fastILimit, MixedBlocks &mixedBlocks,
                                            UErrorCode &errorCode) {
-    int32_t fastIndexLength = fastILimit >> (UCPTRIE_FAST_SHIFT - UCPTRIE_SHIFT_3);
-    if ((highStart >> UCPTRIE_FAST_SHIFT) <= fastIndexLength) {
+    int32_t fast_सूचकांक_लंबाई = fastILimit >> (UCPTRIE_FAST_SHIFT - UCPTRIE_SHIFT_3);
+    अगर ((ऊपरी_Start >> UCPTRIE_FAST_SHIFT) <= fast_सूचकांक_लंबाई) {
         // Only the linear fast index, no multi-stage index tables.
         index3NullOffset = UCPTRIE_NO_INDEX3_NULL_OFFSET;
-        return fastIndexLength;
+        वापस fast_सूचकांक_लंबाई;
     }
 
     // Condense the fast index table.
     // Also, does it contain an index-3 block with all dataNullOffset?
-    uint16_t fastIndex[UCPTRIE_BMP_INDEX_LENGTH];  // fastIndexLength
+    uint16_t fast_सूचकांक[UCPTRIE_BMP_सूचकांक_लंबाई];  // fastIndexLength
     int32_t i3FirstNull = -1;
-    for (int32_t i = 0, j = 0; i < fastILimit; ++j) {
-        uint32_t i3 = index[i];
-        fastIndex[j] = static_cast<uint16_t>(i3);
-        if (i3 == static_cast<uint32_t>(dataNullOffset)) {
-            if (i3FirstNull < 0) {
+    क्रम (int32_t i = 0, j = 0; i < fastILimit; ++j) {
+        uint32_t i3 = सूचकांक[i];
+        fast_सूचकांक[j] = static_cast<uint16_t>(i3);
+        अगर (i3 == static_cast<uint32_t>(तथ्य_Null_Offset)) {
+            अगर (i3FirstNull < 0) {
                 i3FirstNull = j;
-            } else if (index3NullOffset < 0 &&
-                    (j - i3FirstNull + 1) == UCPTRIE_INDEX_3_BLOCK_LENGTH) {
+            } अन्यथा अगर (index3NullOffset < 0 &&
+                    (j - i3FirstNull + 1) == UCPTRIE_सूचकांक_3_BLOCK_लंबाई) {
                 index3NullOffset = i3FirstNull;
             }
-        } else {
+        } अन्यथा {
             i3FirstNull = -1;
         }
         // Set the index entries that compactData() skipped.
         // Needed when the multi-stage index covers the fast index range as well.
-        int32_t iNext = i + SMALL_DATA_BLOCKS_PER_BMP_BLOCK;
-        while (++i < iNext) {
-            i3 += UCPTRIE_SMALL_DATA_BLOCK_LENGTH;
-            index[i] = i3;
+        int32_t i_अग्र = i + SMALL_तथ्य_BLOCKS_PER_BMP_BLOCK;
+        जबतक (++i < i_अग्र) {
+            i3 += UCPTRIE_SMALL_तथ्य_BLOCK_लंबाई;
+            सूचकांक[i] = i3;
         }
     }
 
-    if (!mixedBlocks.init(fastIndexLength, UCPTRIE_INDEX_3_BLOCK_LENGTH)) {
+    अगर (!mixedBlocks.init(fast_सूचकांक_लंबाई, UCPTRIE_सूचकांक_3_BLOCK_लंबाई)) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return 0;
+        वापस 0;
     }
-    mixedBlocks.extend(fastIndex, 0, 0, fastIndexLength);
+    mixedBlocks.extend(fast_सूचकांक, 0, 0, fast_सूचकांक_लंबाई);
 
     // Examine index-3 blocks. For each determine one of:
     // - same as the index-3 null block
@@ -1248,43 +1248,43 @@ int32_t MutableCodePointTrie::compactIndex(int32_t fastILimit, MixedBlocks &mixe
     // the multi-stage index is only for supplementary code points.
     // Otherwise, the multi-stage index covers all of Unicode.
     int32_t iStart = fastILimit < BMP_I_LIMIT ? 0 : BMP_I_LIMIT;
-    int32_t iLimit = highStart >> UCPTRIE_SHIFT_3;
-    for (int32_t i = iStart; i < iLimit;) {
+    int32_t iLimit = ऊपरी_Start >> UCPTRIE_SHIFT_3;
+    क्रम (int32_t i = iStart; i < iLimit;) {
         int32_t j = i;
-        int32_t jLimit = i + UCPTRIE_INDEX_3_BLOCK_LENGTH;
+        int32_t jLimit = i + UCPTRIE_सूचकांक_3_BLOCK_लंबाई;
         uint32_t oredI3 = 0;
         bool isNull = true;
-        do {
-            uint32_t i3 = index[j];
+        करो {
+            uint32_t i3 = सूचकांक[j];
             oredI3 |= i3;
-            if (i3 != static_cast<uint32_t>(dataNullOffset)) {
+            अगर (i3 != static_cast<uint32_t>(तथ्य_Null_Offset)) {
                 isNull = false;
             }
-        } while (++j < jLimit);
-        if (isNull) {
+        } जबतक (++j < jLimit);
+        अगर (isNull) {
             flags[i] = I3_NULL;
-            if (i3FirstNull < 0) {
-                if (oredI3 <= 0xffff) {
-                    index3Capacity += UCPTRIE_INDEX_3_BLOCK_LENGTH;
-                } else {
-                    index3Capacity += INDEX_3_18BIT_BLOCK_LENGTH;
+            अगर (i3FirstNull < 0) {
+                अगर (oredI3 <= 0xffff) {
+                    index3Capacity += UCPTRIE_सूचकांक_3_BLOCK_लंबाई;
+                } अन्यथा {
+                    index3Capacity += सूचकांक_3_18_BIT_BLOCK_लंबाई;
                     hasLongI3Blocks = true;
                 }
                 i3FirstNull = 0;
             }
-        } else {
-            if (oredI3 <= 0xffff) {
-                int32_t n = mixedBlocks.findBlock(fastIndex, index, i);
-                if (n >= 0) {
+        } अन्यथा {
+            अगर (oredI3 <= 0xffff) {
+                int32_t n = mixedBlocks.findBlock(fast_सूचकांक, सूचकांक, i);
+                अगर (n >= 0) {
                     flags[i] = I3_BMP;
-                    index[i] = n;
-                } else {
+                    सूचकांक[i] = n;
+                } अन्यथा {
                     flags[i] = I3_16;
-                    index3Capacity += UCPTRIE_INDEX_3_BLOCK_LENGTH;
+                    index3Capacity += UCPTRIE_सूचकांक_3_BLOCK_लंबाई;
                 }
-            } else {
+            } अन्यथा {
                 flags[i] = I3_18;
-                index3Capacity += INDEX_3_18BIT_BLOCK_LENGTH;
+                index3Capacity += सूचकांक_3_18_BIT_BLOCK_लंबाई;
                 hasLongI3Blocks = true;
             }
         }
@@ -1294,440 +1294,440 @@ int32_t MutableCodePointTrie::compactIndex(int32_t fastILimit, MixedBlocks &mixe
     int32_t index2Capacity = (iLimit - iStart) >> UCPTRIE_SHIFT_2_3;
 
     // Length of the index-1 table, rounded up.
-    int32_t index1Length = (index2Capacity + UCPTRIE_INDEX_2_MASK) >> UCPTRIE_SHIFT_1_2;
+    int32_t index1_लंबाई = (index2Capacity + UCPTRIE_सूचकांक_2_MASK) >> UCPTRIE_SHIFT_1_2;
 
     // Index table: Fast index, index-1, index-3, index-2.
     // +1 for possible index table padding.
-    int32_t index16Capacity = fastIndexLength + index1Length + index3Capacity + index2Capacity + 1;
+    int32_t index16Capacity = fast_सूचकांक_लंबाई + index1_लंबाई + index3Capacity + index2Capacity + 1;
     index16 = static_cast<uint16_t*>(uprv_malloc(index16Capacity * 2));
-    if (index16 == nullptr) {
+    अगर (index16 == nullptr) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return 0;
+        वापस 0;
     }
-    uprv_memcpy(index16, fastIndex, fastIndexLength * 2);
+    uprv_memcpy(index16, fast_सूचकांक, fast_सूचकांक_लंबाई * 2);
 
-    if (!mixedBlocks.init(index16Capacity, UCPTRIE_INDEX_3_BLOCK_LENGTH)) {
+    अगर (!mixedBlocks.init(index16Capacity, UCPTRIE_सूचकांक_3_BLOCK_लंबाई)) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return 0;
+        वापस 0;
     }
     MixedBlocks longI3Blocks;
-    if (hasLongI3Blocks) {
-        if (!longI3Blocks.init(index16Capacity, INDEX_3_18BIT_BLOCK_LENGTH)) {
+    अगर (hasLongI3Blocks) {
+        अगर (!longI3Blocks.init(index16Capacity, सूचकांक_3_18_BIT_BLOCK_लंबाई)) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return 0;
+            वापस 0;
         }
     }
 
     // Compact the index-3 table and write an uncompacted version of the index-2 table.
     uint16_t index2[UNICODE_LIMIT >> UCPTRIE_SHIFT_2];  // index2Capacity
-    int32_t i2Length = 0;
+    int32_t i2_लंबाई = 0;
     i3FirstNull = index3NullOffset;
-    int32_t index3Start = fastIndexLength + index1Length;
-    int32_t indexLength = index3Start;
-    for (int32_t i = iStart; i < iLimit; i += UCPTRIE_INDEX_3_BLOCK_LENGTH) {
+    int32_t index3Start = fast_सूचकांक_लंबाई + index1_लंबाई;
+    int32_t सूचकांक_लंबाई = index3Start;
+    क्रम (int32_t i = iStart; i < iLimit; i += UCPTRIE_सूचकांक_3_BLOCK_लंबाई) {
         int32_t i3;
         uint8_t f = flags[i];
-        if (f == I3_NULL && i3FirstNull < 0) {
+        अगर (f == I3_NULL && i3FirstNull < 0) {
             // First index-3 null block. Write & overlap it like a normal block, then remember it.
-            f = dataNullOffset <= 0xffff ? I3_16 : I3_18;
+            f = तथ्य_Null_Offset <= 0xffff ? I3_16 : I3_18;
             i3FirstNull = 0;
         }
-        if (f == I3_NULL) {
+        अगर (f == I3_NULL) {
             i3 = index3NullOffset;
-        } else if (f == I3_BMP) {
-            i3 = index[i];
-        } else if (f == I3_16) {
-            int32_t n = mixedBlocks.findBlock(index16, index, i);
-            if (n >= 0) {
+        } अन्यथा अगर (f == I3_BMP) {
+            i3 = सूचकांक[i];
+        } अन्यथा अगर (f == I3_16) {
+            int32_t n = mixedBlocks.findBlock(index16, सूचकांक, i);
+            अगर (n >= 0) {
                 i3 = n;
-            } else {
-                if (indexLength == index3Start) {
+            } अन्यथा {
+                अगर (सूचकांक_लंबाई == index3Start) {
                     // No overlap at the boundary between the index-1 and index-3 tables.
                     n = 0;
-                } else {
-                    n = getOverlap(index16, indexLength,
-                                   index, i, UCPTRIE_INDEX_3_BLOCK_LENGTH);
+                } अन्यथा {
+                    n = getOverlap(index16, सूचकांक_लंबाई,
+                                   सूचकांक, i, UCPTRIE_सूचकांक_3_BLOCK_लंबाई);
                 }
-                i3 = indexLength - n;
-                int32_t prevIndexLength = indexLength;
-                while (n < UCPTRIE_INDEX_3_BLOCK_LENGTH) {
-                    index16[indexLength++] = index[i + n++];
+                i3 = सूचकांक_लंबाई - n;
+                int32_t पूर्व_सूचकांक_लंबाई = सूचकांक_लंबाई;
+                जबतक (n < UCPTRIE_सूचकांक_3_BLOCK_लंबाई) {
+                    index16[सूचकांक_लंबाई++] = सूचकांक[i + n++];
                 }
-                mixedBlocks.extend(index16, index3Start, prevIndexLength, indexLength);
-                if (hasLongI3Blocks) {
-                    longI3Blocks.extend(index16, index3Start, prevIndexLength, indexLength);
+                mixedBlocks.extend(index16, index3Start, पूर्व_सूचकांक_लंबाई, सूचकांक_लंबाई);
+                अगर (hasLongI3Blocks) {
+                    longI3Blocks.extend(index16, index3Start, पूर्व_सूचकांक_लंबाई, सूचकांक_लंबाई);
                 }
             }
-        } else {
+        } अन्यथा {
             U_ASSERT(f == I3_18);
             U_ASSERT(hasLongI3Blocks);
             // Encode an index-3 block that contains one or more data indexes exceeding 16 bits.
             int32_t j = i;
-            int32_t jLimit = i + UCPTRIE_INDEX_3_BLOCK_LENGTH;
-            int32_t k = indexLength;
-            do {
+            int32_t jLimit = i + UCPTRIE_सूचकांक_3_BLOCK_लंबाई;
+            int32_t k = सूचकांक_लंबाई;
+            करो {
                 ++k;
-                uint32_t v = index[j++];
+                uint32_t v = सूचकांक[j++];
                 uint32_t upperBits = (v & 0x30000) >> 2;
                 index16[k++] = v;
-                v = index[j++];
+                v = सूचकांक[j++];
                 upperBits |= (v & 0x30000) >> 4;
                 index16[k++] = v;
-                v = index[j++];
+                v = सूचकांक[j++];
                 upperBits |= (v & 0x30000) >> 6;
                 index16[k++] = v;
-                v = index[j++];
+                v = सूचकांक[j++];
                 upperBits |= (v & 0x30000) >> 8;
                 index16[k++] = v;
-                v = index[j++];
+                v = सूचकांक[j++];
                 upperBits |= (v & 0x30000) >> 10;
                 index16[k++] = v;
-                v = index[j++];
+                v = सूचकांक[j++];
                 upperBits |= (v & 0x30000) >> 12;
                 index16[k++] = v;
-                v = index[j++];
+                v = सूचकांक[j++];
                 upperBits |= (v & 0x30000) >> 14;
                 index16[k++] = v;
-                v = index[j++];
+                v = सूचकांक[j++];
                 upperBits |= (v & 0x30000) >> 16;
                 index16[k++] = v;
                 index16[k - 9] = upperBits;
-            } while (j < jLimit);
-            int32_t n = longI3Blocks.findBlock(index16, index16, indexLength);
-            if (n >= 0) {
+            } जबतक (j < jLimit);
+            int32_t n = longI3Blocks.findBlock(index16, index16, सूचकांक_लंबाई);
+            अगर (n >= 0) {
                 i3 = n | 0x8000;
-            } else {
-                if (indexLength == index3Start) {
+            } अन्यथा {
+                अगर (सूचकांक_लंबाई == index3Start) {
                     // No overlap at the boundary between the index-1 and index-3 tables.
                     n = 0;
-                } else {
-                    n = getOverlap(index16, indexLength,
-                                   index16, indexLength, INDEX_3_18BIT_BLOCK_LENGTH);
+                } अन्यथा {
+                    n = getOverlap(index16, सूचकांक_लंबाई,
+                                   index16, सूचकांक_लंबाई, सूचकांक_3_18_BIT_BLOCK_लंबाई);
                 }
-                i3 = (indexLength - n) | 0x8000;
-                int32_t prevIndexLength = indexLength;
-                if (n > 0) {
-                    int32_t start = indexLength;
-                    while (n < INDEX_3_18BIT_BLOCK_LENGTH) {
-                        index16[indexLength++] = index16[start + n++];
+                i3 = (सूचकांक_लंबाई - n) | 0x8000;
+                int32_t पूर्व_सूचकांक_लंबाई = सूचकांक_लंबाई;
+                अगर (n > 0) {
+                    int32_t start = सूचकांक_लंबाई;
+                    जबतक (n < सूचकांक_3_18_BIT_BLOCK_लंबाई) {
+                        index16[सूचकांक_लंबाई++] = index16[start + n++];
                     }
-                } else {
-                    indexLength += INDEX_3_18BIT_BLOCK_LENGTH;
+                } अन्यथा {
+                    सूचकांक_लंबाई += सूचकांक_3_18_BIT_BLOCK_लंबाई;
                 }
-                mixedBlocks.extend(index16, index3Start, prevIndexLength, indexLength);
-                if (hasLongI3Blocks) {
-                    longI3Blocks.extend(index16, index3Start, prevIndexLength, indexLength);
+                mixedBlocks.extend(index16, index3Start, पूर्व_सूचकांक_लंबाई, सूचकांक_लंबाई);
+                अगर (hasLongI3Blocks) {
+                    longI3Blocks.extend(index16, index3Start, पूर्व_सूचकांक_लंबाई, सूचकांक_लंबाई);
                 }
             }
         }
-        if (index3NullOffset < 0 && i3FirstNull >= 0) {
+        अगर (index3NullOffset < 0 && i3FirstNull >= 0) {
             index3NullOffset = i3;
         }
         // Set the index-2 table entry.
-        index2[i2Length++] = i3;
+        index2[i2_लंबाई++] = i3;
     }
-    U_ASSERT(i2Length == index2Capacity);
-    U_ASSERT(indexLength <= index3Start + index3Capacity);
+    U_ASSERT(i2_लंबाई == index2Capacity);
+    U_ASSERT(सूचकांक_लंबाई <= index3Start + index3Capacity);
 
-    if (index3NullOffset < 0) {
+    अगर (index3NullOffset < 0) {
         index3NullOffset = UCPTRIE_NO_INDEX3_NULL_OFFSET;
     }
-    if (indexLength >= (UCPTRIE_NO_INDEX3_NULL_OFFSET + UCPTRIE_INDEX_3_BLOCK_LENGTH)) {
+    अगर (सूचकांक_लंबाई >= (UCPTRIE_NO_INDEX3_NULL_OFFSET + UCPTRIE_सूचकांक_3_BLOCK_लंबाई)) {
         // The index-3 offsets exceed 15 bits, or
         // the last one cannot be distinguished from the no-null-block value.
-        errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        errorCode = U_सूचकांक_OUTOFBOUNDS_ERROR;
+        वापस 0;
     }
 
     // Compact the index-2 table and write the index-1 table.
-    static_assert(UCPTRIE_INDEX_2_BLOCK_LENGTH == UCPTRIE_INDEX_3_BLOCK_LENGTH,
+    static_assert(UCPTRIE_सूचकांक_2_BLOCK_लंबाई == UCPTRIE_सूचकांक_3_BLOCK_लंबाई,
                   "must re-init mixedBlocks");
-    int32_t blockLength = UCPTRIE_INDEX_2_BLOCK_LENGTH;
-    int32_t i1 = fastIndexLength;
-    for (int32_t i = 0; i < i2Length; i += blockLength) {
+    int32_t block_लंबाई = UCPTRIE_सूचकांक_2_BLOCK_लंबाई;
+    int32_t i1 = fast_सूचकांक_लंबाई;
+    क्रम (int32_t i = 0; i < i2_लंबाई; i += block_लंबाई) {
         int32_t n;
-        if ((i2Length - i) >= blockLength) {
+        अगर ((i2_लंबाई - i) >= block_लंबाई) {
             // normal block
-            U_ASSERT(blockLength == UCPTRIE_INDEX_2_BLOCK_LENGTH);
+            U_ASSERT(block_लंबाई == UCPTRIE_सूचकांक_2_BLOCK_लंबाई);
             n = mixedBlocks.findBlock(index16, index2, i);
-        } else {
+        } अन्यथा {
             // highStart is inside the last index-2 block. Shorten it.
-            blockLength = i2Length - i;
-            n = findSameBlock(index16, index3Start, indexLength,
-                              index2, i, blockLength);
+            block_लंबाई = i2_लंबाई - i;
+            n = findSameBlock(index16, index3Start, सूचकांक_लंबाई,
+                              index2, i, block_लंबाई);
         }
         int32_t i2;
-        if (n >= 0) {
+        अगर (n >= 0) {
             i2 = n;
-        } else {
-            if (indexLength == index3Start) {
+        } अन्यथा {
+            अगर (सूचकांक_लंबाई == index3Start) {
                 // No overlap at the boundary between the index-1 and index-3/2 tables.
                 n = 0;
-            } else {
-                n = getOverlap(index16, indexLength, index2, i, blockLength);
+            } अन्यथा {
+                n = getOverlap(index16, सूचकांक_लंबाई, index2, i, block_लंबाई);
             }
-            i2 = indexLength - n;
-            int32_t prevIndexLength = indexLength;
-            while (n < blockLength) {
-                index16[indexLength++] = index2[i + n++];
+            i2 = सूचकांक_लंबाई - n;
+            int32_t पूर्व_सूचकांक_लंबाई = सूचकांक_लंबाई;
+            जबतक (n < block_लंबाई) {
+                index16[सूचकांक_लंबाई++] = index2[i + n++];
             }
-            mixedBlocks.extend(index16, index3Start, prevIndexLength, indexLength);
+            mixedBlocks.extend(index16, index3Start, पूर्व_सूचकांक_लंबाई, सूचकांक_लंबाई);
         }
         // Set the index-1 table entry.
         index16[i1++] = i2;
     }
     U_ASSERT(i1 == index3Start);
-    U_ASSERT(indexLength <= index16Capacity);
+    U_ASSERT(सूचकांक_लंबाई <= index16Capacity);
 
-#ifdef UCPTRIE_DEBUG
+#अगर_घोषित UCPTRIE_DEBUG
     /* we saved some space */
-    printf("compacting UCPTrie: count of 16-bit index words %lu->%lu\n",
-            (long)iLimit, (long)indexLength);
-#endif
+    म_लिखो("compacting UCPTrie: count of 16-bit index words %lu->%lu\n",
+            (दीर्घ)iLimit, (दीर्घ)सूचकांक_लंबाई);
+#पूर्ण_अगर
 
-    return indexLength;
+    वापस सूचकांक_लंबाई;
 }
 
 int32_t MutableCodePointTrie::compactTrie(int32_t fastILimit, UErrorCode &errorCode) {
     // Find the real highStart and round it up.
-    U_ASSERT((highStart & (UCPTRIE_CP_PER_INDEX_2_ENTRY - 1)) == 0);
-    highValue = get(MAX_UNICODE);
-    int32_t realHighStart = findHighStart();
-    realHighStart = (realHighStart + (UCPTRIE_CP_PER_INDEX_2_ENTRY - 1)) &
-        ~(UCPTRIE_CP_PER_INDEX_2_ENTRY - 1);
-    if (realHighStart == UNICODE_LIMIT) {
-        highValue = initialValue;
+    U_ASSERT((ऊपरी_Start & (UCPTRIE_CP_PER_सूचकांक_2_ENTRY - 1)) == 0);
+    ऊपरी_मूल्य = लो(MAX_UNICODE);
+    int32_t real_ऊपरी_Start = find_ऊपरी_Start();
+    real_ऊपरी_Start = (real_ऊपरी_Start + (UCPTRIE_CP_PER_सूचकांक_2_ENTRY - 1)) &
+        ~(UCPTRIE_CP_PER_सूचकांक_2_ENTRY - 1);
+    अगर (real_ऊपरी_Start == UNICODE_LIMIT) {
+        ऊपरी_मूल्य = initial_मूल्य;
     }
 
-#ifdef UCPTRIE_DEBUG
-    printf("UCPTrie: highStart U+%06lx  highValue 0x%lx  initialValue 0x%lx\n",
-            (long)realHighStart, (long)highValue, (long)initialValue);
-#endif
+#अगर_घोषित UCPTRIE_DEBUG
+    म_लिखो("UCPTrie: highStart U+%06lx  highValue 0x%lx  initialValue 0x%lx\n",
+            (दीर्घ)real_ऊपरी_Start, (दीर्घ)ऊपरी_मूल्य, (दीर्घ)initial_मूल्य);
+#पूर्ण_अगर
 
     // We always store indexes and data values for the fast range.
     // Pin highStart to the top of that range while building.
     UChar32 fastLimit = fastILimit << UCPTRIE_SHIFT_3;
-    if (realHighStart < fastLimit) {
-        for (int32_t i = (realHighStart >> UCPTRIE_SHIFT_3); i < fastILimit; ++i) {
+    अगर (real_ऊपरी_Start < fastLimit) {
+        क्रम (int32_t i = (real_ऊपरी_Start >> UCPTRIE_SHIFT_3); i < fastILimit; ++i) {
             flags[i] = ALL_SAME;
-            index[i] = highValue;
+            सूचकांक[i] = ऊपरी_मूल्य;
         }
-        highStart = fastLimit;
-    } else {
-        highStart = realHighStart;
+        ऊपरी_Start = fastLimit;
+    } अन्यथा {
+        ऊपरी_Start = real_ऊपरी_Start;
     }
 
-    uint32_t asciiData[ASCII_LIMIT];
-    for (int32_t i = 0; i < ASCII_LIMIT; ++i) {
-        asciiData[i] = get(i);
+    uint32_t ascii_तथ्य[ASCII_LIMIT];
+    क्रम (int32_t i = 0; i < ASCII_LIMIT; ++i) {
+        ascii_तथ्य[i] = लो(i);
     }
 
     // First we look for which data blocks have the same value repeated over the whole block,
     // deduplicate such blocks, find a good null data block (for faster enumeration),
     // and get an upper bound for the necessary data array length.
     AllSameBlocks allSameBlocks;
-    int32_t newDataCapacity = compactWholeDataBlocks(fastILimit, allSameBlocks);
-    if (newDataCapacity < 0) {
+    int32_t new_तथ्य_Capacity = compact_Whole_तथ्य_Blocks(fastILimit, allSameBlocks);
+    अगर (new_तथ्य_Capacity < 0) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return 0;
+        वापस 0;
     }
-    uint32_t* newData = static_cast<uint32_t*>(uprv_malloc(newDataCapacity * 4));
-    if (newData == nullptr) {
+    uint32_t* new_तथ्य = static_cast<uint32_t*>(uprv_malloc(new_तथ्य_Capacity * 4));
+    अगर (new_तथ्य == nullptr) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return 0;
+        वापस 0;
     }
-    uprv_memcpy(newData, asciiData, sizeof(asciiData));
+    uprv_memcpy(new_तथ्य, ascii_तथ्य, माप(ascii_तथ्य));
 
-    int32_t dataNullIndex = allSameBlocks.findMostUsed();
+    int32_t तथ्य_Null_सूचकांक = allSameBlocks.findMostUsed();
 
     MixedBlocks mixedBlocks;
-    int32_t newDataLength = compactData(fastILimit, newData, newDataCapacity,
-                                        dataNullIndex, mixedBlocks, errorCode);
-    if (U_FAILURE(errorCode)) { return 0; }
-    U_ASSERT(newDataLength <= newDataCapacity);
-    uprv_free(data);
-    data = newData;
-    dataCapacity = newDataCapacity;
-    dataLength = newDataLength;
-    if (dataLength > (0x3ffff + UCPTRIE_SMALL_DATA_BLOCK_LENGTH)) {
+    int32_t new_तथ्य_लंबाई = compact_तथ्य(fastILimit, new_तथ्य, new_तथ्य_Capacity,
+                                        तथ्य_Null_सूचकांक, mixedBlocks, errorCode);
+    अगर (U_FAILURE(errorCode)) { वापस 0; }
+    U_ASSERT(new_तथ्य_लंबाई <= new_तथ्य_Capacity);
+    uprv_free(तथ्य);
+    तथ्य = new_तथ्य;
+    तथ्य_Capacity = new_तथ्य_Capacity;
+    तथ्य_लंबाई = new_तथ्य_लंबाई;
+    अगर (तथ्य_लंबाई > (0x3ffff + UCPTRIE_SMALL_तथ्य_BLOCK_लंबाई)) {
         // The offset of the last data block is too high to be stored in the index table.
-        errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        errorCode = U_सूचकांक_OUTOFBOUNDS_ERROR;
+        वापस 0;
     }
 
-    if (dataNullIndex >= 0) {
-        dataNullOffset = index[dataNullIndex];
-#ifdef UCPTRIE_DEBUG
-        if (data[dataNullOffset] != initialValue) {
-            printf("UCPTrie initialValue %lx -> more common nullValue %lx\n",
-                   (long)initialValue, (long)data[dataNullOffset]);
+    अगर (तथ्य_Null_सूचकांक >= 0) {
+        तथ्य_Null_Offset = सूचकांक[तथ्य_Null_सूचकांक];
+#अगर_घोषित UCPTRIE_DEBUG
+        अगर (तथ्य[तथ्य_Null_Offset] != initial_मूल्य) {
+            म_लिखो("UCPTrie initialValue %lx -> more common nullValue %lx\n",
+                   (दीर्घ)initial_मूल्य, (दीर्घ)तथ्य[तथ्य_Null_Offset]);
         }
-#endif
-        initialValue = data[dataNullOffset];
-    } else {
-        dataNullOffset = UCPTRIE_NO_DATA_NULL_OFFSET;
+#पूर्ण_अगर
+        initial_मूल्य = तथ्य[तथ्य_Null_Offset];
+    } अन्यथा {
+        तथ्य_Null_Offset = UCPTRIE_NO_तथ्य_NULL_OFFSET;
     }
 
-    int32_t indexLength = compactIndex(fastILimit, mixedBlocks, errorCode);
-    highStart = realHighStart;
-    return indexLength;
+    int32_t सूचकांक_लंबाई = compact_सूचकांक(fastILimit, mixedBlocks, errorCode);
+    ऊपरी_Start = real_ऊपरी_Start;
+    वापस सूचकांक_लंबाई;
 }
 
-UCPTrie *MutableCodePointTrie::build(UCPTrieType type, UCPTrieValueWidth valueWidth, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) {
-        return nullptr;
+UCPTrie *MutableCodePointTrie::build(UCPTrieType type, UCPTrie_मूल्य_Width मूल्य_Width, UErrorCode &errorCode) {
+    अगर (U_FAILURE(errorCode)) {
+        वापस nullptr;
     }
-    if (type < UCPTRIE_TYPE_FAST || UCPTRIE_TYPE_SMALL < type ||
-            valueWidth < UCPTRIE_VALUE_BITS_16 || UCPTRIE_VALUE_BITS_8 < valueWidth) {
+    अगर (type < UCPTRIE_TYPE_FAST || UCPTRIE_TYPE_SMALL < type ||
+            मूल्य_Width < UCPTRIE_मूल्य_BITS_16 || UCPTRIE_मूल्य_BITS_8 < मूल्य_Width) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        वापस nullptr;
     }
 
     // The mutable trie always stores 32-bit values.
     // When we build a UCPTrie for a smaller value width, we first mask off unused bits
     // before compacting the data.
-    switch (valueWidth) {
-    case UCPTRIE_VALUE_BITS_32:
-        break;
-    case UCPTRIE_VALUE_BITS_16:
-        maskValues(0xffff);
-        break;
-    case UCPTRIE_VALUE_BITS_8:
-        maskValues(0xff);
-        break;
-    default:
-        break;
+    चयन (मूल्य_Width) {
+    हाल UCPTRIE_मूल्य_BITS_32:
+        अवरोध;
+    हाल UCPTRIE_मूल्य_BITS_16:
+        mask_मूल्यावली(0xffff);
+        अवरोध;
+    हाल UCPTRIE_मूल्य_BITS_8:
+        mask_मूल्यावली(0xff);
+        अवरोध;
+    शेष:
+        अवरोध;
     }
 
     UChar32 fastLimit = type == UCPTRIE_TYPE_FAST ? BMP_LIMIT : UCPTRIE_SMALL_LIMIT;
-    int32_t indexLength = compactTrie(fastLimit >> UCPTRIE_SHIFT_3, errorCode);
-    if (U_FAILURE(errorCode)) {
-        clear();
-        return nullptr;
+    int32_t सूचकांक_लंबाई = compactTrie(fastLimit >> UCPTRIE_SHIFT_3, errorCode);
+    अगर (U_FAILURE(errorCode)) {
+        सफा();
+        वापस nullptr;
     }
 
     // Ensure data table alignment: The index length must be even for uint32_t data.
-    if (valueWidth == UCPTRIE_VALUE_BITS_32 && (indexLength & 1) != 0) {
-        index16[indexLength++] = 0xffee;  // arbitrary value
+    अगर (मूल्य_Width == UCPTRIE_मूल्य_BITS_32 && (सूचकांक_लंबाई & 1) != 0) {
+        index16[सूचकांक_लंबाई++] = 0xffee;  // arbitrary value
     }
 
     // Make the total trie structure length a multiple of 4 bytes by padding the data table,
     // and store special values as the last two data values.
-    int32_t length = indexLength * 2;
-    if (valueWidth == UCPTRIE_VALUE_BITS_16) {
-        if (((indexLength ^ dataLength) & 1) != 0) {
+    int32_t length = सूचकांक_लंबाई * 2;
+    अगर (मूल्य_Width == UCPTRIE_मूल्य_BITS_16) {
+        अगर (((सूचकांक_लंबाई ^ तथ्य_लंबाई) & 1) != 0) {
             // padding
-            data[dataLength++] = errorValue;
+            तथ्य[तथ्य_लंबाई++] = error_मूल्य;
         }
-        if (data[dataLength - 1] != errorValue || data[dataLength - 2] != highValue) {
-            data[dataLength++] = highValue;
-            data[dataLength++] = errorValue;
+        अगर (तथ्य[तथ्य_लंबाई - 1] != error_मूल्य || तथ्य[तथ्य_लंबाई - 2] != ऊपरी_मूल्य) {
+            तथ्य[तथ्य_लंबाई++] = ऊपरी_मूल्य;
+            तथ्य[तथ्य_लंबाई++] = error_मूल्य;
         }
-        length += dataLength * 2;
-    } else if (valueWidth == UCPTRIE_VALUE_BITS_32) {
+        length += तथ्य_लंबाई * 2;
+    } अन्यथा अगर (मूल्य_Width == UCPTRIE_मूल्य_BITS_32) {
         // 32-bit data words never need padding to a multiple of 4 bytes.
-        if (data[dataLength - 1] != errorValue || data[dataLength - 2] != highValue) {
-            if (data[dataLength - 1] != highValue) {
-                data[dataLength++] = highValue;
+        अगर (तथ्य[तथ्य_लंबाई - 1] != error_मूल्य || तथ्य[तथ्य_लंबाई - 2] != ऊपरी_मूल्य) {
+            अगर (तथ्य[तथ्य_लंबाई - 1] != ऊपरी_मूल्य) {
+                तथ्य[तथ्य_लंबाई++] = ऊपरी_मूल्य;
             }
-            data[dataLength++] = errorValue;
+            तथ्य[तथ्य_लंबाई++] = error_मूल्य;
         }
-        length += dataLength * 4;
-    } else {
-        int32_t and3 = (length + dataLength) & 3;
-        if (and3 == 0 && data[dataLength - 1] == errorValue && data[dataLength - 2] == highValue) {
+        length += तथ्य_लंबाई * 4;
+    } अन्यथा {
+        int32_t and3 = (length + तथ्य_लंबाई) & 3;
+        अगर (and3 == 0 && तथ्य[तथ्य_लंबाई - 1] == error_मूल्य && तथ्य[तथ्य_लंबाई - 2] == ऊपरी_मूल्य) {
             // all set
-        } else if(and3 == 3 && data[dataLength - 1] == highValue) {
-            data[dataLength++] = errorValue;
-        } else {
-            while (and3 != 2) {
-                data[dataLength++] = highValue;
+        } अन्यथा अगर(and3 == 3 && तथ्य[तथ्य_लंबाई - 1] == ऊपरी_मूल्य) {
+            तथ्य[तथ्य_लंबाई++] = error_मूल्य;
+        } अन्यथा {
+            जबतक (and3 != 2) {
+                तथ्य[तथ्य_लंबाई++] = ऊपरी_मूल्य;
                 and3 = (and3 + 1) & 3;
             }
-            data[dataLength++] = highValue;
-            data[dataLength++] = errorValue;
+            तथ्य[तथ्य_लंबाई++] = ऊपरी_मूल्य;
+            तथ्य[तथ्य_लंबाई++] = error_मूल्य;
         }
-        length += dataLength;
+        length += तथ्य_लंबाई;
     }
 
     // Calculate the total length of the UCPTrie as a single memory block.
-    length += sizeof(UCPTrie);
+    length += माप(UCPTrie);
     U_ASSERT((length & 3) == 0);
 
     uint8_t* bytes = static_cast<uint8_t*>(uprv_malloc(length));
-    if (bytes == nullptr) {
+    अगर (bytes == nullptr) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        clear();
-        return nullptr;
+        सफा();
+        वापस nullptr;
     }
     UCPTrie *trie = reinterpret_cast<UCPTrie *>(bytes);
-    uprv_memset(trie, 0, sizeof(UCPTrie));
-    trie->indexLength = indexLength;
-    trie->dataLength = dataLength;
+    uprv_memset(trie, 0, माप(UCPTrie));
+    trie->सूचकांक_लंबाई = सूचकांक_लंबाई;
+    trie->तथ्य_लंबाई = तथ्य_लंबाई;
 
-    trie->highStart = highStart;
+    trie->ऊपरी_Start = ऊपरी_Start;
     // Round up shifted12HighStart to a multiple of 0x1000 for easy testing from UTF-8 lead bytes.
     // Runtime code needs to then test for the real highStart as well.
-    trie->shifted12HighStart = (highStart + 0xfff) >> 12;
+    trie->shifted12_ऊपरी_Start = (ऊपरी_Start + 0xfff) >> 12;
     trie->type = type;
-    trie->valueWidth = valueWidth;
+    trie->मूल्य_Width = मूल्य_Width;
 
     trie->index3NullOffset = index3NullOffset;
-    trie->dataNullOffset = dataNullOffset;
-    trie->nullValue = initialValue;
+    trie->तथ्य_Null_Offset = तथ्य_Null_Offset;
+    trie->null_मूल्य = initial_मूल्य;
 
-    bytes += sizeof(UCPTrie);
+    bytes += माप(UCPTrie);
 
     // Fill the index and data arrays.
     uint16_t* dest16 = reinterpret_cast<uint16_t*>(bytes);
-    trie->index = dest16;
+    trie->सूचकांक = dest16;
 
-    if (highStart <= fastLimit) {
+    अगर (ऊपरी_Start <= fastLimit) {
         // Condense only the fast index from the mutable-trie index.
-        for (int32_t i = 0, j = 0; j < indexLength; i += SMALL_DATA_BLOCKS_PER_BMP_BLOCK, ++j) {
-            *dest16++ = static_cast<uint16_t>(index[i]); // dest16[j]
+        क्रम (int32_t i = 0, j = 0; j < सूचकांक_लंबाई; i += SMALL_तथ्य_BLOCKS_PER_BMP_BLOCK, ++j) {
+            *dest16++ = static_cast<uint16_t>(सूचकांक[i]); // dest16[j]
         }
-    } else {
-        uprv_memcpy(dest16, index16, indexLength * 2);
-        dest16 += indexLength;
+    } अन्यथा {
+        uprv_memcpy(dest16, index16, सूचकांक_लंबाई * 2);
+        dest16 += सूचकांक_लंबाई;
     }
-    bytes += indexLength * 2;
+    bytes += सूचकांक_लंबाई * 2;
 
     // Write the data array.
-    const uint32_t *p = data;
-    switch (valueWidth) {
-    case UCPTRIE_VALUE_BITS_16:
+    स्थिर uint32_t *p = तथ्य;
+    चयन (मूल्य_Width) {
+    हाल UCPTRIE_मूल्य_BITS_16:
         // Write 16-bit data values.
-        trie->data.ptr16 = dest16;
-        for (int32_t i = dataLength; i > 0; --i) {
+        trie->तथ्य.ptr16 = dest16;
+        क्रम (int32_t i = तथ्य_लंबाई; i > 0; --i) {
             *dest16++ = static_cast<uint16_t>(*p++);
         }
-        break;
-    case UCPTRIE_VALUE_BITS_32:
+        अवरोध;
+    हाल UCPTRIE_मूल्य_BITS_32:
         // Write 32-bit data values.
-        trie->data.ptr32 = reinterpret_cast<uint32_t*>(bytes);
-        uprv_memcpy(bytes, p, (size_t)dataLength * 4);
-        break;
-    case UCPTRIE_VALUE_BITS_8:
+        trie->तथ्य.ptr32 = reinterpret_cast<uint32_t*>(bytes);
+        uprv_memcpy(bytes, p, (माप_प्रकार)तथ्य_लंबाई * 4);
+        अवरोध;
+    हाल UCPTRIE_मूल्य_BITS_8:
         // Write 8-bit data values.
-        trie->data.ptr8 = bytes;
-        for (int32_t i = dataLength; i > 0; --i) {
+        trie->तथ्य.ptr8 = bytes;
+        क्रम (int32_t i = तथ्य_लंबाई; i > 0; --i) {
             *bytes++ = static_cast<uint8_t>(*p++);
         }
-        break;
-    default:
+        अवरोध;
+    शेष:
         // Will not occur, valueWidth checked at the beginning.
-        break;
+        अवरोध;
     }
 
-#ifdef UCPTRIE_DEBUG
+#अगर_घोषित UCPTRIE_DEBUG
     trie->name = name;
 
     ucptrie_printLengths(trie, "");
-#endif
+#पूर्ण_अगर
 
-    clear();
-    return trie;
+    सफा();
+    वापस trie;
 }
 
 }  // namespace
@@ -1737,116 +1737,116 @@ U_NAMESPACE_END
 U_NAMESPACE_USE
 
 U_CAPI UMutableCPTrie * U_EXPORT2
-umutablecptrie_open(uint32_t initialValue, uint32_t errorValue, UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+umutablecptrie_open(uint32_t initial_मूल्य, uint32_t error_मूल्य, UErrorCode *pErrorCode) {
+    अगर (U_FAILURE(*pErrorCode)) {
+        वापस nullptr;
     }
     LocalPointer<MutableCodePointTrie> trie(
-        new MutableCodePointTrie(initialValue, errorValue, *pErrorCode), *pErrorCode);
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+        नया MutableCodePointTrie(initial_मूल्य, error_मूल्य, *pErrorCode), *pErrorCode);
+    अगर (U_FAILURE(*pErrorCode)) {
+        वापस nullptr;
     }
-    return reinterpret_cast<UMutableCPTrie *>(trie.orphan());
+    वापस reinterpret_cast<UMutableCPTrie *>(trie.orphan());
 }
 
 U_CAPI UMutableCPTrie * U_EXPORT2
-umutablecptrie_clone(const UMutableCPTrie *other, UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+umutablecptrie_clone(स्थिर UMutableCPTrie *other, UErrorCode *pErrorCode) {
+    अगर (U_FAILURE(*pErrorCode)) {
+        वापस nullptr;
     }
-    if (other == nullptr) {
-        return nullptr;
+    अगर (other == nullptr) {
+        वापस nullptr;
     }
     LocalPointer<MutableCodePointTrie> clone(
-        new MutableCodePointTrie(*reinterpret_cast<const MutableCodePointTrie *>(other), *pErrorCode), *pErrorCode);
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+        नया MutableCodePointTrie(*reinterpret_cast<स्थिर MutableCodePointTrie *>(other), *pErrorCode), *pErrorCode);
+    अगर (U_FAILURE(*pErrorCode)) {
+        वापस nullptr;
     }
-    return reinterpret_cast<UMutableCPTrie *>(clone.orphan());
+    वापस reinterpret_cast<UMutableCPTrie *>(clone.orphan());
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI व्योम U_EXPORT2
 umutablecptrie_close(UMutableCPTrie *trie) {
-    delete reinterpret_cast<MutableCodePointTrie *>(trie);
+    मिटाओ reinterpret_cast<MutableCodePointTrie *>(trie);
 }
 
 U_CAPI UMutableCPTrie * U_EXPORT2
-umutablecptrie_fromUCPMap(const UCPMap *map, UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+umutablecptrie_fromUCPMap(स्थिर UCPMap *map, UErrorCode *pErrorCode) {
+    अगर (U_FAILURE(*pErrorCode)) {
+        वापस nullptr;
     }
-    if (map == nullptr) {
+    अगर (map == nullptr) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        वापस nullptr;
     }
-    return reinterpret_cast<UMutableCPTrie *>(MutableCodePointTrie::fromUCPMap(map, *pErrorCode));
+    वापस reinterpret_cast<UMutableCPTrie *>(MutableCodePointTrie::fromUCPMap(map, *pErrorCode));
 }
 
 U_CAPI UMutableCPTrie * U_EXPORT2
-umutablecptrie_fromUCPTrie(const UCPTrie *trie, UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+umutablecptrie_fromUCPTrie(स्थिर UCPTrie *trie, UErrorCode *pErrorCode) {
+    अगर (U_FAILURE(*pErrorCode)) {
+        वापस nullptr;
     }
-    if (trie == nullptr) {
+    अगर (trie == nullptr) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        वापस nullptr;
     }
-    return reinterpret_cast<UMutableCPTrie *>(MutableCodePointTrie::fromUCPTrie(trie, *pErrorCode));
+    वापस reinterpret_cast<UMutableCPTrie *>(MutableCodePointTrie::fromUCPTrie(trie, *pErrorCode));
 }
 
 U_CAPI uint32_t U_EXPORT2
-umutablecptrie_get(const UMutableCPTrie *trie, UChar32 c) {
-    return reinterpret_cast<const MutableCodePointTrie *>(trie)->get(c);
+umutablecptrie_get(स्थिर UMutableCPTrie *trie, UChar32 c) {
+    वापस reinterpret_cast<स्थिर MutableCodePointTrie *>(trie)->लो(c);
 }
 
 namespace {
 
-UChar32 getRange(const void *trie, UChar32 start,
-                 UCPMapValueFilter *filter, const void *context, uint32_t *pValue) {
-    return reinterpret_cast<const MutableCodePointTrie *>(trie)->
-        getRange(start, filter, context, pValue);
+UChar32 getRange(स्थिर व्योम *trie, UChar32 start,
+                 UCPMap_मूल्य_Filter *filter, स्थिर व्योम *context, uint32_t *p_मूल्य) {
+    वापस reinterpret_cast<स्थिर MutableCodePointTrie *>(trie)->
+        getRange(start, filter, context, p_मूल्य);
 }
 
 }  // namespace
 
 U_CAPI UChar32 U_EXPORT2
-umutablecptrie_getRange(const UMutableCPTrie *trie, UChar32 start,
-                        UCPMapRangeOption option, uint32_t surrogateValue,
-                        UCPMapValueFilter *filter, const void *context, uint32_t *pValue) {
-    return ucptrie_internalGetRange(getRange, trie, start,
-                                    option, surrogateValue,
-                                    filter, context, pValue);
+umutablecptrie_getRange(स्थिर UMutableCPTrie *trie, UChar32 start,
+                        UCPMapRangeOption option, uint32_t surrogate_मूल्य,
+                        UCPMap_मूल्य_Filter *filter, स्थिर व्योम *context, uint32_t *p_मूल्य) {
+    वापस ucptrie_internalGetRange(getRange, trie, start,
+                                    option, surrogate_मूल्य,
+                                    filter, context, p_मूल्य);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI व्योम U_EXPORT2
 umutablecptrie_set(UMutableCPTrie *trie, UChar32 c, uint32_t value, UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return;
+    अगर (U_FAILURE(*pErrorCode)) {
+        वापस;
     }
     reinterpret_cast<MutableCodePointTrie *>(trie)->set(c, value, *pErrorCode);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI व्योम U_EXPORT2
 umutablecptrie_setRange(UMutableCPTrie *trie, UChar32 start, UChar32 end,
                    uint32_t value, UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return;
+    अगर (U_FAILURE(*pErrorCode)) {
+        वापस;
     }
     reinterpret_cast<MutableCodePointTrie *>(trie)->setRange(start, end, value, *pErrorCode);
 }
 
 /* Compact and internally serialize the trie. */
 U_CAPI UCPTrie * U_EXPORT2
-umutablecptrie_buildImmutable(UMutableCPTrie *trie, UCPTrieType type, UCPTrieValueWidth valueWidth,
+umutablecptrie_buildImmutable(UMutableCPTrie *trie, UCPTrieType type, UCPTrie_मूल्य_Width मूल्य_Width,
                               UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    अगर (U_FAILURE(*pErrorCode)) {
+        वापस nullptr;
     }
-    return reinterpret_cast<MutableCodePointTrie *>(trie)->build(type, valueWidth, *pErrorCode);
+    वापस reinterpret_cast<MutableCodePointTrie *>(trie)->build(type, मूल्य_Width, *pErrorCode);
 }
 
-#ifdef UCPTRIE_DEBUG
-U_CFUNC void umutablecptrie_setName(UMutableCPTrie *trie, const char *name) {
+#अगर_घोषित UCPTRIE_DEBUG
+U_CFUNC व्योम umutablecptrie_setName(UMutableCPTrie *trie, स्थिर अक्षर *name) {
     reinterpret_cast<MutableCodePointTrie *>(trie)->name = name;
 }
-#endif
+#पूर्ण_अगर

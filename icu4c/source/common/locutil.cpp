@@ -6,27 +6,27 @@
  * others. All Rights Reserved.
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#समावेश "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE || !UCONFIG_NO_TRANSLITERATION
+#अगर !UCONFIG_NO_SERVICE || !UCONFIG_NO_TRANSLITERATION
 
-#include "unicode/resbund.h"
-#include "unicode/uenum.h"
-#include "cmemory.h"
-#include "ustrfmt.h"
-#include "locutil.h"
-#include "charstr.h"
-#include "ucln_cmn.h"
-#include "uassert.h"
-#include "umutex.h"
+#समावेश "unicode/resbund.h"
+#समावेश "unicode/uenum.h"
+#समावेश "cmemory.h"
+#समावेश "ustrfmt.h"
+#समावेश "locutil.h"
+#समावेश "charstr.h"
+#समावेश "ucln_cmn.h"
+#समावेश "uassert.h"
+#समावेश "umutex.h"
 
 // see LocaleUtility::getAvailableLocaleNames
-static icu::UInitOnce   LocaleUtilityInitOnce {};
-static icu::Hashtable * LocaleUtility_cache = nullptr;
+अटल icu::UInitOnce   LocaleUtilityInitOnce {};
+अटल icu::Hashtable * LocaleUtility_cache = nullptr;
 
-#define UNDERSCORE_CHAR ((char16_t)0x005f)
-#define AT_SIGN_CHAR    ((char16_t)64)
-#define PERIOD_CHAR     ((char16_t)46)
+#घोषणा UNDERSCORE_CHAR ((char16_t)0x005f)
+#घोषणा AT_SIGN_CHAR    ((char16_t)64)
+#घोषणा PERIOD_CHAR     ((char16_t)46)
 
 /*
  ******************************************************************
@@ -36,30 +36,30 @@ static icu::Hashtable * LocaleUtility_cache = nullptr;
  * Release all static memory held by Locale Utility.  
  */
 U_CDECL_BEGIN
-static UBool U_CALLCONV service_cleanup() {
-    if (LocaleUtility_cache) {
-        delete LocaleUtility_cache;
+अटल UBool U_CALLCONV service_cleanup() {
+    अगर (LocaleUtility_cache) {
+        मिटाओ LocaleUtility_cache;
         LocaleUtility_cache = nullptr;
     }
-    return true;
+    वापस true;
 }
 
 
-static void U_CALLCONV locale_utility_init(UErrorCode &status) {
+अटल व्योम U_CALLCONV locale_utility_init(UErrorCode &status) {
     using namespace icu;
     U_ASSERT(LocaleUtility_cache == nullptr);
     ucln_common_registerCleanup(UCLN_COMMON_SERVICE, service_cleanup);
-    LocaleUtility_cache = new Hashtable(status);
-    if (U_FAILURE(status)) {
-        delete LocaleUtility_cache;
+    LocaleUtility_cache = नया Hashtable(status);
+    अगर (U_FAILURE(status)) {
+        मिटाओ LocaleUtility_cache;
         LocaleUtility_cache = nullptr;
-        return;
+        वापस;
     }
-    if (LocaleUtility_cache == nullptr) {
+    अगर (LocaleUtility_cache == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        वापस;
     }
-    LocaleUtility_cache->setValueDeleter(uhash_deleteHashtable);
+    LocaleUtility_cache->set_मूल्य_Deleter(uhash_deleteHashtable);
 }
 
 U_CDECL_END
@@ -67,11 +67,11 @@ U_CDECL_END
 U_NAMESPACE_BEGIN
 
 UnicodeString&
-LocaleUtility::canonicalLocaleString(const UnicodeString* id, UnicodeString& result)
+LocaleUtility::canonicalLocaleString(स्थिर UnicodeString* id, UnicodeString& परिणाम)
 {
-  if (id == nullptr) {
-    result.setToBogus();
-  } else {
+  अगर (id == nullptr) {
+    परिणाम.setToBogus();
+  } अन्यथा {
     // Fix case only (no other changes) up to the first '@' or '.' or
     // end of string, whichever comes first.  In 3.0 I changed this to
     // stop at first '@' or '.'.  It used to run out to the end of
@@ -79,38 +79,38 @@ LocaleUtility::canonicalLocaleString(const UnicodeString* id, UnicodeString& res
     // structurally incorrect.  See below.  [alan 3.0]
 
     // TODO: Doug, you might want to revise this...
-    result = *id;
+    परिणाम = *id;
     int32_t i = 0;
-    int32_t end = result.indexOf(AT_SIGN_CHAR);
-    int32_t n = result.indexOf(PERIOD_CHAR);
-    if (n >= 0 && n < end) {
+    int32_t end = परिणाम.सूचकांक_Of(AT_SIGN_CHAR);
+    int32_t n = परिणाम.सूचकांक_Of(PERIOD_CHAR);
+    अगर (n >= 0 && n < end) {
         end = n;
     }
-    if (end < 0) {
-        end = result.length();
+    अगर (end < 0) {
+        end = परिणाम.length();
     }
-    n = result.indexOf(UNDERSCORE_CHAR);
-    if (n < 0) {
+    n = परिणाम.सूचकांक_Of(UNDERSCORE_CHAR);
+    अगर (n < 0) {
       n = end;
     }
-    for (; i < n; ++i) {
-      char16_t c = result.charAt(i);
-      if (c >= 0x0041 && c <= 0x005a) {
+    क्रम (; i < n; ++i) {
+      char16_t c = परिणाम.charAt(i);
+      अगर (c >= 0x0041 && c <= 0x005a) {
         c += 0x20;
-        result.setCharAt(i, c);
+        परिणाम.setCharAt(i, c);
       }
     }
-    for (n = end; i < n; ++i) {
-      char16_t c = result.charAt(i);
-      if (c >= 0x0061 && c <= 0x007a) {
+    क्रम (n = end; i < n; ++i) {
+      char16_t c = परिणाम.charAt(i);
+      अगर (c >= 0x0061 && c <= 0x007a) {
         c -= 0x20;
-        result.setCharAt(i, c);
+        परिणाम.setCharAt(i, c);
       }
     }
   }
-  return result;
+  वापस परिणाम;
 
-#if 0
+#अगर 0
     // This code does a proper full level 2 canonicalization of id.
     // It's nasty to go from char16_t to char to char to char16_t -- but
     // that's what you have to do to use the uloc_canonicalize
@@ -122,32 +122,32 @@ LocaleUtility::canonicalLocaleString(const UnicodeString* id, UnicodeString& res
     // causes some tests to fail.  [alan 3.0]
 
     // TODO: Doug, you might want to revisit this...
-    result.setToBogus();
-    if (id != 0) {
+    परिणाम.setToBogus();
+    अगर (id != 0) {
         int32_t buflen = id->length() + 8; // space for NUL
-        char* buf = (char*) uprv_malloc(buflen);
-        char* canon = (buf == 0) ? 0 : (char*) uprv_malloc(buflen);
-        if (buf != 0 && canon != 0) {
+        अक्षर* buf = (अक्षर*) uprv_malloc(buflen);
+        अक्षर* canon = (buf == 0) ? 0 : (अक्षर*) uprv_malloc(buflen);
+        अगर (buf != 0 && canon != 0) {
             U_ASSERT(id->extract(0, INT32_MAX, buf, buflen) < buflen);
             UErrorCode ec = U_ZERO_ERROR;
             uloc_canonicalize(buf, canon, buflen, &ec);
-            if (U_SUCCESS(ec)) {
-                result = UnicodeString(canon);
+            अगर (U_SUCCESS(ec)) {
+                परिणाम = UnicodeString(canon);
             }
         }
         uprv_free(buf);
         uprv_free(canon);
     }
-    return result;
-#endif
+    वापस परिणाम;
+#पूर्ण_अगर
 }
 
 Locale&
-LocaleUtility::initLocaleFromName(const UnicodeString& id, Locale& result)
+LocaleUtility::initLocaleFromName(स्थिर UnicodeString& id, Locale& परिणाम)
 {
-    if (id.isBogus()) {
-        result.setToBogus();
-    } else {
+    अगर (id.isBogus()) {
+        परिणाम.setToBogus();
+    } अन्यथा {
         /*
          * We need to convert from a UnicodeString to char * in order to
          * create a Locale.
@@ -166,46 +166,46 @@ LocaleUtility::initLocaleFromName(const UnicodeString& id, Locale& result)
          *
          * There should be only at most one '@' in a locale ID.
          */
-        CharString buffer;
-        int32_t prev, i;
-        prev = 0;
+        CharString बफर;
+        int32_t पूर्व, i;
+        पूर्व = 0;
         UErrorCode status = U_ZERO_ERROR;
-        do {
-            i = id.indexOf(static_cast<char16_t>(0x40), prev);
-            if(i < 0) {
+        करो {
+            i = id.सूचकांक_Of(static_cast<char16_t>(0x40), पूर्व);
+            अगर(i < 0) {
                 // no @ between prev and the rest of the string
-                buffer.appendInvariantChars(id.tempSubString(prev), status);
-                break; // done
-            } else {
+                बफर.appendInvariantChars(id.अस्थायी_Sub_String(पूर्व), status);
+                अवरोध; // done
+            } अन्यथा {
                 // normal invariant-character conversion for text between @s
-                buffer.appendInvariantChars(id.tempSubString(prev, i - prev), status);
+                बफर.appendInvariantChars(id.अस्थायी_Sub_String(पूर्व, i - पूर्व), status);
                 // manually "convert" U+0040 at id[i] into '@' at buffer[i]
-                buffer.append('@', status);
-                prev = i + 1;
+                बफर.append('@', status);
+                पूर्व = i + 1;
             }
-        } while (U_SUCCESS(status));
-        if (U_FAILURE(status)) {
-            result.setToBogus();
-        } else {
-            result = Locale::createFromName(buffer.data());
+        } जबतक (U_SUCCESS(status));
+        अगर (U_FAILURE(status)) {
+            परिणाम.setToBogus();
+        } अन्यथा {
+            परिणाम = Locale::createFromName(बफर.तथ्य());
         }
     }
-    return result;
+    वापस परिणाम;
 }
 
 UnicodeString&
-LocaleUtility::initNameFromLocale(const Locale& locale, UnicodeString& result)
+LocaleUtility::initNameFromLocale(स्थिर Locale& locale, UnicodeString& परिणाम)
 {
-    if (locale.isBogus()) {
-        result.setToBogus();
-    } else {
-        result.append(UnicodeString(locale.getName(), -1, US_INV));
+    अगर (locale.isBogus()) {
+        परिणाम.setToBogus();
+    } अन्यथा {
+        परिणाम.append(UnicodeString(locale.getName(), -1, US_INV));
     }
-    return result;
+    वापस परिणाम;
 }
 
-const Hashtable*
-LocaleUtility::getAvailableLocaleNames(const UnicodeString& bundleID)
+स्थिर Hashtable*
+LocaleUtility::getAvailableLocaleNames(स्थिर UnicodeString& bundleID)
 {
     // LocaleUtility_cache is a hash-of-hashes.  The top-level keys
     // are path strings ('bundleID') passed to
@@ -217,60 +217,60 @@ LocaleUtility::getAvailableLocaleNames(const UnicodeString& bundleID)
     UErrorCode status = U_ZERO_ERROR;
     umtx_initOnce(LocaleUtilityInitOnce, locale_utility_init, status);
     Hashtable *cache = LocaleUtility_cache;
-    if (cache == nullptr) {
+    अगर (cache == nullptr) {
         // Catastrophic failure.
-        return nullptr;
+        वापस nullptr;
     }
 
     Hashtable* htp;
     umtx_lock(nullptr);
-    htp = static_cast<Hashtable*>(cache->get(bundleID));
+    htp = static_cast<Hashtable*>(cache->लो(bundleID));
     umtx_unlock(nullptr);
 
-    if (htp == nullptr) {
-        htp = new Hashtable(status);
-        if (htp && U_SUCCESS(status)) {
+    अगर (htp == nullptr) {
+        htp = नया Hashtable(status);
+        अगर (htp && U_SUCCESS(status)) {
             CharString cbundleID;
             cbundleID.appendInvariantChars(bundleID, status);
-            const char* path = cbundleID.isEmpty() ? nullptr : cbundleID.data();
+            स्थिर अक्षर* path = cbundleID.isEmpty() ? nullptr : cbundleID.तथ्य();
             icu::LocalUEnumerationPointer uenum(ures_openAvailableLocales(path, &status));
-            for (;;) {
-                const char16_t* id = uenum_unext(uenum.getAlias(), nullptr, &status);
-                if (id == nullptr) {
-                    break;
+            क्रम (;;) {
+                स्थिर char16_t* id = uenum_unext(uenum.getAlias(), nullptr, &status);
+                अगर (id == nullptr) {
+                    अवरोध;
                 }
-                htp->put(UnicodeString(id), (void*)htp, status);
+                htp->दो(UnicodeString(id), (व्योम*)htp, status);
             }
-            if (U_FAILURE(status)) {
-                delete htp;
-                return nullptr;
+            अगर (U_FAILURE(status)) {
+                मिटाओ htp;
+                वापस nullptr;
             }
             umtx_lock(nullptr);
-            Hashtable *t = static_cast<Hashtable *>(cache->get(bundleID));
-            if (t != nullptr) {
+            Hashtable *t = static_cast<Hashtable *>(cache->लो(bundleID));
+            अगर (t != nullptr) {
                 // Another thread raced through this code, creating the cache entry first.
                 // Discard ours and return theirs.
                 umtx_unlock(nullptr);
-                delete htp;
+                मिटाओ htp;
                 htp = t;
-            } else {
-                cache->put(bundleID, (void*)htp, status);
+            } अन्यथा {
+                cache->दो(bundleID, (व्योम*)htp, status);
                 umtx_unlock(nullptr);
             }
         }
     }
-    return htp;
+    वापस htp;
 }
 
 bool
-LocaleUtility::isFallbackOf(const UnicodeString& root, const UnicodeString& child)
+LocaleUtility::isFallbackOf(स्थिर UnicodeString& मूल, स्थिर UnicodeString& child)
 {
-    return child.indexOf(root) == 0 &&
-      (child.length() == root.length() ||
-       child.charAt(root.length()) == UNDERSCORE_CHAR);
+    वापस child.सूचकांक_Of(मूल) == 0 &&
+      (child.length() == मूल.length() ||
+       child.charAt(मूल.length()) == UNDERSCORE_CHAR);
 }
 
 U_NAMESPACE_END
 
 /* !UCONFIG_NO_SERVICE */
-#endif
+#पूर्ण_अगर

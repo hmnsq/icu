@@ -13,19 +13,19 @@
 //
 // Author: sffc
 
-#include "unicode/utypes.h"
+#समावेश "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
-#ifndef __STATIC_UNICODE_SETS_H__
-#define __STATIC_UNICODE_SETS_H__
+#अगर !UCONFIG_NO_FORMATTING
+#अगर_अघोषित __STATIC_UNICODE_SETS_H__
+#घोषणा __STATIC_UNICODE_SETS_H__
 
-#include "unicode/uniset.h"
-#include "unicode/unistr.h"
+#समावेश "unicode/uniset.h"
+#समावेश "unicode/unistr.h"
 
 U_NAMESPACE_BEGIN
 namespace unisets {
 
-enum Key {
+क्रमागत कुंजी_2 {
     // NONE is used to indicate null in chooseFrom().
     // EMPTY is used to get an empty UnicodeSet.
     NONE = -1,
@@ -73,7 +73,7 @@ enum Key {
     DIGITS_OR_STRICT_ALL_SEPARATORS,
 
     // The number of elements in the enum.
-    UNISETS_KEY_COUNT
+    UNISETS_कुंजी_गिनती
 };
 
 /**
@@ -93,7 +93,7 @@ enum Key {
  * @return The requested UnicodeSet. Guaranteed to be frozen and non-null, but
  *         may be empty if an error occurred during data loading.
  */
-U_COMMON_API const UnicodeSet* get(Key key);
+U_COMMON_API स्थिर UnicodeSet* get(कुंजी_2 कुंजी);
 
 /**
  * Checks if the UnicodeSet given by key1 contains the given string.
@@ -104,7 +104,7 @@ U_COMMON_API const UnicodeSet* get(Key key);
  * @param key1 The set to check.
  * @return key1 if the set contains str, or NONE if not.
  */
-U_COMMON_API Key chooseFrom(UnicodeString str, Key key1);
+U_COMMON_API कुंजी_2 chooseFrom(UnicodeString str, कुंजी_2 key1);
 
 /**
  * Checks if the UnicodeSet given by either key1 or key2 contains the string.
@@ -117,14 +117,14 @@ U_COMMON_API Key chooseFrom(UnicodeString str, Key key1);
  * @return key1 if that set contains str; key2 if that set contains str; or
  *         NONE if neither set contains str.
  */
-U_COMMON_API Key chooseFrom(UnicodeString str, Key key1, Key key2);
+U_COMMON_API कुंजी_2 chooseFrom(UnicodeString str, कुंजी_2 key1, कुंजी_2 key2);
 
 // TODO: Load these from data: ICU-20108
 // Unused in C++:
 // Key chooseCurrency(UnicodeString str);
 // Used instead:
-static const struct {
-    Key key;
+अटल स्थिर काष्ठा {
+    कुंजी_2 कुंजी;
     UChar32 exemplar;
 } kCurrencyEntries[] = {
     {DOLLAR_SIGN, u'$'},
@@ -137,5 +137,5 @@ static const struct {
 } // namespace unisets
 U_NAMESPACE_END
 
-#endif //__STATIC_UNICODE_SETS_H__
-#endif /* #if !UCONFIG_NO_FORMATTING */
+#पूर्ण_अगर //__STATIC_UNICODE_SETS_H__
+#पूर्ण_अगर /* #if !UCONFIG_NO_FORMATTING */

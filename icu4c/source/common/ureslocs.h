@@ -7,21 +7,21 @@
 **********************************************************************
 */
 
-#ifndef __URESLOCS_H__
-#define __URESLOCS_H__
+#अगर_अघोषित __URESLOCS_H__
+#घोषणा __URESLOCS_H__
 
-#include "unicode/utypes.h"
-#include "unicode/udata.h"
+#समावेश "unicode/utypes.h"
+#समावेश "unicode/udata.h"
 
 U_CDECL_BEGIN
 
 
-#define U_ICUDATA_LANG U_ICUDATA_NAME U_TREE_SEPARATOR_STRING "lang"
-#define U_ICUDATA_REGION U_ICUDATA_NAME U_TREE_SEPARATOR_STRING "region"
-#define U_ICUDATA_CURR U_ICUDATA_NAME U_TREE_SEPARATOR_STRING "curr"
-#define U_ICUDATA_ZONE U_ICUDATA_NAME U_TREE_SEPARATOR_STRING "zone"
-#define U_ICUDATA_UNIT U_ICUDATA_NAME U_TREE_SEPARATOR_STRING "unit"
+#घोषणा U_ICUDATA_LANG U_ICUDATA_NAME U_वृक्ष_SEPARATOR_STRING "lang"
+#घोषणा U_ICUDATA_REGION U_ICUDATA_NAME U_वृक्ष_SEPARATOR_STRING "region"
+#घोषणा U_ICUDATA_CURR U_ICUDATA_NAME U_वृक्ष_SEPARATOR_STRING "curr"
+#घोषणा U_ICUDATA_ZONE U_ICUDATA_NAME U_वृक्ष_SEPARATOR_STRING "zone"
+#घोषणा U_ICUDATA_UNIT U_ICUDATA_NAME U_वृक्ष_SEPARATOR_STRING "unit"
 
 U_CDECL_END
 
-#endif
+#पूर्ण_अगर

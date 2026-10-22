@@ -16,8 +16,8 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __LOCALPOINTER_H__
-#define __LOCALPOINTER_H__
+#अगर_अघोषित __LOCALPOINTER_H__
+#घोषणा __LOCALPOINTER_H__
 
 /**
  * \file
@@ -38,11 +38,11 @@
  * For details see https://icu.unicode.org/design/cpp/scoped_ptr
  */
 
-#include "unicode/utypes.h"
+#समावेश "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#अगर U_SHOW_CPLUSPLUS_API
 
-#include <memory>
+#समावेश <memory>
 
 U_NAMESPACE_BEGIN
 
@@ -64,13 +64,13 @@ U_NAMESPACE_BEGIN
  * @see U_DEFINE_LOCAL_OPEN_POINTER
  * @stable ICU 4.4
  */
-template<typename T>
+ढाँचा<typename T>
 class LocalPointerBase {
-public:
+खुला:
     // No heap allocation. Use only on the stack.
-    static void* U_EXPORT2 operator new(size_t) = delete;
-    static void* U_EXPORT2 operator new[](size_t) = delete;
-    static void* U_EXPORT2 operator new(size_t, void*) = delete;
+    अटल व्योम* U_EXPORT2 चालक new(माप_प्रकार) = delete;
+    अटल व्योम* U_EXPORT2 चालक new[](माप_प्रकार) = delete;
+    अटल व्योम* U_EXPORT2 चालक new(माप_प्रकार, व्योम*) = delete;
 
     /**
      * Constructor takes ownership.
@@ -89,13 +89,13 @@ public:
      * @return true if ==nullptr
      * @stable ICU 4.4
      */
-    UBool isNull() const { return ptr==nullptr; }
+    UBool isNull() स्थिर { वापस ptr==nullptr; }
     /**
      * nullptr check.
      * @return true if !=nullptr
      * @stable ICU 4.4
      */
-    UBool isValid() const { return ptr!=nullptr; }
+    UBool isValid() स्थिर { वापस ptr!=nullptr; }
     /**
      * Comparison with a simple pointer, so that existing code
      * with ==nullptr need not be changed.
@@ -103,7 +103,7 @@ public:
      * @return true if this pointer value equals other
      * @stable ICU 4.4
      */
-    bool operator==(const T *other) const { return ptr==other; }
+    bool चालक==(स्थिर T *other) स्थिर { वापस ptr==other; }
     /**
      * Comparison with a simple pointer, so that existing code
      * with !=nullptr need not be changed.
@@ -111,25 +111,25 @@ public:
      * @return true if this pointer value differs from other
      * @stable ICU 4.4
      */
-    bool operator!=(const T *other) const { return ptr!=other; }
+    bool चालक!=(स्थिर T *other) स्थिर { वापस ptr!=other; }
     /**
      * Access without ownership change.
      * @return the pointer value
      * @stable ICU 4.4
      */
-    T* getAlias() const U_LIFETIME_BOUND { return ptr; }
+    T* getAlias() स्थिर U_LIFETIME_BOUND { वापस ptr; }
     /**
      * Access without ownership change.
      * @return the pointer value as a reference
      * @stable ICU 4.4
      */
-    T& operator*() const U_LIFETIME_BOUND { return *ptr; }
+    T& चालक*() स्थिर U_LIFETIME_BOUND { वापस *ptr; }
     /**
      * Access without ownership change.
      * @return the pointer value
      * @stable ICU 4.4
      */
-    T* operator->() const U_LIFETIME_BOUND { return ptr; }
+    T* चालक->() स्थिर U_LIFETIME_BOUND { वापस ptr; }
     /**
      * Gives up ownership; the internal pointer becomes nullptr.
      * @return the pointer value;
@@ -139,7 +139,7 @@ public:
     T *orphan() {
         T *p=ptr;
         ptr=nullptr;
-        return p;
+        वापस p;
     }
     /**
      * Deletes the object it owns,
@@ -148,23 +148,23 @@ public:
      * @param p simple pointer to an object that is adopted
      * @stable ICU 4.4
      */
-    void adoptInstead(T *p) {
+    व्योम adoptInstead(T *p) {
         // delete ptr;
         ptr=p;
     }
-protected:
+रक्षित:
     /**
      * Actual pointer.
      * @internal
      */
     T *ptr;
-private:
+निजी:
     // No comparison operators with other LocalPointerBases.
-    bool operator==(const LocalPointerBase<T> &other) = delete;
-    bool operator!=(const LocalPointerBase<T> &other) = delete;
+    bool चालक==(स्थिर LocalPointerBase<T> &other) = delete;
+    bool चालक!=(स्थिर LocalPointerBase<T> &other) = delete;
     // No ownership sharing: No copy constructor, no assignment operator.
-    LocalPointerBase(const LocalPointerBase<T> &other) = delete;
-    void operator=(const LocalPointerBase<T> &other) = delete;
+    LocalPointerBase(स्थिर LocalPointerBase<T> &other) = delete;
+    व्योम चालक=(स्थिर LocalPointerBase<T> &other) = delete;
 };
 
 /**
@@ -185,11 +185,11 @@ private:
  * @see LocalPointerBase
  * @stable ICU 4.4
  */
-template<typename T>
-class LocalPointer : public LocalPointerBase<T> {
-public:
-    using LocalPointerBase<T>::operator*;
-    using LocalPointerBase<T>::operator->;
+ढाँचा<typename T>
+class LocalPointer : खुला LocalPointerBase<T> {
+खुला:
+    using LocalPointerBase<T>::चालक*;
+    using LocalPointerBase<T>::चालक->;
     /**
      * Constructor takes ownership.
      * @param p simple pointer to an object that is adopted
@@ -210,7 +210,7 @@ public:
      * @stable ICU 55
      */
     LocalPointer(T *p, UErrorCode &errorCode) : LocalPointerBase<T>(p) {
-        if(p==nullptr && U_SUCCESS(errorCode)) {
+        अगर(p==nullptr && U_SUCCESS(errorCode)) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
         }
     }
@@ -250,11 +250,11 @@ public:
      * @return *this
      * @stable ICU 56
      */
-    LocalPointer<T>& operator=(LocalPointer<T>&& src) noexcept U_LIFETIME_BOUND {
+    LocalPointer<T>& चालक=(LocalPointer<T>&& src) noexcept U_LIFETIME_BOUND {
         delete LocalPointerBase<T>::ptr;
         LocalPointerBase<T>::ptr=src.ptr;
         src.ptr=nullptr;
-        return *this;
+        वापस *this;
     }
 
     /**
@@ -265,9 +265,9 @@ public:
      * @return *this
      * @stable ICU 64
      */
-    LocalPointer<T>& operator=(std::unique_ptr<T>&& p) noexcept U_LIFETIME_BOUND {
+    LocalPointer<T>& चालक=(std::unique_ptr<T>&& p) noexcept U_LIFETIME_BOUND {
         adoptInstead(p.release());
-        return *this;
+        वापस *this;
     }
 
     /**
@@ -275,10 +275,10 @@ public:
      * @param other other smart pointer
      * @stable ICU 56
      */
-    void swap(LocalPointer<T> &other) noexcept {
-        T *temp=LocalPointerBase<T>::ptr;
+    व्योम swap(LocalPointer<T> &other) noexcept {
+        T *अस्थायी=LocalPointerBase<T>::ptr;
         LocalPointerBase<T>::ptr=other.ptr;
-        other.ptr=temp;
+        other.ptr=अस्थायी;
     }
     /**
      * Non-member LocalPointer swap function.
@@ -286,7 +286,7 @@ public:
      * @param p2 will get p1's pointer
      * @stable ICU 56
      */
-    friend inline void swap(LocalPointer<T> &p1, LocalPointer<T> &p2) noexcept {
+    मित्र अंतरभूत व्योम swap(LocalPointer<T> &p1, LocalPointer<T> &p2) noexcept {
         p1.swap(p2);
     }
     /**
@@ -295,7 +295,7 @@ public:
      * @param p simple pointer to an object that is adopted
      * @stable ICU 4.4
      */
-    void adoptInstead(T *p) {
+    व्योम adoptInstead(T *p) {
         delete LocalPointerBase<T>::ptr;
         LocalPointerBase<T>::ptr=p;
     }
@@ -314,14 +314,14 @@ public:
      *     if p==nullptr and no other failure code had been set
      * @stable ICU 55
      */
-    void adoptInsteadAndCheckErrorCode(T *p, UErrorCode &errorCode) {
-        if(U_SUCCESS(errorCode)) {
+    व्योम adoptInsteadAndCheckErrorCode(T *p, UErrorCode &errorCode) {
+        अगर(U_SUCCESS(errorCode)) {
             delete LocalPointerBase<T>::ptr;
             LocalPointerBase<T>::ptr=p;
-            if(p==nullptr) {
+            अगर(p==nullptr) {
                 errorCode=U_MEMORY_ALLOCATION_ERROR;
             }
-        } else {
+        } अन्यथा {
             delete p;
         }
     }
@@ -337,8 +337,8 @@ public:
      *         icu::LocalPointer.
      * @stable ICU 64
      */
-    operator std::unique_ptr<T> () && {
-        return std::unique_ptr<T>(LocalPointerBase<T>::orphan());
+    चालक std::unique_ptr<T> () && {
+        वापस std::unique_ptr<T>(LocalPointerBase<T>::orphan());
     }
 };
 
@@ -360,11 +360,11 @@ public:
  * @see LocalPointerBase
  * @stable ICU 4.4
  */
-template<typename T>
-class LocalArray : public LocalPointerBase<T> {
-public:
-    using LocalPointerBase<T>::operator*;
-    using LocalPointerBase<T>::operator->;
+ढाँचा<typename T>
+class LocalArray : खुला LocalPointerBase<T> {
+खुला:
+    using LocalPointerBase<T>::चालक*;
+    using LocalPointerBase<T>::चालक->;
     /**
      * Constructor takes ownership.
      * @param p simple pointer to an array of T objects that is adopted
@@ -385,7 +385,7 @@ public:
      * @stable ICU 56
      */
     LocalArray(T *p, UErrorCode &errorCode) : LocalPointerBase<T>(p) {
-        if(p==nullptr && U_SUCCESS(errorCode)) {
+        अगर(p==nullptr && U_SUCCESS(errorCode)) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
         }
     }
@@ -425,11 +425,11 @@ public:
      * @return *this
      * @stable ICU 56
      */
-    LocalArray<T>& operator=(LocalArray<T>&& src) noexcept U_LIFETIME_BOUND {
+    LocalArray<T>& चालक=(LocalArray<T>&& src) noexcept U_LIFETIME_BOUND {
         delete[] LocalPointerBase<T>::ptr;
         LocalPointerBase<T>::ptr=src.ptr;
         src.ptr=nullptr;
-        return *this;
+        वापस *this;
     }
 
     /**
@@ -440,9 +440,9 @@ public:
      * @return *this
      * @stable ICU 64
      */
-    LocalArray<T>& operator=(std::unique_ptr<T[]>&& p) noexcept U_LIFETIME_BOUND {
+    LocalArray<T>& चालक=(std::unique_ptr<T[]>&& p) noexcept U_LIFETIME_BOUND {
         adoptInstead(p.release());
-        return *this;
+        वापस *this;
     }
 
     /**
@@ -450,10 +450,10 @@ public:
      * @param other other smart pointer
      * @stable ICU 56
      */
-    void swap(LocalArray<T> &other) noexcept {
-        T *temp=LocalPointerBase<T>::ptr;
+    व्योम swap(LocalArray<T> &other) noexcept {
+        T *अस्थायी=LocalPointerBase<T>::ptr;
         LocalPointerBase<T>::ptr=other.ptr;
-        other.ptr=temp;
+        other.ptr=अस्थायी;
     }
     /**
      * Non-member LocalArray swap function.
@@ -461,7 +461,7 @@ public:
      * @param p2 will get p1's pointer
      * @stable ICU 56
      */
-    friend inline void swap(LocalArray<T> &p1, LocalArray<T> &p2) noexcept {
+    मित्र अंतरभूत व्योम swap(LocalArray<T> &p1, LocalArray<T> &p2) noexcept {
         p1.swap(p2);
     }
     /**
@@ -470,7 +470,7 @@ public:
      * @param p simple pointer to an array of T objects that is adopted
      * @stable ICU 4.4
      */
-    void adoptInstead(T *p) {
+    व्योम adoptInstead(T *p) {
         delete[] LocalPointerBase<T>::ptr;
         LocalPointerBase<T>::ptr=p;
     }
@@ -489,14 +489,14 @@ public:
      *     if p==nullptr and no other failure code had been set
      * @stable ICU 56
      */
-    void adoptInsteadAndCheckErrorCode(T *p, UErrorCode &errorCode) {
-        if(U_SUCCESS(errorCode)) {
+    व्योम adoptInsteadAndCheckErrorCode(T *p, UErrorCode &errorCode) {
+        अगर(U_SUCCESS(errorCode)) {
             delete[] LocalPointerBase<T>::ptr;
             LocalPointerBase<T>::ptr=p;
-            if(p==nullptr) {
+            अगर(p==nullptr) {
                 errorCode=U_MEMORY_ALLOCATION_ERROR;
             }
-        } else {
+        } अन्यथा {
             delete[] p;
         }
     }
@@ -507,7 +507,7 @@ public:
      * @return reference to the array item
      * @stable ICU 4.4
      */
-    T& operator[](ptrdiff_t i) const U_LIFETIME_BOUND { return LocalPointerBase<T>::ptr[i]; }
+    T& चालक[](सूचक_भेद_प्रकार i) स्थिर U_LIFETIME_BOUND { वापस LocalPointerBase<T>::ptr[i]; }
 
     /**
      * Conversion operator to a C++11 std::unique_ptr.
@@ -520,8 +520,8 @@ public:
      *         icu::LocalPointer.
      * @stable ICU 64
      */
-    operator std::unique_ptr<T[]> () && {
-        return std::unique_ptr<T[]>(LocalPointerBase<T>::orphan());
+    चालक std::unique_ptr<T[]> () && {
+        वापस std::unique_ptr<T[]>(LocalPointerBase<T>::orphan());
     }
 };
 
@@ -545,10 +545,10 @@ public:
  * @see LocalPointer
  * @stable ICU 4.4
  */
-#define U_DEFINE_LOCAL_OPEN_POINTER(LocalPointerClassName, Type, closeFunction) \
+#घोषणा U_DEFINE_LOCAL_OPEN_POINTER(LocalPointerClassName, Type, closeFunction) \
     using LocalPointerClassName = internal::LocalOpenPointer<Type, closeFunction>
 
-#ifndef U_IN_DOXYGEN
+#अगर_अघोषित U_IN_DOXYGEN
 namespace internal {
 /**
  * Implementation, do not use directly: use U_DEFINE_LOCAL_OPEN_POINTER.
@@ -556,12 +556,12 @@ namespace internal {
  * @see U_DEFINE_LOCAL_OPEN_POINTER
  * @internal
  */
-template <typename Type, auto closeFunction>
-class LocalOpenPointer : public LocalPointerBase<Type> {
+ढाँचा <typename Type, स्वतः closeFunction>
+class LocalOpenPointer : खुला LocalPointerBase<Type> {
     using LocalPointerBase<Type>::ptr;
-public:
-    using LocalPointerBase<Type>::operator*;
-    using LocalPointerBase<Type>::operator->;
+खुला:
+    using LocalPointerBase<Type>::चालक*;
+    using LocalPointerBase<Type>::चालक->;
     explicit LocalOpenPointer(Type *p=nullptr) : LocalPointerBase<Type>(p) {}
     LocalOpenPointer(LocalOpenPointer &&src) noexcept
             : LocalPointerBase<Type>(src.ptr) {
@@ -570,39 +570,39 @@ public:
     /* TODO: Be agnostic of the deleter function signature from the user-provided std::unique_ptr? */
     explicit LocalOpenPointer(std::unique_ptr<Type, decltype(closeFunction)> &&p)
             : LocalPointerBase<Type>(p.release()) {}
-    ~LocalOpenPointer() { if (ptr != nullptr) { closeFunction(ptr); } }
-    LocalOpenPointer& operator=(LocalOpenPointer&& src) noexcept U_LIFETIME_BOUND {
-        if (ptr != nullptr) { closeFunction(ptr); }
+    ~LocalOpenPointer() { अगर (ptr != nullptr) { closeFunction(ptr); } }
+    LocalOpenPointer& चालक=(LocalOpenPointer&& src) noexcept U_LIFETIME_BOUND {
+        अगर (ptr != nullptr) { closeFunction(ptr); }
         LocalPointerBase<Type>::ptr=src.ptr;
         src.ptr=nullptr;
-        return *this;
+        वापस *this;
     }
     /* TODO: Be agnostic of the deleter function signature from the user-provided std::unique_ptr? */
     LocalOpenPointer&
-    operator=(std::unique_ptr<Type, decltype(closeFunction)>&& p) U_LIFETIME_BOUND {
+    चालक=(std::unique_ptr<Type, decltype(closeFunction)>&& p) U_LIFETIME_BOUND {
         adoptInstead(p.release());
-        return *this;
+        वापस *this;
     }
-    void swap(LocalOpenPointer &other) noexcept {
-        Type *temp=LocalPointerBase<Type>::ptr;
+    व्योम swap(LocalOpenPointer &other) noexcept {
+        Type *अस्थायी=LocalPointerBase<Type>::ptr;
         LocalPointerBase<Type>::ptr=other.ptr;
-        other.ptr=temp;
+        other.ptr=अस्थायी;
     }
-    friend inline void swap(LocalOpenPointer &p1, LocalOpenPointer &p2) noexcept {
+    मित्र अंतरभूत व्योम swap(LocalOpenPointer &p1, LocalOpenPointer &p2) noexcept {
         p1.swap(p2);
     }
-    void adoptInstead(Type *p) {
-        if (ptr != nullptr) { closeFunction(ptr); }
+    व्योम adoptInstead(Type *p) {
+        अगर (ptr != nullptr) { closeFunction(ptr); }
         ptr=p;
     }
-    operator std::unique_ptr<Type, decltype(closeFunction)> () && {
-        return std::unique_ptr<Type, decltype(closeFunction)>(LocalPointerBase<Type>::orphan(), closeFunction);
+    चालक std::unique_ptr<Type, decltype(closeFunction)> () && {
+        वापस std::unique_ptr<Type, decltype(closeFunction)>(LocalPointerBase<Type>::orphan(), closeFunction);
     }
 };
 }  // namespace internal
-#endif
+#पूर्ण_अगर
 
 U_NAMESPACE_END
 
-#endif  /* U_SHOW_CPLUSPLUS_API */
-#endif  /* __LOCALPOINTER_H__ */
+#पूर्ण_अगर  /* U_SHOW_CPLUSPLUS_API */
+#पूर्ण_अगर  /* __LOCALPOINTER_H__ */

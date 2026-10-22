@@ -19,24 +19,24 @@
 // is in the ICU svn repository at icuhtml/trunk/design/strings/contrib
 // (see ICU ticket 6765, r25517).
 
-#ifndef __STRINGPIECE_H__
-#define __STRINGPIECE_H__
+#अगर_अघोषित __STRINGPIECE_H__
+#घोषणा __STRINGPIECE_H__
 
 /**
  * \file 
  * \brief C++ API: StringPiece: Read-only byte string wrapper class.
  */
 
-#include "unicode/utypes.h"
+#समावेश "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#अगर U_SHOW_CPLUSPLUS_API
 
-#include <cstddef>
-#include <string_view>
-#include <type_traits>
+#समावेश <cstddef>
+#समावेश <string_view>
+#समावेश <type_traits>
 
-#include "unicode/uobject.h"
-#include "unicode/std_string.h"
+#समावेश "unicode/uobject.h"
+#समावेश "unicode/std_string.h"
 
 // Arghh!  I wish C++ literals were "string".
 
@@ -58,55 +58,55 @@ U_NAMESPACE_BEGIN
  *
  * @stable ICU 4.2
  */
-class U_COMMON_API StringPiece : public UMemory {
- private:
-  const char*   ptr_;
-  int32_t       length_;
+class U_COMMON_API StringPiece : खुला UMemory {
+ निजी:
+  स्थिर अक्षर*   ptr_;
+  int32_t       लंबाई_2;
 
- public:
+ खुला:
   /**
    * Default constructor, creates an empty StringPiece.
    * @stable ICU 4.2
    */
-  StringPiece() : ptr_(nullptr), length_(0) { }
+  StringPiece() : ptr_(nullptr), लंबाई_2(0) { }
 
   /**
    * Constructs from a NUL-terminated const char * pointer.
    * @param str a NUL-terminated const char * pointer
    * @stable ICU 4.2
    */
-  StringPiece(const char* str U_LIFETIME_BOUND);
-#if defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
+  StringPiece(स्थिर अक्षर* str U_LIFETIME_BOUND);
+#अगर defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
   /**
    * Constructs from a NUL-terminated const char8_t * pointer.
    * @param str a NUL-terminated const char8_t * pointer
    * @stable ICU 67
    */
-  StringPiece(const char8_t* str U_LIFETIME_BOUND) : StringPiece(reinterpret_cast<const char*>(str)) {}
-#endif
+  StringPiece(स्थिर char8_t* str U_LIFETIME_BOUND) : StringPiece(reinterpret_cast<स्थिर अक्षर*>(str)) {}
+#पूर्ण_अगर
   /**
    * Constructs an empty StringPiece.
    * Needed for type disambiguation from multiple other overloads.
    * @param p nullptr
    * @stable ICU 67
    */
-  StringPiece(std::nullptr_t p) : ptr_(p), length_(0) {}
+  StringPiece(std::nullptr_t p) : ptr_(p), लंबाई_2(0) {}
 
   /**
    * Constructs from a std::string.
    * @stable ICU 4.2
    */
-  StringPiece(const std::string& str U_LIFETIME_BOUND)
-    : ptr_(str.data()), length_(static_cast<int32_t>(str.size())) { }
-#if defined(__cpp_lib_char8_t) || defined(U_IN_DOXYGEN)
+  StringPiece(स्थिर std::string& str U_LIFETIME_BOUND)
+    : ptr_(str.तथ्य()), लंबाई_2(static_cast<int32_t>(str.आकार_2())) { }
+#अगर defined(__cpp_lib_char8_t) || defined(U_IN_DOXYGEN)
   /**
    * Constructs from a std::u8string.
    * @stable ICU 67
    */
-  StringPiece(const std::u8string& str U_LIFETIME_BOUND)
-    : ptr_(reinterpret_cast<const char*>(str.data())),
-      length_(static_cast<int32_t>(str.size())) { }
-#endif
+  StringPiece(स्थिर std::u8string& str U_LIFETIME_BOUND)
+    : ptr_(reinterpret_cast<स्थिर अक्षर*>(str.तथ्य())),
+      लंबाई_2(static_cast<int32_t>(str.आकार_2())) { }
+#पूर्ण_अगर
 
   /**
    * Constructs from some other implementation of a string piece class, from any
@@ -130,17 +130,17 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param str the other string piece
    * @stable ICU 65
    */
-  template <typename T,
+  ढाँचा <typename T,
             typename = std::enable_if_t<
-                (std::is_same_v<decltype(T().data()), const char*>
-#if defined(__cpp_char8_t)
-                    || std::is_same_v<decltype(T().data()), const char8_t*>
-#endif
+                (std::is_same_v<decltype(T().तथ्य()), स्थिर अक्षर*>
+#अगर defined(__cpp_char8_t)
+                    || std::is_same_v<decltype(T().तथ्य()), स्थिर char8_t*>
+#पूर्ण_अगर
                 ) &&
-                std::is_same_v<decltype(T().size()), size_t>>>
+                std::is_same_v<decltype(T().आकार_2()), माप_प्रकार>>>
   StringPiece(T str U_LIFETIME_BOUND)
-      : ptr_(reinterpret_cast<const char*>(str.data())),
-        length_(static_cast<int32_t>(str.size())) {}
+      : ptr_(reinterpret_cast<स्थिर अक्षर*>(str.तथ्य())),
+        लंबाई_2(static_cast<int32_t>(str.आकार_2())) {}
 
   /**
    * Constructs from a const char * pointer and a specified length.
@@ -148,17 +148,17 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param len the length of the string; must be non-negative
    * @stable ICU 4.2
    */
-  StringPiece(const char* offset U_LIFETIME_BOUND, int32_t len) : ptr_(offset), length_(len) { }
-#if defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
+  StringPiece(स्थिर अक्षर* offset U_LIFETIME_BOUND, int32_t len) : ptr_(offset), लंबाई_2(len) { }
+#अगर defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
   /**
    * Constructs from a const char8_t * pointer and a specified length.
    * @param str a const char8_t * pointer (need not be terminated)
    * @param len the length of the string; must be non-negative
    * @stable ICU 67
    */
-  StringPiece(const char8_t* str U_LIFETIME_BOUND, int32_t len) :
-      StringPiece(reinterpret_cast<const char*>(str), len) {}
-#endif
+  StringPiece(स्थिर char8_t* str U_LIFETIME_BOUND, int32_t len) :
+      StringPiece(reinterpret_cast<स्थिर अक्षर*>(str), len) {}
+#पूर्ण_अगर
 
   /**
    * Substring of another StringPiece.
@@ -166,7 +166,7 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param pos start position in x; must be non-negative and <= x.length().
    * @stable ICU 4.2
    */
-  StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos);
+  StringPiece(स्थिर StringPiece& x U_LIFETIME_BOUND, int32_t pos);
   /**
    * Substring of another StringPiece.
    * @param x the other StringPiece
@@ -175,17 +175,17 @@ class U_COMMON_API StringPiece : public UMemory {
    *            must be non-negative and will be pinned to at most x.length() - pos.
    * @stable ICU 4.2
    */
-  StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos, int32_t len);
+  StringPiece(स्थिर StringPiece& x U_LIFETIME_BOUND, int32_t pos, int32_t len);
 
-#ifndef U_HIDE_INTERNAL_API
+#अगर_अघोषित U_HIDE_INTERNAL_API
   /**
    * Converts to a std::string_view().
    * @internal
    */
-  inline operator std::string_view() const {
-    return {data(), static_cast<std::string_view::size_type>(size())};
+  अंतरभूत चालक std::string_view() स्थिर {
+    वापस {तथ्य(), static_cast<std::string_view::आकार_type>(आकार_2())};
   }
-#endif  // U_HIDE_INTERNAL_API
+#पूर्ण_अगर  // U_HIDE_INTERNAL_API
 
   /**
    * Returns the string pointer. May be nullptr if it is empty.
@@ -197,31 +197,31 @@ class U_COMMON_API StringPiece : public UMemory {
    * @return the string pointer
    * @stable ICU 4.2
    */
-  const char* data() const { return ptr_; }
+  स्थिर अक्षर* तथ्य() स्थिर { वापस ptr_; }
   /**
    * Returns the string length. Same as length().
    * @return the string length
    * @stable ICU 4.2
    */
-  int32_t size() const { return length_; }
+  int32_t आकार_2() स्थिर { वापस लंबाई_2; }
   /**
    * Returns the string length. Same as size().
    * @return the string length
    * @stable ICU 4.2
    */
-  int32_t length() const { return length_; }
+  int32_t लंबाई() स्थिर { वापस लंबाई_2; }
   /**
    * Returns whether the string is empty.
    * @return true if the string is empty
    * @stable ICU 4.2
    */
-  UBool empty() const { return length_ == 0; }
+  UBool empty() स्थिर { वापस लंबाई_2 == 0; }
 
   /**
    * Sets to an empty string.
    * @stable ICU 4.2
    */
-  void clear() { ptr_ = nullptr; length_ = 0; }
+  व्योम clear() { ptr_ = nullptr; लंबाई_2 = 0; }
 
   /**
    * Reset the stringpiece to refer to new data.
@@ -229,24 +229,24 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param len the length of the new data
    * @stable ICU 4.8
    */
-  void set(const char* xdata, int32_t len) { ptr_ = xdata; length_ = len; }
+  व्योम set(स्थिर अक्षर* xdata, int32_t len) { ptr_ = xdata; लंबाई_2 = len; }
 
   /**
    * Reset the stringpiece to refer to new data.
    * @param str a pointer to a NUL-terminated string. 
    * @stable ICU 4.8
    */
-  void set(const char* str);
+  व्योम set(स्थिर अक्षर* str);
 
-#if defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
+#अगर defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
   /**
    * Resets the stringpiece to refer to new data.
    * @param xdata pointer the new string data. Need not be NUL-terminated.
    * @param len the length of the new data
    * @stable ICU 67
    */
-  inline void set(const char8_t* xdata, int32_t len) {
-      set(reinterpret_cast<const char*>(xdata), len);
+  अंतरभूत व्योम set(स्थिर char8_t* xdata, int32_t len) {
+      set(reinterpret_cast<स्थिर अक्षर*>(xdata), len);
   }
 
   /**
@@ -254,23 +254,23 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param str a pointer to a NUL-terminated string.
    * @stable ICU 67
    */
-  inline void set(const char8_t* str) {
-      set(reinterpret_cast<const char*>(str));
+  अंतरभूत व्योम set(स्थिर char8_t* str) {
+      set(reinterpret_cast<स्थिर अक्षर*>(str));
   }
-#endif
+#पूर्ण_अगर
 
   /**
    * Removes the first n string units.
    * @param n prefix length, must be non-negative and <=length()
    * @stable ICU 4.2
    */
-  void remove_prefix(int32_t n) {
-    if (n >= 0) {
-      if (n > length_) {
-        n = length_;
+  व्योम remove_prefix(int32_t n) {
+    अगर (n >= 0) {
+      अगर (n > लंबाई_2) {
+        n = लंबाई_2;
       }
       ptr_ += n;
-      length_ -= n;
+      लंबाई_2 -= n;
     }
   }
 
@@ -279,12 +279,12 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param n suffix length, must be non-negative and <=length()
    * @stable ICU 4.2
    */
-  void remove_suffix(int32_t n) {
-    if (n >= 0) {
-      if (n <= length_) {
-        length_ -= n;
-      } else {
-        length_ = 0;
+  व्योम remove_suffix(int32_t n) {
+    अगर (n >= 0) {
+      अगर (n <= लंबाई_2) {
+        लंबाई_2 -= n;
+      } अन्यथा {
+        लंबाई_2 = 0;
       }
     }
   }
@@ -311,7 +311,7 @@ class U_COMMON_API StringPiece : public UMemory {
    * Maximum integer, used as a default value for substring methods.
    * @stable ICU 4.2
    */
-  static const int32_t npos; // = 0x7fffffff;
+  अटल स्थिर int32_t npos; // = 0x7fffffff;
 
   /**
    * Returns a substring of this StringPiece.
@@ -321,8 +321,8 @@ class U_COMMON_API StringPiece : public UMemory {
    * @return the substring StringPiece
    * @stable ICU 4.2
    */
-  StringPiece substr(int32_t pos, int32_t len = npos) const {
-    return StringPiece(*this, pos, len);
+  StringPiece substr(int32_t pos, int32_t len = npos) स्थिर {
+    वापस StringPiece(*this, pos, len);
   }
 };
 
@@ -334,7 +334,7 @@ class U_COMMON_API StringPiece : public UMemory {
  * @stable ICU 4.8
  */
 U_COMMON_API UBool U_EXPORT2 
-operator==(const StringPiece& x, const StringPiece& y);
+चालक==(स्थिर StringPiece& x, स्थिर StringPiece& y);
 
 /**
  * Global operator != for StringPiece
@@ -343,12 +343,12 @@ operator==(const StringPiece& x, const StringPiece& y);
  * @return true if the string data is not equal
  * @stable ICU 4.8
  */
-inline bool operator!=(const StringPiece& x, const StringPiece& y) {
-  return !(x == y);
+अंतरभूत bool चालक!=(स्थिर StringPiece& x, स्थिर StringPiece& y) {
+  वापस !(x == y);
 }
 
 U_NAMESPACE_END
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#पूर्ण_अगर /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __STRINGPIECE_H__
+#पूर्ण_अगर  // __STRINGPIECE_H__

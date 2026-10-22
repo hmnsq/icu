@@ -16,18 +16,18 @@
 *   created by: Vladimir Weinstein
 */
 
-#ifndef __UENUM_H
-#define __UENUM_H
+#अगर_अघोषित __UENUM_H
+#घोषणा __UENUM_H
 
-#include "unicode/utypes.h"
+#समावेश "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
+#अगर U_SHOW_CPLUSPLUS_API
+#समावेश "unicode/localpointer.h"
 
 U_NAMESPACE_BEGIN
 class StringEnumeration;
 U_NAMESPACE_END
-#endif   // U_SHOW_CPLUSPLUS_API
+#पूर्ण_अगर   // U_SHOW_CPLUSPLUS_API
 
 /**
  * \file
@@ -39,9 +39,9 @@ U_NAMESPACE_END
  * For usage in C programs.
  * @stable ICU 2.2
  */
-struct UEnumeration;
+काष्ठा UEnumeration;
 /** structure representing an enumeration object instance @stable ICU 2.2 */
-typedef struct UEnumeration UEnumeration;
+प्रकार काष्ठा UEnumeration UEnumeration;
 
 /**
  * Disposes of resources in use by the iterator.  If en is NULL,
@@ -50,10 +50,10 @@ typedef struct UEnumeration UEnumeration;
  * @param en UEnumeration structure pointer
  * @stable ICU 2.2
  */
-U_CAPI void U_EXPORT2
+U_CAPI व्योम U_EXPORT2
 uenum_close(UEnumeration* en);
 
-#if U_SHOW_CPLUSPLUS_API
+#अगर U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -70,7 +70,7 @@ U_DEFINE_LOCAL_OPEN_POINTER(LocalUEnumerationPointer, UEnumeration, uenum_close)
 
 U_NAMESPACE_END
 
-#endif
+#पूर्ण_अगर
 
 /**
  * Returns the number of elements that the iterator traverses.  If
@@ -87,7 +87,7 @@ U_NAMESPACE_END
  * @stable ICU 2.2
  */
 U_CAPI int32_t U_EXPORT2
-uenum_count(UEnumeration* en, UErrorCode* status);
+uenum_गिनती(UEnumeration* en, UErrorCode* status);
 
 /**
  * Returns the next element in the iterator's list.  If there are
@@ -110,9 +110,9 @@ uenum_count(UEnumeration* en, UErrorCode* status);
  *         traversed, returns NULL.
  * @stable ICU 2.2
  */
-U_CAPI const UChar* U_EXPORT2
+U_CAPI स्थिर UChar* U_EXPORT2
 uenum_unext(UEnumeration* en U_LIFETIME_BOUND,
-            int32_t* resultLength,
+            int32_t* परिणाम_लंबाई,
             UErrorCode* status);
 
 /**
@@ -143,9 +143,9 @@ uenum_unext(UEnumeration* en U_LIFETIME_BOUND,
  *         traversed, returns NULL.
  * @stable ICU 2.2
  */
-U_CAPI const char* U_EXPORT2
-uenum_next(UEnumeration* en U_LIFETIME_BOUND,
-           int32_t* resultLength,
+U_CAPI स्थिर अक्षर* U_EXPORT2
+uenum_अग्र(UEnumeration* en U_LIFETIME_BOUND,
+           int32_t* परिणाम_लंबाई,
            UErrorCode* status);
 
 /**
@@ -157,10 +157,10 @@ uenum_next(UEnumeration* en U_LIFETIME_BOUND,
  *               the iterator is out of sync with its service.  
  * @stable ICU 2.2
  */
-U_CAPI void U_EXPORT2
+U_CAPI व्योम U_EXPORT2
 uenum_reset(UEnumeration* en, UErrorCode* status);
 
-#if U_SHOW_CPLUSPLUS_API
+#अगर U_SHOW_CPLUSPLUS_API
 
 /**
  * Given a StringEnumeration, wrap it in a UEnumeration.  The
@@ -174,7 +174,7 @@ uenum_reset(UEnumeration* en, UErrorCode* status);
 U_CAPI UEnumeration* U_EXPORT2
 uenum_openFromStringEnumeration(icu::StringEnumeration* adopted, UErrorCode* ec);
 
-#endif
+#पूर्ण_अगर
 
 /**
  * Given an array of const UChar* strings, return a UEnumeration.  String pointers from 0..count-1 must not be null.
@@ -188,8 +188,8 @@ uenum_openFromStringEnumeration(icu::StringEnumeration* adopted, UErrorCode* ec)
  * @stable ICU 50
  */
 U_CAPI UEnumeration* U_EXPORT2
-uenum_openUCharStringsEnumeration(U_LIFETIME_BOUND const UChar* const strings[],
-                                  int32_t count,
+uenum_openUCharStringsEnumeration(U_LIFETIME_BOUND स्थिर UChar* स्थिर strings[],
+                                  int32_t गिनती,
                                   UErrorCode* ec);
 
 /**
@@ -204,8 +204,8 @@ uenum_openUCharStringsEnumeration(U_LIFETIME_BOUND const UChar* const strings[],
  * @stable ICU 50
  */
 U_CAPI UEnumeration* U_EXPORT2
-uenum_openCharStringsEnumeration(U_LIFETIME_BOUND const char* const strings[],
-                                 int32_t count,
+uenum_openCharStringsEnumeration(U_LIFETIME_BOUND स्थिर अक्षर* स्थिर strings[],
+                                 int32_t गिनती,
                                  UErrorCode* ec);
 
-#endif
+#पूर्ण_अगर

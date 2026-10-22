@@ -31,18 +31,18 @@
 *******************************************************************************
 */
 
-#ifndef UTYPES_H
-#define UTYPES_H
+#अगर_अघोषित UTYPES_H
+#घोषणा UTYPES_H
 
 
-#include "unicode/umachine.h"
-#include "unicode/uversion.h"
-#include "unicode/uconfig.h"
-#include <float.h>
+#समावेश "unicode/umachine.h"
+#समावेश "unicode/uversion.h"
+#समावेश "unicode/uconfig.h"
+#समावेश <float.h>
 
-#if !U_NO_DEFAULT_INCLUDE_UTF_HEADERS
+#अगर !U_NO_DEFAULT_INCLUDE_UTF_HEADERS
 #   include "unicode/utf.h"
-#endif
+#पूर्ण_अगर
 
 /*!
  * \file
@@ -71,19 +71,19 @@
  * but who still want to use C++ header-only APIs which do not rely on ICU DLL exports.
  * @internal
  */
-#ifdef __cplusplus
+#अगर_घोषित __cplusplus
 #   ifndef U_SHOW_CPLUSPLUS_API
 #       define U_SHOW_CPLUSPLUS_API 1
 #   endif
 #   ifndef U_SHOW_CPLUSPLUS_HEADER_API
 #       define U_SHOW_CPLUSPLUS_HEADER_API 1
 #   endif
-#else
+#अन्यथा
 #   undef U_SHOW_CPLUSPLUS_API
 #   define U_SHOW_CPLUSPLUS_API 0
 #   undef U_SHOW_CPLUSPLUS_HEADER_API
 #   define U_SHOW_CPLUSPLUS_HEADER_API 0
-#endif
+#पूर्ण_अगर
 
 /**
  * \def U_HIDE_DRAFT_API
@@ -95,12 +95,12 @@
  * Define this to 1 to request that internal API be "hidden"
  * @internal
  */
-#if !U_DEFAULT_SHOW_DRAFT && !defined(U_SHOW_DRAFT_API)
-#define U_HIDE_DRAFT_API 1
-#endif
-#if !U_DEFAULT_SHOW_DRAFT && !defined(U_SHOW_INTERNAL_API)
-#define U_HIDE_INTERNAL_API 1
-#endif
+#अगर !U_DEFAULT_SHOW_DRAFT && !defined(U_SHOW_DRAFT_API)
+#घोषणा U_HIDE_DRAFT_API 1
+#पूर्ण_अगर
+#अगर !U_DEFAULT_SHOW_DRAFT && !defined(U_SHOW_INTERNAL_API)
+#घोषणा U_HIDE_INTERNAL_API 1
+#पूर्ण_अगर
 
 /** @} */
 
@@ -124,38 +124,38 @@
  * The non-string form of U_ICUDATA_TYPE_LETTER
  * @stable ICU 2.0
  */
-#if U_CHARSET_FAMILY
-#   if U_IS_BIG_ENDIAN
+#अगर U_CHARSET_FAMILY
+#   अगर U_IS_BIG_ENDIAN
    /* EBCDIC - should always be BE */
 #     define U_ICUDATA_TYPE_LETTER "e"
 #     define U_ICUDATA_TYPE_LITLETTER e
-#   else
+#   अन्यथा
 #     error "Don't know what to do with little endian EBCDIC!"
 #     define U_ICUDATA_TYPE_LETTER "x"
 #     define U_ICUDATA_TYPE_LITLETTER x
 #   endif
-#else
-#   if U_IS_BIG_ENDIAN
+#अन्यथा
+#   अगर U_IS_BIG_ENDIAN
       /* Big-endian ASCII */
 #     define U_ICUDATA_TYPE_LETTER "b"
 #     define U_ICUDATA_TYPE_LITLETTER b
-#   else
+#   अन्यथा
       /* Little-endian ASCII */
 #     define U_ICUDATA_TYPE_LETTER "l"
 #     define U_ICUDATA_TYPE_LITLETTER l
 #   endif
-#endif
+#पूर्ण_अगर
 
 /**
  * A single string literal containing the icudata stub name. i.e. 'icudt18e' for
  * ICU 1.8.x on EBCDIC, etc..
  * @stable ICU 2.0
  */
-#define U_ICUDATA_NAME    "icudt" U_ICU_VERSION_SHORT U_ICUDATA_TYPE_LETTER
-#ifndef U_HIDE_INTERNAL_API
-#define U_USRDATA_NAME    "usrdt" U_ICU_VERSION_SHORT U_ICUDATA_TYPE_LETTER  /**< @internal */
-#define U_USE_USRDATA     0  /**< @internal */
-#endif  /* U_HIDE_INTERNAL_API */
+#घोषणा U_ICUDATA_NAME    "icudt" U_ICU_VERSION_SHORT U_ICUDATA_TYPE_LETTER
+#अगर_अघोषित U_HIDE_INTERNAL_API
+#घोषणा U_USRDATA_NAME    "usrdt" U_ICU_VERSION_SHORT U_ICUDATA_TYPE_LETTER  /**< @internal */
+#घोषणा U_USE_USRDATA     0  /**< @internal */
+#पूर्ण_अगर  /* U_HIDE_INTERNAL_API */
 
 /**
  *  U_ICU_ENTRY_POINT is the name of the DLL entry point to the ICU data library.
@@ -168,41 +168,41 @@
  *                                  \#define U_ICU_ENTRY_POINT icudt19_dat
  * @stable ICU 2.4
  */
-#define U_ICUDATA_ENTRY_POINT  U_DEF2_ICUDATA_ENTRY_POINT(U_ICU_VERSION_MAJOR_NUM,U_LIB_SUFFIX_C_NAME)
+#घोषणा U_ICUDATA_ENTRY_POINT  U_DEF2_ICUDATA_ENTRY_POINT(U_ICU_VERSION_MAJOR_अंक,U_LIB_SUFFIX_C_NAME)
 
-#ifndef U_HIDE_INTERNAL_API
+#अगर_अघोषित U_HIDE_INTERNAL_API
 /**
  * Do not use. Note that it's OK for the 2nd argument to be undefined (literal).
  * @internal
  */
-#define U_DEF2_ICUDATA_ENTRY_POINT(major,suff) U_DEF_ICUDATA_ENTRY_POINT(major,suff)
+#घोषणा U_DEF2_ICUDATA_ENTRY_POINT(major,suff) U_DEF_ICUDATA_ENTRY_POINT(major,suff)
 
 /**
  * Do not use.
  * @internal
  */
-#ifndef U_DEF_ICUDATA_ENTRY_POINT
+#अगर_अघोषित U_DEF_ICUDATA_ENTRY_POINT
 /* affected by symbol renaming. See platform.h */
-#ifndef U_LIB_SUFFIX_C_NAME
-#define U_DEF_ICUDATA_ENTRY_POINT(major, suff) icudt##major##_dat
-#else
-#define U_DEF_ICUDATA_ENTRY_POINT(major, suff) icudt##suff ## major##_dat
-#endif
-#endif
-#endif  /* U_HIDE_INTERNAL_API */
+#अगर_अघोषित U_LIB_SUFFIX_C_NAME
+#घोषणा U_DEF_ICUDATA_ENTRY_POINT(major, suff) icudt##major##_dat
+#अन्यथा
+#घोषणा U_DEF_ICUDATA_ENTRY_POINT(major, suff) icudt##suff ## major##_dat
+#पूर्ण_अगर
+#पूर्ण_अगर
+#पूर्ण_अगर  /* U_HIDE_INTERNAL_API */
 
 /**
  * \def NULL
  * Define NULL if necessary, to nullptr for C++ and to ((void *)0) for C.
  * @stable ICU 2.0
  */
-#ifndef NULL
-#ifdef __cplusplus
-#define NULL    nullptr
-#else
-#define NULL    ((void *)0)
-#endif
-#endif
+#अगर_अघोषित शून्य
+#अगर_घोषित __cplusplus
+#घोषणा शून्य    nullptr
+#अन्यथा
+#घोषणा शून्य    ((व्योम *)0)
+#पूर्ण_अगर
+#पूर्ण_अगर
 
 /*===========================================================================*/
 /* Calendar/TimeZone data types                                              */
@@ -215,28 +215,28 @@
  * UTC leap seconds are ignored.
  * @stable ICU 2.0
  */
-typedef double UDate;
+प्रकार द्विगुन UDate;
 
 /** The number of milliseconds per second @stable ICU 2.0 */
-#define U_MILLIS_PER_SECOND        (1000)
+#घोषणा U_MILLIS_PER_SECOND        (1000)
 /** The number of milliseconds per minute @stable ICU 2.0 */
-#define U_MILLIS_PER_MINUTE       (60000)
+#घोषणा U_MILLIS_PER_MINUTE       (60000)
 /** The number of milliseconds per hour @stable ICU 2.0 */
-#define U_MILLIS_PER_HOUR       (3600000)
+#घोषणा U_MILLIS_PER_HOUR       (3600000)
 /** The number of milliseconds per day @stable ICU 2.0 */
-#define U_MILLIS_PER_DAY       (86400000)
+#घोषणा U_MILLIS_PER_DAY       (86400000)
 
 /** 
  * Maximum UDate value 
  * @stable ICU 4.8 
  */ 
-#define U_DATE_MAX DBL_MAX
+#घोषणा U_DATE_MAX द्विग_उच्च
 
 /**
  * Minimum UDate value 
  * @stable ICU 4.8 
  */ 
-#define U_DATE_MIN -U_DATE_MAX
+#घोषणा U_DATE_MIN -U_DATE_MAX
 
 /*===========================================================================*/
 /* Shared library/DLL import-export API control                              */
@@ -305,86 +305,86 @@ typedef double UDate;
  * @stable ICU 3.4
  */
 
-#ifdef U_IN_DOXYGEN
+#अगर_घोषित U_IN_DOXYGEN
 // This definition is required when generating the API docs.
-#define U_COMBINED_IMPLEMENTATION 1
-#endif
+#घोषणा U_COMBINED_IMPLEMENTATION 1
+#पूर्ण_अगर
 
-#if defined(U_COMBINED_IMPLEMENTATION)
-#define U_DATA_API     U_EXPORT
-#define U_COMMON_API   U_EXPORT
-#define U_I18N_API     U_EXPORT
-#define U_LAYOUT_API   U_EXPORT
-#define U_LAYOUTEX_API U_EXPORT
-#define U_IO_API       U_EXPORT
-#define U_TOOLUTIL_API U_EXPORT
-#elif defined(U_STATIC_IMPLEMENTATION)
-#define U_DATA_API
-#define U_COMMON_API
-#define U_I18N_API
-#define U_LAYOUT_API
-#define U_LAYOUTEX_API
-#define U_IO_API
-#define U_TOOLUTIL_API
-#elif defined(U_COMMON_IMPLEMENTATION)
-#define U_DATA_API     U_IMPORT
-#define U_COMMON_API   U_EXPORT
-#define U_I18N_API     U_IMPORT
-#define U_LAYOUT_API   U_IMPORT
-#define U_LAYOUTEX_API U_IMPORT
-#define U_IO_API       U_IMPORT
-#define U_TOOLUTIL_API U_IMPORT
-#elif defined(U_I18N_IMPLEMENTATION)
-#define U_DATA_API     U_IMPORT
-#define U_COMMON_API   U_IMPORT
-#define U_I18N_API     U_EXPORT
-#define U_LAYOUT_API   U_IMPORT
-#define U_LAYOUTEX_API U_IMPORT
-#define U_IO_API       U_IMPORT
-#define U_TOOLUTIL_API U_IMPORT
-#elif defined(U_LAYOUT_IMPLEMENTATION)
-#define U_DATA_API     U_IMPORT
-#define U_COMMON_API   U_IMPORT
-#define U_I18N_API     U_IMPORT
-#define U_LAYOUT_API   U_EXPORT
-#define U_LAYOUTEX_API U_IMPORT
-#define U_IO_API       U_IMPORT
-#define U_TOOLUTIL_API U_IMPORT
-#elif defined(U_LAYOUTEX_IMPLEMENTATION)
-#define U_DATA_API     U_IMPORT
-#define U_COMMON_API   U_IMPORT
-#define U_I18N_API     U_IMPORT
-#define U_LAYOUT_API   U_IMPORT
-#define U_LAYOUTEX_API U_EXPORT
-#define U_IO_API       U_IMPORT
-#define U_TOOLUTIL_API U_IMPORT
-#elif defined(U_IO_IMPLEMENTATION)
-#define U_DATA_API     U_IMPORT
-#define U_COMMON_API   U_IMPORT
-#define U_I18N_API     U_IMPORT
-#define U_LAYOUT_API   U_IMPORT
-#define U_LAYOUTEX_API U_IMPORT
-#define U_IO_API       U_EXPORT
-#define U_TOOLUTIL_API U_IMPORT
-#elif defined(U_TOOLUTIL_IMPLEMENTATION)
-#define U_DATA_API     U_IMPORT
-#define U_COMMON_API   U_IMPORT
-#define U_I18N_API     U_IMPORT
-#define U_LAYOUT_API   U_IMPORT
-#define U_LAYOUTEX_API U_IMPORT
-#define U_IO_API       U_IMPORT
-#define U_TOOLUTIL_API U_EXPORT
-#else
-#define U_DATA_API     U_IMPORT
-#define U_COMMON_API   U_IMPORT
-#define U_I18N_API     U_IMPORT
-#define U_LAYOUT_API   U_IMPORT
-#define U_LAYOUTEX_API U_IMPORT
-#define U_IO_API       U_IMPORT
-#define U_TOOLUTIL_API U_IMPORT
-#endif
+#अगर defined(U_COMBINED_IMPLEMENTATION)
+#घोषणा U_तथ्य_API     U_EXPORT
+#घोषणा U_COMMON_API   U_EXPORT
+#घोषणा U_I18N_API     U_EXPORT
+#घोषणा U_LAYOUT_API   U_EXPORT
+#घोषणा U_LAYOUTEX_API U_EXPORT
+#घोषणा U_IO_API       U_EXPORT
+#घोषणा U_TOOLUTIL_API U_EXPORT
+#या_अगर defined(U_STATIC_IMPLEMENTATION)
+#घोषणा U_तथ्य_API
+#घोषणा U_COMMON_API
+#घोषणा U_I18N_API
+#घोषणा U_LAYOUT_API
+#घोषणा U_LAYOUTEX_API
+#घोषणा U_IO_API
+#घोषणा U_TOOLUTIL_API
+#या_अगर defined(U_COMMON_IMPLEMENTATION)
+#घोषणा U_तथ्य_API     U_IMPORT
+#घोषणा U_COMMON_API   U_EXPORT
+#घोषणा U_I18N_API     U_IMPORT
+#घोषणा U_LAYOUT_API   U_IMPORT
+#घोषणा U_LAYOUTEX_API U_IMPORT
+#घोषणा U_IO_API       U_IMPORT
+#घोषणा U_TOOLUTIL_API U_IMPORT
+#या_अगर defined(U_I18N_IMPLEMENTATION)
+#घोषणा U_तथ्य_API     U_IMPORT
+#घोषणा U_COMMON_API   U_IMPORT
+#घोषणा U_I18N_API     U_EXPORT
+#घोषणा U_LAYOUT_API   U_IMPORT
+#घोषणा U_LAYOUTEX_API U_IMPORT
+#घोषणा U_IO_API       U_IMPORT
+#घोषणा U_TOOLUTIL_API U_IMPORT
+#या_अगर defined(U_LAYOUT_IMPLEMENTATION)
+#घोषणा U_तथ्य_API     U_IMPORT
+#घोषणा U_COMMON_API   U_IMPORT
+#घोषणा U_I18N_API     U_IMPORT
+#घोषणा U_LAYOUT_API   U_EXPORT
+#घोषणा U_LAYOUTEX_API U_IMPORT
+#घोषणा U_IO_API       U_IMPORT
+#घोषणा U_TOOLUTIL_API U_IMPORT
+#या_अगर defined(U_LAYOUTEX_IMPLEMENTATION)
+#घोषणा U_तथ्य_API     U_IMPORT
+#घोषणा U_COMMON_API   U_IMPORT
+#घोषणा U_I18N_API     U_IMPORT
+#घोषणा U_LAYOUT_API   U_IMPORT
+#घोषणा U_LAYOUTEX_API U_EXPORT
+#घोषणा U_IO_API       U_IMPORT
+#घोषणा U_TOOLUTIL_API U_IMPORT
+#या_अगर defined(U_IO_IMPLEMENTATION)
+#घोषणा U_तथ्य_API     U_IMPORT
+#घोषणा U_COMMON_API   U_IMPORT
+#घोषणा U_I18N_API     U_IMPORT
+#घोषणा U_LAYOUT_API   U_IMPORT
+#घोषणा U_LAYOUTEX_API U_IMPORT
+#घोषणा U_IO_API       U_EXPORT
+#घोषणा U_TOOLUTIL_API U_IMPORT
+#या_अगर defined(U_TOOLUTIL_IMPLEMENTATION)
+#घोषणा U_तथ्य_API     U_IMPORT
+#घोषणा U_COMMON_API   U_IMPORT
+#घोषणा U_I18N_API     U_IMPORT
+#घोषणा U_LAYOUT_API   U_IMPORT
+#घोषणा U_LAYOUTEX_API U_IMPORT
+#घोषणा U_IO_API       U_IMPORT
+#घोषणा U_TOOLUTIL_API U_EXPORT
+#अन्यथा
+#घोषणा U_तथ्य_API     U_IMPORT
+#घोषणा U_COMMON_API   U_IMPORT
+#घोषणा U_I18N_API     U_IMPORT
+#घोषणा U_LAYOUT_API   U_IMPORT
+#घोषणा U_LAYOUTEX_API U_IMPORT
+#घोषणा U_IO_API       U_IMPORT
+#घोषणा U_TOOLUTIL_API U_IMPORT
+#पूर्ण_अगर
 
-#ifndef U_FORCE_HIDE_DRAFT_API
+#अगर_अघोषित U_FORCE_HIDE_DRAFT_API
 
 /**
  * \def U_DATA_API_CLASS
@@ -443,36 +443,36 @@ typedef double UDate;
 //
 // https://learn.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warning-level-1-c4251
 //
-#if U_PLATFORM_HAS_WIN32_API
-#define U_DATA_API_CLASS
-#define U_COMMON_API_CLASS
-#define U_I18N_API_CLASS
-#define U_LAYOUT_API_CLASS
-#define U_LAYOUTEX_API_CLASS
-#define U_IO_API_CLASS
-#define U_TOOLUTIL_API_CLASS
-#else
-#define U_DATA_API_CLASS     U_DATA_API
-#define U_COMMON_API_CLASS   U_COMMON_API
-#define U_I18N_API_CLASS     U_I18N_API
-#define U_LAYOUT_API_CLASS   U_LAYOUT_API
-#define U_LAYOUTEX_API_CLASS U_LAYOUTEX_API
-#define U_IO_API_CLASS       U_IO_API
-#define U_TOOLUTIL_API_CLASS U_TOOLUTIL_API
-#endif
+#अगर U_PLATFORM_HAS_WIN32_API
+#घोषणा U_तथ्य_API_CLASS
+#घोषणा U_COMMON_API_CLASS
+#घोषणा U_I18N_API_CLASS
+#घोषणा U_LAYOUT_API_CLASS
+#घोषणा U_LAYOUTEX_API_CLASS
+#घोषणा U_IO_API_CLASS
+#घोषणा U_TOOLUTIL_API_CLASS
+#अन्यथा
+#घोषणा U_तथ्य_API_CLASS     U_तथ्य_API
+#घोषणा U_COMMON_API_CLASS   U_COMMON_API
+#घोषणा U_I18N_API_CLASS     U_I18N_API
+#घोषणा U_LAYOUT_API_CLASS   U_LAYOUT_API
+#घोषणा U_LAYOUTEX_API_CLASS U_LAYOUTEX_API
+#घोषणा U_IO_API_CLASS       U_IO_API
+#घोषणा U_TOOLUTIL_API_CLASS U_TOOLUTIL_API
+#पूर्ण_अगर
 
-#endif  // U_FORCE_HIDE_DRAFT_API
+#पूर्ण_अगर  // U_FORCE_HIDE_DRAFT_API
 
 /**
  * \def U_STANDARD_CPP_NAMESPACE
  * Control of C++ Namespace
  * @stable ICU 2.0
  */
-#ifdef __cplusplus
-#define U_STANDARD_CPP_NAMESPACE        ::
-#else
-#define U_STANDARD_CPP_NAMESPACE
-#endif
+#अगर_घोषित __cplusplus
+#घोषणा U_STANDARD_CPP_NAMESPACE        ::
+#अन्यथा
+#घोषणा U_STANDARD_CPP_NAMESPACE
+#पूर्ण_अगर
 
 /*===========================================================================*/
 /* UErrorCode */
@@ -506,7 +506,7 @@ typedef double UDate;
  *
  * @stable ICU 2.0
  */
-typedef enum UErrorCode {
+प्रकार क्रमागत UErrorCode {
     /* The ordering of U_ERROR_INFO_START Vs U_USING_FALLBACK_WARNING looks weird
      * and is that way because VC++ debugger displays first encountered constant,
      * which is not the what the code is used for
@@ -524,7 +524,7 @@ typedef enum UErrorCode {
 
     U_STRING_NOT_TERMINATED_WARNING = -124,/**< An output string could not be NUL-terminated because output length==destCapacity. */
 
-    U_SORT_KEY_TOO_SHORT_WARNING = -123, /**< Number of levels requested in getBound is higher than the number of levels in the sort key */
+    U_SORT_कुंजी_TOO_SHORT_WARNING = -123, /**< Number of levels requested in getBound is higher than the number of levels in the sort key */
 
     U_AMBIGUOUS_ALIAS_WARNING = -122,   /**< This converter alias can go to different converter implementations */
 
@@ -533,13 +533,13 @@ typedef enum UErrorCode {
     U_PLUGIN_CHANGED_LEVEL_WARNING = -120, /**< A plugin caused a level change. May not be an error, but later plugins may not load. */
 
 
-#ifndef U_HIDE_DEPRECATED_API
+#अगर_अघोषित U_HIDE_DEPRECATED_API
     /**
      * One more than the highest normal UErrorCode warning value.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
     U_ERROR_WARNING_LIMIT,
-#endif  // U_HIDE_DEPRECATED_API
+#पूर्ण_अगर  // U_HIDE_DEPRECATED_API
 
     U_ZERO_ERROR              =  0,     /**< No error, no warning. */
 
@@ -550,14 +550,14 @@ typedef enum UErrorCode {
     U_INTERNAL_PROGRAM_ERROR  =  5,     /**< Indicates a bug in the library code */
     U_MESSAGE_PARSE_ERROR     =  6,     /**< Unable to parse a message (message format) */
     U_MEMORY_ALLOCATION_ERROR =  7,     /**< Memory allocation error */
-    U_INDEX_OUTOFBOUNDS_ERROR =  8,     /**< Trying to access the index that is out of bounds */
+    U_सूचकांक_OUTOFBOUNDS_ERROR =  8,     /**< Trying to access the index that is out of bounds */
     U_PARSE_ERROR             =  9,     /**< Equivalent to Java ParseException */
     U_INVALID_CHAR_FOUND      = 10,     /**< Character conversion: Unmappable input sequence. In other APIs: Invalid character. */
     U_TRUNCATED_CHAR_FOUND    = 11,     /**< Character conversion: Incomplete input sequence. */
     U_ILLEGAL_CHAR_FOUND      = 12,     /**< Character conversion: Illegal input sequence/combination of input units. */
     U_INVALID_TABLE_FORMAT    = 13,     /**< Conversion table file found, but corrupted */
     U_INVALID_TABLE_FILE      = 14,     /**< Conversion table file not found */
-    U_BUFFER_OVERFLOW_ERROR   = 15,     /**< A result would not fit in the supplied buffer */
+    U_बफर_OVERFLOW_ERROR   = 15,     /**< A result would not fit in the supplied buffer */
     U_UNSUPPORTED_ERROR       = 16,     /**< Requested operation not supported in current context */
     U_RESOURCE_TYPE_MISMATCH  = 17,     /**< an operation is requested over a resource that does not support it */
     U_ILLEGAL_ESCAPE_SEQUENCE = 18,     /**< ISO-2022 illegal escape sequence */
@@ -581,15 +581,15 @@ typedef enum UErrorCode {
      *
      * @stable ICU 68
      */
-    U_INPUT_TOO_LONG_ERROR = 31,
+    U_निवेश_TOO_LONG_ERROR = 31,
 
-#ifndef U_HIDE_DEPRECATED_API
+#अगर_अघोषित U_HIDE_DEPRECATED_API
     /**
      * One more than the highest standard error code.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
     U_STANDARD_ERROR_LIMIT = 32,
-#endif  // U_HIDE_DEPRECATED_API
+#पूर्ण_अगर  // U_HIDE_DEPRECATED_API
 
     /*
      * Error codes in the range 0x10000 0x10100 are reserved for Transliterator.
@@ -598,7 +598,7 @@ typedef enum UErrorCode {
     U_PARSE_ERROR_START = 0x10000,    /**< Start of Transliterator errors */
     U_MALFORMED_RULE,                 /**< Elements of a rule are misplaced */
     U_MALFORMED_SET,                  /**< A UnicodeSet pattern is invalid*/
-    U_MALFORMED_SYMBOL_REFERENCE,     /**< UNUSED as of ICU 2.4 */
+    U_MALFORMED_प्रतीक_REFERENCE,     /**< UNUSED as of ICU 2.4 */
     U_MALFORMED_UNICODE_ESCAPE,       /**< A Unicode escape pattern is invalid*/
     U_MALFORMED_VARIABLE_DEFINITION,  /**< A variable definition is invalid */
     U_MALFORMED_VARIABLE_REFERENCE,   /**< A variable reference is invalid */
@@ -630,13 +630,13 @@ typedef enum UErrorCode {
     U_INTERNAL_TRANSLITERATOR_ERROR,  /**< Internal transliterator system error */
     U_INVALID_ID,                     /**< A "::id" rule specifies an unknown transliterator */
     U_INVALID_FUNCTION,               /**< A "&fn()" rule specifies an unknown transliterator */
-#ifndef U_HIDE_DEPRECATED_API
+#अगर_अघोषित U_HIDE_DEPRECATED_API
     /**
      * One more than the highest normal Transliterator error code.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
     U_PARSE_ERROR_LIMIT,
-#endif  // U_HIDE_DEPRECATED_API
+#पूर्ण_अगर  // U_HIDE_DEPRECATED_API
 
     /*
      * Error codes in the range 0x10100 0x10200 are reserved for the formatting API.
@@ -659,16 +659,16 @@ typedef enum UErrorCode {
     U_DUPLICATE_KEYWORD,              /**< Duplicate keyword in PluralFormat */
     U_UNDEFINED_KEYWORD,              /**< Undefined Plural keyword */
     U_DEFAULT_KEYWORD_MISSING,        /**< Missing DEFAULT rule in plural rules */
-    U_DECIMAL_NUMBER_SYNTAX_ERROR,    /**< Decimal number syntax error */
+    U_DECIMAL_संख्या_SYNTAX_ERROR,    /**< Decimal number syntax error */
     U_FORMAT_INEXACT_ERROR,           /**< Cannot format a number exactly and rounding mode is ROUND_UNNECESSARY @stable ICU 4.8 */
-    U_NUMBER_ARG_OUTOFBOUNDS_ERROR,   /**< The argument to a NumberFormatter helper method was out of bounds; the bounds are usually 0 to 999. @stable ICU 61 */
-    U_NUMBER_SKELETON_SYNTAX_ERROR,   /**< The number skeleton passed to C++ NumberFormatter or C UNumberFormatter was invalid or contained a syntax error. @stable ICU 62 */
+    U_संख्या_ARG_OUTOFBOUNDS_ERROR,   /**< The argument to a NumberFormatter helper method was out of bounds; the bounds are usually 0 to 999. @stable ICU 61 */
+    U_संख्या_SKELETON_SYNTAX_ERROR,   /**< The number skeleton passed to C++ NumberFormatter or C UNumberFormatter was invalid or contained a syntax error. @stable ICU 62 */
 
     /* MessageFormat 2.0 errors */
     U_MF_UNRESOLVED_VARIABLE_ERROR,    /**< A variable is referred to but not bound by any definition @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
     U_MF_SYNTAX_ERROR,                 /**< Includes all syntax errors @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
     U_MF_UNKNOWN_FUNCTION_ERROR,       /**< An annotation refers to a function not defined by the standard or custom function registry @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
-    U_MF_VARIANT_KEY_MISMATCH_ERROR,   /**< In a match-construct, one or more variants had a different number of keys from the number of selectors @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
+    U_MF_VARIANT_कुंजी_MISMATCH_ERROR,   /**< In a match-construct, one or more variants had a different number of keys from the number of selectors @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
     U_MF_FORMATTING_ERROR,             /**< Covers all runtime errors: for example, an internally inconsistent set of options. @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
     U_MF_NONEXHAUSTIVE_PATTERN_ERROR,  /**< In a match-construct, the variants do not cover all possible values @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
     U_MF_DUPLICATE_OPTION_NAME_ERROR,  /**< In an annotation, the same option name appears more than once @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
@@ -678,13 +678,13 @@ typedef enum UErrorCode {
     U_MF_OPERAND_MISMATCH_ERROR,     /**< An operand provided to a function does not have the required form for that function @internal ICU 75 technology preview @deprecated This API is for technology preview only. */
     U_MF_DUPLICATE_VARIANT_ERROR, /**< A message includes a variant with the same key list as another variant. @internal ICU 76 technology preview @deprecated This API is for technology preview only. */
     U_MF_BAD_OPTION,             /**< An option value provided to a function does not have the required form for that option. @internal ICU 77 technology preview @deprecated This API is for technology preview only. */
-#ifndef U_HIDE_DEPRECATED_API
+#अगर_अघोषित U_HIDE_DEPRECATED_API
     /**
      * One more than the highest normal formatting API error code.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
     U_FMT_PARSE_ERROR_LIMIT = 0x10121,
-#endif  // U_HIDE_DEPRECATED_API
+#पूर्ण_अगर  // U_HIDE_DEPRECATED_API
 
     /*
      * Error codes in the range 0x10200 0x102ff are reserved for BreakIterator.
@@ -698,19 +698,19 @@ typedef enum UErrorCode {
     U_BRK_ASSIGN_ERROR,                    /**< Syntax error in RBBI rule assignment statement.   */
     U_BRK_VARIABLE_REDFINITION,            /**< RBBI rule $Variable redefined.                    */
     U_BRK_MISMATCHED_PAREN,                /**< Mis-matched parentheses in an RBBI rule.          */
-    U_BRK_NEW_LINE_IN_QUOTED_STRING,       /**< Missing closing quote in an RBBI rule.            */
+    U_BRK_NEW_पंक्ति_IN_QUOTED_STRING,       /**< Missing closing quote in an RBBI rule.            */
     U_BRK_UNDEFINED_VARIABLE,              /**< Use of an undefined $Variable in an RBBI rule.    */
     U_BRK_INIT_ERROR,                      /**< Initialization failure.  Probable missing ICU Data. */
     U_BRK_RULE_EMPTY_SET,                  /**< Rule contains an empty Unicode Set.               */
     U_BRK_UNRECOGNIZED_OPTION,             /**< !!option in RBBI rules not recognized.            */
     U_BRK_MALFORMED_RULE_TAG,              /**< The {nnn} tag on a rule is malformed              */
-#ifndef U_HIDE_DEPRECATED_API
+#अगर_अघोषित U_HIDE_DEPRECATED_API
     /**
      * One more than the highest normal BreakIterator error code.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
     U_BRK_ERROR_LIMIT,
-#endif  // U_HIDE_DEPRECATED_API
+#पूर्ण_अगर  // U_HIDE_DEPRECATED_API
 
     /*
      * Error codes in the range 0x10300-0x103ff are reserved for regular expression related errors.
@@ -723,30 +723,30 @@ typedef enum UErrorCode {
     U_REGEX_PROPERTY_SYNTAX,              /**< Incorrect Unicode property                         */
     U_REGEX_UNIMPLEMENTED,                /**< Use of regexp feature that is not yet implemented. */
     U_REGEX_MISMATCHED_PAREN,             /**< Incorrectly nested parentheses in regexp pattern.  */
-    U_REGEX_NUMBER_TOO_BIG,               /**< Decimal number is too large.                       */
+    U_REGEX_संख्या_TOO_BIG,               /**< Decimal number is too large.                       */
     U_REGEX_BAD_INTERVAL,                 /**< Error in {min,max} interval                        */
     U_REGEX_MAX_LT_MIN,                   /**< In {min,max}, max is less than min.                */
     U_REGEX_INVALID_BACK_REF,             /**< Back-reference to a non-existent capture group.    */
     U_REGEX_INVALID_FLAG,                 /**< Invalid value for match mode flags.                */
     U_REGEX_LOOK_BEHIND_LIMIT,            /**< Look-Behind pattern matches must have a bounded maximum length.    */
     U_REGEX_SET_CONTAINS_STRING,          /**< Regexps cannot have UnicodeSets containing strings.*/
-#ifndef U_HIDE_DEPRECATED_API
+#अगर_अघोषित U_HIDE_DEPRECATED_API
     U_REGEX_OCTAL_TOO_BIG,                /**< Octal character constants must be <= 0377. @deprecated ICU 54. This error cannot occur. */
-#endif  /* U_HIDE_DEPRECATED_API */
+#पूर्ण_अगर  /* U_HIDE_DEPRECATED_API */
     U_REGEX_MISSING_CLOSE_BRACKET=U_REGEX_SET_CONTAINS_STRING+2, /**< Missing closing bracket on a bracket expression. */
     U_REGEX_INVALID_RANGE,                /**< In a character range [x-y], x is greater than y.   */
-    U_REGEX_STACK_OVERFLOW,               /**< Regular expression backtrack stack overflow.       */
+    U_REGEX_ढेर_OVERFLOW,               /**< Regular expression backtrack stack overflow.       */
     U_REGEX_TIME_OUT,                     /**< Maximum allowed match time exceeded                */
     U_REGEX_STOPPED_BY_CALLER,            /**< Matching operation aborted by user callback fn.    */
     U_REGEX_PATTERN_TOO_BIG,              /**< Pattern exceeds limits on size or complexity. @stable ICU 55 */
     U_REGEX_INVALID_CAPTURE_GROUP_NAME,   /**< Invalid capture group name. @stable ICU 55 */
-#ifndef U_HIDE_DEPRECATED_API
+#अगर_अघोषित U_HIDE_DEPRECATED_API
     /**
      * One more than the highest normal regular expression error code.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
     U_REGEX_ERROR_LIMIT=U_REGEX_STOPPED_BY_CALLER+3,
-#endif  // U_HIDE_DEPRECATED_API
+#पूर्ण_अगर  // U_HIDE_DEPRECATED_API
 
     /*
      * Error codes in the range 0x10400-0x104ff are reserved for IDNA related error codes.
@@ -759,15 +759,15 @@ typedef enum UErrorCode {
     U_IDNA_ACE_PREFIX_ERROR,
     U_IDNA_VERIFICATION_ERROR,
     U_IDNA_LABEL_TOO_LONG_ERROR,
-    U_IDNA_ZERO_LENGTH_LABEL_ERROR,
+    U_IDNA_ZERO_लंबाई_LABEL_ERROR,
     U_IDNA_DOMAIN_NAME_TOO_LONG_ERROR,
-#ifndef U_HIDE_DEPRECATED_API
+#अगर_अघोषित U_HIDE_DEPRECATED_API
     /**
      * One more than the highest normal IDNA error code.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
     U_IDNA_ERROR_LIMIT,
-#endif  // U_HIDE_DEPRECATED_API
+#पूर्ण_अगर  // U_HIDE_DEPRECATED_API
     /*
      * Aliases for StringPrep
      */
@@ -779,42 +779,42 @@ typedef enum UErrorCode {
      * Error codes in the range 0x10500-0x105ff are reserved for Plugin related error codes.
      */
     U_PLUGIN_ERROR_START=0x10500,         /**< Start of codes indicating plugin failures */
-    U_PLUGIN_TOO_HIGH=0x10500,            /**< The plugin's level is too high to be loaded right now. */
+    U_PLUGIN_TOO_ऊपरी=0x10500,            /**< The plugin's level is too high to be loaded right now. */
     U_PLUGIN_DIDNT_SET_LEVEL,             /**< The plugin didn't call uplug_setPlugLevel in response to a QUERY */
-#ifndef U_HIDE_DEPRECATED_API
+#अगर_अघोषित U_HIDE_DEPRECATED_API
     /**
      * One more than the highest normal plug-in error code.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
     U_PLUGIN_ERROR_LIMIT,
-#endif  // U_HIDE_DEPRECATED_API
+#पूर्ण_अगर  // U_HIDE_DEPRECATED_API
 
-#ifndef U_HIDE_DEPRECATED_API
+#अगर_अघोषित U_HIDE_DEPRECATED_API
     /**
      * One more than the highest normal error code.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
     U_ERROR_LIMIT=U_PLUGIN_ERROR_LIMIT
-#endif  // U_HIDE_DEPRECATED_API
+#पूर्ण_अगर  // U_HIDE_DEPRECATED_API
 } UErrorCode;
 
 /* Use the following to determine if an UErrorCode represents */
 /* operational success or failure. */
 
-#ifdef __cplusplus
+#अगर_घोषित __cplusplus
     /**
      * Does the error code indicate success?
      * @stable ICU 2.0
      */
-    static
-    inline UBool U_SUCCESS(UErrorCode code) { return code <= U_ZERO_ERROR; }
+    अटल
+    अंतरभूत UBool U_SUCCESS(UErrorCode code) { वापस code <= U_ZERO_ERROR; }
     /**
      * Does the error code indicate a failure?
      * @stable ICU 2.0
      */
-    static
-    inline UBool U_FAILURE(UErrorCode code) { return code > U_ZERO_ERROR; }
-#else
+    अटल
+    अंतरभूत UBool U_FAILURE(UErrorCode code) { वापस code > U_ZERO_ERROR; }
+#अन्यथा
     /**
      * Does the error code indicate success?
      * @stable ICU 2.0
@@ -825,23 +825,23 @@ typedef enum UErrorCode {
      * @stable ICU 2.0
      */
 #   define U_FAILURE(x) ((x)>U_ZERO_ERROR)
-#endif
+#पूर्ण_अगर
 
 /* Distinguishing MessageFormat recoverable errors */
-#ifdef __cplusplus
+#अगर_घोषित __cplusplus
     /**
      * Does the error code indicate a MessageFormat recoverable error?
      *
      * @internal ICU 79 technology preview
      * @deprecated This API is for technology preview only.
      */
-    static
-    inline UBool U_MF_RECOVERABLE_ERROR(UErrorCode code) {
-        return (code == U_MF_OPERAND_MISMATCH_ERROR)
+    अटल
+    अंतरभूत UBool U_MF_RECOVERABLE_ERROR(UErrorCode code) {
+        वापस (code == U_MF_OPERAND_MISMATCH_ERROR)
             || (code == U_MF_FORMATTING_ERROR)
             || (code == U_MF_BAD_OPTION);
     }
-#else
+#अन्यथा
     /**
      * Does the error code indicate success?
      *
@@ -851,7 +851,7 @@ typedef enum UErrorCode {
 #   define U_MF_RECOVERABLE_ERROR(x) ((code == U_MF_OPERAND_MISMATCH_ERROR) \
             || (code == U_MF_FORMATTING_ERROR) \
             || (code == U_MF_BAD_OPTION))
-#endif
+#पूर्ण_अगर
 
 
 
@@ -861,8 +861,8 @@ typedef enum UErrorCode {
  * in the UErrorCode enum above.
  * @stable ICU 2.0
  */
-U_CAPI const char * U_EXPORT2
+U_CAPI स्थिर अक्षर * U_EXPORT2
 u_errorName(UErrorCode code);
 
 
-#endif /* _UTYPES */
+#पूर्ण_अगर /* _UTYPES */

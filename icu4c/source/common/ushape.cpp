@@ -18,17 +18,17 @@
  *   Arabic letter shaping implemented by Ayman Roshdy
  */
 
-#include "unicode/utypes.h"
-#include "unicode/uchar.h"
-#include "unicode/ustring.h"
-#include "unicode/ushape.h"
-#include "cmemory.h"
-#include "putilimp.h"
-#include "ustr_imp.h"
-#include "ubidi_props.h"
-#include "uassert.h"
+#समावेश "unicode/utypes.h"
+#समावेश "unicode/uchar.h"
+#समावेश "unicode/ustring.h"
+#समावेश "unicode/ushape.h"
+#समावेश "cmemory.h"
+#समावेश "putilimp.h"
+#समावेश "ustr_imp.h"
+#समावेश "ubidi_props.h"
+#समावेश "uassert.h"
 
-#include <limits>
+#समावेश <limits>
 /*
  * This implementation is designed for 16-bit Unicode strings.
  * The main assumption is that the Arabic characters and their
@@ -50,44 +50,44 @@
 
 /* definitions for Arabic letter shaping ------------------------------------ */
 
-#define IRRELEVANT 4
-#define LAMTYPE    16
-#define ALEFTYPE   32
-#define LINKR      1
-#define LINKL      2
-#define APRESENT   8
-#define SHADDA     64
-#define CSHADDA    128
-#define COMBINE    (SHADDA+CSHADDA)
+#घोषणा IRRELEVANT 4
+#घोषणा LAMTYPE    16
+#घोषणा ALEFTYPE   32
+#घोषणा LINKR      1
+#घोषणा LINKL      2
+#घोषणा APRESENT   8
+#घोषणा SHADDA     64
+#घोषणा CSHADDA    128
+#घोषणा COMBINE    (SHADDA+CSHADDA)
 
-#define HAMZAFE_CHAR       0xfe80
-#define HAMZA06_CHAR       0x0621
-#define YEH_HAMZA_CHAR     0x0626
-#define YEH_HAMZAFE_CHAR   0xFE89
-#define LAMALEF_SPACE_SUB  0xFFFF
-#define TASHKEEL_SPACE_SUB 0xFFFE
-#define NEW_TAIL_CHAR      0xFE73
-#define OLD_TAIL_CHAR      0x200B
-#define LAM_CHAR           0x0644
-#define SPACE_CHAR         0x0020
-#define SHADDA_CHAR        0xFE7C
-#define TATWEEL_CHAR       0x0640
-#define SHADDA_TATWEEL_CHAR  0xFE7D
-#define SHADDA06_CHAR      0x0651
+#घोषणा HAMZAFE_CHAR       0xfe80
+#घोषणा HAMZA06_CHAR       0x0621
+#घोषणा YEH_HAMZA_CHAR     0x0626
+#घोषणा YEH_HAMZAFE_CHAR   0xFE89
+#घोषणा LAMALEF_SPACE_SUB  0xFFFF
+#घोषणा TASHKEEL_SPACE_SUB 0xFFFE
+#घोषणा NEW_पुच्छ_CHAR      0xFE73
+#घोषणा OLD_पुच्छ_CHAR      0x200B
+#घोषणा LAM_CHAR           0x0644
+#घोषणा SPACE_CHAR         0x0020
+#घोषणा SHADDA_CHAR        0xFE7C
+#घोषणा TATWEEL_CHAR       0x0640
+#घोषणा SHADDA_TATWEEL_CHAR  0xFE7D
+#घोषणा SHADDA06_CHAR      0x0651
 
-#define SHAPE_MODE   0
-#define DESHAPE_MODE 1
+#घोषणा SHAPE_MODE   0
+#घोषणा DESHAPE_MODE 1
 
-struct uShapeVariables {
-     char16_t tailChar;
+काष्ठा uShapeVariables {
+     char16_t पुच्छ_Char;
      uint32_t uShapeLamalefBegin;
      uint32_t uShapeLamalefEnd;
      uint32_t uShapeTashkeelBegin;
      uint32_t uShapeTashkeelEnd;
-     int spacesRelativeToTextBeginEnd;
+     पूर्णांक spacesRelativeToTextBeginEnd;
 };
 
-static const uint8_t tailFamilyIsolatedFinal[] = {
+अटल स्थिर uint8_t पुच्छ_Family_Isolated_Final[] = {
     /* FEB1 */ 1,
     /* FEB2 */ 1,
     /* FEB3 */ 0,
@@ -104,7 +104,7 @@ static const uint8_t tailFamilyIsolatedFinal[] = {
     /* FEBE */ 1
 };
 
-static const uint8_t tashkeelMedial[] = {
+अटल स्थिर uint8_t tashkeelMedial[] = {
     /* FE70 */ 0,
     /* FE71 */ 1,
     /* FE72 */ 0,
@@ -123,19 +123,19 @@ static const uint8_t tashkeelMedial[] = {
     /* FE7F */ 1
 };
 
-static const char16_t yehHamzaToYeh[] =
+अटल स्थिर char16_t yehHamzaToYeh[] =
 {
 /* isolated*/ 0xFEEF,
 /* final   */ 0xFEF0
 };
 
-static const uint8_t IrrelevantPos[] = {
+अटल स्थिर uint8_t IrrelevantPos[] = {
     0x0, 0x2, 0x4, 0x6,
     0x8, 0xA, 0xC, 0xE
 };
 
 
-static const char16_t convertLamAlef[] =
+अटल स्थिर char16_t convertLamAlef[] =
 {
 /*FEF5*/    0x0622,
 /*FEF6*/    0x0622,
@@ -147,7 +147,7 @@ static const char16_t convertLamAlef[] =
 /*FEFC*/    0x0627
 };
 
-static const char16_t araLink[178]=
+अटल स्थिर char16_t araLink[178]=
 {
   1           + 32 + 256 * 0x11,/*0x0622*/
   1           + 32 + 256 * 0x13,/*0x0623*/
@@ -259,7 +259,7 @@ static const char16_t araLink[178]=
   1     + 8        + 256 * 0x60 /*0x06D3*/
 };
 
-static const uint8_t presALink[] = {
+अटल स्थिर uint8_t presALink[] = {
 /***********0*****1*****2*****3*****4*****5*****6*****7*****8*****9*****A*****B*****C*****D*****E*****F*/
 /*FB5*/    0,    1,    0,    0,    0,    0,    0,    1,    2,1 + 2,    0,    0,    0,    0,    0,    0,
 /*FB6*/    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
@@ -281,7 +281,7 @@ static const uint8_t presALink[] = {
 /*FC6*/    4,    4,    4
 };
 
-static const uint8_t presBLink[]=
+अटल स्थिर uint8_t presBLink[]=
 {
 /***********0*****1*****2*****3*****4*****5*****6*****7*****8*****9*****A*****B*****C*****D*****E*****F*/
 /*FE7*/1 + 2,1 + 2,1 + 2,    0,1 + 2,    0,1 + 2,1 + 2,1 + 2,1 + 2,1 + 2,1 + 2,1 + 2,1 + 2,1 + 2,1 + 2,
@@ -295,7 +295,7 @@ static const uint8_t presBLink[]=
 /*FEF*/    1,    0,    1,    2,1 + 2,    0,    1,    0,    1,    0,    1,    0,    1,    0,    0,    0
 };
 
-static const char16_t convertFBto06[] =
+अटल स्थिर char16_t convertFBto06[] =
 {
 /***********0******1******2******3******4******5******6******7******8******9******A******B******C******D******E******F***/
 /*FB5*/   0x671, 0x671, 0x67B, 0x67B, 0x67B, 0x67B, 0x67E, 0x67E, 0x67E, 0x67E,     0,     0,     0,     0, 0x67A, 0x67A,
@@ -311,7 +311,7 @@ static const char16_t convertFBto06[] =
 /*FBF*/       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0,     0, 0x6CC, 0x6CC, 0x6CC, 0x6CC
 };
 
-static const char16_t convertFEto06[] =
+अटल स्थिर char16_t convertFEto06[] =
 {
 /***********0******1******2******3******4******5******6******7******8******9******A******B******C******D******E******F***/
 /*FE7*/   0x64B, 0x64B, 0x64C, 0x64C, 0x64D, 0x64D, 0x64E, 0x64E, 0x64F, 0x64F, 0x650, 0x650, 0x651, 0x651, 0x652, 0x652,
@@ -325,7 +325,7 @@ static const char16_t convertFEto06[] =
 /*FEF*/   0x649, 0x64A, 0x64A, 0x64A, 0x64A, 0x65C, 0x65C, 0x65D, 0x65D, 0x65E, 0x65E, 0x65F, 0x65F
 };
 
-static const uint8_t shapeTable[4][4][4]=
+अटल स्थिर uint8_t shapeTable[4][4][4]=
 {
   { {0,0,0,0}, {0,0,0,0}, {0,1,0,3}, {0,1,0,1} },
   { {0,0,2,2}, {0,0,1,2}, {0,1,1,2}, {0,1,1,3} },
@@ -339,7 +339,7 @@ static const uint8_t shapeTable[4][4][4]=
  * Since we know that we are only looking for BMP code points,
  * we can safely just work with code units (again, at least UTF-16).
  */
-static void
+अटल व्योम
 _shapeToArabicDigitsWithContext(char16_t *s, int32_t length,
                                 char16_t digitBase,
                                 UBool isLogical, UBool lastStrongWasAL) {
@@ -349,44 +349,44 @@ _shapeToArabicDigitsWithContext(char16_t *s, int32_t length,
     digitBase-=0x30;
 
     /* the iteration direction depends on the type of input */
-    if(isLogical) {
-        for(i=0; i<length; ++i) {
+    अगर(isLogical) {
+        क्रम(i=0; i<length; ++i) {
             c=s[i];
-            switch(ubidi_getClass(c)) {
-            case U_LEFT_TO_RIGHT: /* L */
-            case U_RIGHT_TO_LEFT: /* R */
+            चयन(ubidi_getClass(c)) {
+            हाल U_बायाँ_TO_दायाँ: /* L */
+            हाल U_दायाँ_TO_बायाँ: /* R */
                 lastStrongWasAL=false;
-                break;
-            case U_RIGHT_TO_LEFT_ARABIC: /* AL */
+                अवरोध;
+            हाल U_दायाँ_TO_बायाँ_ARABIC: /* AL */
                 lastStrongWasAL=true;
-                break;
-            case U_EUROPEAN_NUMBER: /* EN */
-                if (lastStrongWasAL && static_cast<uint32_t>(c - 0x30) < 10) {
+                अवरोध;
+            हाल U_EUROPEAN_संख्या: /* EN */
+                अगर (lastStrongWasAL && static_cast<uint32_t>(c - 0x30) < 10) {
                     s[i] = static_cast<char16_t>(digitBase + c); /* digitBase+(c-0x30) - digitBase was modified above */
                 }
-                break;
-            default :
-                break;
+                अवरोध;
+            शेष :
+                अवरोध;
             }
         }
-    } else {
-        for(i=length; i>0; /* pre-decrement in the body */) {
+    } अन्यथा {
+        क्रम(i=length; i>0; /* pre-decrement in the body */) {
             c=s[--i];
-            switch(ubidi_getClass(c)) {
-            case U_LEFT_TO_RIGHT: /* L */
-            case U_RIGHT_TO_LEFT: /* R */
+            चयन(ubidi_getClass(c)) {
+            हाल U_बायाँ_TO_दायाँ: /* L */
+            हाल U_दायाँ_TO_बायाँ: /* R */
                 lastStrongWasAL=false;
-                break;
-            case U_RIGHT_TO_LEFT_ARABIC: /* AL */
+                अवरोध;
+            हाल U_दायाँ_TO_बायाँ_ARABIC: /* AL */
                 lastStrongWasAL=true;
-                break;
-            case U_EUROPEAN_NUMBER: /* EN */
-                if (lastStrongWasAL && static_cast<uint32_t>(c - 0x30) < 10) {
+                अवरोध;
+            हाल U_EUROPEAN_संख्या: /* EN */
+                अगर (lastStrongWasAL && static_cast<uint32_t>(c - 0x30) < 10) {
                     s[i] = static_cast<char16_t>(digitBase + c); /* digitBase+(c-0x30) - digitBase was modified above */
                 }
-                break;
-            default :
-                break;
+                अवरोध;
+            शेष :
+                अवरोध;
             }
         }
     }
@@ -398,14 +398,14 @@ _shapeToArabicDigitsWithContext(char16_t *s, int32_t length,
  *           in case the user specifies the buffer to be
  *           U_SHAPE_TEXT_DIRECTION_LOGICAL
  */
-static void
-invertBuffer(char16_t *buffer, int32_t size, uint32_t /*options*/, int32_t lowlimit, int32_t highlimit) {
-    char16_t temp;
+अटल व्योम
+invert_बफर(char16_t *बफर, int32_t size, uint32_t /*options*/, int32_t lowlimit, int32_t highlimit) {
+    char16_t अस्थायी;
     int32_t i=0,j=0;
-    for(i=lowlimit,j=size-highlimit-1;i<j;i++,j--) {
-        temp = buffer[i];
-        buffer[i] = buffer[j];
-        buffer[j] = temp;
+    क्रम(i=lowlimit,j=size-highlimit-1;i<j;i++,j--) {
+        अस्थायी = बफर[i];
+        बफर[i] = बफर[j];
+        बफर[j] = अस्थायी;
     }
 }
 
@@ -417,19 +417,19 @@ invertBuffer(char16_t *buffer, int32_t size, uint32_t /*options*/, int32_t lowli
  *           later it'll be converted into the 0xFExx LamAlefs
  *           in the shaping function.
  */
-static inline char16_t
+अटल अंतरभूत char16_t
 changeLamAlef(char16_t ch) {
-    switch(ch) {
-    case 0x0622 :
-        return 0x065C;
-    case 0x0623 :
-        return 0x065D;
-    case 0x0625 :
-        return 0x065E;
-    case 0x0627 :
-        return 0x065F;
+    चयन(ch) {
+    हाल 0x0622 :
+        वापस 0x065C;
+    हाल 0x0623 :
+        वापस 0x065D;
+    हाल 0x0625 :
+        वापस 0x065E;
+    हाल 0x0627 :
+        वापस 0x065F;
     }
-    return 0;
+    वापस 0;
 }
 
 /*
@@ -438,20 +438,20 @@ changeLamAlef(char16_t ch) {
  *           Arabic characters have four forms :
  *           Isolated, Initial, Middle and Final Form
  */
-static char16_t
+अटल char16_t
 getLink(char16_t ch) {
-    if(ch >= 0x0622 && ch <= 0x06D3) {
-        return(araLink[ch-0x0622]);
-    } else if(ch == 0x200D) {
-        return(3);
-    } else if(ch >= 0x206D && ch <= 0x206F) {
-        return(4);
-    }else if(ch >= 0xFB50 && ch <= 0xFC62) {
-        return(presALink[ch-0xFB50]);
-    } else if(ch >= 0xFE70 && ch <= 0xFEFC) {
-        return(presBLink[ch-0xFE70]);
-    }else {
-        return(0);
+    अगर(ch >= 0x0622 && ch <= 0x06D3) {
+        वापस(araLink[ch-0x0622]);
+    } अन्यथा अगर(ch == 0x200D) {
+        वापस(3);
+    } अन्यथा अगर(ch >= 0x206D && ch <= 0x206F) {
+        वापस(4);
+    }अन्यथा अगर(ch >= 0xFB50 && ch <= 0xFC62) {
+        वापस(presALink[ch-0xFB50]);
+    } अन्यथा अगर(ch >= 0xFE70 && ch <= 0xFEFC) {
+        वापस(presBLink[ch-0xFE70]);
+    }अन्यथा {
+        वापस(0);
     }
 }
 
@@ -460,16 +460,16 @@ getLink(char16_t ch) {
  *Function : Counts the number of spaces
  *           at each end of the logical buffer
  */
-static void
-countSpaces(char16_t *dest, int32_t size, uint32_t /*options*/, int32_t *spacesCountl, int32_t *spacesCountr) {
+अटल व्योम
+गिनती_Spaces(char16_t *dest, int32_t size, uint32_t /*options*/, int32_t *spacesCountl, int32_t *spacesCountr) {
     int32_t i = 0;
     int32_t countl = 0,countr = 0;
-    while((dest[i] == SPACE_CHAR) && (countl < size)) {
+    जबतक((dest[i] == SPACE_CHAR) && (countl < size)) {
        countl++;
        i++;
     }
-    if (countl < size) {  /* the entire buffer is not all space */
-        while(dest[size-1] == SPACE_CHAR) {
+    अगर (countl < size) {  /* the entire buffer is not all space */
+        जबतक(dest[size-1] == SPACE_CHAR) {
             countr++;
             size--;
         }
@@ -482,36 +482,36 @@ countSpaces(char16_t *dest, int32_t size, uint32_t /*options*/, int32_t *spacesC
  *Name     : isTashkeelChar
  *Function : Returns 1 for Tashkeel characters in 06 range else return 0
  */
-static inline int32_t
+अटल अंतरभूत int32_t
 isTashkeelChar(char16_t ch) {
-    return static_cast<int32_t>(ch >= 0x064B && ch <= 0x0652);
+    वापस static_cast<int32_t>(ch >= 0x064B && ch <= 0x0652);
 }
 
 /*
  *Name     : isTashkeelCharFE
  *Function : Returns 1 for Tashkeel characters in FE range else return 0
  */
-static inline int32_t
+अटल अंतरभूत int32_t
 isTashkeelCharFE(char16_t ch) {
-    return static_cast<int32_t>(ch >= 0xFE70 && ch <= 0xFE7F);
+    वापस static_cast<int32_t>(ch >= 0xFE70 && ch <= 0xFE7F);
 }
 
 /*
  *Name     : isAlefChar
  *Function : Returns 1 for Alef characters else return 0
  */
-static inline int32_t
+अटल अंतरभूत int32_t
 isAlefChar(char16_t ch) {
-    return static_cast<int32_t>(ch == 0x0622 || ch == 0x0623 || ch == 0x0625 || ch == 0x0627);
+    वापस static_cast<int32_t>(ch == 0x0622 || ch == 0x0623 || ch == 0x0625 || ch == 0x0627);
 }
 
 /*
  *Name     : isLamAlefChar
  *Function : Returns 1 for LamAlef characters else return 0
  */
-static inline int32_t
+अटल अंतरभूत int32_t
 isLamAlefChar(char16_t ch) {
-    return static_cast<int32_t>(ch >= 0xFEF5 && ch <= 0xFEFC);
+    वापस static_cast<int32_t>(ch >= 0xFEF5 && ch <= 0xFEFC);
 }
 
 /*BIDI
@@ -519,12 +519,12 @@ isLamAlefChar(char16_t ch) {
  *Function : returns 1 if the character matches one of the tail characters (0xfe73 or 0x200b) otherwise returns 0
  */
 
-static inline int32_t
-isTailChar(char16_t ch) {
-    if(ch == OLD_TAIL_CHAR || ch == NEW_TAIL_CHAR){
-            return 1;
-    }else{
-            return 0;
+अटल अंतरभूत int32_t
+is_पुच्छ_Char(char16_t ch) {
+    अगर(ch == OLD_पुच्छ_CHAR || ch == NEW_पुच्छ_CHAR){
+            वापस 1;
+    }अन्यथा{
+            वापस 0;
     }
 }
 
@@ -534,12 +534,12 @@ isTailChar(char16_t ch) {
  *           in the FE range otherwise returns 0
  */
 
-static inline int32_t
-isSeenTailFamilyChar(char16_t ch) {
-    if(ch >= 0xfeb1 && ch < 0xfebf){
-            return tailFamilyIsolatedFinal [ch - 0xFEB1];
-    }else{
-            return 0;
+अटल अंतरभूत int32_t
+is_Seen_पुच्छ_Family_Char(char16_t ch) {
+    अगर(ch >= 0xfeb1 && ch < 0xfebf){
+            वापस पुच्छ_Family_Isolated_Final [ch - 0xFEB1];
+    }अन्यथा{
+            वापस 0;
     }
 }
 
@@ -548,12 +548,12 @@ isSeenTailFamilyChar(char16_t ch) {
   *            06 range otherwise returns 0
  */
 
-static inline int32_t
+अटल अंतरभूत int32_t
 isSeenFamilyChar(char16_t  ch){
-    if(ch >= 0x633 && ch <= 0x636){
-        return 1;
-    }else {
-        return 0;
+    अगर(ch >= 0x633 && ch <= 0x636){
+        वापस 1;
+    }अन्यथा {
+        वापस 0;
     }
 }
 
@@ -563,9 +563,9 @@ isSeenFamilyChar(char16_t  ch){
  *Function : returns 1 if the character is a Alef Maksoura Final or isolated
  *           otherwise returns 0
  */
-static inline int32_t
+अटल अंतरभूत int32_t
 isAlefMaksouraChar(char16_t ch) {
-    return static_cast<int32_t>(ch == 0xFEEF || ch == 0xFEF0 || ch == 0x0649);
+    वापस static_cast<int32_t>(ch == 0xFEEF || ch == 0xFEF0 || ch == 0x0649);
 }
 
 /*
@@ -573,12 +573,12 @@ isAlefMaksouraChar(char16_t ch) {
  * Function : returns 1 if the character is a yehHamza isolated or yehhamza
  *            final is found otherwise returns 0
  */
-static inline int32_t
+अटल अंतरभूत int32_t
 isYehHamzaChar(char16_t ch) {
-    if((ch==0xFE89)||(ch==0xFE8A)){
-        return 1;
-    }else{
-        return 0;
+    अगर((ch==0xFE89)||(ch==0xFE8A)){
+        वापस 1;
+    }अन्यथा{
+        वापस 0;
     }
 }
 
@@ -589,15 +589,15 @@ isYehHamzaChar(char16_t ch) {
  *           Tashkeel with shadda on tatweel (FC range)return 2 otherwise
  *           returns 0
  */
-static inline int32_t
+अटल अंतरभूत int32_t
 isTashkeelOnTatweelChar(char16_t ch){
-    if(ch >= 0xfe70 && ch <= 0xfe7f && ch != NEW_TAIL_CHAR && ch != 0xFE75 && ch != SHADDA_TATWEEL_CHAR)
+    अगर(ch >= 0xfe70 && ch <= 0xfe7f && ch != NEW_पुच्छ_CHAR && ch != 0xFE75 && ch != SHADDA_TATWEEL_CHAR)
     {
-        return tashkeelMedial [ch - 0xFE70];
-    }else if( (ch >= 0xfcf2 && ch <= 0xfcf4) || (ch == SHADDA_TATWEEL_CHAR)) {
-        return 2;
-    }else{
-        return 0;
+        वापस tashkeelMedial [ch - 0xFE70];
+    }अन्यथा अगर( (ch >= 0xfcf2 && ch <= 0xfcf4) || (ch == SHADDA_TATWEEL_CHAR)) {
+        वापस 2;
+    }अन्यथा{
+        वापस 0;
     }
 }
 
@@ -608,14 +608,14 @@ isTashkeelOnTatweelChar(char16_t ch){
  *           with shadda is in the isolated form (i.e. Unicode FC range)
  *           returns 2 otherwise returns 0
  */
-static inline int32_t
+अटल अंतरभूत int32_t
 isIsolatedTashkeelChar(char16_t ch){
-    if(ch >= 0xfe70 && ch <= 0xfe7f && ch != NEW_TAIL_CHAR && ch != 0xFE75){
-        return (1 - tashkeelMedial [ch - 0xFE70]);
-    }else if(ch >= 0xfc5e && ch <= 0xfc63){
-        return 1;
-    }else{
-        return 0;
+    अगर(ch >= 0xfe70 && ch <= 0xfe7f && ch != NEW_पुच्छ_CHAR && ch != 0xFE75){
+        वापस (1 - tashkeelMedial [ch - 0xFE70]);
+    }अन्यथा अगर(ch >= 0xfc5e && ch <= 0xfc63){
+        वापस 1;
+    }अन्यथा{
+        वापस 0;
     }
 }
 
@@ -630,52 +630,52 @@ isIsolatedTashkeelChar(char16_t ch){
  *           destination buffer will be resized.
  */
 
-static int32_t
-calculateSize(const char16_t *source, int32_t sourceLength,
-int32_t destSize,uint32_t options) {
+अटल int32_t
+calculate_आकार(स्थिर char16_t *source, int32_t source_लंबाई,
+int32_t dest_आकार,uint32_t options) {
     int32_t i = 0;
 
-    int lamAlefOption = 0;
-    int tashkeelOption = 0;
+    पूर्णांक lamAlefOption = 0;
+    पूर्णांक tashkeelOption = 0;
 
-    destSize = sourceLength;
+    dest_आकार = source_लंबाई;
 
-    if (((options&U_SHAPE_LETTERS_MASK) == U_SHAPE_LETTERS_SHAPE ||
+    अगर (((options&U_SHAPE_LETTERS_MASK) == U_SHAPE_LETTERS_SHAPE ||
         ((options&U_SHAPE_LETTERS_MASK) == U_SHAPE_LETTERS_SHAPE_TASHKEEL_ISOLATED )) &&
         ((options&U_SHAPE_LAMALEF_MASK) == U_SHAPE_LAMALEF_RESIZE )){
             lamAlefOption = 1;
     }
-    if((options&U_SHAPE_LETTERS_MASK) == U_SHAPE_LETTERS_SHAPE &&
+    अगर((options&U_SHAPE_LETTERS_MASK) == U_SHAPE_LETTERS_SHAPE &&
        ((options&U_SHAPE_TASHKEEL_MASK) == U_SHAPE_TASHKEEL_RESIZE ) ){
             tashkeelOption = 1;
         }
 
-    if(lamAlefOption || tashkeelOption){
-        if((options&U_SHAPE_TEXT_DIRECTION_MASK)==U_SHAPE_TEXT_DIRECTION_VISUAL_LTR) {
-            for(i=0;i<sourceLength;i++) {
-                if( ((isAlefChar(source[i]))&& (i<(sourceLength-1)) &&(source[i+1] == LAM_CHAR)) || (isTashkeelCharFE(source[i])) ) {
-                        destSize--;
+    अगर(lamAlefOption || tashkeelOption){
+        अगर((options&U_SHAPE_TEXT_DIRECTION_MASK)==U_SHAPE_TEXT_DIRECTION_VISUAL_LTR) {
+            क्रम(i=0;i<source_लंबाई;i++) {
+                अगर( ((isAlefChar(source[i]))&& (i<(source_लंबाई-1)) &&(source[i+1] == LAM_CHAR)) || (isTashkeelCharFE(source[i])) ) {
+                        dest_आकार--;
                     }
                 }
-            }else if((options&U_SHAPE_TEXT_DIRECTION_MASK)==U_SHAPE_TEXT_DIRECTION_LOGICAL) {
-                for(i=0;i<sourceLength;i++) {
-                    if( ( (source[i] == LAM_CHAR) && (i<(sourceLength-1)) && (isAlefChar(source[i+1]))) || (isTashkeelCharFE(source[i])) ) {
-                        destSize--;
+            }अन्यथा अगर((options&U_SHAPE_TEXT_DIRECTION_MASK)==U_SHAPE_TEXT_DIRECTION_LOGICAL) {
+                क्रम(i=0;i<source_लंबाई;i++) {
+                    अगर( ( (source[i] == LAM_CHAR) && (i<(source_लंबाई-1)) && (isAlefChar(source[i+1]))) || (isTashkeelCharFE(source[i])) ) {
+                        dest_आकार--;
                     }
                 }
             }
         }
 
-    if ((options&U_SHAPE_LETTERS_MASK) == U_SHAPE_LETTERS_UNSHAPE){
-        if ( (options&U_SHAPE_LAMALEF_MASK) == U_SHAPE_LAMALEF_RESIZE){
-            for(i=0;i<sourceLength;i++) {
-                if(isLamAlefChar(source[i]))
-                destSize++;
+    अगर ((options&U_SHAPE_LETTERS_MASK) == U_SHAPE_LETTERS_UNSHAPE){
+        अगर ( (options&U_SHAPE_LAMALEF_MASK) == U_SHAPE_LAMALEF_RESIZE){
+            क्रम(i=0;i<source_लंबाई;i++) {
+                अगर(isLamAlefChar(source[i]))
+                dest_आकार++;
             }
         }
     }
 
-    return destSize;
+    वापस dest_आकार;
 }
 
 /*
@@ -687,21 +687,21 @@ int32_t destSize,uint32_t options) {
  *            Case 3: if the Tashkeel is isolated replace it with Space.
  *
  */
-static int32_t
-handleTashkeelWithTatweel(char16_t *dest, int32_t sourceLength,
+अटल int32_t
+handleTashkeelWithTatweel(char16_t *dest, int32_t source_लंबाई,
              int32_t /*destSize*/, uint32_t /*options*/,
              UErrorCode * /*pErrorCode*/) {
-                 int i;
-                 for(i = 0; i < sourceLength; i++){
-                     if((isTashkeelOnTatweelChar(dest[i]) == 1)){
+                 पूर्णांक i;
+                 क्रम(i = 0; i < source_लंबाई; i++){
+                     अगर((isTashkeelOnTatweelChar(dest[i]) == 1)){
                          dest[i] = TATWEEL_CHAR;
-                    }else if((isTashkeelOnTatweelChar(dest[i]) == 2)){
+                    }अन्यथा अगर((isTashkeelOnTatweelChar(dest[i]) == 2)){
                          dest[i] = SHADDA_TATWEEL_CHAR;
-                    }else if(isIsolatedTashkeelChar(dest[i]) && dest[i] != SHADDA_CHAR){
+                    }अन्यथा अगर(isIsolatedTashkeelChar(dest[i]) && dest[i] != SHADDA_CHAR){
                          dest[i] = SPACE_CHAR;
                     }
                  }
-                 return sourceLength;
+                 वापस source_लंबाई;
 }
 
 
@@ -725,123 +725,123 @@ handleTashkeelWithTatweel(char16_t *dest, int32_t sourceLength,
  *           BEGIN will place the space at the end of the buffer.
  */
 
-static int32_t
-handleGeneratedSpaces(char16_t *dest, int32_t sourceLength,
-                    int32_t destSize,
+अटल int32_t
+handleGeneratedSpaces(char16_t *dest, int32_t source_लंबाई,
+                    int32_t dest_आकार,
                     uint32_t options,
-                    UErrorCode *pErrorCode,struct uShapeVariables shapeVars ) {
+                    UErrorCode *pErrorCode,काष्ठा uShapeVariables shapeVars ) {
 
     int32_t i = 0, j = 0;
     int32_t count = 0;
     char16_t *tempbuffer=nullptr;
 
-    int lamAlefOption = 0;
-    int tashkeelOption = 0;
-    int shapingMode = SHAPE_MODE;
+    पूर्णांक lamAlefOption = 0;
+    पूर्णांक tashkeelOption = 0;
+    पूर्णांक shapingMode = SHAPE_MODE;
 
-    if (shapingMode == 0){
-        if ( (options&U_SHAPE_LAMALEF_MASK) == U_SHAPE_LAMALEF_RESIZE ){
+    अगर (shapingMode == 0){
+        अगर ( (options&U_SHAPE_LAMALEF_MASK) == U_SHAPE_LAMALEF_RESIZE ){
             lamAlefOption = 1;
         }
-        if ( (options&U_SHAPE_TASHKEEL_MASK) == U_SHAPE_TASHKEEL_RESIZE ){
+        अगर ( (options&U_SHAPE_TASHKEEL_MASK) == U_SHAPE_TASHKEEL_RESIZE ){
             tashkeelOption = 1;
         }
     }
 
-    if (static_cast<size_t>(sourceLength) + 1 > std::numeric_limits<size_t>::max() / U_SIZEOF_UCHAR) {
-        *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+    अगर (static_cast<माप_प्रकार>(source_लंबाई) + 1 > std::numeric_limits<माप_प्रकार>::max() / U_SIZEOF_UCHAR) {
+        *pErrorCode = U_सूचकांक_OUTOFBOUNDS_ERROR;
+        वापस 0;
     }
-    tempbuffer = static_cast<char16_t*>(uprv_malloc((sourceLength + 1) * U_SIZEOF_UCHAR));
+    tempbuffer = static_cast<char16_t*>(uprv_malloc((source_लंबाई + 1) * U_SIZEOF_UCHAR));
     /* Test for nullptr */
-    if(tempbuffer == nullptr) {
+    अगर(tempbuffer == nullptr) {
         *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-        return 0;
+        वापस 0;
     }
 
 
-    if (lamAlefOption || tashkeelOption){
-        uprv_memset(tempbuffer, 0, (sourceLength+1)*U_SIZEOF_UCHAR);
+    अगर (lamAlefOption || tashkeelOption){
+        uprv_memset(tempbuffer, 0, (source_लंबाई+1)*U_SIZEOF_UCHAR);
 
         i = j = 0; count = 0;
-        while(i < sourceLength) {
-            if ( (lamAlefOption && dest[i] == LAMALEF_SPACE_SUB) ||
+        जबतक(i < source_लंबाई) {
+            अगर ( (lamAlefOption && dest[i] == LAMALEF_SPACE_SUB) ||
                (tashkeelOption && dest[i] == TASHKEEL_SPACE_SUB) ){
                 j--;
                 count++;
-            } else {
+            } अन्यथा {
                 tempbuffer[j] = dest[i];
             }
             i++;
             j++;
         }
 
-        while(count >= 0) {
+        जबतक(count >= 0) {
             tempbuffer[i] = 0x0000;
             i--;
             count--;
         }
 
-        u_memcpy(dest, tempbuffer, sourceLength);
-        destSize = u_strlen(dest);
+        u_memcpy(dest, tempbuffer, source_लंबाई);
+        dest_आकार = u_strlen(dest);
     }
 
       lamAlefOption = 0;
 
-    if (shapingMode == 0){
-        if ( (options&U_SHAPE_LAMALEF_MASK) == U_SHAPE_LAMALEF_NEAR ){
+    अगर (shapingMode == 0){
+        अगर ( (options&U_SHAPE_LAMALEF_MASK) == U_SHAPE_LAMALEF_NEAR ){
             lamAlefOption = 1;
         }
     }
 
-    if (lamAlefOption){
+    अगर (lamAlefOption){
         /* Lam+Alef is already shaped into LamAlef + FFFF */
         i = 0;
-        while(i < sourceLength) {
-            if(lamAlefOption&&dest[i] == LAMALEF_SPACE_SUB){
+        जबतक(i < source_लंबाई) {
+            अगर(lamAlefOption&&dest[i] == LAMALEF_SPACE_SUB){
                 dest[i] = SPACE_CHAR;
             }
             i++;
         }
-        destSize = sourceLength;
+        dest_आकार = source_लंबाई;
     }
     lamAlefOption = 0;
     tashkeelOption = 0;
 
-    if (shapingMode == 0) {
-        if ( ((options&U_SHAPE_LAMALEF_MASK) == shapeVars.uShapeLamalefBegin) ||
+    अगर (shapingMode == 0) {
+        अगर ( ((options&U_SHAPE_LAMALEF_MASK) == shapeVars.uShapeLamalefBegin) ||
               (((options&U_SHAPE_LAMALEF_MASK) == U_SHAPE_LAMALEF_AUTO )
               && (shapeVars.spacesRelativeToTextBeginEnd==1)) ) {
             lamAlefOption = 1;
         }
-        if ( (options&U_SHAPE_TASHKEEL_MASK) == shapeVars.uShapeTashkeelBegin ) {
+        अगर ( (options&U_SHAPE_TASHKEEL_MASK) == shapeVars.uShapeTashkeelBegin ) {
             tashkeelOption = 1;
         }
     }
 
-    if(lamAlefOption || tashkeelOption){
-        uprv_memset(tempbuffer, 0, (sourceLength+1)*U_SIZEOF_UCHAR);
+    अगर(lamAlefOption || tashkeelOption){
+        uprv_memset(tempbuffer, 0, (source_लंबाई+1)*U_SIZEOF_UCHAR);
         
-        i = j = sourceLength; count = 0;
+        i = j = source_लंबाई; count = 0;
         
-        while(i >= 0) {
-            if ( (lamAlefOption && dest[i] == LAMALEF_SPACE_SUB) ||
+        जबतक(i >= 0) {
+            अगर ( (lamAlefOption && dest[i] == LAMALEF_SPACE_SUB) ||
                  (tashkeelOption && dest[i] == TASHKEEL_SPACE_SUB) ){
                 j++;
                 count++;
-            }else {
+            }अन्यथा {
                 tempbuffer[j] = dest[i];
             }
             i--;
             j--;
         }
 
-        for(i=0 ;i < count; i++){
+        क्रम(i=0 ;i < count; i++){
                 tempbuffer[i] = SPACE_CHAR;
         }
 
-        u_memcpy(dest, tempbuffer, sourceLength);
-        destSize = sourceLength;
+        u_memcpy(dest, tempbuffer, source_लंबाई);
+        dest_आकार = source_लंबाई;
     }
 
 
@@ -849,49 +849,49 @@ handleGeneratedSpaces(char16_t *dest, int32_t sourceLength,
     lamAlefOption = 0;
     tashkeelOption = 0;
 
-    if (shapingMode == 0) {
-        if ( ((options&U_SHAPE_LAMALEF_MASK) == shapeVars.uShapeLamalefEnd) ||
+    अगर (shapingMode == 0) {
+        अगर ( ((options&U_SHAPE_LAMALEF_MASK) == shapeVars.uShapeLamalefEnd) ||
               (((options&U_SHAPE_LAMALEF_MASK) == U_SHAPE_LAMALEF_AUTO )
               && (shapeVars.spacesRelativeToTextBeginEnd==0)) ) {
             lamAlefOption = 1;
         }
-        if ( (options&U_SHAPE_TASHKEEL_MASK) == shapeVars.uShapeTashkeelEnd ){
+        अगर ( (options&U_SHAPE_TASHKEEL_MASK) == shapeVars.uShapeTashkeelEnd ){
             tashkeelOption = 1;
         }
     }
 
-    if(lamAlefOption || tashkeelOption){
-        uprv_memset(tempbuffer, 0, (sourceLength+1)*U_SIZEOF_UCHAR);
+    अगर(lamAlefOption || tashkeelOption){
+        uprv_memset(tempbuffer, 0, (source_लंबाई+1)*U_SIZEOF_UCHAR);
 
         i = j = 0; count = 0;
-        while(i < sourceLength) {
-            if ( (lamAlefOption && dest[i] == LAMALEF_SPACE_SUB) ||
+        जबतक(i < source_लंबाई) {
+            अगर ( (lamAlefOption && dest[i] == LAMALEF_SPACE_SUB) ||
                  (tashkeelOption && dest[i] == TASHKEEL_SPACE_SUB) ){
                 j--;
                 count++;
-            }else {
+            }अन्यथा {
                 tempbuffer[j] = dest[i];
             }
             i++;
             j++;
         }
 
-        while(count >= 0) {
+        जबतक(count >= 0) {
             tempbuffer[i] = SPACE_CHAR;
             i--;
             count--;
         }
 
-        u_memcpy(dest, tempbuffer, sourceLength);
-        destSize = sourceLength;
+        u_memcpy(dest, tempbuffer, source_लंबाई);
+        dest_आकार = source_लंबाई;
     }
 
 
-    if(tempbuffer){
+    अगर(tempbuffer){
         uprv_free(tempbuffer);
     }
 
-    return destSize;
+    वापस dest_आकार;
 }
 
 /*
@@ -904,32 +904,32 @@ handleGeneratedSpaces(char16_t *dest, int32_t sourceLength,
  *         will be set to U_NO_SPACE_AVAILABLE as defined in utypes.h
  */
 
-static int32_t
-expandCompositCharAtBegin(char16_t *dest, int32_t sourceLength, int32_t destSize,UErrorCode *pErrorCode) {
+अटल int32_t
+expandCompositCharAtBegin(char16_t *dest, int32_t source_लंबाई, int32_t dest_आकार,UErrorCode *pErrorCode) {
     int32_t      i = 0,j = 0;
     int32_t      countl = 0;
     char16_t *tempbuffer=nullptr;
 
-    tempbuffer = static_cast<char16_t*>(uprv_malloc((sourceLength + 1) * U_SIZEOF_UCHAR));
+    tempbuffer = static_cast<char16_t*>(uprv_malloc((source_लंबाई + 1) * U_SIZEOF_UCHAR));
 
     /* Test for nullptr */
-    if(tempbuffer == nullptr) {
+    अगर(tempbuffer == nullptr) {
         *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-        return 0;
+        वापस 0;
     }
 
-        uprv_memset(tempbuffer, 0, (sourceLength+1)*U_SIZEOF_UCHAR);
+        uprv_memset(tempbuffer, 0, (source_लंबाई+1)*U_SIZEOF_UCHAR);
 
         i = 0;
-        while(dest[i] == SPACE_CHAR) {
+        जबतक(dest[i] == SPACE_CHAR) {
             countl++;
             i++;
         }
 
-        i = j = sourceLength-1;
+        i = j = source_लंबाई-1;
 
-        while(i >= 0 && j >= 0) {
-            if( countl>0 && isLamAlefChar(dest[i])) {
+        जबतक(i >= 0 && j >= 0) {
+            अगर( countl>0 && isLamAlefChar(dest[i])) {
                 tempbuffer[j] = LAM_CHAR;
                 /* to ensure the array index is within the range */
                 U_ASSERT(dest[i] >= 0xFEF5u
@@ -937,8 +937,8 @@ expandCompositCharAtBegin(char16_t *dest, int32_t sourceLength, int32_t destSize
                 tempbuffer[j-1] = convertLamAlef[ dest[i] - 0xFEF5 ];
                 j--;
                 countl--;
-            }else {
-                 if( countl == 0 && isLamAlefChar(dest[i]) ) {
+            }अन्यथा {
+                 अगर( countl == 0 && isLamAlefChar(dest[i]) ) {
                      *pErrorCode=U_NO_SPACE_AVAILABLE;
                      }
                  tempbuffer[j] = dest[i];
@@ -946,12 +946,12 @@ expandCompositCharAtBegin(char16_t *dest, int32_t sourceLength, int32_t destSize
             i--;
             j--;
         }
-        u_memcpy(dest, tempbuffer, sourceLength);
+        u_memcpy(dest, tempbuffer, source_लंबाई);
 
         uprv_free(tempbuffer);
 
-        destSize = sourceLength;
-        return destSize;
+        dest_आकार = source_लंबाई;
+        वापस dest_आकार;
 }
 
 /*
@@ -964,40 +964,40 @@ expandCompositCharAtBegin(char16_t *dest, int32_t sourceLength, int32_t destSize
  *           will be set to U_NO_SPACE_AVAILABLE as defined in utypes.h
  */
 
-static int32_t
-expandCompositCharAtEnd(char16_t *dest, int32_t sourceLength, int32_t destSize,UErrorCode *pErrorCode) {
+अटल int32_t
+expandCompositCharAtEnd(char16_t *dest, int32_t source_लंबाई, int32_t dest_आकार,UErrorCode *pErrorCode) {
     int32_t      i = 0,j = 0;
 
     int32_t      countr = 0;
-    int32_t  inpsize = sourceLength;
+    int32_t  inpsize = source_लंबाई;
 
     char16_t *tempbuffer=nullptr;
-    tempbuffer = static_cast<char16_t*>(uprv_malloc((sourceLength + 1) * U_SIZEOF_UCHAR));
+    tempbuffer = static_cast<char16_t*>(uprv_malloc((source_लंबाई + 1) * U_SIZEOF_UCHAR));
 
     /* Test for nullptr */
-    if(tempbuffer == nullptr) {
+    अगर(tempbuffer == nullptr) {
         *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-         return 0;
+         वापस 0;
     }
 
-    uprv_memset(tempbuffer, 0, (sourceLength+1)*U_SIZEOF_UCHAR);
+    uprv_memset(tempbuffer, 0, (source_लंबाई+1)*U_SIZEOF_UCHAR);
 
-    while(inpsize>0 && dest[inpsize-1] == SPACE_CHAR) {
+    जबतक(inpsize>0 && dest[inpsize-1] == SPACE_CHAR) {
         countr++;
         inpsize--;
     }
 
-    i = sourceLength - countr - 1;
-    j = sourceLength - 1;
+    i = source_लंबाई - countr - 1;
+    j = source_लंबाई - 1;
 
-    while(i >= 0 && j >= 0) {
-        if( countr>0 && isLamAlefChar(dest[i]) ) {
+    जबतक(i >= 0 && j >= 0) {
+        अगर( countr>0 && isLamAlefChar(dest[i]) ) {
             tempbuffer[j] = LAM_CHAR;
             tempbuffer[j-1] = convertLamAlef[ dest[i] - 0xFEF5 ];
             j--;
             countr--;
-        }else {
-            if ((countr == 0) && isLamAlefChar(dest[i]) ) {
+        }अन्यथा {
+            अगर ((countr == 0) && isLamAlefChar(dest[i]) ) {
                 *pErrorCode=U_NO_SPACE_AVAILABLE;
             }
             tempbuffer[j] = dest[i];
@@ -1006,20 +1006,20 @@ expandCompositCharAtEnd(char16_t *dest, int32_t sourceLength, int32_t destSize,U
         j--;
     }
 
-    if(countr > 0) {
-        u_memmove(tempbuffer, tempbuffer+countr, sourceLength);
-        if(u_strlen(tempbuffer) < sourceLength) {
-            for(i=sourceLength-1;i>=sourceLength-countr;i--) {
+    अगर(countr > 0) {
+        u_memmove(tempbuffer, tempbuffer+countr, source_लंबाई);
+        अगर(u_strlen(tempbuffer) < source_लंबाई) {
+            क्रम(i=source_लंबाई-1;i>=source_लंबाई-countr;i--) {
                 tempbuffer[i] = SPACE_CHAR;
             }
         }
     }
-    u_memcpy(dest, tempbuffer, sourceLength);
+    u_memcpy(dest, tempbuffer, source_लंबाई);
 
     uprv_free(tempbuffer);
 
-    destSize = sourceLength;
-    return destSize;
+    dest_आकार = source_लंबाई;
+    वापस dest_आकार;
 }
 
 /*
@@ -1031,42 +1031,42 @@ expandCompositCharAtEnd(char16_t *dest, int32_t sourceLength, int32_t destSize,U
  *           will be set to U_NO_SPACE_AVAILABLE as defined in utypes.h
  */
 
-static int32_t
-expandCompositCharAtNear(char16_t *dest, int32_t sourceLength, int32_t destSize,UErrorCode *pErrorCode,
-                         int yehHamzaOption, int seenTailOption, int lamAlefOption, struct uShapeVariables shapeVars) {
+अटल int32_t
+expandCompositCharAtNear(char16_t *dest, int32_t source_लंबाई, int32_t dest_आकार,UErrorCode *pErrorCode,
+                         पूर्णांक yehHamzaOption, पूर्णांक seen_पुच्छ_Option, पूर्णांक lamAlefOption, काष्ठा uShapeVariables shapeVars) {
     int32_t      i = 0;
 
 
     char16_t lamalefChar, yehhamzaChar;
 
-    for(i = 0 ;i<=sourceLength-1;i++) {
-            if (seenTailOption && isSeenTailFamilyChar(dest[i])) {
-                if ((i>0) && (dest[i-1] == SPACE_CHAR) ) {
-                    dest[i-1] = shapeVars.tailChar;
-                }else {
+    क्रम(i = 0 ;i<=source_लंबाई-1;i++) {
+            अगर (seen_पुच्छ_Option && is_Seen_पुच्छ_Family_Char(dest[i])) {
+                अगर ((i>0) && (dest[i-1] == SPACE_CHAR) ) {
+                    dest[i-1] = shapeVars.पुच्छ_Char;
+                }अन्यथा {
                     *pErrorCode=U_NO_SPACE_AVAILABLE;
                 }
-            }else if(yehHamzaOption && (isYehHamzaChar(dest[i])) ) {
-                if ((i>0) && (dest[i-1] == SPACE_CHAR) ) {
+            }अन्यथा अगर(yehHamzaOption && (isYehHamzaChar(dest[i])) ) {
+                अगर ((i>0) && (dest[i-1] == SPACE_CHAR) ) {
                     yehhamzaChar = dest[i];
                     dest[i] = yehHamzaToYeh[yehhamzaChar - YEH_HAMZAFE_CHAR];
                     dest[i-1] = HAMZAFE_CHAR;
-                }else {
+                }अन्यथा {
 
                     *pErrorCode=U_NO_SPACE_AVAILABLE;
                 }
-            }else if(lamAlefOption && isLamAlefChar(dest[i+1])) {
-                if(dest[i] == SPACE_CHAR){
+            }अन्यथा अगर(lamAlefOption && isLamAlefChar(dest[i+1])) {
+                अगर(dest[i] == SPACE_CHAR){
                     lamalefChar = dest[i+1];
                     dest[i+1] = LAM_CHAR;
                     dest[i] = convertLamAlef[ lamalefChar - 0xFEF5 ];
-                }else {
+                }अन्यथा {
                     *pErrorCode=U_NO_SPACE_AVAILABLE;
                 }
             }
        }
-       destSize = sourceLength;
-       return destSize;
+       dest_आकार = source_लंबाई;
+       वापस dest_आकार;
 }
  /*
  * Name     : expandCompositChar
@@ -1084,112 +1084,112 @@ expandCompositCharAtNear(char16_t *dest, int32_t sourceLength, int32_t destSize,
  *            U_NO_SPACE_AVAILABLE as defined in utypes.h
  */
 
-static int32_t
-expandCompositChar(char16_t *dest, int32_t sourceLength,
-              int32_t destSize,uint32_t options,
-              UErrorCode *pErrorCode, int shapingMode,struct uShapeVariables shapeVars) {
+अटल int32_t
+expandCompositChar(char16_t *dest, int32_t source_लंबाई,
+              int32_t dest_आकार,uint32_t options,
+              UErrorCode *pErrorCode, पूर्णांक shapingMode,काष्ठा uShapeVariables shapeVars) {
 
     int32_t      i = 0,j = 0;
 
     char16_t *tempbuffer=nullptr;
-    int yehHamzaOption = 0;
-    int seenTailOption = 0;
-    int lamAlefOption = 0;
+    पूर्णांक yehHamzaOption = 0;
+    पूर्णांक seen_पुच्छ_Option = 0;
+    पूर्णांक lamAlefOption = 0;
 
-    if (shapingMode == 1){
-        if ( (options&U_SHAPE_LAMALEF_MASK) == U_SHAPE_LAMALEF_AUTO){
+    अगर (shapingMode == 1){
+        अगर ( (options&U_SHAPE_LAMALEF_MASK) == U_SHAPE_LAMALEF_AUTO){
 
-            if(shapeVars.spacesRelativeToTextBeginEnd == 0) {
-                destSize = expandCompositCharAtEnd(dest, sourceLength, destSize, pErrorCode);
+            अगर(shapeVars.spacesRelativeToTextBeginEnd == 0) {
+                dest_आकार = expandCompositCharAtEnd(dest, source_लंबाई, dest_आकार, pErrorCode);
 
-                if(*pErrorCode == U_NO_SPACE_AVAILABLE) {
+                अगर(*pErrorCode == U_NO_SPACE_AVAILABLE) {
                     *pErrorCode = U_ZERO_ERROR;
-                    destSize = expandCompositCharAtBegin(dest, sourceLength, destSize, pErrorCode);
+                    dest_आकार = expandCompositCharAtBegin(dest, source_लंबाई, dest_आकार, pErrorCode);
                 }
-            }else {
-                destSize = expandCompositCharAtBegin(dest, sourceLength, destSize, pErrorCode);
+            }अन्यथा {
+                dest_आकार = expandCompositCharAtBegin(dest, source_लंबाई, dest_आकार, pErrorCode);
 
-                if(*pErrorCode == U_NO_SPACE_AVAILABLE) {
+                अगर(*pErrorCode == U_NO_SPACE_AVAILABLE) {
                     *pErrorCode = U_ZERO_ERROR;
-                    destSize = expandCompositCharAtEnd(dest, sourceLength, destSize, pErrorCode);
+                    dest_आकार = expandCompositCharAtEnd(dest, source_लंबाई, dest_आकार, pErrorCode);
                 }
             }
 
-            if(*pErrorCode == U_NO_SPACE_AVAILABLE) {
+            अगर(*pErrorCode == U_NO_SPACE_AVAILABLE) {
                 *pErrorCode = U_ZERO_ERROR;
-                destSize = expandCompositCharAtNear(dest, sourceLength, destSize, pErrorCode, yehHamzaOption,
-                                                seenTailOption, 1,shapeVars);
+                dest_आकार = expandCompositCharAtNear(dest, source_लंबाई, dest_आकार, pErrorCode, yehHamzaOption,
+                                                seen_पुच्छ_Option, 1,shapeVars);
             }
         }
     }
 
-    if (shapingMode == 1){
-        if ( (options&U_SHAPE_LAMALEF_MASK) == shapeVars.uShapeLamalefEnd){
-            destSize = expandCompositCharAtEnd(dest, sourceLength, destSize, pErrorCode);
+    अगर (shapingMode == 1){
+        अगर ( (options&U_SHAPE_LAMALEF_MASK) == shapeVars.uShapeLamalefEnd){
+            dest_आकार = expandCompositCharAtEnd(dest, source_लंबाई, dest_आकार, pErrorCode);
         }
     }
 
-    if (shapingMode == 1){
-        if ( (options&U_SHAPE_LAMALEF_MASK) == shapeVars.uShapeLamalefBegin){
-            destSize = expandCompositCharAtBegin(dest, sourceLength, destSize, pErrorCode);
+    अगर (shapingMode == 1){
+        अगर ( (options&U_SHAPE_LAMALEF_MASK) == shapeVars.uShapeLamalefBegin){
+            dest_आकार = expandCompositCharAtBegin(dest, source_लंबाई, dest_आकार, pErrorCode);
         }
     }
 
-    if (shapingMode == 0){
-         if ((options&U_SHAPE_YEHHAMZA_MASK) == U_SHAPE_YEHHAMZA_TWOCELL_NEAR){
+    अगर (shapingMode == 0){
+         अगर ((options&U_SHAPE_YEHHAMZA_MASK) == U_SHAPE_YEHHAMZA_TWOCELL_NEAR){
              yehHamzaOption = 1;
          }
-         if ((options&U_SHAPE_SEEN_MASK) == U_SHAPE_SEEN_TWOCELL_NEAR){
-            seenTailOption = 1;
+         अगर ((options&U_SHAPE_SEEN_MASK) == U_SHAPE_SEEN_TWOCELL_NEAR){
+            seen_पुच्छ_Option = 1;
          }
     }
-    if (shapingMode == 1) {
-        if ( (options&U_SHAPE_LAMALEF_MASK) == U_SHAPE_LAMALEF_NEAR) {
+    अगर (shapingMode == 1) {
+        अगर ( (options&U_SHAPE_LAMALEF_MASK) == U_SHAPE_LAMALEF_NEAR) {
             lamAlefOption = 1;
         }
     }
 
 
-    if (yehHamzaOption || seenTailOption || lamAlefOption){
-        destSize = expandCompositCharAtNear(dest, sourceLength, destSize, pErrorCode, yehHamzaOption,
-                                            seenTailOption,lamAlefOption,shapeVars);
+    अगर (yehHamzaOption || seen_पुच्छ_Option || lamAlefOption){
+        dest_आकार = expandCompositCharAtNear(dest, source_लंबाई, dest_आकार, pErrorCode, yehHamzaOption,
+                                            seen_पुच्छ_Option,lamAlefOption,shapeVars);
     }
 
 
-    if (shapingMode == 1){
-        if ( (options&U_SHAPE_LAMALEF_MASK) == U_SHAPE_LAMALEF_RESIZE){
-            destSize = calculateSize(dest,sourceLength,destSize,options);
-            tempbuffer = static_cast<char16_t*>(uprv_malloc((destSize + 1) * U_SIZEOF_UCHAR));
+    अगर (shapingMode == 1){
+        अगर ( (options&U_SHAPE_LAMALEF_MASK) == U_SHAPE_LAMALEF_RESIZE){
+            dest_आकार = calculate_आकार(dest,source_लंबाई,dest_आकार,options);
+            tempbuffer = static_cast<char16_t*>(uprv_malloc((dest_आकार + 1) * U_SIZEOF_UCHAR));
 
             /* Test for nullptr */
-            if(tempbuffer == nullptr) {
+            अगर(tempbuffer == nullptr) {
                 *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-                return 0;
+                वापस 0;
             }
 
-            uprv_memset(tempbuffer, 0, (destSize+1)*U_SIZEOF_UCHAR);
+            uprv_memset(tempbuffer, 0, (dest_आकार+1)*U_SIZEOF_UCHAR);
 
             i = j = 0;
-            while(i < destSize && j < destSize) {
-                if(isLamAlefChar(dest[i]) ) {
+            जबतक(i < dest_आकार && j < dest_आकार) {
+                अगर(isLamAlefChar(dest[i]) ) {
                     tempbuffer[j] = convertLamAlef[ dest[i] - 0xFEF5 ];
                     tempbuffer[j+1] = LAM_CHAR;
                     j++;
-                }else {
+                }अन्यथा {
                     tempbuffer[j] = dest[i];
                 }
                 i++;
                 j++;
             }
 
-            u_memcpy(dest, tempbuffer, destSize);
+            u_memcpy(dest, tempbuffer, dest_आकार);
         }
     }
 
-    if(tempbuffer) {
+    अगर(tempbuffer) {
         uprv_free(tempbuffer);
     }
-    return destSize;
+    वापस dest_आकार;
 }
 
 /*
@@ -1197,19 +1197,19 @@ expandCompositChar(char16_t *dest, int32_t sourceLength,
  *Function : Converts an Arabic Unicode buffer in 06xx Range into a shaped
  *           arabic Unicode buffer in FExx Range
  */
-static int32_t
-shapeUnicode(char16_t *dest, int32_t sourceLength,
-             int32_t destSize,uint32_t options,
+अटल int32_t
+shapeUnicode(char16_t *dest, int32_t source_लंबाई,
+             int32_t dest_आकार,uint32_t options,
              UErrorCode *pErrorCode,
-             int tashkeelFlag, struct uShapeVariables shapeVars) {
+             पूर्णांक tashkeelFlag, काष्ठा uShapeVariables shapeVars) {
 
     int32_t          i, iend;
     int32_t          step;
     int32_t          lastPos,Nx, Nw;
-    unsigned int     Shape;
+    अचिन्हित पूर्णांक     Shape;
     int32_t          lamalef_found = 0;
     int32_t seenfamFound = 0, yehhamzaFound =0, tashkeelFound  = 0;
-    char16_t         prevLink = 0, lastLink = 0, currLink, nextLink = 0;
+    char16_t         पूर्व_Link = 0, lastLink = 0, currLink, अग्र_Link = 0;
     char16_t         wLamalef;
 
     /*
@@ -1218,24 +1218,24 @@ shapeUnicode(char16_t *dest, int32_t sourceLength,
      * even the lamalef is converted to the special region in
      * the 06xx range
      */
-    if ((options & U_SHAPE_PRESERVE_PRESENTATION_MASK)  == U_SHAPE_PRESERVE_PRESENTATION_NOOP) {
-        for (i = 0; i < sourceLength; i++) {
-            char16_t inputChar  = dest[i];
-            if ( (inputChar >= 0xFB50) && (inputChar <= 0xFBFF)) {
-                char16_t c = convertFBto06 [ (inputChar - 0xFB50) ];
-                if (c != 0)
+    अगर ((options & U_SHAPE_PRESERVE_PRESENTATION_MASK)  == U_SHAPE_PRESERVE_PRESENTATION_NOOP) {
+        क्रम (i = 0; i < source_लंबाई; i++) {
+            char16_t निवेश_Char  = dest[i];
+            अगर ( (निवेश_Char >= 0xFB50) && (निवेश_Char <= 0xFBFF)) {
+                char16_t c = convertFBto06 [ (निवेश_Char - 0xFB50) ];
+                अगर (c != 0)
                     dest[i] = c;
-            } else if ( (inputChar >= 0xFE70) && (inputChar <= 0xFEFC)) {
-                dest[i] = convertFEto06 [ (inputChar - 0xFE70) ] ;
-            } else {
-                dest[i] = inputChar ;
+            } अन्यथा अगर ( (निवेश_Char >= 0xFE70) && (निवेश_Char <= 0xFEFC)) {
+                dest[i] = convertFEto06 [ (निवेश_Char - 0xFE70) ] ;
+            } अन्यथा {
+                dest[i] = निवेश_Char ;
             }
         }
     }
 
 
     /* sets the index to the end of the buffer, together with the step point to -1 */
-    i = sourceLength - 1;
+    i = source_लंबाई - 1;
     iend = -1;
     step = -1;
 
@@ -1249,47 +1249,47 @@ shapeUnicode(char16_t *dest, int32_t sourceLength,
     lastPos = i;
     Nx = -2, Nw = 0;
 
-    while (i != iend) {
+    जबतक (i != iend) {
         /* If high byte of currLink > 0 then more than one shape */
-        if ((currLink & 0xFF00) > 0 || (getLink(dest[i]) & IRRELEVANT) != 0) {
+        अगर ((currLink & 0xFF00) > 0 || (getLink(dest[i]) & IRRELEVANT) != 0) {
             Nw = i + step;
-            while (Nx < 0) {         /* we need to know about next char */
-                if(Nw == iend) {
-                    nextLink = 0;
+            जबतक (Nx < 0) {         /* we need to know about next char */
+                अगर(Nw == iend) {
+                    अग्र_Link = 0;
                     Nx = 3000;
-                } else {
-                    nextLink = getLink(dest[Nw]);
-                    if((nextLink & IRRELEVANT) == 0) {
+                } अन्यथा {
+                    अग्र_Link = getLink(dest[Nw]);
+                    अगर((अग्र_Link & IRRELEVANT) == 0) {
                         Nx = Nw;
-                    } else {
+                    } अन्यथा {
                         Nw = Nw + step;
                     }
                 }
             }
 
-            if ( ((currLink & ALEFTYPE) > 0)  &&  ((lastLink & LAMTYPE) > 0) ) {
+            अगर ( ((currLink & ALEFTYPE) > 0)  &&  ((lastLink & LAMTYPE) > 0) ) {
                 lamalef_found = 1;
                 wLamalef = changeLamAlef(dest[i]); /*get from 0x065C-0x065f */
-                if ( wLamalef != 0) {
+                अगर ( wLamalef != 0) {
                     dest[i] = LAMALEF_SPACE_SUB;            /* The default case is to drop the Alef and replace */
                     dest[lastPos] =wLamalef;     /* it by LAMALEF_SPACE_SUB which is the last character in the  */
                     i=lastPos;                   /* unicode private use area, this is done to make   */
                 }                                /* sure that removeLamAlefSpaces() handles only the */
-                lastLink = prevLink;             /* spaces generated during lamalef generation.      */
+                lastLink = पूर्व_Link;             /* spaces generated during lamalef generation.      */
                 currLink = getLink(wLamalef);    /* LAMALEF_SPACE_SUB is added here and is replaced by spaces   */
             }                                    /* in removeLamAlefSpaces()                         */
 
-            if ((i > 0) && (dest[i-1] == SPACE_CHAR)){
-                if ( isSeenFamilyChar(dest[i])) {
+            अगर ((i > 0) && (dest[i-1] == SPACE_CHAR)){
+                अगर ( isSeenFamilyChar(dest[i])) {
                     seenfamFound = 1;
-                } else if (dest[i] == YEH_HAMZA_CHAR) {
+                } अन्यथा अगर (dest[i] == YEH_HAMZA_CHAR) {
                     yehhamzaFound = 1;
                 }
             }
-            else if(i==0){
-                if ( isSeenFamilyChar(dest[i])){
+            अन्यथा अगर(i==0){
+                अगर ( isSeenFamilyChar(dest[i])){
                     seenfamFound = 1;
-                } else if (dest[i] == YEH_HAMZA_CHAR) {
+                } अन्यथा अगर (dest[i] == YEH_HAMZA_CHAR) {
                     yehhamzaFound = 1;
                 }
             }
@@ -1299,69 +1299,69 @@ shapeUnicode(char16_t *dest, int32_t sourceLength,
              * and of character; depends on the order of the shapes
              * (isolated, initial, middle, final) in the compatibility area
              */
-            Shape = shapeTable[nextLink & (LINKR + LINKL)]
+            Shape = shapeTable[अग्र_Link & (LINKR + LINKL)]
                               [lastLink & (LINKR + LINKL)]
                               [currLink & (LINKR + LINKL)];
 
-            if ((currLink & (LINKR+LINKL)) == 1) {
+            अगर ((currLink & (LINKR+LINKL)) == 1) {
                 Shape &= 1;
-            } else if(isTashkeelChar(dest[i])) {
-                if( (lastLink & LINKL) && (nextLink & LINKR) && (tashkeelFlag == 1) &&
+            } अन्यथा अगर(isTashkeelChar(dest[i])) {
+                अगर( (lastLink & LINKL) && (अग्र_Link & LINKR) && (tashkeelFlag == 1) &&
                      dest[i] != 0x064C && dest[i] != 0x064D )
                 {
                     Shape = 1;
-                    if( (nextLink&ALEFTYPE) == ALEFTYPE && (lastLink&LAMTYPE) == LAMTYPE ) {
+                    अगर( (अग्र_Link&ALEFTYPE) == ALEFTYPE && (lastLink&LAMTYPE) == LAMTYPE ) {
                         Shape = 0;
                     }
-                } else if(tashkeelFlag == 2 && dest[i] == SHADDA06_CHAR){
+                } अन्यथा अगर(tashkeelFlag == 2 && dest[i] == SHADDA06_CHAR){
                     Shape = 1;
-                } else {
+                } अन्यथा {
                     Shape = 0;
                 }
             }
-            if ((dest[i] ^ 0x0600) < 0x100) {
-                if ( isTashkeelChar(dest[i]) ){
-                    if (tashkeelFlag == 2  && dest[i] != SHADDA06_CHAR){
+            अगर ((dest[i] ^ 0x0600) < 0x100) {
+                अगर ( isTashkeelChar(dest[i]) ){
+                    अगर (tashkeelFlag == 2  && dest[i] != SHADDA06_CHAR){
                         dest[i] = TASHKEEL_SPACE_SUB;
                         tashkeelFound  = 1;
-                    } else {
+                    } अन्यथा {
                         /* to ensure the array index is within the range */
                         U_ASSERT(dest[i] >= 0x064Bu
                             && dest[i]-0x064Bu < UPRV_LENGTHOF(IrrelevantPos));
                         dest[i] =  0xFE70 + IrrelevantPos[(dest[i] - 0x064B)] + static_cast<char16_t>(Shape);
                     }
-                }else if ((currLink & APRESENT) > 0) {
+                }अन्यथा अगर ((currLink & APRESENT) > 0) {
                     dest[i] = static_cast<char16_t>(0xFB50 + (currLink >> 8) + Shape);
-                }else if ((currLink >> 8) > 0 && (currLink & IRRELEVANT) == 0) {
+                }अन्यथा अगर ((currLink >> 8) > 0 && (currLink & IRRELEVANT) == 0) {
                     dest[i] = static_cast<char16_t>(0xFE70 + (currLink >> 8) + Shape);
                 }
             }
         }
 
         /* move one notch forward */
-        if ((currLink & IRRELEVANT) == 0) {
-            prevLink = lastLink;
+        अगर ((currLink & IRRELEVANT) == 0) {
+            पूर्व_Link = lastLink;
             lastLink = currLink;
             lastPos = i;
         }
 
         i = i + step;
-        if (i == Nx) {
-            currLink = nextLink;
+        अगर (i == Nx) {
+            currLink = अग्र_Link;
             Nx = -2;
-        } else if(i != iend) {
+        } अन्यथा अगर(i != iend) {
             currLink = getLink(dest[i]);
         }
     }
-    destSize = sourceLength;
-    if ( (lamalef_found != 0 ) || (tashkeelFound  != 0) ){
-        destSize = handleGeneratedSpaces(dest,sourceLength,destSize,options,pErrorCode, shapeVars);
+    dest_आकार = source_लंबाई;
+    अगर ( (lamalef_found != 0 ) || (tashkeelFound  != 0) ){
+        dest_आकार = handleGeneratedSpaces(dest,source_लंबाई,dest_आकार,options,pErrorCode, shapeVars);
     }
 
-    if ( (seenfamFound != 0) || (yehhamzaFound != 0) ) {
-        destSize = expandCompositChar(dest, sourceLength,destSize,options,pErrorCode, SHAPE_MODE,shapeVars);
+    अगर ( (seenfamFound != 0) || (yehhamzaFound != 0) ) {
+        dest_आकार = expandCompositChar(dest, source_लंबाई,dest_आकार,options,pErrorCode, SHAPE_MODE,shapeVars);
     }
-    return destSize;
+    वापस dest_आकार;
 }
 
 /*
@@ -1369,10 +1369,10 @@ shapeUnicode(char16_t *dest, int32_t sourceLength,
  *Function : Converts an Arabic Unicode buffer in FExx Range into unshaped
  *           arabic Unicode buffer in 06xx Range
  */
-static int32_t
-deShapeUnicode(char16_t *dest, int32_t sourceLength,
-               int32_t destSize,uint32_t options,
-               UErrorCode *pErrorCode, struct uShapeVariables shapeVars) {
+अटल int32_t
+deShapeUnicode(char16_t *dest, int32_t source_लंबाई,
+               int32_t dest_आकार,uint32_t options,
+               UErrorCode *pErrorCode, काष्ठा uShapeVariables shapeVars) {
     int32_t i = 0;
     int32_t lamalef_found = 0;
     int32_t yehHamzaComposeEnabled = 0;
@@ -1386,34 +1386,34 @@ deShapeUnicode(char16_t *dest, int32_t sourceLength,
      *the Unicode 06 range
      */
 
-    for(i = 0; i < sourceLength; i++) {
-        char16_t  inputChar = dest[i];
-        if ( (inputChar >= 0xFB50) && (inputChar <= 0xFBFF)) { /* FBxx Arabic range */
-            char16_t c = convertFBto06 [ (inputChar - 0xFB50) ];
-            if (c != 0)
+    क्रम(i = 0; i < source_लंबाई; i++) {
+        char16_t  निवेश_Char = dest[i];
+        अगर ( (निवेश_Char >= 0xFB50) && (निवेश_Char <= 0xFBFF)) { /* FBxx Arabic range */
+            char16_t c = convertFBto06 [ (निवेश_Char - 0xFB50) ];
+            अगर (c != 0)
                 dest[i] = c;
-        } else if( (yehHamzaComposeEnabled == 1) && ((inputChar == HAMZA06_CHAR) || (inputChar == HAMZAFE_CHAR))
-                && (i < (sourceLength - 1)) && isAlefMaksouraChar(dest[i+1] )) {
+        } अन्यथा अगर( (yehHamzaComposeEnabled == 1) && ((निवेश_Char == HAMZA06_CHAR) || (निवेश_Char == HAMZAFE_CHAR))
+                && (i < (source_लंबाई - 1)) && isAlefMaksouraChar(dest[i+1] )) {
                  dest[i] = SPACE_CHAR;
                  dest[i+1] = YEH_HAMZA_CHAR;
-        } else if ( (seenComposeEnabled == 1) && (isTailChar(inputChar)) && (i< (sourceLength - 1))
-                        && (isSeenTailFamilyChar(dest[i+1])) ) {
+        } अन्यथा अगर ( (seenComposeEnabled == 1) && (is_पुच्छ_Char(निवेश_Char)) && (i< (source_लंबाई - 1))
+                        && (is_Seen_पुच्छ_Family_Char(dest[i+1])) ) {
                 dest[i] = SPACE_CHAR;
-        } else if (( inputChar >= 0xFE70) && (inputChar <= 0xFEF4 )) { /* FExx Arabic range */
-                dest[i] = convertFEto06 [ (inputChar - 0xFE70) ];
-        } else {
-            dest[i] = inputChar ;
+        } अन्यथा अगर (( निवेश_Char >= 0xFE70) && (निवेश_Char <= 0xFEF4 )) { /* FExx Arabic range */
+                dest[i] = convertFEto06 [ (निवेश_Char - 0xFE70) ];
+        } अन्यथा {
+            dest[i] = निवेश_Char ;
         }
 
-        if( isLamAlefChar(dest[i]) )
+        अगर( isLamAlefChar(dest[i]) )
             lamalef_found = 1;
     }
 
-   destSize = sourceLength;
-   if (lamalef_found != 0){
-          destSize = expandCompositChar(dest,sourceLength,destSize,options,pErrorCode,DESHAPE_MODE, shapeVars);
+   dest_आकार = source_लंबाई;
+   अगर (lamalef_found != 0){
+          dest_आकार = expandCompositChar(dest,source_लंबाई,dest_आकार,options,pErrorCode,DESHAPE_MODE, shapeVars);
    }
-   return destSize;
+   वापस dest_आकार;
 }
 
 /*
@@ -1423,21 +1423,21 @@ deShapeUnicode(char16_t *dest, int32_t sourceLength,
  */
 
 U_CAPI int32_t U_EXPORT2
-u_shapeArabic(const char16_t *source, int32_t sourceLength,
+u_shapeArabic(स्थिर char16_t *source, int32_t source_लंबाई,
               char16_t *dest, int32_t destCapacity,
               uint32_t options,
               UErrorCode *pErrorCode) {
 
-    int32_t destLength;
-    struct  uShapeVariables shapeVars = { OLD_TAIL_CHAR,U_SHAPE_LAMALEF_BEGIN,U_SHAPE_LAMALEF_END,U_SHAPE_TASHKEEL_BEGIN,U_SHAPE_TASHKEEL_END,0};
+    int32_t dest_लंबाई;
+    काष्ठा  uShapeVariables shapeVars = { OLD_पुच्छ_CHAR,U_SHAPE_LAMALEF_BEGIN,U_SHAPE_LAMALEF_END,U_SHAPE_TASHKEEL_BEGIN,U_SHAPE_TASHKEEL_END,0};
 
     /* usual error checking */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    अगर(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        वापस 0;
     }
 
     /* make sure that no reserved options values are used; allow dest==nullptr only for preflighting */
-    if( source==nullptr || sourceLength<-1 || (dest==nullptr && destCapacity!=0) || destCapacity<0 ||
+    अगर( source==nullptr || source_लंबाई<-1 || (dest==nullptr && destCapacity!=0) || destCapacity<0 ||
                 (((options&U_SHAPE_TASHKEEL_MASK) > 0) &&
                  ((options&U_SHAPE_LETTERS_SHAPE_TASHKEEL_ISOLATED) == U_SHAPE_LETTERS_SHAPE_TASHKEEL_ISOLATED) ) ||
                 (((options&U_SHAPE_TASHKEEL_MASK) > 0) &&
@@ -1451,10 +1451,10 @@ u_shapeArabic(const char16_t *source, int32_t sourceLength,
     )
     {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        वापस 0;
     }
     /* Validate  lamalef options */
-    if(((options&U_SHAPE_LAMALEF_MASK) > 0)&&
+    अगर(((options&U_SHAPE_LAMALEF_MASK) > 0)&&
               !(((options & U_SHAPE_LAMALEF_MASK)==U_SHAPE_LAMALEF_BEGIN) ||
                 ((options & U_SHAPE_LAMALEF_MASK)==U_SHAPE_LAMALEF_END ) ||
                 ((options & U_SHAPE_LAMALEF_MASK)==U_SHAPE_LAMALEF_RESIZE )||
@@ -1462,141 +1462,141 @@ u_shapeArabic(const char16_t *source, int32_t sourceLength,
                  ((options & U_SHAPE_LAMALEF_MASK)==U_SHAPE_LAMALEF_NEAR)))
     {
          *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        वापस 0;
     }
     /* Validate  Tashkeel options */
-    if(((options&U_SHAPE_TASHKEEL_MASK) > 0)&&
+    अगर(((options&U_SHAPE_TASHKEEL_MASK) > 0)&&
                    !(((options & U_SHAPE_TASHKEEL_MASK)==U_SHAPE_TASHKEEL_BEGIN) ||
                      ((options & U_SHAPE_TASHKEEL_MASK)==U_SHAPE_TASHKEEL_END )
                     ||((options & U_SHAPE_TASHKEEL_MASK)==U_SHAPE_TASHKEEL_RESIZE )||
                     ((options & U_SHAPE_TASHKEEL_MASK)==U_SHAPE_TASHKEEL_REPLACE_BY_TATWEEL)))
     {
          *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        वापस 0;
     }
     /* determine the source length */
-    if(sourceLength==-1) {
-        sourceLength=u_strlen(source);
+    अगर(source_लंबाई==-1) {
+        source_लंबाई=u_strlen(source);
     }
-    if(sourceLength<=0) {
-        return u_terminateUChars(dest, destCapacity, 0, pErrorCode);
+    अगर(source_लंबाई<=0) {
+        वापस u_terminateUChars(dest, destCapacity, 0, pErrorCode);
     }
 
     /* check that source and destination do not overlap */
-    if( dest!=nullptr &&
-        ((source<=dest && dest<source+sourceLength) ||
+    अगर( dest!=nullptr &&
+        ((source<=dest && dest<source+source_लंबाई) ||
          (dest<=source && source<dest+destCapacity))) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        वापस 0;
     }
 
     /* Does Options contain the new Seen Tail Unicode code point option */
-    if ( (options&U_SHAPE_TAIL_TYPE_MASK) == U_SHAPE_TAIL_NEW_UNICODE){
-        shapeVars.tailChar = NEW_TAIL_CHAR;
-    }else {
-        shapeVars.tailChar = OLD_TAIL_CHAR;
+    अगर ( (options&U_SHAPE_पुच्छ_TYPE_MASK) == U_SHAPE_पुच्छ_NEW_UNICODE){
+        shapeVars.पुच्छ_Char = NEW_पुच्छ_CHAR;
+    }अन्यथा {
+        shapeVars.पुच्छ_Char = OLD_पुच्छ_CHAR;
     }
 
-    if((options&U_SHAPE_LETTERS_MASK)!=U_SHAPE_LETTERS_NOOP) {
-        char16_t buffer[300];
+    अगर((options&U_SHAPE_LETTERS_MASK)!=U_SHAPE_LETTERS_NOOP) {
+        char16_t बफर[300];
         char16_t *tempbuffer, *tempsource = nullptr;
-        int32_t outputSize, spacesCountl=0, spacesCountr=0;
+        int32_t output_आकार, spacesCountl=0, spacesCountr=0;
 
-        if((options&U_SHAPE_AGGREGATE_TASHKEEL_MASK)>0) {
+        अगर((options&U_SHAPE_AGGREGATE_TASHKEEL_MASK)>0) {
             int32_t logical_order = (options&U_SHAPE_TEXT_DIRECTION_MASK) == U_SHAPE_TEXT_DIRECTION_LOGICAL;
             int32_t aggregate_tashkeel =
                         (options&(U_SHAPE_AGGREGATE_TASHKEEL_MASK+U_SHAPE_LETTERS_SHAPE_TASHKEEL_ISOLATED)) ==
                         (U_SHAPE_AGGREGATE_TASHKEEL+U_SHAPE_LETTERS_SHAPE_TASHKEEL_ISOLATED);
-            int step=logical_order?1:-1;
-            int j=logical_order?-1:2*sourceLength;
-            int i=logical_order?-1:sourceLength;
-            int end=logical_order?sourceLength:-1;
-            int aggregation_possible = 1;
-            char16_t prev = 0;
-            char16_t prevLink, currLink = 0;
-            int newSourceLength = 0;
-            tempsource = (char16_t *)uprv_malloc(2*sourceLength*U_SIZEOF_UCHAR);
-            if(tempsource == nullptr) {
+            पूर्णांक step=logical_order?1:-1;
+            पूर्णांक j=logical_order?-1:2*source_लंबाई;
+            पूर्णांक i=logical_order?-1:source_लंबाई;
+            पूर्णांक end=logical_order?source_लंबाई:-1;
+            पूर्णांक aggregation_possible = 1;
+            char16_t पूर्व = 0;
+            char16_t पूर्व_Link, currLink = 0;
+            पूर्णांक new_Source_लंबाई = 0;
+            tempsource = (char16_t *)uprv_malloc(2*source_लंबाई*U_SIZEOF_UCHAR);
+            अगर(tempsource == nullptr) {
                 *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-                return 0;
+                वापस 0;
             }
 
-            while ((i+=step) != end) {
-                prevLink = currLink;
+            जबतक ((i+=step) != end) {
+                पूर्व_Link = currLink;
                 currLink = getLink(source[i]);
-                if (aggregate_tashkeel && ((prevLink|currLink)&COMBINE) == COMBINE && aggregation_possible) {
-                    if (j<0 || j>=2*sourceLength) {
+                अगर (aggregate_tashkeel && ((पूर्व_Link|currLink)&COMBINE) == COMBINE && aggregation_possible) {
+                    अगर (j<0 || j>=2*source_लंबाई) {
                         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-                        if (tempsource != nullptr) uprv_free(tempsource);
-                        return 0;
+                        अगर (tempsource != nullptr) uprv_free(tempsource);
+                        वापस 0;
                     }
                     aggregation_possible = 0;
-                    tempsource[j] = (prev<source[i]?prev:source[i])-0x064C+0xFC5E;
+                    tempsource[j] = (पूर्व<source[i]?पूर्व:source[i])-0x064C+0xFC5E;
                     currLink = getLink(tempsource[j]);
-                } else {
+                } अन्यथा {
                     aggregation_possible = 1;
                     tempsource[j+=step] = source[i];
-                    prev = source[i];
-                    newSourceLength++;
+                    पूर्व = source[i];
+                    new_Source_लंबाई++;
                 }
             }
             source = tempsource+(logical_order?0:j);
-            sourceLength = newSourceLength;
+            source_लंबाई = new_Source_लंबाई;
         }
 
         /* calculate destination size */
         /* TODO: do we ever need to do this pure preflighting? */
-        if(((options&U_SHAPE_LAMALEF_MASK)==U_SHAPE_LAMALEF_RESIZE) ||
+        अगर(((options&U_SHAPE_LAMALEF_MASK)==U_SHAPE_LAMALEF_RESIZE) ||
            ((options&U_SHAPE_TASHKEEL_MASK)==U_SHAPE_TASHKEEL_RESIZE)) {
-            outputSize=calculateSize(source,sourceLength,destCapacity,options);
-        } else {
-            outputSize=sourceLength;
+            output_आकार=calculate_आकार(source,source_लंबाई,destCapacity,options);
+        } अन्यथा {
+            output_आकार=source_लंबाई;
         }
 
-        if(outputSize>destCapacity) {
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                if (tempsource != nullptr) uprv_free(tempsource);
-            return outputSize;
+        अगर(output_आकार>destCapacity) {
+            *pErrorCode=U_बफर_OVERFLOW_ERROR;
+                अगर (tempsource != nullptr) uprv_free(tempsource);
+            वापस output_आकार;
         }
 
         /*
          * need a temporary buffer of size max(outputSize, sourceLength)
          * because at first we copy source->temp
          */
-        if(sourceLength>outputSize) {
-            outputSize=sourceLength;
+        अगर(source_लंबाई>output_आकार) {
+            output_आकार=source_लंबाई;
         }
 
         /* Start of Arabic letter shaping part */
-        if(outputSize<=UPRV_LENGTHOF(buffer)) {
-            outputSize=UPRV_LENGTHOF(buffer);
-            tempbuffer=buffer;
-        } else {
-            tempbuffer = (char16_t *)uprv_malloc(outputSize*U_SIZEOF_UCHAR);
+        अगर(output_आकार<=UPRV_LENGTHOF(बफर)) {
+            output_आकार=UPRV_LENGTHOF(बफर);
+            tempbuffer=बफर;
+        } अन्यथा {
+            tempbuffer = (char16_t *)uprv_malloc(output_आकार*U_SIZEOF_UCHAR);
 
             /*Test for nullptr*/
-            if(tempbuffer == nullptr) {
+            अगर(tempbuffer == nullptr) {
                 *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-                if (tempsource != nullptr) uprv_free(tempsource);
-                return 0;
+                अगर (tempsource != nullptr) uprv_free(tempsource);
+                वापस 0;
             }
         }
-        u_memcpy(tempbuffer, source, sourceLength);
-        if (tempsource != nullptr){
+        u_memcpy(tempbuffer, source, source_लंबाई);
+        अगर (tempsource != nullptr){
             uprv_free(tempsource);
         }
 
-        if(sourceLength<outputSize) {
-            uprv_memset(tempbuffer+sourceLength, 0, (outputSize-sourceLength)*U_SIZEOF_UCHAR);
+        अगर(source_लंबाई<output_आकार) {
+            uprv_memset(tempbuffer+source_लंबाई, 0, (output_आकार-source_लंबाई)*U_SIZEOF_UCHAR);
         }
 
-        if((options&U_SHAPE_TEXT_DIRECTION_MASK) == U_SHAPE_TEXT_DIRECTION_LOGICAL) {
-            countSpaces(tempbuffer,sourceLength,options,&spacesCountl,&spacesCountr);
-            invertBuffer(tempbuffer,sourceLength,options,spacesCountl,spacesCountr);
+        अगर((options&U_SHAPE_TEXT_DIRECTION_MASK) == U_SHAPE_TEXT_DIRECTION_LOGICAL) {
+            गिनती_Spaces(tempbuffer,source_लंबाई,options,&spacesCountl,&spacesCountr);
+            invert_बफर(tempbuffer,source_लंबाई,options,spacesCountl,spacesCountr);
         }
 
-        if((options&U_SHAPE_TEXT_DIRECTION_MASK) == U_SHAPE_TEXT_DIRECTION_VISUAL_LTR) {
-            if((options&U_SHAPE_SPACES_RELATIVE_TO_TEXT_MASK) == U_SHAPE_SPACES_RELATIVE_TO_TEXT_BEGIN_END) {
+        अगर((options&U_SHAPE_TEXT_DIRECTION_MASK) == U_SHAPE_TEXT_DIRECTION_VISUAL_LTR) {
+            अगर((options&U_SHAPE_SPACES_RELATIVE_TO_TEXT_MASK) == U_SHAPE_SPACES_RELATIVE_TO_TEXT_BEGIN_END) {
                 shapeVars.spacesRelativeToTextBeginEnd = 1;
                 shapeVars.uShapeLamalefBegin = U_SHAPE_LAMALEF_END;
                 shapeVars.uShapeLamalefEnd = U_SHAPE_LAMALEF_BEGIN;
@@ -1605,35 +1605,35 @@ u_shapeArabic(const char16_t *source, int32_t sourceLength,
             }
         }
 
-        switch(options&U_SHAPE_LETTERS_MASK) {
-        case U_SHAPE_LETTERS_SHAPE :
-             if( (options&U_SHAPE_TASHKEEL_MASK)> 0
+        चयन(options&U_SHAPE_LETTERS_MASK) {
+        हाल U_SHAPE_LETTERS_SHAPE :
+             अगर( (options&U_SHAPE_TASHKEEL_MASK)> 0
                  && ((options&U_SHAPE_TASHKEEL_MASK) !=U_SHAPE_TASHKEEL_REPLACE_BY_TATWEEL)) {
                 /* Call the shaping function with tashkeel flag == 2 for removal of tashkeel */
-                destLength = shapeUnicode(tempbuffer,sourceLength,destCapacity,options,pErrorCode,2,shapeVars);
-             }else {
+                dest_लंबाई = shapeUnicode(tempbuffer,source_लंबाई,destCapacity,options,pErrorCode,2,shapeVars);
+             }अन्यथा {
                 /* default Call the shaping function with tashkeel flag == 1 */
-                destLength = shapeUnicode(tempbuffer,sourceLength,destCapacity,options,pErrorCode,1,shapeVars);
+                dest_लंबाई = shapeUnicode(tempbuffer,source_लंबाई,destCapacity,options,pErrorCode,1,shapeVars);
 
                 /*After shaping text check if user wants to remove tashkeel and replace it with tatweel*/
-                if( (options&U_SHAPE_TASHKEEL_MASK) == U_SHAPE_TASHKEEL_REPLACE_BY_TATWEEL){
-                  destLength = handleTashkeelWithTatweel(tempbuffer,destLength,destCapacity,options,pErrorCode);
+                अगर( (options&U_SHAPE_TASHKEEL_MASK) == U_SHAPE_TASHKEEL_REPLACE_BY_TATWEEL){
+                  dest_लंबाई = handleTashkeelWithTatweel(tempbuffer,dest_लंबाई,destCapacity,options,pErrorCode);
                 }
             }
-            break;
-        case U_SHAPE_LETTERS_SHAPE_TASHKEEL_ISOLATED :
+            अवरोध;
+        हाल U_SHAPE_LETTERS_SHAPE_TASHKEEL_ISOLATED :
             /* Call the shaping function with tashkeel flag == 0 */
-            destLength = shapeUnicode(tempbuffer,sourceLength,destCapacity,options,pErrorCode,0,shapeVars);
-            break;
+            dest_लंबाई = shapeUnicode(tempbuffer,source_लंबाई,destCapacity,options,pErrorCode,0,shapeVars);
+            अवरोध;
 
-        case U_SHAPE_LETTERS_UNSHAPE :
+        हाल U_SHAPE_LETTERS_UNSHAPE :
             /* Call the deshaping function */
-            destLength = deShapeUnicode(tempbuffer,sourceLength,destCapacity,options,pErrorCode,shapeVars);
-            break;
-        default :
+            dest_लंबाई = deShapeUnicode(tempbuffer,source_लंबाई,destCapacity,options,pErrorCode,shapeVars);
+            अवरोध;
+        शेष :
             /* will never occur because of validity checks above */
-            destLength = 0;
-            break;
+            dest_लंबाई = 0;
+            अवरोध;
         }
 
         /*
@@ -1643,34 +1643,34 @@ u_shapeArabic(const char16_t *source, int32_t sourceLength,
          * except for the adjustment above before the tempbuffer allocation
          */
 
-        if((options&U_SHAPE_TEXT_DIRECTION_MASK) == U_SHAPE_TEXT_DIRECTION_LOGICAL) {
-            countSpaces(tempbuffer,destLength,options,&spacesCountl,&spacesCountr);
-            invertBuffer(tempbuffer,destLength,options,spacesCountl,spacesCountr);
+        अगर((options&U_SHAPE_TEXT_DIRECTION_MASK) == U_SHAPE_TEXT_DIRECTION_LOGICAL) {
+            गिनती_Spaces(tempbuffer,dest_लंबाई,options,&spacesCountl,&spacesCountr);
+            invert_बफर(tempbuffer,dest_लंबाई,options,spacesCountl,spacesCountr);
         }
-        u_memcpy(dest, tempbuffer, uprv_min(destLength, destCapacity));
+        u_memcpy(dest, tempbuffer, uprv_min(dest_लंबाई, destCapacity));
 
-        if(tempbuffer!=buffer) {
+        अगर(tempbuffer!=बफर) {
             uprv_free(tempbuffer);
         }
 
-        if(destLength>destCapacity) {
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            return destLength;
+        अगर(dest_लंबाई>destCapacity) {
+            *pErrorCode=U_बफर_OVERFLOW_ERROR;
+            वापस dest_लंबाई;
         }
 
         /* End of Arabic letter shaping part */
-    } else {
+    } अन्यथा {
         /*
          * No letter shaping:
          * just make sure the destination is large enough and copy the string.
          */
-        if(destCapacity<sourceLength) {
+        अगर(destCapacity<source_लंबाई) {
             /* this catches preflighting, too */
-            *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-            return sourceLength;
+            *pErrorCode=U_बफर_OVERFLOW_ERROR;
+            वापस source_लंबाई;
         }
-        u_memcpy(dest, source, sourceLength);
-        destLength=sourceLength;
+        u_memcpy(dest, source, source_लंबाई);
+        dest_लंबाई=source_लंबाई;
     }
 
     /*
@@ -1679,60 +1679,60 @@ u_shapeArabic(const char16_t *source, int32_t sourceLength,
      * The easiest way to do this is to operate on the destination and
      * "shape" the digits in-place.
      */
-    if((options&U_SHAPE_DIGITS_MASK)!=U_SHAPE_DIGITS_NOOP) {
+    अगर((options&U_SHAPE_DIGITS_MASK)!=U_SHAPE_DIGITS_NOOP) {
         char16_t digitBase;
         int32_t i;
 
         /* select the requested digit group */
-        switch(options&U_SHAPE_DIGIT_TYPE_MASK) {
-        case U_SHAPE_DIGIT_TYPE_AN:
+        चयन(options&U_SHAPE_DIGIT_TYPE_MASK) {
+        हाल U_SHAPE_DIGIT_TYPE_AN:
             digitBase=0x660; /* Unicode: "Arabic-Indic digits" */
-            break;
-        case U_SHAPE_DIGIT_TYPE_AN_EXTENDED:
+            अवरोध;
+        हाल U_SHAPE_DIGIT_TYPE_AN_EXTENDED:
             digitBase=0x6f0; /* Unicode: "Eastern Arabic-Indic digits (Persian and Urdu)" */
-            break;
-        default:
+            अवरोध;
+        शेष:
             /* will never occur because of validity checks above */
             digitBase=0;
-            break;
+            अवरोध;
         }
 
         /* perform the requested operation */
-        switch(options&U_SHAPE_DIGITS_MASK) {
-        case U_SHAPE_DIGITS_EN2AN:
+        चयन(options&U_SHAPE_DIGITS_MASK) {
+        हाल U_SHAPE_DIGITS_EN2AN:
             /* add (digitBase-'0') to each European (ASCII) digit code point */
             digitBase-=0x30;
-            for(i=0; i<destLength; ++i) {
-                if(((uint32_t)dest[i]-0x30)<10) {
+            क्रम(i=0; i<dest_लंबाई; ++i) {
+                अगर(((uint32_t)dest[i]-0x30)<10) {
                     dest[i]+=digitBase;
                 }
             }
-            break;
-        case U_SHAPE_DIGITS_AN2EN:
+            अवरोध;
+        हाल U_SHAPE_DIGITS_AN2EN:
             /* subtract (digitBase-'0') from each Arabic digit code point */
-            for(i=0; i<destLength; ++i) {
-                if(((uint32_t)dest[i]-(uint32_t)digitBase)<10) {
+            क्रम(i=0; i<dest_लंबाई; ++i) {
+                अगर(((uint32_t)dest[i]-(uint32_t)digitBase)<10) {
                     dest[i]-=digitBase-0x30;
                 }
             }
-            break;
-        case U_SHAPE_DIGITS_ALEN2AN_INIT_LR:
-            _shapeToArabicDigitsWithContext(dest, destLength,
+            अवरोध;
+        हाल U_SHAPE_DIGITS_ALEN2AN_INIT_LR:
+            _shapeToArabicDigitsWithContext(dest, dest_लंबाई,
                                             digitBase,
                                             (options & U_SHAPE_TEXT_DIRECTION_MASK) == U_SHAPE_TEXT_DIRECTION_LOGICAL,
                                             false);
-            break;
-        case U_SHAPE_DIGITS_ALEN2AN_INIT_AL:
-            _shapeToArabicDigitsWithContext(dest, destLength,
+            अवरोध;
+        हाल U_SHAPE_DIGITS_ALEN2AN_INIT_AL:
+            _shapeToArabicDigitsWithContext(dest, dest_लंबाई,
                                             digitBase,
                                             (options & U_SHAPE_TEXT_DIRECTION_MASK) == U_SHAPE_TEXT_DIRECTION_LOGICAL,
                                             true);
-            break;
-        default:
+            अवरोध;
+        शेष:
             /* will never occur because of validity checks above */
-            break;
+            अवरोध;
         }
     }
 
-    return u_terminateUChars(dest, destCapacity, destLength, pErrorCode);
+    वापस u_terminateUChars(dest, destCapacity, dest_लंबाई, pErrorCode);
 }

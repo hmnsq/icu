@@ -24,12 +24,12 @@ Adam M. Costello
 http://www.nicemice.net/amc/
 */
 
-#ifndef __PUNYCODE_H__
-#define __PUNYCODE_H__
+#अगर_अघोषित __PUNYCODE_H__
+#घोषणा __PUNYCODE_H__
 
-#include "unicode/utypes.h"
+#समावेश "unicode/utypes.h"
 
-#if !UCONFIG_NO_IDNA
+#अगर !UCONFIG_NO_IDNA
 
 /**
  * u_strToPunycode() converts Unicode to Punycode.
@@ -66,9 +66,9 @@ http://www.nicemice.net/amc/
  * @see u_strFromPunycode
  */
 U_CAPI int32_t
-u_strToPunycode(const UChar *src, int32_t srcLength,
+u_strToPunycode(स्थिर UChar *src, int32_t src_लंबाई,
                 UChar *dest, int32_t destCapacity,
-                const UBool *caseFlags,
+                स्थिर UBool *caseFlags,
                 UErrorCode *pErrorCode);
 
 /**
@@ -101,14 +101,14 @@ u_strToPunycode(const UChar *src, int32_t srcLength,
  * @see u_strToPunycode
  */
 U_CAPI int32_t
-u_strFromPunycode(const UChar *src, int32_t srcLength,
+u_strFromPunycode(स्थिर UChar *src, int32_t src_लंबाई,
                   UChar *dest, int32_t destCapacity,
                   UBool *caseFlags,
                   UErrorCode *pErrorCode);
 
-#endif /* #if !UCONFIG_NO_IDNA */
+#पूर्ण_अगर /* #if !UCONFIG_NO_IDNA */
 
-#endif
+#पूर्ण_अगर
 
 /*
  * Hey, Emacs, please set the following:

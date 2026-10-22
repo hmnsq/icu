@@ -15,16 +15,16 @@
 *
 */
 
-#ifndef UBIDITRANSFORM_H
-#define UBIDITRANSFORM_H
+#अगर_अघोषित UBIDITRANSFORM_H
+#घोषणा UBIDITRANSFORM_H
 
-#include "unicode/utypes.h"
-#include "unicode/ubidi.h"
-#include "unicode/uchar.h"
+#समावेश "unicode/utypes.h"
+#समावेश "unicode/ubidi.h"
+#समावेश "unicode/uchar.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#endif   // U_SHOW_CPLUSPLUS_API
+#अगर U_SHOW_CPLUSPLUS_API
+#समावेश "unicode/localpointer.h"
+#पूर्ण_अगर   // U_SHOW_CPLUSPLUS_API
 
 /**
  * \file
@@ -68,7 +68,7 @@
  * @see UBIDI_REORDER_RUNS_ONLY
  * @stable ICU 58
  */
-typedef enum {
+प्रकार क्रमागत {
     /** 0: Constant indicating a logical order.
       * This is the default for input text.
       * @stable ICU 58
@@ -91,7 +91,7 @@ typedef enum {
  * @see ubidi_writeReverse
  * @stable ICU 58
  */
-typedef enum {
+प्रकार क्रमागत {
     /** 0: Constant indicating that character mirroring should not be
       * performed.
       * This is the default.
@@ -112,7 +112,7 @@ typedef enum {
  * information used by the layout transformation engine.
  * @stable ICU 58
  */
-typedef struct UBiDiTransform UBiDiTransform;
+प्रकार काष्ठा UBiDiTransform UBiDiTransform;
 
 /**
  * Performs transformation of text from the bidi layout defined by the input
@@ -250,8 +250,8 @@ typedef struct UBiDiTransform UBiDiTransform;
  */
 U_CAPI uint32_t U_EXPORT2
 ubiditransform_transform(UBiDiTransform *pBiDiTransform,
-            const UChar *src, int32_t srcLength,
-            UChar *dest, int32_t destSize,
+            स्थिर UChar *src, int32_t src_लंबाई,
+            UChar *dest, int32_t dest_आकार,
             UBiDiLevel inParaLevel, UBiDiOrder inOrder,
             UBiDiLevel outParaLevel, UBiDiOrder outOrder,
             UBiDiMirroring doMirroring, uint32_t shapingOptions,
@@ -301,10 +301,10 @@ ubiditransform_open(UErrorCode *pErrorCode);
  * Deallocates the given <code>UBiDiTransform</code> object.
  * @stable ICU 58
  */
-U_CAPI void U_EXPORT2
+U_CAPI व्योम U_EXPORT2
 ubiditransform_close(UBiDiTransform *pBidiTransform);
 
-#if U_SHOW_CPLUSPLUS_API
+#अगर U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -321,6 +321,6 @@ U_DEFINE_LOCAL_OPEN_POINTER(LocalUBiDiTransformPointer, UBiDiTransform, ubiditra
 
 U_NAMESPACE_END
 
-#endif
+#पूर्ण_अगर
 
-#endif
+#पूर्ण_अगर

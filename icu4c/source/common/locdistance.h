@@ -4,48 +4,48 @@
 // locdistance.h
 // created: 2019may08 Markus W. Scherer
 
-#ifndef __LOCDISTANCE_H__
-#define __LOCDISTANCE_H__
+#अगर_अघोषित __LOCDISTANCE_H__
+#घोषणा __LOCDISTANCE_H__
 
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/localematcher.h"
-#include "unicode/locid.h"
-#include "unicode/uobject.h"
-#include "lsr.h"
+#समावेश "unicode/utypes.h"
+#समावेश "unicode/bytestrie.h"
+#समावेश "unicode/localematcher.h"
+#समावेश "unicode/locid.h"
+#समावेश "unicode/uobject.h"
+#समावेश "lsr.h"
 
 U_NAMESPACE_BEGIN
 
-struct LocaleDistanceData;
+काष्ठा Locale_Distance_तथ्य;
 
 /**
  * Offline-built data for LocaleMatcher.
  * Mostly but not only the data for mapping locales to their maximized forms.
  */
-class LocaleDistance final : public UMemory {
-public:
-    static const LocaleDistance *getSingleton(UErrorCode &errorCode);
+class LocaleDistance final : खुला UMemory {
+खुला:
+    अटल स्थिर LocaleDistance *getSingleton(UErrorCode &errorCode);
 
-    static int32_t shiftDistance(int32_t distance) {
-        return distance << DISTANCE_SHIFT;
+    अटल int32_t shiftDistance(int32_t distance) {
+        वापस distance << DISTANCE_SHIFT;
     }
 
-    static int32_t getShiftedDistance(int32_t indexAndDistance) {
-        return indexAndDistance & DISTANCE_MASK;
+    अटल int32_t getShiftedDistance(int32_t सूचकांक_And_Distance) {
+        वापस सूचकांक_And_Distance & DISTANCE_MASK;
     }
 
-    static double getDistanceDouble(int32_t indexAndDistance) {
-        double shiftedDistance = getShiftedDistance(indexAndDistance);
-        return shiftedDistance / (1 << DISTANCE_SHIFT);
+    अटल द्विगुन getDistanceDouble(int32_t सूचकांक_And_Distance) {
+        द्विगुन shiftedDistance = getShiftedDistance(सूचकांक_And_Distance);
+        वापस shiftedDistance / (1 << DISTANCE_SHIFT);
     }
 
-    static int32_t getDistanceFloor(int32_t indexAndDistance) {
-        return (indexAndDistance & DISTANCE_MASK) >> DISTANCE_SHIFT;
+    अटल int32_t getDistanceFloor(int32_t सूचकांक_And_Distance) {
+        वापस (सूचकांक_And_Distance & DISTANCE_MASK) >> DISTANCE_SHIFT;
     }
 
-    static int32_t getIndex(int32_t indexAndDistance) {
+    अटल int32_t get_सूचकांक(int32_t सूचकांक_And_Distance) {
         // assert indexAndDistance >= 0;
-        return indexAndDistance >> INDEX_SHIFT;
+        वापस सूचकांक_And_Distance >> सूचकांक_SHIFT;
     }
 
     /**
@@ -56,70 +56,70 @@ public:
      * (negative if none has a distance below the threshold),
      * and its distance (0..ABOVE_THRESHOLD) in the low bits.
      */
-    int32_t getBestIndexAndDistance(const LSR &desired,
-                                    const LSR **supportedLSRs, int32_t supportedLSRsLength,
+    int32_t get_Best_सूचकांक_And_Distance(स्थिर LSR &desired,
+                                    स्थिर LSR **supportedLSRs, int32_t supported_LSRs_लंबाई,
                                     int32_t shiftedThreshold,
                                     ULocMatchFavorSubtag favorSubtag,
-                                    ULocMatchDirection direction) const;
+                                    ULocMatchDirection direction) स्थिर;
 
-    bool isParadigmLSR(const LSR &lsr) const;
+    bool isParadigmLSR(स्थिर LSR &lsr) स्थिर;
 
-    int32_t getDefaultScriptDistance() const {
-        return defaultScriptDistance;
+    int32_t getDefaultScriptDistance() स्थिर {
+        वापस defaultScriptDistance;
     }
 
-    int32_t getDefaultDemotionPerDesiredLocale() const {
-        return defaultDemotionPerDesiredLocale;
+    int32_t getDefaultDemotionPerDesiredLocale() स्थिर {
+        वापस defaultDemotionPerDesiredLocale;
     }
 
-private:
+निजी:
     // The distance is shifted left to gain some fraction bits.
-    static constexpr int32_t DISTANCE_SHIFT = 3;
-    static constexpr int32_t DISTANCE_FRACTION_MASK = 7;
+    अटल constexpr int32_t DISTANCE_SHIFT = 3;
+    अटल constexpr int32_t DISTANCE_FRACTION_MASK = 7;
     // 7 bits for 0..100
-    static constexpr int32_t DISTANCE_INT_SHIFT = 7;
-    static constexpr int32_t INDEX_SHIFT = DISTANCE_INT_SHIFT + DISTANCE_SHIFT;
-    static constexpr int32_t DISTANCE_MASK = 0x3ff;
+    अटल constexpr int32_t DISTANCE_INT_SHIFT = 7;
+    अटल constexpr int32_t सूचकांक_SHIFT = DISTANCE_INT_SHIFT + DISTANCE_SHIFT;
+    अटल constexpr int32_t DISTANCE_MASK = 0x3ff;
     // tic constexpr int32_t MAX_INDEX = 0x1fffff;  // avoids sign bit
-    static constexpr int32_t INDEX_NEG_1 = 0xfffffc00;
+    अटल constexpr int32_t सूचकांक_NEG_1 = 0xfffffc00;
 
-    LocaleDistance(const LocaleDistanceData &data, const LikelySubtags &likely);
-    LocaleDistance(const LocaleDistance &other) = delete;
-    LocaleDistance &operator=(const LocaleDistance &other) = delete;
+    LocaleDistance(स्थिर Locale_Distance_तथ्य &तथ्य, स्थिर LikelySubtags &likely);
+    LocaleDistance(स्थिर LocaleDistance &other) = delete;
+    LocaleDistance &चालक=(स्थिर LocaleDistance &other) = delete;
 
-    static void initLocaleDistance(UErrorCode &errorCode);
+    अटल व्योम initLocaleDistance(UErrorCode &errorCode);
 
-    bool isMatch(const LSR &desired, const LSR &supported,
-                 int32_t shiftedThreshold, ULocMatchFavorSubtag favorSubtag) const {
-        const LSR *pSupp = &supported;
-        return getBestIndexAndDistance(
+    bool isMatch(स्थिर LSR &desired, स्थिर LSR &supported,
+                 int32_t shiftedThreshold, ULocMatchFavorSubtag favorSubtag) स्थिर {
+        स्थिर LSR *pSupp = &supported;
+        वापस get_Best_सूचकांक_And_Distance(
             desired, &pSupp, 1,
             shiftedThreshold, favorSubtag, ULOCMATCH_DIRECTION_WITH_ONE_WAY) >= 0;
     }
 
-    static int32_t getDesSuppScriptDistance(BytesTrie &iter, uint64_t startState,
-                                            const char *desired, const char *supported);
+    अटल int32_t getDesSuppScriptDistance(BytesTrie &iter, uint64_t startState,
+                                            स्थिर अक्षर *desired, स्थिर अक्षर *supported);
 
-    static int32_t getRegionPartitionsDistance(
+    अटल int32_t getRegionPartitionsDistance(
         BytesTrie &iter, uint64_t startState,
-        const char *desiredPartitions, const char *supportedPartitions,
+        स्थिर अक्षर *desiredPartitions, स्थिर अक्षर *supportedPartitions,
         int32_t threshold);
 
-    static int32_t getFallbackRegionDistance(BytesTrie &iter, uint64_t startState);
+    अटल int32_t getFallbackRegionDistance(BytesTrie &iter, uint64_t startState);
 
-    static int32_t trieNext(BytesTrie &iter, const char *s, bool wantValue);
+    अटल int32_t trie_अग्र(BytesTrie &iter, स्थिर अक्षर *s, bool want_मूल्य);
 
-    const char *partitionsForRegion(const LSR &lsr) const {
+    स्थिर अक्षर *partitionsForRegion(स्थिर LSR &lsr) स्थिर {
         // ill-formed region -> one non-matching string
-        int32_t pIndex = regionToPartitionsIndex[lsr.regionIndex];
-        return partitionArrays[pIndex];
+        int32_t p_सूचकांक = region_To_Partitions_सूचकांक[lsr.region_सूचकांक];
+        वापस partitionArrays[p_सूचकांक];
     }
 
-    int32_t getDefaultRegionDistance() const {
-        return defaultRegionDistance;
+    int32_t getDefaultRegionDistance() स्थिर {
+        वापस defaultRegionDistance;
     }
 
-    const LikelySubtags &likelySubtags;
+    स्थिर LikelySubtags &likelySubtags;
 
     // The trie maps each dlang+slang+dscript+sscript+dregion+sregion
     // (encoded in ASCII with bit 7 set on the last character of each subtag) to a distance.
@@ -130,14 +130,14 @@ private:
     /**
      * Maps each region to zero or more single-character partitions.
      */
-    const uint8_t *regionToPartitionsIndex;
-    const char **partitionArrays;
+    स्थिर uint8_t *region_To_Partitions_सूचकांक;
+    स्थिर अक्षर **partitionArrays;
 
     /**
      * Used to get the paradigm region for a cluster, if there is one.
      */
-    const LSR *paradigmLSRs;
-    int32_t paradigmLSRsLength;
+    स्थिर LSR *paradigmLSRs;
+    int32_t paradigm_LSRs_लंबाई;
 
     int32_t defaultLanguageDistance;
     int32_t defaultScriptDistance;
@@ -148,4 +148,4 @@ private:
 
 U_NAMESPACE_END
 
-#endif  // __LOCDISTANCE_H__
+#पूर्ण_अगर  // __LOCDISTANCE_H__

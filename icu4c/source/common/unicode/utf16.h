@@ -31,14 +31,14 @@
  * bodies and all macro statements should be terminated with semicolon.
  */
 
-#ifndef __UTF16_H__
-#define __UTF16_H__
+#अगर_अघोषित __UTF16_H__
+#घोषणा __UTF16_H__
 
-#include <stdbool.h>
-#include "unicode/umachine.h"
-#ifndef __UTF_H__
+#समावेश <stdbool.h>
+#समावेश "unicode/umachine.h"
+#अगर_अघोषित __UTF_H__
 #   include "unicode/utf.h"
-#endif
+#पूर्ण_अगर
 
 /* single-code point definitions -------------------------------------------- */
 
@@ -48,7 +48,7 @@
  * @return true or false
  * @stable ICU 2.4
  */
-#define U16_IS_SINGLE(c) !U_IS_SURROGATE(c)
+#घोषणा U16_IS_SINGLE(c) !U_IS_SURROGATE(c)
 
 /**
  * Is this code unit a lead surrogate (U+d800..U+dbff)?
@@ -56,7 +56,7 @@
  * @return true or false
  * @stable ICU 2.4
  */
-#define U16_IS_LEAD(c) (((c)&0xfffffc00)==0xd800)
+#घोषणा U16_IS_LEAD(c) (((c)&0xfffffc00)==0xd800)
 
 /**
  * Is this code unit a trail surrogate (U+dc00..U+dfff)?
@@ -64,7 +64,7 @@
  * @return true or false
  * @stable ICU 2.4
  */
-#define U16_IS_TRAIL(c) (((c)&0xfffffc00)==0xdc00)
+#घोषणा U16_IS_TRAIL(c) (((c)&0xfffffc00)==0xdc00)
 
 /**
  * Is this code unit a surrogate (U+d800..U+dfff)?
@@ -72,7 +72,7 @@
  * @return true or false
  * @stable ICU 2.4
  */
-#define U16_IS_SURROGATE(c) U_IS_SURROGATE(c)
+#घोषणा U16_IS_SURROGATE(c) U_IS_SURROGATE(c)
 
 /**
  * Assuming c is a surrogate code point (U16_IS_SURROGATE(c)),
@@ -81,7 +81,7 @@
  * @return true or false
  * @stable ICU 2.4
  */
-#define U16_IS_SURROGATE_LEAD(c) (((c)&0x400)==0)
+#घोषणा U16_IS_SURROGATE_LEAD(c) (((c)&0x400)==0)
 
 /**
  * Assuming c is a surrogate code point (U16_IS_SURROGATE(c)),
@@ -90,13 +90,13 @@
  * @return true or false
  * @stable ICU 4.2
  */
-#define U16_IS_SURROGATE_TRAIL(c) (((c)&0x400)!=0)
+#घोषणा U16_IS_SURROGATE_TRAIL(c) (((c)&0x400)!=0)
 
 /**
  * Helper constant for U16_GET_SUPPLEMENTARY.
  * @internal
  */
-#define U16_SURROGATE_OFFSET ((0xd800<<10UL)+0xdc00-0x10000)
+#घोषणा U16_SURROGATE_OFFSET ((0xd800<<10UL)+0xdc00-0x10000)
 
 /**
  * Get a supplementary code point value (U+10000..U+10ffff)
@@ -109,7 +109,7 @@
  * @return supplementary code point (U+10000..U+10ffff)
  * @stable ICU 2.4
  */
-#define U16_GET_SUPPLEMENTARY(lead, trail) \
+#घोषणा U16_GET_SUPPLEMENTARY(lead, trail) \
     (((UChar32)(lead)<<10UL)+(UChar32)(trail)-U16_SURROGATE_OFFSET)
 
 
@@ -120,7 +120,7 @@
  * @return lead surrogate (U+d800..U+dbff) for supplementary
  * @stable ICU 2.4
  */
-#define U16_LEAD(supplementary) (UChar)(((supplementary)>>10)+0xd7c0)
+#घोषणा U16_LEAD(supplementary) (UChar)(((supplementary)>>10)+0xd7c0)
 
 /**
  * Get the trail surrogate (0xdc00..0xdfff) for a
@@ -129,7 +129,7 @@
  * @return trail surrogate (U+dc00..U+dfff) for supplementary
  * @stable ICU 2.4
  */
-#define U16_TRAIL(supplementary) (UChar)(((supplementary)&0x3ff)|0xdc00)
+#घोषणा U16_TRAIL(supplementary) (UChar)(((supplementary)&0x3ff)|0xdc00)
 
 /**
  * How many 16-bit code units are used to encode this Unicode code point? (1 or 2)
@@ -138,14 +138,14 @@
  * @return 1 or 2
  * @stable ICU 2.4
  */
-#define U16_LENGTH(c) ((uint32_t)(c)<=0xffff ? 1 : 2)
+#घोषणा U16_लंबाई(c) ((uint32_t)(c)<=0xffff ? 1 : 2)
 
 /**
  * The maximum number of 16-bit code units per Unicode code point (U+0000..U+10ffff).
  * @return 2
  * @stable ICU 2.4
  */
-#define U16_MAX_LENGTH 2
+#घोषणा U16_MAX_लंबाई 2
 
 /**
  * Get a code point from a string at a random-access offset,
@@ -164,12 +164,12 @@
  * @see U16_GET
  * @stable ICU 2.4
  */
-#define U16_GET_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
+#घोषणा U16_GET_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[i]; \
-    if(U16_IS_SURROGATE(c)) { \
-        if(U16_IS_SURROGATE_LEAD(c)) { \
+    अगर(U16_IS_SURROGATE(c)) { \
+        अगर(U16_IS_SURROGATE_LEAD(c)) { \
             (c)=U16_GET_SUPPLEMENTARY((c), (s)[(i)+1]); \
-        } else { \
+        } अन्यथा { \
             (c)=U16_GET_SUPPLEMENTARY((s)[(i)-1], (c)); \
         } \
     } \
@@ -198,16 +198,16 @@
  * @see U16_GET_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_GET(s, start, i, length, c) UPRV_BLOCK_MACRO_BEGIN { \
+#घोषणा U16_GET(s, start, i, लंबाई, c) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[i]; \
-    if(U16_IS_SURROGATE(c)) { \
+    अगर(U16_IS_SURROGATE(c)) { \
         uint16_t __c2; \
-        if(U16_IS_SURROGATE_LEAD(c)) { \
-            if((i)+1!=(length) && U16_IS_TRAIL(__c2=(s)[(i)+1])) { \
+        अगर(U16_IS_SURROGATE_LEAD(c)) { \
+            अगर((i)+1!=(लंबाई) && U16_IS_TRAIL(__c2=(s)[(i)+1])) { \
                 (c)=U16_GET_SUPPLEMENTARY((c), __c2); \
             } \
-        } else { \
-            if((i)>(start) && U16_IS_LEAD(__c2=(s)[(i)-1])) { \
+        } अन्यथा { \
+            अगर((i)>(start) && U16_IS_LEAD(__c2=(s)[(i)-1])) { \
                 (c)=U16_GET_SUPPLEMENTARY(__c2, (c)); \
             } \
         } \
@@ -237,20 +237,20 @@
  * @see U16_GET_UNSAFE
  * @stable ICU 60
  */
-#define U16_GET_OR_FFFD(s, start, i, length, c) UPRV_BLOCK_MACRO_BEGIN { \
+#घोषणा U16_GET_OR_FFFD(s, start, i, लंबाई, c) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[i]; \
-    if(U16_IS_SURROGATE(c)) { \
+    अगर(U16_IS_SURROGATE(c)) { \
         uint16_t __c2; \
-        if(U16_IS_SURROGATE_LEAD(c)) { \
-            if((i)+1!=(length) && U16_IS_TRAIL(__c2=(s)[(i)+1])) { \
+        अगर(U16_IS_SURROGATE_LEAD(c)) { \
+            अगर((i)+1!=(लंबाई) && U16_IS_TRAIL(__c2=(s)[(i)+1])) { \
                 (c)=U16_GET_SUPPLEMENTARY((c), __c2); \
-            } else { \
+            } अन्यथा { \
                 (c)=0xfffd; \
             } \
-        } else { \
-            if((i)>(start) && U16_IS_LEAD(__c2=(s)[(i)-1])) { \
+        } अन्यथा { \
+            अगर((i)>(start) && U16_IS_LEAD(__c2=(s)[(i)-1])) { \
                 (c)=U16_GET_SUPPLEMENTARY(__c2, (c)); \
-            } else { \
+            } अन्यथा { \
                 (c)=0xfffd; \
             } \
         } \
@@ -278,9 +278,9 @@
  * @see U16_NEXT
  * @stable ICU 2.4
  */
-#define U16_NEXT_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
+#घोषणा U16_अग्र_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[(i)++]; \
-    if(U16_IS_LEAD(c)) { \
+    अगर(U16_IS_LEAD(c)) { \
         (c)=U16_GET_SUPPLEMENTARY((c), (s)[(i)++]); \
     } \
 } UPRV_BLOCK_MACRO_END
@@ -306,11 +306,11 @@
  * @see U16_NEXT_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_NEXT(s, i, length, c) UPRV_BLOCK_MACRO_BEGIN { \
+#घोषणा U16_अग्र(s, i, लंबाई, c) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[(i)++]; \
-    if(U16_IS_LEAD(c)) { \
+    अगर(U16_IS_LEAD(c)) { \
         uint16_t __c2; \
-        if((i)!=(length) && U16_IS_TRAIL(__c2=(s)[(i)])) { \
+        अगर((i)!=(लंबाई) && U16_IS_TRAIL(__c2=(s)[(i)])) { \
             ++(i); \
             (c)=U16_GET_SUPPLEMENTARY((c), __c2); \
         } \
@@ -338,14 +338,14 @@
  * @see U16_NEXT_UNSAFE
  * @stable ICU 60
  */
-#define U16_NEXT_OR_FFFD(s, i, length, c) UPRV_BLOCK_MACRO_BEGIN { \
+#घोषणा U16_अग्र_OR_FFFD(s, i, लंबाई, c) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[(i)++]; \
-    if(U16_IS_SURROGATE(c)) { \
+    अगर(U16_IS_SURROGATE(c)) { \
         uint16_t __c2; \
-        if(U16_IS_SURROGATE_LEAD(c) && (i)!=(length) && U16_IS_TRAIL(__c2=(s)[(i)])) { \
+        अगर(U16_IS_SURROGATE_LEAD(c) && (i)!=(लंबाई) && U16_IS_TRAIL(__c2=(s)[(i)])) { \
             ++(i); \
             (c)=U16_GET_SUPPLEMENTARY((c), __c2); \
-        } else { \
+        } अन्यथा { \
             (c)=0xfffd; \
         } \
     } \
@@ -364,10 +364,10 @@
  * @see U16_APPEND
  * @stable ICU 2.4
  */
-#define U16_APPEND_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
-    if((uint32_t)(c)<=0xffff) { \
+#घोषणा U16_APPEND_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
+    अगर((uint32_t)(c)<=0xffff) { \
         (s)[(i)++]=(uint16_t)(c); \
-    } else { \
+    } अन्यथा { \
         (s)[(i)++]=(uint16_t)(((c)>>10)+0xd7c0); \
         (s)[(i)++]=(uint16_t)(((c)&0x3ff)|0xdc00); \
     } \
@@ -390,13 +390,13 @@
  * @see U16_APPEND_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_APPEND(s, i, capacity, c, isError) UPRV_BLOCK_MACRO_BEGIN { \
-    if((uint32_t)(c)<=0xffff) { \
+#घोषणा U16_APPEND(s, i, capacity, c, isError) UPRV_BLOCK_MACRO_BEGIN { \
+    अगर((uint32_t)(c)<=0xffff) { \
         (s)[(i)++]=(uint16_t)(c); \
-    } else if((uint32_t)(c)<=0x10ffff && (i)+1<(capacity)) { \
+    } अन्यथा अगर((uint32_t)(c)<=0x10ffff && (i)+1<(capacity)) { \
         (s)[(i)++]=(uint16_t)(((c)>>10)+0xd7c0); \
         (s)[(i)++]=(uint16_t)(((c)&0x3ff)|0xdc00); \
-    } else /* c>0x10ffff or not enough space */ { \
+    } अन्यथा /* c>0x10ffff or not enough space */ { \
         (isError)=true; \
     } \
 } UPRV_BLOCK_MACRO_END
@@ -411,8 +411,8 @@
  * @see U16_FWD_1
  * @stable ICU 2.4
  */
-#define U16_FWD_1_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    if(U16_IS_LEAD((s)[(i)++])) { \
+#घोषणा U16_FWD_1_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
+    अगर(U16_IS_LEAD((s)[(i)++])) { \
         ++(i); \
     } \
 } UPRV_BLOCK_MACRO_END
@@ -430,8 +430,8 @@
  * @see U16_FWD_1_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_FWD_1(s, i, length) UPRV_BLOCK_MACRO_BEGIN { \
-    if(U16_IS_LEAD((s)[(i)++]) && (i)!=(length) && U16_IS_TRAIL((s)[i])) { \
+#घोषणा U16_FWD_1(s, i, लंबाई) UPRV_BLOCK_MACRO_BEGIN { \
+    अगर(U16_IS_LEAD((s)[(i)++]) && (i)!=(लंबाई) && U16_IS_TRAIL((s)[i])) { \
         ++(i); \
     } \
 } UPRV_BLOCK_MACRO_END
@@ -448,9 +448,9 @@
  * @see U16_FWD_N
  * @stable ICU 2.4
  */
-#define U16_FWD_N_UNSAFE(s, i, n) UPRV_BLOCK_MACRO_BEGIN { \
+#घोषणा U16_FWD_N_UNSAFE(s, i, n) UPRV_BLOCK_MACRO_BEGIN { \
     int32_t __N=(n); \
-    while(__N>0) { \
+    जबतक(__N>0) { \
         U16_FWD_1_UNSAFE(s, i); \
         --__N; \
     } \
@@ -471,10 +471,10 @@
  * @see U16_FWD_N_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_FWD_N(s, i, length, n) UPRV_BLOCK_MACRO_BEGIN { \
+#घोषणा U16_FWD_N(s, i, लंबाई, n) UPRV_BLOCK_MACRO_BEGIN { \
     int32_t __N=(n); \
-    while(__N>0 && ((i)<(length) || ((length)<0 && (s)[i]!=0))) { \
-        U16_FWD_1(s, i, length); \
+    जबतक(__N>0 && ((i)<(लंबाई) || ((लंबाई)<0 && (s)[i]!=0))) { \
+        U16_FWD_1(s, i, लंबाई); \
         --__N; \
     } \
 } UPRV_BLOCK_MACRO_END
@@ -492,8 +492,8 @@
  * @see U16_SET_CP_START
  * @stable ICU 2.4
  */
-#define U16_SET_CP_START_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    if(U16_IS_TRAIL((s)[i])) { \
+#घोषणा U16_SET_CP_START_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
+    अगर(U16_IS_TRAIL((s)[i])) { \
         --(i); \
     } \
 } UPRV_BLOCK_MACRO_END
@@ -512,8 +512,8 @@
  * @see U16_SET_CP_START_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_SET_CP_START(s, start, i) UPRV_BLOCK_MACRO_BEGIN { \
-    if(U16_IS_TRAIL((s)[i]) && (i)>(start) && U16_IS_LEAD((s)[(i)-1])) { \
+#घोषणा U16_SET_CP_START(s, start, i) UPRV_BLOCK_MACRO_BEGIN { \
+    अगर(U16_IS_TRAIL((s)[i]) && (i)>(start) && U16_IS_LEAD((s)[(i)-1])) { \
         --(i); \
     } \
 } UPRV_BLOCK_MACRO_END
@@ -540,9 +540,9 @@
  * @see U16_PREV
  * @stable ICU 2.4
  */
-#define U16_PREV_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
+#घोषणा U16_पूर्व_UNSAFE(s, i, c) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[--(i)]; \
-    if(U16_IS_TRAIL(c)) { \
+    अगर(U16_IS_TRAIL(c)) { \
         (c)=U16_GET_SUPPLEMENTARY((s)[--(i)], (c)); \
     } \
 } UPRV_BLOCK_MACRO_END
@@ -567,11 +567,11 @@
  * @see U16_PREV_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_PREV(s, start, i, c) UPRV_BLOCK_MACRO_BEGIN { \
+#घोषणा U16_पूर्व(s, start, i, c) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[--(i)]; \
-    if(U16_IS_TRAIL(c)) { \
+    अगर(U16_IS_TRAIL(c)) { \
         uint16_t __c2; \
-        if((i)>(start) && U16_IS_LEAD(__c2=(s)[(i)-1])) { \
+        अगर((i)>(start) && U16_IS_LEAD(__c2=(s)[(i)-1])) { \
             --(i); \
             (c)=U16_GET_SUPPLEMENTARY(__c2, (c)); \
         } \
@@ -598,14 +598,14 @@
  * @see U16_PREV_UNSAFE
  * @stable ICU 60
  */
-#define U16_PREV_OR_FFFD(s, start, i, c) UPRV_BLOCK_MACRO_BEGIN { \
+#घोषणा U16_पूर्व_OR_FFFD(s, start, i, c) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=(s)[--(i)]; \
-    if(U16_IS_SURROGATE(c)) { \
+    अगर(U16_IS_SURROGATE(c)) { \
         uint16_t __c2; \
-        if(U16_IS_SURROGATE_TRAIL(c) && (i)>(start) && U16_IS_LEAD(__c2=(s)[(i)-1])) { \
+        अगर(U16_IS_SURROGATE_TRAIL(c) && (i)>(start) && U16_IS_LEAD(__c2=(s)[(i)-1])) { \
             --(i); \
             (c)=U16_GET_SUPPLEMENTARY(__c2, (c)); \
-        } else { \
+        } अन्यथा { \
             (c)=0xfffd; \
         } \
     } \
@@ -622,8 +622,8 @@
  * @see U16_BACK_1
  * @stable ICU 2.4
  */
-#define U16_BACK_1_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    if(U16_IS_TRAIL((s)[--(i)])) { \
+#घोषणा U16_BACK_1_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
+    अगर(U16_IS_TRAIL((s)[--(i)])) { \
         --(i); \
     } \
 } UPRV_BLOCK_MACRO_END
@@ -640,8 +640,8 @@
  * @see U16_BACK_1_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_BACK_1(s, start, i) UPRV_BLOCK_MACRO_BEGIN { \
-    if(U16_IS_TRAIL((s)[--(i)]) && (i)>(start) && U16_IS_LEAD((s)[(i)-1])) { \
+#घोषणा U16_BACK_1(s, start, i) UPRV_BLOCK_MACRO_BEGIN { \
+    अगर(U16_IS_TRAIL((s)[--(i)]) && (i)>(start) && U16_IS_LEAD((s)[(i)-1])) { \
         --(i); \
     } \
 } UPRV_BLOCK_MACRO_END
@@ -659,9 +659,9 @@
  * @see U16_BACK_N
  * @stable ICU 2.4
  */
-#define U16_BACK_N_UNSAFE(s, i, n) UPRV_BLOCK_MACRO_BEGIN { \
+#घोषणा U16_BACK_N_UNSAFE(s, i, n) UPRV_BLOCK_MACRO_BEGIN { \
     int32_t __N=(n); \
-    while(__N>0) { \
+    जबतक(__N>0) { \
         U16_BACK_1_UNSAFE(s, i); \
         --__N; \
     } \
@@ -681,9 +681,9 @@
  * @see U16_BACK_N_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_BACK_N(s, start, i, n) UPRV_BLOCK_MACRO_BEGIN { \
+#घोषणा U16_BACK_N(s, start, i, n) UPRV_BLOCK_MACRO_BEGIN { \
     int32_t __N=(n); \
-    while(__N>0 && (i)>(start)) { \
+    जबतक(__N>0 && (i)>(start)) { \
         U16_BACK_1(s, start, i); \
         --__N; \
     } \
@@ -702,8 +702,8 @@
  * @see U16_SET_CP_LIMIT
  * @stable ICU 2.4
  */
-#define U16_SET_CP_LIMIT_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
-    if(U16_IS_LEAD((s)[(i)-1])) { \
+#घोषणा U16_SET_CP_LIMIT_UNSAFE(s, i) UPRV_BLOCK_MACRO_BEGIN { \
+    अगर(U16_IS_LEAD((s)[(i)-1])) { \
         ++(i); \
     } \
 } UPRV_BLOCK_MACRO_END
@@ -725,10 +725,10 @@
  * @see U16_SET_CP_LIMIT_UNSAFE
  * @stable ICU 2.4
  */
-#define U16_SET_CP_LIMIT(s, start, i, length) UPRV_BLOCK_MACRO_BEGIN { \
-    if((start)<(i) && ((i)<(length) || (length)<0) && U16_IS_LEAD((s)[(i)-1]) && U16_IS_TRAIL((s)[i])) { \
+#घोषणा U16_SET_CP_LIMIT(s, start, i, लंबाई) UPRV_BLOCK_MACRO_BEGIN { \
+    अगर((start)<(i) && ((i)<(लंबाई) || (लंबाई)<0) && U16_IS_LEAD((s)[(i)-1]) && U16_IS_TRAIL((s)[i])) { \
         ++(i); \
     } \
 } UPRV_BLOCK_MACRO_END
 
-#endif
+#पूर्ण_अगर

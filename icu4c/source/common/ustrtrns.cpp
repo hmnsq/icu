@@ -26,127 +26,127 @@
  */
 
 
-#include "unicode/putil.h"
-#include "unicode/ustring.h"
-#include "unicode/utf.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "ustr_imp.h"
-#include "uassert.h"
+#समावेश "unicode/putil.h"
+#समावेश "unicode/ustring.h"
+#समावेश "unicode/utf.h"
+#समावेश "unicode/utf8.h"
+#समावेश "unicode/utf16.h"
+#समावेश "cstring.h"
+#समावेश "cmemory.h"
+#समावेश "ustr_imp.h"
+#समावेश "uassert.h"
 
 U_CAPI char16_t* U_EXPORT2
 u_strFromUTF32WithSub(char16_t* dest U_LIFETIME_BOUND,
                       int32_t destCapacity,
-                      int32_t* pDestLength,
-                      const UChar32* src,
-                      int32_t srcLength,
+                      int32_t* p_Dest_लंबाई,
+                      स्थिर UChar32* src,
+                      int32_t src_लंबाई,
                       UChar32 subchar,
-                      int32_t* pNumSubstitutions,
+                      int32_t* p_अंक_Substitutions,
                       UErrorCode* pErrorCode) {
-    const UChar32 *srcLimit;
+    स्थिर UChar32 *srcLimit;
     UChar32 ch;
     char16_t *destLimit;
     char16_t *pDest;
-    int32_t reqLength;
-    int32_t numSubstitutions;
+    int32_t req_लंबाई;
+    int32_t अंक_Substitutions;
 
     /* args check */
-    if(U_FAILURE(*pErrorCode)){
-        return nullptr;
+    अगर(U_FAILURE(*pErrorCode)){
+        वापस nullptr;
     }
-    if( (src==nullptr && srcLength!=0) || srcLength < -1 ||
+    अगर( (src==nullptr && src_लंबाई!=0) || src_लंबाई < -1 ||
         (destCapacity<0) || (dest == nullptr && destCapacity > 0) ||
         subchar > 0x10ffff || U_IS_SURROGATE(subchar)
     ) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        वापस nullptr;
     }
 
-    if(pNumSubstitutions != nullptr) {
-        *pNumSubstitutions = 0;
+    अगर(p_अंक_Substitutions != nullptr) {
+        *p_अंक_Substitutions = 0;
     }
 
     pDest = dest;
     destLimit = (dest!=nullptr)?(dest + destCapacity):nullptr;
-    reqLength = 0;
-    numSubstitutions = 0;
+    req_लंबाई = 0;
+    अंक_Substitutions = 0;
 
-    if(srcLength < 0) {
+    अगर(src_लंबाई < 0) {
         /* simple loop for conversion of a NUL-terminated BMP string */
-        while((ch=*src) != 0 &&
+        जबतक((ch=*src) != 0 &&
               ((uint32_t)ch < 0xd800 || (0xe000 <= ch && ch <= 0xffff))) {
             ++src;
-            if(pDest < destLimit) {
+            अगर(pDest < destLimit) {
                 *pDest++ = (char16_t)ch;
-            } else {
-                ++reqLength;
+            } अन्यथा {
+                ++req_लंबाई;
             }
         }
         srcLimit = src;
-        if(ch != 0) {
+        अगर(ch != 0) {
             /* "complicated" case, find the end of the remaining string */
-            while(*++srcLimit != 0) {}
+            जबतक(*++srcLimit != 0) {}
         }
-    } else {
-      srcLimit = (src!=nullptr)?(src + srcLength):nullptr;
+    } अन्यथा {
+      srcLimit = (src!=nullptr)?(src + src_लंबाई):nullptr;
     }
 
     /* convert with length */
-    while(src < srcLimit) {
+    जबतक(src < srcLimit) {
         ch = *src++;
-        do {
+        करो {
             /* usually "loops" once; twice only for writing subchar */
-            if((uint32_t)ch < 0xd800 || (0xe000 <= ch && ch <= 0xffff)) {
-                if(pDest < destLimit) {
+            अगर((uint32_t)ch < 0xd800 || (0xe000 <= ch && ch <= 0xffff)) {
+                अगर(pDest < destLimit) {
                     *pDest++ = (char16_t)ch;
-                } else {
-                    ++reqLength;
+                } अन्यथा {
+                    ++req_लंबाई;
                 }
-                break;
-            } else if(0x10000 <= ch && ch <= 0x10ffff) {
-                if(pDest!=nullptr && ((pDest + 2) <= destLimit)) {
+                अवरोध;
+            } अन्यथा अगर(0x10000 <= ch && ch <= 0x10ffff) {
+                अगर(pDest!=nullptr && ((pDest + 2) <= destLimit)) {
                     *pDest++ = U16_LEAD(ch);
                     *pDest++ = U16_TRAIL(ch);
-                } else {
-                    reqLength += 2;
+                } अन्यथा {
+                    req_लंबाई += 2;
                 }
-                break;
-            } else if((ch = subchar) < 0) {
+                अवरोध;
+            } अन्यथा अगर((ch = subchar) < 0) {
                 /* surrogate code point, or not a Unicode code point at all */
                 *pErrorCode = U_INVALID_CHAR_FOUND;
-                return nullptr;
-            } else {
-                ++numSubstitutions;
+                वापस nullptr;
+            } अन्यथा {
+                ++अंक_Substitutions;
             }
-        } while(true);
+        } जबतक(true);
     }
 
-    reqLength += (int32_t)(pDest - dest);
-    if(pDestLength) {
-        *pDestLength = reqLength;
+    req_लंबाई += (int32_t)(pDest - dest);
+    अगर(p_Dest_लंबाई) {
+        *p_Dest_लंबाई = req_लंबाई;
     }
-    if(pNumSubstitutions != nullptr) {
-        *pNumSubstitutions = numSubstitutions;
+    अगर(p_अंक_Substitutions != nullptr) {
+        *p_अंक_Substitutions = अंक_Substitutions;
     }
 
     /* Terminate the buffer */
-    u_terminateUChars(dest, destCapacity, reqLength, pErrorCode);
+    u_terminateUChars(dest, destCapacity, req_लंबाई, pErrorCode);
     
-    return dest;
+    वापस dest;
 }
 
 U_CAPI char16_t* U_EXPORT2
 u_strFromUTF32(char16_t* dest U_LIFETIME_BOUND,
                int32_t destCapacity,
-               int32_t* pDestLength,
-               const UChar32* src,
-               int32_t srcLength,
+               int32_t* p_Dest_लंबाई,
+               स्थिर UChar32* src,
+               int32_t src_लंबाई,
                UErrorCode* pErrorCode) {
-    return u_strFromUTF32WithSub(
-            dest, destCapacity, pDestLength,
-            src, srcLength,
+    वापस u_strFromUTF32WithSub(
+            dest, destCapacity, p_Dest_लंबाई,
+            src, src_लंबाई,
             U_SENTINEL, nullptr,
             pErrorCode);
 }
@@ -154,106 +154,106 @@ u_strFromUTF32(char16_t* dest U_LIFETIME_BOUND,
 U_CAPI UChar32* U_EXPORT2
 u_strToUTF32WithSub(UChar32* dest U_LIFETIME_BOUND,
                     int32_t destCapacity,
-                    int32_t* pDestLength,
-                    const char16_t* src,
-                    int32_t srcLength,
+                    int32_t* p_Dest_लंबाई,
+                    स्थिर char16_t* src,
+                    int32_t src_लंबाई,
                     UChar32 subchar,
-                    int32_t* pNumSubstitutions,
+                    int32_t* p_अंक_Substitutions,
                     UErrorCode* pErrorCode) {
-    const char16_t *srcLimit;
+    स्थिर char16_t *srcLimit;
     UChar32 ch;
     char16_t ch2;
     UChar32 *destLimit;
     UChar32 *pDest;
-    int32_t reqLength;
-    int32_t numSubstitutions;
+    int32_t req_लंबाई;
+    int32_t अंक_Substitutions;
 
     /* args check */
-    if(U_FAILURE(*pErrorCode)){
-        return nullptr;
+    अगर(U_FAILURE(*pErrorCode)){
+        वापस nullptr;
     }
-    if( (src==nullptr && srcLength!=0) || srcLength < -1 ||
+    अगर( (src==nullptr && src_लंबाई!=0) || src_लंबाई < -1 ||
         (destCapacity<0) || (dest == nullptr && destCapacity > 0) ||
         subchar > 0x10ffff || U_IS_SURROGATE(subchar)
     ) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        वापस nullptr;
     }
 
-    if(pNumSubstitutions != nullptr) {
-        *pNumSubstitutions = 0;
+    अगर(p_अंक_Substitutions != nullptr) {
+        *p_अंक_Substitutions = 0;
     }
 
     pDest = dest;
     destLimit = (dest!=nullptr)?(dest + destCapacity):nullptr;
-    reqLength = 0;
-    numSubstitutions = 0;
+    req_लंबाई = 0;
+    अंक_Substitutions = 0;
 
-    if(srcLength < 0) {
+    अगर(src_लंबाई < 0) {
         /* simple loop for conversion of a NUL-terminated BMP string */
-        while((ch=*src) != 0 && !U16_IS_SURROGATE(ch)) {
+        जबतक((ch=*src) != 0 && !U16_IS_SURROGATE(ch)) {
             ++src;
-            if(pDest < destLimit) {
+            अगर(pDest < destLimit) {
                 *pDest++ = ch;
-            } else {
-                ++reqLength;
+            } अन्यथा {
+                ++req_लंबाई;
             }
         }
         srcLimit = src;
-        if(ch != 0) {
+        अगर(ch != 0) {
             /* "complicated" case, find the end of the remaining string */
-            while(*++srcLimit != 0) {}
+            जबतक(*++srcLimit != 0) {}
         }
-    } else {
-        srcLimit = (src!=nullptr)?(src + srcLength):nullptr;
+    } अन्यथा {
+        srcLimit = (src!=nullptr)?(src + src_लंबाई):nullptr;
     }
 
     /* convert with length */
-    while(src < srcLimit) {
+    जबतक(src < srcLimit) {
         ch = *src++;
-        if(!U16_IS_SURROGATE(ch)) {
+        अगर(!U16_IS_SURROGATE(ch)) {
             /* write or count ch below */
-        } else if(U16_IS_SURROGATE_LEAD(ch) && src < srcLimit && U16_IS_TRAIL(ch2 = *src)) {
+        } अन्यथा अगर(U16_IS_SURROGATE_LEAD(ch) && src < srcLimit && U16_IS_TRAIL(ch2 = *src)) {
             ++src;
             ch = U16_GET_SUPPLEMENTARY(ch, ch2);
-        } else if((ch = subchar) < 0) {
+        } अन्यथा अगर((ch = subchar) < 0) {
             /* unpaired surrogate */
             *pErrorCode = U_INVALID_CHAR_FOUND;
-            return nullptr;
-        } else {
-            ++numSubstitutions;
+            वापस nullptr;
+        } अन्यथा {
+            ++अंक_Substitutions;
         }
-        if(pDest < destLimit) {
+        अगर(pDest < destLimit) {
             *pDest++ = ch;
-        } else {
-            ++reqLength;
+        } अन्यथा {
+            ++req_लंबाई;
         }
     }
 
-    reqLength += (int32_t)(pDest - dest);
-    if(pDestLength) {
-        *pDestLength = reqLength;
+    req_लंबाई += (int32_t)(pDest - dest);
+    अगर(p_Dest_लंबाई) {
+        *p_Dest_लंबाई = req_लंबाई;
     }
-    if(pNumSubstitutions != nullptr) {
-        *pNumSubstitutions = numSubstitutions;
+    अगर(p_अंक_Substitutions != nullptr) {
+        *p_अंक_Substitutions = अंक_Substitutions;
     }
 
     /* Terminate the buffer */
-    u_terminateUChar32s(dest, destCapacity, reqLength, pErrorCode);
+    u_terminateUChar32s(dest, destCapacity, req_लंबाई, pErrorCode);
 
-    return dest;
+    वापस dest;
 }
 
 U_CAPI UChar32* U_EXPORT2
 u_strToUTF32(UChar32* dest U_LIFETIME_BOUND,
              int32_t destCapacity,
-             int32_t* pDestLength,
-             const char16_t* src,
-             int32_t srcLength,
+             int32_t* p_Dest_लंबाई,
+             स्थिर char16_t* src,
+             int32_t src_लंबाई,
              UErrorCode* pErrorCode) {
-    return u_strToUTF32WithSub(
-            dest, destCapacity, pDestLength,
-            src, srcLength,
+    वापस u_strToUTF32WithSub(
+            dest, destCapacity, p_Dest_लंबाई,
+            src, src_लंबाई,
             U_SENTINEL, nullptr,
             pErrorCode);
 }
@@ -261,31 +261,31 @@ u_strToUTF32(UChar32* dest U_LIFETIME_BOUND,
 U_CAPI char16_t* U_EXPORT2
 u_strFromUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
                      int32_t destCapacity,
-                     int32_t* pDestLength,
-                     const char* src,
-                     int32_t srcLength,
+                     int32_t* p_Dest_लंबाई,
+                     स्थिर अक्षर* src,
+                     int32_t src_लंबाई,
                      UChar32 subchar,
-                     int32_t* pNumSubstitutions,
+                     int32_t* p_अंक_Substitutions,
                      UErrorCode* pErrorCode) {
     /* args check */
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    अगर(U_FAILURE(*pErrorCode)) {
+        वापस nullptr;
     }
-    if( (src==nullptr && srcLength!=0) || srcLength < -1 ||
+    अगर( (src==nullptr && src_लंबाई!=0) || src_लंबाई < -1 ||
         (destCapacity<0) || (dest == nullptr && destCapacity > 0) ||
         subchar > 0x10ffff || U_IS_SURROGATE(subchar)
     ) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        वापस nullptr;
     }
 
-    if(pNumSubstitutions!=nullptr) {
-        *pNumSubstitutions=0;
+    अगर(p_अंक_Substitutions!=nullptr) {
+        *p_अंक_Substitutions=0;
     }
     char16_t *pDest = dest;
     char16_t *pDestLimit = dest+destCapacity;
-    int32_t reqLength = 0;
-    int32_t numSubstitutions=0;
+    int32_t req_लंबाई = 0;
+    int32_t अंक_Substitutions=0;
 
     /*
      * Inline processing of UTF-8 byte sequences:
@@ -300,7 +300,7 @@ u_strFromUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
      * Each branch then tests for the other end of its range.
      */
 
-    if(srcLength < 0){
+    अगर(src_लंबाई < 0){
         /*
          * Transform a NUL-terminated string.
          * The code explicitly checks for NULs only in the lead byte position.
@@ -308,39 +308,39 @@ u_strFromUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
          */
         int32_t i;
         UChar32 c;
-        for(i = 0; (c = (uint8_t)src[i]) != 0 && (pDest < pDestLimit);) {
+        क्रम(i = 0; (c = (uint8_t)src[i]) != 0 && (pDest < pDestLimit);) {
             // modified copy of U8_NEXT()
             ++i;
-            if(U8_IS_SINGLE(c)) {
+            अगर(U8_IS_SINGLE(c)) {
                 *pDest++=(char16_t)c;
-            } else {
+            } अन्यथा {
                 uint8_t __t1, __t2;
-                if( /* handle U+0800..U+FFFF inline */
+                अगर( /* handle U+0800..U+FFFF inline */
                         (0xe0<=(c) && (c)<0xf0) &&
                         U8_IS_VALID_LEAD3_AND_T1((c), src[i]) &&
                         (__t2=src[(i)+1]-0x80)<=0x3f) {
                     *pDest++ = (((c)&0xf)<<12)|((src[i]&0x3f)<<6)|__t2;
                     i+=2;
-                } else if( /* handle U+0080..U+07FF inline */
+                } अन्यथा अगर( /* handle U+0080..U+07FF inline */
                         ((c)<0xe0 && (c)>=0xc2) &&
                         (__t1=src[i]-0x80)<=0x3f) {
                     *pDest++ = (((c)&0x1f)<<6)|__t1;
                     ++(i);
-                } else {
+                } अन्यथा {
                     /* function call for "complicated" and error cases */
-                    (c)=utf8_nextCharSafeBody((const uint8_t *)src, &(i), -1, c, -1);
-                    if(c<0 && (++numSubstitutions, c = subchar) < 0) {
+                    (c)=utf8_अग्र_Char_Safe_Body((स्थिर uint8_t *)src, &(i), -1, c, -1);
+                    अगर(c<0 && (++अंक_Substitutions, c = subchar) < 0) {
                         *pErrorCode = U_INVALID_CHAR_FOUND;
-                        return nullptr;
-                    } else if(c<=0xFFFF) {
+                        वापस nullptr;
+                    } अन्यथा अगर(c<=0xFFFF) {
                         *(pDest++)=(char16_t)c;
-                    } else {
+                    } अन्यथा {
                         *(pDest++)=U16_LEAD(c);
-                        if(pDest<pDestLimit) {
+                        अगर(pDest<pDestLimit) {
                             *(pDest++)=U16_TRAIL(c);
-                        } else {
-                            reqLength++;
-                            break;
+                        } अन्यथा {
+                            req_लंबाई++;
+                            अवरोध;
                         }
                     }
                 }
@@ -348,40 +348,40 @@ u_strFromUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
         }
 
         /* Pre-flight the rest of the string. */
-        while((c = (uint8_t)src[i]) != 0) {
+        जबतक((c = (uint8_t)src[i]) != 0) {
             // modified copy of U8_NEXT()
             ++i;
-            if(U8_IS_SINGLE(c)) {
-                ++reqLength;
-            } else {
+            अगर(U8_IS_SINGLE(c)) {
+                ++req_लंबाई;
+            } अन्यथा {
                 uint8_t __t1, __t2;
-                if( /* handle U+0800..U+FFFF inline */
+                अगर( /* handle U+0800..U+FFFF inline */
                         (0xe0<=(c) && (c)<0xf0) &&
                         U8_IS_VALID_LEAD3_AND_T1((c), src[i]) &&
                         (__t2=src[(i)+1]-0x80)<=0x3f) {
-                    ++reqLength;
+                    ++req_लंबाई;
                     i+=2;
-                } else if( /* handle U+0080..U+07FF inline */
+                } अन्यथा अगर( /* handle U+0080..U+07FF inline */
                         ((c)<0xe0 && (c)>=0xc2) &&
                         (__t1=src[i]-0x80)<=0x3f) {
-                    ++reqLength;
+                    ++req_लंबाई;
                     ++(i);
-                } else {
+                } अन्यथा {
                     /* function call for "complicated" and error cases */
-                    (c)=utf8_nextCharSafeBody((const uint8_t *)src, &(i), -1, c, -1);
-                    if(c<0 && (++numSubstitutions, c = subchar) < 0) {
+                    (c)=utf8_अग्र_Char_Safe_Body((स्थिर uint8_t *)src, &(i), -1, c, -1);
+                    अगर(c<0 && (++अंक_Substitutions, c = subchar) < 0) {
                         *pErrorCode = U_INVALID_CHAR_FOUND;
-                        return nullptr;
+                        वापस nullptr;
                     }
-                    reqLength += U16_LENGTH(c);
+                    req_लंबाई += U16_लंबाई(c);
                 }
             }
         }
-    } else /* srcLength >= 0 */ {
+    } अन्यथा /* srcLength >= 0 */ {
         /* Faster loop without ongoing checking for srcLength and pDestLimit. */
         int32_t i = 0;
         UChar32 c;
-        for(;;) {
+        क्रम(;;) {
             /*
              * Each iteration of the inner loop progresses by at most 3 UTF-8
              * bytes and one char16_t, for most characters.
@@ -389,100 +389,100 @@ u_strFromUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
              * there is an additional adjustment.
              */
             int32_t count = (int32_t)(pDestLimit - pDest);
-            int32_t count2 = (srcLength - i) / 3;
-            if(count > count2) {
+            int32_t count2 = (src_लंबाई - i) / 3;
+            अगर(count > count2) {
                 count = count2; /* min(remaining dest, remaining src/3) */
             }
-            if(count < 3) {
+            अगर(count < 3) {
                 /*
                  * Too much overhead if we get near the end of the string,
                  * continue with the next loop.
                  */
-                break;
+                अवरोध;
             }
 
-            do {
+            करो {
                 // modified copy of U8_NEXT()
                 c = (uint8_t)src[i++];
-                if(U8_IS_SINGLE(c)) {
+                अगर(U8_IS_SINGLE(c)) {
                     *pDest++=(char16_t)c;
-                } else {
+                } अन्यथा {
                     uint8_t __t1, __t2;
-                    if( /* handle U+0800..U+FFFF inline */
+                    अगर( /* handle U+0800..U+FFFF inline */
                             (0xe0<=(c) && (c)<0xf0) &&
-                            ((i)+1)<srcLength &&
+                            ((i)+1)<src_लंबाई &&
                             U8_IS_VALID_LEAD3_AND_T1((c), src[i]) &&
                             (__t2=src[(i)+1]-0x80)<=0x3f) {
                         *pDest++ = (((c)&0xf)<<12)|((src[i]&0x3f)<<6)|__t2;
                         i+=2;
-                    } else if( /* handle U+0080..U+07FF inline */
+                    } अन्यथा अगर( /* handle U+0080..U+07FF inline */
                             ((c)<0xe0 && (c)>=0xc2) &&
-                            ((i)!=srcLength) &&
+                            ((i)!=src_लंबाई) &&
                             (__t1=src[i]-0x80)<=0x3f) {
                         *pDest++ = (((c)&0x1f)<<6)|__t1;
                         ++(i);
-                    } else {
-                        if(c >= 0xf0 || subchar > 0xffff) {
+                    } अन्यथा {
+                        अगर(c >= 0xf0 || subchar > 0xffff) {
                             // We may read up to four bytes and write up to two UChars,
                             // which we didn't account for with computing count,
                             // so we adjust it here.
-                            if(--count == 0) {
+                            अगर(--count == 0) {
                                 --i;  // back out byte c
-                                break;
+                                अवरोध;
                             }
                         }
 
                         /* function call for "complicated" and error cases */
-                        (c)=utf8_nextCharSafeBody((const uint8_t *)src, &(i), srcLength, c, -1);
-                        if(c<0 && (++numSubstitutions, c = subchar) < 0) {
+                        (c)=utf8_अग्र_Char_Safe_Body((स्थिर uint8_t *)src, &(i), src_लंबाई, c, -1);
+                        अगर(c<0 && (++अंक_Substitutions, c = subchar) < 0) {
                             *pErrorCode = U_INVALID_CHAR_FOUND;
-                            return nullptr;
-                        } else if(c<=0xFFFF) {
+                            वापस nullptr;
+                        } अन्यथा अगर(c<=0xFFFF) {
                             *(pDest++)=(char16_t)c;
-                        } else {
+                        } अन्यथा {
                             *(pDest++)=U16_LEAD(c);
                             *(pDest++)=U16_TRAIL(c);
                         }
                     }
                 }
-            } while(--count > 0);
+            } जबतक(--count > 0);
         }
 
-        while(i < srcLength && (pDest < pDestLimit)) {
+        जबतक(i < src_लंबाई && (pDest < pDestLimit)) {
             // modified copy of U8_NEXT()
             c = (uint8_t)src[i++];
-            if(U8_IS_SINGLE(c)) {
+            अगर(U8_IS_SINGLE(c)) {
                 *pDest++=(char16_t)c;
-            } else {
+            } अन्यथा {
                 uint8_t __t1, __t2;
-                if( /* handle U+0800..U+FFFF inline */
+                अगर( /* handle U+0800..U+FFFF inline */
                         (0xe0<=(c) && (c)<0xf0) &&
-                        ((i)+1)<srcLength &&
+                        ((i)+1)<src_लंबाई &&
                         U8_IS_VALID_LEAD3_AND_T1((c), src[i]) &&
                         (__t2=src[(i)+1]-0x80)<=0x3f) {
                     *pDest++ = (((c)&0xf)<<12)|((src[i]&0x3f)<<6)|__t2;
                     i+=2;
-                } else if( /* handle U+0080..U+07FF inline */
+                } अन्यथा अगर( /* handle U+0080..U+07FF inline */
                         ((c)<0xe0 && (c)>=0xc2) &&
-                        ((i)!=srcLength) &&
+                        ((i)!=src_लंबाई) &&
                         (__t1=src[i]-0x80)<=0x3f) {
                     *pDest++ = (((c)&0x1f)<<6)|__t1;
                     ++(i);
-                } else {
+                } अन्यथा {
                     /* function call for "complicated" and error cases */
-                    (c)=utf8_nextCharSafeBody((const uint8_t *)src, &(i), srcLength, c, -1);
-                    if(c<0 && (++numSubstitutions, c = subchar) < 0) {
+                    (c)=utf8_अग्र_Char_Safe_Body((स्थिर uint8_t *)src, &(i), src_लंबाई, c, -1);
+                    अगर(c<0 && (++अंक_Substitutions, c = subchar) < 0) {
                         *pErrorCode = U_INVALID_CHAR_FOUND;
-                        return nullptr;
-                    } else if(c<=0xFFFF) {
+                        वापस nullptr;
+                    } अन्यथा अगर(c<=0xFFFF) {
                         *(pDest++)=(char16_t)c;
-                    } else {
+                    } अन्यथा {
                         *(pDest++)=U16_LEAD(c);
-                        if(pDest<pDestLimit) {
+                        अगर(pDest<pDestLimit) {
                             *(pDest++)=U16_TRAIL(c);
-                        } else {
-                            reqLength++;
-                            break;
+                        } अन्यथा {
+                            req_लंबाई++;
+                            अवरोध;
                         }
                     }
                 }
@@ -490,65 +490,65 @@ u_strFromUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
         }
 
         /* Pre-flight the rest of the string. */
-        while(i < srcLength) {
+        जबतक(i < src_लंबाई) {
             // modified copy of U8_NEXT()
             c = (uint8_t)src[i++];
-            if(U8_IS_SINGLE(c)) {
-                ++reqLength;
-            } else {
+            अगर(U8_IS_SINGLE(c)) {
+                ++req_लंबाई;
+            } अन्यथा {
                 uint8_t __t1, __t2;
-                if( /* handle U+0800..U+FFFF inline */
+                अगर( /* handle U+0800..U+FFFF inline */
                         (0xe0<=(c) && (c)<0xf0) &&
-                        ((i)+1)<srcLength &&
+                        ((i)+1)<src_लंबाई &&
                         U8_IS_VALID_LEAD3_AND_T1((c), src[i]) &&
                         (__t2=src[(i)+1]-0x80)<=0x3f) {
-                    ++reqLength;
+                    ++req_लंबाई;
                     i+=2;
-                } else if( /* handle U+0080..U+07FF inline */
+                } अन्यथा अगर( /* handle U+0080..U+07FF inline */
                         ((c)<0xe0 && (c)>=0xc2) &&
-                        ((i)!=srcLength) &&
+                        ((i)!=src_लंबाई) &&
                         (__t1=src[i]-0x80)<=0x3f) {
-                    ++reqLength;
+                    ++req_लंबाई;
                     ++(i);
-                } else {
+                } अन्यथा {
                     /* function call for "complicated" and error cases */
-                    (c)=utf8_nextCharSafeBody((const uint8_t *)src, &(i), srcLength, c, -1);
-                    if(c<0 && (++numSubstitutions, c = subchar) < 0) {
+                    (c)=utf8_अग्र_Char_Safe_Body((स्थिर uint8_t *)src, &(i), src_लंबाई, c, -1);
+                    अगर(c<0 && (++अंक_Substitutions, c = subchar) < 0) {
                         *pErrorCode = U_INVALID_CHAR_FOUND;
-                        return nullptr;
+                        वापस nullptr;
                     }
-                    reqLength += U16_LENGTH(c);
+                    req_लंबाई += U16_लंबाई(c);
                 }
             }
         }
     }
 
-    reqLength+=(int32_t)(pDest - dest);
+    req_लंबाई+=(int32_t)(pDest - dest);
 
-    if(pNumSubstitutions!=nullptr) {
-        *pNumSubstitutions=numSubstitutions;
+    अगर(p_अंक_Substitutions!=nullptr) {
+        *p_अंक_Substitutions=अंक_Substitutions;
     }
 
-    if(pDestLength){
-        *pDestLength = reqLength;
+    अगर(p_Dest_लंबाई){
+        *p_Dest_लंबाई = req_लंबाई;
     }
 
     /* Terminate the buffer */
-    u_terminateUChars(dest,destCapacity,reqLength,pErrorCode);
+    u_terminateUChars(dest,destCapacity,req_लंबाई,pErrorCode);
 
-    return dest;
+    वापस dest;
 }
 
 U_CAPI char16_t* U_EXPORT2
 u_strFromUTF8(char16_t* dest U_LIFETIME_BOUND,
               int32_t destCapacity,
-              int32_t* pDestLength,
-              const char* src,
-              int32_t srcLength,
+              int32_t* p_Dest_लंबाई,
+              स्थिर अक्षर* src,
+              int32_t src_लंबाई,
               UErrorCode* pErrorCode) {
-    return u_strFromUTF8WithSub(
-            dest, destCapacity, pDestLength,
-            src, srcLength,
+    वापस u_strFromUTF8WithSub(
+            dest, destCapacity, p_Dest_लंबाई,
+            src, src_लंबाई,
             U_SENTINEL, nullptr,
             pErrorCode);
 }
@@ -556,34 +556,34 @@ u_strFromUTF8(char16_t* dest U_LIFETIME_BOUND,
 U_CAPI char16_t* U_EXPORT2
 u_strFromUTF8Lenient(char16_t* dest U_LIFETIME_BOUND,
                      int32_t destCapacity,
-                     int32_t* pDestLength,
-                     const char* src,
-                     int32_t srcLength,
+                     int32_t* p_Dest_लंबाई,
+                     स्थिर अक्षर* src,
+                     int32_t src_लंबाई,
                      UErrorCode* pErrorCode) {
     char16_t *pDest = dest;
     UChar32 ch;
-    int32_t reqLength = 0;
+    int32_t req_लंबाई = 0;
     uint8_t* pSrc = (uint8_t*) src;
 
     /* args check */
-    if(U_FAILURE(*pErrorCode)){
-        return nullptr;
+    अगर(U_FAILURE(*pErrorCode)){
+        वापस nullptr;
     }
         
-    if( (src==nullptr && srcLength!=0) || srcLength < -1 ||
+    अगर( (src==nullptr && src_लंबाई!=0) || src_लंबाई < -1 ||
         (destCapacity<0) || (dest == nullptr && destCapacity > 0)
     ) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        वापस nullptr;
     }
 
-    if(srcLength < 0) {
+    अगर(src_लंबाई < 0) {
         /* Transform a NUL-terminated string. */
         char16_t *pDestLimit = (dest!=nullptr)?(dest+destCapacity):nullptr;
         uint8_t t1, t2, t3; /* trail bytes */
 
-        while(((ch = *pSrc) != 0) && (pDest < pDestLimit)) {
-            if(ch < 0xc0) {
+        जबतक(((ch = *pSrc) != 0) && (pDest < pDestLimit)) {
+            अगर(ch < 0xc0) {
                 /*
                  * ASCII, or a trail byte in lead position which is treated like
                  * a single-byte sequence for better character boundary
@@ -591,117 +591,117 @@ u_strFromUTF8Lenient(char16_t* dest U_LIFETIME_BOUND,
                  */
                 *pDest++=(char16_t)ch;
                 ++pSrc;
-                continue;
-            } else if(ch < 0xe0) { /* U+0080..U+07FF */
-                if((t1 = pSrc[1]) != 0) {
+                जारी;
+            } अन्यथा अगर(ch < 0xe0) { /* U+0080..U+07FF */
+                अगर((t1 = pSrc[1]) != 0) {
                     /* 0x3080 = (0xc0 << 6) + 0x80 */
                     *pDest++ = (char16_t)((ch << 6) + t1 - 0x3080);
                     pSrc += 2;
-                    continue;
+                    जारी;
                 }
-            } else if(ch < 0xf0) { /* U+0800..U+FFFF */
-                if((t1 = pSrc[1]) != 0 && (t2 = pSrc[2]) != 0) {
+            } अन्यथा अगर(ch < 0xf0) { /* U+0800..U+FFFF */
+                अगर((t1 = pSrc[1]) != 0 && (t2 = pSrc[2]) != 0) {
                     /* no need for (ch & 0xf) because the upper bits are truncated after <<12 in the cast to (char16_t) */
                     /* 0x2080 = (0x80 << 6) + 0x80 */
                     *pDest++ = (char16_t)((ch << 12) + (t1 << 6) + t2 - 0x2080);
                     pSrc += 3;
-                    continue;
+                    जारी;
                 }
-            } else /* f0..f4 */ { /* U+10000..U+10FFFF */
-                if((t1 = pSrc[1]) != 0 && (t2 = pSrc[2]) != 0 && (t3 = pSrc[3]) != 0) {
+            } अन्यथा /* f0..f4 */ { /* U+10000..U+10FFFF */
+                अगर((t1 = pSrc[1]) != 0 && (t2 = pSrc[2]) != 0 && (t3 = pSrc[3]) != 0) {
                     pSrc += 4;
                     /* 0x3c82080 = (0xf0 << 18) + (0x80 << 12) + (0x80 << 6) + 0x80 */
                     ch = (ch << 18) + (t1 << 12) + (t2 << 6) + t3 - 0x3c82080;
                     *(pDest++) = U16_LEAD(ch);
-                    if(pDest < pDestLimit) {
+                    अगर(pDest < pDestLimit) {
                         *(pDest++) = U16_TRAIL(ch);
-                    } else {
-                        reqLength = 1;
-                        break;
+                    } अन्यथा {
+                        req_लंबाई = 1;
+                        अवरोध;
                     }
-                    continue;
+                    जारी;
                 }
             }
 
             /* truncated character at the end */
             *pDest++ = 0xfffd;
-            while(*++pSrc != 0) {}
-            break;
+            जबतक(*++pSrc != 0) {}
+            अवरोध;
         }
 
         /* Pre-flight the rest of the string. */
-        while((ch = *pSrc) != 0) {
-            if(ch < 0xc0) {
+        जबतक((ch = *pSrc) != 0) {
+            अगर(ch < 0xc0) {
                 /*
                  * ASCII, or a trail byte in lead position which is treated like
                  * a single-byte sequence for better character boundary
                  * resynchronization after illegal sequences.
                  */
-                ++reqLength;
+                ++req_लंबाई;
                 ++pSrc;
-                continue;
-            } else if(ch < 0xe0) { /* U+0080..U+07FF */
-                if(pSrc[1] != 0) {
-                    ++reqLength;
+                जारी;
+            } अन्यथा अगर(ch < 0xe0) { /* U+0080..U+07FF */
+                अगर(pSrc[1] != 0) {
+                    ++req_लंबाई;
                     pSrc += 2;
-                    continue;
+                    जारी;
                 }
-            } else if(ch < 0xf0) { /* U+0800..U+FFFF */
-                if(pSrc[1] != 0 && pSrc[2] != 0) {
-                    ++reqLength;
+            } अन्यथा अगर(ch < 0xf0) { /* U+0800..U+FFFF */
+                अगर(pSrc[1] != 0 && pSrc[2] != 0) {
+                    ++req_लंबाई;
                     pSrc += 3;
-                    continue;
+                    जारी;
                 }
-            } else /* f0..f4 */ { /* U+10000..U+10FFFF */
-                if(pSrc[1] != 0 && pSrc[2] != 0 && pSrc[3] != 0) {
-                    reqLength += 2;
+            } अन्यथा /* f0..f4 */ { /* U+10000..U+10FFFF */
+                अगर(pSrc[1] != 0 && pSrc[2] != 0 && pSrc[3] != 0) {
+                    req_लंबाई += 2;
                     pSrc += 4;
-                    continue;
+                    जारी;
                 }
             }
 
             /* truncated character at the end */
-            ++reqLength;
-            break;
+            ++req_लंबाई;
+            अवरोध;
         }
-    } else /* srcLength >= 0 */ {
-      const uint8_t *pSrcLimit = (pSrc!=nullptr)?(pSrc + srcLength):nullptr;
+    } अन्यथा /* srcLength >= 0 */ {
+      स्थिर uint8_t *pSrcLimit = (pSrc!=nullptr)?(pSrc + src_लंबाई):nullptr;
 
         /*
          * This function requires that if srcLength is given, then it must be
          * destCapatity >= srcLength so that we need not check for
          * destination buffer overflow in the loop.
          */
-        if(destCapacity < srcLength) {
-            if(pDestLength != nullptr) {
-                *pDestLength = srcLength; /* this likely overestimates the true destLength! */
+        अगर(destCapacity < src_लंबाई) {
+            अगर(p_Dest_लंबाई != nullptr) {
+                *p_Dest_लंबाई = src_लंबाई; /* this likely overestimates the true destLength! */
             }
-            *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
-            return nullptr;
+            *pErrorCode = U_बफर_OVERFLOW_ERROR;
+            वापस nullptr;
         }
 
-        if((pSrcLimit - pSrc) >= 4) {
+        अगर((pSrcLimit - pSrc) >= 4) {
             pSrcLimit -= 3; /* temporarily reduce pSrcLimit */
 
             /* in this loop, we can always access at least 4 bytes, up to pSrc+3 */
-            do {
+            करो {
                 ch = *pSrc++;
-                if(ch < 0xc0) {
+                अगर(ch < 0xc0) {
                     /*
                      * ASCII, or a trail byte in lead position which is treated like
                      * a single-byte sequence for better character boundary
                      * resynchronization after illegal sequences.
                      */
                     *pDest++=(char16_t)ch;
-                } else if(ch < 0xe0) { /* U+0080..U+07FF */
+                } अन्यथा अगर(ch < 0xe0) { /* U+0080..U+07FF */
                     /* 0x3080 = (0xc0 << 6) + 0x80 */
                     *pDest++ = (char16_t)((ch << 6) + *pSrc++ - 0x3080);
-                } else if(ch < 0xf0) { /* U+0800..U+FFFF */
+                } अन्यथा अगर(ch < 0xf0) { /* U+0800..U+FFFF */
                     /* no need for (ch & 0xf) because the upper bits are truncated after <<12 in the cast to (char16_t) */
                     /* 0x2080 = (0x80 << 6) + 0x80 */
                     ch = (ch << 12) + (*pSrc++ << 6);
                     *pDest++ = (char16_t)(ch + *pSrc++ - 0x2080);
-                } else /* f0..f4 */ { /* U+10000..U+10FFFF */
+                } अन्यथा /* f0..f4 */ { /* U+10000..U+10FFFF */
                     /* 0x3c82080 = (0xf0 << 18) + (0x80 << 12) + (0x80 << 6) + 0x80 */
                     ch = (ch << 18) + (*pSrc++ << 12);
                     ch += *pSrc++ << 6;
@@ -709,38 +709,38 @@ u_strFromUTF8Lenient(char16_t* dest U_LIFETIME_BOUND,
                     *(pDest++) = U16_LEAD(ch);
                     *(pDest++) = U16_TRAIL(ch);
                 }
-            } while(pSrc < pSrcLimit);
+            } जबतक(pSrc < pSrcLimit);
 
             pSrcLimit += 3; /* restore original pSrcLimit */
         }
 
-        while(pSrc < pSrcLimit) {
+        जबतक(pSrc < pSrcLimit) {
             ch = *pSrc++;
-            if(ch < 0xc0) {
+            अगर(ch < 0xc0) {
                 /*
                  * ASCII, or a trail byte in lead position which is treated like
                  * a single-byte sequence for better character boundary
                  * resynchronization after illegal sequences.
                  */
                 *pDest++=(char16_t)ch;
-                continue;
-            } else if(ch < 0xe0) { /* U+0080..U+07FF */
-                if(pSrc < pSrcLimit) {
+                जारी;
+            } अन्यथा अगर(ch < 0xe0) { /* U+0080..U+07FF */
+                अगर(pSrc < pSrcLimit) {
                     /* 0x3080 = (0xc0 << 6) + 0x80 */
                     *pDest++ = (char16_t)((ch << 6) + *pSrc++ - 0x3080);
-                    continue;
+                    जारी;
                 }
-            } else if(ch < 0xf0) { /* U+0800..U+FFFF */
-                if((pSrcLimit - pSrc) >= 2) {
+            } अन्यथा अगर(ch < 0xf0) { /* U+0800..U+FFFF */
+                अगर((pSrcLimit - pSrc) >= 2) {
                     /* no need for (ch & 0xf) because the upper bits are truncated after <<12 in the cast to (char16_t) */
                     /* 0x2080 = (0x80 << 6) + 0x80 */
                     ch = (ch << 12) + (*pSrc++ << 6);
                     *pDest++ = (char16_t)(ch + *pSrc++ - 0x2080);
                     pSrc += 3;
-                    continue;
+                    जारी;
                 }
-            } else /* f0..f4 */ { /* U+10000..U+10FFFF */
-                if((pSrcLimit - pSrc) >= 3) {
+            } अन्यथा /* f0..f4 */ { /* U+10000..U+10FFFF */
+                अगर((pSrcLimit - pSrc) >= 3) {
                     /* 0x3c82080 = (0xf0 << 18) + (0x80 << 12) + (0x80 << 6) + 0x80 */
                     ch = (ch << 18) + (*pSrc++ << 12);
                     ch += *pSrc++ << 6;
@@ -748,160 +748,160 @@ u_strFromUTF8Lenient(char16_t* dest U_LIFETIME_BOUND,
                     *(pDest++) = U16_LEAD(ch);
                     *(pDest++) = U16_TRAIL(ch);
                     pSrc += 4;
-                    continue;
+                    जारी;
                 }
             }
 
             /* truncated character at the end */
             *pDest++ = 0xfffd;
-            break;
+            अवरोध;
         }
     }
 
-    reqLength+=(int32_t)(pDest - dest);
+    req_लंबाई+=(int32_t)(pDest - dest);
 
-    if(pDestLength){
-        *pDestLength = reqLength;
+    अगर(p_Dest_लंबाई){
+        *p_Dest_लंबाई = req_लंबाई;
     }
 
     /* Terminate the buffer */
-    u_terminateUChars(dest,destCapacity,reqLength,pErrorCode);
+    u_terminateUChars(dest,destCapacity,req_लंबाई,pErrorCode);
 
-    return dest;
+    वापस dest;
 }
 
-static inline uint8_t *
+अटल अंतरभूत uint8_t *
 _appendUTF8(uint8_t *pDest, UChar32 c) {
     /* it is 0<=c<=0x10ffff and not a surrogate if called by a validating function */
-    if((c)<=0x7f) {
+    अगर((c)<=0x7f) {
         *pDest++ = static_cast<uint8_t>(c);
-    } else if(c<=0x7ff) {
+    } अन्यथा अगर(c<=0x7ff) {
         *pDest++ = static_cast<uint8_t>((c >> 6) | 0xc0);
         *pDest++ = static_cast<uint8_t>((c & 0x3f) | 0x80);
-    } else if(c<=0xffff) {
+    } अन्यथा अगर(c<=0xffff) {
         *pDest++ = static_cast<uint8_t>((c >> 12) | 0xe0);
         *pDest++ = static_cast<uint8_t>(((c >> 6) & 0x3f) | 0x80);
         *pDest++ = static_cast<uint8_t>(((c) & 0x3f) | 0x80);
-    } else /* if((uint32_t)(c)<=0x10ffff) */ {
+    } अन्यथा /* if((uint32_t)(c)<=0x10ffff) */ {
         *pDest++ = static_cast<uint8_t>(((c) >> 18) | 0xf0);
         *pDest++ = static_cast<uint8_t>((((c) >> 12) & 0x3f) | 0x80);
         *pDest++ = static_cast<uint8_t>((((c) >> 6) & 0x3f) | 0x80);
         *pDest++ = static_cast<uint8_t>(((c) & 0x3f) | 0x80);
     }
-    return pDest;
+    वापस pDest;
 }
 
-U_CAPI char* U_EXPORT2
-u_strToUTF8WithSub(char* dest U_LIFETIME_BOUND,
+U_CAPI अक्षर* U_EXPORT2
+u_strToUTF8WithSub(अक्षर* dest U_LIFETIME_BOUND,
                    int32_t destCapacity,
-                   int32_t* pDestLength,
-                   const char16_t* pSrc,
-                   int32_t srcLength,
+                   int32_t* p_Dest_लंबाई,
+                   स्थिर char16_t* pSrc,
+                   int32_t src_लंबाई,
                    UChar32 subchar,
-                   int32_t* pNumSubstitutions,
+                   int32_t* p_अंक_Substitutions,
                    UErrorCode* pErrorCode) {
-    int32_t reqLength=0;
+    int32_t req_लंबाई=0;
     uint32_t ch=0,ch2=0;
     uint8_t *pDest = (uint8_t *)dest;
     uint8_t *pDestLimit = (pDest!=nullptr)?(pDest + destCapacity):nullptr;
-    int32_t numSubstitutions;
+    int32_t अंक_Substitutions;
 
     /* args check */
-    if(U_FAILURE(*pErrorCode)){
-        return nullptr;
+    अगर(U_FAILURE(*pErrorCode)){
+        वापस nullptr;
     }
         
-    if( (pSrc==nullptr && srcLength!=0) || srcLength < -1 ||
+    अगर( (pSrc==nullptr && src_लंबाई!=0) || src_लंबाई < -1 ||
         (destCapacity<0) || (dest == nullptr && destCapacity > 0) ||
         subchar > 0x10ffff || U_IS_SURROGATE(subchar)
     ) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        वापस nullptr;
     }
 
-    if(pNumSubstitutions!=nullptr) {
-        *pNumSubstitutions=0;
+    अगर(p_अंक_Substitutions!=nullptr) {
+        *p_अंक_Substitutions=0;
     }
-    numSubstitutions=0;
+    अंक_Substitutions=0;
 
-    if(srcLength==-1) {
-        while((ch=*pSrc)!=0) {
+    अगर(src_लंबाई==-1) {
+        जबतक((ch=*pSrc)!=0) {
             ++pSrc;
-            if(ch <= 0x7f) {
-                if(pDest<pDestLimit) {
+            अगर(ch <= 0x7f) {
+                अगर(pDest<pDestLimit) {
                     *pDest++ = (uint8_t)ch;
-                } else {
-                    reqLength = 1;
-                    break;
+                } अन्यथा {
+                    req_लंबाई = 1;
+                    अवरोध;
                 }
-            } else if(ch <= 0x7ff) {
-                if((pDestLimit - pDest) >= 2) {
+            } अन्यथा अगर(ch <= 0x7ff) {
+                अगर((pDestLimit - pDest) >= 2) {
                     *pDest++=(uint8_t)((ch>>6)|0xc0);
                     *pDest++=(uint8_t)((ch&0x3f)|0x80);
-                } else {
-                    reqLength = 2;
-                    break;
+                } अन्यथा {
+                    req_लंबाई = 2;
+                    अवरोध;
                 }
-            } else if(ch <= 0xd7ff || ch >= 0xe000) {
-                if((pDestLimit - pDest) >= 3) {
+            } अन्यथा अगर(ch <= 0xd7ff || ch >= 0xe000) {
+                अगर((pDestLimit - pDest) >= 3) {
                     *pDest++=(uint8_t)((ch>>12)|0xe0);
                     *pDest++=(uint8_t)(((ch>>6)&0x3f)|0x80);
                     *pDest++=(uint8_t)((ch&0x3f)|0x80);
-                } else {
-                    reqLength = 3;
-                    break;
+                } अन्यथा {
+                    req_लंबाई = 3;
+                    अवरोध;
                 }
-            } else /* ch is a surrogate */ {
+            } अन्यथा /* ch is a surrogate */ {
                 int32_t length;
 
                 /*need not check for NUL because NUL fails U16_IS_TRAIL() anyway*/
-                if(U16_IS_SURROGATE_LEAD(ch) && U16_IS_TRAIL(ch2=*pSrc)) { 
+                अगर(U16_IS_SURROGATE_LEAD(ch) && U16_IS_TRAIL(ch2=*pSrc)) { 
                     ++pSrc;
                     ch=U16_GET_SUPPLEMENTARY(ch, ch2);
-                } else if(subchar>=0) {
+                } अन्यथा अगर(subchar>=0) {
                     ch=subchar;
-                    ++numSubstitutions;
-                } else {
+                    ++अंक_Substitutions;
+                } अन्यथा {
                     /* Unicode 3.2 forbids surrogate code points in UTF-8 */
                     *pErrorCode = U_INVALID_CHAR_FOUND;
-                    return nullptr;
+                    वापस nullptr;
                 }
 
-                length = U8_LENGTH(ch);
-                if((pDestLimit - pDest) >= length) {
+                length = U8_लंबाई(ch);
+                अगर((pDestLimit - pDest) >= length) {
                     /* convert and append*/
                     pDest=_appendUTF8(pDest, ch);
-                } else {
-                    reqLength = length;
-                    break;
+                } अन्यथा {
+                    req_लंबाई = length;
+                    अवरोध;
                 }
             }
         }
-        while((ch=*pSrc++)!=0) {
-            if(ch<=0x7f) {
-                ++reqLength;
-            } else if(ch<=0x7ff) {
-                reqLength+=2;
-            } else if(!U16_IS_SURROGATE(ch)) {
-                reqLength+=3;
-            } else if(U16_IS_SURROGATE_LEAD(ch) && U16_IS_TRAIL(ch2=*pSrc)) {
+        जबतक((ch=*pSrc++)!=0) {
+            अगर(ch<=0x7f) {
+                ++req_लंबाई;
+            } अन्यथा अगर(ch<=0x7ff) {
+                req_लंबाई+=2;
+            } अन्यथा अगर(!U16_IS_SURROGATE(ch)) {
+                req_लंबाई+=3;
+            } अन्यथा अगर(U16_IS_SURROGATE_LEAD(ch) && U16_IS_TRAIL(ch2=*pSrc)) {
                 ++pSrc;
-                reqLength+=4;
-            } else if(subchar>=0) {
-                reqLength+=U8_LENGTH(subchar);
-                ++numSubstitutions;
-            } else {
+                req_लंबाई+=4;
+            } अन्यथा अगर(subchar>=0) {
+                req_लंबाई+=U8_लंबाई(subchar);
+                ++अंक_Substitutions;
+            } अन्यथा {
                 /* Unicode 3.2 forbids surrogate code points in UTF-8 */
                 *pErrorCode = U_INVALID_CHAR_FOUND;
-                return nullptr;
+                वापस nullptr;
             }
         }
-    } else {
-        const char16_t *pSrcLimit = (pSrc!=nullptr)?(pSrc+srcLength):nullptr;
+    } अन्यथा {
+        स्थिर char16_t *pSrcLimit = (pSrc!=nullptr)?(pSrc+src_लंबाई):nullptr;
         int32_t count;
 
         /* Faster loop without ongoing checking for pSrcLimit and pDestLimit. */
-        for(;;) {
+        क्रम(;;) {
             /*
              * Each iteration of the inner loop progresses by at most 3 UTF-8
              * bytes and one char16_t, for most characters.
@@ -909,40 +909,40 @@ u_strToUTF8WithSub(char* dest U_LIFETIME_BOUND,
              * there is an additional adjustment.
              */
             count = (int32_t)((pDestLimit - pDest) / 3);
-            srcLength = (int32_t)(pSrcLimit - pSrc);
-            if(count > srcLength) {
-                count = srcLength; /* min(remaining dest/3, remaining src) */
+            src_लंबाई = (int32_t)(pSrcLimit - pSrc);
+            अगर(count > src_लंबाई) {
+                count = src_लंबाई; /* min(remaining dest/3, remaining src) */
             }
-            if(count < 3) {
+            अगर(count < 3) {
                 /*
                  * Too much overhead if we get near the end of the string,
                  * continue with the next loop.
                  */
-                break;
+                अवरोध;
             }
-            do {
+            करो {
                 ch=*pSrc++;
-                if(ch <= 0x7f) {
+                अगर(ch <= 0x7f) {
                     *pDest++ = (uint8_t)ch;
-                } else if(ch <= 0x7ff) {
+                } अन्यथा अगर(ch <= 0x7ff) {
                     *pDest++=(uint8_t)((ch>>6)|0xc0);
                     *pDest++=(uint8_t)((ch&0x3f)|0x80);
-                } else if(ch <= 0xd7ff || ch >= 0xe000) {
+                } अन्यथा अगर(ch <= 0xd7ff || ch >= 0xe000) {
                     *pDest++=(uint8_t)((ch>>12)|0xe0);
                     *pDest++=(uint8_t)(((ch>>6)&0x3f)|0x80);
                     *pDest++=(uint8_t)((ch&0x3f)|0x80);
-                } else /* ch is a surrogate */ {
+                } अन्यथा /* ch is a surrogate */ {
                     /*
                      * We will read two UChars and probably output four bytes,
                      * which we didn't account for with computing count,
                      * so we adjust it here.
                      */
-                    if(--count == 0) {
+                    अगर(--count == 0) {
                         --pSrc; /* undo ch=*pSrc++ for the lead surrogate */
-                        break;  /* recompute count */
+                        अवरोध;  /* recompute count */
                     }
 
-                    if(U16_IS_SURROGATE_LEAD(ch) && U16_IS_TRAIL(ch2=*pSrc)) { 
+                    अगर(U16_IS_SURROGATE_LEAD(ch) && U16_IS_TRAIL(ch2=*pSrc)) { 
                         ++pSrc;
                         ch=U16_GET_SUPPLEMENTARY(ch, ch2);
 
@@ -951,121 +951,121 @@ u_strToUTF8WithSub(char* dest U_LIFETIME_BOUND,
                         *pDest++=(uint8_t)(((ch>>12)&0x3f)|0x80);
                         *pDest++=(uint8_t)(((ch>>6)&0x3f)|0x80);
                         *pDest++=(uint8_t)((ch&0x3f)|0x80);
-                    } else  {
+                    } अन्यथा  {
                         /* Unicode 3.2 forbids surrogate code points in UTF-8 */
-                        if(subchar>=0) {
+                        अगर(subchar>=0) {
                             ch=subchar;
-                            ++numSubstitutions;
-                        } else {
+                            ++अंक_Substitutions;
+                        } अन्यथा {
                             *pErrorCode = U_INVALID_CHAR_FOUND;
-                            return nullptr;
+                            वापस nullptr;
                         }
 
                         /* convert and append*/
                         pDest=_appendUTF8(pDest, ch);
                     }
                 }
-            } while(--count > 0);
+            } जबतक(--count > 0);
         }
 
-        while(pSrc<pSrcLimit) {
+        जबतक(pSrc<pSrcLimit) {
             ch=*pSrc++;
-            if(ch <= 0x7f) {
-                if(pDest<pDestLimit) {
+            अगर(ch <= 0x7f) {
+                अगर(pDest<pDestLimit) {
                     *pDest++ = (uint8_t)ch;
-                } else {
-                    reqLength = 1;
-                    break;
+                } अन्यथा {
+                    req_लंबाई = 1;
+                    अवरोध;
                 }
-            } else if(ch <= 0x7ff) {
-                if((pDestLimit - pDest) >= 2) {
+            } अन्यथा अगर(ch <= 0x7ff) {
+                अगर((pDestLimit - pDest) >= 2) {
                     *pDest++=(uint8_t)((ch>>6)|0xc0);
                     *pDest++=(uint8_t)((ch&0x3f)|0x80);
-                } else {
-                    reqLength = 2;
-                    break;
+                } अन्यथा {
+                    req_लंबाई = 2;
+                    अवरोध;
                 }
-            } else if(ch <= 0xd7ff || ch >= 0xe000) {
-                if((pDestLimit - pDest) >= 3) {
+            } अन्यथा अगर(ch <= 0xd7ff || ch >= 0xe000) {
+                अगर((pDestLimit - pDest) >= 3) {
                     *pDest++=(uint8_t)((ch>>12)|0xe0);
                     *pDest++=(uint8_t)(((ch>>6)&0x3f)|0x80);
                     *pDest++=(uint8_t)((ch&0x3f)|0x80);
-                } else {
-                    reqLength = 3;
-                    break;
+                } अन्यथा {
+                    req_लंबाई = 3;
+                    अवरोध;
                 }
-            } else /* ch is a surrogate */ {
+            } अन्यथा /* ch is a surrogate */ {
                 int32_t length;
 
-                if(U16_IS_SURROGATE_LEAD(ch) && pSrc<pSrcLimit && U16_IS_TRAIL(ch2=*pSrc)) { 
+                अगर(U16_IS_SURROGATE_LEAD(ch) && pSrc<pSrcLimit && U16_IS_TRAIL(ch2=*pSrc)) { 
                     ++pSrc;
                     ch=U16_GET_SUPPLEMENTARY(ch, ch2);
-                } else if(subchar>=0) {
+                } अन्यथा अगर(subchar>=0) {
                     ch=subchar;
-                    ++numSubstitutions;
-                } else {
+                    ++अंक_Substitutions;
+                } अन्यथा {
                     /* Unicode 3.2 forbids surrogate code points in UTF-8 */
                     *pErrorCode = U_INVALID_CHAR_FOUND;
-                    return nullptr;
+                    वापस nullptr;
                 }
 
-                length = U8_LENGTH(ch);
-                if((pDestLimit - pDest) >= length) {
+                length = U8_लंबाई(ch);
+                अगर((pDestLimit - pDest) >= length) {
                     /* convert and append*/
                     pDest=_appendUTF8(pDest, ch);
-                } else {
-                    reqLength = length;
-                    break;
+                } अन्यथा {
+                    req_लंबाई = length;
+                    अवरोध;
                 }
             }
         }
-        while(pSrc<pSrcLimit) {
+        जबतक(pSrc<pSrcLimit) {
             ch=*pSrc++;
-            if(ch<=0x7f) {
-                ++reqLength;
-            } else if(ch<=0x7ff) {
-                reqLength+=2;
-            } else if(!U16_IS_SURROGATE(ch)) {
-                reqLength+=3;
-            } else if(U16_IS_SURROGATE_LEAD(ch) && pSrc<pSrcLimit && U16_IS_TRAIL(ch2=*pSrc)) {
+            अगर(ch<=0x7f) {
+                ++req_लंबाई;
+            } अन्यथा अगर(ch<=0x7ff) {
+                req_लंबाई+=2;
+            } अन्यथा अगर(!U16_IS_SURROGATE(ch)) {
+                req_लंबाई+=3;
+            } अन्यथा अगर(U16_IS_SURROGATE_LEAD(ch) && pSrc<pSrcLimit && U16_IS_TRAIL(ch2=*pSrc)) {
                 ++pSrc;
-                reqLength+=4;
-            } else if(subchar>=0) {
-                reqLength+=U8_LENGTH(subchar);
-                ++numSubstitutions;
-            } else {
+                req_लंबाई+=4;
+            } अन्यथा अगर(subchar>=0) {
+                req_लंबाई+=U8_लंबाई(subchar);
+                ++अंक_Substitutions;
+            } अन्यथा {
                 /* Unicode 3.2 forbids surrogate code points in UTF-8 */
                 *pErrorCode = U_INVALID_CHAR_FOUND;
-                return nullptr;
+                वापस nullptr;
             }
         }
     }
 
-    reqLength+=(int32_t)(pDest - (uint8_t *)dest);
+    req_लंबाई+=(int32_t)(pDest - (uint8_t *)dest);
 
-    if(pNumSubstitutions!=nullptr) {
-        *pNumSubstitutions=numSubstitutions;
+    अगर(p_अंक_Substitutions!=nullptr) {
+        *p_अंक_Substitutions=अंक_Substitutions;
     }
 
-    if(pDestLength){
-        *pDestLength = reqLength;
+    अगर(p_Dest_लंबाई){
+        *p_Dest_लंबाई = req_लंबाई;
     }
 
     /* Terminate the buffer */
-    u_terminateChars(dest, destCapacity, reqLength, pErrorCode);
-    return dest;
+    u_terminateChars(dest, destCapacity, req_लंबाई, pErrorCode);
+    वापस dest;
 }
 
-U_CAPI char* U_EXPORT2
-u_strToUTF8(char* dest U_LIFETIME_BOUND,
+U_CAPI अक्षर* U_EXPORT2
+u_strToUTF8(अक्षर* dest U_LIFETIME_BOUND,
             int32_t destCapacity,
-            int32_t* pDestLength,
-            const char16_t* pSrc,
-            int32_t srcLength,
+            int32_t* p_Dest_लंबाई,
+            स्थिर char16_t* pSrc,
+            int32_t src_लंबाई,
             UErrorCode* pErrorCode) {
-    return u_strToUTF8WithSub(
-            dest, destCapacity, pDestLength,
-            pSrc, srcLength,
+    वापस u_strToUTF8WithSub(
+            dest, destCapacity, p_Dest_लंबाई,
+            pSrc, src_लंबाई,
             U_SENTINEL, nullptr,
             pErrorCode);
 }
@@ -1073,67 +1073,67 @@ u_strToUTF8(char* dest U_LIFETIME_BOUND,
 U_CAPI char16_t* U_EXPORT2
 u_strFromJavaModifiedUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
                                  int32_t destCapacity,
-                                 int32_t* pDestLength,
-                                 const char* src,
-                                 int32_t srcLength,
+                                 int32_t* p_Dest_लंबाई,
+                                 स्थिर अक्षर* src,
+                                 int32_t src_लंबाई,
                                  UChar32 subchar,
-                                 int32_t* pNumSubstitutions,
+                                 int32_t* p_अंक_Substitutions,
                                  UErrorCode* pErrorCode) {
     /* args check */
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    अगर(U_FAILURE(*pErrorCode)) {
+        वापस nullptr;
     }
-    if( (src==nullptr && srcLength!=0) || srcLength < -1 ||
+    अगर( (src==nullptr && src_लंबाई!=0) || src_लंबाई < -1 ||
         (dest==nullptr && destCapacity!=0) || destCapacity<0 ||
         subchar > 0x10ffff || U_IS_SURROGATE(subchar)
     ) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        वापस nullptr;
     }
 
-    if(pNumSubstitutions!=nullptr) {
-        *pNumSubstitutions=0;
+    अगर(p_अंक_Substitutions!=nullptr) {
+        *p_अंक_Substitutions=0;
     }
     char16_t *pDest = dest;
     char16_t *pDestLimit = dest+destCapacity;
-    int32_t reqLength = 0;
-    int32_t numSubstitutions=0;
+    int32_t req_लंबाई = 0;
+    int32_t अंक_Substitutions=0;
 
-    if(srcLength < 0) {
+    अगर(src_लंबाई < 0) {
         /*
          * Transform a NUL-terminated ASCII string.
          * Handle non-ASCII strings with slower code.
          */
         UChar32 c;
-        while(((c = (uint8_t)*src) != 0) && c <= 0x7f && (pDest < pDestLimit)) {
+        जबतक(((c = (uint8_t)*src) != 0) && c <= 0x7f && (pDest < pDestLimit)) {
             *pDest++=(char16_t)c;
             ++src;
         }
-        if(c == 0) {
-            reqLength=(int32_t)(pDest - dest);
-            if(pDestLength) {
-                *pDestLength = reqLength;
+        अगर(c == 0) {
+            req_लंबाई=(int32_t)(pDest - dest);
+            अगर(p_Dest_लंबाई) {
+                *p_Dest_लंबाई = req_लंबाई;
             }
 
             /* Terminate the buffer */
-            u_terminateUChars(dest, destCapacity, reqLength, pErrorCode);
-            return dest;
+            u_terminateUChars(dest, destCapacity, req_लंबाई, pErrorCode);
+            वापस dest;
         }
-        srcLength = static_cast<int32_t>(uprv_strlen(src));
+        src_लंबाई = static_cast<int32_t>(uprv_strlen(src));
     }
 
     /* Faster loop without ongoing checking for srcLength and pDestLimit. */
     UChar32 ch;
     uint8_t t1, t2;
     int32_t i = 0;
-    for(;;) {
+    क्रम(;;) {
         int32_t count = (int32_t)(pDestLimit - pDest);
-        int32_t count2 = srcLength - i;
-        if(count >= count2 && srcLength > 0 && U8_IS_SINGLE(*src)) {
+        int32_t count2 = src_लंबाई - i;
+        अगर(count >= count2 && src_लंबाई > 0 && U8_IS_SINGLE(*src)) {
             /* fast ASCII loop */
             int32_t start = i;
             uint8_t b;
-            while(i < srcLength && U8_IS_SINGLE(b = src[i])) {
+            जबतक(i < src_लंबाई && U8_IS_SINGLE(b = src[i])) {
                 *pDest++=b;
                 ++i;
             }
@@ -1145,27 +1145,27 @@ u_strFromJavaModifiedUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
          * Each iteration of the inner loop progresses by at most 3 UTF-8
          * bytes and one char16_t.
          */
-        if(subchar > 0xFFFF) {
-            break;
+        अगर(subchar > 0xFFFF) {
+            अवरोध;
         }
         count2 /= 3;
-        if(count > count2) {
+        अगर(count > count2) {
             count = count2; /* min(remaining dest, remaining src/3) */
         }
-        if(count < 3) {
+        अगर(count < 3) {
             /*
              * Too much overhead if we get near the end of the string,
              * continue with the next loop.
              */
-            break;
+            अवरोध;
         }
-        do {
+        करो {
             ch = (uint8_t)src[i++];
-            if(U8_IS_SINGLE(ch)) {
+            अगर(U8_IS_SINGLE(ch)) {
                 *pDest++=(char16_t)ch;
-            } else {
-                if(ch >= 0xe0) {
-                    if( /* handle U+0000..U+FFFF inline */
+            } अन्यथा {
+                अगर(ch >= 0xe0) {
+                    अगर( /* handle U+0000..U+FFFF inline */
                         ch <= 0xef &&
                         (t1 = (uint8_t)(src[i] - 0x80)) <= 0x3f &&
                         (t2 = (uint8_t)(src[i+1] - 0x80)) <= 0x3f
@@ -1173,84 +1173,84 @@ u_strFromJavaModifiedUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
                         /* no need for (ch & 0xf) because the upper bits are truncated after <<12 in the cast to (char16_t) */
                         *pDest++ = (char16_t)((ch << 12) | (t1 << 6) | t2);
                         i += 2;
-                        continue;
+                        जारी;
                     }
-                } else {
-                    if( /* handle U+0000..U+07FF inline */
+                } अन्यथा {
+                    अगर( /* handle U+0000..U+07FF inline */
                         ch >= 0xc0 &&
                         (t1 = (uint8_t)(src[i] - 0x80)) <= 0x3f
                     ) {
                         *pDest++ = (char16_t)(((ch & 0x1f) << 6) | t1);
                         ++i;
-                        continue;
+                        जारी;
                     }
                 }
 
-                if(subchar < 0) {
+                अगर(subchar < 0) {
                     *pErrorCode = U_INVALID_CHAR_FOUND;
-                    return nullptr;
-                } else if(subchar > 0xffff && --count == 0) {
+                    वापस nullptr;
+                } अन्यथा अगर(subchar > 0xffff && --count == 0) {
                     /*
                      * We need to write two UChars, adjusted count for that,
                      * and ran out of space.
                      */
                     --i;  // back out byte ch
-                    break;
-                } else {
+                    अवरोध;
+                } अन्यथा {
                     /* function call for error cases */
-                    utf8_nextCharSafeBody((const uint8_t *)src, &(i), srcLength, ch, -1);
-                    ++numSubstitutions;
+                    utf8_अग्र_Char_Safe_Body((स्थिर uint8_t *)src, &(i), src_लंबाई, ch, -1);
+                    ++अंक_Substitutions;
                     *(pDest++)=(char16_t)subchar;
                 }
             }
-        } while(--count > 0);
+        } जबतक(--count > 0);
     }
 
-    while(i < srcLength && (pDest < pDestLimit)) {
+    जबतक(i < src_लंबाई && (pDest < pDestLimit)) {
         ch = (uint8_t)src[i++];
-        if(U8_IS_SINGLE(ch)){
+        अगर(U8_IS_SINGLE(ch)){
             *pDest++=(char16_t)ch;
-        } else {
-            if(ch >= 0xe0) {
-                if( /* handle U+0000..U+FFFF inline */
+        } अन्यथा {
+            अगर(ch >= 0xe0) {
+                अगर( /* handle U+0000..U+FFFF inline */
                     ch <= 0xef &&
-                    (i+1) < srcLength &&
+                    (i+1) < src_लंबाई &&
                     (t1 = (uint8_t)(src[i] - 0x80)) <= 0x3f &&
                     (t2 = (uint8_t)(src[i+1] - 0x80)) <= 0x3f
                 ) {
                     /* no need for (ch & 0xf) because the upper bits are truncated after <<12 in the cast to (char16_t) */
                     *pDest++ = (char16_t)((ch << 12) | (t1 << 6) | t2);
                     i += 2;
-                    continue;
+                    जारी;
                 }
-            } else {
-                if( /* handle U+0000..U+07FF inline */
+            } अन्यथा {
+                अगर( /* handle U+0000..U+07FF inline */
                     ch >= 0xc0 &&
-                    i < srcLength &&
+                    i < src_लंबाई &&
                     (t1 = (uint8_t)(src[i] - 0x80)) <= 0x3f
                 ) {
                     *pDest++ = (char16_t)(((ch & 0x1f) << 6) | t1);
                     ++i;
-                    continue;
+                    जारी;
                 }
             }
 
-            if(subchar < 0) {
+            अगर(subchar < 0) {
                 *pErrorCode = U_INVALID_CHAR_FOUND;
-                return nullptr;
-            } else {
+                वापस nullptr;
+            } अन्यथा {
                 /* function call for error cases */
-                utf8_nextCharSafeBody((const uint8_t *)src, &(i), srcLength, ch, -1);
-                ++numSubstitutions;
-                if(subchar<=0xFFFF) {
+                utf8_अग्र_Char_Safe_Body((स्थिर uint8_t *)src, &(i), src_लंबाई, ch, -1);
+                ++अंक_Substitutions;
+                अगर(subchar<=0xFFFF) {
                     *(pDest++)=(char16_t)subchar;
-                } else {
+                } अन्यथा {
                     *(pDest++)=U16_LEAD(subchar);
-                    if(pDest<pDestLimit) {
+                    अगर(pDest<pDestLimit) {
                         *(pDest++)=U16_TRAIL(subchar);
-                    } else {
-                        reqLength++;
-                        break;
+                    } अन्यथा {
+                        req_लंबाई++;
+                        अवरोध;
                     }
                 }
             }
@@ -1258,196 +1258,196 @@ u_strFromJavaModifiedUTF8WithSub(char16_t* dest U_LIFETIME_BOUND,
     }
 
     /* Pre-flight the rest of the string. */
-    while(i < srcLength) {
+    जबतक(i < src_लंबाई) {
         ch = (uint8_t)src[i++];
-        if(U8_IS_SINGLE(ch)) {
-            reqLength++;
-        } else {
-            if(ch >= 0xe0) {
-                if( /* handle U+0000..U+FFFF inline */
+        अगर(U8_IS_SINGLE(ch)) {
+            req_लंबाई++;
+        } अन्यथा {
+            अगर(ch >= 0xe0) {
+                अगर( /* handle U+0000..U+FFFF inline */
                     ch <= 0xef &&
-                    (i+1) < srcLength &&
+                    (i+1) < src_लंबाई &&
                     (uint8_t)(src[i] - 0x80) <= 0x3f &&
                     (uint8_t)(src[i+1] - 0x80) <= 0x3f
                 ) {
-                    reqLength++;
+                    req_लंबाई++;
                     i += 2;
-                    continue;
+                    जारी;
                 }
-            } else {
-                if( /* handle U+0000..U+07FF inline */
+            } अन्यथा {
+                अगर( /* handle U+0000..U+07FF inline */
                     ch >= 0xc0 &&
-                    i < srcLength &&
+                    i < src_लंबाई &&
                     (uint8_t)(src[i] - 0x80) <= 0x3f
                 ) {
-                    reqLength++;
+                    req_लंबाई++;
                     ++i;
-                    continue;
+                    जारी;
                 }
             }
 
-            if(subchar < 0) {
+            अगर(subchar < 0) {
                 *pErrorCode = U_INVALID_CHAR_FOUND;
-                return nullptr;
-            } else {
+                वापस nullptr;
+            } अन्यथा {
                 /* function call for error cases */
-                utf8_nextCharSafeBody((const uint8_t *)src, &(i), srcLength, ch, -1);
-                ++numSubstitutions;
-                reqLength+=U16_LENGTH(ch);
+                utf8_अग्र_Char_Safe_Body((स्थिर uint8_t *)src, &(i), src_लंबाई, ch, -1);
+                ++अंक_Substitutions;
+                req_लंबाई+=U16_लंबाई(ch);
             }
         }
     }
 
-    if(pNumSubstitutions!=nullptr) {
-        *pNumSubstitutions=numSubstitutions;
+    अगर(p_अंक_Substitutions!=nullptr) {
+        *p_अंक_Substitutions=अंक_Substitutions;
     }
 
-    reqLength+=(int32_t)(pDest - dest);
-    if(pDestLength) {
-        *pDestLength = reqLength;
+    req_लंबाई+=(int32_t)(pDest - dest);
+    अगर(p_Dest_लंबाई) {
+        *p_Dest_लंबाई = req_लंबाई;
     }
 
     /* Terminate the buffer */
-    u_terminateUChars(dest, destCapacity, reqLength, pErrorCode);
-    return dest;
+    u_terminateUChars(dest, destCapacity, req_लंबाई, pErrorCode);
+    वापस dest;
 }
 
-U_CAPI char* U_EXPORT2
-u_strToJavaModifiedUTF8(char* dest U_LIFETIME_BOUND,
+U_CAPI अक्षर* U_EXPORT2
+u_strToJavaModifiedUTF8(अक्षर* dest U_LIFETIME_BOUND,
                         int32_t destCapacity,
-                        int32_t* pDestLength,
-                        const char16_t* src,
-                        int32_t srcLength,
+                        int32_t* p_Dest_लंबाई,
+                        स्थिर char16_t* src,
+                        int32_t src_लंबाई,
                         UErrorCode* pErrorCode) {
-    int32_t reqLength=0;
+    int32_t req_लंबाई=0;
     uint32_t ch=0;
-    const char16_t *pSrcLimit;
+    स्थिर char16_t *pSrcLimit;
     int32_t count;
 
     /* args check */
-    if(U_FAILURE(*pErrorCode)){
-        return nullptr;
+    अगर(U_FAILURE(*pErrorCode)){
+        वापस nullptr;
     }
-    if( (src==nullptr && srcLength!=0) || srcLength < -1 ||
+    अगर( (src==nullptr && src_लंबाई!=0) || src_लंबाई < -1 ||
         (dest==nullptr && destCapacity!=0) || destCapacity<0
     ) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        वापस nullptr;
     }
     uint8_t *pDest = (uint8_t *)dest;
     uint8_t *pDestLimit = pDest + destCapacity;
 
-    if(srcLength==-1) {
+    अगर(src_लंबाई==-1) {
         /* Convert NUL-terminated ASCII, then find the string length. */
-        while((ch=*src)<=0x7f && ch != 0 && pDest<pDestLimit) {
+        जबतक((ch=*src)<=0x7f && ch != 0 && pDest<pDestLimit) {
             *pDest++ = (uint8_t)ch;
             ++src;
         }
-        if(ch == 0) {
-            reqLength=(int32_t)(pDest - (uint8_t *)dest);
-            if(pDestLength) {
-                *pDestLength = reqLength;
+        अगर(ch == 0) {
+            req_लंबाई=(int32_t)(pDest - (uint8_t *)dest);
+            अगर(p_Dest_लंबाई) {
+                *p_Dest_लंबाई = req_लंबाई;
             }
 
             /* Terminate the buffer */
-            u_terminateChars(dest, destCapacity, reqLength, pErrorCode);
-            return dest;
+            u_terminateChars(dest, destCapacity, req_लंबाई, pErrorCode);
+            वापस dest;
         }
-        srcLength = u_strlen(src);
+        src_लंबाई = u_strlen(src);
     }
 
     /* Faster loop without ongoing checking for pSrcLimit and pDestLimit. */
-    pSrcLimit = (src!=nullptr)?(src+srcLength):nullptr;
-    for(;;) {
+    pSrcLimit = (src!=nullptr)?(src+src_लंबाई):nullptr;
+    क्रम(;;) {
         count = (int32_t)(pDestLimit - pDest);
-        srcLength = (int32_t)(pSrcLimit - src);
-        if(count >= srcLength && srcLength > 0 && *src <= 0x7f) {
+        src_लंबाई = (int32_t)(pSrcLimit - src);
+        अगर(count >= src_लंबाई && src_लंबाई > 0 && *src <= 0x7f) {
             /* fast ASCII loop */
-            const char16_t *prevSrc = src;
+            स्थिर char16_t *पूर्व_Src = src;
             int32_t delta;
-            while(src < pSrcLimit && (ch = *src) <= 0x7f && ch != 0) {
+            जबतक(src < pSrcLimit && (ch = *src) <= 0x7f && ch != 0) {
                 *pDest++=(uint8_t)ch;
                 ++src;
             }
-            delta = (int32_t)(src - prevSrc);
+            delta = (int32_t)(src - पूर्व_Src);
             count -= delta;
-            srcLength -= delta;
+            src_लंबाई -= delta;
         }
         /*
          * Each iteration of the inner loop progresses by at most 3 UTF-8
          * bytes and one char16_t.
          */
         count /= 3;
-        if(count > srcLength) {
-            count = srcLength; /* min(remaining dest/3, remaining src) */
+        अगर(count > src_लंबाई) {
+            count = src_लंबाई; /* min(remaining dest/3, remaining src) */
         }
-        if(count < 3) {
+        अगर(count < 3) {
             /*
              * Too much overhead if we get near the end of the string,
              * continue with the next loop.
              */
-            break;
+            अवरोध;
         }
-        do {
+        करो {
             ch=*src++;
-            if(ch <= 0x7f && ch != 0) {
+            अगर(ch <= 0x7f && ch != 0) {
                 *pDest++ = (uint8_t)ch;
-            } else if(ch <= 0x7ff) {
+            } अन्यथा अगर(ch <= 0x7ff) {
                 *pDest++=(uint8_t)((ch>>6)|0xc0);
                 *pDest++=(uint8_t)((ch&0x3f)|0x80);
-            } else {
+            } अन्यथा {
                 *pDest++=(uint8_t)((ch>>12)|0xe0);
                 *pDest++=(uint8_t)(((ch>>6)&0x3f)|0x80);
                 *pDest++=(uint8_t)((ch&0x3f)|0x80);
             }
-        } while(--count > 0);
+        } जबतक(--count > 0);
     }
 
-    while(src<pSrcLimit) {
+    जबतक(src<pSrcLimit) {
         ch=*src++;
-        if(ch <= 0x7f && ch != 0) {
-            if(pDest<pDestLimit) {
+        अगर(ch <= 0x7f && ch != 0) {
+            अगर(pDest<pDestLimit) {
                 *pDest++ = (uint8_t)ch;
-            } else {
-                reqLength = 1;
-                break;
+            } अन्यथा {
+                req_लंबाई = 1;
+                अवरोध;
             }
-        } else if(ch <= 0x7ff) {
-            if((pDestLimit - pDest) >= 2) {
+        } अन्यथा अगर(ch <= 0x7ff) {
+            अगर((pDestLimit - pDest) >= 2) {
                 *pDest++=(uint8_t)((ch>>6)|0xc0);
                 *pDest++=(uint8_t)((ch&0x3f)|0x80);
-            } else {
-                reqLength = 2;
-                break;
+            } अन्यथा {
+                req_लंबाई = 2;
+                अवरोध;
             }
-        } else {
-            if((pDestLimit - pDest) >= 3) {
+        } अन्यथा {
+            अगर((pDestLimit - pDest) >= 3) {
                 *pDest++=(uint8_t)((ch>>12)|0xe0);
                 *pDest++=(uint8_t)(((ch>>6)&0x3f)|0x80);
                 *pDest++=(uint8_t)((ch&0x3f)|0x80);
-            } else {
-                reqLength = 3;
-                break;
+            } अन्यथा {
+                req_लंबाई = 3;
+                अवरोध;
             }
         }
     }
-    while(src<pSrcLimit) {
+    जबतक(src<pSrcLimit) {
         ch=*src++;
-        if(ch <= 0x7f && ch != 0) {
-            ++reqLength;
-        } else if(ch<=0x7ff) {
-            reqLength+=2;
-        } else {
-            reqLength+=3;
+        अगर(ch <= 0x7f && ch != 0) {
+            ++req_लंबाई;
+        } अन्यथा अगर(ch<=0x7ff) {
+            req_लंबाई+=2;
+        } अन्यथा {
+            req_लंबाई+=3;
         }
     }
 
-    reqLength+=(int32_t)(pDest - (uint8_t *)dest);
-    if(pDestLength){
-        *pDestLength = reqLength;
+    req_लंबाई+=(int32_t)(pDest - (uint8_t *)dest);
+    अगर(p_Dest_लंबाई){
+        *p_Dest_लंबाई = req_लंबाई;
     }
 
     /* Terminate the buffer */
-    u_terminateChars(dest, destCapacity, reqLength, pErrorCode);
-    return dest;
+    u_terminateChars(dest, destCapacity, req_लंबाई, pErrorCode);
+    वापस dest;
 }

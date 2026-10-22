@@ -16,12 +16,12 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/uobject.h"
-#include "cmemory.h"
+#समावेश "unicode/uobject.h"
+#समावेश "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
-#if U_OVERRIDE_CXX_ALLOCATION
+#अगर U_OVERRIDE_CXX_ALLOCATION
 
 /*
  * Default implementation of UMemory::new/delete
@@ -58,48 +58,48 @@ U_NAMESPACE_BEGIN
  * and replace with uprv_malloc/uprv_free.
  */
 
-void * U_EXPORT2 UMemory::operator new(size_t size) noexcept {
-    return uprv_malloc(size);
+व्योम * U_EXPORT2 UMemory::चालक नया(माप_प्रकार size) noexcept {
+    वापस uprv_malloc(size);
 }
 
-void U_EXPORT2 UMemory::operator delete(void *p) noexcept {
-    if(p!=nullptr) {
+व्योम U_EXPORT2 UMemory::चालक मिटाओ(व्योम *p) noexcept {
+    अगर(p!=nullptr) {
         uprv_free(p);
     }
 }
 
-void * U_EXPORT2 UMemory::operator new[](size_t size) noexcept {
-    return uprv_malloc(size);
+व्योम * U_EXPORT2 UMemory::चालक नया[](माप_प्रकार size) noexcept {
+    वापस uprv_malloc(size);
 }
 
-void U_EXPORT2 UMemory::operator delete[](void *p) noexcept {
-    if(p!=nullptr) {
+व्योम U_EXPORT2 UMemory::चालक मिटाओ[](व्योम *p) noexcept {
+    अगर(p!=nullptr) {
         uprv_free(p);
     }
 }
 
-#if U_HAVE_DEBUG_LOCATION_NEW
-void * U_EXPORT2 UMemory::operator new(size_t size, const char* /*file*/, int /*line*/) noexcept {
-    return UMemory::operator new(size);
+#अगर U_HAVE_DEBUG_LOCATION_NEW
+व्योम * U_EXPORT2 UMemory::चालक नया(माप_प्रकार size, स्थिर अक्षर* /*file*/, पूर्णांक /*पंक्ति*/) noexcept {
+    वापस UMemory::चालक नया(size);
 }
 
-void U_EXPORT2 UMemory::operator delete(void* p, const char* /*file*/, int /*line*/) noexcept {
-    UMemory::operator delete(p);
+व्योम U_EXPORT2 UMemory::चालक मिटाओ(व्योम* p, स्थिर अक्षर* /*file*/, पूर्णांक /*पंक्ति*/) noexcept {
+    UMemory::चालक मिटाओ(p);
 }
-#endif /* U_HAVE_DEBUG_LOCATION_NEW */
+#पूर्ण_अगर /* U_HAVE_DEBUG_LOCATION_NEW */
 
 
-#endif
+#पूर्ण_अगर
 
 UObject::~UObject() {}
 
-UClassID UObject::getDynamicClassID() const { return nullptr; }
+UClassID UObject::getDynamicClassID() स्थिर { वापस nullptr; }
 
 U_NAMESPACE_END
 
 U_NAMESPACE_USE
 
-U_CAPI void U_EXPORT2
-uprv_deleteUObject(void *obj) {
-    delete static_cast<UObject *>(obj);
+U_CAPI व्योम U_EXPORT2
+uprv_deleteUObject(व्योम *obj) {
+    मिटाओ static_cast<UObject *>(obj);
 }

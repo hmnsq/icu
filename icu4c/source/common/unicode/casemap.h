@@ -4,15 +4,15 @@
 // casemap.h
 // created: 2017jan12 Markus W. Scherer
 
-#ifndef __CASEMAP_H__
-#define __CASEMAP_H__
+#अगर_अघोषित __CASEMAP_H__
+#घोषणा __CASEMAP_H__
 
-#include "unicode/utypes.h"
+#समावेश "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#अगर U_SHOW_CPLUSPLUS_API
 
-#include "unicode/stringpiece.h"
-#include "unicode/uobject.h"
+#समावेश "unicode/stringpiece.h"
+#समावेश "unicode/uobject.h"
 
 /**
  * \file
@@ -30,8 +30,8 @@ class Edits;
  *
  * @stable ICU 59
  */
-class U_COMMON_API CaseMap final : public UMemory {
-public:
+class U_COMMON_API CaseMap final : खुला UMemory {
+खुला:
     /**
      * Lowercases a UTF-16 string and optionally records edits.
      * Casing is locale-dependent and context-sensitive.
@@ -62,9 +62,9 @@ public:
      * @see u_strToLower
      * @stable ICU 59
      */
-     static int32_t toLower(
-            const char *locale, uint32_t options,
-            const char16_t *src, int32_t srcLength,
+     अटल int32_t toLower(
+            स्थिर अक्षर *locale, uint32_t options,
+            स्थिर char16_t *src, int32_t src_लंबाई,
             char16_t *dest, int32_t destCapacity, Edits *edits,
             UErrorCode &errorCode);
 
@@ -98,13 +98,13 @@ public:
      * @see u_strToUpper
      * @stable ICU 59
      */
-    static int32_t toUpper(
-            const char *locale, uint32_t options,
-            const char16_t *src, int32_t srcLength,
+    अटल int32_t toUpper(
+            स्थिर अक्षर *locale, uint32_t options,
+            स्थिर char16_t *src, int32_t src_लंबाई,
             char16_t *dest, int32_t destCapacity, Edits *edits,
             UErrorCode &errorCode);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#अगर !UCONFIG_NO_BREAK_ITERATION
 
     /**
      * Titlecases a UTF-16 string and optionally records edits.
@@ -149,13 +149,13 @@ public:
      * @see ucasemap_toTitle
      * @stable ICU 59
      */
-    static int32_t toTitle(
-            const char *locale, uint32_t options, BreakIterator *iter,
-            const char16_t *src, int32_t srcLength,
+    अटल int32_t toTitle(
+            स्थिर अक्षर *locale, uint32_t options, BreakIterator *iter,
+            स्थिर char16_t *src, int32_t src_लंबाई,
             char16_t *dest, int32_t destCapacity, Edits *edits,
             UErrorCode &errorCode);
 
-#endif  // UCONFIG_NO_BREAK_ITERATION
+#पूर्ण_अगर  // UCONFIG_NO_BREAK_ITERATION
 
     /**
      * Case-folds a UTF-16 string and optionally records edits.
@@ -191,9 +191,9 @@ public:
      * @see u_strFoldCase
      * @stable ICU 59
      */
-    static int32_t fold(
+    अटल int32_t fold(
             uint32_t options,
-            const char16_t *src, int32_t srcLength,
+            स्थिर char16_t *src, int32_t src_लंबाई,
             char16_t *dest, int32_t destCapacity, Edits *edits,
             UErrorCode &errorCode);
 
@@ -218,8 +218,8 @@ public:
      * @see ucasemap_utf8ToLower
      * @stable ICU 60
      */
-    static void utf8ToLower(
-            const char *locale, uint32_t options,
+    अटल व्योम utf8ToLower(
+            स्थिर अक्षर *locale, uint32_t options,
             StringPiece src, ByteSink &sink, Edits *edits,
             UErrorCode &errorCode);
 
@@ -244,12 +244,12 @@ public:
      * @see ucasemap_utf8ToUpper
      * @stable ICU 60
      */
-    static void utf8ToUpper(
-            const char *locale, uint32_t options,
+    अटल व्योम utf8ToUpper(
+            स्थिर अक्षर *locale, uint32_t options,
             StringPiece src, ByteSink &sink, Edits *edits,
             UErrorCode &errorCode);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#अगर !UCONFIG_NO_BREAK_ITERATION
 
     /**
      * Titlecases a UTF-8 string and optionally records edits.
@@ -284,12 +284,12 @@ public:
      * @see ucasemap_utf8ToTitle
      * @stable ICU 60
      */
-    static void utf8ToTitle(
-            const char *locale, uint32_t options, BreakIterator *iter,
+    अटल व्योम utf8ToTitle(
+            स्थिर अक्षर *locale, uint32_t options, BreakIterator *iter,
             StringPiece src, ByteSink &sink, Edits *edits,
             UErrorCode &errorCode);
 
-#endif  // UCONFIG_NO_BREAK_ITERATION
+#पूर्ण_अगर  // UCONFIG_NO_BREAK_ITERATION
 
     /**
      * Case-folds a UTF-8 string and optionally records edits.
@@ -315,7 +315,7 @@ public:
      * @see ucasemap_utf8FoldCase
      * @stable ICU 60
      */
-    static void utf8Fold(
+    अटल व्योम utf8Fold(
             uint32_t options,
             StringPiece src, ByteSink &sink, Edits *edits,
             UErrorCode &errorCode);
@@ -350,10 +350,10 @@ public:
      * @see ucasemap_utf8ToLower
      * @stable ICU 59
      */
-    static int32_t utf8ToLower(
-            const char *locale, uint32_t options,
-            const char *src, int32_t srcLength,
-            char *dest, int32_t destCapacity, Edits *edits,
+    अटल int32_t utf8ToLower(
+            स्थिर अक्षर *locale, uint32_t options,
+            स्थिर अक्षर *src, int32_t src_लंबाई,
+            अक्षर *dest, int32_t destCapacity, Edits *edits,
             UErrorCode &errorCode);
 
     /**
@@ -386,13 +386,13 @@ public:
      * @see ucasemap_utf8ToUpper
      * @stable ICU 59
      */
-    static int32_t utf8ToUpper(
-            const char *locale, uint32_t options,
-            const char *src, int32_t srcLength,
-            char *dest, int32_t destCapacity, Edits *edits,
+    अटल int32_t utf8ToUpper(
+            स्थिर अक्षर *locale, uint32_t options,
+            स्थिर अक्षर *src, int32_t src_लंबाई,
+            अक्षर *dest, int32_t destCapacity, Edits *edits,
             UErrorCode &errorCode);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#अगर !UCONFIG_NO_BREAK_ITERATION
 
     /**
      * Titlecases a UTF-8 string and optionally records edits.
@@ -436,13 +436,13 @@ public:
      * @see ucasemap_utf8ToTitle
      * @stable ICU 59
      */
-    static int32_t utf8ToTitle(
-            const char *locale, uint32_t options, BreakIterator *iter,
-            const char *src, int32_t srcLength,
-            char *dest, int32_t destCapacity, Edits *edits,
+    अटल int32_t utf8ToTitle(
+            स्थिर अक्षर *locale, uint32_t options, BreakIterator *iter,
+            स्थिर अक्षर *src, int32_t src_लंबाई,
+            अक्षर *dest, int32_t destCapacity, Edits *edits,
             UErrorCode &errorCode);
 
-#endif  // UCONFIG_NO_BREAK_ITERATION
+#पूर्ण_अगर  // UCONFIG_NO_BREAK_ITERATION
 
     /**
      * Case-folds a UTF-8 string and optionally records edits.
@@ -478,20 +478,20 @@ public:
      * @see ucasemap_utf8FoldCase
      * @stable ICU 59
      */
-    static int32_t utf8Fold(
+    अटल int32_t utf8Fold(
             uint32_t options,
-            const char *src, int32_t srcLength,
-            char *dest, int32_t destCapacity, Edits *edits,
+            स्थिर अक्षर *src, int32_t src_लंबाई,
+            अक्षर *dest, int32_t destCapacity, Edits *edits,
             UErrorCode &errorCode);
 
-private:
+निजी:
     CaseMap() = delete;
-    CaseMap(const CaseMap &other) = delete;
-    CaseMap &operator=(const CaseMap &other) = delete;
+    CaseMap(स्थिर CaseMap &other) = delete;
+    CaseMap &चालक=(स्थिर CaseMap &other) = delete;
 };
 
 U_NAMESPACE_END
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#पूर्ण_अगर /* U_SHOW_CPLUSPLUS_API */
 
-#endif  // __CASEMAP_H__
+#पूर्ण_अगर  // __CASEMAP_H__

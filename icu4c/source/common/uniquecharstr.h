@@ -4,13 +4,13 @@
 // uniquecharstr.h
 // created: 2020sep01 Frank Yung-Fong Tang
 
-#ifndef __UNIQUECHARSTR_H__
-#define __UNIQUECHARSTR_H__
+#अगर_अघोषित __UNIQUECHARSTR_H__
+#घोषणा __UNIQUECHARSTR_H__
 
-#include "charstr.h"
-#include "uassert.h"
-#include "uhash.h"
-#include "cmemory.h"
+#समावेश "charstr.h"
+#समावेश "uassert.h"
+#समावेश "uhash.h"
+#समावेश "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
@@ -23,15 +23,15 @@ U_NAMESPACE_BEGIN
  * call orphanCharStrings() to capture the string storage, and let this object go out of scope.
  */
 class UniqueCharStrings {
-public:
+खुला:
     UniqueCharStrings(UErrorCode &errorCode) : strings(nullptr) {
         // Note: We hash on string contents but store stable char16_t * pointers.
         // If the strings are stored in resource bundles which should be built with
         // duplicate elimination, then we should be able to hash on just the pointer values.
         uhash_init(&map, uhash_hashUChars, uhash_compareUChars, uhash_compareLong, &errorCode);
-        if (U_FAILURE(errorCode)) { return; }
+        अगर (U_FAILURE(errorCode)) { वापस; }
         strings = new CharString();
-        if (strings == nullptr) {
+        अगर (strings == nullptr) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
         }
     }
@@ -42,9 +42,9 @@ public:
 
     /** Returns/orphans the CharString that contains all strings. */
     CharString *orphanCharStrings() {
-        CharString *result = strings;
+        CharString *परिणाम = strings;
         strings = nullptr;
-        return result;
+        वापस परिणाम;
     }
 
     /**
@@ -55,66 +55,66 @@ public:
      * Best used with string data in a stable storage, such as strings returned
      * by resource bundle functions.
      */
-    int32_t add(const char16_t*p, UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return -1; }
-        if (isFrozen) {
+    int32_t add(स्थिर char16_t*p, UErrorCode &errorCode) {
+        अगर (U_FAILURE(errorCode)) { वापस -1; }
+        अगर (isFrozen) {
             errorCode = U_NO_WRITE_PERMISSION;
-            return -1;
+            वापस -1;
         }
         // The string points into the resource bundle.
-        int32_t oldIndex = uhash_geti(&map, p);
-        if (oldIndex != 0) {  // found duplicate
-            return oldIndex;
+        int32_t old_सूचकांक = uhash_geti(&map, p);
+        अगर (old_सूचकांक != 0) {  // found duplicate
+            वापस old_सूचकांक;
         }
         // Explicit NUL terminator for the previous string.
         // The strings object is also terminated with one implicit NUL.
         strings->append(0, errorCode);
-        int32_t newIndex = strings->length();
+        int32_t new_सूचकांक = strings->लंबाई();
         strings->appendInvariantChars(p, u_strlen(p), errorCode);
-        uhash_puti(&map, const_cast<char16_t *>(p), newIndex, &errorCode);
-        return newIndex;
+        uhash_puti(&map, const_cast<char16_t *>(p), new_सूचकांक, &errorCode);
+        वापस new_सूचकांक;
     }
 
     /**
      * Adds a unicode string by value and returns a unique number for it.
      */
-    int32_t addByValue(UnicodeString s, UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return -1; }
-        if (isFrozen) {
+    int32_t add_By_मूल्य(UnicodeString s, UErrorCode &errorCode) {
+        अगर (U_FAILURE(errorCode)) { वापस -1; }
+        अगर (isFrozen) {
             errorCode = U_NO_WRITE_PERMISSION;
-            return -1;
+            वापस -1;
         }
-        int32_t oldIndex = uhash_geti(&map, s.getTerminatedBuffer());
-        if (oldIndex != 0) {  // found duplicate
-            return oldIndex;
+        int32_t old_सूचकांक = uhash_geti(&map, s.get_Terminated_बफर());
+        अगर (old_सूचकांक != 0) {  // found duplicate
+            वापस old_सूचकांक;
         }
         // We need to store the string content of the UnicodeString.
-        UnicodeString *key = keyStore.create(s);
-        if (key == nullptr) {
+        UnicodeString *कुंजी = कुंजी_Store.create(s);
+        अगर (कुंजी == nullptr) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return -1;
+            वापस -1;
         }
-        return add(key->getTerminatedBuffer(), errorCode);
+        वापस add(कुंजी->get_Terminated_बफर(), errorCode);
     }
 
-    void freeze() { isFrozen = true; }
+    व्योम freeze() { isFrozen = true; }
 
     /**
      * Returns a string pointer for its unique number, if this object is frozen.
      * Otherwise nullptr.
      */
-    const char *get(int32_t i) const {
+    स्थिर अक्षर *get(int32_t i) स्थिर {
         U_ASSERT(isFrozen);
-        return isFrozen && i > 0 ? strings->data() + i : nullptr;
+        वापस isFrozen && i > 0 ? strings->तथ्य() + i : nullptr;
     }
 
-private:
+निजी:
     UHashtable map;
     CharString *strings;
-    MemoryPool<UnicodeString> keyStore;
+    MemoryPool<UnicodeString> कुंजी_Store;
     bool isFrozen = false;
 };
 
 U_NAMESPACE_END
 
-#endif  // __UNIQUECHARSTR_H__
+#पूर्ण_अगर  // __UNIQUECHARSTR_H__

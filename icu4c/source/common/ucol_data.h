@@ -23,18 +23,18 @@
 *    which might (or might not) be easier if all swappers are in the common library.
 */
 
-#ifndef __UCOL_DATA_H__
-#define __UCOL_DATA_H__
+#अगर_अघोषित __UCOL_DATA_H__
+#घोषणा __UCOL_DATA_H__
 
-#include "unicode/utypes.h"
+#समावेश "unicode/utypes.h"
 
-#if !UCONFIG_NO_COLLATION
+#अगर !UCONFIG_NO_COLLATION
 
 /* let us know whether reserved fields are reset to zero or junked */
-#define UCOL_HEADER_MAGIC 0x20030618
+#घोषणा UCOL_HEADER_MAGIC 0x20030618
 
-typedef struct {
-      int32_t size;
+प्रकार काष्ठा {
+      int32_t आकार_2;
       /* all the offsets are in bytes */
       /* to get the address add to the header address and cast properly */
       uint32_t options; /* these are the default options for the collator */
@@ -43,9 +43,9 @@ typedef struct {
       uint32_t magic;            /* magic number - lets us know whether reserved data is reset or junked */
       uint32_t mappingPosition;  /* const uint8_t *mappingPosition; */
       uint32_t expansion;        /* uint32_t *expansion;            */
-      uint32_t contractionIndex; /* char16_t *contractionIndex;        */
+      uint32_t contraction_सूचकांक; /* char16_t *contractionIndex;        */
       uint32_t contractionCEs;   /* uint32_t *contractionCEs;       */
-      uint32_t contractionSize;  /* needed for various closures */
+      uint32_t contraction_आकार;  /* needed for various closures */
       /*int32_t latinOneMapping;*/ /* this is now handled in the trie itself *//* fast track to latin1 chars      */
 
       uint32_t endExpansionCE;      /* array of last collation element in
@@ -59,7 +59,7 @@ typedef struct {
       uint32_t contrEndCP;          /* hash table of final code points  */
                                     /*   in contractions.               */
 
-      int32_t contractionUCACombosSize;     /* number of UCA contraction items. */
+      int32_t contraction_UCACombos_आकार;     /* number of UCA contraction items. */
                                             /*Length is contractionUCACombosSize*contractionUCACombosWidth*sizeof(char16_t) */
       UBool jamoSpecial;                    /* is jamoSpecial */
       UBool isBigEndian;                    /* is this data big endian? from the UDataInfo header*/
@@ -74,16 +74,16 @@ typedef struct {
       uint8_t reserved[76];                 /* for future use */
 } UCATableHeader;
 
-typedef struct {
-  uint32_t byteSize;
-  uint32_t tableSize;
-  uint32_t contsSize;
+प्रकार काष्ठा {
+  uint32_t byte_आकार;
+  uint32_t table_आकार;
+  uint32_t conts_आकार;
   uint32_t table;
   uint32_t conts;
   UVersionInfo UCAVersion;              /* version of the UCA, read from file */
   uint8_t padding[8];
 } InverseUCATableHeader;
 
-#endif  /* !UCONFIG_NO_COLLATION */
+#पूर्ण_अगर  /* !UCONFIG_NO_COLLATION */
 
-#endif  /* __UCOL_DATA_H__ */
+#पूर्ण_अगर  /* __UCOL_DATA_H__ */

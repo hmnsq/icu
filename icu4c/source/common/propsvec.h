@@ -18,12 +18,12 @@
 *   Store bits (Unicode character properties) in bit set vectors.
 */
 
-#ifndef __UPROPSVEC_H__
-#define __UPROPSVEC_H__
+#अगर_अघोषित __UPROPSVEC_H__
+#घोषणा __UPROPSVEC_H__
 
-#include "unicode/utypes.h"
-#include "utrie.h"
-#include "utrie2.h"
+#समावेश "unicode/utypes.h"
+#समावेश "utrie.h"
+#समावेश "utrie2.h"
 
 U_CDECL_BEGIN
 
@@ -49,24 +49,24 @@ U_CDECL_BEGIN
  * It would be possible to store only one range boundary per row,
  * but self-contained rows allow to later sort them by contents.
  */
-struct UPropsVectors;
-typedef struct UPropsVectors UPropsVectors;
+काष्ठा UPropsVectors;
+प्रकार काष्ठा UPropsVectors UPropsVectors;
 
 /*
  * Special pseudo code points for storing the initialValue and the errorValue,
  * which are used to initialize a UTrie2 or similar.
  */
-#define UPVEC_FIRST_SPECIAL_CP 0x110000
-#define UPVEC_INITIAL_VALUE_CP 0x110000
-#define UPVEC_ERROR_VALUE_CP 0x110001
-#define UPVEC_MAX_CP 0x110001
+#घोषणा UPVEC_FIRST_SPECIAL_CP 0x110000
+#घोषणा UPVEC_INITIAL_मूल्य_CP 0x110000
+#घोषणा UPVEC_ERROR_मूल्य_CP 0x110001
+#घोषणा UPVEC_MAX_CP 0x110001
 
 /*
  * Special pseudo code point used in upvec_compact() signalling the end of
  * delivering special values and the beginning of delivering real ones.
  * Stable value, unlike UPVEC_MAX_CP which might grow over time.
  */
-#define UPVEC_START_REAL_VALUES_CP 0x200000
+#घोषणा UPVEC_START_REAL_मूल्यावली_CP 0x200000
 
 /*
  * Open a UPropsVectors object.
@@ -75,7 +75,7 @@ typedef struct UPropsVectors UPropsVectors;
 U_CAPI UPropsVectors * U_EXPORT2
 upvec_open(int32_t columns, UErrorCode *pErrorCode);
 
-U_CAPI void U_EXPORT2
+U_CAPI व्योम U_EXPORT2
 upvec_close(UPropsVectors *pv);
 
 /*
@@ -84,11 +84,11 @@ upvec_close(UPropsVectors *pv);
  *
  * Will set U_NO_WRITE_PERMISSION if called after upvec_compact().
  */
-U_CAPI void U_EXPORT2
-upvec_setValue(UPropsVectors *pv,
+U_CAPI व्योम U_EXPORT2
+upvec_set_मूल्य(UPropsVectors *pv,
                UChar32 start, UChar32 end,
                int32_t column,
-               uint32_t value, uint32_t mask,
+               uint32_t मूल्य_2, uint32_t mask,
                UErrorCode *pErrorCode);
 
 /*
@@ -96,7 +96,7 @@ upvec_setValue(UPropsVectors *pv,
  * Always returns 0 if called after upvec_compact().
  */
 U_CAPI uint32_t U_EXPORT2
-upvec_getValue(const UPropsVectors *pv, UChar32 c, int32_t column);
+upvec_get_मूल्य(स्थिर UPropsVectors *pv, UChar32 c, int32_t column);
 
 /*
  * pRangeStart and pRangeEnd can be NULL.
@@ -104,7 +104,7 @@ upvec_getValue(const UPropsVectors *pv, UChar32 c, int32_t column);
  *         or if called after upvec_compact()
  */
 U_CAPI uint32_t * U_EXPORT2
-upvec_getRow(const UPropsVectors *pv, int32_t rowIndex,
+upvec_getRow(स्थिर UPropsVectors *pv, int32_t row_सूचकांक,
              UChar32 *pRangeStart, UChar32 *pRangeEnd);
 
 /*
@@ -125,22 +125,22 @@ upvec_getRow(const UPropsVectors *pv, int32_t rowIndex,
  * and the row is arbitrary (but not NULL).
  * Then, in the second phase, the handler is called for each row of real values.
  */
-typedef void U_CALLCONV
-UPVecCompactHandler(void *context,
+प्रकार व्योम U_CALLCONV
+UPVecCompactHandler(व्योम *context,
                     UChar32 start, UChar32 end,
-                    int32_t rowIndex, uint32_t *row, int32_t columns,
+                    int32_t row_सूचकांक, uint32_t *row, int32_t columns,
                     UErrorCode *pErrorCode);
 
-U_CAPI void U_EXPORT2
-upvec_compact(UPropsVectors *pv, UPVecCompactHandler *handler, void *context, UErrorCode *pErrorCode);
+U_CAPI व्योम U_EXPORT2
+upvec_compact(UPropsVectors *pv, UPVecCompactHandler *handler, व्योम *context, UErrorCode *pErrorCode);
 
 /*
  * Get the vectors array after calling upvec_compact().
  * The caller must not modify nor release the returned array.
  * Returns NULL if called before upvec_compact().
  */
-U_CAPI const uint32_t * U_EXPORT2
-upvec_getArray(const UPropsVectors *pv, int32_t *pRows, int32_t *pColumns);
+U_CAPI स्थिर uint32_t * U_EXPORT2
+upvec_getArray(स्थिर UPropsVectors *pv, int32_t *pRows, int32_t *pColumns);
 
 /*
  * Get a clone of the vectors array after calling upvec_compact().
@@ -148,7 +148,7 @@ upvec_getArray(const UPropsVectors *pv, int32_t *pRows, int32_t *pColumns);
  * Returns NULL if called before upvec_compact().
  */
 U_CAPI uint32_t * U_EXPORT2
-upvec_cloneArray(const UPropsVectors *pv,
+upvec_cloneArray(स्थिर UPropsVectors *pv,
                  int32_t *pRows, int32_t *pColumns, UErrorCode *pErrorCode);
 
 /*
@@ -158,21 +158,21 @@ upvec_cloneArray(const UPropsVectors *pv,
 U_CAPI UTrie2 * U_EXPORT2
 upvec_compactToUTrie2WithRowIndexes(UPropsVectors *pv, UErrorCode *pErrorCode);
 
-struct UPVecToUTrie2Context {
+काष्ठा UPVecToUTrie2Context {
     UTrie2 *trie;
-    int32_t initialValue;
-    int32_t errorValue;
-    int32_t maxValue;
+    int32_t initial_मूल्य;
+    int32_t error_मूल्य;
+    int32_t max_मूल्य;
 };
-typedef struct UPVecToUTrie2Context UPVecToUTrie2Context;
+प्रकार काष्ठा UPVecToUTrie2Context UPVecToUTrie2Context;
 
 /* context=UPVecToUTrie2Context, creates the trie and stores the rowIndex values */
-U_CAPI void U_CALLCONV
-upvec_compactToUTrie2Handler(void *context,
+U_CAPI व्योम U_CALLCONV
+upvec_compactToUTrie2Handler(व्योम *context,
                              UChar32 start, UChar32 end,
-                             int32_t rowIndex, uint32_t *row, int32_t columns,
+                             int32_t row_सूचकांक, uint32_t *row, int32_t columns,
                              UErrorCode *pErrorCode);
 
 U_CDECL_END
 
-#endif
+#पूर्ण_अगर

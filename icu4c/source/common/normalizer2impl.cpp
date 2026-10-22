@@ -18,29 +18,29 @@
 
 // #define UCPTRIE_DEBUG
 
-#include "unicode/utypes.h"
+#समावेश "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#अगर !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/bytestream.h"
-#include "unicode/edits.h"
-#include "unicode/normalizer2.h"
-#include "unicode/stringoptions.h"
-#include "unicode/ucptrie.h"
-#include "unicode/udata.h"
-#include "unicode/umutablecptrie.h"
-#include "unicode/ustring.h"
-#include "unicode/utf16.h"
-#include "unicode/utf8.h"
-#include "bytesinkutil.h"
-#include "cmemory.h"
-#include "mutex.h"
-#include "normalizer2impl.h"
-#include "putilimp.h"
-#include "uassert.h"
-#include "ucptrie_impl.h"
-#include "uset_imp.h"
-#include "uvector.h"
+#समावेश "unicode/bytestream.h"
+#समावेश "unicode/edits.h"
+#समावेश "unicode/normalizer2.h"
+#समावेश "unicode/stringoptions.h"
+#समावेश "unicode/ucptrie.h"
+#समावेश "unicode/udata.h"
+#समावेश "unicode/umutablecptrie.h"
+#समावेश "unicode/ustring.h"
+#समावेश "unicode/utf16.h"
+#समावेश "unicode/utf8.h"
+#समावेश "bytesinkutil.h"
+#समावेश "cmemory.h"
+#समावेश "mutex.h"
+#समावेश "normalizer2impl.h"
+#समावेश "putilimp.h"
+#समावेश "uassert.h"
+#समावेश "ucptrie_impl.h"
+#समावेश "uset_imp.h"
+#समावेश "uvector.h"
 
 U_NAMESPACE_BEGIN
 
@@ -51,14 +51,14 @@ namespace {
  * Can be lower than the actual lead byte for c.
  * Typically U+0300 for NFC/NFD, U+00A0 for NFKC/NFKD, U+0041 for NFKC_Casefold.
  */
-inline uint8_t leadByteForCP(UChar32 c) {
-    if (c <= 0x7f) {
-        return static_cast<uint8_t>(c);
-    } else if (c <= 0x7ff) {
-        return static_cast<uint8_t>(0xc0 + (c >> 6));
-    } else {
+अंतरभूत uint8_t leadByteForCP(UChar32 c) {
+    अगर (c <= 0x7f) {
+        वापस static_cast<uint8_t>(c);
+    } अन्यथा अगर (c <= 0x7ff) {
+        वापस static_cast<uint8_t>(0xc0 + (c >> 6));
+    } अन्यथा {
         // Should not occur because ccc(U+0300)!=0.
-        return 0xe0;
+        वापस 0xe0;
     }
 }
 
@@ -71,21 +71,21 @@ inline uint8_t leadByteForCP(UChar32 c) {
  * We should not need it for normalization-inert data (norm16==0).
  * Illegal sequences yield the error value norm16==0 just like real normalization-inert code points.
  */
-UChar32 codePointFromValidUTF8(const uint8_t *cpStart, const uint8_t *cpLimit) {
+UChar32 codePointFromValidUTF8(स्थिर uint8_t *cpStart, स्थिर uint8_t *cpLimit) {
     // Similar to U8_NEXT_UNSAFE(s, i, c).
     U_ASSERT(cpStart < cpLimit);
     uint8_t c = *cpStart;
-    switch(cpLimit-cpStart) {
-    case 1:
-        return c;
-    case 2:
-        return ((c&0x1f)<<6) | (cpStart[1]&0x3f);
-    case 3:
+    चयन(cpLimit-cpStart) {
+    हाल 1:
+        वापस c;
+    हाल 2:
+        वापस ((c&0x1f)<<6) | (cpStart[1]&0x3f);
+    हाल 3:
         // no need for (c&0xf) because the upper bits are truncated after <<12 in the cast to (char16_t)
-        return static_cast<char16_t>((c << 12) | ((cpStart[1] & 0x3f) << 6) | (cpStart[2] & 0x3f));
-    case 4:
-        return ((c&7)<<18) | ((cpStart[1]&0x3f)<<12) | ((cpStart[2]&0x3f)<<6) | (cpStart[3]&0x3f);
-    default:
+        वापस static_cast<char16_t>((c << 12) | ((cpStart[1] & 0x3f) << 6) | (cpStart[2] & 0x3f));
+    हाल 4:
+        वापस ((c&7)<<18) | ((cpStart[1]&0x3f)<<12) | ((cpStart[2]&0x3f)<<6) | (cpStart[3]&0x3f);
+    शेष:
         UPRV_UNREACHABLE_EXIT;  // Should not occur.
     }
 }
@@ -94,254 +94,254 @@ UChar32 codePointFromValidUTF8(const uint8_t *cpStart, const uint8_t *cpLimit) {
  * Returns the last code point in [start, p[ if it is valid and in U+1000..U+D7FF.
  * Otherwise returns a negative value.
  */
-UChar32 previousHangulOrJamo(const uint8_t *start, const uint8_t *p) {
-    if ((p - start) >= 3) {
+UChar32 previousHangulOrJamo(स्थिर uint8_t *start, स्थिर uint8_t *p) {
+    अगर ((p - start) >= 3) {
         p -= 3;
         uint8_t l = *p;
         uint8_t t1, t2;
-        if (0xe1 <= l && l <= 0xed &&
+        अगर (0xe1 <= l && l <= 0xed &&
                 (t1 = static_cast<uint8_t>(p[1] - 0x80)) <= 0x3f &&
                 (t2 = static_cast<uint8_t>(p[2] - 0x80)) <= 0x3f &&
                 (l < 0xed || t1 <= 0x1f)) {
-            return ((l & 0xf) << 12) | (t1 << 6) | t2;
+            वापस ((l & 0xf) << 12) | (t1 << 6) | t2;
         }
     }
-    return U_SENTINEL;
+    वापस U_SENTINEL;
 }
 
 /**
  * Returns the offset from the Jamo T base if [src, limit[ starts with a single Jamo T code point.
  * Otherwise returns a negative value.
  */
-int32_t getJamoTMinusBase(const uint8_t *src, const uint8_t *limit) {
+int32_t getJamoTMinusBase(स्थिर uint8_t *src, स्थिर uint8_t *limit) {
     // Jamo T: E1 86 A8..E1 87 82
-    if ((limit - src) >= 3 && *src == 0xe1) {
-        if (src[1] == 0x86) {
+    अगर ((limit - src) >= 3 && *src == 0xe1) {
+        अगर (src[1] == 0x86) {
             uint8_t t = src[2];
             // The first Jamo T is U+11A8 but JAMO_T_BASE is 11A7.
             // Offset 0 does not correspond to any conjoining Jamo.
-            if (0xa8 <= t && t <= 0xbf) {
-                return t - 0xa7;
+            अगर (0xa8 <= t && t <= 0xbf) {
+                वापस t - 0xa7;
             }
-        } else if (src[1] == 0x87) {
+        } अन्यथा अगर (src[1] == 0x87) {
             uint8_t t = src[2];
-            if (static_cast<int8_t>(t) <= static_cast<int8_t>(0x82u)) {
-                return t - (0xa7 - 0x40);
+            अगर (static_cast<int8_t>(t) <= static_cast<int8_t>(0x82u)) {
+                वापस t - (0xa7 - 0x40);
             }
         }
     }
-    return -1;
+    वापस -1;
 }
 
-void
-appendCodePointDelta(const uint8_t *cpStart, const uint8_t *cpLimit, int32_t delta,
+व्योम
+appendCodePointDelta(स्थिर uint8_t *cpStart, स्थिर uint8_t *cpLimit, int32_t delta,
                      ByteSink &sink, Edits *edits) {
-    char buffer[U8_MAX_LENGTH];
+    अक्षर बफर[U8_MAX_लंबाई];
     int32_t length;
-    int32_t cpLength = static_cast<int32_t>(cpLimit - cpStart);
-    if (cpLength == 1) {
+    int32_t cp_लंबाई = static_cast<int32_t>(cpLimit - cpStart);
+    अगर (cp_लंबाई == 1) {
         // The builder makes ASCII map to ASCII.
-        buffer[0] = static_cast<uint8_t>(*cpStart + delta);
+        बफर[0] = static_cast<uint8_t>(*cpStart + delta);
         length = 1;
-    } else {
+    } अन्यथा {
         int32_t trail = *(cpLimit-1) + delta;
-        if (0x80 <= trail && trail <= 0xbf) {
+        अगर (0x80 <= trail && trail <= 0xbf) {
             // The delta only changes the last trail byte.
             --cpLimit;
             length = 0;
-            do { buffer[length++] = *cpStart++; } while (cpStart < cpLimit);
-            buffer[length++] = static_cast<uint8_t>(trail);
-        } else {
+            करो { बफर[length++] = *cpStart++; } जबतक (cpStart < cpLimit);
+            बफर[length++] = static_cast<uint8_t>(trail);
+        } अन्यथा {
             // Decode the code point, add the delta, re-encode.
             UChar32 c = codePointFromValidUTF8(cpStart, cpLimit) + delta;
             length = 0;
-            U8_APPEND_UNSAFE(buffer, length, c);
+            U8_APPEND_UNSAFE(बफर, length, c);
         }
     }
-    if (edits != nullptr) {
-        edits->addReplace(cpLength, length);
+    अगर (edits != nullptr) {
+        edits->addReplace(cp_लंबाई, length);
     }
-    sink.Append(buffer, length);
+    sink.Append(बफर, length);
 }
 
 }  // namespace
 
 // ReorderingBuffer -------------------------------------------------------- ***
 
-ReorderingBuffer::ReorderingBuffer(const Normalizer2Impl &ni, UnicodeString &dest,
+Reordering_बफर::Reordering_बफर(स्थिर Normalizer2Impl &ni, UnicodeString &dest,
                                    UErrorCode &errorCode) :
         impl(ni), str(dest),
-        start(str.getBuffer(8)), reorderStart(start), limit(start),
+        start(str.get_बफर(8)), reorderStart(start), limit(start),
         remainingCapacity(str.getCapacity()), lastCC(0) {
-    if (start == nullptr && U_SUCCESS(errorCode)) {
+    अगर (start == nullptr && U_SUCCESS(errorCode)) {
         // getBuffer() already did str.setToBogus()
         errorCode = U_MEMORY_ALLOCATION_ERROR;
     }
 }
 
-UBool ReorderingBuffer::init(int32_t destCapacity, UErrorCode &errorCode) {
+UBool Reordering_बफर::init(int32_t destCapacity, UErrorCode &errorCode) {
     int32_t length=str.length();
-    start=str.getBuffer(destCapacity);
-    if(start==nullptr) {
+    start=str.get_बफर(destCapacity);
+    अगर(start==nullptr) {
         // getBuffer() already did str.setToBogus()
         errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return false;
+        वापस false;
     }
     limit=start+length;
     remainingCapacity=str.getCapacity()-length;
     reorderStart=start;
-    if(start==limit) {
+    अगर(start==limit) {
         lastCC=0;
-    } else {
+    } अन्यथा {
         setIterator();
         lastCC=previousCC();
         // Set reorderStart after the last code point with cc<=1 if there is one.
-        if(lastCC>1) {
-            while(previousCC()>1) {}
+        अगर(lastCC>1) {
+            जबतक(previousCC()>1) {}
         }
         reorderStart=codePointLimit;
     }
-    return true;
+    वापस true;
 }
 
-UBool ReorderingBuffer::equals(const char16_t *otherStart, const char16_t *otherLimit) const {
+UBool Reordering_बफर::equals(स्थिर char16_t *otherStart, स्थिर char16_t *otherLimit) स्थिर {
     int32_t length = static_cast<int32_t>(limit - start);
-    return
+    वापस
         length == static_cast<int32_t>(otherLimit - otherStart) &&
         0==u_memcmp(start, otherStart, length);
 }
 
-UBool ReorderingBuffer::equals(const uint8_t *otherStart, const uint8_t *otherLimit) const {
+UBool Reordering_बफर::equals(स्थिर uint8_t *otherStart, स्थिर uint8_t *otherLimit) स्थिर {
     U_ASSERT((otherLimit - otherStart) <= INT32_MAX);  // ensured by caller
     int32_t length = static_cast<int32_t>(limit - start);
-    int32_t otherLength = static_cast<int32_t>(otherLimit - otherStart);
+    int32_t other_लंबाई = static_cast<int32_t>(otherLimit - otherStart);
     // For equal strings, UTF-8 is at least as long as UTF-16, and at most three times as long.
-    if (otherLength < length || (otherLength / 3) > length) {
-        return false;
+    अगर (other_लंबाई < length || (other_लंबाई / 3) > length) {
+        वापस false;
     }
     // Compare valid strings from between normalization boundaries.
     // (Invalid sequences are normalization-inert.)
-    for (int32_t i = 0, j = 0;;) {
-        if (i >= length) {
-            return j >= otherLength;
-        } else if (j >= otherLength) {
-            return false;
+    क्रम (int32_t i = 0, j = 0;;) {
+        अगर (i >= length) {
+            वापस j >= other_लंबाई;
+        } अन्यथा अगर (j >= other_लंबाई) {
+            वापस false;
         }
         // Not at the end of either string yet.
         UChar32 c, other;
-        U16_NEXT_UNSAFE(start, i, c);
-        U8_NEXT_UNSAFE(otherStart, j, other);
-        if (c != other) {
-            return false;
+        U16_अग्र_UNSAFE(start, i, c);
+        U8_अग्र_UNSAFE(otherStart, j, other);
+        अगर (c != other) {
+            वापस false;
         }
     }
 }
 
-UBool ReorderingBuffer::appendSupplementary(UChar32 c, uint8_t cc, UErrorCode &errorCode) {
-    if(remainingCapacity<2 && !resize(2, errorCode)) {
-        return false;
+UBool Reordering_बफर::appendSupplementary(UChar32 c, uint8_t cc, UErrorCode &errorCode) {
+    अगर(remainingCapacity<2 && !resize(2, errorCode)) {
+        वापस false;
     }
-    if(lastCC<=cc || cc==0) {
+    अगर(lastCC<=cc || cc==0) {
         limit[0]=U16_LEAD(c);
         limit[1]=U16_TRAIL(c);
         limit+=2;
         lastCC=cc;
-        if(cc<=1) {
+        अगर(cc<=1) {
             reorderStart=limit;
         }
-    } else {
+    } अन्यथा {
         insert(c, cc);
     }
     remainingCapacity-=2;
-    return true;
+    वापस true;
 }
 
-UBool ReorderingBuffer::append(const char16_t *s, int32_t length, UBool isNFD,
+UBool Reordering_बफर::append(स्थिर char16_t *s, int32_t length, UBool isNFD,
                                uint8_t leadCC, uint8_t trailCC,
                                UErrorCode &errorCode) {
-    if(length==0) {
-        return true;
+    अगर(length==0) {
+        वापस true;
     }
-    if(remainingCapacity<length && !resize(length, errorCode)) {
-        return false;
+    अगर(remainingCapacity<length && !resize(length, errorCode)) {
+        वापस false;
     }
     remainingCapacity-=length;
-    if(lastCC<=leadCC || leadCC==0) {
-        if(trailCC<=1) {
+    अगर(lastCC<=leadCC || leadCC==0) {
+        अगर(trailCC<=1) {
             reorderStart=limit+length;
-        } else if(leadCC<=1) {
+        } अन्यथा अगर(leadCC<=1) {
             reorderStart=limit+1;  // Ok if not a code point boundary.
         }
-        const char16_t *sLimit=s+length;
-        do { *limit++=*s++; } while(s!=sLimit);
+        स्थिर char16_t *sLimit=s+length;
+        करो { *limit++=*s++; } जबतक(s!=sLimit);
         lastCC=trailCC;
-    } else {
+    } अन्यथा {
         int32_t i=0;
         UChar32 c;
-        U16_NEXT(s, i, length, c);
+        U16_अग्र(s, i, length, c);
         insert(c, leadCC);  // insert first code point
-        while(i<length) {
-            U16_NEXT(s, i, length, c);
-            if(i<length) {
-                if (isNFD) {
+        जबतक(i<length) {
+            U16_अग्र(s, i, length, c);
+            अगर(i<length) {
+                अगर (isNFD) {
                     leadCC = Normalizer2Impl::getCCFromYesOrMaybeYes(impl.getRawNorm16(c));
-                } else {
+                } अन्यथा {
                     leadCC = impl.getCC(impl.getNorm16(c));
                 }
-            } else {
+            } अन्यथा {
                 leadCC=trailCC;
             }
             append(c, leadCC, errorCode);
         }
     }
-    return true;
+    वापस true;
 }
 
-UBool ReorderingBuffer::appendZeroCC(UChar32 c, UErrorCode &errorCode) {
-    int32_t cpLength=U16_LENGTH(c);
-    if(remainingCapacity<cpLength && !resize(cpLength, errorCode)) {
-        return false;
+UBool Reordering_बफर::appendZeroCC(UChar32 c, UErrorCode &errorCode) {
+    int32_t cp_लंबाई=U16_लंबाई(c);
+    अगर(remainingCapacity<cp_लंबाई && !resize(cp_लंबाई, errorCode)) {
+        वापस false;
     }
-    remainingCapacity-=cpLength;
-    if(cpLength==1) {
+    remainingCapacity-=cp_लंबाई;
+    अगर(cp_लंबाई==1) {
         *limit++ = static_cast<char16_t>(c);
-    } else {
+    } अन्यथा {
         limit[0]=U16_LEAD(c);
         limit[1]=U16_TRAIL(c);
         limit+=2;
     }
     lastCC=0;
     reorderStart=limit;
-    return true;
+    वापस true;
 }
 
-UBool ReorderingBuffer::appendZeroCC(const char16_t *s, const char16_t *sLimit, UErrorCode &errorCode) {
-    if(s==sLimit) {
-        return true;
+UBool Reordering_बफर::appendZeroCC(स्थिर char16_t *s, स्थिर char16_t *sLimit, UErrorCode &errorCode) {
+    अगर(s==sLimit) {
+        वापस true;
     }
     int32_t length = static_cast<int32_t>(sLimit - s);
-    if(remainingCapacity<length && !resize(length, errorCode)) {
-        return false;
+    अगर(remainingCapacity<length && !resize(length, errorCode)) {
+        वापस false;
     }
     u_memcpy(limit, s, length);
     limit+=length;
     remainingCapacity-=length;
     lastCC=0;
     reorderStart=limit;
-    return true;
+    वापस true;
 }
 
-void ReorderingBuffer::remove() {
+व्योम Reordering_बफर::हटाओ() {
     reorderStart=limit=start;
     remainingCapacity=str.getCapacity();
     lastCC=0;
 }
 
-void ReorderingBuffer::removeSuffix(int32_t suffixLength) {
-    if(suffixLength<(limit-start)) {
-        limit-=suffixLength;
-        remainingCapacity+=suffixLength;
-    } else {
+व्योम Reordering_बफर::removeSuffix(int32_t suffix_लंबाई) {
+    अगर(suffix_लंबाई<(limit-start)) {
+        limit-=suffix_लंबाई;
+        remainingCapacity+=suffix_लंबाई;
+    } अन्यथा {
         limit=start;
         remainingCapacity=str.getCapacity();
     }
@@ -349,86 +349,86 @@ void ReorderingBuffer::removeSuffix(int32_t suffixLength) {
     reorderStart=limit;
 }
 
-UBool ReorderingBuffer::resize(int32_t appendLength, UErrorCode &errorCode) {
-    int32_t reorderStartIndex = static_cast<int32_t>(reorderStart - start);
+UBool Reordering_बफर::resize(int32_t append_लंबाई, UErrorCode &errorCode) {
+    int32_t reorder_Start_सूचकांक = static_cast<int32_t>(reorderStart - start);
     int32_t length = static_cast<int32_t>(limit - start);
-    str.releaseBuffer(length);
-    int32_t newCapacity=length+appendLength;
+    str.release_बफर(length);
+    int32_t newCapacity=length+append_लंबाई;
     int32_t doubleCapacity=2*str.getCapacity();
-    if(newCapacity<doubleCapacity) {
+    अगर(newCapacity<doubleCapacity) {
         newCapacity=doubleCapacity;
     }
-    if(newCapacity<256) {
+    अगर(newCapacity<256) {
         newCapacity=256;
     }
-    start=str.getBuffer(newCapacity);
-    if(start==nullptr) {
+    start=str.get_बफर(newCapacity);
+    अगर(start==nullptr) {
         // getBuffer() already did str.setToBogus()
         errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return false;
+        वापस false;
     }
-    reorderStart=start+reorderStartIndex;
+    reorderStart=start+reorder_Start_सूचकांक;
     limit=start+length;
     remainingCapacity=str.getCapacity()-length;
-    return true;
+    वापस true;
 }
 
-void ReorderingBuffer::skipPrevious() {
+व्योम Reordering_बफर::skipPrevious() {
     codePointLimit=codePointStart;
     char16_t c=*--codePointStart;
-    if(U16_IS_TRAIL(c) && start<codePointStart && U16_IS_LEAD(*(codePointStart-1))) {
+    अगर(U16_IS_TRAIL(c) && start<codePointStart && U16_IS_LEAD(*(codePointStart-1))) {
         --codePointStart;
     }
 }
 
-uint8_t ReorderingBuffer::previousCC() {
+uint8_t Reordering_बफर::previousCC() {
     codePointLimit=codePointStart;
-    if(reorderStart>=codePointStart) {
-        return 0;
+    अगर(reorderStart>=codePointStart) {
+        वापस 0;
     }
     UChar32 c=*--codePointStart;
     char16_t c2;
-    if(U16_IS_TRAIL(c) && start<codePointStart && U16_IS_LEAD(c2=*(codePointStart-1))) {
+    अगर(U16_IS_TRAIL(c) && start<codePointStart && U16_IS_LEAD(c2=*(codePointStart-1))) {
         --codePointStart;
         c=U16_GET_SUPPLEMENTARY(c2, c);
     }
-    return impl.getCCFromYesOrMaybeYesCP(c);
+    वापस impl.getCCFromYesOrMaybeYesCP(c);
 }
 
 // Inserts c somewhere before the last character.
 // Requires 0<cc<lastCC which implies reorderStart<limit.
-void ReorderingBuffer::insert(UChar32 c, uint8_t cc) {
-    for(setIterator(), skipPrevious(); previousCC()>cc;) {}
+व्योम Reordering_बफर::insert(UChar32 c, uint8_t cc) {
+    क्रम(setIterator(), skipPrevious(); previousCC()>cc;) {}
     // insert c at codePointLimit, after the character with prevCC<=cc
     char16_t *q=limit;
-    char16_t *r=limit+=U16_LENGTH(c);
-    do {
+    char16_t *r=limit+=U16_लंबाई(c);
+    करो {
         *--r=*--q;
-    } while(codePointLimit!=q);
+    } जबतक(codePointLimit!=q);
     writeCodePoint(q, c);
-    if(cc<=1) {
+    अगर(cc<=1) {
         reorderStart=r;
     }
 }
 
 // Normalizer2Impl --------------------------------------------------------- ***
 
-struct CanonIterData : public UMemory {
-    CanonIterData(UErrorCode &errorCode);
-    ~CanonIterData();
-    void addToStartSet(UChar32 origin, UChar32 decompLead, UErrorCode &errorCode);
+काष्ठा Canon_Iter_तथ्य : खुला UMemory {
+    Canon_Iter_तथ्य(UErrorCode &errorCode);
+    ~Canon_Iter_तथ्य();
+    व्योम addToStartSet(UChar32 origin, UChar32 decompLead, UErrorCode &errorCode);
     UMutableCPTrie *mutableTrie;
     UCPTrie *trie;
     UVector canonStartSets;  // contains UnicodeSet *
 };
 
 Normalizer2Impl::~Normalizer2Impl() {
-    delete fCanonIterData;
+    मिटाओ f_Canon_Iter_तथ्य;
 }
 
-void
-Normalizer2Impl::init(const int32_t *inIndexes, const UCPTrie *inTrie,
-                      const uint16_t *inExtraData, const uint8_t *inSmallFCD) {
+व्योम
+Normalizer2Impl::init(स्थिर int32_t *inIndexes, स्थिर UCPTrie *inTrie,
+                      स्थिर uint16_t *in_Extra_तथ्य, स्थिर uint8_t *inSmallFCD) {
     minDecompNoCP = static_cast<char16_t>(inIndexes[IX_MIN_DECOMP_NO_CP]);
     minCompNoMaybeCP = static_cast<char16_t>(inIndexes[IX_MIN_COMP_NO_MAYBE_CP]);
     minLcccCP = static_cast<char16_t>(inIndexes[IX_MIN_LCCC_CP]);
@@ -447,54 +447,54 @@ Normalizer2Impl::init(const int32_t *inIndexes, const UCPTrie *inTrie,
     centerNoNoDelta = (minMaybeNo >> DELTA_SHIFT) - MAX_DELTA - 1;
 
     normTrie=inTrie;
-    extraData=inExtraData;
+    extra_तथ्य=in_Extra_तथ्य;
     smallFCD=inSmallFCD;
 }
 
 U_CDECL_BEGIN
 
-static uint32_t U_CALLCONV
-segmentStarterMapper(const void * /*context*/, uint32_t value) {
-    return value&CANON_NOT_SEGMENT_STARTER;
+अटल uint32_t U_CALLCONV
+segmentStarterMapper(स्थिर व्योम * /*context*/, uint32_t value) {
+    वापस value&CANON_NOT_SEGMENT_STARTER;
 }
 
 U_CDECL_END
 
-void
-Normalizer2Impl::addLcccChars(UnicodeSet &set) const {
+व्योम
+Normalizer2Impl::addLcccChars(UnicodeSet &set) स्थिर {
     UChar32 start = 0, end;
     uint32_t norm16;
-    while ((end = ucptrie_getRange(normTrie, start, UCPMAP_RANGE_FIXED_LEAD_SURROGATES, INERT,
+    जबतक ((end = ucptrie_getRange(normTrie, start, UCPMAP_RANGE_FIXED_LEAD_SURROGATES, INERT,
                                    nullptr, nullptr, &norm16)) >= 0) {
-        if (norm16 > Normalizer2Impl::MIN_NORMAL_MAYBE_YES &&
+        अगर (norm16 > Normalizer2Impl::MIN_NORMAL_MAYBE_YES &&
                 norm16 != Normalizer2Impl::JAMO_VT) {
             set.add(start, end);
-        } else if (minNoNoCompNoMaybeCC <= norm16 && norm16 < limitNoNo) {
+        } अन्यथा अगर (minNoNoCompNoMaybeCC <= norm16 && norm16 < limitNoNo) {
             uint16_t fcd16 = getFCD16(start);
-            if (fcd16 > 0xff) { set.add(start, end); }
+            अगर (fcd16 > 0xff) { set.add(start, end); }
         }
         start = end + 1;
     }
 }
 
-void
-Normalizer2Impl::addPropertyStarts(const USetAdder *sa, UErrorCode & /*errorCode*/) const {
+व्योम
+Normalizer2Impl::addPropertyStarts(स्थिर USetAdder *sa, UErrorCode & /*errorCode*/) स्थिर {
     // Add the start code point of each same-value range of the trie.
     UChar32 start = 0, end;
     uint32_t value;
-    while ((end = ucptrie_getRange(normTrie, start, UCPMAP_RANGE_FIXED_LEAD_SURROGATES, INERT,
+    जबतक ((end = ucptrie_getRange(normTrie, start, UCPMAP_RANGE_FIXED_LEAD_SURROGATES, INERT,
                                    nullptr, nullptr, &value)) >= 0) {
         sa->add(sa->set, start);
-        if (start != end && isAlgorithmicNoNo(static_cast<uint16_t>(value)) &&
+        अगर (start != end && isAlgorithmicNoNo(static_cast<uint16_t>(value)) &&
                 (value & Normalizer2Impl::DELTA_TCCC_MASK) > Normalizer2Impl::DELTA_TCCC_1) {
             // Range of code points with same-norm16-value algorithmic decompositions.
             // They might have different non-zero FCD16 values.
-            uint16_t prevFCD16 = getFCD16(start);
-            while (++start <= end) {
+            uint16_t पूर्व_FCD16 = getFCD16(start);
+            जबतक (++start <= end) {
                 uint16_t fcd16 = getFCD16(start);
-                if (fcd16 != prevFCD16) {
+                अगर (fcd16 != पूर्व_FCD16) {
                     sa->add(sa->set, start);
-                    prevFCD16 = fcd16;
+                    पूर्व_FCD16 = fcd16;
                 }
             }
         }
@@ -502,276 +502,276 @@ Normalizer2Impl::addPropertyStarts(const USetAdder *sa, UErrorCode & /*errorCode
     }
 
     /* add Hangul LV syllables and LV+1 because of skippables */
-    for(char16_t c=Hangul::HANGUL_BASE; c<Hangul::HANGUL_LIMIT; c+=Hangul::JAMO_T_COUNT) {
+    क्रम(char16_t c=Hangul::HANGUL_BASE; c<Hangul::HANGUL_LIMIT; c+=Hangul::JAMO_T_गिनती) {
         sa->add(sa->set, c);
         sa->add(sa->set, c+1);
     }
     sa->add(sa->set, Hangul::HANGUL_LIMIT); /* add Hangul+1 to continue with other properties */
 }
 
-void
-Normalizer2Impl::addCanonIterPropertyStarts(const USetAdder *sa, UErrorCode &errorCode) const {
+व्योम
+Normalizer2Impl::addCanonIterPropertyStarts(स्थिर USetAdder *sa, UErrorCode &errorCode) स्थिर {
     // Add the start code point of each same-value range of the canonical iterator data trie.
-    if (!ensureCanonIterData(errorCode)) { return; }
+    अगर (!ensure_Canon_Iter_तथ्य(errorCode)) { वापस; }
     // Currently only used for the SEGMENT_STARTER property.
     UChar32 start = 0, end;
     uint32_t value;
-    while ((end = ucptrie_getRange(fCanonIterData->trie, start, UCPMAP_RANGE_NORMAL, 0,
+    जबतक ((end = ucptrie_getRange(f_Canon_Iter_तथ्य->trie, start, UCPMAP_RANGE_NORMAL, 0,
                                    segmentStarterMapper, nullptr, &value)) >= 0) {
         sa->add(sa->set, start);
         start = end + 1;
     }
 }
 
-const char16_t *
-Normalizer2Impl::copyLowPrefixFromNulTerminated(const char16_t *src,
-                                                UChar32 minNeedDataCP,
-                                                ReorderingBuffer *buffer,
-                                                UErrorCode &errorCode) const {
+स्थिर char16_t *
+Normalizer2Impl::copy_निचला_Prefix_From_Nul_Terminated(स्थिर char16_t *src,
+                                                UChar32 min_Need_तथ्य_CP,
+                                                Reordering_बफर *बफर,
+                                                UErrorCode &errorCode) स्थिर {
     // Make some effort to support NUL-terminated strings reasonably.
     // Take the part of the fast quick check loop that does not look up
     // data and check the first part of the string.
     // After this prefix, determine the string length to simplify the rest
     // of the code.
-    const char16_t *prevSrc=src;
+    स्थिर char16_t *पूर्व_Src=src;
     char16_t c;
-    while((c=*src++)<minNeedDataCP && c!=0) {}
+    जबतक((c=*src++)<min_Need_तथ्य_CP && c!=0) {}
     // Back out the last character for full processing.
     // Copy this prefix.
-    if(--src!=prevSrc) {
-        if(buffer!=nullptr) {
-            buffer->appendZeroCC(prevSrc, src, errorCode);
+    अगर(--src!=पूर्व_Src) {
+        अगर(बफर!=nullptr) {
+            बफर->appendZeroCC(पूर्व_Src, src, errorCode);
         }
     }
-    return src;
+    वापस src;
 }
 
 UnicodeString &
-Normalizer2Impl::decompose(const UnicodeString &src, UnicodeString &dest,
-                           UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
+Normalizer2Impl::decompose(स्थिर UnicodeString &src, UnicodeString &dest,
+                           UErrorCode &errorCode) स्थिर {
+    अगर(U_FAILURE(errorCode)) {
         dest.setToBogus();
-        return dest;
+        वापस dest;
     }
-    const char16_t *sArray=src.getBuffer();
-    if(&dest==&src || sArray==nullptr) {
+    स्थिर char16_t *sArray=src.get_बफर();
+    अगर(&dest==&src || sArray==nullptr) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
         dest.setToBogus();
-        return dest;
+        वापस dest;
     }
     decompose(sArray, sArray+src.length(), dest, src.length(), errorCode);
-    return dest;
+    वापस dest;
 }
 
-void
-Normalizer2Impl::decompose(const char16_t *src, const char16_t *limit,
+व्योम
+Normalizer2Impl::decompose(स्थिर char16_t *src, स्थिर char16_t *limit,
                            UnicodeString &dest,
-                           int32_t destLengthEstimate,
-                           UErrorCode &errorCode) const {
-    if(destLengthEstimate<0 && limit!=nullptr) {
-        destLengthEstimate = static_cast<int32_t>(limit - src);
+                           int32_t dest_लंबाई_Estimate,
+                           UErrorCode &errorCode) स्थिर {
+    अगर(dest_लंबाई_Estimate<0 && limit!=nullptr) {
+        dest_लंबाई_Estimate = static_cast<int32_t>(limit - src);
     }
-    dest.remove();
-    ReorderingBuffer buffer(*this, dest);
-    if(buffer.init(destLengthEstimate, errorCode)) {
-        decompose(src, limit, &buffer, errorCode);
+    dest.हटाओ();
+    Reordering_बफर बफर(*यह, dest);
+    अगर(बफर.init(dest_लंबाई_Estimate, errorCode)) {
+        decompose(src, limit, &बफर, errorCode);
     }
 }
 
 // Dual functionality:
 // buffer!=nullptr: normalize
 // buffer==nullptr: isNormalized/spanQuickCheckYes
-const char16_t *
-Normalizer2Impl::decompose(const char16_t *src, const char16_t *limit,
-                           ReorderingBuffer *buffer,
-                           UErrorCode &errorCode) const {
-    if(src==nullptr) {
+स्थिर char16_t *
+Normalizer2Impl::decompose(स्थिर char16_t *src, स्थिर char16_t *limit,
+                           Reordering_बफर *बफर,
+                           UErrorCode &errorCode) स्थिर {
+    अगर(src==nullptr) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return src;
+        वापस src;
     }
     UChar32 minNoCP=minDecompNoCP;
-    if(limit==nullptr) {
-        src=copyLowPrefixFromNulTerminated(src, minNoCP, buffer, errorCode);
-        if(U_FAILURE(errorCode)) {
-            return src;
+    अगर(limit==nullptr) {
+        src=copy_निचला_Prefix_From_Nul_Terminated(src, minNoCP, बफर, errorCode);
+        अगर(U_FAILURE(errorCode)) {
+            वापस src;
         }
         limit=u_strchr(src, 0);
     }
 
-    const char16_t *prevSrc;
+    स्थिर char16_t *पूर्व_Src;
     UChar32 c=0;
     uint16_t norm16=0;
 
     // only for quick check
-    const char16_t *prevBoundary=src;
-    uint8_t prevCC=0;
+    स्थिर char16_t *पूर्व_Boundary=src;
+    uint8_t पूर्व_CC=0;
 
-    for(;;) {
+    क्रम(;;) {
         // count code units below the minimum or with irrelevant data for the quick check
-        for(prevSrc=src; src!=limit;) {
-            if( (c=*src)<minNoCP ||
+        क्रम(पूर्व_Src=src; src!=limit;) {
+            अगर( (c=*src)<minNoCP ||
                 isMostDecompYesAndZeroCC(norm16=UCPTRIE_FAST_BMP_GET(normTrie, UCPTRIE_16, c))
             ) {
                 ++src;
-            } else if(!U16_IS_LEAD(c)) {
-                break;
-            } else {
+            } अन्यथा अगर(!U16_IS_LEAD(c)) {
+                अवरोध;
+            } अन्यथा {
                 char16_t c2;
-                if((src+1)!=limit && U16_IS_TRAIL(c2=src[1])) {
+                अगर((src+1)!=limit && U16_IS_TRAIL(c2=src[1])) {
                     c=U16_GET_SUPPLEMENTARY(c, c2);
                     norm16=UCPTRIE_FAST_SUPP_GET(normTrie, UCPTRIE_16, c);
-                    if(isMostDecompYesAndZeroCC(norm16)) {
+                    अगर(isMostDecompYesAndZeroCC(norm16)) {
                         src+=2;
-                    } else {
-                        break;
+                    } अन्यथा {
+                        अवरोध;
                     }
-                } else {
+                } अन्यथा {
                     ++src;  // unpaired lead surrogate: inert
                 }
             }
         }
         // copy these code units all at once
-        if(src!=prevSrc) {
-            if(buffer!=nullptr) {
-                if(!buffer->appendZeroCC(prevSrc, src, errorCode)) {
-                    break;
+        अगर(src!=पूर्व_Src) {
+            अगर(बफर!=nullptr) {
+                अगर(!बफर->appendZeroCC(पूर्व_Src, src, errorCode)) {
+                    अवरोध;
                 }
-            } else {
-                prevCC=0;
-                prevBoundary=src;
+            } अन्यथा {
+                पूर्व_CC=0;
+                पूर्व_Boundary=src;
             }
         }
-        if(src==limit) {
-            break;
+        अगर(src==limit) {
+            अवरोध;
         }
 
         // Check one above-minimum, relevant code point.
-        src+=U16_LENGTH(c);
-        if(buffer!=nullptr) {
-            if(!decompose(c, norm16, *buffer, errorCode)) {
-                break;
+        src+=U16_लंबाई(c);
+        अगर(बफर!=nullptr) {
+            अगर(!decompose(c, norm16, *बफर, errorCode)) {
+                अवरोध;
             }
-        } else {
-            if(isDecompYes(norm16)) {
+        } अन्यथा {
+            अगर(isDecompYes(norm16)) {
                 uint8_t cc=getCCFromYesOrMaybeYes(norm16);
-                if(prevCC<=cc || cc==0) {
-                    prevCC=cc;
-                    if(cc<=1) {
-                        prevBoundary=src;
+                अगर(पूर्व_CC<=cc || cc==0) {
+                    पूर्व_CC=cc;
+                    अगर(cc<=1) {
+                        पूर्व_Boundary=src;
                     }
-                    continue;
+                    जारी;
                 }
             }
-            return prevBoundary;  // "no" or cc out of order
+            वापस पूर्व_Boundary;  // "no" or cc out of order
         }
     }
-    return src;
+    वापस src;
 }
 
 // Decompose a short piece of text which is likely to contain characters that
 // fail the quick check loop and/or where the quick check loop's overhead
 // is unlikely to be amortized.
 // Called by the compose() and makeFCD() implementations.
-const char16_t *
-Normalizer2Impl::decomposeShort(const char16_t *src, const char16_t *limit,
+स्थिर char16_t *
+Normalizer2Impl::decomposeShort(स्थिर char16_t *src, स्थिर char16_t *limit,
                                 UBool stopAtCompBoundary, UBool onlyContiguous,
-                                ReorderingBuffer &buffer, UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) {
-        return nullptr;
+                                Reordering_बफर &बफर, UErrorCode &errorCode) स्थिर {
+    अगर (U_FAILURE(errorCode)) {
+        वापस nullptr;
     }
-    while(src<limit) {
-        if (stopAtCompBoundary && *src < minCompNoMaybeCP) {
-            return src;
+    जबतक(src<limit) {
+        अगर (stopAtCompBoundary && *src < minCompNoMaybeCP) {
+            वापस src;
         }
-        const char16_t *prevSrc = src;
+        स्थिर char16_t *पूर्व_Src = src;
         UChar32 c;
         uint16_t norm16;
-        UCPTRIE_FAST_U16_NEXT(normTrie, UCPTRIE_16, src, limit, c, norm16);
-        if (stopAtCompBoundary && norm16HasCompBoundaryBefore(norm16)) {
-            return prevSrc;
+        UCPTRIE_FAST_U16_अग्र(normTrie, UCPTRIE_16, src, limit, c, norm16);
+        अगर (stopAtCompBoundary && norm16HasCompBoundaryBefore(norm16)) {
+            वापस पूर्व_Src;
         }
-        if(!decompose(c, norm16, buffer, errorCode)) {
-            return nullptr;
+        अगर(!decompose(c, norm16, बफर, errorCode)) {
+            वापस nullptr;
         }
-        if (stopAtCompBoundary && norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
-            return src;
+        अगर (stopAtCompBoundary && norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
+            वापस src;
         }
     }
-    return src;
+    वापस src;
 }
 
 UBool Normalizer2Impl::decompose(UChar32 c, uint16_t norm16,
-                                 ReorderingBuffer &buffer,
-                                 UErrorCode &errorCode) const {
+                                 Reordering_बफर &बफर,
+                                 UErrorCode &errorCode) स्थिर {
     // get the decomposition and the lead and trail cc's
-    if (norm16 >= limitNoNo) {
-        if (isMaybeYesOrNonZeroCC(norm16)) {
-            return buffer.append(c, getCCFromYesOrMaybeYes(norm16), errorCode);
-        } else if (norm16 < minMaybeNo) {
+    अगर (norm16 >= limitNoNo) {
+        अगर (isMaybeYesOrNonZeroCC(norm16)) {
+            वापस बफर.append(c, getCCFromYesOrMaybeYes(norm16), errorCode);
+        } अन्यथा अगर (norm16 < minMaybeNo) {
             // Maps to an isCompYesAndZeroCC.
             c=mapAlgorithmic(c, norm16);
             norm16=getRawNorm16(c);
         }
     }
-    if (norm16 < minYesNo) {
+    अगर (norm16 < minYesNo) {
         // c does not decompose
-        return buffer.append(c, 0, errorCode);
-    } else if(isHangulLV(norm16) || isHangulLVT(norm16)) {
+        वापस बफर.append(c, 0, errorCode);
+    } अन्यथा अगर(isHangulLV(norm16) || isHangulLVT(norm16)) {
         // Hangul syllable: decompose algorithmically
         char16_t jamos[3];
-        return buffer.appendZeroCC(jamos, jamos+Hangul::decompose(c, jamos), errorCode);
+        वापस बफर.appendZeroCC(jamos, jamos+Hangul::decompose(c, jamos), errorCode);
     }
     // c decomposes, get everything from the variable-length extra data
-    const uint16_t *mapping=getData(norm16);
+    स्थिर uint16_t *mapping=get_तथ्य(norm16);
     uint16_t firstUnit=*mapping;
-    int32_t length=firstUnit&MAPPING_LENGTH_MASK;
+    int32_t length=firstUnit&MAPPING_लंबाई_MASK;
     uint8_t leadCC, trailCC;
     trailCC = static_cast<uint8_t>(firstUnit >> 8);
-    if(firstUnit&MAPPING_HAS_CCC_LCCC_WORD) {
+    अगर(firstUnit&MAPPING_HAS_CCC_LCCC_WORD) {
         leadCC = static_cast<uint8_t>(*(mapping - 1) >> 8);
-    } else {
+    } अन्यथा {
         leadCC=0;
     }
-    return buffer.append(reinterpret_cast<const char16_t*>(mapping) + 1, length, true, leadCC, trailCC, errorCode);
+    वापस बफर.append(reinterpret_cast<स्थिर char16_t*>(mapping) + 1, length, true, leadCC, trailCC, errorCode);
 }
 
 // Dual functionality:
 // sink != nullptr: normalize
 // sink == nullptr: isNormalized/spanQuickCheckYes
-const uint8_t *
+स्थिर uint8_t *
 Normalizer2Impl::decomposeUTF8(uint32_t options,
-                               const uint8_t *src, const uint8_t *limit,
-                               ByteSink *sink, Edits *edits, UErrorCode &errorCode) const {
+                               स्थिर uint8_t *src, स्थिर uint8_t *limit,
+                               ByteSink *sink, Edits *edits, UErrorCode &errorCode) स्थिर {
     U_ASSERT(limit != nullptr);
     UnicodeString s16;
     uint8_t minNoLead = leadByteForCP(minDecompNoCP);
 
-    const uint8_t *prevBoundary = src;
+    स्थिर uint8_t *पूर्व_Boundary = src;
     // only for quick check
-    uint8_t prevCC = 0;
+    uint8_t पूर्व_CC = 0;
 
-    for (;;) {
+    क्रम (;;) {
         // Fast path: Scan over a sequence of characters below the minimum "no" code point,
         // or with (decompYes && ccc==0) properties.
-        const uint8_t *fastStart = src;
-        const uint8_t *prevSrc;
+        स्थिर uint8_t *fastStart = src;
+        स्थिर uint8_t *पूर्व_Src;
         uint16_t norm16 = 0;
 
-        for (;;) {
-            if (src == limit) {
-                if (prevBoundary != limit && sink != nullptr) {
-                    ByteSinkUtil::appendUnchanged(prevBoundary, limit,
+        क्रम (;;) {
+            अगर (src == limit) {
+                अगर (पूर्व_Boundary != limit && sink != nullptr) {
+                    ByteSinkUtil::appendUnchanged(पूर्व_Boundary, limit,
                                                   *sink, options, edits, errorCode);
                 }
-                return src;
+                वापस src;
             }
-            if (*src < minNoLead) {
+            अगर (*src < minNoLead) {
                 ++src;
-            } else {
-                prevSrc = src;
-                UCPTRIE_FAST_U8_NEXT(normTrie, UCPTRIE_16, src, limit, norm16);
-                if (!isMostDecompYesAndZeroCC(norm16)) {
-                    break;
+            } अन्यथा {
+                पूर्व_Src = src;
+                UCPTRIE_FAST_U8_अग्र(normTrie, UCPTRIE_16, src, limit, norm16);
+                अगर (!isMostDecompYesAndZeroCC(norm16)) {
+                    अवरोध;
                 }
             }
         }
@@ -779,123 +779,123 @@ Normalizer2Impl::decomposeUTF8(uint32_t options,
         // and the current character at [prevSrc..src[ is not a common case with cc=0
         // (MIN_NORMAL_MAYBE_YES or JAMO_VT).
         // It could still be a maybeYes with cc=0.
-        if (prevSrc != fastStart) {
+        अगर (पूर्व_Src != fastStart) {
             // The fast path looped over yes/0 characters before the current one.
-            if (sink != nullptr &&
-                    !ByteSinkUtil::appendUnchanged(prevBoundary, prevSrc,
+            अगर (sink != nullptr &&
+                    !ByteSinkUtil::appendUnchanged(पूर्व_Boundary, पूर्व_Src,
                                                    *sink, options, edits, errorCode)) {
-                break;
+                अवरोध;
             }
-            prevBoundary = prevSrc;
-            prevCC = 0;
+            पूर्व_Boundary = पूर्व_Src;
+            पूर्व_CC = 0;
         }
 
         // Medium-fast path: Quick check.
-        if (isMaybeYesOrNonZeroCC(norm16)) {
+        अगर (isMaybeYesOrNonZeroCC(norm16)) {
             // Does not decompose.
             uint8_t cc = getCCFromYesOrMaybeYes(norm16);
-            if (prevCC <= cc || cc == 0) {
-                prevCC = cc;
-                if (cc <= 1) {
-                    if (sink != nullptr &&
-                            !ByteSinkUtil::appendUnchanged(prevBoundary, src,
+            अगर (पूर्व_CC <= cc || cc == 0) {
+                पूर्व_CC = cc;
+                अगर (cc <= 1) {
+                    अगर (sink != nullptr &&
+                            !ByteSinkUtil::appendUnchanged(पूर्व_Boundary, src,
                                                            *sink, options, edits, errorCode)) {
-                        break;
+                        अवरोध;
                     }
-                    prevBoundary = src;
+                    पूर्व_Boundary = src;
                 }
-                continue;
+                जारी;
             }
         }
-        if (sink == nullptr) {
-            return prevBoundary;  // quick check: "no" or cc out of order
+        अगर (sink == nullptr) {
+            वापस पूर्व_Boundary;  // quick check: "no" or cc out of order
         }
 
         // Slow path
         // Decompose up to and including the current character.
-        if (prevBoundary != prevSrc && norm16HasDecompBoundaryBefore(norm16)) {
-            if (!ByteSinkUtil::appendUnchanged(prevBoundary, prevSrc,
+        अगर (पूर्व_Boundary != पूर्व_Src && norm16HasDecompBoundaryBefore(norm16)) {
+            अगर (!ByteSinkUtil::appendUnchanged(पूर्व_Boundary, पूर्व_Src,
                                                *sink, options, edits, errorCode)) {
-                break;
+                अवरोध;
             }
-            prevBoundary = prevSrc;
+            पूर्व_Boundary = पूर्व_Src;
         }
-        ReorderingBuffer buffer(*this, s16, errorCode);
-        if (U_FAILURE(errorCode)) {
-            break;
+        Reordering_बफर बफर(*यह, s16, errorCode);
+        अगर (U_FAILURE(errorCode)) {
+            अवरोध;
         }
-        decomposeShort(prevBoundary, src, STOP_AT_LIMIT, false /* onlyContiguous */,
-                       buffer, errorCode);
+        decomposeShort(पूर्व_Boundary, src, STOP_AT_LIMIT, false /* onlyContiguous */,
+                       बफर, errorCode);
         // Decompose until the next boundary.
-        if (buffer.getLastCC() > 1) {
+        अगर (बफर.getLastCC() > 1) {
             src = decomposeShort(src, limit, STOP_AT_DECOMP_BOUNDARY, false /* onlyContiguous */,
-                                 buffer, errorCode);
+                                 बफर, errorCode);
         }
-        if (U_FAILURE(errorCode)) {
-            break;
+        अगर (U_FAILURE(errorCode)) {
+            अवरोध;
         }
-        if ((src - prevSrc) > INT32_MAX) {  // guard before buffer.equals()
-            errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            break;
+        अगर ((src - पूर्व_Src) > INT32_MAX) {  // guard before buffer.equals()
+            errorCode = U_सूचकांक_OUTOFBOUNDS_ERROR;
+            अवरोध;
         }
         // We already know there was a change if the original character decomposed;
         // otherwise compare.
-        if (isMaybeYesOrNonZeroCC(norm16) && buffer.equals(prevBoundary, src)) {
-            if (!ByteSinkUtil::appendUnchanged(prevBoundary, src,
+        अगर (isMaybeYesOrNonZeroCC(norm16) && बफर.equals(पूर्व_Boundary, src)) {
+            अगर (!ByteSinkUtil::appendUnchanged(पूर्व_Boundary, src,
                                                *sink, options, edits, errorCode)) {
-                break;
+                अवरोध;
             }
-        } else {
-            if (!ByteSinkUtil::appendChange(prevBoundary, src, buffer.getStart(), buffer.length(),
+        } अन्यथा {
+            अगर (!ByteSinkUtil::appendChange(पूर्व_Boundary, src, बफर.getStart(), बफर.length(),
                                             *sink, edits, errorCode)) {
-                break;
+                अवरोध;
             }
         }
-        prevBoundary = src;
-        prevCC = 0;
+        पूर्व_Boundary = src;
+        पूर्व_CC = 0;
     }
-    return src;
+    वापस src;
 }
 
-const uint8_t *
-Normalizer2Impl::decomposeShort(const uint8_t *src, const uint8_t *limit,
+स्थिर uint8_t *
+Normalizer2Impl::decomposeShort(स्थिर uint8_t *src, स्थिर uint8_t *limit,
                                 StopAt stopAt, UBool onlyContiguous,
-                                ReorderingBuffer &buffer, UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) {
-        return nullptr;
+                                Reordering_बफर &बफर, UErrorCode &errorCode) स्थिर {
+    अगर (U_FAILURE(errorCode)) {
+        वापस nullptr;
     }
-    while (src < limit) {
-        const uint8_t *prevSrc = src;
+    जबतक (src < limit) {
+        स्थिर uint8_t *पूर्व_Src = src;
         uint16_t norm16;
-        UCPTRIE_FAST_U8_NEXT(normTrie, UCPTRIE_16, src, limit, norm16);
+        UCPTRIE_FAST_U8_अग्र(normTrie, UCPTRIE_16, src, limit, norm16);
         // Get the decomposition and the lead and trail cc's.
         UChar32 c = U_SENTINEL;
-        if (norm16 >= limitNoNo) {
-            if (isMaybeYesOrNonZeroCC(norm16)) {
+        अगर (norm16 >= limitNoNo) {
+            अगर (isMaybeYesOrNonZeroCC(norm16)) {
                 // No comp boundaries around this character.
                 uint8_t cc = getCCFromYesOrMaybeYes(norm16);
-                if (cc == 0 && stopAt == STOP_AT_DECOMP_BOUNDARY) {
-                    return prevSrc;
+                अगर (cc == 0 && stopAt == STOP_AT_DECOMP_BOUNDARY) {
+                    वापस पूर्व_Src;
                 }
-                c = codePointFromValidUTF8(prevSrc, src);
-                if (!buffer.append(c, cc, errorCode)) {
-                    return nullptr;
+                c = codePointFromValidUTF8(पूर्व_Src, src);
+                अगर (!बफर.append(c, cc, errorCode)) {
+                    वापस nullptr;
                 }
-                if (stopAt == STOP_AT_DECOMP_BOUNDARY && buffer.getLastCC() <= 1) {
-                    return src;
+                अगर (stopAt == STOP_AT_DECOMP_BOUNDARY && बफर.getLastCC() <= 1) {
+                    वापस src;
                 }
-                continue;
-            } else if (norm16 < minMaybeNo) {
+                जारी;
+            } अन्यथा अगर (norm16 < minMaybeNo) {
                 // Maps to an isCompYesAndZeroCC.
-                if (stopAt != STOP_AT_LIMIT) {
-                    return prevSrc;
+                अगर (stopAt != STOP_AT_LIMIT) {
+                    वापस पूर्व_Src;
                 }
-                c = codePointFromValidUTF8(prevSrc, src);
+                c = codePointFromValidUTF8(पूर्व_Src, src);
                 c = mapAlgorithmic(c, norm16);
                 norm16 = getRawNorm16(c);
             }
-        } else if (stopAt != STOP_AT_LIMIT && norm16 < minNoNoCompNoMaybeCC) {
-            return prevSrc;
+        } अन्यथा अगर (stopAt != STOP_AT_LIMIT && norm16 < minNoNoCompNoMaybeCC) {
+            वापस पूर्व_Src;
         }
         // norm16!=INERT guarantees that [prevSrc, src[ is valid UTF-8.
         // We do not see invalid UTF-8 here because
@@ -904,219 +904,219 @@ Normalizer2Impl::decomposeShort(const uint8_t *src, const uint8_t *limit,
         // and we stop the slow path where invalid UTF-8 begins.
         // c >= 0 is the result of an algorithmic mapping.
         U_ASSERT(c >= 0 || norm16 != INERT);
-        if (norm16 < minYesNo) {
-            if (c < 0) {
-                c = codePointFromValidUTF8(prevSrc, src);
+        अगर (norm16 < minYesNo) {
+            अगर (c < 0) {
+                c = codePointFromValidUTF8(पूर्व_Src, src);
             }
             // does not decompose
-            if (!buffer.append(c, 0, errorCode)) {
-                return nullptr;
+            अगर (!बफर.append(c, 0, errorCode)) {
+                वापस nullptr;
             }
-        } else if (isHangulLV(norm16) || isHangulLVT(norm16)) {
+        } अन्यथा अगर (isHangulLV(norm16) || isHangulLVT(norm16)) {
             // Hangul syllable: decompose algorithmically
-            if (c < 0) {
-                c = codePointFromValidUTF8(prevSrc, src);
+            अगर (c < 0) {
+                c = codePointFromValidUTF8(पूर्व_Src, src);
             }
             char16_t jamos[3];
-            if (!buffer.appendZeroCC(jamos, jamos+Hangul::decompose(c, jamos), errorCode)) {
-                return nullptr;
+            अगर (!बफर.appendZeroCC(jamos, jamos+Hangul::decompose(c, jamos), errorCode)) {
+                वापस nullptr;
             }
-        } else {
+        } अन्यथा {
             // The character decomposes, get everything from the variable-length extra data.
-            const uint16_t *mapping = getData(norm16);
+            स्थिर uint16_t *mapping = get_तथ्य(norm16);
             uint16_t firstUnit = *mapping;
-            int32_t length = firstUnit & MAPPING_LENGTH_MASK;
+            int32_t length = firstUnit & MAPPING_लंबाई_MASK;
             uint8_t trailCC = static_cast<uint8_t>(firstUnit >> 8);
             uint8_t leadCC;
-            if (firstUnit & MAPPING_HAS_CCC_LCCC_WORD) {
+            अगर (firstUnit & MAPPING_HAS_CCC_LCCC_WORD) {
                 leadCC = static_cast<uint8_t>(*(mapping - 1) >> 8);
-            } else {
+            } अन्यथा {
                 leadCC = 0;
             }
-            if (leadCC == 0 && stopAt == STOP_AT_DECOMP_BOUNDARY) {
-                return prevSrc;
+            अगर (leadCC == 0 && stopAt == STOP_AT_DECOMP_BOUNDARY) {
+                वापस पूर्व_Src;
             }
-            if (!buffer.append(reinterpret_cast<const char16_t*>(mapping) + 1, length, true, leadCC, trailCC, errorCode)) {
-                return nullptr;
+            अगर (!बफर.append(reinterpret_cast<स्थिर char16_t*>(mapping) + 1, length, true, leadCC, trailCC, errorCode)) {
+                वापस nullptr;
             }
         }
-        if ((stopAt == STOP_AT_COMP_BOUNDARY && norm16HasCompBoundaryAfter(norm16, onlyContiguous)) ||
-                (stopAt == STOP_AT_DECOMP_BOUNDARY && buffer.getLastCC() <= 1)) {
-            return src;
+        अगर ((stopAt == STOP_AT_COMP_BOUNDARY && norm16HasCompBoundaryAfter(norm16, onlyContiguous)) ||
+                (stopAt == STOP_AT_DECOMP_BOUNDARY && बफर.getLastCC() <= 1)) {
+            वापस src;
         }
     }
-    return src;
+    वापस src;
 }
 
-const char16_t *
-Normalizer2Impl::getDecomposition(UChar32 c, char16_t buffer[4], int32_t &length) const {
+स्थिर char16_t *
+Normalizer2Impl::getDecomposition(UChar32 c, char16_t बफर[4], int32_t &length) स्थिर {
     uint16_t norm16;
-    if(c<minDecompNoCP || isMaybeYesOrNonZeroCC(norm16=getNorm16(c))) {
+    अगर(c<minDecompNoCP || isMaybeYesOrNonZeroCC(norm16=getNorm16(c))) {
         // c does not decompose
-        return nullptr;
+        वापस nullptr;
     }
-    const char16_t *decomp = nullptr;
-    if(isDecompNoAlgorithmic(norm16)) {
+    स्थिर char16_t *decomp = nullptr;
+    अगर(isDecompNoAlgorithmic(norm16)) {
         // Maps to an isCompYesAndZeroCC.
         c=mapAlgorithmic(c, norm16);
-        decomp=buffer;
+        decomp=बफर;
         length=0;
-        U16_APPEND_UNSAFE(buffer, length, c);
+        U16_APPEND_UNSAFE(बफर, length, c);
         // The mapping might decompose further.
         norm16 = getRawNorm16(c);
     }
-    if (norm16 < minYesNo) {
-        return decomp;
-    } else if(isHangulLV(norm16) || isHangulLVT(norm16)) {
+    अगर (norm16 < minYesNo) {
+        वापस decomp;
+    } अन्यथा अगर(isHangulLV(norm16) || isHangulLVT(norm16)) {
         // Hangul syllable: decompose algorithmically
-        length=Hangul::decompose(c, buffer);
-        return buffer;
+        length=Hangul::decompose(c, बफर);
+        वापस बफर;
     }
     // c decomposes, get everything from the variable-length extra data
-    const uint16_t *mapping=getData(norm16);
-    length=*mapping&MAPPING_LENGTH_MASK;
-    return reinterpret_cast<const char16_t*>(mapping) + 1;
+    स्थिर uint16_t *mapping=get_तथ्य(norm16);
+    length=*mapping&MAPPING_लंबाई_MASK;
+    वापस reinterpret_cast<स्थिर char16_t*>(mapping) + 1;
 }
 
 // The capacity of the buffer must be 30=MAPPING_LENGTH_MASK-1
 // so that a raw mapping fits that consists of one unit ("rm0")
 // plus all but the first two code units of the normal mapping.
 // The maximum length of a normal mapping is 31=MAPPING_LENGTH_MASK.
-const char16_t *
-Normalizer2Impl::getRawDecomposition(UChar32 c, char16_t buffer[30], int32_t &length) const {
+स्थिर char16_t *
+Normalizer2Impl::getRawDecomposition(UChar32 c, char16_t बफर[30], int32_t &length) स्थिर {
     uint16_t norm16;
-    if(c<minDecompNoCP || isDecompYes(norm16=getNorm16(c))) {
+    अगर(c<minDecompNoCP || isDecompYes(norm16=getNorm16(c))) {
         // c does not decompose
-        return nullptr;
-    } else if(isHangulLV(norm16) || isHangulLVT(norm16)) {
+        वापस nullptr;
+    } अन्यथा अगर(isHangulLV(norm16) || isHangulLVT(norm16)) {
         // Hangul syllable: decompose algorithmically
-        Hangul::getRawDecomposition(c, buffer);
+        Hangul::getRawDecomposition(c, बफर);
         length=2;
-        return buffer;
-    } else if(isDecompNoAlgorithmic(norm16)) {
+        वापस बफर;
+    } अन्यथा अगर(isDecompNoAlgorithmic(norm16)) {
         c=mapAlgorithmic(c, norm16);
         length=0;
-        U16_APPEND_UNSAFE(buffer, length, c);
-        return buffer;
+        U16_APPEND_UNSAFE(बफर, length, c);
+        वापस बफर;
     }
     // c decomposes, get everything from the variable-length extra data
-    const uint16_t *mapping=getData(norm16);
+    स्थिर uint16_t *mapping=get_तथ्य(norm16);
     uint16_t firstUnit=*mapping;
-    int32_t mLength=firstUnit&MAPPING_LENGTH_MASK;  // length of normal mapping
-    if(firstUnit&MAPPING_HAS_RAW_MAPPING) {
+    int32_t m_लंबाई=firstUnit&MAPPING_लंबाई_MASK;  // length of normal mapping
+    अगर(firstUnit&MAPPING_HAS_RAW_MAPPING) {
         // Read the raw mapping from before the firstUnit and before the optional ccc/lccc word.
         // Bit 7=MAPPING_HAS_CCC_LCCC_WORD
-        const uint16_t *rawMapping=mapping-((firstUnit>>7)&1)-1;
+        स्थिर uint16_t *rawMapping=mapping-((firstUnit>>7)&1)-1;
         uint16_t rm0=*rawMapping;
-        if(rm0<=MAPPING_LENGTH_MASK) {
+        अगर(rm0<=MAPPING_लंबाई_MASK) {
             length=rm0;
-            return reinterpret_cast<const char16_t*>(rawMapping) - rm0;
-        } else {
+            वापस reinterpret_cast<स्थिर char16_t*>(rawMapping) - rm0;
+        } अन्यथा {
             // Copy the normal mapping and replace its first two code units with rm0.
-            buffer[0] = static_cast<char16_t>(rm0);
-            u_memcpy(buffer + 1, reinterpret_cast<const char16_t*>(mapping) + 1 + 2, mLength - 2);
-            length=mLength-1;
-            return buffer;
+            बफर[0] = static_cast<char16_t>(rm0);
+            u_memcpy(बफर + 1, reinterpret_cast<स्थिर char16_t*>(mapping) + 1 + 2, m_लंबाई - 2);
+            length=m_लंबाई-1;
+            वापस बफर;
         }
-    } else {
-        length=mLength;
-        return reinterpret_cast<const char16_t*>(mapping) + 1;
+    } अन्यथा {
+        length=m_लंबाई;
+        वापस reinterpret_cast<स्थिर char16_t*>(mapping) + 1;
     }
 }
 
-void Normalizer2Impl::decomposeAndAppend(const char16_t *src, const char16_t *limit,
+व्योम Normalizer2Impl::decomposeAndAppend(स्थिर char16_t *src, स्थिर char16_t *limit,
                                          UBool doDecompose,
-                                         UnicodeString &safeMiddle,
-                                         ReorderingBuffer &buffer,
-                                         UErrorCode &errorCode) const {
-    buffer.copyReorderableSuffixTo(safeMiddle);
-    if(doDecompose) {
-        decompose(src, limit, &buffer, errorCode);
-        return;
+                                         UnicodeString &safe_मध्य,
+                                         Reordering_बफर &बफर,
+                                         UErrorCode &errorCode) स्थिर {
+    बफर.copyReorderableSuffixTo(safe_मध्य);
+    अगर(doDecompose) {
+        decompose(src, limit, &बफर, errorCode);
+        वापस;
     }
     // Just merge the strings at the boundary.
     bool isFirst = true;
-    uint8_t firstCC = 0, prevCC = 0, cc;
-    const char16_t *p = src;
-    while (p != limit) {
-        const char16_t *codePointStart = p;
+    uint8_t firstCC = 0, पूर्व_CC = 0, cc;
+    स्थिर char16_t *p = src;
+    जबतक (p != limit) {
+        स्थिर char16_t *codePointStart = p;
         UChar32 c;
         uint16_t norm16;
-        UCPTRIE_FAST_U16_NEXT(normTrie, UCPTRIE_16, p, limit, c, norm16);
-        if ((cc = getCC(norm16)) == 0) {
+        UCPTRIE_FAST_U16_अग्र(normTrie, UCPTRIE_16, p, limit, c, norm16);
+        अगर ((cc = getCC(norm16)) == 0) {
             p = codePointStart;
-            break;
+            अवरोध;
         }
-        if (isFirst) {
+        अगर (isFirst) {
             firstCC = cc;
             isFirst = false;
         }
-        prevCC = cc;
+        पूर्व_CC = cc;
     }
-    if(limit==nullptr) {  // appendZeroCC() needs limit!=nullptr
+    अगर(limit==nullptr) {  // appendZeroCC() needs limit!=nullptr
         limit=u_strchr(p, 0);
     }
 
-    if (buffer.append(src, static_cast<int32_t>(p - src), false, firstCC, prevCC, errorCode)) {
-        buffer.appendZeroCC(p, limit, errorCode);
+    अगर (बफर.append(src, static_cast<int32_t>(p - src), false, firstCC, पूर्व_CC, errorCode)) {
+        बफर.appendZeroCC(p, limit, errorCode);
     }
 }
 
-UBool Normalizer2Impl::hasDecompBoundaryBefore(UChar32 c) const {
-    return c < minLcccCP || (c <= 0xffff && !singleLeadMightHaveNonZeroFCD16(c)) ||
+UBool Normalizer2Impl::hasDecompBoundaryBefore(UChar32 c) स्थिर {
+    वापस c < minLcccCP || (c <= 0xffff && !singleLeadMightHaveNonZeroFCD16(c)) ||
         norm16HasDecompBoundaryBefore(getNorm16(c));
 }
 
-UBool Normalizer2Impl::norm16HasDecompBoundaryBefore(uint16_t norm16) const {
-    if (norm16 < minNoNoCompNoMaybeCC) {
-        return true;
+UBool Normalizer2Impl::norm16HasDecompBoundaryBefore(uint16_t norm16) स्थिर {
+    अगर (norm16 < minNoNoCompNoMaybeCC) {
+        वापस true;
     }
-    if (norm16 >= limitNoNo) {
-        return norm16 <= MIN_NORMAL_MAYBE_YES || norm16 == JAMO_VT;
+    अगर (norm16 >= limitNoNo) {
+        वापस norm16 <= MIN_NORMAL_MAYBE_YES || norm16 == JAMO_VT;
     }
     // c decomposes, get everything from the variable-length extra data
-    const uint16_t *mapping=getDataForYesOrNo(norm16);
+    स्थिर uint16_t *mapping=get_तथ्य_For_Yes_Or_No(norm16);
     uint16_t firstUnit=*mapping;
     // true if leadCC==0 (hasFCDBoundaryBefore())
-    return (firstUnit&MAPPING_HAS_CCC_LCCC_WORD)==0 || (*(mapping-1)&0xff00)==0;
+    वापस (firstUnit&MAPPING_HAS_CCC_LCCC_WORD)==0 || (*(mapping-1)&0xff00)==0;
 }
 
-UBool Normalizer2Impl::hasDecompBoundaryAfter(UChar32 c) const {
-    if (c < minDecompNoCP) {
-        return true;
+UBool Normalizer2Impl::hasDecompBoundaryAfter(UChar32 c) स्थिर {
+    अगर (c < minDecompNoCP) {
+        वापस true;
     }
-    if (c <= 0xffff && !singleLeadMightHaveNonZeroFCD16(c)) {
-        return true;
+    अगर (c <= 0xffff && !singleLeadMightHaveNonZeroFCD16(c)) {
+        वापस true;
     }
-    return norm16HasDecompBoundaryAfter(getNorm16(c));
+    वापस norm16HasDecompBoundaryAfter(getNorm16(c));
 }
 
-UBool Normalizer2Impl::norm16HasDecompBoundaryAfter(uint16_t norm16) const {
-    if(norm16 <= minYesNo || isHangulLVT(norm16)) {
-        return true;
+UBool Normalizer2Impl::norm16HasDecompBoundaryAfter(uint16_t norm16) स्थिर {
+    अगर(norm16 <= minYesNo || isHangulLVT(norm16)) {
+        वापस true;
     }
-    if (norm16 >= limitNoNo) {
-        if (isMaybeYesOrNonZeroCC(norm16)) {
-            return norm16 <= MIN_NORMAL_MAYBE_YES || norm16 == JAMO_VT;
-        } else if (norm16 < minMaybeNo) {
+    अगर (norm16 >= limitNoNo) {
+        अगर (isMaybeYesOrNonZeroCC(norm16)) {
+            वापस norm16 <= MIN_NORMAL_MAYBE_YES || norm16 == JAMO_VT;
+        } अन्यथा अगर (norm16 < minMaybeNo) {
             // Maps to an isCompYesAndZeroCC.
-            return (norm16 & DELTA_TCCC_MASK) <= DELTA_TCCC_1;
+            वापस (norm16 & DELTA_TCCC_MASK) <= DELTA_TCCC_1;
         }
     }
     // c decomposes, get everything from the variable-length extra data
-    const uint16_t *mapping=getData(norm16);
+    स्थिर uint16_t *mapping=get_तथ्य(norm16);
     uint16_t firstUnit=*mapping;
     // decomp after-boundary: same as hasFCDBoundaryAfter(),
     // fcd16<=1 || trailCC==0
-    if(firstUnit>0x1ff) {
-        return false;  // trailCC>1
+    अगर(firstUnit>0x1ff) {
+        वापस false;  // trailCC>1
     }
-    if(firstUnit<=0xff) {
-        return true;  // trailCC==0
+    अगर(firstUnit<=0xff) {
+        वापस true;  // trailCC==0
     }
     // if(trailCC==1) test leadCC==0, same as checking for before-boundary
     // true if leadCC==0 (hasFCDBoundaryBefore())
-    return (firstUnit&MAPPING_HAS_CCC_LCCC_WORD)==0 || (*(mapping-1)&0xff00)==0;
+    वापस (firstUnit&MAPPING_HAS_CCC_LCCC_WORD)==0 || (*(mapping-1)&0xff00)==0;
 }
 
 /*
@@ -1141,23 +1141,23 @@ UBool Normalizer2Impl::norm16HasDecompBoundaryAfter(uint16_t norm16) const {
  * See normalizer2impl.h for a more detailed description
  * of the compositions list format.
  */
-int32_t Normalizer2Impl::combine(const uint16_t *list, UChar32 trail) {
+int32_t Normalizer2Impl::combine(स्थिर uint16_t *list, UChar32 trail) {
     uint16_t key1, firstUnit;
-    if(trail<COMP_1_TRAIL_LIMIT) {
+    अगर(trail<COMP_1_TRAIL_LIMIT) {
         // trail character is 0..33FF
         // result entry may have 2 or 3 units
         key1 = static_cast<uint16_t>(trail << 1);
-        while(key1>(firstUnit=*list)) {
+        जबतक(key1>(firstUnit=*list)) {
             list+=2+(firstUnit&COMP_1_TRIPLE);
         }
-        if(key1==(firstUnit&COMP_1_TRAIL_MASK)) {
-            if(firstUnit&COMP_1_TRIPLE) {
-                return (static_cast<int32_t>(list[1]) << 16) | list[2];
-            } else {
-                return list[1];
+        अगर(key1==(firstUnit&COMP_1_TRAIL_MASK)) {
+            अगर(firstUnit&COMP_1_TRIPLE) {
+                वापस (static_cast<int32_t>(list[1]) << 16) | list[2];
+            } अन्यथा {
+                वापस list[1];
             }
         }
-    } else {
+    } अन्यथा {
         // trail character is 3400..10FFFF
         // result entry has 3 units
         key1 = static_cast<uint16_t>(COMP_1_TRAIL_LIMIT +
@@ -1165,51 +1165,51 @@ int32_t Normalizer2Impl::combine(const uint16_t *list, UChar32 trail) {
                           ~COMP_1_TRIPLE));
         uint16_t key2 = static_cast<uint16_t>(trail << COMP_2_TRAIL_SHIFT);
         uint16_t secondUnit;
-        for(;;) {
-            if(key1>(firstUnit=*list)) {
+        क्रम(;;) {
+            अगर(key1>(firstUnit=*list)) {
                 list+=2+(firstUnit&COMP_1_TRIPLE);
-            } else if(key1==(firstUnit&COMP_1_TRAIL_MASK)) {
-                if(key2>(secondUnit=list[1])) {
-                    if(firstUnit&COMP_1_LAST_TUPLE) {
-                        break;
-                    } else {
+            } अन्यथा अगर(key1==(firstUnit&COMP_1_TRAIL_MASK)) {
+                अगर(key2>(secondUnit=list[1])) {
+                    अगर(firstUnit&COMP_1_LAST_TUPLE) {
+                        अवरोध;
+                    } अन्यथा {
                         list+=3;
                     }
-                } else if(key2==(secondUnit&COMP_2_TRAIL_MASK)) {
-                    return (static_cast<int32_t>(secondUnit & ~COMP_2_TRAIL_MASK) << 16) | list[2];
-                } else {
-                    break;
+                } अन्यथा अगर(key2==(secondUnit&COMP_2_TRAIL_MASK)) {
+                    वापस (static_cast<int32_t>(secondUnit & ~COMP_2_TRAIL_MASK) << 16) | list[2];
+                } अन्यथा {
+                    अवरोध;
                 }
-            } else {
-                break;
+            } अन्यथा {
+                अवरोध;
             }
         }
     }
-    return -1;
+    वापस -1;
 }
 
 /**
   * @param list some character's compositions list
   * @param set recursively receives the composites from these compositions
   */
-void Normalizer2Impl::addComposites(const uint16_t *list, UnicodeSet &set) const {
+व्योम Normalizer2Impl::addComposites(स्थिर uint16_t *list, UnicodeSet &set) स्थिर {
     uint16_t firstUnit;
     int32_t compositeAndFwd;
-    do {
+    करो {
         firstUnit=*list;
-        if((firstUnit&COMP_1_TRIPLE)==0) {
+        अगर((firstUnit&COMP_1_TRIPLE)==0) {
             compositeAndFwd=list[1];
             list+=2;
-        } else {
+        } अन्यथा {
             compositeAndFwd = ((static_cast<int32_t>(list[1]) & ~COMP_2_TRAIL_MASK) << 16) | list[2];
             list+=3;
         }
         UChar32 composite=compositeAndFwd>>1;
-        if((compositeAndFwd&1)!=0) {
+        अगर((compositeAndFwd&1)!=0) {
             addComposites(getCompositionsListForComposite(getRawNorm16(composite)), set);
         }
         set.add(composite);
-    } while((firstUnit&COMP_1_LAST_TUPLE)==0);
+    } जबतक((firstUnit&COMP_1_LAST_TUPLE)==0);
 }
 
 /*
@@ -1222,19 +1222,19 @@ void Normalizer2Impl::addComposites(const uint16_t *list, UnicodeSet &set) const
  * a composition may contain at most one more code unit than the original starter,
  * while the combining mark that is removed has at least one code unit.
  */
-void Normalizer2Impl::recompose(ReorderingBuffer &buffer, int32_t recomposeStartIndex,
-                                UBool onlyContiguous) const {
-    char16_t *p=buffer.getStart()+recomposeStartIndex;
-    char16_t *limit=buffer.getLimit();
-    if(p==limit) {
-        return;
+व्योम Normalizer2Impl::recompose(Reordering_बफर &बफर, int32_t recompose_Start_सूचकांक,
+                                UBool onlyContiguous) स्थिर {
+    char16_t *p=बफर.getStart()+recompose_Start_सूचकांक;
+    char16_t *limit=बफर.getLimit();
+    अगर(p==limit) {
+        वापस;
     }
 
     char16_t *starter, *pRemove, *q, *r;
-    const uint16_t *compositionsList;
+    स्थिर uint16_t *compositionsList;
     UChar32 c, compositeAndFwd;
     uint16_t norm16;
-    uint8_t cc, prevCC;
+    uint8_t cc, पूर्व_CC;
     UBool starterIsSupplementary;
 
     // Some of the following variables are not used until we have a forward-combining starter
@@ -1242,31 +1242,31 @@ void Normalizer2Impl::recompose(ReorderingBuffer &buffer, int32_t recomposeStart
     compositionsList=nullptr;  // used as indicator for whether we have a forward-combining starter
     starter=nullptr;
     starterIsSupplementary=false;
-    prevCC=0;
+    पूर्व_CC=0;
 
-    for(;;) {
-        UCPTRIE_FAST_U16_NEXT(normTrie, UCPTRIE_16, p, limit, c, norm16);
+    क्रम(;;) {
+        UCPTRIE_FAST_U16_अग्र(normTrie, UCPTRIE_16, p, limit, c, norm16);
         cc=getCCFromYesOrMaybeYes(norm16);
-        if( // this character combines backward and
+        अगर( // this character combines backward and
             isMaybe(norm16) &&
             // we have seen a starter that combines forward and
             compositionsList!=nullptr &&
             // the backward-combining character is not blocked
-            (prevCC<cc || prevCC==0)
+            (पूर्व_CC<cc || पूर्व_CC==0)
         ) {
-            if(isJamoVT(norm16)) {
+            अगर(isJamoVT(norm16)) {
                 // c is a Jamo V/T, see if we can compose it with the previous character.
-                if(c<Hangul::JAMO_T_BASE) {
+                अगर(c<Hangul::JAMO_T_BASE) {
                     // c is a Jamo Vowel, compose with previous Jamo L and following Jamo T.
-                    char16_t prev = static_cast<char16_t>(*starter - Hangul::JAMO_L_BASE);
-                    if(prev<Hangul::JAMO_L_COUNT) {
+                    char16_t पूर्व = static_cast<char16_t>(*starter - Hangul::JAMO_L_BASE);
+                    अगर(पूर्व<Hangul::JAMO_L_गिनती) {
                         pRemove=p-1;
                         char16_t syllable = static_cast<char16_t>(
                             Hangul::HANGUL_BASE +
-                             (prev*Hangul::JAMO_V_COUNT+(c-Hangul::JAMO_V_BASE))*
-                             Hangul::JAMO_T_COUNT);
+                             (पूर्व*Hangul::JAMO_V_गिनती+(c-Hangul::JAMO_V_BASE))*
+                             Hangul::JAMO_T_गिनती);
                         char16_t t;
-                        if (p != limit && (t = static_cast<char16_t>(*p - Hangul::JAMO_T_BASE)) < Hangul::JAMO_T_COUNT) {
+                        अगर (p != limit && (t = static_cast<char16_t>(*p - Hangul::JAMO_T_BASE)) < Hangul::JAMO_T_गिनती) {
                             ++p;
                             syllable+=t;  // The next character was a Jamo T.
                         }
@@ -1274,7 +1274,7 @@ void Normalizer2Impl::recompose(ReorderingBuffer &buffer, int32_t recomposeStart
                         // remove the Jamo V/T
                         q=pRemove;
                         r=p;
-                        while(r<limit) {
+                        जबतक(r<limit) {
                             *q++=*r++;
                         }
                         limit=q;
@@ -1287,56 +1287,56 @@ void Normalizer2Impl::recompose(ReorderingBuffer &buffer, int32_t recomposeStart
                  * a Jamo T could combine with.
                  * All Jamo Ts are combined above when handling Jamo Vs.
                  */
-                if(p==limit) {
-                    break;
+                अगर(p==limit) {
+                    अवरोध;
                 }
                 compositionsList=nullptr;
-                continue;
-            } else if((compositeAndFwd=combine(compositionsList, c))>=0) {
+                जारी;
+            } अन्यथा अगर((compositeAndFwd=combine(compositionsList, c))>=0) {
                 // The starter and the combining mark (c) do combine.
                 UChar32 composite=compositeAndFwd>>1;
 
                 // Replace the starter with the composite, remove the combining mark.
-                pRemove=p-U16_LENGTH(c);  // pRemove & p: start & limit of the combining mark
-                if(starterIsSupplementary) {
-                    if(U_IS_SUPPLEMENTARY(composite)) {
+                pRemove=p-U16_लंबाई(c);  // pRemove & p: start & limit of the combining mark
+                अगर(starterIsSupplementary) {
+                    अगर(U_IS_SUPPLEMENTARY(composite)) {
                         // both are supplementary
                         starter[0]=U16_LEAD(composite);
                         starter[1]=U16_TRAIL(composite);
-                    } else {
+                    } अन्यथा {
                         *starter = static_cast<char16_t>(composite);
                         // The composite is shorter than the starter,
                         // move the intermediate characters forward one.
                         starterIsSupplementary=false;
                         q=starter+1;
                         r=q+1;
-                        while(r<pRemove) {
+                        जबतक(r<pRemove) {
                             *q++=*r++;
                         }
                         --pRemove;
                     }
-                } else if(U_IS_SUPPLEMENTARY(composite)) {
+                } अन्यथा अगर(U_IS_SUPPLEMENTARY(composite)) {
                     // The composite is longer than the starter,
                     // move the intermediate characters back one.
                     starterIsSupplementary=true;
                     ++starter;  // temporarily increment for the loop boundary
                     q=pRemove;
                     r=++pRemove;
-                    while(starter<q) {
+                    जबतक(starter<q) {
                         *--r=*--q;
                     }
                     *starter=U16_TRAIL(composite);
                     *--starter=U16_LEAD(composite);  // undo the temporary increment
-                } else {
+                } अन्यथा {
                     // both are on the BMP
                     *starter = static_cast<char16_t>(composite);
                 }
 
                 /* remove the combining mark by moving the following text over it */
-                if(pRemove<p) {
+                अगर(pRemove<p) {
                     q=pRemove;
                     r=p;
-                    while(r<limit) {
+                    जबतक(r<limit) {
                         *q++=*r++;
                     }
                     limit=q;
@@ -1344,168 +1344,168 @@ void Normalizer2Impl::recompose(ReorderingBuffer &buffer, int32_t recomposeStart
                 }
                 // Keep prevCC because we removed the combining mark.
 
-                if(p==limit) {
-                    break;
+                अगर(p==limit) {
+                    अवरोध;
                 }
                 // Is the composite a starter that combines forward?
-                if(compositeAndFwd&1) {
+                अगर(compositeAndFwd&1) {
                     compositionsList=
                         getCompositionsListForComposite(getRawNorm16(composite));
-                } else {
+                } अन्यथा {
                     compositionsList=nullptr;
                 }
 
                 // We combined; continue with looking for compositions.
-                continue;
+                जारी;
             }
         }
 
         // no combination this time
-        prevCC=cc;
-        if(p==limit) {
-            break;
+        पूर्व_CC=cc;
+        अगर(p==limit) {
+            अवरोध;
         }
 
         // If c did not combine, then check if it is a starter.
-        if(cc==0) {
+        अगर(cc==0) {
             // Found a new starter.
-            if((compositionsList=getCompositionsListForDecompYes(norm16))!=nullptr) {
+            अगर((compositionsList=getCompositionsListForDecompYes(norm16))!=nullptr) {
                 // It may combine with something, prepare for it.
-                if(U_IS_BMP(c)) {
+                अगर(U_IS_BMP(c)) {
                     starterIsSupplementary=false;
                     starter=p-1;
-                } else {
+                } अन्यथा {
                     starterIsSupplementary=true;
                     starter=p-2;
                 }
             }
-        } else if(onlyContiguous) {
+        } अन्यथा अगर(onlyContiguous) {
             // FCC: no discontiguous compositions; any intervening character blocks.
             compositionsList=nullptr;
         }
     }
-    buffer.setReorderingLimit(limit);
+    बफर.setReorderingLimit(limit);
 }
 
 UChar32
-Normalizer2Impl::composePair(UChar32 a, UChar32 b) const {
+Normalizer2Impl::composePair(UChar32 a, UChar32 b) स्थिर {
     uint16_t norm16=getNorm16(a);  // maps an out-of-range 'a' to inert norm16
-    const uint16_t *list;
-    if(isInert(norm16)) {
-        return U_SENTINEL;
-    } else if(norm16<minYesNoMappingsOnly) {
+    स्थिर uint16_t *list;
+    अगर(isInert(norm16)) {
+        वापस U_SENTINEL;
+    } अन्यथा अगर(norm16<minYesNoMappingsOnly) {
         // a combines forward.
-        if(isJamoL(norm16)) {
-            if (b < Hangul::JAMO_V_BASE) {
-                return U_SENTINEL;
+        अगर(isJamoL(norm16)) {
+            अगर (b < Hangul::JAMO_V_BASE) {
+                वापस U_SENTINEL;
             }
             b-=Hangul::JAMO_V_BASE;
-            if(b<Hangul::JAMO_V_COUNT) {
-                return
+            अगर(b<Hangul::JAMO_V_गिनती) {
+                वापस
                     (Hangul::HANGUL_BASE+
-                     ((a-Hangul::JAMO_L_BASE)*Hangul::JAMO_V_COUNT+b)*
-                     Hangul::JAMO_T_COUNT);
-            } else {
-                return U_SENTINEL;
+                     ((a-Hangul::JAMO_L_BASE)*Hangul::JAMO_V_गिनती+b)*
+                     Hangul::JAMO_T_गिनती);
+            } अन्यथा {
+                वापस U_SENTINEL;
             }
-        } else if(isHangulLV(norm16)) {
-            if (b <= Hangul::JAMO_T_BASE) {
-               return U_SENTINEL;
+        } अन्यथा अगर(isHangulLV(norm16)) {
+            अगर (b <= Hangul::JAMO_T_BASE) {
+               वापस U_SENTINEL;
             }
             b-=Hangul::JAMO_T_BASE;
-            if(b<Hangul::JAMO_T_COUNT) {  // not b==0!
-                return a+b;
-            } else {
-                return U_SENTINEL;
+            अगर(b<Hangul::JAMO_T_गिनती) {  // not b==0!
+                वापस a+b;
+            } अन्यथा {
+                वापस U_SENTINEL;
             }
-        } else {
+        } अन्यथा {
             // 'a' has a compositions list in extraData
-            list=getDataForYesOrNo(norm16);
-            if(norm16>minYesNo) {  // composite 'a' has both mapping & compositions list
+            list=get_तथ्य_For_Yes_Or_No(norm16);
+            अगर(norm16>minYesNo) {  // composite 'a' has both mapping & compositions list
                 list+=  // mapping pointer
                     1+  // +1 to skip the first unit with the mapping length
-                    (*list&MAPPING_LENGTH_MASK);  // + mapping length
+                    (*list&MAPPING_लंबाई_MASK);  // + mapping length
             }
         }
-    } else if(norm16<minMaybeNoCombinesFwd || MIN_NORMAL_MAYBE_YES<=norm16) {
-        return U_SENTINEL;
-    } else {
-        list=getDataForMaybe(norm16);
-        if(norm16<minMaybeYes) {  // composite 'a' has both mapping & compositions list
+    } अन्यथा अगर(norm16<minMaybeNoCombinesFwd || MIN_NORMAL_MAYBE_YES<=norm16) {
+        वापस U_SENTINEL;
+    } अन्यथा {
+        list=get_तथ्य_For_Maybe(norm16);
+        अगर(norm16<minMaybeYes) {  // composite 'a' has both mapping & compositions list
             list+=  // mapping pointer
                 1+  // +1 to skip the first unit with the mapping length
-                (*list&MAPPING_LENGTH_MASK);  // + mapping length
+                (*list&MAPPING_लंबाई_MASK);  // + mapping length
         }
     }
-    if(b<0 || 0x10ffff<b) {  // combine(list, b) requires a valid code point b
-        return U_SENTINEL;
+    अगर(b<0 || 0x10ffff<b) {  // combine(list, b) requires a valid code point b
+        वापस U_SENTINEL;
     }
-#if U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
-    return combine(list, b)>>1;
-#else
+#अगर U_SIGNED_दायाँ_SHIFT_IS_ARITHMETIC
+    वापस combine(list, b)>>1;
+#अन्यथा
     int32_t compositeAndFwd=combine(list, b);
-    return compositeAndFwd>=0 ? compositeAndFwd>>1 : U_SENTINEL;
-#endif
+    वापस compositeAndFwd>=0 ? compositeAndFwd>>1 : U_SENTINEL;
+#पूर्ण_अगर
 }
 
 // Very similar to composeQuickCheck(): Make the same changes in both places if relevant.
 // doCompose: normalize
 // !doCompose: isNormalized (buffer must be empty and initialized)
 UBool
-Normalizer2Impl::compose(const char16_t *src, const char16_t *limit,
+Normalizer2Impl::compose(स्थिर char16_t *src, स्थिर char16_t *limit,
                          UBool onlyContiguous,
                          UBool doCompose,
-                         ReorderingBuffer &buffer,
-                         UErrorCode &errorCode) const {
-    const char16_t *prevBoundary=src;
+                         Reordering_बफर &बफर,
+                         UErrorCode &errorCode) स्थिर {
+    स्थिर char16_t *पूर्व_Boundary=src;
     UChar32 minNoMaybeCP=minCompNoMaybeCP;
-    if(limit==nullptr) {
-        src=copyLowPrefixFromNulTerminated(src, minNoMaybeCP,
-                                           doCompose ? &buffer : nullptr,
+    अगर(limit==nullptr) {
+        src=copy_निचला_Prefix_From_Nul_Terminated(src, minNoMaybeCP,
+                                           doCompose ? &बफर : nullptr,
                                            errorCode);
-        if(U_FAILURE(errorCode)) {
-            return false;
+        अगर(U_FAILURE(errorCode)) {
+            वापस false;
         }
         limit=u_strchr(src, 0);
-        if (prevBoundary != src) {
-            if (hasCompBoundaryAfter(*(src-1), onlyContiguous)) {
-                prevBoundary = src;
-            } else {
-                buffer.removeSuffix(1);
-                prevBoundary = --src;
+        अगर (पूर्व_Boundary != src) {
+            अगर (hasCompBoundaryAfter(*(src-1), onlyContiguous)) {
+                पूर्व_Boundary = src;
+            } अन्यथा {
+                बफर.removeSuffix(1);
+                पूर्व_Boundary = --src;
             }
         }
     }
 
-    for (;;) {
+    क्रम (;;) {
         // Fast path: Scan over a sequence of characters below the minimum "no or maybe" code point,
         // or with (compYes && ccc==0) properties.
-        const char16_t *prevSrc;
+        स्थिर char16_t *पूर्व_Src;
         UChar32 c = 0;
         uint16_t norm16 = 0;
-        for (;;) {
-            if (src == limit) {
-                if (prevBoundary != limit && doCompose) {
-                    buffer.appendZeroCC(prevBoundary, limit, errorCode);
+        क्रम (;;) {
+            अगर (src == limit) {
+                अगर (पूर्व_Boundary != limit && doCompose) {
+                    बफर.appendZeroCC(पूर्व_Boundary, limit, errorCode);
                 }
-                return true;
+                वापस true;
             }
-            if( (c=*src)<minNoMaybeCP ||
+            अगर( (c=*src)<minNoMaybeCP ||
                 isCompYesAndZeroCC(norm16=UCPTRIE_FAST_BMP_GET(normTrie, UCPTRIE_16, c))
             ) {
                 ++src;
-            } else {
-                prevSrc = src++;
-                if(!U16_IS_LEAD(c)) {
-                    break;
-                } else {
+            } अन्यथा {
+                पूर्व_Src = src++;
+                अगर(!U16_IS_LEAD(c)) {
+                    अवरोध;
+                } अन्यथा {
                     char16_t c2;
-                    if(src!=limit && U16_IS_TRAIL(c2=*src)) {
+                    अगर(src!=limit && U16_IS_TRAIL(c2=*src)) {
                         ++src;
                         c=U16_GET_SUPPLEMENTARY(c, c2);
                         norm16=UCPTRIE_FAST_SUPP_GET(normTrie, UCPTRIE_16, c);
-                        if(!isCompYesAndZeroCC(norm16)) {
-                            break;
+                        अगर(!isCompYesAndZeroCC(norm16)) {
+                            अवरोध;
                         }
                     }
                 }
@@ -1518,91 +1518,91 @@ Normalizer2Impl::compose(const char16_t *src, const char16_t *limit,
         // It is not a Hangul syllable or Jamo L because those have "yes" properties.
 
         // Medium-fast path: Handle cases that do not require full decomposition and recomposition.
-        if (norm16 < minMaybeNo) {  // minNoNo <= norm16 < minMaybeNo
-            if (!doCompose) {
-                return false;
+        अगर (norm16 < minMaybeNo) {  // minNoNo <= norm16 < minMaybeNo
+            अगर (!doCompose) {
+                वापस false;
             }
             // Fast path for mapping a character that is immediately surrounded by boundaries.
             // In this case, we need not decompose around the current character.
-            if (isDecompNoAlgorithmic(norm16)) {
+            अगर (isDecompNoAlgorithmic(norm16)) {
                 // Maps to a single isCompYesAndZeroCC character
                 // which also implies hasCompBoundaryBefore.
-                if (norm16HasCompBoundaryAfter(norm16, onlyContiguous) ||
+                अगर (norm16HasCompBoundaryAfter(norm16, onlyContiguous) ||
                         hasCompBoundaryBefore(src, limit)) {
-                    if (prevBoundary != prevSrc && !buffer.appendZeroCC(prevBoundary, prevSrc, errorCode)) {
-                        break;
+                    अगर (पूर्व_Boundary != पूर्व_Src && !बफर.appendZeroCC(पूर्व_Boundary, पूर्व_Src, errorCode)) {
+                        अवरोध;
                     }
-                    if(!buffer.append(mapAlgorithmic(c, norm16), 0, errorCode)) {
-                        break;
+                    अगर(!बफर.append(mapAlgorithmic(c, norm16), 0, errorCode)) {
+                        अवरोध;
                     }
-                    prevBoundary = src;
-                    continue;
+                    पूर्व_Boundary = src;
+                    जारी;
                 }
-            } else if (norm16 < minNoNoCompBoundaryBefore) {
+            } अन्यथा अगर (norm16 < minNoNoCompBoundaryBefore) {
                 // The mapping is comp-normalized which also implies hasCompBoundaryBefore.
-                if (norm16HasCompBoundaryAfter(norm16, onlyContiguous) ||
+                अगर (norm16HasCompBoundaryAfter(norm16, onlyContiguous) ||
                         hasCompBoundaryBefore(src, limit)) {
-                    if (prevBoundary != prevSrc && !buffer.appendZeroCC(prevBoundary, prevSrc, errorCode)) {
-                        break;
+                    अगर (पूर्व_Boundary != पूर्व_Src && !बफर.appendZeroCC(पूर्व_Boundary, पूर्व_Src, errorCode)) {
+                        अवरोध;
                     }
-                    const char16_t *mapping = reinterpret_cast<const char16_t *>(getDataForYesOrNo(norm16));
-                    int32_t length = *mapping++ & MAPPING_LENGTH_MASK;
-                    if(!buffer.appendZeroCC(mapping, mapping + length, errorCode)) {
-                        break;
+                    स्थिर char16_t *mapping = reinterpret_cast<स्थिर char16_t *>(get_तथ्य_For_Yes_Or_No(norm16));
+                    int32_t length = *mapping++ & MAPPING_लंबाई_MASK;
+                    अगर(!बफर.appendZeroCC(mapping, mapping + length, errorCode)) {
+                        अवरोध;
                     }
-                    prevBoundary = src;
-                    continue;
+                    पूर्व_Boundary = src;
+                    जारी;
                 }
-            } else if (norm16 >= minNoNoEmpty) {
+            } अन्यथा अगर (norm16 >= minNoNoEmpty) {
                 // The current character maps to nothing.
                 // Simply omit it from the output if there is a boundary before _or_ after it.
                 // The character itself implies no boundaries.
-                if (hasCompBoundaryBefore(src, limit) ||
-                        hasCompBoundaryAfter(prevBoundary, prevSrc, onlyContiguous)) {
-                    if (prevBoundary != prevSrc && !buffer.appendZeroCC(prevBoundary, prevSrc, errorCode)) {
-                        break;
+                अगर (hasCompBoundaryBefore(src, limit) ||
+                        hasCompBoundaryAfter(पूर्व_Boundary, पूर्व_Src, onlyContiguous)) {
+                    अगर (पूर्व_Boundary != पूर्व_Src && !बफर.appendZeroCC(पूर्व_Boundary, पूर्व_Src, errorCode)) {
+                        अवरोध;
                     }
-                    prevBoundary = src;
-                    continue;
+                    पूर्व_Boundary = src;
+                    जारी;
                 }
             }
             // Other "noNo" type, or need to examine more text around this character:
             // Fall through to the slow path.
-        } else if (isJamoVT(norm16) && prevBoundary != prevSrc) {
-            char16_t prev=*(prevSrc-1);
-            if(c<Hangul::JAMO_T_BASE) {
+        } अन्यथा अगर (isJamoVT(norm16) && पूर्व_Boundary != पूर्व_Src) {
+            char16_t पूर्व=*(पूर्व_Src-1);
+            अगर(c<Hangul::JAMO_T_BASE) {
                 // The current character is a Jamo Vowel,
                 // compose with previous Jamo L and following Jamo T.
-                char16_t l = static_cast<char16_t>(prev - Hangul::JAMO_L_BASE);
-                if(l<Hangul::JAMO_L_COUNT) {
-                    if (!doCompose) {
-                        return false;
+                char16_t l = static_cast<char16_t>(पूर्व - Hangul::JAMO_L_BASE);
+                अगर(l<Hangul::JAMO_L_गिनती) {
+                    अगर (!doCompose) {
+                        वापस false;
                     }
                     int32_t t;
-                    if (src != limit &&
+                    अगर (src != limit &&
                             0 < (t = (static_cast<int32_t>(*src) - Hangul::JAMO_T_BASE)) &&
-                            t < Hangul::JAMO_T_COUNT) {
+                            t < Hangul::JAMO_T_गिनती) {
                         // The next character is a Jamo T.
                         ++src;
-                    } else if (hasCompBoundaryBefore(src, limit)) {
+                    } अन्यथा अगर (hasCompBoundaryBefore(src, limit)) {
                         // No Jamo T follows, not even via decomposition.
                         t = 0;
-                    } else {
+                    } अन्यथा {
                         t = -1;
                     }
-                    if (t >= 0) {
+                    अगर (t >= 0) {
                         UChar32 syllable = Hangul::HANGUL_BASE +
-                            (l*Hangul::JAMO_V_COUNT + (c-Hangul::JAMO_V_BASE)) *
-                            Hangul::JAMO_T_COUNT + t;
-                        --prevSrc;  // Replace the Jamo L as well.
-                        if (prevBoundary != prevSrc && !buffer.appendZeroCC(prevBoundary, prevSrc, errorCode)) {
-                            break;
+                            (l*Hangul::JAMO_V_गिनती + (c-Hangul::JAMO_V_BASE)) *
+                            Hangul::JAMO_T_गिनती + t;
+                        --पूर्व_Src;  // Replace the Jamo L as well.
+                        अगर (पूर्व_Boundary != पूर्व_Src && !बफर.appendZeroCC(पूर्व_Boundary, पूर्व_Src, errorCode)) {
+                            अवरोध;
                         }
-                        if (!buffer.appendBMP(static_cast<char16_t>(syllable), 0, errorCode)) {
-                            break;
+                        अगर (!बफर.appendBMP(static_cast<char16_t>(syllable), 0, errorCode)) {
+                            अवरोध;
                         }
-                        prevBoundary = src;
-                        continue;
+                        पूर्व_Boundary = src;
+                        जारी;
                     }
                     // If we see L+V+x where x!=T then we drop to the slow path,
                     // decompose and recompose.
@@ -1612,70 +1612,70 @@ Normalizer2Impl::compose(const char16_t *src, const char16_t *limit,
                     // (which would complicate the code and may not work with strange custom data)
                     // or use the slow path.
                 }
-            } else if (Hangul::isHangulLV(prev)) {
+            } अन्यथा अगर (Hangul::isHangulLV(पूर्व)) {
                 // The current character is a Jamo Trailing consonant,
                 // compose with previous Hangul LV that does not contain a Jamo T.
-                if (!doCompose) {
-                    return false;
+                अगर (!doCompose) {
+                    वापस false;
                 }
-                UChar32 syllable = prev + c - Hangul::JAMO_T_BASE;
-                --prevSrc;  // Replace the Hangul LV as well.
-                if (prevBoundary != prevSrc && !buffer.appendZeroCC(prevBoundary, prevSrc, errorCode)) {
-                    break;
+                UChar32 syllable = पूर्व + c - Hangul::JAMO_T_BASE;
+                --पूर्व_Src;  // Replace the Hangul LV as well.
+                अगर (पूर्व_Boundary != पूर्व_Src && !बफर.appendZeroCC(पूर्व_Boundary, पूर्व_Src, errorCode)) {
+                    अवरोध;
                 }
-                if (!buffer.appendBMP(static_cast<char16_t>(syllable), 0, errorCode)) {
-                    break;
+                अगर (!बफर.appendBMP(static_cast<char16_t>(syllable), 0, errorCode)) {
+                    अवरोध;
                 }
-                prevBoundary = src;
-                continue;
+                पूर्व_Boundary = src;
+                जारी;
             }
             // No matching context, or may need to decompose surrounding text first:
             // Fall through to the slow path.
-        } else if (norm16 > JAMO_VT) {  // norm16 >= MIN_YES_YES_WITH_CC
+        } अन्यथा अगर (norm16 > JAMO_VT) {  // norm16 >= MIN_YES_YES_WITH_CC
             // One or more combining marks that do not combine-back:
             // Check for canonical order, copy unchanged if ok and
             // if followed by a character with a boundary-before.
             uint8_t cc = getCCFromNormalYesOrMaybe(norm16);  // cc!=0
-            if (onlyContiguous /* FCC */ && getPreviousTrailCC(prevBoundary, prevSrc) > cc) {
+            अगर (onlyContiguous /* FCC */ && getPreviousTrailCC(पूर्व_Boundary, पूर्व_Src) > cc) {
                 // Fails FCD test, need to decompose and contiguously recompose.
-                if (!doCompose) {
-                    return false;
+                अगर (!doCompose) {
+                    वापस false;
                 }
-            } else {
+            } अन्यथा {
                 // If !onlyContiguous (not FCC), then we ignore the tccc of
                 // the previous character which passed the quick check "yes && ccc==0" test.
-                const char16_t *nextSrc;
+                स्थिर char16_t *अग्र_Src;
                 uint16_t n16;
-                for (;;) {
-                    if (src == limit) {
-                        if (doCompose) {
-                            buffer.appendZeroCC(prevBoundary, limit, errorCode);
+                क्रम (;;) {
+                    अगर (src == limit) {
+                        अगर (doCompose) {
+                            बफर.appendZeroCC(पूर्व_Boundary, limit, errorCode);
                         }
-                        return true;
+                        वापस true;
                     }
-                    uint8_t prevCC = cc;
-                    nextSrc = src;
-                    UCPTRIE_FAST_U16_NEXT(normTrie, UCPTRIE_16, nextSrc, limit, c, n16);
-                    if (n16 >= MIN_YES_YES_WITH_CC) {
+                    uint8_t पूर्व_CC = cc;
+                    अग्र_Src = src;
+                    UCPTRIE_FAST_U16_अग्र(normTrie, UCPTRIE_16, अग्र_Src, limit, c, n16);
+                    अगर (n16 >= MIN_YES_YES_WITH_CC) {
                         cc = getCCFromNormalYesOrMaybe(n16);
-                        if (prevCC > cc) {
-                            if (!doCompose) {
-                                return false;
+                        अगर (पूर्व_CC > cc) {
+                            अगर (!doCompose) {
+                                वापस false;
                             }
-                            break;
+                            अवरोध;
                         }
-                    } else {
-                        break;
+                    } अन्यथा {
+                        अवरोध;
                     }
-                    src = nextSrc;
+                    src = अग्र_Src;
                 }
                 // src is after the last in-order combining mark.
                 // If there is a boundary here, then we continue with no change.
-                if (norm16HasCompBoundaryBefore(n16)) {
-                    if (isCompYesAndZeroCC(n16)) {
-                        src = nextSrc;
+                अगर (norm16HasCompBoundaryBefore(n16)) {
+                    अगर (isCompYesAndZeroCC(n16)) {
+                        src = अग्र_Src;
                     }
-                    continue;
+                    जारी;
                 }
                 // Use the slow path. There is no boundary in [prevSrc, src[.
             }
@@ -1683,90 +1683,90 @@ Normalizer2Impl::compose(const char16_t *src, const char16_t *limit,
 
         // Slow path: Find the nearest boundaries around the current character,
         // decompose and recompose.
-        if (prevBoundary != prevSrc && !norm16HasCompBoundaryBefore(norm16)) {
-            const char16_t *p = prevSrc;
-            UCPTRIE_FAST_U16_PREV(normTrie, UCPTRIE_16, prevBoundary, p, c, norm16);
-            if (!norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
-                prevSrc = p;
+        अगर (पूर्व_Boundary != पूर्व_Src && !norm16HasCompBoundaryBefore(norm16)) {
+            स्थिर char16_t *p = पूर्व_Src;
+            UCPTRIE_FAST_U16_पूर्व(normTrie, UCPTRIE_16, पूर्व_Boundary, p, c, norm16);
+            अगर (!norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
+                पूर्व_Src = p;
             }
         }
-        if (doCompose && prevBoundary != prevSrc && !buffer.appendZeroCC(prevBoundary, prevSrc, errorCode)) {
-            break;
+        अगर (doCompose && पूर्व_Boundary != पूर्व_Src && !बफर.appendZeroCC(पूर्व_Boundary, पूर्व_Src, errorCode)) {
+            अवरोध;
         }
-        int32_t recomposeStartIndex=buffer.length();
+        int32_t recompose_Start_सूचकांक=बफर.length();
         // We know there is not a boundary here.
-        decomposeShort(prevSrc, src, false /* !stopAtCompBoundary */, onlyContiguous,
-                       buffer, errorCode);
+        decomposeShort(पूर्व_Src, src, false /* !stopAtCompBoundary */, onlyContiguous,
+                       बफर, errorCode);
         // Decompose until the next boundary.
         src = decomposeShort(src, limit, true /* stopAtCompBoundary */, onlyContiguous,
-                             buffer, errorCode);
-        if (U_FAILURE(errorCode)) {
-            break;
+                             बफर, errorCode);
+        अगर (U_FAILURE(errorCode)) {
+            अवरोध;
         }
-        if ((src - prevSrc) > INT32_MAX) {  // guard before buffer.equals()
-            errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            return true;
+        अगर ((src - पूर्व_Src) > INT32_MAX) {  // guard before buffer.equals()
+            errorCode = U_सूचकांक_OUTOFBOUNDS_ERROR;
+            वापस true;
         }
-        recompose(buffer, recomposeStartIndex, onlyContiguous);
-        if(!doCompose) {
-            if(!buffer.equals(prevSrc, src)) {
-                return false;
+        recompose(बफर, recompose_Start_सूचकांक, onlyContiguous);
+        अगर(!doCompose) {
+            अगर(!बफर.equals(पूर्व_Src, src)) {
+                वापस false;
             }
-            buffer.remove();
+            बफर.हटाओ();
         }
-        prevBoundary=src;
+        पूर्व_Boundary=src;
     }
-    return true;
+    वापस true;
 }
 
 // Very similar to compose(): Make the same changes in both places if relevant.
 // pQCResult==nullptr: spanQuickCheckYes
 // pQCResult!=nullptr: quickCheck (*pQCResult must be UNORM_YES)
-const char16_t *
-Normalizer2Impl::composeQuickCheck(const char16_t *src, const char16_t *limit,
+स्थिर char16_t *
+Normalizer2Impl::composeQuickCheck(स्थिर char16_t *src, स्थिर char16_t *limit,
                                    UBool onlyContiguous,
-                                   UNormalizationCheckResult *pQCResult) const {
-    const char16_t *prevBoundary=src;
+                                   UNormalization_Check_परिणाम *pQCResult) स्थिर {
+    स्थिर char16_t *पूर्व_Boundary=src;
     UChar32 minNoMaybeCP=minCompNoMaybeCP;
-    if(limit==nullptr) {
+    अगर(limit==nullptr) {
         UErrorCode errorCode=U_ZERO_ERROR;
-        src=copyLowPrefixFromNulTerminated(src, minNoMaybeCP, nullptr, errorCode);
+        src=copy_निचला_Prefix_From_Nul_Terminated(src, minNoMaybeCP, nullptr, errorCode);
         limit=u_strchr(src, 0);
-        if (prevBoundary != src) {
-            if (hasCompBoundaryAfter(*(src-1), onlyContiguous)) {
-                prevBoundary = src;
-            } else {
-                prevBoundary = --src;
+        अगर (पूर्व_Boundary != src) {
+            अगर (hasCompBoundaryAfter(*(src-1), onlyContiguous)) {
+                पूर्व_Boundary = src;
+            } अन्यथा {
+                पूर्व_Boundary = --src;
             }
         }
     }
 
-    for(;;) {
+    क्रम(;;) {
         // Fast path: Scan over a sequence of characters below the minimum "no or maybe" code point,
         // or with (compYes && ccc==0) properties.
-        const char16_t *prevSrc;
+        स्थिर char16_t *पूर्व_Src;
         UChar32 c = 0;
         uint16_t norm16 = 0;
-        for (;;) {
-            if(src==limit) {
-                return src;
+        क्रम (;;) {
+            अगर(src==limit) {
+                वापस src;
             }
-            if( (c=*src)<minNoMaybeCP ||
+            अगर( (c=*src)<minNoMaybeCP ||
                 isCompYesAndZeroCC(norm16=UCPTRIE_FAST_BMP_GET(normTrie, UCPTRIE_16, c))
             ) {
                 ++src;
-            } else {
-                prevSrc = src++;
-                if(!U16_IS_LEAD(c)) {
-                    break;
-                } else {
+            } अन्यथा {
+                पूर्व_Src = src++;
+                अगर(!U16_IS_LEAD(c)) {
+                    अवरोध;
+                } अन्यथा {
                     char16_t c2;
-                    if(src!=limit && U16_IS_TRAIL(c2=*src)) {
+                    अगर(src!=limit && U16_IS_TRAIL(c2=*src)) {
                         ++src;
                         c=U16_GET_SUPPLEMENTARY(c, c2);
                         norm16=UCPTRIE_FAST_SUPP_GET(normTrie, UCPTRIE_16, c);
-                        if(!isCompYesAndZeroCC(norm16)) {
-                            break;
+                        अगर(!isCompYesAndZeroCC(norm16)) {
+                            अवरोध;
                         }
                     }
                 }
@@ -1778,139 +1778,139 @@ Normalizer2Impl::composeQuickCheck(const char16_t *src, const char16_t *limit,
         // or a "yesYes" with ccc!=0.
         // It is not a Hangul syllable or Jamo L because those have "yes" properties.
 
-        uint16_t prevNorm16 = INERT;
-        if (prevBoundary != prevSrc) {
-            if (norm16HasCompBoundaryBefore(norm16)) {
-                prevBoundary = prevSrc;
-            } else {
-                const char16_t *p = prevSrc;
+        uint16_t पूर्व_Norm16 = INERT;
+        अगर (पूर्व_Boundary != पूर्व_Src) {
+            अगर (norm16HasCompBoundaryBefore(norm16)) {
+                पूर्व_Boundary = पूर्व_Src;
+            } अन्यथा {
+                स्थिर char16_t *p = पूर्व_Src;
                 uint16_t n16;
-                UCPTRIE_FAST_U16_PREV(normTrie, UCPTRIE_16, prevBoundary, p, c, n16);
-                if (norm16HasCompBoundaryAfter(n16, onlyContiguous)) {
-                    prevBoundary = prevSrc;
-                } else {
-                    prevBoundary = p;
-                    prevNorm16 = n16;
+                UCPTRIE_FAST_U16_पूर्व(normTrie, UCPTRIE_16, पूर्व_Boundary, p, c, n16);
+                अगर (norm16HasCompBoundaryAfter(n16, onlyContiguous)) {
+                    पूर्व_Boundary = पूर्व_Src;
+                } अन्यथा {
+                    पूर्व_Boundary = p;
+                    पूर्व_Norm16 = n16;
                 }
             }
         }
 
-        if (norm16 >= minMaybeNo) {
+        अगर (norm16 >= minMaybeNo) {
             uint16_t fcd16 = getFCD16FromMaybeOrNonZeroCC(norm16);
             uint8_t cc = fcd16 >> 8;
-            if (onlyContiguous /* FCC */ && cc != 0 &&
-                    getTrailCCFromCompYesAndZeroCC(prevNorm16) > cc) {
+            अगर (onlyContiguous /* FCC */ && cc != 0 &&
+                    getTrailCCFromCompYesAndZeroCC(पूर्व_Norm16) > cc) {
                 // The [prevBoundary..prevSrc[ character
                 // passed the quick check "yes && ccc==0" test
                 // but is out of canonical order with the current combining mark.
-            } else {
+            } अन्यथा {
                 // If !onlyContiguous (not FCC), then we ignore the tccc of
                 // the previous character which passed the quick check "yes && ccc==0" test.
-                const char16_t *nextSrc;
-                for (;;) {
-                    if (norm16 < MIN_YES_YES_WITH_CC) {
-                        if (pQCResult != nullptr) {
+                स्थिर char16_t *अग्र_Src;
+                क्रम (;;) {
+                    अगर (norm16 < MIN_YES_YES_WITH_CC) {
+                        अगर (pQCResult != nullptr) {
                             *pQCResult = UNORM_MAYBE;
-                        } else {
-                            return prevBoundary;
+                        } अन्यथा {
+                            वापस पूर्व_Boundary;
                         }
                     }
-                    if (src == limit) {
-                        return src;
+                    अगर (src == limit) {
+                        वापस src;
                     }
-                    uint8_t prevCC = fcd16;
-                    nextSrc = src;
-                    UCPTRIE_FAST_U16_NEXT(normTrie, UCPTRIE_16, nextSrc, limit, c, norm16);
-                    if (norm16 >= minMaybeNo) {
+                    uint8_t पूर्व_CC = fcd16;
+                    अग्र_Src = src;
+                    UCPTRIE_FAST_U16_अग्र(normTrie, UCPTRIE_16, अग्र_Src, limit, c, norm16);
+                    अगर (norm16 >= minMaybeNo) {
                         fcd16 = getFCD16FromMaybeOrNonZeroCC(norm16);
                         cc = fcd16 >> 8;
-                        if (!(prevCC <= cc || cc == 0)) {
-                            break;
+                        अगर (!(पूर्व_CC <= cc || cc == 0)) {
+                            अवरोध;
                         }
-                    } else {
-                        break;
+                    } अन्यथा {
+                        अवरोध;
                     }
-                    src = nextSrc;
+                    src = अग्र_Src;
                 }
                 // src is after the last in-order combining mark.
-                if (isCompYesAndZeroCC(norm16)) {
-                    prevBoundary = src;
-                    src = nextSrc;
-                    continue;
+                अगर (isCompYesAndZeroCC(norm16)) {
+                    पूर्व_Boundary = src;
+                    src = अग्र_Src;
+                    जारी;
                 }
             }
         }
-        if(pQCResult!=nullptr) {
+        अगर(pQCResult!=nullptr) {
             *pQCResult=UNORM_NO;
         }
-        return prevBoundary;
+        वापस पूर्व_Boundary;
     }
 }
 
-void Normalizer2Impl::composeAndAppend(const char16_t *src, const char16_t *limit,
+व्योम Normalizer2Impl::composeAndAppend(स्थिर char16_t *src, स्थिर char16_t *limit,
                                        UBool doCompose,
                                        UBool onlyContiguous,
-                                       UnicodeString &safeMiddle,
-                                       ReorderingBuffer &buffer,
-                                       UErrorCode &errorCode) const {
-    if(!buffer.isEmpty()) {
-        const char16_t *firstStarterInSrc=findNextCompBoundary(src, limit, onlyContiguous);
-        if(src!=firstStarterInSrc) {
-            const char16_t *lastStarterInDest=findPreviousCompBoundary(buffer.getStart(),
-                                                                    buffer.getLimit(), onlyContiguous);
-            int32_t destSuffixLength = static_cast<int32_t>(buffer.getLimit() - lastStarterInDest);
-            UnicodeString middle(lastStarterInDest, destSuffixLength);
-            buffer.removeSuffix(destSuffixLength);
-            safeMiddle=middle;
-            middle.append(src, static_cast<int32_t>(firstStarterInSrc - src));
-            const char16_t *middleStart=middle.getBuffer();
-            compose(middleStart, middleStart+middle.length(), onlyContiguous,
-                    true, buffer, errorCode);
-            if(U_FAILURE(errorCode)) {
-                return;
+                                       UnicodeString &safe_मध्य,
+                                       Reordering_बफर &बफर,
+                                       UErrorCode &errorCode) स्थिर {
+    अगर(!बफर.isEmpty()) {
+        स्थिर char16_t *firstStarterInSrc=find_अग्र_Comp_Boundary(src, limit, onlyContiguous);
+        अगर(src!=firstStarterInSrc) {
+            स्थिर char16_t *lastStarterInDest=findPreviousCompBoundary(बफर.getStart(),
+                                                                    बफर.getLimit(), onlyContiguous);
+            int32_t dest_Suffix_लंबाई = static_cast<int32_t>(बफर.getLimit() - lastStarterInDest);
+            UnicodeString मध्य(lastStarterInDest, dest_Suffix_लंबाई);
+            बफर.removeSuffix(dest_Suffix_लंबाई);
+            safe_मध्य=मध्य;
+            मध्य.append(src, static_cast<int32_t>(firstStarterInSrc - src));
+            स्थिर char16_t *मध्य_Start=मध्य.get_बफर();
+            compose(मध्य_Start, मध्य_Start+मध्य.length(), onlyContiguous,
+                    true, बफर, errorCode);
+            अगर(U_FAILURE(errorCode)) {
+                वापस;
             }
             src=firstStarterInSrc;
         }
     }
-    if(doCompose) {
-        compose(src, limit, onlyContiguous, true, buffer, errorCode);
-    } else {
-        if(limit==nullptr) {  // appendZeroCC() needs limit!=nullptr
+    अगर(doCompose) {
+        compose(src, limit, onlyContiguous, true, बफर, errorCode);
+    } अन्यथा {
+        अगर(limit==nullptr) {  // appendZeroCC() needs limit!=nullptr
             limit=u_strchr(src, 0);
         }
-        buffer.appendZeroCC(src, limit, errorCode);
+        बफर.appendZeroCC(src, limit, errorCode);
     }
 }
 
 UBool
 Normalizer2Impl::composeUTF8(uint32_t options, UBool onlyContiguous,
-                             const uint8_t *src, const uint8_t *limit,
-                             ByteSink *sink, Edits *edits, UErrorCode &errorCode) const {
+                             स्थिर uint8_t *src, स्थिर uint8_t *limit,
+                             ByteSink *sink, Edits *edits, UErrorCode &errorCode) स्थिर {
     U_ASSERT(limit != nullptr);
     UnicodeString s16;
     uint8_t minNoMaybeLead = leadByteForCP(minCompNoMaybeCP);
-    const uint8_t *prevBoundary = src;
+    स्थिर uint8_t *पूर्व_Boundary = src;
 
-    for (;;) {
+    क्रम (;;) {
         // Fast path: Scan over a sequence of characters below the minimum "no or maybe" code point,
         // or with (compYes && ccc==0) properties.
-        const uint8_t *prevSrc;
+        स्थिर uint8_t *पूर्व_Src;
         uint16_t norm16 = 0;
-        for (;;) {
-            if (src == limit) {
-                if (prevBoundary != limit && sink != nullptr) {
-                    ByteSinkUtil::appendUnchanged(prevBoundary, limit,
+        क्रम (;;) {
+            अगर (src == limit) {
+                अगर (पूर्व_Boundary != limit && sink != nullptr) {
+                    ByteSinkUtil::appendUnchanged(पूर्व_Boundary, limit,
                                                   *sink, options, edits, errorCode);
                 }
-                return true;
+                वापस true;
             }
-            if (*src < minNoMaybeLead) {
+            अगर (*src < minNoMaybeLead) {
                 ++src;
-            } else {
-                prevSrc = src;
-                UCPTRIE_FAST_U8_NEXT(normTrie, UCPTRIE_16, src, limit, norm16);
-                if (!isCompYesAndZeroCC(norm16)) {
-                    break;
+            } अन्यथा {
+                पूर्व_Src = src;
+                UCPTRIE_FAST_U8_अग्र(normTrie, UCPTRIE_16, src, limit, norm16);
+                अगर (!isCompYesAndZeroCC(norm16)) {
+                    अवरोध;
                 }
             }
         }
@@ -1921,99 +1921,99 @@ Normalizer2Impl::composeUTF8(uint32_t options, UBool onlyContiguous,
         // It is not a Hangul syllable or Jamo L because those have "yes" properties.
 
         // Medium-fast path: Handle cases that do not require full decomposition and recomposition.
-        if (norm16 < minMaybeNo) {  // minNoNo <= norm16 < minMaybeNo
-            if (sink == nullptr) {
-                return false;
+        अगर (norm16 < minMaybeNo) {  // minNoNo <= norm16 < minMaybeNo
+            अगर (sink == nullptr) {
+                वापस false;
             }
             // Fast path for mapping a character that is immediately surrounded by boundaries.
             // In this case, we need not decompose around the current character.
-            if (isDecompNoAlgorithmic(norm16)) {
+            अगर (isDecompNoAlgorithmic(norm16)) {
                 // Maps to a single isCompYesAndZeroCC character
                 // which also implies hasCompBoundaryBefore.
-                if (norm16HasCompBoundaryAfter(norm16, onlyContiguous) ||
+                अगर (norm16HasCompBoundaryAfter(norm16, onlyContiguous) ||
                         hasCompBoundaryBefore(src, limit)) {
-                    if (prevBoundary != prevSrc &&
-                            !ByteSinkUtil::appendUnchanged(prevBoundary, prevSrc,
+                    अगर (पूर्व_Boundary != पूर्व_Src &&
+                            !ByteSinkUtil::appendUnchanged(पूर्व_Boundary, पूर्व_Src,
                                                            *sink, options, edits, errorCode)) {
-                        break;
+                        अवरोध;
                     }
-                    appendCodePointDelta(prevSrc, src, getAlgorithmicDelta(norm16), *sink, edits);
-                    prevBoundary = src;
-                    continue;
+                    appendCodePointDelta(पूर्व_Src, src, getAlgorithmicDelta(norm16), *sink, edits);
+                    पूर्व_Boundary = src;
+                    जारी;
                 }
-            } else if (norm16 < minNoNoCompBoundaryBefore) {
+            } अन्यथा अगर (norm16 < minNoNoCompBoundaryBefore) {
                 // The mapping is comp-normalized which also implies hasCompBoundaryBefore.
-                if (norm16HasCompBoundaryAfter(norm16, onlyContiguous) ||
+                अगर (norm16HasCompBoundaryAfter(norm16, onlyContiguous) ||
                         hasCompBoundaryBefore(src, limit)) {
-                    if (prevBoundary != prevSrc &&
-                            !ByteSinkUtil::appendUnchanged(prevBoundary, prevSrc,
+                    अगर (पूर्व_Boundary != पूर्व_Src &&
+                            !ByteSinkUtil::appendUnchanged(पूर्व_Boundary, पूर्व_Src,
                                                            *sink, options, edits, errorCode)) {
-                        break;
+                        अवरोध;
                     }
-                    const uint16_t *mapping = getDataForYesOrNo(norm16);
-                    int32_t length = *mapping++ & MAPPING_LENGTH_MASK;
-                    if (!ByteSinkUtil::appendChange(prevSrc, src, reinterpret_cast<const char16_t*>(mapping), length,
+                    स्थिर uint16_t *mapping = get_तथ्य_For_Yes_Or_No(norm16);
+                    int32_t length = *mapping++ & MAPPING_लंबाई_MASK;
+                    अगर (!ByteSinkUtil::appendChange(पूर्व_Src, src, reinterpret_cast<स्थिर char16_t*>(mapping), length,
                                                     *sink, edits, errorCode)) {
-                        break;
+                        अवरोध;
                     }
-                    prevBoundary = src;
-                    continue;
+                    पूर्व_Boundary = src;
+                    जारी;
                 }
-            } else if (norm16 >= minNoNoEmpty) {
+            } अन्यथा अगर (norm16 >= minNoNoEmpty) {
                 // The current character maps to nothing.
                 // Simply omit it from the output if there is a boundary before _or_ after it.
                 // The character itself implies no boundaries.
-                if (hasCompBoundaryBefore(src, limit) ||
-                        hasCompBoundaryAfter(prevBoundary, prevSrc, onlyContiguous)) {
-                    if (prevBoundary != prevSrc &&
-                            !ByteSinkUtil::appendUnchanged(prevBoundary, prevSrc,
+                अगर (hasCompBoundaryBefore(src, limit) ||
+                        hasCompBoundaryAfter(पूर्व_Boundary, पूर्व_Src, onlyContiguous)) {
+                    अगर (पूर्व_Boundary != पूर्व_Src &&
+                            !ByteSinkUtil::appendUnchanged(पूर्व_Boundary, पूर्व_Src,
                                                            *sink, options, edits, errorCode)) {
-                        break;
+                        अवरोध;
                     }
-                    if (edits != nullptr) {
-                        edits->addReplace(static_cast<int32_t>(src - prevSrc), 0);
+                    अगर (edits != nullptr) {
+                        edits->addReplace(static_cast<int32_t>(src - पूर्व_Src), 0);
                     }
-                    prevBoundary = src;
-                    continue;
+                    पूर्व_Boundary = src;
+                    जारी;
                 }
             }
             // Other "noNo" type, or need to examine more text around this character:
             // Fall through to the slow path.
-        } else if (isJamoVT(norm16)) {
+        } अन्यथा अगर (isJamoVT(norm16)) {
             // Jamo L: E1 84 80..92
             // Jamo V: E1 85 A1..B5
             // Jamo T: E1 86 A8..E1 87 82
-            U_ASSERT((src - prevSrc) == 3 && *prevSrc == 0xe1);
-            UChar32 prev = previousHangulOrJamo(prevBoundary, prevSrc);
-            if (prevSrc[1] == 0x85) {
+            U_ASSERT((src - पूर्व_Src) == 3 && *पूर्व_Src == 0xe1);
+            UChar32 पूर्व = previousHangulOrJamo(पूर्व_Boundary, पूर्व_Src);
+            अगर (पूर्व_Src[1] == 0x85) {
                 // The current character is a Jamo Vowel,
                 // compose with previous Jamo L and following Jamo T.
-                UChar32 l = prev - Hangul::JAMO_L_BASE;
-                if (static_cast<uint32_t>(l) < Hangul::JAMO_L_COUNT) {
-                    if (sink == nullptr) {
-                        return false;
+                UChar32 l = पूर्व - Hangul::JAMO_L_BASE;
+                अगर (static_cast<uint32_t>(l) < Hangul::JAMO_L_गिनती) {
+                    अगर (sink == nullptr) {
+                        वापस false;
                     }
                     int32_t t = getJamoTMinusBase(src, limit);
-                    if (t >= 0) {
+                    अगर (t >= 0) {
                         // The next character is a Jamo T.
                         src += 3;
-                    } else if (hasCompBoundaryBefore(src, limit)) {
+                    } अन्यथा अगर (hasCompBoundaryBefore(src, limit)) {
                         // No Jamo T follows, not even via decomposition.
                         t = 0;
                     }
-                    if (t >= 0) {
+                    अगर (t >= 0) {
                         UChar32 syllable = Hangul::HANGUL_BASE +
-                            (l*Hangul::JAMO_V_COUNT + (prevSrc[2]-0xa1)) *
-                            Hangul::JAMO_T_COUNT + t;
-                        prevSrc -= 3;  // Replace the Jamo L as well.
-                        if (prevBoundary != prevSrc &&
-                                !ByteSinkUtil::appendUnchanged(prevBoundary, prevSrc,
+                            (l*Hangul::JAMO_V_गिनती + (पूर्व_Src[2]-0xa1)) *
+                            Hangul::JAMO_T_गिनती + t;
+                        पूर्व_Src -= 3;  // Replace the Jamo L as well.
+                        अगर (पूर्व_Boundary != पूर्व_Src &&
+                                !ByteSinkUtil::appendUnchanged(पूर्व_Boundary, पूर्व_Src,
                                                                *sink, options, edits, errorCode)) {
-                            break;
+                            अवरोध;
                         }
-                        ByteSinkUtil::appendCodePoint(prevSrc, src, syllable, *sink, edits);
-                        prevBoundary = src;
-                        continue;
+                        ByteSinkUtil::appendCodePoint(पूर्व_Src, src, syllable, *sink, edits);
+                        पूर्व_Boundary = src;
+                        जारी;
                     }
                     // If we see L+V+x where x!=T then we drop to the slow path,
                     // decompose and recompose.
@@ -2023,71 +2023,71 @@ Normalizer2Impl::composeUTF8(uint32_t options, UBool onlyContiguous,
                     // (which would complicate the code and may not work with strange custom data)
                     // or use the slow path.
                 }
-            } else if (Hangul::isHangulLV(prev)) {
+            } अन्यथा अगर (Hangul::isHangulLV(पूर्व)) {
                 // The current character is a Jamo Trailing consonant,
                 // compose with previous Hangul LV that does not contain a Jamo T.
-                if (sink == nullptr) {
-                    return false;
+                अगर (sink == nullptr) {
+                    वापस false;
                 }
-                UChar32 syllable = prev + getJamoTMinusBase(prevSrc, src);
-                prevSrc -= 3;  // Replace the Hangul LV as well.
-                if (prevBoundary != prevSrc &&
-                        !ByteSinkUtil::appendUnchanged(prevBoundary, prevSrc,
+                UChar32 syllable = पूर्व + getJamoTMinusBase(पूर्व_Src, src);
+                पूर्व_Src -= 3;  // Replace the Hangul LV as well.
+                अगर (पूर्व_Boundary != पूर्व_Src &&
+                        !ByteSinkUtil::appendUnchanged(पूर्व_Boundary, पूर्व_Src,
                                                        *sink, options, edits, errorCode)) {
-                    break;
+                    अवरोध;
                 }
-                ByteSinkUtil::appendCodePoint(prevSrc, src, syllable, *sink, edits);
-                prevBoundary = src;
-                continue;
+                ByteSinkUtil::appendCodePoint(पूर्व_Src, src, syllable, *sink, edits);
+                पूर्व_Boundary = src;
+                जारी;
             }
             // No matching context, or may need to decompose surrounding text first:
             // Fall through to the slow path.
-        } else if (norm16 > JAMO_VT) {  // norm16 >= MIN_YES_YES_WITH_CC
+        } अन्यथा अगर (norm16 > JAMO_VT) {  // norm16 >= MIN_YES_YES_WITH_CC
             // One or more combining marks that do not combine-back:
             // Check for canonical order, copy unchanged if ok and
             // if followed by a character with a boundary-before.
             uint8_t cc = getCCFromNormalYesOrMaybe(norm16);  // cc!=0
-            if (onlyContiguous /* FCC */ && getPreviousTrailCC(prevBoundary, prevSrc) > cc) {
+            अगर (onlyContiguous /* FCC */ && getPreviousTrailCC(पूर्व_Boundary, पूर्व_Src) > cc) {
                 // Fails FCD test, need to decompose and contiguously recompose.
-                if (sink == nullptr) {
-                    return false;
+                अगर (sink == nullptr) {
+                    वापस false;
                 }
-            } else {
+            } अन्यथा {
                 // If !onlyContiguous (not FCC), then we ignore the tccc of
                 // the previous character which passed the quick check "yes && ccc==0" test.
-                const uint8_t *nextSrc;
+                स्थिर uint8_t *अग्र_Src;
                 uint16_t n16;
-                for (;;) {
-                    if (src == limit) {
-                        if (sink != nullptr) {
-                            ByteSinkUtil::appendUnchanged(prevBoundary, limit,
+                क्रम (;;) {
+                    अगर (src == limit) {
+                        अगर (sink != nullptr) {
+                            ByteSinkUtil::appendUnchanged(पूर्व_Boundary, limit,
                                                           *sink, options, edits, errorCode);
                         }
-                        return true;
+                        वापस true;
                     }
-                    uint8_t prevCC = cc;
-                    nextSrc = src;
-                    UCPTRIE_FAST_U8_NEXT(normTrie, UCPTRIE_16, nextSrc, limit, n16);
-                    if (n16 >= MIN_YES_YES_WITH_CC) {
+                    uint8_t पूर्व_CC = cc;
+                    अग्र_Src = src;
+                    UCPTRIE_FAST_U8_अग्र(normTrie, UCPTRIE_16, अग्र_Src, limit, n16);
+                    अगर (n16 >= MIN_YES_YES_WITH_CC) {
                         cc = getCCFromNormalYesOrMaybe(n16);
-                        if (prevCC > cc) {
-                            if (sink == nullptr) {
-                                return false;
+                        अगर (पूर्व_CC > cc) {
+                            अगर (sink == nullptr) {
+                                वापस false;
                             }
-                            break;
+                            अवरोध;
                         }
-                    } else {
-                        break;
+                    } अन्यथा {
+                        अवरोध;
                     }
-                    src = nextSrc;
+                    src = अग्र_Src;
                 }
                 // src is after the last in-order combining mark.
                 // If there is a boundary here, then we continue with no change.
-                if (norm16HasCompBoundaryBefore(n16)) {
-                    if (isCompYesAndZeroCC(n16)) {
-                        src = nextSrc;
+                अगर (norm16HasCompBoundaryBefore(n16)) {
+                    अगर (isCompYesAndZeroCC(n16)) {
+                        src = अग्र_Src;
                     }
-                    continue;
+                    जारी;
                 }
                 // Use the slow path. There is no boundary in [prevSrc, src[.
             }
@@ -2095,142 +2095,142 @@ Normalizer2Impl::composeUTF8(uint32_t options, UBool onlyContiguous,
 
         // Slow path: Find the nearest boundaries around the current character,
         // decompose and recompose.
-        if (prevBoundary != prevSrc && !norm16HasCompBoundaryBefore(norm16)) {
-            const uint8_t *p = prevSrc;
-            UCPTRIE_FAST_U8_PREV(normTrie, UCPTRIE_16, prevBoundary, p, norm16);
-            if (!norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
-                prevSrc = p;
+        अगर (पूर्व_Boundary != पूर्व_Src && !norm16HasCompBoundaryBefore(norm16)) {
+            स्थिर uint8_t *p = पूर्व_Src;
+            UCPTRIE_FAST_U8_पूर्व(normTrie, UCPTRIE_16, पूर्व_Boundary, p, norm16);
+            अगर (!norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
+                पूर्व_Src = p;
             }
         }
-        ReorderingBuffer buffer(*this, s16, errorCode);
-        if (U_FAILURE(errorCode)) {
-            break;
+        Reordering_बफर बफर(*यह, s16, errorCode);
+        अगर (U_FAILURE(errorCode)) {
+            अवरोध;
         }
         // We know there is not a boundary here.
-        decomposeShort(prevSrc, src, STOP_AT_LIMIT, onlyContiguous,
-                       buffer, errorCode);
+        decomposeShort(पूर्व_Src, src, STOP_AT_LIMIT, onlyContiguous,
+                       बफर, errorCode);
         // Decompose until the next boundary.
         src = decomposeShort(src, limit, STOP_AT_COMP_BOUNDARY, onlyContiguous,
-                             buffer, errorCode);
-        if (U_FAILURE(errorCode)) {
-            break;
+                             बफर, errorCode);
+        अगर (U_FAILURE(errorCode)) {
+            अवरोध;
         }
-        if ((src - prevSrc) > INT32_MAX) {  // guard before buffer.equals()
-            errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            return true;
+        अगर ((src - पूर्व_Src) > INT32_MAX) {  // guard before buffer.equals()
+            errorCode = U_सूचकांक_OUTOFBOUNDS_ERROR;
+            वापस true;
         }
-        recompose(buffer, 0, onlyContiguous);
-        if (!buffer.equals(prevSrc, src)) {
-            if (sink == nullptr) {
-                return false;
+        recompose(बफर, 0, onlyContiguous);
+        अगर (!बफर.equals(पूर्व_Src, src)) {
+            अगर (sink == nullptr) {
+                वापस false;
             }
-            if (prevBoundary != prevSrc &&
-                    !ByteSinkUtil::appendUnchanged(prevBoundary, prevSrc,
+            अगर (पूर्व_Boundary != पूर्व_Src &&
+                    !ByteSinkUtil::appendUnchanged(पूर्व_Boundary, पूर्व_Src,
                                                    *sink, options, edits, errorCode)) {
-                break;
+                अवरोध;
             }
-            if (!ByteSinkUtil::appendChange(prevSrc, src, buffer.getStart(), buffer.length(),
+            अगर (!ByteSinkUtil::appendChange(पूर्व_Src, src, बफर.getStart(), बफर.length(),
                                             *sink, edits, errorCode)) {
-                break;
+                अवरोध;
             }
-            prevBoundary = src;
+            पूर्व_Boundary = src;
         }
     }
-    return true;
+    वापस true;
 }
 
-UBool Normalizer2Impl::hasCompBoundaryBefore(const char16_t *src, const char16_t *limit) const {
-    if (src == limit || *src < minCompNoMaybeCP) {
-        return true;
+UBool Normalizer2Impl::hasCompBoundaryBefore(स्थिर char16_t *src, स्थिर char16_t *limit) स्थिर {
+    अगर (src == limit || *src < minCompNoMaybeCP) {
+        वापस true;
     }
     UChar32 c;
     uint16_t norm16;
-    UCPTRIE_FAST_U16_NEXT(normTrie, UCPTRIE_16, src, limit, c, norm16);
-    return norm16HasCompBoundaryBefore(norm16);
+    UCPTRIE_FAST_U16_अग्र(normTrie, UCPTRIE_16, src, limit, c, norm16);
+    वापस norm16HasCompBoundaryBefore(norm16);
 }
 
-UBool Normalizer2Impl::hasCompBoundaryBefore(const uint8_t *src, const uint8_t *limit) const {
-    if (src == limit) {
-        return true;
+UBool Normalizer2Impl::hasCompBoundaryBefore(स्थिर uint8_t *src, स्थिर uint8_t *limit) स्थिर {
+    अगर (src == limit) {
+        वापस true;
     }
     uint16_t norm16;
-    UCPTRIE_FAST_U8_NEXT(normTrie, UCPTRIE_16, src, limit, norm16);
-    return norm16HasCompBoundaryBefore(norm16);
+    UCPTRIE_FAST_U8_अग्र(normTrie, UCPTRIE_16, src, limit, norm16);
+    वापस norm16HasCompBoundaryBefore(norm16);
 }
 
-UBool Normalizer2Impl::hasCompBoundaryAfter(const char16_t *start, const char16_t *p,
-                                            UBool onlyContiguous) const {
-    if (start == p) {
-        return true;
+UBool Normalizer2Impl::hasCompBoundaryAfter(स्थिर char16_t *start, स्थिर char16_t *p,
+                                            UBool onlyContiguous) स्थिर {
+    अगर (start == p) {
+        वापस true;
     }
     UChar32 c;
     uint16_t norm16;
-    UCPTRIE_FAST_U16_PREV(normTrie, UCPTRIE_16, start, p, c, norm16);
-    return norm16HasCompBoundaryAfter(norm16, onlyContiguous);
+    UCPTRIE_FAST_U16_पूर्व(normTrie, UCPTRIE_16, start, p, c, norm16);
+    वापस norm16HasCompBoundaryAfter(norm16, onlyContiguous);
 }
 
-UBool Normalizer2Impl::hasCompBoundaryAfter(const uint8_t *start, const uint8_t *p,
-                                            UBool onlyContiguous) const {
-    if (start == p) {
-        return true;
+UBool Normalizer2Impl::hasCompBoundaryAfter(स्थिर uint8_t *start, स्थिर uint8_t *p,
+                                            UBool onlyContiguous) स्थिर {
+    अगर (start == p) {
+        वापस true;
     }
     uint16_t norm16;
-    UCPTRIE_FAST_U8_PREV(normTrie, UCPTRIE_16, start, p, norm16);
-    return norm16HasCompBoundaryAfter(norm16, onlyContiguous);
+    UCPTRIE_FAST_U8_पूर्व(normTrie, UCPTRIE_16, start, p, norm16);
+    वापस norm16HasCompBoundaryAfter(norm16, onlyContiguous);
 }
 
-const char16_t *Normalizer2Impl::findPreviousCompBoundary(const char16_t *start, const char16_t *p,
-                                                       UBool onlyContiguous) const {
-    while (p != start) {
-        const char16_t *codePointLimit = p;
+स्थिर char16_t *Normalizer2Impl::findPreviousCompBoundary(स्थिर char16_t *start, स्थिर char16_t *p,
+                                                       UBool onlyContiguous) स्थिर {
+    जबतक (p != start) {
+        स्थिर char16_t *codePointLimit = p;
         UChar32 c;
         uint16_t norm16;
-        UCPTRIE_FAST_U16_PREV(normTrie, UCPTRIE_16, start, p, c, norm16);
-        if (norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
-            return codePointLimit;
+        UCPTRIE_FAST_U16_पूर्व(normTrie, UCPTRIE_16, start, p, c, norm16);
+        अगर (norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
+            वापस codePointLimit;
         }
-        if (hasCompBoundaryBefore(c, norm16)) {
-            return p;
+        अगर (hasCompBoundaryBefore(c, norm16)) {
+            वापस p;
         }
     }
-    return p;
+    वापस p;
 }
 
-const char16_t *Normalizer2Impl::findNextCompBoundary(const char16_t *p, const char16_t *limit,
-                                                   UBool onlyContiguous) const {
-    while (p != limit) {
-        const char16_t *codePointStart = p;
+स्थिर char16_t *Normalizer2Impl::find_अग्र_Comp_Boundary(स्थिर char16_t *p, स्थिर char16_t *limit,
+                                                   UBool onlyContiguous) स्थिर {
+    जबतक (p != limit) {
+        स्थिर char16_t *codePointStart = p;
         UChar32 c;
         uint16_t norm16;
-        UCPTRIE_FAST_U16_NEXT(normTrie, UCPTRIE_16, p, limit, c, norm16);
-        if (hasCompBoundaryBefore(c, norm16)) {
-            return codePointStart;
+        UCPTRIE_FAST_U16_अग्र(normTrie, UCPTRIE_16, p, limit, c, norm16);
+        अगर (hasCompBoundaryBefore(c, norm16)) {
+            वापस codePointStart;
         }
-        if (norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
-            return p;
+        अगर (norm16HasCompBoundaryAfter(norm16, onlyContiguous)) {
+            वापस p;
         }
     }
-    return p;
+    वापस p;
 }
 
-uint8_t Normalizer2Impl::getPreviousTrailCC(const char16_t *start, const char16_t *p) const {
-    if (start == p) {
-        return 0;
+uint8_t Normalizer2Impl::getPreviousTrailCC(स्थिर char16_t *start, स्थिर char16_t *p) स्थिर {
+    अगर (start == p) {
+        वापस 0;
     }
     int32_t i = static_cast<int32_t>(p - start);
     UChar32 c;
-    U16_PREV(start, 0, i, c);
-    return static_cast<uint8_t>(getFCD16(c));
+    U16_पूर्व(start, 0, i, c);
+    वापस static_cast<uint8_t>(getFCD16(c));
 }
 
-uint8_t Normalizer2Impl::getPreviousTrailCC(const uint8_t *start, const uint8_t *p) const {
-    if (start == p) {
-        return 0;
+uint8_t Normalizer2Impl::getPreviousTrailCC(स्थिर uint8_t *start, स्थिर uint8_t *p) स्थिर {
+    अगर (start == p) {
+        वापस 0;
     }
     int32_t i = static_cast<int32_t>(p - start);
     UChar32 c;
-    U8_PREV(start, 0, i, c);
-    return static_cast<uint8_t>(getFCD16(c));
+    U8_पूर्व(start, 0, i, c);
+    वापस static_cast<uint8_t>(getFCD16(c));
 }
 
 // Note: normalizer2impl.cpp r30982 (2011-nov-27)
@@ -2245,86 +2245,86 @@ uint8_t Normalizer2Impl::getPreviousTrailCC(const uint8_t *start, const uint8_t 
 // function on Windows ARM64. As a work-around, we disable optimizations for this function.
 // This work-around could/should be removed once the following versions of Visual Studio are no
 // longer supported: All versions of VS2017, and versions of VS2019 below 16.4.
-#if (defined(_MSC_VER) && (defined(_M_ARM64)) && (_MSC_VER < 1924))
-#pragma optimize( "", off )
-#endif
+#अगर (defined(_MSC_VER) && (defined(_M_ARM64)) && (_MSC_VER < 1924))
+#आशय optimize( "", off )
+#पूर्ण_अगर
 // Gets the FCD value from the regular normalization data.
-uint16_t Normalizer2Impl::getFCD16FromNormData(UChar32 c) const {
+uint16_t Normalizer2Impl::get_FCD16_From_Norm_तथ्य(UChar32 c) स्थिर {
     uint16_t norm16=getNorm16(c);
-    if (norm16 >= limitNoNo) {
-        if(norm16>=MIN_NORMAL_MAYBE_YES) {
+    अगर (norm16 >= limitNoNo) {
+        अगर(norm16>=MIN_NORMAL_MAYBE_YES) {
             // combining mark
             norm16=getCCFromNormalYesOrMaybe(norm16);
-            return norm16|(norm16<<8);
-        } else if(norm16>=minMaybeYes) {
-            return 0;
-        } else if(norm16<minMaybeNo) {  // isDecompNoAlgorithmic(norm16)
+            वापस norm16|(norm16<<8);
+        } अन्यथा अगर(norm16>=minMaybeYes) {
+            वापस 0;
+        } अन्यथा अगर(norm16<minMaybeNo) {  // isDecompNoAlgorithmic(norm16)
             uint16_t deltaTrailCC = norm16 & DELTA_TCCC_MASK;
-            if (deltaTrailCC <= DELTA_TCCC_1) {
-                return deltaTrailCC >> OFFSET_SHIFT;
+            अगर (deltaTrailCC <= DELTA_TCCC_1) {
+                वापस deltaTrailCC >> OFFSET_SHIFT;
             }
             // Maps to an isCompYesAndZeroCC.
             c=mapAlgorithmic(c, norm16);
             norm16=getRawNorm16(c);
         }
     }
-    if(norm16<=minYesNo || isHangulLVT(norm16)) {
+    अगर(norm16<=minYesNo || isHangulLVT(norm16)) {
         // no decomposition or Hangul syllable, all zeros
-        return 0;
+        वापस 0;
     }
     // c decomposes, get everything from the variable-length extra data
-    const uint16_t *mapping=getData(norm16);
+    स्थिर uint16_t *mapping=get_तथ्य(norm16);
     uint16_t firstUnit=*mapping;
     norm16=firstUnit>>8;  // tccc
-    if(firstUnit&MAPPING_HAS_CCC_LCCC_WORD) {
+    अगर(firstUnit&MAPPING_HAS_CCC_LCCC_WORD) {
         norm16|=*(mapping-1)&0xff00;  // lccc
     }
-    return norm16;
+    वापस norm16;
 }
-#if (defined(_MSC_VER) && (defined(_M_ARM64)) && (_MSC_VER < 1924))
-#pragma optimize( "", on )
-#endif
+#अगर (defined(_MSC_VER) && (defined(_M_ARM64)) && (_MSC_VER < 1924))
+#आशय optimize( "", on )
+#पूर्ण_अगर
 
-uint16_t Normalizer2Impl::getFCD16FromMaybeOrNonZeroCC(uint16_t norm16) const {
+uint16_t Normalizer2Impl::getFCD16FromMaybeOrNonZeroCC(uint16_t norm16) स्थिर {
     U_ASSERT(norm16 >= minMaybeNo);
-    if (norm16 >= MIN_NORMAL_MAYBE_YES) {
+    अगर (norm16 >= MIN_NORMAL_MAYBE_YES) {
         // combining mark
         norm16 = getCCFromNormalYesOrMaybe(norm16);
-        return norm16 | (norm16<<8);
-    } else if (norm16 >= minMaybeYes) {
-        return 0;
+        वापस norm16 | (norm16<<8);
+    } अन्यथा अगर (norm16 >= minMaybeYes) {
+        वापस 0;
     }
     // c decomposes, get everything from the variable-length extra data
-    const uint16_t *mapping = getDataForMaybe(norm16);
+    स्थिर uint16_t *mapping = get_तथ्य_For_Maybe(norm16);
     uint16_t firstUnit = *mapping;
     // maybeNo has lccc = 0
     U_ASSERT((firstUnit & MAPPING_HAS_CCC_LCCC_WORD) == 0 || (*(mapping - 1) & 0xff00) == 0);
-    return firstUnit >> 8;  // tccc
+    वापस firstUnit >> 8;  // tccc
 }
 
 // Dual functionality:
 // buffer!=nullptr: normalize
 // buffer==nullptr: isNormalized/quickCheck/spanQuickCheckYes
-const char16_t *
-Normalizer2Impl::makeFCD(const char16_t *src, const char16_t *limit,
-                         ReorderingBuffer *buffer,
-                         UErrorCode &errorCode) const {
+स्थिर char16_t *
+Normalizer2Impl::makeFCD(स्थिर char16_t *src, स्थिर char16_t *limit,
+                         Reordering_बफर *बफर,
+                         UErrorCode &errorCode) स्थिर {
     // Tracks the last FCD-safe boundary, before lccc=0 or after properly-ordered tccc<=1.
     // Similar to the prevBoundary in the compose() implementation.
-    const char16_t *prevBoundary=src;
-    int32_t prevFCD16=0;
-    if(limit==nullptr) {
-        src=copyLowPrefixFromNulTerminated(src, minLcccCP, buffer, errorCode);
-        if(U_FAILURE(errorCode)) {
-            return src;
+    स्थिर char16_t *पूर्व_Boundary=src;
+    int32_t पूर्व_FCD16=0;
+    अगर(limit==nullptr) {
+        src=copy_निचला_Prefix_From_Nul_Terminated(src, minLcccCP, बफर, errorCode);
+        अगर(U_FAILURE(errorCode)) {
+            वापस src;
         }
-        if(prevBoundary<src) {
-            prevBoundary=src;
+        अगर(पूर्व_Boundary<src) {
+            पूर्व_Boundary=src;
             // We know that the previous character's lccc==0.
             // Fetching the fcd16 value was deferred for this below-U+0300 code point.
-            prevFCD16=getFCD16(*(src-1));
-            if(prevFCD16>1) {
-                --prevBoundary;
+            पूर्व_FCD16=getFCD16(*(src-1));
+            अगर(पूर्व_FCD16>1) {
+                --पूर्व_Boundary;
             }
         }
         limit=u_strchr(src, 0);
@@ -2336,276 +2336,276 @@ Normalizer2Impl::makeFCD(const char16_t *src, const char16_t *limit,
     // The exception is the call to decomposeShort() which uses the buffer
     // in the normal way.
 
-    const char16_t *prevSrc;
+    स्थिर char16_t *पूर्व_Src;
     UChar32 c=0;
     uint16_t fcd16=0;
 
-    for(;;) {
+    क्रम(;;) {
         // count code units with lccc==0
-        for(prevSrc=src; src!=limit;) {
-            if((c=*src)<minLcccCP) {
-                prevFCD16=~c;
+        क्रम(पूर्व_Src=src; src!=limit;) {
+            अगर((c=*src)<minLcccCP) {
+                पूर्व_FCD16=~c;
                 ++src;
-            } else if(!singleLeadMightHaveNonZeroFCD16(c)) {
-                prevFCD16=0;
+            } अन्यथा अगर(!singleLeadMightHaveNonZeroFCD16(c)) {
+                पूर्व_FCD16=0;
                 ++src;
-            } else {
-                if(U16_IS_LEAD(c)) {
+            } अन्यथा {
+                अगर(U16_IS_LEAD(c)) {
                     char16_t c2;
-                    if((src+1)!=limit && U16_IS_TRAIL(c2=src[1])) {
+                    अगर((src+1)!=limit && U16_IS_TRAIL(c2=src[1])) {
                         c=U16_GET_SUPPLEMENTARY(c, c2);
                     }
                 }
-                if((fcd16=getFCD16FromNormData(c))<=0xff) {
-                    prevFCD16=fcd16;
-                    src+=U16_LENGTH(c);
-                } else {
-                    break;
+                अगर((fcd16=get_FCD16_From_Norm_तथ्य(c))<=0xff) {
+                    पूर्व_FCD16=fcd16;
+                    src+=U16_लंबाई(c);
+                } अन्यथा {
+                    अवरोध;
                 }
             }
         }
         // copy these code units all at once
-        if(src!=prevSrc) {
-            if(buffer!=nullptr && !buffer->appendZeroCC(prevSrc, src, errorCode)) {
-                break;
+        अगर(src!=पूर्व_Src) {
+            अगर(बफर!=nullptr && !बफर->appendZeroCC(पूर्व_Src, src, errorCode)) {
+                अवरोध;
             }
-            if(src==limit) {
-                break;
+            अगर(src==limit) {
+                अवरोध;
             }
-            prevBoundary=src;
+            पूर्व_Boundary=src;
             // We know that the previous character's lccc==0.
-            if(prevFCD16<0) {
+            अगर(पूर्व_FCD16<0) {
                 // Fetching the fcd16 value was deferred for this below-minLcccCP code point.
-                UChar32 prev=~prevFCD16;
-                if(prev<minDecompNoCP) {
-                    prevFCD16=0;
-                } else {
-                    prevFCD16=getFCD16FromNormData(prev);
-                    if(prevFCD16>1) {
-                        --prevBoundary;
+                UChar32 पूर्व=~पूर्व_FCD16;
+                अगर(पूर्व<minDecompNoCP) {
+                    पूर्व_FCD16=0;
+                } अन्यथा {
+                    पूर्व_FCD16=get_FCD16_From_Norm_तथ्य(पूर्व);
+                    अगर(पूर्व_FCD16>1) {
+                        --पूर्व_Boundary;
                     }
                 }
-            } else {
-                const char16_t *p=src-1;
-                if(U16_IS_TRAIL(*p) && prevSrc<p && U16_IS_LEAD(*(p-1))) {
+            } अन्यथा {
+                स्थिर char16_t *p=src-1;
+                अगर(U16_IS_TRAIL(*p) && पूर्व_Src<p && U16_IS_LEAD(*(p-1))) {
                     --p;
                     // Need to fetch the previous character's FCD value because
                     // prevFCD16 was just for the trail surrogate code point.
-                    prevFCD16=getFCD16FromNormData(U16_GET_SUPPLEMENTARY(p[0], p[1]));
+                    पूर्व_FCD16=get_FCD16_From_Norm_तथ्य(U16_GET_SUPPLEMENTARY(p[0], p[1]));
                     // Still known to have lccc==0 because its lead surrogate unit had lccc==0.
                 }
-                if(prevFCD16>1) {
-                    prevBoundary=p;
+                अगर(पूर्व_FCD16>1) {
+                    पूर्व_Boundary=p;
                 }
             }
             // The start of the current character (c).
-            prevSrc=src;
-        } else if(src==limit) {
-            break;
+            पूर्व_Src=src;
+        } अन्यथा अगर(src==limit) {
+            अवरोध;
         }
 
-        src+=U16_LENGTH(c);
+        src+=U16_लंबाई(c);
         // The current character (c) at [prevSrc..src[ has a non-zero lead combining class.
         // Check for proper order, and decompose locally if necessary.
-        if((prevFCD16&0xff)<=(fcd16>>8)) {
+        अगर((पूर्व_FCD16&0xff)<=(fcd16>>8)) {
             // proper order: prev tccc <= current lccc
-            if((fcd16&0xff)<=1) {
-                prevBoundary=src;
+            अगर((fcd16&0xff)<=1) {
+                पूर्व_Boundary=src;
             }
-            if(buffer!=nullptr && !buffer->appendZeroCC(c, errorCode)) {
-                break;
+            अगर(बफर!=nullptr && !बफर->appendZeroCC(c, errorCode)) {
+                अवरोध;
             }
-            prevFCD16=fcd16;
-            continue;
-        } else if(buffer==nullptr) {
-            return prevBoundary;  // quick check "no"
-        } else {
+            पूर्व_FCD16=fcd16;
+            जारी;
+        } अन्यथा अगर(बफर==nullptr) {
+            वापस पूर्व_Boundary;  // quick check "no"
+        } अन्यथा {
             /*
              * Back out the part of the source that we copied or appended
              * already but is now going to be decomposed.
              * prevSrc is set to after what was copied/appended.
              */
-            buffer->removeSuffix(static_cast<int32_t>(prevSrc - prevBoundary));
+            बफर->removeSuffix(static_cast<int32_t>(पूर्व_Src - पूर्व_Boundary));
             /*
              * Find the part of the source that needs to be decomposed,
              * up to the next safe boundary.
              */
-            src=findNextFCDBoundary(src, limit);
+            src=find_अग्र_FCDBoundary(src, limit);
             /*
              * The source text does not fulfill the conditions for FCD.
              * Decompose and reorder a limited piece of the text.
              */
-            decomposeShort(prevBoundary, src, false, false, *buffer, errorCode);
-            if (U_FAILURE(errorCode)) {
-                break;
+            decomposeShort(पूर्व_Boundary, src, false, false, *बफर, errorCode);
+            अगर (U_FAILURE(errorCode)) {
+                अवरोध;
             }
-            prevBoundary=src;
-            prevFCD16=0;
+            पूर्व_Boundary=src;
+            पूर्व_FCD16=0;
         }
     }
-    return src;
+    वापस src;
 }
 
-void Normalizer2Impl::makeFCDAndAppend(const char16_t *src, const char16_t *limit,
+व्योम Normalizer2Impl::makeFCDAndAppend(स्थिर char16_t *src, स्थिर char16_t *limit,
                                        UBool doMakeFCD,
-                                       UnicodeString &safeMiddle,
-                                       ReorderingBuffer &buffer,
-                                       UErrorCode &errorCode) const {
-    if(!buffer.isEmpty()) {
-        const char16_t *firstBoundaryInSrc=findNextFCDBoundary(src, limit);
-        if(src!=firstBoundaryInSrc) {
-            const char16_t *lastBoundaryInDest=findPreviousFCDBoundary(buffer.getStart(),
-                                                                    buffer.getLimit());
-            int32_t destSuffixLength = static_cast<int32_t>(buffer.getLimit() - lastBoundaryInDest);
-            UnicodeString middle(lastBoundaryInDest, destSuffixLength);
-            buffer.removeSuffix(destSuffixLength);
-            safeMiddle=middle;
-            middle.append(src, static_cast<int32_t>(firstBoundaryInSrc - src));
-            const char16_t *middleStart=middle.getBuffer();
-            makeFCD(middleStart, middleStart+middle.length(), &buffer, errorCode);
-            if(U_FAILURE(errorCode)) {
-                return;
+                                       UnicodeString &safe_मध्य,
+                                       Reordering_बफर &बफर,
+                                       UErrorCode &errorCode) स्थिर {
+    अगर(!बफर.isEmpty()) {
+        स्थिर char16_t *firstBoundaryInSrc=find_अग्र_FCDBoundary(src, limit);
+        अगर(src!=firstBoundaryInSrc) {
+            स्थिर char16_t *lastBoundaryInDest=findPreviousFCDBoundary(बफर.getStart(),
+                                                                    बफर.getLimit());
+            int32_t dest_Suffix_लंबाई = static_cast<int32_t>(बफर.getLimit() - lastBoundaryInDest);
+            UnicodeString मध्य(lastBoundaryInDest, dest_Suffix_लंबाई);
+            बफर.removeSuffix(dest_Suffix_लंबाई);
+            safe_मध्य=मध्य;
+            मध्य.append(src, static_cast<int32_t>(firstBoundaryInSrc - src));
+            स्थिर char16_t *मध्य_Start=मध्य.get_बफर();
+            makeFCD(मध्य_Start, मध्य_Start+मध्य.length(), &बफर, errorCode);
+            अगर(U_FAILURE(errorCode)) {
+                वापस;
             }
             src=firstBoundaryInSrc;
         }
     }
-    if(doMakeFCD) {
-        makeFCD(src, limit, &buffer, errorCode);
-    } else {
-        if(limit==nullptr) {  // appendZeroCC() needs limit!=nullptr
+    अगर(doMakeFCD) {
+        makeFCD(src, limit, &बफर, errorCode);
+    } अन्यथा {
+        अगर(limit==nullptr) {  // appendZeroCC() needs limit!=nullptr
             limit=u_strchr(src, 0);
         }
-        buffer.appendZeroCC(src, limit, errorCode);
+        बफर.appendZeroCC(src, limit, errorCode);
     }
 }
 
-const char16_t *Normalizer2Impl::findPreviousFCDBoundary(const char16_t *start, const char16_t *p) const {
-    while(start<p) {
-        const char16_t *codePointLimit = p;
+स्थिर char16_t *Normalizer2Impl::findPreviousFCDBoundary(स्थिर char16_t *start, स्थिर char16_t *p) स्थिर {
+    जबतक(start<p) {
+        स्थिर char16_t *codePointLimit = p;
         UChar32 c;
         uint16_t norm16;
-        UCPTRIE_FAST_U16_PREV(normTrie, UCPTRIE_16, start, p, c, norm16);
-        if (c < minDecompNoCP || norm16HasDecompBoundaryAfter(norm16)) {
-            return codePointLimit;
+        UCPTRIE_FAST_U16_पूर्व(normTrie, UCPTRIE_16, start, p, c, norm16);
+        अगर (c < minDecompNoCP || norm16HasDecompBoundaryAfter(norm16)) {
+            वापस codePointLimit;
         }
-        if (norm16HasDecompBoundaryBefore(norm16)) {
-            return p;
+        अगर (norm16HasDecompBoundaryBefore(norm16)) {
+            वापस p;
         }
     }
-    return p;
+    वापस p;
 }
 
-const char16_t *Normalizer2Impl::findNextFCDBoundary(const char16_t *p, const char16_t *limit) const {
-    while(p<limit) {
-        const char16_t *codePointStart=p;
+स्थिर char16_t *Normalizer2Impl::find_अग्र_FCDBoundary(स्थिर char16_t *p, स्थिर char16_t *limit) स्थिर {
+    जबतक(p<limit) {
+        स्थिर char16_t *codePointStart=p;
         UChar32 c;
         uint16_t norm16;
-        UCPTRIE_FAST_U16_NEXT(normTrie, UCPTRIE_16, p, limit, c, norm16);
-        if (c < minLcccCP || norm16HasDecompBoundaryBefore(norm16)) {
-            return codePointStart;
+        UCPTRIE_FAST_U16_अग्र(normTrie, UCPTRIE_16, p, limit, c, norm16);
+        अगर (c < minLcccCP || norm16HasDecompBoundaryBefore(norm16)) {
+            वापस codePointStart;
         }
-        if (norm16HasDecompBoundaryAfter(norm16)) {
-            return p;
+        अगर (norm16HasDecompBoundaryAfter(norm16)) {
+            वापस p;
         }
     }
-    return p;
+    वापस p;
 }
 
 // CanonicalIterator data -------------------------------------------------- ***
 
-CanonIterData::CanonIterData(UErrorCode &errorCode) :
+Canon_Iter_तथ्य::Canon_Iter_तथ्य(UErrorCode &errorCode) :
         mutableTrie(umutablecptrie_open(0, 0, &errorCode)), trie(nullptr),
         canonStartSets(uprv_deleteUObject, nullptr, errorCode) {}
 
-CanonIterData::~CanonIterData() {
+Canon_Iter_तथ्य::~Canon_Iter_तथ्य() {
     umutablecptrie_close(mutableTrie);
     ucptrie_close(trie);
 }
 
-void CanonIterData::addToStartSet(UChar32 origin, UChar32 decompLead, UErrorCode &errorCode) {
-    uint32_t canonValue = umutablecptrie_get(mutableTrie, decompLead);
-    if((canonValue&(CANON_HAS_SET|CANON_VALUE_MASK))==0 && origin!=0) {
+व्योम Canon_Iter_तथ्य::addToStartSet(UChar32 origin, UChar32 decompLead, UErrorCode &errorCode) {
+    uint32_t canon_मूल्य = umutablecptrie_get(mutableTrie, decompLead);
+    अगर((canon_मूल्य&(CANON_HAS_SET|CANON_मूल्य_MASK))==0 && origin!=0) {
         // origin is the first character whose decomposition starts with
         // the character for which we are setting the value.
-        umutablecptrie_set(mutableTrie, decompLead, canonValue|origin, &errorCode);
-    } else {
+        umutablecptrie_set(mutableTrie, decompLead, canon_मूल्य|origin, &errorCode);
+    } अन्यथा {
         // origin is not the first character, or it is U+0000.
         UnicodeSet *set;
-        if((canonValue&CANON_HAS_SET)==0) {
-            LocalPointer<UnicodeSet> lpSet(new UnicodeSet, errorCode);
+        अगर((canon_मूल्य&CANON_HAS_SET)==0) {
+            LocalPointer<UnicodeSet> lpSet(नया UnicodeSet, errorCode);
             set=lpSet.getAlias();
-            if(U_FAILURE(errorCode)) {
-                return;
+            अगर(U_FAILURE(errorCode)) {
+                वापस;
             }
-            UChar32 firstOrigin = static_cast<UChar32>(canonValue & CANON_VALUE_MASK);
-            canonValue = (canonValue & ~CANON_VALUE_MASK) | CANON_HAS_SET | static_cast<uint32_t>(canonStartSets.size());
-            umutablecptrie_set(mutableTrie, decompLead, canonValue, &errorCode);
+            UChar32 firstOrigin = static_cast<UChar32>(canon_मूल्य & CANON_मूल्य_MASK);
+            canon_मूल्य = (canon_मूल्य & ~CANON_मूल्य_MASK) | CANON_HAS_SET | static_cast<uint32_t>(canonStartSets.size());
+            umutablecptrie_set(mutableTrie, decompLead, canon_मूल्य, &errorCode);
             canonStartSets.adoptElement(lpSet.orphan(), errorCode);
-            if (U_FAILURE(errorCode)) {
-                return;
+            अगर (U_FAILURE(errorCode)) {
+                वापस;
             }
-            if(firstOrigin!=0) {
+            अगर(firstOrigin!=0) {
                 set->add(firstOrigin);
             }
-        } else {
-            set = static_cast<UnicodeSet*>(canonStartSets[static_cast<int32_t>(canonValue & CANON_VALUE_MASK)]);
+        } अन्यथा {
+            set = static_cast<UnicodeSet*>(canonStartSets[static_cast<int32_t>(canon_मूल्य & CANON_मूल्य_MASK)]);
         }
         set->add(origin);
     }
 }
 
 // C++ class for friend access to private Normalizer2Impl members.
-class InitCanonIterData {
-public:
-    static void doInit(Normalizer2Impl *impl, UErrorCode &errorCode);
+श्रेणी Init_Canon_Iter_तथ्य {
+खुला:
+    अटल व्योम doInit(Normalizer2Impl *impl, UErrorCode &errorCode);
 };
 
 U_CDECL_BEGIN
 
 // UInitOnce instantiation function for CanonIterData
-static void U_CALLCONV
-initCanonIterData(Normalizer2Impl *impl, UErrorCode &errorCode) {
-    InitCanonIterData::doInit(impl, errorCode);
+अटल व्योम U_CALLCONV
+init_Canon_Iter_तथ्य(Normalizer2Impl *impl, UErrorCode &errorCode) {
+    Init_Canon_Iter_तथ्य::doInit(impl, errorCode);
 }
 
 U_CDECL_END
 
-void InitCanonIterData::doInit(Normalizer2Impl *impl, UErrorCode &errorCode) {
-    U_ASSERT(impl->fCanonIterData == nullptr);
-    impl->fCanonIterData = new CanonIterData(errorCode);
-    if (impl->fCanonIterData == nullptr) {
+व्योम Init_Canon_Iter_तथ्य::doInit(Normalizer2Impl *impl, UErrorCode &errorCode) {
+    U_ASSERT(impl->f_Canon_Iter_तथ्य == nullptr);
+    impl->f_Canon_Iter_तथ्य = नया Canon_Iter_तथ्य(errorCode);
+    अगर (impl->f_Canon_Iter_तथ्य == nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
     }
-    if (U_SUCCESS(errorCode)) {
+    अगर (U_SUCCESS(errorCode)) {
         UChar32 start = 0, end;
         uint32_t value;
-        while ((end = ucptrie_getRange(impl->normTrie, start,
+        जबतक ((end = ucptrie_getRange(impl->normTrie, start,
                                        UCPMAP_RANGE_FIXED_LEAD_SURROGATES, Normalizer2Impl::INERT,
                                        nullptr, nullptr, &value)) >= 0) {
             // Call Normalizer2Impl::makeCanonIterDataFromNorm16() for a range of same-norm16 characters.
-            if (value != Normalizer2Impl::INERT) {
-                impl->makeCanonIterDataFromNorm16(start, end, value, *impl->fCanonIterData, errorCode);
+            अगर (value != Normalizer2Impl::INERT) {
+                impl->make_Canon_Iter_तथ्य_From_Norm16(start, end, value, *impl->f_Canon_Iter_तथ्य, errorCode);
             }
             start = end + 1;
         }
-#ifdef UCPTRIE_DEBUG
-        umutablecptrie_setName(impl->fCanonIterData->mutableTrie, "CanonIterData");
-#endif
-        impl->fCanonIterData->trie = umutablecptrie_buildImmutable(
-            impl->fCanonIterData->mutableTrie, UCPTRIE_TYPE_SMALL, UCPTRIE_VALUE_BITS_32, &errorCode);
-        umutablecptrie_close(impl->fCanonIterData->mutableTrie);
-        impl->fCanonIterData->mutableTrie = nullptr;
+#अगर_घोषित UCPTRIE_DEBUG
+        umutablecptrie_setName(impl->f_Canon_Iter_तथ्य->mutableTrie, "CanonIterData");
+#पूर्ण_अगर
+        impl->f_Canon_Iter_तथ्य->trie = umutablecptrie_buildImmutable(
+            impl->f_Canon_Iter_तथ्य->mutableTrie, UCPTRIE_TYPE_SMALL, UCPTRIE_मूल्य_BITS_32, &errorCode);
+        umutablecptrie_close(impl->f_Canon_Iter_तथ्य->mutableTrie);
+        impl->f_Canon_Iter_तथ्य->mutableTrie = nullptr;
     }
-    if (U_FAILURE(errorCode)) {
-        delete impl->fCanonIterData;
-        impl->fCanonIterData = nullptr;
+    अगर (U_FAILURE(errorCode)) {
+        मिटाओ impl->f_Canon_Iter_तथ्य;
+        impl->f_Canon_Iter_तथ्य = nullptr;
     }
 }
 
-void Normalizer2Impl::makeCanonIterDataFromNorm16(UChar32 start, UChar32 end, const uint16_t norm16,
-                                                  CanonIterData &newData,
-                                                  UErrorCode &errorCode) const {
-    if(isInert(norm16) ||
+व्योम Normalizer2Impl::make_Canon_Iter_तथ्य_From_Norm16(UChar32 start, UChar32 end, स्थिर uint16_t norm16,
+                                                  Canon_Iter_तथ्य &new_तथ्य,
+                                                  UErrorCode &errorCode) स्थिर {
+    अगर(isInert(norm16) ||
             (minYesNo<=norm16 && norm16<minNoNo) ||
             (minMaybeNo<=norm16 && norm16<minMaybeYes)) {
         // Inert, or 2-way mapping (including Hangul syllable).
@@ -2614,115 +2614,115 @@ void Normalizer2Impl::makeCanonIterDataFromNorm16(UChar32 start, UChar32 end, co
         // starter's compositions list, and the other characters in
         // 2-way mappings get CANON_NOT_SEGMENT_STARTER set because they are
         // "maybe" characters.
-        return;
+        वापस;
     }
-    for(UChar32 c=start; c<=end; ++c) {
-        uint32_t oldValue = umutablecptrie_get(newData.mutableTrie, c);
-        uint32_t newValue=oldValue;
-        if(isMaybeYesOrNonZeroCC(norm16)) {
+    क्रम(UChar32 c=start; c<=end; ++c) {
+        uint32_t old_मूल्य = umutablecptrie_get(new_तथ्य.mutableTrie, c);
+        uint32_t new_मूल्य=old_मूल्य;
+        अगर(isMaybeYesOrNonZeroCC(norm16)) {
             // not a segment starter if it occurs in a decomposition or has cc!=0
-            newValue|=CANON_NOT_SEGMENT_STARTER;
-            if(norm16<MIN_NORMAL_MAYBE_YES) {
-                newValue|=CANON_HAS_COMPOSITIONS;
+            new_मूल्य|=CANON_NOT_SEGMENT_STARTER;
+            अगर(norm16<MIN_NORMAL_MAYBE_YES) {
+                new_मूल्य|=CANON_HAS_COMPOSITIONS;
             }
-        } else if(norm16<minYesNo) {
-            newValue|=CANON_HAS_COMPOSITIONS;
-        } else {
+        } अन्यथा अगर(norm16<minYesNo) {
+            new_मूल्य|=CANON_HAS_COMPOSITIONS;
+        } अन्यथा {
             // c has a one-way decomposition
             UChar32 c2=c;
             // Do not modify the whole-range norm16 value.
             uint16_t norm16_2=norm16;
-            if (isDecompNoAlgorithmic(norm16_2)) {
+            अगर (isDecompNoAlgorithmic(norm16_2)) {
                 // Maps to an isCompYesAndZeroCC.
                 c2 = mapAlgorithmic(c2, norm16_2);
                 norm16_2 = getRawNorm16(c2);
                 // No compatibility mappings for the CanonicalIterator.
                 U_ASSERT(!(isHangulLV(norm16_2) || isHangulLVT(norm16_2)));
             }
-            if (norm16_2 > minYesNo) {
+            अगर (norm16_2 > minYesNo) {
                 // c decomposes, get everything from the variable-length extra data
-                const uint16_t *mapping=getDataForYesOrNo(norm16_2);
+                स्थिर uint16_t *mapping=get_तथ्य_For_Yes_Or_No(norm16_2);
                 uint16_t firstUnit=*mapping;
-                int32_t length=firstUnit&MAPPING_LENGTH_MASK;
-                if((firstUnit&MAPPING_HAS_CCC_LCCC_WORD)!=0) {
-                    if(c==c2 && (*(mapping-1)&0xff)!=0) {
-                        newValue|=CANON_NOT_SEGMENT_STARTER;  // original c has cc!=0
+                int32_t length=firstUnit&MAPPING_लंबाई_MASK;
+                अगर((firstUnit&MAPPING_HAS_CCC_LCCC_WORD)!=0) {
+                    अगर(c==c2 && (*(mapping-1)&0xff)!=0) {
+                        new_मूल्य|=CANON_NOT_SEGMENT_STARTER;  // original c has cc!=0
                     }
                 }
                 // Skip empty mappings (no characters in the decomposition).
-                if(length!=0) {
+                अगर(length!=0) {
                     ++mapping;  // skip over the firstUnit
                     // add c to first code point's start set
                     int32_t i=0;
-                    U16_NEXT_UNSAFE(mapping, i, c2);
-                    newData.addToStartSet(c, c2, errorCode);
+                    U16_अग्र_UNSAFE(mapping, i, c2);
+                    new_तथ्य.addToStartSet(c, c2, errorCode);
                     // Set CANON_NOT_SEGMENT_STARTER for each remaining code point of a
                     // one-way mapping. A 2-way mapping is possible here after
                     // intermediate algorithmic mapping.
-                    if(norm16_2>=minNoNo) {
-                        while(i<length) {
-                            U16_NEXT_UNSAFE(mapping, i, c2);
-                            uint32_t c2Value = umutablecptrie_get(newData.mutableTrie, c2);
-                            if((c2Value&CANON_NOT_SEGMENT_STARTER)==0) {
-                                umutablecptrie_set(newData.mutableTrie, c2,
-                                                   c2Value|CANON_NOT_SEGMENT_STARTER, &errorCode);
+                    अगर(norm16_2>=minNoNo) {
+                        जबतक(i<length) {
+                            U16_अग्र_UNSAFE(mapping, i, c2);
+                            uint32_t c2_मूल्य = umutablecptrie_get(new_तथ्य.mutableTrie, c2);
+                            अगर((c2_मूल्य&CANON_NOT_SEGMENT_STARTER)==0) {
+                                umutablecptrie_set(new_तथ्य.mutableTrie, c2,
+                                                   c2_मूल्य|CANON_NOT_SEGMENT_STARTER, &errorCode);
                             }
                         }
                     }
                 }
-            } else {
+            } अन्यथा {
                 // c decomposed to c2 algorithmically; c has cc==0
-                newData.addToStartSet(c, c2, errorCode);
+                new_तथ्य.addToStartSet(c, c2, errorCode);
             }
         }
-        if(newValue!=oldValue) {
-            umutablecptrie_set(newData.mutableTrie, c, newValue, &errorCode);
+        अगर(new_मूल्य!=old_मूल्य) {
+            umutablecptrie_set(new_तथ्य.mutableTrie, c, new_मूल्य, &errorCode);
         }
     }
 }
 
-UBool Normalizer2Impl::ensureCanonIterData(UErrorCode &errorCode) const {
+UBool Normalizer2Impl::ensure_Canon_Iter_तथ्य(UErrorCode &errorCode) स्थिर {
     // Logically const: Synchronized instantiation.
-    Normalizer2Impl *me=const_cast<Normalizer2Impl *>(this);
-    umtx_initOnce(me->fCanonIterDataInitOnce, &initCanonIterData, me, errorCode);
-    return U_SUCCESS(errorCode);
+    Normalizer2Impl *me=const_cast<Normalizer2Impl *>(यह);
+    umtx_initOnce(me->f_Canon_Iter_तथ्य_Init_Once, &init_Canon_Iter_तथ्य, me, errorCode);
+    वापस U_SUCCESS(errorCode);
 }
 
-int32_t Normalizer2Impl::getCanonValue(UChar32 c) const {
-    return static_cast<int32_t>(ucptrie_get(fCanonIterData->trie, c));
+int32_t Normalizer2Impl::get_Canon_मूल्य(UChar32 c) स्थिर {
+    वापस static_cast<int32_t>(ucptrie_get(f_Canon_Iter_तथ्य->trie, c));
 }
 
-const UnicodeSet &Normalizer2Impl::getCanonStartSet(int32_t n) const {
-    return *static_cast<const UnicodeSet*>(fCanonIterData->canonStartSets[n]);
+स्थिर UnicodeSet &Normalizer2Impl::getCanonStartSet(int32_t n) स्थिर {
+    वापस *static_cast<स्थिर UnicodeSet*>(f_Canon_Iter_तथ्य->canonStartSets[n]);
 }
 
-UBool Normalizer2Impl::isCanonSegmentStarter(UChar32 c) const {
-    return getCanonValue(c)>=0;
+UBool Normalizer2Impl::isCanonSegmentStarter(UChar32 c) स्थिर {
+    वापस get_Canon_मूल्य(c)>=0;
 }
 
-UBool Normalizer2Impl::getCanonStartSet(UChar32 c, UnicodeSet &set) const {
-    int32_t canonValue=getCanonValue(c)&~CANON_NOT_SEGMENT_STARTER;
-    if(canonValue==0) {
-        return false;
+UBool Normalizer2Impl::getCanonStartSet(UChar32 c, UnicodeSet &set) स्थिर {
+    int32_t canon_मूल्य=get_Canon_मूल्य(c)&~CANON_NOT_SEGMENT_STARTER;
+    अगर(canon_मूल्य==0) {
+        वापस false;
     }
-    set.clear();
-    int32_t value=canonValue&CANON_VALUE_MASK;
-    if((canonValue&CANON_HAS_SET)!=0) {
+    set.सफा();
+    int32_t value=canon_मूल्य&CANON_मूल्य_MASK;
+    अगर((canon_मूल्य&CANON_HAS_SET)!=0) {
         set.addAll(getCanonStartSet(value));
-    } else if(value!=0) {
+    } अन्यथा अगर(value!=0) {
         set.add(value);
     }
-    if((canonValue&CANON_HAS_COMPOSITIONS)!=0) {
+    अगर((canon_मूल्य&CANON_HAS_COMPOSITIONS)!=0) {
         uint16_t norm16=getRawNorm16(c);
-        if(norm16==JAMO_L) {
+        अगर(norm16==JAMO_L) {
             UChar32 syllable=
-                static_cast<UChar32>(Hangul::HANGUL_BASE + (c - Hangul::JAMO_L_BASE) * Hangul::JAMO_VT_COUNT);
-            set.add(syllable, syllable+Hangul::JAMO_VT_COUNT-1);
-        } else {
+                static_cast<UChar32>(Hangul::HANGUL_BASE + (c - Hangul::JAMO_L_BASE) * Hangul::JAMO_VT_गिनती);
+            set.add(syllable, syllable+Hangul::JAMO_VT_गिनती-1);
+        } अन्यथा {
             addComposites(getCompositionsList(norm16), set);
         }
     }
-    return true;
+    वापस true;
 }
 
 U_NAMESPACE_END
@@ -2732,115 +2732,115 @@ U_NAMESPACE_END
 U_NAMESPACE_USE
 
 U_CAPI int32_t U_EXPORT2
-unorm2_swap(const UDataSwapper *ds,
-            const void *inData, int32_t length, void *outData,
+unorm2_swap(स्थिर UDataSwapper *ds,
+            स्थिर व्योम *in_तथ्य, int32_t length, व्योम *out_तथ्य,
             UErrorCode *pErrorCode) {
-    const UDataInfo *pInfo;
-    int32_t headerSize;
+    स्थिर UDataInfo *pInfo;
+    int32_t header_आकार;
 
-    const uint8_t *inBytes;
+    स्थिर uint8_t *inBytes;
     uint8_t *outBytes;
 
-    const int32_t *inIndexes;
-    int32_t indexes[Normalizer2Impl::IX_TOTAL_SIZE+1];
+    स्थिर int32_t *inIndexes;
+    int32_t indexes[Normalizer2Impl::IX_योग_आकार+1];
 
-    int32_t i, offset, nextOffset, size;
+    int32_t i, offset, अग्र_Offset, size;
 
     /* udata_swapDataHeader checks the arguments */
-    headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    header_आकार=udata_swap_तथ्य_Header(ds, in_तथ्य, length, out_तथ्य, pErrorCode);
+    अगर(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        वापस 0;
     }
 
     /* check data format and format version */
-    pInfo=(const UDataInfo *)((const char *)inData+4);
+    pInfo=(स्थिर UDataInfo *)((स्थिर अक्षर *)in_तथ्य+4);
     uint8_t formatVersion0=pInfo->formatVersion[0];
-    if(!(
-        pInfo->dataFormat[0]==0x4e &&   /* dataFormat="Nrm2" */
-        pInfo->dataFormat[1]==0x72 &&
-        pInfo->dataFormat[2]==0x6d &&
-        pInfo->dataFormat[3]==0x32 &&
+    अगर(!(
+        pInfo->तथ्य_Format[0]==0x4e &&   /* dataFormat="Nrm2" */
+        pInfo->तथ्य_Format[1]==0x72 &&
+        pInfo->तथ्य_Format[2]==0x6d &&
+        pInfo->तथ्य_Format[3]==0x32 &&
         (1<=formatVersion0 && formatVersion0<=5)
     )) {
         udata_printError(ds, "unorm2_swap(): data format %02x.%02x.%02x.%02x (format version %02x) is not recognized as Normalizer2 data\n",
-                         pInfo->dataFormat[0], pInfo->dataFormat[1],
-                         pInfo->dataFormat[2], pInfo->dataFormat[3],
+                         pInfo->तथ्य_Format[0], pInfo->तथ्य_Format[1],
+                         pInfo->तथ्य_Format[2], pInfo->तथ्य_Format[3],
                          pInfo->formatVersion[0]);
         *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+        वापस 0;
     }
 
-    inBytes=(const uint8_t *)inData+headerSize;
-    outBytes=(outData == nullptr) ? nullptr : (uint8_t *)outData+headerSize;
+    inBytes=(स्थिर uint8_t *)in_तथ्य+header_आकार;
+    outBytes=(out_तथ्य == nullptr) ? nullptr : (uint8_t *)out_तथ्य+header_आकार;
 
-    inIndexes=(const int32_t *)inBytes;
-    int32_t minIndexesLength;
-    if(formatVersion0==1) {
-        minIndexesLength=Normalizer2Impl::IX_MIN_MAYBE_YES+1;
-    } else if(formatVersion0==2) {
-        minIndexesLength=Normalizer2Impl::IX_MIN_YES_NO_MAPPINGS_ONLY+1;
-    } else if(formatVersion0<=4) {
-        minIndexesLength=Normalizer2Impl::IX_MIN_LCCC_CP+1;
-    } else {
-        minIndexesLength=Normalizer2Impl::IX_MIN_MAYBE_NO_COMBINES_FWD+1;
+    inIndexes=(स्थिर int32_t *)inBytes;
+    int32_t min_Indexes_लंबाई;
+    अगर(formatVersion0==1) {
+        min_Indexes_लंबाई=Normalizer2Impl::IX_MIN_MAYBE_YES+1;
+    } अन्यथा अगर(formatVersion0==2) {
+        min_Indexes_लंबाई=Normalizer2Impl::IX_MIN_YES_NO_MAPPINGS_ONLY+1;
+    } अन्यथा अगर(formatVersion0<=4) {
+        min_Indexes_लंबाई=Normalizer2Impl::IX_MIN_LCCC_CP+1;
+    } अन्यथा {
+        min_Indexes_लंबाई=Normalizer2Impl::IX_MIN_MAYBE_NO_COMBINES_FWD+1;
     }
 
-    if(length>=0) {
-        length-=headerSize;
-        if(length<minIndexesLength*4) {
+    अगर(length>=0) {
+        length-=header_आकार;
+        अगर(length<min_Indexes_लंबाई*4) {
             udata_printError(ds, "unorm2_swap(): too few bytes (%d after header) for Normalizer2 data\n",
                              length);
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            *pErrorCode=U_सूचकांक_OUTOFBOUNDS_ERROR;
+            वापस 0;
         }
     }
 
     /* read the first few indexes */
-    for(i=0; i<UPRV_LENGTHOF(indexes); ++i) {
+    क्रम(i=0; i<UPRV_LENGTHOF(indexes); ++i) {
         indexes[i]=udata_readInt32(ds, inIndexes[i]);
     }
 
     /* get the total length of the data */
-    size=indexes[Normalizer2Impl::IX_TOTAL_SIZE];
+    size=indexes[Normalizer2Impl::IX_योग_आकार];
 
-    if(length>=0) {
-        if(length<size) {
+    अगर(length>=0) {
+        अगर(length<size) {
             udata_printError(ds, "unorm2_swap(): too few bytes (%d after header) for all of Normalizer2 data\n",
                              length);
-            *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            *pErrorCode=U_सूचकांक_OUTOFBOUNDS_ERROR;
+            वापस 0;
         }
 
         /* copy the data for inaccessible bytes */
-        if(inBytes!=outBytes) {
+        अगर(inBytes!=outBytes) {
             uprv_memcpy(outBytes, inBytes, size);
         }
 
         offset=0;
 
         /* swap the int32_t indexes[] */
-        nextOffset=indexes[Normalizer2Impl::IX_NORM_TRIE_OFFSET];
-        ds->swapArray32(ds, inBytes, nextOffset-offset, outBytes, pErrorCode);
-        offset=nextOffset;
+        अग्र_Offset=indexes[Normalizer2Impl::IX_NORM_TRIE_OFFSET];
+        ds->swapArray32(ds, inBytes, अग्र_Offset-offset, outBytes, pErrorCode);
+        offset=अग्र_Offset;
 
         /* swap the trie */
-        nextOffset=indexes[Normalizer2Impl::IX_EXTRA_DATA_OFFSET];
-        utrie_swapAnyVersion(ds, inBytes+offset, nextOffset-offset, outBytes+offset, pErrorCode);
-        offset=nextOffset;
+        अग्र_Offset=indexes[Normalizer2Impl::IX_EXTRA_तथ्य_OFFSET];
+        utrie_swapAnyVersion(ds, inBytes+offset, अग्र_Offset-offset, outBytes+offset, pErrorCode);
+        offset=अग्र_Offset;
 
         /* swap the uint16_t extraData[] */
-        nextOffset=indexes[Normalizer2Impl::IX_SMALL_FCD_OFFSET];
-        ds->swapArray16(ds, inBytes+offset, nextOffset-offset, outBytes+offset, pErrorCode);
-        offset=nextOffset;
+        अग्र_Offset=indexes[Normalizer2Impl::IX_SMALL_FCD_OFFSET];
+        ds->swapArray16(ds, inBytes+offset, अग्र_Offset-offset, outBytes+offset, pErrorCode);
+        offset=अग्र_Offset;
 
         /* no need to swap the uint8_t smallFCD[] (new in formatVersion 2) */
-        nextOffset=indexes[Normalizer2Impl::IX_SMALL_FCD_OFFSET+1];
-        offset=nextOffset;
+        अग्र_Offset=indexes[Normalizer2Impl::IX_SMALL_FCD_OFFSET+1];
+        offset=अग्र_Offset;
 
         U_ASSERT(offset==size);
     }
 
-    return headerSize+size;
+    वापस header_आकार+size;
 }
 
-#endif  // !UCONFIG_NO_NORMALIZATION
+#पूर्ण_अगर  // !UCONFIG_NO_NORMALIZATION

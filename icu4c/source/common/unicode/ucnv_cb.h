@@ -60,15 +60,15 @@
  *
  */
 
-#ifndef UCNV_CB_H
-#define UCNV_CB_H
+#अगर_अघोषित UCNV_CB_H
+#घोषणा UCNV_CB_H
 
-#include "unicode/utypes.h"
+#समावेश "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#अगर !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/ucnv_err.h"
+#समावेश "unicode/ucnv.h"
+#समावेश "unicode/ucnv_err.h"
 
 /**
  * ONLY used by FromU callback functions.
@@ -84,11 +84,11 @@
  * @see ucnv_cbFromUWriteSub
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
+U_CAPI व्योम U_EXPORT2
 ucnv_cbFromUWriteBytes (UConverterFromUnicodeArgs *args,
-                        const char* source,
-                        int32_t length,
-                        int32_t offsetIndex,
+                        स्थिर अक्षर* source,
+                        int32_t लंबाई,
+                        int32_t offset_सूचकांक,
                         UErrorCode * err);
 
 /**
@@ -104,9 +104,9 @@ ucnv_cbFromUWriteBytes (UConverterFromUnicodeArgs *args,
  * @see ucnv_cbFromUWriteBytes
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 
+U_CAPI व्योम U_EXPORT2 
 ucnv_cbFromUWriteSub (UConverterFromUnicodeArgs *args,
-                      int32_t offsetIndex,
+                      int32_t offset_सूचकांक,
                       UErrorCode * err);
 
 /**
@@ -121,10 +121,10 @@ ucnv_cbFromUWriteSub (UConverterFromUnicodeArgs *args,
  * @see ucnv_cbToUWriteSub
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
-                             const UChar** source,
-                             const UChar*  sourceLimit,
-                             int32_t offsetIndex,
+U_CAPI व्योम U_EXPORT2 ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
+                             स्थिर UChar** source,
+                             स्थिर UChar*  sourceLimit,
+                             int32_t offset_सूचकांक,
                              UErrorCode * err);
 
 /**
@@ -140,10 +140,10 @@ U_CAPI void U_EXPORT2 ucnv_cbFromUWriteUChars(UConverterFromUnicodeArgs *args,
  * @see ucnv_cbToUWriteSub
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 ucnv_cbToUWriteUChars (UConverterToUnicodeArgs *args,
-                                             const UChar* source,
-                                             int32_t length,
-                                             int32_t offsetIndex,
+U_CAPI व्योम U_EXPORT2 ucnv_cbToUWriteUChars (UConverterToUnicodeArgs *args,
+                                             स्थिर UChar* source,
+                                             int32_t लंबाई,
+                                             int32_t offset_सूचकांक,
                                              UErrorCode * err);
 
 /**
@@ -156,9 +156,9 @@ U_CAPI void U_EXPORT2 ucnv_cbToUWriteUChars (UConverterToUnicodeArgs *args,
  * @see ucnv_cbToUWriteUChars
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 ucnv_cbToUWriteSub (UConverterToUnicodeArgs *args,
-                       int32_t offsetIndex,
+U_CAPI व्योम U_EXPORT2 ucnv_cbToUWriteSub (UConverterToUnicodeArgs *args,
+                       int32_t offset_सूचकांक,
                        UErrorCode * err);
-#endif
+#पूर्ण_अगर
 
-#endif
+#पूर्ण_अगर

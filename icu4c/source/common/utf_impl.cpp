@@ -20,14 +20,14 @@
 */
 
 /* set import/export definitions */
-#ifndef U_UTF8_IMPL
+#अगर_अघोषित U_UTF8_IMPL
 #   define U_UTF8_IMPL
-#endif
+#पूर्ण_अगर
 
-#include "unicode/utypes.h"
-#include "unicode/utf.h"
-#include "unicode/utf8.h"
-#include "uassert.h"
+#समावेश "unicode/utypes.h"
+#समावेश "unicode/utf.h"
+#समावेश "unicode/utf8.h"
+#समावेश "uassert.h"
 
 /*
  * Table of the number of utf8 trail bytes, indexed by the lead byte.
@@ -55,8 +55,8 @@
  * -finish:
  * (BSR: Bit Scan Reverse, scans for a 1-bit, starting from the MSB)
  */
-U_CAPI const uint8_t
-utf8_countTrailBytes[256]={
+U_CAPI स्थिर uint8_t
+utf8_गिनती_Trail_Bytes[256]={
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -84,22 +84,22 @@ utf8_countTrailBytes[256]={
     3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-static const UChar32
-utf8_errorValue[6]={
+अटल स्थिर UChar32
+utf8_error_मूल्य[6]={
     // Same values as UTF8_ERROR_VALUE_1, UTF8_ERROR_VALUE_2, UTF_ERROR_VALUE,
     // but without relying on the obsolete unicode/utf_old.h.
     0x15, 0x9f, 0xffff,
     0x10ffff
 };
 
-static UChar32
-errorValue(int32_t count, int8_t strict) {
-    if(strict>=0) {
-        return utf8_errorValue[count];
-    } else if(strict==-3) {
-        return 0xfffd;
-    } else {
-        return U_SENTINEL;
+अटल UChar32
+error_मूल्य(int32_t count, int8_t strict) {
+    अगर(strict>=0) {
+        वापस utf8_error_मूल्य[count];
+    } अन्यथा अगर(strict==-3) {
+        वापस 0xfffd;
+    } अन्यथा {
+        वापस U_SENTINEL;
     }
 }
 
@@ -126,202 +126,202 @@ errorValue(int32_t count, int8_t strict) {
  *     like illegal sequences.
  */
 U_CAPI UChar32 U_EXPORT2
-utf8_nextCharSafeBody(const uint8_t *s, int32_t *pi, int32_t length, UChar32 c, int8_t strict) {
+utf8_अग्र_Char_Safe_Body(स्थिर uint8_t *s, int32_t *pi, int32_t length, UChar32 c, int8_t strict) {
     // *pi is one after byte c.
     int32_t i=*pi;
     // length can be negative for NUL-terminated strings: Read and validate one byte at a time.
-    if(i==length || c>0xf4) {
+    अगर(i==length || c>0xf4) {
         // end of string, or not a lead byte
-    } else if(c>=0xf0) {
+    } अन्यथा अगर(c>=0xf0) {
         // Test for 4-byte sequences first because
         // U8_NEXT() handles shorter valid sequences inline.
         uint8_t t1=s[i], t2, t3;
         c&=7;
-        if(U8_IS_VALID_LEAD4_AND_T1(c, t1) &&
+        अगर(U8_IS_VALID_LEAD4_AND_T1(c, t1) &&
                 ++i!=length && (t2=s[i]-0x80)<=0x3f &&
                 ++i!=length && (t3=s[i]-0x80)<=0x3f) {
             ++i;
             c=(c<<18)|((t1&0x3f)<<12)|(t2<<6)|t3;
             // strict: forbid non-characters like U+fffe
-            if(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
+            अगर(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
                 *pi=i;
-                return c;
+                वापस c;
             }
         }
-    } else if(c>=0xe0) {
+    } अन्यथा अगर(c>=0xe0) {
         c&=0xf;
-        if(strict!=-2) {
+        अगर(strict!=-2) {
             uint8_t t1=s[i], t2;
-            if(U8_IS_VALID_LEAD3_AND_T1(c, t1) &&
+            अगर(U8_IS_VALID_LEAD3_AND_T1(c, t1) &&
                     ++i!=length && (t2=s[i]-0x80)<=0x3f) {
                 ++i;
                 c=(c<<12)|((t1&0x3f)<<6)|t2;
                 // strict: forbid non-characters like U+fffe
-                if(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
+                अगर(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
                     *pi=i;
-                    return c;
+                    वापस c;
                 }
             }
-        } else {
+        } अन्यथा {
             // strict=-2 -> lenient: allow surrogates
             uint8_t t1=s[i]-0x80, t2;
-            if(t1<=0x3f && (c>0 || t1>=0x20) &&
+            अगर(t1<=0x3f && (c>0 || t1>=0x20) &&
                     ++i!=length && (t2=s[i]-0x80)<=0x3f) {
                 *pi=i+1;
-                return (c<<12)|(t1<<6)|t2;
+                वापस (c<<12)|(t1<<6)|t2;
             }
         }
-    } else if(c>=0xc2) {
+    } अन्यथा अगर(c>=0xc2) {
         uint8_t t1=s[i]-0x80;
-        if(t1<=0x3f) {
+        अगर(t1<=0x3f) {
             *pi=i+1;
-            return ((c-0xc0)<<6)|t1;
+            वापस ((c-0xc0)<<6)|t1;
         }
     }  // else 0x80<=c<0xc2 is not a lead byte
 
     /* error handling */
-    c=errorValue(i-*pi, strict);
+    c=error_मूल्य(i-*pi, strict);
     *pi=i;
-    return c;
+    वापस c;
 }
 
 U_CAPI int32_t U_EXPORT2
 utf8_appendCharSafeBody(uint8_t *s, int32_t i, int32_t length, UChar32 c, UBool *pIsError) {
-    if((uint32_t)(c)<=0x7ff) {
-        if((i)+1<(length)) {
+    अगर((uint32_t)(c)<=0x7ff) {
+        अगर((i)+1<(length)) {
             (s)[(i)++]=(uint8_t)(((c)>>6)|0xc0);
             (s)[(i)++]=(uint8_t)(((c)&0x3f)|0x80);
-            return i;
+            वापस i;
         }
-    } else if((uint32_t)(c)<=0xffff) {
+    } अन्यथा अगर((uint32_t)(c)<=0xffff) {
         /* Starting with Unicode 3.2, surrogate code points must not be encoded in UTF-8. */
-        if((i)+2<(length) && !U_IS_SURROGATE(c)) {
+        अगर((i)+2<(length) && !U_IS_SURROGATE(c)) {
             (s)[(i)++]=(uint8_t)(((c)>>12)|0xe0);
             (s)[(i)++]=(uint8_t)((((c)>>6)&0x3f)|0x80);
             (s)[(i)++]=(uint8_t)(((c)&0x3f)|0x80);
-            return i;
+            वापस i;
         }
-    } else if((uint32_t)(c)<=0x10ffff) {
-        if((i)+3<(length)) {
+    } अन्यथा अगर((uint32_t)(c)<=0x10ffff) {
+        अगर((i)+3<(length)) {
             (s)[(i)++]=(uint8_t)(((c)>>18)|0xf0);
             (s)[(i)++]=(uint8_t)((((c)>>12)&0x3f)|0x80);
             (s)[(i)++]=(uint8_t)((((c)>>6)&0x3f)|0x80);
             (s)[(i)++]=(uint8_t)(((c)&0x3f)|0x80);
-            return i;
+            वापस i;
         }
     }
     /* c>0x10ffff or not enough space, write an error value */
-    if(pIsError!=nullptr) {
+    अगर(pIsError!=nullptr) {
         *pIsError=true;
-    } else {
+    } अन्यथा {
         length-=i;
-        if(length>0) {
+        अगर(length>0) {
             int32_t offset;
-            if(length>3) {
+            अगर(length>3) {
                 length=3;
             }
             s+=i;
             offset=0;
-            c=utf8_errorValue[length-1];
+            c=utf8_error_मूल्य[length-1];
             U8_APPEND_UNSAFE(s, offset, c);
             i=i+offset;
         }
     }
-    return i;
+    वापस i;
 }
 
 U_CAPI UChar32 U_EXPORT2
-utf8_prevCharSafeBody(const uint8_t *s, int32_t start, int32_t *pi, UChar32 c, int8_t strict) {
+utf8_पूर्व_Char_Safe_Body(स्थिर uint8_t *s, int32_t start, int32_t *pi, UChar32 c, int8_t strict) {
     // *pi is the index of byte c.
     int32_t i=*pi;
-    if(U8_IS_TRAIL(c) && i>start) {
+    अगर(U8_IS_TRAIL(c) && i>start) {
         uint8_t b1=s[--i];
-        if(U8_IS_LEAD(b1)) {
-            if(b1<0xe0) {
+        अगर(U8_IS_LEAD(b1)) {
+            अगर(b1<0xe0) {
                 *pi=i;
-                return ((b1-0xc0)<<6)|(c&0x3f);
-            } else if(b1<0xf0 ? U8_IS_VALID_LEAD3_AND_T1(b1, c) : U8_IS_VALID_LEAD4_AND_T1(b1, c)) {
+                वापस ((b1-0xc0)<<6)|(c&0x3f);
+            } अन्यथा अगर(b1<0xf0 ? U8_IS_VALID_LEAD3_AND_T1(b1, c) : U8_IS_VALID_LEAD4_AND_T1(b1, c)) {
                 // Truncated 3- or 4-byte sequence.
                 *pi=i;
-                return errorValue(1, strict);
+                वापस error_मूल्य(1, strict);
             }
-        } else if(U8_IS_TRAIL(b1) && i>start) {
+        } अन्यथा अगर(U8_IS_TRAIL(b1) && i>start) {
             // Extract the value bits from the last trail byte.
             c&=0x3f;
             uint8_t b2=s[--i];
-            if(0xe0<=b2 && b2<=0xf4) {
-                if(b2<0xf0) {
+            अगर(0xe0<=b2 && b2<=0xf4) {
+                अगर(b2<0xf0) {
                     b2&=0xf;
-                    if(strict!=-2) {
-                        if(U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
+                    अगर(strict!=-2) {
+                        अगर(U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
                             *pi=i;
                             c=(b2<<12)|((b1&0x3f)<<6)|c;
-                            if(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
-                                return c;
-                            } else {
+                            अगर(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
+                                वापस c;
+                            } अन्यथा {
                                 // strict: forbid non-characters like U+fffe
-                                return errorValue(2, strict);
+                                वापस error_मूल्य(2, strict);
                             }
                         }
-                    } else {
+                    } अन्यथा {
                         // strict=-2 -> lenient: allow surrogates
                         b1-=0x80;
-                        if((b2>0 || b1>=0x20)) {
+                        अगर((b2>0 || b1>=0x20)) {
                             *pi=i;
-                            return (b2<<12)|(b1<<6)|c;
+                            वापस (b2<<12)|(b1<<6)|c;
                         }
                     }
-                } else if(U8_IS_VALID_LEAD4_AND_T1(b2, b1)) {
+                } अन्यथा अगर(U8_IS_VALID_LEAD4_AND_T1(b2, b1)) {
                     // Truncated 4-byte sequence.
                     *pi=i;
-                    return errorValue(2, strict);
+                    वापस error_मूल्य(2, strict);
                 }
-            } else if(U8_IS_TRAIL(b2) && i>start) {
+            } अन्यथा अगर(U8_IS_TRAIL(b2) && i>start) {
                 uint8_t b3=s[--i];
-                if(0xf0<=b3 && b3<=0xf4) {
+                अगर(0xf0<=b3 && b3<=0xf4) {
                     b3&=7;
-                    if(U8_IS_VALID_LEAD4_AND_T1(b3, b2)) {
+                    अगर(U8_IS_VALID_LEAD4_AND_T1(b3, b2)) {
                         *pi=i;
                         c=(b3<<18)|((b2&0x3f)<<12)|((b1&0x3f)<<6)|c;
-                        if(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
-                            return c;
-                        } else {
+                        अगर(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
+                            वापस c;
+                        } अन्यथा {
                             // strict: forbid non-characters like U+fffe
-                            return errorValue(3, strict);
+                            वापस error_मूल्य(3, strict);
                         }
                     }
                 }
             }
         }
     }
-    return errorValue(0, strict);
+    वापस error_मूल्य(0, strict);
 }
 
 U_CAPI int32_t U_EXPORT2
-utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i) {
+utf8_back1SafeBody(स्थिर uint8_t *s, int32_t start, int32_t i) {
     // Same as utf8_prevCharSafeBody(..., strict=-1) minus assembling code points.
     int32_t orig_i=i;
     uint8_t c=s[i];
-    if(U8_IS_TRAIL(c) && i>start) {
+    अगर(U8_IS_TRAIL(c) && i>start) {
         uint8_t b1=s[--i];
-        if(U8_IS_LEAD(b1)) {
-            if(b1<0xe0 ||
+        अगर(U8_IS_LEAD(b1)) {
+            अगर(b1<0xe0 ||
                     (b1<0xf0 ? U8_IS_VALID_LEAD3_AND_T1(b1, c) : U8_IS_VALID_LEAD4_AND_T1(b1, c))) {
-                return i;
+                वापस i;
             }
-        } else if(U8_IS_TRAIL(b1) && i>start) {
+        } अन्यथा अगर(U8_IS_TRAIL(b1) && i>start) {
             uint8_t b2=s[--i];
-            if(0xe0<=b2 && b2<=0xf4) {
-                if(b2<0xf0 ? U8_IS_VALID_LEAD3_AND_T1(b2, b1) : U8_IS_VALID_LEAD4_AND_T1(b2, b1)) {
-                    return i;
+            अगर(0xe0<=b2 && b2<=0xf4) {
+                अगर(b2<0xf0 ? U8_IS_VALID_LEAD3_AND_T1(b2, b1) : U8_IS_VALID_LEAD4_AND_T1(b2, b1)) {
+                    वापस i;
                 }
-            } else if(U8_IS_TRAIL(b2) && i>start) {
+            } अन्यथा अगर(U8_IS_TRAIL(b2) && i>start) {
                 uint8_t b3=s[--i];
-                if(0xf0<=b3 && b3<=0xf4 && U8_IS_VALID_LEAD4_AND_T1(b3, b2)) {
-                    return i;
+                अगर(0xf0<=b3 && b3<=0xf4 && U8_IS_VALID_LEAD4_AND_T1(b3, b2)) {
+                    वापस i;
                 }
             }
         }
     }
-    return orig_i;
+    वापस orig_i;
 }

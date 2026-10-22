@@ -6,12 +6,12 @@
  * others. All Rights Reserved.
  ********************************************************************/
 
-#ifndef RBBINODE_H
-#define RBBINODE_H
+#अगर_अघोषित RBBINODE_H
+#घोषणा RBBINODE_H
 
-#include "unicode/utypes.h"
-#include "unicode/unistr.h"
-#include "unicode/uobject.h"
+#समावेश "unicode/utypes.h"
+#समावेश "unicode/unistr.h"
+#समावेश "unicode/uobject.h"
 
 //
 //  class RBBINode
@@ -25,9 +25,9 @@ U_NAMESPACE_BEGIN
 class    UnicodeSet;
 class    UVector;
 
-class RBBINode : public UMemory {
-    public:
-        enum NodeType {
+class RBBINode : खुला UMemory {
+    खुला:
+        क्रमागत गाँठ_Type {
             setRef,
             uset,
             varRef,
@@ -46,7 +46,7 @@ class RBBINode : public UMemory {
             opLParen
         };
 
-        enum OpPrecedence {      
+        क्रमागत OpPrecedence {      
             precZero,
             precStart,
             precLParen,
@@ -54,21 +54,21 @@ class RBBINode : public UMemory {
             precOpCat
         };
             
-        NodeType      fType;
+        गाँठ_Type      fType;
         RBBINode      *fParent;
-        RBBINode      *fLeftChild;
-        RBBINode      *fRightChild;
-        UnicodeSet    *fInputSet;           // For uset nodes only.
+        RBBINode      *f_बायाँ_Child;
+        RBBINode      *f_दायाँ_Child;
+        UnicodeSet    *f_निवेश_Set;           // For uset nodes only.
         OpPrecedence  fPrecedence;          // For binary ops only.
         
         UnicodeString fText;                // Text corresponding to this node.
                                             //   May be lazily evaluated when (if) needed
                                             //   for some node types.
-        int           fFirstPos;            // Position in the rule source string of the
+        पूर्णांक           fFirstPos;            // Position in the rule source string of the
                                             //   first text associated with the node.
                                             //   If there's a left child, this will be the same
                                             //   as that child's left pos.
-        int           fLastPos;             //  Last position in the rule source string
+        पूर्णांक           fLastPos;             //  Last position in the rule source string
                                             //    of any text associated with this node.
                                             //    If there's a right child, this will be the same
                                             //    as that child's last position.
@@ -82,7 +82,7 @@ class RBBINode : public UMemory {
         UBool         fLookAheadEnd;        // For endMark nodes, set true if
                                             //   marking the end of a look-ahead rule.
 
-        UBool         fRuleRoot;            // True if this node is the root of a rule.
+        UBool         f_Rule_मूल;            // True if this node is the root of a rule.
         UBool         fChainIn;             // True if chaining into this rule is allowed
                                             //     (no '^' present).
 
@@ -91,38 +91,38 @@ class RBBINode : public UMemory {
         UVector       *fFollowPos;
 
 
-        RBBINode(NodeType t, UErrorCode& status);
-        RBBINode(const RBBINode &other, UErrorCode& status);
+        RBBINode(गाँठ_Type t, UErrorCode& status);
+        RBBINode(स्थिर RBBINode &other, UErrorCode& status);
         ~RBBINode();
-        static void  NRDeleteNode(RBBINode *node);
+        अटल व्योम  NRDelete_गाँठ(RBBINode *गाँठ);
         
-        RBBINode    *cloneTree(UErrorCode &status, int depth=0);
-        RBBINode    *flattenVariables(UErrorCode &status, int depth=0);
-        void         flattenSets(UErrorCode &status, int depth=0);
-        void         findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &status);
+        RBBINode    *clone_वृक्ष(UErrorCode &status, पूर्णांक depth=0);
+        RBBINode    *flattenVariables(UErrorCode &status, पूर्णांक depth=0);
+        व्योम         flattenSets(UErrorCode &status, पूर्णांक depth=0);
+        व्योम         findNodes(UVector *dest, RBBINode::गाँठ_Type kind, UErrorCode &status);
 
-#ifdef RBBI_DEBUG
-        static void printNodeHeader();
-        static void printNode(const RBBINode *n);
-        static void printTree(const RBBINode *n, UBool withHeading);
-#endif
+#अगर_घोषित RBBI_DEBUG
+        अटल व्योम print_गाँठ_Header();
+        अटल व्योम print_गाँठ(स्थिर RBBINode *n);
+        अटल व्योम print_वृक्ष(स्थिर RBBINode *n, UBool withHeading);
+#पूर्ण_अगर
 
-    private:
-        RBBINode &operator = (const RBBINode &other); // No defs.
-        bool operator == (const RBBINode &other);     // Private, so these functions won't accidentally be used.
+    निजी:
+        RBBINode &चालक = (स्थिर RBBINode &other); // No defs.
+        bool चालक == (स्थिर RBBINode &other);     // Private, so these functions won't accidentally be used.
 
-#ifdef RBBI_DEBUG
-    public:
-        int           fSerialNum;           //  Debugging aids.
-#endif
+#अगर_घोषित RBBI_DEBUG
+    खुला:
+        पूर्णांक           f_Serial_अंक;           //  Debugging aids.
+#पूर्ण_अगर
 };
 
-#ifdef RBBI_DEBUG
-U_CFUNC void 
-RBBI_DEBUG_printUnicodeString(const UnicodeString &s, int minWidth=0);
-#endif
+#अगर_घोषित RBBI_DEBUG
+U_CFUNC व्योम 
+RBBI_DEBUG_printUnicodeString(स्थिर UnicodeString &s, पूर्णांक minWidth=0);
+#पूर्ण_अगर
 
 U_NAMESPACE_END
 
-#endif
+#पूर्ण_अगर
 

@@ -16,8 +16,8 @@
 *   created by: Markus W. Scherer
 */
 
-#ifndef __UTEXT_H__
-#define __UTEXT_H__
+#अगर_अघोषित __UTEXT_H__
+#घोषणा __UTEXT_H__
 
 /**
  * \file
@@ -137,20 +137,20 @@
 
 
 
-#include "unicode/utypes.h"
-#include "unicode/uchar.h"
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
-#include "unicode/rep.h"
-#include "unicode/unistr.h"
-#include "unicode/chariter.h"
-#endif
+#समावेश "unicode/utypes.h"
+#समावेश "unicode/uchar.h"
+#अगर U_SHOW_CPLUSPLUS_API
+#समावेश "unicode/localpointer.h"
+#समावेश "unicode/rep.h"
+#समावेश "unicode/unistr.h"
+#समावेश "unicode/chariter.h"
+#पूर्ण_अगर
 
 
 U_CDECL_BEGIN
 
-struct UText;
-typedef struct UText UText; /**< C typedef for struct UText. @stable ICU 3.6 */
+काष्ठा UText;
+प्रकार काष्ठा UText UText; /**< C typedef for struct UText. @stable ICU 3.6 */
 
 
 /***************************************************************************************
@@ -206,8 +206,8 @@ utext_close(UText* ut U_LIFETIME_BOUND);
  */
 U_CAPI UText* U_EXPORT2
 utext_openUTF8(UText* ut U_LIFETIME_BOUND,
-               const char* s U_LIFETIME_BOUND,
-               int64_t length,
+               स्थिर अक्षर* s U_LIFETIME_BOUND,
+               int64_t लंबाई,
                UErrorCode* status);
 
 /**
@@ -226,11 +226,11 @@ utext_openUTF8(UText* ut U_LIFETIME_BOUND,
  */
 U_CAPI UText* U_EXPORT2
 utext_openUChars(UText* ut U_LIFETIME_BOUND,
-                 const UChar* s U_LIFETIME_BOUND,
-                 int64_t length,
+                 स्थिर UChar* s U_LIFETIME_BOUND,
+                 int64_t लंबाई,
                  UErrorCode* status);
 
-#if U_SHOW_CPLUSPLUS_API
+#अगर U_SHOW_CPLUSPLUS_API
 /**
  * Open a writable UText for a non-const UnicodeString. 
  * 
@@ -262,7 +262,7 @@ utext_openUnicodeString(UText* ut U_LIFETIME_BOUND,
  */
 U_CAPI UText* U_EXPORT2
 utext_openConstUnicodeString(UText* ut U_LIFETIME_BOUND,
-                             const icu::UnicodeString* s U_LIFETIME_BOUND,
+                             स्थिर icu::UnicodeString* s U_LIFETIME_BOUND,
                              UErrorCode* status);
 
 
@@ -300,7 +300,7 @@ utext_openCharacterIterator(UText* ut U_LIFETIME_BOUND,
                             icu::CharacterIterator* ci U_LIFETIME_BOUND,
                             UErrorCode* status);
 
-#endif
+#पूर्ण_अगर
 
 
 /**
@@ -362,7 +362,7 @@ utext_openCharacterIterator(UText* ut U_LIFETIME_BOUND,
   */
 U_CAPI UText* U_EXPORT2
 utext_clone(UText* dest U_LIFETIME_BOUND,
-            const UText* src,
+            स्थिर UText* src,
             UBool deep,
             UBool readOnly,
             UErrorCode* status);
@@ -379,7 +379,7 @@ utext_clone(UText* dest U_LIFETIME_BOUND,
   *  @stable ICU 3.6
   */
 U_CAPI UBool U_EXPORT2
-utext_equals(const UText *a, const UText *b);
+utext_equals(स्थिर UText *a, स्थिर UText *b);
 
 
 /*****************************************************************************
@@ -400,7 +400,7 @@ utext_equals(const UText *a, const UText *b);
   * @stable ICU 3.4
   */
 U_CAPI int64_t U_EXPORT2
-utext_nativeLength(UText *ut);
+utext_native_लंबाई(UText *ut);
 
 /**
  *  Return true if calculating the length of the text could be expensive.
@@ -416,7 +416,7 @@ utext_nativeLength(UText *ut);
  * @stable ICU 3.4
  */
 U_CAPI UBool U_EXPORT2
-utext_isLengthExpensive(const UText *ut);
+utext_is_लंबाई_Expensive(स्थिर UText *ut);
 
 /**
  * Returns the code point at the requested index,
@@ -444,7 +444,7 @@ utext_isLengthExpensive(const UText *ut);
  * @stable ICU 3.4
  */
 U_CAPI UChar32 U_EXPORT2
-utext_char32At(UText *ut, int64_t nativeIndex);
+utext_char32At(UText *ut, int64_t native_सूचकांक);
 
 
 /**
@@ -523,7 +523,7 @@ utext_previous32(UText *ut);
   * @stable ICU 3.4
   */
 U_CAPI UChar32 U_EXPORT2
-utext_next32From(UText *ut, int64_t nativeIndex);
+utext_next32From(UText *ut, int64_t native_सूचकांक);
 
 
 
@@ -543,7 +543,7 @@ utext_next32From(UText *ut, int64_t nativeIndex);
   * @stable ICU 3.4
   */
 U_CAPI UChar32 U_EXPORT2
-utext_previous32From(UText *ut, int64_t nativeIndex);
+utext_previous32From(UText *ut, int64_t native_सूचकांक);
 
 /**
   * Get the current iterator position, which can range from 0 to 
@@ -558,7 +558,7 @@ utext_previous32From(UText *ut, int64_t nativeIndex);
   * @stable ICU 3.4
   */
 U_CAPI int64_t U_EXPORT2
-utext_getNativeIndex(const UText *ut);
+utext_get_Native_सूचकांक(स्थिर UText *ut);
 
 /**
  * Set the current iteration position to the nearest code point
@@ -583,8 +583,8 @@ utext_getNativeIndex(const UText *ut);
  * @param nativeIndex the native unit index of the new iteration position.
  * @stable ICU 3.4
  */
-U_CAPI void U_EXPORT2
-utext_setNativeIndex(UText *ut, int64_t nativeIndex);
+U_CAPI व्योम U_EXPORT2
+utext_set_Native_सूचकांक(UText *ut, int64_t native_सूचकांक);
 
 /**
  * Move the iterator position by delta code points.  The number of code points
@@ -628,7 +628,7 @@ utext_moveIndex32(UText *ut, int32_t delta);
  * @stable ICU 3.6
  */
 U_CAPI int64_t U_EXPORT2
-utext_getPreviousNativeIndex(UText *ut); 
+utext_get_Previous_Native_सूचकांक(UText *ut); 
 
 
 /**
@@ -688,7 +688,7 @@ utext_extract(UText *ut,
  *
  ************************************************************************************/
 
-#ifndef U_HIDE_INTERNAL_API
+#अगर_अघोषित U_HIDE_INTERNAL_API
 /**
  * inline version of utext_current32(), for performance-critical situations.
  *
@@ -698,10 +698,10 @@ utext_extract(UText *ut,
  *
  * @internal ICU 4.4 technology preview
  */
-#define UTEXT_CURRENT32(ut)  \
-    ((ut)->chunkOffset < (ut)->chunkLength && ((ut)->chunkContents)[(ut)->chunkOffset]<0xd800 ? \
+#घोषणा UTEXT_CURRENT32(ut)  \
+    ((ut)->chunkOffset < (ut)->chunk_लंबाई && ((ut)->chunkContents)[(ut)->chunkOffset]<0xd800 ? \
     ((ut)->chunkContents)[((ut)->chunkOffset)] : utext_current32(ut))
-#endif  /* U_HIDE_INTERNAL_API */
+#पूर्ण_अगर  /* U_HIDE_INTERNAL_API */
 
 /**
  * inline version of utext_next32(), for performance-critical situations.
@@ -714,8 +714,8 @@ utext_extract(UText *ut,
  *
  * @stable ICU 3.4
  */
-#define UTEXT_NEXT32(ut)  \
-    ((ut)->chunkOffset < (ut)->chunkLength && ((ut)->chunkContents)[(ut)->chunkOffset]<0xd800 ? \
+#घोषणा UTEXT_NEXT32(ut)  \
+    ((ut)->chunkOffset < (ut)->chunk_लंबाई && ((ut)->chunkContents)[(ut)->chunkOffset]<0xd800 ? \
     ((ut)->chunkContents)[((ut)->chunkOffset)++] : utext_next32(ut))
 
 /**
@@ -728,7 +728,7 @@ utext_extract(UText *ut,
  *
  * @stable ICU 3.4
  */
-#define UTEXT_PREVIOUS32(ut)  \
+#घोषणा UTEXT_PREVIOUS32(ut)  \
     ((ut)->chunkOffset > 0 && \
      (ut)->chunkContents[(ut)->chunkOffset-1] < 0xd800 ? \
           (ut)->chunkContents[--((ut)->chunkOffset)]  :  utext_previous32(ut))
@@ -745,7 +745,7 @@ utext_extract(UText *ut,
   *
   * @stable ICU 3.6
   */
-#define UTEXT_GETNATIVEINDEX(ut)                       \
+#घोषणा UTEXT_GETNATIVEINDEX(ut)                       \
     ((ut)->chunkOffset <= (ut)->nativeIndexingLimit?   \
         (ut)->chunkNativeStart+(ut)->chunkOffset :     \
         (ut)->pFuncs->mapOffsetToNative(ut))    
@@ -761,12 +761,12 @@ utext_extract(UText *ut,
   *
   * @stable ICU 3.8
   */
-#define UTEXT_SETNATIVEINDEX(ut, ix) UPRV_BLOCK_MACRO_BEGIN { \
+#घोषणा UTEXT_SETNATIVEINDEX(ut, ix) UPRV_BLOCK_MACRO_BEGIN { \
     int64_t __offset = (ix) - (ut)->chunkNativeStart; \
-    if (__offset>=0 && __offset<(int64_t)(ut)->nativeIndexingLimit && (ut)->chunkContents[__offset]<0xdc00) { \
+    अगर (__offset>=0 && __offset<(int64_t)(ut)->nativeIndexingLimit && (ut)->chunkContents[__offset]<0xdc00) { \
         (ut)->chunkOffset=(int32_t)__offset; \
-    } else { \
-        utext_setNativeIndex((ut), (ix)); \
+    } अन्यथा { \
+        utext_set_Native_सूचकांक((ut), (ix)); \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -800,7 +800,7 @@ utext_extract(UText *ut,
  *
  */
 U_CAPI UBool U_EXPORT2
-utext_isWritable(const UText *ut);
+utext_isWritable(स्थिर UText *ut);
 
 
 /**
@@ -812,7 +812,7 @@ utext_isWritable(const UText *ut);
   * @stable ICU 3.4
   */
 U_CAPI UBool U_EXPORT2
-utext_hasMetaData(const UText *ut);
+utext_has_Meta_तथ्य(स्थिर UText *ut);
 
 
 /**
@@ -845,7 +845,7 @@ utext_hasMetaData(const UText *ut);
 U_CAPI int32_t U_EXPORT2
 utext_replace(UText *ut,
              int64_t nativeStart, int64_t nativeLimit,
-             const UChar *replacementText, int32_t replacementLength,
+             स्थिर UChar *replacementText, int32_t replacement_लंबाई,
              UErrorCode *status);
 
 
@@ -882,10 +882,10 @@ utext_replace(UText *ut,
  *                       
  * @stable ICU 3.4
  */
-U_CAPI void U_EXPORT2
+U_CAPI व्योम U_EXPORT2
 utext_copy(UText *ut,
           int64_t nativeStart, int64_t nativeLimit,
-          int64_t destIndex,
+          int64_t dest_सूचकांक,
           UBool move,
           UErrorCode *status);
 
@@ -911,7 +911,7 @@ utext_copy(UText *ut,
   *  @see   utext_isWritable()
   *  @stable ICU 3.6
   */
-U_CAPI void U_EXPORT2
+U_CAPI व्योम U_EXPORT2
 utext_freeze(UText *ut);
 
 
@@ -921,12 +921,12 @@ utext_freeze(UText *ut);
  * @see UText
  * @stable ICU 3.4
  */
-enum {
+क्रमागत {
     /**
      * It is potentially time consuming for the provider to determine the length of the text.
      * @stable ICU 3.4
      */
-    UTEXT_PROVIDER_LENGTH_IS_EXPENSIVE = 1,
+    UTEXT_PROVIDER_लंबाई_IS_EXPENSIVE = 1,
     /**
      * Text chunks remain valid and usable until the text object is modified or
      * deleted, not just until the next time the access() function is called
@@ -946,7 +946,7 @@ enum {
      * @see Replaceable::hasMetaData()
      * @stable ICU 3.4
      */ 
-    UTEXT_PROVIDER_HAS_META_DATA = 4,
+    UTEXT_PROVIDER_HAS_META_तथ्य = 4,
     /**
      * Text provider owns the text storage.
      *  Generally occurs as the result of a deep clone of the UText.
@@ -994,8 +994,8 @@ enum {
   *
   * @stable ICU 3.4
   */
-typedef UText * U_CALLCONV
-UTextClone(UText *dest, const UText *src, UBool deep, UErrorCode *status);
+प्रकार UText * U_CALLCONV
+UTextClone(UText *dest, स्थिर UText *src, UBool deep, UErrorCode *status);
 
 
 /**
@@ -1006,8 +1006,8 @@ UTextClone(UText *dest, const UText *src, UBool deep, UErrorCode *status);
  * @see UText
  * @stable ICU 3.4
  */
-typedef int64_t U_CALLCONV
-UTextNativeLength(UText *ut);
+प्रकार int64_t U_CALLCONV
+UText_Native_लंबाई(UText *ut);
 
 /**
  * Function type declaration for UText.access().  Get the description of the text chunk
@@ -1034,8 +1034,8 @@ UTextNativeLength(UText *ut);
  * @see UText
  * @stable ICU 3.4
  */
-typedef UBool U_CALLCONV
-UTextAccess(UText *ut, int64_t nativeIndex, UBool forward);
+प्रकार UBool U_CALLCONV
+UTextAccess(UText *ut, int64_t native_सूचकांक, UBool forward);
 
 /**
  * Function type declaration for UText.extract().
@@ -1064,7 +1064,7 @@ UTextAccess(UText *ut, int64_t nativeIndex, UBool forward);
  *
  * @stable ICU 3.4
  */
-typedef int32_t U_CALLCONV
+प्रकार int32_t U_CALLCONV
 UTextExtract(UText *ut,
              int64_t nativeStart, int64_t nativeLimit,
              UChar *dest, int32_t destCapacity,
@@ -1099,10 +1099,10 @@ UTextExtract(UText *ut,
  *
  * @stable ICU 3.4
  */
-typedef int32_t U_CALLCONV
+प्रकार int32_t U_CALLCONV
 UTextReplace(UText *ut,
              int64_t nativeStart, int64_t nativeLimit,
-             const UChar *replacementText, int32_t replacmentLength,
+             स्थिर UChar *replacementText, int32_t replacment_लंबाई,
              UErrorCode *status);
 
 /**
@@ -1133,7 +1133,7 @@ UTextReplace(UText *ut,
  *
  * @stable ICU 3.4
  */
-typedef void U_CALLCONV
+प्रकार व्योम U_CALLCONV
 UTextCopy(UText *ut,
           int64_t nativeStart, int64_t nativeLimit,
           int64_t nativeDest,
@@ -1153,8 +1153,8 @@ UTextCopy(UText *ut,
  *
  * @stable ICU 3.4
  */
-typedef int64_t U_CALLCONV
-UTextMapOffsetToNative(const UText *ut);
+प्रकार int64_t U_CALLCONV
+UTextMapOffsetToNative(स्थिर UText *ut);
 
 /**
  * Function type declaration for UText.mapIndexToUTF16().
@@ -1171,8 +1171,8 @@ UTextMapOffsetToNative(const UText *ut);
  *
  * @stable ICU 3.4
  */
-typedef int32_t U_CALLCONV
-UTextMapNativeIndexToUTF16(const UText *ut, int64_t nativeIndex);
+प्रकार int32_t U_CALLCONV
+UText_Map_Native_सूचकांक_To_UTF16(स्थिर UText *ut, int64_t native_सूचकांक);
 
 
 /**
@@ -1192,7 +1192,7 @@ UTextMapNativeIndexToUTF16(const UText *ut, int64_t nativeIndex);
  *
  * @stable ICU 3.4
  */
-typedef void U_CALLCONV
+प्रकार व्योम U_CALLCONV
 UTextClose(UText *ut);
 
 
@@ -1205,7 +1205,7 @@ UTextClose(UText *ut);
   *              for the type of text being handled.
   *   @stable ICU 3.6
   */
-struct UTextFuncs {
+काष्ठा UTextFuncs {
     /**
      *   (public)  Function table size, sizeof(UTextFuncs)
      *             Intended for use should the table grow to accommodate added
@@ -1220,7 +1220,7 @@ struct UTextFuncs {
      *             in sequence.
      *   @stable ICU 3.6
      */
-    int32_t       tableSize;
+    int32_t       table_आकार;
 
     /**
       *   (private)  Alignment padding.
@@ -1245,7 +1245,7 @@ struct UTextFuncs {
      * @see UTextLength
      * @stable ICU 3.6
      */
-    UTextNativeLength *nativeLength;
+    UText_Native_लंबाई *native_लंबाई;
 
     /**
      * (public) Function pointer for UTextAccess.
@@ -1293,7 +1293,7 @@ struct UTextFuncs {
      * @see UTextMapNativeIndexToUTF16
      * @stable ICU 3.6
      */
-    UTextMapNativeIndexToUTF16 *mapNativeIndexToUTF16;
+    UText_Map_Native_सूचकांक_To_UTF16 *map_Native_सूचकांक_To_UTF16;
 
     /**
      * (public) Function pointer for UTextClose.
@@ -1301,7 +1301,7 @@ struct UTextFuncs {
       * @see UTextClose
       * @stable ICU 3.6
       */
-    UTextClose  *close;
+    UTextClose  *बंद;
 
     /**
       * (private)  Spare function pointer
@@ -1326,7 +1326,7 @@ struct UTextFuncs {
  * Function dispatch table for UText
  * @see UTextFuncs
  */
-typedef struct UTextFuncs UTextFuncs;
+प्रकार काष्ठा UTextFuncs UTextFuncs;
 
  /**
   *   UText struct.  Provides the interface between the generic UText access code
@@ -1339,7 +1339,7 @@ typedef struct UTextFuncs UTextFuncs;
   *
   * @stable ICU 3.6
   */
-struct UText {
+काष्ठा UText {
     /**
      *     (private)  Magic.  Used to help detect when UText functions are handed
      *                        invalid or uninitialized UText structs.
@@ -1376,7 +1376,7 @@ struct UText {
      *
      * @stable ICU 3.4
      */
-    int32_t         sizeOfStruct;
+    int32_t         आकार_Of_Struct;
     
     /* ------ 16 byte alignment boundary -----------  */
     
@@ -1392,7 +1392,7 @@ struct UText {
      *   (protected)  Size in bytes of the extra space (pExtra).
      *  @stable ICU 3.4
      */
-    int32_t        extraSize;
+    int32_t        extra_आकार;
 
     /**
       *    (protected) The highest chunk offset where native indexing and
@@ -1422,7 +1422,7 @@ struct UText {
      *  (protected) Length the text chunk (UTF-16 buffer), in UChars.
      *  @stable ICU 3.6
      */
-    int32_t         chunkLength;
+    int32_t         chunk_लंबाई;
 
     /* ---- 16  byte alignment boundary-- */
     
@@ -1433,20 +1433,20 @@ struct UText {
      *  if conversion was required, to a buffer owned by the UText.
      *  @stable ICU 3.6
      */
-    const UChar    *chunkContents;
+    स्थिर UChar    *chunkContents;
 
      /**
       * (public)     Pointer to Dispatch table for accessing functions for this UText.
       * @stable ICU 3.6
       */
-    const UTextFuncs     *pFuncs;
+    स्थिर UTextFuncs     *pFuncs;
 
     /**
      *  (protected)  Pointer to additional space requested by the
      *               text provider during the utext_open operation.
      * @stable ICU 3.4
      */
-    void          *pExtra;
+    व्योम          *pExtra;
 
     /**
      * (protected) Pointer to string or text-containing object or similar.
@@ -1454,7 +1454,7 @@ struct UText {
      *  that is known to the text provider functions.
      * @stable ICU 3.4
      */
-    const void   *context;
+    स्थिर व्योम   *context;
 
     /* --- 16 byte alignment boundary--- */
 
@@ -1463,26 +1463,26 @@ struct UText {
      * Not used by UText common code.
      * @stable ICU 3.6
      */
-    const void     *p; 
+    स्थिर व्योम     *p; 
     /**
      * (protected) Pointer fields available for use by the text provider.
      * Not used by UText common code.
      * @stable ICU 3.6
      */
-    const void     *q;
+    स्थिर व्योम     *q;
      /**
      * (protected) Pointer fields available for use by the text provider.
      * Not used by UText common code.
      * @stable ICU 3.6
       */
-    const void     *r;
+    स्थिर व्योम     *r;
 
     /**
       *  Private field reserved for future use by the UText framework
       *     itself.  This is not to be touched by the text providers.
       * @internal ICU 3.4
       */
-    void           *privP;
+    व्योम           *privP;
 
 
     /* --- 16 byte alignment boundary--- */
@@ -1558,7 +1558,7 @@ utext_setup(UText* ut U_LIFETIME_BOUND, int32_t extraSpace, UErrorCode* status);
   *  Value used to help identify correctly initialized UText structs.
   *  Note:  must be publicly visible so that UTEXT_INITIALIZER can access it.
   */
-enum {
+क्रमागत {
     UTEXT_MAGIC = 0x345ad82c
 };
 
@@ -1569,23 +1569,23 @@ enum {
  *
  * @stable ICU 3.6
  */
-#define UTEXT_INITIALIZER {                                        \
+#घोषणा UTEXT_INITIALIZER {                                        \
                   UTEXT_MAGIC,          /* magic                */ \
                   0,                    /* flags                */ \
                   0,                    /* providerProps        */ \
-                  sizeof(UText),        /* sizeOfStruct         */ \
+                  माप(UText),        /* sizeOfStruct         */ \
                   0,                    /* chunkNativeLimit     */ \
                   0,                    /* extraSize            */ \
                   0,                    /* nativeIndexingLimit  */ \
                   0,                    /* chunkNativeStart     */ \
                   0,                    /* chunkOffset          */ \
                   0,                    /* chunkLength          */ \
-                  NULL,                 /* chunkContents        */ \
-                  NULL,                 /* pFuncs               */ \
-                  NULL,                 /* pExtra               */ \
-                  NULL,                 /* context              */ \
-                  NULL, NULL, NULL,     /* p, q, r              */ \
-                  NULL,                 /* privP                */ \
+                  शून्य,                 /* chunkContents        */ \
+                  शून्य,                 /* pFuncs               */ \
+                  शून्य,                 /* pExtra               */ \
+                  शून्य,                 /* context              */ \
+                  शून्य, शून्य, शून्य,     /* p, q, r              */ \
+                  शून्य,                 /* privP                */ \
                   0, 0, 0,              /* a, b, c              */ \
                   0, 0, 0               /* privA,B,C,           */ \
                   }
@@ -1594,7 +1594,7 @@ enum {
 U_CDECL_END
 
 
-#if U_SHOW_CPLUSPLUS_API
+#अगर U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -1611,7 +1611,7 @@ U_DEFINE_LOCAL_OPEN_POINTER(LocalUTextPointer, UText, utext_close);
 
 U_NAMESPACE_END
 
-#endif
+#पूर्ण_अगर
 
 
-#endif
+#पूर्ण_अगर

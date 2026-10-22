@@ -4,24 +4,24 @@
 // ucptrie_impl.h (modified from utrie2_impl.h)
 // created: 2017dec29 Markus W. Scherer
 
-#ifndef __UCPTRIE_IMPL_H__
-#define __UCPTRIE_IMPL_H__
+#अगर_अघोषित __UCPTRIE_IMPL_H__
+#घोषणा __UCPTRIE_IMPL_H__
 
-#include "unicode/ucptrie.h"
-#ifdef UCPTRIE_DEBUG
-#include "unicode/umutablecptrie.h"
-#endif
+#समावेश "unicode/ucptrie.h"
+#अगर_घोषित UCPTRIE_DEBUG
+#समावेश "unicode/umutablecptrie.h"
+#पूर्ण_अगर
 
 // UCPTrie signature values, in platform endianness and opposite endianness.
 // The UCPTrie signature ASCII byte values spell "Tri3".
-#define UCPTRIE_SIG     0x54726933
-#define UCPTRIE_OE_SIG  0x33697254
+#घोषणा UCPTRIE_SIG     0x54726933
+#घोषणा UCPTRIE_OE_SIG  0x33697254
 
 /**
  * Header data for the binary, memory-mappable representation of a UCPTrie/CodePointTrie.
  * @internal
  */
-struct UCPTrieHeader {
+काष्ठा UCPTrieHeader {
     /** "Tri3" in big-endian US-ASCII (0x54726933) */
     uint32_t signature;
 
@@ -36,29 +36,29 @@ struct UCPTrieHeader {
     uint16_t options;
 
     /** Total length of the index tables. */
-    uint16_t indexLength;
+    uint16_t सूचकांक_लंबाई;
 
     /** Data length bits 15..0. */
-    uint16_t dataLength;
+    uint16_t तथ्य_लंबाई;
 
     /** Index-3 null block offset, 0x7fff or 0xffff if none. */
     uint16_t index3NullOffset;
 
     /** Data null block offset bits 15..0, 0xfffff if none. */
-    uint16_t dataNullOffset;
+    uint16_t तथ्य_Null_Offset;
 
     /**
      * First code point of the single-value range ending with U+10ffff,
      * rounded up and then shifted right by UCPTRIE_SHIFT_2.
      */
-    uint16_t shiftedHighStart;
+    uint16_t shifted_ऊपरी_Start;
 };
 
 // Constants for use with UCPTrieHeader.options.
-constexpr uint16_t UCPTRIE_OPTIONS_DATA_LENGTH_MASK = 0xf000;
-constexpr uint16_t UCPTRIE_OPTIONS_DATA_NULL_OFFSET_MASK = 0xf00;
+constexpr uint16_t UCPTRIE_OPTIONS_तथ्य_लंबाई_MASK = 0xf000;
+constexpr uint16_t UCPTRIE_OPTIONS_तथ्य_NULL_OFFSET_MASK = 0xf00;
 constexpr uint16_t UCPTRIE_OPTIONS_RESERVED_MASK = 0x38;
-constexpr uint16_t UCPTRIE_OPTIONS_VALUE_BITS_MASK = 7;
+constexpr uint16_t UCPTRIE_OPTIONS_मूल्य_BITS_MASK = 7;
 
 /**
  * Value for index3NullOffset which indicates that there is no index-3 null block.
@@ -66,15 +66,15 @@ constexpr uint16_t UCPTRIE_OPTIONS_VALUE_BITS_MASK = 7;
  * 18-bit indexes.
  */
 constexpr int32_t UCPTRIE_NO_INDEX3_NULL_OFFSET = 0x7fff;
-constexpr int32_t UCPTRIE_NO_DATA_NULL_OFFSET = 0xfffff;
+constexpr int32_t UCPTRIE_NO_तथ्य_NULL_OFFSET = 0xfffff;
 
 // Internal constants.
 
 /** The length of the BMP index table. 1024=0x400 */
-constexpr int32_t UCPTRIE_BMP_INDEX_LENGTH = 0x10000 >> UCPTRIE_FAST_SHIFT;
+constexpr int32_t UCPTRIE_BMP_सूचकांक_लंबाई = 0x10000 >> UCPTRIE_FAST_SHIFT;
 
 constexpr int32_t UCPTRIE_SMALL_LIMIT = 0x1000;
-constexpr int32_t UCPTRIE_SMALL_INDEX_LENGTH = UCPTRIE_SMALL_LIMIT >> UCPTRIE_FAST_SHIFT;
+constexpr int32_t UCPTRIE_SMALL_सूचकांक_लंबाई = UCPTRIE_SMALL_LIMIT >> UCPTRIE_FAST_SHIFT;
 
 /** Shift size for getting the index-3 table offset. */
 constexpr int32_t UCPTRIE_SHIFT_3 = 4;
@@ -101,46 +101,46 @@ constexpr int32_t UCPTRIE_SHIFT_1_2 = UCPTRIE_SHIFT_1 - UCPTRIE_SHIFT_2;
  * Number of index-1 entries for the BMP. (4)
  * This part of the index-1 table is omitted from the serialized form.
  */
-constexpr int32_t UCPTRIE_OMITTED_BMP_INDEX_1_LENGTH = 0x10000 >> UCPTRIE_SHIFT_1;
+constexpr int32_t UCPTRIE_OMITTED_BMP_सूचकांक_1_लंबाई = 0x10000 >> UCPTRIE_SHIFT_1;
 
 /** Number of entries in an index-2 block. 32=0x20 */
-constexpr int32_t UCPTRIE_INDEX_2_BLOCK_LENGTH = 1 << UCPTRIE_SHIFT_1_2;
+constexpr int32_t UCPTRIE_सूचकांक_2_BLOCK_लंबाई = 1 << UCPTRIE_SHIFT_1_2;
 
 /** Mask for getting the lower bits for the in-index-2-block offset. */
-constexpr int32_t UCPTRIE_INDEX_2_MASK = UCPTRIE_INDEX_2_BLOCK_LENGTH - 1;
+constexpr int32_t UCPTRIE_सूचकांक_2_MASK = UCPTRIE_सूचकांक_2_BLOCK_लंबाई - 1;
 
 /** Number of code points per index-2 table entry. 512=0x200 */
-constexpr int32_t UCPTRIE_CP_PER_INDEX_2_ENTRY = 1 << UCPTRIE_SHIFT_2;
+constexpr int32_t UCPTRIE_CP_PER_सूचकांक_2_ENTRY = 1 << UCPTRIE_SHIFT_2;
 
 /** Number of entries in an index-3 block. 32=0x20 */
-constexpr int32_t UCPTRIE_INDEX_3_BLOCK_LENGTH = 1 << UCPTRIE_SHIFT_2_3;
+constexpr int32_t UCPTRIE_सूचकांक_3_BLOCK_लंबाई = 1 << UCPTRIE_SHIFT_2_3;
 
 /** Mask for getting the lower bits for the in-index-3-block offset. */
-constexpr int32_t UCPTRIE_INDEX_3_MASK = UCPTRIE_INDEX_3_BLOCK_LENGTH - 1;
+constexpr int32_t UCPTRIE_सूचकांक_3_MASK = UCPTRIE_सूचकांक_3_BLOCK_लंबाई - 1;
 
 /** Number of entries in a small data block. 16=0x10 */
-constexpr int32_t UCPTRIE_SMALL_DATA_BLOCK_LENGTH = 1 << UCPTRIE_SHIFT_3;
+constexpr int32_t UCPTRIE_SMALL_तथ्य_BLOCK_लंबाई = 1 << UCPTRIE_SHIFT_3;
 
 /** Mask for getting the lower bits for the in-small-data-block offset. */
-constexpr int32_t UCPTRIE_SMALL_DATA_MASK = UCPTRIE_SMALL_DATA_BLOCK_LENGTH - 1;
+constexpr int32_t UCPTRIE_SMALL_तथ्य_MASK = UCPTRIE_SMALL_तथ्य_BLOCK_लंबाई - 1;
 
 
-typedef UChar32
-UCPTrieGetRange(const void *trie, UChar32 start,
-                UCPMapValueFilter *filter, const void *context, uint32_t *pValue);
+प्रकार UChar32
+UCPTrieGetRange(स्थिर व्योम *trie, UChar32 start,
+                UCPMap_मूल्य_Filter *filter, स्थिर व्योम *context, uint32_t *p_मूल्य);
 
 U_CFUNC UChar32
 ucptrie_internalGetRange(UCPTrieGetRange *getRange,
-                         const void *trie, UChar32 start,
-                         UCPMapRangeOption option, uint32_t surrogateValue,
-                         UCPMapValueFilter *filter, const void *context, uint32_t *pValue);
+                         स्थिर व्योम *trie, UChar32 start,
+                         UCPMapRangeOption option, uint32_t surrogate_मूल्य,
+                         UCPMap_मूल्य_Filter *filter, स्थिर व्योम *context, uint32_t *p_मूल्य);
 
-#ifdef UCPTRIE_DEBUG
-U_CFUNC void
-ucptrie_printLengths(const UCPTrie *trie, const char *which);
+#अगर_घोषित UCPTRIE_DEBUG
+U_CFUNC व्योम
+ucptrie_printLengths(स्थिर UCPTrie *trie, स्थिर अक्षर *which);
 
-U_CFUNC void umutablecptrie_setName(UMutableCPTrie *builder, const char *name);
-#endif
+U_CFUNC व्योम umutablecptrie_setName(UMutableCPTrie *builder, स्थिर अक्षर *name);
+#पूर्ण_अगर
 
 /*
  * Format of the binary, memory-mappable representation of a UCPTrie/CodePointTrie.
@@ -282,4 +282,4 @@ U_CFUNC void umutablecptrie_setName(UMutableCPTrie *builder, const char *name);
  * normally UCPTRIE_NO_DATA_NULL_OFFSET or UCPTRIE_NO_INDEX3_NULL_OFFSET respectively.
  */
 
-#endif
+#पूर्ण_अगर

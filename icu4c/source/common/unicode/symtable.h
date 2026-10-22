@@ -9,14 +9,14 @@
 *   02/04/00    aliu        Creation.
 **********************************************************************
 */
-#ifndef SYMTABLE_H
-#define SYMTABLE_H
+#अगर_अघोषित SYMTABLE_H
+#घोषणा SYMTABLE_H
 
-#include "unicode/utypes.h"
+#समावेश "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#अगर U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#समावेश "unicode/uobject.h"
 
 /**
  * \file
@@ -56,20 +56,20 @@ class UnicodeString;
  *
  * @stable ICU 2.8
  */
-class U_COMMON_API SymbolTable /* not : public UObject because this is an interface/mixin class */ {
-public:
+class U_COMMON_API प्रतीक_Table /* not : public UObject because this is an interface/mixin class */ {
+खुला:
 
     /**
      * The character preceding a symbol reference name.
      * @stable ICU 2.8
      */
-    enum { SYMBOL_REF = 0x0024 /*$*/ };
+    क्रमागत { प्रतीक_REF = 0x0024 /*$*/ };
 
     /**
      * Destructor.
      * @stable ICU 2.8
      */
-    virtual ~SymbolTable();
+    भव ~प्रतीक_Table();
 
     /**
      * Lookup the characters associated with this string and return it.
@@ -80,7 +80,7 @@ public:
      * there is no mapping for s.
      * @stable ICU 2.8
      */
-    virtual const UnicodeString* lookup(const UnicodeString& s) const U_LIFETIME_BOUND = 0;
+    भव स्थिर UnicodeString* lookup(स्थिर UnicodeString& s) स्थिर U_LIFETIME_BOUND = 0;
 
     /**
      * Returns a pointer to a pre-parsed set associated with the variable with
@@ -88,8 +88,8 @@ public:
      * undefined or string-valued variable).
      * @internal
      */
-    virtual const UnicodeSet* lookupSet(const UnicodeString& /*name*/) const {
-        return nullptr;
+    भव स्थिर UnicodeSet* lookupSet(स्थिर UnicodeString& /*name*/) स्थिर {
+        वापस nullptr;
     }
 
     /**
@@ -100,7 +100,7 @@ public:
      * character, or nullptr if there is no mapping for ch.
      * @stable ICU 2.8
      */
-    virtual const UnicodeFunctor* lookupMatcher(UChar32 ch) const U_LIFETIME_BOUND = 0;
+    भव स्थिर UnicodeFunctor* lookupMatcher(UChar32 ch) स्थिर U_LIFETIME_BOUND = 0;
 
     /**
      * Parse a symbol reference name from the given string, starting
@@ -119,11 +119,11 @@ public:
      * valid symbolic name at the given position.
      * @stable ICU 2.8
      */
-    virtual UnicodeString parseReference(const UnicodeString& text,
-                                         ParsePosition& pos, int32_t limit) const = 0;
+    भव UnicodeString parseReference(स्थिर UnicodeString& text,
+                                         ParsePosition& pos, int32_t limit) स्थिर = 0;
 };
 U_NAMESPACE_END
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#पूर्ण_अगर /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#पूर्ण_अगर

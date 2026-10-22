@@ -20,42 +20,42 @@
 ******************************************************************************
 */
 
-#ifndef UNISTR_H
-#define UNISTR_H
+#अगर_अघोषित UNISTR_H
+#घोषणा UNISTR_H
 
 /**
  * \file
  * \brief C++ API: Unicode String
  */
 
-#include "unicode/utypes.h"
+#समावेश "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#अगर U_SHOW_CPLUSPLUS_API
 
-#include <cstddef>
-#include <string_view>
-#include "unicode/char16ptr.h"
-#include "unicode/rep.h"
-#include "unicode/std_string.h"
-#include "unicode/stringpiece.h"
-#include "unicode/bytestream.h"
+#समावेश <cstddef>
+#समावेश <string_view>
+#समावेश "unicode/char16ptr.h"
+#समावेश "unicode/rep.h"
+#समावेश "unicode/std_string.h"
+#समावेश "unicode/stringpiece.h"
+#समावेश "unicode/bytestream.h"
 
-struct UConverter;          // unicode/ucnv.h
+काष्ठा UConverter;          // unicode/ucnv.h
 
-#ifndef USTRING_H
+#अगर_अघोषित USTRING_H
 /**
  * \ingroup ustring_ustrlen
  * @param s Pointer to sequence of UChars.
  * @return Length of sequence.
  */
-U_CAPI int32_t U_EXPORT2 u_strlen(const UChar *s);
-#endif
+U_CAPI int32_t U_EXPORT2 u_strlen(स्थिर UChar *s);
+#पूर्ण_अगर
 
 U_NAMESPACE_BEGIN
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#अगर !UCONFIG_NO_BREAK_ITERATION
 class BreakIterator;        // unicode/brkiter.h
-#endif
+#पूर्ण_अगर
 class Edits;
 
 U_NAMESPACE_END
@@ -67,13 +67,13 @@ U_NAMESPACE_END
  * src and dest must not overlap.
  * @internal
  */
-typedef int32_t U_CALLCONV
+प्रकार int32_t U_CALLCONV
 UStringCaseMapper(int32_t caseLocale, uint32_t options,
-#if !UCONFIG_NO_BREAK_ITERATION
+#अगर !UCONFIG_NO_BREAK_ITERATION
                   icu::BreakIterator *iter,
-#endif
+#पूर्ण_अगर
                   char16_t *dest, int32_t destCapacity,
-                  const char16_t *src, int32_t srcLength,
+                  स्थिर char16_t *src, int32_t src_लंबाई,
                   icu::Edits *edits,
                   UErrorCode &errorCode);
 
@@ -95,7 +95,7 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  *
  * @stable ICU 3.2
  */
-#define US_INV icu::UnicodeString::kInvariant
+#घोषणा US_INV icu::UnicodeString::kInvariant
 
 /**
  * \def UNICODE_STRING
@@ -117,11 +117,11 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  * `NUL`, must be specified as a constant.
  * @stable ICU 2.0
  */
-#if !U_CHAR16_IS_TYPEDEF
-# define UNICODE_STRING(cs, _length) icu::UnicodeString(true, u ## cs, _length)
-#else
-# define UNICODE_STRING(cs, _length) icu::UnicodeString(true, (const char16_t*)u ## cs, _length)
-#endif
+#अगर !U_CHAR16_IS_TYPEDEF
+# define UNICODE_STRING(cs, लंबाई_4) icu::UnicodeString(true, u ## cs, लंबाई_4)
+#अन्यथा
+# define UNICODE_STRING(cs, लंबाई_4) icu::UnicodeString(true, (स्थिर char16_t*)u ## cs, लंबाई_4)
+#पूर्ण_अगर
 
 /**
  * Unicode String literals in C++.
@@ -132,7 +132,7 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  * @stable ICU 2.0
  * @see UNICODE_STRING
  */
-#define UNICODE_STRING_SIMPLE(cs) UNICODE_STRING(cs, -1)
+#घोषणा UNICODE_STRING_SIMPLE(cs) UNICODE_STRING(cs, -1)
 
 /**
  * \def UNISTR_FROM_CHAR_EXPLICIT
@@ -141,15 +141,15 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  * constructors are marked as explicit, preventing their inadvertent use.
  * @stable ICU 49
  */
-#ifndef UNISTR_FROM_CHAR_EXPLICIT
-# if defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION)
+#अगर_अघोषित UNISTR_FROM_CHAR_EXPLICIT
+# अगर defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION)
     // Auto-"explicit" in ICU library code.
 #   define UNISTR_FROM_CHAR_EXPLICIT explicit
-# else
+# अन्यथा
     // Empty by default for source code compatibility.
 #   define UNISTR_FROM_CHAR_EXPLICIT
 # endif
-#endif
+#पूर्ण_अगर
 
 /**
  * \def UNISTR_FROM_STRING_EXPLICIT
@@ -161,15 +161,15 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  * by passing a string literal into an API with a const UnicodeString & parameter.
  * @stable ICU 49
  */
-#ifndef UNISTR_FROM_STRING_EXPLICIT
-# if defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION)
+#अगर_अघोषित UNISTR_FROM_STRING_EXPLICIT
+# अगर defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || defined(U_I18N_IMPLEMENTATION) || defined(U_IO_IMPLEMENTATION)
     // Auto-"explicit" in ICU library code.
 #   define UNISTR_FROM_STRING_EXPLICIT explicit
-# else
+# अन्यथा
     // Empty by default for source code compatibility.
 #   define UNISTR_FROM_STRING_EXPLICIT
 # endif
-#endif
+#पूर्ण_अगर
 
 /**
  * \def UNISTR_OBJECT_SIZE
@@ -204,9 +204,9 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  * @see U16_MAX_LENGTH
  * @stable ICU 56
  */
-#ifndef UNISTR_OBJECT_SIZE
-# define UNISTR_OBJECT_SIZE 64
-#endif
+#अगर_अघोषित UNISTR_OBJECT_आकार
+# define UNISTR_OBJECT_आकार 64
+#पूर्ण_अगर
 
 /**
  * UnicodeString is a string class that stores Unicode characters directly and provides
@@ -299,11 +299,11 @@ class UnicodeStringAppendable;  // unicode/appendable.h
  * @see CharacterIterator
  * @stable ICU 2.0
  */
-class U_COMMON_API UnicodeString : public Replaceable
+class U_COMMON_API UnicodeString : खुला Replaceable
 {
-public:
+खुला:
   /** C++ boilerplate @internal */
-  using value_type = char16_t;
+  using मूल्य_type = char16_t;
 
   /**
    * Constant to be used in the UnicodeString(char *, int32_t, EInvariant) constructor
@@ -313,7 +313,7 @@ public:
    * @see US_INV
    * @stable ICU 3.2
    */
-  enum EInvariant {
+  क्रमागत EInvariant {
     /**
      * @see EInvariant
      * @stable ICU 3.2
@@ -334,7 +334,7 @@ public:
    * false otherwise.
    * @stable ICU 2.0
    */
-  inline bool operator== (const UnicodeString& text) const;
+  अंतरभूत bool चालक== (स्थिर UnicodeString& text) स्थिर;
 
   /**
    * Equality operator. Performs only bitwise comparison with `text`
@@ -351,11 +351,11 @@ public:
    * @return true if `text` contains the same characters as this one, false otherwise.
    * @stable ICU 76
    */
-  template<typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  inline bool operator==(const S &text) const {
+  ढाँचा<typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
+  अंतरभूत bool चालक==(स्थिर S &text) स्थिर {
     std::u16string_view sv(internal::toU16StringView(text));
     uint32_t len;  // unsigned to avoid a compiler warning
-    return !isBogus() && (len = length()) == sv.length() && doEquals(sv.data(), len);
+    वापस !isBogus() && (len = लंबाई()) == sv.लंबाई() && doEquals(sv.तथ्य(), len);
   }
 
   /**
@@ -365,7 +365,7 @@ public:
    * true otherwise.
    * @stable ICU 2.0
    */
-  inline bool operator!= (const UnicodeString& text) const;
+  अंतरभूत bool चालक!= (स्थिर UnicodeString& text) स्थिर;
 
   /**
    * Inequality operator. Performs only bitwise comparison with `text`
@@ -384,9 +384,9 @@ public:
    * @return false if `text` contains the same characters as this one, true otherwise.
    * @stable ICU 76
    */
-  template<typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  inline bool operator!=(const S &text) const {
-    return !operator==(text);
+  ढाँचा<typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
+  अंतरभूत bool चालक!=(स्थिर S &text) स्थिर {
+    वापस !चालक==(text);
   }
 
   /**
@@ -396,7 +396,7 @@ public:
    * greater than the characters in `text`, false otherwise
    * @stable ICU 2.0
    */
-  inline UBool operator> (const UnicodeString& text) const;
+  अंतरभूत UBool चालक> (स्थिर UnicodeString& text) स्थिर;
 
   /**
    * Less than operator. Performs only bitwise comparison.
@@ -405,7 +405,7 @@ public:
    * less than the characters in `text`, false otherwise
    * @stable ICU 2.0
    */
-  inline UBool operator< (const UnicodeString& text) const;
+  अंतरभूत UBool चालक< (स्थिर UnicodeString& text) स्थिर;
 
   /**
    * Greater than or equal operator. Performs only bitwise comparison.
@@ -414,7 +414,7 @@ public:
    * greater than or equal to the characters in `text`, false otherwise
    * @stable ICU 2.0
    */
-  inline UBool operator>= (const UnicodeString& text) const;
+  अंतरभूत UBool चालक>= (स्थिर UnicodeString& text) स्थिर;
 
   /**
    * Less than or equal operator. Performs only bitwise comparison.
@@ -423,7 +423,7 @@ public:
    * less than or equal to the characters in `text`, false otherwise
    * @stable ICU 2.0
    */
-  inline UBool operator<= (const UnicodeString& text) const;
+  अंतरभूत UBool चालक<= (स्थिर UnicodeString& text) स्थिर;
 
   /**
    * Compare the characters bitwise in this UnicodeString to
@@ -436,7 +436,7 @@ public:
    * in `text`.
    * @stable ICU 2.0
    */
-  inline int8_t compare(const UnicodeString& text) const;
+  अंतरभूत int8_t compare(स्थिर UnicodeString& text) स्थिर;
 
   /**
    * Compare the characters bitwise in the range
@@ -453,9 +453,9 @@ public:
    * in `text`.
    * @stable ICU 2.0
    */
-  inline int8_t compare(int32_t start,
-         int32_t length,
-         const UnicodeString& text) const;
+  अंतरभूत int8_t compare(int32_t start,
+         int32_t लंबाई,
+         स्थिर UnicodeString& text) स्थिर;
 
   /**
    * Compare the characters bitwise in the range
@@ -474,11 +474,11 @@ public:
    * in `srcText`.
    * @stable ICU 2.0
    */
-   inline int8_t compare(int32_t start,
-         int32_t length,
-         const UnicodeString& srcText,
+   अंतरभूत int8_t compare(int32_t start,
+         int32_t लंबाई,
+         स्थिर UnicodeString& srcText,
          int32_t srcStart,
-         int32_t srcLength) const;
+         int32_t src_लंबाई) स्थिर;
 
   /**
    * Compare the characters bitwise in this UnicodeString with the first
@@ -492,8 +492,8 @@ public:
    * in `srcChars`.
    * @stable ICU 2.0
    */
-  inline int8_t compare(ConstChar16Ptr srcChars,
-         int32_t srcLength) const;
+  अंतरभूत int8_t compare(ConstChar16Ptr srcChars,
+         int32_t src_लंबाई) स्थिर;
 
   /**
    * Compare the characters bitwise in the range
@@ -509,9 +509,9 @@ public:
    * in `srcChars`.
    * @stable ICU 2.0
    */
-  inline int8_t compare(int32_t start,
-         int32_t length,
-         const char16_t *srcChars) const;
+  अंतरभूत int8_t compare(int32_t start,
+         int32_t लंबाई,
+         स्थिर char16_t *srcChars) स्थिर;
 
   /**
    * Compare the characters bitwise in the range
@@ -530,11 +530,11 @@ public:
    * in `srcChars`.
    * @stable ICU 2.0
    */
-  inline int8_t compare(int32_t start,
-         int32_t length,
-         const char16_t *srcChars,
+  अंतरभूत int8_t compare(int32_t start,
+         int32_t लंबाई,
+         स्थिर char16_t *srcChars,
          int32_t srcStart,
-         int32_t srcLength) const;
+         int32_t src_लंबाई) स्थिर;
 
   /**
    * Compare the characters bitwise in the range
@@ -553,11 +553,11 @@ public:
    * in `srcText`.
    * @stable ICU 2.0
    */
-  inline int8_t compareBetween(int32_t start,
+  अंतरभूत int8_t compareBetween(int32_t start,
             int32_t limit,
-            const UnicodeString& srcText,
+            स्थिर UnicodeString& srcText,
             int32_t srcStart,
-            int32_t srcLimit) const;
+            int32_t srcLimit) स्थिर;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -576,7 +576,7 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-  inline int8_t compareCodePointOrder(const UnicodeString& text) const;
+  अंतरभूत int8_t compareCodePointOrder(स्थिर UnicodeString& text) स्थिर;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -597,9 +597,9 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-  inline int8_t compareCodePointOrder(int32_t start,
-                                      int32_t length,
-                                      const UnicodeString& srcText) const;
+  अंतरभूत int8_t compareCodePointOrder(int32_t start,
+                                      int32_t लंबाई,
+                                      स्थिर UnicodeString& srcText) स्थिर;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -622,11 +622,11 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-   inline int8_t compareCodePointOrder(int32_t start,
-                                       int32_t length,
-                                       const UnicodeString& srcText,
+   अंतरभूत int8_t compareCodePointOrder(int32_t start,
+                                       int32_t लंबाई,
+                                       स्थिर UnicodeString& srcText,
                                        int32_t srcStart,
-                                       int32_t srcLength) const;
+                                       int32_t src_लंबाई) स्थिर;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -646,8 +646,8 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-  inline int8_t compareCodePointOrder(ConstChar16Ptr srcChars,
-                                      int32_t srcLength) const;
+  अंतरभूत int8_t compareCodePointOrder(ConstChar16Ptr srcChars,
+                                      int32_t src_लंबाई) स्थिर;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -668,9 +668,9 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-  inline int8_t compareCodePointOrder(int32_t start,
-                                      int32_t length,
-                                      const char16_t *srcChars) const;
+  अंतरभूत int8_t compareCodePointOrder(int32_t start,
+                                      int32_t लंबाई,
+                                      स्थिर char16_t *srcChars) स्थिर;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -693,11 +693,11 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-  inline int8_t compareCodePointOrder(int32_t start,
-                                      int32_t length,
-                                      const char16_t *srcChars,
+  अंतरभूत int8_t compareCodePointOrder(int32_t start,
+                                      int32_t लंबाई,
+                                      स्थिर char16_t *srcChars,
                                       int32_t srcStart,
-                                      int32_t srcLength) const;
+                                      int32_t src_लंबाई) स्थिर;
 
   /**
    * Compare two Unicode strings in code point order.
@@ -720,11 +720,11 @@ public:
    * in code point order
    * @stable ICU 2.0
    */
-  inline int8_t compareCodePointOrderBetween(int32_t start,
+  अंतरभूत int8_t compareCodePointOrderBetween(int32_t start,
                                              int32_t limit,
-                                             const UnicodeString& srcText,
+                                             स्थिर UnicodeString& srcText,
                                              int32_t srcStart,
-                                             int32_t srcLimit) const;
+                                             int32_t srcLimit) स्थिर;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -744,7 +744,7 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompare(const UnicodeString& text, uint32_t options) const;
+  अंतरभूत int8_t caseCompare(स्थिर UnicodeString& text, uint32_t options) स्थिर;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -766,10 +766,10 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompare(int32_t start,
-         int32_t length,
-         const UnicodeString& srcText,
-         uint32_t options) const;
+  अंतरभूत int8_t caseCompare(int32_t start,
+         int32_t लंबाई,
+         स्थिर UnicodeString& srcText,
+         uint32_t options) स्थिर;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -793,12 +793,12 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompare(int32_t start,
-         int32_t length,
-         const UnicodeString& srcText,
+  अंतरभूत int8_t caseCompare(int32_t start,
+         int32_t लंबाई,
+         स्थिर UnicodeString& srcText,
          int32_t srcStart,
-         int32_t srcLength,
-         uint32_t options) const;
+         int32_t src_लंबाई,
+         uint32_t options) स्थिर;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -819,9 +819,9 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompare(ConstChar16Ptr srcChars,
-         int32_t srcLength,
-         uint32_t options) const;
+  अंतरभूत int8_t caseCompare(ConstChar16Ptr srcChars,
+         int32_t src_लंबाई,
+         uint32_t options) स्थिर;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -843,10 +843,10 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompare(int32_t start,
-         int32_t length,
-         const char16_t *srcChars,
-         uint32_t options) const;
+  अंतरभूत int8_t caseCompare(int32_t start,
+         int32_t लंबाई,
+         स्थिर char16_t *srcChars,
+         uint32_t options) स्थिर;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -870,12 +870,12 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompare(int32_t start,
-         int32_t length,
-         const char16_t *srcChars,
+  अंतरभूत int8_t caseCompare(int32_t start,
+         int32_t लंबाई,
+         स्थिर char16_t *srcChars,
          int32_t srcStart,
-         int32_t srcLength,
-         uint32_t options) const;
+         int32_t src_लंबाई,
+         uint32_t options) स्थिर;
 
   /**
    * Compare two strings case-insensitively using full case folding.
@@ -899,12 +899,12 @@ public:
    * @return A negative, zero, or positive integer indicating the comparison result.
    * @stable ICU 2.0
    */
-  inline int8_t caseCompareBetween(int32_t start,
+  अंतरभूत int8_t caseCompareBetween(int32_t start,
             int32_t limit,
-            const UnicodeString& srcText,
+            स्थिर UnicodeString& srcText,
             int32_t srcStart,
             int32_t srcLimit,
-            uint32_t options) const;
+            uint32_t options) स्थिर;
 
   /**
    * Determine if this starts with the characters in `text`
@@ -913,7 +913,7 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool startsWith(const UnicodeString& text) const;
+  अंतरभूत UBool startsWith(स्थिर UnicodeString& text) स्थिर;
 
   /**
    * Determine if this starts with the characters in `srcText`
@@ -925,9 +925,9 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool startsWith(const UnicodeString& srcText,
+  अंतरभूत UBool startsWith(स्थिर UnicodeString& srcText,
             int32_t srcStart,
-            int32_t srcLength) const;
+            int32_t src_लंबाई) स्थिर;
 
   /**
    * Determine if this starts with the characters in `srcChars`
@@ -937,8 +937,8 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool startsWith(ConstChar16Ptr srcChars,
-            int32_t srcLength) const;
+  अंतरभूत UBool startsWith(ConstChar16Ptr srcChars,
+            int32_t src_लंबाई) स्थिर;
 
   /**
    * Determine if this ends with the characters in `srcChars`
@@ -949,9 +949,9 @@ public:
    * @return true if this ends with the characters in `srcChars`, false otherwise
    * @stable ICU 2.0
    */
-  inline UBool startsWith(const char16_t *srcChars,
+  अंतरभूत UBool startsWith(स्थिर char16_t *srcChars,
             int32_t srcStart,
-            int32_t srcLength) const;
+            int32_t src_लंबाई) स्थिर;
 
   /**
    * Determine if this ends with the characters in `text`
@@ -960,7 +960,7 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool endsWith(const UnicodeString& text) const;
+  अंतरभूत UBool endsWith(स्थिर UnicodeString& text) स्थिर;
 
   /**
    * Determine if this ends with the characters in `srcText`
@@ -972,9 +972,9 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool endsWith(const UnicodeString& srcText,
+  अंतरभूत UBool endsWith(स्थिर UnicodeString& srcText,
           int32_t srcStart,
-          int32_t srcLength) const;
+          int32_t src_लंबाई) स्थिर;
 
   /**
    * Determine if this ends with the characters in `srcChars`
@@ -984,8 +984,8 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool endsWith(ConstChar16Ptr srcChars,
-          int32_t srcLength) const;
+  अंतरभूत UBool endsWith(ConstChar16Ptr srcChars,
+          int32_t src_लंबाई) स्थिर;
 
   /**
    * Determine if this ends with the characters in `srcChars`
@@ -997,9 +997,9 @@ public:
    * false otherwise
    * @stable ICU 2.0
    */
-  inline UBool endsWith(const char16_t *srcChars,
+  अंतरभूत UBool endsWith(स्थिर char16_t *srcChars,
           int32_t srcStart,
-          int32_t srcLength) const;
+          int32_t src_लंबाई) स्थिर;
 
 
   /* Searching - bitwise only */
@@ -1012,7 +1012,7 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(const UnicodeString& text) const;
+  अंतरभूत int32_t सूचकांक_Of(स्थिर UnicodeString& text) स्थिर;
 
   /**
    * Locate in this the first occurrence of the characters in `text`
@@ -1023,8 +1023,8 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(const UnicodeString& text,
-              int32_t start) const;
+  अंतरभूत int32_t सूचकांक_Of(स्थिर UnicodeString& text,
+              int32_t start) स्थिर;
 
   /**
    * Locate in this the first occurrence in the range
@@ -1037,9 +1037,9 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(const UnicodeString& text,
+  अंतरभूत int32_t सूचकांक_Of(स्थिर UnicodeString& text,
               int32_t start,
-              int32_t length) const;
+              int32_t लंबाई) स्थिर;
 
   /**
    * Locate in this the first occurrence in the range
@@ -1057,11 +1057,11 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(const UnicodeString& srcText,
+  अंतरभूत int32_t सूचकांक_Of(स्थिर UnicodeString& srcText,
               int32_t srcStart,
-              int32_t srcLength,
+              int32_t src_लंबाई,
               int32_t start,
-              int32_t length) const;
+              int32_t लंबाई) स्थिर;
 
   /**
    * Locate in this the first occurrence of the characters in
@@ -1074,9 +1074,9 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(const char16_t *srcChars,
-              int32_t srcLength,
-              int32_t start) const;
+  अंतरभूत int32_t सूचकांक_Of(स्थिर char16_t *srcChars,
+              int32_t src_लंबाई,
+              int32_t start) स्थिर;
 
   /**
    * Locate in this the first occurrence in the range
@@ -1090,10 +1090,10 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(ConstChar16Ptr srcChars,
-              int32_t srcLength,
+  अंतरभूत int32_t सूचकांक_Of(ConstChar16Ptr srcChars,
+              int32_t src_लंबाई,
               int32_t start,
-              int32_t length) const;
+              int32_t लंबाई) स्थिर;
 
   /**
    * Locate in this the first occurrence in the range
@@ -1111,11 +1111,11 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  int32_t indexOf(const char16_t *srcChars,
+  int32_t सूचकांक_Of(स्थिर char16_t *srcChars,
               int32_t srcStart,
-              int32_t srcLength,
+              int32_t src_लंबाई,
               int32_t start,
-              int32_t length) const;
+              int32_t लंबाई) स्थिर;
 
   /**
    * Locate in this the first occurrence of the BMP code point `c`,
@@ -1124,7 +1124,7 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(char16_t c) const;
+  अंतरभूत int32_t सूचकांक_Of(char16_t c) स्थिर;
 
   /**
    * Locate in this the first occurrence of the code point `c`,
@@ -1134,7 +1134,7 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(UChar32 c) const;
+  अंतरभूत int32_t सूचकांक_Of(UChar32 c) स्थिर;
 
   /**
    * Locate in this the first occurrence of the BMP code point `c`,
@@ -1144,8 +1144,8 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(char16_t c,
-              int32_t start) const;
+  अंतरभूत int32_t सूचकांक_Of(char16_t c,
+              int32_t start) स्थिर;
 
   /**
    * Locate in this the first occurrence of the code point `c`
@@ -1156,8 +1156,8 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(UChar32 c,
-              int32_t start) const;
+  अंतरभूत int32_t सूचकांक_Of(UChar32 c,
+              int32_t start) स्थिर;
 
   /**
    * Locate in this the first occurrence of the BMP code point `c`
@@ -1169,9 +1169,9 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(char16_t c,
+  अंतरभूत int32_t सूचकांक_Of(char16_t c,
               int32_t start,
-              int32_t length) const;
+              int32_t लंबाई) स्थिर;
 
   /**
    * Locate in this the first occurrence of the code point `c`
@@ -1184,9 +1184,9 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t indexOf(UChar32 c,
+  अंतरभूत int32_t सूचकांक_Of(UChar32 c,
               int32_t start,
-              int32_t length) const;
+              int32_t लंबाई) स्थिर;
 
   /**
    * Locate in this the last occurrence of the characters in `text`,
@@ -1196,7 +1196,7 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(const UnicodeString& text) const;
+  अंतरभूत int32_t last_सूचकांक_Of(स्थिर UnicodeString& text) स्थिर;
 
   /**
    * Locate in this the last occurrence of the characters in `text`
@@ -1207,8 +1207,8 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(const UnicodeString& text,
-              int32_t start) const;
+  अंतरभूत int32_t last_सूचकांक_Of(स्थिर UnicodeString& text,
+              int32_t start) स्थिर;
 
   /**
    * Locate in this the last occurrence in the range
@@ -1221,9 +1221,9 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(const UnicodeString& text,
+  अंतरभूत int32_t last_सूचकांक_Of(स्थिर UnicodeString& text,
               int32_t start,
-              int32_t length) const;
+              int32_t लंबाई) स्थिर;
 
   /**
    * Locate in this the last occurrence in the range
@@ -1241,11 +1241,11 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(const UnicodeString& srcText,
+  अंतरभूत int32_t last_सूचकांक_Of(स्थिर UnicodeString& srcText,
               int32_t srcStart,
-              int32_t srcLength,
+              int32_t src_लंबाई,
               int32_t start,
-              int32_t length) const;
+              int32_t लंबाई) स्थिर;
 
   /**
    * Locate in this the last occurrence of the characters in `srcChars`
@@ -1257,9 +1257,9 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(const char16_t *srcChars,
-              int32_t srcLength,
-              int32_t start) const;
+  अंतरभूत int32_t last_सूचकांक_Of(स्थिर char16_t *srcChars,
+              int32_t src_लंबाई,
+              int32_t start) स्थिर;
 
   /**
    * Locate in this the last occurrence in the range
@@ -1273,10 +1273,10 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(ConstChar16Ptr srcChars,
-              int32_t srcLength,
+  अंतरभूत int32_t last_सूचकांक_Of(ConstChar16Ptr srcChars,
+              int32_t src_लंबाई,
               int32_t start,
-              int32_t length) const;
+              int32_t लंबाई) स्थिर;
 
   /**
    * Locate in this the last occurrence in the range
@@ -1294,11 +1294,11 @@ public:
    * or -1 if not found.
    * @stable ICU 2.0
    */
-  int32_t lastIndexOf(const char16_t *srcChars,
+  int32_t last_सूचकांक_Of(स्थिर char16_t *srcChars,
               int32_t srcStart,
-              int32_t srcLength,
+              int32_t src_लंबाई,
               int32_t start,
-              int32_t length) const;
+              int32_t लंबाई) स्थिर;
 
   /**
    * Locate in this the last occurrence of the BMP code point `c`,
@@ -1307,7 +1307,7 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(char16_t c) const;
+  अंतरभूत int32_t last_सूचकांक_Of(char16_t c) स्थिर;
 
   /**
    * Locate in this the last occurrence of the code point `c`,
@@ -1317,7 +1317,7 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(UChar32 c) const;
+  अंतरभूत int32_t last_सूचकांक_Of(UChar32 c) स्थिर;
 
   /**
    * Locate in this the last occurrence of the BMP code point `c`
@@ -1327,8 +1327,8 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(char16_t c,
-              int32_t start) const;
+  अंतरभूत int32_t last_सूचकांक_Of(char16_t c,
+              int32_t start) स्थिर;
 
   /**
    * Locate in this the last occurrence of the code point `c`
@@ -1339,8 +1339,8 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(UChar32 c,
-              int32_t start) const;
+  अंतरभूत int32_t last_सूचकांक_Of(UChar32 c,
+              int32_t start) स्थिर;
 
   /**
    * Locate in this the last occurrence of the BMP code point `c`
@@ -1352,9 +1352,9 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(char16_t c,
+  अंतरभूत int32_t last_सूचकांक_Of(char16_t c,
               int32_t start,
-              int32_t length) const;
+              int32_t लंबाई) स्थिर;
 
   /**
    * Locate in this the last occurrence of the code point `c`
@@ -1367,9 +1367,9 @@ public:
    * @return The offset into this of `c`, or -1 if not found.
    * @stable ICU 2.0
    */
-  inline int32_t lastIndexOf(UChar32 c,
+  अंतरभूत int32_t last_सूचकांक_Of(UChar32 c,
               int32_t start,
-              int32_t length) const;
+              int32_t लंबाई) स्थिर;
 
 
   /* Character access */
@@ -1382,7 +1382,7 @@ public:
    *         or 0xffff if the offset is not valid for this string
    * @stable ICU 2.0
    */
-  inline char16_t charAt(int32_t offset) const;
+  अंतरभूत char16_t charAt(int32_t offset) स्थिर;
 
   /**
    * Return the code unit at offset `offset`.
@@ -1391,7 +1391,7 @@ public:
    * @return the code unit at offset `offset`
    * @stable ICU 2.0
    */
-  inline char16_t operator[] (int32_t offset) const;
+  अंतरभूत char16_t चालक[] (int32_t offset) स्थिर;
 
   /**
    * Return the code point that contains the code unit
@@ -1404,7 +1404,7 @@ public:
    *         or 0xffff if the offset is not valid for this string
    * @stable ICU 2.0
    */
-  UChar32 char32At(int32_t offset) const;
+  UChar32 char32At(int32_t offset) स्थिर;
 
   /**
    * Adjust a random-access offset so that
@@ -1421,7 +1421,7 @@ public:
    * @see U16_SET_CP_START
    * @stable ICU 2.0
    */
-  int32_t getChar32Start(int32_t offset) const;
+  int32_t getChar32Start(int32_t offset) स्थिर;
 
   /**
    * Adjust a random-access offset so that
@@ -1439,7 +1439,7 @@ public:
    * @see U16_SET_CP_LIMIT
    * @stable ICU 2.0
    */
-  int32_t getChar32Limit(int32_t offset) const;
+  int32_t getChar32Limit(int32_t offset) स्थिर;
 
   /**
    * Move the code unit index along the string by delta code points.
@@ -1491,7 +1491,7 @@ public:
    * @return the resulting code unit index
    * @stable ICU 2.0
    */
-  int32_t moveIndex32(int32_t index, int32_t delta) const;
+  int32_t moveIndex32(int32_t सूचकांक, int32_t delta) स्थिर;
 
   /* Substring extraction */
 
@@ -1510,10 +1510,10 @@ public:
    * will be extracted
    * @stable ICU 2.0
    */
-  inline void extract(int32_t start,
-           int32_t length,
+  अंतरभूत व्योम extract(int32_t start,
+           int32_t लंबाई,
            Char16Ptr dst,
-           int32_t dstStart = 0) const;
+           int32_t dstStart = 0) स्थिर;
 
   /**
    * Copy the contents of the string into dest.
@@ -1538,7 +1538,7 @@ public:
    */
   int32_t
   extract(Char16Ptr dest, int32_t destCapacity,
-          UErrorCode &errorCode) const;
+          UErrorCode &errorCode) स्थिर;
 
   /**
    * Copy the characters in the range
@@ -1549,9 +1549,9 @@ public:
    * @param target UnicodeString into which to copy characters.
    * @stable ICU 2.0
    */
-  inline void extract(int32_t start,
-           int32_t length,
-           UnicodeString& target) const;
+  अंतरभूत व्योम extract(int32_t start,
+           int32_t लंबाई,
+           UnicodeString& target) स्थिर;
 
   /**
    * Copy the characters in the range [`start`, `limit`)
@@ -1564,10 +1564,10 @@ public:
    * will be extracted
    * @stable ICU 2.0
    */
-  inline void extractBetween(int32_t start,
+  अंतरभूत व्योम extractBetween(int32_t start,
               int32_t limit,
               char16_t *dst,
-              int32_t dstStart = 0) const;
+              int32_t dstStart = 0) स्थिर;
 
   /**
    * Copy the characters in the range [`start`, `limit`)
@@ -1577,9 +1577,9 @@ public:
    * @param target UnicodeString into which to copy characters.
    * @stable ICU 2.0
    */
-  virtual void extractBetween(int32_t start,
+  भव व्योम extractBetween(int32_t start,
               int32_t limit,
-              UnicodeString& target) const override;
+              UnicodeString& target) स्थिर override;
 
   /**
    * Copy the characters in the range
@@ -1603,12 +1603,12 @@ public:
    * @stable ICU 3.2
    */
   int32_t extract(int32_t start,
-           int32_t startLength,
-           char *target,
+           int32_t start_लंबाई,
+           अक्षर *target,
            int32_t targetCapacity,
-           enum EInvariant inv) const;
+           क्रमागत EInvariant inv) स्थिर;
 
-#if U_CHARSET_IS_UTF8 || !UCONFIG_NO_CONVERSION
+#अगर U_CHARSET_IS_UTF8 || !UCONFIG_NO_CONVERSION
 
   /**
    * Copy the characters in the range
@@ -1630,13 +1630,13 @@ public:
    * @stable ICU 2.0
    */
   int32_t extract(int32_t start,
-           int32_t startLength,
-           char *target,
-           uint32_t targetLength) const;
+           int32_t start_लंबाई,
+           अक्षर *target,
+           uint32_t target_लंबाई) स्थिर;
 
-#endif
+#पूर्ण_अगर
 
-#if !UCONFIG_NO_CONVERSION
+#अगर !UCONFIG_NO_CONVERSION
 
   /**
    * Copy the characters in the range
@@ -1663,10 +1663,10 @@ public:
    * @return the output string length, not including the terminating NUL
    * @stable ICU 2.0
    */
-  inline int32_t extract(int32_t start,
-                         int32_t startLength,
-                         char* target,
-                         const char* codepage = nullptr) const;
+  अंतरभूत int32_t extract(int32_t start,
+                         int32_t start_लंबाई,
+                         अक्षर* target,
+                         स्थिर अक्षर* codepage = nullptr) स्थिर;
 
   /**
    * Copy the characters in the range
@@ -1698,10 +1698,10 @@ public:
    * @stable ICU 2.0
    */
   int32_t extract(int32_t start,
-           int32_t startLength,
-           char *target,
-           uint32_t targetLength,
-           const char *codepage) const;
+           int32_t start_लंबाई,
+           अक्षर *target,
+           uint32_t target_लंबाई,
+           स्थिर अक्षर *codepage) स्थिर;
 
   /**
    * Convert the UnicodeString into a codepage string using an existing UConverter.
@@ -1720,11 +1720,11 @@ public:
    *         and a buffer of the indicated length would need to be passed in
    * @stable ICU 2.0
    */
-  int32_t extract(char *dest, int32_t destCapacity,
+  int32_t extract(अक्षर *dest, int32_t destCapacity,
                   UConverter *cnv,
-                  UErrorCode &errorCode) const;
+                  UErrorCode &errorCode) स्थिर;
 
-#endif
+#पूर्ण_अगर
 
   /**
    * Create a temporary substring for the specified range.
@@ -1739,7 +1739,7 @@ public:
    * @return a read-only alias UnicodeString object for the substring
    * @stable ICU 4.4
    */
-  UnicodeString tempSubString(int32_t start=0, int32_t length=INT32_MAX) const U_LIFETIME_BOUND;
+  UnicodeString अस्थायी_Sub_String(int32_t start=0, int32_t लंबाई=INT32_MAX) स्थिर U_LIFETIME_BOUND;
 
   /**
    * Create a temporary substring for the specified range.
@@ -1751,8 +1751,8 @@ public:
    * @return a read-only alias UnicodeString object for the substring
    * @stable ICU 4.4
    */
-  inline UnicodeString tempSubStringBetween(int32_t start,
-                                            int32_t limit = INT32_MAX) const U_LIFETIME_BOUND;
+  अंतरभूत UnicodeString अस्थायी_Sub_String_Between(int32_t start,
+                                            int32_t limit = INT32_MAX) स्थिर U_LIFETIME_BOUND;
 
   /**
    * Convert the UnicodeString to UTF-8 and write the result
@@ -1765,7 +1765,7 @@ public:
    * @stable ICU 4.2
    * @see toUTF8String
    */
-  void toUTF8(ByteSink &sink) const;
+  व्योम toUTF8(ByteSink &sink) स्थिर;
 
   /**
    * Convert the UnicodeString to UTF-8 and append the result
@@ -1780,14 +1780,14 @@ public:
    * @stable ICU 4.2
    * @see toUTF8
    */
-  template <typename StringClass>
-  StringClass& toUTF8String(StringClass& result U_LIFETIME_BOUND) const {
-    StringByteSink<StringClass> sbs(&result, length());
+  ढाँचा <typename StringClass>
+  StringClass& toUTF8String(StringClass& परिणाम U_LIFETIME_BOUND) स्थिर {
+    StringByteSink<StringClass> sbs(&परिणाम, लंबाई());
     toUTF8(sbs);
-    return result;
+    वापस परिणाम;
   }
 
-#ifndef U_HIDE_DRAFT_API
+#अगर_अघोषित U_HIDE_DRAFT_API
   /**
    * Convert the UnicodeString to a UTF-8 string.
    * Unpaired surrogates are replaced with U+FFFD.
@@ -1799,14 +1799,14 @@ public:
    * @draft ICU 78
    * @see toUTF8
    */
-  template<typename StringClass>
-  StringClass toUTF8String() const {
-    StringClass result;
-    StringByteSink<StringClass> sbs(&result, length());
+  ढाँचा<typename StringClass>
+  StringClass toUTF8String() स्थिर {
+    StringClass परिणाम;
+    StringByteSink<StringClass> sbs(&परिणाम, लंबाई());
     toUTF8(sbs);
-    return result;
+    वापस परिणाम;
   }
-#endif  // U_HIDE_DRAFT_API
+#पूर्ण_अगर  // U_HIDE_DRAFT_API
 
   /**
    * Convert the UnicodeString to UTF-32.
@@ -1823,7 +1823,7 @@ public:
    * @see fromUTF32
    * @stable ICU 4.2
    */
-  int32_t toUTF32(UChar32 *utf32, int32_t capacity, UErrorCode &errorCode) const;
+  int32_t toUTF32(UChar32 *utf32, int32_t capacity, UErrorCode &errorCode) स्थिर;
 
   /* Length operations */
 
@@ -1835,7 +1835,7 @@ public:
    * @see countChar32
    * @stable ICU 2.0
    */
-  inline int32_t length() const;
+  अंतरभूत int32_t लंबाई() स्थिर;
 
   /**
    * Count Unicode code points in the length char16_t code units of the string.
@@ -1851,7 +1851,7 @@ public:
    * @stable ICU 2.0
    */
   int32_t
-  countChar32(int32_t start=0, int32_t length=INT32_MAX) const;
+  गिनती_Char32(int32_t start=0, int32_t लंबाई=INT32_MAX) स्थिर;
 
   /**
    * Check if the length char16_t code units of the string
@@ -1877,14 +1877,14 @@ public:
    * @stable ICU 2.4
    */
   UBool
-  hasMoreChar32Than(int32_t start, int32_t length, int32_t number) const;
+  hasMoreChar32Than(int32_t start, int32_t लंबाई, int32_t संख्या) स्थिर;
 
   /**
    * Determine if this string is empty.
    * @return true if this string contains 0 characters, false otherwise.
    * @stable ICU 2.0
    */
-  inline UBool isEmpty() const;
+  अंतरभूत UBool isEmpty() स्थिर;
 
   /**
    * Return the capacity of the internal buffer of the UnicodeString object.
@@ -1895,7 +1895,7 @@ public:
    * @see getBuffer
    * @stable ICU 2.0
    */
-  inline int32_t getCapacity() const;
+  अंतरभूत int32_t getCapacity() स्थिर;
 
   /* Other operations */
 
@@ -1904,7 +1904,7 @@ public:
    * @return The hash code of this UnicodeString.
    * @stable ICU 2.0
    */
-  inline int32_t hashCode() const;
+  अंतरभूत int32_t hashCode() स्थिर;
 
   /**
    * Determine if this object contains a valid string.
@@ -1918,10 +1918,10 @@ public:
    * @see setToBogus()
    * @stable ICU 2.0
    */
-  inline UBool isBogus() const;
+  अंतरभूत UBool isBogus() स्थिर;
 
-#ifndef U_HIDE_DRAFT_API
-private:
+#अगर_अघोषित U_HIDE_DRAFT_API
+निजी:
   // These type aliases are private; there is no guarantee that they will remain
   // aliases to the same types in subsequent versions of ICU.
   // Note that whether `std::u16string_view::const_iterator` is a pointer or a
@@ -1929,32 +1929,32 @@ private:
   using unspecified_iterator = std::u16string_view::const_iterator;
   using unspecified_reverse_iterator = std::u16string_view::const_reverse_iterator;
 
-public:
+खुला:
   /**
    * @return an iterator to the first code unit in this string.
    *     The iterator may be a pointer or a contiguous-iterator object.
    * @draft ICU 78
    */
-  unspecified_iterator begin() const { return std::u16string_view(*this).begin(); }
+  unspecified_iterator begin() स्थिर { वापस std::u16string_view(*this).begin(); }
   /**
    * @return an iterator to just past the last code unit in this string.
    *     The iterator may be a pointer or a contiguous-iterator object.
    * @draft ICU 78
    */
-  unspecified_iterator end() const { return std::u16string_view(*this).end(); }
+  unspecified_iterator end() स्थिर { वापस std::u16string_view(*this).end(); }
   /**
    * @return a reverse iterator to the last code unit in this string.
    *     The iterator may be a pointer or a contiguous-iterator object.
    * @draft ICU 78
    */
-  unspecified_reverse_iterator rbegin() const { return std::u16string_view(*this).rbegin(); }
+  unspecified_reverse_iterator rbegin() स्थिर { वापस std::u16string_view(*this).rbegin(); }
   /**
    * @return a reverse iterator to just before the first code unit in this string.
    *     The iterator may be a pointer or a contiguous-iterator object.
    * @draft ICU 78
    */
-  unspecified_reverse_iterator rend() const { return std::u16string_view(*this).rend(); }
-#endif  // U_HIDE_DRAFT_API
+  unspecified_reverse_iterator rend() स्थिर { वापस std::u16string_view(*this).rend(); }
+#पूर्ण_अगर  // U_HIDE_DRAFT_API
 
   //========================================
   // Write operations
@@ -1980,7 +1980,7 @@ public:
    * @stable ICU 2.0
    * @see fastCopyFrom
    */
-  UnicodeString& operator=(const UnicodeString& srcText) U_LIFETIME_BOUND;
+  UnicodeString& चालक=(स्थिर UnicodeString& srcText) U_LIFETIME_BOUND;
 
   /**
    * Almost the same as the assignment operator.
@@ -2007,7 +2007,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.4
    */
-  UnicodeString& fastCopyFrom(const UnicodeString& src) U_LIFETIME_BOUND;
+  UnicodeString& fastCopyFrom(स्थिर UnicodeString& src) U_LIFETIME_BOUND;
 
   /**
    * Assignment operator. Replaces the characters in this UnicodeString
@@ -2019,10 +2019,10 @@ public:
    * @return a reference to this
    * @stable ICU 76
    */
-  template <typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  inline UnicodeString& operator=(const S& src) U_LIFETIME_BOUND {
+  ढाँचा <typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
+  अंतरभूत UnicodeString& चालक=(स्थिर S& src) U_LIFETIME_BOUND {
     unBogus();
-    return doReplace(0, length(), internal::toU16StringView(src));
+    वापस doReplace(0, लंबाई(), internal::toU16StringView(src));
   }
 
   /**
@@ -2033,14 +2033,14 @@ public:
    * @return *this
    * @stable ICU 56
    */
-  UnicodeString& operator=(UnicodeString&& src) noexcept U_LIFETIME_BOUND;
+  UnicodeString& चालक=(UnicodeString&& src) noexcept U_LIFETIME_BOUND;
 
   /**
    * Swap strings.
    * @param other other string
    * @stable ICU 56
    */
-  void swap(UnicodeString &other) noexcept;
+  व्योम swap(UnicodeString &other) noexcept;
 
   /**
    * Non-member UnicodeString swap function.
@@ -2048,7 +2048,7 @@ public:
    * @param s2 will get s1's contents and state
    * @stable ICU 56
    */
-  friend inline void U_EXPORT2
+  मित्र अंतरभूत व्योम U_EXPORT2
   swap(UnicodeString &s1, UnicodeString &s2) noexcept {
     s1.swap(s2);
   }
@@ -2060,7 +2060,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& operator=(char16_t ch) U_LIFETIME_BOUND;
+  अंतरभूत UnicodeString& चालक=(char16_t ch) U_LIFETIME_BOUND;
 
   /**
    * Assignment operator.  Replace the characters in this UnicodeString
@@ -2069,7 +2069,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& operator=(UChar32 ch) U_LIFETIME_BOUND;
+  अंतरभूत UnicodeString& चालक=(UChar32 ch) U_LIFETIME_BOUND;
 
   /**
    * Set the text in the UnicodeString object to the characters
@@ -2082,7 +2082,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.2
    */
-  inline UnicodeString& setTo(const UnicodeString& srcText, int32_t srcStart) U_LIFETIME_BOUND;
+  अंतरभूत UnicodeString& setTo(स्थिर UnicodeString& srcText, int32_t srcStart) U_LIFETIME_BOUND;
 
   /**
    * Set the text in the UnicodeString object to the characters
@@ -2097,9 +2097,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& setTo(const UnicodeString& srcText,
+  अंतरभूत UnicodeString& setTo(स्थिर UnicodeString& srcText,
                               int32_t srcStart,
-                              int32_t srcLength) U_LIFETIME_BOUND;
+                              int32_t src_लंबाई) U_LIFETIME_BOUND;
 
   /**
    * Set the text in the UnicodeString object to the characters in
@@ -2109,7 +2109,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& setTo(const UnicodeString& srcText) U_LIFETIME_BOUND;
+  अंतरभूत UnicodeString& setTo(स्थिर UnicodeString& srcText) U_LIFETIME_BOUND;
 
   /**
    * Set the characters in the UnicodeString object to the characters
@@ -2119,7 +2119,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& setTo(const char16_t* srcChars, int32_t srcLength) U_LIFETIME_BOUND;
+  अंतरभूत UnicodeString& setTo(स्थिर char16_t* srcChars, int32_t src_लंबाई) U_LIFETIME_BOUND;
 
   /**
    * Set the characters in the UnicodeString object to the code unit
@@ -2129,7 +2129,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& setTo(char16_t srcChar) U_LIFETIME_BOUND;
+  अंतरभूत UnicodeString& setTo(char16_t srcChar) U_LIFETIME_BOUND;
 
   /**
    * Set the characters in the UnicodeString object to the code point
@@ -2139,7 +2139,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& setTo(UChar32 srcChar) U_LIFETIME_BOUND;
+  अंतरभूत UnicodeString& setTo(UChar32 srcChar) U_LIFETIME_BOUND;
 
   /**
    * Aliasing setTo() function, analogous to the readonly-aliasing char16_t* constructor.
@@ -2166,7 +2166,7 @@ public:
    */
   UnicodeString& setTo(UBool isTerminated,
                        ConstChar16Ptr text U_LIFETIME_BOUND,
-                       int32_t textLength) U_LIFETIME_BOUND;
+                       int32_t text_लंबाई) U_LIFETIME_BOUND;
 
   /**
    * Aliasing setTo() function, analogous to the writable-aliasing char16_t* constructor.
@@ -2187,8 +2187,8 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  UnicodeString& setTo(char16_t* buffer U_LIFETIME_BOUND,
-                       int32_t buffLength,
+  UnicodeString& setTo(char16_t* बफर U_LIFETIME_BOUND,
+                       int32_t buff_लंबाई,
                        int32_t buffCapacity) U_LIFETIME_BOUND;
 
   /**
@@ -2230,7 +2230,7 @@ public:
    * @see isBogus()
    * @stable ICU 2.0
    */
-  void setToBogus();
+  व्योम setToBogus();
 
   /**
    * Set the character at the specified offset to the specified character.
@@ -2250,7 +2250,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& operator+=(char16_t ch) U_LIFETIME_BOUND;
+  अंतरभूत UnicodeString& चालक+=(char16_t ch) U_LIFETIME_BOUND;
 
   /**
    * Append operator. Append the code point `ch` to the UnicodeString
@@ -2259,7 +2259,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& operator+=(UChar32 ch) U_LIFETIME_BOUND;
+  अंतरभूत UnicodeString& चालक+=(UChar32 ch) U_LIFETIME_BOUND;
 
   /**
    * Append operator. Append the characters in `srcText` to the
@@ -2268,7 +2268,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& operator+=(const UnicodeString& srcText) U_LIFETIME_BOUND;
+  अंतरभूत UnicodeString& चालक+=(स्थिर UnicodeString& srcText) U_LIFETIME_BOUND;
 
   /**
    * Append operator. Appends the characters in `src`
@@ -2280,9 +2280,9 @@ public:
    * @return a reference to this
    * @stable ICU 76
    */
-  template <typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  inline UnicodeString& operator+=(const S& src) U_LIFETIME_BOUND {
-    return doAppend(internal::toU16StringView(src));
+  ढाँचा <typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
+  अंतरभूत UnicodeString& चालक+=(स्थिर S& src) U_LIFETIME_BOUND {
+    वापस doAppend(internal::toU16StringView(src));
   }
 
   /**
@@ -2299,9 +2299,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& append(const UnicodeString& srcText,
+  अंतरभूत UnicodeString& append(स्थिर UnicodeString& srcText,
                                int32_t srcStart,
-                               int32_t srcLength) U_LIFETIME_BOUND;
+                               int32_t src_लंबाई) U_LIFETIME_BOUND;
 
   /**
    * Append the characters in `srcText` to the UnicodeString object.
@@ -2310,7 +2310,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& append(const UnicodeString& srcText) U_LIFETIME_BOUND;
+  अंतरभूत UnicodeString& append(स्थिर UnicodeString& srcText) U_LIFETIME_BOUND;
 
   /**
    * Append the characters in `srcChars` in the range
@@ -2325,9 +2325,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& append(const char16_t* srcChars,
+  अंतरभूत UnicodeString& append(स्थिर char16_t* srcChars,
                                int32_t srcStart,
-                               int32_t srcLength) U_LIFETIME_BOUND;
+                               int32_t src_लंबाई) U_LIFETIME_BOUND;
 
   /**
    * Append the characters in `srcChars` to the UnicodeString object.
@@ -2338,7 +2338,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& append(ConstChar16Ptr srcChars, int32_t srcLength) U_LIFETIME_BOUND;
+  अंतरभूत UnicodeString& append(ConstChar16Ptr srcChars, int32_t src_लंबाई) U_LIFETIME_BOUND;
 
   /**
    * Appends the characters in `src`
@@ -2350,9 +2350,9 @@ public:
    * @return a reference to this
    * @stable ICU 76
    */
-  template <typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  inline UnicodeString& append(const S& src) U_LIFETIME_BOUND {
-    return doAppend(internal::toU16StringView(src));
+  ढाँचा <typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
+  अंतरभूत UnicodeString& append(स्थिर S& src) U_LIFETIME_BOUND {
+    वापस doAppend(internal::toU16StringView(src));
   }
 
   /**
@@ -2361,7 +2361,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& append(char16_t srcChar) U_LIFETIME_BOUND;
+  अंतरभूत UnicodeString& append(char16_t srcChar) U_LIFETIME_BOUND;
 
   /**
    * Append the code point `srcChar` to the UnicodeString object.
@@ -2371,7 +2371,7 @@ public:
    */
   UnicodeString& append(UChar32 srcChar) U_LIFETIME_BOUND;
 
-#ifndef U_HIDE_DRAFT_API
+#अगर_अघोषित U_HIDE_DRAFT_API
   /**
    * Appends the code unit `c` to the UnicodeString object.
    * Same as append(c) except does not return *this.
@@ -2379,8 +2379,8 @@ public:
    * @param c the code unit to append
    * @draft ICU 78
    */
-  inline void push_back(char16_t c) { append(c); }
-#endif  // U_HIDE_DRAFT_API
+  अंतरभूत व्योम धकेलो_back(char16_t c) { append(c); }
+#पूर्ण_अगर  // U_HIDE_DRAFT_API
 
   /* Insert operations */
 
@@ -2397,10 +2397,10 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start,
-                               const UnicodeString& srcText,
+  अंतरभूत UnicodeString& जोड़ो(int32_t start,
+                               स्थिर UnicodeString& srcText,
                                int32_t srcStart,
-                               int32_t srcLength) U_LIFETIME_BOUND;
+                               int32_t src_लंबाई) U_LIFETIME_BOUND;
 
   /**
    * Insert the characters in `srcText` into the UnicodeString object
@@ -2410,7 +2410,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start, const UnicodeString& srcText) U_LIFETIME_BOUND;
+  अंतरभूत UnicodeString& जोड़ो(int32_t start, स्थिर UnicodeString& srcText) U_LIFETIME_BOUND;
 
   /**
    * Insert the characters in `srcChars` in the range
@@ -2425,10 +2425,10 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start,
-                               const char16_t* srcChars,
+  अंतरभूत UnicodeString& जोड़ो(int32_t start,
+                               स्थिर char16_t* srcChars,
                                int32_t srcStart,
-                               int32_t srcLength) U_LIFETIME_BOUND;
+                               int32_t src_लंबाई) U_LIFETIME_BOUND;
 
   /**
    * Insert the characters in `srcChars` into the UnicodeString object
@@ -2439,9 +2439,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start,
+  अंतरभूत UnicodeString& जोड़ो(int32_t start,
                                ConstChar16Ptr srcChars,
-                               int32_t srcLength) U_LIFETIME_BOUND;
+                               int32_t src_लंबाई) U_LIFETIME_BOUND;
 
   /**
    * Insert the code unit `srcChar` into the UnicodeString object at
@@ -2451,7 +2451,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start, char16_t srcChar) U_LIFETIME_BOUND;
+  अंतरभूत UnicodeString& जोड़ो(int32_t start, char16_t srcChar) U_LIFETIME_BOUND;
 
   /**
    * Insert the code point `srcChar` into the UnicodeString object at
@@ -2461,7 +2461,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& insert(int32_t start, UChar32 srcChar) U_LIFETIME_BOUND;
+  अंतरभूत UnicodeString& जोड़ो(int32_t start, UChar32 srcChar) U_LIFETIME_BOUND;
 
   /* Replace operations */
 
@@ -2482,11 +2482,11 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replace(int32_t start,
-                                int32_t length,
-                                const UnicodeString& srcText,
+  अंतरभूत UnicodeString& replace(int32_t start,
+                                int32_t लंबाई,
+                                स्थिर UnicodeString& srcText,
                                 int32_t srcStart,
-                                int32_t srcLength) U_LIFETIME_BOUND;
+                                int32_t src_लंबाई) U_LIFETIME_BOUND;
 
   /**
    * Replace the characters in the range
@@ -2500,9 +2500,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replace(int32_t start,
-                                int32_t length,
-                                const UnicodeString& srcText) U_LIFETIME_BOUND;
+  अंतरभूत UnicodeString& replace(int32_t start,
+                                int32_t लंबाई,
+                                स्थिर UnicodeString& srcText) U_LIFETIME_BOUND;
 
   /**
    * Replace the characters in the range
@@ -2521,11 +2521,11 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replace(int32_t start,
-                                int32_t length,
-                                const char16_t* srcChars,
+  अंतरभूत UnicodeString& replace(int32_t start,
+                                int32_t लंबाई,
+                                स्थिर char16_t* srcChars,
                                 int32_t srcStart,
-                                int32_t srcLength) U_LIFETIME_BOUND;
+                                int32_t src_लंबाई) U_LIFETIME_BOUND;
 
   /**
    * Replace the characters in the range
@@ -2539,10 +2539,10 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replace(int32_t start,
-                                int32_t length,
+  अंतरभूत UnicodeString& replace(int32_t start,
+                                int32_t लंबाई,
                                 ConstChar16Ptr srcChars,
-                                int32_t srcLength) U_LIFETIME_BOUND;
+                                int32_t src_लंबाई) U_LIFETIME_BOUND;
 
   /**
    * Replace the characters in the range
@@ -2555,7 +2555,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replace(int32_t start, int32_t length, char16_t srcChar) U_LIFETIME_BOUND;
+  अंतरभूत UnicodeString& replace(int32_t start, int32_t लंबाई, char16_t srcChar) U_LIFETIME_BOUND;
 
   /**
    * Replace the characters in the range
@@ -2568,7 +2568,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  UnicodeString& replace(int32_t start, int32_t length, UChar32 srcChar) U_LIFETIME_BOUND;
+  UnicodeString& replace(int32_t start, int32_t लंबाई, UChar32 srcChar) U_LIFETIME_BOUND;
 
   /**
    * Replace the characters in the range [`start`, `limit`)
@@ -2579,9 +2579,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replaceBetween(int32_t start,
+  अंतरभूत UnicodeString& replaceBetween(int32_t start,
                                        int32_t limit,
-                                       const UnicodeString& srcText) U_LIFETIME_BOUND;
+                                       स्थिर UnicodeString& srcText) U_LIFETIME_BOUND;
 
   /**
    * Replace the characters in the range [`start`, `limit`)
@@ -2597,9 +2597,9 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& replaceBetween(int32_t start,
+  अंतरभूत UnicodeString& replaceBetween(int32_t start,
                                        int32_t limit,
-                                       const UnicodeString& srcText,
+                                       स्थिर UnicodeString& srcText,
                                        int32_t srcStart,
                                        int32_t srcLimit) U_LIFETIME_BOUND;
 
@@ -2610,16 +2610,16 @@ public:
    * @param text the text to replace characters `start` to `limit - 1`
    * @stable ICU 2.0
    */
-  virtual void handleReplaceBetween(int32_t start,
+  भव व्योम handleReplaceBetween(int32_t start,
                                     int32_t limit,
-                                    const UnicodeString& text) override;
+                                    स्थिर UnicodeString& text) override;
 
   /**
    * Replaceable API
    * @return true if it has MetaData
    * @stable ICU 2.4
    */
-  virtual UBool hasMetaData() const override;
+  भव UBool has_Meta_तथ्य() स्थिर override;
 
   /**
    * Copy a substring of this object, retaining attribute (out-of-band)
@@ -2634,7 +2634,7 @@ public:
    * dest >= limit`.
    * @stable ICU 2.0
    */
-  virtual void copy(int32_t start, int32_t limit, int32_t dest) override;
+  भव व्योम copy(int32_t start, int32_t limit, int32_t dest) override;
 
   /* Search and replace operations */
 
@@ -2646,8 +2646,8 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& findAndReplace(const UnicodeString& oldText,
-                                       const UnicodeString& newText) U_LIFETIME_BOUND;
+  अंतरभूत UnicodeString& findAndReplace(स्थिर UnicodeString& oldText,
+                                       स्थिर UnicodeString& newText) U_LIFETIME_BOUND;
 
   /**
    * Replace all occurrences of characters in oldText with characters
@@ -2660,10 +2660,10 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& findAndReplace(int32_t start,
-                                       int32_t length,
-                                       const UnicodeString& oldText,
-                                       const UnicodeString& newText) U_LIFETIME_BOUND;
+  अंतरभूत UnicodeString& findAndReplace(int32_t start,
+                                       int32_t लंबाई,
+                                       स्थिर UnicodeString& oldText,
+                                       स्थिर UnicodeString& newText) U_LIFETIME_BOUND;
 
   /**
    * Replace all occurrences of characters in oldText in the range
@@ -2683,13 +2683,13 @@ public:
    * @stable ICU 2.0
    */
   UnicodeString& findAndReplace(int32_t start,
-                                int32_t length,
-                                const UnicodeString& oldText,
+                                int32_t लंबाई,
+                                स्थिर UnicodeString& oldText,
                                 int32_t oldStart,
-                                int32_t oldLength,
-                                const UnicodeString& newText,
+                                int32_t old_लंबाई,
+                                स्थिर UnicodeString& newText,
                                 int32_t newStart,
-                                int32_t newLength) U_LIFETIME_BOUND;
+                                int32_t new_लंबाई) U_LIFETIME_BOUND;
 
 
   /* Remove operations */
@@ -2702,7 +2702,7 @@ public:
    * @see setToBogus
    * @stable ICU 2.0
    */
-  inline UnicodeString& remove() U_LIFETIME_BOUND;
+  अंतरभूत UnicodeString& हटाओ() U_LIFETIME_BOUND;
 
   /**
    * Remove the characters in the range
@@ -2712,8 +2712,8 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& remove(int32_t start,
-                               int32_t length = static_cast<int32_t>(INT32_MAX)) U_LIFETIME_BOUND;
+  अंतरभूत UnicodeString& हटाओ(int32_t start,
+                               int32_t लंबाई = static_cast<int32_t>(INT32_MAX)) U_LIFETIME_BOUND;
 
   /**
    * Remove the characters in the range
@@ -2723,7 +2723,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString&
+  अंतरभूत UnicodeString&
   removeBetween(int32_t start, int32_t limit = static_cast<int32_t>(INT32_MAX)) U_LIFETIME_BOUND;
 
   /**
@@ -2735,7 +2735,7 @@ public:
    * @return a reference to this
    * @stable ICU 4.4
    */
-  inline UnicodeString& retainBetween(int32_t start, int32_t limit = INT32_MAX) U_LIFETIME_BOUND;
+  अंतरभूत UnicodeString& retainBetween(int32_t start, int32_t limit = INT32_MAX) U_LIFETIME_BOUND;
 
   /* Length operations */
 
@@ -2750,7 +2750,7 @@ public:
    * @return true if the text was padded, false otherwise.
    * @stable ICU 2.0
    */
-  UBool padLeading(int32_t targetLength,
+  UBool padLeading(int32_t target_लंबाई,
                     char16_t padChar = 0x0020);
 
   /**
@@ -2764,7 +2764,7 @@ public:
    * @return true if the text was padded, false otherwise.
    * @stable ICU 2.0
    */
-  UBool padTrailing(int32_t targetLength,
+  UBool padTrailing(int32_t target_लंबाई,
                      char16_t padChar = 0x0020);
 
   /**
@@ -2773,7 +2773,7 @@ public:
    * @return true if the text was truncated, false otherwise
    * @stable ICU 2.0
    */
-  inline UBool truncate(int32_t targetLength);
+  अंतरभूत UBool truncate(int32_t target_लंबाई);
 
   /**
    * Trims leading and trailing whitespace from this UnicodeString.
@@ -2789,7 +2789,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& reverse() U_LIFETIME_BOUND;
+  अंतरभूत UnicodeString& reverse() U_LIFETIME_BOUND;
 
   /**
    * Reverse the range [`start`, `start + length`) in
@@ -2799,7 +2799,7 @@ public:
    * @return a reference to this
    * @stable ICU 2.0
    */
-  inline UnicodeString& reverse(int32_t start, int32_t length) U_LIFETIME_BOUND;
+  अंतरभूत UnicodeString& reverse(int32_t start, int32_t लंबाई) U_LIFETIME_BOUND;
 
   /**
    * Convert the characters in this to UPPER CASE following the conventions of
@@ -2816,7 +2816,7 @@ public:
    * @return A reference to this.
    * @stable ICU 2.0
    */
-  UnicodeString& toUpper(const Locale& locale) U_LIFETIME_BOUND;
+  UnicodeString& toUpper(स्थिर Locale& locale) U_LIFETIME_BOUND;
 
   /**
    * Convert the characters in this to lower case following the conventions of
@@ -2833,9 +2833,9 @@ public:
    * @return A reference to this.
    * @stable ICU 2.0
    */
-  UnicodeString& toLower(const Locale& locale) U_LIFETIME_BOUND;
+  UnicodeString& toLower(स्थिर Locale& locale) U_LIFETIME_BOUND;
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#अगर !UCONFIG_NO_BREAK_ITERATION
 
   /**
    * Titlecase this string, convenience function using the default locale.
@@ -2892,7 +2892,7 @@ public:
    * @return A reference to this.
    * @stable ICU 2.1
    */
-  UnicodeString& toTitle(BreakIterator* titleIter, const Locale& locale) U_LIFETIME_BOUND;
+  UnicodeString& toTitle(BreakIterator* titleIter, स्थिर Locale& locale) U_LIFETIME_BOUND;
 
   /**
    * Titlecase this string, with options.
@@ -2925,10 +2925,10 @@ public:
    * @stable ICU 3.8
    */
   UnicodeString& toTitle(BreakIterator* titleIter,
-                         const Locale& locale,
+                         स्थिर Locale& locale,
                          uint32_t options) U_LIFETIME_BOUND;
 
-#endif
+#पूर्ण_अगर
 
   /**
    * Case-folds the characters in this string.
@@ -2992,7 +2992,7 @@ public:
    * @see getTerminatedBuffer()
    * @stable ICU 2.0
    */
-  char16_t* getBuffer(int32_t minCapacity) U_LIFETIME_BOUND;
+  char16_t* get_बफर(int32_t minCapacity) U_LIFETIME_BOUND;
 
   /**
    * Release a read/write buffer on a UnicodeString object with an
@@ -3014,7 +3014,7 @@ public:
    * @see getBuffer(int32_t minCapacity)
    * @stable ICU 2.0
    */
-  void releaseBuffer(int32_t newLength=-1);
+  व्योम release_बफर(int32_t new_लंबाई=-1);
 
   /**
    * Get a read-only pointer to the internal buffer.
@@ -3046,7 +3046,7 @@ public:
    * @see getTerminatedBuffer()
    * @stable ICU 2.0
    */
-  inline const char16_t* getBuffer() const U_LIFETIME_BOUND;
+  अंतरभूत स्थिर char16_t* get_बफर() स्थिर U_LIFETIME_BOUND;
 
   /**
    * Get a read-only pointer to the internal buffer,
@@ -3081,7 +3081,7 @@ public:
    * @see getBuffer()
    * @stable ICU 2.2
    */
-  const char16_t* getTerminatedBuffer() U_LIFETIME_BOUND;
+  स्थिर char16_t* get_Terminated_बफर() U_LIFETIME_BOUND;
 
   /**
    * Converts to a std::u16string_view.
@@ -3089,11 +3089,11 @@ public:
    * @return a string view of the contents of this string
    * @stable ICU 76
    */
-  inline operator std::u16string_view() const {
-    return {getBuffer(), static_cast<std::u16string_view::size_type>(length())};
+  अंतरभूत चालक std::u16string_view() स्थिर {
+    वापस {get_बफर(), static_cast<std::u16string_view::आकार_type>(लंबाई())};
   }
 
-#if U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
+#अगर U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
   /**
    * Converts to a std::wstring_view.
    *
@@ -3103,14 +3103,14 @@ public:
    * @return a string view of the contents of this string
    * @stable ICU 76
    */
-  inline operator std::wstring_view() const {
-    const char16_t *p = getBuffer();
-#ifdef U_ALIASING_BARRIER
+  अंतरभूत चालक std::wstring_view() स्थिर {
+    स्थिर char16_t *p = get_बफर();
+#अगर_घोषित U_ALIASING_BARRIER
     U_ALIASING_BARRIER(p);
-#endif
-    return { reinterpret_cast<const wchar_t *>(p), (std::wstring_view::size_type)length() };
+#पूर्ण_अगर
+    वापस { reinterpret_cast<स्थिर ब_अक्षर_प्रकार *>(p), (std::wstring_view::आकार_type)लंबाई() };
   }
-#endif  // U_SIZEOF_WCHAR_T
+#पूर्ण_अगर  // U_SIZEOF_WCHAR_T
 
   //========================================
   // Constructors
@@ -3119,7 +3119,7 @@ public:
   /** Construct an empty UnicodeString.
    * @stable ICU 2.0
    */
-  inline UnicodeString();
+  अंतरभूत UnicodeString();
 
   /**
    * Construct a UnicodeString with capacity to hold `capacity` char16_ts
@@ -3132,7 +3132,7 @@ public:
    *              string
    * @stable ICU 2.0
    */
-  UnicodeString(int32_t capacity, UChar32 c, int32_t count);
+  UnicodeString(int32_t capacity, UChar32 c, int32_t गिनती);
 
   /**
    * Single char16_t (code unit) constructor.
@@ -3156,7 +3156,7 @@ public:
    */
   UNISTR_FROM_CHAR_EXPLICIT UnicodeString(UChar32 ch);
 
-#ifdef U_HIDE_DRAFT_API
+#अगर_घोषित U_HIDE_DRAFT_API
   /**
    * char16_t* constructor.
    *
@@ -3176,11 +3176,11 @@ public:
    * must be NUL (U+0000) terminated.
    * @stable ICU 2.0
    */
-  UNISTR_FROM_STRING_EXPLICIT UnicodeString(const char16_t *text) :
+  UNISTR_FROM_STRING_EXPLICIT UnicodeString(स्थिर char16_t *text) :
       UnicodeString(text, -1) {}
-#endif  // U_HIDE_DRAFT_API
+#पूर्ण_अगर  // U_HIDE_DRAFT_API
 
-#if !U_CHAR16_IS_TYPEDEF && \
+#अगर !U_CHAR16_IS_TYPEDEF && \
     (defined(U_HIDE_DRAFT_API) || (defined(_LIBCPP_VERSION) && _LIBCPP_VERSION >= 180000))
   /**
    * uint16_t * constructor.
@@ -3201,11 +3201,11 @@ public:
    * @param text NUL-terminated UTF-16 string
    * @stable ICU 59
    */
-  UNISTR_FROM_STRING_EXPLICIT UnicodeString(const uint16_t *text) :
+  UNISTR_FROM_STRING_EXPLICIT UnicodeString(स्थिर uint16_t *text) :
       UnicodeString(ConstChar16Ptr(text), -1) {}
-#endif
+#पूर्ण_अगर
 
-#if defined(U_HIDE_DRAFT_API) && (U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN))
+#अगर defined(U_HIDE_DRAFT_API) && (U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN))
   /**
    * wchar_t * constructor.
    * (Only defined if U_SIZEOF_WCHAR_T==2.)
@@ -3226,9 +3226,9 @@ public:
    * @param text NUL-terminated UTF-16 string
    * @stable ICU 59
    */
-  UNISTR_FROM_STRING_EXPLICIT UnicodeString(const wchar_t *text) :
+  UNISTR_FROM_STRING_EXPLICIT UnicodeString(स्थिर ब_अक्षर_प्रकार *text) :
       UnicodeString(ConstChar16Ptr(text), -1) {}
-#endif
+#पूर्ण_अगर
 
   /**
    * nullptr_t constructor.
@@ -3240,7 +3240,7 @@ public:
    * @param text nullptr
    * @stable ICU 59
    */
-  UNISTR_FROM_STRING_EXPLICIT inline UnicodeString(const std::nullptr_t text);
+  UNISTR_FROM_STRING_EXPLICIT अंतरभूत UnicodeString(स्थिर std::nullptr_t text);
 
   /**
    * char16_t* constructor.
@@ -3258,10 +3258,10 @@ public:
    * to copy.
    * @stable ICU 2.0
    */
-  UnicodeString(const char16_t *text,
-        int32_t textLength);
+  UnicodeString(स्थिर char16_t *text,
+        int32_t text_लंबाई);
 
-#if !U_CHAR16_IS_TYPEDEF
+#अगर !U_CHAR16_IS_TYPEDEF
   /**
    * uint16_t * constructor.
    * Delegates to UnicodeString(const char16_t *, int32_t).
@@ -3278,11 +3278,11 @@ public:
    * @param textLength string length
    * @stable ICU 59
    */
-  UnicodeString(const uint16_t *text, int32_t textLength) :
-      UnicodeString(ConstChar16Ptr(text), textLength) {}
-#endif
+  UnicodeString(स्थिर uint16_t *text, int32_t text_लंबाई) :
+      UnicodeString(ConstChar16Ptr(text), text_लंबाई) {}
+#पूर्ण_अगर
 
-#if U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
+#अगर U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
   /**
    * wchar_t * constructor.
    * (Only defined if U_SIZEOF_WCHAR_T==2.)
@@ -3300,9 +3300,9 @@ public:
    * @param textLength string length
    * @stable ICU 59
    */
-  UnicodeString(const wchar_t *text, int32_t textLength) :
-      UnicodeString(ConstChar16Ptr(text), textLength) {}
-#endif
+  UnicodeString(स्थिर ब_अक्षर_प्रकार *text, int32_t text_लंबाई) :
+      UnicodeString(ConstChar16Ptr(text), text_लंबाई) {}
+#पूर्ण_अगर
 
   /**
    * nullptr_t constructor.
@@ -3311,7 +3311,7 @@ public:
    * @param textLength ignored
    * @stable ICU 59
    */
-  inline UnicodeString(const std::nullptr_t text, int32_t textLength);
+  अंतरभूत UnicodeString(स्थिर std::nullptr_t text, int32_t text_लंबाई);
 
   /**
    * Constructor from `text`
@@ -3325,9 +3325,9 @@ public:
    * @param text UTF-16 string
    * @stable ICU 76
    */
-  template<typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  UNISTR_FROM_STRING_EXPLICIT UnicodeString(const S &text) {
-    fUnion.fFields.fLengthAndFlags = kShortString;
+  ढाँचा<typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
+  UNISTR_FROM_STRING_EXPLICIT UnicodeString(स्थिर S &text) {
+    fUnion.fFields.f_लंबाई_And_Flags = kShortString;
     doAppend(internal::toU16StringViewNullable(text));
   }
 
@@ -3363,7 +3363,7 @@ public:
    */
   UnicodeString(UBool isTerminated,
                 ConstChar16Ptr text U_LIFETIME_BOUND,
-                int32_t textLength);
+                int32_t text_लंबाई);
 
   /**
    * Writable-aliasing char16_t* constructor.
@@ -3383,9 +3383,9 @@ public:
    * @param buffCapacity The size of `buffer` in char16_ts.
    * @stable ICU 2.0
    */
-  UnicodeString(char16_t* buffer U_LIFETIME_BOUND, int32_t buffLength, int32_t buffCapacity);
+  UnicodeString(char16_t* बफर U_LIFETIME_BOUND, int32_t buff_लंबाई, int32_t buffCapacity);
 
-#if !U_CHAR16_IS_TYPEDEF
+#अगर !U_CHAR16_IS_TYPEDEF
   /**
    * Writable-aliasing uint16_t * constructor.
    * Delegates to UnicodeString(const char16_t *, int32_t, int32_t).
@@ -3394,11 +3394,11 @@ public:
    * @param buffCapacity buffer capacity
    * @stable ICU 59
    */
-  UnicodeString(uint16_t* buffer U_LIFETIME_BOUND, int32_t buffLength, int32_t buffCapacity) :
-      UnicodeString(Char16Ptr(buffer), buffLength, buffCapacity) {}
-#endif
+  UnicodeString(uint16_t* बफर U_LIFETIME_BOUND, int32_t buff_लंबाई, int32_t buffCapacity) :
+      UnicodeString(Char16Ptr(बफर), buff_लंबाई, buffCapacity) {}
+#पूर्ण_अगर
 
-#if U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
+#अगर U_SIZEOF_WCHAR_T==2 || defined(U_IN_DOXYGEN)
   /**
    * Writable-aliasing wchar_t * constructor.
    * (Only defined if U_SIZEOF_WCHAR_T==2.)
@@ -3408,9 +3408,9 @@ public:
    * @param buffCapacity buffer capacity
    * @stable ICU 59
    */
-  UnicodeString(wchar_t* buffer U_LIFETIME_BOUND, int32_t buffLength, int32_t buffCapacity) :
-      UnicodeString(Char16Ptr(buffer), buffLength, buffCapacity) {}
-#endif
+  UnicodeString(ब_अक्षर_प्रकार* बफर U_LIFETIME_BOUND, int32_t buff_लंबाई, int32_t buffCapacity) :
+      UnicodeString(Char16Ptr(बफर), buff_लंबाई, buffCapacity) {}
+#पूर्ण_अगर
 
   /**
    * Writable-aliasing nullptr_t constructor.
@@ -3420,9 +3420,9 @@ public:
    * @param buffCapacity ignored
    * @stable ICU 59
    */
-  inline UnicodeString(std::nullptr_t buffer, int32_t buffLength, int32_t buffCapacity);
+  अंतरभूत UnicodeString(std::nullptr_t बफर, int32_t buff_लंबाई, int32_t buffCapacity);
 
-#if U_CHARSET_IS_UTF8 || !UCONFIG_NO_CONVERSION
+#अगर U_CHARSET_IS_UTF8 || !UCONFIG_NO_CONVERSION
 
   /**
    * char* constructor.
@@ -3447,7 +3447,7 @@ public:
    *                     in the platform's default codepage.
    * @stable ICU 2.0
    */
-  UNISTR_FROM_STRING_EXPLICIT UnicodeString(const char *codepageData);
+  UNISTR_FROM_STRING_EXPLICIT UnicodeString(स्थिर अक्षर *codepage_तथ्य);
 
   /**
    * char* constructor.
@@ -3457,11 +3457,11 @@ public:
    * @param dataLength The number of bytes in `codepageData`.
    * @stable ICU 2.0
    */
-  UnicodeString(const char *codepageData, int32_t dataLength);
+  UnicodeString(स्थिर अक्षर *codepage_तथ्य, int32_t तथ्य_लंबाई);
 
-#endif
+#पूर्ण_अगर
 
-#if !UCONFIG_NO_CONVERSION
+#अगर !UCONFIG_NO_CONVERSION
 
   /**
    * char* constructor.
@@ -3480,7 +3480,7 @@ public:
    *
    * @stable ICU 2.0
    */
-  UnicodeString(const char *codepageData, const char *codepage);
+  UnicodeString(स्थिर अक्षर *codepage_तथ्य, स्थिर अक्षर *codepage);
 
   /**
    * char* constructor.
@@ -3499,7 +3499,7 @@ public:
    *
    * @stable ICU 2.0
    */
-  UnicodeString(const char *codepageData, int32_t dataLength, const char *codepage);
+  UnicodeString(स्थिर अक्षर *codepage_तथ्य, int32_t तथ्य_लंबाई, स्थिर अक्षर *codepage);
 
   /**
    * char * / UConverter constructor.
@@ -3523,11 +3523,11 @@ public:
    * @stable ICU 2.0
    */
   UnicodeString(
-        const char *src, int32_t srcLength,
+        स्थिर अक्षर *src, int32_t src_लंबाई,
         UConverter *cnv,
         UErrorCode &errorCode);
 
-#endif
+#पूर्ण_अगर
 
   /**
    * Constructs a Unicode string from an invariant-character char * string.
@@ -3561,7 +3561,7 @@ public:
    * @see US_INV
    * @stable ICU 3.2
    */
-  UnicodeString(const char *src, int32_t textLength, enum EInvariant inv);
+  UnicodeString(स्थिर अक्षर *src, int32_t text_लंबाई, क्रमागत EInvariant inv);
 
 
   /**
@@ -3580,7 +3580,7 @@ public:
    * @stable ICU 2.0
    * @see fastCopyFrom
    */
-  UnicodeString(const UnicodeString& that);
+  UnicodeString(स्थिर UnicodeString& that);
 
   /**
    * Move constructor; might leave src in bogus state.
@@ -3596,7 +3596,7 @@ public:
    * @param srcStart The offset into `src` at which to start copying.
    * @stable ICU 2.2
    */
-  UnicodeString(const UnicodeString& src, int32_t srcStart);
+  UnicodeString(स्थिर UnicodeString& src, int32_t srcStart);
 
   /**
    * 'Substring' constructor from subrange of source string.
@@ -3605,7 +3605,7 @@ public:
    * @param srcLength The number of characters from `src` to copy.
    * @stable ICU 2.2
    */
-  UnicodeString(const UnicodeString& src, int32_t srcStart, int32_t srcLength);
+  UnicodeString(स्थिर UnicodeString& src, int32_t srcStart, int32_t src_लंबाई);
 
   /**
    * Clone this object, an instance of a subclass of Replaceable.
@@ -3620,12 +3620,12 @@ public:
    * @see getDynamicClassID
    * @stable ICU 2.6
    */
-  virtual UnicodeString *clone() const override;
+  भव UnicodeString *clone() स्थिर override;
 
   /** Destructor.
    * @stable ICU 2.0
    */
-  virtual ~UnicodeString();
+  भव ~UnicodeString();
 
   /**
    * Readonly-aliasing factory method.
@@ -3649,9 +3649,9 @@ public:
    * @param text The string view to alias for the UnicodeString.
    * @stable ICU 76
    */
-  template <typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
-  static inline UnicodeString readOnlyAlias(const S& text U_LIFETIME_BOUND) {
-    return readOnlyAliasFromU16StringView(internal::toU16StringView(text));
+  ढाँचा <typename S, typename = std::enable_if_t<ConvertibleToU16StringView<S>>>
+  अटल अंतरभूत UnicodeString readOnlyAlias(स्थिर S& text U_LIFETIME_BOUND) {
+    वापस readOnlyAliasFromU16StringView(internal::toU16StringView(text));
   }
 
   /**
@@ -3673,8 +3673,8 @@ public:
    * @param text The UnicodeString to alias.
    * @stable ICU 76
    */
-  static inline UnicodeString readOnlyAlias(const UnicodeString& text U_LIFETIME_BOUND) {
-    return readOnlyAliasFromUnicodeString(text);
+  अटल अंतरभूत UnicodeString readOnlyAlias(स्थिर UnicodeString& text U_LIFETIME_BOUND) {
+    वापस readOnlyAliasFromUnicodeString(text);
   }
 
   /**
@@ -3690,7 +3690,7 @@ public:
    * @see toUTF8String
    * @stable ICU 4.2
    */
-  static UnicodeString fromUTF8(StringPiece utf8);
+  अटल UnicodeString fromUTF8(StringPiece utf8);
 
   /**
    * Create a UnicodeString from a UTF-32 string.
@@ -3703,7 +3703,7 @@ public:
    * @see toUTF32
    * @stable ICU 4.2
    */
-  static UnicodeString fromUTF32(const UChar32 *utf32, int32_t length);
+  अटल UnicodeString fromUTF32(स्थिर UChar32 *utf32, int32_t लंबाई);
 
   /* Miscellaneous operations */
 
@@ -3741,7 +3741,7 @@ public:
    * @see u_unescapeAt()
    * @stable ICU 2.0
    */
-  UnicodeString unescape() const;
+  UnicodeString unescape() स्थिर;
 
   /**
    * Unescape a single escape sequence and return the represented
@@ -3762,50 +3762,50 @@ public:
    * @see u_unescapeAt()
    * @stable ICU 2.0
    */
-  UChar32 unescapeAt(int32_t &offset) const;
+  UChar32 unescapeAt(int32_t &offset) स्थिर;
 
   /**
    * ICU "poor man's RTTI", returns a UClassID for this class.
    *
    * @stable ICU 2.2
    */
-  static UClassID U_EXPORT2 getStaticClassID();
+  अटल UClassID U_EXPORT2 getStaticClassID();
 
   /**
    * ICU "poor man's RTTI", returns a UClassID for the actual class.
    *
    * @stable ICU 2.2
    */
-  virtual UClassID getDynamicClassID() const override;
+  भव UClassID getDynamicClassID() स्थिर override;
 
   //========================================
   // Implementation methods
   //========================================
 
-protected:
+रक्षित:
   /**
    * Implement Replaceable::getLength() (see jitterbug 1027).
    * @stable ICU 2.4
    */
-  virtual int32_t getLength() const override;
+  भव int32_t get_लंबाई() स्थिर override;
 
   /**
    * The change in Replaceable to use virtual getCharAt() allows
    * UnicodeString::charAt() to be inline again (see jitterbug 709).
    * @stable ICU 2.4
    */
-  virtual char16_t getCharAt(int32_t offset) const override;
+  भव char16_t getCharAt(int32_t offset) स्थिर override;
 
   /**
    * The change in Replaceable to use virtual getChar32At() allows
    * UnicodeString::char32At() to be inline again (see jitterbug 709).
    * @stable ICU 2.4
    */
-  virtual UChar32 getChar32At(int32_t offset) const override;
+  भव UChar32 getChar32At(int32_t offset) स्थिर override;
 
-private:
-  static UnicodeString readOnlyAliasFromU16StringView(std::u16string_view text U_LIFETIME_BOUND);
-  static UnicodeString readOnlyAliasFromUnicodeString(const UnicodeString& text U_LIFETIME_BOUND);
+निजी:
+  अटल UnicodeString readOnlyAliasFromU16StringView(std::u16string_view text U_LIFETIME_BOUND);
+  अटल UnicodeString readOnlyAliasFromUnicodeString(स्थिर UnicodeString& text U_LIFETIME_BOUND);
 
   // For char* constructors. Could be made public.
   UnicodeString& setToUTF8(StringPiece utf8) U_LIFETIME_BOUND;
@@ -3816,146 +3816,146 @@ private:
   // and it should take a UErrorCode&.
   int32_t
   toUTF8(int32_t start, int32_t len,
-         char *target, int32_t capacity) const;
+         अक्षर *target, int32_t capacity) स्थिर;
 
   /**
    * Internal string contents comparison, called by operator==.
    * Requires: this & text not bogus and have same lengths.
    */
-  inline UBool doEquals(const UnicodeString &text, int32_t len) const {
-    return doEquals(text.getArrayStart(), len);
+  अंतरभूत UBool doEquals(स्थिर UnicodeString &text, int32_t len) स्थिर {
+    वापस doEquals(text.getArrayStart(), len);
   }
-  UBool doEquals(const char16_t *text, int32_t len) const;
+  UBool doEquals(स्थिर char16_t *text, int32_t len) स्थिर;
 
-  inline UBool
+  अंतरभूत UBool
   doEqualsSubstring(int32_t start,
-           int32_t length,
-           const UnicodeString& srcText,
+           int32_t लंबाई,
+           स्थिर UnicodeString& srcText,
            int32_t srcStart,
-           int32_t srcLength) const;
+           int32_t src_लंबाई) स्थिर;
 
   UBool doEqualsSubstring(int32_t start,
-           int32_t length,
-           const char16_t *srcChars,
+           int32_t लंबाई,
+           स्थिर char16_t *srcChars,
            int32_t srcStart,
-           int32_t srcLength) const;
+           int32_t src_लंबाई) स्थिर;
 
-  inline int8_t
+  अंतरभूत int8_t
   doCompare(int32_t start,
-           int32_t length,
-           const UnicodeString& srcText,
+           int32_t लंबाई,
+           स्थिर UnicodeString& srcText,
            int32_t srcStart,
-           int32_t srcLength) const;
+           int32_t src_लंबाई) स्थिर;
 
   int8_t doCompare(int32_t start,
-           int32_t length,
-           const char16_t *srcChars,
+           int32_t लंबाई,
+           स्थिर char16_t *srcChars,
            int32_t srcStart,
-           int32_t srcLength) const;
+           int32_t src_लंबाई) स्थिर;
 
-  inline int8_t
+  अंतरभूत int8_t
   doCompareCodePointOrder(int32_t start,
-                          int32_t length,
-                          const UnicodeString& srcText,
+                          int32_t लंबाई,
+                          स्थिर UnicodeString& srcText,
                           int32_t srcStart,
-                          int32_t srcLength) const;
+                          int32_t src_लंबाई) स्थिर;
 
   int8_t doCompareCodePointOrder(int32_t start,
-                                 int32_t length,
-                                 const char16_t *srcChars,
+                                 int32_t लंबाई,
+                                 स्थिर char16_t *srcChars,
                                  int32_t srcStart,
-                                 int32_t srcLength) const;
+                                 int32_t src_लंबाई) स्थिर;
 
-  inline int8_t
+  अंतरभूत int8_t
   doCaseCompare(int32_t start,
-                int32_t length,
-                const UnicodeString &srcText,
+                int32_t लंबाई,
+                स्थिर UnicodeString &srcText,
                 int32_t srcStart,
-                int32_t srcLength,
-                uint32_t options) const;
+                int32_t src_लंबाई,
+                uint32_t options) स्थिर;
 
   int8_t
   doCaseCompare(int32_t start,
-                int32_t length,
-                const char16_t *srcChars,
+                int32_t लंबाई,
+                स्थिर char16_t *srcChars,
                 int32_t srcStart,
-                int32_t srcLength,
-                uint32_t options) const;
+                int32_t src_लंबाई,
+                uint32_t options) स्थिर;
 
-  int32_t doIndexOf(char16_t c,
+  int32_t do_सूचकांक_Of(char16_t c,
             int32_t start,
-            int32_t length) const;
+            int32_t लंबाई) स्थिर;
 
-  int32_t doIndexOf(UChar32 c,
+  int32_t do_सूचकांक_Of(UChar32 c,
                         int32_t start,
-                        int32_t length) const;
+                        int32_t लंबाई) स्थिर;
 
-  int32_t doLastIndexOf(char16_t c,
+  int32_t do_Last_सूचकांक_Of(char16_t c,
                 int32_t start,
-                int32_t length) const;
+                int32_t लंबाई) स्थिर;
 
-  int32_t doLastIndexOf(UChar32 c,
+  int32_t do_Last_सूचकांक_Of(UChar32 c,
                             int32_t start,
-                            int32_t length) const;
+                            int32_t लंबाई) स्थिर;
 
-  void doExtract(int32_t start,
-         int32_t length,
+  व्योम doExtract(int32_t start,
+         int32_t लंबाई,
          char16_t *dst,
-         int32_t dstStart) const;
+         int32_t dstStart) स्थिर;
 
-  inline void doExtract(int32_t start,
-         int32_t length,
-         UnicodeString& target) const;
+  अंतरभूत व्योम doExtract(int32_t start,
+         int32_t लंबाई,
+         UnicodeString& target) स्थिर;
 
-  inline char16_t doCharAt(int32_t offset)  const;
-
-  UnicodeString& doReplace(int32_t start,
-                           int32_t length,
-                           const UnicodeString& srcText,
-                           int32_t srcStart,
-                           int32_t srcLength) U_LIFETIME_BOUND;
+  अंतरभूत char16_t doCharAt(int32_t offset)  स्थिर;
 
   UnicodeString& doReplace(int32_t start,
-                           int32_t length,
-                           const char16_t* srcChars,
+                           int32_t लंबाई,
+                           स्थिर UnicodeString& srcText,
                            int32_t srcStart,
-                           int32_t srcLength) U_LIFETIME_BOUND;
-  UnicodeString& doReplace(int32_t start, int32_t length, std::u16string_view src) U_LIFETIME_BOUND;
+                           int32_t src_लंबाई) U_LIFETIME_BOUND;
 
-  UnicodeString& doAppend(const UnicodeString& src,
+  UnicodeString& doReplace(int32_t start,
+                           int32_t लंबाई,
+                           स्थिर char16_t* srcChars,
+                           int32_t srcStart,
+                           int32_t src_लंबाई) U_LIFETIME_BOUND;
+  UnicodeString& doReplace(int32_t start, int32_t लंबाई, std::u16string_view src) U_LIFETIME_BOUND;
+
+  UnicodeString& doAppend(स्थिर UnicodeString& src,
                           int32_t srcStart,
-                          int32_t srcLength) U_LIFETIME_BOUND;
-  UnicodeString& doAppend(const char16_t* srcChars,
+                          int32_t src_लंबाई) U_LIFETIME_BOUND;
+  UnicodeString& doAppend(स्थिर char16_t* srcChars,
                           int32_t srcStart,
-                          int32_t srcLength) U_LIFETIME_BOUND;
+                          int32_t src_लंबाई) U_LIFETIME_BOUND;
   UnicodeString& doAppend(std::u16string_view src) U_LIFETIME_BOUND;
 
-  UnicodeString& doReverse(int32_t start, int32_t length) U_LIFETIME_BOUND;
+  UnicodeString& doReverse(int32_t start, int32_t लंबाई) U_LIFETIME_BOUND;
 
   // calculate hash code
-  int32_t doHashCode() const;
+  int32_t doHashCode() स्थिर;
 
   // get pointer to start of array
   // these do not check for kOpenGetBuffer, unlike the public getBuffer() function
-  inline char16_t* getArrayStart() U_LIFETIME_BOUND;
-  inline const char16_t* getArrayStart() const U_LIFETIME_BOUND;
+  अंतरभूत char16_t* getArrayStart() U_LIFETIME_BOUND;
+  अंतरभूत स्थिर char16_t* getArrayStart() स्थिर U_LIFETIME_BOUND;
 
-  inline UBool hasShortLength() const;
-  inline int32_t getShortLength() const;
+  अंतरभूत UBool has_Short_लंबाई() स्थिर;
+  अंतरभूत int32_t get_Short_लंबाई() स्थिर;
 
   // A UnicodeString object (not necessarily its current buffer)
   // is writable unless it isBogus() or it has an "open" getBuffer(minCapacity).
-  inline UBool isWritable() const;
+  अंतरभूत UBool isWritable() स्थिर;
 
   // Is the current buffer writable?
-  inline UBool isBufferWritable() const;
+  अंतरभूत UBool is_बफर_Writable() स्थिर;
 
   // None of the following does releaseArray().
-  inline void setZeroLength();
-  inline void setShortLength(int32_t len);
-  inline void setLength(int32_t len);
-  inline void setToEmpty();
-  inline void setArray(char16_t *array, int32_t len, int32_t capacity); // sets length but not flags
+  अंतरभूत व्योम set_Zero_लंबाई();
+  अंतरभूत व्योम set_Short_लंबाई(int32_t len);
+  अंतरभूत व्योम set_लंबाई(int32_t len);
+  अंतरभूत व्योम setToEmpty();
+  अंतरभूत व्योम setArray(char16_t *array, int32_t len, int32_t capacity); // sets length but not flags
 
   // allocate the array; result may be the stack buffer
   // sets refCount to 1 if appropriate
@@ -3965,29 +3965,29 @@ private:
   UBool allocate(int32_t capacity);
 
   // release the array if owned
-  void releaseArray();
+  व्योम releaseArray();
 
   // turn a bogus string into an empty one
-  void unBogus();
+  व्योम unBogus();
 
   // implements assignment operator, copy constructor, and fastCopyFrom()
-  UnicodeString& copyFrom(const UnicodeString& src, UBool fastCopy = false) U_LIFETIME_BOUND;
+  UnicodeString& copyFrom(स्थिर UnicodeString& src, UBool fastCopy = false) U_LIFETIME_BOUND;
 
   // Copies just the fields without memory management.
-  void copyFieldsFrom(UnicodeString &src, UBool setSrcToBogus) noexcept;
+  व्योम copyFieldsFrom(UnicodeString &src, UBool setSrcToBogus) noexcept;
 
   // Pin start and limit to acceptable values.
-  inline void pinIndex(int32_t& start) const;
-  inline void pinIndices(int32_t& start,
-                         int32_t& length) const;
+  अंतरभूत व्योम pin_सूचकांक(int32_t& start) स्थिर;
+  अंतरभूत व्योम pinIndices(int32_t& start,
+                         int32_t& लंबाई) स्थिर;
 
-#if !UCONFIG_NO_CONVERSION
+#अगर !UCONFIG_NO_CONVERSION
 
   /* Internal extract() using UConverter. */
-  int32_t doExtract(int32_t start, int32_t length,
-                    char *dest, int32_t destCapacity,
+  int32_t doExtract(int32_t start, int32_t लंबाई,
+                    अक्षर *dest, int32_t destCapacity,
                     UConverter *cnv,
-                    UErrorCode &errorCode) const;
+                    UErrorCode &errorCode) स्थिर;
 
   /*
    * Real constructor for converting from codepage data.
@@ -3999,21 +3999,21 @@ private:
    * then a simple conversion is performed on the codepage-invariant
    * subset ("invariant characters") of the platform encoding. See utypes.h.
    */
-  void doCodepageCreate(const char *codepageData,
-                        int32_t dataLength,
-                        const char *codepage);
+  व्योम doCodepageCreate(स्थिर अक्षर *codepage_तथ्य,
+                        int32_t तथ्य_लंबाई,
+                        स्थिर अक्षर *codepage);
 
   /*
    * Worker function for creating a UnicodeString from
    * a codepage string using a UConverter.
    */
-  void
-  doCodepageCreate(const char *codepageData,
-                   int32_t dataLength,
+  व्योम
+  doCodepageCreate(स्थिर अक्षर *codepage_तथ्य,
+                   int32_t तथ्य_लंबाई,
                    UConverter *converter,
                    UErrorCode &status);
 
-#endif
+#पूर्ण_अगर
 
   /*
    * This function is called when write access to the array
@@ -4029,7 +4029,7 @@ private:
   UBool cloneArrayIfNeeded(int32_t newCapacity = -1,
                            int32_t growCapacity = -1,
                            UBool doCopyArray = true,
-                           int32_t** pBufferToDelete = nullptr,
+                           int32_t** p_बफर_To_Delete = nullptr,
                            UBool forceClone = false);
 
   /**
@@ -4039,53 +4039,53 @@ private:
    */
   UnicodeString& caseMap(int32_t caseLocale,
                          uint32_t options,
-#if !UCONFIG_NO_BREAK_ITERATION
+#अगर !UCONFIG_NO_BREAK_ITERATION
                          BreakIterator* iter,
-#endif
+#पूर्ण_अगर
                          UStringCaseMapper* stringCaseMapper) U_LIFETIME_BOUND;
 
   // ref counting
-  void addRef();
+  व्योम addRef();
   int32_t removeRef();
-  int32_t refCount() const;
+  int32_t ref_गिनती() स्थिर;
 
   // constants
-  enum {
+  क्रमागत {
     /**
      * Size of stack buffer for short strings.
      * Must be at least U16_MAX_LENGTH for the single-code point constructor to work.
      * @see UNISTR_OBJECT_SIZE
      */
-    US_STACKBUF_SIZE = static_cast<int32_t>(UNISTR_OBJECT_SIZE - sizeof(void*) - 2) / U_SIZEOF_UCHAR,
+    US_STACKBUF_आकार = static_cast<int32_t>(UNISTR_OBJECT_आकार - माप(व्योम*) - 2) / U_SIZEOF_UCHAR,
     kInvalidUChar=0xffff, // U+FFFF returned by charAt(invalid index)
     kInvalidHashCode=0, // invalid hash code
     kEmptyHashCode=1, // hash code for empty string
 
     // bit flag values for fLengthAndFlags
     kIsBogus=1,         // this string is bogus, i.e., not valid or nullptr
-    kUsingStackBuffer=2,// using fUnion.fStackFields instead of fUnion.fFields
+    k_Using_ढेर_बफर=2,// using fUnion.fStackFields instead of fUnion.fFields
     kRefCounted=4,      // there is a refCount field before the characters in fArray
-    kBufferIsReadonly=8,// do not write to this buffer
-    kOpenGetBuffer=16,  // getBuffer(minCapacity) was called (is "open"),
+    k_बफर_Is_Readonly=8,// do not write to this buffer
+    k_Open_Get_बफर=16,  // getBuffer(minCapacity) was called (is "open"),
                         // and releaseBuffer(newLength) must be called
     kAllStorageFlags=0x1f,
 
-    kLengthShift=5,     // remaining 11 bits for non-negative short length, or negative if long
-    kLength1=1<<kLengthShift,
-    kMaxShortLength=0x3ff,  // max non-negative short length (leaves top bit 0)
-    kLengthIsLarge=0xffe0,  // short length < 0, real length is in fUnion.fFields.fLength
+    k_लंबाई_Shift=5,     // remaining 11 bits for non-negative short length, or negative if long
+    kLength1=1<<k_लंबाई_Shift,
+    k_Max_Short_लंबाई=0x3ff,  // max non-negative short length (leaves top bit 0)
+    k_लंबाई_Is_Large=0xffe0,  // short length < 0, real length is in fUnion.fFields.fLength
 
     // combined values for convenience
-    kShortString=kUsingStackBuffer,
+    kShortString=k_Using_ढेर_बफर,
     kLongString=kRefCounted,
-    kReadonlyAlias=kBufferIsReadonly,
+    kReadonlyAlias=k_बफर_Is_Readonly,
     kWritableAlias=0
   };
 
-  friend class UnicodeStringAppendable;
+  मित्र class UnicodeStringAppendable;
 
-  union StackBufferOrFields;        // forward declaration necessary before friend declaration
-  friend union StackBufferOrFields; // make US_STACKBUF_SIZE visible inside fUnion
+  जोड़ ढेर_बफर_Or_Fields;        // forward declaration necessary before friend declaration
+  मित्र जोड़ ढेर_बफर_Or_Fields; // make US_STACKBUF_SIZE visible inside fUnion
 
   /*
    * The following are all the class fields that are stored
@@ -4128,16 +4128,16 @@ private:
    * - ICU ticket #8322 "why is sizeof(UnicodeString)==48?"
    */
   // (implicit) *vtable;
-  union StackBufferOrFields {
+  जोड़ ढेर_बफर_Or_Fields {
     // fStackFields is used iff (fLengthAndFlags&kUsingStackBuffer) else fFields is used.
     // Each struct of the union must begin with fLengthAndFlags.
-    struct {
-      int16_t fLengthAndFlags;          // bit fields: see constants above
-      char16_t fBuffer[US_STACKBUF_SIZE];  // buffer for short strings
-    } fStackFields;
-    struct {
-      int16_t fLengthAndFlags;          // bit fields: see constants above
-      int32_t fLength;    // number of characters in fArray if >127; else undefined
+    काष्ठा {
+      int16_t f_लंबाई_And_Flags;          // bit fields: see constants above
+      char16_t f_बफर[US_STACKBUF_आकार];  // buffer for short strings
+    } f_ढेर_Fields;
+    काष्ठा {
+      int16_t f_लंबाई_And_Flags;          // bit fields: see constants above
+      int32_t f_लंबाई;    // number of characters in fArray if >127; else undefined
       int32_t fCapacity;  // capacity of fArray (in char16_ts)
       // array pointer last to minimize padding for machines with P128 data model
       // or pointer sizes that are not a power of 2
@@ -4155,7 +4155,7 @@ private:
  * @stable ICU 2.8
  */
 U_COMMON_API UnicodeString U_EXPORT2
-operator+ (const UnicodeString &s1, const UnicodeString &s2);
+चालक+ (स्थिर UnicodeString &s1, स्थिर UnicodeString &s2);
 
 /**
  * Creates a new UnicodeString from the concatenation of a UnicodeString and `s2`
@@ -4167,18 +4167,18 @@ operator+ (const UnicodeString &s1, const UnicodeString &s2);
  * @return UnicodeString(s1).append(s2)
  * @stable ICU 76
  */
-template<
+ढाँचा<
     typename US, typename S,
     typename = std::enable_if_t<ConvertibleToU16StringView<S> && std::is_same_v<US, UnicodeString>>>
-inline UnicodeString operator+(const US &s1, const S &s2) {
-  return unistr_internalConcat(s1, internal::toU16StringView(s2));
+अंतरभूत UnicodeString चालक+(स्थिर US &s1, स्थिर S &s2) {
+  वापस unistr_internalConcat(s1, internal::toU16StringView(s2));
 }
 
-#ifndef U_FORCE_HIDE_INTERNAL_API
+#अगर_अघोषित U_FORCE_HIDE_INTERNAL_API
 /** @internal */
 U_COMMON_API UnicodeString U_EXPORT2
-unistr_internalConcat(const UnicodeString &s1, std::u16string_view s2);
-#endif
+unistr_internalConcat(स्थिर UnicodeString &s1, std::u16string_view s2);
+#पूर्ण_अगर
 
 //========================================
 // Inline members
@@ -4188,963 +4188,963 @@ unistr_internalConcat(const UnicodeString &s1, std::u16string_view s2);
 // Privates
 //========================================
 
-inline void
-UnicodeString::pinIndex(int32_t& start) const
+अंतरभूत व्योम
+UnicodeString::pin_सूचकांक(int32_t& start) स्थिर
 {
   // pin index
-  if(start < 0) {
+  अगर(start < 0) {
     start = 0;
-  } else if(start > length()) {
-    start = length();
+  } अन्यथा अगर(start > लंबाई()) {
+    start = लंबाई();
   }
 }
 
-inline void
+अंतरभूत व्योम
 UnicodeString::pinIndices(int32_t& start,
-                          int32_t& _length) const
+                          int32_t& लंबाई_4) स्थिर
 {
   // pin indices
-  int32_t len = length();
-  if(start < 0) {
+  int32_t len = लंबाई();
+  अगर(start < 0) {
     start = 0;
-  } else if(start > len) {
+  } अन्यथा अगर(start > len) {
     start = len;
   }
-  if(_length < 0) {
-    _length = 0;
-  } else if(_length > (len - start)) {
-    _length = (len - start);
+  अगर(लंबाई_4 < 0) {
+    लंबाई_4 = 0;
+  } अन्यथा अगर(लंबाई_4 > (len - start)) {
+    लंबाई_4 = (len - start);
   }
 }
 
-inline char16_t*
+अंतरभूत char16_t*
 UnicodeString::getArrayStart() U_LIFETIME_BOUND {
-  return (fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) ?
-    fUnion.fStackFields.fBuffer : fUnion.fFields.fArray;
+  वापस (fUnion.fFields.f_लंबाई_And_Flags&k_Using_ढेर_बफर) ?
+    fUnion.f_ढेर_Fields.f_बफर : fUnion.fFields.fArray;
 }
 
-inline const char16_t*
-UnicodeString::getArrayStart() const U_LIFETIME_BOUND {
-  return (fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) ?
-    fUnion.fStackFields.fBuffer : fUnion.fFields.fArray;
+अंतरभूत स्थिर char16_t*
+UnicodeString::getArrayStart() स्थिर U_LIFETIME_BOUND {
+  वापस (fUnion.fFields.f_लंबाई_And_Flags&k_Using_ढेर_बफर) ?
+    fUnion.f_ढेर_Fields.f_बफर : fUnion.fFields.fArray;
 }
 
 //========================================
 // Default constructor
 //========================================
 
-inline
+अंतरभूत
 UnicodeString::UnicodeString() {
-  fUnion.fStackFields.fLengthAndFlags=kShortString;
+  fUnion.f_ढेर_Fields.f_लंबाई_And_Flags=kShortString;
 }
 
-inline UnicodeString::UnicodeString(const std::nullptr_t /*text*/) {
-  fUnion.fStackFields.fLengthAndFlags=kShortString;
+अंतरभूत UnicodeString::UnicodeString(स्थिर std::nullptr_t /*text*/) {
+  fUnion.f_ढेर_Fields.f_लंबाई_And_Flags=kShortString;
 }
 
-inline UnicodeString::UnicodeString(const std::nullptr_t /*text*/, int32_t /*length*/) {
-  fUnion.fStackFields.fLengthAndFlags=kShortString;
+अंतरभूत UnicodeString::UnicodeString(स्थिर std::nullptr_t /*text*/, int32_t /*लंबाई*/) {
+  fUnion.f_ढेर_Fields.f_लंबाई_And_Flags=kShortString;
 }
 
-inline UnicodeString::UnicodeString(std::nullptr_t /*buffer*/, int32_t /*buffLength*/, int32_t /*buffCapacity*/) {
-  fUnion.fStackFields.fLengthAndFlags=kShortString;
+अंतरभूत UnicodeString::UnicodeString(std::nullptr_t /*बफर*/, int32_t /*buffLength*/, int32_t /*buffCapacity*/) {
+  fUnion.f_ढेर_Fields.f_लंबाई_And_Flags=kShortString;
 }
 
 //========================================
 // Read-only implementation methods
 //========================================
-inline UBool
-UnicodeString::hasShortLength() const {
-  return fUnion.fFields.fLengthAndFlags>=0;
+अंतरभूत UBool
+UnicodeString::has_Short_लंबाई() स्थिर {
+  वापस fUnion.fFields.f_लंबाई_And_Flags>=0;
 }
 
-inline int32_t
-UnicodeString::getShortLength() const {
+अंतरभूत int32_t
+UnicodeString::get_Short_लंबाई() स्थिर {
   // fLengthAndFlags must be non-negative -> short length >= 0
   // and arithmetic or logical shift does not matter.
-  return fUnion.fFields.fLengthAndFlags>>kLengthShift;
+  वापस fUnion.fFields.f_लंबाई_And_Flags>>k_लंबाई_Shift;
 }
 
-inline int32_t
-UnicodeString::length() const {
-  return hasShortLength() ? getShortLength() : fUnion.fFields.fLength;
+अंतरभूत int32_t
+UnicodeString::लंबाई() स्थिर {
+  वापस has_Short_लंबाई() ? get_Short_लंबाई() : fUnion.fFields.f_लंबाई;
 }
 
-inline int32_t
-UnicodeString::getCapacity() const {
-  return (fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) ?
-    US_STACKBUF_SIZE : fUnion.fFields.fCapacity;
+अंतरभूत int32_t
+UnicodeString::getCapacity() स्थिर {
+  वापस (fUnion.fFields.f_लंबाई_And_Flags&k_Using_ढेर_बफर) ?
+    US_STACKBUF_आकार : fUnion.fFields.fCapacity;
 }
 
-inline int32_t
-UnicodeString::hashCode() const
-{ return doHashCode(); }
+अंतरभूत int32_t
+UnicodeString::hashCode() स्थिर
+{ वापस doHashCode(); }
 
-inline UBool
-UnicodeString::isBogus() const
-{ return fUnion.fFields.fLengthAndFlags & kIsBogus; }
+अंतरभूत UBool
+UnicodeString::isBogus() स्थिर
+{ वापस fUnion.fFields.f_लंबाई_And_Flags & kIsBogus; }
 
-inline UBool
-UnicodeString::isWritable() const
-{ return !(fUnion.fFields.fLengthAndFlags & (kOpenGetBuffer | kIsBogus)); }
+अंतरभूत UBool
+UnicodeString::isWritable() स्थिर
+{ वापस !(fUnion.fFields.f_लंबाई_And_Flags & (k_Open_Get_बफर | kIsBogus)); }
 
-inline UBool
-UnicodeString::isBufferWritable() const
+अंतरभूत UBool
+UnicodeString::is_बफर_Writable() स्थिर
 {
-  return
-      !(fUnion.fFields.fLengthAndFlags&(kOpenGetBuffer|kIsBogus|kBufferIsReadonly)) &&
-      (!(fUnion.fFields.fLengthAndFlags&kRefCounted) || refCount()==1);
+  वापस
+      !(fUnion.fFields.f_लंबाई_And_Flags&(k_Open_Get_बफर|kIsBogus|k_बफर_Is_Readonly)) &&
+      (!(fUnion.fFields.f_लंबाई_And_Flags&kRefCounted) || ref_गिनती()==1);
 }
 
-inline const char16_t *
-UnicodeString::getBuffer() const U_LIFETIME_BOUND {
-  if(fUnion.fFields.fLengthAndFlags&(kIsBogus|kOpenGetBuffer)) {
-    return nullptr;
-  } else if(fUnion.fFields.fLengthAndFlags&kUsingStackBuffer) {
-    return fUnion.fStackFields.fBuffer;
-  } else {
-    return fUnion.fFields.fArray;
+अंतरभूत स्थिर char16_t *
+UnicodeString::get_बफर() स्थिर U_LIFETIME_BOUND {
+  अगर(fUnion.fFields.f_लंबाई_And_Flags&(kIsBogus|k_Open_Get_बफर)) {
+    वापस nullptr;
+  } अन्यथा अगर(fUnion.fFields.f_लंबाई_And_Flags&k_Using_ढेर_बफर) {
+    वापस fUnion.f_ढेर_Fields.f_बफर;
+  } अन्यथा {
+    वापस fUnion.fFields.fArray;
   }
 }
 
 //========================================
 // Read-only alias methods
 //========================================
-inline int8_t
+अंतरभूत int8_t
 UnicodeString::doCompare(int32_t start,
-              int32_t thisLength,
-              const UnicodeString& srcText,
+              int32_t this_लंबाई,
+              स्थिर UnicodeString& srcText,
               int32_t srcStart,
-              int32_t srcLength) const
+              int32_t src_लंबाई) स्थिर
 {
-  if(srcText.isBogus()) {
-    return static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
-  } else {
-    srcText.pinIndices(srcStart, srcLength);
-    return doCompare(start, thisLength, srcText.getArrayStart(), srcStart, srcLength);
+  अगर(srcText.isBogus()) {
+    वापस static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
+  } अन्यथा {
+    srcText.pinIndices(srcStart, src_लंबाई);
+    वापस doCompare(start, this_लंबाई, srcText.getArrayStart(), srcStart, src_लंबाई);
   }
 }
 
-inline UBool
+अंतरभूत UBool
 UnicodeString::doEqualsSubstring(int32_t start,
-              int32_t thisLength,
-              const UnicodeString& srcText,
+              int32_t this_लंबाई,
+              स्थिर UnicodeString& srcText,
               int32_t srcStart,
-              int32_t srcLength) const
+              int32_t src_लंबाई) स्थिर
 {
-  if(srcText.isBogus()) {
-    return isBogus();
-  } else {
-    srcText.pinIndices(srcStart, srcLength);
-    return !isBogus() && doEqualsSubstring(start, thisLength, srcText.getArrayStart(), srcStart, srcLength);
+  अगर(srcText.isBogus()) {
+    वापस isBogus();
+  } अन्यथा {
+    srcText.pinIndices(srcStart, src_लंबाई);
+    वापस !isBogus() && doEqualsSubstring(start, this_लंबाई, srcText.getArrayStart(), srcStart, src_लंबाई);
   }
 }
 
-inline bool
-UnicodeString::operator== (const UnicodeString& text) const
+अंतरभूत bool
+UnicodeString::चालक== (स्थिर UnicodeString& text) स्थिर
 {
-  if(isBogus()) {
-    return text.isBogus();
-  } else {
-    int32_t len = length(), textLength = text.length();
-    return !text.isBogus() && len == textLength && doEquals(text, len);
+  अगर(isBogus()) {
+    वापस text.isBogus();
+  } अन्यथा {
+    int32_t len = लंबाई(), text_लंबाई = text.लंबाई();
+    वापस !text.isBogus() && len == text_लंबाई && doEquals(text, len);
   }
 }
 
-inline bool
-UnicodeString::operator!= (const UnicodeString& text) const
-{ return (! operator==(text)); }
+अंतरभूत bool
+UnicodeString::चालक!= (स्थिर UnicodeString& text) स्थिर
+{ वापस (! चालक==(text)); }
 
-inline UBool
-UnicodeString::operator> (const UnicodeString& text) const
-{ return doCompare(0, length(), text, 0, text.length()) == 1; }
+अंतरभूत UBool
+UnicodeString::चालक> (स्थिर UnicodeString& text) स्थिर
+{ वापस doCompare(0, लंबाई(), text, 0, text.लंबाई()) == 1; }
 
-inline UBool
-UnicodeString::operator< (const UnicodeString& text) const
-{ return doCompare(0, length(), text, 0, text.length()) == -1; }
+अंतरभूत UBool
+UnicodeString::चालक< (स्थिर UnicodeString& text) स्थिर
+{ वापस doCompare(0, लंबाई(), text, 0, text.लंबाई()) == -1; }
 
-inline UBool
-UnicodeString::operator>= (const UnicodeString& text) const
-{ return doCompare(0, length(), text, 0, text.length()) != -1; }
+अंतरभूत UBool
+UnicodeString::चालक>= (स्थिर UnicodeString& text) स्थिर
+{ वापस doCompare(0, लंबाई(), text, 0, text.लंबाई()) != -1; }
 
-inline UBool
-UnicodeString::operator<= (const UnicodeString& text) const
-{ return doCompare(0, length(), text, 0, text.length()) != 1; }
+अंतरभूत UBool
+UnicodeString::चालक<= (स्थिर UnicodeString& text) स्थिर
+{ वापस doCompare(0, लंबाई(), text, 0, text.लंबाई()) != 1; }
 
-inline int8_t
-UnicodeString::compare(const UnicodeString& text) const
-{ return doCompare(0, length(), text, 0, text.length()); }
+अंतरभूत int8_t
+UnicodeString::compare(स्थिर UnicodeString& text) स्थिर
+{ वापस doCompare(0, लंबाई(), text, 0, text.लंबाई()); }
 
-inline int8_t
+अंतरभूत int8_t
 UnicodeString::compare(int32_t start,
-               int32_t _length,
-               const UnicodeString& srcText) const
-{ return doCompare(start, _length, srcText, 0, srcText.length()); }
+               int32_t लंबाई_4,
+               स्थिर UnicodeString& srcText) स्थिर
+{ वापस doCompare(start, लंबाई_4, srcText, 0, srcText.लंबाई()); }
 
-inline int8_t
+अंतरभूत int8_t
 UnicodeString::compare(ConstChar16Ptr srcChars,
-               int32_t srcLength) const
-{ return doCompare(0, length(), srcChars, 0, srcLength); }
+               int32_t src_लंबाई) स्थिर
+{ वापस doCompare(0, लंबाई(), srcChars, 0, src_लंबाई); }
 
-inline int8_t
+अंतरभूत int8_t
 UnicodeString::compare(int32_t start,
-               int32_t _length,
-               const UnicodeString& srcText,
+               int32_t लंबाई_4,
+               स्थिर UnicodeString& srcText,
                int32_t srcStart,
-               int32_t srcLength) const
-{ return doCompare(start, _length, srcText, srcStart, srcLength); }
+               int32_t src_लंबाई) स्थिर
+{ वापस doCompare(start, लंबाई_4, srcText, srcStart, src_लंबाई); }
 
-inline int8_t
+अंतरभूत int8_t
 UnicodeString::compare(int32_t start,
-               int32_t _length,
-               const char16_t *srcChars) const
-{ return doCompare(start, _length, srcChars, 0, _length); }
+               int32_t लंबाई_4,
+               स्थिर char16_t *srcChars) स्थिर
+{ वापस doCompare(start, लंबाई_4, srcChars, 0, लंबाई_4); }
 
-inline int8_t
+अंतरभूत int8_t
 UnicodeString::compare(int32_t start,
-               int32_t _length,
-               const char16_t *srcChars,
+               int32_t लंबाई_4,
+               स्थिर char16_t *srcChars,
                int32_t srcStart,
-               int32_t srcLength) const
-{ return doCompare(start, _length, srcChars, srcStart, srcLength); }
+               int32_t src_लंबाई) स्थिर
+{ वापस doCompare(start, लंबाई_4, srcChars, srcStart, src_लंबाई); }
 
-inline int8_t
+अंतरभूत int8_t
 UnicodeString::compareBetween(int32_t start,
                   int32_t limit,
-                  const UnicodeString& srcText,
+                  स्थिर UnicodeString& srcText,
                   int32_t srcStart,
-                  int32_t srcLimit) const
-{ return doCompare(start, limit - start,
+                  int32_t srcLimit) स्थिर
+{ वापस doCompare(start, limit - start,
            srcText, srcStart, srcLimit - srcStart); }
 
-inline int8_t
+अंतरभूत int8_t
 UnicodeString::doCompareCodePointOrder(int32_t start,
-                                       int32_t thisLength,
-                                       const UnicodeString& srcText,
+                                       int32_t this_लंबाई,
+                                       स्थिर UnicodeString& srcText,
                                        int32_t srcStart,
-                                       int32_t srcLength) const
+                                       int32_t src_लंबाई) स्थिर
 {
-  if(srcText.isBogus()) {
-    return static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
-  } else {
-    srcText.pinIndices(srcStart, srcLength);
-    return doCompareCodePointOrder(start, thisLength, srcText.getArrayStart(), srcStart, srcLength);
+  अगर(srcText.isBogus()) {
+    वापस static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
+  } अन्यथा {
+    srcText.pinIndices(srcStart, src_लंबाई);
+    वापस doCompareCodePointOrder(start, this_लंबाई, srcText.getArrayStart(), srcStart, src_लंबाई);
   }
 }
 
-inline int8_t
-UnicodeString::compareCodePointOrder(const UnicodeString& text) const
-{ return doCompareCodePointOrder(0, length(), text, 0, text.length()); }
+अंतरभूत int8_t
+UnicodeString::compareCodePointOrder(स्थिर UnicodeString& text) स्थिर
+{ वापस doCompareCodePointOrder(0, लंबाई(), text, 0, text.लंबाई()); }
 
-inline int8_t
+अंतरभूत int8_t
 UnicodeString::compareCodePointOrder(int32_t start,
-                                     int32_t _length,
-                                     const UnicodeString& srcText) const
-{ return doCompareCodePointOrder(start, _length, srcText, 0, srcText.length()); }
+                                     int32_t लंबाई_4,
+                                     स्थिर UnicodeString& srcText) स्थिर
+{ वापस doCompareCodePointOrder(start, लंबाई_4, srcText, 0, srcText.लंबाई()); }
 
-inline int8_t
+अंतरभूत int8_t
 UnicodeString::compareCodePointOrder(ConstChar16Ptr srcChars,
-                                     int32_t srcLength) const
-{ return doCompareCodePointOrder(0, length(), srcChars, 0, srcLength); }
+                                     int32_t src_लंबाई) स्थिर
+{ वापस doCompareCodePointOrder(0, लंबाई(), srcChars, 0, src_लंबाई); }
 
-inline int8_t
+अंतरभूत int8_t
 UnicodeString::compareCodePointOrder(int32_t start,
-                                     int32_t _length,
-                                     const UnicodeString& srcText,
+                                     int32_t लंबाई_4,
+                                     स्थिर UnicodeString& srcText,
                                      int32_t srcStart,
-                                     int32_t srcLength) const
-{ return doCompareCodePointOrder(start, _length, srcText, srcStart, srcLength); }
+                                     int32_t src_लंबाई) स्थिर
+{ वापस doCompareCodePointOrder(start, लंबाई_4, srcText, srcStart, src_लंबाई); }
 
-inline int8_t
+अंतरभूत int8_t
 UnicodeString::compareCodePointOrder(int32_t start,
-                                     int32_t _length,
-                                     const char16_t *srcChars) const
-{ return doCompareCodePointOrder(start, _length, srcChars, 0, _length); }
+                                     int32_t लंबाई_4,
+                                     स्थिर char16_t *srcChars) स्थिर
+{ वापस doCompareCodePointOrder(start, लंबाई_4, srcChars, 0, लंबाई_4); }
 
-inline int8_t
+अंतरभूत int8_t
 UnicodeString::compareCodePointOrder(int32_t start,
-                                     int32_t _length,
-                                     const char16_t *srcChars,
+                                     int32_t लंबाई_4,
+                                     स्थिर char16_t *srcChars,
                                      int32_t srcStart,
-                                     int32_t srcLength) const
-{ return doCompareCodePointOrder(start, _length, srcChars, srcStart, srcLength); }
+                                     int32_t src_लंबाई) स्थिर
+{ वापस doCompareCodePointOrder(start, लंबाई_4, srcChars, srcStart, src_लंबाई); }
 
-inline int8_t
+अंतरभूत int8_t
 UnicodeString::compareCodePointOrderBetween(int32_t start,
                                             int32_t limit,
-                                            const UnicodeString& srcText,
+                                            स्थिर UnicodeString& srcText,
                                             int32_t srcStart,
-                                            int32_t srcLimit) const
-{ return doCompareCodePointOrder(start, limit - start,
+                                            int32_t srcLimit) स्थिर
+{ वापस doCompareCodePointOrder(start, limit - start,
            srcText, srcStart, srcLimit - srcStart); }
 
-inline int8_t
+अंतरभूत int8_t
 UnicodeString::doCaseCompare(int32_t start,
-                             int32_t thisLength,
-                             const UnicodeString &srcText,
+                             int32_t this_लंबाई,
+                             स्थिर UnicodeString &srcText,
                              int32_t srcStart,
-                             int32_t srcLength,
-                             uint32_t options) const
+                             int32_t src_लंबाई,
+                             uint32_t options) स्थिर
 {
-  if(srcText.isBogus()) {
-    return static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
-  } else {
-    srcText.pinIndices(srcStart, srcLength);
-    return doCaseCompare(start, thisLength, srcText.getArrayStart(), srcStart, srcLength, options);
+  अगर(srcText.isBogus()) {
+    वापस static_cast<int8_t>(!isBogus()); // 0 if both are bogus, 1 otherwise
+  } अन्यथा {
+    srcText.pinIndices(srcStart, src_लंबाई);
+    वापस doCaseCompare(start, this_लंबाई, srcText.getArrayStart(), srcStart, src_लंबाई, options);
   }
 }
 
-inline int8_t
-UnicodeString::caseCompare(const UnicodeString &text, uint32_t options) const {
-  return doCaseCompare(0, length(), text, 0, text.length(), options);
+अंतरभूत int8_t
+UnicodeString::caseCompare(स्थिर UnicodeString &text, uint32_t options) स्थिर {
+  वापस doCaseCompare(0, लंबाई(), text, 0, text.लंबाई(), options);
 }
 
-inline int8_t
+अंतरभूत int8_t
 UnicodeString::caseCompare(int32_t start,
-                           int32_t _length,
-                           const UnicodeString &srcText,
-                           uint32_t options) const {
-  return doCaseCompare(start, _length, srcText, 0, srcText.length(), options);
+                           int32_t लंबाई_4,
+                           स्थिर UnicodeString &srcText,
+                           uint32_t options) स्थिर {
+  वापस doCaseCompare(start, लंबाई_4, srcText, 0, srcText.लंबाई(), options);
 }
 
-inline int8_t
+अंतरभूत int8_t
 UnicodeString::caseCompare(ConstChar16Ptr srcChars,
-                           int32_t srcLength,
-                           uint32_t options) const {
-  return doCaseCompare(0, length(), srcChars, 0, srcLength, options);
+                           int32_t src_लंबाई,
+                           uint32_t options) स्थिर {
+  वापस doCaseCompare(0, लंबाई(), srcChars, 0, src_लंबाई, options);
 }
 
-inline int8_t
+अंतरभूत int8_t
 UnicodeString::caseCompare(int32_t start,
-                           int32_t _length,
-                           const UnicodeString &srcText,
+                           int32_t लंबाई_4,
+                           स्थिर UnicodeString &srcText,
                            int32_t srcStart,
-                           int32_t srcLength,
-                           uint32_t options) const {
-  return doCaseCompare(start, _length, srcText, srcStart, srcLength, options);
+                           int32_t src_लंबाई,
+                           uint32_t options) स्थिर {
+  वापस doCaseCompare(start, लंबाई_4, srcText, srcStart, src_लंबाई, options);
 }
 
-inline int8_t
+अंतरभूत int8_t
 UnicodeString::caseCompare(int32_t start,
-                           int32_t _length,
-                           const char16_t *srcChars,
-                           uint32_t options) const {
-  return doCaseCompare(start, _length, srcChars, 0, _length, options);
+                           int32_t लंबाई_4,
+                           स्थिर char16_t *srcChars,
+                           uint32_t options) स्थिर {
+  वापस doCaseCompare(start, लंबाई_4, srcChars, 0, लंबाई_4, options);
 }
 
-inline int8_t
+अंतरभूत int8_t
 UnicodeString::caseCompare(int32_t start,
-                           int32_t _length,
-                           const char16_t *srcChars,
+                           int32_t लंबाई_4,
+                           स्थिर char16_t *srcChars,
                            int32_t srcStart,
-                           int32_t srcLength,
-                           uint32_t options) const {
-  return doCaseCompare(start, _length, srcChars, srcStart, srcLength, options);
+                           int32_t src_लंबाई,
+                           uint32_t options) स्थिर {
+  वापस doCaseCompare(start, लंबाई_4, srcChars, srcStart, src_लंबाई, options);
 }
 
-inline int8_t
+अंतरभूत int8_t
 UnicodeString::caseCompareBetween(int32_t start,
                                   int32_t limit,
-                                  const UnicodeString &srcText,
+                                  स्थिर UnicodeString &srcText,
                                   int32_t srcStart,
                                   int32_t srcLimit,
-                                  uint32_t options) const {
-  return doCaseCompare(start, limit - start, srcText, srcStart, srcLimit - srcStart, options);
+                                  uint32_t options) स्थिर {
+  वापस doCaseCompare(start, limit - start, srcText, srcStart, srcLimit - srcStart, options);
 }
 
-inline int32_t
-UnicodeString::indexOf(const UnicodeString& srcText,
+अंतरभूत int32_t
+UnicodeString::सूचकांक_Of(स्थिर UnicodeString& srcText,
                int32_t srcStart,
-               int32_t srcLength,
+               int32_t src_लंबाई,
                int32_t start,
-               int32_t _length) const
+               int32_t लंबाई_4) स्थिर
 {
-  if(!srcText.isBogus()) {
-    srcText.pinIndices(srcStart, srcLength);
-    if(srcLength > 0) {
-      return indexOf(srcText.getArrayStart(), srcStart, srcLength, start, _length);
+  अगर(!srcText.isBogus()) {
+    srcText.pinIndices(srcStart, src_लंबाई);
+    अगर(src_लंबाई > 0) {
+      वापस सूचकांक_Of(srcText.getArrayStart(), srcStart, src_लंबाई, start, लंबाई_4);
     }
   }
-  return -1;
+  वापस -1;
 }
 
-inline int32_t
-UnicodeString::indexOf(const UnicodeString& text) const
-{ return indexOf(text, 0, text.length(), 0, length()); }
+अंतरभूत int32_t
+UnicodeString::सूचकांक_Of(स्थिर UnicodeString& text) स्थिर
+{ वापस सूचकांक_Of(text, 0, text.लंबाई(), 0, लंबाई()); }
 
-inline int32_t
-UnicodeString::indexOf(const UnicodeString& text,
-               int32_t start) const {
-  pinIndex(start);
-  return indexOf(text, 0, text.length(), start, length() - start);
+अंतरभूत int32_t
+UnicodeString::सूचकांक_Of(स्थिर UnicodeString& text,
+               int32_t start) स्थिर {
+  pin_सूचकांक(start);
+  वापस सूचकांक_Of(text, 0, text.लंबाई(), start, लंबाई() - start);
 }
 
-inline int32_t
-UnicodeString::indexOf(const UnicodeString& text,
+अंतरभूत int32_t
+UnicodeString::सूचकांक_Of(स्थिर UnicodeString& text,
                int32_t start,
-               int32_t _length) const
-{ return indexOf(text, 0, text.length(), start, _length); }
+               int32_t लंबाई_4) स्थिर
+{ वापस सूचकांक_Of(text, 0, text.लंबाई(), start, लंबाई_4); }
 
-inline int32_t
-UnicodeString::indexOf(const char16_t *srcChars,
-               int32_t srcLength,
-               int32_t start) const {
-  pinIndex(start);
-  return indexOf(srcChars, 0, srcLength, start, length() - start);
+अंतरभूत int32_t
+UnicodeString::सूचकांक_Of(स्थिर char16_t *srcChars,
+               int32_t src_लंबाई,
+               int32_t start) स्थिर {
+  pin_सूचकांक(start);
+  वापस सूचकांक_Of(srcChars, 0, src_लंबाई, start, लंबाई() - start);
 }
 
-inline int32_t
-UnicodeString::indexOf(ConstChar16Ptr srcChars,
-               int32_t srcLength,
+अंतरभूत int32_t
+UnicodeString::सूचकांक_Of(ConstChar16Ptr srcChars,
+               int32_t src_लंबाई,
                int32_t start,
-               int32_t _length) const
-{ return indexOf(srcChars, 0, srcLength, start, _length); }
+               int32_t लंबाई_4) स्थिर
+{ वापस सूचकांक_Of(srcChars, 0, src_लंबाई, start, लंबाई_4); }
 
-inline int32_t
-UnicodeString::indexOf(char16_t c,
+अंतरभूत int32_t
+UnicodeString::सूचकांक_Of(char16_t c,
                int32_t start,
-               int32_t _length) const
-{ return doIndexOf(c, start, _length); }
+               int32_t लंबाई_4) स्थिर
+{ वापस do_सूचकांक_Of(c, start, लंबाई_4); }
 
-inline int32_t
-UnicodeString::indexOf(UChar32 c,
+अंतरभूत int32_t
+UnicodeString::सूचकांक_Of(UChar32 c,
                int32_t start,
-               int32_t _length) const
-{ return doIndexOf(c, start, _length); }
+               int32_t लंबाई_4) स्थिर
+{ वापस do_सूचकांक_Of(c, start, लंबाई_4); }
 
-inline int32_t
-UnicodeString::indexOf(char16_t c) const
-{ return doIndexOf(c, 0, length()); }
+अंतरभूत int32_t
+UnicodeString::सूचकांक_Of(char16_t c) स्थिर
+{ वापस do_सूचकांक_Of(c, 0, लंबाई()); }
 
-inline int32_t
-UnicodeString::indexOf(UChar32 c) const
-{ return indexOf(c, 0, length()); }
+अंतरभूत int32_t
+UnicodeString::सूचकांक_Of(UChar32 c) स्थिर
+{ वापस सूचकांक_Of(c, 0, लंबाई()); }
 
-inline int32_t
-UnicodeString::indexOf(char16_t c,
-               int32_t start) const {
-  pinIndex(start);
-  return doIndexOf(c, start, length() - start);
+अंतरभूत int32_t
+UnicodeString::सूचकांक_Of(char16_t c,
+               int32_t start) स्थिर {
+  pin_सूचकांक(start);
+  वापस do_सूचकांक_Of(c, start, लंबाई() - start);
 }
 
-inline int32_t
-UnicodeString::indexOf(UChar32 c,
-               int32_t start) const {
-  pinIndex(start);
-  return indexOf(c, start, length() - start);
+अंतरभूत int32_t
+UnicodeString::सूचकांक_Of(UChar32 c,
+               int32_t start) स्थिर {
+  pin_सूचकांक(start);
+  वापस सूचकांक_Of(c, start, लंबाई() - start);
 }
 
-inline int32_t
-UnicodeString::lastIndexOf(ConstChar16Ptr srcChars,
-               int32_t srcLength,
+अंतरभूत int32_t
+UnicodeString::last_सूचकांक_Of(ConstChar16Ptr srcChars,
+               int32_t src_लंबाई,
                int32_t start,
-               int32_t _length) const
-{ return lastIndexOf(srcChars, 0, srcLength, start, _length); }
+               int32_t लंबाई_4) स्थिर
+{ वापस last_सूचकांक_Of(srcChars, 0, src_लंबाई, start, लंबाई_4); }
 
-inline int32_t
-UnicodeString::lastIndexOf(const char16_t *srcChars,
-               int32_t srcLength,
-               int32_t start) const {
-  pinIndex(start);
-  return lastIndexOf(srcChars, 0, srcLength, start, length() - start);
+अंतरभूत int32_t
+UnicodeString::last_सूचकांक_Of(स्थिर char16_t *srcChars,
+               int32_t src_लंबाई,
+               int32_t start) स्थिर {
+  pin_सूचकांक(start);
+  वापस last_सूचकांक_Of(srcChars, 0, src_लंबाई, start, लंबाई() - start);
 }
 
-inline int32_t
-UnicodeString::lastIndexOf(const UnicodeString& srcText,
+अंतरभूत int32_t
+UnicodeString::last_सूचकांक_Of(स्थिर UnicodeString& srcText,
                int32_t srcStart,
-               int32_t srcLength,
+               int32_t src_लंबाई,
                int32_t start,
-               int32_t _length) const
+               int32_t लंबाई_4) स्थिर
 {
-  if(!srcText.isBogus()) {
-    srcText.pinIndices(srcStart, srcLength);
-    if(srcLength > 0) {
-      return lastIndexOf(srcText.getArrayStart(), srcStart, srcLength, start, _length);
+  अगर(!srcText.isBogus()) {
+    srcText.pinIndices(srcStart, src_लंबाई);
+    अगर(src_लंबाई > 0) {
+      वापस last_सूचकांक_Of(srcText.getArrayStart(), srcStart, src_लंबाई, start, लंबाई_4);
     }
   }
-  return -1;
+  वापस -1;
 }
 
-inline int32_t
-UnicodeString::lastIndexOf(const UnicodeString& text,
+अंतरभूत int32_t
+UnicodeString::last_सूचकांक_Of(स्थिर UnicodeString& text,
                int32_t start,
-               int32_t _length) const
-{ return lastIndexOf(text, 0, text.length(), start, _length); }
+               int32_t लंबाई_4) स्थिर
+{ वापस last_सूचकांक_Of(text, 0, text.लंबाई(), start, लंबाई_4); }
 
-inline int32_t
-UnicodeString::lastIndexOf(const UnicodeString& text,
-               int32_t start) const {
-  pinIndex(start);
-  return lastIndexOf(text, 0, text.length(), start, length() - start);
+अंतरभूत int32_t
+UnicodeString::last_सूचकांक_Of(स्थिर UnicodeString& text,
+               int32_t start) स्थिर {
+  pin_सूचकांक(start);
+  वापस last_सूचकांक_Of(text, 0, text.लंबाई(), start, लंबाई() - start);
 }
 
-inline int32_t
-UnicodeString::lastIndexOf(const UnicodeString& text) const
-{ return lastIndexOf(text, 0, text.length(), 0, length()); }
+अंतरभूत int32_t
+UnicodeString::last_सूचकांक_Of(स्थिर UnicodeString& text) स्थिर
+{ वापस last_सूचकांक_Of(text, 0, text.लंबाई(), 0, लंबाई()); }
 
-inline int32_t
-UnicodeString::lastIndexOf(char16_t c,
+अंतरभूत int32_t
+UnicodeString::last_सूचकांक_Of(char16_t c,
                int32_t start,
-               int32_t _length) const
-{ return doLastIndexOf(c, start, _length); }
+               int32_t लंबाई_4) स्थिर
+{ वापस do_Last_सूचकांक_Of(c, start, लंबाई_4); }
 
-inline int32_t
-UnicodeString::lastIndexOf(UChar32 c,
+अंतरभूत int32_t
+UnicodeString::last_सूचकांक_Of(UChar32 c,
                int32_t start,
-               int32_t _length) const {
-  return doLastIndexOf(c, start, _length);
+               int32_t लंबाई_4) स्थिर {
+  वापस do_Last_सूचकांक_Of(c, start, लंबाई_4);
 }
 
-inline int32_t
-UnicodeString::lastIndexOf(char16_t c) const
-{ return doLastIndexOf(c, 0, length()); }
+अंतरभूत int32_t
+UnicodeString::last_सूचकांक_Of(char16_t c) स्थिर
+{ वापस do_Last_सूचकांक_Of(c, 0, लंबाई()); }
 
-inline int32_t
-UnicodeString::lastIndexOf(UChar32 c) const {
-  return lastIndexOf(c, 0, length());
+अंतरभूत int32_t
+UnicodeString::last_सूचकांक_Of(UChar32 c) स्थिर {
+  वापस last_सूचकांक_Of(c, 0, लंबाई());
 }
 
-inline int32_t
-UnicodeString::lastIndexOf(char16_t c,
-               int32_t start) const {
-  pinIndex(start);
-  return doLastIndexOf(c, start, length() - start);
+अंतरभूत int32_t
+UnicodeString::last_सूचकांक_Of(char16_t c,
+               int32_t start) स्थिर {
+  pin_सूचकांक(start);
+  वापस do_Last_सूचकांक_Of(c, start, लंबाई() - start);
 }
 
-inline int32_t
-UnicodeString::lastIndexOf(UChar32 c,
-               int32_t start) const {
-  pinIndex(start);
-  return lastIndexOf(c, start, length() - start);
+अंतरभूत int32_t
+UnicodeString::last_सूचकांक_Of(UChar32 c,
+               int32_t start) स्थिर {
+  pin_सूचकांक(start);
+  वापस last_सूचकांक_Of(c, start, लंबाई() - start);
 }
 
-inline UBool
-UnicodeString::startsWith(const UnicodeString& text) const
-{ return doEqualsSubstring(0, text.length(), text, 0, text.length()); }
+अंतरभूत UBool
+UnicodeString::startsWith(स्थिर UnicodeString& text) स्थिर
+{ वापस doEqualsSubstring(0, text.लंबाई(), text, 0, text.लंबाई()); }
 
-inline UBool
-UnicodeString::startsWith(const UnicodeString& srcText,
+अंतरभूत UBool
+UnicodeString::startsWith(स्थिर UnicodeString& srcText,
               int32_t srcStart,
-              int32_t srcLength) const
-{ return doEqualsSubstring(0, srcLength, srcText, srcStart, srcLength); }
+              int32_t src_लंबाई) स्थिर
+{ वापस doEqualsSubstring(0, src_लंबाई, srcText, srcStart, src_लंबाई); }
 
-inline UBool
-UnicodeString::startsWith(ConstChar16Ptr srcChars, int32_t srcLength) const {
-  if(srcLength < 0) {
-    srcLength = u_strlen(toUCharPtr(srcChars));
+अंतरभूत UBool
+UnicodeString::startsWith(ConstChar16Ptr srcChars, int32_t src_लंबाई) स्थिर {
+  अगर(src_लंबाई < 0) {
+    src_लंबाई = u_strlen(toUCharPtr(srcChars));
   }
-  return doEqualsSubstring(0, srcLength, srcChars, 0, srcLength);
+  वापस doEqualsSubstring(0, src_लंबाई, srcChars, 0, src_लंबाई);
 }
 
-inline UBool
-UnicodeString::startsWith(const char16_t *srcChars, int32_t srcStart, int32_t srcLength) const {
-  if(srcLength < 0) {
-    srcLength = u_strlen(toUCharPtr(srcChars));
+अंतरभूत UBool
+UnicodeString::startsWith(स्थिर char16_t *srcChars, int32_t srcStart, int32_t src_लंबाई) स्थिर {
+  अगर(src_लंबाई < 0) {
+    src_लंबाई = u_strlen(toUCharPtr(srcChars));
   }
-  return doEqualsSubstring(0, srcLength, srcChars, srcStart, srcLength);
+  वापस doEqualsSubstring(0, src_लंबाई, srcChars, srcStart, src_लंबाई);
 }
 
-inline UBool
-UnicodeString::endsWith(const UnicodeString& text) const
-{ return doEqualsSubstring(length() - text.length(), text.length(),
-           text, 0, text.length()); }
+अंतरभूत UBool
+UnicodeString::endsWith(स्थिर UnicodeString& text) स्थिर
+{ वापस doEqualsSubstring(लंबाई() - text.लंबाई(), text.लंबाई(),
+           text, 0, text.लंबाई()); }
 
-inline UBool
-UnicodeString::endsWith(const UnicodeString& srcText,
+अंतरभूत UBool
+UnicodeString::endsWith(स्थिर UnicodeString& srcText,
             int32_t srcStart,
-            int32_t srcLength) const {
-  srcText.pinIndices(srcStart, srcLength);
-  return doEqualsSubstring(length() - srcLength, srcLength,
-                   srcText, srcStart, srcLength);
+            int32_t src_लंबाई) स्थिर {
+  srcText.pinIndices(srcStart, src_लंबाई);
+  वापस doEqualsSubstring(लंबाई() - src_लंबाई, src_लंबाई,
+                   srcText, srcStart, src_लंबाई);
 }
 
-inline UBool
+अंतरभूत UBool
 UnicodeString::endsWith(ConstChar16Ptr srcChars,
-            int32_t srcLength) const {
-  if(srcLength < 0) {
-    srcLength = u_strlen(toUCharPtr(srcChars));
+            int32_t src_लंबाई) स्थिर {
+  अगर(src_लंबाई < 0) {
+    src_लंबाई = u_strlen(toUCharPtr(srcChars));
   }
-  return doEqualsSubstring(length() - srcLength, srcLength, srcChars, 0, srcLength);
+  वापस doEqualsSubstring(लंबाई() - src_लंबाई, src_लंबाई, srcChars, 0, src_लंबाई);
 }
 
-inline UBool
-UnicodeString::endsWith(const char16_t *srcChars,
+अंतरभूत UBool
+UnicodeString::endsWith(स्थिर char16_t *srcChars,
             int32_t srcStart,
-            int32_t srcLength) const {
-  if(srcLength < 0) {
-    srcLength = u_strlen(toUCharPtr(srcChars + srcStart));
+            int32_t src_लंबाई) स्थिर {
+  अगर(src_लंबाई < 0) {
+    src_लंबाई = u_strlen(toUCharPtr(srcChars + srcStart));
   }
-  return doEqualsSubstring(length() - srcLength, srcLength,
-                   srcChars, srcStart, srcLength);
+  वापस doEqualsSubstring(लंबाई() - src_लंबाई, src_लंबाई,
+                   srcChars, srcStart, src_लंबाई);
 }
 
 //========================================
 // replace
 //========================================
-inline UnicodeString&
+अंतरभूत UnicodeString&
 UnicodeString::replace(int32_t start,
-                       int32_t _length,
-                       const UnicodeString& srcText) U_LIFETIME_BOUND
-{ return doReplace(start, _length, srcText, 0, srcText.length()); }
+                       int32_t लंबाई_4,
+                       स्थिर UnicodeString& srcText) U_LIFETIME_BOUND
+{ वापस doReplace(start, लंबाई_4, srcText, 0, srcText.लंबाई()); }
 
-inline UnicodeString&
+अंतरभूत UnicodeString&
 UnicodeString::replace(int32_t start,
-                       int32_t _length,
-                       const UnicodeString& srcText,
+                       int32_t लंबाई_4,
+                       स्थिर UnicodeString& srcText,
                        int32_t srcStart,
-                       int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, _length, srcText, srcStart, srcLength); }
+                       int32_t src_लंबाई) U_LIFETIME_BOUND
+{ वापस doReplace(start, लंबाई_4, srcText, srcStart, src_लंबाई); }
 
-inline UnicodeString&
+अंतरभूत UnicodeString&
 UnicodeString::replace(int32_t start,
-                       int32_t _length,
+                       int32_t लंबाई_4,
                        ConstChar16Ptr srcChars,
-                       int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, _length, srcChars, 0, srcLength); }
+                       int32_t src_लंबाई) U_LIFETIME_BOUND
+{ वापस doReplace(start, लंबाई_4, srcChars, 0, src_लंबाई); }
 
-inline UnicodeString&
+अंतरभूत UnicodeString&
 UnicodeString::replace(int32_t start,
-                       int32_t _length,
-                       const char16_t* srcChars,
+                       int32_t लंबाई_4,
+                       स्थिर char16_t* srcChars,
                        int32_t srcStart,
-                       int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, _length, srcChars, srcStart, srcLength); }
+                       int32_t src_लंबाई) U_LIFETIME_BOUND
+{ वापस doReplace(start, लंबाई_4, srcChars, srcStart, src_लंबाई); }
 
-inline UnicodeString&
+अंतरभूत UnicodeString&
 UnicodeString::replace(int32_t start,
-                       int32_t _length,
+                       int32_t लंबाई_4,
                        char16_t srcChar) U_LIFETIME_BOUND
-{ return doReplace(start, _length, &srcChar, 0, 1); }
+{ वापस doReplace(start, लंबाई_4, &srcChar, 0, 1); }
 
-inline UnicodeString&
+अंतरभूत UnicodeString&
 UnicodeString::replaceBetween(int32_t start,
                               int32_t limit,
-                              const UnicodeString& srcText) U_LIFETIME_BOUND
-{ return doReplace(start, limit - start, srcText, 0, srcText.length()); }
+                              स्थिर UnicodeString& srcText) U_LIFETIME_BOUND
+{ वापस doReplace(start, limit - start, srcText, 0, srcText.लंबाई()); }
 
-inline UnicodeString&
+अंतरभूत UnicodeString&
 UnicodeString::replaceBetween(int32_t start,
                               int32_t limit,
-                              const UnicodeString& srcText,
+                              स्थिर UnicodeString& srcText,
                               int32_t srcStart,
                               int32_t srcLimit) U_LIFETIME_BOUND
-{ return doReplace(start, limit - start, srcText, srcStart, srcLimit - srcStart); }
+{ वापस doReplace(start, limit - start, srcText, srcStart, srcLimit - srcStart); }
 
-inline UnicodeString&
-UnicodeString::findAndReplace(const UnicodeString& oldText,
-                              const UnicodeString& newText) U_LIFETIME_BOUND
-{ return findAndReplace(0, length(), oldText, 0, oldText.length(),
-            newText, 0, newText.length()); }
+अंतरभूत UnicodeString&
+UnicodeString::findAndReplace(स्थिर UnicodeString& oldText,
+                              स्थिर UnicodeString& newText) U_LIFETIME_BOUND
+{ वापस findAndReplace(0, लंबाई(), oldText, 0, oldText.लंबाई(),
+            newText, 0, newText.लंबाई()); }
 
-inline UnicodeString&
+अंतरभूत UnicodeString&
 UnicodeString::findAndReplace(int32_t start,
-                              int32_t _length,
-                              const UnicodeString& oldText,
-                              const UnicodeString& newText) U_LIFETIME_BOUND
-{ return findAndReplace(start, _length, oldText, 0, oldText.length(),
-            newText, 0, newText.length()); }
+                              int32_t लंबाई_4,
+                              स्थिर UnicodeString& oldText,
+                              स्थिर UnicodeString& newText) U_LIFETIME_BOUND
+{ वापस findAndReplace(start, लंबाई_4, oldText, 0, oldText.लंबाई(),
+            newText, 0, newText.लंबाई()); }
 
 // ============================
 // extract
 // ============================
-inline void
+अंतरभूत व्योम
 UnicodeString::doExtract(int32_t start,
-             int32_t _length,
-             UnicodeString& target) const
-{ target.replace(0, target.length(), *this, start, _length); }
+             int32_t लंबाई_4,
+             UnicodeString& target) स्थिर
+{ target.replace(0, target.लंबाई(), *this, start, लंबाई_4); }
 
-inline void
+अंतरभूत व्योम
 UnicodeString::extract(int32_t start,
-               int32_t _length,
+               int32_t लंबाई_4,
                Char16Ptr target,
-               int32_t targetStart) const
-{ doExtract(start, _length, target, targetStart); }
+               int32_t targetStart) स्थिर
+{ doExtract(start, लंबाई_4, target, targetStart); }
 
-inline void
+अंतरभूत व्योम
 UnicodeString::extract(int32_t start,
-               int32_t _length,
-               UnicodeString& target) const
-{ doExtract(start, _length, target); }
+               int32_t लंबाई_4,
+               UnicodeString& target) स्थिर
+{ doExtract(start, लंबाई_4, target); }
 
-#if !UCONFIG_NO_CONVERSION
+#अगर !UCONFIG_NO_CONVERSION
 
-inline int32_t
+अंतरभूत int32_t
 UnicodeString::extract(int32_t start,
-               int32_t _length,
-               char *dst,
-               const char *codepage) const
+               int32_t लंबाई_4,
+               अक्षर *dst,
+               स्थिर अक्षर *codepage) स्थिर
 
 {
   // This dstSize value will be checked explicitly
-  return extract(start, _length, dst, dst != nullptr ? 0xffffffff : 0, codepage);
+  वापस extract(start, लंबाई_4, dst, dst != nullptr ? 0xffffffff : 0, codepage);
 }
 
-#endif
+#पूर्ण_अगर
 
-inline void
+अंतरभूत व्योम
 UnicodeString::extractBetween(int32_t start,
                   int32_t limit,
                   char16_t *dst,
-                  int32_t dstStart) const {
-  pinIndex(start);
-  pinIndex(limit);
+                  int32_t dstStart) स्थिर {
+  pin_सूचकांक(start);
+  pin_सूचकांक(limit);
   doExtract(start, limit - start, dst, dstStart);
 }
 
-inline UnicodeString
-UnicodeString::tempSubStringBetween(int32_t start, int32_t limit) const U_LIFETIME_BOUND {
-    return tempSubString(start, limit - start);
+अंतरभूत UnicodeString
+UnicodeString::अस्थायी_Sub_String_Between(int32_t start, int32_t limit) स्थिर U_LIFETIME_BOUND {
+    वापस अस्थायी_Sub_String(start, limit - start);
 }
 
-inline char16_t
-UnicodeString::doCharAt(int32_t offset) const
+अंतरभूत char16_t
+UnicodeString::doCharAt(int32_t offset) स्थिर
 {
-  if (static_cast<uint32_t>(offset) < static_cast<uint32_t>(length())) {
-    return getArrayStart()[offset];
-  } else {
-    return kInvalidUChar;
+  अगर (static_cast<uint32_t>(offset) < static_cast<uint32_t>(लंबाई())) {
+    वापस getArrayStart()[offset];
+  } अन्यथा {
+    वापस kInvalidUChar;
   }
 }
 
-inline char16_t
-UnicodeString::charAt(int32_t offset) const
-{ return doCharAt(offset); }
+अंतरभूत char16_t
+UnicodeString::charAt(int32_t offset) स्थिर
+{ वापस doCharAt(offset); }
 
-inline char16_t
-UnicodeString::operator[] (int32_t offset) const
-{ return doCharAt(offset); }
+अंतरभूत char16_t
+UnicodeString::चालक[] (int32_t offset) स्थिर
+{ वापस doCharAt(offset); }
 
-inline UBool
-UnicodeString::isEmpty() const {
+अंतरभूत UBool
+UnicodeString::isEmpty() स्थिर {
   // Arithmetic or logical right shift does not matter: only testing for 0.
-  return (fUnion.fFields.fLengthAndFlags>>kLengthShift) == 0;
+  वापस (fUnion.fFields.f_लंबाई_And_Flags>>k_लंबाई_Shift) == 0;
 }
 
 //========================================
 // Write implementation methods
 //========================================
-inline void
-UnicodeString::setZeroLength() {
-  fUnion.fFields.fLengthAndFlags &= kAllStorageFlags;
+अंतरभूत व्योम
+UnicodeString::set_Zero_लंबाई() {
+  fUnion.fFields.f_लंबाई_And_Flags &= kAllStorageFlags;
 }
 
-inline void
-UnicodeString::setShortLength(int32_t len) {
+अंतरभूत व्योम
+UnicodeString::set_Short_लंबाई(int32_t len) {
   // requires 0 <= len <= kMaxShortLength
-  fUnion.fFields.fLengthAndFlags =
-    static_cast<int16_t>((fUnion.fFields.fLengthAndFlags & kAllStorageFlags) | (len << kLengthShift));
+  fUnion.fFields.f_लंबाई_And_Flags =
+    static_cast<int16_t>((fUnion.fFields.f_लंबाई_And_Flags & kAllStorageFlags) | (len << k_लंबाई_Shift));
 }
 
-inline void
-UnicodeString::setLength(int32_t len) {
-  if(len <= kMaxShortLength) {
-    setShortLength(len);
-  } else {
-    fUnion.fFields.fLengthAndFlags |= kLengthIsLarge;
-    fUnion.fFields.fLength = len;
+अंतरभूत व्योम
+UnicodeString::set_लंबाई(int32_t len) {
+  अगर(len <= k_Max_Short_लंबाई) {
+    set_Short_लंबाई(len);
+  } अन्यथा {
+    fUnion.fFields.f_लंबाई_And_Flags |= k_लंबाई_Is_Large;
+    fUnion.fFields.f_लंबाई = len;
   }
 }
 
-inline void
+अंतरभूत व्योम
 UnicodeString::setToEmpty() {
-  fUnion.fFields.fLengthAndFlags = kShortString;
+  fUnion.fFields.f_लंबाई_And_Flags = kShortString;
 }
 
-inline void
+अंतरभूत व्योम
 UnicodeString::setArray(char16_t *array, int32_t len, int32_t capacity) {
-  setLength(len);
+  set_लंबाई(len);
   fUnion.fFields.fArray = array;
   fUnion.fFields.fCapacity = capacity;
 }
 
-inline UnicodeString&
-UnicodeString::operator=(char16_t ch) U_LIFETIME_BOUND
-{ return doReplace(0, length(), &ch, 0, 1); }
+अंतरभूत UnicodeString&
+UnicodeString::चालक=(char16_t ch) U_LIFETIME_BOUND
+{ वापस doReplace(0, लंबाई(), &ch, 0, 1); }
 
-inline UnicodeString&
-UnicodeString::operator=(UChar32 ch) U_LIFETIME_BOUND
-{ return replace(0, length(), ch); }
+अंतरभूत UnicodeString&
+UnicodeString::चालक=(UChar32 ch) U_LIFETIME_BOUND
+{ वापस replace(0, लंबाई(), ch); }
 
-inline UnicodeString&
-UnicodeString::setTo(const UnicodeString& srcText,
+अंतरभूत UnicodeString&
+UnicodeString::setTo(स्थिर UnicodeString& srcText,
                      int32_t srcStart,
-                     int32_t srcLength) U_LIFETIME_BOUND
+                     int32_t src_लंबाई) U_LIFETIME_BOUND
 {
   unBogus();
-  return doReplace(0, length(), srcText, srcStart, srcLength);
+  वापस doReplace(0, लंबाई(), srcText, srcStart, src_लंबाई);
 }
 
-inline UnicodeString&
-UnicodeString::setTo(const UnicodeString& srcText,
+अंतरभूत UnicodeString&
+UnicodeString::setTo(स्थिर UnicodeString& srcText,
                      int32_t srcStart) U_LIFETIME_BOUND
 {
   unBogus();
-  srcText.pinIndex(srcStart);
-  return doReplace(0, length(), srcText, srcStart, srcText.length() - srcStart);
+  srcText.pin_सूचकांक(srcStart);
+  वापस doReplace(0, लंबाई(), srcText, srcStart, srcText.लंबाई() - srcStart);
 }
 
-inline UnicodeString&
-UnicodeString::setTo(const UnicodeString& srcText) U_LIFETIME_BOUND
+अंतरभूत UnicodeString&
+UnicodeString::setTo(स्थिर UnicodeString& srcText) U_LIFETIME_BOUND
 {
-  return copyFrom(srcText);
+  वापस copyFrom(srcText);
 }
 
-inline UnicodeString&
-UnicodeString::setTo(const char16_t* srcChars,
-                     int32_t srcLength) U_LIFETIME_BOUND
+अंतरभूत UnicodeString&
+UnicodeString::setTo(स्थिर char16_t* srcChars,
+                     int32_t src_लंबाई) U_LIFETIME_BOUND
 {
   unBogus();
-  return doReplace(0, length(), srcChars, 0, srcLength);
+  वापस doReplace(0, लंबाई(), srcChars, 0, src_लंबाई);
 }
 
-inline UnicodeString&
+अंतरभूत UnicodeString&
 UnicodeString::setTo(char16_t srcChar) U_LIFETIME_BOUND
 {
   unBogus();
-  return doReplace(0, length(), &srcChar, 0, 1);
+  वापस doReplace(0, लंबाई(), &srcChar, 0, 1);
 }
 
-inline UnicodeString&
+अंतरभूत UnicodeString&
 UnicodeString::setTo(UChar32 srcChar) U_LIFETIME_BOUND
 {
   unBogus();
-  return replace(0, length(), srcChar);
+  वापस replace(0, लंबाई(), srcChar);
 }
 
-inline UnicodeString&
-UnicodeString::append(const UnicodeString& srcText,
+अंतरभूत UnicodeString&
+UnicodeString::append(स्थिर UnicodeString& srcText,
                       int32_t srcStart,
-                      int32_t srcLength) U_LIFETIME_BOUND
-{ return doAppend(srcText, srcStart, srcLength); }
+                      int32_t src_लंबाई) U_LIFETIME_BOUND
+{ वापस doAppend(srcText, srcStart, src_लंबाई); }
 
-inline UnicodeString&
-UnicodeString::append(const UnicodeString& srcText) U_LIFETIME_BOUND
-{ return doAppend(srcText, 0, srcText.length()); }
+अंतरभूत UnicodeString&
+UnicodeString::append(स्थिर UnicodeString& srcText) U_LIFETIME_BOUND
+{ वापस doAppend(srcText, 0, srcText.लंबाई()); }
 
-inline UnicodeString&
-UnicodeString::append(const char16_t* srcChars,
+अंतरभूत UnicodeString&
+UnicodeString::append(स्थिर char16_t* srcChars,
                       int32_t srcStart,
-                      int32_t srcLength) U_LIFETIME_BOUND
-{ return doAppend(srcChars, srcStart, srcLength); }
+                      int32_t src_लंबाई) U_LIFETIME_BOUND
+{ वापस doAppend(srcChars, srcStart, src_लंबाई); }
 
-inline UnicodeString&
+अंतरभूत UnicodeString&
 UnicodeString::append(ConstChar16Ptr srcChars,
-                      int32_t srcLength) U_LIFETIME_BOUND
-{ return doAppend(srcChars, 0, srcLength); }
+                      int32_t src_लंबाई) U_LIFETIME_BOUND
+{ वापस doAppend(srcChars, 0, src_लंबाई); }
 
-inline UnicodeString&
+अंतरभूत UnicodeString&
 UnicodeString::append(char16_t srcChar) U_LIFETIME_BOUND
-{ return doAppend(&srcChar, 0, 1); }
+{ वापस doAppend(&srcChar, 0, 1); }
 
-inline UnicodeString&
-UnicodeString::operator+=(char16_t ch) U_LIFETIME_BOUND
-{ return doAppend(&ch, 0, 1); }
+अंतरभूत UnicodeString&
+UnicodeString::चालक+=(char16_t ch) U_LIFETIME_BOUND
+{ वापस doAppend(&ch, 0, 1); }
 
-inline UnicodeString&
-UnicodeString::operator+=(UChar32 ch) U_LIFETIME_BOUND {
-  return append(ch);
+अंतरभूत UnicodeString&
+UnicodeString::चालक+=(UChar32 ch) U_LIFETIME_BOUND {
+  वापस append(ch);
 }
 
-inline UnicodeString&
-UnicodeString::operator+=(const UnicodeString& srcText) U_LIFETIME_BOUND
-{ return doAppend(srcText, 0, srcText.length()); }
+अंतरभूत UnicodeString&
+UnicodeString::चालक+=(स्थिर UnicodeString& srcText) U_LIFETIME_BOUND
+{ वापस doAppend(srcText, 0, srcText.लंबाई()); }
 
-inline UnicodeString&
-UnicodeString::insert(int32_t start,
-                      const UnicodeString& srcText,
+अंतरभूत UnicodeString&
+UnicodeString::जोड़ो(int32_t start,
+                      स्थिर UnicodeString& srcText,
                       int32_t srcStart,
-                      int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, 0, srcText, srcStart, srcLength); }
+                      int32_t src_लंबाई) U_LIFETIME_BOUND
+{ वापस doReplace(start, 0, srcText, srcStart, src_लंबाई); }
 
-inline UnicodeString&
-UnicodeString::insert(int32_t start,
-                      const UnicodeString& srcText) U_LIFETIME_BOUND
-{ return doReplace(start, 0, srcText, 0, srcText.length()); }
+अंतरभूत UnicodeString&
+UnicodeString::जोड़ो(int32_t start,
+                      स्थिर UnicodeString& srcText) U_LIFETIME_BOUND
+{ वापस doReplace(start, 0, srcText, 0, srcText.लंबाई()); }
 
-inline UnicodeString&
-UnicodeString::insert(int32_t start,
-                      const char16_t* srcChars,
+अंतरभूत UnicodeString&
+UnicodeString::जोड़ो(int32_t start,
+                      स्थिर char16_t* srcChars,
                       int32_t srcStart,
-                      int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, 0, srcChars, srcStart, srcLength); }
+                      int32_t src_लंबाई) U_LIFETIME_BOUND
+{ वापस doReplace(start, 0, srcChars, srcStart, src_लंबाई); }
 
-inline UnicodeString&
-UnicodeString::insert(int32_t start,
+अंतरभूत UnicodeString&
+UnicodeString::जोड़ो(int32_t start,
                       ConstChar16Ptr srcChars,
-                      int32_t srcLength) U_LIFETIME_BOUND
-{ return doReplace(start, 0, srcChars, 0, srcLength); }
+                      int32_t src_लंबाई) U_LIFETIME_BOUND
+{ वापस doReplace(start, 0, srcChars, 0, src_लंबाई); }
 
-inline UnicodeString&
-UnicodeString::insert(int32_t start,
+अंतरभूत UnicodeString&
+UnicodeString::जोड़ो(int32_t start,
                       char16_t srcChar) U_LIFETIME_BOUND
-{ return doReplace(start, 0, &srcChar, 0, 1); }
+{ वापस doReplace(start, 0, &srcChar, 0, 1); }
 
-inline UnicodeString&
-UnicodeString::insert(int32_t start,
+अंतरभूत UnicodeString&
+UnicodeString::जोड़ो(int32_t start,
                       UChar32 srcChar) U_LIFETIME_BOUND
-{ return replace(start, 0, srcChar); }
+{ वापस replace(start, 0, srcChar); }
 
 
-inline UnicodeString&
-UnicodeString::remove() U_LIFETIME_BOUND
+अंतरभूत UnicodeString&
+UnicodeString::हटाओ() U_LIFETIME_BOUND
 {
   // remove() of a bogus string makes the string empty and non-bogus
-  if(isBogus()) {
+  अगर(isBogus()) {
     setToEmpty();
-  } else {
-    setZeroLength();
+  } अन्यथा {
+    set_Zero_लंबाई();
   }
-  return *this;
+  वापस *this;
 }
 
-inline UnicodeString&
-UnicodeString::remove(int32_t start,
-                      int32_t _length) U_LIFETIME_BOUND
+अंतरभूत UnicodeString&
+UnicodeString::हटाओ(int32_t start,
+                      int32_t लंबाई_4) U_LIFETIME_BOUND
 {
-    if(start <= 0 && _length == INT32_MAX) {
+    अगर(start <= 0 && लंबाई_4 == INT32_MAX) {
         // remove(guaranteed everything) of a bogus string makes the string empty and non-bogus
-        return remove();
+        वापस हटाओ();
     }
-    return doReplace(start, _length, nullptr, 0, 0);
+    वापस doReplace(start, लंबाई_4, nullptr, 0, 0);
 }
 
-inline UnicodeString&
+अंतरभूत UnicodeString&
 UnicodeString::removeBetween(int32_t start,
                              int32_t limit) U_LIFETIME_BOUND
-{ return doReplace(start, limit - start, nullptr, 0, 0); }
+{ वापस doReplace(start, limit - start, nullptr, 0, 0); }
 
-inline UnicodeString&
+अंतरभूत UnicodeString&
 UnicodeString::retainBetween(int32_t start, int32_t limit) U_LIFETIME_BOUND {
   truncate(limit);
-  return doReplace(0, start, nullptr, 0, 0);
+  वापस doReplace(0, start, nullptr, 0, 0);
 }
 
-inline UBool
-UnicodeString::truncate(int32_t targetLength)
+अंतरभूत UBool
+UnicodeString::truncate(int32_t target_लंबाई)
 {
-  if(isBogus() && targetLength == 0) {
+  अगर(isBogus() && target_लंबाई == 0) {
     // truncate(0) of a bogus string makes the string empty and non-bogus
     unBogus();
-    return false;
-  } else if (static_cast<uint32_t>(targetLength) < static_cast<uint32_t>(length())) {
-    setLength(targetLength);
-    return true;
-  } else {
-    return false;
+    वापस false;
+  } अन्यथा अगर (static_cast<uint32_t>(target_लंबाई) < static_cast<uint32_t>(लंबाई())) {
+    set_लंबाई(target_लंबाई);
+    वापस true;
+  } अन्यथा {
+    वापस false;
   }
 }
 
-inline UnicodeString&
+अंतरभूत UnicodeString&
 UnicodeString::reverse() U_LIFETIME_BOUND
-{ return doReverse(0, length()); }
+{ वापस doReverse(0, लंबाई()); }
 
-inline UnicodeString&
+अंतरभूत UnicodeString&
 UnicodeString::reverse(int32_t start,
-                       int32_t _length) U_LIFETIME_BOUND
-{ return doReverse(start, _length); }
+                       int32_t लंबाई_4) U_LIFETIME_BOUND
+{ वापस doReverse(start, लंबाई_4); }
 
 U_NAMESPACE_END
 
-#endif /* U_SHOW_CPLUSPLUS_API */
+#पूर्ण_अगर /* U_SHOW_CPLUSPLUS_API */
 
-#endif
+#पूर्ण_अगर

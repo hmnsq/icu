@@ -18,27 +18,27 @@
 *   Internal USet definitions.
 */
 
-#ifndef __USET_IMP_H__
-#define __USET_IMP_H__
+#अगर_अघोषित __USET_IMP_H__
+#घोषणा __USET_IMP_H__
 
-#include "unicode/utypes.h"
-#include "unicode/uset.h"
+#समावेश "unicode/utypes.h"
+#समावेश "unicode/uset.h"
 
 U_CDECL_BEGIN
 
-typedef void U_CALLCONV
+प्रकार व्योम U_CALLCONV
 USetAdd(USet *set, UChar32 c);
 
-typedef void U_CALLCONV
+प्रकार व्योम U_CALLCONV
 USetAddRange(USet *set, UChar32 start, UChar32 end);
 
-typedef void U_CALLCONV
-USetAddString(USet *set, const UChar *str, int32_t length);
+प्रकार व्योम U_CALLCONV
+USetAddString(USet *set, स्थिर UChar *str, int32_t लंबाई);
 
-typedef void U_CALLCONV
+प्रकार व्योम U_CALLCONV
 USetRemove(USet *set, UChar32 c);
 
-typedef void U_CALLCONV
+प्रकार व्योम U_CALLCONV
 USetRemoveRange(USet *set, UChar32 start, UChar32 end);
 
 /**
@@ -46,19 +46,19 @@ USetRemoveRange(USet *set, UChar32 start, UChar32 end);
  * statically depending on the USet implementation.
  * Calls will look like sa->add(sa->set, c);
  */
-struct USetAdder {
+काष्ठा USetAdder {
     USet *set;
     USetAdd *add;
     USetAddRange *addRange;
     USetAddString *addString;
-    USetRemove *remove;
+    USetRemove *हटाओ;
     USetRemoveRange *removeRange;
 };
-typedef struct USetAdder USetAdder;
+प्रकार काष्ठा USetAdder USetAdder;
 
 U_CDECL_END
 
-#ifdef __cplusplus
+#अगर_घोषित __cplusplus
 
 namespace {
 
@@ -66,6 +66,6 @@ constexpr int32_t USET_CASE_MASK = USET_CASE_INSENSITIVE | USET_ADD_CASE_MAPPING
 
 }  // namespace
 
-#endif  // __cplusplus
+#पूर्ण_अगर  // __cplusplus
 
-#endif
+#पूर्ण_अगर

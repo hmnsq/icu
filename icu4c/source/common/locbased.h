@@ -10,11 +10,11 @@
 * Since: ICU 2.8
 **********************************************************************
 */
-#ifndef LOCBASED_H
-#define LOCBASED_H
+#अगर_अघोषित LOCBASED_H
+#घोषणा LOCBASED_H
 
-#include "unicode/locid.h"
-#include "unicode/uobject.h"
+#समावेश "unicode/locid.h"
+#समावेश "unicode/uobject.h"
 
 U_NAMESPACE_BEGIN
 
@@ -25,9 +25,9 @@ U_NAMESPACE_BEGIN
  * services framework.
  * @since ICU 2.8
  */
-class U_COMMON_API LocaleBased : public UMemory {
+class U_COMMON_API LocaleBased : खुला UMemory {
 
- public:
+ खुला:
 
     /**
      * Return locale meta-data for the service object wrapped by this
@@ -39,10 +39,10 @@ class U_COMMON_API LocaleBased : public UMemory {
      * @param status input-output error code
      * @return the indicated locale
      */
-    static const Locale& getLocale(
-        const Locale& valid U_LIFETIME_BOUND,
-        const Locale& actual U_LIFETIME_BOUND,
-        ULocDataLocaleType type,
+    अटल स्थिर Locale& getLocale(
+        स्थिर Locale& valid U_LIFETIME_BOUND,
+        स्थिर Locale& actual U_LIFETIME_BOUND,
+        ULoc_तथ्य_Locale_Type type,
         UErrorCode& status);
 
     /**
@@ -55,12 +55,12 @@ class U_COMMON_API LocaleBased : public UMemory {
      * @param status input-output error code
      * @return the indicated locale ID
      */
-    static const char* getLocaleID(
-        const Locale& valid, const Locale& actual,
-        ULocDataLocaleType type, UErrorCode& status);
+    अटल स्थिर अक्षर* getLocaleID(
+        स्थिर Locale& valid, स्थिर Locale& actual,
+        ULoc_तथ्य_Locale_Type type, UErrorCode& status);
 
 };
 
 U_NAMESPACE_END
 
-#endif
+#पूर्ण_अगर
