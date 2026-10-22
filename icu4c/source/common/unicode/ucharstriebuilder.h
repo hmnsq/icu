@@ -19,7 +19,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ако U_SHOW_CPLUSPLUS_API
 
 #include "unicode/stringtriebuilder.h"
 #include "unicode/ucharstrie.h"
@@ -132,7 +132,7 @@ public:
         strings.remove();
         elementsLength=0;
         ucharsLength=0;
-        return *this;
+        върни *this;
     }
 
 private:
@@ -151,11 +151,11 @@ private:
     virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t count) const override;
     virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) const override;
 
-    virtual UBool matchNodesCanHaveValues() const override { return true; }
+    virtual UBool matchNodesCanHaveValues() const override { върни true; }
 
-    virtual int32_t getMaxBranchLinearSubNodeLength() const override { return UCharsTrie::kMaxBranchLinearSubNodeLength; }
-    virtual int32_t getMinLinearMatch() const override { return UCharsTrie::kMinLinearMatch; }
-    virtual int32_t getMaxLinearMatchLength() const override { return UCharsTrie::kMaxLinearMatchLength; }
+    virtual int32_t getMaxBranchLinearSubNodeLength() const override { върни UCharsTrie::kMaxBranchLinearSubNodeLength; }
+    virtual int32_t getMinLinearMatch() const override { върни UCharsTrie::kMinLinearMatch; }
+    virtual int32_t getMaxLinearMatchLength() const override { върни UCharsTrie::kMaxLinearMatchLength; }
 
     class UCTLinearMatchNode : public LinearMatchNode {
     public:

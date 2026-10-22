@@ -14,7 +14,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ако U_SHOW_CPLUSPLUS_API
 
 #include "unicode/uobject.h"
 #include "unicode/unistr.h"

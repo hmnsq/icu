@@ -28,7 +28,7 @@
 
 #include "unicode/ucnvsel.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ако !UCONFIG_NO_CONVERSION
 
 #include <string.h>
 
@@ -64,35 +64,35 @@ static void generateSelectorData(UConverterSelector* result,
                                  const USet* excludedCodePoints,
                                  const UConverterUnicodeSet whichSet,
                                  UErrorCode* status) {
-  if (U_FAILURE(*status)) {
-    return;
+  ако (U_FAILURE(*status)) {
+    върни;
   }
 
   int32_t columns = (result->encodingsCount+31)/32;
 
   // set errorValue to all-ones
-  for (int32_t col = 0; col < columns; col++) {
+  за (int32_t col = 0; col < columns; col++) {
     upvec_setValue(upvec, UPVEC_ERROR_VALUE_CP, UPVEC_ERROR_VALUE_CP,
                    col, static_cast<uint32_t>(~0), static_cast<uint32_t>(~0), status);
   }
 
-  for (int32_t i = 0; i < result->encodingsCount; ++i) {
+  за (int32_t i = 0; i < result->encodingsCount; ++i) {
     uint32_t mask;
     uint32_t column;
     int32_t item_count;
     int32_t j;
     UConverter* test_converter = ucnv_open(result->encodings[i], status);
-    if (U_FAILURE(*status)) {
-      return;
+    ако (U_FAILURE(*status)) {
+      върни;
     }
     USet* unicode_point_set;
     unicode_point_set = uset_open(1, 0);  // empty set
 
     ucnv_getUnicodeSet(test_converter, unicode_point_set,
                        whichSet, status);
-    if (U_FAILURE(*status)) {
+    ако (U_FAILURE(*status)) {
       ucnv_close(test_converter);
-      return;
+      върни;
     }
 
     column = i / 32;
@@ -100,37 +100,37 @@ static void generateSelectorData(UConverterSelector* result,
     // now iterate over intervals on set i!
     item_count = uset_getItemCount(unicode_point_set);
 
-    for (j = 0; j < item_count; ++j) {
+    за (j = 0; j < item_count; ++j) {
       UChar32 start_char;
       UChar32 end_char;
       UErrorCode smallStatus = U_ZERO_ERROR;
       uset_getItem(unicode_point_set, j, &start_char, &end_char, nullptr, 0,
                    &smallStatus);
-      if (U_FAILURE(smallStatus)) {
+      ако (U_FAILURE(smallStatus)) {
         // this will be reached for the converters that fill the set with
         // strings. Those should be ignored by our system
-      } else {
+      } иначе {
         upvec_setValue(upvec, start_char, end_char, column, static_cast<uint32_t>(~0), mask,
                        status);
       }
     }
     ucnv_close(test_converter);
     uset_close(unicode_point_set);
-    if (U_FAILURE(*status)) {
-      return;
+    ако (U_FAILURE(*status)) {
+      върни;
     }
   }
 
   // handle excluded encodings! Simply set their values to all 1's in the upvec
-  if (excludedCodePoints) {
+  ако (excludedCodePoints) {
     int32_t item_count = uset_getItemCount(excludedCodePoints);
-    for (int32_t j = 0; j < item_count; ++j) {
+    за (int32_t j = 0; j < item_count; ++j) {
       UChar32 start_char;
       UChar32 end_char;
 
       uset_getItem(excludedCodePoints, j, &start_char, &end_char, nullptr, 0,
                    status);
-      for (int32_t col = 0; col < columns; col++) {
+      за (int32_t col = 0; col < columns; col++) {
         upvec_setValue(upvec, start_char, end_char, col, static_cast<uint32_t>(~0), static_cast<uint32_t>(~0),
                       status);
       }
@@ -152,62 +152,62 @@ ucnvsel_open(const char* const*  converterList, int32_t converterListSize,
              const USet* excludedCodePoints,
              const UConverterUnicodeSet whichSet, UErrorCode* status) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  ако (U_FAILURE(*status)) {
+    върни nullptr;
   }
   // ensure args make sense!
-  if (converterListSize < 0 || (converterList == nullptr && converterListSize != 0)) {
+  ако (converterListSize < 0 || (converterList == nullptr && converterListSize != 0)) {
     *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+    върни nullptr;
   }
 
   // allocate a new converter
   LocalUConverterSelectorPointer newSelector(
     (UConverterSelector*)uprv_malloc(sizeof(UConverterSelector)));
-  if (newSelector.isNull()) {
+  ако (newSelector.isNull()) {
     *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+    върни nullptr;
   }
   uprv_memset(newSelector.getAlias(), 0, sizeof(UConverterSelector));
 
-  if (converterListSize == 0) {
+  ако (converterListSize == 0) {
     converterList = nullptr;
     converterListSize = ucnv_countAvailable();
   }
   newSelector->encodings =
     (char**)uprv_malloc(converterListSize * sizeof(char*));
-  if (!newSelector->encodings) {
+  ако (!newSelector->encodings) {
     *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+    върни nullptr;
   }
   newSelector->encodings[0] = nullptr;  // now we can call ucnvsel_close()
 
   // make a backup copy of the list of converters
   int32_t totalSize = 0;
   int32_t i;
-  for (i = 0; i < converterListSize; i++) {
+  за (i = 0; i < converterListSize; i++) {
     totalSize +=
       (int32_t)uprv_strlen(converterList != nullptr ? converterList[i] : ucnv_getAvailableName(i)) + 1;
   }
   // 4-align the totalSize to 4-align the size of the serialized form
   int32_t encodingStrPadding = totalSize & 3;
-  if (encodingStrPadding != 0) {
+  ако (encodingStrPadding != 0) {
     encodingStrPadding = 4 - encodingStrPadding;
   }
   newSelector->encodingStrLength = totalSize += encodingStrPadding;
   char* allStrings = (char*) uprv_malloc(totalSize);
-  if (!allStrings) {
+  ако (!allStrings) {
     *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+    върни nullptr;
   }
 
-  for (i = 0; i < converterListSize; i++) {
+  за (i = 0; i < converterListSize; i++) {
     newSelector->encodings[i] = allStrings;
     uprv_strcpy(newSelector->encodings[i],
                 converterList != nullptr ? converterList[i] : ucnv_getAvailableName(i));
     allStrings += uprv_strlen(newSelector->encodings[i]) + 1;
   }
-  while (encodingStrPadding > 0) {
+  докато (encodingStrPadding > 0) {
     *allStrings++ = 0;
     --encodingStrPadding;
   }
@@ -218,24 +218,24 @@ ucnvsel_open(const char* const*  converterList, int32_t converterListSize,
   generateSelectorData(newSelector.getAlias(), upvec, excludedCodePoints, whichSet, status);
   upvec_close(upvec);
 
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  ако (U_FAILURE(*status)) {
+    върни nullptr;
   }
 
-  return newSelector.orphan();
+  върни newSelector.orphan();
 }
 
 /* close opened selector */
 U_CAPI void U_EXPORT2
 ucnvsel_close(UConverterSelector *sel) {
-  if (!sel) {
-    return;
+  ако (!sel) {
+    върни;
   }
-  if (sel->ownEncodingStrings) {
+  ако (sel->ownEncodingStrings) {
     uprv_free(sel->encodings[0]);
   }
   uprv_free(sel->encodings);
-  if (sel->ownPv) {
+  ако (sel->ownPv) {
     uprv_free(sel->pv);
   }
   utrie2_close(sel->trie);
@@ -283,21 +283,21 @@ U_CAPI int32_t U_EXPORT2
 ucnvsel_serialize(const UConverterSelector* sel,
                   void* buffer, int32_t bufferCapacity, UErrorCode* status) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return 0;
+  ако (U_FAILURE(*status)) {
+    върни 0;
   }
   // ensure args make sense!
   uint8_t *p = (uint8_t *)buffer;
-  if (bufferCapacity < 0 ||
+  ако (bufferCapacity < 0 ||
       (bufferCapacity > 0 && (p == nullptr || (U_POINTER_MASK_LSB(p, 3) != 0)))
   ) {
     *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+    върни 0;
   }
   // add up the size of the serialized form
   int32_t serializedTrieSize = utrie2_serialize(sel->trie, nullptr, 0, status);
-  if (*status != U_BUFFER_OVERFLOW_ERROR && U_FAILURE(*status)) {
-    return 0;
+  ако (*status != U_BUFFER_OVERFLOW_ERROR && U_FAILURE(*status)) {
+    върни 0;
   }
   *status = U_ZERO_ERROR;
 
@@ -322,9 +322,9 @@ ucnvsel_serialize(const UConverterSelector* sel,
     sel->pvCount * 4 +
     sel->encodingStrLength;
   indexes[UCNVSEL_INDEX_SIZE] = totalSize - header.dataHeader.headerSize;
-  if (totalSize > bufferCapacity) {
+  ако (totalSize > bufferCapacity) {
     *status = U_BUFFER_OVERFLOW_ERROR;
-    return totalSize;
+    върни totalSize;
   }
   // ok, save!
   int32_t length = header.dataHeader.headerSize;
@@ -346,7 +346,7 @@ ucnvsel_serialize(const UConverterSelector* sel,
   uprv_memcpy(p, sel->encodings[0], sel->encodingStrLength);
   p += sel->encodingStrLength;
 
-  return totalSize;
+  върни totalSize;
 }
 
 /**
@@ -372,13 +372,13 @@ ucnvsel_swap(const UDataSwapper *ds,
              void *outData, UErrorCode *status) {
   /* udata_swapDataHeader checks the arguments */
   int32_t headerSize = udata_swapDataHeader(ds, inData, length, outData, status);
-  if(U_FAILURE(*status)) {
-    return 0;
+  ако(U_FAILURE(*status)) {
+    върни 0;
   }
 
   /* check data format and format version */
   const UDataInfo* pInfo = reinterpret_cast<const UDataInfo*>(static_cast<const char*>(inData) + 4);
-  if(!(
+  ако(!(
     pInfo->dataFormat[0] == 0x43 &&  /* dataFormat="CSel" */
     pInfo->dataFormat[1] == 0x53 &&
     pInfo->dataFormat[2] == 0x65 &&
@@ -388,22 +388,22 @@ ucnvsel_swap(const UDataSwapper *ds,
                      pInfo->dataFormat[0], pInfo->dataFormat[1],
                      pInfo->dataFormat[2], pInfo->dataFormat[3]);
     *status = U_INVALID_FORMAT_ERROR;
-    return 0;
+    върни 0;
   }
-  if(pInfo->formatVersion[0] != 1) {
+  ако(pInfo->formatVersion[0] != 1) {
     udata_printError(ds, "ucnvsel_swap(): format version %02x is not supported\n",
                      pInfo->formatVersion[0]);
     *status = U_UNSUPPORTED_ERROR;
-    return 0;
+    върни 0;
   }
 
-  if(length >= 0) {
+  ако(length >= 0) {
     length -= headerSize;
-    if(length < 16*4) {
+    ако(length < 16*4) {
       udata_printError(ds, "ucnvsel_swap(): too few bytes (%d after header) for UConverterSelector data\n",
                        length);
       *status = U_INDEX_OUTOFBOUNDS_ERROR;
-      return 0;
+      върни 0;
     }
   }
 
@@ -414,22 +414,22 @@ ucnvsel_swap(const UDataSwapper *ds,
   const int32_t* inIndexes = reinterpret_cast<const int32_t*>(inBytes);
   int32_t indexes[16];
   int32_t i;
-  for(i = 0; i < 16; ++i) {
+  за(i = 0; i < 16; ++i) {
     indexes[i] = udata_readInt32(ds, inIndexes[i]);
   }
 
   /* get the total length of the data */
   int32_t size = indexes[UCNVSEL_INDEX_SIZE];
-  if(length >= 0) {
-    if(length < size) {
+  ако(length >= 0) {
+    ако(length < size) {
       udata_printError(ds, "ucnvsel_swap(): too few bytes (%d after header) for all of UConverterSelector data\n",
                        length);
       *status = U_INDEX_OUTOFBOUNDS_ERROR;
-      return 0;
+      върни 0;
     }
 
     /* copy the data for inaccessible bytes */
-    if(inBytes != outBytes) {
+    ако(inBytes != outBytes) {
       uprv_memcpy(outBytes, inBytes, size);
     }
 
@@ -458,7 +458,7 @@ ucnvsel_swap(const UDataSwapper *ds,
     U_ASSERT(offset == size);
   }
 
-  return headerSize + size;
+  върни headerSize + size;
 }
 
 /* unserialize a selector */
@@ -467,25 +467,25 @@ ucnvsel_openFromSerialized(const void* buffer U_LIFETIME_BOUND,
                            int32_t length,
                            UErrorCode* status) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  ако (U_FAILURE(*status)) {
+    върни nullptr;
   }
   // ensure args make sense!
   const uint8_t *p = (const uint8_t *)buffer;
-  if (length <= 0 ||
+  ако (length <= 0 ||
       (length > 0 && (p == nullptr || (U_POINTER_MASK_LSB(p, 3) != 0)))
   ) {
     *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+    върни nullptr;
   }
   // header
-  if (length < 32) {
+  ако (length < 32) {
     // not even enough space for a minimal header
     *status = U_INDEX_OUTOFBOUNDS_ERROR;
-    return nullptr;
+    върни nullptr;
   }
   const DataHeader *pHeader = (const DataHeader *)p;
-  if (!(
+  ако (!(
     pHeader->dataHeader.magic1==0xda &&
     pHeader->dataHeader.magic2==0x27 &&
     pHeader->info.dataFormat[0] == 0x43 &&
@@ -495,58 +495,58 @@ ucnvsel_openFromSerialized(const void* buffer U_LIFETIME_BOUND,
   )) {
     /* header not valid or dataFormat not recognized */
     *status = U_INVALID_FORMAT_ERROR;
-    return nullptr;
+    върни nullptr;
   }
-  if (pHeader->info.formatVersion[0] != 1) {
+  ако (pHeader->info.formatVersion[0] != 1) {
     *status = U_UNSUPPORTED_ERROR;
-    return nullptr;
+    върни nullptr;
   }
   uint8_t* swapped = nullptr;
-  if (pHeader->info.isBigEndian != U_IS_BIG_ENDIAN ||
+  ако (pHeader->info.isBigEndian != U_IS_BIG_ENDIAN ||
       pHeader->info.charsetFamily != U_CHARSET_FAMILY
   ) {
     // swap the data
     UDataSwapper *ds =
       udata_openSwapperForInputData(p, length, U_IS_BIG_ENDIAN, U_CHARSET_FAMILY, status);
     int32_t totalSize = ucnvsel_swap(ds, p, -1, nullptr, status);
-    if (U_FAILURE(*status)) {
+    ако (U_FAILURE(*status)) {
       udata_closeSwapper(ds);
-      return nullptr;
+      върни nullptr;
     }
-    if (length < totalSize) {
+    ако (length < totalSize) {
       udata_closeSwapper(ds);
       *status = U_INDEX_OUTOFBOUNDS_ERROR;
-      return nullptr;
+      върни nullptr;
     }
     swapped = (uint8_t*)uprv_malloc(totalSize);
-    if (swapped == nullptr) {
+    ако (swapped == nullptr) {
       udata_closeSwapper(ds);
       *status = U_MEMORY_ALLOCATION_ERROR;
-      return nullptr;
+      върни nullptr;
     }
     ucnvsel_swap(ds, p, length, swapped, status);
     udata_closeSwapper(ds);
-    if (U_FAILURE(*status)) {
+    ако (U_FAILURE(*status)) {
       uprv_free(swapped);
-      return nullptr;
+      върни nullptr;
     }
     p = swapped;
     pHeader = (const DataHeader *)p;
   }
-  if (length < (pHeader->dataHeader.headerSize + 16 * 4)) {
+  ако (length < (pHeader->dataHeader.headerSize + 16 * 4)) {
     // not even enough space for the header and the indexes
     uprv_free(swapped);
     *status = U_INDEX_OUTOFBOUNDS_ERROR;
-    return nullptr;
+    върни nullptr;
   }
   p += pHeader->dataHeader.headerSize;
   length -= pHeader->dataHeader.headerSize;
   // indexes
   const int32_t *indexes = (const int32_t *)p;
-  if (length < indexes[UCNVSEL_INDEX_SIZE]) {
+  ако (length < indexes[UCNVSEL_INDEX_SIZE]) {
     uprv_free(swapped);
     *status = U_INDEX_OUTOFBOUNDS_ERROR;
-    return nullptr;
+    върни nullptr;
   }
   p += UCNVSEL_INDEX_COUNT * 4;
   // create and populate the selector object
@@ -554,12 +554,12 @@ ucnvsel_openFromSerialized(const void* buffer U_LIFETIME_BOUND,
   char **encodings =
     (char **)uprv_malloc(
       indexes[UCNVSEL_INDEX_NAMES_COUNT] * sizeof(char *));
-  if (sel == nullptr || encodings == nullptr) {
+  ако (sel == nullptr || encodings == nullptr) {
     uprv_free(swapped);
     uprv_free(sel);
     uprv_free(encodings);
     *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+    върни nullptr;
   }
   uprv_memset(sel, 0, sizeof(UConverterSelector));
   sel->pvCount = indexes[UCNVSEL_INDEX_PV_COUNT];
@@ -572,22 +572,22 @@ ucnvsel_openFromSerialized(const void* buffer U_LIFETIME_BOUND,
                                         p, indexes[UCNVSEL_INDEX_TRIE_SIZE], nullptr,
                                         status);
   p += indexes[UCNVSEL_INDEX_TRIE_SIZE];
-  if (U_FAILURE(*status)) {
+  ако (U_FAILURE(*status)) {
     ucnvsel_close(sel);
-    return nullptr;
+    върни nullptr;
   }
   // bit vectors
   sel->pv = (uint32_t *)p;
   p += sel->pvCount * 4;
   // encoding names
   char* s = (char*)p;
-  for (int32_t i = 0; i < sel->encodingsCount; ++i) {
+  за (int32_t i = 0; i < sel->encodingsCount; ++i) {
     sel->encodings[i] = s;
     s += uprv_strlen(s) + 1;
   }
   p += sel->encodingStrLength;
 
-  return sel;
+  върни sel;
 }
 
 // a bunch of functions for the enumeration thingie! Nothing fancy here. Just
@@ -612,10 +612,10 @@ ucnvsel_close_selector_iterator(UEnumeration *enumerator) {
 static int32_t U_CALLCONV
 ucnvsel_count_encodings(UEnumeration *enumerator, UErrorCode *status) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return 0;
+  ако (U_FAILURE(*status)) {
+    върни 0;
   }
-  return ((Enumerator*)(enumerator->context))->length;
+  върни ((Enumerator*)(enumerator->context))->length;
 }
 
 
@@ -623,30 +623,30 @@ static const char* U_CALLCONV ucnvsel_next_encoding(UEnumeration* enumerator,
                                                  int32_t* resultLength,
                                                  UErrorCode* status) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  ако (U_FAILURE(*status)) {
+    върни nullptr;
   }
 
   int16_t cur = ((Enumerator*)(enumerator->context))->cur;
   const UConverterSelector* sel;
   const char* result;
-  if (cur >= ((Enumerator*)(enumerator->context))->length) {
-    return nullptr;
+  ако (cur >= ((Enumerator*)(enumerator->context))->length) {
+    върни nullptr;
   }
   sel = ((Enumerator*)(enumerator->context))->sel;
   result = sel->encodings[((Enumerator*)(enumerator->context))->index[cur] ];
   ((Enumerator*)(enumerator->context))->cur++;
-  if (resultLength) {
+  ако (resultLength) {
     *resultLength = (int32_t)uprv_strlen(result);
   }
-  return result;
+  върни result;
 }
 
 static void U_CALLCONV ucnvsel_reset_iterator(UEnumeration* enumerator,
                                            UErrorCode* status) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return ;
+  ако (U_FAILURE(*status)) {
+    върни ;
   }
   ((Enumerator*)(enumerator->context))->cur = 0;
 }
@@ -670,24 +670,24 @@ static const UEnumeration defaultEncodings = {
 static UBool intersectMasks(uint32_t* dest, const uint32_t* source1, int32_t len) {
   int32_t i;
   uint32_t oredDest = 0;
-  for (i = 0 ; i < len ; ++i) {
+  за (i = 0 ; i < len ; ++i) {
     oredDest |= (dest[i] &= source1[i]);
   }
-  return oredDest == 0;
+  върни oredDest == 0;
 }
 
 // internal fn to count how many 1's are there in a mask
 // algorithm taken from  http://graphics.stanford.edu/~seander/bithacks.html
 static int16_t countOnes(uint32_t* mask, int32_t len) {
   int32_t i, totalOnes = 0;
-  for (i = 0 ; i < len ; ++i) {
+  за (i = 0 ; i < len ; ++i) {
     uint32_t ent = mask[i];
-    for (; ent; totalOnes++)
+    за (; ent; totalOnes++)
     {
       ent &= ent - 1; // clear the least significant bit set
     }
   }
-  return static_cast<int16_t>(totalOnes);
+  върни static_cast<int16_t>(totalOnes);
 }
 
 
@@ -700,37 +700,37 @@ selectForMask(const UConverterSelector* sel U_LIFETIME_BOUND,
   // this is the context we will use. Store a table of indices to which
   // encodings are legit.
   LocalMemory<Enumerator> result(static_cast<Enumerator *>(uprv_malloc(sizeof(Enumerator))));
-  if (result.isNull()) {
+  ако (result.isNull()) {
     *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+    върни nullptr;
   }
   result->index = nullptr;  // this will be allocated later!
   result->length = result->cur = 0;
   result->sel = sel;
 
   LocalMemory<UEnumeration> en(static_cast<UEnumeration *>(uprv_malloc(sizeof(UEnumeration))));
-  if (en.isNull()) {
+  ако (en.isNull()) {
     // TODO(markus): Combine Enumerator and UEnumeration into one struct.
     *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+    върни nullptr;
   }
   memcpy(en.getAlias(), &defaultEncodings, sizeof(UEnumeration));
   
   int32_t columns = (sel->encodingsCount+31)/32;
   int16_t numOnes = countOnes(mask.getAlias(), columns);
   // now, we know the exact space we need for index
-  if (numOnes > 0) {
+  ако (numOnes > 0) {
     result->index = static_cast<int16_t*>(uprv_malloc(numOnes * sizeof(int16_t)));
-    if (result->index == nullptr) {
+    ако (result->index == nullptr) {
       *status = U_MEMORY_ALLOCATION_ERROR;
-      return nullptr;
+      върни nullptr;
     }
     int32_t i, j;
     int16_t k = 0;
-    for (j = 0 ; j < columns; j++) {
+    за (j = 0 ; j < columns; j++) {
       uint32_t v = mask[j];
-      for (i = 0 ; i < 32 && k < sel->encodingsCount; i++, k++) {
-        if ((v & 1) != 0) {
+      за (i = 0 ; i < 32 && k < sel->encodingsCount; i++, k++) {
+        ако ((v & 1) != 0) {
           result->index[result->length++] = k;
         }
         v >>= 1;
@@ -739,7 +739,7 @@ selectForMask(const UConverterSelector* sel U_LIFETIME_BOUND,
   } //otherwise, index will remain nullptr (and will never be touched by
     //the enumerator code anyway)
   en->context = result.orphan();
-  return en.orphan();
+  върни en.orphan();
 }
 
 /* check a string against the selector - UTF16 version */
@@ -749,41 +749,41 @@ ucnvsel_selectForString(const UConverterSelector* sel U_LIFETIME_BOUND,
                         int32_t length,
                         UErrorCode* status) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  ако (U_FAILURE(*status)) {
+    върни nullptr;
   }
   // ensure args make sense!
-  if (sel == nullptr || (s == nullptr && length != 0)) {
+  ако (sel == nullptr || (s == nullptr && length != 0)) {
     *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+    върни nullptr;
   }
 
   int32_t columns = (sel->encodingsCount+31)/32;
   uint32_t* mask = (uint32_t*) uprv_malloc(columns * 4);
-  if (mask == nullptr) {
+  ако (mask == nullptr) {
     *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+    върни nullptr;
   }
   uprv_memset(mask, ~0, columns *4);
 
-  if(s!=nullptr) {
+  ако(s!=nullptr) {
     const char16_t *limit;
-    if (length >= 0) {
+    ако (length >= 0) {
       limit = s + length;
-    } else {
+    } иначе {
       limit = nullptr;
     }
     
-    while (limit == nullptr ? *s != 0 : s != limit) {
+    докато (limit == nullptr ? *s != 0 : s != limit) {
       UChar32 c;
       uint16_t pvIndex;
       UTRIE2_U16_NEXT16(sel->trie, s, limit, c, pvIndex);
-      if (intersectMasks(mask, sel->pv+pvIndex, columns)) {
+      ако (intersectMasks(mask, sel->pv+pvIndex, columns)) {
         break;
       }
     }
   }
-  return selectForMask(sel, mask, status);
+  върни selectForMask(sel, mask, status);
 }
 
 /* check a string against the selector - UTF8 version */
@@ -793,39 +793,39 @@ ucnvsel_selectForUTF8(const UConverterSelector* sel U_LIFETIME_BOUND,
                       int32_t length,
                       UErrorCode* status) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  ако (U_FAILURE(*status)) {
+    върни nullptr;
   }
   // ensure args make sense!
-  if (sel == nullptr || (s == nullptr && length != 0)) {
+  ако (sel == nullptr || (s == nullptr && length != 0)) {
     *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+    върни nullptr;
   }
 
   int32_t columns = (sel->encodingsCount+31)/32;
   uint32_t* mask = (uint32_t*) uprv_malloc(columns * 4);
-  if (mask == nullptr) {
+  ако (mask == nullptr) {
     *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+    върни nullptr;
   }
   uprv_memset(mask, ~0, columns *4);
 
-  if (length < 0) {
+  ако (length < 0) {
     length = (int32_t)uprv_strlen(s);
   }
 
-  if(s!=nullptr) {
+  ако(s!=nullptr) {
     const char *limit = s + length;
     
-    while (s != limit) {
+    докато (s != limit) {
       uint16_t pvIndex;
       UTRIE2_U8_NEXT16(sel->trie, s, limit, pvIndex);
-      if (intersectMasks(mask, sel->pv+pvIndex, columns)) {
+      ако (intersectMasks(mask, sel->pv+pvIndex, columns)) {
         break;
       }
     }
   }
-  return selectForMask(sel, mask, status);
+  върни selectForMask(sel, mask, status);
 }
 
 #endif  // !UCONFIG_NO_CONVERSION

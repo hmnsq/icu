@@ -20,7 +20,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ако U_SHOW_CPLUSPLUS_API
 
 #include "unicode/uobject.h"
 
@@ -189,28 +189,28 @@ ParsePosition::operator=(const ParsePosition& copy) U_LIFETIME_BOUND
 {
   index = copy.index;
   errorIndex = copy.errorIndex;
-  return *this;
+  върни *this;
 }
 
 inline bool
 ParsePosition::operator==(const ParsePosition& copy) const
 {
-  if(index != copy.index || errorIndex != copy.errorIndex)
-  return false;
-  else
-  return true;
+  ако(index != copy.index || errorIndex != copy.errorIndex)
+  върни false;
+  иначе
+  върни true;
 }
 
 inline bool
 ParsePosition::operator!=(const ParsePosition& copy) const
 {
-  return !operator==(copy);
+  върни !operator==(copy);
 }
 
 inline int32_t
 ParsePosition::getIndex() const
 {
-  return index;
+  върни index;
 }
 
 inline void
@@ -222,7 +222,7 @@ ParsePosition::setIndex(int32_t offset)
 inline int32_t
 ParsePosition::getErrorIndex() const
 {
-  return errorIndex;
+  върни errorIndex;
 }
 
 inline void

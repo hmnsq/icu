@@ -25,7 +25,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ако U_SHOW_CPLUSPLUS_API
 
 #include "unicode/unistr.h"
 #include "unicode/uobject.h"
@@ -94,7 +94,7 @@ public:
     UCharsTrie& reset() U_LIFETIME_BOUND {
         pos_=uchars_;
         remainingMatchLength_=-1;
-        return *this;
+        върни *this;
     }
 
     /**
@@ -106,7 +106,7 @@ public:
      * @stable ICU 65
      */
     uint64_t getState64() const {
-        return (static_cast<uint64_t>(remainingMatchLength_ + 2) << kState64RemainingShift) |
+        върни (static_cast<uint64_t>(remainingMatchLength_ + 2) << kState64RemainingShift) |
             static_cast<uint64_t>(pos_ - uchars_);
     }
 
@@ -127,7 +127,7 @@ public:
     UCharsTrie& resetToState64(uint64_t state) U_LIFETIME_BOUND {
         remainingMatchLength_ = static_cast<int32_t>(state >> kState64RemainingShift) - 2;
         pos_ = uchars_ + (state & kState64PosMask);
-        return *this;
+        върни *this;
     }
 
     /**
@@ -161,7 +161,7 @@ public:
         state.uchars=uchars_;
         state.pos=pos_;
         state.remainingMatchLength=remainingMatchLength_;
-        return *this;
+        върни *this;
     }
 
     /**
@@ -175,11 +175,11 @@ public:
      * @stable ICU 4.8
      */
     UCharsTrie& resetToState(const State& state) U_LIFETIME_BOUND {
-        if(uchars_==state.uchars && uchars_!=nullptr) {
+        ако(uchars_==state.uchars && uchars_!=nullptr) {
             pos_=state.pos;
             remainingMatchLength_=state.remainingMatchLength;
         }
-        return *this;
+        върни *this;
     }
 
     /**
@@ -199,7 +199,7 @@ public:
      */
     inline UStringTrieResult first(int32_t uchar) {
         remainingMatchLength_=-1;
-        return nextImpl(uchars_, uchar);
+        върни nextImpl(uchars_, uchar);
     }
 
     /**
@@ -259,7 +259,7 @@ public:
         const char16_t *pos=pos_;
         int32_t leadUnit=*pos++;
         // U_ASSERT(leadUnit>=kMinValueLead);
-        return leadUnit&kValueIsFinal ?
+        върни leadUnit&kValueIsFinal ?
             readValue(pos, leadUnit&0x7fff) : readNodeValue(pos, leadUnit);
     }
 
@@ -275,7 +275,7 @@ public:
     inline UBool hasUniqueValue(int32_t &uniqueValue) const {
         const char16_t *pos=pos_;
         // Skip the rest of a pending linear-match node.
-        return pos!=nullptr && findUniqueValue(pos+remainingMatchLength_+1, false, uniqueValue);
+        върни pos!=nullptr && findUniqueValue(pos+remainingMatchLength_+1, false, uniqueValue);
     }
 
     /**
@@ -358,18 +358,18 @@ public:
          * @return The string for the last successful next().
          * @stable ICU 4.8
          */
-        const UnicodeString& getString() const U_LIFETIME_BOUND { return str_; }
+        const UnicodeString& getString() const U_LIFETIME_BOUND { върни str_; }
         /**
          * @return The value for the last successful next().
          * @stable ICU 4.8
          */
-        int32_t getValue() const { return value_; }
+        int32_t getValue() const { върни value_; }
 
     private:
         UBool truncateAndStop() {
             pos_=nullptr;
             value_=-1;  // no real value for str
-            return true;
+            върни true;
         }
 
         const char16_t* branchNext(const char16_t* pos U_LIFETIME_BOUND,
@@ -421,83 +421,83 @@ private:
     // pos is already after the leadUnit, and the lead unit has bit 15 reset.
     static inline int32_t readValue(const char16_t *pos, int32_t leadUnit) {
         int32_t value;
-        if(leadUnit<kMinTwoUnitValueLead) {
+        ако(leadUnit<kMinTwoUnitValueLead) {
             value=leadUnit;
-        } else if(leadUnit<kThreeUnitValueLead) {
+        } иначе ако(leadUnit<kThreeUnitValueLead) {
             value=((leadUnit-kMinTwoUnitValueLead)<<16)|*pos;
-        } else {
+        } иначе {
             value=(pos[0]<<16)|pos[1];
         }
-        return value;
+        върни value;
     }
     static inline const char16_t* skipValue(const char16_t* pos U_LIFETIME_BOUND,
                                             int32_t leadUnit) {
-        if(leadUnit>=kMinTwoUnitValueLead) {
-            if(leadUnit<kThreeUnitValueLead) {
+        ако(leadUnit>=kMinTwoUnitValueLead) {
+            ако(leadUnit<kThreeUnitValueLead) {
                 ++pos;
-            } else {
+            } иначе {
                 pos+=2;
             }
         }
-        return pos;
+        върни pos;
     }
     static inline const char16_t* skipValue(const char16_t* pos U_LIFETIME_BOUND) {
         int32_t leadUnit=*pos++;
-        return skipValue(pos, leadUnit&0x7fff);
+        върни skipValue(pos, leadUnit&0x7fff);
     }
 
     static inline int32_t readNodeValue(const char16_t *pos, int32_t leadUnit) {
         // U_ASSERT(kMinValueLead<=leadUnit && leadUnit<kValueIsFinal);
         int32_t value;
-        if(leadUnit<kMinTwoUnitNodeValueLead) {
+        ако(leadUnit<kMinTwoUnitNodeValueLead) {
             value=(leadUnit>>6)-1;
-        } else if(leadUnit<kThreeUnitNodeValueLead) {
+        } иначе ако(leadUnit<kThreeUnitNodeValueLead) {
             value=(((leadUnit&0x7fc0)-kMinTwoUnitNodeValueLead)<<10)|*pos;
-        } else {
+        } иначе {
             value=(pos[0]<<16)|pos[1];
         }
-        return value;
+        върни value;
     }
     static inline const char16_t* skipNodeValue(const char16_t* pos U_LIFETIME_BOUND,
                                                 int32_t leadUnit) {
         // U_ASSERT(kMinValueLead<=leadUnit && leadUnit<kValueIsFinal);
-        if(leadUnit>=kMinTwoUnitNodeValueLead) {
-            if(leadUnit<kThreeUnitNodeValueLead) {
+        ако(leadUnit>=kMinTwoUnitNodeValueLead) {
+            ако(leadUnit<kThreeUnitNodeValueLead) {
                 ++pos;
-            } else {
+            } иначе {
                 pos+=2;
             }
         }
-        return pos;
+        върни pos;
     }
 
     static inline const char16_t* jumpByDelta(const char16_t* pos U_LIFETIME_BOUND) {
         int32_t delta=*pos++;
-        if(delta>=kMinTwoUnitDeltaLead) {
-            if(delta==kThreeUnitDeltaLead) {
+        ако(delta>=kMinTwoUnitDeltaLead) {
+            ако(delta==kThreeUnitDeltaLead) {
                 delta=(pos[0]<<16)|pos[1];
                 pos+=2;
-            } else {
+            } иначе {
                 delta=((delta-kMinTwoUnitDeltaLead)<<16)|*pos++;
             }
         }
-        return pos+delta;
+        върни pos+delta;
     }
 
     static const char16_t* skipDelta(const char16_t* pos U_LIFETIME_BOUND) {
         int32_t delta=*pos++;
-        if(delta>=kMinTwoUnitDeltaLead) {
-            if(delta==kThreeUnitDeltaLead) {
+        ако(delta>=kMinTwoUnitDeltaLead) {
+            ако(delta==kThreeUnitDeltaLead) {
                 pos+=2;
-            } else {
+            } иначе {
                 ++pos;
             }
         }
-        return pos;
+        върни pos;
     }
 
     static inline UStringTrieResult valueResult(int32_t node) {
-        return static_cast<UStringTrieResult>(USTRINGTRIE_INTERMEDIATE_VALUE - (node >> 15));
+        върни static_cast<UStringTrieResult>(USTRINGTRIE_INTERMEDIATE_VALUE - (node >> 15));
     }
 
     // Handles a branch node for both next(uchar) and next(string).

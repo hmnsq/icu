@@ -20,51 +20,51 @@ U_NAMESPACE_BEGIN
 UBool
 ByteSinkUtil::appendChange(int32_t length, const char16_t *s16, int32_t s16Length,
                            ByteSink &sink, Edits *edits, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return false; }
+    ако (U_FAILURE(errorCode)) { върни false; }
     char scratch[200];
     int32_t s8Length = 0;
-    for (int32_t i = 0; i < s16Length;) {
+    за (int32_t i = 0; i < s16Length;) {
         int32_t capacity;
         int32_t desiredCapacity = s16Length - i;
-        if (desiredCapacity < (INT32_MAX / 3)) {
+        ако (desiredCapacity < (INT32_MAX / 3)) {
             desiredCapacity *= 3;  // max 3 UTF-8 bytes per UTF-16 code unit
-        } else if (desiredCapacity < (INT32_MAX / 2)) {
+        } иначе ако (desiredCapacity < (INT32_MAX / 2)) {
             desiredCapacity *= 2;
-        } else {
+        } иначе {
             desiredCapacity = INT32_MAX;
         }
         char *buffer = sink.GetAppendBuffer(U8_MAX_LENGTH, desiredCapacity,
                                             scratch, UPRV_LENGTHOF(scratch), &capacity);
         capacity -= U8_MAX_LENGTH - 1;
         int32_t j = 0;
-        for (; i < s16Length && j < capacity;) {
+        за (; i < s16Length && j < capacity;) {
             UChar32 c;
             U16_NEXT_UNSAFE(s16, i, c);
             U8_APPEND_UNSAFE(buffer, j, c);
         }
-        if (j > (INT32_MAX - s8Length)) {
+        ако (j > (INT32_MAX - s8Length)) {
             errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            return false;
+            върни false;
         }
         sink.Append(buffer, j);
         s8Length += j;
     }
-    if (edits != nullptr) {
+    ако (edits != nullptr) {
         edits->addReplace(length, s8Length);
     }
-    return true;
+    върни true;
 }
 
 UBool
 ByteSinkUtil::appendChange(const uint8_t *s, const uint8_t *limit,
                            const char16_t *s16, int32_t s16Length,
                            ByteSink &sink, Edits *edits, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return false; }
-    if ((limit - s) > INT32_MAX) {
+    ако (U_FAILURE(errorCode)) { върни false; }
+    ако ((limit - s) > INT32_MAX) {
         errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-        return false;
+        върни false;
     }
-    return appendChange(static_cast<int32_t>(limit - s), s16, s16Length, sink, edits, errorCode);
+    върни appendChange(static_cast<int32_t>(limit - s), s16, s16Length, sink, edits, errorCode);
 }
 
 void
@@ -72,7 +72,7 @@ ByteSinkUtil::appendCodePoint(int32_t length, UChar32 c, ByteSink &sink, Edits *
     char s8[U8_MAX_LENGTH];
     int32_t s8Length = 0;
     U8_APPEND_UNSAFE(s8, s8Length, c);
-    if (edits != nullptr) {
+    ако (edits != nullptr) {
         edits->addReplace(length, s8Length);
     }
     sink.Append(s8, s8Length);
@@ -81,8 +81,8 @@ ByteSinkUtil::appendCodePoint(int32_t length, UChar32 c, ByteSink &sink, Edits *
 namespace {
 
 // See unicode/utf8.h U8_APPEND_UNSAFE().
-inline uint8_t getTwoByteLead(UChar32 c) { return static_cast<uint8_t>((c >> 6) | 0xc0); }
-inline uint8_t getTwoByteTrail(UChar32 c) { return static_cast<uint8_t>((c & 0x3f) | 0x80); }
+inline uint8_t getTwoByteLead(UChar32 c) { върни static_cast<uint8_t>((c >> 6) | 0xc0); }
+inline uint8_t getTwoByteTrail(UChar32 c) { върни static_cast<uint8_t>((c & 0x3f) | 0x80); }
 
 }  // namespace
 
@@ -97,10 +97,10 @@ void
 ByteSinkUtil::appendNonEmptyUnchanged(const uint8_t *s, int32_t length,
                                       ByteSink &sink, uint32_t options, Edits *edits) {
     U_ASSERT(length > 0);
-    if (edits != nullptr) {
+    ако (edits != nullptr) {
         edits->addUnchanged(length);
     }
-    if ((options & U_OMIT_UNCHANGED_TEXT) == 0) {
+    ако ((options & U_OMIT_UNCHANGED_TEXT) == 0) {
         sink.Append(reinterpret_cast<const char *>(s), length);
     }
 }
@@ -109,16 +109,16 @@ UBool
 ByteSinkUtil::appendUnchanged(const uint8_t *s, const uint8_t *limit,
                               ByteSink &sink, uint32_t options, Edits *edits,
                               UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return false; }
-    if ((limit - s) > INT32_MAX) {
+    ако (U_FAILURE(errorCode)) { върни false; }
+    ако ((limit - s) > INT32_MAX) {
         errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-        return false;
+        върни false;
     }
     int32_t length = static_cast<int32_t>(limit - s);
-    if (length > 0) {
+    ако (length > 0) {
         appendNonEmptyUnchanged(s, length, sink, options, edits);
     }
-    return true;
+    върни true;
 }
 
 CharStringByteSink::CharStringByteSink(CharString* dest) : dest_(*dest) {
@@ -139,9 +139,9 @@ CharStringByteSink::GetAppendBuffer(int32_t min_capacity,
                                     char* scratch U_LIFETIME_BOUND,
                                     int32_t scratch_capacity,
                                     int32_t* result_capacity) U_LIFETIME_BOUND {
-    if (min_capacity < 1 || scratch_capacity < min_capacity) {
+    ако (min_capacity < 1 || scratch_capacity < min_capacity) {
         *result_capacity = 0;
-        return nullptr;
+        върни nullptr;
     }
 
     UErrorCode status = U_ZERO_ERROR;
@@ -150,12 +150,12 @@ CharStringByteSink::GetAppendBuffer(int32_t min_capacity,
             desired_capacity_hint,
             *result_capacity,
             status);
-    if (U_SUCCESS(status)) {
-        return result;
+    ако (U_SUCCESS(status)) {
+        върни result;
     }
 
     *result_capacity = scratch_capacity;
-    return scratch;
+    върни scratch;
 }
 
 U_NAMESPACE_END

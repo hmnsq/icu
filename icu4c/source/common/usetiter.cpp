@@ -47,22 +47,22 @@ UnicodeSetIterator::~UnicodeSetIterator() {
  * <br>Note also that the codepointEnd is undefined after calling this method.
  */
 UBool UnicodeSetIterator::next() {
-    if (nextElement <= endElement) {
+    ако (nextElement <= endElement) {
         codepoint = codepointEnd = nextElement++;
         string = nullptr;
-        return true;
+        върни true;
     }
-    if (range < endRange) {
+    ако (range < endRange) {
         loadRange(++range);
         codepoint = codepointEnd = nextElement++;
         string = nullptr;
-        return true;
+        върни true;
     }
 
-    if (nextString >= stringCount) return false;
+    ако (nextString >= stringCount) върни false;
     codepoint = static_cast<UChar32>(IS_STRING); // signal that value is actually a string
     string = static_cast<const UnicodeString*>(set->strings_->elementAt(nextString++));
-    return true;
+    върни true;
 }
 
 /**
@@ -78,24 +78,24 @@ UBool UnicodeSetIterator::next() {
  */
 UBool UnicodeSetIterator::nextRange() {
     string = nullptr;
-    if (nextElement <= endElement) {
+    ако (nextElement <= endElement) {
         codepointEnd = endElement;
         codepoint = nextElement;
         nextElement = endElement+1;
-        return true;
+        върни true;
     }
-    if (range < endRange) {
+    ако (range < endRange) {
         loadRange(++range);
         codepointEnd = endElement;
         codepoint = nextElement;
         nextElement = endElement+1;
-        return true;
+        върни true;
     }
 
-    if (nextString >= stringCount) return false;
+    ако (nextString >= stringCount) върни false;
     codepoint = static_cast<UChar32>(IS_STRING); // signal that value is actually a string
     string = static_cast<const UnicodeString*>(set->strings_->elementAt(nextString++));
-    return true;
+    върни true;
 }
 
 /**
@@ -110,18 +110,18 @@ void UnicodeSetIterator::reset(const UnicodeSet& uSet) {
  * Resets to the start, to allow the iteration to start over again.
  */
 void UnicodeSetIterator::reset() {
-    if (set == nullptr) {
+    ако (set == nullptr) {
         // Set up indices to empty iteration
         endRange = -1;
         stringCount = 0;
-    } else {
+    } иначе {
         endRange = set->getRangeCount() - 1;
         stringCount = set->stringsSize();
     }
     range = 0;
     endElement = -1;
     nextElement = 0;            
-    if (endRange >= 0) {
+    ако (endRange >= 0) {
         loadRange(range);
     }
     nextString = 0;
@@ -135,16 +135,16 @@ void UnicodeSetIterator::loadRange(int32_t iRange) {
 
 
 const UnicodeString& UnicodeSetIterator::getString() U_LIFETIME_BOUND {
-    if (string == nullptr && codepoint != static_cast<UChar32>(IS_STRING)) {
-       if (cpString == nullptr) {
+    ако (string == nullptr && codepoint != static_cast<UChar32>(IS_STRING)) {
+       ако (cpString == nullptr) {
           cpString = new UnicodeString();
        }
-       if (cpString != nullptr) {
+       ако (cpString != nullptr) {
           cpString->setTo(codepoint);
        }
        string = cpString;
     }
-    return *string;
+    върни *string;
 }
 
 U_NAMESPACE_END

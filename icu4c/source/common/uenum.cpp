@@ -33,38 +33,38 @@ static const int32_t PAD = 8;
    or reallocating it if at least 'capacity' bytes are not available. */
 static void* _getBuffer(UEnumeration* en U_LIFETIME_BOUND, int32_t capacity) {
 
-    if (en->baseContext != nullptr) {
-        if (static_cast<_UEnumBuffer*>(en->baseContext)->len < capacity) {
+    ако (en->baseContext != nullptr) {
+        ако (static_cast<_UEnumBuffer*>(en->baseContext)->len < capacity) {
             capacity += PAD;
             en->baseContext = uprv_realloc(en->baseContext,
                                            sizeof(int32_t) + capacity);
-            if (en->baseContext == nullptr) {
-                return nullptr;
+            ако (en->baseContext == nullptr) {
+                върни nullptr;
             }
             static_cast<_UEnumBuffer*>(en->baseContext)->len = capacity;
         }
-    } else {
+    } иначе {
         capacity += PAD;
         en->baseContext = uprv_malloc(sizeof(int32_t) + capacity);
-        if (en->baseContext == nullptr) {
-            return nullptr;
+        ако (en->baseContext == nullptr) {
+            върни nullptr;
         }
         static_cast<_UEnumBuffer*>(en->baseContext)->len = capacity;
     }
     
-    return static_cast<void*>(&static_cast<_UEnumBuffer*>(en->baseContext)->data);
+    върни static_cast<void*>(&static_cast<_UEnumBuffer*>(en->baseContext)->data);
 }
 
 U_CAPI void U_EXPORT2
 uenum_close(UEnumeration* en)
 {
-    if (en) {
-        if (en->close != nullptr) {
-            if (en->baseContext) {
+    ако (en) {
+        ако (en->close != nullptr) {
+            ако (en->baseContext) {
                 uprv_free(en->baseContext);
             }
             en->close(en);
-        } else { /* this seems dangerous, but we better kill the object */
+        } иначе { /* this seems dangerous, but we better kill the object */
             uprv_free(en);
         }
     }
@@ -73,14 +73,14 @@ uenum_close(UEnumeration* en)
 U_CAPI int32_t U_EXPORT2
 uenum_count(UEnumeration* en, UErrorCode* status)
 {
-    if (!en || U_FAILURE(*status)) {
-        return -1;
+    ако (!en || U_FAILURE(*status)) {
+        върни -1;
     }
-    if (en->count != nullptr) {
-        return en->count(en, status);
-    } else {
+    ако (en->count != nullptr) {
+        върни en->count(en, status);
+    } иначе {
         *status = U_UNSUPPORTED_ERROR;
-        return -1;
+        върни -1;
     }
 }
 
@@ -92,24 +92,24 @@ uenum_unextDefault(UEnumeration* en U_LIFETIME_BOUND,
 {
     char16_t *ustr = nullptr;
     int32_t len = 0;
-    if (en->next != nullptr) {
+    ако (en->next != nullptr) {
         const char *cstr = en->next(en, &len, status);
-        if (cstr != nullptr) {
+        ако (cstr != nullptr) {
             ustr = (char16_t*) _getBuffer(en, (len+1) * sizeof(char16_t));
-            if (ustr == nullptr) {
+            ако (ustr == nullptr) {
                 *status = U_MEMORY_ALLOCATION_ERROR;
-            } else {
+            } иначе {
                 u_charsToUChars(cstr, ustr, len);
                 ustr[len] = 0;
             }
         }
-    } else {
+    } иначе {
         *status = U_UNSUPPORTED_ERROR;
     }
-    if (resultLength) {
+    ако (resultLength) {
         *resultLength = len;
     }
-    return ustr;
+    върни ustr;
 }
 
 /* Don't call this directly. Only uenum_next should be calling this. */
@@ -118,24 +118,24 @@ uenum_nextDefault(UEnumeration* en U_LIFETIME_BOUND,
                   int32_t* resultLength,
                   UErrorCode* status)
 {
-    if (en->uNext != nullptr) {
+    ако (en->uNext != nullptr) {
         char *tempCharVal;
         const char16_t *tempUCharVal = en->uNext(en, resultLength, status);
-        if (tempUCharVal == nullptr) {
-            return nullptr;
+        ако (tempUCharVal == nullptr) {
+            върни nullptr;
         }
         tempCharVal = (char*)
             _getBuffer(en, (*resultLength+1) * sizeof(char));
-        if (!tempCharVal) {
+        ако (!tempCharVal) {
             *status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+            върни nullptr;
         }
         u_UCharsToChars(tempUCharVal, tempCharVal, *resultLength);
         tempCharVal[*resultLength] = 0;
-        return tempCharVal;
-    } else {
+        върни tempCharVal;
+    } иначе {
         *status = U_UNSUPPORTED_ERROR;
-        return nullptr;
+        върни nullptr;
     }
 }
 
@@ -144,14 +144,14 @@ uenum_unext(UEnumeration* en U_LIFETIME_BOUND,
             int32_t* resultLength,
             UErrorCode* status)
 {
-    if (!en || U_FAILURE(*status)) {
-        return nullptr;
+    ако (!en || U_FAILURE(*status)) {
+        върни nullptr;
     }
-    if (en->uNext != nullptr) {
-        return en->uNext(en, resultLength, status);
-    } else {
+    ако (en->uNext != nullptr) {
+        върни en->uNext(en, resultLength, status);
+    } иначе {
         *status = U_UNSUPPORTED_ERROR;
-        return nullptr;
+        върни nullptr;
     }
 }
 
@@ -160,32 +160,32 @@ uenum_next(UEnumeration* en U_LIFETIME_BOUND,
            int32_t* resultLength,
            UErrorCode* status)
 {
-    if (!en || U_FAILURE(*status)) {
-        return nullptr;
+    ако (!en || U_FAILURE(*status)) {
+        върни nullptr;
     }
-    if (en->next != nullptr) {
-        if (resultLength != nullptr) {
-            return en->next(en, resultLength, status);
+    ако (en->next != nullptr) {
+        ако (resultLength != nullptr) {
+            върни en->next(en, resultLength, status);
         }
-        else {
+        иначе {
             int32_t dummyLength=0;
-            return en->next(en, &dummyLength, status);
+            върни en->next(en, &dummyLength, status);
         }
-    } else {
+    } иначе {
         *status = U_UNSUPPORTED_ERROR;
-        return nullptr;
+        върни nullptr;
     }
 }
 
 U_CAPI void U_EXPORT2
 uenum_reset(UEnumeration* en, UErrorCode* status)
 {
-    if (!en || U_FAILURE(*status)) {
-        return;
+    ако (!en || U_FAILURE(*status)) {
+        върни;
     }
-    if (en->reset != nullptr) {
+    ако (en->reset != nullptr) {
         en->reset(en, status);
-    } else {
+    } иначе {
         *status = U_UNSUPPORTED_ERROR;
     }
 }

@@ -19,7 +19,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ако !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/brkiter.h"
 #include "unicode/casemap.h"
@@ -74,28 +74,28 @@ private:
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(WholeStringBreakIterator)
 
 WholeStringBreakIterator::~WholeStringBreakIterator() {}
-bool WholeStringBreakIterator::operator==(const BreakIterator&) const { return false; }
-WholeStringBreakIterator *WholeStringBreakIterator::clone() const { return nullptr; }
+bool WholeStringBreakIterator::operator==(const BreakIterator&) const { върни false; }
+WholeStringBreakIterator *WholeStringBreakIterator::clone() const { върни nullptr; }
 
 CharacterIterator& WholeStringBreakIterator::getText() const U_LIFETIME_BOUND {
     UPRV_UNREACHABLE_EXIT;  // really should not be called
 }
 UText *WholeStringBreakIterator::getUText(UText * /*fillIn*/, UErrorCode &errorCode) const {
-    if (U_SUCCESS(errorCode)) {
+    ако (U_SUCCESS(errorCode)) {
         errorCode = U_UNSUPPORTED_ERROR;
     }
-    return nullptr;
+    върни nullptr;
 }
 
 void  WholeStringBreakIterator::setText(const UnicodeString &text) {
     length = text.length();
 }
 void  WholeStringBreakIterator::setText(UText *text, UErrorCode &errorCode) {
-    if (U_SUCCESS(errorCode)) {
+    ако (U_SUCCESS(errorCode)) {
         int64_t length64 = utext_nativeLength(text);
-        if (length64 <= INT32_MAX) {
+        ако (length64 <= INT32_MAX) {
             length = static_cast<int32_t>(length64);
-        } else {
+        } иначе {
             errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
         }
     }
@@ -104,30 +104,30 @@ void  WholeStringBreakIterator::adoptText(CharacterIterator*) {
     UPRV_UNREACHABLE_EXIT;  // should not be called
 }
 
-int32_t WholeStringBreakIterator::first() { return 0; }
-int32_t WholeStringBreakIterator::last() { return length; }
-int32_t WholeStringBreakIterator::previous() { return 0; }
-int32_t WholeStringBreakIterator::next() { return length; }
-int32_t WholeStringBreakIterator::current() const { return 0; }
-int32_t WholeStringBreakIterator::following(int32_t /*offset*/) { return length; }
-int32_t WholeStringBreakIterator::preceding(int32_t /*offset*/) { return 0; }
-UBool WholeStringBreakIterator::isBoundary(int32_t /*offset*/) { return false; }
-int32_t WholeStringBreakIterator::next(int32_t /*n*/) { return length; }
+int32_t WholeStringBreakIterator::first() { върни 0; }
+int32_t WholeStringBreakIterator::last() { върни length; }
+int32_t WholeStringBreakIterator::previous() { върни 0; }
+int32_t WholeStringBreakIterator::next() { върни length; }
+int32_t WholeStringBreakIterator::current() const { върни 0; }
+int32_t WholeStringBreakIterator::following(int32_t /*offset*/) { върни length; }
+int32_t WholeStringBreakIterator::preceding(int32_t /*offset*/) { върни 0; }
+UBool WholeStringBreakIterator::isBoundary(int32_t /*offset*/) { върни false; }
+int32_t WholeStringBreakIterator::next(int32_t /*n*/) { върни length; }
 
 WholeStringBreakIterator *WholeStringBreakIterator::createBufferClone(
         void * /*stackBuffer*/, int32_t & /*BufferSize*/, UErrorCode &errorCode) {
-    if (U_SUCCESS(errorCode)) {
+    ако (U_SUCCESS(errorCode)) {
         errorCode = U_UNSUPPORTED_ERROR;
     }
-    return nullptr;
+    върни nullptr;
 }
 WholeStringBreakIterator&
 WholeStringBreakIterator::refreshInputText(UText* /*input*/,
                                            UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if (U_SUCCESS(errorCode)) {
+    ако (U_SUCCESS(errorCode)) {
         errorCode = U_UNSUPPORTED_ERROR;
     }
-    return *this;
+    върни *this;
 }
 
 U_CFUNC
@@ -137,13 +137,13 @@ BreakIterator* ustrcase_getTitleBreakIterator(const Locale* locale,
                                               BreakIterator* iter U_LIFETIME_BOUND,
                                               LocalPointer<BreakIterator>& ownedIter,
                                               UErrorCode& errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
+    ако (U_FAILURE(errorCode)) { върни nullptr; }
     options &= U_TITLECASE_ITERATOR_MASK;
-    if (options != 0 && iter != nullptr) {
+    ако (options != 0 && iter != nullptr) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        върни nullptr;
     }
-    if (iter == nullptr) {
+    ако (iter == nullptr) {
         switch (options) {
         case 0:
             iter = BreakIterator::createWordInstance(
@@ -151,7 +151,7 @@ BreakIterator* ustrcase_getTitleBreakIterator(const Locale* locale,
             break;
         case U_TITLECASE_WHOLE_STRING:
             iter = new WholeStringBreakIterator();
-            if (iter == nullptr) {
+            ако (iter == nullptr) {
                 errorCode = U_MEMORY_ALLOCATION_ERROR;
             }
             break;
@@ -165,7 +165,7 @@ BreakIterator* ustrcase_getTitleBreakIterator(const Locale* locale,
         }
         ownedIter.adoptInstead(iter);
     }
-    return iter;
+    върни iter;
 }
 
 int32_t CaseMap::toTitle(
@@ -175,12 +175,12 @@ int32_t CaseMap::toTitle(
         UErrorCode &errorCode) {
     LocalPointer<BreakIterator> ownedIter;
     iter = ustrcase_getTitleBreakIterator(nullptr, locale, options, iter, ownedIter, errorCode);
-    if(iter==nullptr) {
-        return 0;
+    ако(iter==nullptr) {
+        върни 0;
     }
     UnicodeString s(srcLength<0, src, srcLength);
     iter->setText(s);
-    return ustrcase_map(
+    върни ustrcase_map(
         ustrcase_getCaseLocale(locale), options, iter,
         dest, destCapacity,
         src, srcLength,
@@ -201,12 +201,12 @@ u_strToTitle(char16_t *dest, int32_t destCapacity,
     BreakIterator *iter = ustrcase_getTitleBreakIterator(
         nullptr, locale, 0, reinterpret_cast<BreakIterator *>(titleIter),
         ownedIter, *pErrorCode);
-    if (iter == nullptr) {
-        return 0;
+    ако (iter == nullptr) {
+        върни 0;
     }
     UnicodeString s(srcLength<0, src, srcLength);
     iter->setText(s);
-    return ustrcase_mapWithOverlap(
+    върни ustrcase_mapWithOverlap(
         ustrcase_getCaseLocale(locale), 0, iter,
         dest, destCapacity,
         src, srcLength,
@@ -218,22 +218,22 @@ ucasemap_toTitle(UCaseMap *csm,
                  char16_t *dest, int32_t destCapacity,
                  const char16_t *src, int32_t srcLength,
                  UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return 0;
+    ако (U_FAILURE(*pErrorCode)) {
+        върни 0;
     }
     auto *impl = reinterpret_cast<UCaseMapImpl *>(csm);
-    if (impl->iter == nullptr) {
+    ако (impl->iter == nullptr) {
         LocalPointer<BreakIterator> ownedIter;
         BreakIterator *iter = ustrcase_getTitleBreakIterator(
             nullptr, impl->locale, impl->options, nullptr, ownedIter, *pErrorCode);
-        if (iter == nullptr) {
-            return 0;
+        ако (iter == nullptr) {
+            върни 0;
         }
         impl->iter = ownedIter.orphan();
     }
     UnicodeString s(srcLength<0, src, srcLength);
     impl->iter->setText(s);
-    return ustrcase_map(
+    върни ustrcase_map(
         impl->caseLocale, impl->options, impl->iter,
         dest, destCapacity,
         src, srcLength,

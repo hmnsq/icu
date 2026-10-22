@@ -17,7 +17,7 @@
  * \brief C++ API: Unicode Matcher
  */
 
-#if U_SHOW_CPLUSPLUS_API
+#ако U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

@@ -13,7 +13,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ако !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/brkiter.h"
 #include "unicode/rbbi.h"
@@ -71,22 +71,22 @@ RBBIRuleBuilder::RBBIRuleBuilder(const UnicodeString   &rules,
     fRuleStatusVals     = nullptr;
     fScanner            = nullptr;
     fSetBuilder         = nullptr;
-    if (parseErr) {
+    ако (parseErr) {
         uprv_memset(parseErr, 0, sizeof(UParseError));
     }
 
-    if (U_FAILURE(status)) {
-        return;
+    ако (U_FAILURE(status)) {
+        върни;
     }
 
     fUSetNodes          = new UVector(status); // bcos status gets overwritten here
     fRuleStatusVals     = new UVector(status);
     fScanner            = new RBBIRuleScanner(this);
     fSetBuilder         = new RBBISetBuilder(this);
-    if (U_FAILURE(status)) {
-        return;
+    ако (U_FAILURE(status)) {
+        върни;
     }
-    if (fSetBuilder == nullptr || fScanner == nullptr ||
+    ако (fSetBuilder == nullptr || fScanner == nullptr ||
         fUSetNodes == nullptr || fRuleStatusVals == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
     }
@@ -101,10 +101,10 @@ RBBIRuleBuilder::RBBIRuleBuilder(const UnicodeString   &rules,
 //----------------------------------------------------------------------------------------
 RBBIRuleBuilder::~RBBIRuleBuilder() {
 
-    int        i;
-    for (i=0; ; i++) {
+    цяло        i;
+    за (i=0; ; i++) {
         RBBINode* n = static_cast<RBBINode*>(fUSetNodes->elementAt(i));
-        if (n==nullptr) {
+        ако (n==nullptr) {
             break;
         }
         delete n;
@@ -132,13 +132,13 @@ RBBIRuleBuilder::~RBBIRuleBuilder() {
 //                    which is also the format needed by the RBBI runtime engine.
 //
 //----------------------------------------------------------------------------------------
-static int32_t align8(int32_t i) {return (i+7) & 0xfffffff8;}
+static int32_t align8(int32_t i) {върни (i+7) & 0xfffffff8;}
 
 RBBIDataHeader *RBBIRuleBuilder::flattenData() {
     int32_t    i;
 
-    if (U_FAILURE(*fStatus)) {
-        return nullptr;
+    ако (U_FAILURE(*fStatus)) {
+        върни nullptr;
     }
 
     // Remove whitespace from the rules to make it smaller.
@@ -170,7 +170,7 @@ RBBIDataHeader *RBBIRuleBuilder::flattenData() {
                                 + statusTableSize + trieSize + rulesSize;
 
 #ifdef RBBI_DEBUG
-    if (fDebugEnv && uprv_strstr(fDebugEnv, "size")) {
+    ако (fDebugEnv && uprv_strstr(fDebugEnv, "size")) {
         RBBIDebugPrintf("Header Size:        %8d\n", headerSize);
         RBBIDebugPrintf("Forward Table Size: %8d\n", forwardTableSize);
         RBBIDebugPrintf("Reverse Table Size: %8d\n", reverseTableSize);
@@ -183,9 +183,9 @@ RBBIDataHeader *RBBIRuleBuilder::flattenData() {
 #endif
 
     LocalMemory<RBBIDataHeader> data(static_cast<RBBIDataHeader*>(uprv_malloc(totalSize)));
-    if (data.isNull()) {
+    ако (data.isNull()) {
         *fStatus = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        върни nullptr;
     }
     uprv_memset(data.getAlias(), 0, totalSize);
 
@@ -218,18 +218,18 @@ RBBIDataHeader *RBBIRuleBuilder::flattenData() {
     fSetBuilder->serializeTrie(reinterpret_cast<uint8_t*>(data.getAlias()) + data->fTrie);
 
     int32_t* ruleStatusTable = reinterpret_cast<int32_t*>(reinterpret_cast<uint8_t*>(data.getAlias()) + data->fStatusTable);
-    for (i=0; i<fRuleStatusVals->size(); i++) {
+    за (i=0; i<fRuleStatusVals->size(); i++) {
         ruleStatusTable[i] = fRuleStatusVals->elementAti(i);
     }
 
     u_strToUTF8WithSub(reinterpret_cast<char*>(data.getAlias()) + data->fRuleSource, rulesSize, &rulesLengthInUTF8,
                        fStrippedRules.getBuffer(), fStrippedRules.length(),
                        0xfffd, nullptr, fStatus);
-    if (U_FAILURE(*fStatus)) {
-        return nullptr;
+    ако (U_FAILURE(*fStatus)) {
+        върни nullptr;
     }
 
-    return data.orphan();
+    върни data.orphan();
 }
 
 
@@ -249,14 +249,14 @@ RBBIRuleBuilder::createRuleBasedBreakIterator( const UnicodeString    &rules,
     // and list of all Unicode Sets referenced by the rules.
     //
     RBBIRuleBuilder  builder(rules, parseError, status);
-    if (U_FAILURE(status)) { // status checked here bcos build below doesn't
-        return nullptr;
+    ако (U_FAILURE(status)) { // status checked here bcos build below doesn't
+        върни nullptr;
     }
 
     RBBIDataHeader *data = builder.build(status);
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    ако (U_FAILURE(status)) {
+        върни nullptr;
     }
 
     //
@@ -265,24 +265,24 @@ RBBIRuleBuilder::createRuleBasedBreakIterator( const UnicodeString    &rules,
     //
     // status is checked after init in construction.
     RuleBasedBreakIterator *This = new RuleBasedBreakIterator(data, status);
-    if (U_FAILURE(status)) {
+    ако (U_FAILURE(status)) {
         delete This;
         This = nullptr;
     } 
-    else if(This == nullptr) { // test for nullptr
+    иначе ако(This == nullptr) { // test for nullptr
         status = U_MEMORY_ALLOCATION_ERROR;
     }
-    return This;
+    върни This;
 }
 
 RBBIDataHeader *RBBIRuleBuilder::build(UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return nullptr;
+    ако (U_FAILURE(status)) {
+        върни nullptr;
     }
 
     fScanner->parse();
-    if (U_FAILURE(status)) {
-        return nullptr;
+    ако (U_FAILURE(status)) {
+        върни nullptr;
     }
 
     //
@@ -295,9 +295,9 @@ RBBIDataHeader *RBBIRuleBuilder::build(UErrorCode &status) {
     //   Generate the DFA state transition table.
     //
     fForwardTable = new RBBITableBuilder(this, &fForwardTree, status);
-    if (fForwardTable == nullptr) {
+    ако (fForwardTable == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        върни nullptr;
     }
 
     fForwardTable->buildForwardTable();
@@ -312,7 +312,7 @@ RBBIDataHeader *RBBIRuleBuilder::build(UErrorCode &status) {
 
 
 #ifdef RBBI_DEBUG
-    if (fDebugEnv && uprv_strstr(fDebugEnv, "states")) {
+    ако (fDebugEnv && uprv_strstr(fDebugEnv, "states")) {
         fForwardTable->printStates();
         fForwardTable->printRuleStatusTable();
         fForwardTable->printReverseTable();
@@ -329,10 +329,10 @@ RBBIDataHeader *RBBIRuleBuilder::build(UErrorCode &status) {
     //      in the run-time format.
     //
     RBBIDataHeader *data = flattenData(); // returns nullptr if error
-    if (U_FAILURE(status)) {
-        return nullptr;
+    ако (U_FAILURE(status)) {
+        върни nullptr;
     }
-    return data;
+    върни data;
 }
 
 void RBBIRuleBuilder::optimizeTables() {
@@ -346,16 +346,16 @@ void RBBIRuleBuilder::optimizeTables() {
         // it. We allow merging categories *into* class 1 {eof} (but not the
         // reverse, so that eof remains in class 1).
         IntPair duplPair = {1, 0};
-        while (fForwardTable->findDuplCharClassFrom(&duplPair)) {
+        докато (fForwardTable->findDuplCharClassFrom(&duplPair)) {
             fSetBuilder->mergeCategories(duplPair);
             fForwardTable->removeColumn(duplPair.second);
             didSomething = true;
         }
 
-        while (fForwardTable->removeDuplicateStates() > 0) {
+        докато (fForwardTable->removeDuplicateStates() > 0) {
             didSomething = true;
         }
-    } while (didSomething);
+    } докато (didSomething);
 }
 
 U_NAMESPACE_END

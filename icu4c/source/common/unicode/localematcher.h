@@ -9,7 +9,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ако U_SHOW_CPLUSPLUS_API
 
 #include <optional>
 
@@ -225,7 +225,7 @@ public:
          * @return the best-matching desired locale, or nullptr.
          * @stable ICU 65
          */
-        inline const Locale* getDesiredLocale() const U_LIFETIME_BOUND { return desiredLocale; }
+        inline const Locale* getDesiredLocale() const U_LIFETIME_BOUND { върни desiredLocale; }
 
         /**
          * Returns the best-matching supported locale.
@@ -236,7 +236,7 @@ public:
          * @return the best-matching supported locale, or nullptr.
          * @stable ICU 65
          */
-        inline const Locale* getSupportedLocale() const U_LIFETIME_BOUND { return supportedLocale; }
+        inline const Locale* getSupportedLocale() const U_LIFETIME_BOUND { върни supportedLocale; }
 
         /**
          * Returns the index of the best-matching desired locale in the input Iterable order.
@@ -245,7 +245,7 @@ public:
          * @return the index of the best-matching desired locale, or -1.
          * @stable ICU 65
          */
-        inline int32_t getDesiredIndex() const { return desiredIndex; }
+        inline int32_t getDesiredIndex() const { върни desiredIndex; }
 
         /**
          * Returns the index of the best-matching supported locale in the
@@ -257,7 +257,7 @@ public:
          * @return the index of the best-matching supported locale, or -1.
          * @stable ICU 65
          */
-        inline int32_t getSupportedIndex() const { return supportedIndex; }
+        inline int32_t getSupportedIndex() const { върни supportedIndex; }
 
         /**
          * Takes the best-matching supported locale and adds relevant fields of the
@@ -371,12 +371,12 @@ public:
          */
         template <typename Iter>
         Builder& setSupportedLocales(Iter begin, Iter end) U_LIFETIME_BOUND {
-            if (U_FAILURE(errorCode_)) { return *this; }
+            ако (U_FAILURE(errorCode_)) { върни *this; }
             clearSupportedLocales();
-            while (begin != end) {
+            докато (begin != end) {
                 addSupportedLocale(*begin++);
             }
-            return *this;
+            върни *this;
         }
 
         /**
@@ -397,12 +397,12 @@ public:
         template <typename Iter, typename Conv>
         Builder& setSupportedLocalesViaConverter(Iter begin, Iter end,
                                                  Conv converter) U_LIFETIME_BOUND {
-            if (U_FAILURE(errorCode_)) { return *this; }
+            ако (U_FAILURE(errorCode_)) { върни *this; }
             clearSupportedLocales();
-            while (begin != end) {
+            докато (begin != end) {
                 addSupportedLocale(converter(*begin++));
             }
-            return *this;
+            върни *this;
         }
 
         /**
@@ -468,10 +468,10 @@ public:
          * @stable ICU 67
          */
         Builder& setDirection(ULocMatchDirection matchDirection) U_LIFETIME_BOUND {
-            if (U_SUCCESS(errorCode_)) {
+            ако (U_SUCCESS(errorCode_)) {
                 direction_ = matchDirection;
             }
-            return *this;
+            върни *this;
         }
 
         /**

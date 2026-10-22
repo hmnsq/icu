@@ -124,7 +124,7 @@ public:
 
     inline int32_t size() const;
 
-    inline UBool isEmpty() const { return count == 0; }
+    inline UBool isEmpty() const { върни count == 0; }
 
     // Inline.  Use this one for speedy size check.
     inline UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
@@ -202,59 +202,59 @@ public:
 // UVector64 inlines
 
 inline UBool UVector64::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
-    if ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
-        return true;
-    } else {
-        return expandCapacity(minimumCapacity, status);
+    ако ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
+        върни true;
+    } иначе {
+        върни expandCapacity(minimumCapacity, status);
     }
 }
 
 inline int64_t UVector64::elementAti(int32_t index) const {
-    return (0 <= index && index < count) ? elements[index] : 0;
+    върни (0 <= index && index < count) ? elements[index] : 0;
 }
 
 
 inline void UVector64::addElement(int64_t elem, UErrorCode &status) {
-    if (ensureCapacity(count + 1, status)) {
+    ако (ensureCapacity(count + 1, status)) {
         elements[count] = elem;
         count++;
     }
 }
 
 inline int64_t *UVector64::reserveBlock(int32_t size, UErrorCode &status) {
-    if (ensureCapacity(count+size, status) == false) {
-        return nullptr;
+    ако (ensureCapacity(count+size, status) == false) {
+        върни nullptr;
     }
     int64_t  *rp = elements+count;
     count += size;
-    return rp;
+    върни rp;
 }
 
 inline int64_t *UVector64::popFrame(int32_t size) {
     U_ASSERT(count >= size);
     count -= size;
-    if (count < 0) {
+    ако (count < 0) {
         count = 0;
     }
-    return elements+count-size;
+    върни elements+count-size;
 }
 
 
 
 inline int32_t UVector64::size() const {
-    return count;
+    върни count;
 }
 
 inline int64_t UVector64::lastElementi() const {
-    return elementAti(count-1);
+    върни elementAti(count-1);
 }
 
 inline bool UVector64::operator!=(const UVector64& other) {
-    return !operator==(other);
+    върни !operator==(other);
 }
 
 inline int64_t *UVector64::getBuffer() const {
-    return elements;
+    върни elements;
 }
 
 
@@ -262,16 +262,16 @@ inline int64_t *UVector64::getBuffer() const {
 
 inline int64_t UVector64::push(int64_t i, UErrorCode &status) {
     addElement(i, status);
-    return i;
+    върни i;
 }
 
 inline int64_t UVector64::popi() {
     int64_t result = 0;
-    if (count > 0) {
+    ако (count > 0) {
         count--;
         result = elements[count];
     }
-    return result;
+    върни result;
 }
 
 U_NAMESPACE_END

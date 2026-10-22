@@ -50,31 +50,31 @@
 
 U_CAPI UBool U_EXPORT2
 uprv_isASCIILetter(char c) {
-#if U_CHARSET_FAMILY==U_EBCDIC_FAMILY
-    return
+#ако U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+    върни
         ('a'<=c && c<='i') || ('j'<=c && c<='r') || ('s'<=c && c<='z') ||
         ('A'<=c && c<='I') || ('J'<=c && c<='R') || ('S'<=c && c<='Z');
-#else
-    return ('a'<=c && c<='z') || ('A'<=c && c<='Z');
+#иначе
+    върни ('a'<=c && c<='z') || ('A'<=c && c<='Z');
 #endif
 }
 
 U_CAPI char U_EXPORT2
 uprv_toupper(char c) {
-#if U_CHARSET_FAMILY==U_EBCDIC_FAMILY
-    if(('a'<=c && c<='i') || ('j'<=c && c<='r') || ('s'<=c && c<='z')) {
+#ако U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+    ако(('a'<=c && c<='i') || ('j'<=c && c<='r') || ('s'<=c && c<='z')) {
         c=(char)(c+('A'-'a'));
     }
-#else
-    if('a'<=c && c<='z') {
+#иначе
+    ако('a'<=c && c<='z') {
         c=(char)(c+('A'-'a'));
     }
 #endif
-    return c;
+    върни c;
 }
 
 
-#if 0
+#ако 0
 /*
  * Commented out because cstring.h defines uprv_tolower() to be
  * the same as either uprv_asciitolower() or uprv_ebcdictolower()
@@ -86,36 +86,36 @@ uprv_toupper(char c) {
  */
 U_CAPI char U_EXPORT2
 uprv_tolower(char c) {
-#if U_CHARSET_FAMILY==U_EBCDIC_FAMILY
-    if(('A'<=c && c<='I') || ('J'<=c && c<='R') || ('S'<=c && c<='Z')) {
+#ако U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+    ако(('A'<=c && c<='I') || ('J'<=c && c<='R') || ('S'<=c && c<='Z')) {
         c=(char)(c+('a'-'A'));
     }
-#else
-    if('A'<=c && c<='Z') {
+#иначе
+    ако('A'<=c && c<='Z') {
         c=(char)(c+('a'-'A'));
     }
 #endif
-    return c;
+    върни c;
 }
 #endif
 
 U_CAPI char U_EXPORT2
 uprv_asciitolower(char c) {
-    if(0x41<=c && c<=0x5a) {
+    ако(0x41<=c && c<=0x5a) {
         c=(char)(c+0x20);
     }
-    return c;
+    върни c;
 }
 
 U_CAPI char U_EXPORT2
 uprv_ebcdictolower(char c) {
-    if( (0xc1<=(uint8_t)c && (uint8_t)c<=0xc9) ||
+    ако( (0xc1<=(uint8_t)c && (uint8_t)c<=0xc9) ||
         (0xd1<=(uint8_t)c && (uint8_t)c<=0xd9) ||
         (0xe2<=(uint8_t)c && (uint8_t)c<=0xe9)
     ) {
         c=(char)(c-0x40);
     }
-    return c;
+    върни c;
 }
 
 
@@ -124,13 +124,13 @@ T_CString_toLowerCase(char* str)
 {
     char* origPtr = str;
 
-    if (str) {
+    ако (str) {
         do
             *str = uprv_tolower(*str);
-        while (*(str++));
+        докато (*(str++));
     }
 
-    return origPtr;
+    върни origPtr;
 }
 
 U_CAPI char* U_EXPORT2
@@ -138,13 +138,13 @@ T_CString_toUpperCase(char* str)
 {
     char* origPtr = str;
 
-    if (str) {
+    ако (str) {
         do
             *str = uprv_toupper(*str);
-        while (*(str++));
+        докато (*(str++));
     }
 
-    return origPtr;
+    върни origPtr;
 }
 
 /*
@@ -164,7 +164,7 @@ T_CString_integerToString(char* buffer, int32_t v, int32_t radix)
     
     U_ASSERT(radix>=2 && radix<=16);
     uval = (uint32_t) v;
-    if(v<0 && radix == 10) {
+    ако(v<0 && radix == 10) {
         /* Only in base 10 do we conside numbers to be signed. */
         uval = (uint32_t)(-v); 
         buffer[length++] = '-';
@@ -176,12 +176,12 @@ T_CString_integerToString(char* buffer, int32_t v, int32_t radix)
         digit = (uint8_t)(uval % radix);
         tbuf[--tbx] = (char)(T_CString_itosOffset(digit));
         uval  = uval / radix;
-    } while (uval != 0);
+    } докато (uval != 0);
     
     /* copy converted number into user buffer  */
     uprv_strcpy(buffer+length, tbuf+tbx);
     length += sizeof(tbuf) - tbx -1;
-    return length;
+    върни length;
 }
 
 
@@ -202,7 +202,7 @@ T_CString_int64ToString(char* buffer, int64_t v, uint32_t radix)
     
     U_ASSERT(radix>=2 && radix<=16);
     uval = (uint64_t) v;
-    if(v<0 && radix == 10) {
+    ако(v<0 && radix == 10) {
         /* Only in base 10 do we conside numbers to be signed. */
         uval = (uint64_t)(-v); 
         buffer[length++] = '-';
@@ -214,12 +214,12 @@ T_CString_int64ToString(char* buffer, int64_t v, uint32_t radix)
         digit = (uint8_t)(uval % radix);
         tbuf[--tbx] = (char)(T_CString_itosOffset(digit));
         uval  = uval / radix;
-    } while (uval != 0);
+    } докато (uval != 0);
     
     /* copy converted number into user buffer  */
     uprv_strcpy(buffer+length, tbuf+tbx);
     length += sizeof(tbuf) - tbx -1;
-    return length;
+    върни length;
 }
 
 
@@ -227,41 +227,41 @@ U_CAPI int32_t U_EXPORT2
 T_CString_stringToInteger(const char *integerString, int32_t radix)
 {
     char *end;
-    return uprv_strtoul(integerString, &end, radix);
+    върни uprv_strtoul(integerString, &end, radix);
 
 }
 
-U_CAPI int U_EXPORT2
+U_CAPI цяло U_EXPORT2
 uprv_stricmp(const char *str1, const char *str2) {
-    if(str1==nullptr) {
-        if(str2==nullptr) {
-            return 0;
-        } else {
-            return -1;
+    ако(str1==nullptr) {
+        ако(str2==nullptr) {
+            върни 0;
+        } иначе {
+            върни -1;
         }
-    } else if(str2==nullptr) {
-        return 1;
-    } else {
+    } иначе ако(str2==nullptr) {
+        върни 1;
+    } иначе {
         /* compare non-nullptr strings lexically with lowercase */
-        int rc;
+        цяло rc;
         unsigned char c1, c2;
 
-        for(;;) {
+        за(;;) {
             c1=(unsigned char)*str1;
             c2=(unsigned char)*str2;
-            if(c1==0) {
-                if(c2==0) {
-                    return 0;
-                } else {
-                    return -1;
+            ако(c1==0) {
+                ако(c2==0) {
+                    върни 0;
+                } иначе {
+                    върни -1;
                 }
-            } else if(c2==0) {
-                return 1;
-            } else {
+            } иначе ако(c2==0) {
+                върни 1;
+            } иначе {
                 /* compare non-zero characters with lowercase */
-                rc=(int)(unsigned char)uprv_tolower(c1)-(int)(unsigned char)uprv_tolower(c2);
-                if(rc!=0) {
-                    return rc;
+                rc=(цяло)(unsigned char)uprv_tolower(c1)-(цяло)(unsigned char)uprv_tolower(c2);
+                ако(rc!=0) {
+                    върни rc;
                 }
             }
             ++str1;
@@ -270,37 +270,37 @@ uprv_stricmp(const char *str1, const char *str2) {
     }
 }
 
-U_CAPI int U_EXPORT2
+U_CAPI цяло U_EXPORT2
 uprv_strnicmp(const char *str1, const char *str2, uint32_t n) {
-    if(str1==nullptr) {
-        if(str2==nullptr) {
-            return 0;
-        } else {
-            return -1;
+    ако(str1==nullptr) {
+        ако(str2==nullptr) {
+            върни 0;
+        } иначе {
+            върни -1;
         }
-    } else if(str2==nullptr) {
-        return 1;
-    } else {
+    } иначе ако(str2==nullptr) {
+        върни 1;
+    } иначе {
         /* compare non-nullptr strings lexically with lowercase */
-        int rc;
+        цяло rc;
         unsigned char c1, c2;
 
-        for(; n--;) {
+        за(; n--;) {
             c1=(unsigned char)*str1;
             c2=(unsigned char)*str2;
-            if(c1==0) {
-                if(c2==0) {
-                    return 0;
-                } else {
-                    return -1;
+            ако(c1==0) {
+                ако(c2==0) {
+                    върни 0;
+                } иначе {
+                    върни -1;
                 }
-            } else if(c2==0) {
-                return 1;
-            } else {
+            } иначе ако(c2==0) {
+                върни 1;
+            } иначе {
                 /* compare non-zero characters with lowercase */
-                rc=(int)(unsigned char)uprv_tolower(c1)-(int)(unsigned char)uprv_tolower(c2);
-                if(rc!=0) {
-                    return rc;
+                rc=(цяло)(unsigned char)uprv_tolower(c1)-(цяло)(unsigned char)uprv_tolower(c2);
+                ако(rc!=0) {
+                    върни rc;
                 }
             }
             ++str1;
@@ -308,7 +308,7 @@ uprv_strnicmp(const char *str1, const char *str2, uint32_t n) {
         }
     }
 
-    return 0;
+    върни 0;
 }
 
 U_CAPI char* U_EXPORT2
@@ -316,26 +316,26 @@ uprv_strdup(const char *src) {
     size_t len = uprv_strlen(src) + 1;
     char *dup = (char *) uprv_malloc(len);
 
-    if (dup) {
+    ако (dup) {
         uprv_memcpy(dup, src, len);
     }
 
-    return dup;
+    върни dup;
 }
 
 U_CAPI char* U_EXPORT2
 uprv_strndup(const char *src, int32_t n) {
     char *dup;
 
-    if(n < 0) {
+    ако(n < 0) {
         dup = uprv_strdup(src);
-    } else {
+    } иначе {
         dup = (char*)uprv_malloc(n+1);
-        if (dup) { 
+        ако (dup) { 
             uprv_memcpy(dup, src, n);
             dup[n] = 0;
         }
     }
 
-    return dup;
+    върни dup;
 }

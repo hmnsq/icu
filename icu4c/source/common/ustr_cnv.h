@@ -20,7 +20,7 @@
 #include "unicode/utypes.h"
 #include "unicode/ucnv.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ако !UCONFIG_NO_CONVERSION
 
 /**
  * Get the default converter. This is a commonly used converter

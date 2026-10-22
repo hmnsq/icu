@@ -9,7 +9,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ако !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/ubrk.h"
 
@@ -38,7 +38,7 @@ ubrk_open(UBreakIteratorType type,
       UErrorCode *status)
 {
 
-  if (U_FAILURE(*status)) return nullptr;
+  ако (U_FAILURE(*status)) върни nullptr;
 
   BreakIterator *result = nullptr;
 
@@ -69,20 +69,20 @@ ubrk_open(UBreakIteratorType type,
   }
 
   // check for allocation error
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  ако (U_FAILURE(*status)) {
+    върни nullptr;
   }
-  if (result == nullptr) {
+  ако (result == nullptr) {
     *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+    върни nullptr;
   }
 
 
   UBreakIterator *uBI = (UBreakIterator *)result;
-  if (text != nullptr) {
+  ако (text != nullptr) {
       ubrk_setText(uBI, text, textLength, status);
   }
-  return uBI;
+  върни uBI;
 }
 
 
@@ -101,22 +101,22 @@ ubrk_openRules(  const char16_t     *rules,
                        UParseError  *parseErr,
                        UErrorCode   *status)  {
 
-    if (status == nullptr || U_FAILURE(*status)){
-        return nullptr;
+    ако (status == nullptr || U_FAILURE(*status)){
+        върни nullptr;
     }
 
     BreakIterator *result = nullptr;
     UnicodeString ruleString(rules, rulesLength);
     result = RBBIRuleBuilder::createRuleBasedBreakIterator(ruleString, parseErr, *status);
-    if(U_FAILURE(*status)) {
-        return nullptr;
+    ако(U_FAILURE(*status)) {
+        върни nullptr;
     }
 
     UBreakIterator *uBI = (UBreakIterator *)result;
-    if (text != nullptr) {
+    ако (text != nullptr) {
         ubrk_setText(uBI, text, textLength, status);
     }
-    return uBI;
+    върни uBI;
 }
 
 
@@ -125,22 +125,22 @@ ubrk_openBinaryRules(const uint8_t *binaryRules, int32_t rulesLength,
                      const char16_t *  text, int32_t textLength,
                      UErrorCode *   status)
 {
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    ако (U_FAILURE(*status)) {
+        върни nullptr;
     }
-    if (rulesLength < 0) {
+    ако (rulesLength < 0) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        върни nullptr;
     }
     LocalPointer<RuleBasedBreakIterator> lpRBBI(new RuleBasedBreakIterator(binaryRules, rulesLength, *status), *status);
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    ако (U_FAILURE(*status)) {
+        върни nullptr;
     }
     UBreakIterator *uBI = reinterpret_cast<UBreakIterator *>(lpRBBI.orphan());
-    if (text != nullptr) {
+    ако (text != nullptr) {
         ubrk_setText(uBI, text, textLength, status);
     }
-    return uBI;
+    върни uBI;
 }
 
 
@@ -151,32 +151,32 @@ ubrk_safeClone(
           int32_t *pBufferSize,
           UErrorCode *status)
 {
-    if (status == nullptr || U_FAILURE(*status)){
-        return nullptr;
+    ако (status == nullptr || U_FAILURE(*status)){
+        върни nullptr;
     }
-    if (bi == nullptr) {
+    ако (bi == nullptr) {
        *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        върни nullptr;
     }
-    if (pBufferSize != nullptr) {
+    ако (pBufferSize != nullptr) {
         int32_t inputSize = *pBufferSize;
         *pBufferSize = 1;
-        if (inputSize == 0) {
-            return nullptr;  // preflighting for deprecated functionality
+        ако (inputSize == 0) {
+            върни nullptr;  // preflighting for deprecated functionality
         }
     }
     BreakIterator *newBI = ((BreakIterator *)bi)->clone();
-    if (newBI == nullptr) {
+    ако (newBI == nullptr) {
         *status = U_MEMORY_ALLOCATION_ERROR;
-    } else if (pBufferSize != nullptr) {
+    } иначе ако (pBufferSize != nullptr) {
         *status = U_SAFECLONE_ALLOCATED_WARNING;
     }
-    return (UBreakIterator *)newBI;
+    върни (UBreakIterator *)newBI;
 }
 
 U_CAPI UBreakIterator * U_EXPORT2
 ubrk_clone(const UBreakIterator *bi, UErrorCode *status) {
-    return ubrk_safeClone(bi, nullptr, nullptr, status);
+    върни ubrk_safeClone(bi, nullptr, nullptr, status);
 }
 
 
@@ -217,35 +217,35 @@ U_CAPI int32_t U_EXPORT2
 ubrk_current(const UBreakIterator *bi)
 {
 
-  return ((BreakIterator*)bi)->current();
+  върни ((BreakIterator*)bi)->current();
 }
 
 U_CAPI int32_t U_EXPORT2
 ubrk_next(UBreakIterator *bi)
 {
 
-  return ((BreakIterator*)bi)->next();
+  върни ((BreakIterator*)bi)->next();
 }
 
 U_CAPI int32_t U_EXPORT2
 ubrk_previous(UBreakIterator *bi)
 {
 
-  return ((BreakIterator*)bi)->previous();
+  върни ((BreakIterator*)bi)->previous();
 }
 
 U_CAPI int32_t U_EXPORT2
 ubrk_first(UBreakIterator *bi)
 {
 
-  return ((BreakIterator*)bi)->first();
+  върни ((BreakIterator*)bi)->first();
 }
 
 U_CAPI int32_t U_EXPORT2
 ubrk_last(UBreakIterator *bi)
 {
 
-  return ((BreakIterator*)bi)->last();
+  върни ((BreakIterator*)bi)->last();
 }
 
 U_CAPI int32_t U_EXPORT2
@@ -253,7 +253,7 @@ ubrk_preceding(UBreakIterator *bi,
            int32_t offset)
 {
 
-  return ((BreakIterator*)bi)->preceding(offset);
+  върни ((BreakIterator*)bi)->preceding(offset);
 }
 
 U_CAPI int32_t U_EXPORT2
@@ -261,41 +261,41 @@ ubrk_following(UBreakIterator *bi,
            int32_t offset)
 {
 
-  return ((BreakIterator*)bi)->following(offset);
+  върни ((BreakIterator*)bi)->following(offset);
 }
 
 U_CAPI const char* U_EXPORT2
 ubrk_getAvailable(int32_t index)
 {
 
-  return uloc_getAvailable(index);
+  върни uloc_getAvailable(index);
 }
 
 U_CAPI int32_t U_EXPORT2
 ubrk_countAvailable()
 {
 
-  return uloc_countAvailable();
+  върни uloc_countAvailable();
 }
 
 
 U_CAPI  UBool U_EXPORT2
 ubrk_isBoundary(UBreakIterator *bi, int32_t offset)
 {
-    return ((BreakIterator*)bi)->isBoundary(offset);
+    върни ((BreakIterator*)bi)->isBoundary(offset);
 }
 
 
 U_CAPI  int32_t U_EXPORT2
 ubrk_getRuleStatus(UBreakIterator *bi)
 {
-    return ((BreakIterator*)bi)->getRuleStatus();
+    върни ((BreakIterator*)bi)->getRuleStatus();
 }
 
 U_CAPI  int32_t U_EXPORT2
 ubrk_getRuleStatusVec(UBreakIterator *bi, int32_t *fillInVec, int32_t capacity, UErrorCode *status)
 {
-    return ((BreakIterator*)bi)->getRuleStatusVec(fillInVec, capacity, *status);
+    върни ((BreakIterator*)bi)->getRuleStatusVec(fillInVec, capacity, *status);
 }
 
 
@@ -304,13 +304,13 @@ ubrk_getLocaleByType(const UBreakIterator* bi U_LIFETIME_BOUND,
                      ULocDataLocaleType type,
                      UErrorCode* status)
 {
-    if (bi == nullptr) {
-        if (U_SUCCESS(*status)) {
+    ако (bi == nullptr) {
+        ако (U_SUCCESS(*status)) {
             *status = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return nullptr;
+        върни nullptr;
     }
-    return ((BreakIterator*)bi)->getLocaleID(type, *status);
+    върни ((BreakIterator*)bi)->getLocaleID(type, *status);
 }
 
 
@@ -328,33 +328,33 @@ ubrk_getBinaryRules(UBreakIterator *bi,
                     uint8_t *       binaryRules, int32_t rulesCapacity,
                     UErrorCode *    status)
 {
-    if (U_FAILURE(*status)) {
-        return 0;
+    ако (U_FAILURE(*status)) {
+        върни 0;
     }
-    if ((binaryRules == nullptr && rulesCapacity > 0) || rulesCapacity < 0) {
+    ако ((binaryRules == nullptr && rulesCapacity > 0) || rulesCapacity < 0) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        върни 0;
     }
     RuleBasedBreakIterator* rbbi;
-    if ((rbbi = dynamic_cast<RuleBasedBreakIterator*>(reinterpret_cast<BreakIterator*>(bi))) == nullptr) {
+    ако ((rbbi = dynamic_cast<RuleBasedBreakIterator*>(reinterpret_cast<BreakIterator*>(bi))) == nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        върни 0;
     }
     uint32_t rulesLength;
     const uint8_t * returnedRules = rbbi->getBinaryRules(rulesLength);
-    if (rulesLength > INT32_MAX) {
+    ако (rulesLength > INT32_MAX) {
         *status = U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        върни 0;
     }
-    if (binaryRules != nullptr) { // if not preflighting
+    ако (binaryRules != nullptr) { // if not preflighting
         // Here we know rulesLength <= INT32_MAX and rulesCapacity >= 0, can cast safely
-        if ((int32_t)rulesLength > rulesCapacity) {
+        ако ((int32_t)rulesLength > rulesCapacity) {
             *status = U_BUFFER_OVERFLOW_ERROR;
-        } else {
+        } иначе {
             uprv_memcpy(binaryRules, returnedRules, rulesLength);
         }
     }
-    return (int32_t)rulesLength;
+    върни (int32_t)rulesLength;
 }
 
 

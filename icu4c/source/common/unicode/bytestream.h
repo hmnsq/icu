@@ -39,7 +39,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ако U_SHOW_CPLUSPLUS_API
 
 #include <type_traits>
 
@@ -88,7 +88,7 @@ public:
     Append(bytes, n);
   }
 
-#if defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
+#ако defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
   /**
    * Appends n bytes to this. Same as Append() but for a const char8_t * pointer.
    * Call AppendU8() with u8"string literals" which are const char * in C++11
@@ -234,14 +234,14 @@ public:
    * @return number of bytes written to the buffer
    * @stable ICU 4.2
    */
-  int32_t NumberOfBytesWritten() const { return size_; }
+  int32_t NumberOfBytesWritten() const { върни size_; }
   /**
    * Returns true if any bytes were discarded, i.e., if there was an
    * attempt to write more than 'capacity' bytes.
    * @return true if more than 'capacity' bytes were Append()ed
    * @stable ICU 4.2
    */
-  UBool Overflowed() const { return overflowed_; }
+  UBool Overflowed() const { върни overflowed_; }
   /**
    * Returns the number of bytes appended to the sink.
    * If Overflowed() then NumberOfBytesAppended()>NumberOfBytesWritten()
@@ -249,7 +249,7 @@ public:
    * @return number of bytes written to the buffer
    * @stable ICU 4.6
    */
-  int32_t NumberOfBytesAppended() const { return appended_; }
+  int32_t NumberOfBytesAppended() const { върни appended_; }
 private:
   char* outbuf_;
   const int32_t capacity_;
@@ -307,7 +307,7 @@ class StringByteSink : public ByteSink {
    * @stable ICU 60
    */
   StringByteSink(StringClass* dest, int32_t initialAppendCapacity) : dest_(dest) {
-    if (initialAppendCapacity > 0 &&
+    ако (initialAppendCapacity > 0 &&
         static_cast<uint32_t>(initialAppendCapacity) > dest->capacity() - dest->length()) {
       dest->reserve(dest->length() + initialAppendCapacity);
     }
@@ -319,9 +319,9 @@ class StringByteSink : public ByteSink {
    * @stable ICU 4.2
    */
   virtual void Append(const char* data, int32_t n) override {
-    if constexpr (std::is_same_v<Unit, char>) {
+    ако constexpr (std::is_same_v<Unit, char>) {
       dest_->append(data, n);
-    } else {
+    } иначе {
       dest_->append(reinterpret_cast<const Unit*>(data), n);
     }
   }

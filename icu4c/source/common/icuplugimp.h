@@ -23,7 +23,7 @@
 
 #include "unicode/icuplug.h"
 
-#if UCONFIG_ENABLE_PLUGINS
+#ако UCONFIG_ENABLE_PLUGINS
 
 /*========================*/
 /** @{ Library Manipulation  

@@ -61,7 +61,7 @@ UCharCharacterIterator&
 UCharCharacterIterator::operator=(const UCharCharacterIterator& that) U_LIFETIME_BOUND {
     CharacterIterator::operator=(that);
     text = that.text;
-    return *this;
+    върни *this;
 }
 
 UCharCharacterIterator::~UCharCharacterIterator() {
@@ -69,16 +69,16 @@ UCharCharacterIterator::~UCharCharacterIterator() {
 
 bool
 UCharCharacterIterator::operator==(const ForwardCharacterIterator& that) const {
-    if (this == &that) {
-        return true;
+    ако (this == &that) {
+        върни true;
     }
-    if (typeid(*this) != typeid(that)) {
-        return false;
+    ако (typeid(*this) != typeid(that)) {
+        върни false;
     }
 
     const UCharCharacterIterator&    realThat = static_cast<const UCharCharacterIterator&>(that);
 
-    return text == realThat.text
+    върни text == realThat.text
         && textLength == realThat.textLength
         && pos == realThat.pos
         && begin == realThat.begin
@@ -87,210 +87,210 @@ UCharCharacterIterator::operator==(const ForwardCharacterIterator& that) const {
 
 int32_t
 UCharCharacterIterator::hashCode() const {
-    return ustr_hashUCharsN(text, textLength) ^ pos ^ begin ^ end;
+    върни ustr_hashUCharsN(text, textLength) ^ pos ^ begin ^ end;
 }
 
 UCharCharacterIterator*
 UCharCharacterIterator::clone() const {
-    return new UCharCharacterIterator(*this);
+    върни new UCharCharacterIterator(*this);
 }
 
 char16_t
 UCharCharacterIterator::first() {
     pos = begin;
-    if(pos < end) {
-        return text[pos];
-    } else {
-        return DONE;
+    ако(pos < end) {
+        върни text[pos];
+    } иначе {
+        върни DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::firstPostInc() {
     pos = begin;
-    if(pos < end) {
-        return text[pos++];
-    } else {
-        return DONE;
+    ако(pos < end) {
+        върни text[pos++];
+    } иначе {
+        върни DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::last() {
     pos = end;
-    if(pos > begin) {
-        return text[--pos];
-    } else {
-        return DONE;
+    ако(pos > begin) {
+        върни text[--pos];
+    } иначе {
+        върни DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::setIndex(int32_t position) {
-    if(position < begin) {
+    ако(position < begin) {
         pos = begin;
-    } else if(position > end) {
+    } иначе ако(position > end) {
         pos = end;
-    } else {
+    } иначе {
         pos = position;
     }
-    if(pos < end) {
-        return text[pos];
-    } else {
-        return DONE;
+    ако(pos < end) {
+        върни text[pos];
+    } иначе {
+        върни DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::current() const {
-    if (pos >= begin && pos < end) {
-        return text[pos];
-    } else {
-        return DONE;
+    ако (pos >= begin && pos < end) {
+        върни text[pos];
+    } иначе {
+        върни DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::next() {
-    if (pos + 1 < end) {
-        return text[++pos];
-    } else {
+    ако (pos + 1 < end) {
+        върни text[++pos];
+    } иначе {
         /* make current() return DONE */
         pos = end;
-        return DONE;
+        върни DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::nextPostInc() {
-    if (pos < end) {
-        return text[pos++];
-    } else {
-        return DONE;
+    ако (pos < end) {
+        върни text[pos++];
+    } иначе {
+        върни DONE;
     }
 }
 
 UBool
 UCharCharacterIterator::hasNext() {
-    return pos < end;
+    върни pos < end;
 }
 
 char16_t
 UCharCharacterIterator::previous() {
-    if (pos > begin) {
-        return text[--pos];
-    } else {
-        return DONE;
+    ако (pos > begin) {
+        върни text[--pos];
+    } иначе {
+        върни DONE;
     }
 }
 
 UBool
 UCharCharacterIterator::hasPrevious() {
-    return pos > begin;
+    върни pos > begin;
 }
 
 UChar32
 UCharCharacterIterator::first32() {
     pos = begin;
-    if(pos < end) {
+    ако(pos < end) {
         int32_t i = pos;
         UChar32 c;
         U16_NEXT(text, i, end, c);
-        return c;
-    } else {
-        return DONE;
+        върни c;
+    } иначе {
+        върни DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::first32PostInc() {
     pos = begin;
-    if(pos < end) {
+    ако(pos < end) {
         UChar32 c;
         U16_NEXT(text, pos, end, c);
-        return c;
-    } else {
-        return DONE;
+        върни c;
+    } иначе {
+        върни DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::last32() {
     pos = end;
-    if(pos > begin) {
+    ако(pos > begin) {
         UChar32 c;
         U16_PREV(text, begin, pos, c);
-        return c;
-    } else {
-        return DONE;
+        върни c;
+    } иначе {
+        върни DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::setIndex32(int32_t position) {
-    if(position < begin) {
+    ако(position < begin) {
         position = begin;
-    } else if(position > end) {
+    } иначе ако(position > end) {
         position = end;
     }
-    if(position < end) {
+    ако(position < end) {
         U16_SET_CP_START(text, begin, position);
         int32_t i = this->pos = position;
         UChar32 c;
         U16_NEXT(text, i, end, c);
-        return c;
-    } else {
+        върни c;
+    } иначе {
         this->pos = position;
-        return DONE;
+        върни DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::current32() const {
-    if (pos >= begin && pos < end) {
+    ако (pos >= begin && pos < end) {
         UChar32 c;
         U16_GET(text, begin, pos, end, c);
-        return c;
-    } else {
-        return DONE;
+        върни c;
+    } иначе {
+        върни DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::next32() {
-    if (pos < end) {
+    ако (pos < end) {
         U16_FWD_1(text, pos, end);
-        if(pos < end) {
+        ако(pos < end) {
             int32_t i = pos;
             UChar32 c;
             U16_NEXT(text, i, end, c);
-            return c;
+            върни c;
         }
     }
     /* make current() return DONE */
     pos = end;
-    return DONE;
+    върни DONE;
 }
 
 UChar32
 UCharCharacterIterator::next32PostInc() {
-    if (pos < end) {
+    ако (pos < end) {
         UChar32 c;
         U16_NEXT(text, pos, end, c);
-        return c;
-    } else {
-        return DONE;
+        върни c;
+    } иначе {
+        върни DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::previous32() {
-    if (pos > begin) {
+    ако (pos > begin) {
         UChar32 c;
         U16_PREV(text, begin, pos, c);
-        return c;
-    } else {
-        return DONE;
+        върни c;
+    } иначе {
+        върни DONE;
     }
 }
 
@@ -310,13 +310,13 @@ UCharCharacterIterator::move(int32_t delta, CharacterIterator::EOrigin origin) {
         break;
     }
 
-    if(pos < begin) {
+    ако(pos < begin) {
         pos = begin;
-    } else if(pos > end) {
+    } иначе ако(pos > end) {
         pos = end;
     }
 
-    return pos;
+    върни pos;
 }
 
 int32_t
@@ -326,20 +326,20 @@ UCharCharacterIterator::move32(int32_t delta, CharacterIterator::EOrigin origin)
     switch(origin) {
     case kStart:
         pos = begin;
-        if(delta > 0) {
+        ако(delta > 0) {
             U16_FWD_N(text, pos, end, delta);
         }
         break;
     case kCurrent:
-        if(delta > 0) {
+        ако(delta > 0) {
             U16_FWD_N(text, pos, end, delta);
-        } else {
+        } иначе {
             U16_BACK_N(text, begin, pos, -delta);
         }
         break;
     case kEnd:
         pos = end;
-        if(delta < 0) {
+        ако(delta < 0) {
             U16_BACK_N(text, begin, pos, -delta);
         }
         break;
@@ -347,13 +347,13 @@ UCharCharacterIterator::move32(int32_t delta, CharacterIterator::EOrigin origin)
         break;
     }
 
-    return pos;
+    върни pos;
 }
 
 void UCharCharacterIterator::setText(ConstChar16Ptr newText,
                                      int32_t      newTextLength) {
     text = newText;
-    if (newText == nullptr || newTextLength < 0) {
+    ако (newText == nullptr || newTextLength < 0) {
         newTextLength = 0;
     }
     end = textLength = newTextLength;

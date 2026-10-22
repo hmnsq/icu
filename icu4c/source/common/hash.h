@@ -125,11 +125,11 @@ private:
 
 inline void Hashtable::init(UHashFunction *keyHash, UKeyComparator *keyComp,
                             UValueComparator *valueComp, UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return;
+    ако (U_FAILURE(status)) {
+        върни;
     }
     uhash_init(&hashObj, keyHash, keyComp, valueComp, &status);
-    if (U_SUCCESS(status)) {
+    ако (U_SUCCESS(status)) {
         hash = &hashObj;
         uhash_setKeyDeleter(hash, uprv_deleteUObject);
     }
@@ -137,11 +137,11 @@ inline void Hashtable::init(UHashFunction *keyHash, UKeyComparator *keyComp,
 
 inline void Hashtable::initSize(UHashFunction *keyHash, UKeyComparator *keyComp,
                                 UValueComparator *valueComp, int32_t size, UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return;
+    ако (U_FAILURE(status)) {
+        върни;
     }
     uhash_initSize(&hashObj, keyHash, keyComp, valueComp, size, &status);
-    if (U_SUCCESS(status)) {
+    ако (U_SUCCESS(status)) {
         hash = &hashObj;
         uhash_setKeyDeleter(hash, uprv_deleteUObject);
     }
@@ -188,62 +188,62 @@ inline Hashtable::Hashtable()
 }
 
 inline Hashtable::~Hashtable() {
-    if (hash != nullptr) {
+    ако (hash != nullptr) {
         uhash_close(hash);
     }
 }
 
 inline UObjectDeleter *Hashtable::setValueDeleter(UObjectDeleter *fn) {
-    return uhash_setValueDeleter(hash, fn);
+    върни uhash_setValueDeleter(hash, fn);
 }
 
 inline int32_t Hashtable::count() const {
-    return uhash_count(hash);
+    върни uhash_count(hash);
 }
 
 inline void* Hashtable::put(const UnicodeString& key, void* value, UErrorCode& status) {
-    return uhash_put(hash, new UnicodeString(key), value, &status);
+    върни uhash_put(hash, new UnicodeString(key), value, &status);
 }
 
 inline int32_t Hashtable::puti(const UnicodeString& key, int32_t value, UErrorCode& status) {
-    return uhash_puti(hash, new UnicodeString(key), value, &status);
+    върни uhash_puti(hash, new UnicodeString(key), value, &status);
 }
 
 inline int32_t Hashtable::putiAllowZero(const UnicodeString& key, int32_t value,
                                         UErrorCode& status) {
-    return uhash_putiAllowZero(hash, new UnicodeString(key), value, &status);
+    върни uhash_putiAllowZero(hash, new UnicodeString(key), value, &status);
 }
 
 inline void* Hashtable::get(const UnicodeString& key) const {
-    return uhash_get(hash, &key);
+    върни uhash_get(hash, &key);
 }
 
 inline int32_t Hashtable::geti(const UnicodeString& key) const {
-    return uhash_geti(hash, &key);
+    върни uhash_geti(hash, &key);
 }
 
 inline int32_t Hashtable::getiAndFound(const UnicodeString& key, UBool &found) const {
-    return uhash_getiAndFound(hash, &key, &found);
+    върни uhash_getiAndFound(hash, &key, &found);
 }
 
 inline void* Hashtable::remove(const UnicodeString& key) {
-    return uhash_remove(hash, &key);
+    върни uhash_remove(hash, &key);
 }
 
 inline int32_t Hashtable::removei(const UnicodeString& key) {
-    return uhash_removei(hash, &key);
+    върни uhash_removei(hash, &key);
 }
 
 inline UBool Hashtable::containsKey(const UnicodeString& key) const {
-    return uhash_containsKey(hash, &key);
+    върни uhash_containsKey(hash, &key);
 }
 
 inline const UHashElement* Hashtable::find(const UnicodeString& key) const {
-    return uhash_find(hash, &key);
+    върни uhash_find(hash, &key);
 }
 
 inline const UHashElement* Hashtable::nextElement(int32_t& pos) const {
-    return uhash_nextElement(hash, &pos);
+    върни uhash_nextElement(hash, &pos);
 }
 
 inline void Hashtable::removeAll() {
@@ -251,15 +251,15 @@ inline void Hashtable::removeAll() {
 }
 
 inline UKeyComparator* Hashtable::setKeyComparator(UKeyComparator*keyComp){
-    return uhash_setKeyComparator(hash, keyComp);
+    върни uhash_setKeyComparator(hash, keyComp);
 }
 
 inline UValueComparator* Hashtable::setValueComparator(UValueComparator* valueComp){
-    return uhash_setValueComparator(hash, valueComp);
+    върни uhash_setValueComparator(hash, valueComp);
 }
 
 inline UBool Hashtable::equals(const Hashtable& that)const{
-   return uhash_equals(hash, that.hash);
+   върни uhash_equals(hash, that.hash);
 }
 U_NAMESPACE_END
 

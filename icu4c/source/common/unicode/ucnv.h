@@ -51,11 +51,11 @@
 #include "unicode/ucnv_err.h"
 #include "unicode/uenum.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ако U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
-#if !defined(USET_DEFINED) && !defined(U_IN_DOXYGEN)
+#ако !defined(USET_DEFINED) && !defined(U_IN_DOXYGEN)
 
 #define USET_DEFINED
 
@@ -71,7 +71,7 @@ typedef struct USet USet;
 
 #endif
 
-#if !UCONFIG_NO_CONVERSION
+#ако !UCONFIG_NO_CONVERSION
 
 U_CDECL_BEGIN
 
@@ -310,7 +310,7 @@ U_CDECL_END
  * lexically follows name2.
  * @stable ICU 2.0
  */
-U_CAPI int U_EXPORT2
+U_CAPI цяло U_EXPORT2
 ucnv_compareNames(const char *name1, const char *name2);
 
 
@@ -581,7 +581,7 @@ ucnv_safeClone(const UConverter* cnv,
 U_CAPI void  U_EXPORT2
 ucnv_close(UConverter * converter);
 
-#if U_SHOW_CPLUSPLUS_API
+#ако U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

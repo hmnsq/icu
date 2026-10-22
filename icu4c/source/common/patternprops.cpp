@@ -117,114 +117,114 @@ static const uint32_t syntaxOrWhiteSpace2000[]={
 
 UBool
 PatternProps::isSyntax(UChar32 c) {
-    if(c<0) {
-        return false;
-    } else if(c<=0xff) {
-        return (latin1[c] >> 1) & 1;
-    } else if(c<0x2010) {
-        return false;
-    } else if(c<=0x3030) {
+    ако(c<0) {
+        върни false;
+    } иначе ако(c<=0xff) {
+        върни (latin1[c] >> 1) & 1;
+    } иначе ако(c<0x2010) {
+        върни false;
+    } иначе ако(c<=0x3030) {
         uint32_t bits=syntax2000[index2000[(c-0x2000)>>5]];
-        return (bits >> (c & 0x1f)) & 1;
-    } else if(0xfd3e<=c && c<=0xfe46) {
-        return c<=0xfd3f || 0xfe45<=c;
-    } else {
-        return false;
+        върни (bits >> (c & 0x1f)) & 1;
+    } иначе ако(0xfd3e<=c && c<=0xfe46) {
+        върни c<=0xfd3f || 0xfe45<=c;
+    } иначе {
+        върни false;
     }
 }
 
 UBool
 PatternProps::isSyntaxOrWhiteSpace(UChar32 c) {
-    if(c<0) {
-        return false;
-    } else if(c<=0xff) {
-        return latin1[c] & 1;
-    } else if(c<0x200e) {
-        return false;
-    } else if(c<=0x3030) {
+    ако(c<0) {
+        върни false;
+    } иначе ако(c<=0xff) {
+        върни latin1[c] & 1;
+    } иначе ако(c<0x200e) {
+        върни false;
+    } иначе ако(c<=0x3030) {
         uint32_t bits=syntaxOrWhiteSpace2000[index2000[(c-0x2000)>>5]];
-        return (bits >> (c & 0x1f)) & 1;
-    } else if(0xfd3e<=c && c<=0xfe46) {
-        return c<=0xfd3f || 0xfe45<=c;
-    } else {
-        return false;
+        върни (bits >> (c & 0x1f)) & 1;
+    } иначе ако(0xfd3e<=c && c<=0xfe46) {
+        върни c<=0xfd3f || 0xfe45<=c;
+    } иначе {
+        върни false;
     }
 }
 
 UBool
 PatternProps::isWhiteSpace(UChar32 c) {
-    if(c<0) {
-        return false;
-    } else if(c<=0xff) {
-        return (latin1[c] >> 2) & 1;
-    } else if(0x200e<=c && c<=0x2029) {
-        return c<=0x200f || 0x2028<=c;
-    } else {
-        return false;
+    ако(c<0) {
+        върни false;
+    } иначе ако(c<=0xff) {
+        върни (latin1[c] >> 2) & 1;
+    } иначе ако(0x200e<=c && c<=0x2029) {
+        върни c<=0x200f || 0x2028<=c;
+    } иначе {
+        върни false;
     }
 }
 
 const char16_t *
 PatternProps::skipWhiteSpace(const char16_t *s, int32_t length) {
-    while(length>0 && isWhiteSpace(*s)) {
+    докато(length>0 && isWhiteSpace(*s)) {
         ++s;
         --length;
     }
-    return s;
+    върни s;
 }
 
 int32_t
 PatternProps::skipWhiteSpace(const UnicodeString& s, int32_t start) {
     int32_t i = start;
     int32_t length = s.length();
-    while(i<length && isWhiteSpace(s.charAt(i))) {
+    докато(i<length && isWhiteSpace(s.charAt(i))) {
         ++i;
     }
-    return i;
+    върни i;
 }
 
 const char16_t *
 PatternProps::trimWhiteSpace(const char16_t *s, int32_t &length) {
-    if(length<=0 || (!isWhiteSpace(s[0]) && !isWhiteSpace(s[length-1]))) {
-        return s;
+    ако(length<=0 || (!isWhiteSpace(s[0]) && !isWhiteSpace(s[length-1]))) {
+        върни s;
     }
     int32_t start=0;
     int32_t limit=length;
-    while(start<limit && isWhiteSpace(s[start])) {
+    докато(start<limit && isWhiteSpace(s[start])) {
         ++start;
     }
-    if(start<limit) {
+    ако(start<limit) {
         // There is non-white space at start; we will not move limit below that,
         // so we need not test start<limit in the loop.
-        while(isWhiteSpace(s[limit-1])) {
+        докато(isWhiteSpace(s[limit-1])) {
             --limit;
         }
     }
     length=limit-start;
-    return s+start;
+    върни s+start;
 }
 
 UBool
 PatternProps::isIdentifier(const char16_t *s, int32_t length) {
-    if(length<=0) {
-        return false;
+    ако(length<=0) {
+        върни false;
     }
     const char16_t *limit=s+length;
     do {
-        if(isSyntaxOrWhiteSpace(*s++)) {
-            return false;
+        ако(isSyntaxOrWhiteSpace(*s++)) {
+            върни false;
         }
-    } while(s<limit);
-    return true;
+    } докато(s<limit);
+    върни true;
 }
 
 const char16_t *
 PatternProps::skipIdentifier(const char16_t *s, int32_t length) {
-    while(length>0 && !isSyntaxOrWhiteSpace(*s)) {
+    докато(length>0 && !isSyntaxOrWhiteSpace(*s)) {
         ++s;
         --length;
     }
-    return s;
+    върни s;
 }
 
 U_NAMESPACE_END
