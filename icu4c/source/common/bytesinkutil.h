@@ -7,39 +7,39 @@
 #ifndef BYTESINKUTIL_H
 #define BYTESINKUTIL_H
 
-#include <type_traits>
+#ضمن <type_traits>
 
-#include "unicode/utypes.h"
-#include "unicode/bytestream.h"
-#include "unicode/edits.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "uassert.h"
-#include "ustr_imp.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/bytestream.h"
+#ضمن "unicode/edits.h"
+#ضمن "charstr.h"
+#ضمن "cmemory.h"
+#ضمن "uassert.h"
+#ضمن "ustr_imp.h"
 
 U_NAMESPACE_BEGIN
 
 class ByteSink;
 class Edits;
 
-class U_COMMON_API CharStringByteSink : public ByteSink {
-public:
+class U_COMMON_API CharStringByteSink : عام ByteSink {
+عام:
     CharStringByteSink(CharString* dest);
     ~CharStringByteSink() override;
 
     CharStringByteSink() = delete;
-    CharStringByteSink(const CharStringByteSink&) = delete;
-    CharStringByteSink& operator=(const CharStringByteSink&) = delete;
+    CharStringByteSink(ثابت CharStringByteSink&) = delete;
+    CharStringByteSink& operator=(ثابت CharStringByteSink&) = delete;
 
-    void Append(const char* bytes, int32_t n) override;
+    فراغ Append(ثابت حرف* bytes, int32_t n) override;
 
-    char* GetAppendBuffer(int32_t min_capacity,
+    حرف* GetAppendBuffer(int32_t min_capacity,
                           int32_t desired_capacity_hint,
-                          char* scratch U_LIFETIME_BOUND,
+                          حرف* scratch U_LIFETIME_BOUND,
                           int32_t scratch_capacity,
                           int32_t* result_capacity) U_LIFETIME_BOUND override;
 
-private:
+خاص:
     CharString& dest_;
 };
 
@@ -47,47 +47,47 @@ private:
 // string class to have so this template specialization replaces the default
 // implementation of StringByteSink<CharString> with CharStringByteSink.
 template<>
-class StringByteSink<CharString> : public CharStringByteSink {
- public:
+class StringByteSink<CharString> : عام CharStringByteSink {
+ عام:
   StringByteSink(CharString* dest) : CharStringByteSink(dest) { }
   StringByteSink(CharString* dest, int32_t /*initialAppendCapacity*/) : CharStringByteSink(dest) { }
 };
 
 class U_COMMON_API ByteSinkUtil {
-public:
+عام:
     ByteSinkUtil() = delete;  // all static
 
     /** (length) bytes were mapped to valid (s16, s16Length). */
-    static UBool appendChange(int32_t length,
-                              const char16_t *s16, int32_t s16Length,
+    ساكن UBool appendChange(int32_t length,
+                              ثابت char16_t *s16, int32_t s16Length,
                               ByteSink &sink, Edits *edits, UErrorCode &errorCode);
 
     /** The bytes at [s, limit[ were mapped to valid (s16, s16Length). */
-    static UBool appendChange(const uint8_t *s, const uint8_t *limit,
-                              const char16_t *s16, int32_t s16Length,
+    ساكن UBool appendChange(ثابت uint8_t *s, ثابت uint8_t *limit,
+                              ثابت char16_t *s16, int32_t s16Length,
                               ByteSink &sink, Edits *edits, UErrorCode &errorCode);
 
     /** (length) bytes were mapped/changed to valid code point c. */
-    static void appendCodePoint(int32_t length, UChar32 c, ByteSink &sink, Edits *edits = nullptr);
+    ساكن فراغ appendCodePoint(int32_t length, UChar32 c, ByteSink &sink, Edits *edits = nullptr);
 
     /** The few bytes at [src, nextSrc[ were mapped/changed to valid code point c. */
-    static inline void appendCodePoint(const uint8_t *src, const uint8_t *nextSrc, UChar32 c,
+    ساكن مضمن فراغ appendCodePoint(ثابت uint8_t *src, ثابت uint8_t *nextSrc, UChar32 c,
                                        ByteSink &sink, Edits *edits = nullptr) {
         appendCodePoint(static_cast<int32_t>(nextSrc - src), c, sink, edits);
     }
 
     /** Append the two-byte character (U+0080..U+07FF). */
-    static void appendTwoBytes(UChar32 c, ByteSink &sink);
+    ساكن فراغ appendTwoBytes(UChar32 c, ByteSink &sink);
 
-    static UBool appendUnchanged(const uint8_t *s, int32_t length,
+    ساكن UBool appendUnchanged(ثابت uint8_t *s, int32_t length,
                                  ByteSink &sink, uint32_t options, Edits *edits,
                                  UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return false; }
-        if (length > 0) { appendNonEmptyUnchanged(s, length, sink, options, edits); }
-        return true;
+        إذا (U_FAILURE(errorCode)) { أرجع false; }
+        إذا (length > 0) { appendNonEmptyUnchanged(s, length, sink, options, edits); }
+        أرجع true;
     }
 
-    static UBool appendUnchanged(const uint8_t *s, const uint8_t *limit,
+    ساكن UBool appendUnchanged(ثابت uint8_t *s, ثابت uint8_t *limit,
                                  ByteSink &sink, uint32_t options, Edits *edits,
                                  UErrorCode &errorCode);
 
@@ -106,23 +106,23 @@ public:
      */
     template <typename F,
               typename = std::enable_if_t<
-                  std::is_invocable_r_v<void, F, ByteSink&, UErrorCode&>>>
-    static int32_t viaByteSinkToTerminatedChars(char* buffer, int32_t capacity,
+                  std::is_invocable_r_v<فراغ, F, ByteSink&, UErrorCode&>>>
+    ساكن int32_t viaByteSinkToTerminatedChars(حرف* buffer, int32_t capacity,
                                                 F&& lambda,
                                                 UErrorCode& status) {
-        if (U_FAILURE(status)) { return 0; }
+        إذا (U_FAILURE(status)) { أرجع 0; }
         CheckedArrayByteSink sink(buffer, capacity);
         lambda(sink, status);
-        if (U_FAILURE(status)) { return 0; }
+        إذا (U_FAILURE(status)) { أرجع 0; }
 
-        int32_t reslen = sink.NumberOfBytesAppended();
+        int32_t reslen = sink.سان_Of_Bytes_Appended();
 
-        if (sink.Overflowed()) {
+        إذا (sink.Overflowed()) {
             status = U_BUFFER_OVERFLOW_ERROR;
-            return reslen;
+            أرجع reslen;
         }
 
-        return u_terminateChars(buffer, capacity, reslen, &status);
+        أرجع u_terminateChars(buffer, capacity, reslen, &status);
     }
 
     /**
@@ -137,17 +137,17 @@ public:
      */
     template <typename F,
               typename = std::enable_if_t<
-                  std::is_invocable_r_v<void, F, ByteSink&, UErrorCode&>>>
-    static CharString viaByteSinkToCharString(F&& lambda, UErrorCode& status) {
-        if (U_FAILURE(status)) { return {}; }
+                  std::is_invocable_r_v<فراغ, F, ByteSink&, UErrorCode&>>>
+    ساكن CharString viaByteSinkToCharString(F&& lambda, UErrorCode& status) {
+        إذا (U_FAILURE(status)) { أرجع {}; }
         CharString result;
         CharStringByteSink sink(&result);
         lambda(sink, status);
-        return result;
+        أرجع result;
     }
 
-private:
-    static void appendNonEmptyUnchanged(const uint8_t *s, int32_t length,
+خاص:
+    ساكن فراغ appendNonEmptyUnchanged(ثابت uint8_t *s, int32_t length,
                                         ByteSink &sink, uint32_t options, Edits *edits);
 };
 
