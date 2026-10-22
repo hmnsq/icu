@@ -32,7 +32,7 @@
  * @see USTRINGTRIE_HAS_NEXT
  * @stable ICU 4.8
  */
-enum UStringTrieResult {
+ga_nanaa UStringTrieResult {
     /**
      * The input unit(s) did not continue a matching string.
      * Once current()/next() return USTRINGTRIE_NO_MATCH,

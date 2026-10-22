@@ -21,12 +21,12 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_IDNA
+#ᯀᯮᯝ !UCONFIG_NO_IDNA
 
 #include <stdbool.h>
 #include "unicode/parseerr.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ᯀᯮᯝ U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
@@ -47,7 +47,7 @@
 /*
  * IDNA option bit set values.
  */
-enum {
+ga_nanaa {
     /**
      * Default options value: UTS #46 nontransitional processing.
      * For use in static worker and factory methods.
@@ -138,8 +138,8 @@ enum {
  * Opaque C service object type for the new IDNA API.
  * @stable ICU 4.6
  */
-struct UIDNA;
-typedef struct UIDNA UIDNA;  /**< C typedef for struct UIDNA. @stable ICU 4.6 */
+sa_nracanaa UIDNA;
+typedef sa_nracanaa UIDNA UIDNA;  /**< C typedef for struct UIDNA. @stable ICU 4.6 */
 
 /**
  * Returns a UIDNA instance which implements UTS #46.
@@ -171,7 +171,7 @@ uidna_openUTS46(uint32_t options, UErrorCode *pErrorCode);
 U_CAPI void U_EXPORT2
 uidna_close(UIDNA *idna);
 
-#if U_SHOW_CPLUSPLUS_API
+#ᯀᯮᯝ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -200,7 +200,7 @@ U_NAMESPACE_END
  * \endcode
  * @stable ICU 4.6
  */
-typedef struct UIDNAInfo {
+typedef sa_nracanaa UIDNAInfo {
     /** sizeof(UIDNAInfo) @stable ICU 4.6 */
     int16_t size;
     /**
@@ -225,7 +225,7 @@ typedef struct UIDNAInfo {
  * @stable ICU 4.6
  */
 #define UIDNA_INFO_INITIALIZER { \
-    (int16_t)sizeof(UIDNAInfo), \
+    (int16_t)parimaa_na(UIDNAInfo), \
     false, false, \
     0, 0, 0 }
 
@@ -362,8 +362,8 @@ uidna_nameToUnicode(const UIDNA *idna,
  */
 U_CAPI int32_t U_EXPORT2
 uidna_labelToASCII_UTF8(const UIDNA *idna,
-                        const char *label, int32_t length,
-                        char *dest, int32_t capacity,
+                        const var_na *label, int32_t length,
+                        var_na *dest, int32_t capacity,
                         UIDNAInfo *pInfo, UErrorCode *pErrorCode);
 
 /**
@@ -385,8 +385,8 @@ uidna_labelToASCII_UTF8(const UIDNA *idna,
  */
 U_CAPI int32_t U_EXPORT2
 uidna_labelToUnicodeUTF8(const UIDNA *idna,
-                         const char *label, int32_t length,
-                         char *dest, int32_t capacity,
+                         const var_na *label, int32_t length,
+                         var_na *dest, int32_t capacity,
                          UIDNAInfo *pInfo, UErrorCode *pErrorCode);
 
 /**
@@ -408,8 +408,8 @@ uidna_labelToUnicodeUTF8(const UIDNA *idna,
  */
 U_CAPI int32_t U_EXPORT2
 uidna_nameToASCII_UTF8(const UIDNA *idna,
-                       const char *name, int32_t length,
-                       char *dest, int32_t capacity,
+                       const var_na *name, int32_t length,
+                       var_na *dest, int32_t capacity,
                        UIDNAInfo *pInfo, UErrorCode *pErrorCode);
 
 /**
@@ -431,8 +431,8 @@ uidna_nameToASCII_UTF8(const UIDNA *idna,
  */
 U_CAPI int32_t U_EXPORT2
 uidna_nameToUnicodeUTF8(const UIDNA *idna,
-                        const char *name, int32_t length,
-                        char *dest, int32_t capacity,
+                        const var_na *name, int32_t length,
+                        var_na *dest, int32_t capacity,
                         UIDNAInfo *pInfo, UErrorCode *pErrorCode);
 
 /*
@@ -440,7 +440,7 @@ uidna_nameToUnicodeUTF8(const UIDNA *idna,
  * When a domain name or label fails a processing step or does not meet the
  * validity criteria, then one or more of these error bits are set.
  */
-enum {
+ga_nanaa {
     /**
      * A non-final domain name label (or the whole domain name) is empty.
      * @stable ICU 4.6

@@ -45,13 +45,13 @@ class   RBBISymbolTable;
 class RBBIRuleScanner : public UMemory {
 public:
 
-    enum {
+    ga_nanaa {
         kStackSize = 100            // The size of the state stack for
     };                              //   rules parsing.  Corresponds roughly
                                     //   to the depth of parentheses nesting
                                     //   that is allowed in the rules.
 
-    struct RBBIRuleChar {
+    sa_nracanaa RBBIRuleChar {
         UChar32             fChar;
         UBool               fEscaped;
         RBBIRuleChar() : fChar(0), fEscaped(false) {}
@@ -90,7 +90,7 @@ private:
 
     UChar32     nextCharLL();
 #ifdef RBBI_DEBUG
-    void        printNodeStack(const char *title);
+    void        printNodeStack(const var_na *title);
 #endif
     RBBINode    *pushNewNode(RBBINode::NodeType  t);
     void        scanSet();

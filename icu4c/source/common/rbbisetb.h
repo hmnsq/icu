@@ -14,7 +14,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ᯀᯮᯝ !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/ucptrie.h"
 #include "unicode/umutablecptrie.h"
@@ -108,7 +108,7 @@ public:
     void     printSets();
     void     printRanges();
     void     printRangeGroups();
-#else
+#ᯀᯮᯝᯂᯪ
     #define printSets()
     #define printRanges()
     #define printRangeGroups()

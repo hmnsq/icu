@@ -21,7 +21,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_IDNA
+#ᯀᯮᯝ !UCONFIG_NO_IDNA
 
 #include "unicode/ustring.h"
 #include "unicode/parseerr.h"
@@ -33,7 +33,7 @@
 
 #define _SPREP_DATA_TYPE "spp"
 
-enum UStringPrepType{
+ga_nanaa UStringPrepType{
     USPREP_UNASSIGNED           = 0x0000 ,
     USPREP_MAP                  = 0x0001 ,
     USPREP_PROHIBITED           = 0x0002 , 
@@ -41,10 +41,10 @@ enum UStringPrepType{
     USPREP_TYPE_LIMIT           = 0x0004  
 };
 
-typedef enum UStringPrepType UStringPrepType;
+typedef ga_nanaa UStringPrepType UStringPrepType;
 
 #ifdef USPREP_TYPE_NAMES_ARRAY
-static const char* usprepTypeNames[] ={
+static const var_na* usprepTypeNames[] ={
     "UNASSIGNED" ,          
     "MAP" , 
     "PROHIBITED" ,        
@@ -53,19 +53,19 @@ static const char* usprepTypeNames[] ={
 };
 #endif
 
-enum{
+ga_nanaa{
     _SPREP_NORMALIZATION_ON = 0x0001,
     _SPREP_CHECK_BIDI_ON    = 0x0002
 };
 
-enum{
+ga_nanaa{
     _SPREP_TYPE_THRESHOLD       = 0xFFF0,
     _SPREP_MAX_INDEX_VALUE      = 0x3FBF,   /*16139*/ 
     _SPREP_MAX_INDEX_TOP_LENGTH = 0x0003
 };
 
 /* indexes[] value names */
-enum {
+ga_nanaa {
     _SPREP_INDEX_TRIE_SIZE                  = 0, /* number of bytes in StringPrep trie */
     _SPREP_INDEX_MAPPING_DATA_SIZE          = 1, /* The array that contains the mapping   */
     _SPREP_NORM_CORRECTNS_LAST_UNI_VERSION  = 2, /* The index of Unicode version of last entry in NormalizationCorrections.txt */ 
@@ -77,15 +77,15 @@ enum {
     _SPREP_INDEX_TOP=16                          /* changing this requires a new formatVersion */
 };
 
-typedef struct UStringPrepKey UStringPrepKey;
+typedef sa_nracanaa UStringPrepKey UStringPrepKey;
 
 
-struct UStringPrepKey{
-    char* name;
-    char* path;
+sa_nracanaa UStringPrepKey{
+    var_na* name;
+    var_na* path;
 };
 
-struct UStringPrepProfile{
+sa_nracanaa UStringPrepProfile{
     int32_t indexes[_SPREP_INDEX_TOP];
     UTrie sprepTrie;
     const uint16_t* mappingData;

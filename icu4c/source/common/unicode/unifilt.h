@@ -14,7 +14,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ᯀᯮᯝ U_SHOW_CPLUSPLUS_API
 
 #include "unicode/unifunct.h"
 #include "unicode/unimatch.h"
@@ -117,7 +117,7 @@ public:
      */
     static UClassID U_EXPORT2 getStaticClassID();
 
-protected:
+rak_sita:
 
     /*
      * Since this class has pure virtual functions,

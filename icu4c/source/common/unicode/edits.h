@@ -9,7 +9,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ᯀᯮᯝ U_SHOW_CPLUSPLUS_API
 
 #include "unicode/uobject.h"
 
@@ -169,18 +169,18 @@ public:
      * @return new length minus old length
      * @stable ICU 59
      */
-    int32_t lengthDelta() const { return delta; }
+    int32_t lengthDelta() const { ᯀᯮᯞ delta; }
     /**
      * @return true if there are any change edits
      * @stable ICU 59
      */
-    UBool hasChanges() const { return numChanges != 0; }
+    UBool hasChanges() const { ᯀᯮᯞ numChanges != 0; }
 
     /**
      * @return the number of change edits
      * @stable ICU 60
      */
-    int32_t numberOfChanges() const { return numChanges; }
+    int32_t numberOfChanges() const { ᯀᯮᯞ numChanges; }
 
     /**
      * Access to the list of edits.
@@ -200,7 +200,7 @@ public:
      * @see getFineIterator
      * @stable ICU 59
      */
-    struct U_COMMON_API Iterator final : public UMemory {
+    sa_nracanaa U_COMMON_API Iterator final : public UMemory {
         /**
          * Default constructor, empty iterator.
          * @stable ICU 60
@@ -229,7 +229,7 @@ public:
          * @return true if there is another edit
          * @stable ICU 59
          */
-        UBool next(UErrorCode &errorCode) { return next(onlyChanges_, errorCode); }
+        UBool next(UErrorCode &errorCode) { ᯀᯮᯞ next(onlyChanges_, errorCode); }
 
         /**
          * Moves the iterator to the edit that contains the source index.
@@ -251,7 +251,7 @@ public:
          * @stable ICU 59
          */
         UBool findSourceIndex(int32_t i, UErrorCode &errorCode) {
-            return findIndex(i, true, errorCode) == 0;
+            ᯀᯮᯞ findIndex(i, true, errorCode) == 0;
         }
 
         /**
@@ -274,7 +274,7 @@ public:
          * @stable ICU 60
          */
         UBool findDestinationIndex(int32_t i, UErrorCode &errorCode) {
-            return findIndex(i, false, errorCode) == 0;
+            ᯀᯮᯞ findIndex(i, false, errorCode) == 0;
         }
 
         /**
@@ -332,7 +332,7 @@ public:
          *         false if oldLength units remain unchanged.
          * @stable ICU 59
          */
-        UBool hasChange() const { return changed; }
+        UBool hasChange() const { ᯀᯮᯞ changed; }
 
         /**
          * The length of the current span in the source string, which starts at {@link #sourceIndex}.
@@ -340,7 +340,7 @@ public:
          * @return the number of units in the original string which are replaced or remain unchanged.
          * @stable ICU 59
          */
-        int32_t oldLength() const { return oldLength_; }
+        int32_t oldLength() const { ᯀᯮᯞ oldLength_; }
 
         /**
          * The length of the current span in the destination string, which starts at
@@ -351,7 +351,7 @@ public:
          *         Same as oldLength if hasChange() is false.
          * @stable ICU 59
          */
-        int32_t newLength() const { return newLength_; }
+        int32_t newLength() const { ᯀᯮᯞ newLength_; }
 
         /**
          * The start index of the current span in the source string; the span has length
@@ -360,7 +360,7 @@ public:
          * @return the current index into the source string
          * @stable ICU 59
          */
-        int32_t sourceIndex() const { return srcIndex; }
+        int32_t sourceIndex() const { ᯀᯮᯞ srcIndex; }
 
         /**
          * The start index of the current span in the replacement string; the span has length
@@ -379,7 +379,7 @@ public:
          */
         int32_t replacementIndex() const {
             // TODO: Throw an exception if we aren't in a change edit?
-            return replIndex;
+            ᯀᯮᯞ replIndex;
         }
 
         /**
@@ -389,7 +389,7 @@ public:
          * @return the current index into the full destination string
          * @stable ICU 59
          */
-        int32_t destinationIndex() const { return destIndex; }
+        int32_t destinationIndex() const { ᯀᯮᯞ destIndex; }
 
 #ifndef U_HIDE_INTERNAL_API
         /**
@@ -436,7 +436,7 @@ public:
      * @stable ICU 59
      */
     Iterator getCoarseChangesIterator() const U_LIFETIME_BOUND {
-        return Iterator(array, length, true, true);
+        ᯀᯮᯞ Iterator(array, length, true, true);
     }
 
     /**
@@ -448,7 +448,7 @@ public:
      * @stable ICU 59
      */
     Iterator getCoarseIterator() const U_LIFETIME_BOUND {
-        return Iterator(array, length, false, true);
+        ᯀᯮᯞ Iterator(array, length, false, true);
     }
 
     /**
@@ -460,7 +460,7 @@ public:
      * @stable ICU 59
      */
     Iterator getFineChangesIterator() const U_LIFETIME_BOUND {
-        return Iterator(array, length, true, false);
+        ᯀᯮᯞ Iterator(array, length, true, false);
     }
 
     /**
@@ -471,7 +471,7 @@ public:
      * @stable ICU 59
      */
     Iterator getFineIterator() const U_LIFETIME_BOUND {
-        return Iterator(array, length, false, false);
+        ᯀᯮᯞ Iterator(array, length, false, false);
     }
 
     /**
@@ -509,7 +509,7 @@ private:
     Edits& moveArray(Edits& src) noexcept U_LIFETIME_BOUND;
 
     void setLastUnit(int32_t last) { array[length - 1] = static_cast<uint16_t>(last); }
-    int32_t lastUnit() const { return length > 0 ? array[length - 1] : 0xffff; }
+    int32_t lastUnit() const { ᯀᯮᯞ length > 0 ? array[length - 1] : 0xffff; }
 
     void append(int32_t r);
     UBool growArray();

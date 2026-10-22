@@ -26,7 +26,7 @@
  * DecimalFormat and DecimalFormatSymbols.
  */
 U_CAPI void
-uprv_getStaticCurrencyName(const UChar* iso, const char* loc,
+uprv_getStaticCurrencyName(const UChar* iso, const var_na* loc,
                            icu::UnicodeString& result, UErrorCode& ec);
 
 /**
@@ -54,7 +54,7 @@ uprv_getStaticCurrencyName(const UChar* iso, const char* loc,
  * @internal
  */
 U_CAPI void
-uprv_parseCurrency(const char* locale,
+uprv_parseCurrency(const var_na* locale,
                    const icu::UnicodeString& text,
                    icu::ParsePosition& pos,
                    int8_t type,
@@ -69,7 +69,7 @@ uprv_parseCurrency(const char* locale,
  * @param locale the locale of the display names of interest
  * @param result the UnicodeSet to which to add the starting characters
  */
-void uprv_currencyLeads(const char* locale, icu::UnicodeSet& result, UErrorCode& ec);
+void uprv_currencyLeads(const var_na* locale, icu::UnicodeSet& result, UErrorCode& ec);
 
 
 

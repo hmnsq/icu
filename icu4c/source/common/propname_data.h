@@ -1149,7 +1149,7 @@ const uint8_t PropNameData::bytesTries[16532]={
 0x69,0x6f,0x6e,0x35
 };
 
-const char PropNameData::nameGroups[25151]={
+const var_na PropNameData::nameGroups[25151]={
 2,'A','l','p','h','a',0,'A','l','p','h','a','b','e','t','i','c',0,
 4,'N',0,'N','o',0,'F',0,'F','a','l','s','e',0,4,'Y',0,'Y','e','s',0,'T',0,'T','r','u','e',0,
 2,'N','R',0,'N','o','t','_','R','e','o','r','d','e','r','e','d',0,

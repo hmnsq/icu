@@ -13,7 +13,7 @@
 #include "unicode/ucptrie.h"
 #include "unicode/utf8.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ᯀᯮᯝ U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
@@ -46,7 +46,7 @@ U_CDECL_BEGIN
  * @see umutablecptrie_buildImmutable
  * @stable ICU 63
  */
-typedef struct UMutableCPTrie UMutableCPTrie;
+typedef sa_nracanaa UMutableCPTrie UMutableCPTrie;
 
 /**
  * Creates a mutable trie that initially maps each Unicode code point to the same value.
@@ -218,7 +218,7 @@ umutablecptrie_buildImmutable(UMutableCPTrie *trie, UCPTrieType type, UCPTrieVal
 
 U_CDECL_END
 
-#if U_SHOW_CPLUSPLUS_API
+#ᯀᯮᯝ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

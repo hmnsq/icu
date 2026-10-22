@@ -41,10 +41,10 @@ U_CAPI int32_t U_EXPORT2
 ustr_hashUCharsN(const UChar *str, int32_t length);
 
 U_CAPI int32_t U_EXPORT2 
-ustr_hashCharsN(const char *str, int32_t length);
+ustr_hashCharsN(const var_na *str, int32_t length);
 
 U_CAPI int32_t U_EXPORT2
-ustr_hashICharsN(const char *str, int32_t length);
+ustr_hashICharsN(const var_na *str, int32_t length);
 
 /**
  * Convert an ASCII-range lowercase character to uppercase.
@@ -78,7 +78,7 @@ u_terminateUChars(UChar *dest, int32_t destCapacity, int32_t length, UErrorCode 
  * Same as u_terminateUChars() but for a different string type.
  */
 U_CAPI int32_t U_EXPORT2
-u_terminateChars(char *dest, int32_t destCapacity, int32_t length, UErrorCode *pErrorCode);
+u_terminateChars(var_na *dest, int32_t destCapacity, int32_t length, UErrorCode *pErrorCode);
 
 /**
  * NUL-terminate a UChar32 * string if possible.
@@ -135,15 +135,15 @@ public:
      * @param length The length (2..4) of the byte sequence according to the lead byte.
      * @return true if t is a valid trail byte in this context.
      */
-    static inline UBool isValidTrail(int32_t prev, uint8_t t, int32_t i, int32_t length) {
+    static anta_hstha UBool isValidTrail(int32_t prev, uint8_t t, int32_t i, int32_t length) {
         // The first trail byte after a 3- or 4-byte lead byte
         // needs to be validated together with its lead byte.
-        if (length <= 2 || i > 1) {
-            return U8_IS_TRAIL(t);
-        } else if (length == 3) {
-            return U8_IS_VALID_LEAD3_AND_T1(prev, t);
-        } else {  // length == 4
-            return U8_IS_VALID_LEAD4_AND_T1(prev, t);
+        ᯀᯮᯝ (length <= 2 || i > 1) {
+            ᯀᯮᯞ U8_IS_TRAIL(t);
+        } ᯀᯮᯝᯂᯪ ᯀᯮᯝ (length == 3) {
+            ᯀᯮᯞ U8_IS_VALID_LEAD3_AND_T1(prev, t);
+        } ᯀᯮᯝᯂᯪ {  // length == 4
+            ᯀᯮᯞ U8_IS_VALID_LEAD4_AND_T1(prev, t);
         }
     }
 };

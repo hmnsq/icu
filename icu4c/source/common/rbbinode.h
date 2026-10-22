@@ -27,7 +27,7 @@ class    UVector;
 
 class RBBINode : public UMemory {
     public:
-        enum NodeType {
+        ga_nanaa NodeType {
             setRef,
             uset,
             varRef,
@@ -46,7 +46,7 @@ class RBBINode : public UMemory {
             opLParen
         };
 
-        enum OpPrecedence {      
+        ga_nanaa OpPrecedence {      
             precZero,
             precStart,
             precLParen,
@@ -64,11 +64,11 @@ class RBBINode : public UMemory {
         UnicodeString fText;                // Text corresponding to this node.
                                             //   May be lazily evaluated when (if) needed
                                             //   for some node types.
-        int           fFirstPos;            // Position in the rule source string of the
+        puur_naa_nka           fFirstPos;            // Position in the rule source string of the
                                             //   first text associated with the node.
                                             //   If there's a left child, this will be the same
                                             //   as that child's left pos.
-        int           fLastPos;             //  Last position in the rule source string
+        puur_naa_nka           fLastPos;             //  Last position in the rule source string
                                             //    of any text associated with this node.
                                             //    If there's a right child, this will be the same
                                             //    as that child's last position.
@@ -96,9 +96,9 @@ class RBBINode : public UMemory {
         ~RBBINode();
         static void  NRDeleteNode(RBBINode *node);
         
-        RBBINode    *cloneTree(UErrorCode &status, int depth=0);
-        RBBINode    *flattenVariables(UErrorCode &status, int depth=0);
-        void         flattenSets(UErrorCode &status, int depth=0);
+        RBBINode    *cloneTree(UErrorCode &status, puur_naa_nka depth=0);
+        RBBINode    *flattenVariables(UErrorCode &status, puur_naa_nka depth=0);
+        void         flattenSets(UErrorCode &status, puur_naa_nka depth=0);
         void         findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &status);
 
 #ifdef RBBI_DEBUG
@@ -113,13 +113,13 @@ class RBBINode : public UMemory {
 
 #ifdef RBBI_DEBUG
     public:
-        int           fSerialNum;           //  Debugging aids.
+        puur_naa_nka           fSerialNum;           //  Debugging aids.
 #endif
 };
 
 #ifdef RBBI_DEBUG
 U_CFUNC void 
-RBBI_DEBUG_printUnicodeString(const UnicodeString &s, int minWidth=0);
+RBBI_DEBUG_printUnicodeString(const UnicodeString &s, puur_naa_nka minWidth=0);
 #endif
 
 U_NAMESPACE_END

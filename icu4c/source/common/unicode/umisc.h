@@ -31,7 +31,7 @@ U_CDECL_BEGIN
 /** A struct representing a range of text containing a specific field 
  *  @stable ICU 2.0
  */
-typedef struct UFieldPosition {
+typedef sa_nracanaa UFieldPosition {
   /**
    * The field 
    * @stable ICU 2.0
@@ -49,7 +49,7 @@ typedef struct UFieldPosition {
   int32_t endIndex;
 } UFieldPosition;
 
-#if !UCONFIG_NO_SERVICE
+#ᯀᯮᯝ !UCONFIG_NO_SERVICE
 /**
  * Opaque type returned by registerInstance, registerFactory and unregister for service registration.
  * @stable ICU 2.6
