@@ -16,16 +16,16 @@
  * \brief C++ API: Simple formatter, minimal subset of MessageFormat.
  */
 
-#include "unicode/utypes.h"
+#અન્તર્ભાવ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#જો U_SHOW_CPLUSPLUS_API
 
-#include "unicode/unistr.h"
+#અન્તર્ભાવ "unicode/unistr.h"
 
 U_NAMESPACE_BEGIN
 
 // Forward declaration:
-namespace number::impl {
+namespace સંખ્યા::impl {
 class SimpleModifier;
 }
 
@@ -57,8 +57,8 @@ class SimpleModifier;
  * @see UMessagePatternApostropheMode
  * @stable ICU 57
  */
-class U_COMMON_API SimpleFormatter final : public UMemory {
-public:
+class U_COMMON_API SimpleFormatter final : જાહેર UMemory {
+જાહેર:
     /**
      * Default constructor.
      * @stable ICU 57
@@ -74,7 +74,7 @@ public:
      *                  Set to U_ILLEGAL_ARGUMENT_ERROR for bad argument syntax.
      * @stable ICU 57
      */
-    SimpleFormatter(const UnicodeString& pattern, UErrorCode &errorCode) {
+    SimpleFormatter(અચલ UnicodeString& pattern, UErrorCode &errorCode) {
         applyPattern(pattern, errorCode);
     }
 
@@ -92,7 +92,7 @@ public:
      *                  too few or too many arguments.
      * @stable ICU 57
      */
-    SimpleFormatter(const UnicodeString& pattern, int32_t min, int32_t max,
+    SimpleFormatter(અચલ UnicodeString& pattern, int32_t min, int32_t max,
                     UErrorCode &errorCode) {
         applyPatternMinMaxArguments(pattern, min, max, errorCode);
     }
@@ -101,14 +101,14 @@ public:
      * Copy constructor.
      * @stable ICU 57
      */
-    SimpleFormatter(const SimpleFormatter& other)
+    SimpleFormatter(અચલ SimpleFormatter& other)
             : compiledPattern(other.compiledPattern) {}
 
     /**
      * Assignment operator.
      * @stable ICU 57
      */
-    SimpleFormatter& operator=(const SimpleFormatter& other) U_LIFETIME_BOUND;
+    SimpleFormatter& operator=(અચલ SimpleFormatter& other) U_LIFETIME_BOUND;
 
     /**
      * Destructor.
@@ -126,8 +126,8 @@ public:
      * @return true if U_SUCCESS(errorCode).
      * @stable ICU 57
      */
-    UBool applyPattern(const UnicodeString &pattern, UErrorCode &errorCode) {
-        return applyPatternMinMaxArguments(pattern, 0, INT32_MAX, errorCode);
+    UBool applyPattern(અચલ UnicodeString &pattern, UErrorCode &errorCode) {
+        પાછા applyPatternMinMaxArguments(pattern, 0, INT32_MAX, errorCode);
     }
 
     /**
@@ -145,15 +145,15 @@ public:
      * @return true if U_SUCCESS(errorCode).
      * @stable ICU 57
      */
-    UBool applyPatternMinMaxArguments(const UnicodeString &pattern,
+    UBool applyPatternMinMaxArguments(અચલ UnicodeString &pattern,
                                       int32_t min, int32_t max, UErrorCode &errorCode);
 
     /**
      * @return The max argument number + 1.
      * @stable ICU 57
      */
-    int32_t getArgumentLimit() const {
-        return getArgumentLimit(compiledPattern.getBuffer(), compiledPattern.length());
+    int32_t getArgumentLimit() અચલ {
+        પાછા getArgumentLimit(compiledPattern.getBuffer(), compiledPattern.length());
     }
 
     /**
@@ -169,9 +169,9 @@ public:
      * @stable ICU 57
      */
     UnicodeString& format(
-            const UnicodeString& value0,
+            અચલ UnicodeString& value0,
             UnicodeString& appendTo U_LIFETIME_BOUND,
-            UErrorCode& errorCode) const;
+            UErrorCode& errorCode) અચલ;
 
     /**
      * Formats the given values, appending to the appendTo builder.
@@ -187,10 +187,10 @@ public:
      * @stable ICU 57
      */
     UnicodeString& format(
-            const UnicodeString& value0,
-            const UnicodeString& value1,
+            અચલ UnicodeString& value0,
+            અચલ UnicodeString& value1,
             UnicodeString& appendTo U_LIFETIME_BOUND,
-            UErrorCode& errorCode) const;
+            UErrorCode& errorCode) અચલ;
 
     /**
      * Formats the given values, appending to the appendTo builder.
@@ -207,11 +207,11 @@ public:
      * @stable ICU 57
      */
     UnicodeString& format(
-            const UnicodeString& value0,
-            const UnicodeString& value1,
-            const UnicodeString& value2,
+            અચલ UnicodeString& value0,
+            અચલ UnicodeString& value1,
+            અચલ UnicodeString& value2,
             UnicodeString& appendTo U_LIFETIME_BOUND,
-            UErrorCode& errorCode) const;
+            UErrorCode& errorCode) અચલ;
 
     /**
      * Formats the given values, appending to the appendTo string.
@@ -233,12 +233,12 @@ public:
      * @stable ICU 57
      */
     UnicodeString& formatAndAppend(
-            const UnicodeString* const* values,
-            int32_t valuesLength,
+            અચલ UnicodeString* અચલ* કિંમતો,
+            int32_t કિંમતો_Length,
             UnicodeString& appendTo U_LIFETIME_BOUND,
             int32_t* offsets,
             int32_t offsetsLength,
-            UErrorCode& errorCode) const;
+            UErrorCode& errorCode) અચલ;
 
     /**
      * Formats the given values, replacing the contents of the result string.
@@ -262,20 +262,20 @@ public:
      * @stable ICU 57
      */
     UnicodeString& formatAndReplace(
-            const UnicodeString* const* values,
-            int32_t valuesLength,
+            અચલ UnicodeString* અચલ* કિંમતો,
+            int32_t કિંમતો_Length,
             UnicodeString& result U_LIFETIME_BOUND,
             int32_t* offsets,
             int32_t offsetsLength,
-            UErrorCode& errorCode) const;
+            UErrorCode& errorCode) અચલ;
 
     /**
      * Returns the pattern text with none of the arguments.
      * Like formatting with all-empty string values.
      * @stable ICU 57
      */
-    UnicodeString getTextWithNoArguments() const {
-        return getTextWithNoArguments(
+    UnicodeString getTextWithNoArguments() અચલ {
+        પાછા getTextWithNoArguments(
             compiledPattern.getBuffer(),
             compiledPattern.length(),
             nullptr,
@@ -298,8 +298,8 @@ public:
      *
      * @internal
      */
-    UnicodeString getTextWithNoArguments(int32_t *offsets, int32_t offsetsLength) const {
-        return getTextWithNoArguments(
+    UnicodeString getTextWithNoArguments(int32_t *offsets, int32_t offsetsLength) અચલ {
+        પાછા getTextWithNoArguments(
             compiledPattern.getBuffer(),
             compiledPattern.length(),
             offsets,
@@ -307,7 +307,7 @@ public:
     }
 #endif // U_HIDE_INTERNAL_API
 
-private:
+ખાનગી:
     /**
      * Binary representation of the compiled pattern.
      * Index 0: One more than the highest argument number.
@@ -319,30 +319,30 @@ private:
      */
     UnicodeString compiledPattern;
 
-    static inline int32_t getArgumentLimit(const char16_t *compiledPattern,
+    સ્થિર અંતઃરેખ int32_t getArgumentLimit(અચલ char16_t *compiledPattern,
                                               int32_t compiledPatternLength) {
-        return compiledPatternLength == 0 ? 0 : compiledPattern[0];
+        પાછા compiledPatternLength == 0 ? 0 : compiledPattern[0];
     }
 
-    static UnicodeString getTextWithNoArguments(
-        const char16_t *compiledPattern,
+    સ્થિર UnicodeString getTextWithNoArguments(
+        અચલ char16_t *compiledPattern,
         int32_t compiledPatternLength,
         int32_t *offsets,
         int32_t offsetsLength);
 
-    static UnicodeString& format(
-            const char16_t* compiledPattern,
+    સ્થિર UnicodeString& format(
+            અચલ char16_t* compiledPattern,
             int32_t compiledPatternLength,
-            const UnicodeString* const* values,
+            અચલ UnicodeString* અચલ* કિંમતો,
             UnicodeString& result U_LIFETIME_BOUND,
-            const UnicodeString* resultCopy,
-            UBool forbidResultAsValue,
+            અચલ UnicodeString* resultCopy,
+            UBool forbid_Result_As_કિંમત,
             int32_t* offsets,
             int32_t offsetsLength,
             UErrorCode& errorCode);
 
     // Give access to internals to SimpleModifier for number formatting
-    friend class number::impl::SimpleModifier;
+    friend class સંખ્યા::impl::SimpleModifier;
 };
 
 U_NAMESPACE_END

@@ -27,11 +27,11 @@
 #ifndef CSTRING_H
 #define CSTRING_H 1
 
-#include "unicode/utypes.h"
-#include "cmemory.h"
-#include <string.h>
-#include <stdlib.h>
-#include <ctype.h>
+#અન્તર્ભાવ "unicode/utypes.h"
+#અન્તર્ભાવ "cmemory.h"
+#અન્તર્ભાવ <string.h>
+#અન્તર્ભાવ <stdlib.h>
+#અન્તર્ભાવ <ctype.h>
 
 #define uprv_strcpy(dst, src) U_STANDARD_CPP_NAMESPACE  strcpy(dst, src)
 #define uprv_strlen(str) U_STANDARD_CPP_NAMESPACE strlen(str)
@@ -50,25 +50,25 @@
  * an ASCII-based or EBCDIC-based machine. There just does not seem to be a better name for this.
  */
 U_CAPI UBool U_EXPORT2
-uprv_isASCIILetter(char c);
+uprv_isASCIILetter(અક્ષર c);
 
 // NOTE: For u_asciiToUpper that takes a UChar, see ustr_imp.h
 
-U_CAPI char U_EXPORT2
-uprv_toupper(char c);
+U_CAPI અક્ષર U_EXPORT2
+uprv_toupper(અક્ષર c);
 
 
-U_CAPI char U_EXPORT2
-uprv_asciitolower(char c);
+U_CAPI અક્ષર U_EXPORT2
+uprv_asciitolower(અક્ષર c);
 
-U_CAPI char U_EXPORT2
-uprv_ebcdictolower(char c);
+U_CAPI અક્ષર U_EXPORT2
+uprv_ebcdictolower(અક્ષર c);
 
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
+#જો U_CHARSET_FAMILY==U_ASCII_FAMILY
 #   define uprv_tolower uprv_asciitolower
-#elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+#અથવાજો U_CHARSET_FAMILY==U_EBCDIC_FAMILY
 #   define uprv_tolower uprv_ebcdictolower
-#else
+#નહીંતર
 #   error U_CHARSET_FAMILY is not valid
 #endif
 
@@ -80,8 +80,8 @@ uprv_ebcdictolower(char c);
 /* May need to use U_UPPER_ORDINAL*/
 #define T_CString_itosOffset(a) ((a)<=9?('0'+(a)):('A'+(a)-10))
 
-U_CAPI char* U_EXPORT2
-uprv_strdup(const char *src);
+U_CAPI અક્ષર* U_EXPORT2
+uprv_strdup(અચલ અક્ષર *src);
 
 /**
  * uprv_malloc n+1 bytes, and copy n bytes from src into the new string.
@@ -91,36 +91,36 @@ uprv_strdup(const char *src);
  * @return new string (owned by caller, use uprv_free to free).
  * @internal
  */
-U_CAPI char* U_EXPORT2
-uprv_strndup(const char *src, int32_t n);
+U_CAPI અક્ષર* U_EXPORT2
+uprv_strndup(અચલ અક્ષર *src, int32_t n);
 
-U_CAPI char* U_EXPORT2
-T_CString_toLowerCase(char* str);
+U_CAPI અક્ષર* U_EXPORT2
+T_CString_toLowerCase(અક્ષર* str);
 
-U_CAPI char* U_EXPORT2
-T_CString_toUpperCase(char* str);
-
-U_CAPI int32_t U_EXPORT2
-T_CString_integerToString(char *buffer, int32_t n, int32_t radix);
+U_CAPI અક્ષર* U_EXPORT2
+T_CString_toUpperCase(અક્ષર* str);
 
 U_CAPI int32_t U_EXPORT2
-T_CString_int64ToString(char *buffer, int64_t n, uint32_t radix);
+T_CString_integerToString(અક્ષર *buffer, int32_t n, int32_t radix);
 
 U_CAPI int32_t U_EXPORT2
-T_CString_stringToInteger(const char *integerString, int32_t radix);
+T_CString_int64ToString(અક્ષર *buffer, int64_t n, uint32_t radix);
+
+U_CAPI int32_t U_EXPORT2
+T_CString_stringToInteger(અચલ અક્ષર *integerString, int32_t radix);
 
 /**
  * Case-insensitive, language-independent string comparison
  * limited to the ASCII character repertoire.
  */
-U_CAPI int U_EXPORT2
-uprv_stricmp(const char *str1, const char *str2);
+U_CAPI પૂર્ણાંક U_EXPORT2
+uprv_stricmp(અચલ અક્ષર *str1, અચલ અક્ષર *str2);
 
 /**
  * Case-insensitive, language-independent string comparison
  * limited to the ASCII character repertoire.
  */
-U_CAPI int U_EXPORT2
-uprv_strnicmp(const char *str1, const char *str2, uint32_t n);
+U_CAPI પૂર્ણાંક U_EXPORT2
+uprv_strnicmp(અચલ અક્ષર *str1, અચલ અક્ષર *str2, uint32_t n);
 
 #endif /* ! CSTRING_H */

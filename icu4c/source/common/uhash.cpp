@@ -12,14 +12,14 @@
 ******************************************************************************
 */
 
-#include <string_view>
+#અન્તર્ભાવ <string_view>
 
-#include "uhash.h"
-#include "unicode/ustring.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "uassert.h"
-#include "ustr_imp.h"
+#અન્તર્ભાવ "uhash.h"
+#અન્તર્ભાવ "unicode/ustring.h"
+#અન્તર્ભાવ "cstring.h"
+#અન્તર્ભાવ "cmemory.h"
+#અન્તર્ભાવ "uassert.h"
+#અન્તર્ભાવ "ustr_imp.h"
 
 /* This hashtable is implemented as a double hash.  All elements are
  * stored in a single array with no secondary storage for collision
@@ -80,7 +80,7 @@
  * These prime numbers were also chosen so that they are the largest
  * prime number while being less than a power of two.
  */
-static const int32_t PRIMES[] = {
+સ્થિર અચલ int32_t PRIMES[] = {
     7, 13, 31, 61, 127, 251, 509, 1021, 2039, 4093, 8191, 16381, 32749,
     65521, 131071, 262139, 524287, 1048573, 2097143, 4194301, 8388593,
     16777213, 33554393, 67108859, 134217689, 268435399, 536870909,
@@ -88,7 +88,7 @@ static const int32_t PRIMES[] = {
 };
 
 #define PRIMES_LENGTH UPRV_LENGTHOF(PRIMES)
-#define DEFAULT_PRIME_INDEX 4
+#define DEFAULT_અવિભાજ્ય_INDEX 4
 
 /* These ratios are tuned to the PRIMES array such that a resize
  * places the table back into the zone of non-resizing.  That is,
@@ -96,7 +96,7 @@ static const int32_t PRIMES[] = {
  * _uhash_rehash() should do nothing (should not churn).  This is only
  * a potential problem with U_GROW_AND_SHRINK.
  */
-static const float RESIZE_POLICY_RATIO_TABLE[6] = {
+સ્થિર અચલ દશાંશ RESIZE_POLICY_RATIO_TABLE[6] = {
     /* low, high water ratio */
     0.0F, 0.5F, /* U_GROW: Grow on demand, do not shrink */
     0.1F, 0.5F, /* U_GROW_AND_SHRINK: Grow and shrink on demand */
@@ -121,12 +121,12 @@ static const float RESIZE_POLICY_RATIO_TABLE[6] = {
 
 /* This macro expects a UHashTok.pointer as its keypointer and
    valuepointer parameters */
-#define HASH_DELETE_KEY_VALUE(hash, keypointer, valuepointer) UPRV_BLOCK_MACRO_BEGIN { \
-    if (hash->keyDeleter != nullptr && keypointer != nullptr) { \
-        (*hash->keyDeleter)(keypointer); \
+#define HASH_DELETE_ચાવી_કિંમત(hash, keypointer, valuepointer) UPRV_BLOCK_MACRO_BEGIN { \
+    જો (hash->ચાવી_Deleter != nullptr && keypointer != nullptr) { \
+        (*hash->ચાવી_Deleter)(keypointer); \
     } \
-    if (hash->valueDeleter != nullptr && valuepointer != nullptr) { \
-        (*hash->valueDeleter)(valuepointer); \
+    જો (hash->કિંમત_Deleter != nullptr && valuepointer != nullptr) { \
+        (*hash->કિંમત_Deleter)(valuepointer); \
     } \
 } UPRV_BLOCK_MACRO_END
 
@@ -136,30 +136,30 @@ static const float RESIZE_POLICY_RATIO_TABLE[6] = {
  * token is assumed to be an integer.
  */
 #define HINT_BOTH_INTEGERS (0)
-#define HINT_KEY_POINTER   (1)
-#define HINT_VALUE_POINTER (2)
+#define HINT_ચાવી_POINTER   (1)
+#define HINT_કિંમત_POINTER (2)
 #define HINT_ALLOW_ZERO    (4)
 
 /********************************************************************
  * PRIVATE Implementation
  ********************************************************************/
 
-static UHashTok
+સ્થિર UHashTok
 _uhash_setElement(UHashtable *hash, UHashElement* e,
                   int32_t hashcode,
-                  UHashTok key, UHashTok value, int8_t hint) {
+                  UHashTok ચાવી, UHashTok value, int8_t hint) {
 
-    UHashTok oldValue = e->value;
-    if (hash->keyDeleter != nullptr && e->key.pointer != nullptr &&
-        e->key.pointer != key.pointer) { /* Avoid double deletion */
-        (*hash->keyDeleter)(e->key.pointer);
+    UHashTok old_કિંમત = e->value;
+    જો (hash->ચાવી_Deleter != nullptr && e->ચાવી.pointer != nullptr &&
+        e->ચાવી.pointer != ચાવી.pointer) { /* Avoid double deletion */
+        (*hash->ચાવી_Deleter)(e->ચાવી.pointer);
     }
-    if (hash->valueDeleter != nullptr) {
-        if (oldValue.pointer != nullptr &&
-            oldValue.pointer != value.pointer) { /* Avoid double deletion */
-            (*hash->valueDeleter)(oldValue.pointer);
+    જો (hash->કિંમત_Deleter != nullptr) {
+        જો (old_કિંમત.pointer != nullptr &&
+            old_કિંમત.pointer != value.pointer) { /* Avoid double deletion */
+            (*hash->કિંમત_Deleter)(old_કિંમત.pointer);
         }
-        oldValue.pointer = nullptr;
+        old_કિંમત.pointer = nullptr;
     }
     /* Compilers should copy the UHashTok union correctly, but even if
      * they do, memory heap tools (e.g. BoundsChecker) can get
@@ -167,39 +167,39 @@ _uhash_setElement(UHashtable *hash, UHashElement* e,
      * TO ALLEVIATE THIS, we use hints (based on what API the user is
      * calling) to copy pointers when we know the user thinks
      * something is a pointer. */
-    if (hint & HINT_KEY_POINTER) {
-        e->key.pointer = key.pointer;
-    } else {
-        e->key = key;
+    જો (hint & HINT_ચાવી_POINTER) {
+        e->ચાવી.pointer = ચાવી.pointer;
+    } નહીંતર {
+        e->ચાવી = ચાવી;
     }
-    if (hint & HINT_VALUE_POINTER) {
+    જો (hint & HINT_કિંમત_POINTER) {
         e->value.pointer = value.pointer;
-    } else {
+    } નહીંતર {
         e->value = value;
     }
     e->hashcode = hashcode;
-    return oldValue;
+    પાછા old_કિંમત;
 }
 
 /**
  * Assumes that the given element is not empty or deleted.
  */
-static UHashTok
+સ્થિર UHashTok
 _uhash_internalRemoveElement(UHashtable *hash, UHashElement* e) {
     UHashTok empty;
     U_ASSERT(!IS_EMPTY_OR_DELETED(e->hashcode));
     --hash->count;
     empty.pointer = nullptr; empty.integer = 0;
-    return _uhash_setElement(hash, e, HASH_DELETED, empty, empty, 0);
+    પાછા _uhash_setElement(hash, e, HASH_DELETED, empty, empty, 0);
 }
 
-static void
-_uhash_internalSetResizePolicy(UHashtable *hash, enum UHashResizePolicy policy) {
+સ્થિર શૂન્ય
+_uhash_internalSetResizePolicy(UHashtable *hash, ગણના UHashResizePolicy policy) {
     U_ASSERT(hash != nullptr);
     U_ASSERT(((int32_t)policy) >= 0);
     U_ASSERT(((int32_t)policy) < 3);
-    hash->lowWaterRatio  = RESIZE_POLICY_RATIO_TABLE[policy * 2];
-    hash->highWaterRatio = RESIZE_POLICY_RATIO_TABLE[policy * 2 + 1];
+    hash->નીચલું_Water_Ratio  = RESIZE_POLICY_RATIO_TABLE[policy * 2];
+    hash->ઉપલું_Water_Ratio = RESIZE_POLICY_RATIO_TABLE[policy * 2 + 1];
 }
 
 /**
@@ -211,99 +211,99 @@ _uhash_internalSetResizePolicy(UHashtable *hash, enum UHashResizePolicy policy) 
  *
  * Caller must ensure primeIndex is in range 0..PRIME_LENGTH-1.
  */
-static void
+સ્થિર શૂન્ય
 _uhash_allocate(UHashtable *hash,
-                int32_t primeIndex,
+                int32_t અવિભાજ્ય_Index,
                 UErrorCode *status) {
 
     UHashElement *p, *limit;
     UHashTok emptytok;
 
-    if (U_FAILURE(*status)) return;
+    જો (U_FAILURE(*status)) પાછા;
 
-    U_ASSERT(primeIndex >= 0 && primeIndex < PRIMES_LENGTH);
+    U_ASSERT(અવિભાજ્ય_Index >= 0 && અવિભાજ્ય_Index < PRIMES_LENGTH);
 
-    hash->primeIndex = static_cast<int8_t>(primeIndex);
-    hash->length = PRIMES[primeIndex];
+    hash->અવિભાજ્ય_Index = static_cast<int8_t>(અવિભાજ્ય_Index);
+    hash->length = PRIMES[અવિભાજ્ય_Index];
 
     p = hash->elements = static_cast<UHashElement*>(
-        uprv_malloc(sizeof(UHashElement) * hash->length));
+        uprv_malloc(કદ(UHashElement) * hash->length));
 
-    if (hash->elements == nullptr) {
+    જો (hash->elements == nullptr) {
         *status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        પાછા;
     }
 
     emptytok.pointer = nullptr; /* Only one of these two is needed */
     emptytok.integer = 0;    /* but we don't know which one. */
 
     limit = p + hash->length;
-    while (p < limit) {
-        p->key = emptytok;
+    જ્યારે (p < limit) {
+        p->ચાવી = emptytok;
         p->value = emptytok;
         p->hashcode = HASH_EMPTY;
         ++p;
     }
 
     hash->count = 0;
-    hash->lowWaterMark = static_cast<int32_t>(hash->length * hash->lowWaterRatio);
-    hash->highWaterMark = static_cast<int32_t>(hash->length * hash->highWaterRatio);
+    hash->નીચલું_Water_Mark = static_cast<int32_t>(hash->length * hash->નીચલું_Water_Ratio);
+    hash->ઉપલું_Water_Mark = static_cast<int32_t>(hash->length * hash->ઉપલું_Water_Ratio);
 }
 
-static UHashtable*
+સ્થિર UHashtable*
 _uhash_init(UHashtable *result,
-              UHashFunction *keyHash,
-              UKeyComparator *keyComp,
-              UValueComparator *valueComp,
-              int32_t primeIndex,
+              UHashFunction *ચાવી_Hash,
+              UKeyComparator *ચાવી_Comp,
+              UValueComparator *કિંમત_Comp,
+              int32_t અવિભાજ્ય_Index,
               UErrorCode *status)
 {
-    if (U_FAILURE(*status)) return nullptr;
-    U_ASSERT(keyHash != nullptr);
-    U_ASSERT(keyComp != nullptr);
+    જો (U_FAILURE(*status)) પાછા nullptr;
+    U_ASSERT(ચાવી_Hash != nullptr);
+    U_ASSERT(ચાવી_Comp != nullptr);
 
-    result->keyHasher       = keyHash;
-    result->keyComparator   = keyComp;
-    result->valueComparator = valueComp;
-    result->keyDeleter      = nullptr;
-    result->valueDeleter    = nullptr;
-    result->allocated       = false;
+    result->ચાવી_Hasher       = ચાવી_Hash;
+    result->ચાવી_Comparator   = ચાવી_Comp;
+    result->કિંમત_Comparator = કિંમત_Comp;
+    result->ચાવી_Deleter      = nullptr;
+    result->કિંમત_Deleter    = nullptr;
+    result->allocated       = ખોટું;
     _uhash_internalSetResizePolicy(result, U_GROW);
 
-    _uhash_allocate(result, primeIndex, status);
+    _uhash_allocate(result, અવિભાજ્ય_Index, status);
 
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    જો (U_FAILURE(*status)) {
+        પાછા nullptr;
     }
 
-    return result;
+    પાછા result;
 }
 
-static UHashtable*
-_uhash_create(UHashFunction *keyHash,
-              UKeyComparator *keyComp,
-              UValueComparator *valueComp,
-              int32_t primeIndex,
+સ્થિર UHashtable*
+_uhash_create(UHashFunction *ચાવી_Hash,
+              UKeyComparator *ચાવી_Comp,
+              UValueComparator *કિંમત_Comp,
+              int32_t અવિભાજ્ય_Index,
               UErrorCode *status) {
     UHashtable *result;
 
-    if (U_FAILURE(*status)) return nullptr;
+    જો (U_FAILURE(*status)) પાછા nullptr;
 
-    result = static_cast<UHashtable*>(uprv_malloc(sizeof(UHashtable)));
-    if (result == nullptr) {
+    result = static_cast<UHashtable*>(uprv_malloc(કદ(UHashtable)));
+    જો (result == nullptr) {
         *status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        પાછા nullptr;
     }
 
-    _uhash_init(result, keyHash, keyComp, valueComp, primeIndex, status);
-    result->allocated       = true;
+    _uhash_init(result, ચાવી_Hash, ચાવી_Comp, કિંમત_Comp, અવિભાજ્ય_Index, status);
+    result->allocated       = સાચું;
 
-    if (U_FAILURE(*status)) {
+    જો (U_FAILURE(*status)) {
         uprv_free(result);
-        return nullptr;
+        પાછા nullptr;
     }
 
-    return result;
+    પાછા result;
 }
 
 /**
@@ -334,8 +334,8 @@ _uhash_create(UHashFunction *keyHash,
  * otherwise we are not guaranteed that the jump value (the secondary
  * hash) is relatively prime to the table length.
  */
-static UHashElement*
-_uhash_find(const UHashtable *hash, UHashTok key,
+સ્થિર UHashElement*
+_uhash_find(અચલ UHashtable *hash, UHashTok ચાવી,
             int32_t hashcode) {
 
     int32_t firstDeleted = -1;  /* assume invalid index */
@@ -347,23 +347,23 @@ _uhash_find(const UHashtable *hash, UHashTok key,
     hashcode &= 0x7FFFFFFF; /* must be positive */
     startIndex = theIndex = (hashcode ^ 0x4000000) % hash->length;
 
-    do {
+    કરો {
         tableHash = elements[theIndex].hashcode;
-        if (tableHash == hashcode) {          /* quick check */
-            if ((*hash->keyComparator)(key, elements[theIndex].key)) {
-                return &(elements[theIndex]);
+        જો (tableHash == hashcode) {          /* quick check */
+            જો ((*hash->ચાવી_Comparator)(ચાવી, elements[theIndex].ચાવી)) {
+                પાછા &(elements[theIndex]);
             }
-        } else if (!IS_EMPTY_OR_DELETED(tableHash)) {
+        } નહીંતર જો (!IS_EMPTY_OR_DELETED(tableHash)) {
             /* We have hit a slot which contains a key-value pair,
              * but for which the hash code does not match.  Keep
              * looking.
              */
-        } else if (tableHash == HASH_EMPTY) { /* empty, end o' the line */
-            break;
-        } else if (firstDeleted < 0) { /* remember first deleted */
+        } નહીંતર જો (tableHash == HASH_EMPTY) { /* empty, end o' the line */
+            તોડો;
+        } નહીંતર જો (firstDeleted < 0) { /* remember first deleted */
             firstDeleted = theIndex;
         }
-        if (jump == 0) { /* lazy compute jump */
+        જો (jump == 0) { /* lazy compute jump */
             /* The jump value must be relatively prime to the table
              * length.  As long as the length is prime, then any value
              * 1..length-1 will be relatively prime to it.
@@ -371,11 +371,11 @@ _uhash_find(const UHashtable *hash, UHashTok key,
             jump = (hashcode % (hash->length - 1)) + 1;
         }
         theIndex = (theIndex + jump) % hash->length;
-    } while (theIndex != startIndex);
+    } જ્યારે (theIndex != startIndex);
 
-    if (firstDeleted >= 0) {
+    જો (firstDeleted >= 0) {
         theIndex = firstDeleted; /* reset if had deleted slot */
-    } else if (tableHash != HASH_EMPTY) {
+    } નહીંતર જો (tableHash != HASH_EMPTY) {
         /* We get to this point if the hashtable is full (no empty or
          * deleted slots), and we've failed to find a match.  THIS
          * WILL NEVER HAPPEN as long as uhash_put() makes sure that
@@ -383,7 +383,7 @@ _uhash_find(const UHashtable *hash, UHashTok key,
          */
         UPRV_UNREACHABLE_EXIT;
     }
-    return &(elements[theIndex]);
+    પાછા &(elements[theIndex]);
 }
 
 /**
@@ -395,40 +395,40 @@ _uhash_find(const UHashtable *hash, UHashTok key,
  * already at the low or high limit.  In any case, upon return the
  * arrays will be valid.
  */
-static void
+સ્થિર શૂન્ય
 _uhash_rehash(UHashtable *hash, UErrorCode *status) {
 
     UHashElement *old = hash->elements;
     int32_t oldLength = hash->length;
-    int32_t newPrimeIndex = hash->primeIndex;
+    int32_t new_અવિભાજ્ય_Index = hash->અવિભાજ્ય_Index;
     int32_t i;
 
-    if (hash->count > hash->highWaterMark) {
-        if (++newPrimeIndex >= PRIMES_LENGTH) {
-            return;
+    જો (hash->count > hash->ઉપલું_Water_Mark) {
+        જો (++new_અવિભાજ્ય_Index >= PRIMES_LENGTH) {
+            પાછા;
         }
-    } else if (hash->count < hash->lowWaterMark) {
-        if (--newPrimeIndex < 0) {
-            return;
+    } નહીંતર જો (hash->count < hash->નીચલું_Water_Mark) {
+        જો (--new_અવિભાજ્ય_Index < 0) {
+            પાછા;
         }
-    } else {
-        return;
+    } નહીંતર {
+        પાછા;
     }
 
-    _uhash_allocate(hash, newPrimeIndex, status);
+    _uhash_allocate(hash, new_અવિભાજ્ય_Index, status);
 
-    if (U_FAILURE(*status)) {
+    જો (U_FAILURE(*status)) {
         hash->elements = old;
         hash->length = oldLength;
-        return;
+        પાછા;
     }
 
-    for (i = oldLength - 1; i >= 0; --i) {
-        if (!IS_EMPTY_OR_DELETED(old[i].hashcode)) {
-            UHashElement *e = _uhash_find(hash, old[i].key, old[i].hashcode);
+    માટે (i = oldLength - 1; i >= 0; --i) {
+        જો (!IS_EMPTY_OR_DELETED(old[i].hashcode)) {
+            UHashElement *e = _uhash_find(hash, old[i].ચાવી, old[i].hashcode);
             U_ASSERT(e != nullptr);
             U_ASSERT(e->hashcode == HASH_EMPTY);
-            e->key = old[i].key;
+            e->ચાવી = old[i].ચાવી;
             e->value = old[i].value;
             e->hashcode = old[i].hashcode;
             ++hash->count;
@@ -438,9 +438,9 @@ _uhash_rehash(UHashtable *hash, UErrorCode *status) {
     uprv_free(old);
 }
 
-static UHashTok
+સ્થિર UHashTok
 _uhash_remove(UHashtable *hash,
-              UHashTok key) {
+              UHashTok ચાવી) {
     /* First find the position of the key in the table.  If the object
      * has not been removed already, remove it.  If the user wanted
      * keys deleted, then delete it also.  We have to put a special
@@ -449,23 +449,23 @@ _uhash_remove(UHashtable *hash,
      * deleted values.
      */
     UHashTok result;
-    UHashElement* e = _uhash_find(hash, key, hash->keyHasher(key));
+    UHashElement* e = _uhash_find(hash, ચાવી, hash->ચાવી_Hasher(ચાવી));
     U_ASSERT(e != nullptr);
     result.pointer = nullptr;
     result.integer = 0;
-    if (!IS_EMPTY_OR_DELETED(e->hashcode)) {
+    જો (!IS_EMPTY_OR_DELETED(e->hashcode)) {
         result = _uhash_internalRemoveElement(hash, e);
-        if (hash->count < hash->lowWaterMark) {
+        જો (hash->count < hash->નીચલું_Water_Mark) {
             UErrorCode status = U_ZERO_ERROR;
             _uhash_rehash(hash, &status);
         }
     }
-    return result;
+    પાછા result;
 }
 
-static UHashTok
+સ્થિર UHashTok
 _uhash_put(UHashtable *hash,
-           UHashTok key,
+           UHashTok ચાવી,
            UHashTok value,
            int8_t hint,
            UErrorCode *status) {
@@ -479,30 +479,30 @@ _uhash_put(UHashtable *hash,
     UHashElement* e;
     UHashTok emptytok;
 
-    if (U_FAILURE(*status)) {
-        goto err;
+    જો (U_FAILURE(*status)) {
+        જાઓ err;
     }
     U_ASSERT(hash != nullptr);
-    if ((hint & HINT_VALUE_POINTER) ?
+    જો ((hint & HINT_કિંમત_POINTER) ?
             value.pointer == nullptr :
             value.integer == 0 && (hint & HINT_ALLOW_ZERO) == 0) {
         /* Disallow storage of nullptr values, since nullptr is returned by
          * get() to indicate an absent key.  Storing nullptr == removing.
          */
-        return _uhash_remove(hash, key);
+        પાછા _uhash_remove(hash, ચાવી);
     }
-    if (hash->count > hash->highWaterMark) {
+    જો (hash->count > hash->ઉપલું_Water_Mark) {
         _uhash_rehash(hash, status);
-        if (U_FAILURE(*status)) {
-            goto err;
+        જો (U_FAILURE(*status)) {
+            જાઓ err;
         }
     }
 
-    hashcode = (*hash->keyHasher)(key);
-    e = _uhash_find(hash, key, hashcode);
+    hashcode = (*hash->ચાવી_Hasher)(ચાવી);
+    e = _uhash_find(hash, ચાવી, hashcode);
     U_ASSERT(e != nullptr);
 
-    if (IS_EMPTY_OR_DELETED(e->hashcode)) {
+    જો (IS_EMPTY_OR_DELETED(e->hashcode)) {
         /* Important: We must never actually fill the table up.  If we
          * do so, then _uhash_find() will return nullptr, and we'll have
          * to check for nullptr after every call to _uhash_find().  To
@@ -511,11 +511,11 @@ _uhash_put(UHashtable *hash,
          * are out of memory and rehash isn't working.
          */
         ++hash->count;
-        if (hash->count == hash->length) {
+        જો (hash->count == hash->length) {
             /* Don't allow count to reach length */
             --hash->count;
             *status = U_MEMORY_ALLOCATION_ERROR;
-            goto err;
+            જાઓ err;
         }
     }
 
@@ -523,16 +523,16 @@ _uhash_put(UHashtable *hash,
      * old key, then it must be deleted (if the deleter != nullptr).
      * Make hashcodes stored in table positive.
      */
-    return _uhash_setElement(hash, e, hashcode & 0x7FFFFFFF, key, value, hint);
+    પાછા _uhash_setElement(hash, e, hashcode & 0x7FFFFFFF, ચાવી, value, hint);
 
  err:
     /* If the deleters are non-nullptr, this method adopts its key and/or
      * value arguments, and we must be sure to delete the key and/or
      * value in all cases, even upon failure.
      */
-    HASH_DELETE_KEY_VALUE(hash, key.pointer, value.pointer);
+    HASH_DELETE_ચાવી_કિંમત(hash, ચાવી.pointer, value.pointer);
     emptytok.pointer = nullptr; emptytok.integer = 0;
-    return emptytok;
+    પાછા emptytok;
 }
 
 
@@ -541,298 +541,298 @@ _uhash_put(UHashtable *hash,
  ********************************************************************/
 
 U_CAPI UHashtable* U_EXPORT2
-uhash_open(UHashFunction *keyHash,
-           UKeyComparator *keyComp,
-           UValueComparator *valueComp,
+uhash_open(UHashFunction *ચાવી_Hash,
+           UKeyComparator *ચાવી_Comp,
+           UValueComparator *કિંમત_Comp,
            UErrorCode *status) {
 
-    return _uhash_create(keyHash, keyComp, valueComp, DEFAULT_PRIME_INDEX, status);
+    પાછા _uhash_create(ચાવી_Hash, ચાવી_Comp, કિંમત_Comp, DEFAULT_અવિભાજ્ય_INDEX, status);
 }
 
 U_CAPI UHashtable* U_EXPORT2
-uhash_openSize(UHashFunction *keyHash,
-               UKeyComparator *keyComp,
-               UValueComparator *valueComp,
+uhash_openSize(UHashFunction *ચાવી_Hash,
+               UKeyComparator *ચાવી_Comp,
+               UValueComparator *કિંમત_Comp,
                int32_t size,
                UErrorCode *status) {
 
     /* Find the smallest index i for which PRIMES[i] >= size. */
     int32_t i = 0;
-    while (i<(PRIMES_LENGTH-1) && PRIMES[i]<size) {
+    જ્યારે (i<(PRIMES_LENGTH-1) && PRIMES[i]<size) {
         ++i;
     }
 
-    return _uhash_create(keyHash, keyComp, valueComp, i, status);
+    પાછા _uhash_create(ચાવી_Hash, ચાવી_Comp, કિંમત_Comp, i, status);
 }
 
 U_CAPI UHashtable* U_EXPORT2
 uhash_init(UHashtable *fillinResult,
-           UHashFunction *keyHash,
-           UKeyComparator *keyComp,
-           UValueComparator *valueComp,
+           UHashFunction *ચાવી_Hash,
+           UKeyComparator *ચાવી_Comp,
+           UValueComparator *કિંમત_Comp,
            UErrorCode *status) {
 
-    return _uhash_init(fillinResult, keyHash, keyComp, valueComp, DEFAULT_PRIME_INDEX, status);
+    પાછા _uhash_init(fillinResult, ચાવી_Hash, ચાવી_Comp, કિંમત_Comp, DEFAULT_અવિભાજ્ય_INDEX, status);
 }
 
 U_CAPI UHashtable* U_EXPORT2
 uhash_initSize(UHashtable *fillinResult,
-               UHashFunction *keyHash,
-               UKeyComparator *keyComp,
-               UValueComparator *valueComp,
+               UHashFunction *ચાવી_Hash,
+               UKeyComparator *ચાવી_Comp,
+               UValueComparator *કિંમત_Comp,
                int32_t size,
                UErrorCode *status) {
 
     // Find the smallest index i for which PRIMES[i] >= size.
     int32_t i = 0;
-    while (i<(PRIMES_LENGTH-1) && PRIMES[i]<size) {
+    જ્યારે (i<(PRIMES_LENGTH-1) && PRIMES[i]<size) {
         ++i;
     }
-    return _uhash_init(fillinResult, keyHash, keyComp, valueComp, i, status);
+    પાછા _uhash_init(fillinResult, ચાવી_Hash, ચાવી_Comp, કિંમત_Comp, i, status);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI શૂન્ય U_EXPORT2
 uhash_close(UHashtable *hash) {
-    if (hash == nullptr) {
-        return;
+    જો (hash == nullptr) {
+        પાછા;
     }
-    if (hash->elements != nullptr) {
-        if (hash->keyDeleter != nullptr || hash->valueDeleter != nullptr) {
+    જો (hash->elements != nullptr) {
+        જો (hash->ચાવી_Deleter != nullptr || hash->કિંમત_Deleter != nullptr) {
             int32_t pos=UHASH_FIRST;
             UHashElement *e;
-            while ((e = (UHashElement*) uhash_nextElement(hash, &pos)) != nullptr) {
-                HASH_DELETE_KEY_VALUE(hash, e->key.pointer, e->value.pointer);
+            જ્યારે ((e = (UHashElement*) uhash_nextElement(hash, &pos)) != nullptr) {
+                HASH_DELETE_ચાવી_કિંમત(hash, e->ચાવી.pointer, e->value.pointer);
             }
         }
         uprv_free(hash->elements);
         hash->elements = nullptr;
     }
-    if (hash->allocated) {
+    જો (hash->allocated) {
         uprv_free(hash);
     }
 }
 
 U_CAPI UHashFunction *U_EXPORT2
-uhash_setKeyHasher(UHashtable *hash, UHashFunction *fn) {
-    UHashFunction *result = hash->keyHasher;
-    hash->keyHasher = fn;
-    return result;
+uhash_set_ચાવી_Hasher(UHashtable *hash, UHashFunction *fn) {
+    UHashFunction *result = hash->ચાવી_Hasher;
+    hash->ચાવી_Hasher = fn;
+    પાછા result;
 }
 
 U_CAPI UKeyComparator *U_EXPORT2
-uhash_setKeyComparator(UHashtable *hash, UKeyComparator *fn) {
-    UKeyComparator *result = hash->keyComparator;
-    hash->keyComparator = fn;
-    return result;
+uhash_set_ચાવી_Comparator(UHashtable *hash, UKeyComparator *fn) {
+    UKeyComparator *result = hash->ચાવી_Comparator;
+    hash->ચાવી_Comparator = fn;
+    પાછા result;
 }
 U_CAPI UValueComparator *U_EXPORT2
-uhash_setValueComparator(UHashtable *hash, UValueComparator *fn){
-    UValueComparator *result = hash->valueComparator;
-    hash->valueComparator = fn;
-    return result;
+uhash_set_કિંમત_Comparator(UHashtable *hash, UValueComparator *fn){
+    UValueComparator *result = hash->કિંમત_Comparator;
+    hash->કિંમત_Comparator = fn;
+    પાછા result;
 }
 
 U_CAPI UObjectDeleter *U_EXPORT2
-uhash_setKeyDeleter(UHashtable *hash, UObjectDeleter *fn) {
-    UObjectDeleter *result = hash->keyDeleter;
-    hash->keyDeleter = fn;
-    return result;
+uhash_set_ચાવી_Deleter(UHashtable *hash, UObjectDeleter *fn) {
+    UObjectDeleter *result = hash->ચાવી_Deleter;
+    hash->ચાવી_Deleter = fn;
+    પાછા result;
 }
 
 U_CAPI UObjectDeleter *U_EXPORT2
-uhash_setValueDeleter(UHashtable *hash, UObjectDeleter *fn) {
-    UObjectDeleter *result = hash->valueDeleter;
-    hash->valueDeleter = fn;
-    return result;
+uhash_set_કિંમત_Deleter(UHashtable *hash, UObjectDeleter *fn) {
+    UObjectDeleter *result = hash->કિંમત_Deleter;
+    hash->કિંમત_Deleter = fn;
+    પાછા result;
 }
 
-U_CAPI void U_EXPORT2
-uhash_setResizePolicy(UHashtable *hash, enum UHashResizePolicy policy) {
+U_CAPI શૂન્ય U_EXPORT2
+uhash_setResizePolicy(UHashtable *hash, ગણના UHashResizePolicy policy) {
     UErrorCode status = U_ZERO_ERROR;
     _uhash_internalSetResizePolicy(hash, policy);
-    hash->lowWaterMark  = (int32_t)(hash->length * hash->lowWaterRatio);
-    hash->highWaterMark = (int32_t)(hash->length * hash->highWaterRatio);
+    hash->નીચલું_Water_Mark  = (int32_t)(hash->length * hash->નીચલું_Water_Ratio);
+    hash->ઉપલું_Water_Mark = (int32_t)(hash->length * hash->ઉપલું_Water_Ratio);
     _uhash_rehash(hash, &status);
 }
 
 U_CAPI int32_t U_EXPORT2
-uhash_count(const UHashtable *hash) {
-    return hash->count;
+uhash_ગણતરી(અચલ UHashtable *hash) {
+    પાછા hash->count;
 }
 
-U_CAPI void* U_EXPORT2
-uhash_get(const UHashtable *hash,
-          const void* key) {
+U_CAPI શૂન્ય* U_EXPORT2
+uhash_get(અચલ UHashtable *hash,
+          અચલ શૂન્ય* ચાવી) {
     UHashTok keyholder;
-    keyholder.pointer = (void*) key;
-    return _uhash_find(hash, keyholder, hash->keyHasher(keyholder))->value.pointer;
+    keyholder.pointer = (શૂન્ય*) ચાવી;
+    પાછા _uhash_find(hash, keyholder, hash->ચાવી_Hasher(keyholder))->value.pointer;
 }
 
-U_CAPI void* U_EXPORT2
-uhash_iget(const UHashtable *hash,
-           int32_t key) {
+U_CAPI શૂન્ય* U_EXPORT2
+uhash_iget(અચલ UHashtable *hash,
+           int32_t ચાવી) {
     UHashTok keyholder;
-    keyholder.integer = key;
-    return _uhash_find(hash, keyholder, hash->keyHasher(keyholder))->value.pointer;
+    keyholder.integer = ચાવી;
+    પાછા _uhash_find(hash, keyholder, hash->ચાવી_Hasher(keyholder))->value.pointer;
 }
 
 U_CAPI int32_t U_EXPORT2
-uhash_geti(const UHashtable *hash,
-           const void* key) {
+uhash_geti(અચલ UHashtable *hash,
+           અચલ શૂન્ય* ચાવી) {
     UHashTok keyholder;
-    keyholder.pointer = (void*) key;
-    return _uhash_find(hash, keyholder, hash->keyHasher(keyholder))->value.integer;
+    keyholder.pointer = (શૂન્ય*) ચાવી;
+    પાછા _uhash_find(hash, keyholder, hash->ચાવી_Hasher(keyholder))->value.integer;
 }
 
 U_CAPI int32_t U_EXPORT2
-uhash_igeti(const UHashtable *hash,
-           int32_t key) {
+uhash_igeti(અચલ UHashtable *hash,
+           int32_t ચાવી) {
     UHashTok keyholder;
-    keyholder.integer = key;
-    return _uhash_find(hash, keyholder, hash->keyHasher(keyholder))->value.integer;
+    keyholder.integer = ચાવી;
+    પાછા _uhash_find(hash, keyholder, hash->ચાવી_Hasher(keyholder))->value.integer;
 }
 
 U_CAPI int32_t U_EXPORT2
-uhash_getiAndFound(const UHashtable *hash,
-                   const void *key,
+uhash_getiAndFound(અચલ UHashtable *hash,
+                   અચલ શૂન્ય *ચાવી,
                    UBool *found) {
     UHashTok keyholder;
-    keyholder.pointer = (void *)key;
-    const UHashElement *e = _uhash_find(hash, keyholder, hash->keyHasher(keyholder));
+    keyholder.pointer = (શૂન્ય *)ચાવી;
+    અચલ UHashElement *e = _uhash_find(hash, keyholder, hash->ચાવી_Hasher(keyholder));
     *found = !IS_EMPTY_OR_DELETED(e->hashcode);
-    return e->value.integer;
+    પાછા e->value.integer;
 }
 
 U_CAPI int32_t U_EXPORT2
-uhash_igetiAndFound(const UHashtable *hash,
-                    int32_t key,
+uhash_igetiAndFound(અચલ UHashtable *hash,
+                    int32_t ચાવી,
                     UBool *found) {
     UHashTok keyholder;
-    keyholder.integer = key;
-    const UHashElement *e = _uhash_find(hash, keyholder, hash->keyHasher(keyholder));
+    keyholder.integer = ચાવી;
+    અચલ UHashElement *e = _uhash_find(hash, keyholder, hash->ચાવી_Hasher(keyholder));
     *found = !IS_EMPTY_OR_DELETED(e->hashcode);
-    return e->value.integer;
+    પાછા e->value.integer;
 }
 
-U_CAPI void* U_EXPORT2
+U_CAPI શૂન્ય* U_EXPORT2
 uhash_put(UHashtable *hash,
-          void* key,
-          void* value,
+          શૂન્ય* ચાવી,
+          શૂન્ય* value,
           UErrorCode *status) {
     UHashTok keyholder, valueholder;
-    keyholder.pointer = key;
+    keyholder.pointer = ચાવી;
     valueholder.pointer = value;
-    return _uhash_put(hash, keyholder, valueholder,
-                      HINT_KEY_POINTER | HINT_VALUE_POINTER,
+    પાછા _uhash_put(hash, keyholder, valueholder,
+                      HINT_ચાવી_POINTER | HINT_કિંમત_POINTER,
                       status).pointer;
 }
 
-U_CAPI void* U_EXPORT2
+U_CAPI શૂન્ય* U_EXPORT2
 uhash_iput(UHashtable *hash,
-           int32_t key,
-           void* value,
+           int32_t ચાવી,
+           શૂન્ય* value,
            UErrorCode *status) {
     UHashTok keyholder, valueholder;
-    keyholder.integer = key;
+    keyholder.integer = ચાવી;
     valueholder.pointer = value;
-    return _uhash_put(hash, keyholder, valueholder,
-                      HINT_VALUE_POINTER,
+    પાછા _uhash_put(hash, keyholder, valueholder,
+                      HINT_કિંમત_POINTER,
                       status).pointer;
 }
 
 U_CAPI int32_t U_EXPORT2
 uhash_puti(UHashtable *hash,
-           void* key,
+           શૂન્ય* ચાવી,
            int32_t value,
            UErrorCode *status) {
     UHashTok keyholder, valueholder;
-    keyholder.pointer = key;
+    keyholder.pointer = ચાવી;
     valueholder.integer = value;
-    return _uhash_put(hash, keyholder, valueholder,
-                      HINT_KEY_POINTER,
+    પાછા _uhash_put(hash, keyholder, valueholder,
+                      HINT_ચાવી_POINTER,
                       status).integer;
 }
 
 
 U_CAPI int32_t U_EXPORT2
 uhash_iputi(UHashtable *hash,
-           int32_t key,
+           int32_t ચાવી,
            int32_t value,
            UErrorCode *status) {
     UHashTok keyholder, valueholder;
-    keyholder.integer = key;
+    keyholder.integer = ચાવી;
     valueholder.integer = value;
-    return _uhash_put(hash, keyholder, valueholder,
+    પાછા _uhash_put(hash, keyholder, valueholder,
                       HINT_BOTH_INTEGERS,
                       status).integer;
 }
 
 U_CAPI int32_t U_EXPORT2
 uhash_putiAllowZero(UHashtable *hash,
-                    void *key,
+                    શૂન્ય *ચાવી,
                     int32_t value,
                     UErrorCode *status) {
     UHashTok keyholder, valueholder;
-    keyholder.pointer = key;
+    keyholder.pointer = ચાવી;
     valueholder.integer = value;
-    return _uhash_put(hash, keyholder, valueholder,
-                      HINT_KEY_POINTER | HINT_ALLOW_ZERO,
+    પાછા _uhash_put(hash, keyholder, valueholder,
+                      HINT_ચાવી_POINTER | HINT_ALLOW_ZERO,
                       status).integer;
 }
 
 
 U_CAPI int32_t U_EXPORT2
 uhash_iputiAllowZero(UHashtable *hash,
-                     int32_t key,
+                     int32_t ચાવી,
                      int32_t value,
                      UErrorCode *status) {
     UHashTok keyholder, valueholder;
-    keyholder.integer = key;
+    keyholder.integer = ચાવી;
     valueholder.integer = value;
-    return _uhash_put(hash, keyholder, valueholder,
+    પાછા _uhash_put(hash, keyholder, valueholder,
                       HINT_BOTH_INTEGERS | HINT_ALLOW_ZERO,
                       status).integer;
 }
 
-U_CAPI void* U_EXPORT2
+U_CAPI શૂન્ય* U_EXPORT2
 uhash_remove(UHashtable *hash,
-             const void* key) {
+             અચલ શૂન્ય* ચાવી) {
     UHashTok keyholder;
-    keyholder.pointer = (void*) key;
-    return _uhash_remove(hash, keyholder).pointer;
+    keyholder.pointer = (શૂન્ય*) ચાવી;
+    પાછા _uhash_remove(hash, keyholder).pointer;
 }
 
-U_CAPI void* U_EXPORT2
+U_CAPI શૂન્ય* U_EXPORT2
 uhash_iremove(UHashtable *hash,
-              int32_t key) {
+              int32_t ચાવી) {
     UHashTok keyholder;
-    keyholder.integer = key;
-    return _uhash_remove(hash, keyholder).pointer;
+    keyholder.integer = ચાવી;
+    પાછા _uhash_remove(hash, keyholder).pointer;
 }
 
 U_CAPI int32_t U_EXPORT2
 uhash_removei(UHashtable *hash,
-              const void* key) {
+              અચલ શૂન્ય* ચાવી) {
     UHashTok keyholder;
-    keyholder.pointer = (void*) key;
-    return _uhash_remove(hash, keyholder).integer;
+    keyholder.pointer = (શૂન્ય*) ચાવી;
+    પાછા _uhash_remove(hash, keyholder).integer;
 }
 
 U_CAPI int32_t U_EXPORT2
 uhash_iremovei(UHashtable *hash,
-               int32_t key) {
+               int32_t ચાવી) {
     UHashTok keyholder;
-    keyholder.integer = key;
-    return _uhash_remove(hash, keyholder).integer;
+    keyholder.integer = ચાવી;
+    પાછા _uhash_remove(hash, keyholder).integer;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI શૂન્ય U_EXPORT2
 uhash_removeAll(UHashtable *hash) {
     int32_t pos = UHASH_FIRST;
-    const UHashElement *e;
+    અચલ UHashElement *e;
     U_ASSERT(hash != nullptr);
-    if (hash->count != 0) {
-        while ((e = uhash_nextElement(hash, &pos)) != nullptr) {
+    જો (hash->count != 0) {
+        જ્યારે ((e = uhash_nextElement(hash, &pos)) != nullptr) {
             uhash_removeElement(hash, e);
         }
     }
@@ -840,11 +840,11 @@ uhash_removeAll(UHashtable *hash) {
 }
 
 U_CAPI UBool U_EXPORT2
-uhash_containsKey(const UHashtable *hash, const void *key) {
+uhash_contains_ચાવી(અચલ UHashtable *hash, અચલ શૂન્ય *ચાવી) {
     UHashTok keyholder;
-    keyholder.pointer = (void *)key;
-    const UHashElement *e = _uhash_find(hash, keyholder, hash->keyHasher(keyholder));
-    return !IS_EMPTY_OR_DELETED(e->hashcode);
+    keyholder.pointer = (શૂન્ય *)ચાવી;
+    અચલ UHashElement *e = _uhash_find(hash, keyholder, hash->ચાવી_Hasher(keyholder));
+    પાછા !IS_EMPTY_OR_DELETED(e->hashcode);
 }
 
 /**
@@ -855,49 +855,49 @@ uhash_containsKey(const UHashtable *hash, const void *key) {
  * @return true if the key is found.
  */
 U_CAPI UBool U_EXPORT2
-uhash_icontainsKey(const UHashtable *hash, int32_t key) {
+uhash_icontains_ચાવી(અચલ UHashtable *hash, int32_t ચાવી) {
     UHashTok keyholder;
-    keyholder.integer = key;
-    const UHashElement *e = _uhash_find(hash, keyholder, hash->keyHasher(keyholder));
-    return !IS_EMPTY_OR_DELETED(e->hashcode);
+    keyholder.integer = ચાવી;
+    અચલ UHashElement *e = _uhash_find(hash, keyholder, hash->ચાવી_Hasher(keyholder));
+    પાછા !IS_EMPTY_OR_DELETED(e->hashcode);
 }
 
-U_CAPI const UHashElement* U_EXPORT2
-uhash_find(const UHashtable *hash, const void* key) {
+U_CAPI અચલ UHashElement* U_EXPORT2
+uhash_find(અચલ UHashtable *hash, અચલ શૂન્ય* ચાવી) {
     UHashTok keyholder;
-    const UHashElement *e;
-    keyholder.pointer = (void*) key;
-    e = _uhash_find(hash, keyholder, hash->keyHasher(keyholder));
-    return IS_EMPTY_OR_DELETED(e->hashcode) ? nullptr : e;
+    અચલ UHashElement *e;
+    keyholder.pointer = (શૂન્ય*) ચાવી;
+    e = _uhash_find(hash, keyholder, hash->ચાવી_Hasher(keyholder));
+    પાછા IS_EMPTY_OR_DELETED(e->hashcode) ? nullptr : e;
 }
 
-U_CAPI const UHashElement* U_EXPORT2
-uhash_nextElement(const UHashtable *hash, int32_t *pos) {
+U_CAPI અચલ UHashElement* U_EXPORT2
+uhash_nextElement(અચલ UHashtable *hash, int32_t *pos) {
     /* Walk through the array until we find an element that is not
      * EMPTY and not DELETED.
      */
     int32_t i;
     U_ASSERT(hash != nullptr);
-    for (i = *pos + 1; i < hash->length; ++i) {
-        if (!IS_EMPTY_OR_DELETED(hash->elements[i].hashcode)) {
+    માટે (i = *pos + 1; i < hash->length; ++i) {
+        જો (!IS_EMPTY_OR_DELETED(hash->elements[i].hashcode)) {
             *pos = i;
-            return &(hash->elements[i]);
+            પાછા &(hash->elements[i]);
         }
     }
 
     /* No more elements */
-    return nullptr;
+    પાછા nullptr;
 }
 
-U_CAPI void* U_EXPORT2
-uhash_removeElement(UHashtable *hash, const UHashElement* e) {
+U_CAPI શૂન્ય* U_EXPORT2
+uhash_removeElement(UHashtable *hash, અચલ UHashElement* e) {
     U_ASSERT(hash != nullptr);
     U_ASSERT(e != nullptr);
-    if (!IS_EMPTY_OR_DELETED(e->hashcode)) {
+    જો (!IS_EMPTY_OR_DELETED(e->hashcode)) {
         UHashElement *nce = (UHashElement *)e;
-        return _uhash_internalRemoveElement(hash, nce).pointer;
+        પાછા _uhash_internalRemoveElement(hash, nce).pointer;
     }
-    return nullptr;
+    પાછા nullptr;
 }
 
 /********************************************************************
@@ -929,35 +929,35 @@ uhash_tokp(void* p) {
  ********************************************************************/
 
 U_CAPI int32_t U_EXPORT2
-uhash_hashUChars(const UHashTok key) {
-    const char16_t *s = (const char16_t *)key.pointer;
-    return s == nullptr ? 0 : ustr_hashUCharsN(s, u_strlen(s));
+uhash_hashUChars(અચલ UHashTok ચાવી) {
+    અચલ char16_t *s = (અચલ char16_t *)ચાવી.pointer;
+    પાછા s == nullptr ? 0 : ustr_hashUCharsN(s, u_strlen(s));
 }
 
 U_CAPI int32_t U_EXPORT2
-uhash_hashChars(const UHashTok key) {
-    const char *s = (const char *)key.pointer;
-    return s == nullptr ? 0 : static_cast<int32_t>(ustr_hashCharsN(s, static_cast<int32_t>(uprv_strlen(s))));
+uhash_hashChars(અચલ UHashTok ચાવી) {
+    અચલ અક્ષર *s = (અચલ અક્ષર *)ચાવી.pointer;
+    પાછા s == nullptr ? 0 : static_cast<int32_t>(ustr_hashCharsN(s, static_cast<int32_t>(uprv_strlen(s))));
 }
 
 U_CAPI int32_t U_EXPORT2
-uhash_hashIChars(const UHashTok key) {
-    const char *s = (const char *)key.pointer;
-    return s == nullptr ? 0 : ustr_hashICharsN(s, static_cast<int32_t>(uprv_strlen(s)));
+uhash_hashIChars(અચલ UHashTok ચાવી) {
+    અચલ અક્ષર *s = (અચલ અક્ષર *)ચાવી.pointer;
+    પાછા s == nullptr ? 0 : ustr_hashICharsN(s, static_cast<int32_t>(uprv_strlen(s)));
 }
 
 U_CAPI int32_t U_EXPORT2
-uhash_hashIStringView(const UHashTok key) {
-    const std::string_view* s = static_cast<std::string_view*>(key.pointer);
-    return s == nullptr ? 0 : ustr_hashICharsN(s->data(), static_cast<int32_t>(s->size()));
+uhash_hashIStringView(અચલ UHashTok ચાવી) {
+    અચલ std::string_view* s = static_cast<std::string_view*>(ચાવી.pointer);
+    પાછા s == nullptr ? 0 : ustr_hashICharsN(s->data(), static_cast<int32_t>(s->size()));
 }
 
 U_CAPI UBool U_EXPORT2
-uhash_equals(const UHashtable* hash1, const UHashtable* hash2){
+uhash_equals(અચલ UHashtable* hash1, અચલ UHashtable* hash2){
     int32_t count1, count2, pos, i;
 
-    if(hash1==hash2){
-        return true;
+    જો(hash1==hash2){
+        પાછા સાચું;
     }
 
     /*
@@ -968,40 +968,40 @@ uhash_equals(const UHashtable* hash1, const UHashtable* hash2){
      * with 64-bit pointers and 32-bit integer hashes.
      * A valueComparator is normally optional.
      */
-    if (hash1==nullptr || hash2==nullptr ||
-        hash1->keyComparator != hash2->keyComparator ||
-        hash1->valueComparator != hash2->valueComparator ||
-        hash1->valueComparator == nullptr)
+    જો (hash1==nullptr || hash2==nullptr ||
+        hash1->ચાવી_Comparator != hash2->ચાવી_Comparator ||
+        hash1->કિંમત_Comparator != hash2->કિંમત_Comparator ||
+        hash1->કિંમત_Comparator == nullptr)
     {
         /*
         Normally we would return an error here about incompatible hash tables,
         but we return false instead.
         */
-        return false;
+        પાછા ખોટું;
     }
 
-    count1 = uhash_count(hash1);
-    count2 = uhash_count(hash2);
-    if(count1!=count2){
-        return false;
+    count1 = uhash_ગણતરી(hash1);
+    count2 = uhash_ગણતરી(hash2);
+    જો(count1!=count2){
+        પાછા ખોટું;
     }
 
     pos=UHASH_FIRST;
-    for(i=0; i<count1; i++){
-        const UHashElement* elem1 = uhash_nextElement(hash1, &pos);
-        const UHashTok key1 = elem1->key;
-        const UHashTok val1 = elem1->value;
+    માટે(i=0; i<count1; i++){
+        અચલ UHashElement* elem1 = uhash_nextElement(hash1, &pos);
+        અચલ UHashTok key1 = elem1->ચાવી;
+        અચલ UHashTok val1 = elem1->value;
         /* here the keys are not compared, instead the key form hash1 is used to fetch
          * value from hash2. If the hashes are equal then then both hashes should
          * contain equal values for the same key!
          */
-        const UHashElement* elem2 = _uhash_find(hash2, key1, hash2->keyHasher(key1));
-        const UHashTok val2 = elem2->value;
-        if(hash1->valueComparator(val1, val2)==false){
-            return false;
+        અચલ UHashElement* elem2 = _uhash_find(hash2, key1, hash2->ચાવી_Hasher(key1));
+        અચલ UHashTok val2 = elem2->value;
+        જો(hash1->કિંમત_Comparator(val1, val2)==ખોટું){
+            પાછા ખોટું;
         }
     }
-    return true;
+    પાછા સાચું;
 }
 
 /********************************************************************
@@ -1009,77 +1009,77 @@ uhash_equals(const UHashtable* hash1, const UHashtable* hash2){
  ********************************************************************/
 
 U_CAPI UBool U_EXPORT2
-uhash_compareUChars(const UHashTok key1, const UHashTok key2) {
-    const char16_t *p1 = (const char16_t*) key1.pointer;
-    const char16_t *p2 = (const char16_t*) key2.pointer;
-    if (p1 == p2) {
-        return true;
+uhash_compareUChars(અચલ UHashTok key1, અચલ UHashTok key2) {
+    અચલ char16_t *p1 = (અચલ char16_t*) key1.pointer;
+    અચલ char16_t *p2 = (અચલ char16_t*) key2.pointer;
+    જો (p1 == p2) {
+        પાછા સાચું;
     }
-    if (p1 == nullptr || p2 == nullptr) {
-        return false;
+    જો (p1 == nullptr || p2 == nullptr) {
+        પાછા ખોટું;
     }
-    while (*p1 != 0 && *p1 == *p2) {
+    જ્યારે (*p1 != 0 && *p1 == *p2) {
         ++p1;
         ++p2;
     }
-    return *p1 == *p2;
+    પાછા *p1 == *p2;
 }
 
 U_CAPI UBool U_EXPORT2
-uhash_compareChars(const UHashTok key1, const UHashTok key2) {
-    const char *p1 = (const char*) key1.pointer;
-    const char *p2 = (const char*) key2.pointer;
-    if (p1 == p2) {
-        return true;
+uhash_compareChars(અચલ UHashTok key1, અચલ UHashTok key2) {
+    અચલ અક્ષર *p1 = (અચલ અક્ષર*) key1.pointer;
+    અચલ અક્ષર *p2 = (અચલ અક્ષર*) key2.pointer;
+    જો (p1 == p2) {
+        પાછા સાચું;
     }
-    if (p1 == nullptr || p2 == nullptr) {
-        return false;
+    જો (p1 == nullptr || p2 == nullptr) {
+        પાછા ખોટું;
     }
-    while (*p1 != 0 && *p1 == *p2) {
+    જ્યારે (*p1 != 0 && *p1 == *p2) {
         ++p1;
         ++p2;
     }
-    return *p1 == *p2;
+    પાછા *p1 == *p2;
 }
 
 U_CAPI UBool U_EXPORT2
-uhash_compareIChars(const UHashTok key1, const UHashTok key2) {
-    const char *p1 = (const char*) key1.pointer;
-    const char *p2 = (const char*) key2.pointer;
-    if (p1 == p2) {
-        return true;
+uhash_compareIChars(અચલ UHashTok key1, અચલ UHashTok key2) {
+    અચલ અક્ષર *p1 = (અચલ અક્ષર*) key1.pointer;
+    અચલ અક્ષર *p2 = (અચલ અક્ષર*) key2.pointer;
+    જો (p1 == p2) {
+        પાછા સાચું;
     }
-    if (p1 == nullptr || p2 == nullptr) {
-        return false;
+    જો (p1 == nullptr || p2 == nullptr) {
+        પાછા ખોટું;
     }
-    while (*p1 != 0 && uprv_tolower(*p1) == uprv_tolower(*p2)) {
+    જ્યારે (*p1 != 0 && uprv_tolower(*p1) == uprv_tolower(*p2)) {
         ++p1;
         ++p2;
     }
-    return *p1 == *p2;
+    પાછા *p1 == *p2;
 }
 
 U_CAPI UBool U_EXPORT2
-uhash_compareIStringView(const UHashTok key1, const UHashTok key2) {
-    const std::string_view* p1 = static_cast<std::string_view*>(key1.pointer);
-    const std::string_view* p2 = static_cast<std::string_view*>(key2.pointer);
-    if (p1 == p2) {
-        return true;
+uhash_compareIStringView(અચલ UHashTok key1, અચલ UHashTok key2) {
+    અચલ std::string_view* p1 = static_cast<std::string_view*>(key1.pointer);
+    અચલ std::string_view* p2 = static_cast<std::string_view*>(key2.pointer);
+    જો (p1 == p2) {
+        પાછા સાચું;
     }
-    if (p1 == nullptr || p2 == nullptr) {
-        return false;
+    જો (p1 == nullptr || p2 == nullptr) {
+        પાછા ખોટું;
     }
-    const std::string_view& v1 = *p1;
-    const std::string_view& v2 = *p2;
-    if (v1.size() != v2.size()) {
-        return false;
+    અચલ std::string_view& v1 = *p1;
+    અચલ std::string_view& v2 = *p2;
+    જો (v1.size() != v2.size()) {
+        પાછા ખોટું;
     }
-    for (size_t i = 0; i < v1.size(); ++i) {
-        if (uprv_tolower(v1[i]) != uprv_tolower(v2[i])) {
-            return false;
+    માટે (size_t i = 0; i < v1.size(); ++i) {
+        જો (uprv_tolower(v1[i]) != uprv_tolower(v2[i])) {
+            પાછા ખોટું;
         }
     }
-    return true;
+    પાછા સાચું;
 }
 
 /********************************************************************
@@ -1087,11 +1087,11 @@ uhash_compareIStringView(const UHashTok key1, const UHashTok key2) {
  ********************************************************************/
 
 U_CAPI int32_t U_EXPORT2
-uhash_hashLong(const UHashTok key) {
-    return key.integer;
+uhash_hashLong(અચલ UHashTok ચાવી) {
+    પાછા ચાવી.integer;
 }
 
 U_CAPI UBool U_EXPORT2
-uhash_compareLong(const UHashTok key1, const UHashTok key2) {
-    return key1.integer == key2.integer;
+uhash_compareLong(અચલ UHashTok key1, અચલ UHashTok key2) {
+    પાછા key1.integer == key2.integer;
 }

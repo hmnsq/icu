@@ -7,13 +7,13 @@
 *******************************************************************************
 */
 
-#include "unicode/utypes.h"
-#include "unicode/localpointer.h"
+#અન્તર્ભાવ "unicode/utypes.h"
+#અન્તર્ભાવ "unicode/localpointer.h"
 
-#if !UCONFIG_NO_SERVICE
+#જો !UCONFIG_NO_SERVICE
 
-#include "serv.h"
-#include "umutex.h"
+#અન્તર્ભાવ "serv.h"
+#અન્તર્ભાવ "umutex.h"
 
 #undef SERVICE_REFCOUNT
 
@@ -25,99 +25,99 @@ U_NAMESPACE_BEGIN
 ******************************************************************
 */
 
-const char16_t ICUServiceKey::PREFIX_DELIMITER = 0x002F;   /* '/' */
+અચલ char16_t ICUService_ચાવી::PREFIX_DELIMITER = 0x002F;   /* '/' */
 
-ICUServiceKey::ICUServiceKey(const UnicodeString& id) 
+ICUService_ચાવી::ICUService_ચાવી(અચલ UnicodeString& id) 
 : _id(id) {
 }
 
-ICUServiceKey::~ICUServiceKey() 
+ICUService_ચાવી::~ICUService_ચાવી() 
 {
 }
 
-const UnicodeString& 
-ICUServiceKey::getID() const 
+અચલ UnicodeString& 
+ICUService_ચાવી::getID() અચલ 
 {
-    return _id;
-}
-
-UnicodeString& 
-ICUServiceKey::canonicalID(UnicodeString& result) const 
-{
-    return result.append(_id);
+    પાછા _id;
 }
 
 UnicodeString& 
-ICUServiceKey::currentID(UnicodeString& result) const 
+ICUService_ચાવી::canonicalID(UnicodeString& result) અચલ 
 {
-    return canonicalID(result);
+    પાછા result.append(_id);
 }
 
 UnicodeString& 
-ICUServiceKey::currentDescriptor(UnicodeString& result) const 
+ICUService_ચાવી::currentID(UnicodeString& result) અચલ 
+{
+    પાછા canonicalID(result);
+}
+
+UnicodeString& 
+ICUService_ચાવી::currentDescriptor(UnicodeString& result) અચલ 
 {
     prefix(result);
     result.append(PREFIX_DELIMITER);
-    return currentID(result);
+    પાછા currentID(result);
 }
 
 UBool 
-ICUServiceKey::fallback() 
+ICUService_ચાવી::fallback() 
 {
-    return false;
+    પાછા ખોટું;
 }
 
 UBool 
-ICUServiceKey::isFallbackOf(const UnicodeString& id) const 
+ICUService_ચાવી::isFallbackOf(અચલ UnicodeString& id) અચલ 
 {
-    return id == _id;
+    પાછા id == _id;
 }
 
 UnicodeString& 
-ICUServiceKey::prefix(UnicodeString& result) const 
+ICUService_ચાવી::prefix(UnicodeString& result) અચલ 
 {
-    return result;
+    પાછા result;
 }
 
 UnicodeString& 
-ICUServiceKey::parsePrefix(UnicodeString& result) 
+ICUService_ચાવી::parsePrefix(UnicodeString& result) 
 {
     int32_t n = result.indexOf(PREFIX_DELIMITER);
-    if (n < 0) {
+    જો (n < 0) {
         n = 0;
     }
     result.remove(n);
-    return result;
+    પાછા result;
 }
 
 UnicodeString& 
-ICUServiceKey::parseSuffix(UnicodeString& result) 
+ICUService_ચાવી::parseSuffix(UnicodeString& result) 
 {
     int32_t n = result.indexOf(PREFIX_DELIMITER);
-    if (n >= 0) {
+    જો (n >= 0) {
         result.remove(0, n+1);
     }
-    return result;
+    પાછા result;
 }
 
 #ifdef SERVICE_DEBUG
 UnicodeString& 
-ICUServiceKey::debug(UnicodeString& result) const 
+ICUService_ચાવી::debug(UnicodeString& result) અચલ 
 {
     debugClass(result);
     result.append((UnicodeString)" id: ");
     result.append(_id);
-    return result;
+    પાછા result;
 }
 
 UnicodeString& 
-ICUServiceKey::debugClass(UnicodeString& result) const 
+ICUService_ચાવી::debugClass(UnicodeString& result) અચલ 
 {
-    return result.append((UnicodeString)"ICUServiceKey");
+    પાછા result.append((UnicodeString)"ICUServiceKey");
 }
 #endif
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ICUServiceKey)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ICUService_ચાવી)
 
 /*
 ******************************************************************
@@ -125,7 +125,7 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ICUServiceKey)
 
 ICUServiceFactory::~ICUServiceFactory() {}
 
-SimpleFactory::SimpleFactory(UObject* instanceToAdopt, const UnicodeString& id, UBool visible) 
+SimpleFactory::SimpleFactory(UObject* instanceToAdopt, અચલ UnicodeString& id, UBool visible) 
 : _instance(instanceToAdopt), _id(id), _visible(visible)
 {
 }
@@ -136,54 +136,54 @@ SimpleFactory::~SimpleFactory()
 }
 
 UObject* 
-SimpleFactory::create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const 
+SimpleFactory::create(અચલ ICUService_ચાવી& ચાવી, અચલ ICUService* service, UErrorCode& status) અચલ 
 {
-    if (U_SUCCESS(status)) {
+    જો (U_SUCCESS(status)) {
         UnicodeString temp;
-        if (_id == key.currentID(temp)) {
-            return service->cloneInstance(_instance); 
+        જો (_id == ચાવી.currentID(temp)) {
+            પાછા service->cloneInstance(_instance); 
         }
     }
-    return nullptr;
+    પાછા nullptr;
 }
 
-void 
-SimpleFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const 
+શૂન્ય 
+SimpleFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) અચલ 
 {
-    if (_visible) {
-        result.put(_id, (void*)this, status); // cast away const
-    } else {
+    જો (_visible) {
+        result.put(_id, (શૂન્ય*)આ, status); // cast away const
+    } નહીંતર {
         result.remove(_id);
     }
 }
 
 UnicodeString& 
-SimpleFactory::getDisplayName(const UnicodeString& id, const Locale& /* locale */, UnicodeString& result) const 
+SimpleFactory::getDisplayName(અચલ UnicodeString& id, અચલ Locale& /* locale */, UnicodeString& result) અચલ 
 {
-    if (_visible && _id == id) {
+    જો (_visible && _id == id) {
         result = _id;
-    } else {
+    } નહીંતર {
         result.setToBogus();
     }
-    return result;
+    પાછા result;
 }
 
 #ifdef SERVICE_DEBUG
 UnicodeString& 
-SimpleFactory::debug(UnicodeString& toAppendTo) const 
+SimpleFactory::debug(UnicodeString& toAppendTo) અચલ 
 {
     debugClass(toAppendTo);
     toAppendTo.append((UnicodeString)" id: ");
     toAppendTo.append(_id);
     toAppendTo.append((UnicodeString)", visible: ");
     toAppendTo.append(_visible ? (UnicodeString)"T" : (UnicodeString)"F");
-    return toAppendTo;
+    પાછા toAppendTo;
 }
 
 UnicodeString& 
-SimpleFactory::debugClass(UnicodeString& toAppendTo) const 
+SimpleFactory::debugClass(UnicodeString& toAppendTo) અચલ 
 {
-    return toAppendTo.append((UnicodeString)"SimpleFactory");
+    પાછા toAppendTo.append((UnicodeString)"SimpleFactory");
 }
 #endif
 
@@ -203,11 +203,11 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ServiceListener)
 
 // Record the actual id for this service in the cache, so we can return it
 // even if we succeed later with a different id.
-class CacheEntry : public UMemory {
-private:
+વર્ગ CacheEntry : જાહેર UMemory {
+ખાનગી:
     int32_t refcount;
 
-public:
+જાહેર:
     UnicodeString actualDescriptor;
     UObject* service;
 
@@ -218,7 +218,7 @@ public:
         delete service;
     }
 
-    CacheEntry(const UnicodeString& _actualDescriptor, UObject* _service) 
+    CacheEntry(અચલ UnicodeString& _actualDescriptor, UObject* _service) 
         : refcount(1), actualDescriptor(_actualDescriptor), service(_service) {
     }
 
@@ -230,7 +230,7 @@ public:
     */
     CacheEntry* ref() {
         ++refcount;
-        return this;
+        પાછા આ;
     }
 
     /**
@@ -241,26 +241,26 @@ public:
     * false if the resource has been released.
     */
     CacheEntry* unref() {
-        if ((--refcount) == 0) {
-            delete this;
-            return nullptr;
+        જો ((--refcount) == 0) {
+            delete આ;
+            પાછા nullptr;
         }
-        return this;
+        પાછા આ;
     }
 
     /**
     * Return true if there is at least one reference to this and the
     * resource has not been released.
     */
-    UBool isShared() const {
-        return refcount > 1;
+    UBool isShared() અચલ {
+        પાછા refcount > 1;
     }
 };
 
 // Deleter for serviceCache
 U_CDECL_BEGIN
-static void U_CALLCONV
-cacheDeleter(void* obj) {
+સ્થિર શૂન્ય U_CALLCONV
+cacheDeleter(શૂન્ય* obj) {
     U_NAMESPACE_USE ((CacheEntry*)obj)->unref();
 }
 
@@ -270,12 +270,12 @@ U_CDECL_END
 ******************************************************************
 */
 
-class DNCache : public UMemory {
-public:
+વર્ગ DNCache : જાહેર UMemory {
+જાહેર:
     Hashtable cache;
-    const Locale locale;
+    અચલ Locale locale;
 
-    DNCache(const Locale& _locale) 
+    DNCache(અચલ Locale& _locale) 
         : cache(), locale(_locale) 
     {
         // cache.setKeyDeleter(uprv_deleteUObject);
@@ -288,37 +288,37 @@ public:
 */
 
 StringPair* 
-StringPair::create(const UnicodeString& displayName, 
-                   const UnicodeString& id,
+StringPair::create(અચલ UnicodeString& displayName, 
+                   અચલ UnicodeString& id,
                    UErrorCode& status)
 {
-    if (U_SUCCESS(status)) {
-        StringPair* sp = new StringPair(displayName, id);
-        if (sp == nullptr || sp->isBogus()) {
+    જો (U_SUCCESS(status)) {
+        StringPair* sp = નવું StringPair(displayName, id);
+        જો (sp == nullptr || sp->isBogus()) {
             status = U_MEMORY_ALLOCATION_ERROR;
             delete sp;
-            return nullptr;
+            પાછા nullptr;
         }
-        return sp;
+        પાછા sp;
     }
-    return nullptr;
+    પાછા nullptr;
 }
 
 UBool 
-StringPair::isBogus() const {
-    return displayName.isBogus() || id.isBogus();
+StringPair::isBogus() અચલ {
+    પાછા displayName.isBogus() || id.isBogus();
 }
 
-StringPair::StringPair(const UnicodeString& _displayName, 
-                       const UnicodeString& _id)
+StringPair::StringPair(અચલ UnicodeString& _displayName, 
+                       અચલ UnicodeString& _id)
 : displayName(_displayName)
 , id(_id)
 {
 }
 
 U_CDECL_BEGIN
-static void U_CALLCONV
-userv_deleteStringPair(void *obj) {
+સ્થિર શૂન્ય U_CALLCONV
+userv_deleteStringPair(શૂન્ય *obj) {
     U_NAMESPACE_USE delete (StringPair*) obj;
 }
 U_CDECL_END
@@ -327,7 +327,7 @@ U_CDECL_END
 ******************************************************************
 */
 
-static UMutex lock;
+સ્થિર UMutex lock;
 
 ICUService::ICUService()
 : name()
@@ -339,7 +339,7 @@ ICUService::ICUService()
 {
 }
 
-ICUService::ICUService(const UnicodeString& newName) 
+ICUService::ICUService(અચલ UnicodeString& newName) 
 : name(newName)
 , timestamp(0)
 , factories(nullptr)
@@ -360,71 +360,71 @@ ICUService::~ICUService()
 }
 
 UObject* 
-ICUService::get(const UnicodeString& descriptor, UErrorCode& status) const 
+ICUService::get(અચલ UnicodeString& descriptor, UErrorCode& status) અચલ 
 {
-    return get(descriptor, nullptr, status);
+    પાછા get(descriptor, nullptr, status);
 }
 
 UObject* 
-ICUService::get(const UnicodeString& descriptor, UnicodeString* actualReturn, UErrorCode& status) const 
+ICUService::get(અચલ UnicodeString& descriptor, UnicodeString* actualReturn, UErrorCode& status) અચલ 
 {
     UObject* result = nullptr;
-    ICUServiceKey* key = createKey(&descriptor, status);
-    if (key) {
-        result = getKey(*key, actualReturn, status);
-        delete key;
+    ICUService_ચાવી* ચાવી = create_ચાવી(&descriptor, status);
+    જો (ચાવી) {
+        result = get_ચાવી(*ચાવી, actualReturn, status);
+        delete ચાવી;
     }
-    return result;
+    પાછા result;
 }
 
 UObject* 
-ICUService::getKey(ICUServiceKey& key, UErrorCode& status) const 
+ICUService::get_ચાવી(ICUService_ચાવી& ચાવી, UErrorCode& status) અચલ 
 {
-    return getKey(key, nullptr, status);
+    પાછા get_ચાવી(ચાવી, nullptr, status);
 }
 
 // this is a vector that subclasses of ICUService can override to further customize the result object
 // before returning it.  All other public get functions should call this one.
 
 UObject* 
-ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, UErrorCode& status) const 
+ICUService::get_ચાવી(ICUService_ચાવી& ચાવી, UnicodeString* actualReturn, UErrorCode& status) અચલ 
 {
-    return getKey(key, actualReturn, nullptr, status);
+    પાછા get_ચાવી(ચાવી, actualReturn, nullptr, status);
 }
 
 // make it possible to call reentrantly on systems that don't have reentrant mutexes.
 // we can use this simple approach since we know the situation where we're calling
 // reentrantly even without knowing the thread.
-class XMutex : public UMemory {
-public:
-    inline XMutex(UMutex *mutex, UBool reentering) 
+વર્ગ XMutex : જાહેર UMemory {
+જાહેર:
+    અંતઃરેખ XMutex(UMutex *mutex, UBool reentering) 
         : fMutex(mutex)
         , fActive(!reentering) 
     {
-        if (fActive) umtx_lock(fMutex);
+        જો (fActive) umtx_lock(fMutex);
     }
-    inline ~XMutex() {
-        if (fActive) umtx_unlock(fMutex);
+    અંતઃરેખ ~XMutex() {
+        જો (fActive) umtx_unlock(fMutex);
     }
 
-private:
+ખાનગી:
     UMutex  *fMutex;
     UBool fActive;
 };
 
 // called only by factories, treat as private
 UObject* 
-ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUServiceFactory* factory, UErrorCode& status) const 
+ICUService::get_ચાવી(ICUService_ચાવી& ચાવી, UnicodeString* actualReturn, અચલ ICUServiceFactory* factory, UErrorCode& status) અચલ 
 {
-    if (U_FAILURE(status)) {
-        return nullptr;
+    જો (U_FAILURE(status)) {
+        પાછા nullptr;
     }
 
-    if (isDefault()) {
-        return handleDefault(key, actualReturn, status);
+    જો (isDefault()) {
+        પાછા handleDefault(ચાવી, actualReturn, status);
     }
 
-    ICUService* ncthis = const_cast<ICUService*>(this); // cast away semantic const
+    ICUService* ncthis = const_cast<ICUService*>(આ); // cast away semantic const
 
     CacheEntry* result = nullptr;
     {
@@ -439,71 +439,71 @@ ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUSer
         // need to make sure not to try to lock it again.
         XMutex mutex(&lock, factory != nullptr);
 
-        if (serviceCache == nullptr) {
-            ncthis->serviceCache = new Hashtable(status);
-            if (ncthis->serviceCache == nullptr) {
+        જો (serviceCache == nullptr) {
+            ncthis->serviceCache = નવું Hashtable(status);
+            જો (ncthis->serviceCache == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return nullptr;
+                પાછા nullptr;
             }
-            if (U_FAILURE(status)) {
+            જો (U_FAILURE(status)) {
                 delete serviceCache;
-                return nullptr;
+                પાછા nullptr;
             }
-            serviceCache->setValueDeleter(cacheDeleter);
+            serviceCache->set_કિંમત_Deleter(cacheDeleter);
         }
 
         UnicodeString currentDescriptor;
         LocalPointer<UVector> cacheDescriptorList;
-        UBool putInCache = false;
+        UBool putInCache = ખોટું;
 
         int32_t startIndex = 0;
         int32_t limit = factories->size();
-        UBool cacheResult = true;
+        UBool cacheResult = સાચું;
 
-        if (factory != nullptr) {
-            for (int32_t i = 0; i < limit; ++i) {
-                if (factory == static_cast<const ICUServiceFactory*>(factories->elementAt(i))) {
+        જો (factory != nullptr) {
+            માટે (int32_t i = 0; i < limit; ++i) {
+                જો (factory == static_cast<અચલ ICUServiceFactory*>(factories->elementAt(i))) {
                     startIndex = i + 1;
-                    break;
+                    તોડો;
                 }
             }
-            if (startIndex == 0) {
+            જો (startIndex == 0) {
                 // throw new InternalError("Factory " + factory + "not registered with service: " + this);
                 status = U_ILLEGAL_ARGUMENT_ERROR;
-                return nullptr;
+                પાછા nullptr;
             }
-            cacheResult = false;
+            cacheResult = ખોટું;
         }
 
-        do {
+        કરો {
             currentDescriptor.remove();
-            key.currentDescriptor(currentDescriptor);
+            ચાવી.currentDescriptor(currentDescriptor);
             result = static_cast<CacheEntry*>(serviceCache->get(currentDescriptor));
-            if (result != nullptr) {
-                break;
+            જો (result != nullptr) {
+                તોડો;
             }
 
             // first test of cache failed, so we'll have to update
             // the cache if we eventually succeed-- that is, if we're 
             // going to update the cache at all.
-            putInCache = true;
+            putInCache = સાચું;
 
             int32_t index = startIndex;
-            while (index < limit) {
+            જ્યારે (index < limit) {
                 ICUServiceFactory* f = static_cast<ICUServiceFactory*>(factories->elementAt(index++));
-                LocalPointer<UObject> service(f->create(key, this, status));
-                if (U_FAILURE(status)) {
-                    return nullptr;
+                LocalPointer<UObject> service(f->create(ચાવી, આ, status));
+                જો (U_FAILURE(status)) {
+                    પાછા nullptr;
                 }
-                if (service.isValid()) {
-                    result = new CacheEntry(currentDescriptor, service.getAlias());
-                    if (result == nullptr) {
+                જો (service.isValid()) {
+                    result = નવું CacheEntry(currentDescriptor, service.getAlias());
+                    જો (result == nullptr) {
                         status = U_MEMORY_ALLOCATION_ERROR;
-                        return nullptr;
+                        પાછા nullptr;
                     }
                     service.orphan(); // result now owns service.
 
-                    goto outerEnd;
+                    જાઓ outerEnd;
                 }
             }
 
@@ -512,42 +512,42 @@ ICUService::getKey(ICUServiceKey& key, UnicodeString* actualReturn, const ICUSer
             // don't want to keep querying on an id that's going to
             // fallback to the one that succeeded, we want to hit the
             // cache the first time next goaround.
-            if (cacheDescriptorList.isNull()) {
-                cacheDescriptorList.adoptInsteadAndCheckErrorCode(new UVector(uprv_deleteUObject, nullptr, 5, status), status);
-                if (U_FAILURE(status)) {
-                    return nullptr;
+            જો (cacheDescriptorList.isNull()) {
+                cacheDescriptorList.adoptInsteadAndCheckErrorCode(નવું UVector(uprv_deleteUObject, nullptr, 5, status), status);
+                જો (U_FAILURE(status)) {
+                    પાછા nullptr;
                 }
             }
 
-            LocalPointer<UnicodeString> idToCache(new UnicodeString(currentDescriptor), status);
-            if (U_FAILURE(status)) {
-                return nullptr;
+            LocalPointer<UnicodeString> idToCache(નવું UnicodeString(currentDescriptor), status);
+            જો (U_FAILURE(status)) {
+                પાછા nullptr;
             }
-            if (idToCache->isBogus()) {
+            જો (idToCache->isBogus()) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return nullptr;
+                પાછા nullptr;
             }
             cacheDescriptorList->adoptElement(idToCache.orphan(), status);
-            if (U_FAILURE(status)) {
-                return nullptr;
+            જો (U_FAILURE(status)) {
+                પાછા nullptr;
             }
-        } while (key.fallback());
+        } જ્યારે (ચાવી.fallback());
 outerEnd:
 
-        if (result != nullptr) {
-            if (putInCache && cacheResult) {
+        જો (result != nullptr) {
+            જો (putInCache && cacheResult) {
                 serviceCache->put(result->actualDescriptor, result, status);
-                if (U_FAILURE(status)) {
-                    return nullptr;
+                જો (U_FAILURE(status)) {
+                    પાછા nullptr;
                 }
 
-                if (cacheDescriptorList.isValid()) {
-                    for (int32_t i = cacheDescriptorList->size(); --i >= 0;) {
+                જો (cacheDescriptorList.isValid()) {
+                    માટે (int32_t i = cacheDescriptorList->size(); --i >= 0;) {
                         UnicodeString* desc = static_cast<UnicodeString*>(cacheDescriptorList->elementAt(i));
 
                         serviceCache->put(*desc, result, status);
-                        if (U_FAILURE(status)) {
-                            return nullptr;
+                        જો (U_FAILURE(status)) {
+                            પાછા nullptr;
                         }
 
                         result->ref();
@@ -556,333 +556,333 @@ outerEnd:
                 }
             }
 
-            if (actualReturn != nullptr) {
+            જો (actualReturn != nullptr) {
                 // strip null prefix
-                if (result->actualDescriptor.indexOf(static_cast<char16_t>(0x2f)) == 0) { // U+002f=slash (/)
+                જો (result->actualDescriptor.indexOf(static_cast<char16_t>(0x2f)) == 0) { // U+002f=slash (/)
                     actualReturn->remove();
                     actualReturn->append(result->actualDescriptor, 
                         1, 
                         result->actualDescriptor.length() - 1);
-                } else {
+                } નહીંતર {
                     *actualReturn = result->actualDescriptor;
                 }
 
-                if (actualReturn->isBogus()) {
+                જો (actualReturn->isBogus()) {
                     status = U_MEMORY_ALLOCATION_ERROR;
                     delete result;
-                    return nullptr;
+                    પાછા nullptr;
                 }
             }
 
             UObject* service = cloneInstance(result->service);
-            if (putInCache && !cacheResult) {
+            જો (putInCache && !cacheResult) {
                 delete result;
             }
-            return service;
+            પાછા service;
         }
     }
 
-    return handleDefault(key, actualReturn, status);
+    પાછા handleDefault(ચાવી, actualReturn, status);
 }
 
 UObject* 
-ICUService::handleDefault(const ICUServiceKey& /* key */, UnicodeString* /* actualIDReturn */, UErrorCode& /* status */) const 
+ICUService::handleDefault(અચલ ICUService_ચાવી& /*ચાવી*/, UnicodeString* /* actualIDReturn */, UErrorCode& /* status */) અચલ 
 {
-    return nullptr;
+    પાછા nullptr;
 }
 
 UVector& 
-ICUService::getVisibleIDs(UVector& result, UErrorCode& status) const {
-    return getVisibleIDs(result, nullptr, status);
+ICUService::getVisibleIDs(UVector& result, UErrorCode& status) અચલ {
+    પાછા getVisibleIDs(result, nullptr, status);
 }
 
 UVector& 
-ICUService::getVisibleIDs(UVector& result, const UnicodeString* matchID, UErrorCode& status) const 
+ICUService::getVisibleIDs(UVector& result, અચલ UnicodeString* matchID, UErrorCode& status) અચલ 
 {
     result.removeAllElements();
 
-    if (U_FAILURE(status)) {
-        return result;
+    જો (U_FAILURE(status)) {
+        પાછા result;
     }
     UObjectDeleter *savedDeleter = result.setDeleter(uprv_deleteUObject);
 
     {
         Mutex mutex(&lock);
-        const Hashtable* map = getVisibleIDMap(status);
-        if (map != nullptr) {
-            ICUServiceKey* fallbackKey = createKey(matchID, status);
+        અચલ Hashtable* map = getVisibleIDMap(status);
+        જો (map != nullptr) {
+            ICUService_ચાવી* fallback_ચાવી = create_ચાવી(matchID, status);
 
-            for (int32_t pos = UHASH_FIRST; U_SUCCESS(status); ) {
-                const UHashElement* e = map->nextElement(pos);
-                if (e == nullptr) {
-                    break;
+            માટે (int32_t pos = UHASH_FIRST; U_SUCCESS(status); ) {
+                અચલ UHashElement* e = map->nextElement(pos);
+                જો (e == nullptr) {
+                    તોડો;
                 }
 
-                const UnicodeString* id = static_cast<const UnicodeString*>(e->key.pointer);
-                if (fallbackKey != nullptr) {
-                    if (!fallbackKey->isFallbackOf(*id)) {
-                        continue;
+                અચલ UnicodeString* id = static_cast<અચલ UnicodeString*>(e->ચાવી.pointer);
+                જો (fallback_ચાવી != nullptr) {
+                    જો (!fallback_ચાવી->isFallbackOf(*id)) {
+                        ચાલુ;
                     }
                 }
 
                 LocalPointer<UnicodeString> idClone(id->clone(), status);
                 result.adoptElement(idClone.orphan(), status);
             }
-            delete fallbackKey;
+            delete fallback_ચાવી;
         }
     }
-    if (U_FAILURE(status)) {
+    જો (U_FAILURE(status)) {
         result.removeAllElements();
     }
     result.setDeleter(savedDeleter);
-    return result;
+    પાછા result;
 }
 
-const Hashtable* 
-ICUService::getVisibleIDMap(UErrorCode& status) const {
-    if (U_FAILURE(status)) return nullptr;
+અચલ Hashtable* 
+ICUService::getVisibleIDMap(UErrorCode& status) અચલ {
+    જો (U_FAILURE(status)) પાછા nullptr;
 
     // must only be called when lock is already held
 
-    ICUService* ncthis = const_cast<ICUService*>(this); // cast away semantic const
-    if (idCache == nullptr) {
-        ncthis->idCache = new Hashtable(status);
-        if (idCache == nullptr) {
+    ICUService* ncthis = const_cast<ICUService*>(આ); // cast away semantic const
+    જો (idCache == nullptr) {
+        ncthis->idCache = નવું Hashtable(status);
+        જો (idCache == nullptr) {
             status = U_MEMORY_ALLOCATION_ERROR;
-        } else if (factories != nullptr) {
-            for (int32_t pos = factories->size(); --pos >= 0;) {
+        } નહીંતર જો (factories != nullptr) {
+            માટે (int32_t pos = factories->size(); --pos >= 0;) {
                 ICUServiceFactory* f = static_cast<ICUServiceFactory*>(factories->elementAt(pos));
                 f->updateVisibleIDs(*idCache, status);
             }
-            if (U_FAILURE(status)) {
+            જો (U_FAILURE(status)) {
                 delete idCache;
                 ncthis->idCache = nullptr;
             }
         }
     }
 
-    return idCache;
+    પાછા idCache;
 }
 
 
 UnicodeString& 
-ICUService::getDisplayName(const UnicodeString& id, UnicodeString& result) const 
+ICUService::getDisplayName(અચલ UnicodeString& id, UnicodeString& result) અચલ 
 {
-    return getDisplayName(id, result, Locale::getDefault());
+    પાછા getDisplayName(id, result, Locale::getDefault());
 }
 
 UnicodeString& 
-ICUService::getDisplayName(const UnicodeString& id, UnicodeString& result, const Locale& locale) const 
+ICUService::getDisplayName(અચલ UnicodeString& id, UnicodeString& result, અચલ Locale& locale) અચલ 
 {
     {
         UErrorCode status = U_ZERO_ERROR;
         Mutex mutex(&lock);
-        const Hashtable* map = getVisibleIDMap(status);
-        if (map != nullptr) {
+        અચલ Hashtable* map = getVisibleIDMap(status);
+        જો (map != nullptr) {
             ICUServiceFactory* f = static_cast<ICUServiceFactory*>(map->get(id));
-            if (f != nullptr) {
+            જો (f != nullptr) {
                 f->getDisplayName(id, locale, result);
-                return result;
+                પાછા result;
             }
 
             // fallback
             status = U_ZERO_ERROR;
-            ICUServiceKey* fallbackKey = createKey(&id, status);
-            while (fallbackKey != nullptr && fallbackKey->fallback()) {
+            ICUService_ચાવી* fallback_ચાવી = create_ચાવી(&id, status);
+            જ્યારે (fallback_ચાવી != nullptr && fallback_ચાવી->fallback()) {
                 UnicodeString us;
-                fallbackKey->currentID(us);
+                fallback_ચાવી->currentID(us);
                 f = static_cast<ICUServiceFactory*>(map->get(us));
-                if (f != nullptr) {
+                જો (f != nullptr) {
                     f->getDisplayName(id, locale, result);
-                    delete fallbackKey;
-                    return result;
+                    delete fallback_ચાવી;
+                    પાછા result;
                 }
             }
-            delete fallbackKey;
+            delete fallback_ચાવી;
         }
     }
     result.setToBogus();
-    return result;
+    પાછા result;
 }
 
 UVector& 
-ICUService::getDisplayNames(UVector& result, UErrorCode& status) const 
+ICUService::getDisplayNames(UVector& result, UErrorCode& status) અચલ 
 {
-    return getDisplayNames(result, Locale::getDefault(), nullptr, status);
+    પાછા getDisplayNames(result, Locale::getDefault(), nullptr, status);
 }
 
 
 UVector& 
-ICUService::getDisplayNames(UVector& result, const Locale& locale, UErrorCode& status) const 
+ICUService::getDisplayNames(UVector& result, અચલ Locale& locale, UErrorCode& status) અચલ 
 {
-    return getDisplayNames(result, locale, nullptr, status);
+    પાછા getDisplayNames(result, locale, nullptr, status);
 }
 
 UVector& 
 ICUService::getDisplayNames(UVector& result, 
-                            const Locale& locale, 
-                            const UnicodeString* matchID, 
-                            UErrorCode& status) const 
+                            અચલ Locale& locale, 
+                            અચલ UnicodeString* matchID, 
+                            UErrorCode& status) અચલ 
 {
     result.removeAllElements();
     result.setDeleter(userv_deleteStringPair);
-    if (U_SUCCESS(status)) {
-        ICUService* ncthis = const_cast<ICUService*>(this); // cast away semantic const
+    જો (U_SUCCESS(status)) {
+        ICUService* ncthis = const_cast<ICUService*>(આ); // cast away semantic const
         Mutex mutex(&lock);
 
-        if (dnCache != nullptr && dnCache->locale != locale) {
+        જો (dnCache != nullptr && dnCache->locale != locale) {
             delete dnCache;
             ncthis->dnCache = nullptr;
         }
 
-        if (dnCache == nullptr) {
-            const Hashtable* m = getVisibleIDMap(status);
-            if (U_FAILURE(status)) {
-                return result;
+        જો (dnCache == nullptr) {
+            અચલ Hashtable* m = getVisibleIDMap(status);
+            જો (U_FAILURE(status)) {
+                પાછા result;
             }
-            ncthis->dnCache = new DNCache(locale); 
-            if (dnCache == nullptr) {
+            ncthis->dnCache = નવું DNCache(locale); 
+            જો (dnCache == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return result;
+                પાછા result;
             }
 
             int32_t pos = UHASH_FIRST;
-            const UHashElement* entry = nullptr;
-            while ((entry = m->nextElement(pos)) != nullptr) {
-                const UnicodeString* id = static_cast<const UnicodeString*>(entry->key.pointer);
+            અચલ UHashElement* entry = nullptr;
+            જ્યારે ((entry = m->nextElement(pos)) != nullptr) {
+                અચલ UnicodeString* id = static_cast<અચલ UnicodeString*>(entry->ચાવી.pointer);
                 ICUServiceFactory* f = static_cast<ICUServiceFactory*>(entry->value.pointer);
                 UnicodeString dname;
                 f->getDisplayName(*id, locale, dname);
-                if (dname.isBogus()) {
+                જો (dname.isBogus()) {
                     status = U_MEMORY_ALLOCATION_ERROR;
-                } else {
-                    dnCache->cache.put(dname, (void*)id, status); // share pointer with visibleIDMap
-                    if (U_SUCCESS(status)) {
-                        continue;
+                } નહીંતર {
+                    dnCache->cache.put(dname, (શૂન્ય*)id, status); // share pointer with visibleIDMap
+                    જો (U_SUCCESS(status)) {
+                        ચાલુ;
                     }
                 }
                 delete dnCache;
                 ncthis->dnCache = nullptr;
-                return result;
+                પાછા result;
             }
         }
     }
 
-    ICUServiceKey* matchKey = createKey(matchID, status);
+    ICUService_ચાવી* match_ચાવી = create_ચાવી(matchID, status);
     /* To ensure that all elements in the hashtable are iterated, set pos to -1.
      * nextElement(pos) will skip the position at pos and begin the iteration
      * at the next position, which in this case will be 0.
      */
     int32_t pos = UHASH_FIRST; 
-    const UHashElement *entry = nullptr;
-    while ((entry = dnCache->cache.nextElement(pos)) != nullptr) {
-        const UnicodeString* id = static_cast<const UnicodeString*>(entry->value.pointer);
-        if (matchKey != nullptr && !matchKey->isFallbackOf(*id)) {
-            continue;
+    અચલ UHashElement *entry = nullptr;
+    જ્યારે ((entry = dnCache->cache.nextElement(pos)) != nullptr) {
+        અચલ UnicodeString* id = static_cast<અચલ UnicodeString*>(entry->value.pointer);
+        જો (match_ચાવી != nullptr && !match_ચાવી->isFallbackOf(*id)) {
+            ચાલુ;
         }
-        const UnicodeString* dn = static_cast<const UnicodeString*>(entry->key.pointer);
+        અચલ UnicodeString* dn = static_cast<અચલ UnicodeString*>(entry->ચાવી.pointer);
         StringPair* sp = StringPair::create(*id, *dn, status);
         result.adoptElement(sp, status);
-        if (U_FAILURE(status)) {
+        જો (U_FAILURE(status)) {
             result.removeAllElements();
-            break;
+            તોડો;
         }
     }
-    delete matchKey;
+    delete match_ચાવી;
 
-    return result;
+    પાછા result;
 }
 
-URegistryKey
-ICUService::registerInstance(UObject* objToAdopt, const UnicodeString& id, UErrorCode& status) 
+URegistry_ચાવી
+ICUService::registerInstance(UObject* objToAdopt, અચલ UnicodeString& id, UErrorCode& status) 
 {
-    return registerInstance(objToAdopt, id, true, status);
+    પાછા registerInstance(objToAdopt, id, સાચું, status);
 }
 
-URegistryKey
-ICUService::registerInstance(UObject* objToAdopt, const UnicodeString& id, UBool visible, UErrorCode& status) 
+URegistry_ચાવી
+ICUService::registerInstance(UObject* objToAdopt, અચલ UnicodeString& id, UBool visible, UErrorCode& status) 
 {
-    ICUServiceKey* key = createKey(&id, status);
-    if (key != nullptr) {
+    ICUService_ચાવી* ચાવી = create_ચાવી(&id, status);
+    જો (ચાવી != nullptr) {
         UnicodeString canonicalID;
-        key->canonicalID(canonicalID);
-        delete key;
+        ચાવી->canonicalID(canonicalID);
+        delete ચાવી;
 
         ICUServiceFactory* f = createSimpleFactory(objToAdopt, canonicalID, visible, status);
-        if (f != nullptr) {
-            return registerFactory(f, status);
+        જો (f != nullptr) {
+            પાછા registerFactory(f, status);
         }
     }
     delete objToAdopt;
-    return nullptr;
+    પાછા nullptr;
 }
 
 ICUServiceFactory* 
-ICUService::createSimpleFactory(UObject* objToAdopt, const UnicodeString& id, UBool visible, UErrorCode& status)
+ICUService::createSimpleFactory(UObject* objToAdopt, અચલ UnicodeString& id, UBool visible, UErrorCode& status)
 {
-    if (U_SUCCESS(status)) {
-        if ((objToAdopt != nullptr) && (!id.isBogus())) {
-            return new SimpleFactory(objToAdopt, id, visible);
+    જો (U_SUCCESS(status)) {
+        જો ((objToAdopt != nullptr) && (!id.isBogus())) {
+            પાછા નવું SimpleFactory(objToAdopt, id, visible);
         }
         status = U_ILLEGAL_ARGUMENT_ERROR;
     }
-    return nullptr;
+    પાછા nullptr;
 }
 
-URegistryKey
+URegistry_ચાવી
 ICUService::registerFactory(ICUServiceFactory* factoryToAdopt, UErrorCode& status)
 {
     LocalPointer<ICUServiceFactory>lpFactoryToAdopt(factoryToAdopt);
-    if (U_FAILURE(status) || factoryToAdopt == nullptr) {
-        return nullptr;
+    જો (U_FAILURE(status) || factoryToAdopt == nullptr) {
+        પાછા nullptr;
     }
     {
         Mutex mutex(&lock);
 
-        if (factories == nullptr) {
-            LocalPointer<UVector> lpFactories(new UVector(uprv_deleteUObject, nullptr, status), status);
-            if (U_FAILURE(status)) {
-                return nullptr;
+        જો (factories == nullptr) {
+            LocalPointer<UVector> lpFactories(નવું UVector(uprv_deleteUObject, nullptr, status), status);
+            જો (U_FAILURE(status)) {
+                પાછા nullptr;
             }
             factories = lpFactories.orphan();
         }
-        factories->insertElementAt(lpFactoryToAdopt.orphan(), 0, status);
-        if (U_SUCCESS(status)) {
+        factories->ઉમેરો_Element_At(lpFactoryToAdopt.orphan(), 0, status);
+        જો (U_SUCCESS(status)) {
             clearCaches();
         }
     }   // Close of mutex lock block.
 
-    if (U_SUCCESS(status)) {
+    જો (U_SUCCESS(status)) {
         notifyChanged();
-        return (URegistryKey)factoryToAdopt;
-    } else {
-        return nullptr;
+        પાછા (URegistry_ચાવી)factoryToAdopt;
+    } નહીંતર {
+        પાછા nullptr;
     }
 }
 
 UBool 
-ICUService::unregister(URegistryKey rkey, UErrorCode& status) 
+ICUService::unregister(URegistry_ચાવી rkey, UErrorCode& status) 
 {
     ICUServiceFactory *factory = (ICUServiceFactory*)rkey;
-    UBool result = false;
-    if (factory != nullptr && factories != nullptr) {
+    UBool result = ખોટું;
+    જો (factory != nullptr && factories != nullptr) {
         Mutex mutex(&lock);
 
-        if (factories->removeElement(factory)) {
+        જો (factories->removeElement(factory)) {
             clearCaches();
-            result = true;
-        } else {
+            result = સાચું;
+        } નહીંતર {
             status = U_ILLEGAL_ARGUMENT_ERROR;
             delete factory;
         }
     }
-    if (result) {
+    જો (result) {
         notifyChanged();
     }
-    return result;
+    પાછા result;
 }
 
-void 
+શૂન્ય 
 ICUService::reset() 
 {
     {
@@ -893,27 +893,27 @@ ICUService::reset()
     notifyChanged();
 }
 
-void 
+શૂન્ય 
 ICUService::reInitializeFactories() 
 {
-    if (factories != nullptr) {
+    જો (factories != nullptr) {
         factories->removeAllElements();
     }
 }
 
 UBool 
-ICUService::isDefault() const 
+ICUService::isDefault() અચલ 
 {
-    return countFactories() == 0;
+    પાછા ગણતરી_Factories() == 0;
 }
 
-ICUServiceKey* 
-ICUService::createKey(const UnicodeString* id, UErrorCode& status) const 
+ICUService_ચાવી* 
+ICUService::create_ચાવી(અચલ UnicodeString* id, UErrorCode& status) અચલ 
 {
-    return (U_FAILURE(status) || id == nullptr) ? nullptr : new ICUServiceKey(*id);
+    પાછા (U_FAILURE(status) || id == nullptr) ? nullptr : નવું ICUService_ચાવી(*id);
 }
 
-void 
+શૂન્ય 
 ICUService::clearCaches() 
 {
     // callers synchronize before use
@@ -925,7 +925,7 @@ ICUService::clearCaches()
     delete serviceCache; serviceCache = nullptr;
 }
 
-void 
+શૂન્ય 
 ICUService::clearServiceCache() 
 {
     // callers synchronize before use
@@ -933,33 +933,33 @@ ICUService::clearServiceCache()
 }
 
 UBool 
-ICUService::acceptsListener(const EventListener& l) const 
+ICUService::acceptsListener(અચલ EventListener& l) અચલ 
 {
-    return dynamic_cast<const ServiceListener*>(&l) != nullptr;
+    પાછા dynamic_cast<અચલ ServiceListener*>(&l) != nullptr;
 }
 
-void 
-ICUService::notifyListener(EventListener& l) const 
+શૂન્ય 
+ICUService::notifyListener(EventListener& l) અચલ 
 {
-    (static_cast<ServiceListener&>(l)).serviceChanged(*this);
+    (static_cast<ServiceListener&>(l)).serviceChanged(*આ);
 }
 
 UnicodeString&
-ICUService::getName(UnicodeString& result) const 
+ICUService::getName(UnicodeString& result) અચલ 
 {
-    return result.append(name);
+    પાછા result.append(name);
 }
 
 int32_t 
-ICUService::countFactories() const 
+ICUService::ગણતરી_Factories() અચલ 
 {
-    return factories == nullptr ? 0 : factories->size();
+    પાછા factories == nullptr ? 0 : factories->size();
 }
 
 int32_t
-ICUService::getTimestamp() const
+ICUService::getTimestamp() અચલ
 {
-    return timestamp;
+    પાછા timestamp;
 }
 
 U_NAMESPACE_END

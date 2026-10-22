@@ -8,18 +8,18 @@
  *
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#અન્તર્ભાવ "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#જો !UCONFIG_NO_SERVICE
 
-#include "unicode/resbund.h"
-#include "uresimp.h"
-#include "cmemory.h"
-#include "servloc.h"
-#include "ustrfmt.h"
-#include "uhash.h"
-#include "charstr.h"
-#include "uassert.h"
+#અન્તર્ભાવ "unicode/resbund.h"
+#અન્તર્ભાવ "uresimp.h"
+#અન્તર્ભાવ "cmemory.h"
+#અન્તર્ભાવ "servloc.h"
+#અન્તર્ભાવ "ustrfmt.h"
+#અન્તર્ભાવ "uhash.h"
+#અન્તર્ભાવ "charstr.h"
+#અન્તર્ભાવ "uassert.h"
 
 #define UNDERSCORE_CHAR ((char16_t)0x005f)
 #define AT_SIGN_CHAR    ((char16_t)64)
@@ -27,41 +27,41 @@
 
 U_NAMESPACE_BEGIN
 
-LocaleKey*
-LocaleKey::createWithCanonicalFallback(const UnicodeString* primaryID,
-                                       const UnicodeString* canonicalFallbackID,
+Locale_ચાવી*
+Locale_ચાવી::createWithCanonicalFallback(અચલ UnicodeString* primaryID,
+                                       અચલ UnicodeString* canonicalFallbackID,
                                        UErrorCode& status)
 {
-    return LocaleKey::createWithCanonicalFallback(primaryID, canonicalFallbackID, KIND_ANY, status);
+    પાછા Locale_ચાવી::createWithCanonicalFallback(primaryID, canonicalFallbackID, KIND_ANY, status);
 }
 
-LocaleKey*
-LocaleKey::createWithCanonicalFallback(const UnicodeString* primaryID,
-                                       const UnicodeString* canonicalFallbackID,
+Locale_ચાવી*
+Locale_ચાવી::createWithCanonicalFallback(અચલ UnicodeString* primaryID,
+                                       અચલ UnicodeString* canonicalFallbackID,
                                        int32_t kind,
                                        UErrorCode& status)
 {
-    if (primaryID == nullptr || U_FAILURE(status)) {
-        return nullptr;
+    જો (primaryID == nullptr || U_FAILURE(status)) {
+        પાછા nullptr;
     }
     UnicodeString canonicalPrimaryID;
     LocaleUtility::canonicalLocaleString(primaryID, canonicalPrimaryID);
-    return new LocaleKey(*primaryID, canonicalPrimaryID, canonicalFallbackID, kind);
+    પાછા નવું Locale_ચાવી(*primaryID, canonicalPrimaryID, canonicalFallbackID, kind);
 }
 
-LocaleKey::LocaleKey(const UnicodeString& primaryID,
-                     const UnicodeString& canonicalPrimaryID,
-                     const UnicodeString* canonicalFallbackID,
+Locale_ચાવી::Locale_ચાવી(અચલ UnicodeString& primaryID,
+                     અચલ UnicodeString& canonicalPrimaryID,
+                     અચલ UnicodeString* canonicalFallbackID,
                      int32_t kind)
-  : ICUServiceKey(primaryID)
+  : ICUService_ચાવી(primaryID)
   , _kind(kind)
   , _primaryID(canonicalPrimaryID)
   , _fallbackID()
   , _currentID()
 {
     _fallbackID.setToBogus();
-    if (_primaryID.length() != 0) {
-        if (canonicalFallbackID != nullptr && _primaryID != *canonicalFallbackID) {
+    જો (_primaryID.length() != 0) {
+        જો (canonicalFallbackID != nullptr && _primaryID != *canonicalFallbackID) {
             _fallbackID = *canonicalFallbackID;
         }
     }
@@ -69,97 +69,97 @@ LocaleKey::LocaleKey(const UnicodeString& primaryID,
     _currentID = _primaryID;
 }
 
-LocaleKey::~LocaleKey() {}
+Locale_ચાવી::~Locale_ચાવી() {}
 
 UnicodeString&
-LocaleKey::prefix(UnicodeString& result) const {
-    if (_kind != KIND_ANY) {
+Locale_ચાવી::prefix(UnicodeString& result) અચલ {
+    જો (_kind != KIND_ANY) {
         char16_t buffer[64];
         uprv_itou(buffer, 64, _kind, 10, 0);
         UnicodeString temp(buffer);
         result.append(temp);
     }
-    return result;
+    પાછા result;
 }
 
 int32_t
-LocaleKey::kind() const {
-    return _kind;
+Locale_ચાવી::kind() અચલ {
+    પાછા _kind;
 }
 
 UnicodeString&
-LocaleKey::canonicalID(UnicodeString& result) const {
-    return result.append(_primaryID);
+Locale_ચાવી::canonicalID(UnicodeString& result) અચલ {
+    પાછા result.append(_primaryID);
 }
 
 UnicodeString&
-LocaleKey::currentID(UnicodeString& result) const {
-    if (!_currentID.isBogus()) {
+Locale_ચાવી::currentID(UnicodeString& result) અચલ {
+    જો (!_currentID.isBogus()) {
         result.append(_currentID);
     }
-    return result;
+    પાછા result;
 }
 
 UnicodeString&
-LocaleKey::currentDescriptor(UnicodeString& result) const {
-    if (!_currentID.isBogus()) {
+Locale_ચાવી::currentDescriptor(UnicodeString& result) અચલ {
+    જો (!_currentID.isBogus()) {
         prefix(result).append(PREFIX_DELIMITER).append(_currentID);
-    } else {
+    } નહીંતર {
         result.setToBogus();
     }
-    return result;
+    પાછા result;
 }
 
 Locale&
-LocaleKey::canonicalLocale(Locale& result) const {
-    return LocaleUtility::initLocaleFromName(_primaryID, result);
+Locale_ચાવી::canonicalLocale(Locale& result) અચલ {
+    પાછા LocaleUtility::initLocaleFromName(_primaryID, result);
 }
 
 Locale&
-LocaleKey::currentLocale(Locale& result) const {
-    return LocaleUtility::initLocaleFromName(_currentID, result);
+Locale_ચાવી::currentLocale(Locale& result) અચલ {
+    પાછા LocaleUtility::initLocaleFromName(_currentID, result);
 }
 
 UBool
-LocaleKey::fallback() {
-    if (!_currentID.isBogus()) {
-        int x = _currentID.lastIndexOf(UNDERSCORE_CHAR);
-        if (x != -1) {
+Locale_ચાવી::fallback() {
+    જો (!_currentID.isBogus()) {
+        પૂર્ણાંક x = _currentID.lastIndexOf(UNDERSCORE_CHAR);
+        જો (x != -1) {
             _currentID.remove(x); // truncate current or fallback, whichever we're pointing to
-            return true;
+            પાછા સાચું;
         }
 
-        if (!_fallbackID.isBogus()) {
+        જો (!_fallbackID.isBogus()) {
             _currentID = _fallbackID;
             _fallbackID.setToBogus();
-            return true;
+            પાછા સાચું;
         }
 
-        if (_currentID.length() > 0) {
+        જો (_currentID.length() > 0) {
             _currentID.remove(0); // completely truncate
-            return true;
+            પાછા સાચું;
         }
 
         _currentID.setToBogus();
     }
 
-    return false;
+    પાછા ખોટું;
 }
 
 UBool
-LocaleKey::isFallbackOf(const UnicodeString& id) const {
+Locale_ચાવી::isFallbackOf(અચલ UnicodeString& id) અચલ {
     UnicodeString temp(id);
     parseSuffix(temp);
-    return temp.indexOf(_primaryID) == 0 &&
+    પાછા temp.indexOf(_primaryID) == 0 &&
         (temp.length() == _primaryID.length() ||
         temp.charAt(_primaryID.length()) == UNDERSCORE_CHAR);
 }
 
 #ifdef SERVICE_DEBUG
 UnicodeString&
-LocaleKey::debug(UnicodeString& result) const
+Locale_ચાવી::debug(UnicodeString& result) અચલ
 {
-    ICUServiceKey::debug(result);
+    ICUService_ચાવી::debug(result);
     result.append((UnicodeString)" kind: ");
     result.append(_kind);
     result.append((UnicodeString)" primaryID: ");
@@ -168,17 +168,17 @@ LocaleKey::debug(UnicodeString& result) const
     result.append(_fallbackID);
     result.append((UnicodeString)" currentID: ");
     result.append(_currentID);
-    return result;
+    પાછા result;
 }
 
 UnicodeString&
-LocaleKey::debugClass(UnicodeString& result) const
+Locale_ચાવી::debugClass(UnicodeString& result) અચલ
 {
-    return result.append((UnicodeString)"LocaleKey ");
+    પાછા result.append((UnicodeString)"LocaleKey ");
 }
 #endif
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(LocaleKey)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Locale_ચાવી)
 
 U_NAMESPACE_END
 

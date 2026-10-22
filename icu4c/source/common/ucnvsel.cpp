@@ -26,112 +26,112 @@
  * stores all encodings a codepoint can map to
  */
 
-#include "unicode/ucnvsel.h"
+#અન્તર્ભાવ "unicode/ucnvsel.h"
 
-#if !UCONFIG_NO_CONVERSION
+#જો !UCONFIG_NO_CONVERSION
 
-#include <string.h>
+#અન્તર્ભાવ <string.h>
 
-#include "unicode/uchar.h"
-#include "unicode/uniset.h"
-#include "unicode/ucnv.h"
-#include "unicode/ustring.h"
-#include "unicode/uchriter.h"
-#include "utrie2.h"
-#include "propsvec.h"
-#include "uassert.h"
-#include "ucmndata.h"
-#include "udataswp.h"
-#include "uenumimp.h"
-#include "cmemory.h"
-#include "cstring.h"
+#અન્તર્ભાવ "unicode/uchar.h"
+#અન્તર્ભાવ "unicode/uniset.h"
+#અન્તર્ભાવ "unicode/ucnv.h"
+#અન્તર્ભાવ "unicode/ustring.h"
+#અન્તર્ભાવ "unicode/uchriter.h"
+#અન્તર્ભાવ "utrie2.h"
+#અન્તર્ભાવ "propsvec.h"
+#અન્તર્ભાવ "uassert.h"
+#અન્તર્ભાવ "ucmndata.h"
+#અન્તર્ભાવ "udataswp.h"
+#અન્તર્ભાવ "uenumimp.h"
+#અન્તર્ભાવ "cmemory.h"
+#અન્તર્ભાવ "cstring.h"
 
 U_NAMESPACE_USE
 
-struct UConverterSelector {
+સંરચના UConverterSelector {
   UTrie2 *trie;              // 16 bit trie containing offsets into pv
   uint32_t* pv;              // table of bits!
-  int32_t pvCount;
-  char** encodings;          // which encodings did user ask to use?
-  int32_t encodingsCount;
+  int32_t pv_ગણતરી;
+  અક્ષર** encodings;          // which encodings did user ask to use?
+  int32_t encodings_ગણતરી;
   int32_t encodingStrLength;
   uint8_t* swapped;
   UBool ownPv, ownEncodingStrings;
 };
 
-static void generateSelectorData(UConverterSelector* result,
+સ્થિર શૂન્ય generateSelectorData(UConverterSelector* result,
                                  UPropsVectors *upvec,
-                                 const USet* excludedCodePoints,
-                                 const UConverterUnicodeSet whichSet,
+                                 અચલ USet* excludedCodePoints,
+                                 અચલ UConverterUnicodeSet whichSet,
                                  UErrorCode* status) {
-  if (U_FAILURE(*status)) {
-    return;
+  જો (U_FAILURE(*status)) {
+    પાછા;
   }
 
-  int32_t columns = (result->encodingsCount+31)/32;
+  int32_t columns = (result->encodings_ગણતરી+31)/32;
 
   // set errorValue to all-ones
-  for (int32_t col = 0; col < columns; col++) {
-    upvec_setValue(upvec, UPVEC_ERROR_VALUE_CP, UPVEC_ERROR_VALUE_CP,
+  માટે (int32_t col = 0; col < columns; col++) {
+    upvec_set_કિંમત(upvec, UPVEC_ERROR_કિંમત_CP, UPVEC_ERROR_કિંમત_CP,
                    col, static_cast<uint32_t>(~0), static_cast<uint32_t>(~0), status);
   }
 
-  for (int32_t i = 0; i < result->encodingsCount; ++i) {
+  માટે (int32_t i = 0; i < result->encodings_ગણતરી; ++i) {
     uint32_t mask;
     uint32_t column;
-    int32_t item_count;
+    int32_t item_ગણતરી;
     int32_t j;
     UConverter* test_converter = ucnv_open(result->encodings[i], status);
-    if (U_FAILURE(*status)) {
-      return;
+    જો (U_FAILURE(*status)) {
+      પાછા;
     }
     USet* unicode_point_set;
     unicode_point_set = uset_open(1, 0);  // empty set
 
     ucnv_getUnicodeSet(test_converter, unicode_point_set,
                        whichSet, status);
-    if (U_FAILURE(*status)) {
+    જો (U_FAILURE(*status)) {
       ucnv_close(test_converter);
-      return;
+      પાછા;
     }
 
     column = i / 32;
     mask = 1 << (i%32);
     // now iterate over intervals on set i!
-    item_count = uset_getItemCount(unicode_point_set);
+    item_ગણતરી = uset_get_Item_ગણતરી(unicode_point_set);
 
-    for (j = 0; j < item_count; ++j) {
+    માટે (j = 0; j < item_ગણતરી; ++j) {
       UChar32 start_char;
       UChar32 end_char;
       UErrorCode smallStatus = U_ZERO_ERROR;
       uset_getItem(unicode_point_set, j, &start_char, &end_char, nullptr, 0,
                    &smallStatus);
-      if (U_FAILURE(smallStatus)) {
+      જો (U_FAILURE(smallStatus)) {
         // this will be reached for the converters that fill the set with
         // strings. Those should be ignored by our system
-      } else {
-        upvec_setValue(upvec, start_char, end_char, column, static_cast<uint32_t>(~0), mask,
+      } નહીંતર {
+        upvec_set_કિંમત(upvec, start_char, end_char, column, static_cast<uint32_t>(~0), mask,
                        status);
       }
     }
     ucnv_close(test_converter);
     uset_close(unicode_point_set);
-    if (U_FAILURE(*status)) {
-      return;
+    જો (U_FAILURE(*status)) {
+      પાછા;
     }
   }
 
   // handle excluded encodings! Simply set their values to all 1's in the upvec
-  if (excludedCodePoints) {
-    int32_t item_count = uset_getItemCount(excludedCodePoints);
-    for (int32_t j = 0; j < item_count; ++j) {
+  જો (excludedCodePoints) {
+    int32_t item_ગણતરી = uset_get_Item_ગણતરી(excludedCodePoints);
+    માટે (int32_t j = 0; j < item_ગણતરી; ++j) {
       UChar32 start_char;
       UChar32 end_char;
 
       uset_getItem(excludedCodePoints, j, &start_char, &end_char, nullptr, 0,
                    status);
-      for (int32_t col = 0; col < columns; col++) {
-        upvec_setValue(upvec, start_char, end_char, col, static_cast<uint32_t>(~0), static_cast<uint32_t>(~0),
+      માટે (int32_t col = 0; col < columns; col++) {
+        upvec_set_કિંમત(upvec, start_char, end_char, col, static_cast<uint32_t>(~0), static_cast<uint32_t>(~0),
                       status);
       }
     }
@@ -140,102 +140,102 @@ static void generateSelectorData(UConverterSelector* result,
   // alright. Now, let's put things in the same exact form you'd get when you
   // unserialize things.
   result->trie = upvec_compactToUTrie2WithRowIndexes(upvec, status);
-  result->pv = upvec_cloneArray(upvec, &result->pvCount, nullptr, status);
-  result->pvCount *= columns;  // number of uint32_t = rows * columns
-  result->ownPv = true;
+  result->pv = upvec_cloneArray(upvec, &result->pv_ગણતરી, nullptr, status);
+  result->pv_ગણતરી *= columns;  // number of uint32_t = rows * columns
+  result->ownPv = સાચું;
 }
 
 /* open a selector. If converterListSize is 0, build for all converters.
    If excludedCodePoints is nullptr, don't exclude any codepoints */
 U_CAPI UConverterSelector* U_EXPORT2
-ucnvsel_open(const char* const*  converterList, int32_t converterListSize,
-             const USet* excludedCodePoints,
-             const UConverterUnicodeSet whichSet, UErrorCode* status) {
+ucnvsel_open(અચલ અક્ષર* અચલ*  converterList, int32_t converterListSize,
+             અચલ USet* excludedCodePoints,
+             અચલ UConverterUnicodeSet whichSet, UErrorCode* status) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  જો (U_FAILURE(*status)) {
+    પાછા nullptr;
   }
   // ensure args make sense!
-  if (converterListSize < 0 || (converterList == nullptr && converterListSize != 0)) {
+  જો (converterListSize < 0 || (converterList == nullptr && converterListSize != 0)) {
     *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+    પાછા nullptr;
   }
 
   // allocate a new converter
   LocalUConverterSelectorPointer newSelector(
-    (UConverterSelector*)uprv_malloc(sizeof(UConverterSelector)));
-  if (newSelector.isNull()) {
+    (UConverterSelector*)uprv_malloc(કદ(UConverterSelector)));
+  જો (newSelector.isNull()) {
     *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+    પાછા nullptr;
   }
-  uprv_memset(newSelector.getAlias(), 0, sizeof(UConverterSelector));
+  uprv_memset(newSelector.getAlias(), 0, કદ(UConverterSelector));
 
-  if (converterListSize == 0) {
+  જો (converterListSize == 0) {
     converterList = nullptr;
-    converterListSize = ucnv_countAvailable();
+    converterListSize = ucnv_ગણતરી_Available();
   }
   newSelector->encodings =
-    (char**)uprv_malloc(converterListSize * sizeof(char*));
-  if (!newSelector->encodings) {
+    (અક્ષર**)uprv_malloc(converterListSize * કદ(અક્ષર*));
+  જો (!newSelector->encodings) {
     *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+    પાછા nullptr;
   }
   newSelector->encodings[0] = nullptr;  // now we can call ucnvsel_close()
 
   // make a backup copy of the list of converters
   int32_t totalSize = 0;
   int32_t i;
-  for (i = 0; i < converterListSize; i++) {
+  માટે (i = 0; i < converterListSize; i++) {
     totalSize +=
       (int32_t)uprv_strlen(converterList != nullptr ? converterList[i] : ucnv_getAvailableName(i)) + 1;
   }
   // 4-align the totalSize to 4-align the size of the serialized form
   int32_t encodingStrPadding = totalSize & 3;
-  if (encodingStrPadding != 0) {
+  જો (encodingStrPadding != 0) {
     encodingStrPadding = 4 - encodingStrPadding;
   }
   newSelector->encodingStrLength = totalSize += encodingStrPadding;
-  char* allStrings = (char*) uprv_malloc(totalSize);
-  if (!allStrings) {
+  અક્ષર* allStrings = (અક્ષર*) uprv_malloc(totalSize);
+  જો (!allStrings) {
     *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+    પાછા nullptr;
   }
 
-  for (i = 0; i < converterListSize; i++) {
+  માટે (i = 0; i < converterListSize; i++) {
     newSelector->encodings[i] = allStrings;
     uprv_strcpy(newSelector->encodings[i],
                 converterList != nullptr ? converterList[i] : ucnv_getAvailableName(i));
     allStrings += uprv_strlen(newSelector->encodings[i]) + 1;
   }
-  while (encodingStrPadding > 0) {
+  જ્યારે (encodingStrPadding > 0) {
     *allStrings++ = 0;
     --encodingStrPadding;
   }
 
-  newSelector->ownEncodingStrings = true;
-  newSelector->encodingsCount = converterListSize;
+  newSelector->ownEncodingStrings = સાચું;
+  newSelector->encodings_ગણતરી = converterListSize;
   UPropsVectors *upvec = upvec_open((converterListSize+31)/32, status);
   generateSelectorData(newSelector.getAlias(), upvec, excludedCodePoints, whichSet, status);
   upvec_close(upvec);
 
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  જો (U_FAILURE(*status)) {
+    પાછા nullptr;
   }
 
-  return newSelector.orphan();
+  પાછા newSelector.orphan();
 }
 
 /* close opened selector */
-U_CAPI void U_EXPORT2
+U_CAPI શૂન્ય U_EXPORT2
 ucnvsel_close(UConverterSelector *sel) {
-  if (!sel) {
-    return;
+  જો (!sel) {
+    પાછા;
   }
-  if (sel->ownEncodingStrings) {
+  જો (sel->ownEncodingStrings) {
     uprv_free(sel->encodings[0]);
   }
   uprv_free(sel->encodings);
-  if (sel->ownPv) {
+  જો (sel->ownPv) {
     uprv_free(sel->pv);
   }
   utrie2_close(sel->trie);
@@ -243,8 +243,8 @@ ucnvsel_close(UConverterSelector *sel) {
   uprv_free(sel);
 }
 
-static const UDataInfo dataInfo = {
-  sizeof(UDataInfo),
+સ્થિર અચલ UDataInfo dataInfo = {
+  કદ(UDataInfo),
   0,
 
   U_IS_BIG_ENDIAN,
@@ -257,13 +257,13 @@ static const UDataInfo dataInfo = {
   { 0, 0, 0, 0 }                /* dataVersion */
 };
 
-enum {
+ગણના {
   UCNVSEL_INDEX_TRIE_SIZE,      // trie size in bytes
-  UCNVSEL_INDEX_PV_COUNT,       // number of uint32_t in the bit vectors
-  UCNVSEL_INDEX_NAMES_COUNT,    // number of encoding names
+  UCNVSEL_INDEX_PV_ગણતરી,       // number of uint32_t in the bit vectors
+  UCNVSEL_INDEX_NAMES_ગણતરી,    // number of encoding names
   UCNVSEL_INDEX_NAMES_LENGTH,   // number of encoding name bytes including padding
   UCNVSEL_INDEX_SIZE = 15,      // bytes following the DataHeader
-  UCNVSEL_INDEX_COUNT = 16
+  UCNVSEL_INDEX_ગણતરી = 16
 };
 
 /*
@@ -280,73 +280,73 @@ enum {
 
 /* serialize a selector */
 U_CAPI int32_t U_EXPORT2
-ucnvsel_serialize(const UConverterSelector* sel,
-                  void* buffer, int32_t bufferCapacity, UErrorCode* status) {
+ucnvsel_serialize(અચલ UConverterSelector* sel,
+                  શૂન્ય* buffer, int32_t bufferCapacity, UErrorCode* status) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return 0;
+  જો (U_FAILURE(*status)) {
+    પાછા 0;
   }
   // ensure args make sense!
   uint8_t *p = (uint8_t *)buffer;
-  if (bufferCapacity < 0 ||
+  જો (bufferCapacity < 0 ||
       (bufferCapacity > 0 && (p == nullptr || (U_POINTER_MASK_LSB(p, 3) != 0)))
   ) {
     *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0;
+    પાછા 0;
   }
   // add up the size of the serialized form
   int32_t serializedTrieSize = utrie2_serialize(sel->trie, nullptr, 0, status);
-  if (*status != U_BUFFER_OVERFLOW_ERROR && U_FAILURE(*status)) {
-    return 0;
+  જો (*status != U_BUFFER_OVERFLOW_ERROR && U_FAILURE(*status)) {
+    પાછા 0;
   }
   *status = U_ZERO_ERROR;
 
   DataHeader header;
-  uprv_memset(&header, 0, sizeof(header));
-  header.dataHeader.headerSize = (uint16_t)((sizeof(header) + 15) & ~15);
+  uprv_memset(&header, 0, કદ(header));
+  header.dataHeader.headerSize = (uint16_t)((કદ(header) + 15) & ~15);
   header.dataHeader.magic1 = 0xda;
   header.dataHeader.magic2 = 0x27;
-  uprv_memcpy(&header.info, &dataInfo, sizeof(dataInfo));
+  uprv_memcpy(&header.info, &dataInfo, કદ(dataInfo));
 
-  int32_t indexes[UCNVSEL_INDEX_COUNT] = {
+  int32_t indexes[UCNVSEL_INDEX_ગણતરી] = {
     serializedTrieSize,
-    sel->pvCount,
-    sel->encodingsCount,
+    sel->pv_ગણતરી,
+    sel->encodings_ગણતરી,
     sel->encodingStrLength
   };
 
   int32_t totalSize =
     header.dataHeader.headerSize +
-    (int32_t)sizeof(indexes) +
+    (int32_t)કદ(indexes) +
     serializedTrieSize +
-    sel->pvCount * 4 +
+    sel->pv_ગણતરી * 4 +
     sel->encodingStrLength;
   indexes[UCNVSEL_INDEX_SIZE] = totalSize - header.dataHeader.headerSize;
-  if (totalSize > bufferCapacity) {
+  જો (totalSize > bufferCapacity) {
     *status = U_BUFFER_OVERFLOW_ERROR;
-    return totalSize;
+    પાછા totalSize;
   }
   // ok, save!
   int32_t length = header.dataHeader.headerSize;
-  uprv_memcpy(p, &header, sizeof(header));
-  uprv_memset(p + sizeof(header), 0, length - sizeof(header));
+  uprv_memcpy(p, &header, કદ(header));
+  uprv_memset(p + કદ(header), 0, length - કદ(header));
   p += length;
 
-  length = (int32_t)sizeof(indexes);
+  length = (int32_t)કદ(indexes);
   uprv_memcpy(p, indexes, length);
   p += length;
 
   utrie2_serialize(sel->trie, p, serializedTrieSize, status);
   p += serializedTrieSize;
 
-  length = sel->pvCount * 4;
+  length = sel->pv_ગણતરી * 4;
   uprv_memcpy(p, sel->pv, length);
   p += length;
 
   uprv_memcpy(p, sel->encodings[0], sel->encodingStrLength);
   p += sel->encodingStrLength;
 
-  return totalSize;
+  પાછા totalSize;
 }
 
 /**
@@ -366,19 +366,19 @@ ucnvsel_serialize(const UConverterSelector* sel,
  * @return 0 on failure, number of bytes swapped on success
  *         number of bytes swapped can be smaller than length
  */
-static int32_t
-ucnvsel_swap(const UDataSwapper *ds,
-             const void *inData, int32_t length,
-             void *outData, UErrorCode *status) {
+સ્થિર int32_t
+ucnvsel_swap(અચલ UDataSwapper *ds,
+             અચલ શૂન્ય *inData, int32_t length,
+             શૂન્ય *outData, UErrorCode *status) {
   /* udata_swapDataHeader checks the arguments */
   int32_t headerSize = udata_swapDataHeader(ds, inData, length, outData, status);
-  if(U_FAILURE(*status)) {
-    return 0;
+  જો(U_FAILURE(*status)) {
+    પાછા 0;
   }
 
   /* check data format and format version */
-  const UDataInfo* pInfo = reinterpret_cast<const UDataInfo*>(static_cast<const char*>(inData) + 4);
-  if(!(
+  અચલ UDataInfo* pInfo = reinterpret_cast<અચલ UDataInfo*>(static_cast<અચલ અક્ષર*>(inData) + 4);
+  જો(!(
     pInfo->dataFormat[0] == 0x43 &&  /* dataFormat="CSel" */
     pInfo->dataFormat[1] == 0x53 &&
     pInfo->dataFormat[2] == 0x65 &&
@@ -388,55 +388,55 @@ ucnvsel_swap(const UDataSwapper *ds,
                      pInfo->dataFormat[0], pInfo->dataFormat[1],
                      pInfo->dataFormat[2], pInfo->dataFormat[3]);
     *status = U_INVALID_FORMAT_ERROR;
-    return 0;
+    પાછા 0;
   }
-  if(pInfo->formatVersion[0] != 1) {
+  જો(pInfo->formatVersion[0] != 1) {
     udata_printError(ds, "ucnvsel_swap(): format version %02x is not supported\n",
                      pInfo->formatVersion[0]);
     *status = U_UNSUPPORTED_ERROR;
-    return 0;
+    પાછા 0;
   }
 
-  if(length >= 0) {
+  જો(length >= 0) {
     length -= headerSize;
-    if(length < 16*4) {
+    જો(length < 16*4) {
       udata_printError(ds, "ucnvsel_swap(): too few bytes (%d after header) for UConverterSelector data\n",
                        length);
       *status = U_INDEX_OUTOFBOUNDS_ERROR;
-      return 0;
+      પાછા 0;
     }
   }
 
-  const uint8_t* inBytes = static_cast<const uint8_t*>(inData) + headerSize;
+  અચલ uint8_t* inBytes = static_cast<અચલ uint8_t*>(inData) + headerSize;
   uint8_t* outBytes = static_cast<uint8_t*>(outData) + headerSize;
 
   /* read the indexes */
-  const int32_t* inIndexes = reinterpret_cast<const int32_t*>(inBytes);
+  અચલ int32_t* inIndexes = reinterpret_cast<અચલ int32_t*>(inBytes);
   int32_t indexes[16];
   int32_t i;
-  for(i = 0; i < 16; ++i) {
+  માટે(i = 0; i < 16; ++i) {
     indexes[i] = udata_readInt32(ds, inIndexes[i]);
   }
 
   /* get the total length of the data */
   int32_t size = indexes[UCNVSEL_INDEX_SIZE];
-  if(length >= 0) {
-    if(length < size) {
+  જો(length >= 0) {
+    જો(length < size) {
       udata_printError(ds, "ucnvsel_swap(): too few bytes (%d after header) for all of UConverterSelector data\n",
                        length);
       *status = U_INDEX_OUTOFBOUNDS_ERROR;
-      return 0;
+      પાછા 0;
     }
 
     /* copy the data for inaccessible bytes */
-    if(inBytes != outBytes) {
+    જો(inBytes != outBytes) {
       uprv_memcpy(outBytes, inBytes, size);
     }
 
     int32_t offset = 0, count;
 
     /* swap the int32_t indexes[] */
-    count = UCNVSEL_INDEX_COUNT*4;
+    count = UCNVSEL_INDEX_ગણતરી*4;
     ds->swapArray32(ds, inBytes, count, outBytes, status);
     offset += count;
 
@@ -446,7 +446,7 @@ ucnvsel_swap(const UDataSwapper *ds,
     offset += count;
 
     /* swap the uint32_t pv[] */
-    count = indexes[UCNVSEL_INDEX_PV_COUNT]*4;
+    count = indexes[UCNVSEL_INDEX_PV_ગણતરી]*4;
     ds->swapArray32(ds, inBytes + offset, count, outBytes + offset, status);
     offset += count;
 
@@ -458,34 +458,34 @@ ucnvsel_swap(const UDataSwapper *ds,
     U_ASSERT(offset == size);
   }
 
-  return headerSize + size;
+  પાછા headerSize + size;
 }
 
 /* unserialize a selector */
 U_CAPI UConverterSelector* U_EXPORT2
-ucnvsel_openFromSerialized(const void* buffer U_LIFETIME_BOUND,
+ucnvsel_openFromSerialized(અચલ શૂન્ય* buffer U_LIFETIME_BOUND,
                            int32_t length,
                            UErrorCode* status) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  જો (U_FAILURE(*status)) {
+    પાછા nullptr;
   }
   // ensure args make sense!
-  const uint8_t *p = (const uint8_t *)buffer;
-  if (length <= 0 ||
+  અચલ uint8_t *p = (અચલ uint8_t *)buffer;
+  જો (length <= 0 ||
       (length > 0 && (p == nullptr || (U_POINTER_MASK_LSB(p, 3) != 0)))
   ) {
     *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+    પાછા nullptr;
   }
   // header
-  if (length < 32) {
+  જો (length < 32) {
     // not even enough space for a minimal header
     *status = U_INDEX_OUTOFBOUNDS_ERROR;
-    return nullptr;
+    પાછા nullptr;
   }
-  const DataHeader *pHeader = (const DataHeader *)p;
-  if (!(
+  અચલ DataHeader *pHeader = (અચલ DataHeader *)p;
+  જો (!(
     pHeader->dataHeader.magic1==0xda &&
     pHeader->dataHeader.magic2==0x27 &&
     pHeader->info.dataFormat[0] == 0x43 &&
@@ -495,113 +495,113 @@ ucnvsel_openFromSerialized(const void* buffer U_LIFETIME_BOUND,
   )) {
     /* header not valid or dataFormat not recognized */
     *status = U_INVALID_FORMAT_ERROR;
-    return nullptr;
+    પાછા nullptr;
   }
-  if (pHeader->info.formatVersion[0] != 1) {
+  જો (pHeader->info.formatVersion[0] != 1) {
     *status = U_UNSUPPORTED_ERROR;
-    return nullptr;
+    પાછા nullptr;
   }
   uint8_t* swapped = nullptr;
-  if (pHeader->info.isBigEndian != U_IS_BIG_ENDIAN ||
+  જો (pHeader->info.isBigEndian != U_IS_BIG_ENDIAN ||
       pHeader->info.charsetFamily != U_CHARSET_FAMILY
   ) {
     // swap the data
     UDataSwapper *ds =
-      udata_openSwapperForInputData(p, length, U_IS_BIG_ENDIAN, U_CHARSET_FAMILY, status);
+      udata_open_Swapper_For_આગત_Data(p, length, U_IS_BIG_ENDIAN, U_CHARSET_FAMILY, status);
     int32_t totalSize = ucnvsel_swap(ds, p, -1, nullptr, status);
-    if (U_FAILURE(*status)) {
+    જો (U_FAILURE(*status)) {
       udata_closeSwapper(ds);
-      return nullptr;
+      પાછા nullptr;
     }
-    if (length < totalSize) {
+    જો (length < totalSize) {
       udata_closeSwapper(ds);
       *status = U_INDEX_OUTOFBOUNDS_ERROR;
-      return nullptr;
+      પાછા nullptr;
     }
     swapped = (uint8_t*)uprv_malloc(totalSize);
-    if (swapped == nullptr) {
+    જો (swapped == nullptr) {
       udata_closeSwapper(ds);
       *status = U_MEMORY_ALLOCATION_ERROR;
-      return nullptr;
+      પાછા nullptr;
     }
     ucnvsel_swap(ds, p, length, swapped, status);
     udata_closeSwapper(ds);
-    if (U_FAILURE(*status)) {
+    જો (U_FAILURE(*status)) {
       uprv_free(swapped);
-      return nullptr;
+      પાછા nullptr;
     }
     p = swapped;
-    pHeader = (const DataHeader *)p;
+    pHeader = (અચલ DataHeader *)p;
   }
-  if (length < (pHeader->dataHeader.headerSize + 16 * 4)) {
+  જો (length < (pHeader->dataHeader.headerSize + 16 * 4)) {
     // not even enough space for the header and the indexes
     uprv_free(swapped);
     *status = U_INDEX_OUTOFBOUNDS_ERROR;
-    return nullptr;
+    પાછા nullptr;
   }
   p += pHeader->dataHeader.headerSize;
   length -= pHeader->dataHeader.headerSize;
   // indexes
-  const int32_t *indexes = (const int32_t *)p;
-  if (length < indexes[UCNVSEL_INDEX_SIZE]) {
+  અચલ int32_t *indexes = (અચલ int32_t *)p;
+  જો (length < indexes[UCNVSEL_INDEX_SIZE]) {
     uprv_free(swapped);
     *status = U_INDEX_OUTOFBOUNDS_ERROR;
-    return nullptr;
+    પાછા nullptr;
   }
-  p += UCNVSEL_INDEX_COUNT * 4;
+  p += UCNVSEL_INDEX_ગણતરી * 4;
   // create and populate the selector object
-  UConverterSelector* sel = (UConverterSelector*)uprv_malloc(sizeof(UConverterSelector));
-  char **encodings =
-    (char **)uprv_malloc(
-      indexes[UCNVSEL_INDEX_NAMES_COUNT] * sizeof(char *));
-  if (sel == nullptr || encodings == nullptr) {
+  UConverterSelector* sel = (UConverterSelector*)uprv_malloc(કદ(UConverterSelector));
+  અક્ષર **encodings =
+    (અક્ષર **)uprv_malloc(
+      indexes[UCNVSEL_INDEX_NAMES_ગણતરી] * કદ(અક્ષર *));
+  જો (sel == nullptr || encodings == nullptr) {
     uprv_free(swapped);
     uprv_free(sel);
     uprv_free(encodings);
     *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+    પાછા nullptr;
   }
-  uprv_memset(sel, 0, sizeof(UConverterSelector));
-  sel->pvCount = indexes[UCNVSEL_INDEX_PV_COUNT];
+  uprv_memset(sel, 0, કદ(UConverterSelector));
+  sel->pv_ગણતરી = indexes[UCNVSEL_INDEX_PV_ગણતરી];
   sel->encodings = encodings;
-  sel->encodingsCount = indexes[UCNVSEL_INDEX_NAMES_COUNT];
+  sel->encodings_ગણતરી = indexes[UCNVSEL_INDEX_NAMES_ગણતરી];
   sel->encodingStrLength = indexes[UCNVSEL_INDEX_NAMES_LENGTH];
   sel->swapped = swapped;
   // trie
-  sel->trie = utrie2_openFromSerialized(UTRIE2_16_VALUE_BITS,
+  sel->trie = utrie2_openFromSerialized(UTRIE2_16_કિંમત_BITS,
                                         p, indexes[UCNVSEL_INDEX_TRIE_SIZE], nullptr,
                                         status);
   p += indexes[UCNVSEL_INDEX_TRIE_SIZE];
-  if (U_FAILURE(*status)) {
+  જો (U_FAILURE(*status)) {
     ucnvsel_close(sel);
-    return nullptr;
+    પાછા nullptr;
   }
   // bit vectors
   sel->pv = (uint32_t *)p;
-  p += sel->pvCount * 4;
+  p += sel->pv_ગણતરી * 4;
   // encoding names
-  char* s = (char*)p;
-  for (int32_t i = 0; i < sel->encodingsCount; ++i) {
+  અક્ષર* s = (અક્ષર*)p;
+  માટે (int32_t i = 0; i < sel->encodings_ગણતરી; ++i) {
     sel->encodings[i] = s;
     s += uprv_strlen(s) + 1;
   }
   p += sel->encodingStrLength;
 
-  return sel;
+  પાછા sel;
 }
 
 // a bunch of functions for the enumeration thingie! Nothing fancy here. Just
 // iterate over the selected encodings
-struct Enumerator {
+સંરચના Enumerator {
   int16_t* index;
   int16_t length;
   int16_t cur;
-  const UConverterSelector* sel;
+  અચલ UConverterSelector* sel;
 };
 
 U_CDECL_BEGIN
 
-static void U_CALLCONV
+સ્થિર શૂન્ય U_CALLCONV
 ucnvsel_close_selector_iterator(UEnumeration *enumerator) {
   uprv_free(((Enumerator*)(enumerator->context))->index);
   uprv_free(enumerator->context);
@@ -609,44 +609,44 @@ ucnvsel_close_selector_iterator(UEnumeration *enumerator) {
 }
 
 
-static int32_t U_CALLCONV
-ucnvsel_count_encodings(UEnumeration *enumerator, UErrorCode *status) {
+સ્થિર int32_t U_CALLCONV
+ucnvsel_ગણતરી_encodings(UEnumeration *enumerator, UErrorCode *status) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return 0;
+  જો (U_FAILURE(*status)) {
+    પાછા 0;
   }
-  return ((Enumerator*)(enumerator->context))->length;
+  પાછા ((Enumerator*)(enumerator->context))->length;
 }
 
 
-static const char* U_CALLCONV ucnvsel_next_encoding(UEnumeration* enumerator,
+સ્થિર અચલ અક્ષર* U_CALLCONV ucnvsel_next_encoding(UEnumeration* enumerator,
                                                  int32_t* resultLength,
                                                  UErrorCode* status) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  જો (U_FAILURE(*status)) {
+    પાછા nullptr;
   }
 
   int16_t cur = ((Enumerator*)(enumerator->context))->cur;
-  const UConverterSelector* sel;
-  const char* result;
-  if (cur >= ((Enumerator*)(enumerator->context))->length) {
-    return nullptr;
+  અચલ UConverterSelector* sel;
+  અચલ અક્ષર* result;
+  જો (cur >= ((Enumerator*)(enumerator->context))->length) {
+    પાછા nullptr;
   }
   sel = ((Enumerator*)(enumerator->context))->sel;
   result = sel->encodings[((Enumerator*)(enumerator->context))->index[cur] ];
   ((Enumerator*)(enumerator->context))->cur++;
-  if (resultLength) {
+  જો (resultLength) {
     *resultLength = (int32_t)uprv_strlen(result);
   }
-  return result;
+  પાછા result;
 }
 
-static void U_CALLCONV ucnvsel_reset_iterator(UEnumeration* enumerator,
+સ્થિર શૂન્ય U_CALLCONV ucnvsel_reset_iterator(UEnumeration* enumerator,
                                            UErrorCode* status) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return ;
+  જો (U_FAILURE(*status)) {
+    પાછા ;
   }
   ((Enumerator*)(enumerator->context))->cur = 0;
 }
@@ -654,11 +654,11 @@ static void U_CALLCONV ucnvsel_reset_iterator(UEnumeration* enumerator,
 U_CDECL_END
 
 
-static const UEnumeration defaultEncodings = {
+સ્થિર અચલ UEnumeration defaultEncodings = {
   nullptr,
     nullptr,
     ucnvsel_close_selector_iterator,
-    ucnvsel_count_encodings,
+    ucnvsel_ગણતરી_encodings,
     uenum_unextDefault,
     ucnvsel_next_encoding, 
     ucnvsel_reset_iterator
@@ -667,70 +667,70 @@ static const UEnumeration defaultEncodings = {
 
 // internal fn to intersect two sets of masks
 // returns whether the mask has reduced to all zeros
-static UBool intersectMasks(uint32_t* dest, const uint32_t* source1, int32_t len) {
+સ્થિર UBool intersectMasks(uint32_t* dest, અચલ uint32_t* source1, int32_t len) {
   int32_t i;
   uint32_t oredDest = 0;
-  for (i = 0 ; i < len ; ++i) {
+  માટે (i = 0 ; i < len ; ++i) {
     oredDest |= (dest[i] &= source1[i]);
   }
-  return oredDest == 0;
+  પાછા oredDest == 0;
 }
 
 // internal fn to count how many 1's are there in a mask
 // algorithm taken from  http://graphics.stanford.edu/~seander/bithacks.html
-static int16_t countOnes(uint32_t* mask, int32_t len) {
+સ્થિર int16_t ગણતરી_Ones(uint32_t* mask, int32_t len) {
   int32_t i, totalOnes = 0;
-  for (i = 0 ; i < len ; ++i) {
+  માટે (i = 0 ; i < len ; ++i) {
     uint32_t ent = mask[i];
-    for (; ent; totalOnes++)
+    માટે (; ent; totalOnes++)
     {
       ent &= ent - 1; // clear the least significant bit set
     }
   }
-  return static_cast<int16_t>(totalOnes);
+  પાછા static_cast<int16_t>(totalOnes);
 }
 
 
 /* internal function! */
-static UEnumeration*
-selectForMask(const UConverterSelector* sel U_LIFETIME_BOUND,
+સ્થિર UEnumeration*
+selectForMask(અચલ UConverterSelector* sel U_LIFETIME_BOUND,
               uint32_t* theMask,
               UErrorCode* status) {
   LocalMemory<uint32_t> mask(theMask);
   // this is the context we will use. Store a table of indices to which
   // encodings are legit.
-  LocalMemory<Enumerator> result(static_cast<Enumerator *>(uprv_malloc(sizeof(Enumerator))));
-  if (result.isNull()) {
+  LocalMemory<Enumerator> result(static_cast<Enumerator *>(uprv_malloc(કદ(Enumerator))));
+  જો (result.isNull()) {
     *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+    પાછા nullptr;
   }
   result->index = nullptr;  // this will be allocated later!
   result->length = result->cur = 0;
   result->sel = sel;
 
-  LocalMemory<UEnumeration> en(static_cast<UEnumeration *>(uprv_malloc(sizeof(UEnumeration))));
-  if (en.isNull()) {
+  LocalMemory<UEnumeration> en(static_cast<UEnumeration *>(uprv_malloc(કદ(UEnumeration))));
+  જો (en.isNull()) {
     // TODO(markus): Combine Enumerator and UEnumeration into one struct.
     *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+    પાછા nullptr;
   }
-  memcpy(en.getAlias(), &defaultEncodings, sizeof(UEnumeration));
+  memcpy(en.getAlias(), &defaultEncodings, કદ(UEnumeration));
   
-  int32_t columns = (sel->encodingsCount+31)/32;
-  int16_t numOnes = countOnes(mask.getAlias(), columns);
+  int32_t columns = (sel->encodings_ગણતરી+31)/32;
+  int16_t અંક_Ones = ગણતરી_Ones(mask.getAlias(), columns);
   // now, we know the exact space we need for index
-  if (numOnes > 0) {
-    result->index = static_cast<int16_t*>(uprv_malloc(numOnes * sizeof(int16_t)));
-    if (result->index == nullptr) {
+  જો (અંક_Ones > 0) {
+    result->index = static_cast<int16_t*>(uprv_malloc(અંક_Ones * કદ(int16_t)));
+    જો (result->index == nullptr) {
       *status = U_MEMORY_ALLOCATION_ERROR;
-      return nullptr;
+      પાછા nullptr;
     }
     int32_t i, j;
     int16_t k = 0;
-    for (j = 0 ; j < columns; j++) {
+    માટે (j = 0 ; j < columns; j++) {
       uint32_t v = mask[j];
-      for (i = 0 ; i < 32 && k < sel->encodingsCount; i++, k++) {
-        if ((v & 1) != 0) {
+      માટે (i = 0 ; i < 32 && k < sel->encodings_ગણતરી; i++, k++) {
+        જો ((v & 1) != 0) {
           result->index[result->length++] = k;
         }
         v >>= 1;
@@ -739,93 +739,93 @@ selectForMask(const UConverterSelector* sel U_LIFETIME_BOUND,
   } //otherwise, index will remain nullptr (and will never be touched by
     //the enumerator code anyway)
   en->context = result.orphan();
-  return en.orphan();
+  પાછા en.orphan();
 }
 
 /* check a string against the selector - UTF16 version */
 U_CAPI UEnumeration* U_EXPORT2
-ucnvsel_selectForString(const UConverterSelector* sel U_LIFETIME_BOUND,
-                        const char16_t* s,
+ucnvsel_selectForString(અચલ UConverterSelector* sel U_LIFETIME_BOUND,
+                        અચલ char16_t* s,
                         int32_t length,
                         UErrorCode* status) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  જો (U_FAILURE(*status)) {
+    પાછા nullptr;
   }
   // ensure args make sense!
-  if (sel == nullptr || (s == nullptr && length != 0)) {
+  જો (sel == nullptr || (s == nullptr && length != 0)) {
     *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+    પાછા nullptr;
   }
 
-  int32_t columns = (sel->encodingsCount+31)/32;
+  int32_t columns = (sel->encodings_ગણતરી+31)/32;
   uint32_t* mask = (uint32_t*) uprv_malloc(columns * 4);
-  if (mask == nullptr) {
+  જો (mask == nullptr) {
     *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+    પાછા nullptr;
   }
   uprv_memset(mask, ~0, columns *4);
 
-  if(s!=nullptr) {
-    const char16_t *limit;
-    if (length >= 0) {
+  જો(s!=nullptr) {
+    અચલ char16_t *limit;
+    જો (length >= 0) {
       limit = s + length;
-    } else {
+    } નહીંતર {
       limit = nullptr;
     }
     
-    while (limit == nullptr ? *s != 0 : s != limit) {
+    જ્યારે (limit == nullptr ? *s != 0 : s != limit) {
       UChar32 c;
       uint16_t pvIndex;
       UTRIE2_U16_NEXT16(sel->trie, s, limit, c, pvIndex);
-      if (intersectMasks(mask, sel->pv+pvIndex, columns)) {
-        break;
+      જો (intersectMasks(mask, sel->pv+pvIndex, columns)) {
+        તોડો;
       }
     }
   }
-  return selectForMask(sel, mask, status);
+  પાછા selectForMask(sel, mask, status);
 }
 
 /* check a string against the selector - UTF8 version */
 U_CAPI UEnumeration* U_EXPORT2
-ucnvsel_selectForUTF8(const UConverterSelector* sel U_LIFETIME_BOUND,
-                      const char* s,
+ucnvsel_selectForUTF8(અચલ UConverterSelector* sel U_LIFETIME_BOUND,
+                      અચલ અક્ષર* s,
                       int32_t length,
                       UErrorCode* status) {
   // check if already failed
-  if (U_FAILURE(*status)) {
-    return nullptr;
+  જો (U_FAILURE(*status)) {
+    પાછા nullptr;
   }
   // ensure args make sense!
-  if (sel == nullptr || (s == nullptr && length != 0)) {
+  જો (sel == nullptr || (s == nullptr && length != 0)) {
     *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+    પાછા nullptr;
   }
 
-  int32_t columns = (sel->encodingsCount+31)/32;
+  int32_t columns = (sel->encodings_ગણતરી+31)/32;
   uint32_t* mask = (uint32_t*) uprv_malloc(columns * 4);
-  if (mask == nullptr) {
+  જો (mask == nullptr) {
     *status = U_MEMORY_ALLOCATION_ERROR;
-    return nullptr;
+    પાછા nullptr;
   }
   uprv_memset(mask, ~0, columns *4);
 
-  if (length < 0) {
+  જો (length < 0) {
     length = (int32_t)uprv_strlen(s);
   }
 
-  if(s!=nullptr) {
-    const char *limit = s + length;
+  જો(s!=nullptr) {
+    અચલ અક્ષર *limit = s + length;
     
-    while (s != limit) {
+    જ્યારે (s != limit) {
       uint16_t pvIndex;
       UTRIE2_U8_NEXT16(sel->trie, s, limit, pvIndex);
-      if (intersectMasks(mask, sel->pv+pvIndex, columns)) {
-        break;
+      જો (intersectMasks(mask, sel->pv+pvIndex, columns)) {
+        તોડો;
       }
     }
   }
-  return selectForMask(sel, mask, status);
+  પાછા selectForMask(sel, mask, status);
 }
 
 #endif  // !UCONFIG_NO_CONVERSION

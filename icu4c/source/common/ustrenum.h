@@ -13,8 +13,8 @@
 #ifndef _USTRENUM_H_
 #define _USTRENUM_H_
 
-#include "unicode/uenum.h"
-#include "unicode/strenum.h"
+#અન્તર્ભાવ "unicode/uenum.h"
+#અન્તર્ભાવ "unicode/strenum.h"
 
 //----------------------------------------------------------------------
 U_NAMESPACE_BEGIN
@@ -23,9 +23,9 @@ U_NAMESPACE_BEGIN
  * A wrapper to make a UEnumeration into a StringEnumeration.  The
  * wrapper adopts the UEnumeration is wraps.
  */
-class U_COMMON_API UStringEnumeration : public StringEnumeration {
+class U_COMMON_API UStringEnumeration : જાહેર StringEnumeration {
 
-public:
+જાહેર:
     /**
      * Constructor.  This constructor adopts its UEnumeration
      * argument.
@@ -40,16 +40,16 @@ public:
      * Destructor.  This closes the UEnumeration passed in to the
      * constructor.
      */
-    virtual ~UStringEnumeration();
+    આભાસી ~UStringEnumeration();
 
     /**
      * Return the number of elements that the iterator traverses.
      * @param status the error code.
      * @return number of elements in the iterator.
      */
-    virtual int32_t count(UErrorCode& status) const override;
+    આભાસી int32_t ગણતરી(UErrorCode& status) અચલ override;
 
-    virtual const char* next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND override;
+    આભાસી અચલ અક્ષર* next(int32_t* resultLength, UErrorCode& status) U_LIFETIME_BOUND override;
 
     /**
      * Returns the next element a UnicodeString*.  If there are no
@@ -57,27 +57,27 @@ public:
      * @param status the error code.
      * @return a pointer to the string, or nullptr.
      */
-    virtual const UnicodeString* snext(UErrorCode& status) U_LIFETIME_BOUND override;
+    આભાસી અચલ UnicodeString* snext(UErrorCode& status) U_LIFETIME_BOUND override;
 
     /**
      * Resets the iterator.
      * @param status the error code.
      */
-    virtual void reset(UErrorCode& status) override;
+    આભાસી શૂન્ય reset(UErrorCode& status) override;
 
     /**
      * ICU4C "poor man's RTTI", returns a UClassID for the actual ICU class.
      */
-    virtual UClassID getDynamicClassID() const override;
+    આભાસી UClassID getDynamicClassID() અચલ override;
 
     /**
      * ICU4C "poor man's RTTI", returns a UClassID for this ICU class.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    સ્થિર UClassID U_EXPORT2 getStaticClassID();
 
-    static UStringEnumeration * U_EXPORT2 fromUEnumeration(
+    સ્થિર UStringEnumeration * U_EXPORT2 fromUEnumeration(
             UEnumeration *enumToAdopt, UErrorCode &status);
-private:
+ખાનગી:
     UEnumeration *uenum; // owned
 };
 

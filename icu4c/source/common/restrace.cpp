@@ -1,23 +1,23 @@
 // © 2019 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
 
-#include "unicode/utypes.h"
+#અન્તર્ભાવ "unicode/utypes.h"
 
-#if U_ENABLE_TRACING
+#જો U_ENABLE_TRACING
 
-#include "restrace.h"
-#include "charstr.h"
-#include "cstring.h"
-#include "utracimp.h"
-#include "uresimp.h"
-#include "uassert.h"
-#include "util.h"
+#અન્તર્ભાવ "restrace.h"
+#અન્તર્ભાવ "charstr.h"
+#અન્તર્ભાવ "cstring.h"
+#અન્તર્ભાવ "utracimp.h"
+#અન્તર્ભાવ "uresimp.h"
+#અન્તર્ભાવ "uassert.h"
+#અન્તર્ભાવ "util.h"
 
 U_NAMESPACE_BEGIN
 
-ResourceTracer::~ResourceTracer() = default;
+ResourceTracer::~ResourceTracer() = મૂળભૂત;
 
-void ResourceTracer::trace(const char* resType) const {
+શૂન્ય ResourceTracer::trace(અચલ અક્ષર* resType) અચલ {
     U_ASSERT(fResB || fParent);
     UTRACE_ENTRY(UTRACE_UDATA_RESOURCE);
     UErrorCode status = U_ZERO_ERROR;
@@ -29,9 +29,9 @@ void ResourceTracer::trace(const char* resType) const {
     getResPath(resPath, status);
 
     // The longest type ("intvector") is 9 chars
-    const char kSpaces[] = "         ";
+    અચલ અક્ષર kSpaces[] = "         ";
     CharString format;
-    format.append(kSpaces, sizeof(kSpaces) - 1 - uprv_strlen(resType), status);
+    format.append(kSpaces, કદ(kSpaces) - 1 - uprv_strlen(resType), status);
     format.append("(%s) %s @ %s", status);
 
     UTRACE_DATA3(UTRACE_VERBOSE,
@@ -42,7 +42,7 @@ void ResourceTracer::trace(const char* resType) const {
     UTRACE_EXIT_STATUS(status);
 }
 
-void ResourceTracer::traceOpen() const {
+શૂન્ય ResourceTracer::traceOpen() અચલ {
     U_ASSERT(fResB);
     UTRACE_ENTRY(UTRACE_UDATA_BUNDLE);
     UErrorCode status = U_ZERO_ERROR;
@@ -52,8 +52,8 @@ void ResourceTracer::traceOpen() const {
     UTRACE_EXIT_STATUS(status);
 }
 
-CharString& ResourceTracer::getFilePath(CharString& output, UErrorCode& status) const {
-    if (fResB) {
+CharString& ResourceTracer::getFilePath(CharString& output, UErrorCode& status) અચલ {
+    જો (fResB) {
         // Note: if you get a segfault around here, check that ResourceTable and
         // ResourceArray instances outlive ResourceValue instances referring to
         // their contents:
@@ -61,45 +61,45 @@ CharString& ResourceTracer::getFilePath(CharString& output, UErrorCode& status) 
         output.append('/', status);
         output.append(fResB->fData->fName, status);
         output.append(".res", status);
-    } else {
+    } નહીંતર {
         fParent->getFilePath(output, status);
     }
-    return output;
+    પાછા output;
 }
 
-CharString& ResourceTracer::getResPath(CharString& output, UErrorCode& status) const {
-    if (fResB) {
+CharString& ResourceTracer::getResPath(CharString& output, UErrorCode& status) અચલ {
+    જો (fResB) {
         output.append('/', status);
         output.append(fResB->fResPath, status);
         // removing the trailing /
         U_ASSERT(output[output.length()-1] == '/');
         output.truncate(output.length()-1);
-    } else {
+    } નહીંતર {
         fParent->getResPath(output, status);
     }
-    if (fKey) {
+    જો (f_ચાવી) {
         output.append('/', status);
-        output.append(fKey, status);
+        output.append(f_ચાવી, status);
     }
-    if (fIndex != -1) {
+    જો (fIndex != -1) {
         output.append('[', status);
         UnicodeString indexString;
-        ICU_Utility::appendNumber(indexString, fIndex);
+        ICU_Utility::append_સંખ્યા(indexString, fIndex);
         output.appendInvariantChars(indexString, status);
         output.append(']', status);
     }
-    return output;
+    પાછા output;
 }
 
-void FileTracer::traceOpen(const char* path, const char* type, const char* name) {
-    if (uprv_strcmp(type, "res") == 0) {
+શૂન્ય FileTracer::traceOpen(અચલ અક્ષર* path, અચલ અક્ષર* type, અચલ અક્ષર* name) {
+    જો (uprv_strcmp(type, "res") == 0) {
         traceOpenResFile(path, name);
-    } else {
+    } નહીંતર {
         traceOpenDataFile(path, type, name);
     }
 }
 
-void FileTracer::traceOpenDataFile(const char* path, const char* type, const char* name) {
+શૂન્ય FileTracer::traceOpenDataFile(અચલ અક્ષર* path, અચલ અક્ષર* type, અચલ અક્ષર* name) {
     UTRACE_ENTRY(UTRACE_UDATA_DATA_FILE);
     UErrorCode status = U_ZERO_ERROR;
 
@@ -114,7 +114,7 @@ void FileTracer::traceOpenDataFile(const char* path, const char* type, const cha
     UTRACE_EXIT_STATUS(status);
 }
 
-void FileTracer::traceOpenResFile(const char* path, const char* name) {
+શૂન્ય FileTracer::traceOpenResFile(અચલ અક્ષર* path, અચલ અક્ષર* name) {
     UTRACE_ENTRY(UTRACE_UDATA_RES_FILE);
     UErrorCode status = U_ZERO_ERROR;
 

@@ -4,47 +4,47 @@
 // characterproperties.cpp
 // created: 2018sep03 Markus W. Scherer
 
-#include "unicode/utypes.h"
-#include "unicode/localpointer.h"
-#include "unicode/uchar.h"
-#include "unicode/ucpmap.h"
-#include "unicode/ucptrie.h"
-#include "unicode/umutablecptrie.h"
-#include "unicode/uniset.h"
-#include "unicode/uscript.h"
-#include "unicode/uset.h"
-#include "cmemory.h"
-#include "emojiprops.h"
-#include "mutex.h"
-#include "normalizer2impl.h"
-#include "uassert.h"
-#include "ubidi_props.h"
-#include "ucase.h"
-#include "ucln_cmn.h"
-#include "umutex.h"
-#include "uprops.h"
+#અન્તર્ભાવ "unicode/utypes.h"
+#અન્તર્ભાવ "unicode/localpointer.h"
+#અન્તર્ભાવ "unicode/uchar.h"
+#અન્તર્ભાવ "unicode/ucpmap.h"
+#અન્તર્ભાવ "unicode/ucptrie.h"
+#અન્તર્ભાવ "unicode/umutablecptrie.h"
+#અન્તર્ભાવ "unicode/uniset.h"
+#અન્તર્ભાવ "unicode/uscript.h"
+#અન્તર્ભાવ "unicode/uset.h"
+#અન્તર્ભાવ "cmemory.h"
+#અન્તર્ભાવ "emojiprops.h"
+#અન્તર્ભાવ "mutex.h"
+#અન્તર્ભાવ "normalizer2impl.h"
+#અન્તર્ભાવ "uassert.h"
+#અન્તર્ભાવ "ubidi_props.h"
+#અન્તર્ભાવ "ucase.h"
+#અન્તર્ભાવ "ucln_cmn.h"
+#અન્તર્ભાવ "umutex.h"
+#અન્તર્ભાવ "uprops.h"
 
 using icu::LocalPointer;
-#if !UCONFIG_NO_NORMALIZATION
+#જો !UCONFIG_NO_NORMALIZATION
 using icu::Normalizer2Factory;
 using icu::Normalizer2Impl;
 #endif
 using icu::UInitOnce;
 using icu::UnicodeSet;
 
-namespace {
+નામાકાશ {
 
 UBool U_CALLCONV characterproperties_cleanup();
 
-constexpr int32_t NUM_INCLUSIONS = UPROPS_SRC_COUNT + (UCHAR_INT_LIMIT - UCHAR_INT_START);
+constexpr int32_t અંક_INCLUSIONS = UPROPS_SRC_ગણતરી + (UCHAR_INT_LIMIT - UCHAR_INT_START);
 
-struct Inclusion {
+સંરચના Inclusion {
     UnicodeSet  *fSet = nullptr;
     UInitOnce    fInitOnce {};
 };
-Inclusion gInclusions[NUM_INCLUSIONS]; // cached getInclusions()
+Inclusion gInclusions[અંક_INCLUSIONS]; // cached getInclusions()
 
-UnicodeSet *sets[UCHAR_BINARY_LIMIT] = {};
+UnicodeSet *sets[UCHAR_દ્વિઅંકી_LIMIT] = {};
 
 UCPMap *maps[UCHAR_INT_LIMIT - UCHAR_INT_START] = {};
 
@@ -56,51 +56,51 @@ icu::UMutex cpMutex;
 
 // USetAdder implementation
 // Does not use uset.h to reduce code dependencies
-void U_CALLCONV
+શૂન્ય U_CALLCONV
 _set_add(USet *set, UChar32 c) {
     reinterpret_cast<UnicodeSet*>(set)->add(c);
 }
 
-void U_CALLCONV
+શૂન્ય U_CALLCONV
 _set_addRange(USet *set, UChar32 start, UChar32 end) {
     reinterpret_cast<UnicodeSet*>(set)->add(start, end);
 }
 
-void U_CALLCONV
-_set_addString(USet *set, const char16_t *str, int32_t length) {
+શૂન્ય U_CALLCONV
+_set_addString(USet *set, અચલ char16_t *str, int32_t length) {
     reinterpret_cast<UnicodeSet*>(set)->add(icu::UnicodeString(static_cast<UBool>(length < 0), str, length));
 }
 
 UBool U_CALLCONV characterproperties_cleanup() {
-    for (Inclusion &in: gInclusions) {
+    માટે (Inclusion &in: gInclusions) {
         delete in.fSet;
         in.fSet = nullptr;
         in.fInitOnce.reset();
     }
-    for (int32_t i = 0; i < UPRV_LENGTHOF(sets); ++i) {
+    માટે (int32_t i = 0; i < UPRV_LENGTHOF(sets); ++i) {
         delete sets[i];
         sets[i] = nullptr;
     }
-    for (int32_t i = 0; i < UPRV_LENGTHOF(maps); ++i) {
+    માટે (int32_t i = 0; i < UPRV_LENGTHOF(maps); ++i) {
         ucptrie_close(reinterpret_cast<UCPTrie *>(maps[i]));
         maps[i] = nullptr;
     }
-    return true;
+    પાછા સાચું;
 }
 
-void U_CALLCONV initInclusion(UPropertySource src, UErrorCode &errorCode) {
+શૂન્ય U_CALLCONV initInclusion(UPropertySource src, UErrorCode &errorCode) {
     // This function is invoked only via umtx_initOnce().
-    U_ASSERT(0 <= src && src < UPROPS_SRC_COUNT);
-    if (src == UPROPS_SRC_NONE) {
+    U_ASSERT(0 <= src && src < UPROPS_SRC_ગણતરી);
+    જો (src == UPROPS_SRC_NONE) {
         errorCode = U_INTERNAL_PROGRAM_ERROR;
-        return;
+        પાછા;
     }
     U_ASSERT(gInclusions[src].fSet == nullptr);
 
-    LocalPointer<UnicodeSet> incl(new UnicodeSet());
-    if (incl.isNull()) {
+    LocalPointer<UnicodeSet> incl(નવું UnicodeSet());
+    જો (incl.isNull()) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        પાછા;
     }
     USetAdder sa = {
         reinterpret_cast<USet*>(incl.getAlias()),
@@ -111,96 +111,96 @@ void U_CALLCONV initInclusion(UPropertySource src, UErrorCode &errorCode) {
         nullptr // don't need removeRange()
     };
 
-    switch(src) {
-    case UPROPS_SRC_CHAR:
+    પસંદગી(src) {
+    સ્થિતિ UPROPS_SRC_CHAR:
         uchar_addPropertyStarts(&sa, &errorCode);
-        break;
-    case UPROPS_SRC_PROPSVEC:
+        તોડો;
+    સ્થિતિ UPROPS_SRC_PROPSVEC:
         upropsvec_addPropertyStarts(&sa, &errorCode);
-        break;
-    case UPROPS_SRC_CHAR_AND_PROPSVEC:
+        તોડો;
+    સ્થિતિ UPROPS_SRC_CHAR_AND_PROPSVEC:
         uchar_addPropertyStarts(&sa, &errorCode);
         upropsvec_addPropertyStarts(&sa, &errorCode);
-        break;
-#if !UCONFIG_NO_NORMALIZATION
-    case UPROPS_SRC_CASE_AND_NORM: {
-        const Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(errorCode);
-        if(U_SUCCESS(errorCode)) {
+        તોડો;
+#જો !UCONFIG_NO_NORMALIZATION
+    સ્થિતિ UPROPS_SRC_CASE_AND_NORM: {
+        અચલ Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(errorCode);
+        જો(U_SUCCESS(errorCode)) {
             impl->addPropertyStarts(&sa, errorCode);
         }
         ucase_addPropertyStarts(&sa, &errorCode);
-        break;
+        તોડો;
     }
-    case UPROPS_SRC_NFC: {
-        const Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(errorCode);
-        if(U_SUCCESS(errorCode)) {
+    સ્થિતિ UPROPS_SRC_NFC: {
+        અચલ Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(errorCode);
+        જો(U_SUCCESS(errorCode)) {
             impl->addPropertyStarts(&sa, errorCode);
         }
-        break;
+        તોડો;
     }
-    case UPROPS_SRC_NFKC: {
-        const Normalizer2Impl *impl=Normalizer2Factory::getNFKCImpl(errorCode);
-        if(U_SUCCESS(errorCode)) {
+    સ્થિતિ UPROPS_SRC_NFKC: {
+        અચલ Normalizer2Impl *impl=Normalizer2Factory::getNFKCImpl(errorCode);
+        જો(U_SUCCESS(errorCode)) {
             impl->addPropertyStarts(&sa, errorCode);
         }
-        break;
+        તોડો;
     }
-    case UPROPS_SRC_NFKC_CF: {
-        const Normalizer2Impl *impl=Normalizer2Factory::getNFKC_CFImpl(errorCode);
-        if(U_SUCCESS(errorCode)) {
+    સ્થિતિ UPROPS_SRC_NFKC_CF: {
+        અચલ Normalizer2Impl *impl=Normalizer2Factory::getNFKC_CFImpl(errorCode);
+        જો(U_SUCCESS(errorCode)) {
             impl->addPropertyStarts(&sa, errorCode);
         }
-        break;
+        તોડો;
     }
-    case UPROPS_SRC_NFC_CANON_ITER: {
-        const Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(errorCode);
-        if(U_SUCCESS(errorCode)) {
+    સ્થિતિ UPROPS_SRC_NFC_CANON_ITER: {
+        અચલ Normalizer2Impl *impl=Normalizer2Factory::getNFCImpl(errorCode);
+        જો(U_SUCCESS(errorCode)) {
             impl->addCanonIterPropertyStarts(&sa, errorCode);
         }
-        break;
+        તોડો;
     }
 #endif
-    case UPROPS_SRC_CASE:
+    સ્થિતિ UPROPS_SRC_CASE:
         ucase_addPropertyStarts(&sa, &errorCode);
-        break;
-    case UPROPS_SRC_BIDI:
+        તોડો;
+    સ્થિતિ UPROPS_SRC_BIDI:
         ubidi_addPropertyStarts(&sa, &errorCode);
-        break;
-    case UPROPS_SRC_INPC:
-    case UPROPS_SRC_INSC:
-    case UPROPS_SRC_VO:
+        તોડો;
+    સ્થિતિ UPROPS_SRC_INPC:
+    સ્થિતિ UPROPS_SRC_INSC:
+    સ્થિતિ UPROPS_SRC_VO:
         uprops_addPropertyStarts(src, &sa, &errorCode);
-        break;
-    case UPROPS_SRC_EMOJI: {
-        const icu::EmojiProps *ep = icu::EmojiProps::getSingleton(errorCode);
-        if (U_SUCCESS(errorCode)) {
+        તોડો;
+    સ્થિતિ UPROPS_SRC_EMOJI: {
+        અચલ icu::EmojiProps *ep = icu::EmojiProps::getSingleton(errorCode);
+        જો (U_SUCCESS(errorCode)) {
             ep->addPropertyStarts(&sa, errorCode);
         }
-        break;
+        તોડો;
     }
-    case UPROPS_SRC_IDSU:
+    સ્થિતિ UPROPS_SRC_IDSU:
         // New in Unicode 15.1 for just two characters.
         sa.add(sa.set, 0x2FFE);
         sa.add(sa.set, 0x2FFF + 1);
-        break;
-    case UPROPS_SRC_ID_COMPAT_MATH:
-    case UPROPS_SRC_MCM:
+        તોડો;
+    સ્થિતિ UPROPS_SRC_ID_COMPAT_MATH:
+    સ્થિતિ UPROPS_SRC_MCM:
         uprops_addPropertyStarts(src, &sa, &errorCode);
-        break;
-    case UPROPS_SRC_BLOCK:
+        તોડો;
+    સ્થિતિ UPROPS_SRC_BLOCK:
         ublock_addPropertyStarts(&sa, errorCode);
-        break;
-    default:
+        તોડો;
+    મૂળભૂત:
         errorCode = U_INTERNAL_PROGRAM_ERROR;
-        break;
+        તોડો;
     }
 
-    if (U_FAILURE(errorCode)) {
-        return;
+    જો (U_FAILURE(errorCode)) {
+        પાછા;
     }
-    if (incl->isBogus()) {
+    જો (incl->isBogus()) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        પાછા;
     }
     // Compact for caching.
     incl->compact();
@@ -208,50 +208,50 @@ void U_CALLCONV initInclusion(UPropertySource src, UErrorCode &errorCode) {
     ucln_common_registerCleanup(UCLN_COMMON_CHARACTERPROPERTIES, characterproperties_cleanup);
 }
 
-const UnicodeSet *getInclusionsForSource(UPropertySource src, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    if (src < 0 || UPROPS_SRC_COUNT <= src) {
+અચલ UnicodeSet *getInclusionsForSource(UPropertySource src, UErrorCode &errorCode) {
+    જો (U_FAILURE(errorCode)) { પાછા nullptr; }
+    જો (src < 0 || UPROPS_SRC_ગણતરી <= src) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        પાછા nullptr;
     }
     Inclusion &i = gInclusions[src];
     umtx_initOnce(i.fInitOnce, &initInclusion, src, errorCode);
-    return i.fSet;
+    પાછા i.fSet;
 }
 
-void U_CALLCONV initIntPropInclusion(UProperty prop, UErrorCode &errorCode) {
+શૂન્ય U_CALLCONV initIntPropInclusion(UProperty prop, UErrorCode &errorCode) {
     // This function is invoked only via umtx_initOnce().
     U_ASSERT(UCHAR_INT_START <= prop && prop < UCHAR_INT_LIMIT);
-    int32_t inclIndex = UPROPS_SRC_COUNT + (prop - UCHAR_INT_START);
+    int32_t inclIndex = UPROPS_SRC_ગણતરી + (prop - UCHAR_INT_START);
     U_ASSERT(gInclusions[inclIndex].fSet == nullptr);
     UPropertySource src = uprops_getSource(prop);
-    const UnicodeSet *incl = getInclusionsForSource(src, errorCode);
-    if (U_FAILURE(errorCode)) {
-        return;
+    અચલ UnicodeSet *incl = getInclusionsForSource(src, errorCode);
+    જો (U_FAILURE(errorCode)) {
+        પાછા;
     }
 
-    LocalPointer<UnicodeSet> intPropIncl(new UnicodeSet(0, 0));
-    if (intPropIncl.isNull()) {
+    LocalPointer<UnicodeSet> intPropIncl(નવું UnicodeSet(0, 0));
+    જો (intPropIncl.isNull()) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        પાછા;
     }
-    int32_t numRanges = incl->getRangeCount();
-    int32_t prevValue = 0;
-    for (int32_t i = 0; i < numRanges; ++i) {
+    int32_t અંક_Ranges = incl->get_Range_ગણતરી();
+    int32_t prev_કિંમત = 0;
+    માટે (int32_t i = 0; i < અંક_Ranges; ++i) {
         UChar32 rangeEnd = incl->getRangeEnd(i);
-        for (UChar32 c = incl->getRangeStart(i); c <= rangeEnd; ++c) {
+        માટે (UChar32 c = incl->getRangeStart(i); c <= rangeEnd; ++c) {
             // TODO: Get a UCharacterProperty.IntProperty to avoid the property dispatch.
-            int32_t value = u_getIntPropertyValue(c, prop);
-            if (value != prevValue) {
+            int32_t value = u_get_Int_Property_કિંમત(c, prop);
+            જો (value != prev_કિંમત) {
                 intPropIncl->add(c);
-                prevValue = value;
+                prev_કિંમત = value;
             }
         }
     }
 
-    if (intPropIncl->isBogus()) {
+    જો (intPropIncl->isBogus()) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        પાછા;
     }
     // Compact for caching.
     intPropIncl->compact();
@@ -263,35 +263,35 @@ void U_CALLCONV initIntPropInclusion(UProperty prop, UErrorCode &errorCode) {
 
 U_NAMESPACE_BEGIN
 
-const UnicodeSet *CharacterProperties::getInclusionsForProperty(
+અચલ UnicodeSet *CharacterProperties::getInclusionsForProperty(
         UProperty prop, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    if (UCHAR_INT_START <= prop && prop < UCHAR_INT_LIMIT) {
-        int32_t inclIndex = UPROPS_SRC_COUNT + (prop - UCHAR_INT_START);
+    જો (U_FAILURE(errorCode)) { પાછા nullptr; }
+    જો (UCHAR_INT_START <= prop && prop < UCHAR_INT_LIMIT) {
+        int32_t inclIndex = UPROPS_SRC_ગણતરી + (prop - UCHAR_INT_START);
         Inclusion &i = gInclusions[inclIndex];
         umtx_initOnce(i.fInitOnce, &initIntPropInclusion, prop, errorCode);
-        return i.fSet;
-    } else {
+        પાછા i.fSet;
+    } નહીંતર {
         UPropertySource src = uprops_getSource(prop);
-        return getInclusionsForSource(src, errorCode);
+        પાછા getInclusionsForSource(src, errorCode);
     }
 }
 
 U_NAMESPACE_END
 
-namespace {
+નામાકાશ {
 
 UnicodeSet *makeSet(UProperty property, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    LocalPointer<UnicodeSet> set(new UnicodeSet());
-    if (set.isNull()) {
+    જો (U_FAILURE(errorCode)) { પાછા nullptr; }
+    LocalPointer<UnicodeSet> set(નવું UnicodeSet());
+    જો (set.isNull()) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        પાછા nullptr;
     }
-    if (UCHAR_BASIC_EMOJI <= property && property <= UCHAR_RGI_EMOJI) {
+    જો (UCHAR_BASIC_EMOJI <= property && property <= UCHAR_RGI_EMOJI) {
         // property of strings
-        const icu::EmojiProps *ep = icu::EmojiProps::getSingleton(errorCode);
-        if (U_FAILURE(errorCode)) { return nullptr; }
+        અચલ icu::EmojiProps *ep = icu::EmojiProps::getSingleton(errorCode);
+        જો (U_FAILURE(errorCode)) { પાછા nullptr; }
         USetAdder sa = {
             reinterpret_cast<USet*>(set.getAlias()),
             _set_add,
@@ -301,131 +301,131 @@ UnicodeSet *makeSet(UProperty property, UErrorCode &errorCode) {
             nullptr // don't need removeRange()
         };
         ep->addStrings(&sa, property, errorCode);
-        if (property != UCHAR_BASIC_EMOJI && property != UCHAR_RGI_EMOJI) {
+        જો (property != UCHAR_BASIC_EMOJI && property != UCHAR_RGI_EMOJI) {
             // property of _only_ strings
             set->freeze();
-            return set.orphan();
+            પાછા set.orphan();
         }
     }
 
-    const UnicodeSet *inclusions =
+    અચલ UnicodeSet *inclusions =
         icu::CharacterProperties::getInclusionsForProperty(property, errorCode);
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    int32_t numRanges = inclusions->getRangeCount();
+    જો (U_FAILURE(errorCode)) { પાછા nullptr; }
+    int32_t અંક_Ranges = inclusions->get_Range_ગણતરી();
     UChar32 startHasProperty = -1;
 
-    for (int32_t i = 0; i < numRanges; ++i) {
+    માટે (int32_t i = 0; i < અંક_Ranges; ++i) {
         UChar32 rangeEnd = inclusions->getRangeEnd(i);
-        for (UChar32 c = inclusions->getRangeStart(i); c <= rangeEnd; ++c) {
+        માટે (UChar32 c = inclusions->getRangeStart(i); c <= rangeEnd; ++c) {
             // TODO: Get a UCharacterProperty.BinaryProperty to avoid the property dispatch.
-            if (u_hasBinaryProperty(c, property)) {
-                if (startHasProperty < 0) {
+            જો (u_has_દ્વિઅંકી_Property(c, property)) {
+                જો (startHasProperty < 0) {
                     // Transition from false to true.
                     startHasProperty = c;
                 }
-            } else if (startHasProperty >= 0) {
+            } નહીંતર જો (startHasProperty >= 0) {
                 // Transition from true to false.
                 set->add(startHasProperty, c - 1);
                 startHasProperty = -1;
             }
         }
     }
-    if (startHasProperty >= 0) {
+    જો (startHasProperty >= 0) {
         set->add(startHasProperty, 0x10FFFF);
     }
     set->freeze();
-    return set.orphan();
+    પાછા set.orphan();
 }
 
 UCPMap *makeMap(UProperty property, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    uint32_t nullValue = property == UCHAR_SCRIPT ? USCRIPT_UNKNOWN : 0;
+    જો (U_FAILURE(errorCode)) { પાછા nullptr; }
+    uint32_t null_કિંમત = property == UCHAR_SCRIPT ? USCRIPT_UNKNOWN : 0;
     icu::LocalUMutableCPTriePointer mutableTrie(
-        umutablecptrie_open(nullValue, nullValue, &errorCode));
-    const UnicodeSet *inclusions =
+        umutablecptrie_open(null_કિંમત, null_કિંમત, &errorCode));
+    અચલ UnicodeSet *inclusions =
         icu::CharacterProperties::getInclusionsForProperty(property, errorCode);
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    int32_t numRanges = inclusions->getRangeCount();
+    જો (U_FAILURE(errorCode)) { પાછા nullptr; }
+    int32_t અંક_Ranges = inclusions->get_Range_ગણતરી();
     UChar32 start = 0;
-    uint32_t value = nullValue;
+    uint32_t value = null_કિંમત;
 
-    for (int32_t i = 0; i < numRanges; ++i) {
+    માટે (int32_t i = 0; i < અંક_Ranges; ++i) {
         UChar32 rangeEnd = inclusions->getRangeEnd(i);
-        for (UChar32 c = inclusions->getRangeStart(i); c <= rangeEnd; ++c) {
+        માટે (UChar32 c = inclusions->getRangeStart(i); c <= rangeEnd; ++c) {
             // TODO: Get a UCharacterProperty.IntProperty to avoid the property dispatch.
-            uint32_t nextValue = u_getIntPropertyValue(c, property);
-            if (value != nextValue) {
-                if (value != nullValue) {
+            uint32_t next_કિંમત = u_get_Int_Property_કિંમત(c, property);
+            જો (value != next_કિંમત) {
+                જો (value != null_કિંમત) {
                     umutablecptrie_setRange(mutableTrie.getAlias(), start, c - 1, value, &errorCode);
                 }
                 start = c;
-                value = nextValue;
+                value = next_કિંમત;
             }
         }
     }
-    if (value != 0) {
+    જો (value != 0) {
         umutablecptrie_setRange(mutableTrie.getAlias(), start, 0x10FFFF, value, &errorCode);
     }
 
     UCPTrieType type;
-    if (property == UCHAR_BIDI_CLASS || property == UCHAR_GENERAL_CATEGORY) {
+    જો (property == UCHAR_BIDI_CLASS || property == UCHAR_GENERAL_CATEGORY) {
         type = UCPTRIE_TYPE_FAST;
-    } else {
+    } નહીંતર {
         type = UCPTRIE_TYPE_SMALL;
     }
-    UCPTrieValueWidth valueWidth;
+    UCPTrie_કિંમત_Width કિંમત_Width;
     // TODO: UCharacterProperty.IntProperty
-    int32_t max = u_getIntPropertyMaxValue(property);
-    if (max <= 0xff) {
-        valueWidth = UCPTRIE_VALUE_BITS_8;
-    } else if (max <= 0xffff) {
-        valueWidth = UCPTRIE_VALUE_BITS_16;
-    } else {
-        valueWidth = UCPTRIE_VALUE_BITS_32;
+    int32_t max = u_get_Int_Property_Max_કિંમત(property);
+    જો (max <= 0xff) {
+        કિંમત_Width = UCPTRIE_કિંમત_BITS_8;
+    } નહીંતર જો (max <= 0xffff) {
+        કિંમત_Width = UCPTRIE_કિંમત_BITS_16;
+    } નહીંતર {
+        કિંમત_Width = UCPTRIE_કિંમત_BITS_32;
     }
-    return reinterpret_cast<UCPMap *>(
-        umutablecptrie_buildImmutable(mutableTrie.getAlias(), type, valueWidth, &errorCode));
+    પાછા reinterpret_cast<UCPMap *>(
+        umutablecptrie_buildImmutable(mutableTrie.getAlias(), type, કિંમત_Width, &errorCode));
 }
 
 }  // namespace
 
 U_NAMESPACE_BEGIN
 
-const UnicodeSet *CharacterProperties::getBinaryPropertySet(UProperty property, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    if (property < 0 || UCHAR_BINARY_LIMIT <= property) {
+અચલ UnicodeSet *CharacterProperties::get_દ્વિઅંકી_Property_Set(UProperty property, UErrorCode &errorCode) {
+    જો (U_FAILURE(errorCode)) { પાછા nullptr; }
+    જો (property < 0 || UCHAR_દ્વિઅંકી_LIMIT <= property) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        પાછા nullptr;
     }
     Mutex m(&cpMutex);
     UnicodeSet *set = sets[property];
-    if (set == nullptr) {
+    જો (set == nullptr) {
         sets[property] = set = makeSet(property, errorCode);
     }
-    return set;
+    પાછા set;
 }
 
 U_NAMESPACE_END
 
 U_NAMESPACE_USE
 
-U_CAPI const USet * U_EXPORT2
-u_getBinaryPropertySet(UProperty property, UErrorCode *pErrorCode) {
-    const UnicodeSet *set = CharacterProperties::getBinaryPropertySet(property, *pErrorCode);
-    return U_SUCCESS(*pErrorCode) ? set->toUSet() : nullptr;
+U_CAPI અચલ USet * U_EXPORT2
+u_get_દ્વિઅંકી_Property_Set(UProperty property, UErrorCode *pErrorCode) {
+    અચલ UnicodeSet *set = CharacterProperties::get_દ્વિઅંકી_Property_Set(property, *pErrorCode);
+    પાછા U_SUCCESS(*pErrorCode) ? set->toUSet() : nullptr;
 }
 
-U_CAPI const UCPMap * U_EXPORT2
+U_CAPI અચલ UCPMap * U_EXPORT2
 u_getIntPropertyMap(UProperty property, UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) { return nullptr; }
-    if (property < UCHAR_INT_START || UCHAR_INT_LIMIT <= property) {
+    જો (U_FAILURE(*pErrorCode)) { પાછા nullptr; }
+    જો (property < UCHAR_INT_START || UCHAR_INT_LIMIT <= property) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        પાછા nullptr;
     }
     Mutex m(&cpMutex);
     UCPMap *map = maps[property - UCHAR_INT_START];
-    if (map == nullptr) {
+    જો (map == nullptr) {
         maps[property - UCHAR_INT_START] = map = makeMap(property, *pErrorCode);
     }
-    return map;
+    પાછા map;
 }

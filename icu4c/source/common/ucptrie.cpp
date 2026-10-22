@@ -9,70 +9,70 @@
 #   include <stdio.h>
 #endif
 
-#include "unicode/utypes.h"
-#include "unicode/ucptrie.h"
-#include "unicode/utf.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "uassert.h"
-#include "ucptrie_impl.h"
+#અન્તર્ભાવ "unicode/utypes.h"
+#અન્તર્ભાવ "unicode/ucptrie.h"
+#અન્તર્ભાવ "unicode/utf.h"
+#અન્તર્ભાવ "unicode/utf8.h"
+#અન્તર્ભાવ "unicode/utf16.h"
+#અન્તર્ભાવ "cmemory.h"
+#અન્તર્ભાવ "uassert.h"
+#અન્તર્ભાવ "ucptrie_impl.h"
 
 U_CAPI UCPTrie* U_EXPORT2
-ucptrie_openFromBinary(UCPTrieType type,
-                       UCPTrieValueWidth valueWidth,
-                       const void* data U_LIFETIME_BOUND,
+ucptrie_open_From_દ્વિઅંકી(UCPTrieType type,
+                       UCPTrie_કિંમત_Width કિંમત_Width,
+                       અચલ શૂન્ય* data U_LIFETIME_BOUND,
                        int32_t length,
                        int32_t* pActualLength,
                        UErrorCode* pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    જો (U_FAILURE(*pErrorCode)) {
+        પાછા nullptr;
     }
 
-    if (length <= 0 || (U_POINTER_MASK_LSB(data, 3) != 0) ||
+    જો (length <= 0 || (U_POINTER_MASK_LSB(data, 3) != 0) ||
             type < UCPTRIE_TYPE_ANY || UCPTRIE_TYPE_SMALL < type ||
-            valueWidth < UCPTRIE_VALUE_BITS_ANY || UCPTRIE_VALUE_BITS_8 < valueWidth) {
+            કિંમત_Width < UCPTRIE_કિંમત_BITS_ANY || UCPTRIE_કિંમત_BITS_8 < કિંમત_Width) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        પાછા nullptr;
     }
 
     // Enough data for a trie header?
-    if (length < (int32_t)sizeof(UCPTrieHeader)) {
+    જો (length < (int32_t)કદ(UCPTrieHeader)) {
         *pErrorCode = U_INVALID_FORMAT_ERROR;
-        return nullptr;
+        પાછા nullptr;
     }
 
     // Check the signature.
-    const UCPTrieHeader *header = (const UCPTrieHeader *)data;
-    if (header->signature != UCPTRIE_SIG) {
+    અચલ UCPTrieHeader *header = (અચલ UCPTrieHeader *)data;
+    જો (header->signature != UCPTRIE_SIG) {
         *pErrorCode = U_INVALID_FORMAT_ERROR;
-        return nullptr;
+        પાછા nullptr;
     }
 
     int32_t options = header->options;
     int32_t typeInt = (options >> 6) & 3;
-    int32_t valueWidthInt = options & UCPTRIE_OPTIONS_VALUE_BITS_MASK;
-    if (typeInt > UCPTRIE_TYPE_SMALL || valueWidthInt > UCPTRIE_VALUE_BITS_8 ||
+    int32_t કિંમત_Width_Int = options & UCPTRIE_OPTIONS_કિંમત_BITS_MASK;
+    જો (typeInt > UCPTRIE_TYPE_SMALL || કિંમત_Width_Int > UCPTRIE_કિંમત_BITS_8 ||
             (options & UCPTRIE_OPTIONS_RESERVED_MASK) != 0) {
         *pErrorCode = U_INVALID_FORMAT_ERROR;
-        return nullptr;
+        પાછા nullptr;
     }
     UCPTrieType actualType = (UCPTrieType)typeInt;
-    UCPTrieValueWidth actualValueWidth = (UCPTrieValueWidth)valueWidthInt;
-    if (type < 0) {
+    UCPTrie_કિંમત_Width actual_કિંમત_Width = (UCPTrie_કિંમત_Width)કિંમત_Width_Int;
+    જો (type < 0) {
         type = actualType;
     }
-    if (valueWidth < 0) {
-        valueWidth = actualValueWidth;
+    જો (કિંમત_Width < 0) {
+        કિંમત_Width = actual_કિંમત_Width;
     }
-    if (type != actualType || valueWidth != actualValueWidth) {
+    જો (type != actualType || કિંમત_Width != actual_કિંમત_Width) {
         *pErrorCode = U_INVALID_FORMAT_ERROR;
-        return nullptr;
+        પાછા nullptr;
     }
 
     // Get the length values and offsets.
     UCPTrie tempTrie;
-    uprv_memset(&tempTrie, 0, sizeof(tempTrie));
+    uprv_memset(&tempTrie, 0, કદ(tempTrie));
     tempTrie.indexLength = header->indexLength;
     tempTrie.dataLength =
         ((options & UCPTRIE_OPTIONS_DATA_LENGTH_MASK) << 4) | header->dataLength;
@@ -80,335 +80,335 @@ ucptrie_openFromBinary(UCPTrieType type,
     tempTrie.dataNullOffset =
         ((options & UCPTRIE_OPTIONS_DATA_NULL_OFFSET_MASK) << 8) | header->dataNullOffset;
 
-    tempTrie.highStart = header->shiftedHighStart << UCPTRIE_SHIFT_2;
-    tempTrie.shifted12HighStart = (tempTrie.highStart + 0xfff) >> 12;
+    tempTrie.ઉપલું_Start = header->shifted_ઉપલું_Start << UCPTRIE_SHIFT_2;
+    tempTrie.shifted12_ઉપલું_Start = (tempTrie.ઉપલું_Start + 0xfff) >> 12;
     tempTrie.type = type;
-    tempTrie.valueWidth = valueWidth;
+    tempTrie.કિંમત_Width = કિંમત_Width;
 
     // Calculate the actual length.
-    int32_t actualLength = (int32_t)sizeof(UCPTrieHeader) + tempTrie.indexLength * 2;
-    if (valueWidth == UCPTRIE_VALUE_BITS_16) {
+    int32_t actualLength = (int32_t)કદ(UCPTrieHeader) + tempTrie.indexLength * 2;
+    જો (કિંમત_Width == UCPTRIE_કિંમત_BITS_16) {
         actualLength += tempTrie.dataLength * 2;
-    } else if (valueWidth == UCPTRIE_VALUE_BITS_32) {
+    } નહીંતર જો (કિંમત_Width == UCPTRIE_કિંમત_BITS_32) {
         actualLength += tempTrie.dataLength * 4;
-    } else {
+    } નહીંતર {
         actualLength += tempTrie.dataLength;
     }
-    if (length < actualLength) {
+    જો (length < actualLength) {
         *pErrorCode = U_INVALID_FORMAT_ERROR;  // Not enough bytes.
-        return nullptr;
+        પાછા nullptr;
     }
 
     // Allocate the trie.
-    UCPTrie *trie = (UCPTrie *)uprv_malloc(sizeof(UCPTrie));
-    if (trie == nullptr) {
+    UCPTrie *trie = (UCPTrie *)uprv_malloc(કદ(UCPTrie));
+    જો (trie == nullptr) {
         *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        પાછા nullptr;
     }
-    uprv_memcpy(trie, &tempTrie, sizeof(tempTrie));
+    uprv_memcpy(trie, &tempTrie, કદ(tempTrie));
 #ifdef UCPTRIE_DEBUG
     trie->name = "fromSerialized";
 #endif
 
     // Set the pointers to its index and data arrays.
-    const uint16_t *p16 = (const uint16_t *)(header + 1);
+    અચલ uint16_t *p16 = (અચલ uint16_t *)(header + 1);
     trie->index = p16;
     p16 += trie->indexLength;
 
     // Get the data.
-    int32_t nullValueOffset = trie->dataNullOffset;
-    if (nullValueOffset >= trie->dataLength) {
-        nullValueOffset = trie->dataLength - UCPTRIE_HIGH_VALUE_NEG_DATA_OFFSET;
+    int32_t null_કિંમત_Offset = trie->dataNullOffset;
+    જો (null_કિંમત_Offset >= trie->dataLength) {
+        null_કિંમત_Offset = trie->dataLength - UCPTRIE_ઉપલું_કિંમત_NEG_DATA_OFFSET;
     }
-    switch (valueWidth) {
-    case UCPTRIE_VALUE_BITS_16:
+    પસંદગી (કિંમત_Width) {
+    સ્થિતિ UCPTRIE_કિંમત_BITS_16:
         trie->data.ptr16 = p16;
-        trie->nullValue = trie->data.ptr16[nullValueOffset];
-        break;
-    case UCPTRIE_VALUE_BITS_32:
-        trie->data.ptr32 = (const uint32_t *)p16;
-        trie->nullValue = trie->data.ptr32[nullValueOffset];
-        break;
-    case UCPTRIE_VALUE_BITS_8:
-        trie->data.ptr8 = (const uint8_t *)p16;
-        trie->nullValue = trie->data.ptr8[nullValueOffset];
-        break;
-    default:
+        trie->null_કિંમત = trie->data.ptr16[null_કિંમત_Offset];
+        તોડો;
+    સ્થિતિ UCPTRIE_કિંમત_BITS_32:
+        trie->data.ptr32 = (અચલ uint32_t *)p16;
+        trie->null_કિંમત = trie->data.ptr32[null_કિંમત_Offset];
+        તોડો;
+    સ્થિતિ UCPTRIE_કિંમત_BITS_8:
+        trie->data.ptr8 = (અચલ uint8_t *)p16;
+        trie->null_કિંમત = trie->data.ptr8[null_કિંમત_Offset];
+        તોડો;
+    મૂળભૂત:
         // Unreachable because valueWidth was checked above.
         *pErrorCode = U_INVALID_FORMAT_ERROR;
-        return nullptr;
+        પાછા nullptr;
     }
 
-    if (pActualLength != nullptr) {
+    જો (pActualLength != nullptr) {
         *pActualLength = actualLength;
     }
-    return trie;
+    પાછા trie;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI શૂન્ય U_EXPORT2
 ucptrie_close(UCPTrie *trie) {
     uprv_free(trie);
 }
 
 U_CAPI UCPTrieType U_EXPORT2
-ucptrie_getType(const UCPTrie *trie) {
-    return (UCPTrieType)trie->type;
+ucptrie_getType(અચલ UCPTrie *trie) {
+    પાછા (UCPTrieType)trie->type;
 }
 
-U_CAPI UCPTrieValueWidth U_EXPORT2
-ucptrie_getValueWidth(const UCPTrie *trie) {
-    return (UCPTrieValueWidth)trie->valueWidth;
+U_CAPI UCPTrie_કિંમત_Width U_EXPORT2
+ucptrie_get_કિંમત_Width(અચલ UCPTrie *trie) {
+    પાછા (UCPTrie_કિંમત_Width)trie->કિંમત_Width;
 }
 
 U_CAPI int32_t U_EXPORT2
-ucptrie_internalSmallIndex(const UCPTrie *trie, UChar32 c) {
+ucptrie_internalSmallIndex(અચલ UCPTrie *trie, UChar32 c) {
     int32_t i1 = c >> UCPTRIE_SHIFT_1;
-    if (trie->type == UCPTRIE_TYPE_FAST) {
-        U_ASSERT(0xffff < c && c < trie->highStart);
+    જો (trie->type == UCPTRIE_TYPE_FAST) {
+        U_ASSERT(0xffff < c && c < trie->ઉપલું_Start);
         i1 += UCPTRIE_BMP_INDEX_LENGTH - UCPTRIE_OMITTED_BMP_INDEX_1_LENGTH;
-    } else {
-        U_ASSERT((uint32_t)c < (uint32_t)trie->highStart && trie->highStart > UCPTRIE_SMALL_LIMIT);
+    } નહીંતર {
+        U_ASSERT((uint32_t)c < (uint32_t)trie->ઉપલું_Start && trie->ઉપલું_Start > UCPTRIE_SMALL_LIMIT);
         i1 += UCPTRIE_SMALL_INDEX_LENGTH;
     }
     int32_t i3Block = trie->index[
         (int32_t)trie->index[i1] + ((c >> UCPTRIE_SHIFT_2) & UCPTRIE_INDEX_2_MASK)];
     int32_t i3 = (c >> UCPTRIE_SHIFT_3) & UCPTRIE_INDEX_3_MASK;
     int32_t dataBlock;
-    if ((i3Block & 0x8000) == 0) {
+    જો ((i3Block & 0x8000) == 0) {
         // 16-bit indexes
         dataBlock = trie->index[i3Block + i3];
-    } else {
+    } નહીંતર {
         // 18-bit indexes stored in groups of 9 entries per 8 indexes.
         i3Block = (i3Block & 0x7fff) + (i3 & ~7) + (i3 >> 3);
         i3 &= 7;
         dataBlock = ((int32_t)trie->index[i3Block++] << (2 + (2 * i3))) & 0x30000;
         dataBlock |= trie->index[i3Block + i3];
     }
-    return dataBlock + (c & UCPTRIE_SMALL_DATA_MASK);
+    પાછા dataBlock + (c & UCPTRIE_SMALL_DATA_MASK);
 }
 
 U_CAPI int32_t U_EXPORT2
-ucptrie_internalSmallU8Index(const UCPTrie *trie, int32_t lt1, uint8_t t2, uint8_t t3) {
+ucptrie_internalSmallU8Index(અચલ UCPTrie *trie, int32_t lt1, uint8_t t2, uint8_t t3) {
     UChar32 c = (lt1 << 12) | (t2 << 6) | t3;
-    if (c >= trie->highStart) {
+    જો (c >= trie->ઉપલું_Start) {
         // Possible because the UTF-8 macro compares with shifted12HighStart which may be higher.
-        return trie->dataLength - UCPTRIE_HIGH_VALUE_NEG_DATA_OFFSET;
+        પાછા trie->dataLength - UCPTRIE_ઉપલું_કિંમત_NEG_DATA_OFFSET;
     }
-    return ucptrie_internalSmallIndex(trie, c);
+    પાછા ucptrie_internalSmallIndex(trie, c);
 }
 
 U_CAPI int32_t U_EXPORT2
-ucptrie_internalU8PrevIndex(const UCPTrie *trie, UChar32 c,
-                            const uint8_t *start, const uint8_t *src) {
+ucptrie_internalU8PrevIndex(અચલ UCPTrie *trie, UChar32 c,
+                            અચલ uint8_t *start, અચલ uint8_t *src) {
     int32_t i, length;
     // Support 64-bit pointers by avoiding cast of arbitrary difference.
-    if ((src - start) <= 7) {
+    જો ((src - start) <= 7) {
         i = length = (int32_t)(src - start);
-    } else {
+    } નહીંતર {
         i = length = 7;
         start = src - 7;
     }
     c = utf8_prevCharSafeBody(start, 0, &i, c, -1);
     i = length - i;  // Number of bytes read backward from src.
     int32_t idx = _UCPTRIE_CP_INDEX(trie, 0xffff, c);
-    return (idx << 3) | i;
+    પાછા (idx << 3) | i;
 }
 
-namespace {
+નામાકાશ {
 
-inline uint32_t getValue(UCPTrieData data, UCPTrieValueWidth valueWidth, int32_t dataIndex) {
-    switch (valueWidth) {
-    case UCPTRIE_VALUE_BITS_16:
-        return data.ptr16[dataIndex];
-    case UCPTRIE_VALUE_BITS_32:
-        return data.ptr32[dataIndex];
-    case UCPTRIE_VALUE_BITS_8:
-        return data.ptr8[dataIndex];
-    default:
+અંતઃરેખ uint32_t get_કિંમત(UCPTrieData data, UCPTrie_કિંમત_Width કિંમત_Width, int32_t dataIndex) {
+    પસંદગી (કિંમત_Width) {
+    સ્થિતિ UCPTRIE_કિંમત_BITS_16:
+        પાછા data.ptr16[dataIndex];
+    સ્થિતિ UCPTRIE_કિંમત_BITS_32:
+        પાછા data.ptr32[dataIndex];
+    સ્થિતિ UCPTRIE_કિંમત_BITS_8:
+        પાછા data.ptr8[dataIndex];
+    મૂળભૂત:
         // Unreachable if the trie is properly initialized.
-        return 0xffffffff;
+        પાછા 0xffffffff;
     }
 }
 
 }  // namespace
 
 U_CAPI uint32_t U_EXPORT2
-ucptrie_get(const UCPTrie *trie, UChar32 c) {
+ucptrie_get(અચલ UCPTrie *trie, UChar32 c) {
     int32_t dataIndex;
-    if ((uint32_t)c <= 0x7f) {
+    જો ((uint32_t)c <= 0x7f) {
         // linear ASCII
         dataIndex = c;
-    } else {
+    } નહીંતર {
         UChar32 fastMax = trie->type == UCPTRIE_TYPE_FAST ? 0xffff : UCPTRIE_SMALL_MAX;
         dataIndex = _UCPTRIE_CP_INDEX(trie, fastMax, c);
     }
-    return getValue(trie->data, (UCPTrieValueWidth)trie->valueWidth, dataIndex);
+    પાછા get_કિંમત(trie->data, (UCPTrie_કિંમત_Width)trie->કિંમત_Width, dataIndex);
 }
 
-namespace {
+નામાકાશ {
 
 constexpr int32_t MAX_UNICODE = 0x10ffff;
 
-inline uint32_t maybeFilterValue(uint32_t value, uint32_t trieNullValue, uint32_t nullValue,
-                                 UCPMapValueFilter *filter, const void *context) {
-    if (value == trieNullValue) {
-        value = nullValue;
-    } else if (filter != nullptr) {
+અંતઃરેખ uint32_t maybe_Filter_કિંમત(uint32_t value, uint32_t trie_Null_કિંમત, uint32_t null_કિંમત,
+                                 UCPMap_કિંમત_Filter *filter, અચલ શૂન્ય *context) {
+    જો (value == trie_Null_કિંમત) {
+        value = null_કિંમત;
+    } નહીંતર જો (filter != nullptr) {
         value = filter(context, value);
     }
-    return value;
+    પાછા value;
 }
 
-UChar32 getRange(const void *t, UChar32 start,
-                 UCPMapValueFilter *filter, const void *context, uint32_t *pValue) {
-    if (static_cast<uint32_t>(start) > MAX_UNICODE) {
-        return U_SENTINEL;
+UChar32 getRange(અચલ શૂન્ય *t, UChar32 start,
+                 UCPMap_કિંમત_Filter *filter, અચલ શૂન્ય *context, uint32_t *p_કિંમત) {
+    જો (static_cast<uint32_t>(start) > MAX_UNICODE) {
+        પાછા U_SENTINEL;
     }
-    const UCPTrie *trie = reinterpret_cast<const UCPTrie *>(t);
-    UCPTrieValueWidth valueWidth = static_cast<UCPTrieValueWidth>(trie->valueWidth);
-    if (start >= trie->highStart) {
-        if (pValue != nullptr) {
-            int32_t di = trie->dataLength - UCPTRIE_HIGH_VALUE_NEG_DATA_OFFSET;
-            uint32_t value = getValue(trie->data, valueWidth, di);
-            if (filter != nullptr) { value = filter(context, value); }
-            *pValue = value;
+    અચલ UCPTrie *trie = reinterpret_cast<અચલ UCPTrie *>(t);
+    UCPTrie_કિંમત_Width કિંમત_Width = static_cast<UCPTrie_કિંમત_Width>(trie->કિંમત_Width);
+    જો (start >= trie->ઉપલું_Start) {
+        જો (p_કિંમત != nullptr) {
+            int32_t di = trie->dataLength - UCPTRIE_ઉપલું_કિંમત_NEG_DATA_OFFSET;
+            uint32_t value = get_કિંમત(trie->data, કિંમત_Width, di);
+            જો (filter != nullptr) { value = filter(context, value); }
+            *p_કિંમત = value;
         }
-        return MAX_UNICODE;
+        પાછા MAX_UNICODE;
     }
 
-    uint32_t nullValue = trie->nullValue;
-    if (filter != nullptr) { nullValue = filter(context, nullValue); }
-    const uint16_t *index = trie->index;
+    uint32_t null_કિંમત = trie->null_કિંમત;
+    જો (filter != nullptr) { null_કિંમત = filter(context, null_કિંમત); }
+    અચલ uint16_t *index = trie->index;
 
     int32_t prevI3Block = -1;
     int32_t prevBlock = -1;
     UChar32 c = start;
-    uint32_t trieValue, value = nullValue;
-    bool haveValue = false;
-    do {
+    uint32_t trie_કિંમત, value = null_કિંમત;
+    તાર્કિક have_કિંમત = ખોટું;
+    કરો {
         int32_t i3Block;
         int32_t i3;
         int32_t i3BlockLength;
         int32_t dataBlockLength;
-        if (c <= 0xffff && (trie->type == UCPTRIE_TYPE_FAST || c <= UCPTRIE_SMALL_MAX)) {
+        જો (c <= 0xffff && (trie->type == UCPTRIE_TYPE_FAST || c <= UCPTRIE_SMALL_MAX)) {
             i3Block = 0;
             i3 = c >> UCPTRIE_FAST_SHIFT;
             i3BlockLength = trie->type == UCPTRIE_TYPE_FAST ?
                 UCPTRIE_BMP_INDEX_LENGTH : UCPTRIE_SMALL_INDEX_LENGTH;
             dataBlockLength = UCPTRIE_FAST_DATA_BLOCK_LENGTH;
-        } else {
+        } નહીંતર {
             // Use the multi-stage index.
             int32_t i1 = c >> UCPTRIE_SHIFT_1;
-            if (trie->type == UCPTRIE_TYPE_FAST) {
-                U_ASSERT(0xffff < c && c < trie->highStart);
+            જો (trie->type == UCPTRIE_TYPE_FAST) {
+                U_ASSERT(0xffff < c && c < trie->ઉપલું_Start);
                 i1 += UCPTRIE_BMP_INDEX_LENGTH - UCPTRIE_OMITTED_BMP_INDEX_1_LENGTH;
-            } else {
-                U_ASSERT(c < trie->highStart && trie->highStart > UCPTRIE_SMALL_LIMIT);
+            } નહીંતર {
+                U_ASSERT(c < trie->ઉપલું_Start && trie->ઉપલું_Start > UCPTRIE_SMALL_LIMIT);
                 i1 += UCPTRIE_SMALL_INDEX_LENGTH;
             }
             i3Block = trie->index[
                 static_cast<int32_t>(trie->index[i1]) + ((c >> UCPTRIE_SHIFT_2) & UCPTRIE_INDEX_2_MASK)];
-            if (i3Block == prevI3Block && (c - start) >= UCPTRIE_CP_PER_INDEX_2_ENTRY) {
+            જો (i3Block == prevI3Block && (c - start) >= UCPTRIE_CP_PER_INDEX_2_ENTRY) {
                 // The index-3 block is the same as the previous one, and filled with value.
                 U_ASSERT((c & (UCPTRIE_CP_PER_INDEX_2_ENTRY - 1)) == 0);
                 c += UCPTRIE_CP_PER_INDEX_2_ENTRY;
-                continue;
+                ચાલુ;
             }
             prevI3Block = i3Block;
-            if (i3Block == trie->index3NullOffset) {
+            જો (i3Block == trie->index3NullOffset) {
                 // This is the index-3 null block.
-                if (haveValue) {
-                    if (nullValue != value) {
-                        return c - 1;
+                જો (have_કિંમત) {
+                    જો (null_કિંમત != value) {
+                        પાછા c - 1;
                     }
-                } else {
-                    trieValue = trie->nullValue;
-                    value = nullValue;
-                    if (pValue != nullptr) { *pValue = nullValue; }
-                    haveValue = true;
+                } નહીંતર {
+                    trie_કિંમત = trie->null_કિંમત;
+                    value = null_કિંમત;
+                    જો (p_કિંમત != nullptr) { *p_કિંમત = null_કિંમત; }
+                    have_કિંમત = સાચું;
                 }
                 prevBlock = trie->dataNullOffset;
                 c = (c + UCPTRIE_CP_PER_INDEX_2_ENTRY) & ~(UCPTRIE_CP_PER_INDEX_2_ENTRY - 1);
-                continue;
+                ચાલુ;
             }
             i3 = (c >> UCPTRIE_SHIFT_3) & UCPTRIE_INDEX_3_MASK;
             i3BlockLength = UCPTRIE_INDEX_3_BLOCK_LENGTH;
             dataBlockLength = UCPTRIE_SMALL_DATA_BLOCK_LENGTH;
         }
         // Enumerate data blocks for one index-3 block.
-        do {
+        કરો {
             int32_t block;
-            if ((i3Block & 0x8000) == 0) {
+            જો ((i3Block & 0x8000) == 0) {
                 block = index[i3Block + i3];
-            } else {
+            } નહીંતર {
                 // 18-bit indexes stored in groups of 9 entries per 8 indexes.
                 int32_t group = (i3Block & 0x7fff) + (i3 & ~7) + (i3 >> 3);
                 int32_t gi = i3 & 7;
                 block = (static_cast<int32_t>(index[group++]) << (2 + (2 * gi))) & 0x30000;
                 block |= index[group + gi];
             }
-            if (block == prevBlock && (c - start) >= dataBlockLength) {
+            જો (block == prevBlock && (c - start) >= dataBlockLength) {
                 // The block is the same as the previous one, and filled with value.
                 U_ASSERT((c & (dataBlockLength - 1)) == 0);
                 c += dataBlockLength;
-            } else {
+            } નહીંતર {
                 int32_t dataMask = dataBlockLength - 1;
                 prevBlock = block;
-                if (block == trie->dataNullOffset) {
+                જો (block == trie->dataNullOffset) {
                     // This is the data null block.
-                    if (haveValue) {
-                        if (nullValue != value) {
-                            return c - 1;
+                    જો (have_કિંમત) {
+                        જો (null_કિંમત != value) {
+                            પાછા c - 1;
                         }
-                    } else {
-                        trieValue = trie->nullValue;
-                        value = nullValue;
-                        if (pValue != nullptr) { *pValue = nullValue; }
-                        haveValue = true;
+                    } નહીંતર {
+                        trie_કિંમત = trie->null_કિંમત;
+                        value = null_કિંમત;
+                        જો (p_કિંમત != nullptr) { *p_કિંમત = null_કિંમત; }
+                        have_કિંમત = સાચું;
                     }
                     c = (c + dataBlockLength) & ~dataMask;
-                } else {
+                } નહીંતર {
                     int32_t di = block + (c & dataMask);
-                    uint32_t trieValue2 = getValue(trie->data, valueWidth, di);
-                    if (haveValue) {
-                        if (trieValue2 != trieValue) {
-                            if (filter == nullptr ||
-                                    maybeFilterValue(trieValue2, trie->nullValue, nullValue,
+                    uint32_t trieValue2 = get_કિંમત(trie->data, કિંમત_Width, di);
+                    જો (have_કિંમત) {
+                        જો (trieValue2 != trie_કિંમત) {
+                            જો (filter == nullptr ||
+                                    maybe_Filter_કિંમત(trieValue2, trie->null_કિંમત, null_કિંમત,
                                                      filter, context) != value) {
-                                return c - 1;
+                                પાછા c - 1;
                             }
-                            trieValue = trieValue2;  // may or may not help
+                            trie_કિંમત = trieValue2;  // may or may not help
                         }
-                    } else {
-                        trieValue = trieValue2;
-                        value = maybeFilterValue(trieValue2, trie->nullValue, nullValue,
+                    } નહીંતર {
+                        trie_કિંમત = trieValue2;
+                        value = maybe_Filter_કિંમત(trieValue2, trie->null_કિંમત, null_કિંમત,
                                                  filter, context);
-                        if (pValue != nullptr) { *pValue = value; }
-                        haveValue = true;
+                        જો (p_કિંમત != nullptr) { *p_કિંમત = value; }
+                        have_કિંમત = સાચું;
                     }
-                    while ((++c & dataMask) != 0) {
-                        trieValue2 = getValue(trie->data, valueWidth, ++di);
-                        if (trieValue2 != trieValue) {
-                            if (filter == nullptr ||
-                                    maybeFilterValue(trieValue2, trie->nullValue, nullValue,
+                    જ્યારે ((++c & dataMask) != 0) {
+                        trieValue2 = get_કિંમત(trie->data, કિંમત_Width, ++di);
+                        જો (trieValue2 != trie_કિંમત) {
+                            જો (filter == nullptr ||
+                                    maybe_Filter_કિંમત(trieValue2, trie->null_કિંમત, null_કિંમત,
                                                      filter, context) != value) {
-                                return c - 1;
+                                પાછા c - 1;
                             }
-                            trieValue = trieValue2;  // may or may not help
+                            trie_કિંમત = trieValue2;  // may or may not help
                         }
                     }
                 }
             }
-        } while (++i3 < i3BlockLength);
-    } while (c < trie->highStart);
-    U_ASSERT(haveValue);
-    int32_t di = trie->dataLength - UCPTRIE_HIGH_VALUE_NEG_DATA_OFFSET;
-    uint32_t highValue = getValue(trie->data, valueWidth, di);
-    if (maybeFilterValue(highValue, trie->nullValue, nullValue,
+        } જ્યારે (++i3 < i3BlockLength);
+    } જ્યારે (c < trie->ઉપલું_Start);
+    U_ASSERT(have_કિંમત);
+    int32_t di = trie->dataLength - UCPTRIE_ઉપલું_કિંમત_NEG_DATA_OFFSET;
+    uint32_t ઉપલું_કિંમત = get_કિંમત(trie->data, કિંમત_Width, di);
+    જો (maybe_Filter_કિંમત(ઉપલું_કિંમત, trie->null_કિંમત, null_કિંમત,
                          filter, context) != value) {
-        return c - 1;
-    } else {
-        return MAX_UNICODE;
+        પાછા c - 1;
+    } નહીંતર {
+        પાછા MAX_UNICODE;
     }
 }
 
@@ -416,171 +416,171 @@ UChar32 getRange(const void *t, UChar32 start,
 
 U_CFUNC UChar32
 ucptrie_internalGetRange(UCPTrieGetRange *getRange,
-                         const void *trie, UChar32 start,
-                         UCPMapRangeOption option, uint32_t surrogateValue,
-                         UCPMapValueFilter *filter, const void *context, uint32_t *pValue) {
-    if (option == UCPMAP_RANGE_NORMAL) {
-        return getRange(trie, start, filter, context, pValue);
+                         અચલ શૂન્ય *trie, UChar32 start,
+                         UCPMapRangeOption option, uint32_t surrogate_કિંમત,
+                         UCPMap_કિંમત_Filter *filter, અચલ શૂન્ય *context, uint32_t *p_કિંમત) {
+    જો (option == UCPMAP_RANGE_NORMAL) {
+        પાછા getRange(trie, start, filter, context, p_કિંમત);
     }
     uint32_t value;
-    if (pValue == nullptr) {
+    જો (p_કિંમત == nullptr) {
         // We need to examine the range value even if the caller does not want it.
-        pValue = &value;
+        p_કિંમત = &value;
     }
     UChar32 surrEnd = option == UCPMAP_RANGE_FIXED_ALL_SURROGATES ? 0xdfff : 0xdbff;
-    UChar32 end = getRange(trie, start, filter, context, pValue);
-    if (end < 0xd7ff || start > surrEnd) {
-        return end;
+    UChar32 end = getRange(trie, start, filter, context, p_કિંમત);
+    જો (end < 0xd7ff || start > surrEnd) {
+        પાછા end;
     }
     // The range overlaps with surrogates, or ends just before the first one.
-    if (*pValue == surrogateValue) {
-        if (end >= surrEnd) {
+    જો (*p_કિંમત == surrogate_કિંમત) {
+        જો (end >= surrEnd) {
             // Surrogates followed by a non-surrogateValue range,
             // or surrogates are part of a larger surrogateValue range.
-            return end;
+            પાછા end;
         }
-    } else {
-        if (start <= 0xd7ff) {
-            return 0xd7ff;  // Non-surrogateValue range ends before surrogateValue surrogates.
+    } નહીંતર {
+        જો (start <= 0xd7ff) {
+            પાછા 0xd7ff;  // Non-surrogateValue range ends before surrogateValue surrogates.
         }
         // Start is a surrogate with a non-surrogateValue code *unit* value.
         // Return a surrogateValue code *point* range.
-        *pValue = surrogateValue;
-        if (end > surrEnd) {
-            return surrEnd;  // Surrogate range ends before non-surrogateValue rest of range.
+        *p_કિંમત = surrogate_કિંમત;
+        જો (end > surrEnd) {
+            પાછા surrEnd;  // Surrogate range ends before non-surrogateValue rest of range.
         }
     }
     // See if the surrogateValue surrogate range can be merged with
     // an immediately following range.
     uint32_t value2;
     UChar32 end2 = getRange(trie, surrEnd + 1, filter, context, &value2);
-    if (value2 == surrogateValue) {
-        return end2;
+    જો (value2 == surrogate_કિંમત) {
+        પાછા end2;
     }
-    return surrEnd;
+    પાછા surrEnd;
 }
 
 U_CAPI UChar32 U_EXPORT2
-ucptrie_getRange(const UCPTrie *trie, UChar32 start,
-                 UCPMapRangeOption option, uint32_t surrogateValue,
-                 UCPMapValueFilter *filter, const void *context, uint32_t *pValue) {
-    return ucptrie_internalGetRange(getRange, trie, start,
-                                    option, surrogateValue,
-                                    filter, context, pValue);
+ucptrie_getRange(અચલ UCPTrie *trie, UChar32 start,
+                 UCPMapRangeOption option, uint32_t surrogate_કિંમત,
+                 UCPMap_કિંમત_Filter *filter, અચલ શૂન્ય *context, uint32_t *p_કિંમત) {
+    પાછા ucptrie_internalGetRange(getRange, trie, start,
+                                    option, surrogate_કિંમત,
+                                    filter, context, p_કિંમત);
 }
 
 U_CAPI int32_t U_EXPORT2
-ucptrie_toBinary(const UCPTrie *trie,
-                 void *data, int32_t capacity,
+ucptrie_to_દ્વિઅંકી(અચલ UCPTrie *trie,
+                 શૂન્ય *data, int32_t capacity,
                  UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return 0;
+    જો (U_FAILURE(*pErrorCode)) {
+        પાછા 0;
     }
 
     UCPTrieType type = (UCPTrieType)trie->type;
-    UCPTrieValueWidth valueWidth = (UCPTrieValueWidth)trie->valueWidth;
-    if (type < UCPTRIE_TYPE_FAST || UCPTRIE_TYPE_SMALL < type ||
-            valueWidth < UCPTRIE_VALUE_BITS_16 || UCPTRIE_VALUE_BITS_8 < valueWidth ||
+    UCPTrie_કિંમત_Width કિંમત_Width = (UCPTrie_કિંમત_Width)trie->કિંમત_Width;
+    જો (type < UCPTRIE_TYPE_FAST || UCPTRIE_TYPE_SMALL < type ||
+            કિંમત_Width < UCPTRIE_કિંમત_BITS_16 || UCPTRIE_કિંમત_BITS_8 < કિંમત_Width ||
             capacity < 0 ||
             (capacity > 0 && (data == nullptr || (U_POINTER_MASK_LSB(data, 3) != 0)))) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        પાછા 0;
     }
 
-    int32_t length = (int32_t)sizeof(UCPTrieHeader) + trie->indexLength * 2;
-    switch (valueWidth) {
-    case UCPTRIE_VALUE_BITS_16:
+    int32_t length = (int32_t)કદ(UCPTrieHeader) + trie->indexLength * 2;
+    પસંદગી (કિંમત_Width) {
+    સ્થિતિ UCPTRIE_કિંમત_BITS_16:
         length += trie->dataLength * 2;
-        break;
-    case UCPTRIE_VALUE_BITS_32:
+        તોડો;
+    સ્થિતિ UCPTRIE_કિંમત_BITS_32:
         length += trie->dataLength * 4;
-        break;
-    case UCPTRIE_VALUE_BITS_8:
+        તોડો;
+    સ્થિતિ UCPTRIE_કિંમત_BITS_8:
         length += trie->dataLength;
-        break;
-    default:
+        તોડો;
+    મૂળભૂત:
         // unreachable
-        break;
+        તોડો;
     }
-    if (capacity < length) {
+    જો (capacity < length) {
         *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
-        return length;
+        પાછા length;
     }
 
-    char *bytes = (char *)data;
+    અક્ષર *bytes = (અક્ષર *)data;
     UCPTrieHeader *header = (UCPTrieHeader *)bytes;
     header->signature = UCPTRIE_SIG;  // "Tri3"
     header->options = (uint16_t)(
         ((trie->dataLength & 0xf0000) >> 4) |
         ((trie->dataNullOffset & 0xf0000) >> 8) |
         (trie->type << 6) |
-        valueWidth);
+        કિંમત_Width);
     header->indexLength = (uint16_t)trie->indexLength;
     header->dataLength = (uint16_t)trie->dataLength;
     header->index3NullOffset = trie->index3NullOffset;
     header->dataNullOffset = (uint16_t)trie->dataNullOffset;
-    header->shiftedHighStart = trie->highStart >> UCPTRIE_SHIFT_2;
-    bytes += sizeof(UCPTrieHeader);
+    header->shifted_ઉપલું_Start = trie->ઉપલું_Start >> UCPTRIE_SHIFT_2;
+    bytes += કદ(UCPTrieHeader);
 
     uprv_memcpy(bytes, trie->index, trie->indexLength * 2);
     bytes += trie->indexLength * 2;
 
-    switch (valueWidth) {
-    case UCPTRIE_VALUE_BITS_16:
+    પસંદગી (કિંમત_Width) {
+    સ્થિતિ UCPTRIE_કિંમત_BITS_16:
         uprv_memcpy(bytes, trie->data.ptr16, trie->dataLength * 2);
-        break;
-    case UCPTRIE_VALUE_BITS_32:
+        તોડો;
+    સ્થિતિ UCPTRIE_કિંમત_BITS_32:
         uprv_memcpy(bytes, trie->data.ptr32, trie->dataLength * 4);
-        break;
-    case UCPTRIE_VALUE_BITS_8:
+        તોડો;
+    સ્થિતિ UCPTRIE_કિંમત_BITS_8:
         uprv_memcpy(bytes, trie->data.ptr8, trie->dataLength);
-        break;
-    default:
+        તોડો;
+    મૂળભૂત:
         // unreachable
-        break;
+        તોડો;
     }
-    return length;
+    પાછા length;
 }
 
-namespace {
+નામાકાશ {
 
 #ifdef UCPTRIE_DEBUG
-long countNull(const UCPTrie *trie) {
-    uint32_t nullValue=trie->nullValue;
+long ગણતરી_Null(અચલ UCPTrie *trie) {
+    uint32_t null_કિંમત=trie->null_કિંમત;
     int32_t length=trie->dataLength;
     long count=0;
-    switch (trie->valueWidth) {
-    case UCPTRIE_VALUE_BITS_16:
-        for(int32_t i=0; i<length; ++i) {
-            if(trie->data.ptr16[i]==nullValue) { ++count; }
+    પસંદગી (trie->કિંમત_Width) {
+    સ્થિતિ UCPTRIE_કિંમત_BITS_16:
+        માટે(int32_t i=0; i<length; ++i) {
+            જો(trie->data.ptr16[i]==null_કિંમત) { ++count; }
         }
-        break;
-    case UCPTRIE_VALUE_BITS_32:
-        for(int32_t i=0; i<length; ++i) {
-            if(trie->data.ptr32[i]==nullValue) { ++count; }
+        તોડો;
+    સ્થિતિ UCPTRIE_કિંમત_BITS_32:
+        માટે(int32_t i=0; i<length; ++i) {
+            જો(trie->data.ptr32[i]==null_કિંમત) { ++count; }
         }
-        break;
-    case UCPTRIE_VALUE_BITS_8:
-        for(int32_t i=0; i<length; ++i) {
-            if(trie->data.ptr8[i]==nullValue) { ++count; }
+        તોડો;
+    સ્થિતિ UCPTRIE_કિંમત_BITS_8:
+        માટે(int32_t i=0; i<length; ++i) {
+            જો(trie->data.ptr8[i]==null_કિંમત) { ++count; }
         }
-        break;
-    default:
+        તોડો;
+    મૂળભૂત:
         // unreachable
-        break;
+        તોડો;
     }
-    return count;
+    પાછા count;
 }
 
-U_CFUNC void
-ucptrie_printLengths(const UCPTrie *trie, const char *which) {
+U_CFUNC શૂન્ય
+ucptrie_printLengths(અચલ UCPTrie *trie, અચલ અક્ષર *which) {
     long indexLength=trie->indexLength;
     long dataLength=(long)trie->dataLength;
-    long totalLength=(long)sizeof(UCPTrieHeader)+indexLength*2+
-            dataLength*(trie->valueWidth==UCPTRIE_VALUE_BITS_16 ? 2 :
-                        trie->valueWidth==UCPTRIE_VALUE_BITS_32 ? 4 : 1);
+    long totalLength=(long)કદ(UCPTrieHeader)+indexLength*2+
+            dataLength*(trie->કિંમત_Width==UCPTRIE_કિંમત_BITS_16 ? 2 :
+                        trie->કિંમત_Width==UCPTRIE_કિંમત_BITS_32 ? 4 : 1);
     printf("**UCPTrieLengths(%s %s)** index:%6ld  data:%6ld  countNull:%6ld  serialized:%6ld\n",
-           which, trie->name, indexLength, dataLength, countNull(trie), totalLength);
+           which, trie->name, indexLength, dataLength, ગણતરી_Null(trie), totalLength);
 }
 #endif
 
@@ -590,15 +590,15 @@ ucptrie_printLengths(const UCPTrie *trie, const char *which) {
 // Initially, this is the same as UCPTrie. This may well change.
 
 U_CAPI uint32_t U_EXPORT2
-ucpmap_get(const UCPMap *map, UChar32 c) {
-    return ucptrie_get(reinterpret_cast<const UCPTrie *>(map), c);
+ucpmap_get(અચલ UCPMap *map, UChar32 c) {
+    પાછા ucptrie_get(reinterpret_cast<અચલ UCPTrie *>(map), c);
 }
 
 U_CAPI UChar32 U_EXPORT2
-ucpmap_getRange(const UCPMap *map, UChar32 start,
-                UCPMapRangeOption option, uint32_t surrogateValue,
-                UCPMapValueFilter *filter, const void *context, uint32_t *pValue) {
-    return ucptrie_getRange(reinterpret_cast<const UCPTrie *>(map), start,
-                            option, surrogateValue,
-                            filter, context, pValue);
+ucpmap_getRange(અચલ UCPMap *map, UChar32 start,
+                UCPMapRangeOption option, uint32_t surrogate_કિંમત,
+                UCPMap_કિંમત_Filter *filter, અચલ શૂન્ય *context, uint32_t *p_કિંમત) {
+    પાછા ucptrie_getRange(reinterpret_cast<અચલ UCPTrie *>(map), start,
+                            option, surrogate_કિંમત,
+                            filter, context, p_કિંમત);
 }

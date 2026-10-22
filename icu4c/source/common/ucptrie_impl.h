@@ -7,9 +7,9 @@
 #ifndef __UCPTRIE_IMPL_H__
 #define __UCPTRIE_IMPL_H__
 
-#include "unicode/ucptrie.h"
+#અન્તર્ભાવ "unicode/ucptrie.h"
 #ifdef UCPTRIE_DEBUG
-#include "unicode/umutablecptrie.h"
+#અન્તર્ભાવ "unicode/umutablecptrie.h"
 #endif
 
 // UCPTrie signature values, in platform endianness and opposite endianness.
@@ -21,7 +21,7 @@
  * Header data for the binary, memory-mappable representation of a UCPTrie/CodePointTrie.
  * @internal
  */
-struct UCPTrieHeader {
+સંરચના UCPTrieHeader {
     /** "Tri3" in big-endian US-ASCII (0x54726933) */
     uint32_t signature;
 
@@ -51,14 +51,14 @@ struct UCPTrieHeader {
      * First code point of the single-value range ending with U+10ffff,
      * rounded up and then shifted right by UCPTRIE_SHIFT_2.
      */
-    uint16_t shiftedHighStart;
+    uint16_t shifted_ઉપલું_Start;
 };
 
 // Constants for use with UCPTrieHeader.options.
 constexpr uint16_t UCPTRIE_OPTIONS_DATA_LENGTH_MASK = 0xf000;
 constexpr uint16_t UCPTRIE_OPTIONS_DATA_NULL_OFFSET_MASK = 0xf00;
 constexpr uint16_t UCPTRIE_OPTIONS_RESERVED_MASK = 0x38;
-constexpr uint16_t UCPTRIE_OPTIONS_VALUE_BITS_MASK = 7;
+constexpr uint16_t UCPTRIE_OPTIONS_કિંમત_BITS_MASK = 7;
 
 /**
  * Value for index3NullOffset which indicates that there is no index-3 null block.
@@ -125,21 +125,21 @@ constexpr int32_t UCPTRIE_SMALL_DATA_BLOCK_LENGTH = 1 << UCPTRIE_SHIFT_3;
 constexpr int32_t UCPTRIE_SMALL_DATA_MASK = UCPTRIE_SMALL_DATA_BLOCK_LENGTH - 1;
 
 
-typedef UChar32
-UCPTrieGetRange(const void *trie, UChar32 start,
-                UCPMapValueFilter *filter, const void *context, uint32_t *pValue);
+પ્રકારવ્યાખ્યા UChar32
+UCPTrieGetRange(અચલ શૂન્ય *trie, UChar32 start,
+                UCPMap_કિંમત_Filter *filter, અચલ શૂન્ય *context, uint32_t *p_કિંમત);
 
 U_CFUNC UChar32
 ucptrie_internalGetRange(UCPTrieGetRange *getRange,
-                         const void *trie, UChar32 start,
-                         UCPMapRangeOption option, uint32_t surrogateValue,
-                         UCPMapValueFilter *filter, const void *context, uint32_t *pValue);
+                         અચલ શૂન્ય *trie, UChar32 start,
+                         UCPMapRangeOption option, uint32_t surrogate_કિંમત,
+                         UCPMap_કિંમત_Filter *filter, અચલ શૂન્ય *context, uint32_t *p_કિંમત);
 
 #ifdef UCPTRIE_DEBUG
-U_CFUNC void
-ucptrie_printLengths(const UCPTrie *trie, const char *which);
+U_CFUNC શૂન્ય
+ucptrie_printLengths(અચલ UCPTrie *trie, અચલ અક્ષર *which);
 
-U_CFUNC void umutablecptrie_setName(UMutableCPTrie *builder, const char *name);
+U_CFUNC શૂન્ય umutablecptrie_setName(UMutableCPTrie *builder, અચલ અક્ષર *name);
 #endif
 
 /*

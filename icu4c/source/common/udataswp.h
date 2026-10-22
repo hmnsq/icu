@@ -23,15 +23,15 @@
 #ifndef __UDATASWP_H__
 #define __UDATASWP_H__
 
-#include <stdarg.h>
-#include "unicode/utypes.h"
+#અન્તર્ભાવ <stdarg.h>
+#અન્તર્ભાવ "unicode/utypes.h"
 
 /* forward declaration */
 
 U_CDECL_BEGIN
 
-struct UDataSwapper;
-typedef struct UDataSwapper UDataSwapper;
+સંરચના UDataSwapper;
+પ્રકારવ્યાખ્યા સંરચના UDataSwapper UDataSwapper;
 
 /**
  * Function type for data transformation.
@@ -86,37 +86,37 @@ typedef struct UDataSwapper UDataSwapper;
  * @see UDataSwapper
  * @internal ICU 2.8
  */
-typedef int32_t U_CALLCONV
-UDataSwapFn(const UDataSwapper *ds,
-            const void *inData, int32_t length, void *outData,
+પ્રકારવ્યાખ્યા int32_t U_CALLCONV
+UDataSwapFn(અચલ UDataSwapper *ds,
+            અચલ શૂન્ય *inData, int32_t length, શૂન્ય *outData,
             UErrorCode *pErrorCode);
 
 /**
  * Convert one uint16_t from input to platform endianness.
  * @internal ICU 2.8
  */
-typedef uint16_t U_CALLCONV
+પ્રકારવ્યાખ્યા uint16_t U_CALLCONV
 UDataReadUInt16(uint16_t x);
 
 /**
  * Convert one uint32_t from input to platform endianness.
  * @internal ICU 2.8
  */
-typedef uint32_t U_CALLCONV
+પ્રકારવ્યાખ્યા uint32_t U_CALLCONV
 UDataReadUInt32(uint32_t x);
 
 /**
  * Convert one uint16_t from platform to input endianness.
  * @internal ICU 2.8
  */
-typedef void U_CALLCONV
+પ્રકારવ્યાખ્યા શૂન્ય U_CALLCONV
 UDataWriteUInt16(uint16_t *p, uint16_t x);
 
 /**
  * Convert one uint32_t from platform to input endianness.
  * @internal ICU 2.8
  */
-typedef void U_CALLCONV
+પ્રકારવ્યાખ્યા શૂન્ય U_CALLCONV
 UDataWriteUInt32(uint32_t *p, uint32_t x);
 
 /**
@@ -129,10 +129,10 @@ UDataWriteUInt32(uint32_t *p, uint32_t x);
  * Returns Unicode code point order for invariant characters.
  * @internal ICU 2.8
  */
-typedef int32_t U_CALLCONV
-UDataCompareInvChars(const UDataSwapper *ds,
-                     const char *outString, int32_t outLength,
-                     const UChar *localString, int32_t localLength);
+પ્રકારવ્યાખ્યા int32_t U_CALLCONV
+UDataCompareInvChars(અચલ UDataSwapper *ds,
+                     અચલ અક્ષર *outString, int32_t outLength,
+                     અચલ UChar *localString, int32_t localLength);
 
 /**
  * Function for message output when an error occurs during data swapping.
@@ -145,10 +145,10 @@ UDataCompareInvChars(const UDataSwapper *ds,
  *
  * @internal ICU 2.8
  */
-typedef void U_CALLCONV
-UDataPrintError(void *context, const char *fmt, va_list args);
+પ્રકારવ્યાખ્યા શૂન્ય U_CALLCONV
+UDataPrintError(શૂન્ય *context, અચલ અક્ષર *fmt, va_list args);
 
-struct UDataSwapper {
+સંરચના UDataSwapper {
     /** Input endianness. @internal ICU 2.8 */
     UBool inIsBigEndian;
     /** Input charset family. @see U_CHARSET_FAMILY @internal ICU 2.8 */
@@ -192,7 +192,7 @@ struct UDataSwapper {
      */
     UDataPrintError *printError;
     /** Context pointer for printError. @internal ICU 2.8 */
-    void *printErrorContext;
+    શૂન્ય *printErrorContext;
 };
 
 U_CDECL_END
@@ -212,11 +212,11 @@ udata_openSwapper(UBool inIsBigEndian, uint8_t inCharset,
  * @internal ICU 2.8
  */
 U_CAPI UDataSwapper * U_EXPORT2
-udata_openSwapperForInputData(const void *data, int32_t length,
+udata_open_Swapper_For_આગત_Data(અચલ શૂન્ય *data, int32_t length,
                               UBool outIsBigEndian, uint8_t outCharset,
                               UErrorCode *pErrorCode);
 
-U_CAPI void U_EXPORT2
+U_CAPI શૂન્ય U_EXPORT2
 udata_closeSwapper(UDataSwapper *ds);
 
 /**
@@ -229,8 +229,8 @@ udata_closeSwapper(UDataSwapper *ds);
  * @internal ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-udata_swapDataHeader(const UDataSwapper *ds,
-                     const void *inData, int32_t length, void *outData,
+udata_swapDataHeader(અચલ UDataSwapper *ds,
+                     અચલ શૂન્ય *inData, int32_t length, શૂન્ય *outData,
                      UErrorCode *pErrorCode);
 
 /**
@@ -238,14 +238,14 @@ udata_swapDataHeader(const UDataSwapper *ds,
  * @internal ICU 2.8
  */
 U_CAPI int16_t U_EXPORT2
-udata_readInt16(const UDataSwapper *ds, int16_t x);
+udata_readInt16(અચલ UDataSwapper *ds, int16_t x);
 
 /**
  * Convert one int32_t from input to platform endianness.
  * @internal ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-udata_readInt32(const UDataSwapper *ds, int32_t x);
+udata_readInt32(અચલ UDataSwapper *ds, int32_t x);
 
 /**
  * Swap a block of invariant, NUL-terminated strings, but not padding
@@ -253,13 +253,13 @@ udata_readInt32(const UDataSwapper *ds, int32_t x);
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-udata_swapInvStringBlock(const UDataSwapper *ds,
-                         const void *inData, int32_t length, void *outData,
+udata_swapInvStringBlock(અચલ UDataSwapper *ds,
+                         અચલ શૂન્ય *inData, int32_t length, શૂન્ય *outData,
                          UErrorCode *pErrorCode);
 
-U_CAPI void U_EXPORT2
-udata_printError(const UDataSwapper *ds,
-                 const char *fmt,
+U_CAPI શૂન્ય U_EXPORT2
+udata_printError(અચલ UDataSwapper *ds,
+                 અચલ અક્ષર *fmt,
                  ...);
 
 /* internal exports from putil.c -------------------------------------------- */
@@ -271,8 +271,8 @@ udata_printError(const UDataSwapper *ds,
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uprv_ebcdicFromAscii(const UDataSwapper *ds,
-                     const void *inData, int32_t length, void *outData,
+uprv_ebcdicFromAscii(અચલ UDataSwapper *ds,
+                     અચલ શૂન્ય *inData, int32_t length, શૂન્ય *outData,
                      UErrorCode *pErrorCode);
 
 /**
@@ -280,8 +280,8 @@ uprv_ebcdicFromAscii(const UDataSwapper *ds,
  * @internal
  */
 U_CFUNC int32_t
-uprv_copyAscii(const UDataSwapper *ds,
-               const void *inData, int32_t length, void *outData,
+uprv_copyAscii(અચલ UDataSwapper *ds,
+               અચલ શૂન્ય *inData, int32_t length, શૂન્ય *outData,
                UErrorCode *pErrorCode);
 
 /**
@@ -289,8 +289,8 @@ uprv_copyAscii(const UDataSwapper *ds,
  * @internal
  */
 U_CFUNC int32_t
-uprv_asciiFromEbcdic(const UDataSwapper *ds,
-                     const void *inData, int32_t length, void *outData,
+uprv_asciiFromEbcdic(અચલ UDataSwapper *ds,
+                     અચલ શૂન્ય *inData, int32_t length, શૂન્ય *outData,
                      UErrorCode *pErrorCode);
 
 /**
@@ -298,8 +298,8 @@ uprv_asciiFromEbcdic(const UDataSwapper *ds,
  * @internal
  */
 U_CFUNC int32_t
-uprv_copyEbcdic(const UDataSwapper *ds,
-                const void *inData, int32_t length, void *outData,
+uprv_copyEbcdic(અચલ UDataSwapper *ds,
+                અચલ શૂન્ય *inData, int32_t length, શૂન્ય *outData,
                 UErrorCode *pErrorCode);
 
 /**
@@ -307,29 +307,29 @@ uprv_copyEbcdic(const UDataSwapper *ds,
  * @internal
  */
 U_CFUNC int32_t
-uprv_compareInvAscii(const UDataSwapper *ds,
-                     const char *outString, int32_t outLength,
-                     const UChar *localString, int32_t localLength);
+uprv_compareInvAscii(અચલ UDataSwapper *ds,
+                     અચલ અક્ષર *outString, int32_t outLength,
+                     અચલ UChar *localString, int32_t localLength);
 
 /**
  * Compare EBCDIC invariant char * with Unicode invariant UChar *
  * @internal
  */
 U_CFUNC int32_t
-uprv_compareInvEbcdic(const UDataSwapper *ds,
-                      const char *outString, int32_t outLength,
-                      const UChar *localString, int32_t localLength);
+uprv_compareInvEbcdic(અચલ UDataSwapper *ds,
+                      અચલ અક્ષર *outString, int32_t outLength,
+                      અચલ UChar *localString, int32_t localLength);
 
 /**
  * \def uprv_compareInvWithUChar
  * Compare an invariant-character strings with a UChar string
  * @internal
  */
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
+#જો U_CHARSET_FAMILY==U_ASCII_FAMILY
 #   define uprv_compareInvWithUChar uprv_compareInvAscii
-#elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+#અથવાજો U_CHARSET_FAMILY==U_EBCDIC_FAMILY
 #   define uprv_compareInvWithUChar uprv_compareInvEbcdic
-#else
+#નહીંતર
 #   error Unknown charset family!
 #endif
 
@@ -340,8 +340,8 @@ uprv_compareInvEbcdic(const UDataSwapper *ds,
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-utrie_swap(const UDataSwapper *ds,
-           const void *inData, int32_t length, void *outData,
+utrie_swap(અચલ UDataSwapper *ds,
+           અચલ શૂન્ય *inData, int32_t length, શૂન્ય *outData,
            UErrorCode *pErrorCode);
 
 /**
@@ -349,8 +349,8 @@ utrie_swap(const UDataSwapper *ds,
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-utrie2_swap(const UDataSwapper *ds,
-            const void *inData, int32_t length, void *outData,
+utrie2_swap(અચલ UDataSwapper *ds,
+            અચલ શૂન્ય *inData, int32_t length, શૂન્ય *outData,
             UErrorCode *pErrorCode);
 
 /**
@@ -358,8 +358,8 @@ utrie2_swap(const UDataSwapper *ds,
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-ucptrie_swap(const UDataSwapper *ds,
-             const void *inData, int32_t length, void *outData,
+ucptrie_swap(અચલ UDataSwapper *ds,
+             અચલ શૂન્ય *inData, int32_t length, શૂન્ય *outData,
              UErrorCode *pErrorCode);
 
 /**
@@ -367,13 +367,13 @@ ucptrie_swap(const UDataSwapper *ds,
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-utrie_swapAnyVersion(const UDataSwapper *ds,
-                     const void *inData, int32_t length, void *outData,
+utrie_swapAnyVersion(અચલ UDataSwapper *ds,
+                     અચલ શૂન્ય *inData, int32_t length, શૂન્ય *outData,
                      UErrorCode *pErrorCode);
 
 /* material... -------------------------------------------------------------- */
 
-#if 0
+#જો 0
 
 /* udata.h */
 
@@ -393,10 +393,10 @@ utrie_swapAnyVersion(const UDataSwapper *ds,
  * @internal ICU 2.8
  */
 U_CAPI UDataMemory * U_EXPORT2
-udata_openSwap(const char *path, const char *type, const char *name,
-               UDataMemoryIsAcceptable *isAcceptable, void *isAcceptableContext,
+udata_openSwap(અચલ અક્ષર *path, અચલ અક્ષર *type, અચલ અક્ષર *name,
+               UDataMemoryIsAcceptable *isAcceptable, શૂન્ય *isAcceptableContext,
                UDataSwapFn *swap,
-               UDataPrintError *printError, void *printErrorContext,
+               UDataPrintError *printError, શૂન્ય *printErrorContext,
                UErrorCode *pErrorCode);
 
 #endif

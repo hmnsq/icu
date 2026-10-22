@@ -16,10 +16,10 @@
 #ifndef UVECTOR64_H
 #define UVECTOR64_H
 
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "uhash.h"
-#include "uassert.h"
+#અન્તર્ભાવ "unicode/utypes.h"
+#અન્તર્ભાવ "unicode/uobject.h"
+#અન્તર્ભાવ "uhash.h"
+#અન્તર્ભાવ "uassert.h"
 
 U_NAMESPACE_BEGIN
 
@@ -57,9 +57,9 @@ U_NAMESPACE_BEGIN
  * <p>Improve the handling of index out of bounds errors.
  *
  */
-class U_COMMON_API UVector64 : public UObject {
-private:
-    int32_t   count;
+class U_COMMON_API UVector64 : જાહેર UObject {
+ખાનગી:
+    int32_t   ગણતરી;
 
     int32_t   capacity;
     
@@ -67,46 +67,46 @@ private:
 
     int64_t*  elements;
 
-public:
+જાહેર:
     UVector64(UErrorCode &status);
 
     UVector64(int32_t initialCapacity, UErrorCode &status);
 
-    virtual ~UVector64();
+    આભાસી ~UVector64();
 
     /**
      * Assign this object to another (make this a copy of 'other').
      * Use the 'assign' function to assign each element.
      */
-    void assign(const UVector64& other, UErrorCode &ec);
+    શૂન્ય assign(અચલ UVector64& other, UErrorCode &ec);
 
     /**
      * Compare this vector with another.  They will be considered
      * equal if they are of the same size and all elements are equal,
      * as compared using this object's comparer.
      */
-    bool operator==(const UVector64& other);
+    bool operator==(અચલ UVector64& other);
 
     /**
      * Equivalent to !operator==()
      */
-    inline bool operator!=(const UVector64& other);
+    અંતઃરેખ bool operator!=(અચલ UVector64& other);
 
     //------------------------------------------------------------
     // subset of java.util.Vector API
     //------------------------------------------------------------
 
-    inline void addElement(int64_t elem, UErrorCode &status);
+    અંતઃરેખ શૂન્ય addElement(int64_t elem, UErrorCode &status);
 
-    void setElementAt(int64_t elem, int32_t index);
+    શૂન્ય setElementAt(int64_t elem, int32_t index);
 
-    void insertElementAt(int64_t elem, int32_t index, UErrorCode &status);
+    શૂન્ય ઉમેરો_Element_At(int64_t elem, int32_t index, UErrorCode &status);
     
-    inline int64_t elementAti(int32_t index) const;
+    અંતઃરેખ int64_t elementAti(int32_t index) અચલ;
 
     //UBool equals(const UVector64 &other) const;
 
-    inline int64_t lastElementi() const;
+    અંતઃરેખ int64_t lastElementi() અચલ;
 
     //int32_t indexOf(int64_t elem, int32_t startIndex = 0) const;
 
@@ -120,14 +120,14 @@ public:
 
     //void removeElementAt(int32_t index);
 
-    void removeAllElements();
+    શૂન્ય removeAllElements();
 
-    inline int32_t size() const;
+    અંતઃરેખ int32_t size() અચલ;
 
-    inline UBool isEmpty() const { return count == 0; }
+    અંતઃરેખ UBool isEmpty() અચલ { પાછા ગણતરી == 0; }
 
     // Inline.  Use this one for speedy size check.
-    inline UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
+    અંતઃરેખ UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
 
     // Out-of-line, handles actual growth.  Called by ensureCapacity() when necessary.
     UBool expandCapacity(int32_t minimumCapacity, UErrorCode &status);
@@ -138,7 +138,7 @@ public:
      * elements for i >= newSize.  If newSize is larger, grow the
      * array, filling in new slows with zero.
      */
-    void setSize(int32_t newSize);
+    શૂન્ય setSize(int32_t newSize);
 
     //------------------------------------------------------------
     // New API
@@ -152,7 +152,7 @@ public:
     /**
      * Returns a pointer to the internal array holding the vector.
      */
-    inline int64_t *getBuffer() const;
+    અંતઃરેખ int64_t *getBuffer() અચલ;
 
     /**
      * Set the maximum allowed buffer capacity for this vector/stack.
@@ -160,118 +160,118 @@ public:
      * A Limit of zero means unlimited capacity.
      * Units are vector elements (64 bits each), not bytes.
      */
-    void setMaxCapacity(int32_t limit);
+    શૂન્ય setMaxCapacity(int32_t limit);
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    સ્થિર UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      */
-    virtual UClassID getDynamicClassID() const override;
+    આભાસી UClassID getDynamicClassID() અચલ override;
 
-private:
-    void _init(int32_t initialCapacity, UErrorCode &status);
-
-    // Disallow
-    UVector64(const UVector64&) = delete;
+ખાનગી:
+    શૂન્ય _init(int32_t initialCapacity, UErrorCode &status);
 
     // Disallow
-    UVector64& operator=(const UVector64&) = delete;
+    UVector64(અચલ UVector64&) = delete;
+
+    // Disallow
+    UVector64& operator=(અચલ UVector64&) = delete;
 
 
     //  API Functions for Stack operations.
     //  In the original UVector, these were in a separate derived class, UStack.
     //  Here in UVector64, they are all together.
-public:
+જાહેર:
     //UBool empty() const;   // TODO:  redundant, same as empty().  Remove it?
 
     //int64_t peeki() const;
     
-    inline int64_t popi();
+    અંતઃરેખ int64_t popi();
     
-    inline int64_t push(int64_t i, UErrorCode &status);
+    અંતઃરેખ int64_t ધકેલો(int64_t i, UErrorCode &status);
 
-    inline int64_t *reserveBlock(int32_t size, UErrorCode &status);
-    inline int64_t *popFrame(int32_t size);
+    અંતઃરેખ int64_t *reserveBlock(int32_t size, UErrorCode &status);
+    અંતઃરેખ int64_t *કાઢો_Frame(int32_t size);
 };
 
 
 // UVector64 inlines
 
-inline UBool UVector64::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
-    if ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
-        return true;
-    } else {
-        return expandCapacity(minimumCapacity, status);
+અંતઃરેખ UBool UVector64::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
+    જો ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
+        પાછા true;
+    } નહીંતર {
+        પાછા expandCapacity(minimumCapacity, status);
     }
 }
 
-inline int64_t UVector64::elementAti(int32_t index) const {
-    return (0 <= index && index < count) ? elements[index] : 0;
+અંતઃરેખ int64_t UVector64::elementAti(int32_t index) અચલ {
+    પાછા (0 <= index && index < ગણતરી) ? elements[index] : 0;
 }
 
 
-inline void UVector64::addElement(int64_t elem, UErrorCode &status) {
-    if (ensureCapacity(count + 1, status)) {
-        elements[count] = elem;
-        count++;
+અંતઃરેખ શૂન્ય UVector64::addElement(int64_t elem, UErrorCode &status) {
+    જો (ensureCapacity(ગણતરી + 1, status)) {
+        elements[ગણતરી] = elem;
+        ગણતરી++;
     }
 }
 
-inline int64_t *UVector64::reserveBlock(int32_t size, UErrorCode &status) {
-    if (ensureCapacity(count+size, status) == false) {
-        return nullptr;
+અંતઃરેખ int64_t *UVector64::reserveBlock(int32_t size, UErrorCode &status) {
+    જો (ensureCapacity(ગણતરી+size, status) == false) {
+        પાછા nullptr;
     }
-    int64_t  *rp = elements+count;
-    count += size;
-    return rp;
+    int64_t  *rp = elements+ગણતરી;
+    ગણતરી += size;
+    પાછા rp;
 }
 
-inline int64_t *UVector64::popFrame(int32_t size) {
-    U_ASSERT(count >= size);
-    count -= size;
-    if (count < 0) {
-        count = 0;
+અંતઃરેખ int64_t *UVector64::કાઢો_Frame(int32_t size) {
+    U_ASSERT(ગણતરી >= size);
+    ગણતરી -= size;
+    જો (ગણતરી < 0) {
+        ગણતરી = 0;
     }
-    return elements+count-size;
+    પાછા elements+ગણતરી-size;
 }
 
 
 
-inline int32_t UVector64::size() const {
-    return count;
+અંતઃરેખ int32_t UVector64::size() અચલ {
+    પાછા ગણતરી;
 }
 
-inline int64_t UVector64::lastElementi() const {
-    return elementAti(count-1);
+અંતઃરેખ int64_t UVector64::lastElementi() અચલ {
+    પાછા elementAti(ગણતરી-1);
 }
 
-inline bool UVector64::operator!=(const UVector64& other) {
-    return !operator==(other);
+અંતઃરેખ bool UVector64::operator!=(અચલ UVector64& other) {
+    પાછા !operator==(other);
 }
 
-inline int64_t *UVector64::getBuffer() const {
-    return elements;
+અંતઃરેખ int64_t *UVector64::getBuffer() અચલ {
+    પાછા elements;
 }
 
 
 // UStack inlines
 
-inline int64_t UVector64::push(int64_t i, UErrorCode &status) {
+અંતઃરેખ int64_t UVector64::ધકેલો(int64_t i, UErrorCode &status) {
     addElement(i, status);
-    return i;
+    પાછા i;
 }
 
-inline int64_t UVector64::popi() {
+અંતઃરેખ int64_t UVector64::popi() {
     int64_t result = 0;
-    if (count > 0) {
-        count--;
-        result = elements[count];
+    જો (ગણતરી > 0) {
+        ગણતરી--;
+        result = elements[ગણતરી];
     }
-    return result;
+    પાછા result;
 }
 
 U_NAMESPACE_END

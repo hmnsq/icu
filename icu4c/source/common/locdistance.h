@@ -7,45 +7,45 @@
 #ifndef __LOCDISTANCE_H__
 #define __LOCDISTANCE_H__
 
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/localematcher.h"
-#include "unicode/locid.h"
-#include "unicode/uobject.h"
-#include "lsr.h"
+#અન્તર્ભાવ "unicode/utypes.h"
+#અન્તર્ભાવ "unicode/bytestrie.h"
+#અન્તર્ભાવ "unicode/localematcher.h"
+#અન્તર્ભાવ "unicode/locid.h"
+#અન્તર્ભાવ "unicode/uobject.h"
+#અન્તર્ભાવ "lsr.h"
 
 U_NAMESPACE_BEGIN
 
-struct LocaleDistanceData;
+સંરચના LocaleDistanceData;
 
 /**
  * Offline-built data for LocaleMatcher.
  * Mostly but not only the data for mapping locales to their maximized forms.
  */
-class LocaleDistance final : public UMemory {
-public:
-    static const LocaleDistance *getSingleton(UErrorCode &errorCode);
+class LocaleDistance final : જાહેર UMemory {
+જાહેર:
+    સ્થિર અચલ LocaleDistance *getSingleton(UErrorCode &errorCode);
 
-    static int32_t shiftDistance(int32_t distance) {
-        return distance << DISTANCE_SHIFT;
+    સ્થિર int32_t shiftDistance(int32_t distance) {
+        પાછા distance << DISTANCE_SHIFT;
     }
 
-    static int32_t getShiftedDistance(int32_t indexAndDistance) {
-        return indexAndDistance & DISTANCE_MASK;
+    સ્થિર int32_t getShiftedDistance(int32_t indexAndDistance) {
+        પાછા indexAndDistance & DISTANCE_MASK;
     }
 
-    static double getDistanceDouble(int32_t indexAndDistance) {
-        double shiftedDistance = getShiftedDistance(indexAndDistance);
-        return shiftedDistance / (1 << DISTANCE_SHIFT);
+    સ્થિર દ્વિગુણ getDistanceDouble(int32_t indexAndDistance) {
+        દ્વિગુણ shiftedDistance = getShiftedDistance(indexAndDistance);
+        પાછા shiftedDistance / (1 << DISTANCE_SHIFT);
     }
 
-    static int32_t getDistanceFloor(int32_t indexAndDistance) {
-        return (indexAndDistance & DISTANCE_MASK) >> DISTANCE_SHIFT;
+    સ્થિર int32_t getDistanceFloor(int32_t indexAndDistance) {
+        પાછા (indexAndDistance & DISTANCE_MASK) >> DISTANCE_SHIFT;
     }
 
-    static int32_t getIndex(int32_t indexAndDistance) {
+    સ્થિર int32_t getIndex(int32_t indexAndDistance) {
         // assert indexAndDistance >= 0;
-        return indexAndDistance >> INDEX_SHIFT;
+        પાછા indexAndDistance >> INDEX_SHIFT;
     }
 
     /**
@@ -56,70 +56,70 @@ public:
      * (negative if none has a distance below the threshold),
      * and its distance (0..ABOVE_THRESHOLD) in the low bits.
      */
-    int32_t getBestIndexAndDistance(const LSR &desired,
-                                    const LSR **supportedLSRs, int32_t supportedLSRsLength,
+    int32_t getBestIndexAndDistance(અચલ LSR &desired,
+                                    અચલ LSR **supportedLSRs, int32_t supportedLSRsLength,
                                     int32_t shiftedThreshold,
                                     ULocMatchFavorSubtag favorSubtag,
-                                    ULocMatchDirection direction) const;
+                                    ULocMatchDirection direction) અચલ;
 
-    bool isParadigmLSR(const LSR &lsr) const;
+    bool isParadigmLSR(અચલ LSR &lsr) અચલ;
 
-    int32_t getDefaultScriptDistance() const {
-        return defaultScriptDistance;
+    int32_t getDefaultScriptDistance() અચલ {
+        પાછા defaultScriptDistance;
     }
 
-    int32_t getDefaultDemotionPerDesiredLocale() const {
-        return defaultDemotionPerDesiredLocale;
+    int32_t getDefaultDemotionPerDesiredLocale() અચલ {
+        પાછા defaultDemotionPerDesiredLocale;
     }
 
-private:
+ખાનગી:
     // The distance is shifted left to gain some fraction bits.
-    static constexpr int32_t DISTANCE_SHIFT = 3;
-    static constexpr int32_t DISTANCE_FRACTION_MASK = 7;
+    સ્થિર constexpr int32_t DISTANCE_SHIFT = 3;
+    સ્થિર constexpr int32_t DISTANCE_FRACTION_MASK = 7;
     // 7 bits for 0..100
-    static constexpr int32_t DISTANCE_INT_SHIFT = 7;
-    static constexpr int32_t INDEX_SHIFT = DISTANCE_INT_SHIFT + DISTANCE_SHIFT;
-    static constexpr int32_t DISTANCE_MASK = 0x3ff;
+    સ્થિર constexpr int32_t DISTANCE_INT_SHIFT = 7;
+    સ્થિર constexpr int32_t INDEX_SHIFT = DISTANCE_INT_SHIFT + DISTANCE_SHIFT;
+    સ્થિર constexpr int32_t DISTANCE_MASK = 0x3ff;
     // tic constexpr int32_t MAX_INDEX = 0x1fffff;  // avoids sign bit
-    static constexpr int32_t INDEX_NEG_1 = 0xfffffc00;
+    સ્થિર constexpr int32_t INDEX_NEG_1 = 0xfffffc00;
 
-    LocaleDistance(const LocaleDistanceData &data, const LikelySubtags &likely);
-    LocaleDistance(const LocaleDistance &other) = delete;
-    LocaleDistance &operator=(const LocaleDistance &other) = delete;
+    LocaleDistance(અચલ LocaleDistanceData &data, અચલ LikelySubtags &likely);
+    LocaleDistance(અચલ LocaleDistance &other) = delete;
+    LocaleDistance &operator=(અચલ LocaleDistance &other) = delete;
 
-    static void initLocaleDistance(UErrorCode &errorCode);
+    સ્થિર શૂન્ય initLocaleDistance(UErrorCode &errorCode);
 
-    bool isMatch(const LSR &desired, const LSR &supported,
-                 int32_t shiftedThreshold, ULocMatchFavorSubtag favorSubtag) const {
-        const LSR *pSupp = &supported;
-        return getBestIndexAndDistance(
+    bool isMatch(અચલ LSR &desired, અચલ LSR &supported,
+                 int32_t shiftedThreshold, ULocMatchFavorSubtag favorSubtag) અચલ {
+        અચલ LSR *pSupp = &supported;
+        પાછા getBestIndexAndDistance(
             desired, &pSupp, 1,
             shiftedThreshold, favorSubtag, ULOCMATCH_DIRECTION_WITH_ONE_WAY) >= 0;
     }
 
-    static int32_t getDesSuppScriptDistance(BytesTrie &iter, uint64_t startState,
-                                            const char *desired, const char *supported);
+    સ્થિર int32_t getDesSuppScriptDistance(BytesTrie &iter, uint64_t startState,
+                                            અચલ અક્ષર *desired, અચલ અક્ષર *supported);
 
-    static int32_t getRegionPartitionsDistance(
+    સ્થિર int32_t getRegionPartitionsDistance(
         BytesTrie &iter, uint64_t startState,
-        const char *desiredPartitions, const char *supportedPartitions,
+        અચલ અક્ષર *desiredPartitions, અચલ અક્ષર *supportedPartitions,
         int32_t threshold);
 
-    static int32_t getFallbackRegionDistance(BytesTrie &iter, uint64_t startState);
+    સ્થિર int32_t getFallbackRegionDistance(BytesTrie &iter, uint64_t startState);
 
-    static int32_t trieNext(BytesTrie &iter, const char *s, bool wantValue);
+    સ્થિર int32_t trieNext(BytesTrie &iter, અચલ અક્ષર *s, bool want_કિંમત);
 
-    const char *partitionsForRegion(const LSR &lsr) const {
+    અચલ અક્ષર *partitionsForRegion(અચલ LSR &lsr) અચલ {
         // ill-formed region -> one non-matching string
         int32_t pIndex = regionToPartitionsIndex[lsr.regionIndex];
-        return partitionArrays[pIndex];
+        પાછા partitionArrays[pIndex];
     }
 
-    int32_t getDefaultRegionDistance() const {
-        return defaultRegionDistance;
+    int32_t getDefaultRegionDistance() અચલ {
+        પાછા defaultRegionDistance;
     }
 
-    const LikelySubtags &likelySubtags;
+    અચલ LikelySubtags &likelySubtags;
 
     // The trie maps each dlang+slang+dscript+sscript+dregion+sregion
     // (encoded in ASCII with bit 7 set on the last character of each subtag) to a distance.
@@ -130,13 +130,13 @@ private:
     /**
      * Maps each region to zero or more single-character partitions.
      */
-    const uint8_t *regionToPartitionsIndex;
-    const char **partitionArrays;
+    અચલ uint8_t *regionToPartitionsIndex;
+    અચલ અક્ષર **partitionArrays;
 
     /**
      * Used to get the paradigm region for a cluster, if there is one.
      */
-    const LSR *paradigmLSRs;
+    અચલ LSR *paradigmLSRs;
     int32_t paradigmLSRsLength;
 
     int32_t defaultLanguageDistance;

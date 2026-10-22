@@ -14,11 +14,11 @@
 #ifndef UVECTOR_H
 #define UVECTOR_H
 
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "cmemory.h"
-#include "uarrsort.h"
-#include "uelement.h"
+#અન્તર્ભાવ "unicode/utypes.h"
+#અન્તર્ભાવ "unicode/uobject.h"
+#અન્તર્ભાવ "cmemory.h"
+#અન્તર્ભાવ "uarrsort.h"
+#અન્તર્ભાવ "uelement.h"
 
 U_NAMESPACE_BEGIN
 
@@ -73,14 +73,14 @@ U_NAMESPACE_BEGIN
  *
  * @author Alan Liu
  */
-class U_COMMON_API UVector : public UObject {
+class U_COMMON_API UVector : જાહેર UObject {
     // NOTE: UVector uses the UElement (union of void* and int32_t) as
     // its basic storage type.  It uses UElementsAreEqual as its
     // comparison function.  It uses UObjectDeleter as its deleter
     // function.  This allows sharing of support functions with UHashtable.
 
-private:
-    int32_t count = 0;
+ખાનગી:
+    int32_t ગણતરી = 0;
 
     int32_t capacity = 0;
 
@@ -90,7 +90,7 @@ private:
 
     UElementsAreEqual *comparer = nullptr;
 
-public:
+જાહેર:
     UVector(UErrorCode &status);
 
     UVector(int32_t initialCapacity, UErrorCode &status);
@@ -99,25 +99,25 @@ public:
 
     UVector(UObjectDeleter *d, UElementsAreEqual *c, int32_t initialCapacity, UErrorCode &status);
 
-    virtual ~UVector();
+    આભાસી ~UVector();
 
     /**
      * Assign this object to another (make this a copy of 'other').
      * Use the 'assign' function to assign each element.
      */
-    void assign(const UVector& other, UElementAssigner *assign, UErrorCode &ec);
+    શૂન્ય assign(અચલ UVector& other, UElementAssigner *assign, UErrorCode &ec);
 
     /**
      * Compare this vector with another.  They will be considered
      * equal if they are of the same size and all elements are equal,
      * as compared using this object's comparer.
      */
-    bool operator==(const UVector& other) const;
+    bool operator==(અચલ UVector& other) અચલ;
 
     /**
      * Equivalent to !operator==()
      */
-    inline bool operator!=(const UVector& other) const {return !operator==(other);}
+    અંતઃરેખ bool operator!=(અચલ UVector& other) અચલ {પાછા !operator==(other);}
 
     //------------------------------------------------------------
     // java.util.Vector API
@@ -128,7 +128,7 @@ public:
      * For use only with vectors that do not adopt their elements, which is to say,
      * have not set an element deleter function. See `adoptElement()`.
      */
-    void addElement(void *obj, UErrorCode &status);
+    શૂન્ય addElement(શૂન્ય *obj, UErrorCode &status);
 
     /**
      * Add an element at the end of the vector.
@@ -143,53 +143,53 @@ public:
      * to see what the function is doing at call sites. Having a single combined function,
      * as in earlier versions of UVector, had proved to be error-prone.
      */
-    void adoptElement(void *obj, UErrorCode &status);
+    શૂન્ય adoptElement(શૂન્ય *obj, UErrorCode &status);
 
-    void addElement(int32_t elem, UErrorCode &status);
+    શૂન્ય addElement(int32_t elem, UErrorCode &status);
 
-    void setElementAt(void* obj, int32_t index);
+    શૂન્ય setElementAt(શૂન્ય* obj, int32_t index);
 
-    void setElementAt(int32_t elem, int32_t index);
+    શૂન્ય setElementAt(int32_t elem, int32_t index);
 
-    void insertElementAt(void* obj, int32_t index, UErrorCode &status);
+    શૂન્ય ઉમેરો_Element_At(શૂન્ય* obj, int32_t index, UErrorCode &status);
 
-    void insertElementAt(int32_t elem, int32_t index, UErrorCode &status);
+    શૂન્ય ઉમેરો_Element_At(int32_t elem, int32_t index, UErrorCode &status);
     
-    void* elementAt(int32_t index) const;
+    શૂન્ય* elementAt(int32_t index) અચલ;
 
-    int32_t elementAti(int32_t index) const;
+    int32_t elementAti(int32_t index) અચલ;
 
-    UBool equals(const UVector &other) const;
+    UBool equals(અચલ UVector &other) અચલ;
 
-    inline void* firstElement() const {return elementAt(0);}
+    અંતઃરેખ શૂન્ય* firstElement() અચલ {પાછા elementAt(0);}
 
-    inline void* lastElement() const {return elementAt(count-1);}
+    અંતઃરેખ શૂન્ય* lastElement() અચલ {પાછા elementAt(ગણતરી-1);}
 
-    inline int32_t lastElementi() const {return elementAti(count-1);}
+    અંતઃરેખ int32_t lastElementi() અચલ {પાછા elementAti(ગણતરી-1);}
 
-    int32_t indexOf(void* obj, int32_t startIndex = 0) const;
+    int32_t indexOf(શૂન્ય* obj, int32_t startIndex = 0) અચલ;
 
-    int32_t indexOf(int32_t obj, int32_t startIndex = 0) const;
+    int32_t indexOf(int32_t obj, int32_t startIndex = 0) અચલ;
 
-    inline UBool contains(void* obj) const {return indexOf(obj) >= 0;}
+    અંતઃરેખ UBool contains(શૂન્ય* obj) અચલ {પાછા indexOf(obj) >= 0;}
 
-    inline UBool contains(int32_t obj) const {return indexOf(obj) >= 0;}
+    અંતઃરેખ UBool contains(int32_t obj) અચલ {પાછા indexOf(obj) >= 0;}
 
-    UBool containsAll(const UVector& other) const;
+    UBool containsAll(અચલ UVector& other) અચલ;
 
-    UBool removeAll(const UVector& other);
+    UBool removeAll(અચલ UVector& other);
 
-    UBool retainAll(const UVector& other);
+    UBool retainAll(અચલ UVector& other);
 
-    void removeElementAt(int32_t index);
+    શૂન્ય removeElementAt(int32_t index);
 
-    UBool removeElement(void* obj);
+    UBool removeElement(શૂન્ય* obj);
 
-    void removeAllElements();
+    શૂન્ય removeAllElements();
 
-    inline int32_t size() const {return count;}
+    અંતઃરેખ int32_t size() અચલ {પાછા ગણતરી;}
 
-    inline UBool isEmpty() const {return count == 0;}
+    અંતઃરેખ UBool isEmpty() અચલ {પાછા ગણતરી == 0;}
 
     UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
 
@@ -199,23 +199,23 @@ public:
      * elements for i >= newSize.  If newSize is larger, grow the
      * array, filling in new slots with nullptr.
      */
-    void setSize(int32_t newSize, UErrorCode &status);
+    શૂન્ય setSize(int32_t newSize, UErrorCode &status);
 
     /**
      * Fill in the given array with all elements of this vector.
      */
-    void** toArray(void** result) const;
+    શૂન્ય** toArray(શૂન્ય** result) અચલ;
 
     //------------------------------------------------------------
     // New API
     //------------------------------------------------------------
 
     UObjectDeleter *setDeleter(UObjectDeleter *d);
-    bool hasDeleter() {return deleter != nullptr;}
+    bool hasDeleter() {પાછા deleter != nullptr;}
 
     UElementsAreEqual *setComparer(UElementsAreEqual *c);
 
-    inline void* operator[](int32_t index) const {return elementAt(index);}
+    અંતઃરેખ શૂન્ય* operator[](int32_t index) અચલ {પાછા elementAt(index);}
 
     /**
      * Removes the element at the given index from this vector and
@@ -226,7 +226,7 @@ public:
      * index is out of range or if there is no item at the given index
      * then 0 is returned and the vector is unchanged.
      */
-    void* orphanElementAt(int32_t index);
+    શૂન્ય* orphanElementAt(int32_t index);
 
     /**
      * Returns true if this vector contains none of the elements
@@ -234,27 +234,27 @@ public:
      * @param other vector to be checked for containment
      * @return true if the test condition is met
      */
-    UBool containsNone(const UVector& other) const;
+    UBool containsNone(અચલ UVector& other) અચલ;
 
     /**
      * Insert the given object into this vector at its sorted position
      * as defined by 'compare'.  The current elements are assumed to
      * be sorted already.
      */
-    void sortedInsert(void* obj, UElementComparator *compare, UErrorCode& ec);
+    શૂન્ય sorted_ઉમેરો(શૂન્ય* obj, UElementComparator *compare, UErrorCode& ec);
 
     /**
      * Insert the given integer into this vector at its sorted position
      * as defined by 'compare'.  The current elements are assumed to
      * be sorted already.
      */
-    void sortedInsert(int32_t obj, UElementComparator *compare, UErrorCode& ec);
+    શૂન્ય sorted_ઉમેરો(int32_t obj, UElementComparator *compare, UErrorCode& ec);
 
     /**
      * Sort the contents of the vector, assuming that the contents of the
      * vector are of type int32_t.
      */
-    void sorti(UErrorCode &ec);
+    શૂન્ય sorti(UErrorCode &ec);
 
     /**
       * Sort the contents of this vector, using a caller-supplied function
@@ -262,7 +262,7 @@ public:
       *  UVector's UElementComparator function is different from the
       *  UComparator function type defined in uarrsort.h)
       */
-    void sort(UElementComparator *compare, UErrorCode &ec);
+    શૂન્ય sort(UElementComparator *compare, UErrorCode &ec);
 
     /**
      * Stable sort the contents of this vector using a caller-supplied function
@@ -270,29 +270,29 @@ public:
      * than UVector::sort() because an additional user parameter can be passed to
      * the comparison function.
      */
-    void sortWithUComparator(UComparator *compare, const void *context, UErrorCode &ec);
+    શૂન્ય sortWithUComparator(UComparator *compare, અચલ શૂન્ય *context, UErrorCode &ec);
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    સ્થિર UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      */
-    virtual UClassID getDynamicClassID() const override;
+    આભાસી UClassID getDynamicClassID() અચલ override;
 
-private:
-    int32_t indexOf(UElement key, int32_t startIndex = 0, int8_t hint = 0) const;
+ખાનગી:
+    int32_t indexOf(UElement ચાવી, int32_t startIndex = 0, int8_t hint = 0) અચલ;
 
-    void sortedInsert(UElement e, UElementComparator *compare, UErrorCode& ec);
+    શૂન્ય sorted_ઉમેરો(UElement e, UElementComparator *compare, UErrorCode& ec);
 
-public:
+જાહેર:
     // Disallow
-    UVector(const UVector&) = delete;
+    UVector(અચલ UVector&) = delete;
 
     // Disallow
-    UVector& operator=(const UVector&) = delete;
+    UVector& operator=(અચલ UVector&) = delete;
 
 };
 
@@ -313,8 +313,8 @@ public:
  *
  * @author Alan Liu
  */
-class U_COMMON_API UStack : public UVector {
-public:
+class U_COMMON_API UStack : જાહેર UVector {
+જાહેર:
     UStack(UErrorCode &status);
 
     UStack(int32_t initialCapacity, UErrorCode &status);
@@ -323,62 +323,62 @@ public:
 
     UStack(UObjectDeleter *d, UElementsAreEqual *c, int32_t initialCapacity, UErrorCode &status);
 
-    virtual ~UStack();
+    આભાસી ~UStack();
 
     // It's okay not to have a virtual destructor (in UVector)
     // because UStack has no special cleanup to do.
 
-    inline UBool empty() const {return isEmpty();}
+    અંતઃરેખ UBool empty() અચલ {પાછા isEmpty();}
 
-    inline void* peek() const {return lastElement();}
+    અંતઃરેખ શૂન્ય* peek() અચલ {પાછા lastElement();}
 
-    inline int32_t peeki() const {return lastElementi();}
+    અંતઃરેખ int32_t peeki() અચલ {પાછા lastElementi();}
     
     /**
      * Pop and return an element from the stack.
      * For stacks with a deleter function, the caller takes ownership
      * of the popped element.
      */
-    void* pop();
+    શૂન્ય* કાઢો();
     
     int32_t popi();
     
-    inline void* push(void* obj, UErrorCode &status) {
-        if (hasDeleter()) {
+    અંતઃરેખ શૂન્ય* ધકેલો(શૂન્ય* obj, UErrorCode &status) {
+        જો (hasDeleter()) {
             adoptElement(obj, status);
-            return (U_SUCCESS(status)) ? obj : nullptr;
-        } else {
+            પાછા (U_SUCCESS(status)) ? obj : nullptr;
+        } નહીંતર {
             addElement(obj, status);
-            return obj;
+            પાછા obj;
         }
     }
 
-    inline int32_t push(int32_t i, UErrorCode &status) {
+    અંતઃરેખ int32_t ધકેલો(int32_t i, UErrorCode &status) {
         addElement(i, status);
-        return i;
+        પાછા i;
     }
 
     /*
     If the object o occurs as an item in this stack,
     this method returns the 1-based distance from the top of the stack.
     */
-    int32_t search(void* obj) const;
+    int32_t શોધ(શૂન્ય* obj) અચલ;
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    સ્થિર UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      */
-    virtual UClassID getDynamicClassID() const override;
+    આભાસી UClassID getDynamicClassID() અચલ override;
 
     // Disallow
-    UStack(const UStack&) = delete;
+    UStack(અચલ UStack&) = delete;
 
     // Disallow
-    UStack& operator=(const UStack&) = delete;
+    UStack& operator=(અચલ UStack&) = delete;
 };
 
 U_NAMESPACE_END

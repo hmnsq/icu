@@ -17,9 +17,9 @@
 #ifndef ENUMSET_H
 #define ENUMSET_H
 
-#include "unicode/utypes.h"
+#અન્તર્ભાવ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#જો U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -30,35 +30,35 @@ U_NAMESPACE_BEGIN
  * @internal
  * \cond
  */
-template<typename T, uint32_t minValue, uint32_t limitValue>
+template<typename T, uint32_t min_કિંમત, uint32_t limit_કિંમત>
 class EnumSet {
-public:
-    inline EnumSet() : fBools(0) {}
-    inline EnumSet(const EnumSet<T,minValue,limitValue>& other) : fBools(other.fBools) {}
-    inline ~EnumSet() {}
+જાહેર:
+    અંતઃરેખ EnumSet() : fBools(0) {}
+    અંતઃરેખ EnumSet(અચલ EnumSet<T,min_કિંમત,limit_કિંમત>& other) : fBools(other.fBools) {}
+    અંતઃરેખ ~EnumSet() {}
 #ifndef U_HIDE_INTERNAL_API
-    inline void clear() { fBools=0; }
-    inline void add(T toAdd) { set(toAdd, 1); }
-    inline void remove(T toRemove) { set(toRemove, 0); }
-    inline int32_t contains(T toCheck) const { return get(toCheck); }
-    inline void set(T toSet, int32_t v) { fBools=(fBools&(~flag(toSet)))|(v?(flag(toSet)):0); }
-    inline int32_t get(T toCheck) const { return (fBools & flag(toCheck))?1:0; }
-    inline UBool isValidEnum(T toCheck) const {  return (toCheck>=minValue&&toCheck<limitValue); }
-    inline UBool isValidValue(int32_t v) const { return (v==0||v==1); }
-    inline const EnumSet<T, minValue, limitValue>&
-    operator=(const EnumSet<T, minValue, limitValue>& other) U_LIFETIME_BOUND {
+    અંતઃરેખ શૂન્ય clear() { fBools=0; }
+    અંતઃરેખ શૂન્ય add(T toAdd) { set(toAdd, 1); }
+    અંતઃરેખ શૂન્ય remove(T toRemove) { set(toRemove, 0); }
+    અંતઃરેખ int32_t contains(T toCheck) અચલ { પાછા get(toCheck); }
+    અંતઃરેખ શૂન્ય set(T toSet, int32_t v) { fBools=(fBools&(~flag(toSet)))|(v?(flag(toSet)):0); }
+    અંતઃરેખ int32_t get(T toCheck) અચલ { પાછા (fBools & flag(toCheck))?1:0; }
+    અંતઃરેખ UBool isValidEnum(T toCheck) અચલ {  પાછા (toCheck>=min_કિંમત&&toCheck<limit_કિંમત); }
+    અંતઃરેખ UBool is_Valid_કિંમત(int32_t v) અચલ { પાછા (v==0||v==1); }
+    અંતઃરેખ અચલ EnumSet<T, min_કિંમત, limit_કિંમત>&
+    operator=(અચલ EnumSet<T, min_કિંમત, limit_કિંમત>& other) U_LIFETIME_BOUND {
         fBools = other.fBools;
-        return *this;
+        પાછા *this;
     }
   
-    inline uint32_t getAll() const {
-        return fBools; 
+    અંતઃરેખ uint32_t getAll() અચલ {
+        પાછા fBools; 
     }
 #endif /* U_HIDE_INTERNAL_API */
 
-private:
-    inline uint32_t flag(T toCheck) const { return (1<<(toCheck-minValue)); }
-private:
+ખાનગી:
+    અંતઃરેખ uint32_t flag(T toCheck) અચલ { પાછા (1<<(toCheck-min_કિંમત)); }
+ખાનગી:
     uint32_t fBools;
 };
 

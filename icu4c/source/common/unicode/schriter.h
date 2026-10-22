@@ -20,12 +20,12 @@
 #ifndef SCHRITER_H
 #define SCHRITER_H
 
-#include "unicode/utypes.h"
+#અન્તર્ભાવ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#જો U_SHOW_CPLUSPLUS_API
 
-#include "unicode/chariter.h"
-#include "unicode/uchriter.h"
+#અન્તર્ભાવ "unicode/chariter.h"
+#અન્તર્ભાવ "unicode/uchriter.h"
 
 /**
  * \file 
@@ -45,8 +45,8 @@ U_NAMESPACE_BEGIN
  * @see ForwardCharacterIterator
  * @stable ICU 2.0
  */
-class U_COMMON_API StringCharacterIterator : public UCharCharacterIterator {
-public:
+class U_COMMON_API StringCharacterIterator : જાહેર UCharCharacterIterator {
+જાહેર:
   /**
    * Create an iterator over the UnicodeString referred to by "textStr".
    * The UnicodeString object is copied.
@@ -54,7 +54,7 @@ public:
    * @param textStr The unicode string used to create an iterator
    * @stable ICU 2.0
    */
-  StringCharacterIterator(const UnicodeString& textStr);
+  StringCharacterIterator(અચલ UnicodeString& textStr);
 
   /**
    * Create an iterator over the UnicodeString referred to by "textStr".
@@ -65,7 +65,7 @@ public:
    * @param textPos The starting position of the iteration
    * @stable ICU 2.0
    */
-  StringCharacterIterator(const UnicodeString&    textStr,
+  StringCharacterIterator(અચલ UnicodeString&    textStr,
               int32_t              textPos);
 
   /**
@@ -84,7 +84,7 @@ public:
    * @param textPos    The starting position of the iteration
    * @stable ICU 2.0
    */
-  StringCharacterIterator(const UnicodeString&    textStr,
+  StringCharacterIterator(અચલ UnicodeString&    textStr,
               int32_t              textBegin,
               int32_t              textEnd,
               int32_t              textPos);
@@ -97,13 +97,13 @@ public:
    * @param that The StringCharacterIterator to be copied
    * @stable ICU 2.0
    */
-  StringCharacterIterator(const StringCharacterIterator&  that);
+  StringCharacterIterator(અચલ StringCharacterIterator&  that);
 
   /**
    * Destructor.
    * @stable ICU 2.0
    */
-  virtual ~StringCharacterIterator();
+  આભાસી ~StringCharacterIterator();
 
   /**
    * Assignment operator.  *this is altered to iterate over the same
@@ -113,7 +113,7 @@ public:
    * @return the newly created object.
    * @stable ICU 2.0
    */
-  StringCharacterIterator& operator=(const StringCharacterIterator& that) U_LIFETIME_BOUND;
+  StringCharacterIterator& operator=(અચલ StringCharacterIterator& that) U_LIFETIME_BOUND;
 
   /**
    * Returns true if the iterators iterate over the same range of the
@@ -123,7 +123,7 @@ public:
    * same string and are pointing at the same character.
    * @stable ICU 2.0
    */
-  virtual bool           operator==(const ForwardCharacterIterator& that) const override;
+  આભાસી bool           operator==(અચલ ForwardCharacterIterator& that) અચલ override;
 
   /**
    * Returns a new StringCharacterIterator referring to the same
@@ -132,14 +132,14 @@ public:
    * @return the newly cloned object.
    * @stable ICU 2.0
    */
-  virtual StringCharacterIterator* clone() const override;
+  આભાસી StringCharacterIterator* clone() અચલ override;
 
   /**
    * Sets the iterator to iterate over the provided string.
    * @param newText The string to be iterated over
    * @stable ICU 2.0
    */
-  void setText(const UnicodeString& newText);
+  શૂન્ય setText(અચલ UnicodeString& newText);
 
   /**
    * Copies the UnicodeString under iteration into the UnicodeString
@@ -148,23 +148,23 @@ public:
    * @param result Receives a copy of the text under iteration.
    * @stable ICU 2.0
    */
-  virtual void            getText(UnicodeString& result) override;
+  આભાસી શૂન્ય            getText(UnicodeString& result) override;
 
   /**
    * Return a class ID for this object (not really public)
    * @return a class ID for this object.
    * @stable ICU 2.0
    */
-  virtual UClassID getDynamicClassID() const override;
+  આભાસી UClassID getDynamicClassID() અચલ override;
 
   /**
    * Return a class ID for this class (not really public)
    * @return a class ID for this class
    * @stable ICU 2.0
    */
-  static UClassID U_EXPORT2 getStaticClassID();
+  સ્થિર UClassID U_EXPORT2 getStaticClassID();
 
-protected:
+સુરક્ષિત:
   /**
    * Default constructor, iteration over empty string.
    * @stable ICU 2.0

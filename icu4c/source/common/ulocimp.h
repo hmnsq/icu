@@ -10,14 +10,14 @@
 #ifndef ULOCIMP_H
 #define ULOCIMP_H
 
-#include <cstddef>
-#include <optional>
-#include <string_view>
+#અન્તર્ભાવ <cstddef>
+#અન્તર્ભાવ <optional>
+#અન્તર્ભાવ <string_view>
 
-#include "unicode/bytestream.h"
-#include "unicode/uloc.h"
+#અન્તર્ભાવ "unicode/bytestream.h"
+#અન્તર્ભાવ "unicode/uloc.h"
 
-#include "charstr.h"
+#અન્તર્ભાવ "charstr.h"
 
 /**
  * Create an iterator over the specified keywords list
@@ -28,63 +28,63 @@
  * @internal ICU 3.0
  */
 U_CAPI UEnumeration* U_EXPORT2
-uloc_openKeywordList(const char *keywordList, int32_t keywordListSize, UErrorCode* status);
+uloc_openKeywordList(અચલ અક્ષર *keywordList, int32_t keywordListSize, UErrorCode* status);
 
 /**
  * Look up a resource bundle table item with fallback on the table level.
  * This is accessible so it can be called by C++ code.
  */
-U_CAPI const UChar * U_EXPORT2
+U_CAPI અચલ UChar * U_EXPORT2
 uloc_getTableStringWithFallback(
-    const char *path,
-    const char *locale,
-    const char *tableKey,
-    const char *subTableKey,
-    const char *itemKey,
+    અચલ અક્ષર *path,
+    અચલ અક્ષર *locale,
+    અચલ અક્ષર *table_ચાવી,
+    અચલ અક્ષર *sub_Table_ચાવી,
+    અચલ અક્ષર *item_ચાવી,
     int32_t *pLength,
     UErrorCode *pErrorCode);
 
 namespace {
 /*returns true if a is an ID separator false otherwise*/
-inline bool _isIDSeparator(char a) { return a == '_' || a == '-'; }
+અંતઃરેખ bool _isIDSeparator(અક્ષર a) { પાછા a == '_' || a == '-'; }
 }  // namespace
 
-U_CFUNC const char* 
-uloc_getCurrentCountryID(const char* oldID U_LIFETIME_BOUND);
+U_CFUNC અચલ અક્ષર* 
+uloc_getCurrentCountryID(અચલ અક્ષર* oldID U_LIFETIME_BOUND);
 
-U_CFUNC const char* 
-uloc_getCurrentLanguageID(const char* oldID U_LIFETIME_BOUND);
-
-U_COMMON_API std::optional<std::string_view>
-ulocimp_toBcpKeyWithFallback(std::string_view keyword U_LIFETIME_BOUND);
+U_CFUNC અચલ અક્ષર* 
+uloc_getCurrentLanguageID(અચલ અક્ષર* oldID U_LIFETIME_BOUND);
 
 U_COMMON_API std::optional<std::string_view>
-ulocimp_toBcpTypeWithFallback(std::string_view keyword, std::string_view value U_LIFETIME_BOUND);
+ulocimp_to_Bcp_ચાવી_With_Fallback(std::string_view keyword U_LIFETIME_BOUND);
 
 U_COMMON_API std::optional<std::string_view>
-ulocimp_toLegacyKeyWithFallback(std::string_view keyword U_LIFETIME_BOUND);
+ulocimp_toBcpTypeWithFallback(std::string_view keyword, std::string_view કિંમત_2 U_LIFETIME_BOUND);
 
 U_COMMON_API std::optional<std::string_view>
-ulocimp_toLegacyTypeWithFallback(std::string_view keyword, std::string_view value U_LIFETIME_BOUND);
+ulocimp_to_Legacy_ચાવી_With_Fallback(std::string_view keyword U_LIFETIME_BOUND);
+
+U_COMMON_API std::optional<std::string_view>
+ulocimp_toLegacyTypeWithFallback(std::string_view keyword, std::string_view કિંમત_2 U_LIFETIME_BOUND);
 
 U_COMMON_API icu::CharString
 ulocimp_getKeywords(std::string_view localeID,
-                    char prev,
-                    bool valuesToo,
+                    અક્ષર prev,
+                    bool કિંમતો_Too,
                     UErrorCode& status);
 
-U_COMMON_API void
+U_COMMON_API શૂન્ય
 ulocimp_getKeywords(std::string_view localeID,
-                    char prev,
+                    અક્ષર prev,
                     icu::ByteSink& sink,
-                    bool valuesToo,
+                    bool કિંમતો_Too,
                     UErrorCode& status);
 
 U_COMMON_API icu::CharString
 ulocimp_getName(std::string_view localeID,
                 UErrorCode& err);
 
-U_COMMON_API void
+U_COMMON_API શૂન્ય
 ulocimp_getName(std::string_view localeID,
                 icu::ByteSink& sink,
                 UErrorCode& err);
@@ -93,7 +93,7 @@ U_COMMON_API icu::CharString
 ulocimp_getBaseName(std::string_view localeID,
                     UErrorCode& err);
 
-U_COMMON_API void
+U_COMMON_API શૂન્ય
 ulocimp_getBaseName(std::string_view localeID,
                     icu::ByteSink& sink,
                     UErrorCode& err);
@@ -102,18 +102,18 @@ U_COMMON_API icu::CharString
 ulocimp_canonicalize(std::string_view localeID,
                      UErrorCode& err);
 
-U_COMMON_API void
+U_COMMON_API શૂન્ય
 ulocimp_canonicalize(std::string_view localeID,
                      icu::ByteSink& sink,
                      UErrorCode& err);
 
 U_COMMON_API icu::CharString
-ulocimp_getKeywordValue(const char* localeID,
+ulocimp_get_Keyword_કિંમત(અચલ અક્ષર* localeID,
                         std::string_view keywordName,
                         UErrorCode& status);
 
-U_COMMON_API void
-ulocimp_getKeywordValue(const char* localeID,
+U_COMMON_API શૂન્ય
+ulocimp_get_Keyword_કિંમત(અચલ અક્ષર* localeID,
                         std::string_view keywordName,
                         icu::ByteSink& sink,
                         UErrorCode& status);
@@ -130,47 +130,47 @@ ulocimp_getRegion(std::string_view localeID, UErrorCode& status);
 U_COMMON_API icu::CharString
 ulocimp_getVariant(std::string_view localeID, UErrorCode& status);
 
-U_COMMON_API void
-ulocimp_setKeywordValue(std::string_view keywordName,
-                        std::string_view keywordValue,
+U_COMMON_API શૂન્ય
+ulocimp_set_Keyword_કિંમત(std::string_view keywordName,
+                        std::string_view keyword_કિંમત,
                         icu::CharString& localeID,
                         UErrorCode& status);
 
 U_COMMON_API int32_t
-ulocimp_setKeywordValue(std::string_view keywords,
+ulocimp_set_Keyword_કિંમત(std::string_view keywords,
                         std::string_view keywordName,
-                        std::string_view keywordValue,
+                        std::string_view keyword_કિંમત,
                         icu::ByteSink& sink,
                         UErrorCode& status);
 
-U_COMMON_API void
+U_COMMON_API શૂન્ય
 ulocimp_getSubtags(
         std::string_view localeID,
         icu::CharString* language,
         icu::CharString* script,
         icu::CharString* region,
         icu::CharString* variant,
-        const char** pEnd,
+        અચલ અક્ષર** pEnd,
         UErrorCode& status);
 
-U_COMMON_API void
+U_COMMON_API શૂન્ય
 ulocimp_getSubtags(
         std::string_view localeID,
         icu::ByteSink* language,
         icu::ByteSink* script,
         icu::ByteSink* region,
         icu::ByteSink* variant,
-        const char** pEnd,
+        અચલ અક્ષર** pEnd,
         UErrorCode& status);
 
-inline void
+અંતઃરેખ શૂન્ય
 ulocimp_getSubtags(
         std::string_view localeID,
         std::nullptr_t,
         std::nullptr_t,
         std::nullptr_t,
         std::nullptr_t,
-        const char** pEnd,
+        અચલ અક્ષર** pEnd,
         UErrorCode& status) {
     ulocimp_getSubtags(
             localeID,
@@ -183,16 +183,16 @@ ulocimp_getSubtags(
 }
 
 U_COMMON_API icu::CharString
-ulocimp_getParent(const char* localeID,
+ulocimp_getParent(અચલ અક્ષર* localeID,
                   UErrorCode& err);
 
-U_COMMON_API void
-ulocimp_getParent(const char* localeID,
+U_COMMON_API શૂન્ય
+ulocimp_getParent(અચલ અક્ષર* localeID,
                   icu::ByteSink& sink,
                   UErrorCode& err);
 
 U_COMMON_API icu::CharString
-ulocimp_toLanguageTag(const char* localeID,
+ulocimp_toLanguageTag(અચલ અક્ષર* localeID,
                       bool strict,
                       UErrorCode& status);
 
@@ -215,14 +215,14 @@ ulocimp_toLanguageTag(const char* localeID,
  *
  * @internal ICU 64
  */
-U_COMMON_API void
-ulocimp_toLanguageTag(const char* localeID,
+U_COMMON_API શૂન્ય
+ulocimp_toLanguageTag(અચલ અક્ષર* localeID,
                       icu::ByteSink& sink,
                       bool strict,
                       UErrorCode& err);
 
 U_COMMON_API icu::CharString
-ulocimp_forLanguageTag(const char* langtag,
+ulocimp_forLanguageTag(અચલ અક્ષર* langtag,
                        int32_t tagLen,
                        int32_t* parsedLength,
                        UErrorCode& status);
@@ -253,8 +253,8 @@ ulocimp_forLanguageTag(const char* langtag,
  *                  failed.
  * @internal ICU 63
  */
-U_COMMON_API void
-ulocimp_forLanguageTag(const char* langtag,
+U_COMMON_API શૂન્ય
+ulocimp_forLanguageTag(અચલ અક્ષર* langtag,
                        int32_t tagLen,
                        icu::ByteSink& sink,
                        int32_t* parsedLength,
@@ -281,11 +281,11 @@ ulocimp_forLanguageTag(const char* langtag,
  * @internal ICU 57
  */
 U_COMMON_API icu::CharString
-ulocimp_getRegionForSupplementalData(const char *localeID, bool inferRegion,
+ulocimp_getRegionForSupplementalData(અચલ અક્ષર *localeID, bool inferRegion,
                                      UErrorCode& status);
 
 U_COMMON_API icu::CharString
-ulocimp_addLikelySubtags(const char* localeID,
+ulocimp_addLikelySubtags(અચલ અક્ષર* localeID,
                          UErrorCode& status);
 
 /**
@@ -317,13 +317,13 @@ ulocimp_addLikelySubtags(const char* localeID,
  * or the localeId is not well-formed, the error code is U_ILLEGAL_ARGUMENT_ERROR.
  * @internal ICU 64
  */
-U_COMMON_API void
-ulocimp_addLikelySubtags(const char* localeID,
+U_COMMON_API શૂન્ય
+ulocimp_addLikelySubtags(અચલ અક્ષર* localeID,
                          icu::ByteSink& sink,
                          UErrorCode& err);
 
 U_COMMON_API icu::CharString
-ulocimp_minimizeSubtags(const char* localeID,
+ulocimp_minimizeSubtags(અચલ અક્ષર* localeID,
                         bool favorScript,
                         UErrorCode& status);
 
@@ -357,84 +357,84 @@ ulocimp_minimizeSubtags(const char* localeID,
  * or the localeId is not well-formed, the error code is U_ILLEGAL_ARGUMENT_ERROR.
  * @internal ICU 64
  */
-U_COMMON_API void
-ulocimp_minimizeSubtags(const char* localeID,
+U_COMMON_API શૂન્ય
+ulocimp_minimizeSubtags(અચલ અક્ષર* localeID,
                         icu::ByteSink& sink,
                         bool favorScript,
                         UErrorCode& err);
 
-U_CAPI const char* U_EXPORT2
+U_CAPI અચલ અક્ષર* U_EXPORT2
 locale_getKeywordsStart(std::string_view localeID U_LIFETIME_BOUND);
 
 bool
-ultag_isExtensionSubtags(const char* s, int32_t len);
+ultag_isExtensionSubtags(અચલ અક્ષર* s, int32_t len);
 
 bool
-ultag_isLanguageSubtag(const char* s, int32_t len);
+ultag_isLanguageSubtag(અચલ અક્ષર* s, int32_t len);
 
 bool
-ultag_isPrivateuseValueSubtags(const char* s, int32_t len);
+ultag_is_Privateuse_કિંમત_Subtags(અચલ અક્ષર* s, int32_t len);
 
 bool
-ultag_isRegionSubtag(const char* s, int32_t len);
+ultag_isRegionSubtag(અચલ અક્ષર* s, int32_t len);
 
 bool
-ultag_isScriptSubtag(const char* s, int32_t len);
+ultag_isScriptSubtag(અચલ અક્ષર* s, int32_t len);
 
 bool
-ultag_isTransformedExtensionSubtags(const char* s, int32_t len);
+ultag_isTransformedExtensionSubtags(અચલ અક્ષર* s, int32_t len);
 
 bool
-ultag_isUnicodeExtensionSubtags(const char* s, int32_t len);
+ultag_isUnicodeExtensionSubtags(અચલ અક્ષર* s, int32_t len);
 
 bool
-ultag_isUnicodeLocaleAttribute(const char* s, int32_t len);
+ultag_isUnicodeLocaleAttribute(અચલ અક્ષર* s, int32_t len);
 
 bool
-ultag_isUnicodeLocaleAttributes(const char* s, int32_t len);
+ultag_isUnicodeLocaleAttributes(અચલ અક્ષર* s, int32_t len);
 
 bool
-ultag_isUnicodeLocaleKey(const char* s, int32_t len);
+ultag_is_Unicode_Locale_ચાવી(અચલ અક્ષર* s, int32_t len);
 
 bool
-ultag_isUnicodeLocaleType(const char* s, int32_t len);
+ultag_isUnicodeLocaleType(અચલ અક્ષર* s, int32_t len);
 
 bool
-ultag_isVariantSubtags(const char* s, int32_t len);
+ultag_isVariantSubtags(અચલ અક્ષર* s, int32_t len);
 
-const char*
-ultag_getTKeyStart(const char* localeID U_LIFETIME_BOUND);
+અચલ અક્ષર*
+ultag_getTKeyStart(અચલ અક્ષર* localeID U_LIFETIME_BOUND);
 
 U_COMMON_API std::optional<std::string_view>
-ulocimp_toBcpKey(std::string_view key);
+ulocimp_to_Bcp_ચાવી(std::string_view ચાવી);
 
 U_COMMON_API std::optional<std::string_view>
-ulocimp_toLegacyKey(std::string_view key);
+ulocimp_to_Legacy_ચાવી(std::string_view ચાવી);
 
 U_COMMON_API std::optional<std::string_view>
-ulocimp_toBcpType(std::string_view key, std::string_view type U_LIFETIME_BOUND);
+ulocimp_toBcpType(std::string_view ચાવી, std::string_view type U_LIFETIME_BOUND);
 
 U_COMMON_API std::optional<std::string_view>
-ulocimp_toLegacyType(std::string_view key, std::string_view type U_LIFETIME_BOUND);
+ulocimp_toLegacyType(std::string_view ચાવી, std::string_view type U_LIFETIME_BOUND);
 
 /* Function for testing purpose */
-U_COMMON_API const char* const*
+U_COMMON_API અચલ અક્ષર* અચલ*
 ulocimp_getKnownCanonicalizedLocaleForTest(int32_t& length);
 
 // Return true if the value is already canonicalized.
 U_COMMON_API bool
-ulocimp_isCanonicalizedLocaleForTest(const char* localeName);
+ulocimp_isCanonicalizedLocaleForTest(અચલ અક્ષર* localeName);
 
 #ifdef __cplusplus
 U_NAMESPACE_BEGIN
-class U_COMMON_API RegionValidateMap : public UObject {
- public:
+class U_COMMON_API RegionValidateMap : જાહેર UObject {
+ જાહેર:
   RegionValidateMap();
-  virtual ~RegionValidateMap();
-  bool isSet(const char* region) const;
-  bool equals(const RegionValidateMap& that) const;
- protected:
-  int32_t value(const char* region) const;
+  આભાસી ~RegionValidateMap();
+  bool isSet(અચલ અક્ષર* region) અચલ;
+  bool equals(અચલ RegionValidateMap& that) અચલ;
+ સુરક્ષિત:
+  int32_t કિંમત_2(અચલ અક્ષર* region) અચલ;
   uint32_t map[22]; // 26x26/32 = 22;
 };
 U_NAMESPACE_END

@@ -29,23 +29,23 @@
 *******************************************************************************
 */
 
-#include "unicode/utypes.h"
+#અન્તર્ભાવ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#જો !UCONFIG_NO_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/udata.h"
+#અન્તર્ભાવ "unicode/ucnv.h"
+#અન્તર્ભાવ "unicode/udata.h"
 
-#include "umutex.h"
-#include "uarrsort.h"
-#include "uassert.h"
-#include "udataswp.h"
-#include "udatamem.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "ucnv_io.h"
-#include "uenumimp.h"
-#include "ucln_cmn.h"
+#અન્તર્ભાવ "umutex.h"
+#અન્તર્ભાવ "uarrsort.h"
+#અન્તર્ભાવ "uassert.h"
+#અન્તર્ભાવ "udataswp.h"
+#અન્તર્ભાવ "udatamem.h"
+#અન્તર્ભાવ "cstring.h"
+#અન્તર્ભાવ "cmemory.h"
+#અન્તર્ભાવ "ucnv_io.h"
+#અન્તર્ભાવ "uenumimp.h"
+#અન્તર્ભાવ "ucln_cmn.h"
 
 /* Format of cnvalias.icu -----------------------------------------------------
  *
@@ -167,18 +167,18 @@
 /**
  * Used by the UEnumeration API
  */
-typedef struct UAliasContext {
+પ્રકારવ્યાખ્યા સંરચના UAliasContext {
     uint32_t listOffset;
     uint32_t listIdx;
 } UAliasContext;
 
-static const char DATA_NAME[] = "cnvalias";
-static const char DATA_TYPE[] = "icu";
+સ્થિર અચલ અક્ષર DATA_NAME[] = "cnvalias";
+સ્થિર અચલ અક્ષર DATA_TYPE[] = "icu";
 
-static UDataMemory *gAliasData=nullptr;
-static icu::UInitOnce gAliasDataInitOnce {};
+સ્થિર UDataMemory *gAliasData=nullptr;
+સ્થિર icu::UInitOnce gAliasDataInitOnce {};
 
-enum {
+ગણના {
     tocLengthIndex=0,
     converterListIndex=1,
     tagListIndex=2,
@@ -189,24 +189,24 @@ enum {
     tableOptionsIndex=7,
     stringTableIndex=8,
     normalizedStringTableIndex=9,
-    offsetsCount,    /* length of the swapper's temporary offsets[] */
+    offsets_ગણતરી,    /* length of the swapper's temporary offsets[] */
     minTocLength=8 /* min. tocLength in the file, does not count the tocLengthIndex! */
 };
 
-static const UConverterAliasOptions defaultTableOptions = {
+સ્થિર અચલ UConverterAliasOptions defaultTableOptions = {
     UCNV_IO_UNNORMALIZED,
     0 /* containsCnvOptionInfo */
 };
-static UConverterAlias gMainTable;
+સ્થિર UConverterAlias gMainTable;
 
-#define GET_STRING(idx) (const char *)(gMainTable.stringTable + (idx))
-#define GET_NORMALIZED_STRING(idx) (const char *)(gMainTable.normalizedStringTable + (idx))
+#define GET_STRING(idx) (અચલ અક્ષર *)(gMainTable.stringTable + (idx))
+#define GET_NORMALIZED_STRING(idx) (અચલ અક્ષર *)(gMainTable.normalizedStringTable + (idx))
 
-static UBool U_CALLCONV
-isAcceptable(void * /*context*/,
-             const char * /*type*/, const char * /*name*/,
-             const UDataInfo *pInfo) {
-    return
+સ્થિર UBool U_CALLCONV
+isAcceptable(શૂન્ય * /*context*/,
+             અચલ અક્ષર * /*type*/, અચલ અક્ષર * /*name*/,
+             અચલ UDataInfo *pInfo) {
+    પાછા
         pInfo->size>=20 &&
         pInfo->isBigEndian==U_IS_BIG_ENDIAN &&
         pInfo->charsetFamily==U_CHARSET_FAMILY &&
@@ -217,23 +217,23 @@ isAcceptable(void * /*context*/,
         pInfo->formatVersion[0]==3;
 }
 
-static UBool U_CALLCONV ucnv_io_cleanup()
+સ્થિર UBool U_CALLCONV ucnv_io_cleanup()
 {
-    if (gAliasData) {
+    જો (gAliasData) {
         udata_close(gAliasData);
         gAliasData = nullptr;
     }
     gAliasDataInitOnce.reset();
 
-    uprv_memset(&gMainTable, 0, sizeof(gMainTable));
+    uprv_memset(&gMainTable, 0, કદ(gMainTable));
 
-    return true;                   /* Everything was cleaned up */
+    પાછા સાચું;                   /* Everything was cleaned up */
 }
 
-static void U_CALLCONV initAliasData(UErrorCode &errCode) {
+સ્થિર શૂન્ય U_CALLCONV initAliasData(UErrorCode &errCode) {
     UDataMemory *data;
-    const uint16_t *table;
-    const uint32_t *sectionSizes;
+    અચલ uint16_t *table;
+    અચલ uint32_t *sectionSizes;
     uint32_t tableStart;
     uint32_t currOffset;
     int32_t sizeOfData;
@@ -243,23 +243,23 @@ static void U_CALLCONV initAliasData(UErrorCode &errCode) {
 
     U_ASSERT(gAliasData == nullptr);
     data = udata_openChoice(nullptr, DATA_TYPE, DATA_NAME, isAcceptable, nullptr, &errCode);
-    if (U_FAILURE(errCode)) {
-        return;
+    જો (U_FAILURE(errCode)) {
+        પાછા;
     }
 
-    sectionSizes = static_cast<const uint32_t*>(udata_getMemory(data));
+    sectionSizes = static_cast<અચલ uint32_t*>(udata_getMemory(data));
     int32_t dataLength = udata_getLength(data); // This is the length minus the UDataInfo size
     UBool isDataLengthKnown = dataLength >= 0; // Only false when using a pointer table of contents (not files nor a common data archive)
-    if (isDataLengthKnown && dataLength <= int32_t(sizeof(sectionSizes[0]))) {
+    જો (isDataLengthKnown && dataLength <= int32_t(કદ(sectionSizes[0]))) {
         // We don't even have a TOC!
-        goto invalidFormat;
+        જાઓ invalidFormat;
     }
-    table = reinterpret_cast<const uint16_t*>(sectionSizes);
+    table = reinterpret_cast<અચલ uint16_t*>(sectionSizes);
     tableStart = sectionSizes[0];
-    sizeOfTOC = int32_t((tableStart + 1) * sizeof(sectionSizes[0]));
-    if (tableStart < minTocLength || (isDataLengthKnown && dataLength <= sizeOfTOC)) {
+    sizeOfTOC = int32_t((tableStart + 1) * કદ(sectionSizes[0]));
+    જો (tableStart < minTocLength || (isDataLengthKnown && dataLength <= sizeOfTOC)) {
         // We don't have a whole TOC!
-        goto invalidFormat;
+        જાઓ invalidFormat;
     }
     gAliasData = data;
 
@@ -272,21 +272,21 @@ static void U_CALLCONV initAliasData(UErrorCode &errCode) {
     gMainTable.optionTableSize        = sectionSizes[7];
     gMainTable.stringTableSize        = sectionSizes[8];
 
-    if (tableStart > minTocLength) {
+    જો (tableStart > minTocLength) {
         gMainTable.normalizedStringTableSize = sectionSizes[9];
     }
 
     sizeOfData = sizeOfTOC;
-    for (uint32_t section = 1; section <= tableStart; section++) {
-        sizeOfData += sectionSizes[section] * sizeof(table[0]);
+    માટે (uint32_t section = 1; section <= tableStart; section++) {
+        sizeOfData += sectionSizes[section] * કદ(table[0]);
     }
-    if (isDataLengthKnown && dataLength < sizeOfData) {
+    જો (isDataLengthKnown && dataLength < sizeOfData) {
         // Truncated file!
-        goto invalidFormat;
+        જાઓ invalidFormat;
     }
     // There may be some extra padding at the end, or this is a new file format with extra data that we can't read yet.
 
-    currOffset = (tableStart + 1) * (sizeof(uint32_t)/sizeof(uint16_t));
+    currOffset = (tableStart + 1) * (કદ(uint32_t)/કદ(uint16_t));
     gMainTable.converterList = table + currOffset;
 
     currOffset += gMainTable.converterListSize;
@@ -306,13 +306,13 @@ static void U_CALLCONV initAliasData(UErrorCode &errCode) {
     gMainTable.taggedAliasLists = table + currOffset;
 
     currOffset += gMainTable.taggedAliasListsSize;
-    if (gMainTable.optionTableSize > 0
-        && reinterpret_cast<const UConverterAliasOptions*>(table + currOffset)->stringNormalizationType < UCNV_IO_NORM_TYPE_COUNT)
+    જો (gMainTable.optionTableSize > 0
+        && reinterpret_cast<અચલ UConverterAliasOptions*>(table + currOffset)->stringNormalizationType < UCNV_IO_NORM_TYPE_ગણતરી)
     {
         /* Faster table */
-        gMainTable.optionTable = reinterpret_cast<const UConverterAliasOptions*>(table + currOffset);
+        gMainTable.optionTable = reinterpret_cast<અચલ UConverterAliasOptions*>(table + currOffset);
     }
-    else {
+    નહીંતર {
         /* Smaller table, or I can't handle this normalization mode!
         Use the original slower table lookup. */
         gMainTable.optionTable = &defaultTableOptions;
@@ -325,7 +325,7 @@ static void U_CALLCONV initAliasData(UErrorCode &errCode) {
     gMainTable.normalizedStringTable = ((gMainTable.optionTable->stringNormalizationType == UCNV_IO_UNNORMALIZED)
         ? gMainTable.stringTable : (table + currOffset));
 
-    return;
+    પાછા;
 
 invalidFormat:
     errCode = U_INVALID_FORMAT_ERROR;
@@ -333,36 +333,36 @@ invalidFormat:
 }
 
 
-static UBool
+સ્થિર UBool
 haveAliasData(UErrorCode *pErrorCode) {
     umtx_initOnce(gAliasDataInitOnce, &initAliasData, *pErrorCode);
-    return U_SUCCESS(*pErrorCode);
+    પાછા U_SUCCESS(*pErrorCode);
 }
 
-static inline UBool
-isAlias(const char *alias, UErrorCode *pErrorCode) {
-    if(alias==nullptr) {
+સ્થિર અંતઃરેખ UBool
+isAlias(અચલ અક્ષર *alias, UErrorCode *pErrorCode) {
+    જો(alias==nullptr) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        પાછા ખોટું;
     }
-    return *alias != 0;
+    પાછા *alias != 0;
 }
 
-static uint32_t getTagNumber(const char *tagname) {
-    if (gMainTable.tagList) {
-        uint32_t tagNum;
-        for (tagNum = 0; tagNum < gMainTable.tagListSize; tagNum++) {
-            if (!uprv_stricmp(GET_STRING(gMainTable.tagList[tagNum]), tagname)) {
-                return tagNum;
+સ્થિર uint32_t get_Tag_સંખ્યા(અચલ અક્ષર *tagname) {
+    જો (gMainTable.tagList) {
+        uint32_t tag_અંક;
+        માટે (tag_અંક = 0; tag_અંક < gMainTable.tagListSize; tag_અંક++) {
+            જો (!uprv_stricmp(GET_STRING(gMainTable.tagList[tag_અંક]), tagname)) {
+                પાછા tag_અંક;
             }
         }
     }
 
-    return UINT32_MAX;
+    પાછા UINT32_MAX;
 }
 
 /* character types relevant for ucnv_compareNames() */
-enum {
+ગણના {
     UIGNORE,
     ZERO,
     NONZERO,
@@ -370,7 +370,7 @@ enum {
 };
 
 /* character types for ASCII 00..7F */
-static const uint8_t asciiTypes[128] = {
+સ્થિર અચલ uint8_t asciiTypes[128] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -384,7 +384,7 @@ static const uint8_t asciiTypes[128] = {
 #define GET_ASCII_TYPE(c) ((int8_t)(c) >= 0 ? asciiTypes[(uint8_t)c] : (uint8_t)UIGNORE)
 
 /* character types for EBCDIC 80..FF */
-static const uint8_t ebcdicTypes[128] = {
+સ્થિર અચલ uint8_t ebcdicTypes[128] = {
     0,    0x81, 0x82, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0, 0, 0, 0, 0, 0,
     0,    0x91, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98, 0x99, 0, 0, 0, 0, 0, 0,
     0,    0,    0xa2, 0xa3, 0xa4, 0xa5, 0xa6, 0xa7, 0xa8, 0xa9, 0, 0, 0, 0, 0, 0,
@@ -397,84 +397,84 @@ static const uint8_t ebcdicTypes[128] = {
 
 #define GET_EBCDIC_TYPE(c) ((int8_t)(c) < 0 ? ebcdicTypes[(c)&0x7f] : (uint8_t)UIGNORE)
 
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
+#જો U_CHARSET_FAMILY==U_ASCII_FAMILY
 #   define GET_CHAR_TYPE(c) GET_ASCII_TYPE(c)
-#elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+#અથવાજો U_CHARSET_FAMILY==U_EBCDIC_FAMILY
 #   define GET_CHAR_TYPE(c) GET_EBCDIC_TYPE(c)
-#else
+#નહીંતર
 #   error U_CHARSET_FAMILY is not valid
 #endif
 
 
 /* @see ucnv_compareNames */
-U_CAPI char* U_CALLCONV
-ucnv_io_stripASCIIForCompare(char* dst U_LIFETIME_BOUND, const char* name) {
-    char *dstItr = dst;
+U_CAPI અક્ષર* U_CALLCONV
+ucnv_io_stripASCIIForCompare(અક્ષર* dst U_LIFETIME_BOUND, અચલ અક્ષર* name) {
+    અક્ષર *dstItr = dst;
     uint8_t type, nextType;
-    char c1;
-    UBool afterDigit = false;
+    અક્ષર c1;
+    UBool afterDigit = ખોટું;
 
-    while ((c1 = *name++) != 0) {
+    જ્યારે ((c1 = *name++) != 0) {
         type = GET_ASCII_TYPE(c1);
-        switch (type) {
-        case UIGNORE:
-            afterDigit = false;
-            continue; /* ignore all but letters and digits */
-        case ZERO:
-            if (!afterDigit) {
+        પસંદગી (type) {
+        સ્થિતિ UIGNORE:
+            afterDigit = ખોટું;
+            ચાલુ; /* ignore all but letters and digits */
+        સ્થિતિ ZERO:
+            જો (!afterDigit) {
                 nextType = GET_ASCII_TYPE(*name);
-                if (nextType == ZERO || nextType == NONZERO) {
-                    continue; /* ignore leading zero before another digit */
+                જો (nextType == ZERO || nextType == NONZERO) {
+                    ચાલુ; /* ignore leading zero before another digit */
                 }
             }
-            break;
-        case NONZERO:
-            afterDigit = true;
-            break;
-        default:
-            c1 = (char)type; /* lowercased letter */
-            afterDigit = false;
-            break;
+            તોડો;
+        સ્થિતિ NONZERO:
+            afterDigit = સાચું;
+            તોડો;
+        મૂળભૂત:
+            c1 = (અક્ષર)type; /* lowercased letter */
+            afterDigit = ખોટું;
+            તોડો;
         }
         *dstItr++ = c1;
     }
     *dstItr = 0;
-    return dst;
+    પાછા dst;
 }
 
-U_CAPI char* U_CALLCONV
-ucnv_io_stripEBCDICForCompare(char* dst U_LIFETIME_BOUND, const char* name) {
-    char *dstItr = dst;
+U_CAPI અક્ષર* U_CALLCONV
+ucnv_io_stripEBCDICForCompare(અક્ષર* dst U_LIFETIME_BOUND, અચલ અક્ષર* name) {
+    અક્ષર *dstItr = dst;
     uint8_t type, nextType;
-    char c1;
-    UBool afterDigit = false;
+    અક્ષર c1;
+    UBool afterDigit = ખોટું;
 
-    while ((c1 = *name++) != 0) {
+    જ્યારે ((c1 = *name++) != 0) {
         type = GET_EBCDIC_TYPE(c1);
-        switch (type) {
-        case UIGNORE:
-            afterDigit = false;
-            continue; /* ignore all but letters and digits */
-        case ZERO:
-            if (!afterDigit) {
+        પસંદગી (type) {
+        સ્થિતિ UIGNORE:
+            afterDigit = ખોટું;
+            ચાલુ; /* ignore all but letters and digits */
+        સ્થિતિ ZERO:
+            જો (!afterDigit) {
                 nextType = GET_EBCDIC_TYPE(*name);
-                if (nextType == ZERO || nextType == NONZERO) {
-                    continue; /* ignore leading zero before another digit */
+                જો (nextType == ZERO || nextType == NONZERO) {
+                    ચાલુ; /* ignore leading zero before another digit */
                 }
             }
-            break;
-        case NONZERO:
-            afterDigit = true;
-            break;
-        default:
-            c1 = (char)type; /* lowercased letter */
-            afterDigit = false;
-            break;
+            તોડો;
+        સ્થિતિ NONZERO:
+            afterDigit = સાચું;
+            તોડો;
+        મૂળભૂત:
+            c1 = (અક્ષર)type; /* lowercased letter */
+            afterDigit = ખોટું;
+            તોડો;
         }
         *dstItr++ = c1;
     }
     *dstItr = 0;
-    return dst;
+    પાછા dst;
 }
 
 /**
@@ -498,72 +498,72 @@ ucnv_io_stripEBCDICForCompare(char* dst U_LIFETIME_BOUND, const char* name) {
  *
  * @see ucnv_io_stripForCompare
  */
-U_CAPI int U_EXPORT2
-ucnv_compareNames(const char *name1, const char *name2) {
-    int rc;
+U_CAPI પૂર્ણાંક U_EXPORT2
+ucnv_compareNames(અચલ અક્ષર *name1, અચલ અક્ષર *name2) {
+    પૂર્ણાંક rc;
     uint8_t type, nextType;
-    char c1, c2;
-    UBool afterDigit1 = false, afterDigit2 = false;
+    અક્ષર c1, c2;
+    UBool afterDigit1 = ખોટું, afterDigit2 = ખોટું;
 
-    for (;;) {
-        while ((c1 = *name1++) != 0) {
+    માટે (;;) {
+        જ્યારે ((c1 = *name1++) != 0) {
             type = GET_CHAR_TYPE(c1);
-            switch (type) {
-            case UIGNORE:
-                afterDigit1 = false;
-                continue; /* ignore all but letters and digits */
-            case ZERO:
-                if (!afterDigit1) {
+            પસંદગી (type) {
+            સ્થિતિ UIGNORE:
+                afterDigit1 = ખોટું;
+                ચાલુ; /* ignore all but letters and digits */
+            સ્થિતિ ZERO:
+                જો (!afterDigit1) {
                     nextType = GET_CHAR_TYPE(*name1);
-                    if (nextType == ZERO || nextType == NONZERO) {
-                        continue; /* ignore leading zero before another digit */
+                    જો (nextType == ZERO || nextType == NONZERO) {
+                        ચાલુ; /* ignore leading zero before another digit */
                     }
                 }
-                break;
-            case NONZERO:
-                afterDigit1 = true;
-                break;
-            default:
-                c1 = (char)type; /* lowercased letter */
-                afterDigit1 = false;
-                break;
+                તોડો;
+            સ્થિતિ NONZERO:
+                afterDigit1 = સાચું;
+                તોડો;
+            મૂળભૂત:
+                c1 = (અક્ષર)type; /* lowercased letter */
+                afterDigit1 = ખોટું;
+                તોડો;
             }
-            break; /* deliver c1 */
+            તોડો; /* deliver c1 */
         }
-        while ((c2 = *name2++) != 0) {
+        જ્યારે ((c2 = *name2++) != 0) {
             type = GET_CHAR_TYPE(c2);
-            switch (type) {
-            case UIGNORE:
-                afterDigit2 = false;
-                continue; /* ignore all but letters and digits */
-            case ZERO:
-                if (!afterDigit2) {
+            પસંદગી (type) {
+            સ્થિતિ UIGNORE:
+                afterDigit2 = ખોટું;
+                ચાલુ; /* ignore all but letters and digits */
+            સ્થિતિ ZERO:
+                જો (!afterDigit2) {
                     nextType = GET_CHAR_TYPE(*name2);
-                    if (nextType == ZERO || nextType == NONZERO) {
-                        continue; /* ignore leading zero before another digit */
+                    જો (nextType == ZERO || nextType == NONZERO) {
+                        ચાલુ; /* ignore leading zero before another digit */
                     }
                 }
-                break;
-            case NONZERO:
-                afterDigit2 = true;
-                break;
-            default:
-                c2 = (char)type; /* lowercased letter */
-                afterDigit2 = false;
-                break;
+                તોડો;
+            સ્થિતિ NONZERO:
+                afterDigit2 = સાચું;
+                તોડો;
+            મૂળભૂત:
+                c2 = (અક્ષર)type; /* lowercased letter */
+                afterDigit2 = ખોટું;
+                તોડો;
             }
-            break; /* deliver c2 */
+            તોડો; /* deliver c2 */
         }
 
         /* If we reach the ends of both strings then they match */
-        if ((c1|c2)==0) {
-            return 0;
+        જો ((c1|c2)==0) {
+            પાછા 0;
         }
 
         /* Case-insensitive comparison */
-        rc = (int)(unsigned char)c1 - (int)(unsigned char)c2;
-        if (rc != 0) {
-            return rc;
+        rc = (પૂર્ણાંક)(unsigned અક્ષર)c1 - (પૂર્ણાંક)(unsigned અક્ષર)c2;
+        જો (rc != 0) {
+            પાછા rc;
         }
     }
 }
@@ -572,18 +572,18 @@ ucnv_compareNames(const char *name1, const char *name2) {
  * search for an alias
  * return the converter number index for gConverterList
  */
-static inline uint32_t
-findConverter(const char *alias, UBool *containsOption, UErrorCode *pErrorCode) {
+સ્થિર અંતઃરેખ uint32_t
+findConverter(અચલ અક્ષર *alias, UBool *containsOption, UErrorCode *pErrorCode) {
     uint32_t mid, start, limit;
     uint32_t lastMid;
-    int result;
-    int isUnnormalized = (gMainTable.optionTable->stringNormalizationType == UCNV_IO_UNNORMALIZED);
-    char strippedName[UCNV_MAX_CONVERTER_NAME_LENGTH];
+    પૂર્ણાંક result;
+    પૂર્ણાંક isUnnormalized = (gMainTable.optionTable->stringNormalizationType == UCNV_IO_UNNORMALIZED);
+    અક્ષર strippedName[UCNV_MAX_CONVERTER_NAME_LENGTH];
 
-    if (!isUnnormalized) {
-        if (uprv_strlen(alias) >= UCNV_MAX_CONVERTER_NAME_LENGTH) {
+    જો (!isUnnormalized) {
+        જો (uprv_strlen(alias) >= UCNV_MAX_CONVERTER_NAME_LENGTH) {
             *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
-            return UINT32_MAX;
+            પાછા UINT32_MAX;
         }
 
         /* Lower case and remove ignoreable characters. */
@@ -597,66 +597,66 @@ findConverter(const char *alias, UBool *containsOption, UErrorCode *pErrorCode) 
     mid = limit;
     lastMid = UINT32_MAX;
 
-    for (;;) {
+    માટે (;;) {
         mid = (start + limit) / 2;
-        if (lastMid == mid) {   /* Have we moved? */
-            break;  /* We haven't moved, and it wasn't found. */
+        જો (lastMid == mid) {   /* Have we moved? */
+            તોડો;  /* We haven't moved, and it wasn't found. */
         }
         lastMid = mid;
-        if (isUnnormalized) {
+        જો (isUnnormalized) {
             result = ucnv_compareNames(alias, GET_STRING(gMainTable.aliasList[mid]));
         }
-        else {
+        નહીંતર {
             result = uprv_strcmp(alias, GET_NORMALIZED_STRING(gMainTable.aliasList[mid]));
         }
 
-        if (result < 0) {
+        જો (result < 0) {
             limit = mid;
-        } else if (result > 0) {
+        } નહીંતર જો (result > 0) {
             start = mid;
-        } else {
+        } નહીંતર {
             /* Since the gencnval tool folds duplicates into one entry,
              * this alias in gAliasList is unique, but different standards
              * may map an alias to different converters.
              */
-            if (gMainTable.untaggedConvArray[mid] & UCNV_AMBIGUOUS_ALIAS_MAP_BIT) {
+            જો (gMainTable.untaggedConvArray[mid] & UCNV_AMBIGUOUS_ALIAS_MAP_BIT) {
                 *pErrorCode = U_AMBIGUOUS_ALIAS_WARNING;
             }
             /* State whether the canonical converter name contains an option.
             This information is contained in this list in order to maintain backward & forward compatibility. */
-            if (containsOption) {
+            જો (containsOption) {
                 UBool containsCnvOptionInfo = static_cast<UBool>(gMainTable.optionTable->containsCnvOptionInfo);
                 *containsOption = static_cast<UBool>((containsCnvOptionInfo
                     && ((gMainTable.untaggedConvArray[mid] & UCNV_CONTAINS_OPTION_BIT) != 0))
                     || !containsCnvOptionInfo);
             }
-            return gMainTable.untaggedConvArray[mid] & UCNV_CONVERTER_INDEX_MASK;
+            પાછા gMainTable.untaggedConvArray[mid] & UCNV_CONVERTER_INDEX_MASK;
         }
     }
 
-    return UINT32_MAX;
+    પાછા UINT32_MAX;
 }
 
 /*
  * Is this alias in this list?
  * alias and listOffset should be non-nullptr.
  */
-static inline UBool
-isAliasInList(const char *alias, uint32_t listOffset) {
-    if (listOffset) {
+સ્થિર અંતઃરેખ UBool
+isAliasInList(અચલ અક્ષર *alias, uint32_t listOffset) {
+    જો (listOffset) {
         uint32_t currAlias;
-        uint32_t listCount = gMainTable.taggedAliasLists[listOffset];
+        uint32_t list_ગણતરી = gMainTable.taggedAliasLists[listOffset];
         /* +1 to skip listCount */
-        const uint16_t *currList = gMainTable.taggedAliasLists + listOffset + 1;
-        for (currAlias = 0; currAlias < listCount; currAlias++) {
-            if (currList[currAlias]
+        અચલ uint16_t *currList = gMainTable.taggedAliasLists + listOffset + 1;
+        માટે (currAlias = 0; currAlias < list_ગણતરી; currAlias++) {
+            જો (currList[currAlias]
                 && ucnv_compareNames(alias, GET_STRING(currList[currAlias]))==0)
             {
-                return true;
+                પાછા સાચું;
             }
         }
     }
-    return false;
+    પાછા ખોટું;
 }
 
 /*
@@ -665,39 +665,39 @@ isAliasInList(const char *alias, uint32_t listOffset) {
  * return the listOffset for gTaggedAliasLists. If it's 0,
  * the it couldn't be found, but the parameters are valid.
  */
-static uint32_t
-findTaggedAliasListsOffset(const char *alias, const char *standard, UErrorCode *pErrorCode) {
+સ્થિર uint32_t
+findTaggedAliasListsOffset(અચલ અક્ષર *alias, અચલ અક્ષર *standard, UErrorCode *pErrorCode) {
     uint32_t idx;
     uint32_t listOffset;
-    uint32_t convNum;
+    uint32_t conv_અંક;
     UErrorCode myErr = U_ZERO_ERROR;
-    uint32_t tagNum = getTagNumber(standard);
+    uint32_t tag_અંક = get_Tag_સંખ્યા(standard);
 
     /* Make a quick guess. Hopefully they used a TR22 canonical alias. */
-    convNum = findConverter(alias, nullptr, &myErr);
-    if (myErr != U_ZERO_ERROR) {
+    conv_અંક = findConverter(alias, nullptr, &myErr);
+    જો (myErr != U_ZERO_ERROR) {
         *pErrorCode = myErr;
     }
 
-    if (tagNum < (gMainTable.tagListSize - UCNV_NUM_HIDDEN_TAGS) && convNum < gMainTable.converterListSize) {
-        listOffset = gMainTable.taggedAliasArray[tagNum*gMainTable.converterListSize + convNum];
-        if (listOffset && gMainTable.taggedAliasLists[listOffset + 1]) {
-            return listOffset;
+    જો (tag_અંક < (gMainTable.tagListSize - UCNV_અંક_HIDDEN_TAGS) && conv_અંક < gMainTable.converterListSize) {
+        listOffset = gMainTable.taggedAliasArray[tag_અંક*gMainTable.converterListSize + conv_અંક];
+        જો (listOffset && gMainTable.taggedAliasLists[listOffset + 1]) {
+            પાછા listOffset;
         }
-        if (myErr == U_AMBIGUOUS_ALIAS_WARNING) {
+        જો (myErr == U_AMBIGUOUS_ALIAS_WARNING) {
             /* Uh Oh! They used an ambiguous alias.
                We have to search the whole swiss cheese starting
                at the highest standard affinity.
                This may take a while.
             */
-            for (idx = 0; idx < gMainTable.taggedAliasArraySize; idx++) {
+            માટે (idx = 0; idx < gMainTable.taggedAliasArraySize; idx++) {
                 listOffset = gMainTable.taggedAliasArray[idx];
-                if (listOffset && isAliasInList(alias, listOffset)) {
-                    uint32_t currTagNum = idx/gMainTable.converterListSize;
-                    uint32_t currConvNum = (idx - currTagNum*gMainTable.converterListSize);
-                    uint32_t tempListOffset = gMainTable.taggedAliasArray[tagNum*gMainTable.converterListSize + currConvNum];
-                    if (tempListOffset && gMainTable.taggedAliasLists[tempListOffset + 1]) {
-                        return tempListOffset;
+                જો (listOffset && isAliasInList(alias, listOffset)) {
+                    uint32_t curr_Tag_અંક = idx/gMainTable.converterListSize;
+                    uint32_t curr_Conv_અંક = (idx - curr_Tag_અંક*gMainTable.converterListSize);
+                    uint32_t tempListOffset = gMainTable.taggedAliasArray[tag_અંક*gMainTable.converterListSize + curr_Conv_અંક];
+                    જો (tempListOffset && gMainTable.taggedAliasLists[tempListOffset + 1]) {
+                        પાછા tempListOffset;
                     }
                     /* else keep on looking */
                     /* We could speed this up by starting on the next row
@@ -708,45 +708,45 @@ findTaggedAliasListsOffset(const char *alias, const char *standard, UErrorCode *
             /* The standard doesn't know about the alias */
         }
         /* else no default name */
-        return 0;
+        પાછા 0;
     }
     /* else converter or tag not found */
 
-    return UINT32_MAX;
+    પાછા UINT32_MAX;
 }
 
 /* Return the canonical name */
-static uint32_t
-findTaggedConverterNum(const char *alias, const char *standard, UErrorCode *pErrorCode) {
+સ્થિર uint32_t
+find_Tagged_Converter_અંક(અચલ અક્ષર *alias, અચલ અક્ષર *standard, UErrorCode *pErrorCode) {
     uint32_t idx;
     uint32_t listOffset;
-    uint32_t convNum;
+    uint32_t conv_અંક;
     UErrorCode myErr = U_ZERO_ERROR;
-    uint32_t tagNum = getTagNumber(standard);
+    uint32_t tag_અંક = get_Tag_સંખ્યા(standard);
 
     /* Make a quick guess. Hopefully they used a TR22 canonical alias. */
-    convNum = findConverter(alias, nullptr, &myErr);
-    if (myErr != U_ZERO_ERROR) {
+    conv_અંક = findConverter(alias, nullptr, &myErr);
+    જો (myErr != U_ZERO_ERROR) {
         *pErrorCode = myErr;
     }
 
-    if (tagNum < (gMainTable.tagListSize - UCNV_NUM_HIDDEN_TAGS) && convNum < gMainTable.converterListSize) {
-        listOffset = gMainTable.taggedAliasArray[tagNum*gMainTable.converterListSize + convNum];
-        if (listOffset && isAliasInList(alias, listOffset)) {
-            return convNum;
+    જો (tag_અંક < (gMainTable.tagListSize - UCNV_અંક_HIDDEN_TAGS) && conv_અંક < gMainTable.converterListSize) {
+        listOffset = gMainTable.taggedAliasArray[tag_અંક*gMainTable.converterListSize + conv_અંક];
+        જો (listOffset && isAliasInList(alias, listOffset)) {
+            પાછા conv_અંક;
         }
-        if (myErr == U_AMBIGUOUS_ALIAS_WARNING) {
+        જો (myErr == U_AMBIGUOUS_ALIAS_WARNING) {
             /* Uh Oh! They used an ambiguous alias.
                We have to search one slice of the swiss cheese.
                We search only in the requested tag, not the whole thing.
                This may take a while.
             */
-            uint32_t convStart = (tagNum)*gMainTable.converterListSize;
-            uint32_t convLimit = (tagNum+1)*gMainTable.converterListSize;
-            for (idx = convStart; idx < convLimit; idx++) {
+            uint32_t convStart = (tag_અંક)*gMainTable.converterListSize;
+            uint32_t convLimit = (tag_અંક+1)*gMainTable.converterListSize;
+            માટે (idx = convStart; idx < convLimit; idx++) {
                 listOffset = gMainTable.taggedAliasArray[idx];
-                if (listOffset && isAliasInList(alias, listOffset)) {
-                    return idx-convStart;
+                જો (listOffset && isAliasInList(alias, listOffset)) {
+                    પાછા idx-convStart;
                 }
             }
             /* The standard doesn't know about the alias */
@@ -755,56 +755,56 @@ findTaggedConverterNum(const char *alias, const char *standard, UErrorCode *pErr
     }
     /* else converter or tag not found */
 
-    return UINT32_MAX;
+    પાછા UINT32_MAX;
 }
 
-U_CAPI const char *
-ucnv_io_getConverterName(const char *alias, UBool *containsOption, UErrorCode *pErrorCode) {
-    const char *aliasTmp = alias;
+U_CAPI અચલ અક્ષર *
+ucnv_io_getConverterName(અચલ અક્ષર *alias, UBool *containsOption, UErrorCode *pErrorCode) {
+    અચલ અક્ષર *aliasTmp = alias;
     int32_t i = 0;
-    for (i = 0; i < 2; i++) {
-        if (i == 1) {
+    માટે (i = 0; i < 2; i++) {
+        જો (i == 1) {
             /*
              * After the first unsuccess converter lookup, check to see if
              * the name begins with 'x-'. If it does, strip it off and try
              * again.  This behaviour is similar to how ICU4J does it.
              */
-            if (aliasTmp[0] == 'x' && aliasTmp[1] == '-') {
+            જો (aliasTmp[0] == 'x' && aliasTmp[1] == '-') {
                 aliasTmp = aliasTmp+2;
-            } else {
-                break;
+            } નહીંતર {
+                તોડો;
             }
         }
-        if(haveAliasData(pErrorCode) && isAlias(aliasTmp, pErrorCode)) {
-            uint32_t convNum = findConverter(aliasTmp, containsOption, pErrorCode);
-            if (convNum < gMainTable.converterListSize) {
-                return GET_STRING(gMainTable.converterList[convNum]);
+        જો(haveAliasData(pErrorCode) && isAlias(aliasTmp, pErrorCode)) {
+            uint32_t conv_અંક = findConverter(aliasTmp, containsOption, pErrorCode);
+            જો (conv_અંક < gMainTable.converterListSize) {
+                પાછા GET_STRING(gMainTable.converterList[conv_અંક]);
             }
             /* else converter not found */
-        } else {
-            break;
+        } નહીંતર {
+            તોડો;
         }
     }
 
-    return nullptr;
+    પાછા nullptr;
 }
 
 U_CDECL_BEGIN
 
 
-static int32_t U_CALLCONV
-ucnv_io_countStandardAliases(UEnumeration *enumerator, UErrorCode * /*pErrorCode*/) {
+સ્થિર int32_t U_CALLCONV
+ucnv_io_ગણતરી_Standard_Aliases(UEnumeration *enumerator, UErrorCode * /*pErrorCode*/) {
     int32_t value = 0;
     UAliasContext *myContext = (UAliasContext *)(enumerator->context);
     uint32_t listOffset = myContext->listOffset;
 
-    if (listOffset) {
+    જો (listOffset) {
         value = gMainTable.taggedAliasLists[listOffset];
     }
-    return value;
+    પાછા value;
 }
 
-static const char * U_CALLCONV
+સ્થિર અચલ અક્ષર * U_CALLCONV
 ucnv_io_nextStandardAliases(UEnumeration *enumerator,
                             int32_t* resultLength,
                             UErrorCode * /*pErrorCode*/)
@@ -812,31 +812,31 @@ ucnv_io_nextStandardAliases(UEnumeration *enumerator,
     UAliasContext *myContext = (UAliasContext *)(enumerator->context);
     uint32_t listOffset = myContext->listOffset;
 
-    if (listOffset) {
-        uint32_t listCount = gMainTable.taggedAliasLists[listOffset];
-        const uint16_t *currList = gMainTable.taggedAliasLists + listOffset + 1;
+    જો (listOffset) {
+        uint32_t list_ગણતરી = gMainTable.taggedAliasLists[listOffset];
+        અચલ uint16_t *currList = gMainTable.taggedAliasLists + listOffset + 1;
 
-        if (myContext->listIdx < listCount) {
-            const char *myStr = GET_STRING(currList[myContext->listIdx++]);
-            if (resultLength) {
+        જો (myContext->listIdx < list_ગણતરી) {
+            અચલ અક્ષર *myStr = GET_STRING(currList[myContext->listIdx++]);
+            જો (resultLength) {
                 *resultLength = (int32_t)uprv_strlen(myStr);
             }
-            return myStr;
+            પાછા myStr;
         }
     }
     /* Either we accessed a zero length list, or we enumerated too far. */
-    if (resultLength) {
+    જો (resultLength) {
         *resultLength = 0;
     }
-    return nullptr;
+    પાછા nullptr;
 }
 
-static void U_CALLCONV
+સ્થિર શૂન્ય U_CALLCONV
 ucnv_io_resetStandardAliases(UEnumeration *enumerator, UErrorCode * /*pErrorCode*/) {
     ((UAliasContext *)(enumerator->context))->listIdx = 0;
 }
 
-static void U_CALLCONV
+સ્થિર શૂન્ય U_CALLCONV
 ucnv_io_closeUEnumeration(UEnumeration *enumerator) {
     uprv_free(enumerator->context);
     uprv_free(enumerator);
@@ -845,42 +845,42 @@ ucnv_io_closeUEnumeration(UEnumeration *enumerator) {
 U_CDECL_END
 
 /* Enumerate the aliases for the specified converter and standard tag */
-static const UEnumeration gEnumAliases = {
+સ્થિર અચલ UEnumeration gEnumAliases = {
     nullptr,
     nullptr,
     ucnv_io_closeUEnumeration,
-    ucnv_io_countStandardAliases,
+    ucnv_io_ગણતરી_Standard_Aliases,
     uenum_unextDefault,
     ucnv_io_nextStandardAliases,
     ucnv_io_resetStandardAliases
 };
 
 U_CAPI UEnumeration * U_EXPORT2
-ucnv_openStandardNames(const char *convName,
-                       const char *standard,
+ucnv_openStandardNames(અચલ અક્ષર *convName,
+                       અચલ અક્ષર *standard,
                        UErrorCode *pErrorCode)
 {
     UEnumeration *myEnum = nullptr;
-    if (haveAliasData(pErrorCode) && isAlias(convName, pErrorCode)) {
+    જો (haveAliasData(pErrorCode) && isAlias(convName, pErrorCode)) {
         uint32_t listOffset = findTaggedAliasListsOffset(convName, standard, pErrorCode);
 
         /* When listOffset == 0, we want to acknowledge that the
            converter name and standard are okay, but there
            is nothing to enumerate. */
-        if (listOffset < gMainTable.taggedAliasListsSize) {
+        જો (listOffset < gMainTable.taggedAliasListsSize) {
             UAliasContext *myContext;
 
-            myEnum = static_cast<UEnumeration *>(uprv_malloc(sizeof(UEnumeration)));
-            if (myEnum == nullptr) {
+            myEnum = static_cast<UEnumeration *>(uprv_malloc(કદ(UEnumeration)));
+            જો (myEnum == nullptr) {
                 *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-                return nullptr;
+                પાછા nullptr;
             }
-            uprv_memcpy(myEnum, &gEnumAliases, sizeof(UEnumeration));
-            myContext = static_cast<UAliasContext *>(uprv_malloc(sizeof(UAliasContext)));
-            if (myContext == nullptr) {
+            uprv_memcpy(myEnum, &gEnumAliases, કદ(UEnumeration));
+            myContext = static_cast<UAliasContext *>(uprv_malloc(કદ(UAliasContext)));
+            જો (myContext == nullptr) {
                 *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
                 uprv_free(myEnum);
-                return nullptr;
+                પાછા nullptr;
             }
             myContext->listOffset = listOffset;
             myContext->listIdx = 0;
@@ -888,42 +888,42 @@ ucnv_openStandardNames(const char *convName,
         }
         /* else converter or tag not found */
     }
-    return myEnum;
+    પાછા myEnum;
 }
 
-static uint16_t
-ucnv_io_countAliases(const char *alias, UErrorCode *pErrorCode) {
-    if(haveAliasData(pErrorCode) && isAlias(alias, pErrorCode)) {
-        uint32_t convNum = findConverter(alias, nullptr, pErrorCode);
-        if (convNum < gMainTable.converterListSize) {
+સ્થિર uint16_t
+ucnv_io_ગણતરી_Aliases(અચલ અક્ષર *alias, UErrorCode *pErrorCode) {
+    જો(haveAliasData(pErrorCode) && isAlias(alias, pErrorCode)) {
+        uint32_t conv_અંક = findConverter(alias, nullptr, pErrorCode);
+        જો (conv_અંક < gMainTable.converterListSize) {
             /* tagListNum - 1 is the ALL tag */
-            int32_t listOffset = gMainTable.taggedAliasArray[(gMainTable.tagListSize - 1)*gMainTable.converterListSize + convNum];
+            int32_t listOffset = gMainTable.taggedAliasArray[(gMainTable.tagListSize - 1)*gMainTable.converterListSize + conv_અંક];
 
-            if (listOffset) {
-                return gMainTable.taggedAliasLists[listOffset];
+            જો (listOffset) {
+                પાછા gMainTable.taggedAliasLists[listOffset];
             }
             /* else this shouldn't happen. internal program error */
         }
         /* else converter not found */
     }
-    return 0;
+    પાછા 0;
 }
 
-static uint16_t
-ucnv_io_getAliases(const char *alias, uint16_t start, const char **aliases, UErrorCode *pErrorCode) {
-    if(haveAliasData(pErrorCode) && isAlias(alias, pErrorCode)) {
+સ્થિર uint16_t
+ucnv_io_getAliases(અચલ અક્ષર *alias, uint16_t start, અચલ અક્ષર **aliases, UErrorCode *pErrorCode) {
+    જો(haveAliasData(pErrorCode) && isAlias(alias, pErrorCode)) {
         uint32_t currAlias;
-        uint32_t convNum = findConverter(alias, nullptr, pErrorCode);
-        if (convNum < gMainTable.converterListSize) {
+        uint32_t conv_અંક = findConverter(alias, nullptr, pErrorCode);
+        જો (conv_અંક < gMainTable.converterListSize) {
             /* tagListNum - 1 is the ALL tag */
-            int32_t listOffset = gMainTable.taggedAliasArray[(gMainTable.tagListSize - 1)*gMainTable.converterListSize + convNum];
+            int32_t listOffset = gMainTable.taggedAliasArray[(gMainTable.tagListSize - 1)*gMainTable.converterListSize + conv_અંક];
 
-            if (listOffset) {
-                uint32_t listCount = gMainTable.taggedAliasLists[listOffset];
+            જો (listOffset) {
+                uint32_t list_ગણતરી = gMainTable.taggedAliasLists[listOffset];
                 /* +1 to skip listCount */
-                const uint16_t *currList = gMainTable.taggedAliasLists + listOffset + 1;
+                અચલ uint16_t *currList = gMainTable.taggedAliasLists + listOffset + 1;
 
-                for (currAlias = start; currAlias < listCount; currAlias++) {
+                માટે (currAlias = start; currAlias < list_ગણતરી; currAlias++) {
                     aliases[currAlias] = GET_STRING(currList[currAlias]);
                 }
             }
@@ -931,24 +931,24 @@ ucnv_io_getAliases(const char *alias, uint16_t start, const char **aliases, UErr
         }
         /* else converter not found */
     }
-    return 0;
+    પાછા 0;
 }
 
-static const char *
-ucnv_io_getAlias(const char *alias, uint16_t n, UErrorCode *pErrorCode) {
-    if(haveAliasData(pErrorCode) && isAlias(alias, pErrorCode)) {
-        uint32_t convNum = findConverter(alias, nullptr, pErrorCode);
-        if (convNum < gMainTable.converterListSize) {
+સ્થિર અચલ અક્ષર *
+ucnv_io_getAlias(અચલ અક્ષર *alias, uint16_t n, UErrorCode *pErrorCode) {
+    જો(haveAliasData(pErrorCode) && isAlias(alias, pErrorCode)) {
+        uint32_t conv_અંક = findConverter(alias, nullptr, pErrorCode);
+        જો (conv_અંક < gMainTable.converterListSize) {
             /* tagListNum - 1 is the ALL tag */
-            int32_t listOffset = gMainTable.taggedAliasArray[(gMainTable.tagListSize - 1)*gMainTable.converterListSize + convNum];
+            int32_t listOffset = gMainTable.taggedAliasArray[(gMainTable.tagListSize - 1)*gMainTable.converterListSize + conv_અંક];
 
-            if (listOffset) {
-                uint32_t listCount = gMainTable.taggedAliasLists[listOffset];
+            જો (listOffset) {
+                uint32_t list_ગણતરી = gMainTable.taggedAliasLists[listOffset];
                 /* +1 to skip listCount */
-                const uint16_t *currList = gMainTable.taggedAliasLists + listOffset + 1;
+                અચલ uint16_t *currList = gMainTable.taggedAliasLists + listOffset + 1;
 
-                if (n < listCount)  {
-                    return GET_STRING(currList[n]);
+                જો (n < list_ગણતરી)  {
+                    પાછા GET_STRING(currList[n]);
                 }
                 *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
             }
@@ -956,129 +956,129 @@ ucnv_io_getAlias(const char *alias, uint16_t n, UErrorCode *pErrorCode) {
         }
         /* else converter not found */
     }
-    return nullptr;
+    પાછા nullptr;
 }
 
-static uint16_t
-ucnv_io_countStandards(UErrorCode *pErrorCode) {
-    if (haveAliasData(pErrorCode)) {
+સ્થિર uint16_t
+ucnv_io_ગણતરી_Standards(UErrorCode *pErrorCode) {
+    જો (haveAliasData(pErrorCode)) {
         /* Don't include the empty list */
-        return static_cast<uint16_t>(gMainTable.tagListSize - UCNV_NUM_HIDDEN_TAGS);
+        પાછા static_cast<uint16_t>(gMainTable.tagListSize - UCNV_અંક_HIDDEN_TAGS);
     }
 
-    return 0;
+    પાછા 0;
 }
 
-U_CAPI const char * U_EXPORT2
+U_CAPI અચલ અક્ષર * U_EXPORT2
 ucnv_getStandard(uint16_t n, UErrorCode *pErrorCode) {
-    if (haveAliasData(pErrorCode)) {
-        if (n < gMainTable.tagListSize - UCNV_NUM_HIDDEN_TAGS) {
-            return GET_STRING(gMainTable.tagList[n]);
+    જો (haveAliasData(pErrorCode)) {
+        જો (n < gMainTable.tagListSize - UCNV_અંક_HIDDEN_TAGS) {
+            પાછા GET_STRING(gMainTable.tagList[n]);
         }
         *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
     }
 
-    return nullptr;
+    પાછા nullptr;
 }
 
-U_CAPI const char * U_EXPORT2
-ucnv_getStandardName(const char *alias, const char *standard, UErrorCode *pErrorCode) {
-    if (haveAliasData(pErrorCode) && isAlias(alias, pErrorCode)) {
+U_CAPI અચલ અક્ષર * U_EXPORT2
+ucnv_getStandardName(અચલ અક્ષર *alias, અચલ અક્ષર *standard, UErrorCode *pErrorCode) {
+    જો (haveAliasData(pErrorCode) && isAlias(alias, pErrorCode)) {
         uint32_t listOffset = findTaggedAliasListsOffset(alias, standard, pErrorCode);
 
-        if (0 < listOffset && listOffset < gMainTable.taggedAliasListsSize) {
-            const uint16_t *currList = gMainTable.taggedAliasLists + listOffset + 1;
+        જો (0 < listOffset && listOffset < gMainTable.taggedAliasListsSize) {
+            અચલ uint16_t *currList = gMainTable.taggedAliasLists + listOffset + 1;
 
             /* Get the preferred name from this list */
-            if (currList[0]) {
-                return GET_STRING(currList[0]);
+            જો (currList[0]) {
+                પાછા GET_STRING(currList[0]);
             }
             /* else someone screwed up the alias table. */
             /* *pErrorCode = U_INVALID_FORMAT_ERROR */
         }
     }
 
-    return nullptr;
+    પાછા nullptr;
 }
 
 U_CAPI uint16_t U_EXPORT2
-ucnv_countAliases(const char *alias, UErrorCode *pErrorCode)
+ucnv_ગણતરી_Aliases(અચલ અક્ષર *alias, UErrorCode *pErrorCode)
 {
-    return ucnv_io_countAliases(alias, pErrorCode);
+    પાછા ucnv_io_ગણતરી_Aliases(alias, pErrorCode);
 }
 
 
-U_CAPI const char* U_EXPORT2
-ucnv_getAlias(const char *alias, uint16_t n, UErrorCode *pErrorCode)
+U_CAPI અચલ અક્ષર* U_EXPORT2
+ucnv_getAlias(અચલ અક્ષર *alias, uint16_t n, UErrorCode *pErrorCode)
 {
-    return ucnv_io_getAlias(alias, n, pErrorCode);
+    પાછા ucnv_io_getAlias(alias, n, pErrorCode);
 }
 
-U_CAPI void U_EXPORT2
-ucnv_getAliases(const char *alias, const char **aliases, UErrorCode *pErrorCode)
+U_CAPI શૂન્ય U_EXPORT2
+ucnv_getAliases(અચલ અક્ષર *alias, અચલ અક્ષર **aliases, UErrorCode *pErrorCode)
 {
     ucnv_io_getAliases(alias, 0, aliases, pErrorCode);
 }
 
 U_CAPI uint16_t U_EXPORT2
-ucnv_countStandards()
+ucnv_ગણતરી_Standards()
 {
     UErrorCode err = U_ZERO_ERROR;
-    return ucnv_io_countStandards(&err);
+    પાછા ucnv_io_ગણતરી_Standards(&err);
 }
 
-U_CAPI const char * U_EXPORT2
-ucnv_getCanonicalName(const char *alias, const char *standard, UErrorCode *pErrorCode) {
-    if (haveAliasData(pErrorCode) && isAlias(alias, pErrorCode)) {
-        uint32_t convNum = findTaggedConverterNum(alias, standard, pErrorCode);
+U_CAPI અચલ અક્ષર * U_EXPORT2
+ucnv_getCanonicalName(અચલ અક્ષર *alias, અચલ અક્ષર *standard, UErrorCode *pErrorCode) {
+    જો (haveAliasData(pErrorCode) && isAlias(alias, pErrorCode)) {
+        uint32_t conv_અંક = find_Tagged_Converter_અંક(alias, standard, pErrorCode);
 
-        if (convNum < gMainTable.converterListSize) {
-            return GET_STRING(gMainTable.converterList[convNum]);
+        જો (conv_અંક < gMainTable.converterListSize) {
+            પાછા GET_STRING(gMainTable.converterList[conv_અંક]);
         }
     }
 
-    return nullptr;
+    પાછા nullptr;
 }
 
 U_CDECL_BEGIN
 
 
-static int32_t U_CALLCONV
-ucnv_io_countAllConverters(UEnumeration * /*enumerator*/, UErrorCode * /*pErrorCode*/) {
-    return gMainTable.converterListSize;
+સ્થિર int32_t U_CALLCONV
+ucnv_io_ગણતરી_All_Converters(UEnumeration * /*enumerator*/, UErrorCode * /*pErrorCode*/) {
+    પાછા gMainTable.converterListSize;
 }
 
-static const char * U_CALLCONV
+સ્થિર અચલ અક્ષર * U_CALLCONV
 ucnv_io_nextAllConverters(UEnumeration *enumerator,
                             int32_t* resultLength,
                             UErrorCode * /*pErrorCode*/)
 {
     uint16_t *myContext = (uint16_t *)(enumerator->context);
 
-    if (*myContext < gMainTable.converterListSize) {
-        const char *myStr = GET_STRING(gMainTable.converterList[(*myContext)++]);
-        if (resultLength) {
+    જો (*myContext < gMainTable.converterListSize) {
+        અચલ અક્ષર *myStr = GET_STRING(gMainTable.converterList[(*myContext)++]);
+        જો (resultLength) {
             *resultLength = (int32_t)uprv_strlen(myStr);
         }
-        return myStr;
+        પાછા myStr;
     }
     /* Either we accessed a zero length list, or we enumerated too far. */
-    if (resultLength) {
+    જો (resultLength) {
         *resultLength = 0;
     }
-    return nullptr;
+    પાછા nullptr;
 }
 
-static void U_CALLCONV
+સ્થિર શૂન્ય U_CALLCONV
 ucnv_io_resetAllConverters(UEnumeration *enumerator, UErrorCode * /*pErrorCode*/) {
     *((uint16_t *)(enumerator->context)) = 0;
 }
 U_CDECL_END
-static const UEnumeration gEnumAllConverters = {
+સ્થિર અચલ UEnumeration gEnumAllConverters = {
     nullptr,
     nullptr,
     ucnv_io_closeUEnumeration,
-    ucnv_io_countAllConverters,
+    ucnv_io_ગણતરી_All_Converters,
     uenum_unextDefault,
     ucnv_io_nextAllConverters,
     ucnv_io_resetAllConverters
@@ -1087,40 +1087,40 @@ static const UEnumeration gEnumAllConverters = {
 U_CAPI UEnumeration * U_EXPORT2
 ucnv_openAllNames(UErrorCode *pErrorCode) {
     UEnumeration *myEnum = nullptr;
-    if (haveAliasData(pErrorCode)) {
+    જો (haveAliasData(pErrorCode)) {
         uint16_t *myContext;
 
-        myEnum = static_cast<UEnumeration *>(uprv_malloc(sizeof(UEnumeration)));
-        if (myEnum == nullptr) {
+        myEnum = static_cast<UEnumeration *>(uprv_malloc(કદ(UEnumeration)));
+        જો (myEnum == nullptr) {
             *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+            પાછા nullptr;
         }
-        uprv_memcpy(myEnum, &gEnumAllConverters, sizeof(UEnumeration));
-        myContext = static_cast<uint16_t *>(uprv_malloc(sizeof(uint16_t)));
-        if (myContext == nullptr) {
+        uprv_memcpy(myEnum, &gEnumAllConverters, કદ(UEnumeration));
+        myContext = static_cast<uint16_t *>(uprv_malloc(કદ(uint16_t)));
+        જો (myContext == nullptr) {
             *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
             uprv_free(myEnum);
-            return nullptr;
+            પાછા nullptr;
         }
         *myContext = 0;
         myEnum->context = myContext;
     }
-    return myEnum;
+    પાછા myEnum;
 }
 
 U_CAPI uint16_t
-ucnv_io_countKnownConverters(UErrorCode *pErrorCode) {
-    if (haveAliasData(pErrorCode)) {
-        return (uint16_t)gMainTable.converterListSize;
+ucnv_io_ગણતરી_Known_Converters(UErrorCode *pErrorCode) {
+    જો (haveAliasData(pErrorCode)) {
+        પાછા (uint16_t)gMainTable.converterListSize;
     }
-    return 0;
+    પાછા 0;
 }
 
 /* alias table swapping ----------------------------------------------------- */
 
 U_CDECL_BEGIN
 
-typedef char * U_CALLCONV StripForCompareFn(char *dst, const char *name);
+પ્રકારવ્યાખ્યા અક્ષર * U_CALLCONV StripForCompareFn(અક્ષર *dst, અચલ અક્ષર *name);
 U_CDECL_END
 
 
@@ -1131,60 +1131,60 @@ U_CDECL_END
  * after sorting this array by strings, the actual arrays are permutated
  * according to the sorting indexes
  */
-typedef struct TempRow {
+પ્રકારવ્યાખ્યા સંરચના TempRow {
     uint16_t strIndex, sortIndex;
 } TempRow;
 
-typedef struct TempAliasTable {
-    const char *chars;
+પ્રકારવ્યાખ્યા સંરચના TempAliasTable {
+    અચલ અક્ષર *chars;
     TempRow *rows;
     uint16_t *resort;
     StripForCompareFn *stripForCompare;
 } TempAliasTable;
 
-enum {
-    STACK_ROW_CAPACITY=500
+ગણના {
+    ઢગલો_ROW_CAPACITY=500
 };
 
-static int32_t U_CALLCONV
-io_compareRows(const void *context, const void *left, const void *right) {
-    char strippedLeft[UCNV_MAX_CONVERTER_NAME_LENGTH],
-         strippedRight[UCNV_MAX_CONVERTER_NAME_LENGTH];
+સ્થિર int32_t U_CALLCONV
+io_compareRows(અચલ શૂન્ય *context, અચલ શૂન્ય *left, અચલ શૂન્ય *જમણું) {
+    અક્ષર stripped_ડાબું[UCNV_MAX_CONVERTER_NAME_LENGTH],
+         stripped_જમણું[UCNV_MAX_CONVERTER_NAME_LENGTH];
 
     TempAliasTable *tempTable=(TempAliasTable *)context;
-    const char *chars=tempTable->chars;
+    અચલ અક્ષર *chars=tempTable->chars;
 
-    return static_cast<int32_t>(uprv_strcmp(
-        tempTable->stripForCompare(strippedLeft, chars + 2 * static_cast<const TempRow*>(left)->strIndex),
-        tempTable->stripForCompare(strippedRight, chars + 2 * static_cast<const TempRow*>(right)->strIndex)));
+    પાછા static_cast<int32_t>(uprv_strcmp(
+        tempTable->stripForCompare(stripped_ડાબું, chars + 2 * static_cast<અચલ TempRow*>(left)->strIndex),
+        tempTable->stripForCompare(stripped_જમણું, chars + 2 * static_cast<અચલ TempRow*>(જમણું)->strIndex)));
 }
 
 U_CAPI int32_t U_EXPORT2
-ucnv_swapAliases(const UDataSwapper *ds,
-                 const void *inData, int32_t length, void *outData,
+ucnv_swapAliases(અચલ UDataSwapper *ds,
+                 અચલ શૂન્ય *inData, int32_t length, શૂન્ય *outData,
                  UErrorCode *pErrorCode) {
-    const UDataInfo *pInfo;
+    અચલ UDataInfo *pInfo;
     int32_t headerSize;
 
-    const uint16_t *inTable;
-    const uint32_t *inSectionSizes;
-    uint32_t toc[offsetsCount];
-    uint32_t offsets[offsetsCount]; /* 16-bit-addressed offsets from inTable/outTable */
-    uint32_t i, count, tocLength, topOffset;
+    અચલ uint16_t *inTable;
+    અચલ uint32_t *inSectionSizes;
+    uint32_t toc[offsets_ગણતરી];
+    uint32_t offsets[offsets_ગણતરી]; /* 16-bit-addressed offsets from inTable/outTable */
+    uint32_t i, count, tocLength, ટોચ_Offset;
 
-    TempRow rows[STACK_ROW_CAPACITY];
-    uint16_t resort[STACK_ROW_CAPACITY];
+    TempRow rows[ઢગલો_ROW_CAPACITY];
+    uint16_t resort[ઢગલો_ROW_CAPACITY];
     TempAliasTable tempTable;
 
     /* udata_swapDataHeader checks the arguments */
     headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    જો(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        પાછા 0;
     }
 
     /* check data format and format version */
-    pInfo=(const UDataInfo *)((const char *)inData+4);
-    if(!(
+    pInfo=(અચલ UDataInfo *)((અચલ અક્ષર *)inData+4);
+    જો(!(
         pInfo->dataFormat[0]==0x43 &&   /* dataFormat="CvAl" */
         pInfo->dataFormat[1]==0x76 &&
         pInfo->dataFormat[2]==0x41 &&
@@ -1196,56 +1196,56 @@ ucnv_swapAliases(const UDataSwapper *ds,
                          pInfo->dataFormat[2], pInfo->dataFormat[3],
                          pInfo->formatVersion[0]);
         *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+        પાછા 0;
     }
 
     /* an alias table must contain at least the table of contents array */
-    if(length>=0 && (length-headerSize)<4*(1+minTocLength)) {
+    જો(length>=0 && (length-headerSize)<4*(1+minTocLength)) {
         udata_printError(ds, "ucnv_swapAliases(): too few bytes (%d after header) for an alias table\n",
                          length-headerSize);
         *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        પાછા 0;
     }
 
-    inSectionSizes=(const uint32_t *)((const char *)inData+headerSize);
-    inTable=(const uint16_t *)inSectionSizes;
-    uprv_memset(toc, 0, sizeof(toc));
+    inSectionSizes=(અચલ uint32_t *)((અચલ અક્ષર *)inData+headerSize);
+    inTable=(અચલ uint16_t *)inSectionSizes;
+    uprv_memset(toc, 0, કદ(toc));
     toc[tocLengthIndex]=tocLength=ds->readUInt32(inSectionSizes[tocLengthIndex]);
-    if(tocLength<minTocLength || offsetsCount<=tocLength) {
+    જો(tocLength<minTocLength || offsets_ગણતરી<=tocLength) {
         udata_printError(ds, "ucnv_swapAliases(): table of contents contains unsupported number of sections (%u sections)\n", tocLength);
         *pErrorCode=U_INVALID_FORMAT_ERROR;
-        return 0;
+        પાછા 0;
     }
 
     /* read the known part of the table of contents */
-    for(i=converterListIndex; i<=tocLength; ++i) {
+    માટે(i=converterListIndex; i<=tocLength; ++i) {
         toc[i]=ds->readUInt32(inSectionSizes[i]);
     }
 
     /* compute offsets */
-    uprv_memset(offsets, 0, sizeof(offsets));
+    uprv_memset(offsets, 0, કદ(offsets));
     offsets[converterListIndex]=2*(1+tocLength); /* count two 16-bit units per toc entry */
-    for(i=tagListIndex; i<=tocLength; ++i) {
+    માટે(i=tagListIndex; i<=tocLength; ++i) {
         offsets[i]=offsets[i-1]+toc[i-1];
     }
 
     /* compute the overall size of the after-header data, in numbers of 16-bit units */
-    topOffset=offsets[i-1]+toc[i-1];
+    ટોચ_Offset=offsets[i-1]+toc[i-1];
 
-    if(length>=0) {
+    જો(length>=0) {
         uint16_t *outTable;
-        const uint16_t *p, *p2;
+        અચલ uint16_t *p, *p2;
         uint16_t *q, *q2;
         uint16_t oldIndex;
 
-        if((length-headerSize)<(2*(int32_t)topOffset)) {
+        જો((length-headerSize)<(2*(int32_t)ટોચ_Offset)) {
             udata_printError(ds, "ucnv_swapAliases(): too few bytes (%d after header) for an alias table\n",
                              length-headerSize);
             *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            પાછા 0;
         }
 
-        outTable=(uint16_t *)((char *)outData+headerSize);
+        outTable=(uint16_t *)((અક્ષર *)outData+headerSize);
 
         /* swap the entire table of contents */
         ds->swapArray32(ds, inTable, 4*(1+tocLength), outTable, pErrorCode);
@@ -1253,41 +1253,41 @@ ucnv_swapAliases(const UDataSwapper *ds,
         /* swap unormalized strings & normalized strings */
         ds->swapInvChars(ds, inTable+offsets[stringTableIndex], 2*(int32_t)(toc[stringTableIndex]+toc[normalizedStringTableIndex]),
                              outTable+offsets[stringTableIndex], pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
+        જો(U_FAILURE(*pErrorCode)) {
             udata_printError(ds, "ucnv_swapAliases().swapInvChars(charset names) failed\n");
-            return 0;
+            પાછા 0;
         }
 
-        if(ds->inCharset==ds->outCharset) {
+        જો(ds->inCharset==ds->outCharset) {
             /* no need to sort, just swap all 16-bit values together */
             ds->swapArray16(ds,
                             inTable+offsets[converterListIndex],
                             2*(int32_t)(offsets[stringTableIndex]-offsets[converterListIndex]),
                             outTable+offsets[converterListIndex],
                             pErrorCode);
-        } else {
+        } નહીંતર {
             /* allocate the temporary table for sorting */
             count=toc[aliasListIndex];
 
-            tempTable.chars=(const char *)(outTable+offsets[stringTableIndex]); /* sort by outCharset */
+            tempTable.chars=(અચલ અક્ષર *)(outTable+offsets[stringTableIndex]); /* sort by outCharset */
 
-            if(count<=STACK_ROW_CAPACITY) {
+            જો(count<=ઢગલો_ROW_CAPACITY) {
                 tempTable.rows=rows;
                 tempTable.resort=resort;
-            } else {
-                tempTable.rows=(TempRow *)uprv_malloc(count*sizeof(TempRow)+count*2);
-                if(tempTable.rows==nullptr) {
+            } નહીંતર {
+                tempTable.rows=(TempRow *)uprv_malloc(count*કદ(TempRow)+count*2);
+                જો(tempTable.rows==nullptr) {
                     udata_printError(ds, "ucnv_swapAliases(): unable to allocate memory for sorting tables (max length: %u)\n",
                                      count);
                     *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                    return 0;
+                    પાછા 0;
                 }
                 tempTable.resort=(uint16_t *)(tempTable.rows+count);
             }
 
-            if(ds->outCharset==U_ASCII_FAMILY) {
+            જો(ds->outCharset==U_ASCII_FAMILY) {
                 tempTable.stripForCompare=ucnv_io_stripASCIIForCompare;
-            } else /* U_EBCDIC_FAMILY */ {
+            } નહીંતર /* U_EBCDIC_FAMILY */ {
                 tempTable.stripForCompare=ucnv_io_stripEBCDICForCompare;
             }
 
@@ -1306,24 +1306,24 @@ ucnv_swapAliases(const UDataSwapper *ds,
             p2=inTable+offsets[untaggedConvArrayIndex];
             q2=outTable+offsets[untaggedConvArrayIndex];
 
-            for(i=0; i<count; ++i) {
+            માટે(i=0; i<count; ++i) {
                 tempTable.rows[i].strIndex=ds->readUInt16(p[i]);
                 tempTable.rows[i].sortIndex=(uint16_t)i;
             }
 
-            uprv_sortArray(tempTable.rows, (int32_t)count, sizeof(TempRow),
+            uprv_sortArray(tempTable.rows, (int32_t)count, કદ(TempRow),
                            io_compareRows, &tempTable,
-                           false, pErrorCode);
+                           ખોટું, pErrorCode);
 
-            if(U_SUCCESS(*pErrorCode)) {
+            જો(U_SUCCESS(*pErrorCode)) {
                 /* copy/swap/permutate items */
-                if(p!=q) {
-                    for(i=0; i<count; ++i) {
+                જો(p!=q) {
+                    માટે(i=0; i<count; ++i) {
                         oldIndex=tempTable.rows[i].sortIndex;
                         ds->swapArray16(ds, p+oldIndex, 2, q+i, pErrorCode);
                         ds->swapArray16(ds, p2+oldIndex, 2, q2+i, pErrorCode);
                     }
-                } else {
+                } નહીંતર {
                     /*
                      * If we swap in-place, then the permutation must use another
                      * temporary array (tempTable.resort)
@@ -1331,13 +1331,13 @@ ucnv_swapAliases(const UDataSwapper *ds,
                      */
                     uint16_t *r=tempTable.resort;
 
-                    for(i=0; i<count; ++i) {
+                    માટે(i=0; i<count; ++i) {
                         oldIndex=tempTable.rows[i].sortIndex;
                         ds->swapArray16(ds, p+oldIndex, 2, r+i, pErrorCode);
                     }
                     uprv_memcpy(q, r, 2*(size_t)count);
 
-                    for(i=0; i<count; ++i) {
+                    માટે(i=0; i<count; ++i) {
                         oldIndex=tempTable.rows[i].sortIndex;
                         ds->swapArray16(ds, p2+oldIndex, 2, r+i, pErrorCode);
                     }
@@ -1345,14 +1345,14 @@ ucnv_swapAliases(const UDataSwapper *ds,
                 }
             }
 
-            if(tempTable.rows!=rows) {
+            જો(tempTable.rows!=rows) {
                 uprv_free(tempTable.rows);
             }
 
-            if(U_FAILURE(*pErrorCode)) {
+            જો(U_FAILURE(*pErrorCode)) {
                 udata_printError(ds, "ucnv_swapAliases().uprv_sortArray(%u items) failed\n",
                                  count);
-                return 0;
+                પાછા 0;
             }
 
             /* swap remaining 16-bit values */
@@ -1369,7 +1369,7 @@ ucnv_swapAliases(const UDataSwapper *ds,
         }
     }
 
-    return headerSize+2*(int32_t)topOffset;
+    પાછા headerSize+2*(int32_t)ટોચ_Offset;
 }
 
 #endif

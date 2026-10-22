@@ -17,7 +17,7 @@
 #ifndef UMISC_H
 #define UMISC_H
 
-#include "unicode/utypes.h"
+#અન્તર્ભાવ "unicode/utypes.h"
 
 /**
  * \file
@@ -31,7 +31,7 @@ U_CDECL_BEGIN
 /** A struct representing a range of text containing a specific field 
  *  @stable ICU 2.0
  */
-typedef struct UFieldPosition {
+પ્રકારવ્યાખ્યા સંરચના UFieldPosition {
   /**
    * The field 
    * @stable ICU 2.0
@@ -49,12 +49,12 @@ typedef struct UFieldPosition {
   int32_t endIndex;
 } UFieldPosition;
 
-#if !UCONFIG_NO_SERVICE
+#જો !UCONFIG_NO_SERVICE
 /**
  * Opaque type returned by registerInstance, registerFactory and unregister for service registration.
  * @stable ICU 2.6
  */
-typedef const void* URegistryKey;
+પ્રકારવ્યાખ્યા અચલ શૂન્ય* URegistry_ચાવી;
 #endif
 
 U_CDECL_END

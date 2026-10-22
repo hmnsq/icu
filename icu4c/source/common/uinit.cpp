@@ -14,34 +14,34 @@
 *   created by: George Rhoten
 */
 
-#include "unicode/utypes.h"
-#include "unicode/icuplug.h"
-#include "unicode/uclean.h"
-#include "cmemory.h"
-#include "icuplugimp.h"
-#include "ucln_cmn.h"
-#include "ucnv_io.h"
-#include "umutex.h"
-#include "utracimp.h"
+#અન્તર્ભાવ "unicode/utypes.h"
+#અન્તર્ભાવ "unicode/icuplug.h"
+#અન્તર્ભાવ "unicode/uclean.h"
+#અન્તર્ભાવ "cmemory.h"
+#અન્તર્ભાવ "icuplugimp.h"
+#અન્તર્ભાવ "ucln_cmn.h"
+#અન્તર્ભાવ "ucnv_io.h"
+#અન્તર્ભાવ "umutex.h"
+#અન્તર્ભાવ "utracimp.h"
 
 U_NAMESPACE_BEGIN
 
-static UInitOnce gICUInitOnce {};
+સ્થિર UInitOnce gICUInitOnce {};
 
-static UBool U_CALLCONV uinit_cleanup() {
+સ્થિર UBool U_CALLCONV uinit_cleanup() {
     gICUInitOnce.reset();
-    return true;
+    પાછા સાચું;
 }
 
-static void U_CALLCONV
+સ્થિર શૂન્ય U_CALLCONV
 initData(UErrorCode &status)
 {
-#if UCONFIG_ENABLE_PLUGINS
+#જો UCONFIG_ENABLE_PLUGINS
     /* initialize plugins */
     uplug_init(&status);
 #endif
 
-#if !UCONFIG_NO_CONVERSION
+#જો !UCONFIG_NO_CONVERSION
     /*
      * 2005-may-02
      *
@@ -54,7 +54,7 @@ initData(UErrorCode &status)
      * for errors there, to make sure that the actual items they need are
      * available.
      */
-    ucnv_io_countKnownConverters(&status);
+    ucnv_io_ગણતરી_Known_Converters(&status);
 #endif
     ucln_common_registerCleanup(UCLN_COMMON_UINIT, uinit_cleanup);
 }
@@ -66,7 +66,7 @@ U_NAMESPACE_USE
 /*
  * ICU Initialization Function. Need not be called.
  */
-U_CAPI void U_EXPORT2
+U_CAPI શૂન્ય U_EXPORT2
 u_init(UErrorCode *status) {
     UTRACE_ENTRY_OC(UTRACE_U_INIT);
     umtx_initOnce(gICUInitOnce, &initData, *status);

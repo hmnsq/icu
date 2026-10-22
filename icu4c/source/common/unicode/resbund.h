@@ -48,14 +48,14 @@
 #ifndef RESBUND_H
 #define RESBUND_H
 
-#include "unicode/utypes.h"
+#અન્તર્ભાવ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#જો U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
-#include "unicode/ures.h"
-#include "unicode/unistr.h"
-#include "unicode/locid.h"
+#અન્તર્ભાવ "unicode/uobject.h"
+#અન્તર્ભાવ "unicode/ures.h"
+#અન્તર્ભાવ "unicode/unistr.h"
+#અન્તર્ભાવ "unicode/locid.h"
 
 /**
  * \file 
@@ -80,8 +80,8 @@ U_NAMESPACE_BEGIN
  *
  * @stable ICU 2.0
  */
-class U_COMMON_API ResourceBundle : public UObject {
-public:
+class U_COMMON_API ResourceBundle : જાહેર UObject {
+જાહેર:
     /**
      * Constructor
      *
@@ -108,8 +108,8 @@ public:
      * fall back locales could be found.
      * @stable ICU 2.0
      */
-    ResourceBundle(const UnicodeString&    packageName,
-                   const Locale&           locale,
+    ResourceBundle(અચલ UnicodeString&    packageName,
+                   અચલ Locale&           locale,
                    UErrorCode&              err);
 
     /**
@@ -123,7 +123,7 @@ public:
      * @param err A UErrorCode value
      * @stable ICU 2.0
      */
-    ResourceBundle(const UnicodeString&    packageName,
+    ResourceBundle(અચલ UnicodeString&    packageName,
                    UErrorCode&              err);
 
     /**
@@ -148,8 +148,8 @@ public:
      * @param err A UErrorCode value
      * @stable ICU 2.0
      */
-    ResourceBundle(const char* packageName,
-                   const Locale& locale,
+    ResourceBundle(અચલ અક્ષર* packageName,
+                   અચલ Locale& locale,
                    UErrorCode& err);
 
     /**
@@ -158,7 +158,7 @@ public:
      * @param original The resource bundle to copy.
      * @stable ICU 2.0
      */
-    ResourceBundle(const ResourceBundle &original);
+    ResourceBundle(અચલ ResourceBundle &original);
 
     /**
      * Constructor from a C UResourceBundle. The resource bundle is
@@ -178,12 +178,12 @@ public:
      * @param other The resource bundle to copy.
      * @stable ICU 2.0
      */
-    ResourceBundle& operator=(const ResourceBundle& other) U_LIFETIME_BOUND;
+    ResourceBundle& operator=(અચલ ResourceBundle& other) U_LIFETIME_BOUND;
 
     /** Destructor.
      * @stable ICU 2.0
      */
-    virtual ~ResourceBundle();
+    આભાસી ~ResourceBundle();
 
     /**
      * Clone this object.
@@ -196,7 +196,7 @@ public:
      * @see getDynamicClassID
      * @stable ICU 2.8
      */
-    ResourceBundle *clone() const;
+    ResourceBundle *clone() અચલ;
 
     /**
      * Returns the size of a resource. Size for scalar types is always 1, and for vector/table types is
@@ -208,7 +208,7 @@ public:
      * @return number of resources in a given resource.
      * @stable ICU 2.0
      */
-    int32_t getSize() const;
+    int32_t getSize() અચલ;
 
     /**
      * returns a string from a string resource type
@@ -220,7 +220,7 @@ public:
      * @return a pointer to a zero-terminated char16_t array which lives in a memory mapped/DLL file.
      * @stable ICU 2.0
      */
-    UnicodeString getString(UErrorCode& status) const U_LIFETIME_BOUND;
+    UnicodeString getString(UErrorCode& status) અચલ U_LIFETIME_BOUND;
 
     /**
      * returns a binary data from a resource. Can be used at most primitive resource types (binaries,
@@ -234,7 +234,7 @@ public:
      * @return a pointer to a chunk of unsigned bytes which live in a memory mapped/DLL file.
      * @stable ICU 2.0
      */
-    const uint8_t* getBinary(int32_t& len, UErrorCode& status) const U_LIFETIME_BOUND;
+    અચલ uint8_t* get_દ્વિઅંકી(int32_t& len, UErrorCode& status) અચલ U_LIFETIME_BOUND;
 
     /**
      * returns an integer vector from a resource.
@@ -247,7 +247,7 @@ public:
      * @return a pointer to a vector of integers that lives in a memory mapped/DLL file.
      * @stable ICU 2.0
      */
-    const int32_t* getIntVector(int32_t& len, UErrorCode& status) const U_LIFETIME_BOUND;
+    અચલ int32_t* getIntVector(int32_t& len, UErrorCode& status) અચલ U_LIFETIME_BOUND;
 
     /**
      * returns an unsigned integer from a resource.
@@ -261,7 +261,7 @@ public:
      * @stable ICU 2.0
      */
     uint32_t
-      getUInt(UErrorCode& status) const;
+      getUInt(UErrorCode& status) અચલ;
 
     /**
      * returns a signed integer from a resource.
@@ -275,7 +275,7 @@ public:
      * @stable ICU 2.0
      */
     int32_t
-      getInt(UErrorCode& status) const;
+      getInt(UErrorCode& status) અચલ;
 
     /**
      * Checks whether the resource has another element to iterate over.
@@ -283,14 +283,14 @@ public:
      * @return true if there are more elements, false if there is no more elements
      * @stable ICU 2.0
      */
-    UBool hasNext() const;
+    UBool hasNext() અચલ;
 
     /**
      * Resets the internal context of a resource so that iteration starts from the first element.
      *
      * @stable ICU 2.0
      */
-    void resetIterator();
+    શૂન્ય resetIterator();
 
     /**
      * Returns the key associated with this resource. Not all the resources have a key - only
@@ -299,7 +299,7 @@ public:
      * @return a key associated to this resource, or nullptr if it doesn't have a key
      * @stable ICU 2.0
      */
-    const char* getKey() const U_LIFETIME_BOUND;
+    અચલ અક્ષર* get_ચાવી() અચલ U_LIFETIME_BOUND;
 
     /**
      * Gets the locale ID of the resource bundle as a string.
@@ -308,7 +308,7 @@ public:
      * @return the locale ID of the resource bundle as a string
      * @stable ICU 2.0
      */
-    const char* getName() const U_LIFETIME_BOUND;
+    અચલ અક્ષર* getName() અચલ U_LIFETIME_BOUND;
 
     /**
      * Returns the type of a resource. Available types are defined in enum UResType
@@ -316,7 +316,7 @@ public:
      * @return type of the given resource.
      * @stable ICU 2.0
      */
-    UResType getType() const;
+    UResType getType() અચલ;
 
     /**
      * Returns the next resource in a given resource or nullptr if there are no more resources
@@ -347,7 +347,7 @@ public:
      * @return an UnicodeString object.
      * @stable ICU 2.0
      */
-    UnicodeString getNextString(const char** key, UErrorCode& status) U_LIFETIME_BOUND;
+    UnicodeString getNextString(અચલ અક્ષર** ચાવી, UErrorCode& status) U_LIFETIME_BOUND;
 
     /**
      * Returns the resource in a resource at the specified index.
@@ -359,7 +359,7 @@ public:
      */
     ResourceBundle
       get(int32_t index,
-          UErrorCode& status) const;
+          UErrorCode& status) અચલ;
 
     /**
      * Returns the string in a given resource at the specified index.
@@ -369,7 +369,7 @@ public:
      * @return                  an UnicodeString object. If there is an error, string is bogus
      * @stable ICU 2.0
      */
-    UnicodeString getStringEx(int32_t index, UErrorCode& status) const U_LIFETIME_BOUND;
+    UnicodeString getStringEx(int32_t index, UErrorCode& status) અચલ U_LIFETIME_BOUND;
 
     /**
      * Returns a resource in a resource that has a given key. This procedure works only with table
@@ -381,8 +381,8 @@ public:
      * @stable ICU 2.0
      */
     ResourceBundle
-      get(const char* key,
-          UErrorCode& status) const;
+      get(અચલ અક્ષર* ચાવી,
+          UErrorCode& status) અચલ;
 
     /**
      * Returns a string in a resource that has a given key. This procedure works only with table
@@ -393,7 +393,7 @@ public:
      * @return                  an UnicodeString object. If there is an error, string is bogus
      * @stable ICU 2.0
      */
-    UnicodeString getStringEx(const char* key, UErrorCode& status) const U_LIFETIME_BOUND;
+    UnicodeString getStringEx(અચલ અક્ષર* ચાવી, UErrorCode& status) અચલ U_LIFETIME_BOUND;
 
 #ifndef U_HIDE_DEPRECATED_API
     /**
@@ -405,7 +405,7 @@ public:
      * @see getVersion
      * @deprecated ICU 2.8 Use getVersion instead.
      */
-    const char* getVersionNumber() const U_LIFETIME_BOUND;
+    અચલ અક્ષર* get_Version_સંખ્યા() અચલ U_LIFETIME_BOUND;
 #endif  /* U_HIDE_DEPRECATED_API */
 
     /**
@@ -415,8 +415,8 @@ public:
      *                    as specified in the resource bundle or its parent.
      * @stable ICU 2.0
      */
-    void
-      getVersion(UVersionInfo versionInfo) const;
+    શૂન્ય
+      getVersion(UVersionInfo versionInfo) અચલ;
 
 #ifndef U_HIDE_DEPRECATED_API
     /**
@@ -425,7 +425,7 @@ public:
      * @return a Locale object
      * @deprecated ICU 2.8 Use getLocale(ULocDataLocaleType type, UErrorCode &status) overload instead.
      */
-    const Locale& getLocale() const U_LIFETIME_BOUND;
+    અચલ Locale& getLocale() અચલ U_LIFETIME_BOUND;
 #endif  /* U_HIDE_DEPRECATED_API */
 
     /**
@@ -439,34 +439,34 @@ public:
      * @stable ICU 2.8
      */
     Locale
-      getLocale(ULocDataLocaleType type, UErrorCode &status) const;
+      getLocale(ULocDataLocaleType type, UErrorCode &status) અચલ;
 #ifndef U_HIDE_INTERNAL_API
     /**
      * This API implements multilevel fallback
      * @internal
      */
     ResourceBundle
-        getWithFallback(const char* key, UErrorCode& status);
+        getWithFallback(અચલ અક્ષર* ચાવી, UErrorCode& status);
 #endif  /* U_HIDE_INTERNAL_API */
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      *
      * @stable ICU 2.2
      */
-    virtual UClassID getDynamicClassID() const override;
+    આભાસી UClassID getDynamicClassID() અચલ override;
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      *
      * @stable ICU 2.2
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    સ્થિર UClassID U_EXPORT2 getStaticClassID();
 
-private:
+ખાનગી:
     ResourceBundle() = delete; // default constructor not implemented
 
     UResourceBundle *fResource;
-    void constructForLocale(const UnicodeString& path, const Locale& locale, UErrorCode& error);
+    શૂન્ય constructForLocale(અચલ UnicodeString& path, અચલ Locale& locale, UErrorCode& error);
     Locale *fLocale;
 };
 

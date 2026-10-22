@@ -3,14 +3,14 @@
 #ifndef __LOCALEBUILDER_H__
 #define __LOCALEBUILDER_H__
 
-#include "unicode/utypes.h"
+#અન્તર્ભાવ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#જો U_SHOW_CPLUSPLUS_API
 
-#include "unicode/locid.h"
-#include "unicode/localematcher.h"
-#include "unicode/stringpiece.h"
-#include "unicode/uobject.h"
+#અન્તર્ભાવ "unicode/locid.h"
+#અન્તર્ભાવ "unicode/localematcher.h"
+#અન્તર્ભાવ "unicode/stringpiece.h"
+#અન્તર્ભાવ "unicode/uobject.h"
 
 /**
  * \file
@@ -58,8 +58,8 @@ class FixedString;
  *
  * @stable ICU 64
  */
-class U_COMMON_API LocaleBuilder : public UObject {
-public:
+class U_COMMON_API LocaleBuilder : જાહેર UObject {
+જાહેર:
     /**
      * Constructs an empty LocaleBuilder. The default value of all
      * fields, extensions, and private use information is the
@@ -73,7 +73,7 @@ public:
      * Destructor
      * @stable ICU 64
      */
-    virtual ~LocaleBuilder();
+    આભાસી ~LocaleBuilder();
 
     /**
      * Resets the <code>LocaleBuilder</code> to match the provided
@@ -87,7 +87,7 @@ public:
      *
      * @stable ICU 64
      */
-    LocaleBuilder& setLocale(const Locale& locale) U_LIFETIME_BOUND;
+    LocaleBuilder& setLocale(અચલ Locale& locale) U_LIFETIME_BOUND;
 
     /**
      * Resets the LocaleBuilder to match the provided IETF BCP 47 language tag.
@@ -196,7 +196,7 @@ public:
      * @return This builder.
      * @stable ICU 64
      */
-    LocaleBuilder& setExtension(char key, StringPiece value) U_LIFETIME_BOUND;
+    LocaleBuilder& setExtension(અક્ષર ચાવી, StringPiece કિંમત_2) U_LIFETIME_BOUND;
 
     /**
      * Sets the Unicode locale keyword type for the given key. If the type
@@ -216,7 +216,7 @@ public:
      * @return This builder.
      * @stable ICU 64
      */
-    LocaleBuilder& setUnicodeLocaleKeyword(StringPiece key, StringPiece type) U_LIFETIME_BOUND;
+    LocaleBuilder& setUnicodeLocaleKeyword(StringPiece ચાવી, StringPiece type) U_LIFETIME_BOUND;
 
     /**
      * Adds a unicode locale attribute, if not already present, otherwise
@@ -285,17 +285,17 @@ public:
      * @return true if U_FAILURE(outErrorCode)
      * @stable ICU 65
      */
-    UBool copyErrorTo(UErrorCode &outErrorCode) const;
+    UBool copyErrorTo(UErrorCode &outErrorCode) અચલ;
 
-private:
+ખાનગી:
     friend class LocaleMatcher::Result;
 
-    void copyExtensionsFrom(const Locale& src, UErrorCode& errorCode);
+    શૂન્ય copyExtensionsFrom(અચલ Locale& src, UErrorCode& errorCode);
 
     UErrorCode status_;
-    char language_[9];
-    char script_[5];
-    char region_[4];
+    અક્ષર language_[9];
+    અક્ષર script_[5];
+    અક્ષર region_[4];
     FixedString *variant_;  // Pointer not object so we need not #include internal fixedstring.h.
     icu::Locale *extensions_;  // Pointer not object. Storage for all other fields.
 

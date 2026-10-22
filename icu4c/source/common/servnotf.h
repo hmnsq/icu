@@ -9,9 +9,9 @@
 #ifndef ICUNOTIF_H
 #define ICUNOTIF_H
 
-#include "unicode/utypes.h"
+#અન્તર્ભાવ "unicode/utypes.h"
 
-#if UCONFIG_NO_SERVICE
+#જો UCONFIG_NO_SERVICE
 
 U_NAMESPACE_BEGIN
 
@@ -23,33 +23,33 @@ class ICUNotifier;
 
 U_NAMESPACE_END
 
-#else
+#નહીંતર
 
-#include "unicode/uobject.h"
-#include "unicode/unistr.h"
+#અન્તર્ભાવ "unicode/uobject.h"
+#અન્તર્ભાવ "unicode/unistr.h"
 
-#include "mutex.h"
-#include "uvector.h"
+#અન્તર્ભાવ "mutex.h"
+#અન્તર્ભાવ "uvector.h"
 
 U_NAMESPACE_BEGIN
 
-class U_COMMON_API EventListener : public UObject {
-public: 
-    virtual ~EventListener();
+class U_COMMON_API EventListener : જાહેર UObject {
+જાહેર: 
+    આભાસી ~EventListener();
 
-public:
-    static UClassID U_EXPORT2 getStaticClassID();
+જાહેર:
+    સ્થિર UClassID U_EXPORT2 getStaticClassID();
 
-    virtual UClassID getDynamicClassID() const override;
+    આભાસી UClassID getDynamicClassID() અચલ override;
 
-public:
+જાહેર:
 #ifdef SERVICE_DEBUG
-    virtual UnicodeString& debug(UnicodeString& result) const {
-      return debugClass(result);
+    આભાસી UnicodeString& debug(UnicodeString& result) અચલ {
+      પાછા debugClass(result);
     }
 
-    virtual UnicodeString& debugClass(UnicodeString& result) const {
-      return result.append((UnicodeString)"Key");
+    આભાસી UnicodeString& debugClass(UnicodeString& result) અચલ {
+      પાછા result.append((UnicodeString)"Key");
     }
 #endif
 };
@@ -71,13 +71,13 @@ public:
  * type and call the appropriate method on the listener.
  */
 
-class U_COMMON_API ICUNotifier : public UMemory  {
-private: UVector* listeners;
+class U_COMMON_API ICUNotifier : જાહેર UMemory  {
+ખાનગી: UVector* listeners;
          
-public: 
+જાહેર: 
     ICUNotifier();
     
-    virtual ~ICUNotifier();
+    આભાસી ~ICUNotifier();
     
     /**
      * Add a listener to be notified when notifyChanged is called.
@@ -86,14 +86,14 @@ public:
      * register the identical listener more than once will be
      * silently ignored.  
      */
-    virtual void addListener(const EventListener* l, UErrorCode& status);
+    આભાસી શૂન્ય addListener(અચલ EventListener* l, UErrorCode& status);
     
     /**
      * Stop notifying this listener.  The listener must
      * not be null. Attempts to remove a listener that is
      * not registered will be silently ignored.
      */
-    virtual void removeListener(const EventListener* l, UErrorCode& status);
+    આભાસી શૂન્ય removeListener(અચલ EventListener* l, UErrorCode& status);
     
     /**
      * ICU doesn't spawn its own threads.  All listeners are notified in
@@ -101,19 +101,19 @@ public:
      * indefinitely block the calling thread.  Callers should beware of
      * deadlock situations.  
      */
-    virtual void notifyChanged();
+    આભાસી શૂન્ય notifyChanged();
     
-protected: 
+સુરક્ષિત: 
     /**
      * Subclasses implement this to return true if the listener is
      * of the appropriate type.
      */
-    virtual UBool acceptsListener(const EventListener& l) const = 0;
+    આભાસી UBool acceptsListener(અચલ EventListener& l) અચલ = 0;
     
     /**
      * Subclasses implement this to notify the listener.
      */
-    virtual void notifyListener(EventListener& l) const = 0;
+    આભાસી શૂન્ય notifyListener(EventListener& l) અચલ = 0;
 };
 
 U_NAMESPACE_END

@@ -14,16 +14,16 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/bytestriebuilder.h"
-#include "unicode/stringpiece.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "uhash.h"
-#include "uarrsort.h"
-#include "uassert.h"
-#include "ustr_imp.h"
+#અન્તર્ભાવ "unicode/utypes.h"
+#અન્તર્ભાવ "unicode/bytestrie.h"
+#અન્તર્ભાવ "unicode/bytestriebuilder.h"
+#અન્તર્ભાવ "unicode/stringpiece.h"
+#અન્તર્ભાવ "charstr.h"
+#અન્તર્ભાવ "cmemory.h"
+#અન્તર્ભાવ "uhash.h"
+#અન્તર્ભાવ "uarrsort.h"
+#અન્તર્ભાવ "uassert.h"
+#અન્તર્ભાવ "ustr_imp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -33,49 +33,49 @@ U_NAMESPACE_BEGIN
  * It might(!) take less memory if we collected the data in a temporary, dynamic trie.
  */
 
-class BytesTrieElement : public UMemory {
-public:
+વર્ગ BytesTrieElement : જાહેર UMemory {
+જાહેર:
     // Use compiler's default constructor, initializes nothing.
 
-    void setTo(StringPiece s, int32_t val, CharString &strings, UErrorCode &errorCode);
+    શૂન્ય setTo(StringPiece s, int32_t val, CharString &strings, UErrorCode &errorCode);
 
-    StringPiece getString(const CharString& strings U_LIFETIME_BOUND) const {
+    StringPiece getString(અચલ CharString& strings U_LIFETIME_BOUND) અચલ {
         int32_t offset=stringOffset;
         int32_t length;
-        if(offset>=0) {
+        જો(offset>=0) {
             length = static_cast<uint8_t>(strings[offset++]);
-        } else {
+        } નહીંતર {
             offset=~offset;
             length = (static_cast<int32_t>(static_cast<uint8_t>(strings[offset])) << 8) | static_cast<uint8_t>(strings[offset + 1]);
             offset+=2;
         }
-        return StringPiece(strings.data()+offset, length);
+        પાછા StringPiece(strings.data()+offset, length);
     }
-    int32_t getStringLength(const CharString &strings) const {
+    int32_t getStringLength(અચલ CharString &strings) અચલ {
         int32_t offset=stringOffset;
-        if(offset>=0) {
-            return static_cast<uint8_t>(strings[offset]);
-        } else {
+        જો(offset>=0) {
+            પાછા static_cast<uint8_t>(strings[offset]);
+        } નહીંતર {
             offset=~offset;
-            return (static_cast<int32_t>(static_cast<uint8_t>(strings[offset])) << 8) | static_cast<uint8_t>(strings[offset + 1]);
+            પાછા (static_cast<int32_t>(static_cast<uint8_t>(strings[offset])) << 8) | static_cast<uint8_t>(strings[offset + 1]);
         }
     }
 
-    char charAt(int32_t index, const CharString &strings) const { return data(strings)[index]; }
+    અક્ષર charAt(int32_t index, અચલ CharString &strings) અચલ { પાછા data(strings)[index]; }
 
-    int32_t getValue() const { return value; }
+    int32_t get_કિંમત() અચલ { પાછા value; }
 
-    int32_t compareStringTo(const BytesTrieElement &o, const CharString &strings) const;
+    int32_t compareStringTo(અચલ BytesTrieElement &o, અચલ CharString &strings) અચલ;
 
-private:
-    const char* data(const CharString& strings U_LIFETIME_BOUND) const {
+ખાનગી:
+    અચલ અક્ષર* data(અચલ CharString& strings U_LIFETIME_BOUND) અચલ {
         int32_t offset=stringOffset;
-        if(offset>=0) {
+        જો(offset>=0) {
             ++offset;
-        } else {
+        } નહીંતર {
             offset=~offset+2;
         }
-        return strings.data()+offset;
+        પાછા strings.data()+offset;
     }
 
     // If the stringOffset is non-negative, then the first strings byte contains
@@ -87,53 +87,53 @@ private:
     int32_t value;
 };
 
-void
+શૂન્ય
 BytesTrieElement::setTo(StringPiece s, int32_t val,
                         CharString &strings, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+    જો(U_FAILURE(errorCode)) {
+        પાછા;
     }
     int32_t length=s.length();
-    if(length>0xffff) {
+    જો(length>0xffff) {
         // Too long: We store the length in 1 or 2 bytes.
         errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+        પાછા;
     }
     int32_t offset=strings.length();
-    if(length>0xff) {
+    જો(length>0xff) {
         offset=~offset;
-        strings.append(static_cast<char>(length >> 8), errorCode);
+        strings.append(static_cast<અક્ષર>(length >> 8), errorCode);
     }
-    strings.append(static_cast<char>(length), errorCode);
+    strings.append(static_cast<અક્ષર>(length), errorCode);
     stringOffset=offset;
     value=val;
     strings.append(s, errorCode);
 }
 
 int32_t
-BytesTrieElement::compareStringTo(const BytesTrieElement &other, const CharString &strings) const {
+BytesTrieElement::compareStringTo(અચલ BytesTrieElement &other, અચલ CharString &strings) અચલ {
     // TODO: add StringPiece::compare(), see ticket #8187
     StringPiece thisString=getString(strings);
     StringPiece otherString=other.getString(strings);
     int32_t lengthDiff=thisString.length()-otherString.length();
     int32_t commonLength;
-    if(lengthDiff<=0) {
+    જો(lengthDiff<=0) {
         commonLength=thisString.length();
-    } else {
+    } નહીંતર {
         commonLength=otherString.length();
     }
     int32_t diff=uprv_memcmp(thisString.data(), otherString.data(), commonLength);
-    return diff!=0 ? diff : lengthDiff;
+    પાછા diff!=0 ? diff : lengthDiff;
 }
 
 BytesTrieBuilder::BytesTrieBuilder(UErrorCode &errorCode)
         : strings(nullptr), elements(nullptr), elementsCapacity(0), elementsLength(0),
           bytes(nullptr), bytesCapacity(0), bytesLength(0) {
-    if(U_FAILURE(errorCode)) {
-        return;
+    જો(U_FAILURE(errorCode)) {
+        પાછા;
     }
-    strings=new CharString();
-    if(strings==nullptr) {
+    strings=નવું CharString();
+    જો(strings==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
     }
 }
@@ -146,45 +146,45 @@ BytesTrieBuilder::~BytesTrieBuilder() {
 
 BytesTrieBuilder&
 BytesTrieBuilder::add(StringPiece s, int32_t value, UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if(U_FAILURE(errorCode)) {
-        return *this;
+    જો(U_FAILURE(errorCode)) {
+        પાછા *આ;
     }
-    if(bytesLength>0) {
+    જો(bytesLength>0) {
         // Cannot add elements after building.
         errorCode=U_NO_WRITE_PERMISSION;
-        return *this;
+        પાછા *આ;
     }
-    if(elementsLength==elementsCapacity) {
+    જો(elementsLength==elementsCapacity) {
         int32_t newCapacity;
-        if(elementsCapacity==0) {
+        જો(elementsCapacity==0) {
             newCapacity=1024;
-        } else {
+        } નહીંતર {
             newCapacity=4*elementsCapacity;
         }
-        BytesTrieElement *newElements=new BytesTrieElement[newCapacity];
-        if(newElements==nullptr) {
+        BytesTrieElement *newElements=નવું BytesTrieElement[newCapacity];
+        જો(newElements==nullptr) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return *this; // error instead of dereferencing null
+            પાછા *આ; // error instead of dereferencing null
         }
-        if(elementsLength>0) {
-            uprv_memcpy(newElements, elements, (size_t)elementsLength*sizeof(BytesTrieElement));
+        જો(elementsLength>0) {
+            uprv_memcpy(newElements, elements, (size_t)elementsLength*કદ(BytesTrieElement));
         }
         delete[] elements;
         elements=newElements;
         elementsCapacity=newCapacity;
     }
     elements[elementsLength++].setTo(s, value, *strings, errorCode);
-    return *this;
+    પાછા *આ;
 }
 
 U_CDECL_BEGIN
 
-static int32_t U_CALLCONV
-compareElementStrings(const void *context, const void *left, const void *right) {
-    const CharString *strings=static_cast<const CharString *>(context);
-    const BytesTrieElement *leftElement=static_cast<const BytesTrieElement *>(left);
-    const BytesTrieElement *rightElement=static_cast<const BytesTrieElement *>(right);
-    return leftElement->compareStringTo(*rightElement, *strings);
+સ્થિર int32_t U_CALLCONV
+compareElementStrings(અચલ શૂન્ય *context, અચલ શૂન્ય *left, અચલ શૂન્ય *જમણું) {
+    અચલ CharString *strings=static_cast<અચલ CharString *>(context);
+    અચલ BytesTrieElement *ડાબું_Element=static_cast<અચલ BytesTrieElement *>(left);
+    અચલ BytesTrieElement *જમણું_Element=static_cast<અચલ BytesTrieElement *>(જમણું);
+    પાછા ડાબું_Element->compareStringTo(*જમણું_Element, *strings);
 }
 
 U_CDECL_END
@@ -193,16 +193,16 @@ BytesTrie *
 BytesTrieBuilder::build(UStringTrieBuildOption buildOption, UErrorCode &errorCode) {
     buildBytes(buildOption, errorCode);
     BytesTrie *newTrie=nullptr;
-    if(U_SUCCESS(errorCode)) {
-        newTrie=new BytesTrie(bytes, bytes+(bytesCapacity-bytesLength));
-        if(newTrie==nullptr) {
+    જો(U_SUCCESS(errorCode)) {
+        newTrie=નવું BytesTrie(bytes, bytes+(bytesCapacity-bytesLength));
+        જો(newTrie==nullptr) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-        } else {
+        } નહીંતર {
             bytes=nullptr;  // The new trie now owns the array.
             bytesCapacity=0;
         }
     }
-    return newTrie;
+    પાછા newTrie;
 }
 
 StringPiece
@@ -210,40 +210,40 @@ BytesTrieBuilder::buildStringPiece(UStringTrieBuildOption buildOption,
                                    UErrorCode& errorCode) U_LIFETIME_BOUND {
     buildBytes(buildOption, errorCode);
     StringPiece result;
-    if(U_SUCCESS(errorCode)) {
+    જો(U_SUCCESS(errorCode)) {
         result.set(bytes+(bytesCapacity-bytesLength), bytesLength);
     }
-    return result;
+    પાછા result;
 }
 
-void
+શૂન્ય
 BytesTrieBuilder::buildBytes(UStringTrieBuildOption buildOption, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+    જો(U_FAILURE(errorCode)) {
+        પાછા;
     }
-    if(bytes!=nullptr && bytesLength>0) {
+    જો(bytes!=nullptr && bytesLength>0) {
         // Already built.
-        return;
+        પાછા;
     }
-    if(bytesLength==0) {
-        if(elementsLength==0) {
+    જો(bytesLength==0) {
+        જો(elementsLength==0) {
             errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return;
+            પાછા;
         }
-        uprv_sortArray(elements, elementsLength, static_cast<int32_t>(sizeof(BytesTrieElement)),
+        uprv_sortArray(elements, elementsLength, static_cast<int32_t>(કદ(BytesTrieElement)),
                       compareElementStrings, strings,
-                      false,  // need not be a stable sort
+                      ખોટું,  // need not be a stable sort
                       &errorCode);
-        if(U_FAILURE(errorCode)) {
-            return;
+        જો(U_FAILURE(errorCode)) {
+            પાછા;
         }
         // Duplicate strings are not allowed.
         StringPiece prev=elements[0].getString(*strings);
-        for(int32_t i=1; i<elementsLength; ++i) {
+        માટે(int32_t i=1; i<elementsLength; ++i) {
             StringPiece current=elements[i].getString(*strings);
-            if(prev==current) {
+            જો(prev==current) {
                 errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-                return;
+                પાછા;
             }
             prev=current;
         }
@@ -251,21 +251,21 @@ BytesTrieBuilder::buildBytes(UStringTrieBuildOption buildOption, UErrorCode &err
     // Create and byte-serialize the trie for the elements.
     bytesLength=0;
     int32_t capacity=strings->length();
-    if(capacity<1024) {
+    જો(capacity<1024) {
         capacity=1024;
     }
-    if(bytesCapacity<capacity) {
+    જો(bytesCapacity<capacity) {
         uprv_free(bytes);
-        bytes=static_cast<char *>(uprv_malloc(capacity));
-        if(bytes==nullptr) {
+        bytes=static_cast<અક્ષર *>(uprv_malloc(capacity));
+        જો(bytes==nullptr) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
             bytesCapacity=0;
-            return;
+            પાછા;
         }
         bytesCapacity=capacity;
     }
     StringTrieBuilder::build(buildOption, elementsLength, errorCode);
-    if(bytes==nullptr) {
+    જો(bytes==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
     }
 }
@@ -275,121 +275,121 @@ BytesTrieBuilder::clear() U_LIFETIME_BOUND {
     strings->clear();
     elementsLength=0;
     bytesLength=0;
-    return *this;
+    પાછા *આ;
 }
 
 int32_t
-BytesTrieBuilder::getElementStringLength(int32_t i) const {
-    return elements[i].getStringLength(*strings);
+BytesTrieBuilder::getElementStringLength(int32_t i) અચલ {
+    પાછા elements[i].getStringLength(*strings);
 }
 
 char16_t
-BytesTrieBuilder::getElementUnit(int32_t i, int32_t byteIndex) const {
-    return static_cast<uint8_t>(elements[i].charAt(byteIndex, *strings));
+BytesTrieBuilder::getElementUnit(int32_t i, int32_t byteIndex) અચલ {
+    પાછા static_cast<uint8_t>(elements[i].charAt(byteIndex, *strings));
 }
 
 int32_t
-BytesTrieBuilder::getElementValue(int32_t i) const {
-    return elements[i].getValue();
+BytesTrieBuilder::get_Element_કિંમત(int32_t i) અચલ {
+    પાછા elements[i].get_કિંમત();
 }
 
 int32_t
-BytesTrieBuilder::getLimitOfLinearMatch(int32_t first, int32_t last, int32_t byteIndex) const {
-    const BytesTrieElement &firstElement=elements[first];
-    const BytesTrieElement &lastElement=elements[last];
+BytesTrieBuilder::getLimitOfLinearMatch(int32_t first, int32_t last, int32_t byteIndex) અચલ {
+    અચલ BytesTrieElement &firstElement=elements[first];
+    અચલ BytesTrieElement &lastElement=elements[last];
     int32_t minStringLength=firstElement.getStringLength(*strings);
-    while(++byteIndex<minStringLength &&
+    જ્યારે(++byteIndex<minStringLength &&
             firstElement.charAt(byteIndex, *strings)==
             lastElement.charAt(byteIndex, *strings)) {}
-    return byteIndex;
+    પાછા byteIndex;
 }
 
 int32_t
-BytesTrieBuilder::countElementUnits(int32_t start, int32_t limit, int32_t byteIndex) const {
+BytesTrieBuilder::ગણતરી_Element_Units(int32_t start, int32_t limit, int32_t byteIndex) અચલ {
     int32_t length=0;  // Number of different bytes at byteIndex.
     int32_t i=start;
-    do {
-        char byte=elements[i++].charAt(byteIndex, *strings);
-        while(i<limit && byte==elements[i].charAt(byteIndex, *strings)) {
+    કરો {
+        અક્ષર byte=elements[i++].charAt(byteIndex, *strings);
+        જ્યારે(i<limit && byte==elements[i].charAt(byteIndex, *strings)) {
             ++i;
         }
         ++length;
-    } while(i<limit);
-    return length;
+    } જ્યારે(i<limit);
+    પાછા length;
 }
 
 int32_t
-BytesTrieBuilder::skipElementsBySomeUnits(int32_t i, int32_t byteIndex, int32_t count) const {
-    do {
-        char byte=elements[i++].charAt(byteIndex, *strings);
-        while(byte==elements[i].charAt(byteIndex, *strings)) {
+BytesTrieBuilder::skipElementsBySomeUnits(int32_t i, int32_t byteIndex, int32_t count) અચલ {
+    કરો {
+        અક્ષર byte=elements[i++].charAt(byteIndex, *strings);
+        જ્યારે(byte==elements[i].charAt(byteIndex, *strings)) {
             ++i;
         }
-    } while(--count>0);
-    return i;
+    } જ્યારે(--count>0);
+    પાછા i;
 }
 
 int32_t
-BytesTrieBuilder::indexOfElementWithNextUnit(int32_t i, int32_t byteIndex, char16_t byte) const {
-    char b = static_cast<char>(byte);
-    while(b==elements[i].charAt(byteIndex, *strings)) {
+BytesTrieBuilder::indexOfElementWithNextUnit(int32_t i, int32_t byteIndex, char16_t byte) અચલ {
+    અક્ષર b = static_cast<અક્ષર>(byte);
+    જ્યારે(b==elements[i].charAt(byteIndex, *strings)) {
         ++i;
     }
-    return i;
+    પાછા i;
 }
 
-BytesTrieBuilder::BTLinearMatchNode::BTLinearMatchNode(const char *bytes, int32_t len, Node *nextNode)
-        : LinearMatchNode(len, nextNode), s(bytes) {
+BytesTrieBuilder::BTLinear_Match_ગાંઠ::BTLinear_Match_ગાંઠ(અચલ અક્ષર *bytes, int32_t len, Node *next_ગાંઠ)
+        : Linear_Match_ગાંઠ(len, next_ગાંઠ), s(bytes) {
     hash=static_cast<int32_t>(
         static_cast<uint32_t>(hash)*37u + static_cast<uint32_t>(ustr_hashCharsN(bytes, len)));
 }
 
-bool
-BytesTrieBuilder::BTLinearMatchNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
+તાર્કિક
+BytesTrieBuilder::BTLinear_Match_ગાંઠ::operator==(અચલ Node &other) અચલ {
+    જો(આ==&other) {
+        પાછા સાચું;
     }
-    if(!LinearMatchNode::operator==(other)) {
-        return false;
+    જો(!Linear_Match_ગાંઠ::operator==(other)) {
+        પાછા ખોટું;
     }
-    const BTLinearMatchNode &o=static_cast<const BTLinearMatchNode &>(other);
-    return 0==uprv_memcmp(s, o.s, length);
+    અચલ BTLinear_Match_ગાંઠ &o=static_cast<અચલ BTLinear_Match_ગાંઠ &>(other);
+    પાછા 0==uprv_memcmp(s, o.s, length);
 }
 
-void
-BytesTrieBuilder::BTLinearMatchNode::write(StringTrieBuilder &builder) {
+શૂન્ય
+BytesTrieBuilder::BTLinear_Match_ગાંઠ::લિખ(StringTrieBuilder &builder) {
     BytesTrieBuilder &b=static_cast<BytesTrieBuilder &>(builder);
-    next->write(builder);
-    b.write(s, length);
-    offset=b.write(b.getMinLinearMatch()+length-1);
+    next->લિખ(builder);
+    b.લિખ(s, length);
+    offset=b.લિખ(b.getMinLinearMatch()+length-1);
 }
 
 StringTrieBuilder::Node *
-BytesTrieBuilder::createLinearMatchNode(int32_t i, int32_t byteIndex, int32_t length,
-                                        Node *nextNode) const {
-    return new BTLinearMatchNode(
+BytesTrieBuilder::create_Linear_Match_ગાંઠ(int32_t i, int32_t byteIndex, int32_t length,
+                                        Node *next_ગાંઠ) અચલ {
+    પાછા નવું BTLinear_Match_ગાંઠ(
             elements[i].getString(*strings).data()+byteIndex,
             length,
-            nextNode);
+            next_ગાંઠ);
 }
 
 UBool
 BytesTrieBuilder::ensureCapacity(int32_t length) {
-    if(bytes==nullptr) {
-        return false;  // previous memory allocation had failed
+    જો(bytes==nullptr) {
+        પાછા ખોટું;  // previous memory allocation had failed
     }
-    if(length>bytesCapacity) {
+    જો(length>bytesCapacity) {
         int32_t newCapacity=bytesCapacity;
-        do {
+        કરો {
             newCapacity*=2;
-        } while(newCapacity<=length);
-        char *newBytes=static_cast<char *>(uprv_malloc(newCapacity));
-        if(newBytes==nullptr) {
+        } જ્યારે(newCapacity<=length);
+        અક્ષર *newBytes=static_cast<અક્ષર *>(uprv_malloc(newCapacity));
+        જો(newBytes==nullptr) {
             // unable to allocate memory
             uprv_free(bytes);
             bytes=nullptr;
             bytesCapacity=0;
-            return false;
+            પાછા ખોટું;
         }
         uprv_memcpy(newBytes+(newCapacity-bytesLength),
                     bytes+(bytesCapacity-bytesLength), bytesLength);
@@ -397,117 +397,117 @@ BytesTrieBuilder::ensureCapacity(int32_t length) {
         bytes=newBytes;
         bytesCapacity=newCapacity;
     }
-    return true;
+    પાછા સાચું;
 }
 
 int32_t
-BytesTrieBuilder::write(int32_t byte) {
+BytesTrieBuilder::લિખ(int32_t byte) {
     int32_t newLength=bytesLength+1;
-    if(ensureCapacity(newLength)) {
+    જો(ensureCapacity(newLength)) {
         bytesLength=newLength;
-        bytes[bytesCapacity - bytesLength] = static_cast<char>(byte);
+        bytes[bytesCapacity - bytesLength] = static_cast<અક્ષર>(byte);
     }
-    return bytesLength;
+    પાછા bytesLength;
 }
 
 int32_t
-BytesTrieBuilder::write(const char *b, int32_t length) {
+BytesTrieBuilder::લિખ(અચલ અક્ષર *b, int32_t length) {
     int32_t newLength=bytesLength+length;
-    if(ensureCapacity(newLength)) {
+    જો(ensureCapacity(newLength)) {
         bytesLength=newLength;
         uprv_memcpy(bytes+(bytesCapacity-bytesLength), b, length);
     }
-    return bytesLength;
+    પાછા bytesLength;
 }
 
 int32_t
 BytesTrieBuilder::writeElementUnits(int32_t i, int32_t byteIndex, int32_t length) {
-    return write(elements[i].getString(*strings).data()+byteIndex, length);
+    પાછા લિખ(elements[i].getString(*strings).data()+byteIndex, length);
 }
 
 int32_t
-BytesTrieBuilder::writeValueAndFinal(int32_t i, UBool isFinal) {
-    if(0<=i && i<=BytesTrie::kMaxOneByteValue) {
-        return write(((BytesTrie::kMinOneByteValueLead+i)<<1)|isFinal);
+BytesTrieBuilder::write_કિંમત_And_Final(int32_t i, UBool isFinal) {
+    જો(0<=i && i<=BytesTrie::k_Max_One_Byte_કિંમત) {
+        પાછા લિખ(((BytesTrie::k_Min_One_Byte_કિંમત_Lead+i)<<1)|isFinal);
     }
-    char intBytes[5];
+    અક્ષર intBytes[5];
     int32_t length=1;
-    if(i<0 || i>0xffffff) {
-        intBytes[0] = static_cast<char>(BytesTrie::kFiveByteValueLead);
-        intBytes[1] = static_cast<char>(static_cast<uint32_t>(i) >> 24);
-        intBytes[2] = static_cast<char>(static_cast<uint32_t>(i) >> 16);
-        intBytes[3] = static_cast<char>(static_cast<uint32_t>(i) >> 8);
-        intBytes[4] = static_cast<char>(i);
+    જો(i<0 || i>0xffffff) {
+        intBytes[0] = static_cast<અક્ષર>(BytesTrie::k_Five_Byte_કિંમત_Lead);
+        intBytes[1] = static_cast<અક્ષર>(static_cast<uint32_t>(i) >> 24);
+        intBytes[2] = static_cast<અક્ષર>(static_cast<uint32_t>(i) >> 16);
+        intBytes[3] = static_cast<અક્ષર>(static_cast<uint32_t>(i) >> 8);
+        intBytes[4] = static_cast<અક્ષર>(i);
         length=5;
     // } else if(i<=BytesTrie::kMaxOneByteValue) {
     //     intBytes[0]=(char)(BytesTrie::kMinOneByteValueLead+i);
-    } else {
-        if(i<=BytesTrie::kMaxTwoByteValue) {
-            intBytes[0] = static_cast<char>(BytesTrie::kMinTwoByteValueLead + (i >> 8));
-        } else {
-            if(i<=BytesTrie::kMaxThreeByteValue) {
-                intBytes[0] = static_cast<char>(BytesTrie::kMinThreeByteValueLead + (i >> 16));
-            } else {
-                intBytes[0] = static_cast<char>(BytesTrie::kFourByteValueLead);
-                intBytes[1] = static_cast<char>(i >> 16);
+    } નહીંતર {
+        જો(i<=BytesTrie::k_Max_Two_Byte_કિંમત) {
+            intBytes[0] = static_cast<અક્ષર>(BytesTrie::k_Min_Two_Byte_કિંમત_Lead + (i >> 8));
+        } નહીંતર {
+            જો(i<=BytesTrie::k_Max_Three_Byte_કિંમત) {
+                intBytes[0] = static_cast<અક્ષર>(BytesTrie::k_Min_Three_Byte_કિંમત_Lead + (i >> 16));
+            } નહીંતર {
+                intBytes[0] = static_cast<અક્ષર>(BytesTrie::k_Four_Byte_કિંમત_Lead);
+                intBytes[1] = static_cast<અક્ષર>(i >> 16);
                 length=2;
             }
-            intBytes[length++] = static_cast<char>(i >> 8);
+            intBytes[length++] = static_cast<અક્ષર>(i >> 8);
         }
-        intBytes[length++] = static_cast<char>(i);
+        intBytes[length++] = static_cast<અક્ષર>(i);
     }
-    intBytes[0] = static_cast<char>((intBytes[0] << 1) | isFinal);
-    return write(intBytes, length);
+    intBytes[0] = static_cast<અક્ષર>((intBytes[0] << 1) | isFinal);
+    પાછા લિખ(intBytes, length);
 }
 
 int32_t
-BytesTrieBuilder::writeValueAndType(UBool hasValue, int32_t value, int32_t node) {
-    int32_t offset=write(node);
-    if(hasValue) {
-        offset=writeValueAndFinal(value, false);
+BytesTrieBuilder::write_કિંમત_And_Type(UBool has_કિંમત, int32_t value, int32_t ગાંઠ) {
+    int32_t offset=લિખ(ગાંઠ);
+    જો(has_કિંમત) {
+        offset=write_કિંમત_And_Final(value, ખોટું);
     }
-    return offset;
+    પાછા offset;
 }
 
 int32_t
 BytesTrieBuilder::writeDeltaTo(int32_t jumpTarget) {
     int32_t i=bytesLength-jumpTarget;
     U_ASSERT(i>=0);
-    if(i<=BytesTrie::kMaxOneByteDelta) {
-        return write(i);
-    } else {
-        char intBytes[5];
-        return write(intBytes, internalEncodeDelta(i, intBytes));
+    જો(i<=BytesTrie::kMaxOneByteDelta) {
+        પાછા લિખ(i);
+    } નહીંતર {
+        અક્ષર intBytes[5];
+        પાછા લિખ(intBytes, internalEncodeDelta(i, intBytes));
     }
 }
 
 int32_t
-BytesTrieBuilder::internalEncodeDelta(int32_t i, char intBytes[]) {
+BytesTrieBuilder::internalEncodeDelta(int32_t i, અક્ષર intBytes[]) {
     U_ASSERT(i>=0);
-    if(i<=BytesTrie::kMaxOneByteDelta) {
-        intBytes[0] = static_cast<char>(i);
-        return 1;
+    જો(i<=BytesTrie::kMaxOneByteDelta) {
+        intBytes[0] = static_cast<અક્ષર>(i);
+        પાછા 1;
     }
     int32_t length=1;
-    if(i<=BytesTrie::kMaxTwoByteDelta) {
-        intBytes[0] = static_cast<char>(BytesTrie::kMinTwoByteDeltaLead + (i >> 8));
-    } else {
-        if(i<=BytesTrie::kMaxThreeByteDelta) {
-            intBytes[0] = static_cast<char>(BytesTrie::kMinThreeByteDeltaLead + (i >> 16));
-        } else {
-            if(i<=0xffffff) {
-                intBytes[0] = static_cast<char>(BytesTrie::kFourByteDeltaLead);
-            } else {
-                intBytes[0] = static_cast<char>(BytesTrie::kFiveByteDeltaLead);
-                intBytes[1] = static_cast<char>(i >> 24);
+    જો(i<=BytesTrie::kMaxTwoByteDelta) {
+        intBytes[0] = static_cast<અક્ષર>(BytesTrie::kMinTwoByteDeltaLead + (i >> 8));
+    } નહીંતર {
+        જો(i<=BytesTrie::kMaxThreeByteDelta) {
+            intBytes[0] = static_cast<અક્ષર>(BytesTrie::kMinThreeByteDeltaLead + (i >> 16));
+        } નહીંતર {
+            જો(i<=0xffffff) {
+                intBytes[0] = static_cast<અક્ષર>(BytesTrie::kFourByteDeltaLead);
+            } નહીંતર {
+                intBytes[0] = static_cast<અક્ષર>(BytesTrie::kFiveByteDeltaLead);
+                intBytes[1] = static_cast<અક્ષર>(i >> 24);
                 length=2;
             }
-            intBytes[length++] = static_cast<char>(i >> 16);
+            intBytes[length++] = static_cast<અક્ષર>(i >> 16);
         }
-        intBytes[length++] = static_cast<char>(i >> 8);
+        intBytes[length++] = static_cast<અક્ષર>(i >> 8);
     }
-    intBytes[length++] = static_cast<char>(i);
-    return length;
+    intBytes[length++] = static_cast<અક્ષર>(i);
+    પાછા length;
 }
 
 U_NAMESPACE_END

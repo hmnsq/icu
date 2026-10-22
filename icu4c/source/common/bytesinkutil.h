@@ -7,39 +7,39 @@
 #ifndef BYTESINKUTIL_H
 #define BYTESINKUTIL_H
 
-#include <type_traits>
+#અન્તર્ભાવ <type_traits>
 
-#include "unicode/utypes.h"
-#include "unicode/bytestream.h"
-#include "unicode/edits.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "uassert.h"
-#include "ustr_imp.h"
+#અન્તર્ભાવ "unicode/utypes.h"
+#અન્તર્ભાવ "unicode/bytestream.h"
+#અન્તર્ભાવ "unicode/edits.h"
+#અન્તર્ભાવ "charstr.h"
+#અન્તર્ભાવ "cmemory.h"
+#અન્તર્ભાવ "uassert.h"
+#અન્તર્ભાવ "ustr_imp.h"
 
 U_NAMESPACE_BEGIN
 
 class ByteSink;
 class Edits;
 
-class U_COMMON_API CharStringByteSink : public ByteSink {
-public:
+class U_COMMON_API CharStringByteSink : જાહેર ByteSink {
+જાહેર:
     CharStringByteSink(CharString* dest);
     ~CharStringByteSink() override;
 
     CharStringByteSink() = delete;
-    CharStringByteSink(const CharStringByteSink&) = delete;
-    CharStringByteSink& operator=(const CharStringByteSink&) = delete;
+    CharStringByteSink(અચલ CharStringByteSink&) = delete;
+    CharStringByteSink& operator=(અચલ CharStringByteSink&) = delete;
 
-    void Append(const char* bytes, int32_t n) override;
+    શૂન્ય Append(અચલ અક્ષર* bytes, int32_t n) override;
 
-    char* GetAppendBuffer(int32_t min_capacity,
+    અક્ષર* GetAppendBuffer(int32_t min_capacity,
                           int32_t desired_capacity_hint,
-                          char* scratch U_LIFETIME_BOUND,
+                          અક્ષર* scratch U_LIFETIME_BOUND,
                           int32_t scratch_capacity,
                           int32_t* result_capacity) U_LIFETIME_BOUND override;
 
-private:
+ખાનગી:
     CharString& dest_;
 };
 
@@ -47,47 +47,47 @@ private:
 // string class to have so this template specialization replaces the default
 // implementation of StringByteSink<CharString> with CharStringByteSink.
 template<>
-class StringByteSink<CharString> : public CharStringByteSink {
- public:
+class StringByteSink<CharString> : જાહેર CharStringByteSink {
+ જાહેર:
   StringByteSink(CharString* dest) : CharStringByteSink(dest) { }
   StringByteSink(CharString* dest, int32_t /*initialAppendCapacity*/) : CharStringByteSink(dest) { }
 };
 
 class U_COMMON_API ByteSinkUtil {
-public:
+જાહેર:
     ByteSinkUtil() = delete;  // all static
 
     /** (length) bytes were mapped to valid (s16, s16Length). */
-    static UBool appendChange(int32_t length,
-                              const char16_t *s16, int32_t s16Length,
+    સ્થિર UBool appendChange(int32_t length,
+                              અચલ char16_t *s16, int32_t s16Length,
                               ByteSink &sink, Edits *edits, UErrorCode &errorCode);
 
     /** The bytes at [s, limit[ were mapped to valid (s16, s16Length). */
-    static UBool appendChange(const uint8_t *s, const uint8_t *limit,
-                              const char16_t *s16, int32_t s16Length,
+    સ્થિર UBool appendChange(અચલ uint8_t *s, અચલ uint8_t *limit,
+                              અચલ char16_t *s16, int32_t s16Length,
                               ByteSink &sink, Edits *edits, UErrorCode &errorCode);
 
     /** (length) bytes were mapped/changed to valid code point c. */
-    static void appendCodePoint(int32_t length, UChar32 c, ByteSink &sink, Edits *edits = nullptr);
+    સ્થિર શૂન્ય appendCodePoint(int32_t length, UChar32 c, ByteSink &sink, Edits *edits = nullptr);
 
     /** The few bytes at [src, nextSrc[ were mapped/changed to valid code point c. */
-    static inline void appendCodePoint(const uint8_t *src, const uint8_t *nextSrc, UChar32 c,
+    સ્થિર અંતઃરેખ શૂન્ય appendCodePoint(અચલ uint8_t *src, અચલ uint8_t *nextSrc, UChar32 c,
                                        ByteSink &sink, Edits *edits = nullptr) {
         appendCodePoint(static_cast<int32_t>(nextSrc - src), c, sink, edits);
     }
 
     /** Append the two-byte character (U+0080..U+07FF). */
-    static void appendTwoBytes(UChar32 c, ByteSink &sink);
+    સ્થિર શૂન્ય appendTwoBytes(UChar32 c, ByteSink &sink);
 
-    static UBool appendUnchanged(const uint8_t *s, int32_t length,
+    સ્થિર UBool appendUnchanged(અચલ uint8_t *s, int32_t length,
                                  ByteSink &sink, uint32_t options, Edits *edits,
                                  UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return false; }
-        if (length > 0) { appendNonEmptyUnchanged(s, length, sink, options, edits); }
-        return true;
+        જો (U_FAILURE(errorCode)) { પાછા false; }
+        જો (length > 0) { appendNonEmptyUnchanged(s, length, sink, options, edits); }
+        પાછા true;
     }
 
-    static UBool appendUnchanged(const uint8_t *s, const uint8_t *limit,
+    સ્થિર UBool appendUnchanged(અચલ uint8_t *s, અચલ uint8_t *limit,
                                  ByteSink &sink, uint32_t options, Edits *edits,
                                  UErrorCode &errorCode);
 
@@ -106,23 +106,23 @@ public:
      */
     template <typename F,
               typename = std::enable_if_t<
-                  std::is_invocable_r_v<void, F, ByteSink&, UErrorCode&>>>
-    static int32_t viaByteSinkToTerminatedChars(char* buffer, int32_t capacity,
+                  std::is_invocable_r_v<શૂન્ય, F, ByteSink&, UErrorCode&>>>
+    સ્થિર int32_t viaByteSinkToTerminatedChars(અક્ષર* buffer, int32_t capacity,
                                                 F&& lambda,
                                                 UErrorCode& status) {
-        if (U_FAILURE(status)) { return 0; }
+        જો (U_FAILURE(status)) { પાછા 0; }
         CheckedArrayByteSink sink(buffer, capacity);
         lambda(sink, status);
-        if (U_FAILURE(status)) { return 0; }
+        જો (U_FAILURE(status)) { પાછા 0; }
 
-        int32_t reslen = sink.NumberOfBytesAppended();
+        int32_t reslen = sink.સંખ્યા_Of_Bytes_Appended();
 
-        if (sink.Overflowed()) {
+        જો (sink.Overflowed()) {
             status = U_BUFFER_OVERFLOW_ERROR;
-            return reslen;
+            પાછા reslen;
         }
 
-        return u_terminateChars(buffer, capacity, reslen, &status);
+        પાછા u_terminateChars(buffer, capacity, reslen, &status);
     }
 
     /**
@@ -137,17 +137,17 @@ public:
      */
     template <typename F,
               typename = std::enable_if_t<
-                  std::is_invocable_r_v<void, F, ByteSink&, UErrorCode&>>>
-    static CharString viaByteSinkToCharString(F&& lambda, UErrorCode& status) {
-        if (U_FAILURE(status)) { return {}; }
+                  std::is_invocable_r_v<શૂન્ય, F, ByteSink&, UErrorCode&>>>
+    સ્થિર CharString viaByteSinkToCharString(F&& lambda, UErrorCode& status) {
+        જો (U_FAILURE(status)) { પાછા {}; }
         CharString result;
         CharStringByteSink sink(&result);
         lambda(sink, status);
-        return result;
+        પાછા result;
     }
 
-private:
-    static void appendNonEmptyUnchanged(const uint8_t *s, int32_t length,
+ખાનગી:
+    સ્થિર શૂન્ય appendNonEmptyUnchanged(અચલ uint8_t *s, int32_t length,
                                         ByteSink &sink, uint32_t options, Edits *edits);
 };
 

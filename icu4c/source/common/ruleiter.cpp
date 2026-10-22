@@ -10,19 +10,19 @@
 * Since: ICU 2.8
 **********************************************************************
 */
-#include "ruleiter.h"
-#include "unicode/parsepos.h"
-#include "unicode/symtable.h"
-#include "unicode/unistr.h"
-#include "unicode/utf16.h"
-#include "patternprops.h"
+#અન્તર્ભાવ "ruleiter.h"
+#અન્તર્ભાવ "unicode/parsepos.h"
+#અન્તર્ભાવ "unicode/symtable.h"
+#અન્તર્ભાવ "unicode/unistr.h"
+#અન્તર્ભાવ "unicode/utf16.h"
+#અન્તર્ભાવ "patternprops.h"
 
 /* \U87654321 or \ud800\udc00 */
 #define MAX_U_NOTATION_LEN 12
 
 U_NAMESPACE_BEGIN
 
-RuleCharacterIterator::RuleCharacterIterator(const UnicodeString& theText, const SymbolTable* theSym,
+RuleCharacterIterator::RuleCharacterIterator(અચલ UnicodeString& theText, અચલ પ્રતીક_Table* theSym,
                       ParsePosition& thePos) :
     text(theText),
     pos(thePos),
@@ -31,98 +31,98 @@ RuleCharacterIterator::RuleCharacterIterator(const UnicodeString& theText, const
     bufPos(0)
 {}
 
-UBool RuleCharacterIterator::atEnd() const {
-    return buf == nullptr && pos.getIndex() == text.length();
+UBool RuleCharacterIterator::atEnd() અચલ {
+    પાછા buf == nullptr && pos.getIndex() == text.length();
 }
 
 UChar32 RuleCharacterIterator::next(int32_t options, UBool& isEscaped, UErrorCode& ec) {
-    if (U_FAILURE(ec)) return DONE;
+    જો (U_FAILURE(ec)) પાછા DONE;
 
     UChar32 c = DONE;
-    isEscaped = false;
+    isEscaped = ખોટું;
 
-    for (;;) {
+    માટે (;;) {
         c = _current();
         _advance(U16_LENGTH(c));
 
-        if (c == SymbolTable::SYMBOL_REF && buf == nullptr &&
+        જો (c == પ્રતીક_Table::પ્રતીક_REF && buf == nullptr &&
             (options & PARSE_VARIABLES) != 0 && sym != nullptr) {
             UnicodeString name = sym->parseReference(text, pos, text.length());
             // If name is empty there was an isolated SYMBOL_REF;
             // return it.  Caller must be prepared for this.
-            if (name.length() == 0) {
-                break;
+            જો (name.length() == 0) {
+                તોડો;
             }
             bufPos = 0;
             buf = sym->lookup(name);
-            if (buf == nullptr) {
+            જો (buf == nullptr) {
                 ec = U_UNDEFINED_VARIABLE;
-                return DONE;
+                પાછા DONE;
             }
             // Handle empty variable value
-            if (buf->length() == 0) {
+            જો (buf->length() == 0) {
                 buf = nullptr;
             }
-            continue;
+            ચાલુ;
         }
 
-        if ((options & SKIP_WHITESPACE) != 0 && PatternProps::isWhiteSpace(c)) {
-            continue;
+        જો ((options & SKIP_WHITESPACE) != 0 && PatternProps::isWhiteSpace(c)) {
+            ચાલુ;
         }
 
-        if (c == 0x5C /*'\\'*/ && (options & PARSE_ESCAPES) != 0) {
+        જો (c == 0x5C /*'\\'*/ && (options & PARSE_ESCAPES) != 0) {
             UnicodeString tempEscape;
             int32_t offset = 0;
             c = lookahead(tempEscape, MAX_U_NOTATION_LEN).unescapeAt(offset);
             jumpahead(offset);
-            isEscaped = true;
-            if (c < 0) {
+            isEscaped = સાચું;
+            જો (c < 0) {
                 ec = U_MALFORMED_UNICODE_ESCAPE;
-                return DONE;
+                પાછા DONE;
             }
         }
 
-        break;
+        તોડો;
     }
 
-    return c;
+    પાછા c;
 }
 
-void RuleCharacterIterator::getPos(RuleCharacterIterator::Pos& p) const {
+શૂન્ય RuleCharacterIterator::getPos(RuleCharacterIterator::Pos& p) અચલ {
     p.buf = buf;
     p.pos = pos.getIndex();
     p.bufPos = bufPos;
 }
 
-void RuleCharacterIterator::setPos(const RuleCharacterIterator::Pos& p) {
+શૂન્ય RuleCharacterIterator::setPos(અચલ RuleCharacterIterator::Pos& p) {
     buf = p.buf;
     pos.setIndex(p.pos);
     bufPos = p.bufPos;
 }
 
-void RuleCharacterIterator::skipIgnored(int32_t options) {
-    if ((options & SKIP_WHITESPACE) != 0) {
-        for (;;) {
+શૂન્ય RuleCharacterIterator::skipIgnored(int32_t options) {
+    જો ((options & SKIP_WHITESPACE) != 0) {
+        માટે (;;) {
             UChar32 a = _current();
-            if (!PatternProps::isWhiteSpace(a)) break;
+            જો (!PatternProps::isWhiteSpace(a)) તોડો;
             _advance(U16_LENGTH(a));
         }
     }
 }
 
-UnicodeString& RuleCharacterIterator::lookahead(UnicodeString& result, int32_t maxLookAhead) const {
-    if (maxLookAhead < 0) {
+UnicodeString& RuleCharacterIterator::lookahead(UnicodeString& result, int32_t maxLookAhead) અચલ {
+    જો (maxLookAhead < 0) {
         maxLookAhead = 0x7FFFFFFF;
     }
-    if (buf != nullptr) {
+    જો (buf != nullptr) {
         buf->extract(bufPos, maxLookAhead, result);
-    } else {
+    } નહીંતર {
         text.extract(pos.getIndex(), maxLookAhead, result);
     }
-    return result;
+    પાછા result;
 }
 
-void RuleCharacterIterator::jumpahead(int32_t count) {
+શૂન્ય RuleCharacterIterator::jumpahead(int32_t count) {
     _advance(count);
 }
 
@@ -134,24 +134,24 @@ UnicodeString& RuleCharacterIterator::toString(UnicodeString& result) const {
 }
 */
 
-UChar32 RuleCharacterIterator::_current() const {
-    if (buf != nullptr) {
-        return buf->char32At(bufPos);
-    } else {
-        int i = pos.getIndex();
-        return (i < text.length()) ? text.char32At(i) : static_cast<UChar32>(DONE);
+UChar32 RuleCharacterIterator::_current() અચલ {
+    જો (buf != nullptr) {
+        પાછા buf->char32At(bufPos);
+    } નહીંતર {
+        પૂર્ણાંક i = pos.getIndex();
+        પાછા (i < text.length()) ? text.char32At(i) : static_cast<UChar32>(DONE);
     }
 }
 
-void RuleCharacterIterator::_advance(int32_t count) {
-    if (buf != nullptr) {
+શૂન્ય RuleCharacterIterator::_advance(int32_t count) {
+    જો (buf != nullptr) {
         bufPos += count;
-        if (bufPos == buf->length()) {
+        જો (bufPos == buf->length()) {
             buf = nullptr;
         }
-    } else {
+    } નહીંતર {
         pos.setIndex(pos.getIndex() + count);
-        if (pos.getIndex() > text.length()) {
+        જો (pos.getIndex() > text.length()) {
             pos.setIndex(text.length());
         }
     }

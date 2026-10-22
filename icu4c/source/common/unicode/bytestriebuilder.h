@@ -22,13 +22,13 @@
 #ifndef __BYTESTRIEBUILDER_H__
 #define __BYTESTRIEBUILDER_H__
 
-#include "unicode/utypes.h"
+#અન્તર્ભાવ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#જો U_SHOW_CPLUSPLUS_API
 
-#include "unicode/bytestrie.h"
-#include "unicode/stringpiece.h"
-#include "unicode/stringtriebuilder.h"
+#અન્તર્ભાવ "unicode/bytestrie.h"
+#અન્તર્ભાવ "unicode/stringpiece.h"
+#અન્તર્ભાવ "unicode/stringtriebuilder.h"
 
 class BytesTrieTest;
 
@@ -42,8 +42,8 @@ class CharString;
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API BytesTrieBuilder : public StringTrieBuilder {
-public:
+class U_COMMON_API BytesTrieBuilder : જાહેર StringTrieBuilder {
+જાહેર:
     /**
      * Constructs an empty builder.
      * @param errorCode Standard ICU error code.
@@ -55,7 +55,7 @@ public:
      * Destructor.
      * @stable ICU 4.8
      */
-    virtual ~BytesTrieBuilder();
+    આભાસી ~BytesTrieBuilder();
 
     /**
      * Adds a (byte sequence, value) pair.
@@ -71,7 +71,7 @@ public:
      * @return *this
      * @stable ICU 4.8
      */
-    BytesTrieBuilder& add(StringPiece s, int32_t value, UErrorCode& errorCode) U_LIFETIME_BOUND;
+    BytesTrieBuilder& add(StringPiece s, int32_t કિંમત_2, UErrorCode& errorCode) U_LIFETIME_BOUND;
 
     /**
      * Builds a BytesTrie for the add()ed data.
@@ -127,50 +127,50 @@ public:
      */
     BytesTrieBuilder& clear() U_LIFETIME_BOUND;
 
-private:
+ખાનગી:
     friend class ::BytesTrieTest;
 
-    BytesTrieBuilder(const BytesTrieBuilder &other) = delete;  // no copy constructor
-    BytesTrieBuilder &operator=(const BytesTrieBuilder &other) = delete;  // no assignment operator
+    BytesTrieBuilder(અચલ BytesTrieBuilder &other) = delete;  // no copy constructor
+    BytesTrieBuilder &operator=(અચલ BytesTrieBuilder &other) = delete;  // no assignment operator
 
-    void buildBytes(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
+    શૂન્ય buildBytes(UStringTrieBuildOption buildOption, UErrorCode &errorCode);
 
-    virtual int32_t getElementStringLength(int32_t i) const override;
-    virtual char16_t getElementUnit(int32_t i, int32_t byteIndex) const override;
-    virtual int32_t getElementValue(int32_t i) const override;
+    આભાસી int32_t getElementStringLength(int32_t i) અચલ override;
+    આભાસી char16_t getElementUnit(int32_t i, int32_t byteIndex) અચલ override;
+    આભાસી int32_t get_Element_કિંમત(int32_t i) અચલ override;
 
-    virtual int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t byteIndex) const override;
+    આભાસી int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t byteIndex) અચલ override;
 
-    virtual int32_t countElementUnits(int32_t start, int32_t limit, int32_t byteIndex) const override;
-    virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t byteIndex, int32_t count) const override;
-    virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t byteIndex, char16_t byte) const override;
+    આભાસી int32_t ગણતરી_Element_Units(int32_t start, int32_t limit, int32_t byteIndex) અચલ override;
+    આભાસી int32_t skipElementsBySomeUnits(int32_t i, int32_t byteIndex, int32_t ગણતરી) અચલ override;
+    આભાસી int32_t indexOfElementWithNextUnit(int32_t i, int32_t byteIndex, char16_t byte) અચલ override;
 
-    virtual UBool matchNodesCanHaveValues() const override { return false; }
+    આભાસી UBool match_Nodes_Can_Have_કિંમતો() અચલ override { પાછા false; }
 
-    virtual int32_t getMaxBranchLinearSubNodeLength() const override { return BytesTrie::kMaxBranchLinearSubNodeLength; }
-    virtual int32_t getMinLinearMatch() const override { return BytesTrie::kMinLinearMatch; }
-    virtual int32_t getMaxLinearMatchLength() const override { return BytesTrie::kMaxLinearMatchLength; }
+    આભાસી int32_t get_Max_Branch_Linear_Sub_ગાંઠ_Length() અચલ override { પાછા BytesTrie::k_Max_Branch_Linear_Sub_ગાંઠ_Length; }
+    આભાસી int32_t getMinLinearMatch() અચલ override { પાછા BytesTrie::kMinLinearMatch; }
+    આભાસી int32_t getMaxLinearMatchLength() અચલ override { પાછા BytesTrie::kMaxLinearMatchLength; }
 
-    class BTLinearMatchNode : public LinearMatchNode {
-    public:
-        BTLinearMatchNode(const char *units, int32_t len, Node *nextNode);
-        virtual bool operator==(const Node &other) const override;
-        virtual void write(StringTrieBuilder &builder) override;
-    private:
-        const char *s;
+    class BTLinear_Match_ગાંઠ : જાહેર Linear_Match_ગાંઠ {
+    જાહેર:
+        BTLinear_Match_ગાંઠ(અચલ અક્ષર *units, int32_t len, ગાંઠ_2 *next_ગાંઠ);
+        આભાસી bool operator==(અચલ ગાંઠ_2 &other) અચલ override;
+        આભાસી શૂન્ય લિખ(StringTrieBuilder &builder) override;
+    ખાનગી:
+        અચલ અક્ષર *s;
     };
     
-    virtual Node *createLinearMatchNode(int32_t i, int32_t byteIndex, int32_t length,
-                                        Node *nextNode) const override;
+    આભાસી ગાંઠ_2 *create_Linear_Match_ગાંઠ(int32_t i, int32_t byteIndex, int32_t length,
+                                        ગાંઠ_2 *next_ગાંઠ) અચલ override;
 
     UBool ensureCapacity(int32_t length);
-    virtual int32_t write(int32_t byte) override;
-    int32_t write(const char *b, int32_t length);
-    virtual int32_t writeElementUnits(int32_t i, int32_t byteIndex, int32_t length) override;
-    virtual int32_t writeValueAndFinal(int32_t i, UBool isFinal) override;
-    virtual int32_t writeValueAndType(UBool hasValue, int32_t value, int32_t node) override;
-    virtual int32_t writeDeltaTo(int32_t jumpTarget) override;
-    static int32_t internalEncodeDelta(int32_t i, char intBytes[]);
+    આભાસી int32_t લિખ(int32_t byte) override;
+    int32_t લિખ(અચલ અક્ષર *b, int32_t length);
+    આભાસી int32_t writeElementUnits(int32_t i, int32_t byteIndex, int32_t length) override;
+    આભાસી int32_t write_કિંમત_And_Final(int32_t i, UBool isFinal) override;
+    આભાસી int32_t write_કિંમત_And_Type(UBool has_કિંમત, int32_t કિંમત_2, int32_t ગાંઠ) override;
+    આભાસી int32_t writeDeltaTo(int32_t jumpTarget) override;
+    સ્થિર int32_t internalEncodeDelta(int32_t i, અક્ષર intBytes[]);
 
     CharString *strings;  // Pointer not object so we need not #include internal charstr.h.
     BytesTrieElement *elements;
@@ -179,7 +179,7 @@ private:
 
     // Byte serialization of the trie.
     // Grows from the back: bytesLength measures from the end of the buffer!
-    char *bytes;
+    અક્ષર *bytes;
     int32_t bytesCapacity;
     int32_t bytesLength;
 };

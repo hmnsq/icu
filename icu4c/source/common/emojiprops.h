@@ -7,28 +7,28 @@
 #ifndef __EMOJIPROPS_H__
 #define __EMOJIPROPS_H__
 
-#include "unicode/utypes.h"
-#include "unicode/ucptrie.h"
-#include "unicode/udata.h"
-#include "unicode/uobject.h"
-#include "uset_imp.h"
+#અન્તર્ભાવ "unicode/utypes.h"
+#અન્તર્ભાવ "unicode/ucptrie.h"
+#અન્તર્ભાવ "unicode/udata.h"
+#અન્તર્ભાવ "unicode/uobject.h"
+#અન્તર્ભાવ "uset_imp.h"
 
 U_NAMESPACE_BEGIN
 
-class EmojiProps : public UMemory {
-public:
+class EmojiProps : જાહેર UMemory {
+જાહેર:
     // @internal
     EmojiProps(UErrorCode &errorCode) { load(errorCode); }
     ~EmojiProps();
 
-    static const EmojiProps *getSingleton(UErrorCode &errorCode);
-    static UBool hasBinaryProperty(UChar32 c, UProperty which);
-    static UBool hasBinaryProperty(const char16_t *s, int32_t length, UProperty which);
+    સ્થિર અચલ EmojiProps *getSingleton(UErrorCode &errorCode);
+    સ્થિર UBool has_દ્વિઅંકી_Property(UChar32 c, UProperty which);
+    સ્થિર UBool has_દ્વિઅંકી_Property(અચલ char16_t *s, int32_t length, UProperty which);
 
-    void addPropertyStarts(const USetAdder *sa, UErrorCode &errorCode) const;
-    void addStrings(const USetAdder *sa, UProperty which, UErrorCode &errorCode) const;
+    શૂન્ય addPropertyStarts(અચલ USetAdder *sa, UErrorCode &errorCode) અચલ;
+    શૂન્ય addStrings(અચલ USetAdder *sa, UProperty which, UErrorCode &errorCode) અચલ;
 
-    enum {
+    ગણના {
         // Byte offsets from the start of the data, after the generic header,
         // in ascending order.
         // UCPTrie=CodePointTrie, follows the indexes
@@ -52,11 +52,11 @@ public:
         // Not initially byte offsets.
         IX_RESERVED14,
         IX_RESERVED15,
-        IX_COUNT  // 16
+        IX_ગણતરી  // 16
     };
 
     // Properties in the code point trie.
-    enum {
+    ગણના {
         // https://www.unicode.org/reports/tr51/#Emoji_Properties
         BIT_EMOJI,
         BIT_EMOJI_PRESENTATION,
@@ -68,21 +68,21 @@ public:
         BIT_BASIC_EMOJI
     };
 
-private:
-    static UBool U_CALLCONV
-    isAcceptable(void *context, const char *type, const char *name, const UDataInfo *pInfo);
+ખાનગી:
+    સ્થિર UBool U_CALLCONV
+    isAcceptable(શૂન્ય *context, અચલ અક્ષર *type, અચલ અક્ષર *name, અચલ UDataInfo *pInfo);
     /** Input i: One of the IX_..._TRIE_OFFSET indexes into the data file indexes[] array. */
-    static int32_t getStringTrieIndex(int32_t i) {
-        return i - IX_BASIC_EMOJI_TRIE_OFFSET;
+    સ્થિર int32_t getStringTrieIndex(int32_t i) {
+        પાછા i - IX_BASIC_EMOJI_TRIE_OFFSET;
     }
 
-    void load(UErrorCode &errorCode);
-    UBool hasBinaryPropertyImpl(UChar32 c, UProperty which) const;
-    UBool hasBinaryPropertyImpl(const char16_t *s, int32_t length, UProperty which) const;
+    શૂન્ય load(UErrorCode &errorCode);
+    UBool has_દ્વિઅંકી_Property_Impl(UChar32 c, UProperty which) અચલ;
+    UBool has_દ્વિઅંકી_Property_Impl(અચલ char16_t *s, int32_t length, UProperty which) અચલ;
 
     UDataMemory *memory = nullptr;
     UCPTrie *cpTrie = nullptr;
-    const char16_t *stringTries[6] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
+    અચલ char16_t *stringTries[6] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 };
 
 U_NAMESPACE_END

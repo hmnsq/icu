@@ -7,51 +7,51 @@
 **********************************************************************
 */
 
-#include "unicode/utypes.h"
+#અન્તર્ભાવ "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
+#જો !UCONFIG_NO_FORMATTING
 
-#include <utility>
+#અન્તર્ભાવ <utility>
 
-#include "unicode/ucurr.h"
-#include "unicode/locid.h"
-#include "unicode/ures.h"
-#include "unicode/ustring.h"
-#include "unicode/parsepos.h"
-#include "unicode/uniset.h"
-#include "unicode/usetiter.h"
-#include "unicode/utf16.h"
-#include "ustr_imp.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "static_unicode_sets.h"
-#include "uassert.h"
-#include "umutex.h"
-#include "ucln_cmn.h"
-#include "uenumimp.h"
-#include "uhash.h"
-#include "hash.h"
-#include "uinvchar.h"
-#include "uresimp.h"
-#include "ulist.h"
-#include "uresimp.h"
-#include "ureslocs.h"
-#include "ulocimp.h"
+#અન્તર્ભાવ "unicode/ucurr.h"
+#અન્તર્ભાવ "unicode/locid.h"
+#અન્તર્ભાવ "unicode/ures.h"
+#અન્તર્ભાવ "unicode/ustring.h"
+#અન્તર્ભાવ "unicode/parsepos.h"
+#અન્તર્ભાવ "unicode/uniset.h"
+#અન્તર્ભાવ "unicode/usetiter.h"
+#અન્તર્ભાવ "unicode/utf16.h"
+#અન્તર્ભાવ "ustr_imp.h"
+#અન્તર્ભાવ "charstr.h"
+#અન્તર્ભાવ "cmemory.h"
+#અન્તર્ભાવ "cstring.h"
+#અન્તર્ભાવ "static_unicode_sets.h"
+#અન્તર્ભાવ "uassert.h"
+#અન્તર્ભાવ "umutex.h"
+#અન્તર્ભાવ "ucln_cmn.h"
+#અન્તર્ભાવ "uenumimp.h"
+#અન્તર્ભાવ "uhash.h"
+#અન્તર્ભાવ "hash.h"
+#અન્તર્ભાવ "uinvchar.h"
+#અન્તર્ભાવ "uresimp.h"
+#અન્તર્ભાવ "ulist.h"
+#અન્તર્ભાવ "uresimp.h"
+#અન્તર્ભાવ "ureslocs.h"
+#અન્તર્ભાવ "ulocimp.h"
 
-using namespace icu;
+using નામાકાશ icu;
 
 //#define UCURR_DEBUG_EQUIV 1
 #ifdef UCURR_DEBUG_EQUIV
-#include "stdio.h"
+#અન્તર્ભાવ "stdio.h"
 #endif
 //#define UCURR_DEBUG 1
 #ifdef UCURR_DEBUG
-#include "stdio.h"
+#અન્તર્ભાવ "stdio.h"
 #endif
 
-typedef struct IsoCodeEntry {
-    const char16_t *isoCode; /* const because it's a reference to a resource bundle string. */
+પ્રકારવ્યાખ્યા સંરચના IsoCodeEntry {
+    અચલ char16_t *isoCode; /* const because it's a reference to a resource bundle string. */
     UDate from;
     UDate to;
 } IsoCodeEntry;
@@ -63,13 +63,13 @@ typedef struct IsoCodeEntry {
 // defaults encoded in the meta data resource bundle.  If there is a
 // configuration/build error and these are not available, we use these
 // hard-coded defaults (which should be identical).
-static const int32_t LAST_RESORT_DATA[] = { 2, 0, 2, 0 };
+સ્થિર અચલ int32_t LAST_RESORT_DATA[] = { 2, 0, 2, 0 };
 
 // POW10[i] = 10^i, i=0..MAX_POW10
-static const int32_t POW10[] = { 1, 10, 100, 1000, 10000, 100000,
+સ્થિર અચલ int32_t POW10[] = { 1, 10, 100, 1000, 10000, 100000,
                                  1000000, 10000000, 100000000, 1000000000 };
 
-static const int32_t MAX_POW10 = UPRV_LENGTHOF(POW10) - 1;
+સ્થિર અચલ int32_t MAX_POW10 = UPRV_LENGTHOF(POW10) - 1;
 
 #define ISO_CURRENCY_CODE_LENGTH 3
 
@@ -77,154 +77,154 @@ static const int32_t MAX_POW10 = UPRV_LENGTHOF(POW10) - 1;
 // Resource tags
 //
 
-static const char CURRENCY_DATA[] = "supplementalData";
+સ્થિર અચલ અક્ષર CURRENCY_DATA[] = "supplementalData";
 // Tag for meta-data, in root.
-static const char CURRENCY_META[] = "CurrencyMeta";
+સ્થિર અચલ અક્ષર CURRENCY_META[] = "CurrencyMeta";
 
 // Tag for map from countries to currencies, in root.
-static const char CURRENCY_MAP[] = "CurrencyMap";
+સ્થિર અચલ અક્ષર CURRENCY_MAP[] = "CurrencyMap";
 
 // Tag for default meta-data, in CURRENCY_META
-static const char DEFAULT_META[] = "DEFAULT";
+સ્થિર અચલ અક્ષર DEFAULT_META[] = "DEFAULT";
 
 // Variant delimiter
-static const char VAR_DELIM = '_';
+સ્થિર અચલ અક્ષર VAR_DELIM = '_';
 
 // Tag for localized display names (symbols) of currencies
-static const char CURRENCIES[] = "Currencies";
-static const char CURRENCIES_NARROW[] = "Currencies%narrow";
-static const char CURRENCIES_FORMAL[] = "Currencies%formal";
-static const char CURRENCIES_VARIANT[] = "Currencies%variant";
-static const char CURRENCYPLURALS[] = "CurrencyPlurals";
+સ્થિર અચલ અક્ષર CURRENCIES[] = "Currencies";
+સ્થિર અચલ અક્ષર CURRENCIES_NARROW[] = "Currencies%narrow";
+સ્થિર અચલ અક્ષર CURRENCIES_FORMAL[] = "Currencies%formal";
+સ્થિર અચલ અક્ષર CURRENCIES_VARIANT[] = "Currencies%variant";
+સ્થિર અચલ અક્ષર CURRENCYPLURALS[] = "CurrencyPlurals";
 
 // ISO codes mapping table
-static const UHashtable* gIsoCodes = nullptr;
-static icu::UInitOnce gIsoCodesInitOnce {};
+સ્થિર અચલ UHashtable* gIsoCodes = nullptr;
+સ્થિર icu::UInitOnce gIsoCodesInitOnce {};
 
 // Currency symbol equivalances
-static const icu::Hashtable* gCurrSymbolsEquiv = nullptr;
-static icu::UInitOnce gCurrSymbolsEquivInitOnce {};
+સ્થિર અચલ icu::Hashtable* gCurrSymbolsEquiv = nullptr;
+સ્થિર icu::UInitOnce gCurrSymbolsEquivInitOnce {};
 
 U_NAMESPACE_BEGIN
 
 // EquivIterator iterates over all strings that are equivalent to a given
 // string, s. Note that EquivIterator will never yield s itself.
-class EquivIterator : public icu::UMemory {
-public:
+વર્ગ EquivIterator : જાહેર icu::UMemory {
+જાહેર:
     // Constructor. hash stores the equivalence relationships; s is the string
     // for which we find equivalent strings.
-    inline EquivIterator(const icu::Hashtable& hash, const icu::UnicodeString& s)
+    અંતઃરેખ EquivIterator(અચલ icu::Hashtable& hash, અચલ icu::UnicodeString& s)
         : _hash(hash) { 
         _start = _current = &s;
     }
-    inline ~EquivIterator() { }
+    અંતઃરેખ ~EquivIterator() { }
 
     // next returns the next equivalent string or nullptr if there are no more.
     // If s has no equivalent strings, next returns nullptr on the first call.
-    const icu::UnicodeString *next();
-private:
-    const icu::Hashtable& _hash;
-    const icu::UnicodeString* _start;
-    const icu::UnicodeString* _current;
+    અચલ icu::UnicodeString *next();
+ખાનગી:
+    અચલ icu::Hashtable& _hash;
+    અચલ icu::UnicodeString* _start;
+    અચલ icu::UnicodeString* _current;
 };
 
-const icu::UnicodeString *
+અચલ icu::UnicodeString *
 EquivIterator::next() {
-    const icu::UnicodeString* _next = static_cast<const icu::UnicodeString*>(_hash.get(*_current));
-    if (_next == nullptr) {
+    અચલ icu::UnicodeString* _next = static_cast<અચલ icu::UnicodeString*>(_hash.get(*_current));
+    જો (_next == nullptr) {
         U_ASSERT(_current == _start);
-        return nullptr;
+        પાછા nullptr;
     }
-    if (*_next == *_start) {
-        return nullptr;
+    જો (*_next == *_start) {
+        પાછા nullptr;
     }
     _current = _next;
-    return _next;
+    પાછા _next;
 }
 
 U_NAMESPACE_END
 
 // makeEquivalent makes lhs and rhs equivalent by updating the equivalence
 // relations in hash accordingly.
-static void makeEquivalent(
-    const icu::UnicodeString &lhs,
-    const icu::UnicodeString &rhs,
+સ્થિર શૂન્ય makeEquivalent(
+    અચલ icu::UnicodeString &lhs,
+    અચલ icu::UnicodeString &rhs,
     icu::Hashtable* hash, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return;
+    જો (U_FAILURE(status)) {
+        પાછા;
     }
-    if (lhs == rhs) {
+    જો (lhs == rhs) {
         // already equivalent
-        return;
+        પાછા;
     }
-    icu::EquivIterator leftIter(*hash, lhs);
-    icu::EquivIterator rightIter(*hash, rhs);
-    const icu::UnicodeString *firstLeft = leftIter.next();
-    const icu::UnicodeString *firstRight = rightIter.next();
-    const icu::UnicodeString *nextLeft = firstLeft;
-    const icu::UnicodeString *nextRight = firstRight;
-    while (nextLeft != nullptr && nextRight != nullptr) {
-        if (*nextLeft == rhs || *nextRight == lhs) {
+    icu::EquivIterator ડાબું_Iter(*hash, lhs);
+    icu::EquivIterator જમણું_Iter(*hash, rhs);
+    અચલ icu::UnicodeString *first_ડાબું = ડાબું_Iter.next();
+    અચલ icu::UnicodeString *first_જમણું = જમણું_Iter.next();
+    અચલ icu::UnicodeString *next_ડાબું = first_ડાબું;
+    અચલ icu::UnicodeString *next_જમણું = first_જમણું;
+    જ્યારે (next_ડાબું != nullptr && next_જમણું != nullptr) {
+        જો (*next_ડાબું == rhs || *next_જમણું == lhs) {
             // Already equivalent
-            return;
+            પાછા;
         }
-        nextLeft = leftIter.next();
-        nextRight = rightIter.next();
+        next_ડાબું = ડાબું_Iter.next();
+        next_જમણું = જમણું_Iter.next();
     }
     // Not equivalent. Must join.
-    icu::UnicodeString *newFirstLeft;
-    icu::UnicodeString *newFirstRight;
-    if (firstRight == nullptr && firstLeft == nullptr) {
+    icu::UnicodeString *new_First_ડાબું;
+    icu::UnicodeString *new_First_જમણું;
+    જો (first_જમણું == nullptr && first_ડાબું == nullptr) {
         // Neither lhs or rhs belong to an equivalence circle, so we form
         // a new equivalnce circle of just lhs and rhs.
-        newFirstLeft = new icu::UnicodeString(rhs);
-        newFirstRight = new icu::UnicodeString(lhs);
-    } else if (firstRight == nullptr) {
+        new_First_ડાબું = નવું icu::UnicodeString(rhs);
+        new_First_જમણું = નવું icu::UnicodeString(lhs);
+    } નહીંતર જો (first_જમણું == nullptr) {
         // lhs belongs to an equivalence circle, but rhs does not, so we link
         // rhs into lhs' circle.
-        newFirstLeft = new icu::UnicodeString(rhs);
-        newFirstRight = new icu::UnicodeString(*firstLeft);
-    } else if (firstLeft == nullptr) {
+        new_First_ડાબું = નવું icu::UnicodeString(rhs);
+        new_First_જમણું = નવું icu::UnicodeString(*first_ડાબું);
+    } નહીંતર જો (first_ડાબું == nullptr) {
         // rhs belongs to an equivlance circle, but lhs does not, so we link
         // lhs into rhs' circle.
-        newFirstLeft = new icu::UnicodeString(*firstRight);
-        newFirstRight = new icu::UnicodeString(lhs);
-    } else {
+        new_First_ડાબું = નવું icu::UnicodeString(*first_જમણું);
+        new_First_જમણું = નવું icu::UnicodeString(lhs);
+    } નહીંતર {
         // Both lhs and rhs belong to different equivalnce circles. We link
         // them together to form one single, larger equivalnce circle.
-        newFirstLeft = new icu::UnicodeString(*firstRight);
-        newFirstRight = new icu::UnicodeString(*firstLeft);
+        new_First_ડાબું = નવું icu::UnicodeString(*first_જમણું);
+        new_First_જમણું = નવું icu::UnicodeString(*first_ડાબું);
     }
-    if (newFirstLeft == nullptr || newFirstRight == nullptr) {
-        delete newFirstLeft;
-        delete newFirstRight;
+    જો (new_First_ડાબું == nullptr || new_First_જમણું == nullptr) {
+        delete new_First_ડાબું;
+        delete new_First_જમણું;
         status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        પાછા;
     }
-    hash->put(lhs, (void *) newFirstLeft, status);
-    hash->put(rhs, (void *) newFirstRight, status);
+    hash->put(lhs, (શૂન્ય *) new_First_ડાબું, status);
+    hash->put(rhs, (શૂન્ય *) new_First_જમણું, status);
 }
 
 // countEquivalent counts how many strings are equivalent to s.
 // hash stores all the equivalnce relations.
 // countEquivalent does not include s itself in the count.
-static int32_t countEquivalent(const icu::Hashtable &hash, const icu::UnicodeString &s) {
+સ્થિર int32_t ગણતરી_Equivalent(અચલ icu::Hashtable &hash, અચલ icu::UnicodeString &s) {
     int32_t result = 0;
     icu::EquivIterator iter(hash, s);
-    while (iter.next() != nullptr) {
+    જ્યારે (iter.next() != nullptr) {
         ++result;
     }
 #ifdef UCURR_DEBUG_EQUIV
  {
-   char tmp[200];
+   અક્ષર tmp[200];
    s.extract(0,s.length(),tmp, "UTF-8");
    printf("CountEquivalent('%s') = %d\n", tmp, result);
  }
 #endif
-    return result;
+    પાછા result;
 }
 
-static const icu::Hashtable* getCurrSymbolsEquiv();
+સ્થિર અચલ icu::Hashtable* getCurrSymbolsEquiv();
 
 //------------------------------------------------------------
 // Code
@@ -232,34 +232,34 @@ static const icu::Hashtable* getCurrSymbolsEquiv();
 /**
  * Cleanup callback func
  */
-static UBool U_CALLCONV 
+સ્થિર UBool U_CALLCONV 
 isoCodes_cleanup()
 {
-    if (gIsoCodes != nullptr) {
+    જો (gIsoCodes != nullptr) {
         uhash_close(const_cast<UHashtable *>(gIsoCodes));
         gIsoCodes = nullptr;
     }
     gIsoCodesInitOnce.reset();
-    return true;
+    પાછા સાચું;
 }
 
 /**
  * Cleanup callback func
  */
-static UBool U_CALLCONV 
+સ્થિર UBool U_CALLCONV 
 currSymbolsEquiv_cleanup()
 {
     delete const_cast<icu::Hashtable *>(gCurrSymbolsEquiv);
     gCurrSymbolsEquiv = nullptr;
     gCurrSymbolsEquivInitOnce.reset();
-    return true;
+    પાછા સાચું;
 }
 
 /**
  * Deleter for IsoCodeEntry
  */
-static void U_CALLCONV
-deleteIsoCodeEntry(void *obj) {
+સ્થિર શૂન્ય U_CALLCONV
+deleteIsoCodeEntry(શૂન્ય *obj) {
     IsoCodeEntry* entry = static_cast<IsoCodeEntry*>(obj);
     uprv_free(entry);
 }
@@ -267,8 +267,8 @@ deleteIsoCodeEntry(void *obj) {
 /**
  * Deleter for gCurrSymbolsEquiv.
  */
-static void U_CALLCONV
-deleteUnicode(void *obj) {
+સ્થિર શૂન્ય U_CALLCONV
+deleteUnicode(શૂન્ય *obj) {
     icu::UnicodeString* entry = static_cast<icu::UnicodeString*>(obj);
     delete entry;
 }
@@ -277,11 +277,11 @@ deleteUnicode(void *obj) {
  * Unfortunately, we have to convert the char16_t* currency code to char*
  * to use it as a resource key.
  */
-static inline char*
-myUCharsToChars(char* resultOfLen4, const char16_t* currency) {
+સ્થિર અંતઃરેખ અક્ષર*
+myUCharsToChars(અક્ષર* resultOfLen4, અચલ char16_t* currency) {
     u_UCharsToChars(currency, resultOfLen4, ISO_CURRENCY_CODE_LENGTH);
     resultOfLen4[ISO_CURRENCY_CODE_LENGTH] = 0;
-    return resultOfLen4;
+    પાછા resultOfLen4;
 }
 
 /**
@@ -292,58 +292,58 @@ myUCharsToChars(char* resultOfLen4, const char16_t* currency) {
  * except that they are those used in cash transactions ( cashDigits
  * and cashRounding ).
  */
-static const int32_t*
-_findMetaData(const char16_t* currency, UErrorCode& ec) {
+સ્થિર અચલ int32_t*
+_findMetaData(અચલ char16_t* currency, UErrorCode& ec) {
 
-    if (currency == nullptr || *currency == 0) {
-        if (U_SUCCESS(ec)) {
+    જો (currency == nullptr || *currency == 0) {
+        જો (U_SUCCESS(ec)) {
             ec = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return LAST_RESORT_DATA;
+        પાછા LAST_RESORT_DATA;
     }
 
     // Get CurrencyMeta resource out of root locale file.  [This may
     // move out of the root locale file later; if it does, update this
     // code.]
     UResourceBundle* currencyData = ures_openDirect(U_ICUDATA_CURR, CURRENCY_DATA, &ec);
-    LocalUResourceBundlePointer currencyMeta(ures_getByKey(currencyData, CURRENCY_META, currencyData, &ec));
+    LocalUResourceBundlePointer currencyMeta(ures_get_By_ચાવી(currencyData, CURRENCY_META, currencyData, &ec));
 
-    if (U_FAILURE(ec)) {
+    જો (U_FAILURE(ec)) {
         // Config/build error; return hard-coded defaults
-        return LAST_RESORT_DATA;
+        પાછા LAST_RESORT_DATA;
     }
 
     // Look up our currency, or if that's not available, then DEFAULT
-    char buf[ISO_CURRENCY_CODE_LENGTH+1];
+    અક્ષર buf[ISO_CURRENCY_CODE_LENGTH+1];
     UErrorCode ec2 = U_ZERO_ERROR; // local error code: soft failure
-    LocalUResourceBundlePointer rb(ures_getByKey(currencyMeta.getAlias(), myUCharsToChars(buf, currency), nullptr, &ec2));
-      if (U_FAILURE(ec2)) {
-        rb.adoptInstead(ures_getByKey(currencyMeta.getAlias(),DEFAULT_META, nullptr, &ec));
-        if (U_FAILURE(ec)) {
+    LocalUResourceBundlePointer rb(ures_get_By_ચાવી(currencyMeta.getAlias(), myUCharsToChars(buf, currency), nullptr, &ec2));
+      જો (U_FAILURE(ec2)) {
+        rb.adoptInstead(ures_get_By_ચાવી(currencyMeta.getAlias(),DEFAULT_META, nullptr, &ec));
+        જો (U_FAILURE(ec)) {
             // Config/build error; return hard-coded defaults
-            return LAST_RESORT_DATA;
+            પાછા LAST_RESORT_DATA;
         }
     }
 
     int32_t len;
-    const int32_t *data = ures_getIntVector(rb.getAlias(), &len, &ec);
-    if (U_FAILURE(ec) || len != 4) {
+    અચલ int32_t *data = ures_getIntVector(rb.getAlias(), &len, &ec);
+    જો (U_FAILURE(ec) || len != 4) {
         // Config/build error; return hard-coded defaults
-        if (U_SUCCESS(ec)) {
+        જો (U_SUCCESS(ec)) {
             ec = U_INVALID_FORMAT_ERROR;
         }
-        return LAST_RESORT_DATA;
+        પાછા LAST_RESORT_DATA;
     }
 
-    return data;
+    પાછા data;
 }
 
 // -------------------------------------
 
-static CharString
-idForLocale(const char* locale, UErrorCode* ec)
+સ્થિર CharString
+idForLocale(અચલ અક્ષર* locale, UErrorCode* ec)
 {
-    return ulocimp_getRegionForSupplementalData(locale, false, *ec);
+    પાછા ulocimp_getRegionForSupplementalData(locale, ખોટું, *ec);
 }
 
 // ------------------------------------------
@@ -355,89 +355,89 @@ idForLocale(const char* locale, UErrorCode* ec)
 // don't use ICUService since we don't need fallback
 
 U_CDECL_BEGIN
-static UBool U_CALLCONV currency_cleanup();
+સ્થિર UBool U_CALLCONV currency_cleanup();
 U_CDECL_END
 
-#if !UCONFIG_NO_SERVICE
-struct CReg;
+#જો !UCONFIG_NO_SERVICE
+સંરચના CReg;
 
-static UMutex gCRegLock;
-static CReg* gCRegHead = nullptr;
+સ્થિર UMutex gCRegLock;
+સ્થિર CReg* gCRegHead = nullptr;
 
-struct CReg : public icu::UMemory {
+સંરચના CReg : જાહેર icu::UMemory {
     CReg *next;
     char16_t iso[ISO_CURRENCY_CODE_LENGTH+1];
-    char  id[ULOC_FULLNAME_CAPACITY];
+    અક્ષર  id[ULOC_FULLNAME_CAPACITY];
 
-    CReg(const char16_t* _iso, const char* _id)
+    CReg(અચલ char16_t* _iso, અચલ અક્ષર* _id)
         : next(nullptr)
     {
-        uprv_strncpy(id, _id, sizeof(id)-1);
-        id[sizeof(id)-1] = 0;
+        uprv_strncpy(id, _id, કદ(id)-1);
+        id[કદ(id)-1] = 0;
         u_memcpy(iso, _iso, ISO_CURRENCY_CODE_LENGTH);
         iso[ISO_CURRENCY_CODE_LENGTH] = 0;
     }
 
-    static UCurrRegistryKey reg(const char16_t* _iso, const char* _id, UErrorCode* status)
+    સ્થિર UCurr_Registry_ચાવી reg(અચલ char16_t* _iso, અચલ અક્ષર* _id, UErrorCode* status)
     {
-        if (status && U_SUCCESS(*status) && _iso && _id) {
-            CReg* n = new CReg(_iso, _id);
-            if (n) {
+        જો (status && U_SUCCESS(*status) && _iso && _id) {
+            CReg* n = નવું CReg(_iso, _id);
+            જો (n) {
                 umtx_lock(&gCRegLock);
-                if (!gCRegHead) {
+                જો (!gCRegHead) {
                     /* register for the first time */
                     ucln_common_registerCleanup(UCLN_COMMON_CURRENCY, currency_cleanup);
                 }
                 n->next = gCRegHead;
                 gCRegHead = n;
                 umtx_unlock(&gCRegLock);
-                return n;
+                પાછા n;
             }
             *status = U_MEMORY_ALLOCATION_ERROR;
         }
-        return nullptr;
+        પાછા nullptr;
     }
 
-    static UBool unreg(UCurrRegistryKey key) {
-        UBool found = false;
+    સ્થિર UBool unreg(UCurr_Registry_ચાવી ચાવી) {
+        UBool found = ખોટું;
         umtx_lock(&gCRegLock);
 
         CReg** p = &gCRegHead;
-        while (*p) {
-            if (*p == key) {
-                *p = ((CReg*)key)->next;
-                delete (CReg*)key;
-                found = true;
-                break;
+        જ્યારે (*p) {
+            જો (*p == ચાવી) {
+                *p = ((CReg*)ચાવી)->next;
+                delete (CReg*)ચાવી;
+                found = સાચું;
+                તોડો;
             }
             p = &((*p)->next);
         }
 
         umtx_unlock(&gCRegLock);
-        return found;
+        પાછા found;
     }
 
-    static const char16_t* get(const char* id) {
-        const char16_t* result = nullptr;
+    સ્થિર અચલ char16_t* get(અચલ અક્ષર* id) {
+        અચલ char16_t* result = nullptr;
         umtx_lock(&gCRegLock);
         CReg* p = gCRegHead;
 
         /* register cleanup of the mutex */
         ucln_common_registerCleanup(UCLN_COMMON_CURRENCY, currency_cleanup);
-        while (p) {
-            if (uprv_strcmp(id, p->id) == 0) {
+        જ્યારે (p) {
+            જો (uprv_strcmp(id, p->id) == 0) {
                 result = p->iso;
-                break;
+                તોડો;
             }
             p = p->next;
         }
         umtx_unlock(&gCRegLock);
-        return result;
+        પાછા result;
     }
 
     /* This doesn't need to be thread safe. It's for u_cleanup only. */
-    static void cleanup() {
-        while (gCRegHead) {
+    સ્થિર શૂન્ય cleanup() {
+        જ્યારે (gCRegHead) {
             CReg* n = gCRegHead;
             gCRegHead = gCRegHead->next;
             delete n;
@@ -447,25 +447,25 @@ struct CReg : public icu::UMemory {
 
 // -------------------------------------
 
-U_CAPI UCurrRegistryKey U_EXPORT2
-ucurr_register(const char16_t* isoCode, const char* locale, UErrorCode *status)
+U_CAPI UCurr_Registry_ચાવી U_EXPORT2
+ucurr_register(અચલ char16_t* isoCode, અચલ અક્ષર* locale, UErrorCode *status)
 {
-    if (status && U_SUCCESS(*status)) {
+    જો (status && U_SUCCESS(*status)) {
         CharString id = idForLocale(locale, status);
-        return CReg::reg(isoCode, id.data(), status);
+        પાછા CReg::reg(isoCode, id.data(), status);
     }
-    return nullptr;
+    પાછા nullptr;
 }
 
 // -------------------------------------
 
 U_CAPI UBool U_EXPORT2
-ucurr_unregister(UCurrRegistryKey key, UErrorCode* status)
+ucurr_unregister(UCurr_Registry_ચાવી ચાવી, UErrorCode* status)
 {
-    if (status && U_SUCCESS(*status)) {
-        return CReg::unreg(key);
+    જો (status && U_SUCCESS(*status)) {
+        પાછા CReg::unreg(ચાવી);
     }
-    return false;
+    પાછા ખોટું;
 }
 #endif /* UCONFIG_NO_SERVICE */
 
@@ -477,12 +477,12 @@ ucurr_unregister(UCurrRegistryKey key, UErrorCode* status)
 /*The declaration here is needed so currency_cleanup()
  * can call this function.
  */
-static UBool U_CALLCONV
+સ્થિર UBool U_CALLCONV
 currency_cache_cleanup();
 
 U_CDECL_BEGIN
-static UBool U_CALLCONV currency_cleanup() {
-#if !UCONFIG_NO_SERVICE
+સ્થિર UBool U_CALLCONV currency_cleanup() {
+#જો !UCONFIG_NO_SERVICE
     CReg::cleanup();
 #endif
     /*
@@ -492,114 +492,114 @@ static UBool U_CALLCONV currency_cleanup() {
     isoCodes_cleanup();
     currSymbolsEquiv_cleanup();
 
-    return true;
+    પાછા સાચું;
 }
 U_CDECL_END
 
 // -------------------------------------
 
 U_CAPI int32_t U_EXPORT2
-ucurr_forLocale(const char* locale,
+ucurr_forLocale(અચલ અક્ષર* locale,
                 char16_t* buff,
                 int32_t buffCapacity,
                 UErrorCode* ec) {
-    if (U_FAILURE(*ec)) { return 0; }
-    if (buffCapacity < 0 || (buff == nullptr && buffCapacity > 0)) {
+    જો (U_FAILURE(*ec)) { પાછા 0; }
+    જો (buffCapacity < 0 || (buff == nullptr && buffCapacity > 0)) {
         *ec = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        પાછા 0;
     }
 
     UErrorCode localStatus = U_ZERO_ERROR;
-    CharString currency = ulocimp_getKeywordValue(locale, "currency", localStatus);
+    CharString currency = ulocimp_get_Keyword_કિંમત(locale, "currency", localStatus);
     int32_t resLen = currency.length();
 
-    if (U_SUCCESS(localStatus) && resLen == 3 && uprv_isInvariantString(currency.data(), resLen)) {
-        if (resLen < buffCapacity) {
+    જો (U_SUCCESS(localStatus) && resLen == 3 && uprv_isInvariantString(currency.data(), resLen)) {
+        જો (resLen < buffCapacity) {
             T_CString_toUpperCase(currency.data());
             u_charsToUChars(currency.data(), buff, resLen);
         }
-        return u_terminateUChars(buff, buffCapacity, resLen, ec);
+        પાછા u_terminateUChars(buff, buffCapacity, resLen, ec);
     }
 
     // get country or country_variant in `id'
     CharString id = idForLocale(locale, ec);
-    if (U_FAILURE(*ec)) {
-        return 0;
+    જો (U_FAILURE(*ec)) {
+        પાછા 0;
     }
 
-#if !UCONFIG_NO_SERVICE
-    const char16_t* result = CReg::get(id.data());
-    if (result) {
-        if(buffCapacity > u_strlen(result)) {
+#જો !UCONFIG_NO_SERVICE
+    અચલ char16_t* result = CReg::get(id.data());
+    જો (result) {
+        જો(buffCapacity > u_strlen(result)) {
             u_strcpy(buff, result);
         }
         resLen = u_strlen(result);
-        return u_terminateUChars(buff, buffCapacity, resLen, ec);
+        પાછા u_terminateUChars(buff, buffCapacity, resLen, ec);
     }
 #endif
     // Remove variants, which is only needed for registration.
-    char *idDelim = uprv_strchr(id.data(), VAR_DELIM);
-    if (idDelim) {
+    અક્ષર *idDelim = uprv_strchr(id.data(), VAR_DELIM);
+    જો (idDelim) {
         id.truncate(idDelim - id.data());
     }
 
-    const char16_t* s = nullptr;  // Currency code from data file.
-    if (id.isEmpty()) {
+    અચલ char16_t* s = nullptr;  // Currency code from data file.
+    જો (id.isEmpty()) {
         // No point looking in the data for an empty string.
         // This is what we would get.
         localStatus = U_MISSING_RESOURCE_ERROR;
-    } else {
+    } નહીંતર {
         // Look up the CurrencyMap element in the root bundle.
         localStatus = U_ZERO_ERROR;
         UResourceBundle *rb = ures_openDirect(U_ICUDATA_CURR, CURRENCY_DATA, &localStatus);
-        UResourceBundle *cm = ures_getByKey(rb, CURRENCY_MAP, rb, &localStatus);
-        LocalUResourceBundlePointer countryArray(ures_getByKey(rb, id.data(), cm, &localStatus));
+        UResourceBundle *cm = ures_get_By_ચાવી(rb, CURRENCY_MAP, rb, &localStatus);
+        LocalUResourceBundlePointer countryArray(ures_get_By_ચાવી(rb, id.data(), cm, &localStatus));
         // https://unicode-org.atlassian.net/browse/ICU-21997
         // Prefer to use currencies that are legal tender.
-        if (U_SUCCESS(localStatus)) {
+        જો (U_SUCCESS(localStatus)) {
             int32_t arrayLength = ures_getSize(countryArray.getAlias());
-            for (int32_t i = 0; i < arrayLength; ++i) {
+            માટે (int32_t i = 0; i < arrayLength; ++i) {
                 LocalUResourceBundlePointer currencyReq(
                     ures_getByIndex(countryArray.getAlias(), i, nullptr, &localStatus));
                 // The currency is legal tender if it is *not* marked with tender{"false"}.
                 UErrorCode tenderStatus = localStatus;
-                const char16_t *tender =
-                    ures_getStringByKey(currencyReq.getAlias(), "tender", nullptr, &tenderStatus);
-                bool isTender = U_FAILURE(tenderStatus) || u_strcmp(tender, u"false") != 0;
-                if (!isTender && s != nullptr) {
+                અચલ char16_t *tender =
+                    ures_get_String_By_ચાવી(currencyReq.getAlias(), "tender", nullptr, &tenderStatus);
+                તાર્કિક isTender = U_FAILURE(tenderStatus) || u_strcmp(tender, u"false") != 0;
+                જો (!isTender && s != nullptr) {
                     // We already have a non-tender currency. Ignore all following non-tender ones.
-                    continue;
+                    ચાલુ;
                 }
                 // Fetch the currency code.
-                s = ures_getStringByKey(currencyReq.getAlias(), "id", &resLen, &localStatus);
-                if (isTender) {
-                    break;
+                s = ures_get_String_By_ચાવી(currencyReq.getAlias(), "id", &resLen, &localStatus);
+                જો (isTender) {
+                    તોડો;
                 }
             }
-            if (U_SUCCESS(localStatus) && s == nullptr) {
+            જો (U_SUCCESS(localStatus) && s == nullptr) {
                 localStatus = U_MISSING_RESOURCE_ERROR;
             }
         }
     }
 
-    if ((U_FAILURE(localStatus)) && strchr(id.data(), '_') != nullptr) {
+    જો ((U_FAILURE(localStatus)) && strchr(id.data(), '_') != nullptr) {
         // We don't know about it.  Check to see if we support the variant.
         CharString parent = ulocimp_getParent(locale, *ec);
         *ec = U_USING_FALLBACK_WARNING;
         // TODO: Loop over the parent rather than recursing and
         // looking again for a currency keyword.
-        return ucurr_forLocale(parent.data(), buff, buffCapacity, ec);
+        પાછા ucurr_forLocale(parent.data(), buff, buffCapacity, ec);
     }
-    if (*ec == U_ZERO_ERROR || localStatus != U_ZERO_ERROR) {
+    જો (*ec == U_ZERO_ERROR || localStatus != U_ZERO_ERROR) {
         // There is nothing to fallback to. Report the failure/warning if possible.
         *ec = localStatus;
     }
-    if (U_SUCCESS(*ec)) {
-        if(buffCapacity > resLen) {
+    જો (U_SUCCESS(*ec)) {
+        જો(buffCapacity > resLen) {
             u_strcpy(buff, s);
         }
     }
-    return u_terminateUChars(buff, buffCapacity, resLen, ec);
+    પાછા u_terminateUChars(buff, buffCapacity, resLen, ec);
 }
 
 // end registration
@@ -611,18 +611,18 @@ ucurr_forLocale(const char* locale,
  * @return true if the fallback happened; false if locale is already
  * root ("").
  */
-static UBool fallback(CharString& loc) {
-    if (loc.isEmpty()) {
-        return false;
+સ્થિર UBool fallback(CharString& loc) {
+    જો (loc.isEmpty()) {
+        પાછા ખોટું;
     }
     UErrorCode status = U_ZERO_ERROR;
-    if (loc == "en_GB") {
+    જો (loc == "en_GB") {
         // HACK: See #13368.  We need "en_GB" to fall back to "en_001" instead of "en"
         // in order to consume the correct data strings.  This hack will be removed
         // when proper data sink loading is implemented here.
         loc.truncate(3);
         loc.append("001", status);
-    } else {
+    } નહીંતર {
         loc = ulocimp_getParent(loc.data(), status);
     }
  /*
@@ -632,13 +632,13 @@ static UBool fallback(CharString& loc) {
     }
     *i = 0;
  */
-    return true;
+    પાછા સાચું;
 }
 
 
-U_CAPI const char16_t* U_EXPORT2
-ucurr_getName(const char16_t* currency U_LIFETIME_BOUND,
-              const char* locale,
+U_CAPI અચલ char16_t* U_EXPORT2
+ucurr_getName(અચલ char16_t* currency U_LIFETIME_BOUND,
+              અચલ અક્ષર* locale,
               UCurrNameStyle nameStyle,
               UBool* isChoiceFormat, // fillin
               int32_t* len, // fillin
@@ -655,14 +655,14 @@ ucurr_getName(const char16_t* currency U_LIFETIME_BOUND,
     //|  }
     //|}
 
-    if (U_FAILURE(*ec)) {
-        return nullptr;
+    જો (U_FAILURE(*ec)) {
+        પાછા nullptr;
     }
 
     int32_t choice = (int32_t) nameStyle;
-    if (choice < 0 || choice > 4) {
+    જો (choice < 0 || choice > 4) {
         *ec = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        પાછા nullptr;
     }
 
     // In the future, resource bundles may implement multi-level
@@ -678,60 +678,60 @@ ucurr_getName(const char16_t* currency U_LIFETIME_BOUND,
     // this function.
     UErrorCode ec2 = U_ZERO_ERROR;
 
-    if (locale == nullptr) {
+    જો (locale == nullptr) {
         locale = uloc_getDefault();
     }
     CharString loc = ulocimp_getName(locale, ec2);
-    if (U_FAILURE(ec2)) {
+    જો (U_FAILURE(ec2)) {
         *ec = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        પાછા nullptr;
     }
 
-    char buf[ISO_CURRENCY_CODE_LENGTH+1];
+    અક્ષર buf[ISO_CURRENCY_CODE_LENGTH+1];
     myUCharsToChars(buf, currency);
     
     /* Normalize the keyword value to uppercase */
     T_CString_toUpperCase(buf);
     
-    const char16_t* s = nullptr;
+    અચલ char16_t* s = nullptr;
     ec2 = U_ZERO_ERROR;
     LocalUResourceBundlePointer rb(ures_open(U_ICUDATA_CURR, loc.data(), &ec2));
 
-    if (nameStyle == UCURR_NARROW_SYMBOL_NAME || nameStyle == UCURR_FORMAL_SYMBOL_NAME || nameStyle == UCURR_VARIANT_SYMBOL_NAME) {
-        CharString key;
-        switch (nameStyle) {
-        case UCURR_NARROW_SYMBOL_NAME:
-            key.append(CURRENCIES_NARROW, ec2);
-            break;
-        case UCURR_FORMAL_SYMBOL_NAME:
-            key.append(CURRENCIES_FORMAL, ec2);
-            break;
-        case UCURR_VARIANT_SYMBOL_NAME:
-            key.append(CURRENCIES_VARIANT, ec2);
-            break;
-        default:
+    જો (nameStyle == UCURR_NARROW_પ્રતીક_NAME || nameStyle == UCURR_FORMAL_પ્રતીક_NAME || nameStyle == UCURR_VARIANT_પ્રતીક_NAME) {
+        CharString ચાવી;
+        પસંદગી (nameStyle) {
+        સ્થિતિ UCURR_NARROW_પ્રતીક_NAME:
+            ચાવી.append(CURRENCIES_NARROW, ec2);
+            તોડો;
+        સ્થિતિ UCURR_FORMAL_પ્રતીક_NAME:
+            ચાવી.append(CURRENCIES_FORMAL, ec2);
+            તોડો;
+        સ્થિતિ UCURR_VARIANT_પ્રતીક_NAME:
+            ચાવી.append(CURRENCIES_VARIANT, ec2);
+            તોડો;
+        મૂળભૂત:
             *ec = U_UNSUPPORTED_ERROR;
-            return nullptr;
+            પાછા nullptr;
         }
-        key.append("/", ec2);
-        key.append(buf, ec2);
-        s = ures_getStringByKeyWithFallback(rb.getAlias(), key.data(), len, &ec2);
-        if (ec2 == U_MISSING_RESOURCE_ERROR) {
+        ચાવી.append("/", ec2);
+        ચાવી.append(buf, ec2);
+        s = ures_get_String_By_ચાવી_With_Fallback(rb.getAlias(), ચાવી.data(), len, &ec2);
+        જો (ec2 == U_MISSING_RESOURCE_ERROR) {
             *ec = U_USING_FALLBACK_WARNING;
             ec2 = U_ZERO_ERROR;
-            choice = UCURR_SYMBOL_NAME;
+            choice = UCURR_પ્રતીક_NAME;
         }
     }
-    if (s == nullptr) {
-        ures_getByKey(rb.getAlias(), CURRENCIES, rb.getAlias(), &ec2);
-        ures_getByKeyWithFallback(rb.getAlias(), buf, rb.getAlias(), &ec2);
+    જો (s == nullptr) {
+        ures_get_By_ચાવી(rb.getAlias(), CURRENCIES, rb.getAlias(), &ec2);
+        ures_get_By_ચાવી_With_Fallback(rb.getAlias(), buf, rb.getAlias(), &ec2);
         s = ures_getStringByIndex(rb.getAlias(), choice, len, &ec2);
     }
 
     // If we've succeeded we're done.  Otherwise, try to fallback.
     // If that fails (because we are already at root) then exit.
-    if (U_SUCCESS(ec2)) {
-        if (ec2 == U_USING_DEFAULT_WARNING
+    જો (U_SUCCESS(ec2)) {
+        જો (ec2 == U_USING_DEFAULT_WARNING
             || (ec2 == U_USING_FALLBACK_WARNING && *ec != U_USING_DEFAULT_WARNING)) {
             *ec = ec2;
         }
@@ -739,25 +739,25 @@ ucurr_getName(const char16_t* currency U_LIFETIME_BOUND,
 
     // We no longer support choice format data in names.  Data should not contain
     // choice patterns.
-    if (isChoiceFormat != nullptr) {
-        *isChoiceFormat = false;
+    જો (isChoiceFormat != nullptr) {
+        *isChoiceFormat = ખોટું;
     }
-    if (U_SUCCESS(ec2)) {
+    જો (U_SUCCESS(ec2)) {
         U_ASSERT(s != nullptr);
-        return s;
+        પાછા s;
     }
 
     // If we fail to find a match, use the ISO 4217 code
     *len = u_strlen(currency); // Should == ISO_CURRENCY_CODE_LENGTH, but maybe not...?
     *ec = U_USING_DEFAULT_WARNING;
-    return currency;
+    પાછા currency;
 }
 
-U_CAPI const char16_t* U_EXPORT2
-ucurr_getPluralName(const char16_t* currency U_LIFETIME_BOUND,
-                    const char* locale,
+U_CAPI અચલ char16_t* U_EXPORT2
+ucurr_getPluralName(અચલ char16_t* currency U_LIFETIME_BOUND,
+                    અચલ અક્ષર* locale,
                     UBool* isChoiceFormat,
-                    const char* pluralCount,
+                    અચલ અક્ષર* plural_ગણતરી,
                     int32_t* len, // fillin
                     UErrorCode* ec) {
     // Look up the Currencies resource for the given locale.  The
@@ -771,62 +771,62 @@ ucurr_getPluralName(const char16_t* currency U_LIFETIME_BOUND,
     //|  }
     //|}
 
-    if (U_FAILURE(*ec)) {
-        return nullptr;
+    જો (U_FAILURE(*ec)) {
+        પાછા nullptr;
     }
 
     // Use a separate UErrorCode here that does not propagate out of
     // this function.
     UErrorCode ec2 = U_ZERO_ERROR;
 
-    if (locale == nullptr) {
+    જો (locale == nullptr) {
         locale = uloc_getDefault();
     }
     CharString loc = ulocimp_getName(locale, ec2);
-    if (U_FAILURE(ec2)) {
+    જો (U_FAILURE(ec2)) {
         *ec = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        પાછા nullptr;
     }
 
-    char buf[ISO_CURRENCY_CODE_LENGTH+1];
+    અક્ષર buf[ISO_CURRENCY_CODE_LENGTH+1];
     myUCharsToChars(buf, currency);
 
-    const char16_t* s = nullptr;
+    અચલ char16_t* s = nullptr;
     ec2 = U_ZERO_ERROR;
     UResourceBundle* rb = ures_open(U_ICUDATA_CURR, loc.data(), &ec2);
 
-    rb = ures_getByKey(rb, CURRENCYPLURALS, rb, &ec2);
+    rb = ures_get_By_ચાવી(rb, CURRENCYPLURALS, rb, &ec2);
 
     // Fetch resource with multi-level resource inheritance fallback
-    LocalUResourceBundlePointer curr(ures_getByKeyWithFallback(rb, buf, rb, &ec2));
+    LocalUResourceBundlePointer curr(ures_get_By_ચાવી_With_Fallback(rb, buf, rb, &ec2));
 
-    s = ures_getStringByKeyWithFallback(curr.getAlias(), pluralCount, len, &ec2);
-    if (U_FAILURE(ec2)) {
+    s = ures_get_String_By_ચાવી_With_Fallback(curr.getAlias(), plural_ગણતરી, len, &ec2);
+    જો (U_FAILURE(ec2)) {
         //  fall back to "other"
         ec2 = U_ZERO_ERROR;
-        s = ures_getStringByKeyWithFallback(curr.getAlias(), "other", len, &ec2);     
-        if (U_FAILURE(ec2)) {
+        s = ures_get_String_By_ચાવી_With_Fallback(curr.getAlias(), "other", len, &ec2);     
+        જો (U_FAILURE(ec2)) {
             // fall back to long name in Currencies
-            return ucurr_getName(currency, locale, UCURR_LONG_NAME, 
+            પાછા ucurr_getName(currency, locale, UCURR_LONG_NAME, 
                                  isChoiceFormat, len, ec);
         }
     }
 
     // If we've succeeded we're done.  Otherwise, try to fallback.
     // If that fails (because we are already at root) then exit.
-    if (U_SUCCESS(ec2)) {
-        if (ec2 == U_USING_DEFAULT_WARNING
+    જો (U_SUCCESS(ec2)) {
+        જો (ec2 == U_USING_DEFAULT_WARNING
             || (ec2 == U_USING_FALLBACK_WARNING && *ec != U_USING_DEFAULT_WARNING)) {
             *ec = ec2;
         }
         U_ASSERT(s != nullptr);
-        return s;
+        પાછા s;
     }
 
     // If we fail to find a match, use the ISO 4217 code
     *len = u_strlen(currency); // Should == ISO_CURRENCY_CODE_LENGTH, but maybe not...?
     *ec = U_USING_DEFAULT_WARNING;
-    return currency;
+    પાછા currency;
 }
 
 
@@ -838,9 +838,9 @@ ucurr_getPluralName(const char16_t* currency U_LIFETIME_BOUND,
 // TODO: a better way to define this?
 #define MAX_CURRENCY_NAME_LEN 100
 
-typedef struct {
-    const char* IsoCode;  // key
-    char16_t* currencyName;  // value
+પ્રકારવ્યાખ્યા સંરચના {
+    અચલ અક્ષર* IsoCode;  //ચાવી
+    char16_t* currencyName;  //કિંમત
     int32_t currencyNameLen;  // value length
     int32_t flag;  // flags
 } CurrencyNameStruct;
@@ -856,25 +856,25 @@ typedef struct {
 
 
 // Comparison function used in quick sort.
-static int U_CALLCONV currencyNameComparator(const void* a, const void* b) {
-    const CurrencyNameStruct* currName_1 = static_cast<const CurrencyNameStruct*>(a);
-    const CurrencyNameStruct* currName_2 = static_cast<const CurrencyNameStruct*>(b);
-    for (int32_t i = 0; 
+સ્થિર પૂર્ણાંક U_CALLCONV currencyNameComparator(અચલ શૂન્ય* a, અચલ શૂન્ય* b) {
+    અચલ CurrencyNameStruct* currName_1 = static_cast<અચલ CurrencyNameStruct*>(a);
+    અચલ CurrencyNameStruct* currName_2 = static_cast<અચલ CurrencyNameStruct*>(b);
+    માટે (int32_t i = 0; 
          i < MIN(currName_1->currencyNameLen, currName_2->currencyNameLen);
          ++i) {
-        if (currName_1->currencyName[i] < currName_2->currencyName[i]) {
-            return -1;
+        જો (currName_1->currencyName[i] < currName_2->currencyName[i]) {
+            પાછા -1;
         }
-        if (currName_1->currencyName[i] > currName_2->currencyName[i]) {
-            return 1;
+        જો (currName_1->currencyName[i] > currName_2->currencyName[i]) {
+            પાછા 1;
         }
     }
-    if (currName_1->currencyNameLen < currName_2->currencyNameLen) {
-        return -1;
-    } else if (currName_1->currencyNameLen > currName_2->currencyNameLen) {
-        return 1;
+    જો (currName_1->currencyNameLen < currName_2->currencyNameLen) {
+        પાછા -1;
+    } નહીંતર જો (currName_1->currencyNameLen > currName_2->currencyNameLen) {
+        પાછા 1;
     }
-    return 0;
+    પાછા 0;
 }
 
 
@@ -886,133 +886,133 @@ static int U_CALLCONV currencyNameComparator(const void* a, const void* b) {
 // For example, given locale as "en_US", the currency names get from resource
 // bundle in "en_US" and "en" are duplicated. The fallback mechanism will count
 // all currency names in "en_US" and "en".
-static void
-getCurrencyNameCount(const char* loc, int32_t* total_currency_name_count, int32_t* total_currency_symbol_count) {
+સ્થિર શૂન્ય
+get_Currency_Name_ગણતરી(અચલ અક્ષર* loc, int32_t* total_currency_name_ગણતરી, int32_t* total_currency_પ્રતીક_ગણતરી) {
     U_NAMESPACE_USE
-    *total_currency_name_count = 0;
-    *total_currency_symbol_count = 0;
-    const char16_t* s = nullptr;
+    *total_currency_name_ગણતરી = 0;
+    *total_currency_પ્રતીક_ગણતરી = 0;
+    અચલ char16_t* s = nullptr;
     CharString locale;
     {
         UErrorCode status = U_ZERO_ERROR;
         locale.append(loc, status);
-        if (U_FAILURE(status)) { return; }
+        જો (U_FAILURE(status)) { પાછા; }
     }
-    const icu::Hashtable *currencySymbolsEquiv = getCurrSymbolsEquiv();
-    for (;;) {
+    અચલ icu::Hashtable *currencySymbolsEquiv = getCurrSymbolsEquiv();
+    માટે (;;) {
         UErrorCode ec2 = U_ZERO_ERROR;
         // TODO: ures_openDirect?
         LocalUResourceBundlePointer rb(ures_open(U_ICUDATA_CURR, locale.data(), &ec2));
-        LocalUResourceBundlePointer curr(ures_getByKey(rb.getAlias(), CURRENCIES, nullptr, &ec2));
+        LocalUResourceBundlePointer curr(ures_get_By_ચાવી(rb.getAlias(), CURRENCIES, nullptr, &ec2));
         int32_t n = ures_getSize(curr.getAlias());
-        for (int32_t i=0; i<n; ++i) {
+        માટે (int32_t i=0; i<n; ++i) {
             LocalUResourceBundlePointer names(ures_getByIndex(curr.getAlias(), i, nullptr, &ec2));
             int32_t len;
-            s = ures_getStringByIndex(names.getAlias(), UCURR_SYMBOL_NAME, &len, &ec2);
-            ++(*total_currency_symbol_count);  // currency symbol
-            if (currencySymbolsEquiv != nullptr) {
-                *total_currency_symbol_count += countEquivalent(*currencySymbolsEquiv, UnicodeString(true, s, len));
+            s = ures_getStringByIndex(names.getAlias(), UCURR_પ્રતીક_NAME, &len, &ec2);
+            ++(*total_currency_પ્રતીક_ગણતરી);  // currency symbol
+            જો (currencySymbolsEquiv != nullptr) {
+                *total_currency_પ્રતીક_ગણતરી += ગણતરી_Equivalent(*currencySymbolsEquiv, UnicodeString(સાચું, s, len));
             }
-            ++(*total_currency_symbol_count); // iso code
-            ++(*total_currency_name_count); // long name
+            ++(*total_currency_પ્રતીક_ગણતરી); // iso code
+            ++(*total_currency_name_ગણતરી); // long name
         }
 
         // currency plurals
         UErrorCode ec3 = U_ZERO_ERROR;
-        LocalUResourceBundlePointer curr_p(ures_getByKey(rb.getAlias(), CURRENCYPLURALS, nullptr, &ec3));
+        LocalUResourceBundlePointer curr_p(ures_get_By_ચાવી(rb.getAlias(), CURRENCYPLURALS, nullptr, &ec3));
         n = ures_getSize(curr_p.getAlias());
-        for (int32_t i=0; i<n; ++i) {
+        માટે (int32_t i=0; i<n; ++i) {
             LocalUResourceBundlePointer names(ures_getByIndex(curr_p.getAlias(), i, nullptr, &ec3));
-            *total_currency_name_count += ures_getSize(names.getAlias());
+            *total_currency_name_ગણતરી += ures_getSize(names.getAlias());
         }
 
-        if (!fallback(locale)) {
-            break;
+        જો (!fallback(locale)) {
+            તોડો;
         }
     }
 }
 
-static char16_t*
-toUpperCase(const char16_t* source, int32_t len, const char* locale) {
+સ્થિર char16_t*
+toUpperCase(અચલ char16_t* source, int32_t len, અચલ અક્ષર* locale) {
     char16_t* dest = nullptr;
     UErrorCode ec = U_ZERO_ERROR;
     int32_t destLen = u_strToUpper(dest, 0, source, len, locale, &ec);
 
     ec = U_ZERO_ERROR;
-    dest = static_cast<char16_t*>(uprv_malloc(sizeof(char16_t) * MAX(destLen, len)));
-    if (dest == nullptr) {
-        return nullptr;
+    dest = static_cast<char16_t*>(uprv_malloc(કદ(char16_t) * MAX(destLen, len)));
+    જો (dest == nullptr) {
+        પાછા nullptr;
     }
     u_strToUpper(dest, destLen, source, len, locale, &ec);
-    if (U_FAILURE(ec)) {
+    જો (U_FAILURE(ec)) {
         u_memcpy(dest, source, len);
     } 
-    return dest;
+    પાછા dest;
 }
 
 
-static void deleteCurrencyNames(CurrencyNameStruct* currencyNames, int32_t count);
+સ્થિર શૂન્ય deleteCurrencyNames(CurrencyNameStruct* currencyNames, int32_t count);
 // Collect all available currency names associated with the given locale
 // (enable fallback chain).
 // Read currenc names defined in resource bundle "Currencies" and
 // "CurrencyPlural", enable fallback chain.
 // return the malloc-ed currency name arrays and the total number of currency
 // names in the array.
-static void
-collectCurrencyNames(const char* locale, 
+સ્થિર શૂન્ય
+collectCurrencyNames(અચલ અક્ષર* locale, 
                      CurrencyNameStruct** currencyNames, 
-                     int32_t* total_currency_name_count, 
+                     int32_t* total_currency_name_ગણતરી, 
                      CurrencyNameStruct** currencySymbols, 
-                     int32_t* total_currency_symbol_count, 
+                     int32_t* total_currency_પ્રતીક_ગણતરી, 
                      UErrorCode& ec) {
-    if (U_FAILURE(ec)) {
+    જો (U_FAILURE(ec)) {
         *currencyNames = *currencySymbols = nullptr;
-        *total_currency_name_count = *total_currency_symbol_count = 0;
-        return;
+        *total_currency_name_ગણતરી = *total_currency_પ્રતીક_ગણતરી = 0;
+        પાછા;
     }
     U_NAMESPACE_USE
-    const icu::Hashtable *currencySymbolsEquiv = getCurrSymbolsEquiv();
+    અચલ icu::Hashtable *currencySymbolsEquiv = getCurrSymbolsEquiv();
     // Look up the Currencies resource for the given locale.
     UErrorCode ec2 = U_ZERO_ERROR;
 
-    if (locale == nullptr) {
+    જો (locale == nullptr) {
         locale = uloc_getDefault();
     }
     CharString loc = ulocimp_getName(locale, ec2);
-    if (U_FAILURE(ec2)) {
+    જો (U_FAILURE(ec2)) {
         ec = U_ILLEGAL_ARGUMENT_ERROR;
         *currencyNames = *currencySymbols = nullptr;
-        *total_currency_name_count = *total_currency_symbol_count = 0;
-        return;
+        *total_currency_name_ગણતરી = *total_currency_પ્રતીક_ગણતરી = 0;
+        પાછા;
     }
 
     // Get maximum currency name count first.
-    getCurrencyNameCount(loc.data(), total_currency_name_count, total_currency_symbol_count);
+    get_Currency_Name_ગણતરી(loc.data(), total_currency_name_ગણતરી, total_currency_પ્રતીક_ગણતરી);
 
     *currencyNames = static_cast<CurrencyNameStruct*>(
-        uprv_malloc(sizeof(CurrencyNameStruct) * (*total_currency_name_count)));
-    if(*currencyNames == nullptr) {
+        uprv_malloc(કદ(CurrencyNameStruct) * (*total_currency_name_ગણતરી)));
+    જો(*currencyNames == nullptr) {
         *currencySymbols = nullptr;
-        *total_currency_name_count = *total_currency_symbol_count = 0;
+        *total_currency_name_ગણતરી = *total_currency_પ્રતીક_ગણતરી = 0;
         ec = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        પાછા;
     }
     *currencySymbols = static_cast<CurrencyNameStruct*>(
-        uprv_malloc(sizeof(CurrencyNameStruct) * (*total_currency_symbol_count)));
+        uprv_malloc(કદ(CurrencyNameStruct) * (*total_currency_પ્રતીક_ગણતરી)));
 
-    if(*currencySymbols == nullptr) {
+    જો(*currencySymbols == nullptr) {
         uprv_free(*currencyNames);
         *currencyNames = nullptr;
-        *total_currency_name_count = *total_currency_symbol_count = 0;
+        *total_currency_name_ગણતરી = *total_currency_પ્રતીક_ગણતરી = 0;
         ec = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        પાછા;
     }
 
-    const char16_t* s = nullptr;  // currency name
-    char* iso = nullptr;  // currency ISO code
+    અચલ char16_t* s = nullptr;  // currency name
+    અક્ષર* iso = nullptr;  // currency ISO code
 
-    *total_currency_name_count = 0;
-    *total_currency_symbol_count = 0;
+    *total_currency_name_ગણતરી = 0;
+    *total_currency_પ્રતીક_ગણતરી = 0;
 
     UErrorCode ec3 = U_ZERO_ERROR;
     UErrorCode ec4 = U_ZERO_ERROR;
@@ -1020,111 +1020,111 @@ collectCurrencyNames(const char* locale,
     // Using hash to remove duplicates caused by locale fallback
     LocalUHashtablePointer currencyIsoCodes(uhash_open(uhash_hashChars, uhash_compareChars, nullptr, &ec3));
     LocalUHashtablePointer currencyPluralIsoCodes(uhash_open(uhash_hashChars, uhash_compareChars, nullptr, &ec4));
-    for (int32_t localeLevel = 0; ; ++localeLevel) {
+    માટે (int32_t localeLevel = 0; ; ++localeLevel) {
         ec2 = U_ZERO_ERROR;
         // TODO: ures_openDirect
         LocalUResourceBundlePointer rb(ures_open(U_ICUDATA_CURR, loc.data(), &ec2));
-        LocalUResourceBundlePointer curr(ures_getByKey(rb.getAlias(), CURRENCIES, nullptr, &ec2));
+        LocalUResourceBundlePointer curr(ures_get_By_ચાવી(rb.getAlias(), CURRENCIES, nullptr, &ec2));
         int32_t n = ures_getSize(curr.getAlias());
-        for (int32_t i=0; i<n; ++i) {
+        માટે (int32_t i=0; i<n; ++i) {
             LocalUResourceBundlePointer names(ures_getByIndex(curr.getAlias(), i, nullptr, &ec2));
             int32_t len;
-            s = ures_getStringByIndex(names.getAlias(), UCURR_SYMBOL_NAME, &len, &ec2);
+            s = ures_getStringByIndex(names.getAlias(), UCURR_પ્રતીક_NAME, &len, &ec2);
             // TODO: uhash_put wont change key/value?
-            iso = const_cast<char*>(ures_getKey(names.getAlias()));
-            if (localeLevel != 0 && uhash_get(currencyIsoCodes.getAlias(), iso) != nullptr) {
-                continue;
+            iso = const_cast<અક્ષર*>(ures_get_ચાવી(names.getAlias()));
+            જો (localeLevel != 0 && uhash_get(currencyIsoCodes.getAlias(), iso) != nullptr) {
+                ચાલુ;
             }
             uhash_put(currencyIsoCodes.getAlias(), iso, iso, &ec3); 
             // Add currency symbol.
-            (*currencySymbols)[(*total_currency_symbol_count)++] = {iso, const_cast<char16_t*>(s), len, 0};
+            (*currencySymbols)[(*total_currency_પ્રતીક_ગણતરી)++] = {iso, const_cast<char16_t*>(s), len, 0};
 
             // Add equivalent symbols
-            if (currencySymbolsEquiv != nullptr) {
-                UnicodeString str(true, s, len);
+            જો (currencySymbolsEquiv != nullptr) {
+                UnicodeString str(સાચું, s, len);
                 icu::EquivIterator iter(*currencySymbolsEquiv, str);
-                const UnicodeString *symbol;
-                while ((symbol = iter.next()) != nullptr) {
-                    (*currencySymbols)[(*total_currency_symbol_count)++]
-                        = {iso, const_cast<char16_t*>(symbol->getBuffer()), symbol->length(), 0};
+                અચલ UnicodeString *પ્રતીક;
+                જ્યારે ((પ્રતીક = iter.next()) != nullptr) {
+                    (*currencySymbols)[(*total_currency_પ્રતીક_ગણતરી)++]
+                        = {iso, const_cast<char16_t*>(પ્રતીક->getBuffer()), પ્રતીક->length(), 0};
                 }
             }
 
             // Add currency long name.
             s = ures_getStringByIndex(names.getAlias(), UCURR_LONG_NAME, &len, &ec2);
             char16_t* upperName = toUpperCase(s, len, locale);
-            if (upperName == nullptr) {
+            જો (upperName == nullptr) {
                 ec = U_MEMORY_ALLOCATION_ERROR;
-                goto error;
+                જાઓ error;
             }
-            (*currencyNames)[(*total_currency_name_count)++] = {iso, upperName, len, NEED_TO_BE_DELETED};
+            (*currencyNames)[(*total_currency_name_ગણતરી)++] = {iso, upperName, len, NEED_TO_BE_DELETED};
 
             // put (iso, 3, and iso) in to array
             // Add currency ISO code.
-            char16_t* isoCode = static_cast<char16_t*>(uprv_malloc(sizeof(char16_t) * 3));
-            if (isoCode == nullptr) {
+            char16_t* isoCode = static_cast<char16_t*>(uprv_malloc(કદ(char16_t) * 3));
+            જો (isoCode == nullptr) {
                 ec = U_MEMORY_ALLOCATION_ERROR;
-                goto error;
+                જાઓ error;
             }
             // Must convert iso[] into Unicode
             u_charsToUChars(iso, isoCode, 3);
-            (*currencySymbols)[(*total_currency_symbol_count)++] = {iso, isoCode, 3, NEED_TO_BE_DELETED};
+            (*currencySymbols)[(*total_currency_પ્રતીક_ગણતરી)++] = {iso, isoCode, 3, NEED_TO_BE_DELETED};
         }
 
         // currency plurals
         UErrorCode ec5 = U_ZERO_ERROR;
-        LocalUResourceBundlePointer curr_p(ures_getByKey(rb.getAlias(), CURRENCYPLURALS, nullptr, &ec5));
+        LocalUResourceBundlePointer curr_p(ures_get_By_ચાવી(rb.getAlias(), CURRENCYPLURALS, nullptr, &ec5));
         n = ures_getSize(curr_p.getAlias());
-        for (int32_t i=0; i<n; ++i) {
+        માટે (int32_t i=0; i<n; ++i) {
             LocalUResourceBundlePointer names(ures_getByIndex(curr_p.getAlias(), i, nullptr, &ec5));
-            iso = const_cast<char*>(ures_getKey(names.getAlias()));
+            iso = const_cast<અક્ષર*>(ures_get_ચાવી(names.getAlias()));
             // Using hash to remove duplicated ISO codes in fallback chain.
-            if (localeLevel != 0 && uhash_get(currencyPluralIsoCodes.getAlias(), iso) != nullptr) {
-                continue;
+            જો (localeLevel != 0 && uhash_get(currencyPluralIsoCodes.getAlias(), iso) != nullptr) {
+                ચાલુ;
             }
             uhash_put(currencyPluralIsoCodes.getAlias(), iso, iso, &ec4);
             int32_t num = ures_getSize(names.getAlias());
             int32_t len;
-            for (int32_t j = 0; j < num; ++j) {
+            માટે (int32_t j = 0; j < num; ++j) {
                 // TODO: remove duplicates between singular name and 
                 // currency long name?
                 s = ures_getStringByIndex(names.getAlias(), j, &len, &ec5);
                 char16_t* upperName = toUpperCase(s, len, locale);
-                if (upperName == nullptr) {
+                જો (upperName == nullptr) {
                     ec = U_MEMORY_ALLOCATION_ERROR;
-                    goto error;
+                    જાઓ error;
                 }
-                (*currencyNames)[(*total_currency_name_count)++] = {iso, upperName, len, NEED_TO_BE_DELETED};
+                (*currencyNames)[(*total_currency_name_ગણતરી)++] = {iso, upperName, len, NEED_TO_BE_DELETED};
             }
         }
 
-        if (!fallback(loc)) {
-            break;
+        જો (!fallback(loc)) {
+            તોડો;
         }
     }
 
     // quick sort the struct
-    qsort(*currencyNames, *total_currency_name_count, 
-          sizeof(CurrencyNameStruct), currencyNameComparator);
-    qsort(*currencySymbols, *total_currency_symbol_count, 
-          sizeof(CurrencyNameStruct), currencyNameComparator);
+    qsort(*currencyNames, *total_currency_name_ગણતરી, 
+          કદ(CurrencyNameStruct), currencyNameComparator);
+    qsort(*currencySymbols, *total_currency_પ્રતીક_ગણતરી, 
+          કદ(CurrencyNameStruct), currencyNameComparator);
 
 #ifdef UCURR_DEBUG
-    printf("currency name count: %d\n", *total_currency_name_count);
-    for (int32_t index = 0; index < *total_currency_name_count; ++index) {
+    printf("currency name count: %d\n", *total_currency_name_ગણતરી);
+    માટે (int32_t index = 0; index < *total_currency_name_ગણતરી; ++index) {
         printf("index: %d\n", index);
         printf("iso: %s\n", (*currencyNames)[index].IsoCode);
-        char curNameBuf[1024];
+        અક્ષર curNameBuf[1024];
         memset(curNameBuf, 0, 1024);
         u_austrncpy(curNameBuf, (*currencyNames)[index].currencyName, (*currencyNames)[index].currencyNameLen);
         printf("currencyName: %s\n", curNameBuf);
         printf("len: %d\n", (*currencyNames)[index].currencyNameLen);
     }
-    printf("currency symbol count: %d\n", *total_currency_symbol_count);
-    for (int32_t index = 0; index < *total_currency_symbol_count; ++index) {
+    printf("currency symbol count: %d\n", *total_currency_પ્રતીક_ગણતરી);
+    માટે (int32_t index = 0; index < *total_currency_પ્રતીક_ગણતરી; ++index) {
         printf("index: %d\n", index);
         printf("iso: %s\n", (*currencySymbols)[index].IsoCode);
-        char curNameBuf[1024];
+        અક્ષર curNameBuf[1024];
         memset(curNameBuf, 0, 1024);
         u_austrncpy(curNameBuf, (*currencySymbols)[index].currencyName, (*currencySymbols)[index].currencyNameLen);
         printf("currencySymbol: %s\n", curNameBuf);
@@ -1132,19 +1132,19 @@ collectCurrencyNames(const char* locale,
     }
 #endif
     // fail on hashtable errors
-    if (U_FAILURE(ec3)) {
+    જો (U_FAILURE(ec3)) {
       ec = ec3;
-    } else if (U_FAILURE(ec4)) {
+    } નહીંતર જો (U_FAILURE(ec4)) {
       ec = ec4;
     }
 
   error:
     // clean up if we got error
-    if (U_FAILURE(ec)) {
-        deleteCurrencyNames(*currencyNames, *total_currency_name_count);
-        deleteCurrencyNames(*currencySymbols, *total_currency_symbol_count);
+    જો (U_FAILURE(ec)) {
+        deleteCurrencyNames(*currencyNames, *total_currency_name_ગણતરી);
+        deleteCurrencyNames(*currencySymbols, *total_currency_પ્રતીક_ગણતરી);
         *currencyNames = *currencySymbols = nullptr;
-        *total_currency_name_count = *total_currency_symbol_count = 0;
+        *total_currency_name_ગણતરી = *total_currency_પ્રતીક_ગણતરી = 0;
     }
 }
 
@@ -1154,28 +1154,28 @@ collectCurrencyNames(const char* locale,
 // @param  key: input text char to compare against
 // @param  begin(IN/OUT): the begin index of matching range in currency names array
 // @param  end(IN/OUT): the end index of matching range in currency names array.
-static int32_t
-binarySearch(const CurrencyNameStruct* currencyNames, 
+સ્થિર int32_t
+દ્વિઅંકી_શોધ(અચલ CurrencyNameStruct* currencyNames, 
              int32_t indexInCurrencyNames,
-             const char16_t key,
+             અચલ char16_t ચાવી,
              int32_t* begin, int32_t* end) {
 #ifdef UCURR_DEBUG
-    printf("key = %x\n", key);
+    printf("key = %x\n", ચાવી);
 #endif
    int32_t first = *begin;
    int32_t last = *end;
-   while (first <= last) {
+   જ્યારે (first <= last) {
        int32_t mid = (first + last) / 2;  // compute mid point.
-       if (indexInCurrencyNames >= currencyNames[mid].currencyNameLen) {
+       જો (indexInCurrencyNames >= currencyNames[mid].currencyNameLen) {
            first = mid + 1;
-       } else {
-           if (key > currencyNames[mid].currencyName[indexInCurrencyNames]) {
+       } નહીંતર {
+           જો (ચાવી > currencyNames[mid].currencyName[indexInCurrencyNames]) {
                first = mid + 1;
            }
-           else if (key < currencyNames[mid].currencyName[indexInCurrencyNames]) {
+           નહીંતર જો (ચાવી < currencyNames[mid].currencyName[indexInCurrencyNames]) {
                last = mid - 1;
            }
-           else {
+           નહીંતર {
                 // Find a match, and looking for ranges
                 // Now do two more binary searches. First, on the left side for
                 // the greatest L such that CurrencyNameStruct[L] < key.
@@ -1185,19 +1185,19 @@ binarySearch(const CurrencyNameStruct* currencyNames,
 #ifdef UCURR_DEBUG
                 printf("mid = %d\n", mid);
 #endif
-                while (L < R) {
+                જ્યારે (L < R) {
                     int32_t M = (L + R) / 2;
 #ifdef UCURR_DEBUG
                     printf("L = %d, R = %d, M = %d\n", L, R, M);
 #endif
-                    if (indexInCurrencyNames >= currencyNames[M].currencyNameLen) {
+                    જો (indexInCurrencyNames >= currencyNames[M].currencyNameLen) {
                         L = M + 1;
-                    } else {
-                        if (currencyNames[M].currencyName[indexInCurrencyNames] < key) {
+                    } નહીંતર {
+                        જો (currencyNames[M].currencyName[indexInCurrencyNames] < ચાવી) {
                             L = M + 1;
-                        } else {
+                        } નહીંતર {
 #ifdef UCURR_DEBUG
-                            U_ASSERT(currencyNames[M].currencyName[indexInCurrencyNames] == key);
+                            U_ASSERT(currencyNames[M].currencyName[indexInCurrencyNames] == ચાવી);
 #endif
                             R = M;
                         }
@@ -1209,26 +1209,26 @@ binarySearch(const CurrencyNameStruct* currencyNames,
                 *begin = L;
 #ifdef UCURR_DEBUG
                 printf("begin = %d\n", *begin);
-                U_ASSERT(currencyNames[*begin].currencyName[indexInCurrencyNames] == key);
+                U_ASSERT(currencyNames[*begin].currencyName[indexInCurrencyNames] == ચાવી);
 #endif
 
                 // Now for the second search, finding the least R such that
                 // key < CurrencyNameStruct[R].
                 L = mid;
                 R = *end;
-                while (L < R) {
+                જ્યારે (L < R) {
                     int32_t M = (L + R) / 2;
 #ifdef UCURR_DEBUG
                     printf("L = %d, R = %d, M = %d\n", L, R, M);
 #endif
-                    if (currencyNames[M].currencyNameLen < indexInCurrencyNames) {
+                    જો (currencyNames[M].currencyNameLen < indexInCurrencyNames) {
                         L = M + 1;
-                    } else {
-                        if (currencyNames[M].currencyName[indexInCurrencyNames] > key) {
+                    } નહીંતર {
+                        જો (currencyNames[M].currencyName[indexInCurrencyNames] > ચાવી) {
                             R = M;
-                        } else {
+                        } નહીંતર {
 #ifdef UCURR_DEBUG
-                            U_ASSERT(currencyNames[M].currencyName[indexInCurrencyNames] == key);
+                            U_ASSERT(currencyNames[M].currencyName[indexInCurrencyNames] == ચાવી);
 #endif
                             L = M + 1;
                         }
@@ -1237,9 +1237,9 @@ binarySearch(const CurrencyNameStruct* currencyNames,
 #ifdef UCURR_DEBUG
                 U_ASSERT(L == R);
 #endif
-                if (currencyNames[R].currencyName[indexInCurrencyNames] > key) {
+                જો (currencyNames[R].currencyName[indexInCurrencyNames] > ચાવી) {
                     *end = R - 1;
-                } else {
+                } નહીંતર {
                     *end = R;
                 }
 #ifdef UCURR_DEBUG
@@ -1247,16 +1247,16 @@ binarySearch(const CurrencyNameStruct* currencyNames,
 #endif
 
                 // now, found the range. check whether there is exact match
-                if (currencyNames[*begin].currencyNameLen == indexInCurrencyNames + 1) {
-                    return *begin;  // find range and exact match.
+                જો (currencyNames[*begin].currencyNameLen == indexInCurrencyNames + 1) {
+                    પાછા *begin;  // find range and exact match.
                 }
-                return -1;  // find range, but no exact match.
+                પાછા -1;  // find range, but no exact match.
            }
        }
    }
    *begin = -1;
    *end = -1;
-   return -1;    // failed to find range.
+   પાછા -1;    // failed to find range.
 }
 
 
@@ -1268,17 +1268,17 @@ binarySearch(const CurrencyNameStruct* currencyNames,
 //                              pass out the new max  matching length
 // @param  maxMatchIndex: the index in currencyName which has the longest
 //                        match with input text.
-static void
-linearSearch(const CurrencyNameStruct* currencyNames, 
+સ્થિર શૂન્ય
+linear_શોધ(અચલ CurrencyNameStruct* currencyNames, 
              int32_t begin, int32_t end,
-             const char16_t* text, int32_t textLen,
+             અચલ char16_t* text, int32_t textLen,
              int32_t *partialMatchLen,
              int32_t *maxMatchLen, int32_t* maxMatchIndex) {
     int32_t initialPartialMatchLen = *partialMatchLen;
-    for (int32_t index = begin; index <= end; ++index) {
+    માટે (int32_t index = begin; index <= end; ++index) {
         int32_t len = currencyNames[index].currencyNameLen;
-        if (len > *maxMatchLen && len <= textLen &&
-            uprv_memcmp(currencyNames[index].currencyName, text, len * sizeof(char16_t)) == 0) {
+        જો (len > *maxMatchLen && len <= textLen &&
+            uprv_memcmp(currencyNames[index].currencyName, text, len * કદ(char16_t)) == 0) {
             *partialMatchLen = MAX(*partialMatchLen, len);
             *maxMatchIndex = index;
             *maxMatchLen = len;
@@ -1286,11 +1286,11 @@ linearSearch(const CurrencyNameStruct* currencyNames,
             printf("maxMatchIndex = %d, maxMatchLen = %d\n",
                    *maxMatchIndex, *maxMatchLen);
 #endif
-        } else {
+        } નહીંતર {
             // Check for partial matches.
-            for (int32_t i=initialPartialMatchLen; i<MIN(len, textLen); i++) {
-                if (currencyNames[index].currencyName[i] != text[i]) {
-                    break;
+            માટે (int32_t i=initialPartialMatchLen; i<MIN(len, textLen); i++) {
+                જો (currencyNames[index].currencyName[i] != text[i]) {
+                    તોડો;
                 }
                 *partialMatchLen = MAX(*partialMatchLen, i + 1);
             }
@@ -1298,7 +1298,7 @@ linearSearch(const CurrencyNameStruct* currencyNames,
     }
 }
 
-#define LINEAR_SEARCH_THRESHOLD 10
+#define LINEAR_શોધ_THRESHOLD 10
 
 // Find longest match between "text" and currency names in "currencyNames".
 // @param  total_currency_count: total number of currency names in CurrencyNames.
@@ -1307,17 +1307,17 @@ linearSearch(const CurrencyNameStruct* currencyNames,
 //                              pass out the new max  matching length
 // @param  maxMatchIndex: the index in currencyName which has the longest
 //                        match with input text.
-static void
-searchCurrencyName(const CurrencyNameStruct* currencyNames, 
-                   int32_t total_currency_count,
-                   const char16_t* text, int32_t textLen,
+સ્થિર શૂન્ય
+શોધ_Currency_Name(અચલ CurrencyNameStruct* currencyNames, 
+                   int32_t total_currency_ગણતરી,
+                   અચલ char16_t* text, int32_t textLen,
                    int32_t *partialMatchLen,
                    int32_t* maxMatchLen, int32_t* maxMatchIndex) {
     *maxMatchIndex = -1;
     *maxMatchLen = 0;
     int32_t matchIndex = -1;
-    int32_t binarySearchBegin = 0;
-    int32_t binarySearchEnd = total_currency_count - 1;
+    int32_t દ્વિઅંકી_શોધ_Begin = 0;
+    int32_t દ્વિઅંકી_શોધ_End = total_currency_ગણતરી - 1;
     // It is a variant of binary search.
     // For example, given the currency names in currencyNames array are:
     // A AB ABC AD AZ B BB BBEX BBEXYZ BS C D E....
@@ -1332,66 +1332,66 @@ searchCurrencyName(const CurrencyNameStruct* currencyNames,
     // maximum matching).
     // The 4th round returns the same range (the maximum matching is "BBEX").
     // The 5th round returns no matching range.
-    for (int32_t index = 0; index < textLen; ++index) {
+    માટે (int32_t index = 0; index < textLen; ++index) {
         // matchIndex saves the one with exact match till the current point.
         // [binarySearchBegin, binarySearchEnd] saves the matching range.
-        matchIndex = binarySearch(currencyNames, index,
+        matchIndex = દ્વિઅંકી_શોધ(currencyNames, index,
                                   text[index],
-                                  &binarySearchBegin, &binarySearchEnd);
-        if (binarySearchBegin == -1) { // did not find the range
-            break;
+                                  &દ્વિઅંકી_શોધ_Begin, &દ્વિઅંકી_શોધ_End);
+        જો (દ્વિઅંકી_શોધ_Begin == -1) { // did not find the range
+            તોડો;
         }
         *partialMatchLen = MAX(*partialMatchLen, index + 1);
-        if (matchIndex != -1) { 
+        જો (matchIndex != -1) { 
             // find an exact match for text from text[0] to text[index] 
             // in currencyNames array.
             *maxMatchLen = index + 1;
             *maxMatchIndex = matchIndex;
         }
-        if (binarySearchEnd - binarySearchBegin < LINEAR_SEARCH_THRESHOLD) {
+        જો (દ્વિઅંકી_શોધ_End - દ્વિઅંકી_શોધ_Begin < LINEAR_શોધ_THRESHOLD) {
             // linear search if within threshold.
-            linearSearch(currencyNames, binarySearchBegin, binarySearchEnd,
+            linear_શોધ(currencyNames, દ્વિઅંકી_શોધ_Begin, દ્વિઅંકી_શોધ_End,
                          text, textLen,
                          partialMatchLen,
                          maxMatchLen, maxMatchIndex);
-            break;
+            તોડો;
         }
     }
 }
 
 //========================= currency name cache =====================
-typedef struct {
-    char locale[ULOC_FULLNAME_CAPACITY];  //key
+પ્રકારવ્યાખ્યા સંરચના {
+    અક્ષર locale[ULOC_FULLNAME_CAPACITY];  //key
     // currency names, case insensitive
-    CurrencyNameStruct* currencyNames;  // value
-    int32_t totalCurrencyNameCount;  // currency name count
+    CurrencyNameStruct* currencyNames;  //કિંમત
+    int32_t total_Currency_Name_ગણતરી;  // currency name count
     // currency symbols and ISO code, case sensitive
-    CurrencyNameStruct* currencySymbols; // value
-    int32_t totalCurrencySymbolCount;  // count
+    CurrencyNameStruct* currencySymbols; //કિંમત
+    int32_t total_Currency_પ્રતીક_ગણતરી;  //ગણતરી
     // reference count.
     // reference count is set to 1 when an entry is put to cache.
     // it increases by 1 before accessing, and decreased by 1 after accessing.
     // The entry is deleted when ref count is zero, which means 
     // the entry is replaced out of cache and no process is accessing it.
-    int32_t refCount;
+    int32_t ref_ગણતરી;
 } CurrencyNameCacheEntry;
 
 
-#define CURRENCY_NAME_CACHE_NUM 10
+#define CURRENCY_NAME_CACHE_અંક 10
 
 // Reserve 10 cache entries.
-static CurrencyNameCacheEntry* currCache[CURRENCY_NAME_CACHE_NUM] = {nullptr};
+સ્થિર CurrencyNameCacheEntry* currCache[CURRENCY_NAME_CACHE_અંક] = {nullptr};
 // Using an index to indicate which entry to be replaced when cache is full.
 // It is a simple round-robin replacement strategy.
-static int8_t currentCacheEntryIndex = 0;
+સ્થિર int8_t currentCacheEntryIndex = 0;
 
-static UMutex gCurrencyCacheMutex;
+સ્થિર UMutex gCurrencyCacheMutex;
 
 // Cache deletion
-static void
+સ્થિર શૂન્ય
 deleteCurrencyNames(CurrencyNameStruct* currencyNames, int32_t count) {
-    for (int32_t index = 0; index < count; ++index) {
-        if ( (currencyNames[index].flag & NEED_TO_BE_DELETED) ) {
+    માટે (int32_t index = 0; index < count; ++index) {
+        જો ( (currencyNames[index].flag & NEED_TO_BE_DELETED) ) {
             uprv_free(currencyNames[index].currencyName);
         }
     }
@@ -1399,24 +1399,24 @@ deleteCurrencyNames(CurrencyNameStruct* currencyNames, int32_t count) {
 }
 
 
-static void
+સ્થિર શૂન્ય
 deleteCacheEntry(CurrencyNameCacheEntry* entry) {
-    deleteCurrencyNames(entry->currencyNames, entry->totalCurrencyNameCount);
-    deleteCurrencyNames(entry->currencySymbols, entry->totalCurrencySymbolCount);
+    deleteCurrencyNames(entry->currencyNames, entry->total_Currency_Name_ગણતરી);
+    deleteCurrencyNames(entry->currencySymbols, entry->total_Currency_પ્રતીક_ગણતરી);
     uprv_free(entry);
 }
 
 
 // Cache clean up
-static UBool U_CALLCONV
+સ્થિર UBool U_CALLCONV
 currency_cache_cleanup() {
-    for (int32_t i = 0; i < CURRENCY_NAME_CACHE_NUM; ++i) {
-        if (currCache[i]) {
+    માટે (int32_t i = 0; i < CURRENCY_NAME_CACHE_અંક; ++i) {
+        જો (currCache[i]) {
             deleteCacheEntry(currCache[i]);
             currCache[i] = nullptr;
         }
     }
-    return true;
+    પાછા સાચું;
 }
 
 
@@ -1425,12 +1425,12 @@ currency_cache_cleanup() {
  * The refCount is automatically incremented.  It is the caller's responsibility
  * to decrement it when done!
  */
-static CurrencyNameCacheEntry*
-getCacheEntry(const char* locale, UErrorCode& ec) {
+સ્થિર CurrencyNameCacheEntry*
+getCacheEntry(અચલ અક્ષર* locale, UErrorCode& ec) {
 
-    int32_t total_currency_name_count = 0;
+    int32_t total_currency_name_ગણતરી = 0;
     CurrencyNameStruct* currencyNames = nullptr;
-    int32_t total_currency_symbol_count = 0;
+    int32_t total_currency_પ્રતીક_ગણતરી = 0;
     CurrencyNameStruct* currencySymbols = nullptr;
     CurrencyNameCacheEntry* cacheEntry = nullptr;
 
@@ -1438,113 +1438,113 @@ getCacheEntry(const char* locale, UErrorCode& ec) {
     // in order to handle racing correctly,
     // not putting 'search' in a separate function.
     int8_t found = -1;
-    for (int8_t i = 0; i < CURRENCY_NAME_CACHE_NUM; ++i) {
-        if (currCache[i]!= nullptr &&
+    માટે (int8_t i = 0; i < CURRENCY_NAME_CACHE_અંક; ++i) {
+        જો (currCache[i]!= nullptr &&
             uprv_strcmp(locale, currCache[i]->locale) == 0) {
             found = i;
-            break;
+            તોડો;
         }
     }
-    if (found != -1) {
+    જો (found != -1) {
         cacheEntry = currCache[found];
-        ++(cacheEntry->refCount);
+        ++(cacheEntry->ref_ગણતરી);
     }
     umtx_unlock(&gCurrencyCacheMutex);
-    if (found == -1) {
-        collectCurrencyNames(locale, &currencyNames, &total_currency_name_count, &currencySymbols, &total_currency_symbol_count, ec);
-        if (U_FAILURE(ec)) {
-            return nullptr;
+    જો (found == -1) {
+        collectCurrencyNames(locale, &currencyNames, &total_currency_name_ગણતરી, &currencySymbols, &total_currency_પ્રતીક_ગણતરી, ec);
+        જો (U_FAILURE(ec)) {
+            પાછા nullptr;
         }
         umtx_lock(&gCurrencyCacheMutex);
         // check again.
-        for (int8_t i = 0; i < CURRENCY_NAME_CACHE_NUM; ++i) {
-            if (currCache[i]!= nullptr &&
+        માટે (int8_t i = 0; i < CURRENCY_NAME_CACHE_અંક; ++i) {
+            જો (currCache[i]!= nullptr &&
                 uprv_strcmp(locale, currCache[i]->locale) == 0) {
                 found = i;
-                break;
+                તોડો;
             }
         }
-        if (found == -1) {
+        જો (found == -1) {
             // insert new entry to 
             // currentCacheEntryIndex % CURRENCY_NAME_CACHE_NUM
             // and remove the existing entry 
             // currentCacheEntryIndex % CURRENCY_NAME_CACHE_NUM
             // from cache.
             cacheEntry = currCache[currentCacheEntryIndex];
-            if (cacheEntry) {
-                --(cacheEntry->refCount);
+            જો (cacheEntry) {
+                --(cacheEntry->ref_ગણતરી);
                 // delete if the ref count is zero
-                if (cacheEntry->refCount == 0) {
+                જો (cacheEntry->ref_ગણતરી == 0) {
                     deleteCacheEntry(cacheEntry);
                 }
             }
-            cacheEntry = static_cast<CurrencyNameCacheEntry*>(uprv_malloc(sizeof(CurrencyNameCacheEntry)));
-            if (cacheEntry == nullptr) {
-                deleteCurrencyNames(currencyNames, total_currency_name_count);
-                deleteCurrencyNames(currencySymbols, total_currency_symbol_count);
+            cacheEntry = static_cast<CurrencyNameCacheEntry*>(uprv_malloc(કદ(CurrencyNameCacheEntry)));
+            જો (cacheEntry == nullptr) {
+                deleteCurrencyNames(currencyNames, total_currency_name_ગણતરી);
+                deleteCurrencyNames(currencySymbols, total_currency_પ્રતીક_ગણતરી);
                 ec = U_MEMORY_ALLOCATION_ERROR;
-                return nullptr;
+                પાછા nullptr;
             }
             currCache[currentCacheEntryIndex] = cacheEntry;
             uprv_strcpy(cacheEntry->locale, locale);
             cacheEntry->currencyNames = currencyNames;
-            cacheEntry->totalCurrencyNameCount = total_currency_name_count;
+            cacheEntry->total_Currency_Name_ગણતરી = total_currency_name_ગણતરી;
             cacheEntry->currencySymbols = currencySymbols;
-            cacheEntry->totalCurrencySymbolCount = total_currency_symbol_count;
-            cacheEntry->refCount = 2; // one for cache, one for reference
-            currentCacheEntryIndex = (currentCacheEntryIndex + 1) % CURRENCY_NAME_CACHE_NUM;
+            cacheEntry->total_Currency_પ્રતીક_ગણતરી = total_currency_પ્રતીક_ગણતરી;
+            cacheEntry->ref_ગણતરી = 2; // one for cache, one for reference
+            currentCacheEntryIndex = (currentCacheEntryIndex + 1) % CURRENCY_NAME_CACHE_અંક;
             ucln_common_registerCleanup(UCLN_COMMON_CURRENCY, currency_cleanup);
-        } else {
-            deleteCurrencyNames(currencyNames, total_currency_name_count);
-            deleteCurrencyNames(currencySymbols, total_currency_symbol_count);
+        } નહીંતર {
+            deleteCurrencyNames(currencyNames, total_currency_name_ગણતરી);
+            deleteCurrencyNames(currencySymbols, total_currency_પ્રતીક_ગણતરી);
             cacheEntry = currCache[found];
-            ++(cacheEntry->refCount);
+            ++(cacheEntry->ref_ગણતરી);
         }
         umtx_unlock(&gCurrencyCacheMutex);
     }
 
-    return cacheEntry;
+    પાછા cacheEntry;
 }
 
-static void releaseCacheEntry(CurrencyNameCacheEntry* cacheEntry) {
+સ્થિર શૂન્ય releaseCacheEntry(CurrencyNameCacheEntry* cacheEntry) {
     umtx_lock(&gCurrencyCacheMutex);
-    --(cacheEntry->refCount);
-    if (cacheEntry->refCount == 0) {  // remove
+    --(cacheEntry->ref_ગણતરી);
+    જો (cacheEntry->ref_ગણતરી == 0) {  // remove
         deleteCacheEntry(cacheEntry);
     }
     umtx_unlock(&gCurrencyCacheMutex);
 }
 
-U_CAPI void
-uprv_parseCurrency(const char* locale,
-                   const icu::UnicodeString& text,
+U_CAPI શૂન્ય
+uprv_parseCurrency(અચલ અક્ષર* locale,
+                   અચલ icu::UnicodeString& text,
                    icu::ParsePosition& pos,
                    int8_t type,
                    int32_t* partialMatchLen,
                    char16_t* result,
                    UErrorCode& ec) {
     U_NAMESPACE_USE
-    if (U_FAILURE(ec)) {
-        return;
+    જો (U_FAILURE(ec)) {
+        પાછા;
     }
     CurrencyNameCacheEntry* cacheEntry = getCacheEntry(locale, ec);
-    if (U_FAILURE(ec)) {
-        return;
+    જો (U_FAILURE(ec)) {
+        પાછા;
     }
 
-    int32_t total_currency_name_count = cacheEntry->totalCurrencyNameCount;
+    int32_t total_currency_name_ગણતરી = cacheEntry->total_Currency_Name_ગણતરી;
     CurrencyNameStruct* currencyNames = cacheEntry->currencyNames;
-    int32_t total_currency_symbol_count = cacheEntry->totalCurrencySymbolCount;
+    int32_t total_currency_પ્રતીક_ગણતરી = cacheEntry->total_Currency_પ્રતીક_ગણતરી;
     CurrencyNameStruct* currencySymbols = cacheEntry->currencySymbols;
 
     int32_t start = pos.getIndex();
 
-    char16_t inputText[MAX_CURRENCY_NAME_LEN];
+    char16_t આગત_Text[MAX_CURRENCY_NAME_LEN];
     char16_t upperText[MAX_CURRENCY_NAME_LEN];
     int32_t textLen = MIN(MAX_CURRENCY_NAME_LEN, text.length() - start);
-    text.extract(start, textLen, inputText);
+    text.extract(start, textLen, આગત_Text);
     UErrorCode ec1 = U_ZERO_ERROR;
-    textLen = u_strToUpper(upperText, MAX_CURRENCY_NAME_LEN, inputText, textLen, locale, &ec1);
+    textLen = u_strToUpper(upperText, MAX_CURRENCY_NAME_LEN, આગત_Text, textLen, locale, &ec1);
 
     // Make sure partialMatchLen is initialized
     *partialMatchLen = 0;
@@ -1552,61 +1552,61 @@ uprv_parseCurrency(const char* locale,
     int32_t max = 0;
     int32_t matchIndex = -1;
     // case in-sensitive comparison against currency names
-    searchCurrencyName(currencyNames, total_currency_name_count, 
+    શોધ_Currency_Name(currencyNames, total_currency_name_ગણતરી, 
                        upperText, textLen, partialMatchLen, &max, &matchIndex);
 
 #ifdef UCURR_DEBUG
     printf("search in names, max = %d, matchIndex = %d\n", max, matchIndex);
 #endif
 
-    int32_t maxInSymbol = 0;
-    int32_t matchIndexInSymbol = -1;
-    if (type != UCURR_LONG_NAME) {  // not name only
+    int32_t max_In_પ્રતીક = 0;
+    int32_t match_Index_In_પ્રતીક = -1;
+    જો (type != UCURR_LONG_NAME) {  // not name only
         // case sensitive comparison against currency symbols and ISO code.
-        searchCurrencyName(currencySymbols, total_currency_symbol_count, 
-                           inputText, textLen,
+        શોધ_Currency_Name(currencySymbols, total_currency_પ્રતીક_ગણતરી, 
+                           આગત_Text, textLen,
                            partialMatchLen,
-                           &maxInSymbol, &matchIndexInSymbol);
+                           &max_In_પ્રતીક, &match_Index_In_પ્રતીક);
     }
 
 #ifdef UCURR_DEBUG
-    printf("search in symbols, maxInSymbol = %d, matchIndexInSymbol = %d\n", maxInSymbol, matchIndexInSymbol);
-    if(matchIndexInSymbol != -1) {
-      printf("== ISO=%s\n", currencySymbols[matchIndexInSymbol].IsoCode);
+    printf("search in symbols, maxInSymbol = %d, matchIndexInSymbol = %d\n", max_In_પ્રતીક, match_Index_In_પ્રતીક);
+    જો(match_Index_In_પ્રતીક != -1) {
+      printf("== ISO=%s\n", currencySymbols[match_Index_In_પ્રતીક].IsoCode);
     }
 #endif
 
-    if (max >= maxInSymbol && matchIndex != -1) {
+    જો (max >= max_In_પ્રતીક && matchIndex != -1) {
         u_charsToUChars(currencyNames[matchIndex].IsoCode, result, 4);
         pos.setIndex(start + max);
-    } else if (maxInSymbol >= max && matchIndexInSymbol != -1) {
-        u_charsToUChars(currencySymbols[matchIndexInSymbol].IsoCode, result, 4);
-        pos.setIndex(start + maxInSymbol);
+    } નહીંતર જો (max_In_પ્રતીક >= max && match_Index_In_પ્રતીક != -1) {
+        u_charsToUChars(currencySymbols[match_Index_In_પ્રતીક].IsoCode, result, 4);
+        pos.setIndex(start + max_In_પ્રતીક);
     }
 
     // decrease reference count
     releaseCacheEntry(cacheEntry);
 }
 
-void uprv_currencyLeads(const char* locale, icu::UnicodeSet& result, UErrorCode& ec) {
+શૂન્ય uprv_currencyLeads(અચલ અક્ષર* locale, icu::UnicodeSet& result, UErrorCode& ec) {
     U_NAMESPACE_USE
-    if (U_FAILURE(ec)) {
-        return;
+    જો (U_FAILURE(ec)) {
+        પાછા;
     }
     CurrencyNameCacheEntry* cacheEntry = getCacheEntry(locale, ec);
-    if (U_FAILURE(ec)) {
-        return;
+    જો (U_FAILURE(ec)) {
+        પાછા;
     }
 
-    for (int32_t i=0; i<cacheEntry->totalCurrencySymbolCount; i++) {
-        const CurrencyNameStruct& info = cacheEntry->currencySymbols[i];
+    માટે (int32_t i=0; i<cacheEntry->total_Currency_પ્રતીક_ગણતરી; i++) {
+        અચલ CurrencyNameStruct& info = cacheEntry->currencySymbols[i];
         UChar32 cp;
         U16_GET(info.currencyName, 0, 0, info.currencyNameLen, cp);
         result.add(cp);
     }
 
-    for (int32_t i=0; i<cacheEntry->totalCurrencyNameCount; i++) {
-        const CurrencyNameStruct& info = cacheEntry->currencyNames[i];
+    માટે (int32_t i=0; i<cacheEntry->total_Currency_Name_ગણતરી; i++) {
+        અચલ CurrencyNameStruct& info = cacheEntry->currencyNames[i];
         UChar32 cp;
         U16_GET(info.currencyName, 0, 0, info.currencyNameLen, cp);
         result.add(cp);
@@ -1627,89 +1627,89 @@ void uprv_currencyLeads(const char* locale, icu::UnicodeSet& result, UErrorCode&
  * This is used for backward compatibility with old currency logic in
  * DecimalFormat and DecimalFormatSymbols.
  */
-U_CAPI void
-uprv_getStaticCurrencyName(const char16_t* iso, const char* loc,
+U_CAPI શૂન્ય
+uprv_getStaticCurrencyName(અચલ char16_t* iso, અચલ અક્ષર* loc,
                            icu::UnicodeString& result, UErrorCode& ec)
 {
     U_NAMESPACE_USE
 
     int32_t len;
-    const char16_t* currname = ucurr_getName(iso, loc, UCURR_SYMBOL_NAME,
+    અચલ char16_t* currname = ucurr_getName(iso, loc, UCURR_પ્રતીક_NAME,
                                           nullptr /* isChoiceFormat */, &len, &ec);
-    if (U_SUCCESS(ec)) {
+    જો (U_SUCCESS(ec)) {
         result.setTo(currname, len);
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-ucurr_getDefaultFractionDigits(const char16_t* currency, UErrorCode* ec) {
-    return ucurr_getDefaultFractionDigitsForUsage(currency,UCURR_USAGE_STANDARD,ec);
+ucurr_getDefaultFractionDigits(અચલ char16_t* currency, UErrorCode* ec) {
+    પાછા ucurr_getDefaultFractionDigitsForUsage(currency,UCURR_USAGE_STANDARD,ec);
 }
 
 U_CAPI int32_t U_EXPORT2
-ucurr_getDefaultFractionDigitsForUsage(const char16_t* currency, const UCurrencyUsage usage, UErrorCode* ec) {
+ucurr_getDefaultFractionDigitsForUsage(અચલ char16_t* currency, અચલ UCurrencyUsage usage, UErrorCode* ec) {
     int32_t fracDigits = 0;
-    if (U_SUCCESS(*ec)) {
-        switch (usage) {
-            case UCURR_USAGE_STANDARD:
+    જો (U_SUCCESS(*ec)) {
+        પસંદગી (usage) {
+            સ્થિતિ UCURR_USAGE_STANDARD:
                 fracDigits = (_findMetaData(currency, *ec))[0];
-                break;
-            case UCURR_USAGE_CASH:
+                તોડો;
+            સ્થિતિ UCURR_USAGE_CASH:
                 fracDigits = (_findMetaData(currency, *ec))[2];
-                break;
-            default:
+                તોડો;
+            મૂળભૂત:
                 *ec = U_UNSUPPORTED_ERROR;
         }
     }
-    return fracDigits;
+    પાછા fracDigits;
 }
 
-U_CAPI double U_EXPORT2
-ucurr_getRoundingIncrement(const char16_t* currency, UErrorCode* ec) {
-    return ucurr_getRoundingIncrementForUsage(currency, UCURR_USAGE_STANDARD, ec);
+U_CAPI દ્વિગુણ U_EXPORT2
+ucurr_getRoundingIncrement(અચલ char16_t* currency, UErrorCode* ec) {
+    પાછા ucurr_getRoundingIncrementForUsage(currency, UCURR_USAGE_STANDARD, ec);
 }
 
-U_CAPI double U_EXPORT2
-ucurr_getRoundingIncrementForUsage(const char16_t* currency, const UCurrencyUsage usage, UErrorCode* ec) {
-    double result = 0.0;
+U_CAPI દ્વિગુણ U_EXPORT2
+ucurr_getRoundingIncrementForUsage(અચલ char16_t* currency, અચલ UCurrencyUsage usage, UErrorCode* ec) {
+    દ્વિગુણ result = 0.0;
 
-    const int32_t *data = _findMetaData(currency, *ec);
-    if (U_SUCCESS(*ec)) {
+    અચલ int32_t *data = _findMetaData(currency, *ec);
+    જો (U_SUCCESS(*ec)) {
         int32_t fracDigits;
         int32_t increment;
-        switch (usage) {
-            case UCURR_USAGE_STANDARD:
+        પસંદગી (usage) {
+            સ્થિતિ UCURR_USAGE_STANDARD:
                 fracDigits = data[0];
                 increment = data[1];
-                break;
-            case UCURR_USAGE_CASH:
+                તોડો;
+            સ્થિતિ UCURR_USAGE_CASH:
                 fracDigits = data[2];
                 increment = data[3];
-                break;
-            default:
+                તોડો;
+            મૂળભૂત:
                 *ec = U_UNSUPPORTED_ERROR;
-                return result;
+                પાછા result;
         }
 
         // If the meta data is invalid, return 0.0
-        if (fracDigits < 0 || fracDigits > MAX_POW10) {
+        જો (fracDigits < 0 || fracDigits > MAX_POW10) {
             *ec = U_INVALID_FORMAT_ERROR;
-        } else {
+        } નહીંતર {
             // A rounding value of 0 or 1 indicates no rounding.
-            if (increment >= 2) {
+            જો (increment >= 2) {
                 // Return (increment) / 10^(fracDigits).  The only actual rounding data,
                 // as of this writing, is CHF { 2, 5 }.
-                result = double(increment) / POW10[fracDigits];
+                result = દ્વિગુણ(increment) / POW10[fracDigits];
             }
         }
     }
 
-    return result;
+    પાછા result;
 }
 
 U_CDECL_BEGIN
 
-typedef struct UCurrencyContext {
+પ્રકારવ્યાખ્યા સંરચના UCurrencyContext {
     uint32_t currType; /* UCurrCurrencyType */
     uint32_t listIdx;
 } UCurrencyContext;
@@ -1720,8 +1720,8 @@ You can look at the CLDR supplemental data or ISO-4217 for the meaning of some
 of these items.
 ISO-4217: http://www.iso.org/iso/en/prods-services/popstds/currencycodeslist.html
 */
-static const struct CurrencyList {
-    const char *currency;
+સ્થિર અચલ સંરચના CurrencyList {
+    અચલ અક્ષર *currency;
     uint32_t currType;
 } gCurrencyList[] = {
     {"ADP", UCURR_COMMON|UCURR_DEPRECATED},
@@ -2038,22 +2038,22 @@ static const struct CurrencyList {
 #define UCURR_MATCHES_BITMASK(variable, typeToMatch) \
     ((typeToMatch) == UCURR_ALL || ((variable) & (typeToMatch)) == (typeToMatch))
 
-static int32_t U_CALLCONV
-ucurr_countCurrencyList(UEnumeration *enumerator, UErrorCode * /*pErrorCode*/) {
+સ્થિર int32_t U_CALLCONV
+ucurr_ગણતરી_Currency_List(UEnumeration *enumerator, UErrorCode * /*pErrorCode*/) {
     UCurrencyContext *myContext = (UCurrencyContext *)(enumerator->context);
     uint32_t currType = myContext->currType;
     int32_t count = 0;
 
     /* Count the number of items matching the type we are looking for. */
-    for (int32_t idx = 0; gCurrencyList[idx].currency != nullptr; idx++) {
-        if (UCURR_MATCHES_BITMASK(gCurrencyList[idx].currType, currType)) {
+    માટે (int32_t idx = 0; gCurrencyList[idx].currency != nullptr; idx++) {
+        જો (UCURR_MATCHES_BITMASK(gCurrencyList[idx].currType, currType)) {
             count++;
         }
     }
-    return count;
+    પાછા count;
 }
 
-static const char* U_CALLCONV
+સ્થિર અચલ અક્ષર* U_CALLCONV
 ucurr_nextCurrencyList(UEnumeration *enumerator,
                         int32_t* resultLength,
                         UErrorCode * /*pErrorCode*/)
@@ -2061,73 +2061,73 @@ ucurr_nextCurrencyList(UEnumeration *enumerator,
     UCurrencyContext *myContext = (UCurrencyContext *)(enumerator->context);
 
     /* Find the next in the list that matches the type we are looking for. */
-    while (myContext->listIdx < UPRV_LENGTHOF(gCurrencyList)-1) {
-        const struct CurrencyList *currItem = &gCurrencyList[myContext->listIdx++];
-        if (UCURR_MATCHES_BITMASK(currItem->currType, myContext->currType))
+    જ્યારે (myContext->listIdx < UPRV_LENGTHOF(gCurrencyList)-1) {
+        અચલ સંરચના CurrencyList *currItem = &gCurrencyList[myContext->listIdx++];
+        જો (UCURR_MATCHES_BITMASK(currItem->currType, myContext->currType))
         {
-            if (resultLength) {
+            જો (resultLength) {
                 *resultLength = 3; /* Currency codes are only 3 chars long */
             }
-            return currItem->currency;
+            પાછા currItem->currency;
         }
     }
     /* We enumerated too far. */
-    if (resultLength) {
+    જો (resultLength) {
         *resultLength = 0;
     }
-    return nullptr;
+    પાછા nullptr;
 }
 
-static void U_CALLCONV
+સ્થિર શૂન્ય U_CALLCONV
 ucurr_resetCurrencyList(UEnumeration *enumerator, UErrorCode * /*pErrorCode*/) {
     ((UCurrencyContext *)(enumerator->context))->listIdx = 0;
 }
 
-static void U_CALLCONV
+સ્થિર શૂન્ય U_CALLCONV
 ucurr_closeCurrencyList(UEnumeration *enumerator) {
     uprv_free(enumerator->context);
     uprv_free(enumerator);
 }
 
-static void U_CALLCONV
+સ્થિર શૂન્ય U_CALLCONV
 ucurr_createCurrencyList(UHashtable *isoCodes, UErrorCode* status){
     UErrorCode localStatus = U_ZERO_ERROR;
 
     // Look up the CurrencyMap element in the root bundle.
     UResourceBundle *rb = ures_openDirect(U_ICUDATA_CURR, CURRENCY_DATA, &localStatus);
-    LocalUResourceBundlePointer currencyMapArray(ures_getByKey(rb, CURRENCY_MAP, rb, &localStatus));
+    LocalUResourceBundlePointer currencyMapArray(ures_get_By_ચાવી(rb, CURRENCY_MAP, rb, &localStatus));
 
-    if (U_SUCCESS(localStatus)) {
+    જો (U_SUCCESS(localStatus)) {
         // process each entry in currency map
-        for (int32_t i=0; i<ures_getSize(currencyMapArray.getAlias()); i++) {
+        માટે (int32_t i=0; i<ures_getSize(currencyMapArray.getAlias()); i++) {
             // get the currency resource
             LocalUResourceBundlePointer currencyArray(ures_getByIndex(currencyMapArray.getAlias(), i, nullptr, &localStatus));
             // process each currency
-            if (U_SUCCESS(localStatus)) {
-                for (int32_t j=0; j<ures_getSize(currencyArray.getAlias()); j++) {
+            જો (U_SUCCESS(localStatus)) {
+                માટે (int32_t j=0; j<ures_getSize(currencyArray.getAlias()); j++) {
                     // get the currency resource
                     LocalUResourceBundlePointer currencyRes(ures_getByIndex(currencyArray.getAlias(), j, nullptr, &localStatus));
-                    IsoCodeEntry *entry = (IsoCodeEntry*)uprv_malloc(sizeof(IsoCodeEntry));
-                    if (entry == nullptr) {
+                    IsoCodeEntry *entry = (IsoCodeEntry*)uprv_malloc(કદ(IsoCodeEntry));
+                    જો (entry == nullptr) {
                         *status = U_MEMORY_ALLOCATION_ERROR;
-                        return;
+                        પાછા;
                     }
 
                     // get the ISO code
                     int32_t isoLength = 0;
-                    LocalUResourceBundlePointer idRes(ures_getByKey(currencyRes.getAlias(), "id", nullptr, &localStatus));
-                    if (idRes.isNull()) {
-                        continue;
+                    LocalUResourceBundlePointer idRes(ures_get_By_ચાવી(currencyRes.getAlias(), "id", nullptr, &localStatus));
+                    જો (idRes.isNull()) {
+                        ચાલુ;
                     }
-                    const char16_t *isoCode = ures_getString(idRes.getAlias(), &isoLength, &localStatus);
+                    અચલ char16_t *isoCode = ures_getString(idRes.getAlias(), &isoLength, &localStatus);
 
                     // get from date
                     UDate fromDate = U_DATE_MIN;
-                    LocalUResourceBundlePointer fromRes(ures_getByKey(currencyRes.getAlias(), "from", nullptr, &localStatus));
+                    LocalUResourceBundlePointer fromRes(ures_get_By_ચાવી(currencyRes.getAlias(), "from", nullptr, &localStatus));
 
-                    if (U_SUCCESS(localStatus)) {
+                    જો (U_SUCCESS(localStatus)) {
                         int32_t fromLength = 0;
-                        const int32_t *fromArray = ures_getIntVector(fromRes.getAlias(), &fromLength, &localStatus);
+                        અચલ int32_t *fromArray = ures_getIntVector(fromRes.getAlias(), &fromLength, &localStatus);
                         int64_t currDate64 = ((uint64_t)fromArray[0]) << 32;
                         currDate64 |= ((int64_t)fromArray[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
                         fromDate = (UDate)currDate64;
@@ -2136,11 +2136,11 @@ ucurr_createCurrencyList(UHashtable *isoCodes, UErrorCode* status){
                     // get to date
                     UDate toDate = U_DATE_MAX;
                     localStatus = U_ZERO_ERROR;
-                    LocalUResourceBundlePointer toRes(ures_getByKey(currencyRes.getAlias(), "to", nullptr, &localStatus));
+                    LocalUResourceBundlePointer toRes(ures_get_By_ચાવી(currencyRes.getAlias(), "to", nullptr, &localStatus));
 
-                    if (U_SUCCESS(localStatus)) {
+                    જો (U_SUCCESS(localStatus)) {
                         int32_t toLength = 0;
-                        const int32_t *toArray = ures_getIntVector(toRes.getAlias(), &toLength, &localStatus);
+                        અચલ int32_t *toArray = ures_getIntVector(toRes.getAlias(), &toLength, &localStatus);
                         int64_t currDate64 = (uint64_t)toArray[0] << 32;
                         currDate64 |= ((int64_t)toArray[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
                         toDate = (UDate)currDate64;
@@ -2153,20 +2153,20 @@ ucurr_createCurrencyList(UHashtable *isoCodes, UErrorCode* status){
                     localStatus = U_ZERO_ERROR;
                     uhash_put(isoCodes, (char16_t *)isoCode, entry, &localStatus);
                 }
-            } else {
+            } નહીંતર {
                 *status = localStatus;
             }
         }
-    } else {
+    } નહીંતર {
         *status = localStatus;
     }
 }
 
-static const UEnumeration gEnumCurrencyList = {
+સ્થિર અચલ UEnumeration gEnumCurrencyList = {
     nullptr,
     nullptr,
     ucurr_closeCurrencyList,
-    ucurr_countCurrencyList,
+    ucurr_ગણતરી_Currency_List,
     uenum_unextDefault,
     ucurr_nextCurrencyList,
     ucurr_resetCurrencyList
@@ -2174,86 +2174,86 @@ static const UEnumeration gEnumCurrencyList = {
 U_CDECL_END
 
 
-static void U_CALLCONV initIsoCodes(UErrorCode &status) {
+સ્થિર શૂન્ય U_CALLCONV initIsoCodes(UErrorCode &status) {
     U_ASSERT(gIsoCodes == nullptr);
     ucln_common_registerCleanup(UCLN_COMMON_CURRENCY, currency_cleanup);
 
     LocalUHashtablePointer isoCodes(uhash_open(uhash_hashUChars, uhash_compareUChars, nullptr, &status));
-    if (U_FAILURE(status)) {
-        return;
+    જો (U_FAILURE(status)) {
+        પાછા;
     }
-    uhash_setValueDeleter(isoCodes.getAlias(), deleteIsoCodeEntry);
+    uhash_set_કિંમત_Deleter(isoCodes.getAlias(), deleteIsoCodeEntry);
 
     ucurr_createCurrencyList(isoCodes.getAlias(), &status);
-    if (U_FAILURE(status)) {
-        return;
+    જો (U_FAILURE(status)) {
+        પાછા;
     }
     gIsoCodes = isoCodes.orphan();  // Note: gIsoCodes is const. Once set up here it is never altered,
                                     //       and read only access is safe without synchronization.
 }
 
-static void populateCurrSymbolsEquiv(icu::Hashtable *hash, UErrorCode &status) {
-    if (U_FAILURE(status)) { return; }
-    for (const auto& entry : unisets::kCurrencyEntries) {
+સ્થિર શૂન્ય populateCurrSymbolsEquiv(icu::Hashtable *hash, UErrorCode &status) {
+    જો (U_FAILURE(status)) { પાછા; }
+    માટે (અચલ auto& entry : unisets::kCurrencyEntries) {
         UnicodeString exemplar(entry.exemplar);
-        const UnicodeSet* set = unisets::get(entry.key);
-        if (set == nullptr) { return; }
+        અચલ UnicodeSet* set = unisets::get(entry.ચાવી);
+        જો (set == nullptr) { પાછા; }
         UnicodeSetIterator it(*set);
-        while (it.next()) {
+        જ્યારે (it.next()) {
             UnicodeString value = it.getString();
-            if (value == exemplar) {
+            જો (value == exemplar) {
                 // No need to mark the exemplar character as an equivalent
-                continue;
+                ચાલુ;
             }
             makeEquivalent(exemplar, value, hash, status);
-            if (U_FAILURE(status)) { return; }
+            જો (U_FAILURE(status)) { પાછા; }
         }
     }
 }
 
-static void U_CALLCONV initCurrSymbolsEquiv() {
+સ્થિર શૂન્ય U_CALLCONV initCurrSymbolsEquiv() {
     U_ASSERT(gCurrSymbolsEquiv == nullptr);
     UErrorCode status = U_ZERO_ERROR;
     ucln_common_registerCleanup(UCLN_COMMON_CURRENCY, currency_cleanup);
-    icu::Hashtable *temp = new icu::Hashtable(status);
-    if (temp == nullptr) {
-        return;
+    icu::Hashtable *temp = નવું icu::Hashtable(status);
+    જો (temp == nullptr) {
+        પાછા;
     }
-    if (U_FAILURE(status)) {
+    જો (U_FAILURE(status)) {
         delete temp;
-        return;
+        પાછા;
     }
-    temp->setValueDeleter(deleteUnicode);
+    temp->set_કિંમત_Deleter(deleteUnicode);
     populateCurrSymbolsEquiv(temp, status);
-    if (U_FAILURE(status)) {
+    જો (U_FAILURE(status)) {
         delete temp;
-        return;
+        પાછા;
     }
     gCurrSymbolsEquiv = temp;
 }
 
 U_CAPI UBool U_EXPORT2
-ucurr_isAvailable(const char16_t* isoCode, UDate from, UDate to, UErrorCode* eErrorCode) {
+ucurr_isAvailable(અચલ char16_t* isoCode, UDate from, UDate to, UErrorCode* eErrorCode) {
     umtx_initOnce(gIsoCodesInitOnce, &initIsoCodes, *eErrorCode);
-    if (U_FAILURE(*eErrorCode)) {
-        return false;
+    જો (U_FAILURE(*eErrorCode)) {
+        પાછા ખોટું;
     }
 
     IsoCodeEntry* result = (IsoCodeEntry *) uhash_get(gIsoCodes, isoCode);
-    if (result == nullptr) {
-        return false;
-    } else if (from > to) {
+    જો (result == nullptr) {
+        પાછા ખોટું;
+    } નહીંતર જો (from > to) {
         *eErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
-    } else if  ((from > result->to) || (to < result->from)) {
-        return false;
+        પાછા ખોટું;
+    } નહીંતર જો  ((from > result->to) || (to < result->from)) {
+        પાછા ખોટું;
     }
-    return true;
+    પાછા સાચું;
 }
 
-static const icu::Hashtable* getCurrSymbolsEquiv() {
+સ્થિર અચલ icu::Hashtable* getCurrSymbolsEquiv() {
     umtx_initOnce(gCurrSymbolsEquivInitOnce, &initCurrSymbolsEquiv);
-    return gCurrSymbolsEquiv;
+    પાછા gCurrSymbolsEquiv;
 }
 
 U_CAPI UEnumeration * U_EXPORT2
@@ -2261,32 +2261,32 @@ ucurr_openISOCurrencies(uint32_t currType, UErrorCode *pErrorCode) {
     UEnumeration *myEnum = nullptr;
     UCurrencyContext *myContext;
 
-    myEnum = (UEnumeration*)uprv_malloc(sizeof(UEnumeration));
-    if (myEnum == nullptr) {
+    myEnum = (UEnumeration*)uprv_malloc(કદ(UEnumeration));
+    જો (myEnum == nullptr) {
         *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        પાછા nullptr;
     }
-    uprv_memcpy(myEnum, &gEnumCurrencyList, sizeof(UEnumeration));
-    myContext = (UCurrencyContext*)uprv_malloc(sizeof(UCurrencyContext));
-    if (myContext == nullptr) {
+    uprv_memcpy(myEnum, &gEnumCurrencyList, કદ(UEnumeration));
+    myContext = (UCurrencyContext*)uprv_malloc(કદ(UCurrencyContext));
+    જો (myContext == nullptr) {
         *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
         uprv_free(myEnum);
-        return nullptr;
+        પાછા nullptr;
     }
     myContext->currType = currType;
     myContext->listIdx = 0;
     myEnum->context = myContext;
-    return myEnum;
+    પાછા myEnum;
 }
 
 U_CAPI int32_t U_EXPORT2
-ucurr_countCurrencies(const char* locale, 
+ucurr_ગણતરી_Currencies(અચલ અક્ષર* locale, 
                  UDate date, 
                  UErrorCode* ec)
 {
-    int32_t currCount = 0;
+    int32_t curr_ગણતરી = 0;
 
-    if (ec != nullptr && U_SUCCESS(*ec)) 
+    જો (ec != nullptr && U_SUCCESS(*ec)) 
     {
         // local variables
         UErrorCode localStatus = U_ZERO_ERROR;
@@ -2294,89 +2294,89 @@ ucurr_countCurrencies(const char* locale,
         // get country or country_variant in `id'
         CharString id = idForLocale(locale, ec);
 
-        if (U_FAILURE(*ec))
+        જો (U_FAILURE(*ec))
         {
-            return 0;
+            પાછા 0;
         }
 
         // Remove variants, which is only needed for registration.
-        char *idDelim = strchr(id.data(), VAR_DELIM);
-        if (idDelim)
+        અક્ષર *idDelim = strchr(id.data(), VAR_DELIM);
+        જો (idDelim)
         {
             id.truncate(idDelim - id.data());
         }
 
         // Look up the CurrencyMap element in the root bundle.
         UResourceBundle *rb = ures_openDirect(U_ICUDATA_CURR, CURRENCY_DATA, &localStatus);
-        UResourceBundle *cm = ures_getByKey(rb, CURRENCY_MAP, rb, &localStatus);
+        UResourceBundle *cm = ures_get_By_ચાવી(rb, CURRENCY_MAP, rb, &localStatus);
 
         // Using the id derived from the local, get the currency data
-        LocalUResourceBundlePointer countryArray(ures_getByKey(rb, id.data(), cm, &localStatus));
+        LocalUResourceBundlePointer countryArray(ures_get_By_ચાવી(rb, id.data(), cm, &localStatus));
 
         // process each currency to see which one is valid for the given date
-        if (U_SUCCESS(localStatus))
+        જો (U_SUCCESS(localStatus))
         {
-            for (int32_t i=0; i<ures_getSize(countryArray.getAlias()); i++)
+            માટે (int32_t i=0; i<ures_getSize(countryArray.getAlias()); i++)
             {
                 // get the currency resource
                 LocalUResourceBundlePointer currencyRes(ures_getByIndex(countryArray.getAlias(), i, nullptr, &localStatus));
 
                 // get the from date
                 int32_t fromLength = 0;
-                LocalUResourceBundlePointer fromRes(ures_getByKey(currencyRes.getAlias(), "from", nullptr, &localStatus));
-                const int32_t *fromArray = ures_getIntVector(fromRes.getAlias(), &fromLength, &localStatus);
+                LocalUResourceBundlePointer fromRes(ures_get_By_ચાવી(currencyRes.getAlias(), "from", nullptr, &localStatus));
+                અચલ int32_t *fromArray = ures_getIntVector(fromRes.getAlias(), &fromLength, &localStatus);
 
                 int64_t currDate64 = (int64_t)((uint64_t)(fromArray[0]) << 32);
                 currDate64 |= ((int64_t)fromArray[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
                 UDate fromDate = (UDate)currDate64;
 
-                if (ures_getSize(currencyRes.getAlias())> 2)
+                જો (ures_getSize(currencyRes.getAlias())> 2)
                 {
                     int32_t toLength = 0;
-                    LocalUResourceBundlePointer toRes(ures_getByKey(currencyRes.getAlias(), "to", nullptr, &localStatus));
-                    const int32_t *toArray = ures_getIntVector(toRes.getAlias(), &toLength, &localStatus);
+                    LocalUResourceBundlePointer toRes(ures_get_By_ચાવી(currencyRes.getAlias(), "to", nullptr, &localStatus));
+                    અચલ int32_t *toArray = ures_getIntVector(toRes.getAlias(), &toLength, &localStatus);
 
                     currDate64 = (int64_t)toArray[0] << 32;
                     currDate64 |= ((int64_t)toArray[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
                     UDate toDate = (UDate)currDate64;
 
-                    if ((fromDate <= date) && (date < toDate))
+                    જો ((fromDate <= date) && (date < toDate))
                     {
-                        currCount++;
+                        curr_ગણતરી++;
                     }
                 }
-                else
+                નહીંતર
                 {
-                    if (fromDate <= date)
+                    જો (fromDate <= date)
                     {
-                        currCount++;
+                        curr_ગણતરી++;
                     }
                 }
             } // end For loop
         } // end if (U_SUCCESS(localStatus))
 
         // Check for errors
-        if (*ec == U_ZERO_ERROR || localStatus != U_ZERO_ERROR)
+        જો (*ec == U_ZERO_ERROR || localStatus != U_ZERO_ERROR)
         {
             // There is nothing to fallback to. 
             // Report the failure/warning if possible.
             *ec = localStatus;
         }
 
-        if (U_SUCCESS(*ec))
+        જો (U_SUCCESS(*ec))
         {
             // no errors
-            return currCount;
+            પાછા curr_ગણતરી;
         }
     }
 
     // If we got here, either error code is invalid or
     // some argument passed is no good.
-    return 0;
+    પાછા 0;
 }
 
 U_CAPI int32_t U_EXPORT2 
-ucurr_forLocaleAndDate(const char* locale, 
+ucurr_forLocaleAndDate(અચલ અક્ષર* locale, 
                 UDate date, 
                 int32_t index,
                 char16_t* buff,
@@ -2385,127 +2385,127 @@ ucurr_forLocaleAndDate(const char* locale,
 {
     int32_t resLen = 0;
 	int32_t currIndex = 0;
-    const char16_t* s = nullptr;
+    અચલ char16_t* s = nullptr;
 
-    if (ec != nullptr && U_SUCCESS(*ec))
+    જો (ec != nullptr && U_SUCCESS(*ec))
     {
         // check the arguments passed
-        if ((buff && buffCapacity) || !buffCapacity )
+        જો ((buff && buffCapacity) || !buffCapacity )
         {
             // local variables
             UErrorCode localStatus = U_ZERO_ERROR;
 
             // get country or country_variant in `id'
             CharString id = idForLocale(locale, ec);
-            if (U_FAILURE(*ec))
+            જો (U_FAILURE(*ec))
             {
-                return 0;
+                પાછા 0;
             }
 
             // Remove variants, which is only needed for registration.
-            char *idDelim = strchr(id.data(), VAR_DELIM);
-            if (idDelim)
+            અક્ષર *idDelim = strchr(id.data(), VAR_DELIM);
+            જો (idDelim)
             {
                 id.truncate(idDelim - id.data());
             }
 
             // Look up the CurrencyMap element in the root bundle.
             UResourceBundle *rb = ures_openDirect(U_ICUDATA_CURR, CURRENCY_DATA, &localStatus);
-            UResourceBundle *cm = ures_getByKey(rb, CURRENCY_MAP, rb, &localStatus);
+            UResourceBundle *cm = ures_get_By_ચાવી(rb, CURRENCY_MAP, rb, &localStatus);
 
             // Using the id derived from the local, get the currency data
-            LocalUResourceBundlePointer countryArray(ures_getByKey(rb, id.data(), cm, &localStatus));
+            LocalUResourceBundlePointer countryArray(ures_get_By_ચાવી(rb, id.data(), cm, &localStatus));
 
             // process each currency to see which one is valid for the given date
-            bool matchFound = false;
-            if (U_SUCCESS(localStatus))
+            તાર્કિક matchFound = ખોટું;
+            જો (U_SUCCESS(localStatus))
             {
-                if ((index <= 0) || (index> ures_getSize(countryArray.getAlias())))
+                જો ((index <= 0) || (index> ures_getSize(countryArray.getAlias())))
                 {
                     // requested index is out of bounds
-                    return 0;
+                    પાછા 0;
                 }
 
-                for (int32_t i=0; i<ures_getSize(countryArray.getAlias()); i++)
+                માટે (int32_t i=0; i<ures_getSize(countryArray.getAlias()); i++)
                 {
                     // get the currency resource
                     LocalUResourceBundlePointer currencyRes(ures_getByIndex(countryArray.getAlias(), i, nullptr, &localStatus));
-                    s = ures_getStringByKey(currencyRes.getAlias(), "id", &resLen, &localStatus);
+                    s = ures_get_String_By_ચાવી(currencyRes.getAlias(), "id", &resLen, &localStatus);
 
                     // get the from date
                     int32_t fromLength = 0;
-                    LocalUResourceBundlePointer fromRes(ures_getByKey(currencyRes.getAlias(), "from", nullptr, &localStatus));
-                    const int32_t *fromArray = ures_getIntVector(fromRes.getAlias(), &fromLength, &localStatus);
+                    LocalUResourceBundlePointer fromRes(ures_get_By_ચાવી(currencyRes.getAlias(), "from", nullptr, &localStatus));
+                    અચલ int32_t *fromArray = ures_getIntVector(fromRes.getAlias(), &fromLength, &localStatus);
 
                     int64_t currDate64 = (int64_t)((uint64_t)fromArray[0] << 32);
                     currDate64 |= ((int64_t)fromArray[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
                     UDate fromDate = (UDate)currDate64;
 
-                    if (ures_getSize(currencyRes.getAlias()) > 2)
+                    જો (ures_getSize(currencyRes.getAlias()) > 2)
                     {
                         int32_t toLength = 0;
-                        LocalUResourceBundlePointer toRes(ures_getByKey(currencyRes.getAlias(), "to", nullptr, &localStatus));
-                        const int32_t *toArray = ures_getIntVector(toRes.getAlias(), &toLength, &localStatus);
+                        LocalUResourceBundlePointer toRes(ures_get_By_ચાવી(currencyRes.getAlias(), "to", nullptr, &localStatus));
+                        અચલ int32_t *toArray = ures_getIntVector(toRes.getAlias(), &toLength, &localStatus);
 
                         currDate64 = (int64_t)toArray[0] << 32;
                         currDate64 |= ((int64_t)toArray[1] & (int64_t)INT64_C(0x00000000FFFFFFFF));
                         UDate toDate = (UDate)currDate64;
 
-                        if ((fromDate <= date) && (date < toDate))
+                        જો ((fromDate <= date) && (date < toDate))
                         {
                             currIndex++;
-                            if (currIndex == index)
+                            જો (currIndex == index)
                             {
-                                matchFound = true;
+                                matchFound = સાચું;
                             }
                         }
                     }
-                    else
+                    નહીંતર
                     {
-                        if (fromDate <= date)
+                        જો (fromDate <= date)
                         {
                             currIndex++;
-                            if (currIndex == index)
+                            જો (currIndex == index)
                             {
-                                matchFound = true;
+                                matchFound = સાચું;
                             }
                         }
                     }
                     // check for loop exit
-                    if (matchFound)
+                    જો (matchFound)
                     {
-                        break;
+                        તોડો;
                     }
 
                 } // end For loop
             }
 
             // Check for errors
-            if (*ec == U_ZERO_ERROR || localStatus != U_ZERO_ERROR)
+            જો (*ec == U_ZERO_ERROR || localStatus != U_ZERO_ERROR)
             {
                 // There is nothing to fallback to. 
                 // Report the failure/warning if possible.
                 *ec = localStatus;
             }
 
-            if (U_SUCCESS(*ec))
+            જો (U_SUCCESS(*ec))
             {
                 // no errors
-                if((buffCapacity> resLen) && matchFound)
+                જો((buffCapacity> resLen) && matchFound)
                 {
                     // write out the currency value
                     u_strcpy(buff, s);
                 }
-                else
+                નહીંતર
                 {
-                    return 0;
+                    પાછા 0;
                 }
             }
 
             // return null terminated currency string
-            return u_terminateUChars(buff, buffCapacity, resLen, ec);
+            પાછા u_terminateUChars(buff, buffCapacity, resLen, ec);
         }
-        else
+        નહીંતર
         {
             // illegal argument encountered
             *ec = U_ILLEGAL_ARGUMENT_ERROR;
@@ -2515,171 +2515,171 @@ ucurr_forLocaleAndDate(const char* locale,
 
     // If we got here, either error code is invalid or
     // some argument passed is no good.
-    return resLen;
+    પાછા resLen;
 }
 
-static const UEnumeration defaultKeywordValues = {
+સ્થિર અચલ UEnumeration default_Keyword_કિંમતો = {
     nullptr,
     nullptr,
-    ulist_close_keyword_values_iterator,
-    ulist_count_keyword_values,
+    ulist_close_keyword_કિંમતો_iterator,
+    ulist_ગણતરી_keyword_કિંમતો,
     uenum_unextDefault,
-    ulist_next_keyword_value, 
-    ulist_reset_keyword_values_iterator
+    ulist_next_keyword_કિંમત, 
+    ulist_reset_keyword_કિંમતો_iterator
 };
 
-U_CAPI UEnumeration *U_EXPORT2 ucurr_getKeywordValuesForLocale(const char *key, const char *locale, UBool commonlyUsed, UErrorCode* status) {
+U_CAPI UEnumeration *U_EXPORT2 ucurr_get_Keyword_કિંમતો_For_Locale(અચલ અક્ષર *ચાવી, અચલ અક્ષર *locale, UBool commonlyUsed, UErrorCode* status) {
     // Resolve region
-    CharString prefRegion = ulocimp_getRegionForSupplementalData(locale, true, *status);
+    CharString prefRegion = ulocimp_getRegionForSupplementalData(locale, સાચું, *status);
 
     // Read value from supplementalData
-    UList *values = ulist_createEmptyList(status);
-    UList *otherValues = ulist_createEmptyList(status);
-    UEnumeration *en = (UEnumeration *)uprv_malloc(sizeof(UEnumeration));
-    if (U_FAILURE(*status) || en == nullptr) {
-        if (en == nullptr) {
+    UList *કિંમતો = ulist_createEmptyList(status);
+    UList *other_કિંમતો = ulist_createEmptyList(status);
+    UEnumeration *en = (UEnumeration *)uprv_malloc(કદ(UEnumeration));
+    જો (U_FAILURE(*status) || en == nullptr) {
+        જો (en == nullptr) {
             *status = U_MEMORY_ALLOCATION_ERROR;
-        } else {
+        } નહીંતર {
             uprv_free(en);
         }
-        ulist_deleteList(values);
-        ulist_deleteList(otherValues);
-        return nullptr;
+        ulist_deleteList(કિંમતો);
+        ulist_deleteList(other_કિંમતો);
+        પાછા nullptr;
     }
-    memcpy(en, &defaultKeywordValues, sizeof(UEnumeration));
-    en->context = values;
+    memcpy(en, &default_Keyword_કિંમતો, કદ(UEnumeration));
+    en->context = કિંમતો;
     
     UResourceBundle* rb = ures_openDirect(U_ICUDATA_CURR, "supplementalData", status);
-    LocalUResourceBundlePointer bundle(ures_getByKey(rb, "CurrencyMap", rb, status));
-    StackUResourceBundle bundlekey, regbndl, curbndl, to;
+    LocalUResourceBundlePointer bundle(ures_get_By_ચાવી(rb, "CurrencyMap", rb, status));
+    ઢગલો_UResource_Bundle bundlekey, regbndl, curbndl, to;
     
-    while (U_SUCCESS(*status) && ures_hasNext(bundle.getAlias())) {
+    જ્યારે (U_SUCCESS(*status) && ures_hasNext(bundle.getAlias())) {
         ures_getNextResource(bundle.getAlias(), bundlekey.getAlias(), status);
-        if (U_FAILURE(*status)) {
-            break;
+        જો (U_FAILURE(*status)) {
+            તોડો;
         }
-        const char *region = ures_getKey(bundlekey.getAlias());
+        અચલ અક્ષર *region = ures_get_ચાવી(bundlekey.getAlias());
         UBool isPrefRegion = prefRegion == region;
-        if (!isPrefRegion && commonlyUsed) {
+        જો (!isPrefRegion && commonlyUsed) {
             // With commonlyUsed=true, we do not put
             // currencies for other regions in the
             // result list.
-            continue;
+            ચાલુ;
         }
-        ures_getByKey(bundle.getAlias(), region, regbndl.getAlias(), status);
-        if (U_FAILURE(*status)) {
-            break;
+        ures_get_By_ચાવી(bundle.getAlias(), region, regbndl.getAlias(), status);
+        જો (U_FAILURE(*status)) {
+            તોડો;
         }
-        while (U_SUCCESS(*status) && ures_hasNext(regbndl.getAlias())) {
+        જ્યારે (U_SUCCESS(*status) && ures_hasNext(regbndl.getAlias())) {
             ures_getNextResource(regbndl.getAlias(), curbndl.getAlias(), status);
-            if (ures_getType(curbndl.getAlias()) != URES_TABLE) {
+            જો (ures_getType(curbndl.getAlias()) != URES_TABLE) {
                 // Currently, an empty ARRAY is mixed in.
-                continue;
+                ચાલુ;
             }
-            char *curID = (char *)uprv_malloc(sizeof(char) * ULOC_KEYWORDS_CAPACITY);
-            if (curID == nullptr) {
+            અક્ષર *curID = (અક્ષર *)uprv_malloc(કદ(અક્ષર) * ULOC_KEYWORDS_CAPACITY);
+            જો (curID == nullptr) {
                 *status = U_MEMORY_ALLOCATION_ERROR;
-                break;
+                તોડો;
             }
             int32_t curIDLength = ULOC_KEYWORDS_CAPACITY;
 
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
-            ures_getUTF8StringByKey(curbndl.getAlias(), "id", curID, &curIDLength, true, status);
+#જો U_CHARSET_FAMILY==U_ASCII_FAMILY
+            ures_get_UTF8_String_By_ચાવી(curbndl.getAlias(), "id", curID, &curIDLength, સાચું, status);
             /* optimize - use the utf-8 string */
-#else
+#નહીંતર
             {
-                       const char16_t* defString = ures_getStringByKey(curbndl.getAlias(), "id", &curIDLength, status);
-                       if(U_SUCCESS(*status)) {
-			   if(curIDLength+1 > ULOC_KEYWORDS_CAPACITY) {
+                       અચલ char16_t* defString = ures_get_String_By_ચાવી(curbndl.getAlias(), "id", &curIDLength, status);
+                       જો(U_SUCCESS(*status)) {
+			   જો(curIDLength+1 > ULOC_KEYWORDS_CAPACITY) {
 				*status = U_BUFFER_OVERFLOW_ERROR;
-			   } else {
+			   } નહીંતર {
                            	u_UCharsToChars(defString, curID, curIDLength+1);
 			   }
                        }
             }
 #endif	
 
-            if (U_FAILURE(*status)) {
-                break;
+            જો (U_FAILURE(*status)) {
+                તોડો;
             }
-            UBool hasTo = false;
-            ures_getByKey(curbndl.getAlias(), "to", to.getAlias(), status);
-            if (U_FAILURE(*status)) {
+            UBool hasTo = ખોટું;
+            ures_get_By_ચાવી(curbndl.getAlias(), "to", to.getAlias(), status);
+            જો (U_FAILURE(*status)) {
                 // Do nothing here...
                 *status = U_ZERO_ERROR;
-            } else {
-                hasTo = true;
+            } નહીંતર {
+                hasTo = સાચું;
             }
-            if (isPrefRegion && !hasTo && !ulist_containsString(values, curID, (int32_t)uprv_strlen(curID))) {
+            જો (isPrefRegion && !hasTo && !ulist_containsString(કિંમતો, curID, (int32_t)uprv_strlen(curID))) {
                 // Currently active currency for the target country
-                ulist_addItemEndList(values, curID, true, status);
-            } else if (!ulist_containsString(otherValues, curID, (int32_t)uprv_strlen(curID)) && !commonlyUsed) {
-                ulist_addItemEndList(otherValues, curID, true, status);
-            } else {
+                ulist_addItemEndList(કિંમતો, curID, સાચું, status);
+            } નહીંતર જો (!ulist_containsString(other_કિંમતો, curID, (int32_t)uprv_strlen(curID)) && !commonlyUsed) {
+                ulist_addItemEndList(other_કિંમતો, curID, સાચું, status);
+            } નહીંતર {
                 uprv_free(curID);
             }
         }
         
     }
-    if (U_SUCCESS(*status)) {
-        if (commonlyUsed) {
-            if (ulist_getListSize(values) == 0) {
+    જો (U_SUCCESS(*status)) {
+        જો (commonlyUsed) {
+            જો (ulist_getListSize(કિંમતો) == 0) {
                 // This could happen if no valid region is supplied in the input
                 // locale. In this case, we use the CLDR's default.
                 uenum_close(en);
-                en = ucurr_getKeywordValuesForLocale(key, "und", true, status);
+                en = ucurr_get_Keyword_કિંમતો_For_Locale(ચાવી, "und", સાચું, status);
             }
-        } else {
+        } નહીંતર {
             // Consolidate the list
-            char *value = nullptr;
-            ulist_resetList(otherValues);
-            while ((value = (char *)ulist_getNext(otherValues)) != nullptr) {
-                if (!ulist_containsString(values, value, (int32_t)uprv_strlen(value))) {
-                    char *tmpValue = (char *)uprv_malloc(sizeof(char) * ULOC_KEYWORDS_CAPACITY);
-                    if (tmpValue == nullptr) {
+            અક્ષર *value = nullptr;
+            ulist_resetList(other_કિંમતો);
+            જ્યારે ((value = (અક્ષર *)ulist_getNext(other_કિંમતો)) != nullptr) {
+                જો (!ulist_containsString(કિંમતો, value, (int32_t)uprv_strlen(value))) {
+                    અક્ષર *tmp_કિંમત = (અક્ષર *)uprv_malloc(કદ(અક્ષર) * ULOC_KEYWORDS_CAPACITY);
+                    જો (tmp_કિંમત == nullptr) {
                         *status = U_MEMORY_ALLOCATION_ERROR;
-                        break;
+                        તોડો;
                     }
-                    uprv_memcpy(tmpValue, value, uprv_strlen(value) + 1);
-                    ulist_addItemEndList(values, tmpValue, true, status);
-                    if (U_FAILURE(*status)) {
-                        break;
+                    uprv_memcpy(tmp_કિંમત, value, uprv_strlen(value) + 1);
+                    ulist_addItemEndList(કિંમતો, tmp_કિંમત, સાચું, status);
+                    જો (U_FAILURE(*status)) {
+                        તોડો;
                     }
                 }
             }
         }
         ulist_resetList((UList *)(en->context));
-    } else {
-        ulist_deleteList(values);
+    } નહીંતર {
+        ulist_deleteList(કિંમતો);
         uprv_free(en);
-        values = nullptr;
+        કિંમતો = nullptr;
         en = nullptr;
     }
-    ulist_deleteList(otherValues);
-    return en;
+    ulist_deleteList(other_કિંમતો);
+    પાછા en;
 }
 
 
 U_CAPI int32_t U_EXPORT2
-ucurr_getNumericCode(const char16_t* currency) {
+ucurr_getNumericCode(અચલ char16_t* currency) {
     int32_t code = 0;
-    if (currency && u_strlen(currency) == ISO_CURRENCY_CODE_LENGTH) {
+    જો (currency && u_strlen(currency) == ISO_CURRENCY_CODE_LENGTH) {
         UErrorCode status = U_ZERO_ERROR;
 
         UResourceBundle* bundle = ures_openDirect(nullptr, "currencyNumericCodes", &status);
-        LocalUResourceBundlePointer codeMap(ures_getByKey(bundle, "codeMap", bundle, &status));
-        if (U_SUCCESS(status)) {
-            char alphaCode[ISO_CURRENCY_CODE_LENGTH+1];
+        LocalUResourceBundlePointer codeMap(ures_get_By_ચાવી(bundle, "codeMap", bundle, &status));
+        જો (U_SUCCESS(status)) {
+            અક્ષર alphaCode[ISO_CURRENCY_CODE_LENGTH+1];
             myUCharsToChars(alphaCode, currency);
             T_CString_toUpperCase(alphaCode);
-            ures_getByKey(codeMap.getAlias(), alphaCode, codeMap.getAlias(), &status);
-            int tmpCode = ures_getInt(codeMap.getAlias(), &status);
-            if (U_SUCCESS(status)) {
+            ures_get_By_ચાવી(codeMap.getAlias(), alphaCode, codeMap.getAlias(), &status);
+            પૂર્ણાંક tmpCode = ures_getInt(codeMap.getAlias(), &status);
+            જો (U_SUCCESS(status)) {
                 code = tmpCode;
             }
         }
     }
-    return code;
+    પાછા code;
 }
 #endif /* #if !UCONFIG_NO_FORMATTING */
 

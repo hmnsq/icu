@@ -53,26 +53,26 @@
  *  This value will change in the subsequent releases of ICU
  *  @stable ICU 2.4
  */
-#define U_ICU_VERSION_MAJOR_NUM 79
+#define U_ICU_VERSION_MAJOR_અંક 79
 
 /** The current ICU minor version as an integer.
  *  This value will change in the subsequent releases of ICU
  *  @stable ICU 2.6
  */
-#define U_ICU_VERSION_MINOR_NUM 1
+#define U_ICU_VERSION_MINOR_અંક 1
 
 /** The current ICU patchlevel version as an integer.
  *  This value will change in the subsequent releases of ICU
  *  @stable ICU 2.4
  */
-#define U_ICU_VERSION_PATCHLEVEL_NUM 0
+#define U_ICU_VERSION_PATCHLEVEL_અંક 0
 
 /** The current ICU build level version as an integer.
  *  This value is for use by ICU clients. It defaults to 0.
  *  @stable ICU 4.0
  */
-#ifndef U_ICU_VERSION_BUILDLEVEL_NUM
-#define U_ICU_VERSION_BUILDLEVEL_NUM 0
+#ifndef U_ICU_VERSION_BUILDLEVEL_અંક
+#define U_ICU_VERSION_BUILDLEVEL_અંક 0
 #endif
 
 /** Glued version suffix for renamers
@@ -107,21 +107,21 @@
 
 #ifndef U_ICU_ENTRY_POINT_RENAME
 #ifdef U_HAVE_LIB_SUFFIX
-#   if !U_DISABLE_VERSION_SUFFIX
+#   જો !U_DISABLE_VERSION_SUFFIX
 #       define U_DEF_ICU_ENTRY_POINT_RENAME(x,y,z) x ## y ##  z
 #       define U_DEF2_ICU_ENTRY_POINT_RENAME(x,y,z) U_DEF_ICU_ENTRY_POINT_RENAME(x,y,z)
 #       define U_ICU_ENTRY_POINT_RENAME(x)    U_DEF2_ICU_ENTRY_POINT_RENAME(x,U_ICU_VERSION_SUFFIX,U_LIB_SUFFIX_C_NAME)
-#   else
+#   નહીંતર
 #       define U_DEF_ICU_ENTRY_POINT_RENAME(x,y) x ## y
 #       define U_DEF2_ICU_ENTRY_POINT_RENAME(x,y) U_DEF_ICU_ENTRY_POINT_RENAME(x,y)
 #       define U_ICU_ENTRY_POINT_RENAME(x)    U_DEF2_ICU_ENTRY_POINT_RENAME(x,U_LIB_SUFFIX_C_NAME)
 #   endif
-#else
-#   if !U_DISABLE_VERSION_SUFFIX
+#નહીંતર
+#   જો !U_DISABLE_VERSION_SUFFIX
 #       define U_DEF_ICU_ENTRY_POINT_RENAME(x,y) x ## y
 #       define U_DEF2_ICU_ENTRY_POINT_RENAME(x,y) U_DEF_ICU_ENTRY_POINT_RENAME(x,y)
 #       define U_ICU_ENTRY_POINT_RENAME(x)    U_DEF2_ICU_ENTRY_POINT_RENAME(x,U_ICU_VERSION_SUFFIX)
-#   else
+#   નહીંતર
 #       define U_ICU_ENTRY_POINT_RENAME(x)    x
 #   endif
 #endif

@@ -7,12 +7,12 @@
 ******************************************************************************
 */
 
-#include "utypeinfo.h"  // for 'typeid' to work
+#અન્તર્ભાવ "utypeinfo.h"  // for 'typeid' to work
 
-#include "unicode/uchriter.h"
-#include "unicode/ustring.h"
-#include "unicode/utf16.h"
-#include "ustr_imp.h"
+#અન્તર્ભાવ "unicode/uchriter.h"
+#અન્તર્ભાવ "unicode/ustring.h"
+#અન્તર્ભાવ "unicode/utf16.h"
+#અન્તર્ભાવ "ustr_imp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -51,34 +51,34 @@ UCharCharacterIterator::UCharCharacterIterator(ConstChar16Ptr textPtr U_LIFETIME
 {
 }
 
-UCharCharacterIterator::UCharCharacterIterator(const UCharCharacterIterator& that)
+UCharCharacterIterator::UCharCharacterIterator(અચલ UCharCharacterIterator& that)
 : CharacterIterator(that),
   text(that.text)
 {
 }
 
 UCharCharacterIterator&
-UCharCharacterIterator::operator=(const UCharCharacterIterator& that) U_LIFETIME_BOUND {
+UCharCharacterIterator::operator=(અચલ UCharCharacterIterator& that) U_LIFETIME_BOUND {
     CharacterIterator::operator=(that);
     text = that.text;
-    return *this;
+    પાછા *આ;
 }
 
 UCharCharacterIterator::~UCharCharacterIterator() {
 }
 
-bool
-UCharCharacterIterator::operator==(const ForwardCharacterIterator& that) const {
-    if (this == &that) {
-        return true;
+તાર્કિક
+UCharCharacterIterator::operator==(અચલ ForwardCharacterIterator& that) અચલ {
+    જો (આ == &that) {
+        પાછા સાચું;
     }
-    if (typeid(*this) != typeid(that)) {
-        return false;
+    જો (typeid(*આ) != typeid(that)) {
+        પાછા ખોટું;
     }
 
-    const UCharCharacterIterator&    realThat = static_cast<const UCharCharacterIterator&>(that);
+    અચલ UCharCharacterIterator&    realThat = static_cast<અચલ UCharCharacterIterator&>(that);
 
-    return text == realThat.text
+    પાછા text == realThat.text
         && textLength == realThat.textLength
         && pos == realThat.pos
         && begin == realThat.begin
@@ -86,281 +86,281 @@ UCharCharacterIterator::operator==(const ForwardCharacterIterator& that) const {
 }
 
 int32_t
-UCharCharacterIterator::hashCode() const {
-    return ustr_hashUCharsN(text, textLength) ^ pos ^ begin ^ end;
+UCharCharacterIterator::hashCode() અચલ {
+    પાછા ustr_hashUCharsN(text, textLength) ^ pos ^ begin ^ end;
 }
 
 UCharCharacterIterator*
-UCharCharacterIterator::clone() const {
-    return new UCharCharacterIterator(*this);
+UCharCharacterIterator::clone() અચલ {
+    પાછા નવું UCharCharacterIterator(*આ);
 }
 
 char16_t
 UCharCharacterIterator::first() {
     pos = begin;
-    if(pos < end) {
-        return text[pos];
-    } else {
-        return DONE;
+    જો(pos < end) {
+        પાછા text[pos];
+    } નહીંતર {
+        પાછા DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::firstPostInc() {
     pos = begin;
-    if(pos < end) {
-        return text[pos++];
-    } else {
-        return DONE;
+    જો(pos < end) {
+        પાછા text[pos++];
+    } નહીંતર {
+        પાછા DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::last() {
     pos = end;
-    if(pos > begin) {
-        return text[--pos];
-    } else {
-        return DONE;
+    જો(pos > begin) {
+        પાછા text[--pos];
+    } નહીંતર {
+        પાછા DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::setIndex(int32_t position) {
-    if(position < begin) {
+    જો(position < begin) {
         pos = begin;
-    } else if(position > end) {
+    } નહીંતર જો(position > end) {
         pos = end;
-    } else {
+    } નહીંતર {
         pos = position;
     }
-    if(pos < end) {
-        return text[pos];
-    } else {
-        return DONE;
+    જો(pos < end) {
+        પાછા text[pos];
+    } નહીંતર {
+        પાછા DONE;
     }
 }
 
 char16_t
-UCharCharacterIterator::current() const {
-    if (pos >= begin && pos < end) {
-        return text[pos];
-    } else {
-        return DONE;
+UCharCharacterIterator::current() અચલ {
+    જો (pos >= begin && pos < end) {
+        પાછા text[pos];
+    } નહીંતર {
+        પાછા DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::next() {
-    if (pos + 1 < end) {
-        return text[++pos];
-    } else {
+    જો (pos + 1 < end) {
+        પાછા text[++pos];
+    } નહીંતર {
         /* make current() return DONE */
         pos = end;
-        return DONE;
+        પાછા DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::nextPostInc() {
-    if (pos < end) {
-        return text[pos++];
-    } else {
-        return DONE;
+    જો (pos < end) {
+        પાછા text[pos++];
+    } નહીંતર {
+        પાછા DONE;
     }
 }
 
 UBool
 UCharCharacterIterator::hasNext() {
-    return pos < end;
+    પાછા pos < end;
 }
 
 char16_t
 UCharCharacterIterator::previous() {
-    if (pos > begin) {
-        return text[--pos];
-    } else {
-        return DONE;
+    જો (pos > begin) {
+        પાછા text[--pos];
+    } નહીંતર {
+        પાછા DONE;
     }
 }
 
 UBool
 UCharCharacterIterator::hasPrevious() {
-    return pos > begin;
+    પાછા pos > begin;
 }
 
 UChar32
 UCharCharacterIterator::first32() {
     pos = begin;
-    if(pos < end) {
+    જો(pos < end) {
         int32_t i = pos;
         UChar32 c;
         U16_NEXT(text, i, end, c);
-        return c;
-    } else {
-        return DONE;
+        પાછા c;
+    } નહીંતર {
+        પાછા DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::first32PostInc() {
     pos = begin;
-    if(pos < end) {
+    જો(pos < end) {
         UChar32 c;
         U16_NEXT(text, pos, end, c);
-        return c;
-    } else {
-        return DONE;
+        પાછા c;
+    } નહીંતર {
+        પાછા DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::last32() {
     pos = end;
-    if(pos > begin) {
+    જો(pos > begin) {
         UChar32 c;
         U16_PREV(text, begin, pos, c);
-        return c;
-    } else {
-        return DONE;
+        પાછા c;
+    } નહીંતર {
+        પાછા DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::setIndex32(int32_t position) {
-    if(position < begin) {
+    જો(position < begin) {
         position = begin;
-    } else if(position > end) {
+    } નહીંતર જો(position > end) {
         position = end;
     }
-    if(position < end) {
+    જો(position < end) {
         U16_SET_CP_START(text, begin, position);
-        int32_t i = this->pos = position;
+        int32_t i = આ->pos = position;
         UChar32 c;
         U16_NEXT(text, i, end, c);
-        return c;
-    } else {
-        this->pos = position;
-        return DONE;
+        પાછા c;
+    } નહીંતર {
+        આ->pos = position;
+        પાછા DONE;
     }
 }
 
 UChar32
-UCharCharacterIterator::current32() const {
-    if (pos >= begin && pos < end) {
+UCharCharacterIterator::current32() અચલ {
+    જો (pos >= begin && pos < end) {
         UChar32 c;
         U16_GET(text, begin, pos, end, c);
-        return c;
-    } else {
-        return DONE;
+        પાછા c;
+    } નહીંતર {
+        પાછા DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::next32() {
-    if (pos < end) {
+    જો (pos < end) {
         U16_FWD_1(text, pos, end);
-        if(pos < end) {
+        જો(pos < end) {
             int32_t i = pos;
             UChar32 c;
             U16_NEXT(text, i, end, c);
-            return c;
+            પાછા c;
         }
     }
     /* make current() return DONE */
     pos = end;
-    return DONE;
+    પાછા DONE;
 }
 
 UChar32
 UCharCharacterIterator::next32PostInc() {
-    if (pos < end) {
+    જો (pos < end) {
         UChar32 c;
         U16_NEXT(text, pos, end, c);
-        return c;
-    } else {
-        return DONE;
+        પાછા c;
+    } નહીંતર {
+        પાછા DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::previous32() {
-    if (pos > begin) {
+    જો (pos > begin) {
         UChar32 c;
         U16_PREV(text, begin, pos, c);
-        return c;
-    } else {
-        return DONE;
+        પાછા c;
+    } નહીંતર {
+        પાછા DONE;
     }
 }
 
 int32_t
 UCharCharacterIterator::move(int32_t delta, CharacterIterator::EOrigin origin) {
-    switch(origin) {
-    case kStart:
+    પસંદગી(origin) {
+    સ્થિતિ kStart:
         pos = begin + delta;
-        break;
-    case kCurrent:
+        તોડો;
+    સ્થિતિ kCurrent:
         pos += delta;
-        break;
-    case kEnd:
+        તોડો;
+    સ્થિતિ kEnd:
         pos = end + delta;
-        break;
-    default:
-        break;
+        તોડો;
+    મૂળભૂત:
+        તોડો;
     }
 
-    if(pos < begin) {
+    જો(pos < begin) {
         pos = begin;
-    } else if(pos > end) {
+    } નહીંતર જો(pos > end) {
         pos = end;
     }
 
-    return pos;
+    પાછા pos;
 }
 
 int32_t
 UCharCharacterIterator::move32(int32_t delta, CharacterIterator::EOrigin origin) {
     // this implementation relies on the "safe" version of the UTF macros
     // (or the trustworthiness of the caller)
-    switch(origin) {
-    case kStart:
+    પસંદગી(origin) {
+    સ્થિતિ kStart:
         pos = begin;
-        if(delta > 0) {
+        જો(delta > 0) {
             U16_FWD_N(text, pos, end, delta);
         }
-        break;
-    case kCurrent:
-        if(delta > 0) {
+        તોડો;
+    સ્થિતિ kCurrent:
+        જો(delta > 0) {
             U16_FWD_N(text, pos, end, delta);
-        } else {
+        } નહીંતર {
             U16_BACK_N(text, begin, pos, -delta);
         }
-        break;
-    case kEnd:
+        તોડો;
+    સ્થિતિ kEnd:
         pos = end;
-        if(delta < 0) {
+        જો(delta < 0) {
             U16_BACK_N(text, begin, pos, -delta);
         }
-        break;
-    default:
-        break;
+        તોડો;
+    મૂળભૂત:
+        તોડો;
     }
 
-    return pos;
+    પાછા pos;
 }
 
-void UCharCharacterIterator::setText(ConstChar16Ptr newText,
+શૂન્ય UCharCharacterIterator::setText(ConstChar16Ptr newText,
                                      int32_t      newTextLength) {
     text = newText;
-    if (newText == nullptr || newTextLength < 0) {
+    જો (newText == nullptr || newTextLength < 0) {
         newTextLength = 0;
     }
     end = textLength = newTextLength;
     pos = begin = 0;
 }
 
-void
+શૂન્ય
 UCharCharacterIterator::getText(UnicodeString& result) {
     result = UnicodeString(text, textLength);
 }

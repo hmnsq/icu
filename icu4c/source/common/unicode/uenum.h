@@ -19,10 +19,10 @@
 #ifndef __UENUM_H
 #define __UENUM_H
 
-#include "unicode/utypes.h"
+#અન્તર્ભાવ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
+#જો U_SHOW_CPLUSPLUS_API
+#અન્તર્ભાવ "unicode/localpointer.h"
 
 U_NAMESPACE_BEGIN
 class StringEnumeration;
@@ -39,9 +39,9 @@ U_NAMESPACE_END
  * For usage in C programs.
  * @stable ICU 2.2
  */
-struct UEnumeration;
+સંરચના UEnumeration;
 /** structure representing an enumeration object instance @stable ICU 2.2 */
-typedef struct UEnumeration UEnumeration;
+પ્રકારવ્યાખ્યા સંરચના UEnumeration UEnumeration;
 
 /**
  * Disposes of resources in use by the iterator.  If en is NULL,
@@ -50,10 +50,10 @@ typedef struct UEnumeration UEnumeration;
  * @param en UEnumeration structure pointer
  * @stable ICU 2.2
  */
-U_CAPI void U_EXPORT2
+U_CAPI શૂન્ય U_EXPORT2
 uenum_close(UEnumeration* en);
 
-#if U_SHOW_CPLUSPLUS_API
+#જો U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -87,7 +87,7 @@ U_NAMESPACE_END
  * @stable ICU 2.2
  */
 U_CAPI int32_t U_EXPORT2
-uenum_count(UEnumeration* en, UErrorCode* status);
+uenum_ગણતરી(UEnumeration* en, UErrorCode* status);
 
 /**
  * Returns the next element in the iterator's list.  If there are
@@ -110,7 +110,7 @@ uenum_count(UEnumeration* en, UErrorCode* status);
  *         traversed, returns NULL.
  * @stable ICU 2.2
  */
-U_CAPI const UChar* U_EXPORT2
+U_CAPI અચલ UChar* U_EXPORT2
 uenum_unext(UEnumeration* en U_LIFETIME_BOUND,
             int32_t* resultLength,
             UErrorCode* status);
@@ -143,7 +143,7 @@ uenum_unext(UEnumeration* en U_LIFETIME_BOUND,
  *         traversed, returns NULL.
  * @stable ICU 2.2
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI અચલ અક્ષર* U_EXPORT2
 uenum_next(UEnumeration* en U_LIFETIME_BOUND,
            int32_t* resultLength,
            UErrorCode* status);
@@ -157,10 +157,10 @@ uenum_next(UEnumeration* en U_LIFETIME_BOUND,
  *               the iterator is out of sync with its service.  
  * @stable ICU 2.2
  */
-U_CAPI void U_EXPORT2
+U_CAPI શૂન્ય U_EXPORT2
 uenum_reset(UEnumeration* en, UErrorCode* status);
 
-#if U_SHOW_CPLUSPLUS_API
+#જો U_SHOW_CPLUSPLUS_API
 
 /**
  * Given a StringEnumeration, wrap it in a UEnumeration.  The
@@ -188,8 +188,8 @@ uenum_openFromStringEnumeration(icu::StringEnumeration* adopted, UErrorCode* ec)
  * @stable ICU 50
  */
 U_CAPI UEnumeration* U_EXPORT2
-uenum_openUCharStringsEnumeration(U_LIFETIME_BOUND const UChar* const strings[],
-                                  int32_t count,
+uenum_openUCharStringsEnumeration(U_LIFETIME_BOUND અચલ UChar* અચલ strings[],
+                                  int32_t ગણતરી,
                                   UErrorCode* ec);
 
 /**
@@ -204,8 +204,8 @@ uenum_openUCharStringsEnumeration(U_LIFETIME_BOUND const UChar* const strings[],
  * @stable ICU 50
  */
 U_CAPI UEnumeration* U_EXPORT2
-uenum_openCharStringsEnumeration(U_LIFETIME_BOUND const char* const strings[],
-                                 int32_t count,
+uenum_openCharStringsEnumeration(U_LIFETIME_BOUND અચલ અક્ષર* અચલ strings[],
+                                 int32_t ગણતરી,
                                  UErrorCode* ec);
 
 #endif

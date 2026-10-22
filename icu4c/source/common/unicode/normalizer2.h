@@ -24,16 +24,16 @@
  * \brief C++ API: New API for Unicode Normalization.
  */
 
-#include "unicode/utypes.h"
+#અન્તર્ભાવ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#જો U_SHOW_CPLUSPLUS_API
 
-#if !UCONFIG_NO_NORMALIZATION
+#જો !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/stringpiece.h"
-#include "unicode/uniset.h"
-#include "unicode/unistr.h"
-#include "unicode/unorm2.h"
+#અન્તર્ભાવ "unicode/stringpiece.h"
+#અન્તર્ભાવ "unicode/uniset.h"
+#અન્તર્ભાવ "unicode/unistr.h"
+#અન્તર્ભાવ "unicode/unorm2.h"
 
 U_NAMESPACE_BEGIN
 
@@ -82,8 +82,8 @@ class ByteSink;
  * Different functions may return different boundaries.
  * @stable ICU 4.4
  */
-class U_COMMON_API Normalizer2 : public UObject {
-public:
+class U_COMMON_API Normalizer2 : જાહેર UObject {
+જાહેર:
     /**
      * Destructor.
      * @stable ICU 4.4
@@ -101,7 +101,7 @@ public:
      * @return the requested Normalizer2, if successful
      * @stable ICU 49
      */
-    static const Normalizer2 *
+    સ્થિર અચલ Normalizer2 *
     getNFCInstance(UErrorCode &errorCode);
 
     /**
@@ -115,7 +115,7 @@ public:
      * @return the requested Normalizer2, if successful
      * @stable ICU 49
      */
-    static const Normalizer2 *
+    સ્થિર અચલ Normalizer2 *
     getNFDInstance(UErrorCode &errorCode);
 
     /**
@@ -129,7 +129,7 @@ public:
      * @return the requested Normalizer2, if successful
      * @stable ICU 49
      */
-    static const Normalizer2 *
+    સ્થિર અચલ Normalizer2 *
     getNFKCInstance(UErrorCode &errorCode);
 
     /**
@@ -143,7 +143,7 @@ public:
      * @return the requested Normalizer2, if successful
      * @stable ICU 49
      */
-    static const Normalizer2 *
+    સ્થિર અચલ Normalizer2 *
     getNFKDInstance(UErrorCode &errorCode);
 
     /**
@@ -160,7 +160,7 @@ public:
      * @return the requested Normalizer2, if successful
      * @stable ICU 49
      */
-    static const Normalizer2 *
+    સ્થિર અચલ Normalizer2 *
     getNFKCCasefoldInstance(UErrorCode &errorCode);
 
     /**
@@ -177,7 +177,7 @@ public:
      * @return the requested Normalizer2, if successful
      * @stable ICU 74
      */
-    static const Normalizer2 *
+    સ્થિર અચલ Normalizer2 *
     getNFKCSimpleCasefoldInstance(UErrorCode &errorCode);
 
     /**
@@ -201,9 +201,9 @@ public:
      * @return the requested Normalizer2, if successful
      * @stable ICU 4.4
      */
-    static const Normalizer2 *
-    getInstance(const char *packageName,
-                const char *name,
+    સ્થિર અચલ Normalizer2 *
+    getInstance(અચલ અક્ષર *packageName,
+                અચલ અક્ષર *name,
                 UNormalization2Mode mode,
                 UErrorCode &errorCode);
 
@@ -218,10 +218,10 @@ public:
      * @stable ICU 4.4
      */
     UnicodeString
-    normalize(const UnicodeString &src, UErrorCode &errorCode) const {
+    normalize(અચલ UnicodeString &src, UErrorCode &errorCode) અચલ {
         UnicodeString result;
         normalize(src, result, errorCode);
-        return result;
+        પાછા result;
     }
     /**
      * Writes the normalized form of the source string to the destination string
@@ -236,10 +236,10 @@ public:
      * @return dest
      * @stable ICU 4.4
      */
-    virtual UnicodeString&
-    normalize(const UnicodeString& src,
+    આભાસી UnicodeString&
+    normalize(અચલ UnicodeString& src,
               UnicodeString& dest U_LIFETIME_BOUND,
-              UErrorCode& errorCode) const = 0;
+              UErrorCode& errorCode) અચલ = 0;
 
     /**
      * Normalizes a UTF-8 string and optionally records how source substrings
@@ -263,9 +263,9 @@ public:
      *                  function chaining. (See User Guide for details.)
      * @stable ICU 60
      */
-    virtual void
+    આભાસી શૂન્ય
     normalizeUTF8(uint32_t options, StringPiece src, ByteSink &sink,
-                  Edits *edits, UErrorCode &errorCode) const;
+                  Edits *edits, UErrorCode &errorCode) અચલ;
 
     /**
      * Appends the normalized form of the second string to the first string
@@ -281,10 +281,10 @@ public:
      * @return first
      * @stable ICU 4.4
      */
-    virtual UnicodeString&
+    આભાસી UnicodeString&
     normalizeSecondAndAppend(UnicodeString& first U_LIFETIME_BOUND,
-                             const UnicodeString& second,
-                             UErrorCode& errorCode) const = 0;
+                             અચલ UnicodeString& second,
+                             UErrorCode& errorCode) અચલ = 0;
     /**
      * Appends the second string to the first string
      * (merging them at the boundary) and returns the first string.
@@ -299,10 +299,10 @@ public:
      * @return first
      * @stable ICU 4.4
      */
-    virtual UnicodeString&
+    આભાસી UnicodeString&
     append(UnicodeString& first U_LIFETIME_BOUND,
-           const UnicodeString& second,
-           UErrorCode& errorCode) const = 0;
+           અચલ UnicodeString& second,
+           UErrorCode& errorCode) અચલ = 0;
 
     /**
      * Gets the decomposition mapping of c.
@@ -317,8 +317,8 @@ public:
      * @return true if c has a decomposition, otherwise false
      * @stable ICU 4.6
      */
-    virtual UBool
-    getDecomposition(UChar32 c, UnicodeString &decomposition) const = 0;
+    આભાસી UBool
+    getDecomposition(UChar32 c, UnicodeString &decomposition) અચલ = 0;
 
     /**
      * Gets the raw decomposition mapping of c.
@@ -344,8 +344,8 @@ public:
      * @return true if c has a decomposition, otherwise false
      * @stable ICU 49
      */
-    virtual UBool
-    getRawDecomposition(UChar32 c, UnicodeString &decomposition) const;
+    આભાસી UBool
+    getRawDecomposition(UChar32 c, UnicodeString &decomposition) અચલ;
 
     /**
      * Performs pairwise composition of a & b and returns the composite if there is one.
@@ -362,8 +362,8 @@ public:
      * @return The non-negative composite code point if there is one; otherwise a negative value.
      * @stable ICU 49
      */
-    virtual UChar32
-    composePair(UChar32 a, UChar32 b) const;
+    આભાસી UChar32
+    composePair(UChar32 a, UChar32 b) અચલ;
 
     /**
      * Gets the combining class of c.
@@ -373,8 +373,8 @@ public:
      * @return c's combining class
      * @stable ICU 49
      */
-    virtual uint8_t
-    getCombiningClass(UChar32 c) const;
+    આભાસી uint8_t
+    getCombiningClass(UChar32 c) અચલ;
 
     /**
      * Tests if the string is normalized.
@@ -390,8 +390,8 @@ public:
      * @return true if s is normalized
      * @stable ICU 4.4
      */
-    virtual UBool
-    isNormalized(const UnicodeString &s, UErrorCode &errorCode) const = 0;
+    આભાસી UBool
+    isNormalized(અચલ UnicodeString &s, UErrorCode &errorCode) અચલ = 0;
     /**
      * Tests if the UTF-8 string is normalized.
      * Internally, in cases where the quickCheck() method would return "maybe"
@@ -411,8 +411,8 @@ public:
      * @return true if s is normalized
      * @stable ICU 60
      */
-    virtual UBool
-    isNormalizedUTF8(StringPiece s, UErrorCode &errorCode) const;
+    આભાસી UBool
+    isNormalizedUTF8(StringPiece s, UErrorCode &errorCode) અચલ;
 
 
     /**
@@ -430,8 +430,8 @@ public:
      * @return UNormalizationCheckResult
      * @stable ICU 4.4
      */
-    virtual UNormalizationCheckResult
-    quickCheck(const UnicodeString &s, UErrorCode &errorCode) const = 0;
+    આભાસી UNormalizationCheckResult
+    quickCheck(અચલ UnicodeString &s, UErrorCode &errorCode) અચલ = 0;
 
     /**
      * Returns the end of the normalized substring of the input string.
@@ -455,8 +455,8 @@ public:
      * @return "yes" span end index
      * @stable ICU 4.4
      */
-    virtual int32_t
-    spanQuickCheckYes(const UnicodeString &s, UErrorCode &errorCode) const = 0;
+    આભાસી int32_t
+    spanQuickCheckYes(અચલ UnicodeString &s, UErrorCode &errorCode) અચલ = 0;
 
     /**
      * Tests if the character always has a normalization boundary before it,
@@ -471,7 +471,7 @@ public:
      * @return true if c has a normalization boundary before it
      * @stable ICU 4.4
      */
-    virtual UBool hasBoundaryBefore(UChar32 c) const = 0;
+    આભાસી UBool hasBoundaryBefore(UChar32 c) અચલ = 0;
 
     /**
      * Tests if the character always has a normalization boundary after it,
@@ -487,7 +487,7 @@ public:
      * @return true if c has a normalization boundary after it
      * @stable ICU 4.4
      */
-    virtual UBool hasBoundaryAfter(UChar32 c) const = 0;
+    આભાસી UBool hasBoundaryAfter(UChar32 c) અચલ = 0;
 
     /**
      * Tests if the character is normalization-inert.
@@ -502,7 +502,7 @@ public:
      * @return true if c is normalization-inert
      * @stable ICU 4.4
      */
-    virtual UBool isInert(UChar32 c) const = 0;
+    આભાસી UBool isInert(UChar32 c) અચલ = 0;
 };
 
 /**
@@ -516,8 +516,8 @@ public:
  * must be destructed by the owner.
  * @stable ICU 4.4
  */
-class U_COMMON_API FilteredNormalizer2 : public Normalizer2 {
-public:
+class U_COMMON_API FilteredNormalizer2 : જાહેર Normalizer2 {
+જાહેર:
     /**
      * Constructs a filtered normalizer wrapping any Normalizer2 instance
      * and a filter set.
@@ -528,8 +528,8 @@ public:
      * @param filterSet UnicodeSet which determines the characters to be normalized
      * @stable ICU 4.4
      */
-    FilteredNormalizer2(const Normalizer2& n2 U_LIFETIME_BOUND,
-                        const UnicodeSet& filterSet U_LIFETIME_BOUND) :
+    FilteredNormalizer2(અચલ Normalizer2& n2 U_LIFETIME_BOUND,
+                        અચલ UnicodeSet& filterSet U_LIFETIME_BOUND) :
             norm2(n2), set(filterSet) {}
 
     /**
@@ -551,10 +551,10 @@ public:
      * @return dest
      * @stable ICU 4.4
      */
-    virtual UnicodeString&
-    normalize(const UnicodeString& src,
+    આભાસી UnicodeString&
+    normalize(અચલ UnicodeString& src,
               UnicodeString& dest U_LIFETIME_BOUND,
-              UErrorCode& errorCode) const override;
+              UErrorCode& errorCode) અચલ override;
 
     /**
      * Normalizes a UTF-8 string and optionally records how source substrings
@@ -578,9 +578,9 @@ public:
      *                  function chaining. (See User Guide for details.)
      * @stable ICU 60
      */
-    virtual void
+    આભાસી શૂન્ય
     normalizeUTF8(uint32_t options, StringPiece src, ByteSink &sink,
-                  Edits *edits, UErrorCode &errorCode) const override;
+                  Edits *edits, UErrorCode &errorCode) અચલ override;
 
     /**
      * Appends the normalized form of the second string to the first string
@@ -596,10 +596,10 @@ public:
      * @return first
      * @stable ICU 4.4
      */
-    virtual UnicodeString&
+    આભાસી UnicodeString&
     normalizeSecondAndAppend(UnicodeString& first U_LIFETIME_BOUND,
-                             const UnicodeString& second,
-                             UErrorCode& errorCode) const override;
+                             અચલ UnicodeString& second,
+                             UErrorCode& errorCode) અચલ override;
     /**
      * Appends the second string to the first string
      * (merging them at the boundary) and returns the first string.
@@ -614,10 +614,10 @@ public:
      * @return first
      * @stable ICU 4.4
      */
-    virtual UnicodeString&
+    આભાસી UnicodeString&
     append(UnicodeString& first U_LIFETIME_BOUND,
-           const UnicodeString& second,
-           UErrorCode& errorCode) const override;
+           અચલ UnicodeString& second,
+           UErrorCode& errorCode) અચલ override;
 
     /**
      * Gets the decomposition mapping of c.
@@ -630,8 +630,8 @@ public:
      * @return true if c has a decomposition, otherwise false
      * @stable ICU 4.6
      */
-    virtual UBool
-    getDecomposition(UChar32 c, UnicodeString &decomposition) const override;
+    આભાસી UBool
+    getDecomposition(UChar32 c, UnicodeString &decomposition) અચલ override;
 
     /**
      * Gets the raw decomposition mapping of c.
@@ -644,8 +644,8 @@ public:
      * @return true if c has a decomposition, otherwise false
      * @stable ICU 49
      */
-    virtual UBool
-    getRawDecomposition(UChar32 c, UnicodeString &decomposition) const override;
+    આભાસી UBool
+    getRawDecomposition(UChar32 c, UnicodeString &decomposition) અચલ override;
 
     /**
      * Performs pairwise composition of a & b and returns the composite if there is one.
@@ -657,8 +657,8 @@ public:
      * @return The non-negative composite code point if there is one; otherwise a negative value.
      * @stable ICU 49
      */
-    virtual UChar32
-    composePair(UChar32 a, UChar32 b) const override;
+    આભાસી UChar32
+    composePair(UChar32 a, UChar32 b) અચલ override;
 
     /**
      * Gets the combining class of c.
@@ -668,8 +668,8 @@ public:
      * @return c's combining class
      * @stable ICU 49
      */
-    virtual uint8_t
-    getCombiningClass(UChar32 c) const override;
+    આભાસી uint8_t
+    getCombiningClass(UChar32 c) અચલ override;
 
     /**
      * Tests if the string is normalized.
@@ -682,8 +682,8 @@ public:
      * @return true if s is normalized
      * @stable ICU 4.4
      */
-    virtual UBool
-    isNormalized(const UnicodeString &s, UErrorCode &errorCode) const override;
+    આભાસી UBool
+    isNormalized(અચલ UnicodeString &s, UErrorCode &errorCode) અચલ override;
     /**
      * Tests if the UTF-8 string is normalized.
      * Internally, in cases where the quickCheck() method would return "maybe"
@@ -703,8 +703,8 @@ public:
      * @return true if s is normalized
      * @stable ICU 60
      */
-    virtual UBool
-    isNormalizedUTF8(StringPiece s, UErrorCode &errorCode) const override;
+    આભાસી UBool
+    isNormalizedUTF8(StringPiece s, UErrorCode &errorCode) અચલ override;
     /**
      * Tests if the string is normalized.
      * For details see the Normalizer2 base class documentation.
@@ -716,8 +716,8 @@ public:
      * @return UNormalizationCheckResult
      * @stable ICU 4.4
      */
-    virtual UNormalizationCheckResult
-    quickCheck(const UnicodeString &s, UErrorCode &errorCode) const override;
+    આભાસી UNormalizationCheckResult
+    quickCheck(અચલ UnicodeString &s, UErrorCode &errorCode) અચલ override;
     /**
      * Returns the end of the normalized substring of the input string.
      * For details see the Normalizer2 base class documentation.
@@ -729,8 +729,8 @@ public:
      * @return "yes" span end index
      * @stable ICU 4.4
      */
-    virtual int32_t
-    spanQuickCheckYes(const UnicodeString &s, UErrorCode &errorCode) const override;
+    આભાસી int32_t
+    spanQuickCheckYes(અચલ UnicodeString &s, UErrorCode &errorCode) અચલ override;
 
     /**
      * Tests if the character always has a normalization boundary before it,
@@ -740,7 +740,7 @@ public:
      * @return true if c has a normalization boundary before it
      * @stable ICU 4.4
      */
-    virtual UBool hasBoundaryBefore(UChar32 c) const override;
+    આભાસી UBool hasBoundaryBefore(UChar32 c) અચલ override;
 
     /**
      * Tests if the character always has a normalization boundary after it,
@@ -750,7 +750,7 @@ public:
      * @return true if c has a normalization boundary after it
      * @stable ICU 4.4
      */
-    virtual UBool hasBoundaryAfter(UChar32 c) const override;
+    આભાસી UBool hasBoundaryAfter(UChar32 c) અચલ override;
 
     /**
      * Tests if the character is normalization-inert.
@@ -759,28 +759,28 @@ public:
      * @return true if c is normalization-inert
      * @stable ICU 4.4
      */
-    virtual UBool isInert(UChar32 c) const override;
-private:
+    આભાસી UBool isInert(UChar32 c) અચલ override;
+ખાનગી:
     UnicodeString&
-    normalize(const UnicodeString& src,
+    normalize(અચલ UnicodeString& src,
               UnicodeString& dest U_LIFETIME_BOUND,
               USetSpanCondition spanCondition,
-              UErrorCode& errorCode) const;
+              UErrorCode& errorCode) અચલ;
 
-    void
-    normalizeUTF8(uint32_t options, const char *src, int32_t length,
+    શૂન્ય
+    normalizeUTF8(uint32_t options, અચલ અક્ષર *src, int32_t length,
                   ByteSink &sink, Edits *edits,
                   USetSpanCondition spanCondition,
-                  UErrorCode &errorCode) const;
+                  UErrorCode &errorCode) અચલ;
 
     UnicodeString&
     normalizeSecondAndAppend(UnicodeString& first U_LIFETIME_BOUND,
-                             const UnicodeString& second,
+                             અચલ UnicodeString& second,
                              UBool doNormalize,
-                             UErrorCode& errorCode) const;
+                             UErrorCode& errorCode) અચલ;
 
-    const Normalizer2 &norm2;
-    const UnicodeSet &set;
+    અચલ Normalizer2 &norm2;
+    અચલ UnicodeSet &set;
 };
 
 U_NAMESPACE_END

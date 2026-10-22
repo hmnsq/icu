@@ -20,28 +20,28 @@
 // This file was generated from the java source file BreakIterator.java
 // *****************************************************************************
 
-#include "unicode/utypes.h"
+#અન્તર્ભાવ "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#જો !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/rbbi.h"
-#include "unicode/brkiter.h"
-#include "unicode/udata.h"
-#include "unicode/uloc.h"
-#include "unicode/ures.h"
-#include "unicode/ustring.h"
-#include "unicode/filteredbrk.h"
-#include "bytesinkutil.h"
-#include "ucln_cmn.h"
-#include "cstring.h"
-#include "umutex.h"
-#include "servloc.h"
-#include "locbased.h"
-#include "uresimp.h"
-#include "uassert.h"
-#include "ubrkimpl.h"
-#include "utracimp.h"
-#include "charstr.h"
+#અન્તર્ભાવ "unicode/rbbi.h"
+#અન્તર્ભાવ "unicode/brkiter.h"
+#અન્તર્ભાવ "unicode/udata.h"
+#અન્તર્ભાવ "unicode/uloc.h"
+#અન્તર્ભાવ "unicode/ures.h"
+#અન્તર્ભાવ "unicode/ustring.h"
+#અન્તર્ભાવ "unicode/filteredbrk.h"
+#અન્તર્ભાવ "bytesinkutil.h"
+#અન્તર્ભાવ "ucln_cmn.h"
+#અન્તર્ભાવ "cstring.h"
+#અન્તર્ભાવ "umutex.h"
+#અન્તર્ભાવ "servloc.h"
+#અન્તર્ભાવ "locbased.h"
+#અન્તર્ભાવ "uresimp.h"
+#અન્તર્ભાવ "uassert.h"
+#અન્તર્ભાવ "ubrkimpl.h"
+#અન્તર્ભાવ "utracimp.h"
+#અન્તર્ભાવ "charstr.h"
 
 // *****************************************************************************
 // class BreakIterator
@@ -55,52 +55,52 @@ U_NAMESPACE_BEGIN
 // -------------------------------------
 
 BreakIterator*
-BreakIterator::buildInstance(const Locale& loc, const char *type, UErrorCode &status)
+BreakIterator::buildInstance(અચલ Locale& loc, અચલ અક્ષર *type, UErrorCode &status)
 {
-    char fnbuff[256];
-    char ext[4]={'\0'};
+    અક્ષર fnbuff[256];
+    અક્ષર ext[4]={'\0'};
     CharString actual;
     int32_t size;
-    const char16_t* brkfname = nullptr;
-    UResourceBundle brkRulesStack;
-    UResourceBundle brkNameStack;
-    UResourceBundle *brkRules = &brkRulesStack;
-    UResourceBundle *brkName  = &brkNameStack;
+    અચલ char16_t* brkfname = nullptr;
+    UResourceBundle brk_Rules_ઢગલો;
+    UResourceBundle brk_Name_ઢગલો;
+    UResourceBundle *brkRules = &brk_Rules_ઢગલો;
+    UResourceBundle *brkName  = &brk_Name_ઢગલો;
     RuleBasedBreakIterator *result = nullptr;
 
-    if (U_FAILURE(status))
-        return nullptr;
+    જો (U_FAILURE(status))
+        પાછા nullptr;
 
-    ures_initStackObject(brkRules);
-    ures_initStackObject(brkName);
+    ures_init_ઢગલો_Object(brkRules);
+    ures_init_ઢગલો_Object(brkName);
 
     // Get the locale
     UResourceBundle *b = ures_openNoDefault(U_ICUDATA_BRKITR, loc.getName(), &status);
 
     // Get the "boundaries" array.
-    if (U_SUCCESS(status)) {
-        brkRules = ures_getByKeyWithFallback(b, "boundaries", brkRules, &status);
+    જો (U_SUCCESS(status)) {
+        brkRules = ures_get_By_ચાવી_With_Fallback(b, "boundaries", brkRules, &status);
         // Get the string object naming the rules file
-        brkName = ures_getByKeyWithFallback(brkRules, type, brkName, &status);
+        brkName = ures_get_By_ચાવી_With_Fallback(brkRules, type, brkName, &status);
         // Get the actual string
         brkfname = ures_getString(brkName, &size, &status);
-        U_ASSERT((size_t)size<sizeof(fnbuff));
-        if (static_cast<size_t>(size) >= sizeof(fnbuff)) {
+        U_ASSERT((size_t)size<કદ(fnbuff));
+        જો (static_cast<size_t>(size) >= કદ(fnbuff)) {
             size=0;
-            if (U_SUCCESS(status)) {
+            જો (U_SUCCESS(status)) {
                 status = U_BUFFER_OVERFLOW_ERROR;
             }
         }
 
         // Use the string if we found it
-        if (U_SUCCESS(status) && brkfname) {
+        જો (U_SUCCESS(status) && brkfname) {
             actual.append(ures_getLocaleInternal(brkName, &status), -1, status);
 
             char16_t* extStart=u_strchr(brkfname, 0x002e);
-            int len = 0;
-            if (extStart != nullptr){
-                len = static_cast<int>(extStart - brkfname);
-                u_UCharsToChars(extStart+1, ext, sizeof(ext)); // nul terminates the buff
+            પૂર્ણાંક len = 0;
+            જો (extStart != nullptr){
+                len = static_cast<પૂર્ણાંક>(extStart - brkfname);
+                u_UCharsToChars(extStart+1, ext, કદ(ext)); // nul terminates the buff
                 u_UCharsToChars(brkfname, fnbuff, len);
             }
             fnbuff[len]=0; // nul terminate
@@ -111,16 +111,16 @@ BreakIterator::buildInstance(const Locale& loc, const char *type, UErrorCode &st
     ures_close(brkName);
 
     UDataMemory* file = udata_open(U_ICUDATA_BRKITR, ext, fnbuff, &status);
-    if (U_FAILURE(status)) {
+    જો (U_FAILURE(status)) {
         ures_close(b);
-        return nullptr;
+        પાછા nullptr;
     }
 
     // Create a RuleBasedBreakIterator
-    result = new RuleBasedBreakIterator(file, uprv_strstr(type, "phrase") != nullptr, status);
+    result = નવું RuleBasedBreakIterator(file, uprv_strstr(type, "phrase") != nullptr, status);
 
     // If there is a result, set the valid locale and actual locale, and the kind
-    if (U_SUCCESS(status) && result != nullptr) {
+    જો (U_SUCCESS(status) && result != nullptr) {
         result->actualLocale = Locale(actual.data());
         result->validLocale = Locale(ures_getLocaleByType(b, ULOC_VALID_LOCALE, &status));
         result->requestLocale = loc;
@@ -128,71 +128,71 @@ BreakIterator::buildInstance(const Locale& loc, const char *type, UErrorCode &st
 
     ures_close(b);
 
-    if (U_FAILURE(status) && result != nullptr) {  // Sometimes redundant check, but simple
+    જો (U_FAILURE(status) && result != nullptr) {  // Sometimes redundant check, but simple
         delete result;
-        return nullptr;
+        પાછા nullptr;
     }
 
-    if (result == nullptr) {
+    જો (result == nullptr) {
         udata_close(file);
-        if (U_SUCCESS(status)) {
+        જો (U_SUCCESS(status)) {
             status = U_MEMORY_ALLOCATION_ERROR;
         }
     }
 
-    return result;
+    પાછા result;
 }
 
 // Creates a break iterator for word breaks.
 BreakIterator* U_EXPORT2
-BreakIterator::createWordInstance(const Locale& key, UErrorCode& status)
+BreakIterator::createWordInstance(અચલ Locale& ચાવી, UErrorCode& status)
 {
-    return createInstance(key, UBRK_WORD, status);
+    પાછા createInstance(ચાવી, UBRK_WORD, status);
 }
 
 // -------------------------------------
 
 // Creates a break iterator  for line breaks.
 BreakIterator* U_EXPORT2
-BreakIterator::createLineInstance(const Locale& key, UErrorCode& status)
+BreakIterator::create_લીટી_Instance(અચલ Locale& ચાવી, UErrorCode& status)
 {
-    return createInstance(key, UBRK_LINE, status);
+    પાછા createInstance(ચાવી, UBRK_લીટી, status);
 }
 
 // -------------------------------------
 
 // Creates a break iterator  for character breaks.
 BreakIterator* U_EXPORT2
-BreakIterator::createCharacterInstance(const Locale& key, UErrorCode& status)
+BreakIterator::createCharacterInstance(અચલ Locale& ચાવી, UErrorCode& status)
 {
-    return createInstance(key, UBRK_CHARACTER, status);
+    પાછા createInstance(ચાવી, UBRK_CHARACTER, status);
 }
 
 // -------------------------------------
 
 // Creates a break iterator  for sentence breaks.
 BreakIterator* U_EXPORT2
-BreakIterator::createSentenceInstance(const Locale& key, UErrorCode& status)
+BreakIterator::createSentenceInstance(અચલ Locale& ચાવી, UErrorCode& status)
 {
-    return createInstance(key, UBRK_SENTENCE, status);
+    પાછા createInstance(ચાવી, UBRK_SENTENCE, status);
 }
 
 // -------------------------------------
 
 // Creates a break iterator for title casing breaks.
 BreakIterator* U_EXPORT2
-BreakIterator::createTitleInstance(const Locale& key, UErrorCode& status)
+BreakIterator::createTitleInstance(અચલ Locale& ચાવી, UErrorCode& status)
 {
-    return createInstance(key, UBRK_TITLE, status);
+    પાછા createInstance(ચાવી, UBRK_TITLE, status);
 }
 
 // -------------------------------------
 
 // Gets all the available locales that has localized text boundary data.
-const Locale* U_EXPORT2
+અચલ Locale* U_EXPORT2
 BreakIterator::getAvailableLocales(int32_t& count)
 {
-    return Locale::getAvailableLocales(count);
+    પાછા Locale::getAvailableLocales(count);
 }
 
 // ------------------------------------------
@@ -202,24 +202,24 @@ BreakIterator::getAvailableLocales(int32_t& count)
 //-------------------------------------------
 
 BreakIterator::BreakIterator()
-    : actualLocale(Locale::getRoot()), validLocale(Locale::getRoot()), requestLocale(Locale::getRoot())
+    : actualLocale(Locale::get_મૂળ()), validLocale(Locale::get_મૂળ()), requestLocale(Locale::get_મૂળ())
 {
 }
 
-BreakIterator::BreakIterator(const BreakIterator &other)
+BreakIterator::BreakIterator(અચલ BreakIterator &other)
     : UObject(other),
       actualLocale(other.actualLocale),
       validLocale(other.validLocale),
       requestLocale(other.requestLocale) {
 }
 
-BreakIterator& BreakIterator::operator=(const BreakIterator& other) U_LIFETIME_BOUND {
-    if (this != &other) {
+BreakIterator& BreakIterator::operator=(અચલ BreakIterator& other) U_LIFETIME_BOUND {
+    જો (આ != &other) {
         actualLocale = other.actualLocale;
         validLocale = other.validLocale;
         requestLocale = other.requestLocale;
     }
-    return *this;
+    પાછા *આ;
 }
 
 BreakIterator::~BreakIterator()
@@ -231,16 +231,16 @@ BreakIterator::~BreakIterator()
 // Registration
 //
 //-------------------------------------------
-#if !UCONFIG_NO_SERVICE
+#જો !UCONFIG_NO_SERVICE
 
 // -------------------------------------
 
-class ICUBreakIteratorFactory : public ICUResourceBundleFactory {
-public:
-    virtual ~ICUBreakIteratorFactory();
-protected:
-    virtual UObject* handleCreate(const Locale& loc, int32_t kind, const ICUService* /*service*/, UErrorCode& status) const override {
-        return BreakIterator::makeInstance(loc, kind, status);
+વર્ગ ICUBreakIteratorFactory : જાહેર ICUResourceBundleFactory {
+જાહેર:
+    આભાસી ~ICUBreakIteratorFactory();
+સુરક્ષિત:
+    આભાસી UObject* handleCreate(અચલ Locale& loc, int32_t kind, અચલ ICUService* /*service*/, UErrorCode& status) અચલ override {
+        પાછા BreakIterator::makeInstance(loc, kind, status);
     }
 };
 
@@ -248,31 +248,31 @@ ICUBreakIteratorFactory::~ICUBreakIteratorFactory() {}
 
 // -------------------------------------
 
-class ICUBreakIteratorService : public ICULocaleService {
-public:
+વર્ગ ICUBreakIteratorService : જાહેર ICULocaleService {
+જાહેર:
     ICUBreakIteratorService()
         : ICULocaleService(UNICODE_STRING("Break Iterator", 14))
     {
         UErrorCode status = U_ZERO_ERROR;
-        registerFactory(new ICUBreakIteratorFactory(), status);
+        registerFactory(નવું ICUBreakIteratorFactory(), status);
     }
 
-    virtual ~ICUBreakIteratorService();
+    આભાસી ~ICUBreakIteratorService();
 
-    virtual UObject* cloneInstance(UObject* instance) const override {
-        return ((BreakIterator*)instance)->clone();
+    આભાસી UObject* cloneInstance(UObject* instance) અચલ override {
+        પાછા ((BreakIterator*)instance)->clone();
     }
 
-    virtual UObject* handleDefault(const ICUServiceKey& key, UnicodeString* /*actualID*/, UErrorCode& status) const override {
-        LocaleKey& lkey = static_cast<LocaleKey&>(const_cast<ICUServiceKey&>(key));
+    આભાસી UObject* handleDefault(અચલ ICUService_ચાવી& ચાવી, UnicodeString* /*actualID*/, UErrorCode& status) અચલ override {
+        Locale_ચાવી& lkey = static_cast<Locale_ચાવી&>(const_cast<ICUService_ચાવી&>(ચાવી));
         int32_t kind = lkey.kind();
         Locale loc;
         lkey.currentLocale(loc);
-        return BreakIterator::makeInstance(loc, kind, status);
+        પાછા BreakIterator::makeInstance(loc, kind, status);
     }
 
-    virtual UBool isDefault() const override {
-        return countFactories() == 1;
+    આભાસી UBool isDefault() અચલ override {
+        પાછા ગણતરી_Factories() == 1;
     }
 };
 
@@ -283,8 +283,8 @@ ICUBreakIteratorService::~ICUBreakIteratorService() {}
 // defined in ucln_cmn.h
 U_NAMESPACE_END
 
-static icu::UInitOnce gInitOnceBrkiter {};
-static icu::ICULocaleService* gService = nullptr;
+સ્થિર icu::UInitOnce gInitOnceBrkiter {};
+સ્થિર icu::ICULocaleService* gService = nullptr;
 
 
 
@@ -292,66 +292,66 @@ static icu::ICULocaleService* gService = nullptr;
  * Release all static memory held by breakiterator.
  */
 U_CDECL_BEGIN
-static UBool U_CALLCONV breakiterator_cleanup() {
-#if !UCONFIG_NO_SERVICE
-    if (gService) {
+સ્થિર UBool U_CALLCONV breakiterator_cleanup() {
+#જો !UCONFIG_NO_SERVICE
+    જો (gService) {
         delete gService;
         gService = nullptr;
     }
     gInitOnceBrkiter.reset();
 #endif
-    return true;
+    પાછા સાચું;
 }
 U_CDECL_END
 U_NAMESPACE_BEGIN
 
-static void U_CALLCONV 
+સ્થિર શૂન્ય U_CALLCONV 
 initService() {
-    gService = new ICUBreakIteratorService();
+    gService = નવું ICUBreakIteratorService();
     ucln_common_registerCleanup(UCLN_COMMON_BREAKITERATOR, breakiterator_cleanup);
 }
 
-static ICULocaleService*
+સ્થિર ICULocaleService*
 getService()
 {
     umtx_initOnce(gInitOnceBrkiter, &initService);
-    return gService;
+    પાછા gService;
 }
 
 
 // -------------------------------------
 
-static inline UBool
+સ્થિર અંતઃરેખ UBool
 hasService()
 {
-    return !gInitOnceBrkiter.isReset() && getService() != nullptr;
+    પાછા !gInitOnceBrkiter.isReset() && getService() != nullptr;
 }
 
 // -------------------------------------
 
-URegistryKey U_EXPORT2
-BreakIterator::registerInstance(BreakIterator* toAdopt, const Locale& locale, UBreakIteratorType kind, UErrorCode& status)
+URegistry_ચાવી U_EXPORT2
+BreakIterator::registerInstance(BreakIterator* toAdopt, અચલ Locale& locale, UBreakIteratorType kind, UErrorCode& status)
 {
     ICULocaleService *service = getService();
-    if (service == nullptr) {
+    જો (service == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        પાછા nullptr;
     }
-    return service->registerInstance(toAdopt, locale, kind, status);
+    પાછા service->registerInstance(toAdopt, locale, kind, status);
 }
 
 // -------------------------------------
 
 UBool U_EXPORT2
-BreakIterator::unregister(URegistryKey key, UErrorCode& status)
+BreakIterator::unregister(URegistry_ચાવી ચાવી, UErrorCode& status)
 {
-    if (U_SUCCESS(status)) {
-        if (hasService()) {
-            return gService->unregister(key, status);
+    જો (U_SUCCESS(status)) {
+        જો (hasService()) {
+            પાછા gService->unregister(ચાવી, status);
         }
         status = U_MEMORY_ALLOCATION_ERROR;
     }
-    return false;
+    પાછા ખોટું;
 }
 
 // -------------------------------------
@@ -360,24 +360,24 @@ StringEnumeration* U_EXPORT2
 BreakIterator::getAvailableLocales()
 {
     ICULocaleService *service = getService();
-    if (service == nullptr) {
-        return nullptr;
+    જો (service == nullptr) {
+        પાછા nullptr;
     }
-    return service->getAvailableLocales();
+    પાછા service->getAvailableLocales();
 }
 #endif /* UCONFIG_NO_SERVICE */
 
 // -------------------------------------
 
 BreakIterator*
-BreakIterator::createInstance(const Locale& loc, int32_t kind, UErrorCode& status)
+BreakIterator::createInstance(અચલ Locale& loc, int32_t kind, UErrorCode& status)
 {
-    if (U_FAILURE(status)) {
-        return nullptr;
+    જો (U_FAILURE(status)) {
+        પાછા nullptr;
     }
 
-#if !UCONFIG_NO_SERVICE
-    if (hasService()) {
+#જો !UCONFIG_NO_SERVICE
+    જો (hasService()) {
         Locale actualLoc("");
         BreakIterator *result = (BreakIterator*)gService->get(loc, kind, &actualLoc, status);
         // TODO: The way the service code works in ICU 2.8 is that if
@@ -390,61 +390,61 @@ BreakIterator::createInstance(const Locale& loc, int32_t kind, UErrorCode& statu
         // handleDefault calls), so we don't touch it.  YES, A COMMENT
         // THIS LONG is a sign of bad code -- so the action item is to
         // revisit this in ICU 3.0 and clean it up/fix it/remove it.
-        if (U_SUCCESS(status) && (result != nullptr) && *actualLoc.getName() != 0) {
+        જો (U_SUCCESS(status) && (result != nullptr) && *actualLoc.getName() != 0) {
             result->actualLocale = actualLoc;
             result->validLocale = actualLoc;
         }
-        return result;
+        પાછા result;
     }
-    else
+    નહીંતર
 #endif
     {
-        return makeInstance(loc, kind, status);
+        પાછા makeInstance(loc, kind, status);
     }
 }
 
 // -------------------------------------
-enum { kKeyValueLenMax = 32 };
+ગણના { k_ચાવી_કિંમત_Len_Max = 32 };
 
 BreakIterator*
-BreakIterator::makeInstance(const Locale& loc, int32_t kind, UErrorCode& status)
+BreakIterator::makeInstance(અચલ Locale& loc, int32_t kind, UErrorCode& status)
 {
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    જો (U_FAILURE(status)) {
+        પાછા nullptr;
     }
 
     BreakIterator *result = nullptr;
-    switch (kind) {
-    case UBRK_CHARACTER:
+    પસંદગી (kind) {
+    સ્થિતિ UBRK_CHARACTER:
         {
             UTRACE_ENTRY(UTRACE_UBRK_CREATE_CHARACTER);
             result = BreakIterator::buildInstance(loc, "grapheme", status);
             UTRACE_EXIT_STATUS(status);
         }
-        break;
-    case UBRK_WORD:
+        તોડો;
+    સ્થિતિ UBRK_WORD:
         {
             UTRACE_ENTRY(UTRACE_UBRK_CREATE_WORD);
             result = BreakIterator::buildInstance(loc, "word", status);
             UTRACE_EXIT_STATUS(status);
         }
-        break;
-    case UBRK_LINE:
+        તોડો;
+    સ્થિતિ UBRK_લીટી:
         {
-            char lb_lw[kKeyValueLenMax];
-            UTRACE_ENTRY(UTRACE_UBRK_CREATE_LINE);
+            અક્ષર lb_lw[k_ચાવી_કિંમત_Len_Max];
+            UTRACE_ENTRY(UTRACE_UBRK_CREATE_લીટી);
             uprv_strcpy(lb_lw, "line");
             UErrorCode kvStatus = U_ZERO_ERROR;
-            auto value = loc.getKeywordValue<CharString>("lb", kvStatus);
-            if (U_SUCCESS(kvStatus) && (value == "strict" || value == "normal" || value == "loose")) {
+            auto value = loc.get_Keyword_કિંમત<CharString>("lb", kvStatus);
+            જો (U_SUCCESS(kvStatus) && (value == "strict" || value == "normal" || value == "loose")) {
                 uprv_strcat(lb_lw, "_");
                 uprv_strcat(lb_lw, value.data());
             }
             // lw=phrase is only supported in Japanese and Korean
-            if (uprv_strcmp(loc.getLanguage(), "ja") == 0 || uprv_strcmp(loc.getLanguage(), "ko") == 0) {
-                value = loc.getKeywordValue<CharString>("lw", kvStatus);
-                if (U_SUCCESS(kvStatus) && value == "phrase") {
+            જો (uprv_strcmp(loc.getLanguage(), "ja") == 0 || uprv_strcmp(loc.getLanguage(), "ko") == 0) {
+                value = loc.get_Keyword_કિંમત<CharString>("lw", kvStatus);
+                જો (U_SUCCESS(kvStatus) && value == "phrase") {
                     uprv_strcat(lb_lw, "_");
                     uprv_strcat(lb_lw, value.data());
                 }
@@ -454,18 +454,18 @@ BreakIterator::makeInstance(const Locale& loc, int32_t kind, UErrorCode& status)
             UTRACE_DATA1(UTRACE_INFO, "lb_lw=%s", lb_lw);
             UTRACE_EXIT_STATUS(status);
         }
-        break;
-    case UBRK_SENTENCE:
+        તોડો;
+    સ્થિતિ UBRK_SENTENCE:
         {
             UTRACE_ENTRY(UTRACE_UBRK_CREATE_SENTENCE);
             result = BreakIterator::buildInstance(loc, "sentence", status);
-#if !UCONFIG_NO_FILTERED_BREAK_ITERATION
-            char ssKeyValue[kKeyValueLenMax] = {0};
+#જો !UCONFIG_NO_FILTERED_BREAK_ITERATION
+            અક્ષર ss_ચાવી_કિંમત[k_ચાવી_કિંમત_Len_Max] = {0};
             UErrorCode kvStatus = U_ZERO_ERROR;
-            int32_t kLen = loc.getKeywordValue("ss", ssKeyValue, kKeyValueLenMax, kvStatus);
-            if (U_SUCCESS(kvStatus) && kLen > 0 && uprv_strcmp(ssKeyValue,"standard")==0) {
+            int32_t kLen = loc.get_Keyword_કિંમત("ss", ss_ચાવી_કિંમત, k_ચાવી_કિંમત_Len_Max, kvStatus);
+            જો (U_SUCCESS(kvStatus) && kLen > 0 && uprv_strcmp(ss_ચાવી_કિંમત,"standard")==0) {
                 FilteredBreakIteratorBuilder* fbiBuilder = FilteredBreakIteratorBuilder::createInstance(loc, kvStatus);
-                if (U_SUCCESS(kvStatus)) {
+                જો (U_SUCCESS(kvStatus)) {
                     result = fbiBuilder->build(result, status);
                     delete fbiBuilder;
                 }
@@ -473,73 +473,73 @@ BreakIterator::makeInstance(const Locale& loc, int32_t kind, UErrorCode& status)
 #endif
             UTRACE_EXIT_STATUS(status);
         }
-        break;
-    case UBRK_TITLE:
+        તોડો;
+    સ્થિતિ UBRK_TITLE:
         {
             UTRACE_ENTRY(UTRACE_UBRK_CREATE_TITLE);
             result = BreakIterator::buildInstance(loc, "title", status);
             UTRACE_EXIT_STATUS(status);
         }
-        break;
-    default:
+        તોડો;
+    મૂળભૂત:
         status = U_ILLEGAL_ARGUMENT_ERROR;
     }
 
-    if (U_FAILURE(status)) {
+    જો (U_FAILURE(status)) {
         delete result;
-        return nullptr;
+        પાછા nullptr;
     }
 
-    return result;
+    પાછા result;
 }
 
 Locale
-BreakIterator::getLocale(ULocDataLocaleType type, UErrorCode& status) const {
-    if (U_FAILURE(status)) {
-        return Locale::getRoot();
+BreakIterator::getLocale(ULocDataLocaleType type, UErrorCode& status) અચલ {
+    જો (U_FAILURE(status)) {
+        પાછા Locale::get_મૂળ();
     }
-    if (type == ULOC_REQUESTED_LOCALE) {
-        return requestLocale;
+    જો (type == ULOC_REQUESTED_LOCALE) {
+        પાછા requestLocale;
     }
-    return LocaleBased::getLocale(validLocale, actualLocale, type, status);
+    પાછા LocaleBased::getLocale(validLocale, actualLocale, type, status);
 }
 
-const char*
-BreakIterator::getLocaleID(ULocDataLocaleType type, UErrorCode& status) const U_LIFETIME_BOUND {
-    if (U_FAILURE(status)) {
-        return nullptr;
+અચલ અક્ષર*
+BreakIterator::getLocaleID(ULocDataLocaleType type, UErrorCode& status) અચલ U_LIFETIME_BOUND {
+    જો (U_FAILURE(status)) {
+        પાછા nullptr;
     }
-    if (type == ULOC_REQUESTED_LOCALE) {
-        return requestLocale.getName();
+    જો (type == ULOC_REQUESTED_LOCALE) {
+        પાછા requestLocale.getName();
     }
-    return LocaleBased::getLocaleID(validLocale, actualLocale, type, status);
+    પાછા LocaleBased::getLocaleID(validLocale, actualLocale, type, status);
 }
 
 
 // This implementation of getRuleStatus is a do-nothing stub, here to
 // provide a default implementation for any derived BreakIterator classes that
 // do not implement it themselves.
-int32_t BreakIterator::getRuleStatus() const {
-    return 0;
+int32_t BreakIterator::getRuleStatus() અચલ {
+    પાછા 0;
 }
 
 // This implementation of getRuleStatusVec is a do-nothing stub, here to
 // provide a default implementation for any derived BreakIterator classes that
 // do not implement it themselves.
 int32_t BreakIterator::getRuleStatusVec(int32_t *fillInVec, int32_t capacity, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return 0;
+    જો (U_FAILURE(status)) {
+        પાછા 0;
     }
-    if (capacity < 1) {
+    જો (capacity < 1) {
         status = U_BUFFER_OVERFLOW_ERROR;
-        return 1;
+        પાછા 1;
     }
     *fillInVec = 0;
-    return 1;
+    પાછા 1;
 }
 
-BreakIterator::BreakIterator(const Locale& valid, const Locale& actual)
-    : actualLocale(actual), validLocale(valid), requestLocale(Locale::getRoot()) {
+BreakIterator::BreakIterator(અચલ Locale& valid, અચલ Locale& actual)
+    : actualLocale(actual), validLocale(valid), requestLocale(Locale::get_મૂળ()) {
 }
 
 U_NAMESPACE_END

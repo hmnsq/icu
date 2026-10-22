@@ -1,35 +1,35 @@
 // © 2019 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
 
-#include <optional>
-#include <string_view>
-#include <utility>
+#અન્તર્ભાવ <optional>
+#અન્તર્ભાવ <string_view>
+#અન્તર્ભાવ <utility>
 
-#include "bytesinkutil.h"  // StringByteSink<CharString>
-#include "charstr.h"
-#include "cstring.h"
-#include "fixedstring.h"
-#include "ulocimp.h"
-#include "unicode/localebuilder.h"
-#include "unicode/locid.h"
+#અન્તર્ભાવ "bytesinkutil.h"  // StringByteSink<CharString>
+#અન્તર્ભાવ "charstr.h"
+#અન્તર્ભાવ "cstring.h"
+#અન્તર્ભાવ "fixedstring.h"
+#અન્તર્ભાવ "ulocimp.h"
+#અન્તર્ભાવ "unicode/localebuilder.h"
+#અન્તર્ભાવ "unicode/locid.h"
 
-namespace {
+નામાકાશ {
 
-inline bool UPRV_ISDIGIT(char c) { return c >= '0' && c <= '9'; }
-inline bool UPRV_ISALPHANUM(char c) { return uprv_isASCIILetter(c) || UPRV_ISDIGIT(c); }
+અંતઃરેખ તાર્કિક UPRV_ISDIGIT(અક્ષર c) { પાછા c >= '0' && c <= '9'; }
+અંતઃરેખ તાર્કિક UPRV_ISALPHANUM(અક્ષર c) { પાછા uprv_isASCIILetter(c) || UPRV_ISDIGIT(c); }
 
-constexpr const char* kAttributeKey = "attribute";
+constexpr અચલ અક્ષર* k_Attribute_ચાવી = "attribute";
 
-bool _isExtensionSubtags(char key, const char* s, int32_t len) {
-    switch (uprv_tolower(key)) {
-        case 'u':
-            return ultag_isUnicodeExtensionSubtags(s, len);
-        case 't':
-            return ultag_isTransformedExtensionSubtags(s, len);
-        case 'x':
-            return ultag_isPrivateuseValueSubtags(s, len);
-        default:
-            return ultag_isExtensionSubtags(s, len);
+તાર્કિક _isExtensionSubtags(અક્ષર ચાવી, અચલ અક્ષર* s, int32_t len) {
+    પસંદગી (uprv_tolower(ચાવી)) {
+        સ્થિતિ 'u':
+            પાછા ultag_isUnicodeExtensionSubtags(s, len);
+        સ્થિતિ 't':
+            પાછા ultag_isTransformedExtensionSubtags(s, len);
+        સ્થિતિ 'x':
+            પાછા ultag_is_Privateuse_કિંમત_Subtags(s, len);
+        મૂળભૂત:
+            પાછા ultag_isExtensionSubtags(s, len);
     }
 }
 
@@ -51,7 +51,7 @@ LocaleBuilder::~LocaleBuilder()
     delete extensions_;
 }
 
-LocaleBuilder& LocaleBuilder::setLocale(const Locale& locale) U_LIFETIME_BOUND
+LocaleBuilder& LocaleBuilder::setLocale(અચલ Locale& locale) U_LIFETIME_BOUND
 {
     clear();
     setLanguage(locale.getLanguage());
@@ -59,33 +59,33 @@ LocaleBuilder& LocaleBuilder::setLocale(const Locale& locale) U_LIFETIME_BOUND
     setRegion(locale.getCountry());
     setVariant(locale.getVariant());
     extensions_ = locale.clone();
-    if (extensions_ == nullptr) {
+    જો (extensions_ == nullptr) {
         status_ = U_MEMORY_ALLOCATION_ERROR;
     }
-    return *this;
+    પાછા *આ;
 }
 
 LocaleBuilder& LocaleBuilder::setLanguageTag(StringPiece tag) U_LIFETIME_BOUND
 {
     Locale l = Locale::forLanguageTag(tag, status_);
-    if (U_FAILURE(status_)) { return *this; }
+    જો (U_FAILURE(status_)) { પાછા *આ; }
     // Because setLocale will reset status_ we need to return
     // first if we have error in forLanguageTag.
     setLocale(l);
-    return *this;
+    પાછા *આ;
 }
 
-namespace {
+નામાકાશ {
 
-void setField(StringPiece input, char* dest, UErrorCode& errorCode,
-              bool (*test)(const char*, int32_t)) {
-    if (U_FAILURE(errorCode)) { return; }
-    if (input.empty()) {
+શૂન્ય setField(StringPiece input, અક્ષર* dest, UErrorCode& errorCode,
+              તાર્કિક (*test)(અચલ અક્ષર*, int32_t)) {
+    જો (U_FAILURE(errorCode)) { પાછા; }
+    જો (input.empty()) {
         dest[0] = '\0';
-    } else if (test(input.data(), input.length())) {
+    } નહીંતર જો (test(input.data(), input.length())) {
         uprv_memcpy(dest, input.data(), input.length());
         dest[input.length()] = '\0';
-    } else {
+    } નહીંતર {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
     }
 }
@@ -95,28 +95,28 @@ void setField(StringPiece input, char* dest, UErrorCode& errorCode,
 LocaleBuilder& LocaleBuilder::setLanguage(StringPiece language) U_LIFETIME_BOUND
 {
     setField(language, language_, status_, &ultag_isLanguageSubtag);
-    return *this;
+    પાછા *આ;
 }
 
 LocaleBuilder& LocaleBuilder::setScript(StringPiece script) U_LIFETIME_BOUND
 {
     setField(script, script_, status_, &ultag_isScriptSubtag);
-    return *this;
+    પાછા *આ;
 }
 
 LocaleBuilder& LocaleBuilder::setRegion(StringPiece region) U_LIFETIME_BOUND
 {
     setField(region, region_, status_, &ultag_isRegionSubtag);
-    return *this;
+    પાછા *આ;
 }
 
-namespace {
+નામાકાશ {
 
-void transform(char* data, int32_t len) {
-    for (int32_t i = 0; i < len; i++, data++) {
-        if (*data == '_') {
+શૂન્ય transform(અક્ષર* data, int32_t len) {
+    માટે (int32_t i = 0; i < len; i++, data++) {
+        જો (*data == '_') {
             *data = '-';
-        } else {
+        } નહીંતર {
             *data = uprv_tolower(*data);
         }
     }
@@ -126,263 +126,263 @@ void transform(char* data, int32_t len) {
 
 LocaleBuilder& LocaleBuilder::setVariant(StringPiece variant) U_LIFETIME_BOUND
 {
-    if (U_FAILURE(status_)) { return *this; }
-    if (variant.empty()) {
+    જો (U_FAILURE(status_)) { પાછા *આ; }
+    જો (variant.empty()) {
         delete variant_;
         variant_ = nullptr;
-        return *this;
+        પાછા *આ;
     }
-    FixedString* new_variant = new FixedString(variant);
-    if (new_variant == nullptr || new_variant->isEmpty()) {
+    FixedString* new_variant = નવું FixedString(variant);
+    જો (new_variant == nullptr || new_variant->isEmpty()) {
         status_ = U_MEMORY_ALLOCATION_ERROR;
-        return *this;
+        પાછા *આ;
     }
     transform(new_variant->getAlias(), variant.length());
-    if (!ultag_isVariantSubtags(new_variant->data(), variant.length())) {
+    જો (!ultag_isVariantSubtags(new_variant->data(), variant.length())) {
         delete new_variant;
         status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        પાછા *આ;
     }
     delete variant_;
     variant_ = new_variant;
-    return *this;
+    પાછા *આ;
 }
 
-namespace {
+નામાકાશ {
 
-bool
-_isKeywordValue(const char* key, const char* value, int32_t value_len)
+તાર્કિક
+is_Keyword_કિંમત(અચલ અક્ષર* ચાવી, અચલ અક્ષર* value, int32_t કિંમત_len)
 {
-    if (key[1] == '\0') {
+    જો (ચાવી[1] == '\0') {
         // one char key
-        return (UPRV_ISALPHANUM(uprv_tolower(key[0])) &&
-                _isExtensionSubtags(key[0], value, value_len));
-    } else if (uprv_strcmp(key, kAttributeKey) == 0) {
+        પાછા (UPRV_ISALPHANUM(uprv_tolower(ચાવી[0])) &&
+                _isExtensionSubtags(ચાવી[0], value, કિંમત_len));
+    } નહીંતર જો (uprv_strcmp(ચાવી, k_Attribute_ચાવી) == 0) {
         // unicode attributes
-        return ultag_isUnicodeLocaleAttributes(value, value_len);
+        પાછા ultag_isUnicodeLocaleAttributes(value, કિંમત_len);
     }
     // otherwise: unicode extension value
     // We need to convert from legacy key/value to unicode
     // key/value
-    std::optional<std::string_view> unicode_locale_key = ulocimp_toBcpKeyWithFallback(key);
-    std::optional<std::string_view> unicode_locale_type = ulocimp_toBcpTypeWithFallback(key, value);
+    std::optional<std::string_view> unicode_locale_ચાવી = ulocimp_to_Bcp_ચાવી_With_Fallback(ચાવી);
+    std::optional<std::string_view> unicode_locale_type = ulocimp_toBcpTypeWithFallback(ચાવી, value);
 
-    return unicode_locale_key.has_value() &&
+    પાછા unicode_locale_ચાવી.has_value() &&
            unicode_locale_type.has_value() &&
-           ultag_isUnicodeLocaleKey(unicode_locale_key->data(),
-                                    static_cast<int32_t>(unicode_locale_key->size())) &&
+           ultag_is_Unicode_Locale_ચાવી(unicode_locale_ચાવી->data(),
+                                    static_cast<int32_t>(unicode_locale_ચાવી->size())) &&
            ultag_isUnicodeLocaleType(unicode_locale_type->data(),
                                      static_cast<int32_t>(unicode_locale_type->size()));
 }
 
-void
-_copyExtensions(const Locale& from, icu::StringEnumeration *keywords,
-                Locale& to, bool validate, UErrorCode& errorCode)
+શૂન્ય
+_copyExtensions(અચલ Locale& from, icu::StringEnumeration *keywords,
+                Locale& to, તાર્કિક validate, UErrorCode& errorCode)
 {
-    if (U_FAILURE(errorCode)) { return; }
+    જો (U_FAILURE(errorCode)) { પાછા; }
     LocalPointer<icu::StringEnumeration> ownedKeywords;
-    if (keywords == nullptr) {
+    જો (keywords == nullptr) {
         ownedKeywords.adoptInstead(from.createKeywords(errorCode));
-        if (U_FAILURE(errorCode) || ownedKeywords.isNull()) { return; }
+        જો (U_FAILURE(errorCode) || ownedKeywords.isNull()) { પાછા; }
         keywords = ownedKeywords.getAlias();
     }
-    const char* key;
-    while ((key = keywords->next(nullptr, errorCode)) != nullptr) {
-        auto value = from.getKeywordValue<CharString>(key, errorCode);
-        if (U_FAILURE(errorCode)) { return; }
-        if (uprv_strcmp(key, kAttributeKey) == 0) {
+    અચલ અક્ષર* ચાવી;
+    જ્યારે ((ચાવી = keywords->next(nullptr, errorCode)) != nullptr) {
+        auto value = from.get_Keyword_કિંમત<CharString>(ચાવી, errorCode);
+        જો (U_FAILURE(errorCode)) { પાછા; }
+        જો (uprv_strcmp(ચાવી, k_Attribute_ચાવી) == 0) {
             transform(value.data(), value.length());
         }
-        if (validate &&
-            !_isKeywordValue(key, value.data(), value.length())) {
+        જો (validate &&
+            !is_Keyword_કિંમત(ચાવી, value.data(), value.length())) {
             errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            પાછા;
         }
-        to.setKeywordValue(key, value.data(), errorCode);
-        if (U_FAILURE(errorCode)) { return; }
+        to.set_Keyword_કિંમત(ચાવી, value.data(), errorCode);
+        જો (U_FAILURE(errorCode)) { પાછા; }
     }
 }
 
-void
-_clearUAttributesAndKeyType(Locale& locale, UErrorCode& errorCode)
+શૂન્ય
+clear_UAttributes_And_ચાવી_Type(Locale& locale, UErrorCode& errorCode)
 {
-    if (U_FAILURE(errorCode)) { return; }
+    જો (U_FAILURE(errorCode)) { પાછા; }
     // Clear Unicode attributes
-    locale.setKeywordValue(kAttributeKey, "", errorCode);
+    locale.set_Keyword_કિંમત(k_Attribute_ચાવી, "", errorCode);
 
     // Clear all Unicode keyword values
     LocalPointer<icu::StringEnumeration> iter(locale.createUnicodeKeywords(errorCode));
-    if (U_FAILURE(errorCode) || iter.isNull()) { return; }
-    const char* key;
-    while ((key = iter->next(nullptr, errorCode)) != nullptr) {
-        locale.setUnicodeKeywordValue(key, nullptr, errorCode);
+    જો (U_FAILURE(errorCode) || iter.isNull()) { પાછા; }
+    અચલ અક્ષર* ચાવી;
+    જ્યારે ((ચાવી = iter->next(nullptr, errorCode)) != nullptr) {
+        locale.set_Unicode_Keyword_કિંમત(ચાવી, nullptr, errorCode);
     }
 }
 
-void
-_setUnicodeExtensions(Locale& locale, const CharString& value, UErrorCode& errorCode)
+શૂન્ય
+_setUnicodeExtensions(Locale& locale, અચલ CharString& value, UErrorCode& errorCode)
 {
-    if (U_FAILURE(errorCode)) { return; }
+    જો (U_FAILURE(errorCode)) { પાછા; }
     // Add the unicode extensions to extensions_
     CharString locale_str("und-u-", errorCode);
     locale_str.append(value, errorCode);
     _copyExtensions(
         Locale::forLanguageTag(locale_str.data(), errorCode), nullptr,
-        locale, false, errorCode);
+        locale, ખોટું, errorCode);
 }
 
 }  // namespace
 
-LocaleBuilder& LocaleBuilder::setExtension(char key, StringPiece value) U_LIFETIME_BOUND
+LocaleBuilder& LocaleBuilder::setExtension(અક્ષર ચાવી, StringPiece value) U_LIFETIME_BOUND
 {
-    if (U_FAILURE(status_)) { return *this; }
-    if (!UPRV_ISALPHANUM(key)) {
+    જો (U_FAILURE(status_)) { પાછા *આ; }
+    જો (!UPRV_ISALPHANUM(ચાવી)) {
         status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        પાછા *આ;
     }
-    CharString value_str(value, status_);
-    if (U_FAILURE(status_)) { return *this; }
-    transform(value_str.data(), value_str.length());
-    if (!value_str.isEmpty() &&
-            !_isExtensionSubtags(key, value_str.data(), value_str.length())) {
+    CharString કિંમત_str(value, status_);
+    જો (U_FAILURE(status_)) { પાછા *આ; }
+    transform(કિંમત_str.data(), કિંમત_str.length());
+    જો (!કિંમત_str.isEmpty() &&
+            !_isExtensionSubtags(ચાવી, કિંમત_str.data(), કિંમત_str.length())) {
         status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        પાછા *આ;
     }
-    if (extensions_ == nullptr) {
-        extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
+    જો (extensions_ == nullptr) {
+        extensions_ = Locale::get_મૂળ().clone();
+        જો (extensions_ == nullptr) {
             status_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+            પાછા *આ;
         }
     }
-    if (uprv_tolower(key) != 'u') {
+    જો (uprv_tolower(ચાવી) != 'u') {
         // for t, x and others extension.
-        extensions_->setKeywordValue(StringPiece(&key, 1), value_str.data(),
+        extensions_->set_Keyword_કિંમત(StringPiece(&ચાવી, 1), કિંમત_str.data(),
                                      status_);
-        return *this;
+        પાછા *આ;
     }
-    _clearUAttributesAndKeyType(*extensions_, status_);
-    if (U_FAILURE(status_)) { return *this; }
-    if (!value.empty()) {
-        _setUnicodeExtensions(*extensions_, value_str, status_);
+    clear_UAttributes_And_ચાવી_Type(*extensions_, status_);
+    જો (U_FAILURE(status_)) { પાછા *આ; }
+    જો (!value.empty()) {
+        _setUnicodeExtensions(*extensions_, કિંમત_str, status_);
     }
-    return *this;
+    પાછા *આ;
 }
 
-LocaleBuilder& LocaleBuilder::setUnicodeLocaleKeyword(StringPiece key,
+LocaleBuilder& LocaleBuilder::setUnicodeLocaleKeyword(StringPiece ચાવી,
                                                       StringPiece type) U_LIFETIME_BOUND
 {
-    if (U_FAILURE(status_)) { return *this; }
-    if (!ultag_isUnicodeLocaleKey(key.data(), key.length()) ||
+    જો (U_FAILURE(status_)) { પાછા *આ; }
+    જો (!ultag_is_Unicode_Locale_ચાવી(ચાવી.data(), ચાવી.length()) ||
             (!type.empty() &&
                  !ultag_isUnicodeLocaleType(type.data(), type.length()))) {
       status_ = U_ILLEGAL_ARGUMENT_ERROR;
-      return *this;
+      પાછા *આ;
     }
-    if (extensions_ == nullptr) {
-        extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
+    જો (extensions_ == nullptr) {
+        extensions_ = Locale::get_મૂળ().clone();
+        જો (extensions_ == nullptr) {
             status_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+            પાછા *આ;
         }
     }
-    extensions_->setUnicodeKeywordValue(key, type, status_);
-    return *this;
+    extensions_->set_Unicode_Keyword_કિંમત(ચાવી, type, status_);
+    પાછા *આ;
 }
 
 LocaleBuilder& LocaleBuilder::addUnicodeLocaleAttribute(StringPiece value) U_LIFETIME_BOUND
 {
-    CharString value_str(value, status_);
-    if (U_FAILURE(status_)) { return *this; }
-    transform(value_str.data(), value_str.length());
-    if (!ultag_isUnicodeLocaleAttribute(value_str.data(), value_str.length())) {
+    CharString કિંમત_str(value, status_);
+    જો (U_FAILURE(status_)) { પાછા *આ; }
+    transform(કિંમત_str.data(), કિંમત_str.length());
+    જો (!ultag_isUnicodeLocaleAttribute(કિંમત_str.data(), કિંમત_str.length())) {
         status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        પાછા *આ;
     }
-    if (extensions_ == nullptr) {
-        extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
+    જો (extensions_ == nullptr) {
+        extensions_ = Locale::get_મૂળ().clone();
+        જો (extensions_ == nullptr) {
             status_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+            પાછા *આ;
         }
-        extensions_->setKeywordValue(kAttributeKey, value_str.data(), status_);
-        return *this;
+        extensions_->set_Keyword_કિંમત(k_Attribute_ચાવી, કિંમત_str.data(), status_);
+        પાછા *આ;
     }
 
     UErrorCode localErrorCode = U_ZERO_ERROR;
-    auto attributes = extensions_->getKeywordValue<CharString>(kAttributeKey, localErrorCode);
-    if (U_FAILURE(localErrorCode)) {
-        CharString new_attributes(value_str.data(), status_);
+    auto attributes = extensions_->get_Keyword_કિંમત<CharString>(k_Attribute_ચાવી, localErrorCode);
+    જો (U_FAILURE(localErrorCode)) {
+        CharString new_attributes(કિંમત_str.data(), status_);
         // No attributes, set the attribute.
-        extensions_->setKeywordValue(kAttributeKey, new_attributes.data(), status_);
-        return *this;
+        extensions_->set_Keyword_કિંમત(k_Attribute_ચાવી, new_attributes.data(), status_);
+        પાછા *આ;
     }
 
     transform(attributes.data(),attributes.length());
-    const char* start = attributes.data();
-    const char* limit = attributes.data() + attributes.length();
+    અચલ અક્ષર* start = attributes.data();
+    અચલ અક્ષર* limit = attributes.data() + attributes.length();
     CharString new_attributes;
-    bool inserted = false;
-    while (start < limit) {
-        if (!inserted) {
-            int cmp = uprv_strcmp(start, value_str.data());
-            if (cmp == 0) { return *this; }  // Found it in attributes: Just return
-            if (cmp > 0) {
-                if (!new_attributes.isEmpty()) new_attributes.append('_', status_);
-                new_attributes.append(value_str.data(), status_);
-                inserted = true;
+    તાર્કિક inserted = ખોટું;
+    જ્યારે (start < limit) {
+        જો (!inserted) {
+            પૂર્ણાંક cmp = uprv_strcmp(start, કિંમત_str.data());
+            જો (cmp == 0) { પાછા *આ; }  // Found it in attributes: Just return
+            જો (cmp > 0) {
+                જો (!new_attributes.isEmpty()) new_attributes.append('_', status_);
+                new_attributes.append(કિંમત_str.data(), status_);
+                inserted = સાચું;
             }
         }
-        if (!new_attributes.isEmpty()) {
+        જો (!new_attributes.isEmpty()) {
             new_attributes.append('_', status_);
         }
         new_attributes.append(start, status_);
         start += uprv_strlen(start) + 1;
     }
-    if (!inserted) {
-        if (!new_attributes.isEmpty()) {
+    જો (!inserted) {
+        જો (!new_attributes.isEmpty()) {
             new_attributes.append('_', status_);
         }
-        new_attributes.append(value_str.data(), status_);
+        new_attributes.append(કિંમત_str.data(), status_);
     }
     // Not yet in the attributes, set the attribute.
-    extensions_->setKeywordValue(kAttributeKey, new_attributes.data(), status_);
-    return *this;
+    extensions_->set_Keyword_કિંમત(k_Attribute_ચાવી, new_attributes.data(), status_);
+    પાછા *આ;
 }
 
 LocaleBuilder& LocaleBuilder::removeUnicodeLocaleAttribute(StringPiece value) U_LIFETIME_BOUND
 {
-    CharString value_str(value, status_);
-    if (U_FAILURE(status_)) { return *this; }
-    transform(value_str.data(), value_str.length());
-    if (!ultag_isUnicodeLocaleAttribute(value_str.data(), value_str.length())) {
+    CharString કિંમત_str(value, status_);
+    જો (U_FAILURE(status_)) { પાછા *આ; }
+    transform(કિંમત_str.data(), કિંમત_str.length());
+    જો (!ultag_isUnicodeLocaleAttribute(કિંમત_str.data(), કિંમત_str.length())) {
         status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        પાછા *આ;
     }
-    if (extensions_ == nullptr) { return *this; }
+    જો (extensions_ == nullptr) { પાછા *આ; }
     UErrorCode localErrorCode = U_ZERO_ERROR;
-    auto attributes = extensions_->getKeywordValue<CharString>(kAttributeKey, localErrorCode);
+    auto attributes = extensions_->get_Keyword_કિંમત<CharString>(k_Attribute_ચાવી, localErrorCode);
     // get failure, just return
-    if (U_FAILURE(localErrorCode)) { return *this; }
+    જો (U_FAILURE(localErrorCode)) { પાછા *આ; }
     // Do not have any attributes, just return.
-    if (attributes.isEmpty()) { return *this; }
+    જો (attributes.isEmpty()) { પાછા *આ; }
 
-    char* p = attributes.data();
+    અક્ષર* p = attributes.data();
     // Replace null terminiator in place for _ and - so later
     // we can use uprv_strcmp to compare.
-    for (int32_t i = 0; i < attributes.length(); i++, p++) {
+    માટે (int32_t i = 0; i < attributes.length(); i++, p++) {
         *p = (*p == '_' || *p == '-') ? '\0' : uprv_tolower(*p);
     }
 
-    const char* start = attributes.data();
-    const char* limit = attributes.data() + attributes.length();
+    અચલ અક્ષર* start = attributes.data();
+    અચલ અક્ષર* limit = attributes.data() + attributes.length();
     CharString new_attributes;
-    bool found = false;
-    while (start < limit) {
-        if (uprv_strcmp(start, value_str.data()) == 0) {
-            found = true;
-        } else {
-            if (!new_attributes.isEmpty()) {
+    તાર્કિક found = ખોટું;
+    જ્યારે (start < limit) {
+        જો (uprv_strcmp(start, કિંમત_str.data()) == 0) {
+            found = સાચું;
+        } નહીંતર {
+            જો (!new_attributes.isEmpty()) {
                 new_attributes.append('_', status_);
             }
             new_attributes.append(start, status_);
@@ -390,10 +390,10 @@ LocaleBuilder& LocaleBuilder::removeUnicodeLocaleAttribute(StringPiece value) U_
         start += uprv_strlen(start) + 1;
     }
     // Found the value in attributes, set the attribute.
-    if (found) {
-        extensions_->setKeywordValue(kAttributeKey, new_attributes.data(), status_);
+    જો (found) {
+        extensions_->set_Keyword_કિંમત(k_Attribute_ચાવી, new_attributes.data(), status_);
     }
-    return *this;
+    પાછા *આ;
 }
 
 LocaleBuilder& LocaleBuilder::clear() U_LIFETIME_BOUND
@@ -405,79 +405,79 @@ LocaleBuilder& LocaleBuilder::clear() U_LIFETIME_BOUND
     delete variant_;
     variant_ = nullptr;
     clearExtensions();
-    return *this;
+    પાછા *આ;
 }
 
 LocaleBuilder& LocaleBuilder::clearExtensions() U_LIFETIME_BOUND
 {
     delete extensions_;
     extensions_ = nullptr;
-    return *this;
+    પાછા *આ;
 }
 
 Locale makeBogusLocale() {
   Locale bogus;
   bogus.setToBogus();
-  return bogus;
+  પાછા bogus;
 }
 
-void LocaleBuilder::copyExtensionsFrom(const Locale& src, UErrorCode& errorCode)
+શૂન્ય LocaleBuilder::copyExtensionsFrom(અચલ Locale& src, UErrorCode& errorCode)
 {
-    if (U_FAILURE(errorCode)) { return; }
+    જો (U_FAILURE(errorCode)) { પાછા; }
     LocalPointer<icu::StringEnumeration> keywords(src.createKeywords(errorCode));
-    if (U_FAILURE(errorCode) || keywords.isNull() || keywords->count(errorCode) == 0) {
+    જો (U_FAILURE(errorCode) || keywords.isNull() || keywords->count(errorCode) == 0) {
         // Error, or no extensions to copy.
-        return;
+        પાછા;
     }
-    if (extensions_ == nullptr) {
-        extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
+    જો (extensions_ == nullptr) {
+        extensions_ = Locale::get_મૂળ().clone();
+        જો (extensions_ == nullptr) {
             status_ = U_MEMORY_ALLOCATION_ERROR;
-            return;
+            પાછા;
         }
     }
-    _copyExtensions(src, keywords.getAlias(), *extensions_, false, errorCode);
+    _copyExtensions(src, keywords.getAlias(), *extensions_, ખોટું, errorCode);
 }
 
 Locale LocaleBuilder::build(UErrorCode& errorCode)
 {
-    if (U_FAILURE(errorCode)) {
-        return makeBogusLocale();
+    જો (U_FAILURE(errorCode)) {
+        પાછા makeBogusLocale();
     }
-    if (U_FAILURE(status_)) {
+    જો (U_FAILURE(status_)) {
         errorCode = status_;
-        return makeBogusLocale();
+        પાછા makeBogusLocale();
     }
     CharString locale_str(language_, errorCode);
-    if (uprv_strlen(script_) > 0) {
+    જો (uprv_strlen(script_) > 0) {
         locale_str.append('-', errorCode).append(StringPiece(script_), errorCode);
     }
-    if (uprv_strlen(region_) > 0) {
+    જો (uprv_strlen(region_) > 0) {
         locale_str.append('-', errorCode).append(StringPiece(region_), errorCode);
     }
-    if (variant_ != nullptr) {
+    જો (variant_ != nullptr) {
         locale_str.append('-', errorCode).append(StringPiece(variant_->data()), errorCode);
     }
-    if (U_FAILURE(errorCode)) {
-        return makeBogusLocale();
+    જો (U_FAILURE(errorCode)) {
+        પાછા makeBogusLocale();
     }
     Locale product(locale_str.data());
-    if (extensions_ != nullptr) {
-        _copyExtensions(*extensions_, nullptr, product, true, errorCode);
+    જો (extensions_ != nullptr) {
+        _copyExtensions(*extensions_, nullptr, product, સાચું, errorCode);
     }
-    if (U_FAILURE(errorCode)) {
-        return makeBogusLocale();
+    જો (U_FAILURE(errorCode)) {
+        પાછા makeBogusLocale();
     }
-    return product;
+    પાછા product;
 }
 
-UBool LocaleBuilder::copyErrorTo(UErrorCode &outErrorCode) const {
-    if (U_FAILURE(outErrorCode)) {
+UBool LocaleBuilder::copyErrorTo(UErrorCode &outErrorCode) અચલ {
+    જો (U_FAILURE(outErrorCode)) {
         // Do not overwrite the older error code
-        return true;
+        પાછા સાચું;
     }
     outErrorCode = status_;
-    return U_FAILURE(outErrorCode);
+    પાછા U_FAILURE(outErrorCode);
 }
 
 U_NAMESPACE_END

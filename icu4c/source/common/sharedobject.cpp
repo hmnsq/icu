@@ -7,11 +7,11 @@
 ******************************************************************************
 * sharedobject.cpp
 */
-#include "sharedobject.h"
-#include "mutex.h"
-#include "uassert.h"
-#include "umutex.h"
-#include "unifiedcache.h"
+#અન્તર્ભાવ "sharedobject.h"
+#અન્તર્ભાવ "mutex.h"
+#અન્તર્ભાવ "uassert.h"
+#અન્તર્ભાવ "umutex.h"
+#અન્તર્ભાવ "unifiedcache.h"
 
 U_NAMESPACE_BEGIN
 
@@ -19,9 +19,9 @@ SharedObject::~SharedObject() {}
 
 UnifiedCacheBase::~UnifiedCacheBase() {}
 
-void
-SharedObject::addRef() const {
-    umtx_atomic_inc(&hardRefCount);
+શૂન્ય
+SharedObject::addRef() અચલ {
+    umtx_atomic_inc(&hard_Ref_ગણતરી);
 }
 
 // removeRef Decrement the reference count and delete if it is zero.
@@ -32,30 +32,30 @@ SharedObject::addRef() const {
 //           a cache eviction cycle concurrently.
 //           NO ACCESS TO *this PERMITTED AFTER REFERENCE COUNT == 0 for cached objects.
 //           THE OBJECT MAY ALREADY BE GONE.
-void
-SharedObject::removeRef() const {
-    const UnifiedCacheBase *cache = this->cachePtr;
-    int32_t updatedRefCount = umtx_atomic_dec(&hardRefCount);
-    U_ASSERT(updatedRefCount >= 0);
-    if (updatedRefCount == 0) {
-        if (cache) {
+શૂન્ય
+SharedObject::removeRef() અચલ {
+    અચલ UnifiedCacheBase *cache = આ->cachePtr;
+    int32_t updated_Ref_ગણતરી = umtx_atomic_dec(&hard_Ref_ગણતરી);
+    U_ASSERT(updated_Ref_ગણતરી >= 0);
+    જો (updated_Ref_ગણતરી == 0) {
+        જો (cache) {
             cache->handleUnreferencedObject();
-        } else {
-            delete this;
+        } નહીંતર {
+            delete આ;
         }
     }
 }
 
 
 int32_t
-SharedObject::getRefCount() const {
-    return umtx_loadAcquire(hardRefCount);
+SharedObject::get_Ref_ગણતરી() અચલ {
+    પાછા umtx_loadAcquire(hard_Ref_ગણતરી);
 }
 
-void
-SharedObject::deleteIfZeroRefCount() const {
-    if (this->cachePtr == nullptr && getRefCount() == 0) {
-        delete this;
+શૂન્ય
+SharedObject::delete_If_Zero_Ref_ગણતરી() અચલ {
+    જો (આ->cachePtr == nullptr && get_Ref_ગણતરી() == 0) {
+        delete આ;
     }
 }
 

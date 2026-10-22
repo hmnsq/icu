@@ -14,11 +14,11 @@
 #ifndef PROPNAME_H
 #define PROPNAME_H
 
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/uchar.h"
-#include "udataswp.h"
-#include "uprops.h"
+#અન્તર્ભાવ "unicode/utypes.h"
+#અન્તર્ભાવ "unicode/bytestrie.h"
+#અન્તર્ભાવ "unicode/uchar.h"
+#અન્તર્ભાવ "udataswp.h"
+#અન્તર્ભાવ "uprops.h"
 
 /*
  * This header defines the in-memory layout of the property names data
@@ -51,16 +51,16 @@ U_CDECL_BEGIN
  */
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareASCIIPropertyNames(const char *name1, const char *name2);
+uprv_compareASCIIPropertyNames(અચલ અક્ષર *name1, અચલ અક્ષર *name2);
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareEBCDICPropertyNames(const char *name1, const char *name2);
+uprv_compareEBCDICPropertyNames(અચલ અક્ષર *name1, અચલ અક્ષર *name2);
 
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
+#જો U_CHARSET_FAMILY==U_ASCII_FAMILY
 #   define uprv_comparePropertyNames uprv_compareASCIIPropertyNames
-#elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+#અથવાજો U_CHARSET_FAMILY==U_EBCDIC_FAMILY
 #   define uprv_comparePropertyNames uprv_compareEBCDICPropertyNames
-#else
+#નહીંતર
 #   error U_CHARSET_FAMILY is not valid
 #endif
 
@@ -82,10 +82,10 @@ U_CDECL_END
 U_NAMESPACE_BEGIN
 
 class PropNameData {
-public:
-    enum {
+જાહેર:
+    ગણના {
         // Byte offsets from the start of the data, after the generic header.
-        IX_VALUE_MAPS_OFFSET,
+        IX_કિંમત_MAPS_OFFSET,
         IX_BYTE_TRIES_OFFSET,
         IX_NAME_GROUPS_OFFSET,
         IX_RESERVED3_OFFSET,
@@ -95,27 +95,27 @@ public:
         // Other values.
         IX_MAX_NAME_LENGTH,
         IX_RESERVED7,
-        IX_COUNT
+        IX_ગણતરી
     };
 
-    static const char *getPropertyName(int32_t property, int32_t nameChoice);
-    static const char *getPropertyValueName(int32_t property, int32_t value, int32_t nameChoice);
+    સ્થિર અચલ અક્ષર *getPropertyName(int32_t property, int32_t nameChoice);
+    સ્થિર અચલ અક્ષર *get_Property_કિંમત_Name(int32_t property, int32_t કિંમત_2, int32_t nameChoice);
 
-    static int32_t getPropertyEnum(const char *alias);
-    static int32_t getPropertyValueEnum(int32_t property, const char *alias);
+    સ્થિર int32_t getPropertyEnum(અચલ અક્ષર *alias);
+    સ્થિર int32_t get_Property_કિંમત_Enum(int32_t property, અચલ અક્ષર *alias);
 
-private:
-    static int32_t findProperty(int32_t property);
-    static int32_t findPropertyValueNameGroup(int32_t valueMapIndex, int32_t value);
-    static const char *getName(const char *nameGroup, int32_t nameIndex);
-    static UBool containsName(BytesTrie &trie, const char *name);
+ખાનગી:
+    સ્થિર int32_t findProperty(int32_t property);
+    સ્થિર int32_t find_Property_કિંમત_Name_Group(int32_t કિંમત_Map_Index, int32_t કિંમત_2);
+    સ્થિર અચલ અક્ષર *getName(અચલ અક્ષર *nameGroup, int32_t nameIndex);
+    સ્થિર UBool containsName(BytesTrie &trie, અચલ અક્ષર *name);
 
-    static int32_t getPropertyOrValueEnum(int32_t bytesTrieOffset, const char *alias);
+    સ્થિર int32_t get_Property_Or_કિંમત_Enum(int32_t bytesTrieOffset, અચલ અક્ષર *alias);
 
-    static const int32_t indexes[];
-    static const int32_t valueMaps[];
-    static const uint8_t bytesTries[];
-    static const char nameGroups[];
+    સ્થિર અચલ int32_t indexes[];
+    સ્થિર અચલ int32_t કિંમત_Maps[];
+    સ્થિર અચલ uint8_t bytesTries[];
+    સ્થિર અચલ અક્ષર nameGroups[];
 };
 
 /*

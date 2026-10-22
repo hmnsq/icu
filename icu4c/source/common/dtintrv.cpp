@@ -12,7 +12,7 @@
 
 
 
-#include "unicode/dtintrv.h"
+#અન્તર્ભાવ "unicode/dtintrv.h"
 
 
 U_NAMESPACE_BEGIN
@@ -31,31 +31,31 @@ DateInterval::DateInterval(UDate from, UDate to)
 DateInterval::~DateInterval(){}
 
 
-DateInterval::DateInterval(const DateInterval& other)
+DateInterval::DateInterval(અચલ DateInterval& other)
 : UObject(other) {
-    *this = other;
+    *આ = other;
 }   
 
 
 DateInterval&
-DateInterval::operator=(const DateInterval& other) U_LIFETIME_BOUND {
-    if ( this != &other ) {
+DateInterval::operator=(અચલ DateInterval& other) U_LIFETIME_BOUND {
+    જો ( આ != &other ) {
         fromDate = other.fromDate;
         toDate = other.toDate;
     }
-    return *this;
+    પાછા *આ;
 }
 
 
 DateInterval* 
-DateInterval::clone() const {
-    return new DateInterval(*this);
+DateInterval::clone() અચલ {
+    પાછા નવું DateInterval(*આ);
 }
 
 
-bool
-DateInterval::operator==(const DateInterval& other) const { 
-    return ( fromDate == other.fromDate && toDate == other.toDate );
+તાર્કિક
+DateInterval::operator==(અચલ DateInterval& other) અચલ { 
+    પાછા ( fromDate == other.fromDate && toDate == other.toDate );
 }
 
 
