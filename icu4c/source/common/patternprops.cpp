@@ -117,114 +117,114 @@ static const uint32_t syntaxOrWhiteSpace2000[]={
 
 UBool
 PatternProps::isSyntax(UChar32 c) {
-    if(c<0) {
-        return false;
-    } else if(c<=0xff) {
-        return (latin1[c] >> 1) & 1;
-    } else if(c<0x2010) {
-        return false;
-    } else if(c<=0x3030) {
+    ถ้า(c<0) {
+        คืน false;
+    } มิฉะนั้น ถ้า(c<=0xff) {
+        คืน (latin1[c] >> 1) & 1;
+    } มิฉะนั้น ถ้า(c<0x2010) {
+        คืน false;
+    } มิฉะนั้น ถ้า(c<=0x3030) {
         uint32_t bits=syntax2000[index2000[(c-0x2000)>>5]];
-        return (bits >> (c & 0x1f)) & 1;
-    } else if(0xfd3e<=c && c<=0xfe46) {
-        return c<=0xfd3f || 0xfe45<=c;
-    } else {
-        return false;
+        คืน (bits >> (c & 0x1f)) & 1;
+    } มิฉะนั้น ถ้า(0xfd3e<=c && c<=0xfe46) {
+        คืน c<=0xfd3f || 0xfe45<=c;
+    } มิฉะนั้น {
+        คืน false;
     }
 }
 
 UBool
 PatternProps::isSyntaxOrWhiteSpace(UChar32 c) {
-    if(c<0) {
-        return false;
-    } else if(c<=0xff) {
-        return latin1[c] & 1;
-    } else if(c<0x200e) {
-        return false;
-    } else if(c<=0x3030) {
+    ถ้า(c<0) {
+        คืน false;
+    } มิฉะนั้น ถ้า(c<=0xff) {
+        คืน latin1[c] & 1;
+    } มิฉะนั้น ถ้า(c<0x200e) {
+        คืน false;
+    } มิฉะนั้น ถ้า(c<=0x3030) {
         uint32_t bits=syntaxOrWhiteSpace2000[index2000[(c-0x2000)>>5]];
-        return (bits >> (c & 0x1f)) & 1;
-    } else if(0xfd3e<=c && c<=0xfe46) {
-        return c<=0xfd3f || 0xfe45<=c;
-    } else {
-        return false;
+        คืน (bits >> (c & 0x1f)) & 1;
+    } มิฉะนั้น ถ้า(0xfd3e<=c && c<=0xfe46) {
+        คืน c<=0xfd3f || 0xfe45<=c;
+    } มิฉะนั้น {
+        คืน false;
     }
 }
 
 UBool
 PatternProps::isWhiteSpace(UChar32 c) {
-    if(c<0) {
-        return false;
-    } else if(c<=0xff) {
-        return (latin1[c] >> 2) & 1;
-    } else if(0x200e<=c && c<=0x2029) {
-        return c<=0x200f || 0x2028<=c;
-    } else {
-        return false;
+    ถ้า(c<0) {
+        คืน false;
+    } มิฉะนั้น ถ้า(c<=0xff) {
+        คืน (latin1[c] >> 2) & 1;
+    } มิฉะนั้น ถ้า(0x200e<=c && c<=0x2029) {
+        คืน c<=0x200f || 0x2028<=c;
+    } มิฉะนั้น {
+        คืน false;
     }
 }
 
 const char16_t *
 PatternProps::skipWhiteSpace(const char16_t *s, int32_t length) {
-    while(length>0 && isWhiteSpace(*s)) {
+    ขณะ(length>0 && isWhiteSpace(*s)) {
         ++s;
         --length;
     }
-    return s;
+    คืน s;
 }
 
 int32_t
 PatternProps::skipWhiteSpace(const UnicodeString& s, int32_t start) {
     int32_t i = start;
     int32_t length = s.length();
-    while(i<length && isWhiteSpace(s.charAt(i))) {
+    ขณะ(i<length && isWhiteSpace(s.charAt(i))) {
         ++i;
     }
-    return i;
+    คืน i;
 }
 
 const char16_t *
 PatternProps::trimWhiteSpace(const char16_t *s, int32_t &length) {
-    if(length<=0 || (!isWhiteSpace(s[0]) && !isWhiteSpace(s[length-1]))) {
-        return s;
+    ถ้า(length<=0 || (!isWhiteSpace(s[0]) && !isWhiteSpace(s[length-1]))) {
+        คืน s;
     }
     int32_t start=0;
     int32_t limit=length;
-    while(start<limit && isWhiteSpace(s[start])) {
+    ขณะ(start<limit && isWhiteSpace(s[start])) {
         ++start;
     }
-    if(start<limit) {
+    ถ้า(start<limit) {
         // There is non-white space at start; we will not move limit below that,
         // so we need not test start<limit in the loop.
-        while(isWhiteSpace(s[limit-1])) {
+        ขณะ(isWhiteSpace(s[limit-1])) {
             --limit;
         }
     }
     length=limit-start;
-    return s+start;
+    คืน s+start;
 }
 
 UBool
 PatternProps::isIdentifier(const char16_t *s, int32_t length) {
-    if(length<=0) {
-        return false;
+    ถ้า(length<=0) {
+        คืน false;
     }
     const char16_t *limit=s+length;
     do {
-        if(isSyntaxOrWhiteSpace(*s++)) {
-            return false;
+        ถ้า(isSyntaxOrWhiteSpace(*s++)) {
+            คืน false;
         }
-    } while(s<limit);
-    return true;
+    } ขณะ(s<limit);
+    คืน true;
 }
 
 const char16_t *
 PatternProps::skipIdentifier(const char16_t *s, int32_t length) {
-    while(length>0 && !isSyntaxOrWhiteSpace(*s)) {
+    ขณะ(length>0 && !isSyntaxOrWhiteSpace(*s)) {
         ++s;
         --length;
     }
-    return s;
+    คืน s;
 }
 
 U_NAMESPACE_END

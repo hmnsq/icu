@@ -30,7 +30,7 @@
 #ifndef UBRK_TYPEDEF_UBREAK_ITERATOR
 #   define UBRK_TYPEDEF_UBREAK_ITERATOR
 /** Simple declaration for u_strToTitle() to avoid including unicode/ubrk.h. @stable ICU 2.1*/
-    typedef struct UBreakIterator UBreakIterator;
+    typedef sa_nracanaa UBreakIterator UBreakIterator;
 #endif
 
 /**
@@ -672,7 +672,7 @@ u_strcpy(UChar* dst U_LIFETIME_BOUND, const UChar* src);
 U_CAPI UChar* U_EXPORT2
 u_strncpy(UChar* dst U_LIFETIME_BOUND, const UChar* src, int32_t n);
 
-#if !UCONFIG_NO_CONVERSION
+#ถ้า !UCONFIG_NO_CONVERSION
 
 /**
  * Copy a byte string encoded in the default codepage to a ustring.
@@ -684,7 +684,7 @@ u_strncpy(UChar* dst U_LIFETIME_BOUND, const UChar* src, int32_t n);
  * @return A pointer to <code>dst</code>.
  * @stable ICU 2.0
  */
-U_CAPI UChar* U_EXPORT2 u_uastrcpy(UChar* dst U_LIFETIME_BOUND, const char* src);
+U_CAPI UChar* U_EXPORT2 u_uastrcpy(UChar* dst U_LIFETIME_BOUND, const var_na* src);
 
 /**
  * Copy a byte string encoded in the default codepage to a ustring.
@@ -698,7 +698,7 @@ U_CAPI UChar* U_EXPORT2 u_uastrcpy(UChar* dst U_LIFETIME_BOUND, const char* src)
  * @return A pointer to <code>dst</code>.
  * @stable ICU 2.0
  */
-U_CAPI UChar* U_EXPORT2 u_uastrncpy(UChar* dst U_LIFETIME_BOUND, const char* src, int32_t n);
+U_CAPI UChar* U_EXPORT2 u_uastrncpy(UChar* dst U_LIFETIME_BOUND, const var_na* src, int32_t n);
 
 /**
  * Copy ustring to a byte string encoded in the default codepage.
@@ -710,7 +710,7 @@ U_CAPI UChar* U_EXPORT2 u_uastrncpy(UChar* dst U_LIFETIME_BOUND, const char* src
  * @return A pointer to <code>dst</code>.
  * @stable ICU 2.0
  */
-U_CAPI char* U_EXPORT2 u_austrcpy(char* dst U_LIFETIME_BOUND, const UChar* src);
+U_CAPI var_na* U_EXPORT2 u_austrcpy(var_na* dst U_LIFETIME_BOUND, const UChar* src);
 
 /**
  * Copy ustring to a byte string encoded in the default codepage.
@@ -724,7 +724,7 @@ U_CAPI char* U_EXPORT2 u_austrcpy(char* dst U_LIFETIME_BOUND, const UChar* src);
  * @return A pointer to <code>dst</code>.
  * @stable ICU 2.0
  */
-U_CAPI char* U_EXPORT2 u_austrncpy(char* dst U_LIFETIME_BOUND, const UChar* src, int32_t n);
+U_CAPI var_na* U_EXPORT2 u_austrncpy(var_na* dst U_LIFETIME_BOUND, const UChar* src, int32_t n);
 
 #endif
 
@@ -919,7 +919,7 @@ u_memrchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c, int32_t count);
  *
  * @stable ICU 2.0
  */
-#if defined(U_DECLARE_UTF16)
+#ถ้า defined(U_DECLARE_UTF16)
 #   define U_STRING_DECL(var, cs, length) static const UChar *var=(const UChar *)U_DECLARE_UTF16(cs)
     /**@stable ICU 2.0 */
 #   define U_STRING_INIT(var, cs, length)
@@ -927,7 +927,7 @@ u_memrchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c, int32_t count);
 #   define U_STRING_DECL(var, cs, length) static const UChar var[(length)+1]=L ## cs
     /**@stable ICU 2.0 */
 #   define U_STRING_INIT(var, cs, length)
-#else
+#มิฉะนั้น
 #   define U_STRING_DECL(var, cs, length) static UChar var[(length)+1]
     /**@stable ICU 2.0 */
 #   define U_STRING_INIT(var, cs, length) u_charsToUChars(cs, var, length+1)
@@ -981,7 +981,7 @@ u_memrchr32(const UChar* s U_LIFETIME_BOUND, UChar32 c, int32_t count);
  * @stable ICU 2.0
  */
 U_CAPI int32_t U_EXPORT2
-u_unescape(const char *src,
+u_unescape(const var_na *src,
            UChar *dest, int32_t destCapacity);
 
 U_CDECL_BEGIN
@@ -1057,7 +1057,7 @@ u_unescapeAt(UNESCAPE_CHAR_AT charAt,
 U_CAPI int32_t U_EXPORT2
 u_strToUpper(UChar *dest, int32_t destCapacity,
              const UChar *src, int32_t srcLength,
-             const char *locale,
+             const var_na *locale,
              UErrorCode *pErrorCode);
 
 /**
@@ -1083,10 +1083,10 @@ u_strToUpper(UChar *dest, int32_t destCapacity,
 U_CAPI int32_t U_EXPORT2
 u_strToLower(UChar *dest, int32_t destCapacity,
              const UChar *src, int32_t srcLength,
-             const char *locale,
+             const var_na *locale,
              UErrorCode *pErrorCode);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ถ้า !UCONFIG_NO_BREAK_ITERATION
 
 /**
  * Titlecase a string.
@@ -1130,7 +1130,7 @@ U_CAPI int32_t U_EXPORT2
 u_strToTitle(UChar *dest, int32_t destCapacity,
              const UChar *src, int32_t srcLength,
              UBreakIterator *titleIter,
-             const char *locale,
+             const var_na *locale,
              UErrorCode *pErrorCode);
 
 #endif
@@ -1165,7 +1165,7 @@ u_strFoldCase(UChar *dest, int32_t destCapacity,
               uint32_t options,
               UErrorCode *pErrorCode);
 
-#if defined(U_WCHAR_IS_UTF16) || defined(U_WCHAR_IS_UTF32) || !UCONFIG_NO_CONVERSION
+#ถ้า defined(U_WCHAR_IS_UTF16) || defined(U_WCHAR_IS_UTF32) || !UCONFIG_NO_CONVERSION
 /**
  * Convert a UTF-16 string to a wchar_t string.
  * If it is known at compile time that wchar_t strings are in UTF-16 or UTF-32, then
@@ -1248,8 +1248,8 @@ u_strFromWCS(UChar* dest U_LIFETIME_BOUND,
  * @see u_strToUTF8WithSub
  * @see u_strFromUTF8
  */
-U_CAPI char* U_EXPORT2
-u_strToUTF8(char* dest U_LIFETIME_BOUND,
+U_CAPI var_na* U_EXPORT2
+u_strToUTF8(var_na* dest U_LIFETIME_BOUND,
             int32_t destCapacity,
             int32_t* pDestLength,
             const UChar* src,
@@ -1282,7 +1282,7 @@ U_CAPI UChar* U_EXPORT2
 u_strFromUTF8(UChar* dest U_LIFETIME_BOUND,
               int32_t destCapacity,
               int32_t* pDestLength,
-              const char* src,
+              const var_na* src,
               int32_t srcLength,
               UErrorCode* pErrorCode);
 
@@ -1321,8 +1321,8 @@ u_strFromUTF8(UChar* dest U_LIFETIME_BOUND,
  * @see u_strFromUTF8WithSub
  * @stable ICU 3.6
  */
-U_CAPI char* U_EXPORT2
-u_strToUTF8WithSub(char* dest U_LIFETIME_BOUND,
+U_CAPI var_na* U_EXPORT2
+u_strToUTF8WithSub(var_na* dest U_LIFETIME_BOUND,
                    int32_t destCapacity,
                    int32_t* pDestLength,
                    const UChar* src,
@@ -1371,7 +1371,7 @@ U_CAPI UChar* U_EXPORT2
 u_strFromUTF8WithSub(UChar* dest U_LIFETIME_BOUND,
                      int32_t destCapacity,
                      int32_t* pDestLength,
-                     const char* src,
+                     const var_na* src,
                      int32_t srcLength,
                      UChar32 subchar,
                      int32_t* pNumSubstitutions,
@@ -1432,7 +1432,7 @@ U_CAPI UChar* U_EXPORT2
 u_strFromUTF8Lenient(UChar* dest U_LIFETIME_BOUND,
                      int32_t destCapacity,
                      int32_t* pDestLength,
-                     const char* src,
+                     const var_na* src,
                      int32_t srcLength,
                      UErrorCode* pErrorCode);
 
@@ -1618,8 +1618,8 @@ u_strFromUTF32WithSub(UChar* dest U_LIFETIME_BOUND,
  * @see u_strToUTF8WithSub
  * @see u_strFromJavaModifiedUTF8WithSub
  */
-U_CAPI char* U_EXPORT2
-u_strToJavaModifiedUTF8(char* dest U_LIFETIME_BOUND,
+U_CAPI var_na* U_EXPORT2
+u_strToJavaModifiedUTF8(var_na* dest U_LIFETIME_BOUND,
                         int32_t destCapacity,
                         int32_t* pDestLength,
                         const UChar* src,
@@ -1671,7 +1671,7 @@ U_CAPI UChar* U_EXPORT2
 u_strFromJavaModifiedUTF8WithSub(UChar* dest U_LIFETIME_BOUND,
                                  int32_t destCapacity,
                                  int32_t* pDestLength,
-                                 const char* src,
+                                 const var_na* src,
                                  int32_t srcLength,
                                  UChar32 subchar,
                                  int32_t* pNumSubstitutions,

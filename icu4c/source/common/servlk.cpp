@@ -10,7 +10,7 @@
  */
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#ถ้า !UCONFIG_NO_SERVICE
 
 #include "unicode/resbund.h"
 #include "uresimp.h"
@@ -32,7 +32,7 @@ LocaleKey::createWithCanonicalFallback(const UnicodeString* primaryID,
                                        const UnicodeString* canonicalFallbackID,
                                        UErrorCode& status)
 {
-    return LocaleKey::createWithCanonicalFallback(primaryID, canonicalFallbackID, KIND_ANY, status);
+    คืน LocaleKey::createWithCanonicalFallback(primaryID, canonicalFallbackID, KIND_ANY, status);
 }
 
 LocaleKey*
@@ -41,12 +41,12 @@ LocaleKey::createWithCanonicalFallback(const UnicodeString* primaryID,
                                        int32_t kind,
                                        UErrorCode& status)
 {
-    if (primaryID == nullptr || U_FAILURE(status)) {
-        return nullptr;
+    ถ้า (primaryID == nullptr || U_FAILURE(status)) {
+        คืน nullptr;
     }
     UnicodeString canonicalPrimaryID;
     LocaleUtility::canonicalLocaleString(primaryID, canonicalPrimaryID);
-    return new LocaleKey(*primaryID, canonicalPrimaryID, canonicalFallbackID, kind);
+    คืน new LocaleKey(*primaryID, canonicalPrimaryID, canonicalFallbackID, kind);
 }
 
 LocaleKey::LocaleKey(const UnicodeString& primaryID,
@@ -60,8 +60,8 @@ LocaleKey::LocaleKey(const UnicodeString& primaryID,
   , _currentID()
 {
     _fallbackID.setToBogus();
-    if (_primaryID.length() != 0) {
-        if (canonicalFallbackID != nullptr && _primaryID != *canonicalFallbackID) {
+    ถ้า (_primaryID.length() != 0) {
+        ถ้า (canonicalFallbackID != nullptr && _primaryID != *canonicalFallbackID) {
             _fallbackID = *canonicalFallbackID;
         }
     }
@@ -73,84 +73,84 @@ LocaleKey::~LocaleKey() {}
 
 UnicodeString&
 LocaleKey::prefix(UnicodeString& result) const {
-    if (_kind != KIND_ANY) {
+    ถ้า (_kind != KIND_ANY) {
         char16_t buffer[64];
         uprv_itou(buffer, 64, _kind, 10, 0);
         UnicodeString temp(buffer);
         result.append(temp);
     }
-    return result;
+    คืน result;
 }
 
 int32_t
 LocaleKey::kind() const {
-    return _kind;
+    คืน _kind;
 }
 
 UnicodeString&
 LocaleKey::canonicalID(UnicodeString& result) const {
-    return result.append(_primaryID);
+    คืน result.append(_primaryID);
 }
 
 UnicodeString&
 LocaleKey::currentID(UnicodeString& result) const {
-    if (!_currentID.isBogus()) {
+    ถ้า (!_currentID.isBogus()) {
         result.append(_currentID);
     }
-    return result;
+    คืน result;
 }
 
 UnicodeString&
 LocaleKey::currentDescriptor(UnicodeString& result) const {
-    if (!_currentID.isBogus()) {
+    ถ้า (!_currentID.isBogus()) {
         prefix(result).append(PREFIX_DELIMITER).append(_currentID);
-    } else {
+    } มิฉะนั้น {
         result.setToBogus();
     }
-    return result;
+    คืน result;
 }
 
 Locale&
 LocaleKey::canonicalLocale(Locale& result) const {
-    return LocaleUtility::initLocaleFromName(_primaryID, result);
+    คืน LocaleUtility::initLocaleFromName(_primaryID, result);
 }
 
 Locale&
 LocaleKey::currentLocale(Locale& result) const {
-    return LocaleUtility::initLocaleFromName(_currentID, result);
+    คืน LocaleUtility::initLocaleFromName(_currentID, result);
 }
 
 UBool
 LocaleKey::fallback() {
-    if (!_currentID.isBogus()) {
-        int x = _currentID.lastIndexOf(UNDERSCORE_CHAR);
-        if (x != -1) {
+    ถ้า (!_currentID.isBogus()) {
+        จำนวนเต็ม x = _currentID.lastIndexOf(UNDERSCORE_CHAR);
+        ถ้า (x != -1) {
             _currentID.remove(x); // truncate current or fallback, whichever we're pointing to
-            return true;
+            คืน true;
         }
 
-        if (!_fallbackID.isBogus()) {
+        ถ้า (!_fallbackID.isBogus()) {
             _currentID = _fallbackID;
             _fallbackID.setToBogus();
-            return true;
+            คืน true;
         }
 
-        if (_currentID.length() > 0) {
+        ถ้า (_currentID.length() > 0) {
             _currentID.remove(0); // completely truncate
-            return true;
+            คืน true;
         }
 
         _currentID.setToBogus();
     }
 
-    return false;
+    คืน false;
 }
 
 UBool
 LocaleKey::isFallbackOf(const UnicodeString& id) const {
     UnicodeString temp(id);
     parseSuffix(temp);
-    return temp.indexOf(_primaryID) == 0 &&
+    คืน temp.indexOf(_primaryID) == 0 &&
         (temp.length() == _primaryID.length() ||
         temp.charAt(_primaryID.length()) == UNDERSCORE_CHAR);
 }
@@ -168,13 +168,13 @@ LocaleKey::debug(UnicodeString& result) const
     result.append(_fallbackID);
     result.append((UnicodeString)" currentID: ");
     result.append(_currentID);
-    return result;
+    คืน result;
 }
 
 UnicodeString&
 LocaleKey::debugClass(UnicodeString& result) const
 {
-    return result.append((UnicodeString)"LocaleKey ");
+    คืน result.append((UnicodeString)"LocaleKey ");
 }
 #endif
 

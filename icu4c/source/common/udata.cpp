@@ -71,7 +71,7 @@ might have to #include some other header
 /* If you are excruciatingly bored turn this on .. */
 /* #define UDATA_DEBUG 1 */
 
-#if defined(UDATA_DEBUG)
+#ถ้า defined(UDATA_DEBUG)
 #   include <stdio.h>
 #endif
 
@@ -80,7 +80,7 @@ U_NAMESPACE_USE
 /*
  *  Forward declarations
  */
-static UDataMemory *udata_findCachedData(const char *path, UErrorCode &err);
+static UDataMemory *udata_findCachedData(const var_na *path, UErrorCode &err);
 
 /***********************************************************************
 *
@@ -111,10 +111,10 @@ static u_atomic_int32_t gHaveTriedToLoadCommonData {0};  //  See extendICUData()
 static UHashtable  *gCommonDataCache = nullptr;  /* Global hash table of opened ICU data files.  */
 static icu::UInitOnce gCommonDataCacheInitOnce {};
 
-#if !defined(ICU_DATA_DIR_WINDOWS)
+#ถ้า !defined(ICU_DATA_DIR_WINDOWS)
 static UDataFileAccess  gDataFileAccess = UDATA_DEFAULT_ACCESS;  // Access not synchronized.
                                                                  // Modifying is documented as thread-unsafe.
-#else
+#มิฉะนั้น
 // If we are using the Windows data directory, then look in one spot only.
 static UDataFileAccess  gDataFileAccess = UDATA_NO_FILES;
 #endif
@@ -124,42 +124,42 @@ udata_cleanup()
 {
     int32_t i;
 
-    if (gCommonDataCache) {             /* Delete the cache of user data mappings.  */
+    ถ้า (gCommonDataCache) {             /* Delete the cache of user data mappings.  */
         uhash_close(gCommonDataCache);  /*   Table owns the contents, and will delete them. */
         gCommonDataCache = nullptr;        /*   Cleanup is not thread safe.                */
     }
     gCommonDataCacheInitOnce.reset();
 
-    for (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray) && gCommonICUDataArray[i] != nullptr; ++i) {
+    สำหรับ (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray) && gCommonICUDataArray[i] != nullptr; ++i) {
         udata_close(gCommonICUDataArray[i]);
         gCommonICUDataArray[i] = nullptr;
     }
     gHaveTriedToLoadCommonData = 0;
 
-    return true;                   /* Everything was cleaned up */
+    คืน true;                   /* Everything was cleaned up */
 }
 
 static UBool U_CALLCONV
-findCommonICUDataByName(const char *inBasename, UErrorCode &err)
+findCommonICUDataByName(const var_na *inBasename, UErrorCode &err)
 {
     UBool found = false;
     int32_t i;
 
     UDataMemory  *pData = udata_findCachedData(inBasename, err);
-    if (U_FAILURE(err) || pData == nullptr)
-        return false;
+    ถ้า (U_FAILURE(err) || pData == nullptr)
+        คืน false;
 
     {
         Mutex lock;
-        for (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray); ++i) {
-            if ((gCommonICUDataArray[i] != nullptr) && (gCommonICUDataArray[i]->pHeader == pData->pHeader)) {
+        สำหรับ (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray); ++i) {
+            ถ้า ((gCommonICUDataArray[i] != nullptr) && (gCommonICUDataArray[i]->pHeader == pData->pHeader)) {
                 /* The data pointer is already in the array. */
                 found = true;
-                break;
+                bha_nga;
             }
         }
     }
-    return found;
+    คืน found;
 }
 
 
@@ -175,8 +175,8 @@ setCommonICUData(UDataMemory *pData,     /*  The new common data.  Belongs to ca
     UDataMemory  *newCommonData = UDataMemory_createNewInstance(pErr);
     int32_t i;
     UBool didUpdate = false;
-    if (U_FAILURE(*pErr)) {
-        return false;
+    ถ้า (U_FAILURE(*pErr)) {
+        คืน false;
     }
 
     /*  For the assignment, other threads must cleanly see either the old            */
@@ -185,30 +185,30 @@ setCommonICUData(UDataMemory *pData,     /*  The new common data.  Belongs to ca
     /*    their locals.                                                              */
     UDatamemory_assign(newCommonData, pData);
     umtx_lock(nullptr);
-    for (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray); ++i) {
-        if (gCommonICUDataArray[i] == nullptr) {
+    สำหรับ (i = 0; i < UPRV_LENGTHOF(gCommonICUDataArray); ++i) {
+        ถ้า (gCommonICUDataArray[i] == nullptr) {
             gCommonICUDataArray[i] = newCommonData;
             didUpdate = true;
-            break;
-        } else if (gCommonICUDataArray[i]->pHeader == pData->pHeader) {
+            bha_nga;
+        } มิฉะนั้น ถ้า (gCommonICUDataArray[i]->pHeader == pData->pHeader) {
             /* The same data pointer is already in the array. */
-            break;
+            bha_nga;
         }
     }
     umtx_unlock(nullptr);
 
-    if (i == UPRV_LENGTHOF(gCommonICUDataArray) && warn) {
+    ถ้า (i == UPRV_LENGTHOF(gCommonICUDataArray) && warn) {
         *pErr = U_USING_DEFAULT_WARNING;
     }
-    if (didUpdate) {
+    ถ้า (didUpdate) {
         ucln_common_registerCleanup(UCLN_COMMON_UDATA, udata_cleanup);
-    } else {
+    } มิฉะนั้น {
         uprv_free(newCommonData);
     }
-    return didUpdate;
+    คืน didUpdate;
 }
 
-#if !defined(ICU_DATA_DIR_WINDOWS)
+#ถ้า !defined(ICU_DATA_DIR_WINDOWS)
 
 static UBool
 setCommonICUDataPointer(const void *pData, UBool /*warn*/, UErrorCode *pErrorCode) {
@@ -216,36 +216,36 @@ setCommonICUDataPointer(const void *pData, UBool /*warn*/, UErrorCode *pErrorCod
     UDataMemory_init(&tData);
     UDataMemory_setData(&tData, pData);
     udata_checkCommonData(&tData, pErrorCode);
-    return setCommonICUData(&tData, false, pErrorCode);
+    คืน setCommonICUData(&tData, false, pErrorCode);
 }
 
 #endif
 
-static const char *
-findBasename(const char *path) {
-    const char *basename=uprv_strrchr(path, U_FILE_SEP_CHAR);
-    if(basename==nullptr) {
-        return path;
-    } else {
-        return basename+1;
+static const var_na *
+findBasename(const var_na *path) {
+    const var_na *basename=uprv_strrchr(path, U_FILE_SEP_CHAR);
+    ถ้า(basename==nullptr) {
+        คืน path;
+    } มิฉะนั้น {
+        คืน basename+1;
     }
 }
 
 #ifdef UDATA_DEBUG
-static const char *
-packageNameFromPath(const char *path)
+static const var_na *
+packageNameFromPath(const var_na *path)
 {
-    if((path == nullptr) || (*path == 0)) {
-        return U_ICUDATA_NAME;
+    ถ้า((path == nullptr) || (*path == 0)) {
+        คืน U_ICUDATA_NAME;
     }
 
     path = findBasename(path);
 
-    if((path == nullptr) || (*path == 0)) {
-        return U_ICUDATA_NAME;
+    ถ้า((path == nullptr) || (*path == 0)) {
+        คืน U_ICUDATA_NAME;
     }
 
-    return path;
+    คืน path;
 }
 #endif
 
@@ -261,8 +261,8 @@ packageNameFromPath(const char *path)
  *                                                                      *
  *----------------------------------------------------------------------*/
 
-typedef struct DataCacheElement {
-    char          *name;
+typedef sa_nracanaa DataCacheElement {
+    var_na          *name;
     UDataMemory   *item;
 } DataCacheElement;
 
@@ -283,8 +283,8 @@ static void U_CALLCONV DataCacheElement_deleter(void *pDCEl) {
 static void U_CALLCONV udata_initHashTable(UErrorCode &err) {
     U_ASSERT(gCommonDataCache == nullptr);
     gCommonDataCache = uhash_open(uhash_hashChars, uhash_compareChars, nullptr, &err);
-    if (U_FAILURE(err)) {
-       return;
+    ถ้า (U_FAILURE(err)) {
+       คืน;
     }
     U_ASSERT(gCommonDataCache != nullptr);
     uhash_setValueDeleter(gCommonDataCache, DataCacheElement_deleter);
@@ -297,73 +297,73 @@ static void U_CALLCONV udata_initHashTable(UErrorCode &err) {
   */
 static UHashtable *udata_getHashTable(UErrorCode &err) {
     umtx_initOnce(gCommonDataCacheInitOnce, &udata_initHashTable, err);
-    return gCommonDataCache;
+    คืน gCommonDataCache;
 }
 
 
 
-static UDataMemory *udata_findCachedData(const char *path, UErrorCode &err)
+static UDataMemory *udata_findCachedData(const var_na *path, UErrorCode &err)
 {
     UHashtable        *htable;
     UDataMemory       *retVal = nullptr;
     DataCacheElement  *el;
-    const char        *baseName;
+    const var_na        *baseName;
 
     htable = udata_getHashTable(err);
-    if (U_FAILURE(err)) {
-        return nullptr;
+    ถ้า (U_FAILURE(err)) {
+        คืน nullptr;
     }
 
     baseName = findBasename(path);   /* Cache remembers only the base name, not the full path. */
     umtx_lock(nullptr);
     el = static_cast<DataCacheElement*>(uhash_get(htable, baseName));
     umtx_unlock(nullptr);
-    if (el != nullptr) {
+    ถ้า (el != nullptr) {
         retVal = el->item;
     }
 #ifdef UDATA_DEBUG
     fprintf(stderr, "Cache: [%s] -> %p\n", baseName, (void*) retVal);
 #endif
-    return retVal;
+    คืน retVal;
 }
 
 
-static UDataMemory *udata_cacheDataItem(const char *path, UDataMemory *item, UErrorCode *pErr) {
+static UDataMemory *udata_cacheDataItem(const var_na *path, UDataMemory *item, UErrorCode *pErr) {
     DataCacheElement *newElement;
-    const char       *baseName;
+    const var_na       *baseName;
     int32_t           nameLen;
     UHashtable       *htable;
     DataCacheElement *oldValue = nullptr;
     UErrorCode        subErr = U_ZERO_ERROR;
 
     htable = udata_getHashTable(*pErr);
-    if (U_FAILURE(*pErr)) {
-        return nullptr;
+    ถ้า (U_FAILURE(*pErr)) {
+        คืน nullptr;
     }
 
     /* Create a new DataCacheElement - the thingy we store in the hash table -
      * and copy the supplied path and UDataMemoryItems into it.
      */
-    newElement = static_cast<DataCacheElement*>(uprv_malloc(sizeof(DataCacheElement)));
-    if (newElement == nullptr) {
+    newElement = static_cast<DataCacheElement*>(uprv_malloc(parimaa_na(DataCacheElement)));
+    ถ้า (newElement == nullptr) {
         *pErr = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        คืน nullptr;
     }
     newElement->item = UDataMemory_createNewInstance(pErr);
-    if (U_FAILURE(*pErr)) {
+    ถ้า (U_FAILURE(*pErr)) {
         uprv_free(newElement);
-        return nullptr;
+        คืน nullptr;
     }
     UDatamemory_assign(newElement->item, item);
 
     baseName = findBasename(path);
     nameLen = static_cast<int32_t>(uprv_strlen(baseName));
-    newElement->name = static_cast<char*>(uprv_malloc(nameLen + 1));
-    if (newElement->name == nullptr) {
+    newElement->name = static_cast<var_na*>(uprv_malloc(nameLen + 1));
+    ถ้า (newElement->name == nullptr) {
         *pErr = U_MEMORY_ALLOCATION_ERROR;
         uprv_free(newElement->item);
         uprv_free(newElement);
-        return nullptr;
+        คืน nullptr;
     }
     uprv_strcpy(newElement->name, baseName);
 
@@ -371,10 +371,10 @@ static UDataMemory *udata_cacheDataItem(const char *path, UDataMemory *item, UEr
     */
     umtx_lock(nullptr);
     oldValue = static_cast<DataCacheElement*>(uhash_get(htable, path));
-    if (oldValue != nullptr) {
+    ถ้า (oldValue != nullptr) {
         subErr = U_USING_DEFAULT_WARNING;
     }
-    else {
+    มิฉะนั้น {
         uhash_put(
             htable,
             newElement->name,               /* Key   */
@@ -388,15 +388,15 @@ static UDataMemory *udata_cacheDataItem(const char *path, UDataMemory *item, UEr
     (void*) newElement->item, u_errorName(subErr), (void*) newElement->item->vFuncs);
 #endif
 
-    if (subErr == U_USING_DEFAULT_WARNING || U_FAILURE(subErr)) {
+    ถ้า (subErr == U_USING_DEFAULT_WARNING || U_FAILURE(subErr)) {
         *pErr = subErr; /* copy sub err unto fillin ONLY if something happens. */
         uprv_free(newElement->name);
         uprv_free(newElement->item);
         uprv_free(newElement);
-        return oldValue ? oldValue->item : nullptr;
+        คืน oldValue ? oldValue->item : nullptr;
     }
 
-    return newElement->item;
+    คืน newElement->item;
 }
 
 /*----------------------------------------------------------------------*==============
@@ -411,15 +411,15 @@ U_NAMESPACE_BEGIN
 class UDataPathIterator
 {
 public:
-    UDataPathIterator(const char *path, const char *pkg,
-                      const char *item, const char *suffix, UBool doCheckLastFour,
+    UDataPathIterator(const var_na *path, const var_na *pkg,
+                      const var_na *item, const var_na *suffix, UBool doCheckLastFour,
                       UErrorCode *pErrorCode);
-    const char *next(UErrorCode *pErrorCode);
+    const var_na *next(UErrorCode *pErrorCode);
 
 private:
-    const char *path;                              /* working path (u_icudata_Dir) */
-    const char *nextPath;                          /* path following this one */
-    const char *basename;                          /* item's basename (icudt22e_mt.res)*/
+    const var_na *path;                              /* working path (u_icudata_Dir) */
+    const var_na *nextPath;                          /* path following this one */
+    const var_na *basename;                          /* item's basename (icudt22e_mt.res)*/
 
     StringPiece suffix;                            /* item suffix (can be null) */
 
@@ -445,22 +445,22 @@ private:
  *  Note: inSuffix may also be the 'item' being searched for as well, (ex: "ibm-5348_P100-1997.cnv"), in which case 
  *        the 'item' parameter is often the same as pkg. (Though sometimes might have a tree part as well, ex: "icudt62l-curr").
  */
-UDataPathIterator::UDataPathIterator(const char *inPath, const char *pkg,
-                                     const char *item, const char *inSuffix, UBool doCheckLastFour,
+UDataPathIterator::UDataPathIterator(const var_na *inPath, const var_na *pkg,
+                                     const var_na *item, const var_na *inSuffix, UBool doCheckLastFour,
                                      UErrorCode *pErrorCode)
 {
 #ifdef UDATA_DEBUG
         fprintf(stderr, "SUFFIX1=%s PATH=%s\n", inSuffix, inPath);
 #endif
     /** Path **/
-    if(inPath == nullptr) {
+    ถ้า(inPath == nullptr) {
         path = u_getDataDirectory();
-    } else {
+    } มิฉะนั้น {
         path = inPath;
     }
 
     /** Package **/
-    if(pkg != nullptr) {
+    ถ้า(pkg != nullptr) {
       packageStub.append(U_FILE_SEP_CHAR, *pErrorCode).append(pkg, *pErrorCode);
 #ifdef UDATA_DEBUG
       fprintf(stderr, "STUB=%s [%d]\n", packageStub.data(), packageStub.length());
@@ -472,9 +472,9 @@ UDataPathIterator::UDataPathIterator(const char *inPath, const char *pkg,
     basenameLen = static_cast<int32_t>(uprv_strlen(basename));
 
     /** Item path **/
-    if(basename == item) {
+    ถ้า(basename == item) {
         nextPath = path;
-    } else {
+    } มิฉะนั้น {
         itemPath.append(item, static_cast<int32_t>(basename - item), *pErrorCode);
         nextPath = itemPath.data();
     }
@@ -483,9 +483,9 @@ UDataPathIterator::UDataPathIterator(const char *inPath, const char *pkg,
 #endif
 
     /** Suffix  **/
-    if(inSuffix != nullptr) {
+    ถ้า(inSuffix != nullptr) {
         suffix = inSuffix;
-    } else {
+    } มิฉะนั้น {
         suffix = "";
     }
 
@@ -512,33 +512,33 @@ UDataPathIterator::UDataPathIterator(const char *inPath, const char *pkg,
  * @param len  If set, pointer to the length of the returned path, for convenience. 
  * @return Pointer to the next path segment, or nullptr if there are no more.
  */
-const char *UDataPathIterator::next(UErrorCode *pErrorCode)
+const var_na *UDataPathIterator::next(UErrorCode *pErrorCode)
 {
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    ถ้า(U_FAILURE(*pErrorCode)) {
+        คืน nullptr;
     }
 
-    const char *currentPath = nullptr;
+    const var_na *currentPath = nullptr;
     int32_t     pathLen = 0;
-    const char *pathBasename;
+    const var_na *pathBasename;
 
     do
     {
-        if( nextPath == nullptr ) {
-            break;
+        ถ้า( nextPath == nullptr ) {
+            bha_nga;
         }
         currentPath = nextPath;
 
-        if(nextPath == itemPath.data()) { /* we were processing item's path. */
+        ถ้า(nextPath == itemPath.data()) { /* we were processing item's path. */
             nextPath = path; /* start with regular path next tm. */
             pathLen = static_cast<int32_t>(uprv_strlen(currentPath));
-        } else {
+        } มิฉะนั้น {
             /* fix up next for next time */
             nextPath = uprv_strchr(currentPath, U_PATH_SEP_CHAR);
-            if(nextPath == nullptr) {
+            ถ้า(nextPath == nullptr) {
                 /* segment: entire path */
                 pathLen = static_cast<int32_t>(uprv_strlen(currentPath));
-            } else {
+            } มิฉะนั้น {
                 /* segment: until next segment */
                 pathLen = static_cast<int32_t>(nextPath - currentPath);
                 /* skip divider */
@@ -546,7 +546,7 @@ const char *UDataPathIterator::next(UErrorCode *pErrorCode)
             }
         }
 
-        if(pathLen == 0) {
+        ถ้า(pathLen == 0) {
             continue;
         }
 
@@ -555,7 +555,7 @@ const char *UDataPathIterator::next(UErrorCode *pErrorCode)
         fprintf(stderr, "                     ");
         { 
             int32_t qqq;
-            for(qqq=0;qqq<pathLen;qqq++)
+            สำหรับ(qqq=0;qqq<pathLen;qqq++)
             {
                 fprintf(stderr, " ");
             }
@@ -568,7 +568,7 @@ const char *UDataPathIterator::next(UErrorCode *pErrorCode)
         /* check for .dat files */
         pathBasename = findBasename(pathBuffer.data());
 
-        if(checkLastFour && 
+        ถ้า(checkLastFour && 
            (pathLen>=4) &&
            uprv_strncmp(pathBuffer.data() +(pathLen-4), suffix.data(), 4)==0 && /* suffix matches */
            uprv_strncmp(findBasename(pathBuffer.data()), basename, basenameLen)==0  && /* base matches */
@@ -579,10 +579,10 @@ const char *UDataPathIterator::next(UErrorCode *pErrorCode)
 #endif
             /* do nothing */
         }
-        else 
+        มิฉะนั้น 
         {       /* regular dir path */
-            if(pathBuffer[pathLen-1] != U_FILE_SEP_CHAR) {
-                if((pathLen>=4) &&
+            ถ้า(pathBuffer[pathLen-1] != U_FILE_SEP_CHAR) {
+                ถ้า((pathLen>=4) &&
                    uprv_strncmp(pathBuffer.data()+(pathLen-4), ".dat", 4) == 0)
                 {
 #ifdef UDATA_DEBUG
@@ -592,7 +592,7 @@ const char *UDataPathIterator::next(UErrorCode *pErrorCode)
                 }
 
                 /* Check if it is a directory with the same name as our package */
-                if(!packageStub.isEmpty() &&
+                ถ้า(!packageStub.isEmpty() &&
                    (pathLen > packageStub.length()) &&
                    !uprv_strcmp(pathBuffer.data() + pathLen - packageStub.length(), packageStub.data())) {
 #ifdef UDATA_DEBUG
@@ -606,9 +606,9 @@ const char *UDataPathIterator::next(UErrorCode *pErrorCode)
             /* + basename */
             pathBuffer.append(packageStub.data()+1, packageStub.length()-1, *pErrorCode);
 
-            if (!suffix.empty())  /* tack on suffix */
+            ถ้า (!suffix.empty())  /* tack on suffix */
             {
-                if (suffix.length() > 4) {
+                ถ้า (suffix.length() > 4) {
                     // If the suffix is actually an item ("ibm-5348_P100-1997.cnv") and not an extension (".res")
                     // then we need to ensure that the path ends with a separator.
                     pathBuffer.ensureEndsWithFileSeparator(*pErrorCode);
@@ -621,12 +621,12 @@ const char *UDataPathIterator::next(UErrorCode *pErrorCode)
         fprintf(stderr, " -->  %s\n", pathBuffer.data());
 #endif
 
-        return pathBuffer.data();
+        คืน pathBuffer.data();
 
-    } while(path);
+    } ขณะ(path);
 
     /* fell way off the end */
-    return nullptr;
+    คืน nullptr;
 }
 
 U_NAMESPACE_END
@@ -641,7 +641,7 @@ U_NAMESPACE_END
  *      our common data.                                                *
  *                                                                      *
  *----------------------------------------------------------------------*/
-#if !defined(ICU_DATA_DIR_WINDOWS)
+#ถ้า !defined(ICU_DATA_DIR_WINDOWS)
 // When using the Windows system data, we expect only a single data file.
 extern "C" const DataHeader U_DATA_API U_ICUDATA_ENTRY_POINT;
 #endif
@@ -667,38 +667,38 @@ extern const void *uprv_getICUData_conversion() ATTRIBUTE_WEAK;
  *                                                                      *
  *----------------------------------------------------------------------*/
 static UDataMemory *
-openCommonData(const char *path,          /*  Path from OpenChoice?          */
+openCommonData(const var_na *path,          /*  Path from OpenChoice?          */
                int32_t commonDataIndex,   /*  ICU Data (index >= 0) if path == nullptr */
                UErrorCode *pErrorCode)
 {
     UDataMemory tData;
-    const char *pathBuffer;
-    const char *inBasename;
+    const var_na *pathBuffer;
+    const var_na *inBasename;
 
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    ถ้า (U_FAILURE(*pErrorCode)) {
+        คืน nullptr;
     }
 
     UDataMemory_init(&tData);
 
     /* ??????? TODO revisit this */ 
-    if (commonDataIndex >= 0) {
+    ถ้า (commonDataIndex >= 0) {
         /* "mini-cache" for common ICU data */
-        if(commonDataIndex >= UPRV_LENGTHOF(gCommonICUDataArray)) {
-            return nullptr;
+        ถ้า(commonDataIndex >= UPRV_LENGTHOF(gCommonICUDataArray)) {
+            คืน nullptr;
         }
         {
             Mutex lock;
-            if(gCommonICUDataArray[commonDataIndex] != nullptr) {
-                return gCommonICUDataArray[commonDataIndex];
+            ถ้า(gCommonICUDataArray[commonDataIndex] != nullptr) {
+                คืน gCommonICUDataArray[commonDataIndex];
             }
-#if !defined(ICU_DATA_DIR_WINDOWS)
+#ถ้า !defined(ICU_DATA_DIR_WINDOWS)
 // When using the Windows system data, we expect only a single data file.
             int32_t i;
-            for(i = 0; i < commonDataIndex; ++i) {
-                if(gCommonICUDataArray[i]->pHeader == &U_ICUDATA_ENTRY_POINT) {
+            สำหรับ(i = 0; i < commonDataIndex; ++i) {
+                ถ้า(gCommonICUDataArray[i]->pHeader == &U_ICUDATA_ENTRY_POINT) {
                     /* The linked-in data is already in the list. */
-                    return nullptr;
+                    คืน nullptr;
                 }
             }
 #endif
@@ -717,12 +717,12 @@ openCommonData(const char *path,          /*  Path from OpenChoice?          */
             setCommonICUDataPointer(uprv_getICUData_conversion(), false, pErrorCode);
         }
         */
-#if !defined(ICU_DATA_DIR_WINDOWS)
+#ถ้า !defined(ICU_DATA_DIR_WINDOWS)
 // When using the Windows system data, we expect only a single data file.
         setCommonICUDataPointer(&U_ICUDATA_ENTRY_POINT, false, pErrorCode);
         {
             Mutex lock;
-            return gCommonICUDataArray[commonDataIndex];
+            คืน gCommonICUDataArray[commonDataIndex];
         }
 #endif
     }
@@ -737,24 +737,24 @@ openCommonData(const char *path,          /*  Path from OpenChoice?          */
     fprintf(stderr, "inBasename = %s\n", inBasename);
 #endif
 
-    if(*inBasename==0) {
+    ถ้า(*inBasename==0) {
         /* no basename.     This will happen if the original path was a directory name,   */
         /*    like  "a/b/c/".   (Fallback to separate files will still work.)             */
 #ifdef UDATA_DEBUG
         fprintf(stderr, "ocd: no basename in %s, bailing.\n", path);
 #endif
-        if (U_SUCCESS(*pErrorCode)) {
+        ถ้า (U_SUCCESS(*pErrorCode)) {
             *pErrorCode=U_FILE_ACCESS_ERROR;
         }
-        return nullptr;
+        คืน nullptr;
     }
 
    /* Is the requested common data file already open and cached?                     */
    /*   Note that the cache is keyed by the base name only.  The rest of the path,   */
    /*     if any, is not considered.                                                 */
     UDataMemory  *dataToReturn = udata_findCachedData(inBasename, *pErrorCode);
-    if (dataToReturn != nullptr || U_FAILURE(*pErrorCode)) {
-        return dataToReturn;
+    ถ้า (dataToReturn != nullptr || U_FAILURE(*pErrorCode)) {
+        คืน dataToReturn;
     }
 
     /* Requested item is not in the cache.
@@ -763,7 +763,7 @@ openCommonData(const char *path,          /*  Path from OpenChoice?          */
 
     UDataPathIterator iter(u_getDataDirectory(), inBasename, path, ".dat", true, pErrorCode);
 
-    while ((UDataMemory_isLoaded(&tData)==false) && (pathBuffer = iter.next(pErrorCode)) != nullptr)
+    ขณะ ((UDataMemory_isLoaded(&tData)==false) && (pathBuffer = iter.next(pErrorCode)) != nullptr)
     {
 #ifdef UDATA_DEBUG
         fprintf(stderr, "ocd: trying path %s - ", pathBuffer);
@@ -773,17 +773,17 @@ openCommonData(const char *path,          /*  Path from OpenChoice?          */
         fprintf(stderr, "%s\n", UDataMemory_isLoaded(&tData)?"LOADED":"not loaded");
 #endif
     }
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    ถ้า (U_FAILURE(*pErrorCode)) {
+        คืน nullptr;
     }
 
-    if (U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    ถ้า (U_FAILURE(*pErrorCode)) {
+        คืน nullptr;
     }
-    if (!UDataMemory_isLoaded(&tData)) {
+    ถ้า (!UDataMemory_isLoaded(&tData)) {
         /* no common data */
         *pErrorCode=U_FILE_ACCESS_ERROR;
-        return nullptr;
+        คืน nullptr;
     }
 
     /* we have mapped a file, check its header */
@@ -793,7 +793,7 @@ openCommonData(const char *path,          /*  Path from OpenChoice?          */
     /* Cache the UDataMemory struct for this .dat file,
      *   so we won't need to hunt it down and map it again next time
      *   something is needed from it.                */
-    return udata_cacheDataItem(inBasename, &tData, pErrorCode);
+    คืน udata_cacheDataItem(inBasename, &tData, pErrorCode);
 }
 
 
@@ -823,11 +823,11 @@ static UBool extendICUData(UErrorCode *pErr)
      * In this case, use a mutex to prevent the race.
      * Use a specific mutex to avoid nested locks of the global mutex.
      */
-#if MAP_IMPLEMENTATION==MAP_STDIO
+#ถ้า MAP_IMPLEMENTATION==MAP_STDIO
     static UMutex extendICUDataMutex;
     umtx_lock(&extendICUDataMutex);
 #endif
-    if(!umtx_loadAcquire(gHaveTriedToLoadCommonData)) {
+    ถ้า(!umtx_loadAcquire(gHaveTriedToLoadCommonData)) {
         /* See if we can explicitly open a .dat file for the ICUData. */
         pData = openCommonData(
                    U_ICUDATA_NAME,            /*  "icudt20l" , for example.          */
@@ -837,7 +837,7 @@ static UBool extendICUData(UErrorCode *pErr)
         /* How about if there is no pData, eh... */
 
        UDataMemory_init(&copyPData);
-       if(pData != nullptr) {
+       ถ้า(pData != nullptr) {
           UDatamemory_assign(&copyPData, pData);
           copyPData.map = nullptr;     /* The mapping for this data is owned by the hash table */
           copyPData.mapAddr = nullptr; /*   which will unmap it when ICU is shut down.         */
@@ -860,10 +860,10 @@ static UBool extendICUData(UErrorCode *pErr)
                                                           /* extended data can be examined.                                             */
                                                           /* Also handles a race through here before gHaveTriedToLoadCommonData is set. */
 
-#if MAP_IMPLEMENTATION==MAP_STDIO
+#ถ้า MAP_IMPLEMENTATION==MAP_STDIO
     umtx_unlock(&extendICUDataMutex);
 #endif
-    return didUpdate;               /* Return true if ICUData pointer was updated.   */
+    คืน didUpdate;               /* Return true if ICUData pointer was updated.   */
                                     /*   (Could potentially have been done by another thread racing */
                                     /*   us through here, but that's fine, we still return true    */
                                     /*   so that current thread will also examine extended data.   */
@@ -878,20 +878,20 @@ U_CAPI void U_EXPORT2
 udata_setCommonData(const void *data, UErrorCode *pErrorCode) {
     UDataMemory dataMemory;
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    ถ้า(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        คืน;
     }
 
-    if(data==nullptr) {
+    ถ้า(data==nullptr) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        คืน;
     }
 
     /* set the data pointer and test for validity */
     UDataMemory_init(&dataMemory);
     UDataMemory_setData(&dataMemory, data);
     udata_checkCommonData(&dataMemory, pErrorCode);
-    if (U_FAILURE(*pErrorCode)) {return;}
+    ถ้า (U_FAILURE(*pErrorCode)) {คืน;}
 
     /* we have good data */
     /* Set it up as the ICU Common Data.  */
@@ -904,16 +904,16 @@ udata_setCommonData(const void *data, UErrorCode *pErrorCode) {
  *
  *---------------------------------------------------------------------------- */
 U_CAPI void U_EXPORT2
-udata_setAppData(const char *path, const void *data, UErrorCode *err)
+udata_setAppData(const var_na *path, const void *data, UErrorCode *err)
 {
     UDataMemory     udm;
 
-    if(err==nullptr || U_FAILURE(*err)) {
-        return;
+    ถ้า(err==nullptr || U_FAILURE(*err)) {
+        คืน;
     }
-    if(data==nullptr) {
+    ถ้า(data==nullptr) {
         *err=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        คืน;
     }
 
     UDataMemory_init(&udm);
@@ -939,8 +939,8 @@ checkDataItem
  const DataHeader         *pHeader,         /* The data item to be checked.                */
  UDataMemoryIsAcceptable  *isAcceptable,    /* App's call-back function                    */
  void                     *context,         /*   pass-thru param for above.                */
- const char               *type,            /*   pass-thru param for above.                */
- const char               *name,            /*   pass-thru param for above.                */
+ const var_na               *type,            /*   pass-thru param for above.                */
+ const var_na               *name,            /*   pass-thru param for above.                */
  UErrorCode               *nonFatalErr,     /* Error code if this data was not acceptable  */
                                             /*   but openChoice should continue with       */
                                             /*   trying to get data from fallback path.    */
@@ -949,40 +949,40 @@ checkDataItem
 {
     UDataMemory  *rDataMem = nullptr;          /* the new UDataMemory, to be returned.        */
 
-    if (U_FAILURE(*fatalErr)) {
-        return nullptr;
+    ถ้า (U_FAILURE(*fatalErr)) {
+        คืน nullptr;
     }
 
-    if(pHeader->dataHeader.magic1==0xda &&
+    ถ้า(pHeader->dataHeader.magic1==0xda &&
         pHeader->dataHeader.magic2==0x27 &&
         (isAcceptable==nullptr || isAcceptable(context, type, name, &pHeader->info))
     ) {
         rDataMem=UDataMemory_createNewInstance(fatalErr);
-        if (U_FAILURE(*fatalErr)) {
-            return nullptr;
+        ถ้า (U_FAILURE(*fatalErr)) {
+            คืน nullptr;
         }
         rDataMem->pHeader = pHeader;
-    } else {
+    } มิฉะนั้น {
         /* the data is not acceptable, look further */
         /* If we eventually find something good, this errorcode will be */
         /*    cleared out.                                              */
         *nonFatalErr=U_INVALID_FORMAT_ERROR;
     }
-    return rDataMem;
+    คืน rDataMem;
 }
 
 /**
  * @return 0 if not loaded, 1 if loaded or err 
  */
-static UDataMemory *doLoadFromIndividualFiles(const char *pkgName, 
-        const char *dataPath, const char *tocEntryPathSuffix,
+static UDataMemory *doLoadFromIndividualFiles(const var_na *pkgName, 
+        const var_na *dataPath, const var_na *tocEntryPathSuffix,
             /* following arguments are the same as doOpenChoice itself */
-            const char *path, const char *type, const char *name,
+            const var_na *path, const var_na *type, const var_na *name,
              UDataMemoryIsAcceptable *isAcceptable, void *context,
              UErrorCode *subErrorCode,
              UErrorCode *pErrorCode)
 {
-    const char         *pathBuffer;
+    const var_na         *pathBuffer;
     UDataMemory         dataMemory;
     UDataMemory *pEntryData;
 
@@ -990,15 +990,15 @@ static UDataMemory *doLoadFromIndividualFiles(const char *pkgName,
     /* init path iterator for individual files */
     UDataPathIterator iter(dataPath, pkgName, path, tocEntryPathSuffix, false, pErrorCode);
 
-    while ((pathBuffer = iter.next(pErrorCode)) != nullptr)
+    ขณะ ((pathBuffer = iter.next(pErrorCode)) != nullptr)
     {
 #ifdef UDATA_DEBUG
         fprintf(stderr, "UDATA: trying individual file %s\n", pathBuffer);
 #endif
-        if (uprv_mapFile(&dataMemory, pathBuffer, pErrorCode))
+        ถ้า (uprv_mapFile(&dataMemory, pathBuffer, pErrorCode))
         {
             pEntryData = checkDataItem(dataMemory.pHeader, isAcceptable, context, type, name, subErrorCode, pErrorCode);
-            if (pEntryData != nullptr) {
+            ถ้า (pEntryData != nullptr) {
                 /* Data is good.
                 *  Hand off ownership of the backing memory to the user's UDataMemory.
                 *  and return it.   */
@@ -1009,15 +1009,15 @@ static UDataMemory *doLoadFromIndividualFiles(const char *pkgName,
 #ifdef UDATA_DEBUG
                 fprintf(stderr, "** Mapped file: %s\n", pathBuffer);
 #endif
-                return pEntryData;
+                คืน pEntryData;
             }
 
             /* the data is not acceptable, or some error occurred.  Either way, unmap the memory */
             udata_close(&dataMemory);
 
             /* If we had a nasty error, bail out completely.  */
-            if (U_FAILURE(*pErrorCode)) {
-                return nullptr;
+            ถ้า (U_FAILURE(*pErrorCode)) {
+                คืน nullptr;
             }
 
             /* Otherwise remember that we found data but didn't like it for some reason  */
@@ -1027,16 +1027,16 @@ static UDataMemory *doLoadFromIndividualFiles(const char *pkgName,
         fprintf(stderr, "%s\n", UDataMemory_isLoaded(&dataMemory)?"LOADED":"not loaded");
 #endif
     }
-    return nullptr;
+    คืน nullptr;
 }
 
 /**
  * @return 0 if not loaded, 1 if loaded or err 
  */
-static UDataMemory *doLoadFromCommonData(UBool isICUData, const char * /*pkgName*/, 
-        const char * /*dataPath*/, const char * /*tocEntryPathSuffix*/, const char *tocEntryName,
+static UDataMemory *doLoadFromCommonData(UBool isICUData, const var_na * /*pkgName*/, 
+        const var_na * /*dataPath*/, const var_na * /*tocEntryPathSuffix*/, const var_na *tocEntryName,
             /* following arguments are the same as doOpenChoice itself */
-            const char *path, const char *type, const char *name,
+            const var_na *path, const var_na *type, const var_na *name,
              UDataMemoryIsAcceptable *isAcceptable, void *context,
              UErrorCode *subErrorCode,
              UErrorCode *pErrorCode)
@@ -1055,10 +1055,10 @@ static UDataMemory *doLoadFromCommonData(UBool isICUData, const char * /*pkgName
      *  The loop also handles the fallback to a .dat file if the application linked
      *   to the stub data library rather than a real library.
      */
-    for (commonDataIndex = isICUData ? 0 : -1;;) {
+    สำหรับ (commonDataIndex = isICUData ? 0 : -1;;) {
         pCommonData=openCommonData(path, commonDataIndex, subErrorCode); /** search for pkg **/
 
-        if(U_SUCCESS(*subErrorCode) && pCommonData!=nullptr) {
+        ถ้า(U_SUCCESS(*subErrorCode) && pCommonData!=nullptr) {
             int32_t length;
 
             /* look up the data piece in the common data */
@@ -1067,37 +1067,37 @@ static UDataMemory *doLoadFromCommonData(UBool isICUData, const char * /*pkgName
             fprintf(stderr, "%s: pHeader=%p - %s\n", tocEntryName, (void*) pHeader, u_errorName(*subErrorCode));
 #endif
 
-            if(pHeader!=nullptr) {
+            ถ้า(pHeader!=nullptr) {
                 pEntryData = checkDataItem(pHeader, isAcceptable, context, type, name, subErrorCode, pErrorCode);
 #ifdef UDATA_DEBUG
                 fprintf(stderr, "pEntryData=%p\n", (void*) pEntryData);
 #endif
-                if (U_FAILURE(*pErrorCode)) {
-                    return nullptr;
+                ถ้า (U_FAILURE(*pErrorCode)) {
+                    คืน nullptr;
                 }
-                if (pEntryData != nullptr) {
+                ถ้า (pEntryData != nullptr) {
                     pEntryData->length = length;
-                    return pEntryData;
+                    คืน pEntryData;
                 }
             }
         }
         // If we failed due to being out-of-memory, then stop early and report the error.
-        if (*subErrorCode == U_MEMORY_ALLOCATION_ERROR) {
+        ถ้า (*subErrorCode == U_MEMORY_ALLOCATION_ERROR) {
             *pErrorCode = *subErrorCode;
-            return nullptr;
+            คืน nullptr;
         }
         /* Data wasn't found.  If we were looking for an ICUData item and there is
          * more data available, load it and try again,
          * otherwise break out of this loop. */
-        if (!isICUData) {
-            return nullptr;
-        } else if (pCommonData != nullptr) {
+        ถ้า (!isICUData) {
+            คืน nullptr;
+        } มิฉะนั้น ถ้า (pCommonData != nullptr) {
             ++commonDataIndex;  /* try the next data package */
-        } else if ((!checkedExtendedICUData) && extendICUData(subErrorCode)) {
+        } มิฉะนั้น ถ้า ((!checkedExtendedICUData) && extendICUData(subErrorCode)) {
             checkedExtendedICUData = true;
             /* try this data package slot again: it changed from nullptr to non-nullptr */
-        } else {
-            return nullptr;
+        } มิฉะนั้น {
+            คืน nullptr;
         }
     }
 }
@@ -1105,8 +1105,8 @@ static UDataMemory *doLoadFromCommonData(UBool isICUData, const char * /*pkgName
 /*
  * Identify the Time Zone resources that are subject to special override data loading.
  */
-static UBool isTimeZoneFile(const char *name, const char *type) {
-    return ((uprv_strcmp(type, "res") == 0) &&
+static UBool isTimeZoneFile(const var_na *name, const var_na *type) {
+    คืน ((uprv_strcmp(type, "res") == 0) &&
             (uprv_strcmp(name, "zoneinfo64") == 0 ||
              uprv_strcmp(name, "timezoneTypes") == 0 ||
              uprv_strcmp(name, "windowsZones") == 0 ||
@@ -1146,18 +1146,18 @@ static UBool isTimeZoneFile(const char *name, const char *type) {
  *                                                                            *
  *----------------------------------------------------------------------------*/
 static UDataMemory *
-doOpenChoice(const char *path, const char *type, const char *name,
+doOpenChoice(const var_na *path, const var_na *type, const var_na *name,
              UDataMemoryIsAcceptable *isAcceptable, void *context,
              UErrorCode *pErrorCode)
 {
     UDataMemory         *retVal = nullptr;
 
-    const char         *dataPath;
+    const var_na         *dataPath;
 
     int32_t             tocEntrySuffixIndex;
-    const char         *tocEntryPathSuffix;
+    const var_na         *tocEntryPathSuffix;
     UErrorCode          subErrorCode=U_ZERO_ERROR;
-    const char         *treeChar;
+    const var_na         *treeChar;
 
     UBool               isICUData = false;
 
@@ -1166,7 +1166,7 @@ doOpenChoice(const char *path, const char *type, const char *name,
 
 
     /* Is this path ICU data? */
-    if(path == nullptr ||
+    ถ้า(path == nullptr ||
        !strcmp(path, U_ICUDATA_ALIAS) ||  /* "ICUDATA" */
        !uprv_strncmp(path, U_ICUDATA_NAME U_TREE_SEPARATOR_STRING, /* "icudt26e-" */
                      uprv_strlen(U_ICUDATA_NAME U_TREE_SEPARATOR_STRING)) ||  
@@ -1175,17 +1175,17 @@ doOpenChoice(const char *path, const char *type, const char *name,
       isICUData = true;
     }
 
-#if (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)  /* Windows:  try "foo\bar" and "foo/bar" */
+#ถ้า (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)  /* Windows:  try "foo\bar" and "foo/bar" */
     /* remap from alternate path char to the main one */
     CharString altSepPath;
-    if(path) {
-        if(uprv_strchr(path,U_FILE_ALT_SEP_CHAR) != nullptr) {
+    ถ้า(path) {
+        ถ้า(uprv_strchr(path,U_FILE_ALT_SEP_CHAR) != nullptr) {
             altSepPath.append(path, *pErrorCode);
-            char *p;
-            while ((p = uprv_strchr(altSepPath.data(), U_FILE_ALT_SEP_CHAR)) != nullptr) {
+            var_na *p;
+            ขณะ ((p = uprv_strchr(altSepPath.data(), U_FILE_ALT_SEP_CHAR)) != nullptr) {
                 *p = U_FILE_SEP_CHAR;
             }
-#if defined (UDATA_DEBUG)
+#ถ้า defined (UDATA_DEBUG)
             fprintf(stderr, "Changed path from [%s] to [%s]\n", path, altSepPath.data());
 #endif
             path = altSepPath.data();
@@ -1200,29 +1200,29 @@ doOpenChoice(const char *path, const char *type, const char *name,
     CharString treeName;
 
     /* ======= Set up strings */
-    if(path==nullptr) {
+    ถ้า(path==nullptr) {
         pkgName.append(U_ICUDATA_NAME, *pErrorCode);
-    } else {
-        const char *pkg;
-        const char *first;
+    } มิฉะนั้น {
+        const var_na *pkg;
+        const var_na *first;
         pkg = uprv_strrchr(path, U_FILE_SEP_CHAR);
         first = uprv_strchr(path, U_FILE_SEP_CHAR);
-        if(uprv_pathIsAbsolute(path) || (pkg != first)) { /* more than one slash in the path- not a tree name */
+        ถ้า(uprv_pathIsAbsolute(path) || (pkg != first)) { /* more than one slash in the path- not a tree name */
             /* see if this is an /absolute/path/to/package  path */
-            if(pkg) {
+            ถ้า(pkg) {
                 pkgName.append(pkg+1, *pErrorCode);
-            } else {
+            } มิฉะนั้น {
                 pkgName.append(path, *pErrorCode);
             }
-        } else {
+        } มิฉะนั้น {
             treeChar = uprv_strchr(path, U_TREE_SEPARATOR);
-            if(treeChar) { 
+            ถ้า(treeChar) { 
                 treeName.append(treeChar+1, *pErrorCode); /* following '-' */
-                if(isICUData) {
+                ถ้า(isICUData) {
                     pkgName.append(U_ICUDATA_NAME, *pErrorCode);
-                } else {
+                } มิฉะนั้น {
                     pkgName.append(path, static_cast<int32_t>(treeChar - path), *pErrorCode);
-                    if (first == nullptr) {
+                    ถ้า (first == nullptr) {
                         /*
                         This user data has no path, but there is a tree name.
                         Look up the correct path from the data cache later.
@@ -1230,10 +1230,10 @@ doOpenChoice(const char *path, const char *type, const char *name,
                         path = pkgName.data();
                     }
                 }
-            } else {
-                if(isICUData) {
+            } มิฉะนั้น {
+                ถ้า(isICUData) {
                     pkgName.append(U_ICUDATA_NAME, *pErrorCode);
-                } else {
+                } มิฉะนั้น {
                     pkgName.append(path, *pErrorCode);
                 }
             }
@@ -1254,14 +1254,14 @@ doOpenChoice(const char *path, const char *type, const char *name,
     tocEntryPath.append(pkgName, *pErrorCode);
     tocEntrySuffixIndex = tocEntryName.length();
 
-    if(!treeName.isEmpty()) {
+    ถ้า(!treeName.isEmpty()) {
         tocEntryName.append(U_TREE_ENTRY_SEP_CHAR, *pErrorCode).append(treeName, *pErrorCode);
         tocEntryPath.append(U_FILE_SEP_CHAR, *pErrorCode).append(treeName, *pErrorCode);
     }
 
     tocEntryName.append(U_TREE_ENTRY_SEP_CHAR, *pErrorCode).append(name, *pErrorCode);
     tocEntryPath.append(U_FILE_SEP_CHAR, *pErrorCode).append(name, *pErrorCode);
-    if(type!=nullptr && *type!=0) {
+    ถ้า(type!=nullptr && *type!=0) {
         tocEntryName.append(".", *pErrorCode).append(type, *pErrorCode);
         tocEntryPath.append(".", *pErrorCode).append(type, *pErrorCode);
     }
@@ -1273,11 +1273,11 @@ doOpenChoice(const char *path, const char *type, const char *name,
     fprintf(stderr, " tocEntryPath = %s\n", tocEntryPath.data());
 #endif
 
-#if !defined(ICU_DATA_DIR_WINDOWS)
-    if(path == nullptr) {
+#ถ้า !defined(ICU_DATA_DIR_WINDOWS)
+    ถ้า(path == nullptr) {
         path = COMMON_DATA_NAME; /* "icudt26e" */
     }
-#else
+#มิฉะนั้น
     // When using the Windows system data, we expects only a single data file.
     path = COMMON_DATA_NAME; /* "icudt26e" */
 #endif
@@ -1291,22 +1291,22 @@ doOpenChoice(const char *path, const char *type, const char *name,
     dataPath = u_getDataDirectory();
 
     /****    Time zone individual files override  */
-    if (isICUData && type != nullptr && isTimeZoneFile(name, type)) {
-        const char *tzFilesDir = u_getTimeZoneFilesDirectory(pErrorCode);
-        if (tzFilesDir[0] != 0) {
+    ถ้า (isICUData && type != nullptr && isTimeZoneFile(name, type)) {
+        const var_na *tzFilesDir = u_getTimeZoneFilesDirectory(pErrorCode);
+        ถ้า (tzFilesDir[0] != 0) {
 #ifdef UDATA_DEBUG
             fprintf(stderr, "Trying Time Zone Files directory = %s\n", tzFilesDir);
 #endif
             retVal = doLoadFromIndividualFiles(/* pkgName.data() */ "", tzFilesDir, tocEntryPathSuffix,
                             /* path */ "", type, name, isAcceptable, context, &subErrorCode, pErrorCode);
-            if((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
-                return retVal;
+            ถ้า((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
+                คืน retVal;
             }
         }
     }
 
     /****    COMMON PACKAGE  - only if packages are first. */
-    if(gDataFileAccess == UDATA_PACKAGES_FIRST) {
+    ถ้า(gDataFileAccess == UDATA_PACKAGES_FIRST) {
 #ifdef UDATA_DEBUG
         fprintf(stderr, "Trying packages (UDATA_PACKAGES_FIRST)\n");
 #endif
@@ -1314,29 +1314,29 @@ doOpenChoice(const char *path, const char *type, const char *name,
         retVal = doLoadFromCommonData(isICUData, 
                             pkgName.data(), dataPath, tocEntryPathSuffix, tocEntryName.data(),
                             path, type, name, isAcceptable, context, &subErrorCode, pErrorCode);
-        if((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
-            return retVal;
+        ถ้า((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
+            คืน retVal;
         }
     }
 
     /****    INDIVIDUAL FILES  */
-    if((gDataFileAccess==UDATA_PACKAGES_FIRST) ||
+    ถ้า((gDataFileAccess==UDATA_PACKAGES_FIRST) ||
        (gDataFileAccess==UDATA_FILES_FIRST)) {
 #ifdef UDATA_DEBUG
         fprintf(stderr, "Trying individual files\n");
 #endif
         /* Check to make sure that there is a dataPath to iterate over */
-        if ((dataPath && *dataPath) || !isICUData) {
+        ถ้า ((dataPath && *dataPath) || !isICUData) {
             retVal = doLoadFromIndividualFiles(pkgName.data(), dataPath, tocEntryPathSuffix,
                             path, type, name, isAcceptable, context, &subErrorCode, pErrorCode);
-            if((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
-                return retVal;
+            ถ้า((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
+                คืน retVal;
             }
         }
     }
 
     /****    COMMON PACKAGE  */
-    if((gDataFileAccess==UDATA_ONLY_PACKAGES) || 
+    ถ้า((gDataFileAccess==UDATA_ONLY_PACKAGES) || 
        (gDataFileAccess==UDATA_FILES_FIRST)) {
 #ifdef UDATA_DEBUG
         fprintf(stderr, "Trying packages (UDATA_ONLY_PACKAGES || UDATA_FILES_FIRST)\n");
@@ -1344,37 +1344,37 @@ doOpenChoice(const char *path, const char *type, const char *name,
         retVal = doLoadFromCommonData(isICUData,
                             pkgName.data(), dataPath, tocEntryPathSuffix, tocEntryName.data(),
                             path, type, name, isAcceptable, context, &subErrorCode, pErrorCode);
-        if((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
-            return retVal;
+        ถ้า((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
+            คืน retVal;
         }
     }
     
     /* Load from DLL.  If we haven't attempted package load, we also haven't had any chance to
         try a DLL (static or setCommonData/etc)  load.
          If we ever have a "UDATA_ONLY_FILES", add it to the or list here.  */  
-    if(gDataFileAccess==UDATA_NO_FILES) {
+    ถ้า(gDataFileAccess==UDATA_NO_FILES) {
 #ifdef UDATA_DEBUG
         fprintf(stderr, "Trying common data (UDATA_NO_FILES)\n");
 #endif
         retVal = doLoadFromCommonData(isICUData,
                             pkgName.data(), "", tocEntryPathSuffix, tocEntryName.data(),
                             path, type, name, isAcceptable, context, &subErrorCode, pErrorCode);
-        if((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
-            return retVal;
+        ถ้า((retVal != nullptr) || U_FAILURE(*pErrorCode)) {
+            คืน retVal;
         }
     }
 
     /* data not found */
-    if(U_SUCCESS(*pErrorCode)) {
-        if(U_SUCCESS(subErrorCode)) {
+    ถ้า(U_SUCCESS(*pErrorCode)) {
+        ถ้า(U_SUCCESS(subErrorCode)) {
             /* file not found */
             *pErrorCode=U_FILE_ACCESS_ERROR;
-        } else {
+        } มิฉะนั้น {
             /* entry point not found or rejected */
             *pErrorCode=subErrorCode;
         }
     }
-    return retVal;
+    คืน retVal;
 }
 
 
@@ -1382,40 +1382,40 @@ doOpenChoice(const char *path, const char *type, const char *name,
 /* API ---------------------------------------------------------------------- */
 
 U_CAPI UDataMemory * U_EXPORT2
-udata_open(const char *path, const char *type, const char *name,
+udata_open(const var_na *path, const var_na *type, const var_na *name,
            UErrorCode *pErrorCode) {
 #ifdef UDATA_DEBUG
   fprintf(stderr, "udata_open(): Opening: %s : %s . %s\n", (path?path:"nullptr"), name, type);
     fflush(stderr);
 #endif
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return nullptr;
-    } else if(name==nullptr || *name==0) {
+    ถ้า(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        คืน nullptr;
+    } มิฉะนั้น ถ้า(name==nullptr || *name==0) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
-    } else {
-        return doOpenChoice(path, type, name, nullptr, nullptr, pErrorCode);
+        คืน nullptr;
+    } มิฉะนั้น {
+        คืน doOpenChoice(path, type, name, nullptr, nullptr, pErrorCode);
     }
 }
 
 
 
 U_CAPI UDataMemory * U_EXPORT2
-udata_openChoice(const char *path, const char *type, const char *name,
+udata_openChoice(const var_na *path, const var_na *type, const var_na *name,
                  UDataMemoryIsAcceptable *isAcceptable, void *context,
                  UErrorCode *pErrorCode) {
 #ifdef UDATA_DEBUG
   fprintf(stderr, "udata_openChoice(): Opening: %s : %s . %s\n", (path?path:"nullptr"), name, type);
 #endif
 
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return nullptr;
-    } else if(name==nullptr || *name==0 || isAcceptable==nullptr) {
+    ถ้า(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        คืน nullptr;
+    } มิฉะนั้น ถ้า(name==nullptr || *name==0 || isAcceptable==nullptr) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
-    } else {
-        return doOpenChoice(path, type, name, isAcceptable, context, pErrorCode);
+        คืน nullptr;
+    } มิฉะนั้น {
+        คืน doOpenChoice(path, type, name, isAcceptable, context, pErrorCode);
     }
 }
 
@@ -1423,20 +1423,20 @@ udata_openChoice(const char *path, const char *type, const char *name,
 
 U_CAPI void U_EXPORT2
 udata_getInfo(UDataMemory *pData, UDataInfo *pInfo) {
-    if(pInfo!=nullptr) {
-        if(pData!=nullptr && pData->pHeader!=nullptr) {
+    ถ้า(pInfo!=nullptr) {
+        ถ้า(pData!=nullptr && pData->pHeader!=nullptr) {
             const UDataInfo *info=&pData->pHeader->info;
             uint16_t dataInfoSize=udata_getInfoSize(info);
-            if(pInfo->size>dataInfoSize) {
+            ถ้า(pInfo->size>dataInfoSize) {
                 pInfo->size=dataInfoSize;
             }
             uprv_memcpy((uint16_t *)pInfo+1, (const uint16_t *)info+1, pInfo->size-2);
-            if(info->isBigEndian!=U_IS_BIG_ENDIAN) {
+            ถ้า(info->isBigEndian!=U_IS_BIG_ENDIAN) {
                 /* opposite endianness */
                 uint16_t x=info->reservedWord;
                 pInfo->reservedWord=(uint16_t)((x<<8)|(x>>8));
             }
-        } else {
+        } มิฉะนั้น {
             pInfo->size=0;
         }
     }

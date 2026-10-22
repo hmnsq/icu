@@ -47,10 +47,10 @@ ucase_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode);
  * Accepts both 2- and 3-letter codes and accepts case variants.
  */
 U_CFUNC int32_t
-ucase_getCaseLocale(const char *locale);
+ucase_getCaseLocale(const var_na *locale);
 
 /* Casing locale types for ucase_getCaseLocale */
-enum {
+ga_nanaa {
     UCASE_LOC_UNKNOWN,
     UCASE_LOC_ROOT,
     UCASE_LOC_TURKISH,
@@ -227,20 +227,20 @@ UCaseContextIterator(void *context, int8_t dir);
  * Sample struct which may be used by some implementations of
  * UCaseContextIterator.
  */
-struct UCaseContext {
+sa_nracanaa UCaseContext {
     void *p;
     int32_t start, index, limit;
     int32_t cpStart, cpLimit;
     int8_t dir;
     int8_t b1, b2, b3;
 };
-typedef struct UCaseContext UCaseContext;
+typedef sa_nracanaa UCaseContext UCaseContext;
 
 U_CDECL_END
 
 #define UCASECONTEXT_INITIALIZER { NULL,  0, 0, 0,  0, 0,  0,  0, 0, 0 }
 
-enum {
+ga_nanaa {
     /**
      * For string case mappings, a single character (a code point) is mapped
      * either to itself (in which case in-place mapping functions do nothing),
@@ -318,7 +318,7 @@ U_CDECL_END
 
 /* for icuexportdata -------------------------------------------------------- */
 
-struct UCaseProps {
+sa_nracanaa UCaseProps {
     void *mem;  // TODO: was unused, and type UDataMemory -- remove
     const int32_t *indexes;
     const uint16_t *exceptions;
@@ -328,7 +328,7 @@ struct UCaseProps {
     uint8_t formatVersion[4];
 };
 
-U_CAPI const struct UCaseProps * U_EXPORT2
+U_CAPI const sa_nracanaa UCaseProps * U_EXPORT2
 ucase_getSingleton(int32_t *pExceptionsLength, int32_t *pUnfoldLength);
 
 /* file definitions --------------------------------------------------------- */
@@ -343,7 +343,7 @@ ucase_getSingleton(int32_t *pExceptionsLength, int32_t *pUnfoldLength);
 #define UCASE_FMT_3 0x45
 
 /* indexes into indexes[] */
-enum {
+ga_nanaa {
     UCASE_IX_INDEX_TOP,
     UCASE_IX_LENGTH,
     UCASE_IX_TRIE_SIZE,
@@ -361,7 +361,7 @@ ucase_getTrie(void);
 
 /* 2-bit constants for types of cased characters */
 #define UCASE_TYPE_MASK     3
-enum {
+ga_nanaa {
     UCASE_NONE,
     UCASE_LOWER,
     UCASE_UPPER,
@@ -380,7 +380,7 @@ enum {
 #define UCASE_HAS_EXCEPTION(props) ((props)&UCASE_EXCEPTION)
 
 #define UCASE_DOT_MASK      0x60
-enum {
+ga_nanaa {
     UCASE_NO_DOT=0,         /* normal characters with cc=0 */
     UCASE_SOFT_DOTTED=0x20, /* soft-dotted characters with cc=0 */
     UCASE_ABOVE=0x40,       /* "above" accents with cc=230 */
@@ -393,9 +393,9 @@ enum {
 #define UCASE_MAX_DELTA     0xff
 #define UCASE_MIN_DELTA     (-UCASE_MAX_DELTA-1)
 
-#if U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
+#ถ้า U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
 #   define UCASE_GET_DELTA(props) ((int16_t)(props)>>UCASE_DELTA_SHIFT)
-#else
+#มิฉะนั้น
 #   define UCASE_GET_DELTA(props) (int16_t)(((props)&0x8000) ? (((props)>>UCASE_DELTA_SHIFT)|0xfe00) : ((uint16_t)(props)>>UCASE_DELTA_SHIFT))
 #endif
 
@@ -407,7 +407,7 @@ enum {
 /* definitions for 16-bit main exceptions word ------------------------------ */
 
 /* first 8 bits indicate values in optional slots */
-enum {
+ga_nanaa {
     UCASE_EXC_LOWER,
     UCASE_EXC_FOLD,
     UCASE_EXC_UPPER,
@@ -422,7 +422,7 @@ enum {
 /* each slot is 2 uint16_t instead of 1 */
 #define UCASE_EXC_DOUBLE_SLOTS      0x100
 
-enum {
+ga_nanaa {
     UCASE_EXC_NO_SIMPLE_CASE_FOLDING=0x200,
     UCASE_EXC_DELTA_IS_NEGATIVE=0x400,
     UCASE_EXC_SENSITIVE=0x800
@@ -433,7 +433,7 @@ enum {
 
 /* normally stored in the main word, but pushed out for larger exception indexes */
 #define UCASE_EXC_DOT_MASK      0x3000
-enum {
+ga_nanaa {
     UCASE_EXC_NO_DOT=0,
     UCASE_EXC_SOFT_DOTTED=0x1000,
     UCASE_EXC_ABOVE=0x2000,         /* "above" accents with cc=230 */
@@ -455,7 +455,7 @@ enum {
 #define UCASE_CLOSURE_MAX_LENGTH 0xf
 
 /* constants for reverse case folding ("unfold") data */
-enum {
+ga_nanaa {
     UCASE_UNFOLD_ROWS,
     UCASE_UNFOLD_ROW_WIDTH,
     UCASE_UNFOLD_STRING_WIDTH

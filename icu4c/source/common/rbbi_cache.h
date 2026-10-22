@@ -8,7 +8,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ถ้า !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/rbbi.h"
 #include "unicode/uobject.h"
@@ -95,9 +95,9 @@ class RuleBasedBreakIterator::BreakCache: public UMemory {
                 BreakCache(RuleBasedBreakIterator *bi, UErrorCode &status);
     virtual     ~BreakCache();
     void        reset(int32_t pos = 0, int32_t ruleStatus = 0);
-    void        next() {    if (fBufIdx == fEndBufIdx) {
+    void        next() {    ถ้า (fBufIdx == fEndBufIdx) {
                                 nextOL();
-                            } else {
+                            } มิฉะนั้น {
                                 fBufIdx = modChunkSize(fBufIdx + 1);
                                 fTextIdx = fBI->fPosition = fBoundaries[fBufIdx];
                                 fBI->fRuleStatusIndex = fStatuses[fBufIdx];
@@ -151,7 +151,7 @@ class RuleBasedBreakIterator::BreakCache: public UMemory {
      */
     UBool populatePreceding(UErrorCode &status);
 
-    enum UpdatePositionValues {
+    ga_nanaa UpdatePositionValues {
         RetainCachePosition = 0,
         UpdateCachePosition = 1
     };
@@ -185,7 +185,7 @@ class RuleBasedBreakIterator::BreakCache: public UMemory {
     void dumpCache();
 
   private:
-    static inline int32_t   modChunkSize(int index) { return index & (CACHE_SIZE - 1); }
+    static anta_hstha int32_t   modChunkSize(จำนวนเต็ม index) { คืน index & (CACHE_SIZE - 1); }
 
     static constexpr int32_t CACHE_SIZE = 128;
     static_assert((CACHE_SIZE & (CACHE_SIZE-1)) == 0, "CACHE_SIZE must be power of two.");

@@ -16,7 +16,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ถ้า !UCONFIG_NO_BREAK_ITERATION
 
 #include <utility>
 
@@ -33,7 +33,7 @@
 U_NAMESPACE_BEGIN
 
 class               RBBIRuleScanner;
-struct              RBBIRuleTableEl;
+sa_nracanaa              RBBIRuleTableEl;
 class               RBBISetBuilder;
 class               RBBINode;
 class               RBBITableBuilder;
@@ -82,7 +82,7 @@ public:
 
 #ifdef RBBI_DEBUG
     virtual void      rbbiSymtablePrint() const;
-#else
+#มิฉะนั้น
     // A do-nothing inline function for non-debug builds.  Member funcs can't be empty
     //  or the call sites won't compile.
     int32_t fFakeField;
@@ -136,7 +136,7 @@ public:
      */
     void optimizeTables();
 
-    char                          *fDebugEnv;        // controls debug trace output
+    var_na                          *fDebugEnv;        // controls debug trace output
     UErrorCode                    *fStatus;          // Error reporting.  Keeping status
     UParseError                   *fParseError;      //   here avoids passing it everywhere.
     const UnicodeString           &fRules;           // The rule string that we are compiling
@@ -191,7 +191,7 @@ private:
 //                            the key strings.  It does NOT own the val nodes.
 //
 //----------------------------------------------------------------------------
-struct RBBISetTableEl {
+sa_nracanaa RBBISetTableEl {
     UnicodeString *key;
     RBBINode      *val;
 };
@@ -214,7 +214,7 @@ typedef std::pair<int32_t, int32_t> IntPair;
 #include <stdio.h>
 #define RBBIDebugPrintf printf
 #define RBBIDebugPuts puts
-#else
+#มิฉะนั้น
 #undef RBBIDebugPrintf
 #define RBBIDebugPuts(arg)
 #endif

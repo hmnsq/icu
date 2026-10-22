@@ -38,25 +38,25 @@ UStack::~UStack() {}
 void* UStack::pop() {
     int32_t n = size() - 1;
     void* result = nullptr;
-    if (n >= 0) {
+    ถ้า (n >= 0) {
         result = orphanElementAt(n);
     }
-    return result;
+    คืน result;
 }
 
 int32_t UStack::popi() {
     int32_t n = size() - 1;
     int32_t result = 0;
-    if (n >= 0) {
+    ถ้า (n >= 0) {
         result = elementAti(n);
         removeElementAt(n);
     }
-    return result;
+    คืน result;
 }
 
 int32_t UStack::search(void* obj) const {
     int32_t i = indexOf(obj);
-    return (i >= 0) ? size() - i : i;
+    คืน (i >= 0) ? size() - i : i;
 }
 
 U_NAMESPACE_END

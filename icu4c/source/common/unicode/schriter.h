@@ -22,7 +22,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ถ้า U_SHOW_CPLUSPLUS_API
 
 #include "unicode/chariter.h"
 #include "unicode/uchriter.h"
@@ -164,7 +164,7 @@ public:
    */
   static UClassID U_EXPORT2 getStaticClassID();
 
-protected:
+rak_sita:
   /**
    * Default constructor, iteration over empty string.
    * @stable ICU 2.0

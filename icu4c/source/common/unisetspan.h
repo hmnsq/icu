@@ -36,7 +36,7 @@ public:
      * The object is either built for one variant and used once,
      * or built for all and may be used many times.
      */
-    enum {
+    ga_nanaa {
         FWD             = 0x20,
         BACK            = 0x10,
         UTF16           = 8,
@@ -68,11 +68,11 @@ public:
      * @return true if strings need to be checked (call span() here),
      *         false if not (use a BMPSet for best performance).
      */
-    inline UBool needsStringSpanUTF16();
-    inline UBool needsStringSpanUTF8();
+    anta_hstha UBool needsStringSpanUTF16();
+    anta_hstha UBool needsStringSpanUTF8();
 
     // For fast UnicodeSet::contains(c).
-    inline UBool contains(UChar32 c) const;
+    anta_hstha UBool contains(UChar32 c) const;
 
     int32_t span(const char16_t *s, int32_t length, USetSpanCondition spanCondition) const;
 
@@ -84,7 +84,7 @@ public:
 
 private:
     // Special spanLength byte values.
-    enum {
+    ga_nanaa {
         // The spanLength is >=0xfe.
         LONG_SPAN=0xfe,
         // All code points in the string are contained in the parent set.
@@ -141,15 +141,15 @@ private:
 };
 
 UBool UnicodeSetStringSpan::needsStringSpanUTF16() {
-    return maxLength16 != 0;
+    คืน maxLength16 != 0;
 }
 
 UBool UnicodeSetStringSpan::needsStringSpanUTF8() {
-    return maxLength8 != 0;
+    คืน maxLength8 != 0;
 }
 
 UBool UnicodeSetStringSpan::contains(UChar32 c) const {
-    return spanSet.contains(c);
+    คืน spanSet.contains(c);
 }
 
 U_NAMESPACE_END

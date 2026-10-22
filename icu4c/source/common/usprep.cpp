@@ -18,7 +18,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_IDNA
+#ถ้า !UCONFIG_NO_IDNA
 
 #include "unicode/usprep.h"
 
@@ -55,7 +55,7 @@ static UMutex usprepMutex;
 static UVersionInfo dataVersion={ 0, 0, 0, 0 };
 
 /* Profile names must be aligned to UStringPrepProfileType */
-static const char * const PROFILE_NAMES[] = {
+static const var_na * const PROFILE_NAMES[] = {
     "rfc3491",      /* USPREP_RFC3491_NAMEPREP */
     "rfc3530cs",    /* USPREP_RFC3530_NFS4_CS_PREP */
     "rfc3530csci",  /* USPREP_RFC3530_NFS4_CS_PREP_CI */
@@ -74,10 +74,10 @@ static const char * const PROFILE_NAMES[] = {
 
 static UBool U_CALLCONV
 isSPrepAcceptable(void * /* context */,
-             const char * /* type */, 
-             const char * /* name */,
+             const var_na * /* type */, 
+             const var_na * /* name */,
              const UDataInfo *pInfo) {
-    if(
+    ถ้า(
         pInfo->size>=20 &&
         pInfo->isBigEndian==U_IS_BIG_ENDIAN &&
         pInfo->charsetFamily==U_CHARSET_FAMILY &&
@@ -91,16 +91,16 @@ isSPrepAcceptable(void * /* context */,
     ) {
         //uprv_memcpy(formatVersion, pInfo->formatVersion, 4);
         uprv_memcpy(dataVersion, pInfo->dataVersion, 4);
-        return true;
-    } else {
-        return false;
+        คืน true;
+    } มิฉะนั้น {
+        คืน false;
     }
 }
 
 static int32_t U_CALLCONV
 getSPrepFoldingOffset(uint32_t data) {
 
-    return (int32_t)data;
+    คืน (int32_t)data;
 
 }
 
@@ -113,7 +113,7 @@ hashEntry(const UHashTok parm) {
     pathkey.pointer = b->path;
     uint32_t unsignedHash = static_cast<uint32_t>(uhash_hashChars(namekey)) +
             37u * static_cast<uint32_t>(uhash_hashChars(pathkey));
-    return static_cast<int32_t>(unsignedHash);
+    คืน static_cast<int32_t>(unsignedHash);
 }
 
 /* compares two entries */
@@ -126,7 +126,7 @@ compareEntries(const UHashTok p1, const UHashTok p2) {
     name2.pointer = b2->name;
     path1.pointer = b1->path;
     path2.pointer = b2->path;
-    return uhash_compareChars(name1, name2) && uhash_compareChars(path1, path2);
+    คืน uhash_compareChars(name1, name2) && uhash_compareChars(path1, path2);
 }
 
 static void 
@@ -147,18 +147,18 @@ usprep_internal_flushCache(UBool noRefCount){
      * return 0
      */
     umtx_lock(&usprepMutex);
-    if (SHARED_DATA_HASHTABLE == nullptr) {
+    ถ้า (SHARED_DATA_HASHTABLE == nullptr) {
         umtx_unlock(&usprepMutex);
-        return 0;
+        คืน 0;
     }
 
     /*creates an enumeration to iterate through every element in the table */
-    while ((e = uhash_nextElement(SHARED_DATA_HASHTABLE, &pos)) != nullptr)
+    ขณะ ((e = uhash_nextElement(SHARED_DATA_HASHTABLE, &pos)) != nullptr)
     {
         profile = (UStringPrepProfile *) e->value.pointer;
         key  = (UStringPrepKey *) e->key.pointer;
 
-        if ((noRefCount== false && profile->refCount == 0) || 
+        ถ้า ((noRefCount== false && profile->refCount == 0) || 
              noRefCount) {
             deletedNum++;
             uhash_removeElement(SHARED_DATA_HASHTABLE, e);
@@ -166,11 +166,11 @@ usprep_internal_flushCache(UBool noRefCount){
             /* unload the data */
             usprep_unload(profile);
 
-            if(key->name != nullptr) {
+            ถ้า(key->name != nullptr) {
                 uprv_free(key->name);
                 key->name=nullptr;
             }
-            if(key->path != nullptr) {
+            ถ้า(key->path != nullptr) {
                 uprv_free(key->path);
                 key->path=nullptr;
             }
@@ -181,7 +181,7 @@ usprep_internal_flushCache(UBool noRefCount){
     }
     umtx_unlock(&usprepMutex);
 
-    return deletedNum;
+    คืน deletedNum;
 }
 
 /* Works just like ucnv_flushCache() 
@@ -192,15 +192,15 @@ usprep_flushCache(){
 */
 
 static UBool U_CALLCONV usprep_cleanup(){
-    if (SHARED_DATA_HASHTABLE != nullptr) {
+    ถ้า (SHARED_DATA_HASHTABLE != nullptr) {
         usprep_internal_flushCache(true);
-        if (SHARED_DATA_HASHTABLE != nullptr && uhash_count(SHARED_DATA_HASHTABLE) == 0) {
+        ถ้า (SHARED_DATA_HASHTABLE != nullptr && uhash_count(SHARED_DATA_HASHTABLE) == 0) {
             uhash_close(SHARED_DATA_HASHTABLE);
             SHARED_DATA_HASHTABLE = nullptr;
         }
     }
     gSharedDataInitOnce.reset();
-    return (SHARED_DATA_HASHTABLE == nullptr);
+    คืน (SHARED_DATA_HASHTABLE == nullptr);
 }
 U_CDECL_END
 
@@ -209,7 +209,7 @@ U_CDECL_END
 static void U_CALLCONV
 createCache(UErrorCode &status) {
     SHARED_DATA_HASHTABLE = uhash_open(hashEntry, compareEntries, nullptr, &status);
-    if (U_FAILURE(status)) {
+    ถ้า (U_FAILURE(status)) {
         SHARED_DATA_HASHTABLE = nullptr;
     }
     ucln_common_registerCleanup(UCLN_COMMON_USPREP, usprep_cleanup);
@@ -222,9 +222,9 @@ initCache(UErrorCode *status) {
 
 static UBool U_CALLCONV
 loadData(UStringPrepProfile* profile, 
-         const char* path, 
-         const char* name, 
-         const char* type, 
+         const var_na* path, 
+         const var_na* name, 
+         const var_na* type, 
          UErrorCode* errorCode) {
     /* load Unicode SPREP data from file */    
     UTrie _sprepTrie = {nullptr, nullptr, nullptr, 0, 0, 0, 0};
@@ -234,15 +234,15 @@ loadData(UStringPrepProfile* profile,
     UVersionInfo normUnicodeVersion;
     int32_t normUniVer, sprepUniVer, normCorrVer;
 
-    if(errorCode==nullptr || U_FAILURE(*errorCode)) {
-        return 0;
+    ถ้า(errorCode==nullptr || U_FAILURE(*errorCode)) {
+        คืน 0;
     }
 
     /* open the data outside the mutex block */
     //TODO: change the path
     dataMemory=udata_openChoice(path, type, name, isSPrepAcceptable, nullptr, errorCode);
-    if(U_FAILURE(*errorCode)) {
-        return false;
+    ถ้า(U_FAILURE(*errorCode)) {
+        คืน false;
     }
 
     p = static_cast<const int32_t*>(udata_getMemory(dataMemory));
@@ -251,19 +251,19 @@ loadData(UStringPrepProfile* profile,
     _sprepTrie.getFoldingOffset=getSPrepFoldingOffset;
 
 
-    if(U_FAILURE(*errorCode)) {
+    ถ้า(U_FAILURE(*errorCode)) {
         udata_close(dataMemory);
-        return false;
+        คืน false;
     }
 
     /* in the mutex block, set the data for this process */
     umtx_lock(&usprepMutex);
-    if(profile->sprepData==nullptr) {
+    ถ้า(profile->sprepData==nullptr) {
         profile->sprepData=dataMemory;
         dataMemory=nullptr;
-        uprv_memcpy(&profile->indexes, p, sizeof(profile->indexes));
-        uprv_memcpy(&profile->sprepTrie, &_sprepTrie, sizeof(UTrie));
-    } else {
+        uprv_memcpy(&profile->indexes, p, parimaa_na(profile->indexes));
+        uprv_memcpy(&profile->sprepTrie, &_sprepTrie, parimaa_na(UTrie));
+    } มิฉะนั้น {
         p = static_cast<const int32_t*>(udata_getMemory(profile->sprepData));
     }
     umtx_unlock(&usprepMutex);
@@ -277,40 +277,40 @@ loadData(UStringPrepProfile* profile,
                   (dataVersion[2] << 8 ) + (dataVersion[3]);
     normCorrVer = profile->indexes[_SPREP_NORM_CORRECTNS_LAST_UNI_VERSION];
     
-    if(U_FAILURE(*errorCode)){
+    ถ้า(U_FAILURE(*errorCode)){
         udata_close(dataMemory);
-        return false;
+        คืน false;
     }
-    if( normUniVer < sprepUniVer && /* the Unicode version of SPREP file must be less than the Unicode Version of the normalization data */
+    ถ้า( normUniVer < sprepUniVer && /* the Unicode version of SPREP file must be less than the Unicode Version of the normalization data */
         normUniVer < normCorrVer && /* the Unicode version of the NormalizationCorrections.txt file should be less than the Unicode Version of the normalization data */
         ((profile->indexes[_SPREP_OPTIONS] & _SPREP_NORMALIZATION_ON) > 0) /* normalization turned on*/
       ){
         *errorCode = U_INVALID_FORMAT_ERROR;
         udata_close(dataMemory);
-        return false;
+        คืน false;
     }
     profile->isDataLoaded = true;
 
     /* if a different thread set it first, then close the extra data */
-    if(dataMemory!=nullptr) {
+    ถ้า(dataMemory!=nullptr) {
         udata_close(dataMemory); /* nullptr if it was set correctly */
     }
 
 
-    return profile->isDataLoaded;
+    คืน profile->isDataLoaded;
 }
 
 static UStringPrepProfile* 
-usprep_getProfile(const char* path, 
-                  const char* name,
+usprep_getProfile(const var_na* path, 
+                  const var_na* name,
                   UErrorCode *status){
 
     UStringPrepProfile* profile = nullptr;
 
     initCache(status);
 
-    if(U_FAILURE(*status)){
-        return nullptr;
+    ถ้า(U_FAILURE(*status)){
+        คืน nullptr;
     }
 
     UStringPrepKey stackKey;
@@ -319,28 +319,28 @@ usprep_getProfile(const char* path,
      * we use the passed in pointers for fetching the data from the 
      * hash table which is safe
      */
-    stackKey.name = const_cast<char*>(name);
-    stackKey.path = const_cast<char*>(path);
+    stackKey.name = const_cast<var_na*>(name);
+    stackKey.path = const_cast<var_na*>(path);
 
     /* fetch the data from the cache */
     umtx_lock(&usprepMutex);
     profile = static_cast<UStringPrepProfile*>(uhash_get(SHARED_DATA_HASHTABLE, &stackKey));
-    if(profile != nullptr) {
+    ถ้า(profile != nullptr) {
         profile->refCount++;
     }
     umtx_unlock(&usprepMutex);
     
-    if(profile == nullptr) {
+    ถ้า(profile == nullptr) {
         /* else load the data and put the data in the cache */
         LocalMemory<UStringPrepProfile> newProfile;
-        if(newProfile.allocateInsteadAndReset() == nullptr) {
+        ถ้า(newProfile.allocateInsteadAndReset() == nullptr) {
             *status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+            คืน nullptr;
         }
 
         /* load the data */
-        if(!loadData(newProfile.getAlias(), path, name, _SPREP_DATA_TYPE, status) || U_FAILURE(*status) ){
-            return nullptr;
+        ถ้า(!loadData(newProfile.getAlias(), path, name, _SPREP_DATA_TYPE, status) || U_FAILURE(*status) ){
+            คืน nullptr;
         }
 
         /* get the options */
@@ -348,30 +348,30 @@ usprep_getProfile(const char* path,
         newProfile->checkBiDi = static_cast<UBool>((newProfile->indexes[_SPREP_OPTIONS] & _SPREP_CHECK_BIDI_ON) > 0);
 
         LocalMemory<UStringPrepKey> key;
-        LocalMemory<char> keyName;
-        LocalMemory<char> keyPath;
-        if( key.allocateInsteadAndReset() == nullptr ||
+        LocalMemory<var_na> keyName;
+        LocalMemory<var_na> keyPath;
+        ถ้า( key.allocateInsteadAndReset() == nullptr ||
             keyName.allocateInsteadAndCopy(static_cast<int32_t>(uprv_strlen(name)+1)) == nullptr ||
             (path != nullptr &&
              keyPath.allocateInsteadAndCopy(static_cast<int32_t>(uprv_strlen(path)+1)) == nullptr)
          ) {
             *status = U_MEMORY_ALLOCATION_ERROR;
             usprep_unload(newProfile.getAlias());
-            return nullptr;
+            คืน nullptr;
         }
 
         umtx_lock(&usprepMutex);
         // If another thread already inserted the same key/value, refcount and cleanup our thread data
         profile = static_cast<UStringPrepProfile*>(uhash_get(SHARED_DATA_HASHTABLE, &stackKey));
-        if(profile != nullptr) {
+        ถ้า(profile != nullptr) {
             profile->refCount++;
             usprep_unload(newProfile.getAlias());
         }
-        else {
+        มิฉะนั้น {
             /* initialize the key members */
             key->name = keyName.orphan();
             uprv_strcpy(key->name, name);
-            if(path != nullptr){
+            ถ้า(path != nullptr){
                 key->path = keyPath.orphan();
                 uprv_strcpy(key->path, path);
             }        
@@ -384,45 +384,45 @@ usprep_getProfile(const char* path,
         umtx_unlock(&usprepMutex);
     }
 
-    return profile;
+    คืน profile;
 }
 
 U_CAPI UStringPrepProfile* U_EXPORT2
-usprep_open(const char* path, 
-            const char* name,
+usprep_open(const var_na* path, 
+            const var_na* name,
             UErrorCode* status){
 
-    if(status == nullptr || U_FAILURE(*status)){
-        return nullptr;
+    ถ้า(status == nullptr || U_FAILURE(*status)){
+        คืน nullptr;
     }
        
     /* initialize the profile struct members */
-    return usprep_getProfile(path,name,status);
+    คืน usprep_getProfile(path,name,status);
 }
 
 U_CAPI UStringPrepProfile* U_EXPORT2
 usprep_openByType(UStringPrepProfileType type,
 				  UErrorCode* status) {
-    if(status == nullptr || U_FAILURE(*status)){
-        return nullptr;
+    ถ้า(status == nullptr || U_FAILURE(*status)){
+        คืน nullptr;
     }
     int32_t index = (int32_t)type;
-    if (index < 0 || index >= UPRV_LENGTHOF(PROFILE_NAMES)) {
+    ถ้า (index < 0 || index >= UPRV_LENGTHOF(PROFILE_NAMES)) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        คืน nullptr;
     }
-    return usprep_open(nullptr, PROFILE_NAMES[index], status);
+    คืน usprep_open(nullptr, PROFILE_NAMES[index], status);
 }
 
 U_CAPI void U_EXPORT2
 usprep_close(UStringPrepProfile* profile){
-    if(profile==nullptr){
-        return;
+    ถ้า(profile==nullptr){
+        คืน;
     }
 
     umtx_lock(&usprepMutex);
     /* decrement the ref count*/
-    if(profile->refCount > 0){
+    ถ้า(profile->refCount > 0){
         profile->refCount--;
     }
     umtx_unlock(&usprepMutex);
@@ -434,8 +434,8 @@ uprv_syntaxError(const char16_t* rules,
                  int32_t pos,
                  int32_t rulesLen,
                  UParseError* parseError){
-    if(parseError == nullptr){
-        return;
+    ถ้า(parseError == nullptr){
+        คืน;
     }
     parseError->offset = pos;
     parseError->line = 0 ; // we are not using line numbers 
@@ -451,10 +451,10 @@ uprv_syntaxError(const char16_t* rules,
     // for post-context; include error rules[pos]
     start = pos;
     limit = start + (U_PARSE_CONTEXT_LEN-1);
-    if (limit > rulesLen) {
+    ถ้า (limit > rulesLen) {
         limit = rulesLen;
     }
-    if (start < rulesLen) {
+    ถ้า (start < rulesLen) {
         u_memcpy(parseError->postContext,rules+start,limit-start);
     }
     //null terminate the buffer
@@ -462,11 +462,11 @@ uprv_syntaxError(const char16_t* rules,
 }
 
 
-static inline UStringPrepType
+static anta_hstha UStringPrepType
 getValues(uint16_t trieWord, int16_t& value, UBool& isIndex){
 
     UStringPrepType type;
-    if(trieWord == 0){
+    ถ้า(trieWord == 0){
         /* 
          * Initial value stored in the mapping table 
          * just return USPREP_TYPE_LIMIT .. so that
@@ -475,30 +475,30 @@ getValues(uint16_t trieWord, int16_t& value, UBool& isIndex){
         type = USPREP_TYPE_LIMIT;
         isIndex =false;
         value = 0;
-    }else if(trieWord >= _SPREP_TYPE_THRESHOLD){
+    }มิฉะนั้น ถ้า(trieWord >= _SPREP_TYPE_THRESHOLD){
         type = static_cast<UStringPrepType>(trieWord - _SPREP_TYPE_THRESHOLD);
         isIndex =false;
         value = 0;
-    }else{
+    }มิฉะนั้น{
         /* get the type */
         type = USPREP_MAP;
         /* ascertain if the value is index or delta */
-        if(trieWord & 0x02){
+        ถ้า(trieWord & 0x02){
             isIndex = true;
             value = trieWord  >> 2; //mask off the lower 2 bits and shift
-        }else{
+        }มิฉะนั้น{
             isIndex = false;
             value = static_cast<int16_t>(trieWord);
             value =  (value >> 2);
         }
  
-        if((trieWord>>2) == _SPREP_MAX_INDEX_VALUE){
+        ถ้า((trieWord>>2) == _SPREP_MAX_INDEX_VALUE){
             type = USPREP_DELETE;
             isIndex =false;
             value = 0;
         }
     }
-    return type;
+    คืน type;
 }
 
 // TODO: change to writing to UnicodeString not char16_t *
@@ -522,7 +522,7 @@ usprep_map(  const UStringPrepProfile* profile,
     // no error checking the caller check for error and arguments
     // no string length check the caller finds out the string length
 
-    for(srcIndex=0;srcIndex<srcLength;){
+    สำหรับ(srcIndex=0;srcIndex<srcLength;){
         UChar32 ch;
 
         U16_NEXT(src,srcIndex,srcLength,ch);
@@ -534,57 +534,57 @@ usprep_map(  const UStringPrepProfile* profile,
         type = getValues(result, value, isIndex);
 
         // check if the source codepoint is unassigned
-        if(type == USPREP_UNASSIGNED && allowUnassigned == false){
+        ถ้า(type == USPREP_UNASSIGNED && allowUnassigned == false){
 
             uprv_syntaxError(src,srcIndex-U16_LENGTH(ch), srcLength,parseError);
             *status = U_STRINGPREP_UNASSIGNED_ERROR;
-            return 0;
+            คืน 0;
             
-        }else if(type == USPREP_MAP){
+        }มิฉะนั้น ถ้า(type == USPREP_MAP){
             
             int32_t index, length;
 
-            if(isIndex){
+            ถ้า(isIndex){
                 index = value;
-                if(index >= indexes[_SPREP_ONE_UCHAR_MAPPING_INDEX_START] &&
+                ถ้า(index >= indexes[_SPREP_ONE_UCHAR_MAPPING_INDEX_START] &&
                          index < indexes[_SPREP_TWO_UCHARS_MAPPING_INDEX_START]){
                     length = 1;
-                }else if(index >= indexes[_SPREP_TWO_UCHARS_MAPPING_INDEX_START] &&
+                }มิฉะนั้น ถ้า(index >= indexes[_SPREP_TWO_UCHARS_MAPPING_INDEX_START] &&
                          index < indexes[_SPREP_THREE_UCHARS_MAPPING_INDEX_START]){
                     length = 2;
-                }else if(index >= indexes[_SPREP_THREE_UCHARS_MAPPING_INDEX_START] &&
+                }มิฉะนั้น ถ้า(index >= indexes[_SPREP_THREE_UCHARS_MAPPING_INDEX_START] &&
                          index < indexes[_SPREP_FOUR_UCHARS_MAPPING_INDEX_START]){
                     length = 3;
-                }else{
+                }มิฉะนั้น{
                     length = profile->mappingData[index++];
          
                 }
 
                 /* copy mapping to destination */
-                for(int32_t i=0; i< length; i++){
-                    if(destIndex < destCapacity  ){
+                สำหรับ(int32_t i=0; i< length; i++){
+                    ถ้า(destIndex < destCapacity  ){
                         dest[destIndex] = profile->mappingData[index+i];
                     }
                     destIndex++; /* for pre-flighting */
                 }  
                 continue;
-            }else{
+            }มิฉะนั้น{
                 // subtract the delta to arrive at the code point
                 ch -= value;
             }
 
-        }else if(type==USPREP_DELETE){
+        }มิฉะนั้น ถ้า(type==USPREP_DELETE){
              // just consume the codepoint and continue
             continue;
         }
         //copy the code point into destination
-        if(ch <= 0xFFFF){
-            if(destIndex < destCapacity ){
+        ถ้า(ch <= 0xFFFF){
+            ถ้า(destIndex < destCapacity ){
                 dest[destIndex] = static_cast<char16_t>(ch);
             }
             destIndex++;
-        }else{
-            if(destIndex+1 < destCapacity ){
+        }มิฉะนั้น{
+            ถ้า(destIndex+1 < destCapacity ){
                 dest[destIndex]   = U16_LEAD(ch);
                 dest[destIndex+1] = U16_TRAIL(ch);
             }
@@ -593,7 +593,7 @@ usprep_map(  const UStringPrepProfile* profile,
        
     }
         
-    return u_terminateUChars(dest, destCapacity, destIndex, status);
+    คืน u_terminateUChars(dest, destCapacity, destIndex, status);
 }
 
 /*
@@ -643,41 +643,41 @@ usprep_prepare(   const UStringPrepProfile* profile,
                   UErrorCode* status ){
 
     // check error status
-    if(U_FAILURE(*status)){
-        return 0;
+    ถ้า(U_FAILURE(*status)){
+        คืน 0;
     }
 
     //check arguments
-    if(profile==nullptr ||
+    ถ้า(profile==nullptr ||
             (src==nullptr ? srcLength!=0 : srcLength<-1) ||
             (dest==nullptr ? destCapacity!=0 : destCapacity<0)) {
         *status=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        คืน 0;
     }
 
     //get the string length
-    if(srcLength < 0){
+    ถ้า(srcLength < 0){
         srcLength = u_strlen(src);
     }
     // map
     UnicodeString s1;
     char16_t *b1 = s1.getBuffer(srcLength);
-    if(b1==nullptr){
+    ถ้า(b1==nullptr){
         *status = U_MEMORY_ALLOCATION_ERROR;
-        return 0;
+        คืน 0;
     }
     UErrorCode bufferStatus = U_ZERO_ERROR;
     int32_t b1Len = usprep_map(profile, src, srcLength,
                                b1, s1.getCapacity(), options, parseError, &bufferStatus);
     s1.releaseBuffer(U_SUCCESS(bufferStatus) ? b1Len : 0);
 
-    if(bufferStatus == U_BUFFER_OVERFLOW_ERROR){
+    ถ้า(bufferStatus == U_BUFFER_OVERFLOW_ERROR){
         // redo processing of string
         /* we do not have enough room so grow the buffer*/
         b1 = s1.getBuffer(b1Len);
-        if(b1==nullptr){
+        ถ้า(b1==nullptr){
             *status = U_MEMORY_ALLOCATION_ERROR;
-            return 0;
+            คืน 0;
         }
 
         bufferStatus = U_ZERO_ERROR; // reset error
@@ -685,25 +685,25 @@ usprep_prepare(   const UStringPrepProfile* profile,
                            b1, s1.getCapacity(), options, parseError, &bufferStatus);
         s1.releaseBuffer(U_SUCCESS(bufferStatus) ? b1Len : 0);
     }
-    if(U_FAILURE(bufferStatus)){
+    ถ้า(U_FAILURE(bufferStatus)){
         *status = bufferStatus;
-        return 0;
+        คืน 0;
     }
 
     // normalize
     UnicodeString s2;
-    if(profile->doNFKC){
+    ถ้า(profile->doNFKC){
         const Normalizer2 *n2 = Normalizer2::getNFKCInstance(*status);
         FilteredNormalizer2 fn2(*n2, *uniset_getUnicode32Instance(*status));
-        if(U_FAILURE(*status)){
-            return 0;
+        ถ้า(U_FAILURE(*status)){
+            คืน 0;
         }
         fn2.normalize(s1, s2, *status);
-    }else{
+    }มิฉะนั้น{
         s2.fastCopyFrom(s1);
     }
-    if(U_FAILURE(*status)){
-        return 0;
+    ถ้า(U_FAILURE(*status)){
+        คืน 0;
     }
 
     // Prohibit and checkBiDi in one pass
@@ -713,7 +713,7 @@ usprep_prepare(   const UStringPrepProfile* profile,
     UBool leftToRight=false, rightToLeft=false;
     int32_t rtlPos =-1, ltrPos =-1;
 
-    for(int32_t b2Index=0; b2Index<b2Len;){
+    สำหรับ(int32_t b2Index=0; b2Index<b2Len;){
         UChar32 ch = 0;
         U16_NEXT(b2, b2Index, b2Len, ch);
 
@@ -724,48 +724,48 @@ usprep_prepare(   const UStringPrepProfile* profile,
         UBool isIndex;
         UStringPrepType type = getValues(result, value, isIndex);
 
-        if( type == USPREP_PROHIBITED || 
+        ถ้า( type == USPREP_PROHIBITED || 
             ((result < _SPREP_TYPE_THRESHOLD) && (result & 0x01) /* first bit says it the code point is prohibited*/)
            ){
             *status = U_STRINGPREP_PROHIBITED_ERROR;
             uprv_syntaxError(b2, b2Index-U16_LENGTH(ch), b2Len, parseError);
-            return 0;
+            คืน 0;
         }
 
-        if(profile->checkBiDi) {
+        ถ้า(profile->checkBiDi) {
             direction = ubidi_getClass(ch);
-            if(firstCharDir == U_CHAR_DIRECTION_COUNT){
+            ถ้า(firstCharDir == U_CHAR_DIRECTION_COUNT){
                 firstCharDir = direction;
             }
-            if(direction == U_LEFT_TO_RIGHT){
+            ถ้า(direction == U_LEFT_TO_RIGHT){
                 leftToRight = true;
                 ltrPos = b2Index-1;
             }
-            if(direction == U_RIGHT_TO_LEFT || direction == U_RIGHT_TO_LEFT_ARABIC){
+            ถ้า(direction == U_RIGHT_TO_LEFT || direction == U_RIGHT_TO_LEFT_ARABIC){
                 rightToLeft = true;
                 rtlPos = b2Index-1;
             }
         }
     }
-    if(profile->checkBiDi){
+    ถ้า(profile->checkBiDi){
         // satisfy 2
-        if( leftToRight && rightToLeft){
+        ถ้า( leftToRight && rightToLeft){
             *status = U_STRINGPREP_CHECK_BIDI_ERROR;
             uprv_syntaxError(b2,(rtlPos>ltrPos) ? rtlPos : ltrPos, b2Len, parseError);
-            return 0;
+            คืน 0;
         }
 
         //satisfy 3
-        if( rightToLeft && 
+        ถ้า( rightToLeft && 
             !((firstCharDir == U_RIGHT_TO_LEFT || firstCharDir == U_RIGHT_TO_LEFT_ARABIC) &&
               (direction == U_RIGHT_TO_LEFT || direction == U_RIGHT_TO_LEFT_ARABIC))
            ){
             *status = U_STRINGPREP_CHECK_BIDI_ERROR;
             uprv_syntaxError(b2, rtlPos, b2Len, parseError);
-            return false;
+            คืน false;
         }
     }
-    return s2.extract(dest, destCapacity, *status);
+    คืน s2.extract(dest, destCapacity, *status);
 }
 
 
@@ -788,13 +788,13 @@ usprep_swap(const UDataSwapper *ds,
 
     /* udata_swapDataHeader checks the arguments */
     headerSize=udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return 0;
+    ถ้า(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        คืน 0;
     }
 
     /* check data format and format version */
-    pInfo=(const UDataInfo *)((const char *)inData+4);
-    if(!(
+    pInfo=(const UDataInfo *)((const var_na *)inData+4);
+    ถ้า(!(
         pInfo->dataFormat[0]==0x53 &&   /* dataFormat="SPRP" */
         pInfo->dataFormat[1]==0x50 &&
         pInfo->dataFormat[2]==0x52 &&
@@ -806,7 +806,7 @@ usprep_swap(const UDataSwapper *ds,
                          pInfo->dataFormat[2], pInfo->dataFormat[3],
                          pInfo->formatVersion[0]);
         *pErrorCode=U_UNSUPPORTED_ERROR;
-        return 0;
+        คืน 0;
     }
 
     inBytes=(const uint8_t *)inData+headerSize;
@@ -814,18 +814,18 @@ usprep_swap(const UDataSwapper *ds,
 
     inIndexes=(const int32_t *)inBytes;
 
-    if(length>=0) {
+    ถ้า(length>=0) {
         length-=headerSize;
-        if(length<16*4) {
+        ถ้า(length<16*4) {
             udata_printError(ds, "usprep_swap(): too few bytes (%d after header) for StringPrep .spp data\n",
                              length);
             *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            คืน 0;
         }
     }
 
     /* read the first 16 indexes (ICU 2.8/format version 3: _SPREP_INDEX_TOP==16, might grow) */
-    for(i=0; i<16; ++i) {
+    สำหรับ(i=0; i<16; ++i) {
         indexes[i]=udata_readInt32(ds, inIndexes[i]);
     }
 
@@ -835,16 +835,16 @@ usprep_swap(const UDataSwapper *ds,
         indexes[_SPREP_INDEX_TRIE_SIZE]+
         indexes[_SPREP_INDEX_MAPPING_DATA_SIZE];
 
-    if(length>=0) {
-        if(length<size) {
+    ถ้า(length>=0) {
+        ถ้า(length<size) {
             udata_printError(ds, "usprep_swap(): too few bytes (%d after header) for all of StringPrep .spp data\n",
                              length);
             *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            คืน 0;
         }
 
         /* copy the data for inaccessible bytes */
-        if(inBytes!=outBytes) {
+        ถ้า(inBytes!=outBytes) {
             uprv_memcpy(outBytes, inBytes, size);
         }
 
@@ -866,7 +866,7 @@ usprep_swap(const UDataSwapper *ds,
         //offset+=count;
     }
 
-    return headerSize+size;
+    คืน headerSize+size;
 }
 
 #endif /* #if !UCONFIG_NO_IDNA */

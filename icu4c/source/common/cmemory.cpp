@@ -35,67 +35,67 @@ static UMemAllocFn    *pAlloc;
 static UMemReallocFn  *pRealloc;
 static UMemFreeFn     *pFree;
 
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#ถ้า U_DEBUG && defined(UPRV_MALLOC_COUNT)
 #include <stdio.h>
-static int n=0;
+static จำนวนเต็ม n=0;
 static long b=0; 
 #endif
 
 U_CAPI void * U_EXPORT2
 uprv_malloc(size_t s) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-#if 1
+#ถ้า U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#ถ้า 1
   putchar('>');
   fflush(stdout);
-#else
+#มิฉะนั้น
   fprintf(stderr,"MALLOC\t#%d\t%ul bytes\t%ul total\n", ++n,s,(b+=s)); fflush(stderr);
 #endif
 #endif
-    if (s > 0) {
-        if (pAlloc) {
-            return (*pAlloc)(pContext, s);
-        } else {
-            return uprv_default_malloc(s);
+    ถ้า (s > 0) {
+        ถ้า (pAlloc) {
+            คืน (*pAlloc)(pContext, s);
+        } มิฉะนั้น {
+            คืน uprv_default_malloc(s);
         }
-    } else {
-        return (void *)zeroMem;
+    } มิฉะนั้น {
+        คืน (void *)zeroMem;
     }
 }
 
 U_CAPI void * U_EXPORT2
 uprv_realloc(void * buffer, size_t size) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#ถ้า U_DEBUG && defined(UPRV_MALLOC_COUNT)
   putchar('~');
   fflush(stdout);
 #endif
-    if (buffer == zeroMem) {
-        return uprv_malloc(size);
-    } else if (size == 0) {
-        if (pFree) {
+    ถ้า (buffer == zeroMem) {
+        คืน uprv_malloc(size);
+    } มิฉะนั้น ถ้า (size == 0) {
+        ถ้า (pFree) {
             (*pFree)(pContext, buffer);
-        } else {
+        } มิฉะนั้น {
             uprv_default_free(buffer);
         }
-        return (void *)zeroMem;
-    } else {
-        if (pRealloc) {
-            return (*pRealloc)(pContext, buffer, size);
-        } else {
-            return uprv_default_realloc(buffer, size);
+        คืน (void *)zeroMem;
+    } มิฉะนั้น {
+        ถ้า (pRealloc) {
+            คืน (*pRealloc)(pContext, buffer, size);
+        } มิฉะนั้น {
+            คืน uprv_default_realloc(buffer, size);
         }
     }
 }
 
 U_CAPI void U_EXPORT2
 uprv_free(void *buffer) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#ถ้า U_DEBUG && defined(UPRV_MALLOC_COUNT)
   putchar('<');
   fflush(stdout);
 #endif
-    if (buffer != zeroMem) {
-        if (pFree) {
+    ถ้า (buffer != zeroMem) {
+        ถ้า (pFree) {
             (*pFree)(pContext, buffer);
-        } else {
+        } มิฉะนั้น {
             uprv_default_free(buffer);
         }
     }
@@ -106,21 +106,21 @@ uprv_calloc(size_t num, size_t size) {
     void *mem = nullptr;
     size *= num;
     mem = uprv_malloc(size);
-    if (mem) {
+    ถ้า (mem) {
         uprv_memset(mem, 0, size);
     }
-    return mem;
+    คืน mem;
 }
 
 U_CAPI void U_EXPORT2
 u_setMemoryFunctions(const void *context, UMemAllocFn *a, UMemReallocFn *r, UMemFreeFn *f,  UErrorCode *status)
 {
-    if (U_FAILURE(*status)) {
-        return;
+    ถ้า (U_FAILURE(*status)) {
+        คืน;
     }
-    if (a==nullptr || r==nullptr || f==nullptr) {
+    ถ้า (a==nullptr || r==nullptr || f==nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        คืน;
     }
     pContext  = context;
     pAlloc    = a;
@@ -134,5 +134,5 @@ U_CFUNC UBool cmemory_cleanup() {
     pAlloc     = nullptr;
     pRealloc   = nullptr;
     pFree      = nullptr;
-    return true;
+    คืน true;
 }

@@ -35,82 +35,82 @@ U_NAMESPACE_BEGIN
 
 UnicodeString& ICU_Utility::appendNumber(UnicodeString& result, int32_t n,
                                      int32_t radix, int32_t minDigits) {
-    if (radix < 2 || radix > 36) {
+    ถ้า (radix < 2 || radix > 36) {
         // Bogus radix
-        return result.append(static_cast<char16_t>(63)/*?*/);
+        คืน result.append(static_cast<char16_t>(63)/*?*/);
     }
     // Handle negatives
-    if (n < 0) {
+    ถ้า (n < 0) {
         n = -n;
         result.append(static_cast<char16_t>(45)/*-*/);
     }
     // First determine the number of digits
     int32_t nn = n;
     int32_t r = 1;
-    while (nn >= radix) {
+    ขณะ (nn >= radix) {
         nn /= radix;
         r *= radix;
         --minDigits;
     }
     // Now generate the digits
-    while (--minDigits > 0) {
+    ขณะ (--minDigits > 0) {
         result.append(DIGITS[0]);
     }
-    while (r > 0) {
+    ขณะ (r > 0) {
         int32_t digit = n / r;
         result.append(DIGITS[digit]);
         n -= digit * r;
         r /= radix;
     }
-    return result;
+    คืน result;
 }
 
 UBool ICU_Utility::isUnprintable(UChar32 c) {
-    return !(c >= 0x20 && c <= 0x7E);
+    คืน !(c >= 0x20 && c <= 0x7E);
 }
 
 UBool ICU_Utility::shouldAlwaysBeEscaped(UChar32 c) {
-    if (c < 0x20) {
-        return true;  // C0 control codes
-    } else if (c <= 0x7e) {
-        return false;  // printable ASCII
-    } else if (c <= 0x9f) {
-        return true;  // C1 control codes
-    } else if (c < 0xd800) {
-        return false;  // most of the BMP
-    } else if (c <= 0xdfff || (0xfdd0 <= c && c <= 0xfdef) || (c & 0xfffe) == 0xfffe) {
-        return true;  // surrogate or noncharacter code points
-    } else if (c <= 0x10ffff) {
-        return false;  // all else
-    } else {
-        return true;  // not a code point
+    ถ้า (c < 0x20) {
+        คืน true;  // C0 control codes
+    } มิฉะนั้น ถ้า (c <= 0x7e) {
+        คืน false;  // printable ASCII
+    } มิฉะนั้น ถ้า (c <= 0x9f) {
+        คืน true;  // C1 control codes
+    } มิฉะนั้น ถ้า (c < 0xd800) {
+        คืน false;  // most of the BMP
+    } มิฉะนั้น ถ้า (c <= 0xdfff || (0xfdd0 <= c && c <= 0xfdef) || (c & 0xfffe) == 0xfffe) {
+        คืน true;  // surrogate or noncharacter code points
+    } มิฉะนั้น ถ้า (c <= 0x10ffff) {
+        คืน false;  // all else
+    } มิฉะนั้น {
+        คืน true;  // not a code point
     }
 }
 
 UBool ICU_Utility::escapeUnprintable(UnicodeString& result, UChar32 c) {
-    if (isUnprintable(c)) {
+    ถ้า (isUnprintable(c)) {
         escape(result, c);
-        return true;
+        คืน true;
     }
-    return false;
+    คืน false;
 }
 
 UnicodeString &ICU_Utility::escape(UnicodeString& result, UChar32 c) {
     result.append(BACKSLASH);
-    if (c & ~0xFFFF) {
+    ถ้า (c & ~0xFFFF) {
         result.append(UPPER_U);
         result.append(DIGITS[0xF&(c>>28)]);
         result.append(DIGITS[0xF&(c>>24)]);
         result.append(DIGITS[0xF&(c>>20)]);
         result.append(DIGITS[0xF&(c>>16)]);
-    } else {
+    } มิฉะนั้น {
         result.append(LOWER_U);
     }
     result.append(DIGITS[0xF&(c>>12)]);
     result.append(DIGITS[0xF&(c>>8)]);
     result.append(DIGITS[0xF&(c>>4)]);
     result.append(DIGITS[0xF&c]);
-    return result;
+    คืน result;
 }
 
 /**
@@ -151,10 +151,10 @@ int32_t ICU_Utility::skipWhitespace(const UnicodeString& str, int32_t& pos,
     int32_t p = pos;
     const char16_t* s = str.getBuffer();
     p = static_cast<int32_t>(PatternProps::skipWhiteSpace(s + p, str.length() - p) - s);
-    if (advance) {
+    ถ้า (advance) {
         pos = p;
     }
-    return p;
+    คืน p;
 }
 
 /**
@@ -215,13 +215,13 @@ int32_t ICU_Utility::skipWhitespace(const UnicodeString& str, int32_t& pos,
 UBool ICU_Utility::parseChar(const UnicodeString& id, int32_t& pos, char16_t ch) {
     int32_t start = pos;
     skipWhitespace(id, pos, true);
-    if (pos == id.length() ||
+    ถ้า (pos == id.length() ||
         id.charAt(pos) != ch) {
         pos = start;
-        return false;
+        คืน false;
     }
     ++pos;
-    return true;
+    คืน true;
 }
 
 /**
@@ -247,57 +247,57 @@ int32_t ICU_Utility::parsePattern(const UnicodeString& pat,
     int32_t ipat = 0;
 
     // empty pattern matches immediately
-    if (ipat == pat.length()) {
-        return index;
+    ถ้า (ipat == pat.length()) {
+        คืน index;
     }
 
     UChar32 cpat = pat.char32At(ipat);
 
-    while (index < limit) {
+    ขณะ (index < limit) {
         UChar32 c = text.char32At(index);
 
         // parse \s*
-        if (cpat == 126 /*~*/) {
-            if (PatternProps::isWhiteSpace(c)) {
+        ถ้า (cpat == 126 /*~*/) {
+            ถ้า (PatternProps::isWhiteSpace(c)) {
                 index += U16_LENGTH(c);
                 continue;
-            } else {
-                if (++ipat == pat.length()) {
-                    return index; // success; c unparsed
+            } มิฉะนั้น {
+                ถ้า (++ipat == pat.length()) {
+                    คืน index; // success; c unparsed
                 }
                 // fall thru; process c again with next cpat
             }
         }
 
         // parse literal
-        else if (c == cpat) {
+        มิฉะนั้น ถ้า (c == cpat) {
             index += U16_LENGTH(c);
             ipat += U16_LENGTH(cpat);
-            if (ipat == pat.length()) {
-                return index; // success; c parsed
+            ถ้า (ipat == pat.length()) {
+                คืน index; // success; c parsed
             }
             // fall thru; get next cpat
         }
 
         // match failure of literal
-        else {
-            return -1;
+        มิฉะนั้น {
+            คืน -1;
         }
 
         cpat = pat.char32At(ipat);
     }
 
-    return -1; // text ended before end of pat
+    คืน -1; // text ended before end of pat
 }
 
 int32_t ICU_Utility::parseAsciiInteger(const UnicodeString& str, int32_t& pos) {
     int32_t result = 0;
     char16_t c;
-    while (pos < str.length() && (c = str.charAt(pos)) >= u'0' && c <= u'9') {
+    ขณะ (pos < str.length() && (c = str.charAt(pos)) >= u'0' && c <= u'9') {
         result = result * 10 + (c - u'0');
         pos++;
     }
-    return result;
+    คืน result;
 }
 
 /**
@@ -326,9 +326,9 @@ void ICU_Utility::appendToRule(UnicodeString& rule,
     // If we are escaping unprintables, then escape them outside
     // quotes.  \u and \U are not recognized within quotes.  The same
     // logic applies to literals, but literals are never escaped.
-    if (isLiteral ||
+    ถ้า (isLiteral ||
         (escapeUnprintable && ICU_Utility::isUnprintable(c))) {
-        if (quoteBuf.length() > 0) {
+        ถ้า (quoteBuf.length() > 0) {
             // We prefer backslash APOSTROPHE to double APOSTROPHE
             // (more readable, less similar to ") so if there are
             // double APOSTROPHEs at the ends, we pull them outside
@@ -336,7 +336,7 @@ void ICU_Utility::appendToRule(UnicodeString& rule,
 
             // If the first thing in the quoteBuf is APOSTROPHE
             // (doubled) then pull it out.
-            while (quoteBuf.length() >= 2 &&
+            ขณะ (quoteBuf.length() >= 2 &&
                    quoteBuf.charAt(0) == APOSTROPHE &&
                    quoteBuf.charAt(1) == APOSTROPHE) {
                 rule.append(BACKSLASH).append(APOSTROPHE);
@@ -345,41 +345,41 @@ void ICU_Utility::appendToRule(UnicodeString& rule,
             // If the last thing in the quoteBuf is APOSTROPHE
             // (doubled) then remove and count it and add it after.
             int32_t trailingCount = 0;
-            while (quoteBuf.length() >= 2 &&
+            ขณะ (quoteBuf.length() >= 2 &&
                    quoteBuf.charAt(quoteBuf.length()-2) == APOSTROPHE &&
                    quoteBuf.charAt(quoteBuf.length()-1) == APOSTROPHE) {
                 quoteBuf.truncate(quoteBuf.length()-2);
                 ++trailingCount;
             }
-            if (quoteBuf.length() > 0) {
+            ถ้า (quoteBuf.length() > 0) {
                 rule.append(APOSTROPHE);
                 rule.append(quoteBuf);
                 rule.append(APOSTROPHE);
                 quoteBuf.truncate(0);
             }
-            while (trailingCount-- > 0) {
+            ขณะ (trailingCount-- > 0) {
                 rule.append(BACKSLASH).append(APOSTROPHE);
             }
         }
-        if (c != static_cast<UChar32>(-1)) {
+        ถ้า (c != static_cast<UChar32>(-1)) {
             /* Since spaces are ignored during parsing, they are
              * emitted only for readability.  We emit one here
              * only if there isn't already one at the end of the
              * rule.
              */
-            if (c == SPACE) {
+            ถ้า (c == SPACE) {
                 int32_t len = rule.length();
-                if (len > 0 && rule.charAt(len-1) != c) {
+                ถ้า (len > 0 && rule.charAt(len-1) != c) {
                     rule.append(c);
                 }
-            } else if (!escapeUnprintable || !ICU_Utility::escapeUnprintable(rule, c)) {
+            } มิฉะนั้น ถ้า (!escapeUnprintable || !ICU_Utility::escapeUnprintable(rule, c)) {
                 rule.append(c);
             }
         }
     }
 
     // Escape ' and '\' and don't begin a quote just for them
-    else if (quoteBuf.length() == 0 &&
+    มิฉะนั้น ถ้า (quoteBuf.length() == 0 &&
              (c == APOSTROPHE || c == BACKSLASH)) {
         rule.append(BACKSLASH);
         rule.append(c);
@@ -388,7 +388,7 @@ void ICU_Utility::appendToRule(UnicodeString& rule,
     // Specials (printable ascii that isn't [0-9a-zA-Z]) and
     // whitespace need quoting.  Also append stuff to quotes if we are
     // building up a quoted substring already.
-    else if (quoteBuf.length() > 0 ||
+    มิฉะนั้น ถ้า (quoteBuf.length() > 0 ||
              (c >= 0x0021 && c <= 0x007E &&
               !((c >= 0x0030/*'0'*/ && c <= 0x0039/*'9'*/) ||
                 (c >= 0x0041/*'A'*/ && c <= 0x005A/*'Z'*/) ||
@@ -396,13 +396,13 @@ void ICU_Utility::appendToRule(UnicodeString& rule,
              PatternProps::isWhiteSpace(c)) {
         quoteBuf.append(c);
         // Double ' within a quote
-        if (c == APOSTROPHE) {
+        ถ้า (c == APOSTROPHE) {
             quoteBuf.append(c);
         }
     }
     
     // Otherwise just append
-    else {
+    มิฉะนั้น {
         rule.append(c);
     }
 }
@@ -412,7 +412,7 @@ void ICU_Utility::appendToRule(UnicodeString& rule,
                                UBool isLiteral,
                                UBool escapeUnprintable,
                                UnicodeString& quoteBuf) {
-    for (int32_t i=0; i<text.length(); ++i) {
+    สำหรับ (int32_t i=0; i<text.length(); ++i) {
         appendToRule(rule, text[i], isLiteral, escapeUnprintable, quoteBuf);
     }
 }
@@ -425,7 +425,7 @@ void ICU_Utility::appendToRule(UnicodeString& rule,
                                const UnicodeMatcher* matcher,
                                UBool escapeUnprintable,
                                UnicodeString& quoteBuf) {
-    if (matcher != nullptr) {
+    ถ้า (matcher != nullptr) {
         UnicodeString pat;
         appendToRule(rule, matcher->toPattern(pat, escapeUnprintable),
                      true, escapeUnprintable, quoteBuf);

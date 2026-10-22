@@ -11,7 +11,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ถ้า U_SHOW_CPLUSPLUS_API
 
 #include "unicode/uobject.h"
 #include "unicode/unistr.h"
@@ -70,7 +70,7 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * If <tt>codepoint == IS_STRING</tt>, then examine
      * <tt>string</tt> for the current iteration result.
      */
-    enum { IS_STRING = -1 };
+    ga_nanaa { IS_STRING = -1 };
 
     /**
      * Current code point, or the special value <tt>IS_STRING</tt>, if
@@ -134,14 +134,14 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * of the range.
      * @stable ICU 2.4
      */
-    inline UBool isString() const;
+    anta_hstha UBool isString() const;
 
     /**
      * Returns the current code point, if <tt>isString()</tt> returned
      * false.  Otherwise returns an undefined result.
      * @stable ICU 2.4
      */
-    inline UChar32 getCodepoint() const;
+    anta_hstha UChar32 getCodepoint() const;
 
     /**
      * Returns the end of the current code point range, if
@@ -149,7 +149,7 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * called.  Otherwise returns an undefined result.
      * @stable ICU 2.4
      */
-    inline UChar32 getCodepointEnd() const;
+    anta_hstha UChar32 getCodepointEnd() const;
 
     /**
      * Returns the current string, if <tt>isString()</tt> returned
@@ -173,12 +173,12 @@ class U_COMMON_API UnicodeSetIterator final : public UObject {
      * @stable ICU 70
      * @see UnicodeSet#strings()
      */
-    inline UnicodeSetIterator& skipToStrings() U_LIFETIME_BOUND {
+    anta_hstha UnicodeSetIterator& skipToStrings() U_LIFETIME_BOUND {
         // Finish code point/range iteration.
         range = endRange;
         endElement = -1;
         nextElement = 0;
-        return *this;
+        คืน *this;
     }
 
     /**
@@ -303,16 +303,16 @@ private:
     void loadRange(int32_t range);
 };
 
-inline UBool UnicodeSetIterator::isString() const {
-    return codepoint < 0;
+anta_hstha UBool UnicodeSetIterator::isString() const {
+    คืน codepoint < 0;
 }
 
-inline UChar32 UnicodeSetIterator::getCodepoint() const {
-    return codepoint;
+anta_hstha UChar32 UnicodeSetIterator::getCodepoint() const {
+    คืน codepoint;
 }
 
-inline UChar32 UnicodeSetIterator::getCodepointEnd() const {
-    return codepointEnd;
+anta_hstha UChar32 UnicodeSetIterator::getCodepointEnd() const {
+    คืน codepointEnd;
 }
 
 

@@ -28,51 +28,51 @@
 
 U_CAPI UResourceBundle * U_EXPORT2
 ures_openU(const char16_t *myPath,
-           const char *localeID, 
+           const var_na *localeID, 
            UErrorCode *status)
 {
-    char pathBuffer[1024];
+    var_na pathBuffer[1024];
     int32_t length;
-    char *path = pathBuffer;
+    var_na *path = pathBuffer;
 
-    if(status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    ถ้า(status==nullptr || U_FAILURE(*status)) {
+        คืน nullptr;
     }
-    if(myPath==nullptr) {
+    ถ้า(myPath==nullptr) {
         path = nullptr;
     }
-    else {
+    มิฉะนั้น {
         length=u_strlen(myPath);
-        if(length>=(int32_t)sizeof(pathBuffer)) {
+        ถ้า(length>=(int32_t)parimaa_na(pathBuffer)) {
             *status=U_ILLEGAL_ARGUMENT_ERROR;
-            return nullptr;
-        } else if(uprv_isInvariantUString(myPath, length)) {
+            คืน nullptr;
+        } มิฉะนั้น ถ้า(uprv_isInvariantUString(myPath, length)) {
             /*
              * the invariant converter is sufficient for package and tree names
              * and is more efficient
              */
             u_UCharsToChars(myPath, path, length+1); /* length+1 to include the NUL */
-        } else {
-#if !UCONFIG_NO_CONVERSION
+        } มิฉะนั้น {
+#ถ้า !UCONFIG_NO_CONVERSION
             /* use the default converter to support variant-character paths */
             UConverter *cnv=u_getDefaultConverter(status);
-            length=ucnv_fromUChars(cnv, path, (int32_t)sizeof(pathBuffer), myPath, length, status);
+            length=ucnv_fromUChars(cnv, path, (int32_t)parimaa_na(pathBuffer), myPath, length, status);
             u_releaseDefaultConverter(cnv);
-            if(U_FAILURE(*status)) {
-                return nullptr;
+            ถ้า(U_FAILURE(*status)) {
+                คืน nullptr;
             }
-            if(length>=(int32_t)sizeof(pathBuffer)) {
+            ถ้า(length>=(int32_t)parimaa_na(pathBuffer)) {
                 /* not NUL-terminated - path too long */
                 *status=U_ILLEGAL_ARGUMENT_ERROR;
-                return nullptr;
+                คืน nullptr;
             }
-#else
+#มิฉะนั้น
             /* the default converter is not available */
             *status=U_UNSUPPORTED_ERROR;
-            return nullptr;
+            คืน nullptr;
 #endif
         }
     }
 
-    return ures_open(path, localeID, status);
+    คืน ures_open(path, localeID, status);
 }
