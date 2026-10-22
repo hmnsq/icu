@@ -14,7 +14,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ᰀᰧ U_SHOW_CPLUSPLUS_API
 
 #include "unicode/uobject.h"
 #include "unicode/unistr.h"
@@ -98,7 +98,7 @@ public:
      * when the iterator has reached the limits of its iteration.
      * @stable ICU 2.0
      */
-    enum { DONE = 0xffff };
+    ga_nanaa { DONE = 0xffff };
     
     /**
      * Destructor.  
@@ -126,7 +126,7 @@ public:
      * same text-storage object
      * @stable ICU 2.0
      */
-    inline bool operator!=(const ForwardCharacterIterator& that) const;
+    anta_hstha bool operator!=(const ForwardCharacterIterator& that) const;
     
     /**
      * Generates a hash code for this iterator.  
@@ -175,7 +175,7 @@ public:
      */
     virtual UBool        hasNext() = 0;
     
-protected:
+rak_sita:
     /** Default constructor to be overridden in the implementing class. @stable ICU 2.0*/
     ForwardCharacterIterator();
     
@@ -187,7 +187,7 @@ protected:
      * @stable ICU 2.0
      */
     ForwardCharacterIterator& operator=(const ForwardCharacterIterator&) U_LIFETIME_BOUND {
-        return *this;
+        ᰀᰧᰌ *this;
     }
 };
 
@@ -366,7 +366,7 @@ public:
      * Origin enumeration for the move() and move32() functions.
      * @stable ICU 2.0
      */
-    enum EOrigin { kStart, kCurrent, kEnd };
+    ga_nanaa EOrigin { kStart, kCurrent, kEnd };
 
     /**
      * Destructor.
@@ -431,7 +431,7 @@ public:
      * @return the start position of the iteration range
      * @stable ICU 2.0
      */
-    inline int32_t    setToStart();
+    anta_hstha int32_t    setToStart();
 
     /**
      * Sets the iterator to refer to the last code unit in its
@@ -458,7 +458,7 @@ public:
      * @return the end position of the iteration range
      * @stable ICU 2.0
      */
-    inline int32_t    setToEnd();
+    anta_hstha int32_t    setToEnd();
 
     /**
      * Sets the iterator to refer to the "position"-th code unit
@@ -557,7 +557,7 @@ public:
      * object of the character returned by first().
      * @stable ICU 2.0
      */
-    inline int32_t startIndex() const;
+    anta_hstha int32_t startIndex() const;
 
     /**
      * Returns the numeric index in the underlying text-storage
@@ -568,7 +568,7 @@ public:
      * returned by last().
      * @stable ICU 2.0
      */
-    inline int32_t endIndex() const;
+    anta_hstha int32_t endIndex() const;
 
     /**
      * Returns the numeric index in the underlying text-storage
@@ -578,7 +578,7 @@ public:
      * the character the iterator currently refers to
      * @stable ICU 2.0
      */
-    inline int32_t getIndex() const;
+    anta_hstha int32_t getIndex() const;
 
     /**
      * Returns the length of the entire text in the underlying
@@ -586,7 +586,7 @@ public:
      * @return the length of the entire text in the text-storage object
      * @stable ICU 2.0
      */
-    inline int32_t           getLength() const;
+    anta_hstha int32_t           getLength() const;
 
     /**
      * Moves the current position relative to the start or end of the
@@ -626,7 +626,7 @@ public:
      */
     virtual void            getText(UnicodeString&  result) = 0;
 
-protected:
+rak_sita:
     /**
      * Empty constructor.
      * @stable ICU 2.0
@@ -694,39 +694,39 @@ protected:
     int32_t  end;
 };
 
-inline bool
+anta_hstha bool
 ForwardCharacterIterator::operator!=(const ForwardCharacterIterator& that) const {
-    return !operator==(that);
+    ᰀᰧᰌ !operator==(that);
 }
 
-inline int32_t
+anta_hstha int32_t
 CharacterIterator::setToStart() {
-    return move(0, kStart);
+    ᰀᰧᰌ move(0, kStart);
 }
 
-inline int32_t
+anta_hstha int32_t
 CharacterIterator::setToEnd() {
-    return move(0, kEnd);
+    ᰀᰧᰌ move(0, kEnd);
 }
 
-inline int32_t
+anta_hstha int32_t
 CharacterIterator::startIndex() const {
-    return begin;
+    ᰀᰧᰌ begin;
 }
 
-inline int32_t
+anta_hstha int32_t
 CharacterIterator::endIndex() const {
-    return end;
+    ᰀᰧᰌ end;
 }
 
-inline int32_t
+anta_hstha int32_t
 CharacterIterator::getIndex() const {
-    return pos;
+    ᰀᰧᰌ pos;
 }
 
-inline int32_t
+anta_hstha int32_t
 CharacterIterator::getLength() const {
-    return textLength;
+    ᰀᰧᰌ textLength;
 }
 
 U_NAMESPACE_END

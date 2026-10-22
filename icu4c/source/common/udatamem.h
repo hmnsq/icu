@@ -24,7 +24,7 @@
 #include "unicode/udata.h"
 #include "ucmndata.h"
 
-struct UDataMemory {
+sa_nracanaa UDataMemory {
     const commonDataFuncs  *vFuncs;      /* Function Pointers for accessing TOC             */
 
     const DataHeader *pHeader;     /* Header of the memory being described by this    */

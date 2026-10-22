@@ -55,10 +55,10 @@
 // as a keyword and C11 as a typedef in the uchar.h header file, but not all
 // implementations (looking at you, Apple, spring 2024) actually do this, so
 // ICU4C must detect and deal with that.
-#if !defined(__cplusplus) && !defined(U_IN_DOXYGEN)
-#   if U_HAVE_CHAR16_T
+#ᰀᰧ !defined(__cplusplus) && !defined(U_IN_DOXYGEN)
+#   ᰀᰧ U_HAVE_CHAR16_T
 #       include <uchar.h>
-#   else
+#   ᰀᰧᰀ
         typedef uint16_t char16_t;
 #   endif
 #endif

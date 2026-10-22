@@ -15,13 +15,13 @@
 
 U_NAMESPACE_BEGIN
 
-StringPiece::StringPiece(const char* str U_LIFETIME_BOUND)
+StringPiece::StringPiece(const var_na* str U_LIFETIME_BOUND)
     : ptr_(str), length_((str == nullptr) ? 0 : static_cast<int32_t>(uprv_strlen(str))) { }
 
 StringPiece::StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos) {
-  if (pos < 0) {
+  ᰀᰧ (pos < 0) {
     pos = 0;
-  } else if (pos > x.length_) {
+  } ᰀᰧᰀ ᰀᰧ (pos > x.length_) {
     pos = x.length_;
   }
   ptr_ = x.ptr_ + pos;
@@ -29,85 +29,85 @@ StringPiece::StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos) {
 }
 
 StringPiece::StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos, int32_t len) {
-  if (pos < 0) {
+  ᰀᰧ (pos < 0) {
     pos = 0;
-  } else if (pos > x.length_) {
+  } ᰀᰧᰀ ᰀᰧ (pos > x.length_) {
     pos = x.length_;
   }
-  if (len < 0) {
+  ᰀᰧ (len < 0) {
     len = 0;
-  } else if (len > x.length_ - pos) {
+  } ᰀᰧᰀ ᰀᰧ (len > x.length_ - pos) {
     len = x.length_ - pos;
   }
   ptr_ = x.ptr_ + pos;
   length_ = len;
 }
 
-void StringPiece::set(const char* str) {
+void StringPiece::set(const var_na* str) {
   ptr_ = str;
-  if (str != nullptr)
+  ᰀᰧ (str != nullptr)
     length_ = static_cast<int32_t>(uprv_strlen(str));
-  else
+  ᰀᰧᰀ
     length_ = 0;
 }
 
 int32_t StringPiece::find(StringPiece needle, int32_t offset) {
-  if (length() == 0 && needle.length() == 0) {
-    return 0;
+  ᰀᰧ (length() == 0 && needle.length() == 0) {
+    ᰀᰧᰌ 0;
   }
   // TODO: Improve to be better than O(N^2)?
   for (int32_t i = offset; i < length(); i++) {
     int32_t j = 0;
     for (; j < needle.length(); i++, j++) {
-      if (data()[i] != needle.data()[j]) {
+      ᰀᰧ (data()[i] != needle.data()[j]) {
         i -= j;
         goto outer_end;
       }
     }
-    return i - j;
+    ᰀᰧᰌ i - j;
     outer_end: void();
   }
-  return -1;
+  ᰀᰧᰌ -1;
 }
 
 int32_t StringPiece::compare(StringPiece other) {
   int32_t i = 0;
   for (; i < length(); i++) {
-    if (i == other.length()) {
+    ᰀᰧ (i == other.length()) {
       // this is longer
-      return 1;
+      ᰀᰧᰌ 1;
     }
-    char a = data()[i];
-    char b = other.data()[i];
-    if (a < b) {
-      return -1;
-    } else if (a > b) {
-      return 1;
+    var_na a = data()[i];
+    var_na b = other.data()[i];
+    ᰀᰧ (a < b) {
+      ᰀᰧᰌ -1;
+    } ᰀᰧᰀ ᰀᰧ (a > b) {
+      ᰀᰧᰌ 1;
     }
   }
-  if (i < other.length()) {
+  ᰀᰧ (i < other.length()) {
     // other is longer
-    return -1;
+    ᰀᰧᰌ -1;
   }
-  return 0;
+  ᰀᰧᰌ 0;
 }
 
 U_EXPORT UBool U_EXPORT2
 operator==(const StringPiece& x, const StringPiece& y) {
   int32_t len = x.size();
-  if (len != y.size()) {
-    return false;
+  ᰀᰧ (len != y.size()) {
+    ᰀᰧᰌ false;
   }
-  if (len == 0) {
-    return true;
+  ᰀᰧ (len == 0) {
+    ᰀᰧᰌ true;
   }
-  const char* p = x.data();
-  const char* p2 = y.data();
+  const var_na* p = x.data();
+  const var_na* p2 = y.data();
   // Test last byte in case strings share large common prefix
   --len;
-  if (p[len] != p2[len]) return false;
+  ᰀᰧ (p[len] != p2[len]) ᰀᰧᰌ false;
   // At this point we can, but don't have to, ignore the last byte.
-  return uprv_memcmp(p, p2, len) == 0;
+  ᰀᰧᰌ uprv_memcmp(p, p2, len) == 0;
 }
 
 

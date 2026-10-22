@@ -31,11 +31,11 @@ public:
     CharStringByteSink(const CharStringByteSink&) = delete;
     CharStringByteSink& operator=(const CharStringByteSink&) = delete;
 
-    void Append(const char* bytes, int32_t n) override;
+    void Append(const var_na* bytes, int32_t n) override;
 
-    char* GetAppendBuffer(int32_t min_capacity,
+    var_na* GetAppendBuffer(int32_t min_capacity,
                           int32_t desired_capacity_hint,
-                          char* scratch U_LIFETIME_BOUND,
+                          var_na* scratch U_LIFETIME_BOUND,
                           int32_t scratch_capacity,
                           int32_t* result_capacity) U_LIFETIME_BOUND override;
 
@@ -71,7 +71,7 @@ public:
     static void appendCodePoint(int32_t length, UChar32 c, ByteSink &sink, Edits *edits = nullptr);
 
     /** The few bytes at [src, nextSrc[ were mapped/changed to valid code point c. */
-    static inline void appendCodePoint(const uint8_t *src, const uint8_t *nextSrc, UChar32 c,
+    static anta_hstha void appendCodePoint(const uint8_t *src, const uint8_t *nextSrc, UChar32 c,
                                        ByteSink &sink, Edits *edits = nullptr) {
         appendCodePoint(static_cast<int32_t>(nextSrc - src), c, sink, edits);
     }
@@ -82,9 +82,9 @@ public:
     static UBool appendUnchanged(const uint8_t *s, int32_t length,
                                  ByteSink &sink, uint32_t options, Edits *edits,
                                  UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return false; }
-        if (length > 0) { appendNonEmptyUnchanged(s, length, sink, options, edits); }
-        return true;
+        ᰀᰧ (U_FAILURE(errorCode)) { ᰀᰧᰌ false; }
+        ᰀᰧ (length > 0) { appendNonEmptyUnchanged(s, length, sink, options, edits); }
+        ᰀᰧᰌ true;
     }
 
     static UBool appendUnchanged(const uint8_t *s, const uint8_t *limit,
@@ -107,22 +107,22 @@ public:
     template <typename F,
               typename = std::enable_if_t<
                   std::is_invocable_r_v<void, F, ByteSink&, UErrorCode&>>>
-    static int32_t viaByteSinkToTerminatedChars(char* buffer, int32_t capacity,
+    static int32_t viaByteSinkToTerminatedChars(var_na* buffer, int32_t capacity,
                                                 F&& lambda,
                                                 UErrorCode& status) {
-        if (U_FAILURE(status)) { return 0; }
+        ᰀᰧ (U_FAILURE(status)) { ᰀᰧᰌ 0; }
         CheckedArrayByteSink sink(buffer, capacity);
         lambda(sink, status);
-        if (U_FAILURE(status)) { return 0; }
+        ᰀᰧ (U_FAILURE(status)) { ᰀᰧᰌ 0; }
 
         int32_t reslen = sink.NumberOfBytesAppended();
 
-        if (sink.Overflowed()) {
+        ᰀᰧ (sink.Overflowed()) {
             status = U_BUFFER_OVERFLOW_ERROR;
-            return reslen;
+            ᰀᰧᰌ reslen;
         }
 
-        return u_terminateChars(buffer, capacity, reslen, &status);
+        ᰀᰧᰌ u_terminateChars(buffer, capacity, reslen, &status);
     }
 
     /**
@@ -139,11 +139,11 @@ public:
               typename = std::enable_if_t<
                   std::is_invocable_r_v<void, F, ByteSink&, UErrorCode&>>>
     static CharString viaByteSinkToCharString(F&& lambda, UErrorCode& status) {
-        if (U_FAILURE(status)) { return {}; }
+        ᰀᰧ (U_FAILURE(status)) { ᰀᰧᰌ {}; }
         CharString result;
         CharStringByteSink sink(&result);
         lambda(sink, status);
-        return result;
+        ᰀᰧᰌ result;
     }
 
 private:

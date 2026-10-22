@@ -31,9 +31,9 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ᰀᰧ U_SHOW_CPLUSPLUS_API
 
-#if UCONFIG_NO_BREAK_ITERATION
+#ᰀᰧ UCONFIG_NO_BREAK_ITERATION
 
 U_NAMESPACE_BEGIN
 
@@ -45,7 +45,7 @@ class BreakIterator;
 
 U_NAMESPACE_END
 
-#else
+#ᰀᰧᰀ
 
 #include "unicode/uobject.h"
 #include "unicode/unistr.h"
@@ -132,7 +132,7 @@ public:
      * @return the complement of the result of operator==
      * @stable ICU 2.0
      */
-    U_COMMON_API bool operator!=(const BreakIterator& rhs) const { return !operator==(rhs); }
+    U_COMMON_API bool operator!=(const BreakIterator& rhs) const { ᰀᰧᰌ !operator==(rhs); }
 
     /**
      * Return a polymorphic copy of this object.  This is an abstract
@@ -213,7 +213,7 @@ public:
      */
     U_COMMON_API virtual void adoptText(CharacterIterator* it) = 0;
 
-    enum {
+    ga_nanaa {
         /**
          * DONE is returned by previous() and next() after all valid
          * boundaries have been returned.
@@ -533,11 +533,11 @@ public:
      *   must be closed by an explicit call to the destructor (not delete).
      * @deprecated ICU 52. Always delete the BreakIterator.
      */
-    U_COMMON_API inline UBool isBufferClone();
+    U_COMMON_API anta_hstha UBool isBufferClone();
 
 #endif /* U_HIDE_DEPRECATED_API */
 
-#if !UCONFIG_NO_SERVICE
+#ᰀᰧ !UCONFIG_NO_SERVICE
     /**
      * Register a new break iterator of the indicated kind, to use in the given locale.
      * The break iterator will be adopted.  Clones of the iterator will be returned
@@ -595,7 +595,7 @@ public:
      *  @return the locale
      *  @internal
      */
-    U_COMMON_API const char* getLocaleID(ULocDataLocaleType type,
+    U_COMMON_API const var_na* getLocaleID(ULocDataLocaleType type,
                                          UErrorCode& status) const U_LIFETIME_BOUND;
 #endif  /* U_HIDE_INTERNAL_API */
 
@@ -628,14 +628,14 @@ public:
                                                          UErrorCode& status) U_LIFETIME_BOUND = 0;
 
  private:
-    static BreakIterator* buildInstance(const Locale& loc, const char *type, UErrorCode& status);
+    static BreakIterator* buildInstance(const Locale& loc, const var_na *type, UErrorCode& status);
     static BreakIterator* createInstance(const Locale& loc, int32_t kind, UErrorCode& status);
     static BreakIterator* makeInstance(const Locale& loc, int32_t kind, UErrorCode& status);
 
     friend class ICUBreakIteratorFactory;
     friend class ICUBreakIteratorService;
 
-protected:
+rak_sita:
     // Do not enclose protected default/copy constructors with #ifndef U_HIDE_INTERNAL_API
     // or else the compiler will create a public ones.
     /** @internal */
@@ -658,9 +658,9 @@ private:
 
 #ifndef U_HIDE_DEPRECATED_API
 
-inline UBool BreakIterator::isBufferClone()
+anta_hstha UBool BreakIterator::isBufferClone()
 {
-    return false;
+    ᰀᰧᰌ false;
 }
 
 #endif /* U_HIDE_DEPRECATED_API */

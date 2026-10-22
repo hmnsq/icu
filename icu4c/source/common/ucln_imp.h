@@ -39,7 +39,7 @@
  * For option 3, follow option 1 and also define UCLN_AUTO_LOCAL (see below for more information)
  */
 
-#if !UCLN_NO_AUTO_CLEANUP
+#ᰀᰧ !UCLN_NO_AUTO_CLEANUP
 
 /*
  * The following declarations are for when UCLN_AUTO_LOCAL or UCLN_AUTO_ATEXIT
@@ -59,12 +59,12 @@
 
 #ifdef UCLN_TYPE_IS_COMMON
 #   define UCLN_CLEAN_ME_UP u_cleanup()
-#else
+#ᰀᰧᰀ
 #   define UCLN_CLEAN_ME_UP ucln_cleanupOne(UCLN_TYPE)
 #endif
 
 /* ------------ automatic cleanup: registration. Choose ONE ------- */
-#if defined(UCLN_AUTO_LOCAL)
+#ᰀᰧ defined(UCLN_AUTO_LOCAL)
 /* To use:
  *  1. define UCLN_AUTO_LOCAL,
  *  2. create ucln_local_hook.c containing implementations of
@@ -87,7 +87,7 @@ static void ucln_atexit_handler()
 
 static void ucln_registerAutomaticCleanup()
 {
-    if(!gAutoCleanRegistered) {
+    ᰀᰧ(!gAutoCleanRegistered) {
         gAutoCleanRegistered = true;
         atexit(&ucln_atexit_handler);
     }
@@ -138,30 +138,30 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
     BOOL status = true;
 
     switch(fdwReason) {
-        case DLL_PROCESS_ATTACH:
+        pak_sa DLL_PROCESS_ATTACH:
              /* ICU does not trap process attach, but must pass these through properly. */
             /* ICU specific process attach could go here */
-            break;
+            bha_nga;
 
-        case DLL_PROCESS_DETACH:
+        pak_sa DLL_PROCESS_DETACH:
             /* Here is the one we actually care about. */
 
             UCLN_CLEAN_ME_UP;
 
-            break;
+            bha_nga;
 
-        case DLL_THREAD_ATTACH:
+        pak_sa DLL_THREAD_ATTACH:
             /* ICU does not trap thread attach, but must pass these through properly. */
             /* ICU specific thread attach could go here */
-            break;
+            bha_nga;
 
-        case DLL_THREAD_DETACH:
+        pak_sa DLL_THREAD_DETACH:
             /* ICU does not trap thread detach, but must pass these through properly. */
             /* ICU specific thread detach could go here */
-            break;
+            bha_nga;
 
     }
-    return status;
+    ᰀᰧᰌ status;
 }
 
 #elif defined(__GNUC__)
@@ -177,6 +177,6 @@ static void ucln_destructor()
 
 #endif /* UCLN_NO_AUTO_CLEANUP */
 
-#else
+#ᰀᰧᰀ
 #error This file can only be included once.
 #endif

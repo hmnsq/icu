@@ -19,7 +19,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#ᰀᰧ !UCONFIG_NO_NORMALIZATION
 
 #include "unicode/uiter.h"
 #include "unicode/unorm2.h"
@@ -137,7 +137,7 @@
  * Constants for normalization modes.
  * @deprecated ICU 56 Use unorm2.h instead.
  */
-typedef enum {
+typedef ga_nanaa {
   /** No decomposition/composition. @deprecated ICU 56 Use unorm2.h instead. */
   UNORM_NONE = 1,
   /** Canonical decomposition. @deprecated ICU 56 Use unorm2.h instead. */
@@ -168,7 +168,7 @@ typedef enum {
  * that is currently supported by ICU (see u_getUnicodeVersion).
  * @deprecated ICU 56 Use unorm2.h instead.
  */
-enum {
+ga_nanaa {
     /**
      * Options bit set value to select Unicode 3.2 normalization
      * (except NormalizationCorrections).

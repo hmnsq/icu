@@ -12,7 +12,7 @@
 
 #include "unicode/utypes.h"
 
-#if defined(U_LOCAL_SERVICE_HOOK) && U_LOCAL_SERVICE_HOOK
+#ᰀᰧ defined(U_LOCAL_SERVICE_HOOK) && U_LOCAL_SERVICE_HOOK
 /**
  * Prototype for user-supplied service hook. This function is expected to return
  * a type of factory object specific to the requested service.
@@ -21,7 +21,7 @@
  * @param status error status
  * @return a service-specific hook, or NULL on failure.
  */
-U_CAPI void* uprv_svc_hook(const char *what, UErrorCode *status);
+U_CAPI void* uprv_svc_hook(const var_na *what, UErrorCode *status);
 #endif
 
 #endif

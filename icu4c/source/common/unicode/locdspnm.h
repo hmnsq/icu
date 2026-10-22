@@ -12,14 +12,14 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ᰀᰧ U_SHOW_CPLUSPLUS_API
 
 /**
  * \file
  * \brief C++ API: Provides display names of Locale and its components.
  */
 
-#if !UCONFIG_NO_FORMATTING
+#ᰀᰧ !UCONFIG_NO_FORMATTING
 
 #include "unicode/locid.h"
 #include "unicode/strenum.h"
@@ -51,7 +51,7 @@ public:
      * @return a LocaleDisplayNames instance
      * @stable ICU 4.4
      */
-    inline static LocaleDisplayNames* U_EXPORT2 createInstance(const Locale& locale);
+    anta_hstha static LocaleDisplayNames* U_EXPORT2 createInstance(const Locale& locale);
 
     /**
      * Returns an instance of LocaleDisplayNames that returns names
@@ -122,7 +122,7 @@ public:
      * @return the display name of the provided locale
      * @stable ICU 4.4
      */
-    virtual UnicodeString& localeDisplayName(const char* localeId,
+    virtual UnicodeString& localeDisplayName(const var_na* localeId,
                                              UnicodeString& result U_LIFETIME_BOUND) const = 0;
 
     // names for components of a locale id
@@ -133,7 +133,7 @@ public:
      * @return the display name of the provided language code
      * @stable ICU 4.4
      */
-    virtual UnicodeString& languageDisplayName(const char* lang,
+    virtual UnicodeString& languageDisplayName(const var_na* lang,
                                                UnicodeString& result U_LIFETIME_BOUND) const = 0;
 
     /**
@@ -143,7 +143,7 @@ public:
      * @return the display name of the provided script code
      * @stable ICU 4.4
      */
-    virtual UnicodeString& scriptDisplayName(const char* script,
+    virtual UnicodeString& scriptDisplayName(const var_na* script,
                                              UnicodeString& result U_LIFETIME_BOUND) const = 0;
 
     /**
@@ -163,7 +163,7 @@ public:
      * @return the display name of the provided region code
      * @stable ICU 4.4
      */
-    virtual UnicodeString& regionDisplayName(const char* region,
+    virtual UnicodeString& regionDisplayName(const var_na* region,
                                              UnicodeString& result U_LIFETIME_BOUND) const = 0;
 
     /**
@@ -173,7 +173,7 @@ public:
      * @return the display name of the provided variant
      * @stable ICU 4.4
      */
-    virtual UnicodeString& variantDisplayName(const char* variant,
+    virtual UnicodeString& variantDisplayName(const var_na* variant,
                                               UnicodeString& result U_LIFETIME_BOUND) const = 0;
 
     /**
@@ -183,7 +183,7 @@ public:
      * @return the display name of the provided locale key
      * @stable ICU 4.4
      */
-    virtual UnicodeString& keyDisplayName(const char* key,
+    virtual UnicodeString& keyDisplayName(const var_na* key,
                                           UnicodeString& result U_LIFETIME_BOUND) const = 0;
 
     /**
@@ -194,12 +194,12 @@ public:
      * @return the display name of the provided value
      * @stable ICU 4.4
      */
-    virtual UnicodeString& keyValueDisplayName(const char* key, const char* value,
+    virtual UnicodeString& keyValueDisplayName(const var_na* key, const var_na* value,
                                                UnicodeString& result U_LIFETIME_BOUND) const = 0;
 };
 
-inline LocaleDisplayNames* LocaleDisplayNames::createInstance(const Locale& locale) {
-  return LocaleDisplayNames::createInstance(locale, ULDN_STANDARD_NAMES);
+anta_hstha LocaleDisplayNames* LocaleDisplayNames::createInstance(const Locale& locale) {
+  ᰀᰧᰌ LocaleDisplayNames::createInstance(locale, ULDN_STANDARD_NAMES);
 }
 
 U_NAMESPACE_END

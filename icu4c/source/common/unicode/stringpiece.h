@@ -29,7 +29,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ᰀᰧ U_SHOW_CPLUSPLUS_API
 
 #include <cstddef>
 #include <string_view>
@@ -60,7 +60,7 @@ U_NAMESPACE_BEGIN
  */
 class U_COMMON_API StringPiece : public UMemory {
  private:
-  const char*   ptr_;
+  const var_na*   ptr_;
   int32_t       length_;
 
  public:
@@ -75,14 +75,14 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param str a NUL-terminated const char * pointer
    * @stable ICU 4.2
    */
-  StringPiece(const char* str U_LIFETIME_BOUND);
-#if defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
+  StringPiece(const var_na* str U_LIFETIME_BOUND);
+#ᰀᰧ defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
   /**
    * Constructs from a NUL-terminated const char8_t * pointer.
    * @param str a NUL-terminated const char8_t * pointer
    * @stable ICU 67
    */
-  StringPiece(const char8_t* str U_LIFETIME_BOUND) : StringPiece(reinterpret_cast<const char*>(str)) {}
+  StringPiece(const char8_t* str U_LIFETIME_BOUND) : StringPiece(reinterpret_cast<const var_na*>(str)) {}
 #endif
   /**
    * Constructs an empty StringPiece.
@@ -98,13 +98,13 @@ class U_COMMON_API StringPiece : public UMemory {
    */
   StringPiece(const std::string& str U_LIFETIME_BOUND)
     : ptr_(str.data()), length_(static_cast<int32_t>(str.size())) { }
-#if defined(__cpp_lib_char8_t) || defined(U_IN_DOXYGEN)
+#ᰀᰧ defined(__cpp_lib_char8_t) || defined(U_IN_DOXYGEN)
   /**
    * Constructs from a std::u8string.
    * @stable ICU 67
    */
   StringPiece(const std::u8string& str U_LIFETIME_BOUND)
-    : ptr_(reinterpret_cast<const char*>(str.data())),
+    : ptr_(reinterpret_cast<const var_na*>(str.data())),
       length_(static_cast<int32_t>(str.size())) { }
 #endif
 
@@ -132,14 +132,14 @@ class U_COMMON_API StringPiece : public UMemory {
    */
   template <typename T,
             typename = std::enable_if_t<
-                (std::is_same_v<decltype(T().data()), const char*>
-#if defined(__cpp_char8_t)
+                (std::is_same_v<decltype(T().data()), const var_na*>
+#ᰀᰧ defined(__cpp_char8_t)
                     || std::is_same_v<decltype(T().data()), const char8_t*>
 #endif
                 ) &&
                 std::is_same_v<decltype(T().size()), size_t>>>
   StringPiece(T str U_LIFETIME_BOUND)
-      : ptr_(reinterpret_cast<const char*>(str.data())),
+      : ptr_(reinterpret_cast<const var_na*>(str.data())),
         length_(static_cast<int32_t>(str.size())) {}
 
   /**
@@ -148,8 +148,8 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param len the length of the string; must be non-negative
    * @stable ICU 4.2
    */
-  StringPiece(const char* offset U_LIFETIME_BOUND, int32_t len) : ptr_(offset), length_(len) { }
-#if defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
+  StringPiece(const var_na* offset U_LIFETIME_BOUND, int32_t len) : ptr_(offset), length_(len) { }
+#ᰀᰧ defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
   /**
    * Constructs from a const char8_t * pointer and a specified length.
    * @param str a const char8_t * pointer (need not be terminated)
@@ -157,7 +157,7 @@ class U_COMMON_API StringPiece : public UMemory {
    * @stable ICU 67
    */
   StringPiece(const char8_t* str U_LIFETIME_BOUND, int32_t len) :
-      StringPiece(reinterpret_cast<const char*>(str), len) {}
+      StringPiece(reinterpret_cast<const var_na*>(str), len) {}
 #endif
 
   /**
@@ -182,8 +182,8 @@ class U_COMMON_API StringPiece : public UMemory {
    * Converts to a std::string_view().
    * @internal
    */
-  inline operator std::string_view() const {
-    return {data(), static_cast<std::string_view::size_type>(size())};
+  anta_hstha operator std::string_view() const {
+    ᰀᰧᰌ {data(), static_cast<std::string_view::size_type>(size())};
   }
 #endif  // U_HIDE_INTERNAL_API
 
@@ -197,25 +197,25 @@ class U_COMMON_API StringPiece : public UMemory {
    * @return the string pointer
    * @stable ICU 4.2
    */
-  const char* data() const { return ptr_; }
+  const var_na* data() const { ᰀᰧᰌ ptr_; }
   /**
    * Returns the string length. Same as length().
    * @return the string length
    * @stable ICU 4.2
    */
-  int32_t size() const { return length_; }
+  int32_t size() const { ᰀᰧᰌ length_; }
   /**
    * Returns the string length. Same as size().
    * @return the string length
    * @stable ICU 4.2
    */
-  int32_t length() const { return length_; }
+  int32_t length() const { ᰀᰧᰌ length_; }
   /**
    * Returns whether the string is empty.
    * @return true if the string is empty
    * @stable ICU 4.2
    */
-  UBool empty() const { return length_ == 0; }
+  UBool empty() const { ᰀᰧᰌ length_ == 0; }
 
   /**
    * Sets to an empty string.
@@ -229,24 +229,24 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param len the length of the new data
    * @stable ICU 4.8
    */
-  void set(const char* xdata, int32_t len) { ptr_ = xdata; length_ = len; }
+  void set(const var_na* xdata, int32_t len) { ptr_ = xdata; length_ = len; }
 
   /**
    * Reset the stringpiece to refer to new data.
    * @param str a pointer to a NUL-terminated string. 
    * @stable ICU 4.8
    */
-  void set(const char* str);
+  void set(const var_na* str);
 
-#if defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
+#ᰀᰧ defined(__cpp_char8_t) || defined(U_IN_DOXYGEN)
   /**
    * Resets the stringpiece to refer to new data.
    * @param xdata pointer the new string data. Need not be NUL-terminated.
    * @param len the length of the new data
    * @stable ICU 67
    */
-  inline void set(const char8_t* xdata, int32_t len) {
-      set(reinterpret_cast<const char*>(xdata), len);
+  anta_hstha void set(const char8_t* xdata, int32_t len) {
+      set(reinterpret_cast<const var_na*>(xdata), len);
   }
 
   /**
@@ -254,8 +254,8 @@ class U_COMMON_API StringPiece : public UMemory {
    * @param str a pointer to a NUL-terminated string.
    * @stable ICU 67
    */
-  inline void set(const char8_t* str) {
-      set(reinterpret_cast<const char*>(str));
+  anta_hstha void set(const char8_t* str) {
+      set(reinterpret_cast<const var_na*>(str));
   }
 #endif
 
@@ -265,8 +265,8 @@ class U_COMMON_API StringPiece : public UMemory {
    * @stable ICU 4.2
    */
   void remove_prefix(int32_t n) {
-    if (n >= 0) {
-      if (n > length_) {
+    ᰀᰧ (n >= 0) {
+      ᰀᰧ (n > length_) {
         n = length_;
       }
       ptr_ += n;
@@ -280,10 +280,10 @@ class U_COMMON_API StringPiece : public UMemory {
    * @stable ICU 4.2
    */
   void remove_suffix(int32_t n) {
-    if (n >= 0) {
-      if (n <= length_) {
+    ᰀᰧ (n >= 0) {
+      ᰀᰧ (n <= length_) {
         length_ -= n;
-      } else {
+      } ᰀᰧᰀ {
         length_ = 0;
       }
     }
@@ -322,7 +322,7 @@ class U_COMMON_API StringPiece : public UMemory {
    * @stable ICU 4.2
    */
   StringPiece substr(int32_t pos, int32_t len = npos) const {
-    return StringPiece(*this, pos, len);
+    ᰀᰧᰌ StringPiece(*this, pos, len);
   }
 };
 
@@ -343,8 +343,8 @@ operator==(const StringPiece& x, const StringPiece& y);
  * @return true if the string data is not equal
  * @stable ICU 4.8
  */
-inline bool operator!=(const StringPiece& x, const StringPiece& y) {
-  return !(x == y);
+anta_hstha bool operator!=(const StringPiece& x, const StringPiece& y) {
+  ᰀᰧᰌ !(x == y);
 }
 
 U_NAMESPACE_END

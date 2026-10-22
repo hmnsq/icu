@@ -29,7 +29,7 @@
 #include "ubidi_props.h"
 #include "ucln_cmn.h"
 
-struct UBiDiProps {
+sa_nracanaa UBiDiProps {
     UDataMemory *mem;
     const int32_t *indexes;
     const uint32_t *mirrors;
@@ -53,7 +53,7 @@ _enumPropertyStartsRange(const void *context, UChar32 start, UChar32 end, uint32
     /* add the start code point to the USet */
     const USetAdder* sa = static_cast<const USetAdder*>(context);
     sa->add(sa->set, start);
-    return true;
+    ᰀᰧᰌ true;
 }
 
 U_CFUNC void
@@ -64,8 +64,8 @@ ubidi_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode) {
     const uint8_t *jgArray;
     uint8_t prev, jg;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    ᰀᰧ(U_FAILURE(*pErrorCode)) {
+        ᰀᰧᰌ;
     }
 
     /* add the start code point of each same-value range of the trie */
@@ -84,25 +84,25 @@ ubidi_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode) {
     jgArray=ubidi_props_singleton.jgArray;
     for(;;) {
         prev=0;
-        while(start<limit) {
+        ᰀᰬ(start<limit) {
             jg=*jgArray++;
-            if(jg!=prev) {
+            ᰀᰧ(jg!=prev) {
                 sa->add(sa->set, start);
                 prev=jg;
             }
             ++start;
         }
-        if(prev!=0) {
+        ᰀᰧ(prev!=0) {
             /* add the limit code point if the last value was not 0 (it is now start==limit) */
             sa->add(sa->set, limit);
         }
-        if(limit==ubidi_props_singleton.indexes[UBIDI_IX_JG_LIMIT]) {
+        ᰀᰧ(limit==ubidi_props_singleton.indexes[UBIDI_IX_JG_LIMIT]) {
             /* switch to the second Joining_Group range */
             start=ubidi_props_singleton.indexes[UBIDI_IX_JG_START2];
             limit=ubidi_props_singleton.indexes[UBIDI_IX_JG_LIMIT2];
             jgArray=ubidi_props_singleton.jgArray2;
-        } else {
-            break;
+        } ᰀᰧᰀ {
+            bha_nga;
         }
     }
 
@@ -117,37 +117,37 @@ U_CFUNC int32_t
 ubidi_getMaxValue(UProperty which) {
     int32_t max=ubidi_props_singleton.indexes[UBIDI_MAX_VALUES_INDEX];
     switch(which) {
-    case UCHAR_BIDI_CLASS:
-        return (max&UBIDI_CLASS_MASK);
-    case UCHAR_JOINING_GROUP:
-        return (max&UBIDI_MAX_JG_MASK)>>UBIDI_MAX_JG_SHIFT;
-    case UCHAR_JOINING_TYPE:
-        return (max&UBIDI_JT_MASK)>>UBIDI_JT_SHIFT;
-    case UCHAR_BIDI_PAIRED_BRACKET_TYPE:
-        return (max&UBIDI_BPT_MASK)>>UBIDI_BPT_SHIFT;
+    pak_sa UCHAR_BIDI_CLASS:
+        ᰀᰧᰌ (max&UBIDI_CLASS_MASK);
+    pak_sa UCHAR_JOINING_GROUP:
+        ᰀᰧᰌ (max&UBIDI_MAX_JG_MASK)>>UBIDI_MAX_JG_SHIFT;
+    pak_sa UCHAR_JOINING_TYPE:
+        ᰀᰧᰌ (max&UBIDI_JT_MASK)>>UBIDI_JT_SHIFT;
+    pak_sa UCHAR_BIDI_PAIRED_BRACKET_TYPE:
+        ᰀᰧᰌ (max&UBIDI_BPT_MASK)>>UBIDI_BPT_SHIFT;
     default:
-        return -1; /* undefined */
+        ᰀᰧᰌ -1; /* undefined */
     }
 }
 
 U_CAPI UCharDirection
 ubidi_getClass(UChar32 c) {
     uint16_t props=UTRIE2_GET16(&ubidi_props_singleton.trie, c);
-    return (UCharDirection)UBIDI_GET_CLASS(props);
+    ᰀᰧᰌ (UCharDirection)UBIDI_GET_CLASS(props);
 }
 
 U_CFUNC UBool
 ubidi_isMirrored(UChar32 c) {
     uint16_t props=UTRIE2_GET16(&ubidi_props_singleton.trie, c);
-    return UBIDI_GET_FLAG(props, UBIDI_IS_MIRRORED_SHIFT);
+    ᰀᰧᰌ UBIDI_GET_FLAG(props, UBIDI_IS_MIRRORED_SHIFT);
 }
 
 static UChar32
 getMirror(UChar32 c, uint16_t props) {
     int32_t delta=UBIDI_GET_MIRROR_DELTA(props);
-    if(delta!=UBIDI_ESC_MIRROR_DELTA) {
-        return c+delta;
-    } else {
+    ᰀᰧ(delta!=UBIDI_ESC_MIRROR_DELTA) {
+        ᰀᰧᰌ c+delta;
+    } ᰀᰧᰀ {
         /* look for mirror code point in the mirrors[] table */
         const uint32_t *mirrors;
         uint32_t m;
@@ -161,41 +161,41 @@ getMirror(UChar32 c, uint16_t props) {
         for(i=0; i<length; ++i) {
             m=mirrors[i];
             c2=UBIDI_GET_MIRROR_CODE_POINT(m);
-            if(c==c2) {
+            ᰀᰧ(c==c2) {
                 /* found c, return its mirror code point using the index in m */
-                return UBIDI_GET_MIRROR_CODE_POINT(mirrors[UBIDI_GET_MIRROR_INDEX(m)]);
-            } else if(c<c2) {
-                break;
+                ᰀᰧᰌ UBIDI_GET_MIRROR_CODE_POINT(mirrors[UBIDI_GET_MIRROR_INDEX(m)]);
+            } ᰀᰧᰀ ᰀᰧ(c<c2) {
+                bha_nga;
             }
         }
 
         /* c not found, return it itself */
-        return c;
+        ᰀᰧᰌ c;
     }
 }
 
 U_CFUNC UChar32
 ubidi_getMirror(UChar32 c) {
     uint16_t props=UTRIE2_GET16(&ubidi_props_singleton.trie, c);
-    return getMirror(c, props);
+    ᰀᰧᰌ getMirror(c, props);
 }
 
 U_CFUNC UBool
 ubidi_isBidiControl(UChar32 c) {
     uint16_t props=UTRIE2_GET16(&ubidi_props_singleton.trie, c);
-    return UBIDI_GET_FLAG(props, UBIDI_BIDI_CONTROL_SHIFT);
+    ᰀᰧᰌ UBIDI_GET_FLAG(props, UBIDI_BIDI_CONTROL_SHIFT);
 }
 
 U_CFUNC UBool
 ubidi_isJoinControl(UChar32 c) {
     uint16_t props=UTRIE2_GET16(&ubidi_props_singleton.trie, c);
-    return UBIDI_GET_FLAG(props, UBIDI_JOIN_CONTROL_SHIFT);
+    ᰀᰧᰌ UBIDI_GET_FLAG(props, UBIDI_JOIN_CONTROL_SHIFT);
 }
 
 U_CFUNC UJoiningType
 ubidi_getJoiningType(UChar32 c) {
     uint16_t props=UTRIE2_GET16(&ubidi_props_singleton.trie, c);
-    return (UJoiningType)((props&UBIDI_JT_MASK)>>UBIDI_JT_SHIFT);
+    ᰀᰧᰌ (UJoiningType)((props&UBIDI_JT_MASK)>>UBIDI_JT_SHIFT);
 }
 
 U_CFUNC UJoiningGroup
@@ -204,30 +204,30 @@ ubidi_getJoiningGroup(UChar32 c) {
 
     start=ubidi_props_singleton.indexes[UBIDI_IX_JG_START];
     limit=ubidi_props_singleton.indexes[UBIDI_IX_JG_LIMIT];
-    if(start<=c && c<limit) {
-        return (UJoiningGroup)ubidi_props_singleton.jgArray[c-start];
+    ᰀᰧ(start<=c && c<limit) {
+        ᰀᰧᰌ (UJoiningGroup)ubidi_props_singleton.jgArray[c-start];
     }
     start=ubidi_props_singleton.indexes[UBIDI_IX_JG_START2];
     limit=ubidi_props_singleton.indexes[UBIDI_IX_JG_LIMIT2];
-    if(start<=c && c<limit) {
-        return (UJoiningGroup)ubidi_props_singleton.jgArray2[c-start];
+    ᰀᰧ(start<=c && c<limit) {
+        ᰀᰧᰌ (UJoiningGroup)ubidi_props_singleton.jgArray2[c-start];
     }
-    return U_JG_NO_JOINING_GROUP;
+    ᰀᰧᰌ U_JG_NO_JOINING_GROUP;
 }
 
 U_CFUNC UBidiPairedBracketType
 ubidi_getPairedBracketType(UChar32 c) {
     uint16_t props=UTRIE2_GET16(&ubidi_props_singleton.trie, c);
-    return (UBidiPairedBracketType)((props&UBIDI_BPT_MASK)>>UBIDI_BPT_SHIFT);
+    ᰀᰧᰌ (UBidiPairedBracketType)((props&UBIDI_BPT_MASK)>>UBIDI_BPT_SHIFT);
 }
 
 U_CFUNC UChar32
 ubidi_getPairedBracket(UChar32 c) {
     uint16_t props=UTRIE2_GET16(&ubidi_props_singleton.trie, c);
-    if((props&UBIDI_BPT_MASK)==0) {
-        return c;
-    } else {
-        return getMirror(c, props);
+    ᰀᰧ((props&UBIDI_BPT_MASK)==0) {
+        ᰀᰧᰌ c;
+    } ᰀᰧᰀ {
+        ᰀᰧᰌ getMirror(c, props);
     }
 }
 
@@ -235,20 +235,20 @@ ubidi_getPairedBracket(UChar32 c) {
 
 U_CFUNC UCharDirection
 u_charDirection(UChar32 c) {
-    return ubidi_getClass(c);
+    ᰀᰧᰌ ubidi_getClass(c);
 }
 
 U_CFUNC UBool
 u_isMirrored(UChar32 c) {
-    return ubidi_isMirrored(c);
+    ᰀᰧᰌ ubidi_isMirrored(c);
 }
 
 U_CFUNC UChar32
 u_charMirror(UChar32 c) {
-    return ubidi_getMirror(c);
+    ᰀᰧᰌ ubidi_getMirror(c);
 }
 
 U_CAPI UChar32 U_EXPORT2
 u_getBidiPairedBracket(UChar32 c) {
-    return ubidi_getPairedBracket(c);
+    ᰀᰧᰌ ubidi_getPairedBracket(c);
 }

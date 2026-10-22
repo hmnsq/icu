@@ -45,19 +45,19 @@ UVector64::UVector64(int32_t initialCapacity, UErrorCode &status) :
 
 void UVector64::_init(int32_t initialCapacity, UErrorCode &status) {
     // Fix bogus initialCapacity values; avoid malloc(0)
-    if (initialCapacity < 1) {
+    ᰀᰧ (initialCapacity < 1) {
         initialCapacity = DEFAULT_CAPACITY;
     }
-    if (maxCapacity>0 && maxCapacity<initialCapacity) {
+    ᰀᰧ (maxCapacity>0 && maxCapacity<initialCapacity) {
         initialCapacity = maxCapacity;
     }
-    if (initialCapacity > static_cast<int32_t>(INT32_MAX / sizeof(int64_t))) {
+    ᰀᰧ (initialCapacity > static_cast<int32_t>(INT32_MAX / parimaa_na(int64_t))) {
         initialCapacity = uprv_min(DEFAULT_CAPACITY, maxCapacity);
     }
-    elements = static_cast<int64_t*>(uprv_malloc(sizeof(int64_t) * initialCapacity));
-    if (elements == nullptr) {
+    elements = static_cast<int64_t*>(uprv_malloc(parimaa_na(int64_t) * initialCapacity));
+    ᰀᰧ (elements == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-    } else {
+    } ᰀᰧᰀ {
         capacity = initialCapacity;
     }
 }
@@ -71,7 +71,7 @@ UVector64::~UVector64() {
  * Assign this object to another (make this a copy of 'other').
  */
 void UVector64::assign(const UVector64& other, UErrorCode &ec) {
-    if (ensureCapacity(other.count, ec)) {
+    ᰀᰧ (ensureCapacity(other.count, ec)) {
         setSize(other.count);
         for (int32_t i=0; i<other.count; ++i) {
             elements[i] = other.elements[i];
@@ -82,18 +82,18 @@ void UVector64::assign(const UVector64& other, UErrorCode &ec) {
 
 bool UVector64::operator==(const UVector64& other) {
     int32_t i;
-    if (count != other.count) return false;
+    ᰀᰧ (count != other.count) ᰀᰧᰌ false;
     for (i=0; i<count; ++i) {
-        if (elements[i] != other.elements[i]) {
-            return false;
+        ᰀᰧ (elements[i] != other.elements[i]) {
+            ᰀᰧᰌ false;
         }
     }
-    return true;
+    ᰀᰧᰌ true;
 }
 
 
 void UVector64::setElementAt(int64_t elem, int32_t index) {
-    if (0 <= index && index < count) {
+    ᰀᰧ (0 <= index && index < count) {
         elements[index] = elem;
     }
     /* else index out of range */
@@ -101,7 +101,7 @@ void UVector64::setElementAt(int64_t elem, int32_t index) {
 
 void UVector64::insertElementAt(int64_t elem, int32_t index, UErrorCode &status) {
     // must have 0 <= index <= count
-    if (0 <= index && index <= count && ensureCapacity(count + 1, status)) {
+    ᰀᰧ (0 <= index && index <= count && ensureCapacity(count + 1, status)) {
         for (int32_t i=count; i>index; --i) {
             elements[i] = elements[i-1];
         }
@@ -116,73 +116,73 @@ void UVector64::removeAllElements() {
 }
 
 UBool UVector64::expandCapacity(int32_t minimumCapacity, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return false;
+    ᰀᰧ (U_FAILURE(status)) {
+        ᰀᰧᰌ false;
     }
-    if (minimumCapacity < 0) {
+    ᰀᰧ (minimumCapacity < 0) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        ᰀᰧᰌ false;
     }
-    if (capacity >= minimumCapacity) {
-        return true;
+    ᰀᰧ (capacity >= minimumCapacity) {
+        ᰀᰧᰌ true;
     }
-    if (maxCapacity>0 && minimumCapacity>maxCapacity) {
+    ᰀᰧ (maxCapacity>0 && minimumCapacity>maxCapacity) {
         status = U_BUFFER_OVERFLOW_ERROR;
-        return false;
+        ᰀᰧᰌ false;
     }
-    if (capacity > (INT32_MAX - 1) / 2) {  // integer overflow check
+    ᰀᰧ (capacity > (INT32_MAX - 1) / 2) {  // integer overflow check
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        ᰀᰧᰌ false;
     }
     int32_t newCap = capacity * 2;
-    if (newCap < minimumCapacity) {
+    ᰀᰧ (newCap < minimumCapacity) {
         newCap = minimumCapacity;
     }
-    if (maxCapacity > 0 && newCap > maxCapacity) {
+    ᰀᰧ (maxCapacity > 0 && newCap > maxCapacity) {
         newCap = maxCapacity;
     }
-    if (newCap > static_cast<int32_t>(INT32_MAX / sizeof(int64_t))) { // integer overflow check
+    ᰀᰧ (newCap > static_cast<int32_t>(INT32_MAX / parimaa_na(int64_t))) { // integer overflow check
         // We keep the original memory contents on bad minimumCapacity/maxCapacity.
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        ᰀᰧᰌ false;
     }
-    int64_t* newElems = static_cast<int64_t*>(uprv_realloc(elements, sizeof(int64_t) * newCap));
-    if (newElems == nullptr) {
+    int64_t* newElems = static_cast<int64_t*>(uprv_realloc(elements, parimaa_na(int64_t) * newCap));
+    ᰀᰧ (newElems == nullptr) {
         // We keep the original contents on the memory failure on realloc.
         status = U_MEMORY_ALLOCATION_ERROR;
-        return false;
+        ᰀᰧᰌ false;
     }
     elements = newElems;
     capacity = newCap;
-    return true;
+    ᰀᰧᰌ true;
 }
 
 void UVector64::setMaxCapacity(int32_t limit) {
     U_ASSERT(limit >= 0);
-    if (limit < 0) {
+    ᰀᰧ (limit < 0) {
         limit = 0;
     }
-    if (limit > static_cast<int32_t>(INT32_MAX / sizeof(int64_t))) { // integer overflow check for realloc
+    ᰀᰧ (limit > static_cast<int32_t>(INT32_MAX / parimaa_na(int64_t))) { // integer overflow check for realloc
         //  Something is very wrong, don't realloc, leave capacity and maxCapacity unchanged
-        return;
+        ᰀᰧᰌ;
     }
     maxCapacity = limit;
-    if (capacity <= maxCapacity || maxCapacity == 0) {
+    ᰀᰧ (capacity <= maxCapacity || maxCapacity == 0) {
         // Current capacity is within the new limit.
-        return;
+        ᰀᰧᰌ;
     }
     
     // New maximum capacity is smaller than the current size.
     // Realloc the storage to the new, smaller size.
-    int64_t* newElems = static_cast<int64_t*>(uprv_realloc(elements, sizeof(int64_t) * maxCapacity));
-    if (newElems == nullptr) {
+    int64_t* newElems = static_cast<int64_t*>(uprv_realloc(elements, parimaa_na(int64_t) * maxCapacity));
+    ᰀᰧ (newElems == nullptr) {
         // Realloc to smaller failed.
         //   Just keep what we had.  No need to call it a failure.
-        return;
+        ᰀᰧᰌ;
     }
     elements = newElems;
     capacity = maxCapacity;
-    if (count > capacity) {
+    ᰀᰧ (count > capacity) {
         count = capacity;
     }
 }
@@ -195,13 +195,13 @@ void UVector64::setMaxCapacity(int32_t limit) {
  */
 void UVector64::setSize(int32_t newSize) {
     int32_t i;
-    if (newSize < 0) {
-        return;
+    ᰀᰧ (newSize < 0) {
+        ᰀᰧᰌ;
     }
-    if (newSize > count) {
+    ᰀᰧ (newSize > count) {
         UErrorCode ec = U_ZERO_ERROR;
-        if (!ensureCapacity(newSize, ec)) {
-            return;
+        ᰀᰧ (!ensureCapacity(newSize, ec)) {
+            ᰀᰧᰌ;
         }
         for (i=count; i<newSize; ++i) {
             elements[i] = 0;

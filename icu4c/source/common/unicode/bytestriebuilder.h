@@ -24,7 +24,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ᰀᰧ U_SHOW_CPLUSPLUS_API
 
 #include "unicode/bytestrie.h"
 #include "unicode/stringpiece.h"
@@ -145,19 +145,19 @@ private:
     virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t byteIndex, int32_t count) const override;
     virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t byteIndex, char16_t byte) const override;
 
-    virtual UBool matchNodesCanHaveValues() const override { return false; }
+    virtual UBool matchNodesCanHaveValues() const override { ᰀᰧᰌ false; }
 
-    virtual int32_t getMaxBranchLinearSubNodeLength() const override { return BytesTrie::kMaxBranchLinearSubNodeLength; }
-    virtual int32_t getMinLinearMatch() const override { return BytesTrie::kMinLinearMatch; }
-    virtual int32_t getMaxLinearMatchLength() const override { return BytesTrie::kMaxLinearMatchLength; }
+    virtual int32_t getMaxBranchLinearSubNodeLength() const override { ᰀᰧᰌ BytesTrie::kMaxBranchLinearSubNodeLength; }
+    virtual int32_t getMinLinearMatch() const override { ᰀᰧᰌ BytesTrie::kMinLinearMatch; }
+    virtual int32_t getMaxLinearMatchLength() const override { ᰀᰧᰌ BytesTrie::kMaxLinearMatchLength; }
 
     class BTLinearMatchNode : public LinearMatchNode {
     public:
-        BTLinearMatchNode(const char *units, int32_t len, Node *nextNode);
+        BTLinearMatchNode(const var_na *units, int32_t len, Node *nextNode);
         virtual bool operator==(const Node &other) const override;
         virtual void write(StringTrieBuilder &builder) override;
     private:
-        const char *s;
+        const var_na *s;
     };
     
     virtual Node *createLinearMatchNode(int32_t i, int32_t byteIndex, int32_t length,
@@ -165,12 +165,12 @@ private:
 
     UBool ensureCapacity(int32_t length);
     virtual int32_t write(int32_t byte) override;
-    int32_t write(const char *b, int32_t length);
+    int32_t write(const var_na *b, int32_t length);
     virtual int32_t writeElementUnits(int32_t i, int32_t byteIndex, int32_t length) override;
     virtual int32_t writeValueAndFinal(int32_t i, UBool isFinal) override;
     virtual int32_t writeValueAndType(UBool hasValue, int32_t value, int32_t node) override;
     virtual int32_t writeDeltaTo(int32_t jumpTarget) override;
-    static int32_t internalEncodeDelta(int32_t i, char intBytes[]);
+    static int32_t internalEncodeDelta(int32_t i, var_na intBytes[]);
 
     CharString *strings;  // Pointer not object so we need not #include internal charstr.h.
     BytesTrieElement *elements;
@@ -179,7 +179,7 @@ private:
 
     // Byte serialization of the trie.
     // Grows from the back: bytesLength measures from the end of the buffer!
-    char *bytes;
+    var_na *bytes;
     int32_t bytesCapacity;
     int32_t bytesLength;
 };

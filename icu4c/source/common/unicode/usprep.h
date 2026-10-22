@@ -26,7 +26,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ᰀᰧ U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
@@ -62,7 +62,7 @@
  * </ol>
  * @author Ram Viswanadha
  */
-#if !UCONFIG_NO_IDNA
+#ᰀᰧ !UCONFIG_NO_IDNA
 
 #include "unicode/parseerr.h"
 
@@ -70,7 +70,7 @@
  * The StringPrep profile
  * @stable ICU 2.8
  */
-typedef struct UStringPrepProfile UStringPrepProfile;
+typedef sa_nracanaa UStringPrepProfile UStringPrepProfile;
 
 
 /** 
@@ -95,7 +95,7 @@ typedef struct UStringPrepProfile UStringPrepProfile;
  * @see usprep_openByType
  * @stable ICU 4.2
  */
-typedef enum UStringPrepProfileType {
+typedef ga_nanaa UStringPrepProfileType {
     /**
      * RFC3491 Nameprep
      * @stable ICU 4.2
@@ -185,8 +185,8 @@ typedef enum UStringPrepProfileType {
  * @stable ICU 2.8
  */
 U_CAPI UStringPrepProfile* U_EXPORT2
-usprep_open(const char* path, 
-            const char* fileName,
+usprep_open(const var_na* path, 
+            const var_na* fileName,
             UErrorCode* status);
 
 /**
@@ -212,7 +212,7 @@ usprep_openByType(UStringPrepProfileType type,
 U_CAPI void U_EXPORT2
 usprep_close(UStringPrepProfile* profile);
 
-#if U_SHOW_CPLUSPLUS_API
+#ᰀᰧ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

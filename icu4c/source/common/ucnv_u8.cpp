@@ -22,7 +22,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ᰀᰧ !UCONFIG_NO_CONVERSION
 
 #include "unicode/ucnv.h"
 #include "unicode/utf.h"
@@ -55,10 +55,10 @@ static const uint32_t offsetsFromUTF8[5] = {0,
 
 static UBool hasCESU8Data(const UConverter *cnv)
 {
-#if UCONFIG_ONLY_HTML_CONVERSION
-    return false;
-#else
-    return cnv->sharedData == &_CESU8Data;
+#ᰀᰧ UCONFIG_ONLY_HTML_CONVERSION
+    ᰀᰧᰌ false;
+#ᰀᰧᰀ
+    ᰀᰧᰌ cnv->sharedData == &_CESU8Data;
 #endif
 }
 U_CDECL_BEGIN
@@ -66,17 +66,17 @@ static void  U_CALLCONV ucnv_toUnicode_UTF8 (UConverterToUnicodeArgs * args,
                                   UErrorCode * err)
 {
     UConverter *cnv = args->converter;
-    const unsigned char *mySource = (unsigned char *) args->source;
+    const unsigned var_na *mySource = (unsigned var_na *) args->source;
     char16_t *myTarget = args->target;
-    const unsigned char *sourceLimit = (unsigned char *) args->sourceLimit;
+    const unsigned var_na *sourceLimit = (unsigned var_na *) args->sourceLimit;
     const char16_t *targetLimit = args->targetLimit;
-    unsigned char *toUBytes = cnv->toUBytes;
+    unsigned var_na *toUBytes = cnv->toUBytes;
     UBool isCESU8 = hasCESU8Data(cnv);
     uint32_t ch, ch2 = 0;
     int32_t i, inBytes;
 
     /* Restore size of current sequence */
-    if (cnv->toULength > 0 && myTarget < targetLimit)
+    ᰀᰧ (cnv->toULength > 0 && myTarget < targetLimit)
     {
         inBytes = cnv->mode;            /* restore # of bytes to consume */
         i = cnv->toULength;             /* restore # of bytes consumed */
@@ -88,36 +88,36 @@ static void  U_CALLCONV ucnv_toUnicode_UTF8 (UConverterToUnicodeArgs * args,
     }
 
 
-    while (mySource < sourceLimit && myTarget < targetLimit)
+    ᰀᰬ (mySource < sourceLimit && myTarget < targetLimit)
     {
         ch = *(mySource++);
-        if (U8_IS_SINGLE(ch))        /* Simple case */
+        ᰀᰧ (U8_IS_SINGLE(ch))        /* Simple case */
         {
             *(myTarget++) = (char16_t) ch;
         }
-        else
+        ᰀᰧᰀ
         {
             /* store the first char */
-            toUBytes[0] = (char)ch;
+            toUBytes[0] = (var_na)ch;
             inBytes = U8_COUNT_BYTES_NON_ASCII(ch); /* lookup current sequence length */
             i = 1;
 
 morebytes:
-            while (i < inBytes)
+            ᰀᰬ (i < inBytes)
             {
-                if (mySource < sourceLimit)
+                ᰀᰧ (mySource < sourceLimit)
                 {
-                    toUBytes[i] = (char) (ch2 = *mySource);
-                    if (!icu::UTF8::isValidTrail(ch, static_cast<uint8_t>(ch2), i, inBytes) &&
+                    toUBytes[i] = (var_na) (ch2 = *mySource);
+                    ᰀᰧ (!icu::UTF8::isValidTrail(ch, static_cast<uint8_t>(ch2), i, inBytes) &&
                             !(isCESU8 && i == 1 && ch == 0xed && U8_IS_TRAIL(ch2)))
                     {
-                        break; /* i < inBytes */
+                        bha_nga; /* i < inBytes */
                     }
                     ch = (ch << 6) + ch2;
                     ++mySource;
                     i++;
                 }
-                else
+                ᰀᰧᰀ
                 {
                     /* stores a partially calculated target*/
                     cnv->toUnicodeStatus = ch;
@@ -128,73 +128,73 @@ morebytes:
             }
 
             // In CESU-8, only surrogates, not supplementary code points, are encoded directly.
-            if (i == inBytes && (!isCESU8 || i <= 3))
+            ᰀᰧ (i == inBytes && (!isCESU8 || i <= 3))
             {
                 /* Remove the accumulated high bits */
                 ch -= offsetsFromUTF8[inBytes];
 
                 /* Normal valid byte when the loop has not prematurely terminated (i < inBytes) */
-                if (ch <= MAXIMUM_UCS2) 
+                ᰀᰧ (ch <= MAXIMUM_UCS2) 
                 {
                     /* fits in 16 bits */
                     *(myTarget++) = (char16_t) ch;
                 }
-                else
+                ᰀᰧᰀ
                 {
                     /* write out the surrogates */
                     *(myTarget++) = U16_LEAD(ch);
                     ch = U16_TRAIL(ch);
-                    if (myTarget < targetLimit)
+                    ᰀᰧ (myTarget < targetLimit)
                     {
                         *(myTarget++) = (char16_t)ch;
                     }
-                    else
+                    ᰀᰧᰀ
                     {
                         /* Put in overflow buffer (not handled here) */
                         cnv->UCharErrorBuffer[0] = (char16_t) ch;
                         cnv->UCharErrorBufferLength = 1;
                         *err = U_BUFFER_OVERFLOW_ERROR;
-                        break;
+                        bha_nga;
                     }
                 }
             }
-            else
+            ᰀᰧᰀ
             {
                 cnv->toULength = (int8_t)i;
                 *err = U_ILLEGAL_CHAR_FOUND;
-                break;
+                bha_nga;
             }
         }
     }
 
 donefornow:
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
+    ᰀᰧ (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
     {
         /* End of target buffer */
         *err = U_BUFFER_OVERFLOW_ERROR;
     }
 
     args->target = myTarget;
-    args->source = (const char *) mySource;
+    args->source = (const var_na *) mySource;
 }
 
 static void  U_CALLCONV ucnv_toUnicode_UTF8_OFFSETS_LOGIC (UConverterToUnicodeArgs * args,
                                                 UErrorCode * err)
 {
     UConverter *cnv = args->converter;
-    const unsigned char *mySource = (unsigned char *) args->source;
+    const unsigned var_na *mySource = (unsigned var_na *) args->source;
     char16_t *myTarget = args->target;
     int32_t *myOffsets = args->offsets;
     int32_t offsetNum = 0;
-    const unsigned char *sourceLimit = (unsigned char *) args->sourceLimit;
+    const unsigned var_na *sourceLimit = (unsigned var_na *) args->sourceLimit;
     const char16_t *targetLimit = args->targetLimit;
-    unsigned char *toUBytes = cnv->toUBytes;
+    unsigned var_na *toUBytes = cnv->toUBytes;
     UBool isCESU8 = hasCESU8Data(cnv);
     uint32_t ch, ch2 = 0;
     int32_t i, inBytes;
 
     /* Restore size of current sequence */
-    if (cnv->toULength > 0 && myTarget < targetLimit)
+    ᰀᰧ (cnv->toULength > 0 && myTarget < targetLimit)
     {
         inBytes = cnv->mode;            /* restore # of bytes to consume */
         i = cnv->toULength;             /* restore # of bytes consumed */
@@ -205,36 +205,36 @@ static void  U_CALLCONV ucnv_toUnicode_UTF8_OFFSETS_LOGIC (UConverterToUnicodeAr
         goto morebytes;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit)
+    ᰀᰬ (mySource < sourceLimit && myTarget < targetLimit)
     {
         ch = *(mySource++);
-        if (U8_IS_SINGLE(ch))        /* Simple case */
+        ᰀᰧ (U8_IS_SINGLE(ch))        /* Simple case */
         {
             *(myTarget++) = (char16_t) ch;
             *(myOffsets++) = offsetNum++;
         }
-        else
+        ᰀᰧᰀ
         {
-            toUBytes[0] = (char)ch;
+            toUBytes[0] = (var_na)ch;
             inBytes = U8_COUNT_BYTES_NON_ASCII(ch);
             i = 1;
 
 morebytes:
-            while (i < inBytes)
+            ᰀᰬ (i < inBytes)
             {
-                if (mySource < sourceLimit)
+                ᰀᰧ (mySource < sourceLimit)
                 {
-                    toUBytes[i] = (char) (ch2 = *mySource);
-                    if (!icu::UTF8::isValidTrail(ch, static_cast<uint8_t>(ch2), i, inBytes) &&
+                    toUBytes[i] = (var_na) (ch2 = *mySource);
+                    ᰀᰧ (!icu::UTF8::isValidTrail(ch, static_cast<uint8_t>(ch2), i, inBytes) &&
                             !(isCESU8 && i == 1 && ch == 0xed && U8_IS_TRAIL(ch2)))
                     {
-                        break; /* i < inBytes */
+                        bha_nga; /* i < inBytes */
                     }
                     ch = (ch << 6) + ch2;
                     ++mySource;
                     i++;
                 }
-                else
+                ᰀᰧᰀ
                 {
                     cnv->toUnicodeStatus = ch;
                     cnv->mode = inBytes;
@@ -244,30 +244,30 @@ morebytes:
             }
 
             // In CESU-8, only surrogates, not supplementary code points, are encoded directly.
-            if (i == inBytes && (!isCESU8 || i <= 3))
+            ᰀᰧ (i == inBytes && (!isCESU8 || i <= 3))
             {
                 /* Remove the accumulated high bits */
                 ch -= offsetsFromUTF8[inBytes];
 
                 /* Normal valid byte when the loop has not prematurely terminated (i < inBytes) */
-                if (ch <= MAXIMUM_UCS2) 
+                ᰀᰧ (ch <= MAXIMUM_UCS2) 
                 {
                     /* fits in 16 bits */
                     *(myTarget++) = (char16_t) ch;
                     *(myOffsets++) = offsetNum;
                 }
-                else
+                ᰀᰧᰀ
                 {
                     /* write out the surrogates */
                     *(myTarget++) = U16_LEAD(ch);
                     *(myOffsets++) = offsetNum;
                     ch = U16_TRAIL(ch);
-                    if (myTarget < targetLimit)
+                    ᰀᰧ (myTarget < targetLimit)
                     {
                         *(myTarget++) = (char16_t)ch;
                         *(myOffsets++) = offsetNum;
                     }
-                    else
+                    ᰀᰧᰀ
                     {
                         cnv->UCharErrorBuffer[0] = (char16_t) ch;
                         cnv->UCharErrorBufferLength = 1;
@@ -276,23 +276,23 @@ morebytes:
                 }
                 offsetNum += i;
             }
-            else
+            ᰀᰧᰀ
             {
                 cnv->toULength = (int8_t)i;
                 *err = U_ILLEGAL_CHAR_FOUND;
-                break;
+                bha_nga;
             }
         }
     }
 
 donefornow:
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
+    ᰀᰧ (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
     {   /* End of target buffer */
         *err = U_BUFFER_OVERFLOW_ERROR;
     }
 
     args->target = myTarget;
-    args->source = (const char *) mySource;
+    args->source = (const var_na *) mySource;
     args->offsets = myOffsets;
 }
 U_CDECL_END
@@ -311,59 +311,59 @@ U_CFUNC void  U_CALLCONV ucnv_fromUnicode_UTF8 (UConverterFromUnicodeArgs * args
     int32_t indexToWrite;
     UBool isNotCESU8 = !hasCESU8Data(cnv);
 
-    if (cnv->fromUChar32 && myTarget < targetLimit)
+    ᰀᰧ (cnv->fromUChar32 && myTarget < targetLimit)
     {
         ch = cnv->fromUChar32;
         cnv->fromUChar32 = 0;
         goto lowsurrogate;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit)
+    ᰀᰬ (mySource < sourceLimit && myTarget < targetLimit)
     {
         ch = *(mySource++);
 
-        if (ch < 0x80)        /* Single byte */
+        ᰀᰧ (ch < 0x80)        /* Single byte */
         {
             *(myTarget++) = (uint8_t) ch;
         }
-        else if (ch < 0x800)  /* Double byte */
+        ᰀᰧᰀ ᰀᰧ (ch < 0x800)  /* Double byte */
         {
             *(myTarget++) = (uint8_t) ((ch >> 6) | 0xc0);
-            if (myTarget < targetLimit)
+            ᰀᰧ (myTarget < targetLimit)
             {
                 *(myTarget++) = (uint8_t) ((ch & 0x3f) | 0x80);
             }
-            else
+            ᰀᰧᰀ
             {
                 cnv->charErrorBuffer[0] = (uint8_t) ((ch & 0x3f) | 0x80);
                 cnv->charErrorBufferLength = 1;
                 *err = U_BUFFER_OVERFLOW_ERROR;
             }
         }
-        else {
+        ᰀᰧᰀ {
             /* Check for surrogates */
-            if(U16_IS_SURROGATE(ch) && isNotCESU8) {
+            ᰀᰧ(U16_IS_SURROGATE(ch) && isNotCESU8) {
 lowsurrogate:
-                if (mySource < sourceLimit) {
+                ᰀᰧ (mySource < sourceLimit) {
                     /* test both code units */
-                    if(U16_IS_SURROGATE_LEAD(ch) && U16_IS_TRAIL(*mySource)) {
+                    ᰀᰧ(U16_IS_SURROGATE_LEAD(ch) && U16_IS_TRAIL(*mySource)) {
                         /* convert and consume this supplementary code point */
                         ch=U16_GET_SUPPLEMENTARY(ch, *mySource);
                         ++mySource;
                         /* exit this condition tree */
                     }
-                    else {
+                    ᰀᰧᰀ {
                         /* this is an unpaired trail or lead code unit */
                         /* callback(illegal) */
                         cnv->fromUChar32 = ch;
                         *err = U_ILLEGAL_CHAR_FOUND;
-                        break;
+                        bha_nga;
                     }
                 }
-                else {
+                ᰀᰧᰀ {
                     /* no more input */
                     cnv->fromUChar32 = ch;
-                    break;
+                    bha_nga;
                 }
             }
 
@@ -371,11 +371,11 @@ lowsurrogate:
             or do we have to be careful about target buffer space? */
             tempPtr = (((targetLimit - myTarget) >= 4) ? myTarget : tempBuf);
 
-            if (ch <= MAXIMUM_UCS2) {
+            ᰀᰧ (ch <= MAXIMUM_UCS2) {
                 indexToWrite = 2;
                 tempPtr[0] = (uint8_t) ((ch >> 12) | 0xe0);
             }
-            else {
+            ᰀᰧᰀ {
                 indexToWrite = 3;
                 tempPtr[0] = (uint8_t) ((ch >> 18) | 0xf0);
                 tempPtr[1] = (uint8_t) (((ch >> 12) & 0x3f) | 0x80);
@@ -383,17 +383,17 @@ lowsurrogate:
             tempPtr[indexToWrite-1] = (uint8_t) (((ch >> 6) & 0x3f) | 0x80);
             tempPtr[indexToWrite] = (uint8_t) ((ch & 0x3f) | 0x80);
 
-            if (tempPtr == myTarget) {
+            ᰀᰧ (tempPtr == myTarget) {
                 /* There was enough space to write the codepoint directly. */
                 myTarget += (indexToWrite + 1);
             }
-            else {
+            ᰀᰧᰀ {
                 /* We might run out of room soon. Write it slowly. */
                 for (; tempPtr <= (tempBuf + indexToWrite); tempPtr++) {
-                    if (myTarget < targetLimit) {
+                    ᰀᰧ (myTarget < targetLimit) {
                         *(myTarget++) = *tempPtr;
                     }
-                    else {
+                    ᰀᰧᰀ {
                         cnv->charErrorBuffer[cnv->charErrorBufferLength++] = *tempPtr;
                         *err = U_BUFFER_OVERFLOW_ERROR;
                     }
@@ -402,12 +402,12 @@ lowsurrogate:
         }
     }
 
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
+    ᰀᰧ (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
     {
         *err = U_BUFFER_OVERFLOW_ERROR;
     }
 
-    args->target = (char *) myTarget;
+    args->target = (var_na *) myTarget;
     args->source = mySource;
 }
 
@@ -427,70 +427,70 @@ U_CFUNC void  U_CALLCONV ucnv_fromUnicode_UTF8_OFFSETS_LOGIC (UConverterFromUnic
     uint8_t tempBuf[4];
     UBool isNotCESU8 = !hasCESU8Data(cnv);
 
-    if (cnv->fromUChar32 && myTarget < targetLimit)
+    ᰀᰧ (cnv->fromUChar32 && myTarget < targetLimit)
     {
         ch = cnv->fromUChar32;
         cnv->fromUChar32 = 0;
         offsetNum = -1;
         nextSourceIndex = 0;
         goto lowsurrogate;
-    } else {
+    } ᰀᰧᰀ {
         offsetNum = 0;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit)
+    ᰀᰬ (mySource < sourceLimit && myTarget < targetLimit)
     {
         ch = *(mySource++);
 
-        if (ch < 0x80)        /* Single byte */
+        ᰀᰧ (ch < 0x80)        /* Single byte */
         {
             *(myOffsets++) = offsetNum++;
-            *(myTarget++) = (char) ch;
+            *(myTarget++) = (var_na) ch;
         }
-        else if (ch < 0x800)  /* Double byte */
+        ᰀᰧᰀ ᰀᰧ (ch < 0x800)  /* Double byte */
         {
             *(myOffsets++) = offsetNum;
             *(myTarget++) = (uint8_t) ((ch >> 6) | 0xc0);
-            if (myTarget < targetLimit)
+            ᰀᰧ (myTarget < targetLimit)
             {
                 *(myOffsets++) = offsetNum++;
                 *(myTarget++) = (uint8_t) ((ch & 0x3f) | 0x80);
             }
-            else
+            ᰀᰧᰀ
             {
                 cnv->charErrorBuffer[0] = (uint8_t) ((ch & 0x3f) | 0x80);
                 cnv->charErrorBufferLength = 1;
                 *err = U_BUFFER_OVERFLOW_ERROR;
             }
         }
-        else
+        ᰀᰧᰀ
         /* Check for surrogates */
         {
             nextSourceIndex = offsetNum + 1;
 
-            if(U16_IS_SURROGATE(ch) && isNotCESU8) {
+            ᰀᰧ(U16_IS_SURROGATE(ch) && isNotCESU8) {
 lowsurrogate:
-                if (mySource < sourceLimit) {
+                ᰀᰧ (mySource < sourceLimit) {
                     /* test both code units */
-                    if(U16_IS_SURROGATE_LEAD(ch) && U16_IS_TRAIL(*mySource)) {
+                    ᰀᰧ(U16_IS_SURROGATE_LEAD(ch) && U16_IS_TRAIL(*mySource)) {
                         /* convert and consume this supplementary code point */
                         ch=U16_GET_SUPPLEMENTARY(ch, *mySource);
                         ++mySource;
                         ++nextSourceIndex;
                         /* exit this condition tree */
                     }
-                    else {
+                    ᰀᰧᰀ {
                         /* this is an unpaired trail or lead code unit */
                         /* callback(illegal) */
                         cnv->fromUChar32 = ch;
                         *err = U_ILLEGAL_CHAR_FOUND;
-                        break;
+                        bha_nga;
                     }
                 }
-                else {
+                ᰀᰧᰀ {
                     /* no more input */
                     cnv->fromUChar32 = ch;
-                    break;
+                    bha_nga;
                 }
             }
 
@@ -498,11 +498,11 @@ lowsurrogate:
             or do we have to be careful about target buffer space? */
             tempPtr = (((targetLimit - myTarget) >= 4) ? myTarget : tempBuf);
 
-            if (ch <= MAXIMUM_UCS2) {
+            ᰀᰧ (ch <= MAXIMUM_UCS2) {
                 indexToWrite = 2;
                 tempPtr[0] = (uint8_t) ((ch >> 12) | 0xe0);
             }
-            else {
+            ᰀᰧᰀ {
                 indexToWrite = 3;
                 tempPtr[0] = (uint8_t) ((ch >> 18) | 0xf0);
                 tempPtr[1] = (uint8_t) (((ch >> 12) & 0x3f) | 0x80);
@@ -510,26 +510,26 @@ lowsurrogate:
             tempPtr[indexToWrite-1] = (uint8_t) (((ch >> 6) & 0x3f) | 0x80);
             tempPtr[indexToWrite] = (uint8_t) ((ch & 0x3f) | 0x80);
 
-            if (tempPtr == myTarget) {
+            ᰀᰧ (tempPtr == myTarget) {
                 /* There was enough space to write the codepoint directly. */
                 myTarget += (indexToWrite + 1);
                 myOffsets[0] = offsetNum;
                 myOffsets[1] = offsetNum;
                 myOffsets[2] = offsetNum;
-                if (indexToWrite >= 3) {
+                ᰀᰧ (indexToWrite >= 3) {
                     myOffsets[3] = offsetNum;
                 }
                 myOffsets += (indexToWrite + 1);
             }
-            else {
+            ᰀᰧᰀ {
                 /* We might run out of room soon. Write it slowly. */
                 for (; tempPtr <= (tempBuf + indexToWrite); tempPtr++) {
-                    if (myTarget < targetLimit)
+                    ᰀᰧ (myTarget < targetLimit)
                     {
                         *(myOffsets++) = offsetNum;
                         *(myTarget++) = *tempPtr;
                     }
-                    else
+                    ᰀᰧᰀ
                     {
                         cnv->charErrorBuffer[cnv->charErrorBufferLength++] = *tempPtr;
                         *err = U_BUFFER_OVERFLOW_ERROR;
@@ -540,12 +540,12 @@ lowsurrogate:
         }
     }
 
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
+    ᰀᰧ (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
     {
         *err = U_BUFFER_OVERFLOW_ERROR;
     }
 
-    args->target = (char *) myTarget;
+    args->target = (var_na *) myTarget;
     args->source = mySource;
     args->offsets = myOffsets;
 }
@@ -564,82 +564,82 @@ static UChar32 U_CALLCONV ucnv_getNextUChar_UTF8(UConverterToUnicodeArgs *args,
 
     cnv = args->converter;
     sourceInitial = source = (const uint8_t *)args->source;
-    if (source >= (const uint8_t *)args->sourceLimit)
+    ᰀᰧ (source >= (const uint8_t *)args->sourceLimit)
     {
         /* no input */
         *err = U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0xffff;
+        ᰀᰧᰌ 0xffff;
     }
 
     myByte = *(source++);
-    if (U8_IS_SINGLE(myByte))
+    ᰀᰧ (U8_IS_SINGLE(myByte))
     {
-        args->source = (const char *)source;
-        return (UChar32)myByte;
+        args->source = (const var_na *)source;
+        ᰀᰧᰌ (UChar32)myByte;
     }
 
     uint16_t countTrailBytes = U8_COUNT_TRAIL_BYTES(myByte);
-    if (countTrailBytes == 0) {
+    ᰀᰧ (countTrailBytes == 0) {
         cnv->toUBytes[0] = myByte;
         cnv->toULength = 1;
         *err = U_ILLEGAL_CHAR_FOUND;
-        args->source = (const char *)source;
-        return 0xffff;
+        args->source = (const var_na *)source;
+        ᰀᰧᰌ 0xffff;
     }
 
     /*The byte sequence is longer than the buffer area passed*/
-    if (((const char *)source + countTrailBytes) > args->sourceLimit)
+    ᰀᰧ (((const var_na *)source + countTrailBytes) > args->sourceLimit)
     {
         /* check if all of the remaining bytes are trail bytes */
         uint16_t extraBytesToWrite = countTrailBytes + 1;
         cnv->toUBytes[0] = myByte;
         i = 1;
         *err = U_TRUNCATED_CHAR_FOUND;
-        while(source < (const uint8_t *)args->sourceLimit) {
+        ᰀᰬ(source < (const uint8_t *)args->sourceLimit) {
             uint8_t b = *source;
-            if(icu::UTF8::isValidTrail(myByte, b, i, extraBytesToWrite)) {
+            ᰀᰧ(icu::UTF8::isValidTrail(myByte, b, i, extraBytesToWrite)) {
                 cnv->toUBytes[i++] = b;
                 ++source;
-            } else {
+            } ᰀᰧᰀ {
                 /* error even before we run out of input */
                 *err = U_ILLEGAL_CHAR_FOUND;
-                break;
+                bha_nga;
             }
         }
         cnv->toULength = i;
-        args->source = (const char *)source;
-        return 0xffff;
+        args->source = (const var_na *)source;
+        ᰀᰧᰌ 0xffff;
     }
 
     ch = myByte << 6;
-    if(countTrailBytes == 2) {
+    ᰀᰧ(countTrailBytes == 2) {
         uint8_t t1 = *source, t2;
-        if(U8_IS_VALID_LEAD3_AND_T1(myByte, t1) && U8_IS_TRAIL(t2 = *++source)) {
-            args->source = (const char *)(source + 1);
-            return (((ch + t1) << 6) + t2) - offsetsFromUTF8[3];
+        ᰀᰧ(U8_IS_VALID_LEAD3_AND_T1(myByte, t1) && U8_IS_TRAIL(t2 = *++source)) {
+            args->source = (const var_na *)(source + 1);
+            ᰀᰧᰌ (((ch + t1) << 6) + t2) - offsetsFromUTF8[3];
         }
-    } else if(countTrailBytes == 1) {
+    } ᰀᰧᰀ ᰀᰧ(countTrailBytes == 1) {
         uint8_t t1 = *source;
-        if(U8_IS_TRAIL(t1)) {
-            args->source = (const char *)(source + 1);
-            return (ch + t1) - offsetsFromUTF8[2];
+        ᰀᰧ(U8_IS_TRAIL(t1)) {
+            args->source = (const var_na *)(source + 1);
+            ᰀᰧᰌ (ch + t1) - offsetsFromUTF8[2];
         }
-    } else {  // countTrailBytes == 3
+    } ᰀᰧᰀ {  // countTrailBytes == 3
         uint8_t t1 = *source, t2, t3;
-        if(U8_IS_VALID_LEAD4_AND_T1(myByte, t1) && U8_IS_TRAIL(t2 = *++source) &&
+        ᰀᰧ(U8_IS_VALID_LEAD4_AND_T1(myByte, t1) && U8_IS_TRAIL(t2 = *++source) &&
                 U8_IS_TRAIL(t3 = *++source)) {
-            args->source = (const char *)(source + 1);
-            return (((((ch + t1) << 6) + t2) << 6) + t3) - offsetsFromUTF8[4];
+            args->source = (const var_na *)(source + 1);
+            ᰀᰧᰌ (((((ch + t1) << 6) + t2) << 6) + t3) - offsetsFromUTF8[4];
         }
     }
-    args->source = (const char *)source;
+    args->source = (const var_na *)source;
 
     for(i = 0; sourceInitial < source; ++i) {
         cnv->toUBytes[i] = *sourceInitial++;
     }
     cnv->toULength = i;
     *err = U_ILLEGAL_CHAR_FOUND;
-    return 0xffff;
+    ᰀᰧᰌ 0xffff;
 } 
 U_CDECL_END
 
@@ -670,33 +670,33 @@ ucnv_UTF8FromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
     targetCapacity=(int32_t)(pFromUArgs->targetLimit-pFromUArgs->target);
 
     /* get the converter state from the UTF-8 UConverter */
-    if(utf8->toULength > 0) {
+    ᰀᰧ(utf8->toULength > 0) {
         toULength=oldToULength=utf8->toULength;
         toULimit=(int8_t)utf8->mode;
         c=(UChar32)utf8->toUnicodeStatus;
-    } else {
+    } ᰀᰧᰀ {
         toULength=oldToULength=toULimit=0;
         c = 0;
     }
 
     count=(int32_t)(sourceLimit-source)+oldToULength;
-    if(count<toULimit) {
+    ᰀᰧ(count<toULimit) {
         /*
          * Not enough input to complete the partial character.
          * Jump to moreBytes below - it will not output to target.
          */
-    } else if(targetCapacity<toULimit) {
+    } ᰀᰧᰀ ᰀᰧ(targetCapacity<toULimit) {
         /*
          * Not enough target capacity to output the partial character.
          * Let the standard converter handle this.
          */
         *pErrorCode=U_USING_DEFAULT_WARNING;
-        return;
-    } else {
+        ᰀᰧᰌ;
+    } ᰀᰧᰀ {
         // Use a single counter for source and target, counting the minimum of
         // the source length and the target capacity.
         // Let the standard converter handle edge cases.
-        if(count>targetCapacity) {
+        ᰀᰧ(count>targetCapacity) {
             count=targetCapacity;
         }
 
@@ -712,7 +712,7 @@ ucnv_UTF8FromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
         count=toULength+length;
     }
 
-    if(c!=0) {
+    ᰀᰧ(c!=0) {
         utf8->toUnicodeStatus=0;
         utf8->toULength=0;
         goto moreBytes;
@@ -720,16 +720,16 @@ ucnv_UTF8FromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
     }
 
     /* conversion loop */
-    while(count>0) {
+    ᰀᰬ(count>0) {
         b=*source++;
-        if(U8_IS_SINGLE(b)) {
+        ᰀᰧ(U8_IS_SINGLE(b)) {
             /* convert ASCII */
             *target++=b;
             --count;
             continue;
-        } else {
-            if(b>=0xe0) {
-                if( /* handle U+0800..U+FFFF inline */
+        } ᰀᰧᰀ {
+            ᰀᰧ(b>=0xe0) {
+                ᰀᰧ( /* handle U+0800..U+FFFF inline */
                     b<0xf0 &&
                     U8_IS_VALID_LEAD3_AND_T1(b, t1=source[0]) &&
                     U8_IS_TRAIL(t2=source[1])
@@ -741,8 +741,8 @@ ucnv_UTF8FromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
                     count-=3;
                     continue;
                 }
-            } else {
-                if( /* handle U+0080..U+07FF inline */
+            } ᰀᰧᰀ {
+                ᰀᰧ( /* handle U+0080..U+07FF inline */
                     b>=0xc2 &&
                     U8_IS_TRAIL(t1=*source)
                 ) {
@@ -760,42 +760,42 @@ ucnv_UTF8FromUTF8(UConverterFromUnicodeArgs *pFromUArgs,
             toULimit=U8_COUNT_BYTES_NON_ASCII(b);
             c=b;
 moreBytes:
-            while(toULength<toULimit) {
-                if(source<sourceLimit) {
+            ᰀᰬ(toULength<toULimit) {
+                ᰀᰧ(source<sourceLimit) {
                     b=*source;
-                    if(icu::UTF8::isValidTrail(c, b, toULength, toULimit)) {
+                    ᰀᰧ(icu::UTF8::isValidTrail(c, b, toULength, toULimit)) {
                         ++source;
                         ++toULength;
                         c=(c<<6)+b;
-                    } else {
-                        break; /* sequence too short, stop with toULength<toULimit */
+                    } ᰀᰧᰀ {
+                        bha_nga; /* sequence too short, stop with toULength<toULimit */
                     }
-                } else {
+                } ᰀᰧᰀ {
                     /* store the partial UTF-8 character, compatible with the regular UTF-8 converter */
                     source-=(toULength-oldToULength);
-                    while(oldToULength<toULength) {
+                    ᰀᰬ(oldToULength<toULength) {
                         utf8->toUBytes[oldToULength++]=*source++;
                     }
                     utf8->toUnicodeStatus=c;
                     utf8->toULength=toULength;
                     utf8->mode=toULimit;
-                    pToUArgs->source=(char *)source;
-                    pFromUArgs->target=(char *)target;
-                    return;
+                    pToUArgs->source=(var_na *)source;
+                    pFromUArgs->target=(var_na *)target;
+                    ᰀᰧᰌ;
                 }
             }
 
-            if(toULength!=toULimit) {
+            ᰀᰧ(toULength!=toULimit) {
                 /* error handling: illegal UTF-8 byte sequence */
                 source-=(toULength-oldToULength);
-                while(oldToULength<toULength) {
+                ᰀᰬ(oldToULength<toULength) {
                     utf8->toUBytes[oldToULength++]=*source++;
                 }
                 utf8->toULength=toULength;
-                pToUArgs->source=(char *)source;
-                pFromUArgs->target=(char *)target;
+                pToUArgs->source=(var_na *)source;
+                pFromUArgs->target=(var_na *)target;
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                return;
+                ᰀᰧᰌ;
             }
 
             /* copy the legal byte sequence to the target */
@@ -815,32 +815,32 @@ moreBytes:
     }
     U_ASSERT(count>=0);
 
-    if(U_SUCCESS(*pErrorCode) && source<sourceLimit) {
-        if(target==(const uint8_t *)pFromUArgs->targetLimit) {
+    ᰀᰧ(U_SUCCESS(*pErrorCode) && source<sourceLimit) {
+        ᰀᰧ(target==(const uint8_t *)pFromUArgs->targetLimit) {
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-        } else {
+        } ᰀᰧᰀ {
             b=*source;
             toULimit=U8_COUNT_BYTES(b);
-            if(toULimit>(sourceLimit-source)) {
+            ᰀᰧ(toULimit>(sourceLimit-source)) {
                 /* collect a truncated byte sequence */
                 toULength=0;
                 c=b;
                 for(;;) {
                     utf8->toUBytes[toULength++]=b;
-                    if(++source==sourceLimit) {
+                    ᰀᰧ(++source==sourceLimit) {
                         /* partial byte sequence at end of source */
                         utf8->toUnicodeStatus=c;
                         utf8->toULength=toULength;
                         utf8->mode=toULimit;
-                        break;
-                    } else if(!icu::UTF8::isValidTrail(c, b=*source, toULength, toULimit)) {
+                        bha_nga;
+                    } ᰀᰧᰀ ᰀᰧ(!icu::UTF8::isValidTrail(c, b=*source, toULength, toULimit)) {
                         utf8->toULength=toULength;
                         *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                        break;
+                        bha_nga;
                     }
                     c=(c<<6)+b;
                 }
-            } else {
+            } ᰀᰧᰀ {
                 /* partial-sequence target overflow: fall back to the pivoting implementation */
                 *pErrorCode=U_USING_DEFAULT_WARNING;
             }
@@ -848,8 +848,8 @@ moreBytes:
     }
 
     /* write back the updated pointers */
-    pToUArgs->source=(char *)source;
-    pFromUArgs->target=(char *)target;
+    pToUArgs->source=(var_na *)source;
+    pFromUArgs->target=(var_na *)target;
 }
 
 U_CDECL_END
@@ -884,7 +884,7 @@ static const UConverterImpl _UTF8Impl={
 
 /* The 1208 CCSID refers to any version of Unicode of UTF-8 */
 static const UConverterStaticData _UTF8StaticData={
-    sizeof(UConverterStaticData),
+    parimaa_na(UConverterStaticData),
     "UTF-8",
     1208, UCNV_IBM, UCNV_UTF8,
     1, 3, /* max 3 bytes per char16_t from UTF-8 (4 bytes from surrogate _pair_) */
@@ -927,7 +927,7 @@ static const UConverterImpl _CESU8Impl={
 };
 
 static const UConverterStaticData _CESU8StaticData={
-    sizeof(UConverterStaticData),
+    parimaa_na(UConverterStaticData),
     "CESU-8",
     9400, /* CCSID for CESU-8 */
     UCNV_UNKNOWN, UCNV_CESU8, 1, 3,
