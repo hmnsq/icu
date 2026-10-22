@@ -8,19 +8,19 @@
  *
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#إذا !UCONFIG_NO_SERVICE
 
-#include "unicode/resbund.h"
-#include "uresimp.h"
-#include "cmemory.h"
-#include "servloc.h"
-#include "ustrfmt.h"
-#include "uhash.h"
-#include "charstr.h"
-#include "ucln_cmn.h"
-#include "uassert.h"
+#ضمن "unicode/resbund.h"
+#ضمن "uresimp.h"
+#ضمن "cmemory.h"
+#ضمن "servloc.h"
+#ضمن "ustrfmt.h"
+#ضمن "uhash.h"
+#ضمن "charstr.h"
+#ضمن "ucln_cmn.h"
+#ضمن "uassert.h"
 
 #define UNDERSCORE_CHAR ((char16_t)0x005f)
 #define AT_SIGN_CHAR    ((char16_t)64)
@@ -29,60 +29,60 @@
 
 U_NAMESPACE_BEGIN
 
-LocaleKeyFactory::LocaleKeyFactory(int32_t coverage)
+Locale_مفتاح_Factory::Locale_مفتاح_Factory(int32_t coverage)
   : _name()
   , _coverage(coverage)
 {
 }
 
-LocaleKeyFactory::LocaleKeyFactory(int32_t coverage, const UnicodeString& name)
+Locale_مفتاح_Factory::Locale_مفتاح_Factory(int32_t coverage, ثابت UnicodeString& name)
   : _name(name)
   , _coverage(coverage)
 {
 }
 
-LocaleKeyFactory::~LocaleKeyFactory() {
+Locale_مفتاح_Factory::~Locale_مفتاح_Factory() {
 }
 
 UObject*
-LocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const {
-    if (handlesKey(key, status)) {
-        const LocaleKey& lkey = static_cast<const LocaleKey&>(key);
+Locale_مفتاح_Factory::create(ثابت ICUService_مفتاح& مفتاح, ثابت ICUService* service, UErrorCode& status) ثابت {
+    إذا (handles_مفتاح(مفتاح, status)) {
+        ثابت Locale_مفتاح& lkey = static_cast<ثابت Locale_مفتاح&>(مفتاح);
         int32_t kind = lkey.kind();
         Locale loc;
         lkey.currentLocale(loc);
 
-        return handleCreate(loc, kind, service, status);
+        إرجاع handleCreate(loc, kind, service, status);
     }
-    return nullptr;
+    إرجاع nullptr;
 }
 
 UBool
-LocaleKeyFactory::handlesKey(const ICUServiceKey& key, UErrorCode& status) const {
-    const Hashtable* supported = getSupportedIDs(status);
-    if (supported) {
+Locale_مفتاح_Factory::handles_مفتاح(ثابت ICUService_مفتاح& مفتاح, UErrorCode& status) ثابت {
+    ثابت Hashtable* supported = getSupportedIDs(status);
+    إذا (supported) {
         UnicodeString id;
-        key.currentID(id);
-        return supported->get(id) != nullptr;
+        مفتاح.currentID(id);
+        إرجاع supported->get(id) != nullptr;
     }
-    return false;
+    إرجاع خطأ;
 }
 
-void
-LocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const {
-    const Hashtable* supported = getSupportedIDs(status);
-    if (supported) {
+فراغ
+Locale_مفتاح_Factory::updateVisibleIDs(Hashtable& result, UErrorCode& status) ثابت {
+    ثابت Hashtable* supported = getSupportedIDs(status);
+    إذا (supported) {
         UBool visible = (_coverage & 0x1) == 0;
-        const UHashElement* elem = nullptr;
+        ثابت UHashElement* elem = nullptr;
         int32_t pos = UHASH_FIRST;
-        while ((elem = supported->nextElement(pos)) != nullptr) {
-            const UnicodeString& id = *static_cast<const UnicodeString*>(elem->key.pointer);
-            if (!visible) {
+        بينما ((elem = supported->nextElement(pos)) != nullptr) {
+            ثابت UnicodeString& id = *static_cast<ثابت UnicodeString*>(elem->مفتاح.pointer);
+            إذا (!visible) {
                 result.remove(id);
-            } else {
-                result.put(id, (void*)this, status); // this is dummy non-void marker used for set semantics
-                if (U_FAILURE(status)) {
-                    break;
+            } وإلا {
+                result.put(id, (فراغ*)هذا, status); // this is dummy non-void marker used for set semantics
+                إذا (U_FAILURE(status)) {
+                    اكسر;
                 }
             }
         }
@@ -90,26 +90,26 @@ LocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const 
 }
 
 UnicodeString&
-LocaleKeyFactory::getDisplayName(const UnicodeString& id, const Locale& locale, UnicodeString& result) const {
-    if ((_coverage & 0x1) == 0) {
+Locale_مفتاح_Factory::getDisplayName(ثابت UnicodeString& id, ثابت Locale& locale, UnicodeString& result) ثابت {
+    إذا ((_coverage & 0x1) == 0) {
         //UErrorCode status = U_ZERO_ERROR;
         // assume if this is called on us, we support some fallback of this id
         // if (isSupportedID(id, status)) {
             Locale loc;
             LocaleUtility::initLocaleFromName(id, loc);
-            return loc.getDisplayName(locale, result);
+            إرجاع loc.getDisplayName(locale, result);
         // }
     }
     result.setToBogus();
-    return result;
+    إرجاع result;
 }
 
 UObject*
-LocaleKeyFactory::handleCreate(const Locale& /* loc */, 
+Locale_مفتاح_Factory::handleCreate(ثابت Locale& /* loc */, 
                    int32_t /* kind */, 
-                   const ICUService* /* service */, 
-                   UErrorCode& /* status */) const {
-    return nullptr;
+                   ثابت ICUService* /* service */, 
+                   UErrorCode& /* status */) ثابت {
+    إرجاع nullptr;
 }
 
 //UBool
@@ -118,31 +118,31 @@ LocaleKeyFactory::handleCreate(const Locale& /* loc */,
 //    return ids && ids->get(id);
 //}
 
-const Hashtable*
-LocaleKeyFactory::getSupportedIDs(UErrorCode& /* status */) const {
-    return nullptr;
+ثابت Hashtable*
+Locale_مفتاح_Factory::getSupportedIDs(UErrorCode& /* status */) ثابت {
+    إرجاع nullptr;
 }
 
 #ifdef SERVICE_DEBUG
 UnicodeString&
-LocaleKeyFactory::debug(UnicodeString& result) const
+Locale_مفتاح_Factory::debug(UnicodeString& result) ثابت
 {
     debugClass(result);
     result.append((UnicodeString)", name: ");
     result.append(_name);
     result.append((UnicodeString)", coverage: ");
     result.append(_coverage);
-    return result;
+    إرجاع result;
 }
 
 UnicodeString&
-LocaleKeyFactory::debugClass(UnicodeString& result) const
+Locale_مفتاح_Factory::debugClass(UnicodeString& result) ثابت
 {
-  return result.append((UnicodeString)"LocaleKeyFactory");
+  إرجاع result.append((UnicodeString)"LocaleKeyFactory");
 }
 #endif
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(LocaleKeyFactory)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Locale_مفتاح_Factory)
 
 U_NAMESPACE_END
 

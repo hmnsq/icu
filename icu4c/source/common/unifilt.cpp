@@ -10,9 +10,9 @@
 **********************************************************************
 */
 
-#include "unicode/unifilt.h"
-#include "unicode/rep.h"
-#include "unicode/utf16.h"
+#ضمن "unicode/unifilt.h"
+#ضمن "unicode/rep.h"
+#ضمن "unicode/utf16.h"
 
 U_NAMESPACE_BEGIN
 UOBJECT_DEFINE_ABSTRACT_RTTI_IMPLEMENTATION(UnicodeFilter)
@@ -28,42 +28,42 @@ UnicodeFilter::~UnicodeFilter() {}
  * UnicodeFunctor API.
  *   Note that UnicodeMatcher is a base class of UnicodeFilter.
  */
-UnicodeMatcher* UnicodeFilter::toMatcher() const U_LIFETIME_BOUND {
-  return const_cast<UnicodeFilter *>(this);
+UnicodeMatcher* UnicodeFilter::toMatcher() ثابت U_LIFETIME_BOUND {
+  إرجاع const_cast<UnicodeFilter *>(هذا);
 }
 
-void UnicodeFilter::setData(const TransliterationRuleData*) {}
+فراغ UnicodeFilter::setData(ثابت TransliterationRuleData*) {}
 
 /**
  * Default implementation of UnicodeMatcher::matches() for Unicode
  * filters.  Matches a single code point at offset (either one or
  * two 16-bit code units).
  */
-UMatchDegree UnicodeFilter::matches(const Replaceable& text,
+UMatchDegree UnicodeFilter::matches(ثابت Replaceable& text,
                                     int32_t& offset,
                                     int32_t limit,
                                     UBool incremental) {
     UChar32 c;
-    if (offset < limit &&
+    إذا (offset < limit &&
         contains(c = text.char32At(offset))) {
         offset += U16_LENGTH(c);
-        return U_MATCH;
+        إرجاع U_MATCH;
     }
-    if (offset > limit &&
+    إذا (offset > limit &&
         contains(c = text.char32At(offset))) {
         // Backup offset by 1, unless the preceding character is a
         // surrogate pair -- then backup by 2 (keep offset pointing at
         // the lead surrogate).
         --offset;
-        if (offset >= 0) {
+        إذا (offset >= 0) {
             offset -= U16_LENGTH(text.char32At(offset)) - 1;
         }
-        return U_MATCH;
+        إرجاع U_MATCH;
     }
-    if (incremental && offset == limit) {
-        return U_PARTIAL_MATCH;
+    إذا (incremental && offset == limit) {
+        إرجاع U_PARTIAL_MATCH;
     }
-    return U_MISMATCH;
+    إرجاع U_MISMATCH;
 }
 
 U_NAMESPACE_END

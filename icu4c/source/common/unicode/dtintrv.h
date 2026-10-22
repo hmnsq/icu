@@ -14,11 +14,11 @@
 #ifndef __DTINTRV_H__
 #define __DTINTRV_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#إذا U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#ضمن "unicode/uobject.h"
 
 /**
  * \file
@@ -33,8 +33,8 @@ U_NAMESPACE_BEGIN
  * It is a pair of UDate representing from UDate 1 to UDate 2.
  * @stable ICU 4.0
 **/
-class U_COMMON_API DateInterval : public UObject {
-public:
+class U_COMMON_API DateInterval : عام UObject {
+عام:
 
     /** 
      * Construct a DateInterval given a from date and a to date.
@@ -55,14 +55,14 @@ public:
      * @return  the from date in dateInterval.
      * @stable ICU 4.0
      */
-    inline UDate getFromDate() const;
+    مضمن UDate getFromDate() ثابت;
 
     /** 
      * Get the to date.
      * @return  the to date in dateInterval.
      * @stable ICU 4.0
      */
-    inline UDate getToDate() const;
+    مضمن UDate getToDate() ثابت;
 
 
     /**
@@ -76,7 +76,7 @@ public:
      * @return          The class ID for all objects of this class.
      * @stable ICU 4.0
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    ساكن UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * Returns a unique class ID POLYMORPHICALLY. Pure virtual override. This
@@ -89,33 +89,33 @@ public:
      *                  other classes have different class IDs.
      * @stable ICU 4.0
      */
-    virtual UClassID getDynamicClassID() const override;
+    virtual UClassID getDynamicClassID() ثابت override;
 
     /**
      * Copy constructor.
      * @stable ICU 4.0
      */
-    DateInterval(const DateInterval& other);
+    DateInterval(ثابت DateInterval& other);
 
     /**
      * Default assignment operator
      * @stable ICU 4.0
      */
-    DateInterval& operator=(const DateInterval&) U_LIFETIME_BOUND;
+    DateInterval& operator=(ثابت DateInterval&) U_LIFETIME_BOUND;
 
     /**
      * Equality operator.
      * @return true if the two DateIntervals are the same
      * @stable ICU 4.0
      */
-    virtual bool operator==(const DateInterval& other) const;
+    virtual bool operator==(ثابت DateInterval& other) ثابت;
 
     /**
      * Non-equality operator
      * @return true if the two DateIntervals are not the same
      * @stable ICU 4.0
      */
-    inline bool operator!=(const DateInterval& other) const;
+    مضمن bool operator!=(ثابت DateInterval& other) ثابت;
 
 
     /**
@@ -124,9 +124,9 @@ public:
      * @return a cloned DateInterval
      * @stable ICU 4.0
      */
-     virtual DateInterval* clone() const;
+     virtual DateInterval* clone() ثابت;
 
-private:
+خاص:
     /** 
      * Default constructor, not implemented.
      */
@@ -138,21 +138,21 @@ private:
 } ;// end class DateInterval
 
 
-inline UDate 
-DateInterval::getFromDate() const { 
-    return fromDate; 
+مضمن UDate 
+DateInterval::getFromDate() ثابت { 
+    إرجاع fromDate; 
 }
 
 
-inline UDate 
-DateInterval::getToDate() const { 
-    return toDate; 
+مضمن UDate 
+DateInterval::getToDate() ثابت { 
+    إرجاع toDate; 
 }
 
 
-inline bool
-DateInterval::operator!=(const DateInterval& other) const { 
-    return ( !operator==(other) );
+مضمن bool
+DateInterval::operator!=(ثابت DateInterval& other) ثابت { 
+    إرجاع ( !operator==(other) );
 }
 
 

@@ -7,7 +7,7 @@
 #ifndef __ULAYOUT_PROPS_H__
 #define __ULAYOUT_PROPS_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
 // file definitions ------------------------------------------------------------
 
@@ -21,22 +21,22 @@
 #define ULAYOUT_FMT_3 0x6f
 
 // indexes into indexes[]
-enum {
+تعداد {
     // Element 0 stores the length of the indexes[] array.
     ULAYOUT_IX_INDEXES_LENGTH,
     // Elements 1..7 store the tops of consecutive code point tries.
     // No trie is stored if the difference between two of these is less than 16.
-    ULAYOUT_IX_INPC_TRIE_TOP,
-    ULAYOUT_IX_INSC_TRIE_TOP,
-    ULAYOUT_IX_VO_TRIE_TOP,
-    ULAYOUT_IX_RESERVED_TOP,
+    ULAYOUT_IX_INPC_TRIE_قمة,
+    ULAYOUT_IX_INSC_TRIE_قمة,
+    ULAYOUT_IX_VO_TRIE_قمة,
+    ULAYOUT_IX_RESERVED_قمة,
 
-    ULAYOUT_IX_TRIES_TOP = 7,
+    ULAYOUT_IX_TRIES_قمة = 7,
 
-    ULAYOUT_IX_MAX_VALUES = 9,
+    ULAYOUT_IX_MAX_قيم = 9,
 
     // Length of indexes[]. Multiple of 4 to 16-align the tries.
-    ULAYOUT_IX_COUNT = 12
+    ULAYOUT_IX_تعداد = 12
 };
 
 constexpr int32_t ULAYOUT_MAX_INPC_SHIFT = 24;
