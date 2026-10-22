@@ -21,24 +21,24 @@
 #ifndef __USET_IMP_H__
 #define __USET_IMP_H__
 
-#include "unicode/utypes.h"
-#include "unicode/uset.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/uset.h"
 
 U_CDECL_BEGIN
 
-typedef void U_CALLCONV
+प्रकारव्याख्या शून्य U_CALLCONV
 USetAdd(USet *set, UChar32 c);
 
-typedef void U_CALLCONV
+प्रकारव्याख्या शून्य U_CALLCONV
 USetAddRange(USet *set, UChar32 start, UChar32 end);
 
-typedef void U_CALLCONV
-USetAddString(USet *set, const UChar *str, int32_t length);
+प्रकारव्याख्या शून्य U_CALLCONV
+USetAddString(USet *set, स्थिरांक UChar *str, int32_t length);
 
-typedef void U_CALLCONV
+प्रकारव्याख्या शून्य U_CALLCONV
 USetRemove(USet *set, UChar32 c);
 
-typedef void U_CALLCONV
+प्रकारव्याख्या शून्य U_CALLCONV
 USetRemoveRange(USet *set, UChar32 start, UChar32 end);
 
 /**
@@ -46,15 +46,15 @@ USetRemoveRange(USet *set, UChar32 start, UChar32 end);
  * statically depending on the USet implementation.
  * Calls will look like sa->add(sa->set, c);
  */
-struct USetAdder {
+संरचना USetAdder {
     USet *set;
     USetAdd *add;
     USetAddRange *addRange;
     USetAddString *addString;
-    USetRemove *remove;
+    USetRemove *हटाओ;
     USetRemoveRange *removeRange;
 };
-typedef struct USetAdder USetAdder;
+प्रकारव्याख्या संरचना USetAdder USetAdder;
 
 U_CDECL_END
 

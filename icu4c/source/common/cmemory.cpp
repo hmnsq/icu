@@ -20,107 +20,107 @@
 *
 ******************************************************************************
 */
-#include "unicode/uclean.h"
-#include "cmemory.h"
-#include "putilimp.h"
-#include "uassert.h"
-#include <stdlib.h>
+#अन्तर्भाव "unicode/uclean.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "putilimp.h"
+#अन्तर्भाव "uassert.h"
+#अन्तर्भाव <stdlib.h>
 
 /* uprv_malloc(0) returns a pointer to this read-only data. */
-static const int32_t zeroMem[] = {0, 0, 0, 0, 0, 0};
+स्थिर स्थिरांक int32_t zeroMem[] = {0, 0, 0, 0, 0, 0};
 
 /* Function Pointers for user-supplied heap functions  */
-static const void     *pContext;
-static UMemAllocFn    *pAlloc;
-static UMemReallocFn  *pRealloc;
-static UMemFreeFn     *pFree;
+स्थिर स्थिरांक शून्य     *pContext;
+स्थिर UMemAllocFn    *pAlloc;
+स्थिर UMemReallocFn  *pRealloc;
+स्थिर UMemFreeFn     *pFree;
 
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-#include <stdio.h>
-static int n=0;
-static long b=0; 
+#जर U_DEBUG && defined(UPRV_MALLOC_मोजणी)
+#अन्तर्भाव <stdio.h>
+स्थिर पूर्णांक n=0;
+स्थिर दीर्घ b=0; 
 #endif
 
-U_CAPI void * U_EXPORT2
-uprv_malloc(size_t s) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-#if 1
-  putchar('>');
-  fflush(stdout);
-#else
-  fprintf(stderr,"MALLOC\t#%d\t%ul bytes\t%ul total\n", ++n,s,(b+=s)); fflush(stderr);
+U_CAPI शून्य * U_EXPORT2
+uprv_malloc(माप_प्रकार s) {
+#जर U_DEBUG && defined(UPRV_MALLOC_मोजणी)
+#जर 1
+  अक्षर_दो('>');
+  ख_साफ(मानक_निकास);
+#अन्यथा
+  ख_लिखो(मानक_त्रुटि,"MALLOC\t#%d\t%ul bytes\t%ul total\n", ++n,s,(b+=s)); ख_साफ(मानक_त्रुटि);
 #endif
 #endif
-    if (s > 0) {
-        if (pAlloc) {
-            return (*pAlloc)(pContext, s);
-        } else {
-            return uprv_default_malloc(s);
+    जर (s > 0) {
+        जर (pAlloc) {
+            परत (*pAlloc)(pContext, s);
+        } अन्यथा {
+            परत uprv_default_malloc(s);
         }
-    } else {
-        return (void *)zeroMem;
+    } अन्यथा {
+        परत (शून्य *)zeroMem;
     }
 }
 
-U_CAPI void * U_EXPORT2
-uprv_realloc(void * buffer, size_t size) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-  putchar('~');
-  fflush(stdout);
+U_CAPI शून्य * U_EXPORT2
+uprv_realloc(शून्य * buffer, माप_प्रकार size) {
+#जर U_DEBUG && defined(UPRV_MALLOC_मोजणी)
+  अक्षर_दो('~');
+  ख_साफ(मानक_निकास);
 #endif
-    if (buffer == zeroMem) {
-        return uprv_malloc(size);
-    } else if (size == 0) {
-        if (pFree) {
+    जर (buffer == zeroMem) {
+        परत uprv_malloc(size);
+    } अन्यथा जर (size == 0) {
+        जर (pFree) {
             (*pFree)(pContext, buffer);
-        } else {
+        } अन्यथा {
             uprv_default_free(buffer);
         }
-        return (void *)zeroMem;
-    } else {
-        if (pRealloc) {
-            return (*pRealloc)(pContext, buffer, size);
-        } else {
-            return uprv_default_realloc(buffer, size);
+        परत (शून्य *)zeroMem;
+    } अन्यथा {
+        जर (pRealloc) {
+            परत (*pRealloc)(pContext, buffer, size);
+        } अन्यथा {
+            परत uprv_default_realloc(buffer, size);
         }
     }
 }
 
-U_CAPI void U_EXPORT2
-uprv_free(void *buffer) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-  putchar('<');
-  fflush(stdout);
+U_CAPI शून्य U_EXPORT2
+uprv_free(शून्य *buffer) {
+#जर U_DEBUG && defined(UPRV_MALLOC_मोजणी)
+  अक्षर_दो('<');
+  ख_साफ(मानक_निकास);
 #endif
-    if (buffer != zeroMem) {
-        if (pFree) {
+    जर (buffer != zeroMem) {
+        जर (pFree) {
             (*pFree)(pContext, buffer);
-        } else {
+        } अन्यथा {
             uprv_default_free(buffer);
         }
     }
 }
 
-U_CAPI void * U_EXPORT2
-uprv_calloc(size_t num, size_t size) {
-    void *mem = nullptr;
+U_CAPI शून्य * U_EXPORT2
+uprv_calloc(माप_प्रकार num, माप_प्रकार size) {
+    शून्य *mem = nullptr;
     size *= num;
     mem = uprv_malloc(size);
-    if (mem) {
+    जर (mem) {
         uprv_memset(mem, 0, size);
     }
-    return mem;
+    परत mem;
 }
 
-U_CAPI void U_EXPORT2
-u_setMemoryFunctions(const void *context, UMemAllocFn *a, UMemReallocFn *r, UMemFreeFn *f,  UErrorCode *status)
+U_CAPI शून्य U_EXPORT2
+u_setMemoryFunctions(स्थिरांक शून्य *context, UMemAllocFn *a, UMemReallocFn *r, UMemFreeFn *f,  UErrorCode *status)
 {
-    if (U_FAILURE(*status)) {
-        return;
+    जर (U_FAILURE(*status)) {
+        परत;
     }
-    if (a==nullptr || r==nullptr || f==nullptr) {
+    जर (a==nullptr || r==nullptr || f==nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        परत;
     }
     pContext  = context;
     pAlloc    = a;
@@ -134,5 +134,5 @@ U_CFUNC UBool cmemory_cleanup() {
     pAlloc     = nullptr;
     pRealloc   = nullptr;
     pFree      = nullptr;
-    return true;
+    परत सत्य;
 }

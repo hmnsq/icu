@@ -20,264 +20,264 @@
 *   instantiating a new USet.
 */
 
-#include "unicode/utypes.h"
-#include "unicode/char16ptr.h"
-#include "unicode/uobject.h"
-#include "unicode/uset.h"
-#include "unicode/uniset.h"
-#include "cmemory.h"
-#include "unicode/ustring.h"
-#include "unicode/parsepos.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/char16ptr.h"
+#अन्तर्भाव "unicode/uobject.h"
+#अन्तर्भाव "unicode/uset.h"
+#अन्तर्भाव "unicode/uniset.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "unicode/ustring.h"
+#अन्तर्भाव "unicode/parsepos.h"
 
 U_NAMESPACE_USE
 
 U_CAPI USet* U_EXPORT2
 uset_openEmpty() {
-    return (USet*) new UnicodeSet();
+    परत (USet*) नवीन UnicodeSet();
 }
 
 U_CAPI USet* U_EXPORT2
 uset_open(UChar32 start, UChar32 end) {
-    return (USet*) new UnicodeSet(start, end);
+    परत (USet*) नवीन UnicodeSet(start, end);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 uset_close(USet* set) {
     delete (UnicodeSet*) set;
 }
 
 U_CAPI USet * U_EXPORT2
-uset_clone(const USet *set) {
-    return (USet*) (((UnicodeSet*) set)->UnicodeSet::clone());
+uset_clone(स्थिरांक USet *set) {
+    परत (USet*) (((UnicodeSet*) set)->UnicodeSet::clone());
 }
 
 U_CAPI UBool U_EXPORT2
-uset_isFrozen(const USet *set) {
-    return ((UnicodeSet*) set)->UnicodeSet::isFrozen();
+uset_isFrozen(स्थिरांक USet *set) {
+    परत ((UnicodeSet*) set)->UnicodeSet::isFrozen();
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 uset_freeze(USet *set) {
     ((UnicodeSet*) set)->UnicodeSet::freeze();
 }
 
 U_CAPI USet * U_EXPORT2
-uset_cloneAsThawed(const USet *set) {
-    return (USet*) (((UnicodeSet*) set)->UnicodeSet::cloneAsThawed());
+uset_cloneAsThawed(स्थिरांक USet *set) {
+    परत (USet*) (((UnicodeSet*) set)->UnicodeSet::cloneAsThawed());
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 uset_set(USet* set,
      UChar32 start, UChar32 end) {
     ((UnicodeSet*) set)->UnicodeSet::set(start, end);
 }
 
-U_CAPI void U_EXPORT2
-uset_addAll(USet* set, const USet *additionalSet) {
-    ((UnicodeSet*) set)->UnicodeSet::addAll(*((const UnicodeSet*)additionalSet));
+U_CAPI शून्य U_EXPORT2
+uset_addAll(USet* set, स्थिरांक USet *additionalSet) {
+    ((UnicodeSet*) set)->UnicodeSet::addAll(*((स्थिरांक UnicodeSet*)additionalSet));
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 uset_add(USet* set, UChar32 c) {
     ((UnicodeSet*) set)->UnicodeSet::add(c);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 uset_addRange(USet* set, UChar32 start, UChar32 end) {
     ((UnicodeSet*) set)->UnicodeSet::add(start, end);    
 }
 
-U_CAPI void U_EXPORT2
-uset_addString(USet* set, const char16_t* str, int32_t strLen) {
+U_CAPI शून्य U_EXPORT2
+uset_addString(USet* set, स्थिरांक char16_t* str, int32_t strLen) {
     // UnicodeString handles -1 for strLen
     UnicodeString s(strLen<0, str, strLen);
     ((UnicodeSet*) set)->UnicodeSet::add(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_addAllCodePoints(USet* set, const char16_t *str, int32_t strLen) {
+U_CAPI शून्य U_EXPORT2
+uset_addAllCodePoints(USet* set, स्थिरांक char16_t *str, int32_t strLen) {
     // UnicodeString handles -1 for strLen
     UnicodeString s(str, strLen);
     ((UnicodeSet*) set)->UnicodeSet::addAll(s);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 uset_remove(USet* set, UChar32 c) {
-    ((UnicodeSet*) set)->UnicodeSet::remove(c);
+    ((UnicodeSet*) set)->UnicodeSet::हटाओ(c);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 uset_removeRange(USet* set, UChar32 start, UChar32 end) {
-    ((UnicodeSet*) set)->UnicodeSet::remove(start, end);
+    ((UnicodeSet*) set)->UnicodeSet::हटाओ(start, end);
 }
 
-U_CAPI void U_EXPORT2
-uset_removeString(USet* set, const char16_t* str, int32_t strLen) {
+U_CAPI शून्य U_EXPORT2
+uset_removeString(USet* set, स्थिरांक char16_t* str, int32_t strLen) {
     UnicodeString s(strLen==-1, str, strLen);
-    ((UnicodeSet*) set)->UnicodeSet::remove(s);
+    ((UnicodeSet*) set)->UnicodeSet::हटाओ(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_removeAllCodePoints(USet *set, const char16_t *str, int32_t length) {
+U_CAPI शून्य U_EXPORT2
+uset_removeAllCodePoints(USet *set, स्थिरांक char16_t *str, int32_t length) {
     UnicodeString s(length==-1, str, length);
     ((UnicodeSet*) set)->UnicodeSet::removeAll(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_removeAll(USet* set, const USet* remove) {
-    ((UnicodeSet*) set)->UnicodeSet::removeAll(*(const UnicodeSet*)remove);
+U_CAPI शून्य U_EXPORT2
+uset_removeAll(USet* set, स्थिरांक USet* हटाओ) {
+    ((UnicodeSet*) set)->UnicodeSet::removeAll(*(स्थिरांक UnicodeSet*)हटाओ);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 uset_retain(USet* set, UChar32 start, UChar32 end) {
     ((UnicodeSet*) set)->UnicodeSet::retain(start, end);
 }
 
-U_CAPI void U_EXPORT2
-uset_retainString(USet *set, const char16_t *str, int32_t length) {
+U_CAPI शून्य U_EXPORT2
+uset_retainString(USet *set, स्थिरांक char16_t *str, int32_t length) {
     UnicodeString s(length==-1, str, length);
     ((UnicodeSet*) set)->UnicodeSet::retain(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_retainAllCodePoints(USet *set, const char16_t *str, int32_t length) {
+U_CAPI शून्य U_EXPORT2
+uset_retainAllCodePoints(USet *set, स्थिरांक char16_t *str, int32_t length) {
     UnicodeString s(length==-1, str, length);
     ((UnicodeSet*) set)->UnicodeSet::retainAll(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_retainAll(USet* set, const USet* retain) {
-    ((UnicodeSet*) set)->UnicodeSet::retainAll(*(const UnicodeSet*)retain);
+U_CAPI शून्य U_EXPORT2
+uset_retainAll(USet* set, स्थिरांक USet* retain) {
+    ((UnicodeSet*) set)->UnicodeSet::retainAll(*(स्थिरांक UnicodeSet*)retain);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 uset_compact(USet* set) {
     ((UnicodeSet*) set)->UnicodeSet::compact();
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 uset_complement(USet* set) {
     ((UnicodeSet*) set)->UnicodeSet::complement();
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 uset_complementRange(USet *set, UChar32 start, UChar32 end) {
     ((UnicodeSet*) set)->UnicodeSet::complement(start, end);
 }
 
-U_CAPI void U_EXPORT2
-uset_complementString(USet *set, const char16_t *str, int32_t length) {
+U_CAPI शून्य U_EXPORT2
+uset_complementString(USet *set, स्थिरांक char16_t *str, int32_t length) {
     UnicodeString s(length==-1, str, length);
     ((UnicodeSet*) set)->UnicodeSet::complement(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_complementAllCodePoints(USet *set, const char16_t *str, int32_t length) {
+U_CAPI शून्य U_EXPORT2
+uset_complementAllCodePoints(USet *set, स्थिरांक char16_t *str, int32_t length) {
     UnicodeString s(length==-1, str, length);
     ((UnicodeSet*) set)->UnicodeSet::complementAll(s);
 }
 
-U_CAPI void U_EXPORT2
-uset_complementAll(USet* set, const USet* complement) {
-    ((UnicodeSet*) set)->UnicodeSet::complementAll(*(const UnicodeSet*)complement);
+U_CAPI शून्य U_EXPORT2
+uset_complementAll(USet* set, स्थिरांक USet* complement) {
+    ((UnicodeSet*) set)->UnicodeSet::complementAll(*(स्थिरांक UnicodeSet*)complement);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 uset_clear(USet* set) {
     ((UnicodeSet*) set)->UnicodeSet::clear();
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 uset_removeAllStrings(USet* set) {
     ((UnicodeSet*) set)->UnicodeSet::removeAllStrings();
 }
 
 U_CAPI UBool U_EXPORT2
-uset_isEmpty(const USet* set) {
-    return ((const UnicodeSet*) set)->UnicodeSet::isEmpty();
+uset_isEmpty(स्थिरांक USet* set) {
+    परत ((स्थिरांक UnicodeSet*) set)->UnicodeSet::isEmpty();
 }
 
 U_CAPI UBool U_EXPORT2
-uset_hasStrings(const USet* set) {
-    return ((const UnicodeSet*) set)->UnicodeSet::hasStrings();
+uset_hasStrings(स्थिरांक USet* set) {
+    परत ((स्थिरांक UnicodeSet*) set)->UnicodeSet::hasStrings();
 }
 
 U_CAPI UBool U_EXPORT2
-uset_contains(const USet* set, UChar32 c) {
-    return ((const UnicodeSet*) set)->UnicodeSet::contains(c);
+uset_contains(स्थिरांक USet* set, UChar32 c) {
+    परत ((स्थिरांक UnicodeSet*) set)->UnicodeSet::contains(c);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_containsRange(const USet* set, UChar32 start, UChar32 end) {
-    return ((const UnicodeSet*) set)->UnicodeSet::contains(start, end);
+uset_containsRange(स्थिरांक USet* set, UChar32 start, UChar32 end) {
+    परत ((स्थिरांक UnicodeSet*) set)->UnicodeSet::contains(start, end);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_containsString(const USet* set, const char16_t* str, int32_t strLen) {
+uset_containsString(स्थिरांक USet* set, स्थिरांक char16_t* str, int32_t strLen) {
     UnicodeString s(strLen==-1, str, strLen);
-    return ((const UnicodeSet*) set)->UnicodeSet::contains(s);
+    परत ((स्थिरांक UnicodeSet*) set)->UnicodeSet::contains(s);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_containsAll(const USet* set1, const USet* set2) {
-    return ((const UnicodeSet*) set1)->UnicodeSet::containsAll(* (const UnicodeSet*) set2);
+uset_containsAll(स्थिरांक USet* set1, स्थिरांक USet* set2) {
+    परत ((स्थिरांक UnicodeSet*) set1)->UnicodeSet::containsAll(* (स्थिरांक UnicodeSet*) set2);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_containsAllCodePoints(const USet* set, const char16_t *str, int32_t strLen) {
+uset_containsAllCodePoints(स्थिरांक USet* set, स्थिरांक char16_t *str, int32_t strLen) {
     // Create a string alias, since nothing is being added to the set.
     UnicodeString s(strLen==-1, str, strLen);
-    return ((const UnicodeSet*) set)->UnicodeSet::containsAll(s);
+    परत ((स्थिरांक UnicodeSet*) set)->UnicodeSet::containsAll(s);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_containsNone(const USet* set1, const USet* set2) {
-    return ((const UnicodeSet*) set1)->UnicodeSet::containsNone(* (const UnicodeSet*) set2);
+uset_containsNone(स्थिरांक USet* set1, स्थिरांक USet* set2) {
+    परत ((स्थिरांक UnicodeSet*) set1)->UnicodeSet::containsNone(* (स्थिरांक UnicodeSet*) set2);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_containsSome(const USet* set1, const USet* set2) {
-    return ((const UnicodeSet*) set1)->UnicodeSet::containsSome(* (const UnicodeSet*) set2);
+uset_containsSome(स्थिरांक USet* set1, स्थिरांक USet* set2) {
+    परत ((स्थिरांक UnicodeSet*) set1)->UnicodeSet::containsSome(* (स्थिरांक UnicodeSet*) set2);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_span(const USet *set, const char16_t *s, int32_t length, USetSpanCondition spanCondition) {
-    return ((UnicodeSet*) set)->UnicodeSet::span(s, length, spanCondition);
+uset_span(स्थिरांक USet *set, स्थिरांक char16_t *s, int32_t length, USetSpanCondition spanCondition) {
+    परत ((UnicodeSet*) set)->UnicodeSet::span(s, length, spanCondition);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_spanBack(const USet *set, const char16_t *s, int32_t length, USetSpanCondition spanCondition) {
-    return ((UnicodeSet*) set)->UnicodeSet::spanBack(s, length, spanCondition);
+uset_spanBack(स्थिरांक USet *set, स्थिरांक char16_t *s, int32_t length, USetSpanCondition spanCondition) {
+    परत ((UnicodeSet*) set)->UnicodeSet::spanBack(s, length, spanCondition);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_spanUTF8(const USet *set, const char *s, int32_t length, USetSpanCondition spanCondition) {
-    return ((UnicodeSet*) set)->UnicodeSet::spanUTF8(s, length, spanCondition);
+uset_spanUTF8(स्थिरांक USet *set, स्थिरांक अक्षर *s, int32_t length, USetSpanCondition spanCondition) {
+    परत ((UnicodeSet*) set)->UnicodeSet::spanUTF8(s, length, spanCondition);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_spanBackUTF8(const USet *set, const char *s, int32_t length, USetSpanCondition spanCondition) {
-    return ((UnicodeSet*) set)->UnicodeSet::spanBackUTF8(s, length, spanCondition);
+uset_spanBackUTF8(स्थिरांक USet *set, स्थिरांक अक्षर *s, int32_t length, USetSpanCondition spanCondition) {
+    परत ((UnicodeSet*) set)->UnicodeSet::spanBackUTF8(s, length, spanCondition);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_equals(const USet* set1, const USet* set2) {
-    return *(const UnicodeSet*)set1 == *(const UnicodeSet*)set2;
+uset_equals(स्थिरांक USet* set1, स्थिरांक USet* set2) {
+    परत *(स्थिरांक UnicodeSet*)set1 == *(स्थिरांक UnicodeSet*)set2;
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_indexOf(const USet* set, UChar32 c) {
-    return ((UnicodeSet*) set)->UnicodeSet::indexOf(c);
+uset_indexOf(स्थिरांक USet* set, UChar32 c) {
+    परत ((UnicodeSet*) set)->UnicodeSet::indexOf(c);
 }
 
 U_CAPI UChar32 U_EXPORT2
-uset_charAt(const USet* set, int32_t index) {
-    return ((UnicodeSet*) set)->UnicodeSet::charAt(index);
+uset_charAt(स्थिरांक USet* set, int32_t index) {
+    परत ((UnicodeSet*) set)->UnicodeSet::charAt(index);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_size(const USet* set) {
-    return ((const UnicodeSet*) set)->UnicodeSet::size();
+uset_size(स्थिरांक USet* set) {
+    परत ((स्थिरांक UnicodeSet*) set)->UnicodeSet::size();
 }
 
 U_NAMESPACE_BEGIN
@@ -286,77 +286,77 @@ U_NAMESPACE_BEGIN
  * USet support API.  Declaring a class a friend is more portable than
  * trying to declare extern "C" functions as friends.
  */
-class USetAccess /* not : public UObject because all methods are static */ {
-public:
+वर्ग USetAccess /* not : public UObject because all methods are static */ {
+सार्वजनिक:
     /* Try to have the compiler inline these*/
-    inline static int32_t getStringCount(const UnicodeSet& set) {
-        return set.stringsSize();
+    ओळीत स्थिर int32_t get_String_मोजणी(स्थिरांक UnicodeSet& set) {
+        परत set.stringsSize();
     }
-    inline static const UnicodeString* getString(const UnicodeSet& set U_LIFETIME_BOUND,
+    ओळीत स्थिर स्थिरांक UnicodeString* getString(स्थिरांक UnicodeSet& set U_LIFETIME_BOUND,
                                                  int32_t i) {
-        return set.getString(i);
+        परत set.getString(i);
     }
-private:
+खाजगी:
     /* do not instantiate*/
     USetAccess();
 };
 U_NAMESPACE_END
 
 U_CAPI int32_t U_EXPORT2
-uset_getRangeCount(const USet *set) {
-    return ((const UnicodeSet *)set)->UnicodeSet::getRangeCount();
+uset_get_Range_मोजणी(स्थिरांक USet *set) {
+    परत ((स्थिरांक UnicodeSet *)set)->UnicodeSet::get_Range_मोजणी();
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_getStringCount(const USet *uset) {
-    const UnicodeSet &set = *(const UnicodeSet *)uset;
-    return USetAccess::getStringCount(set);
+uset_get_String_मोजणी(स्थिरांक USet *uset) {
+    स्थिरांक UnicodeSet &set = *(स्थिरांक UnicodeSet *)uset;
+    परत USetAccess::get_String_मोजणी(set);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_getItemCount(const USet* uset) {
-    const UnicodeSet& set = *(const UnicodeSet*)uset;
-    return set.getRangeCount() + USetAccess::getStringCount(set);
+uset_get_Item_मोजणी(स्थिरांक USet* uset) {
+    स्थिरांक UnicodeSet& set = *(स्थिरांक UnicodeSet*)uset;
+    परत set.get_Range_मोजणी() + USetAccess::get_String_मोजणी(set);
 }
 
-U_CAPI const UChar* U_EXPORT2
-uset_getString(const USet* uset U_LIFETIME_BOUND, int32_t index, int32_t* pLength) {
-    if (pLength == nullptr) { return nullptr; }
-    const UnicodeSet &set = *(const UnicodeSet *)uset;
-    int32_t count = USetAccess::getStringCount(set);
-    if (index < 0 || count <= index) {
+U_CAPI स्थिरांक UChar* U_EXPORT2
+uset_getString(स्थिरांक USet* uset U_LIFETIME_BOUND, int32_t index, int32_t* pLength) {
+    जर (pLength == nullptr) { परत nullptr; }
+    स्थिरांक UnicodeSet &set = *(स्थिरांक UnicodeSet *)uset;
+    int32_t count = USetAccess::get_String_मोजणी(set);
+    जर (index < 0 || count <= index) {
         *pLength = 0;
-        return nullptr;
+        परत nullptr;
     }
-    const UnicodeString *s = USetAccess::getString(set, index);
+    स्थिरांक UnicodeString *s = USetAccess::getString(set, index);
     *pLength = s->length();
-    return toUCharPtr(s->getBuffer());
+    परत toUCharPtr(s->getBuffer());
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_getItem(const USet* uset, int32_t itemIndex,
+uset_getItem(स्थिरांक USet* uset, int32_t itemIndex,
              UChar32* start, UChar32* end,
              char16_t* str, int32_t strCapacity,
              UErrorCode* ec) {
-    if (U_FAILURE(*ec)) return 0;
-    const UnicodeSet& set = *(const UnicodeSet*)uset;
-    int32_t rangeCount;
+    जर (U_FAILURE(*ec)) परत 0;
+    स्थिरांक UnicodeSet& set = *(स्थिरांक UnicodeSet*)uset;
+    int32_t range_मोजणी;
 
-    if (itemIndex < 0) {
+    जर (itemIndex < 0) {
         *ec = U_ILLEGAL_ARGUMENT_ERROR;
-        return -1;
-    } else if (itemIndex < (rangeCount = set.getRangeCount())) {
+        परत -1;
+    } अन्यथा जर (itemIndex < (range_मोजणी = set.get_Range_मोजणी())) {
         *start = set.getRangeStart(itemIndex);
         *end = set.getRangeEnd(itemIndex);
-        return 0;
-    } else {
-        itemIndex -= rangeCount;
-        if (itemIndex < USetAccess::getStringCount(set)) {
-            const UnicodeString* s = USetAccess::getString(set, itemIndex);
-            return s->extract(str, strCapacity, *ec);
-        } else {
+        परत 0;
+    } अन्यथा {
+        itemIndex -= range_मोजणी;
+        जर (itemIndex < USetAccess::get_String_मोजणी(set)) {
+            स्थिरांक UnicodeString* s = USetAccess::getString(set, itemIndex);
+            परत s->extract(str, strCapacity, *ec);
+        } अन्यथा {
             *ec = U_INDEX_OUTOFBOUNDS_ERROR;
-            return -1;
+            परत -1;
         }
     }
 }
@@ -392,66 +392,66 @@ uset_getItem(const USet* uset, int32_t itemIndex,
  * - some supplementary: (length|0x8000) (bmpLength<length) BMP, .., BMP, supp-high, supp-low, ..
  */
 U_CAPI int32_t U_EXPORT2
-uset_serialize(const USet* set, uint16_t* dest, int32_t destCapacity, UErrorCode* ec) {
-    if (ec==nullptr || U_FAILURE(*ec)) {
-        return 0;
+uset_serialize(स्थिरांक USet* set, uint16_t* dest, int32_t destCapacity, UErrorCode* ec) {
+    जर (ec==nullptr || U_FAILURE(*ec)) {
+        परत 0;
     }
 
-    return ((const UnicodeSet*) set)->UnicodeSet::serialize(dest, destCapacity,* ec);
+    परत ((स्थिरांक UnicodeSet*) set)->UnicodeSet::serialize(dest, destCapacity,* ec);
 }
 
 U_CAPI UBool U_EXPORT2
-uset_getSerializedSet(USerializedSet* fillSet, const uint16_t* src, int32_t srcLength) {
+uset_getSerializedSet(USerializedSet* fillSet, स्थिरांक uint16_t* src, int32_t srcLength) {
     int32_t length;
 
-    if(fillSet==nullptr) {
-        return false;
+    जर(fillSet==nullptr) {
+        परत असत्य;
     }
-    if(src==nullptr || srcLength<=0) {
+    जर(src==nullptr || srcLength<=0) {
         fillSet->length=fillSet->bmpLength=0;
-        return false;
+        परत असत्य;
     }
 
     length=*src++;
-    if(length&0x8000) {
+    जर(length&0x8000) {
         /* there are supplementary values */
         length&=0x7fff;
-        if(srcLength<(2+length)) {
+        जर(srcLength<(2+length)) {
             fillSet->length=fillSet->bmpLength=0;
-            return false;
+            परत असत्य;
         }
         fillSet->bmpLength=*src++;
-    } else {
+    } अन्यथा {
         /* only BMP values */
-        if(srcLength<(1+length)) {
+        जर(srcLength<(1+length)) {
             fillSet->length=fillSet->bmpLength=0;
-            return false;
+            परत असत्य;
         }
         fillSet->bmpLength=length;
     }
     fillSet->array=src;
     fillSet->length=length;
-    return true;
+    परत सत्य;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 uset_setSerializedToOne(USerializedSet* fillSet, UChar32 c) {
-    if(fillSet==nullptr || (uint32_t)c>0x10ffff) {
-        return;
+    जर(fillSet==nullptr || (uint32_t)c>0x10ffff) {
+        परत;
     }
 
     fillSet->array=fillSet->staticArray;
-    if(c<0xffff) {
+    जर(c<0xffff) {
         fillSet->bmpLength=fillSet->length=2;
         fillSet->staticArray[0]=(uint16_t)c;
         fillSet->staticArray[1]=(uint16_t)c+1;
-    } else if(c==0xffff) {
+    } अन्यथा जर(c==0xffff) {
         fillSet->bmpLength=1;
         fillSet->length=3;
         fillSet->staticArray[0]=0xffff;
         fillSet->staticArray[1]=1;
         fillSet->staticArray[2]=0;
-    } else if(c<0x10ffff) {
+    } अन्यथा जर(c<0x10ffff) {
         fillSet->bmpLength=0;
         fillSet->length=4;
         fillSet->staticArray[0]=(uint16_t)(c>>16);
@@ -459,7 +459,7 @@ uset_setSerializedToOne(USerializedSet* fillSet, UChar32 c) {
         ++c;
         fillSet->staticArray[2]=(uint16_t)(c>>16);
         fillSet->staticArray[3]=(uint16_t)c;
-    } else /* c==0x10ffff */ {
+    } अन्यथा /* c==0x10ffff */ {
         fillSet->bmpLength=0;
         fillSet->length=2;
         fillSet->staticArray[0]=0x10;
@@ -468,80 +468,80 @@ uset_setSerializedToOne(USerializedSet* fillSet, UChar32 c) {
 }
 
 U_CAPI UBool U_EXPORT2
-uset_serializedContains(const USerializedSet* set, UChar32 c) {
-    const uint16_t* array;
+uset_serializedContains(स्थिरांक USerializedSet* set, UChar32 c) {
+    स्थिरांक uint16_t* array;
 
-    if(set==nullptr || (uint32_t)c>0x10ffff) {
-        return false;
+    जर(set==nullptr || (uint32_t)c>0x10ffff) {
+        परत असत्य;
     }
 
     array=set->array;
-    if(c<=0xffff) {
+    जर(c<=0xffff) {
         /* find c in the BMP part */
         int32_t lo = 0;
         int32_t hi = set->bmpLength-1;
-        if (c < array[0]) {
+        जर (c < array[0]) {
             hi = 0;
-        } else if (c < array[hi]) {
-            for(;;) {
+        } अन्यथा जर (c < array[hi]) {
+            साठी(;;) {
                 int32_t i = (lo + hi) >> 1;
-                if (i == lo) {
-                    break;  // Done!
-                } else if (c < array[i]) {
+                जर (i == lo) {
+                    थांबा;  // Done!
+                } अन्यथा जर (c < array[i]) {
                     hi = i;
-                } else {
+                } अन्यथा {
                     lo = i;
                 }
             }
-        } else {
+        } अन्यथा {
             hi += 1;
         }
-        return hi&1;
-    } else {
+        परत hi&1;
+    } अन्यथा {
         /* find c in the supplementary part */
-        uint16_t high=(uint16_t)(c>>16), low=(uint16_t)c;
+        uint16_t वरचा=(uint16_t)(c>>16), खालचा=(uint16_t)c;
         int32_t base = set->bmpLength;
         int32_t lo = 0;
         int32_t hi = set->length - 2 - base;
-        if (high < array[base] || (high==array[base] && low<array[base+1])) {
+        जर (वरचा < array[base] || (वरचा==array[base] && खालचा<array[base+1])) {
             hi = 0;
-        } else if (high < array[base+hi] || (high==array[base+hi] && low<array[base+hi+1])) {
-            for (;;) {
+        } अन्यथा जर (वरचा < array[base+hi] || (वरचा==array[base+hi] && खालचा<array[base+hi+1])) {
+            साठी (;;) {
                 int32_t i = ((lo + hi) >> 1) & ~1;  // Guarantee even result
                 int32_t iabs = i + base;
-                if (i == lo) {
-                    break;  // Done!
-                } else if (high < array[iabs] || (high==array[iabs] && low<array[iabs+1])) {
+                जर (i == lo) {
+                    थांबा;  // Done!
+                } अन्यथा जर (वरचा < array[iabs] || (वरचा==array[iabs] && खालचा<array[iabs+1])) {
                     hi = i;
-                } else {
+                } अन्यथा {
                     lo = i;
                 }
             }
-        } else {
+        } अन्यथा {
             hi += 2;
         }
         /* count pairs of 16-bit units even per BMP and check if the number of pairs is odd */
-        return ((hi+(base<<1))&2)!=0;
+        परत ((hi+(base<<1))&2)!=0;
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_getSerializedRangeCount(const USerializedSet* set) {
-    if(set==nullptr) {
-        return 0;
+uset_get_Serialized_Range_मोजणी(स्थिरांक USerializedSet* set) {
+    जर(set==nullptr) {
+        परत 0;
     }
 
-    return (set->bmpLength+(set->length-set->bmpLength)/2+1)/2;
+    परत (set->bmpLength+(set->length-set->bmpLength)/2+1)/2;
 }
 
 U_CAPI UBool U_EXPORT2
-uset_getSerializedRange(const USerializedSet* set, int32_t rangeIndex,
+uset_getSerializedRange(स्थिरांक USerializedSet* set, int32_t rangeIndex,
                         UChar32* pStart, UChar32* pEnd) {
-    const uint16_t* array;
+    स्थिरांक uint16_t* array;
     int32_t bmpLength, length;
 
-    if(set==nullptr || rangeIndex<0 || pStart==nullptr || pEnd==nullptr) {
-        return false;
+    जर(set==nullptr || rangeIndex<0 || pStart==nullptr || pEnd==nullptr) {
+        परत असत्य;
     }
 
     array=set->array;
@@ -549,32 +549,32 @@ uset_getSerializedRange(const USerializedSet* set, int32_t rangeIndex,
     bmpLength=set->bmpLength;
 
     rangeIndex*=2; /* address start/limit pairs */
-    if(rangeIndex<bmpLength) {
+    जर(rangeIndex<bmpLength) {
         *pStart=array[rangeIndex++];
-        if(rangeIndex<bmpLength) {
+        जर(rangeIndex<bmpLength) {
             *pEnd=array[rangeIndex]-1;
-        } else if(rangeIndex<length) {
+        } अन्यथा जर(rangeIndex<length) {
             *pEnd=((((int32_t)array[rangeIndex])<<16)|array[rangeIndex+1])-1;
-        } else {
+        } अन्यथा {
             *pEnd=0x10ffff;
         }
-        return true;
-    } else {
+        परत सत्य;
+    } अन्यथा {
         rangeIndex-=bmpLength;
         rangeIndex*=2; /* address pairs of pairs of units */
         length-=bmpLength;
-        if(rangeIndex<length) {
+        जर(rangeIndex<length) {
             array+=bmpLength;
             *pStart=(((int32_t)array[rangeIndex])<<16)|array[rangeIndex+1];
             rangeIndex+=2;
-            if(rangeIndex<length) {
+            जर(rangeIndex<length) {
                 *pEnd=((((int32_t)array[rangeIndex])<<16)|array[rangeIndex+1])-1;
-            } else {
+            } अन्यथा {
                 *pEnd=0x10ffff;
             }
-            return true;
-        } else {
-            return false;
+            परत सत्य;
+        } अन्यथा {
+            परत असत्य;
         }
     }
 }

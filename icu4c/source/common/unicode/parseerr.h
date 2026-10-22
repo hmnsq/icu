@@ -13,7 +13,7 @@
 #ifndef PARSEERR_H
 #define PARSEERR_H
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
 
 /**
@@ -24,7 +24,7 @@
  * The capacity of the context strings in UParseError.
  * @stable ICU 2.0
  */ 
-enum { U_PARSE_CONTEXT_LEN = 16 };
+गणना { U_PARSE_CONTEXT_LEN = 16 };
 
 /**
  * A UParseError struct is used to returned detailed information about
@@ -55,7 +55,7 @@ enum { U_PARSE_CONTEXT_LEN = 16 };
  * 
  * @stable ICU 2.0
  */
-typedef struct UParseError {
+प्रकारव्याख्या संरचना UParseError {
 
     /**
      * The line on which the error occurred.  If the parser uses this
@@ -64,7 +64,7 @@ typedef struct UParseError {
      * parse does not support line numbers, the value will be <= 0.
      * @stable ICU 2.0
      */
-    int32_t        line;
+    int32_t        ओळ;
 
     /**
      * The character offset to the error.  If the line field is >= 1,

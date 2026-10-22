@@ -4,12 +4,12 @@
 #ifndef FIXEDSTRING_H
 #define FIXEDSTRING_H
 
-#include <string_view>
-#include <utility>
+#अन्तर्भाव <string_view>
+#अन्तर्भाव <utility>
 
-#include "unicode/uobject.h"
-#include "unicode/utypes.h"
-#include "cmemory.h"
+#अन्तर्भाव "unicode/uobject.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
@@ -26,78 +26,78 @@ class UnicodeString;
  * This class wants to be convenient but is also deliberately minimalist.
  * Please do not add methods if they only add minor convenience.
  */
-class FixedString : public UMemory {
-public:
-    FixedString() = default;
-    ~FixedString() { operator delete[](ptr); }
+class FixedString : सार्वजनिक UMemory {
+सार्वजनिक:
+    FixedString() = पूर्वनिर्धारित;
+    ~FixedString() { चालक delete[](ptr); }
 
-    FixedString(const FixedString& other) : FixedString(other.data()) {}
+    FixedString(स्थिरांक FixedString& other) : FixedString(other.data()) {}
 
     FixedString(std::string_view init) {
-        size_t size = init.size();
-        if (size > 0 && reserve(size + 1)) {
+        माप_प्रकार size = init.size();
+        जर (size > 0 && reserve(size + 1)) {
             uprv_memcpy(ptr, init.data(), size);
             ptr[size] = '\0';
         }
     }
 
-    FixedString& operator=(const FixedString& other) {
+    FixedString& चालक=(स्थिरांक FixedString& other) {
         *this = other.data();
-        return *this;
+        परत *this;
     }
 
-    FixedString& operator=(std::string_view init) {
-        if (init.empty()) {
-            operator delete[](ptr);
+    FixedString& चालक=(std::string_view init) {
+        जर (init.empty()) {
+            चालक delete[](ptr);
             ptr = nullptr;
-        } else {
-            size_t size = init.size();
-            if (reserve(size + 1)) {
+        } अन्यथा {
+            माप_प्रकार size = init.size();
+            जर (reserve(size + 1)) {
                 uprv_memcpy(ptr, init.data(), size);
                 ptr[size] = '\0';
             }
         }
-        return *this;
+        परत *this;
     }
 
     FixedString(FixedString&& other) noexcept : ptr(std::exchange(other.ptr, nullptr)) {}
 
-    FixedString& operator=(FixedString&& other) noexcept {
-        operator delete[](ptr);
+    FixedString& चालक=(FixedString&& other) noexcept {
+        चालक delete[](ptr);
         ptr = other.ptr;
         other.ptr = nullptr;
-        return *this;
+        परत *this;
     }
 
-    void clear() {
-        operator delete[](ptr);
+    शून्य clear() {
+        चालक delete[](ptr);
         ptr = nullptr;
     }
 
-    const char* data() const {
-        return isEmpty() ? "" : ptr;
+    स्थिरांक अक्षर* data() स्थिरांक {
+        परत isEmpty() ? "" : ptr;
     }
 
-    char* getAlias() {
-        return ptr;
+    अक्षर* getAlias() {
+        परत ptr;
     }
 
-    bool isEmpty() const {
-        return ptr == nullptr;
+    bool isEmpty() स्थिरांक {
+        परत ptr == nullptr;
     }
 
     /** Allocate storage for a new string, without initializing it. */
-    bool reserve(size_t size) {
-        operator delete[](ptr);
-        ptr = static_cast<char*>(operator new[](size));
-        return ptr != nullptr;
+    bool reserve(माप_प्रकार size) {
+        चालक delete[](ptr);
+        ptr = static_cast<अक्षर*>(चालक new[](size));
+        परत ptr != nullptr;
     }
 
-private:
-    char* ptr = nullptr;
+खाजगी:
+    अक्षर* ptr = nullptr;
 };
 
-U_COMMON_API void copyInvariantChars(const UnicodeString& src, FixedString& dst, UErrorCode& status);
+U_COMMON_API शून्य copyInvariantChars(स्थिरांक UnicodeString& src, FixedString& dst, UErrorCode& status);
 
 U_NAMESPACE_END
 

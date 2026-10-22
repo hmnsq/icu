@@ -19,10 +19,10 @@
 #ifndef __UDATA_H__
 #define __UDATA_H__
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
+#जर U_SHOW_CPLUSPLUS_API
+#अन्तर्भाव "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
 U_CDECL_BEGIN
@@ -47,25 +47,25 @@ U_CDECL_BEGIN
  * Character used to separate package names from tree names 
  * @internal ICU 3.0
  */
-#define U_TREE_SEPARATOR '-'
+#define U_वृक्ष_SEPARATOR '-'
 
 /**
  * String used to separate package names from tree names 
  * @internal ICU 3.0
  */
-#define U_TREE_SEPARATOR_STRING "-"
+#define U_वृक्ष_SEPARATOR_STRING "-"
 
 /**
  * Character used to separate parts of entry names
  * @internal ICU 3.0
  */
-#define U_TREE_ENTRY_SEP_CHAR '/'
+#define U_वृक्ष_ENTRY_SEP_CHAR '/'
 
 /**
  * String used to separate parts of entry names
  * @internal ICU 3.0
  */
-#define U_TREE_ENTRY_SEP_STRING "/"
+#define U_वृक्ष_ENTRY_SEP_STRING "/"
 
 /**
  * Alias for standard ICU data 
@@ -113,7 +113,7 @@ U_CDECL_BEGIN
  *
  * @stable ICU 2.0
  */
-typedef struct {
+प्रकारव्याख्या संरचना {
     /** sizeof(UDataInfo)
      *  @stable ICU 2.0 */
     uint16_t size;
@@ -158,7 +158,7 @@ typedef struct {
  * Forward declaration of the data memory type.
  * @stable ICU 2.0
  */
-typedef struct UDataMemory UDataMemory;
+प्रकारव्याख्या संरचना UDataMemory UDataMemory;
 
 /**
  * Callback function for udata_openChoice().
@@ -173,10 +173,10 @@ typedef struct UDataMemory UDataMemory;
  * @return true if the current data memory is acceptable
  * @stable ICU 2.0
  */
-typedef UBool U_CALLCONV
-UDataMemoryIsAcceptable(void *context,
-                        const char *type, const char *name,
-                        const UDataInfo *pInfo);
+प्रकारव्याख्या UBool U_CALLCONV
+UDataMemoryIsAcceptable(शून्य *context,
+                        स्थिरांक अक्षर *type, स्थिरांक अक्षर *name,
+                        स्थिरांक UDataInfo *pInfo);
 
 
 /**
@@ -201,7 +201,7 @@ UDataMemoryIsAcceptable(void *context,
  * @stable ICU 2.0
  */
 U_CAPI UDataMemory * U_EXPORT2
-udata_open(const char *path, const char *type, const char *name,
+udata_open(स्थिरांक अक्षर *path, स्थिरांक अक्षर *type, स्थिरांक अक्षर *name,
            UErrorCode *pErrorCode);
 
 /**
@@ -253,8 +253,8 @@ udata_open(const char *path, const char *type, const char *name,
  * @stable ICU 2.0
  */
 U_CAPI UDataMemory * U_EXPORT2
-udata_openChoice(const char *path, const char *type, const char *name,
-                 UDataMemoryIsAcceptable *isAcceptable, void *context,
+udata_openChoice(स्थिरांक अक्षर *path, स्थिरांक अक्षर *type, स्थिरांक अक्षर *name,
+                 UDataMemoryIsAcceptable *isAcceptable, शून्य *context,
                  UErrorCode *pErrorCode);
 
 /**
@@ -264,7 +264,7 @@ udata_openChoice(const char *path, const char *type, const char *name,
  * @param pData The pointer to data memory object
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 udata_close(UDataMemory *pData);
 
 /**
@@ -276,7 +276,7 @@ udata_close(UDataMemory *pData);
  * @param pData The pointer to data memory object
  * @stable ICU 2.0
  */
-U_CAPI const void* U_EXPORT2
+U_CAPI स्थिरांक शून्य* U_EXPORT2
 udata_getMemory(UDataMemory* pData U_LIFETIME_BOUND);
 
 /**
@@ -297,7 +297,7 @@ udata_getMemory(UDataMemory* pData U_LIFETIME_BOUND);
  * adjusted and only part of the structure will be filled.
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 udata_getInfo(UDataMemory *pData, UDataInfo *pInfo);
 
 /**
@@ -343,8 +343,8 @@ udata_getInfo(UDataMemory *pData, UDataInfo *pInfo);
  * @param err outgoing error status <code>U_USING_DEFAULT_WARNING, U_UNSUPPORTED_ERROR</code>
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-udata_setCommonData(const void *data, UErrorCode *err);
+U_CAPI शून्य U_EXPORT2
+udata_setCommonData(स्थिरांक शून्य *data, UErrorCode *err);
 
 
 /**
@@ -374,15 +374,15 @@ udata_setCommonData(const void *data, UErrorCode *err);
  * @see udata_setCommonData
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-udata_setAppData(const char *packageName, const void *data, UErrorCode *err);
+U_CAPI शून्य U_EXPORT2
+udata_setAppData(स्थिरांक अक्षर *packageName, स्थिरांक शून्य *data, UErrorCode *err);
 
 /**
  * Possible settings for udata_setFileAccess()
  * @see udata_setFileAccess
  * @stable ICU 3.4
  */
-typedef enum UDataFileAccess {
+प्रकारव्याख्या गणना UDataFileAccess {
     /** ICU looks for data in single files first, then in packages. (default) @stable ICU 3.4 */
     UDATA_FILES_FIRST,
     /** An alias for the default access mode. @stable ICU 3.4 */
@@ -399,7 +399,7 @@ typedef enum UDataFileAccess {
      * Number of real UDataFileAccess values.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    UDATA_FILE_ACCESS_COUNT
+    UDATA_FILE_ACCESS_मोजणी
 #endif  // U_HIDE_DEPRECATED_API
 } UDataFileAccess;
 
@@ -413,12 +413,12 @@ typedef enum UDataFileAccess {
  * @see UDataFileAccess
  * @stable ICU 3.4 
  */
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 udata_setFileAccess(UDataFileAccess access, UErrorCode *status);
 
 U_CDECL_END
 
-#if U_SHOW_CPLUSPLUS_API
+#जर U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

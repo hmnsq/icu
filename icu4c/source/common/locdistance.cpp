@@ -4,23 +4,23 @@
 // locdistance.cpp
 // created: 2019may08 Markus W. Scherer
 
-#include "unicode/utypes.h"
-#include "unicode/bytestrie.h"
-#include "unicode/localematcher.h"
-#include "unicode/locid.h"
-#include "unicode/uobject.h"
-#include "unicode/ures.h"
-#include "cstring.h"
-#include "locdistance.h"
-#include "loclikelysubtags.h"
-#include "uassert.h"
-#include "ucln_cmn.h"
-#include "uinvchar.h"
-#include "umutex.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/bytestrie.h"
+#अन्तर्भाव "unicode/localematcher.h"
+#अन्तर्भाव "unicode/locid.h"
+#अन्तर्भाव "unicode/uobject.h"
+#अन्तर्भाव "unicode/ures.h"
+#अन्तर्भाव "cstring.h"
+#अन्तर्भाव "locdistance.h"
+#अन्तर्भाव "loclikelysubtags.h"
+#अन्तर्भाव "uassert.h"
+#अन्तर्भाव "ucln_cmn.h"
+#अन्तर्भाव "uinvchar.h"
+#अन्तर्भाव "umutex.h"
 
 U_NAMESPACE_BEGIN
 
-namespace {
+नामाकाश {
 
 /**
  * Bit flag used on the last character of a subtag in the trie.
@@ -36,7 +36,7 @@ constexpr int32_t DISTANCE_IS_FINAL_OR_SKIP_SCRIPT = DISTANCE_IS_FINAL | DISTANC
 constexpr int32_t ABOVE_THRESHOLD = 100;
 
 // Indexes into array of distances.
-enum {
+गणना {
     IX_DEF_LANG_DISTANCE,
     IX_DEF_SCRIPT_DISTANCE,
     IX_DEF_REGION_DISTANCE,
@@ -51,39 +51,39 @@ UBool U_CALLCONV cleanup() {
     delete gLocaleDistance;
     gLocaleDistance = nullptr;
     gInitOnce.reset();
-    return true;
+    परत सत्य;
 }
 
 }  // namespace
 
-void U_CALLCONV LocaleDistance::initLocaleDistance(UErrorCode &errorCode) {
+शून्य U_CALLCONV LocaleDistance::initLocaleDistance(UErrorCode &errorCode) {
     // This function is invoked only via umtx_initOnce().
     U_ASSERT(gLocaleDistance == nullptr);
-    const LikelySubtags &likely = *LikelySubtags::getSingleton(errorCode);
-    if (U_FAILURE(errorCode)) { return; }
-    const LocaleDistanceData &data = likely.getDistanceData();
-    if (data.distanceTrieBytes == nullptr ||
+    स्थिरांक LikelySubtags &likely = *LikelySubtags::getSingleton(errorCode);
+    जर (U_FAILURE(errorCode)) { परत; }
+    स्थिरांक LocaleDistanceData &data = likely.getDistanceData();
+    जर (data.distanceTrieBytes == nullptr ||
             data.regionToPartitions == nullptr || data.partitions == nullptr ||
             // ok if no paradigms
             data.distances == nullptr) {
         errorCode = U_MISSING_RESOURCE_ERROR;
-        return;
+        परत;
     }
-    gLocaleDistance = new LocaleDistance(data, likely);
-    if (gLocaleDistance == nullptr) {
+    gLocaleDistance = नवीन LocaleDistance(data, likely);
+    जर (gLocaleDistance == nullptr) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        परत;
     }
     ucln_common_registerCleanup(UCLN_COMMON_LOCALE_DISTANCE, cleanup);
 }
 
-const LocaleDistance *LocaleDistance::getSingleton(UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
+स्थिरांक LocaleDistance *LocaleDistance::getSingleton(UErrorCode &errorCode) {
+    जर (U_FAILURE(errorCode)) { परत nullptr; }
     umtx_initOnce(gInitOnce, &LocaleDistance::initLocaleDistance, errorCode);
-    return gLocaleDistance;
+    परत gLocaleDistance;
 }
 
-LocaleDistance::LocaleDistance(const LocaleDistanceData &data, const LikelySubtags &likely) :
+LocaleDistance::LocaleDistance(स्थिरांक LocaleDistanceData &data, स्थिरांक LikelySubtags &likely) :
         likelySubtags(likely),
         trie(data.distanceTrieBytes),
         regionToPartitionsIndex(data.regionToPartitions), partitionArrays(data.partitions),
@@ -100,54 +100,54 @@ LocaleDistance::LocaleDistance(const LocaleDistanceData &data, const LikelySubta
     // As of CLDR 36, we have <languageMatch desired="en_*_*" supported="en_*_*" distance="5"/>.
     LSR en("en", "Latn", "US", LSR::EXPLICIT_LSR);
     LSR enGB("en", "Latn", "GB", LSR::EXPLICIT_LSR);
-    const LSR *p_enGB = &enGB;
+    स्थिरांक LSR *p_enGB = &enGB;
     int32_t indexAndDistance = getBestIndexAndDistance(en, &p_enGB, 1,
             shiftDistance(50), ULOCMATCH_FAVOR_LANGUAGE, ULOCMATCH_DIRECTION_WITH_ONE_WAY);
     defaultDemotionPerDesiredLocale  = getDistanceFloor(indexAndDistance);
 }
 
 int32_t LocaleDistance::getBestIndexAndDistance(
-        const LSR &desired,
-        const LSR **supportedLSRs, int32_t supportedLSRsLength,
+        स्थिरांक LSR &desired,
+        स्थिरांक LSR **supportedLSRs, int32_t supportedLSRsLength,
         int32_t shiftedThreshold,
-        ULocMatchFavorSubtag favorSubtag, ULocMatchDirection direction) const {
+        ULocMatchFavorSubtag favorSubtag, ULocMatchDirection direction) स्थिरांक {
     BytesTrie iter(trie);
     // Look up the desired language only once for all supported LSRs.
     // Its "distance" is either a match point value of 0, or a non-match negative value.
     // Note: The data builder verifies that there are no <*, supported> or <desired, *> rules.
-    int32_t desLangDistance = trieNext(iter, desired.language, false);
+    int32_t desLangDistance = trieNext(iter, desired.language, असत्य);
     uint64_t desLangState = desLangDistance >= 0 && supportedLSRsLength > 1 ? iter.getState64() : 0;
     // Index of the supported LSR with the lowest distance.
     int32_t bestIndex = -1;
     // Cached lookup info from LikelySubtags.compareLikely().
     int32_t bestLikelyInfo = -1;
-    for (int32_t slIndex = 0; slIndex < supportedLSRsLength; ++slIndex) {
-        const LSR &supported = *supportedLSRs[slIndex];
-        bool star = false;
+    साठी (int32_t slIndex = 0; slIndex < supportedLSRsLength; ++slIndex) {
+        स्थिरांक LSR &supported = *supportedLSRs[slIndex];
+        तार्किक star = असत्य;
         int32_t distance = desLangDistance;
-        if (distance >= 0) {
+        जर (distance >= 0) {
             U_ASSERT((distance & DISTANCE_IS_FINAL) == 0);
-            if (slIndex != 0) {
+            जर (slIndex != 0) {
                 iter.resetToState64(desLangState);
             }
-            distance = trieNext(iter, supported.language, true);
+            distance = trieNext(iter, supported.language, सत्य);
         }
         // Note: The data builder verifies that there are no rules with "any" (*) language and
         // real (non *) script or region subtags.
         // This means that if the lookup for either language fails we can use
         // the default distances without further lookups.
         int32_t flags;
-        if (distance >= 0) {
+        जर (distance >= 0) {
             flags = distance & DISTANCE_IS_FINAL_OR_SKIP_SCRIPT;
             distance &= ~DISTANCE_IS_FINAL_OR_SKIP_SCRIPT;
-        } else {  // <*, *>
-            if (uprv_strcmp(desired.language, supported.language) == 0) {
+        } अन्यथा {  // <*, *>
+            जर (uprv_strcmp(desired.language, supported.language) == 0) {
                 distance = 0;
-            } else {
+            } अन्यथा {
                 distance = defaultLanguageDistance;
             }
             flags = 0;
-            star = true;
+            star = सत्य;
         }
         U_ASSERT(0 <= distance && distance <= 100);
         // Round up the shifted threshold (if fraction bits are not 0)
@@ -160,41 +160,41 @@ int32_t LocaleDistance::getBestIndexAndDistance(
         // so that the script distance is relatively more important.
         // For example, given a default language distance of 80, we reduce it to 20,
         // which is below the default threshold of 50, which is the default script distance.
-        if (favorSubtag == ULOCMATCH_FAVOR_SCRIPT) {
+        जर (favorSubtag == ULOCMATCH_FAVOR_SCRIPT) {
             distance >>= 2;
         }
         // Let distance == roundedThreshold pass until the tie-breaker logic
         // at the end of the loop.
-        if (distance > roundedThreshold) {
-            continue;
+        जर (distance > roundedThreshold) {
+            सुरूठेवा;
         }
 
         int32_t scriptDistance;
-        if (star || flags != 0) {
-            if (uprv_strcmp(desired.script, supported.script) == 0) {
+        जर (star || flags != 0) {
+            जर (uprv_strcmp(desired.script, supported.script) == 0) {
                 scriptDistance = 0;
-            } else {
+            } अन्यथा {
                 scriptDistance = defaultScriptDistance;
             }
-        } else {
+        } अन्यथा {
             scriptDistance = getDesSuppScriptDistance(iter, iter.getState64(),
                     desired.script, supported.script);
             flags = scriptDistance & DISTANCE_IS_FINAL;
             scriptDistance &= ~DISTANCE_IS_FINAL;
         }
         distance += scriptDistance;
-        if (distance > roundedThreshold) {
-            continue;
+        जर (distance > roundedThreshold) {
+            सुरूठेवा;
         }
 
-        if (uprv_strcmp(desired.region, supported.region) == 0) {
+        जर (uprv_strcmp(desired.region, supported.region) == 0) {
             // regionDistance = 0
-        } else if (star || (flags & DISTANCE_IS_FINAL) != 0) {
+        } अन्यथा जर (star || (flags & DISTANCE_IS_FINAL) != 0) {
             distance += defaultRegionDistance;
-        } else {
+        } अन्यथा {
             int32_t remainingThreshold = roundedThreshold - distance;
-            if (minRegionDistance > remainingThreshold) {
-                continue;
+            जर (minRegionDistance > remainingThreshold) {
+                सुरूठेवा;
             }
 
             // From here on we know the regions are not equal.
@@ -209,38 +209,38 @@ int32_t LocaleDistance::getBestIndexAndDistance(
                     remainingThreshold);
         }
         int32_t shiftedDistance = shiftDistance(distance);
-        if (shiftedDistance == 0) {
+        जर (shiftedDistance == 0) {
             // Distinguish between equivalent but originally unequal locales via an
             // additional micro distance.
             shiftedDistance |= (desired.flags ^ supported.flags);
-            if (shiftedDistance < shiftedThreshold) {
-                if (direction != ULOCMATCH_DIRECTION_ONLY_TWO_WAY ||
+            जर (shiftedDistance < shiftedThreshold) {
+                जर (direction != ULOCMATCH_DIRECTION_ONLY_TWO_WAY ||
                         // Is there also a match when we swap desired/supported?
                         isMatch(supported, desired, shiftedThreshold, favorSubtag)) {
-                    if (shiftedDistance == 0) {
-                        return slIndex << INDEX_SHIFT;
+                    जर (shiftedDistance == 0) {
+                        परत slIndex << INDEX_SHIFT;
                     }
                     bestIndex = slIndex;
                     shiftedThreshold = shiftedDistance;
                     bestLikelyInfo = -1;
                 }
             }
-        } else {
-            if (shiftedDistance < shiftedThreshold) {
-                if (direction != ULOCMATCH_DIRECTION_ONLY_TWO_WAY ||
+        } अन्यथा {
+            जर (shiftedDistance < shiftedThreshold) {
+                जर (direction != ULOCMATCH_DIRECTION_ONLY_TWO_WAY ||
                         // Is there also a match when we swap desired/supported?
                         isMatch(supported, desired, shiftedThreshold, favorSubtag)) {
                     bestIndex = slIndex;
                     shiftedThreshold = shiftedDistance;
                     bestLikelyInfo = -1;
                 }
-            } else if (shiftedDistance == shiftedThreshold && bestIndex >= 0) {
-                if (direction != ULOCMATCH_DIRECTION_ONLY_TWO_WAY ||
+            } अन्यथा जर (shiftedDistance == shiftedThreshold && bestIndex >= 0) {
+                जर (direction != ULOCMATCH_DIRECTION_ONLY_TWO_WAY ||
                         // Is there also a match when we swap desired/supported?
                         isMatch(supported, desired, shiftedThreshold, favorSubtag)) {
                     bestLikelyInfo = likelySubtags.compareLikely(
                             supported, *supportedLSRs[bestIndex], bestLikelyInfo);
-                    if ((bestLikelyInfo & 1) != 0) {
+                    जर ((bestLikelyInfo & 1) != 0) {
                         // This supported locale matches as well as the previous best match,
                         // and neither matches perfectly,
                         // but this one is "more likely" (has more-default subtags).
@@ -250,166 +250,166 @@ int32_t LocaleDistance::getBestIndexAndDistance(
             }
         }
     }
-    return bestIndex >= 0 ?
+    परत bestIndex >= 0 ?
             (bestIndex << INDEX_SHIFT) | shiftedThreshold :
             INDEX_NEG_1 | shiftDistance(ABOVE_THRESHOLD);
 }
 
 int32_t LocaleDistance::getDesSuppScriptDistance(
-        BytesTrie &iter, uint64_t startState, const char *desired, const char *supported) {
+        BytesTrie &iter, uint64_t startState, स्थिरांक अक्षर *desired, स्थिरांक अक्षर *supported) {
     // Note: The data builder verifies that there are no <*, supported> or <desired, *> rules.
-    int32_t distance = trieNext(iter, desired, false);
-    if (distance >= 0) {
-        distance = trieNext(iter, supported, true);
+    int32_t distance = trieNext(iter, desired, असत्य);
+    जर (distance >= 0) {
+        distance = trieNext(iter, supported, सत्य);
     }
-    if (distance < 0) {
+    जर (distance < 0) {
         UStringTrieResult result = iter.resetToState64(startState).next(u'*');  // <*, *>
-        U_ASSERT(USTRINGTRIE_HAS_VALUE(result));
-        if (uprv_strcmp(desired, supported) == 0) {
+        U_ASSERT(USTRINGTRIE_HAS_मूल्य(result));
+        जर (uprv_strcmp(desired, supported) == 0) {
             distance = 0;  // same script
-        } else {
-            distance = iter.getValue();
+        } अन्यथा {
+            distance = iter.get_मूल्य();
             U_ASSERT(distance >= 0);
         }
-        if (result == USTRINGTRIE_FINAL_VALUE) {
+        जर (result == USTRINGTRIE_FINAL_मूल्य) {
             distance |= DISTANCE_IS_FINAL;
         }
     }
-    return distance;
+    परत distance;
 }
 
 int32_t LocaleDistance::getRegionPartitionsDistance(
         BytesTrie &iter, uint64_t startState,
-        const char *desiredPartitions, const char *supportedPartitions, int32_t threshold) {
-    char desired = *desiredPartitions++;
-    char supported = *supportedPartitions++;
+        स्थिरांक अक्षर *desiredPartitions, स्थिरांक अक्षर *supportedPartitions, int32_t threshold) {
+    अक्षर desired = *desiredPartitions++;
+    अक्षर supported = *supportedPartitions++;
     U_ASSERT(desired != 0 && supported != 0);
     // See if we have single desired/supported partitions, from NUL-terminated
     // partition strings without explicit length.
-    bool suppLengthGt1 = *supportedPartitions != 0;  // gt1: more than 1 character
+    तार्किक suppLengthGt1 = *supportedPartitions != 0;  // gt1: more than 1 character
     // equivalent to: if (desLength == 1 && suppLength == 1)
-    if (*desiredPartitions == 0 && !suppLengthGt1) {
+    जर (*desiredPartitions == 0 && !suppLengthGt1) {
         // Fastpath for single desired/supported partitions.
         UStringTrieResult result = iter.next(uprv_invCharToAscii(desired) | END_OF_SUBTAG);
-        if (USTRINGTRIE_HAS_NEXT(result)) {
+        जर (USTRINGTRIE_HAS_NEXT(result)) {
             result = iter.next(uprv_invCharToAscii(supported) | END_OF_SUBTAG);
-            if (USTRINGTRIE_HAS_VALUE(result)) {
-                return iter.getValue();
+            जर (USTRINGTRIE_HAS_मूल्य(result)) {
+                परत iter.get_मूल्य();
             }
         }
-        return getFallbackRegionDistance(iter, startState);
+        परत getFallbackRegionDistance(iter, startState);
     }
 
-    const char *supportedStart = supportedPartitions - 1;  // for restart of inner loop
+    स्थिरांक अक्षर *supportedStart = supportedPartitions - 1;  // for restart of inner loop
     int32_t regionDistance = 0;
     // Fall back to * only once, not for each pair of partition strings.
-    bool star = false;
-    for (;;) {
+    तार्किक star = असत्य;
+    साठी (;;) {
         // Look up each desired-partition string only once,
         // not for each (desired, supported) pair.
         UStringTrieResult result = iter.next(uprv_invCharToAscii(desired) | END_OF_SUBTAG);
-        if (USTRINGTRIE_HAS_NEXT(result)) {
+        जर (USTRINGTRIE_HAS_NEXT(result)) {
             uint64_t desState = suppLengthGt1 ? iter.getState64() : 0;
-            for (;;) {
+            साठी (;;) {
                 result = iter.next(uprv_invCharToAscii(supported) | END_OF_SUBTAG);
                 int32_t d;
-                if (USTRINGTRIE_HAS_VALUE(result)) {
-                    d = iter.getValue();
-                } else if (star) {
+                जर (USTRINGTRIE_HAS_मूल्य(result)) {
+                    d = iter.get_मूल्य();
+                } अन्यथा जर (star) {
                     d = 0;
-                } else {
+                } अन्यथा {
                     d = getFallbackRegionDistance(iter, startState);
-                    star = true;
+                    star = सत्य;
                 }
-                if (d > threshold) {
-                    return d;
-                } else if (regionDistance < d) {
+                जर (d > threshold) {
+                    परत d;
+                } अन्यथा जर (regionDistance < d) {
                     regionDistance = d;
                 }
-                if ((supported = *supportedPartitions++) != 0) {
+                जर ((supported = *supportedPartitions++) != 0) {
                     iter.resetToState64(desState);
-                } else {
-                    break;
+                } अन्यथा {
+                    थांबा;
                 }
             }
-        } else if (!star) {
+        } अन्यथा जर (!star) {
             int32_t d = getFallbackRegionDistance(iter, startState);
-            if (d > threshold) {
-                return d;
-            } else if (regionDistance < d) {
+            जर (d > threshold) {
+                परत d;
+            } अन्यथा जर (regionDistance < d) {
                 regionDistance = d;
             }
-            star = true;
+            star = सत्य;
         }
-        if ((desired = *desiredPartitions++) != 0) {
+        जर ((desired = *desiredPartitions++) != 0) {
             iter.resetToState64(startState);
             supportedPartitions = supportedStart;
             supported = *supportedPartitions++;
-        } else {
-            break;
+        } अन्यथा {
+            थांबा;
         }
     }
-    return regionDistance;
+    परत regionDistance;
 }
 
 int32_t LocaleDistance::getFallbackRegionDistance(BytesTrie &iter, uint64_t startState) {
-#if U_DEBUG
+#जर U_DEBUG
     UStringTrieResult result =
 #endif
     iter.resetToState64(startState).next(u'*');  // <*, *>
-    U_ASSERT(USTRINGTRIE_HAS_VALUE(result));
-    int32_t distance = iter.getValue();
+    U_ASSERT(USTRINGTRIE_HAS_मूल्य(result));
+    int32_t distance = iter.get_मूल्य();
     U_ASSERT(distance >= 0);
-    return distance;
+    परत distance;
 }
 
-int32_t LocaleDistance::trieNext(BytesTrie &iter, const char *s, bool wantValue) {
+int32_t LocaleDistance::trieNext(BytesTrie &iter, स्थिरांक अक्षर *s, तार्किक want_मूल्य) {
     uint8_t c;
-    if ((c = *s) == 0) {
-        return -1;  // no empty subtags in the distance data
+    जर ((c = *s) == 0) {
+        परत -1;  // no empty subtags in the distance data
     }
-    for (;;) {
+    साठी (;;) {
         c = uprv_invCharToAscii(c);
         // EBCDIC: If *s is not an invariant character,
         // then c is now 0 and will simply not match anything, which is harmless.
         uint8_t next = *++s;
-        if (next != 0) {
-            if (!USTRINGTRIE_HAS_NEXT(iter.next(c))) {
-                return -1;
+        जर (next != 0) {
+            जर (!USTRINGTRIE_HAS_NEXT(iter.next(c))) {
+                परत -1;
             }
-        } else {
+        } अन्यथा {
             // last character of this subtag
             UStringTrieResult result = iter.next(c | END_OF_SUBTAG);
-            if (wantValue) {
-                if (USTRINGTRIE_HAS_VALUE(result)) {
-                    int32_t value = iter.getValue();
-                    if (result == USTRINGTRIE_FINAL_VALUE) {
+            जर (want_मूल्य) {
+                जर (USTRINGTRIE_HAS_मूल्य(result)) {
+                    int32_t value = iter.get_मूल्य();
+                    जर (result == USTRINGTRIE_FINAL_मूल्य) {
                         value |= DISTANCE_IS_FINAL;
                     }
-                    return value;
+                    परत value;
                 }
-            } else {
-                if (USTRINGTRIE_HAS_NEXT(result)) {
-                    return 0;
+            } अन्यथा {
+                जर (USTRINGTRIE_HAS_NEXT(result)) {
+                    परत 0;
                 }
             }
-            return -1;
+            परत -1;
         }
         c = next;
     }
 }
 
-bool LocaleDistance::isParadigmLSR(const LSR &lsr) const {
+तार्किक LocaleDistance::isParadigmLSR(स्थिरांक LSR &lsr) स्थिरांक {
     // Linear search for a very short list (length 6 as of 2019),
     // because we look for equivalence not equality, and
     // because it's easy.
     // If there are many paradigm LSRs we should use a hash set
     // with custom comparator and hasher.
     U_ASSERT(paradigmLSRsLength <= 15);
-    for (int32_t i = 0; i < paradigmLSRsLength; ++i) {
-        if (lsr.isEquivalentTo(paradigmLSRs[i])) { return true; }
+    साठी (int32_t i = 0; i < paradigmLSRsLength; ++i) {
+        जर (lsr.isEquivalentTo(paradigmLSRs[i])) { परत सत्य; }
     }
-    return false;
+    परत असत्य;
 }
 
 U_NAMESPACE_END

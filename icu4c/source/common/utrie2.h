@@ -19,15 +19,15 @@
 #ifndef __UTRIE2_H__
 #define __UTRIE2_H__
 
-#include "unicode/utypes.h"
-#include "unicode/utf8.h"
-#include "putilimp.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/utf8.h"
+#अन्तर्भाव "putilimp.h"
 
 U_CDECL_BEGIN
 
-struct UTrie;  /* forward declaration */
+संरचना UTrie;  /* forward declaration */
 #ifndef __UTRIE_H__
-typedef struct UTrie UTrie;
+प्रकारव्याख्या संरचना UTrie UTrie;
 #endif
 
 /**
@@ -62,23 +62,23 @@ typedef struct UTrie UTrie;
  * Trie structure.
  * Use only with public API macros and functions.
  */
-struct UTrie2;
-typedef struct UTrie2 UTrie2;
+संरचना UTrie2;
+प्रकारव्याख्या संरचना UTrie2 UTrie2;
 
 /* Public UTrie2 API functions: read-only access ---------------------------- */
 
 /**
  * Selectors for the width of a UTrie2 data value.
  */
-enum UTrie2ValueBits {
+गणना UTrie2_मूल्य_Bits {
     /** 16 bits per UTrie2 data value. */
-    UTRIE2_16_VALUE_BITS,
+    UTRIE2_16_मूल्य_BITS,
     /** 32 bits per UTrie2 data value. */
-    UTRIE2_32_VALUE_BITS,
+    UTRIE2_32_मूल्य_BITS,
     /** Number of selectors for the width of UTrie2 data values. */
-    UTRIE2_COUNT_VALUE_BITS
+    UTRIE2_मोजणी_मूल्य_BITS
 };
-typedef enum UTrie2ValueBits UTrie2ValueBits;
+प्रकारव्याख्या गणना UTrie2_मूल्य_Bits UTrie2_मूल्य_Bits;
 
 /**
  * Open a frozen trie from its serialized from, stored in 32-bit-aligned memory.
@@ -100,8 +100,8 @@ typedef enum UTrie2ValueBits UTrie2ValueBits;
  * @see utrie2_serialize
  */
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_openFromSerialized(UTrie2ValueBits valueBits,
-                          const void *data, int32_t length, int32_t *pActualLength,
+utrie2_openFromSerialized(UTrie2_मूल्य_Bits मूल्य_Bits,
+                          स्थिरांक शून्य *data, int32_t length, int32_t *pActualLength,
                           UErrorCode *pErrorCode);
 
 /**
@@ -126,8 +126,8 @@ utrie2_openFromSerialized(UTrie2ValueBits valueBits,
  * @see utrie2_open
  */
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_openDummy(UTrie2ValueBits valueBits,
-                 uint32_t initialValue, uint32_t errorValue,
+utrie2_openDummy(UTrie2_मूल्य_Bits मूल्य_Bits,
+                 uint32_t initial_मूल्य, uint32_t error_मूल्य,
                  UErrorCode *pErrorCode);
 
 /**
@@ -141,7 +141,7 @@ utrie2_openDummy(UTrie2ValueBits valueBits,
  * @return the value
  */
 U_CAPI uint32_t U_EXPORT2
-utrie2_get32(const UTrie2 *trie, UChar32 c);
+utrie2_get32(स्थिरांक UTrie2 *trie, UChar32 c);
 
 /* enumeration callback types */
 
@@ -153,8 +153,8 @@ utrie2_get32(const UTrie2 *trie, UChar32 c);
  * @param value a value from the trie
  * @return the value that is to be passed on to the UTrie2EnumRange function
  */
-typedef uint32_t U_CALLCONV
-UTrie2EnumValue(const void *context, uint32_t value);
+प्रकारव्याख्या uint32_t U_CALLCONV
+UTrie2_Enum_मूल्य(स्थिरांक शून्य *context, uint32_t मूल्य_2);
 
 /**
  * Callback from utrie2_enum(), is called for each contiguous range
@@ -169,8 +169,8 @@ UTrie2EnumValue(const void *context, uint32_t value);
  * @param value the value that is set for all code points in [start..end]
  * @return false to stop the enumeration
  */
-typedef UBool U_CALLCONV
-UTrie2EnumRange(const void *context, UChar32 start, UChar32 end, uint32_t value);
+प्रकारव्याख्या UBool U_CALLCONV
+UTrie2EnumRange(स्थिरांक शून्य *context, UChar32 start, UChar32 end, uint32_t मूल्य_2);
 
 /**
  * Enumerate efficiently all values in a trie.
@@ -190,9 +190,9 @@ UTrie2EnumRange(const void *context, UChar32 start, UChar32 end, uint32_t value)
  *                  of code points with the same (transformed) value
  * @param context an opaque pointer that is passed on to the callback functions
  */
-U_CAPI void U_EXPORT2
-utrie2_enum(const UTrie2 *trie,
-            UTrie2EnumValue *enumValue, UTrie2EnumRange *enumRange, const void *context);
+U_CAPI शून्य U_EXPORT2
+utrie2_enum(स्थिरांक UTrie2 *trie,
+            UTrie2_Enum_मूल्य *enum_मूल्य, UTrie2EnumRange *enumRange, स्थिरांक शून्य *context);
 
 /* Building a trie ---------------------------------------------------------- */
 
@@ -208,7 +208,7 @@ utrie2_enum(const UTrie2 *trie,
  * @return a pointer to the allocated and initialized new trie
  */
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_open(uint32_t initialValue, uint32_t errorValue, UErrorCode *pErrorCode);
+utrie2_open(uint32_t initial_मूल्य, uint32_t error_मूल्य, UErrorCode *pErrorCode);
 
 /**
  * Clone a trie.
@@ -219,7 +219,7 @@ utrie2_open(uint32_t initialValue, uint32_t errorValue, UErrorCode *pErrorCode);
  * @return a pointer to the new trie clone
  */
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_clone(const UTrie2 *other, UErrorCode *pErrorCode);
+utrie2_clone(स्थिरांक UTrie2 *other, UErrorCode *pErrorCode);
 
 /**
  * Clone a trie. The clone will be mutable/writable even if the other trie
@@ -231,14 +231,14 @@ utrie2_clone(const UTrie2 *other, UErrorCode *pErrorCode);
  * @return a pointer to the new trie clone
  */
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_cloneAsThawed(const UTrie2 *other, UErrorCode *pErrorCode);
+utrie2_cloneAsThawed(स्थिरांक UTrie2 *other, UErrorCode *pErrorCode);
 
 /**
  * Close a trie and release associated memory.
  *
  * @param trie the trie
  */
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 utrie2_close(UTrie2 *trie);
 
 /**
@@ -250,8 +250,8 @@ utrie2_close(UTrie2 *trie);
  * @param pErrorCode an in/out ICU UErrorCode; among other possible error codes:
  * - U_NO_WRITE_PERMISSION if the trie is frozen
  */
-U_CAPI void U_EXPORT2
-utrie2_set32(UTrie2 *trie, UChar32 c, uint32_t value, UErrorCode *pErrorCode);
+U_CAPI शून्य U_EXPORT2
+utrie2_set32(UTrie2 *trie, UChar32 c, uint32_t मूल्य_2, UErrorCode *pErrorCode);
 
 /**
  * Set a value in a range of code points [start..end].
@@ -266,10 +266,10 @@ utrie2_set32(UTrie2 *trie, UChar32 c, uint32_t value, UErrorCode *pErrorCode);
  * @param pErrorCode an in/out ICU UErrorCode; among other possible error codes:
  * - U_NO_WRITE_PERMISSION if the trie is frozen
  */
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 utrie2_setRange32(UTrie2 *trie,
                   UChar32 start, UChar32 end,
-                  uint32_t value, UBool overwrite,
+                  uint32_t मूल्य_2, UBool overwrite,
                   UErrorCode *pErrorCode);
 
 /**
@@ -291,8 +291,8 @@ utrie2_setRange32(UTrie2 *trie,
  *
  * @see utrie2_cloneAsThawed
  */
-U_CAPI void U_EXPORT2
-utrie2_freeze(UTrie2 *trie, UTrie2ValueBits valueBits, UErrorCode *pErrorCode);
+U_CAPI शून्य U_EXPORT2
+utrie2_freeze(UTrie2 *trie, UTrie2_मूल्य_Bits मूल्य_Bits, UErrorCode *pErrorCode);
 
 /**
  * Test if the trie is frozen. (See utrie2_freeze().)
@@ -302,7 +302,7 @@ utrie2_freeze(UTrie2 *trie, UTrie2ValueBits valueBits, UErrorCode *pErrorCode);
  *         and for use with fast macros
  */
 U_CAPI UBool U_EXPORT2
-utrie2_isFrozen(const UTrie2 *trie);
+utrie2_isFrozen(स्थिरांक UTrie2 *trie);
 
 /**
  * Serialize a frozen trie into 32-bit aligned memory.
@@ -323,8 +323,8 @@ utrie2_isFrozen(const UTrie2 *trie);
  * @see utrie2_openFromSerialized()
  */
 U_CAPI int32_t U_EXPORT2
-utrie2_serialize(const UTrie2 *trie,
-                 void *data, int32_t capacity,
+utrie2_serialize(स्थिरांक UTrie2 *trie,
+                 शून्य *data, int32_t capacity,
                  UErrorCode *pErrorCode);
 
 /* Public UTrie2 API: miscellaneous functions ------------------------------- */
@@ -340,7 +340,7 @@ utrie2_serialize(const UTrie2 *trie,
  * @return The frozen UTrie2 with the same values as the UTrie.
  */
 U_CAPI UTrie2 * U_EXPORT2
-utrie2_fromUTrie(const UTrie *trie1, uint32_t errorValue, UErrorCode *pErrorCode);
+utrie2_fromUTrie(स्थिरांक UTrie *trie1, uint32_t error_मूल्य, UErrorCode *pErrorCode);
 
 /* Public UTrie2 API macros ------------------------------------------------- */
 
@@ -499,7 +499,7 @@ utrie2_fromUTrie(const UTrie *trie1, uint32_t errorValue, UErrorCode *pErrorCode
  * @return the value
  */
 U_CAPI uint32_t U_EXPORT2
-utrie2_get32FromLeadSurrogateCodeUnit(const UTrie2 *trie, UChar32 c);
+utrie2_get32FromLeadSurrogateCodeUnit(स्थिरांक UTrie2 *trie, UChar32 c);
 
 /**
  * Enumerate the trie values for the 1024=0x400 code points
@@ -526,10 +526,10 @@ utrie2_get32FromLeadSurrogateCodeUnit(const UTrie2 *trie, UChar32 c);
  *                  of code points with the same (transformed) value
  * @param context an opaque pointer that is passed on to the callback functions
  */
-U_CAPI void U_EXPORT2
-utrie2_enumForLeadSurrogate(const UTrie2 *trie, UChar32 lead,
-                            UTrie2EnumValue *enumValue, UTrie2EnumRange *enumRange,
-                            const void *context);
+U_CAPI शून्य U_EXPORT2
+utrie2_enumForLeadSurrogate(स्थिरांक UTrie2 *trie, UChar32 lead,
+                            UTrie2_Enum_मूल्य *enum_मूल्य, UTrie2EnumRange *enumRange,
+                            स्थिरांक शून्य *context);
 
 /**
  * Set a value for a lead surrogate code unit.
@@ -540,9 +540,9 @@ utrie2_enumForLeadSurrogate(const UTrie2 *trie, UChar32 lead,
  * @param pErrorCode an in/out ICU UErrorCode; among other possible error codes:
  * - U_NO_WRITE_PERMISSION if the trie is frozen
  */
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 utrie2_set32ForLeadSurrogateCodeUnit(UTrie2 *trie,
-                                     UChar32 lead, uint32_t value,
+                                     UChar32 lead, uint32_t मूल्य_2,
                                      UErrorCode *pErrorCode);
 
 /**
@@ -591,42 +591,42 @@ U_CDECL_END
 
 #ifdef __cplusplus
 
-#include "unicode/uobject.h"
-#include "unicode/utf.h"
+#अन्तर्भाव "unicode/uobject.h"
+#अन्तर्भाव "unicode/utf.h"
 
 U_NAMESPACE_BEGIN
 
 // Use the Forward/Backward subclasses below.
-class UTrie2StringIterator : public UMemory {
-public:
-    UTrie2StringIterator(const UTrie2 *t, const char16_t *p) :
+class UTrie2StringIterator : सार्वजनिक UMemory {
+सार्वजनिक:
+    UTrie2StringIterator(स्थिरांक UTrie2 *t, स्थिरांक char16_t *p) :
         trie(t), codePointStart(p), codePointLimit(p), codePoint(U_SENTINEL) {}
 
-    const UTrie2 *trie;
-    const char16_t *codePointStart, *codePointLimit;
+    स्थिरांक UTrie2 *trie;
+    स्थिरांक char16_t *codePointStart, *codePointLimit;
     UChar32 codePoint;
 };
 
-class BackwardUTrie2StringIterator : public UTrie2StringIterator {
-public:
-    BackwardUTrie2StringIterator(const UTrie2 *t, const char16_t *s, const char16_t *p) :
+class BackwardUTrie2StringIterator : सार्वजनिक UTrie2StringIterator {
+सार्वजनिक:
+    BackwardUTrie2StringIterator(स्थिरांक UTrie2 *t, स्थिरांक char16_t *s, स्थिरांक char16_t *p) :
         UTrie2StringIterator(t, p), start(s) {}
 
     uint16_t previous16();
 
-    const char16_t *start;
+    स्थिरांक char16_t *start;
 };
 
-class ForwardUTrie2StringIterator : public UTrie2StringIterator {
-public:
+class ForwardUTrie2StringIterator : सार्वजनिक UTrie2StringIterator {
+सार्वजनिक:
     // Iteration limit l can be nullptr.
     // In that case, the caller must detect c==0 and stop.
-    ForwardUTrie2StringIterator(const UTrie2 *t, const char16_t *p, const char16_t *l) :
+    ForwardUTrie2StringIterator(स्थिरांक UTrie2 *t, स्थिरांक char16_t *p, स्थिरांक char16_t *l) :
         UTrie2StringIterator(t, p), limit(l) {}
 
     uint16_t next16();
 
-    const char16_t *limit;
+    स्थिरांक char16_t *limit;
 };
 
 U_NAMESPACE_END
@@ -638,8 +638,8 @@ U_NAMESPACE_END
 U_CDECL_BEGIN
 
 /** Build-time trie structure. */
-struct UNewTrie2;
-typedef struct UNewTrie2 UNewTrie2;
+संरचना UNewTrie2;
+प्रकारव्याख्या संरचना UNewTrie2 UNewTrie2;
 
 /*
  * Trie structure definition.
@@ -650,25 +650,25 @@ typedef struct UNewTrie2 UNewTrie2;
  *
  * Or the data table is 32 bits wide and accessed via the data32 pointer.
  */
-struct UTrie2 {
+संरचना UTrie2 {
     /* protected: used by macros and functions for reading values */
-    const uint16_t *index;
-    const uint16_t *data16;     /* for fast UTF-8 ASCII access, if 16b data */
-    const uint32_t *data32;     /* NULL if 16b data is used via index */
+    स्थिरांक uint16_t *index;
+    स्थिरांक uint16_t *data16;     /* for fast UTF-8 ASCII access, if 16b data */
+    स्थिरांक uint32_t *data32;     /* NULL if 16b data is used via index */
 
     int32_t indexLength, dataLength;
     uint16_t index2NullOffset;  /* 0xffff if there is no dedicated index-2 null block */
     uint16_t dataNullOffset;
-    uint32_t initialValue;
+    uint32_t initial_मूल्य;
     /** Value returned for out-of-range code points and illegal UTF-8. */
-    uint32_t errorValue;
+    uint32_t error_मूल्य;
 
     /* Start of the last range which ends at U+10ffff, and its value. */
-    UChar32 highStart;
-    int32_t highValueIndex;
+    UChar32 वरचा_Start;
+    int32_t वरचा_मूल्य_Index;
 
     /* private: used by builder and unserialization functions */
-    void *memory;           /* serialized bytes; NULL if not frozen yet */
+    शून्य *memory;           /* serialized bytes; NULL if not frozen yet */
     int32_t length;         /* number of serialized bytes at memory; 0 if not frozen yet */
     UBool isMemoryOwned;    /* true if the trie owns the memory */
     UBool padding1;
@@ -676,7 +676,7 @@ struct UTrie2 {
     UNewTrie2 *newTrie;     /* builder object; NULL when frozen */
 
 #ifdef UTRIE2_DEBUG
-    const char *name;
+    स्थिरांक अक्षर *name;
 #endif
 };
 
@@ -686,7 +686,7 @@ struct UTrie2 {
  * These are needed for the runtime macros but users can treat these as
  * implementation details and skip to the actual public API further below.
  */
-enum {
+गणना {
     /** Shift size for getting the index-1 table offset. */
     UTRIE2_SHIFT_1=6+5,
 
@@ -797,8 +797,8 @@ enum {
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-utrie2_internalU8NextIndex(const UTrie2 *trie, UChar32 c,
-                           const uint8_t *src, const uint8_t *limit);
+utrie2_internalU8NextIndex(स्थिरांक UTrie2 *trie, UChar32 c,
+                           स्थिरांक uint8_t *src, स्थिरांक uint8_t *limit);
 
 /**
  * Internal function for part of the UTRIE2_U8_PREVxx() macro implementations.
@@ -806,8 +806,8 @@ utrie2_internalU8NextIndex(const UTrie2 *trie, UChar32 c,
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
-                           const uint8_t *start, const uint8_t *src);
+utrie2_internalU8PrevIndex(स्थिरांक UTrie2 *trie, UChar32 c,
+                           स्थिरांक uint8_t *start, स्थिरांक uint8_t *src);
 
 
 /** Internal low-level trie getter. Returns a data index. */
@@ -850,8 +850,8 @@ utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
                 (trie)->index, c) : \
             (uint32_t)(c)>0x10ffff ? \
                 (asciiOffset)+UTRIE2_BAD_UTF8_DATA_OFFSET : \
-                (c)>=(trie)->highStart ? \
-                    (trie)->highValueIndex : \
+                (c)>=(trie)->वरचा_Start ? \
+                    (trie)->वरचा_मूल्य_Index : \
                     _UTRIE2_INDEX_FROM_SUPP((trie)->index, c))
 
 /** Internal trie getter from a UTF-16 single/lead code unit. Returns the data. */
@@ -860,7 +860,7 @@ utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
 
 /** Internal trie getter from a supplementary code point. Returns the data. */
 #define _UTRIE2_GET_FROM_SUPP(trie, data, c) \
-    (trie)->data[(c)>=(trie)->highStart ? (trie)->highValueIndex : \
+    (trie)->data[(c)>=(trie)->वरचा_Start ? (trie)->वरचा_मूल्य_Index : \
                  _UTRIE2_INDEX_FROM_SUPP((trie)->index, c)]
 
 /**
@@ -875,11 +875,11 @@ utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
     { \
         uint16_t __c2; \
         (c)=*(src)++; \
-        if(!U16_IS_LEAD(c)) { \
+        जर(!U16_IS_LEAD(c)) { \
             (result)=_UTRIE2_GET_FROM_U16_SINGLE_LEAD(trie, data, c); \
-        } else if((src)==(limit) || !U16_IS_TRAIL(__c2=*(src))) { \
+        } अन्यथा जर((src)==(limit) || !U16_IS_TRAIL(__c2=*(src))) { \
             (result)=(trie)->data[_UTRIE2_INDEX_FROM_LSCP((trie)->index, c)]; \
-        } else { \
+        } अन्यथा { \
             ++(src); \
             (c)=U16_GET_SUPPLEMENTARY((c), __c2); \
             (result)=_UTRIE2_GET_FROM_SUPP((trie), data, (c)); \
@@ -892,9 +892,9 @@ utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
     { \
         uint16_t __c2; \
         (c)=*--(src); \
-        if(!U16_IS_TRAIL(c) || (src)==(start) || !U16_IS_LEAD(__c2=*((src)-1))) { \
+        जर(!U16_IS_TRAIL(c) || (src)==(start) || !U16_IS_LEAD(__c2=*((src)-1))) { \
             (result)=(trie)->data[_UTRIE2_INDEX_FROM_BMP((trie)->index, c)]; \
-        } else { \
+        } अन्यथा { \
             --(src); \
             (c)=U16_GET_SUPPLEMENTARY(__c2, (c)); \
             (result)=_UTRIE2_GET_FROM_SUPP((trie), data, (c)); \
@@ -905,11 +905,11 @@ utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
 /** Internal UTF-8 next-post-increment: get the next code point's data. */
 #define _UTRIE2_U8_NEXT(trie, ascii, data, src, limit, result) UPRV_BLOCK_MACRO_BEGIN { \
     uint8_t __lead=(uint8_t)*(src)++; \
-    if(U8_IS_SINGLE(__lead)) { \
+    जर(U8_IS_SINGLE(__lead)) { \
         (result)=(trie)->ascii[__lead]; \
-    } else { \
+    } अन्यथा { \
         uint8_t __t1, __t2; \
-        if( /* handle U+0800..U+FFFF inline */ \
+        जर( /* handle U+0800..U+FFFF inline */ \
             0xe0<=__lead && __lead<0xf0 && ((src)+1)<(limit) && \
             U8_IS_VALID_LEAD3_AND_T1(__lead, __t1=(uint8_t)*(src)) && \
             (__t2=(uint8_t)(*((src)+1)-0x80))<= 0x3f \
@@ -920,7 +920,7 @@ utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
                                          ((__t1&0x3f)<<(6-UTRIE2_SHIFT_2))+(__t2>>UTRIE2_SHIFT_2)]) \
                 <<UTRIE2_INDEX_SHIFT)+ \
                 (__t2&UTRIE2_DATA_MASK)]; \
-        } else if( /* handle U+0080..U+07FF inline */ \
+        } अन्यथा जर( /* handle U+0080..U+07FF inline */ \
             __lead<0xe0 && __lead>=0xc2 && (src)<(limit) && \
             (__t1=(uint8_t)(*(src)-0x80))<=0x3f \
         ) { \
@@ -928,9 +928,9 @@ utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
             (result)=(trie)->data[ \
                 (trie)->index[(UTRIE2_UTF8_2B_INDEX_2_OFFSET-0xc0)+__lead]+ \
                 __t1]; \
-        } else { \
-            int32_t __index=utrie2_internalU8NextIndex((trie), __lead, (const uint8_t *)(src), \
-                                                                       (const uint8_t *)(limit)); \
+        } अन्यथा { \
+            int32_t __index=utrie2_internalU8NextIndex((trie), __lead, (स्थिरांक uint8_t *)(src), \
+                                                                       (स्थिरांक uint8_t *)(limit)); \
             (src)+=__index&7; \
             (result)=(trie)->data[__index>>3]; \
         } \
@@ -940,11 +940,11 @@ utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
 /** Internal UTF-8 pre-decrement-previous: get the previous code point's data. */
 #define _UTRIE2_U8_PREV(trie, ascii, data, start, src, result) UPRV_BLOCK_MACRO_BEGIN { \
     uint8_t __b=(uint8_t)*--(src); \
-    if(U8_IS_SINGLE(__b)) { \
+    जर(U8_IS_SINGLE(__b)) { \
         (result)=(trie)->ascii[__b]; \
-    } else { \
-        int32_t __index=utrie2_internalU8PrevIndex((trie), __b, (const uint8_t *)(start), \
-                                                                (const uint8_t *)(src)); \
+    } अन्यथा { \
+        int32_t __index=utrie2_internalU8PrevIndex((trie), __b, (स्थिरांक uint8_t *)(start), \
+                                                                (स्थिरांक uint8_t *)(src)); \
         (src)-=__index&7; \
         (result)=(trie)->data[__index>>3]; \
     } \

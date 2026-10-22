@@ -17,9 +17,9 @@
 #ifndef ENUMSET_H
 #define ENUMSET_H
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#जर U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -30,35 +30,35 @@ U_NAMESPACE_BEGIN
  * @internal
  * \cond
  */
-template<typename T, uint32_t minValue, uint32_t limitValue>
+ढाँचा<typename T, uint32_t min_मूल्य, uint32_t limit_मूल्य>
 class EnumSet {
-public:
-    inline EnumSet() : fBools(0) {}
-    inline EnumSet(const EnumSet<T,minValue,limitValue>& other) : fBools(other.fBools) {}
-    inline ~EnumSet() {}
+सार्वजनिक:
+    ओळीत EnumSet() : fBools(0) {}
+    ओळीत EnumSet(स्थिरांक EnumSet<T,min_मूल्य,limit_मूल्य>& other) : fBools(other.fBools) {}
+    ओळीत ~EnumSet() {}
 #ifndef U_HIDE_INTERNAL_API
-    inline void clear() { fBools=0; }
-    inline void add(T toAdd) { set(toAdd, 1); }
-    inline void remove(T toRemove) { set(toRemove, 0); }
-    inline int32_t contains(T toCheck) const { return get(toCheck); }
-    inline void set(T toSet, int32_t v) { fBools=(fBools&(~flag(toSet)))|(v?(flag(toSet)):0); }
-    inline int32_t get(T toCheck) const { return (fBools & flag(toCheck))?1:0; }
-    inline UBool isValidEnum(T toCheck) const {  return (toCheck>=minValue&&toCheck<limitValue); }
-    inline UBool isValidValue(int32_t v) const { return (v==0||v==1); }
-    inline const EnumSet<T, minValue, limitValue>&
-    operator=(const EnumSet<T, minValue, limitValue>& other) U_LIFETIME_BOUND {
+    ओळीत शून्य clear() { fBools=0; }
+    ओळीत शून्य add(T toAdd) { set(toAdd, 1); }
+    ओळीत शून्य हटाओ(T toRemove) { set(toRemove, 0); }
+    ओळीत int32_t contains(T toCheck) स्थिरांक { परत get(toCheck); }
+    ओळीत शून्य set(T toSet, int32_t v) { fBools=(fBools&(~flag(toSet)))|(v?(flag(toSet)):0); }
+    ओळीत int32_t get(T toCheck) स्थिरांक { परत (fBools & flag(toCheck))?1:0; }
+    ओळीत UBool isValidEnum(T toCheck) स्थिरांक {  परत (toCheck>=min_मूल्य&&toCheck<limit_मूल्य); }
+    ओळीत UBool is_Valid_मूल्य(int32_t v) स्थिरांक { परत (v==0||v==1); }
+    ओळीत स्थिरांक EnumSet<T, min_मूल्य, limit_मूल्य>&
+    चालक=(स्थिरांक EnumSet<T, min_मूल्य, limit_मूल्य>& other) U_LIFETIME_BOUND {
         fBools = other.fBools;
-        return *this;
+        परत *this;
     }
   
-    inline uint32_t getAll() const {
-        return fBools; 
+    ओळीत uint32_t getAll() स्थिरांक {
+        परत fBools; 
     }
 #endif /* U_HIDE_INTERNAL_API */
 
-private:
-    inline uint32_t flag(T toCheck) const { return (1<<(toCheck-minValue)); }
-private:
+खाजगी:
+    ओळीत uint32_t flag(T toCheck) स्थिरांक { परत (1<<(toCheck-min_मूल्य)); }
+खाजगी:
     uint32_t fBools;
 };
 

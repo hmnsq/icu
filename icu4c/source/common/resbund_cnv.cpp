@@ -18,36 +18,36 @@
 *   Character conversion functions moved here from resbund.cpp
 */
 
-#include "unicode/utypes.h"
-#include "unicode/resbund.h"
-#include "uinvchar.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/resbund.h"
+#अन्तर्भाव "uinvchar.h"
 
 U_NAMESPACE_BEGIN
 
-ResourceBundle::ResourceBundle( const UnicodeString&    path,
-                                const Locale&           locale,
+ResourceBundle::ResourceBundle( स्थिरांक UnicodeString&    path,
+                                स्थिरांक Locale&           locale,
                                 UErrorCode&              error)
                                 :UObject(), fLocale(nullptr)
 {
     constructForLocale(path, locale, error);
 }
 
-ResourceBundle::ResourceBundle( const UnicodeString&    path,
+ResourceBundle::ResourceBundle( स्थिरांक UnicodeString&    path,
                                 UErrorCode&              error)
                                 :UObject(), fLocale(nullptr)
 {
     constructForLocale(path, Locale::getDefault(), error);
 }
 
-void 
-ResourceBundle::constructForLocale(const UnicodeString& path,
-                                   const Locale& locale,
+शून्य 
+ResourceBundle::constructForLocale(स्थिरांक UnicodeString& path,
+                                   स्थिरांक Locale& locale,
                                    UErrorCode& error)
 {
-    if (path.isEmpty()) {
+    जर (path.isEmpty()) {
         fResource = ures_open(nullptr, locale.getName(), &error);
     }
-    else {
+    अन्यथा {
         UnicodeString nullTerminatedPath(path);
         nullTerminatedPath.append(static_cast<char16_t>(0));
         fResource = ures_openU(nullTerminatedPath.getBuffer(), locale.getName(), &error);

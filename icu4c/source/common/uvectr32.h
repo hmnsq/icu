@@ -16,10 +16,10 @@
 #ifndef UVECTOR32_H
 #define UVECTOR32_H
 
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "uhash.h"
-#include "uassert.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/uobject.h"
+#अन्तर्भाव "uhash.h"
+#अन्तर्भाव "uassert.h"
 
 U_NAMESPACE_BEGIN
 
@@ -58,9 +58,9 @@ U_NAMESPACE_BEGIN
  *
  * @author Alan Liu
  */
-class U_COMMON_API UVector32 : public UObject {
-private:
-    int32_t   count;
+class U_COMMON_API UVector32 : सार्वजनिक UObject {
+खाजगी:
+    int32_t   मोजणी;
 
     int32_t   capacity;
     
@@ -68,67 +68,67 @@ private:
 
     int32_t*  elements;
 
-public:
+सार्वजनिक:
     UVector32(UErrorCode &status);
 
     UVector32(int32_t initialCapacity, UErrorCode &status);
 
-    virtual ~UVector32();
+    आभासी ~UVector32();
 
     /**
      * Assign this object to another (make this a copy of 'other').
      * Use the 'assign' function to assign each element.
      */
-    void assign(const UVector32& other, UErrorCode &ec);
+    शून्य assign(स्थिरांक UVector32& other, UErrorCode &ec);
 
     /**
      * Compare this vector with another.  They will be considered
      * equal if they are of the same size and all elements are equal,
      * as compared using this object's comparer.
      */
-    bool operator==(const UVector32& other) const;
+    bool चालक==(स्थिरांक UVector32& other) स्थिरांक;
 
     /**
      * Equivalent to !operator==()
      */
-    inline bool operator!=(const UVector32& other) const;
+    ओळीत bool चालक!=(स्थिरांक UVector32& other) स्थिरांक;
 
     //------------------------------------------------------------
     // java.util.Vector API
     //------------------------------------------------------------
 
-    inline void addElement(int32_t elem, UErrorCode &status);
+    ओळीत शून्य addElement(int32_t elem, UErrorCode &status);
 
-    void setElementAt(int32_t elem, int32_t index);
+    शून्य setElementAt(int32_t elem, int32_t index);
 
-    void insertElementAt(int32_t elem, int32_t index, UErrorCode &status);
+    शून्य घाला_Element_At(int32_t elem, int32_t index, UErrorCode &status);
     
-    inline int32_t elementAti(int32_t index) const;
+    ओळीत int32_t elementAti(int32_t index) स्थिरांक;
 
-    UBool equals(const UVector32 &other) const;
+    UBool equals(स्थिरांक UVector32 &other) स्थिरांक;
 
-    inline int32_t lastElementi() const;
+    ओळीत int32_t lastElementi() स्थिरांक;
 
-    int32_t indexOf(int32_t elem, int32_t startIndex = 0) const;
+    int32_t indexOf(int32_t elem, int32_t startIndex = 0) स्थिरांक;
 
-    inline UBool contains(int32_t elem) const;
+    ओळीत UBool contains(int32_t elem) स्थिरांक;
 
-    UBool containsAll(const UVector32& other) const;
+    UBool containsAll(स्थिरांक UVector32& other) स्थिरांक;
 
-    UBool removeAll(const UVector32& other);
+    UBool removeAll(स्थिरांक UVector32& other);
 
-    UBool retainAll(const UVector32& other);
+    UBool retainAll(स्थिरांक UVector32& other);
 
-    void removeElementAt(int32_t index);
+    शून्य removeElementAt(int32_t index);
 
-    void removeAllElements();
+    शून्य removeAllElements();
 
-    inline int32_t size() const;
+    ओळीत int32_t size() स्थिरांक;
 
-    inline UBool isEmpty() const;
+    ओळीत UBool isEmpty() स्थिरांक;
 
     // Inline.  Use this one for speedy size check.
-    inline UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
+    ओळीत UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
 
     // Out-of-line, handles actual growth.  Called by ensureCapacity() when necessary.
     UBool expandCapacity(int32_t minimumCapacity, UErrorCode &status);
@@ -139,7 +139,7 @@ public:
      * elements for i >= newSize.  If newSize is larger, grow the
      * array, filling in new slows with zero.
      */
-    void setSize(int32_t newSize);
+    शून्य setSize(int32_t newSize);
 
     //------------------------------------------------------------
     // New API
@@ -151,19 +151,19 @@ public:
      * @param other vector to be checked for containment
      * @return true if the test condition is met
      */
-    UBool containsNone(const UVector32& other) const;
+    UBool containsNone(स्थिरांक UVector32& other) स्थिरांक;
 
 
     /**
      * Insert the given integer into this vector at its sorted position.
      * The current elements are assumed to be sorted already.
      */
-    void sortedInsert(int32_t elem, UErrorCode& ec);
+    शून्य sorted_घाला(int32_t elem, UErrorCode& ec);
 
     /**
      * Returns a pointer to the internal array holding the vector.
      */
-    inline int32_t *getBuffer() const;
+    ओळीत int32_t *getBuffer() स्थिरांक;
 
     /**
      * Set the maximum allowed buffer capacity for this vector/stack.
@@ -171,134 +171,134 @@ public:
      * A Limit of zero means unlimited capacity.
      * Units are vector elements (32 bits each), not bytes.
      */
-    void setMaxCapacity(int32_t limit);
+    शून्य setMaxCapacity(int32_t limit);
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    स्थिर UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      */
-    virtual UClassID getDynamicClassID() const override;
+    आभासी UClassID getDynamicClassID() स्थिरांक override;
 
-private:
-    void _init(int32_t initialCapacity, UErrorCode &status);
-
-    // Disallow
-    UVector32(const UVector32&) = delete;
+खाजगी:
+    शून्य _init(int32_t initialCapacity, UErrorCode &status);
 
     // Disallow
-    UVector32& operator=(const UVector32&) = delete;
+    UVector32(स्थिरांक UVector32&) = delete;
+
+    // Disallow
+    UVector32& चालक=(स्थिरांक UVector32&) = delete;
 
 
     //  API Functions for Stack operations.
     //  In the original UVector, these were in a separate derived class, UStack.
     //  Here in UVector32, they are all together.
-public:
-    inline UBool empty() const;   // TODO:  redundant, same as empty().  Remove it?
+सार्वजनिक:
+    ओळीत UBool empty() स्थिरांक;   // TODO:  redundant, same as empty().  Remove it?
 
-    inline int32_t peeki() const;
+    ओळीत int32_t peeki() स्थिरांक;
     
-    inline int32_t popi();
+    ओळीत int32_t popi();
     
-    inline int32_t push(int32_t i, UErrorCode &status);
+    ओळीत int32_t ढकला(int32_t i, UErrorCode &status);
 
-    inline int32_t *reserveBlock(int32_t size, UErrorCode &status);
-    inline int32_t *popFrame(int32_t size);
+    ओळीत int32_t *reserveBlock(int32_t size, UErrorCode &status);
+    ओळीत int32_t *काढा_Frame(int32_t size);
 };
 
 
 // UVector32 inlines
 
-inline UBool UVector32::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
-    if ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
-        return true;
-    } else {
-        return expandCapacity(minimumCapacity, status);
+ओळीत UBool UVector32::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
+    जर ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
+        परत true;
+    } अन्यथा {
+        परत expandCapacity(minimumCapacity, status);
     }
 }
 
-inline int32_t UVector32::elementAti(int32_t index) const {
-    return (index >= 0 && count > 0 && count - index > 0) ? elements[index] : 0;
+ओळीत int32_t UVector32::elementAti(int32_t index) स्थिरांक {
+    परत (index >= 0 && मोजणी > 0 && मोजणी - index > 0) ? elements[index] : 0;
 }
 
 
-inline void UVector32::addElement(int32_t elem, UErrorCode &status) {
-    if (ensureCapacity(count + 1, status)) {
-        elements[count] = elem;
-        count++;
+ओळीत शून्य UVector32::addElement(int32_t elem, UErrorCode &status) {
+    जर (ensureCapacity(मोजणी + 1, status)) {
+        elements[मोजणी] = elem;
+        मोजणी++;
     }
 }
 
-inline int32_t *UVector32::reserveBlock(int32_t size, UErrorCode &status) {
-    if (ensureCapacity(count+size, status) == false) {
-        return nullptr;
+ओळीत int32_t *UVector32::reserveBlock(int32_t size, UErrorCode &status) {
+    जर (ensureCapacity(मोजणी+size, status) == false) {
+        परत nullptr;
     }
-    int32_t  *rp = elements+count;
-    count += size;
-    return rp;
+    int32_t  *rp = elements+मोजणी;
+    मोजणी += size;
+    परत rp;
 }
 
-inline int32_t *UVector32::popFrame(int32_t size) {
-    U_ASSERT(count >= size);
-    count -= size;
-    if (count < 0) {
-        count = 0;
+ओळीत int32_t *UVector32::काढा_Frame(int32_t size) {
+    U_ASSERT(मोजणी >= size);
+    मोजणी -= size;
+    जर (मोजणी < 0) {
+        मोजणी = 0;
     }
-    return elements+count-size;
+    परत elements+मोजणी-size;
 }
 
 
 
-inline int32_t UVector32::size() const {
-    return count;
+ओळीत int32_t UVector32::size() स्थिरांक {
+    परत मोजणी;
 }
 
-inline UBool UVector32::isEmpty() const {
-    return count == 0;
+ओळीत UBool UVector32::isEmpty() स्थिरांक {
+    परत मोजणी == 0;
 }
 
-inline UBool UVector32::contains(int32_t obj) const {
-    return indexOf(obj) >= 0;
+ओळीत UBool UVector32::contains(int32_t obj) स्थिरांक {
+    परत indexOf(obj) >= 0;
 }
 
-inline int32_t UVector32::lastElementi() const {
-    return elementAti(count-1);
+ओळीत int32_t UVector32::lastElementi() स्थिरांक {
+    परत elementAti(मोजणी-1);
 }
 
-inline bool UVector32::operator!=(const UVector32& other) const {
-    return !operator==(other);
+ओळीत bool UVector32::चालक!=(स्थिरांक UVector32& other) स्थिरांक {
+    परत !चालक==(other);
 }
 
-inline int32_t *UVector32::getBuffer() const {
-    return elements;
+ओळीत int32_t *UVector32::getBuffer() स्थिरांक {
+    परत elements;
 }
 
 
 // UStack inlines
 
-inline UBool UVector32::empty() const {
-    return isEmpty();
+ओळीत UBool UVector32::empty() स्थिरांक {
+    परत isEmpty();
 }
 
-inline int32_t UVector32::peeki() const {
-    return lastElementi();
+ओळीत int32_t UVector32::peeki() स्थिरांक {
+    परत lastElementi();
 }
 
-inline int32_t UVector32::push(int32_t i, UErrorCode &status) {
+ओळीत int32_t UVector32::ढकला(int32_t i, UErrorCode &status) {
     addElement(i, status);
-    return i;
+    परत i;
 }
 
-inline int32_t UVector32::popi() {
+ओळीत int32_t UVector32::popi() {
     int32_t result = 0;
-    if (count > 0) {
-        count--;
-        result = elements[count];
+    जर (मोजणी > 0) {
+        मोजणी--;
+        result = elements[मोजणी];
     }
-    return result;
+    परत result;
 }
 
 U_NAMESPACE_END

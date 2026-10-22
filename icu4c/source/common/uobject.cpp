@@ -16,12 +16,12 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/uobject.h"
-#include "cmemory.h"
+#अन्तर्भाव "unicode/uobject.h"
+#अन्तर्भाव "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
-#if U_OVERRIDE_CXX_ALLOCATION
+#जर U_OVERRIDE_CXX_ALLOCATION
 
 /*
  * Default implementation of UMemory::new/delete
@@ -58,33 +58,33 @@ U_NAMESPACE_BEGIN
  * and replace with uprv_malloc/uprv_free.
  */
 
-void * U_EXPORT2 UMemory::operator new(size_t size) noexcept {
-    return uprv_malloc(size);
+शून्य * U_EXPORT2 UMemory::चालक नवीन(माप_प्रकार size) noexcept {
+    परत uprv_malloc(size);
 }
 
-void U_EXPORT2 UMemory::operator delete(void *p) noexcept {
-    if(p!=nullptr) {
+शून्य U_EXPORT2 UMemory::चालक delete(शून्य *p) noexcept {
+    जर(p!=nullptr) {
         uprv_free(p);
     }
 }
 
-void * U_EXPORT2 UMemory::operator new[](size_t size) noexcept {
-    return uprv_malloc(size);
+शून्य * U_EXPORT2 UMemory::चालक नवीन[](माप_प्रकार size) noexcept {
+    परत uprv_malloc(size);
 }
 
-void U_EXPORT2 UMemory::operator delete[](void *p) noexcept {
-    if(p!=nullptr) {
+शून्य U_EXPORT2 UMemory::चालक delete[](शून्य *p) noexcept {
+    जर(p!=nullptr) {
         uprv_free(p);
     }
 }
 
-#if U_HAVE_DEBUG_LOCATION_NEW
-void * U_EXPORT2 UMemory::operator new(size_t size, const char* /*file*/, int /*line*/) noexcept {
-    return UMemory::operator new(size);
+#जर U_HAVE_DEBUG_LOCATION_NEW
+शून्य * U_EXPORT2 UMemory::चालक नवीन(माप_प्रकार size, स्थिरांक अक्षर* /*file*/, पूर्णांक /*ओळ*/) noexcept {
+    परत UMemory::चालक नवीन(size);
 }
 
-void U_EXPORT2 UMemory::operator delete(void* p, const char* /*file*/, int /*line*/) noexcept {
-    UMemory::operator delete(p);
+शून्य U_EXPORT2 UMemory::चालक delete(शून्य* p, स्थिरांक अक्षर* /*file*/, पूर्णांक /*ओळ*/) noexcept {
+    UMemory::चालक delete(p);
 }
 #endif /* U_HAVE_DEBUG_LOCATION_NEW */
 
@@ -93,13 +93,13 @@ void U_EXPORT2 UMemory::operator delete(void* p, const char* /*file*/, int /*lin
 
 UObject::~UObject() {}
 
-UClassID UObject::getDynamicClassID() const { return nullptr; }
+UClassID UObject::getDynamicClassID() स्थिरांक { परत nullptr; }
 
 U_NAMESPACE_END
 
 U_NAMESPACE_USE
 
-U_CAPI void U_EXPORT2
-uprv_deleteUObject(void *obj) {
+U_CAPI शून्य U_EXPORT2
+uprv_deleteUObject(शून्य *obj) {
     delete static_cast<UObject *>(obj);
 }

@@ -19,16 +19,16 @@
  *----------------------------------------------------------------------------*/
 /* Defines _XOPEN_SOURCE for access to POSIX functions.
  * Must be before any other #includes. */
-#include "uposixdefs.h"
+#अन्तर्भाव "uposixdefs.h"
 
-#include "unicode/putil.h"
-#include "unicode/ustring.h"
-#include "udatamem.h"
-#include "umapfile.h"
+#अन्तर्भाव "unicode/putil.h"
+#अन्तर्भाव "unicode/ustring.h"
+#अन्तर्भाव "udatamem.h"
+#अन्तर्भाव "umapfile.h"
 
 /* memory-mapping base definitions ------------------------------------------ */
 
-#if MAP_IMPLEMENTATION==MAP_WIN32
+#जर MAP_IMPLEMENTATION==MAP_WIN32
 #ifndef WIN32_LEAN_AND_MEAN
 #   define WIN32_LEAN_AND_MEAN
 #endif
@@ -38,33 +38,33 @@
 #   define NOIME
 #   define NOMCX
 
-#   if U_PLATFORM_HAS_WINUWP_API == 1
+#   जर U_PLATFORM_HAS_WINUWP_API == 1
         // Some previous versions of the Windows 10 SDK don't expose various APIs for UWP applications
         // to use, even though UWP apps are allowed to call and use them.  Temporarily change the
         // WINAPI family partition below to Desktop, so that function declarations are visible for UWP.
 #       include <winapifamily.h>
-#       if !(WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM))
-#           pragma push_macro("WINAPI_PARTITION_DESKTOP")
+#       जर !(WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM))
+#           pragma ढकला_macro("WINAPI_PARTITION_DESKTOP")
 #           undef WINAPI_PARTITION_DESKTOP
 #           define WINAPI_PARTITION_DESKTOP 1
-#           define CHANGED_WINAPI_PARTITION_DESKTOP_VALUE
+#           define CHANGED_WINAPI_PARTITION_DESKTOP_मूल्य
 #       endif
 #   endif
 
 #   include <windows.h>
 
-#   if U_PLATFORM_HAS_WINUWP_API == 1 && defined(CHANGED_WINAPI_PARTITION_DESKTOP_VALUE)
-#       pragma pop_macro("WINAPI_PARTITION_DESKTOP")
+#   जर U_PLATFORM_HAS_WINUWP_API == 1 && defined(CHANGED_WINAPI_PARTITION_DESKTOP_मूल्य)
+#       pragma काढा_macro("WINAPI_PARTITION_DESKTOP")
 #   endif
 
 #   include "cmemory.h"
 
-typedef HANDLE MemoryMap;
+प्रकारव्याख्या HANDLE MemoryMap;
 
 #   define IS_MAP(map) ((map)!=nullptr)
 
-#elif MAP_IMPLEMENTATION==MAP_POSIX
-    typedef size_t MemoryMap;
+#किंवाजर MAP_IMPLEMENTATION==MAP_POSIX
+    प्रकारव्याख्या माप_प्रकार MemoryMap;
 
 #   define IS_MAP(map) ((map)!=0)
 
@@ -74,13 +74,13 @@ typedef HANDLE MemoryMap;
 #   include <fcntl.h>
 
 #   ifndef MAP_FAILED
-#       define MAP_FAILED ((void*)-1)
+#       define MAP_FAILED ((शून्य*)-1)
 #   endif
-#elif MAP_IMPLEMENTATION==MAP_STDIO
+#किंवाजर MAP_IMPLEMENTATION==MAP_STDIO
 #   include <stdio.h>
 #   include "cmemory.h"
 
-    typedef void *MemoryMap;
+    प्रकारव्याख्या शून्य *MemoryMap;
 
 #   define IS_MAP(map) ((map)!=nullptr)
 #endif
@@ -91,40 +91,40 @@ typedef HANDLE MemoryMap;
  *                           functions used by the rest of the implementation.*
  *                                                                            *
  *----------------------------------------------------------------------------*/
-#if MAP_IMPLEMENTATION==MAP_NONE
+#जर MAP_IMPLEMENTATION==MAP_NONE
     U_CFUNC UBool
-    uprv_mapFile(UDataMemory *pData, const char *path, UErrorCode *status) {
-        if (U_FAILURE(*status)) {
-            return false;
+    uprv_mapFile(UDataMemory *pData, स्थिरांक अक्षर *path, UErrorCode *status) {
+        जर (U_FAILURE(*status)) {
+            परत असत्य;
         }
         UDataMemory_init(pData); /* Clear the output struct. */
-        return false;            /* no file access */
+        परत असत्य;            /* no file access */
     }
 
-    U_CFUNC void uprv_unmapFile(UDataMemory *pData) {
+    U_CFUNC शून्य uprv_unmapFile(UDataMemory *pData) {
         /* nothing to do */
     }
-#elif MAP_IMPLEMENTATION==MAP_WIN32
+#किंवाजर MAP_IMPLEMENTATION==MAP_WIN32
     U_CFUNC UBool
     uprv_mapFile(
          UDataMemory *pData,    /* Fill in with info on the result doing the mapping. */
                                 /*   Output only; any original contents are cleared.  */
-         const char *path,      /* File path to be opened/mapped.                     */
+         स्थिरांक अक्षर *path,      /* File path to be opened/mapped.                     */
          UErrorCode *status     /* Error status, used to report out-of-memory errors. */
          )
     {
-        if (U_FAILURE(*status)) {
-            return false;
+        जर (U_FAILURE(*status)) {
+            परत असत्य;
         }
 
         HANDLE map = nullptr;
-        HANDLE file = INVALID_HANDLE_VALUE;
+        HANDLE file = INVALID_HANDLE_मूल्य;
         DWORD fileLength = 0;
 
         UDataMemory_init(pData); /* Clear the output struct.        */
 
         /* open the input file */
-#if U_PLATFORM_HAS_WINUWP_API == 0
+#जर U_PLATFORM_HAS_WINUWP_API == 0
         // Note: In the non-UWP code-path (ie: Win32), the value of the path variable might have come from 
         // the CRT 'getenv' function, and would be therefore be encoded in the default ANSI code page.
         // This means that we can't call the *W version of API below, whereas in the UWP code-path
@@ -132,32 +132,32 @@ typedef HANDLE MemoryMap;
         file=CreateFileA(path, GENERIC_READ, FILE_SHARE_READ, nullptr,
             OPEN_EXISTING,
             FILE_ATTRIBUTE_NORMAL|FILE_FLAG_RANDOM_ACCESS, nullptr);
-#else
+#अन्यथा
         // Convert from UTF-8 string to UTF-16 string.
-        wchar_t utf16Path[MAX_PATH];
+        ब_अक्षर_प्रकार utf16Path[MAX_PATH];
         int32_t pathUtf16Len = 0;
         u_strFromUTF8(reinterpret_cast<char16_t*>(utf16Path), static_cast<int32_t>(UPRV_LENGTHOF(utf16Path)), &pathUtf16Len, path, -1, status);
 
-        if (U_FAILURE(*status)) {
-            return false;
+        जर (U_FAILURE(*status)) {
+            परत असत्य;
         }
-        if (*status == U_STRING_NOT_TERMINATED_WARNING) {
+        जर (*status == U_STRING_NOT_TERMINATED_WARNING) {
             // Report back an error instead of a warning.
             *status = U_BUFFER_OVERFLOW_ERROR;
-            return false;
+            परत असत्य;
         }
 
         file = CreateFileW(utf16Path, GENERIC_READ, FILE_SHARE_READ, nullptr,
             OPEN_EXISTING,
             FILE_ATTRIBUTE_NORMAL | FILE_FLAG_RANDOM_ACCESS, nullptr);
 #endif
-        if (file == INVALID_HANDLE_VALUE) {
+        जर (file == INVALID_HANDLE_मूल्य) {
             // If we failed to open the file due to an out-of-memory error, then we want
             // to report that error back to the caller.
-            if (HRESULT_FROM_WIN32(GetLastError()) == E_OUTOFMEMORY) {
+            जर (HRESULT_FROM_WIN32(GetLastError()) == E_OUTOFMEMORY) {
                 *status = U_MEMORY_ALLOCATION_ERROR;
             }
-            return false;
+            परत असत्य;
         }
 
         fileLength = GetFileSize(file, nullptr);
@@ -168,30 +168,30 @@ typedef HANDLE MemoryMap;
         map = CreateFileMappingW(file, nullptr, PAGE_READONLY, 0, 0, nullptr);
 
         CloseHandle(file);
-        if (map == nullptr) {
+        जर (map == nullptr) {
             // If we failed to create the mapping due to an out-of-memory error, then 
             // we want to report that error back to the caller.
-            if (HRESULT_FROM_WIN32(GetLastError()) == E_OUTOFMEMORY) {
+            जर (HRESULT_FROM_WIN32(GetLastError()) == E_OUTOFMEMORY) {
                 *status = U_MEMORY_ALLOCATION_ERROR;
             }
-            return false;
+            परत असत्य;
         }
 
         /* map a view of the file into our address space */
-        pData->pHeader = reinterpret_cast<const DataHeader *>(MapViewOfFile(map, FILE_MAP_READ, 0, 0, 0));
-        if (pData->pHeader == nullptr) {
+        pData->pHeader = reinterpret_cast<स्थिरांक DataHeader *>(MapViewOfFile(map, FILE_MAP_READ, 0, 0, 0));
+        जर (pData->pHeader == nullptr) {
             CloseHandle(map);
-            return false;
+            परत असत्य;
         }
         pData->map = map;
         pData->length = fileLength;
 
-        return true;
+        परत सत्य;
     }
 
-    U_CFUNC void
+    U_CFUNC शून्य
     uprv_unmapFile(UDataMemory *pData) {
-        if (pData != nullptr && pData->map != nullptr) {
+        जर (pData != nullptr && pData->map != nullptr) {
             UnmapViewOfFile(pData->pHeader);
             CloseHandle(pData->map);
             pData->pHeader = nullptr;
@@ -201,50 +201,50 @@ typedef HANDLE MemoryMap;
 
 
 
-#elif MAP_IMPLEMENTATION==MAP_POSIX
+#किंवाजर MAP_IMPLEMENTATION==MAP_POSIX
     U_CFUNC UBool
-    uprv_mapFile(UDataMemory *pData, const char *path, UErrorCode *status) {
-        int fd;
-        int length;
-        struct stat mystat;
-        void *data;
+    uprv_mapFile(UDataMemory *pData, स्थिरांक अक्षर *path, UErrorCode *status) {
+        पूर्णांक fd;
+        पूर्णांक length;
+        संरचना stat mystat;
+        शून्य *data;
 
-        if (U_FAILURE(*status)) {
-            return false;
+        जर (U_FAILURE(*status)) {
+            परत असत्य;
         }
 
         UDataMemory_init(pData); /* Clear the output struct.        */
 
         /* open the file */
-        fd=open(path, O_RDONLY);
-        if(fd==-1) {
-            return false;
+        fd=खोलो(path, O_RDONLY);
+        जर(fd==-1) {
+            परत असत्य;
         }
 
         /* determine the length of the file */
-        if(stat(path, &mystat)!=0 || mystat.st_size<=0) {
-            close(fd);
-            return false;
+        जर(stat(path, &mystat)!=0 || mystat.st_size<=0) {
+            बंद(fd);
+            परत असत्य;
         }
         length=mystat.st_size;
 
         /* get a view of the mapping */
-#if U_PLATFORM != U_PF_HPUX
+#जर U_PLATFORM != U_PF_HPUX
         data=mmap(nullptr, length, PROT_READ, MAP_SHARED, fd, 0);
-#else
+#अन्यथा
         data=mmap(nullptr, length, PROT_READ, MAP_PRIVATE, fd, 0);
 #endif
-        close(fd); /* no longer needed */
-        if(data==MAP_FAILED) {
+        बंद(fd); /* no longer needed */
+        जर(data==MAP_FAILED) {
             // Possibly check the errno value for ENOMEM, and report U_MEMORY_ALLOCATION_ERROR?
-            return false;
+            परत असत्य;
         }
 
-        pData->map = (char *)data + length;
-        pData->pHeader=(const DataHeader *)data;
+        pData->map = (अक्षर *)data + length;
+        pData->pHeader=(स्थिरांक DataHeader *)data;
         pData->mapAddr = data;
         pData->length = length;
-#if U_PLATFORM == U_PF_IPHONE || U_PLATFORM == U_PF_ANDROID
+#जर U_PLATFORM == U_PF_IPHONE || U_PLATFORM == U_PF_ANDROID
     // Apparently supported from Android 23 and higher:
     //   https://github.com/ggml-org/llama.cpp/pull/3631
     // Checking for the flag itself is safer than checking for __ANDROID_API__.
@@ -252,14 +252,14 @@ typedef HANDLE MemoryMap;
         posix_madvise(data, length, POSIX_MADV_RANDOM);
 #   endif
 #endif
-        return true;
+        परत सत्य;
     }
 
-    U_CFUNC void
+    U_CFUNC शून्य
     uprv_unmapFile(UDataMemory *pData) {
-        if(pData!=nullptr && pData->map!=nullptr) {
-            size_t dataLen = (char *)pData->map - (char *)pData->mapAddr;
-            if(munmap(pData->mapAddr, dataLen)==-1) {
+        जर(pData!=nullptr && pData->map!=nullptr) {
+            माप_प्रकार dataLen = (अक्षर *)pData->map - (अक्षर *)pData->mapAddr;
+            जर(munmap(pData->mapAddr, dataLen)==-1) {
             }
             pData->pHeader=nullptr;
             pData->map=nullptr;
@@ -269,77 +269,77 @@ typedef HANDLE MemoryMap;
 
 
 
-#elif MAP_IMPLEMENTATION==MAP_STDIO
+#किंवाजर MAP_IMPLEMENTATION==MAP_STDIO
     /* copy of the filestrm.c/T_FileStream_size() implementation */
-    static int32_t
-    umap_fsize(FILE *f) {
-        int32_t savedPos = ftell(f);
+    स्थिर int32_t
+    umap_fsize(खाता *f) {
+        int32_t savedPos = ख_बताओ(f);
         int32_t size = 0;
 
         /*Changes by Bertrand A. D. doesn't affect the current position
         goes to the end of the file before ftell*/
-        fseek(f, 0, SEEK_END);
-        size = (int32_t)ftell(f);
-        fseek(f, savedPos, SEEK_SET);
-        return size;
+        ख_जाओ(f, 0, अंत_से);
+        size = (int32_t)ख_बताओ(f);
+        ख_जाओ(f, savedPos, शुरू_से);
+        परत size;
     }
 
     U_CFUNC UBool
-    uprv_mapFile(UDataMemory *pData, const char *path, UErrorCode *status) {
-        FILE *file;
+    uprv_mapFile(UDataMemory *pData, स्थिरांक अक्षर *path, UErrorCode *status) {
+        खाता *file;
         int32_t fileLength;
-        void *p;
+        शून्य *p;
 
-        if (U_FAILURE(*status)) {
-            return false;
+        जर (U_FAILURE(*status)) {
+            परत असत्य;
         }
 
         UDataMemory_init(pData); /* Clear the output struct.        */
         /* open the input file */
-        file=fopen(path, "rb");
-        if(file==nullptr) {
-            return false;
+        file=ख_खोलो(path, "rb");
+        जर(file==nullptr) {
+            परत असत्य;
         }
 
         /* get the file length */
         fileLength=umap_fsize(file);
-        if(ferror(file) || fileLength<=20) {
-            fclose(file);
-            return false;
+        जर(ख_त्रुटि(file) || fileLength<=20) {
+            ख_बंद(file);
+            परत असत्य;
         }
 
         /* allocate the memory to hold the file data */
         p=uprv_malloc(fileLength);
-        if(p==nullptr) {
-            fclose(file);
+        जर(p==nullptr) {
+            ख_बंद(file);
             *status = U_MEMORY_ALLOCATION_ERROR;
-            return false;
+            परत असत्य;
         }
 
         /* read the file */
-        if(fileLength!=fread(p, 1, fileLength, file)) {
+        जर(fileLength!=ख_पढ़ो(p, 1, fileLength, file)) {
             uprv_free(p);
-            fclose(file);
-            return false;
+            ख_बंद(file);
+            परत असत्य;
         }
 
-        fclose(file);
+        ख_बंद(file);
         pData->map=p;
-        pData->pHeader=(const DataHeader *)p;
+        pData->pHeader=(स्थिरांक DataHeader *)p;
         pData->mapAddr=p;
         pData->length = fileLength;
-        return true;
+        परत सत्य;
     }
 
-    U_CFUNC void
+    U_CFUNC शून्य
     uprv_unmapFile(UDataMemory *pData) {
-        if(pData!=nullptr && pData->map!=nullptr) {
+        जर(pData!=nullptr && pData->map!=nullptr) {
             uprv_free(pData->map);
             pData->map     = nullptr;
             pData->mapAddr = nullptr;
             pData->pHeader = nullptr;
         }
     }
-#else
+#अन्यथा
 #   error MAP_IMPLEMENTATION is set incorrectly
 #endif

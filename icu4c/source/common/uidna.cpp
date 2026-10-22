@@ -16,21 +16,21 @@
  *   created by: Ram Viswanadha
  */
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_IDNA
+#जर !UCONFIG_NO_IDNA
 
-#include "unicode/uidna.h"
-#include "unicode/ustring.h"
-#include "unicode/usprep.h"
-#include "punycode.h"
-#include "ustr_imp.h"
-#include "cmemory.h"
-#include "uassert.h"
-#include "sprpimpl.h"
+#अन्तर्भाव "unicode/uidna.h"
+#अन्तर्भाव "unicode/ustring.h"
+#अन्तर्भाव "unicode/usprep.h"
+#अन्तर्भाव "punycode.h"
+#अन्तर्भाव "ustr_imp.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "uassert.h"
+#अन्तर्भाव "sprpimpl.h"
 
 /* it is official IDNA ACE Prefix is "xn--" */
-static const char16_t ACE_PREFIX[] ={ 0x0078,0x006E,0x002d,0x002d } ;
+स्थिर स्थिरांक char16_t ACE_PREFIX[] ={ 0x0078,0x006E,0x002d,0x002d } ;
 #define ACE_PREFIX_LENGTH 4
 
 #define MAX_LABEL_LENGTH 63
@@ -47,46 +47,46 @@ static const char16_t ACE_PREFIX[] ={ 0x0078,0x006E,0x002d,0x002d } ;
 #define CAPITAL_A        0x0041
 #define CAPITAL_Z        0x005A
 
-inline static char16_t
+ओळीत स्थिर char16_t
 toASCIILower(char16_t ch){
-    if(CAPITAL_A <= ch && ch <= CAPITAL_Z){
-        return ch + LOWER_CASE_DELTA;
+    जर(CAPITAL_A <= ch && ch <= CAPITAL_Z){
+        परत ch + LOWER_CASE_DELTA;
     }
-    return ch;
+    परत ch;
 }
 
-inline static UBool 
-startsWithPrefix(const char16_t* src , int32_t srcLength){
-    if(srcLength < ACE_PREFIX_LENGTH){
-        return false;
+ओळीत स्थिर UBool 
+startsWithPrefix(स्थिरांक char16_t* src , int32_t srcLength){
+    जर(srcLength < ACE_PREFIX_LENGTH){
+        परत असत्य;
     }
 
-    for(int8_t i=0; i< ACE_PREFIX_LENGTH; i++){
-        if(toASCIILower(src[i]) != ACE_PREFIX[i]){
-            return false;
+    साठी(int8_t i=0; i< ACE_PREFIX_LENGTH; i++){
+        जर(toASCIILower(src[i]) != ACE_PREFIX[i]){
+            परत असत्य;
         }
     }
-    return true;
+    परत सत्य;
 }
 
 
-inline static int32_t
-compareCaseInsensitiveASCII(const char16_t* s1, int32_t s1Len,
-                            const char16_t* s2, int32_t s2Len){
+ओळीत स्थिर int32_t
+compareCaseInsensitiveASCII(स्थिरांक char16_t* s1, int32_t s1Len,
+                            स्थिरांक char16_t* s2, int32_t s2Len){
     
     int32_t minLength;
     int32_t lengthResult;
 
     // are we comparing different lengths?
-    if(s1Len != s2Len) {
-        if(s1Len < s2Len) {
+    जर(s1Len != s2Len) {
+        जर(s1Len < s2Len) {
             minLength = s1Len;
             lengthResult = -1;
-        } else {
+        } अन्यथा {
             minLength = s2Len;
             lengthResult = 1;
         }
-    } else {
+    } अन्यथा {
         // ok the lengths are equal
         minLength = s1Len;
         lengthResult = 0;
@@ -95,26 +95,26 @@ compareCaseInsensitiveASCII(const char16_t* s1, int32_t s1Len,
     char16_t c1,c2;
     int32_t rc;
 
-    for(int32_t i =0;/* no condition */;i++) {
+    साठी(int32_t i =0;/* no condition */;i++) {
 
         /* If we reach the ends of both strings then they match */
-        if(i == minLength) {
-            return lengthResult;
+        जर(i == minLength) {
+            परत lengthResult;
         }
         
         c1 = s1[i];
         c2 = s2[i];
         
         /* Case-insensitive comparison */
-        if(c1!=c2) {
+        जर(c1!=c2) {
             rc = static_cast<int32_t>(toASCIILower(c1)) - static_cast<int32_t>(toASCIILower(c2));
-            if(rc!=0) {
+            जर(rc!=0) {
                 lengthResult=rc;
-                break;
+                थांबा;
             }
         }
     }
-    return lengthResult;
+    परत lengthResult;
 }
 
 
@@ -126,72 +126,72 @@ compareCaseInsensitiveASCII(const char16_t* s1, int32_t s1Len,
  * @return true if the char is a label separator
  * @stable ICU 2.8
  */
-static inline UBool isLabelSeparator(char16_t ch){
-    switch(ch){
-        case 0x002e:
-        case 0x3002:
-        case 0xFF0E:
-        case 0xFF61:
-            return true;
-        default:
-            return false;           
+स्थिर ओळीत UBool isLabelSeparator(char16_t ch){
+    निवड(ch){
+        स्थिती 0x002e:
+        स्थिती 0x3002:
+        स्थिती 0xFF0E:
+        स्थिती 0xFF61:
+            परत सत्य;
+        पूर्वनिर्धारित:
+            परत असत्य;           
     }
 }
 
 // returns the length of the label excluding the separator
 // if *limit == separator then the length returned does not include 
 // the separtor.
-static inline int32_t
+स्थिर ओळीत int32_t
 getNextSeparator(char16_t *src, int32_t srcLength,
                  char16_t **limit, UBool *done){
-    if(srcLength == -1){
+    जर(srcLength == -1){
         int32_t i;
-        for(i=0 ; ;i++){
-            if(src[i] == 0){
+        साठी(i=0 ; ;i++){
+            जर(src[i] == 0){
                 *limit = src + i; // point to null
-                *done = true;
-                return i;
+                *done = सत्य;
+                परत i;
             }
-            if(isLabelSeparator(src[i])){
+            जर(isLabelSeparator(src[i])){
                 *limit = src + (i+1); // go past the delimiter
-                return i;
+                परत i;
                 
             }
         }
-    }else{
+    }अन्यथा{
         int32_t i;
-        for(i=0;i<srcLength;i++){
-            if(isLabelSeparator(src[i])){
+        साठी(i=0;i<srcLength;i++){
+            जर(isLabelSeparator(src[i])){
                 *limit = src + (i+1); // go past the delimiter
-                return i;
+                परत i;
             }
         }
         // we have not found the delimiter
         // if(i==srcLength)
         *limit = src+srcLength;
-        *done = true;
+        *done = सत्य;
 
-        return i;
+        परत i;
     }
 }
-static inline UBool isLDHChar(char16_t ch){
+स्थिर ओळीत UBool isLDHChar(char16_t ch){
     // high runner case
-    if(ch>0x007A){
-        return false;
+    जर(ch>0x007A){
+        परत असत्य;
     }
     //[\\u002D \\u0030-\\u0039 \\u0041-\\u005A \\u0061-\\u007A]
-    if( (ch==0x002D) || 
+    जर( (ch==0x002D) || 
         (0x0030 <= ch && ch <= 0x0039) ||
         (0x0041 <= ch && ch <= 0x005A) ||
         (0x0061 <= ch && ch <= 0x007A)
       ){
-        return true;
+        परत सत्य;
     }
-    return false;
+    परत असत्य;
 }
 
-static int32_t 
-_internal_toASCII(const char16_t* src, int32_t srcLength,
+स्थिर int32_t 
+_internal_toASCII(स्थिरांक char16_t* src, int32_t srcLength,
                   char16_t* dest, int32_t destCapacity,
                   int32_t options,
                   UStringPrepProfile* nameprep,
@@ -200,9 +200,9 @@ _internal_toASCII(const char16_t* src, int32_t srcLength,
 {
 
     // TODO Revisit buffer handling. The label should not be over 63 ASCII characters. ICU4J may need to be updated too.
-    char16_t b1Stack[MAX_LABEL_BUFFER_SIZE], b2Stack[MAX_LABEL_BUFFER_SIZE];
+    char16_t b1_चळत[MAX_LABEL_BUFFER_SIZE], b2_चळत[MAX_LABEL_BUFFER_SIZE];
     //initialize pointers to stack buffers
-    char16_t  *b1 = b1Stack, *b2 = b2Stack;
+    char16_t  *b1 = b1_चळत, *b2 = b2_चळत;
     int32_t b1Len=0, b2Len, 
             b1Capacity = MAX_LABEL_BUFFER_SIZE, 
             b2Capacity = MAX_LABEL_BUFFER_SIZE ,
@@ -212,9 +212,9 @@ _internal_toASCII(const char16_t* src, int32_t srcLength,
     UBool* caseFlags = nullptr;
     
     // the source contains all ascii codepoints
-    UBool srcIsASCII  = true;
+    UBool srcIsASCII  = सत्य;
     // assume the source contains all LDH codepoints
-    UBool srcIsLDH = true; 
+    UBool srcIsLDH = सत्य; 
 
     int32_t j=0;
 
@@ -223,112 +223,112 @@ _internal_toASCII(const char16_t* src, int32_t srcLength,
 
     int32_t failPos = -1;
     
-    if(srcLength == -1){
+    जर(srcLength == -1){
         srcLength = u_strlen(src);
     }
     
-    if(srcLength > b1Capacity){
+    जर(srcLength > b1Capacity){
         b1 = static_cast<char16_t*>(uprv_malloc(srcLength * U_SIZEOF_UCHAR));
-        if(b1==nullptr){
+        जर(b1==nullptr){
             *status = U_MEMORY_ALLOCATION_ERROR;
-            goto CLEANUP;
+            जा CLEANUP;
         }
         b1Capacity = srcLength;
     }
 
     // step 1 
-    for( j=0;j<srcLength;j++){
-        if(src[j] > 0x7F){
-            srcIsASCII = false;
+    साठी( j=0;j<srcLength;j++){
+        जर(src[j] > 0x7F){
+            srcIsASCII = असत्य;
         }
         b1[b1Len++] = src[j];
     }
     
     // step 2 is performed only if the source contains non ASCII
-    if(srcIsASCII == false){
+    जर(srcIsASCII == असत्य){
         
         // step 2    
         UErrorCode bufferStatus = U_ZERO_ERROR;
         b1Len = usprep_prepare(nameprep, src, srcLength, b1, b1Capacity, namePrepOptions, parseError, &bufferStatus);
 
-        if(bufferStatus == U_BUFFER_OVERFLOW_ERROR){
+        जर(bufferStatus == U_BUFFER_OVERFLOW_ERROR){
             // redo processing of string
             // we do not have enough room so grow the buffer
-            if(b1 != b1Stack){
+            जर(b1 != b1_चळत){
                 uprv_free(b1);
             }
             b1 = static_cast<char16_t*>(uprv_malloc(b1Len * U_SIZEOF_UCHAR));
-            if(b1==nullptr){
+            जर(b1==nullptr){
                 *status = U_MEMORY_ALLOCATION_ERROR;
-                goto CLEANUP;
+                जा CLEANUP;
             }
 
             bufferStatus = U_ZERO_ERROR; // reset error
 
             b1Len = usprep_prepare(nameprep, src, srcLength, b1, b1Len, namePrepOptions, parseError, &bufferStatus);
         }
-        if (U_FAILURE(bufferStatus)) {
+        जर (U_FAILURE(bufferStatus)) {
             *status = bufferStatus;
         }
     }
     // error bail out
-    if(U_FAILURE(*status)){
-        goto CLEANUP;
+    जर(U_FAILURE(*status)){
+        जा CLEANUP;
     }
-    if(b1Len == 0){
+    जर(b1Len == 0){
         *status = U_IDNA_ZERO_LENGTH_LABEL_ERROR;
-        goto CLEANUP;
+        जा CLEANUP;
     }
 
     // for step 3 & 4
-    srcIsASCII = true;
-    for( j=0;j<b1Len;j++){
+    srcIsASCII = सत्य;
+    साठी( j=0;j<b1Len;j++){
         // check if output of usprep_prepare is all ASCII 
-        if(b1[j] > 0x7F){
-            srcIsASCII = false;
-        }else if(isLDHChar(b1[j])==false){  // if the char is in ASCII range verify that it is an LDH character
-            srcIsLDH = false;
+        जर(b1[j] > 0x7F){
+            srcIsASCII = असत्य;
+        }अन्यथा जर(isLDHChar(b1[j])==असत्य){  // if the char is in ASCII range verify that it is an LDH character
+            srcIsLDH = असत्य;
             failPos = j;
         }
     }
-    if(useSTD3ASCIIRules){
+    जर(useSTD3ASCIIRules){
         // verify 3a and 3b
         // 3(a) Verify the absence of non-LDH ASCII code points; that is, the
         //  absence of 0..2C, 2E..2F, 3A..40, 5B..60, and 7B..7F.
         // 3(b) Verify the absence of leading and trailing hyphen-minus; that
         //  is, the absence of U+002D at the beginning and end of the
         //  sequence.
-        if( srcIsLDH == false /* source at this point should not contain anyLDH characters */
+        जर( srcIsLDH == असत्य /* source at this point should not contain anyLDH characters */
             || b1[0] ==  HYPHEN || b1[b1Len-1] == HYPHEN){
             *status = U_IDNA_STD3_ASCII_RULES_ERROR;
 
             /* populate the parseError struct */
-            if(srcIsLDH==false){
+            जर(srcIsLDH==असत्य){
                 // failPos is always set the index of failure
                 uprv_syntaxError(b1,failPos, b1Len,parseError);
-            }else if(b1[0] == HYPHEN){
+            }अन्यथा जर(b1[0] == HYPHEN){
                 // fail position is 0 
                 uprv_syntaxError(b1,0,b1Len,parseError);
-            }else{
+            }अन्यथा{
                 // the last index in the source is always length-1
                 uprv_syntaxError(b1, (b1Len>0) ? b1Len-1 : b1Len, b1Len,parseError);
             }
 
-            goto CLEANUP;
+            जा CLEANUP;
         }
     }
     // Step 4: if the source is ASCII then proceed to step 8
-    if(srcIsASCII){
-        if(b1Len <= destCapacity){
+    जर(srcIsASCII){
+        जर(b1Len <= destCapacity){
             u_memmove(dest, b1, b1Len);
             reqLength = b1Len;
-        }else{
+        }अन्यथा{
             reqLength = b1Len;
-            goto CLEANUP;
+            जा CLEANUP;
         }
-    }else{
+    }अन्यथा{
         // step 5 : verify the sequence does not begin with ACE prefix
-        if(!startsWithPrefix(b1,b1Len)){
+        जर(!startsWithPrefix(b1,b1Len)){
 
             //step 6: encode the sequence with punycode
 
@@ -340,13 +340,13 @@ _internal_toASCII(const char16_t* src, int32_t srcLength,
             UErrorCode bufferStatus = U_ZERO_ERROR;
             b2Len = u_strToPunycode(b1,b1Len,b2,b2Capacity,caseFlags,&bufferStatus);
 
-            if(bufferStatus == U_BUFFER_OVERFLOW_ERROR){
+            जर(bufferStatus == U_BUFFER_OVERFLOW_ERROR){
                 // redo processing of string
                 /* we do not have enough room so grow the buffer*/
                 b2 = static_cast<char16_t*>(uprv_malloc(b2Len * U_SIZEOF_UCHAR));
-                if(b2 == nullptr){
+                जर(b2 == nullptr){
                     *status = U_MEMORY_ALLOCATION_ERROR;
-                    goto CLEANUP;
+                    जा CLEANUP;
                 }
 
                 bufferStatus = U_ZERO_ERROR; // reset error
@@ -354,50 +354,50 @@ _internal_toASCII(const char16_t* src, int32_t srcLength,
                 b2Len = u_strToPunycode(b1,b1Len,b2,b2Len,caseFlags,&bufferStatus);
             }
             //error bail out
-            if(U_FAILURE(bufferStatus)){
+            जर(U_FAILURE(bufferStatus)){
                 *status = bufferStatus;
-                goto CLEANUP;
+                जा CLEANUP;
             }
             // TODO : Reconsider while implementing the case preserve RFE
             // convert all codepoints to lower case ASCII
             // toASCIILower(b2,b2Len);
             reqLength = b2Len+ACE_PREFIX_LENGTH;
 
-            if(reqLength > destCapacity){
+            जर(reqLength > destCapacity){
                 *status = U_BUFFER_OVERFLOW_ERROR;
-                goto CLEANUP;
+                जा CLEANUP;
             }
             //Step 7: prepend the ACE prefix
             u_memcpy(dest, ACE_PREFIX, ACE_PREFIX_LENGTH);
             //Step 6: copy the contents in b2 into dest
             u_memcpy(dest+ACE_PREFIX_LENGTH, b2, b2Len);
 
-        }else{
+        }अन्यथा{
             *status = U_IDNA_ACE_PREFIX_ERROR; 
             //position of failure is 0
             uprv_syntaxError(b1,0,b1Len,parseError);
-            goto CLEANUP;
+            जा CLEANUP;
         }
     }
     // step 8: verify the length of label
-    if(reqLength > MAX_LABEL_LENGTH){
+    जर(reqLength > MAX_LABEL_LENGTH){
         *status = U_IDNA_LABEL_TOO_LONG_ERROR;
     }
 
 CLEANUP:
-    if(b1 != b1Stack){
+    जर(b1 != b1_चळत){
         uprv_free(b1);
     }
-    if(b2 != b2Stack){
+    जर(b2 != b2_चळत){
         uprv_free(b2);
     }
     uprv_free(caseFlags);
     
-    return u_terminateUChars(dest, destCapacity, reqLength, status);
+    परत u_terminateUChars(dest, destCapacity, reqLength, status);
 }
 
-static int32_t
-_internal_toUnicode(const char16_t* src, int32_t srcLength,
+स्थिर int32_t
+_internal_toUnicode(स्थिरांक char16_t* src, int32_t srcLength,
                     char16_t* dest, int32_t destCapacity,
                     int32_t options,
                     UStringPrepProfile* nameprep,
@@ -410,11 +410,11 @@ _internal_toUnicode(const char16_t* src, int32_t srcLength,
     int32_t namePrepOptions = ((options & UIDNA_ALLOW_UNASSIGNED) != 0) ? USPREP_ALLOW_UNASSIGNED: 0; 
 
     // TODO Revisit buffer handling. The label should not be over 63 ASCII characters. ICU4J may need to be updated too.
-    char16_t b1Stack[MAX_LABEL_BUFFER_SIZE], b2Stack[MAX_LABEL_BUFFER_SIZE], b3Stack[MAX_LABEL_BUFFER_SIZE];
+    char16_t b1_चळत[MAX_LABEL_BUFFER_SIZE], b2_चळत[MAX_LABEL_BUFFER_SIZE], b3_चळत[MAX_LABEL_BUFFER_SIZE];
 
     //initialize pointers to stack buffers
-    char16_t  *b1 = b1Stack, *b2 = b2Stack, *b1Prime=nullptr, *b3=b3Stack;
-    int32_t b1Len = 0, b2Len, b1PrimeLen, b3Len,
+    char16_t  *b1 = b1_चळत, *b2 = b2_चळत, *b1_मूळसंख्या=nullptr, *b3=b3_चळत;
+    int32_t b1Len = 0, b2Len, b1_मूळसंख्या_Len, b3Len,
             b1Capacity = MAX_LABEL_BUFFER_SIZE, 
             b2Capacity = MAX_LABEL_BUFFER_SIZE,
             b3Capacity = MAX_LABEL_BUFFER_SIZE,
@@ -422,16 +422,16 @@ _internal_toUnicode(const char16_t* src, int32_t srcLength,
 
     UBool* caseFlags = nullptr;
 
-    UBool srcIsASCII = true;
+    UBool srcIsASCII = सत्य;
     /*UBool srcIsLDH = true;
     int32_t failPos =0;*/
 
     // step 1: find out if all the codepoints in src are ASCII  
-    if(srcLength==-1){
+    जर(srcLength==-1){
         srcLength = 0;
-        for(;src[srcLength]!=0;){
-            if(src[srcLength]> 0x7f){
-                srcIsASCII = false;
+        साठी(;src[srcLength]!=0;){
+            जर(src[srcLength]> 0x7f){
+                srcIsASCII = असत्य;
             }/*else if(isLDHChar(src[srcLength])==false){
                 // here we do not assemble surrogates
                 // since we know that LDH code points
@@ -441,11 +441,11 @@ _internal_toUnicode(const char16_t* src, int32_t srcLength,
             }*/
             srcLength++;
         }
-    }else if(srcLength > 0){
-        for(int32_t j=0; j<srcLength; j++){
-            if(src[j]> 0x7f){
-                srcIsASCII = false;
-                break;
+    }अन्यथा जर(srcLength > 0){
+        साठी(int32_t j=0; j<srcLength; j++){
+            जर(src[j]> 0x7f){
+                srcIsASCII = असत्य;
+                थांबा;
             }/*else if(isLDHChar(src[j])==false){
                 // here we do not assemble surrogates
                 // since we know that LDH code points
@@ -454,21 +454,21 @@ _internal_toUnicode(const char16_t* src, int32_t srcLength,
                 failPos = j;
             }*/
         }
-    }else{
-        return 0;
+    }अन्यथा{
+        परत 0;
     }
     
-    if(srcIsASCII == false){
+    जर(srcIsASCII == असत्य){
         // step 2: process the string
         UErrorCode bufferStatus = U_ZERO_ERROR;
         b1Len = usprep_prepare(nameprep, src, srcLength, b1, b1Capacity, namePrepOptions, parseError, &bufferStatus);
-        if(bufferStatus == U_BUFFER_OVERFLOW_ERROR){
+        जर(bufferStatus == U_BUFFER_OVERFLOW_ERROR){
             // redo processing of string
             /* we do not have enough room so grow the buffer*/
             b1 = static_cast<char16_t*>(uprv_malloc(b1Len * U_SIZEOF_UCHAR));
-            if(b1==nullptr){
+            जर(b1==nullptr){
                 *status = U_MEMORY_ALLOCATION_ERROR;
-                goto CLEANUP;
+                जा CLEANUP;
             }
 
             bufferStatus = U_ZERO_ERROR; // reset error
@@ -476,11 +476,11 @@ _internal_toUnicode(const char16_t* src, int32_t srcLength,
             b1Len = usprep_prepare(nameprep, src, srcLength, b1, b1Len, namePrepOptions, parseError, &bufferStatus);
         }
         //bail out on error
-        if(U_FAILURE(bufferStatus)){
+        जर(U_FAILURE(bufferStatus)){
             *status = bufferStatus;
-            goto CLEANUP;
+            जा CLEANUP;
         }
-    }else{
+    }अन्यथा{
 
         //just point src to b1
         b1 = const_cast<char16_t*>(src);
@@ -494,41 +494,41 @@ _internal_toUnicode(const char16_t* src, int32_t srcLength,
     // </quote>
 
     //step 3: verify ACE Prefix
-    if(startsWithPrefix(b1,b1Len)){
+    जर(startsWithPrefix(b1,b1Len)){
 
         //step 4: Remove the ACE Prefix
-        b1Prime = b1 + ACE_PREFIX_LENGTH;
-        b1PrimeLen  = b1Len - ACE_PREFIX_LENGTH;
+        b1_मूळसंख्या = b1 + ACE_PREFIX_LENGTH;
+        b1_मूळसंख्या_Len  = b1Len - ACE_PREFIX_LENGTH;
 
         //step 5: Decode using punycode
         UErrorCode bufferStatus = U_ZERO_ERROR;
-        b2Len = u_strFromPunycode(b1Prime, b1PrimeLen, b2, b2Capacity, caseFlags, &bufferStatus);
+        b2Len = u_strFromPunycode(b1_मूळसंख्या, b1_मूळसंख्या_Len, b2, b2Capacity, caseFlags, &bufferStatus);
 
-        if(bufferStatus == U_BUFFER_OVERFLOW_ERROR){
+        जर(bufferStatus == U_BUFFER_OVERFLOW_ERROR){
             // redo processing of string
             /* we do not have enough room so grow the buffer*/
             b2 = static_cast<char16_t*>(uprv_malloc(b2Len * U_SIZEOF_UCHAR));
-            if(b2==nullptr){
+            जर(b2==nullptr){
                 *status = U_MEMORY_ALLOCATION_ERROR;
-                goto CLEANUP;
+                जा CLEANUP;
             }
 
             bufferStatus = U_ZERO_ERROR; // reset error
 
-            b2Len =  u_strFromPunycode(b1Prime, b1PrimeLen, b2, b2Len, caseFlags, &bufferStatus);
+            b2Len =  u_strFromPunycode(b1_मूळसंख्या, b1_मूळसंख्या_Len, b2, b2Len, caseFlags, &bufferStatus);
         }
 
 
         //step 6:Apply toASCII
         b3Len = uidna_toASCII(b2, b2Len, b3, b3Capacity, options, parseError, &bufferStatus);
 
-        if(bufferStatus == U_BUFFER_OVERFLOW_ERROR){
+        जर(bufferStatus == U_BUFFER_OVERFLOW_ERROR){
             // redo processing of string
             /* we do not have enough room so grow the buffer*/
             b3 = static_cast<char16_t*>(uprv_malloc(b3Len * U_SIZEOF_UCHAR));
-            if(b3==nullptr){
+            जर(b3==nullptr){
                 *status = U_MEMORY_ALLOCATION_ERROR;
-                goto CLEANUP;
+                जा CLEANUP;
             }
 
             bufferStatus = U_ZERO_ERROR; // reset error
@@ -537,25 +537,25 @@ _internal_toUnicode(const char16_t* src, int32_t srcLength,
 
         }
         //bail out on error
-        if(U_FAILURE(bufferStatus)){
+        जर(U_FAILURE(bufferStatus)){
             *status = bufferStatus;
-            goto CLEANUP;
+            जा CLEANUP;
         }
 
         //step 7: verify
-        if(compareCaseInsensitiveASCII(b1, b1Len, b3, b3Len) !=0){
+        जर(compareCaseInsensitiveASCII(b1, b1Len, b3, b3Len) !=0){
             // Cause the original to be returned.
             *status = U_IDNA_VERIFICATION_ERROR;
-            goto CLEANUP;
+            जा CLEANUP;
         }
 
         //step 8: return output of step 5
         reqLength = b2Len;
-        if(b2Len <= destCapacity) {
+        जर(b2Len <= destCapacity) {
             u_memmove(dest, b2, b2Len);
         }
     }
-    else{
+    अन्यथा{
         // See the start of this if statement for why this is commented out.
         // verify that STD3 ASCII rules are satisfied
         /*if(useSTD3ASCIIRules == true){
@@ -580,7 +580,7 @@ _internal_toUnicode(const char16_t* src, int32_t srcLength,
         }*/
         // just return the source
         //copy the source to destination
-        if(srcLength <= destCapacity){
+        जर(srcLength <= destCapacity){
             u_memmove(dest, src, srcLength);
         }
         reqLength = srcLength;
@@ -589,13 +589,13 @@ _internal_toUnicode(const char16_t* src, int32_t srcLength,
 
 CLEANUP:
 
-    if(b1 != b1Stack && b1!=src){
+    जर(b1 != b1_चळत && b1!=src){
         uprv_free(b1);
     }
-    if(b2 != b2Stack){
+    जर(b2 != b2_चळत){
         uprv_free(b2);
     }
-    if(b3 != b3Stack){
+    जर(b3 != b3_चळत){
         uprv_free(b3);
     }
     uprv_free(caseFlags);
@@ -606,9 +606,9 @@ CLEANUP:
     // is returned immediately in that step.
     // </quote>
     // So if any step fails lets copy source to destination
-    if(U_FAILURE(*status)){
+    जर(U_FAILURE(*status)){
         //copy the source to destination
-        if(dest && srcLength <= destCapacity){
+        जर(dest && srcLength <= destCapacity){
             // srcLength should have already been set earlier.
             U_ASSERT(srcLength >= 0);
             u_memmove(dest, src, srcLength);
@@ -617,28 +617,28 @@ CLEANUP:
         *status = U_ZERO_ERROR;
     }
 
-    return u_terminateUChars(dest, destCapacity, reqLength, status);
+    परत u_terminateUChars(dest, destCapacity, reqLength, status);
 }
 
 U_CAPI int32_t U_EXPORT2
-uidna_toASCII(const char16_t* src, int32_t srcLength,
+uidna_toASCII(स्थिरांक char16_t* src, int32_t srcLength,
               char16_t* dest, int32_t destCapacity,
               int32_t options,
               UParseError* parseError,
               UErrorCode* status){
     
-    if(status == nullptr || U_FAILURE(*status)){
-        return 0;
+    जर(status == nullptr || U_FAILURE(*status)){
+        परत 0;
     }
-    if((src==nullptr) || (srcLength < -1) || (destCapacity<0) || (!dest && destCapacity > 0)){
+    जर((src==nullptr) || (srcLength < -1) || (destCapacity<0) || (!dest && destCapacity > 0)){
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        परत 0;
     }
 
     UStringPrepProfile* nameprep = usprep_openByType(USPREP_RFC3491_NAMEPREP, status);
     
-    if(U_FAILURE(*status)){
-        return -1;
+    जर(U_FAILURE(*status)){
+        परत -1;
     }
     
     int32_t retLen = _internal_toASCII(src, srcLength, dest, destCapacity, options, nameprep, parseError, status);
@@ -646,59 +646,59 @@ uidna_toASCII(const char16_t* src, int32_t srcLength,
     /* close the profile*/
     usprep_close(nameprep);
     
-    return retLen;
+    परत retLen;
 }
 
 U_CAPI int32_t U_EXPORT2
-uidna_toUnicode(const char16_t* src, int32_t srcLength,
+uidna_toUnicode(स्थिरांक char16_t* src, int32_t srcLength,
                 char16_t* dest, int32_t destCapacity,
                 int32_t options,
                 UParseError* parseError,
                 UErrorCode* status){
 
-    if(status == nullptr || U_FAILURE(*status)){
-        return 0;
+    जर(status == nullptr || U_FAILURE(*status)){
+        परत 0;
     }
-    if( (src==nullptr) || (srcLength < -1) || (destCapacity<0) || (!dest && destCapacity > 0)){
+    जर( (src==nullptr) || (srcLength < -1) || (destCapacity<0) || (!dest && destCapacity > 0)){
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        परत 0;
     }  
 
     UStringPrepProfile* nameprep = usprep_openByType(USPREP_RFC3491_NAMEPREP, status);
     
-    if(U_FAILURE(*status)){
-        return -1;
+    जर(U_FAILURE(*status)){
+        परत -1;
     }
     
     int32_t retLen = _internal_toUnicode(src, srcLength, dest, destCapacity, options, nameprep, parseError, status);
 
     usprep_close(nameprep);
     
-    return retLen;
+    परत retLen;
 }
 
 
 U_CAPI int32_t U_EXPORT2
-uidna_IDNToASCII(  const char16_t *src, int32_t srcLength,
+uidna_IDNToASCII(  स्थिरांक char16_t *src, int32_t srcLength,
                    char16_t* dest, int32_t destCapacity,
                    int32_t options,
                    UParseError *parseError,
                    UErrorCode *status){
 
-    if(status == nullptr || U_FAILURE(*status)){
-        return 0;
+    जर(status == nullptr || U_FAILURE(*status)){
+        परत 0;
     }
-    if((src==nullptr) || (srcLength < -1) || (destCapacity<0) || (!dest && destCapacity > 0)){
+    जर((src==nullptr) || (srcLength < -1) || (destCapacity<0) || (!dest && destCapacity > 0)){
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        परत 0;
     }
 
     int32_t reqLength = 0;
 
     UStringPrepProfile* nameprep = usprep_openByType(USPREP_RFC3491_NAMEPREP, status);
     
-    if(U_FAILURE(*status)){
-        return 0;
+    जर(U_FAILURE(*status)){
+        परत 0;
     }
 
     //initialize pointers 
@@ -708,14 +708,14 @@ uidna_IDNToASCII(  const char16_t *src, int32_t srcLength,
     int32_t remainingLen = srcLength;
     int32_t remainingDestCapacity = destCapacity;
     int32_t labelLen = 0, labelReqLength = 0;
-    UBool done = false;
+    UBool done = असत्य;
 
 
-    for(;;){
+    साठी(;;){
 
         labelLen = getNextSeparator(labelStart,remainingLen, &delimiter,&done);
         labelReqLength = 0;
-        if(!(labelLen==0 && done)){// make sure this is not a root label separator.
+        जर(!(labelLen==0 && done)){// make sure this is not a root label separator.
 
             UErrorCode bufferStatus = U_ZERO_ERROR;
             labelReqLength = _internal_toASCII( labelStart, labelLen,
@@ -723,72 +723,72 @@ uidna_IDNToASCII(  const char16_t *src, int32_t srcLength,
                                                 options, nameprep,
                                                 parseError, &bufferStatus);
 
-            if (bufferStatus == U_BUFFER_OVERFLOW_ERROR) {
+            जर (bufferStatus == U_BUFFER_OVERFLOW_ERROR) {
                 remainingDestCapacity = 0;
-            } else if (U_FAILURE(bufferStatus)) {
+            } अन्यथा जर (U_FAILURE(bufferStatus)) {
                 *status = bufferStatus;
-                break;
+                थांबा;
             }
         }
 
         reqLength +=labelReqLength;
         // adjust the destination pointer
-        if(labelReqLength < remainingDestCapacity){
+        जर(labelReqLength < remainingDestCapacity){
             currentDest = currentDest + labelReqLength;
             remainingDestCapacity -= labelReqLength;
-        }else{
+        }अन्यथा{
             // should never occur
             remainingDestCapacity = 0;
         }
 
-        if(done){
-            break;
+        जर(done){
+            थांबा;
         }
 
         // add the label separator
-        if(remainingDestCapacity > 0){
+        जर(remainingDestCapacity > 0){
             *currentDest++ = FULL_STOP;
             remainingDestCapacity--;
         }
         reqLength++;
 
         labelStart = delimiter;
-        if(remainingLen >0 ){
+        जर(remainingLen >0 ){
             remainingLen = (int32_t)(srcLength - (delimiter - src));
         }
 
     }
 
-    if(reqLength > MAX_DOMAIN_NAME_LENGTH){
+    जर(reqLength > MAX_DOMAIN_NAME_LENGTH){
         *status = U_IDNA_DOMAIN_NAME_TOO_LONG_ERROR;
     }
 
     usprep_close(nameprep);
     
-    return u_terminateUChars(dest, destCapacity, reqLength, status);
+    परत u_terminateUChars(dest, destCapacity, reqLength, status);
 }
 
 U_CAPI int32_t U_EXPORT2
-uidna_IDNToUnicode(  const char16_t* src, int32_t srcLength,
+uidna_IDNToUnicode(  स्थिरांक char16_t* src, int32_t srcLength,
                      char16_t* dest, int32_t destCapacity,
                      int32_t options,
                      UParseError* parseError,
                      UErrorCode* status){
     
-    if(status == nullptr || U_FAILURE(*status)){
-        return 0;
+    जर(status == nullptr || U_FAILURE(*status)){
+        परत 0;
     }
-    if((src==nullptr) || (srcLength < -1) || (destCapacity<0) || (!dest && destCapacity > 0)){
+    जर((src==nullptr) || (srcLength < -1) || (destCapacity<0) || (!dest && destCapacity > 0)){
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        परत 0;
     }
 
     int32_t reqLength = 0;
 
     UStringPrepProfile* nameprep = usprep_openByType(USPREP_RFC3491_NAMEPREP, status);
     
-    if(U_FAILURE(*status)){
-        return 0;
+    जर(U_FAILURE(*status)){
+        परत 0;
     }
 
     //initialize pointers
@@ -798,9 +798,9 @@ uidna_IDNToUnicode(  const char16_t* src, int32_t srcLength,
     int32_t remainingLen = srcLength;
     int32_t remainingDestCapacity = destCapacity;
     int32_t labelLen = 0, labelReqLength = 0;
-    UBool done = false;
+    UBool done = असत्य;
 
-    for(;;){
+    साठी(;;){
 
         labelLen = getNextSeparator(labelStart,remainingLen, &delimiter,&done);
         
@@ -820,65 +820,65 @@ uidna_IDNToUnicode(  const char16_t* src, int32_t srcLength,
                                              options, nameprep, 
                                              parseError, status);
 
-        if(*status == U_BUFFER_OVERFLOW_ERROR){
+        जर(*status == U_BUFFER_OVERFLOW_ERROR){
             *status = U_ZERO_ERROR; // reset error
             remainingDestCapacity = 0;
         }
 
-        if(U_FAILURE(*status)){
-            break;
+        जर(U_FAILURE(*status)){
+            थांबा;
         }
         
         reqLength +=labelReqLength;
         // adjust the destination pointer
-        if(labelReqLength < remainingDestCapacity){
+        जर(labelReqLength < remainingDestCapacity){
             currentDest = currentDest + labelReqLength;
             remainingDestCapacity -= labelReqLength;
-        }else{
+        }अन्यथा{
             // should never occur
             remainingDestCapacity = 0;
         }
 
-        if(done){
-            break;
+        जर(done){
+            थांबा;
         }
 
         // add the label separator
         // Unlike the ToASCII operation we don't normalize the label separators
-        if(remainingDestCapacity > 0){
+        जर(remainingDestCapacity > 0){
             *currentDest++ = *(labelStart + labelLen);
             remainingDestCapacity--;
         }
         reqLength++;
 
         labelStart = delimiter;
-        if(remainingLen >0 ){
+        जर(remainingLen >0 ){
             remainingLen = (int32_t)(srcLength - (delimiter - src));
         }
 
     }
 
-    if(reqLength > MAX_DOMAIN_NAME_LENGTH){
+    जर(reqLength > MAX_DOMAIN_NAME_LENGTH){
         *status = U_IDNA_DOMAIN_NAME_TOO_LONG_ERROR;
     }
 
     usprep_close(nameprep);
     
-    return u_terminateUChars(dest, destCapacity, reqLength, status);
+    परत u_terminateUChars(dest, destCapacity, reqLength, status);
 }
 
 U_CAPI int32_t U_EXPORT2
-uidna_compare(  const char16_t *s1, int32_t length1,
-                const char16_t *s2, int32_t length2,
+uidna_compare(  स्थिरांक char16_t *s1, int32_t length1,
+                स्थिरांक char16_t *s2, int32_t length2,
                 int32_t options,
                 UErrorCode* status){
 
-    if(status == nullptr || U_FAILURE(*status)){
-        return -1;
+    जर(status == nullptr || U_FAILURE(*status)){
+        परत -1;
     }
 
-    char16_t b1Stack[MAX_IDN_BUFFER_SIZE], b2Stack[MAX_IDN_BUFFER_SIZE];
-    char16_t *b1 = b1Stack, *b2 = b2Stack;
+    char16_t b1_चळत[MAX_IDN_BUFFER_SIZE], b2_चळत[MAX_IDN_BUFFER_SIZE];
+    char16_t *b1 = b1_चळत, *b2 = b2_चळत;
     int32_t b1Len, b2Len, b1Capacity = MAX_IDN_BUFFER_SIZE, b2Capacity = MAX_IDN_BUFFER_SIZE;
     int32_t result=-1;
     
@@ -886,12 +886,12 @@ uidna_compare(  const char16_t *s1, int32_t length1,
 
     UErrorCode bufferStatus = U_ZERO_ERROR;
     b1Len = uidna_IDNToASCII(s1, length1, b1, b1Capacity, options, &parseError, &bufferStatus);
-    if(bufferStatus == U_BUFFER_OVERFLOW_ERROR){
+    जर(bufferStatus == U_BUFFER_OVERFLOW_ERROR){
         // redo processing of string
         b1 = (char16_t*) uprv_malloc(b1Len * U_SIZEOF_UCHAR);
-        if(b1==nullptr){
+        जर(b1==nullptr){
             *status = U_MEMORY_ALLOCATION_ERROR;
-            goto CLEANUP;
+            जा CLEANUP;
         }
 
         bufferStatus = U_ZERO_ERROR; // reset error
@@ -900,12 +900,12 @@ uidna_compare(  const char16_t *s1, int32_t length1,
     }
 
     b2Len = uidna_IDNToASCII(s2,length2, b2,b2Capacity, options, &parseError, &bufferStatus);
-    if(bufferStatus == U_BUFFER_OVERFLOW_ERROR){
+    जर(bufferStatus == U_BUFFER_OVERFLOW_ERROR){
         // redo processing of string
         b2 = (char16_t*) uprv_malloc(b2Len * U_SIZEOF_UCHAR);
-        if(b2==nullptr){
+        जर(b2==nullptr){
             *status = U_MEMORY_ALLOCATION_ERROR;
-            goto CLEANUP;
+            जा CLEANUP;
         }
 
         bufferStatus = U_ZERO_ERROR; // reset error
@@ -913,24 +913,24 @@ uidna_compare(  const char16_t *s1, int32_t length1,
         b2Len = uidna_IDNToASCII(s2, length2, b2, b2Len, options, &parseError, &bufferStatus);
     }
 
-    if (U_FAILURE(bufferStatus)) {
+    जर (U_FAILURE(bufferStatus)) {
         *status = bufferStatus;
-        goto CLEANUP;
+        जा CLEANUP;
     }
 
     // when toASCII is applied all label separators are replaced with FULL_STOP
     result = compareCaseInsensitiveASCII(b1,b1Len,b2,b2Len);
 
 CLEANUP:
-    if(b1 != b1Stack){
+    जर(b1 != b1_चळत){
         uprv_free(b1);
     }
 
-    if(b2 != b2Stack){
+    जर(b2 != b2_चळत){
         uprv_free(b2);
     }
 
-    return result;
+    परत result;
 }
 
 #endif /* #if !UCONFIG_NO_IDNA */

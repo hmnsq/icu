@@ -10,72 +10,72 @@
 * Since: ICU 2.6
 **********************************************************************
 */
-#include "unicode/ucat.h"
-#include "unicode/ustring.h"
-#include "cstring.h"
-#include "uassert.h"
+#अन्तर्भाव "unicode/ucat.h"
+#अन्तर्भाव "unicode/ustring.h"
+#अन्तर्भाव "cstring.h"
+#अन्तर्भाव "uassert.h"
 
 /* Separator between set_num and msg_num */
-static const char SEPARATOR = '%';
+स्थिर स्थिरांक अक्षर SEPARATOR = '%';
 
 /* Maximum length of a set_num/msg_num key, incl. terminating zero.
  * Longest possible key is "-2147483648%-2147483648" */
-#define MAX_KEY_LEN (24)
+#define MAX_किल्ली_LEN (24)
 
 /**
  * Fill in buffer with a set_num/msg_num key string, given the numeric
  * values. Numeric values must be >= 0. Buffer must be of length
  * MAX_KEY_LEN or more.
  */
-static char*
-_catkey(char* buffer U_LIFETIME_BOUND, int32_t set_num, int32_t msg_num) {
+स्थिर अक्षर*
+_catkey(अक्षर* buffer U_LIFETIME_BOUND, int32_t set_अंक, int32_t संदेश_अंक) {
     int32_t i = 0;
-    i = T_CString_integerToString(buffer, set_num, 10);
+    i = T_CString_integerToString(buffer, set_अंक, 10);
     buffer[i++] = SEPARATOR;
-    T_CString_integerToString(buffer+i, msg_num, 10);
-    return buffer;
+    T_CString_integerToString(buffer+i, संदेश_अंक, 10);
+    परत buffer;
 }
 
 U_CAPI u_nl_catd U_EXPORT2
-u_catopen(const char* name, const char* locale, UErrorCode* ec) {
-    return (u_nl_catd) ures_open(name, locale, ec);
+u_catopen(स्थिरांक अक्षर* name, स्थिरांक अक्षर* locale, UErrorCode* ec) {
+    परत (u_nl_catd) ures_open(name, locale, ec);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 u_catclose(u_nl_catd catd) {
     ures_close((UResourceBundle*) catd); /* may be nullptr */
 }
 
-U_CAPI const char16_t* U_EXPORT2
+U_CAPI स्थिरांक char16_t* U_EXPORT2
 u_catgets(u_nl_catd catd U_LIFETIME_BOUND,
-          int32_t set_num,
-          int32_t msg_num,
-          const char16_t* s U_LIFETIME_BOUND,
+          int32_t set_अंक,
+          int32_t संदेश_अंक,
+          स्थिरांक char16_t* s U_LIFETIME_BOUND,
           int32_t* len,
           UErrorCode* ec) {
 
-    char key[MAX_KEY_LEN];
-    const char16_t* result;
+    अक्षर किल्ली[MAX_किल्ली_LEN];
+    स्थिरांक char16_t* result;
 
-    if (ec == nullptr || U_FAILURE(*ec)) {
-        goto ERROR;
+    जर (ec == nullptr || U_FAILURE(*ec)) {
+        जा ERROR;
     }
 
-    result = ures_getStringByKey((const UResourceBundle*) catd,
-                                 _catkey(key, set_num, msg_num),
+    result = ures_get_String_By_किल्ली((स्थिरांक UResourceBundle*) catd,
+                                 _catkey(किल्ली, set_अंक, संदेश_अंक),
                                  len, ec);
-    if (U_FAILURE(*ec)) {
-        goto ERROR;
+    जर (U_FAILURE(*ec)) {
+        जा ERROR;
     }
 
-    return result;
+    परत result;
 
  ERROR:
     /* In case of any failure, return s */
-    if (len != nullptr) {
+    जर (len != nullptr) {
         *len = u_strlen(s);
     }
-    return s;
+    परत s;
 }
 
 /*eof*/

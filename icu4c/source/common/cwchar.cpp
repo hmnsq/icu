@@ -16,39 +16,39 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !U_HAVE_WCSCPY
+#जर !U_HAVE_WCSCPY
 
-#include "cwchar.h"
+#अन्तर्भाव "cwchar.h"
 
-U_CAPI wchar_t *uprv_wcscat(wchar_t *dst, const wchar_t *src) {
-    wchar_t *start=dst;
-    while(*dst!=0) {
+U_CAPI ब_अक्षर_प्रकार *uprv_wcscat(ब_अक्षर_प्रकार *dst, स्थिरांक ब_अक्षर_प्रकार *src) {
+    ब_अक्षर_प्रकार *start=dst;
+    पर्यंत(*dst!=0) {
         ++dst;
     }
-    while((*dst=*src)!=0) {
+    पर्यंत((*dst=*src)!=0) {
         ++dst;
         ++src;
     }
-    return start;
+    परत start;
 }
 
-U_CAPI wchar_t *uprv_wcscpy(wchar_t *dst, const wchar_t *src) {
-    wchar_t *start=dst;
-    while((*dst=*src)!=0) {
+U_CAPI ब_अक्षर_प्रकार *uprv_wcscpy(ब_अक्षर_प्रकार *dst, स्थिरांक ब_अक्षर_प्रकार *src) {
+    ब_अक्षर_प्रकार *start=dst;
+    पर्यंत((*dst=*src)!=0) {
         ++dst;
         ++src;
     }
-    return start;
+    परत start;
 }
 
-U_CAPI size_t uprv_wcslen(const wchar_t *src) {
-    const wchar_t *start=src;
-    while(*src!=0) {
+U_CAPI माप_प्रकार uprv_wcslen(स्थिरांक ब_अक्षर_प्रकार *src) {
+    स्थिरांक ब_अक्षर_प्रकार *start=src;
+    पर्यंत(*src!=0) {
         ++src;
     }
-    return src-start;
+    परत src-start;
 }
 
 #endif

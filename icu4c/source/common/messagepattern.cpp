@@ -14,131 +14,131 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
+#जर !UCONFIG_NO_FORMATTING
 
-#include "unicode/messagepattern.h"
-#include "unicode/unistr.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "messageimpl.h"
-#include "patternprops.h"
-#include "putilimp.h"
-#include "uassert.h"
+#अन्तर्भाव "unicode/messagepattern.h"
+#अन्तर्भाव "unicode/unistr.h"
+#अन्तर्भाव "unicode/utf16.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "cstring.h"
+#अन्तर्भाव "messageimpl.h"
+#अन्तर्भाव "patternprops.h"
+#अन्तर्भाव "putilimp.h"
+#अन्तर्भाव "uassert.h"
 
 U_NAMESPACE_BEGIN
 
 // Unicode character/code point constants ---------------------------------- ***
 
-static const char16_t u_pound=0x23;
-static const char16_t u_apos=0x27;
-static const char16_t u_plus=0x2B;
-static const char16_t u_comma=0x2C;
-static const char16_t u_minus=0x2D;
-static const char16_t u_dot=0x2E;
-static const char16_t u_colon=0x3A;
-static const char16_t u_lessThan=0x3C;
-static const char16_t u_equal=0x3D;
-static const char16_t u_A=0x41;
-static const char16_t u_C=0x43;
-static const char16_t u_D=0x44;
-static const char16_t u_E=0x45;
-static const char16_t u_H=0x48;
-static const char16_t u_I=0x49;
-static const char16_t u_L=0x4C;
-static const char16_t u_N=0x4E;
-static const char16_t u_O=0x4F;
-static const char16_t u_P=0x50;
-static const char16_t u_R=0x52;
-static const char16_t u_S=0x53;
-static const char16_t u_T=0x54;
-static const char16_t u_U=0x55;
-static const char16_t u_Z=0x5A;
-static const char16_t u_a=0x61;
-static const char16_t u_c=0x63;
-static const char16_t u_d=0x64;
-static const char16_t u_e=0x65;
-static const char16_t u_f=0x66;
-static const char16_t u_h=0x68;
-static const char16_t u_i=0x69;
-static const char16_t u_l=0x6C;
-static const char16_t u_n=0x6E;
-static const char16_t u_o=0x6F;
-static const char16_t u_p=0x70;
-static const char16_t u_r=0x72;
-static const char16_t u_s=0x73;
-static const char16_t u_t=0x74;
-static const char16_t u_u=0x75;
-static const char16_t u_z=0x7A;
-static const char16_t u_leftCurlyBrace=0x7B;
-static const char16_t u_pipe=0x7C;
-static const char16_t u_rightCurlyBrace=0x7D;
-static const char16_t u_lessOrEqual=0x2264;  // U+2264 is <=
+स्थिर स्थिरांक char16_t u_pound=0x23;
+स्थिर स्थिरांक char16_t u_apos=0x27;
+स्थिर स्थिरांक char16_t u_plus=0x2B;
+स्थिर स्थिरांक char16_t u_comma=0x2C;
+स्थिर स्थिरांक char16_t u_minus=0x2D;
+स्थिर स्थिरांक char16_t u_dot=0x2E;
+स्थिर स्थिरांक char16_t u_colon=0x3A;
+स्थिर स्थिरांक char16_t u_lessThan=0x3C;
+स्थिर स्थिरांक char16_t u_equal=0x3D;
+स्थिर स्थिरांक char16_t u_A=0x41;
+स्थिर स्थिरांक char16_t u_C=0x43;
+स्थिर स्थिरांक char16_t u_D=0x44;
+स्थिर स्थिरांक char16_t u_E=0x45;
+स्थिर स्थिरांक char16_t u_H=0x48;
+स्थिर स्थिरांक char16_t u_I=0x49;
+स्थिर स्थिरांक char16_t u_L=0x4C;
+स्थिर स्थिरांक char16_t u_N=0x4E;
+स्थिर स्थिरांक char16_t u_O=0x4F;
+स्थिर स्थिरांक char16_t u_P=0x50;
+स्थिर स्थिरांक char16_t u_R=0x52;
+स्थिर स्थिरांक char16_t u_S=0x53;
+स्थिर स्थिरांक char16_t u_T=0x54;
+स्थिर स्थिरांक char16_t u_U=0x55;
+स्थिर स्थिरांक char16_t u_Z=0x5A;
+स्थिर स्थिरांक char16_t u_a=0x61;
+स्थिर स्थिरांक char16_t u_c=0x63;
+स्थिर स्थिरांक char16_t u_d=0x64;
+स्थिर स्थिरांक char16_t u_e=0x65;
+स्थिर स्थिरांक char16_t u_f=0x66;
+स्थिर स्थिरांक char16_t u_h=0x68;
+स्थिर स्थिरांक char16_t u_i=0x69;
+स्थिर स्थिरांक char16_t u_l=0x6C;
+स्थिर स्थिरांक char16_t u_n=0x6E;
+स्थिर स्थिरांक char16_t u_o=0x6F;
+स्थिर स्थिरांक char16_t u_p=0x70;
+स्थिर स्थिरांक char16_t u_r=0x72;
+स्थिर स्थिरांक char16_t u_s=0x73;
+स्थिर स्थिरांक char16_t u_t=0x74;
+स्थिर स्थिरांक char16_t u_u=0x75;
+स्थिर स्थिरांक char16_t u_z=0x7A;
+स्थिर स्थिरांक char16_t u_डावा_Curly_Brace=0x7B;
+स्थिर स्थिरांक char16_t u_pipe=0x7C;
+स्थिर स्थिरांक char16_t u_उजवा_Curly_Brace=0x7D;
+स्थिर स्थिरांक char16_t u_lessOrEqual=0x2264;  // U+2264 is <=
 
-static const char16_t kOffsetColon[]={  // "offset:"
+स्थिर स्थिरांक char16_t kOffsetColon[]={  // "offset:"
     u_o, u_f, u_f, u_s, u_e, u_t, u_colon
 };
 
-static const char16_t kOther[]={  // "other"
+स्थिर स्थिरांक char16_t kOther[]={  // "other"
     u_o, u_t, u_h, u_e, u_r
 };
 
 // MessagePatternList ------------------------------------------------------ ***
 
-template<typename T, int32_t stackCapacity>
-class MessagePatternList : public UMemory {
-public:
+ढाँचा<typename T, int32_t चळत_Capacity>
+वर्ग MessagePatternList : सार्वजनिक UMemory {
+सार्वजनिक:
     MessagePatternList() {}
-    void copyFrom(const MessagePatternList<T, stackCapacity> &other,
+    शून्य copyFrom(स्थिरांक MessagePatternList<T, चळत_Capacity> &other,
                   int32_t length,
                   UErrorCode &errorCode);
     UBool ensureCapacityForOneMore(int32_t oldLength, UErrorCode &errorCode);
-    UBool equals(const MessagePatternList<T, stackCapacity> &other, int32_t length) const {
-        for(int32_t i=0; i<length; ++i) {
-            if(a[i]!=other.a[i]) { return false; }
+    UBool equals(स्थिरांक MessagePatternList<T, चळत_Capacity> &other, int32_t length) स्थिरांक {
+        साठी(int32_t i=0; i<length; ++i) {
+            जर(a[i]!=other.a[i]) { परत असत्य; }
         }
-        return true;
+        परत सत्य;
     }
 
-    MaybeStackArray<T, stackCapacity> a;
+    Maybe_चळत_Array<T, चळत_Capacity> a;
 };
 
-template<typename T, int32_t stackCapacity>
-void
-MessagePatternList<T, stackCapacity>::copyFrom(
-        const MessagePatternList<T, stackCapacity> &other,
+ढाँचा<typename T, int32_t चळत_Capacity>
+शून्य
+MessagePatternList<T, चळत_Capacity>::copyFrom(
+        स्थिरांक MessagePatternList<T, चळत_Capacity> &other,
         int32_t length,
         UErrorCode &errorCode) {
-    if(U_SUCCESS(errorCode) && length>0) {
-        if(length>a.getCapacity() && nullptr==a.resize(length)) {
+    जर(U_SUCCESS(errorCode) && length>0) {
+        जर(length>a.getCapacity() && nullptr==a.resize(length)) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+            परत;
         }
-        uprv_memcpy(a.getAlias(), other.a.getAlias(), (size_t)length*sizeof(T));
+        uprv_memcpy(a.getAlias(), other.a.getAlias(), (माप_प्रकार)length*आकार(T));
     }
 }
 
-template<typename T, int32_t stackCapacity>
+ढाँचा<typename T, int32_t चळत_Capacity>
 UBool
-MessagePatternList<T, stackCapacity>::ensureCapacityForOneMore(int32_t oldLength, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return false;
+MessagePatternList<T, चळत_Capacity>::ensureCapacityForOneMore(int32_t oldLength, UErrorCode &errorCode) {
+    जर(U_FAILURE(errorCode)) {
+        परत असत्य;
     }
-    if(a.getCapacity()>oldLength || a.resize(2*oldLength, oldLength)!=nullptr) {
-        return true;
+    जर(a.getCapacity()>oldLength || a.resize(2*oldLength, oldLength)!=nullptr) {
+        परत सत्य;
     }
     errorCode=U_MEMORY_ALLOCATION_ERROR;
-    return false;
+    परत असत्य;
 }
 
 // MessagePatternList specializations -------------------------------------- ***
 
-class MessagePatternDoubleList : public MessagePatternList<double, 8> {
+वर्ग MessagePatternDoubleList : सार्वजनिक MessagePatternList<द्विगुण, 8> {
 };
 
-class MessagePatternPartsList : public MessagePatternList<MessagePattern::Part, 32> {
+वर्ग MessagePatternPartsList : सार्वजनिक MessagePatternList<MessagePattern::Part, 32> {
 };
 
 // MessagePattern constructors etc. ---------------------------------------- ***
@@ -146,182 +146,182 @@ class MessagePatternPartsList : public MessagePatternList<MessagePattern::Part, 
 MessagePattern::MessagePattern(UErrorCode &errorCode)
         : aposMode(UCONFIG_MSGPAT_DEFAULT_APOSTROPHE_MODE),
           partsList(nullptr), parts(nullptr), partsLength(0),
-          numericValuesList(nullptr), numericValues(nullptr), numericValuesLength(0),
-          hasArgNames(false), hasArgNumbers(false), needsAutoQuoting(false) {
+          numeric_मूल्ये_List(nullptr), numeric_मूल्ये(nullptr), numeric_मूल्ये_Length(0),
+          hasArgNames(असत्य), hasArgNumbers(असत्य), needsAutoQuoting(असत्य) {
     init(errorCode);
 }
 
 MessagePattern::MessagePattern(UMessagePatternApostropheMode mode, UErrorCode &errorCode)
         : aposMode(mode),
           partsList(nullptr), parts(nullptr), partsLength(0),
-          numericValuesList(nullptr), numericValues(nullptr), numericValuesLength(0),
-          hasArgNames(false), hasArgNumbers(false), needsAutoQuoting(false) {
+          numeric_मूल्ये_List(nullptr), numeric_मूल्ये(nullptr), numeric_मूल्ये_Length(0),
+          hasArgNames(असत्य), hasArgNumbers(असत्य), needsAutoQuoting(असत्य) {
     init(errorCode);
 }
 
-MessagePattern::MessagePattern(const UnicodeString &pattern, UParseError *parseError, UErrorCode &errorCode)
+MessagePattern::MessagePattern(स्थिरांक UnicodeString &pattern, UParseError *parseError, UErrorCode &errorCode)
         : aposMode(UCONFIG_MSGPAT_DEFAULT_APOSTROPHE_MODE),
           partsList(nullptr), parts(nullptr), partsLength(0),
-          numericValuesList(nullptr), numericValues(nullptr), numericValuesLength(0),
-          hasArgNames(false), hasArgNumbers(false), needsAutoQuoting(false) {
-    if(init(errorCode)) {
+          numeric_मूल्ये_List(nullptr), numeric_मूल्ये(nullptr), numeric_मूल्ये_Length(0),
+          hasArgNames(असत्य), hasArgNumbers(असत्य), needsAutoQuoting(असत्य) {
+    जर(init(errorCode)) {
         parse(pattern, parseError, errorCode);
     }
 }
 
 UBool
 MessagePattern::init(UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return false;
+    जर(U_FAILURE(errorCode)) {
+        परत असत्य;
     }
-    partsList=new MessagePatternPartsList();
-    if(partsList==nullptr) {
+    partsList=नवीन MessagePatternPartsList();
+    जर(partsList==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return false;
+        परत असत्य;
     }
     parts=partsList->a.getAlias();
-    return true;
+    परत सत्य;
 }
 
-MessagePattern::MessagePattern(const MessagePattern &other)
-        : UObject(other), aposMode(other.aposMode), msg(other.msg),
+MessagePattern::MessagePattern(स्थिरांक MessagePattern &other)
+        : UObject(other), aposMode(other.aposMode), संदेश(other.संदेश),
           partsList(nullptr), parts(nullptr), partsLength(0),
-          numericValuesList(nullptr), numericValues(nullptr), numericValuesLength(0),
+          numeric_मूल्ये_List(nullptr), numeric_मूल्ये(nullptr), numeric_मूल्ये_Length(0),
           hasArgNames(other.hasArgNames), hasArgNumbers(other.hasArgNumbers),
           needsAutoQuoting(other.needsAutoQuoting) {
     UErrorCode errorCode=U_ZERO_ERROR;
-    if(!copyStorage(other, errorCode)) {
+    जर(!copyStorage(other, errorCode)) {
         clear();
     }
 }
 
 MessagePattern&
-MessagePattern::operator=(const MessagePattern& other) U_LIFETIME_BOUND {
-    if(this==&other) {
-        return *this;
+MessagePattern::चालक=(स्थिरांक MessagePattern& other) U_LIFETIME_BOUND {
+    जर(हे==&other) {
+        परत *हे;
     }
     aposMode=other.aposMode;
-    msg=other.msg;
+    संदेश=other.संदेश;
     hasArgNames=other.hasArgNames;
     hasArgNumbers=other.hasArgNumbers;
     needsAutoQuoting=other.needsAutoQuoting;
     UErrorCode errorCode=U_ZERO_ERROR;
-    if(!copyStorage(other, errorCode)) {
+    जर(!copyStorage(other, errorCode)) {
         clear();
     }
-    return *this;
+    परत *हे;
 }
 
 UBool
-MessagePattern::copyStorage(const MessagePattern &other, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return false;
+MessagePattern::copyStorage(स्थिरांक MessagePattern &other, UErrorCode &errorCode) {
+    जर(U_FAILURE(errorCode)) {
+        परत असत्य;
     }
     parts=nullptr;
     partsLength=0;
-    numericValues=nullptr;
-    numericValuesLength=0;
-    if(partsList==nullptr) {
-        partsList=new MessagePatternPartsList();
-        if(partsList==nullptr) {
+    numeric_मूल्ये=nullptr;
+    numeric_मूल्ये_Length=0;
+    जर(partsList==nullptr) {
+        partsList=नवीन MessagePatternPartsList();
+        जर(partsList==nullptr) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return false;
+            परत असत्य;
         }
         parts=partsList->a.getAlias();
     }
-    if(other.partsLength>0) {
+    जर(other.partsLength>0) {
         partsList->copyFrom(*other.partsList, other.partsLength, errorCode);
-        if(U_FAILURE(errorCode)) {
-            return false;
+        जर(U_FAILURE(errorCode)) {
+            परत असत्य;
         }
         parts=partsList->a.getAlias();
         partsLength=other.partsLength;
     }
-    if(other.numericValuesLength>0) {
-        if(numericValuesList==nullptr) {
-            numericValuesList=new MessagePatternDoubleList();
-            if(numericValuesList==nullptr) {
+    जर(other.numeric_मूल्ये_Length>0) {
+        जर(numeric_मूल्ये_List==nullptr) {
+            numeric_मूल्ये_List=नवीन MessagePatternDoubleList();
+            जर(numeric_मूल्ये_List==nullptr) {
                 errorCode=U_MEMORY_ALLOCATION_ERROR;
-                return false;
+                परत असत्य;
             }
-            numericValues=numericValuesList->a.getAlias();
+            numeric_मूल्ये=numeric_मूल्ये_List->a.getAlias();
         }
-        numericValuesList->copyFrom(
-            *other.numericValuesList, other.numericValuesLength, errorCode);
-        if(U_FAILURE(errorCode)) {
-            return false;
+        numeric_मूल्ये_List->copyFrom(
+            *other.numeric_मूल्ये_List, other.numeric_मूल्ये_Length, errorCode);
+        जर(U_FAILURE(errorCode)) {
+            परत असत्य;
         }
-        numericValues=numericValuesList->a.getAlias();
-        numericValuesLength=other.numericValuesLength;
+        numeric_मूल्ये=numeric_मूल्ये_List->a.getAlias();
+        numeric_मूल्ये_Length=other.numeric_मूल्ये_Length;
     }
-    return true;
+    परत सत्य;
 }
 
 MessagePattern::~MessagePattern() {
     delete partsList;
-    delete numericValuesList;
+    delete numeric_मूल्ये_List;
 }
 
 // MessagePattern API ------------------------------------------------------ ***
 
 MessagePattern&
-MessagePattern::parse(const UnicodeString& pattern,
+MessagePattern::parse(स्थिरांक UnicodeString& pattern,
                       UParseError* parseError,
                       UErrorCode& errorCode) U_LIFETIME_BOUND {
     preParse(pattern, parseError, errorCode);
     parseMessage(0, 0, 0, UMSGPAT_ARG_TYPE_NONE, parseError, errorCode);
     postParse();
-    return *this;
+    परत *हे;
 }
 
 MessagePattern&
-MessagePattern::parseChoiceStyle(const UnicodeString& pattern,
+MessagePattern::parseChoiceStyle(स्थिरांक UnicodeString& pattern,
                                  UParseError* parseError,
                                  UErrorCode& errorCode) U_LIFETIME_BOUND {
     preParse(pattern, parseError, errorCode);
     parseChoiceStyle(0, 0, parseError, errorCode);
     postParse();
-    return *this;
+    परत *हे;
 }
 
 MessagePattern&
-MessagePattern::parsePluralStyle(const UnicodeString& pattern,
+MessagePattern::parsePluralStyle(स्थिरांक UnicodeString& pattern,
                                  UParseError* parseError,
                                  UErrorCode& errorCode) U_LIFETIME_BOUND {
     preParse(pattern, parseError, errorCode);
     parsePluralOrSelectStyle(UMSGPAT_ARG_TYPE_PLURAL, 0, 0, parseError, errorCode);
     postParse();
-    return *this;
+    परत *हे;
 }
 
 MessagePattern&
-MessagePattern::parseSelectStyle(const UnicodeString& pattern,
+MessagePattern::parseSelectStyle(स्थिरांक UnicodeString& pattern,
                                  UParseError* parseError,
                                  UErrorCode& errorCode) U_LIFETIME_BOUND {
     preParse(pattern, parseError, errorCode);
     parsePluralOrSelectStyle(UMSGPAT_ARG_TYPE_SELECT, 0, 0, parseError, errorCode);
     postParse();
-    return *this;
+    परत *हे;
 }
 
-void
+शून्य
 MessagePattern::clear() {
     // Mostly the same as preParse().
-    msg.remove();
-    hasArgNames=hasArgNumbers=false;
-    needsAutoQuoting=false;
+    संदेश.हटाओ();
+    hasArgNames=hasArgNumbers=असत्य;
+    needsAutoQuoting=असत्य;
     partsLength=0;
-    numericValuesLength=0;
+    numeric_मूल्ये_Length=0;
 }
 
-bool
-MessagePattern::operator==(const MessagePattern &other) const {
-    if(this==&other) {
-        return true;
+तार्किक
+MessagePattern::चालक==(स्थिरांक MessagePattern &other) स्थिरांक {
+    जर(हे==&other) {
+        परत सत्य;
     }
-    return
+    परत
         aposMode==other.aposMode &&
-        msg==other.msg &&
+        संदेश==other.संदेश &&
         // parts.equals(o.parts)
         partsLength==other.partsLength &&
         (partsLength==0 || partsList->equals(*other.partsList, partsLength));
@@ -329,48 +329,48 @@ MessagePattern::operator==(const MessagePattern &other) const {
 }
 
 int32_t
-MessagePattern::hashCode() const {
-    int32_t hash=(aposMode*37+msg.hashCode())*37+partsLength;
-    for(int32_t i=0; i<partsLength; ++i) {
+MessagePattern::hashCode() स्थिरांक {
+    int32_t hash=(aposMode*37+संदेश.hashCode())*37+partsLength;
+    साठी(int32_t i=0; i<partsLength; ++i) {
         hash=hash*37+parts[i].hashCode();
     }
-    return hash;
+    परत hash;
 }
 
 int32_t
-MessagePattern::validateArgumentName(const UnicodeString &name) {
-    if(!PatternProps::isIdentifier(name.getBuffer(), name.length())) {
-        return UMSGPAT_ARG_NAME_NOT_VALID;
+MessagePattern::validateArgumentName(स्थिरांक UnicodeString &name) {
+    जर(!PatternProps::isIdentifier(name.getBuffer(), name.length())) {
+        परत UMSGPAT_ARG_NAME_NOT_VALID;
     }
-    return parseArgNumber(name, 0, name.length());
+    परत parse_Arg_संख्या(name, 0, name.length());
 }
 
 UnicodeString
-MessagePattern::autoQuoteApostropheDeep() const {
-    if(!needsAutoQuoting) {
-        return msg;
+MessagePattern::autoQuoteApostropheDeep() स्थिरांक {
+    जर(!needsAutoQuoting) {
+        परत संदेश;
     }
-    UnicodeString modified(msg);
+    UnicodeString modified(संदेश);
     // Iterate backward so that the insertion indexes do not change.
-    int32_t count=countParts();
-    for(int32_t i=count; i>0;) {
-        const Part &part=getPart(--i);
-        if(part.getType()==UMSGPAT_PART_TYPE_INSERT_CHAR) {
+    int32_t count=मोजणी_Parts();
+    साठी(int32_t i=count; i>0;) {
+        स्थिरांक Part &part=getPart(--i);
+        जर(part.getType()==UMSGPAT_PART_TYPE_घाला_CHAR) {
            modified.insert(part.index, static_cast<char16_t>(part.value));
         }
     }
-    return modified;
+    परत modified;
 }
 
-double
-MessagePattern::getNumericValue(const Part &part) const {
+द्विगुण
+MessagePattern::get_Numeric_मूल्य(स्थिरांक Part &part) स्थिरांक {
     UMessagePatternPartType type=part.type;
-    if(type==UMSGPAT_PART_TYPE_ARG_INT) {
-        return part.value;
-    } else if(type==UMSGPAT_PART_TYPE_ARG_DOUBLE) {
-        return numericValues[part.value];
-    } else {
-        return UMSGPAT_NO_NUMERIC_VALUE;
+    जर(type==UMSGPAT_PART_TYPE_ARG_INT) {
+        परत part.value;
+    } अन्यथा जर(type==UMSGPAT_PART_TYPE_ARG_DOUBLE) {
+        परत numeric_मूल्ये[part.value];
+    } अन्यथा {
+        परत UMSGPAT_NO_NUMERIC_मूल्य;
     }
 }
 
@@ -380,24 +380,24 @@ MessagePattern::getNumericValue(const Part &part) const {
   * @return the "offset:" value.
   * @draft ICU 4.8
   */
-double
-MessagePattern::getPluralOffset(int32_t pluralStart) const {
-    const Part &part=getPart(pluralStart);
-    if(Part::hasNumericValue(part.type)) {
-        return getNumericValue(part);
-    } else {
-        return 0;
+द्विगुण
+MessagePattern::getPluralOffset(int32_t pluralStart) स्थिरांक {
+    स्थिरांक Part &part=getPart(pluralStart);
+    जर(Part::has_Numeric_मूल्य(part.type)) {
+        परत get_Numeric_मूल्य(part);
+    } अन्यथा {
+        परत 0;
     }
 }
 
 // MessagePattern::Part ---------------------------------------------------- ***
 
-bool
-MessagePattern::Part::operator==(const Part &other) const {
-    if(this==&other) {
-        return true;
+तार्किक
+MessagePattern::Part::चालक==(स्थिरांक Part &other) स्थिरांक {
+    जर(हे==&other) {
+        परत सत्य;
     }
-    return
+    परत
         type==other.type &&
         index==other.index &&
         length==other.length &&
@@ -407,137 +407,137 @@ MessagePattern::Part::operator==(const Part &other) const {
 
 // MessagePattern parser --------------------------------------------------- ***
 
-void
-MessagePattern::preParse(const UnicodeString &pattern, UParseError *parseError, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+शून्य
+MessagePattern::preParse(स्थिरांक UnicodeString &pattern, UParseError *parseError, UErrorCode &errorCode) {
+    जर(U_FAILURE(errorCode)) {
+        परत;
     }
-    if(parseError!=nullptr) {
-        parseError->line=0;
+    जर(parseError!=nullptr) {
+        parseError->ओळ=0;
         parseError->offset=0;
         parseError->preContext[0]=0;
         parseError->postContext[0]=0;
     }
-    msg=pattern;
-    hasArgNames=hasArgNumbers=false;
-    needsAutoQuoting=false;
+    संदेश=pattern;
+    hasArgNames=hasArgNumbers=असत्य;
+    needsAutoQuoting=असत्य;
     partsLength=0;
-    numericValuesLength=0;
+    numeric_मूल्ये_Length=0;
 }
 
-void
+शून्य
 MessagePattern::postParse() {
-    if(partsList!=nullptr) {
+    जर(partsList!=nullptr) {
         parts=partsList->a.getAlias();
     }
-    if(numericValuesList!=nullptr) {
-        numericValues=numericValuesList->a.getAlias();
+    जर(numeric_मूल्ये_List!=nullptr) {
+        numeric_मूल्ये=numeric_मूल्ये_List->a.getAlias();
     }
 }
 
 int32_t
-MessagePattern::parseMessage(int32_t index, int32_t msgStartLength,
+MessagePattern::parseMessage(int32_t index, int32_t संदेश_Start_Length,
                              int32_t nestingLevel, UMessagePatternArgType parentType,
                              UParseError *parseError, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    जर(U_FAILURE(errorCode)) {
+        परत 0;
     }
-    if(nestingLevel>Part::MAX_NESTED_LEVELS) {
+    जर(nestingLevel>Part::MAX_NESTED_LEVELS) {
         errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        परत 0;
     }
-    int32_t msgStart=partsLength;
-    addPart(UMSGPAT_PART_TYPE_MSG_START, index, msgStartLength, nestingLevel, errorCode);
-    index+=msgStartLength;
-    for(;;) {  // while(index<msg.length()) with U_FAILURE(errorCode) check
-        if(U_FAILURE(errorCode)) {
-            return 0;
+    int32_t संदेश_Start=partsLength;
+    addPart(UMSGPAT_PART_TYPE_संदेश_START, index, संदेश_Start_Length, nestingLevel, errorCode);
+    index+=संदेश_Start_Length;
+    साठी(;;) {  // while(index<msg.length()) with U_FAILURE(errorCode) check
+        जर(U_FAILURE(errorCode)) {
+            परत 0;
         }
-        if(index>=msg.length()) {
-            break;
+        जर(index>=संदेश.length()) {
+            थांबा;
         }
-        char16_t c=msg.charAt(index++);
-        if(c==u_apos) {
-            if(index==msg.length()) {
+        char16_t c=संदेश.charAt(index++);
+        जर(c==u_apos) {
+            जर(index==संदेश.length()) {
                 // The apostrophe is the last character in the pattern. 
                 // Add a Part for auto-quoting.
-                addPart(UMSGPAT_PART_TYPE_INSERT_CHAR, index, 0,
+                addPart(UMSGPAT_PART_TYPE_घाला_CHAR, index, 0,
                         u_apos, errorCode);  // value=char to be inserted
-                needsAutoQuoting=true;
-            } else {
-                c=msg.charAt(index);
-                if(c==u_apos) {
+                needsAutoQuoting=सत्य;
+            } अन्यथा {
+                c=संदेश.charAt(index);
+                जर(c==u_apos) {
                     // double apostrophe, skip the second one
                     addPart(UMSGPAT_PART_TYPE_SKIP_SYNTAX, index++, 1, 0, errorCode);
-                } else if(
+                } अन्यथा जर(
                     aposMode==UMSGPAT_APOS_DOUBLE_REQUIRED ||
-                    c==u_leftCurlyBrace || c==u_rightCurlyBrace ||
+                    c==u_डावा_Curly_Brace || c==u_उजवा_Curly_Brace ||
                     (parentType==UMSGPAT_ARG_TYPE_CHOICE && c==u_pipe) ||
                     (UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(parentType) && c==u_pound)
                 ) {
                     // skip the quote-starting apostrophe
                     addPart(UMSGPAT_PART_TYPE_SKIP_SYNTAX, index-1, 1, 0, errorCode);
                     // find the end of the quoted literal text
-                    for(;;) {
-                        index=msg.indexOf(u_apos, index+1);
-                        if(index>=0) {
-                            if(/*(index+1)<msg.length() &&*/ msg.charAt(index+1)==u_apos) {
+                    साठी(;;) {
+                        index=संदेश.indexOf(u_apos, index+1);
+                        जर(index>=0) {
+                            जर(/*(index+1)<msg.length() &&*/ संदेश.charAt(index+1)==u_apos) {
                                 // double apostrophe inside quoted literal text
                                 // still encodes a single apostrophe, skip the second one
                                 addPart(UMSGPAT_PART_TYPE_SKIP_SYNTAX, ++index, 1, 0, errorCode);
-                            } else {
+                            } अन्यथा {
                                 // skip the quote-ending apostrophe
                                 addPart(UMSGPAT_PART_TYPE_SKIP_SYNTAX, index++, 1, 0, errorCode);
-                                break;
+                                थांबा;
                             }
-                        } else {
+                        } अन्यथा {
                             // The quoted text reaches to the end of the of the message.
-                            index=msg.length();
+                            index=संदेश.length();
                             // Add a Part for auto-quoting.
-                            addPart(UMSGPAT_PART_TYPE_INSERT_CHAR, index, 0,
+                            addPart(UMSGPAT_PART_TYPE_घाला_CHAR, index, 0,
                                     u_apos, errorCode);  // value=char to be inserted
-                            needsAutoQuoting=true;
-                            break;
+                            needsAutoQuoting=सत्य;
+                            थांबा;
                         }
                     }
-                } else {
+                } अन्यथा {
                     // Interpret the apostrophe as literal text.
                     // Add a Part for auto-quoting.
-                    addPart(UMSGPAT_PART_TYPE_INSERT_CHAR, index, 0,
+                    addPart(UMSGPAT_PART_TYPE_घाला_CHAR, index, 0,
                             u_apos, errorCode);  // value=char to be inserted
-                    needsAutoQuoting=true;
+                    needsAutoQuoting=सत्य;
                 }
             }
-        } else if(UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(parentType) && c==u_pound) {
+        } अन्यथा जर(UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(parentType) && c==u_pound) {
             // The unquoted # in a plural message fragment will be replaced
             // with the (number-offset).
-            addPart(UMSGPAT_PART_TYPE_REPLACE_NUMBER, index-1, 1, 0, errorCode);
-        } else if(c==u_leftCurlyBrace) {
+            addPart(UMSGPAT_PART_TYPE_REPLACE_संख्या, index-1, 1, 0, errorCode);
+        } अन्यथा जर(c==u_डावा_Curly_Brace) {
             index=parseArg(index-1, 1, nestingLevel, parseError, errorCode);
-        } else if((nestingLevel>0 && c==u_rightCurlyBrace) ||
+        } अन्यथा जर((nestingLevel>0 && c==u_उजवा_Curly_Brace) ||
                   (parentType==UMSGPAT_ARG_TYPE_CHOICE && c==u_pipe)) {
             // Finish the message before the terminator.
             // In a choice style, report the "}" substring only for the following ARG_LIMIT,
             // not for this MSG_LIMIT.
-            int32_t limitLength=(parentType==UMSGPAT_ARG_TYPE_CHOICE && c==u_rightCurlyBrace) ? 0 : 1;
-            addLimitPart(msgStart, UMSGPAT_PART_TYPE_MSG_LIMIT, index-1, limitLength,
+            int32_t limitLength=(parentType==UMSGPAT_ARG_TYPE_CHOICE && c==u_उजवा_Curly_Brace) ? 0 : 1;
+            addLimitPart(संदेश_Start, UMSGPAT_PART_TYPE_संदेश_LIMIT, index-1, limitLength,
                          nestingLevel, errorCode);
-            if(parentType==UMSGPAT_ARG_TYPE_CHOICE) {
+            जर(parentType==UMSGPAT_ARG_TYPE_CHOICE) {
                 // Let the choice style parser see the '}' or '|'.
-                return index-1;
-            } else {
+                परत index-1;
+            } अन्यथा {
                 // continue parsing after the '}'
-                return index;
+                परत index;
             }
         }  // else: c is part of literal text
     }
-    if(nestingLevel>0 && !inTopLevelChoiceMessage(nestingLevel, parentType)) {
+    जर(nestingLevel>0 && !in_शीर्ष_Level_Choice_Message(nestingLevel, parentType)) {
         setParseError(parseError, 0);  // Unmatched '{' braces in message.
         errorCode=U_UNMATCHED_BRACES;
-        return 0;
+        परत 0;
     }
-    addLimitPart(msgStart, UMSGPAT_PART_TYPE_MSG_LIMIT, index, 0, nestingLevel, errorCode);
-    return index;
+    addLimitPart(संदेश_Start, UMSGPAT_PART_TYPE_संदेश_LIMIT, index, 0, nestingLevel, errorCode);
+    परत index;
 }
 
 int32_t
@@ -546,226 +546,226 @@ MessagePattern::parseArg(int32_t index, int32_t argStartLength, int32_t nestingL
     int32_t argStart=partsLength;
     UMessagePatternArgType argType=UMSGPAT_ARG_TYPE_NONE;
     addPart(UMSGPAT_PART_TYPE_ARG_START, index, argStartLength, argType, errorCode);
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    जर(U_FAILURE(errorCode)) {
+        परत 0;
     }
     int32_t nameIndex=index=skipWhiteSpace(index+argStartLength);
-    if(index==msg.length()) {
+    जर(index==संदेश.length()) {
         setParseError(parseError, 0);  // Unmatched '{' braces in message.
         errorCode=U_UNMATCHED_BRACES;
-        return 0;
+        परत 0;
     }
     // parse argument name or number
     index=skipIdentifier(index);
-    int32_t number=parseArgNumber(nameIndex, index);
-    if(number>=0) {
+    int32_t number=parse_Arg_संख्या(nameIndex, index);
+    जर(number>=0) {
         int32_t length=index-nameIndex;
-        if(length>Part::MAX_LENGTH || number>Part::MAX_VALUE) {
+        जर(length>Part::MAX_LENGTH || number>Part::MAX_मूल्य) {
             setParseError(parseError, nameIndex);  // Argument number too large.
             errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            परत 0;
         }
-        hasArgNumbers=true;
-        addPart(UMSGPAT_PART_TYPE_ARG_NUMBER, nameIndex, length, number, errorCode);
-    } else if(number==UMSGPAT_ARG_NAME_NOT_NUMBER) {
+        hasArgNumbers=सत्य;
+        addPart(UMSGPAT_PART_TYPE_ARG_संख्या, nameIndex, length, number, errorCode);
+    } अन्यथा जर(number==UMSGPAT_ARG_NAME_NOT_संख्या) {
         int32_t length=index-nameIndex;
-        if(length>Part::MAX_LENGTH) {
+        जर(length>Part::MAX_LENGTH) {
             setParseError(parseError, nameIndex);  // Argument name too long.
             errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            परत 0;
         }
-        hasArgNames=true;
+        hasArgNames=सत्य;
         addPart(UMSGPAT_PART_TYPE_ARG_NAME, nameIndex, length, 0, errorCode);
-    } else {  // number<-1 (ARG_NAME_NOT_VALID)
+    } अन्यथा {  // number<-1 (ARG_NAME_NOT_VALID)
         setParseError(parseError, nameIndex);  // Bad argument syntax.
         errorCode=U_PATTERN_SYNTAX_ERROR;
-        return 0;
+        परत 0;
     }
     index=skipWhiteSpace(index);
-    if(index==msg.length()) {
+    जर(index==संदेश.length()) {
         setParseError(parseError, 0);  // Unmatched '{' braces in message.
         errorCode=U_UNMATCHED_BRACES;
-        return 0;
+        परत 0;
     }
-    char16_t c=msg.charAt(index);
-    if(c==u_rightCurlyBrace) {
+    char16_t c=संदेश.charAt(index);
+    जर(c==u_उजवा_Curly_Brace) {
         // all done
-    } else if(c!=u_comma) {
+    } अन्यथा जर(c!=u_comma) {
         setParseError(parseError, nameIndex);  // Bad argument syntax.
         errorCode=U_PATTERN_SYNTAX_ERROR;
-        return 0;
-    } else /* ',' */ {
+        परत 0;
+    } अन्यथा /* ',' */ {
         // parse argument type: case-sensitive a-zA-Z
         int32_t typeIndex=index=skipWhiteSpace(index+1);
-        while(index<msg.length() && isArgTypeChar(msg.charAt(index))) {
+        पर्यंत(index<संदेश.length() && isArgTypeChar(संदेश.charAt(index))) {
             ++index;
         }
         int32_t length=index-typeIndex;
         index=skipWhiteSpace(index);
-        if(index==msg.length()) {
+        जर(index==संदेश.length()) {
             setParseError(parseError, 0);  // Unmatched '{' braces in message.
             errorCode=U_UNMATCHED_BRACES;
-            return 0;
+            परत 0;
         }
-        if(length==0 || ((c=msg.charAt(index))!=u_comma && c!=u_rightCurlyBrace)) {
+        जर(length==0 || ((c=संदेश.charAt(index))!=u_comma && c!=u_उजवा_Curly_Brace)) {
             setParseError(parseError, nameIndex);  // Bad argument syntax.
             errorCode=U_PATTERN_SYNTAX_ERROR;
-            return 0;
+            परत 0;
         }
-        if(length>Part::MAX_LENGTH) {
+        जर(length>Part::MAX_LENGTH) {
             setParseError(parseError, nameIndex);  // Argument type name too long.
             errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            परत 0;
         }
         argType=UMSGPAT_ARG_TYPE_SIMPLE;
-        if(length==6) {
+        जर(length==6) {
             // case-insensitive comparisons for complex-type names
-            if(isChoice(typeIndex)) {
+            जर(isChoice(typeIndex)) {
                 argType=UMSGPAT_ARG_TYPE_CHOICE;
-            } else if(isPlural(typeIndex)) {
+            } अन्यथा जर(isPlural(typeIndex)) {
                 argType=UMSGPAT_ARG_TYPE_PLURAL;
-            } else if(isSelect(typeIndex)) {
+            } अन्यथा जर(isSelect(typeIndex)) {
                 argType=UMSGPAT_ARG_TYPE_SELECT;
             }
-        } else if(length==13) {
-            if(isSelect(typeIndex) && isOrdinal(typeIndex+6)) {
+        } अन्यथा जर(length==13) {
+            जर(isSelect(typeIndex) && isOrdinal(typeIndex+6)) {
                 argType=UMSGPAT_ARG_TYPE_SELECTORDINAL;
             }
         }
         // change the ARG_START type from NONE to argType
         partsList->a[argStart].value = static_cast<int16_t>(argType);
-        if(argType==UMSGPAT_ARG_TYPE_SIMPLE) {
+        जर(argType==UMSGPAT_ARG_TYPE_SIMPLE) {
             addPart(UMSGPAT_PART_TYPE_ARG_TYPE, typeIndex, length, 0, errorCode);
         }
         // look for an argument style (pattern)
-        if(c==u_rightCurlyBrace) {
-            if(argType!=UMSGPAT_ARG_TYPE_SIMPLE) {
+        जर(c==u_उजवा_Curly_Brace) {
+            जर(argType!=UMSGPAT_ARG_TYPE_SIMPLE) {
                 setParseError(parseError, nameIndex);  // No style field for complex argument.
                 errorCode=U_PATTERN_SYNTAX_ERROR;
-                return 0;
+                परत 0;
             }
-        } else /* ',' */ {
+        } अन्यथा /* ',' */ {
             ++index;
-            if(argType==UMSGPAT_ARG_TYPE_SIMPLE) {
+            जर(argType==UMSGPAT_ARG_TYPE_SIMPLE) {
                 index=parseSimpleStyle(index, parseError, errorCode);
-            } else if(argType==UMSGPAT_ARG_TYPE_CHOICE) {
+            } अन्यथा जर(argType==UMSGPAT_ARG_TYPE_CHOICE) {
                 index=parseChoiceStyle(index, nestingLevel, parseError, errorCode);
-            } else {
+            } अन्यथा {
                 index=parsePluralOrSelectStyle(argType, index, nestingLevel, parseError, errorCode);
             }
         }
     }
     // Argument parsing stopped on the '}'.
     addLimitPart(argStart, UMSGPAT_PART_TYPE_ARG_LIMIT, index, 1, argType, errorCode);
-    return index+1;
+    परत index+1;
 }
 
 int32_t
 MessagePattern::parseSimpleStyle(int32_t index, UParseError *parseError, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    जर(U_FAILURE(errorCode)) {
+        परत 0;
     }
     int32_t start=index;
     int32_t nestedBraces=0;
-    while(index<msg.length()) {
-        char16_t c=msg.charAt(index++);
-        if(c==u_apos) {
+    पर्यंत(index<संदेश.length()) {
+        char16_t c=संदेश.charAt(index++);
+        जर(c==u_apos) {
             // Treat apostrophe as quoting but include it in the style part.
             // Find the end of the quoted literal text.
-            index=msg.indexOf(u_apos, index);
-            if(index<0) {
+            index=संदेश.indexOf(u_apos, index);
+            जर(index<0) {
                 // Quoted literal argument style text reaches to the end of the message.
                 setParseError(parseError, start);
                 errorCode=U_PATTERN_SYNTAX_ERROR;
-                return 0;
+                परत 0;
             }
             // skip the quote-ending apostrophe
             ++index;
-        } else if(c==u_leftCurlyBrace) {
+        } अन्यथा जर(c==u_डावा_Curly_Brace) {
             ++nestedBraces;
-        } else if(c==u_rightCurlyBrace) {
-            if(nestedBraces>0) {
+        } अन्यथा जर(c==u_उजवा_Curly_Brace) {
+            जर(nestedBraces>0) {
                 --nestedBraces;
-            } else {
+            } अन्यथा {
                 int32_t length=--index-start;
-                if(length>Part::MAX_LENGTH) {
+                जर(length>Part::MAX_LENGTH) {
                     setParseError(parseError, start);  // Argument style text too long.
                     errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                    return 0;
+                    परत 0;
                 }
                 addPart(UMSGPAT_PART_TYPE_ARG_STYLE, start, length, 0, errorCode);
-                return index;
+                परत index;
             }
         }  // c is part of literal text
     }
     setParseError(parseError, 0);  // Unmatched '{' braces in message.
     errorCode=U_UNMATCHED_BRACES;
-    return 0;
+    परत 0;
 }
 
 int32_t
 MessagePattern::parseChoiceStyle(int32_t index, int32_t nestingLevel,
                                  UParseError *parseError, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    जर(U_FAILURE(errorCode)) {
+        परत 0;
     }
     int32_t start=index;
     index=skipWhiteSpace(index);
-    if(index==msg.length() || msg.charAt(index)==u_rightCurlyBrace) {
+    जर(index==संदेश.length() || संदेश.charAt(index)==u_उजवा_Curly_Brace) {
         setParseError(parseError, 0);  // Missing choice argument pattern.
         errorCode=U_PATTERN_SYNTAX_ERROR;
-        return 0;
+        परत 0;
     }
-    for(;;) {
+    साठी(;;) {
         // The choice argument style contains |-separated (number, separator, message) triples.
         // Parse the number.
-        int32_t numberIndex=index;
+        int32_t संख्या_Index=index;
         index=skipDouble(index);
-        int32_t length=index-numberIndex;
-        if(length==0) {
+        int32_t length=index-संख्या_Index;
+        जर(length==0) {
             setParseError(parseError, start);  // Bad choice pattern syntax.
             errorCode=U_PATTERN_SYNTAX_ERROR;
-            return 0;
+            परत 0;
         }
-        if(length>Part::MAX_LENGTH) {
-            setParseError(parseError, numberIndex);  // Choice number too long.
+        जर(length>Part::MAX_LENGTH) {
+            setParseError(parseError, संख्या_Index);  // Choice number too long.
             errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            परत 0;
         }
-        parseDouble(numberIndex, index, true, parseError, errorCode);  // adds ARG_INT or ARG_DOUBLE
-        if(U_FAILURE(errorCode)) {
-            return 0;
+        parseDouble(संख्या_Index, index, सत्य, parseError, errorCode);  // adds ARG_INT or ARG_DOUBLE
+        जर(U_FAILURE(errorCode)) {
+            परत 0;
         }
         // Parse the separator.
         index=skipWhiteSpace(index);
-        if(index==msg.length()) {
+        जर(index==संदेश.length()) {
             setParseError(parseError, start);  // Bad choice pattern syntax.
             errorCode=U_PATTERN_SYNTAX_ERROR;
-            return 0;
+            परत 0;
         }
-        char16_t c=msg.charAt(index);
-        if(!(c==u_pound || c==u_lessThan || c==u_lessOrEqual)) {  // U+2264 is <=
+        char16_t c=संदेश.charAt(index);
+        जर(!(c==u_pound || c==u_lessThan || c==u_lessOrEqual)) {  // U+2264 is <=
             setParseError(parseError, start);  // Expected choice separator (#<\u2264) instead of c.
             errorCode=U_PATTERN_SYNTAX_ERROR;
-            return 0;
+            परत 0;
         }
         addPart(UMSGPAT_PART_TYPE_ARG_SELECTOR, index, 1, 0, errorCode);
         // Parse the message fragment.
         index=parseMessage(++index, 0, nestingLevel+1, UMSGPAT_ARG_TYPE_CHOICE, parseError, errorCode);
-        if(U_FAILURE(errorCode)) {
-            return 0;
+        जर(U_FAILURE(errorCode)) {
+            परत 0;
         }
         // parseMessage(..., CHOICE) returns the index of the terminator, or msg.length().
-        if(index==msg.length()) {
-            return index;
+        जर(index==संदेश.length()) {
+            परत index;
         }
-        if(msg.charAt(index)==u_rightCurlyBrace) {
-            if(!inMessageFormatPattern(nestingLevel)) {
+        जर(संदेश.charAt(index)==u_उजवा_Curly_Brace) {
+            जर(!inMessageFormatPattern(nestingLevel)) {
                 setParseError(parseError, start);  // Bad choice pattern syntax.
                 errorCode=U_PATTERN_SYNTAX_ERROR;
-                return 0;
+                परत 0;
             }
-            return index;
+            परत index;
         }  // else the terminator is '|'
         index=skipWhiteSpace(index+1);
     }
@@ -775,233 +775,233 @@ int32_t
 MessagePattern::parsePluralOrSelectStyle(UMessagePatternArgType argType,
                                          int32_t index, int32_t nestingLevel,
                                          UParseError *parseError, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    जर(U_FAILURE(errorCode)) {
+        परत 0;
     }
     int32_t start=index;
-    UBool isEmpty=true;
-    UBool hasOther=false;
-    for(;;) {
+    UBool isEmpty=सत्य;
+    UBool hasOther=असत्य;
+    साठी(;;) {
         // First, collect the selector looking for a small set of terminators.
         // It would be a little faster to consider the syntax of each possible
         // token right here, but that makes the code too complicated.
         index=skipWhiteSpace(index);
-        UBool eos=index==msg.length();
-        if(eos || msg.charAt(index)==u_rightCurlyBrace) {
-            if(eos==inMessageFormatPattern(nestingLevel)) {
+        UBool eos=index==संदेश.length();
+        जर(eos || संदेश.charAt(index)==u_उजवा_Curly_Brace) {
+            जर(eos==inMessageFormatPattern(nestingLevel)) {
                 setParseError(parseError, start);  // Bad plural/select pattern syntax.
                 errorCode=U_PATTERN_SYNTAX_ERROR;
-                return 0;
+                परत 0;
             }
-            if(!hasOther) {
+            जर(!hasOther) {
                 setParseError(parseError, 0);  // Missing 'other' keyword in plural/select pattern.
                 errorCode=U_DEFAULT_KEYWORD_MISSING;
-                return 0;
+                परत 0;
             }
-            return index;
+            परत index;
         }
         int32_t selectorIndex=index;
-        if(UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(argType) && msg.charAt(selectorIndex)==u_equal) {
+        जर(UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(argType) && संदेश.charAt(selectorIndex)==u_equal) {
             // explicit-value plural selector: =double
             index=skipDouble(index+1);
             int32_t length=index-selectorIndex;
-            if(length==1) {
+            जर(length==1) {
                 setParseError(parseError, start);  // Bad plural/select pattern syntax.
                 errorCode=U_PATTERN_SYNTAX_ERROR;
-                return 0;
+                परत 0;
             }
-            if(length>Part::MAX_LENGTH) {
+            जर(length>Part::MAX_LENGTH) {
                 setParseError(parseError, selectorIndex);  // Argument selector too long.
                 errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                return 0;
+                परत 0;
             }
             addPart(UMSGPAT_PART_TYPE_ARG_SELECTOR, selectorIndex, length, 0, errorCode);
-            parseDouble(selectorIndex+1, index, false,
+            parseDouble(selectorIndex+1, index, असत्य,
                         parseError, errorCode);  // adds ARG_INT or ARG_DOUBLE
-        } else {
+        } अन्यथा {
             index=skipIdentifier(index);
             int32_t length=index-selectorIndex;
-            if(length==0) {
+            जर(length==0) {
                 setParseError(parseError, start);  // Bad plural/select pattern syntax.
                 errorCode=U_PATTERN_SYNTAX_ERROR;
-                return 0;
+                परत 0;
             }
             // Note: The ':' in "offset:" is just beyond the skipIdentifier() range.
-            if( UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(argType) && length==6 && index<msg.length() &&
-                0==msg.compare(selectorIndex, 7, kOffsetColon, 0, 7)
+            जर( UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(argType) && length==6 && index<संदेश.length() &&
+                0==संदेश.compare(selectorIndex, 7, kOffsetColon, 0, 7)
             ) {
                 // plural offset, not a selector
-                if(!isEmpty) {
+                जर(!isEmpty) {
                     // Plural argument 'offset:' (if present) must precede key-message pairs.
                     setParseError(parseError, start);
                     errorCode=U_PATTERN_SYNTAX_ERROR;
-                    return 0;
+                    परत 0;
                 }
                 // allow whitespace between offset: and its value
-                int32_t valueIndex=skipWhiteSpace(index+1);  // The ':' is at index.
-                index=skipDouble(valueIndex);
-                if(index==valueIndex) {
+                int32_t मूल्य_Index=skipWhiteSpace(index+1);  // The ':' is at index.
+                index=skipDouble(मूल्य_Index);
+                जर(index==मूल्य_Index) {
                     setParseError(parseError, start);  // Missing value for plural 'offset:'.
                     errorCode=U_PATTERN_SYNTAX_ERROR;
-                    return 0;
+                    परत 0;
                 }
-                if((index-valueIndex)>Part::MAX_LENGTH) {
-                    setParseError(parseError, valueIndex);  // Plural offset value too long.
+                जर((index-मूल्य_Index)>Part::MAX_LENGTH) {
+                    setParseError(parseError, मूल्य_Index);  // Plural offset value too long.
                     errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                    return 0;
+                    परत 0;
                 }
-                parseDouble(valueIndex, index, false,
+                parseDouble(मूल्य_Index, index, असत्य,
                             parseError, errorCode);  // adds ARG_INT or ARG_DOUBLE
-                if(U_FAILURE(errorCode)) {
-                    return 0;
+                जर(U_FAILURE(errorCode)) {
+                    परत 0;
                 }
-                isEmpty=false;
-                continue;  // no message fragment after the offset
-            } else {
+                isEmpty=असत्य;
+                सुरूठेवा;  // no message fragment after the offset
+            } अन्यथा {
                 // normal selector word
-                if(length>Part::MAX_LENGTH) {
+                जर(length>Part::MAX_LENGTH) {
                     setParseError(parseError, selectorIndex);  // Argument selector too long.
                     errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-                    return 0;
+                    परत 0;
                 }
                 addPart(UMSGPAT_PART_TYPE_ARG_SELECTOR, selectorIndex, length, 0, errorCode);
-                if(0==msg.compare(selectorIndex, length, kOther, 0, 5)) {
-                    hasOther=true;
+                जर(0==संदेश.compare(selectorIndex, length, kOther, 0, 5)) {
+                    hasOther=सत्य;
                 }
             }
         }
-        if(U_FAILURE(errorCode)) {
-            return 0;
+        जर(U_FAILURE(errorCode)) {
+            परत 0;
         }
 
         // parse the message fragment following the selector
         index=skipWhiteSpace(index);
-        if(index==msg.length() || msg.charAt(index)!=u_leftCurlyBrace) {
+        जर(index==संदेश.length() || संदेश.charAt(index)!=u_डावा_Curly_Brace) {
             setParseError(parseError, selectorIndex);  // No message fragment after plural/select selector.
             errorCode=U_PATTERN_SYNTAX_ERROR;
-            return 0;
+            परत 0;
         }
         index=parseMessage(index, 1, nestingLevel+1, argType, parseError, errorCode);
-        if(U_FAILURE(errorCode)) {
-            return 0;
+        जर(U_FAILURE(errorCode)) {
+            परत 0;
         }
-        isEmpty=false;
+        isEmpty=असत्य;
     }
 }
 
 int32_t
-MessagePattern::parseArgNumber(const UnicodeString &s, int32_t start, int32_t limit) {
+MessagePattern::parse_Arg_संख्या(स्थिरांक UnicodeString &s, int32_t start, int32_t limit) {
     // If the identifier contains only ASCII digits, then it is an argument _number_
     // and must not have leading zeros (except "0" itself).
     // Otherwise it is an argument _name_.
-    if(start>=limit) {
-        return UMSGPAT_ARG_NAME_NOT_VALID;
+    जर(start>=limit) {
+        परत UMSGPAT_ARG_NAME_NOT_VALID;
     }
     int32_t number;
     // Defer numeric errors until we know there are only digits.
-    UBool badNumber;
+    UBool bad_संख्या;
     char16_t c=s.charAt(start++);
-    if(c==0x30) {
-        if(start==limit) {
-            return 0;
-        } else {
+    जर(c==0x30) {
+        जर(start==limit) {
+            परत 0;
+        } अन्यथा {
             number=0;
-            badNumber=true;  // leading zero
+            bad_संख्या=सत्य;  // leading zero
         }
-    } else if(0x31<=c && c<=0x39) {
+    } अन्यथा जर(0x31<=c && c<=0x39) {
         number=c-0x30;
-        badNumber=false;
-    } else {
-        return UMSGPAT_ARG_NAME_NOT_NUMBER;
+        bad_संख्या=असत्य;
+    } अन्यथा {
+        परत UMSGPAT_ARG_NAME_NOT_संख्या;
     }
-    while(start<limit) {
+    पर्यंत(start<limit) {
         c=s.charAt(start++);
-        if(0x30<=c && c<=0x39) {
-            if(number>=INT32_MAX/10) {
-                badNumber=true;  // overflow
-            } else {
+        जर(0x30<=c && c<=0x39) {
+            जर(number>=INT32_MAX/10) {
+                bad_संख्या=सत्य;  // overflow
+            } अन्यथा {
                 number=number*10+(c-0x30);
             }
-        } else {
-            return UMSGPAT_ARG_NAME_NOT_NUMBER;
+        } अन्यथा {
+            परत UMSGPAT_ARG_NAME_NOT_संख्या;
         }
     }
     // There are only ASCII digits.
-    if(badNumber) {
-        return UMSGPAT_ARG_NAME_NOT_VALID;
-    } else {
-        return number;
+    जर(bad_संख्या) {
+        परत UMSGPAT_ARG_NAME_NOT_VALID;
+    } अन्यथा {
+        परत number;
     }
 }
 
-void
+शून्य
 MessagePattern::parseDouble(int32_t start, int32_t limit, UBool allowInfinity,
                             UParseError *parseError, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+    जर(U_FAILURE(errorCode)) {
+        परत;
     }
     U_ASSERT(start<limit);
     // fake loop for easy exit and single throw statement
-    for(;;) { /*loop doesn't iterate*/
+    साठी(;;) { /*loop doesn't iterate*/
         // fast path for small integers and infinity
         int32_t value=0;
         int32_t isNegative=0;  // not boolean so that we can easily add it to value
         int32_t index=start;
-        char16_t c=msg.charAt(index++);
-        if(c==u_minus) {
+        char16_t c=संदेश.charAt(index++);
+        जर(c==u_minus) {
             isNegative=1;
-            if(index==limit) {
-                break;  // no number
+            जर(index==limit) {
+                थांबा;  // no number
             }
-            c=msg.charAt(index++);
-        } else if(c==u_plus) {
-            if(index==limit) {
-                break;  // no number
+            c=संदेश.charAt(index++);
+        } अन्यथा जर(c==u_plus) {
+            जर(index==limit) {
+                थांबा;  // no number
             }
-            c=msg.charAt(index++);
+            c=संदेश.charAt(index++);
         }
-        if(c==0x221e) {  // infinity
-            if(allowInfinity && index==limit) {
-                double infinity=uprv_getInfinity();
+        जर(c==0x221e) {  // infinity
+            जर(allowInfinity && index==limit) {
+                द्विगुण infinity=uprv_getInfinity();
                 addArgDoublePart(
                     isNegative!=0 ? -infinity : infinity,
                     start, limit-start, errorCode);
-                return;
-            } else {
-                break;
+                परत;
+            } अन्यथा {
+                थांबा;
             }
         }
         // try to parse the number as a small integer but fall back to a double
-        while('0'<=c && c<='9') {
+        पर्यंत('0'<=c && c<='9') {
             value=value*10+(c-'0');
-            if(value>(Part::MAX_VALUE+isNegative)) {
-                break;  // not a small-enough integer
+            जर(value>(Part::MAX_मूल्य+isNegative)) {
+                थांबा;  // not a small-enough integer
             }
-            if(index==limit) {
+            जर(index==limit) {
                 addPart(UMSGPAT_PART_TYPE_ARG_INT, start, limit-start,
                         isNegative!=0 ? -value : value, errorCode);
-                return;
+                परत;
             }
-            c=msg.charAt(index++);
+            c=संदेश.charAt(index++);
         }
         // Let Double.parseDouble() throw a NumberFormatException.
-        char numberChars[128];
-        int32_t capacity = static_cast<int32_t>(sizeof(numberChars));
+        अक्षर संख्या_Chars[128];
+        int32_t capacity = static_cast<int32_t>(आकार(संख्या_Chars));
         int32_t length=limit-start;
-        if(length>=capacity) {
-            break;  // number too long
+        जर(length>=capacity) {
+            थांबा;  // number too long
         }
-        msg.extract(start, length, numberChars, capacity, US_INV);
-        if (static_cast<int32_t>(uprv_strlen(numberChars)) < length) {
-            break;  // contains non-invariant character that was turned into NUL
+        संदेश.extract(start, length, संख्या_Chars, capacity, US_INV);
+        जर (static_cast<int32_t>(uprv_strlen(संख्या_Chars)) < length) {
+            थांबा;  // contains non-invariant character that was turned into NUL
         }
-        char *end;
-        double numericValue=uprv_strtod(numberChars, &end);
-        if(end!=(numberChars+length)) {
-            break;  // parsing error
+        अक्षर *end;
+        द्विगुण numeric_मूल्य=uprv_strtod(संख्या_Chars, &end);
+        जर(end!=(संख्या_Chars+length)) {
+            थांबा;  // parsing error
         }
-        addArgDoublePart(numericValue, start, length, errorCode);
-        return;
+        addArgDoublePart(numeric_मूल्य, start, length, errorCode);
+        परत;
     }
     setParseError(parseError, start /*, limit*/);  // Bad syntax for numeric value.
     errorCode=U_PATTERN_SYNTAX_ERROR;
@@ -1009,105 +1009,105 @@ MessagePattern::parseDouble(int32_t start, int32_t limit, UBool allowInfinity,
 
 int32_t
 MessagePattern::skipWhiteSpace(int32_t index) {
-    const char16_t *s=msg.getBuffer();
-    int32_t msgLength=msg.length();
-    const char16_t *t=PatternProps::skipWhiteSpace(s+index, msgLength-index);
-    return static_cast<int32_t>(t - s);
+    स्थिरांक char16_t *s=संदेश.getBuffer();
+    int32_t संदेश_Length=संदेश.length();
+    स्थिरांक char16_t *t=PatternProps::skipWhiteSpace(s+index, संदेश_Length-index);
+    परत static_cast<int32_t>(t - s);
 }
 
 int32_t
 MessagePattern::skipIdentifier(int32_t index) {
-    const char16_t *s=msg.getBuffer();
-    int32_t msgLength=msg.length();
-    const char16_t *t=PatternProps::skipIdentifier(s+index, msgLength-index);
-    return static_cast<int32_t>(t - s);
+    स्थिरांक char16_t *s=संदेश.getBuffer();
+    int32_t संदेश_Length=संदेश.length();
+    स्थिरांक char16_t *t=PatternProps::skipIdentifier(s+index, संदेश_Length-index);
+    परत static_cast<int32_t>(t - s);
 }
 
 int32_t
 MessagePattern::skipDouble(int32_t index) {
-    int32_t msgLength=msg.length();
-    while(index<msgLength) {
-        char16_t c=msg.charAt(index);
+    int32_t संदेश_Length=संदेश.length();
+    पर्यंत(index<संदेश_Length) {
+        char16_t c=संदेश.charAt(index);
         // U+221E: Allow the infinity symbol, for ChoiceFormat patterns.
-        if((c<0x30 && c!=u_plus && c!=u_minus && c!=u_dot) || (c>0x39 && c!=u_e && c!=u_E && c!=0x221e)) {
-            break;
+        जर((c<0x30 && c!=u_plus && c!=u_minus && c!=u_dot) || (c>0x39 && c!=u_e && c!=u_E && c!=0x221e)) {
+            थांबा;
         }
         ++index;
     }
-    return index;
+    परत index;
 }
 
 UBool
 MessagePattern::isArgTypeChar(UChar32 c) {
-    return (u_a<=c && c<=u_z) || (u_A<=c && c<=u_Z);
+    परत (u_a<=c && c<=u_z) || (u_A<=c && c<=u_Z);
 }
 
 UBool
 MessagePattern::isChoice(int32_t index) {
     char16_t c;
-    return
-        ((c=msg.charAt(index++))==u_c || c==u_C) &&
-        ((c=msg.charAt(index++))==u_h || c==u_H) &&
-        ((c=msg.charAt(index++))==u_o || c==u_O) &&
-        ((c=msg.charAt(index++))==u_i || c==u_I) &&
-        ((c=msg.charAt(index++))==u_c || c==u_C) &&
-        ((c=msg.charAt(index))==u_e || c==u_E);
+    परत
+        ((c=संदेश.charAt(index++))==u_c || c==u_C) &&
+        ((c=संदेश.charAt(index++))==u_h || c==u_H) &&
+        ((c=संदेश.charAt(index++))==u_o || c==u_O) &&
+        ((c=संदेश.charAt(index++))==u_i || c==u_I) &&
+        ((c=संदेश.charAt(index++))==u_c || c==u_C) &&
+        ((c=संदेश.charAt(index))==u_e || c==u_E);
 }
 
 UBool
 MessagePattern::isPlural(int32_t index) {
     char16_t c;
-    return
-        ((c=msg.charAt(index++))==u_p || c==u_P) &&
-        ((c=msg.charAt(index++))==u_l || c==u_L) &&
-        ((c=msg.charAt(index++))==u_u || c==u_U) &&
-        ((c=msg.charAt(index++))==u_r || c==u_R) &&
-        ((c=msg.charAt(index++))==u_a || c==u_A) &&
-        ((c=msg.charAt(index))==u_l || c==u_L);
+    परत
+        ((c=संदेश.charAt(index++))==u_p || c==u_P) &&
+        ((c=संदेश.charAt(index++))==u_l || c==u_L) &&
+        ((c=संदेश.charAt(index++))==u_u || c==u_U) &&
+        ((c=संदेश.charAt(index++))==u_r || c==u_R) &&
+        ((c=संदेश.charAt(index++))==u_a || c==u_A) &&
+        ((c=संदेश.charAt(index))==u_l || c==u_L);
 }
 
 UBool
 MessagePattern::isSelect(int32_t index) {
     char16_t c;
-    return
-        ((c=msg.charAt(index++))==u_s || c==u_S) &&
-        ((c=msg.charAt(index++))==u_e || c==u_E) &&
-        ((c=msg.charAt(index++))==u_l || c==u_L) &&
-        ((c=msg.charAt(index++))==u_e || c==u_E) &&
-        ((c=msg.charAt(index++))==u_c || c==u_C) &&
-        ((c=msg.charAt(index))==u_t || c==u_T);
+    परत
+        ((c=संदेश.charAt(index++))==u_s || c==u_S) &&
+        ((c=संदेश.charAt(index++))==u_e || c==u_E) &&
+        ((c=संदेश.charAt(index++))==u_l || c==u_L) &&
+        ((c=संदेश.charAt(index++))==u_e || c==u_E) &&
+        ((c=संदेश.charAt(index++))==u_c || c==u_C) &&
+        ((c=संदेश.charAt(index))==u_t || c==u_T);
 }
 
 UBool
 MessagePattern::isOrdinal(int32_t index) {
     char16_t c;
-    return
-        ((c=msg.charAt(index++))==u_o || c==u_O) &&
-        ((c=msg.charAt(index++))==u_r || c==u_R) &&
-        ((c=msg.charAt(index++))==u_d || c==u_D) &&
-        ((c=msg.charAt(index++))==u_i || c==u_I) &&
-        ((c=msg.charAt(index++))==u_n || c==u_N) &&
-        ((c=msg.charAt(index++))==u_a || c==u_A) &&
-        ((c=msg.charAt(index))==u_l || c==u_L);
+    परत
+        ((c=संदेश.charAt(index++))==u_o || c==u_O) &&
+        ((c=संदेश.charAt(index++))==u_r || c==u_R) &&
+        ((c=संदेश.charAt(index++))==u_d || c==u_D) &&
+        ((c=संदेश.charAt(index++))==u_i || c==u_I) &&
+        ((c=संदेश.charAt(index++))==u_n || c==u_N) &&
+        ((c=संदेश.charAt(index++))==u_a || c==u_A) &&
+        ((c=संदेश.charAt(index))==u_l || c==u_L);
 }
 
 UBool
 MessagePattern::inMessageFormatPattern(int32_t nestingLevel) {
-    return nestingLevel>0 || partsList->a[0].type==UMSGPAT_PART_TYPE_MSG_START;
+    परत nestingLevel>0 || partsList->a[0].type==UMSGPAT_PART_TYPE_संदेश_START;
 }
 
 UBool
-MessagePattern::inTopLevelChoiceMessage(int32_t nestingLevel, UMessagePatternArgType parentType) {
-    return
+MessagePattern::in_शीर्ष_Level_Choice_Message(int32_t nestingLevel, UMessagePatternArgType parentType) {
+    परत
         nestingLevel==1 &&
         parentType==UMSGPAT_ARG_TYPE_CHOICE &&
-        partsList->a[0].type!=UMSGPAT_PART_TYPE_MSG_START;
+        partsList->a[0].type!=UMSGPAT_PART_TYPE_संदेश_START;
 }
 
-void
+शून्य
 MessagePattern::addPart(UMessagePatternPartType type, int32_t index, int32_t length,
                         int32_t value, UErrorCode &errorCode) {
-    if(partsList->ensureCapacityForOneMore(partsLength, errorCode)) {
+    जर(partsList->ensureCapacityForOneMore(partsLength, errorCode)) {
         Part &part=partsList->a[partsLength++];
         part.type=type;
         part.index=index;
@@ -1117,7 +1117,7 @@ MessagePattern::addPart(UMessagePatternPartType type, int32_t index, int32_t len
     }
 }
 
-void
+शून्य
 MessagePattern::addLimitPart(int32_t start,
                              UMessagePatternPartType type, int32_t index, int32_t length,
                              int32_t value, UErrorCode &errorCode) {
@@ -1125,80 +1125,80 @@ MessagePattern::addLimitPart(int32_t start,
     addPart(type, index, length, value, errorCode);
 }
 
-void
-MessagePattern::addArgDoublePart(double numericValue, int32_t start, int32_t length,
+शून्य
+MessagePattern::addArgDoublePart(द्विगुण numeric_मूल्य, int32_t start, int32_t length,
                                  UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+    जर(U_FAILURE(errorCode)) {
+        परत;
     }
-    int32_t numericIndex=numericValuesLength;
-    if(numericValuesList==nullptr) {
-        numericValuesList=new MessagePatternDoubleList();
-        if(numericValuesList==nullptr) {
+    int32_t numericIndex=numeric_मूल्ये_Length;
+    जर(numeric_मूल्ये_List==nullptr) {
+        numeric_मूल्ये_List=नवीन MessagePatternDoubleList();
+        जर(numeric_मूल्ये_List==nullptr) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+            परत;
         }
-    } else if(!numericValuesList->ensureCapacityForOneMore(numericValuesLength, errorCode)) {
-        return;
-    } else {
-        if(numericIndex>Part::MAX_VALUE) {
+    } अन्यथा जर(!numeric_मूल्ये_List->ensureCapacityForOneMore(numeric_मूल्ये_Length, errorCode)) {
+        परत;
+    } अन्यथा {
+        जर(numericIndex>Part::MAX_मूल्य) {
             errorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-            return;
+            परत;
         }
     }
-    numericValuesList->a[numericValuesLength++]=numericValue;
+    numeric_मूल्ये_List->a[numeric_मूल्ये_Length++]=numeric_मूल्य;
     addPart(UMSGPAT_PART_TYPE_ARG_DOUBLE, start, length, numericIndex, errorCode);
 }
 
-void
+शून्य
 MessagePattern::setParseError(UParseError *parseError, int32_t index) {
-    if(parseError==nullptr) {
-        return;
+    जर(parseError==nullptr) {
+        परत;
     }
     parseError->offset=index;
 
     // Set preContext to some of msg before index.
     // Avoid splitting a surrogate pair.
     int32_t length=index;
-    if(length>=U_PARSE_CONTEXT_LEN) {
+    जर(length>=U_PARSE_CONTEXT_LEN) {
         length=U_PARSE_CONTEXT_LEN-1;
-        if(length>0 && U16_IS_TRAIL(msg[index-length])) {
+        जर(length>0 && U16_IS_TRAIL(संदेश[index-length])) {
             --length;
         }
     }
-    msg.extract(index-length, length, parseError->preContext);
+    संदेश.extract(index-length, length, parseError->preContext);
     parseError->preContext[length]=0;
 
     // Set postContext to some of msg starting at index.
-    length=msg.length()-index;
-    if(length>=U_PARSE_CONTEXT_LEN) {
+    length=संदेश.length()-index;
+    जर(length>=U_PARSE_CONTEXT_LEN) {
         length=U_PARSE_CONTEXT_LEN-1;
-        if(length>0 && U16_IS_LEAD(msg[index+length-1])) {
+        जर(length>0 && U16_IS_LEAD(संदेश[index+length-1])) {
             --length;
         }
     }
-    msg.extract(index, length, parseError->postContext);
+    संदेश.extract(index, length, parseError->postContext);
     parseError->postContext[length]=0;
 }
 
 // MessageImpl ------------------------------------------------------------- ***
 
-void
-MessageImpl::appendReducedApostrophes(const UnicodeString &s, int32_t start, int32_t limit,
+शून्य
+MessageImpl::appendReducedApostrophes(स्थिरांक UnicodeString &s, int32_t start, int32_t limit,
                                       UnicodeString &sb) {
     int32_t doubleApos=-1;
-    for(;;) {
+    साठी(;;) {
         int32_t i=s.indexOf(u_apos, start);
-        if(i<0 || i>=limit) {
+        जर(i<0 || i>=limit) {
             sb.append(s, start, limit-start);
-            break;
+            थांबा;
         }
-        if(i==doubleApos) {
+        जर(i==doubleApos) {
             // Double apostrophe at start-1 and start==i, append one.
             sb.append(u_apos);
             ++start;
             doubleApos=-1;
-        } else {
+        } अन्यथा {
             // Append text between apostrophes and skip this one.
             sb.append(s, start, i-start);
             doubleApos=start=i+1;
@@ -1208,26 +1208,26 @@ MessageImpl::appendReducedApostrophes(const UnicodeString &s, int32_t start, int
 
 // Ported from second half of ICU4J SelectFormat.format(String).
 UnicodeString&
-MessageImpl::appendSubMessageWithoutSkipSyntax(const MessagePattern& msgPattern,
-                                               int32_t msgStart,
+MessageImpl::appendSubMessageWithoutSkipSyntax(स्थिरांक MessagePattern& संदेश_Pattern,
+                                               int32_t संदेश_Start,
                                                UnicodeString& result U_LIFETIME_BOUND) {
-    const UnicodeString &msgString=msgPattern.getPatternString();
-    int32_t prevIndex=msgPattern.getPart(msgStart).getLimit();
-    for(int32_t i=msgStart;;) {
-        const MessagePattern::Part &part=msgPattern.getPart(++i);
+    स्थिरांक UnicodeString &संदेश_String=संदेश_Pattern.getPatternString();
+    int32_t prevIndex=संदेश_Pattern.getPart(संदेश_Start).getLimit();
+    साठी(int32_t i=संदेश_Start;;) {
+        स्थिरांक MessagePattern::Part &part=संदेश_Pattern.getPart(++i);
         UMessagePatternPartType type=part.getType();
         int32_t index=part.getIndex();
-        if(type==UMSGPAT_PART_TYPE_MSG_LIMIT) {
-            return result.append(msgString, prevIndex, index-prevIndex);
-        } else if(type==UMSGPAT_PART_TYPE_SKIP_SYNTAX) {
-            result.append(msgString, prevIndex, index-prevIndex);
+        जर(type==UMSGPAT_PART_TYPE_संदेश_LIMIT) {
+            परत result.append(संदेश_String, prevIndex, index-prevIndex);
+        } अन्यथा जर(type==UMSGPAT_PART_TYPE_SKIP_SYNTAX) {
+            result.append(संदेश_String, prevIndex, index-prevIndex);
             prevIndex=part.getLimit();
-        } else if(type==UMSGPAT_PART_TYPE_ARG_START) {
-            result.append(msgString, prevIndex, index-prevIndex);
+        } अन्यथा जर(type==UMSGPAT_PART_TYPE_ARG_START) {
+            result.append(संदेश_String, prevIndex, index-prevIndex);
             prevIndex=index;
-            i=msgPattern.getLimitPartIndex(i);
-            index=msgPattern.getPart(i).getLimit();
-            appendReducedApostrophes(msgString, prevIndex, index, result);
+            i=संदेश_Pattern.getLimitPartIndex(i);
+            index=संदेश_Pattern.getPart(i).getLimit();
+            appendReducedApostrophes(संदेश_String, prevIndex, index, result);
             prevIndex=index;
         }
     }

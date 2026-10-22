@@ -15,10 +15,10 @@
 #ifndef UHASH_H
 #define UHASH_H
 
-#include "unicode/utypes.h"
-#include "cmemory.h"
-#include "uelement.h"
-#include "unicode/localpointer.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "uelement.h"
+#अन्तर्भाव "unicode/localpointer.h"
 
 /**
  * UHashtable stores key-value pairs and does moderately fast lookup
@@ -95,35 +95,35 @@ U_CDECL_BEGIN
  * The hashing and comparison functions take a pointer to a
  * UHashTok, but the deleter receives the void* pointer within it.
  */
-typedef UElement UHashTok;
+प्रकारव्याख्या UElement UHashTok;
 
 /**
  * This is a single hash element.
  */
-struct UHashElement {
+संरचना UHashElement {
     /* Reorder these elements to pack nicely if necessary */
     int32_t  hashcode;
-    UHashTok value;
-    UHashTok key;
+    UHashTok मूल्य_2;
+    UHashTok किल्ली;
 };
-typedef struct UHashElement UHashElement;
+प्रकारव्याख्या संरचना UHashElement UHashElement;
 
 /**
  * A hashing function.
  * @param key A key stored in a hashtable
  * @return A NON-NEGATIVE hash code for parm.
  */
-typedef int32_t U_CALLCONV UHashFunction(const UHashTok key);
+प्रकारव्याख्या int32_t U_CALLCONV UHashFunction(स्थिरांक UHashTok किल्ली);
 
 /**
  * A key equality (boolean) comparison function.
  */
-typedef UElementsAreEqual UKeyComparator;
+प्रकारव्याख्या UElementsAreEqual UKeyComparator;
 
 /**
  * A value equality (boolean) comparison function.
  */
-typedef UElementsAreEqual UValueComparator;
+प्रकारव्याख्या UElementsAreEqual UValueComparator;
 
 /* see cmemory.h for UObjectDeleter and uprv_deleteUObject() */
 
@@ -131,7 +131,7 @@ typedef UElementsAreEqual UValueComparator;
  * This specifies whether or not, and how, the hashtable resizes itself.
  * See uhash_setResizePolicy().
  */
-enum UHashResizePolicy {
+गणना UHashResizePolicy {
     U_GROW,            /* Grow on demand, do not shrink */
     U_GROW_AND_SHRINK, /* Grow and shrink on demand */
     U_FIXED            /* Never change size */
@@ -141,7 +141,7 @@ enum UHashResizePolicy {
  * The UHashtable struct.  Clients should treat this as an opaque data
  * type and manipulate it only through the uhash_... API.
  */
-struct UHashtable {
+संरचना UHashtable {
 
     /* Main key-value pair storage array */
 
@@ -149,20 +149,20 @@ struct UHashtable {
 
     /* Function pointers */
 
-    UHashFunction *keyHasher;      /* Computes hash from key.
+    UHashFunction *किल्ली_Hasher;      /* Computes hash from key.
                                    * Never null. */
-    UKeyComparator *keyComparator; /* Compares keys for equality.
+    UKeyComparator *किल्ली_Comparator; /* Compares keys for equality.
                                    * Never null. */
-    UValueComparator *valueComparator; /* Compares the values for equality */
+    UValueComparator *मूल्य_Comparator; /* Compares the values for equality */
 
-    UObjectDeleter *keyDeleter;    /* Deletes keys when required.
+    UObjectDeleter *किल्ली_Deleter;    /* Deletes keys when required.
                                    * If NULL won't do anything */
-    UObjectDeleter *valueDeleter;  /* Deletes values when required.
+    UObjectDeleter *मूल्य_Deleter;  /* Deletes values when required.
                                    * If NULL won't do anything */
 
     /* Size parameters */
 
-    int32_t     count;      /* The number of key-value pairs in this table.
+    int32_t     मोजणी;      /* The number of key-value pairs in this table.
                              * 0 <= count <= length.  In practice we
                              * never let count == length (see code). */
     int32_t     length;     /* The physical size of the arrays hashes, keys
@@ -170,16 +170,16 @@ struct UHashtable {
 
     /* Rehashing thresholds */
 
-    int32_t     highWaterMark;  /* If count > highWaterMark, rehash */
-    int32_t     lowWaterMark;   /* If count < lowWaterMark, rehash */
-    float       highWaterRatio; /* 0..1; high water as a fraction of length */
-    float       lowWaterRatio;  /* 0..1; low water as a fraction of length */
+    int32_t     वरचा_Water_Mark;  /* If count > highWaterMark, rehash */
+    int32_t     खालचा_Water_Mark;   /* If count < lowWaterMark, rehash */
+    दशांश       वरचा_Water_Ratio; /* 0..1; high water as a fraction of length */
+    दशांश       खालचा_Water_Ratio;  /* 0..1; low water as a fraction of length */
 
-    int8_t      primeIndex;     /* Index into our prime table for length.
+    int8_t      मूळसंख्या_Index;     /* Index into our prime table for length.
                                  * length == PRIMES[primeIndex] */
     UBool       allocated; /* Was this UHashtable allocated? */
 };
-typedef struct UHashtable UHashtable;
+प्रकारव्याख्या संरचना UHashtable UHashtable;
 
 U_CDECL_END
 
@@ -198,9 +198,9 @@ U_CDECL_END
  * @see uhash_openSize
  */
 U_CAPI UHashtable* U_EXPORT2
-uhash_open(UHashFunction *keyHash,
-           UKeyComparator *keyComp,
-           UValueComparator *valueComp,
+uhash_open(UHashFunction *किल्ली_Hash,
+           UKeyComparator *किल्ली_Comp,
+           UValueComparator *मूल्य_Comp,
            UErrorCode *status);
 
 /**
@@ -215,9 +215,9 @@ uhash_open(UHashFunction *keyHash,
  * @see uhash_open
  */
 U_CAPI UHashtable* U_EXPORT2
-uhash_openSize(UHashFunction *keyHash,
-               UKeyComparator *keyComp,
-               UValueComparator *valueComp,
+uhash_openSize(UHashFunction *किल्ली_Hash,
+               UKeyComparator *किल्ली_Comp,
+               UValueComparator *मूल्य_Comp,
                int32_t size,
                UErrorCode *status);
 
@@ -233,9 +233,9 @@ uhash_openSize(UHashFunction *keyHash,
  */
 U_CAPI UHashtable* U_EXPORT2
 uhash_init(UHashtable *hash,
-           UHashFunction *keyHash,
-           UKeyComparator *keyComp,
-           UValueComparator *valueComp,
+           UHashFunction *किल्ली_Hash,
+           UKeyComparator *किल्ली_Comp,
+           UValueComparator *मूल्य_Comp,
            UErrorCode *status);
 
 /**
@@ -251,9 +251,9 @@ uhash_init(UHashtable *hash,
  */
 U_CAPI UHashtable* U_EXPORT2
 uhash_initSize(UHashtable *hash,
-               UHashFunction *keyHash,
-               UKeyComparator *keyComp,
-               UValueComparator *valueComp,
+               UHashFunction *किल्ली_Hash,
+               UKeyComparator *किल्ली_Comp,
+               UValueComparator *मूल्य_Comp,
                int32_t size,
                UErrorCode *status);
 
@@ -261,7 +261,7 @@ uhash_initSize(UHashtable *hash,
  * Close a UHashtable, releasing the memory used.
  * @param hash The UHashtable to close. If hash is NULL no operation is performed.
  */
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 uhash_close(UHashtable *hash);
 
 
@@ -273,7 +273,7 @@ uhash_close(UHashtable *hash);
  * @return the previous key hasher; non-NULL
  */
 U_CAPI UHashFunction *U_EXPORT2
-uhash_setKeyHasher(UHashtable *hash, UHashFunction *fn);
+uhash_set_किल्ली_Hasher(UHashtable *hash, UHashFunction *fn);
 
 /**
  * Set the function used to compare keys.  The default comparison is a
@@ -283,7 +283,7 @@ uhash_setKeyHasher(UHashtable *hash, UHashFunction *fn);
  * @return the previous key comparator; non-NULL
  */
 U_CAPI UKeyComparator *U_EXPORT2
-uhash_setKeyComparator(UHashtable *hash, UKeyComparator *fn);
+uhash_set_किल्ली_Comparator(UHashtable *hash, UKeyComparator *fn);
 
 /**
  * Set the function used to compare values.  The default comparison is a
@@ -293,7 +293,7 @@ uhash_setKeyComparator(UHashtable *hash, UKeyComparator *fn);
  * @return the previous key comparator; non-NULL
  */
 U_CAPI UValueComparator *U_EXPORT2
-uhash_setValueComparator(UHashtable *hash, UValueComparator *fn);
+uhash_set_मूल्य_Comparator(UHashtable *hash, UValueComparator *fn);
 
 /**
  * Set the function used to delete keys.  If this function pointer is
@@ -306,7 +306,7 @@ uhash_setValueComparator(UHashtable *hash, UValueComparator *fn);
  * @return the previous key deleter; may be NULL
  */
 U_CAPI UObjectDeleter *U_EXPORT2
-uhash_setKeyDeleter(UHashtable *hash, UObjectDeleter *fn);
+uhash_set_किल्ली_Deleter(UHashtable *hash, UObjectDeleter *fn);
 
 /**
  * Set the function used to delete values.  If this function pointer
@@ -319,7 +319,7 @@ uhash_setKeyDeleter(UHashtable *hash, UObjectDeleter *fn);
  * @return the previous value deleter; may be NULL
  */
 U_CAPI UObjectDeleter *U_EXPORT2
-uhash_setValueDeleter(UHashtable *hash, UObjectDeleter *fn);
+uhash_set_मूल्य_Deleter(UHashtable *hash, UObjectDeleter *fn);
 
 /**
  * Specify whether or not, and how, the hashtable resizes itself.
@@ -328,8 +328,8 @@ uhash_setValueDeleter(UHashtable *hash, UObjectDeleter *fn);
  * @param hash The UHashtable to set
  * @param policy The way the hashtable resizes itself, {U_GROW, U_GROW_AND_SHRINK, U_FIXED}
  */
-U_CAPI void U_EXPORT2
-uhash_setResizePolicy(UHashtable *hash, enum UHashResizePolicy policy);
+U_CAPI शून्य U_EXPORT2
+uhash_setResizePolicy(UHashtable *hash, गणना UHashResizePolicy policy);
 
 /**
  * Get the number of key-value pairs stored in a UHashtable.
@@ -337,7 +337,7 @@ uhash_setResizePolicy(UHashtable *hash, enum UHashResizePolicy policy);
  * @return The number of key-value pairs stored in hash.
  */
 U_CAPI int32_t U_EXPORT2
-uhash_count(const UHashtable *hash);
+uhash_मोजणी(स्थिरांक UHashtable *hash);
 
 /**
  * Put a (key=pointer, value=pointer) item in a UHashtable.  If the
@@ -352,10 +352,10 @@ uhash_count(const UHashtable *hash);
  * @return The previous value, or NULL if none.
  * @see uhash_get
  */
-U_CAPI void* U_EXPORT2
+U_CAPI शून्य* U_EXPORT2
 uhash_put(UHashtable *hash,
-          void *key,
-          void *value,
+          शून्य *किल्ली,
+          शून्य *मूल्य_2,
           UErrorCode *status);
 
 /**
@@ -370,10 +370,10 @@ uhash_put(UHashtable *hash,
  * @return The previous value, or NULL if none.
  * @see uhash_get
  */
-U_CAPI void* U_EXPORT2
+U_CAPI शून्य* U_EXPORT2
 uhash_iput(UHashtable *hash,
-           int32_t key,
-           void* value,
+           int32_t किल्ली,
+           शून्य* मूल्य_2,
            UErrorCode *status);
 
 /**
@@ -390,8 +390,8 @@ uhash_iput(UHashtable *hash,
  */
 U_CAPI int32_t U_EXPORT2
 uhash_puti(UHashtable *hash,
-           void* key,
-           int32_t value,
+           शून्य* किल्ली,
+           int32_t मूल्य_2,
            UErrorCode *status);
 
 /**
@@ -408,8 +408,8 @@ uhash_puti(UHashtable *hash,
  */
 U_CAPI int32_t U_EXPORT2
 uhash_iputi(UHashtable *hash,
-           int32_t key,
-           int32_t value,
+           int32_t किल्ली,
+           int32_t मूल्य_2,
            UErrorCode *status);
 
 /**
@@ -427,8 +427,8 @@ uhash_iputi(UHashtable *hash,
  */
 U_CAPI int32_t U_EXPORT2
 uhash_putiAllowZero(UHashtable *hash,
-                    void *key,
-                    int32_t value,
+                    शून्य *किल्ली,
+                    int32_t मूल्य_2,
                     UErrorCode *status);
 
 /**
@@ -446,8 +446,8 @@ uhash_putiAllowZero(UHashtable *hash,
  */
 U_CAPI int32_t U_EXPORT2
 uhash_iputiAllowZero(UHashtable *hash,
-                     int32_t key,
-                     int32_t value,
+                     int32_t किल्ली,
+                     int32_t मूल्य_2,
                      UErrorCode *status);
 
 /**
@@ -457,9 +457,9 @@ uhash_iputiAllowZero(UHashtable *hash,
  * @param key A pointer key stored in a hashtable
  * @return The requested item, or NULL if not found.
  */
-U_CAPI void* U_EXPORT2
-uhash_get(const UHashtable *hash,
-          const void *key);
+U_CAPI शून्य* U_EXPORT2
+uhash_get(स्थिरांक UHashtable *hash,
+          स्थिरांक शून्य *किल्ली);
 
 /**
  * Retrieve a pointer value from a UHashtable using a integer key,
@@ -468,9 +468,9 @@ uhash_get(const UHashtable *hash,
  * @param key An integer key stored in a hashtable
  * @return The requested item, or NULL if not found.
  */
-U_CAPI void* U_EXPORT2
-uhash_iget(const UHashtable *hash,
-           int32_t key);
+U_CAPI शून्य* U_EXPORT2
+uhash_iget(स्थिरांक UHashtable *hash,
+           int32_t किल्ली);
 
 /**
  * Retrieve an integer value from a UHashtable using a pointer key,
@@ -480,8 +480,8 @@ uhash_iget(const UHashtable *hash,
  * @return The requested item, or 0 if not found.
  */
 U_CAPI int32_t U_EXPORT2
-uhash_geti(const UHashtable *hash,
-           const void* key);
+uhash_geti(स्थिरांक UHashtable *hash,
+           स्थिरांक शून्य* किल्ली);
 /**
  * Retrieve an integer value from a UHashtable using an integer key,
  * as previously stored by uhash_iputi().
@@ -490,8 +490,8 @@ uhash_geti(const UHashtable *hash,
  * @return The requested item, or 0 if not found.
  */
 U_CAPI int32_t U_EXPORT2
-uhash_igeti(const UHashtable *hash,
-           int32_t key);
+uhash_igeti(स्थिरांक UHashtable *hash,
+           int32_t किल्ली);
 
 /**
  * Retrieves an integer value from a UHashtable using a pointer key,
@@ -503,8 +503,8 @@ uhash_igeti(const UHashtable *hash,
  * @return The requested item, or 0 if not found.
  */
 U_CAPI int32_t U_EXPORT2
-uhash_getiAndFound(const UHashtable *hash,
-                   const void *key,
+uhash_getiAndFound(स्थिरांक UHashtable *hash,
+                   स्थिरांक शून्य *किल्ली,
                    UBool *found);
 
 /**
@@ -517,8 +517,8 @@ uhash_getiAndFound(const UHashtable *hash,
  * @return The requested item, or 0 if not found.
  */
 U_CAPI int32_t U_EXPORT2
-uhash_igetiAndFound(const UHashtable *hash,
-                    int32_t key,
+uhash_igetiAndFound(स्थिरांक UHashtable *hash,
+                    int32_t किल्ली,
                     UBool *found);
 
 /**
@@ -527,9 +527,9 @@ uhash_igetiAndFound(const UHashtable *hash,
  * @param key A key stored in a hashtable
  * @return The item removed, or NULL if not found.
  */
-U_CAPI void* U_EXPORT2
+U_CAPI शून्य* U_EXPORT2
 uhash_remove(UHashtable *hash,
-             const void *key);
+             स्थिरांक शून्य *किल्ली);
 
 /**
  * Remove an item from a UHashtable stored by uhash_iput().
@@ -537,9 +537,9 @@ uhash_remove(UHashtable *hash,
  * @param key An integer key stored in a hashtable
  * @return The item removed, or NULL if not found.
  */
-U_CAPI void* U_EXPORT2
+U_CAPI शून्य* U_EXPORT2
 uhash_iremove(UHashtable *hash,
-              int32_t key);
+              int32_t किल्ली);
 
 /**
  * Remove an item from a UHashtable stored by uhash_puti().
@@ -549,7 +549,7 @@ uhash_iremove(UHashtable *hash,
  */
 U_CAPI int32_t U_EXPORT2
 uhash_removei(UHashtable *hash,
-              const void* key);
+              स्थिरांक शून्य* किल्ली);
 
 /**
  * Remove an item from a UHashtable stored by uhash_iputi().
@@ -559,13 +559,13 @@ uhash_removei(UHashtable *hash,
  */
 U_CAPI int32_t U_EXPORT2
 uhash_iremovei(UHashtable *hash,
-               int32_t key);
+               int32_t किल्ली);
 
 /**
  * Remove all items from a UHashtable.
  * @param hash The target UHashtable.
  */
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 uhash_removeAll(UHashtable *hash);
 
 /**
@@ -576,7 +576,7 @@ uhash_removeAll(UHashtable *hash);
  * @return true if the key is found.
  */
 U_CAPI UBool U_EXPORT2
-uhash_containsKey(const UHashtable *hash, const void *key);
+uhash_contains_किल्ली(स्थिरांक UHashtable *hash, स्थिरांक शून्य *किल्ली);
 
 /**
  * Returns true if the UHashtable contains an item with this integer key.
@@ -586,7 +586,7 @@ uhash_containsKey(const UHashtable *hash, const void *key);
  * @return true if the key is found.
  */
 U_CAPI UBool U_EXPORT2
-uhash_icontainsKey(const UHashtable *hash, int32_t key);
+uhash_icontains_किल्ली(स्थिरांक UHashtable *hash, int32_t किल्ली);
 
 /**
  * Locate an element of a UHashtable.  The caller must not modify the
@@ -599,8 +599,8 @@ uhash_icontainsKey(const UHashtable *hash, int32_t key);
  * @param key A key stored in a hashtable
  * @return a hash element, or NULL if the key is not found.
  */
-U_CAPI const UHashElement* U_EXPORT2
-uhash_find(const UHashtable *hash, const void* key);
+U_CAPI स्थिरांक UHashElement* U_EXPORT2
+uhash_find(स्थिरांक UHashtable *hash, स्थिरांक शून्य* किल्ली);
 
 /**
  * \def UHASH_FIRST
@@ -622,8 +622,8 @@ uhash_find(const UHashtable *hash, const void* key);
  * @return a hash element, or NULL if no further key-value pairs
  * exist in the table.
  */
-U_CAPI const UHashElement* U_EXPORT2
-uhash_nextElement(const UHashtable *hash,
+U_CAPI स्थिरांक UHashElement* U_EXPORT2
+uhash_nextElement(स्थिरांक UHashtable *hash,
                   int32_t *pos);
 
 /**
@@ -637,8 +637,8 @@ uhash_nextElement(const UHashtable *hash,
  * modified.
  * @return the value that was removed.
  */
-U_CAPI void* U_EXPORT2
-uhash_removeElement(UHashtable *hash, const UHashElement* e);
+U_CAPI शून्य* U_EXPORT2
+uhash_removeElement(UHashtable *hash, स्थिरांक UHashElement* e);
 
 /********************************************************************
  * UHashTok convenience
@@ -672,7 +672,7 @@ uhash_tokp(void* p);*/
  * @return A hash code for the key.
  */
 U_CAPI int32_t U_EXPORT2
-uhash_hashUChars(const UHashTok key);
+uhash_hashUChars(स्थिरांक UHashTok किल्ली);
 
 /**
  * Generate a hash code for a null-terminated char* string.  If the
@@ -682,7 +682,7 @@ uhash_hashUChars(const UHashTok key);
  * @return A hash code for the key.
  */
 U_CAPI int32_t U_EXPORT2
-uhash_hashChars(const UHashTok key);
+uhash_hashChars(स्थिरांक UHashTok किल्ली);
 
 /**
  * Generate a case-insensitive hash code for a null-terminated char*
@@ -692,7 +692,7 @@ uhash_hashChars(const UHashTok key);
  * @return A hash code for the key.
  */
 U_CAPI int32_t U_EXPORT2
-uhash_hashIChars(const UHashTok key);
+uhash_hashIChars(स्थिरांक UHashTok किल्ली);
 
 /**
  * Generate a case-insensitive hash code for a std::string_view.
@@ -701,7 +701,7 @@ uhash_hashIChars(const UHashTok key);
  * @return A hash code for the key.
  */
 U_CAPI int32_t U_EXPORT2
-uhash_hashIStringView(const UHashTok key);
+uhash_hashIStringView(स्थिरांक UHashTok किल्ली);
 
 /**
  * Comparator for null-terminated UChar* strings.  Use together with
@@ -711,7 +711,7 @@ uhash_hashIStringView(const UHashTok key);
  * @return true if key1 and key2 are equal, return false otherwise.
  */
 U_CAPI UBool U_EXPORT2
-uhash_compareUChars(const UHashTok key1, const UHashTok key2);
+uhash_compareUChars(स्थिरांक UHashTok key1, स्थिरांक UHashTok key2);
 
 /**
  * Comparator for null-terminated char* strings.  Use together with
@@ -721,7 +721,7 @@ uhash_compareUChars(const UHashTok key1, const UHashTok key2);
  * @return true if key1 and key2 are equal, return false otherwise.
  */
 U_CAPI UBool U_EXPORT2
-uhash_compareChars(const UHashTok key1, const UHashTok key2);
+uhash_compareChars(स्थिरांक UHashTok key1, स्थिरांक UHashTok key2);
 
 /**
  * Case-insensitive comparator for null-terminated char* strings.  Use
@@ -731,7 +731,7 @@ uhash_compareChars(const UHashTok key1, const UHashTok key2);
  * @return true if key1 and key2 are equal, return false otherwise.
  */
 U_CAPI UBool U_EXPORT2
-uhash_compareIChars(const UHashTok key1, const UHashTok key2);
+uhash_compareIChars(स्थिरांक UHashTok key1, स्थिरांक UHashTok key2);
 
 /**
  * Case-insensitive comparator for std::string_view.
@@ -741,7 +741,7 @@ uhash_compareIChars(const UHashTok key1, const UHashTok key2);
  * @return true if key1 and key2 are equal, return false otherwise.
  */
 U_CAPI UBool U_EXPORT2
-uhash_compareIStringView(const UHashTok key1, const UHashTok key2);
+uhash_compareIStringView(स्थिरांक UHashTok key1, स्थिरांक UHashTok key2);
 
 /********************************************************************
  * UnicodeString Support Functions
@@ -753,7 +753,7 @@ uhash_compareIStringView(const UHashTok key1, const UHashTok key2);
  * @return A hash code for the key.
  */
 U_CAPI int32_t U_EXPORT2
-uhash_hashUnicodeString(const UElement key);
+uhash_hashUnicodeString(स्थिरांक UElement किल्ली);
 
 /**
  * Hash function for UnicodeString* keys (case insensitive).
@@ -762,7 +762,7 @@ uhash_hashUnicodeString(const UElement key);
  * @return A hash code for the key.
  */
 U_CAPI int32_t U_EXPORT2
-uhash_hashCaselessUnicodeString(const UElement key);
+uhash_hashCaselessUnicodeString(स्थिरांक UElement किल्ली);
 
 /********************************************************************
  * int32_t Support Functions
@@ -774,7 +774,7 @@ uhash_hashCaselessUnicodeString(const UElement key);
  * @return A hash code for the key.
  */
 U_CAPI int32_t U_EXPORT2
-uhash_hashLong(const UHashTok key);
+uhash_hashLong(स्थिरांक UHashTok किल्ली);
 
 /**
  * Comparator function for 32-bit integer keys.
@@ -783,7 +783,7 @@ uhash_hashLong(const UHashTok key);
  * @return true if key1 and key2 are equal, return false otherwise
  */
 U_CAPI UBool U_EXPORT2
-uhash_compareLong(const UHashTok key1, const UHashTok key2);
+uhash_compareLong(स्थिरांक UHashTok key1, स्थिरांक UHashTok key2);
 
 /********************************************************************
  * Other Support Functions
@@ -793,8 +793,8 @@ uhash_compareLong(const UHashTok key1, const UHashTok key2);
  * Deleter for Hashtable objects.
  * @param obj The object to be deleted
  */
-U_CAPI void U_EXPORT2
-uhash_deleteHashtable(void *obj);
+U_CAPI शून्य U_EXPORT2
+uhash_deleteHashtable(शून्य *obj);
 
 /* Use uprv_free() itself as a deleter for any key or value allocated using uprv_malloc. */
 
@@ -805,10 +805,10 @@ uhash_deleteHashtable(void *obj);
  * @return true if the hashtables are equal and false if not.
  */
 U_CAPI UBool U_EXPORT2
-uhash_equals(const UHashtable* hash1, const UHashtable* hash2);
+uhash_equals(स्थिरांक UHashtable* hash1, स्थिरांक UHashtable* hash2);
 
 
-#if U_SHOW_CPLUSPLUS_API
+#जर U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

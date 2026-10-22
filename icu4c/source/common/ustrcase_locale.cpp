@@ -17,25 +17,25 @@
 *   were moved here to break dependency cycles among parts of the common library.
 */
 
-#include "unicode/utypes.h"
-#include "uassert.h"
-#include "unicode/brkiter.h"
-#include "unicode/casemap.h"
-#include "unicode/ucasemap.h"
-#include "unicode/uloc.h"
-#include "unicode/ustring.h"
-#include "ucase.h"
-#include "ucasemap_imp.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "uassert.h"
+#अन्तर्भाव "unicode/brkiter.h"
+#अन्तर्भाव "unicode/casemap.h"
+#अन्तर्भाव "unicode/ucasemap.h"
+#अन्तर्भाव "unicode/uloc.h"
+#अन्तर्भाव "unicode/ustring.h"
+#अन्तर्भाव "ucase.h"
+#अन्तर्भाव "ucasemap_imp.h"
 
 U_CFUNC int32_t
-ustrcase_getCaseLocale(const char *locale) {
-    if (locale == nullptr) {
+ustrcase_getCaseLocale(स्थिरांक अक्षर *locale) {
+    जर (locale == nullptr) {
         locale = uloc_getDefault();
     }
-    if (*locale == 0) {
-        return UCASE_LOC_ROOT;
-    } else {
-        return ucase_getCaseLocale(locale);
+    जर (*locale == 0) {
+        परत UCASE_LOC_मूळ;
+    } अन्यथा {
+        परत ucase_getCaseLocale(locale);
     }
 }
 
@@ -43,10 +43,10 @@ ustrcase_getCaseLocale(const char *locale) {
 
 U_CAPI int32_t U_EXPORT2
 u_strToLower(char16_t *dest, int32_t destCapacity,
-             const char16_t *src, int32_t srcLength,
-             const char *locale,
+             स्थिरांक char16_t *src, int32_t srcLength,
+             स्थिरांक अक्षर *locale,
              UErrorCode *pErrorCode) {
-    return ustrcase_mapWithOverlap(
+    परत ustrcase_mapWithOverlap(
         ustrcase_getCaseLocale(locale), 0, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,
@@ -55,10 +55,10 @@ u_strToLower(char16_t *dest, int32_t destCapacity,
 
 U_CAPI int32_t U_EXPORT2
 u_strToUpper(char16_t *dest, int32_t destCapacity,
-             const char16_t *src, int32_t srcLength,
-             const char *locale,
+             स्थिरांक char16_t *src, int32_t srcLength,
+             स्थिरांक अक्षर *locale,
              UErrorCode *pErrorCode) {
-    return ustrcase_mapWithOverlap(
+    परत ustrcase_mapWithOverlap(
         ustrcase_getCaseLocale(locale), 0, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,
@@ -68,11 +68,11 @@ u_strToUpper(char16_t *dest, int32_t destCapacity,
 U_NAMESPACE_BEGIN
 
 int32_t CaseMap::toLower(
-        const char *locale, uint32_t options,
-        const char16_t *src, int32_t srcLength,
+        स्थिरांक अक्षर *locale, uint32_t options,
+        स्थिरांक char16_t *src, int32_t srcLength,
         char16_t *dest, int32_t destCapacity, Edits *edits,
         UErrorCode &errorCode) {
-    return ustrcase_map(
+    परत ustrcase_map(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,
@@ -80,11 +80,11 @@ int32_t CaseMap::toLower(
 }
 
 int32_t CaseMap::toUpper(
-        const char *locale, uint32_t options,
-        const char16_t *src, int32_t srcLength,
+        स्थिरांक अक्षर *locale, uint32_t options,
+        स्थिरांक char16_t *src, int32_t srcLength,
         char16_t *dest, int32_t destCapacity, Edits *edits,
         UErrorCode &errorCode) {
-    return ustrcase_map(
+    परत ustrcase_map(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,

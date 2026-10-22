@@ -17,7 +17,7 @@
 
 #ifndef USCRIPT_H
 #define USCRIPT_H
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
 /**
  * \file
@@ -51,7 +51,7 @@
  *
  * @stable ICU 2.2
  */
-typedef enum UScriptCode {
+प्रकारव्याख्या गणना UScriptCode {
     /*
      * Note: UScriptCode constants and their ISO script code comments
      * are parsed by preparseucd.py.
@@ -565,7 +565,7 @@ typedef enum UScriptCode {
  * @stable ICU 2.4
  */
 U_CAPI int32_t  U_EXPORT2
-uscript_getCode(const char* nameOrAbbrOrLocale,UScriptCode* fillIn,int32_t capacity,UErrorCode *err);
+uscript_getCode(स्थिरांक अक्षर* nameOrAbbrOrLocale,UScriptCode* fillIn,int32_t capacity,UErrorCode *err);
 
 /**
  * Returns the long Unicode script name, if there is one.
@@ -577,7 +577,7 @@ uscript_getCode(const char* nameOrAbbrOrLocale,UScriptCode* fillIn,int32_t capac
  * or NULL if scriptCode is invalid
  * @stable ICU 2.4
  */
-U_CAPI const char*  U_EXPORT2
+U_CAPI स्थिरांक अक्षर*  U_EXPORT2
 uscript_getName(UScriptCode scriptCode);
 
 /**
@@ -589,7 +589,7 @@ uscript_getName(UScriptCode scriptCode);
  * @return short script name (4-letter code), or NULL if scriptCode is invalid
  * @stable ICU 2.4
  */
-U_CAPI const char*  U_EXPORT2
+U_CAPI स्थिरांक अक्षर*  U_EXPORT2
 uscript_getShortName(UScriptCode scriptCode);
 
 /**
@@ -659,7 +659,7 @@ uscript_getScriptExtensions(UChar32 c,
  *
  * @stable ICU 51
  */
-typedef enum UScriptUsage {
+प्रकारव्याख्या गणना UScriptUsage {
     /** Not encoded in Unicode. @stable ICU 51 */
     USCRIPT_USAGE_NOT_ENCODED,
     /** Unknown script usage. @stable ICU 51 */
@@ -689,7 +689,7 @@ typedef enum UScriptUsage {
 U_CAPI int32_t U_EXPORT2
 uscript_getSampleString(UScriptCode script, UChar *dest, int32_t capacity, UErrorCode *pErrorCode);
 
-#if U_SHOW_CPLUSPLUS_API
+#जर U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 class UnicodeString;
@@ -730,7 +730,7 @@ uscript_getUsage(UScriptCode script);
  * @stable ICU 51
  */
 U_CAPI UBool U_EXPORT2
-uscript_isRightToLeft(UScriptCode script);
+uscript_is_उजवा_To_डावा(UScriptCode script);
 
 /**
  * Returns true if the script allows line breaks between letters (excluding hyphenation).

@@ -12,8 +12,8 @@
 #define __SHAREDOBJECT_H__
 
 
-#include "unicode/uobject.h"
-#include "umutex.h"
+#अन्तर्भाव "unicode/uobject.h"
+#अन्तर्भाव "umutex.h"
 
 U_NAMESPACE_BEGIN
 
@@ -25,8 +25,8 @@ class SharedObject;
  * update cache metrics. No other part of ICU, except for SharedObject,
  * should directly call the methods of this base class.
  */
-class U_COMMON_API UnifiedCacheBase : public UObject {
-public:
+class U_COMMON_API UnifiedCacheBase : सार्वजनिक UObject {
+सार्वजनिक:
     UnifiedCacheBase() { }
 
     /**
@@ -34,12 +34,12 @@ public:
      * zero hard references. The cache may use this to keep track the number of
      * unreferenced SharedObjects, and to trigger evictions.
      */
-    virtual void handleUnreferencedObject() const = 0;
+    आभासी शून्य handleUnreferencedObject() स्थिरांक = 0;
 
-    virtual ~UnifiedCacheBase();
-private:
-    UnifiedCacheBase(const UnifiedCacheBase &) = delete;
-    UnifiedCacheBase &operator=(const UnifiedCacheBase &) = delete;
+    आभासी ~UnifiedCacheBase();
+खाजगी:
+    UnifiedCacheBase(स्थिरांक UnifiedCacheBase &) = delete;
+    UnifiedCacheBase &चालक=(स्थिरांक UnifiedCacheBase &) = delete;
 };
 
 /**
@@ -51,28 +51,28 @@ private:
  * Either stack-allocate, use LocalPointer, or use addRef()/removeRef().
  * Sharing requires reference-counting.
  */
-class U_COMMON_API_CLASS SharedObject : public UObject {
-public:
+class U_COMMON_API_CLASS SharedObject : सार्वजनिक UObject {
+सार्वजनिक:
     /** Initializes totalRefCount, softRefCount to 0. */
     U_COMMON_API SharedObject() :
-            softRefCount(0),
-            hardRefCount(0),
+            soft_Ref_मोजणी(0),
+            hard_Ref_मोजणी(0),
             cachePtr(nullptr) {}
 
     /** Initializes totalRefCount, softRefCount to 0. */
-    U_COMMON_API SharedObject(const SharedObject &other) :
+    U_COMMON_API SharedObject(स्थिरांक SharedObject &other) :
             UObject(other),
-            softRefCount(0),
-            hardRefCount(0),
+            soft_Ref_मोजणी(0),
+            hard_Ref_मोजणी(0),
             cachePtr(nullptr) {}
 
-    U_COMMON_API virtual ~SharedObject();
+    U_COMMON_API आभासी ~SharedObject();
 
     /**
      * Increments the number of hard references to this object. Thread-safe.
      * Not for use from within the Unified Cache implementation.
      */
-    U_COMMON_API void addRef() const;
+    U_COMMON_API शून्य addRef() स्थिरांक;
 
     /**
      * Decrements the number of hard references to this object, and
@@ -81,32 +81,32 @@ public:
      * 
      * Not for use from within the UnifiedCache implementation.
      */
-    U_COMMON_API void removeRef() const;
+    U_COMMON_API शून्य removeRef() स्थिरांक;
 
     /**
      * Returns the number of hard references for this object.
      * Uses a memory barrier.
      */
-    U_COMMON_API int32_t getRefCount() const;
+    U_COMMON_API int32_t get_Ref_मोजणी() स्थिरांक;
 
     /**
      * If noHardReferences() == true then this object has no hard references.
      * Must be called only from within the internals of UnifiedCache.
      */
-    U_COMMON_API inline UBool noHardReferences() const { return getRefCount() == 0; }
+    U_COMMON_API ओळीत UBool noHardReferences() स्थिरांक { परत get_Ref_मोजणी() == 0; }
 
     /**
      * If hasHardReferences() == true then this object has hard references.
      * Must be called only from within the internals of UnifiedCache.
      */
-    U_COMMON_API inline UBool hasHardReferences() const { return getRefCount() != 0; }
+    U_COMMON_API ओळीत UBool hasHardReferences() स्थिरांक { परत get_Ref_मोजणी() != 0; }
 
     /**
      * Deletes this object if it has no references.
      * Available for non-cached SharedObjects only. Ownership of cached objects
      * is with the UnifiedCache, which is solely responsible for eviction and deletion.
      */
-    U_COMMON_API void deleteIfZeroRefCount() const;
+    U_COMMON_API शून्य delete_If_Zero_Ref_मोजणी() स्थिरांक;
 
         
     /**
@@ -120,16 +120,16 @@ public:
      *
      * T must be a subclass of SharedObject.
      */
-    template<typename T>
-    static T *copyOnWrite(const T *&ptr) {
-        const T *p = ptr;
-        if(p->getRefCount() <= 1) { return const_cast<T *>(p); }
+    ढाँचा<typename T>
+    स्थिर T *copyOnWrite(स्थिरांक T *&ptr) {
+        स्थिरांक T *p = ptr;
+        जर(p->get_Ref_मोजणी() <= 1) { परत const_cast<T *>(p); }
         T *p2 = new T(*p);
-        if(p2 == nullptr) { return nullptr; }
+        जर(p2 == nullptr) { परत nullptr; }
         p->removeRef();
         ptr = p2;
         p2->addRef();
-        return p2;
+        परत p2;
     }
 
     /**
@@ -140,42 +140,42 @@ public:
      *
      * T must be a subclass of SharedObject.
      */
-    template<typename T>
-    static void copyPtr(const T *src, const T *&dest) {
-        if(src != dest) {
-            if(dest != nullptr) { dest->removeRef(); }
+    ढाँचा<typename T>
+    स्थिर शून्य copyPtr(स्थिरांक T *src, स्थिरांक T *&dest) {
+        जर(src != dest) {
+            जर(dest != nullptr) { dest->removeRef(); }
             dest = src;
-            if(src != nullptr) { src->addRef(); }
+            जर(src != nullptr) { src->addRef(); }
         }
     }
 
     /**
      * Equivalent to copyPtr(nullptr, dest).
      */
-    template<typename T>
-    static void clearPtr(const T *&ptr) {
-        if (ptr != nullptr) {
+    ढाँचा<typename T>
+    स्थिर शून्य clearPtr(स्थिरांक T *&ptr) {
+        जर (ptr != nullptr) {
             ptr->removeRef();
             ptr = nullptr;
         }
     }
 
-private:
+खाजगी:
     /**
      * The number of references from the UnifiedCache, which is
      * the number of times that the sharedObject is stored as a hash table value.
      * For use by UnifiedCache implementation code only.
      * All access is synchronized by UnifiedCache's gCacheMutex
      */
-    mutable int32_t softRefCount;
-    friend class UnifiedCache;
+    mutable int32_t soft_Ref_मोजणी;
+    मित्र class UnifiedCache;
 
     /**
      * Reference count, excluding references from within the UnifiedCache implementation.
      */
-    mutable u_atomic_int32_t hardRefCount;
+    mutable u_atomic_int32_t hard_Ref_मोजणी;
     
-    mutable const UnifiedCacheBase *cachePtr;
+    mutable स्थिरांक UnifiedCacheBase *cachePtr;
 
 };
 

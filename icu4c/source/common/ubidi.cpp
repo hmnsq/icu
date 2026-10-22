@@ -17,18 +17,18 @@
 *
 */
 
-#include <limits>
+#अन्तर्भाव <limits>
 
-#include "cmemory.h"
-#include "unicode/unistr.h"
-#include "unicode/utypes.h"
-#include "unicode/ustring.h"
-#include "unicode/uchar.h"
-#include "unicode/ubidi.h"
-#include "unicode/utf16.h"
-#include "ubidi_props.h"
-#include "ubidiimp.h"
-#include "uassert.h"
+#अन्तर्भाव "cmemory.h"
+#अन्तर्भाव "unicode/unistr.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/ustring.h"
+#अन्तर्भाव "unicode/uchar.h"
+#अन्तर्भाव "unicode/ubidi.h"
+#अन्तर्भाव "unicode/utf16.h"
+#अन्तर्भाव "ubidi_props.h"
+#अन्तर्भाव "ubidiimp.h"
+#अन्तर्भाव "uassert.h"
 
 /*
  * General implementation notes:
@@ -112,9 +112,9 @@
  */
 
 /* to avoid some conditional statements, use tiny constant arrays */
-static const Flags flagLR[2]={ DIRPROP_FLAG(L), DIRPROP_FLAG(R) };
-static const Flags flagE[2]={ DIRPROP_FLAG(LRE), DIRPROP_FLAG(RLE) };
-static const Flags flagO[2]={ DIRPROP_FLAG(LRO), DIRPROP_FLAG(RLO) };
+स्थिर स्थिरांक Flags flagLR[2]={ DIRPROP_FLAG(L), DIRPROP_FLAG(R) };
+स्थिर स्थिरांक Flags flagE[2]={ DIRPROP_FLAG(LRE), DIRPROP_FLAG(RLE) };
+स्थिर स्थिरांक Flags flagO[2]={ DIRPROP_FLAG(LRO), DIRPROP_FLAG(RLO) };
 
 #define DIRPROP_FLAG_LR(level) flagLR[(level)&1]
 #define DIRPROP_FLAG_E(level)  flagE[(level)&1]
@@ -130,58 +130,58 @@ U_CAPI UBiDi * U_EXPORT2
 ubidi_open()
 {
     UErrorCode errorCode=U_ZERO_ERROR;
-    return ubidi_openSized(0, 0, &errorCode);
+    परत ubidi_openSized(0, 0, &errorCode);
 }
 
 U_CAPI UBiDi * U_EXPORT2
-ubidi_openSized(int32_t maxLength, int32_t maxRunCount, UErrorCode *pErrorCode) {
+ubidi_openSized(int32_t maxLength, int32_t max_Run_मोजणी, UErrorCode *pErrorCode) {
     UBiDi *pBiDi;
 
     /* check the argument values */
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return nullptr;
-    } else if(maxLength<0 || maxRunCount<0) {
+    जर(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        परत nullptr;
+    } अन्यथा जर(maxLength<0 || max_Run_मोजणी<0) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;    /* invalid arguments */
+        परत nullptr;    /* invalid arguments */
     }
 
     /* allocate memory for the object */
-    pBiDi=(UBiDi *)uprv_malloc(sizeof(UBiDi));
-    if(pBiDi==nullptr) {
+    pBiDi=(UBiDi *)uprv_malloc(आकार(UBiDi));
+    जर(pBiDi==nullptr) {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        परत nullptr;
     }
 
     /* reset the object, all pointers nullptr, all flags false, all sizes 0 */
-    uprv_memset(pBiDi, 0, sizeof(UBiDi));
+    uprv_memset(pBiDi, 0, आकार(UBiDi));
 
     /* allocate memory for arrays as requested */
-    if(maxLength>0) {
-        if( !getInitialDirPropsMemory(pBiDi, maxLength) ||
+    जर(maxLength>0) {
+        जर( !getInitialDirPropsMemory(pBiDi, maxLength) ||
             !getInitialLevelsMemory(pBiDi, maxLength)
         ) {
             *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
         }
-    } else {
-        pBiDi->mayAllocateText=true;
+    } अन्यथा {
+        pBiDi->mayAllocateText=सत्य;
     }
 
-    if(maxRunCount>0) {
-        if(maxRunCount==1) {
+    जर(max_Run_मोजणी>0) {
+        जर(max_Run_मोजणी==1) {
             /* use simpleRuns[] */
-            pBiDi->runsSize=sizeof(Run);
-        } else if(!getInitialRunsMemory(pBiDi, maxRunCount)) {
+            pBiDi->runsSize=आकार(Run);
+        } अन्यथा जर(!getInitialRunsMemory(pBiDi, max_Run_मोजणी)) {
             *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
         }
-    } else {
-        pBiDi->mayAllocateRuns=true;
+    } अन्यथा {
+        pBiDi->mayAllocateRuns=सत्य;
     }
 
-    if(U_SUCCESS(*pErrorCode)) {
-        return pBiDi;
-    } else {
+    जर(U_SUCCESS(*pErrorCode)) {
+        परत pBiDi;
+    } अन्यथा {
         ubidi_close(pBiDi);
-        return nullptr;
+        परत nullptr;
     }
 }
 
@@ -199,74 +199,74 @@ ubidi_openSized(int32_t maxLength, int32_t maxRunCount, UErrorCode *pErrorCode) 
  * is this the best way to do this??
  */
 U_CFUNC UBool
-ubidi_getMemory(BidiMemoryForAllocation *bidiMem, int32_t *pSize, UBool mayAllocate, size_t sizeNeeded) {
-    if (sizeNeeded > std::numeric_limits<int32_t>::max()) {
+ubidi_getMemory(BidiMemoryForAllocation *bidiMem, int32_t *pSize, UBool mayAllocate, माप_प्रकार sizeNeeded) {
+    जर (sizeNeeded > std::numeric_limits<int32_t>::max()) {
       // TODO(egg): Ugly guard for ICU-23397.  A cleaner fix would be to change the pSize to size_t*
       // and update callers throughout to use size_t for sizes (just like uprv_malloc already does).
       // Not that anyone should be running the UBA on text with that many runs…
-      return false;
+      परत असत्य;
     }
-    void **pMemory = (void **)bidiMem;
+    शून्य **pMemory = (शून्य **)bidiMem;
     /* check for existing memory */
-    if(*pMemory==nullptr) {
+    जर(*pMemory==nullptr) {
         /* we need to allocate memory */
-        if(mayAllocate && (*pMemory=uprv_malloc(sizeNeeded))!=nullptr) {
+        जर(mayAllocate && (*pMemory=uprv_malloc(sizeNeeded))!=nullptr) {
             *pSize=static_cast<int32_t>(sizeNeeded);
-            return true;
-        } else {
-            return false;
+            परत सत्य;
+        } अन्यथा {
+            परत असत्य;
         }
-    } else {
-        if(sizeNeeded<=static_cast<size_t>(*pSize)) {
+    } अन्यथा {
+        जर(sizeNeeded<=static_cast<माप_प्रकार>(*pSize)) {
             /* there is already enough memory */
-            return true;
+            परत सत्य;
         }
-        else if(!mayAllocate) {
+        अन्यथा जर(!mayAllocate) {
             /* not enough memory, and we must not allocate */
-            return false;
-        } else {
+            परत असत्य;
+        } अन्यथा {
             /* we try to grow */
-            void *memory;
+            शून्य *memory;
             /* in most cases, we do not need the copy-old-data part of
              * realloc, but it is needed when adding runs using getRunsMemory()
              * in setParaRunsOnly()
              */
-            if((memory=uprv_realloc(*pMemory, sizeNeeded))!=nullptr) {
+            जर((memory=uprv_realloc(*pMemory, sizeNeeded))!=nullptr) {
                 *pMemory=memory;
                 *pSize=static_cast<int32_t>(sizeNeeded);
-                return true;
-            } else {
+                परत सत्य;
+            } अन्यथा {
                 /* we failed to grow */
-                return false;
+                परत असत्य;
             }
         }
     }
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 ubidi_close(UBiDi *pBiDi) {
-    if(pBiDi!=nullptr) {
+    जर(pBiDi!=nullptr) {
         pBiDi->pParaBiDi=nullptr;          /* in case one tries to reuse this block */
-        if(pBiDi->dirPropsMemory!=nullptr) {
+        जर(pBiDi->dirPropsMemory!=nullptr) {
             uprv_free(pBiDi->dirPropsMemory);
         }
-        if(pBiDi->levelsMemory!=nullptr) {
+        जर(pBiDi->levelsMemory!=nullptr) {
             uprv_free(pBiDi->levelsMemory);
         }
-        if(pBiDi->openingsMemory!=nullptr) {
+        जर(pBiDi->openingsMemory!=nullptr) {
             uprv_free(pBiDi->openingsMemory);
         }
-        if(pBiDi->parasMemory!=nullptr) {
+        जर(pBiDi->parasMemory!=nullptr) {
             uprv_free(pBiDi->parasMemory);
         }
-        if(pBiDi->runsMemory!=nullptr) {
+        जर(pBiDi->runsMemory!=nullptr) {
             uprv_free(pBiDi->runsMemory);
         }
-        if(pBiDi->isolatesMemory!=nullptr) {
+        जर(pBiDi->isolatesMemory!=nullptr) {
             uprv_free(pBiDi->isolatesMemory);
         }
-        if(pBiDi->insertPoints.points!=nullptr) {
-            uprv_free(pBiDi->insertPoints.points);
+        जर(pBiDi->घाला_Points.points!=nullptr) {
+            uprv_free(pBiDi->घाला_Points.points);
         }
 
         uprv_free(pBiDi);
@@ -275,9 +275,9 @@ ubidi_close(UBiDi *pBiDi) {
 
 /* set to approximate "inverse BiDi" ---------------------------------------- */
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 ubidi_setInverse(UBiDi *pBiDi, UBool isInverse) {
-    if(pBiDi!=nullptr) {
+    जर(pBiDi!=nullptr) {
         pBiDi->isInverse=isInverse;
         pBiDi->reorderingMode = isInverse ? UBIDI_REORDER_INVERSE_NUMBERS_AS_L
                                           : UBIDI_REORDER_DEFAULT;
@@ -286,10 +286,10 @@ ubidi_setInverse(UBiDi *pBiDi, UBool isInverse) {
 
 U_CAPI UBool U_EXPORT2
 ubidi_isInverse(UBiDi *pBiDi) {
-    if(pBiDi!=nullptr) {
-        return pBiDi->isInverse;
-    } else {
-        return false;
+    जर(pBiDi!=nullptr) {
+        परत pBiDi->isInverse;
+    } अन्यथा {
+        परत असत्य;
     }
 }
 
@@ -308,10 +308,10 @@ ubidi_isInverse(UBiDi *pBiDi) {
  * This would need to document which ones are supported and what are the
  * fallbacks for unsupported combinations.
  */
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 ubidi_setReorderingMode(UBiDi *pBiDi, UBiDiReorderingMode reorderingMode) UPRV_NO_SANITIZE_UNDEFINED {
-    if ((pBiDi!=nullptr) && (reorderingMode >= UBIDI_REORDER_DEFAULT)
-                        && (reorderingMode < UBIDI_REORDER_COUNT)) {
+    जर ((pBiDi!=nullptr) && (reorderingMode >= UBIDI_REORDER_DEFAULT)
+                        && (reorderingMode < UBIDI_REORDER_मोजणी)) {
         pBiDi->reorderingMode = reorderingMode;
         pBiDi->isInverse = reorderingMode == UBIDI_REORDER_INVERSE_NUMBERS_AS_L;
     }
@@ -319,58 +319,58 @@ ubidi_setReorderingMode(UBiDi *pBiDi, UBiDiReorderingMode reorderingMode) UPRV_N
 
 U_CAPI UBiDiReorderingMode U_EXPORT2
 ubidi_getReorderingMode(UBiDi *pBiDi) {
-    if (pBiDi!=nullptr) {
-        return pBiDi->reorderingMode;
-    } else {
-        return UBIDI_REORDER_DEFAULT;
+    जर (pBiDi!=nullptr) {
+        परत pBiDi->reorderingMode;
+    } अन्यथा {
+        परत UBIDI_REORDER_DEFAULT;
     }
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 ubidi_setReorderingOptions(UBiDi *pBiDi, uint32_t reorderingOptions) {
-    if (reorderingOptions & UBIDI_OPTION_REMOVE_CONTROLS) {
-        reorderingOptions&=~UBIDI_OPTION_INSERT_MARKS;
+    जर (reorderingOptions & UBIDI_OPTION_REMOVE_CONTROLS) {
+        reorderingOptions&=~UBIDI_OPTION_घाला_MARKS;
     }
-    if (pBiDi!=nullptr) {
+    जर (pBiDi!=nullptr) {
         pBiDi->reorderingOptions=reorderingOptions;
     }
 }
 
 U_CAPI uint32_t U_EXPORT2
 ubidi_getReorderingOptions(UBiDi *pBiDi) {
-    if (pBiDi!=nullptr) {
-        return pBiDi->reorderingOptions;
-    } else {
-        return 0;
+    जर (pBiDi!=nullptr) {
+        परत pBiDi->reorderingOptions;
+    } अन्यथा {
+        परत 0;
     }
 }
 
 U_CAPI UBiDiDirection U_EXPORT2
-ubidi_getBaseDirection(const char16_t *text,
+ubidi_getBaseDirection(स्थिरांक char16_t *text,
 int32_t length){
 
     int32_t i;
     UChar32 uchar;
     UCharDirection dir;
 
-    if( text==nullptr || length<-1 ){
-        return UBIDI_NEUTRAL;
+    जर( text==nullptr || length<-1 ){
+        परत UBIDI_NEUTRAL;
     }
 
-    if(length==-1) {
+    जर(length==-1) {
         length=u_strlen(text);
     }
 
-    for( i = 0 ; i < length; ) {
+    साठी( i = 0 ; i < length; ) {
         /* i is incremented by U16_NEXT */
         U16_NEXT(text, i, length, uchar);
         dir = u_charDirection(uchar);
-        if( dir == U_LEFT_TO_RIGHT )
-                return UBIDI_LTR;
-        if( dir == U_RIGHT_TO_LEFT || dir ==U_RIGHT_TO_LEFT_ARABIC )
-                return UBIDI_RTL;
+        जर( dir == U_डावा_TO_उजवा )
+                परत UBIDI_LTR;
+        जर( dir == U_उजवा_TO_डावा || dir ==U_उजवा_TO_डावा_ARABIC )
+                परत UBIDI_RTL;
     }
-    return UBIDI_NEUTRAL;
+    परत UBIDI_NEUTRAL;
 }
 
 /* perform (P2)..(P3) ------------------------------------------------------- */
@@ -380,49 +380,49 @@ int32_t length){
  * after the last B in prologue, if any.
  * Requires prologue!=null.
  */
-static DirProp
+स्थिर DirProp
 firstL_R_AL(UBiDi *pBiDi) {
-    const char16_t *text=pBiDi->prologue;
+    स्थिरांक char16_t *text=pBiDi->prologue;
     int32_t length=pBiDi->proLength;
     int32_t i;
     UChar32 uchar;
     DirProp dirProp, result=ON;
-    for(i=0; i<length; ) {
+    साठी(i=0; i<length; ) {
         /* i is incremented by U16_NEXT */
         U16_NEXT(text, i, length, uchar);
         dirProp = static_cast<DirProp>(ubidi_getCustomizedClass(pBiDi, uchar));
-        if(result==ON) {
-            if(dirProp==L || dirProp==R || dirProp==AL) {
+        जर(result==ON) {
+            जर(dirProp==L || dirProp==R || dirProp==AL) {
                 result=dirProp;
             }
-        } else {
-            if(dirProp==B) {
+        } अन्यथा {
+            जर(dirProp==B) {
                 result=ON;
             }
         }
     }
-    return result;
+    परत result;
 }
 
 /*
  * Check that there are enough entries in the array pointed to by pBiDi->paras
  */
-static UBool
-checkParaCount(UBiDi *pBiDi) {
-    int32_t count=pBiDi->paraCount;
-    if(pBiDi->paras==pBiDi->simpleParas) {
-        if(count<=SIMPLE_PARAS_COUNT)
-            return true;
-        if(!getInitialParasMemory(pBiDi, SIMPLE_PARAS_COUNT * 2))
-            return false;
+स्थिर UBool
+check_Para_मोजणी(UBiDi *pBiDi) {
+    int32_t count=pBiDi->para_मोजणी;
+    जर(pBiDi->paras==pBiDi->simpleParas) {
+        जर(count<=SIMPLE_PARAS_मोजणी)
+            परत सत्य;
+        जर(!getInitialParasMemory(pBiDi, SIMPLE_PARAS_मोजणी * 2))
+            परत असत्य;
         pBiDi->paras=pBiDi->parasMemory;
-        uprv_memcpy(pBiDi->parasMemory, pBiDi->simpleParas, SIMPLE_PARAS_COUNT * sizeof(Para));
-        return true;
+        uprv_memcpy(pBiDi->parasMemory, pBiDi->simpleParas, SIMPLE_PARAS_मोजणी * आकार(Para));
+        परत सत्य;
     }
-    if(!getInitialParasMemory(pBiDi, count * 2))
-        return false;
+    जर(!getInitialParasMemory(pBiDi, count * 2))
+        परत असत्य;
     pBiDi->paras=pBiDi->parasMemory;
-    return true;
+    परत सत्य;
 }
 
 /*
@@ -433,9 +433,9 @@ checkParaCount(UBiDi *pBiDi) {
  * default. Only if a strong R or AL is found within its scope will the LRI be
  * replaced by an RLI.
  */
-static UBool
+स्थिर UBool
 getDirProps(UBiDi *pBiDi) {
-    const char16_t *text=pBiDi->text;
+    स्थिरांक char16_t *text=pBiDi->text;
     DirProp *dirProps=pBiDi->dirPropsMemory;    /* pBiDi->dirProps is const */
 
     int32_t i=0, originalLength=pBiDi->originalLength;
@@ -449,11 +449,11 @@ getDirProps(UBiDi *pBiDi) {
             pBiDi->reorderingMode == UBIDI_REORDER_INVERSE_LIKE_DIRECT ||
             pBiDi->reorderingMode == UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL);
     int32_t lastArabicPos=-1;
-    int32_t controlCount=0;
+    int32_t control_मोजणी=0;
     UBool removeBiDiControls =
         static_cast<UBool>(pBiDi->reorderingOptions & UBIDI_OPTION_REMOVE_CONTROLS);
 
-    enum State {
+    गणना State {
          NOT_SEEKING_STRONG,            /* 0: not contextual paraLevel, not after FSI */
          SEEKING_STRONG_FOR_PARA,       /* 1: looking for first strong char in para */
          SEEKING_STRONG_FOR_FSI,        /* 2: looking for first strong after FSI */
@@ -469,29 +469,29 @@ getDirProps(UBiDi *pBiDi) {
        lastStack is reset to -1 on paragraph boundaries. */
     /* The following stack contains the position of the initiator of
        each open isolate sequence */
-    int32_t isolateStartStack[UBIDI_MAX_EXPLICIT_LEVEL+1];
+    int32_t isolate_Start_चळत[UBIDI_MAX_EXPLICIT_LEVEL+1];
     /* The following stack contains the last known state before
        encountering the initiator of an isolate sequence */
-    State  previousStateStack[UBIDI_MAX_EXPLICIT_LEVEL+1];
-    int32_t stackLast=-1;
+    State  previous_State_चळत[UBIDI_MAX_EXPLICIT_LEVEL+1];
+    int32_t चळत_Last=-1;
 
-    if(pBiDi->reorderingOptions & UBIDI_OPTION_STREAMING)
+    जर(pBiDi->reorderingOptions & UBIDI_OPTION_STREAMING)
         pBiDi->length=0;
     defaultParaLevel=pBiDi->paraLevel&1;
-    if(isDefaultLevel) {
+    जर(isDefaultLevel) {
         pBiDi->paras[0].level=defaultParaLevel;
         lastStrong=defaultParaLevel;
-        if(pBiDi->proLength>0 &&                    /* there is a prologue */
+        जर(pBiDi->proLength>0 &&                    /* there is a prologue */
            (dirProp=firstL_R_AL(pBiDi))!=ON) {  /* with a strong character */
-            if(dirProp==L)
+            जर(dirProp==L)
                 pBiDi->paras[0].level=0;    /* set the default para level */
-            else
+            अन्यथा
                 pBiDi->paras[0].level=1;    /* set the default para level */
             state=NOT_SEEKING_STRONG;
-        } else {
+        } अन्यथा {
             state=SEEKING_STRONG_FOR_PARA;
         }
-    } else {
+    } अन्यथा {
         pBiDi->paras[0].level=pBiDi->paraLevel;
         state=NOT_SEEKING_STRONG;
     }
@@ -501,24 +501,24 @@ getDirProps(UBiDi *pBiDi) {
      * the UBIDI_DEFAULT_XXX values are designed so that
      * their bit 0 alone yields the intended default
      */
-    for( /* i=0 above */ ; i<originalLength; ) {
+    साठी( /* i=0 above */ ; i<originalLength; ) {
         /* i is incremented by U16_NEXT */
         U16_NEXT(text, i, originalLength, uchar);
         flags|=DIRPROP_FLAG(dirProp=(DirProp)ubidi_getCustomizedClass(pBiDi, uchar));
         dirProps[i-1]=dirProp;
-        if(uchar>0xffff) {  /* set the lead surrogate's property to BN */
+        जर(uchar>0xffff) {  /* set the lead surrogate's property to BN */
             flags|=DIRPROP_FLAG(BN);
             dirProps[i-2]=BN;
         }
-        if(removeBiDiControls && IS_BIDI_CONTROL_CHAR(uchar))
-            controlCount++;
-        if(dirProp==L) {
-            if(state==SEEKING_STRONG_FOR_PARA) {
-                pBiDi->paras[pBiDi->paraCount-1].level=0;
+        जर(removeBiDiControls && IS_BIDI_CONTROL_CHAR(uchar))
+            control_मोजणी++;
+        जर(dirProp==L) {
+            जर(state==SEEKING_STRONG_FOR_PARA) {
+                pBiDi->paras[pBiDi->para_मोजणी-1].level=0;
                 state=NOT_SEEKING_STRONG;
             }
-            else if(state==SEEKING_STRONG_FOR_FSI) {
-                if(stackLast<=UBIDI_MAX_EXPLICIT_LEVEL) {
+            अन्यथा जर(state==SEEKING_STRONG_FOR_FSI) {
+                जर(चळत_Last<=UBIDI_MAX_EXPLICIT_LEVEL) {
                     /* no need for next statement, already set by default */
                     /* dirProps[isolateStartStack[stackLast]]=LRI; */
                     flags|=DIRPROP_FLAG(LRI);
@@ -526,138 +526,138 @@ getDirProps(UBiDi *pBiDi) {
                 state=LOOKING_FOR_PDI;
             }
             lastStrong=L;
-            continue;
+            सुरूठेवा;
         }
-        if(dirProp==R || dirProp==AL) {
-            if(state==SEEKING_STRONG_FOR_PARA) {
-                pBiDi->paras[pBiDi->paraCount-1].level=1;
+        जर(dirProp==R || dirProp==AL) {
+            जर(state==SEEKING_STRONG_FOR_PARA) {
+                pBiDi->paras[pBiDi->para_मोजणी-1].level=1;
                 state=NOT_SEEKING_STRONG;
             }
-            else if(state==SEEKING_STRONG_FOR_FSI) {
-                if(stackLast<=UBIDI_MAX_EXPLICIT_LEVEL) {
-                    dirProps[isolateStartStack[stackLast]]=RLI;
+            अन्यथा जर(state==SEEKING_STRONG_FOR_FSI) {
+                जर(चळत_Last<=UBIDI_MAX_EXPLICIT_LEVEL) {
+                    dirProps[isolate_Start_चळत[चळत_Last]]=RLI;
                     flags|=DIRPROP_FLAG(RLI);
                 }
                 state=LOOKING_FOR_PDI;
             }
             lastStrong=R;
-            if(dirProp==AL)
+            जर(dirProp==AL)
                 lastArabicPos=i-1;
-            continue;
+            सुरूठेवा;
         }
-        if(dirProp>=FSI && dirProp<=RLI) {  /* FSI, LRI or RLI */
-            stackLast++;
-            if(stackLast<=UBIDI_MAX_EXPLICIT_LEVEL) {
-                isolateStartStack[stackLast]=i-1;
-                previousStateStack[stackLast]=state;
+        जर(dirProp>=FSI && dirProp<=RLI) {  /* FSI, LRI or RLI */
+            चळत_Last++;
+            जर(चळत_Last<=UBIDI_MAX_EXPLICIT_LEVEL) {
+                isolate_Start_चळत[चळत_Last]=i-1;
+                previous_State_चळत[चळत_Last]=state;
             }
-            if(dirProp==FSI) {
+            जर(dirProp==FSI) {
                 dirProps[i-1]=LRI;      /* default if no strong char */
                 state=SEEKING_STRONG_FOR_FSI;
             }
-            else
+            अन्यथा
                 state=LOOKING_FOR_PDI;
-            continue;
+            सुरूठेवा;
         }
-        if(dirProp==PDI) {
-            if(state==SEEKING_STRONG_FOR_FSI) {
-                if(stackLast<=UBIDI_MAX_EXPLICIT_LEVEL) {
+        जर(dirProp==PDI) {
+            जर(state==SEEKING_STRONG_FOR_FSI) {
+                जर(चळत_Last<=UBIDI_MAX_EXPLICIT_LEVEL) {
                     /* no need for next statement, already set by default */
                     /* dirProps[isolateStartStack[stackLast]]=LRI; */
                     flags|=DIRPROP_FLAG(LRI);
                 }
             }
-            if(stackLast>=0) {
-                if(stackLast<=UBIDI_MAX_EXPLICIT_LEVEL)
-                    state=previousStateStack[stackLast];
-                stackLast--;
+            जर(चळत_Last>=0) {
+                जर(चळत_Last<=UBIDI_MAX_EXPLICIT_LEVEL)
+                    state=previous_State_चळत[चळत_Last];
+                चळत_Last--;
             }
-            continue;
+            सुरूठेवा;
         }
-        if(dirProp==B) {
-            if(i<originalLength && uchar==CR && text[i]==LF) /* do nothing on the CR */
-                continue;
-            pBiDi->paras[pBiDi->paraCount-1].limit=i;
-            if(isDefaultLevelInverse && lastStrong==R)
-                pBiDi->paras[pBiDi->paraCount-1].level=1;
-            if(pBiDi->reorderingOptions & UBIDI_OPTION_STREAMING) {
+        जर(dirProp==B) {
+            जर(i<originalLength && uchar==CR && text[i]==LF) /* do nothing on the CR */
+                सुरूठेवा;
+            pBiDi->paras[pBiDi->para_मोजणी-1].limit=i;
+            जर(isDefaultLevelInverse && lastStrong==R)
+                pBiDi->paras[pBiDi->para_मोजणी-1].level=1;
+            जर(pBiDi->reorderingOptions & UBIDI_OPTION_STREAMING) {
                 /* When streaming, we only process whole paragraphs
                    thus some updates are only done on paragraph boundaries */
                 pBiDi->length=i;        /* i is index to next character */
-                pBiDi->controlCount=controlCount;
+                pBiDi->control_मोजणी=control_मोजणी;
             }
-            if(i<originalLength) {              /* B not last char in text */
-                pBiDi->paraCount++;
-                if(checkParaCount(pBiDi)==false)    /* not enough memory for a new para entry */
-                    return false;
-                if(isDefaultLevel) {
-                    pBiDi->paras[pBiDi->paraCount-1].level=defaultParaLevel;
+            जर(i<originalLength) {              /* B not last char in text */
+                pBiDi->para_मोजणी++;
+                जर(check_Para_मोजणी(pBiDi)==असत्य)    /* not enough memory for a new para entry */
+                    परत असत्य;
+                जर(isDefaultLevel) {
+                    pBiDi->paras[pBiDi->para_मोजणी-1].level=defaultParaLevel;
                     state=SEEKING_STRONG_FOR_PARA;
                     lastStrong=defaultParaLevel;
-                } else {
-                    pBiDi->paras[pBiDi->paraCount-1].level=pBiDi->paraLevel;
+                } अन्यथा {
+                    pBiDi->paras[pBiDi->para_मोजणी-1].level=pBiDi->paraLevel;
                     state=NOT_SEEKING_STRONG;
                 }
-                stackLast=-1;
+                चळत_Last=-1;
             }
-            continue;
+            सुरूठेवा;
         }
     }
     /* Ignore still open isolate sequences with overflow */
-    if(stackLast>UBIDI_MAX_EXPLICIT_LEVEL) {
-        stackLast=UBIDI_MAX_EXPLICIT_LEVEL;
+    जर(चळत_Last>UBIDI_MAX_EXPLICIT_LEVEL) {
+        चळत_Last=UBIDI_MAX_EXPLICIT_LEVEL;
         state=SEEKING_STRONG_FOR_FSI;   /* to be on the safe side */
     }
     /* Resolve direction of still unresolved open FSI sequences */
-    while(stackLast>=0) {
-        if(state==SEEKING_STRONG_FOR_FSI) {
+    पर्यंत(चळत_Last>=0) {
+        जर(state==SEEKING_STRONG_FOR_FSI) {
             /* no need for next statement, already set by default */
             /* dirProps[isolateStartStack[stackLast]]=LRI; */
             flags|=DIRPROP_FLAG(LRI);
-            break;
+            थांबा;
         }
-        state=previousStateStack[stackLast];
-        stackLast--;
+        state=previous_State_चळत[चळत_Last];
+        चळत_Last--;
     }
     /* When streaming, ignore text after the last paragraph separator */
-    if(pBiDi->reorderingOptions & UBIDI_OPTION_STREAMING) {
-        if(pBiDi->length<originalLength)
-            pBiDi->paraCount--;
-    } else {
-        pBiDi->paras[pBiDi->paraCount-1].limit=originalLength;
-        pBiDi->controlCount=controlCount;
+    जर(pBiDi->reorderingOptions & UBIDI_OPTION_STREAMING) {
+        जर(pBiDi->length<originalLength)
+            pBiDi->para_मोजणी--;
+    } अन्यथा {
+        pBiDi->paras[pBiDi->para_मोजणी-1].limit=originalLength;
+        pBiDi->control_मोजणी=control_मोजणी;
     }
     /* For inverse bidi, default para direction is RTL if there is
        a strong R or AL at either end of the paragraph */
-    if(isDefaultLevelInverse && lastStrong==R) {
-        pBiDi->paras[pBiDi->paraCount-1].level=1;
+    जर(isDefaultLevelInverse && lastStrong==R) {
+        pBiDi->paras[pBiDi->para_मोजणी-1].level=1;
     }
-    if(isDefaultLevel) {
+    जर(isDefaultLevel) {
         pBiDi->paraLevel=static_cast<UBiDiLevel>(pBiDi->paras[0].level);
     }
     /* The following is needed to resolve the text direction for default level
        paragraphs containing no strong character */
-    for(i=0; i<pBiDi->paraCount; i++)
+    साठी(i=0; i<pBiDi->para_मोजणी; i++)
         flags|=DIRPROP_FLAG_LR(pBiDi->paras[i].level);
 
-    if(pBiDi->orderParagraphsLTR && (flags&DIRPROP_FLAG(B))) {
+    जर(pBiDi->orderParagraphsLTR && (flags&DIRPROP_FLAG(B))) {
         flags|=DIRPROP_FLAG(L);
     }
     pBiDi->flags=flags;
     pBiDi->lastArabicPos=lastArabicPos;
-    return true;
+    परत सत्य;
 }
 
 /* determine the paragraph level at position index */
 U_CFUNC UBiDiLevel
-ubidi_getParaLevelAtIndex(const UBiDi *pBiDi, int32_t pindex) {
+ubidi_getParaLevelAtIndex(स्थिरांक UBiDi *pBiDi, int32_t pindex) {
     int32_t i;
-    for(i=0; i<pBiDi->paraCount; i++)
-        if(pindex<pBiDi->paras[i].limit)
-            break;
-    if(i>=pBiDi->paraCount)
-        i=pBiDi->paraCount-1;
-    return (UBiDiLevel)(pBiDi->paras[i].level);
+    साठी(i=0; i<pBiDi->para_मोजणी; i++)
+        जर(pindex<pBiDi->paras[i].limit)
+            थांबा;
+    जर(i>=pBiDi->para_मोजणी)
+        i=pBiDi->para_मोजणी-1;
+    परत (UBiDiLevel)(pBiDi->paras[i].level);
 }
 
 /* Functions for handling paired brackets ----------------------------------- */
@@ -676,7 +676,7 @@ ubidi_getParaLevelAtIndex(const UBiDi *pBiDi, int32_t pindex) {
    encountered strong character, since these will be needed to resolve
    the level of paired brackets.  */
 
-static void
+स्थिर शून्य
 bracketInit(UBiDi *pBiDi, BracketData *bd) {
     bd->pBiDi=pBiDi;
     bd->isoRunLast=0;
@@ -687,19 +687,19 @@ bracketInit(UBiDi *pBiDi, BracketData *bd) {
     bd->isoRuns[0].lastStrong = bd->isoRuns[0].lastBase = t;
     bd->isoRuns[0].contextDir = static_cast<UBiDiDirection>(t);
     bd->isoRuns[0].contextPos=0;
-    if(pBiDi->openingsMemory) {
+    जर(pBiDi->openingsMemory) {
         bd->openings=pBiDi->openingsMemory;
-        bd->openingsCount=pBiDi->openingsSize / sizeof(Opening);
-    } else {
+        bd->openings_मोजणी=pBiDi->openingsSize / आकार(Opening);
+    } अन्यथा {
         bd->openings=bd->simpleOpenings;
-        bd->openingsCount=SIMPLE_OPENINGS_COUNT;
+        bd->openings_मोजणी=SIMPLE_OPENINGS_मोजणी;
     }
     bd->isNumbersSpecial=bd->pBiDi->reorderingMode==UBIDI_REORDER_NUMBERS_SPECIAL ||
                          bd->pBiDi->reorderingMode==UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL;
 }
 
 /* paragraph boundary */
-static void
+स्थिर शून्य
 bracketProcessB(BracketData *bd, UBiDiLevel level) {
     bd->isoRunLast=0;
     bd->isoRuns[0].limit=0;
@@ -710,14 +710,14 @@ bracketProcessB(BracketData *bd, UBiDiLevel level) {
 }
 
 /* LRE, LRO, RLE, RLO, PDF */
-static void
+स्थिर शून्य
 bracketProcessBoundary(BracketData *bd, int32_t lastCcPos,
                        UBiDiLevel contextLevel, UBiDiLevel embeddingLevel) {
     IsoRun *pLastIsoRun=&bd->isoRuns[bd->isoRunLast];
     DirProp *dirProps=bd->pBiDi->dirProps;
-    if(DIRPROP_FLAG(dirProps[lastCcPos])&MASK_ISO)  /* after an isolate */
-        return;
-    if(NO_OVERRIDE(embeddingLevel)>NO_OVERRIDE(contextLevel))   /* not a PDF */
+    जर(DIRPROP_FLAG(dirProps[lastCcPos])&MASK_ISO)  /* after an isolate */
+        परत;
+    जर(NO_OVERRIDE(embeddingLevel)>NO_OVERRIDE(contextLevel))   /* not a PDF */
         contextLevel=embeddingLevel;
     pLastIsoRun->limit=pLastIsoRun->start;
     pLastIsoRun->level=embeddingLevel;
@@ -727,7 +727,7 @@ bracketProcessBoundary(BracketData *bd, int32_t lastCcPos,
 }
 
 /* LRI or RLI */
-static void
+स्थिर शून्य
 bracketProcessLRI_RLI(BracketData *bd, UBiDiLevel level) {
     IsoRun *pLastIsoRun=&bd->isoRuns[bd->isoRunLast];
     int16_t lastLimit;
@@ -743,7 +743,7 @@ bracketProcessLRI_RLI(BracketData *bd, UBiDiLevel level) {
 }
 
 /* PDI */
-static void
+स्थिर शून्य
 bracketProcessPDI(BracketData *bd) {
     IsoRun *pLastIsoRun;
     bd->isoRunLast--;
@@ -752,19 +752,19 @@ bracketProcessPDI(BracketData *bd) {
 }
 
 /* newly found opening bracket: create an openings entry */
-static UBool                            /* return true if success */
+स्थिर UBool                            /* return true if success */
 bracketAddOpening(BracketData *bd, char16_t match, int32_t position) {
     IsoRun *pLastIsoRun=&bd->isoRuns[bd->isoRunLast];
     Opening *pOpening;
-    if(pLastIsoRun->limit>=bd->openingsCount) {  /* no available new entry */
+    जर(pLastIsoRun->limit>=bd->openings_मोजणी) {  /* no available new entry */
         UBiDi *pBiDi=bd->pBiDi;
-        if(!getInitialOpeningsMemory(pBiDi, pLastIsoRun->limit * 2))
-            return false;
-        if(bd->openings==bd->simpleOpenings)
+        जर(!getInitialOpeningsMemory(pBiDi, pLastIsoRun->limit * 2))
+            परत असत्य;
+        जर(bd->openings==bd->simpleOpenings)
             uprv_memcpy(pBiDi->openingsMemory, bd->simpleOpenings,
-                        SIMPLE_OPENINGS_COUNT * sizeof(Opening));
+                        SIMPLE_OPENINGS_मोजणी * आकार(Opening));
         bd->openings=pBiDi->openingsMemory;     /* may have changed */
-        bd->openingsCount=pBiDi->openingsSize / sizeof(Opening);
+        bd->openings_मोजणी=pBiDi->openingsSize / आकार(Opening);
     }
     pOpening=&bd->openings[pLastIsoRun->limit];
     pOpening->position=position;
@@ -773,26 +773,26 @@ bracketAddOpening(BracketData *bd, char16_t match, int32_t position) {
     pOpening->contextPos=pLastIsoRun->contextPos;
     pOpening->flags=0;
     pLastIsoRun->limit++;
-    return true;
+    परत सत्य;
 }
 
 /* change N0c1 to N0c2 when a preceding bracket is assigned the embedding level */
-static void
+स्थिर शून्य
 fixN0c(BracketData *bd, int32_t openingIndex, int32_t newPropPosition, DirProp newProp) {
     /* This function calls itself recursively */
     IsoRun *pLastIsoRun=&bd->isoRuns[bd->isoRunLast];
     Opening *qOpening;
     DirProp *dirProps=bd->pBiDi->dirProps;
     int32_t k, openingPosition, closingPosition;
-    for(k=openingIndex+1, qOpening=&bd->openings[k]; k<pLastIsoRun->limit; k++, qOpening++) {
-        if(qOpening->match>=0)      /* not an N0c match */
-            continue;
-        if(newPropPosition<qOpening->contextPos)
-            break;
-        if(newPropPosition>=qOpening->position)
-            continue;
-        if(newProp==qOpening->contextDir)
-            break;
+    साठी(k=openingIndex+1, qOpening=&bd->openings[k]; k<pLastIsoRun->limit; k++, qOpening++) {
+        जर(qOpening->match>=0)      /* not an N0c match */
+            सुरूठेवा;
+        जर(newPropPosition<qOpening->contextPos)
+            थांबा;
+        जर(newPropPosition>=qOpening->position)
+            सुरूठेवा;
+        जर(newProp==qOpening->contextDir)
+            थांबा;
         openingPosition=qOpening->position;
         dirProps[openingPosition]=newProp;
         closingPosition=-(qOpening->match);
@@ -804,7 +804,7 @@ fixN0c(BracketData *bd, int32_t openingIndex, int32_t newPropPosition, DirProp n
 }
 
 /* process closing bracket */
-static DirProp              /* return L or R if N0b or N0c, ON if N0d */
+स्थिर DirProp              /* return L or R if N0b or N0c, ON if N0d */
 bracketProcessClosing(BracketData *bd, int32_t openIdx, int32_t position) {
     IsoRun *pLastIsoRun=&bd->isoRuns[bd->isoRunLast];
     Opening *pOpening, *qOpening;
@@ -813,7 +813,7 @@ bracketProcessClosing(BracketData *bd, int32_t openIdx, int32_t position) {
     DirProp newProp;
     pOpening=&bd->openings[openIdx];
     direction = static_cast<UBiDiDirection>(pLastIsoRun->level & 1);
-    stable=true;            /* assume stable until proved otherwise */
+    stable=सत्य;            /* assume stable until proved otherwise */
 
     /* The stable flag is set when brackets are paired and their
        level is resolved and cannot be changed by what will be
@@ -833,196 +833,196 @@ bracketProcessClosing(BracketData *bd, int32_t openIdx, int32_t position) {
        that N0c2 must be applied to the parentheses rather than
        N0c1. */
 
-    if((direction==0 && pOpening->flags&FOUND_L) ||
+    जर((direction==0 && pOpening->flags&FOUND_L) ||
        (direction==1 && pOpening->flags&FOUND_R)) {                         /* N0b */
         newProp=static_cast<DirProp>(direction);
     }
-    else if(pOpening->flags&(FOUND_L|FOUND_R)) {                            /* N0c */
+    अन्यथा जर(pOpening->flags&(FOUND_L|FOUND_R)) {                            /* N0c */
         /* it is stable if there is no containing pair or in
            conditions too complicated and not worth checking */
         stable=(openIdx==pLastIsoRun->start);
-        if(direction!=pOpening->contextDir)
+        जर(direction!=pOpening->contextDir)
             newProp= static_cast<DirProp>(pOpening->contextDir);           /* N0c1 */
-        else
+        अन्यथा
             newProp= static_cast<DirProp>(direction);                      /* N0c2 */
-    } else {
+    } अन्यथा {
         /* forget this and any brackets nested within this pair */
         pLastIsoRun->limit= static_cast<uint16_t>(openIdx);
-        return ON;                                                          /* N0d */
+        परत ON;                                                          /* N0d */
     }
     bd->pBiDi->dirProps[pOpening->position]=newProp;
     bd->pBiDi->dirProps[position]=newProp;
     /* Update nested N0c pairs that may be affected */
     fixN0c(bd, openIdx, pOpening->position, newProp);
-    if(stable) {
+    जर(stable) {
         pLastIsoRun->limit= static_cast<uint16_t>(openIdx); /* forget any brackets nested within this pair */
         /* remove lower located synonyms if any */
-        while(pLastIsoRun->limit>pLastIsoRun->start &&
+        पर्यंत(pLastIsoRun->limit>pLastIsoRun->start &&
               bd->openings[pLastIsoRun->limit-1].position==pOpening->position)
             pLastIsoRun->limit--;
-    } else {
+    } अन्यथा {
         int32_t k;
         pOpening->match=-position;
         /* neutralize lower located synonyms if any */
         k=openIdx-1;
-        while(k>=pLastIsoRun->start &&
+        पर्यंत(k>=pLastIsoRun->start &&
               bd->openings[k].position==pOpening->position)
             bd->openings[k--].match=0;
         /* neutralize any unmatched opening between the current pair;
            this will also neutralize higher located synonyms if any */
-        for(k=openIdx+1; k<pLastIsoRun->limit; k++) {
+        साठी(k=openIdx+1; k<pLastIsoRun->limit; k++) {
             qOpening=&bd->openings[k];
-            if(qOpening->position>=position)
-                break;
-            if(qOpening->match>0)
+            जर(qOpening->position>=position)
+                थांबा;
+            जर(qOpening->match>0)
                 qOpening->match=0;
         }
     }
-    return newProp;
+    परत newProp;
 }
 
 /* handle strong characters, digits and candidates for closing brackets */
-static UBool                            /* return true if success */
+स्थिर UBool                            /* return true if success */
 bracketProcessChar(BracketData *bd, int32_t position) {
     IsoRun *pLastIsoRun=&bd->isoRuns[bd->isoRunLast];
     DirProp *dirProps, dirProp, newProp;
     UBiDiLevel level;
     dirProps=bd->pBiDi->dirProps;
     dirProp=dirProps[position];
-    if(dirProp==ON) {
+    जर(dirProp==ON) {
         char16_t c, match;
         int32_t idx;
         /* First see if it is a matching closing bracket. Hopefully, this is
            more efficient than checking if it is a closing bracket at all */
         c=bd->pBiDi->text[position];
-        for(idx=pLastIsoRun->limit-1; idx>=pLastIsoRun->start; idx--) {
-            if(bd->openings[idx].match!=c)
-                continue;
+        साठी(idx=pLastIsoRun->limit-1; idx>=pLastIsoRun->start; idx--) {
+            जर(bd->openings[idx].match!=c)
+                सुरूठेवा;
             /* We have a match */
             newProp=bracketProcessClosing(bd, idx, position);
-            if(newProp==ON) {           /* N0d */
+            जर(newProp==ON) {           /* N0d */
                 c=0;        /* prevent handling as an opening */
-                break;
+                थांबा;
             }
             pLastIsoRun->lastBase=ON;
             pLastIsoRun->contextDir = static_cast<UBiDiDirection>(newProp);
             pLastIsoRun->contextPos=position;
             level=bd->pBiDi->levels[position];
-            if(level&UBIDI_LEVEL_OVERRIDE) {    /* X4, X5 */
+            जर(level&UBIDI_LEVEL_OVERRIDE) {    /* X4, X5 */
                 uint16_t flag;
                 int32_t i;
                 newProp=level&1;
                 pLastIsoRun->lastStrong=newProp;
                 flag=DIRPROP_FLAG(newProp);
-                for(i=pLastIsoRun->start; i<idx; i++)
+                साठी(i=pLastIsoRun->start; i<idx; i++)
                     bd->openings[i].flags|=flag;
                 /* matching brackets are not overridden by LRO/RLO */
                 bd->pBiDi->levels[position]&=~UBIDI_LEVEL_OVERRIDE;
             }
             /* matching brackets are not overridden by LRO/RLO */
             bd->pBiDi->levels[bd->openings[idx].position]&=~UBIDI_LEVEL_OVERRIDE;
-            return true;
+            परत सत्य;
         }
         /* We get here only if the ON character is not a matching closing
            bracket or it is a case of N0d */
         /* Now see if it is an opening bracket */
-        if(c)
+        जर(c)
             match= static_cast<char16_t>(u_getBidiPairedBracket(c));    /* get the matching char */
-        else
+        अन्यथा
             match=0;
-        if(match!=c &&                  /* has a matching char */
+        जर(match!=c &&                  /* has a matching char */
            ubidi_getPairedBracketType(c)==U_BPT_OPEN) { /* opening bracket */
             /* special case: process synonyms
                create an opening entry for each synonym */
-            if(match==0x232A) {     /* RIGHT-POINTING ANGLE BRACKET */
-                if(!bracketAddOpening(bd, 0x3009, position))
-                    return false;
+            जर(match==0x232A) {     /* RIGHT-POINTING ANGLE BRACKET */
+                जर(!bracketAddOpening(bd, 0x3009, position))
+                    परत असत्य;
             }
-            else if(match==0x3009) {         /* RIGHT ANGLE BRACKET */
-                if(!bracketAddOpening(bd, 0x232A, position))
-                    return false;
+            अन्यथा जर(match==0x3009) {         /* RIGHT ANGLE BRACKET */
+                जर(!bracketAddOpening(bd, 0x232A, position))
+                    परत असत्य;
             }
-            if(!bracketAddOpening(bd, match, position))
-                return false;
+            जर(!bracketAddOpening(bd, match, position))
+                परत असत्य;
         }
     }
     level=bd->pBiDi->levels[position];
-    if(level&UBIDI_LEVEL_OVERRIDE) {    /* X4, X5 */
+    जर(level&UBIDI_LEVEL_OVERRIDE) {    /* X4, X5 */
         newProp=level&1;
-        if(dirProp!=S && dirProp!=WS && dirProp!=ON)
+        जर(dirProp!=S && dirProp!=WS && dirProp!=ON)
             dirProps[position]=newProp;
         pLastIsoRun->lastBase=newProp;
         pLastIsoRun->lastStrong=newProp;
         pLastIsoRun->contextDir = static_cast<UBiDiDirection>(newProp);
         pLastIsoRun->contextPos=position;
     }
-    else if(dirProp<=R || dirProp==AL) {
+    अन्यथा जर(dirProp<=R || dirProp==AL) {
         newProp= static_cast<DirProp>(DIR_FROM_STRONG(dirProp));
         pLastIsoRun->lastBase=dirProp;
         pLastIsoRun->lastStrong=dirProp;
         pLastIsoRun->contextDir = static_cast<UBiDiDirection>(newProp);
         pLastIsoRun->contextPos=position;
     }
-    else if(dirProp==EN) {
+    अन्यथा जर(dirProp==EN) {
         pLastIsoRun->lastBase=EN;
-        if(pLastIsoRun->lastStrong==L) {
+        जर(pLastIsoRun->lastStrong==L) {
             newProp=L;                  /* W7 */
-            if(!bd->isNumbersSpecial)
+            जर(!bd->isNumbersSpecial)
                 dirProps[position]=ENL;
             pLastIsoRun->contextDir = static_cast<UBiDiDirection>(L);
             pLastIsoRun->contextPos=position;
         }
-        else {
+        अन्यथा {
             newProp=R;                  /* N0 */
-            if(pLastIsoRun->lastStrong==AL)
+            जर(pLastIsoRun->lastStrong==AL)
                 dirProps[position]=AN;  /* W2 */
-            else
+            अन्यथा
                 dirProps[position]=ENR;
             pLastIsoRun->contextDir = static_cast<UBiDiDirection>(R);
             pLastIsoRun->contextPos=position;
         }
     }
-    else if(dirProp==AN) {
+    अन्यथा जर(dirProp==AN) {
         newProp=R;                      /* N0 */
         pLastIsoRun->lastBase=AN;
         pLastIsoRun->contextDir = static_cast<UBiDiDirection>(R);
         pLastIsoRun->contextPos=position;
     }
-    else if(dirProp==NSM) {
+    अन्यथा जर(dirProp==NSM) {
         /* if the last real char was ON, change NSM to ON so that it
            will stay ON even if the last real char is a bracket which
            may be changed to L or R */
         newProp=pLastIsoRun->lastBase;
-        if(newProp==ON)
+        जर(newProp==ON)
             dirProps[position]=newProp;
     }
-    else {
+    अन्यथा {
         newProp=dirProp;
         pLastIsoRun->lastBase=dirProp;
     }
-    if(newProp<=R || newProp==AL) {
+    जर(newProp<=R || newProp==AL) {
         int32_t i;
         uint16_t flag=DIRPROP_FLAG(DIR_FROM_STRONG(newProp));
-        for(i=pLastIsoRun->start; i<pLastIsoRun->limit; i++)
-            if(position>bd->openings[i].position)
+        साठी(i=pLastIsoRun->start; i<pLastIsoRun->limit; i++)
+            जर(position>bd->openings[i].position)
                 bd->openings[i].flags|=flag;
     }
-    return true;
+    परत सत्य;
 }
 
 /* perform (X1)..(X9) ------------------------------------------------------- */
 
 /* determine if the text is mixed-directional or single-directional */
-static UBiDiDirection
+स्थिर UBiDiDirection
 directionFromFlags(UBiDi *pBiDi) {
     Flags flags=pBiDi->flags;
     /* if the text contains AN and neutrals, then some neutrals may become RTL */
-    if(!(flags&MASK_RTL || ((flags&DIRPROP_FLAG(AN)) && (flags&MASK_POSSIBLE_N)))) {
-        return UBIDI_LTR;
-    } else if(!(flags&MASK_LTR)) {
-        return UBIDI_RTL;
-    } else {
-        return UBIDI_MIXED;
+    जर(!(flags&MASK_RTL || ((flags&DIRPROP_FLAG(AN)) && (flags&MASK_POSSIBLE_N)))) {
+        परत UBIDI_LTR;
+    } अन्यथा जर(!(flags&MASK_LTR)) {
+        परत UBIDI_RTL;
+    } अन्यथा {
+        परत UBIDI_MIXED;
     }
 }
 
@@ -1077,78 +1077,78 @@ directionFromFlags(UBiDi *pBiDi) {
  * Returns normally the direction; -1 if there was a memory shortage
  *
  */
-static UBiDiDirection
+स्थिर UBiDiDirection
 resolveExplicitLevels(UBiDi *pBiDi, UErrorCode *pErrorCode) {
     DirProp *dirProps=pBiDi->dirProps;
     UBiDiLevel *levels=pBiDi->levels;
-    const char16_t *text=pBiDi->text;
+    स्थिरांक char16_t *text=pBiDi->text;
 
     int32_t i=0, length=pBiDi->length;
     Flags flags=pBiDi->flags;       /* collect all directionalities in the text */
     DirProp dirProp;
     UBiDiLevel level=GET_PARALEVEL(pBiDi, 0);
     UBiDiDirection direction;
-    pBiDi->isolateCount=0;
+    pBiDi->isolate_मोजणी=0;
 
-    if(U_FAILURE(*pErrorCode)) { return UBIDI_LTR; }
+    जर(U_FAILURE(*pErrorCode)) { परत UBIDI_LTR; }
 
     /* determine if the text is mixed-directional or single-directional */
     direction=directionFromFlags(pBiDi);
 
     /* we may not need to resolve any explicit levels */
-    if((direction!=UBIDI_MIXED)) {
+    जर((direction!=UBIDI_MIXED)) {
         /* not mixed directionality: levels don't matter - trailingWSStart will be 0 */
-        return direction;
+        परत direction;
     }
-    if(pBiDi->reorderingMode > UBIDI_REORDER_LAST_LOGICAL_TO_VISUAL) {
+    जर(pBiDi->reorderingMode > UBIDI_REORDER_LAST_LOGICAL_TO_VISUAL) {
         /* inverse BiDi: mixed, but all characters are at the same embedding level */
         /* set all levels to the paragraph level */
         int32_t paraIndex, start, limit;
-        for(paraIndex=0; paraIndex<pBiDi->paraCount; paraIndex++) {
-            if(paraIndex==0)
+        साठी(paraIndex=0; paraIndex<pBiDi->para_मोजणी; paraIndex++) {
+            जर(paraIndex==0)
                 start=0;
-            else
+            अन्यथा
                 start=pBiDi->paras[paraIndex-1].limit;
             limit=pBiDi->paras[paraIndex].limit;
             level= static_cast<UBiDiLevel>(pBiDi->paras[paraIndex].level);
-            for(i=start; i<limit; i++)
+            साठी(i=start; i<limit; i++)
                 levels[i]=level;
         }
-        return direction;   /* no bracket matching for inverse BiDi */
+        परत direction;   /* no bracket matching for inverse BiDi */
     }
-    if(!(flags&(MASK_EXPLICIT|MASK_ISO))) {
+    जर(!(flags&(MASK_EXPLICIT|MASK_ISO))) {
         /* no embeddings, set all levels to the paragraph level */
         /* we still have to perform bracket matching */
         int32_t paraIndex, start, limit;
         BracketData bracketData;
         bracketInit(pBiDi, &bracketData);
-        for(paraIndex=0; paraIndex<pBiDi->paraCount; paraIndex++) {
-            if(paraIndex==0)
+        साठी(paraIndex=0; paraIndex<pBiDi->para_मोजणी; paraIndex++) {
+            जर(paraIndex==0)
                 start=0;
-            else
+            अन्यथा
                 start=pBiDi->paras[paraIndex-1].limit;
             limit=pBiDi->paras[paraIndex].limit;
             level= static_cast<UBiDiLevel>(pBiDi->paras[paraIndex].level);
-            for(i=start; i<limit; i++) {
+            साठी(i=start; i<limit; i++) {
                 levels[i]=level;
                 dirProp=dirProps[i];
-                if(dirProp==BN)
-                    continue;
-                if(dirProp==B) {
-                    if((i+1)<length) {
-                        if(text[i]==CR && text[i+1]==LF)
-                            continue;   /* skip CR when followed by LF */
+                जर(dirProp==BN)
+                    सुरूठेवा;
+                जर(dirProp==B) {
+                    जर((i+1)<length) {
+                        जर(text[i]==CR && text[i+1]==LF)
+                            सुरूठेवा;   /* skip CR when followed by LF */
                         bracketProcessB(&bracketData, level);
                     }
-                    continue;
+                    सुरूठेवा;
                 }
-                if(!bracketProcessChar(&bracketData, i)) {
+                जर(!bracketProcessChar(&bracketData, i)) {
                     *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                    return UBIDI_LTR;
+                    परत UBIDI_LTR;
                 }
             }
         }
-        return direction;
+        परत direction;
     }
     {
         /* continue to perform (Xn) */
@@ -1161,184 +1161,184 @@ resolveExplicitLevels(UBiDi *pBiDi, UErrorCode *pErrorCode) {
 
         /* The following stack remembers the embedding level and the ISOLATE flag of level runs.
            stackLast points to its current entry. */
-        uint16_t stack[UBIDI_MAX_EXPLICIT_LEVEL+2];   /* we never push anything >=UBIDI_MAX_EXPLICIT_LEVEL
+        uint16_t चळत_2[UBIDI_MAX_EXPLICIT_LEVEL+2];   /* we never push anything >=UBIDI_MAX_EXPLICIT_LEVEL
                                                         but we need one more entry as base */
-        uint32_t stackLast=0;
-        int32_t overflowIsolateCount=0;
-        int32_t overflowEmbeddingCount=0;
-        int32_t validIsolateCount=0;
+        uint32_t चळत_Last=0;
+        int32_t overflow_Isolate_मोजणी=0;
+        int32_t overflow_Embedding_मोजणी=0;
+        int32_t valid_Isolate_मोजणी=0;
         BracketData bracketData;
         bracketInit(pBiDi, &bracketData);
-        stack[0]=level;     /* initialize base entry to para level, no override, no isolate */
+        चळत_2[0]=level;     /* initialize base entry to para level, no override, no isolate */
 
         /* recalculate the flags */
         flags=0;
 
-        for(i=0; i<length; ++i) {
+        साठी(i=0; i<length; ++i) {
             dirProp=dirProps[i];
-            switch(dirProp) {
-            case LRE:
-            case RLE:
-            case LRO:
-            case RLO:
+            निवड(dirProp) {
+            स्थिती LRE:
+            स्थिती RLE:
+            स्थिती LRO:
+            स्थिती RLO:
                 /* (X2, X3, X4, X5) */
                 flags|=DIRPROP_FLAG(BN);
                 levels[i]=previousLevel;
-                if (dirProp==LRE || dirProp==LRO)
+                जर (dirProp==LRE || dirProp==LRO)
                     /* least greater even level */
                     newLevel = static_cast<UBiDiLevel>((embeddingLevel + 2) & ~(UBIDI_LEVEL_OVERRIDE | 1));
-                else
+                अन्यथा
                     /* least greater odd level */
                     newLevel = static_cast<UBiDiLevel>((NO_OVERRIDE(embeddingLevel) + 1) | 1);
-                if(newLevel<=UBIDI_MAX_EXPLICIT_LEVEL && overflowIsolateCount==0 &&
-                                                         overflowEmbeddingCount==0) {
+                जर(newLevel<=UBIDI_MAX_EXPLICIT_LEVEL && overflow_Isolate_मोजणी==0 &&
+                                                         overflow_Embedding_मोजणी==0) {
                     lastCcPos=i;
                     embeddingLevel=newLevel;
-                    if(dirProp==LRO || dirProp==RLO)
+                    जर(dirProp==LRO || dirProp==RLO)
                         embeddingLevel|=UBIDI_LEVEL_OVERRIDE;
-                    stackLast++;
-                    stack[stackLast]=embeddingLevel;
+                    चळत_Last++;
+                    चळत_2[चळत_Last]=embeddingLevel;
                     /* we don't need to set UBIDI_LEVEL_OVERRIDE off for LRE and RLE
                        since this has already been done for newLevel which is
                        the source for embeddingLevel.
                      */
-                } else {
-                    if(overflowIsolateCount==0)
-                        overflowEmbeddingCount++;
+                } अन्यथा {
+                    जर(overflow_Isolate_मोजणी==0)
+                        overflow_Embedding_मोजणी++;
                 }
-                break;
-            case PDF:
+                थांबा;
+            स्थिती PDF:
                 /* (X7) */
                 flags|=DIRPROP_FLAG(BN);
                 levels[i]=previousLevel;
                 /* handle all the overflow cases first */
-                if(overflowIsolateCount) {
-                    break;
+                जर(overflow_Isolate_मोजणी) {
+                    थांबा;
                 }
-                if(overflowEmbeddingCount) {
-                    overflowEmbeddingCount--;
-                    break;
+                जर(overflow_Embedding_मोजणी) {
+                    overflow_Embedding_मोजणी--;
+                    थांबा;
                 }
-                if(stackLast>0 && stack[stackLast]<ISOLATE) {   /* not an isolate entry */
+                जर(चळत_Last>0 && चळत_2[चळत_Last]<ISOLATE) {   /* not an isolate entry */
                     lastCcPos=i;
-                    stackLast--;
-                    embeddingLevel = static_cast<UBiDiLevel>(stack[stackLast]);
+                    चळत_Last--;
+                    embeddingLevel = static_cast<UBiDiLevel>(चळत_2[चळत_Last]);
                 }
-                break;
-            case LRI:
-            case RLI:
+                थांबा;
+            स्थिती LRI:
+            स्थिती RLI:
                 flags|=(DIRPROP_FLAG(ON)|DIRPROP_FLAG_LR(embeddingLevel));
                 levels[i]=NO_OVERRIDE(embeddingLevel);
-                if(NO_OVERRIDE(embeddingLevel)!=NO_OVERRIDE(previousLevel)) {
+                जर(NO_OVERRIDE(embeddingLevel)!=NO_OVERRIDE(previousLevel)) {
                     bracketProcessBoundary(&bracketData, lastCcPos,
                                            previousLevel, embeddingLevel);
                     flags|=DIRPROP_FLAG_MULTI_RUNS;
                 }
                 previousLevel=embeddingLevel;
                 /* (X5a, X5b) */
-                if(dirProp==LRI)
+                जर(dirProp==LRI)
                     /* least greater even level */
                     newLevel = static_cast<UBiDiLevel>((embeddingLevel + 2) & ~(UBIDI_LEVEL_OVERRIDE | 1));
-                else
+                अन्यथा
                     /* least greater odd level */
                     newLevel = static_cast<UBiDiLevel>((NO_OVERRIDE(embeddingLevel) + 1) | 1);
-                if(newLevel<=UBIDI_MAX_EXPLICIT_LEVEL && overflowIsolateCount==0 &&
-                                                         overflowEmbeddingCount==0) {
+                जर(newLevel<=UBIDI_MAX_EXPLICIT_LEVEL && overflow_Isolate_मोजणी==0 &&
+                                                         overflow_Embedding_मोजणी==0) {
                     flags|=DIRPROP_FLAG(dirProp);
                     lastCcPos=i;
-                    validIsolateCount++;
-                    if(validIsolateCount>pBiDi->isolateCount)
-                        pBiDi->isolateCount=validIsolateCount;
+                    valid_Isolate_मोजणी++;
+                    जर(valid_Isolate_मोजणी>pBiDi->isolate_मोजणी)
+                        pBiDi->isolate_मोजणी=valid_Isolate_मोजणी;
                     embeddingLevel=newLevel;
                     /* we can increment stackLast without checking because newLevel
                        will exceed UBIDI_MAX_EXPLICIT_LEVEL before stackLast overflows */
-                    stackLast++;
-                    stack[stackLast]=embeddingLevel+ISOLATE;
+                    चळत_Last++;
+                    चळत_2[चळत_Last]=embeddingLevel+ISOLATE;
                     bracketProcessLRI_RLI(&bracketData, embeddingLevel);
-                } else {
+                } अन्यथा {
                     /* make it WS so that it is handled by adjustWSLevels() */
                     dirProps[i]=WS;
-                    overflowIsolateCount++;
+                    overflow_Isolate_मोजणी++;
                 }
-                break;
-            case PDI:
-                if(NO_OVERRIDE(embeddingLevel)!=NO_OVERRIDE(previousLevel)) {
+                थांबा;
+            स्थिती PDI:
+                जर(NO_OVERRIDE(embeddingLevel)!=NO_OVERRIDE(previousLevel)) {
                     bracketProcessBoundary(&bracketData, lastCcPos,
                                            previousLevel, embeddingLevel);
                     flags|=DIRPROP_FLAG_MULTI_RUNS;
                 }
                 /* (X6a) */
-                if(overflowIsolateCount) {
-                    overflowIsolateCount--;
+                जर(overflow_Isolate_मोजणी) {
+                    overflow_Isolate_मोजणी--;
                     /* make it WS so that it is handled by adjustWSLevels() */
                     dirProps[i]=WS;
                 }
-                else if(validIsolateCount) {
+                अन्यथा जर(valid_Isolate_मोजणी) {
                     flags|=DIRPROP_FLAG(PDI);
                     lastCcPos=i;
-                    overflowEmbeddingCount=0;
-                    while(stack[stackLast]<ISOLATE) /* pop embedding entries */
-                        stackLast--;                /* until the last isolate entry */
-                    stackLast--;                    /* pop also the last isolate entry */
-                    validIsolateCount--;
+                    overflow_Embedding_मोजणी=0;
+                    पर्यंत(चळत_2[चळत_Last]<ISOLATE) /* pop embedding entries */
+                        चळत_Last--;                /* until the last isolate entry */
+                    चळत_Last--;                    /* pop also the last isolate entry */
+                    valid_Isolate_मोजणी--;
                     bracketProcessPDI(&bracketData);
-                } else
+                } अन्यथा
                     /* make it WS so that it is handled by adjustWSLevels() */
                     dirProps[i]=WS;
-                embeddingLevel = static_cast<UBiDiLevel>(stack[stackLast]) & ~ISOLATE;
+                embeddingLevel = static_cast<UBiDiLevel>(चळत_2[चळत_Last]) & ~ISOLATE;
                 flags|=(DIRPROP_FLAG(ON)|DIRPROP_FLAG_LR(embeddingLevel));
                 previousLevel=embeddingLevel;
                 levels[i]=NO_OVERRIDE(embeddingLevel);
-                break;
-            case B:
+                थांबा;
+            स्थिती B:
                 flags|=DIRPROP_FLAG(B);
                 levels[i]=GET_PARALEVEL(pBiDi, i);
-                if((i+1)<length) {
-                    if(text[i]==CR && text[i+1]==LF)
-                        break;          /* skip CR when followed by LF */
-                    overflowEmbeddingCount=overflowIsolateCount=0;
-                    validIsolateCount=0;
-                    stackLast=0;
+                जर((i+1)<length) {
+                    जर(text[i]==CR && text[i+1]==LF)
+                        थांबा;          /* skip CR when followed by LF */
+                    overflow_Embedding_मोजणी=overflow_Isolate_मोजणी=0;
+                    valid_Isolate_मोजणी=0;
+                    चळत_Last=0;
                     previousLevel=embeddingLevel=GET_PARALEVEL(pBiDi, i+1);
-                    stack[0]=embeddingLevel; /* initialize base entry to para level, no override, no isolate */
+                    चळत_2[0]=embeddingLevel; /* initialize base entry to para level, no override, no isolate */
                     bracketProcessB(&bracketData, embeddingLevel);
                 }
-                break;
-            case BN:
+                थांबा;
+            स्थिती BN:
                 /* BN, LRE, RLE, and PDF are supposed to be removed (X9) */
                 /* they will get their levels set correctly in adjustWSLevels() */
                 levels[i]=previousLevel;
                 flags|=DIRPROP_FLAG(BN);
-                break;
-            default:
+                थांबा;
+            पूर्वनिर्धारित:
                 /* all other types are normal characters and get the "real" level */
-                if(NO_OVERRIDE(embeddingLevel)!=NO_OVERRIDE(previousLevel)) {
+                जर(NO_OVERRIDE(embeddingLevel)!=NO_OVERRIDE(previousLevel)) {
                     bracketProcessBoundary(&bracketData, lastCcPos,
                                            previousLevel, embeddingLevel);
                     flags|=DIRPROP_FLAG_MULTI_RUNS;
-                    if(embeddingLevel&UBIDI_LEVEL_OVERRIDE)
+                    जर(embeddingLevel&UBIDI_LEVEL_OVERRIDE)
                         flags|=DIRPROP_FLAG_O(embeddingLevel);
-                    else
+                    अन्यथा
                         flags|=DIRPROP_FLAG_E(embeddingLevel);
                 }
                 previousLevel=embeddingLevel;
                 levels[i]=embeddingLevel;
-                if(!bracketProcessChar(&bracketData, i))
-                    return static_cast<UBiDiDirection>(-1);
+                जर(!bracketProcessChar(&bracketData, i))
+                    परत static_cast<UBiDiDirection>(-1);
                 /* the dirProp may have been changed in bracketProcessChar() */
                 flags|=DIRPROP_FLAG(dirProps[i]);
-                break;
+                थांबा;
             }
         }
-        if(flags&MASK_EMBEDDING)
+        जर(flags&MASK_EMBEDDING)
             flags|=DIRPROP_FLAG_LR(pBiDi->paraLevel);
-        if(pBiDi->orderParagraphsLTR && (flags&DIRPROP_FLAG(B)))
+        जर(pBiDi->orderParagraphsLTR && (flags&DIRPROP_FLAG(B)))
             flags|=DIRPROP_FLAG(L);
         /* again, determine if the text is mixed-directional or single-directional */
         pBiDi->flags=flags;
         direction=directionFromFlags(pBiDi);
     }
-    return direction;
+    परत direction;
 }
 
 /*
@@ -1351,73 +1351,73 @@ resolveExplicitLevels(UBiDi *pBiDi, UErrorCode *pErrorCode) {
  * Recalculate the flags to have them reflect the real properties
  * after taking the explicit embeddings into account.
  */
-static UBiDiDirection
+स्थिर UBiDiDirection
 checkExplicitLevels(UBiDi *pBiDi, UErrorCode *pErrorCode) {
     DirProp *dirProps=pBiDi->dirProps;
     UBiDiLevel *levels=pBiDi->levels;
-    int32_t isolateCount=0;
+    int32_t isolate_मोजणी=0;
 
     int32_t length=pBiDi->length;
     Flags flags=0;  /* collect all directionalities in the text */
-    pBiDi->isolateCount=0;
+    pBiDi->isolate_मोजणी=0;
 
     int32_t currentParaIndex = 0;
     int32_t currentParaLimit = pBiDi->paras[0].limit;
     int32_t currentParaLevel = pBiDi->paraLevel;
 
-    for(int32_t i=0; i<length; ++i) {
+    साठी(int32_t i=0; i<length; ++i) {
         UBiDiLevel level=levels[i];
         DirProp dirProp=dirProps[i];
-        if(dirProp==LRI || dirProp==RLI) {
-            isolateCount++;
-            if(isolateCount>pBiDi->isolateCount)
-                pBiDi->isolateCount=isolateCount;
+        जर(dirProp==LRI || dirProp==RLI) {
+            isolate_मोजणी++;
+            जर(isolate_मोजणी>pBiDi->isolate_मोजणी)
+                pBiDi->isolate_मोजणी=isolate_मोजणी;
         }
-        else if(dirProp==PDI)
-            isolateCount--;
-        else if(dirProp==B)
-            isolateCount=0;
+        अन्यथा जर(dirProp==PDI)
+            isolate_मोजणी--;
+        अन्यथा जर(dirProp==B)
+            isolate_मोजणी=0;
 
         // optimized version of  int32_t currentParaLevel = GET_PARALEVEL(pBiDi, i);
-        if (pBiDi->defaultParaLevel != 0 &&
-                i == currentParaLimit && (currentParaIndex + 1) < pBiDi->paraCount) {
+        जर (pBiDi->defaultParaLevel != 0 &&
+                i == currentParaLimit && (currentParaIndex + 1) < pBiDi->para_मोजणी) {
             currentParaLevel = pBiDi->paras[++currentParaIndex].level;
             currentParaLimit = pBiDi->paras[currentParaIndex].limit;
         }
 
         UBiDiLevel overrideFlag = level & UBIDI_LEVEL_OVERRIDE;
         level &= ~UBIDI_LEVEL_OVERRIDE;
-        if (level < currentParaLevel || UBIDI_MAX_EXPLICIT_LEVEL < level) {
-            if (level == 0) {
-                if (dirProp == B) {
+        जर (level < currentParaLevel || UBIDI_MAX_EXPLICIT_LEVEL < level) {
+            जर (level == 0) {
+                जर (dirProp == B) {
                     // Paragraph separators are ok with explicit level 0.
                     // Prevents reordering of paragraphs.
-                } else {
+                } अन्यथा {
                     // Treat explicit level 0 as a wildcard for the paragraph level.
                     // Avoid making the caller guess what the paragraph level would be.
                     level = static_cast<UBiDiLevel>(currentParaLevel);
                     levels[i] = level | overrideFlag;
                 }
-            } else {
+            } अन्यथा {
                 // 1 <= level < currentParaLevel or UBIDI_MAX_EXPLICIT_LEVEL < level
                 /* level out of bounds */
                 *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-                return UBIDI_LTR;
+                परत UBIDI_LTR;
             }
         }
-        if (overrideFlag != 0) {
+        जर (overrideFlag != 0) {
             /* keep the override flag in levels[i] but adjust the flags */
             flags|=DIRPROP_FLAG_O(level);
-        } else {
+        } अन्यथा {
             /* set the flags */
             flags|=DIRPROP_FLAG_E(level)|DIRPROP_FLAG(dirProp);
         }
     }
-    if(flags&MASK_EMBEDDING)
+    जर(flags&MASK_EMBEDDING)
         flags|=DIRPROP_FLAG_LR(pBiDi->paraLevel);
     /* determine if the text is mixed-directional or single-directional */
     pBiDi->flags=flags;
-    return directionFromFlags(pBiDi);
+    परत directionFromFlags(pBiDi);
 }
 
 /******************************************************************
@@ -1443,12 +1443,12 @@ checkExplicitLevels(UBiDi *pBiDi, UErrorCode *pErrorCode) {
 #define GET_ACTIONPROPS(cell) ((cell)>>5)
 #define s(action, newState) ((uint8_t)(newState+(action<<5)))
 
-static const uint8_t groupProp[] =          /* dirProp regrouped */
+स्थिर स्थिरांक uint8_t groupProp[] =          /* dirProp regrouped */
 {
 /*  L   R   EN  ES  ET  AN  CS  B   S   WS  ON  LRE LRO AL  RLE RLO PDF NSM BN  FSI LRI RLI PDI ENL ENR */
     0,  1,  2,  7,  8,  3,  9,  6,  5,  4,  4,  10, 10, 12, 10, 10, 10, 11, 10, 4,  4,  4,  4,  13, 14
 };
-enum { DirProp_L=0, DirProp_R=1, DirProp_EN=2, DirProp_AN=3, DirProp_ON=4, DirProp_S=5, DirProp_B=6 }; /* reduced dirProp */
+गणना { DirProp_L=0, DirProp_R=1, DirProp_EN=2, DirProp_AN=3, DirProp_ON=4, DirProp_S=5, DirProp_B=6 }; /* reduced dirProp */
 
 /******************************************************************
 
@@ -1485,7 +1485,7 @@ enum { DirProp_L=0, DirProp_R=1, DirProp_EN=2, DirProp_AN=3, DirProp_ON=4, DirPr
 
 
 */
-static const uint8_t impTabProps[][IMPTABPROPS_COLUMNS] =
+स्थिर स्थिरांक uint8_t impTabProps[][IMPTABPROPS_COLUMNS] =
 {
 /*                        L ,     R ,    EN ,    AN ,    ON ,     S ,     B ,    ES ,    ET ,    CS ,    BN ,   NSM ,    AL ,   ENL ,   ENR , Res */
 /* 0 Init        */ {     1 ,     2 ,     4 ,     5 ,     7 ,    15 ,    17 ,     7 ,     9 ,     7 ,     0 ,     7 ,     3 ,    18 ,    21 , DirProp_ON },
@@ -1544,15 +1544,15 @@ static const uint8_t impTabProps[][IMPTABPROPS_COLUMNS] =
 #define GET_ACTION(cell) ((cell)>>4)
 #define s(action, newState) ((uint8_t)(newState+(action<<4)))
 
-typedef uint8_t ImpTab[][IMPTABLEVELS_COLUMNS];
-typedef uint8_t ImpAct[];
+प्रकारव्याख्या uint8_t ImpTab[][IMPTABLEVELS_COLUMNS];
+प्रकारव्याख्या uint8_t ImpAct[];
 
 /* FOOD FOR THOUGHT: each ImpTab should have its associated ImpAct,
  * instead of having a pair of ImpTab and a pair of ImpAct.
  */
-typedef struct ImpTabPair {
-    const void * pImpTab[2];
-    const void * pImpAct[2];
+प्रकारव्याख्या संरचना ImpTabPair {
+    स्थिरांक शून्य * pImpTab[2];
+    स्थिरांक शून्य * pImpAct[2];
 } ImpTabPair;
 
 /******************************************************************
@@ -1592,7 +1592,7 @@ typedef struct ImpTabPair {
 
 */
 
-static const ImpTab impTabL_DEFAULT =   /* Even paragraph level */
+स्थिर स्थिरांक ImpTab impTabL_DEFAULT =   /* Even paragraph level */
 /*  In this table, conditional sequences receive the lower possible level
     until proven otherwise.
 */
@@ -1605,7 +1605,7 @@ static const ImpTab impTabL_DEFAULT =   /* Even paragraph level */
 /* 4 : R+ON       */ {     0 , s(2,1), s(3,3), s(3,3),     4 ,     4 ,     0 ,  0 },
 /* 5 : AN+ON      */ {     0 , s(2,1),     0 , s(3,2),     5 ,     5 ,     0 ,  0 }
 };
-static const ImpTab impTabR_DEFAULT =   /* Odd  paragraph level */
+स्थिर स्थिरांक ImpTab impTabR_DEFAULT =   /* Odd  paragraph level */
 /*  In this table, conditional sequences receive the lower possible level
     until proven otherwise.
 */
@@ -1618,12 +1618,12 @@ static const ImpTab impTabR_DEFAULT =   /* Odd  paragraph level */
 /* 4 : L+ON       */ { s(2,1),     0 , s(2,1),     3 ,     4 ,     4 ,     0 ,  0 },
 /* 5 : L+AN+ON    */ {     1 ,     0 ,     1 ,     3 ,     5 ,     5 ,     0 ,  0 }
 };
-static const ImpAct impAct0 = {0,1,2,3,4};
-static const ImpTabPair impTab_DEFAULT = {{&impTabL_DEFAULT,
+स्थिर स्थिरांक ImpAct impAct0 = {0,1,2,3,4};
+स्थिर स्थिरांक ImpTabPair impTab_DEFAULT = {{&impTabL_DEFAULT,
                                            &impTabR_DEFAULT},
                                           {&impAct0, &impAct0}};
 
-static const ImpTab impTabL_NUMBERS_SPECIAL =   /* Even paragraph level */
+स्थिर स्थिरांक ImpTab impTabL_NUMBERS_SPECIAL =   /* Even paragraph level */
 /*  In this table, conditional sequences receive the lower possible level
     until proven otherwise.
 */
@@ -1635,11 +1635,11 @@ static const ImpTab impTabL_NUMBERS_SPECIAL =   /* Even paragraph level */
 /* 3 : R+ON       */ {     0 , s(2,2), s(3,4), s(3,4),     3 ,     3 ,     0 ,  0 },
 /* 4 : R+EN/AN    */ {     0 ,     2 ,     4 ,     4 , s(1,3), s(1,3),     0 ,  2 }
 };
-static const ImpTabPair impTab_NUMBERS_SPECIAL = {{&impTabL_NUMBERS_SPECIAL,
+स्थिर स्थिरांक ImpTabPair impTab_NUMBERS_SPECIAL = {{&impTabL_NUMBERS_SPECIAL,
                                                    &impTabR_DEFAULT},
                                                   {&impAct0, &impAct0}};
 
-static const ImpTab impTabL_GROUP_NUMBERS_WITH_R =
+स्थिर स्थिरांक ImpTab impTabL_GROUP_NUMBERS_WITH_R =
 /*  In this table, EN/AN+ON sequences receive levels as if associated with R
     until proven that there is L or sor/eor on both sides. AN is handled like EN.
 */
@@ -1652,7 +1652,7 @@ static const ImpTab impTabL_GROUP_NUMBERS_WITH_R =
 /* 4 R+ON         */ { s(2,0),     3 ,     5 ,     5 ,     4 , s(2,0), s(2,0),  1 },
 /* 5 R+EN/AN      */ {     0 ,     3 ,     5 ,     5 , s(1,4),     0 ,     0 ,  2 }
 };
-static const ImpTab impTabR_GROUP_NUMBERS_WITH_R =
+स्थिर स्थिरांक ImpTab impTabR_GROUP_NUMBERS_WITH_R =
 /*  In this table, EN/AN+ON sequences receive levels as if associated with R
     until proven that there is L on both sides. AN is handled like EN.
 */
@@ -1664,13 +1664,13 @@ static const ImpTab impTabR_GROUP_NUMBERS_WITH_R =
 /* 3 L+ON         */ { s(2,2),     0 ,     4 ,     4 ,     3 ,     0 ,     0 ,  0 },
 /* 4 L+EN/AN      */ { s(2,2),     0 ,     4 ,     4 ,     3 ,     0 ,     0 ,  1 }
 };
-static const ImpTabPair impTab_GROUP_NUMBERS_WITH_R = {
+स्थिर स्थिरांक ImpTabPair impTab_GROUP_NUMBERS_WITH_R = {
                         {&impTabL_GROUP_NUMBERS_WITH_R,
                          &impTabR_GROUP_NUMBERS_WITH_R},
                         {&impAct0, &impAct0}};
 
 
-static const ImpTab impTabL_INVERSE_NUMBERS_AS_L =
+स्थिर स्थिरांक ImpTab impTabL_INVERSE_NUMBERS_AS_L =
 /*  This table is identical to the Default LTR table except that EN and AN are
     handled like L.
 */
@@ -1683,7 +1683,7 @@ static const ImpTab impTabL_INVERSE_NUMBERS_AS_L =
 /* 4 : R+ON       */ { s(2,0),     1 , s(2,0), s(2,0),     4 ,     4 , s(2,0),  1 },
 /* 5 : AN+ON      */ { s(2,0),     1 , s(2,0), s(2,0),     5 ,     5 , s(2,0),  1 }
 };
-static const ImpTab impTabR_INVERSE_NUMBERS_AS_L =
+स्थिर स्थिरांक ImpTab impTabR_INVERSE_NUMBERS_AS_L =
 /*  This table is identical to the Default RTL table except that EN and AN are
     handled like L.
 */
@@ -1696,12 +1696,12 @@ static const ImpTab impTabR_INVERSE_NUMBERS_AS_L =
 /* 4 : L+ON       */ { s(2,1),     0 , s(2,1), s(2,1),     4 ,     4 ,     0 ,  0 },
 /* 5 : L+AN+ON    */ {     1 ,     0 ,     1 ,     1 ,     5 ,     5 ,     0 ,  0 }
 };
-static const ImpTabPair impTab_INVERSE_NUMBERS_AS_L = {
+स्थिर स्थिरांक ImpTabPair impTab_INVERSE_NUMBERS_AS_L = {
                         {&impTabL_INVERSE_NUMBERS_AS_L,
                          &impTabR_INVERSE_NUMBERS_AS_L},
                         {&impAct0, &impAct0}};
 
-static const ImpTab impTabR_INVERSE_LIKE_DIRECT =   /* Odd  paragraph level */
+स्थिर स्थिरांक ImpTab impTabR_INVERSE_LIKE_DIRECT =   /* Odd  paragraph level */
 /*  In this table, conditional sequences receive the lower possible level
     until proven otherwise.
 */
@@ -1715,15 +1715,15 @@ static const ImpTab impTabR_INVERSE_LIKE_DIRECT =   /* Odd  paragraph level */
 /* 5 : L+AN+ON    */ { s(2,1), s(3,0),     6 ,     4 ,     5 ,     5 , s(3,0),  2 },
 /* 6 : L+ON+EN    */ { s(2,1), s(3,0),     6 ,     4 ,     3 ,     3 , s(3,0),  1 }
 };
-static const ImpAct impAct1 = {0,1,13,14};
+स्थिर स्थिरांक ImpAct impAct1 = {0,1,13,14};
 /* FOOD FOR THOUGHT: in LTR table below, check case "JKL 123abc"
  */
-static const ImpTabPair impTab_INVERSE_LIKE_DIRECT = {
+स्थिर स्थिरांक ImpTabPair impTab_INVERSE_LIKE_DIRECT = {
                         {&impTabL_DEFAULT,
                          &impTabR_INVERSE_LIKE_DIRECT},
                         {&impAct0, &impAct1}};
 
-static const ImpTab impTabL_INVERSE_LIKE_DIRECT_WITH_MARKS =
+स्थिर स्थिरांक ImpTab impTabL_INVERSE_LIKE_DIRECT_WITH_MARKS =
 /*  The case handled in this table is (visually):  R EN L
 */
 {
@@ -1736,7 +1736,7 @@ static const ImpTab impTabL_INVERSE_LIKE_DIRECT_WITH_MARKS =
 /* 5 : R+EN       */ { s(3,0), s(4,3),     5 , s(5,6), s(1,4), s(3,0), s(3,0),  4 },
 /* 6 : R+AN       */ { s(3,0), s(4,3), s(5,5),     6 , s(1,4), s(3,0), s(3,0),  4 }
 };
-static const ImpTab impTabR_INVERSE_LIKE_DIRECT_WITH_MARKS =
+स्थिर स्थिरांक ImpTab impTabR_INVERSE_LIKE_DIRECT_WITH_MARKS =
 /*  The cases handled in this table are (visually):  R EN L
                                                      R L AN L
 */
@@ -1750,19 +1750,19 @@ static const ImpTab impTabR_INVERSE_LIKE_DIRECT_WITH_MARKS =
 /* 5 : L+ON+EN    */ { s(5,3), s(4,0),     5 , s(3,6),     4 , s(4,0), s(4,0),  1 },
 /* 6 : L+AN       */ { s(5,3), s(4,0),     6 ,     6 ,     4 , s(4,0), s(4,0),  3 }
 };
-static const ImpAct impAct2 = {0,1,2,5,6,7,8};
-static const ImpAct impAct3 = {0,1,9,10,11,12};
-static const ImpTabPair impTab_INVERSE_LIKE_DIRECT_WITH_MARKS = {
+स्थिर स्थिरांक ImpAct impAct2 = {0,1,2,5,6,7,8};
+स्थिर स्थिरांक ImpAct impAct3 = {0,1,9,10,11,12};
+स्थिर स्थिरांक ImpTabPair impTab_INVERSE_LIKE_DIRECT_WITH_MARKS = {
                         {&impTabL_INVERSE_LIKE_DIRECT_WITH_MARKS,
                          &impTabR_INVERSE_LIKE_DIRECT_WITH_MARKS},
                         {&impAct2, &impAct3}};
 
-static const ImpTabPair impTab_INVERSE_FOR_NUMBERS_SPECIAL = {
+स्थिर स्थिरांक ImpTabPair impTab_INVERSE_FOR_NUMBERS_SPECIAL = {
                         {&impTabL_NUMBERS_SPECIAL,
                          &impTabR_INVERSE_LIKE_DIRECT},
                         {&impAct0, &impAct1}};
 
-static const ImpTab impTabL_INVERSE_FOR_NUMBERS_SPECIAL_WITH_MARKS =
+स्थिर स्थिरांक ImpTab impTabL_INVERSE_FOR_NUMBERS_SPECIAL_WITH_MARKS =
 /*  The case handled in this table is (visually):  R EN L
 */
 {
@@ -1773,16 +1773,16 @@ static const ImpTab impTabL_INVERSE_FOR_NUMBERS_SPECIAL_WITH_MARKS =
 /* 3 : R+ON       */ { s(3,0), s(4,2), s(5,4), s(5,4),     3 , s(3,0), s(3,0),  3 },
 /* 4 : R+EN/AN    */ { s(3,0), s(4,2),     4 ,     4 , s(1,3), s(3,0), s(3,0),  4 }
 };
-static const ImpTabPair impTab_INVERSE_FOR_NUMBERS_SPECIAL_WITH_MARKS = {
+स्थिर स्थिरांक ImpTabPair impTab_INVERSE_FOR_NUMBERS_SPECIAL_WITH_MARKS = {
                         {&impTabL_INVERSE_FOR_NUMBERS_SPECIAL_WITH_MARKS,
                          &impTabR_INVERSE_LIKE_DIRECT_WITH_MARKS},
                         {&impAct2, &impAct3}};
 
 #undef s
 
-typedef struct {
-    const ImpTab * pImpTab;             /* level table pointer          */
-    const ImpAct * pImpAct;             /* action map array             */
+प्रकारव्याख्या संरचना {
+    स्थिरांक ImpTab * pImpTab;             /* level table pointer          */
+    स्थिरांक ImpAct * pImpAct;             /* action map array             */
     int32_t startON;                    /* start of ON sequence         */
     int32_t startL2EN;                  /* start of level 2 sequence    */
     int32_t lastStrongRTL;              /* index of last found R or AL  */
@@ -1793,7 +1793,7 @@ typedef struct {
 
 /*------------------------------------------------------------------------*/
 
-static void
+स्थिर शून्य
 addPoint(UBiDi *pBiDi, int32_t pos, int32_t flag)
   /* param pos:     position where to insert
      param flag:    one of LRM_BEFORE, LRM_AFTER, RLM_BEFORE, RLM_AFTER
@@ -1801,52 +1801,52 @@ addPoint(UBiDi *pBiDi, int32_t pos, int32_t flag)
 {
 #define FIRSTALLOC  10
     Point point;
-    InsertPoints * pInsertPoints=&(pBiDi->insertPoints);
+    घाला_Points_2 * p_घाला_Points=&(pBiDi->घाला_Points);
 
-    if (pInsertPoints->capacity == 0)
+    जर (p_घाला_Points->capacity == 0)
     {
-        pInsertPoints->points=static_cast<Point *>(uprv_malloc(sizeof(Point)*FIRSTALLOC));
-        if (pInsertPoints->points == nullptr)
+        p_घाला_Points->points=static_cast<Point *>(uprv_malloc(आकार(Point)*FIRSTALLOC));
+        जर (p_घाला_Points->points == nullptr)
         {
-            pInsertPoints->errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+            p_घाला_Points->errorCode=U_MEMORY_ALLOCATION_ERROR;
+            परत;
         }
-        pInsertPoints->capacity=FIRSTALLOC;
+        p_घाला_Points->capacity=FIRSTALLOC;
     }
-    if (pInsertPoints->size >= pInsertPoints->capacity) /* no room for new point */
+    जर (p_घाला_Points->size >= p_घाला_Points->capacity) /* no room for new point */
     {
-        Point * savePoints=pInsertPoints->points;
-        pInsertPoints->points=static_cast<Point *>(uprv_realloc(pInsertPoints->points,
-                                           pInsertPoints->capacity*2*sizeof(Point)));
-        if (pInsertPoints->points == nullptr)
+        Point * savePoints=p_घाला_Points->points;
+        p_घाला_Points->points=static_cast<Point *>(uprv_realloc(p_घाला_Points->points,
+                                           p_घाला_Points->capacity*2*आकार(Point)));
+        जर (p_घाला_Points->points == nullptr)
         {
-            pInsertPoints->points=savePoints;
-            pInsertPoints->errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+            p_घाला_Points->points=savePoints;
+            p_घाला_Points->errorCode=U_MEMORY_ALLOCATION_ERROR;
+            परत;
         }
-        else  pInsertPoints->capacity*=2;
+        अन्यथा  p_घाला_Points->capacity*=2;
     }
     point.pos=pos;
     point.flag=flag;
-    pInsertPoints->points[pInsertPoints->size]=point;
-    pInsertPoints->size++;
+    p_घाला_Points->points[p_घाला_Points->size]=point;
+    p_घाला_Points->size++;
 #undef FIRSTALLOC
 }
 
-static void
+स्थिर शून्य
 setLevelsOutsideIsolates(UBiDi *pBiDi, int32_t start, int32_t limit, UBiDiLevel level)
 {
     DirProp *dirProps=pBiDi->dirProps, dirProp;
     UBiDiLevel *levels=pBiDi->levels;
-    int32_t isolateCount=0, k;
-    for(k=start; k<limit; k++) {
+    int32_t isolate_मोजणी=0, k;
+    साठी(k=start; k<limit; k++) {
         dirProp=dirProps[k];
-        if(dirProp==PDI)
-            isolateCount--;
-        if(isolateCount==0)
+        जर(dirProp==PDI)
+            isolate_मोजणी--;
+        जर(isolate_मोजणी==0)
             levels[k]=level;
-        if(dirProp==LRI || dirProp==RLI)
-            isolateCount++;
+        जर(dirProp==LRI || dirProp==RLI)
+            isolate_मोजणी++;
     }
 }
 
@@ -1865,15 +1865,15 @@ setLevelsOutsideIsolates(UBiDi *pBiDi, int32_t start, int32_t limit, UBiDiLevel 
  * to actually store the intermediate directional properties in dirProps[].
  */
 
-static void
+स्थिर शून्य
 processPropertySeq(UBiDi *pBiDi, LevState *pLevState, uint8_t _prop,
                    int32_t start, int32_t limit) {
     uint8_t cell, oldStateSeq, actionSeq;
-    const ImpTab * pImpTab=pLevState->pImpTab;
-    const ImpAct * pImpAct=pLevState->pImpAct;
+    स्थिरांक ImpTab * pImpTab=pLevState->pImpTab;
+    स्थिरांक ImpAct * pImpAct=pLevState->pImpAct;
     UBiDiLevel * levels=pBiDi->levels;
     UBiDiLevel level, addLevel;
-    InsertPoints * pInsertPoints;
+    घाला_Points_2 * p_घाला_Points;
     int32_t start0, k;
 
     start0=start;                           /* save original start position */
@@ -1883,189 +1883,189 @@ processPropertySeq(UBiDi *pBiDi, LevState *pLevState, uint8_t _prop,
     actionSeq=(*pImpAct)[GET_ACTION(cell)]; /* isolate the action */
     addLevel=(*pImpTab)[pLevState->state][IMPTABLEVELS_RES];
 
-    if(actionSeq) {
-        switch(actionSeq) {
-        case 1:                         /* init ON seq */
+    जर(actionSeq) {
+        निवड(actionSeq) {
+        स्थिती 1:                         /* init ON seq */
             pLevState->startON=start0;
-            break;
+            थांबा;
 
-        case 2:                         /* prepend ON seq to current seq */
+        स्थिती 2:                         /* prepend ON seq to current seq */
             start=pLevState->startON;
-            break;
+            थांबा;
 
-        case 3:                         /* EN/AN after R+ON */
+        स्थिती 3:                         /* EN/AN after R+ON */
             level=pLevState->runLevel+1;
             setLevelsOutsideIsolates(pBiDi, pLevState->startON, start0, level);
-            break;
+            थांबा;
 
-        case 4:                         /* EN/AN before R for NUMBERS_SPECIAL */
+        स्थिती 4:                         /* EN/AN before R for NUMBERS_SPECIAL */
             level=pLevState->runLevel+2;
             setLevelsOutsideIsolates(pBiDi, pLevState->startON, start0, level);
-            break;
+            थांबा;
 
-        case 5:                         /* L or S after possible relevant EN/AN */
+        स्थिती 5:                         /* L or S after possible relevant EN/AN */
             /* check if we had EN after R/AL */
-            if (pLevState->startL2EN >= 0) {
+            जर (pLevState->startL2EN >= 0) {
                 addPoint(pBiDi, pLevState->startL2EN, LRM_BEFORE);
             }
             pLevState->startL2EN=-1;  /* not within previous if since could also be -2 */
             /* check if we had any relevant EN/AN after R/AL */
-            pInsertPoints=&(pBiDi->insertPoints);
-            if ((pInsertPoints->capacity == 0) ||
-                (pInsertPoints->size <= pInsertPoints->confirmed))
+            p_घाला_Points=&(pBiDi->घाला_Points);
+            जर ((p_घाला_Points->capacity == 0) ||
+                (p_घाला_Points->size <= p_घाला_Points->confirmed))
             {
                 /* nothing, just clean up */
                 pLevState->lastStrongRTL=-1;
                 /* check if we have a pending conditional segment */
                 level=(*pImpTab)[oldStateSeq][IMPTABLEVELS_RES];
-                if ((level & 1) && (pLevState->startON > 0)) {  /* after ON */
+                जर ((level & 1) && (pLevState->startON > 0)) {  /* after ON */
                     start=pLevState->startON;   /* reset to basic run level */
                 }
-                if (_prop == DirProp_S)                /* add LRM before S */
+                जर (_prop == DirProp_S)                /* add LRM before S */
                 {
                     addPoint(pBiDi, start0, LRM_BEFORE);
-                    pInsertPoints->confirmed=pInsertPoints->size;
+                    p_घाला_Points->confirmed=p_घाला_Points->size;
                 }
-                break;
+                थांबा;
             }
             /* reset previous RTL cont to level for LTR text */
-            for (k=pLevState->lastStrongRTL+1; k<start0; k++)
+            साठी (k=pLevState->lastStrongRTL+1; k<start0; k++)
             {
                 /* reset odd level, leave runLevel+2 as is */
                 levels[k]=(levels[k] - 2) & ~1;
             }
             /* mark insert points as confirmed */
-            pInsertPoints->confirmed=pInsertPoints->size;
+            p_घाला_Points->confirmed=p_घाला_Points->size;
             pLevState->lastStrongRTL=-1;
-            if (_prop == DirProp_S)            /* add LRM before S */
+            जर (_prop == DirProp_S)            /* add LRM before S */
             {
                 addPoint(pBiDi, start0, LRM_BEFORE);
-                pInsertPoints->confirmed=pInsertPoints->size;
+                p_घाला_Points->confirmed=p_घाला_Points->size;
             }
-            break;
+            थांबा;
 
-        case 6:                         /* R/AL after possible relevant EN/AN */
+        स्थिती 6:                         /* R/AL after possible relevant EN/AN */
             /* just clean up */
-            pInsertPoints=&(pBiDi->insertPoints);
-            if (pInsertPoints->capacity > 0)
+            p_घाला_Points=&(pBiDi->घाला_Points);
+            जर (p_घाला_Points->capacity > 0)
                 /* remove all non confirmed insert points */
-                pInsertPoints->size=pInsertPoints->confirmed;
+                p_घाला_Points->size=p_घाला_Points->confirmed;
             pLevState->startON=-1;
             pLevState->startL2EN=-1;
             pLevState->lastStrongRTL=limit - 1;
-            break;
+            थांबा;
 
-        case 7:                         /* EN/AN after R/AL + possible cont */
+        स्थिती 7:                         /* EN/AN after R/AL + possible cont */
             /* check for real AN */
-            if ((_prop == DirProp_AN) && (pBiDi->dirProps[start0] == AN) &&
+            जर ((_prop == DirProp_AN) && (pBiDi->dirProps[start0] == AN) &&
                 (pBiDi->reorderingMode!=UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL))
             {
                 /* real AN */
-                if (pLevState->startL2EN == -1) /* if no relevant EN already found */
+                जर (pLevState->startL2EN == -1) /* if no relevant EN already found */
                 {
                     /* just note the righmost digit as a strong RTL */
                     pLevState->lastStrongRTL=limit - 1;
-                    break;
+                    थांबा;
                 }
-                if (pLevState->startL2EN >= 0)  /* after EN, no AN */
+                जर (pLevState->startL2EN >= 0)  /* after EN, no AN */
                 {
                     addPoint(pBiDi, pLevState->startL2EN, LRM_BEFORE);
                     pLevState->startL2EN=-2;
                 }
                 /* note AN */
                 addPoint(pBiDi, start0, LRM_BEFORE);
-                break;
+                थांबा;
             }
             /* if first EN/AN after R/AL */
-            if (pLevState->startL2EN == -1) {
+            जर (pLevState->startL2EN == -1) {
                 pLevState->startL2EN=start0;
             }
-            break;
+            थांबा;
 
-        case 8:                         /* note location of latest R/AL */
+        स्थिती 8:                         /* note location of latest R/AL */
             pLevState->lastStrongRTL=limit - 1;
             pLevState->startON=-1;
-            break;
+            थांबा;
 
-        case 9:                         /* L after R+ON/EN/AN */
+        स्थिती 9:                         /* L after R+ON/EN/AN */
             /* include possible adjacent number on the left */
-            for (k=start0-1; k>=0 && !(levels[k]&1); k--);
-            if(k>=0) {
+            साठी (k=start0-1; k>=0 && !(levels[k]&1); k--);
+            जर(k>=0) {
                 addPoint(pBiDi, k, RLM_BEFORE);             /* add RLM before */
-                pInsertPoints=&(pBiDi->insertPoints);
-                pInsertPoints->confirmed=pInsertPoints->size;   /* confirm it */
+                p_घाला_Points=&(pBiDi->घाला_Points);
+                p_घाला_Points->confirmed=p_घाला_Points->size;   /* confirm it */
             }
             pLevState->startON=start0;
-            break;
+            थांबा;
 
-        case 10:                        /* AN after L */
+        स्थिती 10:                        /* AN after L */
             /* AN numbers between L text on both sides may be trouble. */
             /* tentatively bracket with LRMs; will be confirmed if followed by L */
             addPoint(pBiDi, start0, LRM_BEFORE);    /* add LRM before */
             addPoint(pBiDi, start0, LRM_AFTER);     /* add LRM after  */
-            break;
+            थांबा;
 
-        case 11:                        /* R after L+ON/EN/AN */
+        स्थिती 11:                        /* R after L+ON/EN/AN */
             /* false alert, infirm LRMs around previous AN */
-            pInsertPoints=&(pBiDi->insertPoints);
-            pInsertPoints->size=pInsertPoints->confirmed;
-            if (_prop == DirProp_S)            /* add RLM before S */
+            p_घाला_Points=&(pBiDi->घाला_Points);
+            p_घाला_Points->size=p_घाला_Points->confirmed;
+            जर (_prop == DirProp_S)            /* add RLM before S */
             {
                 addPoint(pBiDi, start0, RLM_BEFORE);
-                pInsertPoints->confirmed=pInsertPoints->size;
+                p_घाला_Points->confirmed=p_घाला_Points->size;
             }
-            break;
+            थांबा;
 
-        case 12:                        /* L after L+ON/AN */
+        स्थिती 12:                        /* L after L+ON/AN */
             level=pLevState->runLevel + addLevel;
-            for(k=pLevState->startON; k<start0; k++) {
-                if (levels[k]<level)
+            साठी(k=pLevState->startON; k<start0; k++) {
+                जर (levels[k]<level)
                     levels[k]=level;
             }
-            pInsertPoints=&(pBiDi->insertPoints);
-            pInsertPoints->confirmed=pInsertPoints->size;   /* confirm inserts */
+            p_घाला_Points=&(pBiDi->घाला_Points);
+            p_घाला_Points->confirmed=p_घाला_Points->size;   /* confirm inserts */
             pLevState->startON=start0;
-            break;
+            थांबा;
 
-        case 13:                        /* L after L+ON+EN/AN/ON */
+        स्थिती 13:                        /* L after L+ON+EN/AN/ON */
             level=pLevState->runLevel;
-            for(k=start0-1; k>=pLevState->startON; k--) {
-                if(levels[k]==level+3) {
-                    while(levels[k]==level+3) {
+            साठी(k=start0-1; k>=pLevState->startON; k--) {
+                जर(levels[k]==level+3) {
+                    पर्यंत(levels[k]==level+3) {
                         levels[k--]-=2;
                     }
-                    while(levels[k]==level) {
+                    पर्यंत(levels[k]==level) {
                         k--;
                     }
                 }
-                if(levels[k]==level+2) {
+                जर(levels[k]==level+2) {
                     levels[k]=level;
-                    continue;
+                    सुरूठेवा;
                 }
                 levels[k]=level+1;
             }
-            break;
+            थांबा;
 
-        case 14:                        /* R after L+ON+EN/AN/ON */
+        स्थिती 14:                        /* R after L+ON+EN/AN/ON */
             level=pLevState->runLevel+1;
-            for(k=start0-1; k>=pLevState->startON; k--) {
-                if(levels[k]>level) {
+            साठी(k=start0-1; k>=pLevState->startON; k--) {
+                जर(levels[k]>level) {
                     levels[k]-=2;
                 }
             }
-            break;
+            थांबा;
 
-        default:                        /* we should never get here */
+        पूर्वनिर्धारित:                        /* we should never get here */
             UPRV_UNREACHABLE_EXIT;
         }
     }
-    if((addLevel) || (start < start0)) {
+    जर((addLevel) || (start < start0)) {
         level=pLevState->runLevel + addLevel;
-        if(start>=pLevState->runStart) {
-            for(k=start; k<limit; k++) {
+        जर(start>=pLevState->runStart) {
+            साठी(k=start; k<limit; k++) {
                 levels[k]=level;
             }
-        } else {
+        } अन्यथा {
             setLevelsOutsideIsolates(pBiDi, start, limit, level);
         }
     }
@@ -2075,66 +2075,66 @@ processPropertySeq(UBiDi *pBiDi, LevState *pLevState, uint8_t _prop,
  * Returns the directionality of the last strong character at the end of the prologue, if any.
  * Requires prologue!=null.
  */
-static DirProp
+स्थिर DirProp
 lastL_R_AL(UBiDi *pBiDi) {
-    const char16_t *text=pBiDi->prologue;
+    स्थिरांक char16_t *text=pBiDi->prologue;
     int32_t length=pBiDi->proLength;
     int32_t i;
     UChar32 uchar;
     DirProp dirProp;
-    for(i=length; i>0; ) {
+    साठी(i=length; i>0; ) {
         /* i is decremented by U16_PREV */
         U16_PREV(text, 0, i, uchar);
         dirProp = static_cast<DirProp>(ubidi_getCustomizedClass(pBiDi, uchar));
-        if(dirProp==L) {
-            return DirProp_L;
+        जर(dirProp==L) {
+            परत DirProp_L;
         }
-        if(dirProp==R || dirProp==AL) {
-            return DirProp_R;
+        जर(dirProp==R || dirProp==AL) {
+            परत DirProp_R;
         }
-        if(dirProp==B) {
-            return DirProp_ON;
+        जर(dirProp==B) {
+            परत DirProp_ON;
         }
     }
-    return DirProp_ON;
+    परत DirProp_ON;
 }
 
 /**
  * Returns the directionality of the first strong character, or digit, in the epilogue, if any.
  * Requires epilogue!=null.
  */
-static DirProp
+स्थिर DirProp
 firstL_R_AL_EN_AN(UBiDi *pBiDi) {
-    const char16_t *text=pBiDi->epilogue;
+    स्थिरांक char16_t *text=pBiDi->epilogue;
     int32_t length=pBiDi->epiLength;
     int32_t i;
     UChar32 uchar;
     DirProp dirProp;
-    for(i=0; i<length; ) {
+    साठी(i=0; i<length; ) {
         /* i is incremented by U16_NEXT */
         U16_NEXT(text, i, length, uchar);
         dirProp = static_cast<DirProp>(ubidi_getCustomizedClass(pBiDi, uchar));
-        if(dirProp==L) {
-            return DirProp_L;
+        जर(dirProp==L) {
+            परत DirProp_L;
         }
-        if(dirProp==R || dirProp==AL) {
-            return DirProp_R;
+        जर(dirProp==R || dirProp==AL) {
+            परत DirProp_R;
         }
-        if(dirProp==EN) {
-            return DirProp_EN;
+        जर(dirProp==EN) {
+            परत DirProp_EN;
         }
-        if(dirProp==AN) {
-            return DirProp_AN;
+        जर(dirProp==AN) {
+            परत DirProp_AN;
         }
     }
-    return DirProp_ON;
+    परत DirProp_ON;
 }
 
-static void
+स्थिर शून्य
 resolveImplicitLevels(UBiDi *pBiDi,
                       int32_t start, int32_t limit,
                       DirProp sor, DirProp eor) {
-    const DirProp *dirProps=pBiDi->dirProps;
+    स्थिरांक DirProp *dirProps=pBiDi->dirProps;
     DirProp dirProp;
     LevState levState;
     int32_t i, start1, start2;
@@ -2161,69 +2161,69 @@ resolveImplicitLevels(UBiDi *pBiDi,
     levState.lastStrongRTL=-1;          /* used for INVERSE_LIKE_DIRECT_WITH_MARKS */
     levState.runStart=start;
     levState.runLevel=pBiDi->levels[start];
-    levState.pImpTab = static_cast<const ImpTab*>(((pBiDi->pImpTabPair)->pImpTab)[levState.runLevel & 1]);
-    levState.pImpAct = static_cast<const ImpAct*>(((pBiDi->pImpTabPair)->pImpAct)[levState.runLevel & 1]);
-    if(start==0 && pBiDi->proLength>0) {
+    levState.pImpTab = static_cast<स्थिरांक ImpTab*>(((pBiDi->pImpTabPair)->pImpTab)[levState.runLevel & 1]);
+    levState.pImpAct = static_cast<स्थिरांक ImpAct*>(((pBiDi->pImpTabPair)->pImpAct)[levState.runLevel & 1]);
+    जर(start==0 && pBiDi->proLength>0) {
         DirProp lastStrong=lastL_R_AL(pBiDi);
-        if(lastStrong!=DirProp_ON) {
+        जर(lastStrong!=DirProp_ON) {
             sor=lastStrong;
         }
     }
     /* The isolates[] entries contain enough information to
        resume the bidi algorithm in the same state as it was
        when it was interrupted by an isolate sequence. */
-    if(dirProps[start]==PDI  && pBiDi->isolateCount >= 0) {
-        levState.startON=pBiDi->isolates[pBiDi->isolateCount].startON;
-        start1=pBiDi->isolates[pBiDi->isolateCount].start1;
-        stateImp=pBiDi->isolates[pBiDi->isolateCount].stateImp;
-        levState.state=pBiDi->isolates[pBiDi->isolateCount].state;
-        pBiDi->isolateCount--;
-    } else {
+    जर(dirProps[start]==PDI  && pBiDi->isolate_मोजणी >= 0) {
+        levState.startON=pBiDi->isolates[pBiDi->isolate_मोजणी].startON;
+        start1=pBiDi->isolates[pBiDi->isolate_मोजणी].start1;
+        stateImp=pBiDi->isolates[pBiDi->isolate_मोजणी].stateImp;
+        levState.state=pBiDi->isolates[pBiDi->isolate_मोजणी].state;
+        pBiDi->isolate_मोजणी--;
+    } अन्यथा {
         levState.startON=-1;
         start1=start;
-        if(dirProps[start]==NSM)
+        जर(dirProps[start]==NSM)
             stateImp = 1 + sor;
-        else
+        अन्यथा
             stateImp=0;
         levState.state=0;
         processPropertySeq(pBiDi, &levState, sor, start, start);
     }
     start2=start;                       /* to make Java compiler happy */
 
-    for(i=start; i<=limit; i++) {
-        if(i>=limit) {
+    साठी(i=start; i<=limit; i++) {
+        जर(i>=limit) {
             int32_t k;
-            for(k=limit-1; k>start&&(DIRPROP_FLAG(dirProps[k])&MASK_BN_EXPLICIT); k--);
+            साठी(k=limit-1; k>start&&(DIRPROP_FLAG(dirProps[k])&MASK_BN_EXPLICIT); k--);
             dirProp=dirProps[k];
-            if(dirProp==LRI || dirProp==RLI)
-                break;      /* no forced closing for sequence ending with LRI/RLI */
+            जर(dirProp==LRI || dirProp==RLI)
+                थांबा;      /* no forced closing for sequence ending with LRI/RLI */
             gprop=eor;
-        } else {
+        } अन्यथा {
             DirProp prop, prop1;
             prop=dirProps[i];
-            if(prop==B) {
-                pBiDi->isolateCount=-1; /* current isolates stack entry == none */
+            जर(prop==B) {
+                pBiDi->isolate_मोजणी=-1; /* current isolates stack entry == none */
             }
-            if(inverseRTL) {
-                if(prop==AL) {
+            जर(inverseRTL) {
+                जर(prop==AL) {
                     /* AL before EN does not make it AN */
                     prop=R;
-                } else if(prop==EN) {
-                    if(nextStrongPos<=i) {
+                } अन्यथा जर(prop==EN) {
+                    जर(nextStrongPos<=i) {
                         /* look for next strong char (L/R/AL) */
                         int32_t j;
                         nextStrongProp=R;   /* set default */
                         nextStrongPos=limit;
-                        for(j=i+1; j<limit; j++) {
+                        साठी(j=i+1; j<limit; j++) {
                             prop1=dirProps[j];
-                            if(prop1==L || prop1==R || prop1==AL) {
+                            जर(prop1==L || prop1==R || prop1==AL) {
                                 nextStrongProp=prop1;
                                 nextStrongPos=j;
-                                break;
+                                थांबा;
                             }
                         }
                     }
-                    if(nextStrongProp==AL) {
+                    जर(nextStrongProp==AL) {
                         prop=AN;
                     }
                 }
@@ -2234,55 +2234,55 @@ resolveImplicitLevels(UBiDi *pBiDi,
         cell=impTabProps[oldStateImp][gprop];
         stateImp=GET_STATEPROPS(cell);      /* isolate the new state */
         actionImp=GET_ACTIONPROPS(cell);    /* isolate the action */
-        if((i==limit) && (actionImp==0)) {
+        जर((i==limit) && (actionImp==0)) {
             /* there is an unprocessed sequence if its property == eor   */
             actionImp=1;                    /* process the last sequence */
         }
-        if(actionImp) {
+        जर(actionImp) {
             resProp=impTabProps[oldStateImp][IMPTABPROPS_RES];
-            switch(actionImp) {
-            case 1:             /* process current seq1, init new seq1 */
+            निवड(actionImp) {
+            स्थिती 1:             /* process current seq1, init new seq1 */
                 processPropertySeq(pBiDi, &levState, resProp, start1, i);
                 start1=i;
-                break;
-            case 2:             /* init new seq2 */
+                थांबा;
+            स्थिती 2:             /* init new seq2 */
                 start2=i;
-                break;
-            case 3:             /* process seq1, process seq2, init new seq1 */
+                थांबा;
+            स्थिती 3:             /* process seq1, process seq2, init new seq1 */
                 processPropertySeq(pBiDi, &levState, resProp, start1, start2);
                 processPropertySeq(pBiDi, &levState, DirProp_ON, start2, i);
                 start1=i;
-                break;
-            case 4:             /* process seq1, set seq1=seq2, init new seq2 */
+                थांबा;
+            स्थिती 4:             /* process seq1, set seq1=seq2, init new seq2 */
                 processPropertySeq(pBiDi, &levState, resProp, start1, start2);
                 start1=start2;
                 start2=i;
-                break;
-            default:            /* we should never get here */
+                थांबा;
+            पूर्वनिर्धारित:            /* we should never get here */
                 UPRV_UNREACHABLE_EXIT;
             }
         }
     }
 
     /* flush possible pending sequence, e.g. ON */
-    if(limit==pBiDi->length && pBiDi->epiLength>0) {
+    जर(limit==pBiDi->length && pBiDi->epiLength>0) {
         DirProp firstStrong=firstL_R_AL_EN_AN(pBiDi);
-        if(firstStrong!=DirProp_ON) {
+        जर(firstStrong!=DirProp_ON) {
             eor=firstStrong;
         }
     }
 
     /* look for the last char not a BN or LRE/RLE/LRO/RLO/PDF */
-    for(i=limit-1; i>start&&(DIRPROP_FLAG(dirProps[i])&MASK_BN_EXPLICIT); i--);
+    साठी(i=limit-1; i>start&&(DIRPROP_FLAG(dirProps[i])&MASK_BN_EXPLICIT); i--);
     dirProp=dirProps[i];
-    if((dirProp==LRI || dirProp==RLI) && limit<pBiDi->length) {
-        pBiDi->isolateCount++;
-        pBiDi->isolates[pBiDi->isolateCount].stateImp=stateImp;
-        pBiDi->isolates[pBiDi->isolateCount].state=levState.state;
-        pBiDi->isolates[pBiDi->isolateCount].start1=start1;
-        pBiDi->isolates[pBiDi->isolateCount].startON=levState.startON;
+    जर((dirProp==LRI || dirProp==RLI) && limit<pBiDi->length) {
+        pBiDi->isolate_मोजणी++;
+        pBiDi->isolates[pBiDi->isolate_मोजणी].stateImp=stateImp;
+        pBiDi->isolates[pBiDi->isolate_मोजणी].state=levState.state;
+        pBiDi->isolates[pBiDi->isolate_मोजणी].start1=start1;
+        pBiDi->isolates[pBiDi->isolate_मोजणी].startON=levState.startON;
     }
-    else
+    अन्यथा
         processPropertySeq(pBiDi, &levState, eor, limit, limit);
 }
 
@@ -2294,73 +2294,73 @@ resolveImplicitLevels(UBiDi *pBiDi,
  * explicit embedding types that are supposed to have been removed
  * from the paragraph in (X9).
  */
-static void
+स्थिर शून्य
 adjustWSLevels(UBiDi *pBiDi) {
-    const DirProp *dirProps=pBiDi->dirProps;
+    स्थिरांक DirProp *dirProps=pBiDi->dirProps;
     UBiDiLevel *levels=pBiDi->levels;
     int32_t i;
 
-    if(pBiDi->flags&MASK_WS) {
+    जर(pBiDi->flags&MASK_WS) {
         UBool orderParagraphsLTR=pBiDi->orderParagraphsLTR;
         Flags flag;
 
         i=pBiDi->trailingWSStart;
-        while(i>0) {
+        पर्यंत(i>0) {
             /* reset a sequence of WS/BN before eop and B/S to the paragraph paraLevel */
-            while(i>0 && (flag=DIRPROP_FLAG(dirProps[--i]))&MASK_WS) {
-                if(orderParagraphsLTR&&(flag&DIRPROP_FLAG(B))) {
+            पर्यंत(i>0 && (flag=DIRPROP_FLAG(dirProps[--i]))&MASK_WS) {
+                जर(orderParagraphsLTR&&(flag&DIRPROP_FLAG(B))) {
                     levels[i]=0;
-                } else {
+                } अन्यथा {
                     levels[i]=GET_PARALEVEL(pBiDi, i);
                 }
             }
 
             /* reset BN to the next character's paraLevel until B/S, which restarts above loop */
             /* here, i+1 is guaranteed to be <length */
-            while(i>0) {
+            पर्यंत(i>0) {
                 flag=DIRPROP_FLAG(dirProps[--i]);
-                if(flag&MASK_BN_EXPLICIT) {
+                जर(flag&MASK_BN_EXPLICIT) {
                     levels[i]=levels[i+1];
-                } else if(orderParagraphsLTR&&(flag&DIRPROP_FLAG(B))) {
+                } अन्यथा जर(orderParagraphsLTR&&(flag&DIRPROP_FLAG(B))) {
                     levels[i]=0;
-                    break;
-                } else if(flag&MASK_B_S) {
+                    थांबा;
+                } अन्यथा जर(flag&MASK_B_S) {
                     levels[i]=GET_PARALEVEL(pBiDi, i);
-                    break;
+                    थांबा;
                 }
             }
         }
     }
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 ubidi_setContext(UBiDi *pBiDi,
-                 const char16_t *prologue, int32_t proLength,
-                 const char16_t *epilogue, int32_t epiLength,
+                 स्थिरांक char16_t *prologue, int32_t proLength,
+                 स्थिरांक char16_t *epilogue, int32_t epiLength,
                  UErrorCode *pErrorCode) {
     /* check the argument values */
     RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(pErrorCode);
-    if(pBiDi==nullptr || proLength<-1 || epiLength<-1 ||
+    जर(pBiDi==nullptr || proLength<-1 || epiLength<-1 ||
        (prologue==nullptr && proLength!=0) || (epilogue==nullptr && epiLength!=0)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        परत;
     }
 
-    if(proLength==-1) {
+    जर(proLength==-1) {
         pBiDi->proLength=u_strlen(prologue);
-    } else {
+    } अन्यथा {
         pBiDi->proLength=proLength;
     }
-    if(epiLength==-1) {
+    जर(epiLength==-1) {
         pBiDi->epiLength=u_strlen(epilogue);
-    } else {
+    } अन्यथा {
         pBiDi->epiLength=epiLength;
     }
     pBiDi->prologue=prologue;
     pBiDi->epilogue=epilogue;
 }
 
-static void
+स्थिर शून्य
 setParaSuccess(UBiDi *pBiDi) {
     pBiDi->proLength=0;                 /* forget the last context */
     pBiDi->epiLength=0;
@@ -2370,53 +2370,53 @@ setParaSuccess(UBiDi *pBiDi) {
 #define BIDI_MIN(x, y)   ((x)<(y) ? (x) : (y))
 #define BIDI_ABS(x)      ((x)>=0  ? (x) : (-(x)))
 
-static void
-setParaRunsOnly(UBiDi *pBiDi, const char16_t *text, int32_t length,
+स्थिर शून्य
+setParaRunsOnly(UBiDi *pBiDi, स्थिरांक char16_t *text, int32_t length,
                 UBiDiLevel paraLevel, UErrorCode *pErrorCode) {
     int32_t *runsOnlyMemory = nullptr;
     int32_t *visualMap;
     char16_t *visualText;
     int32_t saveLength, saveTrailingWSStart;
-    const UBiDiLevel *levels;
+    स्थिरांक UBiDiLevel *levels;
     UBiDiLevel *saveLevels;
     UBiDiDirection saveDirection;
     UBool saveMayAllocateText;
     Run *runs;
     int32_t visualLength, i, j, visualStart, logicalStart,
-            runCount, runLength, addedRuns, insertRemove,
+            run_मोजणी, runLength, addedRuns, घाला_Remove,
             start, limit, step, indexOddBit, logicalPos,
             index0, index1;
     uint32_t saveOptions;
 
     pBiDi->reorderingMode=UBIDI_REORDER_DEFAULT;
-    if(length==0) {
+    जर(length==0) {
         ubidi_setPara(pBiDi, text, length, paraLevel, nullptr, pErrorCode);
-        goto cleanup3;
+        जा cleanup3;
     }
     /* obtain memory for mapping table and visual text */
-    runsOnlyMemory=static_cast<int32_t *>(uprv_malloc(length*(sizeof(int32_t)+sizeof(char16_t)+sizeof(UBiDiLevel))));
-    if(runsOnlyMemory==nullptr) {
+    runsOnlyMemory=static_cast<int32_t *>(uprv_malloc(length*(आकार(int32_t)+आकार(char16_t)+आकार(UBiDiLevel))));
+    जर(runsOnlyMemory==nullptr) {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        goto cleanup3;
+        जा cleanup3;
     }
     visualMap=runsOnlyMemory;
     visualText = reinterpret_cast<char16_t*>(&visualMap[length]);
     saveLevels = reinterpret_cast<UBiDiLevel*>(&visualText[length]);
     saveOptions=pBiDi->reorderingOptions;
-    if(saveOptions & UBIDI_OPTION_INSERT_MARKS) {
-        pBiDi->reorderingOptions&=~UBIDI_OPTION_INSERT_MARKS;
+    जर(saveOptions & UBIDI_OPTION_घाला_MARKS) {
+        pBiDi->reorderingOptions&=~UBIDI_OPTION_घाला_MARKS;
         pBiDi->reorderingOptions|=UBIDI_OPTION_REMOVE_CONTROLS;
     }
     paraLevel&=1;                       /* accept only 0 or 1 */
     ubidi_setPara(pBiDi, text, length, paraLevel, nullptr, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        goto cleanup3;
+    जर(U_FAILURE(*pErrorCode)) {
+        जा cleanup3;
     }
     /* we cannot access directly pBiDi->levels since it is not yet set if
      * direction is not MIXED
      */
     levels=ubidi_getLevels(pBiDi, pErrorCode);
-    uprv_memcpy(saveLevels, levels, (size_t)pBiDi->length*sizeof(UBiDiLevel));
+    uprv_memcpy(saveLevels, levels, (माप_प्रकार)pBiDi->length*आकार(UBiDiLevel));
     saveTrailingWSStart=pBiDi->trailingWSStart;
     saveLength=pBiDi->length;
     saveDirection=pBiDi->direction;
@@ -2437,8 +2437,8 @@ setParaRunsOnly(UBiDi *pBiDi, const char16_t *text, int32_t length,
     visualLength=ubidi_writeReordered(pBiDi, visualText, length,
                                       (saveOptions & UBIDI_DO_MIRRORING) | UBIDI_INTERNAL_RUNS_ONLY, pErrorCode);
     ubidi_getVisualMap(pBiDi, visualMap, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        goto cleanup2;
+    जर(U_FAILURE(*pErrorCode)) {
+        जा cleanup2;
     }
     pBiDi->reorderingOptions=saveOptions;
 
@@ -2452,87 +2452,87 @@ setParaRunsOnly(UBiDi *pBiDi, const char16_t *text, int32_t length,
      * ubidi_setpara(), and will restore it afterwards.
      */
     saveMayAllocateText=pBiDi->mayAllocateText;
-    pBiDi->mayAllocateText=false;
+    pBiDi->mayAllocateText=असत्य;
     ubidi_setPara(pBiDi, visualText, visualLength, paraLevel, nullptr, pErrorCode);
     pBiDi->mayAllocateText=saveMayAllocateText;
     ubidi_getRuns(pBiDi, pErrorCode);
-    if(U_FAILURE(*pErrorCode)) {
-        goto cleanup1;
+    जर(U_FAILURE(*pErrorCode)) {
+        जा cleanup1;
     }
     /* check if some runs must be split, count how many splits */
     addedRuns=0;
-    runCount=pBiDi->runCount;
+    run_मोजणी=pBiDi->run_मोजणी;
     runs=pBiDi->runs;
     visualStart=0;
-    for(i=0; i<runCount; i++, visualStart+=runLength) {
+    साठी(i=0; i<run_मोजणी; i++, visualStart+=runLength) {
         runLength=runs[i].visualLimit-visualStart;
-        if(runLength<2) {
-            continue;
+        जर(runLength<2) {
+            सुरूठेवा;
         }
         logicalStart=GET_INDEX(runs[i].logicalStart);
-        for(j=logicalStart+1; j<logicalStart+runLength; j++) {
+        साठी(j=logicalStart+1; j<logicalStart+runLength; j++) {
             index0=visualMap[j];
             index1=visualMap[j-1];
-            if((BIDI_ABS(index0-index1)!=1) || (saveLevels[index0]!=saveLevels[index1])) {
+            जर((BIDI_ABS(index0-index1)!=1) || (saveLevels[index0]!=saveLevels[index1])) {
                 addedRuns++;
             }
         }
     }
-    if(addedRuns) {
-        if(getRunsMemory(pBiDi, runCount+addedRuns)) {
-            if(runCount==1) {
+    जर(addedRuns) {
+        जर(getRunsMemory(pBiDi, run_मोजणी+addedRuns)) {
+            जर(run_मोजणी==1) {
                 /* because we switch from UBiDi.simpleRuns to UBiDi.runs */
                 pBiDi->runsMemory[0]=runs[0];
             }
             runs=pBiDi->runs=pBiDi->runsMemory;
-            pBiDi->runCount+=addedRuns;
-        } else {
+            pBiDi->run_मोजणी+=addedRuns;
+        } अन्यथा {
             *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-            goto cleanup1;
+            जा cleanup1;
         }
     }
     /* split runs which are not consecutive in source text */
-    for(i=runCount-1; i>=0; i--) {
+    साठी(i=run_मोजणी-1; i>=0; i--) {
         runLength= i==0 ? runs[0].visualLimit :
                           runs[i].visualLimit-runs[i-1].visualLimit;
         logicalStart=runs[i].logicalStart;
         indexOddBit=GET_ODD_BIT(logicalStart);
         logicalStart=GET_INDEX(logicalStart);
-        if(runLength<2) {
-            if(addedRuns) {
+        जर(runLength<2) {
+            जर(addedRuns) {
                 runs[i+addedRuns]=runs[i];
             }
             logicalPos=visualMap[logicalStart];
             runs[i+addedRuns].logicalStart=MAKE_INDEX_ODD_PAIR(logicalPos,
                                             saveLevels[logicalPos]^indexOddBit);
-            continue;
+            सुरूठेवा;
         }
-        if(indexOddBit) {
+        जर(indexOddBit) {
             start=logicalStart;
             limit=logicalStart+runLength-1;
             step=1;
-        } else {
+        } अन्यथा {
             start=logicalStart+runLength-1;
             limit=logicalStart;
             step=-1;
         }
-        for(j=start; j!=limit; j+=step) {
+        साठी(j=start; j!=limit; j+=step) {
             index0=visualMap[j];
             index1=visualMap[j+step];
-            if((BIDI_ABS(index0-index1)!=1) || (saveLevels[index0]!=saveLevels[index1])) {
+            जर((BIDI_ABS(index0-index1)!=1) || (saveLevels[index0]!=saveLevels[index1])) {
                 logicalPos=BIDI_MIN(visualMap[start], index0);
                 runs[i+addedRuns].logicalStart=MAKE_INDEX_ODD_PAIR(logicalPos,
                                             saveLevels[logicalPos]^indexOddBit);
                 runs[i+addedRuns].visualLimit=runs[i].visualLimit;
                 runs[i].visualLimit-=BIDI_ABS(j-start)+1;
-                insertRemove=runs[i].insertRemove&(LRM_AFTER|RLM_AFTER);
-                runs[i+addedRuns].insertRemove=insertRemove;
-                runs[i].insertRemove&=~insertRemove;
+                घाला_Remove=runs[i].घाला_Remove&(LRM_AFTER|RLM_AFTER);
+                runs[i+addedRuns].घाला_Remove=घाला_Remove;
+                runs[i].घाला_Remove&=~घाला_Remove;
                 start=j+step;
                 addedRuns--;
             }
         }
-        if(addedRuns) {
+        जर(addedRuns) {
             runs[i+addedRuns]=runs[i];
         }
         logicalPos=BIDI_MIN(visualMap[start], visualMap[limit]);
@@ -2550,12 +2550,12 @@ setParaRunsOnly(UBiDi *pBiDi, const char16_t *text, int32_t length,
     pBiDi->originalLength=length;
     pBiDi->direction=saveDirection;
     /* the saved levels should never excess levelsSize, but we check anyway */
-    if(saveLength>pBiDi->levelsSize) {
+    जर(saveLength>pBiDi->levelsSize) {
         saveLength=pBiDi->levelsSize;
     }
-    uprv_memcpy(pBiDi->levels, saveLevels, (size_t)saveLength*sizeof(UBiDiLevel));
+    uprv_memcpy(pBiDi->levels, saveLevels, (माप_प्रकार)saveLength*आकार(UBiDiLevel));
     pBiDi->trailingWSStart=saveTrailingWSStart;
-    if(pBiDi->runCount>1) {
+    जर(pBiDi->run_मोजणी>1) {
         pBiDi->direction=UBIDI_MIXED;
     }
   cleanup3:
@@ -2567,8 +2567,8 @@ setParaRunsOnly(UBiDi *pBiDi, const char16_t *text, int32_t length,
 
 /* ubidi_setPara ------------------------------------------------------------ */
 
-U_CAPI void U_EXPORT2
-ubidi_setPara(UBiDi *pBiDi, const char16_t *text, int32_t length,
+U_CAPI शून्य U_EXPORT2
+ubidi_setPara(UBiDi *pBiDi, स्थिरांक char16_t *text, int32_t length,
               UBiDiLevel paraLevel, UBiDiLevel *embeddingLevels,
               UErrorCode *pErrorCode) {
     UBiDiDirection direction;
@@ -2576,20 +2576,20 @@ ubidi_setPara(UBiDi *pBiDi, const char16_t *text, int32_t length,
 
     /* check the argument values */
     RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(pErrorCode);
-    if(pBiDi==nullptr || text==nullptr || length<-1 ||
+    जर(pBiDi==nullptr || text==nullptr || length<-1 ||
        (paraLevel>UBIDI_MAX_EXPLICIT_LEVEL && paraLevel<UBIDI_DEFAULT_LTR)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        परत;
     }
 
-    if(length==-1) {
+    जर(length==-1) {
         length=u_strlen(text);
     }
 
     /* special treatment for RUNS_ONLY mode */
-    if(pBiDi->reorderingMode==UBIDI_REORDER_RUNS_ONLY) {
+    जर(pBiDi->reorderingMode==UBIDI_REORDER_RUNS_ONLY) {
         setParaRunsOnly(pBiDi, text, length, paraLevel, pErrorCode);
-        return;
+        परत;
     }
 
     /* initialize the UBiDi structure */
@@ -2598,42 +2598,42 @@ ubidi_setPara(UBiDi *pBiDi, const char16_t *text, int32_t length,
     pBiDi->length=pBiDi->originalLength=pBiDi->resultLength=length;
     pBiDi->paraLevel=paraLevel;
     pBiDi->direction=(UBiDiDirection)(paraLevel&1);
-    pBiDi->paraCount=1;
+    pBiDi->para_मोजणी=1;
 
     pBiDi->dirProps=nullptr;
     pBiDi->levels=nullptr;
     pBiDi->runs=nullptr;
-    pBiDi->insertPoints.size=0;         /* clean up from last call */
-    pBiDi->insertPoints.confirmed=0;    /* clean up from last call */
+    pBiDi->घाला_Points.size=0;         /* clean up from last call */
+    pBiDi->घाला_Points.confirmed=0;    /* clean up from last call */
 
     /*
      * Save the original paraLevel if contextual; otherwise, set to 0.
      */
     pBiDi->defaultParaLevel=IS_DEFAULT_LEVEL(paraLevel);
 
-    if(length==0) {
+    जर(length==0) {
         /*
          * For an empty paragraph, create a UBiDi object with the paraLevel and
          * the flags and the direction set but without allocating zero-length arrays.
          * There is nothing more to do.
          */
-        if(IS_DEFAULT_LEVEL(paraLevel)) {
+        जर(IS_DEFAULT_LEVEL(paraLevel)) {
             pBiDi->paraLevel&=1;
             pBiDi->defaultParaLevel=0;
         }
         pBiDi->flags=DIRPROP_FLAG_LR(paraLevel);
-        pBiDi->runCount=0;
-        pBiDi->paraCount=0;
+        pBiDi->run_मोजणी=0;
+        pBiDi->para_मोजणी=0;
         setParaSuccess(pBiDi);          /* mark successful setPara */
-        return;
+        परत;
     }
 
-    pBiDi->runCount=-1;
+    pBiDi->run_मोजणी=-1;
 
     /* allocate paras memory */
-    if(pBiDi->parasMemory)
+    जर(pBiDi->parasMemory)
         pBiDi->paras=pBiDi->parasMemory;
-    else
+    अन्यथा
         pBiDi->paras=pBiDi->simpleParas;
 
     /*
@@ -2641,15 +2641,15 @@ ubidi_setPara(UBiDi *pBiDi, const char16_t *text, int32_t length,
      * the flags bit-set, and
      * determine the paragraph level if necessary.
      */
-    if(getDirPropsMemory(pBiDi, length)) {
+    जर(getDirPropsMemory(pBiDi, length)) {
         pBiDi->dirProps=pBiDi->dirPropsMemory;
-        if(!getDirProps(pBiDi)) {
+        जर(!getDirProps(pBiDi)) {
             *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+            परत;
         }
-    } else {
+    } अन्यथा {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return;
+        परत;
     }
     dirProps=pBiDi->dirProps;
     /* the processed length may have changed if UBIDI_OPTION_STREAMING */
@@ -2657,89 +2657,89 @@ ubidi_setPara(UBiDi *pBiDi, const char16_t *text, int32_t length,
     pBiDi->trailingWSStart=length;  /* the levels[] will reflect the WS run */
 
     /* are explicit levels specified? */
-    if(embeddingLevels==nullptr) {
+    जर(embeddingLevels==nullptr) {
         /* no: determine explicit levels according to the (Xn) rules */\
-        if(getLevelsMemory(pBiDi, length)) {
+        जर(getLevelsMemory(pBiDi, length)) {
             pBiDi->levels=pBiDi->levelsMemory;
             direction=resolveExplicitLevels(pBiDi, pErrorCode);
-            if(U_FAILURE(*pErrorCode)) {
-                return;
+            जर(U_FAILURE(*pErrorCode)) {
+                परत;
             }
-        } else {
+        } अन्यथा {
             *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-            return;
+            परत;
         }
-    } else {
+    } अन्यथा {
         /* set BN for all explicit codes, check that all levels are 0 or paraLevel..UBIDI_MAX_EXPLICIT_LEVEL */
         pBiDi->levels=embeddingLevels;
         direction=checkExplicitLevels(pBiDi, pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
-            return;
+        जर(U_FAILURE(*pErrorCode)) {
+            परत;
         }
     }
 
     /* allocate isolate memory */
-    if(pBiDi->isolateCount<=SIMPLE_ISOLATES_COUNT)
+    जर(pBiDi->isolate_मोजणी<=SIMPLE_ISOLATES_मोजणी)
         pBiDi->isolates=pBiDi->simpleIsolates;
-    else
-        if((int32_t)(pBiDi->isolateCount*sizeof(Isolate))<=pBiDi->isolatesSize)
+    अन्यथा
+        जर((int32_t)(pBiDi->isolate_मोजणी*आकार(Isolate))<=pBiDi->isolatesSize)
             pBiDi->isolates=pBiDi->isolatesMemory;
-        else {
-            if(getInitialIsolatesMemory(pBiDi, pBiDi->isolateCount)) {
+        अन्यथा {
+            जर(getInitialIsolatesMemory(pBiDi, pBiDi->isolate_मोजणी)) {
                 pBiDi->isolates=pBiDi->isolatesMemory;
-            } else {
+            } अन्यथा {
                 *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-                return;
+                परत;
             }
         }
-    pBiDi->isolateCount=-1;             /* current isolates stack entry == none */
+    pBiDi->isolate_मोजणी=-1;             /* current isolates stack entry == none */
 
     /*
      * The steps after (X9) in the UBiDi algorithm are performed only if
      * the paragraph text has mixed directionality!
      */
     pBiDi->direction=direction;
-    switch(direction) {
-    case UBIDI_LTR:
+    निवड(direction) {
+    स्थिती UBIDI_LTR:
         /* all levels are implicitly at paraLevel (important for ubidi_getLevels()) */
         pBiDi->trailingWSStart=0;
-        break;
-    case UBIDI_RTL:
+        थांबा;
+    स्थिती UBIDI_RTL:
         /* all levels are implicitly at paraLevel (important for ubidi_getLevels()) */
         pBiDi->trailingWSStart=0;
-        break;
-    default:
+        थांबा;
+    पूर्वनिर्धारित:
         /*
          *  Choose the right implicit state table
          */
-        switch(pBiDi->reorderingMode) {
-        case UBIDI_REORDER_DEFAULT:
+        निवड(pBiDi->reorderingMode) {
+        स्थिती UBIDI_REORDER_DEFAULT:
             pBiDi->pImpTabPair=&impTab_DEFAULT;
-            break;
-        case UBIDI_REORDER_NUMBERS_SPECIAL:
+            थांबा;
+        स्थिती UBIDI_REORDER_NUMBERS_SPECIAL:
             pBiDi->pImpTabPair=&impTab_NUMBERS_SPECIAL;
-            break;
-        case UBIDI_REORDER_GROUP_NUMBERS_WITH_R:
+            थांबा;
+        स्थिती UBIDI_REORDER_GROUP_NUMBERS_WITH_R:
             pBiDi->pImpTabPair=&impTab_GROUP_NUMBERS_WITH_R;
-            break;
-        case UBIDI_REORDER_INVERSE_NUMBERS_AS_L:
+            थांबा;
+        स्थिती UBIDI_REORDER_INVERSE_NUMBERS_AS_L:
             pBiDi->pImpTabPair=&impTab_INVERSE_NUMBERS_AS_L;
-            break;
-        case UBIDI_REORDER_INVERSE_LIKE_DIRECT:
-            if (pBiDi->reorderingOptions & UBIDI_OPTION_INSERT_MARKS) {
+            थांबा;
+        स्थिती UBIDI_REORDER_INVERSE_LIKE_DIRECT:
+            जर (pBiDi->reorderingOptions & UBIDI_OPTION_घाला_MARKS) {
                 pBiDi->pImpTabPair=&impTab_INVERSE_LIKE_DIRECT_WITH_MARKS;
-            } else {
+            } अन्यथा {
                 pBiDi->pImpTabPair=&impTab_INVERSE_LIKE_DIRECT;
             }
-            break;
-        case UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL:
-            if (pBiDi->reorderingOptions & UBIDI_OPTION_INSERT_MARKS) {
+            थांबा;
+        स्थिती UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL:
+            जर (pBiDi->reorderingOptions & UBIDI_OPTION_घाला_MARKS) {
                 pBiDi->pImpTabPair=&impTab_INVERSE_FOR_NUMBERS_SPECIAL_WITH_MARKS;
-            } else {
+            } अन्यथा {
                 pBiDi->pImpTabPair=&impTab_INVERSE_FOR_NUMBERS_SPECIAL;
             }
-            break;
-        default:
+            थांबा;
+        पूर्वनिर्धारित:
             /* we should never get here */
             UPRV_UNREACHABLE_EXIT;
         }
@@ -2754,12 +2754,12 @@ ubidi_setPara(UBiDi *pBiDi, const char16_t *text, int32_t length,
          * Examples for "insignificant" ones are empty embeddings
          * LRE-PDF, LRE-RLE-PDF-PDF, etc.
          */
-        if(embeddingLevels==nullptr && pBiDi->paraCount<=1 &&
+        जर(embeddingLevels==nullptr && pBiDi->para_मोजणी<=1 &&
                                    !(pBiDi->flags&DIRPROP_FLAG_MULTI_RUNS)) {
             resolveImplicitLevels(pBiDi, 0, length,
                                     GET_LR_FROM_LEVEL(GET_PARALEVEL(pBiDi, 0)),
                                     GET_LR_FROM_LEVEL(GET_PARALEVEL(pBiDi, length-1)));
-        } else {
+        } अन्यथा {
             /* sor, eor: start and end types of same-level-run */
             UBiDiLevel *levels=pBiDi->levels;
             int32_t start, limit=0;
@@ -2769,219 +2769,219 @@ ubidi_setPara(UBiDi *pBiDi, const char16_t *text, int32_t length,
             /* determine the first sor and set eor to it because of the loop body (sor=eor there) */
             level=GET_PARALEVEL(pBiDi, 0);
             nextLevel=levels[0];
-            if(level<nextLevel) {
+            जर(level<nextLevel) {
                 eor=GET_LR_FROM_LEVEL(nextLevel);
-            } else {
+            } अन्यथा {
                 eor=GET_LR_FROM_LEVEL(level);
             }
 
-            do {
+            करा {
                 /* determine start and limit of the run (end points just behind the run) */
 
                 /* the values for this run's start are the same as for the previous run's end */
                 start=limit;
                 level=nextLevel;
-                if((start>0) && (dirProps[start-1]==B)) {
+                जर((start>0) && (dirProps[start-1]==B)) {
                     /* except if this is a new paragraph, then set sor = para level */
                     sor=GET_LR_FROM_LEVEL(GET_PARALEVEL(pBiDi, start));
-                } else {
+                } अन्यथा {
                     sor=eor;
                 }
 
                 /* search for the limit of this run */
-                while((++limit<length) &&
+                पर्यंत((++limit<length) &&
                       ((levels[limit]==level) ||
                        (DIRPROP_FLAG(dirProps[limit])&MASK_BN_EXPLICIT))) {}
 
                 /* get the correct level of the next run */
-                if(limit<length) {
+                जर(limit<length) {
                     nextLevel=levels[limit];
-                } else {
+                } अन्यथा {
                     nextLevel=GET_PARALEVEL(pBiDi, length-1);
                 }
 
                 /* determine eor from max(level, nextLevel); sor is last run's eor */
-                if(NO_OVERRIDE(level)<NO_OVERRIDE(nextLevel)) {
+                जर(NO_OVERRIDE(level)<NO_OVERRIDE(nextLevel)) {
                     eor=GET_LR_FROM_LEVEL(nextLevel);
-                } else {
+                } अन्यथा {
                     eor=GET_LR_FROM_LEVEL(level);
                 }
 
                 /* if the run consists of overridden directional types, then there
                    are no implicit types to be resolved */
-                if(!(level&UBIDI_LEVEL_OVERRIDE)) {
+                जर(!(level&UBIDI_LEVEL_OVERRIDE)) {
                     resolveImplicitLevels(pBiDi, start, limit, sor, eor);
-                } else {
+                } अन्यथा {
                     /* remove the UBIDI_LEVEL_OVERRIDE flags */
-                    do {
+                    करा {
                         levels[start++]&=~UBIDI_LEVEL_OVERRIDE;
-                    } while(start<limit);
+                    } पर्यंत(start<limit);
                 }
-            } while(limit<length);
+            } पर्यंत(limit<length);
         }
         /* check if we got any memory shortage while adding insert points */
-        if (U_FAILURE(pBiDi->insertPoints.errorCode))
+        जर (U_FAILURE(pBiDi->घाला_Points.errorCode))
         {
-            *pErrorCode=pBiDi->insertPoints.errorCode;
-            return;
+            *pErrorCode=pBiDi->घाला_Points.errorCode;
+            परत;
         }
         /* reset the embedding levels for some non-graphic characters (L1), (X9) */
         adjustWSLevels(pBiDi);
-        break;
+        थांबा;
     }
     /* add RLM for inverse Bidi with contextual orientation resolving
      * to RTL which would not round-trip otherwise
      */
-    if((pBiDi->defaultParaLevel>0) &&
-       (pBiDi->reorderingOptions & UBIDI_OPTION_INSERT_MARKS) &&
+    जर((pBiDi->defaultParaLevel>0) &&
+       (pBiDi->reorderingOptions & UBIDI_OPTION_घाला_MARKS) &&
        ((pBiDi->reorderingMode==UBIDI_REORDER_INVERSE_LIKE_DIRECT) ||
         (pBiDi->reorderingMode==UBIDI_REORDER_INVERSE_FOR_NUMBERS_SPECIAL))) {
         int32_t i, j, start, last;
         UBiDiLevel level;
         DirProp dirProp;
-        for(i=0; i<pBiDi->paraCount; i++) {
+        साठी(i=0; i<pBiDi->para_मोजणी; i++) {
             last=(pBiDi->paras[i].limit)-1;
             level= static_cast<UBiDiLevel>(pBiDi->paras[i].level);
-            if(level==0)
-                continue;           /* LTR paragraph */
+            जर(level==0)
+                सुरूठेवा;           /* LTR paragraph */
             start= i==0 ? 0 : pBiDi->paras[i-1].limit;
-            for(j=last; j>=start; j--) {
+            साठी(j=last; j>=start; j--) {
                 dirProp=dirProps[j];
-                if(dirProp==L) {
-                    if(j<last) {
-                        while(dirProps[last]==B) {
+                जर(dirProp==L) {
+                    जर(j<last) {
+                        पर्यंत(dirProps[last]==B) {
                             last--;
                         }
                     }
                     addPoint(pBiDi, last, RLM_BEFORE);
-                    break;
+                    थांबा;
                 }
-                if(DIRPROP_FLAG(dirProp) & MASK_R_AL) {
-                    break;
+                जर(DIRPROP_FLAG(dirProp) & MASK_R_AL) {
+                    थांबा;
                 }
             }
         }
     }
 
-    if(pBiDi->reorderingOptions & UBIDI_OPTION_REMOVE_CONTROLS) {
-        pBiDi->resultLength -= pBiDi->controlCount;
-    } else {
-        pBiDi->resultLength += pBiDi->insertPoints.size;
+    जर(pBiDi->reorderingOptions & UBIDI_OPTION_REMOVE_CONTROLS) {
+        pBiDi->resultLength -= pBiDi->control_मोजणी;
+    } अन्यथा {
+        pBiDi->resultLength += pBiDi->घाला_Points.size;
     }
     setParaSuccess(pBiDi);              /* mark successful setPara */
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 ubidi_orderParagraphsLTR(UBiDi *pBiDi, UBool orderParagraphsLTR) {
-    if(pBiDi!=nullptr) {
+    जर(pBiDi!=nullptr) {
         pBiDi->orderParagraphsLTR=orderParagraphsLTR;
     }
 }
 
 U_CAPI UBool U_EXPORT2
 ubidi_isOrderParagraphsLTR(UBiDi *pBiDi) {
-    if(pBiDi!=nullptr) {
-        return pBiDi->orderParagraphsLTR;
-    } else {
-        return false;
+    जर(pBiDi!=nullptr) {
+        परत pBiDi->orderParagraphsLTR;
+    } अन्यथा {
+        परत असत्य;
     }
 }
 
 U_CAPI UBiDiDirection U_EXPORT2
-ubidi_getDirection(const UBiDi *pBiDi) {
-    if(IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return pBiDi->direction;
-    } else {
-        return UBIDI_LTR;
+ubidi_getDirection(स्थिरांक UBiDi *pBiDi) {
+    जर(IS_VALID_PARA_OR_ओळ(pBiDi)) {
+        परत pBiDi->direction;
+    } अन्यथा {
+        परत UBIDI_LTR;
     }
 }
 
-U_CAPI const char16_t* U_EXPORT2
-ubidi_getText(const UBiDi* pBiDi) {
-    if(IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return pBiDi->text;
-    } else {
-        return nullptr;
-    }
-}
-
-U_CAPI int32_t U_EXPORT2
-ubidi_getLength(const UBiDi *pBiDi) {
-    if(IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return pBiDi->originalLength;
-    } else {
-        return 0;
+U_CAPI स्थिरांक char16_t* U_EXPORT2
+ubidi_getText(स्थिरांक UBiDi* pBiDi) {
+    जर(IS_VALID_PARA_OR_ओळ(pBiDi)) {
+        परत pBiDi->text;
+    } अन्यथा {
+        परत nullptr;
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-ubidi_getProcessedLength(const UBiDi *pBiDi) {
-    if(IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return pBiDi->length;
-    } else {
-        return 0;
+ubidi_getLength(स्थिरांक UBiDi *pBiDi) {
+    जर(IS_VALID_PARA_OR_ओळ(pBiDi)) {
+        परत pBiDi->originalLength;
+    } अन्यथा {
+        परत 0;
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-ubidi_getResultLength(const UBiDi *pBiDi) {
-    if(IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return pBiDi->resultLength;
-    } else {
-        return 0;
+ubidi_getProcessedLength(स्थिरांक UBiDi *pBiDi) {
+    जर(IS_VALID_PARA_OR_ओळ(pBiDi)) {
+        परत pBiDi->length;
+    } अन्यथा {
+        परत 0;
+    }
+}
+
+U_CAPI int32_t U_EXPORT2
+ubidi_getResultLength(स्थिरांक UBiDi *pBiDi) {
+    जर(IS_VALID_PARA_OR_ओळ(pBiDi)) {
+        परत pBiDi->resultLength;
+    } अन्यथा {
+        परत 0;
     }
 }
 
 /* paragraphs API functions ------------------------------------------------- */
 
 U_CAPI UBiDiLevel U_EXPORT2
-ubidi_getParaLevel(const UBiDi *pBiDi) {
-    if(IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return pBiDi->paraLevel;
-    } else {
-        return 0;
+ubidi_getParaLevel(स्थिरांक UBiDi *pBiDi) {
+    जर(IS_VALID_PARA_OR_ओळ(pBiDi)) {
+        परत pBiDi->paraLevel;
+    } अन्यथा {
+        परत 0;
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-ubidi_countParagraphs(UBiDi *pBiDi) {
-    if(!IS_VALID_PARA_OR_LINE(pBiDi)) {
-        return 0;
-    } else {
-        return pBiDi->paraCount;
+ubidi_मोजणी_Paragraphs(UBiDi *pBiDi) {
+    जर(!IS_VALID_PARA_OR_ओळ(pBiDi)) {
+        परत 0;
+    } अन्यथा {
+        परत pBiDi->para_मोजणी;
     }
 }
 
-U_CAPI void U_EXPORT2
-ubidi_getParagraphByIndex(const UBiDi *pBiDi, int32_t paraIndex,
+U_CAPI शून्य U_EXPORT2
+ubidi_getParagraphByIndex(स्थिरांक UBiDi *pBiDi, int32_t paraIndex,
                           int32_t *pParaStart, int32_t *pParaLimit,
                           UBiDiLevel *pParaLevel, UErrorCode *pErrorCode) {
     int32_t paraStart;
 
     /* check the argument values */
     RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(pErrorCode);
-    RETURN_VOID_IF_NOT_VALID_PARA_OR_LINE(pBiDi, *pErrorCode);
-    RETURN_VOID_IF_BAD_RANGE(paraIndex, 0, pBiDi->paraCount, *pErrorCode);
+    RETURN_VOID_IF_NOT_VALID_PARA_OR_ओळ(pBiDi, *pErrorCode);
+    RETURN_VOID_IF_BAD_RANGE(paraIndex, 0, pBiDi->para_मोजणी, *pErrorCode);
 
     pBiDi=pBiDi->pParaBiDi;             /* get Para object if Line object */
-    if(paraIndex) {
+    जर(paraIndex) {
         paraStart=pBiDi->paras[paraIndex-1].limit;
-    } else {
+    } अन्यथा {
         paraStart=0;
     }
-    if(pParaStart!=nullptr) {
+    जर(pParaStart!=nullptr) {
         *pParaStart=paraStart;
     }
-    if(pParaLimit!=nullptr) {
+    जर(pParaLimit!=nullptr) {
         *pParaLimit=pBiDi->paras[paraIndex].limit;
     }
-    if(pParaLevel!=nullptr) {
+    जर(pParaLevel!=nullptr) {
         *pParaLevel=GET_PARALEVEL(pBiDi, paraStart);
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-ubidi_getParagraph(const UBiDi *pBiDi, int32_t charIndex,
+ubidi_getParagraph(स्थिरांक UBiDi *pBiDi, int32_t charIndex,
                           int32_t *pParaStart, int32_t *pParaLimit,
                           UBiDiLevel *pParaLevel, UErrorCode *pErrorCode) {
     int32_t paraIndex;
@@ -2989,30 +2989,30 @@ ubidi_getParagraph(const UBiDi *pBiDi, int32_t charIndex,
     /* check the argument values */
     /* pErrorCode will be checked by the call to ubidi_getParagraphByIndex */
     RETURN_IF_NULL_OR_FAILING_ERRCODE(pErrorCode, -1);
-    RETURN_IF_NOT_VALID_PARA_OR_LINE(pBiDi, *pErrorCode, -1);
+    RETURN_IF_NOT_VALID_PARA_OR_ओळ(pBiDi, *pErrorCode, -1);
     pBiDi=pBiDi->pParaBiDi;             /* get Para object if Line object */
     RETURN_IF_BAD_RANGE(charIndex, 0, pBiDi->length, *pErrorCode, -1);
 
-    for(paraIndex=0; charIndex>=pBiDi->paras[paraIndex].limit; paraIndex++);
+    साठी(paraIndex=0; charIndex>=pBiDi->paras[paraIndex].limit; paraIndex++);
     ubidi_getParagraphByIndex(pBiDi, paraIndex, pParaStart, pParaLimit, pParaLevel, pErrorCode);
-    return paraIndex;
+    परत paraIndex;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 ubidi_setClassCallback(UBiDi *pBiDi, UBiDiClassCallback *newFn,
-                       const void *newContext, UBiDiClassCallback **oldFn,
-                       const void **oldContext, UErrorCode *pErrorCode)
+                       स्थिरांक शून्य *newContext, UBiDiClassCallback **oldFn,
+                       स्थिरांक शून्य **oldContext, UErrorCode *pErrorCode)
 {
     RETURN_VOID_IF_NULL_OR_FAILING_ERRCODE(pErrorCode);
-    if(pBiDi==nullptr) {
+    जर(pBiDi==nullptr) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        परत;
     }
-    if( oldFn )
+    जर( oldFn )
     {
         *oldFn = pBiDi->fnClassCallback;
     }
-    if( oldContext )
+    जर( oldContext )
     {
         *oldContext = pBiDi->coClassCallback;
     }
@@ -3020,17 +3020,17 @@ ubidi_setClassCallback(UBiDi *pBiDi, UBiDiClassCallback *newFn,
     pBiDi->coClassCallback = newContext;
 }
 
-U_CAPI void U_EXPORT2
-ubidi_getClassCallback(UBiDi *pBiDi, UBiDiClassCallback **fn, const void **context)
+U_CAPI शून्य U_EXPORT2
+ubidi_getClassCallback(UBiDi *pBiDi, UBiDiClassCallback **fn, स्थिरांक शून्य **context)
 {
-    if(pBiDi==nullptr) {
-        return;
+    जर(pBiDi==nullptr) {
+        परत;
     }
-    if( fn )
+    जर( fn )
     {
         *fn = pBiDi->fnClassCallback;
     }
-    if( context )
+    जर( context )
     {
         *context = pBiDi->coClassCallback;
     }
@@ -3041,35 +3041,35 @@ ubidi_getCustomizedClass(UBiDi *pBiDi, UChar32 c)
 {
     UCharDirection dir;
 
-    if( pBiDi->fnClassCallback == nullptr ||
+    जर( pBiDi->fnClassCallback == nullptr ||
         (dir = (*pBiDi->fnClassCallback)(pBiDi->coClassCallback, c)) == U_BIDI_CLASS_DEFAULT )
     {
         dir = ubidi_getClass(c);
     }
-    if(dir >= U_CHAR_DIRECTION_COUNT) {
+    जर(dir >= U_CHAR_DIRECTION_मोजणी) {
         dir = (UCharDirection)ON;
     }
-    return dir;
+    परत dir;
 }
 
 /* Utilities for MessageFormat ------------------------------------------------*/
 
-#if U_SHOW_CPLUSPLUS_API
+#जर U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
 U_CAPI UMFBidiOption U_EXPORT2
-ubidi_getMFOption(const UnicodeString& s) {
-    if (s == u"ltr") {
-        return U_MF_BIDI_OPTION_LTR;
+ubidi_getMFOption(स्थिरांक UnicodeString& s) {
+    जर (s == u"ltr") {
+        परत U_MF_BIDI_OPTION_LTR;
     }
-    if (s == u"rtl") {
-        return U_MF_BIDI_OPTION_RTL;
+    जर (s == u"rtl") {
+        परत U_MF_BIDI_OPTION_RTL;
     }
-    if (s == u"auto") {
-        return U_MF_BIDI_OPTION_AUTO;
+    जर (s == u"auto") {
+        परत U_MF_BIDI_OPTION_AUTO;
     }
-    return U_MF_BIDI_OPTION_INHERIT; // inherit is default
+    परत U_MF_BIDI_OPTION_INHERIT; // inherit is default
 }
 
 // BiDi isolation
@@ -3090,8 +3090,8 @@ ubidi_isolate(UMFBidiIsolationStrategy bidiIsolationStrategy,
     // https://github.com/unicode-org/message-format-wg/blob/main/spec/formatting.md#handling-bidirectional-text
 
     // If strategy is 'none', just return the string
-    if (bidiIsolationStrategy == U_MF_BIDI_OFF)
-        return &fmt;
+    जर (bidiIsolationStrategy == U_MF_BIDI_OFF)
+        परत &fmt;
 
     /* 1. Let msgdir be the directionality of the whole message, one of « 'LTR', 'RTL', 'unknown' ». These correspond to the message having left-to-right directionality, right-to-left directionality, and to the message's directionality not being known. */
 
@@ -3102,51 +3102,51 @@ ubidi_isolate(UMFBidiIsolationStrategy bidiIsolationStrategy,
     // (Passed as argument)
 
     // 2iii. Let the boolean value isolate be True if the u:dir option of the resolved value of exp has a value other than 'inherit', or False otherwise.
-    bool isolate = uDirOption != U_MF_BIDI_OPTION_INHERIT;
+    तार्किक isolate = uDirOption != U_MF_BIDI_OPTION_INHERIT;
 
     UnicodeString bdiOpen("<bdi>");
     UnicodeString bdiClose("</bdi>");
 
     // 2iv. If dir is 'LTR'
-    switch (dir) {
-        case U_MF_DIRECTIONALITY_LTR:
-            if (msgdir == U_MF_DIRECTIONALITY_LTR && !isolate) {
+    निवड (dir) {
+        स्थिती U_MF_DIRECTIONALITY_LTR:
+            जर (msgdir == U_MF_DIRECTIONALITY_LTR && !isolate) {
                 // 2iv(a). If msgdir is 'LTR' in the formatted output, let fmt be itself
-                return &fmt;
+                परत &fmt;
             }
             // 2iii(b) Else, in the formatted output, prefix fmt with U+2066 LEFT-TO-RIGHT ISOLATE and postfix it with U+2069 POP DIRECTIONAL ISOLATE.
-            if (bidiIsolationStyle == U_MF_BIDI_STYLE_CONTROL) {
+            जर (bidiIsolationStyle == U_MF_BIDI_STYLE_CONTROL) {
                 fmt.insert(0, LRI_CHAR);
                 fmt.insert(fmt.length(), PDI_CHAR);
-            } else {
+            } अन्यथा {
                 fmt.insert(0, bdiOpen);
                 fmt.insert(fmt.length(), bdiClose);
             }
-            break; // End of 2iii
+            थांबा; // End of 2iii
         // 2iv. Else, if dir is 'RTL':
-        case U_MF_DIRECTIONALITY_RTL:
+        स्थिती U_MF_DIRECTIONALITY_RTL:
             // 2iv(a). In the formatted output, prefix fmt with U+2067 RIGHT-TO-LEFT ISOLATE and postfix it with U+2069 POP DIRECTIONAL ISOLATE.
-            if (bidiIsolationStyle == U_MF_BIDI_STYLE_CONTROL) {
+            जर (bidiIsolationStyle == U_MF_BIDI_STYLE_CONTROL) {
                 fmt.insert(0, RLI_CHAR);
                 fmt.insert(fmt.length(), PDI_CHAR);
-            } else {
+            } अन्यथा {
                 fmt.insert(0, bdiOpen);
                 fmt.insert(fmt.length(), bdiClose);
             }
-            break; // End of 2iv.
+            थांबा; // End of 2iv.
         // 2v. Else:
-        default:
+        पूर्वनिर्धारित:
             // 2v(a). In the formatted output, prefix fmt with U+2068 FIRST STRONG ISOLATE and postfix it with U+2069 POP DIRECTIONAL ISOLATE.
-            if (bidiIsolationStyle == U_MF_BIDI_STYLE_CONTROL) {
+            जर (bidiIsolationStyle == U_MF_BIDI_STYLE_CONTROL) {
                 fmt.insert(0, FSI_CHAR);
                 fmt.insert(fmt.length(), PDI_CHAR);
-            } else {
+            } अन्यथा {
                 fmt.insert(0, bdiOpen);
                 fmt.insert(fmt.length(), bdiClose);
             }
-            break; // End of 2v
+            थांबा; // End of 2v
     } // `fmt` now contains the isolated string
-    return &fmt;
+    परत &fmt;
 }
 
 U_NAMESPACE_END

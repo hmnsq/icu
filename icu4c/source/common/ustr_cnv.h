@@ -17,10 +17,10 @@
 #ifndef USTR_CNV_IMP_H
 #define USTR_CNV_IMP_H
 
-#include "unicode/utypes.h"
-#include "unicode/ucnv.h"
+#अन्तर्भाव "unicode/utypes.h"
+#अन्तर्भाव "unicode/ucnv.h"
 
-#if !UCONFIG_NO_CONVERSION
+#जर !UCONFIG_NO_CONVERSION
 
 /**
  * Get the default converter. This is a commonly used converter
@@ -36,15 +36,15 @@ u_getDefaultConverter(UErrorCode *status);
  * Release the default converter to the converter cache.
  * @internal
  */
-U_CAPI void U_EXPORT2
+U_CAPI शून्य U_EXPORT2
 u_releaseDefaultConverter(UConverter *converter);
 
 /**
  * Flush the default converter, if cached. 
  * @internal
  */
-U_CAPI void U_EXPORT2
-u_flushDefaultConverter(void);
+U_CAPI शून्य U_EXPORT2
+u_flushDefaultConverter(शून्य);
 
 #endif
 
