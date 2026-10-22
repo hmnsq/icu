@@ -34,44 +34,44 @@
 #ifndef __RBBIDATA_H__
 #define __RBBIDATA_H__
 
-#include "unicode/utypes.h"
-#include "unicode/udata.h"
-#include "udataswp.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/udata.h"
+#ضمن "udataswp.h"
 
 /**
  * Swap RBBI data. See udataswp.h.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-ubrk_swap(const UDataSwapper *ds,
-          const void *inData, int32_t length, void *outData,
+ubrk_swap(ثابت UDataSwapper *ds,
+          ثابت فراغ *inData, int32_t length, فراغ *outData,
           UErrorCode *pErrorCode);
 
 #ifdef __cplusplus
 
-#include "unicode/ucptrie.h"
-#include "unicode/uobject.h"
-#include "unicode/unistr.h"
-#include "unicode/uversion.h"
-#include "umutex.h"
+#ضمن "unicode/ucptrie.h"
+#ضمن "unicode/uobject.h"
+#ضمن "unicode/unistr.h"
+#ضمن "unicode/uversion.h"
+#ضمن "umutex.h"
 
 
 U_NAMESPACE_BEGIN
 
 // The current RBBI data format version.
-static const uint8_t RBBI_DATA_FORMAT_VERSION[] = {7, 0, 0, 0};
+ساكن ثابت uint8_t RBBI_DATA_FORMAT_VERSION[] = {7, 0, 0, 0};
 
 /*  
  *   The following structs map exactly onto the raw data from ICU common data file. 
  */
-struct RBBIDataHeader {
+بنية RBBIDataHeader {
     uint32_t         fMagic;           /*  == 0xbla0                                               */
     UVersionInfo     fFormatVersion;   /* Data Format.  Same as the value in struct UDataInfo      */
                                        /*   if there is one associated with this data.             */
                                        /*     (version originates in rbbi, is copied to UDataInfo) */
     uint32_t         fLength;          /*  Total length in bytes of this RBBI Data,                */
                                        /*      including all sections, not just the header.        */
-    uint32_t         fCatCount;        /*  Number of character categories.                         */
+    uint32_t         f_Cat_ژماردن;        /*  Number of character categories.                         */
 
     /*                                                                        */
     /*  Offsets and sizes of each of the subsections within the RBBI data.    */
@@ -96,7 +96,7 @@ struct RBBIDataHeader {
 
 
 template <typename T>
-struct RBBIStateTableRowT {
+بنية RBBIStateTableRowT {
     T               fAccepting;    //  Non-zero if this row is for an accepting state.
                                    //  Value 0: not an accepting state.
                                    //        1: (ACCEPTING_UNCONDITIONAL) Unconditional Accepting state.
@@ -121,18 +121,18 @@ struct RBBIStateTableRowT {
                                    //              before changing anything here.
 };
 
-typedef RBBIStateTableRowT<uint8_t> RBBIStateTableRow8;
-typedef RBBIStateTableRowT<uint16_t> RBBIStateTableRow16;
+تعريفنوع RBBIStateTableRowT<uint8_t> RBBIStateTableRow8;
+تعريفنوع RBBIStateTableRowT<uint16_t> RBBIStateTableRow16;
 
 constexpr uint16_t ACCEPTING_UNCONDITIONAL = 1;   // Value constant for RBBIStateTableRow::fAccepting
 
-union RBBIStateTableRow {
+اتحاد RBBIStateTableRow {
   RBBIStateTableRow16 r16;
   RBBIStateTableRow8 r8;
 };
 
-struct RBBIStateTable {
-    uint32_t         fNumStates;            // Number of states.
+بنية RBBIStateTable {
+    uint32_t         f_ژمارە_States;            // Number of states.
     uint32_t         fRowLen;               // Length of a state table row, in bytes.
     uint32_t         fDictCategoriesStart;  // Char category number of the first dictionary
                                             //   char class, or the largest category number + 1
@@ -140,7 +140,7 @@ struct RBBIStateTable {
     uint32_t         fLookAheadResultsSize; // Size of run-time array required for holding
                                             //   look-ahead results. Indexed by row.fLookAhead.
     uint32_t         fFlags;                // Option Flags for this state table.
-    char             fTableData[1];         // First RBBIStateTableRow begins here.
+    حرف             fTableData[1];         // First RBBIStateTableRow begins here.
                                             //   Variable-length array declared with length 1
                                             //   to disable bounds checkers.
                                             //   (making it char[] simplifies ugly address
@@ -156,50 +156,50 @@ constexpr uint32_t RBBI_8BITS_ROWS = 4;
 /*                                        */
 /*   The reference counting wrapper class */
 /*                                        */
-class RBBIDataWrapper : public UMemory {
-public:
-    enum EDontAdopt {
+class RBBIDataWrapper : عام UMemory {
+عام:
+    تعداد EDontAdopt {
         kDontAdopt
     };
-    RBBIDataWrapper(const RBBIDataHeader *data, UErrorCode &status);
-    RBBIDataWrapper(const RBBIDataHeader *data, enum EDontAdopt dontAdopt, UErrorCode &status);
+    RBBIDataWrapper(ثابت RBBIDataHeader *data, UErrorCode &status);
+    RBBIDataWrapper(ثابت RBBIDataHeader *data, تعداد EDontAdopt dontAdopt, UErrorCode &status);
     RBBIDataWrapper(UDataMemory* udm, UErrorCode &status);
     ~RBBIDataWrapper();
 
-    static UBool          isDataVersionAcceptable(const UVersionInfo version);
+    ساكن UBool          isDataVersionAcceptable(ثابت UVersionInfo version);
 
-    void                  init0();
-    void                  init(const RBBIDataHeader *data, UErrorCode &status);
+    فراغ                  init0();
+    فراغ                  init(ثابت RBBIDataHeader *data, UErrorCode &status);
     RBBIDataWrapper      *addReference();
-    void                  removeReference();
-    bool                  operator ==(const RBBIDataWrapper &other) const;
+    فراغ                  removeReference();
+    bool                  operator ==(ثابت RBBIDataWrapper &other) ثابت;
     int32_t               hashCode();
-    const UnicodeString  &getRuleSourceString() const;
-    void                  printData();
-    void                  printTable(const char *heading, const RBBIStateTable *table);
+    ثابت UnicodeString  &getRuleSourceString() ثابت;
+    فراغ                  printData();
+    فراغ                  printTable(ثابت حرف *heading, ثابت RBBIStateTable *table);
 
     /*                                     */
     /*   Pointers to items within the data */
     /*                                     */
-    const RBBIDataHeader     *fHeader;
-    const RBBIStateTable     *fForwardTable;
-    const RBBIStateTable     *fReverseTable;
-    const char               *fRuleSource;
-    const int32_t            *fRuleStatusTable; 
+    ثابت RBBIDataHeader     *fHeader;
+    ثابت RBBIStateTable     *fForwardTable;
+    ثابت RBBIStateTable     *fReverseTable;
+    ثابت حرف               *fRuleSource;
+    ثابت int32_t            *fRuleStatusTable; 
 
     /* number of int32_t values in the rule status table.   Used to sanity check indexing */
     int32_t             fStatusMaxIdx;
 
     UCPTrie             *fTrie;
 
-private:
-    u_atomic_int32_t    fRefCount;
+خاص:
+    u_atomic_int32_t    f_Ref_ژماردن;
     UDataMemory        *fUDataMem;
     UnicodeString       fRuleString;
     UBool               fDontFreeData;
 
-    RBBIDataWrapper(const RBBIDataWrapper &other) = delete; /*  forbid copying of this class */
-    RBBIDataWrapper &operator=(const RBBIDataWrapper &other) = delete; /*  forbid copying of this class */
+    RBBIDataWrapper(ثابت RBBIDataWrapper &other) = delete; /*  forbid copying of this class */
+    RBBIDataWrapper &operator=(ثابت RBBIDataWrapper &other) = delete; /*  forbid copying of this class */
 };
 
 

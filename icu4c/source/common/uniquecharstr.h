@@ -7,10 +7,10 @@
 #ifndef __UNIQUECHARSTR_H__
 #define __UNIQUECHARSTR_H__
 
-#include "charstr.h"
-#include "uassert.h"
-#include "uhash.h"
-#include "cmemory.h"
+#ضمن "charstr.h"
+#ضمن "uassert.h"
+#ضمن "uhash.h"
+#ضمن "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
@@ -23,15 +23,15 @@ U_NAMESPACE_BEGIN
  * call orphanCharStrings() to capture the string storage, and let this object go out of scope.
  */
 class UniqueCharStrings {
-public:
+عام:
     UniqueCharStrings(UErrorCode &errorCode) : strings(nullptr) {
         // Note: We hash on string contents but store stable char16_t * pointers.
         // If the strings are stored in resource bundles which should be built with
         // duplicate elimination, then we should be able to hash on just the pointer values.
         uhash_init(&map, uhash_hashUChars, uhash_compareUChars, uhash_compareLong, &errorCode);
-        if (U_FAILURE(errorCode)) { return; }
+        إذا (U_FAILURE(errorCode)) { أرجع; }
         strings = new CharString();
-        if (strings == nullptr) {
+        إذا (strings == nullptr) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
         }
     }
@@ -44,7 +44,7 @@ public:
     CharString *orphanCharStrings() {
         CharString *result = strings;
         strings = nullptr;
-        return result;
+        أرجع result;
     }
 
     /**
@@ -55,16 +55,16 @@ public:
      * Best used with string data in a stable storage, such as strings returned
      * by resource bundle functions.
      */
-    int32_t add(const char16_t*p, UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return -1; }
-        if (isFrozen) {
+    int32_t add(ثابت char16_t*p, UErrorCode &errorCode) {
+        إذا (U_FAILURE(errorCode)) { أرجع -1; }
+        إذا (isFrozen) {
             errorCode = U_NO_WRITE_PERMISSION;
-            return -1;
+            أرجع -1;
         }
         // The string points into the resource bundle.
         int32_t oldIndex = uhash_geti(&map, p);
-        if (oldIndex != 0) {  // found duplicate
-            return oldIndex;
+        إذا (oldIndex != 0) {  // found duplicate
+            أرجع oldIndex;
         }
         // Explicit NUL terminator for the previous string.
         // The strings object is also terminated with one implicit NUL.
@@ -72,46 +72,46 @@ public:
         int32_t newIndex = strings->length();
         strings->appendInvariantChars(p, u_strlen(p), errorCode);
         uhash_puti(&map, const_cast<char16_t *>(p), newIndex, &errorCode);
-        return newIndex;
+        أرجع newIndex;
     }
 
     /**
      * Adds a unicode string by value and returns a unique number for it.
      */
-    int32_t addByValue(UnicodeString s, UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return -1; }
-        if (isFrozen) {
+    int32_t add_By_بەها(UnicodeString s, UErrorCode &errorCode) {
+        إذا (U_FAILURE(errorCode)) { أرجع -1; }
+        إذا (isFrozen) {
             errorCode = U_NO_WRITE_PERMISSION;
-            return -1;
+            أرجع -1;
         }
         int32_t oldIndex = uhash_geti(&map, s.getTerminatedBuffer());
-        if (oldIndex != 0) {  // found duplicate
-            return oldIndex;
+        إذا (oldIndex != 0) {  // found duplicate
+            أرجع oldIndex;
         }
         // We need to store the string content of the UnicodeString.
-        UnicodeString *key = keyStore.create(s);
-        if (key == nullptr) {
+        UnicodeString *کلیل = کلیل_Store.create(s);
+        إذا (کلیل == nullptr) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return -1;
+            أرجع -1;
         }
-        return add(key->getTerminatedBuffer(), errorCode);
+        أرجع add(کلیل->getTerminatedBuffer(), errorCode);
     }
 
-    void freeze() { isFrozen = true; }
+    فراغ freeze() { isFrozen = true; }
 
     /**
      * Returns a string pointer for its unique number, if this object is frozen.
      * Otherwise nullptr.
      */
-    const char *get(int32_t i) const {
+    ثابت حرف *get(int32_t i) ثابت {
         U_ASSERT(isFrozen);
-        return isFrozen && i > 0 ? strings->data() + i : nullptr;
+        أرجع isFrozen && i > 0 ? strings->data() + i : nullptr;
     }
 
-private:
+خاص:
     UHashtable map;
     CharString *strings;
-    MemoryPool<UnicodeString> keyStore;
+    MemoryPool<UnicodeString> کلیل_Store;
     bool isFrozen = false;
 };
 

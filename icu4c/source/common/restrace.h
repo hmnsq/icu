@@ -4,11 +4,11 @@
 #ifndef __RESTRACE_H__
 #define __RESTRACE_H__
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if U_ENABLE_TRACING
+#إذا U_ENABLE_TRACING
 
-struct UResourceBundle;
+بنية UResourceBundle;
 
 U_NAMESPACE_BEGIN
 
@@ -26,67 +26,67 @@ class CharString;
  * in other exported types.
  */
 class U_COMMON_API ResourceTracer {
-public:
+عام:
     ResourceTracer() :
         fResB(nullptr),
         fParent(nullptr),
-        fKey(nullptr),
+        f_کلیل(nullptr),
         fIndex(-1) {}
 
-    ResourceTracer(const UResourceBundle* resB) :
+    ResourceTracer(ثابت UResourceBundle* resB) :
         fResB(resB),
         fParent(nullptr),
-        fKey(nullptr),
+        f_کلیل(nullptr),
         fIndex(-1) {}
 
-    ResourceTracer(const UResourceBundle* resB, const char* key) :
+    ResourceTracer(ثابت UResourceBundle* resB, ثابت حرف* کلیل) :
         fResB(resB),
         fParent(nullptr),
-        fKey(key),
+        f_کلیل(کلیل),
         fIndex(-1) {}
 
-    ResourceTracer(const UResourceBundle* resB, int32_t index) :
+    ResourceTracer(ثابت UResourceBundle* resB, int32_t index) :
         fResB(resB),
         fParent(nullptr),
-        fKey(nullptr),
+        f_کلیل(nullptr),
         fIndex(index) {}
 
-    ResourceTracer(const ResourceTracer& parent, const char* key) :
+    ResourceTracer(ثابت ResourceTracer& parent, ثابت حرف* کلیل) :
         fResB(nullptr),
         fParent(&parent),
-        fKey(key),
+        f_کلیل(کلیل),
         fIndex(-1) {}
 
-    ResourceTracer(const ResourceTracer& parent, int32_t index) :
+    ResourceTracer(ثابت ResourceTracer& parent, int32_t index) :
         fResB(nullptr),
         fParent(&parent),
-        fKey(nullptr),
+        f_کلیل(nullptr),
         fIndex(index) {}
 
     ~ResourceTracer();
 
-    void trace(const char* type) const;
-    void traceOpen() const;
+    فراغ trace(ثابت حرف* type) ثابت;
+    فراغ traceOpen() ثابت;
 
     /**
      * Calls trace() if the resB or parent provided to the constructor was
      * non-null; otherwise, does nothing.
      */
-    void maybeTrace(const char* type) const {
-        if (fResB || fParent) {
+    فراغ maybeTrace(ثابت حرف* type) ثابت {
+        إذا (fResB || fParent) {
             trace(type);
         }
     }
 
-private:
-    const UResourceBundle* fResB;
-    const ResourceTracer* fParent;
-    const char* fKey;
+خاص:
+    ثابت UResourceBundle* fResB;
+    ثابت ResourceTracer* fParent;
+    ثابت حرف* f_کلیل;
     int32_t fIndex;
 
-    CharString& getFilePath(CharString& output, UErrorCode& status) const;
+    CharString& getFilePath(CharString& output, UErrorCode& status) ثابت;
 
-    CharString& getResPath(CharString& output, UErrorCode& status) const;
+    CharString& getResPath(CharString& output, UErrorCode& status) ثابت;
 };
 
 /**
@@ -94,17 +94,17 @@ private:
  * with --enable-tracing.
  */
 class FileTracer {
-public:
-    static void traceOpen(const char* path, const char* type, const char* name);
+عام:
+    ساكن فراغ traceOpen(ثابت حرف* path, ثابت حرف* type, ثابت حرف* name);
 
-private:
-    static void traceOpenDataFile(const char* path, const char* type, const char* name);
-    static void traceOpenResFile(const char* path, const char* name);
+خاص:
+    ساكن فراغ traceOpenDataFile(ثابت حرف* path, ثابت حرف* type, ثابت حرف* name);
+    ساكن فراغ traceOpenResFile(ثابت حرف* path, ثابت حرف* name);
 };
 
 U_NAMESPACE_END
 
-#else // U_ENABLE_TRACING
+#وإلا // U_ENABLE_TRACING
 
 U_NAMESPACE_BEGIN
 
@@ -112,32 +112,32 @@ U_NAMESPACE_BEGIN
  * Default trivial implementation when --enable-tracing is not used.
  */
 class U_COMMON_API ResourceTracer {
-public:
+عام:
     ResourceTracer() {}
 
-    ResourceTracer(const void*) {}
+    ResourceTracer(ثابت فراغ*) {}
 
-    ResourceTracer(const void*, const char*) {}
+    ResourceTracer(ثابت فراغ*, ثابت حرف*) {}
 
-    ResourceTracer(const void*, int32_t) {}
+    ResourceTracer(ثابت فراغ*, int32_t) {}
 
-    ResourceTracer(const ResourceTracer&, const char*) {}
+    ResourceTracer(ثابت ResourceTracer&, ثابت حرف*) {}
 
-    ResourceTracer(const ResourceTracer&, int32_t) {}
+    ResourceTracer(ثابت ResourceTracer&, int32_t) {}
 
-    void trace(const char*) const {}
+    فراغ trace(ثابت حرف*) ثابت {}
 
-    void traceOpen() const {}
+    فراغ traceOpen() ثابت {}
 
-    void maybeTrace(const char*) const {}
+    فراغ maybeTrace(ثابت حرف*) ثابت {}
 };
 
 /**
  * Default trivial implementation when --enable-tracing is not used.
  */
 class FileTracer {
-public:
-    static void traceOpen(const char*, const char*, const char*) {}
+عام:
+    ساكن فراغ traceOpen(ثابت حرف*, ثابت حرف*, ثابت حرف*) {}
 };
 
 U_NAMESPACE_END

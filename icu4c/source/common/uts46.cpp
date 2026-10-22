@@ -14,21 +14,21 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
+#ضمن "unicode/utypes.h"
 
-#if !UCONFIG_NO_IDNA
+#إذا !UCONFIG_NO_IDNA
 
-#include "unicode/bytestream.h"
-#include "unicode/idna.h"
-#include "unicode/normalizer2.h"
-#include "unicode/uscript.h"
-#include "unicode/ustring.h"
-#include "unicode/utf16.h"
-#include "bytesinkutil.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "punycode.h"
-#include "ubidi_props.h"
+#ضمن "unicode/bytestream.h"
+#ضمن "unicode/idna.h"
+#ضمن "unicode/normalizer2.h"
+#ضمن "unicode/uscript.h"
+#ضمن "unicode/ustring.h"
+#ضمن "unicode/utf16.h"
+#ضمن "bytesinkutil.h"
+#ضمن "cmemory.h"
+#ضمن "cstring.h"
+#ضمن "punycode.h"
+#ضمن "ubidi_props.h"
 
 // Note about tests for UIDNA_ERROR_DOMAIN_NAME_TOO_LONG:
 //
@@ -41,69 +41,69 @@
 U_NAMESPACE_BEGIN
 
 // Severe errors which usually result in a U+FFFD replacement character in the result string.
-const uint32_t severeErrors=
+ثابت uint32_t severeErrors=
     UIDNA_ERROR_LEADING_COMBINING_MARK|
     UIDNA_ERROR_DISALLOWED|
     UIDNA_ERROR_PUNYCODE|
     UIDNA_ERROR_LABEL_HAS_DOT|
     UIDNA_ERROR_INVALID_ACE_LABEL;
 
-static inline UBool
-isASCIIString(const UnicodeString &dest) {
-    const char16_t *s=dest.getBuffer();
-    const char16_t *limit=s+dest.length();
-    while(s<limit) {
-        if(*s++>0x7f) {
-            return false;
+ساكن مضمن UBool
+isASCIIString(ثابت UnicodeString &dest) {
+    ثابت char16_t *s=dest.getBuffer();
+    ثابت char16_t *limit=s+dest.length();
+    طالما(s<limit) {
+        إذا(*s++>0x7f) {
+            أرجع خطأ;
         }
     }
-    return true;
+    أرجع true;
 }
 
-static UBool
-isASCIIOkBiDi(const char16_t *s, int32_t length);
+ساكن UBool
+isASCIIOkBiDi(ثابت char16_t *s, int32_t length);
 
-static UBool
-isASCIIOkBiDi(const char *s, int32_t length);
+ساكن UBool
+isASCIIOkBiDi(ثابت حرف *s, int32_t length);
 
 // IDNA class default implementations -------------------------------------- ***
 
 IDNA::~IDNA() {}
 
-void
+فراغ
 IDNA::labelToASCII_UTF8(StringPiece label, ByteSink &dest,
-                        IDNAInfo &info, UErrorCode &errorCode) const {
-    if(U_SUCCESS(errorCode)) {
+                        IDNAInfo &info, UErrorCode &errorCode) ثابت {
+    إذا(U_SUCCESS(errorCode)) {
         UnicodeString destString;
         labelToASCII(UnicodeString::fromUTF8(label), destString,
                      info, errorCode).toUTF8(dest);
     }
 }
 
-void
+فراغ
 IDNA::labelToUnicodeUTF8(StringPiece label, ByteSink &dest,
-                         IDNAInfo &info, UErrorCode &errorCode) const {
-    if(U_SUCCESS(errorCode)) {
+                         IDNAInfo &info, UErrorCode &errorCode) ثابت {
+    إذا(U_SUCCESS(errorCode)) {
         UnicodeString destString;
         labelToUnicode(UnicodeString::fromUTF8(label), destString,
                        info, errorCode).toUTF8(dest);
     }
 }
 
-void
+فراغ
 IDNA::nameToASCII_UTF8(StringPiece name, ByteSink &dest,
-                       IDNAInfo &info, UErrorCode &errorCode) const {
-    if(U_SUCCESS(errorCode)) {
+                       IDNAInfo &info, UErrorCode &errorCode) ثابت {
+    إذا(U_SUCCESS(errorCode)) {
         UnicodeString destString;
         nameToASCII(UnicodeString::fromUTF8(name), destString,
                     info, errorCode).toUTF8(dest);
     }
 }
 
-void
+فراغ
 IDNA::nameToUnicodeUTF8(StringPiece name, ByteSink &dest,
-                        IDNAInfo &info, UErrorCode &errorCode) const {
-    if(U_SUCCESS(errorCode)) {
+                        IDNAInfo &info, UErrorCode &errorCode) ثابت {
+    إذا(U_SUCCESS(errorCode)) {
         UnicodeString destString;
         nameToUnicode(UnicodeString::fromUTF8(name), destString,
                       info, errorCode).toUTF8(dest);
@@ -112,118 +112,118 @@ IDNA::nameToUnicodeUTF8(StringPiece name, ByteSink &dest,
 
 // UTS46 class declaration ------------------------------------------------- ***
 
-class UTS46 : public IDNA {
-public:
+صنف UTS46 : عام IDNA {
+عام:
     UTS46(uint32_t options, UErrorCode &errorCode);
     virtual ~UTS46();
 
     virtual UnicodeString&
-    labelToASCII(const UnicodeString& label,
+    labelToASCII(ثابت UnicodeString& label,
                  UnicodeString& dest U_LIFETIME_BOUND,
                  IDNAInfo& info,
-                 UErrorCode& errorCode) const override;
+                 UErrorCode& errorCode) ثابت override;
 
     virtual UnicodeString&
-    labelToUnicode(const UnicodeString& label,
+    labelToUnicode(ثابت UnicodeString& label,
                    UnicodeString& dest U_LIFETIME_BOUND,
                    IDNAInfo& info,
-                   UErrorCode& errorCode) const override;
+                   UErrorCode& errorCode) ثابت override;
 
     virtual UnicodeString&
-    nameToASCII(const UnicodeString& name,
+    nameToASCII(ثابت UnicodeString& name,
                 UnicodeString& dest U_LIFETIME_BOUND,
                 IDNAInfo& info,
-                UErrorCode& errorCode) const override;
+                UErrorCode& errorCode) ثابت override;
 
     virtual UnicodeString&
-    nameToUnicode(const UnicodeString& name,
+    nameToUnicode(ثابت UnicodeString& name,
                   UnicodeString& dest U_LIFETIME_BOUND,
                   IDNAInfo& info,
-                  UErrorCode& errorCode) const override;
+                  UErrorCode& errorCode) ثابت override;
 
-    virtual void
+    virtual فراغ
     labelToASCII_UTF8(StringPiece label, ByteSink &dest,
-                      IDNAInfo &info, UErrorCode &errorCode) const override;
+                      IDNAInfo &info, UErrorCode &errorCode) ثابت override;
 
-    virtual void
+    virtual فراغ
     labelToUnicodeUTF8(StringPiece label, ByteSink &dest,
-                       IDNAInfo &info, UErrorCode &errorCode) const override;
+                       IDNAInfo &info, UErrorCode &errorCode) ثابت override;
 
-    virtual void
+    virtual فراغ
     nameToASCII_UTF8(StringPiece name, ByteSink &dest,
-                     IDNAInfo &info, UErrorCode &errorCode) const override;
+                     IDNAInfo &info, UErrorCode &errorCode) ثابت override;
 
-    virtual void
+    virtual فراغ
     nameToUnicodeUTF8(StringPiece name, ByteSink &dest,
-                      IDNAInfo &info, UErrorCode &errorCode) const override;
+                      IDNAInfo &info, UErrorCode &errorCode) ثابت override;
 
-private:
+خاص:
     UnicodeString&
-    process(const UnicodeString& src,
+    process(ثابت UnicodeString& src,
             UBool isLabel,
             UBool toASCII,
             UnicodeString& dest U_LIFETIME_BOUND,
             IDNAInfo& info,
-            UErrorCode& errorCode) const;
+            UErrorCode& errorCode) ثابت;
 
-    void
+    فراغ
     processUTF8(StringPiece src,
                 UBool isLabel, UBool toASCII,
                 ByteSink &dest,
-                IDNAInfo &info, UErrorCode &errorCode) const;
+                IDNAInfo &info, UErrorCode &errorCode) ثابت;
 
     UnicodeString&
-    processUnicode(const UnicodeString& src,
+    processUnicode(ثابت UnicodeString& src,
                    int32_t labelStart,
                    int32_t mappingStart,
                    UBool isLabel,
                    UBool toASCII,
                    UnicodeString& dest U_LIFETIME_BOUND,
                    IDNAInfo& info,
-                   UErrorCode& errorCode) const;
+                   UErrorCode& errorCode) ثابت;
 
     // returns the new dest.length()
     int32_t
     mapDevChars(UnicodeString &dest, int32_t labelStart, int32_t mappingStart,
-                UErrorCode &errorCode) const;
+                UErrorCode &errorCode) ثابت;
 
     // returns the new label length
     int32_t
     processLabel(UnicodeString &dest,
                  int32_t labelStart, int32_t labelLength,
                  UBool toASCII,
-                 IDNAInfo &info, UErrorCode &errorCode) const;
+                 IDNAInfo &info, UErrorCode &errorCode) ثابت;
     int32_t
     markBadACELabel(UnicodeString &dest,
                     int32_t labelStart, int32_t labelLength,
-                    UBool toASCII, IDNAInfo &info, UErrorCode &errorCode) const;
+                    UBool toASCII, IDNAInfo &info, UErrorCode &errorCode) ثابت;
 
-    void
-    checkLabelBiDi(const char16_t *label, int32_t labelLength, IDNAInfo &info) const;
+    فراغ
+    checkLabelBiDi(ثابت char16_t *label, int32_t labelLength, IDNAInfo &info) ثابت;
 
     UBool
-    isLabelOkContextJ(const char16_t *label, int32_t labelLength) const;
+    isLabelOkContextJ(ثابت char16_t *label, int32_t labelLength) ثابت;
 
-    void
-    checkLabelContextO(const char16_t *label, int32_t labelLength, IDNAInfo &info) const;
+    فراغ
+    checkLabelContextO(ثابت char16_t *label, int32_t labelLength, IDNAInfo &info) ثابت;
 
-    const Normalizer2 &uts46Norm2;  // uts46.nrm
+    ثابت Normalizer2 &uts46Norm2;  // uts46.nrm
     uint32_t options;
 };
 
 IDNA *
 IDNA::createUTS46Instance(uint32_t options, UErrorCode &errorCode) {
-    if(U_SUCCESS(errorCode)) {
-        IDNA *idna=new UTS46(options, errorCode);
-        if(idna==nullptr) {
+    إذا(U_SUCCESS(errorCode)) {
+        IDNA *idna=جديد UTS46(options, errorCode);
+        إذا(idna==nullptr) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-        } else if(U_FAILURE(errorCode)) {
+        } وإلا إذا(U_FAILURE(errorCode)) {
             delete idna;
             idna=nullptr;
         }
-        return idna;
-    } else {
-        return nullptr;
+        أرجع idna;
+    } وإلا {
+        أرجع nullptr;
     }
 }
 
@@ -236,66 +236,66 @@ UTS46::UTS46(uint32_t opt, UErrorCode &errorCode)
 UTS46::~UTS46() {}
 
 UnicodeString&
-UTS46::labelToASCII(const UnicodeString& label,
+UTS46::labelToASCII(ثابت UnicodeString& label,
                     UnicodeString& dest U_LIFETIME_BOUND,
                     IDNAInfo& info,
-                    UErrorCode& errorCode) const {
-    return process(label, true, true, dest, info, errorCode);
+                    UErrorCode& errorCode) ثابت {
+    أرجع process(label, true, true, dest, info, errorCode);
 }
 
 UnicodeString&
-UTS46::labelToUnicode(const UnicodeString& label,
+UTS46::labelToUnicode(ثابت UnicodeString& label,
                       UnicodeString& dest U_LIFETIME_BOUND,
                       IDNAInfo& info,
-                      UErrorCode& errorCode) const {
-    return process(label, true, false, dest, info, errorCode);
+                      UErrorCode& errorCode) ثابت {
+    أرجع process(label, true, خطأ, dest, info, errorCode);
 }
 
 UnicodeString&
-UTS46::nameToASCII(const UnicodeString& name,
+UTS46::nameToASCII(ثابت UnicodeString& name,
                    UnicodeString& dest U_LIFETIME_BOUND,
                    IDNAInfo& info,
-                   UErrorCode& errorCode) const {
-    process(name, false, true, dest, info, errorCode);
-    if( dest.length()>=254 && (info.errors&UIDNA_ERROR_DOMAIN_NAME_TOO_LONG)==0 &&
+                   UErrorCode& errorCode) ثابت {
+    process(name, خطأ, true, dest, info, errorCode);
+    إذا( dest.length()>=254 && (info.errors&UIDNA_ERROR_DOMAIN_NAME_TOO_LONG)==0 &&
         isASCIIString(dest) &&
         (dest.length()>254 || dest[253]!=0x2e)
     ) {
         info.errors|=UIDNA_ERROR_DOMAIN_NAME_TOO_LONG;
     }
-    return dest;
+    أرجع dest;
 }
 
 UnicodeString&
-UTS46::nameToUnicode(const UnicodeString& name,
+UTS46::nameToUnicode(ثابت UnicodeString& name,
                      UnicodeString& dest U_LIFETIME_BOUND,
                      IDNAInfo& info,
-                     UErrorCode& errorCode) const {
-    return process(name, false, false, dest, info, errorCode);
+                     UErrorCode& errorCode) ثابت {
+    أرجع process(name, خطأ, خطأ, dest, info, errorCode);
 }
 
-void
+فراغ
 UTS46::labelToASCII_UTF8(StringPiece label, ByteSink &dest,
-                         IDNAInfo &info, UErrorCode &errorCode) const {
+                         IDNAInfo &info, UErrorCode &errorCode) ثابت {
     processUTF8(label, true, true, dest, info, errorCode);
 }
 
-void
+فراغ
 UTS46::labelToUnicodeUTF8(StringPiece label, ByteSink &dest,
-                          IDNAInfo &info, UErrorCode &errorCode) const {
-    processUTF8(label, true, false, dest, info, errorCode);
+                          IDNAInfo &info, UErrorCode &errorCode) ثابت {
+    processUTF8(label, true, خطأ, dest, info, errorCode);
 }
 
-void
+فراغ
 UTS46::nameToASCII_UTF8(StringPiece name, ByteSink &dest,
-                        IDNAInfo &info, UErrorCode &errorCode) const {
-    processUTF8(name, false, true, dest, info, errorCode);
+                        IDNAInfo &info, UErrorCode &errorCode) ثابت {
+    processUTF8(name, خطأ, true, dest, info, errorCode);
 }
 
-void
+فراغ
 UTS46::nameToUnicodeUTF8(StringPiece name, ByteSink &dest,
-                         IDNAInfo &info, UErrorCode &errorCode) const {
-    processUTF8(name, false, false, dest, info, errorCode);
+                         IDNAInfo &info, UErrorCode &errorCode) ثابت {
+    processUTF8(name, خطأ, خطأ, dest, info, errorCode);
 }
 
 // UTS #46 data for ASCII characters.
@@ -305,7 +305,7 @@ UTS46::nameToUnicodeUTF8(StringPiece name, ByteSink &dest,
 // using this data.
 // The ASCII fastpath also uses this data.
 // Values: -1=disallowed  0==valid  1==mapped (lowercase)
-static const int8_t asciiData[128]={
+ساكن ثابت int8_t asciiData[128]={
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
     // 002D..002E; valid  #  HYPHEN-MINUS..FULL STOP
@@ -321,92 +321,92 @@ static const int8_t asciiData[128]={
 };
 
 UnicodeString&
-UTS46::process(const UnicodeString& src,
+UTS46::process(ثابت UnicodeString& src,
                UBool isLabel,
                UBool toASCII,
                UnicodeString& dest U_LIFETIME_BOUND,
                IDNAInfo& info,
-               UErrorCode& errorCode) const {
+               UErrorCode& errorCode) ثابت {
     // uts46Norm2.normalize() would do all of this error checking and setup,
     // but with the ASCII fastpath we do not always call it, and do not
     // call it first.
-    if(U_FAILURE(errorCode)) {
+    إذا(U_FAILURE(errorCode)) {
         dest.setToBogus();
-        return dest;
+        أرجع dest;
     }
-    const char16_t *srcArray=src.getBuffer();
-    if(&dest==&src || srcArray==nullptr) {
+    ثابت char16_t *srcArray=src.getBuffer();
+    إذا(&dest==&src || srcArray==nullptr) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
         dest.setToBogus();
-        return dest;
+        أرجع dest;
     }
     // Arguments are fine, reset output values.
     dest.remove();
     info.reset();
     int32_t srcLength=src.length();
-    if(srcLength==0) {
+    إذا(srcLength==0) {
         info.errors|=UIDNA_ERROR_EMPTY_LABEL;
-        return dest;
+        أرجع dest;
     }
     char16_t *destArray=dest.getBuffer(srcLength);
-    if(destArray==nullptr) {
+    إذا(destArray==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return dest;
+        أرجع dest;
     }
     // ASCII fastpath
     UBool disallowNonLDHDot=(options&UIDNA_USE_STD3_RULES)!=0;
     int32_t labelStart=0;
     int32_t i;
-    for(i=0;; ++i) {
-        if(i==srcLength) {
-            if(toASCII) {
-                if((i-labelStart)>63) {
+    لكل(i=0;; ++i) {
+        إذا(i==srcLength) {
+            إذا(toASCII) {
+                إذا((i-labelStart)>63) {
                     info.labelErrors|=UIDNA_ERROR_LABEL_TOO_LONG;
                 }
                 // There is a trailing dot if labelStart==i.
-                if(!isLabel && i>=254 && (i>254 || labelStart<i)) {
+                إذا(!isLabel && i>=254 && (i>254 || labelStart<i)) {
                     info.errors|=UIDNA_ERROR_DOMAIN_NAME_TOO_LONG;
                 }
             }
             info.errors|=info.labelErrors;
             dest.releaseBuffer(i);
-            return dest;
+            أرجع dest;
         }
         char16_t c=srcArray[i];
-        if(c>0x7f) {
-            break;
+        إذا(c>0x7f) {
+            اكسر;
         }
-        int cData=asciiData[c];
-        if(cData>0) {
+        صحيح cData=asciiData[c];
+        إذا(cData>0) {
             destArray[i]=c+0x20;  // Lowercase an uppercase ASCII letter.
-        } else if(cData<0 && disallowNonLDHDot) {
-            break;  // Replacing with U+FFFD can be complicated for toASCII.
-        } else {
+        } وإلا إذا(cData<0 && disallowNonLDHDot) {
+            اكسر;  // Replacing with U+FFFD can be complicated for toASCII.
+        } وإلا {
             destArray[i]=c;
-            if(c==0x2d) {  // hyphen
-                if(i==(labelStart+3) && srcArray[i-1]==0x2d) {
+            إذا(c==0x2d) {  // hyphen
+                إذا(i==(labelStart+3) && srcArray[i-1]==0x2d) {
                     // "??--..." is Punycode or forbidden.
                     ++i;  // '-' was copied to dest already
-                    break;
+                    اكسر;
                 }
-                if(i==labelStart) {
+                إذا(i==labelStart) {
                     // label starts with "-"
                     info.labelErrors|=UIDNA_ERROR_LEADING_HYPHEN;
                 }
-                if((i+1)==srcLength || srcArray[i+1]==0x2e) {
+                إذا((i+1)==srcLength || srcArray[i+1]==0x2e) {
                     // label ends with "-"
                     info.labelErrors|=UIDNA_ERROR_TRAILING_HYPHEN;
                 }
-            } else if(c==0x2e) {  // dot
-                if(isLabel) {
+            } وإلا إذا(c==0x2e) {  // dot
+                إذا(isLabel) {
                     // Replacing with U+FFFD can be complicated for toASCII.
                     ++i;  // '.' was copied to dest already
-                    break;
+                    اكسر;
                 }
-                if(i==labelStart) {
+                إذا(i==labelStart) {
                     info.labelErrors|=UIDNA_ERROR_EMPTY_LABEL;
                 }
-                if(toASCII && (i-labelStart)>63) {
+                إذا(toASCII && (i-labelStart)>63) {
                     info.labelErrors|=UIDNA_ERROR_LABEL_TOO_LONG;
                 }
                 info.errors|=info.labelErrors;
@@ -418,93 +418,93 @@ UTS46::process(const UnicodeString& src,
     info.errors|=info.labelErrors;
     dest.releaseBuffer(i);
     processUnicode(src, labelStart, i, isLabel, toASCII, dest, info, errorCode);
-    if( info.isBiDi && U_SUCCESS(errorCode) && (info.errors&severeErrors)==0 &&
+    إذا( info.isBiDi && U_SUCCESS(errorCode) && (info.errors&severeErrors)==0 &&
         (!info.isOkBiDi || (labelStart>0 && !isASCIIOkBiDi(dest.getBuffer(), labelStart)))
     ) {
         info.errors|=UIDNA_ERROR_BIDI;
     }
-    return dest;
+    أرجع dest;
 }
 
-void
+فراغ
 UTS46::processUTF8(StringPiece src,
                    UBool isLabel, UBool toASCII,
                    ByteSink &dest,
-                   IDNAInfo &info, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return;
+                   IDNAInfo &info, UErrorCode &errorCode) ثابت {
+    إذا(U_FAILURE(errorCode)) {
+        أرجع;
     }
-    const char *srcArray=src.data();
+    ثابت حرف *srcArray=src.data();
     int32_t srcLength=src.length();
-    if(srcArray==nullptr && srcLength!=0) {
+    إذا(srcArray==nullptr && srcLength!=0) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        أرجع;
     }
     // Arguments are fine, reset output values.
     info.reset();
-    if(srcLength==0) {
+    إذا(srcLength==0) {
         info.errors|=UIDNA_ERROR_EMPTY_LABEL;
         dest.Flush();
-        return;
+        أرجع;
     }
     UnicodeString destString;
     int32_t labelStart=0;
-    if(srcLength<=256) {  // length of stackArray[]
+    إذا(srcLength<=256) {  // length of stackArray[]
         // ASCII fastpath
-        char stackArray[256];
+        حرف کەڵەکە_Array[256];
         int32_t destCapacity;
-        char *destArray=dest.GetAppendBuffer(srcLength, srcLength+20,
-                                             stackArray, UPRV_LENGTHOF(stackArray), &destCapacity);
+        حرف *destArray=dest.GetAppendBuffer(srcLength, srcLength+20,
+                                             کەڵەکە_Array, UPRV_LENGTHOF(کەڵەکە_Array), &destCapacity);
         UBool disallowNonLDHDot=(options&UIDNA_USE_STD3_RULES)!=0;
         int32_t i;
-        for(i=0;; ++i) {
-            if(i==srcLength) {
-                if(toASCII) {
-                    if((i-labelStart)>63) {
+        لكل(i=0;; ++i) {
+            إذا(i==srcLength) {
+                إذا(toASCII) {
+                    إذا((i-labelStart)>63) {
                         info.labelErrors|=UIDNA_ERROR_LABEL_TOO_LONG;
                     }
                     // There is a trailing dot if labelStart==i.
-                    if(!isLabel && i>=254 && (i>254 || labelStart<i)) {
+                    إذا(!isLabel && i>=254 && (i>254 || labelStart<i)) {
                         info.errors|=UIDNA_ERROR_DOMAIN_NAME_TOO_LONG;
                     }
                 }
                 info.errors|=info.labelErrors;
                 dest.Append(destArray, i);
                 dest.Flush();
-                return;
+                أرجع;
             }
-            char c=srcArray[i];
-            if (static_cast<int8_t>(c) < 0) { // (uint8_t)c>0x7f
-                break;
+            حرف c=srcArray[i];
+            إذا (static_cast<int8_t>(c) < 0) { // (uint8_t)c>0x7f
+                اكسر;
             }
-            int cData = asciiData[static_cast<int>(c)]; // Cast: gcc warns about indexing with a char.
-            if(cData>0) {
+            صحيح cData = asciiData[static_cast<صحيح>(c)]; // Cast: gcc warns about indexing with a char.
+            إذا(cData>0) {
                 destArray[i]=c+0x20;  // Lowercase an uppercase ASCII letter.
-            } else if(cData<0 && disallowNonLDHDot) {
-                break;  // Replacing with U+FFFD can be complicated for toASCII.
-            } else {
+            } وإلا إذا(cData<0 && disallowNonLDHDot) {
+                اكسر;  // Replacing with U+FFFD can be complicated for toASCII.
+            } وإلا {
                 destArray[i]=c;
-                if(c==0x2d) {  // hyphen
-                    if(i==(labelStart+3) && srcArray[i-1]==0x2d) {
+                إذا(c==0x2d) {  // hyphen
+                    إذا(i==(labelStart+3) && srcArray[i-1]==0x2d) {
                         // "??--..." is Punycode or forbidden.
-                        break;
+                        اكسر;
                     }
-                    if(i==labelStart) {
+                    إذا(i==labelStart) {
                         // label starts with "-"
                         info.labelErrors|=UIDNA_ERROR_LEADING_HYPHEN;
                     }
-                    if((i+1)==srcLength || srcArray[i+1]==0x2e) {
+                    إذا((i+1)==srcLength || srcArray[i+1]==0x2e) {
                         // label ends with "-"
                         info.labelErrors|=UIDNA_ERROR_TRAILING_HYPHEN;
                     }
-                } else if(c==0x2e) {  // dot
-                    if(isLabel) {
-                        break;  // Replacing with U+FFFD can be complicated for toASCII.
+                } وإلا إذا(c==0x2e) {  // dot
+                    إذا(isLabel) {
+                        اكسر;  // Replacing with U+FFFD can be complicated for toASCII.
                     }
-                    if(i==labelStart) {
+                    إذا(i==labelStart) {
                         info.labelErrors|=UIDNA_ERROR_EMPTY_LABEL;
                     }
-                    if(toASCII && (i-labelStart)>63) {
+                    إذا(toASCII && (i-labelStart)>63) {
                         info.labelErrors|=UIDNA_ERROR_LABEL_TOO_LONG;
                     }
                     info.errors|=info.labelErrors;
@@ -522,25 +522,25 @@ UTS46::processUTF8(StringPiece src,
         processUnicode(UnicodeString::fromUTF8(StringPiece(src, labelStart)), 0, mappingStart,
                        isLabel, toASCII,
                        destString, info, errorCode);
-    } else {
+    } وإلا {
         // src is too long for the ASCII fastpath implementation.
         processUnicode(UnicodeString::fromUTF8(src), 0, 0,
                        isLabel, toASCII,
                        destString, info, errorCode);
     }
     destString.toUTF8(dest);  // calls dest.Flush()
-    if(toASCII && !isLabel) {
+    إذا(toASCII && !isLabel) {
         // length==labelStart==254 means that there is a trailing dot (ok) and
         // destString is empty (do not index at 253-labelStart).
         int32_t length=labelStart+destString.length();
-        if( length>=254 && isASCIIString(destString) &&
+        إذا( length>=254 && isASCIIString(destString) &&
             (length>254 ||
              (labelStart<254 && destString[253-labelStart]!=0x2e))
         ) {
             info.errors|=UIDNA_ERROR_DOMAIN_NAME_TOO_LONG;
         }
     }
-    if( info.isBiDi && U_SUCCESS(errorCode) && (info.errors&severeErrors)==0 &&
+    إذا( info.isBiDi && U_SUCCESS(errorCode) && (info.errors&severeErrors)==0 &&
         (!info.isOkBiDi || (labelStart>0 && !isASCIIOkBiDi(srcArray, labelStart)))
     ) {
         info.errors|=UIDNA_ERROR_BIDI;
@@ -548,60 +548,60 @@ UTS46::processUTF8(StringPiece src,
 }
 
 UnicodeString&
-UTS46::processUnicode(const UnicodeString& src,
+UTS46::processUnicode(ثابت UnicodeString& src,
                       int32_t labelStart,
                       int32_t mappingStart,
                       UBool isLabel,
                       UBool toASCII,
                       UnicodeString& dest U_LIFETIME_BOUND,
                       IDNAInfo& info,
-                      UErrorCode& errorCode) const {
-    if(mappingStart==0) {
+                      UErrorCode& errorCode) ثابت {
+    إذا(mappingStart==0) {
         uts46Norm2.normalize(src, dest, errorCode);
-    } else {
+    } وإلا {
         uts46Norm2.normalizeSecondAndAppend(dest, src.tempSubString(mappingStart), errorCode);
     }
-    if(U_FAILURE(errorCode)) {
-        return dest;
+    إذا(U_FAILURE(errorCode)) {
+        أرجع dest;
     }
     UBool doMapDevChars=
         toASCII ? (options&UIDNA_NONTRANSITIONAL_TO_ASCII)==0 :
                   (options&UIDNA_NONTRANSITIONAL_TO_UNICODE)==0;
-    const char16_t *destArray=dest.getBuffer();
+    ثابت char16_t *destArray=dest.getBuffer();
     int32_t destLength=dest.length();
     int32_t labelLimit=labelStart;
-    while(labelLimit<destLength) {
+    طالما(labelLimit<destLength) {
         char16_t c=destArray[labelLimit];
-        if(c==0x2e && !isLabel) {
+        إذا(c==0x2e && !isLabel) {
             int32_t labelLength=labelLimit-labelStart;
             int32_t newLength=processLabel(dest, labelStart, labelLength,
                                             toASCII, info, errorCode);
             info.errors|=info.labelErrors;
             info.labelErrors=0;
-            if(U_FAILURE(errorCode)) {
-                return dest;
+            إذا(U_FAILURE(errorCode)) {
+                أرجع dest;
             }
             destArray=dest.getBuffer();
             destLength+=newLength-labelLength;
             labelLimit=labelStart+=newLength+1;
-            continue;
-        } else if(c<0xdf) {
+            استمر;
+        } وإلا إذا(c<0xdf) {
             // pass
-        } else if(c<=0x200d && (c==0xdf || c==0x3c2 || c>=0x200c)) {
+        } وإلا إذا(c<=0x200d && (c==0xdf || c==0x3c2 || c>=0x200c)) {
             info.isTransDiff=true;
-            if(doMapDevChars) {
+            إذا(doMapDevChars) {
                 destLength=mapDevChars(dest, labelStart, labelLimit, errorCode);
-                if(U_FAILURE(errorCode)) {
-                    return dest;
+                إذا(U_FAILURE(errorCode)) {
+                    أرجع dest;
                 }
                 destArray=dest.getBuffer();
                 // All deviation characters have been mapped, no need to check for them again.
-                doMapDevChars=false;
+                doMapDevChars=خطأ;
                 // Do not increment labelLimit in case c was removed.
-                continue;
+                استمر;
             }
-        } else if(U16_IS_SURROGATE(c)) {
-            if(U16_IS_SURROGATE_LEAD(c) ?
+        } وإلا إذا(U16_IS_SURROGATE(c)) {
+            إذا(U16_IS_SURROGATE_LEAD(c) ?
                     (labelLimit+1)==destLength || !U16_IS_TRAIL(destArray[labelLimit+1]) :
                     labelLimit==labelStart || !U16_IS_LEAD(destArray[labelLimit-1])) {
                 // Map an unpaired surrogate to U+FFFD before normalization so that when
@@ -616,44 +616,44 @@ UTS46::processUnicode(const UnicodeString& src,
     // Permit an empty label at the end (0<labelStart==labelLimit==destLength is ok)
     // but not an empty label elsewhere nor a completely empty domain name.
     // processLabel() sets UIDNA_ERROR_EMPTY_LABEL when labelLength==0.
-    if(0==labelStart || labelStart<labelLimit) {
+    إذا(0==labelStart || labelStart<labelLimit) {
         processLabel(dest, labelStart, labelLimit-labelStart,
                       toASCII, info, errorCode);
         info.errors|=info.labelErrors;
     }
-    return dest;
+    أرجع dest;
 }
 
 int32_t
 UTS46::mapDevChars(UnicodeString &dest, int32_t labelStart, int32_t mappingStart,
-                   UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+                   UErrorCode &errorCode) ثابت {
+    إذا(U_FAILURE(errorCode)) {
+        أرجع 0;
     }
     int32_t length=dest.length();
     char16_t *s=dest.getBuffer(dest[mappingStart]==0xdf ? length+1 : length);
-    if(s==nullptr) {
+    إذا(s==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return length;
+        أرجع length;
     }
     int32_t capacity=dest.getCapacity();
-    UBool didMapDevChars=false;
+    UBool didMapDevChars=خطأ;
     int32_t readIndex=mappingStart, writeIndex=mappingStart;
-    do {
+    افعل {
         char16_t c=s[readIndex++];
-        switch(c) {
-        case 0xdf:
+        بدل(c) {
+        حالة 0xdf:
             // Map sharp s to ss.
             didMapDevChars=true;
             s[writeIndex++]=0x73;  // Replace sharp s with first s.
             // Insert second s and account for possible buffer reallocation.
-            if(writeIndex==readIndex) {
-                if(length==capacity) {
+            إذا(writeIndex==readIndex) {
+                إذا(length==capacity) {
                     dest.releaseBuffer(length);
                     s=dest.getBuffer(length+1);
-                    if(s==nullptr) {
+                    إذا(s==nullptr) {
                         errorCode=U_MEMORY_ALLOCATION_ERROR;
-                        return length;
+                        أرجع length;
                     }
                     capacity=dest.getCapacity();
                 }
@@ -662,38 +662,38 @@ UTS46::mapDevChars(UnicodeString &dest, int32_t labelStart, int32_t mappingStart
             }
             s[writeIndex++]=0x73;
             ++length;
-            break;
-        case 0x3c2:  // Map final sigma to nonfinal sigma.
+            اكسر;
+        حالة 0x3c2:  // Map final sigma to nonfinal sigma.
             didMapDevChars=true;
             s[writeIndex++]=0x3c3;
-            break;
-        case 0x200c:  // Ignore/remove ZWNJ.
-        case 0x200d:  // Ignore/remove ZWJ.
+            اكسر;
+        حالة 0x200c:  // Ignore/remove ZWNJ.
+        حالة 0x200d:  // Ignore/remove ZWJ.
             didMapDevChars=true;
             --length;
-            break;
-        default:
+            اكسر;
+        افتراضي:
             // Only really necessary if writeIndex was different from readIndex.
             s[writeIndex++]=c;
-            break;
+            اكسر;
         }
-    } while(writeIndex<length);
+    } طالما(writeIndex<length);
     dest.releaseBuffer(length);
-    if(didMapDevChars) {
+    إذا(didMapDevChars) {
         // Mapping deviation characters might have resulted in an un-NFC string.
         // We could use either the NFC or the UTS #46 normalizer.
         // By using the UTS #46 normalizer again, we avoid having to load a second .nrm data file.
         UnicodeString normalized;
         uts46Norm2.normalize(dest.tempSubString(labelStart), normalized, errorCode);
-        if(U_SUCCESS(errorCode)) {
+        إذا(U_SUCCESS(errorCode)) {
             dest.replace(labelStart, 0x7fffffff, normalized);
-            if(dest.isBogus()) {
+            إذا(dest.isBogus()) {
                 errorCode=U_MEMORY_ALLOCATION_ERROR;
             }
-            return dest.length();
+            أرجع dest.length();
         }
     }
-    return length;
+    أرجع length;
 }
 
 // Replace the label in dest with the label string, if the label was modified.
@@ -701,37 +701,37 @@ UTS46::mapDevChars(UnicodeString &dest, int32_t labelStart, int32_t mappingStart
 // is the new label length, different from label.length().
 // If &label!=&dest then labelLength==label.length().
 // Returns labelLength (= the new label length).
-static int32_t
+ساكن int32_t
 replaceLabel(UnicodeString &dest, int32_t destLabelStart, int32_t destLabelLength,
-             const UnicodeString &label, int32_t labelLength, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+             ثابت UnicodeString &label, int32_t labelLength, UErrorCode &errorCode) {
+    إذا(U_FAILURE(errorCode)) {
+        أرجع 0;
     }
-    if(&label!=&dest) {
+    إذا(&label!=&dest) {
         dest.replace(destLabelStart, destLabelLength, label);
-        if(dest.isBogus()) {
+        إذا(dest.isBogus()) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return 0;
+            أرجع 0;
         }
     }
-    return labelLength;
+    أرجع labelLength;
 }
 
 int32_t
 UTS46::processLabel(UnicodeString &dest,
                     int32_t labelStart, int32_t labelLength,
                     UBool toASCII,
-                    IDNAInfo &info, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+                    IDNAInfo &info, UErrorCode &errorCode) ثابت {
+    إذا(U_FAILURE(errorCode)) {
+        أرجع 0;
     }
     UnicodeString fromPunycode;
     UnicodeString *labelString;
-    const char16_t *label=dest.getBuffer()+labelStart;
+    ثابت char16_t *label=dest.getBuffer()+labelStart;
     int32_t destLabelStart=labelStart;
     int32_t destLabelLength=labelLength;
     UBool wasPunycode;
-    if(labelLength>=4 && label[0]==0x78 && label[1]==0x6e && label[2]==0x2d && label[3]==0x2d) {
+    إذا(labelLength>=4 && label[0]==0x78 && label[1]==0x6e && label[2]==0x2d && label[3]==0x2d) {
         // Label starts with "xn--", try to un-Punycode it.
         // In IDNA2008, labels like "xn--" (decodes to an empty string) and
         // "xn--ASCII-" (decodes to just "ASCII") fail the round-trip validation from
@@ -739,27 +739,27 @@ UTS46::processLabel(UnicodeString &dest,
         // They are alternate encodings of the respective ASCII labels.
         // Ignore "xn---" here: It will fail Punycode.decode() which logically comes before
         // the round-trip verification.
-        if(labelLength==4 || (labelLength>5 && label[labelLength-1]==u'-')) {
+        إذا(labelLength==4 || (labelLength>5 && label[labelLength-1]==u'-')) {
             info.labelErrors|=UIDNA_ERROR_INVALID_ACE_LABEL;
-            return markBadACELabel(dest, labelStart, labelLength, toASCII, info, errorCode);
+            أرجع markBadACELabel(dest, labelStart, labelLength, toASCII, info, errorCode);
         }
         wasPunycode=true;
         char16_t *unicodeBuffer=fromPunycode.getBuffer(-1);  // capacity==-1: most labels should fit
-        if(unicodeBuffer==nullptr) {
+        إذا(unicodeBuffer==nullptr) {
             // Should never occur if we used capacity==-1 which uses the internal buffer.
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return labelLength;
+            أرجع labelLength;
         }
         UErrorCode punycodeErrorCode=U_ZERO_ERROR;
         int32_t unicodeLength=u_strFromPunycode(label+4, labelLength-4,
                                                 unicodeBuffer, fromPunycode.getCapacity(),
                                                 nullptr, &punycodeErrorCode);
-        if(punycodeErrorCode==U_BUFFER_OVERFLOW_ERROR) {
+        إذا(punycodeErrorCode==U_BUFFER_OVERFLOW_ERROR) {
             fromPunycode.releaseBuffer(0);
             unicodeBuffer=fromPunycode.getBuffer(unicodeLength);
-            if(unicodeBuffer==nullptr) {
+            إذا(unicodeBuffer==nullptr) {
                 errorCode=U_MEMORY_ALLOCATION_ERROR;
-                return labelLength;
+                أرجع labelLength;
             }
             punycodeErrorCode=U_ZERO_ERROR;
             unicodeLength=u_strFromPunycode(label+4, labelLength-4,
@@ -767,9 +767,9 @@ UTS46::processLabel(UnicodeString &dest,
                                             nullptr, &punycodeErrorCode);
         }
         fromPunycode.releaseBuffer(unicodeLength);
-        if(U_FAILURE(punycodeErrorCode)) {
+        إذا(U_FAILURE(punycodeErrorCode)) {
             info.labelErrors|=UIDNA_ERROR_PUNYCODE;
-            return markBadACELabel(dest, labelStart, labelLength, toASCII, info, errorCode);
+            أرجع markBadACELabel(dest, labelStart, labelLength, toASCII, info, errorCode);
         }
         // Check for NFC, and for characters that are not
         // valid or deviation characters according to the normalizer.
@@ -779,42 +779,42 @@ UTS46::processLabel(UnicodeString &dest,
         // In the code further below, if we find non-LDH ASCII and we have UIDNA_USE_STD3_RULES
         // then we will set UIDNA_ERROR_INVALID_ACE_LABEL there too.
         UBool isValid=uts46Norm2.isNormalized(fromPunycode, errorCode);
-        if(U_FAILURE(errorCode)) {
-            return labelLength;
+        إذا(U_FAILURE(errorCode)) {
+            أرجع labelLength;
         }
         // Unicode 15.1 UTS #46:
         // Added an additional condition in 4.1 Validity Criteria to
         // disallow labels such as xn--xn---epa., which do not round-trip.
         // --> Validity Criteria new criterion 4:
         // If not CheckHyphens, the label must not begin with “xn--”.
-        if(!isValid || fromPunycode.startsWith(UnicodeString::readOnlyAlias(u"xn--"))) {
+        إذا(!isValid || fromPunycode.startsWith(UnicodeString::readOnlyAlias(u"xn--"))) {
             info.labelErrors|=UIDNA_ERROR_INVALID_ACE_LABEL;
-            return markBadACELabel(dest, labelStart, labelLength, toASCII, info, errorCode);
+            أرجع markBadACELabel(dest, labelStart, labelLength, toASCII, info, errorCode);
         }
         labelString=&fromPunycode;
         label=fromPunycode.getBuffer();
         labelStart=0;
         labelLength=fromPunycode.length();
-    } else {
-        wasPunycode=false;
+    } وإلا {
+        wasPunycode=خطأ;
         labelString=&dest;
     }
     // Validity check
-    if(labelLength==0) {
+    إذا(labelLength==0) {
         info.labelErrors|=UIDNA_ERROR_EMPTY_LABEL;
-        return replaceLabel(dest, destLabelStart, destLabelLength,
+        أرجع replaceLabel(dest, destLabelStart, destLabelLength,
                             *labelString, labelLength, errorCode);
     }
     // labelLength>0
-    if(labelLength>=4 && label[2]==0x2d && label[3]==0x2d) {
+    إذا(labelLength>=4 && label[2]==0x2d && label[3]==0x2d) {
         // label starts with "??--"
         info.labelErrors|=UIDNA_ERROR_HYPHEN_3_4;
     }
-    if(label[0]==0x2d) {
+    إذا(label[0]==0x2d) {
         // label starts with "-"
         info.labelErrors|=UIDNA_ERROR_LEADING_HYPHEN;
     }
-    if(label[labelLength-1]==0x2d) {
+    إذا(label[labelLength-1]==0x2d) {
         // label ends with "-"
         info.labelErrors|=UIDNA_ERROR_TRAILING_HYPHEN;
     }
@@ -828,71 +828,71 @@ UTS46::processLabel(UnicodeString &dest,
     // We also check for dots which can come from the input to a single-label function.
     // Ok to cast away const because we own the UnicodeString.
     char16_t* s = const_cast<char16_t*>(label);
-    const char16_t *limit=label+labelLength;
+    ثابت char16_t *limit=label+labelLength;
     char16_t oredChars=0;
     // If we enforce STD3 rules, then ASCII characters other than LDH and dot are disallowed.
     UBool disallowNonLDHDot=(options&UIDNA_USE_STD3_RULES)!=0;
-    do {
+    افعل {
         char16_t c=*s;
-        if(c<=0x7f) {
-            if(c==0x2e) {
+        إذا(c<=0x7f) {
+            إذا(c==0x2e) {
                 info.labelErrors|=UIDNA_ERROR_LABEL_HAS_DOT;
                 *s=0xfffd;
-            } else if(disallowNonLDHDot && asciiData[c]<0) {
+            } وإلا إذا(disallowNonLDHDot && asciiData[c]<0) {
                 info.labelErrors|=UIDNA_ERROR_DISALLOWED;
                 *s=0xfffd;
             }
-        } else {
+        } وإلا {
             oredChars|=c;
-            if(c==0xfffd) {
+            إذا(c==0xfffd) {
                 info.labelErrors|=UIDNA_ERROR_DISALLOWED;
             }
         }
         ++s;
-    } while(s<limit);
+    } طالما(s<limit);
     // Check for a leading combining mark after other validity checks
     // so that we don't report UIDNA_ERROR_DISALLOWED for the U+FFFD from here.
     UChar32 c;
     int32_t cpLength=0;
     // "Unsafe" is ok because unpaired surrogates were mapped to U+FFFD.
     U16_NEXT_UNSAFE(label, cpLength, c);
-    if((U_GET_GC_MASK(c)&U_GC_M_MASK)!=0) {
+    إذا((U_GET_GC_MASK(c)&U_GC_M_MASK)!=0) {
         info.labelErrors|=UIDNA_ERROR_LEADING_COMBINING_MARK;
         labelString->replace(labelStart, cpLength, static_cast<char16_t>(0xfffd));
         label=labelString->getBuffer()+labelStart;
         labelLength+=1-cpLength;
-        if(labelString==&dest) {
+        إذا(labelString==&dest) {
             destLabelLength=labelLength;
         }
     }
-    if((info.labelErrors&severeErrors)==0) {
+    إذا((info.labelErrors&severeErrors)==0) {
         // Do contextual checks only if we do not have U+FFFD from a severe error
         // because U+FFFD can make these checks fail.
-        if((options&UIDNA_CHECK_BIDI)!=0 && (!info.isBiDi || info.isOkBiDi)) {
+        إذا((options&UIDNA_CHECK_BIDI)!=0 && (!info.isBiDi || info.isOkBiDi)) {
             checkLabelBiDi(label, labelLength, info);
         }
-        if( (options&UIDNA_CHECK_CONTEXTJ)!=0 && (oredChars&0x200c)==0x200c &&
+        إذا( (options&UIDNA_CHECK_CONTEXTJ)!=0 && (oredChars&0x200c)==0x200c &&
             !isLabelOkContextJ(label, labelLength)
         ) {
             info.labelErrors|=UIDNA_ERROR_CONTEXTJ;
         }
-        if((options&UIDNA_CHECK_CONTEXTO)!=0 && oredChars>=0xb7) {
+        إذا((options&UIDNA_CHECK_CONTEXTO)!=0 && oredChars>=0xb7) {
             checkLabelContextO(label, labelLength, info);
         }
-        if(toASCII) {
-            if(wasPunycode) {
+        إذا(toASCII) {
+            إذا(wasPunycode) {
                 // Leave a Punycode label unchanged if it has no severe errors.
-                if(destLabelLength>63) {
+                إذا(destLabelLength>63) {
                     info.labelErrors|=UIDNA_ERROR_LABEL_TOO_LONG;
                 }
-                return destLabelLength;
-            } else if(oredChars>=0x80) {
+                أرجع destLabelLength;
+            } وإلا إذا(oredChars>=0x80) {
                 // Contains non-ASCII characters.
                 UnicodeString punycode;
                 char16_t *buffer=punycode.getBuffer(63);  // 63==maximum DNS label length
-                if(buffer==nullptr) {
+                إذا(buffer==nullptr) {
                     errorCode=U_MEMORY_ALLOCATION_ERROR;
-                    return destLabelLength;
+                    أرجع destLabelLength;
                 }
                 buffer[0]=0x78;  // Write "xn--".
                 buffer[1]=0x6e;
@@ -902,13 +902,13 @@ UTS46::processLabel(UnicodeString &dest,
                 int32_t punycodeLength=u_strToPunycode(label, labelLength,
                                                       buffer+4, punycode.getCapacity()-4,
                                                       nullptr, &punycodeErrorCode);
-                if(punycodeErrorCode==U_BUFFER_OVERFLOW_ERROR) {
+                إذا(punycodeErrorCode==U_BUFFER_OVERFLOW_ERROR) {
                     punycodeErrorCode=U_ZERO_ERROR;
                     punycode.releaseBuffer(4);
                     buffer=punycode.getBuffer(4+punycodeLength);
-                    if(buffer==nullptr) {
+                    إذا(buffer==nullptr) {
                         errorCode=U_MEMORY_ALLOCATION_ERROR;
-                        return destLabelLength;
+                        أرجع destLabelLength;
                     }
                     punycodeLength=u_strToPunycode(label, labelLength,
                                                   buffer+4, punycode.getCapacity()-4,
@@ -916,31 +916,31 @@ UTS46::processLabel(UnicodeString &dest,
                 }
                 punycodeLength+=4;
                 punycode.releaseBuffer(punycodeLength);
-                if(U_FAILURE(punycodeErrorCode)) {
+                إذا(U_FAILURE(punycodeErrorCode)) {
                     errorCode = punycodeErrorCode;
-                    return destLabelLength;
+                    أرجع destLabelLength;
                 }
-                if(punycodeLength>63) {
+                إذا(punycodeLength>63) {
                     info.labelErrors|=UIDNA_ERROR_LABEL_TOO_LONG;
                 }
-                return replaceLabel(dest, destLabelStart, destLabelLength,
+                أرجع replaceLabel(dest, destLabelStart, destLabelLength,
                                     punycode, punycodeLength, errorCode);
-            } else {
+            } وإلا {
                 // all-ASCII label
-                if(labelLength>63) {
+                إذا(labelLength>63) {
                     info.labelErrors|=UIDNA_ERROR_LABEL_TOO_LONG;
                 }
             }
         }
-    } else {
+    } وإلا {
         // If a Punycode label has severe errors,
         // then leave it but make sure it does not look valid.
-        if(wasPunycode) {
+        إذا(wasPunycode) {
             info.labelErrors|=UIDNA_ERROR_INVALID_ACE_LABEL;
-            return markBadACELabel(dest, destLabelStart, destLabelLength, toASCII, info, errorCode);
+            أرجع markBadACELabel(dest, destLabelStart, destLabelLength, toASCII, info, errorCode);
         }
     }
-    return replaceLabel(dest, destLabelStart, destLabelLength,
+    أرجع replaceLabel(dest, destLabelStart, destLabelLength,
                         *labelString, labelLength, errorCode);
 }
 
@@ -950,77 +950,77 @@ UTS46::processLabel(UnicodeString &dest,
 int32_t
 UTS46::markBadACELabel(UnicodeString &dest,
                        int32_t labelStart, int32_t labelLength,
-                       UBool toASCII, IDNAInfo &info, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return 0;
+                       UBool toASCII, IDNAInfo &info, UErrorCode &errorCode) ثابت {
+    إذا(U_FAILURE(errorCode)) {
+        أرجع 0;
     }
     UBool disallowNonLDHDot=(options&UIDNA_USE_STD3_RULES)!=0;
     UBool isASCII=true;
     UBool onlyLDH=true;
-    const char16_t *label=dest.getBuffer()+labelStart;
-    const char16_t *limit=label+labelLength;
+    ثابت char16_t *label=dest.getBuffer()+labelStart;
+    ثابت char16_t *limit=label+labelLength;
     // Start after the initial "xn--".
     // Ok to cast away const because we own the UnicodeString.
-    for(char16_t *s=const_cast<char16_t *>(label+4); s<limit; ++s) {
+    لكل(char16_t *s=const_cast<char16_t *>(label+4); s<limit; ++s) {
         char16_t c=*s;
-        if(c<=0x7f) {
-            if(c==0x2e) {
+        إذا(c<=0x7f) {
+            إذا(c==0x2e) {
                 info.labelErrors|=UIDNA_ERROR_LABEL_HAS_DOT;
                 *s=0xfffd;
-                isASCII=onlyLDH=false;
-            } else if(asciiData[c]<0) {
-                onlyLDH=false;
-                if(disallowNonLDHDot) {
+                isASCII=onlyLDH=خطأ;
+            } وإلا إذا(asciiData[c]<0) {
+                onlyLDH=خطأ;
+                إذا(disallowNonLDHDot) {
                     *s=0xfffd;
-                    isASCII=false;
+                    isASCII=خطأ;
                 }
             }
-        } else {
-            isASCII=onlyLDH=false;
+        } وإلا {
+            isASCII=onlyLDH=خطأ;
         }
     }
-    if(onlyLDH) {
+    إذا(onlyLDH) {
         dest.insert(labelStart + labelLength, static_cast<char16_t>(0xfffd));
-        if(dest.isBogus()) {
+        إذا(dest.isBogus()) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return 0;
+            أرجع 0;
         }
         ++labelLength;
-    } else {
-        if(toASCII && isASCII && labelLength>63) {
+    } وإلا {
+        إذا(toASCII && isASCII && labelLength>63) {
             info.labelErrors|=UIDNA_ERROR_LABEL_TOO_LONG;
         }
     }
-    return labelLength;
+    أرجع labelLength;
 }
 
-const uint32_t L_MASK=U_MASK(U_LEFT_TO_RIGHT);
-const uint32_t R_AL_MASK=U_MASK(U_RIGHT_TO_LEFT)|U_MASK(U_RIGHT_TO_LEFT_ARABIC);
-const uint32_t L_R_AL_MASK=L_MASK|R_AL_MASK;
+ثابت uint32_t L_MASK=U_MASK(U_چەپ_TO_ڕاست);
+ثابت uint32_t R_AL_MASK=U_MASK(U_ڕاست_TO_چەپ)|U_MASK(U_ڕاست_TO_چەپ_ARABIC);
+ثابت uint32_t L_R_AL_MASK=L_MASK|R_AL_MASK;
 
-const uint32_t R_AL_AN_MASK=R_AL_MASK|U_MASK(U_ARABIC_NUMBER);
+ثابت uint32_t R_AL_AN_MASK=R_AL_MASK|U_MASK(U_ARABIC_ژمار);
 
-const uint32_t EN_AN_MASK=U_MASK(U_EUROPEAN_NUMBER)|U_MASK(U_ARABIC_NUMBER);
-const uint32_t R_AL_EN_AN_MASK=R_AL_MASK|EN_AN_MASK;
-const uint32_t L_EN_MASK=L_MASK|U_MASK(U_EUROPEAN_NUMBER);
+ثابت uint32_t EN_AN_MASK=U_MASK(U_EUROPEAN_ژمار)|U_MASK(U_ARABIC_ژمار);
+ثابت uint32_t R_AL_EN_AN_MASK=R_AL_MASK|EN_AN_MASK;
+ثابت uint32_t L_EN_MASK=L_MASK|U_MASK(U_EUROPEAN_ژمار);
 
-const uint32_t ES_CS_ET_ON_BN_NSM_MASK=
-    U_MASK(U_EUROPEAN_NUMBER_SEPARATOR)|
-    U_MASK(U_COMMON_NUMBER_SEPARATOR)|
-    U_MASK(U_EUROPEAN_NUMBER_TERMINATOR)|
+ثابت uint32_t ES_CS_ET_ON_BN_NSM_MASK=
+    U_MASK(U_EUROPEAN_ژمار_SEPARATOR)|
+    U_MASK(U_COMMON_ژمار_SEPARATOR)|
+    U_MASK(U_EUROPEAN_ژمار_TERMINATOR)|
     U_MASK(U_OTHER_NEUTRAL)|
     U_MASK(U_BOUNDARY_NEUTRAL)|
     U_MASK(U_DIR_NON_SPACING_MARK);
-const uint32_t L_EN_ES_CS_ET_ON_BN_NSM_MASK=L_EN_MASK|ES_CS_ET_ON_BN_NSM_MASK;
-const uint32_t R_AL_AN_EN_ES_CS_ET_ON_BN_NSM_MASK=R_AL_MASK|EN_AN_MASK|ES_CS_ET_ON_BN_NSM_MASK;
+ثابت uint32_t L_EN_ES_CS_ET_ON_BN_NSM_MASK=L_EN_MASK|ES_CS_ET_ON_BN_NSM_MASK;
+ثابت uint32_t R_AL_AN_EN_ES_CS_ET_ON_BN_NSM_MASK=R_AL_MASK|EN_AN_MASK|ES_CS_ET_ON_BN_NSM_MASK;
 
 // We scan the whole label and check both for whether it contains RTL characters
 // and whether it passes the BiDi Rule.
 // In a BiDi domain name, all labels must pass the BiDi Rule, but we might find
 // that a domain name is a BiDi domain name (has an RTL label) only after
 // processing several earlier labels.
-void
-UTS46::checkLabelBiDi(const char16_t *label, int32_t labelLength, IDNAInfo &info) const {
+فراغ
+UTS46::checkLabelBiDi(ثابت char16_t *label, int32_t labelLength, IDNAInfo &info) ثابت {
     // IDNA2008 BiDi rule
     // Get the directionality of the first character.
     UChar32 c;
@@ -1030,21 +1030,21 @@ UTS46::checkLabelBiDi(const char16_t *label, int32_t labelLength, IDNAInfo &info
     // 1. The first character must be a character with BIDI property L, R
     // or AL.  If it has the R or AL property, it is an RTL label; if it
     // has the L property, it is an LTR label.
-    if((firstMask&~L_R_AL_MASK)!=0) {
-        info.isOkBiDi=false;
+    إذا((firstMask&~L_R_AL_MASK)!=0) {
+        info.isOkBiDi=خطأ;
     }
     // Get the directionality of the last non-NSM character.
     uint32_t lastMask;
-    for(;;) {
-        if(i>=labelLength) {
+    لكل(;;) {
+        إذا(i>=labelLength) {
             lastMask=firstMask;
-            break;
+            اكسر;
         }
         U16_PREV_UNSAFE(label, labelLength, c);
         UCharDirection dir=u_charDirection(c);
-        if(dir!=U_DIR_NON_SPACING_MARK) {
+        إذا(dir!=U_DIR_NON_SPACING_MARK) {
             lastMask=U_MASK(dir);
-            break;
+            اكسر;
         }
     }
     // 3. In an RTL label, the end of the label must be a character with
@@ -1053,34 +1053,34 @@ UTS46::checkLabelBiDi(const char16_t *label, int32_t labelLength, IDNAInfo &info
     // 6. In an LTR label, the end of the label must be a character with
     // BIDI property L or EN, followed by zero or more characters with
     // BIDI property NSM.
-    if( (firstMask&L_MASK)!=0 ?
+    إذا( (firstMask&L_MASK)!=0 ?
             (lastMask&~L_EN_MASK)!=0 :
             (lastMask&~R_AL_EN_AN_MASK)!=0
     ) {
-        info.isOkBiDi=false;
+        info.isOkBiDi=خطأ;
     }
     // Add the directionalities of the intervening characters.
     uint32_t mask=firstMask|lastMask;
-    while(i<labelLength) {
+    طالما(i<labelLength) {
         U16_NEXT_UNSAFE(label, i, c);
         mask|=U_MASK(u_charDirection(c));
     }
-    if(firstMask&L_MASK) {
+    إذا(firstMask&L_MASK) {
         // 5. In an LTR label, only characters with the BIDI properties L, EN,
         // ES, CS, ET, ON, BN and NSM are allowed.
-        if((mask&~L_EN_ES_CS_ET_ON_BN_NSM_MASK)!=0) {
-            info.isOkBiDi=false;
+        إذا((mask&~L_EN_ES_CS_ET_ON_BN_NSM_MASK)!=0) {
+            info.isOkBiDi=خطأ;
         }
-    } else {
+    } وإلا {
         // 2. In an RTL label, only characters with the BIDI properties R, AL,
         // AN, EN, ES, CS, ET, ON, BN and NSM are allowed.
-        if((mask&~R_AL_AN_EN_ES_CS_ET_ON_BN_NSM_MASK)!=0) {
-            info.isOkBiDi=false;
+        إذا((mask&~R_AL_AN_EN_ES_CS_ET_ON_BN_NSM_MASK)!=0) {
+            info.isOkBiDi=خطأ;
         }
         // 4. In an RTL label, if an EN is present, no AN may be present, and
         // vice versa.
-        if((mask&EN_AN_MASK)==EN_AN_MASK) {
-            info.isOkBiDi=false;
+        إذا((mask&EN_AN_MASK)==EN_AN_MASK) {
+            info.isOkBiDi=خطأ;
         }
     }
     // An RTL label is a label that contains at least one character of type
@@ -1089,7 +1089,7 @@ UTS46::checkLabelBiDi(const char16_t *label, int32_t labelLength, IDNAInfo &info
     // label. [...]
     // The following rule, consisting of six conditions, applies to labels
     // in BIDI domain names.
-    if((mask&R_AL_AN_MASK)!=0) {
+    إذا((mask&R_AL_AN_MASK)!=0) {
         info.isBiDi=true;
     }
 }
@@ -1107,171 +1107,171 @@ UTS46::checkLabelBiDi(const char16_t *label, int32_t labelLength, IDNAInfo &info
 // UTF-16 version, called for mapped ASCII prefix.
 // Cannot contain uppercase A-Z.
 // s[length-1] must be the trailing dot.
-static UBool
-isASCIIOkBiDi(const char16_t *s, int32_t length) {
+ساكن UBool
+isASCIIOkBiDi(ثابت char16_t *s, int32_t length) {
     int32_t labelStart=0;
-    for(int32_t i=0; i<length; ++i) {
+    لكل(int32_t i=0; i<length; ++i) {
         char16_t c=s[i];
-        if(c==0x2e) {  // dot
-            if(i>labelStart) {
+        إذا(c==0x2e) {  // dot
+            إذا(i>labelStart) {
                 c=s[i-1];
-                if(!(0x61<=c && c<=0x7a) && !(0x30<=c && c<=0x39)) {
+                إذا(!(0x61<=c && c<=0x7a) && !(0x30<=c && c<=0x39)) {
                     // Last character in the label is not an L or EN.
-                    return false;
+                    أرجع خطأ;
                 }
             }
             labelStart=i+1;
-        } else if(i==labelStart) {
-            if(!(0x61<=c && c<=0x7a)) {
+        } وإلا إذا(i==labelStart) {
+            إذا(!(0x61<=c && c<=0x7a)) {
                 // First character in the label is not an L.
-                return false;
+                أرجع خطأ;
             }
-        } else {
-            if(c<=0x20 && (c>=0x1c || (9<=c && c<=0xd))) {
+        } وإلا {
+            إذا(c<=0x20 && (c>=0x1c || (9<=c && c<=0xd))) {
                 // Intermediate character in the label is a B, S or WS.
-                return false;
+                أرجع خطأ;
             }
         }
     }
-    return true;
+    أرجع true;
 }
 
 // UTF-8 version, called for source ASCII prefix.
 // Can contain uppercase A-Z.
 // s[length-1] must be the trailing dot.
-static UBool
-isASCIIOkBiDi(const char *s, int32_t length) {
+ساكن UBool
+isASCIIOkBiDi(ثابت حرف *s, int32_t length) {
     int32_t labelStart=0;
-    for(int32_t i=0; i<length; ++i) {
-        char c=s[i];
-        if(c==0x2e) {  // dot
-            if(i>labelStart) {
+    لكل(int32_t i=0; i<length; ++i) {
+        حرف c=s[i];
+        إذا(c==0x2e) {  // dot
+            إذا(i>labelStart) {
                 c=s[i-1];
-                if(!(0x61<=c && c<=0x7a) && !(0x41<=c && c<=0x5a) && !(0x30<=c && c<=0x39)) {
+                إذا(!(0x61<=c && c<=0x7a) && !(0x41<=c && c<=0x5a) && !(0x30<=c && c<=0x39)) {
                     // Last character in the label is not an L or EN.
-                    return false;
+                    أرجع خطأ;
                 }
             }
             labelStart=i+1;
-        } else if(i==labelStart) {
-            if(!(0x61<=c && c<=0x7a) && !(0x41<=c && c<=0x5a)) {
+        } وإلا إذا(i==labelStart) {
+            إذا(!(0x61<=c && c<=0x7a) && !(0x41<=c && c<=0x5a)) {
                 // First character in the label is not an L.
-                return false;
+                أرجع خطأ;
             }
-        } else {
-            if(c<=0x20 && (c>=0x1c || (9<=c && c<=0xd))) {
+        } وإلا {
+            إذا(c<=0x20 && (c>=0x1c || (9<=c && c<=0xd))) {
                 // Intermediate character in the label is a B, S or WS.
-                return false;
+                أرجع خطأ;
             }
         }
     }
-    return true;
+    أرجع true;
 }
 
 UBool
-UTS46::isLabelOkContextJ(const char16_t *label, int32_t labelLength) const {
+UTS46::isLabelOkContextJ(ثابت char16_t *label, int32_t labelLength) ثابت {
     // [IDNA2008-Tables]
     // 200C..200D  ; CONTEXTJ    # ZERO WIDTH NON-JOINER..ZERO WIDTH JOINER
-    for(int32_t i=0; i<labelLength; ++i) {
-        if(label[i]==0x200c) {
+    لكل(int32_t i=0; i<labelLength; ++i) {
+        إذا(label[i]==0x200c) {
             // Appendix A.1. ZERO WIDTH NON-JOINER
             // Rule Set:
             //  False;
             //  If Canonical_Combining_Class(Before(cp)) .eq.  Virama Then True;
             //  If RegExpMatch((Joining_Type:{L,D})(Joining_Type:T)*\u200C
             //     (Joining_Type:T)*(Joining_Type:{R,D})) Then True;
-            if(i==0) {
-                return false;
+            إذا(i==0) {
+                أرجع خطأ;
             }
             UChar32 c;
             int32_t j=i;
             U16_PREV_UNSAFE(label, j, c);
-            if(uts46Norm2.getCombiningClass(c)==9) {
-                continue;
+            إذا(uts46Norm2.getCombiningClass(c)==9) {
+                استمر;
             }
             // check precontext (Joining_Type:{L,D})(Joining_Type:T)*
-            for(;;) {
+            لكل(;;) {
                 UJoiningType type=ubidi_getJoiningType(c);
-                if(type==U_JT_TRANSPARENT) {
-                    if(j==0) {
-                        return false;
+                إذا(type==U_JT_TRANSPARENT) {
+                    إذا(j==0) {
+                        أرجع خطأ;
                     }
                     U16_PREV_UNSAFE(label, j, c);
-                } else if(type==U_JT_LEFT_JOINING || type==U_JT_DUAL_JOINING) {
-                    break;  // precontext fulfilled
-                } else {
-                    return false;
+                } وإلا إذا(type==U_JT_چەپ_JOINING || type==U_JT_DUAL_JOINING) {
+                    اكسر;  // precontext fulfilled
+                } وإلا {
+                    أرجع خطأ;
                 }
             }
             // check postcontext (Joining_Type:T)*(Joining_Type:{R,D})
-            for(j=i+1;;) {
-                if(j==labelLength) {
-                    return false;
+            لكل(j=i+1;;) {
+                إذا(j==labelLength) {
+                    أرجع خطأ;
                 }
                 U16_NEXT_UNSAFE(label, j, c);
                 UJoiningType type=ubidi_getJoiningType(c);
-                if(type==U_JT_TRANSPARENT) {
+                إذا(type==U_JT_TRANSPARENT) {
                     // just skip this character
-                } else if(type==U_JT_RIGHT_JOINING || type==U_JT_DUAL_JOINING) {
-                    break;  // postcontext fulfilled
-                } else {
-                    return false;
+                } وإلا إذا(type==U_JT_ڕاست_JOINING || type==U_JT_DUAL_JOINING) {
+                    اكسر;  // postcontext fulfilled
+                } وإلا {
+                    أرجع خطأ;
                 }
             }
-        } else if(label[i]==0x200d) {
+        } وإلا إذا(label[i]==0x200d) {
             // Appendix A.2. ZERO WIDTH JOINER (U+200D)
             // Rule Set:
             //  False;
             //  If Canonical_Combining_Class(Before(cp)) .eq.  Virama Then True;
-            if(i==0) {
-                return false;
+            إذا(i==0) {
+                أرجع خطأ;
             }
             UChar32 c;
             int32_t j=i;
             U16_PREV_UNSAFE(label, j, c);
-            if(uts46Norm2.getCombiningClass(c)!=9) {
-                return false;
+            إذا(uts46Norm2.getCombiningClass(c)!=9) {
+                أرجع خطأ;
             }
         }
     }
-    return true;
+    أرجع true;
 }
 
-void
-UTS46::checkLabelContextO(const char16_t *label, int32_t labelLength, IDNAInfo &info) const {
+فراغ
+UTS46::checkLabelContextO(ثابت char16_t *label, int32_t labelLength, IDNAInfo &info) ثابت {
     int32_t labelEnd=labelLength-1;  // inclusive
     int32_t arabicDigits=0;  // -1 for 066x, +1 for 06Fx
-    for(int32_t i=0; i<=labelEnd; ++i) {
+    لكل(int32_t i=0; i<=labelEnd; ++i) {
         UChar32 c=label[i];
-        if(c<0xb7) {
+        إذا(c<0xb7) {
             // ASCII fastpath
-        } else if(c<=0x6f9) {
-            if(c==0xb7) {
+        } وإلا إذا(c<=0x6f9) {
+            إذا(c==0xb7) {
                 // Appendix A.3. MIDDLE DOT (U+00B7)
                 // Rule Set:
                 //  False;
                 //  If Before(cp) .eq.  U+006C And
                 //     After(cp) .eq.  U+006C Then True;
-                if(!(0<i && label[i-1]==0x6c &&
+                إذا(!(0<i && label[i-1]==0x6c &&
                      i<labelEnd && label[i+1]==0x6c)) {
                     info.labelErrors|=UIDNA_ERROR_CONTEXTO_PUNCTUATION;
                 }
-            } else if(c==0x375) {
+            } وإلا إذا(c==0x375) {
                 // Appendix A.4. GREEK LOWER NUMERAL SIGN (KERAIA) (U+0375)
                 // Rule Set:
                 //  False;
                 //  If Script(After(cp)) .eq.  Greek Then True;
                 UScriptCode script=USCRIPT_INVALID_CODE;
-                if(i<labelEnd) {
+                إذا(i<labelEnd) {
                     UErrorCode errorCode=U_ZERO_ERROR;
                     int32_t j=i+1;
                     U16_NEXT(label, j, labelLength, c);
                     script=uscript_getScript(c, &errorCode);
                 }
-                if(script!=USCRIPT_GREEK) {
+                إذا(script!=USCRIPT_GREEK) {
                     info.labelErrors|=UIDNA_ERROR_CONTEXTO_PUNCTUATION;
                 }
-            } else if(c==0x5f3 || c==0x5f4) {
+            } وإلا إذا(c==0x5f3 || c==0x5f4) {
                 // Appendix A.5. HEBREW PUNCTUATION GERESH (U+05F3)
                 // Rule Set:
                 //  False;
@@ -1282,16 +1282,16 @@ UTS46::checkLabelContextO(const char16_t *label, int32_t labelLength, IDNAInfo &
                 //  False;
                 //  If Script(Before(cp)) .eq.  Hebrew Then True;
                 UScriptCode script=USCRIPT_INVALID_CODE;
-                if(0<i) {
+                إذا(0<i) {
                     UErrorCode errorCode=U_ZERO_ERROR;
                     int32_t j=i;
                     U16_PREV(label, 0, j, c);
                     script=uscript_getScript(c, &errorCode);
                 }
-                if(script!=USCRIPT_HEBREW) {
+                إذا(script!=USCRIPT_HEBREW) {
                     info.labelErrors|=UIDNA_ERROR_CONTEXTO_PUNCTUATION;
                 }
-            } else if(0x660<=c /* && c<=0x6f9 */) {
+            } وإلا إذا(0x660<=c /* && c<=0x6f9 */) {
                 // Appendix A.8. ARABIC-INDIC DIGITS (0660..0669)
                 // Rule Set:
                 //  True;
@@ -1305,19 +1305,19 @@ UTS46::checkLabelContextO(const char16_t *label, int32_t labelLength, IDNAInfo &
                 //  For All Characters:
                 //    If cp .in. 0660..0669 Then False;
                 //  End For;
-                if(c<=0x669) {
-                    if(arabicDigits>0) {
+                إذا(c<=0x669) {
+                    إذا(arabicDigits>0) {
                         info.labelErrors|=UIDNA_ERROR_CONTEXTO_DIGITS;
                     }
                     arabicDigits=-1;
-                } else if(0x6f0<=c) {
-                    if(arabicDigits<0) {
+                } وإلا إذا(0x6f0<=c) {
+                    إذا(arabicDigits<0) {
                         info.labelErrors|=UIDNA_ERROR_CONTEXTO_DIGITS;
                     }
                     arabicDigits=1;
                 }
             }
-        } else if(c==0x30fb) {
+        } وإلا إذا(c==0x30fb) {
             // Appendix A.7. KATAKANA MIDDLE DOT (U+30FB)
             // Rule Set:
             //  False;
@@ -1325,15 +1325,15 @@ UTS46::checkLabelContextO(const char16_t *label, int32_t labelLength, IDNAInfo &
             //    If Script(cp) .in. {Hiragana, Katakana, Han} Then True;
             //  End For;
             UErrorCode errorCode=U_ZERO_ERROR;
-            for(int j=0;;) {
-                if(j>labelEnd) {
+            لكل(صحيح j=0;;) {
+                إذا(j>labelEnd) {
                     info.labelErrors|=UIDNA_ERROR_CONTEXTO_PUNCTUATION;
-                    break;
+                    اكسر;
                 }
                 U16_NEXT(label, j, labelLength, c);
                 UScriptCode script=uscript_getScript(c, &errorCode);
-                if(script==USCRIPT_HIRAGANA || script==USCRIPT_KATAKANA || script==USCRIPT_HAN) {
-                    break;
+                إذا(script==USCRIPT_HIRAGANA || script==USCRIPT_KATAKANA || script==USCRIPT_HAN) {
+                    اكسر;
                 }
             }
         }
@@ -1348,179 +1348,179 @@ U_NAMESPACE_USE
 
 U_CAPI UIDNA * U_EXPORT2
 uidna_openUTS46(uint32_t options, UErrorCode *pErrorCode) {
-    return reinterpret_cast<UIDNA *>(IDNA::createUTS46Instance(options, *pErrorCode));
+    أرجع reinterpret_cast<UIDNA *>(IDNA::createUTS46Instance(options, *pErrorCode));
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 uidna_close(UIDNA *idna) {
     delete reinterpret_cast<IDNA *>(idna);
 }
 
-static UBool
-checkArgs(const void *label, int32_t length,
-          void *dest, int32_t capacity,
+ساكن UBool
+checkArgs(ثابت فراغ *label, int32_t length,
+          فراغ *dest, int32_t capacity,
           UIDNAInfo *pInfo, UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return false;
+    إذا(U_FAILURE(*pErrorCode)) {
+        أرجع خطأ;
     }
     // sizeof(UIDNAInfo)=16 in the first API version.
-    if(pInfo==nullptr || pInfo->size<16) {
+    إذا(pInfo==nullptr || pInfo->size<16) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        أرجع خطأ;
     }
-    if( (label==nullptr ? length!=0 : length<-1) ||
+    إذا( (label==nullptr ? length!=0 : length<-1) ||
         (dest==nullptr ? capacity!=0 : capacity<0) ||
         (dest==label && label!=nullptr)
     ) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        أرجع خطأ;
     }
     // Set all *pInfo bytes to 0 except for the size field itself.
-    uprv_memset(&pInfo->size+1, 0, pInfo->size-sizeof(pInfo->size));
-    return true;
+    uprv_memset(&pInfo->size+1, 0, pInfo->size-حجم(pInfo->size));
+    أرجع true;
 }
 
-static void
+ساكن فراغ
 idnaInfoToStruct(IDNAInfo &info, UIDNAInfo *pInfo) {
     pInfo->isTransitionalDifferent=info.isTransitionalDifferent();
     pInfo->errors=info.getErrors();
 }
 
 U_CAPI int32_t U_EXPORT2
-uidna_labelToASCII(const UIDNA *idna,
-                   const char16_t *label, int32_t length,
+uidna_labelToASCII(ثابت UIDNA *idna,
+                   ثابت char16_t *label, int32_t length,
                    char16_t *dest, int32_t capacity,
                    UIDNAInfo *pInfo, UErrorCode *pErrorCode) {
-    if(!checkArgs(label, length, dest, capacity, pInfo, pErrorCode)) {
-        return 0;
+    إذا(!checkArgs(label, length, dest, capacity, pInfo, pErrorCode)) {
+        أرجع 0;
     }
     UnicodeString src(length < 0, label, length);
     UnicodeString destString(dest, 0, capacity);
     IDNAInfo info;
-    reinterpret_cast<const IDNA *>(idna)->labelToASCII(src, destString, info, *pErrorCode);
+    reinterpret_cast<ثابت IDNA *>(idna)->labelToASCII(src, destString, info, *pErrorCode);
     idnaInfoToStruct(info, pInfo);
-    return destString.extract(dest, capacity, *pErrorCode);
+    أرجع destString.extract(dest, capacity, *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uidna_labelToUnicode(const UIDNA *idna,
-                     const char16_t *label, int32_t length,
+uidna_labelToUnicode(ثابت UIDNA *idna,
+                     ثابت char16_t *label, int32_t length,
                      char16_t *dest, int32_t capacity,
                      UIDNAInfo *pInfo, UErrorCode *pErrorCode) {
-    if(!checkArgs(label, length, dest, capacity, pInfo, pErrorCode)) {
-        return 0;
+    إذا(!checkArgs(label, length, dest, capacity, pInfo, pErrorCode)) {
+        أرجع 0;
     }
     UnicodeString src(length < 0, label, length);
     UnicodeString destString(dest, 0, capacity);
     IDNAInfo info;
-    reinterpret_cast<const IDNA *>(idna)->labelToUnicode(src, destString, info, *pErrorCode);
+    reinterpret_cast<ثابت IDNA *>(idna)->labelToUnicode(src, destString, info, *pErrorCode);
     idnaInfoToStruct(info, pInfo);
-    return destString.extract(dest, capacity, *pErrorCode);
+    أرجع destString.extract(dest, capacity, *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uidna_nameToASCII(const UIDNA *idna,
-                  const char16_t *name, int32_t length,
+uidna_nameToASCII(ثابت UIDNA *idna,
+                  ثابت char16_t *name, int32_t length,
                   char16_t *dest, int32_t capacity,
                   UIDNAInfo *pInfo, UErrorCode *pErrorCode) {
-    if(!checkArgs(name, length, dest, capacity, pInfo, pErrorCode)) {
-        return 0;
+    إذا(!checkArgs(name, length, dest, capacity, pInfo, pErrorCode)) {
+        أرجع 0;
     }
     UnicodeString src(length < 0, name, length);
     UnicodeString destString(dest, 0, capacity);
     IDNAInfo info;
-    reinterpret_cast<const IDNA *>(idna)->nameToASCII(src, destString, info, *pErrorCode);
+    reinterpret_cast<ثابت IDNA *>(idna)->nameToASCII(src, destString, info, *pErrorCode);
     idnaInfoToStruct(info, pInfo);
-    return destString.extract(dest, capacity, *pErrorCode);
+    أرجع destString.extract(dest, capacity, *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uidna_nameToUnicode(const UIDNA *idna,
-                    const char16_t *name, int32_t length,
+uidna_nameToUnicode(ثابت UIDNA *idna,
+                    ثابت char16_t *name, int32_t length,
                     char16_t *dest, int32_t capacity,
                     UIDNAInfo *pInfo, UErrorCode *pErrorCode) {
-    if(!checkArgs(name, length, dest, capacity, pInfo, pErrorCode)) {
-        return 0;
+    إذا(!checkArgs(name, length, dest, capacity, pInfo, pErrorCode)) {
+        أرجع 0;
     }
     UnicodeString src(length < 0, name, length);
     UnicodeString destString(dest, 0, capacity);
     IDNAInfo info;
-    reinterpret_cast<const IDNA *>(idna)->nameToUnicode(src, destString, info, *pErrorCode);
+    reinterpret_cast<ثابت IDNA *>(idna)->nameToUnicode(src, destString, info, *pErrorCode);
     idnaInfoToStruct(info, pInfo);
-    return destString.extract(dest, capacity, *pErrorCode);
+    أرجع destString.extract(dest, capacity, *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uidna_labelToASCII_UTF8(const UIDNA *idna,
-                        const char *label, int32_t length,
-                        char *dest, int32_t capacity,
+uidna_labelToASCII_UTF8(ثابت UIDNA *idna,
+                        ثابت حرف *label, int32_t length,
+                        حرف *dest, int32_t capacity,
                         UIDNAInfo *pInfo, UErrorCode *pErrorCode) {
-    if(!checkArgs(label, length, dest, capacity, pInfo, pErrorCode)) {
-        return 0;
+    إذا(!checkArgs(label, length, dest, capacity, pInfo, pErrorCode)) {
+        أرجع 0;
     }
     StringPiece src(label, length<0 ? static_cast<int32_t>(uprv_strlen(label)) : length);
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
+    أرجع ByteSinkUtil::viaByteSinkToTerminatedChars(
         dest, capacity,
         [&](ByteSink& sink, UErrorCode& status) {
             IDNAInfo info;
-            reinterpret_cast<const IDNA *>(idna)->labelToASCII_UTF8(src, sink, info, status);
+            reinterpret_cast<ثابت IDNA *>(idna)->labelToASCII_UTF8(src, sink, info, status);
             idnaInfoToStruct(info, pInfo);
         },
         *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uidna_labelToUnicodeUTF8(const UIDNA *idna,
-                         const char *label, int32_t length,
-                         char *dest, int32_t capacity,
+uidna_labelToUnicodeUTF8(ثابت UIDNA *idna,
+                         ثابت حرف *label, int32_t length,
+                         حرف *dest, int32_t capacity,
                          UIDNAInfo *pInfo, UErrorCode *pErrorCode) {
-    if(!checkArgs(label, length, dest, capacity, pInfo, pErrorCode)) {
-        return 0;
+    إذا(!checkArgs(label, length, dest, capacity, pInfo, pErrorCode)) {
+        أرجع 0;
     }
     StringPiece src(label, length<0 ? static_cast<int32_t>(uprv_strlen(label)) : length);
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
+    أرجع ByteSinkUtil::viaByteSinkToTerminatedChars(
         dest, capacity,
         [&](ByteSink& sink, UErrorCode& status) {
             IDNAInfo info;
-            reinterpret_cast<const IDNA *>(idna)->labelToUnicodeUTF8(src, sink, info, status);
+            reinterpret_cast<ثابت IDNA *>(idna)->labelToUnicodeUTF8(src, sink, info, status);
             idnaInfoToStruct(info, pInfo);
         },
         *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uidna_nameToASCII_UTF8(const UIDNA *idna,
-                       const char *name, int32_t length,
-                       char *dest, int32_t capacity,
+uidna_nameToASCII_UTF8(ثابت UIDNA *idna,
+                       ثابت حرف *name, int32_t length,
+                       حرف *dest, int32_t capacity,
                        UIDNAInfo *pInfo, UErrorCode *pErrorCode) {
-    if(!checkArgs(name, length, dest, capacity, pInfo, pErrorCode)) {
-        return 0;
+    إذا(!checkArgs(name, length, dest, capacity, pInfo, pErrorCode)) {
+        أرجع 0;
     }
     StringPiece src(name, length<0 ? static_cast<int32_t>(uprv_strlen(name)) : length);
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
+    أرجع ByteSinkUtil::viaByteSinkToTerminatedChars(
         dest, capacity,
         [&](ByteSink& sink, UErrorCode& status) {
             IDNAInfo info;
-            reinterpret_cast<const IDNA *>(idna)->nameToASCII_UTF8(src, sink, info, status);
+            reinterpret_cast<ثابت IDNA *>(idna)->nameToASCII_UTF8(src, sink, info, status);
             idnaInfoToStruct(info, pInfo);
         },
         *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-uidna_nameToUnicodeUTF8(const UIDNA *idna,
-                        const char *name, int32_t length,
-                        char *dest, int32_t capacity,
+uidna_nameToUnicodeUTF8(ثابت UIDNA *idna,
+                        ثابت حرف *name, int32_t length,
+                        حرف *dest, int32_t capacity,
                         UIDNAInfo *pInfo, UErrorCode *pErrorCode) {
-    if(!checkArgs(name, length, dest, capacity, pInfo, pErrorCode)) {
-        return 0;
+    إذا(!checkArgs(name, length, dest, capacity, pInfo, pErrorCode)) {
+        أرجع 0;
     }
     StringPiece src(name, length<0 ? static_cast<int32_t>(uprv_strlen(name)) : length);
-    return ByteSinkUtil::viaByteSinkToTerminatedChars(
+    أرجع ByteSinkUtil::viaByteSinkToTerminatedChars(
         dest, capacity,
         [&](ByteSink& sink, UErrorCode& status) {
             IDNAInfo info;
-            reinterpret_cast<const IDNA *>(idna)->nameToUnicodeUTF8(src, sink, info, status);
+            reinterpret_cast<ثابت IDNA *>(idna)->nameToUnicodeUTF8(src, sink, info, status);
             idnaInfoToStruct(info, pInfo);
         },
         *pErrorCode);

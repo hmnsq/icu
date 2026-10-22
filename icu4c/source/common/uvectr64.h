@@ -16,10 +16,10 @@
 #ifndef UVECTOR64_H
 #define UVECTOR64_H
 
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "uhash.h"
-#include "uassert.h"
+#ضمن "unicode/utypes.h"
+#ضمن "unicode/uobject.h"
+#ضمن "uhash.h"
+#ضمن "uassert.h"
 
 U_NAMESPACE_BEGIN
 
@@ -57,9 +57,9 @@ U_NAMESPACE_BEGIN
  * <p>Improve the handling of index out of bounds errors.
  *
  */
-class U_COMMON_API UVector64 : public UObject {
-private:
-    int32_t   count;
+class U_COMMON_API UVector64 : عام UObject {
+خاص:
+    int32_t   ژماردن;
 
     int32_t   capacity;
     
@@ -67,7 +67,7 @@ private:
 
     int64_t*  elements;
 
-public:
+عام:
     UVector64(UErrorCode &status);
 
     UVector64(int32_t initialCapacity, UErrorCode &status);
@@ -78,35 +78,35 @@ public:
      * Assign this object to another (make this a copy of 'other').
      * Use the 'assign' function to assign each element.
      */
-    void assign(const UVector64& other, UErrorCode &ec);
+    فراغ assign(ثابت UVector64& other, UErrorCode &ec);
 
     /**
      * Compare this vector with another.  They will be considered
      * equal if they are of the same size and all elements are equal,
      * as compared using this object's comparer.
      */
-    bool operator==(const UVector64& other);
+    bool operator==(ثابت UVector64& other);
 
     /**
      * Equivalent to !operator==()
      */
-    inline bool operator!=(const UVector64& other);
+    مضمن bool operator!=(ثابت UVector64& other);
 
     //------------------------------------------------------------
     // subset of java.util.Vector API
     //------------------------------------------------------------
 
-    inline void addElement(int64_t elem, UErrorCode &status);
+    مضمن فراغ addElement(int64_t elem, UErrorCode &status);
 
-    void setElementAt(int64_t elem, int32_t index);
+    فراغ setElementAt(int64_t elem, int32_t index);
 
-    void insertElementAt(int64_t elem, int32_t index, UErrorCode &status);
+    فراغ زیادکردن_Element_At(int64_t elem, int32_t index, UErrorCode &status);
     
-    inline int64_t elementAti(int32_t index) const;
+    مضمن int64_t elementAti(int32_t index) ثابت;
 
     //UBool equals(const UVector64 &other) const;
 
-    inline int64_t lastElementi() const;
+    مضمن int64_t lastElementi() ثابت;
 
     //int32_t indexOf(int64_t elem, int32_t startIndex = 0) const;
 
@@ -120,14 +120,14 @@ public:
 
     //void removeElementAt(int32_t index);
 
-    void removeAllElements();
+    فراغ removeAllElements();
 
-    inline int32_t size() const;
+    مضمن int32_t size() ثابت;
 
-    inline UBool isEmpty() const { return count == 0; }
+    مضمن UBool isEmpty() ثابت { أرجع ژماردن == 0; }
 
     // Inline.  Use this one for speedy size check.
-    inline UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
+    مضمن UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
 
     // Out-of-line, handles actual growth.  Called by ensureCapacity() when necessary.
     UBool expandCapacity(int32_t minimumCapacity, UErrorCode &status);
@@ -138,7 +138,7 @@ public:
      * elements for i >= newSize.  If newSize is larger, grow the
      * array, filling in new slows with zero.
      */
-    void setSize(int32_t newSize);
+    فراغ setSize(int32_t newSize);
 
     //------------------------------------------------------------
     // New API
@@ -152,7 +152,7 @@ public:
     /**
      * Returns a pointer to the internal array holding the vector.
      */
-    inline int64_t *getBuffer() const;
+    مضمن int64_t *getBuffer() ثابت;
 
     /**
      * Set the maximum allowed buffer capacity for this vector/stack.
@@ -160,118 +160,118 @@ public:
      * A Limit of zero means unlimited capacity.
      * Units are vector elements (64 bits each), not bytes.
      */
-    void setMaxCapacity(int32_t limit);
+    فراغ setMaxCapacity(int32_t limit);
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    ساكن UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      */
-    virtual UClassID getDynamicClassID() const override;
+    virtual UClassID getDynamicClassID() ثابت override;
 
-private:
-    void _init(int32_t initialCapacity, UErrorCode &status);
-
-    // Disallow
-    UVector64(const UVector64&) = delete;
+خاص:
+    فراغ _init(int32_t initialCapacity, UErrorCode &status);
 
     // Disallow
-    UVector64& operator=(const UVector64&) = delete;
+    UVector64(ثابت UVector64&) = delete;
+
+    // Disallow
+    UVector64& operator=(ثابت UVector64&) = delete;
 
 
     //  API Functions for Stack operations.
     //  In the original UVector, these were in a separate derived class, UStack.
     //  Here in UVector64, they are all together.
-public:
+عام:
     //UBool empty() const;   // TODO:  redundant, same as empty().  Remove it?
 
     //int64_t peeki() const;
     
-    inline int64_t popi();
+    مضمن int64_t popi();
     
-    inline int64_t push(int64_t i, UErrorCode &status);
+    مضمن int64_t پاڵنان(int64_t i, UErrorCode &status);
 
-    inline int64_t *reserveBlock(int32_t size, UErrorCode &status);
-    inline int64_t *popFrame(int32_t size);
+    مضمن int64_t *reserveBlock(int32_t size, UErrorCode &status);
+    مضمن int64_t *دەرهێنان_Frame(int32_t size);
 };
 
 
 // UVector64 inlines
 
-inline UBool UVector64::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
-    if ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
-        return true;
-    } else {
-        return expandCapacity(minimumCapacity, status);
+مضمن UBool UVector64::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
+    إذا ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
+        أرجع true;
+    } وإلا {
+        أرجع expandCapacity(minimumCapacity, status);
     }
 }
 
-inline int64_t UVector64::elementAti(int32_t index) const {
-    return (0 <= index && index < count) ? elements[index] : 0;
+مضمن int64_t UVector64::elementAti(int32_t index) ثابت {
+    أرجع (0 <= index && index < ژماردن) ? elements[index] : 0;
 }
 
 
-inline void UVector64::addElement(int64_t elem, UErrorCode &status) {
-    if (ensureCapacity(count + 1, status)) {
-        elements[count] = elem;
-        count++;
+مضمن فراغ UVector64::addElement(int64_t elem, UErrorCode &status) {
+    إذا (ensureCapacity(ژماردن + 1, status)) {
+        elements[ژماردن] = elem;
+        ژماردن++;
     }
 }
 
-inline int64_t *UVector64::reserveBlock(int32_t size, UErrorCode &status) {
-    if (ensureCapacity(count+size, status) == false) {
-        return nullptr;
+مضمن int64_t *UVector64::reserveBlock(int32_t size, UErrorCode &status) {
+    إذا (ensureCapacity(ژماردن+size, status) == false) {
+        أرجع nullptr;
     }
-    int64_t  *rp = elements+count;
-    count += size;
-    return rp;
+    int64_t  *rp = elements+ژماردن;
+    ژماردن += size;
+    أرجع rp;
 }
 
-inline int64_t *UVector64::popFrame(int32_t size) {
-    U_ASSERT(count >= size);
-    count -= size;
-    if (count < 0) {
-        count = 0;
+مضمن int64_t *UVector64::دەرهێنان_Frame(int32_t size) {
+    U_ASSERT(ژماردن >= size);
+    ژماردن -= size;
+    إذا (ژماردن < 0) {
+        ژماردن = 0;
     }
-    return elements+count-size;
+    أرجع elements+ژماردن-size;
 }
 
 
 
-inline int32_t UVector64::size() const {
-    return count;
+مضمن int32_t UVector64::size() ثابت {
+    أرجع ژماردن;
 }
 
-inline int64_t UVector64::lastElementi() const {
-    return elementAti(count-1);
+مضمن int64_t UVector64::lastElementi() ثابت {
+    أرجع elementAti(ژماردن-1);
 }
 
-inline bool UVector64::operator!=(const UVector64& other) {
-    return !operator==(other);
+مضمن bool UVector64::operator!=(ثابت UVector64& other) {
+    أرجع !operator==(other);
 }
 
-inline int64_t *UVector64::getBuffer() const {
-    return elements;
+مضمن int64_t *UVector64::getBuffer() ثابت {
+    أرجع elements;
 }
 
 
 // UStack inlines
 
-inline int64_t UVector64::push(int64_t i, UErrorCode &status) {
+مضمن int64_t UVector64::پاڵنان(int64_t i, UErrorCode &status) {
     addElement(i, status);
-    return i;
+    أرجع i;
 }
 
-inline int64_t UVector64::popi() {
+مضمن int64_t UVector64::popi() {
     int64_t result = 0;
-    if (count > 0) {
-        count--;
-        result = elements[count];
+    إذا (ژماردن > 0) {
+        ژماردن--;
+        result = elements[ژماردن];
     }
-    return result;
+    أرجع result;
 }
 
 U_NAMESPACE_END

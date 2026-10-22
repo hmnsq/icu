@@ -116,7 +116,7 @@
 #ifndef __UTF_H__
 #define __UTF_H__
 
-#include "unicode/umachine.h"
+#ضمن "unicode/umachine.h"
 /* include the utfXX.h after the following definitions */
 
 /* single-code point definitions -------------------------------------------- */
@@ -146,7 +146,7 @@
  * @see AllScalarValues
  * @see U_IS_CODE_POINT
  */
-#define U_IS_SCALAR_VALUE(c) ((uint32_t)(c)<0xd800 || (0xe000<=(c) && (c)<=0x10ffff))
+#define U_IS_SCALAR_بەها(c) ((uint32_t)(c)<0xd800 || (0xe000<=(c) && (c)<=0x10ffff))
 
 #endif  // U_HIDE_DRAFT_API
 
@@ -243,13 +243,13 @@
 
 /* include the utfXX.h ------------------------------------------------------ */
 
-#if !U_NO_DEFAULT_INCLUDE_UTF_HEADERS
+#إذا !U_NO_DEFAULT_INCLUDE_UTF_HEADERS
 
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
+#ضمن "unicode/utf8.h"
+#ضمن "unicode/utf16.h"
 
 /* utf_old.h contains deprecated, pre-ICU 2.4 definitions */
-#include "unicode/utf_old.h"
+#ضمن "unicode/utf_old.h"
 
 #endif  /* !U_NO_DEFAULT_INCLUDE_UTF_HEADERS */
 

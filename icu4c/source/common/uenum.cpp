@@ -16,176 +16,176 @@
 *   created by: Vladimir Weinstein
 */
 
-#include "unicode/putil.h"
-#include "uenumimp.h"
-#include "cmemory.h"
+#ضمن "unicode/putil.h"
+#ضمن "uenumimp.h"
+#ضمن "cmemory.h"
 
 /* Layout of the baseContext buffer. */
-typedef struct {
+تعريفنوع بنية {
     int32_t len;  /* number of bytes available starting at 'data' */
-    char    data; /* actual data starts here */
+    حرف    data; /* actual data starts here */
 } _UEnumBuffer;
 
 /* Extra bytes to allocate in the baseContext buffer. */
-static const int32_t PAD = 8;
+ساكن ثابت int32_t PAD = 8;
 
 /* Return a pointer to the baseContext buffer, possibly allocating
    or reallocating it if at least 'capacity' bytes are not available. */
-static void* _getBuffer(UEnumeration* en U_LIFETIME_BOUND, int32_t capacity) {
+ساكن فراغ* _getBuffer(UEnumeration* en U_LIFETIME_BOUND, int32_t capacity) {
 
-    if (en->baseContext != nullptr) {
-        if (static_cast<_UEnumBuffer*>(en->baseContext)->len < capacity) {
+    إذا (en->baseContext != nullptr) {
+        إذا (static_cast<_UEnumBuffer*>(en->baseContext)->len < capacity) {
             capacity += PAD;
             en->baseContext = uprv_realloc(en->baseContext,
-                                           sizeof(int32_t) + capacity);
-            if (en->baseContext == nullptr) {
-                return nullptr;
+                                           حجم(int32_t) + capacity);
+            إذا (en->baseContext == nullptr) {
+                أرجع nullptr;
             }
             static_cast<_UEnumBuffer*>(en->baseContext)->len = capacity;
         }
-    } else {
+    } وإلا {
         capacity += PAD;
-        en->baseContext = uprv_malloc(sizeof(int32_t) + capacity);
-        if (en->baseContext == nullptr) {
-            return nullptr;
+        en->baseContext = uprv_malloc(حجم(int32_t) + capacity);
+        إذا (en->baseContext == nullptr) {
+            أرجع nullptr;
         }
         static_cast<_UEnumBuffer*>(en->baseContext)->len = capacity;
     }
     
-    return static_cast<void*>(&static_cast<_UEnumBuffer*>(en->baseContext)->data);
+    أرجع static_cast<فراغ*>(&static_cast<_UEnumBuffer*>(en->baseContext)->data);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 uenum_close(UEnumeration* en)
 {
-    if (en) {
-        if (en->close != nullptr) {
-            if (en->baseContext) {
+    إذا (en) {
+        إذا (en->close != nullptr) {
+            إذا (en->baseContext) {
                 uprv_free(en->baseContext);
             }
             en->close(en);
-        } else { /* this seems dangerous, but we better kill the object */
+        } وإلا { /* this seems dangerous, but we better kill the object */
             uprv_free(en);
         }
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-uenum_count(UEnumeration* en, UErrorCode* status)
+uenum_ژماردن(UEnumeration* en, UErrorCode* status)
 {
-    if (!en || U_FAILURE(*status)) {
-        return -1;
+    إذا (!en || U_FAILURE(*status)) {
+        أرجع -1;
     }
-    if (en->count != nullptr) {
-        return en->count(en, status);
-    } else {
+    إذا (en->count != nullptr) {
+        أرجع en->count(en, status);
+    } وإلا {
         *status = U_UNSUPPORTED_ERROR;
-        return -1;
+        أرجع -1;
     }
 }
 
 /* Don't call this directly. Only uenum_unext should be calling this. */
-U_CAPI const char16_t* U_EXPORT2
+U_CAPI ثابت char16_t* U_EXPORT2
 uenum_unextDefault(UEnumeration* en U_LIFETIME_BOUND,
                    int32_t* resultLength,
                    UErrorCode* status)
 {
     char16_t *ustr = nullptr;
     int32_t len = 0;
-    if (en->next != nullptr) {
-        const char *cstr = en->next(en, &len, status);
-        if (cstr != nullptr) {
-            ustr = (char16_t*) _getBuffer(en, (len+1) * sizeof(char16_t));
-            if (ustr == nullptr) {
+    إذا (en->next != nullptr) {
+        ثابت حرف *cstr = en->next(en, &len, status);
+        إذا (cstr != nullptr) {
+            ustr = (char16_t*) _getBuffer(en, (len+1) * حجم(char16_t));
+            إذا (ustr == nullptr) {
                 *status = U_MEMORY_ALLOCATION_ERROR;
-            } else {
+            } وإلا {
                 u_charsToUChars(cstr, ustr, len);
                 ustr[len] = 0;
             }
         }
-    } else {
+    } وإلا {
         *status = U_UNSUPPORTED_ERROR;
     }
-    if (resultLength) {
+    إذا (resultLength) {
         *resultLength = len;
     }
-    return ustr;
+    أرجع ustr;
 }
 
 /* Don't call this directly. Only uenum_next should be calling this. */
-U_CAPI const char* U_EXPORT2
+U_CAPI ثابت حرف* U_EXPORT2
 uenum_nextDefault(UEnumeration* en U_LIFETIME_BOUND,
                   int32_t* resultLength,
                   UErrorCode* status)
 {
-    if (en->uNext != nullptr) {
-        char *tempCharVal;
-        const char16_t *tempUCharVal = en->uNext(en, resultLength, status);
-        if (tempUCharVal == nullptr) {
-            return nullptr;
+    إذا (en->uNext != nullptr) {
+        حرف *tempCharVal;
+        ثابت char16_t *tempUCharVal = en->uNext(en, resultLength, status);
+        إذا (tempUCharVal == nullptr) {
+            أرجع nullptr;
         }
-        tempCharVal = (char*)
-            _getBuffer(en, (*resultLength+1) * sizeof(char));
-        if (!tempCharVal) {
+        tempCharVal = (حرف*)
+            _getBuffer(en, (*resultLength+1) * حجم(حرف));
+        إذا (!tempCharVal) {
             *status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+            أرجع nullptr;
         }
         u_UCharsToChars(tempUCharVal, tempCharVal, *resultLength);
         tempCharVal[*resultLength] = 0;
-        return tempCharVal;
-    } else {
+        أرجع tempCharVal;
+    } وإلا {
         *status = U_UNSUPPORTED_ERROR;
-        return nullptr;
+        أرجع nullptr;
     }
 }
 
-U_CAPI const char16_t* U_EXPORT2
+U_CAPI ثابت char16_t* U_EXPORT2
 uenum_unext(UEnumeration* en U_LIFETIME_BOUND,
             int32_t* resultLength,
             UErrorCode* status)
 {
-    if (!en || U_FAILURE(*status)) {
-        return nullptr;
+    إذا (!en || U_FAILURE(*status)) {
+        أرجع nullptr;
     }
-    if (en->uNext != nullptr) {
-        return en->uNext(en, resultLength, status);
-    } else {
+    إذا (en->uNext != nullptr) {
+        أرجع en->uNext(en, resultLength, status);
+    } وإلا {
         *status = U_UNSUPPORTED_ERROR;
-        return nullptr;
+        أرجع nullptr;
     }
 }
 
-U_CAPI const char* U_EXPORT2
+U_CAPI ثابت حرف* U_EXPORT2
 uenum_next(UEnumeration* en U_LIFETIME_BOUND,
            int32_t* resultLength,
            UErrorCode* status)
 {
-    if (!en || U_FAILURE(*status)) {
-        return nullptr;
+    إذا (!en || U_FAILURE(*status)) {
+        أرجع nullptr;
     }
-    if (en->next != nullptr) {
-        if (resultLength != nullptr) {
-            return en->next(en, resultLength, status);
+    إذا (en->next != nullptr) {
+        إذا (resultLength != nullptr) {
+            أرجع en->next(en, resultLength, status);
         }
-        else {
+        وإلا {
             int32_t dummyLength=0;
-            return en->next(en, &dummyLength, status);
+            أرجع en->next(en, &dummyLength, status);
         }
-    } else {
+    } وإلا {
         *status = U_UNSUPPORTED_ERROR;
-        return nullptr;
+        أرجع nullptr;
     }
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 uenum_reset(UEnumeration* en, UErrorCode* status)
 {
-    if (!en || U_FAILURE(*status)) {
-        return;
+    إذا (!en || U_FAILURE(*status)) {
+        أرجع;
     }
-    if (en->reset != nullptr) {
+    إذا (en->reset != nullptr) {
         en->reset(en, status);
-    } else {
+    } وإلا {
         *status = U_UNSUPPORTED_ERROR;
     }
 }

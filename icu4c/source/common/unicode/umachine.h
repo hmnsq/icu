@@ -43,14 +43,14 @@
 /* which are contained in the platform-specific file platform.h             */
 /*==========================================================================*/
 
-#include "unicode/ptypes.h" /* platform.h is included in ptypes.h */
+#ضمن "unicode/ptypes.h" /* platform.h is included in ptypes.h */
 
 /*
  * ANSI C headers:
  * stddef.h defines wchar_t
  */
-#include <stdbool.h>
-#include <stddef.h>
+#ضمن <stdbool.h>
+#ضمن <stddef.h>
 
 /*==========================================================================*/
 /* For C wrappers, we use the symbol U_CAPI.                                */
@@ -77,11 +77,11 @@
  */
 
 #ifdef __cplusplus
-#   define U_CFUNC extern "C"
-#   define U_CDECL_BEGIN extern "C" {
+#   define U_CFUNC خارجي "C"
+#   define U_CDECL_BEGIN خارجي "C" {
 #   define U_CDECL_END   }
-#else
-#   define U_CFUNC extern
+#وإلا
+#   define U_CFUNC خارجي
 #   define U_CDECL_BEGIN
 #   define U_CDECL_END
 #endif
@@ -92,16 +92,16 @@
  *  This is used for GCC specific attributes
  * @internal
  */
-#if U_GCC_MAJOR_MINOR >= 302
+#إذا U_GCC_MAJOR_MINOR >= 302
 #    define U_ATTRIBUTE_DEPRECATED __attribute__ ((deprecated))
 /**
  * \def U_ATTRIBUTE_DEPRECATED
  * This is used for Visual C++ specific attributes 
  * @internal
  */
-#elif defined(_MSC_VER) && (_MSC_VER >= 1400)
+#وإلاإذا defined(_MSC_VER) && (_MSC_VER >= 1400)
 #    define U_ATTRIBUTE_DEPRECATED __declspec(deprecated)
-#else
+#وإلا
 #    define U_ATTRIBUTE_DEPRECATED
 #endif
 #endif
@@ -131,14 +131,14 @@
  */
 #ifdef U_FORCE_INLINE
     // already defined
-#elif defined(U_IN_DOXYGEN)
-#  define U_FORCE_INLINE inline
-#elif (defined(__clang__) && __clang__) || U_GCC_MAJOR_MINOR != 0
+#وإلاإذا defined(U_IN_DOXYGEN)
+#  define U_FORCE_INLINE مضمن
+#وإلاإذا (defined(__clang__) && __clang__) || U_GCC_MAJOR_MINOR != 0
 #  define U_FORCE_INLINE [[gnu::always_inline]]
-#elif defined(U_REAL_MSVC)
+#وإلاإذا defined(U_REAL_MSVC)
 #  define U_FORCE_INLINE __forceinline
-#else
-#  define U_FORCE_INLINE inline
+#وإلا
+#  define U_FORCE_INLINE مضمن
 #endif
 
 // Before ICU 65, function-like, multi-statement ICU macros were just defined as
@@ -166,7 +166,7 @@
  * @internal
  */
 #ifndef UPRV_BLOCK_MACRO_BEGIN
-#define UPRV_BLOCK_MACRO_BEGIN do
+#define UPRV_BLOCK_MACRO_BEGIN افعل
 #endif
 
 /**
@@ -175,7 +175,7 @@
  * @internal
  */
 #ifndef UPRV_BLOCK_MACRO_END
-#define UPRV_BLOCK_MACRO_END while (false)
+#define UPRV_BLOCK_MACRO_END طالما (false)
 #endif
 
 /*==========================================================================*/
@@ -221,9 +221,9 @@
 #   define UINT32_MAX      ((uint32_t)(4294967295U))
 #endif
 
-#if defined(U_INT64_T_UNAVAILABLE)
-# error int64_t is required for decimal format and rule-based number format.
-#else
+#إذا defined(U_INT64_T_UNAVAILABLE)
+# error int64_t is required لكل decimal format and rule-based ژمار format.
+#وإلا
 # ifndef INT64_C
 /**
  * Provides a platform independent way to specify a signed 64-bit integer constant.
@@ -266,7 +266,7 @@
  *
  * @stable ICU 2.0
  */
-typedef int8_t UBool;
+تعريفنوع int8_t UBool;
 
 /**
  * \def U_DEFINE_FALSE_AND_TRUE
@@ -282,12 +282,12 @@ typedef int8_t UBool;
  */
 #ifdef U_DEFINE_FALSE_AND_TRUE
     // Use the predefined value.
-#else
+#وإلا
     // Default to avoiding collision with non-macro definitions of FALSE & TRUE.
 #   define U_DEFINE_FALSE_AND_TRUE 0
 #endif
 
-#if U_DEFINE_FALSE_AND_TRUE || defined(U_IN_DOXYGEN)
+#إذا U_DEFINE_FALSE_AND_TRUE || defined(U_IN_DOXYGEN)
 #ifndef TRUE
 /**
  * The TRUE value of a UBool.
@@ -324,19 +324,19 @@ typedef int8_t UBool;
  *
  * @stable ICU 2.0
  */
-#if !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
+#إذا !defined(U_WCHAR_IS_UTF16) && !defined(U_WCHAR_IS_UTF32)
 #   ifdef __STDC_ISO_10646__
-#       if (U_SIZEOF_WCHAR_T==2)
+#       إذا (U_SIZEOF_WCHAR_T==2)
 #           define U_WCHAR_IS_UTF16
 #       elif (U_SIZEOF_WCHAR_T==4)
 #           define  U_WCHAR_IS_UTF32
 #       endif
 #   elif defined __UCS2__
-#       if (U_PF_OS390 <= U_PLATFORM && U_PLATFORM <= U_PF_OS400) && (U_SIZEOF_WCHAR_T==2)
+#       إذا (U_PF_OS390 <= U_PLATFORM && U_PLATFORM <= U_PF_OS400) && (U_SIZEOF_WCHAR_T==2)
 #           define U_WCHAR_IS_UTF16
 #       endif
 #   elif defined(__UCS4__) || (U_PLATFORM == U_PF_OS400 && defined(__UTF32__))
-#       if (U_SIZEOF_WCHAR_T==4)
+#       إذا (U_SIZEOF_WCHAR_T==4)
 #           define U_WCHAR_IS_UTF32
 #       endif
 #   elif U_PLATFORM_IS_DARWIN_BASED || (U_SIZEOF_WCHAR_T==4 && U_PLATFORM_IS_LINUX_BASED)
@@ -356,11 +356,11 @@ typedef int8_t UBool;
  * If 1, then char16_t is a typedef and not a real type (yet)
  * @internal
  */
-#if defined(_MSC_VER) && (_MSC_VER < 1900)
+#إذا defined(_MSC_VER) && (_MSC_VER < 1900)
 // Versions of Visual Studio/MSVC below 2015 do not support char16_t as a real type,
 // and instead use a typedef.  https://msdn.microsoft.com/library/bb531344.aspx
 # define U_CHAR16_IS_TYPEDEF 1
-#else
+#وإلا
 # define U_CHAR16_IS_TYPEDEF 0
 #endif
 
@@ -389,17 +389,17 @@ typedef int8_t UBool;
  * @stable ICU 4.4
  */
 
-#if 1
+#إذا 1
     // #if 1 is normal. UChar defaults to char16_t in C++.
     // For configuration testing of UChar=uint16_t temporarily change this to #if 0.
-#else
+#وإلا
 #   define UCHAR_TYPE uint16_t
 #endif
 
-#if defined(U_ALL_IMPLEMENTATION) || !defined(UCHAR_TYPE)
-    typedef char16_t UChar;
-#else
-    typedef UCHAR_TYPE UChar;
+#إذا defined(U_ALL_IMPLEMENTATION) || !defined(UCHAR_TYPE)
+    تعريفنوع char16_t UChar;
+#وإلا
+    تعريفنوع UCHAR_TYPE UChar;
 #endif
 
 /**
@@ -421,12 +421,12 @@ typedef int8_t UBool;
  *
  * @stable ICU 59
  */
-#if U_SIZEOF_WCHAR_T==2
-    typedef wchar_t OldUChar;
-#elif defined(__CHAR16_TYPE__)
-    typedef __CHAR16_TYPE__ OldUChar;
-#else
-    typedef uint16_t OldUChar;
+#إذا U_SIZEOF_WCHAR_T==2
+    تعريفنوع wchar_t OldUChar;
+#وإلاإذا defined(__CHAR16_TYPE__)
+    تعريفنوع __CHAR16_TYPE__ OldUChar;
+#وإلا
+    تعريفنوع uint16_t OldUChar;
 #endif
 
 /**
@@ -446,7 +446,7 @@ typedef int8_t UBool;
  * @see U_SENTINEL
  * @stable ICU 2.4
  */
-typedef int32_t UChar32;
+تعريفنوع int32_t UChar32;
 
 /**
  * This value is intended for sentinel values for APIs that
@@ -468,6 +468,6 @@ typedef int32_t UChar32;
  */
 #define U_SENTINEL (-1)
 
-#include "unicode/urename.h"
+#ضمن "unicode/urename.h"
 
 #endif

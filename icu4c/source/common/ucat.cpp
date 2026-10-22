@@ -10,72 +10,72 @@
 * Since: ICU 2.6
 **********************************************************************
 */
-#include "unicode/ucat.h"
-#include "unicode/ustring.h"
-#include "cstring.h"
-#include "uassert.h"
+#ضمن "unicode/ucat.h"
+#ضمن "unicode/ustring.h"
+#ضمن "cstring.h"
+#ضمن "uassert.h"
 
 /* Separator between set_num and msg_num */
-static const char SEPARATOR = '%';
+ساكن ثابت حرف SEPARATOR = '%';
 
 /* Maximum length of a set_num/msg_num key, incl. terminating zero.
  * Longest possible key is "-2147483648%-2147483648" */
-#define MAX_KEY_LEN (24)
+#define MAX_کلیل_LEN (24)
 
 /**
  * Fill in buffer with a set_num/msg_num key string, given the numeric
  * values. Numeric values must be >= 0. Buffer must be of length
  * MAX_KEY_LEN or more.
  */
-static char*
-_catkey(char* buffer U_LIFETIME_BOUND, int32_t set_num, int32_t msg_num) {
+ساكن حرف*
+_catkey(حرف* buffer U_LIFETIME_BOUND, int32_t set_ژمارە, int32_t پەیام_ژمارە) {
     int32_t i = 0;
-    i = T_CString_integerToString(buffer, set_num, 10);
+    i = T_CString_integerToString(buffer, set_ژمارە, 10);
     buffer[i++] = SEPARATOR;
-    T_CString_integerToString(buffer+i, msg_num, 10);
-    return buffer;
+    T_CString_integerToString(buffer+i, پەیام_ژمارە, 10);
+    أرجع buffer;
 }
 
 U_CAPI u_nl_catd U_EXPORT2
-u_catopen(const char* name, const char* locale, UErrorCode* ec) {
-    return (u_nl_catd) ures_open(name, locale, ec);
+u_catopen(ثابت حرف* name, ثابت حرف* locale, UErrorCode* ec) {
+    أرجع (u_nl_catd) ures_open(name, locale, ec);
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI فراغ U_EXPORT2
 u_catclose(u_nl_catd catd) {
     ures_close((UResourceBundle*) catd); /* may be nullptr */
 }
 
-U_CAPI const char16_t* U_EXPORT2
+U_CAPI ثابت char16_t* U_EXPORT2
 u_catgets(u_nl_catd catd U_LIFETIME_BOUND,
-          int32_t set_num,
-          int32_t msg_num,
-          const char16_t* s U_LIFETIME_BOUND,
+          int32_t set_ژمارە,
+          int32_t پەیام_ژمارە,
+          ثابت char16_t* s U_LIFETIME_BOUND,
           int32_t* len,
           UErrorCode* ec) {
 
-    char key[MAX_KEY_LEN];
-    const char16_t* result;
+    حرف کلیل[MAX_کلیل_LEN];
+    ثابت char16_t* result;
 
-    if (ec == nullptr || U_FAILURE(*ec)) {
-        goto ERROR;
+    إذا (ec == nullptr || U_FAILURE(*ec)) {
+        اذهب ERROR;
     }
 
-    result = ures_getStringByKey((const UResourceBundle*) catd,
-                                 _catkey(key, set_num, msg_num),
+    result = ures_get_String_By_کلیل((ثابت UResourceBundle*) catd,
+                                 _catkey(کلیل, set_ژمارە, پەیام_ژمارە),
                                  len, ec);
-    if (U_FAILURE(*ec)) {
-        goto ERROR;
+    إذا (U_FAILURE(*ec)) {
+        اذهب ERROR;
     }
 
-    return result;
+    أرجع result;
 
  ERROR:
     /* In case of any failure, return s */
-    if (len != nullptr) {
+    إذا (len != nullptr) {
         *len = u_strlen(s);
     }
-    return s;
+    أرجع s;
 }
 
 /*eof*/
