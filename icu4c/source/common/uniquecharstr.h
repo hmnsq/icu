@@ -29,9 +29,9 @@ public:
         // If the strings are stored in resource bundles which should be built with
         // duplicate elimination, then we should be able to hash on just the pointer values.
         uhash_init(&map, uhash_hashUChars, uhash_compareUChars, uhash_compareLong, &errorCode);
-        if (U_FAILURE(errorCode)) { return; }
+        ᱡᱩᱫᱤ (U_FAILURE(errorCode)) { ᱨᱩᱣᱟᱹᱲ; }
         strings = new CharString();
-        if (strings == nullptr) {
+        ᱡᱩᱫᱤ (strings == nullptr) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
         }
     }
@@ -44,7 +44,7 @@ public:
     CharString *orphanCharStrings() {
         CharString *result = strings;
         strings = nullptr;
-        return result;
+        ᱨᱩᱣᱟᱹᱲ result;
     }
 
     /**
@@ -56,15 +56,15 @@ public:
      * by resource bundle functions.
      */
     int32_t add(const char16_t*p, UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return -1; }
-        if (isFrozen) {
+        ᱡᱩᱫᱤ (U_FAILURE(errorCode)) { ᱨᱩᱣᱟᱹᱲ -1; }
+        ᱡᱩᱫᱤ (isFrozen) {
             errorCode = U_NO_WRITE_PERMISSION;
-            return -1;
+            ᱨᱩᱣᱟᱹᱲ -1;
         }
         // The string points into the resource bundle.
         int32_t oldIndex = uhash_geti(&map, p);
-        if (oldIndex != 0) {  // found duplicate
-            return oldIndex;
+        ᱡᱩᱫᱤ (oldIndex != 0) {  // found duplicate
+            ᱨᱩᱣᱟᱹᱲ oldIndex;
         }
         // Explicit NUL terminator for the previous string.
         // The strings object is also terminated with one implicit NUL.
@@ -72,29 +72,29 @@ public:
         int32_t newIndex = strings->length();
         strings->appendInvariantChars(p, u_strlen(p), errorCode);
         uhash_puti(&map, const_cast<char16_t *>(p), newIndex, &errorCode);
-        return newIndex;
+        ᱨᱩᱣᱟᱹᱲ newIndex;
     }
 
     /**
      * Adds a unicode string by value and returns a unique number for it.
      */
     int32_t addByValue(UnicodeString s, UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return -1; }
-        if (isFrozen) {
+        ᱡᱩᱫᱤ (U_FAILURE(errorCode)) { ᱨᱩᱣᱟᱹᱲ -1; }
+        ᱡᱩᱫᱤ (isFrozen) {
             errorCode = U_NO_WRITE_PERMISSION;
-            return -1;
+            ᱨᱩᱣᱟᱹᱲ -1;
         }
         int32_t oldIndex = uhash_geti(&map, s.getTerminatedBuffer());
-        if (oldIndex != 0) {  // found duplicate
-            return oldIndex;
+        ᱡᱩᱫᱤ (oldIndex != 0) {  // found duplicate
+            ᱨᱩᱣᱟᱹᱲ oldIndex;
         }
         // We need to store the string content of the UnicodeString.
         UnicodeString *key = keyStore.create(s);
-        if (key == nullptr) {
+        ᱡᱩᱫᱤ (key == nullptr) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return -1;
+            ᱨᱩᱣᱟᱹᱲ -1;
         }
-        return add(key->getTerminatedBuffer(), errorCode);
+        ᱨᱩᱣᱟᱹᱲ add(key->getTerminatedBuffer(), errorCode);
     }
 
     void freeze() { isFrozen = true; }
@@ -103,9 +103,9 @@ public:
      * Returns a string pointer for its unique number, if this object is frozen.
      * Otherwise nullptr.
      */
-    const char *get(int32_t i) const {
+    const var_na *get(int32_t i) const {
         U_ASSERT(isFrozen);
-        return isFrozen && i > 0 ? strings->data() + i : nullptr;
+        ᱨᱩᱣᱟᱹᱲ isFrozen && i > 0 ? strings->data() + i : nullptr;
     }
 
 private:

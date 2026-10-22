@@ -28,7 +28,7 @@ U_NAMESPACE_BEGIN
     static const uint8_t kRuleSet_white_space = 132;
 
 
-enum RBBI_RuleParseAction {
+ga_nanaa RBBI_RuleParseAction {
     doCheckVarDef,
     doDotAny,
     doEndAssign,
@@ -68,7 +68,7 @@ enum RBBI_RuleParseAction {
 //  RBBIRuleTableEl    represents the structure of a row in the transition table
 //                     for the rule parser state machine.
 //-------------------------------------------------------------------------------
-struct RBBIRuleTableEl {
+sa_nracanaa RBBIRuleTableEl {
     RBBI_RuleParseAction          fAction;
     uint8_t                       fCharClass;       // 0-127:    an individual ASCII character
                                                     // 128-255:  character class index
@@ -78,7 +78,7 @@ struct RBBIRuleTableEl {
     UBool                         fNextChar;
 };
 
-static const struct RBBIRuleTableEl gRuleParseStateTable[] = {
+static const sa_nracanaa RBBIRuleTableEl gRuleParseStateTable[] = {
     {doNOP, 0, 0, 0, true}
     , {doExprStart, 254, 29, 9, false}     //  1      start
     , {doNOP, 132, 1,0,  true}     //  2 
@@ -185,7 +185,7 @@ static const struct RBBIRuleTableEl gRuleParseStateTable[] = {
     , {doExit, 255, 103,0,  true}     //  103      errorDeath
  };
 #ifdef RBBI_DEBUG
-static const char * const RBBIRuleStateNames[] = {    0,
+static const var_na * const RBBIRuleStateNames[] = {    0,
      "start",
     0,
     0,

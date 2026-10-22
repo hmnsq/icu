@@ -25,7 +25,7 @@
 #include "unicode/stringoptions.h"
 #include "unicode/ustring.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ᱡᱩᱫᱤ U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
@@ -47,8 +47,8 @@
  * Older functions did not use a service object.
  * @stable ICU 3.4
  */
-struct UCaseMap;
-typedef struct UCaseMap UCaseMap; /**< C typedef for struct UCaseMap. @stable ICU 3.4 */
+sa_nracanaa UCaseMap;
+typedef sa_nracanaa UCaseMap UCaseMap; /**< C typedef for struct UCaseMap. @stable ICU 3.4 */
 
 /**
  * Open a UCaseMap service object for a locale and a set of options.
@@ -73,7 +73,7 @@ typedef struct UCaseMap UCaseMap; /**< C typedef for struct UCaseMap. @stable IC
  * @stable ICU 3.4
  */
 U_CAPI UCaseMap * U_EXPORT2
-ucasemap_open(const char *locale, uint32_t options, UErrorCode *pErrorCode);
+ucasemap_open(const var_na *locale, uint32_t options, UErrorCode *pErrorCode);
 
 /**
  * Close a UCaseMap service object.
@@ -83,7 +83,7 @@ ucasemap_open(const char *locale, uint32_t options, UErrorCode *pErrorCode);
 U_CAPI void U_EXPORT2
 ucasemap_close(UCaseMap *csm);
 
-#if U_SHOW_CPLUSPLUS_API
+#ᱡᱩᱫᱤ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -108,7 +108,7 @@ U_NAMESPACE_END
  * @return locale ID
  * @stable ICU 3.4
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI const var_na* U_EXPORT2
 ucasemap_getLocale(const UCaseMap* csm U_LIFETIME_BOUND);
 
 /**
@@ -132,7 +132,7 @@ ucasemap_getOptions(const UCaseMap *csm);
  * @stable ICU 3.4
  */
 U_CAPI void U_EXPORT2
-ucasemap_setLocale(UCaseMap *csm, const char *locale, UErrorCode *pErrorCode);
+ucasemap_setLocale(UCaseMap *csm, const var_na *locale, UErrorCode *pErrorCode);
 
 /**
  * Set the options bit set that is used for case folding and string comparisons.
@@ -148,7 +148,7 @@ ucasemap_setLocale(UCaseMap *csm, const char *locale, UErrorCode *pErrorCode);
 U_CAPI void U_EXPORT2
 ucasemap_setOptions(UCaseMap *csm, uint32_t options, UErrorCode *pErrorCode);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ᱡᱩᱫᱤ !UCONFIG_NO_BREAK_ITERATION
 
 /**
  * Get the break iterator that is used for titlecasing.
@@ -262,8 +262,8 @@ ucasemap_toTitle(UCaseMap *csm,
  */
 U_CAPI int32_t U_EXPORT2
 ucasemap_utf8ToLower(const UCaseMap *csm,
-                     char *dest, int32_t destCapacity,
-                     const char *src, int32_t srcLength,
+                     var_na *dest, int32_t destCapacity,
+                     const var_na *src, int32_t srcLength,
                      UErrorCode *pErrorCode);
 
 /**
@@ -291,11 +291,11 @@ ucasemap_utf8ToLower(const UCaseMap *csm,
  */
 U_CAPI int32_t U_EXPORT2
 ucasemap_utf8ToUpper(const UCaseMap *csm,
-                     char *dest, int32_t destCapacity,
-                     const char *src, int32_t srcLength,
+                     var_na *dest, int32_t destCapacity,
+                     const var_na *src, int32_t srcLength,
                      UErrorCode *pErrorCode);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ᱡᱩᱫᱤ !UCONFIG_NO_BREAK_ITERATION
 
 /**
  * Titlecase a UTF-8 string.
@@ -343,8 +343,8 @@ ucasemap_utf8ToUpper(const UCaseMap *csm,
  */
 U_CAPI int32_t U_EXPORT2
 ucasemap_utf8ToTitle(UCaseMap *csm,
-                    char *dest, int32_t destCapacity,
-                    const char *src, int32_t srcLength,
+                    var_na *dest, int32_t destCapacity,
+                    const var_na *src, int32_t srcLength,
                     UErrorCode *pErrorCode);
 
 #endif
@@ -381,8 +381,8 @@ ucasemap_utf8ToTitle(UCaseMap *csm,
  */
 U_CAPI int32_t U_EXPORT2
 ucasemap_utf8FoldCase(const UCaseMap *csm,
-                      char *dest, int32_t destCapacity,
-                      const char *src, int32_t srcLength,
+                      var_na *dest, int32_t destCapacity,
+                      const var_na *src, int32_t srcLength,
                       UErrorCode *pErrorCode);
 
 #endif

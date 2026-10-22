@@ -11,7 +11,7 @@
 
 #include "unicode/utypes.h"
 
-#if UCONFIG_NO_SERVICE
+#ᱡᱩᱫᱤ UCONFIG_NO_SERVICE
 
 U_NAMESPACE_BEGIN
 
@@ -23,7 +23,7 @@ class ICUNotifier;
 
 U_NAMESPACE_END
 
-#else
+#ᱵᱟᱝ
 
 #include "unicode/uobject.h"
 #include "unicode/unistr.h"
@@ -45,11 +45,11 @@ public:
 public:
 #ifdef SERVICE_DEBUG
     virtual UnicodeString& debug(UnicodeString& result) const {
-      return debugClass(result);
+      ᱨᱩᱣᱟᱹᱲ debugClass(result);
     }
 
     virtual UnicodeString& debugClass(UnicodeString& result) const {
-      return result.append((UnicodeString)"Key");
+      ᱨᱩᱣᱟᱹᱲ result.append((UnicodeString)"Key");
     }
 #endif
 };
@@ -103,7 +103,7 @@ public:
      */
     virtual void notifyChanged();
     
-protected: 
+rak_sita: 
     /**
      * Subclasses implement this to return true if the listener is
      * of the appropriate type.

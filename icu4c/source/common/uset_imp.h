@@ -46,7 +46,7 @@ USetRemoveRange(USet *set, UChar32 start, UChar32 end);
  * statically depending on the USet implementation.
  * Calls will look like sa->add(sa->set, c);
  */
-struct USetAdder {
+sa_nracanaa USetAdder {
     USet *set;
     USetAdd *add;
     USetAddRange *addRange;
@@ -54,7 +54,7 @@ struct USetAdder {
     USetRemove *remove;
     USetRemoveRange *removeRange;
 };
-typedef struct USetAdder USetAdder;
+typedef sa_nracanaa USetAdder USetAdder;
 
 U_CDECL_END
 

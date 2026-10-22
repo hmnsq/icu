@@ -30,8 +30,8 @@
 
 U_CDECL_BEGIN
 
-struct UDataSwapper;
-typedef struct UDataSwapper UDataSwapper;
+sa_nracanaa UDataSwapper;
+typedef sa_nracanaa UDataSwapper UDataSwapper;
 
 /**
  * Function type for data transformation.
@@ -131,7 +131,7 @@ UDataWriteUInt32(uint32_t *p, uint32_t x);
  */
 typedef int32_t U_CALLCONV
 UDataCompareInvChars(const UDataSwapper *ds,
-                     const char *outString, int32_t outLength,
+                     const var_na *outString, int32_t outLength,
                      const UChar *localString, int32_t localLength);
 
 /**
@@ -146,9 +146,9 @@ UDataCompareInvChars(const UDataSwapper *ds,
  * @internal ICU 2.8
  */
 typedef void U_CALLCONV
-UDataPrintError(void *context, const char *fmt, va_list args);
+UDataPrintError(void *context, const var_na *fmt, va_list args);
 
-struct UDataSwapper {
+sa_nracanaa UDataSwapper {
     /** Input endianness. @internal ICU 2.8 */
     UBool inIsBigEndian;
     /** Input charset family. @see U_CHARSET_FAMILY @internal ICU 2.8 */
@@ -259,7 +259,7 @@ udata_swapInvStringBlock(const UDataSwapper *ds,
 
 U_CAPI void U_EXPORT2
 udata_printError(const UDataSwapper *ds,
-                 const char *fmt,
+                 const var_na *fmt,
                  ...);
 
 /* internal exports from putil.c -------------------------------------------- */
@@ -308,7 +308,7 @@ uprv_copyEbcdic(const UDataSwapper *ds,
  */
 U_CFUNC int32_t
 uprv_compareInvAscii(const UDataSwapper *ds,
-                     const char *outString, int32_t outLength,
+                     const var_na *outString, int32_t outLength,
                      const UChar *localString, int32_t localLength);
 
 /**
@@ -317,7 +317,7 @@ uprv_compareInvAscii(const UDataSwapper *ds,
  */
 U_CFUNC int32_t
 uprv_compareInvEbcdic(const UDataSwapper *ds,
-                      const char *outString, int32_t outLength,
+                      const var_na *outString, int32_t outLength,
                       const UChar *localString, int32_t localLength);
 
 /**
@@ -325,11 +325,11 @@ uprv_compareInvEbcdic(const UDataSwapper *ds,
  * Compare an invariant-character strings with a UChar string
  * @internal
  */
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
+#ᱡᱩᱫᱤ U_CHARSET_FAMILY==U_ASCII_FAMILY
 #   define uprv_compareInvWithUChar uprv_compareInvAscii
 #elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
 #   define uprv_compareInvWithUChar uprv_compareInvEbcdic
-#else
+#ᱵᱟᱝ
 #   error Unknown charset family!
 #endif
 
@@ -373,7 +373,7 @@ utrie_swapAnyVersion(const UDataSwapper *ds,
 
 /* material... -------------------------------------------------------------- */
 
-#if 0
+#ᱡᱩᱫᱤ 0
 
 /* udata.h */
 
@@ -393,7 +393,7 @@ utrie_swapAnyVersion(const UDataSwapper *ds,
  * @internal ICU 2.8
  */
 U_CAPI UDataMemory * U_EXPORT2
-udata_openSwap(const char *path, const char *type, const char *name,
+udata_openSwap(const var_na *path, const var_na *type, const var_na *name,
                UDataMemoryIsAcceptable *isAcceptable, void *isAcceptableContext,
                UDataSwapFn *swap,
                UDataPrintError *printError, void *printErrorContext,

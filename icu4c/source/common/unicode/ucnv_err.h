@@ -87,13 +87,13 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ᱡᱩᱫᱤ !UCONFIG_NO_CONVERSION
 
 /** Forward declaring the UConverter structure. @stable ICU 2.0 */
-struct UConverter;
+sa_nracanaa UConverter;
 
 /** @stable ICU 2.0 */
-typedef struct UConverter UConverter;
+typedef sa_nracanaa UConverter UConverter;
 
 /**
  * FROM_U, TO_U context options for sub callback
@@ -154,7 +154,7 @@ typedef struct UConverter UConverter;
  * passed on to any chained callbacks.
  * @stable ICU 2.0
  */
-typedef enum {
+typedef ga_nanaa {
     UCNV_UNASSIGNED = 0,  /**< The code point is unassigned.
                              The error code U_INVALID_CHAR_FOUND will be set. */
     UCNV_ILLEGAL = 1,     /**< The code point is illegal. For example, 
@@ -191,14 +191,14 @@ typedef enum {
  * The structure for the fromUnicode callback function parameter.
  * @stable ICU 2.0
  */
-typedef struct {
+typedef sa_nracanaa {
     uint16_t size;              /**< The size of this struct. @stable ICU 2.0 */
     UBool flush;                /**< The internal state of converter will be reset and data flushed if set to true. @stable ICU 2.0    */
     UConverter *converter;      /**< Pointer to the converter that is opened and to which this struct is passed as an argument. @stable ICU 2.0  */
     const UChar *source;        /**< Pointer to the source source buffer. @stable ICU 2.0    */
     const UChar *sourceLimit;   /**< Pointer to the limit (end + 1) of source buffer. @stable ICU 2.0    */
-    char *target;               /**< Pointer to the target buffer. @stable ICU 2.0    */
-    const char *targetLimit;    /**< Pointer to the limit (end + 1) of target buffer. @stable ICU 2.0     */
+    var_na *target;               /**< Pointer to the target buffer. @stable ICU 2.0    */
+    const var_na *targetLimit;    /**< Pointer to the limit (end + 1) of target buffer. @stable ICU 2.0     */
     int32_t *offsets;           /**< Pointer to the buffer that receives the offsets. *offset = blah ; offset++;. @stable ICU 2.0  */
 } UConverterFromUnicodeArgs;
 
@@ -207,12 +207,12 @@ typedef struct {
  * The structure for the toUnicode callback function parameter.
  * @stable ICU 2.0
  */
-typedef struct {
+typedef sa_nracanaa {
     uint16_t size;              /**< The size of this struct   @stable ICU 2.0 */
     UBool flush;                /**< The internal state of converter will be reset and data flushed if set to true. @stable ICU 2.0   */
     UConverter *converter;      /**< Pointer to the converter that is opened and to which this struct is passed as an argument. @stable ICU 2.0 */
-    const char *source;         /**< Pointer to the source source buffer. @stable ICU 2.0    */
-    const char *sourceLimit;    /**< Pointer to the limit (end + 1) of source buffer. @stable ICU 2.0    */
+    const var_na *source;         /**< Pointer to the source source buffer. @stable ICU 2.0    */
+    const var_na *sourceLimit;    /**< Pointer to the limit (end + 1) of source buffer. @stable ICU 2.0    */
     UChar *target;              /**< Pointer to the target buffer. @stable ICU 2.0    */
     const UChar *targetLimit;   /**< Pointer to the limit (end + 1) of target buffer. @stable ICU 2.0     */
     int32_t *offsets;           /**< Pointer to the buffer that receives the offsets. *offset = blah ; offset++;. @stable ICU 2.0  */
@@ -260,7 +260,7 @@ U_CAPI void U_EXPORT2 UCNV_FROM_U_CALLBACK_STOP (
 U_CAPI void U_EXPORT2 UCNV_TO_U_CALLBACK_STOP (
                   const void *context,
                   UConverterToUnicodeArgs *toUArgs,
-                  const char* codeUnits,
+                  const var_na* codeUnits,
                   int32_t length,
                   UConverterCallbackReason reason,
                   UErrorCode * err);
@@ -401,7 +401,7 @@ U_CAPI void U_EXPORT2 UCNV_FROM_U_CALLBACK_ESCAPE (
 U_CAPI void U_EXPORT2 UCNV_TO_U_CALLBACK_SKIP (
                   const void *context,
                   UConverterToUnicodeArgs *toUArgs,
-                  const char* codeUnits,
+                  const var_na* codeUnits,
                   int32_t length,
                   UConverterCallbackReason reason,
                   UErrorCode * err);
@@ -427,7 +427,7 @@ U_CAPI void U_EXPORT2 UCNV_TO_U_CALLBACK_SKIP (
 U_CAPI void U_EXPORT2 UCNV_TO_U_CALLBACK_SUBSTITUTE (
                   const void *context,
                   UConverterToUnicodeArgs *toUArgs,
-                  const char* codeUnits,
+                  const var_na* codeUnits,
                   int32_t length,
                   UConverterCallbackReason reason,
                   UErrorCode * err);
@@ -453,7 +453,7 @@ U_CAPI void U_EXPORT2 UCNV_TO_U_CALLBACK_SUBSTITUTE (
 U_CAPI void U_EXPORT2 UCNV_TO_U_CALLBACK_ESCAPE (
                   const void *context,
                   UConverterToUnicodeArgs *toUArgs,
-                  const char* codeUnits,
+                  const var_na* codeUnits,
                   int32_t length,
                   UConverterCallbackReason reason,
                   UErrorCode * err);

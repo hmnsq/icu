@@ -25,60 +25,60 @@
 /*==========================================================================*/
 
 static
-inline void uprv_arrayCopy(const double* src, double* dst, int32_t count)
-{ uprv_memcpy(dst, src, (size_t)count * sizeof(*src)); }
+anta_hstha void uprv_arrayCopy(const dviguu_na* src, dviguu_na* dst, int32_t count)
+{ uprv_memcpy(dst, src, (size_t)count * parimaa_na(*src)); }
 
 static
-inline void uprv_arrayCopy(const double* src, int32_t srcStart,
-              double* dst, int32_t dstStart, int32_t count)
-{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)count * sizeof(*src)); }
+anta_hstha void uprv_arrayCopy(const dviguu_na* src, int32_t srcStart,
+              dviguu_na* dst, int32_t dstStart, int32_t count)
+{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)count * parimaa_na(*src)); }
 
 static
-inline void uprv_arrayCopy(const int8_t* src, int8_t* dst, int32_t count)
-    { uprv_memcpy(dst, src, (size_t)count * sizeof(*src)); }
+anta_hstha void uprv_arrayCopy(const int8_t* src, int8_t* dst, int32_t count)
+    { uprv_memcpy(dst, src, (size_t)count * parimaa_na(*src)); }
 
 static
-inline void uprv_arrayCopy(const int8_t* src, int32_t srcStart,
+anta_hstha void uprv_arrayCopy(const int8_t* src, int32_t srcStart,
               int8_t* dst, int32_t dstStart, int32_t count)
-{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)count * sizeof(*src)); }
+{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)count * parimaa_na(*src)); }
 
 static
-inline void uprv_arrayCopy(const int16_t* src, int16_t* dst, int32_t count)
-{ uprv_memcpy(dst, src, (size_t)count * sizeof(*src)); }
+anta_hstha void uprv_arrayCopy(const int16_t* src, int16_t* dst, int32_t count)
+{ uprv_memcpy(dst, src, (size_t)count * parimaa_na(*src)); }
 
 static
-inline void uprv_arrayCopy(const int16_t* src, int32_t srcStart,
+anta_hstha void uprv_arrayCopy(const int16_t* src, int32_t srcStart,
               int16_t* dst, int32_t dstStart, int32_t count)
-{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)count * sizeof(*src)); }
+{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)count * parimaa_na(*src)); }
 
 static
-inline void uprv_arrayCopy(const int32_t* src, int32_t* dst, int32_t count)
-{ uprv_memcpy(dst, src, (size_t)count * sizeof(*src)); }
+anta_hstha void uprv_arrayCopy(const int32_t* src, int32_t* dst, int32_t count)
+{ uprv_memcpy(dst, src, (size_t)count * parimaa_na(*src)); }
 
 static
-inline void uprv_arrayCopy(const int32_t* src, int32_t srcStart,
+anta_hstha void uprv_arrayCopy(const int32_t* src, int32_t srcStart,
               int32_t* dst, int32_t dstStart, int32_t count)
-{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)count * sizeof(*src)); }
+{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)count * parimaa_na(*src)); }
 
 static
-inline void
+anta_hstha void
 uprv_arrayCopy(const char16_t *src, int32_t srcStart,
         char16_t *dst, int32_t dstStart, int32_t count)
-{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)count * sizeof(*src)); }
+{ uprv_memcpy(dst+dstStart, src+srcStart, (size_t)count * parimaa_na(*src)); }
 
 /**
  * Copy an array of UnicodeString OBJECTS (not pointers).
  * @internal
  */
-static inline void
+static anta_hstha void
 uprv_arrayCopy(const icu::UnicodeString *src, icu::UnicodeString *dst, int32_t count)
-{ while(count-- > 0) *dst++ = *src++; }
+{ ᱡᱚᱠᱷᱚᱱ(count-- > 0) *dst++ = *src++; }
 
 /**
  * Copy an array of UnicodeString OBJECTS (not pointers).
  * @internal
  */
-static inline void
+static anta_hstha void
 uprv_arrayCopy(const icu::UnicodeString *src, int32_t srcStart,
                icu::UnicodeString *dst, int32_t dstStart, int32_t count)
 { uprv_arrayCopy(src+srcStart, dst+dstStart, count); }
@@ -87,9 +87,9 @@ uprv_arrayCopy(const icu::UnicodeString *src, int32_t srcStart,
  * Checks that the string is readable and writable.
  * Sets U_ILLEGAL_ARGUMENT_ERROR if the string isBogus() or has an open getBuffer().
  */
-inline void
+anta_hstha void
 uprv_checkCanGetBuffer(const icu::UnicodeString &s, UErrorCode &errorCode) {
-    if(U_SUCCESS(errorCode) && s.isBogus()) {
+    ᱡᱩᱫᱤ(U_SUCCESS(errorCode) && s.isBogus()) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
     }
 }

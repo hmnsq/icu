@@ -10,7 +10,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#ᱡᱩᱫᱤ !UCONFIG_NO_NORMALIZATION
 
 #include "unicode/uniset.h"
 #include "unicode/unistr.h"
@@ -23,7 +23,7 @@
 #include "normalizer2impl.h"
 #include "uprops.h"  // for uniset_getUnicode32Instance()
 
-#if defined(move32)
+#ᱡᱩᱫᱤ defined(move32)
  // System can define move32 intrinsics, but the char iters define move32 method
  // using same undef trick in headers, so undef here to re-enable the method.
 #undef move32
@@ -77,12 +77,12 @@ void
 Normalizer::init() {
     UErrorCode errorCode=U_ZERO_ERROR;
     fNorm2=Normalizer2Factory::getInstance(fUMode, errorCode);
-    if(fOptions&UNORM_UNICODE_3_2) {
+    ᱡᱩᱫᱤ(fOptions&UNORM_UNICODE_3_2) {
         delete fFilteredNorm2;
         fNorm2=fFilteredNorm2=
             new FilteredNormalizer2(*fNorm2, *uniset_getUnicode32Instance(errorCode));
     }
-    if(U_FAILURE(errorCode)) {
+    ᱡᱩᱫᱤ(U_FAILURE(errorCode)) {
         errorCode=U_ZERO_ERROR;
         fNorm2=Normalizer2Factory::getNoopInstance(errorCode);
     }
@@ -97,7 +97,7 @@ Normalizer::~Normalizer()
 Normalizer* 
 Normalizer::clone() const
 {
-    return new Normalizer(*this);
+    ᱨᱩᱣᱟᱹᱲ new Normalizer(*this);
 }
 
 /**
@@ -105,12 +105,12 @@ Normalizer::clone() const
  */
 int32_t Normalizer::hashCode() const
 {
-    return text->hashCode() + fUMode + fOptions + buffer.hashCode() + bufferPos + currentIndex + nextIndex;
+    ᱨᱩᱣᱟᱹᱲ text->hashCode() + fUMode + fOptions + buffer.hashCode() + bufferPos + currentIndex + nextIndex;
 }
     
 bool Normalizer::operator==(const Normalizer& that) const
 {
-    return
+    ᱨᱩᱣᱟᱹᱲ
         this==&that ||
         (fUMode==that.fUMode &&
         fOptions==that.fOptions &&
@@ -129,31 +129,31 @@ Normalizer::normalize(const UnicodeString& source,
                       UNormalizationMode mode, int32_t options,
                       UnicodeString& result, 
                       UErrorCode &status) {
-    if(source.isBogus() || U_FAILURE(status)) {
+    ᱡᱩᱫᱤ(source.isBogus() || U_FAILURE(status)) {
         result.setToBogus();
-        if(U_SUCCESS(status)) {
+        ᱡᱩᱫᱤ(U_SUCCESS(status)) {
             status=U_ILLEGAL_ARGUMENT_ERROR;
         }
-    } else {
+    } ᱵᱟᱝ {
         UnicodeString localDest;
         UnicodeString *dest;
 
-        if(&source!=&result) {
+        ᱡᱩᱫᱤ(&source!=&result) {
             dest=&result;
-        } else {
+        } ᱵᱟᱝ {
             // the source and result strings are the same object, use a temporary one
             dest=&localDest;
         }
         const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, status);
-        if(U_SUCCESS(status)) {
-            if(options&UNORM_UNICODE_3_2) {
+        ᱡᱩᱫᱤ(U_SUCCESS(status)) {
+            ᱡᱩᱫᱤ(options&UNORM_UNICODE_3_2) {
                 FilteredNormalizer2(*n2, *uniset_getUnicode32Instance(status)).
                     normalize(source, *dest, status);
-            } else {
+            } ᱵᱟᱝ {
                 n2->normalize(source, *dest, status);
             }
         }
-        if(dest==&localDest && U_SUCCESS(status)) {
+        ᱡᱩᱫᱤ(dest==&localDest && U_SUCCESS(status)) {
             result=*dest;
         }
     }
@@ -180,15 +180,15 @@ Normalizer::quickCheck(const UnicodeString& source,
                        UNormalizationMode mode, int32_t options,
                        UErrorCode &status) {
     const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, status);
-    if(U_SUCCESS(status)) {
-        if(options&UNORM_UNICODE_3_2) {
-            return FilteredNormalizer2(*n2, *uniset_getUnicode32Instance(status)).
+    ᱡᱩᱫᱤ(U_SUCCESS(status)) {
+        ᱡᱩᱫᱤ(options&UNORM_UNICODE_3_2) {
+            ᱨᱩᱣᱟᱹᱲ FilteredNormalizer2(*n2, *uniset_getUnicode32Instance(status)).
                 quickCheck(source, status);
-        } else {
-            return n2->quickCheck(source, status);
+        } ᱵᱟᱝ {
+            ᱨᱩᱣᱟᱹᱲ n2->quickCheck(source, status);
         }
-    } else {
-        return UNORM_MAYBE;
+    } ᱵᱟᱝ {
+        ᱨᱩᱣᱟᱹᱲ UNORM_MAYBE;
     }
 }
 
@@ -197,15 +197,15 @@ Normalizer::isNormalized(const UnicodeString& source,
                          UNormalizationMode mode, int32_t options,
                          UErrorCode &status) {
     const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, status);
-    if(U_SUCCESS(status)) {
-        if(options&UNORM_UNICODE_3_2) {
-            return FilteredNormalizer2(*n2, *uniset_getUnicode32Instance(status)).
+    ᱡᱩᱫᱤ(U_SUCCESS(status)) {
+        ᱡᱩᱫᱤ(options&UNORM_UNICODE_3_2) {
+            ᱨᱩᱣᱟᱹᱲ FilteredNormalizer2(*n2, *uniset_getUnicode32Instance(status)).
                 isNormalized(source, status);
-        } else {
-            return n2->isNormalized(source, status);
+        } ᱵᱟᱝ {
+            ᱨᱩᱣᱟᱹᱲ n2->isNormalized(source, status);
         }
-    } else {
-        return false;
+    } ᱵᱟᱝ {
+        ᱨᱩᱣᱟᱹᱲ false;
     }
 }
 
@@ -216,36 +216,36 @@ Normalizer::concatenate(const UnicodeString& left,
                         UNormalizationMode mode,
                         int32_t options,
                         UErrorCode& errorCode) {
-    if(left.isBogus() || right.isBogus() || U_FAILURE(errorCode)) {
+    ᱡᱩᱫᱤ(left.isBogus() || right.isBogus() || U_FAILURE(errorCode)) {
         result.setToBogus();
-        if(U_SUCCESS(errorCode)) {
+        ᱡᱩᱫᱤ(U_SUCCESS(errorCode)) {
             errorCode=U_ILLEGAL_ARGUMENT_ERROR;
         }
-    } else {
+    } ᱵᱟᱝ {
         UnicodeString localDest;
         UnicodeString *dest;
 
-        if(&right!=&result) {
+        ᱡᱩᱫᱤ(&right!=&result) {
             dest=&result;
-        } else {
+        } ᱵᱟᱝ {
             // the right and result strings are the same object, use a temporary one
             dest=&localDest;
         }
         *dest=left;
         const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, errorCode);
-        if(U_SUCCESS(errorCode)) {
-            if(options&UNORM_UNICODE_3_2) {
+        ᱡᱩᱫᱤ(U_SUCCESS(errorCode)) {
+            ᱡᱩᱫᱤ(options&UNORM_UNICODE_3_2) {
                 FilteredNormalizer2(*n2, *uniset_getUnicode32Instance(errorCode)).
                     append(*dest, right, errorCode);
-            } else {
+            } ᱵᱟᱝ {
                 n2->append(*dest, right, errorCode);
             }
         }
-        if(dest==&localDest && U_SUCCESS(errorCode)) {
+        ᱡᱩᱫᱤ(dest==&localDest && U_SUCCESS(errorCode)) {
             result=*dest;
         }
     }
-    return result;
+    ᱨᱩᱣᱟᱹᱲ result;
 }
 
 //-------------------------------------------------------------------------
@@ -256,10 +256,10 @@ Normalizer::concatenate(const UnicodeString& left,
  * Return the current character in the normalized text.
  */
 UChar32 Normalizer::current() {
-    if(bufferPos<buffer.length() || nextNormalize()) {
-        return buffer.char32At(bufferPos);
-    } else {
-        return DONE;
+    ᱡᱩᱫᱤ(bufferPos<buffer.length() || nextNormalize()) {
+        ᱨᱩᱣᱟᱹᱲ buffer.char32At(bufferPos);
+    } ᱵᱟᱝ {
+        ᱨᱩᱣᱟᱹᱲ DONE;
     }
 }
 
@@ -269,12 +269,12 @@ UChar32 Normalizer::current() {
  * of the text has already been reached, {@link #DONE} is returned.
  */
 UChar32 Normalizer::next() {
-    if(bufferPos<buffer.length() ||  nextNormalize()) {
+    ᱡᱩᱫᱤ(bufferPos<buffer.length() ||  nextNormalize()) {
         UChar32 c=buffer.char32At(bufferPos);
         bufferPos+=U16_LENGTH(c);
-        return c;
-    } else {
-        return DONE;
+        ᱨᱩᱣᱟᱹᱲ c;
+    } ᱵᱟᱝ {
+        ᱨᱩᱣᱟᱹᱲ DONE;
     }
 }
 
@@ -284,12 +284,12 @@ UChar32 Normalizer::next() {
  * of the text has already been reached, {@link #DONE} is returned.
  */
 UChar32 Normalizer::previous() {
-    if(bufferPos>0 || previousNormalize()) {
+    ᱡᱩᱫᱤ(bufferPos>0 || previousNormalize()) {
         UChar32 c=buffer.char32At(bufferPos-1);
         bufferPos-=U16_LENGTH(c);
-        return c;
-    } else {
-        return DONE;
+        ᱨᱩᱣᱟᱹᱲ c;
+    } ᱵᱟᱝ {
+        ᱨᱩᱣᱟᱹᱲ DONE;
     }
 }
 
@@ -311,7 +311,7 @@ Normalizer::setIndexOnly(int32_t index) {
  */
 UChar32 Normalizer::first() {
     reset();
-    return next();
+    ᱨᱩᱣᱟᱹᱲ next();
 }
 
 /**
@@ -322,7 +322,7 @@ UChar32 Normalizer::first() {
 UChar32 Normalizer::last() {
     currentIndex=nextIndex=text->setToEnd();
     clearBuffer();
-    return previous();
+    ᱨᱩᱣᱟᱹᱲ previous();
 }
 
 /**
@@ -340,10 +340,10 @@ UChar32 Normalizer::last() {
  *
  */
 int32_t Normalizer::getIndex() const {
-    if(bufferPos<buffer.length()) {
-        return currentIndex;
-    } else {
-        return nextIndex;
+    ᱡᱩᱫᱤ(bufferPos<buffer.length()) {
+        ᱨᱩᱣᱟᱹᱲ currentIndex;
+    } ᱵᱟᱝ {
+        ᱨᱩᱣᱟᱹᱲ nextIndex;
     }
 }
 
@@ -353,7 +353,7 @@ int32_t Normalizer::getIndex() const {
  * over which this <tt>Normalizer</tt> is iterating
  */
 int32_t Normalizer::startIndex() const {
-    return text->startIndex();
+    ᱨᱩᱣᱟᱹᱲ text->startIndex();
 }
 
 /**
@@ -362,7 +362,7 @@ int32_t Normalizer::startIndex() const {
  * over which this <tt>Normalizer</tt> is iterating
  */
 int32_t Normalizer::endIndex() const {
-    return text->endIndex();
+    ᱨᱩᱣᱟᱹᱲ text->endIndex();
 }
 
 //-------------------------------------------------------------------------
@@ -379,16 +379,16 @@ Normalizer::setMode(UNormalizationMode newMode)
 UNormalizationMode
 Normalizer::getUMode() const
 {
-    return fUMode;
+    ᱨᱩᱣᱟᱹᱲ fUMode;
 }
 
 void
 Normalizer::setOption(int32_t option, 
                       UBool value) 
 {
-    if (value) {
+    ᱡᱩᱫᱤ (value) {
         fOptions |= option;
-    } else {
+    } ᱵᱟᱝ {
         fOptions &= (~option);
     }
     init();
@@ -397,7 +397,7 @@ Normalizer::setOption(int32_t option,
 UBool
 Normalizer::getOption(int32_t option) const
 {
-    return (fOptions & option) != 0;
+    ᱨᱩᱣᱟᱹᱲ (fOptions & option) != 0;
 }
 
 /**
@@ -408,13 +408,13 @@ void
 Normalizer::setText(const UnicodeString& newText, 
                     UErrorCode &status)
 {
-    if (U_FAILURE(status)) {
-        return;
+    ᱡᱩᱫᱤ (U_FAILURE(status)) {
+        ᱨᱩᱣᱟᱹᱲ;
     }
     CharacterIterator *newIter = new StringCharacterIterator(newText);
-    if (newIter == nullptr) {
+    ᱡᱩᱫᱤ (newIter == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        ᱨᱩᱣᱟᱹᱲ;
     }
     delete text;
     text = newIter;
@@ -429,13 +429,13 @@ void
 Normalizer::setText(const CharacterIterator& newText, 
                     UErrorCode &status) 
 {
-    if (U_FAILURE(status)) {
-        return;
+    ᱡᱩᱫᱤ (U_FAILURE(status)) {
+        ᱨᱩᱣᱟᱹᱲ;
     }
     CharacterIterator *newIter = newText.clone();
-    if (newIter == nullptr) {
+    ᱡᱩᱫᱤ (newIter == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        ᱨᱩᱣᱟᱹᱲ;
     }
     delete text;
     text = newIter;
@@ -447,13 +447,13 @@ Normalizer::setText(ConstChar16Ptr newText,
                     int32_t length,
                     UErrorCode &status)
 {
-    if (U_FAILURE(status)) {
-        return;
+    ᱡᱩᱫᱤ (U_FAILURE(status)) {
+        ᱨᱩᱣᱟᱹᱲ;
     }
     CharacterIterator *newIter = new UCharCharacterIterator(newText, length);
-    if (newIter == nullptr) {
+    ᱡᱩᱫᱤ (newIter == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        ᱨᱩᱣᱟᱹᱲ;
     }
     delete text;
     text = newIter;
@@ -484,23 +484,23 @@ Normalizer::nextNormalize() {
     clearBuffer();
     currentIndex=nextIndex;
     text->setIndex(nextIndex);
-    if(!text->hasNext()) {
-        return false;
+    ᱡᱩᱫᱤ(!text->hasNext()) {
+        ᱨᱩᱣᱟᱹᱲ false;
     }
     // Skip at least one character so we make progress.
     UnicodeString segment(text->next32PostInc());
-    while(text->hasNext()) {
+    ᱡᱚᱠᱷᱚᱱ(text->hasNext()) {
         UChar32 c;
-        if(fNorm2->hasBoundaryBefore(c=text->next32PostInc())) {
+        ᱡᱩᱫᱤ(fNorm2->hasBoundaryBefore(c=text->next32PostInc())) {
             text->move32(-1, CharacterIterator::kCurrent);
-            break;
+            bha_nga;
         }
         segment.append(c);
     }
     nextIndex=text->getIndex();
     UErrorCode errorCode=U_ZERO_ERROR;
     fNorm2->normalize(segment, buffer, errorCode);
-    return U_SUCCESS(errorCode) && !buffer.isEmpty();
+    ᱨᱩᱣᱟᱹᱲ U_SUCCESS(errorCode) && !buffer.isEmpty();
 }
 
 UBool
@@ -508,22 +508,22 @@ Normalizer::previousNormalize() {
     clearBuffer();
     nextIndex=currentIndex;
     text->setIndex(currentIndex);
-    if(!text->hasPrevious()) {
-        return false;
+    ᱡᱩᱫᱤ(!text->hasPrevious()) {
+        ᱨᱩᱣᱟᱹᱲ false;
     }
     UnicodeString segment;
-    while(text->hasPrevious()) {
+    ᱡᱚᱠᱷᱚᱱ(text->hasPrevious()) {
         UChar32 c=text->previous32();
         segment.insert(0, c);
-        if(fNorm2->hasBoundaryBefore(c)) {
-            break;
+        ᱡᱩᱫᱤ(fNorm2->hasBoundaryBefore(c)) {
+            bha_nga;
         }
     }
     currentIndex=text->getIndex();
     UErrorCode errorCode=U_ZERO_ERROR;
     fNorm2->normalize(segment, buffer, errorCode);
     bufferPos=buffer.length();
-    return U_SUCCESS(errorCode) && !buffer.isEmpty();
+    ᱨᱩᱣᱟᱹᱲ U_SUCCESS(errorCode) && !buffer.isEmpty();
 }
 
 U_NAMESPACE_END

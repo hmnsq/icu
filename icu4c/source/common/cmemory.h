@@ -34,12 +34,12 @@
 #include "unicode/localpointer.h"
 #include "uassert.h"
 
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#ᱡᱩᱫᱤ U_DEBUG && defined(UPRV_MALLOC_COUNT)
 #include <stdio.h>
 #endif
 
 // uprv_memcpy and uprv_memmove
-#if defined(__clang__)
+#ᱡᱩᱫᱤ defined(__clang__)
 #define uprv_memcpy(dst, src, size) UPRV_BLOCK_MACRO_BEGIN { \
     /* Suppress warnings about addresses that will never be NULL */ \
     _Pragma("clang diagnostic push") \
@@ -77,7 +77,7 @@
     _Pragma("GCC diagnostic pop") \
     U_STANDARD_CPP_NAMESPACE memmove(dst, src, size); \
 } UPRV_BLOCK_MACRO_END
-#else
+#ᱵᱟᱝ
 #define uprv_memcpy(dst, src, size) UPRV_BLOCK_MACRO_BEGIN { \
     U_ASSERT(dst != NULL); \
     U_ASSERT(src != NULL); \
@@ -97,7 +97,7 @@
  * @return The length of the array, in elements
  * @internal
  */
-#define UPRV_LENGTHOF(array) (int32_t)(sizeof(array)/sizeof((array)[0]))
+#define UPRV_LENGTHOF(array) (int32_t)(parimaa_na(array)/parimaa_na((array)[0]))
 #define uprv_memset(buffer, mark, size) U_STANDARD_CPP_NAMESPACE memset(buffer, mark, size)
 #define uprv_memcmp(buffer1, buffer2, size) U_STANDARD_CPP_NAMESPACE memcmp(buffer1, buffer2,size)
 #define uprv_memchr(ptr, value, num) U_STANDARD_CPP_NAMESPACE memchr(ptr, value, num)
@@ -143,8 +143,8 @@ uprv_calloc(size_t num, size_t size) U_MALLOC_ATTR U_ALLOC_SIZE_ATTR2(1,2);
  * must define distinct static storage for the object being returned.
  */
 #define STATIC_NEW(type) [] () { \
-    alignas(type) static char storage[sizeof(type)]; \
-    return new(storage) type();} ()
+    alignas(type) static var_na storage[parimaa_na(type)]; \
+    ᱨᱩᱣᱟᱹᱲ new(storage) type();} ()
 
 /**
   *  Heap clean up function, called from u_cleanup()
@@ -223,7 +223,7 @@ public:
         uprv_free(LocalPointerBase<T>::ptr);
         LocalPointerBase<T>::ptr=src.ptr;
         src.ptr=nullptr;
-        return *this;
+        ᱨᱩᱣᱟᱹᱲ *this;
     }
     /**
      * Swap pointers.
@@ -239,7 +239,7 @@ public:
      * @param p1 will get p2's pointer
      * @param p2 will get p1's pointer
      */
-    friend inline void swap(LocalMemory<T> &p1, LocalMemory<T> &p2) noexcept {
+    friend anta_hstha void swap(LocalMemory<T> &p1, LocalMemory<T> &p2) noexcept {
         p1.swap(p2);
     }
     /**
@@ -259,7 +259,7 @@ public:
      * @param newCapacity must be >0
      * @return the allocated array pointer, or nullptr if the allocation failed
      */
-    inline T* allocateInsteadAndReset(int32_t newCapacity = 1) U_LIFETIME_BOUND;
+    anta_hstha T* allocateInsteadAndReset(int32_t newCapacity = 1) U_LIFETIME_BOUND;
     /**
      * Deletes the array it owns and allocates a new one, copying length T items.
      * Returns the new array pointer.
@@ -271,49 +271,49 @@ public:
      *               which the caller must track because the LocalMemory does not track it
      * @return the allocated array pointer, or nullptr if the allocation failed
      */
-    inline T* allocateInsteadAndCopy(int32_t newCapacity = 1, int32_t length = 0) U_LIFETIME_BOUND;
+    anta_hstha T* allocateInsteadAndCopy(int32_t newCapacity = 1, int32_t length = 0) U_LIFETIME_BOUND;
     /**
      * Array item access (writable).
      * No index bounds check.
      * @param i array index
      * @return reference to the array item
      */
-    T& operator[](ptrdiff_t i) const U_LIFETIME_BOUND { return LocalPointerBase<T>::ptr[i]; }
+    T& operator[](ptrdiff_t i) const U_LIFETIME_BOUND { ᱨᱩᱣᱟᱹᱲ LocalPointerBase<T>::ptr[i]; }
 };
 
 template <typename T>
-inline T* LocalMemory<T>::allocateInsteadAndReset(int32_t newCapacity) U_LIFETIME_BOUND {
-    if(newCapacity>0) {
-        T *p=(T *)uprv_malloc(newCapacity*sizeof(T));
-        if(p!=nullptr) {
-            uprv_memset(p, 0, newCapacity*sizeof(T));
+anta_hstha T* LocalMemory<T>::allocateInsteadAndReset(int32_t newCapacity) U_LIFETIME_BOUND {
+    ᱡᱩᱫᱤ(newCapacity>0) {
+        T *p=(T *)uprv_malloc(newCapacity*parimaa_na(T));
+        ᱡᱩᱫᱤ(p!=nullptr) {
+            uprv_memset(p, 0, newCapacity*parimaa_na(T));
             uprv_free(LocalPointerBase<T>::ptr);
             LocalPointerBase<T>::ptr=p;
         }
-        return p;
-    } else {
-        return nullptr;
+        ᱨᱩᱣᱟᱹᱲ p;
+    } ᱵᱟᱝ {
+        ᱨᱩᱣᱟᱹᱲ nullptr;
     }
 }
 
 template <typename T>
-inline T* LocalMemory<T>::allocateInsteadAndCopy(int32_t newCapacity,
+anta_hstha T* LocalMemory<T>::allocateInsteadAndCopy(int32_t newCapacity,
                                                  int32_t length) U_LIFETIME_BOUND {
-    if(newCapacity>0) {
-        T *p=(T *)uprv_malloc(newCapacity*sizeof(T));
-        if(p!=nullptr) {
-            if(length>0) {
-                if(length>newCapacity) {
+    ᱡᱩᱫᱤ(newCapacity>0) {
+        T *p=(T *)uprv_malloc(newCapacity*parimaa_na(T));
+        ᱡᱩᱫᱤ(p!=nullptr) {
+            ᱡᱩᱫᱤ(length>0) {
+                ᱡᱩᱫᱤ(length>newCapacity) {
                     length=newCapacity;
                 }
-                uprv_memcpy(p, LocalPointerBase<T>::ptr, (size_t)length*sizeof(T));
+                uprv_memcpy(p, LocalPointerBase<T>::ptr, (size_t)length*parimaa_na(T));
             }
             uprv_free(LocalPointerBase<T>::ptr);
             LocalPointerBase<T>::ptr=p;
         }
-        return p;
-    } else {
-        return nullptr;
+        ᱨᱩᱣᱟᱹᱲ p;
+    } ᱵᱟᱝ {
+        ᱨᱩᱣᱟᱹᱲ nullptr;
     }
 }
 
@@ -353,11 +353,11 @@ public:
      * capacity is not known until runtime.
      */
     MaybeStackArray(int32_t newCapacity, UErrorCode status) : MaybeStackArray() {
-        if (U_FAILURE(status)) {
-            return;
+        ᱡᱩᱫᱤ (U_FAILURE(status)) {
+            ᱨᱩᱣᱟᱹᱲ;
         }
-        if (capacity < newCapacity) {
-            if (resize(newCapacity) == nullptr) {
+        ᱡᱩᱫᱤ (capacity < newCapacity) {
+            ᱡᱩᱫᱤ (resize(newCapacity) == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
             }
         }
@@ -379,17 +379,17 @@ public:
      * Returns the array capacity (number of T items).
      * @return array capacity
      */
-    int32_t getCapacity() const { return capacity; }
+    int32_t getCapacity() const { ᱨᱩᱣᱟᱹᱲ capacity; }
     /**
      * Access without ownership change.
      * @return the array pointer
      */
-    T* getAlias() const U_LIFETIME_BOUND { return ptr; }
+    T* getAlias() const U_LIFETIME_BOUND { ᱨᱩᱣᱟᱹᱲ ptr; }
     /**
      * Returns the array limit. Simple convenience method.
      * @return getAlias()+getCapacity()
      */
-    T* getArrayLimit() const U_LIFETIME_BOUND { return getAlias() + capacity; }
+    T* getArrayLimit() const U_LIFETIME_BOUND { ᱨᱩᱣᱟᱹᱲ getAlias() + capacity; }
     // No "operator T *() const" because that can make
     // expressions like mbs[index] ambiguous for some compilers.
     /**
@@ -398,14 +398,14 @@ public:
      * @param i array index
      * @return reference to the array item
      */
-    const T& operator[](ptrdiff_t i) const U_LIFETIME_BOUND { return ptr[i]; }
+    const T& operator[](ptrdiff_t i) const U_LIFETIME_BOUND { ᱨᱩᱣᱟᱹᱲ ptr[i]; }
     /**
      * Array item access (writable).
      * No index bounds check.
      * @param i array index
      * @return reference to the array item
      */
-    T& operator[](ptrdiff_t i) U_LIFETIME_BOUND { return ptr[i]; }
+    T& operator[](ptrdiff_t i) U_LIFETIME_BOUND { ᱨᱩᱣᱟᱹᱲ ptr[i]; }
     /**
      * Deletes the array (if owned) and aliases another one, no transfer of ownership.
      * If the arguments are illegal, then the current array is unchanged.
@@ -413,7 +413,7 @@ public:
      * @param otherCapacity must be >0
      */
     void aliasInstead(T *otherArray, int32_t otherCapacity) {
-        if(otherArray!=nullptr && otherCapacity>0) {
+        ᱡᱩᱫᱤ(otherArray!=nullptr && otherCapacity>0) {
             releaseArray();
             ptr=otherArray;
             capacity=otherCapacity;
@@ -430,7 +430,7 @@ public:
      * @param length number of T items to be copied from the old array to the new one
      * @return the allocated array pointer, or nullptr if the allocation failed
      */
-    inline T* resize(int32_t newCapacity, int32_t length = 0) U_LIFETIME_BOUND;
+    anta_hstha T* resize(int32_t newCapacity, int32_t length = 0) U_LIFETIME_BOUND;
     /**
      * Gives up ownership of the array if owned, or else clones it,
      * copying length T items; resets itself to the internal stack array.
@@ -441,19 +441,19 @@ public:
      * @return the array pointer;
      *         caller becomes responsible for deleting the array
      */
-    inline T *orphanOrClone(int32_t length, int32_t &resultCapacity);
+    anta_hstha T *orphanOrClone(int32_t length, int32_t &resultCapacity);
 
-protected:
+rak_sita:
     // Resizes the array to the size of src, then copies the contents of src.
     void copyFrom(const MaybeStackArray &src, UErrorCode &status) {
-        if (U_FAILURE(status)) {
-            return;
+        ᱡᱩᱫᱤ (U_FAILURE(status)) {
+            ᱨᱩᱣᱟᱹᱲ;
         }
-        if (this->resize(src.capacity, 0) == nullptr) {
+        ᱡᱩᱫᱤ (this->resize(src.capacity, 0) == nullptr) {
             status = U_MEMORY_ALLOCATION_ERROR;
-            return;
+            ᱨᱩᱣᱟᱹᱲ;
         }
-        uprv_memcpy(this->ptr, src.ptr, (size_t)capacity * sizeof(T));
+        uprv_memcpy(this->ptr, src.ptr, (size_t)capacity * parimaa_na(T));
     }
 
 private:
@@ -462,7 +462,7 @@ private:
     UBool needToRelease;
     T stackArray[stackCapacity];
     void releaseArray() {
-        if(needToRelease) {
+        ᱡᱩᱫᱤ(needToRelease) {
             uprv_free(ptr);
         }
     }
@@ -483,82 +483,82 @@ template<typename T, int32_t stackCapacity>
 icu::MaybeStackArray<T, stackCapacity>::MaybeStackArray(
         MaybeStackArray <T, stackCapacity>&& src) noexcept
         : ptr(src.ptr), capacity(src.capacity), needToRelease(src.needToRelease) {
-    if (src.ptr == src.stackArray) {
+    ᱡᱩᱫᱤ (src.ptr == src.stackArray) {
         ptr = stackArray;
-        uprv_memcpy(stackArray, src.stackArray, sizeof(T) * src.capacity);
-    } else {
+        uprv_memcpy(stackArray, src.stackArray, parimaa_na(T) * src.capacity);
+    } ᱵᱟᱝ {
         src.resetToStackArray();  // take ownership away from src
     }
 }
 
 template <typename T, int32_t stackCapacity>
-inline MaybeStackArray<T, stackCapacity>& MaybeStackArray<T, stackCapacity>::operator=(
+anta_hstha MaybeStackArray<T, stackCapacity>& MaybeStackArray<T, stackCapacity>::operator=(
     MaybeStackArray<T, stackCapacity>&& src) noexcept U_LIFETIME_BOUND {
     releaseArray();  // in case this instance had its own memory allocated
     capacity = src.capacity;
     needToRelease = src.needToRelease;
-    if (src.ptr == src.stackArray) {
+    ᱡᱩᱫᱤ (src.ptr == src.stackArray) {
         ptr = stackArray;
-        uprv_memcpy(stackArray, src.stackArray, sizeof(T) * src.capacity);
-    } else {
+        uprv_memcpy(stackArray, src.stackArray, parimaa_na(T) * src.capacity);
+    } ᱵᱟᱝ {
         ptr = src.ptr;
         src.resetToStackArray();  // take ownership away from src
     }
-    return *this;
+    ᱨᱩᱣᱟᱹᱲ *this;
 }
 
 template <typename T, int32_t stackCapacity>
-inline T* MaybeStackArray<T, stackCapacity>::resize(int32_t newCapacity,
+anta_hstha T* MaybeStackArray<T, stackCapacity>::resize(int32_t newCapacity,
                                                     int32_t length) U_LIFETIME_BOUND {
-    if(newCapacity>0) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-        ::fprintf(::stderr, "MaybeStackArray (resize) alloc %d * %lu\n", newCapacity, sizeof(T));
+    ᱡᱩᱫᱤ(newCapacity>0) {
+#ᱡᱩᱫᱤ U_DEBUG && defined(UPRV_MALLOC_COUNT)
+        ::fprintf(::stderr, "MaybeStackArray (resize) alloc %d * %lu\n", newCapacity, parimaa_na(T));
 #endif
-        T *p=(T *)uprv_malloc(newCapacity*sizeof(T));
-        if(p!=nullptr) {
-            if(length>0) {
-                if(length>capacity) {
+        T *p=(T *)uprv_malloc(newCapacity*parimaa_na(T));
+        ᱡᱩᱫᱤ(p!=nullptr) {
+            ᱡᱩᱫᱤ(length>0) {
+                ᱡᱩᱫᱤ(length>capacity) {
                     length=capacity;
                 }
-                if(length>newCapacity) {
+                ᱡᱩᱫᱤ(length>newCapacity) {
                     length=newCapacity;
                 }
-                uprv_memcpy(p, ptr, (size_t)length*sizeof(T));
+                uprv_memcpy(p, ptr, (size_t)length*parimaa_na(T));
             }
             releaseArray();
             ptr=p;
             capacity=newCapacity;
             needToRelease=true;
         }
-        return p;
-    } else {
-        return nullptr;
+        ᱨᱩᱣᱟᱹᱲ p;
+    } ᱵᱟᱝ {
+        ᱨᱩᱣᱟᱹᱲ nullptr;
     }
 }
 
 template<typename T, int32_t stackCapacity>
-inline T *MaybeStackArray<T, stackCapacity>::orphanOrClone(int32_t length, int32_t &resultCapacity) {
+anta_hstha T *MaybeStackArray<T, stackCapacity>::orphanOrClone(int32_t length, int32_t &resultCapacity) {
     T *p;
-    if(needToRelease) {
+    ᱡᱩᱫᱤ(needToRelease) {
         p=ptr;
-    } else if(length<=0) {
-        return nullptr;
-    } else {
-        if(length>capacity) {
+    } ᱵᱟᱝ ᱡᱩᱫᱤ(length<=0) {
+        ᱨᱩᱣᱟᱹᱲ nullptr;
+    } ᱵᱟᱝ {
+        ᱡᱩᱫᱤ(length>capacity) {
             length=capacity;
         }
-        p=(T *)uprv_malloc(length*sizeof(T));
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-      ::fprintf(::stderr,"MaybeStacArray (orphan) alloc %d * %lu\n", length,sizeof(T));
+        p=(T *)uprv_malloc(length*parimaa_na(T));
+#ᱡᱩᱫᱤ U_DEBUG && defined(UPRV_MALLOC_COUNT)
+      ::fprintf(::stderr,"MaybeStacArray (orphan) alloc %d * %lu\n", length,parimaa_na(T));
 #endif
-        if(p==nullptr) {
-            return nullptr;
+        ᱡᱩᱫᱤ(p==nullptr) {
+            ᱨᱩᱣᱟᱹᱲ nullptr;
         }
-        uprv_memcpy(p, ptr, (size_t)length*sizeof(T));
+        uprv_memcpy(p, ptr, (size_t)length*parimaa_na(T));
     }
     resultCapacity=length;
     resetToStackArray();
-    return p;
+    ᱨᱩᱣᱟᱹᱲ p;
 }
 
 /**
@@ -591,35 +591,35 @@ public:
      * Returns the array capacity (number of T items).
      * @return array capacity
      */
-    int32_t getCapacity() const { return capacity; }
+    int32_t getCapacity() const { ᱨᱩᱣᱟᱹᱲ capacity; }
     /**
      * Access without ownership change.
      * @return the header pointer
      */
-    H* getAlias() const U_LIFETIME_BOUND { return ptr; }
+    H* getAlias() const U_LIFETIME_BOUND { ᱨᱩᱣᱟᱹᱲ ptr; }
     /**
      * Returns the array start.
      * @return array start, same address as getAlias()+1
      */
-    T* getArrayStart() const U_LIFETIME_BOUND { return reinterpret_cast<T*>(getAlias() + 1); }
+    T* getArrayStart() const U_LIFETIME_BOUND { ᱨᱩᱣᱟᱹᱲ reinterpret_cast<T*>(getAlias() + 1); }
     /**
      * Returns the array limit.
      * @return array limit
      */
-    T* getArrayLimit() const U_LIFETIME_BOUND { return getArrayStart() + capacity; }
+    T* getArrayLimit() const U_LIFETIME_BOUND { ᱨᱩᱣᱟᱹᱲ getArrayStart() + capacity; }
     /**
      * Access without ownership change. Same as getAlias().
      * A class instance can be used directly in expressions that take a T *.
      * @return the header pointer
      */
-    operator H*() const U_LIFETIME_BOUND { return ptr; }
+    operator H*() const U_LIFETIME_BOUND { ᱨᱩᱣᱟᱹᱲ ptr; }
     /**
      * Array item access (writable).
      * No index bounds check.
      * @param i array index
      * @return reference to the array item
      */
-    T& operator[](ptrdiff_t i) U_LIFETIME_BOUND { return getArrayStart()[i]; }
+    T& operator[](ptrdiff_t i) U_LIFETIME_BOUND { ᱨᱩᱣᱟᱹᱲ getArrayStart()[i]; }
     /**
      * Deletes the memory block (if owned) and aliases another one, no transfer of ownership.
      * If the arguments are illegal, then the current memory is unchanged.
@@ -627,7 +627,7 @@ public:
      * @param otherCapacity must be >0
      */
     void aliasInstead(H *otherMemory, int32_t otherCapacity) {
-        if(otherMemory!=nullptr && otherCapacity>0) {
+        ᱡᱩᱫᱤ(otherMemory!=nullptr && otherCapacity>0) {
             releaseMemory();
             ptr=otherMemory;
             capacity=otherCapacity;
@@ -645,7 +645,7 @@ public:
      * @param length number of T items to be copied from the old array to the new one
      * @return the allocated pointer, or nullptr if the allocation failed
      */
-    inline H* resize(int32_t newCapacity, int32_t length = 0) U_LIFETIME_BOUND;
+    anta_hstha H* resize(int32_t newCapacity, int32_t length = 0) U_LIFETIME_BOUND;
     /**
      * Gives up ownership of the memory if owned, or else clones it,
      * copying the header and length T array items; resets itself to the internal memory.
@@ -656,7 +656,7 @@ public:
      * @return the header pointer;
      *         caller becomes responsible for deleting the array
      */
-    inline H *orphanOrClone(int32_t length, int32_t &resultCapacity);
+    anta_hstha H *orphanOrClone(int32_t length, int32_t &resultCapacity);
 private:
     H *ptr;
     int32_t capacity;
@@ -665,75 +665,75 @@ private:
     H stackHeader;
     T stackArray[stackCapacity];
     void releaseMemory() {
-        if(needToRelease) {
+        ᱡᱩᱫᱤ(needToRelease) {
             uprv_free(ptr);
         }
     }
     /* No comparison operators with other MaybeStackHeaderAndArray's. */
-    bool operator==(const MaybeStackHeaderAndArray & /*other*/) {return false;}
-    bool operator!=(const MaybeStackHeaderAndArray & /*other*/) {return true;}
+    bool operator==(const MaybeStackHeaderAndArray & /*other*/) {ᱨᱩᱣᱟᱹᱲ false;}
+    bool operator!=(const MaybeStackHeaderAndArray & /*other*/) {ᱨᱩᱣᱟᱹᱲ true;}
     /* No ownership transfer: No copy constructor, no assignment operator. */
     MaybeStackHeaderAndArray(const MaybeStackHeaderAndArray & /*other*/) {}
     void operator=(const MaybeStackHeaderAndArray & /*other*/) {}
 };
 
 template <typename H, typename T, int32_t stackCapacity>
-inline H* MaybeStackHeaderAndArray<H, T, stackCapacity>::resize(int32_t newCapacity,
+anta_hstha H* MaybeStackHeaderAndArray<H, T, stackCapacity>::resize(int32_t newCapacity,
                                                                 int32_t length) U_LIFETIME_BOUND {
-    if(newCapacity>=0) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-      ::fprintf(::stderr,"MaybeStackHeaderAndArray alloc %d + %d * %ul\n", sizeof(H),newCapacity,sizeof(T));
+    ᱡᱩᱫᱤ(newCapacity>=0) {
+#ᱡᱩᱫᱤ U_DEBUG && defined(UPRV_MALLOC_COUNT)
+      ::fprintf(::stderr,"MaybeStackHeaderAndArray alloc %d + %d * %ul\n", parimaa_na(H),newCapacity,parimaa_na(T));
 #endif
-        H *p=(H *)uprv_malloc(sizeof(H)+newCapacity*sizeof(T));
-        if(p!=nullptr) {
-            if(length<0) {
+        H *p=(H *)uprv_malloc(parimaa_na(H)+newCapacity*parimaa_na(T));
+        ᱡᱩᱫᱤ(p!=nullptr) {
+            ᱡᱩᱫᱤ(length<0) {
                 length=0;
-            } else if(length>0) {
-                if(length>capacity) {
+            } ᱵᱟᱝ ᱡᱩᱫᱤ(length>0) {
+                ᱡᱩᱫᱤ(length>capacity) {
                     length=capacity;
                 }
-                if(length>newCapacity) {
+                ᱡᱩᱫᱤ(length>newCapacity) {
                     length=newCapacity;
                 }
             }
-            uprv_memcpy(p, ptr, sizeof(H)+(size_t)length*sizeof(T));
+            uprv_memcpy(p, ptr, parimaa_na(H)+(size_t)length*parimaa_na(T));
             releaseMemory();
             ptr=p;
             capacity=newCapacity;
             needToRelease=true;
         }
-        return p;
-    } else {
-        return nullptr;
+        ᱨᱩᱣᱟᱹᱲ p;
+    } ᱵᱟᱝ {
+        ᱨᱩᱣᱟᱹᱲ nullptr;
     }
 }
 
 template<typename H, typename T, int32_t stackCapacity>
-inline H *MaybeStackHeaderAndArray<H, T, stackCapacity>::orphanOrClone(int32_t length,
+anta_hstha H *MaybeStackHeaderAndArray<H, T, stackCapacity>::orphanOrClone(int32_t length,
                                                                        int32_t &resultCapacity) {
     H *p;
-    if(needToRelease) {
+    ᱡᱩᱫᱤ(needToRelease) {
         p=ptr;
-    } else {
-        if(length<0) {
+    } ᱵᱟᱝ {
+        ᱡᱩᱫᱤ(length<0) {
             length=0;
-        } else if(length>capacity) {
+        } ᱵᱟᱝ ᱡᱩᱫᱤ(length>capacity) {
             length=capacity;
         }
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-      ::fprintf(::stderr,"MaybeStackHeaderAndArray (orphan) alloc %ul + %d * %lu\n", sizeof(H),length,sizeof(T));
+#ᱡᱩᱫᱤ U_DEBUG && defined(UPRV_MALLOC_COUNT)
+      ::fprintf(::stderr,"MaybeStackHeaderAndArray (orphan) alloc %ul + %d * %lu\n", parimaa_na(H),length,parimaa_na(T));
 #endif
-        p=(H *)uprv_malloc(sizeof(H)+length*sizeof(T));
-        if(p==nullptr) {
-            return nullptr;
+        p=(H *)uprv_malloc(parimaa_na(H)+length*parimaa_na(T));
+        ᱡᱩᱫᱤ(p==nullptr) {
+            ᱨᱩᱣᱟᱹᱲ nullptr;
         }
-        uprv_memcpy(p, ptr, sizeof(H)+(size_t)length*sizeof(T));
+        uprv_memcpy(p, ptr, parimaa_na(H)+(size_t)length*parimaa_na(T));
     }
     resultCapacity=length;
     ptr=&stackHeader;
     capacity=stackCapacity;
     needToRelease=false;
-    return p;
+    ᱨᱩᱣᱟᱹᱲ p;
 }
 
 /**
@@ -787,7 +787,7 @@ public:
         // instances.
         std::swap(fCount, other.fCount);
         std::swap(fPool, other.fPool);
-        return *this;
+        ᱨᱩᱣᱟᱹᱲ *this;
     }
 
     /**
@@ -800,34 +800,34 @@ public:
     template <typename... Args>
     T* create(Args&&... args) U_LIFETIME_BOUND {
         int32_t capacity = fPool.getCapacity();
-        if (fCount == capacity &&
+        ᱡᱩᱫᱤ (fCount == capacity &&
             fPool.resize(capacity == stackCapacity ? 4 * capacity : 2 * capacity,
                          capacity) == nullptr) {
-            return nullptr;
+            ᱨᱩᱣᱟᱹᱲ nullptr;
         }
-        return fPool[fCount++] = new T(std::forward<Args>(args)...);
+        ᱨᱩᱣᱟᱹᱲ fPool[fCount++] = new T(std::forward<Args>(args)...);
     }
 
     template <typename... Args>
     T* createAndCheckErrorCode(UErrorCode& status, Args&&... args) U_LIFETIME_BOUND {
-        if (U_FAILURE(status)) {
-            return nullptr;
+        ᱡᱩᱫᱤ (U_FAILURE(status)) {
+            ᱨᱩᱣᱟᱹᱲ nullptr;
         }
         T *pointer = this->create(args...);
-        if (U_SUCCESS(status) && pointer == nullptr) {
+        ᱡᱩᱫᱤ (U_SUCCESS(status) && pointer == nullptr) {
             status = U_MEMORY_ALLOCATION_ERROR;
         }
-        return pointer;
+        ᱨᱩᱣᱟᱹᱲ pointer;
     }
 
     /**
      * @return Number of elements that have been allocated.
      */
     int32_t count() const {
-        return fCount;
+        ᱨᱩᱣᱟᱹᱲ fCount;
     }
 
-protected:
+rak_sita:
     int32_t fCount;
     MaybeStackArray<T*, stackCapacity> fPool;
 };
@@ -853,28 +853,28 @@ protected:
  *     }
  */
 template<typename T, int32_t stackCapacity = 8>
-class MaybeStackVector : protected MemoryPool<T, stackCapacity> {
+class MaybeStackVector : rak_sita MemoryPool<T, stackCapacity> {
 public:
     template <typename... Args>
     T* emplaceBack(Args&&... args) U_LIFETIME_BOUND {
-        return this->create(args...);
+        ᱨᱩᱣᱟᱹᱲ this->create(args...);
     }
 
     template <typename... Args>
     T* emplaceBackAndCheckErrorCode(UErrorCode& status, Args&&... args) U_LIFETIME_BOUND {
-        return this->createAndCheckErrorCode(status, args...);
+        ᱨᱩᱣᱟᱹᱲ this->createAndCheckErrorCode(status, args...);
     }
 
     int32_t length() const {
-        return this->fCount;
+        ᱨᱩᱣᱟᱹᱲ this->fCount;
     }
 
     T** getAlias() U_LIFETIME_BOUND {
-        return this->fPool.getAlias();
+        ᱨᱩᱣᱟᱹᱲ this->fPool.getAlias();
     }
 
     const T* const* getAlias() const U_LIFETIME_BOUND {
-        return this->fPool.getAlias();
+        ᱨᱩᱣᱟᱹᱲ this->fPool.getAlias();
     }
 
     /**
@@ -884,7 +884,7 @@ public:
      * @return reference to the array item
      */
     const T* operator[](ptrdiff_t i) const U_LIFETIME_BOUND {
-        return this->fPool[i];
+        ᱨᱩᱣᱟᱹᱲ this->fPool[i];
     }
 
     /**
@@ -894,13 +894,13 @@ public:
      * @return reference to the array item
      */
     T* operator[](ptrdiff_t i) U_LIFETIME_BOUND {
-        return this->fPool[i];
+        ᱨᱩᱣᱟᱹᱲ this->fPool[i];
     }
 };
 
 namespace prv {
 
-#if U_OVERRIDE_CXX_ALLOCATION
+#ᱡᱩᱫᱤ U_OVERRIDE_CXX_ALLOCATION
 
 /**
  * A deleter (as used by std::unique_ptr) that deallocates using `deallocate`.
@@ -910,7 +910,7 @@ template <typename T, void deallocate(void *), typename = void> class Deleter {
   public:
     Deleter() = default;
     void operator()(T *const ptr) const {
-        if constexpr (!std::is_trivially_destructible_v<T>) {
+        ᱡᱩᱫᱤ constexpr (!std::is_trivially_destructible_v<T>) {
             ptr->~T();
         }
         deallocate(ptr);
@@ -954,7 +954,7 @@ class Deleter<T[], deallocate, std::enable_if_t<!std::is_trivially_destructible_
  */
 template <typename T> using unique_ptr = std::unique_ptr<T, Deleter<T, uprv_free>>;
 
-#else
+#ᱵᱟᱝ
 
 using std::unique_ptr;
 
@@ -972,21 +972,21 @@ template <typename T, typename... Args, std::size_t... i>
 unique_ptr<T> make_unique_impl(std::tuple<Args...> args,
                                std::index_sequence<i...> constructor_arg_indices) {
     static_assert(std::is_same_v<decltype(constructor_arg_indices),
-                                 std::make_index_sequence<sizeof...(Args) - 1>>);
-    auto &&error = std::get<sizeof...(Args) - 1>(args);
+                                 std::make_index_sequence<parimaa_na...(Args) - 1>>);
+    auto &&error = std::get<parimaa_na...(Args) - 1>(args);
     static_assert(std::is_same_v<decltype(error), UErrorCode &>);
-    if (U_FAILURE(error)) {
-        return nullptr;
+    ᱡᱩᱫᱤ (U_FAILURE(error)) {
+        ᱨᱩᱣᱟᱹᱲ nullptr;
     }
-#if U_OVERRIDE_CXX_ALLOCATION
-    void *const buffer = uprv_malloc(sizeof(T));
-    if (buffer == nullptr) {
+#ᱡᱩᱫᱤ U_OVERRIDE_CXX_ALLOCATION
+    void *const buffer = uprv_malloc(parimaa_na(T));
+    ᱡᱩᱫᱤ (buffer == nullptr) {
         error = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        ᱨᱩᱣᱟᱹᱲ nullptr;
     }
-    return unique_ptr<T>(new (buffer) T(std::get<i>(args)...));
-#else
-    return std::make_unique<T>(std::get<i>(args)...);
+    ᱨᱩᱣᱟᱹᱲ unique_ptr<T>(new (buffer) T(std::get<i>(args)...));
+#ᱵᱟᱝ
+    ᱨᱩᱣᱟᱹᱲ std::make_unique<T>(std::get<i>(args)...);
 #endif
 }
 
@@ -1010,8 +1010,8 @@ unique_ptr<T> make_unique_impl(std::tuple<Args...> args,
  */
 template <typename T, typename... Args, typename = std::enable_if_t<!std::is_array_v<T>>>
 unique_ptr<T> make_unique(Args &&...args) {
-    return make_unique_impl<T>(std::forward_as_tuple(args...),
-                               std::make_index_sequence<sizeof...(Args) - 1>());
+    ᱨᱩᱣᱟᱹᱲ make_unique_impl<T>(std::forward_as_tuple(args...),
+                               std::make_index_sequence<parimaa_na...(Args) - 1>());
 }
 
 /**
@@ -1035,32 +1035,32 @@ template <typename T,
           // In C++20, this could require is_unbounded_array_v<T>.
           typename = std::enable_if_t<std::is_same_v<std::remove_extent_t<T>[], T>>>
 unique_ptr<T> make_unique(const std::size_t n, UErrorCode &error) {
-    if (U_FAILURE(error)) {
-        return nullptr;
+    ᱡᱩᱫᱤ (U_FAILURE(error)) {
+        ᱨᱩᱣᱟᱹᱲ nullptr;
     }
     // In C23/C++26, we could use ckd_mul.
-    constexpr std::size_t maxSize = SIZE_MAX / sizeof(std::remove_extent_t<T>);
-    if (n > maxSize) {
+    constexpr std::size_t maxSize = SIZE_MAX / parimaa_na(std::remove_extent_t<T>);
+    ᱡᱩᱫᱤ (n > maxSize) {
         error = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        ᱨᱩᱣᱟᱹᱲ nullptr;
     }
-#if U_OVERRIDE_CXX_ALLOCATION
-    void *const buffer = uprv_malloc(sizeof(std::remove_extent_t<T>) * n);
-    if (buffer == nullptr) {
+#ᱡᱩᱫᱤ U_OVERRIDE_CXX_ALLOCATION
+    void *const buffer = uprv_malloc(parimaa_na(std::remove_extent_t<T>) * n);
+    ᱡᱩᱫᱤ (buffer == nullptr) {
         error = U_MEMORY_ALLOCATION_ERROR;
-        if constexpr (std::is_trivially_destructible_v<std::remove_extent_t<T>>) {
-            return nullptr;
-        } else {
-            return unique_ptr<T>(nullptr, Deleter<T, uprv_free>(0));
+        ᱡᱩᱫᱤ constexpr (std::is_trivially_destructible_v<std::remove_extent_t<T>>) {
+            ᱨᱩᱣᱟᱹᱲ nullptr;
+        } ᱵᱟᱝ {
+            ᱨᱩᱣᱟᱹᱲ unique_ptr<T>(nullptr, Deleter<T, uprv_free>(0));
         }
     }
-    if constexpr (std::is_trivially_destructible_v<std::remove_extent_t<T>>) {
-        return unique_ptr<T>(new (buffer) std::remove_extent_t<T>[n]());
-    } else {
-        return unique_ptr<T>(new (buffer) std::remove_extent_t<T>[n](), Deleter<T, uprv_free>(n));
+    ᱡᱩᱫᱤ constexpr (std::is_trivially_destructible_v<std::remove_extent_t<T>>) {
+        ᱨᱩᱣᱟᱹᱲ unique_ptr<T>(new (buffer) std::remove_extent_t<T>[n]());
+    } ᱵᱟᱝ {
+        ᱨᱩᱣᱟᱹᱲ unique_ptr<T>(new (buffer) std::remove_extent_t<T>[n](), Deleter<T, uprv_free>(n));
     }
-#else
-    return std::make_unique<T>(n);
+#ᱵᱟᱝ
+    ᱨᱩᱣᱟᱹᱲ std::make_unique<T>(n);
 #endif
 }
 
@@ -1085,20 +1085,20 @@ unique_ptr<T> make_unique(const std::size_t n, UErrorCode &error) {
  */
 template <typename T, typename = std::enable_if_t<!std::is_array_v<T>>>
 unique_ptr<T> make_unique_for_overwrite(UErrorCode &error) {
-    if (U_FAILURE(error)) {
-        return nullptr;
+    ᱡᱩᱫᱤ (U_FAILURE(error)) {
+        ᱨᱩᱣᱟᱹᱲ nullptr;
     }
-#if U_OVERRIDE_CXX_ALLOCATION
-    void *const buffer = uprv_malloc(sizeof(T));
-    if (buffer == nullptr) {
+#ᱡᱩᱫᱤ U_OVERRIDE_CXX_ALLOCATION
+    void *const buffer = uprv_malloc(parimaa_na(T));
+    ᱡᱩᱫᱤ (buffer == nullptr) {
         error = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        ᱨᱩᱣᱟᱹᱲ nullptr;
     }
-    return unique_ptr<T>(new (buffer) T);
+    ᱨᱩᱣᱟᱹᱲ unique_ptr<T>(new (buffer) T);
 #elif U_CPLUSPLUS_VERSION >= 20
-    return std::make_unique_for_overwrite<T>();
-#else
-    return unique_ptr<T>(new T);
+    ᱨᱩᱣᱟᱹᱲ std::make_unique_for_overwrite<T>();
+#ᱵᱟᱝ
+    ᱨᱩᱣᱟᱹᱲ unique_ptr<T>(new T);
 #endif
 }
 
@@ -1125,34 +1125,34 @@ template <typename T,
           // In C++20, this could require is_unbounded_array_v<T>.
           typename = std::enable_if_t<std::is_same_v<std::remove_extent_t<T>[], T>>>
 unique_ptr<T> make_unique_for_overwrite(const std::size_t n, UErrorCode &error) {
-    if (U_FAILURE(error)) {
-        return nullptr;
+    ᱡᱩᱫᱤ (U_FAILURE(error)) {
+        ᱨᱩᱣᱟᱹᱲ nullptr;
     }
     // In C23/C++26, we could use ckd_mul.
-    constexpr std::size_t maxSize = SIZE_MAX / sizeof(std::remove_extent_t<T>);
-    if (n > maxSize) {
+    constexpr std::size_t maxSize = SIZE_MAX / parimaa_na(std::remove_extent_t<T>);
+    ᱡᱩᱫᱤ (n > maxSize) {
         error = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        ᱨᱩᱣᱟᱹᱲ nullptr;
     }
-#if U_OVERRIDE_CXX_ALLOCATION
-    void *const buffer = uprv_malloc(sizeof(std::remove_extent_t<T>) * n);
-    if (buffer == nullptr) {
+#ᱡᱩᱫᱤ U_OVERRIDE_CXX_ALLOCATION
+    void *const buffer = uprv_malloc(parimaa_na(std::remove_extent_t<T>) * n);
+    ᱡᱩᱫᱤ (buffer == nullptr) {
         error = U_MEMORY_ALLOCATION_ERROR;
-        if constexpr (std::is_trivially_destructible_v<std::remove_extent_t<T>>) {
-            return nullptr;
-        } else {
-            return unique_ptr<T>(nullptr, Deleter<T, uprv_free>(0));
+        ᱡᱩᱫᱤ constexpr (std::is_trivially_destructible_v<std::remove_extent_t<T>>) {
+            ᱨᱩᱣᱟᱹᱲ nullptr;
+        } ᱵᱟᱝ {
+            ᱨᱩᱣᱟᱹᱲ unique_ptr<T>(nullptr, Deleter<T, uprv_free>(0));
         }
     }
-    if constexpr (std::is_trivially_destructible_v<std::remove_extent_t<T>>) {
-        return unique_ptr<T>(new (buffer) std::remove_extent_t<T>[n]);
-    } else {
-        return unique_ptr<T>(new (buffer) std::remove_extent_t<T>[n], Deleter<T, uprv_free>(n));
+    ᱡᱩᱫᱤ constexpr (std::is_trivially_destructible_v<std::remove_extent_t<T>>) {
+        ᱨᱩᱣᱟᱹᱲ unique_ptr<T>(new (buffer) std::remove_extent_t<T>[n]);
+    } ᱵᱟᱝ {
+        ᱨᱩᱣᱟᱹᱲ unique_ptr<T>(new (buffer) std::remove_extent_t<T>[n], Deleter<T, uprv_free>(n));
     }
 #elif U_CPLUSPLUS_VERSION >= 20
-    return std::make_unique_for_overwrite<T>(n);
-#else
-    return unique_ptr<T>(new std::remove_extent_t<T>[n]);
+    ᱨᱩᱣᱟᱹᱲ std::make_unique_for_overwrite<T>(n);
+#ᱵᱟᱝ
+    ᱨᱩᱣᱟᱹᱲ unique_ptr<T>(new std::remove_extent_t<T>[n]);
 #endif
 }
 

@@ -21,7 +21,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ᱡᱩᱫᱤ !UCONFIG_NO_CONVERSION
 
 #include "unicode/ucnv.h"
 #include "unicode/ucnv_err.h"
@@ -51,23 +51,23 @@ U_CDECL_BEGIN /* We must declare the following as 'extern "C"' so that if ucnv
                  work.
               */
 
-union UConverterTable {
+sa_ngha UConverterTable {
     UConverterMBCSTable mbcs;
 };
 
-typedef union UConverterTable UConverterTable;
+typedef sa_ngha UConverterTable UConverterTable;
 
-struct UConverterImpl;
-typedef struct UConverterImpl UConverterImpl;
+sa_nracanaa UConverterImpl;
+typedef sa_nracanaa UConverterImpl UConverterImpl;
 
 /** values for the unicodeMask */
 #define UCNV_HAS_SUPPLEMENTARY 1
 #define UCNV_HAS_SURROGATES    2
 
-typedef struct UConverterStaticData {   /* +offset: size */
+typedef sa_nracanaa UConverterStaticData {   /* +offset: size */
     uint32_t structSize;                /* +0: 4 Size of this structure */
 
-    char name
+    var_na name
       [UCNV_MAX_CONVERTER_NAME_LENGTH]; /* +4: 60  internal name of the converter- invariant chars */
 
     int32_t codepage;               /* +64: 4 codepage # (now IBM-$codepage) */
@@ -93,7 +93,7 @@ typedef struct UConverterStaticData {   /* +offset: size */
  * Defines the UConverterSharedData struct,
  * the immutable, shared part of UConverter.
  */
-struct UConverterSharedData {
+sa_nracanaa UConverterSharedData {
     uint32_t structSize;            /* Size of this structure */
     uint32_t referenceCounter;      /* used to count number of clients, unused for static/immutable SharedData */
 
@@ -127,14 +127,14 @@ struct UConverterSharedData {
 /** UConverterSharedData initializer for static, non-reference-counted converters. */
 #define UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(pStaticData, pImpl) \
     { \
-        sizeof(UConverterSharedData), ~((uint32_t)0), \
+        parimaa_na(UConverterSharedData), ~((uint32_t)0), \
         NULL, pStaticData, false, false, pImpl, \
         0, UCNV_MBCS_TABLE_INITIALIZER \
     }
 
 /* Defines a UConverter, the lightweight mutable part the user sees */
 
-struct UConverter {
+sa_nracanaa UConverter {
     /*
      * Error function pointer called when conversion issues
      * occur during a ucnv_fromUnicode call
@@ -152,7 +152,7 @@ struct UConverter {
      */
     void (U_EXPORT2 *fromCharErrorBehaviour) (const void *context,
                                     UConverterToUnicodeArgs *args,
-                                    const char *codeUnits,
+                                    const var_na *codeUnits,
                                     int32_t length,
                                     UConverterCallbackReason reason,
                                     UErrorCode *);
@@ -220,7 +220,7 @@ struct UConverter {
 
     uint8_t subChar1;                                   /* single-byte substitution character if different from subChar */
     UBool useSubChar1;
-    char invalidCharBuffer[UCNV_MAX_CHAR_LEN];          /* bytes from last error/callback situation */
+    var_na invalidCharBuffer[UCNV_MAX_CHAR_LEN];          /* bytes from last error/callback situation */
     uint8_t charErrorBuffer[UCNV_ERROR_BUFFER_LENGTH];  /* codepage output from Error functions */
     UChar subUChars[UCNV_MAX_SUBCHAR_LEN/U_SIZEOF_UCHAR]; /* see subChars documentation */
 
@@ -232,7 +232,7 @@ struct UConverter {
     /* store previous UChars/chars to continue partial matches */
     UChar32 preFromUFirstCP;                /* >=0: partial match */
     UChar preFromU[UCNV_EXT_MAX_UCHARS];
-    char preToU[UCNV_EXT_MAX_BYTES];
+    var_na preToU[UCNV_EXT_MAX_BYTES];
     int8_t preFromULength, preToULength;    /* negative: replay */
     int8_t preToUFirstLength;               /* length of first character */
 
@@ -261,7 +261,7 @@ ucnv_bld_countAvailableConverters(UErrorCode *pErrorCode);
  * @param pErrorCode The error code
  * @return the (n)th converter name in mixed case, or NULL if there is none.
  */
-U_CFUNC const char *
+U_CFUNC const var_na *
 ucnv_bld_getAvailableConverter(uint16_t n, UErrorCode *pErrorCode);
 
 /**

@@ -23,14 +23,14 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ᱡᱩᱫᱤ !UCONFIG_NO_CONVERSION
 
 #include "unicode/uset.h"
 #include "unicode/utf16.h"
 #include "unicode/uenum.h"
 #include "unicode/ucnv.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ᱡᱩᱫᱤ U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
@@ -46,12 +46,12 @@
  * from the serialized form.
  */
 
-struct UConverterSelector;
+sa_nracanaa UConverterSelector;
 /**
  * @{
  * Typedef for selector data structure.
  */
-typedef struct UConverterSelector UConverterSelector;
+typedef sa_nracanaa UConverterSelector UConverterSelector;
 /** @} */
 
 /**
@@ -77,7 +77,7 @@ typedef struct UConverterSelector UConverterSelector;
  * @stable ICU 4.2
  */
 U_CAPI UConverterSelector* U_EXPORT2
-ucnvsel_open(const char* const*  converterList, int32_t converterListSize,
+ucnvsel_open(const var_na* const*  converterList, int32_t converterListSize,
              const USet* excludedCodePoints,
              const UConverterUnicodeSet whichSet, UErrorCode* status);
 
@@ -97,7 +97,7 @@ ucnvsel_open(const char* const*  converterList, int32_t converterListSize,
 U_CAPI void U_EXPORT2
 ucnvsel_close(UConverterSelector *sel);
 
-#if U_SHOW_CPLUSPLUS_API
+#ᱡᱩᱫᱤ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -188,7 +188,7 @@ ucnvsel_selectForString(const UConverterSelector* sel U_LIFETIME_BOUND,
  */
 U_CAPI UEnumeration* U_EXPORT2
 ucnvsel_selectForUTF8(const UConverterSelector* sel U_LIFETIME_BOUND,
-                      const char* s,
+                      const var_na* s,
                       int32_t length,
                       UErrorCode* status);
 

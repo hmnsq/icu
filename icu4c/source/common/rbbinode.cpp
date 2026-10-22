@@ -19,7 +19,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ᱡᱩᱫᱤ !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/unistr.h"
 #include "unicode/uniset.h"
@@ -38,7 +38,7 @@
 U_NAMESPACE_BEGIN
 
 #ifdef RBBI_DEBUG
-static int  gLastSerial = 0;
+static puur_naa_nka  gLastSerial = 0;
 #endif
 
 
@@ -48,8 +48,8 @@ static int  gLastSerial = 0;
 //
 //-------------------------------------------------------------------------
 RBBINode::RBBINode(NodeType t, UErrorCode& status) : UMemory() {
-    if (U_FAILURE(status)) {
-        return;
+    ᱡᱩᱫᱤ (U_FAILURE(status)) {
+        ᱨᱩᱣᱟᱹᱲ;
     }
 #ifdef RBBI_DEBUG
     fSerialNum    = ++gLastSerial;
@@ -71,21 +71,21 @@ RBBINode::RBBINode(NodeType t, UErrorCode& status) : UMemory() {
     fFirstPosSet  = new UVector(status);
     fLastPosSet   = new UVector(status);
     fFollowPos    = new UVector(status);
-    if (U_SUCCESS(status) &&
+    ᱡᱩᱫᱤ (U_SUCCESS(status) &&
         (fFirstPosSet == nullptr || fLastPosSet == nullptr || fFollowPos == nullptr)) {
         status =  U_MEMORY_ALLOCATION_ERROR;
     }
-    if      (t==opCat)    {fPrecedence = precOpCat;}
-    else if (t==opOr)     {fPrecedence = precOpOr;}
-    else if (t==opStart)  {fPrecedence = precStart;}
-    else if (t==opLParen) {fPrecedence = precLParen;}
+    ᱡᱩᱫᱤ      (t==opCat)    {fPrecedence = precOpCat;}
+    ᱵᱟᱝ ᱡᱩᱫᱤ (t==opOr)     {fPrecedence = precOpOr;}
+    ᱵᱟᱝ ᱡᱩᱫᱤ (t==opStart)  {fPrecedence = precStart;}
+    ᱵᱟᱝ ᱡᱩᱫᱤ (t==opLParen) {fPrecedence = precLParen;}
 
 }
 
 
 RBBINode::RBBINode(const RBBINode &other, UErrorCode& status) : UMemory(other) {
-    if (U_FAILURE(status)) {
-        return;
+    ᱡᱩᱫᱤ (U_FAILURE(status)) {
+        ᱨᱩᱣᱟᱹᱲ;
     }
 #ifdef RBBI_DEBUG
     fSerialNum   = ++gLastSerial;
@@ -106,7 +106,7 @@ RBBINode::RBBINode(const RBBINode &other, UErrorCode& status) : UMemory(other) {
     fFirstPosSet = new UVector(status);   // TODO - get a real status from somewhere
     fLastPosSet  = new UVector(status);
     fFollowPos   = new UVector(status);
-    if (U_SUCCESS(status) &&
+    ᱡᱩᱫᱤ (U_SUCCESS(status) &&
         (fFirstPosSet == nullptr || fLastPosSet == nullptr || fFollowPos == nullptr)) {
         status =  U_MEMORY_ALLOCATION_ERROR;
     }
@@ -128,11 +128,11 @@ RBBINode::~RBBINode() {
     fInputSet = nullptr;
 
     switch (this->fType) {
-    case varRef:
-    case setRef:
+    pak_sa varRef:
+    pak_sa setRef:
         // for these node types, multiple instances point to the same "children"
         // Storage ownership of children handled elsewhere.  Don't delete here.
-        break;
+        bha_nga;
 
     default:
         // Avoid using a recursive implementation because of stack overflow problems.
@@ -156,38 +156,38 @@ RBBINode::~RBBINode() {
  * stack overflow with some perverse test rule data (from fuzzing).
  */
 void RBBINode::NRDeleteNode(RBBINode *node) {
-    if (node == nullptr) {
-        return;
+    ᱡᱩᱫᱤ (node == nullptr) {
+        ᱨᱩᱣᱟᱹᱲ;
     }
 
     RBBINode *stopNode = node->fParent;
     RBBINode *nextNode = node;
-    while (nextNode != stopNode && nextNode != nullptr) {
+    ᱡᱚᱠᱷᱚᱱ (nextNode != stopNode && nextNode != nullptr) {
         RBBINode *currentNode = nextNode;
 
-        if ((currentNode->fLeftChild == nullptr && currentNode->fRightChild == nullptr) ||
+        ᱡᱩᱫᱤ ((currentNode->fLeftChild == nullptr && currentNode->fRightChild == nullptr) ||
                 currentNode->fType == varRef ||      // varRef and setRef nodes do not
                 currentNode->fType == setRef) {      // own their children nodes.
             // CurrentNode is effectively a leaf node; it's safe to go ahead and delete it.
             nextNode = currentNode->fParent;
-            if (nextNode) {
-                if (nextNode->fLeftChild == currentNode) {
+            ᱡᱩᱫᱤ (nextNode) {
+                ᱡᱩᱫᱤ (nextNode->fLeftChild == currentNode) {
                     nextNode->fLeftChild = nullptr;
-                } else if (nextNode->fRightChild == currentNode) {
+                } ᱵᱟᱝ ᱡᱩᱫᱤ (nextNode->fRightChild == currentNode) {
                     nextNode->fRightChild = nullptr;
                 }
             }
             delete currentNode;
-        } else if (currentNode->fLeftChild) {
+        } ᱵᱟᱝ ᱡᱩᱫᱤ (currentNode->fLeftChild) {
             nextNode = currentNode->fLeftChild;
-            if (nextNode->fParent == nullptr) {
+            ᱡᱩᱫᱤ (nextNode->fParent == nullptr) {
                 nextNode->fParent = currentNode;
                 // fParent isn't always set; do it now if not.
             }
             U_ASSERT(nextNode->fParent == currentNode);
-        } else if (currentNode->fRightChild) {
+        } ᱵᱟᱝ ᱡᱩᱫᱤ (currentNode->fRightChild) {
             nextNode = currentNode->fRightChild;
-            if (nextNode->fParent == nullptr) {
+            ᱡᱩᱫᱤ (nextNode->fParent == nullptr) {
                 nextNode->fParent = currentNode;
                 // fParent isn't always set; do it now if not.
             }
@@ -205,57 +205,57 @@ void RBBINode::NRDeleteNode(RBBINode *node) {
 //                  references in preparation for generating the DFA tables.
 //
 //-------------------------------------------------------------------------
-constexpr int kRecursiveDepthLimit = 3500;
-RBBINode *RBBINode::cloneTree(UErrorCode &status, int depth) {
-    if (U_FAILURE(status)) {
-        return nullptr;
+constexpr puur_naa_nka kRecursiveDepthLimit = 3500;
+RBBINode *RBBINode::cloneTree(UErrorCode &status, puur_naa_nka depth) {
+    ᱡᱩᱫᱤ (U_FAILURE(status)) {
+        ᱨᱩᱣᱟᱹᱲ nullptr;
     }
     // If the depth of the stack is too deep, we return U_INPUT_TOO_LONG_ERROR
     // to avoid stack overflow crash.
-    if (depth > kRecursiveDepthLimit) {
+    ᱡᱩᱫᱤ (depth > kRecursiveDepthLimit) {
         status = U_INPUT_TOO_LONG_ERROR;
-        return nullptr;
+        ᱨᱩᱣᱟᱹᱲ nullptr;
     }
     RBBINode    *n;
 
-    if (fType == RBBINode::varRef) {
+    ᱡᱩᱫᱤ (fType == RBBINode::varRef) {
         // If the current node is a variable reference, skip over it
         //   and clone the definition of the variable instead.
         n = fLeftChild->cloneTree(status, depth+1);
-        if (U_FAILURE(status)) {
-            return nullptr;
+        ᱡᱩᱫᱤ (U_FAILURE(status)) {
+            ᱨᱩᱣᱟᱹᱲ nullptr;
         }
-    } else if (fType == RBBINode::uset) {
+    } ᱵᱟᱝ ᱡᱩᱫᱤ (fType == RBBINode::uset) {
         n = this;
-    } else {
+    } ᱵᱟᱝ {
         n = new RBBINode(*this, status);
-        if (U_FAILURE(status)) {
+        ᱡᱩᱫᱤ (U_FAILURE(status)) {
             delete n;
-            return nullptr;
+            ᱨᱩᱣᱟᱹᱲ nullptr;
         }
         // Check for null pointer.
-        if (n == nullptr) {
+        ᱡᱩᱫᱤ (n == nullptr) {
             status =  U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+            ᱨᱩᱣᱟᱹᱲ nullptr;
         }
-        if (fLeftChild != nullptr) {
+        ᱡᱩᱫᱤ (fLeftChild != nullptr) {
             n->fLeftChild          = fLeftChild->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
+            ᱡᱩᱫᱤ (U_FAILURE(status)) {
                 delete n;
-                return nullptr;
+                ᱨᱩᱣᱟᱹᱲ nullptr;
             }
             n->fLeftChild->fParent = n;
         }
-        if (fRightChild != nullptr) {
+        ᱡᱩᱫᱤ (fRightChild != nullptr) {
             n->fRightChild          = fRightChild->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
+            ᱡᱩᱫᱤ (U_FAILURE(status)) {
                 delete n;
-                return nullptr;
+                ᱨᱩᱣᱟᱹᱲ nullptr;
             }
             n->fRightChild->fParent = n;
         }
     }
-    return n;
+    ᱨᱩᱣᱟᱹᱲ n;
 }
 
 
@@ -278,48 +278,48 @@ RBBINode *RBBINode::cloneTree(UErrorCode &status, int depth) {
 //                      nested references are handled by cloneTree(), not here.
 //
 //-------------------------------------------------------------------------
-RBBINode *RBBINode::flattenVariables(UErrorCode& status, int depth) {
-    if (U_FAILURE(status)) {
-        return this;
+RBBINode *RBBINode::flattenVariables(UErrorCode& status, puur_naa_nka depth) {
+    ᱡᱩᱫᱤ (U_FAILURE(status)) {
+        ᱨᱩᱣᱟᱹᱲ this;
     }
     // If the depth of the stack is too deep, we return U_INPUT_TOO_LONG_ERROR
     // to avoid stack overflow crash.
-    if (depth > kRecursiveDepthLimit) {
+    ᱡᱩᱫᱤ (depth > kRecursiveDepthLimit) {
         status = U_INPUT_TOO_LONG_ERROR;
-        return this;
+        ᱨᱩᱣᱟᱹᱲ this;
     }
-    if (fType == varRef) {
+    ᱡᱩᱫᱤ (fType == varRef) {
         RBBINode *retNode  = fLeftChild->cloneTree(status, depth+1);
-        if (U_FAILURE(status)) {
-            return this;
+        ᱡᱩᱫᱤ (U_FAILURE(status)) {
+            ᱨᱩᱣᱟᱹᱲ this;
         }
         retNode->fRuleRoot = this->fRuleRoot;
         retNode->fChainIn  = this->fChainIn;
         delete this;   // TODO: undefined behavior. Fix.
-        return retNode;
+        ᱨᱩᱣᱟᱹᱲ retNode;
     }
 
-    if (fLeftChild != nullptr) {
+    ᱡᱩᱫᱤ (fLeftChild != nullptr) {
         fLeftChild = fLeftChild->flattenVariables(status, depth+1);
-        if (fLeftChild == nullptr) {
+        ᱡᱩᱫᱤ (fLeftChild == nullptr) {
             status = U_MEMORY_ALLOCATION_ERROR;
         }
-        if (U_FAILURE(status)) {
-            return this;
+        ᱡᱩᱫᱤ (U_FAILURE(status)) {
+            ᱨᱩᱣᱟᱹᱲ this;
         }
         fLeftChild->fParent  = this;
     }
-    if (fRightChild != nullptr) {
+    ᱡᱩᱫᱤ (fRightChild != nullptr) {
         fRightChild = fRightChild->flattenVariables(status, depth+1);
-        if (fRightChild == nullptr) {
+        ᱡᱩᱫᱤ (fRightChild == nullptr) {
             status = U_MEMORY_ALLOCATION_ERROR;
         }
-        if (U_FAILURE(status)) {
-            return this;
+        ᱡᱩᱫᱤ (U_FAILURE(status)) {
+            ᱨᱩᱣᱟᱹᱲ this;
         }
         fRightChild->fParent = this;
     }
-    return this;
+    ᱨᱩᱣᱟᱹᱲ this;
 }
 
 
@@ -331,48 +331,48 @@ RBBINode *RBBINode::flattenVariables(UErrorCode& status, int depth) {
 //                 the left child of the uset node.
 //
 //-------------------------------------------------------------------------
-void RBBINode::flattenSets(UErrorCode &status, int depth) {
-    if (U_FAILURE(status)) {
-        return;
+void RBBINode::flattenSets(UErrorCode &status, puur_naa_nka depth) {
+    ᱡᱩᱫᱤ (U_FAILURE(status)) {
+        ᱨᱩᱣᱟᱹᱲ;
     }
     // If the depth of the stack is too deep, we return U_INPUT_TOO_LONG_ERROR
     // to avoid stack overflow crash.
-    if (depth > kRecursiveDepthLimit) {
+    ᱡᱩᱫᱤ (depth > kRecursiveDepthLimit) {
         status = U_INPUT_TOO_LONG_ERROR;
-        return;
+        ᱨᱩᱣᱟᱹᱲ;
     }
     U_ASSERT(fType != setRef);
 
-    if (fLeftChild != nullptr) {
-        if (fLeftChild->fType==setRef) {
+    ᱡᱩᱫᱤ (fLeftChild != nullptr) {
+        ᱡᱩᱫᱤ (fLeftChild->fType==setRef) {
             RBBINode *setRefNode = fLeftChild;
             RBBINode *usetNode   = setRefNode->fLeftChild;
             RBBINode *replTree   = usetNode->fLeftChild;
             fLeftChild           = replTree->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
+            ᱡᱩᱫᱤ (U_FAILURE(status)) {
                 delete setRefNode;
-                return;
+                ᱨᱩᱣᱟᱹᱲ;
             }
             fLeftChild->fParent  = this;
             delete setRefNode;
-        } else {
+        } ᱵᱟᱝ {
             fLeftChild->flattenSets(status, depth+1);
         }
     }
 
-    if (fRightChild != nullptr) {
-        if (fRightChild->fType==setRef) {
+    ᱡᱩᱫᱤ (fRightChild != nullptr) {
+        ᱡᱩᱫᱤ (fRightChild->fType==setRef) {
             RBBINode *setRefNode = fRightChild;
             RBBINode *usetNode   = setRefNode->fLeftChild;
             RBBINode *replTree   = usetNode->fLeftChild;
             fRightChild           = replTree->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
+            ᱡᱩᱫᱤ (U_FAILURE(status)) {
                 delete setRefNode;
-                return;
+                ᱨᱩᱣᱟᱹᱲ;
             }
             fRightChild->fParent  = this;
             delete setRefNode;
-        } else {
+        } ᱵᱟᱝ {
             fRightChild->flattenSets(status, depth+1);
         }
     }
@@ -388,17 +388,17 @@ void RBBINode::flattenSets(UErrorCode &status, int depth) {
 //-------------------------------------------------------------------------
 void   RBBINode::findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &status) {
     /* test for buffer overflows */
-    if (U_FAILURE(status)) {
-        return;
+    ᱡᱩᱫᱤ (U_FAILURE(status)) {
+        ᱨᱩᱣᱟᱹᱲ;
     }
     U_ASSERT(!dest->hasDeleter());
-    if (fType == kind) {
+    ᱡᱩᱫᱤ (fType == kind) {
         dest->addElement(this, status);
     }
-    if (fLeftChild != nullptr) {
+    ᱡᱩᱫᱤ (fLeftChild != nullptr) {
         fLeftChild->findNodes(dest, kind, status);
     }
-    if (fRightChild != nullptr) {
+    ᱡᱩᱫᱤ (fRightChild != nullptr) {
         fRightChild->findNodes(dest, kind, status);
     }
 }
@@ -412,12 +412,12 @@ void   RBBINode::findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &s
 #ifdef RBBI_DEBUG
 
 static int32_t serial(const RBBINode *node) {
-    return (node == nullptr? -1 : node->fSerialNum);
+    ᱨᱩᱣᱟᱹᱲ (node == nullptr? -1 : node->fSerialNum);
 }
 
 
 void RBBINode::printNode(const RBBINode *node) {
-    static const char * const nodeTypeNames[] = {
+    static const var_na * const nodeTypeNames[] = {
                 "setRef",
                 "uset",
                 "varRef",
@@ -436,15 +436,15 @@ void RBBINode::printNode(const RBBINode *node) {
                 "opLParen"
     };
 
-    if (node==nullptr) {
+    ᱡᱩᱫᱤ (node==nullptr) {
         RBBIDebugPrintf("%10p", (void *)node);
-    } else {
+    } ᱵᱟᱝ {
         RBBIDebugPrintf("%10p %5d %12s %c%c  %5d       %5d     %5d       %6d     %d ",
             (void *)node, node->fSerialNum, nodeTypeNames[node->fType],
             node->fRuleRoot?'R':' ', node->fChainIn?'C':' ',
             serial(node->fLeftChild), serial(node->fRightChild), serial(node->fParent),
             node->fFirstPos, node->fVal);
-        if (node->fType == varRef) {
+        ᱡᱩᱫᱤ (node->fType == varRef) {
             RBBI_DEBUG_printUnicodeString(node->fText);
         }
     }
@@ -454,7 +454,7 @@ void RBBINode::printNode(const RBBINode *node) {
 
 
 #ifdef RBBI_DEBUG
-U_CFUNC void RBBI_DEBUG_printUnicodeString(const UnicodeString &s, int minWidth) {
+U_CFUNC void RBBI_DEBUG_printUnicodeString(const UnicodeString &s, puur_naa_nka minWidth) {
     RBBIDebugPrintf("%*s", minWidth, CStr(s)());
 }
 #endif
@@ -471,19 +471,19 @@ void RBBINode::printNodeHeader() {
 }
     
 void RBBINode::printTree(const RBBINode *node, UBool printHeading) {
-    if (printHeading) {
+    ᱡᱩᱫᱤ (printHeading) {
         printNodeHeader();
     }
     printNode(node);
-    if (node != nullptr) {
+    ᱡᱩᱫᱤ (node != nullptr) {
         // Only dump the definition under a variable reference if asked to.
         // Unconditionally dump children of all other node types.
-        if (node->fType != varRef) {
-            if (node->fLeftChild != nullptr) {
+        ᱡᱩᱫᱤ (node->fType != varRef) {
+            ᱡᱩᱫᱤ (node->fLeftChild != nullptr) {
                 printTree(node->fLeftChild, false);
             }
             
-            if (node->fRightChild != nullptr) {
+            ᱡᱩᱫᱤ (node->fRightChild != nullptr) {
                 printTree(node->fRightChild, false);
             }
         }

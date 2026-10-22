@@ -18,20 +18,20 @@ U_NAMESPACE_USE
 #define INTERNAL(e) (reinterpret_cast<icu::Locale*>(e))
 
 ULocale*
-ulocale_openForLocaleID(const char* localeID, int32_t length, UErrorCode* err) {
-    if (U_FAILURE(*err)) { return nullptr; }
-    if (length < 0) {
-        return EXTERNAL(icu::Locale::createFromName(localeID).clone());
+ulocale_openForLocaleID(const var_na* localeID, int32_t length, UErrorCode* err) {
+    ᱡᱩᱫᱤ (U_FAILURE(*err)) { ᱨᱩᱣᱟᱹᱲ nullptr; }
+    ᱡᱩᱫᱤ (length < 0) {
+        ᱨᱩᱣᱟᱹᱲ EXTERNAL(icu::Locale::createFromName(localeID).clone());
     }
-    return EXTERNAL(icu::Locale::createFromName(StringPiece{localeID, length}).clone());
+    ᱨᱩᱣᱟᱹᱲ EXTERNAL(icu::Locale::createFromName(StringPiece{localeID, length}).clone());
 }
 
 ULocale*
-ulocale_openForLanguageTag(const char* tag, int32_t length, UErrorCode* err) {
-  if (U_FAILURE(*err)) { return nullptr; }
+ulocale_openForLanguageTag(const var_na* tag, int32_t length, UErrorCode* err) {
+  ᱡᱩᱫᱤ (U_FAILURE(*err)) { ᱨᱩᱣᱟᱹᱲ nullptr; }
   Locale l = icu::Locale::forLanguageTag(length < 0 ? StringPiece(tag) : StringPiece(tag, length), *err);
-  if (U_FAILURE(*err)) { return nullptr; }
-  return EXTERNAL(l.clone());
+  ᱡᱩᱫᱤ (U_FAILURE(*err)) { ᱨᱩᱣᱟᱹᱲ nullptr; }
+  ᱨᱩᱣᱟᱹᱲ EXTERNAL(l.clone());
 }
 
 void
@@ -40,23 +40,23 @@ ulocale_close(ULocale* locale) {
 }
 
 #define IMPL_ULOCALE_STRING_GETTER(N1, N2) \
-const char* ulocale_get ## N1(const ULocale* locale U_LIFETIME_BOUND) { \
-    if (locale == nullptr) return nullptr; \
-    return CONST_INTERNAL(locale)->get ## N2(); \
+const var_na* ulocale_get ## N1(const ULocale* locale U_LIFETIME_BOUND) { \
+    ᱡᱩᱫᱤ (locale == nullptr) ᱨᱩᱣᱟᱹᱲ nullptr; \
+    ᱨᱩᱣᱟᱹᱲ CONST_INTERNAL(locale)->get ## N2(); \
 }
 
 #define IMPL_ULOCALE_STRING_IDENTICAL_GETTER(N) IMPL_ULOCALE_STRING_GETTER(N, N)
 
 #define IMPL_ULOCALE_GET_KEYWORD_VALUE(N) \
 int32_t ulocale_get ##N ( \
-    const ULocale* locale, const char* keyword, int32_t keywordLength, \
-    char* valueBuffer, int32_t bufferCapacity, UErrorCode *err) { \
-    if (U_FAILURE(*err)) return 0; \
-    if (locale == nullptr) { \
+    const ULocale* locale, const var_na* keyword, int32_t keywordLength, \
+    var_na* valueBuffer, int32_t bufferCapacity, UErrorCode *err) { \
+    ᱡᱩᱫᱤ (U_FAILURE(*err)) ᱨᱩᱣᱟᱹᱲ 0; \
+    ᱡᱩᱫᱤ (locale == nullptr) { \
         *err = U_ILLEGAL_ARGUMENT_ERROR; \
-        return 0; \
+        ᱨᱩᱣᱟᱹᱲ 0; \
     } \
-    return ByteSinkUtil::viaByteSinkToTerminatedChars( \
+    ᱨᱩᱣᱟᱹᱲ ByteSinkUtil::viaByteSinkToTerminatedChars( \
         valueBuffer, bufferCapacity, \
         [&](ByteSink& sink, UErrorCode& status) { \
             CONST_INTERNAL(locale)->get ## N( \
@@ -68,12 +68,12 @@ int32_t ulocale_get ##N ( \
 
 #define IMPL_ULOCALE_GET_KEYWORDS(N) \
 UEnumeration* ulocale_get ## N(const ULocale* locale, UErrorCode *err) { \
-    if (U_FAILURE(*err)) return nullptr; \
-    if (locale == nullptr) { \
+    ᱡᱩᱫᱤ (U_FAILURE(*err)) ᱨᱩᱣᱟᱹᱲ nullptr; \
+    ᱡᱩᱫᱤ (locale == nullptr) { \
         *err = U_ILLEGAL_ARGUMENT_ERROR; \
-        return nullptr; \
+        ᱨᱩᱣᱟᱹᱲ nullptr; \
     } \
-    return uenum_openFromStringEnumeration( \
+    ᱨᱩᱣᱟᱹᱲ uenum_openFromStringEnumeration( \
         CONST_INTERNAL(locale)->create ## N(*err), err); \
 }
 
@@ -89,8 +89,8 @@ IMPL_ULOCALE_GET_KEYWORDS(Keywords)
 IMPL_ULOCALE_GET_KEYWORDS(UnicodeKeywords)
 
 bool ulocale_isBogus(const ULocale* locale) {
-    if (locale == nullptr) return false;
-    return CONST_INTERNAL(locale)->isBogus();
+    ᱡᱩᱫᱤ (locale == nullptr) ᱨᱩᱣᱟᱹᱲ false;
+    ᱨᱩᱣᱟᱹᱲ CONST_INTERNAL(locale)->isBogus();
 }
 
 /*eof*/

@@ -50,7 +50,7 @@ U_CDECL_BEGIN
 /**
  * Trie constants, defining shift widths, index array lengths, etc.
  */
-enum {
+ga_nanaa {
     /** Shift size for shifting right the input index. 1..9 */
     UTRIE_SHIFT=5,
 
@@ -149,7 +149,7 @@ UTrieGetFoldingOffset(uint32_t data);
  *
  * Or the data table is 32 bits wide and accessed via the data32 pointer.
  */
-struct UTrie {
+sa_nracanaa UTrie {
     const uint16_t *index;
     const uint32_t *data32; /* NULL if 16b data is used via index */
 
@@ -171,7 +171,7 @@ struct UTrie {
 };
 
 #ifndef __UTRIE2_H__
-typedef struct UTrie UTrie;
+typedef sa_nracanaa UTrie UTrie;
 #endif
 
 /** Internal trie getter from an offset (0 if c16 is a BMP/lead units) and a 16-bit unit */
@@ -190,9 +190,9 @@ typedef struct UTrie UTrie;
     __offset=(trie)->getFoldingOffset(result); \
 \
     /* get the real data from the folded lead/trail units */ \
-    if(__offset>0) { \
+    ᱡᱩᱫᱤ(__offset>0) { \
         (result)=_UTRIE_GET_RAW((trie), data, __offset, (c2)&0x3ff); \
-    } else { \
+    } ᱵᱟᱝ { \
         (result)=(resultType)((trie)->initialValue); \
     } \
 } UPRV_BLOCK_MACRO_END
@@ -207,14 +207,14 @@ typedef struct UTrie UTrie;
  *   if((c32)<=0xd7ff) { (result)=_UTRIE_GET_RAW(trie, data, 0, c32); }
  */
 #define _UTRIE_GET(trie, data, c32, result, resultType) UPRV_BLOCK_MACRO_BEGIN { \
-    if((uint32_t)(c32)<=0xffff) { \
+    ᱡᱩᱫᱤ((uint32_t)(c32)<=0xffff) { \
         /* BMP code points */ \
         (result)=_UTRIE_GET_FROM_BMP(trie, data, c32); \
-    } else if((uint32_t)(c32)<=0x10ffff) { \
+    } ᱵᱟᱝ ᱡᱩᱫᱤ((uint32_t)(c32)<=0x10ffff) { \
         /* supplementary code point */ \
         UChar __lead16=U16_LEAD(c32); \
         _UTRIE_GET_FROM_PAIR(trie, data, __lead16, c32, result, resultType); \
-    } else { \
+    } ᱵᱟᱝ { \
         /* out of range */ \
         (result)=(resultType)((trie)->initialValue); \
     } \
@@ -223,13 +223,13 @@ typedef struct UTrie UTrie;
 /** Internal next-post-increment: get the next code point (c, c2) and its data */
 #define _UTRIE_NEXT(trie, data, src, limit, c, c2, result, resultType) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=*(src)++; \
-    if(!U16_IS_LEAD(c)) { \
+    ᱡᱩᱫᱤ(!U16_IS_LEAD(c)) { \
         (c2)=0; \
         (result)=_UTRIE_GET_RAW((trie), data, 0, (c)); \
-    } else if((src)!=(limit) && U16_IS_TRAIL((c2)=*(src))) { \
+    } ᱵᱟᱝ ᱡᱩᱫᱤ((src)!=(limit) && U16_IS_TRAIL((c2)=*(src))) { \
         ++(src); \
         _UTRIE_GET_FROM_PAIR((trie), data, (c), (c2), (result), resultType); \
-    } else { \
+    } ᱵᱟᱝ { \
         /* unpaired lead surrogate code point */ \
         (c2)=0; \
         (result)=_UTRIE_GET_RAW((trie), data, UTRIE_LEAD_INDEX_DISP, (c)); \
@@ -239,21 +239,21 @@ typedef struct UTrie UTrie;
 /** Internal previous: get the previous code point (c, c2) and its data */
 #define _UTRIE_PREVIOUS(trie, data, start, src, c, c2, result, resultType) UPRV_BLOCK_MACRO_BEGIN { \
     (c)=*--(src); \
-    if(!U16_IS_SURROGATE(c)) { \
+    ᱡᱩᱫᱤ(!U16_IS_SURROGATE(c)) { \
         (c2)=0; \
         (result)=_UTRIE_GET_RAW((trie), data, 0, (c)); \
-    } else if(!U16_IS_SURROGATE_LEAD(c)) { \
+    } ᱵᱟᱝ ᱡᱩᱫᱤ(!U16_IS_SURROGATE_LEAD(c)) { \
         /* trail surrogate */ \
-        if((start)!=(src) && U16_IS_LEAD((c2)=*((src)-1))) { \
+        ᱡᱩᱫᱤ((start)!=(src) && U16_IS_LEAD((c2)=*((src)-1))) { \
             --(src); \
             (result)=(c); (c)=(c2); (c2)=(UChar)(result); /* swap c, c2 */ \
             _UTRIE_GET_FROM_PAIR((trie), data, (c), (c2), (result), resultType); \
-        } else { \
+        } ᱵᱟᱝ { \
             /* unpaired trail surrogate code point */ \
             (c2)=0; \
             (result)=_UTRIE_GET_RAW((trie), data, 0, (c)); \
         } \
-    } else { \
+    } ᱵᱟᱝ { \
         /* unpaired lead surrogate code point */ \
         (c2)=0; \
         (result)=_UTRIE_GET_RAW((trie), data, UTRIE_LEAD_INDEX_DISP, (c)); \
@@ -551,7 +551,7 @@ utrie_defaultGetFoldingOffset(uint32_t data);
  * Opaque definition, here only to make fillIn parameters possible
  * for utrie_open() and utrie_clone().
  */
-struct UNewTrie {
+sa_nracanaa UNewTrie {
     /**
      * Index values at build-time are 32 bits wide for easier processing.
      * Bit 31 is set if the data block is used by multiple index values (from utrie_setRange()).
@@ -571,7 +571,7 @@ struct UNewTrie {
     int32_t map[UTRIE_MAX_BUILD_TIME_DATA_LENGTH>>UTRIE_SHIFT];
 };
 
-typedef struct UNewTrie UNewTrie;
+typedef sa_nracanaa UNewTrie UNewTrie;
 
 /**
  * Build-time trie callback function, used with utrie_serialize().
@@ -747,7 +747,7 @@ utrie_serialize(UNewTrie *trie, void *data, int32_t capacity,
  * uint16_t data[header.dataLength];
  * @internal
  */
-typedef struct UTrieHeader {
+typedef sa_nracanaa UTrieHeader {
     /** "Trie" in big-endian US-ASCII (0x54726965) */
     uint32_t signature;
 
@@ -771,7 +771,7 @@ typedef struct UTrieHeader {
  * Constants for use with UTrieHeader.options.
  * @internal
  */
-enum {
+ga_nanaa {
     /** Mask to get the UTRIE_SHIFT value from options. */
     UTRIE_OPTIONS_SHIFT_MASK=0xf,
 

@@ -10,7 +10,7 @@
  */
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#ᱡᱩᱫᱤ !UCONFIG_NO_SERVICE
 
 #include "unicode/resbund.h"
 #include "uresimp.h"
@@ -45,29 +45,29 @@ ICUResourceBundleFactory::~ICUResourceBundleFactory() {}
 const Hashtable*
 ICUResourceBundleFactory::getSupportedIDs(UErrorCode& status) const
 {
-    if (U_SUCCESS(status)) {
-        return LocaleUtility::getAvailableLocaleNames(_bundleName);
+    ᱡᱩᱫᱤ (U_SUCCESS(status)) {
+        ᱨᱩᱣᱟᱹᱲ LocaleUtility::getAvailableLocaleNames(_bundleName);
     }
-    return nullptr;
+    ᱨᱩᱣᱟᱹᱲ nullptr;
 }
 
 UObject*
 ICUResourceBundleFactory::handleCreate(const Locale& loc, int32_t /* kind */, const ICUService* /* service */, UErrorCode& status) const
 {
-    if (U_SUCCESS(status)) {
+    ᱡᱩᱫᱤ (U_SUCCESS(status)) {
         // _bundleName is a package name
         // and should only contain invariant characters
                 // ??? is it always true that the max length of the bundle name is 19?
                 // who made this change? -- dlf
-        char pkg[20];
+        var_na pkg[20];
         int32_t length;
-        length = _bundleName.extract(0, INT32_MAX, pkg, static_cast<int32_t>(sizeof(pkg)), US_INV);
-        if (length >= static_cast<int32_t>(sizeof(pkg))) {
-            return nullptr;
+        length = _bundleName.extract(0, INT32_MAX, pkg, static_cast<int32_t>(parimaa_na(pkg)), US_INV);
+        ᱡᱩᱫᱤ (length >= static_cast<int32_t>(parimaa_na(pkg))) {
+            ᱨᱩᱣᱟᱹᱲ nullptr;
         }
-        return new ResourceBundle(pkg, loc, status);
+        ᱨᱩᱣᱟᱹᱲ new ResourceBundle(pkg, loc, status);
     }
-    return nullptr;
+    ᱨᱩᱣᱟᱹᱲ nullptr;
 }
 
 #ifdef SERVICE_DEBUG
@@ -76,13 +76,13 @@ ICUResourceBundleFactory::debug(UnicodeString& result) const
 {
     LocaleKeyFactory::debug(result);
     result.append((UnicodeString)", bundle: ");
-    return result.append(_bundleName);
+    ᱨᱩᱣᱟᱹᱲ result.append(_bundleName);
 }
 
 UnicodeString&
 ICUResourceBundleFactory::debugClass(UnicodeString& result) const
 {
-    return result.append((UnicodeString)"ICUResourceBundleFactory");
+    ᱨᱩᱣᱟᱹᱲ result.append((UnicodeString)"ICUResourceBundleFactory");
 }
 #endif
 

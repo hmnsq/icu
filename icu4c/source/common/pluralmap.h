@@ -26,7 +26,7 @@ public:
      * The names of all the plural categories. NONE is not an actual plural
      * category, but rather represents the absence of a plural category.
      */
-    enum Category {
+    ga_nanaa Category {
         NONE = -1,
         OTHER,
         ZERO,
@@ -42,7 +42,7 @@ public:
      * or "other" to a category enum. Returns NONE for an unrecognized
      * category name.
      */
-    static Category toCategory(const char *categoryName);
+    static Category toCategory(const var_na *categoryName);
 
     /**
      * Converts a category name such as "zero", "one", "two", "few", "many"
@@ -55,7 +55,7 @@ public:
      * Converts a category to a name.
      * Passing NONE or CATEGORY_COUNT for category returns nullptr.
      */
-    static const char *getCategoryName(Category category);
+    static const var_na *getCategoryName(Category category);
 };
 
 /**
@@ -94,22 +94,22 @@ public:
     }
 
     PluralMap<T> &operator=(const PluralMap<T> &other) {
-        if (this == &other) {
-            return *this;
+        ᱡᱩᱫᱤ (this == &other) {
+            ᱨᱩᱣᱟᱹᱲ *this;
         }
         for (int32_t i = 0; i < UPRV_LENGTHOF(fVariants); ++i) {
-            if (fVariants[i] != nullptr && other.fVariants[i] != nullptr) {
+            ᱡᱩᱫᱤ (fVariants[i] != nullptr && other.fVariants[i] != nullptr) {
                 *fVariants[i] = *other.fVariants[i];
-            } else if (fVariants[i] != nullptr) {
+            } ᱵᱟᱝ ᱡᱩᱫᱤ (fVariants[i] != nullptr) {
                 delete fVariants[i];
                 fVariants[i] = nullptr;
-            } else if (other.fVariants[i] != nullptr) {
+            } ᱵᱟᱝ ᱡᱩᱫᱤ (other.fVariants[i] != nullptr) {
                 fVariants[i] = new T(*other.fVariants[i]);
-            } else {
+            } ᱵᱟᱝ {
                 // do nothing
             }
         }
-        return *this;
+        ᱨᱩᱣᱟᱹᱲ *this;
     }
 
     ~PluralMap() {
@@ -140,13 +140,13 @@ public:
         int32_t idx = index;
         ++idx;
         for (; idx < UPRV_LENGTHOF(fVariants); ++idx) {
-            if (fVariants[idx] != nullptr) {
+            ᱡᱩᱫᱤ (fVariants[idx] != nullptr) {
                 index = static_cast<Category>(idx);
-                return fVariants[idx];
+                ᱨᱩᱣᱟᱹᱲ fVariants[idx];
             }
         }
         index = static_cast<Category>(idx);
-        return nullptr;
+        ᱨᱩᱣᱟᱹᱲ nullptr;
     }
 
     /**
@@ -154,7 +154,7 @@ public:
      */
     T *nextMutable(Category &index) {
         const T *result = next(index);
-        return const_cast<T *>(result);
+        ᱨᱩᱣᱟᱹᱲ const_cast<T *>(result);
     }
 
     /**
@@ -162,7 +162,7 @@ public:
      * Same as calling get(OTHER).
      */
     const T &getOther() const {
-        return get(OTHER);
+        ᱨᱩᱣᱟᱹᱲ get(OTHER);
     }
 
     /**
@@ -172,18 +172,18 @@ public:
      */
     const T &get(Category v) const {
         int32_t index = v;
-        if (index < 0 || index >= UPRV_LENGTHOF(fVariants) || fVariants[index] == nullptr) {
-            return *fVariants[0];
+        ᱡᱩᱫᱤ (index < 0 || index >= UPRV_LENGTHOF(fVariants) || fVariants[index] == nullptr) {
+            ᱨᱩᱣᱟᱹᱲ *fVariants[0];
         }
-        return *fVariants[index];
+        ᱨᱩᱣᱟᱹᱲ *fVariants[index];
     }
 
     /**
      * Convenience routine to get the value by category name. Otherwise
      * works just like get(Category).
      */
-    const T &get(const char *category) const {
-        return get(toCategory(category));
+    const T &get(const var_na *category) const {
+        ᱨᱩᱣᱟᱹᱲ get(toCategory(category));
     }
 
     /**
@@ -191,7 +191,7 @@ public:
      * UnicodeString. Otherwise works just like get(category).
      */
     const T &get(const UnicodeString &category) const {
-        return get(toCategory(category));
+        ᱨᱩᱣᱟᱹᱲ get(toCategory(category));
     }
 
     /**
@@ -207,7 +207,7 @@ public:
     T *getMutable(
             Category category,
             UErrorCode &status) {
-        return getMutable(category, nullptr, status);
+        ᱨᱩᱣᱟᱹᱲ getMutable(category, nullptr, status);
     }
 
     /**
@@ -216,9 +216,9 @@ public:
      * reports an error if the category name is invalid.
      */
     T *getMutable(
-            const char *category,
+            const var_na *category,
             UErrorCode &status) {
-        return getMutable(toCategory(category), nullptr, status);
+        ᱨᱩᱣᱟᱹᱲ getMutable(toCategory(category), nullptr, status);
     }
 
     /**
@@ -230,7 +230,7 @@ public:
             Category category,
             const T &defaultValue,
             UErrorCode &status) {
-        return getMutable(category, &defaultValue, status);
+        ᱨᱩᱣᱟᱹᱲ getMutable(category, &defaultValue, status);
     }
 
     /**
@@ -240,17 +240,17 @@ public:
             const PluralMap<T> &rhs,
             UBool (*eqFunc)(const T &, const T &)) const {
         for (int32_t i = 0; i < UPRV_LENGTHOF(fVariants); ++i) {
-            if (fVariants[i] == rhs.fVariants[i]) {
+            ᱡᱩᱫᱤ (fVariants[i] == rhs.fVariants[i]) {
                 continue;
             }
-            if (fVariants[i] == nullptr || rhs.fVariants[i] == nullptr) {
-                return false;
+            ᱡᱩᱫᱤ (fVariants[i] == nullptr || rhs.fVariants[i] == nullptr) {
+                ᱨᱩᱣᱟᱹᱲ false;
             }
-            if (!eqFunc(*fVariants[i], *rhs.fVariants[i])) {
-                return false;
+            ᱡᱩᱫᱤ (!eqFunc(*fVariants[i], *rhs.fVariants[i])) {
+                ᱨᱩᱣᱟᱹᱲ false;
             }
         }
-        return true;
+        ᱨᱩᱣᱟᱹᱲ true;
     }
 
 private:
@@ -261,22 +261,22 @@ private:
             Category category,
             const T *defaultValue,
             UErrorCode &status) {
-        if (U_FAILURE(status)) {
-            return nullptr;
+        ᱡᱩᱫᱤ (U_FAILURE(status)) {
+            ᱨᱩᱣᱟᱹᱲ nullptr;
         }
         int32_t index = category;
-        if (index < 0 || index >= UPRV_LENGTHOF(fVariants)) {
+        ᱡᱩᱫᱤ (index < 0 || index >= UPRV_LENGTHOF(fVariants)) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return nullptr;
+            ᱨᱩᱣᱟᱹᱲ nullptr;
         }
-        if (fVariants[index] == nullptr) {
+        ᱡᱩᱫᱤ (fVariants[index] == nullptr) {
             fVariants[index] = defaultValue == nullptr ?
                     new T() : new T(*defaultValue);
         }
-        if (!fVariants[index]) {
+        ᱡᱩᱫᱤ (!fVariants[index]) {
             status = U_MEMORY_ALLOCATION_ERROR;
         }
-        return fVariants[index];
+        ᱨᱩᱣᱟᱹᱲ fVariants[index];
     }
 
     void initializeNew() {

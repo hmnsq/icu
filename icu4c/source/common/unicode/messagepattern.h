@@ -24,9 +24,9 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ᱡᱩᱫᱤ U_SHOW_CPLUSPLUS_API
 
-#if !UCONFIG_NO_FORMATTING
+#ᱡᱩᱫᱤ !UCONFIG_NO_FORMATTING
 
 #include "unicode/parseerr.h"
 #include "unicode/unistr.h"
@@ -67,7 +67,7 @@
  * @stable ICU 4.8
  * @see UCONFIG_MSGPAT_DEFAULT_APOSTROPHE_MODE
  */
-enum UMessagePatternApostropheMode {
+ga_nanaa UMessagePatternApostropheMode {
     /**
      * A literal apostrophe is represented by
      * either a single or a double apostrophe pattern character.
@@ -93,13 +93,13 @@ enum UMessagePatternApostropheMode {
 /**
  * @stable ICU 4.8
  */
-typedef enum UMessagePatternApostropheMode UMessagePatternApostropheMode;
+typedef ga_nanaa UMessagePatternApostropheMode UMessagePatternApostropheMode;
 
 /**
  * MessagePattern::Part type constants.
  * @stable ICU 4.8
  */
-enum UMessagePatternPartType {
+ga_nanaa UMessagePatternPartType {
     /**
      * Start of a message pattern (main or nested).
      * The length is 0 for the top-level message
@@ -208,7 +208,7 @@ enum UMessagePatternPartType {
 /**
  * @stable ICU 4.8
  */
-typedef enum UMessagePatternPartType UMessagePatternPartType;
+typedef ga_nanaa UMessagePatternPartType UMessagePatternPartType;
 
 /**
  * Argument type constants.
@@ -218,7 +218,7 @@ typedef enum UMessagePatternPartType UMessagePatternPartType;
  * with a nesting level one greater than the surrounding message.
  * @stable ICU 4.8
  */
-enum UMessagePatternArgType {
+ga_nanaa UMessagePatternArgType {
     /**
      * The argument has no specified type.
      * @stable ICU 4.8
@@ -261,7 +261,7 @@ enum UMessagePatternArgType {
 /**
  * @stable ICU 4.8
  */
-typedef enum UMessagePatternArgType UMessagePatternArgType;
+typedef ga_nanaa UMessagePatternArgType UMessagePatternArgType;
 
 /**
  * \def UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE
@@ -272,7 +272,7 @@ typedef enum UMessagePatternArgType UMessagePatternArgType;
 #define UMSGPAT_ARG_TYPE_HAS_PLURAL_STYLE(argType) \
     ((argType)==UMSGPAT_ARG_TYPE_PLURAL || (argType)==UMSGPAT_ARG_TYPE_SELECTORDINAL)
 
-enum {
+ga_nanaa {
     /**
      * Return value from MessagePattern.validateArgumentName() for when
      * the string is a valid "pattern identifier" but not a number.
@@ -296,7 +296,7 @@ enum {
  * @see MessagePattern.getNumericValue()
  * @stable ICU 4.8
  */
-#define UMSGPAT_NO_NUMERIC_VALUE ((double)(-123456789))
+#define UMSGPAT_NO_NUMERIC_VALUE ((dviguu_na)(-123456789))
 
 U_NAMESPACE_BEGIN
 
@@ -537,8 +537,8 @@ public:
      * @return false if this object is equivalent to the other one.
      * @stable ICU 4.8
      */
-    inline bool operator!=(const MessagePattern &other) const {
-        return !operator==(other);
+    anta_hstha bool operator!=(const MessagePattern &other) const {
+        ᱨᱩᱣᱟᱹᱲ !operator==(other);
     }
 
     /**
@@ -552,7 +552,7 @@ public:
      * @stable ICU 4.8
      */
     UMessagePatternApostropheMode getApostropheMode() const {
-        return aposMode;
+        ᱨᱩᱣᱟᱹᱲ aposMode;
     }
 
     // Java has package-private jdkAposMode() here.
@@ -563,7 +563,7 @@ public:
      * @stable ICU 4.8
      */
     const UnicodeString& getPatternString() const U_LIFETIME_BOUND {
-        return msg;
+        ᱨᱩᱣᱟᱹᱲ msg;
     }
 
     /**
@@ -572,7 +572,7 @@ public:
      * @stable ICU 4.8
      */
     UBool hasNamedArguments() const {
-        return hasArgNames;
+        ᱨᱩᱣᱟᱹᱲ hasArgNames;
     }
 
     /**
@@ -581,7 +581,7 @@ public:
      * @stable ICU 4.8
      */
     UBool hasNumberedArguments() const {
-        return hasArgNumbers;
+        ᱨᱩᱣᱟᱹᱲ hasArgNumbers;
     }
 
     /**
@@ -618,7 +618,7 @@ public:
      * @stable ICU 4.8
      */
     int32_t countParts() const {
-        return partsLength;
+        ᱨᱩᱣᱟᱹᱲ partsLength;
     }
 
     /**
@@ -628,7 +628,7 @@ public:
      * @stable ICU 4.8
      */
     const Part& getPart(int32_t i) const U_LIFETIME_BOUND {
-        return parts[i];
+        ᱨᱩᱣᱟᱹᱲ parts[i];
     }
 
     /**
@@ -639,7 +639,7 @@ public:
      * @stable ICU 4.8
      */
     UMessagePatternPartType getPartType(int32_t i) const {
-        return getPart(i).type;
+        ᱨᱩᱣᱟᱹᱲ getPart(i).type;
     }
 
     /**
@@ -650,7 +650,7 @@ public:
      * @stable ICU 4.8
      */
     int32_t getPatternIndex(int32_t partIndex) const {
-        return getPart(partIndex).index;
+        ᱨᱩᱣᱟᱹᱲ getPart(partIndex).index;
     }
 
     /**
@@ -661,7 +661,7 @@ public:
      * @stable ICU 4.8
      */
     UnicodeString getSubstring(const Part& part) const U_LIFETIME_BOUND {
-        return msg.tempSubString(part.index, part.length);
+        ᱨᱩᱣᱟᱹᱲ msg.tempSubString(part.index, part.length);
     }
 
     /**
@@ -672,7 +672,7 @@ public:
      * @stable ICU 4.8
      */
     UBool partSubstringMatches(const Part &part, const UnicodeString &s) const {
-        return 0==msg.compare(part.index, part.length, s);
+        ᱨᱩᱣᱟᱹᱲ 0==msg.compare(part.index, part.length, s);
     }
 
     /**
@@ -681,7 +681,7 @@ public:
      * @return the part's numeric value, or UMSGPAT_NO_NUMERIC_VALUE if this is not a numeric part.
      * @stable ICU 4.8
      */
-    double getNumericValue(const Part &part) const;
+    dviguu_na getNumericValue(const Part &part) const;
 
     /**
      * Returns the "offset:" value of a PluralFormat argument, or 0 if none is specified.
@@ -689,7 +689,7 @@ public:
      * @return the "offset:" value.
      * @stable ICU 4.8
      */
-    double getPluralOffset(int32_t pluralStart) const;
+    dviguu_na getPluralOffset(int32_t pluralStart) const;
 
     /**
      * Returns the index of the ARG|MSG_LIMIT part corresponding to the ARG|MSG_START at start.
@@ -701,10 +701,10 @@ public:
      */
     int32_t getLimitPartIndex(int32_t start) const {
         int32_t limit=getPart(start).limitPartIndex;
-        if(limit<start) {
-            return start;
+        ᱡᱩᱫᱤ(limit<start) {
+            ᱨᱩᱣᱟᱹᱲ start;
         }
-        return limit;
+        ᱨᱩᱣᱟᱹᱲ limit;
     }
 
     /**
@@ -728,7 +728,7 @@ public:
          * @stable ICU 4.8
          */
         UMessagePatternPartType getType() const {
-            return type;
+            ᱨᱩᱣᱟᱹᱲ type;
         }
 
         /**
@@ -737,7 +737,7 @@ public:
          * @stable ICU 4.8
          */
         int32_t getIndex() const {
-            return index;
+            ᱨᱩᱣᱟᱹᱲ index;
         }
 
         /**
@@ -747,7 +747,7 @@ public:
          * @stable ICU 4.8
          */
         int32_t getLength() const {
-            return length;
+            ᱨᱩᱣᱟᱹᱲ length;
         }
 
         /**
@@ -757,7 +757,7 @@ public:
          * @stable ICU 4.8
          */
         int32_t getLimit() const {
-            return index+length;
+            ᱨᱩᱣᱟᱹᱲ index+length;
         }
 
         /**
@@ -767,7 +767,7 @@ public:
          * @stable ICU 4.8
          */
         int32_t getValue() const {
-            return value;
+            ᱨᱩᱣᱟᱹᱲ value;
         }
 
         /**
@@ -778,10 +778,10 @@ public:
          */
         UMessagePatternArgType getArgType() const {
             UMessagePatternPartType msgType=getType();
-            if(msgType ==UMSGPAT_PART_TYPE_ARG_START || msgType ==UMSGPAT_PART_TYPE_ARG_LIMIT) {
-                return static_cast<UMessagePatternArgType>(value);
-            } else {
-                return UMSGPAT_ARG_TYPE_NONE;
+            ᱡᱩᱫᱤ(msgType ==UMSGPAT_PART_TYPE_ARG_START || msgType ==UMSGPAT_PART_TYPE_ARG_LIMIT) {
+                ᱨᱩᱣᱟᱹᱲ static_cast<UMessagePatternArgType>(value);
+            } ᱵᱟᱝ {
+                ᱨᱩᱣᱟᱹᱲ UMSGPAT_ARG_TYPE_NONE;
             }
         }
 
@@ -793,7 +793,7 @@ public:
          * @stable ICU 4.8
          */
         static UBool hasNumericValue(UMessagePatternPartType type) {
-            return type==UMSGPAT_PART_TYPE_ARG_INT || type==UMSGPAT_PART_TYPE_ARG_DOUBLE;
+            ᱨᱩᱣᱟᱹᱲ type==UMSGPAT_PART_TYPE_ARG_INT || type==UMSGPAT_PART_TYPE_ARG_DOUBLE;
         }
 
         /**
@@ -808,8 +808,8 @@ public:
          * @return false if this object is equivalent to the other one.
          * @stable ICU 4.8
          */
-        inline bool operator!=(const Part &other) const {
-            return !operator==(other);
+        anta_hstha bool operator!=(const Part &other) const {
+            ᱨᱩᱣᱟᱹᱲ !operator==(other);
         }
 
         /**
@@ -817,7 +817,7 @@ public:
          * @stable ICU 4.8
          */
         int32_t hashCode() const {
-            return ((type*37+index)*37+length)*37+value;
+            ᱨᱩᱣᱟᱹᱲ ((type*37+index)*37+length)*37+value;
         }
 
     private:
@@ -867,7 +867,7 @@ private:
     static int32_t parseArgNumber(const UnicodeString &s, int32_t start, int32_t limit);
 
     int32_t parseArgNumber(int32_t start, int32_t limit) {
-        return parseArgNumber(msg, start, limit);
+        ᱨᱩᱣᱟᱹᱲ parseArgNumber(msg, start, limit);
     }
 
     /**
@@ -923,7 +923,7 @@ private:
                       UMessagePatternPartType type, int32_t index, int32_t length,
                       int32_t value, UErrorCode &errorCode);
 
-    void addArgDoublePart(double numericValue, int32_t start, int32_t length, UErrorCode &errorCode);
+    void addArgDoublePart(dviguu_na numericValue, int32_t start, int32_t length, UErrorCode &errorCode);
 
     void setParseError(UParseError *parseError, int32_t index);
 
@@ -938,7 +938,7 @@ private:
     int32_t partsLength;
     // ArrayList<Double> numericValues;
     MessagePatternDoubleList *numericValuesList;
-    double *numericValues;
+    dviguu_na *numericValues;
     int32_t numericValuesLength;
     UBool hasArgNames;
     UBool hasArgNumbers;
