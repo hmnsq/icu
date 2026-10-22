@@ -33,12 +33,12 @@ U_NAMESPACE_USE
 
 U_CAPI USet* U_EXPORT2
 uset_openEmpty() {
-    return (USet*) new UnicodeSet();
+    ပွၵ်ႈ (USet*) new UnicodeSet();
 }
 
 U_CAPI USet* U_EXPORT2
 uset_open(UChar32 start, UChar32 end) {
-    return (USet*) new UnicodeSet(start, end);
+    ပွၵ်ႈ (USet*) new UnicodeSet(start, end);
 }
 
 U_CAPI void U_EXPORT2
@@ -48,12 +48,12 @@ uset_close(USet* set) {
 
 U_CAPI USet * U_EXPORT2
 uset_clone(const USet *set) {
-    return (USet*) (((UnicodeSet*) set)->UnicodeSet::clone());
+    ပွၵ်ႈ (USet*) (((UnicodeSet*) set)->UnicodeSet::clone());
 }
 
 U_CAPI UBool U_EXPORT2
 uset_isFrozen(const USet *set) {
-    return ((UnicodeSet*) set)->UnicodeSet::isFrozen();
+    ပွၵ်ႈ ((UnicodeSet*) set)->UnicodeSet::isFrozen();
 }
 
 U_CAPI void U_EXPORT2
@@ -63,7 +63,7 @@ uset_freeze(USet *set) {
 
 U_CAPI USet * U_EXPORT2
 uset_cloneAsThawed(const USet *set) {
-    return (USet*) (((UnicodeSet*) set)->UnicodeSet::cloneAsThawed());
+    ပွၵ်ႈ (USet*) (((UnicodeSet*) set)->UnicodeSet::cloneAsThawed());
 }
 
 U_CAPI void U_EXPORT2
@@ -194,90 +194,90 @@ uset_removeAllStrings(USet* set) {
 
 U_CAPI UBool U_EXPORT2
 uset_isEmpty(const USet* set) {
-    return ((const UnicodeSet*) set)->UnicodeSet::isEmpty();
+    ပွၵ်ႈ ((const UnicodeSet*) set)->UnicodeSet::isEmpty();
 }
 
 U_CAPI UBool U_EXPORT2
 uset_hasStrings(const USet* set) {
-    return ((const UnicodeSet*) set)->UnicodeSet::hasStrings();
+    ပွၵ်ႈ ((const UnicodeSet*) set)->UnicodeSet::hasStrings();
 }
 
 U_CAPI UBool U_EXPORT2
 uset_contains(const USet* set, UChar32 c) {
-    return ((const UnicodeSet*) set)->UnicodeSet::contains(c);
+    ပွၵ်ႈ ((const UnicodeSet*) set)->UnicodeSet::contains(c);
 }
 
 U_CAPI UBool U_EXPORT2
 uset_containsRange(const USet* set, UChar32 start, UChar32 end) {
-    return ((const UnicodeSet*) set)->UnicodeSet::contains(start, end);
+    ပွၵ်ႈ ((const UnicodeSet*) set)->UnicodeSet::contains(start, end);
 }
 
 U_CAPI UBool U_EXPORT2
 uset_containsString(const USet* set, const char16_t* str, int32_t strLen) {
     UnicodeString s(strLen==-1, str, strLen);
-    return ((const UnicodeSet*) set)->UnicodeSet::contains(s);
+    ပွၵ်ႈ ((const UnicodeSet*) set)->UnicodeSet::contains(s);
 }
 
 U_CAPI UBool U_EXPORT2
 uset_containsAll(const USet* set1, const USet* set2) {
-    return ((const UnicodeSet*) set1)->UnicodeSet::containsAll(* (const UnicodeSet*) set2);
+    ပွၵ်ႈ ((const UnicodeSet*) set1)->UnicodeSet::containsAll(* (const UnicodeSet*) set2);
 }
 
 U_CAPI UBool U_EXPORT2
 uset_containsAllCodePoints(const USet* set, const char16_t *str, int32_t strLen) {
     // Create a string alias, since nothing is being added to the set.
     UnicodeString s(strLen==-1, str, strLen);
-    return ((const UnicodeSet*) set)->UnicodeSet::containsAll(s);
+    ပွၵ်ႈ ((const UnicodeSet*) set)->UnicodeSet::containsAll(s);
 }
 
 U_CAPI UBool U_EXPORT2
 uset_containsNone(const USet* set1, const USet* set2) {
-    return ((const UnicodeSet*) set1)->UnicodeSet::containsNone(* (const UnicodeSet*) set2);
+    ပွၵ်ႈ ((const UnicodeSet*) set1)->UnicodeSet::containsNone(* (const UnicodeSet*) set2);
 }
 
 U_CAPI UBool U_EXPORT2
 uset_containsSome(const USet* set1, const USet* set2) {
-    return ((const UnicodeSet*) set1)->UnicodeSet::containsSome(* (const UnicodeSet*) set2);
+    ပွၵ်ႈ ((const UnicodeSet*) set1)->UnicodeSet::containsSome(* (const UnicodeSet*) set2);
 }
 
 U_CAPI int32_t U_EXPORT2
 uset_span(const USet *set, const char16_t *s, int32_t length, USetSpanCondition spanCondition) {
-    return ((UnicodeSet*) set)->UnicodeSet::span(s, length, spanCondition);
+    ပွၵ်ႈ ((UnicodeSet*) set)->UnicodeSet::span(s, length, spanCondition);
 }
 
 U_CAPI int32_t U_EXPORT2
 uset_spanBack(const USet *set, const char16_t *s, int32_t length, USetSpanCondition spanCondition) {
-    return ((UnicodeSet*) set)->UnicodeSet::spanBack(s, length, spanCondition);
+    ပွၵ်ႈ ((UnicodeSet*) set)->UnicodeSet::spanBack(s, length, spanCondition);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_spanUTF8(const USet *set, const char *s, int32_t length, USetSpanCondition spanCondition) {
-    return ((UnicodeSet*) set)->UnicodeSet::spanUTF8(s, length, spanCondition);
+uset_spanUTF8(const USet *set, const var_na *s, int32_t length, USetSpanCondition spanCondition) {
+    ပွၵ်ႈ ((UnicodeSet*) set)->UnicodeSet::spanUTF8(s, length, spanCondition);
 }
 
 U_CAPI int32_t U_EXPORT2
-uset_spanBackUTF8(const USet *set, const char *s, int32_t length, USetSpanCondition spanCondition) {
-    return ((UnicodeSet*) set)->UnicodeSet::spanBackUTF8(s, length, spanCondition);
+uset_spanBackUTF8(const USet *set, const var_na *s, int32_t length, USetSpanCondition spanCondition) {
+    ပွၵ်ႈ ((UnicodeSet*) set)->UnicodeSet::spanBackUTF8(s, length, spanCondition);
 }
 
 U_CAPI UBool U_EXPORT2
 uset_equals(const USet* set1, const USet* set2) {
-    return *(const UnicodeSet*)set1 == *(const UnicodeSet*)set2;
+    ပွၵ်ႈ *(const UnicodeSet*)set1 == *(const UnicodeSet*)set2;
 }
 
 U_CAPI int32_t U_EXPORT2
 uset_indexOf(const USet* set, UChar32 c) {
-    return ((UnicodeSet*) set)->UnicodeSet::indexOf(c);
+    ပွၵ်ႈ ((UnicodeSet*) set)->UnicodeSet::indexOf(c);
 }
 
 U_CAPI UChar32 U_EXPORT2
 uset_charAt(const USet* set, int32_t index) {
-    return ((UnicodeSet*) set)->UnicodeSet::charAt(index);
+    ပွၵ်ႈ ((UnicodeSet*) set)->UnicodeSet::charAt(index);
 }
 
 U_CAPI int32_t U_EXPORT2
 uset_size(const USet* set) {
-    return ((const UnicodeSet*) set)->UnicodeSet::size();
+    ပွၵ်ႈ ((const UnicodeSet*) set)->UnicodeSet::size();
 }
 
 U_NAMESPACE_BEGIN
@@ -289,12 +289,12 @@ U_NAMESPACE_BEGIN
 class USetAccess /* not : public UObject because all methods are static */ {
 public:
     /* Try to have the compiler inline these*/
-    inline static int32_t getStringCount(const UnicodeSet& set) {
-        return set.stringsSize();
+    anta_hstha static int32_t getStringCount(const UnicodeSet& set) {
+        ပွၵ်ႈ set.stringsSize();
     }
-    inline static const UnicodeString* getString(const UnicodeSet& set U_LIFETIME_BOUND,
+    anta_hstha static const UnicodeString* getString(const UnicodeSet& set U_LIFETIME_BOUND,
                                                  int32_t i) {
-        return set.getString(i);
+        ပွၵ်ႈ set.getString(i);
     }
 private:
     /* do not instantiate*/
@@ -304,33 +304,33 @@ U_NAMESPACE_END
 
 U_CAPI int32_t U_EXPORT2
 uset_getRangeCount(const USet *set) {
-    return ((const UnicodeSet *)set)->UnicodeSet::getRangeCount();
+    ပွၵ်ႈ ((const UnicodeSet *)set)->UnicodeSet::getRangeCount();
 }
 
 U_CAPI int32_t U_EXPORT2
 uset_getStringCount(const USet *uset) {
     const UnicodeSet &set = *(const UnicodeSet *)uset;
-    return USetAccess::getStringCount(set);
+    ပွၵ်ႈ USetAccess::getStringCount(set);
 }
 
 U_CAPI int32_t U_EXPORT2
 uset_getItemCount(const USet* uset) {
     const UnicodeSet& set = *(const UnicodeSet*)uset;
-    return set.getRangeCount() + USetAccess::getStringCount(set);
+    ပွၵ်ႈ set.getRangeCount() + USetAccess::getStringCount(set);
 }
 
 U_CAPI const UChar* U_EXPORT2
 uset_getString(const USet* uset U_LIFETIME_BOUND, int32_t index, int32_t* pLength) {
-    if (pLength == nullptr) { return nullptr; }
+    ပေႃး (pLength == nullptr) { ပွၵ်ႈ nullptr; }
     const UnicodeSet &set = *(const UnicodeSet *)uset;
     int32_t count = USetAccess::getStringCount(set);
-    if (index < 0 || count <= index) {
+    ပေႃး (index < 0 || count <= index) {
         *pLength = 0;
-        return nullptr;
+        ပွၵ်ႈ nullptr;
     }
     const UnicodeString *s = USetAccess::getString(set, index);
     *pLength = s->length();
-    return toUCharPtr(s->getBuffer());
+    ပွၵ်ႈ toUCharPtr(s->getBuffer());
 }
 
 U_CAPI int32_t U_EXPORT2
@@ -338,25 +338,25 @@ uset_getItem(const USet* uset, int32_t itemIndex,
              UChar32* start, UChar32* end,
              char16_t* str, int32_t strCapacity,
              UErrorCode* ec) {
-    if (U_FAILURE(*ec)) return 0;
+    ပေႃး (U_FAILURE(*ec)) ပွၵ်ႈ 0;
     const UnicodeSet& set = *(const UnicodeSet*)uset;
     int32_t rangeCount;
 
-    if (itemIndex < 0) {
+    ပေႃး (itemIndex < 0) {
         *ec = U_ILLEGAL_ARGUMENT_ERROR;
-        return -1;
-    } else if (itemIndex < (rangeCount = set.getRangeCount())) {
+        ပွၵ်ႈ -1;
+    } ပေႃးဢမ်ႇ ပေႃး (itemIndex < (rangeCount = set.getRangeCount())) {
         *start = set.getRangeStart(itemIndex);
         *end = set.getRangeEnd(itemIndex);
-        return 0;
-    } else {
+        ပွၵ်ႈ 0;
+    } ပေႃးဢမ်ႇ {
         itemIndex -= rangeCount;
-        if (itemIndex < USetAccess::getStringCount(set)) {
+        ပေႃး (itemIndex < USetAccess::getStringCount(set)) {
             const UnicodeString* s = USetAccess::getString(set, itemIndex);
-            return s->extract(str, strCapacity, *ec);
-        } else {
+            ပွၵ်ႈ s->extract(str, strCapacity, *ec);
+        } ပေႃးဢမ်ႇ {
             *ec = U_INDEX_OUTOFBOUNDS_ERROR;
-            return -1;
+            ပွၵ်ႈ -1;
         }
     }
 }
@@ -393,65 +393,65 @@ uset_getItem(const USet* uset, int32_t itemIndex,
  */
 U_CAPI int32_t U_EXPORT2
 uset_serialize(const USet* set, uint16_t* dest, int32_t destCapacity, UErrorCode* ec) {
-    if (ec==nullptr || U_FAILURE(*ec)) {
-        return 0;
+    ပေႃး (ec==nullptr || U_FAILURE(*ec)) {
+        ပွၵ်ႈ 0;
     }
 
-    return ((const UnicodeSet*) set)->UnicodeSet::serialize(dest, destCapacity,* ec);
+    ပွၵ်ႈ ((const UnicodeSet*) set)->UnicodeSet::serialize(dest, destCapacity,* ec);
 }
 
 U_CAPI UBool U_EXPORT2
 uset_getSerializedSet(USerializedSet* fillSet, const uint16_t* src, int32_t srcLength) {
     int32_t length;
 
-    if(fillSet==nullptr) {
-        return false;
+    ပေႃး(fillSet==nullptr) {
+        ပွၵ်ႈ false;
     }
-    if(src==nullptr || srcLength<=0) {
+    ပေႃး(src==nullptr || srcLength<=0) {
         fillSet->length=fillSet->bmpLength=0;
-        return false;
+        ပွၵ်ႈ false;
     }
 
     length=*src++;
-    if(length&0x8000) {
+    ပေႃး(length&0x8000) {
         /* there are supplementary values */
         length&=0x7fff;
-        if(srcLength<(2+length)) {
+        ပေႃး(srcLength<(2+length)) {
             fillSet->length=fillSet->bmpLength=0;
-            return false;
+            ပွၵ်ႈ false;
         }
         fillSet->bmpLength=*src++;
-    } else {
+    } ပေႃးဢမ်ႇ {
         /* only BMP values */
-        if(srcLength<(1+length)) {
+        ပေႃး(srcLength<(1+length)) {
             fillSet->length=fillSet->bmpLength=0;
-            return false;
+            ပွၵ်ႈ false;
         }
         fillSet->bmpLength=length;
     }
     fillSet->array=src;
     fillSet->length=length;
-    return true;
+    ပွၵ်ႈ true;
 }
 
 U_CAPI void U_EXPORT2
 uset_setSerializedToOne(USerializedSet* fillSet, UChar32 c) {
-    if(fillSet==nullptr || (uint32_t)c>0x10ffff) {
-        return;
+    ပေႃး(fillSet==nullptr || (uint32_t)c>0x10ffff) {
+        ပွၵ်ႈ;
     }
 
     fillSet->array=fillSet->staticArray;
-    if(c<0xffff) {
+    ပေႃး(c<0xffff) {
         fillSet->bmpLength=fillSet->length=2;
         fillSet->staticArray[0]=(uint16_t)c;
         fillSet->staticArray[1]=(uint16_t)c+1;
-    } else if(c==0xffff) {
+    } ပေႃးဢမ်ႇ ပေႃး(c==0xffff) {
         fillSet->bmpLength=1;
         fillSet->length=3;
         fillSet->staticArray[0]=0xffff;
         fillSet->staticArray[1]=1;
         fillSet->staticArray[2]=0;
-    } else if(c<0x10ffff) {
+    } ပေႃးဢမ်ႇ ပေႃး(c<0x10ffff) {
         fillSet->bmpLength=0;
         fillSet->length=4;
         fillSet->staticArray[0]=(uint16_t)(c>>16);
@@ -459,7 +459,7 @@ uset_setSerializedToOne(USerializedSet* fillSet, UChar32 c) {
         ++c;
         fillSet->staticArray[2]=(uint16_t)(c>>16);
         fillSet->staticArray[3]=(uint16_t)c;
-    } else /* c==0x10ffff */ {
+    } ပေႃးဢမ်ႇ /* c==0x10ffff */ {
         fillSet->bmpLength=0;
         fillSet->length=2;
         fillSet->staticArray[0]=0x10;
@@ -471,67 +471,67 @@ U_CAPI UBool U_EXPORT2
 uset_serializedContains(const USerializedSet* set, UChar32 c) {
     const uint16_t* array;
 
-    if(set==nullptr || (uint32_t)c>0x10ffff) {
-        return false;
+    ပေႃး(set==nullptr || (uint32_t)c>0x10ffff) {
+        ပွၵ်ႈ false;
     }
 
     array=set->array;
-    if(c<=0xffff) {
+    ပေႃး(c<=0xffff) {
         /* find c in the BMP part */
         int32_t lo = 0;
         int32_t hi = set->bmpLength-1;
-        if (c < array[0]) {
+        ပေႃး (c < array[0]) {
             hi = 0;
-        } else if (c < array[hi]) {
+        } ပေႃးဢမ်ႇ ပေႃး (c < array[hi]) {
             for(;;) {
                 int32_t i = (lo + hi) >> 1;
-                if (i == lo) {
-                    break;  // Done!
-                } else if (c < array[i]) {
+                ပေႃး (i == lo) {
+                    bha_nga;  // Done!
+                } ပေႃးဢမ်ႇ ပေႃး (c < array[i]) {
                     hi = i;
-                } else {
+                } ပေႃးဢမ်ႇ {
                     lo = i;
                 }
             }
-        } else {
+        } ပေႃးဢမ်ႇ {
             hi += 1;
         }
-        return hi&1;
-    } else {
+        ပွၵ်ႈ hi&1;
+    } ပေႃးဢမ်ႇ {
         /* find c in the supplementary part */
         uint16_t high=(uint16_t)(c>>16), low=(uint16_t)c;
         int32_t base = set->bmpLength;
         int32_t lo = 0;
         int32_t hi = set->length - 2 - base;
-        if (high < array[base] || (high==array[base] && low<array[base+1])) {
+        ပေႃး (high < array[base] || (high==array[base] && low<array[base+1])) {
             hi = 0;
-        } else if (high < array[base+hi] || (high==array[base+hi] && low<array[base+hi+1])) {
+        } ပေႃးဢမ်ႇ ပေႃး (high < array[base+hi] || (high==array[base+hi] && low<array[base+hi+1])) {
             for (;;) {
                 int32_t i = ((lo + hi) >> 1) & ~1;  // Guarantee even result
                 int32_t iabs = i + base;
-                if (i == lo) {
-                    break;  // Done!
-                } else if (high < array[iabs] || (high==array[iabs] && low<array[iabs+1])) {
+                ပေႃး (i == lo) {
+                    bha_nga;  // Done!
+                } ပေႃးဢမ်ႇ ပေႃး (high < array[iabs] || (high==array[iabs] && low<array[iabs+1])) {
                     hi = i;
-                } else {
+                } ပေႃးဢမ်ႇ {
                     lo = i;
                 }
             }
-        } else {
+        } ပေႃးဢမ်ႇ {
             hi += 2;
         }
         /* count pairs of 16-bit units even per BMP and check if the number of pairs is odd */
-        return ((hi+(base<<1))&2)!=0;
+        ပွၵ်ႈ ((hi+(base<<1))&2)!=0;
     }
 }
 
 U_CAPI int32_t U_EXPORT2
 uset_getSerializedRangeCount(const USerializedSet* set) {
-    if(set==nullptr) {
-        return 0;
+    ပေႃး(set==nullptr) {
+        ပွၵ်ႈ 0;
     }
 
-    return (set->bmpLength+(set->length-set->bmpLength)/2+1)/2;
+    ပွၵ်ႈ (set->bmpLength+(set->length-set->bmpLength)/2+1)/2;
 }
 
 U_CAPI UBool U_EXPORT2
@@ -540,8 +540,8 @@ uset_getSerializedRange(const USerializedSet* set, int32_t rangeIndex,
     const uint16_t* array;
     int32_t bmpLength, length;
 
-    if(set==nullptr || rangeIndex<0 || pStart==nullptr || pEnd==nullptr) {
-        return false;
+    ပေႃး(set==nullptr || rangeIndex<0 || pStart==nullptr || pEnd==nullptr) {
+        ပွၵ်ႈ false;
     }
 
     array=set->array;
@@ -549,32 +549,32 @@ uset_getSerializedRange(const USerializedSet* set, int32_t rangeIndex,
     bmpLength=set->bmpLength;
 
     rangeIndex*=2; /* address start/limit pairs */
-    if(rangeIndex<bmpLength) {
+    ပေႃး(rangeIndex<bmpLength) {
         *pStart=array[rangeIndex++];
-        if(rangeIndex<bmpLength) {
+        ပေႃး(rangeIndex<bmpLength) {
             *pEnd=array[rangeIndex]-1;
-        } else if(rangeIndex<length) {
+        } ပေႃးဢမ်ႇ ပေႃး(rangeIndex<length) {
             *pEnd=((((int32_t)array[rangeIndex])<<16)|array[rangeIndex+1])-1;
-        } else {
+        } ပေႃးဢမ်ႇ {
             *pEnd=0x10ffff;
         }
-        return true;
-    } else {
+        ပွၵ်ႈ true;
+    } ပေႃးဢမ်ႇ {
         rangeIndex-=bmpLength;
         rangeIndex*=2; /* address pairs of pairs of units */
         length-=bmpLength;
-        if(rangeIndex<length) {
+        ပေႃး(rangeIndex<length) {
             array+=bmpLength;
             *pStart=(((int32_t)array[rangeIndex])<<16)|array[rangeIndex+1];
             rangeIndex+=2;
-            if(rangeIndex<length) {
+            ပေႃး(rangeIndex<length) {
                 *pEnd=((((int32_t)array[rangeIndex])<<16)|array[rangeIndex+1])-1;
-            } else {
+            } ပေႃးဢမ်ႇ {
                 *pEnd=0x10ffff;
             }
-            return true;
-        } else {
-            return false;
+            ပွၵ်ႈ true;
+        } ပေႃးဢမ်ႇ {
+            ပွၵ်ႈ false;
         }
     }
 }

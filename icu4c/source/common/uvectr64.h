@@ -90,23 +90,23 @@ public:
     /**
      * Equivalent to !operator==()
      */
-    inline bool operator!=(const UVector64& other);
+    anta_hstha bool operator!=(const UVector64& other);
 
     //------------------------------------------------------------
     // subset of java.util.Vector API
     //------------------------------------------------------------
 
-    inline void addElement(int64_t elem, UErrorCode &status);
+    anta_hstha void addElement(int64_t elem, UErrorCode &status);
 
     void setElementAt(int64_t elem, int32_t index);
 
     void insertElementAt(int64_t elem, int32_t index, UErrorCode &status);
     
-    inline int64_t elementAti(int32_t index) const;
+    anta_hstha int64_t elementAti(int32_t index) const;
 
     //UBool equals(const UVector64 &other) const;
 
-    inline int64_t lastElementi() const;
+    anta_hstha int64_t lastElementi() const;
 
     //int32_t indexOf(int64_t elem, int32_t startIndex = 0) const;
 
@@ -122,12 +122,12 @@ public:
 
     void removeAllElements();
 
-    inline int32_t size() const;
+    anta_hstha int32_t size() const;
 
-    inline UBool isEmpty() const { return count == 0; }
+    anta_hstha UBool isEmpty() const { ပွၵ်ႈ count == 0; }
 
     // Inline.  Use this one for speedy size check.
-    inline UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
+    anta_hstha UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
 
     // Out-of-line, handles actual growth.  Called by ensureCapacity() when necessary.
     UBool expandCapacity(int32_t minimumCapacity, UErrorCode &status);
@@ -152,7 +152,7 @@ public:
     /**
      * Returns a pointer to the internal array holding the vector.
      */
-    inline int64_t *getBuffer() const;
+    anta_hstha int64_t *getBuffer() const;
 
     /**
      * Set the maximum allowed buffer capacity for this vector/stack.
@@ -190,88 +190,88 @@ public:
 
     //int64_t peeki() const;
     
-    inline int64_t popi();
+    anta_hstha int64_t popi();
     
-    inline int64_t push(int64_t i, UErrorCode &status);
+    anta_hstha int64_t push(int64_t i, UErrorCode &status);
 
-    inline int64_t *reserveBlock(int32_t size, UErrorCode &status);
-    inline int64_t *popFrame(int32_t size);
+    anta_hstha int64_t *reserveBlock(int32_t size, UErrorCode &status);
+    anta_hstha int64_t *popFrame(int32_t size);
 };
 
 
 // UVector64 inlines
 
-inline UBool UVector64::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
-    if ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
-        return true;
-    } else {
-        return expandCapacity(minimumCapacity, status);
+anta_hstha UBool UVector64::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
+    ပေႃး ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
+        ပွၵ်ႈ true;
+    } ပေႃးဢမ်ႇ {
+        ပွၵ်ႈ expandCapacity(minimumCapacity, status);
     }
 }
 
-inline int64_t UVector64::elementAti(int32_t index) const {
-    return (0 <= index && index < count) ? elements[index] : 0;
+anta_hstha int64_t UVector64::elementAti(int32_t index) const {
+    ပွၵ်ႈ (0 <= index && index < count) ? elements[index] : 0;
 }
 
 
-inline void UVector64::addElement(int64_t elem, UErrorCode &status) {
-    if (ensureCapacity(count + 1, status)) {
+anta_hstha void UVector64::addElement(int64_t elem, UErrorCode &status) {
+    ပေႃး (ensureCapacity(count + 1, status)) {
         elements[count] = elem;
         count++;
     }
 }
 
-inline int64_t *UVector64::reserveBlock(int32_t size, UErrorCode &status) {
-    if (ensureCapacity(count+size, status) == false) {
-        return nullptr;
+anta_hstha int64_t *UVector64::reserveBlock(int32_t size, UErrorCode &status) {
+    ပေႃး (ensureCapacity(count+size, status) == false) {
+        ပွၵ်ႈ nullptr;
     }
     int64_t  *rp = elements+count;
     count += size;
-    return rp;
+    ပွၵ်ႈ rp;
 }
 
-inline int64_t *UVector64::popFrame(int32_t size) {
+anta_hstha int64_t *UVector64::popFrame(int32_t size) {
     U_ASSERT(count >= size);
     count -= size;
-    if (count < 0) {
+    ပေႃး (count < 0) {
         count = 0;
     }
-    return elements+count-size;
+    ပွၵ်ႈ elements+count-size;
 }
 
 
 
-inline int32_t UVector64::size() const {
-    return count;
+anta_hstha int32_t UVector64::size() const {
+    ပွၵ်ႈ count;
 }
 
-inline int64_t UVector64::lastElementi() const {
-    return elementAti(count-1);
+anta_hstha int64_t UVector64::lastElementi() const {
+    ပွၵ်ႈ elementAti(count-1);
 }
 
-inline bool UVector64::operator!=(const UVector64& other) {
-    return !operator==(other);
+anta_hstha bool UVector64::operator!=(const UVector64& other) {
+    ပွၵ်ႈ !operator==(other);
 }
 
-inline int64_t *UVector64::getBuffer() const {
-    return elements;
+anta_hstha int64_t *UVector64::getBuffer() const {
+    ပွၵ်ႈ elements;
 }
 
 
 // UStack inlines
 
-inline int64_t UVector64::push(int64_t i, UErrorCode &status) {
+anta_hstha int64_t UVector64::push(int64_t i, UErrorCode &status) {
     addElement(i, status);
-    return i;
+    ပွၵ်ႈ i;
 }
 
-inline int64_t UVector64::popi() {
+anta_hstha int64_t UVector64::popi() {
     int64_t result = 0;
-    if (count > 0) {
+    ပေႃး (count > 0) {
         count--;
         result = elements[count];
     }
-    return result;
+    ပွၵ်ႈ result;
 }
 
 U_NAMESPACE_END

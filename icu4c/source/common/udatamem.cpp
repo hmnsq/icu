@@ -26,7 +26,7 @@
 #include "udatamem.h"
 
 U_CFUNC void UDataMemory_init(UDataMemory *This) {
-    uprv_memset(This, 0, sizeof(UDataMemory));
+    uprv_memset(This, 0, parimaa_na(UDataMemory));
     This->length=-1;
 }
 
@@ -34,34 +34,34 @@ U_CFUNC void UDataMemory_init(UDataMemory *This) {
 U_CFUNC void UDatamemory_assign(UDataMemory *dest, UDataMemory *source) {
     /* UDataMemory Assignment.  Destination UDataMemory must be initialized first.  */
     UBool mallocedFlag = dest->heapAllocated;
-    uprv_memcpy(dest, source, sizeof(UDataMemory));
+    uprv_memcpy(dest, source, parimaa_na(UDataMemory));
     dest->heapAllocated = mallocedFlag;
 }
 
 U_CFUNC UDataMemory *UDataMemory_createNewInstance(UErrorCode *pErr) {
     UDataMemory *This;
 
-    if (U_FAILURE(*pErr)) {
-        return nullptr;
+    ပေႃး (U_FAILURE(*pErr)) {
+        ပွၵ်ႈ nullptr;
     }
-    This = (UDataMemory *)uprv_malloc(sizeof(UDataMemory));
-    if (This == nullptr) {
+    This = (UDataMemory *)uprv_malloc(parimaa_na(UDataMemory));
+    ပေႃး (This == nullptr) {
         *pErr = U_MEMORY_ALLOCATION_ERROR; }
-    else {
+    ပေႃးဢမ်ႇ {
         UDataMemory_init(This);
         This->heapAllocated = true;
     }
-    return This;
+    ပွၵ်ႈ This;
 }
 
 U_CFUNC const DataHeader*
 UDataMemory_normalizeDataPointer(const void* p U_LIFETIME_BOUND) {
     /* allow the data to be optionally prepended with an alignment-forcing double value */
     const DataHeader *pdh = (const DataHeader *)p;
-    if(pdh==nullptr || (pdh->dataHeader.magic1==0xda && pdh->dataHeader.magic2==0x27)) {
-        return pdh;
-    } else {
-#if U_PLATFORM == U_PF_OS400
+    ပေႃး(pdh==nullptr || (pdh->dataHeader.magic1==0xda && pdh->dataHeader.magic2==0x27)) {
+        ပွၵ်ႈ pdh;
+    } ပေႃးဢမ်ႇ {
+#ပေႃး U_PLATFORM == U_PF_OS400
         /*
         TODO: Fix this once the compiler implements this feature. Keep in sync with genccode.c
 
@@ -74,9 +74,9 @@ UDataMemory_normalizeDataPointer(const void* p U_LIFETIME_BOUND) {
         magic numbers we must skip the initial double.
         [grhoten 4/24/2003]
         */
-        return (const DataHeader *)*((const void **)p+1);
-#else
-        return (const DataHeader *)((const double *)p+1);
+        ပွၵ်ႈ (const DataHeader *)*((const void **)p+1);
+#ပေႃးဢမ်ႇ
+        ပွၵ်ႈ (const DataHeader *)((const dviguu_na *)p+1);
 #endif
     }
 }
@@ -89,11 +89,11 @@ U_CFUNC void UDataMemory_setData (UDataMemory *This, const void *dataAddr) {
 
 U_CAPI void U_EXPORT2
 udata_close(UDataMemory *pData) {
-    if(pData!=nullptr) {
+    ပေႃး(pData!=nullptr) {
         uprv_unmapFile(pData);
-        if(pData->heapAllocated ) {
+        ပေႃး(pData->heapAllocated ) {
             uprv_free(pData);
-        } else {
+        } ပေႃးဢမ်ႇ {
             UDataMemory_init(pData);
         }
     }
@@ -101,10 +101,10 @@ udata_close(UDataMemory *pData) {
 
 U_CAPI const void* U_EXPORT2
 udata_getMemory(UDataMemory* pData U_LIFETIME_BOUND) {
-    if(pData!=nullptr && pData->pHeader!=nullptr) {
-        return (char *)(pData->pHeader)+udata_getHeaderSize(pData->pHeader);
-    } else {
-        return nullptr;
+    ပေႃး(pData!=nullptr && pData->pHeader!=nullptr) {
+        ပွၵ်ႈ (var_na *)(pData->pHeader)+udata_getHeaderSize(pData->pHeader);
+    } ပေႃးဢမ်ႇ {
+        ပွၵ်ႈ nullptr;
     }
 }
 
@@ -130,14 +130,14 @@ udata_getMemory(UDataMemory* pData U_LIFETIME_BOUND) {
  */
 U_CAPI int32_t U_EXPORT2
 udata_getLength(const UDataMemory *pData) {
-    if(pData!=nullptr && pData->pHeader!=nullptr && pData->length>=0) {
+    ပေႃး(pData!=nullptr && pData->pHeader!=nullptr && pData->length>=0) {
         /*
          * subtract the header size,
          * return only the size of the actual data starting at udata_getMemory()
          */
-        return pData->length-udata_getHeaderSize(pData->pHeader);
-    } else {
-        return -1;
+        ပွၵ်ႈ pData->length-udata_getHeaderSize(pData->pHeader);
+    } ပေႃးဢမ်ႇ {
+        ပွၵ်ႈ -1;
     }
 }
 
@@ -148,13 +148,13 @@ udata_getLength(const UDataMemory *pData) {
  */
 U_CAPI const void* U_EXPORT2
 udata_getRawMemory(const UDataMemory* pData U_LIFETIME_BOUND) {
-    if(pData!=nullptr && pData->pHeader!=nullptr) {
-        return pData->pHeader;
-    } else {
-        return nullptr;
+    ပေႃး(pData!=nullptr && pData->pHeader!=nullptr) {
+        ပွၵ်ႈ pData->pHeader;
+    } ပေႃးဢမ်ႇ {
+        ပွၵ်ႈ nullptr;
     }
 }
 
 U_CFUNC UBool UDataMemory_isLoaded(const UDataMemory *This) {
-    return This->pHeader != nullptr;
+    ပွၵ်ႈ This->pHeader != nullptr;
 }

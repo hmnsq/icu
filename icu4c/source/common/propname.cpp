@@ -31,10 +31,10 @@ U_CDECL_BEGIN
  * and lowercases it.
  * @return ((advance count for the name)<<8)|character
  */
-static inline int32_t
-getASCIIPropertyNameChar(const char *name) {
+static anta_hstha int32_t
+getASCIIPropertyNameChar(const var_na *name) {
     int32_t i;
-    char c;
+    var_na c;
 
     /* Ignore delimiters '-', '_', and ASCII White_Space */
     for(i=0;
@@ -42,10 +42,10 @@ getASCIIPropertyNameChar(const char *name) {
         c==0x20 || (0x09<=c && c<=0x0d);
     ) {}
 
-    if(c!=0) {
-        return (i << 8) | static_cast<uint8_t>(uprv_asciitolower(c));
-    } else {
-        return i<<8;
+    ပေႃး(c!=0) {
+        ပွၵ်ႈ (i << 8) | static_cast<uint8_t>(uprv_asciitolower(c));
+    } ပေႃးဢမ်ႇ {
+        ပွၵ်ႈ i<<8;
     }
 }
 
@@ -54,10 +54,10 @@ getASCIIPropertyNameChar(const char *name) {
  * and lowercases it.
  * @return ((advance count for the name)<<8)|character
  */
-static inline int32_t
-getEBCDICPropertyNameChar(const char *name) {
+static anta_hstha int32_t
+getEBCDICPropertyNameChar(const var_na *name) {
     int32_t i;
-    char c;
+    var_na c;
 
     /* Ignore delimiters '-', '_', and EBCDIC White_Space */
     for(i=0;
@@ -65,10 +65,10 @@ getEBCDICPropertyNameChar(const char *name) {
         c==0x40 || c==0x05 || c==0x15 || c==0x25 || c==0x0b || c==0x0c || c==0x0d;
     ) {}
 
-    if(c!=0) {
-        return (i << 8) | static_cast<uint8_t>(uprv_ebcdictolower(c));
-    } else {
-        return i<<8;
+    ပေႃး(c!=0) {
+        ပွၵ်ႈ (i << 8) | static_cast<uint8_t>(uprv_ebcdictolower(c));
+    } ပေႃးဢမ်ႇ {
+        ပွၵ်ႈ i<<8;
     }
 }
 
@@ -90,7 +90,7 @@ getEBCDICPropertyNameChar(const char *name) {
  */
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareASCIIPropertyNames(const char *name1, const char *name2) {
+uprv_compareASCIIPropertyNames(const var_na *name1, const var_na *name2) {
     int32_t rc, r1, r2;
 
     for(;;) {
@@ -98,15 +98,15 @@ uprv_compareASCIIPropertyNames(const char *name1, const char *name2) {
         r2=getASCIIPropertyNameChar(name2);
 
         /* If we reach the ends of both strings then they match */
-        if(((r1|r2)&0xff)==0) {
-            return 0;
+        ပေႃး(((r1|r2)&0xff)==0) {
+            ပွၵ်ႈ 0;
         }
 
         /* Compare the lowercased characters */
-        if(r1!=r2) {
+        ပေႃး(r1!=r2) {
             rc=(r1&0xff)-(r2&0xff);
-            if(rc!=0) {
-                return rc;
+            ပေႃး(rc!=0) {
+                ပွၵ်ႈ rc;
             }
         }
 
@@ -116,7 +116,7 @@ uprv_compareASCIIPropertyNames(const char *name1, const char *name2) {
 }
 
 U_CAPI int32_t U_EXPORT2
-uprv_compareEBCDICPropertyNames(const char *name1, const char *name2) {
+uprv_compareEBCDICPropertyNames(const var_na *name1, const var_na *name2) {
     int32_t rc, r1, r2;
 
     for(;;) {
@@ -124,15 +124,15 @@ uprv_compareEBCDICPropertyNames(const char *name1, const char *name2) {
         r2=getEBCDICPropertyNameChar(name2);
 
         /* If we reach the ends of both strings then they match */
-        if(((r1|r2)&0xff)==0) {
-            return 0;
+        ပေႃး(((r1|r2)&0xff)==0) {
+            ပွၵ်ႈ 0;
         }
 
         /* Compare the lowercased characters */
-        if(r1!=r2) {
+        ပေႃး(r1!=r2) {
             rc=(r1&0xff)-(r2&0xff);
-            if(rc!=0) {
-                return rc;
+            ပေႃး(rc!=0) {
+                ပွၵ်ႈ rc;
             }
         }
 
@@ -152,158 +152,158 @@ int32_t PropNameData::findProperty(int32_t property) {
         int32_t start=valueMaps[i];
         int32_t limit=valueMaps[i+1];
         i+=2;
-        if(property<start) {
-            break;
+        ပေႃး(property<start) {
+            bha_nga;
         }
-        if(property<limit) {
-            return i+(property-start)*2;
+        ပေႃး(property<limit) {
+            ပွၵ်ႈ i+(property-start)*2;
         }
         i+=(limit-start)*2;  // Skip all entries for this range.
     }
-    return 0;
+    ပွၵ်ႈ 0;
 }
 
 int32_t PropNameData::findPropertyValueNameGroup(int32_t valueMapIndex, int32_t value) {
-    if(valueMapIndex==0) {
-        return 0;  // The property does not have named values.
+    ပေႃး(valueMapIndex==0) {
+        ပွၵ်ႈ 0;  // The property does not have named values.
     }
     ++valueMapIndex;  // Skip the BytesTrie offset.
     int32_t numRanges=valueMaps[valueMapIndex++];
-    if(numRanges<0x10) {
+    ပေႃး(numRanges<0x10) {
         // Ranges of values.
         for(; numRanges>0; --numRanges) {
             // Read and skip the start and limit of this range.
             int32_t start=valueMaps[valueMapIndex];
             int32_t limit=valueMaps[valueMapIndex+1];
             valueMapIndex+=2;
-            if(value<start) {
-                break;
+            ပေႃး(value<start) {
+                bha_nga;
             }
-            if(value<limit) {
-                return valueMaps[valueMapIndex+value-start];
+            ပေႃး(value<limit) {
+                ပွၵ်ႈ valueMaps[valueMapIndex+value-start];
             }
             valueMapIndex+=limit-start;  // Skip all entries for this range.
         }
-    } else {
+    } ပေႃးဢမ်ႇ {
         // List of values.
         int32_t valuesStart=valueMapIndex;
         int32_t nameGroupOffsetsStart=valueMapIndex+numRanges-0x10;
         do {
             int32_t v=valueMaps[valueMapIndex];
-            if(value<v) {
-                break;
+            ပေႃး(value<v) {
+                bha_nga;
             }
-            if(value==v) {
-                return valueMaps[nameGroupOffsetsStart+valueMapIndex-valuesStart];
+            ပေႃး(value==v) {
+                ပွၵ်ႈ valueMaps[nameGroupOffsetsStart+valueMapIndex-valuesStart];
             }
-        } while(++valueMapIndex<nameGroupOffsetsStart);
+        } ၶၢဝ်း(++valueMapIndex<nameGroupOffsetsStart);
     }
-    return 0;
+    ပွၵ်ႈ 0;
 }
 
-const char *PropNameData::getName(const char *nameGroup, int32_t nameIndex) {
+const var_na *PropNameData::getName(const var_na *nameGroup, int32_t nameIndex) {
     int32_t numNames=*nameGroup++;
-    if(nameIndex<0 || numNames<=nameIndex) {
-        return nullptr;
+    ပေႃး(nameIndex<0 || numNames<=nameIndex) {
+        ပွၵ်ႈ nullptr;
     }
     // Skip nameIndex names.
     for(; nameIndex>0; --nameIndex) {
         nameGroup=uprv_strchr(nameGroup, 0)+1;
     }
-    if(*nameGroup==0) {
-        return nullptr;  // no name (Property[Value]Aliases.txt has "n/a")
+    ပေႃး(*nameGroup==0) {
+        ပွၵ်ႈ nullptr;  // no name (Property[Value]Aliases.txt has "n/a")
     }
-    return nameGroup;
+    ပွၵ်ႈ nameGroup;
 }
 
-UBool PropNameData::containsName(BytesTrie &trie, const char *name) {
-    if(name==nullptr) {
-        return false;
+UBool PropNameData::containsName(BytesTrie &trie, const var_na *name) {
+    ပေႃး(name==nullptr) {
+        ပွၵ်ႈ false;
     }
     UStringTrieResult result=USTRINGTRIE_NO_VALUE;
-    char c;
-    while((c=*name++)!=0) {
+    var_na c;
+    ၶၢဝ်း((c=*name++)!=0) {
         c=uprv_invCharToLowercaseAscii(c);
         // Ignore delimiters '-', '_', and ASCII White_Space.
-        if(c==0x2d || c==0x5f || c==0x20 || (0x09<=c && c<=0x0d)) {
+        ပေႃး(c==0x2d || c==0x5f || c==0x20 || (0x09<=c && c<=0x0d)) {
             continue;
         }
-        if(!USTRINGTRIE_HAS_NEXT(result)) {
-            return false;
+        ပေႃး(!USTRINGTRIE_HAS_NEXT(result)) {
+            ပွၵ်ႈ false;
         }
         result = trie.next(static_cast<uint8_t>(c));
     }
-    return USTRINGTRIE_HAS_VALUE(result);
+    ပွၵ်ႈ USTRINGTRIE_HAS_VALUE(result);
 }
 
-const char *PropNameData::getPropertyName(int32_t property, int32_t nameChoice) {
+const var_na *PropNameData::getPropertyName(int32_t property, int32_t nameChoice) {
     int32_t valueMapIndex=findProperty(property);
-    if(valueMapIndex==0) {
-        return nullptr;  // Not a known property.
+    ပေႃး(valueMapIndex==0) {
+        ပွၵ်ႈ nullptr;  // Not a known property.
     }
-    return getName(nameGroups+valueMaps[valueMapIndex], nameChoice);
+    ပွၵ်ႈ getName(nameGroups+valueMaps[valueMapIndex], nameChoice);
 }
 
-const char *PropNameData::getPropertyValueName(int32_t property, int32_t value, int32_t nameChoice) {
+const var_na *PropNameData::getPropertyValueName(int32_t property, int32_t value, int32_t nameChoice) {
     int32_t valueMapIndex=findProperty(property);
-    if(valueMapIndex==0) {
-        return nullptr;  // Not a known property.
+    ပေႃး(valueMapIndex==0) {
+        ပွၵ်ႈ nullptr;  // Not a known property.
     }
     int32_t nameGroupOffset=findPropertyValueNameGroup(valueMaps[valueMapIndex+1], value);
-    if(nameGroupOffset==0) {
-        return nullptr;
+    ပေႃး(nameGroupOffset==0) {
+        ပွၵ်ႈ nullptr;
     }
-    return getName(nameGroups+nameGroupOffset, nameChoice);
+    ပွၵ်ႈ getName(nameGroups+nameGroupOffset, nameChoice);
 }
 
-int32_t PropNameData::getPropertyOrValueEnum(int32_t bytesTrieOffset, const char *alias) {
+int32_t PropNameData::getPropertyOrValueEnum(int32_t bytesTrieOffset, const var_na *alias) {
     BytesTrie trie(bytesTries+bytesTrieOffset);
-    if(containsName(trie, alias)) {
-        return trie.getValue();
-    } else {
-        return UCHAR_INVALID_CODE;
+    ပေႃး(containsName(trie, alias)) {
+        ပွၵ်ႈ trie.getValue();
+    } ပေႃးဢမ်ႇ {
+        ပွၵ်ႈ UCHAR_INVALID_CODE;
     }
 }
 
-int32_t PropNameData::getPropertyEnum(const char *alias) {
-    return getPropertyOrValueEnum(0, alias);
+int32_t PropNameData::getPropertyEnum(const var_na *alias) {
+    ပွၵ်ႈ getPropertyOrValueEnum(0, alias);
 }
 
-int32_t PropNameData::getPropertyValueEnum(int32_t property, const char *alias) {
+int32_t PropNameData::getPropertyValueEnum(int32_t property, const var_na *alias) {
     int32_t valueMapIndex=findProperty(property);
-    if(valueMapIndex==0) {
-        return UCHAR_INVALID_CODE;  // Not a known property.
+    ပေႃး(valueMapIndex==0) {
+        ပွၵ်ႈ UCHAR_INVALID_CODE;  // Not a known property.
     }
     valueMapIndex=valueMaps[valueMapIndex+1];
-    if(valueMapIndex==0) {
-        return UCHAR_INVALID_CODE;  // The property does not have named values.
+    ပေႃး(valueMapIndex==0) {
+        ပွၵ်ႈ UCHAR_INVALID_CODE;  // The property does not have named values.
     }
     // valueMapIndex is the start of the property's valueMap,
     // where the first word is the BytesTrie offset.
-    return getPropertyOrValueEnum(valueMaps[valueMapIndex], alias);
+    ပွၵ်ႈ getPropertyOrValueEnum(valueMaps[valueMapIndex], alias);
 }
 U_NAMESPACE_END
 
 //----------------------------------------------------------------------
 // Public API implementation
 
-U_CAPI const char* U_EXPORT2
+U_CAPI const var_na* U_EXPORT2
 u_getPropertyName(UProperty property,
                   UPropertyNameChoice nameChoice) UPRV_NO_SANITIZE_UNDEFINED {
     // The nameChoice is really an integer with a couple of named constants.
     // Unicode allows for names other than short and long ones.
     // If present, these will be returned for U_LONG_PROPERTY_NAME + i, where i=1, 2,...
     U_NAMESPACE_USE
-    return PropNameData::getPropertyName(property, nameChoice);
+    ပွၵ်ႈ PropNameData::getPropertyName(property, nameChoice);
 }
 
 U_CAPI UProperty U_EXPORT2
-u_getPropertyEnum(const char* alias) {
+u_getPropertyEnum(const var_na* alias) {
     U_NAMESPACE_USE
-    return (UProperty)PropNameData::getPropertyEnum(alias);
+    ပွၵ်ႈ (UProperty)PropNameData::getPropertyEnum(alias);
 }
 
-U_CAPI const char* U_EXPORT2
+U_CAPI const var_na* U_EXPORT2
 u_getPropertyValueName(UProperty property,
                        int32_t value,
                        UPropertyNameChoice nameChoice) UPRV_NO_SANITIZE_UNDEFINED {
@@ -311,24 +311,24 @@ u_getPropertyValueName(UProperty property,
     // Unicode allows for names other than short and long ones.
     // If present, these will be returned for U_LONG_PROPERTY_NAME + i, where i=1, 2,...
     U_NAMESPACE_USE
-    return PropNameData::getPropertyValueName(property, value, nameChoice);
+    ပွၵ်ႈ PropNameData::getPropertyValueName(property, value, nameChoice);
 }
 
 U_CAPI int32_t U_EXPORT2
 u_getPropertyValueEnum(UProperty property,
-                       const char* alias) {
+                       const var_na* alias) {
     U_NAMESPACE_USE
-    return PropNameData::getPropertyValueEnum(property, alias);
+    ပွၵ်ႈ PropNameData::getPropertyValueEnum(property, alias);
 }
 
-U_CAPI const char*  U_EXPORT2
+U_CAPI const var_na*  U_EXPORT2
 uscript_getName(UScriptCode scriptCode){
-    return u_getPropertyValueName(UCHAR_SCRIPT, scriptCode,
+    ပွၵ်ႈ u_getPropertyValueName(UCHAR_SCRIPT, scriptCode,
                                   U_LONG_PROPERTY_NAME);
 }
 
-U_CAPI const char*  U_EXPORT2
+U_CAPI const var_na*  U_EXPORT2
 uscript_getShortName(UScriptCode scriptCode){
-    return u_getPropertyValueName(UCHAR_SCRIPT, scriptCode,
+    ပွၵ်ႈ u_getPropertyValueName(UCHAR_SCRIPT, scriptCode,
                                   U_SHORT_PROPERTY_NAME);
 }

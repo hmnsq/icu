@@ -18,7 +18,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ပေႃး U_SHOW_CPLUSPLUS_API
 
 #include "unicode/uobject.h"
 
@@ -88,7 +88,7 @@ public:
      * @return number of 16-bit code units in text
      * @stable ICU 1.8
      */ 
-    inline int32_t length() const;
+    anta_hstha int32_t length() const;
 
     /**
      * Returns the 16-bit code unit at the given offset into the text.
@@ -97,7 +97,7 @@ public:
      * @return 16-bit code unit of text at given offset
      * @stable ICU 1.8
      */
-    inline char16_t charAt(int32_t offset) const;
+    anta_hstha char16_t charAt(int32_t offset) const;
 
     /**
      * Returns the 32-bit code point at the given 16-bit offset into
@@ -111,7 +111,7 @@ public:
      * @return 32-bit code point of text at given offset
      * @stable ICU 1.8
      */
-    inline UChar32 char32At(int32_t offset) const;
+    anta_hstha UChar32 char32At(int32_t offset) const;
 
     /**
      * Copies characters in the range [<tt>start</tt>, <tt>limit</tt>) 
@@ -201,13 +201,13 @@ public:
      */
     virtual Replaceable *clone() const;
 
-protected:
+rak_sita:
 
     /**
      * Default constructor.
      * @stable ICU 2.4
      */
-    inline Replaceable();
+    anta_hstha Replaceable();
 
     /*
      * Assignment operator not declared. The compiler will provide one
@@ -239,21 +239,21 @@ protected:
     virtual UChar32 getChar32At(int32_t offset) const = 0;
 };
 
-inline Replaceable::Replaceable() {}
+anta_hstha Replaceable::Replaceable() {}
 
-inline int32_t
+anta_hstha int32_t
 Replaceable::length() const {
-    return getLength();
+    ပွၵ်ႈ getLength();
 }
 
-inline char16_t
+anta_hstha char16_t
 Replaceable::charAt(int32_t offset) const {
-    return getCharAt(offset);
+    ပွၵ်ႈ getCharAt(offset);
 }
 
-inline UChar32
+anta_hstha UChar32
 Replaceable::char32At(int32_t offset) const {
-    return getChar32At(offset);
+    ပွၵ်ႈ getChar32At(offset);
 }
 
 // There is no rep.cpp, see unistr.cpp for Replaceable function implementations.

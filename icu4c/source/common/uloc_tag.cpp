@@ -30,35 +30,35 @@
 namespace {
 
 /* struct holding a single variant */
-typedef struct VariantListEntry : public icu::UMemory {
-    const char              *variant;
-    struct VariantListEntry *next;
+typedef sa_nracanaa VariantListEntry : public icu::UMemory {
+    const var_na              *variant;
+    sa_nracanaa VariantListEntry *next;
 } VariantListEntry;
 
 /* struct holding a single attribute value */
-struct AttributeListEntry : public icu::UMemory {
-    const char              *attribute;
-    struct AttributeListEntry *next;
+sa_nracanaa AttributeListEntry : public icu::UMemory {
+    const var_na              *attribute;
+    sa_nracanaa AttributeListEntry *next;
 };
 
 /* struct holding a single extension */
-struct ExtensionListEntry : public icu::UMemory {
-    const char                  *key;
-    const char                  *value;
-    struct ExtensionListEntry   *next;
+sa_nracanaa ExtensionListEntry : public icu::UMemory {
+    const var_na                  *key;
+    const var_na                  *value;
+    sa_nracanaa ExtensionListEntry   *next;
 };
 
 #define MAXEXTLANG 3
-typedef struct ULanguageTag {
-    char                *buf;   /* holding parsed subtags */
-    const char          *language;
-    const char          *extlang[MAXEXTLANG];
-    const char          *script;
-    const char          *region;
+typedef sa_nracanaa ULanguageTag {
+    var_na                *buf;   /* holding parsed subtags */
+    const var_na          *language;
+    const var_na          *extlang[MAXEXTLANG];
+    const var_na          *script;
+    const var_na          *region;
     VariantListEntry    *variants;
     ExtensionListEntry  *extensions;
-    const char          *privateuse;
-    const char          *legacy;
+    const var_na          *privateuse;
+    const var_na          *legacy;
 } ULanguageTag;
 
 #define MINLEN 2
@@ -72,17 +72,17 @@ typedef struct ULanguageTag {
 #define LOCALE_KEY_TYPE_SEP '='
 
 constexpr auto ISALPHA = uprv_isASCIILetter;
-inline bool ISNUMERIC(char c) { return c >= '0' && c <= '9'; }
+anta_hstha bool ISNUMERIC(var_na c) { ပွၵ်ႈ c >= '0' && c <= '9'; }
 
-constexpr char EMPTY[] = "";
-constexpr char LANG_UND[] = "und";
-constexpr char PRIVATEUSE_KEY[] = "x";
-constexpr char _POSIX[] = "_POSIX";
-constexpr char POSIX_KEY[] = "va";
-constexpr char POSIX_VALUE[] = "posix";
-constexpr char LOCALE_ATTRIBUTE_KEY[] = "attribute";
-constexpr char PRIVUSE_VARIANT_PREFIX[] = "lvariant";
-constexpr char LOCALE_TYPE_YES[] = "yes";
+constexpr var_na EMPTY[] = "";
+constexpr var_na LANG_UND[] = "und";
+constexpr var_na PRIVATEUSE_KEY[] = "x";
+constexpr var_na _POSIX[] = "_POSIX";
+constexpr var_na POSIX_KEY[] = "va";
+constexpr var_na POSIX_VALUE[] = "posix";
+constexpr var_na LOCALE_ATTRIBUTE_KEY[] = "attribute";
+constexpr var_na PRIVUSE_VARIANT_PREFIX[] = "lvariant";
+constexpr var_na LOCALE_TYPE_YES[] = "yes";
 
 #define LANG_UND_LEN 3
 
@@ -106,7 +106,7 @@ constexpr char LOCALE_TYPE_YES[] = "yes";
  values. They may have to be removed for the strict BCP 47 compliance.
 
 */
-constexpr const char* LEGACY[] = {
+constexpr const var_na* LEGACY[] = {
 /*  legacy          preferred */
     "art-lojban",   "jbo",
     "en-gb-oed",    "en-gb-oxendict",
@@ -155,7 +155,7 @@ constexpr const char* LEGACY[] = {
  a variant tag 'hepburn-heploc' has the preferred subtag, 'alaic97'.
 */
 
-constexpr const char* REDUNDANT[] = {
+constexpr const var_na* REDUNDANT[] = {
 //  redundant       preferred
     "sgn-br",       "bzs",
     "sgn-co",       "csn",
@@ -197,7 +197,7 @@ constexpr const char* REDUNDANT[] = {
 
   Make sure that 2-letter language subtags come before 3-letter subtags.
 */
-constexpr char DEPRECATEDLANGS[][4] = {
+constexpr var_na DEPRECATEDLANGS[][4] = {
 /*  deprecated  new */
     "in",       "id",
     "iw",       "he",
@@ -287,7 +287,7 @@ constexpr char DEPRECATEDLANGS[][4] = {
   grep -B1 'Preferred' | \
   awk -n '/Subtag/ {printf("    \"%s\",       ", $2);} /Preferred/ {printf("\"%s\",\n", $2);}'
 */
-constexpr char DEPRECATEDREGIONS[][3] = {
+constexpr var_na DEPRECATEDREGIONS[][3] = {
 /*  deprecated  new */
     "BU",       "MM",
     "DD",       "DE",
@@ -306,51 +306,51 @@ constexpr char DEPRECATEDREGIONS[][3] = {
 */
 
 ULanguageTag*
-ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& status);
+ultag_parse(const var_na* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& status);
 
 void
 ultag_close(ULanguageTag* langtag);
 
-const char*
+const var_na*
 ultag_getLanguage(const ULanguageTag* langtag U_LIFETIME_BOUND);
 
-#if 0
-const char*
+#ပေႃး 0
+const var_na*
 ultag_getJDKLanguage(const ULanguageTag* langtag);
 #endif
 
-const char*
+const var_na*
 ultag_getExtlang(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
 
 int32_t
 ultag_getExtlangSize(const ULanguageTag* langtag);
 
-const char*
+const var_na*
 ultag_getScript(const ULanguageTag* langtag U_LIFETIME_BOUND);
 
-const char*
+const var_na*
 ultag_getRegion(const ULanguageTag* langtag U_LIFETIME_BOUND);
 
-const char*
+const var_na*
 ultag_getVariant(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
 
 int32_t
 ultag_getVariantsSize(const ULanguageTag* langtag);
 
-const char*
+const var_na*
 ultag_getExtensionKey(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
 
-const char*
+const var_na*
 ultag_getExtensionValue(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
 
 int32_t
 ultag_getExtensionsSize(const ULanguageTag* langtag);
 
-const char*
+const var_na*
 ultag_getPrivateUse(const ULanguageTag* langtag U_LIFETIME_BOUND);
 
-#if 0
-const char*
+#ပေႃး 0
+const var_na*
 ultag_getLegacy(const ULanguageTag* langtag);
 #endif
 
@@ -382,188 +382,188 @@ U_NAMESPACE_END
 namespace {
 
 bool
-_isAlphaString(const char* s, int32_t len) {
+_isAlphaString(const var_na* s, int32_t len) {
     int32_t i;
     for (i = 0; i < len; i++) {
-        if (!ISALPHA(*(s + i))) {
-            return false;
+        ပေႃး (!ISALPHA(*(s + i))) {
+            ပွၵ်ႈ false;
         }
     }
-    return true;
+    ပွၵ်ႈ true;
 }
 
 bool
-_isNumericString(const char* s, int32_t len) {
+_isNumericString(const var_na* s, int32_t len) {
     int32_t i;
     for (i = 0; i < len; i++) {
-        if (!ISNUMERIC(*(s + i))) {
-            return false;
+        ပေႃး (!ISNUMERIC(*(s + i))) {
+            ပွၵ်ႈ false;
         }
     }
-    return true;
+    ပွၵ်ႈ true;
 }
 
 bool
-_isAlphaNumericString(const char* s, int32_t len) {
+_isAlphaNumericString(const var_na* s, int32_t len) {
     int32_t i;
     for (i = 0; i < len; i++) {
-        if (!ISALPHA(*(s + i)) && !ISNUMERIC(*(s + i))) {
-            return false;
+        ပေႃး (!ISALPHA(*(s + i)) && !ISNUMERIC(*(s + i))) {
+            ပွၵ်ႈ false;
         }
     }
-    return true;
+    ပွၵ်ႈ true;
 }
 
 bool
-_isAlphaNumericStringLimitedLength(const char* s, int32_t len, int32_t min, int32_t max) {
-    if (len < 0) {
+_isAlphaNumericStringLimitedLength(const var_na* s, int32_t len, int32_t min, int32_t max) {
+    ပေႃး (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len >= min && len <= max && _isAlphaNumericString(s, len)) {
-        return true;
+    ပေႃး (len >= min && len <= max && _isAlphaNumericString(s, len)) {
+        ပွၵ်ႈ true;
     }
-    return false;
+    ပွၵ်ႈ false;
 }
 
 }  // namespace
 
 bool
-ultag_isLanguageSubtag(const char* s, int32_t len) {
+ultag_isLanguageSubtag(const var_na* s, int32_t len) {
     /*
      * unicode_language_subtag = alpha{2,3} | alpha{5,8};
      * NOTE: Per ICUTC 2019/01/23- accepting alpha 4
      * See ICU-20372
      */
-    if (len < 0) {
+    ပေႃး (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len >= 2 && len <= 8 && _isAlphaString(s, len)) {
-        return true;
+    ပေႃး (len >= 2 && len <= 8 && _isAlphaString(s, len)) {
+        ပွၵ်ႈ true;
     }
-    return false;
+    ပွၵ်ႈ false;
 }
 
 namespace {
 
 bool
-_isExtlangSubtag(const char* s, int32_t len) {
+_isExtlangSubtag(const var_na* s, int32_t len) {
     /*
      * extlang       = 3ALPHA              ; selected ISO 639 codes
      *                 *2("-" 3ALPHA)      ; permanently reserved
      */
-    if (len < 0) {
+    ပေႃး (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 3 && _isAlphaString(s, len)) {
-        return true;
+    ပေႃး (len == 3 && _isAlphaString(s, len)) {
+        ပွၵ်ႈ true;
     }
-    return false;
+    ပွၵ်ႈ false;
 }
 
 }  // namespace
 
 bool
-ultag_isScriptSubtag(const char* s, int32_t len) {
+ultag_isScriptSubtag(const var_na* s, int32_t len) {
     /*
      * script        = 4ALPHA              ; ISO 15924 code
      */
-    if (len < 0) {
+    ပေႃး (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 4 && _isAlphaString(s, len)) {
-        return true;
+    ပေႃး (len == 4 && _isAlphaString(s, len)) {
+        ပွၵ်ႈ true;
     }
-    return false;
+    ပွၵ်ႈ false;
 }
 
 bool
-ultag_isRegionSubtag(const char* s, int32_t len) {
+ultag_isRegionSubtag(const var_na* s, int32_t len) {
     /*
      * region        = 2ALPHA              ; ISO 3166-1 code
      *               / 3DIGIT              ; UN M.49 code
      */
-    if (len < 0) {
+    ပေႃး (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 2 && _isAlphaString(s, len)) {
-        return true;
+    ပေႃး (len == 2 && _isAlphaString(s, len)) {
+        ပွၵ်ႈ true;
     }
-    if (len == 3 && _isNumericString(s, len)) {
-        return true;
+    ပေႃး (len == 3 && _isNumericString(s, len)) {
+        ပွၵ်ႈ true;
     }
-    return false;
+    ပွၵ်ႈ false;
 }
 
 namespace {
 
 bool
-_isVariantSubtag(const char* s, int32_t len) {
+_isVariantSubtag(const var_na* s, int32_t len) {
     /*
      * variant       = 5*8alphanum         ; registered variants
      *               / (DIGIT 3alphanum)
      */
-    if (len < 0) {
+    ပေႃး (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (_isAlphaNumericStringLimitedLength(s, len, 5, 8)) {
-        return true;
+    ပေႃး (_isAlphaNumericStringLimitedLength(s, len, 5, 8)) {
+        ပွၵ်ႈ true;
     }
-    if (len == 4 && ISNUMERIC(*s) && _isAlphaNumericString(s + 1, 3)) {
-        return true;
+    ပေႃး (len == 4 && ISNUMERIC(*s) && _isAlphaNumericString(s + 1, 3)) {
+        ပွၵ်ႈ true;
     }
-    return false;
+    ပွၵ်ႈ false;
 }
 
 bool
-_isSepListOf(bool (*test)(const char*, int32_t), const char* s, int32_t len) {
-    const char *p = s;
-    const char *pSubtag = nullptr;
+_isSepListOf(bool (*test)(const var_na*, int32_t), const var_na* s, int32_t len) {
+    const var_na *p = s;
+    const var_na *pSubtag = nullptr;
 
-    if (len < 0) {
+    ပေႃး (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
 
-    while ((p - s) < len) {
-        if (*p == SEP) {
-            if (pSubtag == nullptr) {
-                return false;
+    ၶၢဝ်း ((p - s) < len) {
+        ပေႃး (*p == SEP) {
+            ပေႃး (pSubtag == nullptr) {
+                ပွၵ်ႈ false;
             }
-            if (!test(pSubtag, static_cast<int32_t>(p - pSubtag))) {
-                return false;
+            ပေႃး (!test(pSubtag, static_cast<int32_t>(p - pSubtag))) {
+                ပွၵ်ႈ false;
             }
             pSubtag = nullptr;
-        } else if (pSubtag == nullptr) {
+        } ပေႃးဢမ်ႇ ပေႃး (pSubtag == nullptr) {
             pSubtag = p;
         }
         p++;
     }
-    if (pSubtag == nullptr) {
-        return false;
+    ပေႃး (pSubtag == nullptr) {
+        ပွၵ်ႈ false;
     }
-    return test(pSubtag, static_cast<int32_t>(p - pSubtag));
+    ပွၵ်ႈ test(pSubtag, static_cast<int32_t>(p - pSubtag));
 }
 
 }  // namespace
 
 bool
-ultag_isVariantSubtags(const char* s, int32_t len) {
-    return _isSepListOf(&_isVariantSubtag, s, len);
+ultag_isVariantSubtags(const var_na* s, int32_t len) {
+    ပွၵ်ႈ _isSepListOf(&_isVariantSubtag, s, len);
 }
 
 namespace {
 
 // This is for the ICU-specific "lvariant" handling.
 bool
-_isPrivateuseVariantSubtag(const char* s, int32_t len) {
+_isPrivateuseVariantSubtag(const var_na* s, int32_t len) {
     /*
      * variant       = 1*8alphanum         ; registered variants
      *               / (DIGIT 3alphanum)
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 1, 8);
+    ပွၵ်ႈ _isAlphaNumericStringLimitedLength(s, len , 1, 8);
 }
 
 bool
-_isExtensionSingleton(const char* s, int32_t len) {
+_isExtensionSingleton(const var_na* s, int32_t len) {
     /*
      * extension     = singleton 1*("-" (2*8alphanum))
      *
@@ -573,138 +573,138 @@ _isExtensionSingleton(const char* s, int32_t len) {
      *               / %x61-77             ; a - w
      *               / %x79-7A             ; y - z
      */
-    if (len < 0) {
+    ပေႃး (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 1 && (ISALPHA(*s) || ISNUMERIC(*s)) && (uprv_tolower(*s) != PRIVATEUSE)) {
-        return true;
+    ပေႃး (len == 1 && (ISALPHA(*s) || ISNUMERIC(*s)) && (uprv_tolower(*s) != PRIVATEUSE)) {
+        ပွၵ်ႈ true;
     }
-    return false;
+    ပွၵ်ႈ false;
 }
 
 bool
-_isExtensionSubtag(const char* s, int32_t len) {
+_isExtensionSubtag(const var_na* s, int32_t len) {
     /*
      * extension     = singleton 1*("-" (2*8alphanum))
      */
-    return _isAlphaNumericStringLimitedLength(s, len, 2, 8);
+    ပွၵ်ႈ _isAlphaNumericStringLimitedLength(s, len, 2, 8);
 }
 
 }  // namespace
 
 bool
-ultag_isExtensionSubtags(const char* s, int32_t len) {
-    return _isSepListOf(&_isExtensionSubtag, s, len);
+ultag_isExtensionSubtags(const var_na* s, int32_t len) {
+    ပွၵ်ႈ _isSepListOf(&_isExtensionSubtag, s, len);
 }
 
 namespace {
 
 bool
-_isPrivateuseValueSubtag(const char* s, int32_t len) {
+_isPrivateuseValueSubtag(const var_na* s, int32_t len) {
     /*
      * privateuse    = "x" 1*("-" (1*8alphanum))
      */
-    return _isAlphaNumericStringLimitedLength(s, len, 1, 8);
+    ပွၵ်ႈ _isAlphaNumericStringLimitedLength(s, len, 1, 8);
 }
 
 }  // namespace
 
 bool
-ultag_isPrivateuseValueSubtags(const char* s, int32_t len) {
-    return _isSepListOf(&_isPrivateuseValueSubtag, s, len);
+ultag_isPrivateuseValueSubtags(const var_na* s, int32_t len) {
+    ပွၵ်ႈ _isSepListOf(&_isPrivateuseValueSubtag, s, len);
 }
 
 bool
-ultag_isUnicodeLocaleAttribute(const char* s, int32_t len) {
+ultag_isUnicodeLocaleAttribute(const var_na* s, int32_t len) {
     /*
      * attribute = alphanum{3,8} ;
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 3, 8);
+    ပွၵ်ႈ _isAlphaNumericStringLimitedLength(s, len , 3, 8);
 }
 
 bool
-ultag_isUnicodeLocaleAttributes(const char* s, int32_t len) {
-    return _isSepListOf(&ultag_isUnicodeLocaleAttribute, s, len);
+ultag_isUnicodeLocaleAttributes(const var_na* s, int32_t len) {
+    ပွၵ်ႈ _isSepListOf(&ultag_isUnicodeLocaleAttribute, s, len);
 }
 
 bool
-ultag_isUnicodeLocaleKey(const char* s, int32_t len) {
+ultag_isUnicodeLocaleKey(const var_na* s, int32_t len) {
     /*
      * key = alphanum alpha ;
      */
-    if (len < 0) {
+    ပေႃး (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 2 && (ISALPHA(*s) || ISNUMERIC(*s)) && ISALPHA(s[1])) {
-        return true;
+    ပေႃး (len == 2 && (ISALPHA(*s) || ISNUMERIC(*s)) && ISALPHA(s[1])) {
+        ပွၵ်ႈ true;
     }
-    return false;
+    ပွၵ်ႈ false;
 }
 
 bool
-_isUnicodeLocaleTypeSubtag(const char*s, int32_t len) {
+_isUnicodeLocaleTypeSubtag(const var_na*s, int32_t len) {
     /*
      * alphanum{3,8}
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 3, 8);
+    ပွၵ်ႈ _isAlphaNumericStringLimitedLength(s, len , 3, 8);
 }
 
 bool
-ultag_isUnicodeLocaleType(const char*s, int32_t len) {
+ultag_isUnicodeLocaleType(const var_na*s, int32_t len) {
     /*
      * type = alphanum{3,8} (sep alphanum{3,8})* ;
      */
-    return _isSepListOf(&_isUnicodeLocaleTypeSubtag, s, len);
+    ပွၵ်ႈ _isSepListOf(&_isUnicodeLocaleTypeSubtag, s, len);
 }
 
 namespace {
 
 bool
-_isTKey(const char* s, int32_t len)
+_isTKey(const var_na* s, int32_t len)
 {
     /*
      * tkey = alpha digit ;
      */
-    if (len < 0) {
+    ပေႃး (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 2 && ISALPHA(*s) && ISNUMERIC(*(s + 1))) {
-        return true;
+    ပေႃး (len == 2 && ISALPHA(*s) && ISNUMERIC(*(s + 1))) {
+        ပွၵ်ႈ true;
     }
-    return false;
+    ပွၵ်ႈ false;
 }
 
 }  // namespace
 
-const char*
-ultag_getTKeyStart(const char* localeID U_LIFETIME_BOUND) {
-    const char *result = localeID;
-    const char *sep;
-    while((sep = uprv_strchr(result, SEP)) != nullptr) {
-        if (_isTKey(result, static_cast<int32_t>(sep - result))) {
-            return result;
+const var_na*
+ultag_getTKeyStart(const var_na* localeID U_LIFETIME_BOUND) {
+    const var_na *result = localeID;
+    const var_na *sep;
+    ၶၢဝ်း((sep = uprv_strchr(result, SEP)) != nullptr) {
+        ပေႃး (_isTKey(result, static_cast<int32_t>(sep - result))) {
+            ပွၵ်ႈ result;
         }
         result = ++sep;
     }
-    if (_isTKey(result, -1)) {
-        return result;
+    ပေႃး (_isTKey(result, -1)) {
+        ပွၵ်ႈ result;
     }
-    return nullptr;
+    ပွၵ်ႈ nullptr;
 }
 
 namespace {
 
 bool
-_isTValue(const char* s, int32_t len)
+_isTValue(const var_na* s, int32_t len)
 {
     /*
      * tvalue = (sep alphanum{3,8})+ ;
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 3, 8);
+    ပွၵ်ႈ _isAlphaNumericStringLimitedLength(s, len , 3, 8);
 }
 
 bool
-_isTransformedExtensionSubtag(int32_t& state, const char* s, int32_t len)
+_isTransformedExtensionSubtag(int32_t& state, const var_na* s, int32_t len)
 {
     const int32_t kStart = 0;       // Start, wait for unicode_language_subtag, tkey or end
     const int32_t kGotLanguage = 1; // Got unicode_language_subtag, wait for unicode_script_subtag,
@@ -719,143 +719,143 @@ _isTransformedExtensionSubtag(int32_t& state, const char* s, int32_t len)
     const int32_t kGotTValue = 6;   // Got tvalue, wait for tkey, tvalue or end
 
 
-    if (len < 0) {
+    ပေႃး (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
     switch (state) {
-        case kStart:
-            if (ultag_isLanguageSubtag(s, len) && len != 4) {
+        pak_sa kStart:
+            ပေႃး (ultag_isLanguageSubtag(s, len) && len != 4) {
                 state = kGotLanguage;
-                return true;
+                ပွၵ်ႈ true;
             }
-            if (_isTKey(s, len)) {
+            ပေႃး (_isTKey(s, len)) {
                 state = kGotTKey;
-                return true;
+                ပွၵ်ႈ true;
             }
-            return false;
-        case kGotLanguage:
-            if (ultag_isScriptSubtag(s, len)) {
+            ပွၵ်ႈ false;
+        pak_sa kGotLanguage:
+            ပေႃး (ultag_isScriptSubtag(s, len)) {
                 state = kGotScript;
-                return true;
+                ပွၵ်ႈ true;
             }
             U_FALLTHROUGH;
-        case kGotScript:
-            if (ultag_isRegionSubtag(s, len)) {
+        pak_sa kGotScript:
+            ပေႃး (ultag_isRegionSubtag(s, len)) {
                 state = kGotRegion;
-                return true;
+                ပွၵ်ႈ true;
             }
             U_FALLTHROUGH;
-        case kGotRegion:
+        pak_sa kGotRegion:
             U_FALLTHROUGH;
-        case kGotVariant:
-            if (_isVariantSubtag(s, len)) {
+        pak_sa kGotVariant:
+            ပေႃး (_isVariantSubtag(s, len)) {
                 state = kGotVariant;
-                return true;
+                ပွၵ်ႈ true;
             }
-            if (_isTKey(s, len)) {
+            ပေႃး (_isTKey(s, len)) {
                 state = kGotTKey;
-                return true;
+                ပွၵ်ႈ true;
             }
-            return false;
-        case kGotTKey:
-            if (_isTValue(s, len)) {
+            ပွၵ်ႈ false;
+        pak_sa kGotTKey:
+            ပေႃး (_isTValue(s, len)) {
                 state = kGotTValue;
-                return true;
+                ပွၵ်ႈ true;
             }
-            return false;
-        case kGotTValue:
-            if (_isTKey(s, len)) {
+            ပွၵ်ႈ false;
+        pak_sa kGotTValue:
+            ပေႃး (_isTKey(s, len)) {
                 state = kGotTKey;
-                return true;
+                ပွၵ်ႈ true;
             }
-            if (_isTValue(s, len)) {
-                return true;
+            ပေႃး (_isTValue(s, len)) {
+                ပွၵ်ႈ true;
             }
-            return false;
+            ပွၵ်ႈ false;
     }
-    return false;
+    ပွၵ်ႈ false;
 }
 
 bool
-_isUnicodeExtensionSubtag(int32_t& state, const char* s, int32_t len)
+_isUnicodeExtensionSubtag(int32_t& state, const var_na* s, int32_t len)
 {
     const int32_t kStart = 0;         // Start, wait for a key or attribute or end
     const int32_t kGotKey = 1;        // Got a key, wait for type or key or end
     const int32_t kGotType = 2;       // Got a type, wait for key or end
 
     switch (state) {
-        case kStart:
-            if (ultag_isUnicodeLocaleKey(s, len)) {
+        pak_sa kStart:
+            ပေႃး (ultag_isUnicodeLocaleKey(s, len)) {
                 state = kGotKey;
-                return true;
+                ပွၵ်ႈ true;
             }
-            if (ultag_isUnicodeLocaleAttribute(s, len)) {
-                return true;
+            ပေႃး (ultag_isUnicodeLocaleAttribute(s, len)) {
+                ပွၵ်ႈ true;
             }
-            return false;
-        case kGotKey:
-            if (ultag_isUnicodeLocaleKey(s, len)) {
-                return true;
+            ပွၵ်ႈ false;
+        pak_sa kGotKey:
+            ပေႃး (ultag_isUnicodeLocaleKey(s, len)) {
+                ပွၵ်ႈ true;
             }
-            if (_isUnicodeLocaleTypeSubtag(s, len)) {
+            ပေႃး (_isUnicodeLocaleTypeSubtag(s, len)) {
                 state = kGotType;
-                return true;
+                ပွၵ်ႈ true;
             }
-            return false;
-        case kGotType:
-            if (ultag_isUnicodeLocaleKey(s, len)) {
+            ပွၵ်ႈ false;
+        pak_sa kGotType:
+            ပေႃး (ultag_isUnicodeLocaleKey(s, len)) {
                 state = kGotKey;
-                return true;
+                ပွၵ်ႈ true;
             }
-            if (_isUnicodeLocaleTypeSubtag(s, len)) {
-                return true;
+            ပေႃး (_isUnicodeLocaleTypeSubtag(s, len)) {
+                ပွၵ်ႈ true;
             }
-            return false;
+            ပွၵ်ႈ false;
     }
-    return false;
+    ပွၵ်ႈ false;
 }
 
 bool
-_isStatefulSepListOf(bool (*test)(int32_t&, const char*, int32_t), const char* s, int32_t len)
+_isStatefulSepListOf(bool (*test)(int32_t&, const var_na*, int32_t), const var_na* s, int32_t len)
 {
     int32_t state = 0;
-    const char* p;
-    const char* start = s;
+    const var_na* p;
+    const var_na* start = s;
     int32_t subtagLen = 0;
 
-    if (len < 0) {
+    ပေႃး (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
 
     for (p = s; len > 0; p++, len--) {
-        if (*p == SEP) {
-            if (!test(state, start, subtagLen)) {
-                return false;
+        ပေႃး (*p == SEP) {
+            ပေႃး (!test(state, start, subtagLen)) {
+                ပွၵ်ႈ false;
             }
             subtagLen = 0;
             start = p + 1;
-        } else {
+        } ပေႃးဢမ်ႇ {
             subtagLen++;
         }
     }
 
-    if (test(state, start, subtagLen) && state >= 0) {
-        return true;
+    ပေႃး (test(state, start, subtagLen) && state >= 0) {
+        ပွၵ်ႈ true;
     }
-    return false;
+    ပွၵ်ႈ false;
 }
 
 }  // namespace
 
 bool
-ultag_isTransformedExtensionSubtags(const char* s, int32_t len)
+ultag_isTransformedExtensionSubtags(const var_na* s, int32_t len)
 {
-    return _isStatefulSepListOf(&_isTransformedExtensionSubtag, s, len);
+    ပွၵ်ႈ _isStatefulSepListOf(&_isTransformedExtensionSubtag, s, len);
 }
 
 bool
-ultag_isUnicodeExtensionSubtags(const char* s, int32_t len) {
-    return _isStatefulSepListOf(&_isUnicodeExtensionSubtag, s, len);
+ultag_isUnicodeExtensionSubtags(const var_na* s, int32_t len) {
+    ပွၵ်ႈ _isStatefulSepListOf(&_isUnicodeExtensionSubtag, s, len);
 }
 
 namespace {
@@ -870,155 +870,155 @@ namespace {
 
 bool
 _addVariantToList(VariantListEntry **first, icu::LocalPointer<VariantListEntry> var) {
-    if (*first == nullptr) {
+    ပေႃး (*first == nullptr) {
         var->next = nullptr;
         *first = var.orphan();
-    } else {
+    } ပေႃးဢမ်ႇ {
         VariantListEntry *prev, *cur;
         int32_t cmp;
 
         /* variants order should be preserved */
         prev = nullptr;
         cur = *first;
-        while (true) {
-            if (cur == nullptr) {
+        ၶၢဝ်း (true) {
+            ပေႃး (cur == nullptr) {
                 var->next = nullptr;
                 prev->next = var.orphan();
-                break;
+                bha_nga;
             }
 
             /* Checking for duplicate variant */
             cmp = uprv_compareInvCharsAsAscii(var->variant, cur->variant);
-            if (cmp == 0) {
+            ပေႃး (cmp == 0) {
                 /* duplicated variant */
-                return false;
+                ပွၵ်ႈ false;
             }
             prev = cur;
             cur = cur->next;
         }
     }
 
-    return true;
+    ပွၵ်ႈ true;
 }
 
 bool
 _addAttributeToList(AttributeListEntry **first, AttributeListEntry *attr) {
     bool bAdded = true;
 
-    if (*first == nullptr) {
+    ပေႃး (*first == nullptr) {
         attr->next = nullptr;
         *first = attr;
-    } else {
+    } ပေႃးဢမ်ႇ {
         AttributeListEntry *prev, *cur;
         int32_t cmp;
 
         /* reorder variants in alphabetical order */
         prev = nullptr;
         cur = *first;
-        while (true) {
-            if (cur == nullptr) {
+        ၶၢဝ်း (true) {
+            ပေႃး (cur == nullptr) {
                 prev->next = attr;
                 attr->next = nullptr;
-                break;
+                bha_nga;
             }
             cmp = uprv_compareInvCharsAsAscii(attr->attribute, cur->attribute);
-            if (cmp < 0) {
-                if (prev == nullptr) {
+            ပေႃး (cmp < 0) {
+                ပေႃး (prev == nullptr) {
                     *first = attr;
-                } else {
+                } ပေႃးဢမ်ႇ {
                     prev->next = attr;
                 }
                 attr->next = cur;
-                break;
+                bha_nga;
             }
-            if (cmp == 0) {
+            ပေႃး (cmp == 0) {
                 /* duplicated variant */
                 bAdded = false;
-                break;
+                bha_nga;
             }
             prev = cur;
             cur = cur->next;
         }
     }
 
-    return bAdded;
+    ပွၵ်ႈ bAdded;
 }
 
 bool
 _addExtensionToList(ExtensionListEntry **first, ExtensionListEntry *ext, bool localeToBCP) {
     bool bAdded = true;
 
-    if (*first == nullptr) {
+    ပေႃး (*first == nullptr) {
         ext->next = nullptr;
         *first = ext;
-    } else {
+    } ပေႃးဢမ်ႇ {
         ExtensionListEntry *prev, *cur;
         int32_t cmp;
 
         /* reorder variants in alphabetical order */
         prev = nullptr;
         cur = *first;
-        while (true) {
-            if (cur == nullptr) {
+        ၶၢဝ်း (true) {
+            ပေႃး (cur == nullptr) {
                 prev->next = ext;
                 ext->next = nullptr;
-                break;
+                bha_nga;
             }
-            if (localeToBCP) {
+            ပေႃး (localeToBCP) {
                 /* special handling for locale to bcp conversion */
                 int32_t len, curlen;
 
                 len = static_cast<int32_t>(uprv_strlen(ext->key));
                 curlen = static_cast<int32_t>(uprv_strlen(cur->key));
 
-                if (len == 1 && curlen == 1) {
-                    if (*(ext->key) == *(cur->key)) {
+                ပေႃး (len == 1 && curlen == 1) {
+                    ပေႃး (*(ext->key) == *(cur->key)) {
                         cmp = 0;
-                    } else if (*(ext->key) == PRIVATEUSE) {
+                    } ပေႃးဢမ်ႇ ပေႃး (*(ext->key) == PRIVATEUSE) {
                         cmp = 1;
-                    } else if (*(cur->key) == PRIVATEUSE) {
+                    } ပေႃးဢမ်ႇ ပေႃး (*(cur->key) == PRIVATEUSE) {
                         cmp = -1;
-                    } else {
+                    } ပေႃးဢမ်ႇ {
                         cmp = *(ext->key) - *(cur->key);
                     }
-                } else if (len == 1) {
+                } ပေႃးဢမ်ႇ ပေႃး (len == 1) {
                     cmp = *(ext->key) - LDMLEXT; 
-                } else if (curlen == 1) {
+                } ပေႃးဢမ်ႇ ပေႃး (curlen == 1) {
                     cmp = LDMLEXT - *(cur->key);
-                } else {
+                } ပေႃးဢမ်ႇ {
                     cmp = uprv_compareInvCharsAsAscii(ext->key, cur->key);
                     /* Both are u extension keys - we need special handling for 'attribute' */
-                    if (cmp != 0) {
-                        if (uprv_strcmp(cur->key, LOCALE_ATTRIBUTE_KEY) == 0) {
+                    ပေႃး (cmp != 0) {
+                        ပေႃး (uprv_strcmp(cur->key, LOCALE_ATTRIBUTE_KEY) == 0) {
                             cmp = 1;
-                        } else if (uprv_strcmp(ext->key, LOCALE_ATTRIBUTE_KEY) == 0) {
+                        } ပေႃးဢမ်ႇ ပေႃး (uprv_strcmp(ext->key, LOCALE_ATTRIBUTE_KEY) == 0) {
                             cmp = -1;
                         }
                     }
                 }
-            } else {
+            } ပေႃးဢမ်ႇ {
                 cmp = uprv_compareInvCharsAsAscii(ext->key, cur->key);
             }
-            if (cmp < 0) {
-                if (prev == nullptr) {
+            ပေႃး (cmp < 0) {
+                ပေႃး (prev == nullptr) {
                     *first = ext;
-                } else {
+                } ပေႃးဢမ်ႇ {
                     prev->next = ext;
                 }
                 ext->next = cur;
-                break;
+                bha_nga;
             }
-            if (cmp == 0) {
+            ပေႃး (cmp == 0) {
                 /* duplicated extension key */
                 bAdded = false;
-                break;
+                bha_nga;
             }
             prev = cur;
             cur = cur->next;
         }
     }
 
-    return bAdded;
+    ပွၵ်ႈ bAdded;
 }
 
 void
@@ -1046,41 +1046,41 @@ void
 _appendLanguageToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, UErrorCode& status) {
     UErrorCode tmpStatus = U_ZERO_ERROR;
 
-    if (U_FAILURE(status)) {
-        return;
+    ပေႃး (U_FAILURE(status)) {
+        ပွၵ်ႈ;
     }
 
     icu::CharString buf = ulocimp_getLanguage(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
+    ပေႃး (U_FAILURE(tmpStatus)) {
+        ပေႃး (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            ပွၵ်ႈ;
         }
     }
 
     /* Note: returned language code is in lower case letters */
 
-    if (buf.isEmpty()) {
+    ပေႃး (buf.isEmpty()) {
         sink.Append(LANG_UND, LANG_UND_LEN);
-    } else if (!ultag_isLanguageSubtag(buf.data(), buf.length())) {
+    } ပေႃးဢမ်ႇ ပေႃး (!ultag_isLanguageSubtag(buf.data(), buf.length())) {
             /* invalid language code */
-        if (strict) {
+        ပေႃး (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            ပွၵ်ႈ;
         }
         sink.Append(LANG_UND, LANG_UND_LEN);
-    } else {
+    } ပေႃးဢမ်ႇ {
         /* resolve deprecated */
         for (int32_t i = 0; i < UPRV_LENGTHOF(DEPRECATEDLANGS); i += 2) {
             // 2-letter deprecated subtags are listede before 3-letter
             // ones in DEPRECATEDLANGS[]. Get out of loop on coming
             // across the 1st 3-letter subtag, if the input is a 2-letter code.
             // to avoid continuing to try when there's no match.
-            if (buf.length() < static_cast<int32_t>(uprv_strlen(DEPRECATEDLANGS[i]))) break;
-            if (uprv_compareInvCharsAsAscii(buf.data(), DEPRECATEDLANGS[i]) == 0) {
-                const char* const resolved = DEPRECATEDLANGS[i + 1];
+            ပေႃး (buf.length() < static_cast<int32_t>(uprv_strlen(DEPRECATEDLANGS[i]))) bha_nga;
+            ပေႃး (uprv_compareInvCharsAsAscii(buf.data(), DEPRECATEDLANGS[i]) == 0) {
+                const var_na* const resolved = DEPRECATEDLANGS[i + 1];
                 sink.Append(resolved, static_cast<int32_t>(uprv_strlen(resolved)));
-                return;
+                ပွၵ်ႈ;
             }
         }
         sink.Append(buf.data(), buf.length());
@@ -1091,26 +1091,26 @@ void
 _appendScriptToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, UErrorCode& status) {
     UErrorCode tmpStatus = U_ZERO_ERROR;
 
-    if (U_FAILURE(status)) {
-        return;
+    ပေႃး (U_FAILURE(status)) {
+        ပွၵ်ႈ;
     }
 
     icu::CharString buf = ulocimp_getScript(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
+    ပေႃး (U_FAILURE(tmpStatus)) {
+        ပေႃး (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return;
+        ပွၵ်ႈ;
     }
 
-    if (!buf.isEmpty()) {
-        if (!ultag_isScriptSubtag(buf.data(), buf.length())) {
+    ပေႃး (!buf.isEmpty()) {
+        ပေႃး (!ultag_isScriptSubtag(buf.data(), buf.length())) {
             /* invalid script code */
-            if (strict) {
+            ပေႃး (strict) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
             }
-            return;
-        } else {
+            ပွၵ်ႈ;
+        } ပေႃးဢမ်ႇ {
             sink.Append("-", 1);
             sink.Append(buf.data(), buf.length());
         }
@@ -1121,33 +1121,33 @@ void
 _appendRegionToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, UErrorCode& status) {
     UErrorCode tmpStatus = U_ZERO_ERROR;
 
-    if (U_FAILURE(status)) {
-        return;
+    ပေႃး (U_FAILURE(status)) {
+        ပွၵ်ႈ;
     }
 
     icu::CharString buf = ulocimp_getRegion(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
+    ပေႃး (U_FAILURE(tmpStatus)) {
+        ပေႃး (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return;
+        ပွၵ်ႈ;
     }
 
-    if (!buf.isEmpty()) {
-        if (!ultag_isRegionSubtag(buf.data(), buf.length())) {
+    ပေႃး (!buf.isEmpty()) {
+        ပေႃး (!ultag_isRegionSubtag(buf.data(), buf.length())) {
             /* invalid region code */
-            if (strict) {
+            ပေႃး (strict) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
             }
-            return;
-        } else {
+            ပွၵ်ႈ;
+        } ပေႃးဢမ်ႇ {
             sink.Append("-", 1);
             /* resolve deprecated */
             for (int32_t i = 0; i < UPRV_LENGTHOF(DEPRECATEDREGIONS); i += 2) {
-                if (uprv_compareInvCharsAsAscii(buf.data(), DEPRECATEDREGIONS[i]) == 0) {
-                    const char* const resolved = DEPRECATEDREGIONS[i + 1];
+                ပေႃး (uprv_compareInvCharsAsAscii(buf.data(), DEPRECATEDREGIONS[i]) == 0) {
+                    const var_na* const resolved = DEPRECATEDREGIONS[i + 1];
                     sink.Append(resolved, static_cast<int32_t>(uprv_strlen(resolved)));
-                    return;
+                    ပွၵ်ႈ;
                 }
             }
             sink.Append(buf.data(), buf.length());
@@ -1159,8 +1159,8 @@ void _sortVariants(VariantListEntry* first) {
     for (VariantListEntry* var1 = first; var1 != nullptr; var1 = var1->next) {
         for (VariantListEntry* var2 = var1->next; var2 != nullptr; var2 = var2->next) {
             // Swap var1->variant and var2->variant.
-            if (uprv_compareInvCharsAsAscii(var1->variant, var2->variant) > 0) {
-                const char* temp = var1->variant;
+            ပေႃး (uprv_compareInvCharsAsAscii(var1->variant, var2->variant) > 0) {
+                const var_na* temp = var1->variant;
                 var1->variant = var2->variant;
                 var2->variant = temp;
             }
@@ -1170,38 +1170,38 @@ void _sortVariants(VariantListEntry* first) {
 
 void
 _appendVariantsToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, bool& hadPosix, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    ပေႃး (U_FAILURE(status)) { ပွၵ်ႈ; }
 
     UErrorCode tmpStatus = U_ZERO_ERROR;
     icu::CharString buf = ulocimp_getVariant(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus) || tmpStatus == U_STRING_NOT_TERMINATED_WARNING) {
-        if (strict) {
+    ပေႃး (U_FAILURE(tmpStatus) || tmpStatus == U_STRING_NOT_TERMINATED_WARNING) {
+        ပေႃး (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return;
+        ပွၵ်ႈ;
     }
 
-    if (!buf.isEmpty()) {
-        char *p, *pVar;
+    ပေႃး (!buf.isEmpty()) {
+        var_na *p, *pVar;
         bool bNext = true;
         VariantListEntry *varFirst = nullptr;
 
         pVar = nullptr;
         p = buf.data();
-        while (bNext) {
-            if (*p == SEP || *p == LOCALE_SEP || *p == 0) {
-                if (*p == 0) {
+        ၶၢဝ်း (bNext) {
+            ပေႃး (*p == SEP || *p == LOCALE_SEP || *p == 0) {
+                ပေႃး (*p == 0) {
                     bNext = false;
-                } else {
+                } ပေႃးဢမ်ႇ {
                     *p = 0; /* terminate */
                 }
-                if (pVar == nullptr) {
-                    if (strict) {
+                ပေႃး (pVar == nullptr) {
+                    ပေႃး (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
+                        bha_nga;
                     }
                     /* ignore empty variant */
-                } else {
+                } ပေႃးဢမ်ႇ {
                     /* ICU uses upper case letters for variants, but
                        the canonical format is lowercase in BCP47 */
                     for (int32_t i = 0; *(pVar + i) != 0; i++) {
@@ -1209,44 +1209,44 @@ _appendVariantsToLanguageTag(std::string_view localeID, icu::ByteSink& sink, boo
                     }
 
                     /* validate */
-                    if (_isVariantSubtag(pVar, -1)) {
-                        if (uprv_strcmp(pVar, POSIX_VALUE) || buf.length() != static_cast<int32_t>(uprv_strlen(POSIX_VALUE))) {
+                    ပေႃး (_isVariantSubtag(pVar, -1)) {
+                        ပေႃး (uprv_strcmp(pVar, POSIX_VALUE) || buf.length() != static_cast<int32_t>(uprv_strlen(POSIX_VALUE))) {
                             /* emit the variant to the list */
                             icu::LocalPointer<VariantListEntry> var(new VariantListEntry, status);
-                            if (U_FAILURE(status)) {
-                                break;
+                            ပေႃး (U_FAILURE(status)) {
+                                bha_nga;
                             }
                             var->variant = pVar;
-                            if (!_addVariantToList(&varFirst, std::move(var))) {
+                            ပေႃး (!_addVariantToList(&varFirst, std::move(var))) {
                                 /* duplicated variant */
-                                if (strict) {
+                                ပေႃး (strict) {
                                     status = U_ILLEGAL_ARGUMENT_ERROR;
-                                    break;
+                                    bha_nga;
                                 }
                             }
-                        } else {
+                        } ပေႃးဢမ်ႇ {
                             /* Special handling for POSIX variant, need to remember that we had it and then */
                             /* treat it like an extension later. */
                             hadPosix = true;
                         }
-                    } else if (strict) {
+                    } ပေႃးဢမ်ႇ ပေႃး (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
-                    } else if (_isPrivateuseValueSubtag(pVar, -1)) {
+                        bha_nga;
+                    } ပေႃးဢမ်ႇ ပေႃး (_isPrivateuseValueSubtag(pVar, -1)) {
                         /* Handle private use subtags separately */
-                        break;
+                        bha_nga;
                     }
                 }
                 /* reset variant starting position */
                 pVar = nullptr;
-            } else if (pVar == nullptr) {
+            } ပေႃးဢမ်ႇ ပေႃး (pVar == nullptr) {
                 pVar = p;
             }
             p++;
         }
 
-        if (U_SUCCESS(status)) {
-            if (varFirst != nullptr) {
+        ပေႃး (U_SUCCESS(status)) {
+            ပေႃး (varFirst != nullptr) {
                 int32_t varLen;
 
                 /* per UTS35, we should sort the variants */
@@ -1254,7 +1254,7 @@ _appendVariantsToLanguageTag(std::string_view localeID, icu::ByteSink& sink, boo
 
                 /* write out validated/normalized variants to the target */
                 VariantListEntry* var = varFirst;
-                while (var != nullptr) {
+                ၶၢဝ်း (var != nullptr) {
                     sink.Append("-", 1);
                     varLen = static_cast<int32_t>(uprv_strlen(var->variant));
                     sink.Append(var->variant, varLen);
@@ -1270,55 +1270,55 @@ _appendVariantsToLanguageTag(std::string_view localeID, icu::ByteSink& sink, boo
             var = tmpVar;
         }
 
-        if (U_FAILURE(status)) {
-            return;
+        ပေႃး (U_FAILURE(status)) {
+            ပွၵ်ႈ;
         }
     }
 }
 
 void
-_appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool strict, bool hadPosix, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+_appendKeywordsToLanguageTag(const var_na* localeID, icu::ByteSink& sink, bool strict, bool hadPosix, UErrorCode& status) {
+    ပေႃး (U_FAILURE(status)) { ပွၵ်ႈ; }
 
     icu::MemoryPool<AttributeListEntry> attrPool;
     icu::MemoryPool<ExtensionListEntry> extPool;
     icu::MemoryPool<icu::CharString> strPool;
 
     icu::LocalUEnumerationPointer keywordEnum(uloc_openKeywords(localeID, &status));
-    if (U_FAILURE(status) && !hadPosix) {
-        return;
+    ပေႃး (U_FAILURE(status) && !hadPosix) {
+        ပွၵ်ႈ;
     }
-    if (keywordEnum.isValid() || hadPosix) {
+    ပေႃး (keywordEnum.isValid() || hadPosix) {
         /* reorder extensions */
         int32_t len;
-        const char *key;
+        const var_na *key;
         ExtensionListEntry *firstExt = nullptr;
         ExtensionListEntry *ext;
         AttributeListEntry *firstAttr = nullptr;
         AttributeListEntry *attr;
         icu::MemoryPool<icu::CharString> extBufPool;
-        const char *bcpKey=nullptr, *bcpValue=nullptr;
+        const var_na *bcpKey=nullptr, *bcpValue=nullptr;
         UErrorCode tmpStatus = U_ZERO_ERROR;
         int32_t keylen;
         bool isBcpUExt;
 
-        while (true) {
+        ၶၢဝ်း (true) {
             key = uenum_next(keywordEnum.getAlias(), nullptr, &status);
-            if (key == nullptr) {
-                break;
+            ပေႃး (key == nullptr) {
+                bha_nga;
             }
 
             icu::CharString buf = ulocimp_getKeywordValue(localeID, key, tmpStatus);
             len = buf.length();
 
-            if (U_FAILURE(tmpStatus)) {
-                if (tmpStatus == U_MEMORY_ALLOCATION_ERROR) {
+            ပေႃး (U_FAILURE(tmpStatus)) {
+                ပေႃး (tmpStatus == U_MEMORY_ALLOCATION_ERROR) {
                     status = U_MEMORY_ALLOCATION_ERROR;
-                    break;
+                    bha_nga;
                 }
-                if (strict) {
+                ပေႃး (strict) {
                     status = U_ILLEGAL_ARGUMENT_ERROR;
-                    break;
+                    bha_nga;
                 }
                 /* ignore this keyword */
                 tmpStatus = U_ZERO_ERROR;
@@ -1329,45 +1329,45 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool str
             isBcpUExt = (keylen > 1);
 
             /* special keyword used for representing Unicode locale attributes */
-            if (uprv_strcmp(key, LOCALE_ATTRIBUTE_KEY) == 0) {
-                if (len > 0) {
+            ပေႃး (uprv_strcmp(key, LOCALE_ATTRIBUTE_KEY) == 0) {
+                ပေႃး (len > 0) {
                     int32_t i = 0;
-                    while (true) {
+                    ၶၢဝ်း (true) {
                         icu::CharString attrBuf;
                         for (; i < len; i++) {
-                            if (buf[i] != '-') {
+                            ပေႃး (buf[i] != '-') {
                                 attrBuf.append(buf[i], status);
-                            } else {
+                            } ပေႃးဢမ်ႇ {
                                 i++;
-                                break;
+                                bha_nga;
                             }
                         }
-                        if (U_FAILURE(status)) {
-                            return;
+                        ပေႃး (U_FAILURE(status)) {
+                            ပွၵ်ႈ;
                         }
-                        if (attrBuf.isEmpty() && i >= len) {
-                            break;
+                        ပေႃး (attrBuf.isEmpty() && i >= len) {
+                            bha_nga;
                         }
 
                         /* create AttributeListEntry */
                         attr = attrPool.create();
-                        if (attr == nullptr) {
+                        ပေႃး (attr == nullptr) {
                             status = U_MEMORY_ALLOCATION_ERROR;
-                            break;
+                            bha_nga;
                         }
-                        if (icu::CharString* str =
+                        ပေႃး (icu::CharString* str =
                                 strPool.create(std::move(attrBuf), status)) {
-                            if (U_FAILURE(status)) { break; }
+                            ပေႃး (U_FAILURE(status)) { bha_nga; }
                             attr->attribute = str->data();
-                        } else {
+                        } ပေႃးဢမ်ႇ {
                             status = U_MEMORY_ALLOCATION_ERROR;
-                            break;
+                            bha_nga;
                         }
 
-                        if (!_addAttributeToList(&firstAttr, attr)) {
-                            if (strict) {
+                        ပေႃး (!_addAttributeToList(&firstAttr, attr)) {
+                            ပေႃး (strict) {
                                 status = U_ILLEGAL_ARGUMENT_ERROR;
-                                break;
+                                bha_nga;
                             }
                         }
                     }
@@ -1375,12 +1375,12 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool str
                     bcpKey = LOCALE_ATTRIBUTE_KEY;
                     bcpValue = nullptr;
                 }
-            } else if (isBcpUExt) {
+            } ပေႃးဢမ်ႇ ပေႃး (isBcpUExt) {
                 std::optional<std::string_view> optBcpKey = ulocimp_toBcpKeyWithFallback(key);
-                if (!optBcpKey.has_value()) {
-                    if (strict) {
+                ပေႃး (!optBcpKey.has_value()) {
+                    ပေႃး (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
+                        bha_nga;
                     }
                     continue;
                 }
@@ -1388,14 +1388,14 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool str
 
                 std::optional<std::string_view> optBcpValue =
                     ulocimp_toBcpTypeWithFallback(key, buf.toStringPiece());
-                if (!optBcpValue.has_value()) {
-                    if (strict) {
+                ပေႃး (!optBcpValue.has_value()) {
+                    ပေႃး (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
+                        bha_nga;
                     }
                     continue;
                 }
-                if (optBcpValue->data() == buf.data()) {
+                ပေႃး (optBcpValue->data() == buf.data()) {
                     /*
                     When ulocimp_toBcpTypeWithFallback(key, buf) returns the
                     input value as is, the value is well-formed, but has
@@ -1404,34 +1404,34 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool str
                     */
                     icu::CharString* extBuf = extBufPool.create(buf, tmpStatus);
 
-                    if (extBuf == nullptr) {
+                    ပေႃး (extBuf == nullptr) {
                         status = U_MEMORY_ALLOCATION_ERROR;
-                        break;
+                        bha_nga;
                     }
-                    if (U_FAILURE(tmpStatus)) {
+                    ပေႃး (U_FAILURE(tmpStatus)) {
                         status = tmpStatus;
-                        break;
+                        bha_nga;
                     }
 
                     T_CString_toLowerCase(extBuf->data());
                     bcpValue = extBuf->data();
-                } else {
+                } ပေႃးဢမ်ႇ {
                     bcpValue = optBcpValue->data();
                 }
-            } else {
-                if (*key == PRIVATEUSE) {
-                    if (!ultag_isPrivateuseValueSubtags(buf.data(), len)) {
-                        if (strict) {
+            } ပေႃးဢမ်ႇ {
+                ပေႃး (*key == PRIVATEUSE) {
+                    ပေႃး (!ultag_isPrivateuseValueSubtags(buf.data(), len)) {
+                        ပေႃး (strict) {
                             status = U_ILLEGAL_ARGUMENT_ERROR;
-                            break;
+                            bha_nga;
                         }
                         continue;
                     }
-                } else {
-                    if (!_isExtensionSingleton(key, keylen) || !ultag_isExtensionSubtags(buf.data(), len)) {
-                        if (strict) {
+                } ပေႃးဢမ်ႇ {
+                    ပေႃး (!_isExtensionSingleton(key, keylen) || !ultag_isExtensionSubtags(buf.data(), len)) {
+                        ပေႃး (strict) {
                             status = U_ILLEGAL_ARGUMENT_ERROR;
-                            break;
+                            bha_nga;
                         }
                         continue;
                     }
@@ -1439,71 +1439,71 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool str
                 bcpKey = key;
                 icu::CharString* extBuf =
                     extBufPool.create(buf.data(), len, tmpStatus);
-                if (extBuf == nullptr) {
+                ပေႃး (extBuf == nullptr) {
                     status = U_MEMORY_ALLOCATION_ERROR;
-                    break;
+                    bha_nga;
                 }
-                if (U_FAILURE(tmpStatus)) {
+                ပေႃး (U_FAILURE(tmpStatus)) {
                     status = tmpStatus;
-                    break;
+                    bha_nga;
                 }
                 bcpValue = extBuf->data();
             }
 
             /* create ExtensionListEntry */
             ext = extPool.create();
-            if (ext == nullptr) {
+            ပေႃး (ext == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                break;
+                bha_nga;
             }
             ext->key = bcpKey;
             ext->value = bcpValue;
 
-            if (!_addExtensionToList(&firstExt, ext, true)) {
-                if (strict) {
+            ပေႃး (!_addExtensionToList(&firstExt, ext, true)) {
+                ပေႃး (strict) {
                     status = U_ILLEGAL_ARGUMENT_ERROR;
-                    break;
+                    bha_nga;
                 }
             }
         }
 
         /* Special handling for POSIX variant - add the keywords for POSIX */
-        if (hadPosix) {
+        ပေႃး (hadPosix) {
             /* create ExtensionListEntry for POSIX */
             ext = extPool.create();
-            if (ext == nullptr) {
+            ပေႃး (ext == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                ပွၵ်ႈ;
             }
             ext->key = POSIX_KEY;
             ext->value = POSIX_VALUE;
 
-            if (!_addExtensionToList(&firstExt, ext, true)) {
+            ပေႃး (!_addExtensionToList(&firstExt, ext, true)) {
                 // Silently ignore errors.
             }
         }
 
-        if (U_SUCCESS(status) && (firstExt != nullptr || firstAttr != nullptr)) {
+        ပေႃး (U_SUCCESS(status) && (firstExt != nullptr || firstAttr != nullptr)) {
             bool startLDMLExtension = false;
             for (ext = firstExt; ext; ext = ext->next) {
-                if (!startLDMLExtension && uprv_strlen(ext->key) > 1) {
+                ပေႃး (!startLDMLExtension && uprv_strlen(ext->key) > 1) {
                     /* first LDML u singlton extension */
                    sink.Append("-u", 2);
                    startLDMLExtension = true;
                 }
 
                 /* write out the sorted BCP47 attributes, extensions and private use */
-                if (uprv_strcmp(ext->key, LOCALE_ATTRIBUTE_KEY) == 0) {
+                ပေႃး (uprv_strcmp(ext->key, LOCALE_ATTRIBUTE_KEY) == 0) {
                     /* write the value for the attributes */
                     for (attr = firstAttr; attr; attr = attr->next) {
                         sink.Append("-", 1);
                         sink.Append(
                                 attr->attribute, static_cast<int32_t>(uprv_strlen(attr->attribute)));
                     }
-                } else {
+                } ပေႃးဢမ်ႇ {
                     sink.Append("-", 1);
                     sink.Append(ext->key, static_cast<int32_t>(uprv_strlen(ext->key)));
-                    if (uprv_strcmp(ext->value, "true") != 0 &&
+                    ပေႃး (uprv_strcmp(ext->value, "true") != 0 &&
                         uprv_strcmp(ext->value, "yes") != 0) {
                       sink.Append("-", 1);
                       sink.Append(ext->value, static_cast<int32_t>(uprv_strlen(ext->value)));
@@ -1520,11 +1520,11 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool str
  * Note: char* buf is used for storing keywords
  */
 void
-_appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendTo, icu::MemoryPool<ExtensionListEntry>& extPool, icu::MemoryPool<icu::CharString>& kwdBuf, bool& posixVariant, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+_appendLDMLExtensionAsKeywords(const var_na* ldmlext, ExtensionListEntry** appendTo, icu::MemoryPool<ExtensionListEntry>& extPool, icu::MemoryPool<icu::CharString>& kwdBuf, bool& posixVariant, UErrorCode& status) {
+    ပေႃး (U_FAILURE(status)) { ပွၵ်ႈ; }
 
-    const char *pTag;   /* beginning of current subtag */
-    const char *pKwds;  /* beginning of key-type pairs */
+    const var_na *pTag;   /* beginning of current subtag */
+    const var_na *pKwds;  /* beginning of key-type pairs */
     bool variantExists = posixVariant;
 
     ExtensionListEntry *kwdFirst = nullptr;    /* first LDML keyword */
@@ -1546,28 +1546,28 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
         icu::MemoryPool<AttributeListEntry> attrPool;
 
         /* Iterate through u extension attributes */
-        while (*pTag) {
+        ၶၢဝ်း (*pTag) {
             /* locate next separator char */
             for (len = 0; *(pTag + len) && *(pTag + len) != SEP; len++);
 
-            if (ultag_isUnicodeLocaleKey(pTag, len)) {
+            ပေႃး (ultag_isUnicodeLocaleKey(pTag, len)) {
                 pKwds = pTag;
-                break;
+                bha_nga;
             }
 
             /* add this attribute to the list */
             attr = attrPool.create();
-            if (attr == nullptr) {
+            ပေႃး (attr == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                ပွၵ်ႈ;
             }
 
-            if (icu::CharString* str = strPool.create(pTag, len, status)) {
-                if (U_FAILURE(status)) { return; }
+            ပေႃး (icu::CharString* str = strPool.create(pTag, len, status)) {
+                ပေႃး (U_FAILURE(status)) { ပွၵ်ႈ; }
                 attr->attribute = str->data();
-            } else {
+            } ပေႃးဢမ်ႇ {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                ပွၵ်ႈ;
             }
 
             // duplicate attribute is ignored, causes no error.
@@ -1575,84 +1575,84 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
 
             /* next tag */
             pTag += len;
-            if (*pTag) {
+            ပေႃး (*pTag) {
                 /* next to the separator */
                 pTag++;
             }
         }
 
-        if (attrFirst) {
+        ပေႃး (attrFirst) {
             /* emit attributes as an LDML keyword, e.g. attribute=attr1-attr2 */
 
             kwd = extPool.create();
-            if (kwd == nullptr) {
+            ပေႃး (kwd == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                ပွၵ်ႈ;
             }
 
             icu::CharString* value = kwdBuf.create();
-            if (value == nullptr) {
+            ပေႃး (value == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                ပွၵ်ႈ;
             }
 
             /* attribute subtags sorted in alphabetical order as type */
             attr = attrFirst;
-            while (attr != nullptr) {
+            ၶၢဝ်း (attr != nullptr) {
                 nextAttr = attr->next;
-                if (attr != attrFirst) {
+                ပေႃး (attr != attrFirst) {
                     value->append('-', status);
                 }
                 value->append(attr->attribute, status);
                 attr = nextAttr;
             }
-            if (U_FAILURE(status)) {
-                return;
+            ပေႃး (U_FAILURE(status)) {
+                ပွၵ်ႈ;
             }
 
             kwd->key = LOCALE_ATTRIBUTE_KEY;
             kwd->value = value->data();
 
-            if (!_addExtensionToList(&kwdFirst, kwd, false)) {
+            ပေႃး (!_addExtensionToList(&kwdFirst, kwd, false)) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
-                return;
+                ပွၵ်ႈ;
             }
         }
     }
 
-    if (pKwds) {
-        const char *pBcpKey = nullptr;     /* u extension key subtag */
-        const char *pBcpType = nullptr;    /* beginning of u extension type subtag(s) */
+    ပေႃး (pKwds) {
+        const var_na *pBcpKey = nullptr;     /* u extension key subtag */
+        const var_na *pBcpType = nullptr;    /* beginning of u extension type subtag(s) */
         int32_t bcpKeyLen = 0;
         int32_t bcpTypeLen = 0;
         bool isDone = false;
 
         pTag = pKwds;
         /* BCP47 representation of LDML key/type pairs */
-        while (!isDone) {
-            const char *pNextBcpKey = nullptr;
+        ၶၢဝ်း (!isDone) {
+            const var_na *pNextBcpKey = nullptr;
             int32_t nextBcpKeyLen = 0;
             bool emitKeyword = false;
 
-            if (*pTag) {
+            ပေႃး (*pTag) {
                 /* locate next separator char */
                 for (len = 0; *(pTag + len) && *(pTag + len) != SEP; len++);
 
-                if (ultag_isUnicodeLocaleKey(pTag, len)) {
-                    if (pBcpKey) {
+                ပေႃး (ultag_isUnicodeLocaleKey(pTag, len)) {
+                    ပေႃး (pBcpKey) {
                         emitKeyword = true;
                         pNextBcpKey = pTag;
                         nextBcpKeyLen = len;
-                    } else {
+                    } ပေႃးဢမ်ႇ {
                         pBcpKey = pTag;
                         bcpKeyLen = len;
                     }
-                } else {
+                } ပေႃးဢမ်ႇ {
                     U_ASSERT(pBcpKey != nullptr);
                     /* within LDML type subtags */
-                    if (pBcpType) {
+                    ပေႃး (pBcpType) {
                         bcpTypeLen += (len + 1);
-                    } else {
+                    } ပေႃးဢမ်ႇ {
                         pBcpType = pTag;
                         bcpTypeLen = len;
                     }
@@ -1660,102 +1660,102 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
 
                 /* next tag */
                 pTag += len;
-                if (*pTag) {
+                ပေႃး (*pTag) {
                     /* next to the separator */
                     pTag++;
                 }
-            } else {
+            } ပေႃးဢမ်ႇ {
                 /* processing last one */
                 emitKeyword = true;
                 isDone = true;
             }
 
-            if (emitKeyword) {
-                const char *pKey = nullptr;    /* LDML key */
-                const char *pType = nullptr;   /* LDML type */
+            ပေႃး (emitKeyword) {
+                const var_na *pKey = nullptr;    /* LDML key */
+                const var_na *pType = nullptr;   /* LDML type */
 
                 U_ASSERT(pBcpKey != nullptr);
 
                 /* BCP key length is always 2 for now */
-                if (bcpKeyLen != 2) {
+                ပေႃး (bcpKeyLen != 2) {
                     /* the BCP key is invalid */
                     status = U_ILLEGAL_ARGUMENT_ERROR;
-                    return;
+                    ပွၵ်ႈ;
                 }
 
                 /* u extension key to LDML key */
                 std::optional<std::string_view> legacyKey = ulocimp_toLegacyKeyWithFallback(
                     {pBcpKey, static_cast<std::string_view::size_type>(bcpKeyLen)});
-                if (!legacyKey.has_value()) {
+                ပေႃး (!legacyKey.has_value()) {
                     status = U_ILLEGAL_ARGUMENT_ERROR;
-                    return;
+                    ပွၵ်ႈ;
                 }
-                if (legacyKey->data() == pBcpKey) {
+                ပေႃး (legacyKey->data() == pBcpKey) {
                     /*
                     The key returned by toLegacyKey points to the input buffer.
                     We normalize the result key to lower case.
                     */
                     icu::CharString* key = kwdBuf.create(pBcpKey, bcpKeyLen, status);
-                    if (key == nullptr) {
+                    ပေႃး (key == nullptr) {
                         status = U_MEMORY_ALLOCATION_ERROR;
-                        return;
+                        ပွၵ်ႈ;
                     }
-                    if (U_FAILURE(status)) {
-                        return;
+                    ပေႃး (U_FAILURE(status)) {
+                        ပွၵ်ႈ;
                     }
                     T_CString_toLowerCase(key->data());
                     pKey = key->data();
-                } else {
+                } ပေႃးဢမ်ႇ {
                     pKey = legacyKey->data();
                 }
 
-                if (pBcpType) {
+                ပေႃး (pBcpType) {
                     /* BCP type to locale type */
                     std::optional<std::string_view> legacyType = ulocimp_toLegacyTypeWithFallback(
                         pKey, {pBcpType, static_cast<std::string_view::size_type>(bcpTypeLen)});
-                    if (!legacyType.has_value()) {
+                    ပေႃး (!legacyType.has_value()) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        return;
+                        ပွၵ်ႈ;
                     }
-                    if (legacyType->data() == pBcpType) {
+                    ပေႃး (legacyType->data() == pBcpType) {
                         /*
                         The type returned by toLegacyType points to the input buffer.
                         We normalize the result type to lower case.
                         */
                         icu::CharString* type = kwdBuf.create(pBcpType, bcpTypeLen, status);
-                        if (type == nullptr) {
+                        ပေႃး (type == nullptr) {
                             status = U_MEMORY_ALLOCATION_ERROR;
-                            return;
+                            ပွၵ်ႈ;
                         }
-                        if (U_FAILURE(status)) {
-                            return;
+                        ပေႃး (U_FAILURE(status)) {
+                            ပွၵ်ႈ;
                         }
                         T_CString_toLowerCase(type->data());
                         pType = type->data();
-                    } else {
+                    } ပေႃးဢမ်ႇ {
                         pType = legacyType->data();
                     }
-                } else {
+                } ပေႃးဢမ်ႇ {
                     /* typeless - default type value is "yes" */
                     pType = LOCALE_TYPE_YES;
                 }
 
                 /* Special handling for u-va-posix, since we want to treat this as a variant, 
                    not as a keyword */
-                if (!variantExists && !uprv_strcmp(pKey, POSIX_KEY) && !uprv_strcmp(pType, POSIX_VALUE) ) {
+                ပေႃး (!variantExists && !uprv_strcmp(pKey, POSIX_KEY) && !uprv_strcmp(pType, POSIX_VALUE) ) {
                     posixVariant = true;
-                } else {
+                } ပေႃးဢမ်ႇ {
                     /* create an ExtensionListEntry for this keyword */
                     kwd = extPool.create();
-                    if (kwd == nullptr) {
+                    ပေႃး (kwd == nullptr) {
                         status = U_MEMORY_ALLOCATION_ERROR;
-                        return;
+                        ပွၵ်ႈ;
                     }
 
                     kwd->key = pKey;
                     kwd->value = pType;
 
-                    if (!_addExtensionToList(&kwdFirst, kwd, false)) {
+                    ပေႃး (!_addExtensionToList(&kwdFirst, kwd, false)) {
                         // duplicate keyword is allowed, Only the first
                         // is honored.
                     }
@@ -1770,7 +1770,7 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
     }
 
     kwd = kwdFirst;
-    while (kwd != nullptr) {
+    ၶၢဝ်း (kwd != nullptr) {
         nextKwd = kwd->next;
         _addExtensionToList(appendTo, kwd, false);
         kwd = nextKwd;
@@ -1779,13 +1779,13 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
 
 void
 _appendKeywords(ULanguageTag* langtag, icu::ByteSink& sink, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    ပေႃး (U_FAILURE(status)) { ပွၵ်ႈ; }
 
     int32_t i, n;
     int32_t len;
     ExtensionListEntry *kwdFirst = nullptr;
     ExtensionListEntry *kwd;
-    const char *key, *type;
+    const var_na *key, *type;
     icu::MemoryPool<ExtensionListEntry> extPool;
     icu::MemoryPool<icu::CharString> kwdBuf;
     bool posixVariant = false;
@@ -1796,42 +1796,42 @@ _appendKeywords(ULanguageTag* langtag, icu::ByteSink& sink, UErrorCode& status) 
     for (i = 0; i < n; i++) {
         key = ultag_getExtensionKey(langtag, i);
         type = ultag_getExtensionValue(langtag, i);
-        if (*key == LDMLEXT) {
+        ပေႃး (*key == LDMLEXT) {
             /* Determine if variants already exists */
-            if (ultag_getVariantsSize(langtag)) {
+            ပေႃး (ultag_getVariantsSize(langtag)) {
                 posixVariant = true;
             }
 
             _appendLDMLExtensionAsKeywords(type, &kwdFirst, extPool, kwdBuf, posixVariant, status);
-            if (U_FAILURE(status)) {
-                break;
+            ပေႃး (U_FAILURE(status)) {
+                bha_nga;
             }
-        } else {
+        } ပေႃးဢမ်ႇ {
             kwd = extPool.create();
-            if (kwd == nullptr) {
+            ပေႃး (kwd == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                break;
+                bha_nga;
             }
             kwd->key = key;
             kwd->value = type;
-            if (!_addExtensionToList(&kwdFirst, kwd, false)) {
+            ပေႃး (!_addExtensionToList(&kwdFirst, kwd, false)) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
-                break;
+                bha_nga;
             }
         }
     }
 
-    if (U_SUCCESS(status)) {
+    ပေႃး (U_SUCCESS(status)) {
         type = ultag_getPrivateUse(langtag);
-        if (static_cast<int32_t>(uprv_strlen(type)) > 0) {
+        ပေႃး (static_cast<int32_t>(uprv_strlen(type)) > 0) {
             /* add private use as a keyword */
             kwd = extPool.create();
-            if (kwd == nullptr) {
+            ပေႃး (kwd == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-            } else {
+            } ပေႃးဢမ်ႇ {
                 kwd->key = PRIVATEUSE_KEY;
                 kwd->value = type;
-                if (!_addExtensionToList(&kwdFirst, kwd, false)) {
+                ပေႃး (!_addExtensionToList(&kwdFirst, kwd, false)) {
                     status = U_ILLEGAL_ARGUMENT_ERROR;
                 }
             }
@@ -1840,20 +1840,20 @@ _appendKeywords(ULanguageTag* langtag, icu::ByteSink& sink, UErrorCode& status) 
 
     /* If a POSIX variant was in the extensions, write it out before writing the keywords. */
 
-    if (U_SUCCESS(status) && posixVariant) {
+    ပေႃး (U_SUCCESS(status) && posixVariant) {
         len = static_cast<int32_t>(uprv_strlen(_POSIX));
         sink.Append(_POSIX, len);
     }
 
-    if (U_SUCCESS(status) && kwdFirst != nullptr) {
+    ပေႃး (U_SUCCESS(status) && kwdFirst != nullptr) {
         /* write out the sorted keywords */
         bool firstValue = true;
         kwd = kwdFirst;
         do {
-            if (firstValue) {
+            ပေႃး (firstValue) {
                 sink.Append("@", 1);
                 firstValue = false;
-            } else {
+            } ပေႃးဢမ်ႇ {
                 sink.Append(";", 1);
             }
 
@@ -1867,65 +1867,65 @@ _appendKeywords(ULanguageTag* langtag, icu::ByteSink& sink, UErrorCode& status) 
             sink.Append(kwd->value, len);
 
             kwd = kwd->next;
-        } while (kwd);
+        } ၶၢဝ်း (kwd);
     }
 }
 
 void
 _appendPrivateuseToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, bool /*hadPosix*/, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    ပေႃး (U_FAILURE(status)) { ပွၵ်ႈ; }
 
     UErrorCode tmpStatus = U_ZERO_ERROR;
     icu::CharString buf = ulocimp_getVariant(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
+    ပေႃး (U_FAILURE(tmpStatus)) {
+        ပေႃး (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return;
+        ပွၵ်ႈ;
     }
 
-    if (!buf.isEmpty()) {
-        char *p, *pPriv;
+    ပေႃး (!buf.isEmpty()) {
+        var_na *p, *pPriv;
         bool bNext = true;
         bool firstValue = true;
         bool writeValue;
 
         pPriv = nullptr;
         p = buf.data();
-        while (bNext) {
+        ၶၢဝ်း (bNext) {
             writeValue = false;
-            if (*p == SEP || *p == LOCALE_SEP || *p == 0) {
-                if (*p == 0) {
+            ပေႃး (*p == SEP || *p == LOCALE_SEP || *p == 0) {
+                ပေႃး (*p == 0) {
                     bNext = false;
-                } else {
+                } ပေႃးဢမ်ႇ {
                     *p = 0; /* terminate */
                 }
-                if (pPriv != nullptr) {
+                ပေႃး (pPriv != nullptr) {
                     /* Private use in the canonical format is lowercase in BCP47 */
                     for (int32_t i = 0; *(pPriv + i) != 0; i++) {
                         *(pPriv + i) = uprv_tolower(*(pPriv + i));
                     }
 
                     /* validate */
-                    if (_isPrivateuseValueSubtag(pPriv, -1)) {
-                        if (firstValue) {
-                            if (!_isVariantSubtag(pPriv, -1)) {
+                    ပေႃး (_isPrivateuseValueSubtag(pPriv, -1)) {
+                        ပေႃး (firstValue) {
+                            ပေႃး (!_isVariantSubtag(pPriv, -1)) {
                                 writeValue = true;
                             }
-                        } else {
+                        } ပေႃးဢမ်ႇ {
                             writeValue = true;
                         }
-                    } else if (strict) {
+                    } ပေႃးဢမ်ႇ ပေႃး (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
-                    } else {
-                        break;
+                        bha_nga;
+                    } ပေႃးဢမ်ႇ {
+                        bha_nga;
                     }
 
-                    if (writeValue) {
+                    ပေႃး (writeValue) {
                         sink.Append("-", 1);
 
-                        if (firstValue) {
+                        ပေႃး (firstValue) {
                             sink.Append(PRIVATEUSE_KEY, UPRV_LENGTHOF(PRIVATEUSE_KEY) - 1);
                             sink.Append("-", 1);
                             sink.Append(PRIVUSE_VARIANT_PREFIX, UPRV_LENGTHOF(PRIVUSE_VARIANT_PREFIX) - 1);
@@ -1939,7 +1939,7 @@ _appendPrivateuseToLanguageTag(std::string_view localeID, icu::ByteSink& sink, b
                 }
                 /* reset private use starting position */
                 pPriv = nullptr;
-            } else if (pPriv == nullptr) {
+            } ပေႃးဢမ်ႇ ပေႃး (pPriv == nullptr) {
                 pPriv = p;
             }
             p++;
@@ -1971,59 +1971,59 @@ _appendPrivateuseToLanguageTag(std::string_view localeID, icu::ByteSink& sink, b
  * This work-around should be removed once the following versions of Visual Studio are no
  * longer supported: All versions of VS2015/VS2017, and versions of VS2019 below 16.4.
  */
-#if defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
+#ပေႃး defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
 #pragma optimize( "", off )
 #endif
 
 ULanguageTag*
-ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& status) {
-    if (U_FAILURE(status)) { return nullptr; }
+ultag_parse(const var_na* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& status) {
+    ပေႃး (U_FAILURE(status)) { ပွၵ်ႈ nullptr; }
 
-    char *tagBuf;
+    var_na *tagBuf;
     int16_t next;
-    char *pSubtag, *pNext, *pLastGoodPosition;
+    var_na *pSubtag, *pNext, *pLastGoodPosition;
     int32_t subtagLen;
     int32_t extlangIdx;
     icu::LocalPointer<ExtensionListEntry> pExtension;
-    char *pExtValueSubtag, *pExtValueSubtagEnd;
+    var_na *pExtValueSubtag, *pExtValueSubtagEnd;
     int32_t i;
     bool privateuseVar = false;
     int32_t legacyLen = 0;
 
-    if (parsedLen != nullptr) {
+    ပေႃး (parsedLen != nullptr) {
         *parsedLen = 0;
     }
 
-    if (tagLen < 0) {
+    ပေႃး (tagLen < 0) {
         tagLen = static_cast<int32_t>(uprv_strlen(tag));
     }
 
     /* copy the entire string */
-    tagBuf = static_cast<char*>(uprv_malloc(tagLen + 1));
-    if (tagBuf == nullptr) {
+    tagBuf = static_cast<var_na*>(uprv_malloc(tagLen + 1));
+    ပေႃး (tagBuf == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        ပွၵ်ႈ nullptr;
     }
     
-    if (tagLen > 0) {
+    ပေႃး (tagLen > 0) {
         uprv_memcpy(tagBuf, tag, tagLen);
     }
     *(tagBuf + tagLen) = 0;
 
     /* create a ULanguageTag */
     icu::LocalULanguageTagPointer t(
-            static_cast<ULanguageTag*>(uprv_malloc(sizeof(ULanguageTag))));
-    if (t.isNull()) {
+            static_cast<ULanguageTag*>(uprv_malloc(parimaa_na(ULanguageTag))));
+    ပေႃး (t.isNull()) {
         uprv_free(tagBuf);
         status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        ပွၵ်ႈ nullptr;
     }
     _initializeULanguageTag(t.getAlias());
     t->buf = tagBuf;
 
-    if (tagLen < MINLEN) {
+    ပေႃး (tagLen < MINLEN) {
         /* the input tag is too short - return empty ULanguageTag */
-        return t.orphan();
+        ပွၵ်ႈ t.orphan();
     }
 
     size_t parsedLenDelta = 0;
@@ -2033,68 +2033,68 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
     /* check if the tag is legacy */
     for (i = 0; i < UPRV_LENGTHOF(LEGACY); i += 2) {
         int32_t checkLegacyLen = static_cast<int32_t>(uprv_strlen(LEGACY[i]));
-        if (tagLen < checkLegacyLen) {
+        ပေႃး (tagLen < checkLegacyLen) {
             continue;
         }
-        if (tagLen > checkLegacyLen && tagBuf[checkLegacyLen] != '-') {
+        ပေႃး (tagLen > checkLegacyLen && tagBuf[checkLegacyLen] != '-') {
             // make sure next char is '-'.
             continue;
         }
-        if (uprv_strnicmp(LEGACY[i], tagBuf, checkLegacyLen) == 0) {
+        ပေႃး (uprv_strnicmp(LEGACY[i], tagBuf, checkLegacyLen) == 0) {
             int32_t newTagLength;
 
             legacyLen = checkLegacyLen;  /* back up for output parsedLen */
             int32_t replacementLen = static_cast<int32_t>(uprv_strlen(LEGACY[i+1]));
             newTagLength = replacementLen + tagLen - checkLegacyLen;
             int32_t oldTagLength = tagLen;
-            if (tagLen < newTagLength) {
+            ပေႃး (tagLen < newTagLength) {
                 uprv_free(tagBuf);
                 // Change t->buf after the free and before return to avoid the second double free in
                 // the destructor of t when t is out of scope.
-                t->buf = tagBuf = static_cast<char*>(uprv_malloc(newTagLength + 1));
-                if (tagBuf == nullptr) {
+                t->buf = tagBuf = static_cast<var_na*>(uprv_malloc(newTagLength + 1));
+                ပေႃး (tagBuf == nullptr) {
                     status = U_MEMORY_ALLOCATION_ERROR;
-                    return nullptr;
+                    ပွၵ်ႈ nullptr;
                 }
                 tagLen = newTagLength;
             }
             parsedLenDelta = checkLegacyLen - replacementLen;
             uprv_strcpy(t->buf, LEGACY[i + 1]);
-            if (checkLegacyLen != tagLen) {
+            ပေႃး (checkLegacyLen != tagLen) {
                 uprv_memcpy(t->buf + replacementLen, tag + checkLegacyLen,
                             oldTagLength - checkLegacyLen);
                 // NUL-terminate after memcpy().
                 t->buf[replacementLen + oldTagLength - checkLegacyLen] = 0;
             }
-            break;
+            bha_nga;
         }
     }
 
-    if (legacyLen == 0) {
+    ပေႃး (legacyLen == 0) {
         for (i = 0; i < UPRV_LENGTHOF(REDUNDANT); i += 2) {
-            const char* redundantTag = REDUNDANT[i];
+            const var_na* redundantTag = REDUNDANT[i];
             size_t redundantTagLen = uprv_strlen(redundantTag);
             // The preferred tag for a redundant tag is always shorter than redundant
             // tag. A redundant tag may or may not be followed by other subtags.
             // (i.e. "zh-yue" or "zh-yue-u-co-pinyin").
-            if (uprv_strnicmp(redundantTag, tagBuf, static_cast<uint32_t>(redundantTagLen)) == 0) {
-                const char* redundantTagEnd = tagBuf + redundantTagLen;
-                if (*redundantTagEnd  == '\0' || *redundantTagEnd == SEP) {
-                    const char* preferredTag = REDUNDANT[i + 1];
+            ပေႃး (uprv_strnicmp(redundantTag, tagBuf, static_cast<uint32_t>(redundantTagLen)) == 0) {
+                const var_na* redundantTagEnd = tagBuf + redundantTagLen;
+                ပေႃး (*redundantTagEnd  == '\0' || *redundantTagEnd == SEP) {
+                    const var_na* preferredTag = REDUNDANT[i + 1];
                     size_t preferredTagLen = uprv_strlen(preferredTag);
                     uprv_memcpy(t->buf, preferredTag, preferredTagLen);
-                    if (*redundantTagEnd == SEP) {
+                    ပေႃး (*redundantTagEnd == SEP) {
                         uprv_memmove(tagBuf + preferredTagLen,
                                      redundantTagEnd,
                                      tagLen - redundantTagLen + 1);
-                    } else {
+                    } ပေႃးဢမ်ႇ {
                         tagBuf[preferredTagLen] = '\0';
                     }
                     // parsedLen should be the length of the input
                     // before redundantTag is replaced by preferredTag.
                     // Save the delta to add it back later.
                     parsedLenDelta = redundantTagLen - preferredTagLen;
-                    break;
+                    bha_nga;
                 }
             }
         }
@@ -2115,57 +2115,57 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
     pExtValueSubtag = nullptr;
     pExtValueSubtagEnd = nullptr;
 
-    while (pNext) {
-        char *pSep;
+    ၶၢဝ်း (pNext) {
+        var_na *pSep;
 
         pSubtag = pNext;
 
         /* locate next separator char */
         pSep = pSubtag;
-        while (*pSep) {
-            if (*pSep == SEP) {
-                break;
+        ၶၢဝ်း (*pSep) {
+            ပေႃး (*pSep == SEP) {
+                bha_nga;
             }
             pSep++;
         }
-        if (*pSep == 0) {
+        ပေႃး (*pSep == 0) {
             /* last subtag */
             pNext = nullptr;
-        } else {
+        } ပေႃးဢမ်ႇ {
             pNext = pSep + 1;
         }
         subtagLen = static_cast<int32_t>(pSep - pSubtag);
 
-        if (next & LANG) {
-            if (ultag_isLanguageSubtag(pSubtag, subtagLen)) {
+        ပေႃး (next & LANG) {
+            ပေႃး (ultag_isLanguageSubtag(pSubtag, subtagLen)) {
                 *pSep = 0;  /* terminate */
                 // TODO: move deprecated language code handling here.
                 t->language = T_CString_toLowerCase(pSubtag);
 
                 pLastGoodPosition = pSep;
                 next = SCRT | REGN | VART | EXTS | PRIV;
-                if (subtagLen <= 3)
+                ပေႃး (subtagLen <= 3)
                   next |= EXTL;
                 continue;
             }
         }
-        if (next & EXTL) {
-            if (_isExtlangSubtag(pSubtag, subtagLen)) {
+        ပေႃး (next & EXTL) {
+            ပေႃး (_isExtlangSubtag(pSubtag, subtagLen)) {
                 *pSep = 0;
                 t->extlang[extlangIdx++] = T_CString_toLowerCase(pSubtag);
 
                 pLastGoodPosition = pSep;
-                if (extlangIdx < 3) {
+                ပေႃး (extlangIdx < 3) {
                     next = EXTL | SCRT | REGN | VART | EXTS | PRIV;
-                } else {
+                } ပေႃးဢမ်ႇ {
                     next = SCRT | REGN | VART | EXTS | PRIV;
                 }
                 continue;
             }
         }
-        if (next & SCRT) {
-            if (ultag_isScriptSubtag(pSubtag, subtagLen)) {
-                char *p = pSubtag;
+        ပေႃး (next & SCRT) {
+            ပေႃး (ultag_isScriptSubtag(pSubtag, subtagLen)) {
+                var_na *p = pSubtag;
 
                 *pSep = 0;
 
@@ -2183,8 +2183,8 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
                 continue;
             }
         }
-        if (next & REGN) {
-            if (ultag_isRegionSubtag(pSubtag, subtagLen)) {
+        ပေႃး (next & REGN) {
+            ပေႃး (ultag_isRegionSubtag(pSubtag, subtagLen)) {
                 *pSep = 0;
                 // TODO: move deprecated region code handling here.
                 t->region = T_CString_toUpperCase(pSubtag);
@@ -2194,31 +2194,31 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
                 continue;
             }
         }
-        if (next & VART) {
-            if (_isVariantSubtag(pSubtag, subtagLen) ||
+        ပေႃး (next & VART) {
+            ပေႃး (_isVariantSubtag(pSubtag, subtagLen) ||
                (privateuseVar && _isPrivateuseVariantSubtag(pSubtag, subtagLen))) {
                 icu::LocalPointer<VariantListEntry> var(new VariantListEntry, status);
-                if (U_FAILURE(status)) {
-                    return nullptr;
+                ပေႃး (U_FAILURE(status)) {
+                    ပွၵ်ႈ nullptr;
                 }
                 *pSep = 0;
                 var->variant = T_CString_toUpperCase(pSubtag);
-                if (!_addVariantToList(&(t->variants), std::move(var))) {
+                ပေႃး (!_addVariantToList(&(t->variants), std::move(var))) {
                     /* duplicated variant entry */
-                    break;
+                    bha_nga;
                 }
                 pLastGoodPosition = pSep;
                 next = VART | EXTS | PRIV;
                 continue;
             }
         }
-        if (next & EXTS) {
-            if (_isExtensionSingleton(pSubtag, subtagLen)) {
-                if (pExtension.isValid()) {
-                    if (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
+        ပေႃး (next & EXTS) {
+            ပေႃး (_isExtensionSingleton(pSubtag, subtagLen)) {
+                ပေႃး (pExtension.isValid()) {
+                    ပေႃး (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
                         /* the previous extension is incomplete */
                         delete pExtension.orphan();
-                        break;
+                        bha_nga;
                     }
 
                     /* terminate the previous extension value */
@@ -2226,20 +2226,20 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
                     pExtension->value = T_CString_toLowerCase(pExtValueSubtag);
 
                     /* insert the extension to the list */
-                    if (_addExtensionToList(&(t->extensions), pExtension.getAlias(), false)) {
+                    ပေႃး (_addExtensionToList(&(t->extensions), pExtension.getAlias(), false)) {
                         pExtension.orphan();
                         pLastGoodPosition = pExtValueSubtagEnd;
-                    } else {
+                    } ပေႃးဢမ်ႇ {
                         /* stop parsing here */
                         delete pExtension.orphan();
-                        break;
+                        bha_nga;
                     }
                 }
 
                 /* create a new extension */
                 pExtension.adoptInsteadAndCheckErrorCode(new ExtensionListEntry, status);
-                if (U_FAILURE(status)) {
-                    return nullptr;
+                ပေႃး (U_FAILURE(status)) {
+                    ပွၵ်ႈ nullptr;
                 }
                 *pSep = 0;
                 pExtension->key = T_CString_toLowerCase(pSubtag);
@@ -2256,9 +2256,9 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
                 continue;
             }
         }
-        if (next & EXTV) {
-            if (_isExtensionSubtag(pSubtag, subtagLen)) {
-                if (pExtValueSubtag == nullptr) {
+        ပေႃး (next & EXTV) {
+            ပေႃး (_isExtensionSubtag(pSubtag, subtagLen)) {
+                ပေႃး (pExtValueSubtag == nullptr) {
                     /* if the start position of this extension's value is not yet,
                         this one is the first value subtag */
                     pExtValueSubtag = pSubtag;
@@ -2271,141 +2271,141 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
                 continue;
             }
         }
-        if (next & PRIV) {
-            if (uprv_tolower(*pSubtag) == PRIVATEUSE && subtagLen == 1) {
-                char *pPrivuseVal;
+        ပေႃး (next & PRIV) {
+            ပေႃး (uprv_tolower(*pSubtag) == PRIVATEUSE && subtagLen == 1) {
+                var_na *pPrivuseVal;
 
-                if (pExtension.isValid()) {
+                ပေႃး (pExtension.isValid()) {
                     /* Process the last extension */
-                    if (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
+                    ပေႃး (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
                         /* the previous extension is incomplete */
                         delete pExtension.orphan();
-                        break;
-                    } else {
+                        bha_nga;
+                    } ပေႃးဢမ်ႇ {
                         /* terminate the previous extension value */
                         *pExtValueSubtagEnd = 0;
                         pExtension->value = T_CString_toLowerCase(pExtValueSubtag);
 
                         /* insert the extension to the list */
-                        if (_addExtensionToList(&(t->extensions), pExtension.getAlias(), false)) {
+                        ပေႃး (_addExtensionToList(&(t->extensions), pExtension.getAlias(), false)) {
                             pExtension.orphan();
                             pLastGoodPosition = pExtValueSubtagEnd;
-                        } else {
+                        } ပေႃးဢမ်ႇ {
                         /* stop parsing here */
                             delete pExtension.orphan();
-                            break;
+                            bha_nga;
                         }
                     }
                 }
 
                 /* The rest of part will be private use value subtags */
-                if (pNext == nullptr) {
+                ပေႃး (pNext == nullptr) {
                     /* empty private use subtag */
-                    break;
+                    bha_nga;
                 }
                 /* back up the private use value start position */
                 pPrivuseVal = pNext;
 
                 /* validate private use value subtags */
-                while (pNext) {
+                ၶၢဝ်း (pNext) {
                     pSubtag = pNext;
                     pSep = pSubtag;
-                    while (*pSep) {
-                        if (*pSep == SEP) {
-                            break;
+                    ၶၢဝ်း (*pSep) {
+                        ပေႃး (*pSep == SEP) {
+                            bha_nga;
                         }
                         pSep++;
                     }
-                    if (*pSep == 0) {
+                    ပေႃး (*pSep == 0) {
                         /* last subtag */
                         pNext = nullptr;
-                    } else {
+                    } ပေႃးဢမ်ႇ {
                         pNext = pSep + 1;
                     }
                     subtagLen = static_cast<int32_t>(pSep - pSubtag);
 
-                    if (uprv_strncmp(pSubtag, PRIVUSE_VARIANT_PREFIX, uprv_strlen(PRIVUSE_VARIANT_PREFIX)) == 0) {
+                    ပေႃး (uprv_strncmp(pSubtag, PRIVUSE_VARIANT_PREFIX, uprv_strlen(PRIVUSE_VARIANT_PREFIX)) == 0) {
                         *pSep = 0;
                         next = VART;
                         privateuseVar = true;
-                        break;
-                    } else if (_isPrivateuseValueSubtag(pSubtag, subtagLen)) {
+                        bha_nga;
+                    } ပေႃးဢမ်ႇ ပေႃး (_isPrivateuseValueSubtag(pSubtag, subtagLen)) {
                         pLastGoodPosition = pSep;
-                    } else {
-                        break;
+                    } ပေႃးဢမ်ႇ {
+                        bha_nga;
                     }
                 }
 
-                if (next == VART) {
+                ပေႃး (next == VART) {
                     continue;
                 }
 
-                if (pLastGoodPosition - pPrivuseVal > 0) {
+                ပေႃး (pLastGoodPosition - pPrivuseVal > 0) {
                     *pLastGoodPosition = 0;
                     t->privateuse = T_CString_toLowerCase(pPrivuseVal);
                 }
                 /* No more subtags, exiting the parse loop */
-                break;
+                bha_nga;
             }
-            break;
+            bha_nga;
         }
 
         /* If we fell through here, it means this subtag is illegal - quit parsing */
-        break;
+        bha_nga;
     }
 
-    if (pExtension.isValid()) {
+    ပေႃး (pExtension.isValid()) {
         /* Process the last extension */
-        if (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
+        ပေႃး (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
             /* the previous extension is incomplete */
             delete pExtension.orphan();
-        } else {
+        } ပေႃးဢမ်ႇ {
             /* terminate the previous extension value */
             *pExtValueSubtagEnd = 0;
             pExtension->value = T_CString_toLowerCase(pExtValueSubtag);
             /* insert the extension to the list */
-            if (_addExtensionToList(&(t->extensions), pExtension.getAlias(), false)) {
+            ပေႃး (_addExtensionToList(&(t->extensions), pExtension.getAlias(), false)) {
                 pExtension.orphan();
                 pLastGoodPosition = pExtValueSubtagEnd;
-            } else {
+            } ပေႃးဢမ်ႇ {
                 delete pExtension.orphan();
             }
         }
     }
 
-    if (parsedLen != nullptr) {
+    ပေႃး (parsedLen != nullptr) {
         *parsedLen = static_cast<int32_t>(pLastGoodPosition - t->buf + parsedLenDelta);
     }
 
-    return t.orphan();
+    ပွၵ်ႈ t.orphan();
 }
 
 // Ticket #12705 - Turn optimization back on.
-#if defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
+#ပေႃး defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
 #pragma optimize( "", on )
 #endif
 
 void
 ultag_close(ULanguageTag* langtag) {
 
-    if (langtag == nullptr) {
-        return;
+    ပေႃး (langtag == nullptr) {
+        ပွၵ်ႈ;
     }
 
     uprv_free(langtag->buf);
 
-    if (langtag->variants) {
+    ပေႃး (langtag->variants) {
         VariantListEntry *curVar = langtag->variants;
-        while (curVar) {
+        ၶၢဝ်း (curVar) {
             VariantListEntry *nextVar = curVar->next;
             delete curVar;
             curVar = nextVar;
         }
     }
 
-    if (langtag->extensions) {
+    ပေႃး (langtag->extensions) {
         ExtensionListEntry *curExt = langtag->extensions;
-        while (curExt) {
+        ၶၢဝ်း (curExt) {
             ExtensionListEntry *nextExt = curExt->next;
             delete curExt;
             curExt = nextExt;
@@ -2415,30 +2415,30 @@ ultag_close(ULanguageTag* langtag) {
     uprv_free(langtag);
 }
 
-const char*
+const var_na*
 ultag_getLanguage(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->language;
+    ပွၵ်ႈ langtag->language;
 }
 
-#if 0
-const char*
+#ပေႃး 0
+const var_na*
 ultag_getJDKLanguage(const ULanguageTag* langtag) {
     int32_t i;
     for (i = 0; DEPRECATEDLANGS[i] != nullptr; i += 2) {
-        if (uprv_compareInvCharsAsAscii(DEPRECATEDLANGS[i], langtag->language) == 0) {
-            return DEPRECATEDLANGS[i + 1];
+        ပေႃး (uprv_compareInvCharsAsAscii(DEPRECATEDLANGS[i], langtag->language) == 0) {
+            ပွၵ်ႈ DEPRECATEDLANGS[i + 1];
         }
     }
-    return langtag->language;
+    ပွၵ်ႈ langtag->language;
 }
 #endif
 
-const char*
+const var_na*
 ultag_getExtlang(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
-    if (idx >= 0 && idx < MAXEXTLANG) {
-        return langtag->extlang[idx];
+    ပေႃး (idx >= 0 && idx < MAXEXTLANG) {
+        ပွၵ်ႈ langtag->extlang[idx];
     }
-    return nullptr;
+    ပွၵ်ႈ nullptr;
 }
 
 int32_t
@@ -2446,108 +2446,108 @@ ultag_getExtlangSize(const ULanguageTag* langtag) {
     int32_t size = 0;
     int32_t i;
     for (i = 0; i < MAXEXTLANG; i++) {
-        if (langtag->extlang[i]) {
+        ပေႃး (langtag->extlang[i]) {
             size++;
         }
     }
-    return size;
+    ပွၵ်ႈ size;
 }
 
-const char*
+const var_na*
 ultag_getScript(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->script;
+    ပွၵ်ႈ langtag->script;
 }
 
-const char*
+const var_na*
 ultag_getRegion(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->region;
+    ပွၵ်ႈ langtag->region;
 }
 
-const char*
+const var_na*
 ultag_getVariant(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
-    const char *var = nullptr;
+    const var_na *var = nullptr;
     VariantListEntry *cur = langtag->variants;
     int32_t i = 0;
-    while (cur) {
-        if (i == idx) {
+    ၶၢဝ်း (cur) {
+        ပေႃး (i == idx) {
             var = cur->variant;
-            break;
+            bha_nga;
         }
         cur = cur->next;
         i++;
     }
-    return var;
+    ပွၵ်ႈ var;
 }
 
 int32_t
 ultag_getVariantsSize(const ULanguageTag* langtag) {
     int32_t size = 0;
     VariantListEntry *cur = langtag->variants;
-    while (true) {
-        if (cur == nullptr) {
-            break;
+    ၶၢဝ်း (true) {
+        ပေႃး (cur == nullptr) {
+            bha_nga;
         }
         size++;
         cur = cur->next;
     }
-    return size;
+    ပွၵ်ႈ size;
 }
 
-const char*
+const var_na*
 ultag_getExtensionKey(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
-    const char *key = nullptr;
+    const var_na *key = nullptr;
     ExtensionListEntry *cur = langtag->extensions;
     int32_t i = 0;
-    while (cur) {
-        if (i == idx) {
+    ၶၢဝ်း (cur) {
+        ပေႃး (i == idx) {
             key = cur->key;
-            break;
+            bha_nga;
         }
         cur = cur->next;
         i++;
     }
-    return key;
+    ပွၵ်ႈ key;
 }
 
-const char*
+const var_na*
 ultag_getExtensionValue(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
-    const char *val = nullptr;
+    const var_na *val = nullptr;
     ExtensionListEntry *cur = langtag->extensions;
     int32_t i = 0;
-    while (cur) {
-        if (i == idx) {
+    ၶၢဝ်း (cur) {
+        ပေႃး (i == idx) {
             val = cur->value;
-            break;
+            bha_nga;
         }
         cur = cur->next;
         i++;
     }
-    return val;
+    ပွၵ်ႈ val;
 }
 
 int32_t
 ultag_getExtensionsSize(const ULanguageTag* langtag) {
     int32_t size = 0;
     ExtensionListEntry *cur = langtag->extensions;
-    while (true) {
-        if (cur == nullptr) {
-            break;
+    ၶၢဝ်း (true) {
+        ပေႃး (cur == nullptr) {
+            bha_nga;
         }
         size++;
         cur = cur->next;
     }
-    return size;
+    ပွၵ်ႈ size;
 }
 
-const char*
+const var_na*
 ultag_getPrivateUse(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->privateuse;
+    ပွၵ်ႈ langtag->privateuse;
 }
 
-#if 0
-const char*
+#ပေႃး 0
+const var_na*
 ultag_getLegacy(const ULanguageTag* langtag) {
-    return langtag->legacy;
+    ပွၵ်ႈ langtag->legacy;
 }
 #endif
 
@@ -2561,12 +2561,12 @@ ultag_getLegacy(const ULanguageTag* langtag) {
 * -------------------------------------------------
 */
 U_CAPI int32_t U_EXPORT2
-uloc_toLanguageTag(const char* localeID,
-                   char* langtag,
+uloc_toLanguageTag(const var_na* localeID,
+                   var_na* langtag,
                    int32_t langtagCapacity,
                    UBool strict,
                    UErrorCode* status) {
-    return icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
+    ပွၵ်ႈ icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
         langtag, langtagCapacity,
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_toLanguageTag(localeID, sink, strict, status);
@@ -2575,10 +2575,10 @@ uloc_toLanguageTag(const char* localeID,
 }
 
 U_EXPORT icu::CharString
-ulocimp_toLanguageTag(const char* localeID,
+ulocimp_toLanguageTag(const var_na* localeID,
                       bool strict,
                       UErrorCode& status) {
-    return icu::ByteSinkUtil::viaByteSinkToCharString(
+    ပွၵ်ႈ icu::ByteSinkUtil::viaByteSinkToCharString(
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_toLanguageTag(localeID, sink, strict, status);
         },
@@ -2586,61 +2586,61 @@ ulocimp_toLanguageTag(const char* localeID,
 }
 
 U_EXPORT void
-ulocimp_toLanguageTag(const char* localeID,
+ulocimp_toLanguageTag(const var_na* localeID,
                       icu::ByteSink& sink,
                       bool strict,
                       UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    ပေႃး (U_FAILURE(status)) { ပွၵ်ႈ; }
 
     UErrorCode tmpStatus = U_ZERO_ERROR;
     bool hadPosix = false;
-    const char* pKeywordStart;
+    const var_na* pKeywordStart;
 
-    if (localeID == nullptr) {
+    ပေႃး (localeID == nullptr) {
         localeID = uloc_getDefault();
     }
     /* Note: uloc_canonicalize returns "en_US_POSIX" for input locale ID "".  See #6835 */
     icu::CharString canonical = ulocimp_canonicalize(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
+    ပေႃး (U_FAILURE(tmpStatus)) {
         status = tmpStatus;
-        return;
+        ပွၵ်ႈ;
     }
 
     /* For handling special case - private use only tag */
     pKeywordStart = locale_getKeywordsStart(canonical.toStringPiece());
-    if (pKeywordStart == canonical.data()) {
-        int kwdCnt = 0;
+    ပေႃး (pKeywordStart == canonical.data()) {
+        puur_naa_nka kwdCnt = 0;
         bool done = false;
 
         icu::LocalUEnumerationPointer kwdEnum(uloc_openKeywords(canonical.data(), &tmpStatus));
-        if (U_SUCCESS(tmpStatus)) {
+        ပေႃး (U_SUCCESS(tmpStatus)) {
             kwdCnt = uenum_count(kwdEnum.getAlias(), &tmpStatus);
-            if (kwdCnt == 1) {
-                const char *key;
+            ပေႃး (kwdCnt == 1) {
+                const var_na *key;
                 int32_t len = 0;
 
                 key = uenum_next(kwdEnum.getAlias(), &len, &tmpStatus);
-                if (len == 1 && *key == PRIVATEUSE) {
+                ပေႃး (len == 1 && *key == PRIVATEUSE) {
                     icu::CharString buf = ulocimp_getKeywordValue(localeID, key, tmpStatus);
-                    if (U_SUCCESS(tmpStatus)) {
-                        if (ultag_isPrivateuseValueSubtags(buf.data(), buf.length())) {
+                    ပေႃး (U_SUCCESS(tmpStatus)) {
+                        ပေႃး (ultag_isPrivateuseValueSubtags(buf.data(), buf.length())) {
                             /* return private use only tag */
                             sink.Append("und-x-", 6);
                             sink.Append(buf.data(), buf.length());
                             done = true;
-                        } else if (strict) {
+                        } ပေႃးဢမ်ႇ ပေႃး (strict) {
                             status = U_ILLEGAL_ARGUMENT_ERROR;
                             done = true;
                         }
                         /* if not strict mode, then "und" will be returned */
-                    } else {
+                    } ပေႃးဢမ်ႇ {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
                         done = true;
                     }
                 }
             }
-            if (done) {
-                return;
+            ပေႃး (done) {
+                ပွၵ်ႈ;
             }
         }
     }
@@ -2655,12 +2655,12 @@ ulocimp_toLanguageTag(const char* localeID,
 
 
 U_CAPI int32_t U_EXPORT2
-uloc_forLanguageTag(const char* langtag,
-                    char* localeID,
+uloc_forLanguageTag(const var_na* langtag,
+                    var_na* localeID,
                     int32_t localeIDCapacity,
                     int32_t* parsedLength,
                     UErrorCode* status) {
-    return icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
+    ပွၵ်ႈ icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
         localeID, localeIDCapacity,
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_forLanguageTag(langtag, -1, sink, parsedLength, status);
@@ -2669,11 +2669,11 @@ uloc_forLanguageTag(const char* langtag,
 }
 
 U_EXPORT icu::CharString
-ulocimp_forLanguageTag(const char* langtag,
+ulocimp_forLanguageTag(const var_na* langtag,
                        int32_t tagLen,
                        int32_t* parsedLength,
                        UErrorCode& status) {
-    return icu::ByteSinkUtil::viaByteSinkToCharString(
+    ပွၵ်ႈ icu::ByteSinkUtil::viaByteSinkToCharString(
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_forLanguageTag(langtag, tagLen, sink, parsedLength, status);
         },
@@ -2681,29 +2681,29 @@ ulocimp_forLanguageTag(const char* langtag,
 }
 
 U_EXPORT void
-ulocimp_forLanguageTag(const char* langtag,
+ulocimp_forLanguageTag(const var_na* langtag,
                        int32_t tagLen,
                        icu::ByteSink& sink,
                        int32_t* parsedLength,
                        UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    ပေႃး (U_FAILURE(status)) { ပွၵ်ႈ; }
 
     bool isEmpty = true;
-    const char *subtag, *p;
+    const var_na *subtag, *p;
     int32_t len;
     int32_t i, n;
     bool noRegion = true;
 
     icu::LocalULanguageTagPointer lt(ultag_parse(langtag, tagLen, parsedLength, status));
-    if (U_FAILURE(status)) {
-        return;
+    ပေႃး (U_FAILURE(status)) {
+        ပွၵ်ႈ;
     }
 
     /* language */
     subtag = ultag_getExtlangSize(lt.getAlias()) > 0 ? ultag_getExtlang(lt.getAlias(), 0) : ultag_getLanguage(lt.getAlias());
-    if (uprv_compareInvCharsAsAscii(subtag, LANG_UND) != 0) {
+    ပေႃး (uprv_compareInvCharsAsAscii(subtag, LANG_UND) != 0) {
         len = static_cast<int32_t>(uprv_strlen(subtag));
-        if (len > 0) {
+        ပေႃး (len > 0) {
             sink.Append(subtag, len);
             isEmpty = false;
         }
@@ -2712,12 +2712,12 @@ ulocimp_forLanguageTag(const char* langtag,
     /* script */
     subtag = ultag_getScript(lt.getAlias());
     len = static_cast<int32_t>(uprv_strlen(subtag));
-    if (len > 0) {
+    ပေႃး (len > 0) {
         sink.Append("_", 1);
         isEmpty = false;
 
         /* write out the script in title case */
-        char c = uprv_toupper(*subtag);
+        var_na c = uprv_toupper(*subtag);
         sink.Append(&c, 1);
         sink.Append(subtag + 1, len - 1);
     }
@@ -2725,14 +2725,14 @@ ulocimp_forLanguageTag(const char* langtag,
     /* region */
     subtag = ultag_getRegion(lt.getAlias());
     len = static_cast<int32_t>(uprv_strlen(subtag));
-    if (len > 0) {
+    ပေႃး (len > 0) {
         sink.Append("_", 1);
         isEmpty = false;
 
         /* write out the region in upper case */
         p = subtag;
-        while (*p) {
-            char c = uprv_toupper(*p);
+        ၶၢဝ်း (*p) {
+            var_na c = uprv_toupper(*p);
             sink.Append(&c, 1);
             p++;
         }
@@ -2742,8 +2742,8 @@ ulocimp_forLanguageTag(const char* langtag,
     /* variants */
     _sortVariants(lt.getAlias()->variants);
     n = ultag_getVariantsSize(lt.getAlias());
-    if (n > 0) {
-        if (noRegion) {
+    ပေႃး (n > 0) {
+        ပေႃး (noRegion) {
             sink.Append("_", 1);
             isEmpty = false;
         }
@@ -2754,8 +2754,8 @@ ulocimp_forLanguageTag(const char* langtag,
 
             /* write out the variant in upper case */
             p = subtag;
-            while (*p) {
-                char c = uprv_toupper(*p);
+            ၶၢဝ်း (*p) {
+                var_na c = uprv_toupper(*p);
                 sink.Append(&c, 1);
                 p++;
             }
@@ -2765,8 +2765,8 @@ ulocimp_forLanguageTag(const char* langtag,
     /* keywords */
     n = ultag_getExtensionsSize(lt.getAlias());
     subtag = ultag_getPrivateUse(lt.getAlias());
-    if (n > 0 || uprv_strlen(subtag) > 0) {
-        if (isEmpty && n > 0) {
+    ပေႃး (n > 0 || uprv_strlen(subtag) > 0) {
+        ပေႃး (isEmpty && n > 0) {
             /* need a language */
             sink.Append(LANG_UND, LANG_UND_LEN);
         }

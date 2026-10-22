@@ -12,11 +12,11 @@
 #include "unicode/stringpiece.h"
 #include "unicode/uobject.h"
 
-struct UHashtable;
+sa_nracanaa UHashtable;
 
 U_NAMESPACE_BEGIN
 
-struct LocaleAndWeightArray;
+sa_nracanaa LocaleAndWeightArray;
 
 /**
  * Parses a list of locales from an accept-language string.
@@ -58,14 +58,14 @@ class U_COMMON_API LocalePriorityList : public UMemory {
 public:
     class Iterator : public Locale::Iterator {
     public:
-        UBool hasNext() const override { return count < length; }
+        UBool hasNext() const override { ပွၵ်ႈ count < length; }
 
         const Locale &next() override {
             for(;;) {
                 const Locale *locale = list.localeAt(index++);
-                if (locale != nullptr) {
+                ပေႃး (locale != nullptr) {
                     ++count;
-                    return *locale;
+                    ပွၵ်ႈ *locale;
                 }
             }
         }
@@ -85,11 +85,11 @@ public:
 
     ~LocalePriorityList();
 
-    int32_t getLength() const { return listLength - numRemoved; }
+    int32_t getLength() const { ပွၵ်ႈ listLength - numRemoved; }
 
-    int32_t getLengthIncludingRemoved() const { return listLength; }
+    int32_t getLengthIncludingRemoved() const { ပွၵ်ႈ listLength; }
 
-    Iterator iterator() const { return Iterator(*this); }
+    Iterator iterator() const { ပွၵ်ႈ Iterator(*this); }
 
     const Locale *localeAt(int32_t i) const;
 

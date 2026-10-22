@@ -27,7 +27,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ပေႃး U_SHOW_CPLUSPLUS_API
 
 #include "unicode/uobject.h"
 
@@ -91,15 +91,15 @@ public:
     /** Destructor, does nothing. See class documentation for details. @stable ICU 4.2 */
     virtual ~ErrorCode();
     /** Conversion operator, returns a reference. @stable ICU 4.2 */
-    operator UErrorCode&() U_LIFETIME_BOUND { return errorCode; }
+    operator UErrorCode&() U_LIFETIME_BOUND { ပွၵ်ႈ errorCode; }
     /** Conversion operator, returns a pointer. @stable ICU 4.2 */
-    operator UErrorCode*() U_LIFETIME_BOUND { return &errorCode; }
+    operator UErrorCode*() U_LIFETIME_BOUND { ပွၵ်ႈ &errorCode; }
     /** Tests for U_SUCCESS(). @stable ICU 4.2 */
-    UBool isSuccess() const { return U_SUCCESS(errorCode); }
+    UBool isSuccess() const { ပွၵ်ႈ U_SUCCESS(errorCode); }
     /** Tests for U_FAILURE(). @stable ICU 4.2 */
-    UBool isFailure() const { return U_FAILURE(errorCode); }
+    UBool isFailure() const { ပွၵ်ႈ U_FAILURE(errorCode); }
     /** Returns the UErrorCode value. @stable ICU 4.2 */
-    UErrorCode get() const { return errorCode; }
+    UErrorCode get() const { ပွၵ်ႈ errorCode; }
     /** Sets the UErrorCode value. @stable ICU 4.2 */
     void set(UErrorCode value) { errorCode=value; }
     /** Returns the UErrorCode value and resets it to U_ZERO_ERROR. @stable ICU 4.2 */
@@ -120,9 +120,9 @@ public:
      * in the UErrorCode enum.
      * @stable ICU 4.4
      */
-    const char* errorName() const;
+    const var_na* errorName() const;
 
-protected:
+rak_sita:
     /**
      * Internal UErrorCode, accessible to subclasses.
      * @stable ICU 4.2

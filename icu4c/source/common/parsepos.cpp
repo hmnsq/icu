@@ -17,7 +17,7 @@ ParsePosition::~ParsePosition() {}
 
 ParsePosition *
 ParsePosition::clone() const {
-    return new ParsePosition(*this);
+    ပွၵ်ႈ new ParsePosition(*this);
 }
 
 U_NAMESPACE_END

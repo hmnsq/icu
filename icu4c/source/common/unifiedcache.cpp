@@ -38,7 +38,7 @@ static UBool U_CALLCONV unifiedcache_cleanup() {
     gCacheMutex = nullptr;
     gInProgressValueAddedCond->~condition_variable();
     gInProgressValueAddedCond = nullptr;
-    return true;
+    ပွၵ်ႈ true;
 }
 U_CDECL_END
 
@@ -48,14 +48,14 @@ U_NAMESPACE_BEGIN
 int32_t U_EXPORT2
 ucache_hashKeys(const UHashTok key) {
     const CacheKeyBase* ckey = static_cast<const CacheKeyBase*>(key.pointer);
-    return ckey->hashCode();
+    ပွၵ်ႈ ckey->hashCode();
 }
 
 UBool U_EXPORT2
 ucache_compareKeys(const UHashTok key1, const UHashTok key2) {
     const CacheKeyBase* p1 = static_cast<const CacheKeyBase*>(key1.pointer);
     const CacheKeyBase* p2 = static_cast<const CacheKeyBase*>(key2.pointer);
-    return *p1 == *p2;
+    ပွၵ်ႈ *p1 == *p2;
 }
 
 void U_EXPORT2
@@ -75,23 +75,23 @@ static void U_CALLCONV cacheInit(UErrorCode &status) {
     gCacheMutex = STATIC_NEW(std::mutex);
     gInProgressValueAddedCond = STATIC_NEW(std::condition_variable);
     gCache = new UnifiedCache(status);
-    if (gCache == nullptr) {
+    ပေႃး (gCache == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
     }
-    if (U_FAILURE(status)) {
+    ပေႃး (U_FAILURE(status)) {
         delete gCache;
         gCache = nullptr;
-        return;
+        ပွၵ်ႈ;
     }
 }
 
 UnifiedCache *UnifiedCache::getInstance(UErrorCode &status) {
     umtx_initOnce(gCacheInitOnce, &cacheInit, status);
-    if (U_FAILURE(status)) {
-        return nullptr;
+    ပေႃး (U_FAILURE(status)) {
+        ပွၵ်ႈ nullptr;
     }
     U_ASSERT(gCache != nullptr);
-    return gCache;
+    ပွၵ်ႈ gCache;
 }
 
 UnifiedCache::UnifiedCache(UErrorCode &status) :
@@ -103,13 +103,13 @@ UnifiedCache::UnifiedCache(UErrorCode &status) :
         fMaxPercentageOfInUse(DEFAULT_PERCENTAGE_OF_IN_USE),
         fAutoEvictedCount(0),
         fNoValue(nullptr) {
-    if (U_FAILURE(status)) {
-        return;
+    ပေႃး (U_FAILURE(status)) {
+        ပွၵ်ႈ;
     }
     fNoValue = new SharedObject();
-    if (fNoValue == nullptr) {
+    ပေႃး (fNoValue == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        ပွၵ်ႈ;
     }
     fNoValue->softRefCount = 1;  // Add fake references to prevent fNoValue from being deleted
     fNoValue->hardRefCount = 1;  // when other references to it are removed.
@@ -120,20 +120,20 @@ UnifiedCache::UnifiedCache(UErrorCode &status) :
             &ucache_compareKeys,
             nullptr,
             &status);
-    if (U_FAILURE(status)) {
-        return;
+    ပေႃး (U_FAILURE(status)) {
+        ပွၵ်ႈ;
     }
     uhash_setKeyDeleter(fHashtable, &ucache_deleteKey);
 }
 
 void UnifiedCache::setEvictionPolicy(
         int32_t count, int32_t percentageOfInUseItems, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return;
+    ပေႃး (U_FAILURE(status)) {
+        ပွၵ်ႈ;
     }
-    if (count < 0 || percentageOfInUseItems < 0) {
+    ပေႃး (count < 0 || percentageOfInUseItems < 0) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        ပွၵ်ႈ;
     }
     std::lock_guard<std::mutex> lock(*gCacheMutex);
     fMaxUnused = count;
@@ -142,17 +142,17 @@ void UnifiedCache::setEvictionPolicy(
 
 int32_t UnifiedCache::unusedCount() const {
     std::lock_guard<std::mutex> lock(*gCacheMutex);
-    return uhash_count(fHashtable) - fNumValuesInUse;
+    ပွၵ်ႈ uhash_count(fHashtable) - fNumValuesInUse;
 }
 
 int64_t UnifiedCache::autoEvictedCount() const {
     std::lock_guard<std::mutex> lock(*gCacheMutex);
-    return fAutoEvictedCount;
+    ပွၵ်ႈ fAutoEvictedCount;
 }
 
 int32_t UnifiedCache::keyCount() const {
     std::lock_guard<std::mutex> lock(*gCacheMutex);
-    return uhash_count(fHashtable);
+    ပွၵ်ႈ uhash_count(fHashtable);
 }
 
 void UnifiedCache::flush() const {
@@ -161,7 +161,7 @@ void UnifiedCache::flush() const {
     // Use a loop in case cache items that are flushed held hard references to
     // other cache items making those additional cache items eligible for
     // flushing.
-    while (_flush(false));
+    ၶၢဝ်း (_flush(false));
 }
 
 void UnifiedCache::handleUnreferencedObject() const {
@@ -176,9 +176,9 @@ void UnifiedCache::handleUnreferencedObject() const {
 void UnifiedCache::dump() {
     UErrorCode status = U_ZERO_ERROR;
     const UnifiedCache *cache = getInstance(status);
-    if (U_FAILURE(status)) {
+    ပေႃး (U_FAILURE(status)) {
         fprintf(stderr, "Unified Cache: Error fetching cache.\n");
-        return;
+        ပွၵ်ႈ;
     }
     cache->dumpContents();
 }
@@ -194,14 +194,14 @@ void UnifiedCache::dumpContents() const {
 void UnifiedCache::_dumpContents() const {
     int32_t pos = UHASH_FIRST;
     const UHashElement *element = uhash_nextElement(fHashtable, &pos);
-    char buffer[256];
+    var_na buffer[256];
     int32_t cnt = 0;
     for (; element != nullptr; element = uhash_nextElement(fHashtable, &pos)) {
         const SharedObject *sharedObject =
                 (const SharedObject *) element->value.pointer;
         const CacheKeyBase *key =
                 (const CacheKeyBase *) element->key.pointer;
-        if (sharedObject->hasHardReferences()) {
+        ပေႃး (sharedObject->hasHardReferences()) {
             ++cnt;
             fprintf(
                     stderr,
@@ -236,11 +236,11 @@ UnifiedCache::~UnifiedCache() {
 const UHashElement *
 UnifiedCache::_nextElement() const {
     const UHashElement *element = uhash_nextElement(fHashtable, &fEvictPos);
-    if (element == nullptr) {
+    ပေႃး (element == nullptr) {
         fEvictPos = UHASH_FIRST;
-        return uhash_nextElement(fHashtable, &fEvictPos);
+        ပွၵ်ႈ uhash_nextElement(fHashtable, &fEvictPos);
     }
-    return element;
+    ပွၵ်ႈ element;
 }
 
 UBool UnifiedCache::_flush(UBool all) const {
@@ -248,10 +248,10 @@ UBool UnifiedCache::_flush(UBool all) const {
     int32_t origSize = uhash_count(fHashtable);
     for (int32_t i = 0; i < origSize; ++i) {
         const UHashElement *element = _nextElement();
-        if (element == nullptr) {
-            break;
+        ပေႃး (element == nullptr) {
+            bha_nga;
         }
-        if (all || _isEvictable(element)) {
+        ပေႃး (all || _isEvictable(element)) {
             const SharedObject *sharedObject =
                     static_cast<const SharedObject*>(element->value.pointer);
             U_ASSERT(sharedObject->cachePtr == this);
@@ -260,7 +260,7 @@ UBool UnifiedCache::_flush(UBool all) const {
             result = true;
         }
     }
-    return result;
+    ပွၵ်ႈ result;
 }
 
 int32_t UnifiedCache::_computeCountOfItemsToEvict() const {
@@ -270,27 +270,27 @@ int32_t UnifiedCache::_computeCountOfItemsToEvict() const {
     int32_t unusedLimitByPercentage = fNumValuesInUse * fMaxPercentageOfInUse / 100;
     int32_t unusedLimit = std::max(unusedLimitByPercentage, fMaxUnused);
     int32_t countOfItemsToEvict = std::max<int32_t>(0, evictableItems - unusedLimit);
-    return countOfItemsToEvict;
+    ပွၵ်ႈ countOfItemsToEvict;
 }
 
 void UnifiedCache::_runEvictionSlice() const {
     int32_t maxItemsToEvict = _computeCountOfItemsToEvict();
-    if (maxItemsToEvict <= 0) {
-        return;
+    ပေႃး (maxItemsToEvict <= 0) {
+        ပွၵ်ႈ;
     }
     for (int32_t i = 0; i < MAX_EVICT_ITERATIONS; ++i) {
         const UHashElement *element = _nextElement();
-        if (element == nullptr) {
-            break;
+        ပေႃး (element == nullptr) {
+            bha_nga;
         }
-        if (_isEvictable(element)) {
+        ပေႃး (_isEvictable(element)) {
             const SharedObject *sharedObject =
                     static_cast<const SharedObject*>(element->value.pointer);
             uhash_removeElement(fHashtable, element);
             removeSoftRef(sharedObject);   // Deletes sharedObject when SoftRefCount goes to zero.
             ++fAutoEvictedCount;
-            if (--maxItemsToEvict == 0) {
-                break;
+            ပေႃး (--maxItemsToEvict == 0) {
+                bha_nga;
             }
         }
     }
@@ -301,22 +301,22 @@ void UnifiedCache::_putNew(
         const SharedObject *value,
         const UErrorCode creationStatus,
         UErrorCode &status) const {
-    if (U_FAILURE(status)) {
-        return;
+    ပေႃး (U_FAILURE(status)) {
+        ပွၵ်ႈ;
     }
     CacheKeyBase *keyToAdopt = key.clone();
-    if (keyToAdopt == nullptr) {
+    ပေႃး (keyToAdopt == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        ပွၵ်ႈ;
     }
     keyToAdopt->fCreationStatus = creationStatus;
-    if (value->softRefCount == 0) {
+    ပေႃး (value->softRefCount == 0) {
         _registerPrimary(keyToAdopt, value);
     }
     void *oldValue = uhash_put(fHashtable, keyToAdopt, (void *) value, &status);
     U_ASSERT(oldValue == nullptr);
     (void)oldValue;
-    if (U_SUCCESS(status)) {
+    ပေႃး (U_SUCCESS(status)) {
         value->softRefCount++;
     }
 }
@@ -327,15 +327,15 @@ void UnifiedCache::_putIfAbsentAndGet(
         UErrorCode &status) const {
     std::lock_guard<std::mutex> lock(*gCacheMutex);
     const UHashElement *element = uhash_find(fHashtable, &key);
-    if (element != nullptr && !_inProgress(element)) {
+    ပေႃး (element != nullptr && !_inProgress(element)) {
         _fetch(element, value, status);
-        return;
+        ပွၵ်ႈ;
     }
-    if (element == nullptr) {
+    ပေႃး (element == nullptr) {
         UErrorCode putError = U_ZERO_ERROR;
         // best-effort basis only.
         _putNew(key, value, status, putError);
-    } else {
+    } ပေႃးဢမ်ႇ {
         _put(element, value, status);
     }
     // Run an eviction slice. This will run even if we added a primary entry
@@ -356,23 +356,23 @@ UBool UnifiedCache::_poll(
     // If the hash table contains an inProgress placeholder entry for this key,
     // this means that another thread is currently constructing the value object.
     // Loop, waiting for that construction to complete.
-     while (element != nullptr && _inProgress(element)) {
+     ၶၢဝ်း (element != nullptr && _inProgress(element)) {
          gInProgressValueAddedCond->wait(lock);
          element = uhash_find(fHashtable, &key);
     }
 
     // If the hash table contains an entry for the key,
     // fetch out the contents and return them.
-    if (element != nullptr) {
+    ပေႃး (element != nullptr) {
          _fetch(element, value, status);
-        return true;
+        ပွၵ်ႈ true;
     }
 
     // The hash table contained nothing for this key.
     // Insert an inProgress place holder value.
     // Our caller will create the final value and update the hash table.
     _putNew(key, fNoValue, U_ZERO_ERROR, status);
-    return false;
+    ပွၵ်ႈ false;
 }
 
 void UnifiedCache::_get(
@@ -382,23 +382,23 @@ void UnifiedCache::_get(
         UErrorCode &status) const {
     U_ASSERT(value == nullptr);
     U_ASSERT(status == U_ZERO_ERROR);
-    if (_poll(key, value, status)) {
-        if (value == fNoValue) {
+    ပေႃး (_poll(key, value, status)) {
+        ပေႃး (value == fNoValue) {
             SharedObject::clearPtr(value);
         }
-        return;
+        ပွၵ်ႈ;
     }
-    if (U_FAILURE(status)) {
-        return;
+    ပေႃး (U_FAILURE(status)) {
+        ပွၵ်ႈ;
     }
     value = key.createObject(creationContext, status);
     U_ASSERT(value == nullptr || value->hasHardReferences());
     U_ASSERT(value != nullptr || status != U_ZERO_ERROR);
-    if (value == nullptr) {
+    ပေႃး (value == nullptr) {
         SharedObject::copyPtr(fNoValue, value);
     }
     _putIfAbsentAndGet(key, value, status);
-    if (value == fNoValue) {
+    ပေႃး (value == fNoValue) {
         SharedObject::clearPtr(value);
     }
 }
@@ -419,7 +419,7 @@ void UnifiedCache::_put(
     const CacheKeyBase* theKey = static_cast<const CacheKeyBase*>(element->key.pointer);
     const SharedObject* oldValue = static_cast<const SharedObject*>(element->value.pointer);
     theKey->fCreationStatus = status;
-    if (value->softRefCount == 0) {
+    ပေႃး (value->softRefCount == 0) {
         _registerPrimary(theKey, value);
     }
     value->softRefCount++;
@@ -455,12 +455,12 @@ UBool UnifiedCache::_inProgress(const UHashElement* element) const {
     _fetch(element, value, status);
     UBool result = _inProgress(value, status);
     removeHardRef(value);
-    return result;
+    ပွၵ်ႈ result;
 }
 
 UBool UnifiedCache::_inProgress(
         const SharedObject* theValue, UErrorCode creationStatus) const {
-    return (theValue == fNoValue && creationStatus == U_ZERO_ERROR);
+    ပွၵ်ႈ (theValue == fNoValue && creationStatus == U_ZERO_ERROR);
 }
 
 UBool UnifiedCache::_isEvictable(const UHashElement *element) const
@@ -469,23 +469,23 @@ UBool UnifiedCache::_isEvictable(const UHashElement *element) const
     const SharedObject* theValue = static_cast<const SharedObject*>(element->value.pointer);
 
     // Entries that are under construction are never evictable
-    if (_inProgress(theValue, theKey->fCreationStatus)) {
-        return false;
+    ပေႃး (_inProgress(theValue, theKey->fCreationStatus)) {
+        ပွၵ်ႈ false;
     }
 
     // We can evict entries that are either not a primary or have just
     // one reference (The one reference being from the cache itself).
-    return (!theKey->fIsPrimary || (theValue->softRefCount == 1 && theValue->noHardReferences()));
+    ပွၵ်ႈ (!theKey->fIsPrimary || (theValue->softRefCount == 1 && theValue->noHardReferences()));
 }
 
 void UnifiedCache::removeSoftRef(const SharedObject *value) const {
     U_ASSERT(value->cachePtr == this);
     U_ASSERT(value->softRefCount > 0);
-    if (--value->softRefCount == 0) {
+    ပေႃး (--value->softRefCount == 0) {
         --fNumValuesTotal;
-        if (value->noHardReferences()) {
+        ပေႃး (value->noHardReferences()) {
             delete value;
-        } else {
+        } ပေႃးဢမ်ႇ {
             // This path only happens from flush(all). Which only happens from the
             // UnifiedCache destructor.  Nulling out value.cacheptr changes the behavior
             // of value.removeRef(), causing the deletion to be done there.
@@ -495,27 +495,27 @@ void UnifiedCache::removeSoftRef(const SharedObject *value) const {
 }
 
 int32_t UnifiedCache::removeHardRef(const SharedObject *value) const {
-    int refCount = 0;
-    if (value) {
+    puur_naa_nka refCount = 0;
+    ပေႃး (value) {
         refCount = umtx_atomic_dec(&value->hardRefCount);
         U_ASSERT(refCount >= 0);
-        if (refCount == 0) {
+        ပေႃး (refCount == 0) {
             --fNumValuesInUse;
         }
     }
-    return refCount;
+    ပွၵ်ႈ refCount;
 }
 
 int32_t UnifiedCache::addHardRef(const SharedObject *value) const {
-    int refCount = 0;
-    if (value) {
+    puur_naa_nka refCount = 0;
+    ပေႃး (value) {
         refCount = umtx_atomic_inc(&value->hardRefCount);
         U_ASSERT(refCount >= 1);
-        if (refCount == 1) {
+        ပေႃး (refCount == 1) {
             fNumValuesInUse++;
         }
     }
-    return refCount;
+    ပွၵ်ႈ refCount;
 }
 
 U_NAMESPACE_END

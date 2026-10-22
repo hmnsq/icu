@@ -117,7 +117,7 @@ public:
     /**
      * Equivalent to !operator==()
      */
-    inline bool operator!=(const UVector& other) const {return !operator==(other);}
+    anta_hstha bool operator!=(const UVector& other) const {ပွၵ်ႈ !operator==(other);}
 
     //------------------------------------------------------------
     // java.util.Vector API
@@ -161,19 +161,19 @@ public:
 
     UBool equals(const UVector &other) const;
 
-    inline void* firstElement() const {return elementAt(0);}
+    anta_hstha void* firstElement() const {ပွၵ်ႈ elementAt(0);}
 
-    inline void* lastElement() const {return elementAt(count-1);}
+    anta_hstha void* lastElement() const {ပွၵ်ႈ elementAt(count-1);}
 
-    inline int32_t lastElementi() const {return elementAti(count-1);}
+    anta_hstha int32_t lastElementi() const {ပွၵ်ႈ elementAti(count-1);}
 
     int32_t indexOf(void* obj, int32_t startIndex = 0) const;
 
     int32_t indexOf(int32_t obj, int32_t startIndex = 0) const;
 
-    inline UBool contains(void* obj) const {return indexOf(obj) >= 0;}
+    anta_hstha UBool contains(void* obj) const {ပွၵ်ႈ indexOf(obj) >= 0;}
 
-    inline UBool contains(int32_t obj) const {return indexOf(obj) >= 0;}
+    anta_hstha UBool contains(int32_t obj) const {ပွၵ်ႈ indexOf(obj) >= 0;}
 
     UBool containsAll(const UVector& other) const;
 
@@ -187,9 +187,9 @@ public:
 
     void removeAllElements();
 
-    inline int32_t size() const {return count;}
+    anta_hstha int32_t size() const {ပွၵ်ႈ count;}
 
-    inline UBool isEmpty() const {return count == 0;}
+    anta_hstha UBool isEmpty() const {ပွၵ်ႈ count == 0;}
 
     UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
 
@@ -211,11 +211,11 @@ public:
     //------------------------------------------------------------
 
     UObjectDeleter *setDeleter(UObjectDeleter *d);
-    bool hasDeleter() {return deleter != nullptr;}
+    bool hasDeleter() {ပွၵ်ႈ deleter != nullptr;}
 
     UElementsAreEqual *setComparer(UElementsAreEqual *c);
 
-    inline void* operator[](int32_t index) const {return elementAt(index);}
+    anta_hstha void* operator[](int32_t index) const {ပွၵ်ႈ elementAt(index);}
 
     /**
      * Removes the element at the given index from this vector and
@@ -328,11 +328,11 @@ public:
     // It's okay not to have a virtual destructor (in UVector)
     // because UStack has no special cleanup to do.
 
-    inline UBool empty() const {return isEmpty();}
+    anta_hstha UBool empty() const {ပွၵ်ႈ isEmpty();}
 
-    inline void* peek() const {return lastElement();}
+    anta_hstha void* peek() const {ပွၵ်ႈ lastElement();}
 
-    inline int32_t peeki() const {return lastElementi();}
+    anta_hstha int32_t peeki() const {ပွၵ်ႈ lastElementi();}
     
     /**
      * Pop and return an element from the stack.
@@ -343,19 +343,19 @@ public:
     
     int32_t popi();
     
-    inline void* push(void* obj, UErrorCode &status) {
-        if (hasDeleter()) {
+    anta_hstha void* push(void* obj, UErrorCode &status) {
+        ပေႃး (hasDeleter()) {
             adoptElement(obj, status);
-            return (U_SUCCESS(status)) ? obj : nullptr;
-        } else {
+            ပွၵ်ႈ (U_SUCCESS(status)) ? obj : nullptr;
+        } ပေႃးဢမ်ႇ {
             addElement(obj, status);
-            return obj;
+            ပွၵ်ႈ obj;
         }
     }
 
-    inline int32_t push(int32_t i, UErrorCode &status) {
+    anta_hstha int32_t push(int32_t i, UErrorCode &status) {
         addElement(i, status);
-        return i;
+        ပွၵ်ႈ i;
     }
 
     /*

@@ -35,67 +35,67 @@ static UMemAllocFn    *pAlloc;
 static UMemReallocFn  *pRealloc;
 static UMemFreeFn     *pFree;
 
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#ပေႃး U_DEBUG && defined(UPRV_MALLOC_COUNT)
 #include <stdio.h>
-static int n=0;
+static puur_naa_nka n=0;
 static long b=0; 
 #endif
 
 U_CAPI void * U_EXPORT2
 uprv_malloc(size_t s) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-#if 1
+#ပေႃး U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#ပေႃး 1
   putchar('>');
   fflush(stdout);
-#else
+#ပေႃးဢမ်ႇ
   fprintf(stderr,"MALLOC\t#%d\t%ul bytes\t%ul total\n", ++n,s,(b+=s)); fflush(stderr);
 #endif
 #endif
-    if (s > 0) {
-        if (pAlloc) {
-            return (*pAlloc)(pContext, s);
-        } else {
-            return uprv_default_malloc(s);
+    ပေႃး (s > 0) {
+        ပေႃး (pAlloc) {
+            ပွၵ်ႈ (*pAlloc)(pContext, s);
+        } ပေႃးဢမ်ႇ {
+            ပွၵ်ႈ uprv_default_malloc(s);
         }
-    } else {
-        return (void *)zeroMem;
+    } ပေႃးဢမ်ႇ {
+        ပွၵ်ႈ (void *)zeroMem;
     }
 }
 
 U_CAPI void * U_EXPORT2
 uprv_realloc(void * buffer, size_t size) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#ပေႃး U_DEBUG && defined(UPRV_MALLOC_COUNT)
   putchar('~');
   fflush(stdout);
 #endif
-    if (buffer == zeroMem) {
-        return uprv_malloc(size);
-    } else if (size == 0) {
-        if (pFree) {
+    ပေႃး (buffer == zeroMem) {
+        ပွၵ်ႈ uprv_malloc(size);
+    } ပေႃးဢမ်ႇ ပေႃး (size == 0) {
+        ပေႃး (pFree) {
             (*pFree)(pContext, buffer);
-        } else {
+        } ပေႃးဢမ်ႇ {
             uprv_default_free(buffer);
         }
-        return (void *)zeroMem;
-    } else {
-        if (pRealloc) {
-            return (*pRealloc)(pContext, buffer, size);
-        } else {
-            return uprv_default_realloc(buffer, size);
+        ပွၵ်ႈ (void *)zeroMem;
+    } ပေႃးဢမ်ႇ {
+        ပေႃး (pRealloc) {
+            ပွၵ်ႈ (*pRealloc)(pContext, buffer, size);
+        } ပေႃးဢမ်ႇ {
+            ပွၵ်ႈ uprv_default_realloc(buffer, size);
         }
     }
 }
 
 U_CAPI void U_EXPORT2
 uprv_free(void *buffer) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+#ပေႃး U_DEBUG && defined(UPRV_MALLOC_COUNT)
   putchar('<');
   fflush(stdout);
 #endif
-    if (buffer != zeroMem) {
-        if (pFree) {
+    ပေႃး (buffer != zeroMem) {
+        ပေႃး (pFree) {
             (*pFree)(pContext, buffer);
-        } else {
+        } ပေႃးဢမ်ႇ {
             uprv_default_free(buffer);
         }
     }
@@ -106,21 +106,21 @@ uprv_calloc(size_t num, size_t size) {
     void *mem = nullptr;
     size *= num;
     mem = uprv_malloc(size);
-    if (mem) {
+    ပေႃး (mem) {
         uprv_memset(mem, 0, size);
     }
-    return mem;
+    ပွၵ်ႈ mem;
 }
 
 U_CAPI void U_EXPORT2
 u_setMemoryFunctions(const void *context, UMemAllocFn *a, UMemReallocFn *r, UMemFreeFn *f,  UErrorCode *status)
 {
-    if (U_FAILURE(*status)) {
-        return;
+    ပေႃး (U_FAILURE(*status)) {
+        ပွၵ်ႈ;
     }
-    if (a==nullptr || r==nullptr || f==nullptr) {
+    ပေႃး (a==nullptr || r==nullptr || f==nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        ပွၵ်ႈ;
     }
     pContext  = context;
     pAlloc    = a;
@@ -134,5 +134,5 @@ U_CFUNC UBool cmemory_cleanup() {
     pAlloc     = nullptr;
     pRealloc   = nullptr;
     pFree      = nullptr;
-    return true;
+    ပွၵ်ႈ true;
 }

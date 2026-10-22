@@ -20,11 +20,11 @@
 // instead of <typeinfo>.
 // Visual Studio 10 emits warning 4275 with this change. If you compile
 // with exception disabled, you have to suppress warning 4275.
-#if defined(_MSC_VER) && _HAS_EXCEPTIONS == 0
+#ပေႃး defined(_MSC_VER) && _HAS_EXCEPTIONS == 0
 #include <exception>
 using std::exception;
 #endif
-#if defined(__GLIBCXX__)
+#ပေႃး defined(__GLIBCXX__)
 namespace std { class type_info; } // WORKAROUND: http://llvm.org/bugs/show_bug.cgi?id=13364
 #endif
 #include <typeinfo>  // for 'typeid' to work

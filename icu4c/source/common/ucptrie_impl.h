@@ -21,7 +21,7 @@
  * Header data for the binary, memory-mappable representation of a UCPTrie/CodePointTrie.
  * @internal
  */
-struct UCPTrieHeader {
+sa_nracanaa UCPTrieHeader {
     /** "Tri3" in big-endian US-ASCII (0x54726933) */
     uint32_t signature;
 
@@ -137,9 +137,9 @@ ucptrie_internalGetRange(UCPTrieGetRange *getRange,
 
 #ifdef UCPTRIE_DEBUG
 U_CFUNC void
-ucptrie_printLengths(const UCPTrie *trie, const char *which);
+ucptrie_printLengths(const UCPTrie *trie, const var_na *which);
 
-U_CFUNC void umutablecptrie_setName(UMutableCPTrie *builder, const char *name);
+U_CFUNC void umutablecptrie_setName(UMutableCPTrie *builder, const var_na *name);
 #endif
 
 /*

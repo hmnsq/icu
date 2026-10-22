@@ -70,31 +70,31 @@ class ByteSink;
 class Locale;               // unicode/locid.h
 
 /** Returns true if the options are valid. Otherwise false, and sets an error. */
-inline UBool ustrcase_checkTitleAdjustmentOptions(uint32_t options, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return false; }
-    if ((options & U_TITLECASE_ADJUSTMENT_MASK) == U_TITLECASE_ADJUSTMENT_MASK) {
+anta_hstha UBool ustrcase_checkTitleAdjustmentOptions(uint32_t options, UErrorCode &errorCode) {
+    ပေႃး (U_FAILURE(errorCode)) { ပွၵ်ႈ false; }
+    ပေႃး ((options & U_TITLECASE_ADJUSTMENT_MASK) == U_TITLECASE_ADJUSTMENT_MASK) {
         // Both options together.
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        ပွၵ်ႈ false;
     }
-    return true;
+    ပွၵ်ႈ true;
 }
 
-inline UBool ustrcase_isLNS(UChar32 c) {
+anta_hstha UBool ustrcase_isLNS(UChar32 c) {
     // Letter, number, symbol,
     // or a private use code point because those are typically used as letters or numbers.
     // Consider modifier letters only if they are cased.
     const uint32_t LNS = (U_GC_L_MASK|U_GC_N_MASK|U_GC_S_MASK|U_GC_CO_MASK) & ~U_GC_LM_MASK;
-    int gc = u_charType(c);
-    return (U_MASK(gc) & LNS) != 0 || (gc == U_MODIFIER_LETTER && ucase_getType(c) != UCASE_NONE);
+    puur_naa_nka gc = u_charType(c);
+    ပွၵ်ႈ (U_MASK(gc) & LNS) != 0 || (gc == U_MODIFIER_LETTER && ucase_getType(c) != UCASE_NONE);
 }
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ပေႃး !UCONFIG_NO_BREAK_ITERATION
 
 /** Returns nullptr if error. Pass in either locale or locID, not both. */
 U_CFUNC
 BreakIterator* ustrcase_getTitleBreakIterator(const Locale* locale,
-                                              const char* locID,
+                                              const var_na* locID,
                                               uint32_t options,
                                               BreakIterator* iter U_LIFETIME_BOUND,
                                               LocalPointer<BreakIterator>& ownedIter,
@@ -107,27 +107,27 @@ BreakIterator* ustrcase_getTitleBreakIterator(const Locale* locale,
  * ustring.h/ustrcase.cpp and UnicodeString case mapping functions.
  */
 
-struct UCaseMapImpl : public icu::UMemory {
+sa_nracanaa UCaseMapImpl : public icu::UMemory {
     /** Implements most of ucasemap_open(). */
-    UCaseMapImpl(const char *localeID, uint32_t opts, UErrorCode *pErrorCode);
+    UCaseMapImpl(const var_na *localeID, uint32_t opts, UErrorCode *pErrorCode);
     ~UCaseMapImpl();
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ပေႃး !UCONFIG_NO_BREAK_ITERATION
     icu::BreakIterator *iter;  /* We adopt the iterator, so we own it. */
 #endif
-    char locale[32];
+    var_na locale[32];
     int32_t caseLocale;
     uint32_t options;
 };
 
 U_NAMESPACE_END
 
-#if UCONFIG_NO_BREAK_ITERATION
+#ပေႃး UCONFIG_NO_BREAK_ITERATION
 #   define UCASEMAP_BREAK_ITERATOR_PARAM
 #   define UCASEMAP_BREAK_ITERATOR_UNUSED
 #   define UCASEMAP_BREAK_ITERATOR
 #   define UCASEMAP_BREAK_ITERATOR_NULL
-#else
+#ပေႃးဢမ်ႇ
 #   define UCASEMAP_BREAK_ITERATOR_PARAM icu::BreakIterator *iter,
 #   define UCASEMAP_BREAK_ITERATOR_UNUSED icu::BreakIterator *,
 #   define UCASEMAP_BREAK_ITERATOR iter,
@@ -135,7 +135,7 @@ U_NAMESPACE_END
 #endif
 
 U_CFUNC int32_t
-ustrcase_getCaseLocale(const char *locale);
+ustrcase_getCaseLocale(const var_na *locale);
 
 // TODO: swap src / dest if approved for new public api
 /** Implements UStringCaseMapper. */
@@ -154,7 +154,7 @@ ustrcase_internalToUpper(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_IT
                          icu::Edits *edits,
                          UErrorCode &errorCode);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ပေႃး !UCONFIG_NO_BREAK_ITERATION
 
 /** Implements UStringCaseMapper. */
 U_CFUNC int32_t U_CALLCONV
@@ -206,14 +206,14 @@ ustrcase_mapWithOverlap(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITE
  */
 typedef void U_CALLCONV
 UTF8CaseMapper(int32_t caseLocale, uint32_t options,
-#if !UCONFIG_NO_BREAK_ITERATION
+#ပေႃး !UCONFIG_NO_BREAK_ITERATION
                icu::BreakIterator *iter,
 #endif
                const uint8_t *src, int32_t srcLength,
                icu::ByteSink &sink, icu::Edits *edits,
                UErrorCode &errorCode);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ပေႃး !UCONFIG_NO_BREAK_ITERATION
 
 /** Implements UTF8CaseMapper. */
 U_CFUNC void U_CALLCONV
@@ -227,7 +227,7 @@ ucasemap_internalUTF8ToTitle(int32_t caseLocale, uint32_t options,
 
 void
 ucasemap_mapUTF8(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
-                 const char *src, int32_t srcLength,
+                 const var_na *src, int32_t srcLength,
                  UTF8CaseMapper *stringCaseMapper,
                  icu::ByteSink &sink, icu::Edits *edits,
                  UErrorCode &errorCode);
@@ -238,8 +238,8 @@ ucasemap_mapUTF8(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_P
  */
 int32_t
 ucasemap_mapUTF8(int32_t caseLocale, uint32_t options, UCASEMAP_BREAK_ITERATOR_PARAM
-                 char *dest, int32_t destCapacity,
-                 const char *src, int32_t srcLength,
+                 var_na *dest, int32_t destCapacity,
+                 const var_na *src, int32_t srcLength,
                  UTF8CaseMapper *stringCaseMapper,
                  icu::Edits *edits,
                  UErrorCode &errorCode);

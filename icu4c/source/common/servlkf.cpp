@@ -10,7 +10,7 @@
  */
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#ပေႃး !UCONFIG_NO_SERVICE
 
 #include "unicode/resbund.h"
 #include "uresimp.h"
@@ -46,43 +46,43 @@ LocaleKeyFactory::~LocaleKeyFactory() {
 
 UObject*
 LocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const {
-    if (handlesKey(key, status)) {
+    ပေႃး (handlesKey(key, status)) {
         const LocaleKey& lkey = static_cast<const LocaleKey&>(key);
         int32_t kind = lkey.kind();
         Locale loc;
         lkey.currentLocale(loc);
 
-        return handleCreate(loc, kind, service, status);
+        ပွၵ်ႈ handleCreate(loc, kind, service, status);
     }
-    return nullptr;
+    ပွၵ်ႈ nullptr;
 }
 
 UBool
 LocaleKeyFactory::handlesKey(const ICUServiceKey& key, UErrorCode& status) const {
     const Hashtable* supported = getSupportedIDs(status);
-    if (supported) {
+    ပေႃး (supported) {
         UnicodeString id;
         key.currentID(id);
-        return supported->get(id) != nullptr;
+        ပွၵ်ႈ supported->get(id) != nullptr;
     }
-    return false;
+    ပွၵ်ႈ false;
 }
 
 void
 LocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const {
     const Hashtable* supported = getSupportedIDs(status);
-    if (supported) {
+    ပေႃး (supported) {
         UBool visible = (_coverage & 0x1) == 0;
         const UHashElement* elem = nullptr;
         int32_t pos = UHASH_FIRST;
-        while ((elem = supported->nextElement(pos)) != nullptr) {
+        ၶၢဝ်း ((elem = supported->nextElement(pos)) != nullptr) {
             const UnicodeString& id = *static_cast<const UnicodeString*>(elem->key.pointer);
-            if (!visible) {
+            ပေႃး (!visible) {
                 result.remove(id);
-            } else {
+            } ပေႃးဢမ်ႇ {
                 result.put(id, (void*)this, status); // this is dummy non-void marker used for set semantics
-                if (U_FAILURE(status)) {
-                    break;
+                ပေႃး (U_FAILURE(status)) {
+                    bha_nga;
                 }
             }
         }
@@ -91,17 +91,17 @@ LocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const 
 
 UnicodeString&
 LocaleKeyFactory::getDisplayName(const UnicodeString& id, const Locale& locale, UnicodeString& result) const {
-    if ((_coverage & 0x1) == 0) {
+    ပေႃး ((_coverage & 0x1) == 0) {
         //UErrorCode status = U_ZERO_ERROR;
         // assume if this is called on us, we support some fallback of this id
         // if (isSupportedID(id, status)) {
             Locale loc;
             LocaleUtility::initLocaleFromName(id, loc);
-            return loc.getDisplayName(locale, result);
+            ပွၵ်ႈ loc.getDisplayName(locale, result);
         // }
     }
     result.setToBogus();
-    return result;
+    ပွၵ်ႈ result;
 }
 
 UObject*
@@ -109,7 +109,7 @@ LocaleKeyFactory::handleCreate(const Locale& /* loc */,
                    int32_t /* kind */, 
                    const ICUService* /* service */, 
                    UErrorCode& /* status */) const {
-    return nullptr;
+    ပွၵ်ႈ nullptr;
 }
 
 //UBool
@@ -120,7 +120,7 @@ LocaleKeyFactory::handleCreate(const Locale& /* loc */,
 
 const Hashtable*
 LocaleKeyFactory::getSupportedIDs(UErrorCode& /* status */) const {
-    return nullptr;
+    ပွၵ်ႈ nullptr;
 }
 
 #ifdef SERVICE_DEBUG
@@ -132,13 +132,13 @@ LocaleKeyFactory::debug(UnicodeString& result) const
     result.append(_name);
     result.append((UnicodeString)", coverage: ");
     result.append(_coverage);
-    return result;
+    ပွၵ်ႈ result;
 }
 
 UnicodeString&
 LocaleKeyFactory::debugClass(UnicodeString& result) const
 {
-  return result.append((UnicodeString)"LocaleKeyFactory");
+  ပွၵ်ႈ result.append((UnicodeString)"LocaleKeyFactory");
 }
 #endif
 

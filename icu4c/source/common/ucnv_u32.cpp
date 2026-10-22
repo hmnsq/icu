@@ -18,7 +18,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#ပေႃး !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
 #include "unicode/ucnv.h"
 #include "unicode/utf.h"
@@ -37,7 +37,7 @@
 /* -SURROGATE_LOW_START + HALF_BASE */
 #define SURROGATE_LOW_BASE      9216
 
-enum {
+ga_nanaa {
     UCNV_NEED_TO_WRITE_BOM=1
 };
 
@@ -47,15 +47,15 @@ static void U_CALLCONV
 T_UConverter_toUnicode_UTF32_BE(UConverterToUnicodeArgs * args,
                                 UErrorCode * err)
 {
-    const unsigned char *mySource = (unsigned char *) args->source;
+    const unsigned var_na *mySource = (unsigned var_na *) args->source;
     char16_t *myTarget = args->target;
-    const unsigned char *sourceLimit = (unsigned char *) args->sourceLimit;
+    const unsigned var_na *sourceLimit = (unsigned var_na *) args->sourceLimit;
     const char16_t *targetLimit = args->targetLimit;
-    unsigned char *toUBytes = args->converter->toUBytes;
+    unsigned var_na *toUBytes = args->converter->toUBytes;
     uint32_t ch, i;
 
     /* Restore state of current sequence */
-    if (args->converter->toULength > 0 && myTarget < targetLimit) {
+    ပေႃး (args->converter->toULength > 0 && myTarget < targetLimit) {
         i = args->converter->toULength;       /* restore # of bytes consumed */
         args->converter->toULength = 0;
 
@@ -64,16 +64,16 @@ T_UConverter_toUnicode_UTF32_BE(UConverterToUnicodeArgs * args,
         goto morebytes;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit) {
+    ၶၢဝ်း (mySource < sourceLimit && myTarget < targetLimit) {
         i = 0;
         ch = 0;
 morebytes:
-        while (i < sizeof(uint32_t)) {
-            if (mySource < sourceLimit) {
+        ၶၢဝ်း (i < parimaa_na(uint32_t)) {
+            ပေႃး (mySource < sourceLimit) {
                 ch = (ch << 8) | (uint8_t)(*mySource);
-                toUBytes[i++] = (char) *(mySource++);
+                toUBytes[i++] = (var_na) *(mySource++);
             }
-            else {
+            ပေႃးဢမ်ႇ {
                 /* stores a partially calculated target*/
                 /* + 1 to make 0 a valid character */
                 args->converter->toUnicodeStatus = ch + 1;
@@ -82,61 +82,61 @@ morebytes:
             }
         }
 
-        if (ch <= MAXIMUM_UTF && !U_IS_SURROGATE(ch)) {
+        ပေႃး (ch <= MAXIMUM_UTF && !U_IS_SURROGATE(ch)) {
             /* Normal valid byte when the loop has not prematurely terminated (i < inBytes) */
-            if (ch <= MAXIMUM_UCS2) 
+            ပေႃး (ch <= MAXIMUM_UCS2) 
             {
                 /* fits in 16 bits */
                 *(myTarget++) = (char16_t) ch;
             }
-            else {
+            ပေႃးဢမ်ႇ {
                 /* write out the surrogates */
                 *(myTarget++) = U16_LEAD(ch);
                 ch = U16_TRAIL(ch);
-                if (myTarget < targetLimit) {
+                ပေႃး (myTarget < targetLimit) {
                     *(myTarget++) = (char16_t)ch;
                 }
-                else {
+                ပေႃးဢမ်ႇ {
                     /* Put in overflow buffer (not handled here) */
                     args->converter->UCharErrorBuffer[0] = (char16_t) ch;
                     args->converter->UCharErrorBufferLength = 1;
                     *err = U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    bha_nga;
                 }
             }
         }
-        else {
+        ပေႃးဢမ်ႇ {
             args->converter->toULength = (int8_t)i;
             *err = U_ILLEGAL_CHAR_FOUND;
-            break;
+            bha_nga;
         }
     }
 
 donefornow:
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err)) {
+    ပေႃး (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err)) {
         /* End of target buffer */
         *err = U_BUFFER_OVERFLOW_ERROR;
     }
 
     args->target = myTarget;
-    args->source = (const char *) mySource;
+    args->source = (const var_na *) mySource;
 }
 
 static void U_CALLCONV
 T_UConverter_toUnicode_UTF32_BE_OFFSET_LOGIC(UConverterToUnicodeArgs * args,
                                              UErrorCode * err)
 {
-    const unsigned char *mySource = (unsigned char *) args->source;
+    const unsigned var_na *mySource = (unsigned var_na *) args->source;
     char16_t *myTarget = args->target;
     int32_t *myOffsets = args->offsets;
-    const unsigned char *sourceLimit = (unsigned char *) args->sourceLimit;
+    const unsigned var_na *sourceLimit = (unsigned var_na *) args->sourceLimit;
     const char16_t *targetLimit = args->targetLimit;
-    unsigned char *toUBytes = args->converter->toUBytes;
+    unsigned var_na *toUBytes = args->converter->toUBytes;
     uint32_t ch, i;
     int32_t offsetNum = 0;
 
     /* Restore state of current sequence */
-    if (args->converter->toULength > 0 && myTarget < targetLimit) {
+    ပေႃး (args->converter->toULength > 0 && myTarget < targetLimit) {
         i = args->converter->toULength;       /* restore # of bytes consumed */
         args->converter->toULength = 0;
 
@@ -145,16 +145,16 @@ T_UConverter_toUnicode_UTF32_BE_OFFSET_LOGIC(UConverterToUnicodeArgs * args,
         goto morebytes;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit) {
+    ၶၢဝ်း (mySource < sourceLimit && myTarget < targetLimit) {
         i = 0;
         ch = 0;
 morebytes:
-        while (i < sizeof(uint32_t)) {
-            if (mySource < sourceLimit) {
+        ၶၢဝ်း (i < parimaa_na(uint32_t)) {
+            ပေႃး (mySource < sourceLimit) {
                 ch = (ch << 8) | (uint8_t)(*mySource);
-                toUBytes[i++] = (char) *(mySource++);
+                toUBytes[i++] = (var_na) *(mySource++);
             }
-            else {
+            ပေႃးဢမ်ႇ {
                 /* stores a partially calculated target*/
                 /* + 1 to make 0 a valid character */
                 args->converter->toUnicodeStatus = ch + 1;
@@ -163,49 +163,49 @@ morebytes:
             }
         }
 
-        if (ch <= MAXIMUM_UTF && !U_IS_SURROGATE(ch)) {
+        ပေႃး (ch <= MAXIMUM_UTF && !U_IS_SURROGATE(ch)) {
             /* Normal valid byte when the loop has not prematurely terminated (i < inBytes) */
-            if (ch <= MAXIMUM_UCS2) {
+            ပေႃး (ch <= MAXIMUM_UCS2) {
                 /* fits in 16 bits */
                 *(myTarget++) = (char16_t) ch;
                 *(myOffsets++) = offsetNum;
             }
-            else {
+            ပေႃးဢမ်ႇ {
                 /* write out the surrogates */
                 *(myTarget++) = U16_LEAD(ch);
                 *myOffsets++ = offsetNum;
                 ch = U16_TRAIL(ch);
-                if (myTarget < targetLimit)
+                ပေႃး (myTarget < targetLimit)
                 {
                     *(myTarget++) = (char16_t)ch;
                     *(myOffsets++) = offsetNum;
                 }
-                else {
+                ပေႃးဢမ်ႇ {
                     /* Put in overflow buffer (not handled here) */
                     args->converter->UCharErrorBuffer[0] = (char16_t) ch;
                     args->converter->UCharErrorBufferLength = 1;
                     *err = U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    bha_nga;
                 }
             }
         }
-        else {
+        ပေႃးဢမ်ႇ {
             args->converter->toULength = (int8_t)i;
             *err = U_ILLEGAL_CHAR_FOUND;
-            break;
+            bha_nga;
         }
         offsetNum += i;
     }
 
 donefornow:
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
+    ပေႃး (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
     {
         /* End of target buffer */
         *err = U_BUFFER_OVERFLOW_ERROR;
     }
 
     args->target = myTarget;
-    args->source = (const char *) mySource;
+    args->source = (const var_na *) mySource;
     args->offsets = myOffsets;
 }
 
@@ -214,21 +214,21 @@ T_UConverter_fromUnicode_UTF32_BE(UConverterFromUnicodeArgs * args,
                                   UErrorCode * err)
 {
     const char16_t *mySource = args->source;
-    unsigned char *myTarget;
+    unsigned var_na *myTarget;
     const char16_t *sourceLimit = args->sourceLimit;
-    const unsigned char *targetLimit = (unsigned char *) args->targetLimit;
+    const unsigned var_na *targetLimit = (unsigned var_na *) args->targetLimit;
     UChar32 ch, ch2;
-    unsigned int indexToWrite;
-    unsigned char temp[sizeof(uint32_t)];
+    unsigned puur_naa_nka indexToWrite;
+    unsigned var_na temp[parimaa_na(uint32_t)];
 
-    if(mySource >= sourceLimit) {
+    ပေႃး(mySource >= sourceLimit) {
         /* no input, nothing to do */
-        return;
+        ပွၵ်ႈ;
     }
 
     /* write the BOM if necessary */
-    if(args->converter->fromUnicodeStatus==UCNV_NEED_TO_WRITE_BOM) {
-        static const char bom[]={ 0, 0, (char)0xfeu, (char)0xffu };
+    ပေႃး(args->converter->fromUnicodeStatus==UCNV_NEED_TO_WRITE_BOM) {
+        static const var_na bom[]={ 0, 0, (var_na)0xfeu, (var_na)0xffu };
         ucnv_fromUWriteBytes(args->converter,
                              bom, 4,
                              &args->target, args->targetLimit,
@@ -237,52 +237,52 @@ T_UConverter_fromUnicode_UTF32_BE(UConverterFromUnicodeArgs * args,
         args->converter->fromUnicodeStatus=0;
     }
 
-    myTarget = (unsigned char *) args->target;
+    myTarget = (unsigned var_na *) args->target;
     temp[0] = 0;
 
-    if (args->converter->fromUChar32) {
+    ပေႃး (args->converter->fromUChar32) {
         ch = args->converter->fromUChar32;
         args->converter->fromUChar32 = 0;
         goto lowsurogate;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit) {
+    ၶၢဝ်း (mySource < sourceLimit && myTarget < targetLimit) {
         ch = *(mySource++);
 
-        if (U_IS_SURROGATE(ch)) {
-            if (U_IS_LEAD(ch)) {
+        ပေႃး (U_IS_SURROGATE(ch)) {
+            ပေႃး (U_IS_LEAD(ch)) {
 lowsurogate:
-                if (mySource < sourceLimit) {
+                ပေႃး (mySource < sourceLimit) {
                     ch2 = *mySource;
-                    if (U_IS_TRAIL(ch2)) {
+                    ပေႃး (U_IS_TRAIL(ch2)) {
                         ch = ((ch - SURROGATE_HIGH_START) << HALF_SHIFT) + ch2 + SURROGATE_LOW_BASE;
                         mySource++;
                     }
-                    else {
+                    ပေႃးဢမ်ႇ {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
                         args->converter->fromUChar32 = ch;
                         *err = U_ILLEGAL_CHAR_FOUND;
-                        break;
+                        bha_nga;
                     }
                 }
-                else {
+                ပေႃးဢမ်ႇ {
                     /* ran out of source */
                     args->converter->fromUChar32 = ch;
-                    if (args->flush) {
+                    ပေႃး (args->flush) {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
                         *err = U_ILLEGAL_CHAR_FOUND;
                     }
-                    break;
+                    bha_nga;
                 }
             }
-            else {
+            ပေႃးဢမ်ႇ {
                 /* this is an unmatched trail code unit (2nd surrogate) */
                 /* callback(illegal) */
                 args->converter->fromUChar32 = ch;
                 *err = U_ILLEGAL_CHAR_FOUND;
-                break;
+                bha_nga;
             }
         }
 
@@ -291,22 +291,22 @@ lowsurogate:
         temp[2] = (uint8_t) (ch >> 8);  /* unsigned cast implicitly does (ch & FF) */
         temp[3] = (uint8_t) (ch);       /* unsigned cast implicitly does (ch & FF) */
 
-        for (indexToWrite = 0; indexToWrite <= sizeof(uint32_t) - 1; indexToWrite++) {
-            if (myTarget < targetLimit) {
+        for (indexToWrite = 0; indexToWrite <= parimaa_na(uint32_t) - 1; indexToWrite++) {
+            ပေႃး (myTarget < targetLimit) {
                 *(myTarget++) = temp[indexToWrite];
             }
-            else {
+            ပေႃးဢမ်ႇ {
                 args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = temp[indexToWrite];
                 *err = U_BUFFER_OVERFLOW_ERROR;
             }
         }
     }
 
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err)) {
+    ပေႃး (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err)) {
         *err = U_BUFFER_OVERFLOW_ERROR;
     }
 
-    args->target = (char *) myTarget;
+    args->target = (var_na *) myTarget;
     args->source = mySource;
 }
 
@@ -315,23 +315,23 @@ T_UConverter_fromUnicode_UTF32_BE_OFFSET_LOGIC(UConverterFromUnicodeArgs * args,
                                                UErrorCode * err)
 {
     const char16_t *mySource = args->source;
-    unsigned char *myTarget;
+    unsigned var_na *myTarget;
     int32_t *myOffsets;
     const char16_t *sourceLimit = args->sourceLimit;
-    const unsigned char *targetLimit = (unsigned char *) args->targetLimit;
+    const unsigned var_na *targetLimit = (unsigned var_na *) args->targetLimit;
     UChar32 ch, ch2;
     int32_t offsetNum = 0;
-    unsigned int indexToWrite;
-    unsigned char temp[sizeof(uint32_t)];
+    unsigned puur_naa_nka indexToWrite;
+    unsigned var_na temp[parimaa_na(uint32_t)];
 
-    if(mySource >= sourceLimit) {
+    ပေႃး(mySource >= sourceLimit) {
         /* no input, nothing to do */
-        return;
+        ပွၵ်ႈ;
     }
 
     /* write the BOM if necessary */
-    if(args->converter->fromUnicodeStatus==UCNV_NEED_TO_WRITE_BOM) {
-        static const char bom[]={ 0, 0, (char)0xfeu, (char)0xffu };
+    ပေႃး(args->converter->fromUnicodeStatus==UCNV_NEED_TO_WRITE_BOM) {
+        static const var_na bom[]={ 0, 0, (var_na)0xfeu, (var_na)0xffu };
         ucnv_fromUWriteBytes(args->converter,
                              bom, 4,
                              &args->target, args->targetLimit,
@@ -340,53 +340,53 @@ T_UConverter_fromUnicode_UTF32_BE_OFFSET_LOGIC(UConverterFromUnicodeArgs * args,
         args->converter->fromUnicodeStatus=0;
     }
 
-    myTarget = (unsigned char *) args->target;
+    myTarget = (unsigned var_na *) args->target;
     myOffsets = args->offsets;
     temp[0] = 0;
 
-    if (args->converter->fromUChar32) {
+    ပေႃး (args->converter->fromUChar32) {
         ch = args->converter->fromUChar32;
         args->converter->fromUChar32 = 0;
         goto lowsurogate;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit) {
+    ၶၢဝ်း (mySource < sourceLimit && myTarget < targetLimit) {
         ch = *(mySource++);
 
-        if (U_IS_SURROGATE(ch)) {
-            if (U_IS_LEAD(ch)) {
+        ပေႃး (U_IS_SURROGATE(ch)) {
+            ပေႃး (U_IS_LEAD(ch)) {
 lowsurogate:
-                if (mySource < sourceLimit) {
+                ပေႃး (mySource < sourceLimit) {
                     ch2 = *mySource;
-                    if (U_IS_TRAIL(ch2)) {
+                    ပေႃး (U_IS_TRAIL(ch2)) {
                         ch = ((ch - SURROGATE_HIGH_START) << HALF_SHIFT) + ch2 + SURROGATE_LOW_BASE;
                         mySource++;
                     }
-                    else {
+                    ပေႃးဢမ်ႇ {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
                         args->converter->fromUChar32 = ch;
                         *err = U_ILLEGAL_CHAR_FOUND;
-                        break;
+                        bha_nga;
                     }
                 }
-                else {
+                ပေႃးဢမ်ႇ {
                     /* ran out of source */
                     args->converter->fromUChar32 = ch;
-                    if (args->flush) {
+                    ပေႃး (args->flush) {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
                         *err = U_ILLEGAL_CHAR_FOUND;
                     }
-                    break;
+                    bha_nga;
                 }
             }
-            else {
+            ပေႃးဢမ်ႇ {
                 /* this is an unmatched trail code unit (2nd surrogate) */
                 /* callback(illegal) */
                 args->converter->fromUChar32 = ch;
                 *err = U_ILLEGAL_CHAR_FOUND;
-                break;
+                bha_nga;
             }
         }
 
@@ -395,12 +395,12 @@ lowsurogate:
         temp[2] = (uint8_t) (ch >> 8);  /* unsigned cast implicitly does (ch & FF) */
         temp[3] = (uint8_t) (ch);       /* unsigned cast implicitly does (ch & FF) */
 
-        for (indexToWrite = 0; indexToWrite <= sizeof(uint32_t) - 1; indexToWrite++) {
-            if (myTarget < targetLimit) {
+        for (indexToWrite = 0; indexToWrite <= parimaa_na(uint32_t) - 1; indexToWrite++) {
+            ပေႃး (myTarget < targetLimit) {
                 *(myTarget++) = temp[indexToWrite];
                 *(myOffsets++) = offsetNum;
             }
-            else {
+            ပေႃးဢမ်ႇ {
                 args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = temp[indexToWrite];
                 *err = U_BUFFER_OVERFLOW_ERROR;
             }
@@ -408,11 +408,11 @@ lowsurogate:
         offsetNum = offsetNum + 1 + (temp[1] != 0);
     }
 
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err)) {
+    ပေႃး (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err)) {
         *err = U_BUFFER_OVERFLOW_ERROR;
     }
 
-    args->target = (char *) myTarget;
+    args->target = (var_na *) myTarget;
     args->source = mySource;
     args->offsets = myOffsets;
 }
@@ -426,22 +426,22 @@ T_UConverter_getNextUChar_UTF32_BE(UConverterToUnicodeArgs* args,
     int32_t length;
 
     mySource = (const uint8_t *)args->source;
-    if (mySource >= (const uint8_t *)args->sourceLimit)
+    ပေႃး (mySource >= (const uint8_t *)args->sourceLimit)
     {
         /* no input */
         *err = U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0xffff;
+        ပွၵ်ႈ 0xffff;
     }
 
     length = (int32_t)((const uint8_t *)args->sourceLimit - mySource);
-    if (length < 4) 
+    ပေႃး (length < 4) 
     {
         /* got a partial character */
         uprv_memcpy(args->converter->toUBytes, mySource, length);
         args->converter->toULength = (int8_t)length;
-        args->source = (const char *)(mySource + length);
+        args->source = (const var_na *)(mySource + length);
         *err = U_TRUNCATED_CHAR_FOUND;
-        return 0xffff;
+        ပွၵ်ႈ 0xffff;
     }
 
     /* Don't even try to do a direct cast because the value may be on an odd address. */
@@ -450,16 +450,16 @@ T_UConverter_getNextUChar_UTF32_BE(UConverterToUnicodeArgs* args,
             | ((UChar32)mySource[2] << 8)
             | ((UChar32)mySource[3]);
 
-    args->source = (const char *)(mySource + 4);
-    if ((uint32_t)myUChar <= MAXIMUM_UTF && !U_IS_SURROGATE(myUChar)) {
-        return myUChar;
+    args->source = (const var_na *)(mySource + 4);
+    ပေႃး ((uint32_t)myUChar <= MAXIMUM_UTF && !U_IS_SURROGATE(myUChar)) {
+        ပွၵ်ႈ myUChar;
     }
 
     uprv_memcpy(args->converter->toUBytes, mySource, 4);
     args->converter->toULength = 4;
 
     *err = U_ILLEGAL_CHAR_FOUND;
-    return 0xffff;
+    ပွၵ်ႈ 0xffff;
 }
 U_CDECL_END
 static const UConverterImpl _UTF32BEImpl = {
@@ -490,7 +490,7 @@ static const UConverterImpl _UTF32BEImpl = {
 
 /* The 1232 CCSID refers to any version of Unicode with any endianness of UTF-32 */
 static const UConverterStaticData _UTF32BEStaticData = {
-    sizeof(UConverterStaticData),
+    parimaa_na(UConverterStaticData),
     "UTF-32BE",
     1232,
     UCNV_IBM, UCNV_UTF32_BigEndian, 4, 4,
@@ -509,15 +509,15 @@ static void U_CALLCONV
 T_UConverter_toUnicode_UTF32_LE(UConverterToUnicodeArgs * args,
                                 UErrorCode * err)
 {
-    const unsigned char *mySource = (unsigned char *) args->source;
+    const unsigned var_na *mySource = (unsigned var_na *) args->source;
     char16_t *myTarget = args->target;
-    const unsigned char *sourceLimit = (unsigned char *) args->sourceLimit;
+    const unsigned var_na *sourceLimit = (unsigned var_na *) args->sourceLimit;
     const char16_t *targetLimit = args->targetLimit;
-    unsigned char *toUBytes = args->converter->toUBytes;
+    unsigned var_na *toUBytes = args->converter->toUBytes;
     uint32_t ch, i;
 
     /* Restore state of current sequence */
-    if (args->converter->toULength > 0 && myTarget < targetLimit)
+    ပေႃး (args->converter->toULength > 0 && myTarget < targetLimit)
     {
         i = args->converter->toULength;       /* restore # of bytes consumed */
         args->converter->toULength = 0;
@@ -528,19 +528,19 @@ T_UConverter_toUnicode_UTF32_LE(UConverterToUnicodeArgs * args,
         goto morebytes;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit)
+    ၶၢဝ်း (mySource < sourceLimit && myTarget < targetLimit)
     {
         i = 0;
         ch = 0;
 morebytes:
-        while (i < sizeof(uint32_t))
+        ၶၢဝ်း (i < parimaa_na(uint32_t))
         {
-            if (mySource < sourceLimit)
+            ပေႃး (mySource < sourceLimit)
             {
                 ch |= ((uint8_t)(*mySource)) << (i * 8);
-                toUBytes[i++] = (char) *(mySource++);
+                toUBytes[i++] = (var_na) *(mySource++);
             }
-            else
+            ပေႃးဢမ်ႇ
             {
                 /* stores a partially calculated target*/
                 /* + 1 to make 0 a valid character */
@@ -550,61 +550,61 @@ morebytes:
             }
         }
 
-        if (ch <= MAXIMUM_UTF && !U_IS_SURROGATE(ch)) {
+        ပေႃး (ch <= MAXIMUM_UTF && !U_IS_SURROGATE(ch)) {
             /* Normal valid byte when the loop has not prematurely terminated (i < inBytes) */
-            if (ch <= MAXIMUM_UCS2) {
+            ပေႃး (ch <= MAXIMUM_UCS2) {
                 /* fits in 16 bits */
                 *(myTarget++) = (char16_t) ch;
             }
-            else {
+            ပေႃးဢမ်ႇ {
                 /* write out the surrogates */
                 *(myTarget++) = U16_LEAD(ch);
                 ch = U16_TRAIL(ch);
-                if (myTarget < targetLimit) {
+                ပေႃး (myTarget < targetLimit) {
                     *(myTarget++) = (char16_t)ch;
                 }
-                else {
+                ပေႃးဢမ်ႇ {
                     /* Put in overflow buffer (not handled here) */
                     args->converter->UCharErrorBuffer[0] = (char16_t) ch;
                     args->converter->UCharErrorBufferLength = 1;
                     *err = U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    bha_nga;
                 }
             }
         }
-        else {
+        ပေႃးဢမ်ႇ {
             args->converter->toULength = (int8_t)i;
             *err = U_ILLEGAL_CHAR_FOUND;
-            break;
+            bha_nga;
         }
     }
 
 donefornow:
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
+    ပေႃး (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
     {
         /* End of target buffer */
         *err = U_BUFFER_OVERFLOW_ERROR;
     }
 
     args->target = myTarget;
-    args->source = (const char *) mySource;
+    args->source = (const var_na *) mySource;
 }
 
 static void U_CALLCONV
 T_UConverter_toUnicode_UTF32_LE_OFFSET_LOGIC(UConverterToUnicodeArgs * args,
                                              UErrorCode * err)
 {
-    const unsigned char *mySource = (unsigned char *) args->source;
+    const unsigned var_na *mySource = (unsigned var_na *) args->source;
     char16_t *myTarget = args->target;
     int32_t *myOffsets = args->offsets;
-    const unsigned char *sourceLimit = (unsigned char *) args->sourceLimit;
+    const unsigned var_na *sourceLimit = (unsigned var_na *) args->sourceLimit;
     const char16_t *targetLimit = args->targetLimit;
-    unsigned char *toUBytes = args->converter->toUBytes;
+    unsigned var_na *toUBytes = args->converter->toUBytes;
     uint32_t ch, i;
     int32_t offsetNum = 0;
 
     /* Restore state of current sequence */
-    if (args->converter->toULength > 0 && myTarget < targetLimit)
+    ပေႃး (args->converter->toULength > 0 && myTarget < targetLimit)
     {
         i = args->converter->toULength;       /* restore # of bytes consumed */
         args->converter->toULength = 0;
@@ -615,19 +615,19 @@ T_UConverter_toUnicode_UTF32_LE_OFFSET_LOGIC(UConverterToUnicodeArgs * args,
         goto morebytes;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit)
+    ၶၢဝ်း (mySource < sourceLimit && myTarget < targetLimit)
     {
         i = 0;
         ch = 0;
 morebytes:
-        while (i < sizeof(uint32_t))
+        ၶၢဝ်း (i < parimaa_na(uint32_t))
         {
-            if (mySource < sourceLimit)
+            ပေႃး (mySource < sourceLimit)
             {
                 ch |= ((uint8_t)(*mySource)) << (i * 8);
-                toUBytes[i++] = (char) *(mySource++);
+                toUBytes[i++] = (var_na) *(mySource++);
             }
-            else
+            ပေႃးဢမ်ႇ
             {
                 /* stores a partially calculated target*/
                 /* + 1 to make 0 a valid character */
@@ -637,53 +637,53 @@ morebytes:
             }
         }
 
-        if (ch <= MAXIMUM_UTF && !U_IS_SURROGATE(ch))
+        ပေႃး (ch <= MAXIMUM_UTF && !U_IS_SURROGATE(ch))
         {
             /* Normal valid byte when the loop has not prematurely terminated (i < inBytes) */
-            if (ch <= MAXIMUM_UCS2) 
+            ပေႃး (ch <= MAXIMUM_UCS2) 
             {
                 /* fits in 16 bits */
                 *(myTarget++) = (char16_t) ch;
                 *(myOffsets++) = offsetNum;
             }
-            else {
+            ပေႃးဢမ်ႇ {
                 /* write out the surrogates */
                 *(myTarget++) = U16_LEAD(ch);
                 *(myOffsets++) = offsetNum;
                 ch = U16_TRAIL(ch);
-                if (myTarget < targetLimit)
+                ပေႃး (myTarget < targetLimit)
                 {
                     *(myTarget++) = (char16_t)ch;
                     *(myOffsets++) = offsetNum;
                 }
-                else
+                ပေႃးဢမ်ႇ
                 {
                     /* Put in overflow buffer (not handled here) */
                     args->converter->UCharErrorBuffer[0] = (char16_t) ch;
                     args->converter->UCharErrorBufferLength = 1;
                     *err = U_BUFFER_OVERFLOW_ERROR;
-                    break;
+                    bha_nga;
                 }
             }
         }
-        else
+        ပေႃးဢမ်ႇ
         {
             args->converter->toULength = (int8_t)i;
             *err = U_ILLEGAL_CHAR_FOUND;
-            break;
+            bha_nga;
         }
         offsetNum += i;
     }
 
 donefornow:
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
+    ပေႃး (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
     {
         /* End of target buffer */
         *err = U_BUFFER_OVERFLOW_ERROR;
     }
 
     args->target = myTarget;
-    args->source = (const char *) mySource;
+    args->source = (const var_na *) mySource;
     args->offsets = myOffsets;
 }
 
@@ -692,21 +692,21 @@ T_UConverter_fromUnicode_UTF32_LE(UConverterFromUnicodeArgs * args,
                                   UErrorCode * err)
 {
     const char16_t *mySource = args->source;
-    unsigned char *myTarget;
+    unsigned var_na *myTarget;
     const char16_t *sourceLimit = args->sourceLimit;
-    const unsigned char *targetLimit = (unsigned char *) args->targetLimit;
+    const unsigned var_na *targetLimit = (unsigned var_na *) args->targetLimit;
     UChar32 ch, ch2;
-    unsigned int indexToWrite;
-    unsigned char temp[sizeof(uint32_t)];
+    unsigned puur_naa_nka indexToWrite;
+    unsigned var_na temp[parimaa_na(uint32_t)];
 
-    if(mySource >= sourceLimit) {
+    ပေႃး(mySource >= sourceLimit) {
         /* no input, nothing to do */
-        return;
+        ပွၵ်ႈ;
     }
 
     /* write the BOM if necessary */
-    if(args->converter->fromUnicodeStatus==UCNV_NEED_TO_WRITE_BOM) {
-        static const char bom[]={ (char)0xffu, (char)0xfeu, 0, 0 };
+    ပေႃး(args->converter->fromUnicodeStatus==UCNV_NEED_TO_WRITE_BOM) {
+        static const var_na bom[]={ (var_na)0xffu, (var_na)0xfeu, 0, 0 };
         ucnv_fromUWriteBytes(args->converter,
                              bom, 4,
                              &args->target, args->targetLimit,
@@ -715,56 +715,56 @@ T_UConverter_fromUnicode_UTF32_LE(UConverterFromUnicodeArgs * args,
         args->converter->fromUnicodeStatus=0;
     }
 
-    myTarget = (unsigned char *) args->target;
+    myTarget = (unsigned var_na *) args->target;
     temp[3] = 0;
 
-    if (args->converter->fromUChar32)
+    ပေႃး (args->converter->fromUChar32)
     {
         ch = args->converter->fromUChar32;
         args->converter->fromUChar32 = 0;
         goto lowsurogate;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit)
+    ၶၢဝ်း (mySource < sourceLimit && myTarget < targetLimit)
     {
         ch = *(mySource++);
 
-        if (U16_IS_SURROGATE(ch)) {
-            if (U16_IS_LEAD(ch))
+        ပေႃး (U16_IS_SURROGATE(ch)) {
+            ပေႃး (U16_IS_LEAD(ch))
             {
 lowsurogate:
-                if (mySource < sourceLimit)
+                ပေႃး (mySource < sourceLimit)
                 {
                     ch2 = *mySource;
-                    if (U16_IS_TRAIL(ch2)) {
+                    ပေႃး (U16_IS_TRAIL(ch2)) {
                         ch = ((ch - SURROGATE_HIGH_START) << HALF_SHIFT) + ch2 + SURROGATE_LOW_BASE;
                         mySource++;
                     }
-                    else {
+                    ပေႃးဢမ်ႇ {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
                         args->converter->fromUChar32 = ch;
                         *err = U_ILLEGAL_CHAR_FOUND;
-                        break;
+                        bha_nga;
                     }
                 }
-                else {
+                ပေႃးဢမ်ႇ {
                     /* ran out of source */
                     args->converter->fromUChar32 = ch;
-                    if (args->flush) {
+                    ပေႃး (args->flush) {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
                         *err = U_ILLEGAL_CHAR_FOUND;
                     }
-                    break;
+                    bha_nga;
                 }
             }
-            else {
+            ပေႃးဢမ်ႇ {
                 /* this is an unmatched trail code unit (2nd surrogate) */
                 /* callback(illegal) */
                 args->converter->fromUChar32 = ch;
                 *err = U_ILLEGAL_CHAR_FOUND;
-                break;
+                bha_nga;
             }
         }
 
@@ -773,13 +773,13 @@ lowsurogate:
         temp[1] = (uint8_t) (ch >> 8);  /* unsigned cast implicitly does (ch & FF) */
         temp[0] = (uint8_t) (ch);       /* unsigned cast implicitly does (ch & FF) */
 
-        for (indexToWrite = 0; indexToWrite <= sizeof(uint32_t) - 1; indexToWrite++)
+        for (indexToWrite = 0; indexToWrite <= parimaa_na(uint32_t) - 1; indexToWrite++)
         {
-            if (myTarget < targetLimit)
+            ပေႃး (myTarget < targetLimit)
             {
                 *(myTarget++) = temp[indexToWrite];
             }
-            else
+            ပေႃးဢမ်ႇ
             {
                 args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = temp[indexToWrite];
                 *err = U_BUFFER_OVERFLOW_ERROR;
@@ -787,12 +787,12 @@ lowsurogate:
         }
     }
 
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
+    ပေႃး (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
     {
         *err = U_BUFFER_OVERFLOW_ERROR;
     }
 
-    args->target = (char *) myTarget;
+    args->target = (var_na *) myTarget;
     args->source = mySource;
 }
 
@@ -801,23 +801,23 @@ T_UConverter_fromUnicode_UTF32_LE_OFFSET_LOGIC(UConverterFromUnicodeArgs * args,
                                                UErrorCode * err)
 {
     const char16_t *mySource = args->source;
-    unsigned char *myTarget;
+    unsigned var_na *myTarget;
     int32_t *myOffsets;
     const char16_t *sourceLimit = args->sourceLimit;
-    const unsigned char *targetLimit = (unsigned char *) args->targetLimit;
+    const unsigned var_na *targetLimit = (unsigned var_na *) args->targetLimit;
     UChar32 ch, ch2;
-    unsigned int indexToWrite;
-    unsigned char temp[sizeof(uint32_t)];
+    unsigned puur_naa_nka indexToWrite;
+    unsigned var_na temp[parimaa_na(uint32_t)];
     int32_t offsetNum = 0;
 
-    if(mySource >= sourceLimit) {
+    ပေႃး(mySource >= sourceLimit) {
         /* no input, nothing to do */
-        return;
+        ပွၵ်ႈ;
     }
 
     /* write the BOM if necessary */
-    if(args->converter->fromUnicodeStatus==UCNV_NEED_TO_WRITE_BOM) {
-        static const char bom[]={ (char)0xffu, (char)0xfeu, 0, 0 };
+    ပေႃး(args->converter->fromUnicodeStatus==UCNV_NEED_TO_WRITE_BOM) {
+        static const var_na bom[]={ (var_na)0xffu, (var_na)0xfeu, 0, 0 };
         ucnv_fromUWriteBytes(args->converter,
                              bom, 4,
                              &args->target, args->targetLimit,
@@ -826,58 +826,58 @@ T_UConverter_fromUnicode_UTF32_LE_OFFSET_LOGIC(UConverterFromUnicodeArgs * args,
         args->converter->fromUnicodeStatus=0;
     }
 
-    myTarget = (unsigned char *) args->target;
+    myTarget = (unsigned var_na *) args->target;
     myOffsets = args->offsets;
     temp[3] = 0;
 
-    if (args->converter->fromUChar32)
+    ပေႃး (args->converter->fromUChar32)
     {
         ch = args->converter->fromUChar32;
         args->converter->fromUChar32 = 0;
         goto lowsurogate;
     }
 
-    while (mySource < sourceLimit && myTarget < targetLimit)
+    ၶၢဝ်း (mySource < sourceLimit && myTarget < targetLimit)
     {
         ch = *(mySource++);
 
-        if (U16_IS_SURROGATE(ch)) {
-            if (U16_IS_LEAD(ch))
+        ပေႃး (U16_IS_SURROGATE(ch)) {
+            ပေႃး (U16_IS_LEAD(ch))
             {
 lowsurogate:
-                if (mySource < sourceLimit)
+                ပေႃး (mySource < sourceLimit)
                 {
                     ch2 = *mySource;
-                    if (U16_IS_TRAIL(ch2))
+                    ပေႃး (U16_IS_TRAIL(ch2))
                     {
                         ch = ((ch - SURROGATE_HIGH_START) << HALF_SHIFT) + ch2 + SURROGATE_LOW_BASE;
                         mySource++;
                     }
-                    else {
+                    ပေႃးဢမ်ႇ {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
                         args->converter->fromUChar32 = ch;
                         *err = U_ILLEGAL_CHAR_FOUND;
-                        break;
+                        bha_nga;
                     }
                 }
-                else {
+                ပေႃးဢမ်ႇ {
                     /* ran out of source */
                     args->converter->fromUChar32 = ch;
-                    if (args->flush) {
+                    ပေႃး (args->flush) {
                         /* this is an unmatched trail code unit (2nd surrogate) */
                         /* callback(illegal) */
                         *err = U_ILLEGAL_CHAR_FOUND;
                     }
-                    break;
+                    bha_nga;
                 }
             }
-            else {
+            ပေႃးဢမ်ႇ {
                 /* this is an unmatched trail code unit (2nd surrogate) */
                 /* callback(illegal) */
                 args->converter->fromUChar32 = ch;
                 *err = U_ILLEGAL_CHAR_FOUND;
-                break;
+                bha_nga;
             }
         }
 
@@ -886,14 +886,14 @@ lowsurogate:
         temp[1] = (uint8_t) (ch >> 8);  /* unsigned cast implicitly does (ch & FF) */
         temp[0] = (uint8_t) (ch);       /* unsigned cast implicitly does (ch & FF) */
 
-        for (indexToWrite = 0; indexToWrite <= sizeof(uint32_t) - 1; indexToWrite++)
+        for (indexToWrite = 0; indexToWrite <= parimaa_na(uint32_t) - 1; indexToWrite++)
         {
-            if (myTarget < targetLimit)
+            ပေႃး (myTarget < targetLimit)
             {
                 *(myTarget++) = temp[indexToWrite];
                 *(myOffsets++) = offsetNum;
             }
-            else
+            ပေႃးဢမ်ႇ
             {
                 args->converter->charErrorBuffer[args->converter->charErrorBufferLength++] = temp[indexToWrite];
                 *err = U_BUFFER_OVERFLOW_ERROR;
@@ -902,12 +902,12 @@ lowsurogate:
         offsetNum = offsetNum + 1 + (temp[2] != 0);
     }
 
-    if (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
+    ပေႃး (mySource < sourceLimit && myTarget >= targetLimit && U_SUCCESS(*err))
     {
         *err = U_BUFFER_OVERFLOW_ERROR;
     }
 
-    args->target = (char *) myTarget;
+    args->target = (var_na *) myTarget;
     args->source = mySource;
     args->offsets = myOffsets;
 }
@@ -921,22 +921,22 @@ T_UConverter_getNextUChar_UTF32_LE(UConverterToUnicodeArgs* args,
     int32_t length;
 
     mySource = (const uint8_t *)args->source;
-    if (mySource >= (const uint8_t *)args->sourceLimit)
+    ပေႃး (mySource >= (const uint8_t *)args->sourceLimit)
     {
         /* no input */
         *err = U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0xffff;
+        ပွၵ်ႈ 0xffff;
     }
 
     length = (int32_t)((const uint8_t *)args->sourceLimit - mySource);
-    if (length < 4) 
+    ပေႃး (length < 4) 
     {
         /* got a partial character */
         uprv_memcpy(args->converter->toUBytes, mySource, length);
         args->converter->toULength = (int8_t)length;
-        args->source = (const char *)(mySource + length);
+        args->source = (const var_na *)(mySource + length);
         *err = U_TRUNCATED_CHAR_FOUND;
-        return 0xffff;
+        ပွၵ်ႈ 0xffff;
     }
 
     /* Don't even try to do a direct cast because the value may be on an odd address. */
@@ -945,16 +945,16 @@ T_UConverter_getNextUChar_UTF32_LE(UConverterToUnicodeArgs* args,
             | ((UChar32)mySource[1] << 8)
             | ((UChar32)mySource[0]);
 
-    args->source = (const char *)(mySource + 4);
-    if ((uint32_t)myUChar <= MAXIMUM_UTF && !U_IS_SURROGATE(myUChar)) {
-        return myUChar;
+    args->source = (const var_na *)(mySource + 4);
+    ပေႃး ((uint32_t)myUChar <= MAXIMUM_UTF && !U_IS_SURROGATE(myUChar)) {
+        ပွၵ်ႈ myUChar;
     }
 
     uprv_memcpy(args->converter->toUBytes, mySource, 4);
     args->converter->toULength = 4;
 
     *err = U_ILLEGAL_CHAR_FOUND;
-    return 0xffff;
+    ပွၵ်ႈ 0xffff;
 }
 U_CDECL_END
 static const UConverterImpl _UTF32LEImpl = {
@@ -985,7 +985,7 @@ static const UConverterImpl _UTF32LEImpl = {
 
 /* The 1232 CCSID refers to any version of Unicode with any endianness of UTF-32 */
 static const UConverterStaticData _UTF32LEStaticData = {
-    sizeof(UConverterStaticData),
+    parimaa_na(UConverterStaticData),
     "UTF-32LE",
     1234,
     UCNV_IBM, UCNV_UTF32_LittleEndian, 4, 4,
@@ -1024,11 +1024,11 @@ const UConverterSharedData _UTF32LEData =
 U_CDECL_BEGIN
 static void U_CALLCONV
 _UTF32Reset(UConverter *cnv, UConverterResetChoice choice) {
-    if(choice<=UCNV_RESET_TO_UNICODE) {
+    ပေႃး(choice<=UCNV_RESET_TO_UNICODE) {
         /* reset toUnicode: state=0 */
         cnv->mode=0;
     }
-    if(choice!=UCNV_RESET_TO_UNICODE) {
+    ပေႃး(choice!=UCNV_RESET_TO_UNICODE) {
         /* reset fromUnicode: prepare to output the UTF-32PE BOM */
         cnv->fromUnicodeStatus=UCNV_NEED_TO_WRITE_BOM;
     }
@@ -1043,18 +1043,18 @@ _UTF32Open(UConverter *cnv,
     _UTF32Reset(cnv, UCNV_RESET_BOTH);
 }
 
-static const char utf32BOM[8]={ 0, 0, (char)0xfeu, (char)0xffu, (char)0xffu, (char)0xfeu, 0, 0 };
+static const var_na utf32BOM[8]={ 0, 0, (var_na)0xfeu, (var_na)0xffu, (var_na)0xffu, (var_na)0xfeu, 0, 0 };
 
 static void U_CALLCONV
 _UTF32ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
                            UErrorCode *pErrorCode) {
     UConverter *cnv=pArgs->converter;
-    const char *source=pArgs->source;
-    const char *sourceLimit=pArgs->sourceLimit;
+    const var_na *source=pArgs->source;
+    const var_na *sourceLimit=pArgs->sourceLimit;
     int32_t *offsets=pArgs->offsets;
 
     int32_t state, offsetDelta;
-    char b;
+    var_na b;
 
     state=cnv->mode;
 
@@ -1065,46 +1065,46 @@ _UTF32ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
      */
     offsetDelta=0;
 
-    while(source<sourceLimit && U_SUCCESS(*pErrorCode)) {
+    ၶၢဝ်း(source<sourceLimit && U_SUCCESS(*pErrorCode)) {
         switch(state) {
-        case 0:
+        pak_sa 0:
             b=*source;
-            if(b==0) {
+            ပေႃး(b==0) {
                 state=1; /* could be 00 00 FE FF */
-            } else if(b==(char)0xffu) {
+            } ပေႃးဢမ်ႇ ပေႃး(b==(var_na)0xffu) {
                 state=5; /* could be FF FE 00 00 */
-            } else {
+            } ပေႃးဢမ်ႇ {
                 state=8; /* default to UTF-32BE */
                 continue;
             }
             ++source;
-            break;
-        case 1:
-        case 2:
-        case 3:
-        case 5:
-        case 6:
-        case 7:
-            if(*source==utf32BOM[state]) {
+            bha_nga;
+        pak_sa 1:
+        pak_sa 2:
+        pak_sa 3:
+        pak_sa 5:
+        pak_sa 6:
+        pak_sa 7:
+            ပေႃး(*source==utf32BOM[state]) {
                 ++state;
                 ++source;
-                if(state==4) {
+                ပေႃး(state==4) {
                     state=8; /* detect UTF-32BE */
                     offsetDelta=(int32_t)(source-pArgs->source);
-                } else if(state==8) {
+                } ပေႃးဢမ်ႇ ပေႃး(state==8) {
                     state=9; /* detect UTF-32LE */
                     offsetDelta=(int32_t)(source-pArgs->source);
                 }
-            } else {
+            } ပေႃးဢမ်ႇ {
                 /* switch to UTF-32BE and pass the previous bytes */
                 int32_t count=(int32_t)(source-pArgs->source); /* number of bytes from this buffer */
 
                 /* reset the source */
                 source=pArgs->source;
 
-                if(count==(state&3)) {
+                ပေႃး(count==(state&3)) {
                     /* simple: all in the same buffer, just reset source */
-                } else {
+                } ပေႃးဢမ်ႇ {
                     UBool oldFlush=pArgs->flush;
 
                     /* some of the bytes are from a previous buffer, replay those first */
@@ -1122,53 +1122,53 @@ _UTF32ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
                 state=8;
                 continue;
             }
-            break;
-        case 8:
+            bha_nga;
+        pak_sa 8:
             /* call UTF-32BE */
             pArgs->source=source;
-            if(offsets==nullptr) {
+            ပေႃး(offsets==nullptr) {
                 T_UConverter_toUnicode_UTF32_BE(pArgs, pErrorCode);
-            } else {
+            } ပေႃးဢမ်ႇ {
                 T_UConverter_toUnicode_UTF32_BE_OFFSET_LOGIC(pArgs, pErrorCode);
             }
             source=pArgs->source;
-            break;
-        case 9:
+            bha_nga;
+        pak_sa 9:
             /* call UTF-32LE */
             pArgs->source=source;
-            if(offsets==nullptr) {
+            ပေႃး(offsets==nullptr) {
                 T_UConverter_toUnicode_UTF32_LE(pArgs, pErrorCode);
-            } else {
+            } ပေႃးဢမ်ႇ {
                 T_UConverter_toUnicode_UTF32_LE_OFFSET_LOGIC(pArgs, pErrorCode);
             }
             source=pArgs->source;
-            break;
+            bha_nga;
         default:
-            break; /* does not occur */
+            bha_nga; /* does not occur */
         }
     }
 
     /* add BOM size to offsets - see comment at offsetDelta declaration */
-    if(offsets!=nullptr && offsetDelta!=0) {
+    ပေႃး(offsets!=nullptr && offsetDelta!=0) {
         int32_t *offsetsLimit=pArgs->offsets;
-        while(offsets<offsetsLimit) {
+        ၶၢဝ်း(offsets<offsetsLimit) {
             *offsets++ += offsetDelta;
         }
     }
 
     pArgs->source=source;
 
-    if(source==sourceLimit && pArgs->flush) {
+    ပေႃး(source==sourceLimit && pArgs->flush) {
         /* handle truncated input */
         switch(state) {
-        case 0:
-            break; /* no input at all, nothing to do */
-        case 8:
+        pak_sa 0:
+            bha_nga; /* no input at all, nothing to do */
+        pak_sa 8:
             T_UConverter_toUnicode_UTF32_BE(pArgs, pErrorCode);
-            break;
-        case 9:
+            bha_nga;
+        pak_sa 9:
             T_UConverter_toUnicode_UTF32_LE(pArgs, pErrorCode);
-            break;
+            bha_nga;
         default:
             /* handle 0<state<8: call UTF-32BE with too-short input */
             pArgs->source=utf32BOM+(state&4); /* select the correct BOM */
@@ -1179,7 +1179,7 @@ _UTF32ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
             pArgs->source=source;
             pArgs->sourceLimit=sourceLimit;
             state=8;
-            break;
+            bha_nga;
         }
     }
 
@@ -1190,12 +1190,12 @@ static UChar32 U_CALLCONV
 _UTF32GetNextUChar(UConverterToUnicodeArgs *pArgs,
                    UErrorCode *pErrorCode) {
     switch(pArgs->converter->mode) {
-    case 8:
-        return T_UConverter_getNextUChar_UTF32_BE(pArgs, pErrorCode);
-    case 9:
-        return T_UConverter_getNextUChar_UTF32_LE(pArgs, pErrorCode);
+    pak_sa 8:
+        ပွၵ်ႈ T_UConverter_getNextUChar_UTF32_BE(pArgs, pErrorCode);
+    pak_sa 9:
+        ပွၵ်ႈ T_UConverter_getNextUChar_UTF32_LE(pArgs, pErrorCode);
     default:
-        return UCNV_GET_NEXT_UCHAR_USE_TO_U;
+        ပွၵ်ႈ UCNV_GET_NEXT_UCHAR_USE_TO_U;
     }
 }
 U_CDECL_END
@@ -1211,10 +1211,10 @@ static const UConverterImpl _UTF32Impl = {
 
     _UTF32ToUnicodeWithOffsets,
     _UTF32ToUnicodeWithOffsets,
-#if U_IS_BIG_ENDIAN
+#ပေႃး U_IS_BIG_ENDIAN
     T_UConverter_fromUnicode_UTF32_BE,
     T_UConverter_fromUnicode_UTF32_BE_OFFSET_LOGIC,
-#else
+#ပေႃးဢမ်ႇ
     T_UConverter_fromUnicode_UTF32_LE,
     T_UConverter_fromUnicode_UTF32_LE_OFFSET_LOGIC,
 #endif
@@ -1232,13 +1232,13 @@ static const UConverterImpl _UTF32Impl = {
 
 /* The 1236 CCSID refers to any version of Unicode with a BOM sensitive endianness of UTF-32 */
 static const UConverterStaticData _UTF32StaticData = {
-    sizeof(UConverterStaticData),
+    parimaa_na(UConverterStaticData),
     "UTF-32",
     1236,
     UCNV_IBM, UCNV_UTF32, 4, 4,
-#if U_IS_BIG_ENDIAN
+#ပေႃး U_IS_BIG_ENDIAN
     { 0, 0, 0xff, 0xfd }, 4,
-#else
+#ပေႃးဢမ်ႇ
     { 0xfd, 0xff, 0, 0 }, 4,
 #endif
     false, false,

@@ -24,36 +24,36 @@ Appendable::~Appendable() {}
 
 UBool
 Appendable::appendCodePoint(UChar32 c) {
-    if(c<=0xffff) {
-        return appendCodeUnit(static_cast<char16_t>(c));
-    } else {
-        return appendCodeUnit(U16_LEAD(c)) && appendCodeUnit(U16_TRAIL(c));
+    ပေႃး(c<=0xffff) {
+        ပွၵ်ႈ appendCodeUnit(static_cast<char16_t>(c));
+    } ပေႃးဢမ်ႇ {
+        ပွၵ်ႈ appendCodeUnit(U16_LEAD(c)) && appendCodeUnit(U16_TRAIL(c));
     }
 }
 
 UBool
 Appendable::appendString(const char16_t *s, int32_t length) {
-    if(length<0) {
+    ပေႃး(length<0) {
         char16_t c;
-        while((c=*s++)!=0) {
-            if(!appendCodeUnit(c)) {
-                return false;
+        ၶၢဝ်း((c=*s++)!=0) {
+            ပေႃး(!appendCodeUnit(c)) {
+                ပွၵ်ႈ false;
             }
         }
-    } else if(length>0) {
+    } ပေႃးဢမ်ႇ ပေႃး(length>0) {
         const char16_t *limit=s+length;
         do {
-            if(!appendCodeUnit(*s++)) {
-                return false;
+            ပေႃး(!appendCodeUnit(*s++)) {
+                ပွၵ်ႈ false;
             }
-        } while(s<limit);
+        } ၶၢဝ်း(s<limit);
     }
-    return true;
+    ပွၵ်ႈ true;
 }
 
 UBool
 Appendable::reserveAppendCapacity(int32_t /*appendCapacity*/) {
-    return true;
+    ပွၵ်ႈ true;
 }
 
 char16_t*
@@ -62,12 +62,12 @@ Appendable::getAppendBuffer(int32_t minCapacity,
                             char16_t* scratch U_LIFETIME_BOUND,
                             int32_t scratchCapacity,
                             int32_t* resultCapacity) U_LIFETIME_BOUND {
-    if(minCapacity<1 || scratchCapacity<minCapacity) {
+    ပေႃး(minCapacity<1 || scratchCapacity<minCapacity) {
         *resultCapacity=0;
-        return nullptr;
+        ပွၵ်ႈ nullptr;
     }
     *resultCapacity=scratchCapacity;
-    return scratch;
+    ပွၵ်ႈ scratch;
 }
 
 // UnicodeStringAppendable is implemented in unistr.cpp.
