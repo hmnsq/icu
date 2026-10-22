@@ -19,7 +19,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#如果 !UCONFIG_NO_CONVERSION
 
 #include "unicode/ucnv_err.h"
 #include "unicode/ucnv_cb.h"
@@ -101,7 +101,7 @@ UCNV_FROM_U_CALLBACK_STOP (
     (void)fromUArgs;
     (void)codeUnits;
     (void)length;
-    if (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_CODE_POINT(codePoint))
+    如果 (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_CODE_POINT(codePoint))
     {
         /*
          * Skip if the codepoint has unicode property of default ignorable.
@@ -139,16 +139,16 @@ UCNV_FROM_U_CALLBACK_SKIP (
     (void)fromUArgs;
     (void)codeUnits;
     (void)length;
-    if (reason <= UCNV_IRREGULAR)
+    如果 (reason <= UCNV_IRREGULAR)
     {
-        if (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_CODE_POINT(codePoint))
+        如果 (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_CODE_POINT(codePoint))
         {
             /*
              * Skip if the codepoint has unicode property of default ignorable.
              */
             *err = U_ZERO_ERROR;
         }
-        else if (context == nullptr || (*((char*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
+        否则 如果 (context == nullptr || (*((char*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
         {
             *err = U_ZERO_ERROR;
         }
@@ -169,16 +169,16 @@ UCNV_FROM_U_CALLBACK_SUBSTITUTE (
 {
     (void)codeUnits;
     (void)length;
-    if (reason <= UCNV_IRREGULAR)
+    如果 (reason <= UCNV_IRREGULAR)
     {
-        if (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_CODE_POINT(codePoint))
+        如果 (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_CODE_POINT(codePoint))
         {
             /*
              * Skip if the codepoint has unicode property of default ignorable.
              */
             *err = U_ZERO_ERROR;
         }
-        else if (context == nullptr || (*((char*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
+        否则 如果 (context == nullptr || (*((char*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
         {
             *err = U_ZERO_ERROR;
             ucnv_cbFromUWriteSub(fromArgs, 0, err);
@@ -216,17 +216,17 @@ UCNV_FROM_U_CALLBACK_ESCAPE (
   UConverterFromUCallback ignoredCallback = nullptr;
   const void *ignoredContext;
   
-  if (reason > UCNV_IRREGULAR)
+  如果 (reason > UCNV_IRREGULAR)
   {
-      return;
+      返回;
   }
-  else if (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_CODE_POINT(codePoint))
+  否则 如果 (reason == UCNV_UNASSIGNED && IS_DEFAULT_IGNORABLE_CODE_POINT(codePoint))
   {
       /*
        * Skip if the codepoint has unicode property of default ignorable.
        */
       *err = U_ZERO_ERROR;
-      return;
+      返回;
   }
 
   ucnv_setFromUCallBack (fromArgs->converter,
@@ -236,26 +236,26 @@ UCNV_FROM_U_CALLBACK_ESCAPE (
                      &originalContext,
                      &err2);
   
-  if (U_FAILURE (err2))
+  如果 (U_FAILURE (err2))
   {
     *err = err2;
-    return;
+    返回;
   } 
-  if(context==nullptr)
+  如果(context==nullptr)
   { 
-      while (i < length)
+      当 (i < length)
       {
         valueString[valueStringLength++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT;  /* adding % */
         valueString[valueStringLength++] = (char16_t) UNICODE_U_CODEPOINT; /* adding U */
         valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[i++], 16, 4);
       }
   }
-  else
+  否则
   {
       switch(*((char*)context))
       {
       case UCNV_PRV_ESCAPE_JAVA:
-          while (i < length)
+          当 (i < length)
           {
               valueString[valueStringLength++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
               valueString[valueStringLength++] = (char16_t) UNICODE_U_LOW_CODEPOINT; /* adding u */
@@ -266,12 +266,12 @@ UCNV_FROM_U_CALLBACK_ESCAPE (
       case UCNV_PRV_ESCAPE_C:
           valueString[valueStringLength++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
 
-          if(length==2){
+          如果(length==2){
               valueString[valueStringLength++] = (char16_t) UNICODE_U_CODEPOINT; /* adding U */
               valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, codePoint, 16, 8);
 
           }
-          else{
+          否则{
               valueString[valueStringLength++] = (char16_t) UNICODE_U_LOW_CODEPOINT; /* adding u */
               valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[0], 16, 4);
           }
@@ -281,10 +281,10 @@ UCNV_FROM_U_CALLBACK_ESCAPE (
 
           valueString[valueStringLength++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
           valueString[valueStringLength++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
-          if(length==2){
+          如果(length==2){
               valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, codePoint, 10, 0);
           }
-          else{
+          否则{
               valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[0], 10, 0);
           }
           valueString[valueStringLength++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
@@ -295,10 +295,10 @@ UCNV_FROM_U_CALLBACK_ESCAPE (
           valueString[valueStringLength++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
           valueString[valueStringLength++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
           valueString[valueStringLength++] = (char16_t) UNICODE_X_LOW_CODEPOINT; /* adding x */
-          if(length==2){
+          如果(length==2){
               valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, codePoint, 16, 0);
           }
-          else{
+          否则{
               valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[0], 16, 0);
           }
           valueString[valueStringLength++] = (char16_t) UNICODE_SEMICOLON_CODEPOINT; /* adding ; */
@@ -308,9 +308,9 @@ UCNV_FROM_U_CALLBACK_ESCAPE (
           valueString[valueStringLength++] = (char16_t) UNICODE_LEFT_CURLY_CODEPOINT;    /* adding { */
           valueString[valueStringLength++] = (char16_t) UNICODE_U_CODEPOINT;    /* adding U */
           valueString[valueStringLength++] = (char16_t) UNICODE_PLUS_CODEPOINT; /* adding + */
-          if (length == 2) {
+          如果 (length == 2) {
               valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, codePoint, 16, 4);
-          } else {
+          } 否则 {
               valueStringLength += uprv_itou (valueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint16_t)codeUnits[0], 16, 4);
           }
           valueString[valueStringLength++] = (char16_t) UNICODE_RIGHT_CURLY_CODEPOINT;    /* adding } */
@@ -325,7 +325,7 @@ UCNV_FROM_U_CALLBACK_ESCAPE (
           break;
 
       default:
-          while (i < length)
+          当 (i < length)
           {
               valueString[valueStringLength++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT;  /* adding % */
               valueString[valueStringLength++] = (char16_t) UNICODE_U_CODEPOINT;             /* adding U */
@@ -346,10 +346,10 @@ UCNV_FROM_U_CALLBACK_ESCAPE (
                          &ignoredCallback,
                          &ignoredContext,
                          &err2);
-  if (U_FAILURE (err2))
+  如果 (U_FAILURE (err2))
   {
       *err = err2;
-      return;
+      返回;
   }
 }
 
@@ -367,9 +367,9 @@ UCNV_TO_U_CALLBACK_SKIP (
     (void)toArgs;
     (void)codeUnits;
     (void)length;
-    if (reason <= UCNV_IRREGULAR)
+    如果 (reason <= UCNV_IRREGULAR)
     {
-        if (context == nullptr || (*((char*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
+        如果 (context == nullptr || (*((char*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
         {
             *err = U_ZERO_ERROR;
         }
@@ -389,9 +389,9 @@ UCNV_TO_U_CALLBACK_SUBSTITUTE (
 {
     (void)codeUnits;
     (void)length;
-    if (reason <= UCNV_IRREGULAR)
+    如果 (reason <= UCNV_IRREGULAR)
     {
-        if (context == nullptr || (*((char*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
+        如果 (context == nullptr || (*((char*)context) == UCNV_PRV_STOP_ON_ILLEGAL && reason == UCNV_UNASSIGNED))
         {
             *err = U_ZERO_ERROR;
             ucnv_cbToUWriteSub(toArgs,0,err);
@@ -417,26 +417,26 @@ UCNV_TO_U_CALLBACK_ESCAPE (
     int32_t valueStringLength = 0;
     int32_t i = 0;
 
-    if (reason > UCNV_IRREGULAR)
+    如果 (reason > UCNV_IRREGULAR)
     {
-        return;
+        返回;
     }
 
-    if(context==nullptr)
+    如果(context==nullptr)
     {    
-        while (i < length)
+        当 (i < length)
         {
             uniValueString[valueStringLength++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT; /* adding % */
             uniValueString[valueStringLength++] = (char16_t) UNICODE_X_CODEPOINT;    /* adding X */
             valueStringLength += uprv_itou (uniValueString + valueStringLength, VALUE_STRING_LENGTH - valueStringLength, (uint8_t) codeUnits[i++], 16, 2);
         }
     }
-    else
+    否则
     {
         switch(*((char*)context))
         {
         case UCNV_PRV_ESCAPE_XML_DEC:
-            while (i < length)
+            当 (i < length)
             {
                 uniValueString[valueStringLength++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
                 uniValueString[valueStringLength++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
@@ -446,7 +446,7 @@ UCNV_TO_U_CALLBACK_ESCAPE (
             break;
 
         case UCNV_PRV_ESCAPE_XML_HEX:
-            while (i < length)
+            当 (i < length)
             {
                 uniValueString[valueStringLength++] = (char16_t) UNICODE_AMP_CODEPOINT;   /* adding & */
                 uniValueString[valueStringLength++] = (char16_t) UNICODE_HASH_CODEPOINT;  /* adding # */
@@ -456,7 +456,7 @@ UCNV_TO_U_CALLBACK_ESCAPE (
             }
             break;
         case UCNV_PRV_ESCAPE_C:
-            while (i < length)
+            当 (i < length)
             {
                 uniValueString[valueStringLength++] = (char16_t) UNICODE_RS_CODEPOINT;    /* adding \ */
                 uniValueString[valueStringLength++] = (char16_t) UNICODE_X_LOW_CODEPOINT; /* adding x */
@@ -464,7 +464,7 @@ UCNV_TO_U_CALLBACK_ESCAPE (
             }
             break;
         default:
-            while (i < length)
+            当 (i < length)
             {
                 uniValueString[valueStringLength++] = (char16_t) UNICODE_PERCENT_SIGN_CODEPOINT; /* adding % */
                 uniValueString[valueStringLength++] = (char16_t) UNICODE_X_CODEPOINT;    /* adding X */

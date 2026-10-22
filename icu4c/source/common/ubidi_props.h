@@ -119,9 +119,9 @@ enum {
 #define UBIDI_GET_CLASS(props) ((props)&UBIDI_CLASS_MASK)
 #define UBIDI_GET_FLAG(props, shift) (((props)>>(shift))&1)
 
-#if U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
+#如果 U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
 #   define UBIDI_GET_MIRROR_DELTA(props) ((int16_t)(props)>>UBIDI_MIRROR_DELTA_SHIFT)
-#else
+#否则
 #   define UBIDI_GET_MIRROR_DELTA(props) (int16_t)(((props)&0x8000) ? (((props)>>UBIDI_MIRROR_DELTA_SHIFT)|0xe000) : ((props)>>UBIDI_MIRROR_DELTA_SHIFT))
 #endif
 

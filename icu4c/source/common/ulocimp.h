@@ -46,7 +46,7 @@ uloc_getTableStringWithFallback(
 
 namespace {
 /*returns true if a is an ID separator false otherwise*/
-inline bool _isIDSeparator(char a) { return a == '_' || a == '-'; }
+inline bool _isIDSeparator(char a) { 返回 a == '_' || a == '-'; }
 }  // namespace
 
 U_CFUNC const char* 

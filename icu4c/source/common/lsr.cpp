@@ -18,13 +18,13 @@ LSR::LSR(char prefix, const char *lang, const char *scr, const char *r, int32_t 
          UErrorCode &errorCode) :
         language(nullptr), script(nullptr), region(r),
         regionIndex(indexForRegion(region)), flags(f) {
-    if (U_SUCCESS(errorCode)) {
+    如果 (U_SUCCESS(errorCode)) {
         CharString langScript;
         langScript.append(prefix, errorCode).append(lang, errorCode).append('\0', errorCode);
         int32_t scriptOffset = langScript.length();
         langScript.append(prefix, errorCode).append(scr, errorCode);
         owned = langScript.cloneData(errorCode);
-        if (U_SUCCESS(errorCode)) {
+        如果 (U_SUCCESS(errorCode)) {
             language = owned;
             script = owned + scriptOffset;
         }
@@ -35,7 +35,7 @@ LSR::LSR(StringPiece lang, StringPiece scr, StringPiece r, int32_t f,
          UErrorCode &errorCode) :
         language(nullptr), script(nullptr), region(nullptr),
         regionIndex(indexForRegion(r.data())), flags(f) {
-    if (U_SUCCESS(errorCode)) {
+    如果 (U_SUCCESS(errorCode)) {
         CharString data;
         data.append(lang, errorCode).append('\0', errorCode);
         int32_t scriptOffset = data.length();
@@ -43,7 +43,7 @@ LSR::LSR(StringPiece lang, StringPiece scr, StringPiece r, int32_t f,
         int32_t regionOffset = data.length();
         data.append(r, errorCode);
         owned = data.cloneData(errorCode);
-        if (U_SUCCESS(errorCode)) {
+        如果 (U_SUCCESS(errorCode)) {
             language = owned;
             script = owned + scriptOffset;
             region = owned + regionOffset;
@@ -55,7 +55,7 @@ LSR::LSR(LSR &&other) noexcept :
         language(other.language), script(other.script), region(other.region), owned(other.owned),
         regionIndex(other.regionIndex), flags(other.flags),
         hashCode(other.hashCode) {
-    if (owned != nullptr) {
+    如果 (owned != nullptr) {
         other.language = other.script = "";
         other.owned = nullptr;
         other.hashCode = 0;
@@ -75,16 +75,16 @@ LSR &LSR::operator=(LSR &&other) noexcept {
     flags = other.flags;
     owned = other.owned;
     hashCode = other.hashCode;
-    if (owned != nullptr) {
+    如果 (owned != nullptr) {
         other.language = other.script = "";
         other.owned = nullptr;
         other.hashCode = 0;
     }
-    return *this;
+    返回 *this;
 }
 
 UBool LSR::isEquivalentTo(const LSR &other) const {
-    return
+    返回
         uprv_strcmp(language, other.language) == 0 &&
         uprv_strcmp(script, other.script) == 0 &&
         regionIndex == other.regionIndex &&
@@ -93,7 +93,7 @@ UBool LSR::isEquivalentTo(const LSR &other) const {
 }
 
 bool LSR::operator==(const LSR &other) const {
-    return
+    返回
         uprv_strcmp(language, other.language) == 0 &&
         uprv_strcmp(script, other.script) == 0 &&
         regionIndex == other.regionIndex &&
@@ -105,30 +105,30 @@ bool LSR::operator==(const LSR &other) const {
 int32_t LSR::indexForRegion(const char *region) {
     int32_t c = region[0];
     int32_t a = c - '0';
-    if (0 <= a && a <= 9) {  // digits: "419"
+    如果 (0 <= a && a <= 9) {  // digits: "419"
         int32_t b = region[1] - '0';
-        if (b < 0 || 9 < b) { return 0; }
+        如果 (b < 0 || 9 < b) { 返回 0; }
         c = region[2] - '0';
-        if (c < 0 || 9 < c || region[3] != 0) { return 0; }
-        return (10 * a + b) * 10 + c + 1;
-    } else {  // letters: "DE"
+        如果 (c < 0 || 9 < c || region[3] != 0) { 返回 0; }
+        返回 (10 * a + b) * 10 + c + 1;
+    } 否则 {  // letters: "DE"
         a = uprv_upperOrdinal(c);
-        if (a < 0 || 25 < a) { return 0; }
+        如果 (a < 0 || 25 < a) { 返回 0; }
         int32_t b = uprv_upperOrdinal(region[1]);
-        if (b < 0 || 25 < b || region[2] != 0) { return 0; }
-        return 26 * a + b + 1001;
+        如果 (b < 0 || 25 < b || region[2] != 0) { 返回 0; }
+        返回 26 * a + b + 1001;
     }
-    return 0;
+    返回 0;
 }
 
 LSR &LSR::setHashCode() {
-    if (hashCode == 0) {
+    如果 (hashCode == 0) {
         uint32_t h = ustr_hashCharsN(language, static_cast<int32_t>(uprv_strlen(language)));
         h = h * 37 + ustr_hashCharsN(script, static_cast<int32_t>(uprv_strlen(script)));
         h = h * 37 + regionIndex;
         hashCode = h * 37 + flags;
     }
-    return *this;
+    返回 *this;
 }
 
 U_NAMESPACE_END

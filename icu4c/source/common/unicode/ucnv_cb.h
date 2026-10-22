@@ -65,7 +65,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#如果 !UCONFIG_NO_CONVERSION
 
 #include "unicode/ucnv.h"
 #include "unicode/ucnv_err.h"

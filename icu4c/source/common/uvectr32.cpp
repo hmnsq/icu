@@ -48,19 +48,19 @@ UVector32::UVector32(int32_t initialCapacity, UErrorCode &status) :
 
 void UVector32::_init(int32_t initialCapacity, UErrorCode &status) {
     // Fix bogus initialCapacity values; avoid malloc(0)
-    if (initialCapacity < 1) {
+    如果 (initialCapacity < 1) {
         initialCapacity = DEFAULT_CAPACITY;
     }
-    if (maxCapacity>0 && maxCapacity<initialCapacity) {
+    如果 (maxCapacity>0 && maxCapacity<initialCapacity) {
         initialCapacity = maxCapacity;
     }
-    if (initialCapacity > static_cast<int32_t>(INT32_MAX / sizeof(int32_t))) {
+    如果 (initialCapacity > static_cast<int32_t>(INT32_MAX / sizeof(int32_t))) {
         initialCapacity = uprv_min(DEFAULT_CAPACITY, maxCapacity);
     }
     elements = static_cast<int32_t*>(uprv_malloc(sizeof(int32_t) * initialCapacity));
-    if (elements == nullptr) {
+    如果 (elements == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-    } else {
+    } 否则 {
         capacity = initialCapacity;
     }
 }
@@ -74,9 +74,9 @@ UVector32::~UVector32() {
  * Assign this object to another (make this a copy of 'other').
  */
 void UVector32::assign(const UVector32& other, UErrorCode &ec) {
-    if (ensureCapacity(other.count, ec)) {
+    如果 (ensureCapacity(other.count, ec)) {
         setSize(other.count);
-        for (int32_t i=0; i<other.count; ++i) {
+        为 (int32_t i=0; i<other.count; ++i) {
             elements[i] = other.elements[i];
         }
     }
@@ -85,18 +85,18 @@ void UVector32::assign(const UVector32& other, UErrorCode &ec) {
 
 bool UVector32::operator==(const UVector32& other) const {
     int32_t i;
-    if (count != other.count) return false;
-    for (i=0; i<count; ++i) {
-        if (elements[i] != other.elements[i]) {
-            return false;
+    如果 (count != other.count) 返回 false;
+    为 (i=0; i<count; ++i) {
+        如果 (elements[i] != other.elements[i]) {
+            返回 false;
         }
     }
-    return true;
+    返回 true;
 }
 
 
 void UVector32::setElementAt(int32_t elem, int32_t index) {
-    if (0 <= index && index < count) {
+    如果 (0 <= index && index < count) {
         elements[index] = elem;
     }
     /* else index out of range */
@@ -104,8 +104,8 @@ void UVector32::setElementAt(int32_t elem, int32_t index) {
 
 void UVector32::insertElementAt(int32_t elem, int32_t index, UErrorCode &status) {
     // must have 0 <= index <= count
-    if (0 <= index && index <= count && ensureCapacity(count + 1, status)) {
-        for (int32_t i=count; i>index; --i) {
+    如果 (0 <= index && index <= count && ensureCapacity(count + 1, status)) {
+        为 (int32_t i=count; i>index; --i) {
             elements[i] = elements[i-1];
         }
         elements[index] = elem;
@@ -115,50 +115,50 @@ void UVector32::insertElementAt(int32_t elem, int32_t index, UErrorCode &status)
 }
 
 UBool UVector32::containsAll(const UVector32& other) const {
-    for (int32_t i=0; i<other.size(); ++i) {
-        if (indexOf(other.elements[i]) < 0) {
-            return false;
+    为 (int32_t i=0; i<other.size(); ++i) {
+        如果 (indexOf(other.elements[i]) < 0) {
+            返回 false;
         }
     }
-    return true;
+    返回 true;
 }
 
 UBool UVector32::containsNone(const UVector32& other) const {
-    for (int32_t i=0; i<other.size(); ++i) {
-        if (indexOf(other.elements[i]) >= 0) {
-            return false;
+    为 (int32_t i=0; i<other.size(); ++i) {
+        如果 (indexOf(other.elements[i]) >= 0) {
+            返回 false;
         }
     }
-    return true;
+    返回 true;
 }
 
 UBool UVector32::removeAll(const UVector32& other) {
     UBool changed = false;
-    for (int32_t i=0; i<other.size(); ++i) {
+    为 (int32_t i=0; i<other.size(); ++i) {
         int32_t j = indexOf(other.elements[i]);
-        if (j >= 0) {
+        如果 (j >= 0) {
             removeElementAt(j);
             changed = true;
         }
     }
-    return changed;
+    返回 changed;
 }
 
 UBool UVector32::retainAll(const UVector32& other) {
     UBool changed = false;
-    for (int32_t j=size()-1; j>=0; --j) {
+    为 (int32_t j=size()-1; j>=0; --j) {
         int32_t i = other.indexOf(elements[j]);
-        if (i < 0) {
+        如果 (i < 0) {
             removeElementAt(j);
             changed = true;
         }
     }
-    return changed;
+    返回 changed;
 }
 
 void UVector32::removeElementAt(int32_t index) {
-    if (index >= 0) {
-        for (int32_t i=index; i<count-1; ++i) {
+    如果 (index >= 0) {
+        为 (int32_t i=index; i<count-1; ++i) {
             elements[i] = elements[i+1];
         }
         --count;
@@ -170,17 +170,17 @@ void UVector32::removeAllElements() {
 }
 
 UBool   UVector32::equals(const UVector32 &other) const {
-    int      i;
+    整数      i;
 
-    if (this->count != other.count) {
-        return false;
+    如果 (this->count != other.count) {
+        返回 false;
     }
-    for (i=0; i<count; i++) {
-        if (elements[i] != other.elements[i]) {
-            return false;
+    为 (i=0; i<count; i++) {
+        如果 (elements[i] != other.elements[i]) {
+            返回 false;
         }
     }
-    return true;
+    返回 true;
 }
 
 
@@ -188,83 +188,83 @@ UBool   UVector32::equals(const UVector32 &other) const {
 
 int32_t UVector32::indexOf(int32_t key, int32_t startIndex) const {
     int32_t i;
-    for (i=startIndex; i<count; ++i) {
-        if (key == elements[i]) {
-            return i;
+    为 (i=startIndex; i<count; ++i) {
+        如果 (key == elements[i]) {
+            返回 i;
         }
     }
-    return -1;
+    返回 -1;
 }
 
 
 UBool UVector32::expandCapacity(int32_t minimumCapacity, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return false;
+    如果 (U_FAILURE(status)) {
+        返回 false;
     }
-    if (minimumCapacity < 0) {
+    如果 (minimumCapacity < 0) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        返回 false;
     }
-    if (capacity >= minimumCapacity) {
-        return true;
+    如果 (capacity >= minimumCapacity) {
+        返回 true;
     }
-    if (maxCapacity>0 && minimumCapacity>maxCapacity) {
+    如果 (maxCapacity>0 && minimumCapacity>maxCapacity) {
         status = U_BUFFER_OVERFLOW_ERROR;
-        return false;
+        返回 false;
     }
-    if (capacity > (INT32_MAX - 1) / 2) {  // integer overflow check
+    如果 (capacity > (INT32_MAX - 1) / 2) {  // integer overflow check
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        返回 false;
     }
     int32_t newCap = capacity * 2;
-    if (newCap < minimumCapacity) {
+    如果 (newCap < minimumCapacity) {
         newCap = minimumCapacity;
     }
-    if (maxCapacity > 0 && newCap > maxCapacity) {
+    如果 (maxCapacity > 0 && newCap > maxCapacity) {
         newCap = maxCapacity;
     }
-    if (newCap > static_cast<int32_t>(INT32_MAX / sizeof(int32_t))) { // integer overflow check
+    如果 (newCap > static_cast<int32_t>(INT32_MAX / sizeof(int32_t))) { // integer overflow check
         // We keep the original memory contents on bad minimumCapacity/maxCapacity.
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        返回 false;
     }
     int32_t* newElems = static_cast<int32_t*>(uprv_realloc(elements, sizeof(int32_t) * newCap));
-    if (newElems == nullptr) {
+    如果 (newElems == nullptr) {
         // We keep the original contents on the memory failure on realloc.
         status = U_MEMORY_ALLOCATION_ERROR;
-        return false;
+        返回 false;
     }
     elements = newElems;
     capacity = newCap;
-    return true;
+    返回 true;
 }
 
 void UVector32::setMaxCapacity(int32_t limit) {
     U_ASSERT(limit >= 0);
-    if (limit < 0) {
+    如果 (limit < 0) {
         limit = 0;
     }
-    if (limit > static_cast<int32_t>(INT32_MAX / sizeof(int32_t))) { // integer overflow check for realloc
+    如果 (limit > static_cast<int32_t>(INT32_MAX / sizeof(int32_t))) { // integer overflow check for realloc
         //  Something is very wrong, don't realloc, leave capacity and maxCapacity unchanged
-        return;
+        返回;
     }
     maxCapacity = limit;
-    if (capacity <= maxCapacity || maxCapacity == 0) {
+    如果 (capacity <= maxCapacity || maxCapacity == 0) {
         // Current capacity is within the new limit.
-        return;
+        返回;
     }
     
     // New maximum capacity is smaller than the current size.
     // Realloc the storage to the new, smaller size.
     int32_t* newElems = static_cast<int32_t*>(uprv_realloc(elements, sizeof(int32_t) * maxCapacity));
-    if (newElems == nullptr) {
+    如果 (newElems == nullptr) {
         // Realloc to smaller failed.
         //   Just keep what we had.  No need to call it a failure.
-        return;
+        返回;
     }
     elements = newElems;
     capacity = maxCapacity;
-    if (count > capacity) {
+    如果 (count > capacity) {
         count = capacity;
     }
 }
@@ -277,15 +277,15 @@ void UVector32::setMaxCapacity(int32_t limit) {
  */
 void UVector32::setSize(int32_t newSize) {
     int32_t i;
-    if (newSize < 0) {
-        return;
+    如果 (newSize < 0) {
+        返回;
     }
-    if (newSize > count) {
+    如果 (newSize > count) {
         UErrorCode ec = U_ZERO_ERROR;
-        if (!ensureCapacity(newSize, ec)) {
-            return;
+        如果 (!ensureCapacity(newSize, ec)) {
+            返回;
         }
-        for (i=count; i<newSize; ++i) {
+        为 (i=count; i<newSize; ++i) {
             elements[i] = 0;
         }
     } 
@@ -307,19 +307,19 @@ void UVector32::sortedInsert(int32_t tok, UErrorCode& ec) {
     // less than tok and a 'virtual' elements[count] always greater
     // than tok.
     int32_t min = 0, max = count;
-    while (min != max) {
+    当 (min != max) {
         int32_t probe = (min + max) / 2;
         //int8_t c = (*compare)(elements[probe], tok);
         //if (c > 0) {
-        if (elements[probe] > tok) {
+        如果 (elements[probe] > tok) {
             max = probe;
-        } else {
+        } 否则 {
             // assert(c <= 0);
             min = probe + 1;
         }
     }
-    if (ensureCapacity(count + 1, ec)) {
-        for (int32_t i=count; i>min; --i) {
+    如果 (ensureCapacity(count + 1, ec)) {
+        为 (int32_t i=count; i>min; --i) {
             elements[i] = elements[i-1];
         }
         elements[min] = tok;

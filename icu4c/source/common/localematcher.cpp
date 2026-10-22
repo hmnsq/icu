@@ -59,7 +59,7 @@ LocaleMatcher::Result::Result(LocaleMatcher::Result &&src) noexcept :
         desiredIndex(src.desiredIndex),
         supportedIndex(src.supportedIndex),
         desiredIsOwned(src.desiredIsOwned) {
-    if (desiredIsOwned) {
+    如果 (desiredIsOwned) {
         src.desiredLocale = nullptr;
         src.desiredIndex = -1;
         src.desiredIsOwned = false;
@@ -67,7 +67,7 @@ LocaleMatcher::Result::Result(LocaleMatcher::Result &&src) noexcept :
 }
 
 LocaleMatcher::Result::~Result() {
-    if (desiredIsOwned) {
+    如果 (desiredIsOwned) {
         delete desiredLocale;
     }
 }
@@ -82,28 +82,28 @@ LocaleMatcher::Result::operator=(LocaleMatcher::Result&& src) noexcept U_LIFETIM
     supportedIndex = src.supportedIndex;
     desiredIsOwned = src.desiredIsOwned;
 
-    if (desiredIsOwned) {
+    如果 (desiredIsOwned) {
         src.desiredLocale = nullptr;
         src.desiredIndex = -1;
         src.desiredIsOwned = false;
     }
-    return *this;
+    返回 *this;
 }
 
 Locale LocaleMatcher::Result::makeResolvedLocale(UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode) || supportedLocale == nullptr) {
-        return Locale::getRoot();
+    如果 (U_FAILURE(errorCode) || supportedLocale == nullptr) {
+        返回 Locale::getRoot();
     }
     const Locale *bestDesired = getDesiredLocale();
-    if (bestDesired == nullptr || *supportedLocale == *bestDesired) {
-        return *supportedLocale;
+    如果 (bestDesired == nullptr || *supportedLocale == *bestDesired) {
+        返回 *supportedLocale;
     }
     LocaleBuilder b;
     b.setLocale(*supportedLocale);
 
     // Copy the region from bestDesired, if there is one.
     const char *region = bestDesired->getCountry();
-    if (*region != 0) {
+    如果 (*region != 0) {
         b.setRegion(region);
     }
 
@@ -111,7 +111,7 @@ Locale LocaleMatcher::Result::makeResolvedLocale(UErrorCode &errorCode) const {
     // Note that this will override any supportedLocale variants.
     // For example, "sco-ulster-fonipa" + "...-fonupa" => "sco-fonupa" (replacing ulster).
     const char *variants = bestDesired->getVariant();
-    if (*variants != 0) {
+    如果 (*variants != 0) {
         b.setVariant(variants);
     }
 
@@ -122,7 +122,7 @@ Locale LocaleMatcher::Result::makeResolvedLocale(UErrorCode &errorCode) const {
     // For example, "th-u-nu-latn-ca-buddhist" + "...-u-nu-native" => "th-u-nu-native"
     // (replacing calendar).
     b.copyExtensionsFrom(*bestDesired, errorCode);
-    return b.build(errorCode);
+    返回 b.build(errorCode);
 }
 
 LocaleMatcher::Builder::Builder(LocaleMatcher::Builder &&src) noexcept :
@@ -160,123 +160,123 @@ LocaleMatcher::Builder::operator=(LocaleMatcher::Builder&& src) noexcept U_LIFET
 
     src.supportedLocales_ = nullptr;
     src.defaultLocale_ = nullptr;
-    return *this;
+    返回 *this;
 }
 
 void LocaleMatcher::Builder::clearSupportedLocales() {
-    if (supportedLocales_ != nullptr) {
+    如果 (supportedLocales_ != nullptr) {
         supportedLocales_->removeAllElements();
     }
 }
 
 bool LocaleMatcher::Builder::ensureSupportedLocaleVector() {
-    if (U_FAILURE(errorCode_)) { return false; }
-    if (supportedLocales_ != nullptr) { return true; }
+    如果 (U_FAILURE(errorCode_)) { 返回 false; }
+    如果 (supportedLocales_ != nullptr) { 返回 true; }
     LocalPointer<UVector> lpSupportedLocales(new UVector(uprv_deleteUObject, nullptr, errorCode_), errorCode_);
-    if (U_FAILURE(errorCode_)) { return false; }
+    如果 (U_FAILURE(errorCode_)) { 返回 false; }
     supportedLocales_ = lpSupportedLocales.orphan();
-    return true;
+    返回 true;
 }
 
 LocaleMatcher::Builder&
 LocaleMatcher::Builder::setSupportedLocalesFromListString(StringPiece locales) U_LIFETIME_BOUND {
     LocalePriorityList list(locales, errorCode_);
-    if (U_FAILURE(errorCode_)) { return *this; }
+    如果 (U_FAILURE(errorCode_)) { 返回 *this; }
     clearSupportedLocales();
-    if (!ensureSupportedLocaleVector()) { return *this; }
+    如果 (!ensureSupportedLocaleVector()) { 返回 *this; }
     int32_t length = list.getLengthIncludingRemoved();
-    for (int32_t i = 0; i < length; ++i) {
+    为 (int32_t i = 0; i < length; ++i) {
         Locale *locale = list.orphanLocaleAt(i);
-        if (locale == nullptr) { continue; }
+        如果 (locale == nullptr) { continue; }
         supportedLocales_->adoptElement(locale, errorCode_);
-        if (U_FAILURE(errorCode_)) {
+        如果 (U_FAILURE(errorCode_)) {
             break;
         }
     }
-    return *this;
+    返回 *this;
 }
 
 LocaleMatcher::Builder&
 LocaleMatcher::Builder::setSupportedLocales(Locale::Iterator& locales) U_LIFETIME_BOUND {
-    if (ensureSupportedLocaleVector()) {
+    如果 (ensureSupportedLocaleVector()) {
         clearSupportedLocales();
-        while (locales.hasNext() && U_SUCCESS(errorCode_)) {
+        当 (locales.hasNext() && U_SUCCESS(errorCode_)) {
             const Locale &locale = locales.next();
             LocalPointer<Locale> clone (locale.clone(), errorCode_);
             supportedLocales_->adoptElement(clone.orphan(), errorCode_);
         }
     }
-    return *this;
+    返回 *this;
 }
 
 LocaleMatcher::Builder&
 LocaleMatcher::Builder::addSupportedLocale(const Locale& locale) U_LIFETIME_BOUND {
-    if (ensureSupportedLocaleVector()) {
+    如果 (ensureSupportedLocaleVector()) {
         LocalPointer<Locale> clone(locale.clone(), errorCode_);
         supportedLocales_->adoptElement(clone.orphan(), errorCode_);
     }
-    return *this;
+    返回 *this;
 }
 
 LocaleMatcher::Builder& LocaleMatcher::Builder::setNoDefaultLocale() U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode_)) { return *this; }
+    如果 (U_FAILURE(errorCode_)) { 返回 *this; }
     delete defaultLocale_;
     defaultLocale_ = nullptr;
     withDefault_ = false;
-    return *this;
+    返回 *this;
 }
 
 LocaleMatcher::Builder&
 LocaleMatcher::Builder::setDefaultLocale(const Locale* defaultLocale) U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode_)) { return *this; }
+    如果 (U_FAILURE(errorCode_)) { 返回 *this; }
     Locale *clone = nullptr;
-    if (defaultLocale != nullptr) {
+    如果 (defaultLocale != nullptr) {
         clone = defaultLocale->clone();
-        if (clone == nullptr) {
+        如果 (clone == nullptr) {
             errorCode_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+            返回 *this;
         }
     }
     delete defaultLocale_;
     defaultLocale_ = clone;
     withDefault_ = true;
-    return *this;
+    返回 *this;
 }
 
 LocaleMatcher::Builder&
 LocaleMatcher::Builder::setFavorSubtag(ULocMatchFavorSubtag subtag) U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode_)) { return *this; }
+    如果 (U_FAILURE(errorCode_)) { 返回 *this; }
     favor_ = subtag;
-    return *this;
+    返回 *this;
 }
 
 LocaleMatcher::Builder&
 LocaleMatcher::Builder::setDemotionPerDesiredLocale(ULocMatchDemotion demotion) U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode_)) { return *this; }
+    如果 (U_FAILURE(errorCode_)) { 返回 *this; }
     demotion_ = demotion;
-    return *this;
+    返回 *this;
 }
 
 LocaleMatcher::Builder&
 LocaleMatcher::Builder::setMaxDistance(const Locale& desired,
                                        const Locale& supported) U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode_)) { return *this; }
+    如果 (U_FAILURE(errorCode_)) { 返回 *this; }
     Locale *desiredClone = desired.clone();
     Locale *supportedClone = supported.clone();
-    if (desiredClone == nullptr || supportedClone == nullptr) {
+    如果 (desiredClone == nullptr || supportedClone == nullptr) {
         delete desiredClone;  // in case only one could not be allocated
         delete supportedClone;
         errorCode_ = U_MEMORY_ALLOCATION_ERROR;
-        return *this;
+        返回 *this;
     }
     delete maxDistanceDesired_;
     delete maxDistanceSupported_;
     maxDistanceDesired_ = desiredClone;
     maxDistanceSupported_ = supportedClone;
-    return *this;
+    返回 *this;
 }
 
-#if 0
+#如果 0
 /**
  * <i>Internal only!</i>
  *
@@ -287,64 +287,64 @@ LocaleMatcher::Builder::setMaxDistance(const Locale& desired,
  */
 @Deprecated
 LocaleMatcher::Builder &LocaleMatcher::Builder::internalSetThresholdDistance(int32_t thresholdDistance) {
-    if (U_FAILURE(errorCode_)) { return *this; }
-    if (thresholdDistance > 100) {
+    如果 (U_FAILURE(errorCode_)) { 返回 *this; }
+    如果 (thresholdDistance > 100) {
         thresholdDistance = 100;
     }
     thresholdDistance_ = thresholdDistance;
-    return *this;
+    返回 *this;
 }
 #endif
 
 UBool LocaleMatcher::Builder::copyErrorTo(UErrorCode &outErrorCode) const {
-    if (U_FAILURE(outErrorCode)) { return true; }
-    if (U_SUCCESS(errorCode_)) { return false; }
+    如果 (U_FAILURE(outErrorCode)) { 返回 true; }
+    如果 (U_SUCCESS(errorCode_)) { 返回 false; }
     outErrorCode = errorCode_;
-    return true;
+    返回 true;
 }
 
 LocaleMatcher LocaleMatcher::Builder::build(UErrorCode &errorCode) const {
-    if (U_SUCCESS(errorCode) && U_FAILURE(errorCode_)) {
+    如果 (U_SUCCESS(errorCode) && U_FAILURE(errorCode_)) {
         errorCode = errorCode_;
     }
-    return LocaleMatcher(*this, errorCode);
+    返回 LocaleMatcher(*this, errorCode);
 }
 
 namespace {
 
 LSR getMaximalLsrOrUnd(const LikelySubtags &likelySubtags, const Locale &locale,
                        UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode) || locale.isBogus() || *locale.getName() == 0 /* "und" */) {
-        return UND_LSR;
-    } else {
-        return likelySubtags.makeMaximizedLsrFrom(locale, false, errorCode);
+    如果 (U_FAILURE(errorCode) || locale.isBogus() || *locale.getName() == 0 /* "und" */) {
+        返回 UND_LSR;
+    } 否则 {
+        返回 likelySubtags.makeMaximizedLsrFrom(locale, false, errorCode);
     }
 }
 
 int32_t hashLSR(const UHashTok token) {
     const LSR *lsr = static_cast<const LSR *>(token.pointer);
-    return lsr->hashCode;
+    返回 lsr->hashCode;
 }
 
 UBool compareLSRs(const UHashTok t1, const UHashTok t2) {
     const LSR *lsr1 = static_cast<const LSR *>(t1.pointer);
     const LSR *lsr2 = static_cast<const LSR *>(t2.pointer);
-    return *lsr1 == *lsr2;
+    返回 *lsr1 == *lsr2;
 }
 
 }  // namespace
 
 int32_t LocaleMatcher::putIfAbsent(const LSR &lsr, int32_t i, int32_t suppLength,
                                    UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return suppLength; }
-    if (!uhash_containsKey(supportedLsrToIndex, &lsr)) {
+    如果 (U_FAILURE(errorCode)) { 返回 suppLength; }
+    如果 (!uhash_containsKey(supportedLsrToIndex, &lsr)) {
         uhash_putiAllowZero(supportedLsrToIndex, const_cast<LSR *>(&lsr), i, &errorCode);
-        if (U_SUCCESS(errorCode)) {
+        如果 (U_SUCCESS(errorCode)) {
             supportedLSRs[suppLength] = &lsr;
             supportedIndexes[suppLength++] = i;
         }
     }
-    return suppLength;
+    返回 suppLength;
 }
 
 LocaleMatcher::LocaleMatcher(const Builder &builder, UErrorCode &errorCode) :
@@ -358,24 +358,24 @@ LocaleMatcher::LocaleMatcher(const Builder &builder, UErrorCode &errorCode) :
         supportedLsrToIndex(nullptr),
         supportedLSRs(nullptr), supportedIndexes(nullptr), supportedLSRsLength(0),
         ownedDefaultLocale(nullptr), defaultLocale(nullptr) {
-    if (U_FAILURE(errorCode)) { return; }
+    如果 (U_FAILURE(errorCode)) { 返回; }
     const Locale *def = builder.defaultLocale_;
     LSR builderDefaultLSR;
     const LSR *defLSR = nullptr;
-    if (def != nullptr) {
+    如果 (def != nullptr) {
         ownedDefaultLocale = def->clone();
-        if (ownedDefaultLocale == nullptr) {
+        如果 (ownedDefaultLocale == nullptr) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return;
+            返回;
         }
         def = ownedDefaultLocale;
         builderDefaultLSR = getMaximalLsrOrUnd(likelySubtags, *def, errorCode);
-        if (U_FAILURE(errorCode)) { return; }
+        如果 (U_FAILURE(errorCode)) { 返回; }
         defLSR = &builderDefaultLSR;
     }
     supportedLocalesLength = builder.supportedLocales_ != nullptr ?
         builder.supportedLocales_->size() : 0;
-    if (supportedLocalesLength > 0) {
+    如果 (supportedLocalesLength > 0) {
         // Store the supported locales in input order,
         // so that when different types are used (e.g., language tag strings)
         // we can return those by parallel index.
@@ -385,23 +385,23 @@ LocaleMatcher::LocaleMatcher(const Builder &builder, UErrorCode &errorCode) :
         // In C++, we store these permanently to simplify ownership management
         // in the hash tables. Duplicate LSRs (if any) are unused overhead.
         lsrs = new LSR[supportedLocalesLength];
-        if (supportedLocales == nullptr || lsrs == nullptr) {
+        如果 (supportedLocales == nullptr || lsrs == nullptr) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return;
+            返回;
         }
         // If the constructor fails partway, we need null pointers for destructibility.
         uprv_memset(supportedLocales, 0, supportedLocalesLength * sizeof(const Locale *));
-        for (int32_t i = 0; i < supportedLocalesLength; ++i) {
+        为 (int32_t i = 0; i < supportedLocalesLength; ++i) {
             const Locale &locale = *static_cast<Locale *>(builder.supportedLocales_->elementAt(i));
             supportedLocales[i] = locale.clone();
-            if (supportedLocales[i] == nullptr) {
+            如果 (supportedLocales[i] == nullptr) {
                 errorCode = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                返回;
             }
             const Locale &supportedLocale = *supportedLocales[i];
             LSR &lsr = lsrs[i] = getMaximalLsrOrUnd(likelySubtags, supportedLocale, errorCode);
             lsr.setHashCode();
-            if (U_FAILURE(errorCode)) { return; }
+            如果 (U_FAILURE(errorCode)) { 返回; }
         }
 
         // We need an unordered map from LSR to first supported locale with that LSR,
@@ -412,52 +412,52 @@ LocaleMatcher::LocaleMatcher(const Builder &builder, UErrorCode &errorCode) :
         // 3. Remaining locales in builder order.
         supportedLsrToIndex = uhash_openSize(hashLSR, compareLSRs, uhash_compareLong,
                                              supportedLocalesLength, &errorCode);
-        if (U_FAILURE(errorCode)) { return; }
+        如果 (U_FAILURE(errorCode)) { 返回; }
         supportedLSRs = static_cast<const LSR **>(
             uprv_malloc(supportedLocalesLength * sizeof(const LSR *)));
         supportedIndexes = static_cast<int32_t *>(
             uprv_malloc(supportedLocalesLength * sizeof(int32_t)));
-        if (supportedLSRs == nullptr || supportedIndexes == nullptr) {
+        如果 (supportedLSRs == nullptr || supportedIndexes == nullptr) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return;
+            返回;
         }
         int32_t suppLength = 0;
         // Determine insertion order.
         // Add locales immediately that are equivalent to the default.
         MaybeStackArray<int8_t, 100> order(supportedLocalesLength, errorCode);
-        if (U_FAILURE(errorCode)) { return; }
+        如果 (U_FAILURE(errorCode)) { 返回; }
         int32_t numParadigms = 0;
-        for (int32_t i = 0; i < supportedLocalesLength; ++i) {
+        为 (int32_t i = 0; i < supportedLocalesLength; ++i) {
             const Locale &locale = *supportedLocales[i];
             const LSR &lsr = lsrs[i];
-            if (defLSR == nullptr && builder.withDefault_) {
+            如果 (defLSR == nullptr && builder.withDefault_) {
                 // Implicit default locale = first supported locale, if not turned off.
                 U_ASSERT(i == 0);
                 def = &locale;
                 defLSR = &lsr;
                 order[i] = 1;
                 suppLength = putIfAbsent(lsr, 0, suppLength, errorCode);
-            } else if (defLSR != nullptr && lsr.isEquivalentTo(*defLSR)) {
+            } 否则 如果 (defLSR != nullptr && lsr.isEquivalentTo(*defLSR)) {
                 order[i] = 1;
                 suppLength = putIfAbsent(lsr, i, suppLength, errorCode);
-            } else if (localeDistance.isParadigmLSR(lsr)) {
+            } 否则 如果 (localeDistance.isParadigmLSR(lsr)) {
                 order[i] = 2;
                 ++numParadigms;
-            } else {
+            } 否则 {
                 order[i] = 3;
             }
-            if (U_FAILURE(errorCode)) { return; }
+            如果 (U_FAILURE(errorCode)) { 返回; }
         }
         // Add supported paradigm locales.
         int32_t paradigmLimit = suppLength + numParadigms;
-        for (int32_t i = 0; i < supportedLocalesLength && suppLength < paradigmLimit; ++i) {
-            if (order[i] == 2) {
+        为 (int32_t i = 0; i < supportedLocalesLength && suppLength < paradigmLimit; ++i) {
+            如果 (order[i] == 2) {
                 suppLength = putIfAbsent(lsrs[i], i, suppLength, errorCode);
             }
         }
         // Add remaining supported locales.
-        for (int32_t i = 0; i < supportedLocalesLength; ++i) {
-            if (order[i] == 3) {
+        为 (int32_t i = 0; i < supportedLocalesLength; ++i) {
+            如果 (order[i] == 3) {
                 suppLength = putIfAbsent(lsrs[i], i, suppLength, errorCode);
             }
         }
@@ -469,26 +469,26 @@ LocaleMatcher::LocaleMatcher(const Builder &builder, UErrorCode &errorCode) :
 
     defaultLocale = def;
 
-    if (builder.demotion_ == ULOCMATCH_DEMOTION_REGION) {
+    如果 (builder.demotion_ == ULOCMATCH_DEMOTION_REGION) {
         demotionPerDesiredLocale = localeDistance.getDefaultDemotionPerDesiredLocale();
     }
 
-    if (thresholdDistance >= 0) {
+    如果 (thresholdDistance >= 0) {
         // already copied
-    } else if (builder.maxDistanceDesired_ != nullptr) {
+    } 否则 如果 (builder.maxDistanceDesired_ != nullptr) {
         LSR suppLSR = getMaximalLsrOrUnd(likelySubtags, *builder.maxDistanceSupported_, errorCode);
         const LSR *pSuppLSR = &suppLSR;
         int32_t indexAndDistance = localeDistance.getBestIndexAndDistance(
                 getMaximalLsrOrUnd(likelySubtags, *builder.maxDistanceDesired_, errorCode),
                 &pSuppLSR, 1,
                 LocaleDistance::shiftDistance(100), favorSubtag, direction);
-        if (U_SUCCESS(errorCode)) {
+        如果 (U_SUCCESS(errorCode)) {
             // +1 for an exclusive threshold from an inclusive max.
             thresholdDistance = LocaleDistance::getDistanceFloor(indexAndDistance) + 1;
-        } else {
+        } 否则 {
             thresholdDistance = 0;
         }
-    } else {
+    } 否则 {
         thresholdDistance = localeDistance.getDefaultScriptDistance();
     }
 }
@@ -519,7 +519,7 @@ LocaleMatcher::LocaleMatcher(LocaleMatcher &&src) noexcept :
 }
 
 LocaleMatcher::~LocaleMatcher() {
-    for (int32_t i = 0; i < supportedLocalesLength; ++i) {
+    为 (int32_t i = 0; i < supportedLocalesLength; ++i) {
         delete supportedLocales[i];
     }
     uprv_free(supportedLocales);
@@ -556,7 +556,7 @@ LocaleMatcher& LocaleMatcher::operator=(LocaleMatcher&& src) noexcept U_LIFETIME
     src.supportedLSRsLength = 0;
     src.ownedDefaultLocale = nullptr;
     src.defaultLocale = nullptr;
-    return *this;
+    返回 *this;
 }
 
 class LocaleLsrIterator {
@@ -566,30 +566,30 @@ public:
             likelySubtags(likelySubtags), locales(locales), lifetime(lifetime) {}
 
     ~LocaleLsrIterator() {
-        if (lifetime == ULOCMATCH_TEMPORARY_LOCALES) {
+        如果 (lifetime == ULOCMATCH_TEMPORARY_LOCALES) {
             delete remembered;
         }
     }
 
     bool hasNext() const {
-        return locales.hasNext();
+        返回 locales.hasNext();
     }
 
     LSR next(UErrorCode &errorCode) {
         current = &locales.next();
-        return getMaximalLsrOrUnd(likelySubtags, *current, errorCode);
+        返回 getMaximalLsrOrUnd(likelySubtags, *current, errorCode);
     }
 
     void rememberCurrent(int32_t desiredIndex, UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return; }
+        如果 (U_FAILURE(errorCode)) { 返回; }
         bestDesiredIndex = desiredIndex;
-        if (lifetime == ULOCMATCH_STORED_LOCALES) {
+        如果 (lifetime == ULOCMATCH_STORED_LOCALES) {
             remembered = current;
-        } else {
+        } 否则 {
             // ULOCMATCH_TEMPORARY_LOCALES
             delete remembered;
             remembered = new Locale(*current);
-            if (remembered == nullptr) {
+            如果 (remembered == nullptr) {
                 errorCode = U_MEMORY_ALLOCATION_ERROR;
             }
         }
@@ -598,11 +598,11 @@ public:
     const Locale *orphanRemembered() {
         const Locale *rem = remembered;
         remembered = nullptr;
-        return rem;
+        返回 rem;
     }
 
     int32_t getBestDesiredIndex() const {
-        return bestDesiredIndex;
+        返回 bestDesiredIndex;
     }
 
 private:
@@ -615,63 +615,63 @@ private:
 
 const Locale* LocaleMatcher::getBestMatch(const Locale& desiredLocale,
                                           UErrorCode& errorCode) const U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode)) { return nullptr; }
+    如果 (U_FAILURE(errorCode)) { 返回 nullptr; }
     std::optional<int32_t> suppIndex = getBestSuppIndex(
         getMaximalLsrOrUnd(likelySubtags, desiredLocale, errorCode),
         nullptr, errorCode);
-    return U_SUCCESS(errorCode) && suppIndex.has_value() ? supportedLocales[*suppIndex]
+    返回 U_SUCCESS(errorCode) && suppIndex.has_value() ? supportedLocales[*suppIndex]
                                                          : defaultLocale;
 }
 
 const Locale* LocaleMatcher::getBestMatch(Locale::Iterator& desiredLocales,
                                           UErrorCode& errorCode) const U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    if (!desiredLocales.hasNext()) {
-        return defaultLocale;
+    如果 (U_FAILURE(errorCode)) { 返回 nullptr; }
+    如果 (!desiredLocales.hasNext()) {
+        返回 defaultLocale;
     }
     LocaleLsrIterator lsrIter(likelySubtags, desiredLocales, ULOCMATCH_TEMPORARY_LOCALES);
     std::optional<int32_t> suppIndex = getBestSuppIndex(lsrIter.next(errorCode), &lsrIter, errorCode);
-    return U_SUCCESS(errorCode) && suppIndex.has_value() ? supportedLocales[*suppIndex]
+    返回 U_SUCCESS(errorCode) && suppIndex.has_value() ? supportedLocales[*suppIndex]
                                                          : defaultLocale;
 }
 
 const Locale*
 LocaleMatcher::getBestMatchForListString(StringPiece desiredLocaleList,
                                          UErrorCode& errorCode) const U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode)) { return nullptr; }
+    如果 (U_FAILURE(errorCode)) { 返回 nullptr; }
     LocalePriorityList list(desiredLocaleList, errorCode);
     LocalePriorityList::Iterator iter = list.iterator();
-    return getBestMatch(iter, errorCode);
+    返回 getBestMatch(iter, errorCode);
 }
 
 LocaleMatcher::Result
 LocaleMatcher::getBestMatchResult(const Locale& desiredLocale U_LIFETIME_BOUND,
                                   UErrorCode& errorCode) const U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode)) {
-        return Result(nullptr, defaultLocale, -1, -1, false);
+    如果 (U_FAILURE(errorCode)) {
+        返回 Result(nullptr, defaultLocale, -1, -1, false);
     }
     std::optional<int32_t> suppIndex = getBestSuppIndex(
         getMaximalLsrOrUnd(likelySubtags, desiredLocale, errorCode),
         nullptr, errorCode);
-    if (U_FAILURE(errorCode) || !suppIndex.has_value()) {
-        return Result(nullptr, defaultLocale, -1, -1, false);
-    } else {
-        return Result(&desiredLocale, supportedLocales[*suppIndex], 0, *suppIndex, false);
+    如果 (U_FAILURE(errorCode) || !suppIndex.has_value()) {
+        返回 Result(nullptr, defaultLocale, -1, -1, false);
+    } 否则 {
+        返回 Result(&desiredLocale, supportedLocales[*suppIndex], 0, *suppIndex, false);
     }
 }
 
 LocaleMatcher::Result
 LocaleMatcher::getBestMatchResult(Locale::Iterator& desiredLocales,
                                   UErrorCode& errorCode) const U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode) || !desiredLocales.hasNext()) {
-        return Result(nullptr, defaultLocale, -1, -1, false);
+    如果 (U_FAILURE(errorCode) || !desiredLocales.hasNext()) {
+        返回 Result(nullptr, defaultLocale, -1, -1, false);
     }
     LocaleLsrIterator lsrIter(likelySubtags, desiredLocales, ULOCMATCH_TEMPORARY_LOCALES);
     std::optional<int32_t> suppIndex = getBestSuppIndex(lsrIter.next(errorCode), &lsrIter, errorCode);
-    if (U_FAILURE(errorCode) || !suppIndex.has_value()) {
-        return Result(nullptr, defaultLocale, -1, -1, false);
-    } else {
-        return Result(lsrIter.orphanRemembered(), supportedLocales[*suppIndex],
+    如果 (U_FAILURE(errorCode) || !suppIndex.has_value()) {
+        返回 Result(nullptr, defaultLocale, -1, -1, false);
+    } 否则 {
+        返回 Result(lsrIter.orphanRemembered(), supportedLocales[*suppIndex],
                       lsrIter.getBestDesiredIndex(), *suppIndex, true);
     }
 }
@@ -679,75 +679,75 @@ LocaleMatcher::getBestMatchResult(Locale::Iterator& desiredLocales,
 std::optional<int32_t> LocaleMatcher::getBestSuppIndex(LSR desiredLSR,
                                                        LocaleLsrIterator *remainingIter,
                                                        UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return std::nullopt; }
+    如果 (U_FAILURE(errorCode)) { 返回 std::nullopt; }
     int32_t desiredIndex = 0;
     int32_t bestSupportedLsrIndex = -1;
-    for (int32_t bestShiftedDistance = LocaleDistance::shiftDistance(thresholdDistance);;) {
+    为 (int32_t bestShiftedDistance = LocaleDistance::shiftDistance(thresholdDistance);;) {
         // Quick check for exact maximized LSR.
-        if (supportedLsrToIndex != nullptr) {
+        如果 (supportedLsrToIndex != nullptr) {
             desiredLSR.setHashCode();
             UBool found = false;
             int32_t suppIndex = uhash_getiAndFound(supportedLsrToIndex, &desiredLSR, &found);
-            if (found) {
-                if (remainingIter != nullptr) {
+            如果 (found) {
+                如果 (remainingIter != nullptr) {
                     remainingIter->rememberCurrent(desiredIndex, errorCode);
                 }
-                return suppIndex;
+                返回 suppIndex;
             }
         }
         int32_t bestIndexAndDistance = localeDistance.getBestIndexAndDistance(
                 desiredLSR, supportedLSRs, supportedLSRsLength,
                 bestShiftedDistance, favorSubtag, direction);
-        if (bestIndexAndDistance >= 0) {
+        如果 (bestIndexAndDistance >= 0) {
             bestShiftedDistance = LocaleDistance::getShiftedDistance(bestIndexAndDistance);
-            if (remainingIter != nullptr) {
+            如果 (remainingIter != nullptr) {
                 remainingIter->rememberCurrent(desiredIndex, errorCode);
-                if (U_FAILURE(errorCode)) { return std::nullopt; }
+                如果 (U_FAILURE(errorCode)) { 返回 std::nullopt; }
             }
             bestSupportedLsrIndex = LocaleDistance::getIndex(bestIndexAndDistance);
         }
-        if ((bestShiftedDistance -= LocaleDistance::shiftDistance(demotionPerDesiredLocale)) <= 0) {
+        如果 ((bestShiftedDistance -= LocaleDistance::shiftDistance(demotionPerDesiredLocale)) <= 0) {
             break;
         }
-        if (remainingIter == nullptr || !remainingIter->hasNext()) {
+        如果 (remainingIter == nullptr || !remainingIter->hasNext()) {
             break;
         }
         desiredLSR = remainingIter->next(errorCode);
-        if (U_FAILURE(errorCode)) { return std::nullopt; }
+        如果 (U_FAILURE(errorCode)) { 返回 std::nullopt; }
         ++desiredIndex;
     }
-    if (bestSupportedLsrIndex < 0) {
+    如果 (bestSupportedLsrIndex < 0) {
         // no good match
-        return std::nullopt;
+        返回 std::nullopt;
     }
-    return supportedIndexes[bestSupportedLsrIndex];
+    返回 supportedIndexes[bestSupportedLsrIndex];
 }
 
 UBool LocaleMatcher::isMatch(const Locale &desired, const Locale &supported,
                              UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return false; }
+    如果 (U_FAILURE(errorCode)) { 返回 false; }
     LSR suppLSR = getMaximalLsrOrUnd(likelySubtags, supported, errorCode);
-    if (U_FAILURE(errorCode)) { return false; }
+    如果 (U_FAILURE(errorCode)) { 返回 false; }
     const LSR *pSuppLSR = &suppLSR;
     int32_t indexAndDistance = localeDistance.getBestIndexAndDistance(
             getMaximalLsrOrUnd(likelySubtags, desired, errorCode),
             &pSuppLSR, 1,
             LocaleDistance::shiftDistance(thresholdDistance), favorSubtag, direction);
-    return indexAndDistance >= 0;
+    返回 indexAndDistance >= 0;
 }
 
 double LocaleMatcher::internalMatch(const Locale &desired, const Locale &supported, UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return 0.; }
+    如果 (U_FAILURE(errorCode)) { 返回 0.; }
     // Returns the inverse of the distance: That is, 1-distance(desired, supported).
     LSR suppLSR = getMaximalLsrOrUnd(likelySubtags, supported, errorCode);
-    if (U_FAILURE(errorCode)) { return 0.; }
+    如果 (U_FAILURE(errorCode)) { 返回 0.; }
     const LSR *pSuppLSR = &suppLSR;
     int32_t indexAndDistance = localeDistance.getBestIndexAndDistance(
             getMaximalLsrOrUnd(likelySubtags, desired, errorCode),
             &pSuppLSR, 1,
             LocaleDistance::shiftDistance(thresholdDistance), favorSubtag, direction);
     double distance = LocaleDistance::getDistanceDouble(indexAndDistance);
-    return (100.0 - distance) / 100.0;
+    返回 (100.0 - distance) / 100.0;
 }
 
 U_NAMESPACE_END
@@ -761,7 +761,7 @@ namespace {
 class LocaleFromTag {
 public:
     LocaleFromTag() : locale(Locale::getRoot()) {}
-    const Locale& operator()(const char* tag) U_LIFETIME_BOUND { return locale = Locale(tag); }
+    const Locale& operator()(const char* tag) U_LIFETIME_BOUND { 返回 locale = Locale(tag); }
 
 private:
     // Store the locale in the converter, rather than return a reference to a temporary,
@@ -772,36 +772,36 @@ private:
 int32_t acceptLanguage(UEnumeration &supportedLocales, Locale::Iterator &desiredLocales,
                        char *dest, int32_t capacity, UAcceptResult *acceptResult,
                        UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return 0; }
+    如果 (U_FAILURE(errorCode)) { 返回 0; }
     LocaleMatcher::Builder builder;
     const char *locString;
-    while ((locString = uenum_next(&supportedLocales, nullptr, &errorCode)) != nullptr) {
+    当 ((locString = uenum_next(&supportedLocales, nullptr, &errorCode)) != nullptr) {
         Locale loc(locString);
-        if (loc.isBogus()) {
+        如果 (loc.isBogus()) {
             errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-            return 0;
+            返回 0;
         }
         builder.addSupportedLocale(loc);
     }
     LocaleMatcher matcher = builder.build(errorCode);
     LocaleMatcher::Result result = matcher.getBestMatchResult(desiredLocales, errorCode);
-    if (U_FAILURE(errorCode)) { return 0; }
-    if (result.getDesiredIndex() >= 0) {
-        if (acceptResult != nullptr) {
+    如果 (U_FAILURE(errorCode)) { 返回 0; }
+    如果 (result.getDesiredIndex() >= 0) {
+        如果 (acceptResult != nullptr) {
             *acceptResult = *result.getDesiredLocale() == *result.getSupportedLocale() ?
                 ULOC_ACCEPT_VALID : ULOC_ACCEPT_FALLBACK;
         }
         const char *bestStr = result.getSupportedLocale()->getName();
         int32_t bestLength = static_cast<int32_t>(uprv_strlen(bestStr));
-        if (bestLength <= capacity) {
+        如果 (bestLength <= capacity) {
             uprv_memcpy(dest, bestStr, bestLength);
         }
-        return u_terminateChars(dest, capacity, bestLength, &errorCode);
-    } else {
-        if (acceptResult != nullptr) {
+        返回 u_terminateChars(dest, capacity, bestLength, &errorCode);
+    } 否则 {
+        如果 (acceptResult != nullptr) {
             *acceptResult = ULOC_ACCEPT_FAILED;
         }
-        return u_terminateChars(dest, capacity, 0, &errorCode);
+        返回 u_terminateChars(dest, capacity, 0, &errorCode);
     }
 }
 
@@ -813,17 +813,17 @@ uloc_acceptLanguage(char *result, int32_t resultAvailable,
                     const char **acceptList, int32_t acceptListCount,
                     UEnumeration *availableLocales,
                     UErrorCode *status) {
-    if (U_FAILURE(*status)) { return 0; }
-    if ((result == nullptr ? resultAvailable != 0 : resultAvailable < 0) ||
+    如果 (U_FAILURE(*status)) { 返回 0; }
+    如果 ((result == nullptr ? resultAvailable != 0 : resultAvailable < 0) ||
             (acceptList == nullptr ? acceptListCount != 0 : acceptListCount < 0) ||
             availableLocales == nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        返回 0;
     }
     LocaleFromTag converter;
     Locale::ConvertingIterator<const char **, LocaleFromTag> desiredLocales(
         acceptList, acceptList + acceptListCount, converter);
-    return acceptLanguage(*availableLocales, desiredLocales,
+    返回 acceptLanguage(*availableLocales, desiredLocales,
                           result, resultAvailable, outResult, *status);
 }
 
@@ -833,14 +833,14 @@ uloc_acceptLanguageFromHTTP(char *result, int32_t resultAvailable,
                             const char *httpAcceptLanguage,
                             UEnumeration *availableLocales,
                             UErrorCode *status) {
-    if (U_FAILURE(*status)) { return 0; }
-    if ((result == nullptr ? resultAvailable != 0 : resultAvailable < 0) ||
+    如果 (U_FAILURE(*status)) { 返回 0; }
+    如果 ((result == nullptr ? resultAvailable != 0 : resultAvailable < 0) ||
             httpAcceptLanguage == nullptr || availableLocales == nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        返回 0;
     }
     LocalePriorityList list(httpAcceptLanguage, *status);
     LocalePriorityList::Iterator desiredLocales = list.iterator();
-    return acceptLanguage(*availableLocales, desiredLocales,
+    返回 acceptLanguage(*availableLocales, desiredLocales,
                           result, resultAvailable, outResult, *status);
 }

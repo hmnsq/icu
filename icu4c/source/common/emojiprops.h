@@ -73,7 +73,7 @@ private:
     isAcceptable(void *context, const char *type, const char *name, const UDataInfo *pInfo);
     /** Input i: One of the IX_..._TRIE_OFFSET indexes into the data file indexes[] array. */
     static int32_t getStringTrieIndex(int32_t i) {
-        return i - IX_BASIC_EMOJI_TRIE_OFFSET;
+        返回 i - IX_BASIC_EMOJI_TRIE_OFFSET;
     }
 
     void load(UErrorCode &errorCode);

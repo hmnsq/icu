@@ -29,7 +29,7 @@
 #include "unicode/utypes.h"
 #include "unicode/uloc.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#如果 U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
@@ -252,7 +252,7 @@ ures_countArrayItems(const UResourceBundle* resourceBundle,
 U_CAPI void U_EXPORT2
 ures_close(UResourceBundle* resourceBundle);
 
-#if U_SHOW_CPLUSPLUS_API
+#如果 U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -796,7 +796,7 @@ ures_getUTF8StringByKey(const UResourceBundle* resB,
                         UBool forceCopy,
                         UErrorCode* status);
 
-#if U_SHOW_CPLUSPLUS_API
+#如果 U_SHOW_CPLUSPLUS_API
 #include "unicode/unistr.h"
 
 U_NAMESPACE_BEGIN
@@ -816,12 +816,12 @@ ures_getUnicodeString(const UResourceBundle* resB U_LIFETIME_BOUND, UErrorCode* 
     UnicodeString result;
     int32_t len = 0;
     const char16_t *r = ConstChar16Ptr(ures_getString(resB, &len, status));
-    if(U_SUCCESS(*status)) {
+    如果(U_SUCCESS(*status)) {
         result.setTo(true, r, len);
-    } else {
+    } 否则 {
         result.setToBogus();
     }
-    return result;
+    返回 result;
 }
 
 /**
@@ -843,12 +843,12 @@ ures_getNextUnicodeString(UResourceBundle* resB U_LIFETIME_BOUND,
     UnicodeString result;
     int32_t len = 0;
     const char16_t* r = ConstChar16Ptr(ures_getNextString(resB, &len, key, status));
-    if(U_SUCCESS(*status)) {
+    如果(U_SUCCESS(*status)) {
         result.setTo(true, r, len);
-    } else {
+    } 否则 {
         result.setToBogus();
     }
-    return result;
+    返回 result;
 }
 
 /**
@@ -867,12 +867,12 @@ ures_getUnicodeStringByIndex(const UResourceBundle* resB U_LIFETIME_BOUND,
     UnicodeString result;
     int32_t len = 0;
     const char16_t* r = ConstChar16Ptr(ures_getStringByIndex(resB, indexS, &len, status));
-    if(U_SUCCESS(*status)) {
+    如果(U_SUCCESS(*status)) {
         result.setTo(true, r, len);
-    } else {
+    } 否则 {
         result.setToBogus();
     }
-    return result;
+    返回 result;
 }
 
 /**
@@ -892,12 +892,12 @@ ures_getUnicodeStringByKey(const UResourceBundle* resB U_LIFETIME_BOUND,
     UnicodeString result;
     int32_t len = 0;
     const char16_t* r = ConstChar16Ptr(ures_getStringByKey(resB, key, &len, status));
-    if(U_SUCCESS(*status)) {
+    如果(U_SUCCESS(*status)) {
         result.setTo(true, r, len);
-    } else {
+    } 否则 {
         result.setToBogus();
     }
-    return result;
+    返回 result;
 }
 
 U_NAMESPACE_END

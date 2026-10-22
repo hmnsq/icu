@@ -51,7 +51,7 @@
  */
 #include <time.h>
 
-#if !U_PLATFORM_USES_ONLY_WIN32_API
+#如果 !U_PLATFORM_USES_ONLY_WIN32_API
 #include <sys/time.h>
 #endif
 
@@ -76,12 +76,12 @@
 #include <float.h>
 
 #ifndef U_COMMON_IMPLEMENTATION
-#error U_COMMON_IMPLEMENTATION not set - must be set for all ICU source files in common/ - see https://unicode-org.github.io/icu/userguide/icu/howtouseicu.html
+#error U_COMMON_IMPLEMENTATION not set - must be set 为 all ICU source files in common/ - see https://unicode-org.github.io/icu/userguide/icu/howtouseicu.html
 #endif
 
 
 /* include system headers */
-#if U_PLATFORM_USES_ONLY_WIN32_API
+#如果 U_PLATFORM_USES_ONLY_WIN32_API
     /*
      * TODO: U_PLATFORM_USES_ONLY_WIN32_API includes MinGW.
      * Should Cygwin be included as well (U_PLATFORM_HAS_WIN32_API)
@@ -109,7 +109,7 @@
 #elif U_PLATFORM_IS_DARWIN_BASED || U_PLATFORM_IS_LINUX_BASED || U_PLATFORM == U_PF_BSD || U_PLATFORM == U_PF_SOLARIS
 #   include <limits.h>
 #   include <unistd.h>
-#   if U_PLATFORM == U_PF_SOLARIS
+#   如果 U_PLATFORM == U_PF_SOLARIS
 #       ifndef _XPG4_2
 #           define _XPG4_2
 #       endif
@@ -128,7 +128,7 @@
  *
  */
 
-#if U_HAVE_NL_LANGINFO_CODESET
+#如果 U_HAVE_NL_LANGINFO_CODESET
 #include <langinfo.h>
 #endif
 
@@ -136,11 +136,11 @@
  * Simple things (presence of functions, etc) should just go in configure.in and be added to
  * icucfg.h via autoheader.
  */
-#if U_PLATFORM_IMPLEMENTS_POSIX
-#   if U_PLATFORM == U_PF_OS400
+#如果 U_PLATFORM_IMPLEMENTS_POSIX
+#   如果 U_PLATFORM == U_PF_OS400
 #    define HAVE_DLFCN_H 0
 #    define HAVE_DLOPEN 0
-#   else
+#   否则
 #   ifndef HAVE_DLFCN_H
 #    define HAVE_DLFCN_H 1
 #   endif
@@ -151,7 +151,7 @@
 #   ifndef HAVE_GETTIMEOFDAY
 #    define HAVE_GETTIMEOFDAY 1
 #   endif
-#else
+#否则
 #   define HAVE_DLFCN_H 0
 #   define HAVE_DLOPEN 0
 #   define HAVE_GETTIMEOFDAY 0
@@ -186,9 +186,9 @@ static const BitPatternConversion gInf = {static_cast<int64_t>(INT64_C(0x7FF0000
   functions).
   ---------------------------------------------------------------------------*/
 
-#if U_PLATFORM_USES_ONLY_WIN32_API || U_PLATFORM == U_PF_OS400
+#如果 U_PLATFORM_USES_ONLY_WIN32_API || U_PLATFORM == U_PF_OS400
 #   undef U_POSIX_LOCALE
-#else
+#否则
 #   define U_POSIX_LOCALE    1
 #endif
 
@@ -196,44 +196,44 @@ static const BitPatternConversion gInf = {static_cast<int64_t>(INT64_C(0x7FF0000
     WARNING! u_topNBytesOfDouble and u_bottomNBytesOfDouble
     can't be properly optimized by the gcc compiler sometimes (i.e. gcc 3.2).
 */
-#if !IEEE_754
+#如果 !IEEE_754
 static char*
-u_topNBytesOfDouble(double* d, int n)
+u_topNBytesOfDouble(double* d, 整数 n)
 {
-#if U_IS_BIG_ENDIAN
-    return (char*)d;
-#else
-    return (char*)(d + 1) - n;
+#如果 U_IS_BIG_ENDIAN
+    返回 (char*)d;
+#否则
+    返回 (char*)(d + 1) - n;
 #endif
 }
 
 static char*
-u_bottomNBytesOfDouble(double* d, int n)
+u_bottomNBytesOfDouble(double* d, 整数 n)
 {
-#if U_IS_BIG_ENDIAN
-    return (char*)(d + 1) - n;
-#else
-    return (char*)d;
+#如果 U_IS_BIG_ENDIAN
+    返回 (char*)(d + 1) - n;
+#否则
+    返回 (char*)d;
 #endif
 }
 #endif   /* !IEEE_754 */
 
-#if IEEE_754
+#如果 IEEE_754
 static UBool
 u_signBit(double d) {
     uint8_t hiByte;
-#if U_IS_BIG_ENDIAN
+#如果 U_IS_BIG_ENDIAN
     hiByte = *(uint8_t *)&d;
-#else
+#否则
     hiByte = *(reinterpret_cast<uint8_t*>(&d) + sizeof(double) - 1);
 #endif
-    return (hiByte & 0x80) != 0;
+    返回 (hiByte & 0x80) != 0;
 }
 #endif
 
 
 
-#if defined (U_DEBUG_FAKETIME)
+#如果 defined (U_DEBUG_FAKETIME)
 /* Override the clock to test things without having to move the system clock.
  * Assumes POSIX gettimeofday() will function
  */
@@ -244,22 +244,22 @@ UBool fakeClock_set = false; /** True if fake clock has spun up **/
 static UDate getUTCtime_real() {
     struct timeval posixTime;
     gettimeofday(&posixTime, nullptr);
-    return (UDate)(((int64_t)posixTime.tv_sec * U_MILLIS_PER_SECOND) + (posixTime.tv_usec/1000));
+    返回 (UDate)(((int64_t)posixTime.tv_sec * U_MILLIS_PER_SECOND) + (posixTime.tv_usec/1000));
 }
 
 static UDate getUTCtime_fake() {
     static UMutex fakeClockMutex;
     umtx_lock(&fakeClockMutex);
-    if(!fakeClock_set) {
+    如果(!fakeClock_set) {
         UDate real = getUTCtime_real();
         const char *fake_start = getenv("U_FAKETIME_START");
-        if((fake_start!=nullptr) && (fake_start[0]!=0)) {
+        如果((fake_start!=nullptr) && (fake_start[0]!=0)) {
             sscanf(fake_start,"%lf",&fakeClock_t0);
             fakeClock_dt = fakeClock_t0 - real;
             fprintf(stderr,"U_DEBUG_FAKETIME was set at compile time, so the ICU clock will start at a preset value\n"
                     "env variable U_FAKETIME_START=%.0f (%s) for an offset of %.0f ms from the current time %.0f\n",
                     fakeClock_t0, fake_start, fakeClock_dt, real);
-        } else {
+        } 否则 {
           fakeClock_dt = 0;
             fprintf(stderr,"U_DEBUG_FAKETIME was set at compile time, but U_FAKETIME_START was not set.\n"
                     "Set U_FAKETIME_START to the number of milliseconds since 1/1/1970 to set the ICU clock.\n");
@@ -268,11 +268,11 @@ static UDate getUTCtime_fake() {
     }
     umtx_unlock(&fakeClockMutex);
 
-    return getUTCtime_real() + fakeClock_dt;
+    返回 getUTCtime_real() + fakeClock_dt;
 }
 #endif
 
-#if U_PLATFORM_USES_ONLY_WIN32_API
+#如果 U_PLATFORM_USES_ONLY_WIN32_API
 typedef union {
     int64_t int64;
     FILETIME fileTime;
@@ -294,10 +294,10 @@ typedef union {
 U_CAPI UDate U_EXPORT2
 uprv_getUTCtime()
 {
-#if defined(U_DEBUG_FAKETIME)
-    return getUTCtime_fake(); /* Hook for overriding the clock */
-#else
-    return uprv_getRawUTCtime();
+#如果 defined(U_DEBUG_FAKETIME)
+    返回 getUTCtime_fake(); /* Hook for overriding the clock */
+#否则
+    返回 uprv_getRawUTCtime();
 #endif
 }
 
@@ -305,21 +305,21 @@ uprv_getUTCtime()
 U_CAPI UDate U_EXPORT2
 uprv_getRawUTCtime()
 {
-#if U_PLATFORM_USES_ONLY_WIN32_API
+#如果 U_PLATFORM_USES_ONLY_WIN32_API
 
     FileTimeConversion winTime;
     GetSystemTimeAsFileTime(&winTime.fileTime);
-    return (UDate)((winTime.int64 - EPOCH_BIAS) / HECTONANOSECOND_PER_MILLISECOND);
-#else
+    返回 (UDate)((winTime.int64 - EPOCH_BIAS) / HECTONANOSECOND_PER_MILLISECOND);
+#否则
 
-#if HAVE_GETTIMEOFDAY
+#如果 HAVE_GETTIMEOFDAY
     struct timeval posixTime;
     gettimeofday(&posixTime, nullptr);
-    return (UDate)(((int64_t)posixTime.tv_sec * U_MILLIS_PER_SECOND) + (posixTime.tv_usec/1000));
-#else
+    返回 (UDate)(((int64_t)posixTime.tv_sec * U_MILLIS_PER_SECOND) + (posixTime.tv_usec/1000));
+#否则
     time_t epochtime;
     time(&epochtime);
-    return (UDate)epochtime * U_MILLIS_PER_SECOND;
+    返回 (UDate)epochtime * U_MILLIS_PER_SECOND;
 #endif
 
 #endif
@@ -338,11 +338,11 @@ uprv_getRawUTCtime()
 U_CAPI UBool U_EXPORT2
 uprv_isNaN(double number)
 {
-#if IEEE_754
+#如果 IEEE_754
     BitPatternConversion convertedNumber;
     convertedNumber.d64 = number;
     /* Infinity is 0x7FF0000000000000U. Anything greater than that is a NaN */
-    return (convertedNumber.i64 & U_INT64_MAX) > gInf.i64;
+    返回 (convertedNumber.i64 & U_INT64_MAX) > gInf.i64;
 
 #elif U_PLATFORM == U_PF_OS390
     uint32_t highBits = *(uint32_t*)u_topNBytesOfDouble(&number,
@@ -350,61 +350,61 @@ uprv_isNaN(double number)
     uint32_t lowBits  = *(uint32_t*)u_bottomNBytesOfDouble(&number,
                         sizeof(uint32_t));
 
-    return ((highBits & 0x7F080000L) == 0x7F080000L) &&
+    返回 ((highBits & 0x7F080000L) == 0x7F080000L) &&
       (lowBits == 0x00000000L);
 
-#else
+#否则
     /* If your platform doesn't support IEEE 754 but *does* have an NaN value,*/
     /* you'll need to replace this default implementation with what's correct*/
     /* for your platform.*/
-    return number != number;
+    返回 number != number;
 #endif
 }
 
 U_CAPI UBool U_EXPORT2
 uprv_isInfinite(double number)
 {
-#if IEEE_754
+#如果 IEEE_754
     BitPatternConversion convertedNumber;
     convertedNumber.d64 = number;
     /* Infinity is exactly 0x7FF0000000000000U. */
-    return (convertedNumber.i64 & U_INT64_MAX) == gInf.i64;
+    返回 (convertedNumber.i64 & U_INT64_MAX) == gInf.i64;
 #elif U_PLATFORM == U_PF_OS390
     uint32_t highBits = *(uint32_t*)u_topNBytesOfDouble(&number,
                         sizeof(uint32_t));
     uint32_t lowBits  = *(uint32_t*)u_bottomNBytesOfDouble(&number,
                         sizeof(uint32_t));
 
-    return ((highBits  & ~SIGN) == 0x70FF0000L) && (lowBits == 0x00000000L);
+    返回 ((highBits  & ~SIGN) == 0x70FF0000L) && (lowBits == 0x00000000L);
 
-#else
+#否则
     /* If your platform doesn't support IEEE 754 but *does* have an infinity*/
     /* value, you'll need to replace this default implementation with what's*/
     /* correct for your platform.*/
-    return number == (2.0 * number);
+    返回 number == (2.0 * number);
 #endif
 }
 
 U_CAPI UBool U_EXPORT2
 uprv_isPositiveInfinity(double number)
 {
-#if IEEE_754 || U_PLATFORM == U_PF_OS390
-    return number > 0 && uprv_isInfinite(number);
-#else
-    return uprv_isInfinite(number);
+#如果 IEEE_754 || U_PLATFORM == U_PF_OS390
+    返回 number > 0 && uprv_isInfinite(number);
+#否则
+    返回 uprv_isInfinite(number);
 #endif
 }
 
 U_CAPI UBool U_EXPORT2
 uprv_isNegativeInfinity(double number)
 {
-#if IEEE_754 || U_PLATFORM == U_PF_OS390
-    return number < 0 && uprv_isInfinite(number);
+#如果 IEEE_754 || U_PLATFORM == U_PF_OS390
+    返回 number < 0 && uprv_isInfinite(number);
 
-#else
+#否则
     uint32_t highBits = *(uint32_t*)u_topNBytesOfDouble(&number,
                         sizeof(uint32_t));
-    return((highBits & SIGN) && uprv_isInfinite(number));
+    返回((highBits & SIGN) && uprv_isInfinite(number));
 
 #endif
 }
@@ -412,112 +412,112 @@ uprv_isNegativeInfinity(double number)
 U_CAPI double U_EXPORT2
 uprv_getNaN()
 {
-#if IEEE_754 || U_PLATFORM == U_PF_OS390
-    return gNan.d64;
-#else
+#如果 IEEE_754 || U_PLATFORM == U_PF_OS390
+    返回 gNan.d64;
+#否则
     /* If your platform doesn't support IEEE 754 but *does* have an NaN value,*/
     /* you'll need to replace this default implementation with what's correct*/
     /* for your platform.*/
-    return 0.0;
+    返回 0.0;
 #endif
 }
 
 U_CAPI double U_EXPORT2
 uprv_getInfinity()
 {
-#if IEEE_754 || U_PLATFORM == U_PF_OS390
-    return gInf.d64;
-#else
+#如果 IEEE_754 || U_PLATFORM == U_PF_OS390
+    返回 gInf.d64;
+#否则
     /* If your platform doesn't support IEEE 754 but *does* have an infinity*/
     /* value, you'll need to replace this default implementation with what's*/
     /* correct for your platform.*/
-    return 0.0;
+    返回 0.0;
 #endif
 }
 
 U_CAPI double U_EXPORT2
 uprv_floor(double x)
 {
-    return floor(x);
+    返回 floor(x);
 }
 
 U_CAPI double U_EXPORT2
 uprv_ceil(double x)
 {
-    return ceil(x);
+    返回 ceil(x);
 }
 
 U_CAPI double U_EXPORT2
 uprv_round(double x)
 {
-    return uprv_floor(x + 0.5);
+    返回 uprv_floor(x + 0.5);
 }
 
 U_CAPI double U_EXPORT2
 uprv_fabs(double x)
 {
-    return fabs(x);
+    返回 fabs(x);
 }
 
 U_CAPI double U_EXPORT2
 uprv_modf(double x, double* y)
 {
-    return modf(x, y);
+    返回 modf(x, y);
 }
 
 U_CAPI double U_EXPORT2
 uprv_fmod(double x, double y)
 {
-    return fmod(x, y);
+    返回 fmod(x, y);
 }
 
 U_CAPI double U_EXPORT2
 uprv_pow(double x, double y)
 {
     /* This is declared as "double pow(double x, double y)" */
-    return pow(x, y);
+    返回 pow(x, y);
 }
 
 U_CAPI double U_EXPORT2
 uprv_pow10(int32_t x)
 {
-    return pow(10.0, (double)x);
+    返回 pow(10.0, (double)x);
 }
 
 U_CAPI double U_EXPORT2
 uprv_fmax(double x, double y)
 {
-#if IEEE_754
+#如果 IEEE_754
     /* first handle NaN*/
-    if(uprv_isNaN(x) || uprv_isNaN(y))
-        return uprv_getNaN();
+    如果(uprv_isNaN(x) || uprv_isNaN(y))
+        返回 uprv_getNaN();
 
     /* check for -0 and 0*/
-    if(x == 0.0 && y == 0.0 && u_signBit(x))
-        return y;
+    如果(x == 0.0 && y == 0.0 && u_signBit(x))
+        返回 y;
 
 #endif
 
     /* this should work for all flt point w/o NaN and Inf special cases */
-    return (x > y ? x : y);
+    返回 (x > y ? x : y);
 }
 
 U_CAPI double U_EXPORT2
 uprv_fmin(double x, double y)
 {
-#if IEEE_754
+#如果 IEEE_754
     /* first handle NaN*/
-    if(uprv_isNaN(x) || uprv_isNaN(y))
-        return uprv_getNaN();
+    如果(uprv_isNaN(x) || uprv_isNaN(y))
+        返回 uprv_getNaN();
 
     /* check for -0 and 0*/
-    if(x == 0.0 && y == 0.0 && u_signBit(y))
-        return y;
+    如果(x == 0.0 && y == 0.0 && u_signBit(y))
+        返回 y;
 
 #endif
 
     /* this should work for all flt point w/o NaN and Inf special cases */
-    return (x > y ? y : x);
+    返回 (x > y ? y : x);
 }
 
 U_CAPI UBool U_EXPORT2
@@ -528,7 +528,7 @@ uprv_add32_overflow(int32_t a, int32_t b, int32_t* res) {
     auto b64 = static_cast<int64_t>(b);
     int64_t res64 = a64 + b64;
     *res = static_cast<int32_t>(res64);
-    return res64 != *res;
+    返回 res64 != *res;
 }
 
 U_CAPI UBool U_EXPORT2
@@ -539,7 +539,7 @@ uprv_mul32_overflow(int32_t a, int32_t b, int32_t* res) {
     auto b64 = static_cast<int64_t>(b);
     int64_t res64 = a64 * b64;
     *res = static_cast<int32_t>(res64);
-    return res64 != *res;
+    返回 res64 != *res;
 }
 
 /**
@@ -552,20 +552,20 @@ uprv_mul32_overflow(int32_t a, int32_t b, int32_t* res) {
 U_CAPI double U_EXPORT2
 uprv_trunc(double d)
 {
-#if IEEE_754
+#如果 IEEE_754
     /* handle error cases*/
-    if(uprv_isNaN(d))
-        return uprv_getNaN();
-    if(uprv_isInfinite(d))
-        return uprv_getInfinity();
+    如果(uprv_isNaN(d))
+        返回 uprv_getNaN();
+    如果(uprv_isInfinite(d))
+        返回 uprv_getInfinity();
 
-    if(u_signBit(d))    /* Signbit() picks up -0.0;  d<0 does not. */
-        return ceil(d);
-    else
-        return floor(d);
+    如果(u_signBit(d))    /* Signbit() picks up -0.0;  d<0 does not. */
+        返回 ceil(d);
+    否则
+        返回 floor(d);
 
-#else
-    return d >= 0 ? floor(d) : ceil(d);
+#否则
+    返回 d >= 0 ? floor(d) : ceil(d);
 
 #endif
 }
@@ -577,19 +577,19 @@ uprv_trunc(double d)
 U_CAPI double U_EXPORT2
 uprv_maxMantissa()
 {
-    return pow(2.0, DBL_MANT_DIG + 1.0) - 1.0;
+    返回 pow(2.0, DBL_MANT_DIG + 1.0) - 1.0;
 }
 
 U_CAPI double U_EXPORT2
 uprv_log(double d)
 {
-    return log(d);
+    返回 log(d);
 }
 
 U_CAPI void * U_EXPORT2
 uprv_maximumPtr(void * base)
 {
-#if U_PLATFORM == U_PF_OS400
+#如果 U_PLATFORM == U_PF_OS400
     /*
      * With the provided function we should never be out of range of a given segment
      * (a traditional/typical segment that is).  Our segments have 5 bytes for the
@@ -607,15 +607,15 @@ uprv_maximumPtr(void * base)
      * Unlike other operating systems, the pointer model isn't determined at
      * compile time on i5/OS.
      */
-    if ((base != nullptr) && (_TESTPTR(base, _C_TERASPACE_CHECK))) {
+    如果 ((base != nullptr) && (_TESTPTR(base, _C_TERASPACE_CHECK))) {
         /* if it is a TERASPACE pointer the max is 2GB - 4k */
-        return ((void *)(((char *)base)-((uint32_t)(base))+((uint32_t)0x7fffefff)));
+        返回 ((void *)(((char *)base)-((uint32_t)(base))+((uint32_t)0x7fffefff)));
     }
     /* otherwise 16MB since nullptr ptr is not checkable or the ptr is not TERASPACE */
-    return ((void *)(((char *)base)-((uint32_t)(base))+((uint32_t)0xffefff)));
+    返回 ((void *)(((char *)base)-((uint32_t)(base))+((uint32_t)0xffefff)));
 
-#else
-    return U_MAX_PTR(base);
+#否则
+    返回 U_MAX_PTR(base);
 #endif
 }
 
@@ -631,9 +631,9 @@ uprv_maximumPtr(void * base)
 U_CAPI void U_EXPORT2
 uprv_tzset()
 {
-#if defined(U_TZSET)
+#如果 defined(U_TZSET)
     U_TZSET();
-#else
+#否则
     /* no initialization*/
 #endif
 }
@@ -642,15 +642,15 @@ U_CAPI int32_t U_EXPORT2
 uprv_timezone()
 {
 #ifdef U_TIMEZONE
-    return U_TIMEZONE;
-#else
+    返回 U_TIMEZONE;
+#否则
     time_t t, t1, t2;
     struct tm tmrec;
     int32_t tdiff = 0;
 
     time(&t);
     uprv_memcpy( &tmrec, localtime(&t), sizeof(tmrec) );
-#if U_PLATFORM != U_PF_IPHONE
+#如果 U_PLATFORM != U_PF_IPHONE
     UBool dst_checked = (tmrec.tm_isdst != 0); /* daylight savings time is checked*/
 #endif
     t1 = mktime(&tmrec);                 /* local time in seconds*/
@@ -658,7 +658,7 @@ uprv_timezone()
     t2 = mktime(&tmrec);                 /* GMT (or UTC) in seconds*/
     tdiff = t2 - t1;
 
-#if U_PLATFORM != U_PF_IPHONE
+#如果 U_PLATFORM != U_PF_IPHONE
     /* imitate NT behaviour, which returns same timezone offset to GMT for
        winter and summer.
        This does not work on all platforms. For instance, on glibc on Linux
@@ -667,22 +667,22 @@ uprv_timezone()
        platform where this does not work. Linux + glibc and Mac OS 10.5
        have U_TIMEZONE defined so that this code is not reached.
     */
-    if (dst_checked)
+    如果 (dst_checked)
         tdiff += 3600;
 #endif
-    return tdiff;
+    返回 tdiff;
 #endif
 }
 
 /* Note that U_TZNAME does *not* have to be tzname, but if it is,
    some platforms need to have it declared here. */
 
-#if defined(U_TZNAME) && (U_PLATFORM == U_PF_IRIX || U_PLATFORM_IS_DARWIN_BASED)
+#如果 defined(U_TZNAME) && (U_PLATFORM == U_PF_IRIX || U_PLATFORM_IS_DARWIN_BASED)
 /* RS6000 and others reject char **tzname.  */
 extern U_IMPORT char *U_TZNAME[];
 #endif
 
-#if !UCONFIG_NO_FILE_IO && ((U_PLATFORM_IS_DARWIN_BASED && (U_PLATFORM != U_PF_IPHONE || defined(U_TIMEZONE))) || U_PLATFORM_IS_LINUX_BASED || U_PLATFORM == U_PF_BSD || U_PLATFORM == U_PF_SOLARIS)
+#如果 !UCONFIG_NO_FILE_IO && ((U_PLATFORM_IS_DARWIN_BASED && (U_PLATFORM != U_PF_IPHONE || defined(U_TIMEZONE))) || U_PLATFORM_IS_LINUX_BASED || U_PLATFORM == U_PF_BSD || U_PLATFORM == U_PF_SOLARIS)
 /* These platforms are likely to use Olson timezone IDs. */
 /* common targets of the symbolic link at TZDEFAULT are:
  * "/usr/share/zoneinfo/<olsonID>" default, older Linux distros, macOS to 10.12
@@ -695,19 +695,19 @@ extern U_IMPORT char *U_TZNAME[];
  */
 
 #define CHECK_LOCALTIME_LINK 1
-#if U_PLATFORM_IS_DARWIN_BASED
+#如果 U_PLATFORM_IS_DARWIN_BASED
 #include <tzfile.h>
 #define TZZONEINFO      (TZDIR "/")
 #elif U_PLATFORM == U_PF_SOLARIS
 #define TZDEFAULT       "/etc/localtime"
 #define TZZONEINFO      "/usr/share/lib/zoneinfo/"
 #define TZ_ENV_CHECK    "localtime"
-#else
+#否则
 #define TZDEFAULT       "/etc/localtime"
 #define TZZONEINFO      "/usr/share/zoneinfo/"
 #endif
 #define TZZONEINFOTAIL  "/zoneinfo/"
-#if U_HAVE_DIRENT_H
+#如果 U_HAVE_DIRENT_H
 #define TZFILE_SKIP     "posixrules" /* tz file to skip when searching. */
 /* Some Linux distributions have 'localtime' in /usr/share/zoneinfo
    symlinked to /etc/localtime, which makes searchForTZFile return
@@ -720,7 +720,7 @@ static char gTimeZoneBuffer[PATH_MAX];
 static const char *gTimeZoneBufferPtr = nullptr;
 #endif
 
-#if !U_PLATFORM_USES_ONLY_WIN32_API
+#如果 !U_PLATFORM_USES_ONLY_WIN32_API
 #define isNonDigit(ch) (ch < '0' || '9' < ch)
 #define isDigit(ch) ('0' <= ch && ch <= '9')
 static UBool isValidOlsonID(const char *id) {
@@ -729,14 +729,14 @@ static UBool isValidOlsonID(const char *id) {
 
     /* Determine if this is something like Iceland (Olson ID)
     or AST4ADT (non-Olson ID) */
-    while (id[idx] && isNonDigit(id[idx]) && id[idx] != ',') {
+    当 (id[idx] && isNonDigit(id[idx]) && id[idx] != ',') {
         idx++;
     }
 
     /* Allow at maximum 2 numbers at the end of the id to support zone id's
     like GMT+11. */
     idxMax = idx + 2;
-    while (id[idx] && isDigit(id[idx]) && idx < idxMax) {
+    当 (id[idx] && isDigit(id[idx]) && idx < idxMax) {
         idx++;
     }
 
@@ -744,7 +744,7 @@ static UBool isValidOlsonID(const char *id) {
     The timezone is sometimes set to "CST-7CDT", "CST6CDT5,J129,J131/19:30",
     "GRNLNDST3GRNLNDDT" or similar, so we cannot use it.
     The rest of the time it could be an Olson ID. George */
-    return id[idx] == 0
+    返回 id[idx] == 0
         || uprv_strcmp(id, "PST8PDT") == 0
         || uprv_strcmp(id, "MST7MDT") == 0
         || uprv_strcmp(id, "CST6CDT") == 0
@@ -764,7 +764,7 @@ static UBool isValidOlsonID(const char *id) {
    timezone id ('America/New_York' is). So, we have to skip
    'posix/' and 'right/' at the beginning. */
 static void skipZoneIDPrefix(const char** id) {
-    if (uprv_strncmp(*id, "posix/", 6) == 0
+    如果 (uprv_strncmp(*id, "posix/", 6) == 0
         || uprv_strncmp(*id, "right/", 6) == 0)
     {
         *id += 6;
@@ -772,7 +772,7 @@ static void skipZoneIDPrefix(const char** id) {
 }
 #endif
 
-#if defined(U_TZNAME) && !U_PLATFORM_USES_ONLY_WIN32_API
+#如果 defined(U_TZNAME) && !U_PLATFORM_USES_ONLY_WIN32_API
 
 #define CONVERT_HOURS_TO_SECONDS(offset) (int32_t)(offset*3600)
 typedef struct OffsetZoneMapping {
@@ -864,17 +864,17 @@ static const char* remapShortTimeZone(const char *stdID, const char *dstID, int3
 #ifdef DEBUG_TZNAME
     fprintf(stderr, "TZ=%s std=%s dst=%s daylight=%d offset=%d\n", getenv("TZ"), stdID, dstID, daylightType, offset);
 #endif
-    for (idx = 0; idx < UPRV_LENGTHOF(OFFSET_ZONE_MAPPINGS); idx++)
+    为 (idx = 0; idx < UPRV_LENGTHOF(OFFSET_ZONE_MAPPINGS); idx++)
     {
-        if (offset == OFFSET_ZONE_MAPPINGS[idx].offsetSeconds
+        如果 (offset == OFFSET_ZONE_MAPPINGS[idx].offsetSeconds
             && daylightType == OFFSET_ZONE_MAPPINGS[idx].daylightType
             && strcmp(OFFSET_ZONE_MAPPINGS[idx].stdID, stdID) == 0
             && strcmp(OFFSET_ZONE_MAPPINGS[idx].dstID, dstID) == 0)
         {
-            return OFFSET_ZONE_MAPPINGS[idx].olsonID;
+            返回 OFFSET_ZONE_MAPPINGS[idx].olsonID;
         }
     }
-    return nullptr;
+    返回 nullptr;
 }
 #endif
 
@@ -906,51 +906,51 @@ static UBool compareBinaryFiles(const char* TZFileName, DefaultTZInfo* tzInfo) {
 
     tzInfo->defaultTZPosition = 0; /* reset position to begin search */
 
-    if (file != nullptr) {
+    如果 (file != nullptr) {
         /* First check that the file size are equal. */
-        if (tzInfo->defaultTZFileSize == 0) {
+        如果 (tzInfo->defaultTZFileSize == 0) {
             fseek(tzInfo->defaultTZFilePtr, 0, SEEK_END);
             tzInfo->defaultTZFileSize = ftell(tzInfo->defaultTZFilePtr);
         }
-        if (fseek(file, 0, SEEK_END) != 0) {
+        如果 (fseek(file, 0, SEEK_END) != 0) {
             fclose(file);
-            return false;
+            返回 false;
         }
         sizeFile = ftell(file);
-        if (sizeFile == -1) {
+        如果 (sizeFile == -1) {
             fclose(file);
-            return false;
+            返回 false;
         }
         sizeFileLeft = sizeFile;
 
-        if (sizeFile != tzInfo->defaultTZFileSize) {
+        如果 (sizeFile != tzInfo->defaultTZFileSize) {
             result = false;
-        } else {
+        } 否则 {
             /* Store the data from the files in separate buffers and
              * compare each byte to determine equality.
              */
-            if (tzInfo->defaultTZBuffer == nullptr) {
-                if (fseek(tzInfo->defaultTZFilePtr, 0, SEEK_SET) != 0) {
+            如果 (tzInfo->defaultTZBuffer == nullptr) {
+                如果 (fseek(tzInfo->defaultTZFilePtr, 0, SEEK_SET) != 0) {
                     fclose(file);
-                    return false;
+                    返回 false;
                 }
                 tzInfo->defaultTZBuffer = static_cast<char*>(uprv_malloc(sizeof(char) * tzInfo->defaultTZFileSize));
                 sizeFileRead = fread(tzInfo->defaultTZBuffer, 1, tzInfo->defaultTZFileSize, tzInfo->defaultTZFilePtr);
             }
-            if (fseek(file, 0, SEEK_SET) != 0) {
+            如果 (fseek(file, 0, SEEK_SET) != 0) {
                 fclose(file);
-                return false;
+                返回 false;
             }
-            while(sizeFileLeft > 0) {
+            当(sizeFileLeft > 0) {
                 uprv_memset(bufferFile, 0, MAX_READ_SIZE);
                 sizeFileToRead = sizeFileLeft < MAX_READ_SIZE ? sizeFileLeft : MAX_READ_SIZE;
 
                 sizeFileRead = fread(bufferFile, 1, sizeFileToRead, file);
-                if (sizeFileRead == -1) {
+                如果 (sizeFileRead == -1) {
                     fclose(file);
-                    return false;
+                    返回 false;
                 }
-                if (memcmp(tzInfo->defaultTZBuffer + tzInfo->defaultTZPosition, bufferFile, sizeFileRead) != 0) {
+                如果 (memcmp(tzInfo->defaultTZBuffer + tzInfo->defaultTZPosition, bufferFile, sizeFileRead) != 0) {
                     result = false;
                     break;
                 }
@@ -958,15 +958,15 @@ static UBool compareBinaryFiles(const char* TZFileName, DefaultTZInfo* tzInfo) {
                 tzInfo->defaultTZPosition += sizeFileRead;
             }
         }
-    } else {
+    } 否则 {
         result = false;
     }
 
-    if (file != nullptr) {
+    如果 (file != nullptr) {
         fclose(file);
     }
 
-    return result;
+    返回 result;
 }
 
 
@@ -987,47 +987,47 @@ static char* searchForTZFile(const char* path, DefaultTZInfo* tzInfo) {
     UErrorCode status = U_ZERO_ERROR;
 
     /* There is no reference file to compare against, so do not traverse the zoneinfo tree. */
-    if (tzInfo->defaultTZFilePtr == nullptr) {
-        return nullptr;
+    如果 (tzInfo->defaultTZFilePtr == nullptr) {
+        返回 nullptr;
     }
 
     /* Save the current path */
     CharString curpath(path, -1, status);
-    if (U_FAILURE(status)) {
+    如果 (U_FAILURE(status)) {
         goto cleanupAndReturn;
     }
 
     dirp = opendir(path);
-    if (dirp == nullptr) {
+    如果 (dirp == nullptr) {
         goto cleanupAndReturn;
     }
 
-    if (gSearchTZFileResult == nullptr) {
+    如果 (gSearchTZFileResult == nullptr) {
         gSearchTZFileResult = new CharString;
-        if (gSearchTZFileResult == nullptr) {
+        如果 (gSearchTZFileResult == nullptr) {
             goto cleanupAndReturn;
         }
         ucln_common_registerCleanup(UCLN_COMMON_PUTIL, putil_cleanup);
     }
 
     /* Check each entry in the directory. */
-    while((dirEntry = readdir(dirp)) != nullptr) {
+    当((dirEntry = readdir(dirp)) != nullptr) {
         const char* dirName = dirEntry->d_name;
-        if (uprv_strcmp(dirName, SKIP1) != 0 && uprv_strcmp(dirName, SKIP2) != 0
+        如果 (uprv_strcmp(dirName, SKIP1) != 0 && uprv_strcmp(dirName, SKIP2) != 0
             && uprv_strcmp(TZFILE_SKIP, dirName) != 0 && uprv_strcmp(TZFILE_SKIP2, dirName) != 0) {
             /* Create a newpath with the new entry to test each entry in the directory. */
             CharString newpath(curpath, status);
             newpath.append(dirName, -1, status);
-            if (U_FAILURE(status)) {
+            如果 (U_FAILURE(status)) {
                 break;
             }
 
             DIR* subDirp = nullptr;
-            if ((subDirp = opendir(newpath.data())) != nullptr) {
+            如果 ((subDirp = opendir(newpath.data())) != nullptr) {
                 /* If this new path is a directory, make a recursive call with the newpath. */
                 closedir(subDirp);
                 newpath.append('/', status);
-                if (U_FAILURE(status)) {
+                如果 (U_FAILURE(status)) {
                     break;
                 }
                 result = searchForTZFile(newpath.data(), tzInfo);
@@ -1039,19 +1039,19 @@ static char* searchForTZFile(const char* path, DefaultTZInfo* tzInfo) {
                  It worked without this in most cases because we have a fallback of calling
                  localtime_r to figure out the default timezone.
                 */
-                if (result != nullptr)
+                如果 (result != nullptr)
                     break;
-            } else {
-                if(compareBinaryFiles(newpath.data(), tzInfo)) {
+            } 否则 {
+                如果(compareBinaryFiles(newpath.data(), tzInfo)) {
                     int32_t amountToSkip = sizeof(TZZONEINFO) - 1;
-                    if (amountToSkip > newpath.length()) {
+                    如果 (amountToSkip > newpath.length()) {
                         amountToSkip = newpath.length();
                     }
                     const char* zoneid = newpath.data() + amountToSkip;
                     skipZoneIDPrefix(&zoneid);
                     gSearchTZFileResult->clear();
                     gSearchTZFileResult->append(zoneid, -1, status);
-                    if (U_FAILURE(status)) {
+                    如果 (U_FAILURE(status)) {
                         break;
                     }
                     result = gSearchTZFileResult->data();
@@ -1063,21 +1063,21 @@ static char* searchForTZFile(const char* path, DefaultTZInfo* tzInfo) {
     }
 
   cleanupAndReturn:
-    if (dirp) {
+    如果 (dirp) {
         closedir(dirp);
     }
-    return result;
+    返回 result;
 }
 #endif
 
-#if U_PLATFORM == U_PF_ANDROID
-typedef int(system_property_read_callback)(const prop_info* info,
+#如果 U_PLATFORM == U_PF_ANDROID
+typedef 整数(system_property_read_callback)(const prop_info* info,
                                            void (*callback)(void* cookie,
                                                             const char* name,
                                                             const char* value,
                                                             uint32_t serial),
                                            void* cookie);
-typedef int(system_property_get)(const char*, char*);
+typedef 整数(system_property_get)(const char*, char*);
 
 static char gAndroidTimeZone[PROP_VALUE_MAX] = { '\0' };
 
@@ -1090,26 +1090,26 @@ static void u_property_read(void* cookie, const char* name, const char* value,
 U_CAPI void U_EXPORT2
 uprv_tzname_clear_cache()
 {
-#if U_PLATFORM == U_PF_ANDROID
+#如果 U_PLATFORM == U_PF_ANDROID
     /* Android's timezone is stored in system property. */
     gAndroidTimeZone[0] = '\0';
     void* libc = dlopen("libc.so", RTLD_NOLOAD);
-    if (libc) {
+    如果 (libc) {
         /* Android API 26+ has new API to get system property and old API
          * (__system_property_get) is deprecated */
         system_property_read_callback* property_read_callback =
             (system_property_read_callback*)dlsym(
                 libc, "__system_property_read_callback");
-        if (property_read_callback) {
+        如果 (property_read_callback) {
             const prop_info* info =
                 __system_property_find("persist.sys.timezone");
-            if (info) {
+            如果 (info) {
                 property_read_callback(info, &u_property_read, gAndroidTimeZone);
             }
-        } else {
+        } 否则 {
             system_property_get* property_get =
                 (system_property_get*)dlsym(libc, "__system_property_get");
-            if (property_get) {
+            如果 (property_get) {
                 property_get("persist.sys.timezone", gAndroidTimeZone);
             }
         }
@@ -1117,21 +1117,21 @@ uprv_tzname_clear_cache()
     }
 #endif
 
-#if defined(CHECK_LOCALTIME_LINK) && !defined(DEBUG_SKIP_LOCALTIME_LINK)
+#如果 defined(CHECK_LOCALTIME_LINK) && !defined(DEBUG_SKIP_LOCALTIME_LINK)
     gTimeZoneBufferPtr = nullptr;
 #endif
 }
 
 U_CAPI const char* U_EXPORT2
-uprv_tzname(int n)
+uprv_tzname(整数 n)
 {
     (void)n; // Avoid unreferenced parameter warning.
     const char *tzid = nullptr;
-#if U_PLATFORM_USES_ONLY_WIN32_API
+#如果 U_PLATFORM_USES_ONLY_WIN32_API
     tzid = uprv_detectWindowsTimeZone();
 
-    if (tzid != nullptr) {
-        return tzid;
+    如果 (tzid != nullptr) {
+        返回 tzid;
     }
 
 #ifndef U_TZNAME
@@ -1139,10 +1139,10 @@ uprv_tzname(int n)
     // the other code path returns a pointer to a heap location.
     // If we don't have a name already, then tzname wouldn't be any
     // better, so just fall back.
-    return uprv_strdup("");
+    返回 uprv_strdup("");
 #endif // !U_TZNAME
 
-#else
+#否则
 
 /*#if U_PLATFORM_IS_DARWIN_BASED
     int ret;
@@ -1155,38 +1155,38 @@ uprv_tzname(int n)
 
 /* This code can be temporarily disabled to test tzname resolution later on. */
 #ifndef DEBUG_TZNAME
-#if U_PLATFORM == U_PF_ANDROID
+#如果 U_PLATFORM == U_PF_ANDROID
     tzid = gAndroidTimeZone;
-#else
+#否则
     tzid = getenv("TZ");
 #endif
-    if (tzid != nullptr && isValidOlsonID(tzid)
-#if U_PLATFORM == U_PF_SOLARIS
+    如果 (tzid != nullptr && isValidOlsonID(tzid)
+#如果 U_PLATFORM == U_PF_SOLARIS
     /* Don't misinterpret TZ "localtime" on Solaris as a time zone name. */
         && uprv_strcmp(tzid, TZ_ENV_CHECK) != 0
 #endif
     ) {
         /* The colon forces tzset() to treat the remainder as zoneinfo path */
-        if (tzid[0] == ':') {
+        如果 (tzid[0] == ':') {
             tzid++;
         }
         /* This might be a good Olson ID. */
         skipZoneIDPrefix(&tzid);
-        return tzid;
+        返回 tzid;
     }
     /* else U_TZNAME will give a better result. */
 #endif
 
-#if defined(CHECK_LOCALTIME_LINK) && !defined(DEBUG_SKIP_LOCALTIME_LINK)
+#如果 defined(CHECK_LOCALTIME_LINK) && !defined(DEBUG_SKIP_LOCALTIME_LINK)
     /* Caller must handle threading issues */
-    if (gTimeZoneBufferPtr == nullptr) {
+    如果 (gTimeZoneBufferPtr == nullptr) {
         /*
         This is a trick to look at the name of the link to get the Olson ID
         because the tzfile contents is underspecified.
         This isn't guaranteed to work because it may not be a symlink.
         */
         char *ret = realpath(TZDEFAULT, gTimeZoneBuffer);
-        if (ret != nullptr && uprv_strcmp(TZDEFAULT, gTimeZoneBuffer) != 0) {
+        如果 (ret != nullptr && uprv_strcmp(TZDEFAULT, gTimeZoneBuffer) != 0) {
             int32_t tzZoneInfoTailLen = uprv_strlen(TZZONEINFOTAIL);
             const char *tzZoneInfoTailPtr = uprv_strstr(gTimeZoneBuffer, TZZONEINFOTAIL);
             // MacOS14 has the realpath as something like
@@ -1196,25 +1196,25 @@ uprv_tzname(int n)
             // /var/db/timezone/zoneinfo/Australia/Melbourne
             // We also fall back to reading the link if the realpath leads to something like
             // /usr/share/zoneinfo/posixrules
-            if (tzZoneInfoTailPtr == nullptr ||
+            如果 (tzZoneInfoTailPtr == nullptr ||
                     uprv_strcmp(tzZoneInfoTailPtr + tzZoneInfoTailLen, "posixrules") == 0) {
                 ssize_t size = readlink(TZDEFAULT, gTimeZoneBuffer, sizeof(gTimeZoneBuffer)-1);
-                if (size > 0) {
+                如果 (size > 0) {
                     gTimeZoneBuffer[size] = 0;
                     tzZoneInfoTailPtr = uprv_strstr(gTimeZoneBuffer, TZZONEINFOTAIL);
                 }
             }
-            if (tzZoneInfoTailPtr != nullptr) {
+            如果 (tzZoneInfoTailPtr != nullptr) {
                 tzZoneInfoTailPtr += tzZoneInfoTailLen;
                 skipZoneIDPrefix(&tzZoneInfoTailPtr);
-                if (isValidOlsonID(tzZoneInfoTailPtr)) {
-                    return (gTimeZoneBufferPtr = tzZoneInfoTailPtr);
+                如果 (isValidOlsonID(tzZoneInfoTailPtr)) {
+                    返回 (gTimeZoneBufferPtr = tzZoneInfoTailPtr);
                 }
             }
-        } else {
-#if defined(SEARCH_TZFILE)
+        } 否则 {
+#如果 defined(SEARCH_TZFILE)
             DefaultTZInfo* tzInfo = (DefaultTZInfo*)uprv_malloc(sizeof(DefaultTZInfo));
-            if (tzInfo != nullptr) {
+            如果 (tzInfo != nullptr) {
                 tzInfo->defaultTZBuffer = nullptr;
                 tzInfo->defaultTZFileSize = 0;
                 tzInfo->defaultTZFilePtr = fopen(TZDEFAULT, "r");
@@ -1223,33 +1223,33 @@ uprv_tzname(int n)
                 gTimeZoneBufferPtr = searchForTZFile(TZZONEINFO, tzInfo);
 
                 /* Free previously allocated memory */
-                if (tzInfo->defaultTZBuffer != nullptr) {
+                如果 (tzInfo->defaultTZBuffer != nullptr) {
                     uprv_free(tzInfo->defaultTZBuffer);
                 }
-                if (tzInfo->defaultTZFilePtr != nullptr) {
+                如果 (tzInfo->defaultTZFilePtr != nullptr) {
                     fclose(tzInfo->defaultTZFilePtr);
                 }
                 uprv_free(tzInfo);
             }
 
-            if (gTimeZoneBufferPtr != nullptr && isValidOlsonID(gTimeZoneBufferPtr)) {
-                return gTimeZoneBufferPtr;
+            如果 (gTimeZoneBufferPtr != nullptr && isValidOlsonID(gTimeZoneBufferPtr)) {
+                返回 gTimeZoneBufferPtr;
             }
 #endif
         }
     }
-    else {
-        return gTimeZoneBufferPtr;
+    否则 {
+        返回 gTimeZoneBufferPtr;
     }
 #endif
 #endif
 
 #ifdef U_TZNAME
-#if U_PLATFORM_USES_ONLY_WIN32_API
+#如果 U_PLATFORM_USES_ONLY_WIN32_API
     /* The return value is free'd in timezone.cpp on Windows because
      * the other code path returns a pointer to a heap location. */
-    return uprv_strdup(U_TZNAME[n]);
-#else
+    返回 uprv_strdup(U_TZNAME[n]);
+#否则
     /*
     U_TZNAME is usually a non-unique abbreviation, which isn't normally usable.
     So we remap the abbreviation to an olson ID.
@@ -1260,29 +1260,29 @@ uprv_tzname(int n)
     */
     {
         struct tm juneSol, decemberSol;
-        int daylightType;
+        整数 daylightType;
         static const time_t juneSolstice=1182478260; /*2007-06-21 18:11 UT*/
         static const time_t decemberSolstice=1198332540; /*2007-12-22 06:09 UT*/
 
         /* This probing will tell us when daylight savings occurs.  */
         localtime_r(&juneSolstice, &juneSol);
         localtime_r(&decemberSolstice, &decemberSol);
-        if(decemberSol.tm_isdst > 0) {
+        如果(decemberSol.tm_isdst > 0) {
           daylightType = U_DAYLIGHT_DECEMBER;
-        } else if(juneSol.tm_isdst > 0) {
+        } 否则 如果(juneSol.tm_isdst > 0) {
           daylightType = U_DAYLIGHT_JUNE;
-        } else {
+        } 否则 {
           daylightType = U_DAYLIGHT_NONE;
         }
         tzid = remapShortTimeZone(U_TZNAME[0], U_TZNAME[1], daylightType, uprv_timezone());
-        if (tzid != nullptr) {
-            return tzid;
+        如果 (tzid != nullptr) {
+            返回 tzid;
         }
     }
-    return U_TZNAME[n];
+    返回 U_TZNAME[n];
 #endif
-#else
-    return "";
+#否则
+    返回 "";
 #endif
 }
 
@@ -1294,14 +1294,14 @@ static char *gDataDirectory = nullptr;
 UInitOnce gTimeZoneFilesInitOnce {};
 static CharString *gTimeZoneFilesDirectory = nullptr;
 
-#if U_POSIX_LOCALE || U_PLATFORM_USES_ONLY_WIN32_API
+#如果 U_POSIX_LOCALE || U_PLATFORM_USES_ONLY_WIN32_API
  static const char *gCorrectedPOSIXLocale = nullptr; /* Sometimes heap allocated */
  static bool gCorrectedPOSIXLocaleHeapAllocated = false;
 #endif
 
 static UBool U_CALLCONV putil_cleanup()
 {
-    if (gDataDirectory && *gDataDirectory) {
+    如果 (gDataDirectory && *gDataDirectory) {
         uprv_free(gDataDirectory);
     }
     gDataDirectory = nullptr;
@@ -1316,14 +1316,14 @@ static UBool U_CALLCONV putil_cleanup()
     gSearchTZFileResult = nullptr;
 #endif
 
-#if U_POSIX_LOCALE || U_PLATFORM_USES_ONLY_WIN32_API
-    if (gCorrectedPOSIXLocale && gCorrectedPOSIXLocaleHeapAllocated) {
+#如果 U_POSIX_LOCALE || U_PLATFORM_USES_ONLY_WIN32_API
+    如果 (gCorrectedPOSIXLocale && gCorrectedPOSIXLocaleHeapAllocated) {
         uprv_free(const_cast<char *>(gCorrectedPOSIXLocale));
         gCorrectedPOSIXLocale = nullptr;
         gCorrectedPOSIXLocaleHeapAllocated = false;
     }
 #endif
-    return true;
+    返回 true;
 }
 
 /*
@@ -1335,33 +1335,33 @@ u_setDataDirectory(const char *directory) {
     char *newDataDir;
     int32_t length;
 
-    if(directory==nullptr || *directory==0) {
+    如果(directory==nullptr || *directory==0) {
         /* A small optimization to prevent the malloc and copy when the
         shared library is used, and this is a way to make sure that nullptr
         is never returned.
         */
         newDataDir = (char *)"";
     }
-    else {
+    否则 {
         length=(int32_t)uprv_strlen(directory);
         newDataDir = (char *)uprv_malloc(length + 2);
         /* Exit out if newDataDir could not be created. */
-        if (newDataDir == nullptr) {
-            return;
+        如果 (newDataDir == nullptr) {
+            返回;
         }
         uprv_strcpy(newDataDir, directory);
 
-#if (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
+#如果 (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
         {
             char *p;
-            while((p = uprv_strchr(newDataDir, U_FILE_ALT_SEP_CHAR)) != nullptr) {
+            当((p = uprv_strchr(newDataDir, U_FILE_ALT_SEP_CHAR)) != nullptr) {
                 *p = U_FILE_SEP_CHAR;
             }
         }
 #endif
     }
 
-    if (gDataDirectory && *gDataDirectory) {
+    如果 (gDataDirectory && *gDataDirectory) {
         uprv_free(gDataDirectory);
     }
     gDataDirectory = newDataDir;
@@ -1371,40 +1371,40 @@ u_setDataDirectory(const char *directory) {
 U_CAPI UBool U_EXPORT2
 uprv_pathIsAbsolute(const char *path)
 {
-  if(!path || !*path) {
-    return false;
+  如果(!path || !*path) {
+    返回 false;
   }
 
-  if(*path == U_FILE_SEP_CHAR) {
-    return true;
+  如果(*path == U_FILE_SEP_CHAR) {
+    返回 true;
   }
 
-#if (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
-  if(*path == U_FILE_ALT_SEP_CHAR) {
-    return true;
+#如果 (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
+  如果(*path == U_FILE_ALT_SEP_CHAR) {
+    返回 true;
   }
 #endif
 
-#if U_PLATFORM_USES_ONLY_WIN32_API
-  if( (((path[0] >= 'A') && (path[0] <= 'Z')) ||
+#如果 U_PLATFORM_USES_ONLY_WIN32_API
+  如果( (((path[0] >= 'A') && (path[0] <= 'Z')) ||
        ((path[0] >= 'a') && (path[0] <= 'z'))) &&
       path[1] == ':' ) {
-    return true;
+    返回 true;
   }
 #endif
 
-  return false;
+  返回 false;
 }
 
 /* Backup setting of ICU_DATA_DIR_PREFIX_ENV_VAR
    (needed for some Darwin ICU build environments) */
-#if U_PLATFORM_IS_DARWIN_BASED && defined(TARGET_OS_SIMULATOR) && TARGET_OS_SIMULATOR
-# if !defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
+#如果 U_PLATFORM_IS_DARWIN_BASED && defined(TARGET_OS_SIMULATOR) && TARGET_OS_SIMULATOR
+# 如果 !defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
 #  define ICU_DATA_DIR_PREFIX_ENV_VAR "IPHONE_SIMULATOR_ROOT"
 # endif
 #endif
 
-#if defined(ICU_DATA_DIR_WINDOWS)
+#如果 defined(ICU_DATA_DIR_WINDOWS)
 // Helper function to get the ICU Data Directory under the Windows directory location.
 static BOOL U_CALLCONV getIcuDataDirectoryUnderWindowsDirectory(char* directoryBuffer, UINT bufferLength)
 {
@@ -1412,30 +1412,30 @@ static BOOL U_CALLCONV getIcuDataDirectoryUnderWindowsDirectory(char* directoryB
     char windowsPathUtf8[MAX_PATH];
 
     UINT length = GetSystemWindowsDirectoryW(windowsPath, UPRV_LENGTHOF(windowsPath));
-    if ((length > 0) && (length < (UPRV_LENGTHOF(windowsPath) - 1))) {
+    如果 ((length > 0) && (length < (UPRV_LENGTHOF(windowsPath) - 1))) {
         // Convert UTF-16 to a UTF-8 string.
         UErrorCode status = U_ZERO_ERROR;
         int32_t windowsPathUtf8Len = 0;
         u_strToUTF8(windowsPathUtf8, static_cast<int32_t>(UPRV_LENGTHOF(windowsPathUtf8)),
             &windowsPathUtf8Len, reinterpret_cast<const char16_t*>(windowsPath), -1, &status);
 
-        if (U_SUCCESS(status) && (status != U_STRING_NOT_TERMINATED_WARNING) &&
+        如果 (U_SUCCESS(status) && (status != U_STRING_NOT_TERMINATED_WARNING) &&
             (windowsPathUtf8Len < (UPRV_LENGTHOF(windowsPathUtf8) - 1))) {
             // Ensure it always has a separator, so we can append the ICU data path.
-            if (windowsPathUtf8[windowsPathUtf8Len - 1] != U_FILE_SEP_CHAR) {
+            如果 (windowsPathUtf8[windowsPathUtf8Len - 1] != U_FILE_SEP_CHAR) {
                 windowsPathUtf8[windowsPathUtf8Len++] = U_FILE_SEP_CHAR;
                 windowsPathUtf8[windowsPathUtf8Len] = '\0';
             }
             // Check if the concatenated string will fit.
-            if ((windowsPathUtf8Len + UPRV_LENGTHOF(ICU_DATA_DIR_WINDOWS)) < bufferLength) {
+            如果 ((windowsPathUtf8Len + UPRV_LENGTHOF(ICU_DATA_DIR_WINDOWS)) < bufferLength) {
                 uprv_strcpy(directoryBuffer, windowsPathUtf8);
                 uprv_strcat(directoryBuffer, ICU_DATA_DIR_WINDOWS);
-                return true;
+                返回 true;
             }
         }
     }
 
-    return false;
+    返回 false;
 }
 #endif
 
@@ -1443,8 +1443,8 @@ static void U_CALLCONV dataDirectoryInitFn() {
     /* If we already have the directory, then return immediately. Will happen if user called
      * u_setDataDirectory().
      */
-    if (gDataDirectory) {
-        return;
+    如果 (gDataDirectory) {
+        返回;
     }
 
     const char *path = nullptr;
@@ -1462,9 +1462,9 @@ static void U_CALLCONV dataDirectoryInitFn() {
     There may also be some platforms where environment variables
     are not allowed.
     */
-#   if !defined(ICU_NO_USER_DATA_OVERRIDE) && !UCONFIG_NO_FILE_IO
+#   如果 !defined(ICU_NO_USER_DATA_OVERRIDE) && !UCONFIG_NO_FILE_IO
     /* First try to get the environment variable */
-#     if U_PLATFORM_HAS_WINUWP_API == 0  // Windows UWP does not support getenv
+#     如果 U_PLATFORM_HAS_WINUWP_API == 0  // Windows UWP does not support getenv
         path=getenv("ICU_DATA");
 #     endif
 #   endif
@@ -1476,21 +1476,21 @@ static void U_CALLCONV dataDirectoryInitFn() {
      * directory of the data dat file. Users should use ICU_DATA_DIR if they want to
      * set their own path.
      */
-#if defined(ICU_DATA_DIR) || defined(U_ICU_DATA_DEFAULT_DIR)
-# if defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
+#如果 defined(ICU_DATA_DIR) || defined(U_ICU_DATA_DEFAULT_DIR)
+# 如果 defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
     char datadir_path_buffer[PATH_MAX];
 # endif
-    if(path==nullptr || *path==0) {
-# if defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
+    如果(path==nullptr || *path==0) {
+# 如果 defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
         const char *prefix = getenv(ICU_DATA_DIR_PREFIX_ENV_VAR);
 # endif
 # ifdef ICU_DATA_DIR
         path=ICU_DATA_DIR;
-# else
+# 否则
         path=U_ICU_DATA_DEFAULT_DIR;
 # endif
-# if defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
-        if (prefix != nullptr) {
+# 如果 defined(ICU_DATA_DIR_PREFIX_ENV_VAR)
+        如果 (prefix != nullptr) {
             snprintf(datadir_path_buffer, sizeof(datadir_path_buffer), "%s%s", prefix, path);
             path=datadir_path_buffer;
         }
@@ -1498,14 +1498,14 @@ static void U_CALLCONV dataDirectoryInitFn() {
     }
 #endif
 
-#if defined(ICU_DATA_DIR_WINDOWS)
+#如果 defined(ICU_DATA_DIR_WINDOWS)
     char datadir_path_buffer[MAX_PATH];
-    if (getIcuDataDirectoryUnderWindowsDirectory(datadir_path_buffer, UPRV_LENGTHOF(datadir_path_buffer))) {
+    如果 (getIcuDataDirectoryUnderWindowsDirectory(datadir_path_buffer, UPRV_LENGTHOF(datadir_path_buffer))) {
         path = datadir_path_buffer;
     }
 #endif
 
-    if(path==nullptr) {
+    如果(path==nullptr) {
         /* It looks really bad, set it to something. */
         path = "";
     }
@@ -1516,18 +1516,18 @@ static void U_CALLCONV dataDirectoryInitFn() {
 U_CAPI const char * U_EXPORT2
 u_getDataDirectory() {
     umtx_initOnce(gDataDirInitOnce, &dataDirectoryInitFn);
-    return gDataDirectory;
+    返回 gDataDirectory;
 }
 
 static void setTimeZoneFilesDir(const char *path, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return;
+    如果 (U_FAILURE(status)) {
+        返回;
     }
     gTimeZoneFilesDirectory->clear();
     gTimeZoneFilesDirectory->append(path, status);
-#if (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
+#如果 (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
     char *p = gTimeZoneFilesDirectory->data();
-    while ((p = uprv_strchr(p, U_FILE_ALT_SEP_CHAR)) != nullptr) {
+    当 ((p = uprv_strchr(p, U_FILE_ALT_SEP_CHAR)) != nullptr) {
         *p = U_FILE_SEP_CHAR;
     }
 #endif
@@ -1540,46 +1540,46 @@ static void U_CALLCONV TimeZoneDataDirInitFn(UErrorCode &status) {
     U_ASSERT(gTimeZoneFilesDirectory == nullptr);
     ucln_common_registerCleanup(UCLN_COMMON_PUTIL, putil_cleanup);
     gTimeZoneFilesDirectory = new CharString();
-    if (gTimeZoneFilesDirectory == nullptr) {
+    如果 (gTimeZoneFilesDirectory == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        返回;
     }
 
     const char *dir = "";
 
-#if defined(ICU_TIMEZONE_FILES_DIR_PREFIX_ENV_VAR)
+#如果 defined(ICU_TIMEZONE_FILES_DIR_PREFIX_ENV_VAR)
     char timezonefilesdir_path_buffer[PATH_MAX];
     const char *prefix = getenv(ICU_TIMEZONE_FILES_DIR_PREFIX_ENV_VAR);
 #endif
 
-#if U_PLATFORM_HAS_WINUWP_API == 1
+#如果 U_PLATFORM_HAS_WINUWP_API == 1
 // The UWP version does not support the environment variable setting.
 
-# if defined(ICU_DATA_DIR_WINDOWS)
+# 如果 defined(ICU_DATA_DIR_WINDOWS)
     // When using the Windows system data, we can possibly pick up time zone data from the Windows directory.
     char datadir_path_buffer[MAX_PATH];
-    if (getIcuDataDirectoryUnderWindowsDirectory(datadir_path_buffer, UPRV_LENGTHOF(datadir_path_buffer))) {
+    如果 (getIcuDataDirectoryUnderWindowsDirectory(datadir_path_buffer, UPRV_LENGTHOF(datadir_path_buffer))) {
         dir = datadir_path_buffer;
     }
 # endif
 
-#else
+#否则
     dir = getenv("ICU_TIMEZONE_FILES_DIR");
 #endif // U_PLATFORM_HAS_WINUWP_API
 
-#if defined(U_TIMEZONE_FILES_DIR)
-    if (dir == nullptr) {
+#如果 defined(U_TIMEZONE_FILES_DIR)
+    如果 (dir == nullptr) {
         // Build time configuration setting.
         dir = TO_STRING(U_TIMEZONE_FILES_DIR);
     }
 #endif
 
-    if (dir == nullptr) {
+    如果 (dir == nullptr) {
         dir = "";
     }
 
-#if defined(ICU_TIMEZONE_FILES_DIR_PREFIX_ENV_VAR)
-    if (prefix != nullptr) {
+#如果 defined(ICU_TIMEZONE_FILES_DIR_PREFIX_ENV_VAR)
+    如果 (prefix != nullptr) {
         snprintf(timezonefilesdir_path_buffer, sizeof(timezonefilesdir_path_buffer), "%s%s", prefix, dir);
         dir = timezonefilesdir_path_buffer;
     }
@@ -1592,7 +1592,7 @@ static void U_CALLCONV TimeZoneDataDirInitFn(UErrorCode &status) {
 U_CAPI const char * U_EXPORT2
 u_getTimeZoneFilesDirectory(UErrorCode *status) {
     umtx_initOnce(gTimeZoneFilesInitOnce, &TimeZoneDataDirInitFn, *status);
-    return U_SUCCESS(*status) ? gTimeZoneFilesDirectory->data() : "";
+    返回 U_SUCCESS(*status) ? gTimeZoneFilesDirectory->data() : "";
 }
 
 U_CAPI void U_EXPORT2
@@ -1606,15 +1606,15 @@ u_setTimeZoneFilesDirectory(const char *path, UErrorCode *status) {
 }
 
 
-#if U_POSIX_LOCALE
+#如果 U_POSIX_LOCALE
 /* A helper function used by uprv_getPOSIXIDForDefaultLocale and
  * uprv_getPOSIXIDForDefaultCodepage. Returns the posix locale id for
  * LC_CTYPE and LC_MESSAGES. It doesn't support other locale categories.
  */
-static const char *uprv_getPOSIXIDForCategory(int category)
+static const char *uprv_getPOSIXIDForCategory(整数 category)
 {
     const char* posixID = nullptr;
-    if (category == LC_MESSAGES || category == LC_CTYPE) {
+    如果 (category == LC_MESSAGES || category == LC_CTYPE) {
         /*
         * On Solaris two different calls to setlocale can result in
         * different values. Only get this value once.
@@ -1634,7 +1634,7 @@ static const char *uprv_getPOSIXIDForCategory(int category)
         * of nullptr, will modify the libc behavior.
         */
         posixID = setlocale(category, nullptr);
-        if ((posixID == nullptr)
+        如果 ((posixID == nullptr)
             || (uprv_strcmp("C", posixID) == 0)
             || (uprv_strcmp("POSIX", posixID) == 0))
         {
@@ -1643,21 +1643,21 @@ static const char *uprv_getPOSIXIDForCategory(int category)
             /* Solaris speaks POSIX -  See IEEE Std 1003.1-2008
              * This is needed to properly handle empty env. variables
              */
-#if U_PLATFORM == U_PF_SOLARIS
-            if ((posixID == 0) || (posixID[0] == '\0')) {
+#如果 U_PLATFORM == U_PF_SOLARIS
+            如果 ((posixID == 0) || (posixID[0] == '\0')) {
                 posixID = getenv(category == LC_MESSAGES ? "LC_MESSAGES" : "LC_CTYPE");
-                if ((posixID == 0) || (posixID[0] == '\0')) {
-#else
-            if (posixID == nullptr) {
+                如果 ((posixID == 0) || (posixID[0] == '\0')) {
+#否则
+            如果 (posixID == nullptr) {
                 posixID = getenv(category == LC_MESSAGES ? "LC_MESSAGES" : "LC_CTYPE");
-                if (posixID == nullptr) {
+                如果 (posixID == nullptr) {
 #endif
                     posixID = getenv("LANG");
                 }
             }
         }
     }
-    if ((posixID == nullptr)
+    如果 ((posixID == nullptr)
         || (uprv_strcmp("C", posixID) == 0)
         || (uprv_strcmp("POSIX", posixID) == 0))
     {
@@ -1668,7 +1668,7 @@ static const char *uprv_getPOSIXIDForCategory(int category)
         // Leave this mapping here for the uprv_getPOSIXIDForDefaultCodepage()
         // caller which expects to see "en_US_POSIX" in many branches.
     }
-    return posixID;
+    返回 posixID;
 }
 
 /* Return just the POSIX id for the default locale, whatever happens to be in
@@ -1677,23 +1677,23 @@ static const char *uprv_getPOSIXIDForCategory(int category)
 static const char *uprv_getPOSIXIDForDefaultLocale()
 {
     static const char* posixID = nullptr;
-    if (posixID == nullptr) {
+    如果 (posixID == nullptr) {
         posixID = uprv_getPOSIXIDForCategory(LC_MESSAGES);
     }
-    return posixID;
+    返回 posixID;
 }
 
-#if !U_CHARSET_IS_UTF8
+#如果 !U_CHARSET_IS_UTF8
 /* Return just the POSIX id for the default codepage, whatever happens to be in
  * it. It gets the value from LC_CTYPE and indirectly from LC_ALL and LANG.
  */
 static const char *uprv_getPOSIXIDForDefaultCodepage()
 {
     static const char* posixID = nullptr;
-    if (posixID == 0) {
+    如果 (posixID == 0) {
         posixID = uprv_getPOSIXIDForCategory(LC_CTYPE);
     }
-    return posixID;
+    返回 posixID;
 }
 #endif
 #endif
@@ -1702,7 +1702,7 @@ static const char *uprv_getPOSIXIDForDefaultCodepage()
 U_CAPI const char* U_EXPORT2
 uprv_getDefaultLocaleID()
 {
-#if U_POSIX_LOCALE
+#如果 U_POSIX_LOCALE
 /*
   Note that:  (a '!' means the ID is improper somehow)
      LC_ALL  ---->     default_loc          codepage
@@ -1733,27 +1733,27 @@ The leftmost codepage (.xxx) wins.
       l = lang, C = ctry, M = charmap, V = variant
     */
 
-    if (gCorrectedPOSIXLocale != nullptr) {
-        return gCorrectedPOSIXLocale;
+    如果 (gCorrectedPOSIXLocale != nullptr) {
+        返回 gCorrectedPOSIXLocale;
     }
 
     // Copy the ID into owned memory.
     // Over-allocate in case we replace "C" with "en_US_POSIX" (+10), + null termination
     char *correctedPOSIXLocale = static_cast<char *>(uprv_malloc(uprv_strlen(posixID) + 10 + 1));
-    if (correctedPOSIXLocale == nullptr) {
-        return nullptr;
+    如果 (correctedPOSIXLocale == nullptr) {
+        返回 nullptr;
     }
     uprv_strcpy(correctedPOSIXLocale, posixID);
 
     char *limit;
-    if ((limit = uprv_strchr(correctedPOSIXLocale, '.')) != nullptr) {
+    如果 ((limit = uprv_strchr(correctedPOSIXLocale, '.')) != nullptr) {
         *limit = 0;
     }
-    if ((limit = uprv_strchr(correctedPOSIXLocale, '@')) != nullptr) {
+    如果 ((limit = uprv_strchr(correctedPOSIXLocale, '@')) != nullptr) {
         *limit = 0;
     }
 
-    if ((uprv_strcmp("C", correctedPOSIXLocale) == 0) // no @ variant
+    如果 ((uprv_strcmp("C", correctedPOSIXLocale) == 0) // no @ variant
         || (uprv_strcmp("POSIX", correctedPOSIXLocale) == 0)) {
       // Raw input was C.* or POSIX.*, Give it a nice POSIX default value.
       // (The "C"/"POSIX" case is handled in uprv_getPOSIXIDForCategory())
@@ -1762,30 +1762,30 @@ The leftmost codepage (.xxx) wins.
 
     /* Note that we scan the *uncorrected* ID. */
     const char *p;
-    if ((p = uprv_strrchr(posixID, '@')) != nullptr) {
+    如果 ((p = uprv_strrchr(posixID, '@')) != nullptr) {
         p++;
 
         /* Take care of any special cases here.. */
-        if (!uprv_strcmp(p, "nynorsk")) {
+        如果 (!uprv_strcmp(p, "nynorsk")) {
             p = "NY";
             /* Don't worry about no__NY. In practice, it won't appear. */
         }
 
-        if (uprv_strchr(correctedPOSIXLocale,'_') == nullptr) {
+        如果 (uprv_strchr(correctedPOSIXLocale,'_') == nullptr) {
             uprv_strcat(correctedPOSIXLocale, "__"); /* aa@b -> aa__b (note this can make the new locale 1 char longer) */
         }
-        else {
+        否则 {
             uprv_strcat(correctedPOSIXLocale, "_"); /* aa_CC@b -> aa_CC_b */
         }
 
         const char *q;
-        if ((q = uprv_strchr(p, '.')) != nullptr) {
+        如果 ((q = uprv_strchr(p, '.')) != nullptr) {
             /* How big will the resulting string be? */
             int32_t len = (int32_t)(uprv_strlen(correctedPOSIXLocale) + (q-p));
             uprv_strncat(correctedPOSIXLocale, p, q-p); // do not include charset
             correctedPOSIXLocale[len] = 0;
         }
-        else {
+        否则 {
             /* Anything following the @ sign */
             uprv_strcat(correctedPOSIXLocale, p);
         }
@@ -1797,7 +1797,7 @@ The leftmost codepage (.xxx) wins.
          */
     }
 
-    if (gCorrectedPOSIXLocale == nullptr) {
+    如果 (gCorrectedPOSIXLocale == nullptr) {
         gCorrectedPOSIXLocale = correctedPOSIXLocale;
         gCorrectedPOSIXLocaleHeapAllocated = true;
         ucln_common_registerCleanup(UCLN_COMMON_PUTIL, putil_cleanup);
@@ -1805,11 +1805,11 @@ The leftmost codepage (.xxx) wins.
     }
     posixID = gCorrectedPOSIXLocale;
 
-    if (correctedPOSIXLocale != nullptr) {  /* Was already set - clean up. */
+    如果 (correctedPOSIXLocale != nullptr) {  /* Was already set - clean up. */
         uprv_free(correctedPOSIXLocale);
     }
 
-    return posixID;
+    返回 posixID;
 
 #elif U_PLATFORM_USES_ONLY_WIN32_API
 #define POSIX_LOCALE_CAPACITY 64
@@ -1817,39 +1817,39 @@ The leftmost codepage (.xxx) wins.
     char *correctedPOSIXLocale = nullptr;
 
     // If we have already figured this out just use the cached value
-    if (gCorrectedPOSIXLocale != nullptr) {
-        return gCorrectedPOSIXLocale;
+    如果 (gCorrectedPOSIXLocale != nullptr) {
+        返回 gCorrectedPOSIXLocale;
     }
 
     // No cached value, need to determine the current value
     static WCHAR windowsLocale[LOCALE_NAME_MAX_LENGTH] = {};
-    int length = GetLocaleInfoEx(LOCALE_NAME_USER_DEFAULT, LOCALE_SNAME, windowsLocale, LOCALE_NAME_MAX_LENGTH);
+    整数 length = GetLocaleInfoEx(LOCALE_NAME_USER_DEFAULT, LOCALE_SNAME, windowsLocale, LOCALE_NAME_MAX_LENGTH);
 
     // Now we should have a Windows locale name that needs converted to the POSIX style.
-    if (length > 0) // If length is 0, then the GetLocaleInfoEx failed.
+    如果 (length > 0) // If length is 0, then the GetLocaleInfoEx failed.
     {
         // First we need to go from UTF-16 to char (and also convert from _ to - while we're at it.)
         char modifiedWindowsLocale[LOCALE_NAME_MAX_LENGTH] = {};
 
         int32_t i;
-        for (i = 0; i < UPRV_LENGTHOF(modifiedWindowsLocale); i++)
+        为 (i = 0; i < UPRV_LENGTHOF(modifiedWindowsLocale); i++)
         {
-            if (windowsLocale[i] == '_')
+            如果 (windowsLocale[i] == '_')
             {
                 modifiedWindowsLocale[i] = '-';
             }
-            else
+            否则
             {
                 modifiedWindowsLocale[i] = static_cast<char>(windowsLocale[i]);
             }
 
-            if (modifiedWindowsLocale[i] == '\0')
+            如果 (modifiedWindowsLocale[i] == '\0')
             {
                 break;
             }
         }
 
-        if (i >= UPRV_LENGTHOF(modifiedWindowsLocale))
+        如果 (i >= UPRV_LENGTHOF(modifiedWindowsLocale))
         {
             // Ran out of room, can't really happen, maybe we'll be lucky about a matching
             // locale when tags are dropped
@@ -1859,17 +1859,17 @@ The leftmost codepage (.xxx) wins.
         // Now normalize the resulting name
         correctedPOSIXLocale = static_cast<char *>(uprv_malloc(POSIX_LOCALE_CAPACITY + 1));
         /* TODO: Should we just exit on memory allocation failure? */
-        if (correctedPOSIXLocale)
+        如果 (correctedPOSIXLocale)
         {
             int32_t posixLen = uloc_canonicalize(modifiedWindowsLocale, correctedPOSIXLocale, POSIX_LOCALE_CAPACITY, &status);
-            if (U_SUCCESS(status))
+            如果 (U_SUCCESS(status))
             {
                 *(correctedPOSIXLocale + posixLen) = 0;
                 gCorrectedPOSIXLocale = correctedPOSIXLocale;
                 gCorrectedPOSIXLocaleHeapAllocated = true;
                 ucln_common_registerCleanup(UCLN_COMMON_PUTIL, putil_cleanup);
             }
-            else
+            否则
             {
                 uprv_free(correctedPOSIXLocale);
             }
@@ -1877,10 +1877,10 @@ The leftmost codepage (.xxx) wins.
     }
 
     // If unable to find a locale we can agree upon, use en-US by default
-    if (gCorrectedPOSIXLocale == nullptr) {
+    如果 (gCorrectedPOSIXLocale == nullptr) {
         gCorrectedPOSIXLocale = "en_US";
     }
-    return gCorrectedPOSIXLocale;
+    返回 gCorrectedPOSIXLocale;
 
 #elif U_PLATFORM == U_PF_OS400
     /* locales are process scoped and are by definition thread safe */
@@ -1888,16 +1888,16 @@ The leftmost codepage (.xxx) wins.
     const  char *localeID = getenv("LC_ALL");
            char *p;
 
-    if (localeID == nullptr)
+    如果 (localeID == nullptr)
         localeID = getenv("LANG");
-    if (localeID == nullptr)
+    如果 (localeID == nullptr)
         localeID = setlocale(LC_ALL, nullptr);
     /* Make sure we have something... */
-    if (localeID == nullptr)
-        return "en_US_POSIX";
+    如果 (localeID == nullptr)
+        返回 "en_US_POSIX";
 
     /* Extract the locale name from the path. */
-    if((p = uprv_strrchr(localeID, '/')) != nullptr)
+    如果((p = uprv_strrchr(localeID, '/')) != nullptr)
     {
         /* Increment p to start of locale name. */
         p++;
@@ -1908,7 +1908,7 @@ The leftmost codepage (.xxx) wins.
     uprv_strcpy(correctedLocale, localeID);
 
     /* Strip off the '.locale' extension. */
-    if((p = uprv_strchr(correctedLocale, '.')) != nullptr) {
+    如果((p = uprv_strchr(correctedLocale, '.')) != nullptr) {
         *p = 0;
     }
 
@@ -1922,25 +1922,25 @@ The leftmost codepage (.xxx) wins.
     * QLGPGCMA_4 means UTF-32
     * QLGPGCMA_8 means UTF-8
     */
-    if ((uprv_strcmp("C", correctedLocale) == 0) ||
+    如果 ((uprv_strcmp("C", correctedLocale) == 0) ||
         (uprv_strcmp("POSIX", correctedLocale) == 0) ||
         (uprv_strncmp("QLGPGCMA", correctedLocale, 8) == 0))
     {
         uprv_strcpy(correctedLocale, "en_US_POSIX");
     }
-    else
+    否则
     {
         int16_t LocaleLen;
 
         /* Lower case the lang portion. */
-        for(p = correctedLocale; *p != 0 && *p != '_'; p++)
+        为(p = correctedLocale; *p != 0 && *p != '_'; p++)
         {
             *p = uprv_tolower(*p);
         }
 
         /* Adjust for Euro.  After '_E' add 'URO'. */
         LocaleLen = uprv_strlen(correctedLocale);
-        if (correctedLocale[LocaleLen - 2] == '_' &&
+        如果 (correctedLocale[LocaleLen - 2] == '_' &&
             correctedLocale[LocaleLen - 1] == 'E')
         {
             uprv_strcat(correctedLocale, "URO");
@@ -1949,7 +1949,7 @@ The leftmost codepage (.xxx) wins.
         /* If using Lotus-based locale then convert to
          * equivalent non Lotus.
          */
-        else if (correctedLocale[LocaleLen - 2] == '_' &&
+        否则 如果 (correctedLocale[LocaleLen - 2] == '_' &&
             correctedLocale[LocaleLen - 1] == 'L')
         {
             correctedLocale[LocaleLen - 2] = 0;
@@ -1958,27 +1958,27 @@ The leftmost codepage (.xxx) wins.
         /* There are separate simplified and traditional
          * locales called zh_HK_S and zh_HK_T.
          */
-        else if (uprv_strncmp(correctedLocale, "zh_HK", 5) == 0)
+        否则 如果 (uprv_strncmp(correctedLocale, "zh_HK", 5) == 0)
         {
             uprv_strcpy(correctedLocale, "zh_HK");
         }
 
         /* A special zh_CN_GBK locale...
         */
-        else if (uprv_strcmp(correctedLocale, "zh_CN_GBK") == 0)
+        否则 如果 (uprv_strcmp(correctedLocale, "zh_CN_GBK") == 0)
         {
             uprv_strcpy(correctedLocale, "zh_CN");
         }
 
     }
 
-    return correctedLocale;
+    返回 correctedLocale;
 #endif
 
 }
 
-#if !U_CHARSET_IS_UTF8
-#if U_POSIX_LOCALE
+#如果 !U_CHARSET_IS_UTF8
+#如果 U_POSIX_LOCALE
 /*
 Due to various platform differences, one platform may specify a charset,
 when they really mean a different charset. Remap the names so that they are
@@ -1988,43 +1988,43 @@ names to the ICU alias table in the data directory.
 */
 static const char*
 remapPlatformDependentCodepage(const char *locale, const char *name) {
-    if (locale != nullptr && *locale == 0) {
+    如果 (locale != nullptr && *locale == 0) {
         /* Make sure that an empty locale is handled the same way. */
         locale = nullptr;
     }
-    if (name == nullptr) {
-        return nullptr;
+    如果 (name == nullptr) {
+        返回 nullptr;
     }
-#if U_PLATFORM == U_PF_AIX
-    if (uprv_strcmp(name, "IBM-943") == 0) {
+#如果 U_PLATFORM == U_PF_AIX
+    如果 (uprv_strcmp(name, "IBM-943") == 0) {
         /* Use the ASCII compatible ibm-943 */
         name = "Shift-JIS";
     }
-    else if (uprv_strcmp(name, "IBM-1252") == 0) {
+    否则 如果 (uprv_strcmp(name, "IBM-1252") == 0) {
         /* Use the windows-1252 that contains the Euro */
         name = "IBM-5348";
     }
 #elif U_PLATFORM == U_PF_SOLARIS
-    if (locale != nullptr && uprv_strcmp(name, "EUC") == 0) {
+    如果 (locale != nullptr && uprv_strcmp(name, "EUC") == 0) {
         /* Solaris underspecifies the "EUC" name. */
-        if (uprv_strcmp(locale, "zh_CN") == 0) {
+        如果 (uprv_strcmp(locale, "zh_CN") == 0) {
             name = "EUC-CN";
         }
-        else if (uprv_strcmp(locale, "zh_TW") == 0) {
+        否则 如果 (uprv_strcmp(locale, "zh_TW") == 0) {
             name = "EUC-TW";
         }
-        else if (uprv_strcmp(locale, "ko_KR") == 0) {
+        否则 如果 (uprv_strcmp(locale, "ko_KR") == 0) {
             name = "EUC-KR";
         }
     }
-    else if (uprv_strcmp(name, "eucJP") == 0) {
+    否则 如果 (uprv_strcmp(name, "eucJP") == 0) {
         /*
         ibm-954 is the best match.
         ibm-33722 is the default for eucJP (similar to Windows).
         */
         name = "eucjis";
     }
-    else if (uprv_strcmp(name, "646") == 0) {
+    否则 如果 (uprv_strcmp(name, "646") == 0) {
         /*
          * The default codepage given by Solaris is 646 but the C library routines treat it as if it was
          * ISO-8859-1 instead of US-ASCII(646).
@@ -2032,7 +2032,7 @@ remapPlatformDependentCodepage(const char *locale, const char *name) {
         name = "ISO-8859-1";
     }
 #elif U_PLATFORM_IS_DARWIN_BASED
-    if (locale == nullptr && *name == 0) {
+    如果 (locale == nullptr && *name == 0) {
         /*
         No locale was specified, and an empty name was passed in.
         This usually indicates that nl_langinfo didn't return valid information.
@@ -2040,28 +2040,28 @@ remapPlatformDependentCodepage(const char *locale, const char *name) {
         */
         name = "UTF-8";
     }
-    else if (uprv_strcmp(name, "CP949") == 0) {
+    否则 如果 (uprv_strcmp(name, "CP949") == 0) {
         /* Remap CP949 to a similar codepage to avoid issues with backslash and won symbol. */
         name = "EUC-KR";
     }
-    else if (locale != nullptr && uprv_strcmp(locale, "en_US_POSIX") != 0 && uprv_strcmp(name, "US-ASCII") == 0) {
+    否则 如果 (locale != nullptr && uprv_strcmp(locale, "en_US_POSIX") != 0 && uprv_strcmp(name, "US-ASCII") == 0) {
         /*
          * For non C/POSIX locale, default the code page to UTF-8 instead of US-ASCII.
          */
         name = "UTF-8";
     }
 #elif U_PLATFORM == U_PF_BSD
-    if (uprv_strcmp(name, "CP949") == 0) {
+    如果 (uprv_strcmp(name, "CP949") == 0) {
         /* Remap CP949 to a similar codepage to avoid issues with backslash and won symbol. */
         name = "EUC-KR";
     }
 #elif U_PLATFORM == U_PF_HPUX
-    if (locale != nullptr && uprv_strcmp(locale, "zh_HK") == 0 && uprv_strcmp(name, "big5") == 0) {
+    如果 (locale != nullptr && uprv_strcmp(locale, "zh_HK") == 0 && uprv_strcmp(name, "big5") == 0) {
         /* HP decided to extend big5 as hkbig5 even though it's not compatible :-( */
         /* zh_TW.big5 is not the same charset as zh_HK.big5! */
         name = "hkbig5";
     }
-    else if (uprv_strcmp(name, "eucJP") == 0) {
+    否则 如果 (uprv_strcmp(name, "eucJP") == 0) {
         /*
         ibm-1350 is the best match, but unavailable.
         ibm-954 is mostly a superset of ibm-1350.
@@ -2070,17 +2070,17 @@ remapPlatformDependentCodepage(const char *locale, const char *name) {
         name = "eucjis";
     }
 #elif U_PLATFORM == U_PF_LINUX
-    if (locale != nullptr && uprv_strcmp(name, "euc") == 0) {
+    如果 (locale != nullptr && uprv_strcmp(name, "euc") == 0) {
         /* Linux underspecifies the "EUC" name. */
-        if (uprv_strcmp(locale, "korean") == 0) {
+        如果 (uprv_strcmp(locale, "korean") == 0) {
             name = "EUC-KR";
         }
-        else if (uprv_strcmp(locale, "japanese") == 0) {
+        否则 如果 (uprv_strcmp(locale, "japanese") == 0) {
             /* See comment below about eucJP */
             name = "eucjis";
         }
     }
-    else if (uprv_strcmp(name, "eucjp") == 0) {
+    否则 如果 (uprv_strcmp(name, "eucjp") == 0) {
         /*
         ibm-1350 is the best match, but unavailable.
         ibm-954 is mostly a superset of ibm-1350.
@@ -2088,7 +2088,7 @@ remapPlatformDependentCodepage(const char *locale, const char *name) {
         */
         name = "eucjis";
     }
-    else if (locale != nullptr && uprv_strcmp(locale, "en_US_POSIX") != 0 &&
+    否则 如果 (locale != nullptr && uprv_strcmp(locale, "en_US_POSIX") != 0 &&
             (uprv_strcmp(name, "ANSI_X3.4-1968") == 0 || uprv_strcmp(name, "US-ASCII") == 0)) {
         /*
          * For non C/POSIX locale, default the code page to UTF-8 instead of US-ASCII.
@@ -2102,10 +2102,10 @@ remapPlatformDependentCodepage(const char *locale, const char *name) {
      */
 #endif
     /* return nullptr when "" is passed in */
-    if (*name == 0) {
+    如果 (*name == 0) {
         name = nullptr;
     }
-    return name;
+    返回 name;
 }
 
 static const char*
@@ -2115,25 +2115,25 @@ getCodepageFromPOSIXID(const char *localeName, char * buffer, int32_t buffCapaci
     const char *name = nullptr;
     char *variant = nullptr;
 
-    if (localeName != nullptr && (name = (uprv_strchr(localeName, '.'))) != nullptr) {
+    如果 (localeName != nullptr && (name = (uprv_strchr(localeName, '.'))) != nullptr) {
         size_t localeCapacity = uprv_min(sizeof(localeBuf), (name-localeName)+1);
         uprv_strncpy(localeBuf, localeName, localeCapacity);
         localeBuf[localeCapacity-1] = 0; /* ensure NUL termination */
         name = uprv_strncpy(buffer, name+1, buffCapacity);
         buffer[buffCapacity-1] = 0; /* ensure NUL termination */
-        if ((variant = const_cast<char *>(uprv_strchr(name, '@'))) != nullptr) {
+        如果 ((variant = const_cast<char *>(uprv_strchr(name, '@'))) != nullptr) {
             *variant = 0;
         }
         name = remapPlatformDependentCodepage(localeBuf, name);
     }
-    return name;
+    返回 name;
 }
 #endif
 
 static const char*
 int_getDefaultCodepage()
 {
-#if U_PLATFORM == U_PF_OS400
+#如果 U_PLATFORM == U_PF_OS400
     uint32_t ccsid = 37; /* Default to ibm-37 */
     static char codepage[64];
     Qwc_JOBI0400_t jobinfo;
@@ -2142,17 +2142,17 @@ int_getDefaultCodepage()
     EPT_CALL(QUSRJOBI)(&jobinfo, sizeof(jobinfo), "JOBI0400",
         "*                         ", "                ", &error);
 
-    if (error.Bytes_Available == 0) {
-        if (jobinfo.Coded_Char_Set_ID != 0xFFFF) {
+    如果 (error.Bytes_Available == 0) {
+        如果 (jobinfo.Coded_Char_Set_ID != 0xFFFF) {
             ccsid = (uint32_t)jobinfo.Coded_Char_Set_ID;
         }
-        else if (jobinfo.Default_Coded_Char_Set_Id != 0xFFFF) {
+        否则 如果 (jobinfo.Default_Coded_Char_Set_Id != 0xFFFF) {
             ccsid = (uint32_t)jobinfo.Default_Coded_Char_Set_Id;
         }
         /* else use the default */
     }
     snprintf(codepage, sizeof(codepage), "ibm-%d", ccsid);
-    return codepage;
+    返回 codepage;
 
 #elif U_PLATFORM == U_PF_OS390
     static char codepage[64];
@@ -2161,38 +2161,38 @@ int_getDefaultCodepage()
     strcat(codepage,UCNV_SWAP_LFNL_OPTION_STRING);
     codepage[63] = 0; /* NUL terminate */
 
-    return codepage;
+    返回 codepage;
 
 #elif U_PLATFORM_USES_ONLY_WIN32_API
     static char codepage[64];
     DWORD codepageNumber = 0;
 
-#if U_PLATFORM_HAS_WINUWP_API == 1
+#如果 U_PLATFORM_HAS_WINUWP_API == 1
     // UWP doesn't have a direct API to get the default ACP as Microsoft would rather
     // have folks use Unicode than a "system" code page, however this is the same
     // codepage as the system default locale codepage.  (FWIW, the system locale is
     // ONLY used for codepage, it should never be used for anything else)
     GetLocaleInfoEx(LOCALE_NAME_SYSTEM_DEFAULT, LOCALE_IDEFAULTANSICODEPAGE | LOCALE_RETURN_NUMBER,
         (LPWSTR)&codepageNumber, sizeof(codepageNumber) / sizeof(WCHAR));
-#else
+#否则
     // Win32 apps can call GetACP
     codepageNumber = GetACP();
 #endif
     // Special case for UTF-8
-    if (codepageNumber == 65001)
+    如果 (codepageNumber == 65001)
     {
-        return "UTF-8";
+        返回 "UTF-8";
     }
     // Windows codepages can look like windows-1252, so format the found number
     // the numbers are eclectic, however all valid system code pages, besides UTF-8
     // are between 3 and 19999
-    if (codepageNumber > 0 && codepageNumber < 20000)
+    如果 (codepageNumber > 0 && codepageNumber < 20000)
     {
         snprintf(codepage, sizeof(codepage), "windows-%ld", codepageNumber);
-        return codepage;
+        返回 codepage;
     }
     // If the codepage number call failed then return UTF-8
-    return "UTF-8";
+    返回 "UTF-8";
 
 #elif U_POSIX_LOCALE
     static char codesetName[100];
@@ -2204,29 +2204,29 @@ int_getDefaultCodepage()
     /* On Solaris nl_langinfo returns C locale values unless setlocale
      * was called earlier.
      */
-#if (U_HAVE_NL_LANGINFO_CODESET && U_PLATFORM != U_PF_SOLARIS)
+#如果 (U_HAVE_NL_LANGINFO_CODESET && U_PLATFORM != U_PF_SOLARIS)
     /* When available, check nl_langinfo first because it usually gives more
        useful names. It depends on LC_CTYPE.
        nl_langinfo may use the same buffer as setlocale. */
     {
         const char *codeset = nl_langinfo(U_NL_LANGINFO_CODESET);
-#if U_PLATFORM_IS_DARWIN_BASED || U_PLATFORM_IS_LINUX_BASED
+#如果 U_PLATFORM_IS_DARWIN_BASED || U_PLATFORM_IS_LINUX_BASED
         /*
          * On Linux and MacOSX, ensure that default codepage for non C/POSIX locale is UTF-8
          * instead of ASCII.
          */
-        if (uprv_strcmp(localeName, "en_US_POSIX") != 0) {
+        如果 (uprv_strcmp(localeName, "en_US_POSIX") != 0) {
             codeset = remapPlatformDependentCodepage(localeName, codeset);
-        } else
+        } 否则
 #endif
         {
             codeset = remapPlatformDependentCodepage(nullptr, codeset);
         }
 
-        if (codeset != nullptr) {
+        如果 (codeset != nullptr) {
             uprv_strncpy(codesetName, codeset, sizeof(codesetName));
             codesetName[sizeof(codesetName)-1] = 0;
-            return codesetName;
+            返回 codesetName;
         }
     }
 #endif
@@ -2236,19 +2236,19 @@ int_getDefaultCodepage()
     */
     uprv_memset(codesetName, 0, sizeof(codesetName));
     name = getCodepageFromPOSIXID(localeName, codesetName, sizeof(codesetName));
-    if (name) {
+    如果 (name) {
         /* if we can find the codeset name from setlocale, return that. */
-        return name;
+        返回 name;
     }
 
-    if (*codesetName == 0)
+    如果 (*codesetName == 0)
     {
         /* Everything failed. Return US ASCII (ISO 646). */
         (void)uprv_strcpy(codesetName, "US-ASCII");
     }
-    return codesetName;
-#else
-    return "US-ASCII";
+    返回 codesetName;
+#否则
+    返回 "US-ASCII";
 #endif
 }
 
@@ -2258,11 +2258,11 @@ uprv_getDefaultCodepage()
 {
     static char const  *name = nullptr;
     umtx_lock(nullptr);
-    if (name == nullptr) {
+    如果 (name == nullptr) {
         name = int_getDefaultCodepage();
     }
     umtx_unlock(nullptr);
-    return name;
+    返回 name;
 }
 #endif  /* !U_CHARSET_IS_UTF8 */
 
@@ -2276,31 +2276,31 @@ u_versionFromString(UVersionInfo versionArray, const char *versionString) {
     char *end;
     uint16_t part=0;
 
-    if(versionArray==nullptr) {
-        return;
+    如果(versionArray==nullptr) {
+        返回;
     }
 
-    if(versionString!=nullptr) {
-        for(;;) {
+    如果(versionString!=nullptr) {
+        为(;;) {
             versionArray[part]=(uint8_t)uprv_strtoul(versionString, &end, 10);
-            if(end==versionString || ++part==U_MAX_VERSION_LENGTH || *end!=U_VERSION_DELIMITER) {
+            如果(end==versionString || ++part==U_MAX_VERSION_LENGTH || *end!=U_VERSION_DELIMITER) {
                 break;
             }
             versionString=end+1;
         }
     }
 
-    while(part<U_MAX_VERSION_LENGTH) {
+    当(part<U_MAX_VERSION_LENGTH) {
         versionArray[part++]=0;
     }
 }
 
 U_CAPI void U_EXPORT2
 u_versionFromUString(UVersionInfo versionArray, const char16_t *versionString) {
-    if(versionArray!=nullptr && versionString!=nullptr) {
+    如果(versionArray!=nullptr && versionString!=nullptr) {
         char versionChars[U_MAX_VERSION_STRING_LENGTH+1];
         int32_t len = u_strlen(versionString);
-        if(len>U_MAX_VERSION_STRING_LENGTH) {
+        如果(len>U_MAX_VERSION_STRING_LENGTH) {
             len = U_MAX_VERSION_STRING_LENGTH;
         }
         u_UCharsToChars(versionString, versionChars, len);
@@ -2314,48 +2314,48 @@ u_versionToString(const UVersionInfo versionArray, char *versionString) {
     uint16_t count, part;
     uint8_t field;
 
-    if(versionString==nullptr) {
-        return;
+    如果(versionString==nullptr) {
+        返回;
     }
 
-    if(versionArray==nullptr) {
+    如果(versionArray==nullptr) {
         versionString[0]=0;
-        return;
+        返回;
     }
 
     /* count how many fields need to be written */
-    for(count=4; count>0 && versionArray[count-1]==0; --count) {
+    为(count=4; count>0 && versionArray[count-1]==0; --count) {
     }
 
-    if(count <= 1) {
+    如果(count <= 1) {
         count = 2;
     }
 
     /* write the first part */
     /* write the decimal field value */
     field=versionArray[0];
-    if(field>=100) {
+    如果(field>=100) {
         *versionString++=(char)('0'+field/100);
         field%=100;
     }
-    if(field>=10) {
+    如果(field>=10) {
         *versionString++=(char)('0'+field/10);
         field%=10;
     }
     *versionString++=(char)('0'+field);
 
     /* write the following parts */
-    for(part=1; part<count; ++part) {
+    为(part=1; part<count; ++part) {
         /* write a dot first */
         *versionString++=U_VERSION_DELIMITER;
 
         /* write the decimal field value */
         field=versionArray[part];
-        if(field>=100) {
+        如果(field>=100) {
             *versionString++=(char)('0'+field/100);
             field%=100;
         }
-        if(field>=10) {
+        如果(field>=10) {
             *versionString++=(char)('0'+field/10);
             field%=10;
         }
@@ -2376,9 +2376,9 @@ u_getVersion(UVersionInfo versionArray) {
  * icucfg.h dependent code
  */
 
-#if U_ENABLE_DYLOAD && HAVE_DLOPEN && !U_PLATFORM_USES_ONLY_WIN32_API
+#如果 U_ENABLE_DYLOAD && HAVE_DLOPEN && !U_PLATFORM_USES_ONLY_WIN32_API
 
-#if HAVE_DLFCN_H
+#如果 HAVE_DLFCN_H
 #ifdef __MVS__
 #ifndef __SUSV3
 #define __SUSV3 1
@@ -2390,20 +2390,20 @@ u_getVersion(UVersionInfo versionArray) {
 U_CAPI void * U_EXPORT2
 uprv_dl_open(const char *libName, UErrorCode *status) {
   void *ret = nullptr;
-  if(U_FAILURE(*status)) return ret;
+  如果(U_FAILURE(*status)) 返回 ret;
   ret =  dlopen(libName, RTLD_NOW|RTLD_GLOBAL);
-  if(ret==nullptr) {
+  如果(ret==nullptr) {
 #ifdef U_TRACE_DYLOAD
     printf("dlerror on dlopen(%s): %s\n", libName, dlerror());
 #endif
     *status = U_MISSING_RESOURCE_ERROR;
   }
-  return ret;
+  返回 ret;
 }
 
 U_CAPI void U_EXPORT2
 uprv_dl_close(void *lib, UErrorCode *status) {
-  if(U_FAILURE(*status)) return;
+  如果(U_FAILURE(*status)) 返回;
   dlclose(lib);
 }
 
@@ -2414,15 +2414,15 @@ uprv_dlsym_func(void *lib, const char* sym, UErrorCode *status) {
       void *vp;
   } uret;
   uret.fp = nullptr;
-  if(U_FAILURE(*status)) return uret.fp;
+  如果(U_FAILURE(*status)) 返回 uret.fp;
   uret.vp = dlsym(lib, sym);
-  if(uret.vp == nullptr) {
+  如果(uret.vp == nullptr) {
 #ifdef U_TRACE_DYLOAD
     printf("dlerror on dlsym(%p,%s): %s\n", lib,sym, dlerror());
 #endif
     *status = U_MISSING_RESOURCE_ERROR;
   }
-  return uret.fp;
+  返回 uret.fp;
 }
 
 #elif U_ENABLE_DYLOAD && U_PLATFORM_USES_ONLY_WIN32_API && !U_PLATFORM_HAS_WINUWP_API
@@ -2434,25 +2434,25 @@ U_CAPI void * U_EXPORT2
 uprv_dl_open(const char *libName, UErrorCode *status) {
   HMODULE lib = nullptr;
 
-  if(U_FAILURE(*status)) return nullptr;
+  如果(U_FAILURE(*status)) 返回 nullptr;
 
   lib = LoadLibraryA(libName);
 
-  if(lib==nullptr) {
+  如果(lib==nullptr) {
     *status = U_MISSING_RESOURCE_ERROR;
   }
 
-  return (void*)lib;
+  返回 (void*)lib;
 }
 
 U_CAPI void U_EXPORT2
 uprv_dl_close(void *lib, UErrorCode *status) {
   HMODULE handle = (HMODULE)lib;
-  if(U_FAILURE(*status)) return;
+  如果(U_FAILURE(*status)) 返回;
 
   FreeLibrary(handle);
 
-  return;
+  返回;
 }
 
 U_CAPI UVoidFunction* U_EXPORT2
@@ -2460,50 +2460,50 @@ uprv_dlsym_func(void *lib, const char* sym, UErrorCode *status) {
   HMODULE handle = (HMODULE)lib;
   UVoidFunction* addr = nullptr;
 
-  if(U_FAILURE(*status) || lib==nullptr) return nullptr;
+  如果(U_FAILURE(*status) || lib==nullptr) 返回 nullptr;
 
   addr = (UVoidFunction*)GetProcAddress(handle, sym);
 
-  if(addr==nullptr) {
+  如果(addr==nullptr) {
     DWORD lastError = GetLastError();
-    if(lastError == ERROR_PROC_NOT_FOUND) {
+    如果(lastError == ERROR_PROC_NOT_FOUND) {
       *status = U_MISSING_RESOURCE_ERROR;
-    } else {
+    } 否则 {
       *status = U_UNSUPPORTED_ERROR; /* other unknown error. */
     }
   }
 
-  return addr;
+  返回 addr;
 }
 
-#else
+#否则
 
 /* No dynamic loading, null (nonexistent) implementation. */
 
 U_CAPI void * U_EXPORT2
 uprv_dl_open(const char *libName, UErrorCode *status) {
     (void)libName;
-    if(U_FAILURE(*status)) return nullptr;
+    如果(U_FAILURE(*status)) 返回 nullptr;
     *status = U_UNSUPPORTED_ERROR;
-    return nullptr;
+    返回 nullptr;
 }
 
 U_CAPI void U_EXPORT2
 uprv_dl_close(void *lib, UErrorCode *status) {
     (void)lib;
-    if(U_FAILURE(*status)) return;
+    如果(U_FAILURE(*status)) 返回;
     *status = U_UNSUPPORTED_ERROR;
-    return;
+    返回;
 }
 
 U_CAPI UVoidFunction* U_EXPORT2
 uprv_dlsym_func(void *lib, const char* sym, UErrorCode *status) {
   (void)lib;
   (void)sym;
-  if(U_SUCCESS(*status)) {
+  如果(U_SUCCESS(*status)) {
     *status = U_UNSUPPORTED_ERROR;
   }
-  return (UVoidFunction*)nullptr;
+  返回 (UVoidFunction*)nullptr;
 }
 
 #endif

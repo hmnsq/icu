@@ -23,7 +23,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_COLLATION
+#如果 !UCONFIG_NO_COLLATION
 
 #include "udataswp.h"
 

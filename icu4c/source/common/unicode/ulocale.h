@@ -204,7 +204,7 @@ ulocale_getUnicodeKeywordValue(
     const ULocale* locale, const char* keyword, int32_t keywordLength,
     char* valueBuffer, int32_t valueBufferCapacity, UErrorCode *err);
 
-#if U_SHOW_CPLUSPLUS_API
+#如果 U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

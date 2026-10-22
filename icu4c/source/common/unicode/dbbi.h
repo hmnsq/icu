@@ -15,11 +15,11 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#如果 U_SHOW_CPLUSPLUS_API
 
 #include "unicode/rbbi.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#如果 !UCONFIG_NO_BREAK_ITERATION
 
 /**
  * \file

@@ -12,7 +12,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
+#如果 !UCONFIG_NO_FORMATTING
 
 /**
  * \file

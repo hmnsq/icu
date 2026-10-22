@@ -54,7 +54,7 @@ u_cleanup()
 
 U_CAPI void U_EXPORT2 ucln_cleanupOne(ECleanupLibraryType libType) 
 {
-    if (gLibCleanupFunctions[libType])
+    如果 (gLibCleanupFunctions[libType])
     {
         gLibCleanupFunctions[libType]();
         gLibCleanupFunctions[libType] = nullptr;
@@ -76,13 +76,13 @@ ucln_common_registerCleanup(ECleanupCommonType type,
     // No other point in ICU uses std::call_once().
 
     U_ASSERT(UCLN_COMMON_START < type && type < UCLN_COMMON_COUNT);
-    if (type == UCLN_COMMON_MUTEX) {
+    如果 (type == UCLN_COMMON_MUTEX) {
         gCommonCleanupFunctions[type] = func;
-    } else if (UCLN_COMMON_START < type && type < UCLN_COMMON_COUNT)  {
+    } 否则 如果 (UCLN_COMMON_START < type && type < UCLN_COMMON_COUNT)  {
         icu::Mutex m;     // See ticket 10295 for discussion.
         gCommonCleanupFunctions[type] = func;
     }
-#if !UCLN_NO_AUTO_CLEANUP && (defined(UCLN_AUTO_ATEXIT) || defined(UCLN_AUTO_LOCAL))
+#如果 !UCLN_NO_AUTO_CLEANUP && (defined(UCLN_AUTO_ATEXIT) || defined(UCLN_AUTO_LOCAL))
     ucln_registerAutomaticCleanup();
 #endif
 }
@@ -96,7 +96,7 @@ ucln_registerCleanup(ECleanupLibraryType type,
                      cleanupFunc *func)
 {
     U_ASSERT(UCLN_START < type && type < UCLN_COMMON);
-    if (UCLN_START < type && type < UCLN_COMMON)
+    如果 (UCLN_START < type && type < UCLN_COMMON)
     {
         gLibCleanupFunctions[type] = func;
     }
@@ -106,19 +106,19 @@ U_CFUNC UBool ucln_lib_cleanup() {
     int32_t libType = UCLN_START;
     int32_t commonFunc = UCLN_COMMON_START;
 
-    for (libType++; libType<UCLN_COMMON; libType++) {
+    为 (libType++; libType<UCLN_COMMON; libType++) {
         ucln_cleanupOne(static_cast<ECleanupLibraryType>(libType));
     }
 
-    for (commonFunc++; commonFunc<UCLN_COMMON_COUNT; commonFunc++) {
-        if (gCommonCleanupFunctions[commonFunc])
+    为 (commonFunc++; commonFunc<UCLN_COMMON_COUNT; commonFunc++) {
+        如果 (gCommonCleanupFunctions[commonFunc])
         {
             gCommonCleanupFunctions[commonFunc]();
             gCommonCleanupFunctions[commonFunc] = nullptr;
         }
     }
-#if !UCLN_NO_AUTO_CLEANUP && (defined(UCLN_AUTO_ATEXIT) || defined(UCLN_AUTO_LOCAL))
+#如果 !UCLN_NO_AUTO_CLEANUP && (defined(UCLN_AUTO_ATEXIT) || defined(UCLN_AUTO_LOCAL))
     ucln_unRegisterAutomaticCleanup();
 #endif
-    return true;
+    返回 true;
 }

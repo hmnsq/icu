@@ -31,9 +31,9 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#如果 U_SHOW_CPLUSPLUS_API
 
-#if UCONFIG_NO_BREAK_ITERATION
+#如果 UCONFIG_NO_BREAK_ITERATION
 
 U_NAMESPACE_BEGIN
 
@@ -45,7 +45,7 @@ class BreakIterator;
 
 U_NAMESPACE_END
 
-#else
+#否则
 
 #include "unicode/uobject.h"
 #include "unicode/unistr.h"
@@ -132,7 +132,7 @@ public:
      * @return the complement of the result of operator==
      * @stable ICU 2.0
      */
-    U_COMMON_API bool operator!=(const BreakIterator& rhs) const { return !operator==(rhs); }
+    U_COMMON_API bool operator!=(const BreakIterator& rhs) const { 返回 !operator==(rhs); }
 
     /**
      * Return a polymorphic copy of this object.  This is an abstract
@@ -537,7 +537,7 @@ public:
 
 #endif /* U_HIDE_DEPRECATED_API */
 
-#if !UCONFIG_NO_SERVICE
+#如果 !UCONFIG_NO_SERVICE
     /**
      * Register a new break iterator of the indicated kind, to use in the given locale.
      * The break iterator will be adopted.  Clones of the iterator will be returned
@@ -660,7 +660,7 @@ private:
 
 inline UBool BreakIterator::isBufferClone()
 {
-    return false;
+    返回 false;
 }
 
 #endif /* U_HIDE_DEPRECATED_API */

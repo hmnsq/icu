@@ -21,7 +21,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#如果 U_SHOW_CPLUSPLUS_API
 #include "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
@@ -418,7 +418,7 @@ udata_setFileAccess(UDataFileAccess access, UErrorCode *status);
 
 U_CDECL_END
 
-#if U_SHOW_CPLUSPLUS_API
+#如果 U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

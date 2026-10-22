@@ -19,7 +19,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#如果 !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/unistr.h"
 #include "unicode/uniset.h"
@@ -38,7 +38,7 @@
 U_NAMESPACE_BEGIN
 
 #ifdef RBBI_DEBUG
-static int  gLastSerial = 0;
+static 整数  gLastSerial = 0;
 #endif
 
 
@@ -48,8 +48,8 @@ static int  gLastSerial = 0;
 //
 //-------------------------------------------------------------------------
 RBBINode::RBBINode(NodeType t, UErrorCode& status) : UMemory() {
-    if (U_FAILURE(status)) {
-        return;
+    如果 (U_FAILURE(status)) {
+        返回;
     }
 #ifdef RBBI_DEBUG
     fSerialNum    = ++gLastSerial;
@@ -71,21 +71,21 @@ RBBINode::RBBINode(NodeType t, UErrorCode& status) : UMemory() {
     fFirstPosSet  = new UVector(status);
     fLastPosSet   = new UVector(status);
     fFollowPos    = new UVector(status);
-    if (U_SUCCESS(status) &&
+    如果 (U_SUCCESS(status) &&
         (fFirstPosSet == nullptr || fLastPosSet == nullptr || fFollowPos == nullptr)) {
         status =  U_MEMORY_ALLOCATION_ERROR;
     }
-    if      (t==opCat)    {fPrecedence = precOpCat;}
-    else if (t==opOr)     {fPrecedence = precOpOr;}
-    else if (t==opStart)  {fPrecedence = precStart;}
-    else if (t==opLParen) {fPrecedence = precLParen;}
+    如果      (t==opCat)    {fPrecedence = precOpCat;}
+    否则 如果 (t==opOr)     {fPrecedence = precOpOr;}
+    否则 如果 (t==opStart)  {fPrecedence = precStart;}
+    否则 如果 (t==opLParen) {fPrecedence = precLParen;}
 
 }
 
 
 RBBINode::RBBINode(const RBBINode &other, UErrorCode& status) : UMemory(other) {
-    if (U_FAILURE(status)) {
-        return;
+    如果 (U_FAILURE(status)) {
+        返回;
     }
 #ifdef RBBI_DEBUG
     fSerialNum   = ++gLastSerial;
@@ -106,7 +106,7 @@ RBBINode::RBBINode(const RBBINode &other, UErrorCode& status) : UMemory(other) {
     fFirstPosSet = new UVector(status);   // TODO - get a real status from somewhere
     fLastPosSet  = new UVector(status);
     fFollowPos   = new UVector(status);
-    if (U_SUCCESS(status) &&
+    如果 (U_SUCCESS(status) &&
         (fFirstPosSet == nullptr || fLastPosSet == nullptr || fFollowPos == nullptr)) {
         status =  U_MEMORY_ALLOCATION_ERROR;
     }
@@ -156,38 +156,38 @@ RBBINode::~RBBINode() {
  * stack overflow with some perverse test rule data (from fuzzing).
  */
 void RBBINode::NRDeleteNode(RBBINode *node) {
-    if (node == nullptr) {
-        return;
+    如果 (node == nullptr) {
+        返回;
     }
 
     RBBINode *stopNode = node->fParent;
     RBBINode *nextNode = node;
-    while (nextNode != stopNode && nextNode != nullptr) {
+    当 (nextNode != stopNode && nextNode != nullptr) {
         RBBINode *currentNode = nextNode;
 
-        if ((currentNode->fLeftChild == nullptr && currentNode->fRightChild == nullptr) ||
+        如果 ((currentNode->fLeftChild == nullptr && currentNode->fRightChild == nullptr) ||
                 currentNode->fType == varRef ||      // varRef and setRef nodes do not
                 currentNode->fType == setRef) {      // own their children nodes.
             // CurrentNode is effectively a leaf node; it's safe to go ahead and delete it.
             nextNode = currentNode->fParent;
-            if (nextNode) {
-                if (nextNode->fLeftChild == currentNode) {
+            如果 (nextNode) {
+                如果 (nextNode->fLeftChild == currentNode) {
                     nextNode->fLeftChild = nullptr;
-                } else if (nextNode->fRightChild == currentNode) {
+                } 否则 如果 (nextNode->fRightChild == currentNode) {
                     nextNode->fRightChild = nullptr;
                 }
             }
             delete currentNode;
-        } else if (currentNode->fLeftChild) {
+        } 否则 如果 (currentNode->fLeftChild) {
             nextNode = currentNode->fLeftChild;
-            if (nextNode->fParent == nullptr) {
+            如果 (nextNode->fParent == nullptr) {
                 nextNode->fParent = currentNode;
                 // fParent isn't always set; do it now if not.
             }
             U_ASSERT(nextNode->fParent == currentNode);
-        } else if (currentNode->fRightChild) {
+        } 否则 如果 (currentNode->fRightChild) {
             nextNode = currentNode->fRightChild;
-            if (nextNode->fParent == nullptr) {
+            如果 (nextNode->fParent == nullptr) {
                 nextNode->fParent = currentNode;
                 // fParent isn't always set; do it now if not.
             }
@@ -205,57 +205,57 @@ void RBBINode::NRDeleteNode(RBBINode *node) {
 //                  references in preparation for generating the DFA tables.
 //
 //-------------------------------------------------------------------------
-constexpr int kRecursiveDepthLimit = 3500;
-RBBINode *RBBINode::cloneTree(UErrorCode &status, int depth) {
-    if (U_FAILURE(status)) {
-        return nullptr;
+constexpr 整数 kRecursiveDepthLimit = 3500;
+RBBINode *RBBINode::cloneTree(UErrorCode &status, 整数 depth) {
+    如果 (U_FAILURE(status)) {
+        返回 nullptr;
     }
     // If the depth of the stack is too deep, we return U_INPUT_TOO_LONG_ERROR
     // to avoid stack overflow crash.
-    if (depth > kRecursiveDepthLimit) {
+    如果 (depth > kRecursiveDepthLimit) {
         status = U_INPUT_TOO_LONG_ERROR;
-        return nullptr;
+        返回 nullptr;
     }
     RBBINode    *n;
 
-    if (fType == RBBINode::varRef) {
+    如果 (fType == RBBINode::varRef) {
         // If the current node is a variable reference, skip over it
         //   and clone the definition of the variable instead.
         n = fLeftChild->cloneTree(status, depth+1);
-        if (U_FAILURE(status)) {
-            return nullptr;
+        如果 (U_FAILURE(status)) {
+            返回 nullptr;
         }
-    } else if (fType == RBBINode::uset) {
+    } 否则 如果 (fType == RBBINode::uset) {
         n = this;
-    } else {
+    } 否则 {
         n = new RBBINode(*this, status);
-        if (U_FAILURE(status)) {
+        如果 (U_FAILURE(status)) {
             delete n;
-            return nullptr;
+            返回 nullptr;
         }
         // Check for null pointer.
-        if (n == nullptr) {
+        如果 (n == nullptr) {
             status =  U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+            返回 nullptr;
         }
-        if (fLeftChild != nullptr) {
+        如果 (fLeftChild != nullptr) {
             n->fLeftChild          = fLeftChild->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
+            如果 (U_FAILURE(status)) {
                 delete n;
-                return nullptr;
+                返回 nullptr;
             }
             n->fLeftChild->fParent = n;
         }
-        if (fRightChild != nullptr) {
+        如果 (fRightChild != nullptr) {
             n->fRightChild          = fRightChild->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
+            如果 (U_FAILURE(status)) {
                 delete n;
-                return nullptr;
+                返回 nullptr;
             }
             n->fRightChild->fParent = n;
         }
     }
-    return n;
+    返回 n;
 }
 
 
@@ -278,48 +278,48 @@ RBBINode *RBBINode::cloneTree(UErrorCode &status, int depth) {
 //                      nested references are handled by cloneTree(), not here.
 //
 //-------------------------------------------------------------------------
-RBBINode *RBBINode::flattenVariables(UErrorCode& status, int depth) {
-    if (U_FAILURE(status)) {
-        return this;
+RBBINode *RBBINode::flattenVariables(UErrorCode& status, 整数 depth) {
+    如果 (U_FAILURE(status)) {
+        返回 this;
     }
     // If the depth of the stack is too deep, we return U_INPUT_TOO_LONG_ERROR
     // to avoid stack overflow crash.
-    if (depth > kRecursiveDepthLimit) {
+    如果 (depth > kRecursiveDepthLimit) {
         status = U_INPUT_TOO_LONG_ERROR;
-        return this;
+        返回 this;
     }
-    if (fType == varRef) {
+    如果 (fType == varRef) {
         RBBINode *retNode  = fLeftChild->cloneTree(status, depth+1);
-        if (U_FAILURE(status)) {
-            return this;
+        如果 (U_FAILURE(status)) {
+            返回 this;
         }
         retNode->fRuleRoot = this->fRuleRoot;
         retNode->fChainIn  = this->fChainIn;
         delete this;   // TODO: undefined behavior. Fix.
-        return retNode;
+        返回 retNode;
     }
 
-    if (fLeftChild != nullptr) {
+    如果 (fLeftChild != nullptr) {
         fLeftChild = fLeftChild->flattenVariables(status, depth+1);
-        if (fLeftChild == nullptr) {
+        如果 (fLeftChild == nullptr) {
             status = U_MEMORY_ALLOCATION_ERROR;
         }
-        if (U_FAILURE(status)) {
-            return this;
+        如果 (U_FAILURE(status)) {
+            返回 this;
         }
         fLeftChild->fParent  = this;
     }
-    if (fRightChild != nullptr) {
+    如果 (fRightChild != nullptr) {
         fRightChild = fRightChild->flattenVariables(status, depth+1);
-        if (fRightChild == nullptr) {
+        如果 (fRightChild == nullptr) {
             status = U_MEMORY_ALLOCATION_ERROR;
         }
-        if (U_FAILURE(status)) {
-            return this;
+        如果 (U_FAILURE(status)) {
+            返回 this;
         }
         fRightChild->fParent = this;
     }
-    return this;
+    返回 this;
 }
 
 
@@ -331,48 +331,48 @@ RBBINode *RBBINode::flattenVariables(UErrorCode& status, int depth) {
 //                 the left child of the uset node.
 //
 //-------------------------------------------------------------------------
-void RBBINode::flattenSets(UErrorCode &status, int depth) {
-    if (U_FAILURE(status)) {
-        return;
+void RBBINode::flattenSets(UErrorCode &status, 整数 depth) {
+    如果 (U_FAILURE(status)) {
+        返回;
     }
     // If the depth of the stack is too deep, we return U_INPUT_TOO_LONG_ERROR
     // to avoid stack overflow crash.
-    if (depth > kRecursiveDepthLimit) {
+    如果 (depth > kRecursiveDepthLimit) {
         status = U_INPUT_TOO_LONG_ERROR;
-        return;
+        返回;
     }
     U_ASSERT(fType != setRef);
 
-    if (fLeftChild != nullptr) {
-        if (fLeftChild->fType==setRef) {
+    如果 (fLeftChild != nullptr) {
+        如果 (fLeftChild->fType==setRef) {
             RBBINode *setRefNode = fLeftChild;
             RBBINode *usetNode   = setRefNode->fLeftChild;
             RBBINode *replTree   = usetNode->fLeftChild;
             fLeftChild           = replTree->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
+            如果 (U_FAILURE(status)) {
                 delete setRefNode;
-                return;
+                返回;
             }
             fLeftChild->fParent  = this;
             delete setRefNode;
-        } else {
+        } 否则 {
             fLeftChild->flattenSets(status, depth+1);
         }
     }
 
-    if (fRightChild != nullptr) {
-        if (fRightChild->fType==setRef) {
+    如果 (fRightChild != nullptr) {
+        如果 (fRightChild->fType==setRef) {
             RBBINode *setRefNode = fRightChild;
             RBBINode *usetNode   = setRefNode->fLeftChild;
             RBBINode *replTree   = usetNode->fLeftChild;
             fRightChild           = replTree->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
+            如果 (U_FAILURE(status)) {
                 delete setRefNode;
-                return;
+                返回;
             }
             fRightChild->fParent  = this;
             delete setRefNode;
-        } else {
+        } 否则 {
             fRightChild->flattenSets(status, depth+1);
         }
     }
@@ -388,17 +388,17 @@ void RBBINode::flattenSets(UErrorCode &status, int depth) {
 //-------------------------------------------------------------------------
 void   RBBINode::findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &status) {
     /* test for buffer overflows */
-    if (U_FAILURE(status)) {
-        return;
+    如果 (U_FAILURE(status)) {
+        返回;
     }
     U_ASSERT(!dest->hasDeleter());
-    if (fType == kind) {
+    如果 (fType == kind) {
         dest->addElement(this, status);
     }
-    if (fLeftChild != nullptr) {
+    如果 (fLeftChild != nullptr) {
         fLeftChild->findNodes(dest, kind, status);
     }
-    if (fRightChild != nullptr) {
+    如果 (fRightChild != nullptr) {
         fRightChild->findNodes(dest, kind, status);
     }
 }
@@ -412,7 +412,7 @@ void   RBBINode::findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &s
 #ifdef RBBI_DEBUG
 
 static int32_t serial(const RBBINode *node) {
-    return (node == nullptr? -1 : node->fSerialNum);
+    返回 (node == nullptr? -1 : node->fSerialNum);
 }
 
 
@@ -436,15 +436,15 @@ void RBBINode::printNode(const RBBINode *node) {
                 "opLParen"
     };
 
-    if (node==nullptr) {
+    如果 (node==nullptr) {
         RBBIDebugPrintf("%10p", (void *)node);
-    } else {
+    } 否则 {
         RBBIDebugPrintf("%10p %5d %12s %c%c  %5d       %5d     %5d       %6d     %d ",
             (void *)node, node->fSerialNum, nodeTypeNames[node->fType],
             node->fRuleRoot?'R':' ', node->fChainIn?'C':' ',
             serial(node->fLeftChild), serial(node->fRightChild), serial(node->fParent),
             node->fFirstPos, node->fVal);
-        if (node->fType == varRef) {
+        如果 (node->fType == varRef) {
             RBBI_DEBUG_printUnicodeString(node->fText);
         }
     }
@@ -454,7 +454,7 @@ void RBBINode::printNode(const RBBINode *node) {
 
 
 #ifdef RBBI_DEBUG
-U_CFUNC void RBBI_DEBUG_printUnicodeString(const UnicodeString &s, int minWidth) {
+U_CFUNC void RBBI_DEBUG_printUnicodeString(const UnicodeString &s, 整数 minWidth) {
     RBBIDebugPrintf("%*s", minWidth, CStr(s)());
 }
 #endif
@@ -471,19 +471,19 @@ void RBBINode::printNodeHeader() {
 }
     
 void RBBINode::printTree(const RBBINode *node, UBool printHeading) {
-    if (printHeading) {
+    如果 (printHeading) {
         printNodeHeader();
     }
     printNode(node);
-    if (node != nullptr) {
+    如果 (node != nullptr) {
         // Only dump the definition under a variable reference if asked to.
         // Unconditionally dump children of all other node types.
-        if (node->fType != varRef) {
-            if (node->fLeftChild != nullptr) {
+        如果 (node->fType != varRef) {
+            如果 (node->fLeftChild != nullptr) {
                 printTree(node->fLeftChild, false);
             }
             
-            if (node->fRightChild != nullptr) {
+            如果 (node->fRightChild != nullptr) {
                 printTree(node->fRightChild, false);
             }
         }

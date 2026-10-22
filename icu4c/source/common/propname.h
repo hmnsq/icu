@@ -56,11 +56,11 @@ uprv_compareASCIIPropertyNames(const char *name1, const char *name2);
 U_CAPI int32_t U_EXPORT2
 uprv_compareEBCDICPropertyNames(const char *name1, const char *name2);
 
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
+#如果 U_CHARSET_FAMILY==U_ASCII_FAMILY
 #   define uprv_comparePropertyNames uprv_compareASCIIPropertyNames
 #elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
 #   define uprv_comparePropertyNames uprv_compareEBCDICPropertyNames
-#else
+#否则
 #   error U_CHARSET_FAMILY is not valid
 #endif
 

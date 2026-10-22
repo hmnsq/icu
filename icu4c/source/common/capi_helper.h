@@ -50,19 +50,19 @@ class IcuCApiHelper {
 template<typename CType, typename CPPType, int32_t kMagic>
 const CPPType*
 IcuCApiHelper<CType, CPPType, kMagic>::validate(const CType* input, UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return nullptr;
+    如果 (U_FAILURE(status)) {
+        返回 nullptr;
     }
-    if (input == nullptr) {
+    如果 (input == nullptr) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        返回 nullptr;
     }
     auto* impl = reinterpret_cast<const CPPType*>(input);
-    if (static_cast<const IcuCApiHelper<CType, CPPType, kMagic>*>(impl)->fMagic != kMagic) {
+    如果 (static_cast<const IcuCApiHelper<CType, CPPType, kMagic>*>(impl)->fMagic != kMagic) {
         status = U_INVALID_FORMAT_ERROR;
-        return nullptr;
+        返回 nullptr;
     }
-    return impl;
+    返回 impl;
 }
 
 template<typename CType, typename CPPType, int32_t kMagic>
@@ -70,19 +70,19 @@ CPPType*
 IcuCApiHelper<CType, CPPType, kMagic>::validate(CType* input, UErrorCode& status) {
     auto* constInput = static_cast<const CType*>(input);
     auto* validated = validate(constInput, status);
-    return const_cast<CPPType*>(validated);
+    返回 const_cast<CPPType*>(validated);
 }
 
 template<typename CType, typename CPPType, int32_t kMagic>
 const CType*
 IcuCApiHelper<CType, CPPType, kMagic>::exportConstForC() const {
-    return reinterpret_cast<const CType*>(static_cast<const CPPType*>(this));
+    返回 reinterpret_cast<const CType*>(static_cast<const CPPType*>(this));
 }
 
 template<typename CType, typename CPPType, int32_t kMagic>
 CType*
 IcuCApiHelper<CType, CPPType, kMagic>::exportForC() {
-    return reinterpret_cast<CType*>(static_cast<CPPType*>(this));
+    返回 reinterpret_cast<CType*>(static_cast<CPPType*>(this));
 }
 
 template<typename CType, typename CPPType, int32_t kMagic>

@@ -16,7 +16,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#如果 !UCONFIG_NO_BREAK_ITERATION
 
 #include <utility>
 
@@ -82,7 +82,7 @@ public:
 
 #ifdef RBBI_DEBUG
     virtual void      rbbiSymtablePrint() const;
-#else
+#否则
     // A do-nothing inline function for non-debug builds.  Member funcs can't be empty
     //  or the call sites won't compile.
     int32_t fFakeField;
@@ -214,7 +214,7 @@ typedef std::pair<int32_t, int32_t> IntPair;
 #include <stdio.h>
 #define RBBIDebugPrintf printf
 #define RBBIDebugPuts puts
-#else
+#否则
 #undef RBBIDebugPrintf
 #define RBBIDebugPuts(arg)
 #endif

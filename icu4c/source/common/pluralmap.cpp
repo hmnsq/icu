@@ -17,12 +17,12 @@ static const char * const gPluralForms[] = {
 
 PluralMapBase::Category
 PluralMapBase::toCategory(const char *pluralForm) {
-    for (int32_t i = 0; i < UPRV_LENGTHOF(gPluralForms); ++i) {
-        if (uprv_strcmp(pluralForm, gPluralForms[i]) == 0) {
-            return static_cast<Category>(i);
+    为 (int32_t i = 0; i < UPRV_LENGTHOF(gPluralForms); ++i) {
+        如果 (uprv_strcmp(pluralForm, gPluralForms[i]) == 0) {
+            返回 static_cast<Category>(i);
         }
     }
-    return NONE;
+    返回 NONE;
 }
 
 PluralMapBase::Category
@@ -30,12 +30,12 @@ PluralMapBase::toCategory(const UnicodeString &pluralForm) {
     CharString cCategory;
     UErrorCode status = U_ZERO_ERROR;
     cCategory.appendInvariantChars(pluralForm, status);    
-    return U_FAILURE(status) ? NONE : toCategory(cCategory.data());
+    返回 U_FAILURE(status) ? NONE : toCategory(cCategory.data());
 }
 
 const char *PluralMapBase::getCategoryName(Category c) {
     int32_t index = c;
-    return (index < 0 || index >= UPRV_LENGTHOF(gPluralForms)) ?
+    返回 (index < 0 || index >= UPRV_LENGTHOF(gPluralForms)) ?
             nullptr : gPluralForms[index];
 }
 

@@ -325,11 +325,11 @@ uprv_compareInvEbcdic(const UDataSwapper *ds,
  * Compare an invariant-character strings with a UChar string
  * @internal
  */
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
+#如果 U_CHARSET_FAMILY==U_ASCII_FAMILY
 #   define uprv_compareInvWithUChar uprv_compareInvAscii
 #elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
 #   define uprv_compareInvWithUChar uprv_compareInvEbcdic
-#else
+#否则
 #   error Unknown charset family!
 #endif
 
@@ -373,7 +373,7 @@ utrie_swapAnyVersion(const UDataSwapper *ds,
 
 /* material... -------------------------------------------------------------- */
 
-#if 0
+#如果 0
 
 /* udata.h */
 

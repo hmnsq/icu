@@ -23,7 +23,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#如果 !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
 #include "unicode/ucnv.h"
 #include "unicode/ucnv_cb.h"
@@ -159,7 +159,7 @@ static void U_CALLCONV
 _SCSUReset(UConverter *cnv, UConverterResetChoice choice) {
     SCSUData *scsu=(SCSUData *)cnv->extraInfo;
 
-    if(choice<=UCNV_RESET_TO_UNICODE) {
+    如果(choice<=UCNV_RESET_TO_UNICODE) {
         /* reset toUnicode */
         uprv_memcpy(scsu->toUDynamicOffsets, initialDynamicOffsets, 32);
 
@@ -170,7 +170,7 @@ _SCSUReset(UConverter *cnv, UConverterResetChoice choice) {
 
         cnv->toULength=0;
     }
-    if(choice!=UCNV_RESET_TO_UNICODE) {
+    如果(choice!=UCNV_RESET_TO_UNICODE) {
         /* reset fromUnicode */
         uprv_memcpy(scsu->fromUDynamicOffsets, initialDynamicOffsets, 32);
 
@@ -196,18 +196,18 @@ _SCSUOpen(UConverter *cnv,
           UConverterLoadArgs *pArgs,
           UErrorCode *pErrorCode) {
     const char *locale=pArgs->locale;
-    if(pArgs->onlyTestIsLoadable) {
-        return;
+    如果(pArgs->onlyTestIsLoadable) {
+        返回;
     }
     cnv->extraInfo=uprv_malloc(sizeof(SCSUData));
-    if(cnv->extraInfo!=nullptr) {
-        if(locale!=nullptr && locale[0]=='j' && locale[1]=='a' && (locale[2]==0 || locale[2]=='_')) {
+    如果(cnv->extraInfo!=nullptr) {
+        如果(locale!=nullptr && locale[0]=='j' && locale[1]=='a' && (locale[2]==0 || locale[2]=='_')) {
             ((SCSUData *)cnv->extraInfo)->locale=l_ja;
-        } else {
+        } 否则 {
             ((SCSUData *)cnv->extraInfo)->locale=lGeneric;
         }
         _SCSUReset(cnv, UCNV_RESET_BOTH);
-    } else {
+    } 否则 {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
     }
 
@@ -218,8 +218,8 @@ _SCSUOpen(UConverter *cnv,
 
 static void U_CALLCONV
 _SCSUClose(UConverter *cnv) {
-    if(cnv->extraInfo!=nullptr) {
-        if(!cnv->isExtraLocal) {
+    如果(cnv->extraInfo!=nullptr) {
+        如果(!cnv->isExtraLocal) {
             uprv_free(cnv->extraInfo);
         }
         cnv->extraInfo=nullptr;
@@ -285,39 +285,39 @@ _SCSUToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
      * The callback handling is done by returning with an error code.
      * The conversion framework actually calls the callback function.
      */
-    if(isSingleByteMode) {
+    如果(isSingleByteMode) {
         /* fast path for single-byte mode */
-        if(state==readCommand) {
+        如果(state==readCommand) {
 fastSingle:
-            while(source<sourceLimit && target<targetLimit && (b=*source)>=0x20) {
+            当(source<sourceLimit && target<targetLimit && (b=*source)>=0x20) {
                 ++source;
                 ++nextSourceIndex;
-                if(b<=0x7f) {
+                如果(b<=0x7f) {
                     /* write US-ASCII graphic character or DEL */
                     *target++=(char16_t)b;
-                    if(offsets!=nullptr) {
+                    如果(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
-                } else {
+                } 否则 {
                     /* write from dynamic window */
                     uint32_t c=scsu->toUDynamicOffsets[dynamicWindow]+(b&0x7f);
-                    if(c<=0xffff) {
+                    如果(c<=0xffff) {
                         *target++=(char16_t)c;
-                        if(offsets!=nullptr) {
+                        如果(offsets!=nullptr) {
                             *offsets++=sourceIndex;
                         }
-                    } else {
+                    } 否则 {
                         /* output surrogate pair */
                         *target++=(char16_t)(0xd7c0+(c>>10));
-                        if(target<targetLimit) {
+                        如果(target<targetLimit) {
                             *target++=(char16_t)(0xdc00|(c&0x3ff));
-                            if(offsets!=nullptr) {
+                            如果(offsets!=nullptr) {
                                 *offsets++=sourceIndex;
                                 *offsets++=sourceIndex;
                             }
-                        } else {
+                        } 否则 {
                             /* target overflow */
-                            if(offsets!=nullptr) {
+                            如果(offsets!=nullptr) {
                                 *offsets++=sourceIndex;
                             }
                             cnv->UCharErrorBuffer[0]=(char16_t)(0xdc00|(c&0x3ff));
@@ -333,8 +333,8 @@ fastSingle:
 
         /* normal state machine for single-byte mode, minus handling for what fastSingle covers */
 singleByteMode:
-        while(source<sourceLimit) {
-            if(target>=targetLimit) {
+        当(source<sourceLimit) {
+            如果(target>=targetLimit) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                 break;
@@ -345,35 +345,35 @@ singleByteMode:
             case readCommand:
                 /* redundant conditions are commented out */
                 /* here: b<0x20 because otherwise we would be in fastSingle */
-                if((1UL<<b)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
+                如果((1UL<<b)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
                     /* CR/LF/TAB/NUL */
                     *target++=(char16_t)b;
-                    if(offsets!=nullptr) {
+                    如果(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
                     sourceIndex=nextSourceIndex;
                     goto fastSingle;
-                } else if(SC0<=b) {
-                    if(b<=SC7) {
+                } 否则 如果(SC0<=b) {
+                    如果(b<=SC7) {
                         dynamicWindow=(int8_t)(b-SC0);
                         sourceIndex=nextSourceIndex;
                         goto fastSingle;
-                    } else /* if(SD0<=b && b<=SD7) */ {
+                    } 否则 /* if(SD0<=b && b<=SD7) */ {
                         dynamicWindow=(int8_t)(b-SD0);
                         state=defineOne;
                     }
-                } else if(/* SQ0<=b && */ b<=SQ7) {
+                } 否则 如果(/* SQ0<=b && */ b<=SQ7) {
                     quoteWindow=(int8_t)(b-SQ0);
                     state=quoteOne;
-                } else if(b==SDX) {
+                } 否则 如果(b==SDX) {
                     state=definePairOne;
-                } else if(b==SQU) {
+                } 否则 如果(b==SQU) {
                     state=quotePairOne;
-                } else if(b==SCU) {
+                } 否则 如果(b==SCU) {
                     sourceIndex=nextSourceIndex;
                     isSingleByteMode=false;
                     goto fastUnicode;
-                } else /* Srs */ {
+                } 否则 /* Srs */ {
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                     cnv->toUBytes[0]=b;
@@ -393,39 +393,39 @@ singleByteMode:
                 break;
             case quotePairTwo:
                 *target++=(char16_t)((byteOne<<8)|b);
-                if(offsets!=nullptr) {
+                如果(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 sourceIndex=nextSourceIndex;
                 state=readCommand;
                 goto fastSingle;
             case quoteOne:
-                if(b<0x80) {
+                如果(b<0x80) {
                     /* all static offsets are in the BMP */
                     *target++=(char16_t)(staticOffsets[quoteWindow]+b);
-                    if(offsets!=nullptr) {
+                    如果(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
-                } else {
+                } 否则 {
                     /* write from dynamic window */
                     uint32_t c=scsu->toUDynamicOffsets[quoteWindow]+(b&0x7f);
-                    if(c<=0xffff) {
+                    如果(c<=0xffff) {
                         *target++=(char16_t)c;
-                        if(offsets!=nullptr) {
+                        如果(offsets!=nullptr) {
                             *offsets++=sourceIndex;
                         }
-                    } else {
+                    } 否则 {
                         /* output surrogate pair */
                         *target++=(char16_t)(0xd7c0+(c>>10));
-                        if(target<targetLimit) {
+                        如果(target<targetLimit) {
                             *target++=(char16_t)(0xdc00|(c&0x3ff));
-                            if(offsets!=nullptr) {
+                            如果(offsets!=nullptr) {
                                 *offsets++=sourceIndex;
                                 *offsets++=sourceIndex;
                             }
-                        } else {
+                        } 否则 {
                             /* target overflow */
-                            if(offsets!=nullptr) {
+                            如果(offsets!=nullptr) {
                                 *offsets++=sourceIndex;
                             }
                             cnv->UCharErrorBuffer[0]=(char16_t)(0xdc00|(c&0x3ff));
@@ -451,18 +451,18 @@ singleByteMode:
                 state=readCommand;
                 goto fastSingle;
             case defineOne:
-                if(b==0) {
+                如果(b==0) {
                     /* callback(illegal): Reserved window offset value 0 */
                     cnv->toUBytes[1]=b;
                     cnv->toULength=2;
                     goto endloop;
-                } else if(b<gapThreshold) {
+                } 否则 如果(b<gapThreshold) {
                     scsu->toUDynamicOffsets[dynamicWindow]=b<<7UL;
-                } else if((uint8_t)(b-gapThreshold)<(reservedStart-gapThreshold)) {
+                } 否则 如果((uint8_t)(b-gapThreshold)<(reservedStart-gapThreshold)) {
                     scsu->toUDynamicOffsets[dynamicWindow]=(b<<7UL)+gapOffset;
-                } else if(b>=fixedThreshold) {
+                } 否则 如果(b>=fixedThreshold) {
                     scsu->toUDynamicOffsets[dynamicWindow]=fixedOffsets[b-fixedThreshold];
-                } else {
+                } 否则 {
                     /* callback(illegal): Reserved window offset value 0xa8..0xf8 */
                     cnv->toUBytes[1]=b;
                     cnv->toULength=2;
@@ -473,13 +473,13 @@ singleByteMode:
                 goto fastSingle;
             }
         }
-    } else {
+    } 否则 {
         /* fast path for Unicode mode */
-        if(state==readCommand) {
+        如果(state==readCommand) {
 fastUnicode:
-            while(source+1<sourceLimit && target<targetLimit && (uint8_t)((b=*source)-UC0)>(Urs-UC0)) {
+            当(source+1<sourceLimit && target<targetLimit && (uint8_t)((b=*source)-UC0)>(Urs-UC0)) {
                 *target++=(char16_t)((b<<8)|source[1]);
-                if(offsets!=nullptr) {
+                如果(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 sourceIndex=nextSourceIndex;
@@ -490,8 +490,8 @@ fastUnicode:
 
         /* normal state machine for Unicode mode */
 /* unicodeByteMode: */
-        while(source<sourceLimit) {
-            if(target>=targetLimit) {
+        当(source<sourceLimit) {
+            如果(target>=targetLimit) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                 break;
@@ -500,34 +500,34 @@ fastUnicode:
             ++nextSourceIndex;
             switch(state) {
             case readCommand:
-                if((uint8_t)(b-UC0)>(Urs-UC0)) {
+                如果((uint8_t)(b-UC0)>(Urs-UC0)) {
                     byteOne=b;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=quotePairTwo;
-                } else if(/* UC0<=b && */ b<=UC7) {
+                } 否则 如果(/* UC0<=b && */ b<=UC7) {
                     dynamicWindow=(int8_t)(b-UC0);
                     sourceIndex=nextSourceIndex;
                     isSingleByteMode=true;
                     goto fastSingle;
-                } else if(/* UD0<=b && */ b<=UD7) {
+                } 否则 如果(/* UD0<=b && */ b<=UD7) {
                     dynamicWindow=(int8_t)(b-UD0);
                     isSingleByteMode=true;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=defineOne;
                     goto singleByteMode;
-                } else if(b==UDX) {
+                } 否则 如果(b==UDX) {
                     isSingleByteMode=true;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=definePairOne;
                     goto singleByteMode;
-                } else if(b==UQU) {
+                } 否则 如果(b==UQU) {
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=quotePairOne;
-                } else /* Urs */ {
+                } 否则 /* Urs */ {
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                     cnv->toUBytes[0]=b;
@@ -543,7 +543,7 @@ fastUnicode:
                 break;
             case quotePairTwo:
                 *target++=(char16_t)((byteOne<<8)|b);
-                if(offsets!=nullptr) {
+                如果(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 sourceIndex=nextSourceIndex;
@@ -555,10 +555,10 @@ fastUnicode:
 endloop:
 
     /* set the converter state back into UConverter */
-    if(U_FAILURE(*pErrorCode) && *pErrorCode!=U_BUFFER_OVERFLOW_ERROR) {
+    如果(U_FAILURE(*pErrorCode) && *pErrorCode!=U_BUFFER_OVERFLOW_ERROR) {
         /* reset to deal with the next character */
         state=readCommand;
-    } else if(state==readCommand) {
+    } 否则 如果(state==readCommand) {
         /* not in a multi-byte sequence, reset toULength */
         cnv->toULength=0;
     }
@@ -630,26 +630,26 @@ _SCSUToUnicode(UConverterToUnicodeArgs *pArgs,
      * The callback handling is done by returning with an error code.
      * The conversion framework actually calls the callback function.
      */
-    if(isSingleByteMode) {
+    如果(isSingleByteMode) {
         /* fast path for single-byte mode */
-        if(state==readCommand) {
+        如果(state==readCommand) {
 fastSingle:
-            while(source<sourceLimit && target<targetLimit && (b=*source)>=0x20) {
+            当(source<sourceLimit && target<targetLimit && (b=*source)>=0x20) {
                 ++source;
-                if(b<=0x7f) {
+                如果(b<=0x7f) {
                     /* write US-ASCII graphic character or DEL */
                     *target++=(char16_t)b;
-                } else {
+                } 否则 {
                     /* write from dynamic window */
                     uint32_t c=scsu->toUDynamicOffsets[dynamicWindow]+(b&0x7f);
-                    if(c<=0xffff) {
+                    如果(c<=0xffff) {
                         *target++=(char16_t)c;
-                    } else {
+                    } 否则 {
                         /* output surrogate pair */
                         *target++=(char16_t)(0xd7c0+(c>>10));
-                        if(target<targetLimit) {
+                        如果(target<targetLimit) {
                             *target++=(char16_t)(0xdc00|(c&0x3ff));
-                        } else {
+                        } 否则 {
                             /* target overflow */
                             cnv->UCharErrorBuffer[0]=(char16_t)(0xdc00|(c&0x3ff));
                             cnv->UCharErrorBufferLength=1;
@@ -663,8 +663,8 @@ fastSingle:
 
         /* normal state machine for single-byte mode, minus handling for what fastSingle covers */
 singleByteMode:
-        while(source<sourceLimit) {
-            if(target>=targetLimit) {
+        当(source<sourceLimit) {
+            如果(target>=targetLimit) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                 break;
@@ -674,29 +674,29 @@ singleByteMode:
             case readCommand:
                 /* redundant conditions are commented out */
                 /* here: b<0x20 because otherwise we would be in fastSingle */
-                if((1UL<<b)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
+                如果((1UL<<b)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
                     /* CR/LF/TAB/NUL */
                     *target++=(char16_t)b;
                     goto fastSingle;
-                } else if(SC0<=b) {
-                    if(b<=SC7) {
+                } 否则 如果(SC0<=b) {
+                    如果(b<=SC7) {
                         dynamicWindow=(int8_t)(b-SC0);
                         goto fastSingle;
-                    } else /* if(SD0<=b && b<=SD7) */ {
+                    } 否则 /* if(SD0<=b && b<=SD7) */ {
                         dynamicWindow=(int8_t)(b-SD0);
                         state=defineOne;
                     }
-                } else if(/* SQ0<=b && */ b<=SQ7) {
+                } 否则 如果(/* SQ0<=b && */ b<=SQ7) {
                     quoteWindow=(int8_t)(b-SQ0);
                     state=quoteOne;
-                } else if(b==SDX) {
+                } 否则 如果(b==SDX) {
                     state=definePairOne;
-                } else if(b==SQU) {
+                } 否则 如果(b==SQU) {
                     state=quotePairOne;
-                } else if(b==SCU) {
+                } 否则 如果(b==SCU) {
                     isSingleByteMode=false;
                     goto fastUnicode;
-                } else /* Srs */ {
+                } 否则 /* Srs */ {
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                     cnv->toUBytes[0]=b;
@@ -719,20 +719,20 @@ singleByteMode:
                 state=readCommand;
                 goto fastSingle;
             case quoteOne:
-                if(b<0x80) {
+                如果(b<0x80) {
                     /* all static offsets are in the BMP */
                     *target++=(char16_t)(staticOffsets[quoteWindow]+b);
-                } else {
+                } 否则 {
                     /* write from dynamic window */
                     uint32_t c=scsu->toUDynamicOffsets[quoteWindow]+(b&0x7f);
-                    if(c<=0xffff) {
+                    如果(c<=0xffff) {
                         *target++=(char16_t)c;
-                    } else {
+                    } 否则 {
                         /* output surrogate pair */
                         *target++=(char16_t)(0xd7c0+(c>>10));
-                        if(target<targetLimit) {
+                        如果(target<targetLimit) {
                             *target++=(char16_t)(0xdc00|(c&0x3ff));
-                        } else {
+                        } 否则 {
                             /* target overflow */
                             cnv->UCharErrorBuffer[0]=(char16_t)(0xdc00|(c&0x3ff));
                             cnv->UCharErrorBufferLength=1;
@@ -755,18 +755,18 @@ singleByteMode:
                 state=readCommand;
                 goto fastSingle;
             case defineOne:
-                if(b==0) {
+                如果(b==0) {
                     /* callback(illegal): Reserved window offset value 0 */
                     cnv->toUBytes[1]=b;
                     cnv->toULength=2;
                     goto endloop;
-                } else if(b<gapThreshold) {
+                } 否则 如果(b<gapThreshold) {
                     scsu->toUDynamicOffsets[dynamicWindow]=b<<7UL;
-                } else if((uint8_t)(b-gapThreshold)<(reservedStart-gapThreshold)) {
+                } 否则 如果((uint8_t)(b-gapThreshold)<(reservedStart-gapThreshold)) {
                     scsu->toUDynamicOffsets[dynamicWindow]=(b<<7UL)+gapOffset;
-                } else if(b>=fixedThreshold) {
+                } 否则 如果(b>=fixedThreshold) {
                     scsu->toUDynamicOffsets[dynamicWindow]=fixedOffsets[b-fixedThreshold];
-                } else {
+                } 否则 {
                     /* callback(illegal): Reserved window offset value 0xa8..0xf8 */
                     cnv->toUBytes[1]=b;
                     cnv->toULength=2;
@@ -776,11 +776,11 @@ singleByteMode:
                 goto fastSingle;
             }
         }
-    } else {
+    } 否则 {
         /* fast path for Unicode mode */
-        if(state==readCommand) {
+        如果(state==readCommand) {
 fastUnicode:
-            while(source+1<sourceLimit && target<targetLimit && (uint8_t)((b=*source)-UC0)>(Urs-UC0)) {
+            当(source+1<sourceLimit && target<targetLimit && (uint8_t)((b=*source)-UC0)>(Urs-UC0)) {
                 *target++=(char16_t)((b<<8)|source[1]);
                 source+=2;
             }
@@ -788,8 +788,8 @@ fastUnicode:
 
         /* normal state machine for Unicode mode */
 /* unicodeByteMode: */
-        while(source<sourceLimit) {
-            if(target>=targetLimit) {
+        当(source<sourceLimit) {
+            如果(target>=targetLimit) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                 break;
@@ -797,33 +797,33 @@ fastUnicode:
             b=*source++;
             switch(state) {
             case readCommand:
-                if((uint8_t)(b-UC0)>(Urs-UC0)) {
+                如果((uint8_t)(b-UC0)>(Urs-UC0)) {
                     byteOne=b;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=quotePairTwo;
-                } else if(/* UC0<=b && */ b<=UC7) {
+                } 否则 如果(/* UC0<=b && */ b<=UC7) {
                     dynamicWindow=(int8_t)(b-UC0);
                     isSingleByteMode=true;
                     goto fastSingle;
-                } else if(/* UD0<=b && */ b<=UD7) {
+                } 否则 如果(/* UD0<=b && */ b<=UD7) {
                     dynamicWindow=(int8_t)(b-UD0);
                     isSingleByteMode=true;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=defineOne;
                     goto singleByteMode;
-                } else if(b==UDX) {
+                } 否则 如果(b==UDX) {
                     isSingleByteMode=true;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=definePairOne;
                     goto singleByteMode;
-                } else if(b==UQU) {
+                } 否则 如果(b==UQU) {
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=quotePairOne;
-                } else /* Urs */ {
+                } 否则 /* Urs */ {
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                     cnv->toUBytes[0]=b;
@@ -847,10 +847,10 @@ fastUnicode:
 endloop:
 
     /* set the converter state back into UConverter */
-    if(U_FAILURE(*pErrorCode) && *pErrorCode!=U_BUFFER_OVERFLOW_ERROR) {
+    如果(U_FAILURE(*pErrorCode) && *pErrorCode!=U_BUFFER_OVERFLOW_ERROR) {
         /* reset to deal with the next character */
         state=readCommand;
-    } else if(state==readCommand) {
+    } 否则 如果(state==readCommand) {
         /* not in a multi-byte sequence, reset toULength */
         cnv->toULength=0;
     }
@@ -881,19 +881,19 @@ U_CDECL_END
 /* get the number of the window that this character is in, or -1 */
 static int8_t
 getWindow(const uint32_t offsets[8], uint32_t c) {
-    int i;
-    for(i=0; i<8; ++i) {
-        if (c - offsets[i] <= 0x7f) {
-            return static_cast<int8_t>(i);
+    整数 i;
+    为(i=0; i<8; ++i) {
+        如果 (c - offsets[i] <= 0x7f) {
+            返回 static_cast<int8_t>(i);
         }
     }
-    return -1;
+    返回 -1;
 }
 
 /* is the character in the dynamic window starting at the offset, or in the direct-encoded range? */
 static UBool
 isInOffsetWindowOrDirect(uint32_t offset, uint32_t c) {
-    return c<=offset+0x7f &&
+    返回 c<=offset+0x7f &&
           (c>=offset || (c<=0x7f &&
                         (c>=0x20 || (1UL<<c)&0x2601)));
                                 /* binary 0010 0110 0000 0001,
@@ -906,10 +906,10 @@ isInOffsetWindowOrDirect(uint32_t offset, uint32_t c) {
 static int8_t
 getNextDynamicWindow(SCSUData *scsu) {
     int8_t window=scsu->windowUse[scsu->nextWindowUseIndex];
-    if(++scsu->nextWindowUseIndex==8) {
+    如果(++scsu->nextWindowUseIndex==8) {
         scsu->nextWindowUseIndex=0;
     }
-    return window;
+    返回 window;
 }
 
 /*
@@ -926,24 +926,24 @@ useDynamicWindow(SCSUData *scsu, int8_t window) {
      */
 
     /* first, find the index of the window - backwards to favor the more recently used windows */
-    int i, j;
+    整数 i, j;
 
     i=scsu->nextWindowUseIndex;
     do {
-        if(--i<0) {
+        如果(--i<0) {
             i=7;
         }
-    } while(scsu->windowUse[i]!=window);
+    } 当(scsu->windowUse[i]!=window);
 
     /* now copy each windowUse[i+1] to [i] */
     j=i+1;
-    if(j==8) {
+    如果(j==8) {
         j=0;
     }
-    while(j!=scsu->nextWindowUseIndex) {
+    当(j!=scsu->nextWindowUseIndex) {
         scsu->windowUse[i]=scsu->windowUse[j];
         i=j;
-        if(++j==8) { j=0; }
+        如果(++j==8) { j=0; }
     }
 
     /* finally, set the window into the most recently used index */
@@ -958,33 +958,33 @@ useDynamicWindow(SCSUData *scsu, int8_t window) {
  *
  * return offset code: -1 none  <=0xff code for SDn/UDn  else code for SDX/UDX, subtract 0x200 to get the true code
  */
-static int
+static 整数
 getDynamicOffset(uint32_t c, uint32_t *pOffset) {
-    int i;
+    整数 i;
 
-    for(i=0; i<7; ++i) {
-        if (c - fixedOffsets[i] <= 0x7f) {
+    为(i=0; i<7; ++i) {
+        如果 (c - fixedOffsets[i] <= 0x7f) {
             *pOffset=fixedOffsets[i];
-            return 0xf9+i;
+            返回 0xf9+i;
         }
     }
 
-    if(c<0x80) {
+    如果(c<0x80) {
         /* No dynamic window for US-ASCII. */
-        return -1;
-    } else if(c<0x3400 ||
+        返回 -1;
+    } 否则 如果(c<0x3400 ||
               c - 0x10000 < 0x14000 - 0x10000 ||
               c - 0x1d000 <= 0x1ffff - 0x1d000
     ) {
         /* This character is in a code range for a "small", i.e., reasonably windowable, script. */
         *pOffset=c&0x7fffff80;
-        return static_cast<int>(c >> 7);
-    } else if(0xe000<=c && c!=0xfeff && c<0xfff0) {
+        返回 static_cast<整数>(c >> 7);
+    } 否则 如果(0xe000<=c && c!=0xfeff && c<0xfff0) {
         /* For these characters we need to take the gapOffset into account. */
         *pOffset=c&0x7fffff80;
-        return static_cast<int>((c - gapOffset) >> 7);
-    } else {
-        return -1;
+        返回 static_cast<整数>((c - gapOffset) >> 7);
+    } 否则 {
+        返回 -1;
     }
 }
 U_CDECL_BEGIN
@@ -1028,7 +1028,7 @@ _SCSUFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     /* variables for compression heuristics */
     uint32_t offset;
     char16_t lead, trail;
-    int code;
+    整数 code;
     int8_t window;
 
     /* set up the local pointers */
@@ -1055,15 +1055,15 @@ _SCSUFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
 
     /* similar conversion "loop" as in toUnicode */
 loop:
-    if(isSingleByteMode) {
-        if(c!=0 && targetCapacity>0) {
+    如果(isSingleByteMode) {
+        如果(c!=0 && targetCapacity>0) {
             goto getTrailSingle;
         }
 
         /* state machine for single-byte mode */
 /* singleByteMode: */
-        while(source<sourceLimit) {
-            if(targetCapacity<=0) {
+        当(source<sourceLimit) {
+            如果(targetCapacity<=0) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                 break;
@@ -1071,58 +1071,58 @@ loop:
             c=*source++;
             ++nextSourceIndex;
 
-            if((c-0x20)<=0x5f) {
+            如果((c-0x20)<=0x5f) {
                 /* pass US-ASCII graphic character through */
                 *target++=(uint8_t)c;
-                if(offsets!=nullptr) {
+                如果(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 --targetCapacity;
-            } else if(c<0x20) {
-                if((1UL<<c)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
+            } 否则 如果(c<0x20) {
+                如果((1UL<<c)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
                     /* CR/LF/TAB/NUL */
                     *target++=(uint8_t)c;
-                    if(offsets!=nullptr) {
+                    如果(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
                     --targetCapacity;
-                } else {
+                } 否则 {
                     /* quote C0 control character */
                     c|=SQ0<<8;
                     length=2;
                     goto outputBytes;
                 }
-            } else if((delta=c-currentOffset)<=0x7f) {
+            } 否则 如果((delta=c-currentOffset)<=0x7f) {
                 /* use the current dynamic window */
                 *target++=(uint8_t)(delta|0x80);
-                if(offsets!=nullptr) {
+                如果(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 --targetCapacity;
-            } else if(U16_IS_SURROGATE(c)) {
-                if(U16_IS_SURROGATE_LEAD(c)) {
+            } 否则 如果(U16_IS_SURROGATE(c)) {
+                如果(U16_IS_SURROGATE_LEAD(c)) {
 getTrailSingle:
                     lead=(char16_t)c;
-                    if(source<sourceLimit) {
+                    如果(source<sourceLimit) {
                         /* test the following code unit */
                         trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
+                        如果(U16_IS_TRAIL(trail)) {
                             ++source;
                             ++nextSourceIndex;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
                             /* convert this surrogate code point */
                             /* exit this condition tree */
-                        } else {
+                        } 否则 {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                             goto endloop;
                         }
-                    } else {
+                    } 否则 {
                         /* no more input */
                         break;
                     }
-                } else {
+                } 否则 {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
@@ -1130,14 +1130,14 @@ getTrailSingle:
                 }
 
                 /* compress supplementary character U+10000..U+10ffff */
-                if((delta=c-currentOffset)<=0x7f) {
+                如果((delta=c-currentOffset)<=0x7f) {
                     /* use the current dynamic window */
                     *target++=(uint8_t)(delta|0x80);
-                    if(offsets!=nullptr) {
+                    如果(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
                     --targetCapacity;
-                } else if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                } 否则 如果((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
                     /* there is a dynamic window that contains this character, change to it */
                     dynamicWindow=window;
                     currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
@@ -1145,7 +1145,7 @@ getTrailSingle:
                     c=((uint32_t)(SC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                     length=2;
                     goto outputBytes;
-                } else if((code=getDynamicOffset(c, &offset))>=0) {
+                } 否则 如果((code=getDynamicOffset(c, &offset))>=0) {
                     /* might check if there are more characters in this window to come */
                     /* define an extended window with this character */
                     code-=0x200;
@@ -1155,11 +1155,11 @@ getTrailSingle:
                     c=((uint32_t)SDX<<24)|((uint32_t)dynamicWindow<<21)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                     length=4;
                     goto outputBytes;
-                } else {
+                } 否则 {
                     /* change to Unicode mode and output this (lead, trail) pair */
                     isSingleByteMode=false;
                     *target++=(uint8_t)SCU;
-                    if(offsets!=nullptr) {
+                    如果(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
                     --targetCapacity;
@@ -1167,21 +1167,21 @@ getTrailSingle:
                     length=4;
                     goto outputBytes;
                 }
-            } else if(c<0xa0) {
+            } 否则 如果(c<0xa0) {
                 /* quote C1 control character */
                 c=(c&0x7f)|(SQ0+1)<<8; /* SQ0+1==SQ1 */
                 length=2;
                 goto outputBytes;
-            } else if(c==0xfeff || c>=0xfff0) {
+            } 否则 如果(c==0xfeff || c>=0xfff0) {
                 /* quote signature character=byte order mark and specials */
                 c|=SQU<<16;
                 length=3;
                 goto outputBytes;
-            } else {
+            } 否则 {
                 /* compress all other BMP characters */
-                if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                如果((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
                     /* there is a window defined that contains this character - switch to it or quote from it? */
-                    if(source>=sourceLimit || isInOffsetWindowOrDirect(scsu->fromUDynamicOffsets[window], *source)) {
+                    如果(source>=sourceLimit || isInOffsetWindowOrDirect(scsu->fromUDynamicOffsets[window], *source)) {
                         /* change to dynamic window */
                         dynamicWindow=window;
                         currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
@@ -1189,18 +1189,18 @@ getTrailSingle:
                         c=((uint32_t)(SC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                         length=2;
                         goto outputBytes;
-                    } else {
+                    } 否则 {
                         /* quote from dynamic window */
                         c=((uint32_t)(SQ0+window)<<8)|(c-scsu->fromUDynamicOffsets[window])|0x80;
                         length=2;
                         goto outputBytes;
                     }
-                } else if((window=getWindow(staticOffsets, c))>=0) {
+                } 否则 如果((window=getWindow(staticOffsets, c))>=0) {
                     /* quote from static window */
                     c=((uint32_t)(SQ0+window)<<8)|(c-staticOffsets[window]);
                     length=2;
                     goto outputBytes;
-                } else if((code=getDynamicOffset(c, &offset))>=0) {
+                } 否则 如果((code=getDynamicOffset(c, &offset))>=0) {
                     /* define a dynamic window with this character */
                     dynamicWindow=getNextDynamicWindow(scsu);
                     currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
@@ -1208,7 +1208,7 @@ getTrailSingle:
                     c=((uint32_t)(SD0+dynamicWindow)<<16)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                     length=3;
                     goto outputBytes;
-                } else if ((c - 0x3400) < (0xd800 - 0x3400) &&
+                } 否则 如果 ((c - 0x3400) < (0xd800 - 0x3400) &&
                            (source >= sourceLimit || (uint32_t)(*source - 0x3400) < (0xd800 - 0x3400))
                 ) {
                     /*
@@ -1220,7 +1220,7 @@ getTrailSingle:
                     c|=SCU<<16;
                     length=3;
                     goto outputBytes;
-                } else {
+                } 否则 {
                     /* quote Unicode */
                     c|=SQU<<16;
                     length=3;
@@ -1232,15 +1232,15 @@ getTrailSingle:
             c=0;
             sourceIndex=nextSourceIndex;
         }
-    } else {
-        if(c!=0 && targetCapacity>0) {
+    } 否则 {
+        如果(c!=0 && targetCapacity>0) {
             goto getTrailUnicode;
         }
 
         /* state machine for Unicode mode */
 /* unicodeByteMode: */
-        while(source<sourceLimit) {
-            if(targetCapacity<=0) {
+        当(source<sourceLimit) {
+            如果(targetCapacity<=0) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                 break;
@@ -1248,30 +1248,30 @@ getTrailSingle:
             c=*source++;
             ++nextSourceIndex;
 
-            if ((c - 0x3400) < (0xd800 - 0x3400)) {
+            如果 ((c - 0x3400) < (0xd800 - 0x3400)) {
                 /* not compressible, write character directly */
-                if(targetCapacity>=2) {
+                如果(targetCapacity>=2) {
                     *target++=(uint8_t)(c>>8);
                     *target++=(uint8_t)c;
-                    if(offsets!=nullptr) {
+                    如果(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                         *offsets++=sourceIndex;
                     }
                     targetCapacity-=2;
-                } else {
+                } 否则 {
                     length=2;
                     goto outputBytes;
                 }
-            } else if (c - 0x3400 >= 0xf300 - 0x3400 /* c<0x3400 || c>=0xf300 */) {
+            } 否则 如果 (c - 0x3400 >= 0xf300 - 0x3400 /* c<0x3400 || c>=0xf300 */) {
                 /* compress BMP character if the following one is not an uncompressible ideograph */
-                if(!(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))) {
-                    if (c - 0x30 < 10 || c - 0x61 < 26 || c - 0x41 < 26) {
+                如果(!(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))) {
+                    如果 (c - 0x30 < 10 || c - 0x61 < 26 || c - 0x41 < 26) {
                         /* ASCII digit or letter */
                         isSingleByteMode=true;
                         c|=((uint32_t)(UC0+dynamicWindow)<<8)|c;
                         length=2;
                         goto outputBytes;
-                    } else if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                    } 否则 如果((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
                         /* there is a dynamic window that contains this character, change to it */
                         isSingleByteMode=true;
                         dynamicWindow=window;
@@ -1280,7 +1280,7 @@ getTrailSingle:
                         c=((uint32_t)(UC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                         length=2;
                         goto outputBytes;
-                    } else if((code=getDynamicOffset(c, &offset))>=0) {
+                    } 否则 如果((code=getDynamicOffset(c, &offset))>=0) {
                         /* define a dynamic window with this character */
                         isSingleByteMode=true;
                         dynamicWindow=getNextDynamicWindow(scsu);
@@ -1295,31 +1295,31 @@ getTrailSingle:
                 /* don't know how to compress this character, just write it directly */
                 length=2;
                 goto outputBytes;
-            } else if(c<0xe000) {
+            } 否则 如果(c<0xe000) {
                 /* c is a surrogate */
-                if(U16_IS_SURROGATE_LEAD(c)) {
+                如果(U16_IS_SURROGATE_LEAD(c)) {
 getTrailUnicode:
                     lead=(char16_t)c;
-                    if(source<sourceLimit) {
+                    如果(source<sourceLimit) {
                         /* test the following code unit */
                         trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
+                        如果(U16_IS_TRAIL(trail)) {
                             ++source;
                             ++nextSourceIndex;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
                             /* convert this surrogate code point */
                             /* exit this condition tree */
-                        } else {
+                        } 否则 {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                             goto endloop;
                         }
-                    } else {
+                    } 否则 {
                         /* no more input */
                         break;
                     }
-                } else {
+                } 否则 {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
@@ -1327,7 +1327,7 @@ getTrailUnicode:
                 }
 
                 /* compress supplementary character */
-                if( (window=getWindow(scsu->fromUDynamicOffsets, c))>=0 &&
+                如果( (window=getWindow(scsu->fromUDynamicOffsets, c))>=0 &&
                     !(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))
                 ) {
                     /*
@@ -1342,7 +1342,7 @@ getTrailUnicode:
                     c=((uint32_t)(UC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                     length=2;
                     goto outputBytes;
-                } else if(source<sourceLimit && lead==*source && /* too lazy to check trail in same window as source[1] */
+                } 否则 如果(source<sourceLimit && lead==*source && /* too lazy to check trail in same window as source[1] */
                           (code=getDynamicOffset(c, &offset))>=0
                 ) {
                     /* two supplementary characters in (probably) the same window - define an extended one */
@@ -1354,13 +1354,13 @@ getTrailUnicode:
                     c=((uint32_t)UDX<<24)|((uint32_t)dynamicWindow<<21)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                     length=4;
                     goto outputBytes;
-                } else {
+                } 否则 {
                     /* don't know how to compress this character, just write it directly */
                     c=((uint32_t)lead<<16)|trail;
                     length=4;
                     goto outputBytes;
                 }
-            } else /* 0xe000<=c<0xf300 */ {
+            } 否则 /* 0xe000<=c<0xf300 */ {
                 /* quote to avoid SCSU tags */
                 c|=UQU<<16;
                 length=3;
@@ -1384,13 +1384,13 @@ endloop:
     pArgs->source=source;
     pArgs->target=(char *)target;
     pArgs->offsets=offsets;
-    return;
+    返回;
 
 outputBytes:
     /* write the output character bytes from c and length [code copied from ucnvmbcs.c] */
     /* from the first if in the loop we know that targetCapacity>0 */
-    if(length<=targetCapacity) {
-        if(offsets==nullptr) {
+    如果(length<=targetCapacity) {
+        如果(offsets==nullptr) {
             switch(length) {
                 /* each branch falls through to the next one */
             case 4:
@@ -1409,7 +1409,7 @@ outputBytes:
                 /* will never occur */
                 break;
             }
-        } else {
+        } 否则 {
             switch(length) {
                 /* each branch falls through to the next one */
             case 4:
@@ -1439,7 +1439,7 @@ outputBytes:
         c=0;
         sourceIndex=nextSourceIndex;
         goto loop;
-    } else {
+    } 否则 {
         uint8_t *p;
 
         /*
@@ -1478,19 +1478,19 @@ outputBytes:
             /* each branch falls through to the next one */
         case 3:
             *target++=(uint8_t)(c>>16);
-            if(offsets!=nullptr) {
+            如果(offsets!=nullptr) {
                 *offsets++=sourceIndex;
             }
             U_FALLTHROUGH;
         case 2:
             *target++=(uint8_t)(c>>8);
-            if(offsets!=nullptr) {
+            如果(offsets!=nullptr) {
                 *offsets++=sourceIndex;
             }
             U_FALLTHROUGH;
         case 1:
             *target++=(uint8_t)c;
-            if(offsets!=nullptr) {
+            如果(offsets!=nullptr) {
                 *offsets++=sourceIndex;
             }
             U_FALLTHROUGH;
@@ -1533,7 +1533,7 @@ _SCSUFromUnicode(UConverterFromUnicodeArgs *pArgs,
     /* variables for compression heuristics */
     uint32_t offset;
     char16_t lead, trail;
-    int code;
+    整数 code;
     int8_t window;
 
     /* set up the local pointers */
@@ -1555,63 +1555,63 @@ _SCSUFromUnicode(UConverterFromUnicodeArgs *pArgs,
 
     /* similar conversion "loop" as in toUnicode */
 loop:
-    if(isSingleByteMode) {
-        if(c!=0 && targetCapacity>0) {
+    如果(isSingleByteMode) {
+        如果(c!=0 && targetCapacity>0) {
             goto getTrailSingle;
         }
 
         /* state machine for single-byte mode */
 /* singleByteMode: */
-        while(source<sourceLimit) {
-            if(targetCapacity<=0) {
+        当(source<sourceLimit) {
+            如果(targetCapacity<=0) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                 break;
             }
             c=*source++;
 
-            if((c-0x20)<=0x5f) {
+            如果((c-0x20)<=0x5f) {
                 /* pass US-ASCII graphic character through */
                 *target++=(uint8_t)c;
                 --targetCapacity;
-            } else if(c<0x20) {
-                if((1UL<<c)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
+            } 否则 如果(c<0x20) {
+                如果((1UL<<c)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
                     /* CR/LF/TAB/NUL */
                     *target++=(uint8_t)c;
                     --targetCapacity;
-                } else {
+                } 否则 {
                     /* quote C0 control character */
                     c|=SQ0<<8;
                     length=2;
                     goto outputBytes;
                 }
-            } else if((delta=c-currentOffset)<=0x7f) {
+            } 否则 如果((delta=c-currentOffset)<=0x7f) {
                 /* use the current dynamic window */
                 *target++=(uint8_t)(delta|0x80);
                 --targetCapacity;
-            } else if(U16_IS_SURROGATE(c)) {
-                if(U16_IS_SURROGATE_LEAD(c)) {
+            } 否则 如果(U16_IS_SURROGATE(c)) {
+                如果(U16_IS_SURROGATE_LEAD(c)) {
 getTrailSingle:
                     lead=(char16_t)c;
-                    if(source<sourceLimit) {
+                    如果(source<sourceLimit) {
                         /* test the following code unit */
                         trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
+                        如果(U16_IS_TRAIL(trail)) {
                             ++source;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
                             /* convert this surrogate code point */
                             /* exit this condition tree */
-                        } else {
+                        } 否则 {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                             goto endloop;
                         }
-                    } else {
+                    } 否则 {
                         /* no more input */
                         break;
                     }
-                } else {
+                } 否则 {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
@@ -1619,11 +1619,11 @@ getTrailSingle:
                 }
 
                 /* compress supplementary character U+10000..U+10ffff */
-                if((delta=c-currentOffset)<=0x7f) {
+                如果((delta=c-currentOffset)<=0x7f) {
                     /* use the current dynamic window */
                     *target++=(uint8_t)(delta|0x80);
                     --targetCapacity;
-                } else if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                } 否则 如果((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
                     /* there is a dynamic window that contains this character, change to it */
                     dynamicWindow=window;
                     currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
@@ -1631,7 +1631,7 @@ getTrailSingle:
                     c=((uint32_t)(SC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                     length=2;
                     goto outputBytes;
-                } else if((code=getDynamicOffset(c, &offset))>=0) {
+                } 否则 如果((code=getDynamicOffset(c, &offset))>=0) {
                     /* might check if there are more characters in this window to come */
                     /* define an extended window with this character */
                     code-=0x200;
@@ -1641,7 +1641,7 @@ getTrailSingle:
                     c=((uint32_t)SDX<<24)|((uint32_t)dynamicWindow<<21)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                     length=4;
                     goto outputBytes;
-                } else {
+                } 否则 {
                     /* change to Unicode mode and output this (lead, trail) pair */
                     isSingleByteMode=false;
                     *target++=(uint8_t)SCU;
@@ -1650,21 +1650,21 @@ getTrailSingle:
                     length=4;
                     goto outputBytes;
                 }
-            } else if(c<0xa0) {
+            } 否则 如果(c<0xa0) {
                 /* quote C1 control character */
                 c=(c&0x7f)|(SQ0+1)<<8; /* SQ0+1==SQ1 */
                 length=2;
                 goto outputBytes;
-            } else if(c==0xfeff || c>=0xfff0) {
+            } 否则 如果(c==0xfeff || c>=0xfff0) {
                 /* quote signature character=byte order mark and specials */
                 c|=SQU<<16;
                 length=3;
                 goto outputBytes;
-            } else {
+            } 否则 {
                 /* compress all other BMP characters */
-                if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                如果((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
                     /* there is a window defined that contains this character - switch to it or quote from it? */
-                    if(source>=sourceLimit || isInOffsetWindowOrDirect(scsu->fromUDynamicOffsets[window], *source)) {
+                    如果(source>=sourceLimit || isInOffsetWindowOrDirect(scsu->fromUDynamicOffsets[window], *source)) {
                         /* change to dynamic window */
                         dynamicWindow=window;
                         currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
@@ -1672,18 +1672,18 @@ getTrailSingle:
                         c=((uint32_t)(SC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                         length=2;
                         goto outputBytes;
-                    } else {
+                    } 否则 {
                         /* quote from dynamic window */
                         c=((uint32_t)(SQ0+window)<<8)|(c-scsu->fromUDynamicOffsets[window])|0x80;
                         length=2;
                         goto outputBytes;
                     }
-                } else if((window=getWindow(staticOffsets, c))>=0) {
+                } 否则 如果((window=getWindow(staticOffsets, c))>=0) {
                     /* quote from static window */
                     c=((uint32_t)(SQ0+window)<<8)|(c-staticOffsets[window]);
                     length=2;
                     goto outputBytes;
-                } else if((code=getDynamicOffset(c, &offset))>=0) {
+                } 否则 如果((code=getDynamicOffset(c, &offset))>=0) {
                     /* define a dynamic window with this character */
                     dynamicWindow=getNextDynamicWindow(scsu);
                     currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
@@ -1691,7 +1691,7 @@ getTrailSingle:
                     c=((uint32_t)(SD0+dynamicWindow)<<16)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                     length=3;
                     goto outputBytes;
-                } else if (c - 0x3400 < 0xd800 - 0x3400 &&
+                } 否则 如果 (c - 0x3400 < 0xd800 - 0x3400 &&
                            (source >= sourceLimit || static_cast<uint32_t>(*source - 0x3400) < 0xd800 - 0x3400)
                 ) {
                     /*
@@ -1703,7 +1703,7 @@ getTrailSingle:
                     c|=SCU<<16;
                     length=3;
                     goto outputBytes;
-                } else {
+                } 否则 {
                     /* quote Unicode */
                     c|=SQU<<16;
                     length=3;
@@ -1714,41 +1714,41 @@ getTrailSingle:
             /* normal end of conversion: prepare for a new character */
             c=0;
         }
-    } else {
-        if(c!=0 && targetCapacity>0) {
+    } 否则 {
+        如果(c!=0 && targetCapacity>0) {
             goto getTrailUnicode;
         }
 
         /* state machine for Unicode mode */
 /* unicodeByteMode: */
-        while(source<sourceLimit) {
-            if(targetCapacity<=0) {
+        当(source<sourceLimit) {
+            如果(targetCapacity<=0) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                 break;
             }
             c=*source++;
 
-            if (c - 0x3400 < 0xd800 - 0x3400) {
+            如果 (c - 0x3400 < 0xd800 - 0x3400) {
                 /* not compressible, write character directly */
-                if(targetCapacity>=2) {
+                如果(targetCapacity>=2) {
                     *target++=(uint8_t)(c>>8);
                     *target++=(uint8_t)c;
                     targetCapacity-=2;
-                } else {
+                } 否则 {
                     length=2;
                     goto outputBytes;
                 }
-            } else if (c - 0x3400 >= 0xf300 - 0x3400 /* c<0x3400 || c>=0xf300 */) {
+            } 否则 如果 (c - 0x3400 >= 0xf300 - 0x3400 /* c<0x3400 || c>=0xf300 */) {
                 /* compress BMP character if the following one is not an uncompressible ideograph */
-                if(!(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))) {
-                    if (c - 0x30 < 10 || c - 0x61 < 26 || c - 0x41 < 26) {
+                如果(!(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))) {
+                    如果 (c - 0x30 < 10 || c - 0x61 < 26 || c - 0x41 < 26) {
                         /* ASCII digit or letter */
                         isSingleByteMode=true;
                         c|=((uint32_t)(UC0+dynamicWindow)<<8)|c;
                         length=2;
                         goto outputBytes;
-                    } else if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                    } 否则 如果((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
                         /* there is a dynamic window that contains this character, change to it */
                         isSingleByteMode=true;
                         dynamicWindow=window;
@@ -1757,7 +1757,7 @@ getTrailSingle:
                         c=((uint32_t)(UC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                         length=2;
                         goto outputBytes;
-                    } else if((code=getDynamicOffset(c, &offset))>=0) {
+                    } 否则 如果((code=getDynamicOffset(c, &offset))>=0) {
                         /* define a dynamic window with this character */
                         isSingleByteMode=true;
                         dynamicWindow=getNextDynamicWindow(scsu);
@@ -1772,30 +1772,30 @@ getTrailSingle:
                 /* don't know how to compress this character, just write it directly */
                 length=2;
                 goto outputBytes;
-            } else if(c<0xe000) {
+            } 否则 如果(c<0xe000) {
                 /* c is a surrogate */
-                if(U16_IS_SURROGATE_LEAD(c)) {
+                如果(U16_IS_SURROGATE_LEAD(c)) {
 getTrailUnicode:
                     lead=(char16_t)c;
-                    if(source<sourceLimit) {
+                    如果(source<sourceLimit) {
                         /* test the following code unit */
                         trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
+                        如果(U16_IS_TRAIL(trail)) {
                             ++source;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
                             /* convert this surrogate code point */
                             /* exit this condition tree */
-                        } else {
+                        } 否则 {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                             goto endloop;
                         }
-                    } else {
+                    } 否则 {
                         /* no more input */
                         break;
                     }
-                } else {
+                } 否则 {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
@@ -1803,7 +1803,7 @@ getTrailUnicode:
                 }
 
                 /* compress supplementary character */
-                if( (window=getWindow(scsu->fromUDynamicOffsets, c))>=0 &&
+                如果( (window=getWindow(scsu->fromUDynamicOffsets, c))>=0 &&
                     !(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))
                 ) {
                     /*
@@ -1818,7 +1818,7 @@ getTrailUnicode:
                     c=((uint32_t)(UC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                     length=2;
                     goto outputBytes;
-                } else if(source<sourceLimit && lead==*source && /* too lazy to check trail in same window as source[1] */
+                } 否则 如果(source<sourceLimit && lead==*source && /* too lazy to check trail in same window as source[1] */
                           (code=getDynamicOffset(c, &offset))>=0
                 ) {
                     /* two supplementary characters in (probably) the same window - define an extended one */
@@ -1830,13 +1830,13 @@ getTrailUnicode:
                     c=((uint32_t)UDX<<24)|((uint32_t)dynamicWindow<<21)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                     length=4;
                     goto outputBytes;
-                } else {
+                } 否则 {
                     /* don't know how to compress this character, just write it directly */
                     c=((uint32_t)lead<<16)|trail;
                     length=4;
                     goto outputBytes;
                 }
-            } else /* 0xe000<=c<0xf300 */ {
+            } 否则 /* 0xe000<=c<0xf300 */ {
                 /* quote to avoid SCSU tags */
                 c|=UQU<<16;
                 length=3;
@@ -1858,12 +1858,12 @@ endloop:
     /* write back the updated pointers */
     pArgs->source=source;
     pArgs->target=(char *)target;
-    return;
+    返回;
 
 outputBytes:
     /* write the output character bytes from c and length [code copied from ucnvmbcs.c] */
     /* from the first if in the loop we know that targetCapacity>0 */
-    if(length<=targetCapacity) {
+    如果(length<=targetCapacity) {
         switch(length) {
             /* each branch falls through to the next one */
         case 4:
@@ -1887,7 +1887,7 @@ outputBytes:
         /* normal end of conversion: prepare for a new character */
         c=0;
         goto loop;
-    } else {
+    } 否则 {
         uint8_t *p;
 
         /*
@@ -1953,9 +1953,9 @@ _SCSUGetName(const UConverter *cnv) {
 
     switch(scsu->locale) {
     case l_ja:
-        return "SCSU,locale=ja";
+        返回 "SCSU,locale=ja";
     default:
-        return "SCSU";
+        返回 "SCSU";
     }
 }
 
@@ -1975,13 +1975,13 @@ _SCSUSafeClone(const UConverter *cnv,
     struct cloneSCSUStruct * localClone;
     int32_t bufferSizeNeeded = sizeof(struct cloneSCSUStruct);
 
-    if (U_FAILURE(*status)){
-        return nullptr;
+    如果 (U_FAILURE(*status)){
+        返回 nullptr;
     }
 
-    if (*pBufferSize == 0){ /* 'preflighting' request - set needed size into *pBufferSize */
+    如果 (*pBufferSize == 0){ /* 'preflighting' request - set needed size into *pBufferSize */
         *pBufferSize = bufferSizeNeeded;
-        return nullptr;
+        返回 nullptr;
     }
 
     localClone = (struct cloneSCSUStruct *)stackBuffer;
@@ -1991,7 +1991,7 @@ _SCSUSafeClone(const UConverter *cnv,
     localClone->cnv.extraInfo = &localClone->mydata;
     localClone->cnv.isExtraLocal = true;
 
-    return &localClone->cnv;
+    返回 &localClone->cnv;
 }
 U_CDECL_END
 

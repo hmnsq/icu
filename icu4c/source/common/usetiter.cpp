@@ -47,22 +47,22 @@ UnicodeSetIterator::~UnicodeSetIterator() {
  * <br>Note also that the codepointEnd is undefined after calling this method.
  */
 UBool UnicodeSetIterator::next() {
-    if (nextElement <= endElement) {
+    如果 (nextElement <= endElement) {
         codepoint = codepointEnd = nextElement++;
         string = nullptr;
-        return true;
+        返回 true;
     }
-    if (range < endRange) {
+    如果 (range < endRange) {
         loadRange(++range);
         codepoint = codepointEnd = nextElement++;
         string = nullptr;
-        return true;
+        返回 true;
     }
 
-    if (nextString >= stringCount) return false;
+    如果 (nextString >= stringCount) 返回 false;
     codepoint = static_cast<UChar32>(IS_STRING); // signal that value is actually a string
     string = static_cast<const UnicodeString*>(set->strings_->elementAt(nextString++));
-    return true;
+    返回 true;
 }
 
 /**
@@ -78,24 +78,24 @@ UBool UnicodeSetIterator::next() {
  */
 UBool UnicodeSetIterator::nextRange() {
     string = nullptr;
-    if (nextElement <= endElement) {
+    如果 (nextElement <= endElement) {
         codepointEnd = endElement;
         codepoint = nextElement;
         nextElement = endElement+1;
-        return true;
+        返回 true;
     }
-    if (range < endRange) {
+    如果 (range < endRange) {
         loadRange(++range);
         codepointEnd = endElement;
         codepoint = nextElement;
         nextElement = endElement+1;
-        return true;
+        返回 true;
     }
 
-    if (nextString >= stringCount) return false;
+    如果 (nextString >= stringCount) 返回 false;
     codepoint = static_cast<UChar32>(IS_STRING); // signal that value is actually a string
     string = static_cast<const UnicodeString*>(set->strings_->elementAt(nextString++));
-    return true;
+    返回 true;
 }
 
 /**
@@ -110,18 +110,18 @@ void UnicodeSetIterator::reset(const UnicodeSet& uSet) {
  * Resets to the start, to allow the iteration to start over again.
  */
 void UnicodeSetIterator::reset() {
-    if (set == nullptr) {
+    如果 (set == nullptr) {
         // Set up indices to empty iteration
         endRange = -1;
         stringCount = 0;
-    } else {
+    } 否则 {
         endRange = set->getRangeCount() - 1;
         stringCount = set->stringsSize();
     }
     range = 0;
     endElement = -1;
     nextElement = 0;            
-    if (endRange >= 0) {
+    如果 (endRange >= 0) {
         loadRange(range);
     }
     nextString = 0;
@@ -135,16 +135,16 @@ void UnicodeSetIterator::loadRange(int32_t iRange) {
 
 
 const UnicodeString& UnicodeSetIterator::getString() U_LIFETIME_BOUND {
-    if (string == nullptr && codepoint != static_cast<UChar32>(IS_STRING)) {
-       if (cpString == nullptr) {
+    如果 (string == nullptr && codepoint != static_cast<UChar32>(IS_STRING)) {
+       如果 (cpString == nullptr) {
           cpString = new UnicodeString();
        }
-       if (cpString != nullptr) {
+       如果 (cpString != nullptr) {
           cpString->setTo(codepoint);
        }
        string = cpString;
     }
-    return *string;
+    返回 *string;
 }
 
 U_NAMESPACE_END

@@ -19,7 +19,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#如果 !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/brkiter.h"
 #include "unicode/locid.h"
@@ -31,12 +31,12 @@ U_NAMESPACE_BEGIN
 
 UnicodeString&
 UnicodeString::toTitle(BreakIterator* iter) U_LIFETIME_BOUND {
-    return toTitle(iter, Locale::getDefault(), 0);
+    返回 toTitle(iter, Locale::getDefault(), 0);
 }
 
 UnicodeString&
 UnicodeString::toTitle(BreakIterator* iter, const Locale& locale) U_LIFETIME_BOUND {
-    return toTitle(iter, locale, 0);
+    返回 toTitle(iter, locale, 0);
 }
 
 UnicodeString&
@@ -46,12 +46,12 @@ UnicodeString::toTitle(BreakIterator* iter,
     LocalPointer<BreakIterator> ownedIter;
     UErrorCode errorCode = U_ZERO_ERROR;
     iter = ustrcase_getTitleBreakIterator(&locale, "", options, iter, ownedIter, errorCode);
-    if (iter == nullptr) {
+    如果 (iter == nullptr) {
         setToBogus();
-        return *this;
+        返回 *this;
     }
     caseMap(ustrcase_getCaseLocale(locale.getBaseName()), options, iter, ustrcase_internalToTitle);
-    return *this;
+    返回 *this;
 }
 
 U_NAMESPACE_END

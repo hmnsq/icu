@@ -24,9 +24,9 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#如果 U_SHOW_CPLUSPLUS_API
 
-#if !UCONFIG_NO_FORMATTING
+#如果 !UCONFIG_NO_FORMATTING
 
 #include "unicode/parseerr.h"
 #include "unicode/unistr.h"
@@ -538,7 +538,7 @@ public:
      * @stable ICU 4.8
      */
     inline bool operator!=(const MessagePattern &other) const {
-        return !operator==(other);
+        返回 !operator==(other);
     }
 
     /**
@@ -552,7 +552,7 @@ public:
      * @stable ICU 4.8
      */
     UMessagePatternApostropheMode getApostropheMode() const {
-        return aposMode;
+        返回 aposMode;
     }
 
     // Java has package-private jdkAposMode() here.
@@ -563,7 +563,7 @@ public:
      * @stable ICU 4.8
      */
     const UnicodeString& getPatternString() const U_LIFETIME_BOUND {
-        return msg;
+        返回 msg;
     }
 
     /**
@@ -572,7 +572,7 @@ public:
      * @stable ICU 4.8
      */
     UBool hasNamedArguments() const {
-        return hasArgNames;
+        返回 hasArgNames;
     }
 
     /**
@@ -581,7 +581,7 @@ public:
      * @stable ICU 4.8
      */
     UBool hasNumberedArguments() const {
-        return hasArgNumbers;
+        返回 hasArgNumbers;
     }
 
     /**
@@ -618,7 +618,7 @@ public:
      * @stable ICU 4.8
      */
     int32_t countParts() const {
-        return partsLength;
+        返回 partsLength;
     }
 
     /**
@@ -628,7 +628,7 @@ public:
      * @stable ICU 4.8
      */
     const Part& getPart(int32_t i) const U_LIFETIME_BOUND {
-        return parts[i];
+        返回 parts[i];
     }
 
     /**
@@ -639,7 +639,7 @@ public:
      * @stable ICU 4.8
      */
     UMessagePatternPartType getPartType(int32_t i) const {
-        return getPart(i).type;
+        返回 getPart(i).type;
     }
 
     /**
@@ -650,7 +650,7 @@ public:
      * @stable ICU 4.8
      */
     int32_t getPatternIndex(int32_t partIndex) const {
-        return getPart(partIndex).index;
+        返回 getPart(partIndex).index;
     }
 
     /**
@@ -661,7 +661,7 @@ public:
      * @stable ICU 4.8
      */
     UnicodeString getSubstring(const Part& part) const U_LIFETIME_BOUND {
-        return msg.tempSubString(part.index, part.length);
+        返回 msg.tempSubString(part.index, part.length);
     }
 
     /**
@@ -672,7 +672,7 @@ public:
      * @stable ICU 4.8
      */
     UBool partSubstringMatches(const Part &part, const UnicodeString &s) const {
-        return 0==msg.compare(part.index, part.length, s);
+        返回 0==msg.compare(part.index, part.length, s);
     }
 
     /**
@@ -701,10 +701,10 @@ public:
      */
     int32_t getLimitPartIndex(int32_t start) const {
         int32_t limit=getPart(start).limitPartIndex;
-        if(limit<start) {
-            return start;
+        如果(limit<start) {
+            返回 start;
         }
-        return limit;
+        返回 limit;
     }
 
     /**
@@ -728,7 +728,7 @@ public:
          * @stable ICU 4.8
          */
         UMessagePatternPartType getType() const {
-            return type;
+            返回 type;
         }
 
         /**
@@ -737,7 +737,7 @@ public:
          * @stable ICU 4.8
          */
         int32_t getIndex() const {
-            return index;
+            返回 index;
         }
 
         /**
@@ -747,7 +747,7 @@ public:
          * @stable ICU 4.8
          */
         int32_t getLength() const {
-            return length;
+            返回 length;
         }
 
         /**
@@ -757,7 +757,7 @@ public:
          * @stable ICU 4.8
          */
         int32_t getLimit() const {
-            return index+length;
+            返回 index+length;
         }
 
         /**
@@ -767,7 +767,7 @@ public:
          * @stable ICU 4.8
          */
         int32_t getValue() const {
-            return value;
+            返回 value;
         }
 
         /**
@@ -778,10 +778,10 @@ public:
          */
         UMessagePatternArgType getArgType() const {
             UMessagePatternPartType msgType=getType();
-            if(msgType ==UMSGPAT_PART_TYPE_ARG_START || msgType ==UMSGPAT_PART_TYPE_ARG_LIMIT) {
-                return static_cast<UMessagePatternArgType>(value);
-            } else {
-                return UMSGPAT_ARG_TYPE_NONE;
+            如果(msgType ==UMSGPAT_PART_TYPE_ARG_START || msgType ==UMSGPAT_PART_TYPE_ARG_LIMIT) {
+                返回 static_cast<UMessagePatternArgType>(value);
+            } 否则 {
+                返回 UMSGPAT_ARG_TYPE_NONE;
             }
         }
 
@@ -793,7 +793,7 @@ public:
          * @stable ICU 4.8
          */
         static UBool hasNumericValue(UMessagePatternPartType type) {
-            return type==UMSGPAT_PART_TYPE_ARG_INT || type==UMSGPAT_PART_TYPE_ARG_DOUBLE;
+            返回 type==UMSGPAT_PART_TYPE_ARG_INT || type==UMSGPAT_PART_TYPE_ARG_DOUBLE;
         }
 
         /**
@@ -809,7 +809,7 @@ public:
          * @stable ICU 4.8
          */
         inline bool operator!=(const Part &other) const {
-            return !operator==(other);
+            返回 !operator==(other);
         }
 
         /**
@@ -817,7 +817,7 @@ public:
          * @stable ICU 4.8
          */
         int32_t hashCode() const {
-            return ((type*37+index)*37+length)*37+value;
+            返回 ((type*37+index)*37+length)*37+value;
         }
 
     private:
@@ -867,7 +867,7 @@ private:
     static int32_t parseArgNumber(const UnicodeString &s, int32_t start, int32_t limit);
 
     int32_t parseArgNumber(int32_t start, int32_t limit) {
-        return parseArgNumber(msg, start, limit);
+        返回 parseArgNumber(msg, start, limit);
     }
 
     /**

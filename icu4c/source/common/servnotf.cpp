@@ -9,7 +9,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#如果 !UCONFIG_NO_SERVICE
 
 #include "servnotf.h"
 #ifdef NOTIFIER_DEBUG
@@ -40,25 +40,25 @@ ICUNotifier::~ICUNotifier() {
 void 
 ICUNotifier::addListener(const EventListener* l, UErrorCode& status) 
 {
-    if (U_SUCCESS(status)) {
-        if (l == nullptr) {
+    如果 (U_SUCCESS(status)) {
+        如果 (l == nullptr) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            返回;
         }
 
-        if (acceptsListener(*l)) {
+        如果 (acceptsListener(*l)) {
             Mutex lmx(&notifyLock);
-            if (listeners == nullptr) {
+            如果 (listeners == nullptr) {
                 LocalPointer<UVector> lpListeners(new UVector(5, status), status);
-                if (U_FAILURE(status)) {
-                    return;
+                如果 (U_FAILURE(status)) {
+                    返回;
                 }
                 listeners = lpListeners.orphan();
-            } else {
-                for (int i = 0, e = listeners->size(); i < e; ++i) {
+            } 否则 {
+                为 (整数 i = 0, e = listeners->size(); i < e; ++i) {
                     const EventListener* el = static_cast<const EventListener*>(listeners->elementAt(i));
-                    if (l == el) {
-                        return;
+                    如果 (l == el) {
+                        返回;
                     }
                 }
             }
@@ -66,7 +66,7 @@ ICUNotifier::addListener(const EventListener* l, UErrorCode& status)
             listeners->addElement((void*)l, status); // cast away const
         }
 #ifdef NOTIFIER_DEBUG
-        else {
+        否则 {
             fprintf(stderr, "Listener invalid for this notifier.");
             exit(1);
         }
@@ -77,25 +77,25 @@ ICUNotifier::addListener(const EventListener* l, UErrorCode& status)
 void 
 ICUNotifier::removeListener(const EventListener *l, UErrorCode& status) 
 {
-    if (U_SUCCESS(status)) {
-        if (l == nullptr) {
+    如果 (U_SUCCESS(status)) {
+        如果 (l == nullptr) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            返回;
         }
 
         {
             Mutex lmx(&notifyLock);
-            if (listeners != nullptr) {
+            如果 (listeners != nullptr) {
                 // identity equality check
-                for (int i = 0, e = listeners->size(); i < e; ++i) {
+                为 (整数 i = 0, e = listeners->size(); i < e; ++i) {
                     const EventListener* el = static_cast<const EventListener*>(listeners->elementAt(i));
-                    if (l == el) {
+                    如果 (l == el) {
                         listeners->removeElementAt(i);
-                        if (listeners->size() == 0) {
+                        如果 (listeners->size() == 0) {
                             delete listeners;
                             listeners = nullptr;
                         }
-                        return;
+                        返回;
                     }
                 }
             }
@@ -107,8 +107,8 @@ void
 ICUNotifier::notifyChanged() 
 {
     Mutex lmx(&notifyLock);
-    if (listeners != nullptr) {
-        for (int i = 0, e = listeners->size(); i < e; ++i) {
+    如果 (listeners != nullptr) {
+        为 (整数 i = 0, e = listeners->size(); i < e; ++i) {
             EventListener* el = static_cast<EventListener*>(listeners->elementAt(i));
             notifyListener(*el);
         }

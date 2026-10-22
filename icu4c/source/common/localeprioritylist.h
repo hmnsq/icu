@@ -58,14 +58,14 @@ class U_COMMON_API LocalePriorityList : public UMemory {
 public:
     class Iterator : public Locale::Iterator {
     public:
-        UBool hasNext() const override { return count < length; }
+        UBool hasNext() const override { 返回 count < length; }
 
         const Locale &next() override {
-            for(;;) {
+            为(;;) {
                 const Locale *locale = list.localeAt(index++);
-                if (locale != nullptr) {
+                如果 (locale != nullptr) {
                     ++count;
-                    return *locale;
+                    返回 *locale;
                 }
             }
         }
@@ -85,11 +85,11 @@ public:
 
     ~LocalePriorityList();
 
-    int32_t getLength() const { return listLength - numRemoved; }
+    int32_t getLength() const { 返回 listLength - numRemoved; }
 
-    int32_t getLengthIncludingRemoved() const { return listLength; }
+    int32_t getLengthIncludingRemoved() const { 返回 listLength; }
 
-    Iterator iterator() const { return Iterator(*this); }
+    Iterator iterator() const { 返回 Iterator(*this); }
 
     const Locale *localeAt(int32_t i) const;
 

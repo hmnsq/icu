@@ -44,10 +44,10 @@ ResourceBundle::constructForLocale(const UnicodeString& path,
                                    const Locale& locale,
                                    UErrorCode& error)
 {
-    if (path.isEmpty()) {
+    如果 (path.isEmpty()) {
         fResource = ures_open(nullptr, locale.getName(), &error);
     }
-    else {
+    否则 {
         UnicodeString nullTerminatedPath(path);
         nullTerminatedPath.append(static_cast<char16_t>(0));
         fResource = ures_openU(nullTerminatedPath.getBuffer(), locale.getName(), &error);

@@ -14,7 +14,7 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#如果 U_SHOW_CPLUSPLUS_API
 
 #include "unicode/uobject.h"
 #include "unicode/unistr.h"
@@ -187,7 +187,7 @@ protected:
      * @stable ICU 2.0
      */
     ForwardCharacterIterator& operator=(const ForwardCharacterIterator&) U_LIFETIME_BOUND {
-        return *this;
+        返回 *this;
     }
 };
 
@@ -696,37 +696,37 @@ protected:
 
 inline bool
 ForwardCharacterIterator::operator!=(const ForwardCharacterIterator& that) const {
-    return !operator==(that);
+    返回 !operator==(that);
 }
 
 inline int32_t
 CharacterIterator::setToStart() {
-    return move(0, kStart);
+    返回 move(0, kStart);
 }
 
 inline int32_t
 CharacterIterator::setToEnd() {
-    return move(0, kEnd);
+    返回 move(0, kEnd);
 }
 
 inline int32_t
 CharacterIterator::startIndex() const {
-    return begin;
+    返回 begin;
 }
 
 inline int32_t
 CharacterIterator::endIndex() const {
-    return end;
+    返回 end;
 }
 
 inline int32_t
 CharacterIterator::getIndex() const {
-    return pos;
+    返回 pos;
 }
 
 inline int32_t
 CharacterIterator::getLength() const {
-    return textLength;
+    返回 textLength;
 }
 
 U_NAMESPACE_END

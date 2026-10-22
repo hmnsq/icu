@@ -76,26 +76,26 @@ StringCharacterIterator::operator=(const StringCharacterIterator& that) U_LIFETI
     text = that.text;
     // we had set the input parameter's array, now we need to set our copy's array
     UCharCharacterIterator::text = this->text.getBuffer();
-    return *this;
+    返回 *this;
 }
 
 bool
 StringCharacterIterator::operator==(const ForwardCharacterIterator& that) const {
-    if (this == &that) {
-        return true;
+    如果 (this == &that) {
+        返回 true;
     }
 
     // do not call UCharCharacterIterator::operator==()
     // because that checks for array pointer equality
     // while we compare UnicodeString objects
 
-    if (typeid(*this) != typeid(that)) {
-        return false;
+    如果 (typeid(*this) != typeid(that)) {
+        返回 false;
     }
 
     const StringCharacterIterator&    realThat = static_cast<const StringCharacterIterator&>(that);
 
-    return text == realThat.text
+    返回 text == realThat.text
         && pos == realThat.pos
         && begin == realThat.begin
         && end == realThat.end;
@@ -103,7 +103,7 @@ StringCharacterIterator::operator==(const ForwardCharacterIterator& that) const 
 
 StringCharacterIterator*
 StringCharacterIterator::clone() const {
-    return new StringCharacterIterator(*this);
+    返回 new StringCharacterIterator(*this);
 }
 
 void

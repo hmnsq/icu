@@ -29,13 +29,13 @@
 
 U_CFUNC int32_t
 ustrcase_getCaseLocale(const char *locale) {
-    if (locale == nullptr) {
+    如果 (locale == nullptr) {
         locale = uloc_getDefault();
     }
-    if (*locale == 0) {
-        return UCASE_LOC_ROOT;
-    } else {
-        return ucase_getCaseLocale(locale);
+    如果 (*locale == 0) {
+        返回 UCASE_LOC_ROOT;
+    } 否则 {
+        返回 ucase_getCaseLocale(locale);
     }
 }
 
@@ -46,7 +46,7 @@ u_strToLower(char16_t *dest, int32_t destCapacity,
              const char16_t *src, int32_t srcLength,
              const char *locale,
              UErrorCode *pErrorCode) {
-    return ustrcase_mapWithOverlap(
+    返回 ustrcase_mapWithOverlap(
         ustrcase_getCaseLocale(locale), 0, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,
@@ -58,7 +58,7 @@ u_strToUpper(char16_t *dest, int32_t destCapacity,
              const char16_t *src, int32_t srcLength,
              const char *locale,
              UErrorCode *pErrorCode) {
-    return ustrcase_mapWithOverlap(
+    返回 ustrcase_mapWithOverlap(
         ustrcase_getCaseLocale(locale), 0, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,
@@ -72,7 +72,7 @@ int32_t CaseMap::toLower(
         const char16_t *src, int32_t srcLength,
         char16_t *dest, int32_t destCapacity, Edits *edits,
         UErrorCode &errorCode) {
-    return ustrcase_map(
+    返回 ustrcase_map(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,
@@ -84,7 +84,7 @@ int32_t CaseMap::toUpper(
         const char16_t *src, int32_t srcLength,
         char16_t *dest, int32_t destCapacity, Edits *edits,
         UErrorCode &errorCode) {
-    return ustrcase_map(
+    返回 ustrcase_map(
         ustrcase_getCaseLocale(locale), options, UCASEMAP_BREAK_ITERATOR_NULL
         dest, destCapacity,
         src, srcLength,

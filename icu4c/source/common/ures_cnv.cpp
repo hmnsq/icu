@@ -35,44 +35,44 @@ ures_openU(const char16_t *myPath,
     int32_t length;
     char *path = pathBuffer;
 
-    if(status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    如果(status==nullptr || U_FAILURE(*status)) {
+        返回 nullptr;
     }
-    if(myPath==nullptr) {
+    如果(myPath==nullptr) {
         path = nullptr;
     }
-    else {
+    否则 {
         length=u_strlen(myPath);
-        if(length>=(int32_t)sizeof(pathBuffer)) {
+        如果(length>=(int32_t)sizeof(pathBuffer)) {
             *status=U_ILLEGAL_ARGUMENT_ERROR;
-            return nullptr;
-        } else if(uprv_isInvariantUString(myPath, length)) {
+            返回 nullptr;
+        } 否则 如果(uprv_isInvariantUString(myPath, length)) {
             /*
              * the invariant converter is sufficient for package and tree names
              * and is more efficient
              */
             u_UCharsToChars(myPath, path, length+1); /* length+1 to include the NUL */
-        } else {
-#if !UCONFIG_NO_CONVERSION
+        } 否则 {
+#如果 !UCONFIG_NO_CONVERSION
             /* use the default converter to support variant-character paths */
             UConverter *cnv=u_getDefaultConverter(status);
             length=ucnv_fromUChars(cnv, path, (int32_t)sizeof(pathBuffer), myPath, length, status);
             u_releaseDefaultConverter(cnv);
-            if(U_FAILURE(*status)) {
-                return nullptr;
+            如果(U_FAILURE(*status)) {
+                返回 nullptr;
             }
-            if(length>=(int32_t)sizeof(pathBuffer)) {
+            如果(length>=(int32_t)sizeof(pathBuffer)) {
                 /* not NUL-terminated - path too long */
                 *status=U_ILLEGAL_ARGUMENT_ERROR;
-                return nullptr;
+                返回 nullptr;
             }
-#else
+#否则
             /* the default converter is not available */
             *status=U_UNSUPPORTED_ERROR;
-            return nullptr;
+            返回 nullptr;
 #endif
         }
     }
 
-    return ures_open(path, localeID, status);
+    返回 ures_open(path, localeID, status);
 }

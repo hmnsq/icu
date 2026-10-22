@@ -53,7 +53,7 @@ _enumPropertyStartsRange(const void *context, UChar32 start, UChar32 end, uint32
     /* add the start code point to the USet */
     const USetAdder* sa = static_cast<const USetAdder*>(context);
     sa->add(sa->set, start);
-    return true;
+    返回 true;
 }
 
 U_CFUNC void
@@ -64,8 +64,8 @@ ubidi_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode) {
     const uint8_t *jgArray;
     uint8_t prev, jg;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    如果(U_FAILURE(*pErrorCode)) {
+        返回;
     }
 
     /* add the start code point of each same-value range of the trie */
@@ -73,7 +73,7 @@ ubidi_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode) {
 
     /* add the code points from the bidi mirroring table */
     length=ubidi_props_singleton.indexes[UBIDI_IX_MIRROR_LENGTH];
-    for(i=0; i<length; ++i) {
+    为(i=0; i<length; ++i) {
         c=UBIDI_GET_MIRROR_CODE_POINT(ubidi_props_singleton.mirrors[i]);
         sa->addRange(sa->set, c, c+1);
     }
@@ -82,26 +82,26 @@ ubidi_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode) {
     start=ubidi_props_singleton.indexes[UBIDI_IX_JG_START];
     limit=ubidi_props_singleton.indexes[UBIDI_IX_JG_LIMIT];
     jgArray=ubidi_props_singleton.jgArray;
-    for(;;) {
+    为(;;) {
         prev=0;
-        while(start<limit) {
+        当(start<limit) {
             jg=*jgArray++;
-            if(jg!=prev) {
+            如果(jg!=prev) {
                 sa->add(sa->set, start);
                 prev=jg;
             }
             ++start;
         }
-        if(prev!=0) {
+        如果(prev!=0) {
             /* add the limit code point if the last value was not 0 (it is now start==limit) */
             sa->add(sa->set, limit);
         }
-        if(limit==ubidi_props_singleton.indexes[UBIDI_IX_JG_LIMIT]) {
+        如果(limit==ubidi_props_singleton.indexes[UBIDI_IX_JG_LIMIT]) {
             /* switch to the second Joining_Group range */
             start=ubidi_props_singleton.indexes[UBIDI_IX_JG_START2];
             limit=ubidi_props_singleton.indexes[UBIDI_IX_JG_LIMIT2];
             jgArray=ubidi_props_singleton.jgArray2;
-        } else {
+        } 否则 {
             break;
         }
     }
@@ -118,36 +118,36 @@ ubidi_getMaxValue(UProperty which) {
     int32_t max=ubidi_props_singleton.indexes[UBIDI_MAX_VALUES_INDEX];
     switch(which) {
     case UCHAR_BIDI_CLASS:
-        return (max&UBIDI_CLASS_MASK);
+        返回 (max&UBIDI_CLASS_MASK);
     case UCHAR_JOINING_GROUP:
-        return (max&UBIDI_MAX_JG_MASK)>>UBIDI_MAX_JG_SHIFT;
+        返回 (max&UBIDI_MAX_JG_MASK)>>UBIDI_MAX_JG_SHIFT;
     case UCHAR_JOINING_TYPE:
-        return (max&UBIDI_JT_MASK)>>UBIDI_JT_SHIFT;
+        返回 (max&UBIDI_JT_MASK)>>UBIDI_JT_SHIFT;
     case UCHAR_BIDI_PAIRED_BRACKET_TYPE:
-        return (max&UBIDI_BPT_MASK)>>UBIDI_BPT_SHIFT;
+        返回 (max&UBIDI_BPT_MASK)>>UBIDI_BPT_SHIFT;
     default:
-        return -1; /* undefined */
+        返回 -1; /* undefined */
     }
 }
 
 U_CAPI UCharDirection
 ubidi_getClass(UChar32 c) {
     uint16_t props=UTRIE2_GET16(&ubidi_props_singleton.trie, c);
-    return (UCharDirection)UBIDI_GET_CLASS(props);
+    返回 (UCharDirection)UBIDI_GET_CLASS(props);
 }
 
 U_CFUNC UBool
 ubidi_isMirrored(UChar32 c) {
     uint16_t props=UTRIE2_GET16(&ubidi_props_singleton.trie, c);
-    return UBIDI_GET_FLAG(props, UBIDI_IS_MIRRORED_SHIFT);
+    返回 UBIDI_GET_FLAG(props, UBIDI_IS_MIRRORED_SHIFT);
 }
 
 static UChar32
 getMirror(UChar32 c, uint16_t props) {
     int32_t delta=UBIDI_GET_MIRROR_DELTA(props);
-    if(delta!=UBIDI_ESC_MIRROR_DELTA) {
-        return c+delta;
-    } else {
+    如果(delta!=UBIDI_ESC_MIRROR_DELTA) {
+        返回 c+delta;
+    } 否则 {
         /* look for mirror code point in the mirrors[] table */
         const uint32_t *mirrors;
         uint32_t m;
@@ -158,44 +158,44 @@ getMirror(UChar32 c, uint16_t props) {
         length=ubidi_props_singleton.indexes[UBIDI_IX_MIRROR_LENGTH];
 
         /* linear search */
-        for(i=0; i<length; ++i) {
+        为(i=0; i<length; ++i) {
             m=mirrors[i];
             c2=UBIDI_GET_MIRROR_CODE_POINT(m);
-            if(c==c2) {
+            如果(c==c2) {
                 /* found c, return its mirror code point using the index in m */
-                return UBIDI_GET_MIRROR_CODE_POINT(mirrors[UBIDI_GET_MIRROR_INDEX(m)]);
-            } else if(c<c2) {
+                返回 UBIDI_GET_MIRROR_CODE_POINT(mirrors[UBIDI_GET_MIRROR_INDEX(m)]);
+            } 否则 如果(c<c2) {
                 break;
             }
         }
 
         /* c not found, return it itself */
-        return c;
+        返回 c;
     }
 }
 
 U_CFUNC UChar32
 ubidi_getMirror(UChar32 c) {
     uint16_t props=UTRIE2_GET16(&ubidi_props_singleton.trie, c);
-    return getMirror(c, props);
+    返回 getMirror(c, props);
 }
 
 U_CFUNC UBool
 ubidi_isBidiControl(UChar32 c) {
     uint16_t props=UTRIE2_GET16(&ubidi_props_singleton.trie, c);
-    return UBIDI_GET_FLAG(props, UBIDI_BIDI_CONTROL_SHIFT);
+    返回 UBIDI_GET_FLAG(props, UBIDI_BIDI_CONTROL_SHIFT);
 }
 
 U_CFUNC UBool
 ubidi_isJoinControl(UChar32 c) {
     uint16_t props=UTRIE2_GET16(&ubidi_props_singleton.trie, c);
-    return UBIDI_GET_FLAG(props, UBIDI_JOIN_CONTROL_SHIFT);
+    返回 UBIDI_GET_FLAG(props, UBIDI_JOIN_CONTROL_SHIFT);
 }
 
 U_CFUNC UJoiningType
 ubidi_getJoiningType(UChar32 c) {
     uint16_t props=UTRIE2_GET16(&ubidi_props_singleton.trie, c);
-    return (UJoiningType)((props&UBIDI_JT_MASK)>>UBIDI_JT_SHIFT);
+    返回 (UJoiningType)((props&UBIDI_JT_MASK)>>UBIDI_JT_SHIFT);
 }
 
 U_CFUNC UJoiningGroup
@@ -204,30 +204,30 @@ ubidi_getJoiningGroup(UChar32 c) {
 
     start=ubidi_props_singleton.indexes[UBIDI_IX_JG_START];
     limit=ubidi_props_singleton.indexes[UBIDI_IX_JG_LIMIT];
-    if(start<=c && c<limit) {
-        return (UJoiningGroup)ubidi_props_singleton.jgArray[c-start];
+    如果(start<=c && c<limit) {
+        返回 (UJoiningGroup)ubidi_props_singleton.jgArray[c-start];
     }
     start=ubidi_props_singleton.indexes[UBIDI_IX_JG_START2];
     limit=ubidi_props_singleton.indexes[UBIDI_IX_JG_LIMIT2];
-    if(start<=c && c<limit) {
-        return (UJoiningGroup)ubidi_props_singleton.jgArray2[c-start];
+    如果(start<=c && c<limit) {
+        返回 (UJoiningGroup)ubidi_props_singleton.jgArray2[c-start];
     }
-    return U_JG_NO_JOINING_GROUP;
+    返回 U_JG_NO_JOINING_GROUP;
 }
 
 U_CFUNC UBidiPairedBracketType
 ubidi_getPairedBracketType(UChar32 c) {
     uint16_t props=UTRIE2_GET16(&ubidi_props_singleton.trie, c);
-    return (UBidiPairedBracketType)((props&UBIDI_BPT_MASK)>>UBIDI_BPT_SHIFT);
+    返回 (UBidiPairedBracketType)((props&UBIDI_BPT_MASK)>>UBIDI_BPT_SHIFT);
 }
 
 U_CFUNC UChar32
 ubidi_getPairedBracket(UChar32 c) {
     uint16_t props=UTRIE2_GET16(&ubidi_props_singleton.trie, c);
-    if((props&UBIDI_BPT_MASK)==0) {
-        return c;
-    } else {
-        return getMirror(c, props);
+    如果((props&UBIDI_BPT_MASK)==0) {
+        返回 c;
+    } 否则 {
+        返回 getMirror(c, props);
     }
 }
 
@@ -235,20 +235,20 @@ ubidi_getPairedBracket(UChar32 c) {
 
 U_CFUNC UCharDirection
 u_charDirection(UChar32 c) {
-    return ubidi_getClass(c);
+    返回 ubidi_getClass(c);
 }
 
 U_CFUNC UBool
 u_isMirrored(UChar32 c) {
-    return ubidi_isMirrored(c);
+    返回 ubidi_isMirrored(c);
 }
 
 U_CFUNC UChar32
 u_charMirror(UChar32 c) {
-    return ubidi_getMirror(c);
+    返回 ubidi_getMirror(c);
 }
 
 U_CAPI UChar32 U_EXPORT2
 u_getBidiPairedBracket(UChar32 c) {
-    return ubidi_getPairedBracket(c);
+    返回 ubidi_getPairedBracket(c);
 }

@@ -70,13 +70,13 @@ public:
     U_COMMON_API CharString &copyFrom(const CharString &other, UErrorCode &errorCode);
     U_COMMON_API CharString &copyFrom(StringPiece s, UErrorCode &errorCode);
 
-    U_COMMON_API UBool isEmpty() const { return len==0; }
-    U_COMMON_API int32_t length() const { return len; }
-    U_COMMON_API char operator[](int32_t index) const { return buffer[index]; }
-    U_COMMON_API StringPiece toStringPiece() const { return StringPiece(buffer.getAlias(), len); }
+    U_COMMON_API UBool isEmpty() const { 返回 len==0; }
+    U_COMMON_API int32_t length() const { 返回 len; }
+    U_COMMON_API char operator[](int32_t index) const { 返回 buffer[index]; }
+    U_COMMON_API StringPiece toStringPiece() const { 返回 StringPiece(buffer.getAlias(), len); }
 
-    U_COMMON_API const char *data() const { return buffer.getAlias(); }
-    U_COMMON_API char *data() { return buffer.getAlias(); }
+    U_COMMON_API const char *data() const { 返回 buffer.getAlias(); }
+    U_COMMON_API char *data() { 返回 buffer.getAlias(); }
     /**
      * Allocates length()+1 chars and copies the NUL-terminated data().
      * The caller must uprv_free() the result.
@@ -100,17 +100,17 @@ public:
     U_COMMON_API int32_t extract(char *dest, int32_t capacity, UErrorCode &errorCode) const;
 
     U_COMMON_API bool operator==(const CharString& other) const {
-        return len == other.length() && (len == 0 || uprv_memcmp(data(), other.data(), len) == 0);
+        返回 len == other.length() && (len == 0 || uprv_memcmp(data(), other.data(), len) == 0);
     }
     U_COMMON_API bool operator!=(const CharString& other) const {
-        return !operator==(other);
+        返回 !operator==(other);
     }
 
     U_COMMON_API bool operator==(StringPiece other) const {
-        return len == other.length() && (len == 0 || uprv_memcmp(data(), other.data(), len) == 0);
+        返回 len == other.length() && (len == 0 || uprv_memcmp(data(), other.data(), len) == 0);
     }
     U_COMMON_API bool operator!=(StringPiece other) const {
-        return !operator==(other);
+        返回 !operator==(other);
     }
 
     /** @return last index of c, or -1 if c is not in this string */
@@ -118,15 +118,15 @@ public:
 
     U_COMMON_API bool contains(StringPiece s) const;
 
-    U_COMMON_API CharString &clear() { len=0; buffer[0]=0; return *this; }
+    U_COMMON_API CharString &clear() { len=0; buffer[0]=0; 返回 *this; }
     U_COMMON_API CharString &truncate(int32_t newLength);
 
     U_COMMON_API CharString &append(char c, UErrorCode &errorCode);
     U_COMMON_API CharString &append(StringPiece s, UErrorCode &errorCode) {
-        return append(s.data(), s.length(), errorCode);
+        返回 append(s.data(), s.length(), errorCode);
     }
     U_COMMON_API CharString &append(const CharString &s, UErrorCode &errorCode) {
-        return append(s.data(), s.length(), errorCode);
+        返回 append(s.data(), s.length(), errorCode);
     }
     U_COMMON_API CharString &append(const char *s, int32_t sLength, UErrorCode &status);
 

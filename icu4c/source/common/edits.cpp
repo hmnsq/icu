@@ -36,62 +36,62 @@ const int32_t LENGTH_IN_2TRAIL = 62;
 }  // namespace
 
 void Edits::releaseArray() noexcept {
-    if (array != stackArray) {
+    如果 (array != stackArray) {
         uprv_free(array);
     }
 }
 
 Edits& Edits::copyArray(const Edits& other) U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode_)) {
+    如果 (U_FAILURE(errorCode_)) {
         length = delta = numChanges = 0;
-        return *this;
+        返回 *this;
     }
-    if (length > capacity) {
+    如果 (length > capacity) {
         uint16_t* newArray = static_cast<uint16_t*>(uprv_malloc(static_cast<size_t>(length) * 2));
-        if (newArray == nullptr) {
+        如果 (newArray == nullptr) {
             length = delta = numChanges = 0;
             errorCode_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+            返回 *this;
         }
         releaseArray();
         array = newArray;
         capacity = length;
     }
-    if (length > 0) {
+    如果 (length > 0) {
         uprv_memcpy(array, other.array, (size_t)length * 2);
     }
-    return *this;
+    返回 *this;
 }
 
 Edits& Edits::moveArray(Edits& src) noexcept U_LIFETIME_BOUND {
-    if (U_FAILURE(errorCode_)) {
+    如果 (U_FAILURE(errorCode_)) {
         length = delta = numChanges = 0;
-        return *this;
+        返回 *this;
     }
     releaseArray();
-    if (length > STACK_CAPACITY) {
+    如果 (length > STACK_CAPACITY) {
         array = src.array;
         capacity = src.capacity;
         src.array = src.stackArray;
         src.capacity = STACK_CAPACITY;
         src.reset();
-        return *this;
+        返回 *this;
     }
     array = stackArray;
     capacity = STACK_CAPACITY;
-    if (length > 0) {
+    如果 (length > 0) {
         uprv_memcpy(array, src.array, (size_t)length * 2);
     }
-    return *this;
+    返回 *this;
 }
 
 Edits& Edits::operator=(const Edits& other) U_LIFETIME_BOUND {
-    if (this == &other) { return *this; }  // self-assignment: no-op
+    如果 (this == &other) { 返回 *this; }  // self-assignment: no-op
     length = other.length;
     delta = other.delta;
     numChanges = other.numChanges;
     errorCode_ = other.errorCode_;
-    return copyArray(other);
+    返回 copyArray(other);
 }
 
 Edits& Edits::operator=(Edits&& src) noexcept U_LIFETIME_BOUND {
@@ -99,7 +99,7 @@ Edits& Edits::operator=(Edits&& src) noexcept U_LIFETIME_BOUND {
     delta = src.delta;
     numChanges = src.numChanges;
     errorCode_ = src.errorCode_;
-    return moveArray(src);
+    返回 moveArray(src);
 }
 
 Edits::~Edits() {
@@ -112,92 +112,92 @@ void Edits::reset() noexcept {
 }
 
 void Edits::addUnchanged(int32_t unchangedLength) {
-    if(U_FAILURE(errorCode_) || unchangedLength == 0) { return; }
-    if(unchangedLength < 0) {
+    如果(U_FAILURE(errorCode_) || unchangedLength == 0) { 返回; }
+    如果(unchangedLength < 0) {
         errorCode_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        返回;
     }
     // Merge into previous unchanged-text record, if any.
     int32_t last = lastUnit();
-    if(last < MAX_UNCHANGED) {
+    如果(last < MAX_UNCHANGED) {
         int32_t remaining = MAX_UNCHANGED - last;
-        if (remaining >= unchangedLength) {
+        如果 (remaining >= unchangedLength) {
             setLastUnit(last + unchangedLength);
-            return;
+            返回;
         }
         setLastUnit(MAX_UNCHANGED);
         unchangedLength -= remaining;
     }
     // Split large lengths into multiple units.
-    while(unchangedLength >= MAX_UNCHANGED_LENGTH) {
+    当(unchangedLength >= MAX_UNCHANGED_LENGTH) {
         append(MAX_UNCHANGED);
         unchangedLength -= MAX_UNCHANGED_LENGTH;
     }
     // Write a small (remaining) length.
-    if(unchangedLength > 0) {
+    如果(unchangedLength > 0) {
         append(unchangedLength - 1);
     }
 }
 
 void Edits::addReplace(int32_t oldLength, int32_t newLength) {
-    if(U_FAILURE(errorCode_)) { return; }
-    if(oldLength < 0 || newLength < 0) {
+    如果(U_FAILURE(errorCode_)) { 返回; }
+    如果(oldLength < 0 || newLength < 0) {
         errorCode_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        返回;
     }
-    if (oldLength == 0 && newLength == 0) {
-        return;
+    如果 (oldLength == 0 && newLength == 0) {
+        返回;
     }
     ++numChanges;
     int32_t newDelta = newLength - oldLength;
-    if (newDelta != 0) {
-        if ((newDelta > 0 && delta >= 0 && newDelta > (INT32_MAX - delta)) ||
+    如果 (newDelta != 0) {
+        如果 ((newDelta > 0 && delta >= 0 && newDelta > (INT32_MAX - delta)) ||
                 (newDelta < 0 && delta < 0 && newDelta < (INT32_MIN - delta))) {
             // Integer overflow or underflow.
             errorCode_ = U_INDEX_OUTOFBOUNDS_ERROR;
-            return;
+            返回;
         }
         delta += newDelta;
     }
 
-    if(0 < oldLength && oldLength <= MAX_SHORT_CHANGE_OLD_LENGTH &&
+    如果(0 < oldLength && oldLength <= MAX_SHORT_CHANGE_OLD_LENGTH &&
             newLength <= MAX_SHORT_CHANGE_NEW_LENGTH) {
         // Merge into previous same-lengths short-replacement record, if any.
         int32_t u = (oldLength << 12) | (newLength << 9);
         int32_t last = lastUnit();
-        if(MAX_UNCHANGED < last && last < MAX_SHORT_CHANGE &&
+        如果(MAX_UNCHANGED < last && last < MAX_SHORT_CHANGE &&
                 (last & ~SHORT_CHANGE_NUM_MASK) == u &&
                 (last & SHORT_CHANGE_NUM_MASK) < SHORT_CHANGE_NUM_MASK) {
             setLastUnit(last + 1);
-            return;
+            返回;
         }
         append(u);
-        return;
+        返回;
     }
 
     int32_t head = 0x7000;
-    if (oldLength < LENGTH_IN_1TRAIL && newLength < LENGTH_IN_1TRAIL) {
+    如果 (oldLength < LENGTH_IN_1TRAIL && newLength < LENGTH_IN_1TRAIL) {
         head |= oldLength << 6;
         head |= newLength;
         append(head);
-    } else if ((capacity - length) >= 5 || growArray()) {
+    } 否则 如果 ((capacity - length) >= 5 || growArray()) {
         int32_t limit = length + 1;
-        if(oldLength < LENGTH_IN_1TRAIL) {
+        如果(oldLength < LENGTH_IN_1TRAIL) {
             head |= oldLength << 6;
-        } else if(oldLength <= 0x7fff) {
+        } 否则 如果(oldLength <= 0x7fff) {
             head |= LENGTH_IN_1TRAIL << 6;
             array[limit++] = static_cast<uint16_t>(0x8000 | oldLength);
-        } else {
+        } 否则 {
             head |= (LENGTH_IN_2TRAIL + (oldLength >> 30)) << 6;
             array[limit++] = static_cast<uint16_t>(0x8000 | (oldLength >> 15));
             array[limit++] = static_cast<uint16_t>(0x8000 | oldLength);
         }
-        if(newLength < LENGTH_IN_1TRAIL) {
+        如果(newLength < LENGTH_IN_1TRAIL) {
             head |= newLength;
-        } else if(newLength <= 0x7fff) {
+        } 否则 如果(newLength <= 0x7fff) {
             head |= LENGTH_IN_1TRAIL;
             array[limit++] = static_cast<uint16_t>(0x8000 | newLength);
-        } else {
+        } 否则 {
             head |= LENGTH_IN_2TRAIL + (newLength >> 30);
             array[limit++] = static_cast<uint16_t>(0x8000 | (newLength >> 15));
             array[limit++] = static_cast<uint16_t>(0x8000 | newLength);
@@ -208,53 +208,53 @@ void Edits::addReplace(int32_t oldLength, int32_t newLength) {
 }
 
 void Edits::append(int32_t r) {
-    if(length < capacity || growArray()) {
+    如果(length < capacity || growArray()) {
         array[length++] = static_cast<uint16_t>(r);
     }
 }
 
 UBool Edits::growArray() {
     int32_t newCapacity;
-    if (array == stackArray) {
+    如果 (array == stackArray) {
         newCapacity = 2000;
-    } else if (capacity == INT32_MAX) {
+    } 否则 如果 (capacity == INT32_MAX) {
         // Not U_BUFFER_OVERFLOW_ERROR because that could be confused on a string transform API
         // with a result-string-buffer overflow.
         errorCode_ = U_INDEX_OUTOFBOUNDS_ERROR;
-        return false;
-    } else if (capacity >= (INT32_MAX / 2)) {
+        返回 false;
+    } 否则 如果 (capacity >= (INT32_MAX / 2)) {
         newCapacity = INT32_MAX;
-    } else {
+    } 否则 {
         newCapacity = 2 * capacity;
     }
     // Grow by at least 5 units so that a maximal change record will fit.
-    if ((newCapacity - capacity) < 5) {
+    如果 ((newCapacity - capacity) < 5) {
         errorCode_ = U_INDEX_OUTOFBOUNDS_ERROR;
-        return false;
+        返回 false;
     }
     uint16_t* newArray = static_cast<uint16_t*>(uprv_malloc(static_cast<size_t>(newCapacity) * 2));
-    if (newArray == nullptr) {
+    如果 (newArray == nullptr) {
         errorCode_ = U_MEMORY_ALLOCATION_ERROR;
-        return false;
+        返回 false;
     }
     uprv_memcpy(newArray, array, (size_t)length * 2);
     releaseArray();
     array = newArray;
     capacity = newCapacity;
-    return true;
+    返回 true;
 }
 
 UBool Edits::copyErrorTo(UErrorCode &outErrorCode) const {
-    if (U_FAILURE(outErrorCode)) { return true; }
-    if (U_SUCCESS(errorCode_)) { return false; }
+    如果 (U_FAILURE(outErrorCode)) { 返回 true; }
+    如果 (U_SUCCESS(errorCode_)) { 返回 false; }
     outErrorCode = errorCode_;
-    return true;
+    返回 true;
 }
 
 Edits& Edits::mergeAndAppend(const Edits& ab,
                              const Edits& bc,
                              UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if (copyErrorTo(errorCode)) { return *this; }
+    如果 (copyErrorTo(errorCode)) { 返回 *this; }
     // Picture string a --(Edits ab)--> string b --(Edits bc)--> string c.
     // Parallel iteration over both Edits.
     Iterator abIter = ab.getFineIterator();
@@ -265,7 +265,7 @@ Edits& Edits::mergeAndAppend(const Edits& ab,
     int32_t aLength = 0, ab_bLength = 0, bc_bLength = 0, cLength = 0;
     // When we have different-intermediate-length changes, we accumulate a larger change.
     int32_t pending_aLength = 0, pending_cLength = 0;
-    for (;;) {
+    为 (;;) {
         // At this point, for each of the two iterators:
         // Either we are done with the locally cached current edit,
         // and its intermediate-string length has been reset,
@@ -278,16 +278,16 @@ Edits& Edits::mergeAndAppend(const Edits& ab,
         // However, the result is observably different when
         // ab deletions meet bc insertions at the same intermediate-string index.
         // Some users expect the bc insertions to come first, so we fetch from bc first.
-        if (bc_bLength == 0) {
-            if (bcHasNext && (bcHasNext = bcIter.next(errorCode)) != 0) {
+        如果 (bc_bLength == 0) {
+            如果 (bcHasNext && (bcHasNext = bcIter.next(errorCode)) != 0) {
                 bc_bLength = bcIter.oldLength();
                 cLength = bcIter.newLength();
-                if (bc_bLength == 0) {
+                如果 (bc_bLength == 0) {
                     // insertion
-                    if (ab_bLength == 0 || !abIter.hasChange()) {
+                    如果 (ab_bLength == 0 || !abIter.hasChange()) {
                         addReplace(pending_aLength, pending_cLength + cLength);
                         pending_aLength = pending_cLength = 0;
-                    } else {
+                    } 否则 {
                         pending_cLength += cLength;
                     }
                     continue;
@@ -295,38 +295,38 @@ Edits& Edits::mergeAndAppend(const Edits& ab,
             }
             // else see if the other iterator is done, too.
         }
-        if (ab_bLength == 0) {
-            if (abHasNext && (abHasNext = abIter.next(errorCode)) != 0) {
+        如果 (ab_bLength == 0) {
+            如果 (abHasNext && (abHasNext = abIter.next(errorCode)) != 0) {
                 aLength = abIter.oldLength();
                 ab_bLength = abIter.newLength();
-                if (ab_bLength == 0) {
+                如果 (ab_bLength == 0) {
                     // deletion
-                    if (bc_bLength == bcIter.oldLength() || !bcIter.hasChange()) {
+                    如果 (bc_bLength == bcIter.oldLength() || !bcIter.hasChange()) {
                         addReplace(pending_aLength + aLength, pending_cLength);
                         pending_aLength = pending_cLength = 0;
-                    } else {
+                    } 否则 {
                         pending_aLength += aLength;
                     }
                     continue;
                 }
-            } else if (bc_bLength == 0) {
+            } 否则 如果 (bc_bLength == 0) {
                 // Both iterators are done at the same time:
                 // The intermediate-string lengths match.
                 break;
-            } else {
+            } 否则 {
                 // The ab output string is shorter than the bc input string.
-                if (!copyErrorTo(errorCode)) {
+                如果 (!copyErrorTo(errorCode)) {
                     errorCode = U_ILLEGAL_ARGUMENT_ERROR;
                 }
-                return *this;
+                返回 *this;
             }
         }
-        if (bc_bLength == 0) {
+        如果 (bc_bLength == 0) {
             // The bc input string is shorter than the ab output string.
-            if (!copyErrorTo(errorCode)) {
+            如果 (!copyErrorTo(errorCode)) {
                 errorCode = U_ILLEGAL_ARGUMENT_ERROR;
             }
-            return *this;
+            返回 *this;
         }
         //  Done fetching: ab_bLength > 0 && bc_bLength > 0
 
@@ -336,9 +336,9 @@ Edits& Edits::mergeAndAppend(const Edits& ab,
         //   At least one side is newly fetched.
         //   One side might be a truncated remainder of an edit we fetched earlier.
 
-        if (!abIter.hasChange() && !bcIter.hasChange()) {
+        如果 (!abIter.hasChange() && !bcIter.hasChange()) {
             // An unchanged span all the way from string a to string c.
-            if (pending_aLength != 0 || pending_cLength != 0) {
+            如果 (pending_aLength != 0 || pending_cLength != 0) {
                 addReplace(pending_aLength, pending_cLength);
                 pending_aLength = pending_cLength = 0;
             }
@@ -349,9 +349,9 @@ Edits& Edits::mergeAndAppend(const Edits& ab,
             // At least one of the unchanged spans is now empty.
             continue;
         }
-        if (!abIter.hasChange() && bcIter.hasChange()) {
+        如果 (!abIter.hasChange() && bcIter.hasChange()) {
             // Unchanged a->b but changed b->c.
-            if (ab_bLength >= bc_bLength) {
+            如果 (ab_bLength >= bc_bLength) {
                 // Split the longer unchanged span into change + remainder.
                 addReplace(pending_aLength + bc_bLength, pending_cLength + cLength);
                 pending_aLength = pending_cLength = 0;
@@ -360,9 +360,9 @@ Edits& Edits::mergeAndAppend(const Edits& ab,
                 continue;
             }
             // Handle the shorter unchanged span below like a change.
-        } else if (abIter.hasChange() && !bcIter.hasChange()) {
+        } 否则 如果 (abIter.hasChange() && !bcIter.hasChange()) {
             // Changed a->b and then unchanged b->c.
-            if (ab_bLength <= bc_bLength) {
+            如果 (ab_bLength <= bc_bLength) {
                 // Split the longer unchanged span into change + remainder.
                 addReplace(pending_aLength + aLength, pending_cLength + ab_bLength);
                 pending_aLength = pending_cLength = 0;
@@ -371,8 +371,8 @@ Edits& Edits::mergeAndAppend(const Edits& ab,
                 continue;
             }
             // Handle the shorter unchanged span below like a change.
-        } else {  // both abIter.hasChange() && bcIter.hasChange()
-            if (ab_bLength == bc_bLength) {
+        } 否则 {  // both abIter.hasChange() && bcIter.hasChange()
+            如果 (ab_bLength == bc_bLength) {
                 // Changes on both sides up to the same position. Emit & reset.
                 addReplace(pending_aLength + aLength, pending_cLength + cLength);
                 pending_aLength = pending_cLength = 0;
@@ -384,19 +384,19 @@ Edits& Edits::mergeAndAppend(const Edits& ab,
         // keep a remainder of the longer one.
         pending_aLength += aLength;
         pending_cLength += cLength;
-        if (ab_bLength < bc_bLength) {
+        如果 (ab_bLength < bc_bLength) {
             bc_bLength -= ab_bLength;
             cLength = ab_bLength = 0;
-        } else {  // ab_bLength > bc_bLength
+        } 否则 {  // ab_bLength > bc_bLength
             ab_bLength -= bc_bLength;
             aLength = bc_bLength = 0;
         }
     }
-    if (pending_aLength != 0 || pending_cLength != 0) {
+    如果 (pending_aLength != 0 || pending_cLength != 0) {
         addReplace(pending_aLength, pending_cLength);
     }
     copyErrorTo(errorCode);
-    return *this;
+    返回 *this;
 }
 
 Edits::Iterator::Iterator(const uint16_t* a U_LIFETIME_BOUND, int32_t len, UBool oc, UBool crs) :
@@ -406,13 +406,13 @@ Edits::Iterator::Iterator(const uint16_t* a U_LIFETIME_BOUND, int32_t len, UBool
         srcIndex(0), replIndex(0), destIndex(0) {}
 
 int32_t Edits::Iterator::readLength(int32_t head) {
-    if (head < LENGTH_IN_1TRAIL) {
-        return head;
-    } else if (head < LENGTH_IN_2TRAIL) {
+    如果 (head < LENGTH_IN_1TRAIL) {
+        返回 head;
+    } 否则 如果 (head < LENGTH_IN_2TRAIL) {
         U_ASSERT(index < length);
         U_ASSERT(array[index] >= 0x8000);
-        return array[index++] & 0x7fff;
-    } else {
+        返回 array[index++] & 0x7fff;
+    } 否则 {
         U_ASSERT((index + 2) <= length);
         U_ASSERT(array[index] >= 0x8000);
         U_ASSERT(array[index + 1] >= 0x8000);
@@ -420,13 +420,13 @@ int32_t Edits::Iterator::readLength(int32_t head) {
                 (static_cast<int32_t>(array[index] & 0x7fff) << 15) |
                 (array[index + 1] & 0x7fff);
         index += 2;
-        return len;
+        返回 len;
     }
 }
 
 void Edits::Iterator::updateNextIndexes() {
     srcIndex += oldLength_;
-    if (changed) {
+    如果 (changed) {
         replIndex += newLength_;
     }
     destIndex += newLength_;
@@ -434,7 +434,7 @@ void Edits::Iterator::updateNextIndexes() {
 
 void Edits::Iterator::updatePreviousIndexes() {
     srcIndex -= oldLength_;
-    if (changed) {
+    如果 (changed) {
         replIndex -= newLength_;
     }
     destIndex -= newLength_;
@@ -445,203 +445,203 @@ UBool Edits::Iterator::noNext() {
     dir = 0;
     changed = false;
     oldLength_ = newLength_ = 0;
-    return false;
+    返回 false;
 }
 
 UBool Edits::Iterator::next(UBool onlyChanges, UErrorCode &errorCode) {
     // Forward iteration: Update the string indexes to the limit of the current span,
     // and post-increment-read array units to assemble a new span.
     // Leaves the array index one after the last unit of that span.
-    if (U_FAILURE(errorCode)) { return false; }
+    如果 (U_FAILURE(errorCode)) { 返回 false; }
     // We have an errorCode in case we need to start guarding against integer overflows.
     // It is also convenient for caller loops if we bail out when an error was set elsewhere.
-    if (dir > 0) {
+    如果 (dir > 0) {
         updateNextIndexes();
-    } else {
-        if (dir < 0) {
+    } 否则 {
+        如果 (dir < 0) {
             // Turn around from previous() to next().
             // Post-increment-read the same span again.
-            if (remaining > 0) {
+            如果 (remaining > 0) {
                 // Fine-grained iterator:
                 // Stay on the current one of a sequence of compressed changes.
                 ++index;  // next() rests on the index after the sequence unit.
                 dir = 1;
-                return true;
+                返回 true;
             }
         }
         dir = 1;
     }
-    if (remaining >= 1) {
+    如果 (remaining >= 1) {
         // Fine-grained iterator: Continue a sequence of compressed changes.
-        if (remaining > 1) {
+        如果 (remaining > 1) {
             --remaining;
-            return true;
+            返回 true;
         }
         remaining = 0;
     }
-    if (index >= length) {
-        return noNext();
+    如果 (index >= length) {
+        返回 noNext();
     }
     int32_t u = array[index++];
-    if (u <= MAX_UNCHANGED) {
+    如果 (u <= MAX_UNCHANGED) {
         // Combine adjacent unchanged ranges.
         changed = false;
         oldLength_ = u + 1;
-        while (index < length && (u = array[index]) <= MAX_UNCHANGED) {
+        当 (index < length && (u = array[index]) <= MAX_UNCHANGED) {
             ++index;
             oldLength_ += u + 1;
         }
         newLength_ = oldLength_;
-        if (onlyChanges) {
+        如果 (onlyChanges) {
             updateNextIndexes();
-            if (index >= length) {
-                return noNext();
+            如果 (index >= length) {
+                返回 noNext();
             }
             // already fetched u > MAX_UNCHANGED at index
             ++index;
-        } else {
-            return true;
+        } 否则 {
+            返回 true;
         }
     }
     changed = true;
-    if (u <= MAX_SHORT_CHANGE) {
+    如果 (u <= MAX_SHORT_CHANGE) {
         int32_t oldLen = u >> 12;
         int32_t newLen = (u >> 9) & MAX_SHORT_CHANGE_NEW_LENGTH;
         int32_t num = (u & SHORT_CHANGE_NUM_MASK) + 1;
-        if (coarse) {
+        如果 (coarse) {
             oldLength_ = num * oldLen;
             newLength_ = num * newLen;
-        } else {
+        } 否则 {
             // Split a sequence of changes that was compressed into one unit.
             oldLength_ = oldLen;
             newLength_ = newLen;
-            if (num > 1) {
+            如果 (num > 1) {
                 remaining = num;  // This is the first of two or more changes.
             }
-            return true;
+            返回 true;
         }
-    } else {
+    } 否则 {
         U_ASSERT(u <= 0x7fff);
         oldLength_ = readLength((u >> 6) & 0x3f);
         newLength_ = readLength(u & 0x3f);
-        if (!coarse) {
-            return true;
+        如果 (!coarse) {
+            返回 true;
         }
     }
     // Combine adjacent changes.
-    while (index < length && (u = array[index]) > MAX_UNCHANGED) {
+    当 (index < length && (u = array[index]) > MAX_UNCHANGED) {
         ++index;
-        if (u <= MAX_SHORT_CHANGE) {
+        如果 (u <= MAX_SHORT_CHANGE) {
             int32_t num = (u & SHORT_CHANGE_NUM_MASK) + 1;
             oldLength_ += (u >> 12) * num;
             newLength_ += ((u >> 9) & MAX_SHORT_CHANGE_NEW_LENGTH) * num;
-        } else {
+        } 否则 {
             U_ASSERT(u <= 0x7fff);
             oldLength_ += readLength((u >> 6) & 0x3f);
             newLength_ += readLength(u & 0x3f);
         }
     }
-    return true;
+    返回 true;
 }
 
 UBool Edits::Iterator::previous(UErrorCode &errorCode) {
     // Backward iteration: Pre-decrement-read array units to assemble a new span,
     // then update the string indexes to the start of that span.
     // Leaves the array index on the head unit of that span.
-    if (U_FAILURE(errorCode)) { return false; }
+    如果 (U_FAILURE(errorCode)) { 返回 false; }
     // We have an errorCode in case we need to start guarding against integer overflows.
     // It is also convenient for caller loops if we bail out when an error was set elsewhere.
-    if (dir >= 0) {
-        if (dir > 0) {
+    如果 (dir >= 0) {
+        如果 (dir > 0) {
             // Turn around from next() to previous().
             // Set the string indexes to the span limit and
             // pre-decrement-read the same span again.
-            if (remaining > 0) {
+            如果 (remaining > 0) {
                 // Fine-grained iterator:
                 // Stay on the current one of a sequence of compressed changes.
                 --index;  // previous() rests on the sequence unit.
                 dir = -1;
-                return true;
+                返回 true;
             }
             updateNextIndexes();
         }
         dir = -1;
     }
-    if (remaining > 0) {
+    如果 (remaining > 0) {
         // Fine-grained iterator: Continue a sequence of compressed changes.
         int32_t u = array[index];
         U_ASSERT(MAX_UNCHANGED < u && u <= MAX_SHORT_CHANGE);
-        if (remaining <= (u & SHORT_CHANGE_NUM_MASK)) {
+        如果 (remaining <= (u & SHORT_CHANGE_NUM_MASK)) {
             ++remaining;
             updatePreviousIndexes();
-            return true;
+            返回 true;
         }
         remaining = 0;
     }
-    if (index <= 0) {
-        return noNext();
+    如果 (index <= 0) {
+        返回 noNext();
     }
     int32_t u = array[--index];
-    if (u <= MAX_UNCHANGED) {
+    如果 (u <= MAX_UNCHANGED) {
         // Combine adjacent unchanged ranges.
         changed = false;
         oldLength_ = u + 1;
-        while (index > 0 && (u = array[index - 1]) <= MAX_UNCHANGED) {
+        当 (index > 0 && (u = array[index - 1]) <= MAX_UNCHANGED) {
             --index;
             oldLength_ += u + 1;
         }
         newLength_ = oldLength_;
         // No need to handle onlyChanges as long as previous() is called only from findIndex().
         updatePreviousIndexes();
-        return true;
+        返回 true;
     }
     changed = true;
-    if (u <= MAX_SHORT_CHANGE) {
+    如果 (u <= MAX_SHORT_CHANGE) {
         int32_t oldLen = u >> 12;
         int32_t newLen = (u >> 9) & MAX_SHORT_CHANGE_NEW_LENGTH;
         int32_t num = (u & SHORT_CHANGE_NUM_MASK) + 1;
-        if (coarse) {
+        如果 (coarse) {
             oldLength_ = num * oldLen;
             newLength_ = num * newLen;
-        } else {
+        } 否则 {
             // Split a sequence of changes that was compressed into one unit.
             oldLength_ = oldLen;
             newLength_ = newLen;
-            if (num > 1) {
+            如果 (num > 1) {
                 remaining = 1;  // This is the last of two or more changes.
             }
             updatePreviousIndexes();
-            return true;
+            返回 true;
         }
-    } else {
-        if (u <= 0x7fff) {
+    } 否则 {
+        如果 (u <= 0x7fff) {
             // The change is encoded in u alone.
             oldLength_ = readLength((u >> 6) & 0x3f);
             newLength_ = readLength(u & 0x3f);
-        } else {
+        } 否则 {
             // Back up to the head of the change, read the lengths,
             // and reset the index to the head again.
             U_ASSERT(index > 0);
-            while ((u = array[--index]) > 0x7fff) {}
+            当 ((u = array[--index]) > 0x7fff) {}
             U_ASSERT(u > MAX_SHORT_CHANGE);
             int32_t headIndex = index++;
             oldLength_ = readLength((u >> 6) & 0x3f);
             newLength_ = readLength(u & 0x3f);
             index = headIndex;
         }
-        if (!coarse) {
+        如果 (!coarse) {
             updatePreviousIndexes();
-            return true;
+            返回 true;
         }
     }
     // Combine adjacent changes.
-    while (index > 0 && (u = array[index - 1]) > MAX_UNCHANGED) {
+    当 (index > 0 && (u = array[index - 1]) > MAX_UNCHANGED) {
         --index;
-        if (u <= MAX_SHORT_CHANGE) {
+        如果 (u <= MAX_SHORT_CHANGE) {
             int32_t num = (u & SHORT_CHANGE_NUM_MASK) + 1;
             oldLength_ += (u >> 12) * num;
             newLength_ += ((u >> 9) & MAX_SHORT_CHANGE_NEW_LENGTH) * num;
-        } else if (u <= 0x7fff) {
+        } 否则 如果 (u <= 0x7fff) {
             // Read the lengths, and reset the index to the head again.
             int32_t headIndex = index++;
             oldLength_ += readLength((u >> 6) & 0x3f);
@@ -650,32 +650,32 @@ UBool Edits::Iterator::previous(UErrorCode &errorCode) {
         }
     }
     updatePreviousIndexes();
-    return true;
+    返回 true;
 }
 
 int32_t Edits::Iterator::findIndex(int32_t i, UBool findSource, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode) || i < 0) { return -1; }
+    如果 (U_FAILURE(errorCode) || i < 0) { 返回 -1; }
     int32_t spanStart, spanLength;
-    if (findSource) {  // find source index
+    如果 (findSource) {  // find source index
         spanStart = srcIndex;
         spanLength = oldLength_;
-    } else {  // find destination index
+    } 否则 {  // find destination index
         spanStart = destIndex;
         spanLength = newLength_;
     }
-    if (i < spanStart) {
-        if (i >= (spanStart / 2)) {
+    如果 (i < spanStart) {
+        如果 (i >= (spanStart / 2)) {
             // Search backwards.
-            for (;;) {
+            为 (;;) {
                 UBool hasPrevious = previous(errorCode);
                 U_ASSERT(hasPrevious);  // because i>=0 and the first span starts at 0
                 (void)hasPrevious;  // avoid unused-variable warning
                 spanStart = findSource ? srcIndex : destIndex;
-                if (i >= spanStart) {
+                如果 (i >= spanStart) {
                     // The index is in the current span.
-                    return 0;
+                    返回 0;
                 }
-                if (remaining > 0) {
+                如果 (remaining > 0) {
                     // Is the index in one of the remaining compressed edits?
                     // spanStart is the start of the current span, first of the remaining ones.
                     spanLength = findSource ? oldLength_ : newLength_;
@@ -683,14 +683,14 @@ int32_t Edits::Iterator::findIndex(int32_t i, UBool findSource, UErrorCode &erro
                     U_ASSERT(MAX_UNCHANGED < u && u <= MAX_SHORT_CHANGE);
                     int32_t num = (u & SHORT_CHANGE_NUM_MASK) + 1 - remaining;
                     int32_t len = num * spanLength;
-                    if (i >= (spanStart - len)) {
+                    如果 (i >= (spanStart - len)) {
                         int32_t n = ((spanStart - i - 1) / spanLength) + 1;
                         // 1 <= n <= num
                         srcIndex -= n * oldLength_;
                         replIndex -= n * newLength_;
                         destIndex -= n * newLength_;
                         remaining += n;
-                        return 0;
+                        返回 0;
                     }
                     // Skip all of these edits at once.
                     srcIndex -= num * oldLength_;
@@ -703,33 +703,33 @@ int32_t Edits::Iterator::findIndex(int32_t i, UBool findSource, UErrorCode &erro
         // Reset the iterator to the start.
         dir = 0;
         index = remaining = oldLength_ = newLength_ = srcIndex = replIndex = destIndex = 0;
-    } else if (i < (spanStart + spanLength)) {
+    } 否则 如果 (i < (spanStart + spanLength)) {
         // The index is in the current span.
-        return 0;
+        返回 0;
     }
-    while (next(false, errorCode)) {
-        if (findSource) {
+    当 (next(false, errorCode)) {
+        如果 (findSource) {
             spanStart = srcIndex;
             spanLength = oldLength_;
-        } else {
+        } 否则 {
             spanStart = destIndex;
             spanLength = newLength_;
         }
-        if (i < (spanStart + spanLength)) {
+        如果 (i < (spanStart + spanLength)) {
             // The index is in the current span.
-            return 0;
+            返回 0;
         }
-        if (remaining > 1) {
+        如果 (remaining > 1) {
             // Is the index in one of the remaining compressed edits?
             // spanStart is the start of the current span, first of the remaining ones.
             int32_t len = remaining * spanLength;
-            if (i < (spanStart + len)) {
+            如果 (i < (spanStart + len)) {
                 int32_t n = (i - spanStart) / spanLength;  // 1 <= n <= remaining - 1
                 srcIndex += n * oldLength_;
                 replIndex += n * newLength_;
                 destIndex += n * newLength_;
                 remaining -= n;
-                return 0;
+                返回 0;
             }
             // Make next() skip all of these edits at once.
             oldLength_ *= remaining;
@@ -737,44 +737,44 @@ int32_t Edits::Iterator::findIndex(int32_t i, UBool findSource, UErrorCode &erro
             remaining = 0;
         }
     }
-    return 1;
+    返回 1;
 }
 
 int32_t Edits::Iterator::destinationIndexFromSourceIndex(int32_t i, UErrorCode &errorCode) {
     int32_t where = findIndex(i, true, errorCode);
-    if (where < 0) {
+    如果 (where < 0) {
         // Error or before the string.
-        return 0;
+        返回 0;
     }
-    if (where > 0 || i == srcIndex) {
+    如果 (where > 0 || i == srcIndex) {
         // At or after string length, or at start of the found span.
-        return destIndex;
+        返回 destIndex;
     }
-    if (changed) {
+    如果 (changed) {
         // In a change span, map to its end.
-        return destIndex + newLength_;
-    } else {
+        返回 destIndex + newLength_;
+    } 否则 {
         // In an unchanged span, offset 1:1 within it.
-        return destIndex + (i - srcIndex);
+        返回 destIndex + (i - srcIndex);
     }
 }
 
 int32_t Edits::Iterator::sourceIndexFromDestinationIndex(int32_t i, UErrorCode &errorCode) {
     int32_t where = findIndex(i, false, errorCode);
-    if (where < 0) {
+    如果 (where < 0) {
         // Error or before the string.
-        return 0;
+        返回 0;
     }
-    if (where > 0 || i == destIndex) {
+    如果 (where > 0 || i == destIndex) {
         // At or after string length, or at start of the found span.
-        return srcIndex;
+        返回 srcIndex;
     }
-    if (changed) {
+    如果 (changed) {
         // In a change span, map to its end.
-        return srcIndex + oldLength_;
-    } else {
+        返回 srcIndex + oldLength_;
+    } 否则 {
         // In an unchanged span, offset within it.
-        return srcIndex + (i - destIndex);
+        返回 srcIndex + (i - destIndex);
     }
 }
 
@@ -783,24 +783,24 @@ UnicodeString& Edits::Iterator::toString(UnicodeString& sb U_LIFETIME_BOUND) con
     ICU_Utility::appendNumber(sb, srcIndex);
     sb.append(u"..", -1);
     ICU_Utility::appendNumber(sb, srcIndex + oldLength_);
-    if (changed) {
+    如果 (changed) {
         sb.append(u"] ⇝ dest[", -1);
-    } else {
+    } 否则 {
         sb.append(u"] ≡ dest[", -1);
     }
     ICU_Utility::appendNumber(sb, destIndex);
     sb.append(u"..", -1);
     ICU_Utility::appendNumber(sb, destIndex + newLength_);
-    if (changed) {
+    如果 (changed) {
         sb.append(u"], repl[", -1);
         ICU_Utility::appendNumber(sb, replIndex);
         sb.append(u"..", -1);
         ICU_Utility::appendNumber(sb, replIndex + newLength_);
         sb.append(u"] }", -1);
-    } else {
+    } 否则 {
         sb.append(u"] (no-change) }", -1);
     }
-    return sb;
+    返回 sb;
 }
 
 U_NAMESPACE_END

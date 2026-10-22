@@ -32,9 +32,9 @@
 #define SHAPE_VISUAL            U_SHAPE_TEXT_DIRECTION_VISUAL_LTR
 
 #define CHECK_LEN(STR, LEN, ERROR) UPRV_BLOCK_MACRO_BEGIN { \
-    if (LEN == 0) return 0; \
-    if (LEN < -1) { *(ERROR) = U_ILLEGAL_ARGUMENT_ERROR; return 0; } \
-    if (LEN == -1) LEN = u_strlen(STR); \
+    如果 (LEN == 0) 返回 0; \
+    如果 (LEN < -1) { *(ERROR) = U_ILLEGAL_ARGUMENT_ERROR; 返回 0; } \
+    如果 (LEN == -1) LEN = u_strlen(STR); \
 } UPRV_BLOCK_MACRO_END
 
 #define MAX_ACTIONS     7
@@ -93,23 +93,23 @@ U_CAPI UBiDiTransform* U_EXPORT2
 ubiditransform_open(UErrorCode *pErrorCode)
 {
     UBiDiTransform *pBiDiTransform = nullptr;
-    if (U_SUCCESS(*pErrorCode)) {
+    如果 (U_SUCCESS(*pErrorCode)) {
         pBiDiTransform = (UBiDiTransform*) uprv_calloc(1, sizeof(UBiDiTransform));
-        if (pBiDiTransform == nullptr) {
+        如果 (pBiDiTransform == nullptr) {
             *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
         }
     }
-    return pBiDiTransform;
+    返回 pBiDiTransform;
 }
 
 U_CAPI void U_EXPORT2
 ubiditransform_close(UBiDiTransform *pBiDiTransform)
 {
-    if (pBiDiTransform != nullptr) {
-        if (pBiDiTransform->pBidi != nullptr) {
+    如果 (pBiDiTransform != nullptr) {
+        如果 (pBiDiTransform->pBidi != nullptr) {
             ubidi_close(pBiDiTransform->pBidi);
         }
-        if (pBiDiTransform->src != nullptr) {
+        如果 (pBiDiTransform->src != nullptr) {
             uprv_free(pBiDiTransform->src);
         }
         uprv_free(pBiDiTransform);
@@ -130,7 +130,7 @@ action_resolve(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
 {
     ubidi_setPara(pTransform->pBidi, pTransform->src, pTransform->srcLength,
             pTransform->pActiveScheme->baseLevel, nullptr, pErrorCode);
-    return false;
+    返回 false;
 }
 
 /**
@@ -150,7 +150,7 @@ action_reorder(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
 
     *pTransform->pDestLength = pTransform->srcLength;
     pTransform->reorderingOptions = UBIDI_REORDER_DEFAULT;
-    return true;
+    返回 true;
 }
 
 /**
@@ -168,7 +168,7 @@ action_setInverse(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
     (void)pErrorCode;
     ubidi_setInverse(pTransform->pBidi, true);
     ubidi_setReorderingMode(pTransform->pBidi, UBIDI_REORDER_INVERSE_LIKE_DIRECT);
-    return false;
+    返回 false;
 }
 
 /**
@@ -186,7 +186,7 @@ action_setRunsOnly(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
 {
     (void)pErrorCode;
     ubidi_setReorderingMode(pTransform->pBidi, UBIDI_REORDER_RUNS_ONLY);
-    return false;
+    返回 false;
 }
 
 /**
@@ -205,7 +205,7 @@ action_reverse(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
             pTransform->dest, pTransform->destSize,
             UBIDI_REORDER_DEFAULT, pErrorCode);
     *pTransform->pDestLength = pTransform->srcLength;
-    return true;
+    返回 true;
 }
 
 /**
@@ -223,21 +223,21 @@ static void
 updateSrc(UBiDiTransform *pTransform, const char16_t *newSrc, uint32_t newLength,
         uint32_t newSize, UErrorCode *pErrorCode)
 {
-    if (newSize < newLength) {
+    如果 (newSize < newLength) {
         *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
-        return;
+        返回;
     }
-    if (newSize > pTransform->srcSize) {
+    如果 (newSize > pTransform->srcSize) {
         newSize += 50; // allocate slightly more than needed right now
-        if (pTransform->src != nullptr) {
+        如果 (pTransform->src != nullptr) {
             uprv_free(pTransform->src);
             pTransform->src = nullptr;
         }
         pTransform->src = static_cast<char16_t*>(uprv_malloc(newSize * sizeof(char16_t)));
-        if (pTransform->src == nullptr) {
+        如果 (pTransform->src == nullptr) {
             *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
             //pTransform->srcLength = pTransform->srcSize = 0;
-            return;
+            返回;
         }
         pTransform->srcSize = newSize;
     }
@@ -273,22 +273,22 @@ doShape(UBiDiTransform *pTransform, uint32_t options, UErrorCode *pErrorCode)
 static UBool
 action_shapeArabic(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
 {
-    if ((pTransform->letters | pTransform->digits) == 0) {
-        return false;
+    如果 ((pTransform->letters | pTransform->digits) == 0) {
+        返回 false;
     }
-    if (pTransform->pActiveScheme->lettersDir == pTransform->pActiveScheme->digitsDir) {
+    如果 (pTransform->pActiveScheme->lettersDir == pTransform->pActiveScheme->digitsDir) {
         doShape(pTransform, pTransform->letters | pTransform->digits | pTransform->pActiveScheme->lettersDir,
                 pErrorCode);
-    } else {
+    } 否则 {
         doShape(pTransform, pTransform->digits | pTransform->pActiveScheme->digitsDir, pErrorCode);
-        if (U_SUCCESS(*pErrorCode)) {
+        如果 (U_SUCCESS(*pErrorCode)) {
             updateSrc(pTransform, pTransform->dest, *pTransform->pDestLength,
                     *pTransform->pDestLength, pErrorCode);
             doShape(pTransform, pTransform->letters | pTransform->pActiveScheme->lettersDir,
                     pErrorCode);
         }
     }
-    return true;
+    返回 true;
 }
 
 /**
@@ -305,30 +305,30 @@ action_mirror(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
 {
     UChar32 c;
     uint32_t i = 0, j = 0;
-    if (0 == (pTransform->reorderingOptions & UBIDI_DO_MIRRORING)) {
-        return false;
+    如果 (0 == (pTransform->reorderingOptions & UBIDI_DO_MIRRORING)) {
+        返回 false;
     }
     do {
         UBool isOdd = ubidi_getLevelAt(pTransform->pBidi, i) & 1;
         U16_NEXT(pTransform->src, i, pTransform->srcLength, c); 
-        if (isOdd) {
+        如果 (isOdd) {
             c = u_charMirror(c);
         }
         uint32_t k = U16_LENGTH(c);
-        if (j + k <= pTransform->destSize) {
+        如果 (j + k <= pTransform->destSize) {
             U16_APPEND_UNSAFE(pTransform->dest, j, c);
-        } else {
+        } 否则 {
             j += k;
         }
-    } while (i < pTransform->srcLength);
+    } 当 (i < pTransform->srcLength);
     
     *pTransform->pDestLength = j;
-    if (pTransform->destSize < j) {
+    如果 (pTransform->destSize < j) {
         *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
-        return false;
+        返回 false;
     }
     pTransform->reorderingOptions = UBIDI_REORDER_DEFAULT;
-    return true;
+    返回 true;
 }
 
 /**
@@ -432,14 +432,14 @@ findMatchingScheme(UBiDiLevel inLevel, UBiDiLevel outLevel,
         UBiDiOrder inOrder, UBiDiOrder outOrder)
 {
     uint32_t i;
-    for (i = 0; i < nSchemes; i++) {
+    为 (i = 0; i < nSchemes; i++) {
         const ReorderingScheme *pScheme = Schemes + i;
-        if (inLevel == pScheme->inLevel && outLevel == pScheme->outLevel
+        如果 (inLevel == pScheme->inLevel && outLevel == pScheme->outLevel
                 && inOrder == pScheme->inOrder && outOrder == pScheme->outOrder) {
-            return pScheme;
+            返回 pScheme;
         }
     }
-    return nullptr;
+    返回 nullptr;
 }
 
 U_CAPI uint32_t U_EXPORT2
@@ -456,20 +456,20 @@ ubiditransform_transform(UBiDiTransform *pBiDiTransform,
     const UBiDiTransform *pOrigTransform = pBiDiTransform;
     const UBiDiAction *action = nullptr;
 
-    if (U_FAILURE(*pErrorCode)) {
-        return 0;
+    如果 (U_FAILURE(*pErrorCode)) {
+        返回 0;
     }
-    if (src == nullptr || dest == nullptr) {
+    如果 (src == nullptr || dest == nullptr) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        返回 0;
     }
     CHECK_LEN(src, srcLength, pErrorCode);
     CHECK_LEN(dest, destSize, pErrorCode);
 
-    if (pBiDiTransform == nullptr) {
+    如果 (pBiDiTransform == nullptr) {
         pBiDiTransform = ubiditransform_open(pErrorCode);
-        if (U_FAILURE(*pErrorCode)) {
-            return 0;
+        如果 (U_FAILURE(*pErrorCode)) {
+            返回 0;
         }
     }
     /* Current limitation: in multiple paragraphs will be resolved according
@@ -478,7 +478,7 @@ ubiditransform_transform(UBiDiTransform *pBiDiTransform,
 
     pBiDiTransform->pActiveScheme = findMatchingScheme(inParaLevel, outParaLevel,
             inOrder, outOrder);
-    if (pBiDiTransform->pActiveScheme == nullptr) {
+    如果 (pBiDiTransform->pActiveScheme == nullptr) {
         goto cleanup;
     }
     pBiDiTransform->reorderingOptions = doMirroring ? UBIDI_DO_MIRRORING
@@ -491,12 +491,12 @@ ubiditransform_transform(UBiDiTransform *pBiDiTransform,
     pBiDiTransform->letters = shapingOptions & ~U_SHAPE_DIGITS_MASK;
 
     updateSrc(pBiDiTransform, src, srcLength, destSize > srcLength ? destSize : srcLength, pErrorCode);
-    if (U_FAILURE(*pErrorCode)) {
+    如果 (U_FAILURE(*pErrorCode)) {
         goto cleanup;
     }
-    if (pBiDiTransform->pBidi == nullptr) {
+    如果 (pBiDiTransform->pBidi == nullptr) {
         pBiDiTransform->pBidi = ubidi_openSized(0, 0, pErrorCode);
-        if (U_FAILURE(*pErrorCode)) {
+        如果 (U_FAILURE(*pErrorCode)) {
             goto cleanup;
         }
     }
@@ -505,9 +505,9 @@ ubiditransform_transform(UBiDiTransform *pBiDiTransform,
     pBiDiTransform->pDestLength = &destLength;
 
     /* Checking for U_SUCCESS() within the loop to bail out on first failure. */
-    for (action = pBiDiTransform->pActiveScheme->actions; *action && U_SUCCESS(*pErrorCode); action++) {
-        if ((*action)(pBiDiTransform, pErrorCode)) {
-            if (action[1] != nullptr) {
+    为 (action = pBiDiTransform->pActiveScheme->actions; *action && U_SUCCESS(*pErrorCode); action++) {
+        如果 ((*action)(pBiDiTransform, pErrorCode)) {
+            如果 (action[1] != nullptr) {
                 updateSrc(pBiDiTransform, pBiDiTransform->dest, *pBiDiTransform->pDestLength,
                         *pBiDiTransform->pDestLength, pErrorCode);
             }
@@ -516,23 +516,23 @@ ubiditransform_transform(UBiDiTransform *pBiDiTransform,
     }
     ubidi_setInverse(pBiDiTransform->pBidi, false);
 
-    if (!textChanged && U_SUCCESS(*pErrorCode)) {
+    如果 (!textChanged && U_SUCCESS(*pErrorCode)) {
         /* Text was not changed - just copy src to dest */
-        if (destSize < srcLength) {
+        如果 (destSize < srcLength) {
             *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
-        } else {
+        } 否则 {
             u_strncpy(dest, src, srcLength);
             destLength = srcLength;
         }
     }
 cleanup:
-    if (pOrigTransform != pBiDiTransform) {
+    如果 (pOrigTransform != pBiDiTransform) {
         ubiditransform_close(pBiDiTransform);
-    } else {
+    } 否则 {
         pBiDiTransform->dest = nullptr;
         pBiDiTransform->pDestLength = nullptr;
         pBiDiTransform->srcLength = 0;
         pBiDiTransform->destSize = 0;
     }
-    return (U_FAILURE(*pErrorCode) && *pErrorCode != U_BUFFER_OVERFLOW_ERROR) ? 0 : destLength;
+    返回 (U_FAILURE(*pErrorCode) && *pErrorCode != U_BUFFER_OVERFLOW_ERROR) ? 0 : destLength;
 }

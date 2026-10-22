@@ -19,7 +19,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#如果 !UCONFIG_NO_CONVERSION
 
 #include "unicode/ucnv_err.h"
 #include "unicode/ucnv.h"
@@ -62,14 +62,14 @@ ucnv_fromUWriteBytes(UConverter *cnv,
     int32_t *o;
 
     /* write bytes */
-    if(offsets==nullptr || (o=*offsets)==nullptr) {
-        while(length>0 && t<targetLimit) {
+    如果(offsets==nullptr || (o=*offsets)==nullptr) {
+        当(length>0 && t<targetLimit) {
             *t++=*bytes++;
             --length;
         }
-    } else {
+    } 否则 {
         /* output with offsets */
-        while(length>0 && t<targetLimit) {
+        当(length>0 && t<targetLimit) {
             *t++=*bytes++;
             *o++=sourceIndex;
             --length;
@@ -79,13 +79,13 @@ ucnv_fromUWriteBytes(UConverter *cnv,
     *target=t;
 
     /* write overflow */
-    if(length>0) {
-        if(cnv!=nullptr) {
+    如果(length>0) {
+        如果(cnv!=nullptr) {
             t=(char *)cnv->charErrorBuffer;
             cnv->charErrorBufferLength=(int8_t)length;
             do {
                 *t++=(uint8_t)*bytes++;
-            } while(--length>0);
+            } 当(--length>0);
         }
         *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
     }
@@ -102,14 +102,14 @@ ucnv_toUWriteUChars(UConverter *cnv,
     int32_t *o;
 
     /* write UChars */
-    if(offsets==nullptr || (o=*offsets)==nullptr) {
-        while(length>0 && t<targetLimit) {
+    如果(offsets==nullptr || (o=*offsets)==nullptr) {
+        当(length>0 && t<targetLimit) {
             *t++=*uchars++;
             --length;
         }
-    } else {
+    } 否则 {
         /* output with offsets */
-        while(length>0 && t<targetLimit) {
+        当(length>0 && t<targetLimit) {
             *t++=*uchars++;
             *o++=sourceIndex;
             --length;
@@ -119,13 +119,13 @@ ucnv_toUWriteUChars(UConverter *cnv,
     *target=t;
 
     /* write overflow */
-    if(length>0) {
-        if(cnv!=nullptr) {
+    如果(length>0) {
+        如果(cnv!=nullptr) {
             t=cnv->UCharErrorBuffer;
             cnv->UCharErrorBufferLength=(int8_t)length;
             do {
                 *t++=*uchars++;
-            } while(--length>0);
+            } 当(--length>0);
         }
         *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
     }
@@ -143,23 +143,23 @@ ucnv_toUWriteCodePoint(UConverter *cnv,
 
     t=*target;
 
-    if(t<targetLimit) {
-        if(c<=0xffff) {
+    如果(t<targetLimit) {
+        如果(c<=0xffff) {
             *t++=(char16_t)c;
             c=U_SENTINEL;
-        } else /* c is a supplementary code point */ {
+        } 否则 /* c is a supplementary code point */ {
             *t++=U16_LEAD(c);
             c=U16_TRAIL(c);
-            if(t<targetLimit) {
+            如果(t<targetLimit) {
                 *t++=(char16_t)c;
                 c=U_SENTINEL;
             }
         }
 
         /* write offsets */
-        if(offsets!=nullptr && (o=*offsets)!=nullptr) {
+        如果(offsets!=nullptr && (o=*offsets)!=nullptr) {
             *o++=sourceIndex;
-            if((*target+1)<t) {
+            如果((*target+1)<t) {
                 *o++=sourceIndex;
             }
             *offsets=o;
@@ -169,8 +169,8 @@ ucnv_toUWriteCodePoint(UConverter *cnv,
     *target=t;
 
     /* write overflow from c */
-    if(c>=0) {
-        if(cnv!=nullptr) {
+    如果(c>=0) {
+        如果(cnv!=nullptr) {
             int8_t i=0;
             U16_APPEND_UNSAFE(cnv->UCharErrorBuffer, i, c);
             cnv->UCharErrorBufferLength=i;

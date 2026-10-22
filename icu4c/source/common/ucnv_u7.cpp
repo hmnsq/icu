@@ -18,7 +18,7 @@
 
 #include "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#如果 !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
 #include "cmemory.h"
 #include "unicode/ucnv.h"
@@ -182,12 +182,12 @@ fromBase64[128]={
 U_CDECL_BEGIN
 static void U_CALLCONV
 _UTF7Reset(UConverter *cnv, UConverterResetChoice choice) {
-    if(choice<=UCNV_RESET_TO_UNICODE) {
+    如果(choice<=UCNV_RESET_TO_UNICODE) {
         /* reset toUnicode */
         cnv->toUnicodeStatus=0x1000000; /* inDirectMode=true */
         cnv->toULength=0;
     }
-    if(choice!=UCNV_RESET_TO_UNICODE) {
+    如果(choice!=UCNV_RESET_TO_UNICODE) {
         /* reset fromUnicode */
         cnv->fromUnicodeStatus=(cnv->fromUnicodeStatus&0xf0000000)|0x1000000; /* keep version, inDirectMode=true */
     }
@@ -198,11 +198,11 @@ _UTF7Open(UConverter *cnv,
           UConverterLoadArgs *pArgs,
           UErrorCode *pErrorCode) {
     (void)pArgs;
-    if(UCNV_GET_VERSION(cnv)<=1) {
+    如果(UCNV_GET_VERSION(cnv)<=1) {
         /* TODO(markus): Should just use cnv->options rather than copying the version number. */
         cnv->fromUnicodeStatus=UCNV_GET_VERSION(cnv)<<28;
         _UTF7Reset(cnv, UCNV_RESET_BOTH);
-    } else {
+    } 否则 {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
     }
 }
@@ -253,7 +253,7 @@ _UTF7ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     sourceIndex=byteIndex==0 ? 0 : -1;
     nextSourceIndex=0;
 
-    if(inDirectMode) {
+    如果(inDirectMode) {
 directMode:
         /*
          * In Direct Mode, most US-ASCII characters are encoded directly, i.e.,
@@ -266,24 +266,24 @@ directMode:
         byteIndex=0;
         length=(int32_t)(sourceLimit-source);
         targetCapacity=(int32_t)(targetLimit-target);
-        if(length>targetCapacity) {
+        如果(length>targetCapacity) {
             length=targetCapacity;
         }
-        while(length>0) {
+        当(length>0) {
             b=*source++;
-            if(!isLegalUTF7(b)) {
+            如果(!isLegalUTF7(b)) {
                 /* illegal */
                 bytes[0]=b;
                 byteIndex=1;
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                 break;
-            } else if(b!=PLUS) {
+            } 否则 如果(b!=PLUS) {
                 /* write directly encoded character */
                 *target++=b;
-                if(offsets!=nullptr) {
+                如果(offsets!=nullptr) {
                     *offsets++=sourceIndex++;
                 }
-            } else /* PLUS */ {
+            } 否则 /* PLUS */ {
                 /* switch to Unicode mode */
                 nextSourceIndex=++sourceIndex;
                 inDirectMode=false;
@@ -294,11 +294,11 @@ directMode:
             }
             --length;
         }
-        if(source<sourceLimit && target>=targetLimit) {
+        如果(source<sourceLimit && target>=targetLimit) {
             /* target is full */
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
         }
-    } else {
+    } 否则 {
 unicodeMode:
         /*
          * In Unicode (or "escape") Mode, UTF-16BE is base64-encoded.
@@ -310,12 +310,12 @@ unicodeMode:
          * keeping the index to the following byte.
          * Note that in 2 out of 3 cases, UChars overlap within a base64 byte.
          */
-        while(source<sourceLimit) {
-            if(target<targetLimit) {
+        当(source<sourceLimit) {
+            如果(target<targetLimit) {
                 bytes[byteIndex++]=b=*source++;
                 ++nextSourceIndex;
                 base64Value = -3; /* initialize as illegal */
-                if(b>=126 || (base64Value=fromBase64[b])==-3 || base64Value==-1) {
+                如果(b>=126 || (base64Value=fromBase64[b])==-3 || base64Value==-1) {
                     /* either
                      * base64Value==-1 for any legal character except base64 and minus sign, or
                      * base64Value==-3 for illegal characters:
@@ -330,7 +330,7 @@ unicodeMode:
                      * 2.2.2. Else if the current char is illegal, we might as well deal with it here.
                      */
                     inDirectMode=true;
-                    if(base64Counter==-1) {
+                    如果(base64Counter==-1) {
                         /* illegal: + immediately followed by something other than base64 or minus sign */
                         /* include the plus sign in the reported sequence, but not the subsequent char */
                         --source;
@@ -338,27 +338,27 @@ unicodeMode:
                         byteIndex=1;
                         *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                         break;
-                    } else if(bits!=0) {
+                    } 否则 如果(bits!=0) {
                         /* bits are illegally left over, a char16_t is incomplete */
                         /* don't include current char (legal or illegal) in error seq */
                         --source;
                         --byteIndex;
                         *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                         break;
-                    } else {
+                    } 否则 {
                         /* previous char16_t was complete */
-                        if(base64Value==-3) {
+                        如果(base64Value==-3) {
                             /* current character is illegal, deal with it here */
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                             break;
-                        } else {
+                        } 否则 {
                             /* un-read the current character in case it is a plus sign */
                             --source;
                             sourceIndex=nextSourceIndex-1;
                             goto directMode;
                         }
                     }
-                } else if(base64Value>=0) {
+                } 否则 如果(base64Value>=0) {
                     /* collect base64 bytes into UChars */
                     switch(base64Counter) {
                     case -1: /* -1 is immediately after the + */
@@ -375,7 +375,7 @@ unicodeMode:
                         break;
                     case 2:
                         *target++=(char16_t)((bits<<4)|(base64Value>>2));
-                        if(offsets!=nullptr) {
+                        如果(offsets!=nullptr) {
                             *offsets++=sourceIndex;
                             sourceIndex=nextSourceIndex-1;
                         }
@@ -386,7 +386,7 @@ unicodeMode:
                         break;
                     case 5:
                         *target++=(char16_t)((bits<<2)|(base64Value>>4));
-                        if(offsets!=nullptr) {
+                        如果(offsets!=nullptr) {
                             *offsets++=sourceIndex;
                             sourceIndex=nextSourceIndex-1;
                         }
@@ -397,7 +397,7 @@ unicodeMode:
                         break;
                     case 7:
                         *target++=(char16_t)((bits<<6)|base64Value);
-                        if(offsets!=nullptr) {
+                        如果(offsets!=nullptr) {
                             *offsets++=sourceIndex;
                             sourceIndex=nextSourceIndex;
                         }
@@ -409,18 +409,18 @@ unicodeMode:
                         /* will never occur */
                         break;
                     }
-                } else /*base64Value==-2*/ {
+                } 否则 /*base64Value==-2*/ {
                     /* minus sign terminates the base64 sequence */
                     inDirectMode=true;
-                    if(base64Counter==-1) {
+                    如果(base64Counter==-1) {
                         /* +- i.e. a minus immediately following a plus */
                         *target++=PLUS;
-                        if(offsets!=nullptr) {
+                        如果(offsets!=nullptr) {
                             *offsets++=sourceIndex-1;
                         }
-                    } else {
+                    } 否则 {
                         /* absorb the minus and leave the Unicode Mode */
-                        if(bits!=0) {
+                        如果(bits!=0) {
                             /* bits are illegally left over, a char16_t is incomplete */
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                             break;
@@ -429,7 +429,7 @@ unicodeMode:
                     sourceIndex=nextSourceIndex;
                     goto directMode;
                 }
-            } else {
+            } 否则 {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                 break;
@@ -437,7 +437,7 @@ unicodeMode:
         }
     }
 
-    if(U_SUCCESS(*pErrorCode) && pArgs->flush && source==sourceLimit && bits==0) {
+    如果(U_SUCCESS(*pErrorCode) && pArgs->flush && source==sourceLimit && bits==0) {
         /*
          * if we are in Unicode mode, then the byteIndex might not be 0,
          * but that is ok if bits==0
@@ -497,35 +497,35 @@ _UTF7FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     /* UTF-7 always encodes UTF-16 code units, therefore we need only a simple sourceIndex */
     sourceIndex=0;
 
-    if(inDirectMode) {
+    如果(inDirectMode) {
 directMode:
         length=(int32_t)(sourceLimit-source);
         targetCapacity=(int32_t)(targetLimit-target);
-        if(length>targetCapacity) {
+        如果(length>targetCapacity) {
             length=targetCapacity;
         }
-        while(length>0) {
+        当(length>0) {
             c=*source++;
             /* currently always encode CR LF SP TAB directly */
-            if(c<=127 && encodeDirectly[c]) {
+            如果(c<=127 && encodeDirectly[c]) {
                 /* encode directly */
                 *target++=(uint8_t)c;
-                if(offsets!=nullptr) {
+                如果(offsets!=nullptr) {
                     *offsets++=sourceIndex++;
                 }
-            } else if(c==PLUS) {
+            } 否则 如果(c==PLUS) {
                 /* output +- for + */
                 *target++=PLUS;
-                if(target<targetLimit) {
+                如果(target<targetLimit) {
                     *target++=MINUS;
-                    if(offsets!=nullptr) {
+                    如果(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                         *offsets++=sourceIndex++;
                     }
                     /* realign length and targetCapacity */
                     goto directMode;
-                } else {
-                    if(offsets!=nullptr) {
+                } 否则 {
+                    如果(offsets!=nullptr) {
                         *offsets++=sourceIndex++;
                     }
                     cnv->charErrorBuffer[0]=MINUS;
@@ -533,11 +533,11 @@ directMode:
                     *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                     break;
                 }
-            } else {
+            } 否则 {
                 /* un-read this character and switch to Unicode Mode */
                 --source;
                 *target++=PLUS;
-                if(offsets!=nullptr) {
+                如果(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 inDirectMode=false;
@@ -546,16 +546,16 @@ directMode:
             }
             --length;
         }
-        if(source<sourceLimit && target>=targetLimit) {
+        如果(source<sourceLimit && target>=targetLimit) {
             /* target is full */
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
         }
-    } else {
+    } 否则 {
 unicodeMode:
-        while(source<sourceLimit) {
-            if(target<targetLimit) {
+        当(source<sourceLimit) {
+            如果(target<targetLimit) {
                 c=*source++;
-                if(c<=127 && encodeDirectly[c]) {
+                如果(c<=127 && encodeDirectly[c]) {
                     /* encode directly */
                     inDirectMode=true;
 
@@ -563,21 +563,21 @@ unicodeMode:
                     --source;
 
                     /* terminate the base64 sequence */
-                    if(base64Counter!=0) {
+                    如果(base64Counter!=0) {
                         /* write remaining bits for the previous character */
                         *target++=toBase64[bits];
-                        if(offsets!=nullptr) {
+                        如果(offsets!=nullptr) {
                             *offsets++=sourceIndex-1;
                         }
                     }
-                    if(fromBase64[c]!=-1) {
+                    如果(fromBase64[c]!=-1) {
                         /* need to terminate with a minus */
-                        if(target<targetLimit) {
+                        如果(target<targetLimit) {
                             *target++=MINUS;
-                            if(offsets!=nullptr) {
+                            如果(offsets!=nullptr) {
                                 *offsets++=sourceIndex-1;
                             }
-                        } else {
+                        } 否则 {
                             cnv->charErrorBuffer[0]=MINUS;
                             cnv->charErrorBufferLength=1;
                             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
@@ -585,7 +585,7 @@ unicodeMode:
                         }
                     }
                     goto directMode;
-                } else {
+                } 否则 {
                     /*
                      * base64 this character:
                      * Output 2 or 3 base64 bytes for the remaining bits of the previous character
@@ -598,14 +598,14 @@ unicodeMode:
                     switch(base64Counter) {
                     case 0:
                         *target++=toBase64[c>>10];
-                        if(target<targetLimit) {
+                        如果(target<targetLimit) {
                             *target++=toBase64[(c>>4)&0x3f];
-                            if(offsets!=nullptr) {
+                            如果(offsets!=nullptr) {
                                 *offsets++=sourceIndex;
                                 *offsets++=sourceIndex++;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
+                        } 否则 {
+                            如果(offsets!=nullptr) {
                                 *offsets++=sourceIndex++;
                             }
                             cnv->charErrorBuffer[0]=toBase64[(c>>4)&0x3f];
@@ -617,17 +617,17 @@ unicodeMode:
                         break;
                     case 1:
                         *target++=toBase64[bits|(c>>14)];
-                        if(target<targetLimit) {
+                        如果(target<targetLimit) {
                             *target++=toBase64[(c>>8)&0x3f];
-                            if(target<targetLimit) {
+                            如果(target<targetLimit) {
                                 *target++=toBase64[(c>>2)&0x3f];
-                                if(offsets!=nullptr) {
+                                如果(offsets!=nullptr) {
                                     *offsets++=sourceIndex;
                                     *offsets++=sourceIndex;
                                     *offsets++=sourceIndex++;
                                 }
-                            } else {
-                                if(offsets!=nullptr) {
+                            } 否则 {
+                                如果(offsets!=nullptr) {
                                     *offsets++=sourceIndex;
                                     *offsets++=sourceIndex++;
                                 }
@@ -635,8 +635,8 @@ unicodeMode:
                                 cnv->charErrorBufferLength=1;
                                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
+                        } 否则 {
+                            如果(offsets!=nullptr) {
                                 *offsets++=sourceIndex++;
                             }
                             cnv->charErrorBuffer[0]=toBase64[(c>>8)&0x3f];
@@ -649,17 +649,17 @@ unicodeMode:
                         break;
                     case 2:
                         *target++=toBase64[bits|(c>>12)];
-                        if(target<targetLimit) {
+                        如果(target<targetLimit) {
                             *target++=toBase64[(c>>6)&0x3f];
-                            if(target<targetLimit) {
+                            如果(target<targetLimit) {
                                 *target++=toBase64[c&0x3f];
-                                if(offsets!=nullptr) {
+                                如果(offsets!=nullptr) {
                                     *offsets++=sourceIndex;
                                     *offsets++=sourceIndex;
                                     *offsets++=sourceIndex++;
                                 }
-                            } else {
-                                if(offsets!=nullptr) {
+                            } 否则 {
+                                如果(offsets!=nullptr) {
                                     *offsets++=sourceIndex;
                                     *offsets++=sourceIndex++;
                                 }
@@ -667,8 +667,8 @@ unicodeMode:
                                 cnv->charErrorBufferLength=1;
                                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
+                        } 否则 {
+                            如果(offsets!=nullptr) {
                                 *offsets++=sourceIndex++;
                             }
                             cnv->charErrorBuffer[0]=toBase64[(c>>6)&0x3f];
@@ -684,7 +684,7 @@ unicodeMode:
                         break;
                     }
                 }
-            } else {
+            } 否则 {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                 break;
@@ -692,34 +692,34 @@ unicodeMode:
         }
     }
 
-    if(pArgs->flush && source>=sourceLimit) {
+    如果(pArgs->flush && source>=sourceLimit) {
         /* flush remaining bits to the target */
-        if(!inDirectMode) {
-            if (base64Counter!=0) {
-                if(target<targetLimit) {
+        如果(!inDirectMode) {
+            如果 (base64Counter!=0) {
+                如果(target<targetLimit) {
                     *target++=toBase64[bits];
-                    if(offsets!=nullptr) {
+                    如果(offsets!=nullptr) {
                         *offsets++=sourceIndex-1;
                     }
-                } else {
+                } 否则 {
                     cnv->charErrorBuffer[cnv->charErrorBufferLength++]=toBase64[bits];
                     *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                 }
             }
             /* Add final MINUS to terminate unicodeMode */
-            if(target<targetLimit) {
+            如果(target<targetLimit) {
                 *target++=MINUS;
-                if(offsets!=nullptr) {
+                如果(offsets!=nullptr) {
                     *offsets++=sourceIndex-1;
                 }
-            } else {
+            } 否则 {
                 cnv->charErrorBuffer[cnv->charErrorBufferLength++]=MINUS;
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
             }
         }
         /* reset the state for the next conversion */
         cnv->fromUnicodeStatus=(cnv->fromUnicodeStatus&0xf0000000)|0x1000000; /* keep version, inDirectMode=true */
-    } else {
+    } 否则 {
         /* set the converter state back into UConverter */
         cnv->fromUnicodeStatus=
             (cnv->fromUnicodeStatus&0xf0000000)|    /* keep version*/
@@ -736,9 +736,9 @@ static const char * U_CALLCONV
 _UTF7GetName(const UConverter *cnv) {
     switch(cnv->fromUnicodeStatus>>28) {
     case 1:
-        return "UTF-7,version=1";
+        返回 "UTF-7,version=1";
     default:
-        return "UTF-7";
+        返回 "UTF-7";
     }
 }
 U_CDECL_END
@@ -937,7 +937,7 @@ _IMAPToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     sourceIndex=byteIndex==0 ? 0 : -1;
     nextSourceIndex=0;
 
-    if(inDirectMode) {
+    如果(inDirectMode) {
 directMode:
         /*
          * In Direct Mode, US-ASCII characters are encoded directly, i.e.,
@@ -949,24 +949,24 @@ directMode:
         byteIndex=0;
         length=(int32_t)(sourceLimit-source);
         targetCapacity=(int32_t)(targetLimit-target);
-        if(length>targetCapacity) {
+        如果(length>targetCapacity) {
             length=targetCapacity;
         }
-        while(length>0) {
+        当(length>0) {
             b=*source++;
-            if(!isLegalIMAP(b)) {
+            如果(!isLegalIMAP(b)) {
                 /* illegal */
                 bytes[0]=b;
                 byteIndex=1;
                 *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                 break;
-            } else if(b!=AMPERSAND) {
+            } 否则 如果(b!=AMPERSAND) {
                 /* write directly encoded character */
                 *target++=b;
-                if(offsets!=nullptr) {
+                如果(offsets!=nullptr) {
                     *offsets++=sourceIndex++;
                 }
-            } else /* AMPERSAND */ {
+            } 否则 /* AMPERSAND */ {
                 /* switch to Unicode mode */
                 nextSourceIndex=++sourceIndex;
                 inDirectMode=false;
@@ -977,11 +977,11 @@ directMode:
             }
             --length;
         }
-        if(source<sourceLimit && target>=targetLimit) {
+        如果(source<sourceLimit && target>=targetLimit) {
             /* target is full */
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
         }
-    } else {
+    } 否则 {
 unicodeMode:
         /*
          * In Unicode (or "escape") Mode, UTF-16BE is base64-encoded.
@@ -994,16 +994,16 @@ unicodeMode:
          * keeping the index to the following byte.
          * Note that in 2 out of 3 cases, UChars overlap within a base64 byte.
          */
-        while(source<sourceLimit) {
-            if(target<targetLimit) {
+        当(source<sourceLimit) {
+            如果(target<targetLimit) {
                 bytes[byteIndex++]=b=*source++;
                 ++nextSourceIndex;
-                if(b>0x7e) {
+                如果(b>0x7e) {
                     /* illegal - test other illegal US-ASCII values by base64Value==-3 */
                     inDirectMode=true;
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                     break;
-                } else if((base64Value=FROM_BASE64_IMAP(b))>=0) {
+                } 否则 如果((base64Value=FROM_BASE64_IMAP(b))>=0) {
                     /* collect base64 bytes into UChars */
                     switch(base64Counter) {
                     case -1: /* -1 is immediately after the & */
@@ -1020,14 +1020,14 @@ unicodeMode:
                         break;
                     case 2:
                         c=(char16_t)((bits<<4)|(base64Value>>2));
-                        if(isLegalIMAP(c)) {
+                        如果(isLegalIMAP(c)) {
                             /* illegal */
                             inDirectMode=true;
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                             goto endloop;
                         }
                         *target++=c;
-                        if(offsets!=nullptr) {
+                        如果(offsets!=nullptr) {
                             *offsets++=sourceIndex;
                             sourceIndex=nextSourceIndex-1;
                         }
@@ -1038,14 +1038,14 @@ unicodeMode:
                         break;
                     case 5:
                         c=(char16_t)((bits<<2)|(base64Value>>4));
-                        if(isLegalIMAP(c)) {
+                        如果(isLegalIMAP(c)) {
                             /* illegal */
                             inDirectMode=true;
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                             goto endloop;
                         }
                         *target++=c;
-                        if(offsets!=nullptr) {
+                        如果(offsets!=nullptr) {
                             *offsets++=sourceIndex;
                             sourceIndex=nextSourceIndex-1;
                         }
@@ -1056,14 +1056,14 @@ unicodeMode:
                         break;
                     case 7:
                         c=(char16_t)((bits<<6)|base64Value);
-                        if(isLegalIMAP(c)) {
+                        如果(isLegalIMAP(c)) {
                             /* illegal */
                             inDirectMode=true;
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                             goto endloop;
                         }
                         *target++=c;
-                        if(offsets!=nullptr) {
+                        如果(offsets!=nullptr) {
                             *offsets++=sourceIndex;
                             sourceIndex=nextSourceIndex;
                         }
@@ -1075,18 +1075,18 @@ unicodeMode:
                         /* will never occur */
                         break;
                     }
-                } else if(base64Value==-2) {
+                } 否则 如果(base64Value==-2) {
                     /* minus sign terminates the base64 sequence */
                     inDirectMode=true;
-                    if(base64Counter==-1) {
+                    如果(base64Counter==-1) {
                         /* &- i.e. a minus immediately following an ampersand */
                         *target++=AMPERSAND;
-                        if(offsets!=nullptr) {
+                        如果(offsets!=nullptr) {
                             *offsets++=sourceIndex-1;
                         }
-                    } else {
+                    } 否则 {
                         /* absorb the minus and leave the Unicode Mode */
-                        if(bits!=0 || (base64Counter!=0 && base64Counter!=3 && base64Counter!=6)) {
+                        如果(bits!=0 || (base64Counter!=0 && base64Counter!=3 && base64Counter!=6)) {
                             /* bits are illegally left over, a char16_t is incomplete */
                             /* base64Counter other than 0, 3, 6 means non-minimal zero-padding, also illegal */
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
@@ -1095,8 +1095,8 @@ unicodeMode:
                     }
                     sourceIndex=nextSourceIndex;
                     goto directMode;
-                } else {
-                    if(base64Counter==-1) {
+                } 否则 {
+                    如果(base64Counter==-1) {
                         /* illegal: & immediately followed by something other than base64 or minus sign */
                         /* include the ampersand in the reported sequence */
                         --sourceIndex;
@@ -1111,7 +1111,7 @@ unicodeMode:
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                     break;
                 }
-            } else {
+            } 否则 {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                 break;
@@ -1130,11 +1130,11 @@ endloop:
      *   in Unicode mode and byteIndex==0
      *   end of input and no truncated input
      */
-    if( U_SUCCESS(*pErrorCode) &&
+    如果( U_SUCCESS(*pErrorCode) &&
         !inDirectMode && byteIndex==0 &&
         pArgs->flush && source>=sourceLimit
     ) {
-        if(base64Counter==-1) {
+        如果(base64Counter==-1) {
             /* & at the very end of the input */
             /* make the ampersand the reported sequence */
             bytes[0]=AMPERSAND;
@@ -1194,35 +1194,35 @@ _IMAPFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     /* UTF-7 always encodes UTF-16 code units, therefore we need only a simple sourceIndex */
     sourceIndex=0;
 
-    if(inDirectMode) {
+    如果(inDirectMode) {
 directMode:
         length=(int32_t)(sourceLimit-source);
         targetCapacity=(int32_t)(targetLimit-target);
-        if(length>targetCapacity) {
+        如果(length>targetCapacity) {
             length=targetCapacity;
         }
-        while(length>0) {
+        当(length>0) {
             c=*source++;
             /* encode 0x20..0x7e except '&' directly */
-            if(inSetDIMAP(c)) {
+            如果(inSetDIMAP(c)) {
                 /* encode directly */
                 *target++=(uint8_t)c;
-                if(offsets!=nullptr) {
+                如果(offsets!=nullptr) {
                     *offsets++=sourceIndex++;
                 }
-            } else if(c==AMPERSAND) {
+            } 否则 如果(c==AMPERSAND) {
                 /* output &- for & */
                 *target++=AMPERSAND;
-                if(target<targetLimit) {
+                如果(target<targetLimit) {
                     *target++=MINUS;
-                    if(offsets!=nullptr) {
+                    如果(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                         *offsets++=sourceIndex++;
                     }
                     /* realign length and targetCapacity */
                     goto directMode;
-                } else {
-                    if(offsets!=nullptr) {
+                } 否则 {
+                    如果(offsets!=nullptr) {
                         *offsets++=sourceIndex++;
                     }
                     cnv->charErrorBuffer[0]=MINUS;
@@ -1230,11 +1230,11 @@ directMode:
                     *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                     break;
                 }
-            } else {
+            } 否则 {
                 /* un-read this character and switch to Unicode Mode */
                 --source;
                 *target++=AMPERSAND;
-                if(offsets!=nullptr) {
+                如果(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 inDirectMode=false;
@@ -1243,16 +1243,16 @@ directMode:
             }
             --length;
         }
-        if(source<sourceLimit && target>=targetLimit) {
+        如果(source<sourceLimit && target>=targetLimit) {
             /* target is full */
             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
         }
-    } else {
+    } 否则 {
 unicodeMode:
-        while(source<sourceLimit) {
-            if(target<targetLimit) {
+        当(source<sourceLimit) {
+            如果(target<targetLimit) {
                 c=*source++;
-                if(isLegalIMAP(c)) {
+                如果(isLegalIMAP(c)) {
                     /* encode directly */
                     inDirectMode=true;
 
@@ -1260,27 +1260,27 @@ unicodeMode:
                     --source;
 
                     /* terminate the base64 sequence */
-                    if(base64Counter!=0) {
+                    如果(base64Counter!=0) {
                         /* write remaining bits for the previous character */
                         *target++=TO_BASE64_IMAP(bits);
-                        if(offsets!=nullptr) {
+                        如果(offsets!=nullptr) {
                             *offsets++=sourceIndex-1;
                         }
                     }
                     /* need to terminate with a minus */
-                    if(target<targetLimit) {
+                    如果(target<targetLimit) {
                         *target++=MINUS;
-                        if(offsets!=nullptr) {
+                        如果(offsets!=nullptr) {
                             *offsets++=sourceIndex-1;
                         }
-                    } else {
+                    } 否则 {
                         cnv->charErrorBuffer[0]=MINUS;
                         cnv->charErrorBufferLength=1;
                         *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                         break;
                     }
                     goto directMode;
-                } else {
+                } 否则 {
                     /*
                      * base64 this character:
                      * Output 2 or 3 base64 bytes for the remaining bits of the previous character
@@ -1294,15 +1294,15 @@ unicodeMode:
                     case 0:
                         b=(uint8_t)(c>>10);
                         *target++=TO_BASE64_IMAP(b);
-                        if(target<targetLimit) {
+                        如果(target<targetLimit) {
                             b=(uint8_t)((c>>4)&0x3f);
                             *target++=TO_BASE64_IMAP(b);
-                            if(offsets!=nullptr) {
+                            如果(offsets!=nullptr) {
                                 *offsets++=sourceIndex;
                                 *offsets++=sourceIndex++;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
+                        } 否则 {
+                            如果(offsets!=nullptr) {
                                 *offsets++=sourceIndex++;
                             }
                             b=(uint8_t)((c>>4)&0x3f);
@@ -1316,19 +1316,19 @@ unicodeMode:
                     case 1:
                         b=(uint8_t)(bits|(c>>14));
                         *target++=TO_BASE64_IMAP(b);
-                        if(target<targetLimit) {
+                        如果(target<targetLimit) {
                             b=(uint8_t)((c>>8)&0x3f);
                             *target++=TO_BASE64_IMAP(b);
-                            if(target<targetLimit) {
+                            如果(target<targetLimit) {
                                 b=(uint8_t)((c>>2)&0x3f);
                                 *target++=TO_BASE64_IMAP(b);
-                                if(offsets!=nullptr) {
+                                如果(offsets!=nullptr) {
                                     *offsets++=sourceIndex;
                                     *offsets++=sourceIndex;
                                     *offsets++=sourceIndex++;
                                 }
-                            } else {
-                                if(offsets!=nullptr) {
+                            } 否则 {
+                                如果(offsets!=nullptr) {
                                     *offsets++=sourceIndex;
                                     *offsets++=sourceIndex++;
                                 }
@@ -1337,8 +1337,8 @@ unicodeMode:
                                 cnv->charErrorBufferLength=1;
                                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
+                        } 否则 {
+                            如果(offsets!=nullptr) {
                                 *offsets++=sourceIndex++;
                             }
                             b=(uint8_t)((c>>8)&0x3f);
@@ -1354,19 +1354,19 @@ unicodeMode:
                     case 2:
                         b=(uint8_t)(bits|(c>>12));
                         *target++=TO_BASE64_IMAP(b);
-                        if(target<targetLimit) {
+                        如果(target<targetLimit) {
                             b=(uint8_t)((c>>6)&0x3f);
                             *target++=TO_BASE64_IMAP(b);
-                            if(target<targetLimit) {
+                            如果(target<targetLimit) {
                                 b=(uint8_t)(c&0x3f);
                                 *target++=TO_BASE64_IMAP(b);
-                                if(offsets!=nullptr) {
+                                如果(offsets!=nullptr) {
                                     *offsets++=sourceIndex;
                                     *offsets++=sourceIndex;
                                     *offsets++=sourceIndex++;
                                 }
-                            } else {
-                                if(offsets!=nullptr) {
+                            } 否则 {
+                                如果(offsets!=nullptr) {
                                     *offsets++=sourceIndex;
                                     *offsets++=sourceIndex++;
                                 }
@@ -1375,8 +1375,8 @@ unicodeMode:
                                 cnv->charErrorBufferLength=1;
                                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                             }
-                        } else {
-                            if(offsets!=nullptr) {
+                        } 否则 {
+                            如果(offsets!=nullptr) {
                                 *offsets++=sourceIndex++;
                             }
                             b=(uint8_t)((c>>6)&0x3f);
@@ -1394,7 +1394,7 @@ unicodeMode:
                         break;
                     }
                 }
-            } else {
+            } 否则 {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                 break;
@@ -1402,34 +1402,34 @@ unicodeMode:
         }
     }
 
-    if(pArgs->flush && source>=sourceLimit) {
+    如果(pArgs->flush && source>=sourceLimit) {
         /* flush remaining bits to the target */
-        if(!inDirectMode) {
-            if(base64Counter!=0) {
-                if(target<targetLimit) {
+        如果(!inDirectMode) {
+            如果(base64Counter!=0) {
+                如果(target<targetLimit) {
                     *target++=TO_BASE64_IMAP(bits);
-                    if(offsets!=nullptr) {
+                    如果(offsets!=nullptr) {
                         *offsets++=sourceIndex-1;
                     }
-                } else {
+                } 否则 {
                     cnv->charErrorBuffer[cnv->charErrorBufferLength++]=TO_BASE64_IMAP(bits);
                     *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
                 }
             }
             /* need to terminate with a minus */
-            if(target<targetLimit) {
+            如果(target<targetLimit) {
                 *target++=MINUS;
-                if(offsets!=nullptr) {
+                如果(offsets!=nullptr) {
                     *offsets++=sourceIndex-1;
                 }
-            } else {
+            } 否则 {
                 cnv->charErrorBuffer[cnv->charErrorBufferLength++]=MINUS;
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
             }
         }
         /* reset the state for the next conversion */
         cnv->fromUnicodeStatus=(cnv->fromUnicodeStatus&0xf0000000)|0x1000000; /* keep version, inDirectMode=true */
-    } else {
+    } 否则 {
         /* set the converter state back into UConverter */
         cnv->fromUnicodeStatus=
             (cnv->fromUnicodeStatus&0xf0000000)|    /* keep version*/

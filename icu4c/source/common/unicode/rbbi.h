@@ -18,14 +18,14 @@
 
 #include "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#如果 U_SHOW_CPLUSPLUS_API
 
 /**
  * \file
  * \brief C++ API: Rule Based Break Iterator
  */
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#如果 !UCONFIG_NO_BREAK_ITERATION
 
 #include "unicode/brkiter.h"
 #include "unicode/udata.h"
@@ -359,7 +359,7 @@ public:
      *  @stable ICU 2.0
      */
     inline bool operator!=(const BreakIterator& that) const {
-        return !operator==(that);
+        返回 !operator==(that);
     }
 
     /**
