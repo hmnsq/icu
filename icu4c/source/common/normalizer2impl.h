@@ -19,19 +19,19 @@
 #ifndef __NORMALIZER2IMPL_H__
 #define __NORMALIZER2IMPL_H__
 
-#include "unicode/utypes.h"
+#अन्तर्भाव "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#यदि !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/normalizer2.h"
-#include "unicode/ucptrie.h"
-#include "unicode/unistr.h"
-#include "unicode/unorm.h"
-#include "unicode/utf.h"
-#include "unicode/utf16.h"
-#include "mutex.h"
-#include "udataswp.h"
-#include "uset_imp.h"
+#अन्तर्भाव "unicode/normalizer2.h"
+#अन्तर्भाव "unicode/ucptrie.h"
+#अन्तर्भाव "unicode/unistr.h"
+#अन्तर्भाव "unicode/unorm.h"
+#अन्तर्भाव "unicode/utf.h"
+#अन्तर्भाव "unicode/utf16.h"
+#अन्तर्भाव "mutex.h"
+#अन्तर्भाव "udataswp.h"
+#अन्तर्भाव "uset_imp.h"
 
 // When the nfc.nrm data is *not* hardcoded into the common library
 // (with this constant set to 0),
@@ -41,7 +41,7 @@
 
 U_NAMESPACE_BEGIN
 
-struct CanonIterData;
+संरचना CanonIterData;
 
 class ByteSink;
 class Edits;
@@ -49,9 +49,9 @@ class InitCanonIterData;
 class LcccContext;
 
 class U_COMMON_API Hangul {
-public:
+सार्वजनिक:
     /* Korean Hangul and Jamo constants */
-    enum {
+    गणना {
         JAMO_L_BASE=0x1100,     /* "lead" jamo */
         JAMO_L_END=0x1112,
         JAMO_V_BASE=0x1161,     /* "vowel" jamo */
@@ -62,36 +62,36 @@ public:
         HANGUL_BASE=0xac00,
         HANGUL_END=0xd7a3,
 
-        JAMO_L_COUNT=19,
-        JAMO_V_COUNT=21,
-        JAMO_T_COUNT=28,
+        JAMO_L_गिनती=19,
+        JAMO_V_गिनती=21,
+        JAMO_T_गिनती=28,
 
-        JAMO_VT_COUNT=JAMO_V_COUNT*JAMO_T_COUNT,
+        JAMO_VT_गिनती=JAMO_V_गिनती*JAMO_T_गिनती,
 
-        HANGUL_COUNT=JAMO_L_COUNT*JAMO_V_COUNT*JAMO_T_COUNT,
-        HANGUL_LIMIT=HANGUL_BASE+HANGUL_COUNT
+        HANGUL_गिनती=JAMO_L_गिनती*JAMO_V_गिनती*JAMO_T_गिनती,
+        HANGUL_LIMIT=HANGUL_BASE+HANGUL_गिनती
     };
 
-    static inline UBool isHangul(UChar32 c) {
-        return HANGUL_BASE<=c && c<HANGUL_LIMIT;
+    स्थिर अन्तःस्थ UBool isHangul(UChar32 c) {
+        प्रत्यागम HANGUL_BASE<=c && c<HANGUL_LIMIT;
     }
-    static inline UBool
+    स्थिर अन्तःस्थ UBool
     isHangulLV(UChar32 c) {
         c-=HANGUL_BASE;
-        return 0<=c && c<HANGUL_COUNT && c%JAMO_T_COUNT==0;
+        प्रत्यागम 0<=c && c<HANGUL_गिनती && c%JAMO_T_गिनती==0;
     }
-    static inline UBool isJamoL(UChar32 c) {
-        return static_cast<uint32_t>(c - JAMO_L_BASE) < JAMO_L_COUNT;
+    स्थिर अन्तःस्थ UBool isJamoL(UChar32 c) {
+        प्रत्यागम static_cast<uint32_t>(c - JAMO_L_BASE) < JAMO_L_गिनती;
     }
-    static inline UBool isJamoV(UChar32 c) {
-        return static_cast<uint32_t>(c - JAMO_V_BASE) < JAMO_V_COUNT;
+    स्थिर अन्तःस्थ UBool isJamoV(UChar32 c) {
+        प्रत्यागम static_cast<uint32_t>(c - JAMO_V_BASE) < JAMO_V_गिनती;
     }
-    static inline UBool isJamoT(UChar32 c) {
+    स्थिर अन्तःस्थ UBool isJamoT(UChar32 c) {
         int32_t t=c-JAMO_T_BASE;
-        return 0<t && t<JAMO_T_COUNT;  // not JAMO_T_BASE itself
+        प्रत्यागम 0<t && t<JAMO_T_गिनती;  // not JAMO_T_BASE itself
     }
-    static UBool isJamo(UChar32 c) {
-        return JAMO_L_BASE<=c && c<=JAMO_T_END &&
+    स्थिर UBool isJamo(UChar32 c) {
+        प्रत्यागम JAMO_L_BASE<=c && c<=JAMO_T_END &&
             (c<=JAMO_L_END || (JAMO_V_BASE<=c && c<=JAMO_V_END) || JAMO_T_BASE<c);
     }
 
@@ -99,17 +99,17 @@ public:
      * Decomposes c, which must be a Hangul syllable, into buffer
      * and returns the length of the decomposition (2 or 3).
      */
-    static inline int32_t decompose(UChar32 c, char16_t buffer[3]) {
+    स्थिर अन्तःस्थ int32_t decompose(UChar32 c, char16_t buffer[3]) {
         c-=HANGUL_BASE;
-        UChar32 c2=c%JAMO_T_COUNT;
-        c/=JAMO_T_COUNT;
-        buffer[0] = static_cast<char16_t>(JAMO_L_BASE + c / JAMO_V_COUNT);
-        buffer[1] = static_cast<char16_t>(JAMO_V_BASE + c % JAMO_V_COUNT);
-        if(c2==0) {
-            return 2;
-        } else {
+        UChar32 c2=c%JAMO_T_गिनती;
+        c/=JAMO_T_गिनती;
+        buffer[0] = static_cast<char16_t>(JAMO_L_BASE + c / JAMO_V_गिनती);
+        buffer[1] = static_cast<char16_t>(JAMO_V_BASE + c % JAMO_V_गिनती);
+        यदि(c2==0) {
+            प्रत्यागम 2;
+        } अन्यथा {
             buffer[2] = static_cast<char16_t>(JAMO_T_BASE + c2);
-            return 3;
+            प्रत्यागम 3;
         }
     }
 
@@ -117,87 +117,87 @@ public:
      * Decomposes c, which must be a Hangul syllable, into buffer.
      * This is the raw, not recursive, decomposition. Its length is always 2.
      */
-    static inline void getRawDecomposition(UChar32 c, char16_t buffer[2]) {
+    स्थिर अन्तःस्थ शून्य getRawDecomposition(UChar32 c, char16_t buffer[2]) {
         UChar32 orig=c;
         c-=HANGUL_BASE;
-        UChar32 c2=c%JAMO_T_COUNT;
-        if(c2==0) {
-            c/=JAMO_T_COUNT;
-            buffer[0] = static_cast<char16_t>(JAMO_L_BASE + c / JAMO_V_COUNT);
-            buffer[1] = static_cast<char16_t>(JAMO_V_BASE + c % JAMO_V_COUNT);
-        } else {
+        UChar32 c2=c%JAMO_T_गिनती;
+        यदि(c2==0) {
+            c/=JAMO_T_गिनती;
+            buffer[0] = static_cast<char16_t>(JAMO_L_BASE + c / JAMO_V_गिनती);
+            buffer[1] = static_cast<char16_t>(JAMO_V_BASE + c % JAMO_V_गिनती);
+        } अन्यथा {
             buffer[0] = static_cast<char16_t>(orig - c2); // LV syllable
             buffer[1] = static_cast<char16_t>(JAMO_T_BASE + c2);
         }
     }
-private:
+गुप्त:
     Hangul() = delete;  // no instantiation
 };
 
 class Normalizer2Impl;
 
-class U_COMMON_API ReorderingBuffer : public UMemory {
-public:
+class U_COMMON_API ReorderingBuffer : सार्वजनिक UMemory {
+सार्वजनिक:
     /** Constructs only; init() should be called. */
-    ReorderingBuffer(const Normalizer2Impl &ni, UnicodeString &dest) :
+    ReorderingBuffer(ध्रुव Normalizer2Impl &ni, UnicodeString &dest) :
         impl(ni), str(dest),
         start(nullptr), reorderStart(nullptr), limit(nullptr),
         remainingCapacity(0), lastCC(0) {}
     /** Constructs, removes the string contents, and initializes for a small initial capacity. */
-    ReorderingBuffer(const Normalizer2Impl &ni, UnicodeString &dest, UErrorCode &errorCode);
+    ReorderingBuffer(ध्रुव Normalizer2Impl &ni, UnicodeString &dest, UErrorCode &errorCode);
     ~ReorderingBuffer() {
-        if (start != nullptr) {
+        यदि (start != nullptr) {
             str.releaseBuffer(static_cast<int32_t>(limit - start));
         }
     }
     UBool init(int32_t destCapacity, UErrorCode &errorCode);
 
-    UBool isEmpty() const { return start==limit; }
-    int32_t length() const { return static_cast<int32_t>(limit - start); }
-    char16_t *getStart() { return start; }
-    char16_t *getLimit() { return limit; }
-    uint8_t getLastCC() const { return lastCC; }
+    UBool isEmpty() ध्रुव { प्रत्यागम start==limit; }
+    int32_t length() ध्रुव { प्रत्यागम static_cast<int32_t>(limit - start); }
+    char16_t *getStart() { प्रत्यागम start; }
+    char16_t *getLimit() { प्रत्यागम limit; }
+    uint8_t getLastCC() ध्रुव { प्रत्यागम lastCC; }
 
-    UBool equals(const char16_t *start, const char16_t *limit) const;
-    UBool equals(const uint8_t *otherStart, const uint8_t *otherLimit) const;
+    UBool equals(ध्रुव char16_t *start, ध्रुव char16_t *limit) ध्रुव;
+    UBool equals(ध्रुव uint8_t *otherStart, ध्रुव uint8_t *otherLimit) ध्रुव;
 
     UBool append(UChar32 c, uint8_t cc, UErrorCode &errorCode) {
-        return (c<=0xffff) ?
+        प्रत्यागम (c<=0xffff) ?
             appendBMP(static_cast<char16_t>(c), cc, errorCode) :
             appendSupplementary(c, cc, errorCode);
     }
-    UBool append(const char16_t *s, int32_t length, UBool isNFD,
+    UBool append(ध्रुव char16_t *s, int32_t length, UBool isNFD,
                  uint8_t leadCC, uint8_t trailCC,
                  UErrorCode &errorCode);
     UBool appendBMP(char16_t c, uint8_t cc, UErrorCode &errorCode) {
-        if(remainingCapacity==0 && !resize(1, errorCode)) {
-            return false;
+        यदि(remainingCapacity==0 && !resize(1, errorCode)) {
+            प्रत्यागम false;
         }
-        if(lastCC<=cc || cc==0) {
+        यदि(lastCC<=cc || cc==0) {
             *limit++=c;
             lastCC=cc;
-            if(cc<=1) {
+            यदि(cc<=1) {
                 reorderStart=limit;
             }
-        } else {
-            insert(c, cc);
+        } अन्यथा {
+            जोड़ो(c, cc);
         }
         --remainingCapacity;
-        return true;
+        प्रत्यागम true;
     }
     UBool appendZeroCC(UChar32 c, UErrorCode &errorCode);
-    UBool appendZeroCC(const char16_t *s, const char16_t *sLimit, UErrorCode &errorCode);
-    void remove();
-    void removeSuffix(int32_t suffixLength);
-    void setReorderingLimit(char16_t *newLimit) {
+    UBool appendZeroCC(ध्रुव char16_t *s, ध्रुव char16_t *sLimit, UErrorCode &errorCode);
+    शून्य remove();
+    शून्य removeSuffix(int32_t suffixLength);
+    शून्य setReorderingLimit(char16_t *newLimit) {
         remainingCapacity += static_cast<int32_t>(limit - newLimit);
         reorderStart=limit=newLimit;
         lastCC=0;
     }
-    void copyReorderableSuffixTo(UnicodeString &s) const {
+    शून्य copyReorderableSuffixTo(UnicodeString &s) ध्रुव {
         s.setTo(ConstChar16Ptr(reorderStart), static_cast<int32_t>(limit - reorderStart));
     }
-private:
+गुप्त:
     /*
      * TODO: Revisit whether it makes sense to track reorderStart.
      * It is set to after the last known character with cc<=1,
@@ -212,26 +212,26 @@ private:
      */
 
     UBool appendSupplementary(UChar32 c, uint8_t cc, UErrorCode &errorCode);
-    void insert(UChar32 c, uint8_t cc);
-    static void writeCodePoint(char16_t *p, UChar32 c) {
-        if(c<=0xffff) {
+    शून्य जोड़ो(UChar32 c, uint8_t cc);
+    स्थिर शून्य writeCodePoint(char16_t *p, UChar32 c) {
+        यदि(c<=0xffff) {
             *p = static_cast<char16_t>(c);
-        } else {
+        } अन्यथा {
             p[0]=U16_LEAD(c);
             p[1]=U16_TRAIL(c);
         }
     }
     UBool resize(int32_t appendLength, UErrorCode &errorCode);
 
-    const Normalizer2Impl &impl;
+    ध्रुव Normalizer2Impl &impl;
     UnicodeString &str;
     char16_t *start, *reorderStart, *limit;
     int32_t remainingCapacity;
     uint8_t lastCC;
 
     // private backward iterator
-    void setIterator() { codePointStart=limit; }
-    void skipPrevious();  // Requires start<codePointStart.
+    शून्य setIterator() { codePointStart=limit; }
+    शून्य skipPrevious();  // Requires start<codePointStart.
     uint8_t previousCC();  // Returns 0 if there is no previous character.
 
     char16_t *codePointStart, *codePointLimit;
@@ -243,72 +243,72 @@ private:
  * this normalizer2impl.h and in the design doc at
  * https://unicode-org.github.io/icu/design/normalization/custom.html
  */
-class U_COMMON_API_CLASS Normalizer2Impl : public UObject {
-public:
+class U_COMMON_API_CLASS Normalizer2Impl : सार्वजनिक UObject {
+सार्वजनिक:
     U_COMMON_API Normalizer2Impl() : normTrie(nullptr), fCanonIterData(nullptr) {}
-    U_COMMON_API virtual ~Normalizer2Impl();
+    U_COMMON_API आभास ~Normalizer2Impl();
 
-    U_COMMON_API void init(const int32_t* inIndexes,
-                           const UCPTrie* inTrie,
-                           const uint16_t* inExtraData,
-                           const uint8_t* inSmallFCD);
+    U_COMMON_API शून्य init(ध्रुव int32_t* inIndexes,
+                           ध्रुव UCPTrie* inTrie,
+                           ध्रुव uint16_t* inExtraData,
+                           ध्रुव uint8_t* inSmallFCD);
 
-    U_COMMON_API void addLcccChars(UnicodeSet& set) const;
-    U_COMMON_API void addPropertyStarts(const USetAdder* sa, UErrorCode& errorCode) const;
-    U_COMMON_API void addCanonIterPropertyStarts(const USetAdder* sa, UErrorCode& errorCode) const;
+    U_COMMON_API शून्य addLcccChars(UnicodeSet& set) ध्रुव;
+    U_COMMON_API शून्य addPropertyStarts(ध्रुव USetAdder* sa, UErrorCode& errorCode) ध्रुव;
+    U_COMMON_API शून्य addCanonIterPropertyStarts(ध्रुव USetAdder* sa, UErrorCode& errorCode) ध्रुव;
 
     // low-level properties ------------------------------------------------ ***
 
-    U_COMMON_API UBool ensureCanonIterData(UErrorCode& errorCode) const;
+    U_COMMON_API UBool ensureCanonIterData(UErrorCode& errorCode) ध्रुव;
 
     // The trie stores values for lead surrogate code *units*.
     // Surrogate code *points* are inert.
-    U_COMMON_API uint16_t getNorm16(UChar32 c) const {
-        return U_IS_LEAD(c) ?
+    U_COMMON_API uint16_t getNorm16(UChar32 c) ध्रुव {
+        प्रत्यागम U_IS_LEAD(c) ?
             static_cast<uint16_t>(INERT) :
             UCPTRIE_FAST_GET(normTrie, UCPTRIE_16, c);
     }
-    U_COMMON_API uint16_t getRawNorm16(UChar32 c) const {
-        return UCPTRIE_FAST_GET(normTrie, UCPTRIE_16, c);
+    U_COMMON_API uint16_t getRawNorm16(UChar32 c) ध्रुव {
+        प्रत्यागम UCPTRIE_FAST_GET(normTrie, UCPTRIE_16, c);
     }
 
-    U_COMMON_API UNormalizationCheckResult getCompQuickCheck(uint16_t norm16) const {
-        if(norm16<minNoNo || MIN_YES_YES_WITH_CC<=norm16) {
-            return UNORM_YES;
-        } else if(minMaybeNo<=norm16) {
-            return UNORM_MAYBE;
-        } else {
-            return UNORM_NO;
+    U_COMMON_API UNormalizationCheckResult getCompQuickCheck(uint16_t norm16) ध्रुव {
+        यदि(norm16<minNoNo || MIN_YES_YES_WITH_CC<=norm16) {
+            प्रत्यागम UNORM_YES;
+        } अन्यथा यदि(minMaybeNo<=norm16) {
+            प्रत्यागम UNORM_MAYBE;
+        } अन्यथा {
+            प्रत्यागम UNORM_NO;
         }
     }
-    U_COMMON_API UBool isAlgorithmicNoNo(uint16_t norm16) const {
-        return limitNoNo <= norm16 && norm16 < minMaybeNo;
+    U_COMMON_API UBool isAlgorithmicNoNo(uint16_t norm16) ध्रुव {
+        प्रत्यागम limitNoNo <= norm16 && norm16 < minMaybeNo;
     }
-    U_COMMON_API UBool isCompNo(uint16_t norm16) const {
-        return minNoNo <= norm16 && norm16 < minMaybeNo;
+    U_COMMON_API UBool isCompNo(uint16_t norm16) ध्रुव {
+        प्रत्यागम minNoNo <= norm16 && norm16 < minMaybeNo;
     }
-    U_COMMON_API UBool isDecompYes(uint16_t norm16) const {
-        return norm16 < minYesNo || minMaybeYes <= norm16;
+    U_COMMON_API UBool isDecompYes(uint16_t norm16) ध्रुव {
+        प्रत्यागम norm16 < minYesNo || minMaybeYes <= norm16;
     }
 
-    U_COMMON_API uint8_t getCC(uint16_t norm16) const {
-        if(norm16>=MIN_NORMAL_MAYBE_YES) {
-            return getCCFromNormalYesOrMaybe(norm16);
+    U_COMMON_API uint8_t getCC(uint16_t norm16) ध्रुव {
+        यदि(norm16>=MIN_NORMAL_MAYBE_YES) {
+            प्रत्यागम getCCFromNormalYesOrMaybe(norm16);
         }
-        if(norm16<minNoNo || limitNoNo<=norm16) {
-            return 0;
+        यदि(norm16<minNoNo || limitNoNo<=norm16) {
+            प्रत्यागम 0;
         }
-        return getCCFromNoNo(norm16);
+        प्रत्यागम getCCFromNoNo(norm16);
     }
-    U_COMMON_API static uint8_t getCCFromNormalYesOrMaybe(uint16_t norm16) {
-        return static_cast<uint8_t>(norm16 >> OFFSET_SHIFT);
+    U_COMMON_API स्थिर uint8_t getCCFromNormalYesOrMaybe(uint16_t norm16) {
+        प्रत्यागम static_cast<uint8_t>(norm16 >> OFFSET_SHIFT);
     }
-    U_COMMON_API static uint8_t getCCFromYesOrMaybeYes(uint16_t norm16) {
-        return norm16>=MIN_NORMAL_MAYBE_YES ? getCCFromNormalYesOrMaybe(norm16) : 0;
+    U_COMMON_API स्थिर uint8_t getCCFromYesOrMaybeYes(uint16_t norm16) {
+        प्रत्यागम norm16>=MIN_NORMAL_MAYBE_YES ? getCCFromNormalYesOrMaybe(norm16) : 0;
     }
-    U_COMMON_API uint8_t getCCFromYesOrMaybeYesCP(UChar32 c) const {
-        if (c < minCompNoMaybeCP) { return 0; }
-        return getCCFromYesOrMaybeYes(getNorm16(c));
+    U_COMMON_API uint8_t getCCFromYesOrMaybeYesCP(UChar32 c) ध्रुव {
+        यदि (c < minCompNoMaybeCP) { प्रत्यागम 0; }
+        प्रत्यागम getCCFromYesOrMaybeYes(getNorm16(c));
     }
 
     /**
@@ -316,13 +316,13 @@ public:
      * @param c A Unicode code point.
      * @return The lccc(c) in bits 15..8 and tccc(c) in bits 7..0.
      */
-    U_COMMON_API uint16_t getFCD16(UChar32 c) const {
-        if(c<minDecompNoCP) {
-            return 0;
-        } else if(c<=0xffff) {
-            if(!singleLeadMightHaveNonZeroFCD16(c)) { return 0; }
+    U_COMMON_API uint16_t getFCD16(UChar32 c) ध्रुव {
+        यदि(c<minDecompNoCP) {
+            प्रत्यागम 0;
+        } अन्यथा यदि(c<=0xffff) {
+            यदि(!singleLeadMightHaveNonZeroFCD16(c)) { प्रत्यागम 0; }
         }
-        return getFCD16FromNormData(c);
+        प्रत्यागम getFCD16FromNormData(c);
     }
     /**
      * Returns the FCD data for the next code point (post-increment).
@@ -332,17 +332,17 @@ public:
      * @param limit The end of the string, or NULL.
      * @return The lccc(c) in bits 15..8 and tccc(c) in bits 7..0.
      */
-    U_COMMON_API uint16_t nextFCD16(const char16_t*& s, const char16_t* limit) const {
+    U_COMMON_API uint16_t nextFCD16(ध्रुव char16_t*& s, ध्रुव char16_t* limit) ध्रुव {
         UChar32 c=*s++;
-        if(c<minDecompNoCP || !singleLeadMightHaveNonZeroFCD16(c)) {
-            return 0;
+        यदि(c<minDecompNoCP || !singleLeadMightHaveNonZeroFCD16(c)) {
+            प्रत्यागम 0;
         }
         char16_t c2;
-        if(U16_IS_LEAD(c) && s!=limit && U16_IS_TRAIL(c2=*s)) {
+        यदि(U16_IS_LEAD(c) && s!=limit && U16_IS_TRAIL(c2=*s)) {
             c=U16_GET_SUPPLEMENTARY(c, c2);
             ++s;
         }
-        return getFCD16FromNormData(c);
+        प्रत्यागम getFCD16FromNormData(c);
     }
     /**
      * Returns the FCD data for the previous code point (pre-decrement).
@@ -350,36 +350,36 @@ public:
      * @param s A valid pointer into a string. Requires start<s.
      * @return The lccc(c) in bits 15..8 and tccc(c) in bits 7..0.
      */
-    U_COMMON_API uint16_t previousFCD16(const char16_t* start, const char16_t*& s) const {
+    U_COMMON_API uint16_t previousFCD16(ध्रुव char16_t* start, ध्रुव char16_t*& s) ध्रुव {
         UChar32 c=*--s;
-        if(c<minDecompNoCP) {
-            return 0;
+        यदि(c<minDecompNoCP) {
+            प्रत्यागम 0;
         }
-        if(!U16_IS_TRAIL(c)) {
-            if(!singleLeadMightHaveNonZeroFCD16(c)) {
-                return 0;
+        यदि(!U16_IS_TRAIL(c)) {
+            यदि(!singleLeadMightHaveNonZeroFCD16(c)) {
+                प्रत्यागम 0;
             }
-        } else {
+        } अन्यथा {
             char16_t c2;
-            if(start<s && U16_IS_LEAD(c2=*(s-1))) {
+            यदि(start<s && U16_IS_LEAD(c2=*(s-1))) {
                 c=U16_GET_SUPPLEMENTARY(c2, c);
                 --s;
             }
         }
-        return getFCD16FromNormData(c);
+        प्रत्यागम getFCD16FromNormData(c);
     }
 
     /** Returns true if the single-or-lead code unit c might have non-zero FCD data. */
-    U_COMMON_API UBool singleLeadMightHaveNonZeroFCD16(UChar32 lead) const {
+    U_COMMON_API UBool singleLeadMightHaveNonZeroFCD16(UChar32 lead) ध्रुव {
         // 0<=lead<=0xffff
         uint8_t bits=smallFCD[lead>>8];
-        if(bits==0) { return false; }
-        return (bits >> ((lead >> 5) & 7)) & 1;
+        यदि(bits==0) { प्रत्यागम false; }
+        प्रत्यागम (bits >> ((lead >> 5) & 7)) & 1;
     }
     /** Returns the FCD value from the regular normalization data. */
-    U_COMMON_API uint16_t getFCD16FromNormData(UChar32 c) const;
+    U_COMMON_API uint16_t getFCD16FromNormData(UChar32 c) ध्रुव;
 
-    U_COMMON_API uint16_t getFCD16FromMaybeOrNonZeroCC(uint16_t norm16) const;
+    U_COMMON_API uint16_t getFCD16FromMaybeOrNonZeroCC(uint16_t norm16) ध्रुव;
 
     /**
      * Gets the decomposition for one code point.
@@ -388,7 +388,7 @@ public:
      * @param length out-only, takes the length of the decomposition, if any
      * @return pointer to the decomposition, or NULL if none
      */
-    U_COMMON_API const char16_t* getDecomposition(UChar32 c, char16_t buffer[4], int32_t& length) const;
+    U_COMMON_API ध्रुव char16_t* getDecomposition(UChar32 c, char16_t buffer[4], int32_t& length) ध्रुव;
 
     /**
      * Gets the raw decomposition for one code point.
@@ -397,16 +397,16 @@ public:
      * @param length out-only, takes the length of the decomposition, if any
      * @return pointer to the decomposition, or NULL if none
      */
-    U_COMMON_API const char16_t* getRawDecomposition(UChar32 c,
+    U_COMMON_API ध्रुव char16_t* getRawDecomposition(UChar32 c,
                                                      char16_t buffer[30],
-                                                     int32_t& length) const;
+                                                     int32_t& length) ध्रुव;
 
-    U_COMMON_API UChar32 composePair(UChar32 a, UChar32 b) const;
+    U_COMMON_API UChar32 composePair(UChar32 a, UChar32 b) ध्रुव;
 
-    U_COMMON_API UBool isCanonSegmentStarter(UChar32 c) const;
-    U_COMMON_API UBool getCanonStartSet(UChar32 c, UnicodeSet& set) const;
+    U_COMMON_API UBool isCanonSegmentStarter(UChar32 c) ध्रुव;
+    U_COMMON_API UBool getCanonStartSet(UChar32 c, UnicodeSet& set) ध्रुव;
 
-    enum {
+    गणना {
         // Fixed norm16 values.
         MIN_YES_YES_WITH_CC=0xfe02,
         JAMO_VT=0xfe00,
@@ -429,7 +429,7 @@ public:
         MAX_DELTA=0x40
     };
 
-    enum {
+    गणना {
         // Byte offsets from the start of the data, after the generic header.
         IX_NORM_TRIE_OFFSET,
         IX_EXTRA_DATA_OFFSET,
@@ -470,17 +470,17 @@ public:
         /** Two-way mappings & compositions. */
         IX_MIN_MAYBE_NO_COMBINES_FWD,
 
-        IX_COUNT  // 22
+        IX_गिनती  // 22
     };
 
-    enum {
+    गणना {
         MAPPING_HAS_CCC_LCCC_WORD=0x80,
         MAPPING_HAS_RAW_MAPPING=0x40,
         // unused bit 0x20,
         MAPPING_LENGTH_MASK=0x1f
     };
 
-    enum {
+    गणना {
         COMP_1_LAST_TUPLE=0x8000,
         COMP_1_TRIPLE=1,
         COMP_1_TRAIL_LIMIT=0x3400,
@@ -493,116 +493,116 @@ public:
     // higher-level functionality ------------------------------------------ ***
 
     // NFD without an NFD Normalizer2 instance.
-    U_COMMON_API UnicodeString& decompose(const UnicodeString& src,
+    U_COMMON_API UnicodeString& decompose(ध्रुव UnicodeString& src,
                                           UnicodeString& dest,
-                                          UErrorCode& errorCode) const;
+                                          UErrorCode& errorCode) ध्रुव;
     /**
      * Decomposes [src, limit[ and writes the result to dest.
      * limit can be NULL if src is NUL-terminated.
      * destLengthEstimate is the initial dest buffer capacity and can be -1.
      */
-    U_COMMON_API void decompose(const char16_t* src,
-                                const char16_t* limit,
+    U_COMMON_API शून्य decompose(ध्रुव char16_t* src,
+                                ध्रुव char16_t* limit,
                                 UnicodeString& dest,
                                 int32_t destLengthEstimate,
-                                UErrorCode& errorCode) const;
+                                UErrorCode& errorCode) ध्रुव;
 
-    U_COMMON_API const char16_t* decompose(const char16_t* src,
-                                           const char16_t* limit,
+    U_COMMON_API ध्रुव char16_t* decompose(ध्रुव char16_t* src,
+                                           ध्रुव char16_t* limit,
                                            ReorderingBuffer* buffer,
-                                           UErrorCode& errorCode) const;
-    U_COMMON_API void decomposeAndAppend(const char16_t* src,
-                                         const char16_t* limit,
+                                           UErrorCode& errorCode) ध्रुव;
+    U_COMMON_API शून्य decomposeAndAppend(ध्रुव char16_t* src,
+                                         ध्रुव char16_t* limit,
                                          UBool doDecompose,
-                                         UnicodeString& safeMiddle,
+                                         UnicodeString& safe_मध्य,
                                          ReorderingBuffer& buffer,
-                                         UErrorCode& errorCode) const;
+                                         UErrorCode& errorCode) ध्रुव;
 
     /** sink==nullptr: isNormalized()/spanQuickCheckYes() */
-    U_COMMON_API const uint8_t* decomposeUTF8(uint32_t options,
-                                              const uint8_t* src,
-                                              const uint8_t* limit,
+    U_COMMON_API ध्रुव uint8_t* decomposeUTF8(uint32_t options,
+                                              ध्रुव uint8_t* src,
+                                              ध्रुव uint8_t* limit,
                                               ByteSink* sink,
                                               Edits* edits,
-                                              UErrorCode& errorCode) const;
+                                              UErrorCode& errorCode) ध्रुव;
 
-    U_COMMON_API UBool compose(const char16_t* src,
-                               const char16_t* limit,
+    U_COMMON_API UBool compose(ध्रुव char16_t* src,
+                               ध्रुव char16_t* limit,
                                UBool onlyContiguous,
                                UBool doCompose,
                                ReorderingBuffer& buffer,
-                               UErrorCode& errorCode) const;
-    U_COMMON_API const char16_t* composeQuickCheck(const char16_t* src,
-                                                   const char16_t* limit,
+                               UErrorCode& errorCode) ध्रुव;
+    U_COMMON_API ध्रुव char16_t* composeQuickCheck(ध्रुव char16_t* src,
+                                                   ध्रुव char16_t* limit,
                                                    UBool onlyContiguous,
-                                                   UNormalizationCheckResult* pQCResult) const;
-    U_COMMON_API void composeAndAppend(const char16_t* src,
-                                       const char16_t* limit,
+                                                   UNormalizationCheckResult* pQCResult) ध्रुव;
+    U_COMMON_API शून्य composeAndAppend(ध्रुव char16_t* src,
+                                       ध्रुव char16_t* limit,
                                        UBool doCompose,
                                        UBool onlyContiguous,
-                                       UnicodeString& safeMiddle,
+                                       UnicodeString& safe_मध्य,
                                        ReorderingBuffer& buffer,
-                                       UErrorCode& errorCode) const;
+                                       UErrorCode& errorCode) ध्रुव;
 
     /** sink==nullptr: isNormalized() */
     U_COMMON_API UBool composeUTF8(uint32_t options,
                                    UBool onlyContiguous,
-                                   const uint8_t* src,
-                                   const uint8_t* limit,
+                                   ध्रुव uint8_t* src,
+                                   ध्रुव uint8_t* limit,
                                    ByteSink* sink,
                                    icu::Edits* edits,
-                                   UErrorCode& errorCode) const;
+                                   UErrorCode& errorCode) ध्रुव;
 
-    U_COMMON_API const char16_t* makeFCD(const char16_t* src,
-                                         const char16_t* limit,
+    U_COMMON_API ध्रुव char16_t* makeFCD(ध्रुव char16_t* src,
+                                         ध्रुव char16_t* limit,
                                          ReorderingBuffer* buffer,
-                                         UErrorCode& errorCode) const;
-    U_COMMON_API void makeFCDAndAppend(const char16_t* src,
-                                       const char16_t* limit,
+                                         UErrorCode& errorCode) ध्रुव;
+    U_COMMON_API शून्य makeFCDAndAppend(ध्रुव char16_t* src,
+                                       ध्रुव char16_t* limit,
                                        UBool doMakeFCD,
-                                       UnicodeString& safeMiddle,
+                                       UnicodeString& safe_मध्य,
                                        ReorderingBuffer& buffer,
-                                       UErrorCode& errorCode) const;
+                                       UErrorCode& errorCode) ध्रुव;
 
-    U_COMMON_API UBool hasDecompBoundaryBefore(UChar32 c) const;
-    U_COMMON_API UBool norm16HasDecompBoundaryBefore(uint16_t norm16) const;
-    U_COMMON_API UBool hasDecompBoundaryAfter(UChar32 c) const;
-    U_COMMON_API UBool norm16HasDecompBoundaryAfter(uint16_t norm16) const;
-    U_COMMON_API UBool isDecompInert(UChar32 c) const { return isDecompYesAndZeroCC(getNorm16(c)); }
+    U_COMMON_API UBool hasDecompBoundaryBefore(UChar32 c) ध्रुव;
+    U_COMMON_API UBool norm16HasDecompBoundaryBefore(uint16_t norm16) ध्रुव;
+    U_COMMON_API UBool hasDecompBoundaryAfter(UChar32 c) ध्रुव;
+    U_COMMON_API UBool norm16HasDecompBoundaryAfter(uint16_t norm16) ध्रुव;
+    U_COMMON_API UBool isDecompInert(UChar32 c) ध्रुव { प्रत्यागम isDecompYesAndZeroCC(getNorm16(c)); }
 
-    U_COMMON_API UBool hasCompBoundaryBefore(UChar32 c) const {
-        return c<minCompNoMaybeCP || norm16HasCompBoundaryBefore(getNorm16(c));
+    U_COMMON_API UBool hasCompBoundaryBefore(UChar32 c) ध्रुव {
+        प्रत्यागम c<minCompNoMaybeCP || norm16HasCompBoundaryBefore(getNorm16(c));
     }
-    U_COMMON_API UBool hasCompBoundaryAfter(UChar32 c, UBool onlyContiguous) const {
-        return norm16HasCompBoundaryAfter(getNorm16(c), onlyContiguous);
+    U_COMMON_API UBool hasCompBoundaryAfter(UChar32 c, UBool onlyContiguous) ध्रुव {
+        प्रत्यागम norm16HasCompBoundaryAfter(getNorm16(c), onlyContiguous);
     }
-    U_COMMON_API UBool isCompInert(UChar32 c, UBool onlyContiguous) const {
+    U_COMMON_API UBool isCompInert(UChar32 c, UBool onlyContiguous) ध्रुव {
         uint16_t norm16=getNorm16(c);
-        return isCompYesAndZeroCC(norm16) &&
+        प्रत्यागम isCompYesAndZeroCC(norm16) &&
             (norm16 & HAS_COMP_BOUNDARY_AFTER) != 0 &&
             (!onlyContiguous || isInert(norm16) || *getDataForYesOrNo(norm16) <= 0x1ff);
             // The last check fetches the mapping's first unit and checks tccc<=1.
     }
 
-    U_COMMON_API UBool hasFCDBoundaryBefore(UChar32 c) const { return hasDecompBoundaryBefore(c); }
-    U_COMMON_API UBool hasFCDBoundaryAfter(UChar32 c) const { return hasDecompBoundaryAfter(c); }
-    U_COMMON_API UBool isFCDInert(UChar32 c) const { return getFCD16(c) <= 1; }
+    U_COMMON_API UBool hasFCDBoundaryBefore(UChar32 c) ध्रुव { प्रत्यागम hasDecompBoundaryBefore(c); }
+    U_COMMON_API UBool hasFCDBoundaryAfter(UChar32 c) ध्रुव { प्रत्यागम hasDecompBoundaryAfter(c); }
+    U_COMMON_API UBool isFCDInert(UChar32 c) ध्रुव { प्रत्यागम getFCD16(c) <= 1; }
 
-  private:
+  गुप्त:
     friend class InitCanonIterData;
     friend class LcccContext;
 
-    UBool isMaybe(uint16_t norm16) const { return minMaybeNo<=norm16 && norm16<=JAMO_VT; }
-    UBool isMaybeYesOrNonZeroCC(uint16_t norm16) const { return norm16>=minMaybeYes; }
-    static UBool isInert(uint16_t norm16) { return norm16==INERT; }
-    static UBool isJamoL(uint16_t norm16) { return norm16==JAMO_L; }
-    static UBool isJamoVT(uint16_t norm16) { return norm16==JAMO_VT; }
-    uint16_t hangulLVT() const { return minYesNoMappingsOnly|HAS_COMP_BOUNDARY_AFTER; }
-    UBool isHangulLV(uint16_t norm16) const { return norm16==minYesNo; }
-    UBool isHangulLVT(uint16_t norm16) const {
-        return norm16==hangulLVT();
+    UBool isMaybe(uint16_t norm16) ध्रुव { प्रत्यागम minMaybeNo<=norm16 && norm16<=JAMO_VT; }
+    UBool isMaybeYesOrNonZeroCC(uint16_t norm16) ध्रुव { प्रत्यागम norm16>=minMaybeYes; }
+    स्थिर UBool isInert(uint16_t norm16) { प्रत्यागम norm16==INERT; }
+    स्थिर UBool isJamoL(uint16_t norm16) { प्रत्यागम norm16==JAMO_L; }
+    स्थिर UBool isJamoVT(uint16_t norm16) { प्रत्यागम norm16==JAMO_VT; }
+    uint16_t hangulLVT() ध्रुव { प्रत्यागम minYesNoMappingsOnly|HAS_COMP_BOUNDARY_AFTER; }
+    UBool isHangulLV(uint16_t norm16) ध्रुव { प्रत्यागम norm16==minYesNo; }
+    UBool isHangulLVT(uint16_t norm16) ध्रुव {
+        प्रत्यागम norm16==hangulLVT();
     }
-    UBool isCompYesAndZeroCC(uint16_t norm16) const { return norm16<minNoNo; }
+    UBool isCompYesAndZeroCC(uint16_t norm16) ध्रुव { प्रत्यागम norm16<minNoNo; }
     // UBool isCompYes(uint16_t norm16) const {
     //     return norm16>=MIN_YES_YES_WITH_CC || norm16<minNoNo;
     // }
@@ -612,8 +612,8 @@ public:
     // UBool hasZeroCCFromDecompYes(uint16_t norm16) const {
     //     return norm16<=MIN_NORMAL_MAYBE_YES || norm16==JAMO_VT;
     // }
-    UBool isDecompYesAndZeroCC(uint16_t norm16) const {
-        return norm16<minYesNo ||
+    UBool isDecompYesAndZeroCC(uint16_t norm16) ध्रुव {
+        प्रत्यागम norm16<minYesNo ||
                norm16==JAMO_VT ||
                (minMaybeYes<=norm16 && norm16<=MIN_NORMAL_MAYBE_YES);
     }
@@ -621,69 +621,69 @@ public:
      * A little faster and simpler than isDecompYesAndZeroCC() but does not include
      * the MaybeYes which combine-forward and have ccc=0.
      */
-    UBool isMostDecompYesAndZeroCC(uint16_t norm16) const {
-        return norm16<minYesNo || norm16==MIN_NORMAL_MAYBE_YES || norm16==JAMO_VT;
+    UBool isMostDecompYesAndZeroCC(uint16_t norm16) ध्रुव {
+        प्रत्यागम norm16<minYesNo || norm16==MIN_NORMAL_MAYBE_YES || norm16==JAMO_VT;
     }
     /** Since formatVersion 5: same as isAlgorithmicNoNo() */
-    UBool isDecompNoAlgorithmic(uint16_t norm16) const { return limitNoNo<=norm16 && norm16<minMaybeNo; }
+    UBool isDecompNoAlgorithmic(uint16_t norm16) ध्रुव { प्रत्यागम limitNoNo<=norm16 && norm16<minMaybeNo; }
 
     // For use with isCompYes().
     // Perhaps the compiler can combine the two tests for MIN_YES_YES_WITH_CC.
     // static uint8_t getCCFromYes(uint16_t norm16) {
     //     return norm16>=MIN_YES_YES_WITH_CC ? getCCFromNormalYesOrMaybe(norm16) : 0;
     // }
-    uint8_t getCCFromNoNo(uint16_t norm16) const {
-        const uint16_t *mapping=getDataForYesOrNo(norm16);
-        if(*mapping&MAPPING_HAS_CCC_LCCC_WORD) {
-            return static_cast<uint8_t>(*(mapping - 1));
-        } else {
-            return 0;
+    uint8_t getCCFromNoNo(uint16_t norm16) ध्रुव {
+        ध्रुव uint16_t *mapping=getDataForYesOrNo(norm16);
+        यदि(*mapping&MAPPING_HAS_CCC_LCCC_WORD) {
+            प्रत्यागम static_cast<uint8_t>(*(mapping - 1));
+        } अन्यथा {
+            प्रत्यागम 0;
         }
     }
     // requires that the [cpStart..cpLimit[ character passes isCompYesAndZeroCC()
-    uint8_t getTrailCCFromCompYesAndZeroCC(uint16_t norm16) const {
-        if(norm16<=minYesNo) {
-            return 0;  // yesYes and Hangul LV have ccc=tccc=0
-        } else {
+    uint8_t getTrailCCFromCompYesAndZeroCC(uint16_t norm16) ध्रुव {
+        यदि(norm16<=minYesNo) {
+            प्रत्यागम 0;  // yesYes and Hangul LV have ccc=tccc=0
+        } अन्यथा {
             // For Hangul LVT we harmlessly fetch a firstUnit with tccc=0 here.
-            return static_cast<uint8_t>(*getDataForYesOrNo(norm16) >> 8); // tccc from yesNo
+            प्रत्यागम static_cast<uint8_t>(*getDataForYesOrNo(norm16) >> 8); // tccc from yesNo
         }
     }
-    uint8_t getPreviousTrailCC(const char16_t *start, const char16_t *p) const;
-    uint8_t getPreviousTrailCC(const uint8_t *start, const uint8_t *p) const;
+    uint8_t getPreviousTrailCC(ध्रुव char16_t *start, ध्रुव char16_t *p) ध्रुव;
+    uint8_t getPreviousTrailCC(ध्रुव uint8_t *start, ध्रुव uint8_t *p) ध्रुव;
 
     // Requires algorithmic-NoNo.
-    UChar32 mapAlgorithmic(UChar32 c, uint16_t norm16) const {
-        return c+(norm16>>DELTA_SHIFT)-centerNoNoDelta;
+    UChar32 mapAlgorithmic(UChar32 c, uint16_t norm16) ध्रुव {
+        प्रत्यागम c+(norm16>>DELTA_SHIFT)-centerNoNoDelta;
     }
-    UChar32 getAlgorithmicDelta(uint16_t norm16) const {
-        return (norm16>>DELTA_SHIFT)-centerNoNoDelta;
+    UChar32 getAlgorithmicDelta(uint16_t norm16) ध्रुव {
+        प्रत्यागम (norm16>>DELTA_SHIFT)-centerNoNoDelta;
     }
 
-    const uint16_t *getDataForYesOrNo(uint16_t norm16) const {
-        return extraData+(norm16>>OFFSET_SHIFT);
+    ध्रुव uint16_t *getDataForYesOrNo(uint16_t norm16) ध्रुव {
+        प्रत्यागम extraData+(norm16>>OFFSET_SHIFT);
     }
-    const uint16_t *getDataForMaybe(uint16_t norm16) const {
-        return extraData+((norm16-minMaybeNo+limitNoNo)>>OFFSET_SHIFT);
+    ध्रुव uint16_t *getDataForMaybe(uint16_t norm16) ध्रुव {
+        प्रत्यागम extraData+((norm16-minMaybeNo+limitNoNo)>>OFFSET_SHIFT);
     }
-    const uint16_t *getData(uint16_t norm16) const {
-        if(norm16>=minMaybeNo) {
+    ध्रुव uint16_t *getData(uint16_t norm16) ध्रुव {
+        यदि(norm16>=minMaybeNo) {
             norm16=norm16-minMaybeNo+limitNoNo;
         }
-        return extraData+(norm16>>OFFSET_SHIFT);
+        प्रत्यागम extraData+(norm16>>OFFSET_SHIFT);
     }
-    const uint16_t *getCompositionsListForDecompYes(uint16_t norm16) const {
-        if(norm16<JAMO_L || MIN_NORMAL_MAYBE_YES<=norm16) {
-            return nullptr;
-        } else {
+    ध्रुव uint16_t *getCompositionsListForDecompYes(uint16_t norm16) ध्रुव {
+        यदि(norm16<JAMO_L || MIN_NORMAL_MAYBE_YES<=norm16) {
+            प्रत्यागम nullptr;
+        } अन्यथा {
             // if yesYes: if Jamo L: harmless empty list
-            return getData(norm16);
+            प्रत्यागम getData(norm16);
         }
     }
-    const uint16_t *getCompositionsListForComposite(uint16_t norm16) const {
+    ध्रुव uint16_t *getCompositionsListForComposite(uint16_t norm16) ध्रुव {
         // A composite has both mapping & compositions list.
-        const uint16_t *list=getData(norm16);
-        return list+  // mapping pointer
+        ध्रुव uint16_t *list=getData(norm16);
+        प्रत्यागम list+  // mapping pointer
             1+  // +1 to skip the first unit with the mapping length
             (*list&MAPPING_LENGTH_MASK);  // + mapping length
     }
@@ -691,69 +691,69 @@ public:
      * @param c code point must have compositions
      * @return compositions list pointer
      */
-    const uint16_t *getCompositionsList(uint16_t norm16) const {
-        return isDecompYes(norm16) ?
+    ध्रुव uint16_t *getCompositionsList(uint16_t norm16) ध्रुव {
+        प्रत्यागम isDecompYes(norm16) ?
                 getCompositionsListForDecompYes(norm16) :
                 getCompositionsListForComposite(norm16);
     }
 
-    const char16_t *copyLowPrefixFromNulTerminated(const char16_t *src,
+    ध्रुव char16_t *copy_निचला_Prefix_From_Nul_Terminated(ध्रुव char16_t *src,
                                                 UChar32 minNeedDataCP,
                                                 ReorderingBuffer *buffer,
-                                                UErrorCode &errorCode) const;
+                                                UErrorCode &errorCode) ध्रुव;
 
-    enum StopAt { STOP_AT_LIMIT, STOP_AT_DECOMP_BOUNDARY, STOP_AT_COMP_BOUNDARY };
+    गणना StopAt { STOP_AT_LIMIT, STOP_AT_DECOMP_BOUNDARY, STOP_AT_COMP_BOUNDARY };
 
-    const char16_t *decomposeShort(const char16_t *src, const char16_t *limit,
+    ध्रुव char16_t *decomposeShort(ध्रुव char16_t *src, ध्रुव char16_t *limit,
                                 UBool stopAtCompBoundary, UBool onlyContiguous,
-                                ReorderingBuffer &buffer, UErrorCode &errorCode) const;
+                                ReorderingBuffer &buffer, UErrorCode &errorCode) ध्रुव;
     UBool decompose(UChar32 c, uint16_t norm16,
-                    ReorderingBuffer &buffer, UErrorCode &errorCode) const;
+                    ReorderingBuffer &buffer, UErrorCode &errorCode) ध्रुव;
 
-    const uint8_t *decomposeShort(const uint8_t *src, const uint8_t *limit,
+    ध्रुव uint8_t *decomposeShort(ध्रुव uint8_t *src, ध्रुव uint8_t *limit,
                                   StopAt stopAt, UBool onlyContiguous,
-                                  ReorderingBuffer &buffer, UErrorCode &errorCode) const;
+                                  ReorderingBuffer &buffer, UErrorCode &errorCode) ध्रुव;
 
-    static int32_t combine(const uint16_t *list, UChar32 trail);
-    void addComposites(const uint16_t *list, UnicodeSet &set) const;
-    void recompose(ReorderingBuffer &buffer, int32_t recomposeStartIndex,
-                   UBool onlyContiguous) const;
+    स्थिर int32_t combine(ध्रुव uint16_t *list, UChar32 trail);
+    शून्य addComposites(ध्रुव uint16_t *list, UnicodeSet &set) ध्रुव;
+    शून्य recompose(ReorderingBuffer &buffer, int32_t recomposeStartIndex,
+                   UBool onlyContiguous) ध्रुव;
 
-    UBool hasCompBoundaryBefore(UChar32 c, uint16_t norm16) const {
-        return c<minCompNoMaybeCP || norm16HasCompBoundaryBefore(norm16);
+    UBool hasCompBoundaryBefore(UChar32 c, uint16_t norm16) ध्रुव {
+        प्रत्यागम c<minCompNoMaybeCP || norm16HasCompBoundaryBefore(norm16);
     }
-    UBool norm16HasCompBoundaryBefore(uint16_t norm16) const  {
-        return norm16 < minNoNoCompNoMaybeCC || isAlgorithmicNoNo(norm16);
+    UBool norm16HasCompBoundaryBefore(uint16_t norm16) ध्रुव  {
+        प्रत्यागम norm16 < minNoNoCompNoMaybeCC || isAlgorithmicNoNo(norm16);
     }
-    UBool hasCompBoundaryBefore(const char16_t *src, const char16_t *limit) const;
-    UBool hasCompBoundaryBefore(const uint8_t *src, const uint8_t *limit) const;
-    UBool hasCompBoundaryAfter(const char16_t *start, const char16_t *p,
-                               UBool onlyContiguous) const;
-    UBool hasCompBoundaryAfter(const uint8_t *start, const uint8_t *p,
-                               UBool onlyContiguous) const;
-    UBool norm16HasCompBoundaryAfter(uint16_t norm16, UBool onlyContiguous) const {
-        return (norm16 & HAS_COMP_BOUNDARY_AFTER) != 0 &&
+    UBool hasCompBoundaryBefore(ध्रुव char16_t *src, ध्रुव char16_t *limit) ध्रुव;
+    UBool hasCompBoundaryBefore(ध्रुव uint8_t *src, ध्रुव uint8_t *limit) ध्रुव;
+    UBool hasCompBoundaryAfter(ध्रुव char16_t *start, ध्रुव char16_t *p,
+                               UBool onlyContiguous) ध्रुव;
+    UBool hasCompBoundaryAfter(ध्रुव uint8_t *start, ध्रुव uint8_t *p,
+                               UBool onlyContiguous) ध्रुव;
+    UBool norm16HasCompBoundaryAfter(uint16_t norm16, UBool onlyContiguous) ध्रुव {
+        प्रत्यागम (norm16 & HAS_COMP_BOUNDARY_AFTER) != 0 &&
             (!onlyContiguous || isTrailCC01ForCompBoundaryAfter(norm16));
     }
     /** For FCC: Given norm16 HAS_COMP_BOUNDARY_AFTER, does it have tccc<=1? */
-    UBool isTrailCC01ForCompBoundaryAfter(uint16_t norm16) const {
-        return isInert(norm16) || (isDecompNoAlgorithmic(norm16) ?
+    UBool isTrailCC01ForCompBoundaryAfter(uint16_t norm16) ध्रुव {
+        प्रत्यागम isInert(norm16) || (isDecompNoAlgorithmic(norm16) ?
             (norm16 & DELTA_TCCC_MASK) <= DELTA_TCCC_1 : *getDataForYesOrNo(norm16) <= 0x1ff);
     }
 
-    const char16_t *findPreviousCompBoundary(const char16_t *start, const char16_t *p,
-                                             UBool onlyContiguous) const;
-    const char16_t *findNextCompBoundary(const char16_t *p, const char16_t *limit,
-                                         UBool onlyContiguous) const;
+    ध्रुव char16_t *findPreviousCompBoundary(ध्रुव char16_t *start, ध्रुव char16_t *p,
+                                             UBool onlyContiguous) ध्रुव;
+    ध्रुव char16_t *findNextCompBoundary(ध्रुव char16_t *p, ध्रुव char16_t *limit,
+                                         UBool onlyContiguous) ध्रुव;
 
-    const char16_t *findPreviousFCDBoundary(const char16_t *start, const char16_t *p) const;
-    const char16_t *findNextFCDBoundary(const char16_t *p, const char16_t *limit) const;
+    ध्रुव char16_t *findPreviousFCDBoundary(ध्रुव char16_t *start, ध्रुव char16_t *p) ध्रुव;
+    ध्रुव char16_t *findNextFCDBoundary(ध्रुव char16_t *p, ध्रुव char16_t *limit) ध्रुव;
 
-    void makeCanonIterDataFromNorm16(UChar32 start, UChar32 end, const uint16_t norm16,
-                                     CanonIterData &newData, UErrorCode &errorCode) const;
+    शून्य makeCanonIterDataFromNorm16(UChar32 start, UChar32 end, ध्रुव uint16_t norm16,
+                                     CanonIterData &newData, UErrorCode &errorCode) ध्रुव;
 
-    int32_t getCanonValue(UChar32 c) const;
-    const UnicodeSet &getCanonStartSet(int32_t n) const;
+    int32_t get_Canon_मूल्य(UChar32 c) ध्रुव;
+    ध्रुव UnicodeSet &getCanonStartSet(int32_t n) ध्रुव;
 
     // UVersionInfo dataVersion;
 
@@ -775,9 +775,9 @@ public:
     uint16_t minMaybeNoCombinesFwd;
     uint16_t minMaybeYes;
 
-    const UCPTrie *normTrie;
-    const uint16_t *extraData;  // mappings and/or compositions
-    const uint8_t *smallFCD;  // [0x100] one bit per 32 BMP code points, set if any FCD!=0
+    ध्रुव UCPTrie *normTrie;
+    ध्रुव uint16_t *extraData;  // mappings and/or compositions
+    ध्रुव uint8_t *smallFCD;  // [0x100] one bit per 32 BMP code points, set if any FCD!=0
 
     UInitOnce       fCanonIterDataInitOnce {};
     CanonIterData  *fCanonIterData;
@@ -787,35 +787,35 @@ public:
 #define CANON_NOT_SEGMENT_STARTER 0x80000000
 #define CANON_HAS_COMPOSITIONS 0x40000000
 #define CANON_HAS_SET 0x200000
-#define CANON_VALUE_MASK 0x1fffff
+#define CANON_मूल्य_MASK 0x1fffff
 
 /**
  * ICU-internal shortcut for quick access to standard Unicode normalization.
  */
 class U_COMMON_API Normalizer2Factory {
-public:
-    static const Normalizer2 *getFCDInstance(UErrorCode &errorCode);
-    static const Normalizer2 *getFCCInstance(UErrorCode &errorCode);
-    static const Normalizer2 *getNoopInstance(UErrorCode &errorCode);
+सार्वजनिक:
+    स्थिर ध्रुव Normalizer2 *getFCDInstance(UErrorCode &errorCode);
+    स्थिर ध्रुव Normalizer2 *getFCCInstance(UErrorCode &errorCode);
+    स्थिर ध्रुव Normalizer2 *getNoopInstance(UErrorCode &errorCode);
 
-    static const Normalizer2 *getInstance(UNormalizationMode mode, UErrorCode &errorCode);
+    स्थिर ध्रुव Normalizer2 *getInstance(UNormalizationMode mode, UErrorCode &errorCode);
 
-    static const Normalizer2Impl *getNFCImpl(UErrorCode &errorCode);
-    static const Normalizer2Impl *getNFKCImpl(UErrorCode &errorCode);
-    static const Normalizer2Impl *getNFKC_CFImpl(UErrorCode &errorCode);
+    स्थिर ध्रुव Normalizer2Impl *getNFCImpl(UErrorCode &errorCode);
+    स्थिर ध्रुव Normalizer2Impl *getNFKCImpl(UErrorCode &errorCode);
+    स्थिर ध्रुव Normalizer2Impl *getNFKC_CFImpl(UErrorCode &errorCode);
 
     // Get the Impl instance of the Normalizer2.
     // Must be used only when it is known that norm2 is a Normalizer2WithImpl instance.
-    static const Normalizer2Impl* getImpl(const Normalizer2* norm2 U_LIFETIME_BOUND);
-private:
+    स्थिर ध्रुव Normalizer2Impl* getImpl(ध्रुव Normalizer2* norm2 U_LIFETIME_BOUND);
+गुप्त:
     Normalizer2Factory() = delete;  // No instantiation.
 };
 
 U_NAMESPACE_END
 
 U_CAPI int32_t U_EXPORT2
-unorm2_swap(const UDataSwapper *ds,
-            const void *inData, int32_t length, void *outData,
+unorm2_swap(ध्रुव UDataSwapper *ds,
+            ध्रुव शून्य *inData, int32_t length, शून्य *outData,
             UErrorCode *pErrorCode);
 
 /**
