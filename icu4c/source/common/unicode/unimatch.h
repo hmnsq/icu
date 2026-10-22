@@ -10,14 +10,14 @@
 #ifndef UNIMATCH_H
 #define UNIMATCH_H
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
 /**
  * \file 
  * \brief C++ API: Unicode Matcher
  */
 
-#if U_SHOW_CPLUSPLUS_API
+#ಯದಿ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -30,7 +30,7 @@ class UnicodeSet;
  * indicating the degree of match.
  * @stable ICU 2.4
  */
-enum UMatchDegree {
+ಗಣನಾ UMatchDegree {
     /**
      * Constant returned by <code>matches()</code> indicating a
      * mismatch between the text and this matcher.  The text contains
@@ -70,12 +70,12 @@ enum UMatchDegree {
  */
 class U_COMMON_API UnicodeMatcher /* not : public UObject because this is an interface/mixin class */ {
 
-public:
+ಸಾರ್ವಜನಿಕ:
     /**
      * Destructor.
      * @stable ICU 2.4
      */
-    virtual ~UnicodeMatcher();
+    ಆಭಾಸ ~UnicodeMatcher();
 
     /**
      * Return a UMatchDegree value indicating the degree of match for
@@ -123,7 +123,7 @@ public:
      * U_PARTIAL_MATCH should never be returned.
      * @stable ICU 2.4
      */
-    virtual UMatchDegree matches(const Replaceable& text,
+    ಆಭಾಸ UMatchDegree matches(ಧ್ರುವ Replaceable& text,
                                  int32_t& offset,
                                  int32_t limit,
                                  UBool incremental) = 0;
@@ -140,8 +140,8 @@ public:
      * U+000A, U+0020..U+007E.
      * @stable ICU 2.4
      */
-    virtual UnicodeString& toPattern(UnicodeString& result U_LIFETIME_BOUND,
-                                     UBool escapeUnprintable = false) const = 0;
+    ಆಭಾಸ UnicodeString& toPattern(UnicodeString& result U_LIFETIME_BOUND,
+                                     UBool escapeUnprintable = false) ಧ್ರುವ = 0;
 
     /**
      * Returns true if this matcher will match a character c, where c
@@ -150,7 +150,7 @@ public:
      * indexing.
      * @stable ICU 2.4
      */
-    virtual UBool matchesIndexValue(uint8_t v) const = 0;
+    ಆಭಾಸ UBool matches_Index_ಮೌಲ್ಯ(uint8_t v) ಧ್ರುವ = 0;
 
     /**
      * Union the set of all characters that may be matched by this object
@@ -158,7 +158,7 @@ public:
      * @param toUnionTo the set into which to union the source characters
      * @stable ICU 2.4
      */
-    virtual void addMatchSetTo(UnicodeSet& toUnionTo) const = 0;
+    ಆಭಾಸ ಶೂನ್ಯ addMatchSetTo(UnicodeSet& toUnionTo) ಧ್ರುವ = 0;
 };
 
 U_NAMESPACE_END

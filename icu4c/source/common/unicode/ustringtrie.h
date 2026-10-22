@@ -22,7 +22,7 @@
  * \brief C API: Helper definitions for dictionary trie APIs.
  */
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
 
 /**
@@ -32,7 +32,7 @@
  * @see USTRINGTRIE_HAS_NEXT
  * @stable ICU 4.8
  */
-enum UStringTrieResult {
+ಗಣನಾ UStringTrieResult {
     /**
      * The input unit(s) did not continue a matching string.
      * Once current()/next() return USTRINGTRIE_NO_MATCH,
@@ -47,7 +47,7 @@ enum UStringTrieResult {
      * (It is a prefix of a longer string.)
      * @stable ICU 4.8
      */
-    USTRINGTRIE_NO_VALUE,
+    USTRINGTRIE_NO_ಮೌಲ್ಯ,
     /**
      * The input unit(s) continued a matching string
      * and there is a value for the string so far.
@@ -55,7 +55,7 @@ enum UStringTrieResult {
      * No further input byte/unit can continue a matching string.
      * @stable ICU 4.8
      */
-    USTRINGTRIE_FINAL_VALUE,
+    USTRINGTRIE_FINAL_ಮೌಲ್ಯ,
     /**
      * The input unit(s) continued a matching string
      * and there is a value for the string so far.
@@ -63,7 +63,7 @@ enum UStringTrieResult {
      * Another input byte/unit can continue a matching string.
      * @stable ICU 4.8
      */
-    USTRINGTRIE_INTERMEDIATE_VALUE
+    USTRINGTRIE_INTERMEDIATE_ಮೌಲ್ಯ
 };
 
 /**
@@ -83,7 +83,7 @@ enum UStringTrieResult {
  * @see UCharsTrie::getValue
  * @stable ICU 4.8
  */
-#define USTRINGTRIE_HAS_VALUE(result) ((result)>=USTRINGTRIE_FINAL_VALUE)
+#define USTRINGTRIE_HAS_ಮೌಲ್ಯ(result) ((result)>=USTRINGTRIE_FINAL_ಮೌಲ್ಯ)
 
 /**
  * Equivalent to (result==USTRINGTRIE_NO_VALUE || result==USTRINGTRIE_INTERMEDIATE_VALUE) but

@@ -4,9 +4,9 @@
 #ifndef ULOCALE_H
 #define ULOCALE_H
 
-#include "unicode/localpointer.h"
-#include "unicode/uenum.h"
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/localpointer.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uenum.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
 /**
  * \file
@@ -17,13 +17,13 @@
  * Opaque C service object type for the locale API
  * @stable ICU 74
  */
-struct ULocale;
+ಸಂರಚನಾ ULocale;
 
 /**
  * C typedef for struct ULocale.
  * @stable ICU 74
  */
-typedef struct ULocale ULocale;
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ ULocale ULocale;
 
 /**
  * Constructs an ULocale from the locale ID.
@@ -39,7 +39,7 @@ typedef struct ULocale ULocale;
  * @stable ICU 74
  */
 U_CAPI ULocale* U_EXPORT2
-ulocale_openForLocaleID(const char* localeID, int32_t length, UErrorCode* err);
+ulocale_openForLocaleID(ಧ್ರುವ ವರ್ಣ* localeID, int32_t length, UErrorCode* err);
 
 /**
  * Constructs an ULocale from the provided IETF BCP 47 language tag.
@@ -55,7 +55,7 @@ ulocale_openForLocaleID(const char* localeID, int32_t length, UErrorCode* err);
  * @stable ICU 74
  */
 U_CAPI ULocale* U_EXPORT2
-ulocale_openForLanguageTag(const char* tag, int32_t length, UErrorCode* err);
+ulocale_openForLanguageTag(ಧ್ರುವ ವರ್ಣ* tag, int32_t length, UErrorCode* err);
 
 /**
  * Close the locale and destroy it's internal states.
@@ -63,7 +63,7 @@ ulocale_openForLanguageTag(const char* tag, int32_t length, UErrorCode* err);
  * @param locale the locale
  * @stable ICU 74
  */
-U_CAPI void U_EXPORT2
+U_CAPI ಶೂನ್ಯ U_EXPORT2
 ulocale_close(ULocale* locale);
 
 /**
@@ -73,8 +73,8 @@ ulocale_close(ULocale* locale);
  * @return      the language code of the locale.
  * @stable ICU 74
  */
-U_CAPI const char* U_EXPORT2
-ulocale_getLanguage(const ULocale* locale U_LIFETIME_BOUND);
+U_CAPI ಧ್ರುವ ವರ್ಣ* U_EXPORT2
+ulocale_getLanguage(ಧ್ರುವ ULocale* locale U_LIFETIME_BOUND);
 
 /**
  * Returns the locale's ISO-15924 abbreviation script code.
@@ -83,8 +83,8 @@ ulocale_getLanguage(const ULocale* locale U_LIFETIME_BOUND);
  * @return      A pointer to the script.
  * @stable ICU 74
  */
-U_CAPI const char* U_EXPORT2
-ulocale_getScript(const ULocale* locale U_LIFETIME_BOUND);
+U_CAPI ಧ್ರುವ ವರ್ಣ* U_EXPORT2
+ulocale_getScript(ಧ್ರುವ ULocale* locale U_LIFETIME_BOUND);
 
 /**
  * Returns the locale's ISO-3166 region code.
@@ -93,8 +93,8 @@ ulocale_getScript(const ULocale* locale U_LIFETIME_BOUND);
  * @return      A pointer to the region.
  * @stable ICU 74
  */
-U_CAPI const char* U_EXPORT2
-ulocale_getRegion(const ULocale* locale U_LIFETIME_BOUND);
+U_CAPI ಧ್ರುವ ವರ್ಣ* U_EXPORT2
+ulocale_getRegion(ಧ್ರುವ ULocale* locale U_LIFETIME_BOUND);
 
 /**
  * Returns the locale's variant code.
@@ -103,8 +103,8 @@ ulocale_getRegion(const ULocale* locale U_LIFETIME_BOUND);
  * @return      A pointer to the variant.
  * @stable ICU 74
  */
-U_CAPI const char* U_EXPORT2
-ulocale_getVariant(const ULocale* locale U_LIFETIME_BOUND);
+U_CAPI ಧ್ರುವ ವರ್ಣ* U_EXPORT2
+ulocale_getVariant(ಧ್ರುವ ULocale* locale U_LIFETIME_BOUND);
 
 /**
  * Returns the programmatic name of the entire locale, with the language,
@@ -116,8 +116,8 @@ ulocale_getVariant(const ULocale* locale U_LIFETIME_BOUND);
  * @return      A pointer to "name".
  * @stable ICU 74
  */
-U_CAPI const char* U_EXPORT2
-ulocale_getLocaleID(const ULocale* locale U_LIFETIME_BOUND);
+U_CAPI ಧ್ರುವ ವರ್ಣ* U_EXPORT2
+ulocale_getLocaleID(ಧ್ರುವ ULocale* locale U_LIFETIME_BOUND);
 
 /**
  * Returns the programmatic name of the entire locale as ulocale_getLocaleID()
@@ -127,8 +127,8 @@ ulocale_getLocaleID(const ULocale* locale U_LIFETIME_BOUND);
  * @return      A pointer to "base name".
  * @stable ICU 74
  */
-U_CAPI const char* U_EXPORT2
-ulocale_getBaseName(const ULocale* locale U_LIFETIME_BOUND);
+U_CAPI ಧ್ರುವ ವರ್ಣ* U_EXPORT2
+ulocale_getBaseName(ಧ್ರುವ ULocale* locale U_LIFETIME_BOUND);
 
 /**
  * Gets the bogus state. Locale object can be bogus if it doesn't exist
@@ -138,7 +138,7 @@ ulocale_getBaseName(const ULocale* locale U_LIFETIME_BOUND);
  * @stable ICU 74
  */
 U_CAPI bool U_EXPORT2
-ulocale_isBogus(const ULocale* locale);
+ulocale_isBogus(ಧ್ರುವ ULocale* locale);
 
 /**
  * Gets the list of keywords for the specified locale.
@@ -150,7 +150,7 @@ ulocale_isBogus(const ULocale* locale);
  * @stable ICU 74
  */
 U_CAPI UEnumeration* U_EXPORT2
-ulocale_getKeywords(const ULocale* locale, UErrorCode *err);
+ulocale_getKeywords(ಧ್ರುವ ULocale* locale, UErrorCode *err);
 
 /**
  * Gets the list of unicode keywords for the specified locale.
@@ -162,7 +162,7 @@ ulocale_getKeywords(const ULocale* locale, UErrorCode *err);
  * @stable ICU 74
  */
 U_CAPI UEnumeration* U_EXPORT2
-ulocale_getUnicodeKeywords(const ULocale* locale, UErrorCode *err);
+ulocale_getUnicodeKeywords(ಧ್ರುವ ULocale* locale, UErrorCode *err);
 
 /**
  * Gets the value for a keyword.
@@ -180,9 +180,9 @@ ulocale_getUnicodeKeywords(const ULocale* locale, UErrorCode *err);
  * @stable ICU 74
  */
 U_CAPI int32_t U_EXPORT2
-ulocale_getKeywordValue(
-    const ULocale* locale, const char* keyword, int32_t keywordLength,
-    char* valueBuffer, int32_t valueBufferCapacity, UErrorCode *err);
+ulocale_get_Keyword_ಮೌಲ್ಯ(
+    ಧ್ರುವ ULocale* locale, ಧ್ರುವ ವರ್ಣ* keyword, int32_t keywordLength,
+    ವರ್ಣ* ಮೌಲ್ಯ_Buffer, int32_t ಮೌಲ್ಯ_Buffer_Capacity, UErrorCode *err);
 
 /**
  * Gets the Unicode value for a Unicode keyword.
@@ -200,11 +200,11 @@ ulocale_getKeywordValue(
  * @stable ICU 74
  */
 U_CAPI int32_t U_EXPORT2
-ulocale_getUnicodeKeywordValue(
-    const ULocale* locale, const char* keyword, int32_t keywordLength,
-    char* valueBuffer, int32_t valueBufferCapacity, UErrorCode *err);
+ulocale_get_Unicode_Keyword_ಮೌಲ್ಯ(
+    ಧ್ರುವ ULocale* locale, ಧ್ರುವ ವರ್ಣ* keyword, int32_t keywordLength,
+    ವರ್ಣ* ಮೌಲ್ಯ_Buffer, int32_t ಮೌಲ್ಯ_Buffer_Capacity, UErrorCode *err);
 
-#if U_SHOW_CPLUSPLUS_API
+#ಯದಿ U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

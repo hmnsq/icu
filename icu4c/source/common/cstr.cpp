@@ -7,36 +7,36 @@
 *******************************************************************************
 *   file name:  charstr.cpp
 */
-#include "unicode/utypes.h"
-#include "unicode/putil.h"
-#include "unicode/unistr.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/putil.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unistr.h"
 
-#include "cstr.h"
+#ಅನ್ತರ್ಭಾವ "cstr.h"
 
-#include "charstr.h"
-#include "uinvchar.h"
+#ಅನ್ತರ್ಭಾವ "charstr.h"
+#ಅನ್ತರ್ಭಾವ "uinvchar.h"
 
 U_NAMESPACE_BEGIN
 
-CStr::CStr(const UnicodeString &in) {
+CStr::CStr(ಧ್ರುವ UnicodeString &in) {
     UErrorCode status = U_ZERO_ERROR;
-#if !UCONFIG_NO_CONVERSION || U_CHARSET_IS_UTF8
-    int32_t length = in.extract(0, in.length(), static_cast<char *>(nullptr), static_cast<uint32_t>(0));
+#ಯದಿ !UCONFIG_NO_CONVERSION || U_CHARSET_IS_UTF8
+    int32_t length = in.extract(0, in.length(), static_cast<ವರ್ಣ *>(nullptr), static_cast<uint32_t>(0));
     int32_t resultCapacity = 0;
-    char *buf = s.getAppendBuffer(length, length, resultCapacity, status);
-    if (U_SUCCESS(status)) {
+    ವರ್ಣ *buf = s.getAppendBuffer(length, length, resultCapacity, status);
+    ಯದಿ (U_SUCCESS(status)) {
         in.extract(0, in.length(), buf, resultCapacity);
         s.append(buf, length, status);
     }
-#else
+#ಅನ್ಯಥಾ
     // No conversion available. Convert any invariant characters; substitute '?' for the rest.
     // Note: can't just call u_UCharsToChars() or CharString.appendInvariantChars() on the 
     //       whole string because they require that the entire input be invariant.
-    char buf[2];
-    for (int i=0; i<in.length(); i = in.moveIndex32(i, 1)) {
-        if (uprv_isInvariantUString(in.getBuffer()+i, 1)) {
+    ವರ್ಣ buf[2];
+    ಪ್ರತಿ (ಪೂರ್ಣಾಙ್ಕ i=0; i<in.length(); i = in.moveIndex32(i, 1)) {
+        ಯದಿ (uprv_isInvariantUString(in.getBuffer()+i, 1)) {
             u_UCharsToChars(in.getBuffer()+i, buf, 1);
-        } else {
+        } ಅನ್ಯಥಾ {
             buf[0] = '?';
         }
         s.append(buf, 1, status);
@@ -47,8 +47,8 @@ CStr::CStr(const UnicodeString &in) {
 CStr::~CStr() {
 }
 
-const char * CStr::operator ()() const {
-    return s.data();
+ಧ್ರುವ ವರ್ಣ * CStr::operator ()() ಧ್ರುವ {
+    ಪ್ರತ್ಯಾಗಮ s.data();
 }
 
 U_NAMESPACE_END

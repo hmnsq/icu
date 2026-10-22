@@ -1,63 +1,63 @@
 // © 2023 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
 //
-#include "unicode/bytestream.h"
-#include "unicode/errorcode.h"
-#include "unicode/stringpiece.h"
-#include "unicode/utypes.h"
-#include "unicode/ustring.h"
-#include "unicode/ulocale.h"
-#include "unicode/locid.h"
+#ಅನ್ತರ್ಭಾವ "unicode/bytestream.h"
+#ಅನ್ತರ್ಭಾವ "unicode/errorcode.h"
+#ಅನ್ತರ್ಭಾವ "unicode/stringpiece.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ustring.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ulocale.h"
+#ಅನ್ತರ್ಭಾವ "unicode/locid.h"
 
-#include "bytesinkutil.h"
-#include "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "bytesinkutil.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
 
 U_NAMESPACE_USE
 #define EXTERNAL(i) (reinterpret_cast<ULocale*>(i))
-#define CONST_INTERNAL(e) (reinterpret_cast<const icu::Locale*>(e))
+#define CONST_INTERNAL(e) (reinterpret_cast<ಧ್ರುವ icu::Locale*>(e))
 #define INTERNAL(e) (reinterpret_cast<icu::Locale*>(e))
 
 ULocale*
-ulocale_openForLocaleID(const char* localeID, int32_t length, UErrorCode* err) {
-    if (U_FAILURE(*err)) { return nullptr; }
-    if (length < 0) {
-        return EXTERNAL(icu::Locale::createFromName(localeID).clone());
+ulocale_openForLocaleID(ಧ್ರುವ ವರ್ಣ* localeID, int32_t length, UErrorCode* err) {
+    ಯದಿ (U_FAILURE(*err)) { ಪ್ರತ್ಯಾಗಮ nullptr; }
+    ಯದಿ (length < 0) {
+        ಪ್ರತ್ಯಾಗಮ EXTERNAL(icu::Locale::createFromName(localeID).clone());
     }
-    return EXTERNAL(icu::Locale::createFromName(StringPiece{localeID, length}).clone());
+    ಪ್ರತ್ಯಾಗಮ EXTERNAL(icu::Locale::createFromName(StringPiece{localeID, length}).clone());
 }
 
 ULocale*
-ulocale_openForLanguageTag(const char* tag, int32_t length, UErrorCode* err) {
-  if (U_FAILURE(*err)) { return nullptr; }
+ulocale_openForLanguageTag(ಧ್ರುವ ವರ್ಣ* tag, int32_t length, UErrorCode* err) {
+  ಯದಿ (U_FAILURE(*err)) { ಪ್ರತ್ಯಾಗಮ nullptr; }
   Locale l = icu::Locale::forLanguageTag(length < 0 ? StringPiece(tag) : StringPiece(tag, length), *err);
-  if (U_FAILURE(*err)) { return nullptr; }
-  return EXTERNAL(l.clone());
+  ಯದಿ (U_FAILURE(*err)) { ಪ್ರತ್ಯಾಗಮ nullptr; }
+  ಪ್ರತ್ಯಾಗಮ EXTERNAL(l.clone());
 }
 
-void
+ಶೂನ್ಯ
 ulocale_close(ULocale* locale) {
     delete INTERNAL(locale);
 }
 
 #define IMPL_ULOCALE_STRING_GETTER(N1, N2) \
-const char* ulocale_get ## N1(const ULocale* locale U_LIFETIME_BOUND) { \
-    if (locale == nullptr) return nullptr; \
-    return CONST_INTERNAL(locale)->get ## N2(); \
+ಧ್ರುವ ವರ್ಣ* ulocale_get ## N1(ಧ್ರುವ ULocale* locale U_LIFETIME_BOUND) { \
+    ಯದಿ (locale == nullptr) ಪ್ರತ್ಯಾಗಮ nullptr; \
+    ಪ್ರತ್ಯಾಗಮ CONST_INTERNAL(locale)->get ## N2(); \
 }
 
 #define IMPL_ULOCALE_STRING_IDENTICAL_GETTER(N) IMPL_ULOCALE_STRING_GETTER(N, N)
 
-#define IMPL_ULOCALE_GET_KEYWORD_VALUE(N) \
+#define IMPL_ULOCALE_GET_KEYWORD_ಮೌಲ್ಯ(N) \
 int32_t ulocale_get ##N ( \
-    const ULocale* locale, const char* keyword, int32_t keywordLength, \
-    char* valueBuffer, int32_t bufferCapacity, UErrorCode *err) { \
-    if (U_FAILURE(*err)) return 0; \
-    if (locale == nullptr) { \
+    ಧ್ರುವ ULocale* locale, ಧ್ರುವ ವರ್ಣ* keyword, int32_t keywordLength, \
+    ವರ್ಣ* ಮೌಲ್ಯ_Buffer, int32_t bufferCapacity, UErrorCode *err) { \
+    ಯದಿ (U_FAILURE(*err)) ಪ್ರತ್ಯಾಗಮ 0; \
+    ಯದಿ (locale == nullptr) { \
         *err = U_ILLEGAL_ARGUMENT_ERROR; \
-        return 0; \
+        ಪ್ರತ್ಯಾಗಮ 0; \
     } \
-    return ByteSinkUtil::viaByteSinkToTerminatedChars( \
-        valueBuffer, bufferCapacity, \
+    ಪ್ರತ್ಯಾಗಮ ByteSinkUtil::viaByteSinkToTerminatedChars( \
+        ಮೌಲ್ಯ_Buffer, bufferCapacity, \
         [&](ByteSink& sink, UErrorCode& status) { \
             CONST_INTERNAL(locale)->get ## N( \
                 keywordLength < 0 ? StringPiece(keyword) : StringPiece(keyword, keywordLength), \
@@ -67,13 +67,13 @@ int32_t ulocale_get ##N ( \
 }
 
 #define IMPL_ULOCALE_GET_KEYWORDS(N) \
-UEnumeration* ulocale_get ## N(const ULocale* locale, UErrorCode *err) { \
-    if (U_FAILURE(*err)) return nullptr; \
-    if (locale == nullptr) { \
+UEnumeration* ulocale_get ## N(ಧ್ರುವ ULocale* locale, UErrorCode *err) { \
+    ಯದಿ (U_FAILURE(*err)) ಪ್ರತ್ಯಾಗಮ nullptr; \
+    ಯದಿ (locale == nullptr) { \
         *err = U_ILLEGAL_ARGUMENT_ERROR; \
-        return nullptr; \
+        ಪ್ರತ್ಯಾಗಮ nullptr; \
     } \
-    return uenum_openFromStringEnumeration( \
+    ಪ್ರತ್ಯಾಗಮ uenum_openFromStringEnumeration( \
         CONST_INTERNAL(locale)->create ## N(*err), err); \
 }
 
@@ -83,14 +83,14 @@ IMPL_ULOCALE_STRING_GETTER(Region, Country)
 IMPL_ULOCALE_STRING_IDENTICAL_GETTER(Variant)
 IMPL_ULOCALE_STRING_GETTER(LocaleID, Name)
 IMPL_ULOCALE_STRING_IDENTICAL_GETTER(BaseName)
-IMPL_ULOCALE_GET_KEYWORD_VALUE(KeywordValue)
-IMPL_ULOCALE_GET_KEYWORD_VALUE(UnicodeKeywordValue)
+IMPL_ULOCALE_GET_KEYWORD_ಮೌಲ್ಯ(Keyword_ಮೌಲ್ಯ)
+IMPL_ULOCALE_GET_KEYWORD_ಮೌಲ್ಯ(Unicode_Keyword_ಮೌಲ್ಯ)
 IMPL_ULOCALE_GET_KEYWORDS(Keywords)
 IMPL_ULOCALE_GET_KEYWORDS(UnicodeKeywords)
 
-bool ulocale_isBogus(const ULocale* locale) {
-    if (locale == nullptr) return false;
-    return CONST_INTERNAL(locale)->isBogus();
+ತಾರ್ಕಿಕ ulocale_isBogus(ಧ್ರುವ ULocale* locale) {
+    ಯದಿ (locale == nullptr) ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
+    ಪ್ರತ್ಯಾಗಮ CONST_INTERNAL(locale)->isBogus();
 }
 
 /*eof*/

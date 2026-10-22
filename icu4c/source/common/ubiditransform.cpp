@@ -15,13 +15,13 @@
 *
 */
 
-#include "cmemory.h"
-#include "unicode/ubidi.h"
-#include "unicode/ustring.h"
-#include "unicode/ushape.h"
-#include "unicode/utf16.h"
-#include "ustr_imp.h"
-#include "unicode/ubiditransform.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ubidi.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ustring.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ushape.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utf16.h"
+#ಅನ್ತರ್ಭಾವ "ustr_imp.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ubiditransform.h"
 
 /* Some convenience defines */
 #define LTR                     UBIDI_LTR
@@ -32,9 +32,9 @@
 #define SHAPE_VISUAL            U_SHAPE_TEXT_DIRECTION_VISUAL_LTR
 
 #define CHECK_LEN(STR, LEN, ERROR) UPRV_BLOCK_MACRO_BEGIN { \
-    if (LEN == 0) return 0; \
-    if (LEN < -1) { *(ERROR) = U_ILLEGAL_ARGUMENT_ERROR; return 0; } \
-    if (LEN == -1) LEN = u_strlen(STR); \
+    ಯದಿ (LEN == 0) ಪ್ರತ್ಯಾಗಮ 0; \
+    ಯದಿ (LEN < -1) { *(ERROR) = U_ILLEGAL_ARGUMENT_ERROR; ಪ್ರತ್ಯಾಗಮ 0; } \
+    ಯದಿ (LEN == -1) LEN = u_strlen(STR); \
 } UPRV_BLOCK_MACRO_END
 
 #define MAX_ACTIONS     7
@@ -45,7 +45,7 @@
  * indicates whether the text was changed in the course of this operation or
  * not.
  */
-typedef UBool (*UBiDiAction)(UBiDiTransform *, UErrorCode *);
+ಪ್ರಕಾರನಿರ್ದೇಶ UBool (*UBiDiAction)(UBiDiTransform *, UErrorCode *);
 
 /**
  * Structure that holds a predefined reordering scheme, including the following
@@ -64,7 +64,7 @@ typedef UBool (*UBiDiAction)(UBiDiTransform *, UErrorCode *);
  *     transformation.</li>
  * </ul>
  */
-typedef struct {
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ {
     UBiDiLevel        inLevel;               /* input level */
     UBiDiOrder        inOrder;               /* input order */
     UBiDiLevel        outLevel;              /* output level */
@@ -72,12 +72,12 @@ typedef struct {
     uint32_t          digitsDir;             /* digit shaping direction */
     uint32_t          lettersDir;            /* letter shaping direction */
     UBiDiLevel        baseLevel;             /* paragraph level to be used with setPara */
-    const UBiDiAction actions[MAX_ACTIONS];  /* array of pointers to functions carrying out the transformation */
+    ಧ್ರುವ UBiDiAction actions[MAX_ACTIONS];  /* array of pointers to functions carrying out the transformation */
 } ReorderingScheme;
 
-struct UBiDiTransform {
+ಸಂರಚನಾ UBiDiTransform {
     UBiDi                   *pBidi;             /* pointer to a UBiDi object */
-    const ReorderingScheme  *pActiveScheme;     /* effective reordering scheme */
+    ಧ್ರುವ ReorderingScheme  *pActiveScheme;     /* effective reordering scheme */
     char16_t                *src;               /* input text */
     char16_t                *dest;              /* output text */
     uint32_t                srcLength;          /* input text length - not really needed as we are zero-terminated and can u_strlen */
@@ -93,23 +93,23 @@ U_CAPI UBiDiTransform* U_EXPORT2
 ubiditransform_open(UErrorCode *pErrorCode)
 {
     UBiDiTransform *pBiDiTransform = nullptr;
-    if (U_SUCCESS(*pErrorCode)) {
-        pBiDiTransform = (UBiDiTransform*) uprv_calloc(1, sizeof(UBiDiTransform));
-        if (pBiDiTransform == nullptr) {
+    ಯದಿ (U_SUCCESS(*pErrorCode)) {
+        pBiDiTransform = (UBiDiTransform*) uprv_calloc(1, ಪರಿಮಾಣ(UBiDiTransform));
+        ಯದಿ (pBiDiTransform == nullptr) {
             *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
         }
     }
-    return pBiDiTransform;
+    ಪ್ರತ್ಯಾಗಮ pBiDiTransform;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI ಶೂನ್ಯ U_EXPORT2
 ubiditransform_close(UBiDiTransform *pBiDiTransform)
 {
-    if (pBiDiTransform != nullptr) {
-        if (pBiDiTransform->pBidi != nullptr) {
+    ಯದಿ (pBiDiTransform != nullptr) {
+        ಯದಿ (pBiDiTransform->pBidi != nullptr) {
             ubidi_close(pBiDiTransform->pBidi);
         }
-        if (pBiDiTransform->src != nullptr) {
+        ಯದಿ (pBiDiTransform->src != nullptr) {
             uprv_free(pBiDiTransform->src);
         }
         uprv_free(pBiDiTransform);
@@ -125,12 +125,12 @@ ubiditransform_close(UBiDiTransform *pBiDiTransform)
  * @return Whether or not this function modifies the text. Besides the return
  * value, the caller should also check <code>U_SUCCESS(*pErrorCode)</code>.
  */
-static UBool
+ಸ್ಥಿರ UBool
 action_resolve(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
 {
     ubidi_setPara(pTransform->pBidi, pTransform->src, pTransform->srcLength,
             pTransform->pActiveScheme->baseLevel, nullptr, pErrorCode);
-    return false;
+    ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
 }
 
 /**
@@ -142,7 +142,7 @@ action_resolve(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
  * @return Whether or not this function modifies the text. Besides the return
  * value, the caller should also check <code>U_SUCCESS(*pErrorCode)</code>.
  */
-static UBool
+ಸ್ಥಿರ UBool
 action_reorder(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
 {
     ubidi_writeReordered(pTransform->pBidi, pTransform->dest, pTransform->destSize,
@@ -150,7 +150,7 @@ action_reorder(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
 
     *pTransform->pDestLength = pTransform->srcLength;
     pTransform->reorderingOptions = UBIDI_REORDER_DEFAULT;
-    return true;
+    ಪ್ರತ್ಯಾಗಮ ಸತ್ಯ;
 }
 
 /**
@@ -162,13 +162,13 @@ action_reorder(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
  * @return Whether or not this function modifies the text. Besides the return
  * value, the caller should also check <code>U_SUCCESS(*pErrorCode)</code>.
  */
-static UBool
+ಸ್ಥಿರ UBool
 action_setInverse(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
 {
-    (void)pErrorCode;
-    ubidi_setInverse(pTransform->pBidi, true);
+    (ಶೂನ್ಯ)pErrorCode;
+    ubidi_setInverse(pTransform->pBidi, ಸತ್ಯ);
     ubidi_setReorderingMode(pTransform->pBidi, UBIDI_REORDER_INVERSE_LIKE_DIRECT);
-    return false;
+    ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
 }
 
 /**
@@ -181,12 +181,12 @@ action_setInverse(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
  * @return Whether or not this function modifies the text. Besides the return
  * value, the caller should also check <code>U_SUCCESS(*pErrorCode)</code>.
  */
-static UBool
+ಸ್ಥಿರ UBool
 action_setRunsOnly(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
 {
-    (void)pErrorCode;
+    (ಶೂನ್ಯ)pErrorCode;
     ubidi_setReorderingMode(pTransform->pBidi, UBIDI_REORDER_RUNS_ONLY);
-    return false;
+    ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
 }
 
 /**
@@ -198,14 +198,14 @@ action_setRunsOnly(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
  * @return Whether or not this function modifies the text. Besides the return
  * value, the caller should also check <code>U_SUCCESS(*pErrorCode)</code>.
  */
-static UBool
+ಸ್ಥಿರ UBool
 action_reverse(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
 {
     ubidi_writeReverse(pTransform->src, pTransform->srcLength,
             pTransform->dest, pTransform->destSize,
             UBIDI_REORDER_DEFAULT, pErrorCode);
     *pTransform->pDestLength = pTransform->srcLength;
-    return true;
+    ಪ್ರತ್ಯಾಗಮ ಸತ್ಯ;
 }
 
 /**
@@ -219,25 +219,25 @@ action_reverse(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
  * @param newSize A new source capacity in <code>char16_t</code>s.
  * @param pErrorCode Pointer to the error code value.
  */
-static void
-updateSrc(UBiDiTransform *pTransform, const char16_t *newSrc, uint32_t newLength,
+ಸ್ಥಿರ ಶೂನ್ಯ
+updateSrc(UBiDiTransform *pTransform, ಧ್ರುವ char16_t *newSrc, uint32_t newLength,
         uint32_t newSize, UErrorCode *pErrorCode)
 {
-    if (newSize < newLength) {
+    ಯದಿ (newSize < newLength) {
         *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
-        return;
+        ಪ್ರತ್ಯಾಗಮ;
     }
-    if (newSize > pTransform->srcSize) {
+    ಯದಿ (newSize > pTransform->srcSize) {
         newSize += 50; // allocate slightly more than needed right now
-        if (pTransform->src != nullptr) {
+        ಯದಿ (pTransform->src != nullptr) {
             uprv_free(pTransform->src);
             pTransform->src = nullptr;
         }
-        pTransform->src = static_cast<char16_t*>(uprv_malloc(newSize * sizeof(char16_t)));
-        if (pTransform->src == nullptr) {
+        pTransform->src = static_cast<char16_t*>(uprv_malloc(newSize * ಪರಿಮಾಣ(char16_t)));
+        ಯದಿ (pTransform->src == nullptr) {
             *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
             //pTransform->srcLength = pTransform->srcSize = 0;
-            return;
+            ಪ್ರತ್ಯಾಗಮ;
         }
         pTransform->srcSize = newSize;
     }
@@ -253,7 +253,7 @@ updateSrc(UBiDiTransform *pTransform, const char16_t *newSrc, uint32_t newLength
  * @param options Shaping options.
  * @param pErrorCode Pointer to the error code value.
  */
-static void
+ಸ್ಥಿರ ಶೂನ್ಯ
 doShape(UBiDiTransform *pTransform, uint32_t options, UErrorCode *pErrorCode)
 {
     *pTransform->pDestLength = u_shapeArabic(pTransform->src,
@@ -270,25 +270,25 @@ doShape(UBiDiTransform *pTransform, uint32_t options, UErrorCode *pErrorCode)
  * @return Whether or not this function modifies the text. Besides the return
  * value, the caller should also check <code>U_SUCCESS(*pErrorCode)</code>.
  */
-static UBool
+ಸ್ಥಿರ UBool
 action_shapeArabic(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
 {
-    if ((pTransform->letters | pTransform->digits) == 0) {
-        return false;
+    ಯದಿ ((pTransform->letters | pTransform->digits) == 0) {
+        ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
     }
-    if (pTransform->pActiveScheme->lettersDir == pTransform->pActiveScheme->digitsDir) {
+    ಯದಿ (pTransform->pActiveScheme->lettersDir == pTransform->pActiveScheme->digitsDir) {
         doShape(pTransform, pTransform->letters | pTransform->digits | pTransform->pActiveScheme->lettersDir,
                 pErrorCode);
-    } else {
+    } ಅನ್ಯಥಾ {
         doShape(pTransform, pTransform->digits | pTransform->pActiveScheme->digitsDir, pErrorCode);
-        if (U_SUCCESS(*pErrorCode)) {
+        ಯದಿ (U_SUCCESS(*pErrorCode)) {
             updateSrc(pTransform, pTransform->dest, *pTransform->pDestLength,
                     *pTransform->pDestLength, pErrorCode);
             doShape(pTransform, pTransform->letters | pTransform->pActiveScheme->lettersDir,
                     pErrorCode);
         }
     }
-    return true;
+    ಪ್ರತ್ಯಾಗಮ ಸತ್ಯ;
 }
 
 /**
@@ -300,42 +300,42 @@ action_shapeArabic(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
  * @return Whether or not this function modifies the text. Besides the return
  * value, the caller should also check <code>U_SUCCESS(*pErrorCode)</code>.
  */
-static UBool
+ಸ್ಥಿರ UBool
 action_mirror(UBiDiTransform *pTransform, UErrorCode *pErrorCode)
 {
     UChar32 c;
     uint32_t i = 0, j = 0;
-    if (0 == (pTransform->reorderingOptions & UBIDI_DO_MIRRORING)) {
-        return false;
+    ಯದಿ (0 == (pTransform->reorderingOptions & UBIDI_DO_MIRRORING)) {
+        ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
     }
-    do {
+    ಕುರು {
         UBool isOdd = ubidi_getLevelAt(pTransform->pBidi, i) & 1;
         U16_NEXT(pTransform->src, i, pTransform->srcLength, c); 
-        if (isOdd) {
+        ಯದಿ (isOdd) {
             c = u_charMirror(c);
         }
         uint32_t k = U16_LENGTH(c);
-        if (j + k <= pTransform->destSize) {
+        ಯದಿ (j + k <= pTransform->destSize) {
             U16_APPEND_UNSAFE(pTransform->dest, j, c);
-        } else {
+        } ಅನ್ಯಥಾ {
             j += k;
         }
-    } while (i < pTransform->srcLength);
+    } ಯಾವತ್ (i < pTransform->srcLength);
     
     *pTransform->pDestLength = j;
-    if (pTransform->destSize < j) {
+    ಯದಿ (pTransform->destSize < j) {
         *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
-        return false;
+        ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
     }
     pTransform->reorderingOptions = UBIDI_REORDER_DEFAULT;
-    return true;
+    ಪ್ರತ್ಯಾಗಮ ಸತ್ಯ;
 }
 
 /**
  * All possible reordering schemes.
  *
  */
-static const ReorderingScheme Schemes[] =
+ಸ್ಥಿರ ಧ್ರುವ ReorderingScheme Schemes[] =
 {
     /* 0: Logical LTR => Visual LTR */
     {LTR, LOGICAL, LTR, VISUAL, SHAPE_LOGICAL, SHAPE_LOGICAL, LTR,
@@ -387,37 +387,37 @@ static const ReorderingScheme Schemes[] =
             {action_reverse, action_resolve, action_mirror, action_shapeArabic, action_reverse, nullptr}}
 };
 
-static const uint32_t nSchemes = sizeof(Schemes) / sizeof(*Schemes);
+ಸ್ಥಿರ ಧ್ರುವ uint32_t nSchemes = ಪರಿಮಾಣ(Schemes) / ಪರಿಮಾಣ(*Schemes);
 
 /**
  * When the direction option is <code>UBIDI_DEFAULT_LTR</code> or
  * <code>UBIDI_DEFAULT_RTL</code>, resolve the base direction according to that
  * of the first strong bidi character.
  */
-static void
-resolveBaseDirection(const char16_t *text, uint32_t length,
+ಸ್ಥಿರ ಶೂನ್ಯ
+resolveBaseDirection(ಧ್ರುವ char16_t *text, uint32_t length,
         UBiDiLevel *pInLevel, UBiDiLevel *pOutLevel)
 {
-    switch (*pInLevel) {
-        case UBIDI_DEFAULT_LTR:
-        case UBIDI_DEFAULT_RTL: {
+    ವಿಕಲ್ಪ (*pInLevel) {
+        ಪಕ್ಷ UBIDI_DEFAULT_LTR:
+        ಪಕ್ಷ UBIDI_DEFAULT_RTL: {
             UBiDiLevel level = static_cast<UBiDiLevel>(ubidi_getBaseDirection(text, length));
             *pInLevel = static_cast<UBiDiLevel>(level != UBIDI_NEUTRAL) ? level
                     : *pInLevel == UBIDI_DEFAULT_RTL ? static_cast<UBiDiLevel>(RTL) : static_cast<UBiDiLevel>(LTR);
-            break;
+            ಭಙ್ಗ;
         }
-        default:
+        ಸ್ವಭಾವ:
             *pInLevel &= 1;
-            break;
+            ಭಙ್ಗ;
     }
-    switch (*pOutLevel) {
-        case UBIDI_DEFAULT_LTR:
-        case UBIDI_DEFAULT_RTL:
+    ವಿಕಲ್ಪ (*pOutLevel) {
+        ಪಕ್ಷ UBIDI_DEFAULT_LTR:
+        ಪಕ್ಷ UBIDI_DEFAULT_RTL:
             *pOutLevel = *pInLevel;
-            break;
-        default:
+            ಭಙ್ಗ;
+        ಸ್ವಭಾವ:
             *pOutLevel &= 1;
-            break;
+            ಭಙ್ಗ;
     }
 }
 
@@ -427,24 +427,24 @@ resolveBaseDirection(const char16_t *text, uint32_t length,
  * 
  * @return A valid <code>ReorderingScheme</code> object or nullptr
  */
-static const ReorderingScheme*
+ಸ್ಥಿರ ಧ್ರುವ ReorderingScheme*
 findMatchingScheme(UBiDiLevel inLevel, UBiDiLevel outLevel,
         UBiDiOrder inOrder, UBiDiOrder outOrder)
 {
     uint32_t i;
-    for (i = 0; i < nSchemes; i++) {
-        const ReorderingScheme *pScheme = Schemes + i;
-        if (inLevel == pScheme->inLevel && outLevel == pScheme->outLevel
+    ಪ್ರತಿ (i = 0; i < nSchemes; i++) {
+        ಧ್ರುವ ReorderingScheme *pScheme = Schemes + i;
+        ಯದಿ (inLevel == pScheme->inLevel && outLevel == pScheme->outLevel
                 && inOrder == pScheme->inOrder && outOrder == pScheme->outOrder) {
-            return pScheme;
+            ಪ್ರತ್ಯಾಗಮ pScheme;
         }
     }
-    return nullptr;
+    ಪ್ರತ್ಯಾಗಮ nullptr;
 }
 
 U_CAPI uint32_t U_EXPORT2
 ubiditransform_transform(UBiDiTransform *pBiDiTransform,
-            const char16_t *src, int32_t srcLength,
+            ಧ್ರುವ char16_t *src, int32_t srcLength,
             char16_t *dest, int32_t destSize,
             UBiDiLevel inParaLevel, UBiDiOrder inOrder,
             UBiDiLevel outParaLevel, UBiDiOrder outOrder,
@@ -452,24 +452,24 @@ ubiditransform_transform(UBiDiTransform *pBiDiTransform,
             UErrorCode *pErrorCode)
 {
     uint32_t destLength = 0;
-    UBool textChanged = false;
-    const UBiDiTransform *pOrigTransform = pBiDiTransform;
-    const UBiDiAction *action = nullptr;
+    UBool textChanged = ಅಸತ್ಯ;
+    ಧ್ರುವ UBiDiTransform *pOrigTransform = pBiDiTransform;
+    ಧ್ರುವ UBiDiAction *action = nullptr;
 
-    if (U_FAILURE(*pErrorCode)) {
-        return 0;
+    ಯದಿ (U_FAILURE(*pErrorCode)) {
+        ಪ್ರತ್ಯಾಗಮ 0;
     }
-    if (src == nullptr || dest == nullptr) {
+    ಯದಿ (src == nullptr || dest == nullptr) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        ಪ್ರತ್ಯಾಗಮ 0;
     }
     CHECK_LEN(src, srcLength, pErrorCode);
     CHECK_LEN(dest, destSize, pErrorCode);
 
-    if (pBiDiTransform == nullptr) {
+    ಯದಿ (pBiDiTransform == nullptr) {
         pBiDiTransform = ubiditransform_open(pErrorCode);
-        if (U_FAILURE(*pErrorCode)) {
-            return 0;
+        ಯದಿ (U_FAILURE(*pErrorCode)) {
+            ಪ್ರತ್ಯಾಗಮ 0;
         }
     }
     /* Current limitation: in multiple paragraphs will be resolved according
@@ -478,8 +478,8 @@ ubiditransform_transform(UBiDiTransform *pBiDiTransform,
 
     pBiDiTransform->pActiveScheme = findMatchingScheme(inParaLevel, outParaLevel,
             inOrder, outOrder);
-    if (pBiDiTransform->pActiveScheme == nullptr) {
-        goto cleanup;
+    ಯದಿ (pBiDiTransform->pActiveScheme == nullptr) {
+        ಗಚ್ಛ cleanup;
     }
     pBiDiTransform->reorderingOptions = doMirroring ? UBIDI_DO_MIRRORING
             : UBIDI_REORDER_DEFAULT;
@@ -491,13 +491,13 @@ ubiditransform_transform(UBiDiTransform *pBiDiTransform,
     pBiDiTransform->letters = shapingOptions & ~U_SHAPE_DIGITS_MASK;
 
     updateSrc(pBiDiTransform, src, srcLength, destSize > srcLength ? destSize : srcLength, pErrorCode);
-    if (U_FAILURE(*pErrorCode)) {
-        goto cleanup;
+    ಯದಿ (U_FAILURE(*pErrorCode)) {
+        ಗಚ್ಛ cleanup;
     }
-    if (pBiDiTransform->pBidi == nullptr) {
+    ಯದಿ (pBiDiTransform->pBidi == nullptr) {
         pBiDiTransform->pBidi = ubidi_openSized(0, 0, pErrorCode);
-        if (U_FAILURE(*pErrorCode)) {
-            goto cleanup;
+        ಯದಿ (U_FAILURE(*pErrorCode)) {
+            ಗಚ್ಛ cleanup;
         }
     }
     pBiDiTransform->dest = dest;
@@ -505,34 +505,34 @@ ubiditransform_transform(UBiDiTransform *pBiDiTransform,
     pBiDiTransform->pDestLength = &destLength;
 
     /* Checking for U_SUCCESS() within the loop to bail out on first failure. */
-    for (action = pBiDiTransform->pActiveScheme->actions; *action && U_SUCCESS(*pErrorCode); action++) {
-        if ((*action)(pBiDiTransform, pErrorCode)) {
-            if (action[1] != nullptr) {
+    ಪ್ರತಿ (action = pBiDiTransform->pActiveScheme->actions; *action && U_SUCCESS(*pErrorCode); action++) {
+        ಯದಿ ((*action)(pBiDiTransform, pErrorCode)) {
+            ಯದಿ (action[1] != nullptr) {
                 updateSrc(pBiDiTransform, pBiDiTransform->dest, *pBiDiTransform->pDestLength,
                         *pBiDiTransform->pDestLength, pErrorCode);
             }
-            textChanged = true;
+            textChanged = ಸತ್ಯ;
         }
     }
-    ubidi_setInverse(pBiDiTransform->pBidi, false);
+    ubidi_setInverse(pBiDiTransform->pBidi, ಅಸತ್ಯ);
 
-    if (!textChanged && U_SUCCESS(*pErrorCode)) {
+    ಯದಿ (!textChanged && U_SUCCESS(*pErrorCode)) {
         /* Text was not changed - just copy src to dest */
-        if (destSize < srcLength) {
+        ಯದಿ (destSize < srcLength) {
             *pErrorCode = U_BUFFER_OVERFLOW_ERROR;
-        } else {
+        } ಅನ್ಯಥಾ {
             u_strncpy(dest, src, srcLength);
             destLength = srcLength;
         }
     }
 cleanup:
-    if (pOrigTransform != pBiDiTransform) {
+    ಯದಿ (pOrigTransform != pBiDiTransform) {
         ubiditransform_close(pBiDiTransform);
-    } else {
+    } ಅನ್ಯಥಾ {
         pBiDiTransform->dest = nullptr;
         pBiDiTransform->pDestLength = nullptr;
         pBiDiTransform->srcLength = 0;
         pBiDiTransform->destSize = 0;
     }
-    return (U_FAILURE(*pErrorCode) && *pErrorCode != U_BUFFER_OVERFLOW_ERROR) ? 0 : destLength;
+    ಪ್ರತ್ಯಾಗಮ (U_FAILURE(*pErrorCode) && *pErrorCode != U_BUFFER_OVERFLOW_ERROR) ? 0 : destLength;
 }

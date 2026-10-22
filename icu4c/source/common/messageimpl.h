@@ -17,11 +17,11 @@
 #ifndef __MESSAGEIMPL_H__
 #define __MESSAGEIMPL_H__
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if !UCONFIG_NO_FORMATTING
+#ಯದಿ !UCONFIG_NO_FORMATTING
 
-#include "unicode/messagepattern.h"
+#ಅನ್ತರ್ಭಾವ "unicode/messagepattern.h"
 
 U_NAMESPACE_BEGIN
 
@@ -31,30 +31,30 @@ U_NAMESPACE_BEGIN
  * In C++, they are declared here and implemented in messagepattern.cpp.
  */
 class U_COMMON_API MessageImpl {
-public:
+ಸಾರ್ವಜನಿಕ:
     /**
      * @return true if getApostropheMode()==UMSGPAT_APOS_DOUBLE_REQUIRED
      */
-    static UBool jdkAposMode(const MessagePattern &msgPattern) {
-        return msgPattern.getApostropheMode()==UMSGPAT_APOS_DOUBLE_REQUIRED;
+    ಸ್ಥಿರ UBool jdkAposMode(ಧ್ರುವ MessagePattern &ಸಂದೇಶ_Pattern) {
+        ಪ್ರತ್ಯಾಗಮ ಸಂದೇಶ_Pattern.getApostropheMode()==UMSGPAT_APOS_DOUBLE_REQUIRED;
     }
 
     /**
      * Appends the s[start, limit[ substring to sb, but with only half of the apostrophes
      * according to JDK pattern behavior.
      */
-    static void appendReducedApostrophes(const UnicodeString &s, int32_t start, int32_t limit,
+    ಸ್ಥಿರ ಶೂನ್ಯ appendReducedApostrophes(ಧ್ರುವ UnicodeString &s, int32_t start, int32_t limit,
                                          UnicodeString &sb);
 
     /**
      * Appends the sub-message to the result string.
      * Omits SKIP_SYNTAX and appends whole arguments using appendReducedApostrophes().
      */
-    static UnicodeString& appendSubMessageWithoutSkipSyntax(const MessagePattern& msgPattern,
-                                                            int32_t msgStart,
+    ಸ್ಥಿರ UnicodeString& appendSubMessageWithoutSkipSyntax(ಧ್ರುವ MessagePattern& ಸಂದೇಶ_Pattern,
+                                                            int32_t ಸಂದೇಶ_Start,
                                                             UnicodeString& result U_LIFETIME_BOUND);
 
-private:
+ಗುಪ್ತ:
     MessageImpl() = delete;  // no constructor: all static methods
 };
 

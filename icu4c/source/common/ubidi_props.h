@@ -21,23 +21,23 @@
 #ifndef __UBIDI_PROPS_H__
 #define __UBIDI_PROPS_H__
 
-#include "unicode/utypes.h"
-#include "unicode/uset.h"
-#include "putilimp.h"
-#include "uset_imp.h"
-#include "udataswp.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uset.h"
+#ಅನ್ತರ್ಭಾವ "putilimp.h"
+#ಅನ್ತರ್ಭಾವ "uset_imp.h"
+#ಅನ್ತರ್ಭಾವ "udataswp.h"
 
 U_CDECL_BEGIN
 
 /* library API -------------------------------------------------------------- */
 
-U_CFUNC void
-ubidi_addPropertyStarts(const USetAdder *sa, UErrorCode *pErrorCode);
+U_CFUNC ಶೂನ್ಯ
+ubidi_addPropertyStarts(ಧ್ರುವ USetAdder *sa, UErrorCode *pErrorCode);
 
 /* property access functions */
 
 U_CFUNC int32_t
-ubidi_getMaxValue(UProperty which);
+ubidi_get_Max_ಮೌಲ್ಯ(UProperty which);
 
 U_CAPI UCharDirection
 ubidi_getClass(UChar32 c);
@@ -78,8 +78,8 @@ ubidi_getPairedBracket(UChar32 c);
 #define UBIDI_FMT_3 0x69
 
 /* indexes into indexes[] */
-enum {
-    UBIDI_IX_INDEX_TOP,
+ಗಣನಾ {
+    UBIDI_IX_INDEX_ತುದಿ,
     UBIDI_IX_LENGTH,
     UBIDI_IX_TRIE_SIZE,
     UBIDI_IX_MIRROR_LENGTH,
@@ -89,13 +89,13 @@ enum {
     UBIDI_IX_JG_START2,  /* new in format version 2.2, ICU 54 */
     UBIDI_IX_JG_LIMIT2,
 
-    UBIDI_MAX_VALUES_INDEX=15,
-    UBIDI_IX_TOP=16
+    UBIDI_MAX_ಮೌಲ್ಯಗಳು_INDEX=15,
+    UBIDI_IX_ತುದಿ=16
 };
 
 /* definitions for 16-bit bidi/shaping properties word ---------------------- */
 
-enum {
+ಗಣನಾ {
  /* UBIDI_CLASS_SHIFT=0, */     /* bidi class: 5 bits (4..0) */
     UBIDI_JT_SHIFT=5,           /* joining type: 3 bits (7..5) */
 
@@ -119,13 +119,13 @@ enum {
 #define UBIDI_GET_CLASS(props) ((props)&UBIDI_CLASS_MASK)
 #define UBIDI_GET_FLAG(props, shift) (((props)>>(shift))&1)
 
-#if U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
+#ಯದಿ U_SIGNED_ಬಲ_SHIFT_IS_ARITHMETIC
 #   define UBIDI_GET_MIRROR_DELTA(props) ((int16_t)(props)>>UBIDI_MIRROR_DELTA_SHIFT)
-#else
+#ಅನ್ಯಥಾ
 #   define UBIDI_GET_MIRROR_DELTA(props) (int16_t)(((props)&0x8000) ? (((props)>>UBIDI_MIRROR_DELTA_SHIFT)|0xe000) : ((props)>>UBIDI_MIRROR_DELTA_SHIFT))
 #endif
 
-enum {
+ಗಣನಾ {
     UBIDI_ESC_MIRROR_DELTA=-4,
     UBIDI_MIN_MIRROR_DELTA=-3,
     UBIDI_MAX_MIRROR_DELTA=3
@@ -133,7 +133,7 @@ enum {
 
 /* definitions for 32-bit mirror table entry -------------------------------- */
 
-enum {
+ಗಣನಾ {
     /* the source Unicode code point takes 21 bits (20..0) */
     UBIDI_MIRROR_INDEX_SHIFT=21,
     UBIDI_MAX_MIRROR_INDEX=0x7ff

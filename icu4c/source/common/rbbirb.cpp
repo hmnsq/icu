@@ -11,30 +11,30 @@
 //    RBBI engine.
 //
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ಯದಿ !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/brkiter.h"
-#include "unicode/rbbi.h"
-#include "unicode/ubrk.h"
-#include "unicode/unistr.h"
-#include "unicode/uniset.h"
-#include "unicode/uchar.h"
-#include "unicode/uchriter.h"
-#include "unicode/ustring.h"
-#include "unicode/parsepos.h"
-#include "unicode/parseerr.h"
+#ಅನ್ತರ್ಭಾವ "unicode/brkiter.h"
+#ಅನ್ತರ್ಭಾವ "unicode/rbbi.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ubrk.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unistr.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uniset.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uchar.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uchriter.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ustring.h"
+#ಅನ್ತರ್ಭಾವ "unicode/parsepos.h"
+#ಅನ್ತರ್ಭಾವ "unicode/parseerr.h"
 
-#include "cmemory.h"
-#include "cstring.h"
-#include "rbbirb.h"
-#include "rbbinode.h"
-#include "rbbiscan.h"
-#include "rbbisetb.h"
-#include "rbbitblb.h"
-#include "rbbidata.h"
-#include "uassert.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "cstring.h"
+#ಅನ್ತರ್ಭಾವ "rbbirb.h"
+#ಅನ್ತರ್ಭಾವ "rbbinode.h"
+#ಅನ್ತರ್ಭಾವ "rbbiscan.h"
+#ಅನ್ತರ್ಭಾವ "rbbisetb.h"
+#ಅನ್ತರ್ಭಾವ "rbbitblb.h"
+#ಅನ್ತರ್ಭಾವ "rbbidata.h"
+#ಅನ್ತರ್ಭಾವ "uassert.h"
 
 
 U_NAMESPACE_BEGIN
@@ -45,7 +45,7 @@ U_NAMESPACE_BEGIN
 //  Constructor.
 //
 //----------------------------------------------------------------------------------------
-RBBIRuleBuilder::RBBIRuleBuilder(const UnicodeString   &rules,
+RBBIRuleBuilder::RBBIRuleBuilder(ಧ್ರುವ UnicodeString   &rules,
                                        UParseError     *parseErr,
                                        UErrorCode      &status)
  : fRules(rules), fStrippedRules(rules)
@@ -58,35 +58,35 @@ RBBIRuleBuilder::RBBIRuleBuilder(const UnicodeString   &rules,
 #endif
 
 
-    fForwardTree        = nullptr;
-    fReverseTree        = nullptr;
-    fSafeFwdTree        = nullptr;
-    fSafeRevTree        = nullptr;
-    fDefaultTree        = &fForwardTree;
+    f_Forward_ವೃಕ್ಷ        = nullptr;
+    f_Reverse_ವೃಕ್ಷ        = nullptr;
+    f_Safe_Fwd_ವೃಕ್ಷ        = nullptr;
+    f_Safe_Rev_ವೃಕ್ಷ        = nullptr;
+    f_Default_ವೃಕ್ಷ        = &f_Forward_ವೃಕ್ಷ;
     fForwardTable       = nullptr;
     fRuleStatusVals     = nullptr;
-    fChainRules         = false;
-    fLookAheadHardBreak = false;
+    fChainRules         = ಅಸತ್ಯ;
+    fLookAheadHardBreak = ಅಸತ್ಯ;
     fUSetNodes          = nullptr;
     fRuleStatusVals     = nullptr;
     fScanner            = nullptr;
     fSetBuilder         = nullptr;
-    if (parseErr) {
-        uprv_memset(parseErr, 0, sizeof(UParseError));
+    ಯದಿ (parseErr) {
+        uprv_memset(parseErr, 0, ಪರಿಮಾಣ(UParseError));
     }
 
-    if (U_FAILURE(status)) {
-        return;
+    ಯದಿ (U_FAILURE(status)) {
+        ಪ್ರತ್ಯಾಗಮ;
     }
 
-    fUSetNodes          = new UVector(status); // bcos status gets overwritten here
-    fRuleStatusVals     = new UVector(status);
-    fScanner            = new RBBIRuleScanner(this);
-    fSetBuilder         = new RBBISetBuilder(this);
-    if (U_FAILURE(status)) {
-        return;
+    fUSetNodes          = ನೂತನ UVector(status); // bcos status gets overwritten here
+    fRuleStatusVals     = ನೂತನ UVector(status);
+    fScanner            = ನೂತನ RBBIRuleScanner(ಏತತ್);
+    fSetBuilder         = ನೂತನ RBBISetBuilder(ಏತತ್);
+    ಯದಿ (U_FAILURE(status)) {
+        ಪ್ರತ್ಯಾಗಮ;
     }
-    if (fSetBuilder == nullptr || fScanner == nullptr ||
+    ಯದಿ (fSetBuilder == nullptr || fScanner == nullptr ||
         fUSetNodes == nullptr || fRuleStatusVals == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
     }
@@ -101,11 +101,11 @@ RBBIRuleBuilder::RBBIRuleBuilder(const UnicodeString   &rules,
 //----------------------------------------------------------------------------------------
 RBBIRuleBuilder::~RBBIRuleBuilder() {
 
-    int        i;
-    for (i=0; ; i++) {
+    ಪೂರ್ಣಾಙ್ಕ        i;
+    ಪ್ರತಿ (i=0; ; i++) {
         RBBINode* n = static_cast<RBBINode*>(fUSetNodes->elementAt(i));
-        if (n==nullptr) {
-            break;
+        ಯದಿ (n==nullptr) {
+            ಭಙ್ಗ;
         }
         delete n;
     }
@@ -113,10 +113,10 @@ RBBIRuleBuilder::~RBBIRuleBuilder() {
     delete fUSetNodes;
     delete fSetBuilder;
     delete fForwardTable;
-    delete fForwardTree;
-    delete fReverseTree;
-    delete fSafeFwdTree;
-    delete fSafeRevTree;
+    delete f_Forward_ವೃಕ್ಷ;
+    delete f_Reverse_ವೃಕ್ಷ;
+    delete f_Safe_Fwd_ವೃಕ್ಷ;
+    delete f_Safe_Rev_ವೃಕ್ಷ;
     delete fScanner;
     delete fRuleStatusVals;
 }
@@ -132,13 +132,13 @@ RBBIRuleBuilder::~RBBIRuleBuilder() {
 //                    which is also the format needed by the RBBI runtime engine.
 //
 //----------------------------------------------------------------------------------------
-static int32_t align8(int32_t i) {return (i+7) & 0xfffffff8;}
+ಸ್ಥಿರ int32_t align8(int32_t i) {ಪ್ರತ್ಯಾಗಮ (i+7) & 0xfffffff8;}
 
 RBBIDataHeader *RBBIRuleBuilder::flattenData() {
     int32_t    i;
 
-    if (U_FAILURE(*fStatus)) {
-        return nullptr;
+    ಯದಿ (U_FAILURE(*fStatus)) {
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
 
     // Remove whitespace from the rules to make it smaller.
@@ -150,11 +150,11 @@ RBBIDataHeader *RBBIRuleBuilder::flattenData() {
     //   Sections sizes actually stored in the header are for the actual data
     //     without the padding.
     //
-    int32_t headerSize        = align8(sizeof(RBBIDataHeader));
+    int32_t headerSize        = align8(ಪರಿಮಾಣ(RBBIDataHeader));
     int32_t forwardTableSize  = align8(fForwardTable->getTableSize());
     int32_t reverseTableSize  = align8(fForwardTable->getSafeTableSize());
     int32_t trieSize          = align8(fSetBuilder->getTrieSize());
-    int32_t statusTableSize   = align8(fRuleStatusVals->size() * sizeof(int32_t));
+    int32_t statusTableSize   = align8(fRuleStatusVals->size() * ಪರಿಮಾಣ(int32_t));
 
     int32_t rulesLengthInUTF8 = 0;
     u_strToUTF8WithSub(nullptr, 0, &rulesLengthInUTF8,
@@ -170,7 +170,7 @@ RBBIDataHeader *RBBIRuleBuilder::flattenData() {
                                 + statusTableSize + trieSize + rulesSize;
 
 #ifdef RBBI_DEBUG
-    if (fDebugEnv && uprv_strstr(fDebugEnv, "size")) {
+    ಯದಿ (fDebugEnv && uprv_strstr(fDebugEnv, "size")) {
         RBBIDebugPrintf("Header Size:        %8d\n", headerSize);
         RBBIDebugPrintf("Forward Table Size: %8d\n", forwardTableSize);
         RBBIDebugPrintf("Reverse Table Size: %8d\n", reverseTableSize);
@@ -183,9 +183,9 @@ RBBIDataHeader *RBBIRuleBuilder::flattenData() {
 #endif
 
     LocalMemory<RBBIDataHeader> data(static_cast<RBBIDataHeader*>(uprv_malloc(totalSize)));
-    if (data.isNull()) {
+    ಯದಿ (data.isNull()) {
         *fStatus = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
     uprv_memset(data.getAlias(), 0, totalSize);
 
@@ -196,7 +196,7 @@ RBBIDataHeader *RBBIRuleBuilder::flattenData() {
     data->fFormatVersion[2] = RBBI_DATA_FORMAT_VERSION[2];
     data->fFormatVersion[3] = RBBI_DATA_FORMAT_VERSION[3];
     data->fLength           = totalSize;
-    data->fCatCount         = fSetBuilder->getNumCharCategories();
+    data->f_Cat_ಎಣಿಕೆ         = fSetBuilder->get_ಅಂಕೆ_Char_Categories();
 
     data->fFTable        = headerSize;
     data->fFTableLen     = forwardTableSize;
@@ -211,25 +211,25 @@ RBBIDataHeader *RBBIRuleBuilder::flattenData() {
     data->fRuleSource    = data->fStatusTable + statusTableSize;
     data->fRuleSourceLen = rulesLengthInUTF8;
 
-    uprv_memset(data->fReserved, 0, sizeof(data->fReserved));
+    uprv_memset(data->fReserved, 0, ಪರಿಮಾಣ(data->fReserved));
 
     fForwardTable->exportTable(reinterpret_cast<uint8_t*>(data.getAlias()) + data->fFTable);
     fForwardTable->exportSafeTable(reinterpret_cast<uint8_t*>(data.getAlias()) + data->fRTable);
     fSetBuilder->serializeTrie(reinterpret_cast<uint8_t*>(data.getAlias()) + data->fTrie);
 
     int32_t* ruleStatusTable = reinterpret_cast<int32_t*>(reinterpret_cast<uint8_t*>(data.getAlias()) + data->fStatusTable);
-    for (i=0; i<fRuleStatusVals->size(); i++) {
+    ಪ್ರತಿ (i=0; i<fRuleStatusVals->size(); i++) {
         ruleStatusTable[i] = fRuleStatusVals->elementAti(i);
     }
 
-    u_strToUTF8WithSub(reinterpret_cast<char*>(data.getAlias()) + data->fRuleSource, rulesSize, &rulesLengthInUTF8,
+    u_strToUTF8WithSub(reinterpret_cast<ವರ್ಣ*>(data.getAlias()) + data->fRuleSource, rulesSize, &rulesLengthInUTF8,
                        fStrippedRules.getBuffer(), fStrippedRules.length(),
                        0xfffd, nullptr, fStatus);
-    if (U_FAILURE(*fStatus)) {
-        return nullptr;
+    ಯದಿ (U_FAILURE(*fStatus)) {
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
 
-    return data.orphan();
+    ಪ್ರತ್ಯಾಗಮ data.orphan();
 }
 
 
@@ -240,7 +240,7 @@ RBBIDataHeader *RBBIRuleBuilder::flattenData() {
 //
 //----------------------------------------------------------------------------------------
 BreakIterator *
-RBBIRuleBuilder::createRuleBasedBreakIterator( const UnicodeString    &rules,
+RBBIRuleBuilder::createRuleBasedBreakIterator( ಧ್ರುವ UnicodeString    &rules,
                                     UParseError      *parseError,
                                     UErrorCode       &status)
 {
@@ -249,14 +249,14 @@ RBBIRuleBuilder::createRuleBasedBreakIterator( const UnicodeString    &rules,
     // and list of all Unicode Sets referenced by the rules.
     //
     RBBIRuleBuilder  builder(rules, parseError, status);
-    if (U_FAILURE(status)) { // status checked here bcos build below doesn't
-        return nullptr;
+    ಯದಿ (U_FAILURE(status)) { // status checked here bcos build below doesn't
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
 
     RBBIDataHeader *data = builder.build(status);
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    ಯದಿ (U_FAILURE(status)) {
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
 
     //
@@ -264,25 +264,25 @@ RBBIRuleBuilder::createRuleBasedBreakIterator( const UnicodeString    &rules,
     //     (Identical to creation from stored pre-compiled rules)
     //
     // status is checked after init in construction.
-    RuleBasedBreakIterator *This = new RuleBasedBreakIterator(data, status);
-    if (U_FAILURE(status)) {
+    RuleBasedBreakIterator *This = ನೂತನ RuleBasedBreakIterator(data, status);
+    ಯದಿ (U_FAILURE(status)) {
         delete This;
         This = nullptr;
     } 
-    else if(This == nullptr) { // test for nullptr
+    ಅನ್ಯಥಾ ಯದಿ(This == nullptr) { // test for nullptr
         status = U_MEMORY_ALLOCATION_ERROR;
     }
-    return This;
+    ಪ್ರತ್ಯಾಗಮ This;
 }
 
 RBBIDataHeader *RBBIRuleBuilder::build(UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return nullptr;
+    ಯದಿ (U_FAILURE(status)) {
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
 
     fScanner->parse();
-    if (U_FAILURE(status)) {
-        return nullptr;
+    ಯದಿ (U_FAILURE(status)) {
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
 
     //
@@ -294,10 +294,10 @@ RBBIDataHeader *RBBIRuleBuilder::build(UErrorCode &status) {
     //
     //   Generate the DFA state transition table.
     //
-    fForwardTable = new RBBITableBuilder(this, &fForwardTree, status);
-    if (fForwardTable == nullptr) {
+    fForwardTable = ನೂತನ RBBITableBuilder(ಏತತ್, &f_Forward_ವೃಕ್ಷ, status);
+    ಯದಿ (fForwardTable == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
 
     fForwardTable->buildForwardTable();
@@ -312,7 +312,7 @@ RBBIDataHeader *RBBIRuleBuilder::build(UErrorCode &status) {
 
 
 #ifdef RBBI_DEBUG
-    if (fDebugEnv && uprv_strstr(fDebugEnv, "states")) {
+    ಯದಿ (fDebugEnv && uprv_strstr(fDebugEnv, "states")) {
         fForwardTable->printStates();
         fForwardTable->printRuleStatusTable();
         fForwardTable->printReverseTable();
@@ -329,33 +329,33 @@ RBBIDataHeader *RBBIRuleBuilder::build(UErrorCode &status) {
     //      in the run-time format.
     //
     RBBIDataHeader *data = flattenData(); // returns nullptr if error
-    if (U_FAILURE(status)) {
-        return nullptr;
+    ಯದಿ (U_FAILURE(status)) {
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
-    return data;
+    ಪ್ರತ್ಯಾಗಮ data;
 }
 
-void RBBIRuleBuilder::optimizeTables() {
-    bool didSomething;
+ಶೂನ್ಯ RBBIRuleBuilder::optimizeTables() {
+    ತಾರ್ಕಿಕ didSomething;
     fForwardTable->minimizeLookaheads();
-    do {
-        didSomething = false;
+    ಕುರು {
+        didSomething = ಅಸತ್ಯ;
 
         // Begin looking for duplicates with char class 3.
         // Class 0 is unused and should not have other categories merged into
         // it. We allow merging categories *into* class 1 {eof} (but not the
         // reverse, so that eof remains in class 1).
         IntPair duplPair = {1, 0};
-        while (fForwardTable->findDuplCharClassFrom(&duplPair)) {
+        ಯಾವತ್ (fForwardTable->findDuplCharClassFrom(&duplPair)) {
             fSetBuilder->mergeCategories(duplPair);
             fForwardTable->removeColumn(duplPair.second);
-            didSomething = true;
+            didSomething = ಸತ್ಯ;
         }
 
-        while (fForwardTable->removeDuplicateStates() > 0) {
-            didSomething = true;
+        ಯಾವತ್ (fForwardTable->removeDuplicateStates() > 0) {
+            didSomething = ಸತ್ಯ;
         }
-    } while (didSomething);
+    } ಯಾವತ್ (didSomething);
 }
 
 U_NAMESPACE_END

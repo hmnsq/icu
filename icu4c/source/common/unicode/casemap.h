@@ -7,12 +7,12 @@
 #ifndef __CASEMAP_H__
 #define __CASEMAP_H__
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#ಯದಿ U_SHOW_CPLUSPLUS_API
 
-#include "unicode/stringpiece.h"
-#include "unicode/uobject.h"
+#ಅನ್ತರ್ಭಾವ "unicode/stringpiece.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uobject.h"
 
 /**
  * \file
@@ -30,8 +30,8 @@ class Edits;
  *
  * @stable ICU 59
  */
-class U_COMMON_API CaseMap final : public UMemory {
-public:
+class U_COMMON_API CaseMap final : ಸಾರ್ವಜನಿಕ UMemory {
+ಸಾರ್ವಜನಿಕ:
     /**
      * Lowercases a UTF-16 string and optionally records edits.
      * Casing is locale-dependent and context-sensitive.
@@ -62,9 +62,9 @@ public:
      * @see u_strToLower
      * @stable ICU 59
      */
-     static int32_t toLower(
-            const char *locale, uint32_t options,
-            const char16_t *src, int32_t srcLength,
+     ಸ್ಥಿರ int32_t toLower(
+            ಧ್ರುವ ವರ್ಣ *locale, uint32_t options,
+            ಧ್ರುವ char16_t *src, int32_t srcLength,
             char16_t *dest, int32_t destCapacity, Edits *edits,
             UErrorCode &errorCode);
 
@@ -98,13 +98,13 @@ public:
      * @see u_strToUpper
      * @stable ICU 59
      */
-    static int32_t toUpper(
-            const char *locale, uint32_t options,
-            const char16_t *src, int32_t srcLength,
+    ಸ್ಥಿರ int32_t toUpper(
+            ಧ್ರುವ ವರ್ಣ *locale, uint32_t options,
+            ಧ್ರುವ char16_t *src, int32_t srcLength,
             char16_t *dest, int32_t destCapacity, Edits *edits,
             UErrorCode &errorCode);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ಯದಿ !UCONFIG_NO_BREAK_ITERATION
 
     /**
      * Titlecases a UTF-16 string and optionally records edits.
@@ -149,9 +149,9 @@ public:
      * @see ucasemap_toTitle
      * @stable ICU 59
      */
-    static int32_t toTitle(
-            const char *locale, uint32_t options, BreakIterator *iter,
-            const char16_t *src, int32_t srcLength,
+    ಸ್ಥಿರ int32_t toTitle(
+            ಧ್ರುವ ವರ್ಣ *locale, uint32_t options, BreakIterator *iter,
+            ಧ್ರುವ char16_t *src, int32_t srcLength,
             char16_t *dest, int32_t destCapacity, Edits *edits,
             UErrorCode &errorCode);
 
@@ -191,9 +191,9 @@ public:
      * @see u_strFoldCase
      * @stable ICU 59
      */
-    static int32_t fold(
+    ಸ್ಥಿರ int32_t fold(
             uint32_t options,
-            const char16_t *src, int32_t srcLength,
+            ಧ್ರುವ char16_t *src, int32_t srcLength,
             char16_t *dest, int32_t destCapacity, Edits *edits,
             UErrorCode &errorCode);
 
@@ -218,8 +218,8 @@ public:
      * @see ucasemap_utf8ToLower
      * @stable ICU 60
      */
-    static void utf8ToLower(
-            const char *locale, uint32_t options,
+    ಸ್ಥಿರ ಶೂನ್ಯ utf8ToLower(
+            ಧ್ರುವ ವರ್ಣ *locale, uint32_t options,
             StringPiece src, ByteSink &sink, Edits *edits,
             UErrorCode &errorCode);
 
@@ -244,12 +244,12 @@ public:
      * @see ucasemap_utf8ToUpper
      * @stable ICU 60
      */
-    static void utf8ToUpper(
-            const char *locale, uint32_t options,
+    ಸ್ಥಿರ ಶೂನ್ಯ utf8ToUpper(
+            ಧ್ರುವ ವರ್ಣ *locale, uint32_t options,
             StringPiece src, ByteSink &sink, Edits *edits,
             UErrorCode &errorCode);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ಯದಿ !UCONFIG_NO_BREAK_ITERATION
 
     /**
      * Titlecases a UTF-8 string and optionally records edits.
@@ -284,8 +284,8 @@ public:
      * @see ucasemap_utf8ToTitle
      * @stable ICU 60
      */
-    static void utf8ToTitle(
-            const char *locale, uint32_t options, BreakIterator *iter,
+    ಸ್ಥಿರ ಶೂನ್ಯ utf8ToTitle(
+            ಧ್ರುವ ವರ್ಣ *locale, uint32_t options, BreakIterator *iter,
             StringPiece src, ByteSink &sink, Edits *edits,
             UErrorCode &errorCode);
 
@@ -315,7 +315,7 @@ public:
      * @see ucasemap_utf8FoldCase
      * @stable ICU 60
      */
-    static void utf8Fold(
+    ಸ್ಥಿರ ಶೂನ್ಯ utf8Fold(
             uint32_t options,
             StringPiece src, ByteSink &sink, Edits *edits,
             UErrorCode &errorCode);
@@ -350,10 +350,10 @@ public:
      * @see ucasemap_utf8ToLower
      * @stable ICU 59
      */
-    static int32_t utf8ToLower(
-            const char *locale, uint32_t options,
-            const char *src, int32_t srcLength,
-            char *dest, int32_t destCapacity, Edits *edits,
+    ಸ್ಥಿರ int32_t utf8ToLower(
+            ಧ್ರುವ ವರ್ಣ *locale, uint32_t options,
+            ಧ್ರುವ ವರ್ಣ *src, int32_t srcLength,
+            ವರ್ಣ *dest, int32_t destCapacity, Edits *edits,
             UErrorCode &errorCode);
 
     /**
@@ -386,13 +386,13 @@ public:
      * @see ucasemap_utf8ToUpper
      * @stable ICU 59
      */
-    static int32_t utf8ToUpper(
-            const char *locale, uint32_t options,
-            const char *src, int32_t srcLength,
-            char *dest, int32_t destCapacity, Edits *edits,
+    ಸ್ಥಿರ int32_t utf8ToUpper(
+            ಧ್ರುವ ವರ್ಣ *locale, uint32_t options,
+            ಧ್ರುವ ವರ್ಣ *src, int32_t srcLength,
+            ವರ್ಣ *dest, int32_t destCapacity, Edits *edits,
             UErrorCode &errorCode);
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ಯದಿ !UCONFIG_NO_BREAK_ITERATION
 
     /**
      * Titlecases a UTF-8 string and optionally records edits.
@@ -436,10 +436,10 @@ public:
      * @see ucasemap_utf8ToTitle
      * @stable ICU 59
      */
-    static int32_t utf8ToTitle(
-            const char *locale, uint32_t options, BreakIterator *iter,
-            const char *src, int32_t srcLength,
-            char *dest, int32_t destCapacity, Edits *edits,
+    ಸ್ಥಿರ int32_t utf8ToTitle(
+            ಧ್ರುವ ವರ್ಣ *locale, uint32_t options, BreakIterator *iter,
+            ಧ್ರುವ ವರ್ಣ *src, int32_t srcLength,
+            ವರ್ಣ *dest, int32_t destCapacity, Edits *edits,
             UErrorCode &errorCode);
 
 #endif  // UCONFIG_NO_BREAK_ITERATION
@@ -478,16 +478,16 @@ public:
      * @see ucasemap_utf8FoldCase
      * @stable ICU 59
      */
-    static int32_t utf8Fold(
+    ಸ್ಥಿರ int32_t utf8Fold(
             uint32_t options,
-            const char *src, int32_t srcLength,
-            char *dest, int32_t destCapacity, Edits *edits,
+            ಧ್ರುವ ವರ್ಣ *src, int32_t srcLength,
+            ವರ್ಣ *dest, int32_t destCapacity, Edits *edits,
             UErrorCode &errorCode);
 
-private:
+ಗುಪ್ತ:
     CaseMap() = delete;
-    CaseMap(const CaseMap &other) = delete;
-    CaseMap &operator=(const CaseMap &other) = delete;
+    CaseMap(ಧ್ರುವ CaseMap &other) = delete;
+    CaseMap &operator=(ಧ್ರುವ CaseMap &other) = delete;
 };
 
 U_NAMESPACE_END

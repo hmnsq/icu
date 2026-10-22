@@ -16,37 +16,37 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#ಯದಿ !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/edits.h"
-#include "unicode/normalizer2.h"
-#include "unicode/stringoptions.h"
-#include "unicode/uniset.h"
-#include "unicode/unistr.h"
-#include "unicode/unorm.h"
-#include "cpputils.h"
+#ಅನ್ತರ್ಭಾವ "unicode/edits.h"
+#ಅನ್ತರ್ಭಾವ "unicode/normalizer2.h"
+#ಅನ್ತರ್ಭಾವ "unicode/stringoptions.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uniset.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unistr.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unorm.h"
+#ಅನ್ತರ್ಭಾವ "cpputils.h"
 
 U_NAMESPACE_BEGIN
 
 FilteredNormalizer2::~FilteredNormalizer2() {}
 
 UnicodeString&
-FilteredNormalizer2::normalize(const UnicodeString& src,
+FilteredNormalizer2::normalize(ಧ್ರುವ UnicodeString& src,
                                UnicodeString& dest U_LIFETIME_BOUND,
-                               UErrorCode& errorCode) const {
+                               UErrorCode& errorCode) ಧ್ರುವ {
     uprv_checkCanGetBuffer(src, errorCode);
-    if(U_FAILURE(errorCode)) {
+    ಯದಿ(U_FAILURE(errorCode)) {
         dest.setToBogus();
-        return dest;
+        ಪ್ರತ್ಯಾಗಮ dest;
     }
-    if(&dest==&src) {
+    ಯದಿ(&dest==&src) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return dest;
+        ಪ್ರತ್ಯಾಗಮ dest;
     }
     dest.remove();
-    return normalize(src, dest, USET_SPAN_SIMPLE, errorCode);
+    ಪ್ರತ್ಯಾಗಮ normalize(src, dest, USET_SPAN_SIMPLE, errorCode);
 }
 
 // Internal: No argument checking, and appends to dest.
@@ -57,73 +57,73 @@ FilteredNormalizer2::normalize(const UnicodeString& src,
 // and USET_SPAN_NOT_CONTAINED should be passed in if we continue after
 // an in-filter prefix.
 UnicodeString&
-FilteredNormalizer2::normalize(const UnicodeString& src,
+FilteredNormalizer2::normalize(ಧ್ರುವ UnicodeString& src,
                                UnicodeString& dest U_LIFETIME_BOUND,
                                USetSpanCondition spanCondition,
-                               UErrorCode& errorCode) const {
+                               UErrorCode& errorCode) ಧ್ರುವ {
     UnicodeString tempDest;  // Don't throw away destination buffer between iterations.
-    for(int32_t prevSpanLimit=0; prevSpanLimit<src.length();) {
+    ಪ್ರತಿ(int32_t prevSpanLimit=0; prevSpanLimit<src.length();) {
         int32_t spanLimit=set.span(src, prevSpanLimit, spanCondition);
         int32_t spanLength=spanLimit-prevSpanLimit;
-        if(spanCondition==USET_SPAN_NOT_CONTAINED) {
-            if(spanLength!=0) {
+        ಯದಿ(spanCondition==USET_SPAN_NOT_CONTAINED) {
+            ಯದಿ(spanLength!=0) {
                 dest.append(src, prevSpanLimit, spanLength);
             }
             spanCondition=USET_SPAN_SIMPLE;
-        } else {
-            if(spanLength!=0) {
+        } ಅನ್ಯಥಾ {
+            ಯದಿ(spanLength!=0) {
                 // Not norm2.normalizeSecondAndAppend() because we do not want
                 // to modify the non-filter part of dest.
                 dest.append(norm2.normalize(src.tempSubStringBetween(prevSpanLimit, spanLimit),
                                             tempDest, errorCode));
-                if(U_FAILURE(errorCode)) {
-                    break;
+                ಯದಿ(U_FAILURE(errorCode)) {
+                    ಭಙ್ಗ;
                 }
             }
             spanCondition=USET_SPAN_NOT_CONTAINED;
         }
         prevSpanLimit=spanLimit;
     }
-    return dest;
+    ಪ್ರತ್ಯಾಗಮ dest;
 }
 
-void
+ಶೂನ್ಯ
 FilteredNormalizer2::normalizeUTF8(uint32_t options, StringPiece src, ByteSink &sink,
-                                   Edits *edits, UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) {
-        return;
+                                   Edits *edits, UErrorCode &errorCode) ಧ್ರುವ {
+    ಯದಿ (U_FAILURE(errorCode)) {
+        ಪ್ರತ್ಯಾಗಮ;
     }
-    if (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
+    ಯದಿ (edits != nullptr && (options & U_EDITS_NO_RESET) == 0) {
         edits->reset();
     }
     options |= U_EDITS_NO_RESET;  // Do not reset for each span.
     normalizeUTF8(options, src.data(), src.length(), sink, edits, USET_SPAN_SIMPLE, errorCode);
 }
 
-void
-FilteredNormalizer2::normalizeUTF8(uint32_t options, const char *src, int32_t length,
+ಶೂನ್ಯ
+FilteredNormalizer2::normalizeUTF8(uint32_t options, ಧ್ರುವ ವರ್ಣ *src, int32_t length,
                                    ByteSink &sink, Edits *edits,
                                    USetSpanCondition spanCondition,
-                                   UErrorCode &errorCode) const {
-    while (length > 0) {
+                                   UErrorCode &errorCode) ಧ್ರುವ {
+    ಯಾವತ್ (length > 0) {
         int32_t spanLength = set.spanUTF8(src, length, spanCondition);
-        if (spanCondition == USET_SPAN_NOT_CONTAINED) {
-            if (spanLength != 0) {
-                if (edits != nullptr) {
+        ಯದಿ (spanCondition == USET_SPAN_NOT_CONTAINED) {
+            ಯದಿ (spanLength != 0) {
+                ಯದಿ (edits != nullptr) {
                     edits->addUnchanged(spanLength);
                 }
-                if ((options & U_OMIT_UNCHANGED_TEXT) == 0) {
+                ಯದಿ ((options & U_OMIT_UNCHANGED_TEXT) == 0) {
                     sink.Append(src, spanLength);
                 }
             }
             spanCondition = USET_SPAN_SIMPLE;
-        } else {
-            if (spanLength != 0) {
+        } ಅನ್ಯಥಾ {
+            ಯದಿ (spanLength != 0) {
                 // Not norm2.normalizeSecondAndAppend() because we do not want
                 // to modify the non-filter part of dest.
                 norm2.normalizeUTF8(options, StringPiece(src, spanLength), sink, edits, errorCode);
-                if (U_FAILURE(errorCode)) {
-                    break;
+                ಯದಿ (U_FAILURE(errorCode)) {
+                    ಭಙ್ಗ;
                 }
             }
             spanCondition = USET_SPAN_NOT_CONTAINED;
@@ -135,206 +135,206 @@ FilteredNormalizer2::normalizeUTF8(uint32_t options, const char *src, int32_t le
 
 UnicodeString&
 FilteredNormalizer2::normalizeSecondAndAppend(UnicodeString& first U_LIFETIME_BOUND,
-                                              const UnicodeString& second,
-                                              UErrorCode& errorCode) const {
-    return normalizeSecondAndAppend(first, second, true, errorCode);
+                                              ಧ್ರುವ UnicodeString& second,
+                                              UErrorCode& errorCode) ಧ್ರುವ {
+    ಪ್ರತ್ಯಾಗಮ normalizeSecondAndAppend(first, second, ಸತ್ಯ, errorCode);
 }
 
 UnicodeString&
 FilteredNormalizer2::append(UnicodeString& first U_LIFETIME_BOUND,
-                            const UnicodeString& second,
-                            UErrorCode& errorCode) const {
-    return normalizeSecondAndAppend(first, second, false, errorCode);
+                            ಧ್ರುವ UnicodeString& second,
+                            UErrorCode& errorCode) ಧ್ರುವ {
+    ಪ್ರತ್ಯಾಗಮ normalizeSecondAndAppend(first, second, ಅಸತ್ಯ, errorCode);
 }
 
 UnicodeString&
 FilteredNormalizer2::normalizeSecondAndAppend(UnicodeString& first U_LIFETIME_BOUND,
-                                              const UnicodeString& second,
+                                              ಧ್ರುವ UnicodeString& second,
                                               UBool doNormalize,
-                                              UErrorCode& errorCode) const {
+                                              UErrorCode& errorCode) ಧ್ರುವ {
     uprv_checkCanGetBuffer(first, errorCode);
     uprv_checkCanGetBuffer(second, errorCode);
-    if(U_FAILURE(errorCode)) {
-        return first;
+    ಯದಿ(U_FAILURE(errorCode)) {
+        ಪ್ರತ್ಯಾಗಮ first;
     }
-    if(&first==&second) {
+    ಯದಿ(&first==&second) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return first;
+        ಪ್ರತ್ಯಾಗಮ first;
     }
-    if(first.isEmpty()) {
-        if(doNormalize) {
-            return normalize(second, first, errorCode);
-        } else {
-            return first=second;
+    ಯದಿ(first.isEmpty()) {
+        ಯದಿ(doNormalize) {
+            ಪ್ರತ್ಯಾಗಮ normalize(second, first, errorCode);
+        } ಅನ್ಯಥಾ {
+            ಪ್ರತ್ಯಾಗಮ first=second;
         }
     }
     // merge the in-filter suffix of the first string with the in-filter prefix of the second
     int32_t prefixLimit=set.span(second, 0, USET_SPAN_SIMPLE);
-    if(prefixLimit!=0) {
+    ಯದಿ(prefixLimit!=0) {
         UnicodeString prefix(second.tempSubString(0, prefixLimit));
         int32_t suffixStart=set.spanBack(first, INT32_MAX, USET_SPAN_SIMPLE);
-        if(suffixStart==0) {
-            if(doNormalize) {
+        ಯದಿ(suffixStart==0) {
+            ಯದಿ(doNormalize) {
                 norm2.normalizeSecondAndAppend(first, prefix, errorCode);
-            } else {
+            } ಅನ್ಯಥಾ {
                 norm2.append(first, prefix, errorCode);
             }
-        } else {
-            UnicodeString middle(first, suffixStart, INT32_MAX);
-            if(doNormalize) {
-                norm2.normalizeSecondAndAppend(middle, prefix, errorCode);
-            } else {
-                norm2.append(middle, prefix, errorCode);
+        } ಅನ್ಯಥಾ {
+            UnicodeString ಮಧ್ಯ(first, suffixStart, INT32_MAX);
+            ಯದಿ(doNormalize) {
+                norm2.normalizeSecondAndAppend(ಮಧ್ಯ, prefix, errorCode);
+            } ಅನ್ಯಥಾ {
+                norm2.append(ಮಧ್ಯ, prefix, errorCode);
             }
-            first.replace(suffixStart, INT32_MAX, middle);
+            first.replace(suffixStart, INT32_MAX, ಮಧ್ಯ);
         }
     }
-    if(prefixLimit<second.length()) {
+    ಯದಿ(prefixLimit<second.length()) {
         UnicodeString rest(second.tempSubString(prefixLimit, INT32_MAX));
-        if(doNormalize) {
+        ಯದಿ(doNormalize) {
             normalize(rest, first, USET_SPAN_NOT_CONTAINED, errorCode);
-        } else {
+        } ಅನ್ಯಥಾ {
             first.append(rest);
         }
     }
-    return first;
+    ಪ್ರತ್ಯಾಗಮ first;
 }
 
 UBool
-FilteredNormalizer2::getDecomposition(UChar32 c, UnicodeString &decomposition) const {
-    return set.contains(c) && norm2.getDecomposition(c, decomposition);
+FilteredNormalizer2::getDecomposition(UChar32 c, UnicodeString &decomposition) ಧ್ರುವ {
+    ಪ್ರತ್ಯಾಗಮ set.contains(c) && norm2.getDecomposition(c, decomposition);
 }
 
 UBool
-FilteredNormalizer2::getRawDecomposition(UChar32 c, UnicodeString &decomposition) const {
-    return set.contains(c) && norm2.getRawDecomposition(c, decomposition);
+FilteredNormalizer2::getRawDecomposition(UChar32 c, UnicodeString &decomposition) ಧ್ರುವ {
+    ಪ್ರತ್ಯಾಗಮ set.contains(c) && norm2.getRawDecomposition(c, decomposition);
 }
 
 UChar32
-FilteredNormalizer2::composePair(UChar32 a, UChar32 b) const {
-    return (set.contains(a) && set.contains(b)) ? norm2.composePair(a, b) : U_SENTINEL;
+FilteredNormalizer2::composePair(UChar32 a, UChar32 b) ಧ್ರುವ {
+    ಪ್ರತ್ಯಾಗಮ (set.contains(a) && set.contains(b)) ? norm2.composePair(a, b) : U_SENTINEL;
 }
 
 uint8_t
-FilteredNormalizer2::getCombiningClass(UChar32 c) const {
-    return set.contains(c) ? norm2.getCombiningClass(c) : 0;
+FilteredNormalizer2::getCombiningClass(UChar32 c) ಧ್ರುವ {
+    ಪ್ರತ್ಯಾಗಮ set.contains(c) ? norm2.getCombiningClass(c) : 0;
 }
 
 UBool
-FilteredNormalizer2::isNormalized(const UnicodeString &s, UErrorCode &errorCode) const {
+FilteredNormalizer2::isNormalized(ಧ್ರುವ UnicodeString &s, UErrorCode &errorCode) ಧ್ರುವ {
     uprv_checkCanGetBuffer(s, errorCode);
-    if(U_FAILURE(errorCode)) {
-        return false;
+    ಯದಿ(U_FAILURE(errorCode)) {
+        ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
     }
     USetSpanCondition spanCondition=USET_SPAN_SIMPLE;
-    for(int32_t prevSpanLimit=0; prevSpanLimit<s.length();) {
+    ಪ್ರತಿ(int32_t prevSpanLimit=0; prevSpanLimit<s.length();) {
         int32_t spanLimit=set.span(s, prevSpanLimit, spanCondition);
-        if(spanCondition==USET_SPAN_NOT_CONTAINED) {
+        ಯದಿ(spanCondition==USET_SPAN_NOT_CONTAINED) {
             spanCondition=USET_SPAN_SIMPLE;
-        } else {
-            if( !norm2.isNormalized(s.tempSubStringBetween(prevSpanLimit, spanLimit), errorCode) ||
+        } ಅನ್ಯಥಾ {
+            ಯದಿ( !norm2.isNormalized(s.tempSubStringBetween(prevSpanLimit, spanLimit), errorCode) ||
                 U_FAILURE(errorCode)
             ) {
-                return false;
+                ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
             }
             spanCondition=USET_SPAN_NOT_CONTAINED;
         }
         prevSpanLimit=spanLimit;
     }
-    return true;
+    ಪ್ರತ್ಯಾಗಮ ಸತ್ಯ;
 }
 
 UBool
-FilteredNormalizer2::isNormalizedUTF8(StringPiece sp, UErrorCode &errorCode) const {
-    if(U_FAILURE(errorCode)) {
-        return false;
+FilteredNormalizer2::isNormalizedUTF8(StringPiece sp, UErrorCode &errorCode) ಧ್ರುವ {
+    ಯದಿ(U_FAILURE(errorCode)) {
+        ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
     }
-    const char *s = sp.data();
+    ಧ್ರುವ ವರ್ಣ *s = sp.data();
     int32_t length = sp.length();
     USetSpanCondition spanCondition = USET_SPAN_SIMPLE;
-    while (length > 0) {
+    ಯಾವತ್ (length > 0) {
         int32_t spanLength = set.spanUTF8(s, length, spanCondition);
-        if (spanCondition == USET_SPAN_NOT_CONTAINED) {
+        ಯದಿ (spanCondition == USET_SPAN_NOT_CONTAINED) {
             spanCondition = USET_SPAN_SIMPLE;
-        } else {
-            if (!norm2.isNormalizedUTF8(StringPiece(s, spanLength), errorCode) ||
+        } ಅನ್ಯಥಾ {
+            ಯದಿ (!norm2.isNormalizedUTF8(StringPiece(s, spanLength), errorCode) ||
                     U_FAILURE(errorCode)) {
-                return false;
+                ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
             }
             spanCondition = USET_SPAN_NOT_CONTAINED;
         }
         s += spanLength;
         length -= spanLength;
     }
-    return true;
+    ಪ್ರತ್ಯಾಗಮ ಸತ್ಯ;
 }
 
 UNormalizationCheckResult
-FilteredNormalizer2::quickCheck(const UnicodeString &s, UErrorCode &errorCode) const {
+FilteredNormalizer2::quickCheck(ಧ್ರುವ UnicodeString &s, UErrorCode &errorCode) ಧ್ರುವ {
     uprv_checkCanGetBuffer(s, errorCode);
-    if(U_FAILURE(errorCode)) {
-        return UNORM_MAYBE;
+    ಯದಿ(U_FAILURE(errorCode)) {
+        ಪ್ರತ್ಯಾಗಮ UNORM_MAYBE;
     }
     UNormalizationCheckResult result=UNORM_YES;
     USetSpanCondition spanCondition=USET_SPAN_SIMPLE;
-    for(int32_t prevSpanLimit=0; prevSpanLimit<s.length();) {
+    ಪ್ರತಿ(int32_t prevSpanLimit=0; prevSpanLimit<s.length();) {
         int32_t spanLimit=set.span(s, prevSpanLimit, spanCondition);
-        if(spanCondition==USET_SPAN_NOT_CONTAINED) {
+        ಯದಿ(spanCondition==USET_SPAN_NOT_CONTAINED) {
             spanCondition=USET_SPAN_SIMPLE;
-        } else {
+        } ಅನ್ಯಥಾ {
             UNormalizationCheckResult qcResult=
                 norm2.quickCheck(s.tempSubStringBetween(prevSpanLimit, spanLimit), errorCode);
-            if(U_FAILURE(errorCode) || qcResult==UNORM_NO) {
-                return qcResult;
-            } else if(qcResult==UNORM_MAYBE) {
+            ಯದಿ(U_FAILURE(errorCode) || qcResult==UNORM_NO) {
+                ಪ್ರತ್ಯಾಗಮ qcResult;
+            } ಅನ್ಯಥಾ ಯದಿ(qcResult==UNORM_MAYBE) {
                 result=qcResult;
             }
             spanCondition=USET_SPAN_NOT_CONTAINED;
         }
         prevSpanLimit=spanLimit;
     }
-    return result;
+    ಪ್ರತ್ಯಾಗಮ result;
 }
 
 int32_t
-FilteredNormalizer2::spanQuickCheckYes(const UnicodeString &s, UErrorCode &errorCode) const {
+FilteredNormalizer2::spanQuickCheckYes(ಧ್ರುವ UnicodeString &s, UErrorCode &errorCode) ಧ್ರುವ {
     uprv_checkCanGetBuffer(s, errorCode);
-    if(U_FAILURE(errorCode)) {
-        return 0;
+    ಯದಿ(U_FAILURE(errorCode)) {
+        ಪ್ರತ್ಯಾಗಮ 0;
     }
     USetSpanCondition spanCondition=USET_SPAN_SIMPLE;
-    for(int32_t prevSpanLimit=0; prevSpanLimit<s.length();) {
+    ಪ್ರತಿ(int32_t prevSpanLimit=0; prevSpanLimit<s.length();) {
         int32_t spanLimit=set.span(s, prevSpanLimit, spanCondition);
-        if(spanCondition==USET_SPAN_NOT_CONTAINED) {
+        ಯದಿ(spanCondition==USET_SPAN_NOT_CONTAINED) {
             spanCondition=USET_SPAN_SIMPLE;
-        } else {
+        } ಅನ್ಯಥಾ {
             int32_t yesLimit=
                 prevSpanLimit+
                 norm2.spanQuickCheckYes(
                     s.tempSubStringBetween(prevSpanLimit, spanLimit), errorCode);
-            if(U_FAILURE(errorCode) || yesLimit<spanLimit) {
-                return yesLimit;
+            ಯದಿ(U_FAILURE(errorCode) || yesLimit<spanLimit) {
+                ಪ್ರತ್ಯಾಗಮ yesLimit;
             }
             spanCondition=USET_SPAN_NOT_CONTAINED;
         }
         prevSpanLimit=spanLimit;
     }
-    return s.length();
+    ಪ್ರತ್ಯಾಗಮ s.length();
 }
 
 UBool
-FilteredNormalizer2::hasBoundaryBefore(UChar32 c) const {
-    return !set.contains(c) || norm2.hasBoundaryBefore(c);
+FilteredNormalizer2::hasBoundaryBefore(UChar32 c) ಧ್ರುವ {
+    ಪ್ರತ್ಯಾಗಮ !set.contains(c) || norm2.hasBoundaryBefore(c);
 }
 
 UBool
-FilteredNormalizer2::hasBoundaryAfter(UChar32 c) const {
-    return !set.contains(c) || norm2.hasBoundaryAfter(c);
+FilteredNormalizer2::hasBoundaryAfter(UChar32 c) ಧ್ರುವ {
+    ಪ್ರತ್ಯಾಗಮ !set.contains(c) || norm2.hasBoundaryAfter(c);
 }
 
 UBool
-FilteredNormalizer2::isInert(UChar32 c) const {
-    return !set.contains(c) || norm2.isInert(c);
+FilteredNormalizer2::isInert(UChar32 c) ಧ್ರುವ {
+    ಪ್ರತ್ಯಾಗಮ !set.contains(c) || norm2.isInert(c);
 }
 
 U_NAMESPACE_END
@@ -344,22 +344,22 @@ U_NAMESPACE_END
 U_NAMESPACE_USE
 
 U_CAPI UNormalizer2* U_EXPORT2
-unorm2_openFiltered(const UNormalizer2* norm2 U_LIFETIME_BOUND,
-                    const USet* filterSet U_LIFETIME_BOUND,
+unorm2_openFiltered(ಧ್ರುವ UNormalizer2* norm2 U_LIFETIME_BOUND,
+                    ಧ್ರುವ USet* filterSet U_LIFETIME_BOUND,
                     UErrorCode* pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return nullptr;
+    ಯದಿ(U_FAILURE(*pErrorCode)) {
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
-    if(filterSet==nullptr) {
+    ಯದಿ(filterSet==nullptr) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
-    Normalizer2 *fn2=new FilteredNormalizer2(*(Normalizer2 *)norm2,
+    Normalizer2 *fn2=ನೂತನ FilteredNormalizer2(*(Normalizer2 *)norm2,
                                              *UnicodeSet::fromUSet(filterSet));
-    if(fn2==nullptr) {
+    ಯದಿ(fn2==nullptr) {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
     }
-    return (UNormalizer2 *)fn2;
+    ಪ್ರತ್ಯಾಗಮ (UNormalizer2 *)fn2;
 }
 
 #endif  // !UCONFIG_NO_NORMALIZATION

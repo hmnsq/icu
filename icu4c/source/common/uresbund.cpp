@@ -21,50 +21,50 @@
 ******************************************************************************
 */
 
-#include "unicode/ures.h"
-#include "unicode/ustring.h"
-#include "unicode/ucnv.h"
-#include "bytesinkutil.h"
-#include "charstr.h"
-#include "uresimp.h"
-#include "ustr_imp.h"
-#include "cwchar.h"
-#include "ucln_cmn.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "mutex.h"
-#include "uhash.h"
-#include "unicode/uenum.h"
-#include "uenumimp.h"
-#include "ulocimp.h"
-#include "umutex.h"
-#include "putilimp.h"
-#include "uassert.h"
-#include "uresdata.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ures.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ustring.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ucnv.h"
+#ಅನ್ತರ್ಭಾವ "bytesinkutil.h"
+#ಅನ್ತರ್ಭಾವ "charstr.h"
+#ಅನ್ತರ್ಭಾವ "uresimp.h"
+#ಅನ್ತರ್ಭಾವ "ustr_imp.h"
+#ಅನ್ತರ್ಭಾವ "cwchar.h"
+#ಅನ್ತರ್ಭಾವ "ucln_cmn.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "cstring.h"
+#ಅನ್ತರ್ಭಾವ "mutex.h"
+#ಅನ್ತರ್ಭಾವ "uhash.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uenum.h"
+#ಅನ್ತರ್ಭಾವ "uenumimp.h"
+#ಅನ್ತರ್ಭಾವ "ulocimp.h"
+#ಅನ್ತರ್ಭಾವ "umutex.h"
+#ಅನ್ತರ್ಭಾವ "putilimp.h"
+#ಅನ್ತರ್ಭಾವ "uassert.h"
+#ಅನ್ತರ್ಭಾವ "uresdata.h"
 
-using namespace icu;
+using ನಾಮಾಕಾಶ icu;
 
 /*
 Static cache for already opened resource bundles - mostly for keeping fallback info
 TODO: This cache should probably be removed when the deprecated code is
       completely removed.
 */
-static UHashtable *cache = nullptr;
-static icu::UInitOnce gCacheInitOnce {};
+ಸ್ಥಿರ UHashtable *cache = nullptr;
+ಸ್ಥಿರ icu::UInitOnce gCacheInitOnce {};
 
-static UMutex resbMutex;
+ಸ್ಥಿರ UMutex resbMutex;
 
 /* INTERNAL: hashes an entry  */
-static int32_t U_CALLCONV hashEntry(const UHashTok parm) {
+ಸ್ಥಿರ int32_t U_CALLCONV hashEntry(ಧ್ರುವ UHashTok parm) {
     UResourceDataEntry* b = static_cast<UResourceDataEntry*>(parm.pointer);
     UHashTok namekey, pathkey;
     namekey.pointer = b->fName;
     pathkey.pointer = b->fPath;
-    return uhash_hashChars(namekey)+37u*uhash_hashChars(pathkey);
+    ಪ್ರತ್ಯಾಗಮ uhash_hashChars(namekey)+37u*uhash_hashChars(pathkey);
 }
 
 /* INTERNAL: compares two entries */
-static UBool U_CALLCONV compareEntries(const UHashTok p1, const UHashTok p2) {
+ಸ್ಥಿರ UBool U_CALLCONV compareEntries(ಧ್ರುವ UHashTok p1, ಧ್ರುವ UHashTok p2) {
     UResourceDataEntry* b1 = static_cast<UResourceDataEntry*>(p1.pointer);
     UResourceDataEntry* b2 = static_cast<UResourceDataEntry*>(p2.pointer);
     UHashTok name1, name2, path1, path2;
@@ -72,7 +72,7 @@ static UBool U_CALLCONV compareEntries(const UHashTok p1, const UHashTok p2) {
     name2.pointer = b2->fName;
     path1.pointer = b1->fPath;
     path2.pointer = b2->fPath;
-    return uhash_compareChars(name1, name2) && uhash_compareChars(path1, path2);
+    ಪ್ರತ್ಯಾಗಮ uhash_compareChars(name1, name2) && uhash_compareChars(path1, path2);
 }
 
 
@@ -80,18 +80,18 @@ static UBool U_CALLCONV compareEntries(const UHashTok p1, const UHashTok p2) {
  *  Internal function, gets parts of locale name according 
  *  to the position of '_' character
  */
-static UBool chopLocale(char *name) {
-    char *i = uprv_strrchr(name, '_');
+ಸ್ಥಿರ UBool chopLocale(ವರ್ಣ *name) {
+    ವರ್ಣ *i = uprv_strrchr(name, '_');
 
-    if(i != nullptr) {
+    ಯದಿ(i != nullptr) {
         *i = '\0';
-        return true;
+        ಪ್ರತ್ಯಾಗಮ ಸತ್ಯ;
     }
 
-    return false;
+    ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
 }
 
-static UBool hasVariant(const char* localeID) {
+ಸ್ಥಿರ UBool hasVariant(ಧ್ರುವ ವರ್ಣ* localeID) {
     UErrorCode err = U_ZERO_ERROR;
     CheckedArrayByteSink sink(nullptr, 0);
     ulocimp_getSubtags(
@@ -102,41 +102,41 @@ static UBool hasVariant(const char* localeID) {
             &sink,
             nullptr,
             err);
-    return sink.NumberOfBytesAppended() != 0;
+    ಪ್ರತ್ಯಾಗಮ sink.ಸಂಖ್ಯೆ_Of_Bytes_Appended() != 0;
 }
 
 // This file contains the tables for doing locale fallback, which are generated
 // by the CLDR-to-ICU process directly from the CLDR data.  This file should only
 // ever be included from here.
 #define INCLUDED_FROM_URESBUND_CPP
-#include "localefallback_data.h"
+#ಅನ್ತರ್ಭಾವ "localefallback_data.h"
 
-static const char* performFallbackLookup(const char* key,
-                                         const char* keyStrs,
-                                         const char* valueStrs U_LIFETIME_BOUND,
-                                         const int32_t* lookupTable,
+ಸ್ಥಿರ ಧ್ರುವ ವರ್ಣ* performFallbackLookup(ಧ್ರುವ ವರ್ಣ* ಕೀಲಿ,
+                                         ಧ್ರುವ ವರ್ಣ* ಕೀಲಿ_Strs,
+                                         ಧ್ರುವ ವರ್ಣ* ಮೌಲ್ಯ_Strs U_LIFETIME_BOUND,
+                                         ಧ್ರುವ int32_t* lookupTable,
                                          int32_t lookupTableLength) {
-    const int32_t* bottom = lookupTable;
-    const int32_t* top = lookupTable + lookupTableLength;
+    ಧ್ರುವ int32_t* bottom = lookupTable;
+    ಧ್ರುವ int32_t* ತುದಿ = lookupTable + lookupTableLength;
 
-    while (bottom < top) {
+    ಯಾವತ್ (bottom < ತುದಿ) {
         // Effectively, divide by 2 and round down to an even index
-        const int32_t* middle = bottom + (((top - bottom) / 4) * 2);
-        const char* entryKey = &(keyStrs[*middle]);
-        int32_t strcmpResult = uprv_strcmp(key, entryKey);
-        if (strcmpResult == 0) {
-            return &(valueStrs[middle[1]]);
-        } else if (strcmpResult < 0) {
-            top = middle;
-        } else {
-            bottom = middle + 2;
+        ಧ್ರುವ int32_t* ಮಧ್ಯ = bottom + (((ತುದಿ - bottom) / 4) * 2);
+        ಧ್ರುವ ವರ್ಣ* entry_ಕೀಲಿ = &(ಕೀಲಿ_Strs[*ಮಧ್ಯ]);
+        int32_t strcmpResult = uprv_strcmp(ಕೀಲಿ, entry_ಕೀಲಿ);
+        ಯದಿ (strcmpResult == 0) {
+            ಪ್ರತ್ಯಾಗಮ &(ಮೌಲ್ಯ_Strs[ಮಧ್ಯ[1]]);
+        } ಅನ್ಯಥಾ ಯದಿ (strcmpResult < 0) {
+            ತುದಿ = ಮಧ್ಯ;
+        } ಅನ್ಯಥಾ {
+            bottom = ಮಧ್ಯ + 2;
         }
     }
-    return nullptr;
+    ಪ್ರತ್ಯಾಗಮ nullptr;
 }
 
-static CharString getDefaultScript(const CharString& language, const CharString& region) {
-    const char* defaultScript = nullptr;
+ಸ್ಥಿರ CharString getDefaultScript(ಧ್ರುವ CharString& language, ಧ್ರುವ CharString& region) {
+    ಧ್ರುವ ವರ್ಣ* defaultScript = nullptr;
     UErrorCode err = U_ZERO_ERROR;
     
     // the default script will be "Latn" if we don't find the locale ID in the tables
@@ -144,29 +144,29 @@ static CharString getDefaultScript(const CharString& language, const CharString&
     
     // if we were passed both language and region, make them into a locale ID and look that up in the default
     // script table
-    if (!region.isEmpty()) {
+    ಯದಿ (!region.isEmpty()) {
         CharString localeID;
         localeID.append(language, err).append("_", err).append(region, err);
-        if (U_FAILURE(err)) {
-            return result;
+        ಯದಿ (U_FAILURE(err)) {
+            ಪ್ರತ್ಯಾಗಮ result;
         }
         defaultScript = performFallbackLookup(localeID.data(), dsLocaleIDChars, scriptCodeChars, defaultScriptTable, UPRV_LENGTHOF(defaultScriptTable));
     }
     
     // if we didn't find anything, look up just the language in the default script table
-    if (defaultScript == nullptr) {
+    ಯದಿ (defaultScript == nullptr) {
         defaultScript = performFallbackLookup(language.data(), dsLocaleIDChars, scriptCodeChars, defaultScriptTable, UPRV_LENGTHOF(defaultScriptTable));
     }
     
     // if either lookup above succeeded, copy the result from "defaultScript" into "result"; otherwise, return "Latn"
-    if (defaultScript != nullptr) {
+    ಯದಿ (defaultScript != nullptr) {
         result.clear();
         result.append(defaultScript, err);
     }
-    return result;
+    ಪ್ರತ್ಯಾಗಮ result;
 }
 
-enum UResOpenType {
+ಗಣನಾ UResOpenType {
     /**
      * Open a resource bundle for the locale;
      * if there is not even a base language bundle, then fall back to the default locale;
@@ -174,7 +174,7 @@ enum UResOpenType {
      *
      * This is the default bundle loading behavior.
      */
-    URES_OPEN_LOCALE_DEFAULT_ROOT,
+    URES_OPEN_LOCALE_DEFAULT_ಬೇರು,
     // TODO: ICU ticket #11271 "consistent default locale across locale trees"
     // Add an option to look at the main locale tree for whether to
     // fall back to root directly (if the locale has main data) or
@@ -187,7 +187,7 @@ enum UResOpenType {
      * This is used for algorithms that have good pan-Unicode default behavior,
      * such as case mappings, collation, and segmentation (BreakIterator).
      */
-    URES_OPEN_LOCALE_ROOT,
+    URES_OPEN_LOCALE_ಬೇರು,
     /**
      * Open a resource bundle for the exact bundle name as requested;
      * no fallbacks, do not load parent bundles.
@@ -196,7 +196,7 @@ enum UResOpenType {
      */
     URES_OPEN_DIRECT
 };
-typedef enum UResOpenType UResOpenType;
+ಪ್ರಕಾರನಿರ್ದೇಶ ಗಣನಾ UResOpenType UResOpenType;
 
 /**
  *  Internal function, determines the search path for resource bundle files.
@@ -208,11 +208,11 @@ typedef enum UResOpenType UResOpenType;
  *  @param origName The original locale ID the caller of findFirstExisting() requested.  This is the same as `name` on the first call to this function,
  *  but as findFirstExisting() ascends the resource bundle's parent tree, this parameter will continue to be the original locale ID requested.
  */
-static bool getParentLocaleID(char *name, const char *origName, UResOpenType openType) {
+ಸ್ಥಿರ ತಾರ್ಕಿಕ getParentLocaleID(ವರ್ಣ *name, ಧ್ರುವ ವರ್ಣ *origName, UResOpenType openType) {
     // early out if the locale ID has a variant code or ends with _
     size_t nameLen = uprv_strlen(name);
-    if (!nameLen || name[nameLen - 1] == '_' || hasVariant(name)) {
-        return chopLocale(name);
+    ಯದಿ (!nameLen || name[nameLen - 1] == '_' || hasVariant(name)) {
+        ಪ್ರತ್ಯಾಗಮ chopLocale(name);
     }
     
     UErrorCode err = U_ZERO_ERROR;
@@ -221,9 +221,9 @@ static bool getParentLocaleID(char *name, const char *origName, UResOpenType ope
     CharString region;
     ulocimp_getSubtags(name, &language, &script, &region, nullptr, nullptr, err);
 
-    if (U_FAILURE(err)) {
+    ಯದಿ (U_FAILURE(err)) {
         // hopefully this never happens...
-        return chopLocale(name);
+        ಪ್ರತ್ಯಾಗಮ chopLocale(name);
     }
     
     // if the open type is URES_OPEN_LOCALE_DEFAULT_ROOT, first look the locale ID up in the parent locale table;
@@ -231,11 +231,11 @@ static bool getParentLocaleID(char *name, const char *origName, UResOpenType ope
     // falling back through the system default locale, we also want to do straight truncation fallback instead
     // of looking things up in the parent locale table-- see https://www.unicode.org/reports/tr35/tr35.html#Parent_Locales:
     // "Collation data, however, is an exception...")
-    if (openType == URES_OPEN_LOCALE_DEFAULT_ROOT) {
-        const char* parentID = performFallbackLookup(name, parentLocaleChars, parentLocaleChars, parentLocaleTable, UPRV_LENGTHOF(parentLocaleTable));
-        if (parentID != nullptr) {
+    ಯದಿ (openType == URES_OPEN_LOCALE_DEFAULT_ಬೇರು) {
+        ಧ್ರುವ ವರ್ಣ* parentID = performFallbackLookup(name, parentLocaleChars, parentLocaleChars, parentLocaleTable, UPRV_LENGTHOF(parentLocaleTable));
+        ಯದಿ (parentID != nullptr) {
             uprv_strcpy(name, parentID);
-            return true;
+            ಪ್ರತ್ಯಾಗಮ ಸತ್ಯ;
         }
     }
 
@@ -243,16 +243,16 @@ static bool getParentLocaleID(char *name, const char *origName, UResOpenType ope
 
     // if it's not in the parent locale table, figure out the fallback script algorithmically
     // (see CLDR-15265 for an explanation of the algorithm)
-    if (!script.isEmpty() && !region.isEmpty()) {
+    ಯದಿ (!script.isEmpty() && !region.isEmpty()) {
         // if "name" has both script and region, is the script the default script?
         // - if so, remove it and keep the region
         // - if not, remove the region and keep the script
-        if (getDefaultScript(language, region) == script) {
+        ಯದಿ (getDefaultScript(language, region) == script) {
             workingLocale.append(language, err).append("_", err).append(region, err);
-        } else {
+        } ಅನ್ಯಥಾ {
             workingLocale.append(language, err).append("_", err).append(script, err);
         }
-    } else if (!region.isEmpty()) {
+    } ಅನ್ಯಥಾ ಯದಿ (!region.isEmpty()) {
         // if "name" has region but not script, did the original locale ID specify a script?
         // - if yes, replace the region with the script from the original locale ID
         // - if no, replace the region with the default script for that language and region
@@ -260,32 +260,32 @@ static bool getParentLocaleID(char *name, const char *origName, UResOpenType ope
         CharString origNameLanguage;
         CharString origNameScript;
         ulocimp_getSubtags(origName, &origNameLanguage, &origNameScript, nullptr, nullptr, nullptr, err);
-        if (!origNameScript.isEmpty()) {
+        ಯದಿ (!origNameScript.isEmpty()) {
             workingLocale.append(language, err).append("_", err).append(origNameScript, err);
-        } else {
+        } ಅನ್ಯಥಾ {
             workingLocale.append(language, err).append("_", err).append(getDefaultScript(language, region), err);
         }
-    } else if (!script.isEmpty()) {
+    } ಅನ್ಯಥಾ ಯದಿ (!script.isEmpty()) {
         // if "name" has script but not region (and our open type if URES_OPEN_LOCALE_DEFAULT_ROOT), is the script
         // the default script for the language?
         // - if so, remove it from the locale ID
         // - if not, return false to continue up the chain
         // (we don't do this for other open types for the same reason we don't look things up in the parent
         // locale table for other open types-- see the reference to UTS #35 above)
-        if (openType != URES_OPEN_LOCALE_DEFAULT_ROOT || getDefaultScript(language, CharString()) == script) {
+        ಯದಿ (openType != URES_OPEN_LOCALE_DEFAULT_ಬೇರು || getDefaultScript(language, CharString()) == script) {
             workingLocale.append(language, err);
-        } else {
-            return false;
+        } ಅನ್ಯಥಾ {
+            ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
         }
-    } else {
+    } ಅನ್ಯಥಾ {
         // if "name" just contains a language code, return false so the calling code falls back to "root"
-        return false;
+        ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
     }
-    if (U_SUCCESS(err) && !workingLocale.isEmpty()) {
+    ಯದಿ (U_SUCCESS(err) && !workingLocale.isEmpty()) {
         uprv_strcpy(name, workingLocale.data());
-        return true;
-    } else {
-        return false;
+        ಪ್ರತ್ಯಾಗಮ ಸತ್ಯ;
+    } ಅನ್ಯಥಾ {
+        ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
     }
 }
 
@@ -294,19 +294,19 @@ static bool getParentLocaleID(char *name, const char *origName, UResOpenType ope
  *  Some code had assumed that locale IDs with '_' could not have a non-root parent.
  *  We may want a better way of doing this.
  */
-static UBool mayHaveParent(char *name) {
-    return (name[0] != 0 && uprv_strstr("nb nn",name) != nullptr);
+ಸ್ಥಿರ UBool mayHaveParent(ವರ್ಣ *name) {
+    ಪ್ರತ್ಯಾಗಮ (name[0] != 0 && uprv_strstr("nb nn",name) != nullptr);
 }
 
 /**
  *  Internal function
  */
-static void entryIncrease(UResourceDataEntry *entry) {
+ಸ್ಥಿರ ಶೂನ್ಯ entryIncrease(UResourceDataEntry *entry) {
     Mutex lock(&resbMutex);
-    entry->fCountExisting++;
-    while(entry->fParent != nullptr) {
+    entry->f_ಎಣಿಕೆ_Existing++;
+    ಯಾವತ್(entry->fParent != nullptr) {
       entry = entry->fParent;
-      entry->fCountExisting++;
+      entry->f_ಎಣಿಕೆ_Existing++;
     }
 }
 
@@ -314,93 +314,93 @@ static void entryIncrease(UResourceDataEntry *entry) {
  *  Internal function. Tries to find a resource in given Resource
  *  Bundle, as well as in its parents
  */
-static UResourceDataEntry *getFallbackData(
-        const UResourceBundle *resBundle,
-        const char **resTag, Resource *res, UErrorCode *status) {
+ಸ್ಥಿರ UResourceDataEntry *getFallbackData(
+        ಧ್ರುವ UResourceBundle *resBundle,
+        ಧ್ರುವ ವರ್ಣ **resTag, Resource *res, UErrorCode *status) {
     UResourceDataEntry *dataEntry = resBundle->fData;
     int32_t indexR = -1;
     int32_t i = 0;
     *res = RES_BOGUS;
-    if(dataEntry == nullptr) {
+    ಯದಿ(dataEntry == nullptr) {
         *status = U_MISSING_RESOURCE_ERROR;
-        return nullptr;
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
-    if(dataEntry->fBogus == U_ZERO_ERROR) { /* if this resource is real, */
-        *res = res_getTableItemByKey(&(dataEntry->fData), dataEntry->fData.rootRes, &indexR, resTag); /* try to get data from there */
+    ಯದಿ(dataEntry->fBogus == U_ZERO_ERROR) { /* if this resource is real, */
+        *res = res_get_Table_Item_By_ಕೀಲಿ(&(dataEntry->fData), dataEntry->fData.ಬೇರು_Res, &indexR, resTag); /* try to get data from there */
         i++;
     }
-    if(resBundle->fHasFallback) {
+    ಯದಿ(resBundle->fHasFallback) {
         // Otherwise, we'll look in parents.
-        while(*res == RES_BOGUS && dataEntry->fParent != nullptr) {
+        ಯಾವತ್(*res == RES_BOGUS && dataEntry->fParent != nullptr) {
             dataEntry = dataEntry->fParent;
-            if(dataEntry->fBogus == U_ZERO_ERROR) {
+            ಯದಿ(dataEntry->fBogus == U_ZERO_ERROR) {
                 i++;
-                *res = res_getTableItemByKey(&(dataEntry->fData), dataEntry->fData.rootRes, &indexR, resTag);
+                *res = res_get_Table_Item_By_ಕೀಲಿ(&(dataEntry->fData), dataEntry->fData.ಬೇರು_Res, &indexR, resTag);
             }
         }
     }
 
-    if(*res == RES_BOGUS) {
+    ಯದಿ(*res == RES_BOGUS) {
         // If the resource is not found, we need to give an error.
         *status = U_MISSING_RESOURCE_ERROR;
-        return nullptr;
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
     // If the resource is found in parents, we need to adjust the error.
-    if(i>1) {
-        if(uprv_strcmp(dataEntry->fName, uloc_getDefault())==0 || uprv_strcmp(dataEntry->fName, kRootLocaleName)==0) {
+    ಯದಿ(i>1) {
+        ಯದಿ(uprv_strcmp(dataEntry->fName, uloc_getDefault())==0 || uprv_strcmp(dataEntry->fName, k_ಬೇರು_Locale_Name)==0) {
             *status = U_USING_DEFAULT_WARNING;
-        } else {
+        } ಅನ್ಯಥಾ {
             *status = U_USING_FALLBACK_WARNING;
         }
     }
-    return dataEntry;
+    ಪ್ರತ್ಯಾಗಮ dataEntry;
 }
 
-static void
+ಸ್ಥಿರ ಶೂನ್ಯ
 free_entry(UResourceDataEntry *entry) {
     UResourceDataEntry *alias;
     res_unload(&(entry->fData));
-    if(entry->fName != nullptr && entry->fName != entry->fNameBuffer) {
+    ಯದಿ(entry->fName != nullptr && entry->fName != entry->fNameBuffer) {
         uprv_free(entry->fName);
     }
-    if(entry->fPath != nullptr) {
+    ಯದಿ(entry->fPath != nullptr) {
         uprv_free(entry->fPath);
     }
-    if(entry->fPool != nullptr) {
-        --entry->fPool->fCountExisting;
+    ಯದಿ(entry->fPool != nullptr) {
+        --entry->fPool->f_ಎಣಿಕೆ_Existing;
     }
     alias = entry->fAlias;
-    if(alias != nullptr) {
-        while(alias->fAlias != nullptr) {
+    ಯದಿ(alias != nullptr) {
+        ಯಾವತ್(alias->fAlias != nullptr) {
             alias = alias->fAlias;
         }
-        --alias->fCountExisting;
+        --alias->f_ಎಣಿಕೆ_Existing;
     }
     uprv_free(entry);
 }
 
 /* Works just like ucnv_flushCache() */
-static int32_t ures_flushCache()
+ಸ್ಥಿರ int32_t ures_flushCache()
 {
     UResourceDataEntry *resB;
     int32_t pos;
-    int32_t rbDeletedNum = 0;
-    const UHashElement *e;
+    int32_t rb_Deleted_ಅಂಕೆ = 0;
+    ಧ್ರುವ UHashElement *e;
     UBool deletedMore;
 
     /*if shared data hasn't even been lazy evaluated yet
     * return 0
     */
     Mutex lock(&resbMutex);
-    if (cache == nullptr) {
-        return 0;
+    ಯದಿ (cache == nullptr) {
+        ಪ್ರತ್ಯಾಗಮ 0;
     }
 
-    do {
-        deletedMore = false;
+    ಕುರು {
+        deletedMore = ಅಸತ್ಯ;
         /*creates an enumeration to iterate through every element in the table */
         pos = UHASH_FIRST;
-        while ((e = uhash_nextElement(cache, &pos)) != nullptr)
+        ಯಾವತ್ ((e = uhash_nextElement(cache, &pos)) != nullptr)
         {
             resB = static_cast<UResourceDataEntry*>(e->value.pointer);
             /* Deletes only if reference counter == 0
@@ -412,9 +412,9 @@ static int32_t ures_flushCache()
             /* 04/05/2002 [weiv] fCountExisting should now be accurate. If it's not zero, that means that    */
             /* some resource bundles are still open somewhere. */
 
-            if (resB->fCountExisting == 0) {
-                rbDeletedNum++;
-                deletedMore = true;
+            ಯದಿ (resB->f_ಎಣಿಕೆ_Existing == 0) {
+                rb_Deleted_ಅಂಕೆ++;
+                deletedMore = ಸತ್ಯ;
                 uhash_removeElement(cache, e);
                 free_entry(resB);
             }
@@ -423,119 +423,119 @@ static int32_t ures_flushCache()
          * Do it again to catch bundles (aliases, pool bundle) whose fCountExisting
          * got decremented by free_entry().
          */
-    } while(deletedMore);
+    } ಯಾವತ್(deletedMore);
 
-    return rbDeletedNum;
+    ಪ್ರತ್ಯಾಗಮ rb_Deleted_ಅಂಕೆ;
 }
 
 #ifdef URES_DEBUG
-#include <stdio.h>
+#ಅನ್ತರ್ಭಾವ <stdio.h>
 
 U_CAPI UBool U_EXPORT2 ures_dumpCacheContents() {
-  UBool cacheNotEmpty = false;
+  UBool cacheNotEmpty = ಅಸತ್ಯ;
   int32_t pos = UHASH_FIRST;
-  const UHashElement *e;
+  ಧ್ರುವ UHashElement *e;
   UResourceDataEntry *resB;
   
     Mutex lock(&resbMutex);
-    if (cache == nullptr) {
+    ಯದಿ (cache == nullptr) {
       fprintf(stderr,"%s:%d: RB Cache is nullptr.\n", __FILE__, __LINE__);
-      return false;
+      ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
     }
 
-    while ((e = uhash_nextElement(cache, &pos)) != nullptr) {
-      cacheNotEmpty=true;
+    ಯಾವತ್ ((e = uhash_nextElement(cache, &pos)) != nullptr) {
+      cacheNotEmpty=ಸತ್ಯ;
       resB = (UResourceDataEntry *) e->value.pointer;
       fprintf(stderr,"%s:%d: RB Cache: Entry @0x%p, refcount %d, name %s:%s.  Pool 0x%p, alias 0x%p, parent 0x%p\n",
               __FILE__, __LINE__,
-              (void*)resB, resB->fCountExisting,
+              (ಶೂನ್ಯ*)resB, resB->f_ಎಣಿಕೆ_Existing,
               resB->fName?resB->fName:"nullptr",
               resB->fPath?resB->fPath:"nullptr",
-              (void*)resB->fPool,
-              (void*)resB->fAlias,
-              (void*)resB->fParent);       
+              (ಶೂನ್ಯ*)resB->fPool,
+              (ಶೂನ್ಯ*)resB->fAlias,
+              (ಶೂನ್ಯ*)resB->fParent);       
     }
     
-    fprintf(stderr,"%s:%d: RB Cache still contains %d items.\n", __FILE__, __LINE__, uhash_count(cache));
-    return cacheNotEmpty;
+    fprintf(stderr,"%s:%d: RB Cache still contains %d items.\n", __FILE__, __LINE__, uhash_ಎಣಿಕೆ(cache));
+    ಪ್ರತ್ಯಾಗಮ cacheNotEmpty;
 }
 
 #endif
 
-static UBool U_CALLCONV ures_cleanup()
+ಸ್ಥಿರ UBool U_CALLCONV ures_cleanup()
 {
-    if (cache != nullptr) {
+    ಯದಿ (cache != nullptr) {
         ures_flushCache();
         uhash_close(cache);
         cache = nullptr;
     }
     gCacheInitOnce.reset();
-    return true;
+    ಪ್ರತ್ಯಾಗಮ ಸತ್ಯ;
 }
 
 /** INTERNAL: Initializes the cache for resources */
-static void U_CALLCONV createCache(UErrorCode &status) {
+ಸ್ಥಿರ ಶೂನ್ಯ U_CALLCONV createCache(UErrorCode &status) {
     U_ASSERT(cache == nullptr);
     cache = uhash_open(hashEntry, compareEntries, nullptr, &status);
     ucln_common_registerCleanup(UCLN_COMMON_URES, ures_cleanup);
 }
      
-static void initCache(UErrorCode *status) {
+ಸ್ಥಿರ ಶೂನ್ಯ initCache(UErrorCode *status) {
     umtx_initOnce(gCacheInitOnce, &createCache, *status);
 }
 
 /** INTERNAL: sets the name (locale) of the resource bundle to given name */
 
-static void setEntryName(UResourceDataEntry *res, const char *name, UErrorCode *status) {
+ಸ್ಥಿರ ಶೂನ್ಯ setEntryName(UResourceDataEntry *res, ಧ್ರುವ ವರ್ಣ *name, UErrorCode *status) {
     int32_t len = static_cast<int32_t>(uprv_strlen(name));
-    if(res->fName != nullptr && res->fName != res->fNameBuffer) {
+    ಯದಿ(res->fName != nullptr && res->fName != res->fNameBuffer) {
         uprv_free(res->fName);
     }
-    if (len < static_cast<int32_t>(sizeof(res->fNameBuffer))) {
+    ಯದಿ (len < static_cast<int32_t>(ಪರಿಮಾಣ(res->fNameBuffer))) {
         res->fName = res->fNameBuffer;
     }
-    else {
-        res->fName = static_cast<char*>(uprv_malloc(len + 1));
+    ಅನ್ಯಥಾ {
+        res->fName = static_cast<ವರ್ಣ*>(uprv_malloc(len + 1));
     }
-    if(res->fName == nullptr) {
+    ಯದಿ(res->fName == nullptr) {
         *status = U_MEMORY_ALLOCATION_ERROR;
-    } else {
+    } ಅನ್ಯಥಾ {
         uprv_strcpy(res->fName, name);
     }
 }
 
-static UResourceDataEntry *
-getPoolEntry(const char *path, UErrorCode *status);
+ಸ್ಥಿರ UResourceDataEntry *
+getPoolEntry(ಧ್ರುವ ವರ್ಣ *path, UErrorCode *status);
 
 /**
  *  INTERNAL: Inits and opens an entry from a data DLL.
  *    CAUTION:  resbMutex must be locked when calling this function.
  */
-static UResourceDataEntry *init_entry(const char *localeID, const char *path, UErrorCode *status) {
+ಸ್ಥಿರ UResourceDataEntry *init_entry(ಧ್ರುವ ವರ್ಣ *localeID, ಧ್ರುವ ವರ್ಣ *path, UErrorCode *status) {
     UResourceDataEntry *r = nullptr;
     UResourceDataEntry find;
     /*int32_t hashValue;*/
-    const char *name;
-    char aliasName[100] = { 0 };
+    ಧ್ರುವ ವರ್ಣ *name;
+    ವರ್ಣ aliasName[100] = { 0 };
     int32_t aliasLen = 0;
     /*UBool isAlias = false;*/
     /*UHashTok hashkey; */
 
-    if(U_FAILURE(*status)) {
-        return nullptr;
+    ಯದಿ(U_FAILURE(*status)) {
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
 
     /* here we try to deduce the right locale name */
-    if(localeID == nullptr) { /* if localeID is nullptr, we're trying to open default locale */
+    ಯದಿ(localeID == nullptr) { /* if localeID is nullptr, we're trying to open default locale */
         name = uloc_getDefault();
-    } else if(*localeID == 0) { /* if localeID is "" then we try to open root locale */
-        name = kRootLocaleName;
-    } else { /* otherwise, we'll open what we're given */
+    } ಅನ್ಯಥಾ ಯದಿ(*localeID == 0) { /* if localeID is "" then we try to open root locale */
+        name = k_ಬೇರು_Locale_Name;
+    } ಅನ್ಯಥಾ { /* otherwise, we'll open what we're given */
         name = localeID;
     }
 
-    find.fName = const_cast<char*>(name);
-    find.fPath = const_cast<char*>(path);
+    find.fName = const_cast<ವರ್ಣ*>(name);
+    find.fPath = const_cast<ವರ್ಣ*>(path);
 
     /* calculate the hash value of the entry */
     /*hashkey.pointer = (void *)&find;*/
@@ -543,68 +543,68 @@ static UResourceDataEntry *init_entry(const char *localeID, const char *path, UE
 
     /* check to see if we already have this entry */
     r = static_cast<UResourceDataEntry*>(uhash_get(cache, &find));
-    if(r == nullptr) {
+    ಯದಿ(r == nullptr) {
         /* if the entry is not yet in the hash table, we'll try to construct a new one */
-        r = static_cast<UResourceDataEntry*>(uprv_malloc(sizeof(UResourceDataEntry)));
-        if(r == nullptr) {
+        r = static_cast<UResourceDataEntry*>(uprv_malloc(ಪರಿಮಾಣ(UResourceDataEntry)));
+        ಯದಿ(r == nullptr) {
             *status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+            ಪ್ರತ್ಯಾಗಮ nullptr;
         }
 
-        uprv_memset(r, 0, sizeof(UResourceDataEntry));
+        uprv_memset(r, 0, ಪರಿಮಾಣ(UResourceDataEntry));
         /*r->fHashKey = hashValue;*/
 
         setEntryName(r, name, status);
-        if (U_FAILURE(*status)) {
+        ಯದಿ (U_FAILURE(*status)) {
             uprv_free(r);
-            return nullptr;
+            ಪ್ರತ್ಯಾಗಮ nullptr;
         }
 
-        if(path != nullptr) {
+        ಯದಿ(path != nullptr) {
             r->fPath = uprv_strdup(path);
-            if(r->fPath == nullptr) {
+            ಯದಿ(r->fPath == nullptr) {
                 *status = U_MEMORY_ALLOCATION_ERROR;
                 uprv_free(r);
-                return nullptr;
+                ಪ್ರತ್ಯಾಗಮ nullptr;
             }
         }
 
         /* this is the actual loading */
         res_load(&(r->fData), r->fPath, r->fName, status);
 
-        if (U_FAILURE(*status)) {
+        ಯದಿ (U_FAILURE(*status)) {
             /* if we failed to load due to an out-of-memory error, exit early. */
-            if (*status == U_MEMORY_ALLOCATION_ERROR) {
+            ಯದಿ (*status == U_MEMORY_ALLOCATION_ERROR) {
                 uprv_free(r);
-                return nullptr;
+                ಪ್ರತ್ಯಾಗಮ nullptr;
             }
             /* we have no such entry in dll, so it will always use fallback */
             *status = U_USING_FALLBACK_WARNING;
             r->fBogus = U_USING_FALLBACK_WARNING;
-        } else { /* if we have a regular entry */
+        } ಅನ್ಯಥಾ { /* if we have a regular entry */
             Resource aliasres;
-            if (r->fData.usesPoolBundle) {
+            ಯದಿ (r->fData.usesPoolBundle) {
                 r->fPool = getPoolEntry(r->fPath, status);
-                if (U_SUCCESS(*status)) {
-                    const int32_t *poolIndexes = r->fPool->fData.pRoot + 1;
-                    if(r->fData.pRoot[1 + URES_INDEX_POOL_CHECKSUM] == poolIndexes[URES_INDEX_POOL_CHECKSUM]) {
-                        r->fData.poolBundleKeys = reinterpret_cast<const char*>(poolIndexes + (poolIndexes[URES_INDEX_LENGTH] & 0xff));
+                ಯದಿ (U_SUCCESS(*status)) {
+                    ಧ್ರುವ int32_t *poolIndexes = r->fPool->fData.p_ಬೇರು + 1;
+                    ಯದಿ(r->fData.p_ಬೇರು[1 + URES_INDEX_POOL_CHECKSUM] == poolIndexes[URES_INDEX_POOL_CHECKSUM]) {
+                        r->fData.pool_Bundle_ಕೀಲಿಗಳು = reinterpret_cast<ಧ್ರುವ ವರ್ಣ*>(poolIndexes + (poolIndexes[URES_INDEX_LENGTH] & 0xff));
                         r->fData.poolBundleStrings = r->fPool->fData.p16BitUnits;
-                    } else {
+                    } ಅನ್ಯಥಾ {
                         r->fBogus = *status = U_INVALID_FORMAT_ERROR;
                     }
-                } else {
+                } ಅನ್ಯಥಾ {
                     r->fBogus = *status;
                 }
             }
-            if (U_SUCCESS(*status)) {
+            ಯದಿ (U_SUCCESS(*status)) {
                 /* handle the alias by trying to get out the %%Alias tag.*/
                 /* We'll try to get alias string from the bundle */
                 aliasres = res_getResource(&(r->fData), "%%ALIAS");
-                if (aliasres != RES_BOGUS) {
+                ಯದಿ (aliasres != RES_BOGUS) {
                     // No tracing: called during initial data loading
-                    const char16_t *alias = res_getStringNoTrace(&(r->fData), aliasres, &aliasLen);
-                    if(alias != nullptr && aliasLen > 0) { /* if there is actual alias - unload and load new data */
+                    ಧ್ರುವ char16_t *alias = res_getStringNoTrace(&(r->fData), aliasres, &aliasLen);
+                    ಯದಿ(alias != nullptr && aliasLen > 0) { /* if there is actual alias - unload and load new data */
                         u_UCharsToChars(alias, aliasName, aliasLen+1);
                         r->fAlias = init_entry(aliasName, path, status);
                     }
@@ -614,16 +614,16 @@ static UResourceDataEntry *init_entry(const char *localeID, const char *path, UE
 
         {
             UResourceDataEntry *oldR = nullptr;
-            if ((oldR = static_cast<UResourceDataEntry*>(uhash_get(cache, r))) == nullptr) { /* if the data is not cached */
+            ಯದಿ ((oldR = static_cast<UResourceDataEntry*>(uhash_get(cache, r))) == nullptr) { /* if the data is not cached */
                 /* just insert it in the cache */
                 UErrorCode cacheStatus = U_ZERO_ERROR;
-                uhash_put(cache, (void *)r, r, &cacheStatus);
-                if (U_FAILURE(cacheStatus)) {
+                uhash_put(cache, (ಶೂನ್ಯ *)r, r, &cacheStatus);
+                ಯದಿ (U_FAILURE(cacheStatus)) {
                     *status = cacheStatus;
                     free_entry(r);
                     r = nullptr;
                 }
-            } else {
+            } ಅನ್ಯಥಾ {
                 /* somebody have already inserted it while we were working, discard newly opened data */
                 /* Also, we could get here IF we opened an alias */
                 free_entry(r);
@@ -632,280 +632,280 @@ static UResourceDataEntry *init_entry(const char *localeID, const char *path, UE
         }
 
     }
-    if(r != nullptr) {
+    ಯದಿ(r != nullptr) {
         /* return the real bundle */
-        while(r->fAlias != nullptr) {
+        ಯಾವತ್(r->fAlias != nullptr) {
             r = r->fAlias;
         }
-        r->fCountExisting++; /* we increase its reference count */
+        r->f_ಎಣಿಕೆ_Existing++; /* we increase its reference count */
         /* if the resource has a warning */
         /* we don't want to overwrite a status with no error */
-        if(r->fBogus != U_ZERO_ERROR && U_SUCCESS(*status)) {
+        ಯದಿ(r->fBogus != U_ZERO_ERROR && U_SUCCESS(*status)) {
              *status = r->fBogus; /* set the returning status */
         }
     }
-    return r;
+    ಪ್ರತ್ಯಾಗಮ r;
 }
 
-static UResourceDataEntry *
-getPoolEntry(const char *path, UErrorCode *status) {
+ಸ್ಥಿರ UResourceDataEntry *
+getPoolEntry(ಧ್ರುವ ವರ್ಣ *path, UErrorCode *status) {
     UResourceDataEntry *poolBundle = init_entry(kPoolBundleName, path, status);
-    if( U_SUCCESS(*status) &&
+    ಯದಿ( U_SUCCESS(*status) &&
         (poolBundle == nullptr || poolBundle->fBogus != U_ZERO_ERROR || !poolBundle->fData.isPoolBundle)
     ) {
         *status = U_INVALID_FORMAT_ERROR;
     }
-    return poolBundle;
+    ಪ್ರತ್ಯಾಗಮ poolBundle;
 }
 
 /* INTERNAL: */
 /*   CAUTION:  resbMutex must be locked when calling this function! */
-static UResourceDataEntry *
-findFirstExisting(const char* path, char* name, const char* defaultLocale, UResOpenType openType,
-                  UBool *isRoot, UBool *foundParent, UBool *isDefault, UErrorCode* status) {
+ಸ್ಥಿರ UResourceDataEntry *
+findFirstExisting(ಧ್ರುವ ವರ್ಣ* path, ವರ್ಣ* name, ಧ್ರುವ ವರ್ಣ* defaultLocale, UResOpenType openType,
+                  UBool *is_ಬೇರು, UBool *foundParent, UBool *isDefault, UErrorCode* status) {
     UResourceDataEntry *r = nullptr;
-    UBool hasRealData = false;
-    *foundParent = true; /* we're starting with a fresh name */
-    char origName[ULOC_FULLNAME_CAPACITY];
+    UBool hasRealData = ಅಸತ್ಯ;
+    *foundParent = ಸತ್ಯ; /* we're starting with a fresh name */
+    ವರ್ಣ origName[ULOC_FULLNAME_CAPACITY];
 
     uprv_strcpy(origName, name);
-    while(*foundParent && !hasRealData) {
+    ಯಾವತ್(*foundParent && !hasRealData) {
         r = init_entry(name, path, status);
         /* Null pointer test */
-        if (U_FAILURE(*status)) {
-            return nullptr;
+        ಯದಿ (U_FAILURE(*status)) {
+            ಪ್ರತ್ಯಾಗಮ nullptr;
         }
         *isDefault = static_cast<UBool>(uprv_strncmp(name, defaultLocale, uprv_strlen(name)) == 0);
         hasRealData = static_cast<UBool>(r->fBogus == U_ZERO_ERROR);
-        if(!hasRealData) {
+        ಯದಿ(!hasRealData) {
             /* this entry is not real. We will discard it. */
             /* However, the parent line for this entry is  */
             /* not to be used - as there might be parent   */
             /* lines in cache from previous openings that  */
             /* are not updated yet. */
-            r->fCountExisting--;
+            r->f_ಎಣಿಕೆ_Existing--;
             /*entryCloseInt(r);*/
             r = nullptr;
             *status = U_USING_FALLBACK_WARNING;
-        } else {
+        } ಅನ್ಯಥಾ {
             uprv_strcpy(name, r->fName); /* this is needed for supporting aliases */
         }
 
-        *isRoot = static_cast<UBool>(uprv_strcmp(name, kRootLocaleName) == 0);
+        *is_ಬೇರು = static_cast<UBool>(uprv_strcmp(name, k_ಬೇರು_Locale_Name) == 0);
 
         /*Fallback data stuff*/
-        if (!hasRealData) {
+        ಯದಿ (!hasRealData) {
             *foundParent = getParentLocaleID(name, origName, openType);
-        } else {
+        } ಅನ್ಯಥಾ {
             // we've already found a real resource file; what we return to the caller is the parent
             // locale ID for inheritance, which should come from chopLocale(), not getParentLocaleID()
             *foundParent = chopLocale(name);
         }
-        if (*foundParent && *name == '\0') {
+        ಯದಿ (*foundParent && *name == '\0') {
             uprv_strcpy(name, "und");
         }
     }
-    return r;
+    ಪ್ರತ್ಯಾಗಮ r;
 }
 
-static void ures_setIsStackObject( UResourceBundle* resB, UBool state) {
-    if(state) {
+ಸ್ಥಿರ ಶೂನ್ಯ ures_set_Is_ರಾಶಿ_Object( UResourceBundle* resB, UBool state) {
+    ಯದಿ(state) {
         resB->fMagic1 = 0;
         resB->fMagic2 = 0;
-    } else {
+    } ಅನ್ಯಥಾ {
         resB->fMagic1 = MAGIC1;
         resB->fMagic2 = MAGIC2;
     }
 }
 
-static UBool ures_isStackObject(const UResourceBundle* resB) {
-  return((resB->fMagic1 == MAGIC1 && resB->fMagic2 == MAGIC2)?false:true);
+ಸ್ಥಿರ UBool ures_is_ರಾಶಿ_Object(ಧ್ರುವ UResourceBundle* resB) {
+  ಪ್ರತ್ಯಾಗಮ((resB->fMagic1 == MAGIC1 && resB->fMagic2 == MAGIC2)?ಅಸತ್ಯ:ಸತ್ಯ);
 }
 
 
-U_CFUNC void ures_initStackObject(UResourceBundle* resB) {
-  uprv_memset(resB, 0, sizeof(UResourceBundle));
-  ures_setIsStackObject(resB, true);
+U_CFUNC ಶೂನ್ಯ ures_init_ರಾಶಿ_Object(UResourceBundle* resB) {
+  uprv_memset(resB, 0, ಪರಿಮಾಣ(UResourceBundle));
+  ures_set_Is_ರಾಶಿ_Object(resB, ಸತ್ಯ);
 }
 
 U_NAMESPACE_BEGIN
 
-StackUResourceBundle::StackUResourceBundle() {
-    ures_initStackObject(&bundle);
+ರಾಶಿ_UResource_Bundle::ರಾಶಿ_UResource_Bundle() {
+    ures_init_ರಾಶಿ_Object(&bundle);
 }
 
-StackUResourceBundle::~StackUResourceBundle() {
+ರಾಶಿ_UResource_Bundle::~ರಾಶಿ_UResource_Bundle() {
     ures_close(&bundle);
 }
 
 U_NAMESPACE_END
 
-static UBool  // returns U_SUCCESS(*status)
-loadParentsExceptRoot(UResourceDataEntry *&t1,
-                      char name[], int32_t nameCapacity,
-                      UBool usingUSRData, char usrDataPath[], UErrorCode *status) {
-    if (U_FAILURE(*status)) { return false; }
-    UBool checkParent = true;
-    while (checkParent && t1->fParent == nullptr && !t1->fData.noFallback &&
+ಸ್ಥಿರ UBool  // returns U_SUCCESS(*status)
+load_Parents_Except_ಬೇರು(UResourceDataEntry *&t1,
+                      ವರ್ಣ name[], int32_t nameCapacity,
+                      UBool usingUSRData, ವರ್ಣ usrDataPath[], UErrorCode *status) {
+    ಯದಿ (U_FAILURE(*status)) { ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ; }
+    UBool checkParent = ಸತ್ಯ;
+    ಯಾವತ್ (checkParent && t1->fParent == nullptr && !t1->fData.noFallback &&
             res_getResource(&t1->fData,"%%ParentIsRoot") == RES_BOGUS) {
         Resource parentRes = res_getResource(&t1->fData, "%%Parent");
-        if (parentRes != RES_BOGUS) {  // An explicit parent was found.
+        ಯದಿ (parentRes != RES_BOGUS) {  // An explicit parent was found.
             int32_t parentLocaleLen = 0;
             // No tracing: called during initial data loading
-            const char16_t *parentLocaleName = res_getStringNoTrace(&(t1->fData), parentRes, &parentLocaleLen);
-            if(parentLocaleName != nullptr && 0 < parentLocaleLen && parentLocaleLen < nameCapacity) {
+            ಧ್ರುವ char16_t *parentLocaleName = res_getStringNoTrace(&(t1->fData), parentRes, &parentLocaleLen);
+            ಯದಿ(parentLocaleName != nullptr && 0 < parentLocaleLen && parentLocaleLen < nameCapacity) {
                 u_UCharsToChars(parentLocaleName, name, parentLocaleLen + 1);
-                if (uprv_strcmp(name, kRootLocaleName) == 0) {
-                    return true;
+                ಯದಿ (uprv_strcmp(name, k_ಬೇರು_Locale_Name) == 0) {
+                    ಪ್ರತ್ಯಾಗಮ ಸತ್ಯ;
                 }
             }
         }
         // Insert regular parents.
         UErrorCode parentStatus = U_ZERO_ERROR;
         UResourceDataEntry *t2 = init_entry(name, t1->fPath, &parentStatus);
-        if (U_FAILURE(parentStatus)) {
+        ಯದಿ (U_FAILURE(parentStatus)) {
             *status = parentStatus;
-            return false;
+            ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
         }
         UResourceDataEntry *u2 = nullptr;
         UErrorCode usrStatus = U_ZERO_ERROR;
-        if (usingUSRData) {  // This code inserts user override data into the inheritance chain.
+        ಯದಿ (usingUSRData) {  // This code inserts user override data into the inheritance chain.
             u2 = init_entry(name, usrDataPath, &usrStatus);
             // If we failed due to out-of-memory, report that to the caller and exit early.
-            if (usrStatus == U_MEMORY_ALLOCATION_ERROR) {
+            ಯದಿ (usrStatus == U_MEMORY_ALLOCATION_ERROR) {
                 *status = usrStatus;
-                return false;
+                ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
             }
         }
 
-        if (usingUSRData && U_SUCCESS(usrStatus) && u2->fBogus == U_ZERO_ERROR) {
+        ಯದಿ (usingUSRData && U_SUCCESS(usrStatus) && u2->fBogus == U_ZERO_ERROR) {
             t1->fParent = u2;
             u2->fParent = t2;
-        } else {
+        } ಅನ್ಯಥಾ {
             t1->fParent = t2;
-            if (usingUSRData) {
+            ಯದಿ (usingUSRData) {
                 // The USR override data wasn't found, set it to be deleted.
-                u2->fCountExisting = 0;
+                u2->f_ಎಣಿಕೆ_Existing = 0;
             }
         }
         t1 = t2;
         checkParent = chopLocale(name) || mayHaveParent(name);
     }
-    return true;
+    ಪ್ರತ್ಯಾಗಮ ಸತ್ಯ;
 }
 
-static UBool  // returns U_SUCCESS(*status)
-insertRootBundle(UResourceDataEntry *&t1, UErrorCode *status) {
-    if (U_FAILURE(*status)) { return false; }
+ಸ್ಥಿರ UBool  // returns U_SUCCESS(*status)
+ಸೇರಿಸು_ಬೇರು_Bundle(UResourceDataEntry *&t1, UErrorCode *status) {
+    ಯದಿ (U_FAILURE(*status)) { ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ; }
     UErrorCode parentStatus = U_ZERO_ERROR;
-    UResourceDataEntry *t2 = init_entry(kRootLocaleName, t1->fPath, &parentStatus);
-    if (U_FAILURE(parentStatus)) {
+    UResourceDataEntry *t2 = init_entry(k_ಬೇರು_Locale_Name, t1->fPath, &parentStatus);
+    ಯದಿ (U_FAILURE(parentStatus)) {
         *status = parentStatus;
-        return false;
+        ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
     }
     t1->fParent = t2;
     t1 = t2;
-    return true;
+    ಪ್ರತ್ಯಾಗಮ ಸತ್ಯ;
 }
 
-static UResourceDataEntry *entryOpen(const char* path, const char* localeID,
+ಸ್ಥಿರ UResourceDataEntry *entryOpen(ಧ್ರುವ ವರ್ಣ* path, ಧ್ರುವ ವರ್ಣ* localeID,
                                      UResOpenType openType, UErrorCode* status) {
     U_ASSERT(openType != URES_OPEN_DIRECT);
     UErrorCode intStatus = U_ZERO_ERROR;
     UResourceDataEntry *r = nullptr;
     UResourceDataEntry *t1 = nullptr;
-    UBool isDefault = false;
-    UBool isRoot = false;
-    UBool hasRealData = false;
-    UBool hasChopped = true;
+    UBool isDefault = ಅಸತ್ಯ;
+    UBool is_ಬೇರು = ಅಸತ್ಯ;
+    UBool hasRealData = ಅಸತ್ಯ;
+    UBool hasChopped = ಸತ್ಯ;
     UBool usingUSRData = U_USE_USRDATA && ( path == nullptr || uprv_strncmp(path,U_ICUDATA_NAME,8) == 0);
 
-    char name[ULOC_FULLNAME_CAPACITY];
-    char usrDataPath[96];
+    ವರ್ಣ name[ULOC_FULLNAME_CAPACITY];
+    ವರ್ಣ usrDataPath[96];
 
     initCache(status);
 
-    if(U_FAILURE(*status)) {
-        return nullptr;
+    ಯದಿ(U_FAILURE(*status)) {
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
 
-    uprv_strncpy(name, localeID, sizeof(name) - 1);
-    name[sizeof(name) - 1] = 0;
+    uprv_strncpy(name, localeID, ಪರಿಮಾಣ(name) - 1);
+    name[ಪರಿಮಾಣ(name) - 1] = 0;
 
-    if ( usingUSRData ) {
-        if ( path == nullptr ) {
+    ಯದಿ ( usingUSRData ) {
+        ಯದಿ ( path == nullptr ) {
             uprv_strcpy(usrDataPath, U_USRDATA_NAME);
-        } else {
-            uprv_strncpy(usrDataPath, path, sizeof(usrDataPath) - 1);
+        } ಅನ್ಯಥಾ {
+            uprv_strncpy(usrDataPath, path, ಪರಿಮಾಣ(usrDataPath) - 1);
             usrDataPath[0] = 'u';
             usrDataPath[1] = 's';
             usrDataPath[2] = 'r';
-            usrDataPath[sizeof(usrDataPath) - 1] = 0;
+            usrDataPath[ಪರಿಮಾಣ(usrDataPath) - 1] = 0;
         }
     }
  
     // Note: We need to query the default locale *before* locking resbMutex.
-    const char *defaultLocale = uloc_getDefault();
+    ಧ್ರುವ ವರ್ಣ *defaultLocale = uloc_getDefault();
 
     Mutex lock(&resbMutex);    // Lock resbMutex until the end of this function.
 
     /* We're going to skip all the locales that do not have any data */
-    r = findFirstExisting(path, name, defaultLocale, openType, &isRoot, &hasChopped, &isDefault, &intStatus);
+    r = findFirstExisting(path, name, defaultLocale, openType, &is_ಬೇರು, &hasChopped, &isDefault, &intStatus);
 
     // If we failed due to out-of-memory, report the failure and exit early.
-    if (intStatus == U_MEMORY_ALLOCATION_ERROR) {
+    ಯದಿ (intStatus == U_MEMORY_ALLOCATION_ERROR) {
         *status = intStatus;
-        goto finish;
+        ಗಚ್ಛ finish;
     }
 
-    if(r != nullptr) { /* if there is one real locale, we can look for parents. */
+    ಯದಿ(r != nullptr) { /* if there is one real locale, we can look for parents. */
         t1 = r;
-        hasRealData = true;
-        if ( usingUSRData ) {  /* This code inserts user override data into the inheritance chain */
+        hasRealData = ಸತ್ಯ;
+        ಯದಿ ( usingUSRData ) {  /* This code inserts user override data into the inheritance chain */
             UErrorCode usrStatus = U_ZERO_ERROR;
             UResourceDataEntry *u1 = init_entry(t1->fName, usrDataPath, &usrStatus);
             // If we failed due to out-of-memory, report the failure and exit early.
-            if (intStatus == U_MEMORY_ALLOCATION_ERROR) {
+            ಯದಿ (intStatus == U_MEMORY_ALLOCATION_ERROR) {
                 *status = intStatus;
-                goto finish;
+                ಗಚ್ಛ finish;
             }
-            if ( u1 != nullptr ) {
-                if(u1->fBogus == U_ZERO_ERROR) {
+            ಯದಿ ( u1 != nullptr ) {
+                ಯದಿ(u1->fBogus == U_ZERO_ERROR) {
                     u1->fParent = t1;
                     r = u1;
-                } else {
+                } ಅನ್ಯಥಾ {
                     /* the USR override data wasn't found, set it to be deleted */
-                    u1->fCountExisting = 0;
+                    u1->f_ಎಣಿಕೆ_Existing = 0;
                 }
             }
         }
-        if ((hasChopped || mayHaveParent(name)) && !isRoot) {
-            if (!loadParentsExceptRoot(t1, name, UPRV_LENGTHOF(name), usingUSRData, usrDataPath, status)) {
-                goto finish;
+        ಯದಿ ((hasChopped || mayHaveParent(name)) && !is_ಬೇರು) {
+            ಯದಿ (!load_Parents_Except_ಬೇರು(t1, name, UPRV_LENGTHOF(name), usingUSRData, usrDataPath, status)) {
+                ಗಚ್ಛ finish;
             }
         }
     }
 
     /* we could have reached this point without having any real data */
     /* if that is the case, we need to chain in the default locale   */
-    if(r==nullptr && openType == URES_OPEN_LOCALE_DEFAULT_ROOT && !isDefault && !isRoot) {
+    ಯದಿ(r==nullptr && openType == URES_OPEN_LOCALE_DEFAULT_ಬೇರು && !isDefault && !is_ಬೇರು) {
         /* insert default locale */
         uprv_strcpy(name, defaultLocale);
-        r = findFirstExisting(path, name, defaultLocale, openType, &isRoot, &hasChopped, &isDefault, &intStatus);
+        r = findFirstExisting(path, name, defaultLocale, openType, &is_ಬೇರು, &hasChopped, &isDefault, &intStatus);
         // If we failed due to out-of-memory, report the failure and exit early.
-        if (intStatus == U_MEMORY_ALLOCATION_ERROR) {
+        ಯದಿ (intStatus == U_MEMORY_ALLOCATION_ERROR) {
             *status = intStatus;
-            goto finish;
+            ಗಚ್ಛ finish;
         }
         intStatus = U_USING_DEFAULT_WARNING;
-        if(r != nullptr) { /* the default locale exists */
+        ಯದಿ(r != nullptr) { /* the default locale exists */
             t1 = r;
-            hasRealData = true;
-            isDefault = true;
+            hasRealData = ಸತ್ಯ;
+            isDefault = ಸತ್ಯ;
             // TODO: Why not if (usingUSRData) { ... } like in the non-default-locale code path?
-            if ((hasChopped || mayHaveParent(name)) && !isRoot) {
-                if (!loadParentsExceptRoot(t1, name, UPRV_LENGTHOF(name), usingUSRData, usrDataPath, status)) {
-                    goto finish;
+            ಯದಿ ((hasChopped || mayHaveParent(name)) && !is_ಬೇರು) {
+                ಯದಿ (!load_Parents_Except_ಬೇರು(t1, name, UPRV_LENGTHOF(name), usingUSRData, usrDataPath, status)) {
+                    ಗಚ್ಛ finish;
                 }
             }
         }
@@ -913,46 +913,46 @@ static UResourceDataEntry *entryOpen(const char* path, const char* localeID,
 
     /* we could still have r == nullptr at this point - maybe even default locale is not */
     /* present */
-    if(r == nullptr) {
-        uprv_strcpy(name, kRootLocaleName);
-        r = findFirstExisting(path, name, defaultLocale, openType, &isRoot, &hasChopped, &isDefault, &intStatus);
+    ಯದಿ(r == nullptr) {
+        uprv_strcpy(name, k_ಬೇರು_Locale_Name);
+        r = findFirstExisting(path, name, defaultLocale, openType, &is_ಬೇರು, &hasChopped, &isDefault, &intStatus);
         // If we failed due to out-of-memory, report the failure and exit early.
-        if (intStatus == U_MEMORY_ALLOCATION_ERROR) {
+        ಯದಿ (intStatus == U_MEMORY_ALLOCATION_ERROR) {
             *status = intStatus;
-            goto finish;
+            ಗಚ್ಛ finish;
         }
-        if(r != nullptr) {
+        ಯದಿ(r != nullptr) {
             t1 = r;
             intStatus = U_USING_DEFAULT_WARNING;
-            hasRealData = true;
-        } else { /* we don't even have the root locale */
+            hasRealData = ಸತ್ಯ;
+        } ಅನ್ಯಥಾ { /* we don't even have the root locale */
             *status = U_MISSING_RESOURCE_ERROR;
-            goto finish;
+            ಗಚ್ಛ finish;
         }
-    } else if(!isRoot && uprv_strcmp(t1->fName, kRootLocaleName) != 0 &&
+    } ಅನ್ಯಥಾ ಯದಿ(!is_ಬೇರು && uprv_strcmp(t1->fName, k_ಬೇರು_Locale_Name) != 0 &&
             t1->fParent == nullptr && !r->fData.noFallback) {
-        if (!insertRootBundle(t1, status)) {
-            goto finish;
+        ಯದಿ (!ಸೇರಿಸು_ಬೇರು_Bundle(t1, status)) {
+            ಗಚ್ಛ finish;
         }
-        if(!hasRealData) {
+        ಯದಿ(!hasRealData) {
             r->fBogus = U_USING_DEFAULT_WARNING;
         }
     }
 
     // TODO: Does this ever loop?
-    while(r != nullptr && !isRoot && t1->fParent != nullptr) {
-        t1->fParent->fCountExisting++;
+    ಯಾವತ್(r != nullptr && !is_ಬೇರು && t1->fParent != nullptr) {
+        t1->fParent->f_ಎಣಿಕೆ_Existing++;
         t1 = t1->fParent;
     }
 
 finish:
-    if(U_SUCCESS(*status)) {
-        if(intStatus != U_ZERO_ERROR) {
+    ಯದಿ(U_SUCCESS(*status)) {
+        ಯದಿ(intStatus != U_ZERO_ERROR) {
             *status = intStatus;  
         }
-        return r;
-    } else {
-        return nullptr;
+        ಪ್ರತ್ಯಾಗಮ r;
+    } ಅನ್ಯಥಾ {
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
 }
 
@@ -962,62 +962,62 @@ finish:
  * Parent and root locale bundles are loaded if
  * the requested bundle does not have the "nofallback" flag.
  */
-static UResourceDataEntry *
-entryOpenDirect(const char* path, const char* localeID, UErrorCode* status) {
+ಸ್ಥಿರ UResourceDataEntry *
+entryOpenDirect(ಧ್ರುವ ವರ್ಣ* path, ಧ್ರುವ ವರ್ಣ* localeID, UErrorCode* status) {
     initCache(status);
-    if(U_FAILURE(*status)) {
-        return nullptr;
+    ಯದಿ(U_FAILURE(*status)) {
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
 
     // Note: We need to query the default locale *before* locking resbMutex.
     // If the localeID is nullptr, then we want to use the default locale.
-    if (localeID == nullptr) {
+    ಯದಿ (localeID == nullptr) {
         localeID = uloc_getDefault();
-    } else if (*localeID == 0) {
+    } ಅನ್ಯಥಾ ಯದಿ (*localeID == 0) {
         // If the localeID is "", then we want to use the root locale.
-        localeID = kRootLocaleName;
+        localeID = k_ಬೇರು_Locale_Name;
     }
 
     Mutex lock(&resbMutex);
 
     // findFirstExisting() without fallbacks.
     UResourceDataEntry *r = init_entry(localeID, path, status);
-    if(U_SUCCESS(*status)) {
-        if(r->fBogus != U_ZERO_ERROR) {
-            r->fCountExisting--;
+    ಯದಿ(U_SUCCESS(*status)) {
+        ಯದಿ(r->fBogus != U_ZERO_ERROR) {
+            r->f_ಎಣಿಕೆ_Existing--;
             r = nullptr;
         }
-    } else {
+    } ಅನ್ಯಥಾ {
         r = nullptr;
     }
 
     // Some code depends on the ures_openDirect() bundle to have a parent bundle chain,
     // unless it is marked with "nofallback".
     UResourceDataEntry *t1 = r;
-    if(r != nullptr && uprv_strcmp(localeID, kRootLocaleName) != 0 &&  // not root
+    ಯದಿ(r != nullptr && uprv_strcmp(localeID, k_ಬೇರು_Locale_Name) != 0 &&  // not root
             r->fParent == nullptr && !r->fData.noFallback &&
             uprv_strlen(localeID) < ULOC_FULLNAME_CAPACITY) {
-        char name[ULOC_FULLNAME_CAPACITY];
+        ವರ್ಣ name[ULOC_FULLNAME_CAPACITY];
         uprv_strcpy(name, localeID);
-        if(!chopLocale(name) || uprv_strcmp(name, kRootLocaleName) == 0 ||
-                loadParentsExceptRoot(t1, name, UPRV_LENGTHOF(name), false, nullptr, status)) {
-            if(uprv_strcmp(t1->fName, kRootLocaleName) != 0 && t1->fParent == nullptr) {
-                insertRootBundle(t1, status);
+        ಯದಿ(!chopLocale(name) || uprv_strcmp(name, k_ಬೇರು_Locale_Name) == 0 ||
+                load_Parents_Except_ಬೇರು(t1, name, UPRV_LENGTHOF(name), ಅಸತ್ಯ, nullptr, status)) {
+            ಯದಿ(uprv_strcmp(t1->fName, k_ಬೇರು_Locale_Name) != 0 && t1->fParent == nullptr) {
+                ಸೇರಿಸು_ಬೇರು_Bundle(t1, status);
             }
         }
-        if(U_FAILURE(*status)) {
+        ಯದಿ(U_FAILURE(*status)) {
             r = nullptr;
         }
     }
 
-    if(r != nullptr) {
+    ಯದಿ(r != nullptr) {
         // TODO: Does this ever loop?
-        while(t1->fParent != nullptr) {
-            t1->fParent->fCountExisting++;
+        ಯಾವತ್(t1->fParent != nullptr) {
+            t1->fParent->f_ಎಣಿಕೆ_Existing++;
             t1 = t1->fParent;
         }
     }
-    return r;
+    ಪ್ರತ್ಯಾಗಮ r;
 }
 
 /**
@@ -1025,12 +1025,12 @@ entryOpenDirect(const char* path, const char* localeID, UErrorCode* status) {
  *     CAUTION:  resbMutex must be locked when calling this function.
  */
 /* INTERNAL: */
-static void entryCloseInt(UResourceDataEntry *resB) {
+ಸ್ಥಿರ ಶೂನ್ಯ entryCloseInt(UResourceDataEntry *resB) {
     UResourceDataEntry *p = resB;
 
-    while(resB != nullptr) {
+    ಯಾವತ್(resB != nullptr) {
         p = resB->fParent;
-        resB->fCountExisting--;
+        resB->f_ಎಣಿಕೆ_Existing--;
 
         /* Entries are left in the cache. TODO: add ures_flushCache() to force a flush
          of the cache. */
@@ -1058,7 +1058,7 @@ static void entryCloseInt(UResourceDataEntry *resB) {
  *  API: closes a resource bundle and cleans up.
  */
 
-static void entryClose(UResourceDataEntry *resB) {
+ಸ್ಥಿರ ಶೂನ್ಯ entryClose(UResourceDataEntry *resB) {
   Mutex lock(&resbMutex);
   entryCloseInt(resB);
 }
@@ -1080,29 +1080,29 @@ U_CFUNC void ures_setResPath(UResourceBundle *resB, const char* toAdd) {
   uprv_strcpy(resB->fResPath, toAdd);
 }
 */
-static void ures_appendResPath(UResourceBundle *resB, const char* toAdd, int32_t lenToAdd, UErrorCode *status) {
+ಸ್ಥಿರ ಶೂನ್ಯ ures_appendResPath(UResourceBundle *resB, ಧ್ರುವ ವರ್ಣ* toAdd, int32_t lenToAdd, UErrorCode *status) {
     int32_t resPathLenOrig = resB->fResPathLen;
-    if(resB->fResPath == nullptr) {
+    ಯದಿ(resB->fResPath == nullptr) {
         resB->fResPath = resB->fResBuf;
         *(resB->fResPath) = 0;
         resB->fResPathLen = 0;
     } 
     resB->fResPathLen += lenToAdd;
-    if(RES_BUFSIZE <= resB->fResPathLen+1) {
-        if(resB->fResPath == resB->fResBuf) {
-            resB->fResPath = static_cast<char*>(uprv_malloc((resB->fResPathLen + 1) * sizeof(char)));
+    ಯದಿ(RES_BUFSIZE <= resB->fResPathLen+1) {
+        ಯದಿ(resB->fResPath == resB->fResBuf) {
+            resB->fResPath = static_cast<ವರ್ಣ*>(uprv_malloc((resB->fResPathLen + 1) * ಪರಿಮಾಣ(ವರ್ಣ)));
             /* Check that memory was allocated correctly. */
-            if (resB->fResPath == nullptr) {
+            ಯದಿ (resB->fResPath == nullptr) {
                 *status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                ಪ್ರತ್ಯಾಗಮ;
             }
             uprv_strcpy(resB->fResPath, resB->fResBuf);
-        } else {
-            char* temp = static_cast<char*>(uprv_realloc(resB->fResPath, (resB->fResPathLen + 1) * sizeof(char)));
+        } ಅನ್ಯಥಾ {
+            ವರ್ಣ* temp = static_cast<ವರ್ಣ*>(uprv_realloc(resB->fResPath, (resB->fResPathLen + 1) * ಪರಿಮಾಣ(ವರ್ಣ)));
             /* Check that memory was reallocated correctly. */
-            if (temp == nullptr) {
+            ಯದಿ (temp == nullptr) {
                 *status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                ಪ್ರತ್ಯಾಗಮ;
             }
             resB->fResPath = temp;
         }
@@ -1110,52 +1110,52 @@ static void ures_appendResPath(UResourceBundle *resB, const char* toAdd, int32_t
     uprv_strcpy(resB->fResPath + resPathLenOrig, toAdd);
 }
 
-static void ures_freeResPath(UResourceBundle *resB) {
-    if (resB->fResPath && resB->fResPath != resB->fResBuf) {
+ಸ್ಥಿರ ಶೂನ್ಯ ures_freeResPath(UResourceBundle *resB) {
+    ಯದಿ (resB->fResPath && resB->fResPath != resB->fResBuf) {
         uprv_free(resB->fResPath);
     }
     resB->fResPath = nullptr;
     resB->fResPathLen = 0;
 }
 
-static void
+ಸ್ಥಿರ ಶೂನ್ಯ
 ures_closeBundle(UResourceBundle* resB, UBool freeBundleObj)
 {
-    if(resB != nullptr) {
-        if(resB->fData != nullptr) {
+    ಯದಿ(resB != nullptr) {
+        ಯದಿ(resB->fData != nullptr) {
             entryClose(resB->fData);
         }
-        if(resB->fVersion != nullptr) {
+        ಯದಿ(resB->fVersion != nullptr) {
             uprv_free(resB->fVersion);
         }
         ures_freeResPath(resB);
 
-        if(ures_isStackObject(resB) == false && freeBundleObj) {
+        ಯದಿ(ures_is_ರಾಶಿ_Object(resB) == ಅಸತ್ಯ && freeBundleObj) {
             uprv_free(resB);
         }
-#if 0 /*U_DEBUG*/
-        else {
+#ಯದಿ 0 /*U_DEBUG*/
+        ಅನ್ಯಥಾ {
             /* poison the data */
-            uprv_memset(resB, -1, sizeof(UResourceBundle));
+            uprv_memset(resB, -1, ಪರಿಮಾಣ(UResourceBundle));
         }
 #endif
     }
 }
 
-U_CAPI void  U_EXPORT2
+U_CAPI ಶೂನ್ಯ  U_EXPORT2
 ures_close(UResourceBundle* resB)
 {
-    ures_closeBundle(resB, true);
+    ures_closeBundle(resB, ಸತ್ಯ);
 }
 
-namespace {
+ನಾಮಾಕಾಶ {
 
 UResourceBundle* init_resb_result(UResourceDataEntry* dataEntry,
                                   Resource r,
-                                  const char* key,
+                                  ಧ್ರುವ ವರ್ಣ* ಕೀಲಿ,
                                   int32_t idx,
                                   UResourceDataEntry* validLocaleDataEntry,
-                                  const char* containerResPath,
+                                  ಧ್ರುವ ವರ್ಣ* containerResPath,
                                   int32_t recursionDepth,
                                   UResourceBundle* resB U_LIFETIME_BOUND,
                                   UErrorCode* status);
@@ -1164,24 +1164,24 @@ UResourceBundle* init_resb_result(UResourceDataEntry* dataEntry,
 // rather than a UResourceBundle.
 // May need to entryIncrease() the resulting dataEntry.
 UResourceBundle*
-getAliasTargetAsResourceBundle(const ResourceData& resData,
+getAliasTargetAsResourceBundle(ಧ್ರುವ ResourceData& resData,
                                Resource r,
-                               const char* key,
+                               ಧ್ರುವ ವರ್ಣ* ಕೀಲಿ,
                                int32_t idx,
                                UResourceDataEntry* validLocaleDataEntry,
-                               const char* containerResPath,
+                               ಧ್ರುವ ವರ್ಣ* containerResPath,
                                int32_t recursionDepth,
                                UResourceBundle* resB U_LIFETIME_BOUND,
                                UErrorCode* status) {
     // TODO: When an error occurs: Should we return nullptr vs. resB?
-    if (U_FAILURE(*status)) { return resB; }
+    ಯದಿ (U_FAILURE(*status)) { ಪ್ರತ್ಯಾಗಮ resB; }
     U_ASSERT(RES_GET_TYPE(r) == URES_ALIAS);
     int32_t len = 0;
-    const char16_t *alias = res_getAlias(&resData, r, &len);
-    if(len <= 0) {
+    ಧ್ರುವ char16_t *alias = res_getAlias(&resData, r, &len);
+    ಯದಿ(len <= 0) {
         // bad alias
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return resB;
+        ಪ್ರತ್ಯಾಗಮ resB;
     }
 
     // Copy the UTF-16 alias string into an invariant-character string.
@@ -1196,56 +1196,56 @@ getAliasTargetAsResourceBundle(const ResourceData& resData,
     // markus 2003oct17
     CharString chAlias;
     chAlias.appendInvariantChars(alias, len, *status);
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    ಯದಿ (U_FAILURE(*status)) {
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
 
     // We have an alias, now let's cut it up.
-    const char *path = nullptr, *locale = nullptr, *keyPath = nullptr;
-    if(chAlias[0] == RES_PATH_SEPARATOR) {
+    ಧ್ರುವ ವರ್ಣ *path = nullptr, *locale = nullptr, *ಕೀಲಿ_Path = nullptr;
+    ಯದಿ(chAlias[0] == RES_PATH_SEPARATOR) {
         // There is a path included.
-        char *chAliasData = chAlias.data();
-        char *sep = chAliasData + 1;
+        ವರ್ಣ *chAliasData = chAlias.data();
+        ವರ್ಣ *sep = chAliasData + 1;
         path = sep;
         sep = uprv_strchr(sep, RES_PATH_SEPARATOR);
-        if(sep != nullptr) {
+        ಯದಿ(sep != nullptr) {
             *sep++ = 0;
         }
-        if(uprv_strcmp(path, "LOCALE") == 0) {
+        ಯದಿ(uprv_strcmp(path, "LOCALE") == 0) {
             // This is an XPath alias, starting with "/LOCALE/".
             // It contains the path to a resource which should be looked up
             // starting in the valid locale.
             // TODO: Can/should we forbid a /LOCALE alias without key path?
             //   It seems weird to alias to the same path, just starting from the valid locale.
             //   That will often yield an infinite loop.
-            keyPath = sep;
+            ಕೀಲಿ_Path = sep;
             // Read from the valid locale which we already have.
             path = locale = nullptr;
-        } else {
-            if(uprv_strcmp(path, "ICUDATA") == 0) { /* want ICU data */
+        } ಅನ್ಯಥಾ {
+            ಯದಿ(uprv_strcmp(path, "ICUDATA") == 0) { /* want ICU data */
                 path = nullptr;
             }
-            if (sep == nullptr) {
+            ಯದಿ (sep == nullptr) {
                 // TODO: This ends up using the root bundle. Can/should we forbid this?
                 locale = "";
-            } else {
+            } ಅನ್ಯಥಾ {
                 locale = sep;
                 sep = uprv_strchr(sep, RES_PATH_SEPARATOR);
-                if(sep != nullptr) {
+                ಯದಿ(sep != nullptr) {
                     *sep++ = 0;
                 }
-                keyPath = sep;
+                ಕೀಲಿ_Path = sep;
             }
         }
-    } else {
+    } ಅನ್ಯಥಾ {
         // No path, start with a locale.
-        char *sep = chAlias.data();
+        ವರ್ಣ *sep = chAlias.data();
         locale = sep;
         sep = uprv_strchr(sep, RES_PATH_SEPARATOR);
-        if(sep != nullptr) {
+        ಯದಿ(sep != nullptr) {
             *sep++ = 0;
         }
-        keyPath = sep;
+        ಕೀಲಿ_Path = sep;
         path = validLocaleDataEntry->fPath;
     }
 
@@ -1253,24 +1253,24 @@ getAliasTargetAsResourceBundle(const ResourceData& resData,
     // First, open the bundle with real data.
     LocalUResourceBundlePointer mainRes;
     UResourceDataEntry *dataEntry;
-    if (locale == nullptr) {
+    ಯದಿ (locale == nullptr) {
         // alias = /LOCALE/keyPath
         // Read from the valid locale which we already have.
         dataEntry = validLocaleDataEntry;
-    } else {
+    } ಅನ್ಯಥಾ {
         UErrorCode intStatus = U_ZERO_ERROR;
         // TODO: Shouldn't we use ures_open() for locale data bundles (!noFallback)?
         mainRes.adoptInstead(ures_openDirect(path, locale, &intStatus));
-        if(U_FAILURE(intStatus)) {
+        ಯದಿ(U_FAILURE(intStatus)) {
             // We failed to open the resource bundle we're aliasing to.
             *status = intStatus;
-            return resB;
+            ಪ್ರತ್ಯಾಗಮ resB;
         }
         dataEntry = mainRes->fData;
     }
 
-    const char* temp = nullptr;
-    if(keyPath == nullptr) {
+    ಧ್ರುವ ವರ್ಣ* temp = nullptr;
+    ಯದಿ(ಕೀಲಿ_Path == nullptr) {
         // No key path. This means that we are going to to use the corresponding resource from
         // another bundle.
         // TODO: Why the special code path?
@@ -1278,160 +1278,160 @@ getAliasTargetAsResourceBundle(const ResourceData& resData,
         //   as a comment below suggests, and go into the regular code branch?
         // First, we are going to get a corresponding container
         // resource to the one we are searching.
-        r = dataEntry->fData.rootRes;
-        if(containerResPath) {
+        r = dataEntry->fData.ಬೇರು_Res;
+        ಯದಿ(containerResPath) {
             chAlias.clear().append(containerResPath, *status);
-            if (U_FAILURE(*status)) {
-                return nullptr;
+            ಯದಿ (U_FAILURE(*status)) {
+                ಪ್ರತ್ಯಾಗಮ nullptr;
             }
-            char *aKey = chAlias.data();
+            ವರ್ಣ *a_ಕೀಲಿ = chAlias.data();
             // TODO: should res_findResource() return a new dataEntry, too?
-            r = res_findResource(&dataEntry->fData, r, &aKey, &temp);
+            r = res_findResource(&dataEntry->fData, r, &a_ಕೀಲಿ, &temp);
         }
-        if(key) {
+        ಯದಿ(ಕೀಲಿ) {
             // We need to make keyPath from the containerResPath and
             // current key, if there is a key associated.
-            chAlias.clear().append(key, *status);
-            if (U_FAILURE(*status)) {
-                return nullptr;
+            chAlias.clear().append(ಕೀಲಿ, *status);
+            ಯದಿ (U_FAILURE(*status)) {
+                ಪ್ರತ್ಯಾಗಮ nullptr;
             }
-            char *aKey = chAlias.data();
-            r = res_findResource(&dataEntry->fData, r, &aKey, &temp);
-        } else if(idx != -1) {
+            ವರ್ಣ *a_ಕೀಲಿ = chAlias.data();
+            r = res_findResource(&dataEntry->fData, r, &a_ಕೀಲಿ, &temp);
+        } ಅನ್ಯಥಾ ಯದಿ(idx != -1) {
             // If there is no key, but there is an index, try to get by the index.
             // Here we have either a table or an array, so get the element.
             int32_t type = RES_GET_TYPE(r);
-            if(URES_IS_TABLE(type)) {
-                const char *aKey;
-                r = res_getTableItemByIndex(&dataEntry->fData, r, idx, &aKey);
-            } else { /* array */
+            ಯದಿ(URES_IS_TABLE(type)) {
+                ಧ್ರುವ ವರ್ಣ *a_ಕೀಲಿ;
+                r = res_getTableItemByIndex(&dataEntry->fData, r, idx, &a_ಕೀಲಿ);
+            } ಅನ್ಯಥಾ { /* array */
                 r = res_getArrayItem(&dataEntry->fData, r, idx);
             }
         }
-        if(r != RES_BOGUS) {
+        ಯದಿ(r != RES_BOGUS) {
             resB = init_resb_result(
                 dataEntry, r, temp, -1, validLocaleDataEntry, nullptr, recursionDepth+1,
                 resB, status);
-        } else {
+        } ಅನ್ಯಥಾ {
             *status = U_MISSING_RESOURCE_ERROR;
         }
-    } else {
+    } ಅನ್ಯಥಾ {
         // This one is a bit trickier.
         // We start finding keys, but after we resolve one alias, the path might continue.
         // Consider:
         //     aliastest:alias { "testtypes/anotheralias/Sequence" }
         //     anotheralias:alias { "/ICUDATA/sh/CollationElements" }
         // aliastest resource should finally have the sequence, not collation elements.
-        CharString pathBuf(keyPath, *status);
-        if (U_FAILURE(*status)) {
-            return nullptr;
+        CharString pathBuf(ಕೀಲಿ_Path, *status);
+        ಯದಿ (U_FAILURE(*status)) {
+            ಪ್ರತ್ಯಾಗಮ nullptr;
         }
-        char *myPath = pathBuf.data();
+        ವರ್ಣ *myPath = pathBuf.data();
         containerResPath = nullptr;
         // Now we have fallback following here.
-        for(;;) {
-            r = dataEntry->fData.rootRes;
+        ಪ್ರತಿ(;;) {
+            r = dataEntry->fData.ಬೇರು_Res;
             // TODO: Move  containerResPath = nullptr  to here,
             // consistent with restarting from the rootRes of another bundle?!
 
             // This loop handles 'found' resources over several levels.
-            while(*myPath && U_SUCCESS(*status)) {
+            ಯಾವತ್(*myPath && U_SUCCESS(*status)) {
                 r = res_findResource(&(dataEntry->fData), r, &myPath, &temp);
-                if(r == RES_BOGUS) {
+                ಯದಿ(r == RES_BOGUS) {
                     // No resource found, we don't really want to look anymore on this level.
-                    break;
+                    ಭಙ್ಗ;
                 }
                 // Found a resource, but it might be an indirection.
                 resB = init_resb_result(
                     dataEntry, r, temp, -1,
                     validLocaleDataEntry, containerResPath, recursionDepth+1,
                     resB, status);
-                if (U_FAILURE(*status)) {
-                    break;
+                ಯದಿ (U_FAILURE(*status)) {
+                    ಭಙ್ಗ;
                 }
-                if (temp == nullptr || uprv_strcmp(keyPath, temp) != 0) {
+                ಯದಿ (temp == nullptr || uprv_strcmp(ಕೀಲಿ_Path, temp) != 0) {
                     // The call to init_resb_result() above will set resB->fKeyPath to be
                     // the same as resB->fKey,
                     // throwing away any additional path elements if we had them --
                     // if the key path wasn't just a single resource ID, clear out
                     // the bundle's key path and re-set it to be equal to keyPath.
                     ures_freeResPath(resB);
-                    ures_appendResPath(resB, keyPath, static_cast<int32_t>(uprv_strlen(keyPath)), status);
-                    if(resB->fResPath[resB->fResPathLen-1] != RES_PATH_SEPARATOR) {
+                    ures_appendResPath(resB, ಕೀಲಿ_Path, static_cast<int32_t>(uprv_strlen(ಕೀಲಿ_Path)), status);
+                    ಯದಿ(resB->fResPath[resB->fResPathLen-1] != RES_PATH_SEPARATOR) {
                         ures_appendResPath(resB, RES_PATH_SEPARATOR_S, 1, status);
                     }
-                    if (U_FAILURE(*status)) {
-                        break;
+                    ಯದಿ (U_FAILURE(*status)) {
+                        ಭಙ್ಗ;
                     }
                 }
                 r = resB->fRes; /* switch to a new resource, possibly a new tree */
                 dataEntry = resB->fData;
                 containerResPath = resB->fResPath;
             }
-            if (U_FAILURE(*status) || r != RES_BOGUS) {
-                break;
+            ಯದಿ (U_FAILURE(*status) || r != RES_BOGUS) {
+                ಭಙ್ಗ;
             }
             // Fall back to the parent bundle, if there is one.
             dataEntry = dataEntry->fParent;
-            if (dataEntry == nullptr) {
+            ಯದಿ (dataEntry == nullptr) {
                 *status = U_MISSING_RESOURCE_ERROR;
-                break;
+                ಭಙ್ಗ;
             }
             // Copy the same keyPath again.
             myPath = pathBuf.data();
-            uprv_strcpy(myPath, keyPath);
+            uprv_strcpy(myPath, ಕೀಲಿ_Path);
         }
     }
-    if(mainRes.getAlias() == resB) {
+    ಯದಿ(mainRes.getAlias() == resB) {
         mainRes.orphan();
     }
     ResourceTracer(resB).maybeTrace("getalias");
-    return resB;
+    ಪ್ರತ್ಯಾಗಮ resB;
 }
 
 // Recursive function, should be called only by itself, by its simpler wrapper,
 // or by getAliasTargetAsResourceBundle().
 UResourceBundle* init_resb_result(UResourceDataEntry* dataEntry,
                                   Resource r,
-                                  const char* key,
+                                  ಧ್ರುವ ವರ್ಣ* ಕೀಲಿ,
                                   int32_t idx,
                                   UResourceDataEntry* validLocaleDataEntry,
-                                  const char* containerResPath,
+                                  ಧ್ರುವ ವರ್ಣ* containerResPath,
                                   int32_t recursionDepth,
                                   UResourceBundle* resB U_LIFETIME_BOUND,
                                   UErrorCode* status) {
     // TODO: When an error occurs: Should we return nullptr vs. resB?
-    if(status == nullptr || U_FAILURE(*status)) {
-        return resB;
+    ಯದಿ(status == nullptr || U_FAILURE(*status)) {
+        ಪ್ರತ್ಯಾಗಮ resB;
     }
-    if (validLocaleDataEntry == nullptr) {
+    ಯದಿ (validLocaleDataEntry == nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
-    if(RES_GET_TYPE(r) == URES_ALIAS) {
+    ಯದಿ(RES_GET_TYPE(r) == URES_ALIAS) {
         // This is an alias, need to exchange with real data.
-        if(recursionDepth >= URES_MAX_ALIAS_LEVEL) {
+        ಯದಿ(recursionDepth >= URES_MAX_ALIAS_LEVEL) {
             *status = U_TOO_MANY_ALIASES_ERROR;
-            return resB;
+            ಪ್ರತ್ಯಾಗಮ resB;
         }
-        return getAliasTargetAsResourceBundle(
-            dataEntry->fData, r, key, idx,
+        ಪ್ರತ್ಯಾಗಮ getAliasTargetAsResourceBundle(
+            dataEntry->fData, r, ಕೀಲಿ, idx,
             validLocaleDataEntry, containerResPath, recursionDepth, resB, status);
     }
-    if(resB == nullptr) {
-        resB = static_cast<UResourceBundle*>(uprv_malloc(sizeof(UResourceBundle)));
-        if (resB == nullptr) {
+    ಯದಿ(resB == nullptr) {
+        resB = static_cast<UResourceBundle*>(uprv_malloc(ಪರಿಮಾಣ(UResourceBundle)));
+        ಯದಿ (resB == nullptr) {
             *status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+            ಪ್ರತ್ಯಾಗಮ nullptr;
         }
-        ures_setIsStackObject(resB, false);
+        ures_set_Is_ರಾಶಿ_Object(resB, ಅಸತ್ಯ);
         resB->fResPath = nullptr;
         resB->fResPathLen = 0;
-    } else {
-        if(resB->fData != nullptr) {
+    } ಅನ್ಯಥಾ {
+        ಯದಿ(resB->fData != nullptr) {
             entryClose(resB->fData);
         }
-        if(resB->fVersion != nullptr) {
+        ಯದಿ(resB->fVersion != nullptr) {
             uprv_free(resB->fVersion);
         }
         /* 
@@ -1445,158 +1445,158 @@ UResourceBundle* init_resb_result(UResourceDataEntry* dataEntry,
         ures_initStackObject(resB);
         }
         */
-        if(containerResPath != resB->fResPath) {
+        ಯದಿ(containerResPath != resB->fResPath) {
             ures_freeResPath(resB);
         }
     }
     resB->fData = dataEntry;
     entryIncrease(resB->fData);
-    resB->fHasFallback = false;
-    resB->fIsTopLevel = false;
+    resB->fHasFallback = ಅಸತ್ಯ;
+    resB->f_Is_ತುದಿ_Level = ಅಸತ್ಯ;
     resB->fIndex = -1;
-    resB->fKey = key; 
+    resB->f_ಕೀಲಿ = ಕೀಲಿ; 
     resB->fValidLocaleDataEntry = validLocaleDataEntry;
-    if(containerResPath != resB->fResPath) {
+    ಯದಿ(containerResPath != resB->fResPath) {
         ures_appendResPath(
             resB, containerResPath, static_cast<int32_t>(uprv_strlen(containerResPath)), status);
     }
-    if(key != nullptr) {
-        ures_appendResPath(resB, key, static_cast<int32_t>(uprv_strlen(key)), status);
-        if(resB->fResPathLen > 0 && resB->fResPath[resB->fResPathLen-1] != RES_PATH_SEPARATOR) {
+    ಯದಿ(ಕೀಲಿ != nullptr) {
+        ures_appendResPath(resB, ಕೀಲಿ, static_cast<int32_t>(uprv_strlen(ಕೀಲಿ)), status);
+        ಯದಿ(resB->fResPathLen > 0 && resB->fResPath[resB->fResPathLen-1] != RES_PATH_SEPARATOR) {
             ures_appendResPath(resB, RES_PATH_SEPARATOR_S, 1, status);
         }
-    } else if(idx >= 0) {
-        char buf[256];
+    } ಅನ್ಯಥಾ ಯದಿ(idx >= 0) {
+        ವರ್ಣ buf[256];
         int32_t len = T_CString_integerToString(buf, idx, 10);
         ures_appendResPath(resB, buf, len, status);
-        if(resB->fResPathLen > 0 && resB->fResPath[resB->fResPathLen-1] != RES_PATH_SEPARATOR) {
+        ಯದಿ(resB->fResPathLen > 0 && resB->fResPath[resB->fResPathLen-1] != RES_PATH_SEPARATOR) {
             ures_appendResPath(resB, RES_PATH_SEPARATOR_S, 1, status);
         }
     }
     /* Make sure that Purify doesn't complain about uninitialized memory copies. */
     {
         int32_t usedLen = ((resB->fResBuf == resB->fResPath) ? resB->fResPathLen : 0);
-        uprv_memset(resB->fResBuf + usedLen, 0, sizeof(resB->fResBuf) - usedLen);
+        uprv_memset(resB->fResBuf + usedLen, 0, ಪರಿಮಾಣ(resB->fResBuf) - usedLen);
     }
 
     resB->fVersion = nullptr;
     resB->fRes = r;
-    resB->fSize = res_countArrayItems(&resB->getResData(), resB->fRes);
+    resB->fSize = res_ಎಣಿಕೆ_Array_ವಸ್ತುಗಳು(&resB->getResData(), resB->fRes);
     ResourceTracer(resB).trace("get");
-    return resB;
+    ಪ್ರತ್ಯಾಗಮ resB;
 }
 
 UResourceBundle* init_resb_result(UResourceDataEntry* dataEntry,
                                   Resource r,
-                                  const char* key,
+                                  ಧ್ರುವ ವರ್ಣ* ಕೀಲಿ,
                                   int32_t idx,
                                   // validLocaleDataEntry + containerResPath
-                                  const UResourceBundle* container,
+                                  ಧ್ರುವ UResourceBundle* container,
                                   UResourceBundle* resB U_LIFETIME_BOUND,
                                   UErrorCode* status) {
-    return init_resb_result(
-        dataEntry, r, key, idx,
+    ಪ್ರತ್ಯಾಗಮ init_resb_result(
+        dataEntry, r, ಕೀಲಿ, idx,
         container->fValidLocaleDataEntry, container->fResPath, 0, resB, status);
 }
 
 }  // namespace
 
 UResourceBundle* ures_copyResb(UResourceBundle* r U_LIFETIME_BOUND,
-                               const UResourceBundle* original,
+                               ಧ್ರುವ UResourceBundle* original,
                                UErrorCode* status) {
-    UBool isStackObject;
-    if(U_FAILURE(*status) || r == original) {
-        return r;
+    UBool is_ರಾಶಿ_Object;
+    ಯದಿ(U_FAILURE(*status) || r == original) {
+        ಪ್ರತ್ಯಾಗಮ r;
     }
-    if(original != nullptr) {
-        if(r == nullptr) {
-            isStackObject = false;
-            r = static_cast<UResourceBundle*>(uprv_malloc(sizeof(UResourceBundle)));
+    ಯದಿ(original != nullptr) {
+        ಯದಿ(r == nullptr) {
+            is_ರಾಶಿ_Object = ಅಸತ್ಯ;
+            r = static_cast<UResourceBundle*>(uprv_malloc(ಪರಿಮಾಣ(UResourceBundle)));
             /* test for nullptr */
-            if (r == nullptr) {
+            ಯದಿ (r == nullptr) {
                 *status = U_MEMORY_ALLOCATION_ERROR;
-                return nullptr;
+                ಪ್ರತ್ಯಾಗಮ nullptr;
             }
-        } else {
-            isStackObject = ures_isStackObject(r);
-            ures_closeBundle(r, false);
+        } ಅನ್ಯಥಾ {
+            is_ರಾಶಿ_Object = ures_is_ರಾಶಿ_Object(r);
+            ures_closeBundle(r, ಅಸತ್ಯ);
         }
-        uprv_memcpy(r, original, sizeof(UResourceBundle));
+        uprv_memcpy(r, original, ಪರಿಮಾಣ(UResourceBundle));
         r->fResPath = nullptr;
         r->fResPathLen = 0;
-        if(original->fResPath) {
+        ಯದಿ(original->fResPath) {
             ures_appendResPath(r, original->fResPath, original->fResPathLen, status);
         }
-        ures_setIsStackObject(r, isStackObject);
-        if(r->fData != nullptr) {
+        ures_set_Is_ರಾಶಿ_Object(r, is_ರಾಶಿ_Object);
+        ಯದಿ(r->fData != nullptr) {
             entryIncrease(r->fData);
         }
     }
-    return r;
+    ಪ್ರತ್ಯಾಗಮ r;
 }
 
 /**
  * Functions to retrieve data from resource bundles.
  */
 
-U_CAPI const char16_t* U_EXPORT2 ures_getString(const UResourceBundle* resB U_LIFETIME_BOUND,
+U_CAPI ಧ್ರುವ char16_t* U_EXPORT2 ures_getString(ಧ್ರುವ UResourceBundle* resB U_LIFETIME_BOUND,
                                                 int32_t* len,
                                                 UErrorCode* status) {
-    const char16_t *s;
-    if (status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    ಧ್ರುವ char16_t *s;
+    ಯದಿ (status==nullptr || U_FAILURE(*status)) {
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
-    if(resB == nullptr) {
+    ಯದಿ(resB == nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
     s = res_getString({resB}, &resB->getResData(), resB->fRes, len);
-    if (s == nullptr) {
+    ಯದಿ (s == nullptr) {
         *status = U_RESOURCE_TYPE_MISMATCH;
     }
-    return s;
+    ಪ್ರತ್ಯಾಗಮ s;
 }
 
-static const char*
-ures_toUTF8String(const char16_t* s16,
+ಸ್ಥಿರ ಧ್ರುವ ವರ್ಣ*
+ures_toUTF8String(ಧ್ರುವ char16_t* s16,
                   int32_t length16,
-                  char* dest U_LIFETIME_BOUND,
+                  ವರ್ಣ* dest U_LIFETIME_BOUND,
                   int32_t* pLength,
                   UBool forceCopy,
                   UErrorCode* status) {
     int32_t capacity;
 
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    ಯದಿ (U_FAILURE(*status)) {
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
-    if (pLength != nullptr) {
+    ಯದಿ (pLength != nullptr) {
         capacity = *pLength;
-    } else {
+    } ಅನ್ಯಥಾ {
         capacity = 0;
     }
-    if (capacity < 0 || (capacity > 0 && dest == nullptr)) {
+    ಯದಿ (capacity < 0 || (capacity > 0 && dest == nullptr)) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
 
-    if (length16 == 0) {
+    ಯದಿ (length16 == 0) {
         /* empty string, return as read-only pointer */
-        if (pLength != nullptr) {
+        ಯದಿ (pLength != nullptr) {
             *pLength = 0;
         }
-        if (forceCopy) {
+        ಯದಿ (forceCopy) {
             u_terminateChars(dest, capacity, 0, status);
-            return dest;
-        } else {
-            return "";
+            ಪ್ರತ್ಯಾಗಮ dest;
+        } ಅನ್ಯಥಾ {
+            ಪ್ರತ್ಯಾಗಮ "";
         }
-    } else {
+    } ಅನ್ಯಥಾ {
         /* We need to transform the string to the destination buffer. */
-        if (capacity < length16) {
+        ಯದಿ (capacity < length16) {
             /* No chance for the string to fit. Pure preflighting. */
-            return u_strToUTF8(nullptr, 0, pLength, s16, length16, status);
+            ಪ್ರತ್ಯಾಗಮ u_strToUTF8(nullptr, 0, pLength, s16, length16, status);
         }
-        if (!forceCopy && (length16 <= 0x2aaaaaaa)) {
+        ಯದಿ (!forceCopy && (length16 <= 0x2aaaaaaa)) {
             /*
              * We know the string will fit into dest because each char16_t turns
              * into at most three UTF-8 bytes. Fill the latter part of dest
@@ -1612,101 +1612,101 @@ ures_toUTF8String(const char16_t* s16,
              * The +1 is for the NUL terminator.
              */
             int32_t maxLength = 3 * length16 + 1;
-            if (capacity > maxLength) {
+            ಯದಿ (capacity > maxLength) {
                 dest += capacity - maxLength;
                 capacity = maxLength;
             }
         }
-        return u_strToUTF8(dest, capacity, pLength, s16, length16, status);
+        ಪ್ರತ್ಯಾಗಮ u_strToUTF8(dest, capacity, pLength, s16, length16, status);
     }
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getUTF8String(const UResourceBundle* resB,
-                   char* dest U_LIFETIME_BOUND,
+U_CAPI ಧ್ರುವ ವರ್ಣ* U_EXPORT2
+ures_getUTF8String(ಧ್ರುವ UResourceBundle* resB,
+                   ವರ್ಣ* dest U_LIFETIME_BOUND,
                    int32_t* pLength,
                    UBool forceCopy,
                    UErrorCode* status) {
     int32_t length16;
-    const char16_t *s16 = ures_getString(resB, &length16, status);
-    return ures_toUTF8String(s16, length16, dest, pLength, forceCopy, status);
+    ಧ್ರುವ char16_t *s16 = ures_getString(resB, &length16, status);
+    ಪ್ರತ್ಯಾಗಮ ures_toUTF8String(s16, length16, dest, pLength, forceCopy, status);
 }
 
-U_CAPI const uint8_t* U_EXPORT2
-ures_getBinary(const UResourceBundle* resB U_LIFETIME_BOUND, int32_t* len, UErrorCode* status) {
-  const uint8_t *p;
-  if (status==nullptr || U_FAILURE(*status)) {
-    return nullptr;
+U_CAPI ಧ್ರುವ uint8_t* U_EXPORT2
+ures_get_ದ್ವಿಮಾನ(ಧ್ರುವ UResourceBundle* resB U_LIFETIME_BOUND, int32_t* len, UErrorCode* status) {
+  ಧ್ರುವ uint8_t *p;
+  ಯದಿ (status==nullptr || U_FAILURE(*status)) {
+    ಪ್ರತ್ಯಾಗಮ nullptr;
   }
-  if(resB == nullptr) {
+  ಯದಿ(resB == nullptr) {
     *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+    ಪ್ರತ್ಯಾಗಮ nullptr;
   }
-  p = res_getBinary({resB}, &resB->getResData(), resB->fRes, len);
-  if (p == nullptr) {
+  p = res_get_ದ್ವಿಮಾನ({resB}, &resB->getResData(), resB->fRes, len);
+  ಯದಿ (p == nullptr) {
     *status = U_RESOURCE_TYPE_MISMATCH;
   }
-  return p;
+  ಪ್ರತ್ಯಾಗಮ p;
 }
 
-U_CAPI const int32_t* U_EXPORT2
-ures_getIntVector(const UResourceBundle* resB U_LIFETIME_BOUND, int32_t* len, UErrorCode* status) {
-  const int32_t *p;
-  if (status==nullptr || U_FAILURE(*status)) {
-    return nullptr;
+U_CAPI ಧ್ರುವ int32_t* U_EXPORT2
+ures_getIntVector(ಧ್ರುವ UResourceBundle* resB U_LIFETIME_BOUND, int32_t* len, UErrorCode* status) {
+  ಧ್ರುವ int32_t *p;
+  ಯದಿ (status==nullptr || U_FAILURE(*status)) {
+    ಪ್ರತ್ಯಾಗಮ nullptr;
   }
-  if(resB == nullptr) {
+  ಯದಿ(resB == nullptr) {
     *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+    ಪ್ರತ್ಯಾಗಮ nullptr;
   }
   p = res_getIntVector({resB}, &resB->getResData(), resB->fRes, len);
-  if (p == nullptr) {
+  ಯದಿ (p == nullptr) {
     *status = U_RESOURCE_TYPE_MISMATCH;
   }
-  return p;
+  ಪ್ರತ್ಯಾಗಮ p;
 }
 
 /* this function returns a signed integer */ 
 /* it performs sign extension */
-U_CAPI int32_t U_EXPORT2 ures_getInt(const UResourceBundle* resB, UErrorCode *status) {
-  if (status==nullptr || U_FAILURE(*status)) {
-    return 0xffffffff;
+U_CAPI int32_t U_EXPORT2 ures_getInt(ಧ್ರುವ UResourceBundle* resB, UErrorCode *status) {
+  ಯದಿ (status==nullptr || U_FAILURE(*status)) {
+    ಪ್ರತ್ಯಾಗಮ 0xffffffff;
   }
-  if(resB == nullptr) {
+  ಯದಿ(resB == nullptr) {
     *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0xffffffff;
+    ಪ್ರತ್ಯಾಗಮ 0xffffffff;
   }
-  if(RES_GET_TYPE(resB->fRes) != URES_INT) {
+  ಯದಿ(RES_GET_TYPE(resB->fRes) != URES_INT) {
     *status = U_RESOURCE_TYPE_MISMATCH;
-    return 0xffffffff;
+    ಪ್ರತ್ಯಾಗಮ 0xffffffff;
   }
-  return res_getInt({resB}, resB->fRes);
+  ಪ್ರತ್ಯಾಗಮ res_getInt({resB}, resB->fRes);
 }
 
-U_CAPI uint32_t U_EXPORT2 ures_getUInt(const UResourceBundle* resB, UErrorCode *status) {
-  if (status==nullptr || U_FAILURE(*status)) {
-    return 0xffffffff;
+U_CAPI uint32_t U_EXPORT2 ures_getUInt(ಧ್ರುವ UResourceBundle* resB, UErrorCode *status) {
+  ಯದಿ (status==nullptr || U_FAILURE(*status)) {
+    ಪ್ರತ್ಯಾಗಮ 0xffffffff;
   }
-  if(resB == nullptr) {
+  ಯದಿ(resB == nullptr) {
     *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return 0xffffffff;
+    ಪ್ರತ್ಯಾಗಮ 0xffffffff;
   }
-  if(RES_GET_TYPE(resB->fRes) != URES_INT) {
+  ಯದಿ(RES_GET_TYPE(resB->fRes) != URES_INT) {
     *status = U_RESOURCE_TYPE_MISMATCH;
-    return 0xffffffff;
+    ಪ್ರತ್ಯಾಗಮ 0xffffffff;
   }
-  return res_getUInt({resB}, resB->fRes);
+  ಪ್ರತ್ಯಾಗಮ res_getUInt({resB}, resB->fRes);
 }
 
-U_CAPI UResType U_EXPORT2 ures_getType(const UResourceBundle *resB) {
-  if(resB == nullptr) {
-    return URES_NONE;
+U_CAPI UResType U_EXPORT2 ures_getType(ಧ್ರುವ UResourceBundle *resB) {
+  ಯದಿ(resB == nullptr) {
+    ಪ್ರತ್ಯಾಗಮ URES_NONE;
   }
-  return res_getPublicType(resB->fRes);
+  ಪ್ರತ್ಯಾಗಮ res_getPublicType(resB->fRes);
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getKey(const UResourceBundle* resB U_LIFETIME_BOUND) {
+U_CAPI ಧ್ರುವ ವರ್ಣ* U_EXPORT2
+ures_get_ಕೀಲಿ(ಧ್ರುವ UResourceBundle* resB U_LIFETIME_BOUND) {
   //
   // TODO: Trace ures_getKey? I guess not usually.
   //
@@ -1716,273 +1716,273 @@ ures_getKey(const UResourceBundle* resB U_LIFETIME_BOUND) {
   // However, I believe we have some data (e.g., in res_index) where the key
   // strings are the data. Tracing the enclosing table should suffice.
   //
-  if(resB == nullptr) {
-    return nullptr;
+  ಯದಿ(resB == nullptr) {
+    ಪ್ರತ್ಯಾಗಮ nullptr;
   }
-  return(resB->fKey);
+  ಪ್ರತ್ಯಾಗಮ(resB->f_ಕೀಲಿ);
 }
 
-U_CAPI int32_t U_EXPORT2 ures_getSize(const UResourceBundle *resB) {
-  if(resB == nullptr) {
-    return 0;
+U_CAPI int32_t U_EXPORT2 ures_getSize(ಧ್ರುವ UResourceBundle *resB) {
+  ಯದಿ(resB == nullptr) {
+    ಪ್ರತ್ಯಾಗಮ 0;
   }
   
-  return resB->fSize;
+  ಪ್ರತ್ಯಾಗಮ resB->fSize;
 }
 
-static const char16_t*
-ures_getStringWithAlias(const UResourceBundle* resB U_LIFETIME_BOUND,
+ಸ್ಥಿರ ಧ್ರುವ char16_t*
+ures_getStringWithAlias(ಧ್ರುವ UResourceBundle* resB U_LIFETIME_BOUND,
                         Resource r,
                         int32_t sIndex,
                         int32_t* len,
                         UErrorCode* status) {
-  if(RES_GET_TYPE(r) == URES_ALIAS) {
-    const char16_t* result = nullptr;
+  ಯದಿ(RES_GET_TYPE(r) == URES_ALIAS) {
+    ಧ್ರುವ char16_t* result = nullptr;
     UResourceBundle *tempRes = ures_getByIndex(resB, sIndex, nullptr, status);
     result = ures_getString(tempRes, len, status);
     ures_close(tempRes);
-    return result;
-  } else {
-    return res_getString({resB, sIndex}, &resB->getResData(), r, len); 
+    ಪ್ರತ್ಯಾಗಮ result;
+  } ಅನ್ಯಥಾ {
+    ಪ್ರತ್ಯಾಗಮ res_getString({resB, sIndex}, &resB->getResData(), r, len); 
   }
 }
 
-U_CAPI void U_EXPORT2 ures_resetIterator(UResourceBundle *resB){
-  if(resB == nullptr) {
-    return;
+U_CAPI ಶೂನ್ಯ U_EXPORT2 ures_resetIterator(UResourceBundle *resB){
+  ಯದಿ(resB == nullptr) {
+    ಪ್ರತ್ಯಾಗಮ;
   }
   resB->fIndex = -1;
 }
 
-U_CAPI UBool U_EXPORT2 ures_hasNext(const UResourceBundle *resB) {
-  if(resB == nullptr) {
-    return false;
+U_CAPI UBool U_EXPORT2 ures_hasNext(ಧ್ರುವ UResourceBundle *resB) {
+  ಯದಿ(resB == nullptr) {
+    ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
   }
-  return resB->fIndex < resB->fSize-1;
+  ಪ್ರತ್ಯಾಗಮ resB->fIndex < resB->fSize-1;
 }
 
-U_CAPI const char16_t* U_EXPORT2
+U_CAPI ಧ್ರುವ char16_t* U_EXPORT2
 ures_getNextString(UResourceBundle* resB U_LIFETIME_BOUND,
                    int32_t* len,
-                   const char** key,
+                   ಧ್ರುವ ವರ್ಣ** ಕೀಲಿ,
                    UErrorCode* status) {
   Resource r = RES_BOGUS;
   
-  if (status==nullptr || U_FAILURE(*status)) {
-    return nullptr;
+  ಯದಿ (status==nullptr || U_FAILURE(*status)) {
+    ಪ್ರತ್ಯಾಗಮ nullptr;
   }
-  if(resB == nullptr) {
+  ಯದಿ(resB == nullptr) {
     *status = U_ILLEGAL_ARGUMENT_ERROR;
-    return nullptr;
+    ಪ್ರತ್ಯಾಗಮ nullptr;
   }
   
-  if(resB->fIndex == resB->fSize-1) {
+  ಯದಿ(resB->fIndex == resB->fSize-1) {
     *status = U_INDEX_OUTOFBOUNDS_ERROR;
-  } else {
+  } ಅನ್ಯಥಾ {
     resB->fIndex++;
-    switch(RES_GET_TYPE(resB->fRes)) {
-    case URES_STRING:
-    case URES_STRING_V2:
-      return res_getString({resB}, &resB->getResData(), resB->fRes, len);
-    case URES_TABLE:
-    case URES_TABLE16:
-    case URES_TABLE32:
-      r = res_getTableItemByIndex(&resB->getResData(), resB->fRes, resB->fIndex, key);
-      if(r == RES_BOGUS && resB->fHasFallback) {
+    ವಿಕಲ್ಪ(RES_GET_TYPE(resB->fRes)) {
+    ಪಕ್ಷ URES_STRING:
+    ಪಕ್ಷ URES_STRING_V2:
+      ಪ್ರತ್ಯಾಗಮ res_getString({resB}, &resB->getResData(), resB->fRes, len);
+    ಪಕ್ಷ URES_TABLE:
+    ಪಕ್ಷ URES_TABLE16:
+    ಪಕ್ಷ URES_TABLE32:
+      r = res_getTableItemByIndex(&resB->getResData(), resB->fRes, resB->fIndex, ಕೀಲಿ);
+      ಯದಿ(r == RES_BOGUS && resB->fHasFallback) {
         /* TODO: do the fallback */
       }
-      return ures_getStringWithAlias(resB, r, resB->fIndex, len, status);
-    case URES_ARRAY:
-    case URES_ARRAY16:
+      ಪ್ರತ್ಯಾಗಮ ures_getStringWithAlias(resB, r, resB->fIndex, len, status);
+    ಪಕ್ಷ URES_ARRAY:
+    ಪಕ್ಷ URES_ARRAY16:
       r = res_getArrayItem(&resB->getResData(), resB->fRes, resB->fIndex);
-      if(r == RES_BOGUS && resB->fHasFallback) {
+      ಯದಿ(r == RES_BOGUS && resB->fHasFallback) {
         /* TODO: do the fallback */
       }
-      return ures_getStringWithAlias(resB, r, resB->fIndex, len, status);
-    case URES_ALIAS:
-      return ures_getStringWithAlias(resB, resB->fRes, resB->fIndex, len, status);
-    case URES_INT:
-    case URES_BINARY:
-    case URES_INT_VECTOR:
+      ಪ್ರತ್ಯಾಗಮ ures_getStringWithAlias(resB, r, resB->fIndex, len, status);
+    ಪಕ್ಷ URES_ALIAS:
+      ಪ್ರತ್ಯಾಗಮ ures_getStringWithAlias(resB, resB->fRes, resB->fIndex, len, status);
+    ಪಕ್ಷ URES_INT:
+    ಪಕ್ಷ URES_ದ್ವಿಮಾನ:
+    ಪಕ್ಷ URES_INT_VECTOR:
         *status = U_RESOURCE_TYPE_MISMATCH;
         U_FALLTHROUGH;
-    default:
-      return nullptr;
+    ಸ್ವಭಾವ:
+      ಪ್ರತ್ಯಾಗಮ nullptr;
     }
   }
 
-  return nullptr;
+  ಪ್ರತ್ಯಾಗಮ nullptr;
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
 ures_getNextResource(UResourceBundle* resB,
                      UResourceBundle* fillIn U_LIFETIME_BOUND,
                      UErrorCode* status) {
-    const char *key = nullptr;
+    ಧ್ರುವ ವರ್ಣ *ಕೀಲಿ = nullptr;
     Resource r = RES_BOGUS;
 
-    if (status==nullptr || U_FAILURE(*status)) {
+    ಯದಿ (status==nullptr || U_FAILURE(*status)) {
             /*return nullptr;*/
-            return fillIn;
+            ಪ್ರತ್ಯಾಗಮ fillIn;
     }
-    if(resB == nullptr) {
+    ಯದಿ(resB == nullptr) {
             *status = U_ILLEGAL_ARGUMENT_ERROR;
             /*return nullptr;*/
-            return fillIn;
+            ಪ್ರತ್ಯಾಗಮ fillIn;
     }
 
-    if(resB->fIndex == resB->fSize-1) {
+    ಯದಿ(resB->fIndex == resB->fSize-1) {
       *status = U_INDEX_OUTOFBOUNDS_ERROR;
       /*return nullptr;*/
-    } else {
+    } ಅನ್ಯಥಾ {
         resB->fIndex++;
-        switch(RES_GET_TYPE(resB->fRes)) {
-        case URES_INT:
-        case URES_BINARY:
-        case URES_STRING:
-        case URES_STRING_V2:
-        case URES_INT_VECTOR:
-            return ures_copyResb(fillIn, resB, status);
-        case URES_TABLE:
-        case URES_TABLE16:
-        case URES_TABLE32:
-            r = res_getTableItemByIndex(&resB->getResData(), resB->fRes, resB->fIndex, &key);
-            if(r == RES_BOGUS && resB->fHasFallback) {
+        ವಿಕಲ್ಪ(RES_GET_TYPE(resB->fRes)) {
+        ಪಕ್ಷ URES_INT:
+        ಪಕ್ಷ URES_ದ್ವಿಮಾನ:
+        ಪಕ್ಷ URES_STRING:
+        ಪಕ್ಷ URES_STRING_V2:
+        ಪಕ್ಷ URES_INT_VECTOR:
+            ಪ್ರತ್ಯಾಗಮ ures_copyResb(fillIn, resB, status);
+        ಪಕ್ಷ URES_TABLE:
+        ಪಕ್ಷ URES_TABLE16:
+        ಪಕ್ಷ URES_TABLE32:
+            r = res_getTableItemByIndex(&resB->getResData(), resB->fRes, resB->fIndex, &ಕೀಲಿ);
+            ಯದಿ(r == RES_BOGUS && resB->fHasFallback) {
                 /* TODO: do the fallback */
             }
-            return init_resb_result(resB->fData, r, key, resB->fIndex, resB, fillIn, status);
-        case URES_ARRAY:
-        case URES_ARRAY16:
+            ಪ್ರತ್ಯಾಗಮ init_resb_result(resB->fData, r, ಕೀಲಿ, resB->fIndex, resB, fillIn, status);
+        ಪಕ್ಷ URES_ARRAY:
+        ಪಕ್ಷ URES_ARRAY16:
             r = res_getArrayItem(&resB->getResData(), resB->fRes, resB->fIndex);
-            if(r == RES_BOGUS && resB->fHasFallback) {
+            ಯದಿ(r == RES_BOGUS && resB->fHasFallback) {
                 /* TODO: do the fallback */
             }
-            return init_resb_result(resB->fData, r, key, resB->fIndex, resB, fillIn, status);
-        default:
+            ಪ್ರತ್ಯಾಗಮ init_resb_result(resB->fData, r, ಕೀಲಿ, resB->fIndex, resB, fillIn, status);
+        ಸ್ವಭಾವ:
             /*return nullptr;*/
-            return fillIn;
+            ಪ್ರತ್ಯಾಗಮ fillIn;
         }
     }
     /*return nullptr;*/
-    return fillIn;
+    ಪ್ರತ್ಯಾಗಮ fillIn;
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getByIndex(const UResourceBundle* resB,
+ures_getByIndex(ಧ್ರುವ UResourceBundle* resB,
                 int32_t indexR,
                 UResourceBundle* fillIn U_LIFETIME_BOUND,
                 UErrorCode* status) {
-    const char* key = nullptr;
+    ಧ್ರುವ ವರ್ಣ* ಕೀಲಿ = nullptr;
     Resource r = RES_BOGUS;
 
-    if (status==nullptr || U_FAILURE(*status)) {
+    ಯದಿ (status==nullptr || U_FAILURE(*status)) {
         /*return nullptr;*/
-        return fillIn;
+        ಪ್ರತ್ಯಾಗಮ fillIn;
     }
-    if(resB == nullptr) {
+    ಯದಿ(resB == nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
         /*return nullptr;*/
-        return fillIn;
+        ಪ್ರತ್ಯಾಗಮ fillIn;
     }
 
-    if(indexR >= 0 && resB->fSize > indexR) {
-        switch(RES_GET_TYPE(resB->fRes)) {
-        case URES_INT:
-        case URES_BINARY:
-        case URES_STRING:
-        case URES_STRING_V2:
-        case URES_INT_VECTOR:
-            return ures_copyResb(fillIn, resB, status);
-        case URES_TABLE:
-        case URES_TABLE16:
-        case URES_TABLE32:
-            r = res_getTableItemByIndex(&resB->getResData(), resB->fRes, indexR, &key);
-            if(r == RES_BOGUS && resB->fHasFallback) {
+    ಯದಿ(indexR >= 0 && resB->fSize > indexR) {
+        ವಿಕಲ್ಪ(RES_GET_TYPE(resB->fRes)) {
+        ಪಕ್ಷ URES_INT:
+        ಪಕ್ಷ URES_ದ್ವಿಮಾನ:
+        ಪಕ್ಷ URES_STRING:
+        ಪಕ್ಷ URES_STRING_V2:
+        ಪಕ್ಷ URES_INT_VECTOR:
+            ಪ್ರತ್ಯಾಗಮ ures_copyResb(fillIn, resB, status);
+        ಪಕ್ಷ URES_TABLE:
+        ಪಕ್ಷ URES_TABLE16:
+        ಪಕ್ಷ URES_TABLE32:
+            r = res_getTableItemByIndex(&resB->getResData(), resB->fRes, indexR, &ಕೀಲಿ);
+            ಯದಿ(r == RES_BOGUS && resB->fHasFallback) {
                 /* TODO: do the fallback */
             }
-            return init_resb_result(resB->fData, r, key, indexR, resB, fillIn, status);
-        case URES_ARRAY:
-        case URES_ARRAY16:
+            ಪ್ರತ್ಯಾಗಮ init_resb_result(resB->fData, r, ಕೀಲಿ, indexR, resB, fillIn, status);
+        ಪಕ್ಷ URES_ARRAY:
+        ಪಕ್ಷ URES_ARRAY16:
             r = res_getArrayItem(&resB->getResData(), resB->fRes, indexR);
-            if(r == RES_BOGUS && resB->fHasFallback) {
+            ಯದಿ(r == RES_BOGUS && resB->fHasFallback) {
                 /* TODO: do the fallback */
             }
-            return init_resb_result(resB->fData, r, key, indexR, resB, fillIn, status);
-        default:
+            ಪ್ರತ್ಯಾಗಮ init_resb_result(resB->fData, r, ಕೀಲಿ, indexR, resB, fillIn, status);
+        ಸ್ವಭಾವ:
             /*return nullptr;*/
-            return fillIn;
+            ಪ್ರತ್ಯಾಗಮ fillIn;
         }
-    } else {
+    } ಅನ್ಯಥಾ {
         *status = U_MISSING_RESOURCE_ERROR;
     }
     /*return nullptr;*/
-    return fillIn;
+    ಪ್ರತ್ಯಾಗಮ fillIn;
 }
 
-U_CAPI const char16_t* U_EXPORT2
-ures_getStringByIndex(const UResourceBundle* resB U_LIFETIME_BOUND,
+U_CAPI ಧ್ರುವ char16_t* U_EXPORT2
+ures_getStringByIndex(ಧ್ರುವ UResourceBundle* resB U_LIFETIME_BOUND,
                       int32_t indexS,
                       int32_t* len,
                       UErrorCode* status) {
-    const char* key = nullptr;
+    ಧ್ರುವ ವರ್ಣ* ಕೀಲಿ = nullptr;
     Resource r = RES_BOGUS;
 
-    if (status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    ಯದಿ (status==nullptr || U_FAILURE(*status)) {
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
-    if(resB == nullptr) {
+    ಯದಿ(resB == nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
 
-    if(indexS >= 0 && resB->fSize > indexS) {
-        switch(RES_GET_TYPE(resB->fRes)) {
-        case URES_STRING:
-        case URES_STRING_V2:
-            return res_getString({resB}, &resB->getResData(), resB->fRes, len);
-        case URES_TABLE:
-        case URES_TABLE16:
-        case URES_TABLE32:
-            r = res_getTableItemByIndex(&resB->getResData(), resB->fRes, indexS, &key);
-            if(r == RES_BOGUS && resB->fHasFallback) {
+    ಯದಿ(indexS >= 0 && resB->fSize > indexS) {
+        ವಿಕಲ್ಪ(RES_GET_TYPE(resB->fRes)) {
+        ಪಕ್ಷ URES_STRING:
+        ಪಕ್ಷ URES_STRING_V2:
+            ಪ್ರತ್ಯಾಗಮ res_getString({resB}, &resB->getResData(), resB->fRes, len);
+        ಪಕ್ಷ URES_TABLE:
+        ಪಕ್ಷ URES_TABLE16:
+        ಪಕ್ಷ URES_TABLE32:
+            r = res_getTableItemByIndex(&resB->getResData(), resB->fRes, indexS, &ಕೀಲಿ);
+            ಯದಿ(r == RES_BOGUS && resB->fHasFallback) {
                 /* TODO: do the fallback */
             }
-            return ures_getStringWithAlias(resB, r, indexS, len, status);
-        case URES_ARRAY:
-        case URES_ARRAY16:
+            ಪ್ರತ್ಯಾಗಮ ures_getStringWithAlias(resB, r, indexS, len, status);
+        ಪಕ್ಷ URES_ARRAY:
+        ಪಕ್ಷ URES_ARRAY16:
             r = res_getArrayItem(&resB->getResData(), resB->fRes, indexS);
-            if(r == RES_BOGUS && resB->fHasFallback) {
+            ಯದಿ(r == RES_BOGUS && resB->fHasFallback) {
                 /* TODO: do the fallback */
             }
-            return ures_getStringWithAlias(resB, r, indexS, len, status);
-        case URES_ALIAS:
-            return ures_getStringWithAlias(resB, resB->fRes, indexS, len, status);
-        case URES_INT:
-        case URES_BINARY:
-        case URES_INT_VECTOR:
+            ಪ್ರತ್ಯಾಗಮ ures_getStringWithAlias(resB, r, indexS, len, status);
+        ಪಕ್ಷ URES_ALIAS:
+            ಪ್ರತ್ಯಾಗಮ ures_getStringWithAlias(resB, resB->fRes, indexS, len, status);
+        ಪಕ್ಷ URES_INT:
+        ಪಕ್ಷ URES_ದ್ವಿಮಾನ:
+        ಪಕ್ಷ URES_INT_VECTOR:
             *status = U_RESOURCE_TYPE_MISMATCH;
-            break;
-        default:
+            ಭಙ್ಗ;
+        ಸ್ವಭಾವ:
           /* must not occur */
           *status = U_INTERNAL_PROGRAM_ERROR;
-          break;
+          ಭಙ್ಗ;
         }
-    } else {
+    } ಅನ್ಯಥಾ {
         *status = U_MISSING_RESOURCE_ERROR;
     }
-    return nullptr;
+    ಪ್ರತ್ಯಾಗಮ nullptr;
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getUTF8StringByIndex(const UResourceBundle* resB,
+U_CAPI ಧ್ರುವ ವರ್ಣ* U_EXPORT2
+ures_getUTF8StringByIndex(ಧ್ರುವ UResourceBundle* resB,
                           int32_t idx,
-                          char* dest U_LIFETIME_BOUND,
+                          ವರ್ಣ* dest U_LIFETIME_BOUND,
                           int32_t* pLength,
                           UBool forceCopy,
                           UErrorCode* status) {
     int32_t length16;
-    const char16_t *s16 = ures_getStringByIndex(resB, idx, &length16, status);
-    return ures_toUTF8String(s16, length16, dest, pLength, forceCopy, status);
+    ಧ್ರುವ char16_t *s16 = ures_getStringByIndex(resB, idx, &length16, status);
+    ಪ್ರತ್ಯಾಗಮ ures_toUTF8String(s16, length16, dest, pLength, forceCopy, status);
 }
 
 /*U_CAPI const char *ures_getResPath(UResourceBundle *resB) {
@@ -1990,153 +1990,153 @@ ures_getUTF8StringByIndex(const UResourceBundle* resB,
 }*/
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_findResource(const char* path, UResourceBundle* fillIn U_LIFETIME_BOUND, UErrorCode* status)
+ures_findResource(ಧ್ರುವ ವರ್ಣ* path, UResourceBundle* fillIn U_LIFETIME_BOUND, UErrorCode* status)
 {
   UResourceBundle *first = nullptr; 
   UResourceBundle *result = fillIn;
-  char *packageName = nullptr;
-  char *pathToResource = nullptr, *save = nullptr;
-  char *locale = nullptr, *localeEnd = nullptr;
+  ವರ್ಣ *packageName = nullptr;
+  ವರ್ಣ *pathToResource = nullptr, *save = nullptr;
+  ವರ್ಣ *locale = nullptr, *localeEnd = nullptr;
   int32_t length;
 
-  if(status == nullptr || U_FAILURE(*status)) {
-    return result;
+  ಯದಿ(status == nullptr || U_FAILURE(*status)) {
+    ಪ್ರತ್ಯಾಗಮ result;
   }
 
   length = (int32_t)(uprv_strlen(path)+1);
-  save = pathToResource = (char *)uprv_malloc(length*sizeof(char));
+  save = pathToResource = (ವರ್ಣ *)uprv_malloc(length*ಪರಿಮಾಣ(ವರ್ಣ));
   /* test for nullptr */
-  if(pathToResource == nullptr) {
+  ಯದಿ(pathToResource == nullptr) {
     *status = U_MEMORY_ALLOCATION_ERROR;
-    return result;
+    ಪ್ರತ್ಯಾಗಮ result;
   }
   uprv_memcpy(pathToResource, path, length);
 
   locale = pathToResource;
-  if(*pathToResource == RES_PATH_SEPARATOR) { /* there is a path specification */
+  ಯದಿ(*pathToResource == RES_PATH_SEPARATOR) { /* there is a path specification */
     pathToResource++;
     packageName = pathToResource;
     pathToResource = uprv_strchr(pathToResource, RES_PATH_SEPARATOR);
-    if(pathToResource == nullptr) {
+    ಯದಿ(pathToResource == nullptr) {
       *status = U_ILLEGAL_ARGUMENT_ERROR;
-    } else {
+    } ಅನ್ಯಥಾ {
       *pathToResource = 0;
       locale = pathToResource+1;
     }
   }
 
   localeEnd = uprv_strchr(locale, RES_PATH_SEPARATOR);
-  if(localeEnd != nullptr) {
+  ಯದಿ(localeEnd != nullptr) {
     *localeEnd = 0;
   }
 
   first = ures_open(packageName, locale, status);
 
-  if(U_SUCCESS(*status)) {
-    if(localeEnd) {
+  ಯದಿ(U_SUCCESS(*status)) {
+    ಯದಿ(localeEnd) {
       result = ures_findSubResource(first, localeEnd+1, fillIn, status);
-    } else {
+    } ಅನ್ಯಥಾ {
       result = ures_copyResb(fillIn, first, status);
     }
     ures_close(first);
   }
   uprv_free(save);
-  return result;
+  ಪ್ರತ್ಯಾಗಮ result;
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_findSubResource(const UResourceBundle* resB,
-                     char* path,
+ures_findSubResource(ಧ್ರುವ UResourceBundle* resB,
+                     ವರ್ಣ* path,
                      UResourceBundle* fillIn U_LIFETIME_BOUND,
                      UErrorCode* status)
 {
   Resource res = RES_BOGUS;
   UResourceBundle *result = fillIn;
-  const char *key;
+  ಧ್ರುವ ವರ್ಣ *ಕೀಲಿ;
 
-  if(status == nullptr || U_FAILURE(*status)) {
-    return result;
+  ಯದಿ(status == nullptr || U_FAILURE(*status)) {
+    ಪ್ರತ್ಯಾಗಮ result;
   }
 
   /* here we do looping and circular alias checking */
   /* this loop is here because aliasing is resolved on this level, not on res level */
   /* so, when we encounter an alias, it is not an aggregate resource, so we return */
-  do {
-    res = res_findResource(&resB->getResData(), resB->fRes, &path, &key); 
-    if(res != RES_BOGUS) {
-        result = init_resb_result(resB->fData, res, key, -1, resB, fillIn, status);
+  ಕುರು {
+    res = res_findResource(&resB->getResData(), resB->fRes, &path, &ಕೀಲಿ); 
+    ಯದಿ(res != RES_BOGUS) {
+        result = init_resb_result(resB->fData, res, ಕೀಲಿ, -1, resB, fillIn, status);
         resB = result;
-    } else {
+    } ಅನ್ಯಥಾ {
         *status = U_MISSING_RESOURCE_ERROR;
-        break;
+        ಭಙ್ಗ;
     }
-  } while(*path); /* there is more stuff in the path */
+  } ಯಾವತ್(*path); /* there is more stuff in the path */
 
-  return result;
+  ಪ್ರತ್ಯಾಗಮ result;
 }
 
-U_CAPI const char16_t* U_EXPORT2
-ures_getStringByKeyWithFallback(const UResourceBundle* resB U_LIFETIME_BOUND,
-                                const char* inKey,
+U_CAPI ಧ್ರುವ char16_t* U_EXPORT2
+ures_get_String_By_ಕೀಲಿ_With_Fallback(ಧ್ರುವ UResourceBundle* resB U_LIFETIME_BOUND,
+                                ಧ್ರುವ ವರ್ಣ* in_ಕೀಲಿ,
                                 int32_t* len,
                                 UErrorCode* status) {
-    UResourceBundle stack;
-    const char16_t* retVal = nullptr;
-    ures_initStackObject(&stack);
-    ures_getByKeyWithFallback(resB, inKey, &stack, status);
+    UResourceBundle ರಾಶಿ_2;
+    ಧ್ರುವ char16_t* retVal = nullptr;
+    ures_init_ರಾಶಿ_Object(&ರಾಶಿ_2);
+    ures_get_By_ಕೀಲಿ_With_Fallback(resB, in_ಕೀಲಿ, &ರಾಶಿ_2, status);
     int32_t length;
-    retVal = ures_getString(&stack, &length, status);
-    ures_close(&stack);
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    retVal = ures_getString(&ರಾಶಿ_2, &length, status);
+    ures_close(&ರಾಶಿ_2);
+    ಯದಿ (U_FAILURE(*status)) {
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
-    if (length == 3 && retVal[0] == EMPTY_SET && retVal[1] == EMPTY_SET && retVal[2] == EMPTY_SET ) {
+    ಯದಿ (length == 3 && retVal[0] == EMPTY_SET && retVal[1] == EMPTY_SET && retVal[2] == EMPTY_SET ) {
         retVal = nullptr;
         length = 0;
         *status = U_MISSING_RESOURCE_ERROR;
     }
-    if (len != nullptr) {
+    ಯದಿ (len != nullptr) {
         *len = length;
     }
-    return retVal;
+    ಪ್ರತ್ಯಾಗಮ retVal;
 }
 
 /*
   Like res_getTableItemByKey but accepts full paths like "NumberElements/latn/patternsShort".
 */  
-static Resource getTableItemByKeyPath(const ResourceData *pResData, Resource table, const char *key) {
+ಸ್ಥಿರ Resource get_Table_Item_By_ಕೀಲಿ_Path(ಧ್ರುವ ResourceData *pResData, Resource table, ಧ್ರುವ ವರ್ಣ *ಕೀಲಿ) {
   Resource resource = table;  /* The current resource */
   icu::CharString path;
   UErrorCode errorCode = U_ZERO_ERROR;
-  path.append(key, errorCode);
-  if (U_FAILURE(errorCode)) { return RES_BOGUS; }
-  char *pathPart = path.data();  /* Path from current resource to desired resource */
+  path.append(ಕೀಲಿ, errorCode);
+  ಯದಿ (U_FAILURE(errorCode)) { ಪ್ರತ್ಯಾಗಮ RES_BOGUS; }
+  ವರ್ಣ *pathPart = path.data();  /* Path from current resource to desired resource */
   UResType type = static_cast<UResType>(RES_GET_TYPE(resource)); /* the current resource type */
-  while (*pathPart && resource != RES_BOGUS && URES_IS_CONTAINER(type)) {
-    char *nextPathPart = uprv_strchr(pathPart, RES_PATH_SEPARATOR);
-    if (nextPathPart != nullptr) {
+  ಯಾವತ್ (*pathPart && resource != RES_BOGUS && URES_IS_CONTAINER(type)) {
+    ವರ್ಣ *nextPathPart = uprv_strchr(pathPart, RES_PATH_SEPARATOR);
+    ಯದಿ (nextPathPart != nullptr) {
       *nextPathPart = 0;  /* Terminating null for this part of path. */
       nextPathPart++;
-    } else {
+    } ಅನ್ಯಥಾ {
       nextPathPart = uprv_strchr(pathPart, 0);
     }
     int32_t t;
-    const char *pathP = pathPart;
-    resource = res_getTableItemByKey(pResData, resource, &t, &pathP);
+    ಧ್ರುವ ವರ್ಣ *pathP = pathPart;
+    resource = res_get_Table_Item_By_ಕೀಲಿ(pResData, resource, &t, &pathP);
     type = static_cast<UResType>(RES_GET_TYPE(resource));
     pathPart = nextPathPart; 
   }
-  if (*pathPart) {
-    return RES_BOGUS;
+  ಯದಿ (*pathPart) {
+    ಪ್ರತ್ಯಾಗಮ RES_BOGUS;
   }
-  return resource;
+  ಪ್ರತ್ಯಾಗಮ resource;
 }
 
-static void createPath(const char* origResPath,
+ಸ್ಥಿರ ಶೂನ್ಯ createPath(ಧ್ರುವ ವರ್ಣ* origResPath,
                        int32_t     origResPathLen,
-                       const char* resPath,
+                       ಧ್ರುವ ವರ್ಣ* resPath,
                        int32_t     resPathLen,
-                       const char* inKey,
+                       ಧ್ರುವ ವರ್ಣ* in_ಕೀಲಿ,
                        CharString& path,
                        UErrorCode* status) {
     // This is a utility function used by ures_getByKeyWithFallback() below.  This function builds a path from
@@ -2152,46 +2152,46 @@ static void createPath(const char* origResPath,
     // resPath to form the result.  (We're not using uprv_strchr() here because resPath and origResPath may
     // not be zero-terminated.)
     path.clear();
-    const char* key = inKey;
-    if (resPathLen > 0) {
+    ಧ್ರುವ ವರ್ಣ* ಕೀಲಿ = in_ಕೀಲಿ;
+    ಯದಿ (resPathLen > 0) {
         path.append(resPath, resPathLen, *status);
-        if (U_SUCCESS(*status)) {
-            const char* resPathLimit = resPath + resPathLen;
-            const char* origResPathLimit = origResPath + origResPathLen;
-            const char* resPathPtr = resPath;
-            const char* origResPathPtr = origResPath;
+        ಯದಿ (U_SUCCESS(*status)) {
+            ಧ್ರುವ ವರ್ಣ* resPathLimit = resPath + resPathLen;
+            ಧ್ರುವ ವರ್ಣ* origResPathLimit = origResPath + origResPathLen;
+            ಧ್ರುವ ವರ್ಣ* resPathPtr = resPath;
+            ಧ್ರುವ ವರ್ಣ* origResPathPtr = origResPath;
             
             // Remove from the beginning of resPath the number of segments that are contained in origResPath.
             // If origResPath has MORE segments than resPath, this will leave resPath as the empty string.
-            while (origResPathPtr < origResPathLimit && resPathPtr < resPathLimit) {
-                while (origResPathPtr < origResPathLimit && *origResPathPtr != RES_PATH_SEPARATOR) {
+            ಯಾವತ್ (origResPathPtr < origResPathLimit && resPathPtr < resPathLimit) {
+                ಯಾವತ್ (origResPathPtr < origResPathLimit && *origResPathPtr != RES_PATH_SEPARATOR) {
                     ++origResPathPtr;
                 }
-                if (origResPathPtr < origResPathLimit && *origResPathPtr == RES_PATH_SEPARATOR) {
+                ಯದಿ (origResPathPtr < origResPathLimit && *origResPathPtr == RES_PATH_SEPARATOR) {
                     ++origResPathPtr;
                 }
-                while (resPathPtr < resPathLimit && *resPathPtr != RES_PATH_SEPARATOR) {
+                ಯಾವತ್ (resPathPtr < resPathLimit && *resPathPtr != RES_PATH_SEPARATOR) {
                     ++resPathPtr;
                 }
-                if (resPathPtr < resPathLimit && *resPathPtr == RES_PATH_SEPARATOR) {
+                ಯದಿ (resPathPtr < resPathLimit && *resPathPtr == RES_PATH_SEPARATOR) {
                     ++resPathPtr;
                 }
             }
             
             // New remove from the beginning of `key` the number of segments remaining in resPath.
             // If resPath has more segments than `key` does, `key` will end up empty.
-            while (resPathPtr < resPathLimit && *key != '\0') {
-                while (resPathPtr < resPathLimit && *resPathPtr != RES_PATH_SEPARATOR) {
+            ಯಾವತ್ (resPathPtr < resPathLimit && *ಕೀಲಿ != '\0') {
+                ಯಾವತ್ (resPathPtr < resPathLimit && *resPathPtr != RES_PATH_SEPARATOR) {
                     ++resPathPtr;
                 }
-                if (resPathPtr < resPathLimit && *resPathPtr == RES_PATH_SEPARATOR) {
+                ಯದಿ (resPathPtr < resPathLimit && *resPathPtr == RES_PATH_SEPARATOR) {
                     ++resPathPtr;
                 }
-                while (*key != '\0' && *key != RES_PATH_SEPARATOR) {
-                    ++key;
+                ಯಾವತ್ (*ಕೀಲಿ != '\0' && *ಕೀಲಿ != RES_PATH_SEPARATOR) {
+                    ++ಕೀಲಿ;
                 }
-                if (*key == RES_PATH_SEPARATOR) {
-                    ++key;
+                ಯದಿ (*ಕೀಲಿ == RES_PATH_SEPARATOR) {
+                    ++ಕೀಲಿ;
                 }
             }
         }
@@ -2199,132 +2199,132 @@ static void createPath(const char* origResPath,
         // any pieces of `key` that aren't superseded by `resPath`.
         // Or, to put it another way, calculate <#-segments-in-key> - (<#-segments-in-resPath> - <#-segments-in-origResPath>),
         // and append that many segments from the end of `key` to `resPath` to produce the result.
-        path.append(key, *status);
-    } else {
-        path.append(inKey, *status);
+        path.append(ಕೀಲಿ, *status);
+    } ಅನ್ಯಥಾ {
+        path.append(in_ಕೀಲಿ, *status);
     }
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getByKeyWithFallback(const UResourceBundle* resB,
-                          const char* inKey,
+ures_get_By_ಕೀಲಿ_With_Fallback(ಧ್ರುವ UResourceBundle* resB,
+                          ಧ್ರುವ ವರ್ಣ* in_ಕೀಲಿ,
                           UResourceBundle* fillIn U_LIFETIME_BOUND,
                           UErrorCode* status) {
-    Resource res = RES_BOGUS, rootRes = RES_BOGUS;
+    Resource res = RES_BOGUS, ಬೇರು_Res = RES_BOGUS;
     UResourceBundle *helper = nullptr;
 
-    if (status==nullptr || U_FAILURE(*status)) {
-        return fillIn;
+    ಯದಿ (status==nullptr || U_FAILURE(*status)) {
+        ಪ್ರತ್ಯಾಗಮ fillIn;
     }
-    if(resB == nullptr) {
+    ಯದಿ(resB == nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return fillIn;
+        ಪ್ರತ್ಯಾಗಮ fillIn;
     }
 
     int32_t type = RES_GET_TYPE(resB->fRes);
-    if(URES_IS_TABLE(type)) {
-        const char* origResPath = resB->fResPath;
+    ಯದಿ(URES_IS_TABLE(type)) {
+        ಧ್ರುವ ವರ್ಣ* origResPath = resB->fResPath;
         int32_t origResPathLen = resB->fResPathLen;
-        res = getTableItemByKeyPath(&resB->getResData(), resB->fRes, inKey);
-        const char* key = inKey;
-        bool didRootOnce = false;
-        if(res == RES_BOGUS) {
+        res = get_Table_Item_By_ಕೀಲಿ_Path(&resB->getResData(), resB->fRes, in_ಕೀಲಿ);
+        ಧ್ರುವ ವರ್ಣ* ಕೀಲಿ = in_ಕೀಲಿ;
+        ತಾರ್ಕಿಕ did_ಬೇರು_Once = ಅಸತ್ಯ;
+        ಯದಿ(res == RES_BOGUS) {
             UResourceDataEntry *dataEntry = resB->fData;
             CharString path;
-            char *myPath = nullptr;
-            const char* resPath = resB->fResPath;
+            ವರ್ಣ *myPath = nullptr;
+            ಧ್ರುವ ವರ್ಣ* resPath = resB->fResPath;
             int32_t len = resB->fResPathLen;
-            while(res == RES_BOGUS && (dataEntry->fParent != nullptr || !didRootOnce)) { /* Otherwise, we'll look in parents */
-                if (dataEntry->fParent != nullptr) {
+            ಯಾವತ್(res == RES_BOGUS && (dataEntry->fParent != nullptr || !did_ಬೇರು_Once)) { /* Otherwise, we'll look in parents */
+                ಯದಿ (dataEntry->fParent != nullptr) {
                     dataEntry = dataEntry->fParent;
-                } else {
+                } ಅನ್ಯಥಾ {
                     // We can't just stop when we get to a bundle whose fParent is nullptr.  That'll work most of the time,
                     // but if the bundle that the caller passed to us was "root" (which happens in getAllItemsWithFallback(),
                     // this function will drop right out without doing anything if "root" doesn't contain the exact key path
                     // specified.  In that case, we need one extra time through this loop to make sure we follow any
                     // applicable aliases at the root level.
-                    didRootOnce = true;
+                    did_ಬೇರು_Once = ಸತ್ಯ;
                 }
-                rootRes = dataEntry->fData.rootRes;
+                ಬೇರು_Res = dataEntry->fData.ಬೇರು_Res;
 
-                if(dataEntry->fBogus == U_ZERO_ERROR) {
-                    createPath(origResPath, origResPathLen, resPath, len, inKey, path, status);
-                    if (U_FAILURE(*status)) {
+                ಯದಿ(dataEntry->fBogus == U_ZERO_ERROR) {
+                    createPath(origResPath, origResPathLen, resPath, len, in_ಕೀಲಿ, path, status);
+                    ಯದಿ (U_FAILURE(*status)) {
                         ures_close(helper);
-                        return fillIn;
+                        ಪ್ರತ್ಯಾಗಮ fillIn;
                     }
                     myPath = path.data();
-                    key = inKey;
-                    do {
-                        res = res_findResource(&(dataEntry->fData), rootRes, &myPath, &key);
-                        if (RES_GET_TYPE(res) == URES_ALIAS && *myPath) {
+                    ಕೀಲಿ = in_ಕೀಲಿ;
+                    ಕುರು {
+                        res = res_findResource(&(dataEntry->fData), ಬೇರು_Res, &myPath, &ಕೀಲಿ);
+                        ಯದಿ (RES_GET_TYPE(res) == URES_ALIAS && *myPath) {
                             /* We hit an alias, but we didn't finish following the path. */
                             helper = init_resb_result(dataEntry, res, nullptr, -1, resB, helper, status);
                             /*helper = init_resb_result(dataEntry, res, inKey, -1, resB, helper, status);*/
-                            if(helper) {
+                            ಯದಿ(helper) {
                               dataEntry = helper->fData;
-                              rootRes = helper->fRes;
+                              ಬೇರು_Res = helper->fRes;
                               resPath = helper->fResPath;
                               len = helper->fResPathLen;
 
-                            } else {
-                              break;
+                            } ಅನ್ಯಥಾ {
+                              ಭಙ್ಗ;
                             }
-                        } else if (res == RES_BOGUS) {
-                            break;
+                        } ಅನ್ಯಥಾ ಯದಿ (res == RES_BOGUS) {
+                            ಭಙ್ಗ;
                         }
-                    } while(*myPath); /* Continue until the whole path is consumed */
+                    } ಯಾವತ್(*myPath); /* Continue until the whole path is consumed */
                 }
             }
             /*dataEntry = getFallbackData(resB, &key, &res, status);*/
-            if(res != RES_BOGUS) {
+            ಯದಿ(res != RES_BOGUS) {
               /* check if resB->fResPath gives the right name here */
-                if(uprv_strcmp(dataEntry->fName, uloc_getDefault())==0 || uprv_strcmp(dataEntry->fName, kRootLocaleName)==0) {
+                ಯದಿ(uprv_strcmp(dataEntry->fName, uloc_getDefault())==0 || uprv_strcmp(dataEntry->fName, k_ಬೇರು_Locale_Name)==0) {
                     *status = U_USING_DEFAULT_WARNING;
-                } else {
+                } ಅನ್ಯಥಾ {
                     *status = U_USING_FALLBACK_WARNING;
                 }
 
-                fillIn = init_resb_result(dataEntry, res, key, -1, resB, fillIn, status);
-                if (resPath != nullptr) {
-                    createPath(origResPath, origResPathLen, resPath, len, inKey, path, status);
-                } else {
-                    const char* separator = nullptr;
-                    if (fillIn->fResPath != nullptr) {
+                fillIn = init_resb_result(dataEntry, res, ಕೀಲಿ, -1, resB, fillIn, status);
+                ಯದಿ (resPath != nullptr) {
+                    createPath(origResPath, origResPathLen, resPath, len, in_ಕೀಲಿ, path, status);
+                } ಅನ್ಯಥಾ {
+                    ಧ್ರುವ ವರ್ಣ* separator = nullptr;
+                    ಯದಿ (fillIn->fResPath != nullptr) {
                         separator = uprv_strchr(fillIn->fResPath, RES_PATH_SEPARATOR);
                     }
-                    if (separator != nullptr && separator[1] != '\0') {
+                    ಯದಿ (separator != nullptr && separator[1] != '\0') {
                         createPath(origResPath, origResPathLen, fillIn->fResPath,
-                                   static_cast<int32_t>(uprv_strlen(fillIn->fResPath)), inKey, path, status);
-                    } else {
-                        createPath(origResPath, origResPathLen, "", 0, inKey, path, status);
+                                   static_cast<int32_t>(uprv_strlen(fillIn->fResPath)), in_ಕೀಲಿ, path, status);
+                    } ಅನ್ಯಥಾ {
+                        createPath(origResPath, origResPathLen, "", 0, in_ಕೀಲಿ, path, status);
                     }
                 }
                 ures_freeResPath(fillIn);
                 ures_appendResPath(fillIn, path.data(), path.length(), status);
-                if(fillIn->fResPath[fillIn->fResPathLen-1] != RES_PATH_SEPARATOR) {
+                ಯದಿ(fillIn->fResPath[fillIn->fResPathLen-1] != RES_PATH_SEPARATOR) {
                     ures_appendResPath(fillIn, RES_PATH_SEPARATOR_S, 1, status);
                 }
-            } else {
+            } ಅನ್ಯಥಾ {
                 *status = U_MISSING_RESOURCE_ERROR;
             }
-        } else {
-            fillIn = init_resb_result(resB->fData, res, key, -1, resB, fillIn, status);
+        } ಅನ್ಯಥಾ {
+            fillIn = init_resb_result(resB->fData, res, ಕೀಲಿ, -1, resB, fillIn, status);
         }
     } 
-    else {
+    ಅನ್ಯಥಾ {
         *status = U_RESOURCE_TYPE_MISMATCH;
     }
     ures_close(helper);
-    return fillIn;
+    ಪ್ರತ್ಯಾಗಮ fillIn;
 }
 
-namespace {
+ನಾಮಾಕಾಶ {
 
-void getAllItemsWithFallback(
-        const UResourceBundle *bundle, ResourceDataValue &value,
+ಶೂನ್ಯ get_All_ವಸ್ತುಗಳು_With_Fallback(
+        ಧ್ರುವ UResourceBundle *bundle, Resource_Data_ಮೌಲ್ಯ &value,
         ResourceSink &sink, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return; }
+    ಯದಿ (U_FAILURE(errorCode)) { ಪ್ರತ್ಯಾಗಮ; }
     // We recursively enumerate child-first,
     // only storing parent items in the absence of child items.
     // The sink needs to store a placeholder value for the no-fallback/no-inheritance marker
@@ -2340,8 +2340,8 @@ void getAllItemsWithFallback(
     UResourceDataEntry *parentEntry = bundle->fData->fParent;
     UBool hasParent = parentEntry != nullptr && U_SUCCESS(parentEntry->fBogus);
     value.setResource(bundle->fRes, ResourceTracer(bundle));
-    sink.put(bundle->fKey, value, !hasParent, errorCode);
-    if (hasParent) {
+    sink.put(bundle->f_ಕೀಲಿ, value, !hasParent, errorCode);
+    ಯದಿ (hasParent) {
         // We might try to query the sink whether
         // any fallback from the parent bundle is still possible.
 
@@ -2350,121 +2350,121 @@ void getAllItemsWithFallback(
         // TODO: See if we can refactor ures_getByKeyWithFallback()
         // and pull out an inner function that takes and returns a UResourceDataEntry
         // so that we need not create UResourceBundle objects.
-        StackUResourceBundle parentBundle;
+        ರಾಶಿ_UResource_Bundle parentBundle;
         UResourceBundle &parentRef = parentBundle.ref();
         parentRef.fData = parentEntry;
         parentRef.fValidLocaleDataEntry = bundle->fValidLocaleDataEntry;
         parentRef.fHasFallback = !parentRef.getResData().noFallback;
-        parentRef.fIsTopLevel = true;
-        parentRef.fRes = parentRef.getResData().rootRes;
-        parentRef.fSize = res_countArrayItems(&parentRef.getResData(), parentRef.fRes);
+        parentRef.f_Is_ತುದಿ_Level = ಸತ್ಯ;
+        parentRef.fRes = parentRef.getResData().ಬೇರು_Res;
+        parentRef.fSize = res_ಎಣಿಕೆ_Array_ವಸ್ತುಗಳು(&parentRef.getResData(), parentRef.fRes);
         parentRef.fIndex = -1;
         entryIncrease(parentEntry);
 
         // Look up the container item in the parent bundle.
-        StackUResourceBundle containerBundle;
-        const UResourceBundle *rb;
+        ರಾಶಿ_UResource_Bundle containerBundle;
+        ಧ್ರುವ UResourceBundle *rb;
         UErrorCode pathErrorCode = U_ZERO_ERROR;  // Ignore if parents up to root do not have this path.
-        if (bundle->fResPath == nullptr || *bundle->fResPath == 0) {
+        ಯದಿ (bundle->fResPath == nullptr || *bundle->fResPath == 0) {
             rb = parentBundle.getAlias();
-        } else {
-            rb = ures_getByKeyWithFallback(parentBundle.getAlias(), bundle->fResPath,
+        } ಅನ್ಯಥಾ {
+            rb = ures_get_By_ಕೀಲಿ_With_Fallback(parentBundle.getAlias(), bundle->fResPath,
                                            containerBundle.getAlias(), &pathErrorCode);
         }
-        if (U_SUCCESS(pathErrorCode)) {
-            getAllItemsWithFallback(rb, value, sink, errorCode);
+        ಯದಿ (U_SUCCESS(pathErrorCode)) {
+            get_All_ವಸ್ತುಗಳು_With_Fallback(rb, value, sink, errorCode);
         }
     }
 }
 
-struct GetAllChildrenSink : public ResourceSink {
+ಸಂರಚನಾ GetAllChildrenSink : ಸಾರ್ವಜನಿಕ ResourceSink {
     // Destination sink
     ResourceSink& dest;
 
     GetAllChildrenSink(ResourceSink& dest)
         : dest(dest) {}
-    virtual ~GetAllChildrenSink() override;
-    virtual void put(const char *key, ResourceValue &value, UBool isRoot,
+    ಆಭಾಸ ~GetAllChildrenSink() override;
+    ಆಭಾಸ ಶೂನ್ಯ put(ಧ್ರುವ ವರ್ಣ *ಕೀಲಿ, Resource_ಮೌಲ್ಯ &value, UBool is_ಬೇರು,
            UErrorCode &errorCode) override {
-        ResourceTable itemsTable = value.getTable(errorCode);
-        if (U_FAILURE(errorCode)) { return; }
-        for (int32_t i = 0; itemsTable.getKeyAndValue(i, key, value); ++i) {
-            if (value.getType() == URES_ALIAS) {
-                ResourceDataValue& rdv = static_cast<ResourceDataValue&>(value);
-                StackUResourceBundle stackTempBundle;
+        ResourceTable ವಸ್ತುಗಳು_Table = value.getTable(errorCode);
+        ಯದಿ (U_FAILURE(errorCode)) { ಪ್ರತ್ಯಾಗಮ; }
+        ಪ್ರತಿ (int32_t i = 0; ವಸ್ತುಗಳು_Table.get_ಕೀಲಿ_And_ಮೌಲ್ಯ(i, ಕೀಲಿ, value); ++i) {
+            ಯದಿ (value.getType() == URES_ALIAS) {
+                Resource_Data_ಮೌಲ್ಯ& rdv = static_cast<Resource_Data_ಮೌಲ್ಯ&>(value);
+                ರಾಶಿ_UResource_Bundle ರಾಶಿ_Temp_Bundle;
                 UResourceBundle* aliasRB = getAliasTargetAsResourceBundle(rdv.getData(), rdv.getResource(), nullptr, -1,
                                                                           rdv.getValidLocaleDataEntry(), nullptr, 0,
-                                                                          stackTempBundle.getAlias(), &errorCode);
-                if (U_SUCCESS(errorCode)) {
-                    ResourceDataValue aliasedValue;
-                    aliasedValue.setData(aliasRB->getResData());
-                    aliasedValue.setValidLocaleDataEntry(aliasRB->fValidLocaleDataEntry);
-                    aliasedValue.setResource(aliasRB->fRes, ResourceTracer(aliasRB));
+                                                                          ರಾಶಿ_Temp_Bundle.getAlias(), &errorCode);
+                ಯದಿ (U_SUCCESS(errorCode)) {
+                    Resource_Data_ಮೌಲ್ಯ aliased_ಮೌಲ್ಯ;
+                    aliased_ಮೌಲ್ಯ.setData(aliasRB->getResData());
+                    aliased_ಮೌಲ್ಯ.setValidLocaleDataEntry(aliasRB->fValidLocaleDataEntry);
+                    aliased_ಮೌಲ್ಯ.setResource(aliasRB->fRes, ResourceTracer(aliasRB));
                     
-                    if (aliasedValue.getType() != URES_TABLE) {
-                        dest.put(key, aliasedValue, isRoot, errorCode);
-                    } else {
+                    ಯದಿ (aliased_ಮೌಲ್ಯ.getType() != URES_TABLE) {
+                        dest.put(ಕೀಲಿ, aliased_ಮೌಲ್ಯ, is_ಬೇರು, errorCode);
+                    } ಅನ್ಯಥಾ {
                         // if the resource we're aliasing over to is a table, the sink might iterate over its contents.
                         // If it does, it'll get only the things defined in the actual alias target, not the things
                         // the target inherits from its parent resources.  So we walk the parent chain for the *alias target*,
                         // calling dest.put() for each of the parent tables we could be inheriting from.  This means
                         // that dest.put() has to iterate over the children of multiple tables to get all of the inherited
                         // resource values, but it already has to do that to handle normal vertical inheritance.
-                        UResType aliasedValueType = URES_TABLE;
+                        UResType aliased_ಮೌಲ್ಯ_Type = URES_TABLE;
                         CharString tablePath;
                         tablePath.append(aliasRB->fResPath, errorCode);
-                        const char* parentKey = key; // dest.put() changes the key
-                        dest.put(parentKey, aliasedValue, isRoot, errorCode);
+                        ಧ್ರುವ ವರ್ಣ* parent_ಕೀಲಿ = ಕೀಲಿ; // dest.put() changes the key
+                        dest.put(parent_ಕೀಲಿ, aliased_ಮೌಲ್ಯ, is_ಬೇರು, errorCode);
                         UResourceDataEntry* entry = aliasRB->fData;
                         Resource res = aliasRB->fRes;
-                        while (aliasedValueType == URES_TABLE && entry->fParent != nullptr) {
+                        ಯಾವತ್ (aliased_ಮೌಲ್ಯ_Type == URES_TABLE && entry->fParent != nullptr) {
                             CharString localPath;
                             localPath.copyFrom(tablePath, errorCode);
-                            char* localPathAsCharPtr = localPath.data();
-                            const char* childKey;
+                            ವರ್ಣ* localPathAsCharPtr = localPath.data();
+                            ಧ್ರುವ ವರ್ಣ* child_ಕೀಲಿ;
                             entry = entry->fParent;
-                            res = entry->fData.rootRes;
-                            Resource newRes = res_findResource(&entry->fData, res, &localPathAsCharPtr, &childKey);
-                            if (newRes != RES_BOGUS) {
-                                aliasedValue.setData(entry->fData);
+                            res = entry->fData.ಬೇರು_Res;
+                            Resource newRes = res_findResource(&entry->fData, res, &localPathAsCharPtr, &child_ಕೀಲಿ);
+                            ಯದಿ (newRes != RES_BOGUS) {
+                                aliased_ಮೌಲ್ಯ.setData(entry->fData);
                                 // TODO: do I also need to call aliasedValue.setValueLocaleDataEntry() ?
-                                aliasedValue.setResource(newRes, ResourceTracer(aliasRB)); // probably wrong to use aliasRB here
-                                aliasedValueType = aliasedValue.getType();
-                                if (aliasedValueType == URES_ALIAS) {
+                                aliased_ಮೌಲ್ಯ.setResource(newRes, ResourceTracer(aliasRB)); // probably wrong to use aliasRB here
+                                aliased_ಮೌಲ್ಯ_Type = aliased_ಮೌಲ್ಯ.getType();
+                                ಯದಿ (aliased_ಮೌಲ್ಯ_Type == URES_ALIAS) {
                                     // in a few rare cases, when we get to the root resource bundle, the resource in question
                                     // won't be an actual table, but will instead be an alias to a table.  That is, we have
                                     // two aliases in the inheritance path.  (For some locales, such as Zulu, we see this with
                                     // children of the "fields" resource: "day-narrow" aliases to "day-short", which aliases
                                     // to "day".)  When this happens, we need to make sure we follow all the aliases.
-                                    ResourceDataValue& rdv2 = static_cast<ResourceDataValue&>(aliasedValue);
+                                    Resource_Data_ಮೌಲ್ಯ& rdv2 = static_cast<Resource_Data_ಮೌಲ್ಯ&>(aliased_ಮೌಲ್ಯ);
                                     aliasRB = getAliasTargetAsResourceBundle(rdv2.getData(), rdv2.getResource(), nullptr, -1,
                                                                              rdv2.getValidLocaleDataEntry(), nullptr, 0,
-                                                                             stackTempBundle.getAlias(), &errorCode);
+                                                                             ರಾಶಿ_Temp_Bundle.getAlias(), &errorCode);
                                     tablePath.clear();
                                     tablePath.append(aliasRB->fResPath, errorCode);
                                     entry = aliasRB->fData;
                                     res = aliasRB->fRes;
-                                    aliasedValue.setData(entry->fData);
+                                    aliased_ಮೌಲ್ಯ.setData(entry->fData);
                                     // TODO: do I also need to call aliasedValue.setValueLocaleDataEntry() ?
-                                    aliasedValue.setResource(res, ResourceTracer(aliasRB)); // probably wrong to use aliasRB here
-                                    aliasedValueType = aliasedValue.getType();
+                                    aliased_ಮೌಲ್ಯ.setResource(res, ResourceTracer(aliasRB)); // probably wrong to use aliasRB here
+                                    aliased_ಮೌಲ್ಯ_Type = aliased_ಮೌಲ್ಯ.getType();
                                 }
-                                if (aliasedValueType == URES_TABLE) {
-                                    dest.put(parentKey, aliasedValue, isRoot, errorCode);
-                                } else {
+                                ಯದಿ (aliased_ಮೌಲ್ಯ_Type == URES_TABLE) {
+                                    dest.put(parent_ಕೀಲಿ, aliased_ಮೌಲ್ಯ, is_ಬೇರು, errorCode);
+                                } ಅನ್ಯಥಾ {
                                     // once we've followed the alias, the resource we're looking at really should
                                     // be a table
                                     errorCode = U_INTERNAL_PROGRAM_ERROR;
-                                    return;
+                                    ಪ್ರತ್ಯಾಗಮ;
                                 }
                             }
                         }
                     }
                 }
-            } else {
-                dest.put(key, value, isRoot, errorCode);
+            } ಅನ್ಯಥಾ {
+                dest.put(ಕೀಲಿ, value, is_ಬೇರು, errorCode);
             }
-            if (U_FAILURE(errorCode)) { return; }
+            ಯದಿ (U_FAILURE(errorCode)) { ಪ್ರತ್ಯಾಗಮ; }
         }
     }
 };
@@ -2472,11 +2472,11 @@ struct GetAllChildrenSink : public ResourceSink {
 // Virtual destructors must be defined out of line.
 GetAllChildrenSink::~GetAllChildrenSink() {}
 
-U_CAPI void U_EXPORT2
-ures_getAllChildrenWithFallback(const UResourceBundle *bundle, const char *path,
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+ures_getAllChildrenWithFallback(ಧ್ರುವ UResourceBundle *bundle, ಧ್ರುವ ವರ್ಣ *path,
                                 icu::ResourceSink &sink, UErrorCode &errorCode) {
     GetAllChildrenSink allChildrenSink(sink);
-    ures_getAllItemsWithFallback(bundle, path, allChildrenSink, errorCode);
+    ures_get_All_ವಸ್ತುಗಳು_With_Fallback(bundle, path, allChildrenSink, errorCode);
 }
 
 }  // namespace
@@ -2490,23 +2490,23 @@ ures_getAllChildrenWithFallback(const UResourceBundle *bundle, const char *path,
 // Also requires a UResourceBundle fill-in, so that the value's ResourceTracer
 // can point to a non-local bundle.
 // Without tracing, the child bundle could be a function-local object.
-U_CAPI void U_EXPORT2
-ures_getValueWithFallback(const UResourceBundle *bundle, const char *path,
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+ures_get_ಮೌಲ್ಯ_With_Fallback(ಧ್ರುವ UResourceBundle *bundle, ಧ್ರುವ ವರ್ಣ *path,
                           UResourceBundle *tempFillIn,
-                          ResourceDataValue &value, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return; }
-    if (path == nullptr) {
+                          Resource_Data_ಮೌಲ್ಯ &value, UErrorCode &errorCode) {
+    ಯದಿ (U_FAILURE(errorCode)) { ಪ್ರತ್ಯಾಗಮ; }
+    ಯದಿ (path == nullptr) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        ಪ್ರತ್ಯಾಗಮ;
     }
-    const UResourceBundle *rb;
-    if (*path == 0) {
+    ಧ್ರುವ UResourceBundle *rb;
+    ಯದಿ (*path == 0) {
         // empty path
         rb = bundle;
-    } else {
-        rb = ures_getByKeyWithFallback(bundle, path, tempFillIn, &errorCode);
-        if (U_FAILURE(errorCode)) {
-            return;
+    } ಅನ್ಯಥಾ {
+        rb = ures_get_By_ಕೀಲಿ_With_Fallback(bundle, path, tempFillIn, &errorCode);
+        ಯದಿ (U_FAILURE(errorCode)) {
+            ಪ್ರತ್ಯಾಗಮ;
         }
     }
     value.setData(rb->getResData());
@@ -2514,184 +2514,184 @@ ures_getValueWithFallback(const UResourceBundle *bundle, const char *path,
     value.setResource(rb->fRes, ResourceTracer(rb));
 }
 
-U_CAPI void U_EXPORT2
-ures_getAllItemsWithFallback(const UResourceBundle *bundle, const char *path,
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+ures_get_All_ವಸ್ತುಗಳು_With_Fallback(ಧ್ರುವ UResourceBundle *bundle, ಧ್ರುವ ವರ್ಣ *path,
                              icu::ResourceSink &sink, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return; }
-    if (path == nullptr) {
+    ಯದಿ (U_FAILURE(errorCode)) { ಪ್ರತ್ಯಾಗಮ; }
+    ಯದಿ (path == nullptr) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        ಪ್ರತ್ಯಾಗಮ;
     }
-    StackUResourceBundle stackBundle;
-    const UResourceBundle *rb;
-    if (*path == 0) {
+    ರಾಶಿ_UResource_Bundle ರಾಶಿ_Bundle;
+    ಧ್ರುವ UResourceBundle *rb;
+    ಯದಿ (*path == 0) {
         // empty path
         rb = bundle;
-    } else {
-        rb = ures_getByKeyWithFallback(bundle, path, stackBundle.getAlias(), &errorCode);
-        if (U_FAILURE(errorCode)) {
-            return;
+    } ಅನ್ಯಥಾ {
+        rb = ures_get_By_ಕೀಲಿ_With_Fallback(bundle, path, ರಾಶಿ_Bundle.getAlias(), &errorCode);
+        ಯದಿ (U_FAILURE(errorCode)) {
+            ಪ್ರತ್ಯಾಗಮ;
         }
     }
     // Get all table items with fallback.
-    ResourceDataValue value;
-    getAllItemsWithFallback(rb, value, sink, errorCode);
+    Resource_Data_ಮೌಲ್ಯ value;
+    get_All_ವಸ್ತುಗಳು_With_Fallback(rb, value, sink, errorCode);
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_getByKey(const UResourceBundle* resB,
-              const char* inKey,
+ures_get_By_ಕೀಲಿ(ಧ್ರುವ UResourceBundle* resB,
+              ಧ್ರುವ ವರ್ಣ* in_ಕೀಲಿ,
               UResourceBundle* fillIn U_LIFETIME_BOUND,
               UErrorCode* status) {
     Resource res = RES_BOGUS;
     UResourceDataEntry *dataEntry = nullptr;
-    const char *key = inKey;
+    ಧ್ರುವ ವರ್ಣ *ಕೀಲಿ = in_ಕೀಲಿ;
 
-    if (status==nullptr || U_FAILURE(*status)) {
-        return fillIn;
+    ಯದಿ (status==nullptr || U_FAILURE(*status)) {
+        ಪ್ರತ್ಯಾಗಮ fillIn;
     }
-    if(resB == nullptr) {
+    ಯದಿ(resB == nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return fillIn;
+        ಪ್ರತ್ಯಾಗಮ fillIn;
     }
 
     int32_t type = RES_GET_TYPE(resB->fRes);
-    if(URES_IS_TABLE(type)) {
+    ಯದಿ(URES_IS_TABLE(type)) {
         int32_t t;
-        res = res_getTableItemByKey(&resB->getResData(), resB->fRes, &t, &key);
-        if(res == RES_BOGUS) {
-            key = inKey;
-            if(resB->fHasFallback) {
-                dataEntry = getFallbackData(resB, &key, &res, status);
-                if(U_SUCCESS(*status)) {
+        res = res_get_Table_Item_By_ಕೀಲಿ(&resB->getResData(), resB->fRes, &t, &ಕೀಲಿ);
+        ಯದಿ(res == RES_BOGUS) {
+            ಕೀಲಿ = in_ಕೀಲಿ;
+            ಯದಿ(resB->fHasFallback) {
+                dataEntry = getFallbackData(resB, &ಕೀಲಿ, &res, status);
+                ಯದಿ(U_SUCCESS(*status)) {
                     /* check if resB->fResPath gives the right name here */
-                    return init_resb_result(dataEntry, res, key, -1, resB, fillIn, status);
-                } else {
+                    ಪ್ರತ್ಯಾಗಮ init_resb_result(dataEntry, res, ಕೀಲಿ, -1, resB, fillIn, status);
+                } ಅನ್ಯಥಾ {
                     *status = U_MISSING_RESOURCE_ERROR;
                 }
-            } else {
+            } ಅನ್ಯಥಾ {
                 *status = U_MISSING_RESOURCE_ERROR;
             }
-        } else {
-            return init_resb_result(resB->fData, res, key, -1, resB, fillIn, status);
+        } ಅನ್ಯಥಾ {
+            ಪ್ರತ್ಯಾಗಮ init_resb_result(resB->fData, res, ಕೀಲಿ, -1, resB, fillIn, status);
         }
     } 
-#if 0
+#ಯದಿ 0
     /* this is a kind of TODO item. If we have an array with an index table, we could do this. */
     /* not currently */
-    else if(RES_GET_TYPE(resB->fRes) == URES_ARRAY && resB->fHasFallback == true) {
+    ಅನ್ಯಥಾ ಯದಿ(RES_GET_TYPE(resB->fRes) == URES_ARRAY && resB->fHasFallback == ಸತ್ಯ) {
         /* here should go a first attempt to locate the key using index table */
-        dataEntry = getFallbackData(resB, &key, &res, status);
-        if(U_SUCCESS(*status)) {
-            return init_resb_result(dataEntry, res, key, resB, fillIn, status);
-        } else {
+        dataEntry = getFallbackData(resB, &ಕೀಲಿ, &res, status);
+        ಯದಿ(U_SUCCESS(*status)) {
+            ಪ್ರತ್ಯಾಗಮ init_resb_result(dataEntry, res, ಕೀಲಿ, resB, fillIn, status);
+        } ಅನ್ಯಥಾ {
             *status = U_MISSING_RESOURCE_ERROR;
         }
     }
 #endif    
-    else {
+    ಅನ್ಯಥಾ {
         *status = U_RESOURCE_TYPE_MISMATCH;
     }
-    return fillIn;
+    ಪ್ರತ್ಯಾಗಮ fillIn;
 }
 
-U_CAPI const char16_t* U_EXPORT2
-ures_getStringByKey(const UResourceBundle* resB U_LIFETIME_BOUND,
-                    const char* inKey,
+U_CAPI ಧ್ರುವ char16_t* U_EXPORT2
+ures_get_String_By_ಕೀಲಿ(ಧ್ರುವ UResourceBundle* resB U_LIFETIME_BOUND,
+                    ಧ್ರುವ ವರ್ಣ* in_ಕೀಲಿ,
                     int32_t* len,
                     UErrorCode* status) {
     Resource res = RES_BOGUS;
     UResourceDataEntry *dataEntry = nullptr;
-    const char* key = inKey;
+    ಧ್ರುವ ವರ್ಣ* ಕೀಲಿ = in_ಕೀಲಿ;
 
-    if (status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    ಯದಿ (status==nullptr || U_FAILURE(*status)) {
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
-    if(resB == nullptr) {
+    ಯದಿ(resB == nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
 
     int32_t type = RES_GET_TYPE(resB->fRes);
-    if(URES_IS_TABLE(type)) {
+    ಯದಿ(URES_IS_TABLE(type)) {
         int32_t t=0;
 
-        res = res_getTableItemByKey(&resB->getResData(), resB->fRes, &t, &key);
+        res = res_get_Table_Item_By_ಕೀಲಿ(&resB->getResData(), resB->fRes, &t, &ಕೀಲಿ);
 
-        if(res == RES_BOGUS) {
-            key = inKey;
-            if(resB->fHasFallback) {
-                dataEntry = getFallbackData(resB, &key, &res, status);
-                if(U_SUCCESS(*status)) {
-                    switch (RES_GET_TYPE(res)) {
-                    case URES_STRING:
-                    case URES_STRING_V2:
-                        return res_getString({resB, key}, &dataEntry->fData, res, len);
-                    case URES_ALIAS:
+        ಯದಿ(res == RES_BOGUS) {
+            ಕೀಲಿ = in_ಕೀಲಿ;
+            ಯದಿ(resB->fHasFallback) {
+                dataEntry = getFallbackData(resB, &ಕೀಲಿ, &res, status);
+                ಯದಿ(U_SUCCESS(*status)) {
+                    ವಿಕಲ್ಪ (RES_GET_TYPE(res)) {
+                    ಪಕ್ಷ URES_STRING:
+                    ಪಕ್ಷ URES_STRING_V2:
+                        ಪ್ರತ್ಯಾಗಮ res_getString({resB, ಕೀಲಿ}, &dataEntry->fData, res, len);
+                    ಪಕ್ಷ URES_ALIAS:
                       {
-                        const char16_t* result = nullptr;
-                        UResourceBundle *tempRes = ures_getByKey(resB, inKey, nullptr, status);
+                        ಧ್ರುವ char16_t* result = nullptr;
+                        UResourceBundle *tempRes = ures_get_By_ಕೀಲಿ(resB, in_ಕೀಲಿ, nullptr, status);
                         result = ures_getString(tempRes, len, status);
                         ures_close(tempRes);
-                        return result;
+                        ಪ್ರತ್ಯಾಗಮ result;
                       }
-                    default:
+                    ಸ್ವಭಾವ:
                         *status = U_RESOURCE_TYPE_MISMATCH;
                     }
-                } else {
+                } ಅನ್ಯಥಾ {
                     *status = U_MISSING_RESOURCE_ERROR;
                 }
-            } else {
+            } ಅನ್ಯಥಾ {
                 *status = U_MISSING_RESOURCE_ERROR;
             }
-        } else {
-            switch (RES_GET_TYPE(res)) {
-            case URES_STRING:
-            case URES_STRING_V2:
-                return res_getString({resB, key}, &resB->getResData(), res, len);
-            case URES_ALIAS:
+        } ಅನ್ಯಥಾ {
+            ವಿಕಲ್ಪ (RES_GET_TYPE(res)) {
+            ಪಕ್ಷ URES_STRING:
+            ಪಕ್ಷ URES_STRING_V2:
+                ಪ್ರತ್ಯಾಗಮ res_getString({resB, ಕೀಲಿ}, &resB->getResData(), res, len);
+            ಪಕ್ಷ URES_ALIAS:
               {
-                const char16_t* result = nullptr;
-                UResourceBundle *tempRes = ures_getByKey(resB, inKey, nullptr, status);
+                ಧ್ರುವ char16_t* result = nullptr;
+                UResourceBundle *tempRes = ures_get_By_ಕೀಲಿ(resB, in_ಕೀಲಿ, nullptr, status);
                 result = ures_getString(tempRes, len, status);
                 ures_close(tempRes);
-                return result;
+                ಪ್ರತ್ಯಾಗಮ result;
               }
-            default:
+            ಸ್ವಭಾವ:
                 *status = U_RESOURCE_TYPE_MISMATCH;
             }
         }
     } 
-#if 0 
+#ಯದಿ 0 
     /* this is a kind of TODO item. If we have an array with an index table, we could do this. */
     /* not currently */   
-    else if(RES_GET_TYPE(resB->fRes) == URES_ARRAY && resB->fHasFallback == true) {
+    ಅನ್ಯಥಾ ಯದಿ(RES_GET_TYPE(resB->fRes) == URES_ARRAY && resB->fHasFallback == ಸತ್ಯ) {
         /* here should go a first attempt to locate the key using index table */
-        dataEntry = getFallbackData(resB, &key, &res, status);
-        if(U_SUCCESS(*status)) {
+        dataEntry = getFallbackData(resB, &ಕೀಲಿ, &res, status);
+        ಯದಿ(U_SUCCESS(*status)) {
             // TODO: Tracing
-            return res_getString(rd, res, len);
-        } else {
+            ಪ್ರತ್ಯಾಗಮ res_getString(rd, res, len);
+        } ಅನ್ಯಥಾ {
             *status = U_MISSING_RESOURCE_ERROR;
         }
     } 
 #endif    
-    else {
+    ಅನ್ಯಥಾ {
         *status = U_RESOURCE_TYPE_MISMATCH;
     }
-    return nullptr;
+    ಪ್ರತ್ಯಾಗಮ nullptr;
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getUTF8StringByKey(const UResourceBundle* resB,
-                        const char* key,
-                        char* dest U_LIFETIME_BOUND,
+U_CAPI ಧ್ರುವ ವರ್ಣ* U_EXPORT2
+ures_get_UTF8_String_By_ಕೀಲಿ(ಧ್ರುವ UResourceBundle* resB,
+                        ಧ್ರುವ ವರ್ಣ* ಕೀಲಿ,
+                        ವರ್ಣ* dest U_LIFETIME_BOUND,
                         int32_t* pLength,
                         UBool forceCopy,
                         UErrorCode* status) {
     int32_t length16;
-    const char16_t *s16 = ures_getStringByKey(resB, key, &length16, status);
-    return ures_toUTF8String(s16, length16, dest, pLength, forceCopy, status);
+    ಧ್ರುವ char16_t *s16 = ures_get_String_By_ಕೀಲಿ(resB, ಕೀಲಿ, &length16, status);
+    ಪ್ರತ್ಯಾಗಮ ures_toUTF8String(s16, length16, dest, pLength, forceCopy, status);
 }
 
 /* TODO: clean from here down */
@@ -2700,139 +2700,139 @@ ures_getUTF8StringByKey(const UResourceBundle* resB,
  *  INTERNAL: Get the name of the first real locale (not placeholder) 
  *  that has resource bundle data.
  */
-U_CAPI const char* U_EXPORT2
-ures_getLocaleInternal(const UResourceBundle* resourceBundle U_LIFETIME_BOUND, UErrorCode* status)
+U_CAPI ಧ್ರುವ ವರ್ಣ* U_EXPORT2
+ures_getLocaleInternal(ಧ್ರುವ UResourceBundle* resourceBundle U_LIFETIME_BOUND, UErrorCode* status)
 {
-    if (status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    ಯದಿ (status==nullptr || U_FAILURE(*status)) {
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
-    if (!resourceBundle) {
+    ಯದಿ (!resourceBundle) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
-    } else {
-      return resourceBundle->fData->fName;
+        ಪ್ರತ್ಯಾಗಮ nullptr;
+    } ಅನ್ಯಥಾ {
+      ಪ್ರತ್ಯಾಗಮ resourceBundle->fData->fName;
     }
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getLocale(const UResourceBundle* resourceBundle U_LIFETIME_BOUND, UErrorCode* status)
+U_CAPI ಧ್ರುವ ವರ್ಣ* U_EXPORT2
+ures_getLocale(ಧ್ರುವ UResourceBundle* resourceBundle U_LIFETIME_BOUND, UErrorCode* status)
 {
-  return ures_getLocaleInternal(resourceBundle, status);
+  ಪ್ರತ್ಯಾಗಮ ures_getLocaleInternal(resourceBundle, status);
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getLocaleByType(const UResourceBundle* resourceBundle U_LIFETIME_BOUND,
+U_CAPI ಧ್ರುವ ವರ್ಣ* U_EXPORT2
+ures_getLocaleByType(ಧ್ರುವ UResourceBundle* resourceBundle U_LIFETIME_BOUND,
                      ULocDataLocaleType type,
                      UErrorCode* status) {
-    if (status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    ಯದಿ (status==nullptr || U_FAILURE(*status)) {
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
-    if (!resourceBundle) {
+    ಯದಿ (!resourceBundle) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
-    } else {
-        switch(type) {
-        case ULOC_ACTUAL_LOCALE:
-            return resourceBundle->fData->fName;
-        case ULOC_VALID_LOCALE:
-            return resourceBundle->fValidLocaleDataEntry->fName;
-        case ULOC_REQUESTED_LOCALE:
-        default:
+        ಪ್ರತ್ಯಾಗಮ nullptr;
+    } ಅನ್ಯಥಾ {
+        ವಿಕಲ್ಪ(type) {
+        ಪಕ್ಷ ULOC_ACTUAL_LOCALE:
+            ಪ್ರತ್ಯಾಗಮ resourceBundle->fData->fName;
+        ಪಕ್ಷ ULOC_VALID_LOCALE:
+            ಪ್ರತ್ಯಾಗಮ resourceBundle->fValidLocaleDataEntry->fName;
+        ಪಕ್ಷ ULOC_REQUESTED_LOCALE:
+        ಸ್ವಭಾವ:
             *status = U_ILLEGAL_ARGUMENT_ERROR;
-            return nullptr;
+            ಪ್ರತ್ಯಾಗಮ nullptr;
         }
     }
 }
 
-U_CFUNC const char*
-ures_getName(const UResourceBundle* resB U_LIFETIME_BOUND) {
-  if(resB == nullptr) {
-    return nullptr;
+U_CFUNC ಧ್ರುವ ವರ್ಣ*
+ures_getName(ಧ್ರುವ UResourceBundle* resB U_LIFETIME_BOUND) {
+  ಯದಿ(resB == nullptr) {
+    ಪ್ರತ್ಯಾಗಮ nullptr;
   }
 
-  return resB->fData->fName;
+  ಪ್ರತ್ಯಾಗಮ resB->fData->fName;
 }
 
 #ifdef URES_DEBUG
-U_CFUNC const char*
-ures_getPath(const UResourceBundle* resB U_LIFETIME_BOUND) {
-  if(resB == nullptr) {
-    return nullptr;
+U_CFUNC ಧ್ರುವ ವರ್ಣ*
+ures_getPath(ಧ್ರುವ UResourceBundle* resB U_LIFETIME_BOUND) {
+  ಯದಿ(resB == nullptr) {
+    ಪ್ರತ್ಯಾಗಮ nullptr;
   }
 
-  return resB->fData->fPath;
+  ಪ್ರತ್ಯಾಗಮ resB->fData->fPath;
 }
 #endif
 
-static UResourceBundle*
+ಸ್ಥಿರ UResourceBundle*
 ures_openWithType(UResourceBundle* r U_LIFETIME_BOUND,
-                  const char* path,
-                  const char* localeID,
+                  ಧ್ರುವ ವರ್ಣ* path,
+                  ಧ್ರುವ ವರ್ಣ* localeID,
                   UResOpenType openType,
                   UErrorCode* status) {
-    if(U_FAILURE(*status)) {
-        return nullptr;
+    ಯದಿ(U_FAILURE(*status)) {
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
 
     UResourceDataEntry *entry;
-    if(openType != URES_OPEN_DIRECT) {
-        if (localeID == nullptr) {
+    ಯದಿ(openType != URES_OPEN_DIRECT) {
+        ಯದಿ (localeID == nullptr) {
             localeID = uloc_getDefault();
         }
         /* first "canonicalize" the locale ID */
         CharString canonLocaleID = ulocimp_getBaseName(localeID, *status);
-        if(U_FAILURE(*status)) {
+        ಯದಿ(U_FAILURE(*status)) {
             *status = U_ILLEGAL_ARGUMENT_ERROR;
-            return nullptr;
+            ಪ್ರತ್ಯಾಗಮ nullptr;
         }
         entry = entryOpen(path, canonLocaleID.data(), openType, status);
-    } else {
+    } ಅನ್ಯಥಾ {
         entry = entryOpenDirect(path, localeID, status);
     }
-    if(U_FAILURE(*status)) {
-        return nullptr;
+    ಯದಿ(U_FAILURE(*status)) {
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
-    if(entry == nullptr) {
+    ಯದಿ(entry == nullptr) {
         *status = U_MISSING_RESOURCE_ERROR;
-        return nullptr;
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
 
-    UBool isStackObject;
-    if(r == nullptr) {
-        r = static_cast<UResourceBundle*>(uprv_malloc(sizeof(UResourceBundle)));
-        if(r == nullptr) {
+    UBool is_ರಾಶಿ_Object;
+    ಯದಿ(r == nullptr) {
+        r = static_cast<UResourceBundle*>(uprv_malloc(ಪರಿಮಾಣ(UResourceBundle)));
+        ಯದಿ(r == nullptr) {
             entryClose(entry);
             *status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+            ಪ್ರತ್ಯಾಗಮ nullptr;
         }
-        isStackObject = false;
-    } else {  // fill-in
-        isStackObject = ures_isStackObject(r);
-        ures_closeBundle(r, false);
+        is_ರಾಶಿ_Object = ಅಸತ್ಯ;
+    } ಅನ್ಯಥಾ {  // fill-in
+        is_ರಾಶಿ_Object = ures_is_ರಾಶಿ_Object(r);
+        ures_closeBundle(r, ಅಸತ್ಯ);
     }
-    uprv_memset(r, 0, sizeof(UResourceBundle));
-    ures_setIsStackObject(r, isStackObject);
+    uprv_memset(r, 0, ಪರಿಮಾಣ(UResourceBundle));
+    ures_set_Is_ರಾಶಿ_Object(r, is_ರಾಶಿ_Object);
 
     r->fValidLocaleDataEntry = r->fData = entry;
     r->fHasFallback = openType != URES_OPEN_DIRECT && !r->getResData().noFallback;
-    r->fIsTopLevel = true;
-    r->fRes = r->getResData().rootRes;
-    r->fSize = res_countArrayItems(&r->getResData(), r->fRes);
+    r->f_Is_ತುದಿ_Level = ಸತ್ಯ;
+    r->fRes = r->getResData().ಬೇರು_Res;
+    r->fSize = res_ಎಣಿಕೆ_Array_ವಸ್ತುಗಳು(&r->getResData(), r->fRes);
     r->fIndex = -1;
 
     ResourceTracer(r).traceOpen();
 
-    return r;
+    ಪ್ರತ್ಯಾಗಮ r;
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_open(const char* path, const char* localeID, UErrorCode* status) {
-    return ures_openWithType(nullptr, path, localeID, URES_OPEN_LOCALE_DEFAULT_ROOT, status);
+ures_open(ಧ್ರುವ ವರ್ಣ* path, ಧ್ರುವ ವರ್ಣ* localeID, UErrorCode* status) {
+    ಪ್ರತ್ಯಾಗಮ ures_openWithType(nullptr, path, localeID, URES_OPEN_LOCALE_DEFAULT_ಬೇರು, status);
 }
 
 U_CAPI UResourceBundle* U_EXPORT2
-ures_openNoDefault(const char* path, const char* localeID, UErrorCode* status) {
-    return ures_openWithType(nullptr, path, localeID, URES_OPEN_LOCALE_ROOT, status);
+ures_openNoDefault(ಧ್ರುವ ವರ್ಣ* path, ಧ್ರುವ ವರ್ಣ* localeID, UErrorCode* status) {
+    ಪ್ರತ್ಯಾಗಮ ures_openWithType(nullptr, path, localeID, URES_OPEN_LOCALE_ಬೇರು, status);
 }
 
 /**
@@ -2840,8 +2840,8 @@ ures_openNoDefault(const char* path, const char* localeID, UErrorCode* status) {
  *  or sought. However, alias substitution will happen!
  */
 U_CAPI UResourceBundle*  U_EXPORT2
-ures_openDirect(const char* path, const char* localeID, UErrorCode* status) {
-    return ures_openWithType(nullptr, path, localeID, URES_OPEN_DIRECT, status);
+ures_openDirect(ಧ್ರುವ ವರ್ಣ* path, ಧ್ರುವ ವರ್ಣ* localeID, UErrorCode* status) {
+    ಪ್ರತ್ಯಾಗಮ ures_openWithType(nullptr, path, localeID, URES_OPEN_DIRECT, status);
 }
 
 /**
@@ -2851,24 +2851,24 @@ ures_openDirect(const char* path, const char* localeID, UErrorCode* status) {
  * 
  * Same as ures_open(), but uses the fill-in parameter and does not allocate a new bundle.
  */
-U_CAPI void U_EXPORT2
-ures_openFillIn(UResourceBundle *r, const char* path,
-                const char* localeID, UErrorCode* status) {
-    if(U_SUCCESS(*status) && r == nullptr) {
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+ures_openFillIn(UResourceBundle *r, ಧ್ರುವ ವರ್ಣ* path,
+                ಧ್ರುವ ವರ್ಣ* localeID, UErrorCode* status) {
+    ಯದಿ(U_SUCCESS(*status) && r == nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        ಪ್ರತ್ಯಾಗಮ;
     }
-    ures_openWithType(r, path, localeID, URES_OPEN_LOCALE_DEFAULT_ROOT, status);
+    ures_openWithType(r, path, localeID, URES_OPEN_LOCALE_DEFAULT_ಬೇರು, status);
 }
 
 /**
  * Same as ures_openDirect(), but uses the fill-in parameter and does not allocate a new bundle.
  */
-U_CAPI void U_EXPORT2
-ures_openDirectFillIn(UResourceBundle *r, const char* path, const char* localeID, UErrorCode* status) {
-    if(U_SUCCESS(*status) && r == nullptr) {
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+ures_openDirectFillIn(UResourceBundle *r, ಧ್ರುವ ವರ್ಣ* path, ಧ್ರುವ ವರ್ಣ* localeID, UErrorCode* status) {
+    ಯದಿ(U_SUCCESS(*status) && r == nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        ಪ್ರತ್ಯಾಗಮ;
     }
     ures_openWithType(r, path, localeID, URES_OPEN_DIRECT, status);
 }
@@ -2878,29 +2878,29 @@ ures_openDirectFillIn(UResourceBundle *r, const char* path, const char* localeID
  *  For strings, returns 1.
  */
 U_CAPI int32_t  U_EXPORT2
-ures_countArrayItems(const UResourceBundle* resourceBundle,
-                  const char* resourceKey,
+ures_ಎಣಿಕೆ_Array_ವಸ್ತುಗಳು(ಧ್ರುವ UResourceBundle* resourceBundle,
+                  ಧ್ರುವ ವರ್ಣ* resource_ಕೀಲಿ,
                   UErrorCode* status)
 {
     UResourceBundle resData;
-    ures_initStackObject(&resData);
-    if (status==nullptr || U_FAILURE(*status)) {
-        return 0;
+    ures_init_ರಾಶಿ_Object(&resData);
+    ಯದಿ (status==nullptr || U_FAILURE(*status)) {
+        ಪ್ರತ್ಯಾಗಮ 0;
     }
-    if(resourceBundle == nullptr) {
+    ಯದಿ(resourceBundle == nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        ಪ್ರತ್ಯಾಗಮ 0;
     }
-    ures_getByKey(resourceBundle, resourceKey, &resData, status);
+    ures_get_By_ಕೀಲಿ(resourceBundle, resource_ಕೀಲಿ, &resData, status);
     
-    if(resData.getResData().data != nullptr) {
-        int32_t result = res_countArrayItems(&resData.getResData(), resData.fRes);
+    ಯದಿ(resData.getResData().data != nullptr) {
+        int32_t result = res_ಎಣಿಕೆ_Array_ವಸ್ತುಗಳು(&resData.getResData(), resData.fRes);
         ures_close(&resData);
-        return result;
-    } else {
+        ಪ್ರತ್ಯಾಗಮ result;
+    } ಅನ್ಯಥಾ {
         *status = U_MISSING_RESOURCE_ERROR;
         ures_close(&resData);
-        return 0;
+        ಪ್ರತ್ಯಾಗಮ 0;
     }
 }
 
@@ -2914,12 +2914,12 @@ ures_countArrayItems(const UResourceBundle* resourceBundle,
  * @see ures_getVersion
  * @internal
  */
-U_CAPI const char* U_EXPORT2
-ures_getVersionNumberInternal(const UResourceBundle* resourceBundle U_LIFETIME_BOUND)
+U_CAPI ಧ್ರುವ ವರ್ಣ* U_EXPORT2
+ures_get_Version_ಸಂಖ್ಯೆ_Internal(ಧ್ರುವ UResourceBundle* resourceBundle U_LIFETIME_BOUND)
 {
-    if (!resourceBundle) return nullptr;
+    ಯದಿ (!resourceBundle) ಪ್ರತ್ಯಾಗಮ nullptr;
 
-    if(resourceBundle->fVersion == nullptr) {
+    ಯದಿ(resourceBundle->fVersion == nullptr) {
 
         /* If the version ID has not been built yet, then do so.  Retrieve */
         /* the minor version from the file. */
@@ -2927,7 +2927,7 @@ ures_getVersionNumberInternal(const UResourceBundle* resourceBundle U_LIFETIME_B
         int32_t minor_len = 0;
         int32_t len;
 
-        const char16_t* minor_version = ures_getStringByKey(resourceBundle, kVersionTag, &minor_len, &status);
+        ಧ್ರುವ char16_t* minor_version = ures_get_String_By_ಕೀಲಿ(resourceBundle, kVersionTag, &minor_len, &status);
         
         /* Determine the length of of the final version string.  This is */
         /* the length of the major part + the length of the separator */
@@ -2940,34 +2940,34 @@ ures_getVersionNumberInternal(const UResourceBundle* resourceBundle U_LIFETIME_B
         /* + 1 for zero byte */
 
 
-        ((UResourceBundle *)resourceBundle)->fVersion = (char *)uprv_malloc(1 + len); 
+        ((UResourceBundle *)resourceBundle)->fVersion = (ವರ್ಣ *)uprv_malloc(1 + len); 
         /* Check for null pointer. */
-        if (((UResourceBundle *)resourceBundle)->fVersion == nullptr) {
-            return nullptr;
+        ಯದಿ (((UResourceBundle *)resourceBundle)->fVersion == nullptr) {
+            ಪ್ರತ್ಯಾಗಮ nullptr;
         }
        
-        if(minor_len > 0) {
+        ಯದಿ(minor_len > 0) {
             u_UCharsToChars(minor_version, resourceBundle->fVersion , minor_len);
             resourceBundle->fVersion[len] =  '\0';
         }
-        else {
+        ಅನ್ಯಥಾ {
             uprv_strcpy(resourceBundle->fVersion, kDefaultMinorVersion);
         }
     }
 
-    return resourceBundle->fVersion;
+    ಪ್ರತ್ಯಾಗಮ resourceBundle->fVersion;
 }
 
-U_CAPI const char* U_EXPORT2
-ures_getVersionNumber(const UResourceBundle* resourceBundle U_LIFETIME_BOUND)
+U_CAPI ಧ್ರುವ ವರ್ಣ* U_EXPORT2
+ures_get_Version_ಸಂಖ್ಯೆ(ಧ್ರುವ UResourceBundle* resourceBundle U_LIFETIME_BOUND)
 {
-    return ures_getVersionNumberInternal(resourceBundle);
+    ಪ್ರತ್ಯಾಗಮ ures_get_Version_ಸಂಖ್ಯೆ_Internal(resourceBundle);
 }
 
-U_CAPI void U_EXPORT2 ures_getVersion(const UResourceBundle* resB, UVersionInfo versionInfo) {
-    if (!resB) return;
+U_CAPI ಶೂನ್ಯ U_EXPORT2 ures_getVersion(ಧ್ರುವ UResourceBundle* resB, UVersionInfo versionInfo) {
+    ಯದಿ (!resB) ಪ್ರತ್ಯಾಗಮ;
 
-    u_versionFromString(versionInfo, ures_getVersionNumberInternal(resB));
+    u_versionFromString(versionInfo, ures_get_Version_ಸಂಖ್ಯೆ_Internal(resB));
 }
 
 /** Tree support functions *******************************/
@@ -2975,16 +2975,16 @@ U_CAPI void U_EXPORT2 ures_getVersion(const UResourceBundle* resB, UVersionInfo 
 #define INDEX_TAG         "InstalledLocales"
 #define DEFAULT_TAG       "default"
 
-#if defined(URES_TREE_DEBUG)
-#include <stdio.h>
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
+#ಅನ್ತರ್ಭಾವ <stdio.h>
 #endif
 
-typedef struct ULocalesContext {
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ ULocalesContext {
     UResourceBundle installed;
     UResourceBundle curr;
 } ULocalesContext;
 
-static void U_CALLCONV
+ಸ್ಥಿರ ಶೂನ್ಯ U_CALLCONV
 ures_loc_closeLocales(UEnumeration *enumerator) {
     ULocalesContext* ctx = static_cast<ULocalesContext*>(enumerator->context);
     ures_close(&ctx->curr);
@@ -2993,35 +2993,35 @@ ures_loc_closeLocales(UEnumeration *enumerator) {
     uprv_free(enumerator);
 }
 
-static int32_t U_CALLCONV
-ures_loc_countLocales(UEnumeration *en, UErrorCode * /*status*/) {
+ಸ್ಥಿರ int32_t U_CALLCONV
+ures_loc_ಎಣಿಕೆ_Locales(UEnumeration *en, UErrorCode * /*status*/) {
     ULocalesContext* ctx = static_cast<ULocalesContext*>(en->context);
-    return ures_getSize(&ctx->installed);
+    ಪ್ರತ್ಯಾಗಮ ures_getSize(&ctx->installed);
 }
 
 U_CDECL_BEGIN
 
 
-static const char * U_CALLCONV
+ಸ್ಥಿರ ಧ್ರುವ ವರ್ಣ * U_CALLCONV
 ures_loc_nextLocale(UEnumeration* en,
                     int32_t* resultLength,
                     UErrorCode* status) {
     ULocalesContext *ctx = (ULocalesContext *)en->context;
     UResourceBundle *res = &(ctx->installed);
     UResourceBundle *k = nullptr;
-    const char *result = nullptr;
+    ಧ್ರುವ ವರ್ಣ *result = nullptr;
     int32_t len = 0;
-    if (ures_hasNext(res) && (k = ures_getNextResource(res, &ctx->curr, status)) != nullptr) {
-        result = ures_getKey(k);
+    ಯದಿ (ures_hasNext(res) && (k = ures_getNextResource(res, &ctx->curr, status)) != nullptr) {
+        result = ures_get_ಕೀಲಿ(k);
         len = (int32_t)uprv_strlen(result);
     }
-    if (resultLength) {
+    ಯದಿ (resultLength) {
         *resultLength = len;
     }
-    return result;
+    ಪ್ರತ್ಯಾಗಮ result;
 }
 
-static void U_CALLCONV 
+ಸ್ಥಿರ ಶೂನ್ಯ U_CALLCONV 
 ures_loc_resetLocales(UEnumeration* en, 
                       UErrorCode* /*status*/) {
     UResourceBundle *res = &((ULocalesContext *)en->context)->installed;
@@ -3030,11 +3030,11 @@ ures_loc_resetLocales(UEnumeration* en,
 
 U_CDECL_END
 
-static const UEnumeration gLocalesEnum = {
+ಸ್ಥಿರ ಧ್ರುವ UEnumeration gLocalesEnum = {
     nullptr,
         nullptr,
         ures_loc_closeLocales,
-        ures_loc_countLocales,
+        ures_loc_ಎಣಿಕೆ_Locales,
         uenum_unextDefault,
         ures_loc_nextLocale,
         ures_loc_resetLocales
@@ -3042,37 +3042,37 @@ static const UEnumeration gLocalesEnum = {
 
 
 U_CAPI UEnumeration* U_EXPORT2
-ures_openAvailableLocales(const char *path, UErrorCode *status)
+ures_openAvailableLocales(ಧ್ರುವ ವರ್ಣ *path, UErrorCode *status)
 {
     UResourceBundle *idx = nullptr;
     UEnumeration *en = nullptr;
     ULocalesContext *myContext = nullptr;
 
-    if(U_FAILURE(*status)) {
-        return nullptr;
+    ಯದಿ(U_FAILURE(*status)) {
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
-    myContext = static_cast<ULocalesContext *>(uprv_malloc(sizeof(ULocalesContext)));
-    en =  (UEnumeration *)uprv_malloc(sizeof(UEnumeration));
-    if(!en || !myContext) {
+    myContext = static_cast<ULocalesContext *>(uprv_malloc(ಪರಿಮಾಣ(ULocalesContext)));
+    en =  (UEnumeration *)uprv_malloc(ಪರಿಮಾಣ(UEnumeration));
+    ಯದಿ(!en || !myContext) {
         *status = U_MEMORY_ALLOCATION_ERROR;
         uprv_free(en);
         uprv_free(myContext);
-        return nullptr;
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
-    uprv_memcpy(en, &gLocalesEnum, sizeof(UEnumeration));
+    uprv_memcpy(en, &gLocalesEnum, ಪರಿಮಾಣ(UEnumeration));
 
-    ures_initStackObject(&myContext->installed);
-    ures_initStackObject(&myContext->curr);
+    ures_init_ರಾಶಿ_Object(&myContext->installed);
+    ures_init_ರಾಶಿ_Object(&myContext->curr);
     idx = ures_openDirect(path, INDEX_LOCALE_NAME, status);
-    ures_getByKey(idx, INDEX_TAG, &myContext->installed, status);
-    if(U_SUCCESS(*status)) {
-#if defined(URES_TREE_DEBUG)
+    ures_get_By_ಕೀಲಿ(idx, INDEX_TAG, &myContext->installed, status);
+    ಯದಿ(U_SUCCESS(*status)) {
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
         fprintf(stderr, "Got %s::%s::[%s] : %s\n", 
-            path, INDEX_LOCALE_NAME, INDEX_TAG, ures_getKey(&myContext->installed));
+            path, INDEX_LOCALE_NAME, INDEX_TAG, ures_get_ಕೀಲಿ(&myContext->installed));
 #endif
         en->context = myContext;
-    } else {
-#if defined(URES_TREE_DEBUG)
+    } ಅನ್ಯಥಾ {
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
         fprintf(stderr, "%s open failed - %s\n", path, u_errorName(*status));
 #endif
         ures_close(&myContext->installed);
@@ -3083,20 +3083,20 @@ ures_openAvailableLocales(const char *path, UErrorCode *status)
     
     ures_close(idx);
     
-    return en;
+    ಪ್ರತ್ಯಾಗಮ en;
 }
 
-static UBool isLocaleInList(UEnumeration *locEnum, const char *locToSearch, UErrorCode *status) {
-    const char *loc;
-    while ((loc = uenum_next(locEnum, nullptr, status)) != nullptr) {
-        if (uprv_strcmp(loc, locToSearch) == 0) {
-            return true;
+ಸ್ಥಿರ UBool isLocaleInList(UEnumeration *locEnum, ಧ್ರುವ ವರ್ಣ *loc_To_ಹುಡುಕು, UErrorCode *status) {
+    ಧ್ರುವ ವರ್ಣ *loc;
+    ಯಾವತ್ ((loc = uenum_next(locEnum, nullptr, status)) != nullptr) {
+        ಯದಿ (uprv_strcmp(loc, loc_To_ಹುಡುಕು) == 0) {
+            ಪ್ರತ್ಯಾಗಮ ಸತ್ಯ;
         }
     }
-    return false;
+    ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
 }
 
-static void getParentForFunctionalEquivalent(const char*      localeID,
+ಸ್ಥಿರ ಶೂನ್ಯ getParentForFunctionalEquivalent(ಧ್ರುವ ವರ್ಣ*      localeID,
                                              UResourceBundle* res,
                                              UResourceBundle* bund1,
                                              CharString&      parent) {
@@ -3105,25 +3105,25 @@ static void getParentForFunctionalEquivalent(const char*      localeID,
     // such as collation, data may have different parents than in parentLocales).
     UErrorCode subStatus = U_ZERO_ERROR;
     parent.clear();
-    if (res != nullptr) {
-        ures_getByKey(res, "%%Parent", bund1, &subStatus);
-        if (U_SUCCESS(subStatus)) {
+    ಯದಿ (res != nullptr) {
+        ures_get_By_ಕೀಲಿ(res, "%%Parent", bund1, &subStatus);
+        ಯದಿ (U_SUCCESS(subStatus)) {
             int32_t length16;
-            const char16_t* s16 = ures_getString(bund1, &length16, &subStatus);
+            ಧ್ರುವ char16_t* s16 = ures_getString(bund1, &length16, &subStatus);
             parent.appendInvariantChars(s16, length16, subStatus);
         }
     }
     
     // If none there, use normal truncation parent
-    if (U_FAILURE(subStatus) || parent.isEmpty()) {
+    ಯದಿ (U_FAILURE(subStatus) || parent.isEmpty()) {
         subStatus = U_ZERO_ERROR;
         parent = ulocimp_getParent(localeID, subStatus);
     }
 }
 
 U_CAPI int32_t U_EXPORT2
-ures_getFunctionalEquivalent(char *result, int32_t resultCapacity,
-                             const char *path, const char *resName, const char *keyword, const char *locid,
+ures_getFunctionalEquivalent(ವರ್ಣ *result, int32_t resultCapacity,
+                             ಧ್ರುವ ವರ್ಣ *path, ಧ್ರುವ ವರ್ಣ *resName, ಧ್ರುವ ವರ್ಣ *keyword, ಧ್ರುವ ವರ್ಣ *locid,
                              UBool *isAvailable, UBool omitDefault, UErrorCode *status)
 {
     CharString defVal; /* default value for given locale */
@@ -3135,78 +3135,78 @@ ures_getFunctionalEquivalent(char *result, int32_t resultCapacity,
     UResourceBundle *res = nullptr;
     UErrorCode subStatus = U_ZERO_ERROR;
     int32_t length = 0;
-    if(U_FAILURE(*status)) return 0;
+    ಯದಿ(U_FAILURE(*status)) ಪ್ರತ್ಯಾಗಮ 0;
     CharString kwVal;
-    if (keyword != nullptr && *keyword != '\0') {
-        kwVal = ulocimp_getKeywordValue(locid, keyword, subStatus);
-        if (kwVal == DEFAULT_TAG) {
+    ಯದಿ (keyword != nullptr && *keyword != '\0') {
+        kwVal = ulocimp_get_Keyword_ಮೌಲ್ಯ(locid, keyword, subStatus);
+        ಯದಿ (kwVal == DEFAULT_TAG) {
             kwVal.clear();
         }
     }
-    if (locid == nullptr) {
+    ಯದಿ (locid == nullptr) {
         locid = uloc_getDefault();
     }
     CharString base = ulocimp_getBaseName(locid, subStatus);
-#if defined(URES_TREE_DEBUG)
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
     fprintf(stderr, "getFunctionalEquivalent: \"%s\" [%s=%s] in %s - %s\n", 
             locid, keyword, kwVal.data(), base.data(), u_errorName(subStatus));
 #endif
-    ures_initStackObject(&bund1);
-    ures_initStackObject(&bund2);
+    ures_init_ರಾಶಿ_Object(&bund1);
+    ures_init_ರಾಶಿ_Object(&bund2);
 
     parent.copyFrom(base, subStatus);
     found.copyFrom(base, subStatus);
 
-    if(isAvailable) {
+    ಯದಿ(isAvailable) {
         UEnumeration *locEnum = ures_openAvailableLocales(path, &subStatus);
-        *isAvailable = true;
-        if (U_SUCCESS(subStatus)) {
+        *isAvailable = ಸತ್ಯ;
+        ಯದಿ (U_SUCCESS(subStatus)) {
             *isAvailable = isLocaleInList(locEnum, parent.data(), &subStatus);
         }
         uenum_close(locEnum);
     }
 
-    if(U_FAILURE(subStatus)) {
+    ಯದಿ(U_FAILURE(subStatus)) {
         *status = subStatus;
-        return 0;
+        ಪ್ರತ್ಯಾಗಮ 0;
     }
     
-    do {
+    ಕುರು {
         subStatus = U_ZERO_ERROR;
         res = ures_open(path, parent.data(), &subStatus);
-        if(((subStatus == U_USING_FALLBACK_WARNING) ||
+        ಯದಿ(((subStatus == U_USING_FALLBACK_WARNING) ||
             (subStatus == U_USING_DEFAULT_WARNING)) && isAvailable)
         {
-            *isAvailable = false;
+            *isAvailable = ಅಸತ್ಯ;
         }
         isAvailable = nullptr; /* only want to set this the first time around */
         
-#if defined(URES_TREE_DEBUG)
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
         fprintf(stderr, "%s;%s -> %s [%s]\n", path?path:"ICUDATA", parent.data(), u_errorName(subStatus), ures_getLocale(res, &subStatus));
 #endif
-        if(U_FAILURE(subStatus)) {
+        ಯದಿ(U_FAILURE(subStatus)) {
             *status = subStatus;
-        } else if(subStatus == U_ZERO_ERROR) {
-            ures_getByKey(res,resName,&bund1, &subStatus);
-            if(subStatus == U_ZERO_ERROR) {
-                const char16_t *defUstr;
+        } ಅನ್ಯಥಾ ಯದಿ(subStatus == U_ZERO_ERROR) {
+            ures_get_By_ಕೀಲಿ(res,resName,&bund1, &subStatus);
+            ಯದಿ(subStatus == U_ZERO_ERROR) {
+                ಧ್ರುವ char16_t *defUstr;
                 int32_t defLen;
                 /* look for default item */
-#if defined(URES_TREE_DEBUG)
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
                 fprintf(stderr, "%s;%s : loaded default -> %s\n",
                     path?path:"ICUDATA", parent.data(), u_errorName(subStatus));
 #endif
-                defUstr = ures_getStringByKey(&bund1, DEFAULT_TAG, &defLen, &subStatus);
-                if(U_SUCCESS(subStatus) && defLen) {
+                defUstr = ures_get_String_By_ಕೀಲಿ(&bund1, DEFAULT_TAG, &defLen, &subStatus);
+                ಯದಿ(U_SUCCESS(subStatus) && defLen) {
                     defVal.clear().appendInvariantChars(defUstr, defLen, subStatus);
-#if defined(URES_TREE_DEBUG)
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
                     fprintf(stderr, "%s;%s -> default %s=%s,  %s\n", 
                         path?path:"ICUDATA", parent.data(), keyword, defVal.data(), u_errorName(subStatus));
 #endif
                     defLoc.copyFrom(parent, subStatus);
-                    if(kwVal.isEmpty()) {
+                    ಯದಿ(kwVal.isEmpty()) {
                         kwVal.append(defVal, subStatus);
-#if defined(URES_TREE_DEBUG)
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
                         fprintf(stderr, "%s;%s -> kwVal =  %s\n", 
                             path?path:"ICUDATA", parent.data(), keyword, kwVal.data());
 #endif
@@ -3217,81 +3217,81 @@ ures_getFunctionalEquivalent(char *result, int32_t resultCapacity,
         
         subStatus = U_ZERO_ERROR;
 
-        if (res != nullptr) {
+        ಯದಿ (res != nullptr) {
             found.clear().append(ures_getLocaleByType(res, ULOC_VALID_LOCALE, &subStatus), subStatus);
         }
 
-        if (found != parent) {
+        ಯದಿ (found != parent) {
             parent.copyFrom(found, subStatus);
-        } else {
+        } ಅನ್ಯಥಾ {
             getParentForFunctionalEquivalent(found.data(),res,&bund1,parent);
         }
         ures_close(res);
-    } while(defVal.isEmpty() && !found.isEmpty() && found != "root" && U_SUCCESS(*status));
+    } ಯಾವತ್(defVal.isEmpty() && !found.isEmpty() && found != "root" && U_SUCCESS(*status));
     
     /* Now, see if we can find the kwVal collator.. start the search over.. */
     parent.copyFrom(base, subStatus);
     found.copyFrom(base, subStatus);
 
-    do {
+    ಕುರು {
         res = ures_open(path, parent.data(), &subStatus);
-        if((subStatus == U_USING_FALLBACK_WARNING) && isAvailable) {
-            *isAvailable = false;
+        ಯದಿ((subStatus == U_USING_FALLBACK_WARNING) && isAvailable) {
+            *isAvailable = ಅಸತ್ಯ;
         }
         isAvailable = nullptr; /* only want to set this the first time around */
         
-#if defined(URES_TREE_DEBUG)
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
         fprintf(stderr, "%s;%s -> %s (looking for %s)\n", 
             path?path:"ICUDATA", parent.data(), u_errorName(subStatus), kwVal.data());
 #endif
-        if(U_FAILURE(subStatus)) {
+        ಯದಿ(U_FAILURE(subStatus)) {
             *status = subStatus;
-        } else if(subStatus == U_ZERO_ERROR) {
-            ures_getByKey(res,resName,&bund1, &subStatus);
-#if defined(URES_TREE_DEBUG)
+        } ಅನ್ಯಥಾ ಯದಿ(subStatus == U_ZERO_ERROR) {
+            ures_get_By_ಕೀಲಿ(res,resName,&bund1, &subStatus);
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
 /**/ fprintf(stderr,"@%d [%s] %s\n", __LINE__, resName, u_errorName(subStatus));
 #endif
-            if(subStatus == U_ZERO_ERROR) {
-                ures_getByKey(&bund1, kwVal.data(), &bund2, &subStatus);
-#if defined(URES_TREE_DEBUG)
+            ಯದಿ(subStatus == U_ZERO_ERROR) {
+                ures_get_By_ಕೀಲಿ(&bund1, kwVal.data(), &bund2, &subStatus);
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
 /**/ fprintf(stderr,"@%d [%s] %s\n", __LINE__, kwVal.data(), u_errorName(subStatus));
 #endif
-                if(subStatus == U_ZERO_ERROR) {
-#if defined(URES_TREE_DEBUG)
+                ಯದಿ(subStatus == U_ZERO_ERROR) {
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
                     fprintf(stderr, "%s;%s -> full0 %s=%s,  %s\n", 
                         path?path:"ICUDATA", parent.data(), keyword, kwVal.data(), u_errorName(subStatus));
 #endif
-                    if (parent.isEmpty()) {
+                    ಯದಿ (parent.isEmpty()) {
                         full.clear().append("root", subStatus);
-                    } else {
+                    } ಅನ್ಯಥಾ {
                         full.copyFrom(parent, subStatus);
                     }
                         /* now, recalculate default kw if need be */
-                        if(defLoc.length() > full.length()) {
-                          const char16_t *defUstr;
+                        ಯದಿ(defLoc.length() > full.length()) {
+                          ಧ್ರುವ char16_t *defUstr;
                           int32_t defLen;
                           /* look for default item */
-#if defined(URES_TREE_DEBUG)
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
                             fprintf(stderr, "%s;%s -> recalculating Default0\n", 
                                     path?path:"ICUDATA", full.data());
 #endif
-                          defUstr = ures_getStringByKey(&bund1, DEFAULT_TAG, &defLen, &subStatus);
-                          if(U_SUCCESS(subStatus) && defLen) {
+                          defUstr = ures_get_String_By_ಕೀಲಿ(&bund1, DEFAULT_TAG, &defLen, &subStatus);
+                          ಯದಿ(U_SUCCESS(subStatus) && defLen) {
                             defVal.clear().appendInvariantChars(defUstr, defLen, subStatus);
-#if defined(URES_TREE_DEBUG)
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
                             fprintf(stderr, "%s;%s -> default0 %s=%s,  %s\n", 
                                     path?path:"ICUDATA", full.data(), keyword, defVal.data(), u_errorName(subStatus));
 #endif
                             defLoc.copyFrom(full, subStatus);
                           }
                         } /* end of recalculate default KW */
-#if defined(URES_TREE_DEBUG)
-                        else {
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
+                        ಅನ್ಯಥಾ {
                           fprintf(stderr, "No trim0,  %s <= %s\n", defLoc.data(), full.data());
                         }
 #endif
-                } else {
-#if defined(URES_TREE_DEBUG)
+                } ಅನ್ಯಥಾ {
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
                     fprintf(stderr, "err=%s in %s looking for %s\n", 
                         u_errorName(subStatus), parent.data(), kwVal.data());
 #endif
@@ -3300,91 +3300,91 @@ ures_getFunctionalEquivalent(char *result, int32_t resultCapacity,
         }
         
         subStatus = U_ZERO_ERROR;
-        UBool haveFound = false;
+        UBool haveFound = ಅಸತ್ಯ;
         // At least for collations which may be aliased, we need to use the VALID locale
         // as the parent instead of just truncating, as long as the VALID locale is not
         // root and has a different language than the parent. Use of the VALID locale
         // here is similar to the procedure used at the end of the previous do-while loop
         // for all resource types.
-        if (res != nullptr && uprv_strcmp(resName, "collations") == 0) {
-            const char *validLoc = ures_getLocaleByType(res, ULOC_VALID_LOCALE, &subStatus);
-            if (U_SUCCESS(subStatus) && validLoc != nullptr && validLoc[0] != 0 && uprv_strcmp(validLoc, "root") != 0) {
+        ಯದಿ (res != nullptr && uprv_strcmp(resName, "collations") == 0) {
+            ಧ್ರುವ ವರ್ಣ *validLoc = ures_getLocaleByType(res, ULOC_VALID_LOCALE, &subStatus);
+            ಯದಿ (U_SUCCESS(subStatus) && validLoc != nullptr && validLoc[0] != 0 && uprv_strcmp(validLoc, "root") != 0) {
                 CharString validLang = ulocimp_getLanguage(validLoc, subStatus);
                 CharString parentLang = ulocimp_getLanguage(parent.toStringPiece(), subStatus);
-                if (U_SUCCESS(subStatus) && validLang != parentLang) {
+                ಯದಿ (U_SUCCESS(subStatus) && validLang != parentLang) {
                     // validLoc is not root and has a different language than parent, use it instead
                     found.clear().append(validLoc, subStatus);
-                    haveFound = true;
+                    haveFound = ಸತ್ಯ;
                 }
             }
             subStatus = U_ZERO_ERROR;
         }
-        if (!haveFound) {
+        ಯದಿ (!haveFound) {
             found.copyFrom(parent, subStatus);
         }
 
         getParentForFunctionalEquivalent(found.data(),res,&bund1,parent);
         ures_close(res);
         subStatus = U_ZERO_ERROR;
-    } while(full.isEmpty() && !found.isEmpty() && U_SUCCESS(*status));
+    } ಯಾವತ್(full.isEmpty() && !found.isEmpty() && U_SUCCESS(*status));
 
-    if(full.isEmpty() && kwVal != defVal) {
-#if defined(URES_TREE_DEBUG)
+    ಯದಿ(full.isEmpty() && kwVal != defVal) {
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
         fprintf(stderr, "Failed to locate kw %s - try default %s\n", kwVal.data(), defVal.data());
 #endif
         kwVal.clear().append(defVal, subStatus);
         parent.copyFrom(base, subStatus);
         found.copyFrom(base, subStatus);
 
-        do { /* search for 'default' named item */
+        ಕುರು { /* search for 'default' named item */
             res = ures_open(path, parent.data(), &subStatus);
-            if((subStatus == U_USING_FALLBACK_WARNING) && isAvailable) {
-                *isAvailable = false;
+            ಯದಿ((subStatus == U_USING_FALLBACK_WARNING) && isAvailable) {
+                *isAvailable = ಅಸತ್ಯ;
             }
             isAvailable = nullptr; /* only want to set this the first time around */
             
-#if defined(URES_TREE_DEBUG)
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
             fprintf(stderr, "%s;%s -> %s (looking for default %s)\n",
                 path?path:"ICUDATA", parent.data(), u_errorName(subStatus), kwVal.data());
 #endif
-            if(U_FAILURE(subStatus)) {
+            ಯದಿ(U_FAILURE(subStatus)) {
                 *status = subStatus;
-            } else if(subStatus == U_ZERO_ERROR) {
-                ures_getByKey(res,resName,&bund1, &subStatus);
-                if(subStatus == U_ZERO_ERROR) {
-                    ures_getByKey(&bund1, kwVal.data(), &bund2, &subStatus);
-                    if(subStatus == U_ZERO_ERROR) {
-#if defined(URES_TREE_DEBUG)
+            } ಅನ್ಯಥಾ ಯದಿ(subStatus == U_ZERO_ERROR) {
+                ures_get_By_ಕೀಲಿ(res,resName,&bund1, &subStatus);
+                ಯದಿ(subStatus == U_ZERO_ERROR) {
+                    ures_get_By_ಕೀಲಿ(&bund1, kwVal.data(), &bund2, &subStatus);
+                    ಯದಿ(subStatus == U_ZERO_ERROR) {
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
                         fprintf(stderr, "%s;%s -> full1 %s=%s,  %s\n", path?path:"ICUDATA",
                             parent.data(), keyword, kwVal.data(), u_errorName(subStatus));
 #endif
-                        if (parent.isEmpty()) {
+                        ಯದಿ (parent.isEmpty()) {
                             full.clear().append("root", subStatus);
-                        } else {
+                        } ಅನ್ಯಥಾ {
                             full.copyFrom(parent, subStatus);
                         }
                         
                         /* now, recalculate default kw if need be */
-                        if(defLoc.length() > full.length()) {
-                          const char16_t *defUstr;
+                        ಯದಿ(defLoc.length() > full.length()) {
+                          ಧ್ರುವ char16_t *defUstr;
                           int32_t defLen;
                           /* look for default item */
-#if defined(URES_TREE_DEBUG)
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
                             fprintf(stderr, "%s;%s -> recalculating Default1\n", 
                                     path?path:"ICUDATA", full.data());
 #endif
-                          defUstr = ures_getStringByKey(&bund1, DEFAULT_TAG, &defLen, &subStatus);
-                          if(U_SUCCESS(subStatus) && defLen) {
+                          defUstr = ures_get_String_By_ಕೀಲಿ(&bund1, DEFAULT_TAG, &defLen, &subStatus);
+                          ಯದಿ(U_SUCCESS(subStatus) && defLen) {
                             defVal.clear().appendInvariantChars(defUstr, defLen, subStatus);
-#if defined(URES_TREE_DEBUG)
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
                             fprintf(stderr, "%s;%s -> default %s=%s,  %s\n", 
                                     path?path:"ICUDATA", full.data(), keyword, defVal.data(), u_errorName(subStatus));
 #endif
                             defLoc.copyFrom(full, subStatus);
                           }
                         } /* end of recalculate default KW */
-#if defined(URES_TREE_DEBUG)
-                        else {
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
+                        ಅನ್ಯಥಾ {
                           fprintf(stderr, "No trim1,  %s <= %s\n", defLoc.data(), full.data());
                         }
 #endif
@@ -3397,24 +3397,24 @@ ures_getFunctionalEquivalent(char *result, int32_t resultCapacity,
             getParentForFunctionalEquivalent(found.data(),res,&bund1,parent);
             ures_close(res);
             subStatus = U_ZERO_ERROR;
-        } while(full.isEmpty() && !found.isEmpty() && U_SUCCESS(*status));
+        } ಯಾವತ್(full.isEmpty() && !found.isEmpty() && U_SUCCESS(*status));
     }
     
-    if(U_SUCCESS(*status)) {
-        if(full.isEmpty()) {
-#if defined(URES_TREE_DEBUG)
+    ಯದಿ(U_SUCCESS(*status)) {
+        ಯದಿ(full.isEmpty()) {
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
           fprintf(stderr, "Still could not load keyword %s=%s\n", keyword, kwVal.data());
 #endif
           *status = U_MISSING_RESOURCE_ERROR;
-        } else if(omitDefault) {
-#if defined(URES_TREE_DEBUG)
+        } ಅನ್ಯಥಾ ಯದಿ(omitDefault) {
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
           fprintf(stderr,"Trim? full=%s, defLoc=%s, found=%s\n", full.data(), defLoc.data(), found.data());
 #endif        
-          if(defLoc.length() <= full.length()) {
+          ಯದಿ(defLoc.length() <= full.length()) {
             /* found the keyword in a *child* of where the default tag was present. */
-            if(kwVal == defVal) { /* if the requested kw is default, */
+            ಯದಿ(kwVal == defVal) { /* if the requested kw is default, */
               /* and the default is in or in an ancestor of the current locale */
-#if defined(URES_TREE_DEBUG)
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
               fprintf(stderr, "Removing unneeded var %s=%s\n", keyword, kwVal.data());
 #endif
               kwVal.clear();
@@ -3422,13 +3422,13 @@ ures_getFunctionalEquivalent(char *result, int32_t resultCapacity,
           }
         }
         found.copyFrom(full, subStatus);
-        if(!kwVal.isEmpty()) {
+        ಯದಿ(!kwVal.isEmpty()) {
             found
                 .append("@", subStatus)
                 .append(keyword, subStatus)
                 .append("=", subStatus)
                 .append(kwVal, subStatus);
-        } else if(!omitDefault) {
+        } ಅನ್ಯಥಾ ಯದಿ(!omitDefault) {
             found
                 .append("@", subStatus)
                 .append(keyword, subStatus)
@@ -3443,33 +3443,33 @@ ures_getFunctionalEquivalent(char *result, int32_t resultCapacity,
     
     length = found.length();
 
-    if(U_SUCCESS(*status)) {
+    ಯದಿ(U_SUCCESS(*status)) {
         int32_t copyLength = uprv_min(length, resultCapacity);
-        if(copyLength>0) {
+        ಯದಿ(copyLength>0) {
             found.extract(result, copyLength, subStatus);
         }
-        if(length == 0) {
+        ಯದಿ(length == 0) {
           *status = U_MISSING_RESOURCE_ERROR; 
         }
-    } else {
+    } ಅನ್ಯಥಾ {
         length = 0;
         result[0]=0;
     }
-    return u_terminateChars(result, resultCapacity, length, status);
+    ಪ್ರತ್ಯಾಗಮ u_terminateChars(result, resultCapacity, length, status);
 }
 
 U_CAPI UEnumeration* U_EXPORT2
-ures_getKeywordValues(const char *path, const char *keyword, UErrorCode *status)
+ures_get_Keyword_ಮೌಲ್ಯಗಳು(ಧ್ರುವ ವರ್ಣ *path, ಧ್ರುವ ವರ್ಣ *keyword, UErrorCode *status)
 {
-#define VALUES_BUF_SIZE 2048
-#define VALUES_LIST_SIZE 512
+#define ಮೌಲ್ಯಗಳು_BUF_SIZE 2048
+#define ಮೌಲ್ಯಗಳು_LIST_SIZE 512
     
-    char       valuesBuf[VALUES_BUF_SIZE];
-    int32_t    valuesIndex = 0;
-    const char *valuesList[VALUES_LIST_SIZE];
-    int32_t    valuesCount = 0;
+    ವರ್ಣ       ಮೌಲ್ಯಗಳು_Buf[ಮೌಲ್ಯಗಳು_BUF_SIZE];
+    int32_t    ಮೌಲ್ಯಗಳು_Index = 0;
+    ಧ್ರುವ ವರ್ಣ *ಮೌಲ್ಯಗಳು_List[ಮೌಲ್ಯಗಳು_LIST_SIZE];
+    int32_t    ಮೌಲ್ಯಗಳು_ಎಣಿಕೆ = 0;
     
-    const char *locale;
+    ಧ್ರುವ ವರ್ಣ *locale;
     int32_t     locLen;
     
     UEnumeration *locs = nullptr;
@@ -3477,163 +3477,163 @@ ures_getKeywordValues(const char *path, const char *keyword, UErrorCode *status)
     UResourceBundle    item;
     UResourceBundle    subItem;
     
-    ures_initStackObject(&item);
-    ures_initStackObject(&subItem);
+    ures_init_ರಾಶಿ_Object(&item);
+    ures_init_ರಾಶಿ_Object(&subItem);
     locs = ures_openAvailableLocales(path, status);
     
-    if(U_FAILURE(*status)) {
+    ಯದಿ(U_FAILURE(*status)) {
         ures_close(&item);
         ures_close(&subItem);
-        return nullptr;
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
     
-    valuesBuf[0]=0;
-    valuesBuf[1]=0;
+    ಮೌಲ್ಯಗಳು_Buf[0]=0;
+    ಮೌಲ್ಯಗಳು_Buf[1]=0;
 
-    while ((locale = uenum_next(locs, &locLen, status)) != nullptr) {
+    ಯಾವತ್ ((locale = uenum_next(locs, &locLen, status)) != nullptr) {
         UResourceBundle   *bund = nullptr;
         UResourceBundle   *subPtr = nullptr;
         UErrorCode subStatus = U_ZERO_ERROR; /* don't fail if a bundle is unopenable */
         bund = ures_open(path, locale, &subStatus);
         
-#if defined(URES_TREE_DEBUG)
-        if(!bund || U_FAILURE(subStatus)) {
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
+        ಯದಿ(!bund || U_FAILURE(subStatus)) {
             fprintf(stderr, "%s-%s values: Can't open %s locale - skipping. (%s)\n", 
                 path?path:"<ICUDATA>", keyword, locale, u_errorName(subStatus));
         }
 #endif
         
-        ures_getByKey(bund, keyword, &item, &subStatus);
+        ures_get_By_ಕೀಲಿ(bund, keyword, &item, &subStatus);
         
-        if(!bund || U_FAILURE(subStatus)) {
-#if defined(URES_TREE_DEBUG)
+        ಯದಿ(!bund || U_FAILURE(subStatus)) {
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
             fprintf(stderr, "%s-%s values: Can't find in %s - skipping. (%s)\n", 
                 path?path:"<ICUDATA>", keyword, locale, u_errorName(subStatus));
 #endif
             ures_close(bund);
             bund = nullptr;
-            continue;
+            ಅನುವರ್ತ;
         }
 
-        while ((subPtr = ures_getNextResource(&item, &subItem, &subStatus)) != nullptr
+        ಯಾವತ್ ((subPtr = ures_getNextResource(&item, &subItem, &subStatus)) != nullptr
             && U_SUCCESS(subStatus)) {
-            const char *k;
+            ಧ್ರುವ ವರ್ಣ *k;
             int32_t i;
-            k = ures_getKey(subPtr);
+            k = ures_get_ಕೀಲಿ(subPtr);
 
-#if defined(URES_TREE_DEBUG)
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
             /* fprintf(stderr, "%s | %s | %s | %s\n", path?path:"<ICUDATA>", keyword, locale, k); */
 #endif
-            if(k == nullptr || *k == 0 ||
+            ಯದಿ(k == nullptr || *k == 0 ||
                     uprv_strcmp(k, DEFAULT_TAG) == 0 || uprv_strncmp(k, "private-", 8) == 0) {
                 // empty or "default" or unlisted type
-                continue;
+                ಅನುವರ್ತ;
             }
-            for(i=0; i<valuesCount; i++) {
-                if(!uprv_strcmp(valuesList[i],k)) {
+            ಪ್ರತಿ(i=0; i<ಮೌಲ್ಯಗಳು_ಎಣಿಕೆ; i++) {
+                ಯದಿ(!uprv_strcmp(ಮೌಲ್ಯಗಳು_List[i],k)) {
                     k = nullptr; /* found duplicate */
-                    break;
+                    ಭಙ್ಗ;
                 }
             }
-            if(k != nullptr) {
+            ಯದಿ(k != nullptr) {
                 int32_t kLen = (int32_t)uprv_strlen(k);
-                if((valuesCount >= (VALUES_LIST_SIZE-1)) ||       /* no more space in list .. */
-                    ((valuesIndex+kLen+1+1) >= VALUES_BUF_SIZE)) { /* no more space in buffer (string + 2 nulls) */
+                ಯದಿ((ಮೌಲ್ಯಗಳು_ಎಣಿಕೆ >= (ಮೌಲ್ಯಗಳು_LIST_SIZE-1)) ||       /* no more space in list .. */
+                    ((ಮೌಲ್ಯಗಳು_Index+kLen+1+1) >= ಮೌಲ್ಯಗಳು_BUF_SIZE)) { /* no more space in buffer (string + 2 nulls) */
                     *status = U_ILLEGAL_ARGUMENT_ERROR; /* out of space.. */
-                } else {
-                    uprv_strcpy(valuesBuf+valuesIndex, k);
-                    valuesList[valuesCount++] = valuesBuf+valuesIndex;
-                    valuesIndex += kLen;
-#if defined(URES_TREE_DEBUG)
+                } ಅನ್ಯಥಾ {
+                    uprv_strcpy(ಮೌಲ್ಯಗಳು_Buf+ಮೌಲ್ಯಗಳು_Index, k);
+                    ಮೌಲ್ಯಗಳು_List[ಮೌಲ್ಯಗಳು_ಎಣಿಕೆ++] = ಮೌಲ್ಯಗಳು_Buf+ಮೌಲ್ಯಗಳು_Index;
+                    ಮೌಲ್ಯಗಳು_Index += kLen;
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
                     fprintf(stderr, "%s | %s | %s | [%s]   (UNIQUE)\n",
                         path?path:"<ICUDATA>", keyword, locale, k);
 #endif
-                    valuesBuf[valuesIndex++] = 0; /* terminate */
+                    ಮೌಲ್ಯಗಳು_Buf[ಮೌಲ್ಯಗಳು_Index++] = 0; /* terminate */
                 }
             }
         }
         ures_close(bund);
     }
-    valuesBuf[valuesIndex++] = 0; /* terminate */
+    ಮೌಲ್ಯಗಳು_Buf[ಮೌಲ್ಯಗಳು_Index++] = 0; /* terminate */
     
     ures_close(&item);
     ures_close(&subItem);
     uenum_close(locs);
-#if defined(URES_TREE_DEBUG)
+#ಯದಿ defined(URES_ವೃಕ್ಷ_DEBUG)
     fprintf(stderr, "%s:  size %d, #%d\n", u_errorName(*status), 
-        valuesIndex, valuesCount);
+        ಮೌಲ್ಯಗಳು_Index, ಮೌಲ್ಯಗಳು_ಎಣಿಕೆ);
 #endif
-    return uloc_openKeywordList(valuesBuf, valuesIndex, status);
+    ಪ್ರತ್ಯಾಗಮ uloc_openKeywordList(ಮೌಲ್ಯಗಳು_Buf, ಮೌಲ್ಯಗಳು_Index, status);
 }
-#if 0
+#ಯದಿ 0
 /* This code isn't needed, and given the documentation warnings the implementation is suspect */
 U_CAPI UBool U_EXPORT2
-ures_equal(const UResourceBundle* res1, const UResourceBundle* res2){
-    if(res1==nullptr || res2==nullptr){
-        return res1==res2; /* pointer comparison */
+ures_equal(ಧ್ರುವ UResourceBundle* res1, ಧ್ರುವ UResourceBundle* res2){
+    ಯದಿ(res1==nullptr || res2==nullptr){
+        ಪ್ರತ್ಯಾಗಮ res1==res2; /* pointer comparison */
     }
-    if(res1->fKey==nullptr||  res2->fKey==nullptr){
-        return (res1->fKey==res2->fKey);
-    }else{
-        if(uprv_strcmp(res1->fKey, res2->fKey)!=0){
-            return false;
+    ಯದಿ(res1->f_ಕೀಲಿ==nullptr||  res2->f_ಕೀಲಿ==nullptr){
+        ಪ್ರತ್ಯಾಗಮ (res1->f_ಕೀಲಿ==res2->f_ಕೀಲಿ);
+    }ಅನ್ಯಥಾ{
+        ಯದಿ(uprv_strcmp(res1->f_ಕೀಲಿ, res2->f_ಕೀಲಿ)!=0){
+            ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
         }
     }
-    if(uprv_strcmp(res1->fData->fName, res2->fData->fName)!=0){
-        return false;
+    ಯದಿ(uprv_strcmp(res1->fData->fName, res2->fData->fName)!=0){
+        ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
     }
-    if(res1->fData->fPath == nullptr||  res2->fData->fPath==nullptr){
-        return (res1->fData->fPath == res2->fData->fPath);
-    }else{
-        if(uprv_strcmp(res1->fData->fPath, res2->fData->fPath)!=0){
-            return false;
+    ಯದಿ(res1->fData->fPath == nullptr||  res2->fData->fPath==nullptr){
+        ಪ್ರತ್ಯಾಗಮ (res1->fData->fPath == res2->fData->fPath);
+    }ಅನ್ಯಥಾ{
+        ಯದಿ(uprv_strcmp(res1->fData->fPath, res2->fData->fPath)!=0){
+            ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
         }
     }
-    if(uprv_strcmp(res1->fData->fParent->fName, res2->fData->fParent->fName)!=0){
-        return false;
+    ಯದಿ(uprv_strcmp(res1->fData->fParent->fName, res2->fData->fParent->fName)!=0){
+        ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
     }
-    if(uprv_strcmp(res1->fData->fParent->fPath, res2->fData->fParent->fPath)!=0){
-        return false;
+    ಯದಿ(uprv_strcmp(res1->fData->fParent->fPath, res2->fData->fParent->fPath)!=0){
+        ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
     }
-    if(uprv_strncmp(res1->fResPath, res2->fResPath, res1->fResPathLen)!=0){
-        return false;
+    ಯದಿ(uprv_strncmp(res1->fResPath, res2->fResPath, res1->fResPathLen)!=0){
+        ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
     }
-    if(res1->fRes != res2->fRes){
-        return false;
+    ಯದಿ(res1->fRes != res2->fRes){
+        ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
     }
-    return true;
+    ಪ್ರತ್ಯಾಗಮ ಸತ್ಯ;
 }
 U_CAPI UResourceBundle* U_EXPORT2
-ures_clone(const UResourceBundle* res, UErrorCode* status){
+ures_clone(ಧ್ರುವ UResourceBundle* res, UErrorCode* status){
     UResourceBundle* bundle = nullptr;
     UResourceBundle* ret = nullptr;
-    if(U_FAILURE(*status) || res == nullptr){
-        return nullptr;
+    ಯದಿ(U_FAILURE(*status) || res == nullptr){
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
     bundle = ures_open(res->fData->fPath, res->fData->fName, status);
-    if(res->fResPath!=nullptr){
+    ಯದಿ(res->fResPath!=nullptr){
         ret = ures_findSubResource(bundle, res->fResPath, nullptr, status);
         ures_close(bundle);
-    }else{
+    }ಅನ್ಯಥಾ{
         ret = bundle;
     }
-    return ret;
+    ಪ್ರತ್ಯಾಗಮ ret;
 }
-U_CAPI const UResourceBundle* U_EXPORT2
-ures_getParentBundle(const UResourceBundle* res){
-    if(res==nullptr){
-        return nullptr;
+U_CAPI ಧ್ರುವ UResourceBundle* U_EXPORT2
+ures_getParentBundle(ಧ್ರುವ UResourceBundle* res){
+    ಯದಿ(res==nullptr){
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
-    return res->fParentRes;
+    ಪ್ರತ್ಯಾಗಮ res->fParentRes;
 }
 #endif
 
-U_CAPI void U_EXPORT2
-ures_getVersionByKey(const UResourceBundle* res, const char *key, UVersionInfo ver, UErrorCode *status) {
-  const char16_t *str;
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+ures_get_Version_By_ಕೀಲಿ(ಧ್ರುವ UResourceBundle* res, ಧ್ರುವ ವರ್ಣ *ಕೀಲಿ, UVersionInfo ver, UErrorCode *status) {
+  ಧ್ರುವ char16_t *str;
   int32_t len;
-  str = ures_getStringByKey(res, key, &len, status);
-  if(U_SUCCESS(*status)) {
+  str = ures_get_String_By_ಕೀಲಿ(res, ಕೀಲಿ, &len, status);
+  ಯದಿ(U_SUCCESS(*status)) {
     u_versionFromUString(ver, str);
   } 
 }

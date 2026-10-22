@@ -51,8 +51,8 @@
  *
  * @internal ICU 4.0
  */
-#if defined(UCONFIG_USE_LOCAL)
-#include "uconfig_local.h"
+#ಯದಿ defined(UCONFIG_USE_LOCAL)
+#ಅನ್ತರ್ಭಾವ "uconfig_local.h"
 #endif
 
 /**
@@ -64,14 +64,14 @@
  */
 #ifdef U_DEBUG
     /* Use the predefined value. */
-#elif defined(_DEBUG)
+#ನೋಚೇದ್ಯದಿ defined(_DEBUG)
     /*
      * _DEBUG is defined by Visual Studio debug compilation.
      * Do *not* test for its NDEBUG macro: It is an orthogonal macro
      * which disables assert().
      */
 #   define U_DEBUG 1
-# else
+# ಅನ್ಯಥಾ
 #   define U_DEBUG 0
 #endif
 
@@ -102,11 +102,11 @@
  */
 #ifdef U_NO_DEFAULT_INCLUDE_UTF_HEADERS
     /* Use the predefined value. */
-#elif defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || defined(U_I18N_IMPLEMENTATION) || \
+#ನೋಚೇದ್ಯದಿ defined(U_COMBINED_IMPLEMENTATION) || defined(U_COMMON_IMPLEMENTATION) || defined(U_I18N_IMPLEMENTATION) || \
       defined(U_IO_IMPLEMENTATION) || defined(U_LAYOUT_IMPLEMENTATION) || defined(U_LAYOUTEX_IMPLEMENTATION) || \
       defined(U_TOOLUTIL_IMPLEMENTATION)
 #   define U_NO_DEFAULT_INCLUDE_UTF_HEADERS 1
-#else
+#ಅನ್ಯಥಾ
 #   define U_NO_DEFAULT_INCLUDE_UTF_HEADERS 0
 #endif
 
@@ -183,7 +183,7 @@
  */
 #ifdef U_HAVE_LIB_SUFFIX
     /* Use the predefined value. */
-#elif defined(U_LIB_SUFFIX_C_NAME) || defined(U_IN_DOXYGEN)
+#ನೋಚೇದ್ಯದಿ defined(U_LIB_SUFFIX_C_NAME) || defined(U_IN_DOXYGEN)
 #   define U_HAVE_LIB_SUFFIX 1
 #endif
 
@@ -194,10 +194,10 @@
  */
 #ifdef U_LIB_SUFFIX_C_NAME_STRING
     /* Use the predefined value. */
-#elif defined(U_LIB_SUFFIX_C_NAME)
+#ನೋಚೇದ್ಯದಿ defined(U_LIB_SUFFIX_C_NAME)
 #   define CONVERT_TO_STRING(s) #s
 #   define U_LIB_SUFFIX_C_NAME_STRING CONVERT_TO_STRING(U_LIB_SUFFIX_C_NAME)
-#else
+#ಅನ್ಯಥಾ
 #   define U_LIB_SUFFIX_C_NAME_STRING ""
 #endif
 
@@ -218,13 +218,13 @@
 #   define UCONFIG_ONLY_COLLATION 0
 #endif
 
-#if UCONFIG_ONLY_COLLATION
+#ಯದಿ UCONFIG_ONLY_COLLATION
     /* common library */
 #   define UCONFIG_NO_BREAK_ITERATION 1
 #   define UCONFIG_NO_IDNA 1
 
     /* i18n library */
-#   if UCONFIG_NO_COLLATION
+#   ಯದಿ UCONFIG_NO_COLLATION
 #       error Contradictory collation switches in uconfig.h.
 #   endif
 #   define UCONFIG_NO_FORMATTING 1
@@ -256,7 +256,7 @@
 #   define UCONFIG_NO_FILE_IO 0
 #endif
 
-#if UCONFIG_NO_FILE_IO && defined(U_TIMEZONE_FILES_DIR) 
+#ಯದಿ UCONFIG_NO_FILE_IO && defined(U_TIMEZONE_FILES_DIR) 
 #   error Contradictory file io switches in uconfig.h.
 #endif
 
@@ -276,7 +276,7 @@
 #   define UCONFIG_NO_CONVERSION 0
 #endif
 
-#if UCONFIG_NO_CONVERSION
+#ಯದಿ UCONFIG_NO_CONVERSION
 #   define UCONFIG_NO_LEGACY_CONVERSION 1
 #endif
 
@@ -333,7 +333,7 @@
 #   define UCONFIG_USE_ML_PHRASE_BREAKING 0
 #endif
 
-#if UCONFIG_NO_NORMALIZATION
+#ಯದಿ UCONFIG_NO_NORMALIZATION
     /* common library */
     /* ICU 50 CJK dictionary BreakIterator uses normalization */
 #   define UCONFIG_NO_BREAK_ITERATION 1
@@ -341,7 +341,7 @@
 #   define UCONFIG_NO_IDNA 1
 
     /* i18n library */
-#   if UCONFIG_ONLY_COLLATION
+#   ಯದಿ UCONFIG_ONLY_COLLATION
 #       error Contradictory collation switches in uconfig.h.
 #   endif
 #   define UCONFIG_NO_COLLATION 1

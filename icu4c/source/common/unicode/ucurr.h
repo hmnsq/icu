@@ -9,8 +9,8 @@
 #ifndef _UCURR_H_
 #define _UCURR_H_
 
-#include "unicode/utypes.h"
-#include "unicode/uenum.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uenum.h"
 
 /**
  * \file 
@@ -32,13 +32,13 @@
  * @since ICU 2.2
  */
 
-#if !UCONFIG_NO_FORMATTING
+#ಯದಿ !UCONFIG_NO_FORMATTING
 
 /**
  * Currency Usage used for Decimal Format
  * @stable ICU 54
  */
-enum UCurrencyUsage {
+ಗಣನಾ UCurrencyUsage {
     /**
      * a setting to specify currency usage which determines currency digit
      * and rounding for standard usage, for example: "50.00 NT$"
@@ -57,11 +57,11 @@ enum UCurrencyUsage {
      * One higher than the last enum UCurrencyUsage constant.
      * @deprecated ICU 58 The numeric value may change over time, see ICU ticket #12420.
      */
-    UCURR_USAGE_COUNT=2
+    UCURR_USAGE_ಎಣಿಕೆ=2
 #endif  // U_HIDE_DEPRECATED_API
 };
 /** Currency Usage used for Decimal Format */
-typedef enum UCurrencyUsage UCurrencyUsage; 
+ಪ್ರಕಾರನಿರ್ದೇಶ ಗಣನಾ UCurrencyUsage UCurrencyUsage; 
 
 /**
  * Finds a currency code for the given locale.
@@ -79,7 +79,7 @@ typedef enum UCurrencyUsage UCurrencyUsage;
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-ucurr_forLocale(const char* locale,
+ucurr_forLocale(ಧ್ರುವ ವರ್ಣ* locale,
                 UChar* buff,
                 int32_t buffCapacity,
                 UErrorCode* ec);
@@ -90,13 +90,13 @@ ucurr_forLocale(const char* locale,
  * @see ucurr_getName
  * @stable ICU 2.6
  */
-typedef enum UCurrNameStyle {
+ಪ್ರಕಾರನಿರ್ದೇಶ ಗಣನಾ UCurrNameStyle {
     /**
      * Selector for ucurr_getName indicating a symbolic name for a
      * currency, such as "$" for USD.
      * @stable ICU 2.6
      */
-    UCURR_SYMBOL_NAME,
+    UCURR_ಚಿಹ್ನೆ_NAME,
 
     /**
      * Selector for ucurr_getName indicating the long name for a
@@ -113,7 +113,7 @@ typedef enum UCurrNameStyle {
      *
      * @stable ICU 61
      */
-    UCURR_NARROW_SYMBOL_NAME,
+    UCURR_NARROW_ಚಿಹ್ನೆ_NAME,
 
     /**
      * Selector for getName() indicating the formal currency symbol.
@@ -123,7 +123,7 @@ typedef enum UCurrNameStyle {
      *
      * @stable ICU 68
      */
-    UCURR_FORMAL_SYMBOL_NAME,
+    UCURR_FORMAL_ಚಿಹ್ನೆ_NAME,
 
     /**
      * Selector for getName() indicating the variant currency symbol.
@@ -132,15 +132,15 @@ typedef enum UCurrNameStyle {
      *
      * @stable ICU 68
      */
-    UCURR_VARIANT_SYMBOL_NAME
+    UCURR_VARIANT_ಚಿಹ್ನೆ_NAME
     
 } UCurrNameStyle;
 
-#if !UCONFIG_NO_SERVICE
+#ಯದಿ !UCONFIG_NO_SERVICE
 /**
  * @stable ICU 2.6
  */
-typedef const void* UCurrRegistryKey;
+ಪ್ರಕಾರನಿರ್ದೇಶ ಧ್ರುವ ಶೂನ್ಯ* UCurr_Registry_ಕೀಲಿ;
 
 /**
  * Register an (existing) ISO 4217 currency code for the given locale.
@@ -153,9 +153,9 @@ typedef const void* UCurrRegistryKey;
  * if there was an error.
  * @stable ICU 2.6
  */
-U_CAPI UCurrRegistryKey U_EXPORT2
-ucurr_register(const UChar* isoCode, 
-                   const char* locale,  
+U_CAPI UCurr_Registry_ಕೀಲಿ U_EXPORT2
+ucurr_register(ಧ್ರುವ UChar* isoCode, 
+                   ಧ್ರುವ ವರ್ಣ* locale,  
                    UErrorCode* status);
 /**
  * Unregister the previously-registered currency definitions using the
@@ -169,7 +169,7 @@ ucurr_register(const UChar* isoCode,
  * @stable ICU 2.6
  */
 U_CAPI UBool U_EXPORT2
-ucurr_unregister(UCurrRegistryKey key, UErrorCode* status);
+ucurr_unregister(UCurr_Registry_ಕೀಲಿ ಕೀಲಿ, UErrorCode* status);
 #endif /* UCONFIG_NO_SERVICE */
 
 /**
@@ -189,9 +189,9 @@ ucurr_unregister(UCurrRegistryKey key, UErrorCode* status);
  * returned.
  * @stable ICU 2.6
  */
-U_CAPI const UChar* U_EXPORT2
-ucurr_getName(const UChar* currency U_LIFETIME_BOUND,
-              const char* locale,
+U_CAPI ಧ್ರುವ UChar* U_EXPORT2
+ucurr_getName(ಧ್ರುವ UChar* currency U_LIFETIME_BOUND,
+              ಧ್ರುವ ವರ್ಣ* locale,
               UCurrNameStyle nameStyle,
               UBool* isChoiceFormat,
               int32_t* len,
@@ -214,11 +214,11 @@ ucurr_getName(const UChar* currency U_LIFETIME_BOUND,
  * returned.
  * @stable ICU 4.2
  */
-U_CAPI const UChar* U_EXPORT2
-ucurr_getPluralName(const UChar* currency U_LIFETIME_BOUND,
-                    const char* locale,
+U_CAPI ಧ್ರುವ UChar* U_EXPORT2
+ucurr_getPluralName(ಧ್ರುವ UChar* currency U_LIFETIME_BOUND,
+                    ಧ್ರುವ ವರ್ಣ* locale,
                     UBool* isChoiceFormat,
-                    const char* pluralCount,
+                    ಧ್ರುವ ವರ್ಣ* plural_ಎಣಿಕೆ,
                     int32_t* len,
                     UErrorCode* ec);
 
@@ -240,7 +240,7 @@ ucurr_getPluralName(const UChar* currency U_LIFETIME_BOUND,
  * @stable ICU 3.0
  */
 U_CAPI int32_t U_EXPORT2
-ucurr_getDefaultFractionDigits(const UChar* currency,
+ucurr_getDefaultFractionDigits(ಧ್ರುವ UChar* currency,
                                UErrorCode* ec);
 
 /**
@@ -261,8 +261,8 @@ ucurr_getDefaultFractionDigits(const UChar* currency,
  * @stable ICU 54
  */
 U_CAPI int32_t U_EXPORT2
-ucurr_getDefaultFractionDigitsForUsage(const UChar* currency, 
-                                       const UCurrencyUsage usage,
+ucurr_getDefaultFractionDigitsForUsage(ಧ್ರುವ UChar* currency, 
+                                       ಧ್ರುವ UCurrencyUsage usage,
                                        UErrorCode* ec);
 
 /**
@@ -275,8 +275,8 @@ ucurr_getDefaultFractionDigitsForUsage(const UChar* currency,
  * or 0.0 if there is an error
  * @stable ICU 3.0
  */
-U_CAPI double U_EXPORT2
-ucurr_getRoundingIncrement(const UChar* currency,
+U_CAPI ದ್ವಿಗುಣ U_EXPORT2
+ucurr_getRoundingIncrement(ಧ್ರುವ UChar* currency,
                            UErrorCode* ec);
 
 /**
@@ -289,9 +289,9 @@ ucurr_getRoundingIncrement(const UChar* currency,
  * or 0.0 if there is an error
  * @stable ICU 54
  */
-U_CAPI double U_EXPORT2
-ucurr_getRoundingIncrementForUsage(const UChar* currency,
-                                   const UCurrencyUsage usage,
+U_CAPI ದ್ವಿಗುಣ U_EXPORT2
+ucurr_getRoundingIncrementForUsage(ಧ್ರುವ UChar* currency,
+                                   ಧ್ರುವ UCurrencyUsage usage,
                                    UErrorCode* ec);
 
 /**
@@ -300,7 +300,7 @@ ucurr_getRoundingIncrementForUsage(const UChar* currency,
  * @see ucurr_openCurrencies
  * @stable ICU 3.2
  */
-typedef enum UCurrCurrencyType {
+ಪ್ರಕಾರನಿರ್ದೇಶ ಗಣನಾ UCurrCurrencyType {
     /**
      * Select all ISO-4217 currency codes.
      * @stable ICU 3.2
@@ -376,7 +376,7 @@ ucurr_openISOCurrencies(uint32_t currType, UErrorCode *pErrorCode);
   * @stable ICU 4.8 
   */ 
 U_CAPI UBool U_EXPORT2
-ucurr_isAvailable(const UChar* isoCode, 
+ucurr_isAvailable(ಧ್ರುವ UChar* isoCode, 
              UDate from, 
              UDate to, 
              UErrorCode* errorCode);
@@ -396,7 +396,7 @@ ucurr_isAvailable(const UChar* isoCode,
  * @stable ICU 4.0
  */
 U_CAPI int32_t U_EXPORT2
-ucurr_countCurrencies(const char* locale, 
+ucurr_ಎಣಿಕೆ_Currencies(ಧ್ರುವ ವರ್ಣ* locale, 
                  UDate date, 
                  UErrorCode* ec); 
 
@@ -420,7 +420,7 @@ ucurr_countCurrencies(const char* locale,
  * @stable ICU 4.0 
  */ 
 U_CAPI int32_t U_EXPORT2 
-ucurr_forLocaleAndDate(const char* locale, 
+ucurr_forLocaleAndDate(ಧ್ರುವ ವರ್ಣ* locale, 
                 UDate date, 
                 int32_t index,
                 UChar* buff, 
@@ -444,8 +444,8 @@ ucurr_forLocaleAndDate(const char* locale,
  * @stable ICU 4.2
  */
 U_CAPI UEnumeration* U_EXPORT2
-ucurr_getKeywordValuesForLocale(const char* key,
-                                const char* locale,
+ucurr_get_Keyword_ಮೌಲ್ಯಗಳು_For_Locale(ಧ್ರುವ ವರ್ಣ* ಕೀಲಿ,
+                                ಧ್ರುವ ವರ್ಣ* locale,
                                 UBool commonlyUsed,
                                 UErrorCode* status);
 
@@ -459,7 +459,7 @@ ucurr_getKeywordValuesForLocale(const char* key,
  * @stable ICU 49
  */
 U_CAPI int32_t U_EXPORT2
-ucurr_getNumericCode(const UChar* currency);
+ucurr_getNumericCode(ಧ್ರುವ UChar* currency);
 
 /**
  * The number of digits to be used when formatting

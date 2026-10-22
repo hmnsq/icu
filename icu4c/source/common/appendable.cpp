@@ -14,9 +14,9 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/appendable.h"
-#include "unicode/utf16.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/appendable.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utf16.h"
 
 U_NAMESPACE_BEGIN
 
@@ -24,36 +24,36 @@ Appendable::~Appendable() {}
 
 UBool
 Appendable::appendCodePoint(UChar32 c) {
-    if(c<=0xffff) {
-        return appendCodeUnit(static_cast<char16_t>(c));
-    } else {
-        return appendCodeUnit(U16_LEAD(c)) && appendCodeUnit(U16_TRAIL(c));
+    ಯದಿ(c<=0xffff) {
+        ಪ್ರತ್ಯಾಗಮ appendCodeUnit(static_cast<char16_t>(c));
+    } ಅನ್ಯಥಾ {
+        ಪ್ರತ್ಯಾಗಮ appendCodeUnit(U16_LEAD(c)) && appendCodeUnit(U16_TRAIL(c));
     }
 }
 
 UBool
-Appendable::appendString(const char16_t *s, int32_t length) {
-    if(length<0) {
+Appendable::appendString(ಧ್ರುವ char16_t *s, int32_t length) {
+    ಯದಿ(length<0) {
         char16_t c;
-        while((c=*s++)!=0) {
-            if(!appendCodeUnit(c)) {
-                return false;
+        ಯಾವತ್((c=*s++)!=0) {
+            ಯದಿ(!appendCodeUnit(c)) {
+                ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
             }
         }
-    } else if(length>0) {
-        const char16_t *limit=s+length;
-        do {
-            if(!appendCodeUnit(*s++)) {
-                return false;
+    } ಅನ್ಯಥಾ ಯದಿ(length>0) {
+        ಧ್ರುವ char16_t *limit=s+length;
+        ಕುರು {
+            ಯದಿ(!appendCodeUnit(*s++)) {
+                ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
             }
-        } while(s<limit);
+        } ಯಾವತ್(s<limit);
     }
-    return true;
+    ಪ್ರತ್ಯಾಗಮ ಸತ್ಯ;
 }
 
 UBool
 Appendable::reserveAppendCapacity(int32_t /*appendCapacity*/) {
-    return true;
+    ಪ್ರತ್ಯಾಗಮ ಸತ್ಯ;
 }
 
 char16_t*
@@ -62,12 +62,12 @@ Appendable::getAppendBuffer(int32_t minCapacity,
                             char16_t* scratch U_LIFETIME_BOUND,
                             int32_t scratchCapacity,
                             int32_t* resultCapacity) U_LIFETIME_BOUND {
-    if(minCapacity<1 || scratchCapacity<minCapacity) {
+    ಯದಿ(minCapacity<1 || scratchCapacity<minCapacity) {
         *resultCapacity=0;
-        return nullptr;
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
     *resultCapacity=scratchCapacity;
-    return scratch;
+    ಪ್ರತ್ಯಾಗಮ scratch;
 }
 
 // UnicodeStringAppendable is implemented in unistr.cpp.

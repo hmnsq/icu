@@ -24,10 +24,10 @@
 #   define U_UTF8_IMPL
 #endif
 
-#include "unicode/utypes.h"
-#include "unicode/utf.h"
-#include "unicode/utf8.h"
-#include "uassert.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utf.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utf8.h"
+#ಅನ್ತರ್ಭಾವ "uassert.h"
 
 /*
  * Table of the number of utf8 trail bytes, indexed by the lead byte.
@@ -55,8 +55,8 @@
  * -finish:
  * (BSR: Bit Scan Reverse, scans for a 1-bit, starting from the MSB)
  */
-U_CAPI const uint8_t
-utf8_countTrailBytes[256]={
+U_CAPI ಧ್ರುವ uint8_t
+utf8_ಎಣಿಕೆ_Trail_Bytes[256]={
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -84,22 +84,22 @@ utf8_countTrailBytes[256]={
     3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-static const UChar32
-utf8_errorValue[6]={
+ಸ್ಥಿರ ಧ್ರುವ UChar32
+utf8_error_ಮೌಲ್ಯ[6]={
     // Same values as UTF8_ERROR_VALUE_1, UTF8_ERROR_VALUE_2, UTF_ERROR_VALUE,
     // but without relying on the obsolete unicode/utf_old.h.
     0x15, 0x9f, 0xffff,
     0x10ffff
 };
 
-static UChar32
-errorValue(int32_t count, int8_t strict) {
-    if(strict>=0) {
-        return utf8_errorValue[count];
-    } else if(strict==-3) {
-        return 0xfffd;
-    } else {
-        return U_SENTINEL;
+ಸ್ಥಿರ UChar32
+error_ಮೌಲ್ಯ(int32_t count, int8_t strict) {
+    ಯದಿ(strict>=0) {
+        ಪ್ರತ್ಯಾಗಮ utf8_error_ಮೌಲ್ಯ[count];
+    } ಅನ್ಯಥಾ ಯದಿ(strict==-3) {
+        ಪ್ರತ್ಯಾಗಮ 0xfffd;
+    } ಅನ್ಯಥಾ {
+        ಪ್ರತ್ಯಾಗಮ U_SENTINEL;
     }
 }
 
@@ -126,202 +126,202 @@ errorValue(int32_t count, int8_t strict) {
  *     like illegal sequences.
  */
 U_CAPI UChar32 U_EXPORT2
-utf8_nextCharSafeBody(const uint8_t *s, int32_t *pi, int32_t length, UChar32 c, int8_t strict) {
+utf8_nextCharSafeBody(ಧ್ರುವ uint8_t *s, int32_t *pi, int32_t length, UChar32 c, int8_t strict) {
     // *pi is one after byte c.
     int32_t i=*pi;
     // length can be negative for NUL-terminated strings: Read and validate one byte at a time.
-    if(i==length || c>0xf4) {
+    ಯದಿ(i==length || c>0xf4) {
         // end of string, or not a lead byte
-    } else if(c>=0xf0) {
+    } ಅನ್ಯಥಾ ಯದಿ(c>=0xf0) {
         // Test for 4-byte sequences first because
         // U8_NEXT() handles shorter valid sequences inline.
         uint8_t t1=s[i], t2, t3;
         c&=7;
-        if(U8_IS_VALID_LEAD4_AND_T1(c, t1) &&
+        ಯದಿ(U8_IS_VALID_LEAD4_AND_T1(c, t1) &&
                 ++i!=length && (t2=s[i]-0x80)<=0x3f &&
                 ++i!=length && (t3=s[i]-0x80)<=0x3f) {
             ++i;
             c=(c<<18)|((t1&0x3f)<<12)|(t2<<6)|t3;
             // strict: forbid non-characters like U+fffe
-            if(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
+            ಯದಿ(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
                 *pi=i;
-                return c;
+                ಪ್ರತ್ಯಾಗಮ c;
             }
         }
-    } else if(c>=0xe0) {
+    } ಅನ್ಯಥಾ ಯದಿ(c>=0xe0) {
         c&=0xf;
-        if(strict!=-2) {
+        ಯದಿ(strict!=-2) {
             uint8_t t1=s[i], t2;
-            if(U8_IS_VALID_LEAD3_AND_T1(c, t1) &&
+            ಯದಿ(U8_IS_VALID_LEAD3_AND_T1(c, t1) &&
                     ++i!=length && (t2=s[i]-0x80)<=0x3f) {
                 ++i;
                 c=(c<<12)|((t1&0x3f)<<6)|t2;
                 // strict: forbid non-characters like U+fffe
-                if(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
+                ಯದಿ(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
                     *pi=i;
-                    return c;
+                    ಪ್ರತ್ಯಾಗಮ c;
                 }
             }
-        } else {
+        } ಅನ್ಯಥಾ {
             // strict=-2 -> lenient: allow surrogates
             uint8_t t1=s[i]-0x80, t2;
-            if(t1<=0x3f && (c>0 || t1>=0x20) &&
+            ಯದಿ(t1<=0x3f && (c>0 || t1>=0x20) &&
                     ++i!=length && (t2=s[i]-0x80)<=0x3f) {
                 *pi=i+1;
-                return (c<<12)|(t1<<6)|t2;
+                ಪ್ರತ್ಯಾಗಮ (c<<12)|(t1<<6)|t2;
             }
         }
-    } else if(c>=0xc2) {
+    } ಅನ್ಯಥಾ ಯದಿ(c>=0xc2) {
         uint8_t t1=s[i]-0x80;
-        if(t1<=0x3f) {
+        ಯದಿ(t1<=0x3f) {
             *pi=i+1;
-            return ((c-0xc0)<<6)|t1;
+            ಪ್ರತ್ಯಾಗಮ ((c-0xc0)<<6)|t1;
         }
     }  // else 0x80<=c<0xc2 is not a lead byte
 
     /* error handling */
-    c=errorValue(i-*pi, strict);
+    c=error_ಮೌಲ್ಯ(i-*pi, strict);
     *pi=i;
-    return c;
+    ಪ್ರತ್ಯಾಗಮ c;
 }
 
 U_CAPI int32_t U_EXPORT2
 utf8_appendCharSafeBody(uint8_t *s, int32_t i, int32_t length, UChar32 c, UBool *pIsError) {
-    if((uint32_t)(c)<=0x7ff) {
-        if((i)+1<(length)) {
+    ಯದಿ((uint32_t)(c)<=0x7ff) {
+        ಯದಿ((i)+1<(length)) {
             (s)[(i)++]=(uint8_t)(((c)>>6)|0xc0);
             (s)[(i)++]=(uint8_t)(((c)&0x3f)|0x80);
-            return i;
+            ಪ್ರತ್ಯಾಗಮ i;
         }
-    } else if((uint32_t)(c)<=0xffff) {
+    } ಅನ್ಯಥಾ ಯದಿ((uint32_t)(c)<=0xffff) {
         /* Starting with Unicode 3.2, surrogate code points must not be encoded in UTF-8. */
-        if((i)+2<(length) && !U_IS_SURROGATE(c)) {
+        ಯದಿ((i)+2<(length) && !U_IS_SURROGATE(c)) {
             (s)[(i)++]=(uint8_t)(((c)>>12)|0xe0);
             (s)[(i)++]=(uint8_t)((((c)>>6)&0x3f)|0x80);
             (s)[(i)++]=(uint8_t)(((c)&0x3f)|0x80);
-            return i;
+            ಪ್ರತ್ಯಾಗಮ i;
         }
-    } else if((uint32_t)(c)<=0x10ffff) {
-        if((i)+3<(length)) {
+    } ಅನ್ಯಥಾ ಯದಿ((uint32_t)(c)<=0x10ffff) {
+        ಯದಿ((i)+3<(length)) {
             (s)[(i)++]=(uint8_t)(((c)>>18)|0xf0);
             (s)[(i)++]=(uint8_t)((((c)>>12)&0x3f)|0x80);
             (s)[(i)++]=(uint8_t)((((c)>>6)&0x3f)|0x80);
             (s)[(i)++]=(uint8_t)(((c)&0x3f)|0x80);
-            return i;
+            ಪ್ರತ್ಯಾಗಮ i;
         }
     }
     /* c>0x10ffff or not enough space, write an error value */
-    if(pIsError!=nullptr) {
-        *pIsError=true;
-    } else {
+    ಯದಿ(pIsError!=nullptr) {
+        *pIsError=ಸತ್ಯ;
+    } ಅನ್ಯಥಾ {
         length-=i;
-        if(length>0) {
+        ಯದಿ(length>0) {
             int32_t offset;
-            if(length>3) {
+            ಯದಿ(length>3) {
                 length=3;
             }
             s+=i;
             offset=0;
-            c=utf8_errorValue[length-1];
+            c=utf8_error_ಮೌಲ್ಯ[length-1];
             U8_APPEND_UNSAFE(s, offset, c);
             i=i+offset;
         }
     }
-    return i;
+    ಪ್ರತ್ಯಾಗಮ i;
 }
 
 U_CAPI UChar32 U_EXPORT2
-utf8_prevCharSafeBody(const uint8_t *s, int32_t start, int32_t *pi, UChar32 c, int8_t strict) {
+utf8_prevCharSafeBody(ಧ್ರುವ uint8_t *s, int32_t start, int32_t *pi, UChar32 c, int8_t strict) {
     // *pi is the index of byte c.
     int32_t i=*pi;
-    if(U8_IS_TRAIL(c) && i>start) {
+    ಯದಿ(U8_IS_TRAIL(c) && i>start) {
         uint8_t b1=s[--i];
-        if(U8_IS_LEAD(b1)) {
-            if(b1<0xe0) {
+        ಯದಿ(U8_IS_LEAD(b1)) {
+            ಯದಿ(b1<0xe0) {
                 *pi=i;
-                return ((b1-0xc0)<<6)|(c&0x3f);
-            } else if(b1<0xf0 ? U8_IS_VALID_LEAD3_AND_T1(b1, c) : U8_IS_VALID_LEAD4_AND_T1(b1, c)) {
+                ಪ್ರತ್ಯಾಗಮ ((b1-0xc0)<<6)|(c&0x3f);
+            } ಅನ್ಯಥಾ ಯದಿ(b1<0xf0 ? U8_IS_VALID_LEAD3_AND_T1(b1, c) : U8_IS_VALID_LEAD4_AND_T1(b1, c)) {
                 // Truncated 3- or 4-byte sequence.
                 *pi=i;
-                return errorValue(1, strict);
+                ಪ್ರತ್ಯಾಗಮ error_ಮೌಲ್ಯ(1, strict);
             }
-        } else if(U8_IS_TRAIL(b1) && i>start) {
+        } ಅನ್ಯಥಾ ಯದಿ(U8_IS_TRAIL(b1) && i>start) {
             // Extract the value bits from the last trail byte.
             c&=0x3f;
             uint8_t b2=s[--i];
-            if(0xe0<=b2 && b2<=0xf4) {
-                if(b2<0xf0) {
+            ಯದಿ(0xe0<=b2 && b2<=0xf4) {
+                ಯದಿ(b2<0xf0) {
                     b2&=0xf;
-                    if(strict!=-2) {
-                        if(U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
+                    ಯದಿ(strict!=-2) {
+                        ಯದಿ(U8_IS_VALID_LEAD3_AND_T1(b2, b1)) {
                             *pi=i;
                             c=(b2<<12)|((b1&0x3f)<<6)|c;
-                            if(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
-                                return c;
-                            } else {
+                            ಯದಿ(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
+                                ಪ್ರತ್ಯಾಗಮ c;
+                            } ಅನ್ಯಥಾ {
                                 // strict: forbid non-characters like U+fffe
-                                return errorValue(2, strict);
+                                ಪ್ರತ್ಯಾಗಮ error_ಮೌಲ್ಯ(2, strict);
                             }
                         }
-                    } else {
+                    } ಅನ್ಯಥಾ {
                         // strict=-2 -> lenient: allow surrogates
                         b1-=0x80;
-                        if((b2>0 || b1>=0x20)) {
+                        ಯದಿ((b2>0 || b1>=0x20)) {
                             *pi=i;
-                            return (b2<<12)|(b1<<6)|c;
+                            ಪ್ರತ್ಯಾಗಮ (b2<<12)|(b1<<6)|c;
                         }
                     }
-                } else if(U8_IS_VALID_LEAD4_AND_T1(b2, b1)) {
+                } ಅನ್ಯಥಾ ಯದಿ(U8_IS_VALID_LEAD4_AND_T1(b2, b1)) {
                     // Truncated 4-byte sequence.
                     *pi=i;
-                    return errorValue(2, strict);
+                    ಪ್ರತ್ಯಾಗಮ error_ಮೌಲ್ಯ(2, strict);
                 }
-            } else if(U8_IS_TRAIL(b2) && i>start) {
+            } ಅನ್ಯಥಾ ಯದಿ(U8_IS_TRAIL(b2) && i>start) {
                 uint8_t b3=s[--i];
-                if(0xf0<=b3 && b3<=0xf4) {
+                ಯದಿ(0xf0<=b3 && b3<=0xf4) {
                     b3&=7;
-                    if(U8_IS_VALID_LEAD4_AND_T1(b3, b2)) {
+                    ಯದಿ(U8_IS_VALID_LEAD4_AND_T1(b3, b2)) {
                         *pi=i;
                         c=(b3<<18)|((b2&0x3f)<<12)|((b1&0x3f)<<6)|c;
-                        if(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
-                            return c;
-                        } else {
+                        ಯದಿ(strict<=0 || !U_IS_UNICODE_NONCHAR(c)) {
+                            ಪ್ರತ್ಯಾಗಮ c;
+                        } ಅನ್ಯಥಾ {
                             // strict: forbid non-characters like U+fffe
-                            return errorValue(3, strict);
+                            ಪ್ರತ್ಯಾಗಮ error_ಮೌಲ್ಯ(3, strict);
                         }
                     }
                 }
             }
         }
     }
-    return errorValue(0, strict);
+    ಪ್ರತ್ಯಾಗಮ error_ಮೌಲ್ಯ(0, strict);
 }
 
 U_CAPI int32_t U_EXPORT2
-utf8_back1SafeBody(const uint8_t *s, int32_t start, int32_t i) {
+utf8_back1SafeBody(ಧ್ರುವ uint8_t *s, int32_t start, int32_t i) {
     // Same as utf8_prevCharSafeBody(..., strict=-1) minus assembling code points.
     int32_t orig_i=i;
     uint8_t c=s[i];
-    if(U8_IS_TRAIL(c) && i>start) {
+    ಯದಿ(U8_IS_TRAIL(c) && i>start) {
         uint8_t b1=s[--i];
-        if(U8_IS_LEAD(b1)) {
-            if(b1<0xe0 ||
+        ಯದಿ(U8_IS_LEAD(b1)) {
+            ಯದಿ(b1<0xe0 ||
                     (b1<0xf0 ? U8_IS_VALID_LEAD3_AND_T1(b1, c) : U8_IS_VALID_LEAD4_AND_T1(b1, c))) {
-                return i;
+                ಪ್ರತ್ಯಾಗಮ i;
             }
-        } else if(U8_IS_TRAIL(b1) && i>start) {
+        } ಅನ್ಯಥಾ ಯದಿ(U8_IS_TRAIL(b1) && i>start) {
             uint8_t b2=s[--i];
-            if(0xe0<=b2 && b2<=0xf4) {
-                if(b2<0xf0 ? U8_IS_VALID_LEAD3_AND_T1(b2, b1) : U8_IS_VALID_LEAD4_AND_T1(b2, b1)) {
-                    return i;
+            ಯದಿ(0xe0<=b2 && b2<=0xf4) {
+                ಯದಿ(b2<0xf0 ? U8_IS_VALID_LEAD3_AND_T1(b2, b1) : U8_IS_VALID_LEAD4_AND_T1(b2, b1)) {
+                    ಪ್ರತ್ಯಾಗಮ i;
                 }
-            } else if(U8_IS_TRAIL(b2) && i>start) {
+            } ಅನ್ಯಥಾ ಯದಿ(U8_IS_TRAIL(b2) && i>start) {
                 uint8_t b3=s[--i];
-                if(0xf0<=b3 && b3<=0xf4 && U8_IS_VALID_LEAD4_AND_T1(b3, b2)) {
-                    return i;
+                ಯದಿ(0xf0<=b3 && b3<=0xf4 && U8_IS_VALID_LEAD4_AND_T1(b3, b2)) {
+                    ಪ್ರತ್ಯಾಗಮ i;
                 }
             }
         }
     }
-    return orig_i;
+    ಪ್ರತ್ಯಾಗಮ orig_i;
 }

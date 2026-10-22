@@ -6,69 +6,69 @@
 *   Corporation and others.  All Rights Reserved.
 **********************************************************************
 */
-#include <algorithm>
-#include <optional>
-#include <string_view>
+#ಅನ್ತರ್ಭಾವ <algorithm>
+#ಅನ್ತರ್ಭಾವ <optional>
+#ಅನ್ತರ್ಭಾವ <string_view>
 
-#include "unicode/utypes.h"
-#include "unicode/unistr.h"
-#include "unicode/uobject.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unistr.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uobject.h"
 
-#include "cmemory.h"
-#include "cstring.h"
-#include "fixedstring.h"
-#include "uassert.h"
-#include "ucln_cmn.h"
-#include "uhash.h"
-#include "ulocimp.h"
-#include "umutex.h"
-#include "uresimp.h"
-#include "uvector.h"
-#include "udataswp.h" /* for InvChar functions */
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "cstring.h"
+#ಅನ್ತರ್ಭಾವ "fixedstring.h"
+#ಅನ್ತರ್ಭಾವ "uassert.h"
+#ಅನ್ತರ್ಭಾವ "ucln_cmn.h"
+#ಅನ್ತರ್ಭಾವ "uhash.h"
+#ಅನ್ತರ್ಭಾವ "ulocimp.h"
+#ಅನ್ತರ್ಭಾವ "umutex.h"
+#ಅನ್ತರ್ಭಾವ "uresimp.h"
+#ಅನ್ತರ್ಭಾವ "uvector.h"
+#ಅನ್ತರ್ಭಾವ "udataswp.h" /* for InvChar functions */
 
-static UHashtable* gLocExtKeyMap = nullptr;
-static icu::UInitOnce gLocExtKeyMapInitOnce {};
+ಸ್ಥಿರ UHashtable* g_Loc_Ext_ಕೀಲಿ_Map = nullptr;
+ಸ್ಥಿರ icu::UInitOnce g_Loc_Ext_ಕೀಲಿ_Map_Init_Once {};
 
 // bit flags for special types
-typedef enum {
+ಪ್ರಕಾರನಿರ್ದೇಶ ಗಣನಾ {
     SPECIALTYPE_NONE = 0,
     SPECIALTYPE_CODEPOINTS = 1,
     SPECIALTYPE_REORDER_CODE = 2,
-    SPECIALTYPE_RG_KEY_VALUE = 4
+    SPECIALTYPE_RG_ಕೀಲಿ_ಮೌಲ್ಯ = 4
 } SpecialType;
 
-struct LocExtKeyData : public icu::UMemory {
+ಸಂರಚನಾ Loc_Ext_ಕೀಲಿ_Data : ಸಾರ್ವಜನಿಕ icu::UMemory {
     std::string_view legacyId;
     std::string_view bcpId;
     icu::LocalUHashtablePointer typeMap;
     uint32_t        specialTypes;
 };
 
-struct LocExtType : public icu::UMemory {
+ಸಂರಚನಾ LocExtType : ಸಾರ್ವಜನಿಕ icu::UMemory {
     std::string_view legacyId;
     std::string_view bcpId;
 };
 
-struct TypeAlias : public icu::UMemory {
+ಸಂರಚನಾ TypeAlias : ಸಾರ್ವಜನಿಕ icu::UMemory {
     std::string_view from;
 };
 
-static icu::MemoryPool<icu::FixedString>* gKeyTypeStringPool = nullptr;
-static icu::MemoryPool<LocExtKeyData>* gLocExtKeyDataEntries = nullptr;
-static icu::MemoryPool<LocExtType>* gLocExtTypeEntries = nullptr;
-static icu::MemoryPool<TypeAlias>* gTypeAliasEntries = nullptr;
+ಸ್ಥಿರ icu::MemoryPool<icu::FixedString>* g_ಕೀಲಿ_Type_String_Pool = nullptr;
+ಸ್ಥಿರ icu::MemoryPool<Loc_Ext_ಕೀಲಿ_Data>* g_Loc_Ext_ಕೀಲಿ_Data_Entries = nullptr;
+ಸ್ಥಿರ icu::MemoryPool<LocExtType>* gLocExtTypeEntries = nullptr;
+ಸ್ಥಿರ icu::MemoryPool<TypeAlias>* gTypeAliasEntries = nullptr;
 
 U_CDECL_BEGIN
 
-static UBool U_CALLCONV
-uloc_key_type_cleanup() {
-    if (gLocExtKeyMap != nullptr) {
-        uhash_close(gLocExtKeyMap);
-        gLocExtKeyMap = nullptr;
+ಸ್ಥಿರ UBool U_CALLCONV
+uloc_ಕೀಲಿ_type_cleanup() {
+    ಯದಿ (g_Loc_Ext_ಕೀಲಿ_Map != nullptr) {
+        uhash_close(g_Loc_Ext_ಕೀಲಿ_Map);
+        g_Loc_Ext_ಕೀಲಿ_Map = nullptr;
     }
 
-    delete gLocExtKeyDataEntries;
-    gLocExtKeyDataEntries = nullptr;
+    delete g_Loc_Ext_ಕೀಲಿ_Data_Entries;
+    g_Loc_Ext_ಕೀಲಿ_Data_Entries = nullptr;
 
     delete gLocExtTypeEntries;
     gLocExtTypeEntries = nullptr;
@@ -76,156 +76,156 @@ uloc_key_type_cleanup() {
     delete gTypeAliasEntries;
     gTypeAliasEntries = nullptr;
 
-    delete gKeyTypeStringPool;
-    gKeyTypeStringPool = nullptr;
+    delete g_ಕೀಲಿ_Type_String_Pool;
+    g_ಕೀಲಿ_Type_String_Pool = nullptr;
 
-    gLocExtKeyMapInitOnce.reset();
-    return true;
+    g_Loc_Ext_ಕೀಲಿ_Map_Init_Once.reset();
+    ಪ್ರತ್ಯಾಗಮ ಸತ್ಯ;
 }
 
 U_CDECL_END
 
-namespace {
+ನಾಮಾಕಾಶ {
 
-void U_CALLCONV
+ಶೂನ್ಯ U_CALLCONV
 initFromResourceBundle(UErrorCode& sts) {
     U_NAMESPACE_USE
-    ucln_common_registerCleanup(UCLN_COMMON_LOCALE_KEY_TYPE, uloc_key_type_cleanup);
+    ucln_common_registerCleanup(UCLN_COMMON_LOCALE_ಕೀಲಿ_TYPE, uloc_ಕೀಲಿ_type_cleanup);
 
-    gLocExtKeyMap = uhash_open(uhash_hashIStringView, uhash_compareIStringView, nullptr, &sts);
+    g_Loc_Ext_ಕೀಲಿ_Map = uhash_open(uhash_hashIStringView, uhash_compareIStringView, nullptr, &sts);
 
-    LocalUResourceBundlePointer keyTypeDataRes(ures_openDirect(nullptr, "keyTypeData", &sts));
-    LocalUResourceBundlePointer keyMapRes(ures_getByKey(keyTypeDataRes.getAlias(), "keyMap", nullptr, &sts));
-    LocalUResourceBundlePointer typeMapRes(ures_getByKey(keyTypeDataRes.getAlias(), "typeMap", nullptr, &sts));
+    LocalUResourceBundlePointer ಕೀಲಿ_Type_Data_Res(ures_openDirect(nullptr, "keyTypeData", &sts));
+    LocalUResourceBundlePointer ಕೀಲಿ_Map_Res(ures_get_By_ಕೀಲಿ(ಕೀಲಿ_Type_Data_Res.getAlias(), "keyMap", nullptr, &sts));
+    LocalUResourceBundlePointer typeMapRes(ures_get_By_ಕೀಲಿ(ಕೀಲಿ_Type_Data_Res.getAlias(), "typeMap", nullptr, &sts));
 
-    if (U_FAILURE(sts)) {
-        return;
+    ಯದಿ (U_FAILURE(sts)) {
+        ಪ್ರತ್ಯಾಗಮ;
     }
 
     UErrorCode tmpSts = U_ZERO_ERROR;
-    LocalUResourceBundlePointer typeAliasRes(ures_getByKey(keyTypeDataRes.getAlias(), "typeAlias", nullptr, &tmpSts));
+    LocalUResourceBundlePointer typeAliasRes(ures_get_By_ಕೀಲಿ(ಕೀಲಿ_Type_Data_Res.getAlias(), "typeAlias", nullptr, &tmpSts));
     tmpSts = U_ZERO_ERROR;
-    LocalUResourceBundlePointer bcpTypeAliasRes(ures_getByKey(keyTypeDataRes.getAlias(), "bcpTypeAlias", nullptr, &tmpSts));
+    LocalUResourceBundlePointer bcpTypeAliasRes(ures_get_By_ಕೀಲಿ(ಕೀಲಿ_Type_Data_Res.getAlias(), "bcpTypeAlias", nullptr, &tmpSts));
 
     // initialize pools storing dynamically allocated objects
-    gKeyTypeStringPool = new icu::MemoryPool<icu::FixedString>;
-    if (gKeyTypeStringPool == nullptr) {
+    g_ಕೀಲಿ_Type_String_Pool = ನೂತನ icu::MemoryPool<icu::FixedString>;
+    ಯದಿ (g_ಕೀಲಿ_Type_String_Pool == nullptr) {
         sts = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        ಪ್ರತ್ಯಾಗಮ;
     }
-    gLocExtKeyDataEntries = new icu::MemoryPool<LocExtKeyData>;
-    if (gLocExtKeyDataEntries == nullptr) {
+    g_Loc_Ext_ಕೀಲಿ_Data_Entries = ನೂತನ icu::MemoryPool<Loc_Ext_ಕೀಲಿ_Data>;
+    ಯದಿ (g_Loc_Ext_ಕೀಲಿ_Data_Entries == nullptr) {
         sts = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        ಪ್ರತ್ಯಾಗಮ;
     }
-    gLocExtTypeEntries = new icu::MemoryPool<LocExtType>;
-    if (gLocExtTypeEntries == nullptr) {
+    gLocExtTypeEntries = ನೂತನ icu::MemoryPool<LocExtType>;
+    ಯದಿ (gLocExtTypeEntries == nullptr) {
         sts = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        ಪ್ರತ್ಯಾಗಮ;
     }
-    gTypeAliasEntries = new icu::MemoryPool<TypeAlias>;
-    if (gTypeAliasEntries == nullptr) {
+    gTypeAliasEntries = ನೂತನ icu::MemoryPool<TypeAlias>;
+    ಯದಿ (gTypeAliasEntries == nullptr) {
         sts = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        ಪ್ರತ್ಯಾಗಮ;
     }
 
     // iterate through keyMap resource
-    LocalUResourceBundlePointer keyMapEntry;
+    LocalUResourceBundlePointer ಕೀಲಿ_Map_Entry;
 
-    while (ures_hasNext(keyMapRes.getAlias())) {
-        keyMapEntry.adoptInstead(ures_getNextResource(keyMapRes.getAlias(), keyMapEntry.orphan(), &sts));
-        if (U_FAILURE(sts)) {
-            break;
+    ಯಾವತ್ (ures_hasNext(ಕೀಲಿ_Map_Res.getAlias())) {
+        ಕೀಲಿ_Map_Entry.adoptInstead(ures_getNextResource(ಕೀಲಿ_Map_Res.getAlias(), ಕೀಲಿ_Map_Entry.orphan(), &sts));
+        ಯದಿ (U_FAILURE(sts)) {
+            ಭಙ್ಗ;
         }
-        const char* legacyKeyId = ures_getKey(keyMapEntry.getAlias());
-        UnicodeString uBcpKeyId = ures_getUnicodeString(keyMapEntry.getAlias(), &sts);
-        if (U_FAILURE(sts)) {
-            break;
+        ಧ್ರುವ ವರ್ಣ* legacy_ಕೀಲಿ_Id = ures_get_ಕೀಲಿ(ಕೀಲಿ_Map_Entry.getAlias());
+        UnicodeString u_Bcp_ಕೀಲಿ_Id = ures_getUnicodeString(ಕೀಲಿ_Map_Entry.getAlias(), &sts);
+        ಯದಿ (U_FAILURE(sts)) {
+            ಭಙ್ಗ;
         }
 
         // empty value indicates that BCP key is same with the legacy key.
-        const char* bcpKeyId = legacyKeyId;
-        if (!uBcpKeyId.isEmpty()) {
-            icu::FixedString* bcpKeyIdBuf = gKeyTypeStringPool->create();
-            if (bcpKeyIdBuf == nullptr) {
+        ಧ್ರುವ ವರ್ಣ* bcp_ಕೀಲಿ_Id = legacy_ಕೀಲಿ_Id;
+        ಯದಿ (!u_Bcp_ಕೀಲಿ_Id.isEmpty()) {
+            icu::FixedString* bcp_ಕೀಲಿ_Id_Buf = g_ಕೀಲಿ_Type_String_Pool->create();
+            ಯದಿ (bcp_ಕೀಲಿ_Id_Buf == nullptr) {
                 sts = U_MEMORY_ALLOCATION_ERROR;
-                break;
+                ಭಙ್ಗ;
             }
-            copyInvariantChars(uBcpKeyId, *bcpKeyIdBuf, sts);
-            if (U_FAILURE(sts)) {
-                break;
+            copyInvariantChars(u_Bcp_ಕೀಲಿ_Id, *bcp_ಕೀಲಿ_Id_Buf, sts);
+            ಯದಿ (U_FAILURE(sts)) {
+                ಭಙ್ಗ;
             }
-            bcpKeyId = bcpKeyIdBuf->data();
+            bcp_ಕೀಲಿ_Id = bcp_ಕೀಲಿ_Id_Buf->data();
         }
 
-        bool isTZ = uprv_strcmp(legacyKeyId, "timezone") == 0;
+        ತಾರ್ಕಿಕ isTZ = uprv_strcmp(legacy_ಕೀಲಿ_Id, "timezone") == 0;
 
         UHashtable* typeDataMap = uhash_open(uhash_hashIStringView, uhash_compareIStringView, nullptr, &sts);
-        if (U_FAILURE(sts)) {
-            break;
+        ಯದಿ (U_FAILURE(sts)) {
+            ಭಙ್ಗ;
         }
         uint32_t specialTypes = SPECIALTYPE_NONE;
 
-        LocalUResourceBundlePointer typeAliasResByKey;
-        LocalUResourceBundlePointer bcpTypeAliasResByKey;
+        LocalUResourceBundlePointer type_Alias_Res_By_ಕೀಲಿ;
+        LocalUResourceBundlePointer bcp_Type_Alias_Res_By_ಕೀಲಿ;
 
-        if (typeAliasRes.isValid()) {
+        ಯದಿ (typeAliasRes.isValid()) {
             tmpSts = U_ZERO_ERROR;
-            typeAliasResByKey.adoptInstead(ures_getByKey(typeAliasRes.getAlias(), legacyKeyId, nullptr, &tmpSts));
-            if (U_FAILURE(tmpSts)) {
-                typeAliasResByKey.orphan();
+            type_Alias_Res_By_ಕೀಲಿ.adoptInstead(ures_get_By_ಕೀಲಿ(typeAliasRes.getAlias(), legacy_ಕೀಲಿ_Id, nullptr, &tmpSts));
+            ಯದಿ (U_FAILURE(tmpSts)) {
+                type_Alias_Res_By_ಕೀಲಿ.orphan();
             }
         }
-        if (bcpTypeAliasRes.isValid()) {
+        ಯದಿ (bcpTypeAliasRes.isValid()) {
             tmpSts = U_ZERO_ERROR;
-            bcpTypeAliasResByKey.adoptInstead(ures_getByKey(bcpTypeAliasRes.getAlias(), bcpKeyId, nullptr, &tmpSts));
-            if (U_FAILURE(tmpSts)) {
-                bcpTypeAliasResByKey.orphan();
+            bcp_Type_Alias_Res_By_ಕೀಲಿ.adoptInstead(ures_get_By_ಕೀಲಿ(bcpTypeAliasRes.getAlias(), bcp_ಕೀಲಿ_Id, nullptr, &tmpSts));
+            ಯದಿ (U_FAILURE(tmpSts)) {
+                bcp_Type_Alias_Res_By_ಕೀಲಿ.orphan();
             }
         }
 
         // look up type map for the key, and walk through the mapping data
-        LocalUResourceBundlePointer typeMapResByKey(ures_getByKey(typeMapRes.getAlias(), legacyKeyId, nullptr, &sts));
-        if (U_FAILURE(sts)) {
+        LocalUResourceBundlePointer type_Map_Res_By_ಕೀಲಿ(ures_get_By_ಕೀಲಿ(typeMapRes.getAlias(), legacy_ಕೀಲಿ_Id, nullptr, &sts));
+        ಯದಿ (U_FAILURE(sts)) {
             // We fail here if typeMap does not have an entry corresponding to every entry in keyMap (should
             // not happen for valid keyTypeData), or if ures_getByKeyfails fails for some other reason
             // (e.g. data file cannot be loaded, using stubdata, over-aggressive data filtering has removed
             // something like timezoneTypes.res, etc.). Error code is already set. See ICU-21669.
             UPRV_UNREACHABLE_ASSERT;
-        } else {
+        } ಅನ್ಯಥಾ {
             LocalUResourceBundlePointer typeMapEntry;
 
-            while (ures_hasNext(typeMapResByKey.getAlias())) {
-                typeMapEntry.adoptInstead(ures_getNextResource(typeMapResByKey.getAlias(), typeMapEntry.orphan(), &sts));
-                if (U_FAILURE(sts)) {
-                    break;
+            ಯಾವತ್ (ures_hasNext(type_Map_Res_By_ಕೀಲಿ.getAlias())) {
+                typeMapEntry.adoptInstead(ures_getNextResource(type_Map_Res_By_ಕೀಲಿ.getAlias(), typeMapEntry.orphan(), &sts));
+                ಯದಿ (U_FAILURE(sts)) {
+                    ಭಙ್ಗ;
                 }
-                const char* legacyTypeId = ures_getKey(typeMapEntry.getAlias());
+                ಧ್ರುವ ವರ್ಣ* legacyTypeId = ures_get_ಕೀಲಿ(typeMapEntry.getAlias());
 
                 // special types
-                if (uprv_strcmp(legacyTypeId, "CODEPOINTS") == 0) {
+                ಯದಿ (uprv_strcmp(legacyTypeId, "CODEPOINTS") == 0) {
                     specialTypes |= SPECIALTYPE_CODEPOINTS;
-                    continue;
+                    ಅನುವರ್ತ;
                 }
-                if (uprv_strcmp(legacyTypeId, "REORDER_CODE") == 0) {
+                ಯದಿ (uprv_strcmp(legacyTypeId, "REORDER_CODE") == 0) {
                     specialTypes |= SPECIALTYPE_REORDER_CODE;
-                    continue;
+                    ಅನುವರ್ತ;
                 }
-                if (uprv_strcmp(legacyTypeId, "RG_KEY_VALUE") == 0) {
-                    specialTypes |= SPECIALTYPE_RG_KEY_VALUE;
-                    continue;
+                ಯದಿ (uprv_strcmp(legacyTypeId, "RG_KEY_VALUE") == 0) {
+                    specialTypes |= SPECIALTYPE_RG_ಕೀಲಿ_ಮೌಲ್ಯ;
+                    ಅನುವರ್ತ;
                 }
 
-                if (isTZ) {
+                ಯದಿ (isTZ) {
                     // a timezone key uses a colon instead of a slash in the resource.
                     // e.g. America:Los_Angeles
-                    if (uprv_strchr(legacyTypeId, ':') != nullptr) {
+                    ಯದಿ (uprv_strchr(legacyTypeId, ':') != nullptr) {
                         U_ASSERT(legacyTypeId != nullptr && *legacyTypeId != '\0');
                         std::string_view legacyTypeIdView = legacyTypeId;
-                        icu::FixedString* legacyTypeIdBuf = gKeyTypeStringPool->create(legacyTypeIdView);
-                        if (legacyTypeIdBuf == nullptr || legacyTypeIdBuf->isEmpty()) {
+                        icu::FixedString* legacyTypeIdBuf = g_ಕೀಲಿ_Type_String_Pool->create(legacyTypeIdView);
+                        ಯದಿ (legacyTypeIdBuf == nullptr || legacyTypeIdBuf->isEmpty()) {
                             sts = U_MEMORY_ALLOCATION_ERROR;
-                            break;
+                            ಭಙ್ಗ;
                         }
                         std::replace(
                                 legacyTypeIdBuf->getAlias(),
@@ -236,21 +236,21 @@ initFromResourceBundle(UErrorCode& sts) {
                 }
 
                 UnicodeString uBcpTypeId = ures_getUnicodeString(typeMapEntry.getAlias(), &sts);
-                if (U_FAILURE(sts)) {
-                    break;
+                ಯದಿ (U_FAILURE(sts)) {
+                    ಭಙ್ಗ;
                 }
 
                 // empty value indicates that BCP type is same with the legacy type.
-                const char* bcpTypeId = legacyTypeId;
-                if (!uBcpTypeId.isEmpty()) {
-                    icu::FixedString* bcpTypeIdBuf = gKeyTypeStringPool->create();
-                    if (bcpTypeIdBuf == nullptr) {
+                ಧ್ರುವ ವರ್ಣ* bcpTypeId = legacyTypeId;
+                ಯದಿ (!uBcpTypeId.isEmpty()) {
+                    icu::FixedString* bcpTypeIdBuf = g_ಕೀಲಿ_Type_String_Pool->create();
+                    ಯದಿ (bcpTypeIdBuf == nullptr) {
                         sts = U_MEMORY_ALLOCATION_ERROR;
-                        break;
+                        ಭಙ್ಗ;
                     }
                     copyInvariantChars(uBcpTypeId, *bcpTypeIdBuf, sts);
-                    if (U_FAILURE(sts)) {
-                        break;
+                    ಯದಿ (U_FAILURE(sts)) {
+                        ಭಙ್ಗ;
                     }
                     bcpTypeId = bcpTypeIdBuf->data();
                 }
@@ -260,52 +260,52 @@ initFromResourceBundle(UErrorCode& sts) {
                 // type under the same key. So we use a single
                 // map for lookup.
                 LocExtType* t = gLocExtTypeEntries->create();
-                if (t == nullptr) {
+                ಯದಿ (t == nullptr) {
                     sts = U_MEMORY_ALLOCATION_ERROR;
-                    break;
+                    ಭಙ್ಗ;
                 }
                 t->bcpId = bcpTypeId;
                 t->legacyId = legacyTypeId;
 
                 uhash_put(typeDataMap, &t->legacyId, t, &sts);
-                if (bcpTypeId != legacyTypeId) {
+                ಯದಿ (bcpTypeId != legacyTypeId) {
                     // different type value
                     uhash_put(typeDataMap, &t->bcpId, t, &sts);
                 }
-                if (U_FAILURE(sts)) {
-                    break;
+                ಯದಿ (U_FAILURE(sts)) {
+                    ಭಙ್ಗ;
                 }
 
                 // also put aliases in the map
-                if (typeAliasResByKey.isValid()) {
+                ಯದಿ (type_Alias_Res_By_ಕೀಲಿ.isValid()) {
                     LocalUResourceBundlePointer typeAliasDataEntry;
 
-                    ures_resetIterator(typeAliasResByKey.getAlias());
-                    while (ures_hasNext(typeAliasResByKey.getAlias()) && U_SUCCESS(sts)) {
+                    ures_resetIterator(type_Alias_Res_By_ಕೀಲಿ.getAlias());
+                    ಯಾವತ್ (ures_hasNext(type_Alias_Res_By_ಕೀಲಿ.getAlias()) && U_SUCCESS(sts)) {
                         int32_t toLen;
-                        typeAliasDataEntry.adoptInstead(ures_getNextResource(typeAliasResByKey.getAlias(), typeAliasDataEntry.orphan(), &sts));
-                        const char16_t* to = ures_getString(typeAliasDataEntry.getAlias(), &toLen, &sts);
-                        if (U_FAILURE(sts)) {
-                            break;
+                        typeAliasDataEntry.adoptInstead(ures_getNextResource(type_Alias_Res_By_ಕೀಲಿ.getAlias(), typeAliasDataEntry.orphan(), &sts));
+                        ಧ್ರುವ char16_t* to = ures_getString(typeAliasDataEntry.getAlias(), &toLen, &sts);
+                        ಯದಿ (U_FAILURE(sts)) {
+                            ಭಙ್ಗ;
                         }
                         // check if this is an alias of canonical legacy type
-                        if (uprv_compareInvWithUChar(
+                        ಯದಿ (uprv_compareInvWithUChar(
                                 nullptr,
                                 t->legacyId.data(),
                                 static_cast<int32_t>(t->legacyId.size()),
                                 to,
                                 toLen) == 0) {
-                            const char* from = ures_getKey(typeAliasDataEntry.getAlias());
+                            ಧ್ರುವ ವರ್ಣ* from = ures_get_ಕೀಲಿ(typeAliasDataEntry.getAlias());
                             TypeAlias* alias = gTypeAliasEntries->create(TypeAlias{{}, from});
-                            if (isTZ) {
+                            ಯದಿ (isTZ) {
                                 // replace colon with slash if necessary
-                                if (uprv_strchr(from, ':') != nullptr) {
+                                ಯದಿ (uprv_strchr(from, ':') != nullptr) {
                                     U_ASSERT(from != nullptr && *from != '\0');
                                     std::string_view fromView = from;
-                                    icu::FixedString* fromBuf = gKeyTypeStringPool->create(fromView);
-                                    if (fromBuf == nullptr || fromBuf->isEmpty()) {
+                                    icu::FixedString* fromBuf = g_ಕೀಲಿ_Type_String_Pool->create(fromView);
+                                    ಯದಿ (fromBuf == nullptr || fromBuf->isEmpty()) {
                                         sts = U_MEMORY_ALLOCATION_ERROR;
-                                        break;
+                                        ಭಙ್ಗ;
                                     }
                                     std::replace(
                                             fromBuf->getAlias(),
@@ -317,218 +317,218 @@ initFromResourceBundle(UErrorCode& sts) {
                             uhash_put(typeDataMap, &alias->from, t, &sts);
                         }
                     }
-                    if (U_FAILURE(sts)) {
-                        break;
+                    ಯದಿ (U_FAILURE(sts)) {
+                        ಭಙ್ಗ;
                     }
                 }
 
-                if (bcpTypeAliasResByKey.isValid()) {
+                ಯದಿ (bcp_Type_Alias_Res_By_ಕೀಲಿ.isValid()) {
                     LocalUResourceBundlePointer bcpTypeAliasDataEntry;
 
-                    ures_resetIterator(bcpTypeAliasResByKey.getAlias());
-                    while (ures_hasNext(bcpTypeAliasResByKey.getAlias()) && U_SUCCESS(sts)) {
+                    ures_resetIterator(bcp_Type_Alias_Res_By_ಕೀಲಿ.getAlias());
+                    ಯಾವತ್ (ures_hasNext(bcp_Type_Alias_Res_By_ಕೀಲಿ.getAlias()) && U_SUCCESS(sts)) {
                         int32_t toLen;
-                        bcpTypeAliasDataEntry.adoptInstead(ures_getNextResource(bcpTypeAliasResByKey.getAlias(), bcpTypeAliasDataEntry.orphan(), &sts));
-                        const char16_t* to = ures_getString(bcpTypeAliasDataEntry.getAlias(), &toLen, &sts);
-                        if (U_FAILURE(sts)) {
-                            break;
+                        bcpTypeAliasDataEntry.adoptInstead(ures_getNextResource(bcp_Type_Alias_Res_By_ಕೀಲಿ.getAlias(), bcpTypeAliasDataEntry.orphan(), &sts));
+                        ಧ್ರುವ char16_t* to = ures_getString(bcpTypeAliasDataEntry.getAlias(), &toLen, &sts);
+                        ಯದಿ (U_FAILURE(sts)) {
+                            ಭಙ್ಗ;
                         }
                         // check if this is an alias of bcp type
-                        if (uprv_compareInvWithUChar(
+                        ಯದಿ (uprv_compareInvWithUChar(
                                 nullptr,
                                 t->bcpId.data(),
                                 static_cast<int32_t>(t->bcpId.size()),
                                 to,
                                 toLen) == 0) {
-                            const char* from = ures_getKey(bcpTypeAliasDataEntry.getAlias());
+                            ಧ್ರುವ ವರ್ಣ* from = ures_get_ಕೀಲಿ(bcpTypeAliasDataEntry.getAlias());
                             TypeAlias* alias = gTypeAliasEntries->create(TypeAlias{{}, from});
                             uhash_put(typeDataMap, &alias->from, t, &sts);
                         }
                     }
-                    if (U_FAILURE(sts)) {
-                        break;
+                    ಯದಿ (U_FAILURE(sts)) {
+                        ಭಙ್ಗ;
                     }
                 }
             }
         }
-        if (U_FAILURE(sts)) {
-            break;
+        ಯದಿ (U_FAILURE(sts)) {
+            ಭಙ್ಗ;
         }
 
-        LocExtKeyData* keyData = gLocExtKeyDataEntries->create();
-        if (keyData == nullptr) {
+        Loc_Ext_ಕೀಲಿ_Data* ಕೀಲಿ_Data = g_Loc_Ext_ಕೀಲಿ_Data_Entries->create();
+        ಯದಿ (ಕೀಲಿ_Data == nullptr) {
             sts = U_MEMORY_ALLOCATION_ERROR;
-            break;
+            ಭಙ್ಗ;
         }
-        keyData->bcpId = bcpKeyId;
-        keyData->legacyId = legacyKeyId;
-        keyData->specialTypes = specialTypes;
-        keyData->typeMap.adoptInstead(typeDataMap);
+        ಕೀಲಿ_Data->bcpId = bcp_ಕೀಲಿ_Id;
+        ಕೀಲಿ_Data->legacyId = legacy_ಕೀಲಿ_Id;
+        ಕೀಲಿ_Data->specialTypes = specialTypes;
+        ಕೀಲಿ_Data->typeMap.adoptInstead(typeDataMap);
 
-        uhash_put(gLocExtKeyMap, &keyData->legacyId, keyData, &sts);
-        if (legacyKeyId != bcpKeyId) {
+        uhash_put(g_Loc_Ext_ಕೀಲಿ_Map, &ಕೀಲಿ_Data->legacyId, ಕೀಲಿ_Data, &sts);
+        ಯದಿ (legacy_ಕೀಲಿ_Id != bcp_ಕೀಲಿ_Id) {
             // different key value
-            uhash_put(gLocExtKeyMap, &keyData->bcpId, keyData, &sts);
+            uhash_put(g_Loc_Ext_ಕೀಲಿ_Map, &ಕೀಲಿ_Data->bcpId, ಕೀಲಿ_Data, &sts);
         }
-        if (U_FAILURE(sts)) {
-            break;
+        ಯದಿ (U_FAILURE(sts)) {
+            ಭಙ್ಗ;
         }
     }
 }
 
-bool
+ತಾರ್ಕಿಕ
 init() {
     UErrorCode sts = U_ZERO_ERROR;
-    umtx_initOnce(gLocExtKeyMapInitOnce, &initFromResourceBundle, sts);
-    if (U_FAILURE(sts)) {
-        return false;
+    umtx_initOnce(g_Loc_Ext_ಕೀಲಿ_Map_Init_Once, &initFromResourceBundle, sts);
+    ಯದಿ (U_FAILURE(sts)) {
+        ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
     }
-    return true;
+    ಪ್ರತ್ಯಾಗಮ ಸತ್ಯ;
 }
 
-bool
+ತಾರ್ಕಿಕ
 isSpecialTypeCodepoints(std::string_view val) {
     int32_t subtagLen = 0;
-    for (char c : val) {
-        if (c == '-') {
-            if (subtagLen < 4 || subtagLen > 6) {
-                return false;
+    ಪ್ರತಿ (ವರ್ಣ c : val) {
+        ಯದಿ (c == '-') {
+            ಯದಿ (subtagLen < 4 || subtagLen > 6) {
+                ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
             }
             subtagLen = 0;
-        } else if ((c >= '0' && c <= '9') ||
+        } ಅನ್ಯಥಾ ಯದಿ ((c >= '0' && c <= '9') ||
                     (c >= 'A' && c <= 'F') || // A-F/a-f are contiguous
                     (c >= 'a' && c <= 'f')) { // also in EBCDIC
             subtagLen++;
-        } else {
-            return false;
+        } ಅನ್ಯಥಾ {
+            ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
         }
     }
-    return subtagLen >= 4 && subtagLen <= 6;
+    ಪ್ರತ್ಯಾಗಮ subtagLen >= 4 && subtagLen <= 6;
 }
 
-bool
+ತಾರ್ಕಿಕ
 isSpecialTypeReorderCode(std::string_view val) {
     int32_t subtagLen = 0;
-    for (char c : val) {
-        if (c == '-') {
-            if (subtagLen < 3 || subtagLen > 8) {
-                return false;
+    ಪ್ರತಿ (ವರ್ಣ c : val) {
+        ಯದಿ (c == '-') {
+            ಯದಿ (subtagLen < 3 || subtagLen > 8) {
+                ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
             }
             subtagLen = 0;
-        } else if (uprv_isASCIILetter(c)) {
+        } ಅನ್ಯಥಾ ಯದಿ (uprv_isASCIILetter(c)) {
             subtagLen++;
-        } else {
-            return false;
+        } ಅನ್ಯಥಾ {
+            ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
         }
     }
-    return subtagLen >= 3 && subtagLen <= 8;
+    ಪ್ರತ್ಯಾಗಮ subtagLen >= 3 && subtagLen <= 8;
 }
 
-bool
-isSpecialTypeRgKeyValue(std::string_view val) {
+ತಾರ್ಕಿಕ
+is_Special_Type_Rg_ಕೀಲಿ_ಮೌಲ್ಯ(std::string_view val) {
     int32_t subtagLen = 0;
-    for (char c : val) {
-        if ((subtagLen < 2 && uprv_isASCIILetter(c)) ||
+    ಪ್ರತಿ (ವರ್ಣ c : val) {
+        ಯದಿ ((subtagLen < 2 && uprv_isASCIILetter(c)) ||
             (subtagLen >= 2 && (c == 'Z' || c == 'z'))) {
             subtagLen++;
-        } else {
-            return false;
+        } ಅನ್ಯಥಾ {
+            ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
         }
     }
-    return subtagLen == 6;
+    ಪ್ರತ್ಯಾಗಮ subtagLen == 6;
 }
 
 }  // namespace
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toBcpKey(std::string_view key) {
-    if (!init()) {
-        return std::nullopt;
+ulocimp_to_Bcp_ಕೀಲಿ(std::string_view ಕೀಲಿ) {
+    ಯದಿ (!init()) {
+        ಪ್ರತ್ಯಾಗಮ std::nullopt;
     }
 
-    LocExtKeyData* keyData = static_cast<LocExtKeyData*>(uhash_get(gLocExtKeyMap, &key));
-    if (keyData != nullptr) {
-        return keyData->bcpId;
+    Loc_Ext_ಕೀಲಿ_Data* ಕೀಲಿ_Data = static_cast<Loc_Ext_ಕೀಲಿ_Data*>(uhash_get(g_Loc_Ext_ಕೀಲಿ_Map, &ಕೀಲಿ));
+    ಯದಿ (ಕೀಲಿ_Data != nullptr) {
+        ಪ್ರತ್ಯಾಗಮ ಕೀಲಿ_Data->bcpId;
     }
 
-    return std::nullopt;
+    ಪ್ರತ್ಯಾಗಮ std::nullopt;
 }
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toLegacyKey(std::string_view key) {
-    if (!init()) {
-        return std::nullopt;
+ulocimp_to_Legacy_ಕೀಲಿ(std::string_view ಕೀಲಿ) {
+    ಯದಿ (!init()) {
+        ಪ್ರತ್ಯಾಗಮ std::nullopt;
     }
 
-    LocExtKeyData* keyData = static_cast<LocExtKeyData*>(uhash_get(gLocExtKeyMap, &key));
-    if (keyData != nullptr) {
-        return keyData->legacyId;
+    Loc_Ext_ಕೀಲಿ_Data* ಕೀಲಿ_Data = static_cast<Loc_Ext_ಕೀಲಿ_Data*>(uhash_get(g_Loc_Ext_ಕೀಲಿ_Map, &ಕೀಲಿ));
+    ಯದಿ (ಕೀಲಿ_Data != nullptr) {
+        ಪ್ರತ್ಯಾಗಮ ಕೀಲಿ_Data->legacyId;
     }
 
-    return std::nullopt;
+    ಪ್ರತ್ಯಾಗಮ std::nullopt;
 }
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toBcpType(std::string_view key, std::string_view type U_LIFETIME_BOUND) {
-    if (!init()) {
-        return std::nullopt;
+ulocimp_toBcpType(std::string_view ಕೀಲಿ, std::string_view type U_LIFETIME_BOUND) {
+    ಯದಿ (!init()) {
+        ಪ್ರತ್ಯಾಗಮ std::nullopt;
     }
 
-    LocExtKeyData* keyData = static_cast<LocExtKeyData*>(uhash_get(gLocExtKeyMap, &key));
-    if (keyData != nullptr) {
-        LocExtType* t = static_cast<LocExtType*>(uhash_get(keyData->typeMap.getAlias(), &type));
-        if (t != nullptr) {
-            return t->bcpId;
+    Loc_Ext_ಕೀಲಿ_Data* ಕೀಲಿ_Data = static_cast<Loc_Ext_ಕೀಲಿ_Data*>(uhash_get(g_Loc_Ext_ಕೀಲಿ_Map, &ಕೀಲಿ));
+    ಯದಿ (ಕೀಲಿ_Data != nullptr) {
+        LocExtType* t = static_cast<LocExtType*>(uhash_get(ಕೀಲಿ_Data->typeMap.getAlias(), &type));
+        ಯದಿ (t != nullptr) {
+            ಪ್ರತ್ಯಾಗಮ t->bcpId;
         }
-        if (keyData->specialTypes != SPECIALTYPE_NONE) {
-            bool matched = false;
-            if (keyData->specialTypes & SPECIALTYPE_CODEPOINTS) {
+        ಯದಿ (ಕೀಲಿ_Data->specialTypes != SPECIALTYPE_NONE) {
+            ತಾರ್ಕಿಕ matched = ಅಸತ್ಯ;
+            ಯದಿ (ಕೀಲಿ_Data->specialTypes & SPECIALTYPE_CODEPOINTS) {
                 matched = isSpecialTypeCodepoints(type);
             }
-            if (!matched && keyData->specialTypes & SPECIALTYPE_REORDER_CODE) {
+            ಯದಿ (!matched && ಕೀಲಿ_Data->specialTypes & SPECIALTYPE_REORDER_CODE) {
                 matched = isSpecialTypeReorderCode(type);
             }
-            if (!matched && keyData->specialTypes & SPECIALTYPE_RG_KEY_VALUE) {
-                matched = isSpecialTypeRgKeyValue(type);
+            ಯದಿ (!matched && ಕೀಲಿ_Data->specialTypes & SPECIALTYPE_RG_ಕೀಲಿ_ಮೌಲ್ಯ) {
+                matched = is_Special_Type_Rg_ಕೀಲಿ_ಮೌಲ್ಯ(type);
             }
-            if (matched) {
-                return type;
+            ಯದಿ (matched) {
+                ಪ್ರತ್ಯಾಗಮ type;
             }
         }
     }
 
-    return std::nullopt;
+    ಪ್ರತ್ಯಾಗಮ std::nullopt;
 }
 
 
 U_EXPORT std::optional<std::string_view>
-ulocimp_toLegacyType(std::string_view key, std::string_view type U_LIFETIME_BOUND) {
-    if (!init()) {
-        return std::nullopt;
+ulocimp_toLegacyType(std::string_view ಕೀಲಿ, std::string_view type U_LIFETIME_BOUND) {
+    ಯದಿ (!init()) {
+        ಪ್ರತ್ಯಾಗಮ std::nullopt;
     }
 
-    LocExtKeyData* keyData = static_cast<LocExtKeyData*>(uhash_get(gLocExtKeyMap, &key));
-    if (keyData != nullptr) {
-        LocExtType* t = static_cast<LocExtType*>(uhash_get(keyData->typeMap.getAlias(), &type));
-        if (t != nullptr) {
-            return t->legacyId;
+    Loc_Ext_ಕೀಲಿ_Data* ಕೀಲಿ_Data = static_cast<Loc_Ext_ಕೀಲಿ_Data*>(uhash_get(g_Loc_Ext_ಕೀಲಿ_Map, &ಕೀಲಿ));
+    ಯದಿ (ಕೀಲಿ_Data != nullptr) {
+        LocExtType* t = static_cast<LocExtType*>(uhash_get(ಕೀಲಿ_Data->typeMap.getAlias(), &type));
+        ಯದಿ (t != nullptr) {
+            ಪ್ರತ್ಯಾಗಮ t->legacyId;
         }
-        if (keyData->specialTypes != SPECIALTYPE_NONE) {
-            bool matched = false;
-            if (keyData->specialTypes & SPECIALTYPE_CODEPOINTS) {
+        ಯದಿ (ಕೀಲಿ_Data->specialTypes != SPECIALTYPE_NONE) {
+            ತಾರ್ಕಿಕ matched = ಅಸತ್ಯ;
+            ಯದಿ (ಕೀಲಿ_Data->specialTypes & SPECIALTYPE_CODEPOINTS) {
                 matched = isSpecialTypeCodepoints(type);
             }
-            if (!matched && keyData->specialTypes & SPECIALTYPE_REORDER_CODE) {
+            ಯದಿ (!matched && ಕೀಲಿ_Data->specialTypes & SPECIALTYPE_REORDER_CODE) {
                 matched = isSpecialTypeReorderCode(type);
             }
-            if (!matched && keyData->specialTypes & SPECIALTYPE_RG_KEY_VALUE) {
-                matched = isSpecialTypeRgKeyValue(type);
+            ಯದಿ (!matched && ಕೀಲಿ_Data->specialTypes & SPECIALTYPE_RG_ಕೀಲಿ_ಮೌಲ್ಯ) {
+                matched = is_Special_Type_Rg_ಕೀಲಿ_ಮೌಲ್ಯ(type);
             }
-            if (matched) {
-                return type;
+            ಯದಿ (matched) {
+                ಪ್ರತ್ಯಾಗಮ type;
             }
         }
     }
 
-    return std::nullopt;
+    ಪ್ರತ್ಯಾಗಮ std::nullopt;
 }

@@ -17,21 +17,21 @@
 *   were moved here to break dependency cycles among parts of the common library.
 */
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#ಯದಿ !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/brkiter.h"
-#include "unicode/casemap.h"
-#include "unicode/chariter.h"
-#include "unicode/localpointer.h"
-#include "unicode/ubrk.h"
-#include "unicode/ucasemap.h"
-#include "unicode/utext.h"
-#include "cmemory.h"
-#include "uassert.h"
-#include "ucase.h"
-#include "ucasemap_imp.h"
+#ಅನ್ತರ್ಭಾವ "unicode/brkiter.h"
+#ಅನ್ತರ್ಭಾವ "unicode/casemap.h"
+#ಅನ್ತರ್ಭಾವ "unicode/chariter.h"
+#ಅನ್ತರ್ಭಾವ "unicode/localpointer.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ubrk.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ucasemap.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utext.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "uassert.h"
+#ಅನ್ತರ್ಭಾವ "ucase.h"
+#ಅನ್ತರ್ಭಾವ "ucasemap_imp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -40,147 +40,147 @@ U_NAMESPACE_BEGIN
  * Titlecasing only calls setText(), first(), and next().
  * We implement the rest only to satisfy the abstract interface.
  */
-class WholeStringBreakIterator : public BreakIterator {
-public:
+ವರ್ಗ WholeStringBreakIterator : ಸಾರ್ವಜನಿಕ BreakIterator {
+ಸಾರ್ವಜನಿಕ:
     WholeStringBreakIterator() : BreakIterator(), length(0) {}
     ~WholeStringBreakIterator() override;
-    bool operator==(const BreakIterator&) const override;
-    WholeStringBreakIterator *clone() const override;
-    static UClassID U_EXPORT2 getStaticClassID();
-    UClassID getDynamicClassID() const override;
-    CharacterIterator& getText() const U_LIFETIME_BOUND override;
-    UText* getUText(UText* fillIn U_LIFETIME_BOUND, UErrorCode& errorCode) const override;
-    void  setText(const UnicodeString &text) override;
-    void  setText(UText *text, UErrorCode &errorCode) override;
-    void  adoptText(CharacterIterator* it) override;
+    ತಾರ್ಕಿಕ operator==(ಧ್ರುವ BreakIterator&) ಧ್ರುವ override;
+    WholeStringBreakIterator *clone() ಧ್ರುವ override;
+    ಸ್ಥಿರ UClassID U_EXPORT2 getStaticClassID();
+    UClassID getDynamicClassID() ಧ್ರುವ override;
+    CharacterIterator& getText() ಧ್ರುವ U_LIFETIME_BOUND override;
+    UText* getUText(UText* fillIn U_LIFETIME_BOUND, UErrorCode& errorCode) ಧ್ರುವ override;
+    ಶೂನ್ಯ  setText(ಧ್ರುವ UnicodeString &text) override;
+    ಶೂನ್ಯ  setText(UText *text, UErrorCode &errorCode) override;
+    ಶೂನ್ಯ  adoptText(CharacterIterator* it) override;
     int32_t first() override;
     int32_t last() override;
     int32_t previous() override;
     int32_t next() override;
-    int32_t current() const override;
+    int32_t current() ಧ್ರುವ override;
     int32_t following(int32_t offset) override;
     int32_t preceding(int32_t offset) override;
     UBool isBoundary(int32_t offset) override;
     int32_t next(int32_t n) override;
-    WholeStringBreakIterator *createBufferClone(void *stackBuffer, int32_t &BufferSize,
+    WholeStringBreakIterator *createBufferClone(ಶೂನ್ಯ *ರಾಶಿ_Buffer, int32_t &BufferSize,
                                                 UErrorCode &errorCode) override;
-    WholeStringBreakIterator& refreshInputText(UText* input,
+    WholeStringBreakIterator& refresh_ಒಳಹರಿವು_Text(UText* input,
                                                UErrorCode& errorCode) U_LIFETIME_BOUND override;
 
-private:
+ಗುಪ್ತ:
     int32_t length;
 };
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(WholeStringBreakIterator)
 
 WholeStringBreakIterator::~WholeStringBreakIterator() {}
-bool WholeStringBreakIterator::operator==(const BreakIterator&) const { return false; }
-WholeStringBreakIterator *WholeStringBreakIterator::clone() const { return nullptr; }
+ತಾರ್ಕಿಕ WholeStringBreakIterator::operator==(ಧ್ರುವ BreakIterator&) ಧ್ರುವ { ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ; }
+WholeStringBreakIterator *WholeStringBreakIterator::clone() ಧ್ರುವ { ಪ್ರತ್ಯಾಗಮ nullptr; }
 
-CharacterIterator& WholeStringBreakIterator::getText() const U_LIFETIME_BOUND {
+CharacterIterator& WholeStringBreakIterator::getText() ಧ್ರುವ U_LIFETIME_BOUND {
     UPRV_UNREACHABLE_EXIT;  // really should not be called
 }
-UText *WholeStringBreakIterator::getUText(UText * /*fillIn*/, UErrorCode &errorCode) const {
-    if (U_SUCCESS(errorCode)) {
+UText *WholeStringBreakIterator::getUText(UText * /*fillIn*/, UErrorCode &errorCode) ಧ್ರುವ {
+    ಯದಿ (U_SUCCESS(errorCode)) {
         errorCode = U_UNSUPPORTED_ERROR;
     }
-    return nullptr;
+    ಪ್ರತ್ಯಾಗಮ nullptr;
 }
 
-void  WholeStringBreakIterator::setText(const UnicodeString &text) {
+ಶೂನ್ಯ  WholeStringBreakIterator::setText(ಧ್ರುವ UnicodeString &text) {
     length = text.length();
 }
-void  WholeStringBreakIterator::setText(UText *text, UErrorCode &errorCode) {
-    if (U_SUCCESS(errorCode)) {
+ಶೂನ್ಯ  WholeStringBreakIterator::setText(UText *text, UErrorCode &errorCode) {
+    ಯದಿ (U_SUCCESS(errorCode)) {
         int64_t length64 = utext_nativeLength(text);
-        if (length64 <= INT32_MAX) {
+        ಯದಿ (length64 <= INT32_MAX) {
             length = static_cast<int32_t>(length64);
-        } else {
+        } ಅನ್ಯಥಾ {
             errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
         }
     }
 }
-void  WholeStringBreakIterator::adoptText(CharacterIterator*) {
+ಶೂನ್ಯ  WholeStringBreakIterator::adoptText(CharacterIterator*) {
     UPRV_UNREACHABLE_EXIT;  // should not be called
 }
 
-int32_t WholeStringBreakIterator::first() { return 0; }
-int32_t WholeStringBreakIterator::last() { return length; }
-int32_t WholeStringBreakIterator::previous() { return 0; }
-int32_t WholeStringBreakIterator::next() { return length; }
-int32_t WholeStringBreakIterator::current() const { return 0; }
-int32_t WholeStringBreakIterator::following(int32_t /*offset*/) { return length; }
-int32_t WholeStringBreakIterator::preceding(int32_t /*offset*/) { return 0; }
-UBool WholeStringBreakIterator::isBoundary(int32_t /*offset*/) { return false; }
-int32_t WholeStringBreakIterator::next(int32_t /*n*/) { return length; }
+int32_t WholeStringBreakIterator::first() { ಪ್ರತ್ಯಾಗಮ 0; }
+int32_t WholeStringBreakIterator::last() { ಪ್ರತ್ಯಾಗಮ length; }
+int32_t WholeStringBreakIterator::previous() { ಪ್ರತ್ಯಾಗಮ 0; }
+int32_t WholeStringBreakIterator::next() { ಪ್ರತ್ಯಾಗಮ length; }
+int32_t WholeStringBreakIterator::current() ಧ್ರುವ { ಪ್ರತ್ಯಾಗಮ 0; }
+int32_t WholeStringBreakIterator::following(int32_t /*offset*/) { ಪ್ರತ್ಯಾಗಮ length; }
+int32_t WholeStringBreakIterator::preceding(int32_t /*offset*/) { ಪ್ರತ್ಯಾಗಮ 0; }
+UBool WholeStringBreakIterator::isBoundary(int32_t /*offset*/) { ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ; }
+int32_t WholeStringBreakIterator::next(int32_t /*n*/) { ಪ್ರತ್ಯಾಗಮ length; }
 
 WholeStringBreakIterator *WholeStringBreakIterator::createBufferClone(
-        void * /*stackBuffer*/, int32_t & /*BufferSize*/, UErrorCode &errorCode) {
-    if (U_SUCCESS(errorCode)) {
+        ಶೂನ್ಯ * /*stackBuffer*/, int32_t & /*BufferSize*/, UErrorCode &errorCode) {
+    ಯದಿ (U_SUCCESS(errorCode)) {
         errorCode = U_UNSUPPORTED_ERROR;
     }
-    return nullptr;
+    ಪ್ರತ್ಯಾಗಮ nullptr;
 }
 WholeStringBreakIterator&
-WholeStringBreakIterator::refreshInputText(UText* /*input*/,
+WholeStringBreakIterator::refresh_ಒಳಹರಿವು_Text(UText* /*ಒಳಹರಿವು*/,
                                            UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if (U_SUCCESS(errorCode)) {
+    ಯದಿ (U_SUCCESS(errorCode)) {
         errorCode = U_UNSUPPORTED_ERROR;
     }
-    return *this;
+    ಪ್ರತ್ಯಾಗಮ *ಏತತ್;
 }
 
 U_CFUNC
-BreakIterator* ustrcase_getTitleBreakIterator(const Locale* locale,
-                                              const char* locID,
+BreakIterator* ustrcase_getTitleBreakIterator(ಧ್ರುವ Locale* locale,
+                                              ಧ್ರುವ ವರ್ಣ* locID,
                                               uint32_t options,
                                               BreakIterator* iter U_LIFETIME_BOUND,
                                               LocalPointer<BreakIterator>& ownedIter,
                                               UErrorCode& errorCode) {
-    if (U_FAILURE(errorCode)) { return nullptr; }
+    ಯದಿ (U_FAILURE(errorCode)) { ಪ್ರತ್ಯಾಗಮ nullptr; }
     options &= U_TITLECASE_ITERATOR_MASK;
-    if (options != 0 && iter != nullptr) {
+    ಯದಿ (options != 0 && iter != nullptr) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
-    if (iter == nullptr) {
-        switch (options) {
-        case 0:
+    ಯದಿ (iter == nullptr) {
+        ವಿಕಲ್ಪ (options) {
+        ಪಕ್ಷ 0:
             iter = BreakIterator::createWordInstance(
                 locale != nullptr ? *locale : Locale(locID), errorCode);
-            break;
-        case U_TITLECASE_WHOLE_STRING:
-            iter = new WholeStringBreakIterator();
-            if (iter == nullptr) {
+            ಭಙ್ಗ;
+        ಪಕ್ಷ U_TITLECASE_WHOLE_STRING:
+            iter = ನೂತನ WholeStringBreakIterator();
+            ಯದಿ (iter == nullptr) {
                 errorCode = U_MEMORY_ALLOCATION_ERROR;
             }
-            break;
-        case U_TITLECASE_SENTENCES:
+            ಭಙ್ಗ;
+        ಪಕ್ಷ U_TITLECASE_SENTENCES:
             iter = BreakIterator::createSentenceInstance(
                 locale != nullptr ? *locale : Locale(locID), errorCode);
-            break;
-        default:
+            ಭಙ್ಗ;
+        ಸ್ವಭಾವ:
             errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-            break;
+            ಭಙ್ಗ;
         }
         ownedIter.adoptInstead(iter);
     }
-    return iter;
+    ಪ್ರತ್ಯಾಗಮ iter;
 }
 
 int32_t CaseMap::toTitle(
-        const char *locale, uint32_t options, BreakIterator *iter,
-        const char16_t *src, int32_t srcLength,
+        ಧ್ರುವ ವರ್ಣ *locale, uint32_t options, BreakIterator *iter,
+        ಧ್ರುವ char16_t *src, int32_t srcLength,
         char16_t *dest, int32_t destCapacity, Edits *edits,
         UErrorCode &errorCode) {
     LocalPointer<BreakIterator> ownedIter;
     iter = ustrcase_getTitleBreakIterator(nullptr, locale, options, iter, ownedIter, errorCode);
-    if(iter==nullptr) {
-        return 0;
+    ಯದಿ(iter==nullptr) {
+        ಪ್ರತ್ಯಾಗಮ 0;
     }
     UnicodeString s(srcLength<0, src, srcLength);
     iter->setText(s);
-    return ustrcase_map(
+    ಪ್ರತ್ಯಾಗಮ ustrcase_map(
         ustrcase_getCaseLocale(locale), options, iter,
         dest, destCapacity,
         src, srcLength,
@@ -193,20 +193,20 @@ U_NAMESPACE_USE
 
 U_CAPI int32_t U_EXPORT2
 u_strToTitle(char16_t *dest, int32_t destCapacity,
-             const char16_t *src, int32_t srcLength,
+             ಧ್ರುವ char16_t *src, int32_t srcLength,
              UBreakIterator *titleIter,
-             const char *locale,
+             ಧ್ರುವ ವರ್ಣ *locale,
              UErrorCode *pErrorCode) {
     LocalPointer<BreakIterator> ownedIter;
     BreakIterator *iter = ustrcase_getTitleBreakIterator(
         nullptr, locale, 0, reinterpret_cast<BreakIterator *>(titleIter),
         ownedIter, *pErrorCode);
-    if (iter == nullptr) {
-        return 0;
+    ಯದಿ (iter == nullptr) {
+        ಪ್ರತ್ಯಾಗಮ 0;
     }
     UnicodeString s(srcLength<0, src, srcLength);
     iter->setText(s);
-    return ustrcase_mapWithOverlap(
+    ಪ್ರತ್ಯಾಗಮ ustrcase_mapWithOverlap(
         ustrcase_getCaseLocale(locale), 0, iter,
         dest, destCapacity,
         src, srcLength,
@@ -216,24 +216,24 @@ u_strToTitle(char16_t *dest, int32_t destCapacity,
 U_CAPI int32_t U_EXPORT2
 ucasemap_toTitle(UCaseMap *csm,
                  char16_t *dest, int32_t destCapacity,
-                 const char16_t *src, int32_t srcLength,
+                 ಧ್ರುವ char16_t *src, int32_t srcLength,
                  UErrorCode *pErrorCode) {
-    if (U_FAILURE(*pErrorCode)) {
-        return 0;
+    ಯದಿ (U_FAILURE(*pErrorCode)) {
+        ಪ್ರತ್ಯಾಗಮ 0;
     }
     auto *impl = reinterpret_cast<UCaseMapImpl *>(csm);
-    if (impl->iter == nullptr) {
+    ಯದಿ (impl->iter == nullptr) {
         LocalPointer<BreakIterator> ownedIter;
         BreakIterator *iter = ustrcase_getTitleBreakIterator(
             nullptr, impl->locale, impl->options, nullptr, ownedIter, *pErrorCode);
-        if (iter == nullptr) {
-            return 0;
+        ಯದಿ (iter == nullptr) {
+            ಪ್ರತ್ಯಾಗಮ 0;
         }
         impl->iter = ownedIter.orphan();
     }
     UnicodeString s(srcLength<0, src, srcLength);
     impl->iter->setText(s);
-    return ustrcase_map(
+    ಪ್ರತ್ಯಾಗಮ ustrcase_map(
         impl->caseLocale, impl->options, impl->iter,
         dest, destCapacity,
         src, srcLength,

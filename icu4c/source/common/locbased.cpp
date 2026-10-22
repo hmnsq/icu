@@ -10,39 +10,39 @@
 * Since: ICU 2.8
 **********************************************************************
 */
-#include "locbased.h"
-#include "uresimp.h"
+#ಅನ್ತರ್ಭಾವ "locbased.h"
+#ಅನ್ತರ್ಭಾವ "uresimp.h"
 
 U_NAMESPACE_BEGIN
 
-const Locale& LocaleBased::getLocale(const Locale& valid U_LIFETIME_BOUND,
-                                     const Locale& actual U_LIFETIME_BOUND,
+ಧ್ರುವ Locale& LocaleBased::getLocale(ಧ್ರುವ Locale& valid U_LIFETIME_BOUND,
+                                     ಧ್ರುವ Locale& actual U_LIFETIME_BOUND,
                                      ULocDataLocaleType type,
                                      UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return Locale::getRoot();
+    ಯದಿ (U_FAILURE(status)) {
+        ಪ್ರತ್ಯಾಗಮ Locale::get_ಬೇರು();
     }
 
-    switch(type) {
-    case ULOC_VALID_LOCALE:
-        return valid;
-    case ULOC_ACTUAL_LOCALE:
-        return actual;
-    default:
+    ವಿಕಲ್ಪ(type) {
+    ಪಕ್ಷ ULOC_VALID_LOCALE:
+        ಪ್ರತ್ಯಾಗಮ valid;
+    ಪಕ್ಷ ULOC_ACTUAL_LOCALE:
+        ಪ್ರತ್ಯಾಗಮ actual;
+    ಸ್ವಭಾವ:
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return Locale::getRoot();
+        ಪ್ರತ್ಯಾಗಮ Locale::get_ಬೇರು();
     }
 }
 
-const char* LocaleBased::getLocaleID(const Locale& valid, const Locale& actual,
+ಧ್ರುವ ವರ್ಣ* LocaleBased::getLocaleID(ಧ್ರುವ Locale& valid, ಧ್ರುವ Locale& actual,
                                      ULocDataLocaleType type, UErrorCode& status) {
-    const Locale& locale = getLocale(valid, actual, type, status);
+    ಧ್ರುವ Locale& locale = getLocale(valid, actual, type, status);
 
-    if (U_FAILURE(status)) {
-        return nullptr;
+    ಯದಿ (U_FAILURE(status)) {
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
 
-    return locale == Locale::getRoot() ? kRootLocaleName : locale.getName();
+    ಪ್ರತ್ಯಾಗಮ locale == Locale::get_ಬೇರು() ? k_ಬೇರು_Locale_Name : locale.getName();
 }
 
 U_NAMESPACE_END

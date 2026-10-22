@@ -7,11 +7,11 @@
 ******************************************************************************
 * sharedobject.cpp
 */
-#include "sharedobject.h"
-#include "mutex.h"
-#include "uassert.h"
-#include "umutex.h"
-#include "unifiedcache.h"
+#ಅನ್ತರ್ಭಾವ "sharedobject.h"
+#ಅನ್ತರ್ಭಾವ "mutex.h"
+#ಅನ್ತರ್ಭಾವ "uassert.h"
+#ಅನ್ತರ್ಭಾವ "umutex.h"
+#ಅನ್ತರ್ಭಾವ "unifiedcache.h"
 
 U_NAMESPACE_BEGIN
 
@@ -19,9 +19,9 @@ SharedObject::~SharedObject() {}
 
 UnifiedCacheBase::~UnifiedCacheBase() {}
 
-void
-SharedObject::addRef() const {
-    umtx_atomic_inc(&hardRefCount);
+ಶೂನ್ಯ
+SharedObject::addRef() ಧ್ರುವ {
+    umtx_atomic_inc(&hard_Ref_ಎಣಿಕೆ);
 }
 
 // removeRef Decrement the reference count and delete if it is zero.
@@ -32,30 +32,30 @@ SharedObject::addRef() const {
 //           a cache eviction cycle concurrently.
 //           NO ACCESS TO *this PERMITTED AFTER REFERENCE COUNT == 0 for cached objects.
 //           THE OBJECT MAY ALREADY BE GONE.
-void
-SharedObject::removeRef() const {
-    const UnifiedCacheBase *cache = this->cachePtr;
-    int32_t updatedRefCount = umtx_atomic_dec(&hardRefCount);
-    U_ASSERT(updatedRefCount >= 0);
-    if (updatedRefCount == 0) {
-        if (cache) {
+ಶೂನ್ಯ
+SharedObject::removeRef() ಧ್ರುವ {
+    ಧ್ರುವ UnifiedCacheBase *cache = ಏತತ್->cachePtr;
+    int32_t updated_Ref_ಎಣಿಕೆ = umtx_atomic_dec(&hard_Ref_ಎಣಿಕೆ);
+    U_ASSERT(updated_Ref_ಎಣಿಕೆ >= 0);
+    ಯದಿ (updated_Ref_ಎಣಿಕೆ == 0) {
+        ಯದಿ (cache) {
             cache->handleUnreferencedObject();
-        } else {
-            delete this;
+        } ಅನ್ಯಥಾ {
+            delete ಏತತ್;
         }
     }
 }
 
 
 int32_t
-SharedObject::getRefCount() const {
-    return umtx_loadAcquire(hardRefCount);
+SharedObject::get_Ref_ಎಣಿಕೆ() ಧ್ರುವ {
+    ಪ್ರತ್ಯಾಗಮ umtx_loadAcquire(hard_Ref_ಎಣಿಕೆ);
 }
 
-void
-SharedObject::deleteIfZeroRefCount() const {
-    if (this->cachePtr == nullptr && getRefCount() == 0) {
-        delete this;
+ಶೂನ್ಯ
+SharedObject::delete_If_Zero_Ref_ಎಣಿಕೆ() ಧ್ರುವ {
+    ಯದಿ (ಏತತ್->cachePtr == nullptr && get_Ref_ಎಣಿಕೆ() == 0) {
+        delete ಏತತ್;
     }
 }
 

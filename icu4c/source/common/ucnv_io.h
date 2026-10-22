@@ -15,39 +15,39 @@
 #ifndef UCNV_IO_H
 #define UCNV_IO_H
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#ಯದಿ !UCONFIG_NO_CONVERSION
 
-#include "udataswp.h"
+#ಅನ್ತರ್ಭಾವ "udataswp.h"
 
 #define UCNV_AMBIGUOUS_ALIAS_MAP_BIT 0x8000
 #define UCNV_CONTAINS_OPTION_BIT 0x4000
 #define UCNV_CONVERTER_INDEX_MASK 0xFFF
-#define UCNV_NUM_RESERVED_TAGS 2
-#define UCNV_NUM_HIDDEN_TAGS 1
+#define UCNV_ಅಂಕೆ_RESERVED_TAGS 2
+#define UCNV_ಅಂಕೆ_HIDDEN_TAGS 1
 
-enum {
+ಗಣನಾ {
     UCNV_IO_UNNORMALIZED,
     UCNV_IO_STD_NORMALIZED,
-    UCNV_IO_NORM_TYPE_COUNT
+    UCNV_IO_NORM_TYPE_ಎಣಿಕೆ
 };
 
-typedef struct {
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ {
     uint16_t stringNormalizationType;
     uint16_t containsCnvOptionInfo;
 } UConverterAliasOptions;
 
-typedef struct UConverterAlias {
-    const uint16_t *converterList;
-    const uint16_t *tagList;
-    const uint16_t *aliasList;
-    const uint16_t *untaggedConvArray;
-    const uint16_t *taggedAliasArray;
-    const uint16_t *taggedAliasLists;
-    const UConverterAliasOptions *optionTable;
-    const uint16_t *stringTable;
-    const uint16_t *normalizedStringTable;
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ UConverterAlias {
+    ಧ್ರುವ uint16_t *converterList;
+    ಧ್ರುವ uint16_t *tagList;
+    ಧ್ರುವ uint16_t *aliasList;
+    ಧ್ರುವ uint16_t *untaggedConvArray;
+    ಧ್ರುವ uint16_t *taggedAliasArray;
+    ಧ್ರುವ uint16_t *taggedAliasLists;
+    ಧ್ರುವ UConverterAliasOptions *optionTable;
+    ಧ್ರುವ uint16_t *stringTable;
+    ಧ್ರುವ uint16_t *normalizedStringTable;
 
     uint32_t converterListSize;
     uint32_t tagListSize;
@@ -69,19 +69,19 @@ typedef struct UConverterAlias {
  * @see ucnv_compareNames
  * @return the destination buffer.
  */
-#if U_CHARSET_FAMILY==U_ASCII_FAMILY
+#ಯದಿ U_CHARSET_FAMILY==U_ASCII_FAMILY
 #   define ucnv_io_stripForCompare ucnv_io_stripASCIIForCompare
-#elif U_CHARSET_FAMILY==U_EBCDIC_FAMILY
+#ನೋಚೇದ್ಯದಿ U_CHARSET_FAMILY==U_EBCDIC_FAMILY
 #   define ucnv_io_stripForCompare ucnv_io_stripEBCDICForCompare
-#else
+#ಅನ್ಯಥಾ
 #   error U_CHARSET_FAMILY is not valid
 #endif
 
-U_CAPI char* U_CALLCONV
-ucnv_io_stripASCIIForCompare(char* dst U_LIFETIME_BOUND, const char* name);
+U_CAPI ವರ್ಣ* U_CALLCONV
+ucnv_io_stripASCIIForCompare(ವರ್ಣ* dst U_LIFETIME_BOUND, ಧ್ರುವ ವರ್ಣ* name);
 
-U_CAPI char* U_CALLCONV
-ucnv_io_stripEBCDICForCompare(char* dst U_LIFETIME_BOUND, const char* name);
+U_CAPI ವರ್ಣ* U_CALLCONV
+ucnv_io_stripEBCDICForCompare(ವರ್ಣ* dst U_LIFETIME_BOUND, ಧ್ರುವ ವರ್ಣ* name);
 
 /**
  * Map a converter alias name to a canonical converter name.
@@ -93,8 +93,8 @@ ucnv_io_stripEBCDICForCompare(char* dst U_LIFETIME_BOUND, const char* name);
  * @param pErrorCode The error code
  * @return the converter name in mixed-case, return NULL if the alias is not found.
  */
-U_CAPI const char *
-ucnv_io_getConverterName(const char *alias, UBool *containsOption, UErrorCode *pErrorCode);
+U_CAPI ಧ್ರುವ ವರ್ಣ *
+ucnv_io_getConverterName(ಧ್ರುವ ವರ್ಣ *alias, UBool *containsOption, UErrorCode *pErrorCode);
 
 /**
  * Return the number of all known converter names (no aliases).
@@ -102,15 +102,15 @@ ucnv_io_getConverterName(const char *alias, UBool *containsOption, UErrorCode *p
  * @return the number of all aliases
  */
 U_CAPI uint16_t
-ucnv_io_countKnownConverters(UErrorCode *pErrorCode);
+ucnv_io_ಎಣಿಕೆ_Known_Converters(UErrorCode *pErrorCode);
 
 /**
  * Swap an ICU converter alias table. See implementation for details.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-ucnv_swapAliases(const UDataSwapper *ds,
-                 const void *inData, int32_t length, void *outData,
+ucnv_swapAliases(ಧ್ರುವ UDataSwapper *ds,
+                 ಧ್ರುವ ಶೂನ್ಯ *inData, int32_t length, ಶೂನ್ಯ *outData,
                  UErrorCode *pErrorCode);
 
 #endif

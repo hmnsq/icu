@@ -22,8 +22,8 @@
 #ifndef __UTRACE_H__
 #define __UTRACE_H__
 
-#include <stdarg.h>
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ <stdarg.h>
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
 /**
  * \file
@@ -43,7 +43,7 @@ U_CDECL_BEGIN
  * @see utrace_setLevel
  * @stable ICU 2.8
  */
-typedef enum UTraceLevel {
+ಪ್ರಕಾರನಿರ್ದೇಶ ಗಣನಾ UTraceLevel {
     /** Disable all tracing  @stable ICU 2.8*/
     UTRACE_OFF=-1,
     /** Trace error conditions only  @stable ICU 2.8*/
@@ -62,7 +62,7 @@ typedef enum UTraceLevel {
  *  These are the ICU functions that will be traced when tracing is enabled.
  *  @stable ICU 2.8
  */
-typedef enum UTraceFunctionNumber {
+ಪ್ರಕಾರನಿರ್ದೇಶ ಗಣನಾ UTrace_Function_ಸಂಖ್ಯೆ {
     UTRACE_FUNCTION_START=0,
     UTRACE_U_INIT=UTRACE_FUNCTION_START,
     UTRACE_U_CLEANUP,
@@ -201,7 +201,7 @@ typedef enum UTraceFunctionNumber {
      *
      * @stable ICU 67
      */
-    UTRACE_UBRK_CREATE_LINE,
+    UTRACE_UBRK_CREATE_ಸಾಲು,
 
     /**
      * Indicates that a sentence instance of break iterator was created.
@@ -235,14 +235,14 @@ typedef enum UTraceFunctionNumber {
     UTRACE_UBRK_LIMIT,
 #endif  // U_HIDE_INTERNAL_API
 
-} UTraceFunctionNumber;
+} UTrace_Function_ಸಂಖ್ಯೆ;
 
 /**
  * Setter for the trace level.
  * @param traceLevel A UTraceLevel value.
  * @stable ICU 2.8
  */
-U_CAPI void U_EXPORT2
+U_CAPI ಶೂನ್ಯ U_EXPORT2
 utrace_setLevel(int32_t traceLevel);
 
 /**
@@ -251,7 +251,7 @@ utrace_setLevel(int32_t traceLevel);
  * @stable ICU 2.8
  */
 U_CAPI int32_t U_EXPORT2
-utrace_getLevel(void);
+utrace_getLevel(ಶೂನ್ಯ);
 
 /* Trace function pointers types  ----------------------------- */
 
@@ -261,8 +261,8 @@ utrace_getLevel(void);
   *  @param fnNumber Enum value indicating the ICU function being entered.
   *  @stable ICU 2.8
   */
-typedef void U_CALLCONV
-UTraceEntry(const void *context, int32_t fnNumber);
+ಪ್ರಕಾರನಿರ್ದೇಶ ಶೂನ್ಯ U_CALLCONV
+UTraceEntry(ಧ್ರುವ ಶೂನ್ಯ *context, int32_t fn_ಸಂಖ್ಯೆ);
 
 /**
   *  Type signature for the trace function to be called when exiting from a function.
@@ -277,9 +277,9 @@ UTraceEntry(const void *context, int32_t fnNumber);
   *  @see   utrace_vformat
   *  @stable ICU 2.8
   */
-typedef void U_CALLCONV
-UTraceExit(const void *context, int32_t fnNumber, 
-           const char *fmt, va_list args);
+ಪ್ರಕಾರನಿರ್ದೇಶ ಶೂನ್ಯ U_CALLCONV
+UTraceExit(ಧ್ರುವ ಶೂನ್ಯ *context, int32_t fn_ಸಂಖ್ಯೆ, 
+           ಧ್ರುವ ವರ್ಣ *fmt, va_list args);
 
 /**
   *  Type signature for the trace function to be called from within an ICU function
@@ -292,9 +292,9 @@ UTraceExit(const void *context, int32_t fnNumber,
   *  @param args     The data being traced, passed as variable args.
   *  @stable ICU 2.8
   */
-typedef void U_CALLCONV
-UTraceData(const void *context, int32_t fnNumber, int32_t level,
-           const char *fmt, va_list args);
+ಪ್ರಕಾರನಿರ್ದೇಶ ಶೂನ್ಯ U_CALLCONV
+UTraceData(ಧ್ರುವ ಶೂನ್ಯ *context, int32_t fn_ಸಂಖ್ಯೆ, int32_t level,
+           ಧ್ರುವ ವರ್ಣ *fmt, va_list args);
 
 /**
   *  Set ICU Tracing functions.  Installs application-provided tracing
@@ -324,8 +324,8 @@ UTraceData(const void *context, int32_t fnNumber, int32_t level,
   *
   *  @stable ICU 2.8
   */
-U_CAPI void U_EXPORT2
-utrace_setFunctions(const void *context,
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+utrace_setFunctions(ಧ್ರುವ ಶೂನ್ಯ *context,
                     UTraceEntry *e, UTraceExit *x, UTraceData *d);
 
 /**
@@ -338,8 +338,8 @@ utrace_setFunctions(const void *context,
   * @param d        The currently installed UTraceData function.
   * @stable ICU 2.8
   */
-U_CAPI void U_EXPORT2
-utrace_getFunctions(const void **context,
+U_CAPI ಶೂನ್ಯ U_EXPORT2
+utrace_getFunctions(ಧ್ರುವ ಶೂನ್ಯ **context,
                     UTraceEntry **e, UTraceExit **x, UTraceData **d);
 
 
@@ -461,8 +461,8 @@ utrace_getFunctions(const void **context,
   *  @stable ICU 2.8
   */
 U_CAPI int32_t U_EXPORT2
-utrace_vformat(char *outBuf, int32_t capacity,
-              int32_t indent, const char *fmt,  va_list args);
+utrace_vformat(ವರ್ಣ *outBuf, int32_t capacity,
+              int32_t indent, ಧ್ರುವ ವರ್ಣ *fmt,  va_list args);
 
 /**
   *  Trace output Formatter.  An application's UTraceData tracing functions may call
@@ -482,8 +482,8 @@ utrace_vformat(char *outBuf, int32_t capacity,
   *  @stable ICU 2.8
   */
 U_CAPI int32_t U_EXPORT2
-utrace_format(char *outBuf, int32_t capacity,
-              int32_t indent, const char *fmt,  ...);
+utrace_format(ವರ್ಣ *outBuf, int32_t capacity,
+              int32_t indent, ಧ್ರುವ ವರ್ಣ *fmt,  ...);
 
 
 
@@ -498,8 +498,8 @@ utrace_format(char *outBuf, int32_t capacity,
  * @see UTraceFunctionNumber
  * @stable ICU 2.8
  */
-U_CAPI const char * U_EXPORT2
-utrace_functionName(int32_t fnNumber);
+U_CAPI ಧ್ರುವ ವರ್ಣ * U_EXPORT2
+utrace_functionName(int32_t fn_ಸಂಖ್ಯೆ);
 
 U_CDECL_END
 

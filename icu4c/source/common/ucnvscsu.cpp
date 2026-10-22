@@ -21,21 +21,21 @@
 *   will result in callback calls.
 */
 
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
+#ಯದಿ !UCONFIG_NO_CONVERSION && !UCONFIG_ONLY_HTML_CONVERSION
 
-#include "unicode/ucnv.h"
-#include "unicode/ucnv_cb.h"
-#include "unicode/utf16.h"
-#include "ucnv_bld.h"
-#include "ucnv_cnv.h"
-#include "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ucnv.h"
+#ಅನ್ತರ್ಭಾವ "unicode/ucnv_cb.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utf16.h"
+#ಅನ್ತರ್ಭಾವ "ucnv_bld.h"
+#ಅನ್ತರ್ಭಾವ "ucnv_cnv.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
 
 /* SCSU definitions --------------------------------------------------------- */
 
 /* SCSU command byte values */
-enum {
+ಗಣನಾ {
     SQ0=0x01, /* Quote from window pair 0 */
     SQ7=0x08, /* Quote from window pair 7 */
     SDX=0x0B, /* Define a window as extended */
@@ -56,7 +56,7 @@ enum {
     Urs=0xF2  /* reserved */
 };
 
-enum {
+ಗಣನಾ {
     /*
      * Unicode code points from 3400 to E000 are not adressible by
      * dynamic window, since in these areas no short run alphabets are
@@ -73,7 +73,7 @@ enum {
 };
 
 /* constant offsets for the 8 static windows */
-static const uint32_t staticOffsets[8]={
+ಸ್ಥಿರ ಧ್ರುವ uint32_t staticOffsets[8]={
     0x0000, /* ASCII for quoted tags */
     0x0080, /* Latin - 1 Supplement (for access to punctuation) */
     0x0100, /* Latin Extended-A */
@@ -85,7 +85,7 @@ static const uint32_t staticOffsets[8]={
 };
 
 /* initial offsets for the 8 dynamic (sliding) windows */
-static const uint32_t initialDynamicOffsets[8]={
+ಸ್ಥಿರ ಧ್ರುವ uint32_t initialDynamicOffsets[8]={
     0x0080, /* Latin-1 */
     0x00C0, /* Latin Extended A */
     0x0400, /* Cyrillic */
@@ -97,7 +97,7 @@ static const uint32_t initialDynamicOffsets[8]={
 };
 
 /* Table of fixed predefined Offsets */
-static const uint32_t fixedOffsets[]={
+ಸ್ಥಿರ ಧ್ರುವ uint32_t fixedOffsets[]={
     /* 0xF9 */ 0x00C0, /* Latin-1 Letters + half of Latin Extended A */
     /* 0xFA */ 0x0250, /* IPA extensions */
     /* 0xFB */ 0x0370, /* Greek */
@@ -108,7 +108,7 @@ static const uint32_t fixedOffsets[]={
 };
 
 /* state values */
-enum {
+ಗಣನಾ {
     readCommand,
     quotePairOne,
     quotePairTwo,
@@ -118,7 +118,7 @@ enum {
     defineOne
 };
 
-typedef struct SCSUData {
+ಪ್ರಕಾರನಿರ್ದೇಶ ಸಂರಚನಾ SCSUData {
     /* dynamic window offsets, initialize to default values from initialDynamicOffsets */
     uint32_t toUDynamicOffsets[8];
     uint32_t fromUDynamicOffsets[8];
@@ -146,68 +146,68 @@ typedef struct SCSUData {
     int8_t windowUse[8];
 } SCSUData;
 
-static const int8_t initialWindowUse[8]={ 7, 0, 3, 2, 4, 5, 6, 1 };
-static const int8_t initialWindowUse_ja[8]={ 3, 2, 4, 1, 0, 7, 5, 6 };
+ಸ್ಥಿರ ಧ್ರುವ int8_t initialWindowUse[8]={ 7, 0, 3, 2, 4, 5, 6, 1 };
+ಸ್ಥಿರ ಧ್ರುವ int8_t initialWindowUse_ja[8]={ 3, 2, 4, 1, 0, 7, 5, 6 };
 
-enum {
+ಗಣನಾ {
     lGeneric, l_ja
 };
 
 /* SCSU setup functions ----------------------------------------------------- */
 U_CDECL_BEGIN
-static void U_CALLCONV
+ಸ್ಥಿರ ಶೂನ್ಯ U_CALLCONV
 _SCSUReset(UConverter *cnv, UConverterResetChoice choice) {
     SCSUData *scsu=(SCSUData *)cnv->extraInfo;
 
-    if(choice<=UCNV_RESET_TO_UNICODE) {
+    ಯದಿ(choice<=UCNV_RESET_TO_UNICODE) {
         /* reset toUnicode */
         uprv_memcpy(scsu->toUDynamicOffsets, initialDynamicOffsets, 32);
 
-        scsu->toUIsSingleByteMode=true;
+        scsu->toUIsSingleByteMode=ಸತ್ಯ;
         scsu->toUState=readCommand;
         scsu->toUQuoteWindow=scsu->toUDynamicWindow=0;
         scsu->toUByteOne=0;
 
         cnv->toULength=0;
     }
-    if(choice!=UCNV_RESET_TO_UNICODE) {
+    ಯದಿ(choice!=UCNV_RESET_TO_UNICODE) {
         /* reset fromUnicode */
         uprv_memcpy(scsu->fromUDynamicOffsets, initialDynamicOffsets, 32);
 
-        scsu->fromUIsSingleByteMode=true;
+        scsu->fromUIsSingleByteMode=ಸತ್ಯ;
         scsu->fromUDynamicWindow=0;
 
         scsu->nextWindowUseIndex=0;
-        switch(scsu->locale) {
-        case l_ja:
+        ವಿಕಲ್ಪ(scsu->locale) {
+        ಪಕ್ಷ l_ja:
             uprv_memcpy(scsu->windowUse, initialWindowUse_ja, 8);
-            break;
-        default:
+            ಭಙ್ಗ;
+        ಸ್ವಭಾವ:
             uprv_memcpy(scsu->windowUse, initialWindowUse, 8);
-            break;
+            ಭಙ್ಗ;
         }
 
         cnv->fromUChar32=0;
     }
 }
 
-static void U_CALLCONV
+ಸ್ಥಿರ ಶೂನ್ಯ U_CALLCONV
 _SCSUOpen(UConverter *cnv,
           UConverterLoadArgs *pArgs,
           UErrorCode *pErrorCode) {
-    const char *locale=pArgs->locale;
-    if(pArgs->onlyTestIsLoadable) {
-        return;
+    ಧ್ರುವ ವರ್ಣ *locale=pArgs->locale;
+    ಯದಿ(pArgs->onlyTestIsLoadable) {
+        ಪ್ರತ್ಯಾಗಮ;
     }
-    cnv->extraInfo=uprv_malloc(sizeof(SCSUData));
-    if(cnv->extraInfo!=nullptr) {
-        if(locale!=nullptr && locale[0]=='j' && locale[1]=='a' && (locale[2]==0 || locale[2]=='_')) {
+    cnv->extraInfo=uprv_malloc(ಪರಿಮಾಣ(SCSUData));
+    ಯದಿ(cnv->extraInfo!=nullptr) {
+        ಯದಿ(locale!=nullptr && locale[0]=='j' && locale[1]=='a' && (locale[2]==0 || locale[2]=='_')) {
             ((SCSUData *)cnv->extraInfo)->locale=l_ja;
-        } else {
+        } ಅನ್ಯಥಾ {
             ((SCSUData *)cnv->extraInfo)->locale=lGeneric;
         }
         _SCSUReset(cnv, UCNV_RESET_BOTH);
-    } else {
+    } ಅನ್ಯಥಾ {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
     }
 
@@ -216,10 +216,10 @@ _SCSUOpen(UConverter *cnv,
     cnv->subCharLen=-1;
 }
 
-static void U_CALLCONV
+ಸ್ಥಿರ ಶೂನ್ಯ U_CALLCONV
 _SCSUClose(UConverter *cnv) {
-    if(cnv->extraInfo!=nullptr) {
-        if(!cnv->isExtraLocal) {
+    ಯದಿ(cnv->extraInfo!=nullptr) {
+        ಯದಿ(!cnv->isExtraLocal) {
             uprv_free(cnv->extraInfo);
         }
         cnv->extraInfo=nullptr;
@@ -228,14 +228,14 @@ _SCSUClose(UConverter *cnv) {
 
 /* SCSU-to-Unicode conversion functions ------------------------------------- */
 
-static void U_CALLCONV
+ಸ್ಥಿರ ಶೂನ್ಯ U_CALLCONV
 _SCSUToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
                           UErrorCode *pErrorCode) {
     UConverter *cnv;
     SCSUData *scsu;
-    const uint8_t *source, *sourceLimit;
+    ಧ್ರುವ uint8_t *source, *sourceLimit;
     char16_t *target;
-    const char16_t *targetLimit;
+    ಧ್ರುವ char16_t *targetLimit;
     int32_t *offsets;
     UBool isSingleByteMode;
     uint8_t state, byteOne;
@@ -249,8 +249,8 @@ _SCSUToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
     cnv=pArgs->converter;
     scsu=(SCSUData *)cnv->extraInfo;
 
-    source=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
+    source=(ಧ್ರುವ uint8_t *)pArgs->source;
+    sourceLimit=(ಧ್ರುವ uint8_t *)pArgs->sourceLimit;
     target=pArgs->target;
     targetLimit=pArgs->targetLimit;
     offsets=pArgs->offsets;
@@ -285,45 +285,45 @@ _SCSUToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
      * The callback handling is done by returning with an error code.
      * The conversion framework actually calls the callback function.
      */
-    if(isSingleByteMode) {
+    ಯದಿ(isSingleByteMode) {
         /* fast path for single-byte mode */
-        if(state==readCommand) {
+        ಯದಿ(state==readCommand) {
 fastSingle:
-            while(source<sourceLimit && target<targetLimit && (b=*source)>=0x20) {
+            ಯಾವತ್(source<sourceLimit && target<targetLimit && (b=*source)>=0x20) {
                 ++source;
                 ++nextSourceIndex;
-                if(b<=0x7f) {
+                ಯದಿ(b<=0x7f) {
                     /* write US-ASCII graphic character or DEL */
                     *target++=(char16_t)b;
-                    if(offsets!=nullptr) {
+                    ಯದಿ(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
-                } else {
+                } ಅನ್ಯಥಾ {
                     /* write from dynamic window */
                     uint32_t c=scsu->toUDynamicOffsets[dynamicWindow]+(b&0x7f);
-                    if(c<=0xffff) {
+                    ಯದಿ(c<=0xffff) {
                         *target++=(char16_t)c;
-                        if(offsets!=nullptr) {
+                        ಯದಿ(offsets!=nullptr) {
                             *offsets++=sourceIndex;
                         }
-                    } else {
+                    } ಅನ್ಯಥಾ {
                         /* output surrogate pair */
                         *target++=(char16_t)(0xd7c0+(c>>10));
-                        if(target<targetLimit) {
+                        ಯದಿ(target<targetLimit) {
                             *target++=(char16_t)(0xdc00|(c&0x3ff));
-                            if(offsets!=nullptr) {
+                            ಯದಿ(offsets!=nullptr) {
                                 *offsets++=sourceIndex;
                                 *offsets++=sourceIndex;
                             }
-                        } else {
+                        } ಅನ್ಯಥಾ {
                             /* target overflow */
-                            if(offsets!=nullptr) {
+                            ಯದಿ(offsets!=nullptr) {
                                 *offsets++=sourceIndex;
                             }
                             cnv->UCharErrorBuffer[0]=(char16_t)(0xdc00|(c&0x3ff));
                             cnv->UCharErrorBufferLength=1;
                             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                            goto endloop;
+                            ಗಚ್ಛ endloop;
                         }
                     }
                 }
@@ -333,153 +333,153 @@ fastSingle:
 
         /* normal state machine for single-byte mode, minus handling for what fastSingle covers */
 singleByteMode:
-        while(source<sourceLimit) {
-            if(target>=targetLimit) {
+        ಯಾವತ್(source<sourceLimit) {
+            ಯದಿ(target>=targetLimit) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                ಭಙ್ಗ;
             }
             b=*source++;
             ++nextSourceIndex;
-            switch(state) {
-            case readCommand:
+            ವಿಕಲ್ಪ(state) {
+            ಪಕ್ಷ readCommand:
                 /* redundant conditions are commented out */
                 /* here: b<0x20 because otherwise we would be in fastSingle */
-                if((1UL<<b)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
+                ಯದಿ((1UL<<b)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
                     /* CR/LF/TAB/NUL */
                     *target++=(char16_t)b;
-                    if(offsets!=nullptr) {
+                    ಯದಿ(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
                     sourceIndex=nextSourceIndex;
-                    goto fastSingle;
-                } else if(SC0<=b) {
-                    if(b<=SC7) {
+                    ಗಚ್ಛ fastSingle;
+                } ಅನ್ಯಥಾ ಯದಿ(SC0<=b) {
+                    ಯದಿ(b<=SC7) {
                         dynamicWindow=(int8_t)(b-SC0);
                         sourceIndex=nextSourceIndex;
-                        goto fastSingle;
-                    } else /* if(SD0<=b && b<=SD7) */ {
+                        ಗಚ್ಛ fastSingle;
+                    } ಅನ್ಯಥಾ /* if(SD0<=b && b<=SD7) */ {
                         dynamicWindow=(int8_t)(b-SD0);
                         state=defineOne;
                     }
-                } else if(/* SQ0<=b && */ b<=SQ7) {
+                } ಅನ್ಯಥಾ ಯದಿ(/* SQ0<=b && */ b<=SQ7) {
                     quoteWindow=(int8_t)(b-SQ0);
                     state=quoteOne;
-                } else if(b==SDX) {
+                } ಅನ್ಯಥಾ ಯದಿ(b==SDX) {
                     state=definePairOne;
-                } else if(b==SQU) {
+                } ಅನ್ಯಥಾ ಯದಿ(b==SQU) {
                     state=quotePairOne;
-                } else if(b==SCU) {
+                } ಅನ್ಯಥಾ ಯದಿ(b==SCU) {
                     sourceIndex=nextSourceIndex;
-                    isSingleByteMode=false;
-                    goto fastUnicode;
-                } else /* Srs */ {
+                    isSingleByteMode=ಅಸತ್ಯ;
+                    ಗಚ್ಛ fastUnicode;
+                } ಅನ್ಯಥಾ /* Srs */ {
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
-                    goto endloop;
+                    ಗಚ್ಛ endloop;
                 }
 
                 /* store the first byte of a multibyte sequence in toUBytes[] */
                 cnv->toUBytes[0]=b;
                 cnv->toULength=1;
-                break;
-            case quotePairOne:
+                ಭಙ್ಗ;
+            ಪಕ್ಷ quotePairOne:
                 byteOne=b;
                 cnv->toUBytes[1]=b;
                 cnv->toULength=2;
                 state=quotePairTwo;
-                break;
-            case quotePairTwo:
+                ಭಙ್ಗ;
+            ಪಕ್ಷ quotePairTwo:
                 *target++=(char16_t)((byteOne<<8)|b);
-                if(offsets!=nullptr) {
+                ಯದಿ(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 sourceIndex=nextSourceIndex;
                 state=readCommand;
-                goto fastSingle;
-            case quoteOne:
-                if(b<0x80) {
+                ಗಚ್ಛ fastSingle;
+            ಪಕ್ಷ quoteOne:
+                ಯದಿ(b<0x80) {
                     /* all static offsets are in the BMP */
                     *target++=(char16_t)(staticOffsets[quoteWindow]+b);
-                    if(offsets!=nullptr) {
+                    ಯದಿ(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
-                } else {
+                } ಅನ್ಯಥಾ {
                     /* write from dynamic window */
                     uint32_t c=scsu->toUDynamicOffsets[quoteWindow]+(b&0x7f);
-                    if(c<=0xffff) {
+                    ಯದಿ(c<=0xffff) {
                         *target++=(char16_t)c;
-                        if(offsets!=nullptr) {
+                        ಯದಿ(offsets!=nullptr) {
                             *offsets++=sourceIndex;
                         }
-                    } else {
+                    } ಅನ್ಯಥಾ {
                         /* output surrogate pair */
                         *target++=(char16_t)(0xd7c0+(c>>10));
-                        if(target<targetLimit) {
+                        ಯದಿ(target<targetLimit) {
                             *target++=(char16_t)(0xdc00|(c&0x3ff));
-                            if(offsets!=nullptr) {
+                            ಯದಿ(offsets!=nullptr) {
                                 *offsets++=sourceIndex;
                                 *offsets++=sourceIndex;
                             }
-                        } else {
+                        } ಅನ್ಯಥಾ {
                             /* target overflow */
-                            if(offsets!=nullptr) {
+                            ಯದಿ(offsets!=nullptr) {
                                 *offsets++=sourceIndex;
                             }
                             cnv->UCharErrorBuffer[0]=(char16_t)(0xdc00|(c&0x3ff));
                             cnv->UCharErrorBufferLength=1;
                             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                            goto endloop;
+                            ಗಚ್ಛ endloop;
                         }
                     }
                 }
                 sourceIndex=nextSourceIndex;
                 state=readCommand;
-                goto fastSingle;
-            case definePairOne:
+                ಗಚ್ಛ fastSingle;
+            ಪಕ್ಷ definePairOne:
                 dynamicWindow=(int8_t)((b>>5)&7);
                 byteOne=(uint8_t)(b&0x1f);
                 cnv->toUBytes[1]=b;
                 cnv->toULength=2;
                 state=definePairTwo;
-                break;
-            case definePairTwo:
+                ಭಙ್ಗ;
+            ಪಕ್ಷ definePairTwo:
                 scsu->toUDynamicOffsets[dynamicWindow]=0x10000+(byteOne<<15UL | b<<7UL);
                 sourceIndex=nextSourceIndex;
                 state=readCommand;
-                goto fastSingle;
-            case defineOne:
-                if(b==0) {
+                ಗಚ್ಛ fastSingle;
+            ಪಕ್ಷ defineOne:
+                ಯದಿ(b==0) {
                     /* callback(illegal): Reserved window offset value 0 */
                     cnv->toUBytes[1]=b;
                     cnv->toULength=2;
-                    goto endloop;
-                } else if(b<gapThreshold) {
+                    ಗಚ್ಛ endloop;
+                } ಅನ್ಯಥಾ ಯದಿ(b<gapThreshold) {
                     scsu->toUDynamicOffsets[dynamicWindow]=b<<7UL;
-                } else if((uint8_t)(b-gapThreshold)<(reservedStart-gapThreshold)) {
+                } ಅನ್ಯಥಾ ಯದಿ((uint8_t)(b-gapThreshold)<(reservedStart-gapThreshold)) {
                     scsu->toUDynamicOffsets[dynamicWindow]=(b<<7UL)+gapOffset;
-                } else if(b>=fixedThreshold) {
+                } ಅನ್ಯಥಾ ಯದಿ(b>=fixedThreshold) {
                     scsu->toUDynamicOffsets[dynamicWindow]=fixedOffsets[b-fixedThreshold];
-                } else {
+                } ಅನ್ಯಥಾ {
                     /* callback(illegal): Reserved window offset value 0xa8..0xf8 */
                     cnv->toUBytes[1]=b;
                     cnv->toULength=2;
-                    goto endloop;
+                    ಗಚ್ಛ endloop;
                 }
                 sourceIndex=nextSourceIndex;
                 state=readCommand;
-                goto fastSingle;
+                ಗಚ್ಛ fastSingle;
             }
         }
-    } else {
+    } ಅನ್ಯಥಾ {
         /* fast path for Unicode mode */
-        if(state==readCommand) {
+        ಯದಿ(state==readCommand) {
 fastUnicode:
-            while(source+1<sourceLimit && target<targetLimit && (uint8_t)((b=*source)-UC0)>(Urs-UC0)) {
+            ಯಾವತ್(source+1<sourceLimit && target<targetLimit && (uint8_t)((b=*source)-UC0)>(Urs-UC0)) {
                 *target++=(char16_t)((b<<8)|source[1]);
-                if(offsets!=nullptr) {
+                ಯದಿ(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 sourceIndex=nextSourceIndex;
@@ -490,75 +490,75 @@ fastUnicode:
 
         /* normal state machine for Unicode mode */
 /* unicodeByteMode: */
-        while(source<sourceLimit) {
-            if(target>=targetLimit) {
+        ಯಾವತ್(source<sourceLimit) {
+            ಯದಿ(target>=targetLimit) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                ಭಙ್ಗ;
             }
             b=*source++;
             ++nextSourceIndex;
-            switch(state) {
-            case readCommand:
-                if((uint8_t)(b-UC0)>(Urs-UC0)) {
+            ವಿಕಲ್ಪ(state) {
+            ಪಕ್ಷ readCommand:
+                ಯದಿ((uint8_t)(b-UC0)>(Urs-UC0)) {
                     byteOne=b;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=quotePairTwo;
-                } else if(/* UC0<=b && */ b<=UC7) {
+                } ಅನ್ಯಥಾ ಯದಿ(/* UC0<=b && */ b<=UC7) {
                     dynamicWindow=(int8_t)(b-UC0);
                     sourceIndex=nextSourceIndex;
-                    isSingleByteMode=true;
-                    goto fastSingle;
-                } else if(/* UD0<=b && */ b<=UD7) {
+                    isSingleByteMode=ಸತ್ಯ;
+                    ಗಚ್ಛ fastSingle;
+                } ಅನ್ಯಥಾ ಯದಿ(/* UD0<=b && */ b<=UD7) {
                     dynamicWindow=(int8_t)(b-UD0);
-                    isSingleByteMode=true;
+                    isSingleByteMode=ಸತ್ಯ;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=defineOne;
-                    goto singleByteMode;
-                } else if(b==UDX) {
-                    isSingleByteMode=true;
+                    ಗಚ್ಛ singleByteMode;
+                } ಅನ್ಯಥಾ ಯದಿ(b==UDX) {
+                    isSingleByteMode=ಸತ್ಯ;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=definePairOne;
-                    goto singleByteMode;
-                } else if(b==UQU) {
+                    ಗಚ್ಛ singleByteMode;
+                } ಅನ್ಯಥಾ ಯದಿ(b==UQU) {
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=quotePairOne;
-                } else /* Urs */ {
+                } ಅನ್ಯಥಾ /* Urs */ {
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
-                    goto endloop;
+                    ಗಚ್ಛ endloop;
                 }
-                break;
-            case quotePairOne:
+                ಭಙ್ಗ;
+            ಪಕ್ಷ quotePairOne:
                 byteOne=b;
                 cnv->toUBytes[1]=b;
                 cnv->toULength=2;
                 state=quotePairTwo;
-                break;
-            case quotePairTwo:
+                ಭಙ್ಗ;
+            ಪಕ್ಷ quotePairTwo:
                 *target++=(char16_t)((byteOne<<8)|b);
-                if(offsets!=nullptr) {
+                ಯದಿ(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 sourceIndex=nextSourceIndex;
                 state=readCommand;
-                goto fastUnicode;
+                ಗಚ್ಛ fastUnicode;
             }
         }
     }
 endloop:
 
     /* set the converter state back into UConverter */
-    if(U_FAILURE(*pErrorCode) && *pErrorCode!=U_BUFFER_OVERFLOW_ERROR) {
+    ಯದಿ(U_FAILURE(*pErrorCode) && *pErrorCode!=U_BUFFER_OVERFLOW_ERROR) {
         /* reset to deal with the next character */
         state=readCommand;
-    } else if(state==readCommand) {
+    } ಅನ್ಯಥಾ ಯದಿ(state==readCommand) {
         /* not in a multi-byte sequence, reset toULength */
         cnv->toULength=0;
     }
@@ -569,7 +569,7 @@ endloop:
     scsu->toUByteOne=byteOne;
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
+    pArgs->source=(ಧ್ರುವ ವರ್ಣ *)source;
     pArgs->target=target;
     pArgs->offsets=offsets;
 }
@@ -581,14 +581,14 @@ endloop:
  * re-copy the original function and remove the variables
  * offsets, sourceIndex, and nextSourceIndex.
  */
-static void U_CALLCONV
+ಸ್ಥಿರ ಶೂನ್ಯ U_CALLCONV
 _SCSUToUnicode(UConverterToUnicodeArgs *pArgs,
                UErrorCode *pErrorCode) {
     UConverter *cnv;
     SCSUData *scsu;
-    const uint8_t *source, *sourceLimit;
+    ಧ್ರುವ uint8_t *source, *sourceLimit;
     char16_t *target;
-    const char16_t *targetLimit;
+    ಧ್ರುವ char16_t *targetLimit;
     UBool isSingleByteMode;
     uint8_t state, byteOne;
     int8_t quoteWindow, dynamicWindow;
@@ -599,8 +599,8 @@ _SCSUToUnicode(UConverterToUnicodeArgs *pArgs,
     cnv=pArgs->converter;
     scsu=(SCSUData *)cnv->extraInfo;
 
-    source=(const uint8_t *)pArgs->source;
-    sourceLimit=(const uint8_t *)pArgs->sourceLimit;
+    source=(ಧ್ರುವ uint8_t *)pArgs->source;
+    sourceLimit=(ಧ್ರುವ uint8_t *)pArgs->sourceLimit;
     target=pArgs->target;
     targetLimit=pArgs->targetLimit;
 
@@ -630,31 +630,31 @@ _SCSUToUnicode(UConverterToUnicodeArgs *pArgs,
      * The callback handling is done by returning with an error code.
      * The conversion framework actually calls the callback function.
      */
-    if(isSingleByteMode) {
+    ಯದಿ(isSingleByteMode) {
         /* fast path for single-byte mode */
-        if(state==readCommand) {
+        ಯದಿ(state==readCommand) {
 fastSingle:
-            while(source<sourceLimit && target<targetLimit && (b=*source)>=0x20) {
+            ಯಾವತ್(source<sourceLimit && target<targetLimit && (b=*source)>=0x20) {
                 ++source;
-                if(b<=0x7f) {
+                ಯದಿ(b<=0x7f) {
                     /* write US-ASCII graphic character or DEL */
                     *target++=(char16_t)b;
-                } else {
+                } ಅನ್ಯಥಾ {
                     /* write from dynamic window */
                     uint32_t c=scsu->toUDynamicOffsets[dynamicWindow]+(b&0x7f);
-                    if(c<=0xffff) {
+                    ಯದಿ(c<=0xffff) {
                         *target++=(char16_t)c;
-                    } else {
+                    } ಅನ್ಯಥಾ {
                         /* output surrogate pair */
                         *target++=(char16_t)(0xd7c0+(c>>10));
-                        if(target<targetLimit) {
+                        ಯದಿ(target<targetLimit) {
                             *target++=(char16_t)(0xdc00|(c&0x3ff));
-                        } else {
+                        } ಅನ್ಯಥಾ {
                             /* target overflow */
                             cnv->UCharErrorBuffer[0]=(char16_t)(0xdc00|(c&0x3ff));
                             cnv->UCharErrorBufferLength=1;
                             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                            goto endloop;
+                            ಗಚ್ಛ endloop;
                         }
                     }
                 }
@@ -663,124 +663,124 @@ fastSingle:
 
         /* normal state machine for single-byte mode, minus handling for what fastSingle covers */
 singleByteMode:
-        while(source<sourceLimit) {
-            if(target>=targetLimit) {
+        ಯಾವತ್(source<sourceLimit) {
+            ಯದಿ(target>=targetLimit) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                ಭಙ್ಗ;
             }
             b=*source++;
-            switch(state) {
-            case readCommand:
+            ವಿಕಲ್ಪ(state) {
+            ಪಕ್ಷ readCommand:
                 /* redundant conditions are commented out */
                 /* here: b<0x20 because otherwise we would be in fastSingle */
-                if((1UL<<b)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
+                ಯದಿ((1UL<<b)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
                     /* CR/LF/TAB/NUL */
                     *target++=(char16_t)b;
-                    goto fastSingle;
-                } else if(SC0<=b) {
-                    if(b<=SC7) {
+                    ಗಚ್ಛ fastSingle;
+                } ಅನ್ಯಥಾ ಯದಿ(SC0<=b) {
+                    ಯದಿ(b<=SC7) {
                         dynamicWindow=(int8_t)(b-SC0);
-                        goto fastSingle;
-                    } else /* if(SD0<=b && b<=SD7) */ {
+                        ಗಚ್ಛ fastSingle;
+                    } ಅನ್ಯಥಾ /* if(SD0<=b && b<=SD7) */ {
                         dynamicWindow=(int8_t)(b-SD0);
                         state=defineOne;
                     }
-                } else if(/* SQ0<=b && */ b<=SQ7) {
+                } ಅನ್ಯಥಾ ಯದಿ(/* SQ0<=b && */ b<=SQ7) {
                     quoteWindow=(int8_t)(b-SQ0);
                     state=quoteOne;
-                } else if(b==SDX) {
+                } ಅನ್ಯಥಾ ಯದಿ(b==SDX) {
                     state=definePairOne;
-                } else if(b==SQU) {
+                } ಅನ್ಯಥಾ ಯದಿ(b==SQU) {
                     state=quotePairOne;
-                } else if(b==SCU) {
-                    isSingleByteMode=false;
-                    goto fastUnicode;
-                } else /* Srs */ {
+                } ಅನ್ಯಥಾ ಯದಿ(b==SCU) {
+                    isSingleByteMode=ಅಸತ್ಯ;
+                    ಗಚ್ಛ fastUnicode;
+                } ಅನ್ಯಥಾ /* Srs */ {
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
-                    goto endloop;
+                    ಗಚ್ಛ endloop;
                 }
 
                 /* store the first byte of a multibyte sequence in toUBytes[] */
                 cnv->toUBytes[0]=b;
                 cnv->toULength=1;
-                break;
-            case quotePairOne:
+                ಭಙ್ಗ;
+            ಪಕ್ಷ quotePairOne:
                 byteOne=b;
                 cnv->toUBytes[1]=b;
                 cnv->toULength=2;
                 state=quotePairTwo;
-                break;
-            case quotePairTwo:
+                ಭಙ್ಗ;
+            ಪಕ್ಷ quotePairTwo:
                 *target++=(char16_t)((byteOne<<8)|b);
                 state=readCommand;
-                goto fastSingle;
-            case quoteOne:
-                if(b<0x80) {
+                ಗಚ್ಛ fastSingle;
+            ಪಕ್ಷ quoteOne:
+                ಯದಿ(b<0x80) {
                     /* all static offsets are in the BMP */
                     *target++=(char16_t)(staticOffsets[quoteWindow]+b);
-                } else {
+                } ಅನ್ಯಥಾ {
                     /* write from dynamic window */
                     uint32_t c=scsu->toUDynamicOffsets[quoteWindow]+(b&0x7f);
-                    if(c<=0xffff) {
+                    ಯದಿ(c<=0xffff) {
                         *target++=(char16_t)c;
-                    } else {
+                    } ಅನ್ಯಥಾ {
                         /* output surrogate pair */
                         *target++=(char16_t)(0xd7c0+(c>>10));
-                        if(target<targetLimit) {
+                        ಯದಿ(target<targetLimit) {
                             *target++=(char16_t)(0xdc00|(c&0x3ff));
-                        } else {
+                        } ಅನ್ಯಥಾ {
                             /* target overflow */
                             cnv->UCharErrorBuffer[0]=(char16_t)(0xdc00|(c&0x3ff));
                             cnv->UCharErrorBufferLength=1;
                             *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                            goto endloop;
+                            ಗಚ್ಛ endloop;
                         }
                     }
                 }
                 state=readCommand;
-                goto fastSingle;
-            case definePairOne:
+                ಗಚ್ಛ fastSingle;
+            ಪಕ್ಷ definePairOne:
                 dynamicWindow=(int8_t)((b>>5)&7);
                 byteOne=(uint8_t)(b&0x1f);
                 cnv->toUBytes[1]=b;
                 cnv->toULength=2;
                 state=definePairTwo;
-                break;
-            case definePairTwo:
+                ಭಙ್ಗ;
+            ಪಕ್ಷ definePairTwo:
                 scsu->toUDynamicOffsets[dynamicWindow]=0x10000+(byteOne<<15UL | b<<7UL);
                 state=readCommand;
-                goto fastSingle;
-            case defineOne:
-                if(b==0) {
+                ಗಚ್ಛ fastSingle;
+            ಪಕ್ಷ defineOne:
+                ಯದಿ(b==0) {
                     /* callback(illegal): Reserved window offset value 0 */
                     cnv->toUBytes[1]=b;
                     cnv->toULength=2;
-                    goto endloop;
-                } else if(b<gapThreshold) {
+                    ಗಚ್ಛ endloop;
+                } ಅನ್ಯಥಾ ಯದಿ(b<gapThreshold) {
                     scsu->toUDynamicOffsets[dynamicWindow]=b<<7UL;
-                } else if((uint8_t)(b-gapThreshold)<(reservedStart-gapThreshold)) {
+                } ಅನ್ಯಥಾ ಯದಿ((uint8_t)(b-gapThreshold)<(reservedStart-gapThreshold)) {
                     scsu->toUDynamicOffsets[dynamicWindow]=(b<<7UL)+gapOffset;
-                } else if(b>=fixedThreshold) {
+                } ಅನ್ಯಥಾ ಯದಿ(b>=fixedThreshold) {
                     scsu->toUDynamicOffsets[dynamicWindow]=fixedOffsets[b-fixedThreshold];
-                } else {
+                } ಅನ್ಯಥಾ {
                     /* callback(illegal): Reserved window offset value 0xa8..0xf8 */
                     cnv->toUBytes[1]=b;
                     cnv->toULength=2;
-                    goto endloop;
+                    ಗಚ್ಛ endloop;
                 }
                 state=readCommand;
-                goto fastSingle;
+                ಗಚ್ಛ fastSingle;
             }
         }
-    } else {
+    } ಅನ್ಯಥಾ {
         /* fast path for Unicode mode */
-        if(state==readCommand) {
+        ಯದಿ(state==readCommand) {
 fastUnicode:
-            while(source+1<sourceLimit && target<targetLimit && (uint8_t)((b=*source)-UC0)>(Urs-UC0)) {
+            ಯಾವತ್(source+1<sourceLimit && target<targetLimit && (uint8_t)((b=*source)-UC0)>(Urs-UC0)) {
                 *target++=(char16_t)((b<<8)|source[1]);
                 source+=2;
             }
@@ -788,69 +788,69 @@ fastUnicode:
 
         /* normal state machine for Unicode mode */
 /* unicodeByteMode: */
-        while(source<sourceLimit) {
-            if(target>=targetLimit) {
+        ಯಾವತ್(source<sourceLimit) {
+            ಯದಿ(target>=targetLimit) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                ಭಙ್ಗ;
             }
             b=*source++;
-            switch(state) {
-            case readCommand:
-                if((uint8_t)(b-UC0)>(Urs-UC0)) {
+            ವಿಕಲ್ಪ(state) {
+            ಪಕ್ಷ readCommand:
+                ಯದಿ((uint8_t)(b-UC0)>(Urs-UC0)) {
                     byteOne=b;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=quotePairTwo;
-                } else if(/* UC0<=b && */ b<=UC7) {
+                } ಅನ್ಯಥಾ ಯದಿ(/* UC0<=b && */ b<=UC7) {
                     dynamicWindow=(int8_t)(b-UC0);
-                    isSingleByteMode=true;
-                    goto fastSingle;
-                } else if(/* UD0<=b && */ b<=UD7) {
+                    isSingleByteMode=ಸತ್ಯ;
+                    ಗಚ್ಛ fastSingle;
+                } ಅನ್ಯಥಾ ಯದಿ(/* UD0<=b && */ b<=UD7) {
                     dynamicWindow=(int8_t)(b-UD0);
-                    isSingleByteMode=true;
+                    isSingleByteMode=ಸತ್ಯ;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=defineOne;
-                    goto singleByteMode;
-                } else if(b==UDX) {
-                    isSingleByteMode=true;
+                    ಗಚ್ಛ singleByteMode;
+                } ಅನ್ಯಥಾ ಯದಿ(b==UDX) {
+                    isSingleByteMode=ಸತ್ಯ;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=definePairOne;
-                    goto singleByteMode;
-                } else if(b==UQU) {
+                    ಗಚ್ಛ singleByteMode;
+                } ಅನ್ಯಥಾ ಯದಿ(b==UQU) {
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
                     state=quotePairOne;
-                } else /* Urs */ {
+                } ಅನ್ಯಥಾ /* Urs */ {
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
                     cnv->toUBytes[0]=b;
                     cnv->toULength=1;
-                    goto endloop;
+                    ಗಚ್ಛ endloop;
                 }
-                break;
-            case quotePairOne:
+                ಭಙ್ಗ;
+            ಪಕ್ಷ quotePairOne:
                 byteOne=b;
                 cnv->toUBytes[1]=b;
                 cnv->toULength=2;
                 state=quotePairTwo;
-                break;
-            case quotePairTwo:
+                ಭಙ್ಗ;
+            ಪಕ್ಷ quotePairTwo:
                 *target++=(char16_t)((byteOne<<8)|b);
                 state=readCommand;
-                goto fastUnicode;
+                ಗಚ್ಛ fastUnicode;
             }
         }
     }
 endloop:
 
     /* set the converter state back into UConverter */
-    if(U_FAILURE(*pErrorCode) && *pErrorCode!=U_BUFFER_OVERFLOW_ERROR) {
+    ಯದಿ(U_FAILURE(*pErrorCode) && *pErrorCode!=U_BUFFER_OVERFLOW_ERROR) {
         /* reset to deal with the next character */
         state=readCommand;
-    } else if(state==readCommand) {
+    } ಅನ್ಯಥಾ ಯದಿ(state==readCommand) {
         /* not in a multi-byte sequence, reset toULength */
         cnv->toULength=0;
     }
@@ -861,7 +861,7 @@ endloop:
     scsu->toUByteOne=byteOne;
 
     /* write back the updated pointers */
-    pArgs->source=(const char *)source;
+    pArgs->source=(ಧ್ರುವ ವರ್ಣ *)source;
     pArgs->target=target;
 }
 U_CDECL_END
@@ -879,21 +879,21 @@ U_CDECL_END
  */
 
 /* get the number of the window that this character is in, or -1 */
-static int8_t
-getWindow(const uint32_t offsets[8], uint32_t c) {
-    int i;
-    for(i=0; i<8; ++i) {
-        if (c - offsets[i] <= 0x7f) {
-            return static_cast<int8_t>(i);
+ಸ್ಥಿರ int8_t
+getWindow(ಧ್ರುವ uint32_t offsets[8], uint32_t c) {
+    ಪೂರ್ಣಾಙ್ಕ i;
+    ಪ್ರತಿ(i=0; i<8; ++i) {
+        ಯದಿ (c - offsets[i] <= 0x7f) {
+            ಪ್ರತ್ಯಾಗಮ static_cast<int8_t>(i);
         }
     }
-    return -1;
+    ಪ್ರತ್ಯಾಗಮ -1;
 }
 
 /* is the character in the dynamic window starting at the offset, or in the direct-encoded range? */
-static UBool
+ಸ್ಥಿರ UBool
 isInOffsetWindowOrDirect(uint32_t offset, uint32_t c) {
-    return c<=offset+0x7f &&
+    ಪ್ರತ್ಯಾಗಮ c<=offset+0x7f &&
           (c>=offset || (c<=0x7f &&
                         (c>=0x20 || (1UL<<c)&0x2601)));
                                 /* binary 0010 0110 0000 0001,
@@ -903,13 +903,13 @@ isInOffsetWindowOrDirect(uint32_t offset, uint32_t c) {
 /*
  * getNextDynamicWindow returns the next dynamic window to be redefined
  */
-static int8_t
+ಸ್ಥಿರ int8_t
 getNextDynamicWindow(SCSUData *scsu) {
     int8_t window=scsu->windowUse[scsu->nextWindowUseIndex];
-    if(++scsu->nextWindowUseIndex==8) {
+    ಯದಿ(++scsu->nextWindowUseIndex==8) {
         scsu->nextWindowUseIndex=0;
     }
-    return window;
+    ಪ್ರತ್ಯಾಗಮ window;
 }
 
 /*
@@ -918,7 +918,7 @@ getNextDynamicWindow(SCSUData *scsu) {
  * the next dynamic window to be defined;
  * a subclass may override it and provide its own algorithm.
  */
-static void
+ಸ್ಥಿರ ಶೂನ್ಯ
 useDynamicWindow(SCSUData *scsu, int8_t window) {
     /*
      * move the existing window, which just became the most recently used one,
@@ -926,24 +926,24 @@ useDynamicWindow(SCSUData *scsu, int8_t window) {
      */
 
     /* first, find the index of the window - backwards to favor the more recently used windows */
-    int i, j;
+    ಪೂರ್ಣಾಙ್ಕ i, j;
 
     i=scsu->nextWindowUseIndex;
-    do {
-        if(--i<0) {
+    ಕುರು {
+        ಯದಿ(--i<0) {
             i=7;
         }
-    } while(scsu->windowUse[i]!=window);
+    } ಯಾವತ್(scsu->windowUse[i]!=window);
 
     /* now copy each windowUse[i+1] to [i] */
     j=i+1;
-    if(j==8) {
+    ಯದಿ(j==8) {
         j=0;
     }
-    while(j!=scsu->nextWindowUseIndex) {
+    ಯಾವತ್(j!=scsu->nextWindowUseIndex) {
         scsu->windowUse[i]=scsu->windowUse[j];
         i=j;
-        if(++j==8) { j=0; }
+        ಯದಿ(++j==8) { j=0; }
     }
 
     /* finally, set the window into the most recently used index */
@@ -958,33 +958,33 @@ useDynamicWindow(SCSUData *scsu, int8_t window) {
  *
  * return offset code: -1 none  <=0xff code for SDn/UDn  else code for SDX/UDX, subtract 0x200 to get the true code
  */
-static int
+ಸ್ಥಿರ ಪೂರ್ಣಾಙ್ಕ
 getDynamicOffset(uint32_t c, uint32_t *pOffset) {
-    int i;
+    ಪೂರ್ಣಾಙ್ಕ i;
 
-    for(i=0; i<7; ++i) {
-        if (c - fixedOffsets[i] <= 0x7f) {
+    ಪ್ರತಿ(i=0; i<7; ++i) {
+        ಯದಿ (c - fixedOffsets[i] <= 0x7f) {
             *pOffset=fixedOffsets[i];
-            return 0xf9+i;
+            ಪ್ರತ್ಯಾಗಮ 0xf9+i;
         }
     }
 
-    if(c<0x80) {
+    ಯದಿ(c<0x80) {
         /* No dynamic window for US-ASCII. */
-        return -1;
-    } else if(c<0x3400 ||
+        ಪ್ರತ್ಯಾಗಮ -1;
+    } ಅನ್ಯಥಾ ಯದಿ(c<0x3400 ||
               c - 0x10000 < 0x14000 - 0x10000 ||
               c - 0x1d000 <= 0x1ffff - 0x1d000
     ) {
         /* This character is in a code range for a "small", i.e., reasonably windowable, script. */
         *pOffset=c&0x7fffff80;
-        return static_cast<int>(c >> 7);
-    } else if(0xe000<=c && c!=0xfeff && c<0xfff0) {
+        ಪ್ರತ್ಯಾಗಮ static_cast<ಪೂರ್ಣಾಙ್ಕ>(c >> 7);
+    } ಅನ್ಯಥಾ ಯದಿ(0xe000<=c && c!=0xfeff && c<0xfff0) {
         /* For these characters we need to take the gapOffset into account. */
         *pOffset=c&0x7fffff80;
-        return static_cast<int>((c - gapOffset) >> 7);
-    } else {
-        return -1;
+        ಪ್ರತ್ಯಾಗಮ static_cast<ಪೂರ್ಣಾಙ್ಕ>((c - gapOffset) >> 7);
+    } ಅನ್ಯಥಾ {
+        ಪ್ರತ್ಯಾಗಮ -1;
     }
 }
 U_CDECL_BEGIN
@@ -1005,12 +1005,12 @@ U_CDECL_BEGIN
  *  - Only replace the result after an SDX or SCU?
  */
 
-static void U_CALLCONV
+ಸ್ಥಿರ ಶೂನ್ಯ U_CALLCONV
 _SCSUFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
                             UErrorCode *pErrorCode) {
     UConverter *cnv;
     SCSUData *scsu;
-    const char16_t *source, *sourceLimit;
+    ಧ್ರುವ char16_t *source, *sourceLimit;
     uint8_t *target;
     int32_t targetCapacity;
     int32_t *offsets;
@@ -1028,7 +1028,7 @@ _SCSUFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
     /* variables for compression heuristics */
     uint32_t offset;
     char16_t lead, trail;
-    int code;
+    ಪೂರ್ಣಾಙ್ಕ code;
     int8_t window;
 
     /* set up the local pointers */
@@ -1055,97 +1055,97 @@ _SCSUFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
 
     /* similar conversion "loop" as in toUnicode */
 loop:
-    if(isSingleByteMode) {
-        if(c!=0 && targetCapacity>0) {
-            goto getTrailSingle;
+    ಯದಿ(isSingleByteMode) {
+        ಯದಿ(c!=0 && targetCapacity>0) {
+            ಗಚ್ಛ getTrailSingle;
         }
 
         /* state machine for single-byte mode */
 /* singleByteMode: */
-        while(source<sourceLimit) {
-            if(targetCapacity<=0) {
+        ಯಾವತ್(source<sourceLimit) {
+            ಯದಿ(targetCapacity<=0) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                ಭಙ್ಗ;
             }
             c=*source++;
             ++nextSourceIndex;
 
-            if((c-0x20)<=0x5f) {
+            ಯದಿ((c-0x20)<=0x5f) {
                 /* pass US-ASCII graphic character through */
                 *target++=(uint8_t)c;
-                if(offsets!=nullptr) {
+                ಯದಿ(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 --targetCapacity;
-            } else if(c<0x20) {
-                if((1UL<<c)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
+            } ಅನ್ಯಥಾ ಯದಿ(c<0x20) {
+                ಯದಿ((1UL<<c)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
                     /* CR/LF/TAB/NUL */
                     *target++=(uint8_t)c;
-                    if(offsets!=nullptr) {
+                    ಯದಿ(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
                     --targetCapacity;
-                } else {
+                } ಅನ್ಯಥಾ {
                     /* quote C0 control character */
                     c|=SQ0<<8;
                     length=2;
-                    goto outputBytes;
+                    ಗಚ್ಛ outputBytes;
                 }
-            } else if((delta=c-currentOffset)<=0x7f) {
+            } ಅನ್ಯಥಾ ಯದಿ((delta=c-currentOffset)<=0x7f) {
                 /* use the current dynamic window */
                 *target++=(uint8_t)(delta|0x80);
-                if(offsets!=nullptr) {
+                ಯದಿ(offsets!=nullptr) {
                     *offsets++=sourceIndex;
                 }
                 --targetCapacity;
-            } else if(U16_IS_SURROGATE(c)) {
-                if(U16_IS_SURROGATE_LEAD(c)) {
+            } ಅನ್ಯಥಾ ಯದಿ(U16_IS_SURROGATE(c)) {
+                ಯದಿ(U16_IS_SURROGATE_LEAD(c)) {
 getTrailSingle:
                     lead=(char16_t)c;
-                    if(source<sourceLimit) {
+                    ಯದಿ(source<sourceLimit) {
                         /* test the following code unit */
                         trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
+                        ಯದಿ(U16_IS_TRAIL(trail)) {
                             ++source;
                             ++nextSourceIndex;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
                             /* convert this surrogate code point */
                             /* exit this condition tree */
-                        } else {
+                        } ಅನ್ಯಥಾ {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            ಗಚ್ಛ endloop;
                         }
-                    } else {
+                    } ಅನ್ಯಥಾ {
                         /* no more input */
-                        break;
+                        ಭಙ್ಗ;
                     }
-                } else {
+                } ಅನ್ಯಥಾ {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    goto endloop;
+                    ಗಚ್ಛ endloop;
                 }
 
                 /* compress supplementary character U+10000..U+10ffff */
-                if((delta=c-currentOffset)<=0x7f) {
+                ಯದಿ((delta=c-currentOffset)<=0x7f) {
                     /* use the current dynamic window */
                     *target++=(uint8_t)(delta|0x80);
-                    if(offsets!=nullptr) {
+                    ಯದಿ(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
                     --targetCapacity;
-                } else if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                } ಅನ್ಯಥಾ ಯದಿ((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
                     /* there is a dynamic window that contains this character, change to it */
                     dynamicWindow=window;
                     currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
                     useDynamicWindow(scsu, dynamicWindow);
                     c=((uint32_t)(SC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                     length=2;
-                    goto outputBytes;
-                } else if((code=getDynamicOffset(c, &offset))>=0) {
+                    ಗಚ್ಛ outputBytes;
+                } ಅನ್ಯಥಾ ಯದಿ((code=getDynamicOffset(c, &offset))>=0) {
                     /* might check if there are more characters in this window to come */
                     /* define an extended window with this character */
                     code-=0x200;
@@ -1154,61 +1154,61 @@ getTrailSingle:
                     useDynamicWindow(scsu, dynamicWindow);
                     c=((uint32_t)SDX<<24)|((uint32_t)dynamicWindow<<21)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                     length=4;
-                    goto outputBytes;
-                } else {
+                    ಗಚ್ಛ outputBytes;
+                } ಅನ್ಯಥಾ {
                     /* change to Unicode mode and output this (lead, trail) pair */
-                    isSingleByteMode=false;
+                    isSingleByteMode=ಅಸತ್ಯ;
                     *target++=(uint8_t)SCU;
-                    if(offsets!=nullptr) {
+                    ಯದಿ(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                     }
                     --targetCapacity;
                     c=((uint32_t)lead<<16)|trail;
                     length=4;
-                    goto outputBytes;
+                    ಗಚ್ಛ outputBytes;
                 }
-            } else if(c<0xa0) {
+            } ಅನ್ಯಥಾ ಯದಿ(c<0xa0) {
                 /* quote C1 control character */
                 c=(c&0x7f)|(SQ0+1)<<8; /* SQ0+1==SQ1 */
                 length=2;
-                goto outputBytes;
-            } else if(c==0xfeff || c>=0xfff0) {
+                ಗಚ್ಛ outputBytes;
+            } ಅನ್ಯಥಾ ಯದಿ(c==0xfeff || c>=0xfff0) {
                 /* quote signature character=byte order mark and specials */
                 c|=SQU<<16;
                 length=3;
-                goto outputBytes;
-            } else {
+                ಗಚ್ಛ outputBytes;
+            } ಅನ್ಯಥಾ {
                 /* compress all other BMP characters */
-                if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                ಯದಿ((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
                     /* there is a window defined that contains this character - switch to it or quote from it? */
-                    if(source>=sourceLimit || isInOffsetWindowOrDirect(scsu->fromUDynamicOffsets[window], *source)) {
+                    ಯದಿ(source>=sourceLimit || isInOffsetWindowOrDirect(scsu->fromUDynamicOffsets[window], *source)) {
                         /* change to dynamic window */
                         dynamicWindow=window;
                         currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
                         useDynamicWindow(scsu, dynamicWindow);
                         c=((uint32_t)(SC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                         length=2;
-                        goto outputBytes;
-                    } else {
+                        ಗಚ್ಛ outputBytes;
+                    } ಅನ್ಯಥಾ {
                         /* quote from dynamic window */
                         c=((uint32_t)(SQ0+window)<<8)|(c-scsu->fromUDynamicOffsets[window])|0x80;
                         length=2;
-                        goto outputBytes;
+                        ಗಚ್ಛ outputBytes;
                     }
-                } else if((window=getWindow(staticOffsets, c))>=0) {
+                } ಅನ್ಯಥಾ ಯದಿ((window=getWindow(staticOffsets, c))>=0) {
                     /* quote from static window */
                     c=((uint32_t)(SQ0+window)<<8)|(c-staticOffsets[window]);
                     length=2;
-                    goto outputBytes;
-                } else if((code=getDynamicOffset(c, &offset))>=0) {
+                    ಗಚ್ಛ outputBytes;
+                } ಅನ್ಯಥಾ ಯದಿ((code=getDynamicOffset(c, &offset))>=0) {
                     /* define a dynamic window with this character */
                     dynamicWindow=getNextDynamicWindow(scsu);
                     currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
                     useDynamicWindow(scsu, dynamicWindow);
                     c=((uint32_t)(SD0+dynamicWindow)<<16)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                     length=3;
-                    goto outputBytes;
-                } else if ((c - 0x3400) < (0xd800 - 0x3400) &&
+                    ಗಚ್ಛ outputBytes;
+                } ಅನ್ಯಥಾ ಯದಿ ((c - 0x3400) < (0xd800 - 0x3400) &&
                            (source >= sourceLimit || (uint32_t)(*source - 0x3400) < (0xd800 - 0x3400))
                 ) {
                     /*
@@ -1216,15 +1216,15 @@ getTrailSingle:
                      * switch to Unicode mode if this is the last character in the block
                      * or there is at least one more ideograph following immediately
                      */
-                    isSingleByteMode=false;
+                    isSingleByteMode=ಅಸತ್ಯ;
                     c|=SCU<<16;
                     length=3;
-                    goto outputBytes;
-                } else {
+                    ಗಚ್ಛ outputBytes;
+                } ಅನ್ಯಥಾ {
                     /* quote Unicode */
                     c|=SQU<<16;
                     length=3;
-                    goto outputBytes;
+                    ಗಚ್ಛ outputBytes;
                 }
             }
 
@@ -1232,102 +1232,102 @@ getTrailSingle:
             c=0;
             sourceIndex=nextSourceIndex;
         }
-    } else {
-        if(c!=0 && targetCapacity>0) {
-            goto getTrailUnicode;
+    } ಅನ್ಯಥಾ {
+        ಯದಿ(c!=0 && targetCapacity>0) {
+            ಗಚ್ಛ getTrailUnicode;
         }
 
         /* state machine for Unicode mode */
 /* unicodeByteMode: */
-        while(source<sourceLimit) {
-            if(targetCapacity<=0) {
+        ಯಾವತ್(source<sourceLimit) {
+            ಯದಿ(targetCapacity<=0) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                ಭಙ್ಗ;
             }
             c=*source++;
             ++nextSourceIndex;
 
-            if ((c - 0x3400) < (0xd800 - 0x3400)) {
+            ಯದಿ ((c - 0x3400) < (0xd800 - 0x3400)) {
                 /* not compressible, write character directly */
-                if(targetCapacity>=2) {
+                ಯದಿ(targetCapacity>=2) {
                     *target++=(uint8_t)(c>>8);
                     *target++=(uint8_t)c;
-                    if(offsets!=nullptr) {
+                    ಯದಿ(offsets!=nullptr) {
                         *offsets++=sourceIndex;
                         *offsets++=sourceIndex;
                     }
                     targetCapacity-=2;
-                } else {
+                } ಅನ್ಯಥಾ {
                     length=2;
-                    goto outputBytes;
+                    ಗಚ್ಛ outputBytes;
                 }
-            } else if (c - 0x3400 >= 0xf300 - 0x3400 /* c<0x3400 || c>=0xf300 */) {
+            } ಅನ್ಯಥಾ ಯದಿ (c - 0x3400 >= 0xf300 - 0x3400 /* c<0x3400 || c>=0xf300 */) {
                 /* compress BMP character if the following one is not an uncompressible ideograph */
-                if(!(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))) {
-                    if (c - 0x30 < 10 || c - 0x61 < 26 || c - 0x41 < 26) {
+                ಯದಿ(!(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))) {
+                    ಯದಿ (c - 0x30 < 10 || c - 0x61 < 26 || c - 0x41 < 26) {
                         /* ASCII digit or letter */
-                        isSingleByteMode=true;
+                        isSingleByteMode=ಸತ್ಯ;
                         c|=((uint32_t)(UC0+dynamicWindow)<<8)|c;
                         length=2;
-                        goto outputBytes;
-                    } else if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                        ಗಚ್ಛ outputBytes;
+                    } ಅನ್ಯಥಾ ಯದಿ((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
                         /* there is a dynamic window that contains this character, change to it */
-                        isSingleByteMode=true;
+                        isSingleByteMode=ಸತ್ಯ;
                         dynamicWindow=window;
                         currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
                         useDynamicWindow(scsu, dynamicWindow);
                         c=((uint32_t)(UC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                         length=2;
-                        goto outputBytes;
-                    } else if((code=getDynamicOffset(c, &offset))>=0) {
+                        ಗಚ್ಛ outputBytes;
+                    } ಅನ್ಯಥಾ ಯದಿ((code=getDynamicOffset(c, &offset))>=0) {
                         /* define a dynamic window with this character */
-                        isSingleByteMode=true;
+                        isSingleByteMode=ಸತ್ಯ;
                         dynamicWindow=getNextDynamicWindow(scsu);
                         currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
                         useDynamicWindow(scsu, dynamicWindow);
                         c=((uint32_t)(UD0+dynamicWindow)<<16)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                         length=3;
-                        goto outputBytes;
+                        ಗಚ್ಛ outputBytes;
                     }
                 }
 
                 /* don't know how to compress this character, just write it directly */
                 length=2;
-                goto outputBytes;
-            } else if(c<0xe000) {
+                ಗಚ್ಛ outputBytes;
+            } ಅನ್ಯಥಾ ಯದಿ(c<0xe000) {
                 /* c is a surrogate */
-                if(U16_IS_SURROGATE_LEAD(c)) {
+                ಯದಿ(U16_IS_SURROGATE_LEAD(c)) {
 getTrailUnicode:
                     lead=(char16_t)c;
-                    if(source<sourceLimit) {
+                    ಯದಿ(source<sourceLimit) {
                         /* test the following code unit */
                         trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
+                        ಯದಿ(U16_IS_TRAIL(trail)) {
                             ++source;
                             ++nextSourceIndex;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
                             /* convert this surrogate code point */
                             /* exit this condition tree */
-                        } else {
+                        } ಅನ್ಯಥಾ {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            ಗಚ್ಛ endloop;
                         }
-                    } else {
+                    } ಅನ್ಯಥಾ {
                         /* no more input */
-                        break;
+                        ಭಙ್ಗ;
                     }
-                } else {
+                } ಅನ್ಯಥಾ {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    goto endloop;
+                    ಗಚ್ಛ endloop;
                 }
 
                 /* compress supplementary character */
-                if( (window=getWindow(scsu->fromUDynamicOffsets, c))>=0 &&
+                ಯದಿ( (window=getWindow(scsu->fromUDynamicOffsets, c))>=0 &&
                     !(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))
                 ) {
                     /*
@@ -1335,36 +1335,36 @@ getTrailUnicode:
                      * the following character is not uncompressible,
                      * change to the window
                      */
-                    isSingleByteMode=true;
+                    isSingleByteMode=ಸತ್ಯ;
                     dynamicWindow=window;
                     currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
                     useDynamicWindow(scsu, dynamicWindow);
                     c=((uint32_t)(UC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                     length=2;
-                    goto outputBytes;
-                } else if(source<sourceLimit && lead==*source && /* too lazy to check trail in same window as source[1] */
+                    ಗಚ್ಛ outputBytes;
+                } ಅನ್ಯಥಾ ಯದಿ(source<sourceLimit && lead==*source && /* too lazy to check trail in same window as source[1] */
                           (code=getDynamicOffset(c, &offset))>=0
                 ) {
                     /* two supplementary characters in (probably) the same window - define an extended one */
-                    isSingleByteMode=true;
+                    isSingleByteMode=ಸತ್ಯ;
                     code-=0x200;
                     dynamicWindow=getNextDynamicWindow(scsu);
                     currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
                     useDynamicWindow(scsu, dynamicWindow);
                     c=((uint32_t)UDX<<24)|((uint32_t)dynamicWindow<<21)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                     length=4;
-                    goto outputBytes;
-                } else {
+                    ಗಚ್ಛ outputBytes;
+                } ಅನ್ಯಥಾ {
                     /* don't know how to compress this character, just write it directly */
                     c=((uint32_t)lead<<16)|trail;
                     length=4;
-                    goto outputBytes;
+                    ಗಚ್ಛ outputBytes;
                 }
-            } else /* 0xe000<=c<0xf300 */ {
+            } ಅನ್ಯಥಾ /* 0xe000<=c<0xf300 */ {
                 /* quote to avoid SCSU tags */
                 c|=UQU<<16;
                 length=3;
-                goto outputBytes;
+                ಗಚ್ಛ outputBytes;
             }
 
             /* normal end of conversion: prepare for a new character */
@@ -1382,55 +1382,55 @@ endloop:
 
     /* write back the updated pointers */
     pArgs->source=source;
-    pArgs->target=(char *)target;
+    pArgs->target=(ವರ್ಣ *)target;
     pArgs->offsets=offsets;
-    return;
+    ಪ್ರತ್ಯಾಗಮ;
 
 outputBytes:
     /* write the output character bytes from c and length [code copied from ucnvmbcs.c] */
     /* from the first if in the loop we know that targetCapacity>0 */
-    if(length<=targetCapacity) {
-        if(offsets==nullptr) {
-            switch(length) {
+    ಯದಿ(length<=targetCapacity) {
+        ಯದಿ(offsets==nullptr) {
+            ವಿಕಲ್ಪ(length) {
                 /* each branch falls through to the next one */
-            case 4:
+            ಪಕ್ಷ 4:
                 *target++=(uint8_t)(c>>24);
                 U_FALLTHROUGH;
-            case 3:
+            ಪಕ್ಷ 3:
                 *target++=(uint8_t)(c>>16);
                 U_FALLTHROUGH;
-            case 2:
+            ಪಕ್ಷ 2:
                 *target++=(uint8_t)(c>>8);
                 U_FALLTHROUGH;
-            case 1:
+            ಪಕ್ಷ 1:
                 *target++=(uint8_t)c;
                 U_FALLTHROUGH;
-            default:
+            ಸ್ವಭಾವ:
                 /* will never occur */
-                break;
+                ಭಙ್ಗ;
             }
-        } else {
-            switch(length) {
+        } ಅನ್ಯಥಾ {
+            ವಿಕಲ್ಪ(length) {
                 /* each branch falls through to the next one */
-            case 4:
+            ಪಕ್ಷ 4:
                 *target++=(uint8_t)(c>>24);
                 *offsets++=sourceIndex;
                 U_FALLTHROUGH;
-            case 3:
+            ಪಕ್ಷ 3:
                 *target++=(uint8_t)(c>>16);
                 *offsets++=sourceIndex;
                 U_FALLTHROUGH;
-            case 2:
+            ಪಕ್ಷ 2:
                 *target++=(uint8_t)(c>>8);
                 *offsets++=sourceIndex;
                 U_FALLTHROUGH;
-            case 1:
+            ಪಕ್ಷ 1:
                 *target++=(uint8_t)c;
                 *offsets++=sourceIndex;
                 U_FALLTHROUGH;
-            default:
+            ಸ್ವಭಾವ:
                 /* will never occur */
-                break;
+                ಭಙ್ಗ;
             }
         }
         targetCapacity-=length;
@@ -1438,8 +1438,8 @@ outputBytes:
         /* normal end of conversion: prepare for a new character */
         c=0;
         sourceIndex=nextSourceIndex;
-        goto loop;
-    } else {
+        ಗಚ್ಛ loop;
+    } ಅನ್ಯಥಾ {
         uint8_t *p;
 
         /*
@@ -1452,57 +1452,57 @@ outputBytes:
         /* targetCapacity==0 when SCU+supplementary where SCU used up targetCapacity==1 */
         length-=targetCapacity;
         p=(uint8_t *)cnv->charErrorBuffer;
-        switch(length) {
+        ವಿಕಲ್ಪ(length) {
             /* each branch falls through to the next one */
-        case 4:
+        ಪಕ್ಷ 4:
             *p++=(uint8_t)(c>>24);
             U_FALLTHROUGH;
-        case 3:
+        ಪಕ್ಷ 3:
             *p++=(uint8_t)(c>>16);
             U_FALLTHROUGH;
-        case 2:
+        ಪಕ್ಷ 2:
             *p++=(uint8_t)(c>>8);
             U_FALLTHROUGH;
-        case 1:
+        ಪಕ್ಷ 1:
             *p=(uint8_t)c;
             U_FALLTHROUGH;
-        default:
+        ಸ್ವಭಾವ:
             /* will never occur */
-            break;
+            ಭಙ್ಗ;
         }
         cnv->charErrorBufferLength=(int8_t)length;
 
         /* now output what fits into the regular target */
         c>>=8*length; /* length was reduced by targetCapacity */
-        switch(targetCapacity) {
+        ವಿಕಲ್ಪ(targetCapacity) {
             /* each branch falls through to the next one */
-        case 3:
+        ಪಕ್ಷ 3:
             *target++=(uint8_t)(c>>16);
-            if(offsets!=nullptr) {
+            ಯದಿ(offsets!=nullptr) {
                 *offsets++=sourceIndex;
             }
             U_FALLTHROUGH;
-        case 2:
+        ಪಕ್ಷ 2:
             *target++=(uint8_t)(c>>8);
-            if(offsets!=nullptr) {
+            ಯದಿ(offsets!=nullptr) {
                 *offsets++=sourceIndex;
             }
             U_FALLTHROUGH;
-        case 1:
+        ಪಕ್ಷ 1:
             *target++=(uint8_t)c;
-            if(offsets!=nullptr) {
+            ಯದಿ(offsets!=nullptr) {
                 *offsets++=sourceIndex;
             }
             U_FALLTHROUGH;
-        default:
-            break;
+        ಸ್ವಭಾವ:
+            ಭಙ್ಗ;
         }
 
         /* target overflow */
         targetCapacity=0;
         *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
         c=0;
-        goto endloop;
+        ಗಚ್ಛ endloop;
     }
 }
 
@@ -1513,12 +1513,12 @@ outputBytes:
  * re-copy the original function and remove the variables
  * offsets, sourceIndex, and nextSourceIndex.
  */
-static void U_CALLCONV
+ಸ್ಥಿರ ಶೂನ್ಯ U_CALLCONV
 _SCSUFromUnicode(UConverterFromUnicodeArgs *pArgs,
                  UErrorCode *pErrorCode) {
     UConverter *cnv;
     SCSUData *scsu;
-    const char16_t *source, *sourceLimit;
+    ಧ್ರುವ char16_t *source, *sourceLimit;
     uint8_t *target;
     int32_t targetCapacity;
 
@@ -1533,7 +1533,7 @@ _SCSUFromUnicode(UConverterFromUnicodeArgs *pArgs,
     /* variables for compression heuristics */
     uint32_t offset;
     char16_t lead, trail;
-    int code;
+    ಪೂರ್ಣಾಙ್ಕ code;
     int8_t window;
 
     /* set up the local pointers */
@@ -1555,83 +1555,83 @@ _SCSUFromUnicode(UConverterFromUnicodeArgs *pArgs,
 
     /* similar conversion "loop" as in toUnicode */
 loop:
-    if(isSingleByteMode) {
-        if(c!=0 && targetCapacity>0) {
-            goto getTrailSingle;
+    ಯದಿ(isSingleByteMode) {
+        ಯದಿ(c!=0 && targetCapacity>0) {
+            ಗಚ್ಛ getTrailSingle;
         }
 
         /* state machine for single-byte mode */
 /* singleByteMode: */
-        while(source<sourceLimit) {
-            if(targetCapacity<=0) {
+        ಯಾವತ್(source<sourceLimit) {
+            ಯದಿ(targetCapacity<=0) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                ಭಙ್ಗ;
             }
             c=*source++;
 
-            if((c-0x20)<=0x5f) {
+            ಯದಿ((c-0x20)<=0x5f) {
                 /* pass US-ASCII graphic character through */
                 *target++=(uint8_t)c;
                 --targetCapacity;
-            } else if(c<0x20) {
-                if((1UL<<c)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
+            } ಅನ್ಯಥಾ ಯದಿ(c<0x20) {
+                ಯದಿ((1UL<<c)&0x2601 /* binary 0010 0110 0000 0001, check for b==0xd || b==0xa || b==9 || b==0 */) {
                     /* CR/LF/TAB/NUL */
                     *target++=(uint8_t)c;
                     --targetCapacity;
-                } else {
+                } ಅನ್ಯಥಾ {
                     /* quote C0 control character */
                     c|=SQ0<<8;
                     length=2;
-                    goto outputBytes;
+                    ಗಚ್ಛ outputBytes;
                 }
-            } else if((delta=c-currentOffset)<=0x7f) {
+            } ಅನ್ಯಥಾ ಯದಿ((delta=c-currentOffset)<=0x7f) {
                 /* use the current dynamic window */
                 *target++=(uint8_t)(delta|0x80);
                 --targetCapacity;
-            } else if(U16_IS_SURROGATE(c)) {
-                if(U16_IS_SURROGATE_LEAD(c)) {
+            } ಅನ್ಯಥಾ ಯದಿ(U16_IS_SURROGATE(c)) {
+                ಯದಿ(U16_IS_SURROGATE_LEAD(c)) {
 getTrailSingle:
                     lead=(char16_t)c;
-                    if(source<sourceLimit) {
+                    ಯದಿ(source<sourceLimit) {
                         /* test the following code unit */
                         trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
+                        ಯದಿ(U16_IS_TRAIL(trail)) {
                             ++source;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
                             /* convert this surrogate code point */
                             /* exit this condition tree */
-                        } else {
+                        } ಅನ್ಯಥಾ {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            ಗಚ್ಛ endloop;
                         }
-                    } else {
+                    } ಅನ್ಯಥಾ {
                         /* no more input */
-                        break;
+                        ಭಙ್ಗ;
                     }
-                } else {
+                } ಅನ್ಯಥಾ {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    goto endloop;
+                    ಗಚ್ಛ endloop;
                 }
 
                 /* compress supplementary character U+10000..U+10ffff */
-                if((delta=c-currentOffset)<=0x7f) {
+                ಯದಿ((delta=c-currentOffset)<=0x7f) {
                     /* use the current dynamic window */
                     *target++=(uint8_t)(delta|0x80);
                     --targetCapacity;
-                } else if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                } ಅನ್ಯಥಾ ಯದಿ((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
                     /* there is a dynamic window that contains this character, change to it */
                     dynamicWindow=window;
                     currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
                     useDynamicWindow(scsu, dynamicWindow);
                     c=((uint32_t)(SC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                     length=2;
-                    goto outputBytes;
-                } else if((code=getDynamicOffset(c, &offset))>=0) {
+                    ಗಚ್ಛ outputBytes;
+                } ಅನ್ಯಥಾ ಯದಿ((code=getDynamicOffset(c, &offset))>=0) {
                     /* might check if there are more characters in this window to come */
                     /* define an extended window with this character */
                     code-=0x200;
@@ -1640,58 +1640,58 @@ getTrailSingle:
                     useDynamicWindow(scsu, dynamicWindow);
                     c=((uint32_t)SDX<<24)|((uint32_t)dynamicWindow<<21)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                     length=4;
-                    goto outputBytes;
-                } else {
+                    ಗಚ್ಛ outputBytes;
+                } ಅನ್ಯಥಾ {
                     /* change to Unicode mode and output this (lead, trail) pair */
-                    isSingleByteMode=false;
+                    isSingleByteMode=ಅಸತ್ಯ;
                     *target++=(uint8_t)SCU;
                     --targetCapacity;
                     c=((uint32_t)lead<<16)|trail;
                     length=4;
-                    goto outputBytes;
+                    ಗಚ್ಛ outputBytes;
                 }
-            } else if(c<0xa0) {
+            } ಅನ್ಯಥಾ ಯದಿ(c<0xa0) {
                 /* quote C1 control character */
                 c=(c&0x7f)|(SQ0+1)<<8; /* SQ0+1==SQ1 */
                 length=2;
-                goto outputBytes;
-            } else if(c==0xfeff || c>=0xfff0) {
+                ಗಚ್ಛ outputBytes;
+            } ಅನ್ಯಥಾ ಯದಿ(c==0xfeff || c>=0xfff0) {
                 /* quote signature character=byte order mark and specials */
                 c|=SQU<<16;
                 length=3;
-                goto outputBytes;
-            } else {
+                ಗಚ್ಛ outputBytes;
+            } ಅನ್ಯಥಾ {
                 /* compress all other BMP characters */
-                if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                ಯದಿ((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
                     /* there is a window defined that contains this character - switch to it or quote from it? */
-                    if(source>=sourceLimit || isInOffsetWindowOrDirect(scsu->fromUDynamicOffsets[window], *source)) {
+                    ಯದಿ(source>=sourceLimit || isInOffsetWindowOrDirect(scsu->fromUDynamicOffsets[window], *source)) {
                         /* change to dynamic window */
                         dynamicWindow=window;
                         currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
                         useDynamicWindow(scsu, dynamicWindow);
                         c=((uint32_t)(SC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                         length=2;
-                        goto outputBytes;
-                    } else {
+                        ಗಚ್ಛ outputBytes;
+                    } ಅನ್ಯಥಾ {
                         /* quote from dynamic window */
                         c=((uint32_t)(SQ0+window)<<8)|(c-scsu->fromUDynamicOffsets[window])|0x80;
                         length=2;
-                        goto outputBytes;
+                        ಗಚ್ಛ outputBytes;
                     }
-                } else if((window=getWindow(staticOffsets, c))>=0) {
+                } ಅನ್ಯಥಾ ಯದಿ((window=getWindow(staticOffsets, c))>=0) {
                     /* quote from static window */
                     c=((uint32_t)(SQ0+window)<<8)|(c-staticOffsets[window]);
                     length=2;
-                    goto outputBytes;
-                } else if((code=getDynamicOffset(c, &offset))>=0) {
+                    ಗಚ್ಛ outputBytes;
+                } ಅನ್ಯಥಾ ಯದಿ((code=getDynamicOffset(c, &offset))>=0) {
                     /* define a dynamic window with this character */
                     dynamicWindow=getNextDynamicWindow(scsu);
                     currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
                     useDynamicWindow(scsu, dynamicWindow);
                     c=((uint32_t)(SD0+dynamicWindow)<<16)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                     length=3;
-                    goto outputBytes;
-                } else if (c - 0x3400 < 0xd800 - 0x3400 &&
+                    ಗಚ್ಛ outputBytes;
+                } ಅನ್ಯಥಾ ಯದಿ (c - 0x3400 < 0xd800 - 0x3400 &&
                            (source >= sourceLimit || static_cast<uint32_t>(*source - 0x3400) < 0xd800 - 0x3400)
                 ) {
                     /*
@@ -1699,111 +1699,111 @@ getTrailSingle:
                      * switch to Unicode mode if this is the last character in the block
                      * or there is at least one more ideograph following immediately
                      */
-                    isSingleByteMode=false;
+                    isSingleByteMode=ಅಸತ್ಯ;
                     c|=SCU<<16;
                     length=3;
-                    goto outputBytes;
-                } else {
+                    ಗಚ್ಛ outputBytes;
+                } ಅನ್ಯಥಾ {
                     /* quote Unicode */
                     c|=SQU<<16;
                     length=3;
-                    goto outputBytes;
+                    ಗಚ್ಛ outputBytes;
                 }
             }
 
             /* normal end of conversion: prepare for a new character */
             c=0;
         }
-    } else {
-        if(c!=0 && targetCapacity>0) {
-            goto getTrailUnicode;
+    } ಅನ್ಯಥಾ {
+        ಯದಿ(c!=0 && targetCapacity>0) {
+            ಗಚ್ಛ getTrailUnicode;
         }
 
         /* state machine for Unicode mode */
 /* unicodeByteMode: */
-        while(source<sourceLimit) {
-            if(targetCapacity<=0) {
+        ಯಾವತ್(source<sourceLimit) {
+            ಯದಿ(targetCapacity<=0) {
                 /* target is full */
                 *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
-                break;
+                ಭಙ್ಗ;
             }
             c=*source++;
 
-            if (c - 0x3400 < 0xd800 - 0x3400) {
+            ಯದಿ (c - 0x3400 < 0xd800 - 0x3400) {
                 /* not compressible, write character directly */
-                if(targetCapacity>=2) {
+                ಯದಿ(targetCapacity>=2) {
                     *target++=(uint8_t)(c>>8);
                     *target++=(uint8_t)c;
                     targetCapacity-=2;
-                } else {
+                } ಅನ್ಯಥಾ {
                     length=2;
-                    goto outputBytes;
+                    ಗಚ್ಛ outputBytes;
                 }
-            } else if (c - 0x3400 >= 0xf300 - 0x3400 /* c<0x3400 || c>=0xf300 */) {
+            } ಅನ್ಯಥಾ ಯದಿ (c - 0x3400 >= 0xf300 - 0x3400 /* c<0x3400 || c>=0xf300 */) {
                 /* compress BMP character if the following one is not an uncompressible ideograph */
-                if(!(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))) {
-                    if (c - 0x30 < 10 || c - 0x61 < 26 || c - 0x41 < 26) {
+                ಯದಿ(!(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))) {
+                    ಯದಿ (c - 0x30 < 10 || c - 0x61 < 26 || c - 0x41 < 26) {
                         /* ASCII digit or letter */
-                        isSingleByteMode=true;
+                        isSingleByteMode=ಸತ್ಯ;
                         c|=((uint32_t)(UC0+dynamicWindow)<<8)|c;
                         length=2;
-                        goto outputBytes;
-                    } else if((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
+                        ಗಚ್ಛ outputBytes;
+                    } ಅನ್ಯಥಾ ಯದಿ((window=getWindow(scsu->fromUDynamicOffsets, c))>=0) {
                         /* there is a dynamic window that contains this character, change to it */
-                        isSingleByteMode=true;
+                        isSingleByteMode=ಸತ್ಯ;
                         dynamicWindow=window;
                         currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
                         useDynamicWindow(scsu, dynamicWindow);
                         c=((uint32_t)(UC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                         length=2;
-                        goto outputBytes;
-                    } else if((code=getDynamicOffset(c, &offset))>=0) {
+                        ಗಚ್ಛ outputBytes;
+                    } ಅನ್ಯಥಾ ಯದಿ((code=getDynamicOffset(c, &offset))>=0) {
                         /* define a dynamic window with this character */
-                        isSingleByteMode=true;
+                        isSingleByteMode=ಸತ್ಯ;
                         dynamicWindow=getNextDynamicWindow(scsu);
                         currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
                         useDynamicWindow(scsu, dynamicWindow);
                         c=((uint32_t)(UD0+dynamicWindow)<<16)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                         length=3;
-                        goto outputBytes;
+                        ಗಚ್ಛ outputBytes;
                     }
                 }
 
                 /* don't know how to compress this character, just write it directly */
                 length=2;
-                goto outputBytes;
-            } else if(c<0xe000) {
+                ಗಚ್ಛ outputBytes;
+            } ಅನ್ಯಥಾ ಯದಿ(c<0xe000) {
                 /* c is a surrogate */
-                if(U16_IS_SURROGATE_LEAD(c)) {
+                ಯದಿ(U16_IS_SURROGATE_LEAD(c)) {
 getTrailUnicode:
                     lead=(char16_t)c;
-                    if(source<sourceLimit) {
+                    ಯದಿ(source<sourceLimit) {
                         /* test the following code unit */
                         trail=*source;
-                        if(U16_IS_TRAIL(trail)) {
+                        ಯದಿ(U16_IS_TRAIL(trail)) {
                             ++source;
                             c=U16_GET_SUPPLEMENTARY(c, trail);
                             /* convert this surrogate code point */
                             /* exit this condition tree */
-                        } else {
+                        } ಅನ್ಯಥಾ {
                             /* this is an unmatched lead code unit (1st surrogate) */
                             /* callback(illegal) */
                             *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                            goto endloop;
+                            ಗಚ್ಛ endloop;
                         }
-                    } else {
+                    } ಅನ್ಯಥಾ {
                         /* no more input */
-                        break;
+                        ಭಙ್ಗ;
                     }
-                } else {
+                } ಅನ್ಯಥಾ {
                     /* this is an unmatched trail code unit (2nd surrogate) */
                     /* callback(illegal) */
                     *pErrorCode=U_ILLEGAL_CHAR_FOUND;
-                    goto endloop;
+                    ಗಚ್ಛ endloop;
                 }
 
                 /* compress supplementary character */
-                if( (window=getWindow(scsu->fromUDynamicOffsets, c))>=0 &&
+                ಯದಿ( (window=getWindow(scsu->fromUDynamicOffsets, c))>=0 &&
                     !(source<sourceLimit && (uint32_t)(*source-0x3400)<(0xd800-0x3400))
                 ) {
                     /*
@@ -1811,36 +1811,36 @@ getTrailUnicode:
                      * the following character is not uncompressible,
                      * change to the window
                      */
-                    isSingleByteMode=true;
+                    isSingleByteMode=ಸತ್ಯ;
                     dynamicWindow=window;
                     currentOffset=scsu->fromUDynamicOffsets[dynamicWindow];
                     useDynamicWindow(scsu, dynamicWindow);
                     c=((uint32_t)(UC0+dynamicWindow)<<8)|(c-currentOffset)|0x80;
                     length=2;
-                    goto outputBytes;
-                } else if(source<sourceLimit && lead==*source && /* too lazy to check trail in same window as source[1] */
+                    ಗಚ್ಛ outputBytes;
+                } ಅನ್ಯಥಾ ಯದಿ(source<sourceLimit && lead==*source && /* too lazy to check trail in same window as source[1] */
                           (code=getDynamicOffset(c, &offset))>=0
                 ) {
                     /* two supplementary characters in (probably) the same window - define an extended one */
-                    isSingleByteMode=true;
+                    isSingleByteMode=ಸತ್ಯ;
                     code-=0x200;
                     dynamicWindow=getNextDynamicWindow(scsu);
                     currentOffset=scsu->fromUDynamicOffsets[dynamicWindow]=offset;
                     useDynamicWindow(scsu, dynamicWindow);
                     c=((uint32_t)UDX<<24)|((uint32_t)dynamicWindow<<21)|((uint32_t)code<<8)|(c-currentOffset)|0x80;
                     length=4;
-                    goto outputBytes;
-                } else {
+                    ಗಚ್ಛ outputBytes;
+                } ಅನ್ಯಥಾ {
                     /* don't know how to compress this character, just write it directly */
                     c=((uint32_t)lead<<16)|trail;
                     length=4;
-                    goto outputBytes;
+                    ಗಚ್ಛ outputBytes;
                 }
-            } else /* 0xe000<=c<0xf300 */ {
+            } ಅನ್ಯಥಾ /* 0xe000<=c<0xf300 */ {
                 /* quote to avoid SCSU tags */
                 c|=UQU<<16;
                 length=3;
-                goto outputBytes;
+                ಗಚ್ಛ outputBytes;
             }
 
             /* normal end of conversion: prepare for a new character */
@@ -1857,37 +1857,37 @@ endloop:
 
     /* write back the updated pointers */
     pArgs->source=source;
-    pArgs->target=(char *)target;
-    return;
+    pArgs->target=(ವರ್ಣ *)target;
+    ಪ್ರತ್ಯಾಗಮ;
 
 outputBytes:
     /* write the output character bytes from c and length [code copied from ucnvmbcs.c] */
     /* from the first if in the loop we know that targetCapacity>0 */
-    if(length<=targetCapacity) {
-        switch(length) {
+    ಯದಿ(length<=targetCapacity) {
+        ವಿಕಲ್ಪ(length) {
             /* each branch falls through to the next one */
-        case 4:
+        ಪಕ್ಷ 4:
             *target++=(uint8_t)(c>>24);
             U_FALLTHROUGH;
-        case 3:
+        ಪಕ್ಷ 3:
             *target++=(uint8_t)(c>>16);
             U_FALLTHROUGH;
-        case 2:
+        ಪಕ್ಷ 2:
             *target++=(uint8_t)(c>>8);
             U_FALLTHROUGH;
-        case 1:
+        ಪಕ್ಷ 1:
             *target++=(uint8_t)c;
             U_FALLTHROUGH;
-        default:
+        ಸ್ವಭಾವ:
             /* will never occur */
-            break;
+            ಭಙ್ಗ;
         }
         targetCapacity-=length;
 
         /* normal end of conversion: prepare for a new character */
         c=0;
-        goto loop;
-    } else {
+        ಗಚ್ಛ loop;
+    } ಅನ್ಯಥಾ {
         uint8_t *p;
 
         /*
@@ -1900,102 +1900,102 @@ outputBytes:
         /* targetCapacity==0 when SCU+supplementary where SCU used up targetCapacity==1 */
         length-=targetCapacity;
         p=(uint8_t *)cnv->charErrorBuffer;
-        switch(length) {
+        ವಿಕಲ್ಪ(length) {
             /* each branch falls through to the next one */
-        case 4:
+        ಪಕ್ಷ 4:
             *p++=(uint8_t)(c>>24);
             U_FALLTHROUGH;
-        case 3:
+        ಪಕ್ಷ 3:
             *p++=(uint8_t)(c>>16);
             U_FALLTHROUGH;
-        case 2:
+        ಪಕ್ಷ 2:
             *p++=(uint8_t)(c>>8);
             U_FALLTHROUGH;
-        case 1:
+        ಪಕ್ಷ 1:
             *p=(uint8_t)c;
             U_FALLTHROUGH;
-        default:
+        ಸ್ವಭಾವ:
             /* will never occur */
-            break;
+            ಭಙ್ಗ;
         }
         cnv->charErrorBufferLength=(int8_t)length;
 
         /* now output what fits into the regular target */
         c = (length == 4) ? 0 : c >> 8*length; /* length was reduced by targetCapacity */
-        switch(targetCapacity) {
+        ವಿಕಲ್ಪ(targetCapacity) {
             /* each branch falls through to the next one */
-        case 3:
+        ಪಕ್ಷ 3:
             *target++=(uint8_t)(c>>16);
             U_FALLTHROUGH;
-        case 2:
+        ಪಕ್ಷ 2:
             *target++=(uint8_t)(c>>8);
             U_FALLTHROUGH;
-        case 1:
+        ಪಕ್ಷ 1:
             *target++=(uint8_t)c;
             U_FALLTHROUGH;
-        default:
-            break;
+        ಸ್ವಭಾವ:
+            ಭಙ್ಗ;
         }
 
         /* target overflow */
         targetCapacity=0;
         *pErrorCode=U_BUFFER_OVERFLOW_ERROR;
         c=0;
-        goto endloop;
+        ಗಚ್ಛ endloop;
     }
 }
 
 /* miscellaneous ------------------------------------------------------------ */
 
-static const char *  U_CALLCONV
-_SCSUGetName(const UConverter *cnv) {
+ಸ್ಥಿರ ಧ್ರುವ ವರ್ಣ *  U_CALLCONV
+_SCSUGetName(ಧ್ರುವ UConverter *cnv) {
     SCSUData *scsu=(SCSUData *)cnv->extraInfo;
 
-    switch(scsu->locale) {
-    case l_ja:
-        return "SCSU,locale=ja";
-    default:
-        return "SCSU";
+    ವಿಕಲ್ಪ(scsu->locale) {
+    ಪಕ್ಷ l_ja:
+        ಪ್ರತ್ಯಾಗಮ "SCSU,locale=ja";
+    ಸ್ವಭಾವ:
+        ಪ್ರತ್ಯಾಗಮ "SCSU";
     }
 }
 
 /* structure for SafeClone calculations */
-struct cloneSCSUStruct
+ಸಂರಚನಾ cloneSCSUStruct
 {
     UConverter cnv;
     SCSUData mydata;
 };
 
-static UConverter *  U_CALLCONV
-_SCSUSafeClone(const UConverter *cnv, 
-               void *stackBuffer, 
+ಸ್ಥಿರ UConverter *  U_CALLCONV
+_SCSUSafeClone(ಧ್ರುವ UConverter *cnv, 
+               ಶೂನ್ಯ *ರಾಶಿ_Buffer, 
                int32_t *pBufferSize, 
                UErrorCode *status)
 {
-    struct cloneSCSUStruct * localClone;
-    int32_t bufferSizeNeeded = sizeof(struct cloneSCSUStruct);
+    ಸಂರಚನಾ cloneSCSUStruct * localClone;
+    int32_t bufferSizeNeeded = ಪರಿಮಾಣ(ಸಂರಚನಾ cloneSCSUStruct);
 
-    if (U_FAILURE(*status)){
-        return nullptr;
+    ಯದಿ (U_FAILURE(*status)){
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
 
-    if (*pBufferSize == 0){ /* 'preflighting' request - set needed size into *pBufferSize */
+    ಯದಿ (*pBufferSize == 0){ /* 'preflighting' request - set needed size into *pBufferSize */
         *pBufferSize = bufferSizeNeeded;
-        return nullptr;
+        ಪ್ರತ್ಯಾಗಮ nullptr;
     }
 
-    localClone = (struct cloneSCSUStruct *)stackBuffer;
+    localClone = (ಸಂರಚನಾ cloneSCSUStruct *)ರಾಶಿ_Buffer;
     /* ucnv.c/ucnv_safeClone() copied the main UConverter already */
 
-    uprv_memcpy(&localClone->mydata, cnv->extraInfo, sizeof(SCSUData));
+    uprv_memcpy(&localClone->mydata, cnv->extraInfo, ಪರಿಮಾಣ(SCSUData));
     localClone->cnv.extraInfo = &localClone->mydata;
-    localClone->cnv.isExtraLocal = true;
+    localClone->cnv.isExtraLocal = ಸತ್ಯ;
 
-    return &localClone->cnv;
+    ಪ್ರತ್ಯಾಗಮ &localClone->cnv;
 }
 U_CDECL_END
 
-static const UConverterImpl _SCSUImpl={
+ಸ್ಥಿರ ಧ್ರುವ UConverterImpl _SCSUImpl={
     UCNV_SCSU,
 
     nullptr,
@@ -2020,8 +2020,8 @@ static const UConverterImpl _SCSUImpl={
     nullptr
 };
 
-static const UConverterStaticData _SCSUStaticData={
-    sizeof(UConverterStaticData),
+ಸ್ಥಿರ ಧ್ರುವ UConverterStaticData _SCSUStaticData={
+    ಪರಿಮಾಣ(UConverterStaticData),
     "SCSU",
     1212, /* CCSID for SCSU */
     UCNV_IBM, UCNV_SCSU,
@@ -2031,13 +2031,13 @@ static const UConverterStaticData _SCSUStaticData={
      * substitution string.
      */
     { 0x0e, 0xff, 0xfd, 0 }, 3,
-    false, false,
+    ಅಸತ್ಯ, ಅಸತ್ಯ,
     0,
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
 
-const UConverterSharedData _SCSUData=
+ಧ್ರುವ UConverterSharedData _SCSUData=
         UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_SCSUStaticData, &_SCSUImpl);
 
 #endif

@@ -19,7 +19,7 @@
 #ifndef __UENUMIMP_H
 #define __UENUMIMP_H
 
-#include "unicode/uenum.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uenum.h"
 
 U_CDECL_BEGIN
 
@@ -41,7 +41,7 @@ U_CDECL_BEGIN
  *
  * @param en enumeration to be closed
  */
-typedef void U_CALLCONV
+ಪ್ರಕಾರನಿರ್ದೇಶ ಶೂನ್ಯ U_CALLCONV
 UEnumClose(UEnumeration *en);
 
 /**
@@ -54,8 +54,8 @@ UEnumClose(UEnumeration *en);
  * @param status pointer to UErrorCode variable
  * @return number of elements in enumeration
  */
-typedef int32_t U_CALLCONV
-UEnumCount(UEnumeration *en, UErrorCode *status);
+ಪ್ರಕಾರನಿರ್ದೇಶ int32_t U_CALLCONV
+UEnum_ಎಣಿಕೆ(UEnumeration *en, UErrorCode *status);
 
 /**
  * Function type declaration for uenum_unext().
@@ -69,7 +69,7 @@ UEnumCount(UEnumeration *en, UErrorCode *status);
  * @return next element as UChar *,
  *         or NULL after all elements haven been enumerated
  */
-typedef const UChar* U_CALLCONV 
+ಪ್ರಕಾರನಿರ್ದೇಶ ಧ್ರುವ UChar* U_CALLCONV 
 UEnumUNext(UEnumeration* en,
             int32_t* resultLength,
             UErrorCode* status);
@@ -86,7 +86,7 @@ UEnumUNext(UEnumeration* en,
  * @return next element as char *,
  *         or NULL after all elements haven been enumerated
  */
-typedef const char* U_CALLCONV 
+ಪ್ರಕಾರನಿರ್ದೇಶ ಧ್ರುವ ವರ್ಣ* U_CALLCONV 
 UEnumNext(UEnumeration* en,
            int32_t* resultLength,
            UErrorCode* status);
@@ -100,17 +100,17 @@ UEnumNext(UEnumeration* en,
  * @param en enumeration 
  * @param status pointer to UErrorCode variable
  */
-typedef void U_CALLCONV 
+ಪ್ರಕಾರನಿರ್ದೇಶ ಶೂನ್ಯ U_CALLCONV 
 UEnumReset(UEnumeration* en, 
             UErrorCode* status);
 
 
-struct UEnumeration {
+ಸಂರಚನಾ UEnumeration {
     /* baseContext. For the base class only. Don't touch! */
-    void *baseContext;
+    ಶೂನ್ಯ *baseContext;
 
     /* context. Use it for what you need */
-    void *context;
+    ಶೂನ್ಯ *context;
 
     /** 
      * these are functions that will 
@@ -119,7 +119,7 @@ struct UEnumeration {
     /* called from uenum_close */
     UEnumClose *close;
     /* called from uenum_count */
-    UEnumCount *count;
+    UEnum_ಎಣಿಕೆ *ಎಣಿಕೆ;
     /* called from uenum_unext */
     UEnumUNext *uNext;
     /* called from uenum_next */
@@ -136,7 +136,7 @@ U_CDECL_END
  * when a UEnumeration is defined with 'uNext' pointing to this
  * function.
  */
-U_CAPI const UChar* U_EXPORT2
+U_CAPI ಧ್ರುವ UChar* U_EXPORT2
 uenum_unextDefault(UEnumeration* en U_LIFETIME_BOUND,
                    int32_t* resultLength,
                    UErrorCode* status);
@@ -147,7 +147,7 @@ uenum_unextDefault(UEnumeration* en U_LIFETIME_BOUND,
  * when a UEnumeration is defined with 'next' pointing to this
  * function.
  */
-U_CAPI const char* U_EXPORT2
+U_CAPI ಧ್ರುವ ವರ್ಣ* U_EXPORT2
 uenum_nextDefault(UEnumeration* en U_LIFETIME_BOUND,
                   int32_t* resultLength,
                   UErrorCode* status);

@@ -13,17 +13,17 @@
 #ifndef __UNIFIED_CACHE_H__
 #define __UNIFIED_CACHE_H__
 
-#include "utypeinfo.h"  // for 'typeid' to work
+#ಅನ್ತರ್ಭಾವ "utypeinfo.h"  // for 'typeid' to work
 
-#include "unicode/uobject.h"
-#include "unicode/locid.h"
-#include "sharedobject.h"
-#include "unicode/unistr.h"
-#include "cstring.h"
-#include "ustr_imp.h"
+#ಅನ್ತರ್ಭಾವ "unicode/uobject.h"
+#ಅನ್ತರ್ಭಾವ "unicode/locid.h"
+#ಅನ್ತರ್ಭಾವ "sharedobject.h"
+#ಅನ್ತರ್ಭಾವ "unicode/unistr.h"
+#ಅನ್ತರ್ಭಾವ "cstring.h"
+#ಅನ್ತರ್ಭಾವ "ustr_imp.h"
 
-struct UHashtable;
-struct UHashElement;
+ಸಂರಚನಾ UHashtable;
+ಸಂರಚನಾ UHashElement;
 
 U_NAMESPACE_BEGIN
 
@@ -32,26 +32,26 @@ class UnifiedCache;
 /**
  * A base class for all cache keys.
  */
-class U_COMMON_API CacheKeyBase : public UObject {
- public:
-   CacheKeyBase() : fCreationStatus(U_ZERO_ERROR), fIsPrimary(false) {}
+class U_COMMON_API Cache_ಕೀಲಿ_Base : ಸಾರ್ವಜನಿಕ UObject {
+ ಸಾರ್ವಜನಿಕ:
+   Cache_ಕೀಲಿ_Base() : fCreationStatus(U_ZERO_ERROR), fIsPrimary(false) {}
 
    /**
     * Copy constructor. Needed to support cloning.
     */
-   CacheKeyBase(const CacheKeyBase &other) 
+   Cache_ಕೀಲಿ_Base(ಧ್ರುವ Cache_ಕೀಲಿ_Base &other) 
            : UObject(other), fCreationStatus(other.fCreationStatus), fIsPrimary(false) { }
-   virtual ~CacheKeyBase();
+   ಆಭಾಸ ~Cache_ಕೀಲಿ_Base();
 
    /**
     * Returns the hash code for this object.
     */
-   virtual int32_t hashCode() const = 0;
+   ಆಭಾಸ int32_t hashCode() ಧ್ರುವ = 0;
 
    /**
     * Clones this object polymorphically. Caller owns returned value.
     */
-   virtual CacheKeyBase *clone() const = 0;
+   ಆಭಾಸ Cache_ಕೀಲಿ_Base *clone() ಧ್ರುವ = 0;
 
    /**
     * Create a new object for this key. Called by cache on cache miss.
@@ -66,29 +66,29 @@ class U_COMMON_API CacheKeyBase : public UObject {
     *                        In addition, implementations may return a
     *                        non nullptr object and set a warning status.
     */
-   virtual const SharedObject *createObject(
-           const void *creationContext, UErrorCode &status) const = 0;
+   ಆಭಾಸ ಧ್ರುವ SharedObject *createObject(
+           ಧ್ರುವ ಶೂನ್ಯ *creationContext, UErrorCode &status) ಧ್ರುವ = 0;
 
    /**
     * Writes a description of this key to buffer and returns buffer. Written
     * description is nullptr terminated.
     */
-   virtual char *writeDescription(char *buffer, int32_t bufSize) const = 0;
+   ಆಭಾಸ ವರ್ಣ *writeDescription(ವರ್ಣ *buffer, int32_t bufSize) ಧ್ರುವ = 0;
 
-   friend inline bool operator==(const CacheKeyBase& lhs,
-                                 const CacheKeyBase& rhs) {
-       return lhs.equals(rhs);
+   friend ಅನ್ತಃಸ್ಥ bool operator==(ಧ್ರುವ Cache_ಕೀಲಿ_Base& lhs,
+                                 ಧ್ರುವ Cache_ಕೀಲಿ_Base& rhs) {
+       ಪ್ರತ್ಯಾಗಮ lhs.equals(rhs);
    }
 
-   friend inline bool operator!=(const CacheKeyBase& lhs,
-                                 const CacheKeyBase& rhs) {
-       return !lhs.equals(rhs);
+   friend ಅನ್ತಃಸ್ಥ bool operator!=(ಧ್ರುವ Cache_ಕೀಲಿ_Base& lhs,
+                                 ಧ್ರುವ Cache_ಕೀಲಿ_Base& rhs) {
+       ಪ್ರತ್ಯಾಗಮ !lhs.equals(rhs);
    }
 
- protected:
-   virtual bool equals(const CacheKeyBase& other) const = 0;
+ ರಕ್ಷಿತ:
+   ಆಭಾಸ bool equals(ಧ್ರುವ Cache_ಕೀಲಿ_Base& other) ಧ್ರುವ = 0;
 
- private:
+ ಗುಪ್ತ:
    mutable UErrorCode fCreationStatus;
    mutable UBool fIsPrimary;
    friend class UnifiedCache;
@@ -101,33 +101,33 @@ class U_COMMON_API CacheKeyBase : public UObject {
  * A key of type LocaleCacheKey<T> maps to a value of type T.
  */
 template<typename T>
-class CacheKey : public CacheKeyBase {
- public:
-   virtual ~CacheKey() { }
+class Cache_ಕೀಲಿ : ಸಾರ್ವಜನಿಕ Cache_ಕೀಲಿ_Base {
+ ಸಾರ್ವಜನಿಕ:
+   ಆಭಾಸ ~Cache_ಕೀಲಿ() { }
    /**
     * The template parameter, T, determines the hash code returned.
     */
-   virtual int32_t hashCode() const override {
-       const char *s = typeid(T).name();
-       return ustr_hashCharsN(s, static_cast<int32_t>(uprv_strlen(s)));
+   ಆಭಾಸ int32_t hashCode() ಧ್ರುವ override {
+       ಧ್ರುವ ವರ್ಣ *s = typeid(T).name();
+       ಪ್ರತ್ಯಾಗಮ ustr_hashCharsN(s, static_cast<int32_t>(uprv_strlen(s)));
    }
 
    /**
     * Use the value type, T,  as the description.
     */
-   virtual char *writeDescription(char *buffer, int32_t bufLen) const override {
-       const char *s = typeid(T).name();
+   ಆಭಾಸ ವರ್ಣ *writeDescription(ವರ್ಣ *buffer, int32_t bufLen) ಧ್ರುವ override {
+       ಧ್ರುವ ವರ್ಣ *s = typeid(T).name();
        uprv_strncpy(buffer, s, bufLen);
        buffer[bufLen - 1] = 0;
-       return buffer;
+       ಪ್ರತ್ಯಾಗಮ buffer;
    }
 
- protected:
+ ರಕ್ಷಿತ:
    /**
     * Two objects are equal if they are of the same type.
     */
-   virtual bool equals(const CacheKeyBase &other) const override {
-       return this == &other || typeid(*this) == typeid(other);
+   ಆಭಾಸ bool equals(ಧ್ರುವ Cache_ಕೀಲಿ_Base &other) ಧ್ರುವ override {
+       ಪ್ರತ್ಯಾಗಮ this == &other || typeid(*this) == typeid(other);
    }
 };
 
@@ -136,41 +136,41 @@ class CacheKey : public CacheKeyBase {
  * A key of type LocaleCacheKey<T> maps to a value of type T.
  */
 template<typename T>
-class LocaleCacheKey : public CacheKey<T> {
- protected:
+class Locale_Cache_ಕೀಲಿ : ಸಾರ್ವಜನಿಕ Cache_ಕೀಲಿ<T> {
+ ರಕ್ಷಿತ:
    Locale   fLoc;
-   virtual bool equals(const CacheKeyBase &other) const override {
-       if (!CacheKey<T>::equals(other)) {
-           return false;
+   ಆಭಾಸ bool equals(ಧ್ರುವ Cache_ಕೀಲಿ_Base &other) ಧ್ರುವ override {
+       ಯದಿ (!Cache_ಕೀಲಿ<T>::equals(other)) {
+           ಪ್ರತ್ಯಾಗಮ false;
        }
        // We know this and other are of same class because equals() on
        // CacheKey returned true.
-       return operator==(static_cast<const LocaleCacheKey<T> &>(other));
+       ಪ್ರತ್ಯಾಗಮ operator==(static_cast<ಧ್ರುವ Locale_Cache_ಕೀಲಿ<T> &>(other));
    }
- public:
-   LocaleCacheKey(const Locale &loc) : fLoc(loc) {}
-   LocaleCacheKey(const LocaleCacheKey<T> &other)
-           : CacheKey<T>(other), fLoc(other.fLoc) { }
-   virtual ~LocaleCacheKey() { }
-   virtual int32_t hashCode() const override {
-       return (int32_t)(37u * (uint32_t)CacheKey<T>::hashCode() + (uint32_t)fLoc.hashCode());
+ ಸಾರ್ವಜನಿಕ:
+   Locale_Cache_ಕೀಲಿ(ಧ್ರುವ Locale &loc) : fLoc(loc) {}
+   Locale_Cache_ಕೀಲಿ(ಧ್ರುವ Locale_Cache_ಕೀಲಿ<T> &other)
+           : Cache_ಕೀಲಿ<T>(other), fLoc(other.fLoc) { }
+   ಆಭಾಸ ~Locale_Cache_ಕೀಲಿ() { }
+   ಆಭಾಸ int32_t hashCode() ಧ್ರುವ override {
+       ಪ್ರತ್ಯಾಗಮ (int32_t)(37u * (uint32_t)Cache_ಕೀಲಿ<T>::hashCode() + (uint32_t)fLoc.hashCode());
    }
-   inline bool operator == (const LocaleCacheKey<T> &other) const {
-       return fLoc == other.fLoc;
+   ಅನ್ತಃಸ್ಥ bool operator == (ಧ್ರುವ Locale_Cache_ಕೀಲಿ<T> &other) ಧ್ರುವ {
+       ಪ್ರತ್ಯಾಗಮ fLoc == other.fLoc;
    }
-   virtual CacheKeyBase *clone() const override {
-       return new LocaleCacheKey<T>(*this);
+   ಆಭಾಸ Cache_ಕೀಲಿ_Base *clone() ಧ್ರುವ override {
+       ಪ್ರತ್ಯಾಗಮ new Locale_Cache_ಕೀಲಿ<T>(*this);
    }
-   virtual const T *createObject(
-           const void *creationContext, UErrorCode &status) const override;
+   ಆಭಾಸ ಧ್ರುವ T *createObject(
+           ಧ್ರುವ ಶೂನ್ಯ *creationContext, UErrorCode &status) ಧ್ರುವ override;
    /**
     * Use the locale id as the description.
     */
-   virtual char *writeDescription(char *buffer, int32_t bufLen) const override {
-       const char *s = fLoc.getName();
+   ಆಭಾಸ ವರ್ಣ *writeDescription(ವರ್ಣ *buffer, int32_t bufLen) ಧ್ರುವ override {
+       ಧ್ರುವ ವರ್ಣ *s = fLoc.getName();
        uprv_strncpy(buffer, s, bufLen);
        buffer[bufLen - 1] = 0;
-       return buffer;
+       ಪ್ರತ್ಯಾಗಮ buffer;
    }
 
 };
@@ -180,8 +180,8 @@ class LocaleCacheKey : public CacheKey<T> {
  * Design doc here:
  * https://docs.google.com/document/d/1RwGQJs4N4tawNbf809iYDRCvXoMKqDJihxzYt1ysmd8/edit?usp=sharing
  */
-class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
- public:
+class U_COMMON_API UnifiedCache : ಸಾರ್ವಜನಿಕ UnifiedCacheBase {
+ ಸಾರ್ವಜನಿಕ:
    /**
     * @internal
     * Do not call directly. Instead use UnifiedCache::getInstance() as
@@ -192,18 +192,18 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
    /**
     * Return a pointer to the global cache instance.
     */
-   static UnifiedCache *getInstance(UErrorCode &status);
+   ಸ್ಥಿರ UnifiedCache *getInstance(UErrorCode &status);
 
    /**
     * Fetches a value from the cache by key. Equivalent to
     * get(key, nullptr, ptr, status);
     */
    template<typename T>
-   void get(
-           const CacheKey<T>& key,
-           const T *&ptr,
-           UErrorCode &status) const {
-       get(key, nullptr, ptr, status);
+   ಶೂನ್ಯ get(
+           ಧ್ರುವ Cache_ಕೀಲಿ<T>& ಕೀಲಿ,
+           ಧ್ರುವ T *&ptr,
+           UErrorCode &status) ಧ್ರುವ {
+       get(ಕೀಲಿ, nullptr, ptr, status);
    }
 
    /**
@@ -221,25 +221,25 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     *                        warning value even if ptr is set.
     */
    template<typename T>
-   void get(
-           const CacheKey<T>& key,
-           const void *creationContext,
-           const T *&ptr,
-           UErrorCode &status) const {
-       if (U_FAILURE(status)) {
-           return;
+   ಶೂನ್ಯ get(
+           ಧ್ರುವ Cache_ಕೀಲಿ<T>& ಕೀಲಿ,
+           ಧ್ರುವ ಶೂನ್ಯ *creationContext,
+           ಧ್ರುವ T *&ptr,
+           UErrorCode &status) ಧ್ರುವ {
+       ಯದಿ (U_FAILURE(status)) {
+           ಪ್ರತ್ಯಾಗಮ;
        }
        UErrorCode creationStatus = U_ZERO_ERROR;
-       const SharedObject *value = nullptr;
-       _get(key, value, creationContext, creationStatus);
-       const T *tvalue = (const T *) value;
-       if (U_SUCCESS(creationStatus)) {
+       ಧ್ರುವ SharedObject *ಮೌಲ್ಯ_2 = nullptr;
+       _get(ಕೀಲಿ, ಮೌಲ್ಯ_2, creationContext, creationStatus);
+       ಧ್ರುವ T *tvalue = (ಧ್ರುವ T *) ಮೌಲ್ಯ_2;
+       ಯದಿ (U_SUCCESS(creationStatus)) {
            SharedObject::copyPtr(tvalue, ptr);
        }
        SharedObject::clearPtr(tvalue);
        // Take care not to overwrite a warning status passed in with
        // another warning or U_ZERO_ERROR.
-       if (status == U_ZERO_ERROR || U_FAILURE(creationStatus)) {
+       ಯದಿ (status == U_ZERO_ERROR || U_FAILURE(creationStatus)) {
            status = creationStatus;
        }
    }
@@ -249,7 +249,7 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * Dumps the contents of this cache to standard error. Used for testing of
     * cache only.
     */
-   void dumpContents() const;
+   ಶೂನ್ಯ dumpContents() ಧ್ರುವ;
 #endif
 
    /**
@@ -265,32 +265,32 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     *               warning value even if ptr is set.
     */
    template<typename T>
-   static void getByLocale(
-           const Locale &loc, const T *&ptr, UErrorCode &status) {
-       const UnifiedCache *cache = getInstance(status);
-       if (U_FAILURE(status)) {
-           return;
+   ಸ್ಥಿರ ಶೂನ್ಯ getByLocale(
+           ಧ್ರುವ Locale &loc, ಧ್ರುವ T *&ptr, UErrorCode &status) {
+       ಧ್ರುವ UnifiedCache *cache = getInstance(status);
+       ಯದಿ (U_FAILURE(status)) {
+           ಪ್ರತ್ಯಾಗಮ;
        }
-       cache->get(LocaleCacheKey<T>(loc), ptr, status);
+       cache->get(Locale_Cache_ಕೀಲಿ<T>(loc), ptr, status);
    }
 
 #ifdef UNIFIED_CACHE_DEBUG
    /**
     * Dumps the cache contents to stderr. For testing only.
     */
-   static void dump();
+   ಸ್ಥಿರ ಶೂನ್ಯ dump();
 #endif
 
    /**
     * Returns the number of keys in this cache. For testing only.
     */
-   int32_t keyCount() const;
+   int32_t ಕೀಲಿ_ಎಣಿಕೆ() ಧ್ರುವ;
 
    /**
     * Removes any values from cache that are not referenced outside
     * the cache.
     */
-   void flush() const;
+   ಶೂನ್ಯ flush() ಧ್ರುವ;
 
    /**
     * Configures at what point eviction of unused entries will begin.
@@ -324,8 +324,8 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * If the parameters passed are negative, setEvctionPolicy sets status to
     * U_ILLEGAL_ARGUMENT_ERROR.
     */
-   void setEvictionPolicy(
-           int32_t count, int32_t percentageOfInUseItems, UErrorCode &status);
+   ಶೂನ್ಯ setEvictionPolicy(
+           int32_t ಎಣಿಕೆ, int32_t percentage_Of_In_Use_ವಸ್ತುಗಳು, UErrorCode &status);
 
 
    /**
@@ -333,29 +333,29 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * of this cache. This only includes auto evicted entries, not
     * entries evicted because of a call to flush().
     */
-   int64_t autoEvictedCount() const;
+   int64_t auto_Evicted_ಎಣಿಕೆ() ಧ್ರುವ;
 
    /**
     * Returns the unused entry count in this cache. For testing only,
     * Regular clients will not need this.
     */
-   int32_t unusedCount() const;
+   int32_t unused_ಎಣಿಕೆ() ಧ್ರುವ;
 
-   virtual void handleUnreferencedObject() const override;
-   virtual ~UnifiedCache();
+   ಆಭಾಸ ಶೂನ್ಯ handleUnreferencedObject() ಧ್ರುವ override;
+   ಆಭಾಸ ~UnifiedCache();
    
- private:
+ ಗುಪ್ತ:
    UHashtable *fHashtable;
    mutable int32_t fEvictPos;
-   mutable int32_t fNumValuesTotal;
-   mutable int32_t fNumValuesInUse;
+   mutable int32_t f_ಅಂಕೆ_ಮೌಲ್ಯಗಳು_Total;
+   mutable int32_t f_ಅಂಕೆ_ಮೌಲ್ಯಗಳು_In_Use;
    int32_t fMaxUnused;
    int32_t fMaxPercentageOfInUse;
-   mutable int64_t fAutoEvictedCount;
-   SharedObject *fNoValue;
+   mutable int64_t f_Auto_Evicted_ಎಣಿಕೆ;
+   SharedObject *f_No_ಮೌಲ್ಯ;
    
-   UnifiedCache(const UnifiedCache &other) = delete;
-   UnifiedCache &operator=(const UnifiedCache &other) = delete;
+   UnifiedCache(ಧ್ರುವ UnifiedCache &other) = delete;
+   UnifiedCache &operator=(ಧ್ರುವ UnifiedCache &other) = delete;
    
    /**
     * Flushes the contents of the cache. If cache values hold references to other
@@ -372,7 +372,7 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     *                     _flush is not thread safe when all is true.
     *   @return true if any value in cache was flushed or false otherwise.
     */
-   UBool _flush(UBool all) const;
+   UBool _flush(UBool all) ಧ್ರುವ;
    
    /**
     * Gets value out of cache.
@@ -385,11 +385,11 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * fNoValue is stored in cache, and value is set to nullptr. Caller must call
     * removeRef on value if non nullptr.
     */
-   void _get(
-           const CacheKeyBase &key,
-           const SharedObject *&value,
-           const void *creationContext,
-           UErrorCode &status) const;
+   ಶೂನ್ಯ _get(
+           ಧ್ರುವ Cache_ಕೀಲಿ_Base &ಕೀಲಿ,
+           ಧ್ರುವ SharedObject *&ಮೌಲ್ಯ_2,
+           ಧ್ರುವ ಶೂನ್ಯ *creationContext,
+           UErrorCode &status) ಧ್ರುವ;
 
     /**
      * Attempts to fetch value and status for key from cache.
@@ -403,9 +403,9 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
      * returned, caller must call removeRef() on value.
      */
     UBool _poll(
-            const CacheKeyBase &key,
-            const SharedObject *&value,
-            UErrorCode &status) const;
+            ಧ್ರುವ Cache_ಕೀಲಿ_Base &ಕೀಲಿ,
+            ಧ್ರುವ SharedObject *&ಮೌಲ್ಯ_2,
+            UErrorCode &status) ಧ್ರುವ;
     
     /**
      * Places a new value and creationStatus in the cache for the given key.
@@ -413,11 +413,11 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
      * On exit, value and creation status placed under key. Soft reference added
      * to value on successful add. On error sets status.
      */
-    void _putNew(
-        const CacheKeyBase &key,
-        const SharedObject *value,
-        const UErrorCode creationStatus,
-        UErrorCode &status) const;
+    ಶೂನ್ಯ _putNew(
+        ಧ್ರುವ Cache_ಕೀಲಿ_Base &ಕೀಲಿ,
+        ಧ್ರುವ SharedObject *ಮೌಲ್ಯ_2,
+        ಧ್ರುವ UErrorCode creationStatus,
+        UErrorCode &status) ಧ್ರುವ;
            
     /**
      * Places value and status at key if there is no value at key or if cache
@@ -432,17 +432,17 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
      * unchanged in which case they are placed in the cache on a best-effort basis.
      * Caller must call removeRef() on value.
      */
-   void _putIfAbsentAndGet(
-           const CacheKeyBase &key,
-           const SharedObject *&value,
-           UErrorCode &status) const;
+   ಶೂನ್ಯ _putIfAbsentAndGet(
+           ಧ್ರುವ Cache_ಕೀಲಿ_Base &ಕೀಲಿ,
+           ಧ್ರುವ SharedObject *&ಮೌಲ್ಯ_2,
+           UErrorCode &status) ಧ್ರುವ;
 
     /**
      * Returns the next element in the cache round robin style.
      * Returns nullptr if the cache is empty.
      * On entry, gCacheMutex must be held.
      */
-    const UHashElement *_nextElement() const;
+    ಧ್ರುವ UHashElement *_nextElement() ಧ್ರುವ;
    
    /**
     * Return the number of cache items that would need to be evicted
@@ -452,7 +452,7 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * 
     * On entry, gCacheMutex must be held.
     */
-   int32_t _computeCountOfItemsToEvict() const;
+   int32_t compute_ಎಣಿಕೆ_Of_ವಸ್ತುಗಳು_To_Evict() ಧ್ರುವ;
    
    /**
     * Run an eviction slice.
@@ -460,7 +460,7 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * _runEvictionSlice runs a slice of the evict pipeline by examining the next
     * 10 entries in the cache round robin style evicting them if they are eligible.
     */
-   void _runEvictionSlice() const;
+   ಶೂನ್ಯ _runEvictionSlice() ಧ್ರುವ;
  
    /**
     * Register a primary cache entry. A primary key is the first key to create
@@ -473,7 +473,7 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * entry, and value registered with cache so that subsequent calls to
     * addRef() and removeRef() on it correctly interact with the cache.
     */
-   void _registerPrimary(const CacheKeyBase *theKey, const SharedObject *value) const;
+   ಶೂನ್ಯ _registerPrimary(ಧ್ರುವ Cache_ಕೀಲಿ_Base *the_ಕೀಲಿ, ಧ್ರುವ SharedObject *ಮೌಲ್ಯ_2) ಧ್ರುವ;
         
    /**
     * Store a value and creation error status in given hash entry.
@@ -483,17 +483,17 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * entry. Soft reference removed from previous stored value. Waiting
     * threads notified.
     */
-   void _put(
-           const UHashElement *element,
-           const SharedObject *value,
-           const UErrorCode status) const;
+   ಶೂನ್ಯ _put(
+           ಧ್ರುವ UHashElement *element,
+           ಧ್ರುವ SharedObject *ಮೌಲ್ಯ_2,
+           ಧ್ರುವ UErrorCode status) ಧ್ರುವ;
     /**
      * Remove a soft reference, and delete the SharedObject if no references remain.
      * To be used from within the UnifiedCache implementation only.
      * gCacheMutex must be held by caller.
      * @param value the SharedObject to be acted on.
      */
-   void removeSoftRef(const SharedObject *value) const;
+   ಶೂನ್ಯ removeSoftRef(ಧ್ರುವ SharedObject *ಮೌಲ್ಯ_2) ಧ್ರುವ;
    
    /**
     * Increment the hard reference count of the given SharedObject.
@@ -503,7 +503,7 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * @param value The SharedObject to be referenced.
     * @return the hard reference count after the addition.
     */
-   int32_t addHardRef(const SharedObject *value) const;
+   int32_t addHardRef(ಧ್ರುವ SharedObject *ಮೌಲ್ಯ_2) ಧ್ರುವ;
    
   /**
     * Decrement the hard reference count of the given SharedObject.
@@ -513,11 +513,11 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     * @param value The SharedObject to be referenced.
     * @return the hard reference count after the removal.
     */
-   int32_t removeHardRef(const SharedObject *value) const;
+   int32_t removeHardRef(ಧ್ರುವ SharedObject *ಮೌಲ್ಯ_2) ಧ್ರುವ;
 
    
 #ifdef UNIFIED_CACHE_DEBUG
-   void _dumpContents() const;
+   ಶೂನ್ಯ _dumpContents() ಧ್ರುವ;
 #endif
    
    /**
@@ -529,26 +529,26 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     *  If hash entry is in progress, value will be set to gNoValue and status will
     *  be set to U_ZERO_ERROR.
     */
-   void _fetch(const UHashElement *element, const SharedObject *&value,
-                       UErrorCode &status) const;
+   ಶೂನ್ಯ _fetch(ಧ್ರುವ UHashElement *element, ಧ್ರುವ SharedObject *&ಮೌಲ್ಯ_2,
+                       UErrorCode &status) ಧ್ರುವ;
                        
     /**
      * Determine if given hash entry is in progress.
      * On entry, gCacheMutex must be held.
      */
-   UBool _inProgress(const UHashElement *element) const;
+   UBool _inProgress(ಧ್ರುವ UHashElement *element) ಧ್ರುವ;
    
    /**
     * Determine if given hash entry is in progress.
     * On entry, gCacheMutex must be held.
     */
-   UBool _inProgress(const SharedObject *theValue, UErrorCode creationStatus) const;
+   UBool _inProgress(ಧ್ರುವ SharedObject *the_ಮೌಲ್ಯ, UErrorCode creationStatus) ಧ್ರುವ;
    
    /**
     * Determine if given hash entry is eligible for eviction.
     * On entry, gCacheMutex must be held.
     */
-   UBool _isEvictable(const UHashElement *element) const;
+   UBool _isEvictable(ಧ್ರುವ UHashElement *element) ಧ್ರುವ;
 };
 
 U_NAMESPACE_END

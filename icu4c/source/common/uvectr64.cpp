@@ -7,9 +7,9 @@
 ******************************************************************************
 */
 
-#include "uvectr64.h"
-#include "cmemory.h"
-#include "putilimp.h"
+#ಅನ್ತರ್ಭಾವ "uvectr64.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "putilimp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -43,21 +43,21 @@ UVector64::UVector64(int32_t initialCapacity, UErrorCode &status) :
 
 
 
-void UVector64::_init(int32_t initialCapacity, UErrorCode &status) {
+ಶೂನ್ಯ UVector64::_init(int32_t initialCapacity, UErrorCode &status) {
     // Fix bogus initialCapacity values; avoid malloc(0)
-    if (initialCapacity < 1) {
+    ಯದಿ (initialCapacity < 1) {
         initialCapacity = DEFAULT_CAPACITY;
     }
-    if (maxCapacity>0 && maxCapacity<initialCapacity) {
+    ಯದಿ (maxCapacity>0 && maxCapacity<initialCapacity) {
         initialCapacity = maxCapacity;
     }
-    if (initialCapacity > static_cast<int32_t>(INT32_MAX / sizeof(int64_t))) {
+    ಯದಿ (initialCapacity > static_cast<int32_t>(INT32_MAX / ಪರಿಮಾಣ(int64_t))) {
         initialCapacity = uprv_min(DEFAULT_CAPACITY, maxCapacity);
     }
-    elements = static_cast<int64_t*>(uprv_malloc(sizeof(int64_t) * initialCapacity));
-    if (elements == nullptr) {
+    elements = static_cast<int64_t*>(uprv_malloc(ಪರಿಮಾಣ(int64_t) * initialCapacity));
+    ಯದಿ (elements == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-    } else {
+    } ಅನ್ಯಥಾ {
         capacity = initialCapacity;
     }
 }
@@ -70,39 +70,39 @@ UVector64::~UVector64() {
 /**
  * Assign this object to another (make this a copy of 'other').
  */
-void UVector64::assign(const UVector64& other, UErrorCode &ec) {
-    if (ensureCapacity(other.count, ec)) {
+ಶೂನ್ಯ UVector64::assign(ಧ್ರುವ UVector64& other, UErrorCode &ec) {
+    ಯದಿ (ensureCapacity(other.count, ec)) {
         setSize(other.count);
-        for (int32_t i=0; i<other.count; ++i) {
+        ಪ್ರತಿ (int32_t i=0; i<other.count; ++i) {
             elements[i] = other.elements[i];
         }
     }
 }
 
 
-bool UVector64::operator==(const UVector64& other) {
+ತಾರ್ಕಿಕ UVector64::operator==(ಧ್ರುವ UVector64& other) {
     int32_t i;
-    if (count != other.count) return false;
-    for (i=0; i<count; ++i) {
-        if (elements[i] != other.elements[i]) {
-            return false;
+    ಯದಿ (count != other.count) ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
+    ಪ್ರತಿ (i=0; i<count; ++i) {
+        ಯದಿ (elements[i] != other.elements[i]) {
+            ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
         }
     }
-    return true;
+    ಪ್ರತ್ಯಾಗಮ ಸತ್ಯ;
 }
 
 
-void UVector64::setElementAt(int64_t elem, int32_t index) {
-    if (0 <= index && index < count) {
+ಶೂನ್ಯ UVector64::setElementAt(int64_t elem, int32_t index) {
+    ಯದಿ (0 <= index && index < count) {
         elements[index] = elem;
     }
     /* else index out of range */
 }
 
-void UVector64::insertElementAt(int64_t elem, int32_t index, UErrorCode &status) {
+ಶೂನ್ಯ UVector64::ಸೇರಿಸು_Element_At(int64_t elem, int32_t index, UErrorCode &status) {
     // must have 0 <= index <= count
-    if (0 <= index && index <= count && ensureCapacity(count + 1, status)) {
-        for (int32_t i=count; i>index; --i) {
+    ಯದಿ (0 <= index && index <= count && ensureCapacity(count + 1, status)) {
+        ಪ್ರತಿ (int32_t i=count; i>index; --i) {
             elements[i] = elements[i-1];
         }
         elements[index] = elem;
@@ -111,78 +111,78 @@ void UVector64::insertElementAt(int64_t elem, int32_t index, UErrorCode &status)
     /* else index out of range */
 }
 
-void UVector64::removeAllElements() {
+ಶೂನ್ಯ UVector64::removeAllElements() {
     count = 0;
 }
 
 UBool UVector64::expandCapacity(int32_t minimumCapacity, UErrorCode &status) {
-    if (U_FAILURE(status)) {
-        return false;
+    ಯದಿ (U_FAILURE(status)) {
+        ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
     }
-    if (minimumCapacity < 0) {
+    ಯದಿ (minimumCapacity < 0) {
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
     }
-    if (capacity >= minimumCapacity) {
-        return true;
+    ಯದಿ (capacity >= minimumCapacity) {
+        ಪ್ರತ್ಯಾಗಮ ಸತ್ಯ;
     }
-    if (maxCapacity>0 && minimumCapacity>maxCapacity) {
+    ಯದಿ (maxCapacity>0 && minimumCapacity>maxCapacity) {
         status = U_BUFFER_OVERFLOW_ERROR;
-        return false;
+        ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
     }
-    if (capacity > (INT32_MAX - 1) / 2) {  // integer overflow check
+    ಯದಿ (capacity > (INT32_MAX - 1) / 2) {  // integer overflow check
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
     }
     int32_t newCap = capacity * 2;
-    if (newCap < minimumCapacity) {
+    ಯದಿ (newCap < minimumCapacity) {
         newCap = minimumCapacity;
     }
-    if (maxCapacity > 0 && newCap > maxCapacity) {
+    ಯದಿ (maxCapacity > 0 && newCap > maxCapacity) {
         newCap = maxCapacity;
     }
-    if (newCap > static_cast<int32_t>(INT32_MAX / sizeof(int64_t))) { // integer overflow check
+    ಯದಿ (newCap > static_cast<int32_t>(INT32_MAX / ಪರಿಮಾಣ(int64_t))) { // integer overflow check
         // We keep the original memory contents on bad minimumCapacity/maxCapacity.
         status = U_ILLEGAL_ARGUMENT_ERROR;
-        return false;
+        ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
     }
-    int64_t* newElems = static_cast<int64_t*>(uprv_realloc(elements, sizeof(int64_t) * newCap));
-    if (newElems == nullptr) {
+    int64_t* newElems = static_cast<int64_t*>(uprv_realloc(elements, ಪರಿಮಾಣ(int64_t) * newCap));
+    ಯದಿ (newElems == nullptr) {
         // We keep the original contents on the memory failure on realloc.
         status = U_MEMORY_ALLOCATION_ERROR;
-        return false;
+        ಪ್ರತ್ಯಾಗಮ ಅಸತ್ಯ;
     }
     elements = newElems;
     capacity = newCap;
-    return true;
+    ಪ್ರತ್ಯಾಗಮ ಸತ್ಯ;
 }
 
-void UVector64::setMaxCapacity(int32_t limit) {
+ಶೂನ್ಯ UVector64::setMaxCapacity(int32_t limit) {
     U_ASSERT(limit >= 0);
-    if (limit < 0) {
+    ಯದಿ (limit < 0) {
         limit = 0;
     }
-    if (limit > static_cast<int32_t>(INT32_MAX / sizeof(int64_t))) { // integer overflow check for realloc
+    ಯದಿ (limit > static_cast<int32_t>(INT32_MAX / ಪರಿಮಾಣ(int64_t))) { // integer overflow check for realloc
         //  Something is very wrong, don't realloc, leave capacity and maxCapacity unchanged
-        return;
+        ಪ್ರತ್ಯಾಗಮ;
     }
     maxCapacity = limit;
-    if (capacity <= maxCapacity || maxCapacity == 0) {
+    ಯದಿ (capacity <= maxCapacity || maxCapacity == 0) {
         // Current capacity is within the new limit.
-        return;
+        ಪ್ರತ್ಯಾಗಮ;
     }
     
     // New maximum capacity is smaller than the current size.
     // Realloc the storage to the new, smaller size.
-    int64_t* newElems = static_cast<int64_t*>(uprv_realloc(elements, sizeof(int64_t) * maxCapacity));
-    if (newElems == nullptr) {
+    int64_t* newElems = static_cast<int64_t*>(uprv_realloc(elements, ಪರಿಮಾಣ(int64_t) * maxCapacity));
+    ಯದಿ (newElems == nullptr) {
         // Realloc to smaller failed.
         //   Just keep what we had.  No need to call it a failure.
-        return;
+        ಪ್ರತ್ಯಾಗಮ;
     }
     elements = newElems;
     capacity = maxCapacity;
-    if (count > capacity) {
+    ಯದಿ (count > capacity) {
         count = capacity;
     }
 }
@@ -193,17 +193,17 @@ void UVector64::setMaxCapacity(int32_t limit) {
  * newSize.  If newSize is larger, grow the array, filling in new
  * slots with nullptr.
  */
-void UVector64::setSize(int32_t newSize) {
+ಶೂನ್ಯ UVector64::setSize(int32_t newSize) {
     int32_t i;
-    if (newSize < 0) {
-        return;
+    ಯದಿ (newSize < 0) {
+        ಪ್ರತ್ಯಾಗಮ;
     }
-    if (newSize > count) {
+    ಯದಿ (newSize > count) {
         UErrorCode ec = U_ZERO_ERROR;
-        if (!ensureCapacity(newSize, ec)) {
-            return;
+        ಯದಿ (!ensureCapacity(newSize, ec)) {
+            ಪ್ರತ್ಯಾಗಮ;
         }
-        for (i=count; i<newSize; ++i) {
+        ಪ್ರತಿ (i=count; i<newSize; ++i) {
             elements[i] = 0;
         }
     } 

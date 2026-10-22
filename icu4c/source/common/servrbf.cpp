@@ -8,19 +8,19 @@
  *
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#ಅನ್ತರ್ಭಾವ "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#ಯದಿ !UCONFIG_NO_SERVICE
 
-#include "unicode/resbund.h"
-#include "uresimp.h"
-#include "cmemory.h"
-#include "servloc.h"
-#include "ustrfmt.h"
-#include "uhash.h"
-#include "charstr.h"
-#include "ucln_cmn.h"
-#include "uassert.h"
+#ಅನ್ತರ್ಭಾವ "unicode/resbund.h"
+#ಅನ್ತರ್ಭಾವ "uresimp.h"
+#ಅನ್ತರ್ಭಾವ "cmemory.h"
+#ಅನ್ತರ್ಭಾವ "servloc.h"
+#ಅನ್ತರ್ಭಾವ "ustrfmt.h"
+#ಅನ್ತರ್ಭಾವ "uhash.h"
+#ಅನ್ತರ್ಭಾವ "charstr.h"
+#ಅನ್ತರ್ಭಾವ "ucln_cmn.h"
+#ಅನ್ತರ್ಭಾವ "uassert.h"
 
 #define UNDERSCORE_CHAR ((char16_t)0x005f)
 #define AT_SIGN_CHAR    ((char16_t)64)
@@ -29,60 +29,60 @@
 U_NAMESPACE_BEGIN
 
 ICUResourceBundleFactory::ICUResourceBundleFactory()
-  : LocaleKeyFactory(VISIBLE)
+  : Locale_ಕೀಲಿ_Factory(VISIBLE)
   , _bundleName()
 {
 }
 
-ICUResourceBundleFactory::ICUResourceBundleFactory(const UnicodeString& bundleName)
-  : LocaleKeyFactory(VISIBLE)
+ICUResourceBundleFactory::ICUResourceBundleFactory(ಧ್ರುವ UnicodeString& bundleName)
+  : Locale_ಕೀಲಿ_Factory(VISIBLE)
   , _bundleName(bundleName)
 {
 }
 
 ICUResourceBundleFactory::~ICUResourceBundleFactory() {}
 
-const Hashtable*
-ICUResourceBundleFactory::getSupportedIDs(UErrorCode& status) const
+ಧ್ರುವ Hashtable*
+ICUResourceBundleFactory::getSupportedIDs(UErrorCode& status) ಧ್ರುವ
 {
-    if (U_SUCCESS(status)) {
-        return LocaleUtility::getAvailableLocaleNames(_bundleName);
+    ಯದಿ (U_SUCCESS(status)) {
+        ಪ್ರತ್ಯಾಗಮ LocaleUtility::getAvailableLocaleNames(_bundleName);
     }
-    return nullptr;
+    ಪ್ರತ್ಯಾಗಮ nullptr;
 }
 
 UObject*
-ICUResourceBundleFactory::handleCreate(const Locale& loc, int32_t /* kind */, const ICUService* /* service */, UErrorCode& status) const
+ICUResourceBundleFactory::handleCreate(ಧ್ರುವ Locale& loc, int32_t /* kind */, ಧ್ರುವ ICUService* /* service */, UErrorCode& status) ಧ್ರುವ
 {
-    if (U_SUCCESS(status)) {
+    ಯದಿ (U_SUCCESS(status)) {
         // _bundleName is a package name
         // and should only contain invariant characters
                 // ??? is it always true that the max length of the bundle name is 19?
                 // who made this change? -- dlf
-        char pkg[20];
+        ವರ್ಣ pkg[20];
         int32_t length;
-        length = _bundleName.extract(0, INT32_MAX, pkg, static_cast<int32_t>(sizeof(pkg)), US_INV);
-        if (length >= static_cast<int32_t>(sizeof(pkg))) {
-            return nullptr;
+        length = _bundleName.extract(0, INT32_MAX, pkg, static_cast<int32_t>(ಪರಿಮಾಣ(pkg)), US_INV);
+        ಯದಿ (length >= static_cast<int32_t>(ಪರಿಮಾಣ(pkg))) {
+            ಪ್ರತ್ಯಾಗಮ nullptr;
         }
-        return new ResourceBundle(pkg, loc, status);
+        ಪ್ರತ್ಯಾಗಮ ನೂತನ ResourceBundle(pkg, loc, status);
     }
-    return nullptr;
+    ಪ್ರತ್ಯಾಗಮ nullptr;
 }
 
 #ifdef SERVICE_DEBUG
 UnicodeString&
-ICUResourceBundleFactory::debug(UnicodeString& result) const
+ICUResourceBundleFactory::debug(UnicodeString& result) ಧ್ರುವ
 {
-    LocaleKeyFactory::debug(result);
+    Locale_ಕೀಲಿ_Factory::debug(result);
     result.append((UnicodeString)", bundle: ");
-    return result.append(_bundleName);
+    ಪ್ರತ್ಯಾಗಮ result.append(_bundleName);
 }
 
 UnicodeString&
-ICUResourceBundleFactory::debugClass(UnicodeString& result) const
+ICUResourceBundleFactory::debugClass(UnicodeString& result) ಧ್ರುವ
 {
-    return result.append((UnicodeString)"ICUResourceBundleFactory");
+    ಪ್ರತ್ಯಾಗಮ result.append((UnicodeString)"ICUResourceBundleFactory");
 }
 #endif
 
