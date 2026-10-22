@@ -4,21 +4,21 @@
 #ifndef MLBREAKENGINE_H
 #define MLBREAKENGINE_H
 
-#include "hash.h"
-#include "unicode/resbund.h"
-#include "unicode/uniset.h"
-#include "unicode/utext.h"
-#include "uvectr32.h"
+#அந்தர்பாவ "hash.h"
+#அந்தர்பாவ "unicode/resbund.h"
+#அந்தர்பாவ "unicode/uniset.h"
+#அந்தர்பாவ "unicode/utext.h"
+#அந்தர்பாவ "uvectr32.h"
 
 U_NAMESPACE_BEGIN
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#எனில் !UCONFIG_NO_BREAK_ITERATION
 
 /**
  * A machine learning break engine for the phrase breaking in Japanese.
  */
-class MlBreakEngine : public UMemory {
-   public:
+class MlBreakEngine : பொது UMemory {
+   பொது:
     /**
      * Constructor.
      *
@@ -27,15 +27,15 @@ class MlBreakEngine : public UMemory {
      * @param closePunctuationSet An UnicodeSet with close punctuation.
      * @param status Information on any errors encountered.
      */
-    MlBreakEngine(const UnicodeSet &digitOrOpenPunctuationOrAlphabetSet,
-                  const UnicodeSet &closePunctuationSet, UErrorCode &status);
+    MlBreakEngine(மாறிலி UnicodeSet &digitOrOpenPunctuationOrAlphabetSet,
+                  மாறிலி UnicodeSet &closePunctuationSet, UErrorCode &status);
 
     /**
      * Virtual destructor.
      */
-    virtual ~MlBreakEngine();
+    மெய்நிகர் ~MlBreakEngine();
 
-   public:
+   பொது:
     /**
      * Divide up a range of characters handled by this break engine.
      *
@@ -49,16 +49,16 @@ class MlBreakEngine : public UMemory {
      * @return The number of breaks found
      */
     int32_t divideUpRange(UText *inText, int32_t rangeStart, int32_t rangeEnd,
-                          UVector32 &foundBreaks, const UnicodeString &inString,
-                          const LocalPointer<UVector32> &inputMap, UErrorCode &status) const;
+                          UVector32 &foundBreaks, மாறிலி UnicodeString &inString,
+                          மாறிலி LocalPointer<UVector32> &உள்ளீடு_Map, UErrorCode &status) மாறிலி;
 
-   private:
+   தனிப்பட்ட:
     /**
      * Load the machine learning's model file.
      *
      * @param error Information on any errors encountered.
      */
-    void loadMLModel(UErrorCode &error);
+    வெறுமை loadMLModel(UErrorCode &error);
 
     /**
      * In the machine learning's model file, specify the name of the key and value to load the
@@ -70,7 +70,7 @@ class MlBreakEngine : public UMemory {
      * @param model A hashtable to store the pairs of the feature and its score.
      * @param error Information on any errors encountered.
      */
-    void initKeyValue(UResourceBundle *rb, const char *keyName, const char *valueName,
+    வெறுமை init_சாவி_மதிப்பு(UResourceBundle *rb, மாறிலி எழுத்து *சாவி_Name, மாறிலி எழுத்து *மதிப்பு_Name,
                       Hashtable &model, UErrorCode &error);
 
     /**
@@ -81,8 +81,8 @@ class MlBreakEngine : public UMemory {
      * @param status Information on any errors encountered.
      * @return The number of code units of the first four characters in inString.
      */
-    int32_t initIndexList(const UnicodeString &inString, int32_t *indexList,
-                          UErrorCode &status) const;
+    int32_t initIndexList(மாறிலி UnicodeString &inString, int32_t *indexList,
+                          UErrorCode &status) மாறிலி;
 
     /**
      * Evaluate whether the index is a potential breakpoint.
@@ -96,11 +96,11 @@ class MlBreakEngine : public UMemory {
      * @param status Information on any errors encountered.
      * @return The number of breakpoints
      */
-    int32_t evaluateBreakpoint(const UnicodeString &inString, int32_t *indexList, int32_t startIdx,
-                               int32_t numCodeUnits, int32_t numBreaks, UVector32 &boundary,
-                               UErrorCode &status) const;
+    int32_t evaluateBreakpoint(மாறிலி UnicodeString &inString, int32_t *indexList, int32_t startIdx,
+                               int32_t இலக்கம்_Code_Units, int32_t இலக்கம்_Breaks, UVector32 &boundary,
+                               UErrorCode &status) மாறிலி;
 
-    void printUnicodeString(const UnicodeString &s) const;
+    வெறுமை printUnicodeString(மாறிலி UnicodeString &s) மாறிலி;
 
     UnicodeSet fDigitOrOpenPunctuationOrAlphabetSet;
     UnicodeSet fClosePunctuationSet;

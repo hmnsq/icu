@@ -21,7 +21,7 @@
 #ifndef __UARRSORT_H__
 #define __UARRSORT_H__
 
-#include "unicode/utypes.h"
+#அந்தர்பாவ "unicode/utypes.h"
 
 U_CDECL_BEGIN
 /**
@@ -38,8 +38,8 @@ U_CDECL_BEGIN
  *
  * @internal
  */
-typedef int32_t U_CALLCONV
-UComparator(const void *context, const void *left, const void *right);
+வகைவரை int32_t U_CALLCONV
+UComparator(மாறிலி வெறுமை *context, மாறிலி வெறுமை *இடது, மாறிலி வெறுமை *வலது);
 U_CDECL_END
 
 /**
@@ -57,9 +57,9 @@ U_CDECL_END
  *
  * @internal
  */
-U_CAPI void U_EXPORT2
-uprv_sortArray(void *array, int32_t length, int32_t itemSize,
-               UComparator *cmp, const void *context,
+U_CAPI வெறுமை U_EXPORT2
+uprv_sortArray(வெறுமை *array, int32_t length, int32_t itemSize,
+               UComparator *cmp, மாறிலி வெறுமை *context,
                UBool sortStable, UErrorCode *pErrorCode);
 
 /**
@@ -67,21 +67,21 @@ uprv_sortArray(void *array, int32_t length, int32_t itemSize,
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uprv_uint16Comparator(const void *context, const void *left, const void *right);
+uprv_uint16Comparator(மாறிலி வெறுமை *context, மாறிலி வெறுமை *இடது, மாறிலி வெறுமை *வலது);
 
 /**
  * Convenience UComparator implementation for int32_t arrays.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uprv_int32Comparator(const void *context, const void *left, const void *right);
+uprv_int32Comparator(மாறிலி வெறுமை *context, மாறிலி வெறுமை *இடது, மாறிலி வெறுமை *வலது);
 
 /**
  * Convenience UComparator implementation for uint32_t arrays.
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-uprv_uint32Comparator(const void *context, const void *left, const void *right);
+uprv_uint32Comparator(மாறிலி வெறுமை *context, மாறிலி வெறுமை *இடது, மாறிலி வெறுமை *வலது);
 
 /**
  * Much like Java Collections.binarySearch(list, key, comparator).
@@ -97,7 +97,7 @@ uprv_uint32Comparator(const void *context, const void *left, const void *right);
  *         or the index<0 for inserting the item at ~index in sorted order
  */
 U_CAPI int32_t U_EXPORT2
-uprv_stableBinarySearch(char *array, int32_t length, void *item, int32_t itemSize,
-                        UComparator *cmp, const void *context);
+uprv_stable_இருமம்_தேடல்(எழுத்து *array, int32_t length, வெறுமை *item, int32_t itemSize,
+                        UComparator *cmp, மாறிலி வெறுமை *context);
 
 #endif

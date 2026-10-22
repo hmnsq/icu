@@ -7,12 +7,12 @@
 #ifndef __UCPTRIE_H__
 #define __UCPTRIE_H__
 
-#include "unicode/utypes.h"
-#include "unicode/ucpmap.h"
-#include "unicode/utf8.h"
+#அந்தர்பாவ "unicode/utypes.h"
+#அந்தர்பாவ "unicode/ucpmap.h"
+#அந்தர்பாவ "unicode/utf8.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
+#எனில் U_SHOW_CPLUSPLUS_API
+#அந்தர்பாவ "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
 U_CDECL_BEGIN
@@ -27,15 +27,15 @@ U_CDECL_BEGIN
 
 #ifndef U_IN_DOXYGEN
 /** @internal */
-typedef union UCPTrieData {
+வகைவரை ஒன்றிப்பு UCPTrieData {
     /** @internal */
-    const void *ptr0;
+    மாறிலி வெறுமை *ptr0;
     /** @internal */
-    const uint16_t *ptr16;
+    மாறிலி uint16_t *ptr16;
     /** @internal */
-    const uint32_t *ptr32;
+    மாறிலி uint32_t *ptr32;
     /** @internal */
-    const uint8_t *ptr8;
+    மாறிலி uint8_t *ptr8;
 } UCPTrieData;
 #endif
 
@@ -56,10 +56,10 @@ typedef union UCPTrieData {
  * @see UMutableCPTrie
  * @stable ICU 63
  */
-struct UCPTrie {
+கட்டமைப்பு UCPTrie {
 #ifndef U_IN_DOXYGEN
     /** @internal */
-    const uint16_t *index;
+    மாறிலி uint16_t *index;
     /** @internal */
     UCPTrieData data;
 
@@ -68,14 +68,14 @@ struct UCPTrie {
     /** @internal */
     int32_t dataLength;
     /** Start of the last range which ends at U+10FFFF. @internal */
-    UChar32 highStart;
+    UChar32 உயர்வு_Start;
     /** highStart>>12 @internal */
-    uint16_t shifted12HighStart;
+    uint16_t shifted12_உயர்வு_Start;
 
     /** @internal */
     int8_t type;  // UCPTrieType
     /** @internal */
-    int8_t valueWidth;  // UCPTrieValueWidth
+    int8_t மதிப்பு_Width;  // UCPTrieValueWidth
 
     /** padding/reserved @internal */
     uint32_t reserved32;
@@ -95,16 +95,16 @@ struct UCPTrie {
      */
     int32_t dataNullOffset;
     /** @internal */
-    uint32_t nullValue;
+    uint32_t null_மதிப்பு;
 
 #ifdef UCPTRIE_DEBUG
     /** @internal */
-    const char *name;
+    மாறிலி எழுத்து *name;
 #endif
 #endif
 };
 #ifndef U_IN_DOXYGEN
-typedef struct UCPTrie UCPTrie;
+வகைவரை கட்டமைப்பு UCPTrie UCPTrie;
 #endif
 
 /**
@@ -116,7 +116,7 @@ typedef struct UCPTrie UCPTrie;
  * @see ucptrie_getType
  * @stable ICU 63
  */
-enum UCPTrieType {
+எண்ணிக்கை UCPTrieType {
     /**
      * For ucptrie_openFromBinary() to accept any type.
      * ucptrie_getType() will return the actual type.
@@ -135,7 +135,7 @@ enum UCPTrieType {
     UCPTRIE_TYPE_SMALL
 };
 #ifndef U_IN_DOXYGEN
-typedef enum UCPTrieType UCPTrieType;
+வகைவரை எண்ணிக்கை UCPTrieType UCPTrieType;
 #endif
 
 /**
@@ -146,33 +146,33 @@ typedef enum UCPTrieType UCPTrieType;
  * @see ucptrie_getValueWidth
  * @stable ICU 63
  */
-enum UCPTrieValueWidth {
+எண்ணிக்கை UCPTrie_மதிப்பு_Width {
     /**
      * For ucptrie_openFromBinary() to accept any data value width.
      * ucptrie_getValueWidth() will return the actual data value width.
      * @stable ICU 63
      */
-    UCPTRIE_VALUE_BITS_ANY = -1,
+    UCPTRIE_மதிப்பு_BITS_ANY = -1,
     /**
      * The trie stores 16 bits per data value.
      * It returns them as unsigned values 0..0xffff=65535.
      * @stable ICU 63
      */
-    UCPTRIE_VALUE_BITS_16,
+    UCPTRIE_மதிப்பு_BITS_16,
     /**
      * The trie stores 32 bits per data value.
      * @stable ICU 63
      */
-    UCPTRIE_VALUE_BITS_32,
+    UCPTRIE_மதிப்பு_BITS_32,
     /**
      * The trie stores 8 bits per data value.
      * It returns them as unsigned values 0..0xff=255.
      * @stable ICU 63
      */
-    UCPTRIE_VALUE_BITS_8
+    UCPTRIE_மதிப்பு_BITS_8
 };
 #ifndef U_IN_DOXYGEN
-typedef enum UCPTrieValueWidth UCPTrieValueWidth;
+வகைவரை எண்ணிக்கை UCPTrie_மதிப்பு_Width UCPTrie_மதிப்பு_Width;
 #endif
 
 /**
@@ -202,9 +202,9 @@ typedef enum UCPTrieValueWidth UCPTrieValueWidth;
  * @stable ICU 63
  */
 U_CAPI UCPTrie* U_EXPORT2
-ucptrie_openFromBinary(UCPTrieType type,
-                       UCPTrieValueWidth valueWidth,
-                       const void* data U_LIFETIME_BOUND,
+ucptrie_open_From_இருமம்(UCPTrieType type,
+                       UCPTrie_மதிப்பு_Width மதிப்பு_Width,
+                       மாறிலி வெறுமை* data U_LIFETIME_BOUND,
                        int32_t length,
                        int32_t* pActualLength,
                        UErrorCode* pErrorCode);
@@ -215,7 +215,7 @@ ucptrie_openFromBinary(UCPTrieType type,
  * @param trie the trie
  * @stable ICU 63
  */
-U_CAPI void U_EXPORT2
+U_CAPI வெறுமை U_EXPORT2
 ucptrie_close(UCPTrie *trie);
 
 /**
@@ -228,7 +228,7 @@ ucptrie_close(UCPTrie *trie);
  * @stable ICU 63
  */
 U_CAPI UCPTrieType U_EXPORT2
-ucptrie_getType(const UCPTrie *trie);
+ucptrie_getType(மாறிலி UCPTrie *trie);
 
 /**
  * Returns the number of bits in a trie data value.
@@ -239,8 +239,8 @@ ucptrie_getType(const UCPTrie *trie);
  * @see UCPTRIE_VALUE_BITS_ANY
  * @stable ICU 63
  */
-U_CAPI UCPTrieValueWidth U_EXPORT2
-ucptrie_getValueWidth(const UCPTrie *trie);
+U_CAPI UCPTrie_மதிப்பு_Width U_EXPORT2
+ucptrie_get_மதிப்பு_Width(மாறிலி UCPTrie *trie);
 
 /**
  * Returns the value for a code point as stored in the trie, with range checking.
@@ -257,7 +257,7 @@ ucptrie_getValueWidth(const UCPTrie *trie);
  * @stable ICU 63
  */
 U_CAPI uint32_t U_EXPORT2
-ucptrie_get(const UCPTrie *trie, UChar32 c);
+ucptrie_get(மாறிலி UCPTrie *trie, UChar32 c);
 
 /**
  * Returns the last code point such that all those from start to there have the same value.
@@ -296,9 +296,9 @@ ucptrie_get(const UCPTrie *trie, UChar32 c);
  * @stable ICU 63
  */
 U_CAPI UChar32 U_EXPORT2
-ucptrie_getRange(const UCPTrie *trie, UChar32 start,
-                 UCPMapRangeOption option, uint32_t surrogateValue,
-                 UCPMapValueFilter *filter, const void *context, uint32_t *pValue);
+ucptrie_getRange(மாறிலி UCPTrie *trie, UChar32 start,
+                 UCPMapRangeOption option, uint32_t surrogate_மதிப்பு,
+                 UCPMap_மதிப்பு_Filter *filter, மாறிலி வெறுமை *context, uint32_t *p_மதிப்பு);
 
 /**
  * Writes a memory-mappable form of the trie into 32-bit aligned memory.
@@ -316,7 +316,7 @@ ucptrie_getRange(const UCPTrie *trie, UChar32 start,
  * @stable ICU 63
  */
 U_CAPI int32_t U_EXPORT2
-ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *pErrorCode);
+ucptrie_to_இருமம்(மாறிலி UCPTrie *trie, வெறுமை *data, int32_t capacity, UErrorCode *pErrorCode);
 
 /**
  * Macro parameter value for a trie with 16-bit data values.
@@ -389,16 +389,16 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
 #define UCPTRIE_FAST_U16_NEXT(trie, dataAccess, src, limit, c, result) UPRV_BLOCK_MACRO_BEGIN { \
     (c) = *(src)++; \
     int32_t __index; \
-    if (!U16_IS_SURROGATE(c)) { \
+    எனில் (!U16_IS_SURROGATE(c)) { \
         __index = _UCPTRIE_FAST_INDEX(trie, c); \
-    } else { \
+    } இல்லையெனில் { \
         uint16_t __c2; \
-        if (U16_IS_SURROGATE_LEAD(c) && (src) != (limit) && U16_IS_TRAIL(__c2 = *(src))) { \
+        எனில் (U16_IS_SURROGATE_LEAD(c) && (src) != (limit) && U16_IS_TRAIL(__c2 = *(src))) { \
             ++(src); \
             (c) = U16_GET_SUPPLEMENTARY((c), __c2); \
             __index = _UCPTRIE_SMALL_INDEX(trie, c); \
-        } else { \
-            __index = (trie)->dataLength - UCPTRIE_ERROR_VALUE_NEG_DATA_OFFSET; \
+        } இல்லையெனில் { \
+            __index = (trie)->dataLength - UCPTRIE_ERROR_மதிப்பு_NEG_DATA_OFFSET; \
         } \
     } \
     (result) = dataAccess(trie, __index); \
@@ -420,16 +420,16 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
 #define UCPTRIE_FAST_U16_PREV(trie, dataAccess, start, src, c, result) UPRV_BLOCK_MACRO_BEGIN { \
     (c) = *--(src); \
     int32_t __index; \
-    if (!U16_IS_SURROGATE(c)) { \
+    எனில் (!U16_IS_SURROGATE(c)) { \
         __index = _UCPTRIE_FAST_INDEX(trie, c); \
-    } else { \
+    } இல்லையெனில் { \
         uint16_t __c2; \
-        if (U16_IS_SURROGATE_TRAIL(c) && (src) != (start) && U16_IS_LEAD(__c2 = *((src) - 1))) { \
+        எனில் (U16_IS_SURROGATE_TRAIL(c) && (src) != (start) && U16_IS_LEAD(__c2 = *((src) - 1))) { \
             --(src); \
             (c) = U16_GET_SUPPLEMENTARY(__c2, (c)); \
             __index = _UCPTRIE_SMALL_INDEX(trie, c); \
-        } else { \
-            __index = (trie)->dataLength - UCPTRIE_ERROR_VALUE_NEG_DATA_OFFSET; \
+        } இல்லையெனில் { \
+            __index = (trie)->dataLength - UCPTRIE_ERROR_மதிப்பு_NEG_DATA_OFFSET; \
         } \
     } \
     (result) = dataAccess(trie, __index); \
@@ -453,9 +453,9 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  */
 #define UCPTRIE_FAST_U8_NEXT(trie, dataAccess, src, limit, result) UPRV_BLOCK_MACRO_BEGIN { \
     int32_t __lead = (uint8_t)*(src)++; \
-    if (!U8_IS_SINGLE(__lead)) { \
+    எனில் (!U8_IS_SINGLE(__lead)) { \
         uint8_t __t1, __t2, __t3; \
-        if ((src) != (limit) && \
+        எனில் ((src) != (limit) && \
             (__lead >= 0xe0 ? \
                 __lead < 0xf0 ?  /* U+0800..U+FFFF except surrogates */ \
                     U8_LEAD3_T1_BITS[__lead &= 0xf] & (1 << ((__t1 = *(src)) >> 5)) && \
@@ -467,15 +467,15 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
                     (__lead = (__lead << 6) | (__t1 & 0x3f), ++(src) != (limit)) && \
                     (__t2 = *(src) - 0x80) <= 0x3f && \
                     ++(src) != (limit) && (__t3 = *(src) - 0x80) <= 0x3f && \
-                    (__lead = __lead >= (trie)->shifted12HighStart ? \
-                        (trie)->dataLength - UCPTRIE_HIGH_VALUE_NEG_DATA_OFFSET : \
+                    (__lead = __lead >= (trie)->shifted12_உயர்வு_Start ? \
+                        (trie)->dataLength - UCPTRIE_உயர்வு_மதிப்பு_NEG_DATA_OFFSET : \
                         ucptrie_internalSmallU8Index((trie), __lead, __t2, __t3), 1) \
             :  /* U+0080..U+07FF */ \
                 __lead >= 0xc2 && (__t1 = *(src) - 0x80) <= 0x3f && \
                 (__lead = (int32_t)(trie)->index[__lead & 0x1f] + __t1, 1))) { \
             ++(src); \
-        } else { \
-            __lead = (trie)->dataLength - UCPTRIE_ERROR_VALUE_NEG_DATA_OFFSET;  /* ill-formed*/ \
+        } இல்லையெனில் { \
+            __lead = (trie)->dataLength - UCPTRIE_ERROR_மதிப்பு_NEG_DATA_OFFSET;  /* ill-formed*/ \
         } \
     } \
     (result) = dataAccess(trie, __lead); \
@@ -499,9 +499,9 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  */
 #define UCPTRIE_FAST_U8_PREV(trie, dataAccess, start, src, result) UPRV_BLOCK_MACRO_BEGIN { \
     int32_t __index = (uint8_t)*--(src); \
-    if (!U8_IS_SINGLE(__index)) { \
-        __index = ucptrie_internalU8PrevIndex((trie), __index, (const uint8_t *)(start), \
-                                              (const uint8_t *)(src)); \
+    எனில் (!U8_IS_SINGLE(__index)) { \
+        __index = ucptrie_internalU8PrevIndex((trie), __index, (மாறிலி uint8_t *)(start), \
+                                              (மாறிலி uint8_t *)(src)); \
         (src) -= __index & 7; \
         __index >>= 3; \
     } \
@@ -553,7 +553,7 @@ ucptrie_toBinary(const UCPTrie *trie, void *data, int32_t capacity, UErrorCode *
  * These are needed for the API macros, but users should not use these directly.
  * @internal
  */
-enum {
+எண்ணிக்கை {
     /** @internal */
     UCPTRIE_FAST_SHIFT = 6,
 
@@ -571,13 +571,13 @@ enum {
      * value returned for out-of-range code points and ill-formed UTF-8/16.
      * @internal
      */
-    UCPTRIE_ERROR_VALUE_NEG_DATA_OFFSET = 1,
+    UCPTRIE_ERROR_மதிப்பு_NEG_DATA_OFFSET = 1,
     /**
      * Offset from dataLength (to be subtracted) for fetching the
      * value returned for code points highStart..U+10FFFF.
      * @internal
      */
-    UCPTRIE_HIGH_VALUE_NEG_DATA_OFFSET = 2
+    UCPTRIE_உயர்வு_மதிப்பு_NEG_DATA_OFFSET = 2
 };
 
 /* Internal functions and macros -------------------------------------------- */
@@ -585,11 +585,11 @@ enum {
 
 /** @internal */
 U_CAPI int32_t U_EXPORT2
-ucptrie_internalSmallIndex(const UCPTrie *trie, UChar32 c);
+ucptrie_internalSmallIndex(மாறிலி UCPTrie *trie, UChar32 c);
 
 /** @internal */
 U_CAPI int32_t U_EXPORT2
-ucptrie_internalSmallU8Index(const UCPTrie *trie, int32_t lt1, uint8_t t2, uint8_t t3);
+ucptrie_internalSmallU8Index(மாறிலி UCPTrie *trie, int32_t lt1, uint8_t t2, uint8_t t3);
 
 /**
  * Internal function for part of the UCPTRIE_FAST_U8_PREVxx() macro implementations.
@@ -597,8 +597,8 @@ ucptrie_internalSmallU8Index(const UCPTrie *trie, int32_t lt1, uint8_t t2, uint8
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-ucptrie_internalU8PrevIndex(const UCPTrie *trie, UChar32 c,
-                            const uint8_t *start, const uint8_t *src);
+ucptrie_internalU8PrevIndex(மாறிலி UCPTrie *trie, UChar32 c,
+                            மாறிலி uint8_t *start, மாறிலி uint8_t *src);
 
 /** Internal trie getter for a code point below the fast limit. Returns the data index. @internal */
 #define _UCPTRIE_FAST_INDEX(trie, c) \
@@ -606,8 +606,8 @@ ucptrie_internalU8PrevIndex(const UCPTrie *trie, UChar32 c,
 
 /** Internal trie getter for a code point at or above the fast limit. Returns the data index. @internal */
 #define _UCPTRIE_SMALL_INDEX(trie, c) \
-    ((c) >= (trie)->highStart ? \
-        (trie)->dataLength - UCPTRIE_HIGH_VALUE_NEG_DATA_OFFSET : \
+    ((c) >= (trie)->உயர்வு_Start ? \
+        (trie)->dataLength - UCPTRIE_உயர்வு_மதிப்பு_NEG_DATA_OFFSET : \
         ucptrie_internalSmallIndex(trie, c))
 
 /**
@@ -620,13 +620,13 @@ ucptrie_internalU8PrevIndex(const UCPTrie *trie, UChar32 c,
         _UCPTRIE_FAST_INDEX(trie, c) : \
         (uint32_t)(c) <= 0x10ffff ? \
             _UCPTRIE_SMALL_INDEX(trie, c) : \
-            (trie)->dataLength - UCPTRIE_ERROR_VALUE_NEG_DATA_OFFSET)
+            (trie)->dataLength - UCPTRIE_ERROR_மதிப்பு_NEG_DATA_OFFSET)
 
 U_CDECL_END
 
 #endif  // U_IN_DOXYGEN
 
-#if U_SHOW_CPLUSPLUS_API
+#எனில் U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

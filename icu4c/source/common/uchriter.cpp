@@ -7,12 +7,12 @@
 ******************************************************************************
 */
 
-#include "utypeinfo.h"  // for 'typeid' to work
+#அந்தர்பாவ "utypeinfo.h"  // for 'typeid' to work
 
-#include "unicode/uchriter.h"
-#include "unicode/ustring.h"
-#include "unicode/utf16.h"
-#include "ustr_imp.h"
+#அந்தர்பாவ "unicode/uchriter.h"
+#அந்தர்பாவ "unicode/ustring.h"
+#அந்தர்பாவ "unicode/utf16.h"
+#அந்தர்பாவ "ustr_imp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -51,34 +51,34 @@ UCharCharacterIterator::UCharCharacterIterator(ConstChar16Ptr textPtr U_LIFETIME
 {
 }
 
-UCharCharacterIterator::UCharCharacterIterator(const UCharCharacterIterator& that)
+UCharCharacterIterator::UCharCharacterIterator(மாறிலி UCharCharacterIterator& that)
 : CharacterIterator(that),
   text(that.text)
 {
 }
 
 UCharCharacterIterator&
-UCharCharacterIterator::operator=(const UCharCharacterIterator& that) U_LIFETIME_BOUND {
+UCharCharacterIterator::operator=(மாறிலி UCharCharacterIterator& that) U_LIFETIME_BOUND {
     CharacterIterator::operator=(that);
     text = that.text;
-    return *this;
+    திரும்பு *இது;
 }
 
 UCharCharacterIterator::~UCharCharacterIterator() {
 }
 
-bool
-UCharCharacterIterator::operator==(const ForwardCharacterIterator& that) const {
-    if (this == &that) {
-        return true;
+தருக்க
+UCharCharacterIterator::operator==(மாறிலி ForwardCharacterIterator& that) மாறிலி {
+    எனில் (இது == &that) {
+        திரும்பு உண்மை;
     }
-    if (typeid(*this) != typeid(that)) {
-        return false;
+    எனில் (typeid(*இது) != typeid(that)) {
+        திரும்பு பொய்;
     }
 
-    const UCharCharacterIterator&    realThat = static_cast<const UCharCharacterIterator&>(that);
+    மாறிலி UCharCharacterIterator&    realThat = static_cast<மாறிலி UCharCharacterIterator&>(that);
 
-    return text == realThat.text
+    திரும்பு text == realThat.text
         && textLength == realThat.textLength
         && pos == realThat.pos
         && begin == realThat.begin
@@ -86,281 +86,281 @@ UCharCharacterIterator::operator==(const ForwardCharacterIterator& that) const {
 }
 
 int32_t
-UCharCharacterIterator::hashCode() const {
-    return ustr_hashUCharsN(text, textLength) ^ pos ^ begin ^ end;
+UCharCharacterIterator::hashCode() மாறிலி {
+    திரும்பு ustr_hashUCharsN(text, textLength) ^ pos ^ begin ^ end;
 }
 
 UCharCharacterIterator*
-UCharCharacterIterator::clone() const {
-    return new UCharCharacterIterator(*this);
+UCharCharacterIterator::clone() மாறிலி {
+    திரும்பு புதிய UCharCharacterIterator(*இது);
 }
 
 char16_t
 UCharCharacterIterator::first() {
     pos = begin;
-    if(pos < end) {
-        return text[pos];
-    } else {
-        return DONE;
+    எனில்(pos < end) {
+        திரும்பு text[pos];
+    } இல்லையெனில் {
+        திரும்பு DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::firstPostInc() {
     pos = begin;
-    if(pos < end) {
-        return text[pos++];
-    } else {
-        return DONE;
+    எனில்(pos < end) {
+        திரும்பு text[pos++];
+    } இல்லையெனில் {
+        திரும்பு DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::last() {
     pos = end;
-    if(pos > begin) {
-        return text[--pos];
-    } else {
-        return DONE;
+    எனில்(pos > begin) {
+        திரும்பு text[--pos];
+    } இல்லையெனில் {
+        திரும்பு DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::setIndex(int32_t position) {
-    if(position < begin) {
+    எனில்(position < begin) {
         pos = begin;
-    } else if(position > end) {
+    } இல்லையெனில் எனில்(position > end) {
         pos = end;
-    } else {
+    } இல்லையெனில் {
         pos = position;
     }
-    if(pos < end) {
-        return text[pos];
-    } else {
-        return DONE;
+    எனில்(pos < end) {
+        திரும்பு text[pos];
+    } இல்லையெனில் {
+        திரும்பு DONE;
     }
 }
 
 char16_t
-UCharCharacterIterator::current() const {
-    if (pos >= begin && pos < end) {
-        return text[pos];
-    } else {
-        return DONE;
+UCharCharacterIterator::current() மாறிலி {
+    எனில் (pos >= begin && pos < end) {
+        திரும்பு text[pos];
+    } இல்லையெனில் {
+        திரும்பு DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::next() {
-    if (pos + 1 < end) {
-        return text[++pos];
-    } else {
+    எனில் (pos + 1 < end) {
+        திரும்பு text[++pos];
+    } இல்லையெனில் {
         /* make current() return DONE */
         pos = end;
-        return DONE;
+        திரும்பு DONE;
     }
 }
 
 char16_t
 UCharCharacterIterator::nextPostInc() {
-    if (pos < end) {
-        return text[pos++];
-    } else {
-        return DONE;
+    எனில் (pos < end) {
+        திரும்பு text[pos++];
+    } இல்லையெனில் {
+        திரும்பு DONE;
     }
 }
 
 UBool
 UCharCharacterIterator::hasNext() {
-    return pos < end;
+    திரும்பு pos < end;
 }
 
 char16_t
 UCharCharacterIterator::previous() {
-    if (pos > begin) {
-        return text[--pos];
-    } else {
-        return DONE;
+    எனில் (pos > begin) {
+        திரும்பு text[--pos];
+    } இல்லையெனில் {
+        திரும்பு DONE;
     }
 }
 
 UBool
 UCharCharacterIterator::hasPrevious() {
-    return pos > begin;
+    திரும்பு pos > begin;
 }
 
 UChar32
 UCharCharacterIterator::first32() {
     pos = begin;
-    if(pos < end) {
+    எனில்(pos < end) {
         int32_t i = pos;
         UChar32 c;
         U16_NEXT(text, i, end, c);
-        return c;
-    } else {
-        return DONE;
+        திரும்பு c;
+    } இல்லையெனில் {
+        திரும்பு DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::first32PostInc() {
     pos = begin;
-    if(pos < end) {
+    எனில்(pos < end) {
         UChar32 c;
         U16_NEXT(text, pos, end, c);
-        return c;
-    } else {
-        return DONE;
+        திரும்பு c;
+    } இல்லையெனில் {
+        திரும்பு DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::last32() {
     pos = end;
-    if(pos > begin) {
+    எனில்(pos > begin) {
         UChar32 c;
         U16_PREV(text, begin, pos, c);
-        return c;
-    } else {
-        return DONE;
+        திரும்பு c;
+    } இல்லையெனில் {
+        திரும்பு DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::setIndex32(int32_t position) {
-    if(position < begin) {
+    எனில்(position < begin) {
         position = begin;
-    } else if(position > end) {
+    } இல்லையெனில் எனில்(position > end) {
         position = end;
     }
-    if(position < end) {
+    எனில்(position < end) {
         U16_SET_CP_START(text, begin, position);
-        int32_t i = this->pos = position;
+        int32_t i = இது->pos = position;
         UChar32 c;
         U16_NEXT(text, i, end, c);
-        return c;
-    } else {
-        this->pos = position;
-        return DONE;
+        திரும்பு c;
+    } இல்லையெனில் {
+        இது->pos = position;
+        திரும்பு DONE;
     }
 }
 
 UChar32
-UCharCharacterIterator::current32() const {
-    if (pos >= begin && pos < end) {
+UCharCharacterIterator::current32() மாறிலி {
+    எனில் (pos >= begin && pos < end) {
         UChar32 c;
         U16_GET(text, begin, pos, end, c);
-        return c;
-    } else {
-        return DONE;
+        திரும்பு c;
+    } இல்லையெனில் {
+        திரும்பு DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::next32() {
-    if (pos < end) {
+    எனில் (pos < end) {
         U16_FWD_1(text, pos, end);
-        if(pos < end) {
+        எனில்(pos < end) {
             int32_t i = pos;
             UChar32 c;
             U16_NEXT(text, i, end, c);
-            return c;
+            திரும்பு c;
         }
     }
     /* make current() return DONE */
     pos = end;
-    return DONE;
+    திரும்பு DONE;
 }
 
 UChar32
 UCharCharacterIterator::next32PostInc() {
-    if (pos < end) {
+    எனில் (pos < end) {
         UChar32 c;
         U16_NEXT(text, pos, end, c);
-        return c;
-    } else {
-        return DONE;
+        திரும்பு c;
+    } இல்லையெனில் {
+        திரும்பு DONE;
     }
 }
 
 UChar32
 UCharCharacterIterator::previous32() {
-    if (pos > begin) {
+    எனில் (pos > begin) {
         UChar32 c;
         U16_PREV(text, begin, pos, c);
-        return c;
-    } else {
-        return DONE;
+        திரும்பு c;
+    } இல்லையெனில் {
+        திரும்பு DONE;
     }
 }
 
 int32_t
 UCharCharacterIterator::move(int32_t delta, CharacterIterator::EOrigin origin) {
-    switch(origin) {
-    case kStart:
+    தேர்வு(origin) {
+    நிலை kStart:
         pos = begin + delta;
-        break;
-    case kCurrent:
+        நிறுத்து;
+    நிலை kCurrent:
         pos += delta;
-        break;
-    case kEnd:
+        நிறுத்து;
+    நிலை kEnd:
         pos = end + delta;
-        break;
-    default:
-        break;
+        நிறுத்து;
+    இயல்பு:
+        நிறுத்து;
     }
 
-    if(pos < begin) {
+    எனில்(pos < begin) {
         pos = begin;
-    } else if(pos > end) {
+    } இல்லையெனில் எனில்(pos > end) {
         pos = end;
     }
 
-    return pos;
+    திரும்பு pos;
 }
 
 int32_t
 UCharCharacterIterator::move32(int32_t delta, CharacterIterator::EOrigin origin) {
     // this implementation relies on the "safe" version of the UTF macros
     // (or the trustworthiness of the caller)
-    switch(origin) {
-    case kStart:
+    தேர்வு(origin) {
+    நிலை kStart:
         pos = begin;
-        if(delta > 0) {
+        எனில்(delta > 0) {
             U16_FWD_N(text, pos, end, delta);
         }
-        break;
-    case kCurrent:
-        if(delta > 0) {
+        நிறுத்து;
+    நிலை kCurrent:
+        எனில்(delta > 0) {
             U16_FWD_N(text, pos, end, delta);
-        } else {
+        } இல்லையெனில் {
             U16_BACK_N(text, begin, pos, -delta);
         }
-        break;
-    case kEnd:
+        நிறுத்து;
+    நிலை kEnd:
         pos = end;
-        if(delta < 0) {
+        எனில்(delta < 0) {
             U16_BACK_N(text, begin, pos, -delta);
         }
-        break;
-    default:
-        break;
+        நிறுத்து;
+    இயல்பு:
+        நிறுத்து;
     }
 
-    return pos;
+    திரும்பு pos;
 }
 
-void UCharCharacterIterator::setText(ConstChar16Ptr newText,
+வெறுமை UCharCharacterIterator::setText(ConstChar16Ptr newText,
                                      int32_t      newTextLength) {
     text = newText;
-    if (newText == nullptr || newTextLength < 0) {
+    எனில் (newText == nullptr || newTextLength < 0) {
         newTextLength = 0;
     }
     end = textLength = newTextLength;
     pos = begin = 0;
 }
 
-void
+வெறுமை
 UCharCharacterIterator::getText(UnicodeString& result) {
     result = UnicodeString(text, textLength);
 }

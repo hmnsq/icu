@@ -10,35 +10,35 @@
 //  rbbitblb.cpp
 //
 
-#include <functional>
+#அந்தர்பாவ <functional>
 
-#include "unicode/utypes.h"
+#அந்தர்பாவ "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#எனில் !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/unistr.h"
-#include "rbbitblb.h"
-#include "rbbirb.h"
-#include "rbbiscan.h"
-#include "rbbisetb.h"
-#include "rbbidata.h"
-#include "cstring.h"
-#include "uassert.h"
-#include "uvectr32.h"
-#include "cmemory.h"
+#அந்தர்பாவ "unicode/unistr.h"
+#அந்தர்பாவ "rbbitblb.h"
+#அந்தர்பாவ "rbbirb.h"
+#அந்தர்பாவ "rbbiscan.h"
+#அந்தர்பாவ "rbbisetb.h"
+#அந்தர்பாவ "rbbidata.h"
+#அந்தர்பாவ "cstring.h"
+#அந்தர்பாவ "uassert.h"
+#அந்தர்பாவ "uvectr32.h"
+#அந்தர்பாவ "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
-namespace {
+நாமாகாஶ {
 
 // Given the `RBBITableBuilder::fDStates` vector of `RBBIStateDescriptor`s, returns
 // true if a state for which `isSink` returns true is reachable from state `source` by following
 // transitions without going through any state for which `excludedState` returns true.
 // Note that “going through” is distinct from “reaching”, and means entering and then leaving: A
 // state can be both a sink and excluded, and can still be reachable.
-bool reachableByTransitions(const UVector &states, const int32_t source,
-                            const std::function<bool(int32_t)> isSink,
-                            const std::function<bool(int32_t)> excludedState, UErrorCode &status) {
+தருக்க reachableByTransitions(மாறிலி UVector &states, மாறிலி int32_t source,
+                            மாறிலி std::function<தருக்க(int32_t)> isSink,
+                            மாறிலி std::function<தருக்க(int32_t)> excludedState, UErrorCode &status) {
     UStack boundary(status);
     {
         UVector32 &transitionsFromSource =
@@ -46,50 +46,50 @@ bool reachableByTransitions(const UVector &states, const int32_t source,
         // We do not initialize boundary to `{source}`, but instead to the set of states one
         // transition away from `source`; if `source` sets lookahead l and accepts lookahead k, we
         // only need k and l to occupy distinct slots if there is a `source`-to-`source` path.
-        for (int32_t symbol = 0; symbol < transitionsFromSource.size(); ++symbol) {
-            const int32_t state = transitionsFromSource.elementAti(symbol);
-            if (state != 0) {
+        க்கு (int32_t குறியீடு = 0; குறியீடு < transitionsFromSource.size(); ++குறியீடு) {
+            மாறிலி int32_t state = transitionsFromSource.elementAti(குறியீடு);
+            எனில் (state != 0) {
                 boundary.push(state, status);
             }
         }
     }
-    const auto visited = prv::make_unique<bool[]>(states.size(), status);
-    while (U_SUCCESS(status) && !boundary.empty()) {
-        const int32_t s = boundary.popi();
-        if (isSink(s)) {
-            return true;
+    மாறிலி auto visited = prv::make_unique<தருக்க[]>(states.size(), status);
+    போது (U_SUCCESS(status) && !boundary.empty()) {
+        மாறிலி int32_t s = boundary.popi();
+        எனில் (isSink(s)) {
+            திரும்பு உண்மை;
         }
-        if (excludedState(s) || visited[s]) {
-            continue;
+        எனில் (excludedState(s) || visited[s]) {
+            தொடர்;
         }
-        visited[s] = true;
+        visited[s] = உண்மை;
         UVector32 &transitions = *static_cast<RBBIStateDescriptor *>(states.elementAt(s))->fDtran;
-        for (int32_t symbol = 0; symbol < transitions.size(); ++symbol) {
-            const int32_t t = transitions.elementAti(symbol);
-            if (t != 0 && !visited[t]) {
+        க்கு (int32_t குறியீடு = 0; குறியீடு < transitions.size(); ++குறியீடு) {
+            மாறிலி int32_t t = transitions.elementAti(குறியீடு);
+            எனில் (t != 0 && !visited[t]) {
                 boundary.push(t, status);
             }
         }
     }
-    return false;
+    திரும்பு பொய்;
 }
 
 } // namespace
 
-const int32_t kMaxStateFor8BitsTable = 255;
+மாறிலி int32_t kMaxStateFor8BitsTable = 255;
 
-RBBITableBuilder::RBBITableBuilder(RBBIRuleBuilder *rb, RBBINode **rootNode, UErrorCode &status) :
+RBBITableBuilder::RBBITableBuilder(RBBIRuleBuilder *rb, RBBINode **வேர்_முனை, UErrorCode &status) :
         fRB(rb),
-        fTree(*rootNode),
+        f_மரம்(*வேர்_முனை),
         fStatus(&status),
         fDStates(nullptr),
         fSafeTable(nullptr) {
-    if (U_FAILURE(status)) {
-        return;
+    எனில் (U_FAILURE(status)) {
+        திரும்பு;
     }
     // fDStates is UVector<RBBIStateDescriptor *>
-    fDStates = new UVector(status);
-    if (U_SUCCESS(status) && fDStates == nullptr ) {
+    fDStates = புதிய UVector(status);
+    எனில் (U_SUCCESS(status) && fDStates == nullptr ) {
         status = U_MEMORY_ALLOCATION_ERROR;
     }
 }
@@ -97,8 +97,8 @@ RBBITableBuilder::RBBITableBuilder(RBBIRuleBuilder *rb, RBBINode **rootNode, UEr
 
 
 RBBITableBuilder::~RBBITableBuilder() {
-    int i;
-    for (i=0; i<fDStates->size(); i++) {
+    முழு i;
+    க்கு (i=0; i<fDStates->size(); i++) {
         delete static_cast<RBBIStateDescriptor*>(fDStates->elementAt(i));
     }
     delete fDStates;
@@ -113,30 +113,30 @@ RBBITableBuilder::~RBBITableBuilder() {
 //                               the DFA state transition table from the RBBI rules parse tree.
 //
 //-----------------------------------------------------------------------------
-void  RBBITableBuilder::buildForwardTable() {
+வெறுமை  RBBITableBuilder::buildForwardTable() {
 
-    if (U_FAILURE(*fStatus)) {
-        return;
+    எனில் (U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
 
     // If there were no rules, just return.  This situation can easily arise
     //   for the reverse rules.
-    if (fTree==nullptr) {
-        return;
+    எனில் (f_மரம்==nullptr) {
+        திரும்பு;
     }
 
     //
     // Walk through the tree, replacing any references to $variables with a copy of the
     //   parse tree for the substitution expression.
     //
-    fTree = fTree->flattenVariables(*fStatus, 0);
-    if (U_FAILURE(*fStatus)) {
-        return;
+    f_மரம் = f_மரம்->flattenVariables(*fStatus, 0);
+    எனில் (U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
 #ifdef RBBI_DEBUG
-    if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "ftree")) {
+    எனில் (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "ftree")) {
         RBBIDebugPuts("\nParse tree after flattening variable references.");
-        RBBINode::printTree(fTree, true);
+        RBBINode::print_மரம்(f_மரம், உண்மை);
     }
 #endif
 
@@ -145,41 +145,41 @@ void  RBBITableBuilder::buildForwardTable() {
     //   Appears as a cat-node, left child being the original tree,
     //   right child being the end marker.
     //
-    RBBINode *cn = new RBBINode(RBBINode::opCat, *fStatus);
+    RBBINode *cn = புதிய RBBINode(RBBINode::opCat, *fStatus);
     // Exit if memory allocation failed.
-    if (cn == nullptr) {
+    எனில் (cn == nullptr) {
         *fStatus = U_MEMORY_ALLOCATION_ERROR;
     }
-    if (U_FAILURE(*fStatus)) {
+    எனில் (U_FAILURE(*fStatus)) {
         delete cn;
-        return;
+        திரும்பு;
     }
-    cn->fLeftChild = fTree;
-    fTree->fParent = cn;
-    RBBINode *endMarkerNode = cn->fRightChild = new RBBINode(RBBINode::endMark, *fStatus);
+    cn->f_இடது_Child = f_மரம்;
+    f_மரம்->fParent = cn;
+    RBBINode *end_Marker_முனை = cn->f_வலது_Child = புதிய RBBINode(RBBINode::endMark, *fStatus);
     // Delete and exit if memory allocation failed.
-    if (cn->fRightChild == nullptr) {
+    எனில் (cn->f_வலது_Child == nullptr) {
         *fStatus = U_MEMORY_ALLOCATION_ERROR;
     }
-    if (U_FAILURE(*fStatus)) {
+    எனில் (U_FAILURE(*fStatus)) {
         delete cn;
-        return;
+        திரும்பு;
     }
-    cn->fRightChild->fParent = cn;
-    fTree = cn;
+    cn->f_வலது_Child->fParent = cn;
+    f_மரம் = cn;
 
     //
     //  Replace all references to UnicodeSets with the tree for the equivalent
     //      expression.
     //
-    fTree->flattenSets(*fStatus, 0);
-    if (U_FAILURE(*fStatus)) {
-        return;
+    f_மரம்->flattenSets(*fStatus, 0);
+    எனில் (U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
 #ifdef RBBI_DEBUG
-    if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "stree")) {
+    எனில் (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "stree")) {
         RBBIDebugPuts("\nParse tree after flattening Unicode Set references.");
-        RBBINode::printTree(fTree, true);
+        RBBINode::print_மரம்(f_மரம், உண்மை);
     }
 #endif
 
@@ -191,20 +191,20 @@ void  RBBITableBuilder::buildForwardTable() {
     //    Understanding how this works by looking at the code alone will be
     //       nearly impossible.
     //
-    calcNullable(fTree);
-    calcFirstPos(fTree);
-    calcLastPos(fTree);
-    calcFollowPos(fTree);
-    if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "pos")) {
+    calcNullable(f_மரம்);
+    calcFirstPos(f_மரம்);
+    calcLastPos(f_மரம்);
+    calcFollowPos(f_மரம்);
+    எனில் (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "pos")) {
         RBBIDebugPuts("\n");
-        printPosSets(fTree);
+        printPosSets(f_மரம்);
     }
 
     //
     //  For "chained" rules, modify the followPos sets
     //
-    if (fRB->fChainRules) {
-        calcChainedFollowPos(fTree, endMarkerNode);
+    எனில் (fRB->fChainRules) {
+        calcChainedFollowPos(f_மரம், end_Marker_முனை);
     }
 
     //
@@ -231,42 +231,42 @@ void  RBBITableBuilder::buildForwardTable() {
 //   calcNullable.    Impossible to explain succinctly.  See Aho, section 3.9
 //
 //-----------------------------------------------------------------------------
-void RBBITableBuilder::calcNullable(RBBINode *n) {
-    if (n == nullptr) {
-        return;
+வெறுமை RBBITableBuilder::calcNullable(RBBINode *n) {
+    எனில் (n == nullptr) {
+        திரும்பு;
     }
-    if (n->fType == RBBINode::setRef ||
+    எனில் (n->fType == RBBINode::setRef ||
         n->fType == RBBINode::endMark ) {
         // These are non-empty leaf node types.
-        n->fNullable = false;
-        return;
+        n->fNullable = பொய்;
+        திரும்பு;
     }
 
-    if (n->fType == RBBINode::lookAhead || n->fType == RBBINode::tag) {
+    எனில் (n->fType == RBBINode::lookAhead || n->fType == RBBINode::tag) {
         // Lookahead marker node.  It's a leaf, so no recursion on children.
         // It's nullable because it does not match any literal text from the input stream.
-        n->fNullable = true;
-        return;
+        n->fNullable = உண்மை;
+        திரும்பு;
     }
 
 
     // The node is not a leaf.
     //  Calculate nullable on its children.
-    calcNullable(n->fLeftChild);
-    calcNullable(n->fRightChild);
+    calcNullable(n->f_இடது_Child);
+    calcNullable(n->f_வலது_Child);
 
     // Apply functions from table 3.40 in Aho
-    if (n->fType == RBBINode::opOr) {
-        n->fNullable = n->fLeftChild->fNullable || n->fRightChild->fNullable;
+    எனில் (n->fType == RBBINode::opOr) {
+        n->fNullable = n->f_இடது_Child->fNullable || n->f_வலது_Child->fNullable;
     }
-    else if (n->fType == RBBINode::opCat) {
-        n->fNullable = n->fLeftChild->fNullable && n->fRightChild->fNullable;
+    இல்லையெனில் எனில் (n->fType == RBBINode::opCat) {
+        n->fNullable = n->f_இடது_Child->fNullable && n->f_வலது_Child->fNullable;
     }
-    else if (n->fType == RBBINode::opStar || n->fType == RBBINode::opQuestion) {
-        n->fNullable = true;
+    இல்லையெனில் எனில் (n->fType == RBBINode::opStar || n->fType == RBBINode::opQuestion) {
+        n->fNullable = உண்மை;
     }
-    else {
-        n->fNullable = false;
+    இல்லையெனில் {
+        n->fNullable = பொய்;
     }
 }
 
@@ -278,11 +278,11 @@ void RBBITableBuilder::calcNullable(RBBINode *n) {
 //   calcFirstPos.    Impossible to explain succinctly.  See Aho, section 3.9
 //
 //-----------------------------------------------------------------------------
-void RBBITableBuilder::calcFirstPos(RBBINode *n) {
-    if (n == nullptr) {
-        return;
+வெறுமை RBBITableBuilder::calcFirstPos(RBBINode *n) {
+    எனில் (n == nullptr) {
+        திரும்பு;
     }
-    if (n->fType == RBBINode::leafChar  ||
+    எனில் (n->fType == RBBINode::leafChar  ||
         n->fType == RBBINode::endMark   ||
         n->fType == RBBINode::lookAhead ||
         n->fType == RBBINode::tag) {
@@ -291,29 +291,29 @@ void RBBITableBuilder::calcFirstPos(RBBINode *n) {
         // this function should only be called on a node whose set is
         // empty to start with.
         n->fFirstPosSet->addElement(n, *fStatus);
-        return;
+        திரும்பு;
     }
 
     // The node is not a leaf.
     //  Calculate firstPos on its children.
-    calcFirstPos(n->fLeftChild);
-    calcFirstPos(n->fRightChild);
+    calcFirstPos(n->f_இடது_Child);
+    calcFirstPos(n->f_வலது_Child);
 
     // Apply functions from table 3.40 in Aho
-    if (n->fType == RBBINode::opOr) {
-        setAdd(n->fFirstPosSet, n->fLeftChild->fFirstPosSet);
-        setAdd(n->fFirstPosSet, n->fRightChild->fFirstPosSet);
+    எனில் (n->fType == RBBINode::opOr) {
+        setAdd(n->fFirstPosSet, n->f_இடது_Child->fFirstPosSet);
+        setAdd(n->fFirstPosSet, n->f_வலது_Child->fFirstPosSet);
     }
-    else if (n->fType == RBBINode::opCat) {
-        setAdd(n->fFirstPosSet, n->fLeftChild->fFirstPosSet);
-        if (n->fLeftChild->fNullable) {
-            setAdd(n->fFirstPosSet, n->fRightChild->fFirstPosSet);
+    இல்லையெனில் எனில் (n->fType == RBBINode::opCat) {
+        setAdd(n->fFirstPosSet, n->f_இடது_Child->fFirstPosSet);
+        எனில் (n->f_இடது_Child->fNullable) {
+            setAdd(n->fFirstPosSet, n->f_வலது_Child->fFirstPosSet);
         }
     }
-    else if (n->fType == RBBINode::opStar ||
+    இல்லையெனில் எனில் (n->fType == RBBINode::opStar ||
              n->fType == RBBINode::opQuestion ||
              n->fType == RBBINode::opPlus) {
-        setAdd(n->fFirstPosSet, n->fLeftChild->fFirstPosSet);
+        setAdd(n->fFirstPosSet, n->f_இடது_Child->fFirstPosSet);
     }
 }
 
@@ -324,11 +324,11 @@ void RBBITableBuilder::calcFirstPos(RBBINode *n) {
 //   calcLastPos.    Impossible to explain succinctly.  See Aho, section 3.9
 //
 //-----------------------------------------------------------------------------
-void RBBITableBuilder::calcLastPos(RBBINode *n) {
-    if (n == nullptr) {
-        return;
+வெறுமை RBBITableBuilder::calcLastPos(RBBINode *n) {
+    எனில் (n == nullptr) {
+        திரும்பு;
     }
-    if (n->fType == RBBINode::leafChar  ||
+    எனில் (n->fType == RBBINode::leafChar  ||
         n->fType == RBBINode::endMark   ||
         n->fType == RBBINode::lookAhead ||
         n->fType == RBBINode::tag) {
@@ -337,29 +337,29 @@ void RBBITableBuilder::calcLastPos(RBBINode *n) {
         // this function should only be called on a node whose set is
         // empty to start with.
         n->fLastPosSet->addElement(n, *fStatus);
-        return;
+        திரும்பு;
     }
 
     // The node is not a leaf.
     //  Calculate lastPos on its children.
-    calcLastPos(n->fLeftChild);
-    calcLastPos(n->fRightChild);
+    calcLastPos(n->f_இடது_Child);
+    calcLastPos(n->f_வலது_Child);
 
     // Apply functions from table 3.40 in Aho
-    if (n->fType == RBBINode::opOr) {
-        setAdd(n->fLastPosSet, n->fLeftChild->fLastPosSet);
-        setAdd(n->fLastPosSet, n->fRightChild->fLastPosSet);
+    எனில் (n->fType == RBBINode::opOr) {
+        setAdd(n->fLastPosSet, n->f_இடது_Child->fLastPosSet);
+        setAdd(n->fLastPosSet, n->f_வலது_Child->fLastPosSet);
     }
-    else if (n->fType == RBBINode::opCat) {
-        setAdd(n->fLastPosSet, n->fRightChild->fLastPosSet);
-        if (n->fRightChild->fNullable) {
-            setAdd(n->fLastPosSet, n->fLeftChild->fLastPosSet);
+    இல்லையெனில் எனில் (n->fType == RBBINode::opCat) {
+        setAdd(n->fLastPosSet, n->f_வலது_Child->fLastPosSet);
+        எனில் (n->f_வலது_Child->fNullable) {
+            setAdd(n->fLastPosSet, n->f_இடது_Child->fLastPosSet);
         }
     }
-    else if (n->fType == RBBINode::opStar     ||
+    இல்லையெனில் எனில் (n->fType == RBBINode::opStar     ||
              n->fType == RBBINode::opQuestion ||
              n->fType == RBBINode::opPlus) {
-        setAdd(n->fLastPosSet, n->fLeftChild->fLastPosSet);
+        setAdd(n->fLastPosSet, n->f_இடது_Child->fLastPosSet);
     }
 }
 
@@ -370,36 +370,36 @@ void RBBITableBuilder::calcLastPos(RBBINode *n) {
 //   calcFollowPos.    Impossible to explain succinctly.  See Aho, section 3.9
 //
 //-----------------------------------------------------------------------------
-void RBBITableBuilder::calcFollowPos(RBBINode *n) {
-    if (n == nullptr ||
+வெறுமை RBBITableBuilder::calcFollowPos(RBBINode *n) {
+    எனில் (n == nullptr ||
         n->fType == RBBINode::leafChar ||
         n->fType == RBBINode::endMark) {
-        return;
+        திரும்பு;
     }
 
-    calcFollowPos(n->fLeftChild);
-    calcFollowPos(n->fRightChild);
+    calcFollowPos(n->f_இடது_Child);
+    calcFollowPos(n->f_வலது_Child);
 
     // Aho rule #1
-    if (n->fType == RBBINode::opCat) {
+    எனில் (n->fType == RBBINode::opCat) {
         RBBINode *i;   // is 'i' in Aho's description
         uint32_t     ix;
 
-        UVector *LastPosOfLeftChild = n->fLeftChild->fLastPosSet;
+        UVector *Last_Pos_Of_இடது_Child = n->f_இடது_Child->fLastPosSet;
 
-        for (ix = 0; ix < static_cast<uint32_t>(LastPosOfLeftChild->size()); ix++) {
-            i = static_cast<RBBINode*>(LastPosOfLeftChild->elementAt(ix));
-            setAdd(i->fFollowPos, n->fRightChild->fFirstPosSet);
+        க்கு (ix = 0; ix < static_cast<uint32_t>(Last_Pos_Of_இடது_Child->size()); ix++) {
+            i = static_cast<RBBINode*>(Last_Pos_Of_இடது_Child->elementAt(ix));
+            setAdd(i->fFollowPos, n->f_வலது_Child->fFirstPosSet);
         }
     }
 
     // Aho rule #2
-    if (n->fType == RBBINode::opStar ||
+    எனில் (n->fType == RBBINode::opStar ||
         n->fType == RBBINode::opPlus) {
         RBBINode   *i;  // again, n and i are the names from Aho's description.
         uint32_t    ix;
 
-        for (ix = 0; ix < static_cast<uint32_t>(n->fLastPosSet->size()); ix++) {
+        க்கு (ix = 0; ix < static_cast<uint32_t>(n->fLastPosSet->size()); ix++) {
             i = static_cast<RBBINode*>(n->fLastPosSet->elementAt(ix));
             setAdd(i->fFollowPos, n->fFirstPosSet);
         }
@@ -415,19 +415,19 @@ void RBBITableBuilder::calcFollowPos(RBBINode *n) {
 //                        as roots of a rule to a destination vector.
 //
 //-----------------------------------------------------------------------------
-void RBBITableBuilder::addRuleRootNodes(UVector *dest, RBBINode *node) {
-    if (node == nullptr || U_FAILURE(*fStatus)) {
-        return;
+வெறுமை RBBITableBuilder::add_Rule_வேர்_Nodes(UVector *dest, RBBINode *முனை) {
+    எனில் (முனை == nullptr || U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
     U_ASSERT(!dest->hasDeleter());
-    if (node->fRuleRoot) {
-        dest->addElement(node, *fStatus);
+    எனில் (முனை->f_Rule_வேர்) {
+        dest->addElement(முனை, *fStatus);
         // Note: rules cannot nest. If we found a rule start node,
         //       no child node can also be a start node.
-        return;
+        திரும்பு;
     }
-    addRuleRootNodes(dest, node->fLeftChild);
-    addRuleRootNodes(dest, node->fRightChild);
+    add_Rule_வேர்_Nodes(dest, முனை->f_இடது_Child);
+    add_Rule_வேர்_Nodes(dest, முனை->f_வலது_Child);
 }
 
 //-----------------------------------------------------------------------------
@@ -436,42 +436,42 @@ void RBBITableBuilder::addRuleRootNodes(UVector *dest, RBBINode *node) {
 //                            to implement rule chaining.  NOT described by Aho
 //
 //-----------------------------------------------------------------------------
-void RBBITableBuilder::calcChainedFollowPos(RBBINode *tree, RBBINode *endMarkNode) {
+வெறுமை RBBITableBuilder::calcChainedFollowPos(RBBINode *மரம், RBBINode *end_Mark_முனை) {
 
     UVector         leafNodes(*fStatus);
-    if (U_FAILURE(*fStatus)) {
-        return;
+    எனில் (U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
 
     // get a list all leaf nodes
-    tree->findNodes(&leafNodes, RBBINode::leafChar, *fStatus);
-    if (U_FAILURE(*fStatus)) {
-        return;
+    மரம்->findNodes(&leafNodes, RBBINode::leafChar, *fStatus);
+    எனில் (U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
 
     // Collect all leaf nodes that can start matches for rules
     // with inbound chaining enabled, which is the union of the 
     // firstPosition sets from each of the rule root nodes.
     
-    UVector ruleRootNodes(*fStatus);
-    addRuleRootNodes(&ruleRootNodes, tree);
+    UVector rule_வேர்_Nodes(*fStatus);
+    add_Rule_வேர்_Nodes(&rule_வேர்_Nodes, மரம்);
 
     UVector matchStartNodes(*fStatus);
-    for (int j=0; j<ruleRootNodes.size(); ++j) {
-        RBBINode *node = static_cast<RBBINode *>(ruleRootNodes.elementAt(j));
-        if (node->fChainIn) {
-            setAdd(&matchStartNodes, node->fFirstPosSet);
+    க்கு (முழு j=0; j<rule_வேர்_Nodes.size(); ++j) {
+        RBBINode *முனை = static_cast<RBBINode *>(rule_வேர்_Nodes.elementAt(j));
+        எனில் (முனை->fChainIn) {
+            setAdd(&matchStartNodes, முனை->fFirstPosSet);
         }
     }
-    if (U_FAILURE(*fStatus)) {
-        return;
+    எனில் (U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
 
-    int32_t  endNodeIx;
-    int32_t  startNodeIx;
+    int32_t  end_முனை_Ix;
+    int32_t  start_முனை_Ix;
 
-    for (endNodeIx=0; endNodeIx<leafNodes.size(); endNodeIx++) {
-        RBBINode* endNode = static_cast<RBBINode*>(leafNodes.elementAt(endNodeIx));
+    க்கு (end_முனை_Ix=0; end_முனை_Ix<leafNodes.size(); end_முனை_Ix++) {
+        RBBINode* end_முனை = static_cast<RBBINode*>(leafNodes.elementAt(end_முனை_Ix));
 
         // Identify leaf nodes that correspond to overall rule match positions.
         // These include the endMarkNode in their followPos sets.
@@ -481,22 +481,22 @@ void RBBITableBuilder::calcChainedFollowPos(RBBINode *tree, RBBINode *endMarkNod
         //       further matching. This leaves exactly one end marker node, the one
         //       at the end of the complete tree.
 
-        if (!endNode->fFollowPos->contains(endMarkNode)) {
-            continue;
+        எனில் (!end_முனை->fFollowPos->contains(end_Mark_முனை)) {
+            தொடர்;
         }
 
         // We've got a node that can end a match.
 
         // Now iterate over the nodes that can start a match, looking for ones
         //   with the same char class as our ending node.
-        RBBINode *startNode;
-        for (startNodeIx = 0; startNodeIx<matchStartNodes.size(); startNodeIx++) {
-            startNode = static_cast<RBBINode*>(matchStartNodes.elementAt(startNodeIx));
-            if (startNode->fType != RBBINode::leafChar) {
-                continue;
+        RBBINode *start_முனை;
+        க்கு (start_முனை_Ix = 0; start_முனை_Ix<matchStartNodes.size(); start_முனை_Ix++) {
+            start_முனை = static_cast<RBBINode*>(matchStartNodes.elementAt(start_முனை_Ix));
+            எனில் (start_முனை->fType != RBBINode::leafChar) {
+                தொடர்;
             }
 
-            if (endNode->fVal == startNode->fVal) {
+            எனில் (end_முனை->fVal == start_முனை->fVal) {
                 // The end val (character class) of one possible match is the
                 //   same as the start of another.
 
@@ -504,7 +504,7 @@ void RBBITableBuilder::calcChainedFollowPos(RBBINode *tree, RBBINode *endMarkNod
                 //  followPos set of the end node, which will have the effect of
                 //  letting matches transition from a match state at endNode
                 //  to the second char of a match starting with startNode.
-                setAdd(endNode->fFollowPos, startNode->fFollowPos);
+                setAdd(end_முனை->fFollowPos, start_முனை->fFollowPos);
             }
         }
     }
@@ -521,10 +521,10 @@ void RBBITableBuilder::calcChainedFollowPos(RBBINode *tree, RBBINode *endMarkNod
 //                This function has much in common with calcChainedFollowPos().
 //
 //-----------------------------------------------------------------------------
-void RBBITableBuilder::bofFixup() {
+வெறுமை RBBITableBuilder::bofFixup() {
 
-    if (U_FAILURE(*fStatus)) {
-        return;
+    எனில் (U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
 
     //   The parse tree looks like this ...
@@ -537,32 +537,32 @@ void RBBITableBuilder::bofFixup() {
     //
     //    We will be adding things to the followPos set of the <bofNode>
     //
-    RBBINode  *bofNode = fTree->fLeftChild->fLeftChild;
-    U_ASSERT(bofNode->fType == RBBINode::leafChar);
-    U_ASSERT(bofNode->fVal == 2);
+    RBBINode  *bof_முனை = f_மரம்->f_இடது_Child->f_இடது_Child;
+    U_ASSERT(bof_முனை->fType == RBBINode::leafChar);
+    U_ASSERT(bof_முனை->fVal == 2);
 
     // Get all nodes that can be the start a match of the user-written rules
     //  (excluding the fake bofNode)
     //  We want the nodes that can start a match in the
     //     part labeled "rest of tree"
     // 
-    UVector *matchStartNodes = fTree->fLeftChild->fRightChild->fFirstPosSet;
+    UVector *matchStartNodes = f_மரம்->f_இடது_Child->f_வலது_Child->fFirstPosSet;
 
-    RBBINode *startNode;
-    int       startNodeIx;
-    for (startNodeIx = 0; startNodeIx<matchStartNodes->size(); startNodeIx++) {
-        startNode = static_cast<RBBINode*>(matchStartNodes->elementAt(startNodeIx));
-        if (startNode->fType != RBBINode::leafChar) {
-            continue;
+    RBBINode *start_முனை;
+    முழு       start_முனை_Ix;
+    க்கு (start_முனை_Ix = 0; start_முனை_Ix<matchStartNodes->size(); start_முனை_Ix++) {
+        start_முனை = static_cast<RBBINode*>(matchStartNodes->elementAt(start_முனை_Ix));
+        எனில் (start_முனை->fType != RBBINode::leafChar) {
+            தொடர்;
         }
 
-        if (startNode->fVal == bofNode->fVal) {
+        எனில் (start_முனை->fVal == bof_முனை->fVal) {
             //  We found a leaf node corresponding to a {bof} that was
             //    explicitly written into a rule.
             //  Add everything from the followPos set of this node to the
             //    followPos set of the fake bofNode at the start of the tree.
             //  
-            setAdd(bofNode->fFollowPos, startNode->fFollowPos);
+            setAdd(bof_முனை->fFollowPos, start_முனை->fFollowPos);
         }
     }
 }
@@ -576,91 +576,91 @@ void RBBITableBuilder::bofFixup() {
 //                        Most of the comments are quotes of Aho's pseudo-code.
 //
 //-----------------------------------------------------------------------------
-void RBBITableBuilder::buildStateTable() {
-    if (U_FAILURE(*fStatus)) {
-        return;
+வெறுமை RBBITableBuilder::buildStateTable() {
+    எனில் (U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
     RBBIStateDescriptor *failState;
     // Set it to nullptr to avoid uninitialized warning
     RBBIStateDescriptor *initialState = nullptr;
     //
     // Add a dummy state 0 - the stop state.  Not from Aho.
-    int      lastInputSymbol = fRB->fSetBuilder->getNumCharCategories() - 1;
-    failState = new RBBIStateDescriptor(lastInputSymbol, fStatus);
-    if (failState == nullptr) {
+    முழு      last_உள்ளீடு_குறியீடு = fRB->fSetBuilder->get_இலக்கம்_Char_Categories() - 1;
+    failState = புதிய RBBIStateDescriptor(last_உள்ளீடு_குறியீடு, fStatus);
+    எனில் (failState == nullptr) {
         *fStatus = U_MEMORY_ALLOCATION_ERROR;
-        goto ExitBuildSTdeleteall;
+        செல் ExitBuildSTdeleteall;
     }
-    failState->fPositions = new UVector(*fStatus);
-    if (failState->fPositions == nullptr) {
+    failState->fPositions = புதிய UVector(*fStatus);
+    எனில் (failState->fPositions == nullptr) {
         *fStatus = U_MEMORY_ALLOCATION_ERROR;
     }
-    if (failState->fPositions == nullptr || U_FAILURE(*fStatus)) {
-        goto ExitBuildSTdeleteall;
+    எனில் (failState->fPositions == nullptr || U_FAILURE(*fStatus)) {
+        செல் ExitBuildSTdeleteall;
     }
     fDStates->addElement(failState, *fStatus);
-    if (U_FAILURE(*fStatus)) {
-        goto ExitBuildSTdeleteall;
+    எனில் (U_FAILURE(*fStatus)) {
+        செல் ExitBuildSTdeleteall;
     }
 
     // initially, the only unmarked state in Dstates is firstpos(root),
     //       where toot is the root of the syntax tree for (r)#;
-    initialState = new RBBIStateDescriptor(lastInputSymbol, fStatus);
-    if (initialState == nullptr) {
+    initialState = புதிய RBBIStateDescriptor(last_உள்ளீடு_குறியீடு, fStatus);
+    எனில் (initialState == nullptr) {
         *fStatus = U_MEMORY_ALLOCATION_ERROR;
     }
-    if (U_FAILURE(*fStatus)) {
-        goto ExitBuildSTdeleteall;
+    எனில் (U_FAILURE(*fStatus)) {
+        செல் ExitBuildSTdeleteall;
     }
-    initialState->fPositions = new UVector(*fStatus);
-    if (initialState->fPositions == nullptr) {
+    initialState->fPositions = புதிய UVector(*fStatus);
+    எனில் (initialState->fPositions == nullptr) {
         *fStatus = U_MEMORY_ALLOCATION_ERROR;
     }
-    if (U_FAILURE(*fStatus)) {
-        goto ExitBuildSTdeleteall;
+    எனில் (U_FAILURE(*fStatus)) {
+        செல் ExitBuildSTdeleteall;
     }
-    setAdd(initialState->fPositions, fTree->fFirstPosSet);
+    setAdd(initialState->fPositions, f_மரம்->fFirstPosSet);
     fDStates->addElement(initialState, *fStatus);
-    if (U_FAILURE(*fStatus)) {
-        goto ExitBuildSTdeleteall;
+    எனில் (U_FAILURE(*fStatus)) {
+        செல் ExitBuildSTdeleteall;
     }
 
     // while there is an unmarked state T in Dstates do begin
-    for (;;) {
+    க்கு (;;) {
         RBBIStateDescriptor *T = nullptr;
         int32_t              tx;
-        for (tx=1; tx<fDStates->size(); tx++) {
+        க்கு (tx=1; tx<fDStates->size(); tx++) {
             RBBIStateDescriptor *temp;
             temp = static_cast<RBBIStateDescriptor*>(fDStates->elementAt(tx));
-            if (temp->fMarked == false) {
+            எனில் (temp->fMarked == பொய்) {
                 T = temp;
-                break;
+                நிறுத்து;
             }
         }
-        if (T == nullptr) {
-            break;
+        எனில் (T == nullptr) {
+            நிறுத்து;
         }
 
         // mark T;
-        T->fMarked = true;
+        T->fMarked = உண்மை;
 
         // for each input symbol a do begin
         int32_t  a;
-        for (a = 1; a<=lastInputSymbol; a++) {
+        க்கு (a = 1; a<=last_உள்ளீடு_குறியீடு; a++) {
             // let U be the set of positions that are in followpos(p)
             //    for some position p in T
             //    such that the symbol at position p is a;
             UVector    *U = nullptr;
             RBBINode   *p;
             int32_t     px;
-            for (px=0; px<T->fPositions->size(); px++) {
+            க்கு (px=0; px<T->fPositions->size(); px++) {
                 p = static_cast<RBBINode*>(T->fPositions->elementAt(px));
-                if ((p->fType == RBBINode::leafChar) &&  (p->fVal == a)) {
-                    if (U == nullptr) {
-                        U = new UVector(*fStatus);
-                        if (U == nullptr) {
+                எனில் ((p->fType == RBBINode::leafChar) &&  (p->fVal == a)) {
+                    எனில் (U == nullptr) {
+                        U = புதிய UVector(*fStatus);
+                        எனில் (U == nullptr) {
                         	*fStatus = U_MEMORY_ALLOCATION_ERROR;
-                        	goto ExitBuildSTdeleteall;
+                        	செல் ExitBuildSTdeleteall;
                         }
                     }
                     setAdd(U, p->fFollowPos);
@@ -669,36 +669,36 @@ void RBBITableBuilder::buildStateTable() {
 
             // if U is not empty and not in DStates then
             int32_t  ux = 0;
-            UBool    UinDstates = false;
-            if (U != nullptr) {
+            UBool    UinDstates = பொய்;
+            எனில் (U != nullptr) {
                 U_ASSERT(U->size() > 0);
-                int  ix;
-                for (ix=0; ix<fDStates->size(); ix++) {
+                முழு  ix;
+                க்கு (ix=0; ix<fDStates->size(); ix++) {
                     RBBIStateDescriptor *temp2;
                     temp2 = static_cast<RBBIStateDescriptor*>(fDStates->elementAt(ix));
-                    if (setEquals(U, temp2->fPositions)) {
+                    எனில் (setEquals(U, temp2->fPositions)) {
                         delete U;
                         U  = temp2->fPositions;
                         ux = ix;
-                        UinDstates = true;
-                        break;
+                        UinDstates = உண்மை;
+                        நிறுத்து;
                     }
                 }
 
                 // Add U as an unmarked state to Dstates
-                if (!UinDstates)
+                எனில் (!UinDstates)
                 {
-                    RBBIStateDescriptor *newState = new RBBIStateDescriptor(lastInputSymbol, fStatus);
-                    if (newState == nullptr) {
+                    RBBIStateDescriptor *newState = புதிய RBBIStateDescriptor(last_உள்ளீடு_குறியீடு, fStatus);
+                    எனில் (newState == nullptr) {
                     	*fStatus = U_MEMORY_ALLOCATION_ERROR;
                     }
-                    if (U_FAILURE(*fStatus)) {
-                        goto ExitBuildSTdeleteall;
+                    எனில் (U_FAILURE(*fStatus)) {
+                        செல் ExitBuildSTdeleteall;
                     }
                     newState->fPositions = U;
                     fDStates->addElement(newState, *fStatus);
-                    if (U_FAILURE(*fStatus)) {
-                        return;
+                    எனில் (U_FAILURE(*fStatus)) {
+                        திரும்பு;
                     }
                     ux = fDStates->size()-1;
                 }
@@ -708,7 +708,7 @@ void RBBITableBuilder::buildStateTable() {
             }
         }
     }
-    return;
+    திரும்பு;
     // delete local pointers only if error occurred.
 ExitBuildSTdeleteall:
     delete initialState;
@@ -720,17 +720,17 @@ ExitBuildSTdeleteall:
  * mapLookAheadRules
  *
  */
-void RBBITableBuilder::mapLookAheadRules() {
-    fLookAheadRuleMap =  new UVector32(fRB->fScanner->numRules() + 1, *fStatus);
-    if (fLookAheadRuleMap == nullptr) {
+வெறுமை RBBITableBuilder::mapLookAheadRules() {
+    fLookAheadRuleMap =  புதிய UVector32(fRB->fScanner->இலக்கம்_Rules() + 1, *fStatus);
+    எனில் (fLookAheadRuleMap == nullptr) {
         *fStatus = U_MEMORY_ALLOCATION_ERROR;
     }
-    if (U_FAILURE(*fStatus)) {
-        return;
+    எனில் (U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
-    fLookAheadRuleMap->setSize(fRB->fScanner->numRules() + 1);
+    fLookAheadRuleMap->setSize(fRB->fScanner->இலக்கம்_Rules() + 1);
 
-    for (int32_t n=0; n<fDStates->size(); n++) {
+    க்கு (int32_t n=0; n<fDStates->size(); n++) {
         RBBIStateDescriptor* sd = static_cast<RBBIStateDescriptor*>(fDStates->elementAt(n));
         int32_t laSlotForState = 0;
 
@@ -740,31 +740,31 @@ void RBBITableBuilder::mapLookAheadRules() {
         // If any of the look-ahead nodes already have a slot assigned, use it,
         // otherwise assign a new one.
 
-        bool sawLookAheadNode = false;
-        for (int32_t ipos=0; ipos<sd->fPositions->size(); ++ipos) {
-            RBBINode *node = static_cast<RBBINode *>(sd->fPositions->elementAt(ipos));
-            if (node->fType != RBBINode::NodeType::lookAhead) {
-                continue;
+        தருக்க saw_Look_Ahead_முனை = பொய்;
+        க்கு (int32_t ipos=0; ipos<sd->fPositions->size(); ++ipos) {
+            RBBINode *முனை = static_cast<RBBINode *>(sd->fPositions->elementAt(ipos));
+            எனில் (முனை->fType != RBBINode::முனை_Type::lookAhead) {
+                தொடர்;
             }
-            sawLookAheadNode = true;
-            int32_t ruleNum = node->fVal;     // Set when rule was originally parsed.
-            U_ASSERT(ruleNum < fLookAheadRuleMap->size());
-            U_ASSERT(ruleNum > 0);
-            int32_t laSlot = fLookAheadRuleMap->elementAti(ruleNum);
-            if (laSlot != 0) {
-                if (laSlotForState == 0) {
+            saw_Look_Ahead_முனை = உண்மை;
+            int32_t rule_இலக்கம் = முனை->fVal;     // Set when rule was originally parsed.
+            U_ASSERT(rule_இலக்கம் < fLookAheadRuleMap->size());
+            U_ASSERT(rule_இலக்கம் > 0);
+            int32_t laSlot = fLookAheadRuleMap->elementAti(rule_இலக்கம்);
+            எனில் (laSlot != 0) {
+                எனில் (laSlotForState == 0) {
                     laSlotForState = laSlot;
-                } else {
+                } இல்லையெனில் {
                     // TODO: figure out if this can fail, change to setting an error code if so.
                     U_ASSERT(laSlot == laSlotForState);
                 }
             }
         }
-        if (!sawLookAheadNode) {
-            continue;
+        எனில் (!saw_Look_Ahead_முனை) {
+            தொடர்;
         }
 
-        if (laSlotForState == 0) {
+        எனில் (laSlotForState == 0) {
             laSlotForState = ++fLASlotsInUse;
         }
 
@@ -772,16 +772,16 @@ void RBBITableBuilder::mapLookAheadRules() {
         // set the mapping from the node's rule number to the look ahead slot.
         // There can be multiple nodes/rule numbers going to the same la slot.
 
-        for (int32_t ipos=0; ipos<sd->fPositions->size(); ++ipos) {
-            RBBINode *node = static_cast<RBBINode *>(sd->fPositions->elementAt(ipos));
-            if (node->fType != RBBINode::NodeType::lookAhead) {
-                continue;
+        க்கு (int32_t ipos=0; ipos<sd->fPositions->size(); ++ipos) {
+            RBBINode *முனை = static_cast<RBBINode *>(sd->fPositions->elementAt(ipos));
+            எனில் (முனை->fType != RBBINode::முனை_Type::lookAhead) {
+                தொடர்;
             }
-            int32_t ruleNum = node->fVal;     // Set when rule was originally parsed.
-            int32_t existingVal = fLookAheadRuleMap->elementAti(ruleNum);
-            (void)existingVal;
+            int32_t rule_இலக்கம் = முனை->fVal;     // Set when rule was originally parsed.
+            int32_t existingVal = fLookAheadRuleMap->elementAti(rule_இலக்கம்);
+            (வெறுமை)existingVal;
             U_ASSERT(existingVal == 0 || existingVal == laSlotForState);
-            fLookAheadRuleMap->setElementAt(laSlotForState, ruleNum);
+            fLookAheadRuleMap->setElementAt(laSlotForState, rule_இலக்கம்);
         }
     }
 
@@ -796,41 +796,41 @@ void RBBITableBuilder::mapLookAheadRules() {
 //                                  s is an accepting state.
 //
 //-----------------------------------------------------------------------------
-void     RBBITableBuilder::flagAcceptingStates() {
-    if (U_FAILURE(*fStatus)) {
-        return;
+வெறுமை     RBBITableBuilder::flagAcceptingStates() {
+    எனில் (U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
     UVector     endMarkerNodes(*fStatus);
     RBBINode    *endMarker;
     int32_t     i;
     int32_t     n;
 
-    if (U_FAILURE(*fStatus)) {
-        return;
+    எனில் (U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
 
-    fTree->findNodes(&endMarkerNodes, RBBINode::endMark, *fStatus);
-    if (U_FAILURE(*fStatus)) {
-        return;
+    f_மரம்->findNodes(&endMarkerNodes, RBBINode::endMark, *fStatus);
+    எனில் (U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
 
-    for (i=0; i<endMarkerNodes.size(); i++) {
+    க்கு (i=0; i<endMarkerNodes.size(); i++) {
         endMarker = static_cast<RBBINode*>(endMarkerNodes.elementAt(i));
-        for (n=0; n<fDStates->size(); n++) {
+        க்கு (n=0; n<fDStates->size(); n++) {
             RBBIStateDescriptor* sd = static_cast<RBBIStateDescriptor*>(fDStates->elementAt(n));
-            if (sd->fPositions->indexOf(endMarker) >= 0) {
+            எனில் (sd->fPositions->indexOf(endMarker) >= 0) {
                 // Any non-zero value for fAccepting means this is an accepting node.
                 // The value is what will be returned to the user as the break status.
                 // If no other value was specified, force it to ACCEPTING_UNCONDITIONAL (1).
 
-                if (sd->fAccepting==0) {
+                எனில் (sd->fAccepting==0) {
                     // State hasn't been marked as accepting yet.  Do it now.
                     sd->fAccepting = fLookAheadRuleMap->elementAti(endMarker->fVal);
-                    if (sd->fAccepting == 0) {
+                    எனில் (sd->fAccepting == 0) {
                         sd->fAccepting = ACCEPTING_UNCONDITIONAL;
                     }
                 }
-                if (sd->fAccepting==ACCEPTING_UNCONDITIONAL && endMarker->fVal != 0) {
+                எனில் (sd->fAccepting==ACCEPTING_UNCONDITIONAL && endMarker->fVal != 0) {
                     // Both lookahead and non-lookahead accepting for this state.
                     // Favor the look-ahead, because a look-ahead match needs to
                     // immediately stop the run-time engine. First match, not longest.
@@ -849,29 +849,29 @@ void     RBBITableBuilder::flagAcceptingStates() {
 //    flagLookAheadStates   Very similar to flagAcceptingStates, above.
 //
 //-----------------------------------------------------------------------------
-void     RBBITableBuilder::flagLookAheadStates() {
-    if (U_FAILURE(*fStatus)) {
-        return;
+வெறுமை     RBBITableBuilder::flagLookAheadStates() {
+    எனில் (U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
     UVector     lookAheadNodes(*fStatus);
-    RBBINode    *lookAheadNode;
+    RBBINode    *look_Ahead_முனை;
     int32_t     i;
     int32_t     n;
 
-    fTree->findNodes(&lookAheadNodes, RBBINode::lookAhead, *fStatus);
-    if (U_FAILURE(*fStatus)) {
-        return;
+    f_மரம்->findNodes(&lookAheadNodes, RBBINode::lookAhead, *fStatus);
+    எனில் (U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
-    for (i=0; i<lookAheadNodes.size(); i++) {
-        lookAheadNode = static_cast<RBBINode*>(lookAheadNodes.elementAt(i));
-        U_ASSERT(lookAheadNode->fType == RBBINode::NodeType::lookAhead);
+    க்கு (i=0; i<lookAheadNodes.size(); i++) {
+        look_Ahead_முனை = static_cast<RBBINode*>(lookAheadNodes.elementAt(i));
+        U_ASSERT(look_Ahead_முனை->fType == RBBINode::முனை_Type::lookAhead);
 
-        for (n=0; n<fDStates->size(); n++) {
+        க்கு (n=0; n<fDStates->size(); n++) {
             RBBIStateDescriptor* sd = static_cast<RBBIStateDescriptor*>(fDStates->elementAt(n));
-            int32_t positionsIdx = sd->fPositions->indexOf(lookAheadNode);
-            if (positionsIdx >= 0) {
-                U_ASSERT(lookAheadNode == sd->fPositions->elementAt(positionsIdx));
-                uint32_t lookaheadSlot = fLookAheadRuleMap->elementAti(lookAheadNode->fVal);
+            int32_t positionsIdx = sd->fPositions->indexOf(look_Ahead_முனை);
+            எனில் (positionsIdx >= 0) {
+                U_ASSERT(look_Ahead_முனை == sd->fPositions->elementAt(positionsIdx));
+                uint32_t lookaheadSlot = fLookAheadRuleMap->elementAti(look_Ahead_முனை->fVal);
                 U_ASSERT(sd->fLookAhead == 0 || sd->fLookAhead == lookaheadSlot);
                 // if (sd->fLookAhead != 0 && sd->fLookAhead != lookaheadSlot) {
                 //     printf("%s:%d Bingo. sd->fLookAhead:%d   lookaheadSlot:%d\n",
@@ -891,29 +891,29 @@ void     RBBITableBuilder::flagLookAheadStates() {
 //    flagTaggedStates
 //
 //-----------------------------------------------------------------------------
-void     RBBITableBuilder::flagTaggedStates() {
-    if (U_FAILURE(*fStatus)) {
-        return;
+வெறுமை     RBBITableBuilder::flagTaggedStates() {
+    எனில் (U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
     UVector     tagNodes(*fStatus);
-    RBBINode    *tagNode;
+    RBBINode    *tag_முனை;
     int32_t     i;
     int32_t     n;
 
-    if (U_FAILURE(*fStatus)) {
-        return;
+    எனில் (U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
-    fTree->findNodes(&tagNodes, RBBINode::tag, *fStatus);
-    if (U_FAILURE(*fStatus)) {
-        return;
+    f_மரம்->findNodes(&tagNodes, RBBINode::tag, *fStatus);
+    எனில் (U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
-    for (i=0; i<tagNodes.size(); i++) {                   // For each tag node t (all of 'em)
-        tagNode = static_cast<RBBINode*>(tagNodes.elementAt(i));
+    க்கு (i=0; i<tagNodes.size(); i++) {                   // For each tag node t (all of 'em)
+        tag_முனை = static_cast<RBBINode*>(tagNodes.elementAt(i));
 
-        for (n=0; n<fDStates->size(); n++) {              //    For each state  s (row in the state table)
+        க்கு (n=0; n<fDStates->size(); n++) {              //    For each state  s (row in the state table)
             RBBIStateDescriptor* sd = static_cast<RBBIStateDescriptor*>(fDStates->elementAt(n));
-            if (sd->fPositions->indexOf(tagNode) >= 0) {  //       if  s include the tag node t
-                sortedAdd(&sd->fTagVals, tagNode->fVal);
+            எனில் (sd->fPositions->indexOf(tag_முனை) >= 0) {  //       if  s include the tag node t
+                sortedAdd(&sd->fTagVals, tag_முனை->fVal);
             }
         }
     }
@@ -931,7 +931,7 @@ void     RBBITableBuilder::flagTaggedStates() {
 //      for all tables.  Merge the ones from this table into the global set.
 //
 //-----------------------------------------------------------------------------
-void  RBBITableBuilder::mergeRuleStatusVals() {
+வெறுமை  RBBITableBuilder::mergeRuleStatusVals() {
     //
     //  The basic outline of what happens here is this...
     //
@@ -942,25 +942,25 @@ void  RBBITableBuilder::mergeRuleStatusVals() {
     //       else
     //           add the tag list for this state to the global list.
     //
-    int i;
-    int n;
+    முழு i;
+    முழு n;
 
     // Pre-set a single tag of {0} into the table.
     //   We will need this as a default, for rule sets with no explicit tagging.
-    if (fRB->fRuleStatusVals->size() == 0) {
+    எனில் (fRB->fRuleStatusVals->size() == 0) {
         fRB->fRuleStatusVals->addElement(1, *fStatus);  // Num of statuses in group
         fRB->fRuleStatusVals->addElement(static_cast<int32_t>(0), *fStatus); // and our single status of zero
     }
 
     //    For each state
-    for (n=0; n<fDStates->size(); n++) {
+    க்கு (n=0; n<fDStates->size(); n++) {
         RBBIStateDescriptor* sd = static_cast<RBBIStateDescriptor*>(fDStates->elementAt(n));
-        UVector *thisStatesTagValues = sd->fTagVals;
-        if (thisStatesTagValues == nullptr) {
+        UVector *this_States_Tag_மதிப்புகள் = sd->fTagVals;
+        எனில் (this_States_Tag_மதிப்புகள் == nullptr) {
             // No tag values are explicitly associated with this state.
             //   Set the default tag value.
             sd->fTagsIdx = 0;
-            continue;
+            தொடர்;
         }
 
         // There are tag(s) associated with this state.
@@ -971,39 +971,39 @@ void  RBBITableBuilder::mergeRuleStatusVals() {
         int32_t  nextTagGroupStart = 0;
 
         // Loop runs once per group of tags in the global list
-        while (nextTagGroupStart < fRB->fRuleStatusVals->size()) {
+        போது (nextTagGroupStart < fRB->fRuleStatusVals->size()) {
             thisTagGroupStart = nextTagGroupStart;
             nextTagGroupStart += fRB->fRuleStatusVals->elementAti(thisTagGroupStart) + 1;
-            if (thisStatesTagValues->size() != fRB->fRuleStatusVals->elementAti(thisTagGroupStart)) {
+            எனில் (this_States_Tag_மதிப்புகள்->size() != fRB->fRuleStatusVals->elementAti(thisTagGroupStart)) {
                 // The number of tags for this state is different from
                 //    the number of tags in this group from the global list.
                 //    Continue with the next group from the global list.
-                continue;
+                தொடர்;
             }
             // The lengths match, go ahead and compare the actual tag values
             //    between this state and the group from the global list.
-            for (i=0; i<thisStatesTagValues->size(); i++) {
-                if (thisStatesTagValues->elementAti(i) !=
+            க்கு (i=0; i<this_States_Tag_மதிப்புகள்->size(); i++) {
+                எனில் (this_States_Tag_மதிப்புகள்->elementAti(i) !=
                     fRB->fRuleStatusVals->elementAti(thisTagGroupStart + 1 + i) ) {
                     // Mismatch.
-                    break;
+                    நிறுத்து;
                 }
             }
 
-            if (i == thisStatesTagValues->size()) {
+            எனில் (i == this_States_Tag_மதிப்புகள்->size()) {
                 // We found a set of tag values in the global list that match
                 //   those for this state.  Use them.
                 sd->fTagsIdx = thisTagGroupStart;
-                break;
+                நிறுத்து;
             }
         }
 
-        if (sd->fTagsIdx == -1) {
+        எனில் (sd->fTagsIdx == -1) {
             // No suitable entry in the global tag list already.  Add one
             sd->fTagsIdx = fRB->fRuleStatusVals->size();
-            fRB->fRuleStatusVals->addElement(thisStatesTagValues->size(), *fStatus);
-            for (i=0; i<thisStatesTagValues->size(); i++) {
-                fRB->fRuleStatusVals->addElement(thisStatesTagValues->elementAti(i), *fStatus);
+            fRB->fRuleStatusVals->addElement(this_States_Tag_மதிப்புகள்->size(), *fStatus);
+            க்கு (i=0; i<this_States_Tag_மதிப்புகள்->size(); i++) {
+                fRB->fRuleStatusVals->addElement(this_States_Tag_மதிப்புகள்->elementAti(i), *fStatus);
             }
         }
     }
@@ -1028,26 +1028,26 @@ void  RBBITableBuilder::mergeRuleStatusVals() {
 //
 //-----------------------------------------------------------------------------
 
-void RBBITableBuilder::minimizeStates() {
-    if (U_FAILURE(*fStatus)) {
-        return;
+வெறுமை RBBITableBuilder::minimizeStates() {
+    எனில் (U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
 
-#if UPRV_HAS_SANITIZER
-    if (fDStates->size() > 512) {
+#எனில் UPRV_HAS_SANITIZER
+    எனில் (fDStates->size() > 512) {
         // This algorithm is sluggish on large state machines, and even more sluggish with
         // sanitizers, which leads the fuzzer into the weeds, see
         // https://github.com/unicode-org/icu/pull/3948#issuecomment-4335461360.
         *fStatus = U_REGEX_PATTERN_TOO_BIG;
-        return;
+        திரும்பு;
     }
 #endif
-    struct StateType {
+    கட்டமைப்பு StateType {
         uint32_t fAccepting;
         uint32_t fLookAhead;
         int32_t fTagsIdx;
-        bool operator==(StateType const &other) const {
-            return fAccepting == other.fAccepting &&
+        தருக்க operator==(StateType மாறிலி &other) மாறிலி {
+            திரும்பு fAccepting == other.fAccepting &&
                    fLookAhead == other.fLookAhead &&
                    fTagsIdx == other.fTagsIdx;
         }
@@ -1059,34 +1059,34 @@ void RBBITableBuilder::minimizeStates() {
     // If there are no lookaheads and no tags, there are only two types
     // (accepting and non-accepting) in which case this is exactly step 1
     // of Algorithm 3.6.
-    struct TypeToStates : UMemory {
-        TypeToStates(const StateType &type, UErrorCode &status)
+    கட்டமைப்பு TypeToStates : UMemory {
+        TypeToStates(மாறிலி StateType &type, UErrorCode &status)
             : type(type), states(prv::make_unique<UVector>(status, status)) {}
         StateType type;
         prv::unique_ptr<UVector> states;
     };
     UVector initialPartition(*fStatus);
     initialPartition.setDeleter(
-        [](void *p) { delete static_cast<TypeToStates *>(p); });
-    for (int32_t i = 0; i < fDStates->size(); ++i) {
-        const RBBIStateDescriptor &state =
+        [](வெறுமை *p) { delete static_cast<TypeToStates *>(p); });
+    க்கு (int32_t i = 0; i < fDStates->size(); ++i) {
+        மாறிலி RBBIStateDescriptor &state =
             *static_cast<RBBIStateDescriptor *>(fDStates->elementAt(i));
-        const StateType type{state.fAccepting,
+        மாறிலி StateType type{state.fAccepting,
                              state.fLookAhead,
                              state.fTagsIdx};
         int32_t j = 0;
-        for (; j < initialPartition.size(); ++j) {
+        க்கு (; j < initialPartition.size(); ++j) {
             auto &[type_j, states] =
                 *static_cast<TypeToStates *>(initialPartition.elementAt(j));
-            if (type_j == type) {
+            எனில் (type_j == type) {
                 states->addElement(i, *fStatus);
-                break;
+                நிறுத்து;
             }
         }
-        if (j == initialPartition.size()) {
+        எனில் (j == initialPartition.size()) {
             auto newEntry = prv::make_unique<TypeToStates>(type, *fStatus, *fStatus);
-            if (U_FAILURE(*fStatus)) {
-                return;
+            எனில் (U_FAILURE(*fStatus)) {
+                திரும்பு;
             }
             newEntry->states->addElement(i, *fStatus);
             initialPartition.adoptElement(newEntry.release(), *fStatus);
@@ -1096,13 +1096,13 @@ void RBBITableBuilder::minimizeStates() {
     // (We could call it Π, but some member companies that integrate the ICU
     // code base prohibit non-ASCII identifiers…).
     auto partition = prv::make_unique<UVector>(*fStatus, *fStatus);
-    if (U_FAILURE(*fStatus)) {
-        return;
+    எனில் (U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
     partition->setDeleter(
-        [](void *p) { delete static_cast<UVector*>(p); });
+        [](வெறுமை *p) { delete static_cast<UVector*>(p); });
     
-    for (int32_t i = 0; i < initialPartition.size(); ++i) {
+    க்கு (int32_t i = 0; i < initialPartition.size(); ++i) {
         partition->adoptElement(
             static_cast<TypeToStates*>(initialPartition.elementAt(i))->states.release(),
             *fStatus);
@@ -1113,44 +1113,44 @@ void RBBITableBuilder::minimizeStates() {
     // We then have σ(𝑠) == σ(𝑡) if and only if “for all input symbols 𝑎, states
     // 𝑠 and 𝑡 have transitions on 𝑎 to states in the same group of Π” (which is
     // what defines the refinement of 𝐺 in Fig. 3.45).
-    auto partition_signature = [&partition, this](int32_t stateIndex) -> prv::unique_ptr<UVector> {
-        const RBBIStateDescriptor &state =
+    auto partition_signature = [&partition, இது](int32_t stateIndex) -> prv::unique_ptr<UVector> {
+        மாறிலி RBBIStateDescriptor &state =
             *static_cast<RBBIStateDescriptor *>(fDStates->elementAt(stateIndex));
         auto result = prv::make_unique<UVector>(state.fDtran->size(), *fStatus, *fStatus);
-        if (U_FAILURE(*fStatus)) {
-            return nullptr;
+        எனில் (U_FAILURE(*fStatus)) {
+            திரும்பு nullptr;
         }
-        for (int32_t i = 0; i < state.fDtran->size(); ++i) {
+        க்கு (int32_t i = 0; i < state.fDtran->size(); ++i) {
             int32_t toState = state.fDtran->elementAti(i);
-            for (int32_t partIndex = 0; partIndex < partition->size(); ++partIndex) {
-                const UVector &part = *static_cast<UVector *>(partition->elementAt(partIndex));
-                if (part.contains(toState)) {
+            க்கு (int32_t partIndex = 0; partIndex < partition->size(); ++partIndex) {
+                மாறிலி UVector &part = *static_cast<UVector *>(partition->elementAt(partIndex));
+                எனில் (part.contains(toState)) {
                     result->addElement(partIndex, *fStatus);
-                    break;
+                    நிறுத்து;
                 }
             }
         }
-        result->setComparer([](const UElement left, const UElement right) -> UBool {
-            return left.integer == right.integer;
+        result->setComparer([](மாறிலி UElement left, மாறிலி UElement வலது) -> UBool {
+            திரும்பு left.integer == வலது.integer;
         });
-        return result;
+        திரும்பு result;
     };
     // The loop between steps 2. and 3. of Algorithm 3.6.
-    for (;;) {
+    க்கு (;;) {
         // Π_new.
         auto partitionNew = prv::make_unique<UVector>(*fStatus, *fStatus);
-        if (U_FAILURE(*fStatus)) {
-            return;
+        எனில் (U_FAILURE(*fStatus)) {
+            திரும்பு;
         }
         partitionNew->setDeleter(
-            [](void *p) { delete static_cast<UVector*>(p); });
+            [](வெறுமை *p) { delete static_cast<UVector*>(p); });
         // The procedure from Figure 3.45, Construction of Π_new.
-        bool refined = false;
-        for (int32_t i = 0; i < partition->size(); ++i) {
+        தருக்க refined = பொய்;
+        க்கு (int32_t i = 0; i < partition->size(); ++i) {
             // Group 𝐺 in Π (=`partition`).
-            const UVector &group = *static_cast<UVector*>(partition->elementAt(i));
+            மாறிலி UVector &group = *static_cast<UVector*>(partition->elementAt(i));
             // Partition 𝐺 based on the signature, see above.
-            struct SignatureToStates : UMemory {
+            கட்டமைப்பு SignatureToStates : UMemory {
                 SignatureToStates(prv::unique_ptr<UVector> signature, UErrorCode &status)
                     : signature(std::move(signature)), states(prv::make_unique<UVector>(status, status)) {
                 }
@@ -1158,96 +1158,96 @@ void RBBITableBuilder::minimizeStates() {
                 prv::unique_ptr<UVector> states;
             };
             UVector groupRefinement(*fStatus);
-            groupRefinement.setDeleter([](void *p) { delete static_cast<SignatureToStates*>(p); });
-            for (int32_t j = 0; j < group.size(); ++j) {
+            groupRefinement.setDeleter([](வெறுமை *p) { delete static_cast<SignatureToStates*>(p); });
+            க்கு (int32_t j = 0; j < group.size(); ++j) {
                 // Index of a state in the group.
-                const int32_t s = group.elementAti(j);
+                மாறிலி int32_t s = group.elementAti(j);
                 auto signature = partition_signature(s);
                 int32_t k = 0;
-                for (; k < groupRefinement.size(); ++k) {
-                    const auto &[subgroupSignature, subgroup] =
+                க்கு (; k < groupRefinement.size(); ++k) {
+                    மாறிலி auto &[subgroupSignature, subgroup] =
                         *static_cast<SignatureToStates*>(groupRefinement.elementAt(k));
-                    if (*subgroupSignature == *signature) {
+                    எனில் (*subgroupSignature == *signature) {
                         subgroup->addElement(s, *fStatus);
-                        break;
+                        நிறுத்து;
                     }
                 }
-                if (k == groupRefinement.size()) {
-                    const auto newEntry =
-                        new SignatureToStates(std::move(signature), *fStatus);
-                    if (U_FAILURE(*fStatus)) {
-                        return;
+                எனில் (k == groupRefinement.size()) {
+                    மாறிலி auto newEntry =
+                        புதிய SignatureToStates(std::move(signature), *fStatus);
+                    எனில் (U_FAILURE(*fStatus)) {
+                        திரும்பு;
                     }
-                    if (newEntry == nullptr) {
+                    எனில் (newEntry == nullptr) {
                       *fStatus = U_MEMORY_ALLOCATION_ERROR;
-                      return;
+                      திரும்பு;
                     }
                     newEntry->states->addElement(s, *fStatus);
                     groupRefinement.adoptElement(newEntry, *fStatus);
                 }
             }
             refined |= groupRefinement.size() > 1;
-            for (int32_t j = 0; j < groupRefinement.size(); ++j) {
+            க்கு (int32_t j = 0; j < groupRefinement.size(); ++j) {
                 auto &[_, subgroup] = *static_cast<SignatureToStates*>(
                     groupRefinement.elementAt(j));
                 partitionNew->adoptElement(subgroup.release(), *fStatus);
             }
         }
-        if (refined) {
+        எனில் (refined) {
             partition = std::move(partitionNew);
-        } else {
-            break;
+        } இல்லையெனில் {
+            நிறுத்து;
         }
     }
     // We will use the indices in `partition` as the new state indices.  Make
     // sure that the start (1) and stop (0) states remain in their correct
     // places; everything else can merrily be scrambled.
-    for (int i = 0; i < partition->size(); ++i) {
-        UVector *const part_i = static_cast<UVector *>(partition->elementAt(i));
-        if (part_i->contains(0)) {
-            void *const part_0 = partition->elementAt(0);
+    க்கு (முழு i = 0; i < partition->size(); ++i) {
+        UVector *மாறிலி part_i = static_cast<UVector *>(partition->elementAt(i));
+        எனில் (part_i->contains(0)) {
+            வெறுமை *மாறிலி part_0 = partition->elementAt(0);
             // No swap on UVector, so we briefly remove the deleter.
-            const auto deleter = partition->setDeleter(nullptr);
+            மாறிலி auto deleter = partition->setDeleter(nullptr);
             partition->setElementAt(part_i, 0);
             partition->setElementAt(part_0, i);
             partition->setDeleter(deleter);
-        } else if (part_i->contains(1)) {
-            void *const part_1 = partition->elementAt(1);
-            const auto deleter = partition->setDeleter(nullptr);
+        } இல்லையெனில் எனில் (part_i->contains(1)) {
+            வெறுமை *மாறிலி part_1 = partition->elementAt(1);
+            மாறிலி auto deleter = partition->setDeleter(nullptr);
             partition->setElementAt(part_i, 1);
             partition->setElementAt(part_1, i);
             partition->setDeleter(deleter);
         }
     }
-    if (U_FAILURE(*fStatus)) {
-        return;
+    எனில் (U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
     auto oldStateToPart = prv::make_unique_for_overwrite<uint16_t[]>(fDStates->size(), *fStatus);
-    if (U_FAILURE(*fStatus)) {
-        return;
+    எனில் (U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
-    for (int i = 0; i < partition->size(); ++i) {
-        const UVector &part = *static_cast<UVector*>(partition->elementAt(i));
-        for (int j = 0; j < part.size(); ++j) {
+    க்கு (முழு i = 0; i < partition->size(); ++i) {
+        மாறிலி UVector &part = *static_cast<UVector*>(partition->elementAt(i));
+        க்கு (முழு j = 0; j < part.size(); ++j) {
             oldStateToPart[part.elementAti(j)] = i;
         }
     }
-    auto const oldStates = prv::unique_ptr<UVector>(fDStates);
+    auto மாறிலி oldStates = prv::unique_ptr<UVector>(fDStates);
     fDStates = prv::make_unique<UVector>(*fStatus, *fStatus).release();
-    if (U_FAILURE(*fStatus)) {
-        return;
+    எனில் (U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
-    for (int i = 0; i < partition->size(); ++i) {
-        const UVector &part = *static_cast<UVector*>(partition->elementAt(i));
-        RBBIStateDescriptor *const state =
+    க்கு (முழு i = 0; i < partition->size(); ++i) {
+        மாறிலி UVector &part = *static_cast<UVector*>(partition->elementAt(i));
+        RBBIStateDescriptor *மாறிலி state =
             static_cast<RBBIStateDescriptor*>(oldStates->elementAt(part.elementAti(0)));
         fDStates->addElement(state, *fStatus);
-        for (int j = 0; j < state->fDtran->size(); ++j) {
+        க்கு (முழு j = 0; j < state->fDtran->size(); ++j) {
             state->fDtran->setElementAt(oldStateToPart[state->fDtran->elementAti(j)], j);
         }
         oldStates->setElementAt(nullptr, part.elementAti(0));
     }
-    oldStates->setDeleter([](void *p) { delete static_cast<RBBIStateDescriptor*>(p); });
+    oldStates->setDeleter([](வெறுமை *p) { delete static_cast<RBBIStateDescriptor*>(p); });
 }
 
 
@@ -1264,28 +1264,28 @@ void RBBITableBuilder::minimizeStates() {
 //             Lazily create the vector if it does not already exist.
 //
 //-----------------------------------------------------------------------------
-void RBBITableBuilder::sortedAdd(UVector **vector, int32_t val) {
+வெறுமை RBBITableBuilder::sortedAdd(UVector **vector, int32_t val) {
     int32_t i;
 
-    if (*vector == nullptr) {
-        *vector = new UVector(*fStatus);
+    எனில் (*vector == nullptr) {
+        *vector = புதிய UVector(*fStatus);
     }
-    if (*vector == nullptr || U_FAILURE(*fStatus)) {
-        return;
+    எனில் (*vector == nullptr || U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
     UVector *vec = *vector;
     int32_t  vSize = vec->size();
-    for (i=0; i<vSize; i++) {
+    க்கு (i=0; i<vSize; i++) {
         int32_t valAtI = vec->elementAti(i);
-        if (valAtI == val) {
+        எனில் (valAtI == val) {
             // The value is already in the vector.  Don't add it again.
-            return;
+            திரும்பு;
         }
-        if (valAtI > val) {
-            break;
+        எனில் (valAtI > val) {
+            நிறுத்து;
         }
     }
-    vec->insertElementAt(val, i, *fStatus);
+    vec->செருகு_Element_At(val, i, *fStatus);
 }
 
 
@@ -1297,61 +1297,61 @@ void RBBITableBuilder::sortedAdd(UVector **vector, int32_t val) {
 //             Elements may only appear once and must be sorted.
 //
 //-----------------------------------------------------------------------------
-void RBBITableBuilder::setAdd(UVector *dest, UVector *source) {
+வெறுமை RBBITableBuilder::setAdd(UVector *dest, UVector *source) {
     U_ASSERT(!dest->hasDeleter());
     U_ASSERT(!source->hasDeleter());
     int32_t destOriginalSize = dest->size();
     int32_t sourceSize       = source->size();
     int32_t di           = 0;
-    MaybeStackArray<void *, 16> destArray, sourceArray;  // Handle small cases without malloc
-    void **destPtr, **sourcePtr;
-    void **destLim, **sourceLim;
+    Maybe_அடுக்கு_Array<வெறுமை *, 16> destArray, sourceArray;  // Handle small cases without malloc
+    வெறுமை **destPtr, **sourcePtr;
+    வெறுமை **destLim, **sourceLim;
 
-    if (destOriginalSize > destArray.getCapacity()) {
-        if (destArray.resize(destOriginalSize) == nullptr) {
-            return;
+    எனில் (destOriginalSize > destArray.getCapacity()) {
+        எனில் (destArray.resize(destOriginalSize) == nullptr) {
+            திரும்பு;
         }
     }
     destPtr = destArray.getAlias();
     destLim = destPtr + destOriginalSize;  // destArray.getArrayLimit()?
 
-    if (sourceSize > sourceArray.getCapacity()) {
-        if (sourceArray.resize(sourceSize) == nullptr) {
-            return;
+    எனில் (sourceSize > sourceArray.getCapacity()) {
+        எனில் (sourceArray.resize(sourceSize) == nullptr) {
+            திரும்பு;
         }
     }
     sourcePtr = sourceArray.getAlias();
     sourceLim = sourcePtr + sourceSize;  // sourceArray.getArrayLimit()?
 
     // Avoid multiple "get element" calls by getting the contents into arrays
-    (void) dest->toArray(destPtr);
-    (void) source->toArray(sourcePtr);
+    (வெறுமை) dest->toArray(destPtr);
+    (வெறுமை) source->toArray(sourcePtr);
 
     dest->setSize(sourceSize+destOriginalSize, *fStatus);
-    if (U_FAILURE(*fStatus)) {
-        return;
+    எனில் (U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
 
-    while (sourcePtr < sourceLim && destPtr < destLim) {
-        if (*destPtr == *sourcePtr) {
+    போது (sourcePtr < sourceLim && destPtr < destLim) {
+        எனில் (*destPtr == *sourcePtr) {
             dest->setElementAt(*sourcePtr++, di++);
             destPtr++;
         }
         // This check is required for machines with segmented memory, like i5/OS.
         // Direct pointer comparison is not recommended.
-        else if (uprv_memcmp(destPtr, sourcePtr, sizeof(void *)) < 0) {
+        இல்லையெனில் எனில் (uprv_memcmp(destPtr, sourcePtr, அளவு(வெறுமை *)) < 0) {
             dest->setElementAt(*destPtr++, di++);
         }
-        else { /* *sourcePtr < *destPtr */
+        இல்லையெனில் { /* *sourcePtr < *destPtr */
             dest->setElementAt(*sourcePtr++, di++);
         }
     }
 
     // At most one of these two cleanup loops will execute
-    while (destPtr < destLim) {
+    போது (destPtr < destLim) {
         dest->setElementAt(*destPtr++, di++);
     }
-    while (sourcePtr < sourceLim) {
+    போது (sourcePtr < sourceLim) {
         dest->setElementAt(*sourcePtr++, di++);
     }
 
@@ -1368,7 +1368,7 @@ void RBBITableBuilder::setAdd(UVector *dest, UVector *source) {
 //
 //-----------------------------------------------------------------------------
 UBool RBBITableBuilder::setEquals(UVector *a, UVector *b) {
-    return a->equals(*b);
+    திரும்பு a->equals(*b);
 }
 
 
@@ -1379,13 +1379,13 @@ UBool RBBITableBuilder::setEquals(UVector *a, UVector *b) {
 //
 //-----------------------------------------------------------------------------
 #ifdef RBBI_DEBUG
-void RBBITableBuilder::printPosSets(RBBINode *n) {
-    if (n==nullptr) {
-        return;
+வெறுமை RBBITableBuilder::printPosSets(RBBINode *n) {
+    எனில் (n==nullptr) {
+        திரும்பு;
     }
     printf("\n");
-    RBBINode::printNodeHeader();
-    RBBINode::printNode(n);
+    RBBINode::print_முனை_Header();
+    RBBINode::print_முனை(n);
     RBBIDebugPrintf("         Nullable:  %s\n", n->fNullable?"true":"false");
 
     RBBIDebugPrintf("         firstpos:  ");
@@ -1397,52 +1397,52 @@ void RBBITableBuilder::printPosSets(RBBINode *n) {
     RBBIDebugPrintf("         followpos: ");
     printSet(n->fFollowPos);
 
-    printPosSets(n->fLeftChild);
-    printPosSets(n->fRightChild);
+    printPosSets(n->f_இடது_Child);
+    printPosSets(n->f_வலது_Child);
 }
 #endif
 
 //
 //    findDuplCharClassFrom()
 //
-bool RBBITableBuilder::findDuplCharClassFrom(IntPair *categories) {
-    int32_t numStates = fDStates->size();
-    int32_t numCols = fRB->fSetBuilder->getNumCharCategories();
+தருக்க RBBITableBuilder::findDuplCharClassFrom(IntPair *categories) {
+    int32_t இலக்கம்_States = fDStates->size();
+    int32_t இலக்கம்_Cols = fRB->fSetBuilder->get_இலக்கம்_Char_Categories();
 
-    for (; categories->first < numCols-1; categories->first++) {
+    க்கு (; categories->first < இலக்கம்_Cols-1; categories->first++) {
         // Note: dictionary & non-dictionary columns cannot be merged.
         //       The limitSecond value prevents considering mixed pairs.
         //       Dictionary categories are >= DictCategoriesStart.
         //       Non dict categories are   <  DictCategoriesStart.
-        int limitSecond = categories->first < fRB->fSetBuilder->getDictCategoriesStart() ?
-            fRB->fSetBuilder->getDictCategoriesStart() : numCols;
-        for (categories->second=categories->first+1; categories->second < limitSecond; categories->second++) {
+        முழு limitSecond = categories->first < fRB->fSetBuilder->getDictCategoriesStart() ?
+            fRB->fSetBuilder->getDictCategoriesStart() : இலக்கம்_Cols;
+        க்கு (categories->second=categories->first+1; categories->second < limitSecond; categories->second++) {
             // Initialized to different values to prevent returning true if numStates = 0 (implies no duplicates).
             uint16_t table_base = 0;
             uint16_t table_dupl = 1;
-            for (int32_t state=0; state<numStates; state++) {
+            க்கு (int32_t state=0; state<இலக்கம்_States; state++) {
                 RBBIStateDescriptor* sd = static_cast<RBBIStateDescriptor*>(fDStates->elementAt(state));
                 table_base = static_cast<uint16_t>(sd->fDtran->elementAti(categories->first));
                 table_dupl = static_cast<uint16_t>(sd->fDtran->elementAti(categories->second));
-                if (table_base != table_dupl) {
-                    break;
+                எனில் (table_base != table_dupl) {
+                    நிறுத்து;
                 }
             }
-            if (table_base == table_dupl) {
-                return true;
+            எனில் (table_base == table_dupl) {
+                திரும்பு உண்மை;
             }
         }
     }
-    return false;
+    திரும்பு பொய்;
 }
 
 
 //
 //    removeColumn()
 //
-void RBBITableBuilder::removeColumn(int32_t column) {
-    int32_t numStates = fDStates->size();
-    for (int32_t state=0; state<numStates; state++) {
+வெறுமை RBBITableBuilder::removeColumn(int32_t column) {
+    int32_t இலக்கம்_States = fDStates->size();
+    க்கு (int32_t state=0; state<இலக்கம்_States; state++) {
         RBBIStateDescriptor* sd = static_cast<RBBIStateDescriptor*>(fDStates->elementAt(state));
         U_ASSERT(column < sd->fDtran->size());
         sd->fDtran->removeElementAt(column);
@@ -1450,51 +1450,51 @@ void RBBITableBuilder::removeColumn(int32_t column) {
 }
 
 
-bool RBBITableBuilder::findDuplicateSafeState(IntPair *states) {
-    int32_t numStates = fSafeTable->size();
+தருக்க RBBITableBuilder::findDuplicateSafeState(IntPair *states) {
+    int32_t இலக்கம்_States = fSafeTable->size();
 
-    for (; states->first<numStates-1; states->first++) {
+    க்கு (; states->first<இலக்கம்_States-1; states->first++) {
         UnicodeString *firstRow = static_cast<UnicodeString *>(fSafeTable->elementAt(states->first));
-        for (states->second=states->first+1; states->second<numStates; states->second++) {
+        க்கு (states->second=states->first+1; states->second<இலக்கம்_States; states->second++) {
             UnicodeString *duplRow = static_cast<UnicodeString *>(fSafeTable->elementAt(states->second));
-            bool rowsMatch = true;
-            int32_t numCols = firstRow->length();
-            for (int32_t col=0; col < numCols; ++col) {
+            தருக்க rowsMatch = உண்மை;
+            int32_t இலக்கம்_Cols = firstRow->length();
+            க்கு (int32_t col=0; col < இலக்கம்_Cols; ++col) {
                 int32_t firstVal = firstRow->charAt(col);
                 int32_t duplVal = duplRow->charAt(col);
-                if (!((firstVal == duplVal) ||
+                எனில் (!((firstVal == duplVal) ||
                         ((firstVal == states->first || firstVal == states->second) &&
                         (duplVal  == states->first || duplVal  == states->second)))) {
-                    rowsMatch = false;
-                    break;
+                    rowsMatch = பொய்;
+                    நிறுத்து;
                 }
             }
-            if (rowsMatch) {
-                return true;
+            எனில் (rowsMatch) {
+                திரும்பு உண்மை;
             }
         }
     }
-    return false;
+    திரும்பு பொய்;
 }
 
-void RBBITableBuilder::removeSafeState(IntPair duplStates) {
-    const int32_t keepState = duplStates.first;
-    const int32_t duplState = duplStates.second;
+வெறுமை RBBITableBuilder::removeSafeState(IntPair duplStates) {
+    மாறிலி int32_t keepState = duplStates.first;
+    மாறிலி int32_t duplState = duplStates.second;
     U_ASSERT(keepState < duplState);
     U_ASSERT(duplState < fSafeTable->size());
 
     fSafeTable->removeElementAt(duplState);   // Note that fSafeTable has a deleter function
                                               // and will auto-delete the removed element.
-    int32_t numStates = fSafeTable->size();
-    for (int32_t state=0; state<numStates; ++state) {
+    int32_t இலக்கம்_States = fSafeTable->size();
+    க்கு (int32_t state=0; state<இலக்கம்_States; ++state) {
         UnicodeString* sd = static_cast<UnicodeString*>(fSafeTable->elementAt(state));
-        int32_t numCols = sd->length();
-        for (int32_t col=0; col<numCols; col++) {
+        int32_t இலக்கம்_Cols = sd->length();
+        க்கு (int32_t col=0; col<இலக்கம்_Cols; col++) {
             int32_t existingVal = sd->charAt(col);
             int32_t newVal = existingVal;
-            if (existingVal == duplState) {
+            எனில் (existingVal == duplState) {
                 newVal = keepState;
-            } else if (existingVal > duplState) {
+            } இல்லையெனில் எனில் (existingVal > duplState) {
                 newVal = existingVal - 1;
             }
             sd->setCharAt(col, static_cast<char16_t>(newVal));
@@ -1507,9 +1507,9 @@ void RBBITableBuilder::removeSafeState(IntPair duplStates) {
  * RemoveDuplicateStates
  */
 int32_t RBBITableBuilder::removeDuplicateStates() {
-    const int32_t oldStateCount = fDStates->size();
+    மாறிலி int32_t old_State_மொத்தம் = fDStates->size();
     minimizeStates();
-    return fDStates->size() - oldStateCount;
+    திரும்பு fDStates->size() - old_State_மொத்தம்;
 }
 
 
@@ -1563,50 +1563,50 @@ int32_t RBBITableBuilder::removeDuplicateStates() {
  * This function first computes the adjacency matrix of lookahead reachability, and then colours the
  * graph of lookaheads and reassigns lookahead slots accordingly.
  */
-void RBBITableBuilder::minimizeLookaheads() {
-    if (fLASlotsInUse == ACCEPTING_UNCONDITIONAL) {
-        return;
+வெறுமை RBBITableBuilder::minimizeLookaheads() {
+    எனில் (fLASlotsInUse == ACCEPTING_UNCONDITIONAL) {
+        திரும்பு;
     }
-    const int32_t lookaheadCount = fLASlotsInUse - ACCEPTING_UNCONDITIONAL;
+    மாறிலி int32_t lookahead_மொத்தம் = fLASlotsInUse - ACCEPTING_UNCONDITIONAL;
     // The last lookahead is fLASlotsInUse.
-    const int32_t firstLookahead = ACCEPTING_UNCONDITIONAL + 1;
-    const auto stateDescriptor = [this](const int32_t state) -> RBBIStateDescriptor & {
-        return *static_cast<RBBIStateDescriptor *>(fDStates->elementAt(state));
+    மாறிலி int32_t firstLookahead = ACCEPTING_UNCONDITIONAL + 1;
+    மாறிலி auto stateDescriptor = [இது](மாறிலி int32_t state) -> RBBIStateDescriptor & {
+        திரும்பு *static_cast<RBBIStateDescriptor *>(fDStates->elementAt(state));
     };
 
-    const auto lookaheadReachability =
-        prv::make_unique<bool[]>(lookaheadCount * lookaheadCount, *fStatus);
-    if (U_FAILURE(*fStatus)) {
-        return;
+    மாறிலி auto lookaheadReachability =
+        prv::make_unique<தருக்க[]>(lookahead_மொத்தம் * lookahead_மொத்தம், *fStatus);
+    எனில் (U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
-    for (int32_t l = firstLookahead; l <= fLASlotsInUse; ++l) {
-        for (int32_t k = firstLookahead; k <= fLASlotsInUse; ++k) {
-            if (k != l) {
-                for (int32_t source = 1; source < fDStates->size(); ++source) {
-                    if (static_cast<int32_t>(stateDescriptor(source).fLookAhead) != l) {
-                        continue;
+    க்கு (int32_t l = firstLookahead; l <= fLASlotsInUse; ++l) {
+        க்கு (int32_t k = firstLookahead; k <= fLASlotsInUse; ++k) {
+            எனில் (k != l) {
+                க்கு (int32_t source = 1; source < fDStates->size(); ++source) {
+                    எனில் (static_cast<int32_t>(stateDescriptor(source).fLookAhead) != l) {
+                        தொடர்;
                     }
-                    if (reachableByTransitions(
+                    எனில் (reachableByTransitions(
                             *fDStates, source, /*isSink=*/
-                            [&](const int32_t state) {
-                                return static_cast<int32_t>(stateDescriptor(state).fAccepting) == k;
+                            [&](மாறிலி int32_t state) {
+                                திரும்பு static_cast<int32_t>(stateDescriptor(state).fAccepting) == k;
                             },
                             /*excludedState=*/
-                            [&](const int32_t state) {
-                                return static_cast<int32_t>(stateDescriptor(state).fLookAhead) == k;
+                            [&](மாறிலி int32_t state) {
+                                திரும்பு static_cast<int32_t>(stateDescriptor(state).fLookAhead) == k;
                             },
                             *fStatus)) {
-                        lookaheadReachability[(l - firstLookahead) * lookaheadCount + k -
-                                              firstLookahead] = true;
+                        lookaheadReachability[(l - firstLookahead) * lookahead_மொத்தம் + k -
+                                              firstLookahead] = உண்மை;
                     }
                 }
             }
         }
     }
 
-    const auto colours = prv::make_unique_for_overwrite<int32_t[]>(lookaheadCount, *fStatus);
-    if (U_FAILURE(*fStatus)) {
-        return;
+    மாறிலி auto colours = prv::make_unique_for_overwrite<int32_t[]>(lookahead_மொத்தம், *fStatus);
+    எனில் (U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
     // Brute-force colouring: the number of lookaheads is in practice small, and the chromatic
     // number is in practice 1, so this usually terminates in one iteration of the first two loops.
@@ -1614,50 +1614,50 @@ void RBBITableBuilder::minimizeLookaheads() {
     // expressions anyway.
     // The outer loop terminates after at most `lookaheadCount` iterations
     // (when the chromatic number equals the number of lookaheads being coloured).
-    for (int32_t chromaticNumber = 1;; ++chromaticNumber) {
-        uprv_memset(colours.get(), 0, sizeof(int32_t) * lookaheadCount);
+    க்கு (int32_t chromatic_எண் = 1;; ++chromatic_எண்) {
+        uprv_memset(colours.get(), 0, அளவு(int32_t) * lookahead_மொத்தம்);
         // This loop terminates after at most chromaticNumber ** lookaheadCount iterations.
-        for (;;) {
+        க்கு (;;) {
             // Here `source` and `sink` correspond to lookaheads, not states.
-            for (int source = 0; source < lookaheadCount; ++source) {
-                for (int sink = 0; sink < lookaheadCount; ++sink) {
-                    if (lookaheadReachability[source * lookaheadCount + sink] &&
+            க்கு (முழு source = 0; source < lookahead_மொத்தம்; ++source) {
+                க்கு (முழு sink = 0; sink < lookahead_மொத்தம்; ++sink) {
+                    எனில் (lookaheadReachability[source * lookahead_மொத்தம் + sink] &&
                         colours[source] == colours[sink]) {
-                        goto nextColouring;
+                        செல் nextColouring;
                     }
                 }
             }
 
             // We have found a valid colouring of the graph of lookaheads.  Assign lookahead slots
             // accordingly.
-            for (int i = 0; i < fDStates->size(); ++i) {
-                if (stateDescriptor(i).fAccepting > ACCEPTING_UNCONDITIONAL) {
+            க்கு (முழு i = 0; i < fDStates->size(); ++i) {
+                எனில் (stateDescriptor(i).fAccepting > ACCEPTING_UNCONDITIONAL) {
                     stateDescriptor(i).fAccepting =
                         firstLookahead +
                         colours[stateDescriptor(i).fAccepting - firstLookahead];
                 }
-                if (stateDescriptor(i).fLookAhead != 0) {
+                எனில் (stateDescriptor(i).fLookAhead != 0) {
                     stateDescriptor(i).fLookAhead =
                         ACCEPTING_UNCONDITIONAL + 1 +
                         colours[stateDescriptor(i).fLookAhead - firstLookahead];
                 }
             }
-            fLASlotsInUse = ACCEPTING_UNCONDITIONAL + chromaticNumber;
-            return;
+            fLASlotsInUse = ACCEPTING_UNCONDITIONAL + chromatic_எண்;
+            திரும்பு;
 
           nextColouring:
             // Increment the colour of the first lookahead, and then carry if we reach
             // `chromaticNumber` (which is one more than the greatest colour).
             ++colours[0];
-            for (int32_t i = 0; i < lookaheadCount - 1 && colours[i] == chromaticNumber;
+            க்கு (int32_t i = 0; i < lookahead_மொத்தம் - 1 && colours[i] == chromatic_எண்;
                  ++i) {
                 colours[i] = 0;
                 ++colours[i + 1];
             }
-            if (colours[lookaheadCount - 1] == chromaticNumber) {
+            எனில் (colours[lookahead_மொத்தம் - 1] == chromatic_எண்) {
                 // We tried all assignments of colours in {0, …, chromaticNumber - 1},
                 // we need more colours.
-                break;
+                நிறுத்து;
             }
         }
     }
@@ -1670,32 +1670,32 @@ void RBBITableBuilder::minimizeLookaheads() {
 //                     state transition table.
 //
 //-----------------------------------------------------------------------------
-int32_t  RBBITableBuilder::getTableSize() const {
+int32_t  RBBITableBuilder::getTableSize() மாறிலி {
     int32_t    size = 0;
-    int32_t    numRows;
-    int32_t    numCols;
+    int32_t    இலக்கம்_Rows;
+    int32_t    இலக்கம்_Cols;
     int32_t    rowSize;
 
-    if (fTree == nullptr) {
-        return 0;
+    எனில் (f_மரம் == nullptr) {
+        திரும்பு 0;
     }
 
     size    = offsetof(RBBIStateTable, fTableData);    // The header, with no rows to the table.
 
-    numRows = fDStates->size();
-    numCols = fRB->fSetBuilder->getNumCharCategories();
+    இலக்கம்_Rows = fDStates->size();
+    இலக்கம்_Cols = fRB->fSetBuilder->get_இலக்கம்_Char_Categories();
 
-    if (use8BitsForTable()) {
-        rowSize = offsetof(RBBIStateTableRow8, fNextState) + sizeof(int8_t)*numCols;
-    } else {
-        rowSize = offsetof(RBBIStateTableRow16, fNextState) + sizeof(int16_t)*numCols;
+    எனில் (use8BitsForTable()) {
+        rowSize = offsetof(RBBIStateTableRow8, fNextState) + அளவு(int8_t)*இலக்கம்_Cols;
+    } இல்லையெனில் {
+        rowSize = offsetof(RBBIStateTableRow16, fNextState) + அளவு(int16_t)*இலக்கம்_Cols;
     }
-    size   += numRows * rowSize;
-    return size;
+    size   += இலக்கம்_Rows * rowSize;
+    திரும்பு size;
 }
 
-bool RBBITableBuilder::use8BitsForTable() const {
-    return fDStates->size() <= kMaxStateFor8BitsTable;
+தருக்க RBBITableBuilder::use8BitsForTable() மாறிலி {
+    திரும்பு fDStates->size() <= kMaxStateFor8BitsTable;
 }
 
 //-----------------------------------------------------------------------------
@@ -1705,40 +1705,40 @@ bool RBBITableBuilder::use8BitsForTable() const {
 //                    must be available at the output address "where".
 //
 //-----------------------------------------------------------------------------
-void RBBITableBuilder::exportTable(void *where) {
+வெறுமை RBBITableBuilder::exportTable(வெறுமை *where) {
     RBBIStateTable* table = static_cast<RBBIStateTable*>(where);
     uint32_t           state;
-    int                col;
+    முழு                col;
 
-    if (U_FAILURE(*fStatus) || fTree == nullptr) {
-        return;
+    எனில் (U_FAILURE(*fStatus) || f_மரம் == nullptr) {
+        திரும்பு;
     }
 
-    int32_t catCount = fRB->fSetBuilder->getNumCharCategories();
-    if (catCount > 0x7fff ||
+    int32_t cat_மொத்தம் = fRB->fSetBuilder->get_இலக்கம்_Char_Categories();
+    எனில் (cat_மொத்தம் > 0x7fff ||
         fDStates->size() > 0x7fff) {
         *fStatus = U_BRK_INTERNAL_ERROR;
-        return;
+        திரும்பு;
     }
 
-    table->fNumStates = fDStates->size();
+    table->f_இலக்கம்_States = fDStates->size();
     table->fDictCategoriesStart = fRB->fSetBuilder->getDictCategoriesStart();
     table->fLookAheadResultsSize = fLASlotsInUse == ACCEPTING_UNCONDITIONAL ? 0 : fLASlotsInUse + 1;
     table->fFlags     = 0;
-    if (use8BitsForTable()) {
-        table->fRowLen    = offsetof(RBBIStateTableRow8, fNextState) + sizeof(uint8_t) * catCount;
+    எனில் (use8BitsForTable()) {
+        table->fRowLen    = offsetof(RBBIStateTableRow8, fNextState) + அளவு(uint8_t) * cat_மொத்தம்;
         table->fFlags  |= RBBI_8BITS_ROWS;
-    } else {
-        table->fRowLen    = offsetof(RBBIStateTableRow16, fNextState) + sizeof(int16_t) * catCount;
+    } இல்லையெனில் {
+        table->fRowLen    = offsetof(RBBIStateTableRow16, fNextState) + அளவு(int16_t) * cat_மொத்தம்;
     }
-    if (fRB->fLookAheadHardBreak) {
+    எனில் (fRB->fLookAheadHardBreak) {
         table->fFlags  |= RBBI_LOOKAHEAD_HARD_BREAK;
     }
 
-    for (state=0; state<table->fNumStates; state++) {
+    க்கு (state=0; state<table->f_இலக்கம்_States; state++) {
         RBBIStateDescriptor* sd = static_cast<RBBIStateDescriptor*>(fDStates->elementAt(state));
         RBBIStateTableRow* row = reinterpret_cast<RBBIStateTableRow*>(table->fTableData + state * table->fRowLen);
-        if (use8BitsForTable()) {
+        எனில் (use8BitsForTable()) {
             U_ASSERT (sd->fAccepting <= 255);
             U_ASSERT (sd->fLookAhead <= 255);
             U_ASSERT (0 <= sd->fTagsIdx && sd->fTagsIdx <= 255);
@@ -1746,18 +1746,18 @@ void RBBITableBuilder::exportTable(void *where) {
             r8->fAccepting = sd->fAccepting;
             r8->fLookAhead = sd->fLookAhead;
             r8->fTagsIdx   = sd->fTagsIdx;
-            for (col=0; col<catCount; col++) {
+            க்கு (col=0; col<cat_மொத்தம்; col++) {
                 U_ASSERT (sd->fDtran->elementAti(col) <= kMaxStateFor8BitsTable);
                 r8->fNextState[col] = sd->fDtran->elementAti(col);
             }
-        } else {
+        } இல்லையெனில் {
             U_ASSERT (sd->fAccepting <= 0xffff);
             U_ASSERT (sd->fLookAhead <= 0xffff);
             U_ASSERT (0 <= sd->fTagsIdx && sd->fTagsIdx <= 0xffff);
             row->r16.fAccepting = sd->fAccepting;
             row->r16.fLookAhead = sd->fLookAhead;
             row->r16.fTagsIdx   = sd->fTagsIdx;
-            for (col=0; col<catCount; col++) {
+            க்கு (col=0; col<cat_மொத்தம்; col++) {
                 row->r16.fNextState[col] = sd->fDtran->elementAti(col);
             }
         }
@@ -1768,7 +1768,7 @@ void RBBITableBuilder::exportTable(void *where) {
 /**
  *   Synthesize a safe state table from the main state table.
  */
-void RBBITableBuilder::buildSafeReverseTable(UErrorCode &status) {
+வெறுமை RBBITableBuilder::buildSafeReverseTable(UErrorCode &status) {
     // The safe table creation has three steps:
 
     // 1. Identify pairs of character classes that are "safe." Safe means that boundaries
@@ -1804,15 +1804,15 @@ void RBBITableBuilder::buildSafeReverseTable(UErrorCode &status) {
     // Each safe pair is stored as two UChars in the safePair string.
     UnicodeString safePairs;
 
-    int32_t numCharClasses = fRB->fSetBuilder->getNumCharCategories();
-    int32_t numStates = fDStates->size();
+    int32_t இலக்கம்_Char_Classes = fRB->fSetBuilder->get_இலக்கம்_Char_Categories();
+    int32_t இலக்கம்_States = fDStates->size();
     // The elements at indices 0 and ACCEPTING_UNCONDITIONAL (1) are never used.
-    const auto lookaheadPositions =
+    மாறிலி auto lookaheadPositions =
         prv::make_unique_for_overwrite<int8_t[]>(fLASlotsInUse + 1, status);
-    const auto wantedLookaheadsInPair =
+    மாறிலி auto wantedLookaheadsInPair =
         prv::make_unique_for_overwrite<int8_t[]>(fLASlotsInUse + 1, status);
-    if (U_FAILURE(status)) {
-        return;
+    எனில் (U_FAILURE(status)) {
+        திரும்பு;
     }
     // Same as in rbbi.cpp.
     // TODO(egg): Maybe this should move to rbbidata.h like ACCEPTING_UNCONDITIONAL?
@@ -1821,65 +1821,65 @@ void RBBITableBuilder::buildSafeReverseTable(UErrorCode &status) {
     constexpr int32_t BEFORE_PAIR = -2;
     // In lookaheadPositions, index -1 is used to signify that the lookahead has not been set.
     constexpr int8_t LOOKAHEAD_NOT_SET = -1;
-    for (int32_t c1 = 1; c1 < numCharClasses; ++c1) {
-        if (fRB->fSetBuilder->getFirstChar(c1) < 0) {
-          continue;
+    க்கு (int32_t c1 = 1; c1 < இலக்கம்_Char_Classes; ++c1) {
+        எனில் (fRB->fSetBuilder->getFirstChar(c1) < 0) {
+          தொடர்;
         }
-        for (int32_t c2 = 1; c2 < numCharClasses; ++c2) {
-            if (fRB->fSetBuilder->getFirstChar(c2) < 0) {
-                continue;
+        க்கு (int32_t c2 = 1; c2 < இலக்கம்_Char_Classes; ++c2) {
+            எனில் (fRB->fSetBuilder->getFirstChar(c2) < 0) {
+                தொடர்;
             }
             int32_t wantedEndState = -1;
             int32_t wantedLastAcceptingPosition;
-            bool mustCheckConsistentWithStartC2 = false;
-            const int32_t text[2] = {c1, c2};
-            for (int32_t injectedState = START_STATE; injectedState < numStates; ++injectedState) {
-                for (int32_t injectedLookahead = ACCEPTING_UNCONDITIONAL;
+            தருக்க mustCheckConsistentWithStartC2 = பொய்;
+            மாறிலி int32_t text[2] = {c1, c2};
+            க்கு (int32_t injectedState = START_STATE; injectedState < இலக்கம்_States; ++injectedState) {
+                க்கு (int32_t injectedLookahead = ACCEPTING_UNCONDITIONAL;
                      injectedLookahead <= fLASlotsInUse; ++injectedLookahead) {
                     int32_t lastBreak = BEFORE_PAIR;
                     int32_t lastAcceptingPosition = BEFORE_PAIR;
                     uprv_memset(lookaheadPositions.get(), LOOKAHEAD_NOT_SET, fLASlotsInUse + 1);
-                    if (injectedLookahead != ACCEPTING_UNCONDITIONAL) {
+                    எனில் (injectedLookahead != ACCEPTING_UNCONDITIONAL) {
                         lookaheadPositions[injectedLookahead] = BEFORE_PAIR;
                     }
                     {
-                        const RBBIStateDescriptor &injectedStateDescriptor =
+                        மாறிலி RBBIStateDescriptor &injectedStateDescriptor =
                             *static_cast<RBBIStateDescriptor *>(fDStates->elementAt(injectedState));
-                        if (injectedStateDescriptor.fAccepting == ACCEPTING_UNCONDITIONAL) {
+                        எனில் (injectedStateDescriptor.fAccepting == ACCEPTING_UNCONDITIONAL) {
                             lastAcceptingPosition = 0;
-                        } else if (static_cast<int32_t>(injectedStateDescriptor.fAccepting) ==
+                        } இல்லையெனில் எனில் (static_cast<int32_t>(injectedStateDescriptor.fAccepting) ==
                                    injectedLookahead) {
-                            continue;
+                            தொடர்;
                         }
-                        if (injectedStateDescriptor.fLookAhead != 0) {
+                        எனில் (injectedStateDescriptor.fLookAhead != 0) {
                             lookaheadPositions[injectedStateDescriptor.fLookAhead] = 0;
                         }
                     }
                     int32_t s = injectedState;
                     int32_t i = 0;
-                    goto dfaStep;
+                    செல் dfaStep;
                     // Loop Run_DFA in L2/26-135, without the termination condition (we do not need
                     // to simulate the end of text).
-                    for (;;) {
+                    க்கு (;;) {
                         s = START_STATE;
                         uprv_memset(lookaheadPositions.get(), LOOKAHEAD_NOT_SET, fLASlotsInUse + 1);
                         i = lastBreak;
                         // Loop Find_Next_Break in L2/26-135.
-                        for (;;) {
+                        க்கு (;;) {
                         dfaStep:
-                            if (i == BEFORE_PAIR || i == 2) {
-                                goto inspectFinalState;
+                            எனில் (i == BEFORE_PAIR || i == 2) {
+                                செல் inspectFinalState;
                             }
-                            const int32_t symbolAhead = text[i];
+                            மாறிலி int32_t குறியீடு_Ahead = text[i];
                             ++i;
-                            const RBBIStateDescriptor *sDescriptor =
+                            மாறிலி RBBIStateDescriptor *sDescriptor =
                                 static_cast<RBBIStateDescriptor *>(fDStates->elementAt(s));
-                            if (sDescriptor->fDtran->elementAti(symbolAhead) != 0) {
-                                s = sDescriptor->fDtran->elementAti(symbolAhead);
+                            எனில் (sDescriptor->fDtran->elementAti(குறியீடு_Ahead) != 0) {
+                                s = sDescriptor->fDtran->elementAti(குறியீடு_Ahead);
                                 sDescriptor =
                                     static_cast<RBBIStateDescriptor *>(fDStates->elementAt(s));
-                            } else {
-                                if (lastBreak != BEFORE_PAIR &&
+                            } இல்லையெனில் {
+                                எனில் (lastBreak != BEFORE_PAIR &&
                                     lastAcceptingPosition == lastBreak) {
                                     // The pair (c1, c2) puts us in an infinite loop from the
                                     // current configuration, presumably because some one-character
@@ -1887,54 +1887,54 @@ void RBBITableBuilder::buildSafeReverseTable(UErrorCode &status) {
                                     // This should never happen for a segmentation algorithm.  The
                                     // RBBI implementation forcefully advances the iterator in that
                                     // case; let’s just say the pair is unsafe and move on.
-                                    goto nextSymbolPair;
+                                    செல் next_குறியீடு_Pair;
                                 }
                                 lastBreak = lastAcceptingPosition;
-                                break;
+                                நிறுத்து;
                             }
 
-                            if (sDescriptor->fAccepting == ACCEPTING_UNCONDITIONAL) {
+                            எனில் (sDescriptor->fAccepting == ACCEPTING_UNCONDITIONAL) {
                                 lastAcceptingPosition = i;
-                            } else if (sDescriptor->fAccepting > ACCEPTING_UNCONDITIONAL &&
+                            } இல்லையெனில் எனில் (sDescriptor->fAccepting > ACCEPTING_UNCONDITIONAL &&
                                        lookaheadPositions[sDescriptor->fAccepting] !=
                                            LOOKAHEAD_NOT_SET) {
                                 lastBreak = lookaheadPositions[sDescriptor->fAccepting];
-                                break;
+                                நிறுத்து;
                             }
-                            if (sDescriptor->fLookAhead != 0) {
+                            எனில் (sDescriptor->fLookAhead != 0) {
                                 lookaheadPositions[sDescriptor->fLookAhead] = i;
                             }
                         }
                     }
                 inspectFinalState:
-                    if (i == BEFORE_PAIR) {
+                    எனில் (i == BEFORE_PAIR) {
                         // Starting on `injectedState` with `injectedLookahead` set, with the pair
                         // (c1, c2) ahead, the state machine finds a break before the pair; it will
                         // thus come back to the pair in a different configuration, which is covered
                         // by some other iteration of the loop over `injectedState` and
                         // `injectedLookahead`.
-                        continue;
+                        தொடர்;
                     }
-                    if (wantedEndState < 0) {
+                    எனில் (wantedEndState < 0) {
                         wantedEndState = s;
                         wantedLastAcceptingPosition = lastAcceptingPosition;
-                        for (int32_t l = ACCEPTING_UNCONDITIONAL + 1; l <= fLASlotsInUse; ++l) {
-                            if (lookaheadPositions[l] != LOOKAHEAD_NOT_SET &&
+                        க்கு (int32_t l = ACCEPTING_UNCONDITIONAL + 1; l <= fLASlotsInUse; ++l) {
+                            எனில் (lookaheadPositions[l] != LOOKAHEAD_NOT_SET &&
                                 lookaheadPositions[l] != BEFORE_PAIR &&
                                 lookaheadPositions[l] != 0) {
                                 wantedLookaheadsInPair[l] = lookaheadPositions[i];
-                            } else {
+                            } இல்லையெனில் {
                                 wantedLookaheadsInPair[l] = LOOKAHEAD_NOT_SET;
                             }
                         }
-                    } else {
-                        if (wantedEndState != s) {
+                    } இல்லையெனில் {
+                        எனில் (wantedEndState != s) {
                             // We can get out of the pair on different states depending on the
                             // initial configuration.
-                            goto nextSymbolPair;
+                            செல் next_குறியீடு_Pair;
                         }
-                        if (wantedLastAcceptingPosition != lastAcceptingPosition) {
-                            goto nextSymbolPair;
+                        எனில் (wantedLastAcceptingPosition != lastAcceptingPosition) {
+                            செல் next_குறியீடு_Pair;
                         }
                     }
                     // A lookahead some distance before the pair (set to BEFORE_PAIR) means we
@@ -1946,59 +1946,59 @@ void RBBITableBuilder::buildSafeReverseTable(UErrorCode &status) {
                     // pair), these have two ways of being safe: either they are always set, or it
                     // does not matter if they are set, because if they match we come back with the
                     // same state.
-                    for (int32_t l = ACCEPTING_UNCONDITIONAL + 1; l <= fLASlotsInUse; ++l) {
-                        if (lookaheadPositions[l] == BEFORE_PAIR || lookaheadPositions[l] == 0 ||
+                    க்கு (int32_t l = ACCEPTING_UNCONDITIONAL + 1; l <= fLASlotsInUse; ++l) {
+                        எனில் (lookaheadPositions[l] == BEFORE_PAIR || lookaheadPositions[l] == 0 ||
                             lookaheadPositions[l] == wantedLookaheadsInPair[l]) {
-                            continue;
+                            தொடர்;
                         }
-                        if (lookaheadPositions[l] == 2 || wantedLookaheadsInPair[l] == 2) {
+                        எனில் (lookaheadPositions[l] == 2 || wantedLookaheadsInPair[l] == 2) {
                             // A lookahead after the pair means we will come back to the end of the
                             // pair on the start state if it matches, so in order for the pair to be
                             // safe if that lookahead is not consistently set, we must have left it
                             // on the start state.
-                            if (wantedEndState != START_STATE) {
-                                goto nextSymbolPair;
+                            எனில் (wantedEndState != START_STATE) {
+                                செல் next_குறியீடு_Pair;
                             }
                         }
-                        if (lookaheadPositions[l] == 1 || wantedLookaheadsInPair[l] == 1) {
+                        எனில் (lookaheadPositions[l] == 1 || wantedLookaheadsInPair[l] == 1) {
                             // If a lookahead in the middle of the pair matches, we will come back
                             // to c2 on the start state.
-                            mustCheckConsistentWithStartC2 = true;
+                            mustCheckConsistentWithStartC2 = உண்மை;
                         }
                     }
                 }
             }
-            if (mustCheckConsistentWithStartC2) {
-                const RBBIStateDescriptor& startDescriptor =
+            எனில் (mustCheckConsistentWithStartC2) {
+                மாறிலி RBBIStateDescriptor& startDescriptor =
                     *static_cast<RBBIStateDescriptor *>(fDStates->elementAt(START_STATE));
-                const auto c2State = startDescriptor.fDtran->elementAti(c2);
-                if (c2State != wantedEndState) {
-                    goto nextSymbolPair;
+                மாறிலி auto c2State = startDescriptor.fDtran->elementAti(c2);
+                எனில் (c2State != wantedEndState) {
+                    செல் next_குறியீடு_Pair;
                 }
-                const RBBIStateDescriptor& c2StateDescriptor =
+                மாறிலி RBBIStateDescriptor& c2StateDescriptor =
                     *static_cast<RBBIStateDescriptor *>(fDStates->elementAt(c2State));
                 // In a segmentation algorithm, any single symbol transitions to an
                 // accepting state from the start state (a single character is a
                 // possible segment), so we know c2State is accepting.
                 U_ASSERT(c2StateDescriptor.fAccepting == ACCEPTING_UNCONDITIONAL);
-                if (wantedLastAcceptingPosition != 2) {
-                    goto nextSymbolPair;
+                எனில் (wantedLastAcceptingPosition != 2) {
+                    செல் next_குறியீடு_Pair;
                 }
                 // If that in turn sets a lookahead, we have a lookahead after the
                 // pair.  If we consistently have that the pair is safe.  Otherwise, if we match
                 // that lookahead, we end up on the start state.
-                for (int32_t l = ACCEPTING_UNCONDITIONAL + 1; l <= fLASlotsInUse; ++l) {
-                    if (((wantedLookaheadsInPair[l] == 2) !=
+                க்கு (int32_t l = ACCEPTING_UNCONDITIONAL + 1; l <= fLASlotsInUse; ++l) {
+                    எனில் (((wantedLookaheadsInPair[l] == 2) !=
                          (static_cast<int32_t>(c2StateDescriptor.fLookAhead) == l)) &&
                         wantedEndState != START_STATE) {
-                        goto nextSymbolPair;
+                        செல் next_குறியீடு_Pair;
                     }
                 }
             }
             safePairs.append(static_cast<char16_t>(c1));
             safePairs.append(static_cast<char16_t>(c2));
-        nextSymbolPair:
-            continue;
+        next_குறியீடு_Pair:
+            தொடர்;
         }
     }
 
@@ -2014,35 +2014,35 @@ void RBBITableBuilder::buildSafeReverseTable(UErrorCode &status) {
 
     U_ASSERT(fSafeTable == nullptr);
     LocalPointer<UVector> lpSafeTable(
-        new UVector(uprv_deleteUObject, uhash_compareUnicodeString, numCharClasses + 2, status), status);
-    if (U_FAILURE(status)) {
-        return;
+        புதிய UVector(uprv_deleteUObject, uhash_compareUnicodeString, இலக்கம்_Char_Classes + 2, status), status);
+    எனில் (U_FAILURE(status)) {
+        திரும்பு;
     }
     fSafeTable = lpSafeTable.orphan();
-    for (int32_t row=0; row<numCharClasses + 2; ++row) {
-        LocalPointer<UnicodeString> lpString(new UnicodeString(numCharClasses, 0, numCharClasses+4), status);
+    க்கு (int32_t row=0; row<இலக்கம்_Char_Classes + 2; ++row) {
+        LocalPointer<UnicodeString> lpString(புதிய UnicodeString(இலக்கம்_Char_Classes, 0, இலக்கம்_Char_Classes+4), status);
         fSafeTable->adoptElement(lpString.orphan(), status);
     }
-    if (U_FAILURE(status)) {
-        return;
+    எனில் (U_FAILURE(status)) {
+        திரும்பு;
     }
 
     // From the start state, each input char class transitions to the state for that input.
     UnicodeString &startState = *static_cast<UnicodeString *>(fSafeTable->elementAt(1));
-    for (int32_t charClass=0; charClass < numCharClasses; ++charClass) {
+    க்கு (int32_t charClass=0; charClass < இலக்கம்_Char_Classes; ++charClass) {
         // Note: +2 for the start & stop state.
         startState.setCharAt(charClass, static_cast<char16_t>(charClass+2));
     }
 
     // Initially make every other state table row look like the start state row,
-    for (int32_t row=2; row<numCharClasses+2; ++row) {
+    க்கு (int32_t row=2; row<இலக்கம்_Char_Classes+2; ++row) {
         UnicodeString &rowState = *static_cast<UnicodeString *>(fSafeTable->elementAt(row));
         rowState = startState;   // UnicodeString assignment, copies contents.
     }
 
     // Run through the safe pairs, set the next state to zero when pair has been seen.
     // Zero being the stop state, meaning we found a safe point.
-    for (int32_t pairIdx=0; pairIdx<safePairs.length(); pairIdx+=2) {
+    க்கு (int32_t pairIdx=0; pairIdx<safePairs.length(); pairIdx+=2) {
         int32_t c1 = safePairs.charAt(pairIdx);
         int32_t c2 = safePairs.charAt(pairIdx + 1);
 
@@ -2052,7 +2052,7 @@ void RBBITableBuilder::buildSafeReverseTable(UErrorCode &status) {
 
     // Remove duplicate or redundant rows from the table.
     IntPair states = {1, 0};
-    while (findDuplicateSafeState(&states)) {
+    போது (findDuplicateSafeState(&states)) {
         // printf("Removing duplicate safe states (%d, %d)\n", states.first, states.second);
         removeSafeState(states);
     }
@@ -2065,32 +2065,32 @@ void RBBITableBuilder::buildSafeReverseTable(UErrorCode &status) {
 //                         safe state table.
 //
 //-----------------------------------------------------------------------------
-int32_t  RBBITableBuilder::getSafeTableSize() const {
+int32_t  RBBITableBuilder::getSafeTableSize() மாறிலி {
     int32_t    size = 0;
-    int32_t    numRows;
-    int32_t    numCols;
+    int32_t    இலக்கம்_Rows;
+    int32_t    இலக்கம்_Cols;
     int32_t    rowSize;
 
-    if (fSafeTable == nullptr) {
-        return 0;
+    எனில் (fSafeTable == nullptr) {
+        திரும்பு 0;
     }
 
     size    = offsetof(RBBIStateTable, fTableData);    // The header, with no rows to the table.
 
-    numRows = fSafeTable->size();
-    numCols = fRB->fSetBuilder->getNumCharCategories();
+    இலக்கம்_Rows = fSafeTable->size();
+    இலக்கம்_Cols = fRB->fSetBuilder->get_இலக்கம்_Char_Categories();
 
-    if (use8BitsForSafeTable()) {
-        rowSize = offsetof(RBBIStateTableRow8, fNextState) + sizeof(int8_t)*numCols;
-    } else {
-        rowSize = offsetof(RBBIStateTableRow16, fNextState) + sizeof(int16_t)*numCols;
+    எனில் (use8BitsForSafeTable()) {
+        rowSize = offsetof(RBBIStateTableRow8, fNextState) + அளவு(int8_t)*இலக்கம்_Cols;
+    } இல்லையெனில் {
+        rowSize = offsetof(RBBIStateTableRow16, fNextState) + அளவு(int16_t)*இலக்கம்_Cols;
     }
-    size   += numRows * rowSize;
-    return size;
+    size   += இலக்கம்_Rows * rowSize;
+    திரும்பு size;
 }
 
-bool RBBITableBuilder::use8BitsForSafeTable() const {
-    return fSafeTable->size() <= kMaxStateFor8BitsTable;
+தருக்க RBBITableBuilder::use8BitsForSafeTable() மாறிலி {
+    திரும்பு fSafeTable->size() <= kMaxStateFor8BitsTable;
 }
 
 //-----------------------------------------------------------------------------
@@ -2100,48 +2100,48 @@ bool RBBITableBuilder::use8BitsForSafeTable() const {
 //                       must be available at the output address "where".
 //
 //-----------------------------------------------------------------------------
-void RBBITableBuilder::exportSafeTable(void *where) {
+வெறுமை RBBITableBuilder::exportSafeTable(வெறுமை *where) {
     RBBIStateTable* table = static_cast<RBBIStateTable*>(where);
     uint32_t           state;
-    int                col;
+    முழு                col;
 
-    if (U_FAILURE(*fStatus) || fSafeTable == nullptr) {
-        return;
+    எனில் (U_FAILURE(*fStatus) || fSafeTable == nullptr) {
+        திரும்பு;
     }
 
-    int32_t catCount = fRB->fSetBuilder->getNumCharCategories();
-    if (catCount > 0x7fff ||
+    int32_t cat_மொத்தம் = fRB->fSetBuilder->get_இலக்கம்_Char_Categories();
+    எனில் (cat_மொத்தம் > 0x7fff ||
             fSafeTable->size() > 0x7fff) {
         *fStatus = U_BRK_INTERNAL_ERROR;
-        return;
+        திரும்பு;
     }
 
-    table->fNumStates = fSafeTable->size();
+    table->f_இலக்கம்_States = fSafeTable->size();
     table->fFlags     = 0;
-    if (use8BitsForSafeTable()) {
-        table->fRowLen    = offsetof(RBBIStateTableRow8, fNextState) + sizeof(uint8_t) * catCount;
+    எனில் (use8BitsForSafeTable()) {
+        table->fRowLen    = offsetof(RBBIStateTableRow8, fNextState) + அளவு(uint8_t) * cat_மொத்தம்;
         table->fFlags  |= RBBI_8BITS_ROWS;
-    } else {
-        table->fRowLen    = offsetof(RBBIStateTableRow16, fNextState) + sizeof(int16_t) * catCount;
+    } இல்லையெனில் {
+        table->fRowLen    = offsetof(RBBIStateTableRow16, fNextState) + அளவு(int16_t) * cat_மொத்தம்;
     }
 
-    for (state=0; state<table->fNumStates; state++) {
+    க்கு (state=0; state<table->f_இலக்கம்_States; state++) {
         UnicodeString* rowString = static_cast<UnicodeString*>(fSafeTable->elementAt(state));
         RBBIStateTableRow* row = reinterpret_cast<RBBIStateTableRow*>(table->fTableData + state * table->fRowLen);
-        if (use8BitsForSafeTable()) {
+        எனில் (use8BitsForSafeTable()) {
             RBBIStateTableRow8* r8 = reinterpret_cast<RBBIStateTableRow8*>(row);
             r8->fAccepting = 0;
             r8->fLookAhead = 0;
             r8->fTagsIdx    = 0;
-            for (col=0; col<catCount; col++) {
+            க்கு (col=0; col<cat_மொத்தம்; col++) {
                 U_ASSERT(rowString->charAt(col) <= kMaxStateFor8BitsTable);
                 r8->fNextState[col] = static_cast<uint8_t>(rowString->charAt(col));
             }
-        } else {
+        } இல்லையெனில் {
             row->r16.fAccepting = 0;
             row->r16.fLookAhead = 0;
             row->r16.fTagsIdx    = 0;
-            for (col=0; col<catCount; col++) {
+            க்கு (col=0; col<cat_மொத்தம்; col++) {
                 row->r16.fNextState[col] = rowString->charAt(col);
             }
         }
@@ -2157,11 +2157,11 @@ void RBBITableBuilder::exportSafeTable(void *where) {
 //
 //-----------------------------------------------------------------------------
 #ifdef RBBI_DEBUG
-void RBBITableBuilder::printSet(UVector *s) {
+வெறுமை RBBITableBuilder::printSet(UVector *s) {
     int32_t  i;
-    for (i=0; i<s->size(); i++) {
-        const RBBINode *v = static_cast<const RBBINode *>(s->elementAt(i));
-        RBBIDebugPrintf("%5d", v==nullptr? -1 : v->fSerialNum);
+    க்கு (i=0; i<s->size(); i++) {
+        மாறிலி RBBINode *v = static_cast<மாறிலி RBBINode *>(s->elementAt(i));
+        RBBIDebugPrintf("%5d", v==nullptr? -1 : v->f_Serial_இலக்கம்);
     }
     RBBIDebugPrintf("\n");
 }
@@ -2174,27 +2174,27 @@ void RBBITableBuilder::printSet(UVector *s) {
 //
 //-----------------------------------------------------------------------------
 #ifdef RBBI_DEBUG
-void RBBITableBuilder::printStates() {
-    int     c;    // input "character"
-    int     n;    // state number
+வெறுமை RBBITableBuilder::printStates() {
+    முழு     c;    // input "character"
+    முழு     n;    // state number
 
     RBBIDebugPrintf("state |           i n p u t     s y m b o l s \n");
     RBBIDebugPrintf("      | Acc  LA    Tag");
-    for (c=0; c<fRB->fSetBuilder->getNumCharCategories(); c++) {
+    க்கு (c=0; c<fRB->fSetBuilder->get_இலக்கம்_Char_Categories(); c++) {
         RBBIDebugPrintf(" %3d", c);
     }
     RBBIDebugPrintf("\n");
     RBBIDebugPrintf("      |---------------");
-    for (c=0; c<fRB->fSetBuilder->getNumCharCategories(); c++) {
+    க்கு (c=0; c<fRB->fSetBuilder->get_இலக்கம்_Char_Categories(); c++) {
         RBBIDebugPrintf("----");
     }
     RBBIDebugPrintf("\n");
 
-    for (n=0; n<fDStates->size(); n++) {
+    க்கு (n=0; n<fDStates->size(); n++) {
         RBBIStateDescriptor *sd = (RBBIStateDescriptor *)fDStates->elementAt(n);
         RBBIDebugPrintf("  %3d | " , n);
         RBBIDebugPrintf("%3d %3d %5d ", sd->fAccepting, sd->fLookAhead, sd->fTagsIdx);
-        for (c=0; c<fRB->fSetBuilder->getNumCharCategories(); c++) {
+        க்கு (c=0; c<fRB->fSetBuilder->get_இலக்கம்_Char_Categories(); c++) {
             RBBIDebugPrintf(" %3d", sd->fDtran->elementAti(c));
         }
         RBBIDebugPrintf("\n");
@@ -2210,32 +2210,32 @@ void RBBITableBuilder::printStates() {
 //
 //-----------------------------------------------------------------------------
 #ifdef RBBI_DEBUG
-void RBBITableBuilder::printReverseTable() {
-    int     c;    // input "character"
-    int     n;    // state number
+வெறுமை RBBITableBuilder::printReverseTable() {
+    முழு     c;    // input "character"
+    முழு     n;    // state number
 
     RBBIDebugPrintf("    Safe Reverse Table \n");
-    if (fSafeTable == nullptr) {
+    எனில் (fSafeTable == nullptr) {
         RBBIDebugPrintf("   --- nullptr ---\n");
-        return;
+        திரும்பு;
     }
     RBBIDebugPrintf("state |           i n p u t     s y m b o l s \n");
     RBBIDebugPrintf("      | Acc  LA    Tag");
-    for (c=0; c<fRB->fSetBuilder->getNumCharCategories(); c++) {
+    க்கு (c=0; c<fRB->fSetBuilder->get_இலக்கம்_Char_Categories(); c++) {
         RBBIDebugPrintf(" %2d", c);
     }
     RBBIDebugPrintf("\n");
     RBBIDebugPrintf("      |---------------");
-    for (c=0; c<fRB->fSetBuilder->getNumCharCategories(); c++) {
+    க்கு (c=0; c<fRB->fSetBuilder->get_இலக்கம்_Char_Categories(); c++) {
         RBBIDebugPrintf("---");
     }
     RBBIDebugPrintf("\n");
 
-    for (n=0; n<fSafeTable->size(); n++) {
+    க்கு (n=0; n<fSafeTable->size(); n++) {
         UnicodeString *rowString = (UnicodeString *)fSafeTable->elementAt(n);
         RBBIDebugPrintf("  %3d | " , n);
         RBBIDebugPrintf("%3d %3d %5d ", 0, 0, 0);  // Accepting, LookAhead, Tags
-        for (c=0; c<fRB->fSetBuilder->getNumCharCategories(); c++) {
+        க்கு (c=0; c<fRB->fSetBuilder->get_இலக்கம்_Char_Categories(); c++) {
             RBBIDebugPrintf(" %2d", rowString->charAt(c));
         }
         RBBIDebugPrintf("\n");
@@ -2252,20 +2252,20 @@ void RBBITableBuilder::printReverseTable() {
 //
 //-----------------------------------------------------------------------------
 #ifdef RBBI_DEBUG
-void RBBITableBuilder::printRuleStatusTable() {
+வெறுமை RBBITableBuilder::printRuleStatusTable() {
     int32_t  thisRecord = 0;
     int32_t  nextRecord = 0;
-    int      i;
+    முழு      i;
     UVector  *tbl = fRB->fRuleStatusVals;
 
     RBBIDebugPrintf("index |  tags \n");
     RBBIDebugPrintf("-------------------\n");
 
-    while (nextRecord < tbl->size()) {
+    போது (nextRecord < tbl->size()) {
         thisRecord = nextRecord;
         nextRecord = thisRecord + tbl->elementAti(thisRecord) + 1;
         RBBIDebugPrintf("%4d   ", thisRecord);
-        for (i=thisRecord+1; i<nextRecord; i++) {
+        க்கு (i=thisRecord+1; i<nextRecord; i++) {
             RBBIDebugPrintf("  %5d", tbl->elementAti(i));
         }
         RBBIDebugPrintf("\n");
@@ -2282,8 +2282,8 @@ void RBBITableBuilder::printRuleStatusTable() {
 //
 //-----------------------------------------------------------------------------
 
-RBBIStateDescriptor::RBBIStateDescriptor(int lastInputSymbol, UErrorCode *fStatus) {
-    fMarked    = false;
+RBBIStateDescriptor::RBBIStateDescriptor(முழு last_உள்ளீடு_குறியீடு, UErrorCode *fStatus) {
+    fMarked    = பொய்;
     fAccepting = 0;
     fLookAhead = 0;
     fTagsIdx   = 0;
@@ -2291,15 +2291,15 @@ RBBIStateDescriptor::RBBIStateDescriptor(int lastInputSymbol, UErrorCode *fStatu
     fPositions = nullptr;
     fDtran     = nullptr;
 
-    fDtran     = new UVector32(lastInputSymbol+1, *fStatus);
-    if (U_FAILURE(*fStatus)) {
-        return;
+    fDtran     = புதிய UVector32(last_உள்ளீடு_குறியீடு+1, *fStatus);
+    எனில் (U_FAILURE(*fStatus)) {
+        திரும்பு;
     }
-    if (fDtran == nullptr) {
+    எனில் (fDtran == nullptr) {
         *fStatus = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        திரும்பு;
     }
-    fDtran->setSize(lastInputSymbol+1);    // fDtran needs to be pre-sized.
+    fDtran->setSize(last_உள்ளீடு_குறியீடு+1);    // fDtran needs to be pre-sized.
                                            //   It is indexed by input symbols, and will
                                            //   hold  the next state number for each
                                            //   symbol.

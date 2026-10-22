@@ -13,10 +13,10 @@
 #ifndef HASH_H
 #define HASH_H
 
-#include "unicode/unistr.h"
-#include "unicode/uobject.h"
-#include "cmemory.h"
-#include "uhash.h"
+#அந்தர்பாவ "unicode/unistr.h"
+#அந்தர்பாவ "unicode/uobject.h"
+#அந்தர்பாவ "cmemory.h"
+#அந்தர்பாவ "uhash.h"
 
 U_NAMESPACE_BEGIN
 
@@ -27,21 +27,21 @@ U_NAMESPACE_BEGIN
  *
  * Hashtable is an INTERNAL CLASS.
  */
-class U_COMMON_API Hashtable : public UMemory {
+class U_COMMON_API Hashtable : பொது UMemory {
     UHashtable* hash;
     UHashtable hashObj;
 
-    inline void init(UHashFunction *keyHash, UKeyComparator *keyComp, UValueComparator *valueComp, UErrorCode& status);
+    உள்வரி வெறுமை init(UHashFunction *சாவி_Hash, UKeyComparator *சாவி_Comp, UValueComparator *மதிப்பு_Comp, UErrorCode& status);
 
-    inline void initSize(UHashFunction *keyHash, UKeyComparator *keyComp, UValueComparator *valueComp, int32_t size, UErrorCode& status);
+    உள்வரி வெறுமை initSize(UHashFunction *சாவி_Hash, UKeyComparator *சாவி_Comp, UValueComparator *மதிப்பு_Comp, int32_t size, UErrorCode& status);
 
-public:
+பொது:
     /**
      * Construct a hashtable
      * @param ignoreKeyCase If true, keys are case insensitive.
      * @param status Error code
     */
-    inline Hashtable(UBool ignoreKeyCase, UErrorCode& status);
+    உள்வரி Hashtable(UBool ignore_சாவி_Case, UErrorCode& status);
 
     /**
      * Construct a hashtable
@@ -49,7 +49,7 @@ public:
      * @param size initial size allocation
      * @param status Error code
     */
-    inline Hashtable(UBool ignoreKeyCase, int32_t size, UErrorCode& status);
+    உள்வரி Hashtable(UBool ignore_சாவி_Case, int32_t size, UErrorCode& status);
 
     /**
      * Construct a hashtable
@@ -57,209 +57,209 @@ public:
      * @param valueComp Comparator for comparing the values
      * @param status Error code
     */
-    inline Hashtable(UKeyComparator *keyComp, UValueComparator *valueComp, UErrorCode& status);
+    உள்வரி Hashtable(UKeyComparator *சாவி_Comp, UValueComparator *மதிப்பு_Comp, UErrorCode& status);
 
     /**
      * Construct a hashtable
      * @param status Error code
     */
-    inline Hashtable(UErrorCode& status);
+    உள்வரி Hashtable(UErrorCode& status);
 
     /**
      * Construct a hashtable, _disregarding any error_.  Use this constructor
      * with caution.
      */
-    inline Hashtable();
+    உள்வரி Hashtable();
 
     /**
      * Non-virtual destructor; make this virtual if Hashtable is subclassed
      * in the future.
      */
-    inline ~Hashtable();
+    உள்வரி ~Hashtable();
 
-    inline UObjectDeleter *setValueDeleter(UObjectDeleter *fn);
+    உள்வரி UObjectDeleter *set_மதிப்பு_Deleter(UObjectDeleter *fn);
 
-    inline int32_t count() const;
+    உள்வரி int32_t மொத்தம்() மாறிலி;
 
-    inline void* put(const UnicodeString& key, void* value, UErrorCode& status);
+    உள்வரி வெறுமை* put(மாறிலி UnicodeString& சாவி, வெறுமை* மதிப்பு_2, UErrorCode& status);
 
-    inline int32_t puti(const UnicodeString& key, int32_t value, UErrorCode& status);
+    உள்வரி int32_t puti(மாறிலி UnicodeString& சாவி, int32_t மதிப்பு_2, UErrorCode& status);
 
-    inline int32_t putiAllowZero(const UnicodeString& key, int32_t value, UErrorCode& status);
+    உள்வரி int32_t putiAllowZero(மாறிலி UnicodeString& சாவி, int32_t மதிப்பு_2, UErrorCode& status);
 
-    inline void* get(const UnicodeString& key) const;
+    உள்வரி வெறுமை* get(மாறிலி UnicodeString& சாவி) மாறிலி;
 
-    inline int32_t geti(const UnicodeString& key) const;
+    உள்வரி int32_t geti(மாறிலி UnicodeString& சாவி) மாறிலி;
 
-    inline int32_t getiAndFound(const UnicodeString& key, UBool &found) const;
+    உள்வரி int32_t getiAndFound(மாறிலி UnicodeString& சாவி, UBool &found) மாறிலி;
 
-    inline void* remove(const UnicodeString& key);
+    உள்வரி வெறுமை* remove(மாறிலி UnicodeString& சாவி);
 
-    inline int32_t removei(const UnicodeString& key);
+    உள்வரி int32_t removei(மாறிலி UnicodeString& சாவி);
 
-    inline void removeAll();
+    உள்வரி வெறுமை removeAll();
 
-    inline UBool containsKey(const UnicodeString& key) const;
+    உள்வரி UBool contains_சாவி(மாறிலி UnicodeString& சாவி) மாறிலி;
 
-    inline const UHashElement* find(const UnicodeString& key) const;
+    உள்வரி மாறிலி UHashElement* find(மாறிலி UnicodeString& சாவி) மாறிலி;
 
     /**
      * @param pos - must be UHASH_FIRST on first call, and untouched afterwards.
      * @see uhash_nextElement
      */
-    inline const UHashElement* nextElement(int32_t& pos) const;
+    உள்வரி மாறிலி UHashElement* nextElement(int32_t& pos) மாறிலி;
 
-    inline UKeyComparator* setKeyComparator(UKeyComparator*keyComp);
+    உள்வரி UKeyComparator* set_சாவி_Comparator(UKeyComparator*சாவி_Comp);
 
-    inline UValueComparator* setValueComparator(UValueComparator* valueComp);
+    உள்வரி UValueComparator* set_மதிப்பு_Comparator(UValueComparator* மதிப்பு_Comp);
 
-    inline UBool equals(const Hashtable& that) const;
-private:
-    Hashtable(const Hashtable &other) = delete; // forbid copying of this class
-    Hashtable &operator=(const Hashtable &other) = delete; // forbid copying of this class
+    உள்வரி UBool equals(மாறிலி Hashtable& that) மாறிலி;
+தனிப்பட்ட:
+    Hashtable(மாறிலி Hashtable &other) = delete; // forbid copying of this class
+    Hashtable &operator=(மாறிலி Hashtable &other) = delete; // forbid copying of this class
 };
 
 /*********************************************************************
  * Implementation
  ********************************************************************/
 
-inline void Hashtable::init(UHashFunction *keyHash, UKeyComparator *keyComp,
-                            UValueComparator *valueComp, UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return;
+உள்வரி வெறுமை Hashtable::init(UHashFunction *சாவி_Hash, UKeyComparator *சாவி_Comp,
+                            UValueComparator *மதிப்பு_Comp, UErrorCode& status) {
+    எனில் (U_FAILURE(status)) {
+        திரும்பு;
     }
-    uhash_init(&hashObj, keyHash, keyComp, valueComp, &status);
-    if (U_SUCCESS(status)) {
+    uhash_init(&hashObj, சாவி_Hash, சாவி_Comp, மதிப்பு_Comp, &status);
+    எனில் (U_SUCCESS(status)) {
         hash = &hashObj;
-        uhash_setKeyDeleter(hash, uprv_deleteUObject);
+        uhash_set_சாவி_Deleter(hash, uprv_deleteUObject);
     }
 }
 
-inline void Hashtable::initSize(UHashFunction *keyHash, UKeyComparator *keyComp,
-                                UValueComparator *valueComp, int32_t size, UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return;
+உள்வரி வெறுமை Hashtable::initSize(UHashFunction *சாவி_Hash, UKeyComparator *சாவி_Comp,
+                                UValueComparator *மதிப்பு_Comp, int32_t size, UErrorCode& status) {
+    எனில் (U_FAILURE(status)) {
+        திரும்பு;
     }
-    uhash_initSize(&hashObj, keyHash, keyComp, valueComp, size, &status);
-    if (U_SUCCESS(status)) {
+    uhash_initSize(&hashObj, சாவி_Hash, சாவி_Comp, மதிப்பு_Comp, size, &status);
+    எனில் (U_SUCCESS(status)) {
         hash = &hashObj;
-        uhash_setKeyDeleter(hash, uprv_deleteUObject);
+        uhash_set_சாவி_Deleter(hash, uprv_deleteUObject);
     }
 }
 
-inline Hashtable::Hashtable(UKeyComparator *keyComp, UValueComparator *valueComp,
+உள்வரி Hashtable::Hashtable(UKeyComparator *சாவி_Comp, UValueComparator *மதிப்பு_Comp,
                  UErrorCode& status) : hash(nullptr) {
-    init( uhash_hashUnicodeString, keyComp, valueComp, status);
+    init( uhash_hashUnicodeString, சாவி_Comp, மதிப்பு_Comp, status);
 }
 
-inline Hashtable::Hashtable(UBool ignoreKeyCase, UErrorCode& status)
+உள்வரி Hashtable::Hashtable(UBool ignore_சாவி_Case, UErrorCode& status)
  : hash(nullptr)
 {
-    init(ignoreKeyCase ? uhash_hashCaselessUnicodeString
+    init(ignore_சாவி_Case ? uhash_hashCaselessUnicodeString
                         : uhash_hashUnicodeString,
-            ignoreKeyCase ? uhash_compareCaselessUnicodeString
+            ignore_சாவி_Case ? uhash_compareCaselessUnicodeString
                         : uhash_compareUnicodeString,
             nullptr,
             status);
 }
 
-inline Hashtable::Hashtable(UBool ignoreKeyCase, int32_t size, UErrorCode& status)
+உள்வரி Hashtable::Hashtable(UBool ignore_சாவி_Case, int32_t size, UErrorCode& status)
  : hash(nullptr)
 {
-    initSize(ignoreKeyCase ? uhash_hashCaselessUnicodeString
+    initSize(ignore_சாவி_Case ? uhash_hashCaselessUnicodeString
                         : uhash_hashUnicodeString,
-            ignoreKeyCase ? uhash_compareCaselessUnicodeString
+            ignore_சாவி_Case ? uhash_compareCaselessUnicodeString
                         : uhash_compareUnicodeString,
             nullptr, size,
             status);
 }
 
-inline Hashtable::Hashtable(UErrorCode& status)
+உள்வரி Hashtable::Hashtable(UErrorCode& status)
  : hash(nullptr)
 {
     init(uhash_hashUnicodeString, uhash_compareUnicodeString, nullptr, status);
 }
 
-inline Hashtable::Hashtable()
+உள்வரி Hashtable::Hashtable()
  : hash(nullptr)
 {
     UErrorCode status = U_ZERO_ERROR;
     init(uhash_hashUnicodeString, uhash_compareUnicodeString, nullptr, status);
 }
 
-inline Hashtable::~Hashtable() {
-    if (hash != nullptr) {
+உள்வரி Hashtable::~Hashtable() {
+    எனில் (hash != nullptr) {
         uhash_close(hash);
     }
 }
 
-inline UObjectDeleter *Hashtable::setValueDeleter(UObjectDeleter *fn) {
-    return uhash_setValueDeleter(hash, fn);
+உள்வரி UObjectDeleter *Hashtable::set_மதிப்பு_Deleter(UObjectDeleter *fn) {
+    திரும்பு uhash_set_மதிப்பு_Deleter(hash, fn);
 }
 
-inline int32_t Hashtable::count() const {
-    return uhash_count(hash);
+உள்வரி int32_t Hashtable::மொத்தம்() மாறிலி {
+    திரும்பு uhash_மொத்தம்(hash);
 }
 
-inline void* Hashtable::put(const UnicodeString& key, void* value, UErrorCode& status) {
-    return uhash_put(hash, new UnicodeString(key), value, &status);
+உள்வரி வெறுமை* Hashtable::put(மாறிலி UnicodeString& சாவி, வெறுமை* மதிப்பு_2, UErrorCode& status) {
+    திரும்பு uhash_put(hash, new UnicodeString(சாவி), மதிப்பு_2, &status);
 }
 
-inline int32_t Hashtable::puti(const UnicodeString& key, int32_t value, UErrorCode& status) {
-    return uhash_puti(hash, new UnicodeString(key), value, &status);
+உள்வரி int32_t Hashtable::puti(மாறிலி UnicodeString& சாவி, int32_t மதிப்பு_2, UErrorCode& status) {
+    திரும்பு uhash_puti(hash, new UnicodeString(சாவி), மதிப்பு_2, &status);
 }
 
-inline int32_t Hashtable::putiAllowZero(const UnicodeString& key, int32_t value,
+உள்வரி int32_t Hashtable::putiAllowZero(மாறிலி UnicodeString& சாவி, int32_t மதிப்பு_2,
                                         UErrorCode& status) {
-    return uhash_putiAllowZero(hash, new UnicodeString(key), value, &status);
+    திரும்பு uhash_putiAllowZero(hash, new UnicodeString(சாவி), மதிப்பு_2, &status);
 }
 
-inline void* Hashtable::get(const UnicodeString& key) const {
-    return uhash_get(hash, &key);
+உள்வரி வெறுமை* Hashtable::get(மாறிலி UnicodeString& சாவி) மாறிலி {
+    திரும்பு uhash_get(hash, &சாவி);
 }
 
-inline int32_t Hashtable::geti(const UnicodeString& key) const {
-    return uhash_geti(hash, &key);
+உள்வரி int32_t Hashtable::geti(மாறிலி UnicodeString& சாவி) மாறிலி {
+    திரும்பு uhash_geti(hash, &சாவி);
 }
 
-inline int32_t Hashtable::getiAndFound(const UnicodeString& key, UBool &found) const {
-    return uhash_getiAndFound(hash, &key, &found);
+உள்வரி int32_t Hashtable::getiAndFound(மாறிலி UnicodeString& சாவி, UBool &found) மாறிலி {
+    திரும்பு uhash_getiAndFound(hash, &சாவி, &found);
 }
 
-inline void* Hashtable::remove(const UnicodeString& key) {
-    return uhash_remove(hash, &key);
+உள்வரி வெறுமை* Hashtable::remove(மாறிலி UnicodeString& சாவி) {
+    திரும்பு uhash_remove(hash, &சாவி);
 }
 
-inline int32_t Hashtable::removei(const UnicodeString& key) {
-    return uhash_removei(hash, &key);
+உள்வரி int32_t Hashtable::removei(மாறிலி UnicodeString& சாவி) {
+    திரும்பு uhash_removei(hash, &சாவி);
 }
 
-inline UBool Hashtable::containsKey(const UnicodeString& key) const {
-    return uhash_containsKey(hash, &key);
+உள்வரி UBool Hashtable::contains_சாவி(மாறிலி UnicodeString& சாவி) மாறிலி {
+    திரும்பு uhash_contains_சாவி(hash, &சாவி);
 }
 
-inline const UHashElement* Hashtable::find(const UnicodeString& key) const {
-    return uhash_find(hash, &key);
+உள்வரி மாறிலி UHashElement* Hashtable::find(மாறிலி UnicodeString& சாவி) மாறிலி {
+    திரும்பு uhash_find(hash, &சாவி);
 }
 
-inline const UHashElement* Hashtable::nextElement(int32_t& pos) const {
-    return uhash_nextElement(hash, &pos);
+உள்வரி மாறிலி UHashElement* Hashtable::nextElement(int32_t& pos) மாறிலி {
+    திரும்பு uhash_nextElement(hash, &pos);
 }
 
-inline void Hashtable::removeAll() {
+உள்வரி வெறுமை Hashtable::removeAll() {
     uhash_removeAll(hash);
 }
 
-inline UKeyComparator* Hashtable::setKeyComparator(UKeyComparator*keyComp){
-    return uhash_setKeyComparator(hash, keyComp);
+உள்வரி UKeyComparator* Hashtable::set_சாவி_Comparator(UKeyComparator*சாவி_Comp){
+    திரும்பு uhash_set_சாவி_Comparator(hash, சாவி_Comp);
 }
 
-inline UValueComparator* Hashtable::setValueComparator(UValueComparator* valueComp){
-    return uhash_setValueComparator(hash, valueComp);
+உள்வரி UValueComparator* Hashtable::set_மதிப்பு_Comparator(UValueComparator* மதிப்பு_Comp){
+    திரும்பு uhash_set_மதிப்பு_Comparator(hash, மதிப்பு_Comp);
 }
 
-inline UBool Hashtable::equals(const Hashtable& that)const{
-   return uhash_equals(hash, that.hash);
+உள்வரி UBool Hashtable::equals(மாறிலி Hashtable& that)மாறிலி{
+   திரும்பு uhash_equals(hash, that.hash);
 }
 U_NAMESPACE_END
 

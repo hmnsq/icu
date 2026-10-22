@@ -7,7 +7,7 @@
 **********************************************************************
 */
 
-#include "unicode/parsepos.h"
+#அந்தர்பாவ "unicode/parsepos.h"
 
 U_NAMESPACE_BEGIN
 
@@ -16,8 +16,8 @@ UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ParsePosition)
 ParsePosition::~ParsePosition() {}
 
 ParsePosition *
-ParsePosition::clone() const {
-    return new ParsePosition(*this);
+ParsePosition::clone() மாறிலி {
+    திரும்பு புதிய ParsePosition(*இது);
 }
 
 U_NAMESPACE_END

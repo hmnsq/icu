@@ -7,11 +7,11 @@
 #ifndef __UTFSTRING_H__
 #define __UTFSTRING_H__
 
-#include "unicode/utypes.h"
+#அந்தர்பாவ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API || !defined(UTYPES_H)
+#எனில் U_SHOW_CPLUSPLUS_API || U_SHOW_CPLUSPLUS_HEADER_API || !defined(UTYPES_H)
 
-#include "unicode/utf16.h"
+#அந்தர்பாவ "unicode/utf16.h"
 
 /**
  * \file
@@ -32,26 +32,26 @@ namespace prv {
 // want to be U_FORCE_INLINE but the gcc-debug-build-and-test CI check failed with
 // error: ‘always_inline’ function might not be inlinable [-Werror=attributes]
 template <typename StringClass, bool validate>
-inline StringClass& appendCodePoint(StringClass& s U_LIFETIME_BOUND, uint32_t c) {
-    using Unit = typename StringClass::value_type;
-    if constexpr (sizeof(Unit) == 1) {
+உள்வரி StringClass& appendCodePoint(StringClass& s U_LIFETIME_BOUND, uint32_t c) {
+    using Unit = typename StringClass::மதிப்பு_type;
+    எனில் constexpr (அளவு(Unit) == 1) {
         // UTF-8: Similar to U8_APPEND().
-        if (c <= 0x7f) {
-            s.push_back(static_cast<Unit>(c));
-        } else {
+        எனில் (c <= 0x7f) {
+            s.தள்ளு_back(static_cast<Unit>(c));
+        } இல்லையெனில் {
             Unit buf[4];
             uint8_t len;
-            if (c <= 0x7ff) {
+            எனில் (c <= 0x7ff) {
                 len = 2;
                 buf[2] = (c >> 6) | 0xc0;
-            } else {
-                if (validate ?
+            } இல்லையெனில் {
+                எனில் (validate ?
                         c < 0xd800 ||
                             (c < 0xe000 || c > 0x10ffff ? (c = 0xfffd, true) : c <= 0xffff) :
                         c <= 0xffff) {
                     len = 3;
                     buf[1] = (c >> 12) | 0xe0;
-                } else {
+                } இல்லையெனில் {
                     len = 4;
                     buf[0] = (c >> 18) | 0xf0;
                     buf[1] = ((c >> 12) & 0x3f) | 0x80;
@@ -61,21 +61,21 @@ inline StringClass& appendCodePoint(StringClass& s U_LIFETIME_BOUND, uint32_t c)
             buf[3] = (c & 0x3f) | 0x80;
             s.append(buf + 4 - len, len);
         }
-    } else if constexpr (sizeof(Unit) == 2) {
+    } இல்லையெனில் எனில் constexpr (அளவு(Unit) == 2) {
         // UTF-16: Similar to U16_APPEND().
-        if (validate ?
+        எனில் (validate ?
                 c < 0xd800 || (c < 0xe000 || c > 0x10ffff ? (c = 0xfffd, true) : c <= 0xffff) :
                 c <= 0xffff) {
-            s.push_back(static_cast<Unit>(c));
-        } else {
+            s.தள்ளு_back(static_cast<Unit>(c));
+        } இல்லையெனில் {
             Unit buf[2] = { U16_LEAD(c), U16_TRAIL(c) };
             s.append(buf, 2);
         }
-    } else {
+    } இல்லையெனில் {
         // UTF-32
-        s.push_back(!validate || U_IS_SCALAR_VALUE(c) ? c : 0xfffd);
+        s.தள்ளு_back(!validate || U_IS_SCALAR_மதிப்பு(c) ? c : 0xfffd);
     }
-    return s;
+    திரும்பு s;
 }
 
 }  // namespace prv
@@ -95,8 +95,8 @@ inline StringClass& appendCodePoint(StringClass& s U_LIFETIME_BOUND, uint32_t c)
  * @see U_IS_SCALAR_VALUE
  */
 template <typename StringClass>
-inline StringClass& appendOrFFFD(StringClass& s U_LIFETIME_BOUND, UChar32 c) {
-    return prv::appendCodePoint<StringClass, true>(s, c);
+உள்வரி StringClass& appendOrFFFD(StringClass& s U_LIFETIME_BOUND, UChar32 c) {
+    திரும்பு prv::appendCodePoint<StringClass, true>(s, c);
 }
 
 /**
@@ -112,8 +112,8 @@ inline StringClass& appendOrFFFD(StringClass& s U_LIFETIME_BOUND, UChar32 c) {
  * @see U_IS_SCALAR_VALUE
  */
 template <typename StringClass>
-inline StringClass& appendUnsafe(StringClass& s U_LIFETIME_BOUND, UChar32 c) {
-    return prv::appendCodePoint<StringClass, false>(s, c);
+உள்வரி StringClass& appendUnsafe(StringClass& s U_LIFETIME_BOUND, UChar32 c) {
+    திரும்பு prv::appendCodePoint<StringClass, false>(s, c);
 }
 
 /**
@@ -128,10 +128,10 @@ inline StringClass& appendUnsafe(StringClass& s U_LIFETIME_BOUND, UChar32 c) {
  * @see U_IS_SCALAR_VALUE
  */
 template<typename StringClass>
-inline StringClass encodeOrFFFD(UChar32 c) {
+உள்வரி StringClass encodeOrFFFD(UChar32 c) {
     StringClass s;
     prv::appendCodePoint<StringClass, true>(s, c);
-    return s;
+    திரும்பு s;
 }
 
 /**
@@ -146,10 +146,10 @@ inline StringClass encodeOrFFFD(UChar32 c) {
  * @see U_IS_SCALAR_VALUE
  */
 template<typename StringClass>
-inline StringClass encodeUnsafe(UChar32 c) {
+உள்வரி StringClass encodeUnsafe(UChar32 c) {
     StringClass s;
     prv::appendCodePoint<StringClass, false>(s, c);
-    return s;
+    திரும்பு s;
 }
 #endif  // U_HIDE_DRAFT_API
 

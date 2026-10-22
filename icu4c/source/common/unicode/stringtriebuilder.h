@@ -17,11 +17,11 @@
 #ifndef __STRINGTRIEBUILDER_H__
 #define __STRINGTRIEBUILDER_H__
 
-#include "unicode/utypes.h"
+#அந்தர்பாவ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#எனில் U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#அந்தர்பாவ "unicode/uobject.h"
 
 /**
  * \file
@@ -30,15 +30,15 @@
 
 // Forward declaration.
 /// \cond
-struct UHashtable;
-typedef struct UHashtable UHashtable;
+கட்டமைப்பு UHashtable;
+வகைவரை கட்டமைப்பு UHashtable UHashtable;
 /// \endcond
 
 /**
  * Build options for BytesTrieBuilder and CharsTrieBuilder.
  * @stable ICU 4.8
  */
-enum UStringTrieBuildOption {
+எண்ணிக்கை UStringTrieBuildOption {
     /**
      * Builds a trie quickly.
      * @stable ICU 4.8
@@ -65,48 +65,48 @@ U_NAMESPACE_BEGIN
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API StringTrieBuilder : public UObject {
-public:
+class U_COMMON_API StringTrieBuilder : பொது UObject {
+பொது:
 #ifndef U_HIDE_INTERNAL_API
     /** @internal */
-    static int32_t hashNode(const void *node);
+    நிலையான int32_t hash_முனை(மாறிலி வெறுமை *முனை);
     /** @internal */
-    static UBool equalNodes(const void *left, const void *right);
+    நிலையான UBool equalNodes(மாறிலி வெறுமை *இடது, மாறிலி வெறுமை *வலது);
 #endif  /* U_HIDE_INTERNAL_API */
 
-protected:
+பாதுகாக்கப்பட்ட:
     // Do not enclose the protected default constructor with #ifndef U_HIDE_INTERNAL_API
     // or else the compiler will create a public default constructor.
     /** @internal */
     StringTrieBuilder();
     /** @internal */
-    virtual ~StringTrieBuilder();
+    மெய்நிகர் ~StringTrieBuilder();
 
 #ifndef U_HIDE_INTERNAL_API
     /** @internal */
-    void createCompactBuilder(int32_t sizeGuess, UErrorCode &errorCode);
+    வெறுமை createCompactBuilder(int32_t sizeGuess, UErrorCode &errorCode);
     /** @internal */
-    void deleteCompactBuilder();
+    வெறுமை deleteCompactBuilder();
 
     /** @internal */
-    void build(UStringTrieBuildOption buildOption, int32_t elementsLength, UErrorCode &errorCode);
+    வெறுமை build(UStringTrieBuildOption buildOption, int32_t elementsLength, UErrorCode &errorCode);
 
     /** @internal */
-    int32_t writeNode(int32_t start, int32_t limit, int32_t unitIndex);
+    int32_t write_முனை(int32_t start, int32_t limit, int32_t unitIndex);
     /** @internal */
-    int32_t writeBranchSubNode(int32_t start, int32_t limit, int32_t unitIndex, int32_t length);
+    int32_t write_Branch_Sub_முனை(int32_t start, int32_t limit, int32_t unitIndex, int32_t length);
 #endif  /* U_HIDE_INTERNAL_API */
 
-    class Node;
+    class முனை_2;
 
 #ifndef U_HIDE_INTERNAL_API
     /** @internal */
-    Node* makeNode(int32_t start,
+    முனை_2* make_முனை(int32_t start,
                    int32_t limit,
                    int32_t unitIndex,
                    UErrorCode& errorCode) U_LIFETIME_BOUND;
     /** @internal */
-    Node* makeBranchSubNode(int32_t start,
+    முனை_2* make_Branch_Sub_முனை(int32_t start,
                             int32_t limit,
                             int32_t unitIndex,
                             int32_t length,
@@ -114,44 +114,44 @@ protected:
 #endif  /* U_HIDE_INTERNAL_API */
 
     /** @internal */
-    virtual int32_t getElementStringLength(int32_t i) const = 0;
+    மெய்நிகர் int32_t getElementStringLength(int32_t i) மாறிலி = 0;
     /** @internal */
-    virtual char16_t getElementUnit(int32_t i, int32_t unitIndex) const = 0;
+    மெய்நிகர் char16_t getElementUnit(int32_t i, int32_t unitIndex) மாறிலி = 0;
     /** @internal */
-    virtual int32_t getElementValue(int32_t i) const = 0;
+    மெய்நிகர் int32_t get_Element_மதிப்பு(int32_t i) மாறிலி = 0;
 
     // Finds the first unit index after this one where
     // the first and last element have different units again.
     /** @internal */
-    virtual int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) const = 0;
+    மெய்நிகர் int32_t getLimitOfLinearMatch(int32_t first, int32_t last, int32_t unitIndex) மாறிலி = 0;
 
     // Number of different units at unitIndex.
     /** @internal */
-    virtual int32_t countElementUnits(int32_t start, int32_t limit, int32_t unitIndex) const = 0;
+    மெய்நிகர் int32_t மொத்தம்_Element_Units(int32_t start, int32_t limit, int32_t unitIndex) மாறிலி = 0;
     /** @internal */
-    virtual int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t count) const = 0;
+    மெய்நிகர் int32_t skipElementsBySomeUnits(int32_t i, int32_t unitIndex, int32_t மொத்தம்) மாறிலி = 0;
     /** @internal */
-    virtual int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) const = 0;
+    மெய்நிகர் int32_t indexOfElementWithNextUnit(int32_t i, int32_t unitIndex, char16_t unit) மாறிலி = 0;
 
     /** @internal */
-    virtual UBool matchNodesCanHaveValues() const = 0;
+    மெய்நிகர் UBool match_Nodes_Can_Have_மதிப்புகள்() மாறிலி = 0;
 
     /** @internal */
-    virtual int32_t getMaxBranchLinearSubNodeLength() const = 0;
+    மெய்நிகர் int32_t get_Max_Branch_Linear_Sub_முனை_Length() மாறிலி = 0;
     /** @internal */
-    virtual int32_t getMinLinearMatch() const = 0;
+    மெய்நிகர் int32_t getMinLinearMatch() மாறிலி = 0;
     /** @internal */
-    virtual int32_t getMaxLinearMatchLength() const = 0;
+    மெய்நிகர் int32_t getMaxLinearMatchLength() மாறிலி = 0;
 
 #ifndef U_HIDE_INTERNAL_API
     // max(BytesTrie::kMaxBranchLinearSubNodeLength, UCharsTrie::kMaxBranchLinearSubNodeLength).
     /** @internal */
-    static const int32_t kMaxBranchLinearSubNodeLength=5;
+    நிலையான மாறிலி int32_t k_Max_Branch_Linear_Sub_முனை_Length=5;
 
     // Maximum number of nested split-branch levels for a branch on all 2^16 possible char16_t units.
     // log2(2^16/kMaxBranchLinearSubNodeLength) rounded up.
     /** @internal */
-    static const int32_t kMaxSplitBranchLevels=14;
+    நிலையான மாறிலி int32_t kMaxSplitBranchLevels=14;
 
     /**
      * Makes sure that there is only one unique node registered that is
@@ -163,7 +163,7 @@ protected:
      *         an equivalent node if newNode is a duplicate.
      * @internal
      */
-    Node* registerNode(Node* newNode, UErrorCode& errorCode) U_LIFETIME_BOUND;
+    முனை_2* register_முனை(முனை_2* new_முனை, UErrorCode& errorCode) U_LIFETIME_BOUND;
     /**
      * Makes sure that there is only one unique FinalValueNode registered
      * with this value.
@@ -174,7 +174,7 @@ protected:
      * @return A FinalValueNode with the given value.
      * @internal
      */
-    Node* registerFinalValue(int32_t value, UErrorCode& errorCode) U_LIFETIME_BOUND;
+    முனை_2* register_Final_மதிப்பு(int32_t மதிப்பு_2, UErrorCode& errorCode) U_LIFETIME_BOUND;
 #endif  /* U_HIDE_INTERNAL_API */
 
     /*
@@ -203,15 +203,15 @@ protected:
      * @internal
      * \cond
      */
-    class Node : public UObject {
-    public:
-        Node(int32_t initialHash) : hash(initialHash), offset(0) {}
-        inline int32_t hashCode() const { return hash; }
+    class முனை_2 : பொது UObject {
+    பொது:
+        முனை_2(int32_t initialHash) : hash(initialHash), offset(0) {}
+        உள்வரி int32_t hashCode() மாறிலி { திரும்பு hash; }
         // Handles node==nullptr.
-        static inline int32_t hashCode(const Node *node) { return node==nullptr ? 0 : node->hashCode(); }
+        நிலையான உள்வரி int32_t hashCode(மாறிலி முனை_2 *முனை) { திரும்பு முனை==nullptr ? 0 : முனை->hashCode(); }
         // Base class operator==() compares the actual class types.
-        virtual bool operator==(const Node &other) const;
-        inline bool operator!=(const Node &other) const { return !operator==(other); }
+        மெய்நிகர் bool operator==(மாறிலி முனை_2 &other) மாறிலி;
+        உள்வரி bool operator!=(மாறிலி முனை_2 &other) மாறிலி { திரும்பு !operator==(other); }
         /**
          * Traverses the Node graph and numbers branch edges, with rightmost edges first.
          * This is to avoid writing a duplicate node twice.
@@ -239,23 +239,23 @@ protected:
          * @return An edge number that is at least the maximum-negative
          *         of the input edge number and the numbers of this node and all of its sub-nodes.
          */
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber);
+        மெய்நிகர் int32_t mark_வலது_Edges_First(int32_t edge_எண்);
         // write() must set the offset to a positive value.
-        virtual void write(StringTrieBuilder &builder) = 0;
+        மெய்நிகர் வெறுமை லிக(StringTrieBuilder &builder) = 0;
         // See markRightEdgesFirst.
-        inline void writeUnlessInsideRightEdge(int32_t firstRight, int32_t lastRight,
+        உள்வரி வெறுமை write_Unless_Inside_வலது_Edge(int32_t first_வலது, int32_t last_வலது,
                                                StringTrieBuilder &builder) {
             // Note: Edge numbers are negative, lastRight<=firstRight.
             // If offset>0 then this node and its sub-nodes have been written already
             // and we need not write them again.
             // If this node is part of the unwritten right branch edge,
             // then we wait until that is written.
-            if(offset<0 && (offset<lastRight || firstRight<offset)) {
-                write(builder);
+            எனில்(offset<0 && (offset<last_வலது || first_வலது<offset)) {
+                லிக(builder);
             }
         }
-        inline int32_t getOffset() const { return offset; }
-    protected:
+        உள்வரி int32_t getOffset() மாறிலி { திரும்பு offset; }
+    பாதுகாக்கப்பட்ட:
         int32_t hash;
         int32_t offset;
     };
@@ -268,13 +268,13 @@ protected:
     // !Node::operator==(other) used inside FinalValueNode::operator==(other)
     // will be false if the typeid's are different.
     /** @internal */
-    class FinalValueNode : public Node {
-    public:
-        FinalValueNode(int32_t v) : Node(0x111111u*37u+v), value(v) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
-        int32_t value;
+    class Final_மதிப்பு_முனை : பொது முனை_2 {
+    பொது:
+        Final_மதிப்பு_முனை(int32_t v) : முனை_2(0x111111u*37u+v), மதிப்பு_2(v) {}
+        மெய்நிகர் bool operator==(மாறிலி முனை_2 &other) மாறிலி override;
+        மெய்நிகர் வெறுமை லிக(StringTrieBuilder &builder) override;
+    பாதுகாக்கப்பட்ட:
+        int32_t மதிப்பு_2;
     };
 #endif  /* U_HIDE_INTERNAL_API */
 
@@ -283,33 +283,33 @@ protected:
     /**
      * @internal 
      */
-    class ValueNode : public Node {
-    public:
-        ValueNode(int32_t initialHash) : Node(initialHash), hasValue(false), value(0) {}
-        virtual bool operator==(const Node &other) const override;
-        void setValue(int32_t v) {
-            hasValue=true;
-            value=v;
+    class மதிப்பு_முனை : பொது முனை_2 {
+    பொது:
+        மதிப்பு_முனை(int32_t initialHash) : முனை_2(initialHash), has_மதிப்பு(false), மதிப்பு_2(0) {}
+        மெய்நிகர் bool operator==(மாறிலி முனை_2 &other) மாறிலி override;
+        வெறுமை set_மதிப்பு(int32_t v) {
+            has_மதிப்பு=true;
+            மதிப்பு_2=v;
             hash=hash*37u+v;
         }
-    protected:
-        UBool hasValue;
-        int32_t value;
+    பாதுகாக்கப்பட்ட:
+        UBool has_மதிப்பு;
+        int32_t மதிப்பு_2;
     };
 
 #ifndef U_HIDE_INTERNAL_API
     /** 
      * @internal 
      */
-    class IntermediateValueNode : public ValueNode {
-    public:
-        IntermediateValueNode(int32_t v, Node *nextNode)
-                : ValueNode(0x222222u*37u+hashCode(nextNode)), next(nextNode) { setValue(v); }
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
-        Node *next;
+    class Intermediate_மதிப்பு_முனை : பொது மதிப்பு_முனை {
+    பொது:
+        Intermediate_மதிப்பு_முனை(int32_t v, முனை_2 *next_முனை)
+                : மதிப்பு_முனை(0x222222u*37u+hashCode(next_முனை)), next(next_முனை) { set_மதிப்பு(v); }
+        மெய்நிகர் bool operator==(மாறிலி முனை_2 &other) மாறிலி override;
+        மெய்நிகர் int32_t mark_வலது_Edges_First(int32_t edge_எண்) override;
+        மெய்நிகர் வெறுமை லிக(StringTrieBuilder &builder) override;
+    பாதுகாக்கப்பட்ட:
+        முனை_2 *next;
     };
 #endif  /* U_HIDE_INTERNAL_API */
 
@@ -318,111 +318,111 @@ protected:
     /**
      * @internal 
      */
-    class LinearMatchNode : public ValueNode {
-    public:
-        LinearMatchNode(int32_t len, Node *nextNode)
-                : ValueNode((0x333333u*37u+len)*37u+hashCode(nextNode)),
-                  length(len), next(nextNode) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-    protected:
+    class Linear_Match_முனை : பொது மதிப்பு_முனை {
+    பொது:
+        Linear_Match_முனை(int32_t len, முனை_2 *next_முனை)
+                : மதிப்பு_முனை((0x333333u*37u+len)*37u+hashCode(next_முனை)),
+                  length(len), next(next_முனை) {}
+        மெய்நிகர் bool operator==(மாறிலி முனை_2 &other) மாறிலி override;
+        மெய்நிகர் int32_t mark_வலது_Edges_First(int32_t edge_எண்) override;
+    பாதுகாக்கப்பட்ட:
         int32_t length;
-        Node *next;
+        முனை_2 *next;
     };
 
 #ifndef U_HIDE_INTERNAL_API
     /**
      * @internal 
      */
-    class BranchNode : public Node {
-    public:
-        BranchNode(int32_t initialHash) : Node(initialHash) {}
-    protected:
-        int32_t firstEdgeNumber;
+    class Branch_முனை : பொது முனை_2 {
+    பொது:
+        Branch_முனை(int32_t initialHash) : முனை_2(initialHash) {}
+    பாதுகாக்கப்பட்ட:
+        int32_t first_Edge_எண்;
     };
 
     /**
      * @internal 
      */
-    class ListBranchNode : public BranchNode {
-    public:
-        ListBranchNode() : BranchNode(0x444444), length(0) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
+    class List_Branch_முனை : பொது Branch_முனை {
+    பொது:
+        List_Branch_முனை() : Branch_முனை(0x444444), length(0) {}
+        மெய்நிகர் bool operator==(மாறிலி முனை_2 &other) மாறிலி override;
+        மெய்நிகர் int32_t mark_வலது_Edges_First(int32_t edge_எண்) override;
+        மெய்நிகர் வெறுமை லிக(StringTrieBuilder &builder) override;
         // Adds a unit with a final value.
-        void add(int32_t c, int32_t value) {
+        வெறுமை add(int32_t c, int32_t மதிப்பு_2) {
             units[length] = static_cast<char16_t>(c);
             equal[length]=nullptr;
-            values[length]=value;
+            மதிப்புகள்[length]=மதிப்பு_2;
             ++length;
-            hash=(hash*37u+c)*37u+value;
+            hash=(hash*37u+c)*37u+மதிப்பு_2;
         }
         // Adds a unit which leads to another match node.
-        void add(int32_t c, Node *node) {
+        வெறுமை add(int32_t c, முனை_2 *முனை) {
             units[length] = static_cast<char16_t>(c);
-            equal[length]=node;
-            values[length]=0;
+            equal[length]=முனை;
+            மதிப்புகள்[length]=0;
             ++length;
-            hash=(hash*37u+c)*37u+hashCode(node);
+            hash=(hash*37u+c)*37u+hashCode(முனை);
         }
-    protected:
-        Node *equal[kMaxBranchLinearSubNodeLength];  // nullptr means "has final value".
+    பாதுகாக்கப்பட்ட:
+        முனை_2 *equal[k_Max_Branch_Linear_Sub_முனை_Length];  // nullptr means "has final value".
         int32_t length;
-        int32_t values[kMaxBranchLinearSubNodeLength];
-        char16_t units[kMaxBranchLinearSubNodeLength];
+        int32_t மதிப்புகள்[k_Max_Branch_Linear_Sub_முனை_Length];
+        char16_t units[k_Max_Branch_Linear_Sub_முனை_Length];
     };
 
     /**
      * @internal 
      */
-    class SplitBranchNode : public BranchNode {
-    public:
-        SplitBranchNode(char16_t middleUnit, Node *lessThanNode, Node *greaterOrEqualNode)
-                : BranchNode(((0x555555u*37u+middleUnit)*37u+
-                              hashCode(lessThanNode))*37u+hashCode(greaterOrEqualNode)),
-                  unit(middleUnit), lessThan(lessThanNode), greaterOrEqual(greaterOrEqualNode) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
+    class Split_Branch_முனை : பொது Branch_முனை {
+    பொது:
+        Split_Branch_முனை(char16_t நடு_Unit, முனை_2 *less_Than_முனை, முனை_2 *greater_Or_Equal_முனை)
+                : Branch_முனை(((0x555555u*37u+நடு_Unit)*37u+
+                              hashCode(less_Than_முனை))*37u+hashCode(greater_Or_Equal_முனை)),
+                  unit(நடு_Unit), lessThan(less_Than_முனை), greaterOrEqual(greater_Or_Equal_முனை) {}
+        மெய்நிகர் bool operator==(மாறிலி முனை_2 &other) மாறிலி override;
+        மெய்நிகர் int32_t mark_வலது_Edges_First(int32_t edge_எண்) override;
+        மெய்நிகர் வெறுமை லிக(StringTrieBuilder &builder) override;
+    பாதுகாக்கப்பட்ட:
         char16_t unit;
-        Node *lessThan;
-        Node *greaterOrEqual;
+        முனை_2 *lessThan;
+        முனை_2 *greaterOrEqual;
     };
 
     // Branch head node, for writing the actual node lead unit.
     /** @internal */
-    class BranchHeadNode : public ValueNode {
-    public:
-        BranchHeadNode(int32_t len, Node *subNode)
-                : ValueNode((0x666666u*37u+len)*37u+hashCode(subNode)),
-                  length(len), next(subNode) {}
-        virtual bool operator==(const Node &other) const override;
-        virtual int32_t markRightEdgesFirst(int32_t edgeNumber) override;
-        virtual void write(StringTrieBuilder &builder) override;
-    protected:
+    class Branch_Head_முனை : பொது மதிப்பு_முனை {
+    பொது:
+        Branch_Head_முனை(int32_t len, முனை_2 *sub_முனை)
+                : மதிப்பு_முனை((0x666666u*37u+len)*37u+hashCode(sub_முனை)),
+                  length(len), next(sub_முனை) {}
+        மெய்நிகர் bool operator==(மாறிலி முனை_2 &other) மாறிலி override;
+        மெய்நிகர் int32_t mark_வலது_Edges_First(int32_t edge_எண்) override;
+        மெய்நிகர் வெறுமை லிக(StringTrieBuilder &builder) override;
+    பாதுகாக்கப்பட்ட:
         int32_t length;
-        Node *next;  // A branch sub-node.
+        முனை_2 *next;  // A branch sub-node.
     };
 
 #endif  /* U_HIDE_INTERNAL_API */
     /// \endcond
 
     /** @internal */
-    virtual Node *createLinearMatchNode(int32_t i, int32_t unitIndex, int32_t length,
-                                        Node *nextNode) const = 0;
+    மெய்நிகர் முனை_2 *create_Linear_Match_முனை(int32_t i, int32_t unitIndex, int32_t length,
+                                        முனை_2 *next_முனை) மாறிலி = 0;
 
     /** @internal */
-    virtual int32_t write(int32_t unit) = 0;
+    மெய்நிகர் int32_t லிக(int32_t unit) = 0;
     /** @internal */
-    virtual int32_t writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) = 0;
+    மெய்நிகர் int32_t writeElementUnits(int32_t i, int32_t unitIndex, int32_t length) = 0;
     /** @internal */
-    virtual int32_t writeValueAndFinal(int32_t i, UBool isFinal) = 0;
+    மெய்நிகர் int32_t write_மதிப்பு_And_Final(int32_t i, UBool isFinal) = 0;
     /** @internal */
-    virtual int32_t writeValueAndType(UBool hasValue, int32_t value, int32_t node) = 0;
+    மெய்நிகர் int32_t write_மதிப்பு_And_Type(UBool has_மதிப்பு, int32_t மதிப்பு_2, int32_t முனை) = 0;
     /** @internal */
-    virtual int32_t writeDeltaTo(int32_t jumpTarget) = 0;
+    மெய்நிகர் int32_t writeDeltaTo(int32_t jumpTarget) = 0;
 };
 
 U_NAMESPACE_END

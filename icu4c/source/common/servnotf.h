@@ -9,9 +9,9 @@
 #ifndef ICUNOTIF_H
 #define ICUNOTIF_H
 
-#include "unicode/utypes.h"
+#அந்தர்பாவ "unicode/utypes.h"
 
-#if UCONFIG_NO_SERVICE
+#எனில் UCONFIG_NO_SERVICE
 
 U_NAMESPACE_BEGIN
 
@@ -23,33 +23,33 @@ class ICUNotifier;
 
 U_NAMESPACE_END
 
-#else
+#இல்லையெனில்
 
-#include "unicode/uobject.h"
-#include "unicode/unistr.h"
+#அந்தர்பாவ "unicode/uobject.h"
+#அந்தர்பாவ "unicode/unistr.h"
 
-#include "mutex.h"
-#include "uvector.h"
+#அந்தர்பாவ "mutex.h"
+#அந்தர்பாவ "uvector.h"
 
 U_NAMESPACE_BEGIN
 
-class U_COMMON_API EventListener : public UObject {
-public: 
-    virtual ~EventListener();
+class U_COMMON_API EventListener : பொது UObject {
+பொது: 
+    மெய்நிகர் ~EventListener();
 
-public:
-    static UClassID U_EXPORT2 getStaticClassID();
+பொது:
+    நிலையான UClassID U_EXPORT2 getStaticClassID();
 
-    virtual UClassID getDynamicClassID() const override;
+    மெய்நிகர் UClassID getDynamicClassID() மாறிலி override;
 
-public:
+பொது:
 #ifdef SERVICE_DEBUG
-    virtual UnicodeString& debug(UnicodeString& result) const {
-      return debugClass(result);
+    மெய்நிகர் UnicodeString& debug(UnicodeString& result) மாறிலி {
+      திரும்பு debugClass(result);
     }
 
-    virtual UnicodeString& debugClass(UnicodeString& result) const {
-      return result.append((UnicodeString)"Key");
+    மெய்நிகர் UnicodeString& debugClass(UnicodeString& result) மாறிலி {
+      திரும்பு result.append((UnicodeString)"Key");
     }
 #endif
 };
@@ -71,13 +71,13 @@ public:
  * type and call the appropriate method on the listener.
  */
 
-class U_COMMON_API ICUNotifier : public UMemory  {
-private: UVector* listeners;
+class U_COMMON_API ICUNotifier : பொது UMemory  {
+தனிப்பட்ட: UVector* listeners;
          
-public: 
+பொது: 
     ICUNotifier();
     
-    virtual ~ICUNotifier();
+    மெய்நிகர் ~ICUNotifier();
     
     /**
      * Add a listener to be notified when notifyChanged is called.
@@ -86,14 +86,14 @@ public:
      * register the identical listener more than once will be
      * silently ignored.  
      */
-    virtual void addListener(const EventListener* l, UErrorCode& status);
+    மெய்நிகர் வெறுமை addListener(மாறிலி EventListener* l, UErrorCode& status);
     
     /**
      * Stop notifying this listener.  The listener must
      * not be null. Attempts to remove a listener that is
      * not registered will be silently ignored.
      */
-    virtual void removeListener(const EventListener* l, UErrorCode& status);
+    மெய்நிகர் வெறுமை removeListener(மாறிலி EventListener* l, UErrorCode& status);
     
     /**
      * ICU doesn't spawn its own threads.  All listeners are notified in
@@ -101,19 +101,19 @@ public:
      * indefinitely block the calling thread.  Callers should beware of
      * deadlock situations.  
      */
-    virtual void notifyChanged();
+    மெய்நிகர் வெறுமை notifyChanged();
     
-protected: 
+பாதுகாக்கப்பட்ட: 
     /**
      * Subclasses implement this to return true if the listener is
      * of the appropriate type.
      */
-    virtual UBool acceptsListener(const EventListener& l) const = 0;
+    மெய்நிகர் UBool acceptsListener(மாறிலி EventListener& l) மாறிலி = 0;
     
     /**
      * Subclasses implement this to notify the listener.
      */
-    virtual void notifyListener(EventListener& l) const = 0;
+    மெய்நிகர் வெறுமை notifyListener(EventListener& l) மாறிலி = 0;
 };
 
 U_NAMESPACE_END

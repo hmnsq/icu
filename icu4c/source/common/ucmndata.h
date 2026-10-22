@@ -27,31 +27,31 @@
 #ifndef __UCMNDATA_H__
 #define __UCMNDATA_H__
 
-#include "unicode/udata.h"
-#include "umapfile.h"
+#அந்தர்பாவ "unicode/udata.h"
+#அந்தர்பாவ "umapfile.h"
 
 
 #define COMMON_DATA_NAME U_ICUDATA_NAME
 
-typedef struct  {
+வகைவரை கட்டமைப்பு  {
     uint16_t    headerSize;
     uint8_t     magic1;
     uint8_t     magic2;
 } MappedData;
 
 
-typedef struct  {
+வகைவரை கட்டமைப்பு  {
     MappedData  dataHeader;
     UDataInfo   info;
 } DataHeader;
 
-typedef struct {
+வகைவரை கட்டமைப்பு {
     uint32_t nameOffset;
     uint32_t dataOffset;
 } UDataOffsetTOCEntry;
 
-typedef struct {
-    uint32_t count;
+வகைவரை கட்டமைப்பு {
+    uint32_t மொத்தம்;
     /**
      * Variable-length array declared with length 1 to disable bounds checkers.
      * The actual array length is in the count field.
@@ -66,7 +66,7 @@ typedef struct {
  * @internal
  */
 U_CFUNC uint16_t
-udata_getHeaderSize(const DataHeader *udh);
+udata_getHeaderSize(மாறிலி DataHeader *udh);
 
 /**
  * Get the UDataInfo.size from a const UDataInfo *info.
@@ -75,7 +75,7 @@ udata_getHeaderSize(const DataHeader *udh);
  * @internal
  */
 U_CFUNC uint16_t
-udata_getInfoSize(const UDataInfo *info);
+udata_getInfoSize(மாறிலி UDataInfo *info);
 
 U_CDECL_BEGIN
 /*
@@ -85,20 +85,20 @@ U_CDECL_BEGIN
  *          (I sure do wish this was written in C++, not C)
  */
 
-typedef const DataHeader *
-(U_CALLCONV * LookupFn)(const UDataMemory *pData,
-                        const char *tocEntryName,
+வகைவரை மாறிலி DataHeader *
+(U_CALLCONV * LookupFn)(மாறிலி UDataMemory *pData,
+                        மாறிலி எழுத்து *tocEntryName,
                         int32_t *pLength,
                         UErrorCode *pErrorCode);
 
-typedef uint32_t
-(U_CALLCONV * NumEntriesFn)(const UDataMemory *pData);
+வகைவரை uint32_t
+(U_CALLCONV * இலக்கம்_Entries_Fn)(மாறிலி UDataMemory *pData);
 
 U_CDECL_END
 
-typedef struct {
+வகைவரை கட்டமைப்பு {
     LookupFn      Lookup;
-    NumEntriesFn  NumEntries; 
+    இலக்கம்_Entries_Fn  இலக்கம்_Entries; 
 } commonDataFuncs;
 
 
@@ -112,6 +112,6 @@ typedef struct {
  *     otherwise
  *         set an errorcode.
  */
-U_CFUNC void udata_checkCommonData(UDataMemory *pData, UErrorCode *pErrorCode);
+U_CFUNC வெறுமை udata_checkCommonData(UDataMemory *pData, UErrorCode *pErrorCode);
 
 #endif

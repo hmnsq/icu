@@ -18,12 +18,12 @@
 #ifndef UBIDITRANSFORM_H
 #define UBIDITRANSFORM_H
 
-#include "unicode/utypes.h"
-#include "unicode/ubidi.h"
-#include "unicode/uchar.h"
+#அந்தர்பாவ "unicode/utypes.h"
+#அந்தர்பாவ "unicode/ubidi.h"
+#அந்தர்பாவ "unicode/uchar.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
+#எனில் U_SHOW_CPLUSPLUS_API
+#அந்தர்பாவ "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
 /**
@@ -68,7 +68,7 @@
  * @see UBIDI_REORDER_RUNS_ONLY
  * @stable ICU 58
  */
-typedef enum {
+வகைவரை எண்ணிக்கை {
     /** 0: Constant indicating a logical order.
       * This is the default for input text.
       * @stable ICU 58
@@ -91,7 +91,7 @@ typedef enum {
  * @see ubidi_writeReverse
  * @stable ICU 58
  */
-typedef enum {
+வகைவரை எண்ணிக்கை {
     /** 0: Constant indicating that character mirroring should not be
       * performed.
       * This is the default.
@@ -112,7 +112,7 @@ typedef enum {
  * information used by the layout transformation engine.
  * @stable ICU 58
  */
-typedef struct UBiDiTransform UBiDiTransform;
+வகைவரை கட்டமைப்பு UBiDiTransform UBiDiTransform;
 
 /**
  * Performs transformation of text from the bidi layout defined by the input
@@ -250,7 +250,7 @@ typedef struct UBiDiTransform UBiDiTransform;
  */
 U_CAPI uint32_t U_EXPORT2
 ubiditransform_transform(UBiDiTransform *pBiDiTransform,
-            const UChar *src, int32_t srcLength,
+            மாறிலி UChar *src, int32_t srcLength,
             UChar *dest, int32_t destSize,
             UBiDiLevel inParaLevel, UBiDiOrder inOrder,
             UBiDiLevel outParaLevel, UBiDiOrder outOrder,
@@ -301,10 +301,10 @@ ubiditransform_open(UErrorCode *pErrorCode);
  * Deallocates the given <code>UBiDiTransform</code> object.
  * @stable ICU 58
  */
-U_CAPI void U_EXPORT2
+U_CAPI வெறுமை U_EXPORT2
 ubiditransform_close(UBiDiTransform *pBidiTransform);
 
-#if U_SHOW_CPLUSPLUS_API
+#எனில் U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 

@@ -14,14 +14,14 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/unistr.h"
-#include "unicode/uscript.h"
-#include "unicode/utf16.h"
-#include "ustr_imp.h"
-#include "cmemory.h"
+#அந்தர்பாவ "unicode/utypes.h"
+#அந்தர்பாவ "unicode/unistr.h"
+#அந்தர்பாவ "unicode/uscript.h"
+#அந்தர்பாவ "unicode/utf16.h"
+#அந்தர்பாவ "ustr_imp.h"
+#அந்தர்பாவ "cmemory.h"
 
-namespace {
+நாமாகாஶ {
 
 // Script metadata (script properties).
 // See http://unicode.org/cldr/trac/browser/trunk/common/properties/scriptMetadata.txt
@@ -30,18 +30,18 @@ namespace {
 // Bits 20.. 0: sample character
 
 // Bits 23..21: usage
-const int32_t UNKNOWN = 1 << 21;
-const int32_t EXCLUSION = 2 << 21;
-const int32_t LIMITED_USE = 3 << 21;
+மாறிலி int32_t UNKNOWN = 1 << 21;
+மாறிலி int32_t EXCLUSION = 2 << 21;
+மாறிலி int32_t LIMITED_USE = 3 << 21;
 // st int32_t ASPIRATIONAL = 4 << 21; -- not used any more since Unicode 10
-const int32_t RECOMMENDED = 5 << 21;
+மாறிலி int32_t RECOMMENDED = 5 << 21;
 
 // Bits 31..24: Single-bit flags
-const int32_t RTL = 1 << 24;
-const int32_t LB_LETTERS = 1 << 25;
-const int32_t CASED = 1 << 26;
+மாறிலி int32_t RTL = 1 << 24;
+மாறிலி int32_t LB_LETTERS = 1 << 25;
+மாறிலி int32_t CASED = 1 << 26;
 
-const int32_t SCRIPT_PROPS[] = {
+மாறிலி int32_t SCRIPT_PROPS[] = {
     // Begin copy-paste output from
     // tools/trunk/unicode/py/parsescriptmetadata.py
     0x0040 | RECOMMENDED,  // Zyyy
@@ -263,10 +263,10 @@ const int32_t SCRIPT_PROPS[] = {
 };
 
 int32_t getScriptProps(UScriptCode script) {
-    if (0 <= script && script < UPRV_LENGTHOF(SCRIPT_PROPS)) {
-        return SCRIPT_PROPS[script];
-    } else {
-        return 0;
+    எனில் (0 <= script && script < UPRV_LENGTHOF(SCRIPT_PROPS)) {
+        திரும்பு SCRIPT_PROPS[script];
+    } இல்லையெனில் {
+        திரும்பு 0;
     }
 }
 
@@ -274,51 +274,51 @@ int32_t getScriptProps(UScriptCode script) {
 
 U_CAPI int32_t U_EXPORT2
 uscript_getSampleString(UScriptCode script, char16_t *dest, int32_t capacity, UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) { return 0; }
-    if(capacity < 0 || (capacity > 0 && dest == nullptr)) {
+    எனில்(U_FAILURE(*pErrorCode)) { திரும்பு 0; }
+    எனில்(capacity < 0 || (capacity > 0 && dest == nullptr)) {
         *pErrorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        திரும்பு 0;
     }
     int32_t sampleChar = getScriptProps(script) & 0x1fffff;
     int32_t length;
-    if(sampleChar == 0) {
+    எனில்(sampleChar == 0) {
         length = 0;
-    } else {
+    } இல்லையெனில் {
         length = U16_LENGTH(sampleChar);
-        if(length <= capacity) {
+        எனில்(length <= capacity) {
             int32_t i = 0;
             U16_APPEND_UNSAFE(dest, i, sampleChar);
         }
     }
-    return u_terminateUChars(dest, capacity, length, pErrorCode);
+    திரும்பு u_terminateUChars(dest, capacity, length, pErrorCode);
 }
 
 U_COMMON_API icu::UnicodeString U_EXPORT2
 uscript_getSampleUnicodeString(UScriptCode script) {
     icu::UnicodeString sample;
     int32_t sampleChar = getScriptProps(script) & 0x1fffff;
-    if(sampleChar != 0) {
+    எனில்(sampleChar != 0) {
         sample.append(sampleChar);
     }
-    return sample;
+    திரும்பு sample;
 }
 
 U_CAPI UScriptUsage U_EXPORT2
 uscript_getUsage(UScriptCode script) {
-    return (UScriptUsage)((getScriptProps(script) >> 21) & 7);
+    திரும்பு (UScriptUsage)((getScriptProps(script) >> 21) & 7);
 }
 
 U_CAPI UBool U_EXPORT2
-uscript_isRightToLeft(UScriptCode script) {
-    return (getScriptProps(script) & RTL) != 0;
+uscript_is_வலது_To_இடது(UScriptCode script) {
+    திரும்பு (getScriptProps(script) & RTL) != 0;
 }
 
 U_CAPI UBool U_EXPORT2
 uscript_breaksBetweenLetters(UScriptCode script) {
-    return (getScriptProps(script) & LB_LETTERS) != 0;
+    திரும்பு (getScriptProps(script) & LB_LETTERS) != 0;
 }
 
 U_CAPI UBool U_EXPORT2
 uscript_isCased(UScriptCode script) {
-    return (getScriptProps(script) & CASED) != 0;
+    திரும்பு (getScriptProps(script) & CASED) != 0;
 }

@@ -18,13 +18,13 @@
 *   Internal function for sorting arrays.
 */
 
-#include <cstddef>
+#அந்தர்பாவ <cstddef>
 
-#include "unicode/utypes.h"
-#include "cmemory.h"
-#include "uarrsort.h"
+#அந்தர்பாவ "unicode/utypes.h"
+#அந்தர்பாவ "cmemory.h"
+#அந்தர்பாவ "uarrsort.h"
 
-enum {
+எண்ணிக்கை {
     /**
      * "from Knuth"
      *
@@ -33,55 +33,55 @@ enum {
      * A linear search over 8 items on average also performs 4 comparisons.
      */
     MIN_QSORT=9,
-    STACK_ITEM_SIZE=200
+    அடுக்கு_ITEM_SIZE=200
 };
 
-static constexpr int32_t sizeInMaxAlignTs(int32_t sizeInBytes) {
-    return (sizeInBytes + sizeof(std::max_align_t) - 1) / sizeof(std::max_align_t);
+நிலையான constexpr int32_t sizeInMaxAlignTs(int32_t sizeInBytes) {
+    திரும்பு (sizeInBytes + அளவு(std::max_align_t) - 1) / அளவு(std::max_align_t);
 }
 
 /* UComparator convenience implementations ---------------------------------- */
 
 U_CAPI int32_t U_EXPORT2
-uprv_uint16Comparator(const void *context, const void *left, const void *right) {
-    (void)context;
-    return (int32_t)*(const uint16_t *)left - (int32_t)*(const uint16_t *)right;
+uprv_uint16Comparator(மாறிலி வெறுமை *context, மாறிலி வெறுமை *left, மாறிலி வெறுமை *வலது) {
+    (வெறுமை)context;
+    திரும்பு (int32_t)*(மாறிலி uint16_t *)left - (int32_t)*(மாறிலி uint16_t *)வலது;
 }
 
 U_CAPI int32_t U_EXPORT2
-uprv_int32Comparator(const void *context, const void *left, const void *right) {
-    (void)context;
-    return *(const int32_t *)left - *(const int32_t *)right;
+uprv_int32Comparator(மாறிலி வெறுமை *context, மாறிலி வெறுமை *left, மாறிலி வெறுமை *வலது) {
+    (வெறுமை)context;
+    திரும்பு *(மாறிலி int32_t *)left - *(மாறிலி int32_t *)வலது;
 }
 
 U_CAPI int32_t U_EXPORT2
-uprv_uint32Comparator(const void *context, const void *left, const void *right) {
-    (void)context;
-    uint32_t l=*(const uint32_t *)left, r=*(const uint32_t *)right;
+uprv_uint32Comparator(மாறிலி வெறுமை *context, மாறிலி வெறுமை *left, மாறிலி வெறுமை *வலது) {
+    (வெறுமை)context;
+    uint32_t l=*(மாறிலி uint32_t *)left, r=*(மாறிலி uint32_t *)வலது;
 
     /* compare directly because (l-r) would overflow the int32_t result */
-    if(l<r) {
-        return -1;
-    } else if(l==r) {
-        return 0;
-    } else /* l>r */ {
-        return 1;
+    எனில்(l<r) {
+        திரும்பு -1;
+    } இல்லையெனில் எனில்(l==r) {
+        திரும்பு 0;
+    } இல்லையெனில் /* l>r */ {
+        திரும்பு 1;
     }
 }
 
 /* Insertion sort using binary search --------------------------------------- */
 
 U_CAPI int32_t U_EXPORT2
-uprv_stableBinarySearch(char *array, int32_t limit, void *item, int32_t itemSize,
-                        UComparator *cmp, const void *context) {
+uprv_stable_இருமம்_தேடல்(எழுத்து *array, int32_t limit, வெறுமை *item, int32_t itemSize,
+                        UComparator *cmp, மாறிலி வெறுமை *context) {
     int32_t start=0;
-    UBool found=false;
+    UBool found=பொய்;
 
     /* Binary search until we get down to a tiny sub-array. */
-    while((limit-start)>=MIN_QSORT) {
+    போது((limit-start)>=MIN_QSORT) {
         int32_t i=(start+limit)/2;
         int32_t diff=cmp(context, item, array+i*itemSize);
-        if(diff==0) {
+        எனில்(diff==0) {
             /*
              * Found the item. We look for the *last* occurrence of such
              * an item, for stable sorting.
@@ -93,43 +93,43 @@ uprv_stableBinarySearch(char *array, int32_t limit, void *item, int32_t itemSize
              * (where found will never become true in the insertion sort)
              * or potentially many duplicates.
              */
-            found=true;
+            found=உண்மை;
             start=i+1;
-        } else if(diff<0) {
+        } இல்லையெனில் எனில்(diff<0) {
             limit=i;
-        } else {
+        } இல்லையெனில் {
             start=i;
         }
     }
 
     /* Linear search over the remaining tiny sub-array. */
-    while(start<limit) {
+    போது(start<limit) {
         int32_t diff=cmp(context, item, array+start*itemSize);
-        if(diff==0) {
-            found=true;
-        } else if(diff<0) {
-            break;
+        எனில்(diff==0) {
+            found=உண்மை;
+        } இல்லையெனில் எனில்(diff<0) {
+            நிறுத்து;
         }
         ++start;
     }
-    return found ? (start-1) : ~start;
+    திரும்பு found ? (start-1) : ~start;
 }
 
-static void
-doInsertionSort(char *array, int32_t length, int32_t itemSize,
-                UComparator *cmp, const void *context, void *pv) {
+நிலையான வெறுமை
+doInsertionSort(எழுத்து *array, int32_t length, int32_t itemSize,
+                UComparator *cmp, மாறிலி வெறுமை *context, வெறுமை *pv) {
     int32_t j;
 
-    for(j=1; j<length; ++j) {
-        char *item=array+j*itemSize;
-        int32_t insertionPoint=uprv_stableBinarySearch(array, j, item, itemSize, cmp, context);
-        if(insertionPoint<0) {
+    க்கு(j=1; j<length; ++j) {
+        எழுத்து *item=array+j*itemSize;
+        int32_t insertionPoint=uprv_stable_இருமம்_தேடல்(array, j, item, itemSize, cmp, context);
+        எனில்(insertionPoint<0) {
             insertionPoint=~insertionPoint;
-        } else {
+        } இல்லையெனில் {
             ++insertionPoint;  /* one past the last equal item */
         }
-        if(insertionPoint<j) {
-            char *dest=array+insertionPoint*itemSize;
+        எனில்(insertionPoint<j) {
+            எழுத்து *dest=array+insertionPoint*itemSize;
             uprv_memcpy(pv, item, itemSize);  /* v=array[j] */
             uprv_memmove(dest+itemSize, dest, (j-insertionPoint)*(size_t)itemSize);
             uprv_memcpy(dest, pv, itemSize);  /* array[insertionPoint]=v */
@@ -137,15 +137,15 @@ doInsertionSort(char *array, int32_t length, int32_t itemSize,
     }
 }
 
-static void
-insertionSort(char *array, int32_t length, int32_t itemSize,
-              UComparator *cmp, const void *context, UErrorCode *pErrorCode) {
+நிலையான வெறுமை
+insertionSort(எழுத்து *array, int32_t length, int32_t itemSize,
+              UComparator *cmp, மாறிலி வெறுமை *context, UErrorCode *pErrorCode) {
 
-    icu::MaybeStackArray<std::max_align_t, sizeInMaxAlignTs(STACK_ITEM_SIZE)> v;
-    if (sizeInMaxAlignTs(itemSize) > v.getCapacity() &&
+    icu::Maybe_அடுக்கு_Array<std::max_align_t, sizeInMaxAlignTs(அடுக்கு_ITEM_SIZE)> v;
+    எனில் (sizeInMaxAlignTs(itemSize) > v.getCapacity() &&
             v.resize(sizeInMaxAlignTs(itemSize)) == nullptr) {
         *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        திரும்பு;
     }
 
     doInsertionSort(array, length, itemSize, cmp, context, v.getAlias());
@@ -165,81 +165,81 @@ insertionSort(char *array, int32_t length, int32_t itemSize,
  * 4. Auflage 1986
  * ISBN 3-519-02260-5
  */
-static void
-subQuickSort(char *array, int32_t start, int32_t limit, int32_t itemSize,
-             UComparator *cmp, const void *context,
-             void *px, void *pw) {
-    int32_t left, right;
+நிலையான வெறுமை
+subQuickSort(எழுத்து *array, int32_t start, int32_t limit, int32_t itemSize,
+             UComparator *cmp, மாறிலி வெறுமை *context,
+             வெறுமை *px, வெறுமை *pw) {
+    int32_t left, வலது;
 
     /* start and left are inclusive, limit and right are exclusive */
-    do {
-        if((start+MIN_QSORT)>=limit) {
+    செய் {
+        எனில்((start+MIN_QSORT)>=limit) {
             doInsertionSort(array+start*itemSize, limit-start, itemSize, cmp, context, px);
-            break;
+            நிறுத்து;
         }
 
         left=start;
-        right=limit;
+        வலது=limit;
 
         /* x=array[middle] */
         uprv_memcpy(px, array+(size_t)((start+limit)/2)*itemSize, itemSize);
 
-        do {
-            while(/* array[left]<x */
+        செய் {
+            போது(/* array[left]<x */
                   cmp(context, array+left*itemSize, px)<0
             ) {
                 ++left;
             }
-            while(/* x<array[right-1] */
-                  cmp(context, px, array+(right-1)*itemSize)<0
+            போது(/* x<array[right-1] */
+                  cmp(context, px, array+(வலது-1)*itemSize)<0
             ) {
-                --right;
+                --வலது;
             }
 
             /* swap array[left] and array[right-1] via w; ++left; --right */
-            if(left<right) {
-                --right;
+            எனில்(left<வலது) {
+                --வலது;
 
-                if(left<right) {
+                எனில்(left<வலது) {
                     uprv_memcpy(pw, array+(size_t)left*itemSize, itemSize);
-                    uprv_memcpy(array+(size_t)left*itemSize, array+(size_t)right*itemSize, itemSize);
-                    uprv_memcpy(array+(size_t)right*itemSize, pw, itemSize);
+                    uprv_memcpy(array+(size_t)left*itemSize, array+(size_t)வலது*itemSize, itemSize);
+                    uprv_memcpy(array+(size_t)வலது*itemSize, pw, itemSize);
                 }
 
                 ++left;
             }
-        } while(left<right);
+        } போது(left<வலது);
 
         /* sort sub-arrays */
-        if((right-start)<(limit-left)) {
+        எனில்((வலது-start)<(limit-left)) {
             /* sort [start..right[ */
-            if(start<(right-1)) {
-                subQuickSort(array, start, right, itemSize, cmp, context, px, pw);
+            எனில்(start<(வலது-1)) {
+                subQuickSort(array, start, வலது, itemSize, cmp, context, px, pw);
             }
 
             /* sort [left..limit[ */
             start=left;
-        } else {
+        } இல்லையெனில் {
             /* sort [left..limit[ */
-            if(left<(limit-1)) {
+            எனில்(left<(limit-1)) {
                 subQuickSort(array, left, limit, itemSize, cmp, context, px, pw);
             }
 
             /* sort [start..right[ */
-            limit=right;
+            limit=வலது;
         }
-    } while(start<(limit-1));
+    } போது(start<(limit-1));
 }
 
-static void
-quickSort(char *array, int32_t length, int32_t itemSize,
-            UComparator *cmp, const void *context, UErrorCode *pErrorCode) {
+நிலையான வெறுமை
+quickSort(எழுத்து *array, int32_t length, int32_t itemSize,
+            UComparator *cmp, மாறிலி வெறுமை *context, UErrorCode *pErrorCode) {
     /* allocate two intermediate item variables (x and w) */
-    icu::MaybeStackArray<std::max_align_t, sizeInMaxAlignTs(STACK_ITEM_SIZE) * 2> xw;
-    if(sizeInMaxAlignTs(itemSize)*2 > xw.getCapacity() &&
+    icu::Maybe_அடுக்கு_Array<std::max_align_t, sizeInMaxAlignTs(அடுக்கு_ITEM_SIZE) * 2> xw;
+    எனில்(sizeInMaxAlignTs(itemSize)*2 > xw.getCapacity() &&
             xw.resize(sizeInMaxAlignTs(itemSize) * 2) == nullptr) {
         *pErrorCode=U_MEMORY_ALLOCATION_ERROR;
-        return;
+        திரும்பு;
     }
 
     subQuickSort(array, 0, length, itemSize, cmp, context,
@@ -252,23 +252,23 @@ quickSort(char *array, int32_t length, int32_t itemSize,
  * Check arguments, select an appropriate implementation,
  * cast the array to char * so that array+i*itemSize works.
  */
-U_CAPI void U_EXPORT2
-uprv_sortArray(void *array, int32_t length, int32_t itemSize,
-               UComparator *cmp, const void *context,
+U_CAPI வெறுமை U_EXPORT2
+uprv_sortArray(வெறுமை *array, int32_t length, int32_t itemSize,
+               UComparator *cmp, மாறிலி வெறுமை *context,
                UBool sortStable, UErrorCode *pErrorCode) {
-    if(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
-        return;
+    எனில்(pErrorCode==nullptr || U_FAILURE(*pErrorCode)) {
+        திரும்பு;
     }
-    if((length>0 && array==nullptr) || length<0 || itemSize<=0 || cmp==nullptr) {
+    எனில்((length>0 && array==nullptr) || length<0 || itemSize<=0 || cmp==nullptr) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        திரும்பு;
     }
 
-    if(length<=1) {
-        return;
-    } else if(length<MIN_QSORT || sortStable) {
-        insertionSort((char *)array, length, itemSize, cmp, context, pErrorCode);
-    } else {
-        quickSort((char *)array, length, itemSize, cmp, context, pErrorCode);
+    எனில்(length<=1) {
+        திரும்பு;
+    } இல்லையெனில் எனில்(length<MIN_QSORT || sortStable) {
+        insertionSort((எழுத்து *)array, length, itemSize, cmp, context, pErrorCode);
+    } இல்லையெனில் {
+        quickSort((எழுத்து *)array, length, itemSize, cmp, context, pErrorCode);
     }
 }

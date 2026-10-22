@@ -14,13 +14,13 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/appendable.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/uobject.h"
-#include "unicode/utf16.h"
-#include "cmemory.h"
-#include "uassert.h"
+#அந்தர்பாவ "unicode/utypes.h"
+#அந்தர்பாவ "unicode/appendable.h"
+#அந்தர்பாவ "unicode/ucharstrie.h"
+#அந்தர்பாவ "unicode/uobject.h"
+#அந்தர்பாவ "unicode/utf16.h"
+#அந்தர்பாவ "cmemory.h"
+#அந்தர்பாவ "uassert.h"
 
 U_NAMESPACE_BEGIN
 
@@ -29,20 +29,20 @@ UCharsTrie::~UCharsTrie() {
 }
 
 UStringTrieResult
-UCharsTrie::current() const {
-    const char16_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
-    } else {
-        int32_t node;
-        return (remainingMatchLength_<0 && (node=*pos)>=kMinValueLead) ?
-                valueResult(node) : USTRINGTRIE_NO_VALUE;
+UCharsTrie::current() மாறிலி {
+    மாறிலி char16_t *pos=pos_;
+    எனில்(pos==nullptr) {
+        திரும்பு USTRINGTRIE_NO_MATCH;
+    } இல்லையெனில் {
+        int32_t முனை;
+        திரும்பு (remainingMatchLength_<0 && (முனை=*pos)>=k_Min_மதிப்பு_Lead) ?
+                மதிப்பு_Result(முனை) : USTRINGTRIE_NO_மதிப்பு;
     }
 }
 
 UStringTrieResult
 UCharsTrie::firstForCodePoint(UChar32 cp) {
-    return cp<=0xffff ?
+    திரும்பு cp<=0xffff ?
         first(cp) :
         (USTRINGTRIE_HAS_NEXT(first(U16_LEAD(cp))) ?
             next(U16_TRAIL(cp)) :
@@ -51,7 +51,7 @@ UCharsTrie::firstForCodePoint(UChar32 cp) {
 
 UStringTrieResult
 UCharsTrie::nextForCodePoint(UChar32 cp) {
-    return cp<=0xffff ?
+    திரும்பு cp<=0xffff ?
         next(cp) :
         (USTRINGTRIE_HAS_NEXT(next(U16_LEAD(cp))) ?
             next(U16_TRAIL(cp)) :
@@ -59,19 +59,19 @@ UCharsTrie::nextForCodePoint(UChar32 cp) {
 }
 
 UStringTrieResult
-UCharsTrie::branchNext(const char16_t *pos, int32_t length, int32_t uchar) {
+UCharsTrie::branchNext(மாறிலி char16_t *pos, int32_t length, int32_t uchar) {
     // Branch according to the current unit.
-    if(length==0) {
+    எனில்(length==0) {
         length=*pos++;
     }
     ++length;
     // The length of the branch is the number of units to select from.
     // The data structure encodes a binary search.
-    while(length>kMaxBranchLinearSubNodeLength) {
-        if(uchar<*pos++) {
+    போது(length>k_Max_Branch_Linear_Sub_முனை_Length) {
+        எனில்(uchar<*pos++) {
             length>>=1;
             pos=jumpByDelta(pos);
-        } else {
+        } இல்லையெனில் {
             length=length-(length>>1);
             pos=skipDelta(pos);
         }
@@ -79,337 +79,337 @@ UCharsTrie::branchNext(const char16_t *pos, int32_t length, int32_t uchar) {
     // Drop down to linear search for the last few units.
     // length>=2 because the loop body above sees length>kMaxBranchLinearSubNodeLength>=3
     // and divides length by 2.
-    do {
-        if(uchar==*pos++) {
+    செய் {
+        எனில்(uchar==*pos++) {
             UStringTrieResult result;
-            int32_t node=*pos;
-            if(node&kValueIsFinal) {
+            int32_t முனை=*pos;
+            எனில்(முனை&k_மதிப்பு_Is_Final) {
                 // Leave the final value for getValue() to read.
-                result=USTRINGTRIE_FINAL_VALUE;
-            } else {
+                result=USTRINGTRIE_FINAL_மதிப்பு;
+            } இல்லையெனில் {
                 // Use the non-final value as the jump delta.
                 ++pos;
                 // int32_t delta=readValue(pos, node);
                 int32_t delta;
-                if(node<kMinTwoUnitValueLead) {
-                    delta=node;
-                } else if(node<kThreeUnitValueLead) {
-                    delta=((node-kMinTwoUnitValueLead)<<16)|*pos++;
-                } else {
+                எனில்(முனை<k_Min_Two_Unit_மதிப்பு_Lead) {
+                    delta=முனை;
+                } இல்லையெனில் எனில்(முனை<k_Three_Unit_மதிப்பு_Lead) {
+                    delta=((முனை-k_Min_Two_Unit_மதிப்பு_Lead)<<16)|*pos++;
+                } இல்லையெனில் {
                     delta=(pos[0]<<16)|pos[1];
                     pos+=2;
                 }
                 // end readValue()
                 pos+=delta;
-                node=*pos;
-                result= node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
+                முனை=*pos;
+                result= முனை>=k_Min_மதிப்பு_Lead ? மதிப்பு_Result(முனை) : USTRINGTRIE_NO_மதிப்பு;
             }
             pos_=pos;
-            return result;
+            திரும்பு result;
         }
         --length;
-        pos=skipValue(pos);
-    } while(length>1);
-    if(uchar==*pos++) {
+        pos=skip_மதிப்பு(pos);
+    } போது(length>1);
+    எனில்(uchar==*pos++) {
         pos_=pos;
-        int32_t node=*pos;
-        return node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
-    } else {
+        int32_t முனை=*pos;
+        திரும்பு முனை>=k_Min_மதிப்பு_Lead ? மதிப்பு_Result(முனை) : USTRINGTRIE_NO_மதிப்பு;
+    } இல்லையெனில் {
         stop();
-        return USTRINGTRIE_NO_MATCH;
+        திரும்பு USTRINGTRIE_NO_MATCH;
     }
 }
 
 UStringTrieResult
-UCharsTrie::nextImpl(const char16_t *pos, int32_t uchar) {
-    int32_t node=*pos++;
-    for(;;) {
-        if(node<kMinLinearMatch) {
-            return branchNext(pos, node, uchar);
-        } else if(node<kMinValueLead) {
+UCharsTrie::nextImpl(மாறிலி char16_t *pos, int32_t uchar) {
+    int32_t முனை=*pos++;
+    க்கு(;;) {
+        எனில்(முனை<kMinLinearMatch) {
+            திரும்பு branchNext(pos, முனை, uchar);
+        } இல்லையெனில் எனில்(முனை<k_Min_மதிப்பு_Lead) {
             // Match the first of length+1 units.
-            int32_t length=node-kMinLinearMatch;  // Actual match length minus 1.
-            if(uchar==*pos++) {
+            int32_t length=முனை-kMinLinearMatch;  // Actual match length minus 1.
+            எனில்(uchar==*pos++) {
                 remainingMatchLength_=--length;
                 pos_=pos;
-                return (length<0 && (node=*pos)>=kMinValueLead) ?
-                        valueResult(node) : USTRINGTRIE_NO_VALUE;
-            } else {
+                திரும்பு (length<0 && (முனை=*pos)>=k_Min_மதிப்பு_Lead) ?
+                        மதிப்பு_Result(முனை) : USTRINGTRIE_NO_மதிப்பு;
+            } இல்லையெனில் {
                 // No match.
-                break;
+                நிறுத்து;
             }
-        } else if(node&kValueIsFinal) {
+        } இல்லையெனில் எனில்(முனை&k_மதிப்பு_Is_Final) {
             // No further matching units.
-            break;
-        } else {
+            நிறுத்து;
+        } இல்லையெனில் {
             // Skip intermediate value.
-            pos=skipNodeValue(pos, node);
-            node&=kNodeTypeMask;
+            pos=skip_முனை_மதிப்பு(pos, முனை);
+            முனை&=k_முனை_Type_Mask;
         }
     }
     stop();
-    return USTRINGTRIE_NO_MATCH;
+    திரும்பு USTRINGTRIE_NO_MATCH;
 }
 
 UStringTrieResult
 UCharsTrie::next(int32_t uchar) {
-    const char16_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+    மாறிலி char16_t *pos=pos_;
+    எனில்(pos==nullptr) {
+        திரும்பு USTRINGTRIE_NO_MATCH;
     }
     int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    if(length>=0) {
+    எனில்(length>=0) {
         // Remaining part of a linear-match node.
-        if(uchar==*pos++) {
+        எனில்(uchar==*pos++) {
             remainingMatchLength_=--length;
             pos_=pos;
-            int32_t node;
-            return (length<0 && (node=*pos)>=kMinValueLead) ?
-                    valueResult(node) : USTRINGTRIE_NO_VALUE;
-        } else {
+            int32_t முனை;
+            திரும்பு (length<0 && (முனை=*pos)>=k_Min_மதிப்பு_Lead) ?
+                    மதிப்பு_Result(முனை) : USTRINGTRIE_NO_மதிப்பு;
+        } இல்லையெனில் {
             stop();
-            return USTRINGTRIE_NO_MATCH;
+            திரும்பு USTRINGTRIE_NO_MATCH;
         }
     }
-    return nextImpl(pos, uchar);
+    திரும்பு nextImpl(pos, uchar);
 }
 
 UStringTrieResult
 UCharsTrie::next(ConstChar16Ptr ptr, int32_t sLength) {
-    const char16_t *s=ptr;
-    if(sLength<0 ? *s==0 : sLength==0) {
+    மாறிலி char16_t *s=ptr;
+    எனில்(sLength<0 ? *s==0 : sLength==0) {
         // Empty input.
-        return current();
+        திரும்பு current();
     }
-    const char16_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+    மாறிலி char16_t *pos=pos_;
+    எனில்(pos==nullptr) {
+        திரும்பு USTRINGTRIE_NO_MATCH;
     }
     int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    for(;;) {
+    க்கு(;;) {
         // Fetch the next input unit, if there is one.
         // Continue a linear-match node without rechecking sLength<0.
         int32_t uchar;
-        if(sLength<0) {
-            for(;;) {
-                if((uchar=*s++)==0) {
+        எனில்(sLength<0) {
+            க்கு(;;) {
+                எனில்((uchar=*s++)==0) {
                     remainingMatchLength_=length;
                     pos_=pos;
-                    int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
-                            valueResult(node) : USTRINGTRIE_NO_VALUE;
+                    int32_t முனை;
+                    திரும்பு (length<0 && (முனை=*pos)>=k_Min_மதிப்பு_Lead) ?
+                            மதிப்பு_Result(முனை) : USTRINGTRIE_NO_மதிப்பு;
                 }
-                if(length<0) {
+                எனில்(length<0) {
                     remainingMatchLength_=length;
-                    break;
+                    நிறுத்து;
                 }
-                if(uchar!=*pos) {
+                எனில்(uchar!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    திரும்பு USTRINGTRIE_NO_MATCH;
                 }
                 ++pos;
                 --length;
             }
-        } else {
-            for(;;) {
-                if(sLength==0) {
+        } இல்லையெனில் {
+            க்கு(;;) {
+                எனில்(sLength==0) {
                     remainingMatchLength_=length;
                     pos_=pos;
-                    int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
-                            valueResult(node) : USTRINGTRIE_NO_VALUE;
+                    int32_t முனை;
+                    திரும்பு (length<0 && (முனை=*pos)>=k_Min_மதிப்பு_Lead) ?
+                            மதிப்பு_Result(முனை) : USTRINGTRIE_NO_மதிப்பு;
                 }
                 uchar=*s++;
                 --sLength;
-                if(length<0) {
+                எனில்(length<0) {
                     remainingMatchLength_=length;
-                    break;
+                    நிறுத்து;
                 }
-                if(uchar!=*pos) {
+                எனில்(uchar!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    திரும்பு USTRINGTRIE_NO_MATCH;
                 }
                 ++pos;
                 --length;
             }
         }
-        int32_t node=*pos++;
-        for(;;) {
-            if(node<kMinLinearMatch) {
-                UStringTrieResult result=branchNext(pos, node, uchar);
-                if(result==USTRINGTRIE_NO_MATCH) {
-                    return USTRINGTRIE_NO_MATCH;
+        int32_t முனை=*pos++;
+        க்கு(;;) {
+            எனில்(முனை<kMinLinearMatch) {
+                UStringTrieResult result=branchNext(pos, முனை, uchar);
+                எனில்(result==USTRINGTRIE_NO_MATCH) {
+                    திரும்பு USTRINGTRIE_NO_MATCH;
                 }
                 // Fetch the next input unit, if there is one.
-                if(sLength<0) {
-                    if((uchar=*s++)==0) {
-                        return result;
+                எனில்(sLength<0) {
+                    எனில்((uchar=*s++)==0) {
+                        திரும்பு result;
                     }
-                } else {
-                    if(sLength==0) {
-                        return result;
+                } இல்லையெனில் {
+                    எனில்(sLength==0) {
+                        திரும்பு result;
                     }
                     uchar=*s++;
                     --sLength;
                 }
-                if(result==USTRINGTRIE_FINAL_VALUE) {
+                எனில்(result==USTRINGTRIE_FINAL_மதிப்பு) {
                     // No further matching units.
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    திரும்பு USTRINGTRIE_NO_MATCH;
                 }
                 pos=pos_;  // branchNext() advanced pos and wrote it to pos_ .
-                node=*pos++;
-            } else if(node<kMinValueLead) {
+                முனை=*pos++;
+            } இல்லையெனில் எனில்(முனை<k_Min_மதிப்பு_Lead) {
                 // Match length+1 units.
-                length=node-kMinLinearMatch;  // Actual match length minus 1.
-                if(uchar!=*pos) {
+                length=முனை-kMinLinearMatch;  // Actual match length minus 1.
+                எனில்(uchar!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    திரும்பு USTRINGTRIE_NO_MATCH;
                 }
                 ++pos;
                 --length;
-                break;
-            } else if(node&kValueIsFinal) {
+                நிறுத்து;
+            } இல்லையெனில் எனில்(முனை&k_மதிப்பு_Is_Final) {
                 // No further matching units.
                 stop();
-                return USTRINGTRIE_NO_MATCH;
-            } else {
+                திரும்பு USTRINGTRIE_NO_MATCH;
+            } இல்லையெனில் {
                 // Skip intermediate value.
-                pos=skipNodeValue(pos, node);
-                node&=kNodeTypeMask;
+                pos=skip_முனை_மதிப்பு(pos, முனை);
+                முனை&=k_முனை_Type_Mask;
             }
         }
     }
 }
 
-const char16_t*
-UCharsTrie::findUniqueValueFromBranch(const char16_t* pos U_LIFETIME_BOUND,
+மாறிலி char16_t*
+UCharsTrie::find_Unique_மதிப்பு_From_Branch(மாறிலி char16_t* pos U_LIFETIME_BOUND,
                                       int32_t length,
-                                      UBool haveUniqueValue,
-                                      int32_t& uniqueValue) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+                                      UBool have_Unique_மதிப்பு,
+                                      int32_t& unique_மதிப்பு) {
+    போது(length>k_Max_Branch_Linear_Sub_முனை_Length) {
         ++pos;  // ignore the comparison unit
-        if(nullptr==findUniqueValueFromBranch(jumpByDelta(pos), length>>1, haveUniqueValue, uniqueValue)) {
-            return nullptr;
+        எனில்(nullptr==find_Unique_மதிப்பு_From_Branch(jumpByDelta(pos), length>>1, have_Unique_மதிப்பு, unique_மதிப்பு)) {
+            திரும்பு nullptr;
         }
         length=length-(length>>1);
         pos=skipDelta(pos);
     }
-    do {
+    செய் {
         ++pos;  // ignore a comparison unit
         // handle its value
-        int32_t node=*pos++;
-        UBool isFinal = static_cast<UBool>(node >> 15);
-        node&=0x7fff;
-        int32_t value=readValue(pos, node);
-        pos=skipValue(pos, node);
-        if(isFinal) {
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return nullptr;
+        int32_t முனை=*pos++;
+        UBool isFinal = static_cast<UBool>(முனை >> 15);
+        முனை&=0x7fff;
+        int32_t value=read_மதிப்பு(pos, முனை);
+        pos=skip_மதிப்பு(pos, முனை);
+        எனில்(isFinal) {
+            எனில்(have_Unique_மதிப்பு) {
+                எனில்(value!=unique_மதிப்பு) {
+                    திரும்பு nullptr;
                 }
-            } else {
-                uniqueValue=value;
-                haveUniqueValue=true;
+            } இல்லையெனில் {
+                unique_மதிப்பு=value;
+                have_Unique_மதிப்பு=உண்மை;
             }
-        } else {
-            if(!findUniqueValue(pos+value, haveUniqueValue, uniqueValue)) {
-                return nullptr;
+        } இல்லையெனில் {
+            எனில்(!find_Unique_மதிப்பு(pos+value, have_Unique_மதிப்பு, unique_மதிப்பு)) {
+                திரும்பு nullptr;
             }
-            haveUniqueValue=true;
+            have_Unique_மதிப்பு=உண்மை;
         }
-    } while(--length>1);
-    return pos+1;  // ignore the last comparison unit
+    } போது(--length>1);
+    திரும்பு pos+1;  // ignore the last comparison unit
 }
 
 UBool
-UCharsTrie::findUniqueValue(const char16_t *pos, UBool haveUniqueValue, int32_t &uniqueValue) {
-    int32_t node=*pos++;
-    for(;;) {
-        if(node<kMinLinearMatch) {
-            if(node==0) {
-                node=*pos++;
+UCharsTrie::find_Unique_மதிப்பு(மாறிலி char16_t *pos, UBool have_Unique_மதிப்பு, int32_t &unique_மதிப்பு) {
+    int32_t முனை=*pos++;
+    க்கு(;;) {
+        எனில்(முனை<kMinLinearMatch) {
+            எனில்(முனை==0) {
+                முனை=*pos++;
             }
-            pos=findUniqueValueFromBranch(pos, node+1, haveUniqueValue, uniqueValue);
-            if(pos==nullptr) {
-                return false;
+            pos=find_Unique_மதிப்பு_From_Branch(pos, முனை+1, have_Unique_மதிப்பு, unique_மதிப்பு);
+            எனில்(pos==nullptr) {
+                திரும்பு பொய்;
             }
-            haveUniqueValue=true;
-            node=*pos++;
-        } else if(node<kMinValueLead) {
+            have_Unique_மதிப்பு=உண்மை;
+            முனை=*pos++;
+        } இல்லையெனில் எனில்(முனை<k_Min_மதிப்பு_Lead) {
             // linear-match node
-            pos+=node-kMinLinearMatch+1;  // Ignore the match units.
-            node=*pos++;
-        } else {
-            UBool isFinal = static_cast<UBool>(node >> 15);
+            pos+=முனை-kMinLinearMatch+1;  // Ignore the match units.
+            முனை=*pos++;
+        } இல்லையெனில் {
+            UBool isFinal = static_cast<UBool>(முனை >> 15);
             int32_t value;
-            if(isFinal) {
-                value=readValue(pos, node&0x7fff);
-            } else {
-                value=readNodeValue(pos, node);
+            எனில்(isFinal) {
+                value=read_மதிப்பு(pos, முனை&0x7fff);
+            } இல்லையெனில் {
+                value=read_முனை_மதிப்பு(pos, முனை);
             }
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return false;
+            எனில்(have_Unique_மதிப்பு) {
+                எனில்(value!=unique_மதிப்பு) {
+                    திரும்பு பொய்;
                 }
-            } else {
-                uniqueValue=value;
-                haveUniqueValue=true;
+            } இல்லையெனில் {
+                unique_மதிப்பு=value;
+                have_Unique_மதிப்பு=உண்மை;
             }
-            if(isFinal) {
-                return true;
+            எனில்(isFinal) {
+                திரும்பு உண்மை;
             }
-            pos=skipNodeValue(pos, node);
-            node&=kNodeTypeMask;
+            pos=skip_முனை_மதிப்பு(pos, முனை);
+            முனை&=k_முனை_Type_Mask;
         }
     }
 }
 
 int32_t
-UCharsTrie::getNextUChars(Appendable &out) const {
-    const char16_t *pos=pos_;
-    if(pos==nullptr) {
-        return 0;
+UCharsTrie::getNextUChars(Appendable &out) மாறிலி {
+    மாறிலி char16_t *pos=pos_;
+    எனில்(pos==nullptr) {
+        திரும்பு 0;
     }
-    if(remainingMatchLength_>=0) {
+    எனில்(remainingMatchLength_>=0) {
         out.appendCodeUnit(*pos);  // Next unit of a pending linear-match node.
-        return 1;
+        திரும்பு 1;
     }
-    int32_t node=*pos++;
-    if(node>=kMinValueLead) {
-        if(node&kValueIsFinal) {
-            return 0;
-        } else {
-            pos=skipNodeValue(pos, node);
-            node&=kNodeTypeMask;
+    int32_t முனை=*pos++;
+    எனில்(முனை>=k_Min_மதிப்பு_Lead) {
+        எனில்(முனை&k_மதிப்பு_Is_Final) {
+            திரும்பு 0;
+        } இல்லையெனில் {
+            pos=skip_முனை_மதிப்பு(pos, முனை);
+            முனை&=k_முனை_Type_Mask;
         }
     }
-    if(node<kMinLinearMatch) {
-        if(node==0) {
-            node=*pos++;
+    எனில்(முனை<kMinLinearMatch) {
+        எனில்(முனை==0) {
+            முனை=*pos++;
         }
-        out.reserveAppendCapacity(++node);
-        getNextBranchUChars(pos, node, out);
-        return node;
-    } else {
+        out.reserveAppendCapacity(++முனை);
+        getNextBranchUChars(pos, முனை, out);
+        திரும்பு முனை;
+    } இல்லையெனில் {
         // First unit of the linear-match node.
         out.appendCodeUnit(*pos);
-        return 1;
+        திரும்பு 1;
     }
 }
 
-void
-UCharsTrie::getNextBranchUChars(const char16_t *pos, int32_t length, Appendable &out) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+வெறுமை
+UCharsTrie::getNextBranchUChars(மாறிலி char16_t *pos, int32_t length, Appendable &out) {
+    போது(length>k_Max_Branch_Linear_Sub_முனை_Length) {
         ++pos;  // ignore the comparison unit
         getNextBranchUChars(jumpByDelta(pos), length>>1, out);
         length=length-(length>>1);
         pos=skipDelta(pos);
     }
-    do {
+    செய் {
         out.appendCodeUnit(*pos++);
-        pos=skipValue(pos);
-    } while(--length>1);
+        pos=skip_மதிப்பு(pos);
+    } போது(--length>1);
     out.appendCodeUnit(*pos);
 }
 

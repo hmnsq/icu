@@ -8,17 +8,17 @@
  *
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#அந்தர்பாவ "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#எனில் !UCONFIG_NO_SERVICE
 
-#include "unicode/resbund.h"
-#include "uresimp.h"
-#include "cmemory.h"
-#include "servloc.h"
-#include "ustrfmt.h"
-#include "charstr.h"
-#include "uassert.h"
+#அந்தர்பாவ "unicode/resbund.h"
+#அந்தர்பாவ "uresimp.h"
+#அந்தர்பாவ "cmemory.h"
+#அந்தர்பாவ "servloc.h"
+#அந்தர்பாவ "ustrfmt.h"
+#அந்தர்பாவ "charstr.h"
+#அந்தர்பாவ "uassert.h"
 
 #define UNDERSCORE_CHAR ((char16_t)0x005f)
 #define AT_SIGN_CHAR    ((char16_t)64)
@@ -31,7 +31,7 @@ ICULocaleService::ICULocaleService()
 {
 }
 
-ICULocaleService::ICULocaleService(const UnicodeString& dname)
+ICULocaleService::ICULocaleService(மாறிலி UnicodeString& dname)
   : ICUService(dname)
   , fallbackLocale(Locale::getDefault())
 {
@@ -42,124 +42,124 @@ ICULocaleService::~ICULocaleService()
 }
 
 UObject*
-ICULocaleService::get(const Locale& locale, UErrorCode& status) const
+ICULocaleService::get(மாறிலி Locale& locale, UErrorCode& status) மாறிலி
 {
-    return get(locale, LocaleKey::KIND_ANY, nullptr, status);
+    திரும்பு get(locale, Locale_சாவி::KIND_ANY, nullptr, status);
 }
 
 UObject*
-ICULocaleService::get(const Locale& locale, int32_t kind, UErrorCode& status) const
+ICULocaleService::get(மாறிலி Locale& locale, int32_t kind, UErrorCode& status) மாறிலி
 {
-    return get(locale, kind, nullptr, status);
+    திரும்பு get(locale, kind, nullptr, status);
 }
 
 UObject*
-ICULocaleService::get(const Locale& locale, Locale* actualReturn, UErrorCode& status) const
+ICULocaleService::get(மாறிலி Locale& locale, Locale* actualReturn, UErrorCode& status) மாறிலி
 {
-    return get(locale, LocaleKey::KIND_ANY, actualReturn, status);
+    திரும்பு get(locale, Locale_சாவி::KIND_ANY, actualReturn, status);
 }
 
 UObject*
-ICULocaleService::get(const Locale& locale, int32_t kind, Locale* actualReturn, UErrorCode& status) const
+ICULocaleService::get(மாறிலி Locale& locale, int32_t kind, Locale* actualReturn, UErrorCode& status) மாறிலி
 {
     UObject* result = nullptr;
-    if (U_FAILURE(status)) {
-        return result;
+    எனில் (U_FAILURE(status)) {
+        திரும்பு result;
     }
 
     UnicodeString locName(locale.getName(), -1, US_INV);
-    if (locName.isBogus()) {
+    எனில் (locName.isBogus()) {
         status = U_MEMORY_ALLOCATION_ERROR;
-    } else {
-        ICUServiceKey* key = createKey(&locName, kind, status);
-        if (key) {
-            if (actualReturn == nullptr) {
-                result = getKey(*key, status);
-            } else {
+    } இல்லையெனில் {
+        ICUService_சாவி* சாவி = create_சாவி(&locName, kind, status);
+        எனில் (சாவி) {
+            எனில் (actualReturn == nullptr) {
+                result = get_சாவி(*சாவி, status);
+            } இல்லையெனில் {
                 UnicodeString temp;
-                result = getKey(*key, &temp, status);
+                result = get_சாவி(*சாவி, &temp, status);
 
-                if (result != nullptr) {
-                    key->parseSuffix(temp);
+                எனில் (result != nullptr) {
+                    சாவி->parseSuffix(temp);
                     LocaleUtility::initLocaleFromName(temp, *actualReturn);
                 }
             }
-            delete key;
+            delete சாவி;
         }
     }
-    return result;
+    திரும்பு result;
 }
 
 
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const UnicodeString& locale, 
+URegistry_சாவி
+ICULocaleService::registerInstance(UObject* objToAdopt, மாறிலி UnicodeString& locale, 
     UBool visible, UErrorCode& status)
 {
     Locale loc;
     LocaleUtility::initLocaleFromName(locale, loc);
-    return registerInstance(objToAdopt, loc, LocaleKey::KIND_ANY, 
-        visible ? LocaleKeyFactory::VISIBLE : LocaleKeyFactory::INVISIBLE, status);
+    திரும்பு registerInstance(objToAdopt, loc, Locale_சாவி::KIND_ANY, 
+        visible ? Locale_சாவி_Factory::VISIBLE : Locale_சாவி_Factory::INVISIBLE, status);
 }
 
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const Locale& locale, UErrorCode& status)
+URegistry_சாவி
+ICULocaleService::registerInstance(UObject* objToAdopt, மாறிலி Locale& locale, UErrorCode& status)
 {
-    return registerInstance(objToAdopt, locale, LocaleKey::KIND_ANY, LocaleKeyFactory::VISIBLE, status);
+    திரும்பு registerInstance(objToAdopt, locale, Locale_சாவி::KIND_ANY, Locale_சாவி_Factory::VISIBLE, status);
 }
 
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const Locale& locale, int32_t kind, UErrorCode& status)
+URegistry_சாவி
+ICULocaleService::registerInstance(UObject* objToAdopt, மாறிலி Locale& locale, int32_t kind, UErrorCode& status)
 {
-    return registerInstance(objToAdopt, locale, kind, LocaleKeyFactory::VISIBLE, status);
+    திரும்பு registerInstance(objToAdopt, locale, kind, Locale_சாவி_Factory::VISIBLE, status);
 }
 
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const Locale& locale, int32_t kind, int32_t coverage, UErrorCode& status)
+URegistry_சாவி
+ICULocaleService::registerInstance(UObject* objToAdopt, மாறிலி Locale& locale, int32_t kind, int32_t coverage, UErrorCode& status)
 {
-    ICUServiceFactory * factory = new SimpleLocaleKeyFactory(objToAdopt, locale, kind, coverage);
-    if (factory != nullptr) {
-        return registerFactory(factory, status);
+    ICUServiceFactory * factory = புதிய Simple_Locale_சாவி_Factory(objToAdopt, locale, kind, coverage);
+    எனில் (factory != nullptr) {
+        திரும்பு registerFactory(factory, status);
     }
     delete objToAdopt;
-    return nullptr;
+    திரும்பு nullptr;
 }
 
-#if 0
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const UnicodeString& locale, UErrorCode& status)
+#எனில் 0
+URegistry_சாவி
+ICULocaleService::registerInstance(UObject* objToAdopt, மாறிலி UnicodeString& locale, UErrorCode& status)
 {
-    return registerInstance(objToAdopt, locale, LocaleKey::KIND_ANY, LocaleKeyFactory::VISIBLE, status);
+    திரும்பு registerInstance(objToAdopt, locale, Locale_சாவி::KIND_ANY, Locale_சாவி_Factory::VISIBLE, status);
 }
 
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const UnicodeString& locale, UBool visible, UErrorCode& status)
+URegistry_சாவி
+ICULocaleService::registerInstance(UObject* objToAdopt, மாறிலி UnicodeString& locale, UBool visible, UErrorCode& status)
 {
-    return registerInstance(objToAdopt, locale, LocaleKey::KIND_ANY,
-                            visible ? LocaleKeyFactory::VISIBLE : LocaleKeyFactory::INVISIBLE,
+    திரும்பு registerInstance(objToAdopt, locale, Locale_சாவி::KIND_ANY,
+                            visible ? Locale_சாவி_Factory::VISIBLE : Locale_சாவி_Factory::INVISIBLE,
                             status);
 }
 
-URegistryKey
-ICULocaleService::registerInstance(UObject* objToAdopt, const UnicodeString& locale, int32_t kind, int32_t coverage, UErrorCode& status)
+URegistry_சாவி
+ICULocaleService::registerInstance(UObject* objToAdopt, மாறிலி UnicodeString& locale, int32_t kind, int32_t coverage, UErrorCode& status)
 {
-    ICUServiceFactory * factory = new SimpleLocaleKeyFactory(objToAdopt, locale, kind, coverage);
-    if (factory != nullptr) {
-        return registerFactory(factory, status);
+    ICUServiceFactory * factory = புதிய Simple_Locale_சாவி_Factory(objToAdopt, locale, kind, coverage);
+    எனில் (factory != nullptr) {
+        திரும்பு registerFactory(factory, status);
     }
     delete objToAdopt;
-    return nullptr;
+    திரும்பு nullptr;
 }
 #endif
 
-class ServiceEnumeration : public StringEnumeration {
-private:
-    const ICULocaleService* _service;
+வகுப்பு ServiceEnumeration : பொது StringEnumeration {
+தனிப்பட்ட:
+    மாறிலி ICULocaleService* _service;
     int32_t _timestamp;
     UVector _ids;
     int32_t _pos;
 
-private:
-    ServiceEnumeration(const ICULocaleService* service U_LIFETIME_BOUND, UErrorCode& status)
+தனிப்பட்ட:
+    ServiceEnumeration(மாறிலி ICULocaleService* service U_LIFETIME_BOUND, UErrorCode& status)
         : _service(service)
         , _timestamp(service->getTimestamp())
         , _ids(uprv_deleteUObject, nullptr, status)
@@ -168,85 +168,85 @@ private:
         _service->getVisibleIDs(_ids, status);
     }
 
-    ServiceEnumeration(const ServiceEnumeration &other, UErrorCode &status)
+    ServiceEnumeration(மாறிலி ServiceEnumeration &other, UErrorCode &status)
         : _service(other._service)
         , _timestamp(other._timestamp)
         , _ids(uprv_deleteUObject, nullptr, status)
         , _pos(0)
     {
-        if(U_SUCCESS(status)) {
+        எனில்(U_SUCCESS(status)) {
             int32_t i, length;
 
             length = other._ids.size();
-            for(i = 0; i < length; ++i) {
+            க்கு(i = 0; i < length; ++i) {
                 LocalPointer<UnicodeString> clonedId(static_cast<UnicodeString*>(other._ids.elementAt(i))->clone(), status);
                 _ids.adoptElement(clonedId.orphan(), status);
             }
 
-            if(U_SUCCESS(status)) {
+            எனில்(U_SUCCESS(status)) {
                 _pos = other._pos;
             }
         }
     }
 
-public:
-    static ServiceEnumeration* create(const ICULocaleService* service U_LIFETIME_BOUND) {
+பொது:
+    நிலையான ServiceEnumeration* create(மாறிலி ICULocaleService* service U_LIFETIME_BOUND) {
         UErrorCode status = U_ZERO_ERROR;
-        ServiceEnumeration* result = new ServiceEnumeration(service, status);
-        if (U_SUCCESS(status)) {
-            return result;
+        ServiceEnumeration* result = புதிய ServiceEnumeration(service, status);
+        எனில் (U_SUCCESS(status)) {
+            திரும்பு result;
         }
         delete result;
-        return nullptr;
+        திரும்பு nullptr;
     }
 
-    virtual ~ServiceEnumeration();
+    மெய்நிகர் ~ServiceEnumeration();
 
-    virtual StringEnumeration *clone() const override {
+    மெய்நிகர் StringEnumeration *clone() மாறிலி override {
         UErrorCode status = U_ZERO_ERROR;
-        ServiceEnumeration *cl = new ServiceEnumeration(*this, status);
-        if(U_FAILURE(status)) {
+        ServiceEnumeration *cl = புதிய ServiceEnumeration(*இது, status);
+        எனில்(U_FAILURE(status)) {
             delete cl;
             cl = nullptr;
         }
-        return cl;
+        திரும்பு cl;
     }
 
-    UBool upToDate(UErrorCode& status) const {
-        if (U_SUCCESS(status)) {
-            if (_timestamp == _service->getTimestamp()) {
-                return true;
+    UBool upToDate(UErrorCode& status) மாறிலி {
+        எனில் (U_SUCCESS(status)) {
+            எனில் (_timestamp == _service->getTimestamp()) {
+                திரும்பு உண்மை;
             }
             status = U_ENUM_OUT_OF_SYNC_ERROR;
         }
-        return false;
+        திரும்பு பொய்;
     }
 
-    virtual int32_t count(UErrorCode& status) const override {
-        return upToDate(status) ? _ids.size() : 0;
+    மெய்நிகர் int32_t count(UErrorCode& status) மாறிலி override {
+        திரும்பு upToDate(status) ? _ids.size() : 0;
     }
 
-    virtual const UnicodeString* snext(UErrorCode& status) U_LIFETIME_BOUND override {
-        if (upToDate(status) && (_pos < _ids.size())) {
-            return static_cast<const UnicodeString*>(_ids[_pos++]);
+    மெய்நிகர் மாறிலி UnicodeString* snext(UErrorCode& status) U_LIFETIME_BOUND override {
+        எனில் (upToDate(status) && (_pos < _ids.size())) {
+            திரும்பு static_cast<மாறிலி UnicodeString*>(_ids[_pos++]);
         }
-        return nullptr;
+        திரும்பு nullptr;
     }
 
-    virtual void reset(UErrorCode& status) override {
-        if (status == U_ENUM_OUT_OF_SYNC_ERROR) {
+    மெய்நிகர் வெறுமை reset(UErrorCode& status) override {
+        எனில் (status == U_ENUM_OUT_OF_SYNC_ERROR) {
             status = U_ZERO_ERROR;
         }
-        if (U_SUCCESS(status)) {
+        எனில் (U_SUCCESS(status)) {
             _timestamp = _service->getTimestamp();
             _pos = 0;
             _service->getVisibleIDs(_ids, status);
         }
     }
 
-public:
-    static UClassID U_EXPORT2 getStaticClassID();
-    virtual UClassID getDynamicClassID() const override;
+பொது:
+    நிலையான UClassID U_EXPORT2 getStaticClassID();
+    மெய்நிகர் UClassID getDynamicClassID() மாறிலி override;
 };
 
 ServiceEnumeration::~ServiceEnumeration() {}
@@ -254,38 +254,38 @@ ServiceEnumeration::~ServiceEnumeration() {}
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(ServiceEnumeration)
 
 StringEnumeration*
-ICULocaleService::getAvailableLocales() const U_LIFETIME_BOUND
+ICULocaleService::getAvailableLocales() மாறிலி U_LIFETIME_BOUND
 {
-    return ServiceEnumeration::create(this);
+    திரும்பு ServiceEnumeration::create(இது);
 }
 
-const UnicodeString&
-ICULocaleService::validateFallbackLocale() const
+மாறிலி UnicodeString&
+ICULocaleService::validateFallbackLocale() மாறிலி
 {
-    const Locale&     loc    = Locale::getDefault();
-    ICULocaleService* ncThis = const_cast<ICULocaleService*>(this);
-    static UMutex llock;
+    மாறிலி Locale&     loc    = Locale::getDefault();
+    ICULocaleService* ncThis = const_cast<ICULocaleService*>(இது);
+    நிலையான UMutex llock;
     {
         Mutex mutex(&llock);
-        if (loc != fallbackLocale) {
+        எனில் (loc != fallbackLocale) {
             ncThis->fallbackLocale = loc;
             LocaleUtility::initNameFromLocale(loc, ncThis->fallbackLocaleName);
             ncThis->clearServiceCache();
         }
     }
-    return fallbackLocaleName;
+    திரும்பு fallbackLocaleName;
 }
 
-ICUServiceKey*
-ICULocaleService::createKey(const UnicodeString* id, UErrorCode& status) const
+ICUService_சாவி*
+ICULocaleService::create_சாவி(மாறிலி UnicodeString* id, UErrorCode& status) மாறிலி
 {
-    return LocaleKey::createWithCanonicalFallback(id, &validateFallbackLocale(), status);
+    திரும்பு Locale_சாவி::createWithCanonicalFallback(id, &validateFallbackLocale(), status);
 }
 
-ICUServiceKey*
-ICULocaleService::createKey(const UnicodeString* id, int32_t kind, UErrorCode& status) const
+ICUService_சாவி*
+ICULocaleService::create_சாவி(மாறிலி UnicodeString* id, int32_t kind, UErrorCode& status) மாறிலி
 {
-    return LocaleKey::createWithCanonicalFallback(id, &validateFallbackLocale(), kind, status);
+    திரும்பு Locale_சாவி::createWithCanonicalFallback(id, &validateFallbackLocale(), kind, status);
 }
 
 U_NAMESPACE_END

@@ -14,12 +14,12 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
-#include "unicode/bytestream.h"
-#include "unicode/bytestrie.h"
-#include "unicode/uobject.h"
-#include "cmemory.h"
-#include "uassert.h"
+#அந்தர்பாவ "unicode/utypes.h"
+#அந்தர்பாவ "unicode/bytestream.h"
+#அந்தர்பாவ "unicode/bytestrie.h"
+#அந்தர்பாவ "unicode/uobject.h"
+#அந்தர்பாவ "cmemory.h"
+#அந்தர்பாவ "uassert.h"
 
 U_NAMESPACE_BEGIN
 
@@ -29,68 +29,68 @@ BytesTrie::~BytesTrie() {
 
 // lead byte already shifted right by 1.
 int32_t
-BytesTrie::readValue(const uint8_t *pos, int32_t leadByte) {
+BytesTrie::read_மதிப்பு(மாறிலி uint8_t *pos, int32_t leadByte) {
     int32_t value;
-    if(leadByte<kMinTwoByteValueLead) {
-        value=leadByte-kMinOneByteValueLead;
-    } else if(leadByte<kMinThreeByteValueLead) {
-        value=((leadByte-kMinTwoByteValueLead)<<8)|*pos;
-    } else if(leadByte<kFourByteValueLead) {
-        value=((leadByte-kMinThreeByteValueLead)<<16)|(pos[0]<<8)|pos[1];
-    } else if(leadByte==kFourByteValueLead) {
+    எனில்(leadByte<k_Min_Two_Byte_மதிப்பு_Lead) {
+        value=leadByte-k_Min_One_Byte_மதிப்பு_Lead;
+    } இல்லையெனில் எனில்(leadByte<k_Min_Three_Byte_மதிப்பு_Lead) {
+        value=((leadByte-k_Min_Two_Byte_மதிப்பு_Lead)<<8)|*pos;
+    } இல்லையெனில் எனில்(leadByte<k_Four_Byte_மதிப்பு_Lead) {
+        value=((leadByte-k_Min_Three_Byte_மதிப்பு_Lead)<<16)|(pos[0]<<8)|pos[1];
+    } இல்லையெனில் எனில்(leadByte==k_Four_Byte_மதிப்பு_Lead) {
         value=(pos[0]<<16)|(pos[1]<<8)|pos[2];
-    } else {
+    } இல்லையெனில் {
         value=(pos[0]<<24)|(pos[1]<<16)|(pos[2]<<8)|pos[3];
     }
-    return value;
+    திரும்பு value;
 }
 
-const uint8_t*
-BytesTrie::jumpByDelta(const uint8_t* pos U_LIFETIME_BOUND) {
+மாறிலி uint8_t*
+BytesTrie::jumpByDelta(மாறிலி uint8_t* pos U_LIFETIME_BOUND) {
     int32_t delta=*pos++;
-    if(delta<kMinTwoByteDeltaLead) {
+    எனில்(delta<kMinTwoByteDeltaLead) {
         // nothing to do
-    } else if(delta<kMinThreeByteDeltaLead) {
+    } இல்லையெனில் எனில்(delta<kMinThreeByteDeltaLead) {
         delta=((delta-kMinTwoByteDeltaLead)<<8)|*pos++;
-    } else if(delta<kFourByteDeltaLead) {
+    } இல்லையெனில் எனில்(delta<kFourByteDeltaLead) {
         delta=((delta-kMinThreeByteDeltaLead)<<16)|(pos[0]<<8)|pos[1];
         pos+=2;
-    } else if(delta==kFourByteDeltaLead) {
+    } இல்லையெனில் எனில்(delta==kFourByteDeltaLead) {
         delta=(pos[0]<<16)|(pos[1]<<8)|pos[2];
         pos+=3;
-    } else {
+    } இல்லையெனில் {
         delta=(pos[0]<<24)|(pos[1]<<16)|(pos[2]<<8)|pos[3];
         pos+=4;
     }
-    return pos+delta;
+    திரும்பு pos+delta;
 }
 
 UStringTrieResult
-BytesTrie::current() const {
-    const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
-    } else {
-        int32_t node;
-        return (remainingMatchLength_<0 && (node=*pos)>=kMinValueLead) ?
-                valueResult(node) : USTRINGTRIE_NO_VALUE;
+BytesTrie::current() மாறிலி {
+    மாறிலி uint8_t *pos=pos_;
+    எனில்(pos==nullptr) {
+        திரும்பு USTRINGTRIE_NO_MATCH;
+    } இல்லையெனில் {
+        int32_t முனை;
+        திரும்பு (remainingMatchLength_<0 && (முனை=*pos)>=k_Min_மதிப்பு_Lead) ?
+                மதிப்பு_Result(முனை) : USTRINGTRIE_NO_மதிப்பு;
     }
 }
 
 UStringTrieResult
-BytesTrie::branchNext(const uint8_t *pos, int32_t length, int32_t inByte) {
+BytesTrie::branchNext(மாறிலி uint8_t *pos, int32_t length, int32_t inByte) {
     // Branch according to the current byte.
-    if(length==0) {
+    எனில்(length==0) {
         length=*pos++;
     }
     ++length;
     // The length of the branch is the number of bytes to select from.
     // The data structure encodes a binary search.
-    while(length>kMaxBranchLinearSubNodeLength) {
-        if(inByte<*pos++) {
+    போது(length>k_Max_Branch_Linear_Sub_முனை_Length) {
+        எனில்(inByte<*pos++) {
             length>>=1;
             pos=jumpByDelta(pos);
-        } else {
+        } இல்லையெனில் {
             length=length-(length>>1);
             pos=skipDelta(pos);
         }
@@ -98,345 +98,345 @@ BytesTrie::branchNext(const uint8_t *pos, int32_t length, int32_t inByte) {
     // Drop down to linear search for the last few bytes.
     // length>=2 because the loop body above sees length>kMaxBranchLinearSubNodeLength>=3
     // and divides length by 2.
-    do {
-        if(inByte==*pos++) {
+    செய் {
+        எனில்(inByte==*pos++) {
             UStringTrieResult result;
-            int32_t node=*pos;
-            U_ASSERT(node>=kMinValueLead);
-            if(node&kValueIsFinal) {
+            int32_t முனை=*pos;
+            U_ASSERT(முனை>=k_Min_மதிப்பு_Lead);
+            எனில்(முனை&k_மதிப்பு_Is_Final) {
                 // Leave the final value for getValue() to read.
-                result=USTRINGTRIE_FINAL_VALUE;
-            } else {
+                result=USTRINGTRIE_FINAL_மதிப்பு;
+            } இல்லையெனில் {
                 // Use the non-final value as the jump delta.
                 ++pos;
                 // int32_t delta=readValue(pos, node>>1);
-                node>>=1;
+                முனை>>=1;
                 int32_t delta;
-                if(node<kMinTwoByteValueLead) {
-                    delta=node-kMinOneByteValueLead;
-                } else if(node<kMinThreeByteValueLead) {
-                    delta=((node-kMinTwoByteValueLead)<<8)|*pos++;
-                } else if(node<kFourByteValueLead) {
-                    delta=((node-kMinThreeByteValueLead)<<16)|(pos[0]<<8)|pos[1];
+                எனில்(முனை<k_Min_Two_Byte_மதிப்பு_Lead) {
+                    delta=முனை-k_Min_One_Byte_மதிப்பு_Lead;
+                } இல்லையெனில் எனில்(முனை<k_Min_Three_Byte_மதிப்பு_Lead) {
+                    delta=((முனை-k_Min_Two_Byte_மதிப்பு_Lead)<<8)|*pos++;
+                } இல்லையெனில் எனில்(முனை<k_Four_Byte_மதிப்பு_Lead) {
+                    delta=((முனை-k_Min_Three_Byte_மதிப்பு_Lead)<<16)|(pos[0]<<8)|pos[1];
                     pos+=2;
-                } else if(node==kFourByteValueLead) {
+                } இல்லையெனில் எனில்(முனை==k_Four_Byte_மதிப்பு_Lead) {
                     delta=(pos[0]<<16)|(pos[1]<<8)|pos[2];
                     pos+=3;
-                } else {
+                } இல்லையெனில் {
                     delta=(pos[0]<<24)|(pos[1]<<16)|(pos[2]<<8)|pos[3];
                     pos+=4;
                 }
                 // end readValue()
                 pos+=delta;
-                node=*pos;
-                result= node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
+                முனை=*pos;
+                result= முனை>=k_Min_மதிப்பு_Lead ? மதிப்பு_Result(முனை) : USTRINGTRIE_NO_மதிப்பு;
             }
             pos_=pos;
-            return result;
+            திரும்பு result;
         }
         --length;
-        pos=skipValue(pos);
-    } while(length>1);
-    if(inByte==*pos++) {
+        pos=skip_மதிப்பு(pos);
+    } போது(length>1);
+    எனில்(inByte==*pos++) {
         pos_=pos;
-        int32_t node=*pos;
-        return node>=kMinValueLead ? valueResult(node) : USTRINGTRIE_NO_VALUE;
-    } else {
+        int32_t முனை=*pos;
+        திரும்பு முனை>=k_Min_மதிப்பு_Lead ? மதிப்பு_Result(முனை) : USTRINGTRIE_NO_மதிப்பு;
+    } இல்லையெனில் {
         stop();
-        return USTRINGTRIE_NO_MATCH;
+        திரும்பு USTRINGTRIE_NO_MATCH;
     }
 }
 
 UStringTrieResult
-BytesTrie::nextImpl(const uint8_t *pos, int32_t inByte) {
-    for(;;) {
-        int32_t node=*pos++;
-        if(node<kMinLinearMatch) {
-            return branchNext(pos, node, inByte);
-        } else if(node<kMinValueLead) {
+BytesTrie::nextImpl(மாறிலி uint8_t *pos, int32_t inByte) {
+    க்கு(;;) {
+        int32_t முனை=*pos++;
+        எனில்(முனை<kMinLinearMatch) {
+            திரும்பு branchNext(pos, முனை, inByte);
+        } இல்லையெனில் எனில்(முனை<k_Min_மதிப்பு_Lead) {
             // Match the first of length+1 bytes.
-            int32_t length=node-kMinLinearMatch;  // Actual match length minus 1.
-            if(inByte==*pos++) {
+            int32_t length=முனை-kMinLinearMatch;  // Actual match length minus 1.
+            எனில்(inByte==*pos++) {
                 remainingMatchLength_=--length;
                 pos_=pos;
-                return (length<0 && (node=*pos)>=kMinValueLead) ?
-                        valueResult(node) : USTRINGTRIE_NO_VALUE;
-            } else {
+                திரும்பு (length<0 && (முனை=*pos)>=k_Min_மதிப்பு_Lead) ?
+                        மதிப்பு_Result(முனை) : USTRINGTRIE_NO_மதிப்பு;
+            } இல்லையெனில் {
                 // No match.
-                break;
+                நிறுத்து;
             }
-        } else if(node&kValueIsFinal) {
+        } இல்லையெனில் எனில்(முனை&k_மதிப்பு_Is_Final) {
             // No further matching bytes.
-            break;
-        } else {
+            நிறுத்து;
+        } இல்லையெனில் {
             // Skip intermediate value.
-            pos=skipValue(pos, node);
+            pos=skip_மதிப்பு(pos, முனை);
             // The next node must not also be a value node.
-            U_ASSERT(*pos<kMinValueLead);
+            U_ASSERT(*pos<k_Min_மதிப்பு_Lead);
         }
     }
     stop();
-    return USTRINGTRIE_NO_MATCH;
+    திரும்பு USTRINGTRIE_NO_MATCH;
 }
 
 UStringTrieResult
 BytesTrie::next(int32_t inByte) {
-    const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+    மாறிலி uint8_t *pos=pos_;
+    எனில்(pos==nullptr) {
+        திரும்பு USTRINGTRIE_NO_MATCH;
     }
-    if(inByte<0) {
+    எனில்(inByte<0) {
         inByte+=0x100;
     }
     int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    if(length>=0) {
+    எனில்(length>=0) {
         // Remaining part of a linear-match node.
-        if(inByte==*pos++) {
+        எனில்(inByte==*pos++) {
             remainingMatchLength_=--length;
             pos_=pos;
-            int32_t node;
-            return (length<0 && (node=*pos)>=kMinValueLead) ?
-                    valueResult(node) : USTRINGTRIE_NO_VALUE;
-        } else {
+            int32_t முனை;
+            திரும்பு (length<0 && (முனை=*pos)>=k_Min_மதிப்பு_Lead) ?
+                    மதிப்பு_Result(முனை) : USTRINGTRIE_NO_மதிப்பு;
+        } இல்லையெனில் {
             stop();
-            return USTRINGTRIE_NO_MATCH;
+            திரும்பு USTRINGTRIE_NO_MATCH;
         }
     }
-    return nextImpl(pos, inByte);
+    திரும்பு nextImpl(pos, inByte);
 }
 
 UStringTrieResult
-BytesTrie::next(const char *s, int32_t sLength) {
-    if(sLength<0 ? *s==0 : sLength==0) {
+BytesTrie::next(மாறிலி எழுத்து *s, int32_t sLength) {
+    எனில்(sLength<0 ? *s==0 : sLength==0) {
         // Empty input.
-        return current();
+        திரும்பு current();
     }
-    const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return USTRINGTRIE_NO_MATCH;
+    மாறிலி uint8_t *pos=pos_;
+    எனில்(pos==nullptr) {
+        திரும்பு USTRINGTRIE_NO_MATCH;
     }
     int32_t length=remainingMatchLength_;  // Actual remaining match length minus 1.
-    for(;;) {
+    க்கு(;;) {
         // Fetch the next input byte, if there is one.
         // Continue a linear-match node without rechecking sLength<0.
         int32_t inByte;
-        if(sLength<0) {
-            for(;;) {
-                if((inByte=*s++)==0) {
+        எனில்(sLength<0) {
+            க்கு(;;) {
+                எனில்((inByte=*s++)==0) {
                     remainingMatchLength_=length;
                     pos_=pos;
-                    int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
-                            valueResult(node) : USTRINGTRIE_NO_VALUE;
+                    int32_t முனை;
+                    திரும்பு (length<0 && (முனை=*pos)>=k_Min_மதிப்பு_Lead) ?
+                            மதிப்பு_Result(முனை) : USTRINGTRIE_NO_மதிப்பு;
                 }
-                if(length<0) {
+                எனில்(length<0) {
                     remainingMatchLength_=length;
-                    break;
+                    நிறுத்து;
                 }
-                if(inByte!=*pos) {
+                எனில்(inByte!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    திரும்பு USTRINGTRIE_NO_MATCH;
                 }
                 ++pos;
                 --length;
             }
-        } else {
-            for(;;) {
-                if(sLength==0) {
+        } இல்லையெனில் {
+            க்கு(;;) {
+                எனில்(sLength==0) {
                     remainingMatchLength_=length;
                     pos_=pos;
-                    int32_t node;
-                    return (length<0 && (node=*pos)>=kMinValueLead) ?
-                            valueResult(node) : USTRINGTRIE_NO_VALUE;
+                    int32_t முனை;
+                    திரும்பு (length<0 && (முனை=*pos)>=k_Min_மதிப்பு_Lead) ?
+                            மதிப்பு_Result(முனை) : USTRINGTRIE_NO_மதிப்பு;
                 }
                 inByte=*s++;
                 --sLength;
-                if(length<0) {
+                எனில்(length<0) {
                     remainingMatchLength_=length;
-                    break;
+                    நிறுத்து;
                 }
-                if(inByte!=*pos) {
+                எனில்(inByte!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    திரும்பு USTRINGTRIE_NO_MATCH;
                 }
                 ++pos;
                 --length;
             }
         }
-        for(;;) {
-            int32_t node=*pos++;
-            if(node<kMinLinearMatch) {
-                UStringTrieResult result=branchNext(pos, node, inByte);
-                if(result==USTRINGTRIE_NO_MATCH) {
-                    return USTRINGTRIE_NO_MATCH;
+        க்கு(;;) {
+            int32_t முனை=*pos++;
+            எனில்(முனை<kMinLinearMatch) {
+                UStringTrieResult result=branchNext(pos, முனை, inByte);
+                எனில்(result==USTRINGTRIE_NO_MATCH) {
+                    திரும்பு USTRINGTRIE_NO_MATCH;
                 }
                 // Fetch the next input byte, if there is one.
-                if(sLength<0) {
-                    if((inByte=*s++)==0) {
-                        return result;
+                எனில்(sLength<0) {
+                    எனில்((inByte=*s++)==0) {
+                        திரும்பு result;
                     }
-                } else {
-                    if(sLength==0) {
-                        return result;
+                } இல்லையெனில் {
+                    எனில்(sLength==0) {
+                        திரும்பு result;
                     }
                     inByte=*s++;
                     --sLength;
                 }
-                if(result==USTRINGTRIE_FINAL_VALUE) {
+                எனில்(result==USTRINGTRIE_FINAL_மதிப்பு) {
                     // No further matching bytes.
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    திரும்பு USTRINGTRIE_NO_MATCH;
                 }
                 pos=pos_;  // branchNext() advanced pos and wrote it to pos_ .
-            } else if(node<kMinValueLead) {
+            } இல்லையெனில் எனில்(முனை<k_Min_மதிப்பு_Lead) {
                 // Match length+1 bytes.
-                length=node-kMinLinearMatch;  // Actual match length minus 1.
-                if(inByte!=*pos) {
+                length=முனை-kMinLinearMatch;  // Actual match length minus 1.
+                எனில்(inByte!=*pos) {
                     stop();
-                    return USTRINGTRIE_NO_MATCH;
+                    திரும்பு USTRINGTRIE_NO_MATCH;
                 }
                 ++pos;
                 --length;
-                break;
-            } else if(node&kValueIsFinal) {
+                நிறுத்து;
+            } இல்லையெனில் எனில்(முனை&k_மதிப்பு_Is_Final) {
                 // No further matching bytes.
                 stop();
-                return USTRINGTRIE_NO_MATCH;
-            } else {
+                திரும்பு USTRINGTRIE_NO_MATCH;
+            } இல்லையெனில் {
                 // Skip intermediate value.
-                pos=skipValue(pos, node);
+                pos=skip_மதிப்பு(pos, முனை);
                 // The next node must not also be a value node.
-                U_ASSERT(*pos<kMinValueLead);
+                U_ASSERT(*pos<k_Min_மதிப்பு_Lead);
             }
         }
     }
 }
 
-const uint8_t*
-BytesTrie::findUniqueValueFromBranch(const uint8_t* pos U_LIFETIME_BOUND,
+மாறிலி uint8_t*
+BytesTrie::find_Unique_மதிப்பு_From_Branch(மாறிலி uint8_t* pos U_LIFETIME_BOUND,
                                      int32_t length,
-                                     UBool haveUniqueValue,
-                                     int32_t& uniqueValue) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+                                     UBool have_Unique_மதிப்பு,
+                                     int32_t& unique_மதிப்பு) {
+    போது(length>k_Max_Branch_Linear_Sub_முனை_Length) {
         ++pos;  // ignore the comparison byte
-        if(nullptr==findUniqueValueFromBranch(jumpByDelta(pos), length>>1, haveUniqueValue, uniqueValue)) {
-            return nullptr;
+        எனில்(nullptr==find_Unique_மதிப்பு_From_Branch(jumpByDelta(pos), length>>1, have_Unique_மதிப்பு, unique_மதிப்பு)) {
+            திரும்பு nullptr;
         }
         length=length-(length>>1);
         pos=skipDelta(pos);
     }
-    do {
+    செய் {
         ++pos;  // ignore a comparison byte
         // handle its value
-        int32_t node=*pos++;
-        UBool isFinal = static_cast<UBool>(node & kValueIsFinal);
-        int32_t value=readValue(pos, node>>1);
-        pos=skipValue(pos, node);
-        if(isFinal) {
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return nullptr;
+        int32_t முனை=*pos++;
+        UBool isFinal = static_cast<UBool>(முனை & k_மதிப்பு_Is_Final);
+        int32_t value=read_மதிப்பு(pos, முனை>>1);
+        pos=skip_மதிப்பு(pos, முனை);
+        எனில்(isFinal) {
+            எனில்(have_Unique_மதிப்பு) {
+                எனில்(value!=unique_மதிப்பு) {
+                    திரும்பு nullptr;
                 }
-            } else {
-                uniqueValue=value;
-                haveUniqueValue=true;
+            } இல்லையெனில் {
+                unique_மதிப்பு=value;
+                have_Unique_மதிப்பு=உண்மை;
             }
-        } else {
-            if(!findUniqueValue(pos+value, haveUniqueValue, uniqueValue)) {
-                return nullptr;
+        } இல்லையெனில் {
+            எனில்(!find_Unique_மதிப்பு(pos+value, have_Unique_மதிப்பு, unique_மதிப்பு)) {
+                திரும்பு nullptr;
             }
-            haveUniqueValue=true;
+            have_Unique_மதிப்பு=உண்மை;
         }
-    } while(--length>1);
-    return pos+1;  // ignore the last comparison byte
+    } போது(--length>1);
+    திரும்பு pos+1;  // ignore the last comparison byte
 }
 
 UBool
-BytesTrie::findUniqueValue(const uint8_t *pos, UBool haveUniqueValue, int32_t &uniqueValue) {
-    for(;;) {
-        int32_t node=*pos++;
-        if(node<kMinLinearMatch) {
-            if(node==0) {
-                node=*pos++;
+BytesTrie::find_Unique_மதிப்பு(மாறிலி uint8_t *pos, UBool have_Unique_மதிப்பு, int32_t &unique_மதிப்பு) {
+    க்கு(;;) {
+        int32_t முனை=*pos++;
+        எனில்(முனை<kMinLinearMatch) {
+            எனில்(முனை==0) {
+                முனை=*pos++;
             }
-            pos=findUniqueValueFromBranch(pos, node+1, haveUniqueValue, uniqueValue);
-            if(pos==nullptr) {
-                return false;
+            pos=find_Unique_மதிப்பு_From_Branch(pos, முனை+1, have_Unique_மதிப்பு, unique_மதிப்பு);
+            எனில்(pos==nullptr) {
+                திரும்பு பொய்;
             }
-            haveUniqueValue=true;
-        } else if(node<kMinValueLead) {
+            have_Unique_மதிப்பு=உண்மை;
+        } இல்லையெனில் எனில்(முனை<k_Min_மதிப்பு_Lead) {
             // linear-match node
-            pos+=node-kMinLinearMatch+1;  // Ignore the match bytes.
-        } else {
-            UBool isFinal = static_cast<UBool>(node & kValueIsFinal);
-            int32_t value=readValue(pos, node>>1);
-            if(haveUniqueValue) {
-                if(value!=uniqueValue) {
-                    return false;
+            pos+=முனை-kMinLinearMatch+1;  // Ignore the match bytes.
+        } இல்லையெனில் {
+            UBool isFinal = static_cast<UBool>(முனை & k_மதிப்பு_Is_Final);
+            int32_t value=read_மதிப்பு(pos, முனை>>1);
+            எனில்(have_Unique_மதிப்பு) {
+                எனில்(value!=unique_மதிப்பு) {
+                    திரும்பு பொய்;
                 }
-            } else {
-                uniqueValue=value;
-                haveUniqueValue=true;
+            } இல்லையெனில் {
+                unique_மதிப்பு=value;
+                have_Unique_மதிப்பு=உண்மை;
             }
-            if(isFinal) {
-                return true;
+            எனில்(isFinal) {
+                திரும்பு உண்மை;
             }
-            pos=skipValue(pos, node);
+            pos=skip_மதிப்பு(pos, முனை);
         }
     }
 }
 
 int32_t
-BytesTrie::getNextBytes(ByteSink &out) const {
-    const uint8_t *pos=pos_;
-    if(pos==nullptr) {
-        return 0;
+BytesTrie::getNextBytes(ByteSink &out) மாறிலி {
+    மாறிலி uint8_t *pos=pos_;
+    எனில்(pos==nullptr) {
+        திரும்பு 0;
     }
-    if(remainingMatchLength_>=0) {
+    எனில்(remainingMatchLength_>=0) {
         append(out, *pos);  // Next byte of a pending linear-match node.
-        return 1;
+        திரும்பு 1;
     }
-    int32_t node=*pos++;
-    if(node>=kMinValueLead) {
-        if(node&kValueIsFinal) {
-            return 0;
-        } else {
-            pos=skipValue(pos, node);
-            node=*pos++;
-            U_ASSERT(node<kMinValueLead);
+    int32_t முனை=*pos++;
+    எனில்(முனை>=k_Min_மதிப்பு_Lead) {
+        எனில்(முனை&k_மதிப்பு_Is_Final) {
+            திரும்பு 0;
+        } இல்லையெனில் {
+            pos=skip_மதிப்பு(pos, முனை);
+            முனை=*pos++;
+            U_ASSERT(முனை<k_Min_மதிப்பு_Lead);
         }
     }
-    if(node<kMinLinearMatch) {
-        if(node==0) {
-            node=*pos++;
+    எனில்(முனை<kMinLinearMatch) {
+        எனில்(முனை==0) {
+            முனை=*pos++;
         }
-        getNextBranchBytes(pos, ++node, out);
-        return node;
-    } else {
+        getNextBranchBytes(pos, ++முனை, out);
+        திரும்பு முனை;
+    } இல்லையெனில் {
         // First byte of the linear-match node.
         append(out, *pos);
-        return 1;
+        திரும்பு 1;
     }
 }
 
-void
-BytesTrie::getNextBranchBytes(const uint8_t *pos, int32_t length, ByteSink &out) {
-    while(length>kMaxBranchLinearSubNodeLength) {
+வெறுமை
+BytesTrie::getNextBranchBytes(மாறிலி uint8_t *pos, int32_t length, ByteSink &out) {
+    போது(length>k_Max_Branch_Linear_Sub_முனை_Length) {
         ++pos;  // ignore the comparison byte
         getNextBranchBytes(jumpByDelta(pos), length>>1, out);
         length=length-(length>>1);
         pos=skipDelta(pos);
     }
-    do {
+    செய் {
         append(out, *pos++);
-        pos=skipValue(pos);
-    } while(--length>1);
+        pos=skip_மதிப்பு(pos);
+    } போது(--length>1);
     append(out, *pos);
 }
 
-void
-BytesTrie::append(ByteSink &out, int c) {
-    char ch = static_cast<char>(c);
+வெறுமை
+BytesTrie::append(ByteSink &out, முழு c) {
+    எழுத்து ch = static_cast<எழுத்து>(c);
     out.Append(&ch, 1);
 }
 

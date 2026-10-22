@@ -17,28 +17,28 @@
 //         Code using it is expected to directly access fields much of the time.
 //
 
-#include "unicode/utypes.h"
+#அந்தர்பாவ "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#எனில் !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/unistr.h"
-#include "unicode/uniset.h"
-#include "unicode/uchar.h"
-#include "unicode/parsepos.h"
+#அந்தர்பாவ "unicode/unistr.h"
+#அந்தர்பாவ "unicode/uniset.h"
+#அந்தர்பாவ "unicode/uchar.h"
+#அந்தர்பாவ "unicode/parsepos.h"
 
-#include "cstr.h"
-#include "uvector.h"
+#அந்தர்பாவ "cstr.h"
+#அந்தர்பாவ "uvector.h"
 
-#include "rbbirb.h"
-#include "rbbinode.h"
+#அந்தர்பாவ "rbbirb.h"
+#அந்தர்பாவ "rbbinode.h"
 
-#include "uassert.h"
+#அந்தர்பாவ "uassert.h"
 
 
 U_NAMESPACE_BEGIN
 
 #ifdef RBBI_DEBUG
-static int  gLastSerial = 0;
+நிலையான முழு  gLastSerial = 0;
 #endif
 
 
@@ -47,66 +47,66 @@ static int  gLastSerial = 0;
 //    Constructor.   Just set the fields to reasonable default values.
 //
 //-------------------------------------------------------------------------
-RBBINode::RBBINode(NodeType t, UErrorCode& status) : UMemory() {
-    if (U_FAILURE(status)) {
-        return;
+RBBINode::RBBINode(முனை_Type t, UErrorCode& status) : UMemory() {
+    எனில் (U_FAILURE(status)) {
+        திரும்பு;
     }
 #ifdef RBBI_DEBUG
-    fSerialNum    = ++gLastSerial;
+    f_Serial_இலக்கம்    = ++gLastSerial;
 #endif
     fType         = t;
     fParent       = nullptr;
-    fLeftChild    = nullptr;
-    fRightChild   = nullptr;
-    fInputSet     = nullptr;
+    f_இடது_Child    = nullptr;
+    f_வலது_Child   = nullptr;
+    f_உள்ளீடு_Set     = nullptr;
     fFirstPos     = 0;
     fLastPos      = 0;
-    fNullable     = false;
-    fLookAheadEnd = false;
-    fRuleRoot     = false;
-    fChainIn      = false;
+    fNullable     = பொய்;
+    fLookAheadEnd = பொய்;
+    f_Rule_வேர்     = பொய்;
+    fChainIn      = பொய்;
     fVal          = 0;
     fPrecedence   = precZero;
 
-    fFirstPosSet  = new UVector(status);
-    fLastPosSet   = new UVector(status);
-    fFollowPos    = new UVector(status);
-    if (U_SUCCESS(status) &&
+    fFirstPosSet  = புதிய UVector(status);
+    fLastPosSet   = புதிய UVector(status);
+    fFollowPos    = புதிய UVector(status);
+    எனில் (U_SUCCESS(status) &&
         (fFirstPosSet == nullptr || fLastPosSet == nullptr || fFollowPos == nullptr)) {
         status =  U_MEMORY_ALLOCATION_ERROR;
     }
-    if      (t==opCat)    {fPrecedence = precOpCat;}
-    else if (t==opOr)     {fPrecedence = precOpOr;}
-    else if (t==opStart)  {fPrecedence = precStart;}
-    else if (t==opLParen) {fPrecedence = precLParen;}
+    எனில்      (t==opCat)    {fPrecedence = precOpCat;}
+    இல்லையெனில் எனில் (t==opOr)     {fPrecedence = precOpOr;}
+    இல்லையெனில் எனில் (t==opStart)  {fPrecedence = precStart;}
+    இல்லையெனில் எனில் (t==opLParen) {fPrecedence = precLParen;}
 
 }
 
 
-RBBINode::RBBINode(const RBBINode &other, UErrorCode& status) : UMemory(other) {
-    if (U_FAILURE(status)) {
-        return;
+RBBINode::RBBINode(மாறிலி RBBINode &other, UErrorCode& status) : UMemory(other) {
+    எனில் (U_FAILURE(status)) {
+        திரும்பு;
     }
 #ifdef RBBI_DEBUG
-    fSerialNum   = ++gLastSerial;
+    f_Serial_இலக்கம்   = ++gLastSerial;
 #endif
     fType        = other.fType;
     fParent      = nullptr;
-    fLeftChild   = nullptr;
-    fRightChild  = nullptr;
-    fInputSet    = other.fInputSet;
+    f_இடது_Child   = nullptr;
+    f_வலது_Child  = nullptr;
+    f_உள்ளீடு_Set    = other.f_உள்ளீடு_Set;
     fPrecedence  = other.fPrecedence;
     fText        = other.fText;
     fFirstPos    = other.fFirstPos;
     fLastPos     = other.fLastPos;
     fNullable    = other.fNullable;
     fVal         = other.fVal;
-    fRuleRoot    = false;
+    f_Rule_வேர்    = பொய்;
     fChainIn     = other.fChainIn;
-    fFirstPosSet = new UVector(status);   // TODO - get a real status from somewhere
-    fLastPosSet  = new UVector(status);
-    fFollowPos   = new UVector(status);
-    if (U_SUCCESS(status) &&
+    fFirstPosSet = புதிய UVector(status);   // TODO - get a real status from somewhere
+    fLastPosSet  = புதிய UVector(status);
+    fFollowPos   = புதிய UVector(status);
+    எனில் (U_SUCCESS(status) &&
         (fFirstPosSet == nullptr || fLastPosSet == nullptr || fFollowPos == nullptr)) {
         status =  U_MEMORY_ALLOCATION_ERROR;
     }
@@ -124,25 +124,25 @@ RBBINode::RBBINode(const RBBINode &other, UErrorCode& status) : UMemory(other) {
 //-------------------------------------------------------------------------
 RBBINode::~RBBINode() {
     // printf("deleting node %8x   serial %4d\n", this, this->fSerialNum);
-    delete fInputSet;
-    fInputSet = nullptr;
+    delete f_உள்ளீடு_Set;
+    f_உள்ளீடு_Set = nullptr;
 
-    switch (this->fType) {
-    case varRef:
-    case setRef:
+    தேர்வு (இது->fType) {
+    நிலை varRef:
+    நிலை setRef:
         // for these node types, multiple instances point to the same "children"
         // Storage ownership of children handled elsewhere.  Don't delete here.
-        break;
+        நிறுத்து;
 
-    default:
+    இயல்பு:
         // Avoid using a recursive implementation because of stack overflow problems.
         // See bug ICU-22584.
         // delete        fLeftChild;
-        NRDeleteNode(fLeftChild);
-        fLeftChild =   nullptr;
+        NRDelete_முனை(f_இடது_Child);
+        f_இடது_Child =   nullptr;
         // delete        fRightChild;
-        NRDeleteNode(fRightChild);
-        fRightChild = nullptr;
+        NRDelete_முனை(f_வலது_Child);
+        f_வலது_Child = nullptr;
     }
 
     delete fFirstPosSet;
@@ -155,43 +155,43 @@ RBBINode::~RBBINode() {
  * instead of the more obvious recursive implementation to avoid problems with
  * stack overflow with some perverse test rule data (from fuzzing).
  */
-void RBBINode::NRDeleteNode(RBBINode *node) {
-    if (node == nullptr) {
-        return;
+வெறுமை RBBINode::NRDelete_முனை(RBBINode *முனை) {
+    எனில் (முனை == nullptr) {
+        திரும்பு;
     }
 
-    RBBINode *stopNode = node->fParent;
-    RBBINode *nextNode = node;
-    while (nextNode != stopNode && nextNode != nullptr) {
-        RBBINode *currentNode = nextNode;
+    RBBINode *stop_முனை = முனை->fParent;
+    RBBINode *next_முனை = முனை;
+    போது (next_முனை != stop_முனை && next_முனை != nullptr) {
+        RBBINode *current_முனை = next_முனை;
 
-        if ((currentNode->fLeftChild == nullptr && currentNode->fRightChild == nullptr) ||
-                currentNode->fType == varRef ||      // varRef and setRef nodes do not
-                currentNode->fType == setRef) {      // own their children nodes.
+        எனில் ((current_முனை->f_இடது_Child == nullptr && current_முனை->f_வலது_Child == nullptr) ||
+                current_முனை->fType == varRef ||      // varRef and setRef nodes do not
+                current_முனை->fType == setRef) {      // own their children nodes.
             // CurrentNode is effectively a leaf node; it's safe to go ahead and delete it.
-            nextNode = currentNode->fParent;
-            if (nextNode) {
-                if (nextNode->fLeftChild == currentNode) {
-                    nextNode->fLeftChild = nullptr;
-                } else if (nextNode->fRightChild == currentNode) {
-                    nextNode->fRightChild = nullptr;
+            next_முனை = current_முனை->fParent;
+            எனில் (next_முனை) {
+                எனில் (next_முனை->f_இடது_Child == current_முனை) {
+                    next_முனை->f_இடது_Child = nullptr;
+                } இல்லையெனில் எனில் (next_முனை->f_வலது_Child == current_முனை) {
+                    next_முனை->f_வலது_Child = nullptr;
                 }
             }
-            delete currentNode;
-        } else if (currentNode->fLeftChild) {
-            nextNode = currentNode->fLeftChild;
-            if (nextNode->fParent == nullptr) {
-                nextNode->fParent = currentNode;
+            delete current_முனை;
+        } இல்லையெனில் எனில் (current_முனை->f_இடது_Child) {
+            next_முனை = current_முனை->f_இடது_Child;
+            எனில் (next_முனை->fParent == nullptr) {
+                next_முனை->fParent = current_முனை;
                 // fParent isn't always set; do it now if not.
             }
-            U_ASSERT(nextNode->fParent == currentNode);
-        } else if (currentNode->fRightChild) {
-            nextNode = currentNode->fRightChild;
-            if (nextNode->fParent == nullptr) {
-                nextNode->fParent = currentNode;
+            U_ASSERT(next_முனை->fParent == current_முனை);
+        } இல்லையெனில் எனில் (current_முனை->f_வலது_Child) {
+            next_முனை = current_முனை->f_வலது_Child;
+            எனில் (next_முனை->fParent == nullptr) {
+                next_முனை->fParent = current_முனை;
                 // fParent isn't always set; do it now if not.
             }
-            U_ASSERT(nextNode->fParent == currentNode);
+            U_ASSERT(next_முனை->fParent == current_முனை);
         }
     }
 }
@@ -205,57 +205,57 @@ void RBBINode::NRDeleteNode(RBBINode *node) {
 //                  references in preparation for generating the DFA tables.
 //
 //-------------------------------------------------------------------------
-constexpr int kRecursiveDepthLimit = 3500;
-RBBINode *RBBINode::cloneTree(UErrorCode &status, int depth) {
-    if (U_FAILURE(status)) {
-        return nullptr;
+constexpr முழு kRecursiveDepthLimit = 3500;
+RBBINode *RBBINode::clone_மரம்(UErrorCode &status, முழு depth) {
+    எனில் (U_FAILURE(status)) {
+        திரும்பு nullptr;
     }
     // If the depth of the stack is too deep, we return U_INPUT_TOO_LONG_ERROR
     // to avoid stack overflow crash.
-    if (depth > kRecursiveDepthLimit) {
-        status = U_INPUT_TOO_LONG_ERROR;
-        return nullptr;
+    எனில் (depth > kRecursiveDepthLimit) {
+        status = U_உள்ளீடு_TOO_LONG_ERROR;
+        திரும்பு nullptr;
     }
     RBBINode    *n;
 
-    if (fType == RBBINode::varRef) {
+    எனில் (fType == RBBINode::varRef) {
         // If the current node is a variable reference, skip over it
         //   and clone the definition of the variable instead.
-        n = fLeftChild->cloneTree(status, depth+1);
-        if (U_FAILURE(status)) {
-            return nullptr;
+        n = f_இடது_Child->clone_மரம்(status, depth+1);
+        எனில் (U_FAILURE(status)) {
+            திரும்பு nullptr;
         }
-    } else if (fType == RBBINode::uset) {
-        n = this;
-    } else {
-        n = new RBBINode(*this, status);
-        if (U_FAILURE(status)) {
+    } இல்லையெனில் எனில் (fType == RBBINode::uset) {
+        n = இது;
+    } இல்லையெனில் {
+        n = புதிய RBBINode(*இது, status);
+        எனில் (U_FAILURE(status)) {
             delete n;
-            return nullptr;
+            திரும்பு nullptr;
         }
         // Check for null pointer.
-        if (n == nullptr) {
+        எனில் (n == nullptr) {
             status =  U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
+            திரும்பு nullptr;
         }
-        if (fLeftChild != nullptr) {
-            n->fLeftChild          = fLeftChild->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
+        எனில் (f_இடது_Child != nullptr) {
+            n->f_இடது_Child          = f_இடது_Child->clone_மரம்(status, depth+1);
+            எனில் (U_FAILURE(status)) {
                 delete n;
-                return nullptr;
+                திரும்பு nullptr;
             }
-            n->fLeftChild->fParent = n;
+            n->f_இடது_Child->fParent = n;
         }
-        if (fRightChild != nullptr) {
-            n->fRightChild          = fRightChild->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
+        எனில் (f_வலது_Child != nullptr) {
+            n->f_வலது_Child          = f_வலது_Child->clone_மரம்(status, depth+1);
+            எனில் (U_FAILURE(status)) {
                 delete n;
-                return nullptr;
+                திரும்பு nullptr;
             }
-            n->fRightChild->fParent = n;
+            n->f_வலது_Child->fParent = n;
         }
     }
-    return n;
+    திரும்பு n;
 }
 
 
@@ -278,48 +278,48 @@ RBBINode *RBBINode::cloneTree(UErrorCode &status, int depth) {
 //                      nested references are handled by cloneTree(), not here.
 //
 //-------------------------------------------------------------------------
-RBBINode *RBBINode::flattenVariables(UErrorCode& status, int depth) {
-    if (U_FAILURE(status)) {
-        return this;
+RBBINode *RBBINode::flattenVariables(UErrorCode& status, முழு depth) {
+    எனில் (U_FAILURE(status)) {
+        திரும்பு இது;
     }
     // If the depth of the stack is too deep, we return U_INPUT_TOO_LONG_ERROR
     // to avoid stack overflow crash.
-    if (depth > kRecursiveDepthLimit) {
-        status = U_INPUT_TOO_LONG_ERROR;
-        return this;
+    எனில் (depth > kRecursiveDepthLimit) {
+        status = U_உள்ளீடு_TOO_LONG_ERROR;
+        திரும்பு இது;
     }
-    if (fType == varRef) {
-        RBBINode *retNode  = fLeftChild->cloneTree(status, depth+1);
-        if (U_FAILURE(status)) {
-            return this;
+    எனில் (fType == varRef) {
+        RBBINode *ret_முனை  = f_இடது_Child->clone_மரம்(status, depth+1);
+        எனில் (U_FAILURE(status)) {
+            திரும்பு இது;
         }
-        retNode->fRuleRoot = this->fRuleRoot;
-        retNode->fChainIn  = this->fChainIn;
-        delete this;   // TODO: undefined behavior. Fix.
-        return retNode;
+        ret_முனை->f_Rule_வேர் = இது->f_Rule_வேர்;
+        ret_முனை->fChainIn  = இது->fChainIn;
+        delete இது;   // TODO: undefined behavior. Fix.
+        திரும்பு ret_முனை;
     }
 
-    if (fLeftChild != nullptr) {
-        fLeftChild = fLeftChild->flattenVariables(status, depth+1);
-        if (fLeftChild == nullptr) {
+    எனில் (f_இடது_Child != nullptr) {
+        f_இடது_Child = f_இடது_Child->flattenVariables(status, depth+1);
+        எனில் (f_இடது_Child == nullptr) {
             status = U_MEMORY_ALLOCATION_ERROR;
         }
-        if (U_FAILURE(status)) {
-            return this;
+        எனில் (U_FAILURE(status)) {
+            திரும்பு இது;
         }
-        fLeftChild->fParent  = this;
+        f_இடது_Child->fParent  = இது;
     }
-    if (fRightChild != nullptr) {
-        fRightChild = fRightChild->flattenVariables(status, depth+1);
-        if (fRightChild == nullptr) {
+    எனில் (f_வலது_Child != nullptr) {
+        f_வலது_Child = f_வலது_Child->flattenVariables(status, depth+1);
+        எனில் (f_வலது_Child == nullptr) {
             status = U_MEMORY_ALLOCATION_ERROR;
         }
-        if (U_FAILURE(status)) {
-            return this;
+        எனில் (U_FAILURE(status)) {
+            திரும்பு இது;
         }
-        fRightChild->fParent = this;
+        f_வலது_Child->fParent = இது;
     }
-    return this;
+    திரும்பு இது;
 }
 
 
@@ -331,49 +331,49 @@ RBBINode *RBBINode::flattenVariables(UErrorCode& status, int depth) {
 //                 the left child of the uset node.
 //
 //-------------------------------------------------------------------------
-void RBBINode::flattenSets(UErrorCode &status, int depth) {
-    if (U_FAILURE(status)) {
-        return;
+வெறுமை RBBINode::flattenSets(UErrorCode &status, முழு depth) {
+    எனில் (U_FAILURE(status)) {
+        திரும்பு;
     }
     // If the depth of the stack is too deep, we return U_INPUT_TOO_LONG_ERROR
     // to avoid stack overflow crash.
-    if (depth > kRecursiveDepthLimit) {
-        status = U_INPUT_TOO_LONG_ERROR;
-        return;
+    எனில் (depth > kRecursiveDepthLimit) {
+        status = U_உள்ளீடு_TOO_LONG_ERROR;
+        திரும்பு;
     }
     U_ASSERT(fType != setRef);
 
-    if (fLeftChild != nullptr) {
-        if (fLeftChild->fType==setRef) {
-            RBBINode *setRefNode = fLeftChild;
-            RBBINode *usetNode   = setRefNode->fLeftChild;
-            RBBINode *replTree   = usetNode->fLeftChild;
-            fLeftChild           = replTree->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
-                delete setRefNode;
-                return;
+    எனில் (f_இடது_Child != nullptr) {
+        எனில் (f_இடது_Child->fType==setRef) {
+            RBBINode *set_Ref_முனை = f_இடது_Child;
+            RBBINode *uset_முனை   = set_Ref_முனை->f_இடது_Child;
+            RBBINode *repl_மரம்   = uset_முனை->f_இடது_Child;
+            f_இடது_Child           = repl_மரம்->clone_மரம்(status, depth+1);
+            எனில் (U_FAILURE(status)) {
+                delete set_Ref_முனை;
+                திரும்பு;
             }
-            fLeftChild->fParent  = this;
-            delete setRefNode;
-        } else {
-            fLeftChild->flattenSets(status, depth+1);
+            f_இடது_Child->fParent  = இது;
+            delete set_Ref_முனை;
+        } இல்லையெனில் {
+            f_இடது_Child->flattenSets(status, depth+1);
         }
     }
 
-    if (fRightChild != nullptr) {
-        if (fRightChild->fType==setRef) {
-            RBBINode *setRefNode = fRightChild;
-            RBBINode *usetNode   = setRefNode->fLeftChild;
-            RBBINode *replTree   = usetNode->fLeftChild;
-            fRightChild           = replTree->cloneTree(status, depth+1);
-            if (U_FAILURE(status)) {
-                delete setRefNode;
-                return;
+    எனில் (f_வலது_Child != nullptr) {
+        எனில் (f_வலது_Child->fType==setRef) {
+            RBBINode *set_Ref_முனை = f_வலது_Child;
+            RBBINode *uset_முனை   = set_Ref_முனை->f_இடது_Child;
+            RBBINode *repl_மரம்   = uset_முனை->f_இடது_Child;
+            f_வலது_Child           = repl_மரம்->clone_மரம்(status, depth+1);
+            எனில் (U_FAILURE(status)) {
+                delete set_Ref_முனை;
+                திரும்பு;
             }
-            fRightChild->fParent  = this;
-            delete setRefNode;
-        } else {
-            fRightChild->flattenSets(status, depth+1);
+            f_வலது_Child->fParent  = இது;
+            delete set_Ref_முனை;
+        } இல்லையெனில் {
+            f_வலது_Child->flattenSets(status, depth+1);
         }
     }
 }
@@ -386,20 +386,20 @@ void RBBINode::flattenSets(UErrorCode &status, int depth) {
 //                   at the specified root.
 //
 //-------------------------------------------------------------------------
-void   RBBINode::findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &status) {
+வெறுமை   RBBINode::findNodes(UVector *dest, RBBINode::முனை_Type kind, UErrorCode &status) {
     /* test for buffer overflows */
-    if (U_FAILURE(status)) {
-        return;
+    எனில் (U_FAILURE(status)) {
+        திரும்பு;
     }
     U_ASSERT(!dest->hasDeleter());
-    if (fType == kind) {
-        dest->addElement(this, status);
+    எனில் (fType == kind) {
+        dest->addElement(இது, status);
     }
-    if (fLeftChild != nullptr) {
-        fLeftChild->findNodes(dest, kind, status);
+    எனில் (f_இடது_Child != nullptr) {
+        f_இடது_Child->findNodes(dest, kind, status);
     }
-    if (fRightChild != nullptr) {
-        fRightChild->findNodes(dest, kind, status);
+    எனில் (f_வலது_Child != nullptr) {
+        f_வலது_Child->findNodes(dest, kind, status);
     }
 }
 
@@ -411,13 +411,13 @@ void   RBBINode::findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &s
 //-------------------------------------------------------------------------
 #ifdef RBBI_DEBUG
 
-static int32_t serial(const RBBINode *node) {
-    return (node == nullptr? -1 : node->fSerialNum);
+நிலையான int32_t serial(மாறிலி RBBINode *முனை) {
+    திரும்பு (முனை == nullptr? -1 : முனை->f_Serial_இலக்கம்);
 }
 
 
-void RBBINode::printNode(const RBBINode *node) {
-    static const char * const nodeTypeNames[] = {
+வெறுமை RBBINode::print_முனை(மாறிலி RBBINode *முனை) {
+    நிலையான மாறிலி எழுத்து * மாறிலி முனை_Type_Names[] = {
                 "setRef",
                 "uset",
                 "varRef",
@@ -436,16 +436,16 @@ void RBBINode::printNode(const RBBINode *node) {
                 "opLParen"
     };
 
-    if (node==nullptr) {
-        RBBIDebugPrintf("%10p", (void *)node);
-    } else {
+    எனில் (முனை==nullptr) {
+        RBBIDebugPrintf("%10p", (வெறுமை *)முனை);
+    } இல்லையெனில் {
         RBBIDebugPrintf("%10p %5d %12s %c%c  %5d       %5d     %5d       %6d     %d ",
-            (void *)node, node->fSerialNum, nodeTypeNames[node->fType],
-            node->fRuleRoot?'R':' ', node->fChainIn?'C':' ',
-            serial(node->fLeftChild), serial(node->fRightChild), serial(node->fParent),
-            node->fFirstPos, node->fVal);
-        if (node->fType == varRef) {
-            RBBI_DEBUG_printUnicodeString(node->fText);
+            (வெறுமை *)முனை, முனை->f_Serial_இலக்கம், முனை_Type_Names[முனை->fType],
+            முனை->f_Rule_வேர்?'R':' ', முனை->fChainIn?'C':' ',
+            serial(முனை->f_இடது_Child), serial(முனை->f_வலது_Child), serial(முனை->fParent),
+            முனை->fFirstPos, முனை->fVal);
+        எனில் (முனை->fType == varRef) {
+            RBBI_DEBUG_printUnicodeString(முனை->fText);
         }
     }
     RBBIDebugPrintf("\n");
@@ -454,7 +454,7 @@ void RBBINode::printNode(const RBBINode *node) {
 
 
 #ifdef RBBI_DEBUG
-U_CFUNC void RBBI_DEBUG_printUnicodeString(const UnicodeString &s, int minWidth) {
+U_CFUNC வெறுமை RBBI_DEBUG_printUnicodeString(மாறிலி UnicodeString &s, முழு minWidth) {
     RBBIDebugPrintf("%*s", minWidth, CStr(s)());
 }
 #endif
@@ -466,25 +466,25 @@ U_CFUNC void RBBI_DEBUG_printUnicodeString(const UnicodeString &s, int minWidth)
 //
 //-------------------------------------------------------------------------
 #ifdef RBBI_DEBUG
-void RBBINode::printNodeHeader() {
+வெறுமை RBBINode::print_முனை_Header() {
     RBBIDebugPrintf(" Address   serial        type     LeftChild  RightChild   Parent   position value\n");
 }
     
-void RBBINode::printTree(const RBBINode *node, UBool printHeading) {
-    if (printHeading) {
-        printNodeHeader();
+வெறுமை RBBINode::print_மரம்(மாறிலி RBBINode *முனை, UBool printHeading) {
+    எனில் (printHeading) {
+        print_முனை_Header();
     }
-    printNode(node);
-    if (node != nullptr) {
+    print_முனை(முனை);
+    எனில் (முனை != nullptr) {
         // Only dump the definition under a variable reference if asked to.
         // Unconditionally dump children of all other node types.
-        if (node->fType != varRef) {
-            if (node->fLeftChild != nullptr) {
-                printTree(node->fLeftChild, false);
+        எனில் (முனை->fType != varRef) {
+            எனில் (முனை->f_இடது_Child != nullptr) {
+                print_மரம்(முனை->f_இடது_Child, பொய்);
             }
             
-            if (node->fRightChild != nullptr) {
-                printTree(node->fRightChild, false);
+            எனில் (முனை->f_வலது_Child != nullptr) {
+                print_மரம்(முனை->f_வலது_Child, பொய்);
             }
         }
     }

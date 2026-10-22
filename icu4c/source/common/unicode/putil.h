@@ -26,7 +26,7 @@
 #ifndef PUTIL_H
 #define PUTIL_H
 
-#include "unicode/utypes.h"
+#அந்தர்பாவ "unicode/utypes.h"
  /**
   * \file
   * \brief C API: Platform Utilities
@@ -66,7 +66,7 @@
  *   
  * @stable ICU 2.0
  */
-U_CAPI const char* U_EXPORT2 u_getDataDirectory(void);
+U_CAPI மாறிலி எழுத்து* U_EXPORT2 u_getDataDirectory(வெறுமை);
 
 
 /** 
@@ -88,7 +88,7 @@ U_CAPI const char* U_EXPORT2 u_getDataDirectory(void);
  * @see u_init
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2 u_setDataDirectory(const char *directory);
+U_CAPI வெறுமை U_EXPORT2 u_setDataDirectory(மாறிலி எழுத்து *directory);
 
 #ifndef U_HIDE_INTERNAL_API
 /**
@@ -99,7 +99,7 @@ U_CAPI void U_EXPORT2 u_setDataDirectory(const char *directory);
   * @return the time zone data override directory.
   * @internal
   */ 
-U_CAPI const char * U_EXPORT2 u_getTimeZoneFilesDirectory(UErrorCode *status);
+U_CAPI மாறிலி எழுத்து * U_EXPORT2 u_getTimeZoneFilesDirectory(UErrorCode *status);
 
 /**
   * Set the time zone files override directory.
@@ -109,7 +109,7 @@ U_CAPI const char * U_EXPORT2 u_getTimeZoneFilesDirectory(UErrorCode *status);
   *   will access the time zone data.
   * @internal
   */
-U_CAPI void U_EXPORT2 u_setTimeZoneFilesDirectory(const char *path, UErrorCode *status);
+U_CAPI வெறுமை U_EXPORT2 u_setTimeZoneFilesDirectory(மாறிலி எழுத்து *path, UErrorCode *status);
 #endif  /* U_HIDE_INTERNAL_API */
 
 
@@ -119,14 +119,14 @@ U_CAPI void U_EXPORT2 u_setTimeZoneFilesDirectory(const char *path, UErrorCode *
  * Example: '/' and ':' on Unix, '\\' and ';' on Windows.
  * @stable ICU 2.0
  */
-#if U_PLATFORM_USES_ONLY_WIN32_API
+#எனில் U_PLATFORM_USES_ONLY_WIN32_API
 #   define U_FILE_SEP_CHAR '\\'
 #   define U_FILE_ALT_SEP_CHAR '/'
 #   define U_PATH_SEP_CHAR ';'
 #   define U_FILE_SEP_STRING "\\"
 #   define U_FILE_ALT_SEP_STRING "/"
 #   define U_PATH_SEP_STRING ";"
-#else
+#இல்லையெனில்
 #   define U_FILE_SEP_CHAR '/'
 #   define U_FILE_ALT_SEP_CHAR '/'
 #   define U_PATH_SEP_CHAR ':'
@@ -155,8 +155,8 @@ U_CAPI void U_EXPORT2 u_setTimeZoneFilesDirectory(const char *path, UErrorCode *
  * @see U_CHARSET_FAMILY
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-u_charsToUChars(const char *cs, UChar *us, int32_t length);
+U_CAPI வெறுமை U_EXPORT2
+u_charsToUChars(மாறிலி எழுத்து *cs, UChar *us, int32_t length);
 
 /**
  * Convert UChar characters to char characters.
@@ -177,7 +177,7 @@ u_charsToUChars(const char *cs, UChar *us, int32_t length);
  * @see U_CHARSET_FAMILY
  * @stable ICU 2.0
  */
-U_CAPI void U_EXPORT2
-u_UCharsToChars(const UChar *us, char *cs, int32_t length);
+U_CAPI வெறுமை U_EXPORT2
+u_UCharsToChars(மாறிலி UChar *us, எழுத்து *cs, int32_t length);
 
 #endif

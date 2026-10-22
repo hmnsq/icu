@@ -19,15 +19,15 @@
 #ifndef __UIDNA_H__
 #define __UIDNA_H__
 
-#include "unicode/utypes.h"
+#அந்தர்பாவ "unicode/utypes.h"
 
-#if !UCONFIG_NO_IDNA
+#எனில் !UCONFIG_NO_IDNA
 
-#include <stdbool.h>
-#include "unicode/parseerr.h"
+#அந்தர்பாவ <stdbool.h>
+#அந்தர்பாவ "unicode/parseerr.h"
 
-#if U_SHOW_CPLUSPLUS_API
-#include "unicode/localpointer.h"
+#எனில் U_SHOW_CPLUSPLUS_API
+#அந்தர்பாவ "unicode/localpointer.h"
 #endif   // U_SHOW_CPLUSPLUS_API
 
 /**
@@ -47,7 +47,7 @@
 /*
  * IDNA option bit set values.
  */
-enum {
+எண்ணிக்கை {
     /**
      * Default options value: UTS #46 nontransitional processing.
      * For use in static worker and factory methods.
@@ -138,8 +138,8 @@ enum {
  * Opaque C service object type for the new IDNA API.
  * @stable ICU 4.6
  */
-struct UIDNA;
-typedef struct UIDNA UIDNA;  /**< C typedef for struct UIDNA. @stable ICU 4.6 */
+கட்டமைப்பு UIDNA;
+வகைவரை கட்டமைப்பு UIDNA UIDNA;  /**< C typedef for struct UIDNA. @stable ICU 4.6 */
 
 /**
  * Returns a UIDNA instance which implements UTS #46.
@@ -168,10 +168,10 @@ uidna_openUTS46(uint32_t options, UErrorCode *pErrorCode);
  * @param idna UIDNA instance to be closed
  * @stable ICU 4.6
  */
-U_CAPI void U_EXPORT2
+U_CAPI வெறுமை U_EXPORT2
 uidna_close(UIDNA *idna);
 
-#if U_SHOW_CPLUSPLUS_API
+#எனில் U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -200,7 +200,7 @@ U_NAMESPACE_END
  * \endcode
  * @stable ICU 4.6
  */
-typedef struct UIDNAInfo {
+வகைவரை கட்டமைப்பு UIDNAInfo {
     /** sizeof(UIDNAInfo) @stable ICU 4.6 */
     int16_t size;
     /**
@@ -225,7 +225,7 @@ typedef struct UIDNAInfo {
  * @stable ICU 4.6
  */
 #define UIDNA_INFO_INITIALIZER { \
-    (int16_t)sizeof(UIDNAInfo), \
+    (int16_t)அளவு(UIDNAInfo), \
     false, false, \
     0, 0, 0 }
 
@@ -253,8 +253,8 @@ typedef struct UIDNAInfo {
  * @stable ICU 4.6
  */
 U_CAPI int32_t U_EXPORT2
-uidna_labelToASCII(const UIDNA *idna,
-                   const UChar *label, int32_t length,
+uidna_labelToASCII(மாறிலி UIDNA *idna,
+                   மாறிலி UChar *label, int32_t length,
                    UChar *dest, int32_t capacity,
                    UIDNAInfo *pInfo, UErrorCode *pErrorCode);
 
@@ -280,8 +280,8 @@ uidna_labelToASCII(const UIDNA *idna,
  * @stable ICU 4.6
  */
 U_CAPI int32_t U_EXPORT2
-uidna_labelToUnicode(const UIDNA *idna,
-                     const UChar *label, int32_t length,
+uidna_labelToUnicode(மாறிலி UIDNA *idna,
+                     மாறிலி UChar *label, int32_t length,
                      UChar *dest, int32_t capacity,
                      UIDNAInfo *pInfo, UErrorCode *pErrorCode);
 
@@ -309,8 +309,8 @@ uidna_labelToUnicode(const UIDNA *idna,
  * @stable ICU 4.6
  */
 U_CAPI int32_t U_EXPORT2
-uidna_nameToASCII(const UIDNA *idna,
-                  const UChar *name, int32_t length,
+uidna_nameToASCII(மாறிலி UIDNA *idna,
+                  மாறிலி UChar *name, int32_t length,
                   UChar *dest, int32_t capacity,
                   UIDNAInfo *pInfo, UErrorCode *pErrorCode);
 
@@ -336,8 +336,8 @@ uidna_nameToASCII(const UIDNA *idna,
  * @stable ICU 4.6
  */
 U_CAPI int32_t U_EXPORT2
-uidna_nameToUnicode(const UIDNA *idna,
-                    const UChar *name, int32_t length,
+uidna_nameToUnicode(மாறிலி UIDNA *idna,
+                    மாறிலி UChar *name, int32_t length,
                     UChar *dest, int32_t capacity,
                     UIDNAInfo *pInfo, UErrorCode *pErrorCode);
 
@@ -361,9 +361,9 @@ uidna_nameToUnicode(const UIDNA *idna,
  * @stable ICU 4.6
  */
 U_CAPI int32_t U_EXPORT2
-uidna_labelToASCII_UTF8(const UIDNA *idna,
-                        const char *label, int32_t length,
-                        char *dest, int32_t capacity,
+uidna_labelToASCII_UTF8(மாறிலி UIDNA *idna,
+                        மாறிலி எழுத்து *label, int32_t length,
+                        எழுத்து *dest, int32_t capacity,
                         UIDNAInfo *pInfo, UErrorCode *pErrorCode);
 
 /**
@@ -384,9 +384,9 @@ uidna_labelToASCII_UTF8(const UIDNA *idna,
  * @stable ICU 4.6
  */
 U_CAPI int32_t U_EXPORT2
-uidna_labelToUnicodeUTF8(const UIDNA *idna,
-                         const char *label, int32_t length,
-                         char *dest, int32_t capacity,
+uidna_labelToUnicodeUTF8(மாறிலி UIDNA *idna,
+                         மாறிலி எழுத்து *label, int32_t length,
+                         எழுத்து *dest, int32_t capacity,
                          UIDNAInfo *pInfo, UErrorCode *pErrorCode);
 
 /**
@@ -407,9 +407,9 @@ uidna_labelToUnicodeUTF8(const UIDNA *idna,
  * @stable ICU 4.6
  */
 U_CAPI int32_t U_EXPORT2
-uidna_nameToASCII_UTF8(const UIDNA *idna,
-                       const char *name, int32_t length,
-                       char *dest, int32_t capacity,
+uidna_nameToASCII_UTF8(மாறிலி UIDNA *idna,
+                       மாறிலி எழுத்து *name, int32_t length,
+                       எழுத்து *dest, int32_t capacity,
                        UIDNAInfo *pInfo, UErrorCode *pErrorCode);
 
 /**
@@ -430,9 +430,9 @@ uidna_nameToASCII_UTF8(const UIDNA *idna,
  * @stable ICU 4.6
  */
 U_CAPI int32_t U_EXPORT2
-uidna_nameToUnicodeUTF8(const UIDNA *idna,
-                        const char *name, int32_t length,
-                        char *dest, int32_t capacity,
+uidna_nameToUnicodeUTF8(மாறிலி UIDNA *idna,
+                        மாறிலி எழுத்து *name, int32_t length,
+                        எழுத்து *dest, int32_t capacity,
                         UIDNAInfo *pInfo, UErrorCode *pErrorCode);
 
 /*
@@ -440,7 +440,7 @@ uidna_nameToUnicodeUTF8(const UIDNA *idna,
  * When a domain name or label fails a processing step or does not meet the
  * validity criteria, then one or more of these error bits are set.
  */
-enum {
+எண்ணிக்கை {
     /**
      * A non-final domain name label (or the whole domain name) is empty.
      * @stable ICU 4.6
@@ -595,7 +595,7 @@ enum {
  * @deprecated ICU 55 Use UTS #46 instead via uidna_openUTS46() or class IDNA.
  */
 U_DEPRECATED int32_t U_EXPORT2
-uidna_toASCII(const UChar* src, int32_t srcLength, 
+uidna_toASCII(மாறிலி UChar* src, int32_t srcLength, 
               UChar* dest, int32_t destCapacity,
               int32_t options,
               UParseError* parseError,
@@ -643,7 +643,7 @@ uidna_toASCII(const UChar* src, int32_t srcLength,
  * @deprecated ICU 55 Use UTS #46 instead via uidna_openUTS46() or class IDNA.
  */
 U_DEPRECATED int32_t U_EXPORT2
-uidna_toUnicode(const UChar* src, int32_t srcLength,
+uidna_toUnicode(மாறிலி UChar* src, int32_t srcLength,
                 UChar* dest, int32_t destCapacity,
                 int32_t options,
                 UParseError* parseError,
@@ -694,7 +694,7 @@ uidna_toUnicode(const UChar* src, int32_t srcLength,
  * @deprecated ICU 55 Use UTS #46 instead via uidna_openUTS46() or class IDNA.
  */
 U_DEPRECATED int32_t U_EXPORT2
-uidna_IDNToASCII(  const UChar* src, int32_t srcLength,
+uidna_IDNToASCII(  மாறிலி UChar* src, int32_t srcLength,
                    UChar* dest, int32_t destCapacity,
                    int32_t options,
                    UParseError* parseError,
@@ -741,7 +741,7 @@ uidna_IDNToASCII(  const UChar* src, int32_t srcLength,
  * @deprecated ICU 55 Use UTS #46 instead via uidna_openUTS46() or class IDNA.
  */
 U_DEPRECATED int32_t U_EXPORT2
-uidna_IDNToUnicode(  const UChar* src, int32_t srcLength,
+uidna_IDNToUnicode(  மாறிலி UChar* src, int32_t srcLength,
                      UChar* dest, int32_t destCapacity,
                      int32_t options,
                      UParseError* parseError,
@@ -782,8 +782,8 @@ uidna_IDNToUnicode(  const UChar* src, int32_t srcLength,
  * @deprecated ICU 55 Use UTS #46 instead via uidna_openUTS46() or class IDNA.
  */
 U_DEPRECATED int32_t U_EXPORT2
-uidna_compare(  const UChar *s1, int32_t length1,
-                const UChar *s2, int32_t length2,
+uidna_compare(  மாறிலி UChar *s1, int32_t length1,
+                மாறிலி UChar *s2, int32_t length2,
                 int32_t options,
                 UErrorCode* status);
 

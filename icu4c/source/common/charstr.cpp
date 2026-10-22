@@ -14,15 +14,15 @@
 *   created by: Markus W. Scherer
 */
 
-#include <cstdlib>
+#அந்தர்பாவ <cstdlib>
 
-#include "unicode/utypes.h"
-#include "unicode/putil.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "uinvchar.h"
-#include "ustr_imp.h"
+#அந்தர்பாவ "unicode/utypes.h"
+#அந்தர்பாவ "unicode/putil.h"
+#அந்தர்பாவ "charstr.h"
+#அந்தர்பாவ "cmemory.h"
+#அந்தர்பாவ "cstring.h"
+#அந்தர்பாவ "uinvchar.h"
+#அந்தர்பாவ "ustr_imp.h"
 
 U_NAMESPACE_BEGIN
 
@@ -35,248 +35,248 @@ CharString& CharString::operator=(CharString&& src) noexcept {
     buffer = std::move(src.buffer);
     len = src.len;
     src.len = 0;  // not strictly necessary because we make no guarantees on the source string
-    return *this;
+    திரும்பு *இது;
 }
 
-char *CharString::cloneData(UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return nullptr; }
-    char *p = static_cast<char *>(uprv_malloc(len + 1));
-    if (p == nullptr) {
+எழுத்து *CharString::cloneData(UErrorCode &errorCode) மாறிலி {
+    எனில் (U_FAILURE(errorCode)) { திரும்பு nullptr; }
+    எழுத்து *p = static_cast<எழுத்து *>(uprv_malloc(len + 1));
+    எனில் (p == nullptr) {
         errorCode = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        திரும்பு nullptr;
     }
     uprv_memcpy(p, buffer.getAlias(), len + 1);
-    return p;
+    திரும்பு p;
 }
 
-int32_t CharString::extract(char *dest, int32_t capacity, UErrorCode &errorCode) const {
-    if (U_FAILURE(errorCode)) { return len; }
-    if (capacity < 0 || (capacity > 0 && dest == nullptr)) {
+int32_t CharString::extract(எழுத்து *dest, int32_t capacity, UErrorCode &errorCode) மாறிலி {
+    எனில் (U_FAILURE(errorCode)) { திரும்பு len; }
+    எனில் (capacity < 0 || (capacity > 0 && dest == nullptr)) {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-        return len;
+        திரும்பு len;
     }
-    const char *src = buffer.getAlias();
-    if (0 < len && len <= capacity && src != dest) {
+    மாறிலி எழுத்து *src = buffer.getAlias();
+    எனில் (0 < len && len <= capacity && src != dest) {
         uprv_memcpy(dest, src, len);
     }
-    return u_terminateChars(dest, capacity, len, &errorCode);
+    திரும்பு u_terminateChars(dest, capacity, len, &errorCode);
 }
 
-CharString &CharString::copyFrom(const CharString &s, UErrorCode &errorCode) {
-    if(U_SUCCESS(errorCode) && this!=&s && ensureCapacity(s.len+1, 0, errorCode)) {
+CharString &CharString::copyFrom(மாறிலி CharString &s, UErrorCode &errorCode) {
+    எனில்(U_SUCCESS(errorCode) && இது!=&s && ensureCapacity(s.len+1, 0, errorCode)) {
         len=s.len;
         uprv_memcpy(buffer.getAlias(), s.buffer.getAlias(), len+1);
     }
-    return *this;
+    திரும்பு *இது;
 }
 
 CharString &CharString::copyFrom(StringPiece s, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) {
-        return *this;
+    எனில் (U_FAILURE(errorCode)) {
+        திரும்பு *இது;
     }
     len = 0;
     append(s, errorCode);
-    return *this;
+    திரும்பு *இது;
 }
 
-int32_t CharString::lastIndexOf(char c) const {
-    for(int32_t i=len; i>0;) {
-        if(buffer[--i]==c) {
-            return i;
+int32_t CharString::lastIndexOf(எழுத்து c) மாறிலி {
+    க்கு(int32_t i=len; i>0;) {
+        எனில்(buffer[--i]==c) {
+            திரும்பு i;
         }
     }
-    return -1;
+    திரும்பு -1;
 }
 
-bool CharString::contains(StringPiece s) const {
-    if (s.empty()) { return false; }
-    const char *p = buffer.getAlias();
+தருக்க CharString::contains(StringPiece s) மாறிலி {
+    எனில் (s.empty()) { திரும்பு பொய்; }
+    மாறிலி எழுத்து *p = buffer.getAlias();
     int32_t lastStart = len - s.length();
-    for (int32_t i = 0; i <= lastStart; ++i) {
-        if (uprv_memcmp(p + i, s.data(), s.length()) == 0) {
-            return true;
+    க்கு (int32_t i = 0; i <= lastStart; ++i) {
+        எனில் (uprv_memcmp(p + i, s.data(), s.length()) == 0) {
+            திரும்பு உண்மை;
         }
     }
-    return false;
+    திரும்பு பொய்;
 }
 
 CharString &CharString::truncate(int32_t newLength) {
-    if(newLength<0) {
+    எனில்(newLength<0) {
         newLength=0;
     }
-    if(newLength<len) {
+    எனில்(newLength<len) {
         buffer[len=newLength]=0;
     }
-    return *this;
+    திரும்பு *இது;
 }
 
-CharString &CharString::append(char c, UErrorCode &errorCode) {
-    if(ensureCapacity(len+2, 0, errorCode)) {
+CharString &CharString::append(எழுத்து c, UErrorCode &errorCode) {
+    எனில்(ensureCapacity(len+2, 0, errorCode)) {
         buffer[len++]=c;
         buffer[len]=0;
     }
-    return *this;
+    திரும்பு *இது;
 }
 
-CharString &CharString::append(const char *s, int32_t sLength, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return *this;
+CharString &CharString::append(மாறிலி எழுத்து *s, int32_t sLength, UErrorCode &errorCode) {
+    எனில்(U_FAILURE(errorCode)) {
+        திரும்பு *இது;
     }
-    if(sLength<-1 || (s==nullptr && sLength!=0)) {
+    எனில்(sLength<-1 || (s==nullptr && sLength!=0)) {
         errorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        திரும்பு *இது;
     }
-    if(sLength<0) {
+    எனில்(sLength<0) {
         sLength= static_cast<int32_t>(uprv_strlen(s));
     }
-    if(sLength>0) {
-        if(s==(buffer.getAlias()+len)) {
+    எனில்(sLength>0) {
+        எனில்(s==(buffer.getAlias()+len)) {
             // The caller wrote into the getAppendBuffer().
-            if(sLength>=(buffer.getCapacity()-len)) {
+            எனில்(sLength>=(buffer.getCapacity()-len)) {
                 // The caller wrote too much.
                 errorCode=U_INTERNAL_PROGRAM_ERROR;
-            } else {
+            } இல்லையெனில் {
                 buffer[len+=sLength]=0;
             }
-        } else if(buffer.getAlias()<=s && s<(buffer.getAlias()+len) &&
+        } இல்லையெனில் எனில்(buffer.getAlias()<=s && s<(buffer.getAlias()+len) &&
                   sLength>=(buffer.getCapacity()-len)
         ) {
             // (Part of) this string is appended to itself which requires reallocation,
             // so we have to make a copy of the substring and append that.
-            return append(CharString(s, sLength, errorCode), errorCode);
-        } else if(ensureCapacity(len+sLength+1, 0, errorCode)) {
+            திரும்பு append(CharString(s, sLength, errorCode), errorCode);
+        } இல்லையெனில் எனில்(ensureCapacity(len+sLength+1, 0, errorCode)) {
             uprv_memcpy(buffer.getAlias()+len, s, sLength);
             buffer[len+=sLength]=0;
         }
     }
-    return *this;
+    திரும்பு *இது;
 }
 
-CharString &CharString::appendNumber(int64_t number, UErrorCode &status) {
-    if (number < 0) {
-        this->append('-', status);
-        if (U_FAILURE(status)) {
-            return *this;
+CharString &CharString::append_எண்(int64_t number, UErrorCode &status) {
+    எனில் (number < 0) {
+        இது->append('-', status);
+        எனில் (U_FAILURE(status)) {
+            திரும்பு *இது;
         }
     }
 
-    if (number == 0) {
-        this->append('0', status);
-        return *this;
+    எனில் (number == 0) {
+        இது->append('0', status);
+        திரும்பு *இது;
     }
 
-    int32_t numLen = 0;
-    while (number != 0) {
+    int32_t இலக்கம்_Len = 0;
+    போது (number != 0) {
         int32_t residue = number % 10;
         number /= 10;
-        this->append(std::abs(residue) + '0', status);
-        numLen++;
-        if (U_FAILURE(status)) {
-            return *this;
+        இது->append(std::abs(residue) + '0', status);
+        இலக்கம்_Len++;
+        எனில் (U_FAILURE(status)) {
+            திரும்பு *இது;
         }
     }
 
-    int32_t start = this->length() - numLen, end = this->length() - 1;
-    while(start < end) {
-        std::swap(this->data()[start++], this->data()[end--]);
+    int32_t start = இது->length() - இலக்கம்_Len, end = இது->length() - 1;
+    போது(start < end) {
+        std::swap(இது->data()[start++], இது->data()[end--]);
     }
 
-    return *this;
+    திரும்பு *இது;
 }
 
-char *CharString::getAppendBuffer(int32_t minCapacity,
+எழுத்து *CharString::getAppendBuffer(int32_t minCapacity,
                                   int32_t desiredCapacityHint,
                                   int32_t &resultCapacity,
                                   UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
+    எனில்(U_FAILURE(errorCode)) {
         resultCapacity=0;
-        return nullptr;
+        திரும்பு nullptr;
     }
     int32_t appendCapacity=buffer.getCapacity()-len-1;  // -1 for NUL
-    if(appendCapacity>=minCapacity) {
+    எனில்(appendCapacity>=minCapacity) {
         resultCapacity=appendCapacity;
-        return buffer.getAlias()+len;
+        திரும்பு buffer.getAlias()+len;
     }
-    if(ensureCapacity(len+minCapacity+1, len+desiredCapacityHint+1, errorCode)) {
+    எனில்(ensureCapacity(len+minCapacity+1, len+desiredCapacityHint+1, errorCode)) {
         resultCapacity=buffer.getCapacity()-len-1;
-        return buffer.getAlias()+len;
+        திரும்பு buffer.getAlias()+len;
     }
     resultCapacity=0;
-    return nullptr;
+    திரும்பு nullptr;
 }
 
-CharString &CharString::appendInvariantChars(const UnicodeString &s, UErrorCode &errorCode) {
-    return appendInvariantChars(s.getBuffer(), s.length(), errorCode);
+CharString &CharString::appendInvariantChars(மாறிலி UnicodeString &s, UErrorCode &errorCode) {
+    திரும்பு appendInvariantChars(s.getBuffer(), s.length(), errorCode);
 }
 
-CharString &CharString::appendInvariantChars(const char16_t* uchars, int32_t ucharsLen, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return *this;
+CharString &CharString::appendInvariantChars(மாறிலி char16_t* uchars, int32_t ucharsLen, UErrorCode &errorCode) {
+    எனில்(U_FAILURE(errorCode)) {
+        திரும்பு *இது;
     }
-    if (!uprv_isInvariantUString(uchars, ucharsLen)) {
+    எனில் (!uprv_isInvariantUString(uchars, ucharsLen)) {
         errorCode = U_INVARIANT_CONVERSION_ERROR;
-        return *this;
+        திரும்பு *இது;
     }
-    if(ensureCapacity(len+ucharsLen+1, 0, errorCode)) {
+    எனில்(ensureCapacity(len+ucharsLen+1, 0, errorCode)) {
         u_UCharsToChars(uchars, buffer.getAlias()+len, ucharsLen);
         len += ucharsLen;
         buffer[len] = 0;
     }
-    return *this;
+    திரும்பு *இது;
 }
 
 UBool CharString::ensureCapacity(int32_t capacity,
                                  int32_t desiredCapacityHint,
                                  UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return false;
+    எனில்(U_FAILURE(errorCode)) {
+        திரும்பு பொய்;
     }
-    if(capacity>buffer.getCapacity()) {
-        if(desiredCapacityHint==0) {
+    எனில்(capacity>buffer.getCapacity()) {
+        எனில்(desiredCapacityHint==0) {
             desiredCapacityHint=capacity+buffer.getCapacity();
         }
-        if( (desiredCapacityHint<=capacity || buffer.resize(desiredCapacityHint, len+1)==nullptr) &&
+        எனில்( (desiredCapacityHint<=capacity || buffer.resize(desiredCapacityHint, len+1)==nullptr) &&
             buffer.resize(capacity, len+1)==nullptr
         ) {
             errorCode=U_MEMORY_ALLOCATION_ERROR;
-            return false;
+            திரும்பு பொய்;
         }
     }
-    return true;
+    திரும்பு உண்மை;
 }
 
 CharString &CharString::appendPathPart(StringPiece s, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return *this;
+    எனில்(U_FAILURE(errorCode)) {
+        திரும்பு *இது;
     }
-    if(s.length()==0) {
-        return *this;
+    எனில்(s.length()==0) {
+        திரும்பு *இது;
     }
-    char c;
-    if(len>0 && (c=buffer[len-1])!=U_FILE_SEP_CHAR && c!=U_FILE_ALT_SEP_CHAR) {
+    எழுத்து c;
+    எனில்(len>0 && (c=buffer[len-1])!=U_FILE_SEP_CHAR && c!=U_FILE_ALT_SEP_CHAR) {
         append(getDirSepChar(), errorCode);
     }
     append(s, errorCode);
-    return *this;
+    திரும்பு *இது;
 }
 
 CharString &CharString::ensureEndsWithFileSeparator(UErrorCode &errorCode) {
-    char c;
-    if(U_SUCCESS(errorCode) && len>0 &&
+    எழுத்து c;
+    எனில்(U_SUCCESS(errorCode) && len>0 &&
             (c=buffer[len-1])!=U_FILE_SEP_CHAR && c!=U_FILE_ALT_SEP_CHAR) {
         append(getDirSepChar(), errorCode);
     }
-    return *this;
+    திரும்பு *இது;
 }
 
-char CharString::getDirSepChar() const {
-    char dirSepChar = U_FILE_SEP_CHAR;
-#if (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
+எழுத்து CharString::getDirSepChar() மாறிலி {
+    எழுத்து dirSepChar = U_FILE_SEP_CHAR;
+#எனில் (U_FILE_SEP_CHAR != U_FILE_ALT_SEP_CHAR)
     // We may need to return a different directory separator when building for Cygwin or MSYS2.
-    if(len>0 && !uprv_strchr(data(), U_FILE_SEP_CHAR) && uprv_strchr(data(), U_FILE_ALT_SEP_CHAR))
+    எனில்(len>0 && !uprv_strchr(data(), U_FILE_SEP_CHAR) && uprv_strchr(data(), U_FILE_ALT_SEP_CHAR))
         dirSepChar = U_FILE_ALT_SEP_CHAR;
 #endif
-    return dirSepChar;
+    திரும்பு dirSepChar;
 }
 
 U_NAMESPACE_END

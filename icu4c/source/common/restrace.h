@@ -4,11 +4,11 @@
 #ifndef __RESTRACE_H__
 #define __RESTRACE_H__
 
-#include "unicode/utypes.h"
+#அந்தர்பாவ "unicode/utypes.h"
 
-#if U_ENABLE_TRACING
+#எனில் U_ENABLE_TRACING
 
-struct UResourceBundle;
+கட்டமைப்பு UResourceBundle;
 
 U_NAMESPACE_BEGIN
 
@@ -26,67 +26,67 @@ class CharString;
  * in other exported types.
  */
 class U_COMMON_API ResourceTracer {
-public:
+பொது:
     ResourceTracer() :
         fResB(nullptr),
         fParent(nullptr),
-        fKey(nullptr),
+        f_சாவி(nullptr),
         fIndex(-1) {}
 
-    ResourceTracer(const UResourceBundle* resB) :
+    ResourceTracer(மாறிலி UResourceBundle* resB) :
         fResB(resB),
         fParent(nullptr),
-        fKey(nullptr),
+        f_சாவி(nullptr),
         fIndex(-1) {}
 
-    ResourceTracer(const UResourceBundle* resB, const char* key) :
+    ResourceTracer(மாறிலி UResourceBundle* resB, மாறிலி எழுத்து* சாவி) :
         fResB(resB),
         fParent(nullptr),
-        fKey(key),
+        f_சாவி(சாவி),
         fIndex(-1) {}
 
-    ResourceTracer(const UResourceBundle* resB, int32_t index) :
+    ResourceTracer(மாறிலி UResourceBundle* resB, int32_t index) :
         fResB(resB),
         fParent(nullptr),
-        fKey(nullptr),
+        f_சாவி(nullptr),
         fIndex(index) {}
 
-    ResourceTracer(const ResourceTracer& parent, const char* key) :
+    ResourceTracer(மாறிலி ResourceTracer& parent, மாறிலி எழுத்து* சாவி) :
         fResB(nullptr),
         fParent(&parent),
-        fKey(key),
+        f_சாவி(சாவி),
         fIndex(-1) {}
 
-    ResourceTracer(const ResourceTracer& parent, int32_t index) :
+    ResourceTracer(மாறிலி ResourceTracer& parent, int32_t index) :
         fResB(nullptr),
         fParent(&parent),
-        fKey(nullptr),
+        f_சாவி(nullptr),
         fIndex(index) {}
 
     ~ResourceTracer();
 
-    void trace(const char* type) const;
-    void traceOpen() const;
+    வெறுமை trace(மாறிலி எழுத்து* type) மாறிலி;
+    வெறுமை traceOpen() மாறிலி;
 
     /**
      * Calls trace() if the resB or parent provided to the constructor was
      * non-null; otherwise, does nothing.
      */
-    void maybeTrace(const char* type) const {
-        if (fResB || fParent) {
+    வெறுமை maybeTrace(மாறிலி எழுத்து* type) மாறிலி {
+        எனில் (fResB || fParent) {
             trace(type);
         }
     }
 
-private:
-    const UResourceBundle* fResB;
-    const ResourceTracer* fParent;
-    const char* fKey;
+தனிப்பட்ட:
+    மாறிலி UResourceBundle* fResB;
+    மாறிலி ResourceTracer* fParent;
+    மாறிலி எழுத்து* f_சாவி;
     int32_t fIndex;
 
-    CharString& getFilePath(CharString& output, UErrorCode& status) const;
+    CharString& getFilePath(CharString& output, UErrorCode& status) மாறிலி;
 
-    CharString& getResPath(CharString& output, UErrorCode& status) const;
+    CharString& getResPath(CharString& output, UErrorCode& status) மாறிலி;
 };
 
 /**
@@ -94,17 +94,17 @@ private:
  * with --enable-tracing.
  */
 class FileTracer {
-public:
-    static void traceOpen(const char* path, const char* type, const char* name);
+பொது:
+    நிலையான வெறுமை traceOpen(மாறிலி எழுத்து* path, மாறிலி எழுத்து* type, மாறிலி எழுத்து* name);
 
-private:
-    static void traceOpenDataFile(const char* path, const char* type, const char* name);
-    static void traceOpenResFile(const char* path, const char* name);
+தனிப்பட்ட:
+    நிலையான வெறுமை traceOpenDataFile(மாறிலி எழுத்து* path, மாறிலி எழுத்து* type, மாறிலி எழுத்து* name);
+    நிலையான வெறுமை traceOpenResFile(மாறிலி எழுத்து* path, மாறிலி எழுத்து* name);
 };
 
 U_NAMESPACE_END
 
-#else // U_ENABLE_TRACING
+#இல்லையெனில் // U_ENABLE_TRACING
 
 U_NAMESPACE_BEGIN
 
@@ -112,32 +112,32 @@ U_NAMESPACE_BEGIN
  * Default trivial implementation when --enable-tracing is not used.
  */
 class U_COMMON_API ResourceTracer {
-public:
+பொது:
     ResourceTracer() {}
 
-    ResourceTracer(const void*) {}
+    ResourceTracer(மாறிலி வெறுமை*) {}
 
-    ResourceTracer(const void*, const char*) {}
+    ResourceTracer(மாறிலி வெறுமை*, மாறிலி எழுத்து*) {}
 
-    ResourceTracer(const void*, int32_t) {}
+    ResourceTracer(மாறிலி வெறுமை*, int32_t) {}
 
-    ResourceTracer(const ResourceTracer&, const char*) {}
+    ResourceTracer(மாறிலி ResourceTracer&, மாறிலி எழுத்து*) {}
 
-    ResourceTracer(const ResourceTracer&, int32_t) {}
+    ResourceTracer(மாறிலி ResourceTracer&, int32_t) {}
 
-    void trace(const char*) const {}
+    வெறுமை trace(மாறிலி எழுத்து*) மாறிலி {}
 
-    void traceOpen() const {}
+    வெறுமை traceOpen() மாறிலி {}
 
-    void maybeTrace(const char*) const {}
+    வெறுமை maybeTrace(மாறிலி எழுத்து*) மாறிலி {}
 };
 
 /**
  * Default trivial implementation when --enable-tracing is not used.
  */
 class FileTracer {
-public:
-    static void traceOpen(const char*, const char*, const char*) {}
+பொது:
+    நிலையான வெறுமை traceOpen(மாறிலி எழுத்து*, மாறிலி எழுத்து*, மாறிலி எழுத்து*) {}
 };
 
 U_NAMESPACE_END

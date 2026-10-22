@@ -7,58 +7,58 @@
 **********************************************************************
 */
 
-#include <optional>
-#include <string_view>
-#include <utility>
+#அந்தர்பாவ <optional>
+#அந்தர்பாவ <string_view>
+#அந்தர்பாவ <utility>
 
-#include "unicode/bytestream.h"
-#include "unicode/utypes.h"
-#include "unicode/ures.h"
-#include "unicode/localpointer.h"
-#include "unicode/putil.h"
-#include "unicode/uenum.h"
-#include "unicode/uloc.h"
-#include "bytesinkutil.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "putilimp.h"
-#include "uinvchar.h"
-#include "ulocimp.h"
-#include "uassert.h"
+#அந்தர்பாவ "unicode/bytestream.h"
+#அந்தர்பாவ "unicode/utypes.h"
+#அந்தர்பாவ "unicode/ures.h"
+#அந்தர்பாவ "unicode/localpointer.h"
+#அந்தர்பாவ "unicode/putil.h"
+#அந்தர்பாவ "unicode/uenum.h"
+#அந்தர்பாவ "unicode/uloc.h"
+#அந்தர்பாவ "bytesinkutil.h"
+#அந்தர்பாவ "charstr.h"
+#அந்தர்பாவ "cmemory.h"
+#அந்தர்பாவ "cstring.h"
+#அந்தர்பாவ "putilimp.h"
+#அந்தர்பாவ "uinvchar.h"
+#அந்தர்பாவ "ulocimp.h"
+#அந்தர்பாவ "uassert.h"
 
-namespace {
+நாமாகாஶ {
 
 /* struct holding a single variant */
-typedef struct VariantListEntry : public icu::UMemory {
-    const char              *variant;
-    struct VariantListEntry *next;
+வகைவரை கட்டமைப்பு VariantListEntry : பொது icu::UMemory {
+    மாறிலி எழுத்து              *variant;
+    கட்டமைப்பு VariantListEntry *next;
 } VariantListEntry;
 
 /* struct holding a single attribute value */
-struct AttributeListEntry : public icu::UMemory {
-    const char              *attribute;
-    struct AttributeListEntry *next;
+கட்டமைப்பு AttributeListEntry : பொது icu::UMemory {
+    மாறிலி எழுத்து              *attribute;
+    கட்டமைப்பு AttributeListEntry *next;
 };
 
 /* struct holding a single extension */
-struct ExtensionListEntry : public icu::UMemory {
-    const char                  *key;
-    const char                  *value;
-    struct ExtensionListEntry   *next;
+கட்டமைப்பு ExtensionListEntry : பொது icu::UMemory {
+    மாறிலி எழுத்து                  *சாவி;
+    மாறிலி எழுத்து                  *value;
+    கட்டமைப்பு ExtensionListEntry   *next;
 };
 
 #define MAXEXTLANG 3
-typedef struct ULanguageTag {
-    char                *buf;   /* holding parsed subtags */
-    const char          *language;
-    const char          *extlang[MAXEXTLANG];
-    const char          *script;
-    const char          *region;
+வகைவரை கட்டமைப்பு ULanguageTag {
+    எழுத்து                *buf;   /* holding parsed subtags */
+    மாறிலி எழுத்து          *language;
+    மாறிலி எழுத்து          *extlang[MAXEXTLANG];
+    மாறிலி எழுத்து          *script;
+    மாறிலி எழுத்து          *region;
     VariantListEntry    *variants;
     ExtensionListEntry  *extensions;
-    const char          *privateuse;
-    const char          *legacy;
+    மாறிலி எழுத்து          *privateuse;
+    மாறிலி எழுத்து          *legacy;
 } ULanguageTag;
 
 #define MINLEN 2
@@ -69,20 +69,20 @@ typedef struct ULanguageTag {
 #define LOCALE_SEP '_'
 #define LOCALE_EXT_SEP '@'
 #define LOCALE_KEYWORD_SEP ';'
-#define LOCALE_KEY_TYPE_SEP '='
+#define LOCALE_சாவி_TYPE_SEP '='
 
 constexpr auto ISALPHA = uprv_isASCIILetter;
-inline bool ISNUMERIC(char c) { return c >= '0' && c <= '9'; }
+உள்வரி தருக்க ISNUMERIC(எழுத்து c) { திரும்பு c >= '0' && c <= '9'; }
 
-constexpr char EMPTY[] = "";
-constexpr char LANG_UND[] = "und";
-constexpr char PRIVATEUSE_KEY[] = "x";
-constexpr char _POSIX[] = "_POSIX";
-constexpr char POSIX_KEY[] = "va";
-constexpr char POSIX_VALUE[] = "posix";
-constexpr char LOCALE_ATTRIBUTE_KEY[] = "attribute";
-constexpr char PRIVUSE_VARIANT_PREFIX[] = "lvariant";
-constexpr char LOCALE_TYPE_YES[] = "yes";
+constexpr எழுத்து EMPTY[] = "";
+constexpr எழுத்து LANG_UND[] = "und";
+constexpr எழுத்து PRIVATEUSE_சாவி[] = "x";
+constexpr எழுத்து _POSIX[] = "_POSIX";
+constexpr எழுத்து POSIX_சாவி[] = "va";
+constexpr எழுத்து POSIX_மதிப்பு[] = "posix";
+constexpr எழுத்து LOCALE_ATTRIBUTE_சாவி[] = "attribute";
+constexpr எழுத்து PRIVUSE_VARIANT_PREFIX[] = "lvariant";
+constexpr எழுத்து LOCALE_TYPE_YES[] = "yes";
 
 #define LANG_UND_LEN 3
 
@@ -106,7 +106,7 @@ constexpr char LOCALE_TYPE_YES[] = "yes";
  values. They may have to be removed for the strict BCP 47 compliance.
 
 */
-constexpr const char* LEGACY[] = {
+constexpr மாறிலி எழுத்து* LEGACY[] = {
 /*  legacy          preferred */
     "art-lojban",   "jbo",
     "en-gb-oed",    "en-gb-oxendict",
@@ -155,7 +155,7 @@ constexpr const char* LEGACY[] = {
  a variant tag 'hepburn-heploc' has the preferred subtag, 'alaic97'.
 */
 
-constexpr const char* REDUNDANT[] = {
+constexpr மாறிலி எழுத்து* REDUNDANT[] = {
 //  redundant       preferred
     "sgn-br",       "bzs",
     "sgn-co",       "csn",
@@ -197,7 +197,7 @@ constexpr const char* REDUNDANT[] = {
 
   Make sure that 2-letter language subtags come before 3-letter subtags.
 */
-constexpr char DEPRECATEDLANGS[][4] = {
+constexpr எழுத்து DEPRECATEDLANGS[][4] = {
 /*  deprecated  new */
     "in",       "id",
     "iw",       "he",
@@ -287,7 +287,7 @@ constexpr char DEPRECATEDLANGS[][4] = {
   grep -B1 'Preferred' | \
   awk -n '/Subtag/ {printf("    \"%s\",       ", $2);} /Preferred/ {printf("\"%s\",\n", $2);}'
 */
-constexpr char DEPRECATEDREGIONS[][3] = {
+constexpr எழுத்து DEPRECATEDREGIONS[][3] = {
 /*  deprecated  new */
     "BU",       "MM",
     "DD",       "DE",
@@ -306,52 +306,52 @@ constexpr char DEPRECATEDREGIONS[][3] = {
 */
 
 ULanguageTag*
-ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& status);
+ultag_parse(மாறிலி எழுத்து* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& status);
 
-void
+வெறுமை
 ultag_close(ULanguageTag* langtag);
 
-const char*
-ultag_getLanguage(const ULanguageTag* langtag U_LIFETIME_BOUND);
+மாறிலி எழுத்து*
+ultag_getLanguage(மாறிலி ULanguageTag* langtag U_LIFETIME_BOUND);
 
-#if 0
-const char*
-ultag_getJDKLanguage(const ULanguageTag* langtag);
+#எனில் 0
+மாறிலி எழுத்து*
+ultag_getJDKLanguage(மாறிலி ULanguageTag* langtag);
 #endif
 
-const char*
-ultag_getExtlang(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
+மாறிலி எழுத்து*
+ultag_getExtlang(மாறிலி ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
 
 int32_t
-ultag_getExtlangSize(const ULanguageTag* langtag);
+ultag_getExtlangSize(மாறிலி ULanguageTag* langtag);
 
-const char*
-ultag_getScript(const ULanguageTag* langtag U_LIFETIME_BOUND);
+மாறிலி எழுத்து*
+ultag_getScript(மாறிலி ULanguageTag* langtag U_LIFETIME_BOUND);
 
-const char*
-ultag_getRegion(const ULanguageTag* langtag U_LIFETIME_BOUND);
+மாறிலி எழுத்து*
+ultag_getRegion(மாறிலி ULanguageTag* langtag U_LIFETIME_BOUND);
 
-const char*
-ultag_getVariant(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
-
-int32_t
-ultag_getVariantsSize(const ULanguageTag* langtag);
-
-const char*
-ultag_getExtensionKey(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
-
-const char*
-ultag_getExtensionValue(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
+மாறிலி எழுத்து*
+ultag_getVariant(மாறிலி ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
 
 int32_t
-ultag_getExtensionsSize(const ULanguageTag* langtag);
+ultag_getVariantsSize(மாறிலி ULanguageTag* langtag);
 
-const char*
-ultag_getPrivateUse(const ULanguageTag* langtag U_LIFETIME_BOUND);
+மாறிலி எழுத்து*
+ultag_get_Extension_சாவி(மாறிலி ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
 
-#if 0
-const char*
-ultag_getLegacy(const ULanguageTag* langtag);
+மாறிலி எழுத்து*
+ultag_get_Extension_மதிப்பு(மாறிலி ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx);
+
+int32_t
+ultag_getExtensionsSize(மாறிலி ULanguageTag* langtag);
+
+மாறிலி எழுத்து*
+ultag_getPrivateUse(மாறிலி ULanguageTag* langtag U_LIFETIME_BOUND);
+
+#எனில் 0
+மாறிலி எழுத்து*
+ultag_getLegacy(மாறிலி ULanguageTag* langtag);
 #endif
 
 }  // namespace
@@ -379,191 +379,191 @@ U_NAMESPACE_END
 * -------------------------------------------------
 */
 
-namespace {
+நாமாகாஶ {
 
-bool
-_isAlphaString(const char* s, int32_t len) {
+தருக்க
+_isAlphaString(மாறிலி எழுத்து* s, int32_t len) {
     int32_t i;
-    for (i = 0; i < len; i++) {
-        if (!ISALPHA(*(s + i))) {
-            return false;
+    க்கு (i = 0; i < len; i++) {
+        எனில் (!ISALPHA(*(s + i))) {
+            திரும்பு பொய்;
         }
     }
-    return true;
+    திரும்பு உண்மை;
 }
 
-bool
-_isNumericString(const char* s, int32_t len) {
+தருக்க
+_isNumericString(மாறிலி எழுத்து* s, int32_t len) {
     int32_t i;
-    for (i = 0; i < len; i++) {
-        if (!ISNUMERIC(*(s + i))) {
-            return false;
+    க்கு (i = 0; i < len; i++) {
+        எனில் (!ISNUMERIC(*(s + i))) {
+            திரும்பு பொய்;
         }
     }
-    return true;
+    திரும்பு உண்மை;
 }
 
-bool
-_isAlphaNumericString(const char* s, int32_t len) {
+தருக்க
+_isAlphaNumericString(மாறிலி எழுத்து* s, int32_t len) {
     int32_t i;
-    for (i = 0; i < len; i++) {
-        if (!ISALPHA(*(s + i)) && !ISNUMERIC(*(s + i))) {
-            return false;
+    க்கு (i = 0; i < len; i++) {
+        எனில் (!ISALPHA(*(s + i)) && !ISNUMERIC(*(s + i))) {
+            திரும்பு பொய்;
         }
     }
-    return true;
+    திரும்பு உண்மை;
 }
 
-bool
-_isAlphaNumericStringLimitedLength(const char* s, int32_t len, int32_t min, int32_t max) {
-    if (len < 0) {
+தருக்க
+_isAlphaNumericStringLimitedLength(மாறிலி எழுத்து* s, int32_t len, int32_t min, int32_t max) {
+    எனில் (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len >= min && len <= max && _isAlphaNumericString(s, len)) {
-        return true;
+    எனில் (len >= min && len <= max && _isAlphaNumericString(s, len)) {
+        திரும்பு உண்மை;
     }
-    return false;
+    திரும்பு பொய்;
 }
 
 }  // namespace
 
-bool
-ultag_isLanguageSubtag(const char* s, int32_t len) {
+தருக்க
+ultag_isLanguageSubtag(மாறிலி எழுத்து* s, int32_t len) {
     /*
      * unicode_language_subtag = alpha{2,3} | alpha{5,8};
      * NOTE: Per ICUTC 2019/01/23- accepting alpha 4
      * See ICU-20372
      */
-    if (len < 0) {
+    எனில் (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len >= 2 && len <= 8 && _isAlphaString(s, len)) {
-        return true;
+    எனில் (len >= 2 && len <= 8 && _isAlphaString(s, len)) {
+        திரும்பு உண்மை;
     }
-    return false;
+    திரும்பு பொய்;
 }
 
-namespace {
+நாமாகாஶ {
 
-bool
-_isExtlangSubtag(const char* s, int32_t len) {
+தருக்க
+_isExtlangSubtag(மாறிலி எழுத்து* s, int32_t len) {
     /*
      * extlang       = 3ALPHA              ; selected ISO 639 codes
      *                 *2("-" 3ALPHA)      ; permanently reserved
      */
-    if (len < 0) {
+    எனில் (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 3 && _isAlphaString(s, len)) {
-        return true;
+    எனில் (len == 3 && _isAlphaString(s, len)) {
+        திரும்பு உண்மை;
     }
-    return false;
+    திரும்பு பொய்;
 }
 
 }  // namespace
 
-bool
-ultag_isScriptSubtag(const char* s, int32_t len) {
+தருக்க
+ultag_isScriptSubtag(மாறிலி எழுத்து* s, int32_t len) {
     /*
      * script        = 4ALPHA              ; ISO 15924 code
      */
-    if (len < 0) {
+    எனில் (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 4 && _isAlphaString(s, len)) {
-        return true;
+    எனில் (len == 4 && _isAlphaString(s, len)) {
+        திரும்பு உண்மை;
     }
-    return false;
+    திரும்பு பொய்;
 }
 
-bool
-ultag_isRegionSubtag(const char* s, int32_t len) {
+தருக்க
+ultag_isRegionSubtag(மாறிலி எழுத்து* s, int32_t len) {
     /*
      * region        = 2ALPHA              ; ISO 3166-1 code
      *               / 3DIGIT              ; UN M.49 code
      */
-    if (len < 0) {
+    எனில் (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 2 && _isAlphaString(s, len)) {
-        return true;
+    எனில் (len == 2 && _isAlphaString(s, len)) {
+        திரும்பு உண்மை;
     }
-    if (len == 3 && _isNumericString(s, len)) {
-        return true;
+    எனில் (len == 3 && _isNumericString(s, len)) {
+        திரும்பு உண்மை;
     }
-    return false;
+    திரும்பு பொய்;
 }
 
-namespace {
+நாமாகாஶ {
 
-bool
-_isVariantSubtag(const char* s, int32_t len) {
+தருக்க
+_isVariantSubtag(மாறிலி எழுத்து* s, int32_t len) {
     /*
      * variant       = 5*8alphanum         ; registered variants
      *               / (DIGIT 3alphanum)
      */
-    if (len < 0) {
+    எனில் (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (_isAlphaNumericStringLimitedLength(s, len, 5, 8)) {
-        return true;
+    எனில் (_isAlphaNumericStringLimitedLength(s, len, 5, 8)) {
+        திரும்பு உண்மை;
     }
-    if (len == 4 && ISNUMERIC(*s) && _isAlphaNumericString(s + 1, 3)) {
-        return true;
+    எனில் (len == 4 && ISNUMERIC(*s) && _isAlphaNumericString(s + 1, 3)) {
+        திரும்பு உண்மை;
     }
-    return false;
+    திரும்பு பொய்;
 }
 
-bool
-_isSepListOf(bool (*test)(const char*, int32_t), const char* s, int32_t len) {
-    const char *p = s;
-    const char *pSubtag = nullptr;
+தருக்க
+_isSepListOf(தருக்க (*test)(மாறிலி எழுத்து*, int32_t), மாறிலி எழுத்து* s, int32_t len) {
+    மாறிலி எழுத்து *p = s;
+    மாறிலி எழுத்து *pSubtag = nullptr;
 
-    if (len < 0) {
+    எனில் (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
 
-    while ((p - s) < len) {
-        if (*p == SEP) {
-            if (pSubtag == nullptr) {
-                return false;
+    போது ((p - s) < len) {
+        எனில் (*p == SEP) {
+            எனில் (pSubtag == nullptr) {
+                திரும்பு பொய்;
             }
-            if (!test(pSubtag, static_cast<int32_t>(p - pSubtag))) {
-                return false;
+            எனில் (!test(pSubtag, static_cast<int32_t>(p - pSubtag))) {
+                திரும்பு பொய்;
             }
             pSubtag = nullptr;
-        } else if (pSubtag == nullptr) {
+        } இல்லையெனில் எனில் (pSubtag == nullptr) {
             pSubtag = p;
         }
         p++;
     }
-    if (pSubtag == nullptr) {
-        return false;
+    எனில் (pSubtag == nullptr) {
+        திரும்பு பொய்;
     }
-    return test(pSubtag, static_cast<int32_t>(p - pSubtag));
+    திரும்பு test(pSubtag, static_cast<int32_t>(p - pSubtag));
 }
 
 }  // namespace
 
-bool
-ultag_isVariantSubtags(const char* s, int32_t len) {
-    return _isSepListOf(&_isVariantSubtag, s, len);
+தருக்க
+ultag_isVariantSubtags(மாறிலி எழுத்து* s, int32_t len) {
+    திரும்பு _isSepListOf(&_isVariantSubtag, s, len);
 }
 
-namespace {
+நாமாகாஶ {
 
 // This is for the ICU-specific "lvariant" handling.
-bool
-_isPrivateuseVariantSubtag(const char* s, int32_t len) {
+தருக்க
+_isPrivateuseVariantSubtag(மாறிலி எழுத்து* s, int32_t len) {
     /*
      * variant       = 1*8alphanum         ; registered variants
      *               / (DIGIT 3alphanum)
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 1, 8);
+    திரும்பு _isAlphaNumericStringLimitedLength(s, len , 1, 8);
 }
 
-bool
-_isExtensionSingleton(const char* s, int32_t len) {
+தருக்க
+_isExtensionSingleton(மாறிலி எழுத்து* s, int32_t len) {
     /*
      * extension     = singleton 1*("-" (2*8alphanum))
      *
@@ -573,292 +573,292 @@ _isExtensionSingleton(const char* s, int32_t len) {
      *               / %x61-77             ; a - w
      *               / %x79-7A             ; y - z
      */
-    if (len < 0) {
+    எனில் (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 1 && (ISALPHA(*s) || ISNUMERIC(*s)) && (uprv_tolower(*s) != PRIVATEUSE)) {
-        return true;
+    எனில் (len == 1 && (ISALPHA(*s) || ISNUMERIC(*s)) && (uprv_tolower(*s) != PRIVATEUSE)) {
+        திரும்பு உண்மை;
     }
-    return false;
+    திரும்பு பொய்;
 }
 
-bool
-_isExtensionSubtag(const char* s, int32_t len) {
+தருக்க
+_isExtensionSubtag(மாறிலி எழுத்து* s, int32_t len) {
     /*
      * extension     = singleton 1*("-" (2*8alphanum))
      */
-    return _isAlphaNumericStringLimitedLength(s, len, 2, 8);
+    திரும்பு _isAlphaNumericStringLimitedLength(s, len, 2, 8);
 }
 
 }  // namespace
 
-bool
-ultag_isExtensionSubtags(const char* s, int32_t len) {
-    return _isSepListOf(&_isExtensionSubtag, s, len);
+தருக்க
+ultag_isExtensionSubtags(மாறிலி எழுத்து* s, int32_t len) {
+    திரும்பு _isSepListOf(&_isExtensionSubtag, s, len);
 }
 
-namespace {
+நாமாகாஶ {
 
-bool
-_isPrivateuseValueSubtag(const char* s, int32_t len) {
+தருக்க
+is_Privateuse_மதிப்பு_Subtag(மாறிலி எழுத்து* s, int32_t len) {
     /*
      * privateuse    = "x" 1*("-" (1*8alphanum))
      */
-    return _isAlphaNumericStringLimitedLength(s, len, 1, 8);
+    திரும்பு _isAlphaNumericStringLimitedLength(s, len, 1, 8);
 }
 
 }  // namespace
 
-bool
-ultag_isPrivateuseValueSubtags(const char* s, int32_t len) {
-    return _isSepListOf(&_isPrivateuseValueSubtag, s, len);
+தருக்க
+ultag_is_Privateuse_மதிப்பு_Subtags(மாறிலி எழுத்து* s, int32_t len) {
+    திரும்பு _isSepListOf(&is_Privateuse_மதிப்பு_Subtag, s, len);
 }
 
-bool
-ultag_isUnicodeLocaleAttribute(const char* s, int32_t len) {
+தருக்க
+ultag_isUnicodeLocaleAttribute(மாறிலி எழுத்து* s, int32_t len) {
     /*
      * attribute = alphanum{3,8} ;
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 3, 8);
+    திரும்பு _isAlphaNumericStringLimitedLength(s, len , 3, 8);
 }
 
-bool
-ultag_isUnicodeLocaleAttributes(const char* s, int32_t len) {
-    return _isSepListOf(&ultag_isUnicodeLocaleAttribute, s, len);
+தருக்க
+ultag_isUnicodeLocaleAttributes(மாறிலி எழுத்து* s, int32_t len) {
+    திரும்பு _isSepListOf(&ultag_isUnicodeLocaleAttribute, s, len);
 }
 
-bool
-ultag_isUnicodeLocaleKey(const char* s, int32_t len) {
+தருக்க
+ultag_is_Unicode_Locale_சாவி(மாறிலி எழுத்து* s, int32_t len) {
     /*
      * key = alphanum alpha ;
      */
-    if (len < 0) {
+    எனில் (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 2 && (ISALPHA(*s) || ISNUMERIC(*s)) && ISALPHA(s[1])) {
-        return true;
+    எனில் (len == 2 && (ISALPHA(*s) || ISNUMERIC(*s)) && ISALPHA(s[1])) {
+        திரும்பு உண்மை;
     }
-    return false;
+    திரும்பு பொய்;
 }
 
-bool
-_isUnicodeLocaleTypeSubtag(const char*s, int32_t len) {
+தருக்க
+_isUnicodeLocaleTypeSubtag(மாறிலி எழுத்து*s, int32_t len) {
     /*
      * alphanum{3,8}
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 3, 8);
+    திரும்பு _isAlphaNumericStringLimitedLength(s, len , 3, 8);
 }
 
-bool
-ultag_isUnicodeLocaleType(const char*s, int32_t len) {
+தருக்க
+ultag_isUnicodeLocaleType(மாறிலி எழுத்து*s, int32_t len) {
     /*
      * type = alphanum{3,8} (sep alphanum{3,8})* ;
      */
-    return _isSepListOf(&_isUnicodeLocaleTypeSubtag, s, len);
+    திரும்பு _isSepListOf(&_isUnicodeLocaleTypeSubtag, s, len);
 }
 
-namespace {
+நாமாகாஶ {
 
-bool
-_isTKey(const char* s, int32_t len)
+தருக்க
+_isTKey(மாறிலி எழுத்து* s, int32_t len)
 {
     /*
      * tkey = alpha digit ;
      */
-    if (len < 0) {
+    எனில் (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    if (len == 2 && ISALPHA(*s) && ISNUMERIC(*(s + 1))) {
-        return true;
+    எனில் (len == 2 && ISALPHA(*s) && ISNUMERIC(*(s + 1))) {
+        திரும்பு உண்மை;
     }
-    return false;
+    திரும்பு பொய்;
 }
 
 }  // namespace
 
-const char*
-ultag_getTKeyStart(const char* localeID U_LIFETIME_BOUND) {
-    const char *result = localeID;
-    const char *sep;
-    while((sep = uprv_strchr(result, SEP)) != nullptr) {
-        if (_isTKey(result, static_cast<int32_t>(sep - result))) {
-            return result;
+மாறிலி எழுத்து*
+ultag_getTKeyStart(மாறிலி எழுத்து* localeID U_LIFETIME_BOUND) {
+    மாறிலி எழுத்து *result = localeID;
+    மாறிலி எழுத்து *sep;
+    போது((sep = uprv_strchr(result, SEP)) != nullptr) {
+        எனில் (_isTKey(result, static_cast<int32_t>(sep - result))) {
+            திரும்பு result;
         }
         result = ++sep;
     }
-    if (_isTKey(result, -1)) {
-        return result;
+    எனில் (_isTKey(result, -1)) {
+        திரும்பு result;
     }
-    return nullptr;
+    திரும்பு nullptr;
 }
 
-namespace {
+நாமாகாஶ {
 
-bool
-_isTValue(const char* s, int32_t len)
+தருக்க
+_isTValue(மாறிலி எழுத்து* s, int32_t len)
 {
     /*
      * tvalue = (sep alphanum{3,8})+ ;
      */
-    return _isAlphaNumericStringLimitedLength(s, len , 3, 8);
+    திரும்பு _isAlphaNumericStringLimitedLength(s, len , 3, 8);
 }
 
-bool
-_isTransformedExtensionSubtag(int32_t& state, const char* s, int32_t len)
+தருக்க
+_isTransformedExtensionSubtag(int32_t& state, மாறிலி எழுத்து* s, int32_t len)
 {
-    const int32_t kStart = 0;       // Start, wait for unicode_language_subtag, tkey or end
-    const int32_t kGotLanguage = 1; // Got unicode_language_subtag, wait for unicode_script_subtag,
+    மாறிலி int32_t kStart = 0;       // Start, wait for unicode_language_subtag, tkey or end
+    மாறிலி int32_t kGotLanguage = 1; // Got unicode_language_subtag, wait for unicode_script_subtag,
                                     // unicode_region_subtag, unicode_variant_subtag, tkey or end
-    const int32_t kGotScript = 2;   // Got unicode_script_subtag, wait for unicode_region_subtag,
+    மாறிலி int32_t kGotScript = 2;   // Got unicode_script_subtag, wait for unicode_region_subtag,
                                     // unicode_variant_subtag, tkey, or end
-    const int32_t kGotRegion = 3;   // Got unicode_region_subtag, wait for unicode_variant_subtag,
+    மாறிலி int32_t kGotRegion = 3;   // Got unicode_region_subtag, wait for unicode_variant_subtag,
                                     // tkey, or end.
-    const int32_t kGotVariant = 4;  // Got unicode_variant_subtag, wait for unicode_variant_subtag
+    மாறிலி int32_t kGotVariant = 4;  // Got unicode_variant_subtag, wait for unicode_variant_subtag
                                     // tkey or end.
-    const int32_t kGotTKey = -1;    // Got tkey, wait for tvalue. ERROR if stop here.
-    const int32_t kGotTValue = 6;   // Got tvalue, wait for tkey, tvalue or end
+    மாறிலி int32_t kGotTKey = -1;    // Got tkey, wait for tvalue. ERROR if stop here.
+    மாறிலி int32_t kGotTValue = 6;   // Got tvalue, wait for tkey, tvalue or end
 
 
-    if (len < 0) {
+    எனில் (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
-    switch (state) {
-        case kStart:
-            if (ultag_isLanguageSubtag(s, len) && len != 4) {
+    தேர்வு (state) {
+        நிலை kStart:
+            எனில் (ultag_isLanguageSubtag(s, len) && len != 4) {
                 state = kGotLanguage;
-                return true;
+                திரும்பு உண்மை;
             }
-            if (_isTKey(s, len)) {
+            எனில் (_isTKey(s, len)) {
                 state = kGotTKey;
-                return true;
+                திரும்பு உண்மை;
             }
-            return false;
-        case kGotLanguage:
-            if (ultag_isScriptSubtag(s, len)) {
+            திரும்பு பொய்;
+        நிலை kGotLanguage:
+            எனில் (ultag_isScriptSubtag(s, len)) {
                 state = kGotScript;
-                return true;
+                திரும்பு உண்மை;
             }
             U_FALLTHROUGH;
-        case kGotScript:
-            if (ultag_isRegionSubtag(s, len)) {
+        நிலை kGotScript:
+            எனில் (ultag_isRegionSubtag(s, len)) {
                 state = kGotRegion;
-                return true;
+                திரும்பு உண்மை;
             }
             U_FALLTHROUGH;
-        case kGotRegion:
+        நிலை kGotRegion:
             U_FALLTHROUGH;
-        case kGotVariant:
-            if (_isVariantSubtag(s, len)) {
+        நிலை kGotVariant:
+            எனில் (_isVariantSubtag(s, len)) {
                 state = kGotVariant;
-                return true;
+                திரும்பு உண்மை;
             }
-            if (_isTKey(s, len)) {
+            எனில் (_isTKey(s, len)) {
                 state = kGotTKey;
-                return true;
+                திரும்பு உண்மை;
             }
-            return false;
-        case kGotTKey:
-            if (_isTValue(s, len)) {
+            திரும்பு பொய்;
+        நிலை kGotTKey:
+            எனில் (_isTValue(s, len)) {
                 state = kGotTValue;
-                return true;
+                திரும்பு உண்மை;
             }
-            return false;
-        case kGotTValue:
-            if (_isTKey(s, len)) {
+            திரும்பு பொய்;
+        நிலை kGotTValue:
+            எனில் (_isTKey(s, len)) {
                 state = kGotTKey;
-                return true;
+                திரும்பு உண்மை;
             }
-            if (_isTValue(s, len)) {
-                return true;
+            எனில் (_isTValue(s, len)) {
+                திரும்பு உண்மை;
             }
-            return false;
+            திரும்பு பொய்;
     }
-    return false;
+    திரும்பு பொய்;
 }
 
-bool
-_isUnicodeExtensionSubtag(int32_t& state, const char* s, int32_t len)
+தருக்க
+_isUnicodeExtensionSubtag(int32_t& state, மாறிலி எழுத்து* s, int32_t len)
 {
-    const int32_t kStart = 0;         // Start, wait for a key or attribute or end
-    const int32_t kGotKey = 1;        // Got a key, wait for type or key or end
-    const int32_t kGotType = 2;       // Got a type, wait for key or end
+    மாறிலி int32_t kStart = 0;         // Start, wait for a key or attribute or end
+    மாறிலி int32_t k_Got_சாவி = 1;        // Got a key, wait for type or key or end
+    மாறிலி int32_t kGotType = 2;       // Got a type, wait for key or end
 
-    switch (state) {
-        case kStart:
-            if (ultag_isUnicodeLocaleKey(s, len)) {
-                state = kGotKey;
-                return true;
+    தேர்வு (state) {
+        நிலை kStart:
+            எனில் (ultag_is_Unicode_Locale_சாவி(s, len)) {
+                state = k_Got_சாவி;
+                திரும்பு உண்மை;
             }
-            if (ultag_isUnicodeLocaleAttribute(s, len)) {
-                return true;
+            எனில் (ultag_isUnicodeLocaleAttribute(s, len)) {
+                திரும்பு உண்மை;
             }
-            return false;
-        case kGotKey:
-            if (ultag_isUnicodeLocaleKey(s, len)) {
-                return true;
+            திரும்பு பொய்;
+        நிலை k_Got_சாவி:
+            எனில் (ultag_is_Unicode_Locale_சாவி(s, len)) {
+                திரும்பு உண்மை;
             }
-            if (_isUnicodeLocaleTypeSubtag(s, len)) {
+            எனில் (_isUnicodeLocaleTypeSubtag(s, len)) {
                 state = kGotType;
-                return true;
+                திரும்பு உண்மை;
             }
-            return false;
-        case kGotType:
-            if (ultag_isUnicodeLocaleKey(s, len)) {
-                state = kGotKey;
-                return true;
+            திரும்பு பொய்;
+        நிலை kGotType:
+            எனில் (ultag_is_Unicode_Locale_சாவி(s, len)) {
+                state = k_Got_சாவி;
+                திரும்பு உண்மை;
             }
-            if (_isUnicodeLocaleTypeSubtag(s, len)) {
-                return true;
+            எனில் (_isUnicodeLocaleTypeSubtag(s, len)) {
+                திரும்பு உண்மை;
             }
-            return false;
+            திரும்பு பொய்;
     }
-    return false;
+    திரும்பு பொய்;
 }
 
-bool
-_isStatefulSepListOf(bool (*test)(int32_t&, const char*, int32_t), const char* s, int32_t len)
+தருக்க
+_isStatefulSepListOf(தருக்க (*test)(int32_t&, மாறிலி எழுத்து*, int32_t), மாறிலி எழுத்து* s, int32_t len)
 {
     int32_t state = 0;
-    const char* p;
-    const char* start = s;
+    மாறிலி எழுத்து* p;
+    மாறிலி எழுத்து* start = s;
     int32_t subtagLen = 0;
 
-    if (len < 0) {
+    எனில் (len < 0) {
         len = static_cast<int32_t>(uprv_strlen(s));
     }
 
-    for (p = s; len > 0; p++, len--) {
-        if (*p == SEP) {
-            if (!test(state, start, subtagLen)) {
-                return false;
+    க்கு (p = s; len > 0; p++, len--) {
+        எனில் (*p == SEP) {
+            எனில் (!test(state, start, subtagLen)) {
+                திரும்பு பொய்;
             }
             subtagLen = 0;
             start = p + 1;
-        } else {
+        } இல்லையெனில் {
             subtagLen++;
         }
     }
 
-    if (test(state, start, subtagLen) && state >= 0) {
-        return true;
+    எனில் (test(state, start, subtagLen) && state >= 0) {
+        திரும்பு உண்மை;
     }
-    return false;
+    திரும்பு பொய்;
 }
 
 }  // namespace
 
-bool
-ultag_isTransformedExtensionSubtags(const char* s, int32_t len)
+தருக்க
+ultag_isTransformedExtensionSubtags(மாறிலி எழுத்து* s, int32_t len)
 {
-    return _isStatefulSepListOf(&_isTransformedExtensionSubtag, s, len);
+    திரும்பு _isStatefulSepListOf(&_isTransformedExtensionSubtag, s, len);
 }
 
-bool
-ultag_isUnicodeExtensionSubtags(const char* s, int32_t len) {
-    return _isStatefulSepListOf(&_isUnicodeExtensionSubtag, s, len);
+தருக்க
+ultag_isUnicodeExtensionSubtags(மாறிலி எழுத்து* s, int32_t len) {
+    திரும்பு _isStatefulSepListOf(&_isUnicodeExtensionSubtag, s, len);
 }
 
-namespace {
+நாமாகாஶ {
 
 /*
 * -------------------------------------------------
@@ -868,167 +868,167 @@ namespace {
 * -------------------------------------------------
 */
 
-bool
+தருக்க
 _addVariantToList(VariantListEntry **first, icu::LocalPointer<VariantListEntry> var) {
-    if (*first == nullptr) {
+    எனில் (*first == nullptr) {
         var->next = nullptr;
         *first = var.orphan();
-    } else {
+    } இல்லையெனில் {
         VariantListEntry *prev, *cur;
         int32_t cmp;
 
         /* variants order should be preserved */
         prev = nullptr;
         cur = *first;
-        while (true) {
-            if (cur == nullptr) {
+        போது (உண்மை) {
+            எனில் (cur == nullptr) {
                 var->next = nullptr;
                 prev->next = var.orphan();
-                break;
+                நிறுத்து;
             }
 
             /* Checking for duplicate variant */
             cmp = uprv_compareInvCharsAsAscii(var->variant, cur->variant);
-            if (cmp == 0) {
+            எனில் (cmp == 0) {
                 /* duplicated variant */
-                return false;
+                திரும்பு பொய்;
             }
             prev = cur;
             cur = cur->next;
         }
     }
 
-    return true;
+    திரும்பு உண்மை;
 }
 
-bool
+தருக்க
 _addAttributeToList(AttributeListEntry **first, AttributeListEntry *attr) {
-    bool bAdded = true;
+    தருக்க bAdded = உண்மை;
 
-    if (*first == nullptr) {
+    எனில் (*first == nullptr) {
         attr->next = nullptr;
         *first = attr;
-    } else {
+    } இல்லையெனில் {
         AttributeListEntry *prev, *cur;
         int32_t cmp;
 
         /* reorder variants in alphabetical order */
         prev = nullptr;
         cur = *first;
-        while (true) {
-            if (cur == nullptr) {
+        போது (உண்மை) {
+            எனில் (cur == nullptr) {
                 prev->next = attr;
                 attr->next = nullptr;
-                break;
+                நிறுத்து;
             }
             cmp = uprv_compareInvCharsAsAscii(attr->attribute, cur->attribute);
-            if (cmp < 0) {
-                if (prev == nullptr) {
+            எனில் (cmp < 0) {
+                எனில் (prev == nullptr) {
                     *first = attr;
-                } else {
+                } இல்லையெனில் {
                     prev->next = attr;
                 }
                 attr->next = cur;
-                break;
+                நிறுத்து;
             }
-            if (cmp == 0) {
+            எனில் (cmp == 0) {
                 /* duplicated variant */
-                bAdded = false;
-                break;
+                bAdded = பொய்;
+                நிறுத்து;
             }
             prev = cur;
             cur = cur->next;
         }
     }
 
-    return bAdded;
+    திரும்பு bAdded;
 }
 
-bool
-_addExtensionToList(ExtensionListEntry **first, ExtensionListEntry *ext, bool localeToBCP) {
-    bool bAdded = true;
+தருக்க
+_addExtensionToList(ExtensionListEntry **first, ExtensionListEntry *ext, தருக்க localeToBCP) {
+    தருக்க bAdded = உண்மை;
 
-    if (*first == nullptr) {
+    எனில் (*first == nullptr) {
         ext->next = nullptr;
         *first = ext;
-    } else {
+    } இல்லையெனில் {
         ExtensionListEntry *prev, *cur;
         int32_t cmp;
 
         /* reorder variants in alphabetical order */
         prev = nullptr;
         cur = *first;
-        while (true) {
-            if (cur == nullptr) {
+        போது (உண்மை) {
+            எனில் (cur == nullptr) {
                 prev->next = ext;
                 ext->next = nullptr;
-                break;
+                நிறுத்து;
             }
-            if (localeToBCP) {
+            எனில் (localeToBCP) {
                 /* special handling for locale to bcp conversion */
                 int32_t len, curlen;
 
-                len = static_cast<int32_t>(uprv_strlen(ext->key));
-                curlen = static_cast<int32_t>(uprv_strlen(cur->key));
+                len = static_cast<int32_t>(uprv_strlen(ext->சாவி));
+                curlen = static_cast<int32_t>(uprv_strlen(cur->சாவி));
 
-                if (len == 1 && curlen == 1) {
-                    if (*(ext->key) == *(cur->key)) {
+                எனில் (len == 1 && curlen == 1) {
+                    எனில் (*(ext->சாவி) == *(cur->சாவி)) {
                         cmp = 0;
-                    } else if (*(ext->key) == PRIVATEUSE) {
+                    } இல்லையெனில் எனில் (*(ext->சாவி) == PRIVATEUSE) {
                         cmp = 1;
-                    } else if (*(cur->key) == PRIVATEUSE) {
+                    } இல்லையெனில் எனில் (*(cur->சாவி) == PRIVATEUSE) {
                         cmp = -1;
-                    } else {
-                        cmp = *(ext->key) - *(cur->key);
+                    } இல்லையெனில் {
+                        cmp = *(ext->சாவி) - *(cur->சாவி);
                     }
-                } else if (len == 1) {
-                    cmp = *(ext->key) - LDMLEXT; 
-                } else if (curlen == 1) {
-                    cmp = LDMLEXT - *(cur->key);
-                } else {
-                    cmp = uprv_compareInvCharsAsAscii(ext->key, cur->key);
+                } இல்லையெனில் எனில் (len == 1) {
+                    cmp = *(ext->சாவி) - LDMLEXT; 
+                } இல்லையெனில் எனில் (curlen == 1) {
+                    cmp = LDMLEXT - *(cur->சாவி);
+                } இல்லையெனில் {
+                    cmp = uprv_compareInvCharsAsAscii(ext->சாவி, cur->சாவி);
                     /* Both are u extension keys - we need special handling for 'attribute' */
-                    if (cmp != 0) {
-                        if (uprv_strcmp(cur->key, LOCALE_ATTRIBUTE_KEY) == 0) {
+                    எனில் (cmp != 0) {
+                        எனில் (uprv_strcmp(cur->சாவி, LOCALE_ATTRIBUTE_சாவி) == 0) {
                             cmp = 1;
-                        } else if (uprv_strcmp(ext->key, LOCALE_ATTRIBUTE_KEY) == 0) {
+                        } இல்லையெனில் எனில் (uprv_strcmp(ext->சாவி, LOCALE_ATTRIBUTE_சாவி) == 0) {
                             cmp = -1;
                         }
                     }
                 }
-            } else {
-                cmp = uprv_compareInvCharsAsAscii(ext->key, cur->key);
+            } இல்லையெனில் {
+                cmp = uprv_compareInvCharsAsAscii(ext->சாவி, cur->சாவி);
             }
-            if (cmp < 0) {
-                if (prev == nullptr) {
+            எனில் (cmp < 0) {
+                எனில் (prev == nullptr) {
                     *first = ext;
-                } else {
+                } இல்லையெனில் {
                     prev->next = ext;
                 }
                 ext->next = cur;
-                break;
+                நிறுத்து;
             }
-            if (cmp == 0) {
+            எனில் (cmp == 0) {
                 /* duplicated extension key */
-                bAdded = false;
-                break;
+                bAdded = பொய்;
+                நிறுத்து;
             }
             prev = cur;
             cur = cur->next;
         }
     }
 
-    return bAdded;
+    திரும்பு bAdded;
 }
 
-void
+வெறுமை
 _initializeULanguageTag(ULanguageTag* langtag) {
     int32_t i;
 
     langtag->buf = nullptr;
 
     langtag->language = EMPTY;
-    for (i = 0; i < MAXEXTLANG; i++) {
+    க்கு (i = 0; i < MAXEXTLANG; i++) {
         langtag->extlang[i] = nullptr;
     }
 
@@ -1042,112 +1042,112 @@ _initializeULanguageTag(ULanguageTag* langtag) {
     langtag->privateuse = EMPTY;
 }
 
-void
-_appendLanguageToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, UErrorCode& status) {
+வெறுமை
+_appendLanguageToLanguageTag(std::string_view localeID, icu::ByteSink& sink, தருக்க strict, UErrorCode& status) {
     UErrorCode tmpStatus = U_ZERO_ERROR;
 
-    if (U_FAILURE(status)) {
-        return;
+    எனில் (U_FAILURE(status)) {
+        திரும்பு;
     }
 
     icu::CharString buf = ulocimp_getLanguage(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
+    எனில் (U_FAILURE(tmpStatus)) {
+        எனில் (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            திரும்பு;
         }
     }
 
     /* Note: returned language code is in lower case letters */
 
-    if (buf.isEmpty()) {
+    எனில் (buf.isEmpty()) {
         sink.Append(LANG_UND, LANG_UND_LEN);
-    } else if (!ultag_isLanguageSubtag(buf.data(), buf.length())) {
+    } இல்லையெனில் எனில் (!ultag_isLanguageSubtag(buf.data(), buf.length())) {
             /* invalid language code */
-        if (strict) {
+        எனில் (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            திரும்பு;
         }
         sink.Append(LANG_UND, LANG_UND_LEN);
-    } else {
+    } இல்லையெனில் {
         /* resolve deprecated */
-        for (int32_t i = 0; i < UPRV_LENGTHOF(DEPRECATEDLANGS); i += 2) {
+        க்கு (int32_t i = 0; i < UPRV_LENGTHOF(DEPRECATEDLANGS); i += 2) {
             // 2-letter deprecated subtags are listede before 3-letter
             // ones in DEPRECATEDLANGS[]. Get out of loop on coming
             // across the 1st 3-letter subtag, if the input is a 2-letter code.
             // to avoid continuing to try when there's no match.
-            if (buf.length() < static_cast<int32_t>(uprv_strlen(DEPRECATEDLANGS[i]))) break;
-            if (uprv_compareInvCharsAsAscii(buf.data(), DEPRECATEDLANGS[i]) == 0) {
-                const char* const resolved = DEPRECATEDLANGS[i + 1];
+            எனில் (buf.length() < static_cast<int32_t>(uprv_strlen(DEPRECATEDLANGS[i]))) நிறுத்து;
+            எனில் (uprv_compareInvCharsAsAscii(buf.data(), DEPRECATEDLANGS[i]) == 0) {
+                மாறிலி எழுத்து* மாறிலி resolved = DEPRECATEDLANGS[i + 1];
                 sink.Append(resolved, static_cast<int32_t>(uprv_strlen(resolved)));
-                return;
+                திரும்பு;
             }
         }
         sink.Append(buf.data(), buf.length());
     }
 }
 
-void
-_appendScriptToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, UErrorCode& status) {
+வெறுமை
+_appendScriptToLanguageTag(std::string_view localeID, icu::ByteSink& sink, தருக்க strict, UErrorCode& status) {
     UErrorCode tmpStatus = U_ZERO_ERROR;
 
-    if (U_FAILURE(status)) {
-        return;
+    எனில் (U_FAILURE(status)) {
+        திரும்பு;
     }
 
     icu::CharString buf = ulocimp_getScript(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
+    எனில் (U_FAILURE(tmpStatus)) {
+        எனில் (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return;
+        திரும்பு;
     }
 
-    if (!buf.isEmpty()) {
-        if (!ultag_isScriptSubtag(buf.data(), buf.length())) {
+    எனில் (!buf.isEmpty()) {
+        எனில் (!ultag_isScriptSubtag(buf.data(), buf.length())) {
             /* invalid script code */
-            if (strict) {
+            எனில் (strict) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
             }
-            return;
-        } else {
+            திரும்பு;
+        } இல்லையெனில் {
             sink.Append("-", 1);
             sink.Append(buf.data(), buf.length());
         }
     }
 }
 
-void
-_appendRegionToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, UErrorCode& status) {
+வெறுமை
+_appendRegionToLanguageTag(std::string_view localeID, icu::ByteSink& sink, தருக்க strict, UErrorCode& status) {
     UErrorCode tmpStatus = U_ZERO_ERROR;
 
-    if (U_FAILURE(status)) {
-        return;
+    எனில் (U_FAILURE(status)) {
+        திரும்பு;
     }
 
     icu::CharString buf = ulocimp_getRegion(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
+    எனில் (U_FAILURE(tmpStatus)) {
+        எனில் (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return;
+        திரும்பு;
     }
 
-    if (!buf.isEmpty()) {
-        if (!ultag_isRegionSubtag(buf.data(), buf.length())) {
+    எனில் (!buf.isEmpty()) {
+        எனில் (!ultag_isRegionSubtag(buf.data(), buf.length())) {
             /* invalid region code */
-            if (strict) {
+            எனில் (strict) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
             }
-            return;
-        } else {
+            திரும்பு;
+        } இல்லையெனில் {
             sink.Append("-", 1);
             /* resolve deprecated */
-            for (int32_t i = 0; i < UPRV_LENGTHOF(DEPRECATEDREGIONS); i += 2) {
-                if (uprv_compareInvCharsAsAscii(buf.data(), DEPRECATEDREGIONS[i]) == 0) {
-                    const char* const resolved = DEPRECATEDREGIONS[i + 1];
+            க்கு (int32_t i = 0; i < UPRV_LENGTHOF(DEPRECATEDREGIONS); i += 2) {
+                எனில் (uprv_compareInvCharsAsAscii(buf.data(), DEPRECATEDREGIONS[i]) == 0) {
+                    மாறிலி எழுத்து* மாறிலி resolved = DEPRECATEDREGIONS[i + 1];
                     sink.Append(resolved, static_cast<int32_t>(uprv_strlen(resolved)));
-                    return;
+                    திரும்பு;
                 }
             }
             sink.Append(buf.data(), buf.length());
@@ -1155,12 +1155,12 @@ _appendRegionToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool 
     }
 }
 
-void _sortVariants(VariantListEntry* first) {
-    for (VariantListEntry* var1 = first; var1 != nullptr; var1 = var1->next) {
-        for (VariantListEntry* var2 = var1->next; var2 != nullptr; var2 = var2->next) {
+வெறுமை _sortVariants(VariantListEntry* first) {
+    க்கு (VariantListEntry* var1 = first; var1 != nullptr; var1 = var1->next) {
+        க்கு (VariantListEntry* var2 = var1->next; var2 != nullptr; var2 = var2->next) {
             // Swap var1->variant and var2->variant.
-            if (uprv_compareInvCharsAsAscii(var1->variant, var2->variant) > 0) {
-                const char* temp = var1->variant;
+            எனில் (uprv_compareInvCharsAsAscii(var1->variant, var2->variant) > 0) {
+                மாறிலி எழுத்து* temp = var1->variant;
                 var1->variant = var2->variant;
                 var2->variant = temp;
             }
@@ -1168,85 +1168,85 @@ void _sortVariants(VariantListEntry* first) {
     }
 }
 
-void
-_appendVariantsToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, bool& hadPosix, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+வெறுமை
+_appendVariantsToLanguageTag(std::string_view localeID, icu::ByteSink& sink, தருக்க strict, தருக்க& hadPosix, UErrorCode& status) {
+    எனில் (U_FAILURE(status)) { திரும்பு; }
 
     UErrorCode tmpStatus = U_ZERO_ERROR;
     icu::CharString buf = ulocimp_getVariant(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus) || tmpStatus == U_STRING_NOT_TERMINATED_WARNING) {
-        if (strict) {
+    எனில் (U_FAILURE(tmpStatus) || tmpStatus == U_STRING_NOT_TERMINATED_WARNING) {
+        எனில் (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return;
+        திரும்பு;
     }
 
-    if (!buf.isEmpty()) {
-        char *p, *pVar;
-        bool bNext = true;
+    எனில் (!buf.isEmpty()) {
+        எழுத்து *p, *pVar;
+        தருக்க bNext = உண்மை;
         VariantListEntry *varFirst = nullptr;
 
         pVar = nullptr;
         p = buf.data();
-        while (bNext) {
-            if (*p == SEP || *p == LOCALE_SEP || *p == 0) {
-                if (*p == 0) {
-                    bNext = false;
-                } else {
+        போது (bNext) {
+            எனில் (*p == SEP || *p == LOCALE_SEP || *p == 0) {
+                எனில் (*p == 0) {
+                    bNext = பொய்;
+                } இல்லையெனில் {
                     *p = 0; /* terminate */
                 }
-                if (pVar == nullptr) {
-                    if (strict) {
+                எனில் (pVar == nullptr) {
+                    எனில் (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
+                        நிறுத்து;
                     }
                     /* ignore empty variant */
-                } else {
+                } இல்லையெனில் {
                     /* ICU uses upper case letters for variants, but
                        the canonical format is lowercase in BCP47 */
-                    for (int32_t i = 0; *(pVar + i) != 0; i++) {
+                    க்கு (int32_t i = 0; *(pVar + i) != 0; i++) {
                         *(pVar + i) = uprv_tolower(*(pVar + i));
                     }
 
                     /* validate */
-                    if (_isVariantSubtag(pVar, -1)) {
-                        if (uprv_strcmp(pVar, POSIX_VALUE) || buf.length() != static_cast<int32_t>(uprv_strlen(POSIX_VALUE))) {
+                    எனில் (_isVariantSubtag(pVar, -1)) {
+                        எனில் (uprv_strcmp(pVar, POSIX_மதிப்பு) || buf.length() != static_cast<int32_t>(uprv_strlen(POSIX_மதிப்பு))) {
                             /* emit the variant to the list */
-                            icu::LocalPointer<VariantListEntry> var(new VariantListEntry, status);
-                            if (U_FAILURE(status)) {
-                                break;
+                            icu::LocalPointer<VariantListEntry> var(புதிய VariantListEntry, status);
+                            எனில் (U_FAILURE(status)) {
+                                நிறுத்து;
                             }
                             var->variant = pVar;
-                            if (!_addVariantToList(&varFirst, std::move(var))) {
+                            எனில் (!_addVariantToList(&varFirst, std::move(var))) {
                                 /* duplicated variant */
-                                if (strict) {
+                                எனில் (strict) {
                                     status = U_ILLEGAL_ARGUMENT_ERROR;
-                                    break;
+                                    நிறுத்து;
                                 }
                             }
-                        } else {
+                        } இல்லையெனில் {
                             /* Special handling for POSIX variant, need to remember that we had it and then */
                             /* treat it like an extension later. */
-                            hadPosix = true;
+                            hadPosix = உண்மை;
                         }
-                    } else if (strict) {
+                    } இல்லையெனில் எனில் (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
-                    } else if (_isPrivateuseValueSubtag(pVar, -1)) {
+                        நிறுத்து;
+                    } இல்லையெனில் எனில் (is_Privateuse_மதிப்பு_Subtag(pVar, -1)) {
                         /* Handle private use subtags separately */
-                        break;
+                        நிறுத்து;
                     }
                 }
                 /* reset variant starting position */
                 pVar = nullptr;
-            } else if (pVar == nullptr) {
+            } இல்லையெனில் எனில் (pVar == nullptr) {
                 pVar = p;
             }
             p++;
         }
 
-        if (U_SUCCESS(status)) {
-            if (varFirst != nullptr) {
+        எனில் (U_SUCCESS(status)) {
+            எனில் (varFirst != nullptr) {
                 int32_t varLen;
 
                 /* per UTS35, we should sort the variants */
@@ -1254,7 +1254,7 @@ _appendVariantsToLanguageTag(std::string_view localeID, icu::ByteSink& sink, boo
 
                 /* write out validated/normalized variants to the target */
                 VariantListEntry* var = varFirst;
-                while (var != nullptr) {
+                போது (var != nullptr) {
                     sink.Append("-", 1);
                     varLen = static_cast<int32_t>(uprv_strlen(var->variant));
                     sink.Append(var->variant, varLen);
@@ -1264,138 +1264,138 @@ _appendVariantsToLanguageTag(std::string_view localeID, icu::ByteSink& sink, boo
         }
 
         /* clean up */
-        for (VariantListEntry* var = varFirst; var != nullptr; ) {
+        க்கு (VariantListEntry* var = varFirst; var != nullptr; ) {
             VariantListEntry *tmpVar = var->next;
             delete var;
             var = tmpVar;
         }
 
-        if (U_FAILURE(status)) {
-            return;
+        எனில் (U_FAILURE(status)) {
+            திரும்பு;
         }
     }
 }
 
-void
-_appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool strict, bool hadPosix, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+வெறுமை
+_appendKeywordsToLanguageTag(மாறிலி எழுத்து* localeID, icu::ByteSink& sink, தருக்க strict, தருக்க hadPosix, UErrorCode& status) {
+    எனில் (U_FAILURE(status)) { திரும்பு; }
 
     icu::MemoryPool<AttributeListEntry> attrPool;
     icu::MemoryPool<ExtensionListEntry> extPool;
     icu::MemoryPool<icu::CharString> strPool;
 
     icu::LocalUEnumerationPointer keywordEnum(uloc_openKeywords(localeID, &status));
-    if (U_FAILURE(status) && !hadPosix) {
-        return;
+    எனில் (U_FAILURE(status) && !hadPosix) {
+        திரும்பு;
     }
-    if (keywordEnum.isValid() || hadPosix) {
+    எனில் (keywordEnum.isValid() || hadPosix) {
         /* reorder extensions */
         int32_t len;
-        const char *key;
+        மாறிலி எழுத்து *சாவி;
         ExtensionListEntry *firstExt = nullptr;
         ExtensionListEntry *ext;
         AttributeListEntry *firstAttr = nullptr;
         AttributeListEntry *attr;
         icu::MemoryPool<icu::CharString> extBufPool;
-        const char *bcpKey=nullptr, *bcpValue=nullptr;
+        மாறிலி எழுத்து *bcp_சாவி=nullptr, *bcp_மதிப்பு=nullptr;
         UErrorCode tmpStatus = U_ZERO_ERROR;
         int32_t keylen;
-        bool isBcpUExt;
+        தருக்க isBcpUExt;
 
-        while (true) {
-            key = uenum_next(keywordEnum.getAlias(), nullptr, &status);
-            if (key == nullptr) {
-                break;
+        போது (உண்மை) {
+            சாவி = uenum_next(keywordEnum.getAlias(), nullptr, &status);
+            எனில் (சாவி == nullptr) {
+                நிறுத்து;
             }
 
-            icu::CharString buf = ulocimp_getKeywordValue(localeID, key, tmpStatus);
+            icu::CharString buf = ulocimp_get_Keyword_மதிப்பு(localeID, சாவி, tmpStatus);
             len = buf.length();
 
-            if (U_FAILURE(tmpStatus)) {
-                if (tmpStatus == U_MEMORY_ALLOCATION_ERROR) {
+            எனில் (U_FAILURE(tmpStatus)) {
+                எனில் (tmpStatus == U_MEMORY_ALLOCATION_ERROR) {
                     status = U_MEMORY_ALLOCATION_ERROR;
-                    break;
+                    நிறுத்து;
                 }
-                if (strict) {
+                எனில் (strict) {
                     status = U_ILLEGAL_ARGUMENT_ERROR;
-                    break;
+                    நிறுத்து;
                 }
                 /* ignore this keyword */
                 tmpStatus = U_ZERO_ERROR;
-                continue;
+                தொடர்;
             }
 
-            keylen = static_cast<int32_t>(uprv_strlen(key));
+            keylen = static_cast<int32_t>(uprv_strlen(சாவி));
             isBcpUExt = (keylen > 1);
 
             /* special keyword used for representing Unicode locale attributes */
-            if (uprv_strcmp(key, LOCALE_ATTRIBUTE_KEY) == 0) {
-                if (len > 0) {
+            எனில் (uprv_strcmp(சாவி, LOCALE_ATTRIBUTE_சாவி) == 0) {
+                எனில் (len > 0) {
                     int32_t i = 0;
-                    while (true) {
+                    போது (உண்மை) {
                         icu::CharString attrBuf;
-                        for (; i < len; i++) {
-                            if (buf[i] != '-') {
+                        க்கு (; i < len; i++) {
+                            எனில் (buf[i] != '-') {
                                 attrBuf.append(buf[i], status);
-                            } else {
+                            } இல்லையெனில் {
                                 i++;
-                                break;
+                                நிறுத்து;
                             }
                         }
-                        if (U_FAILURE(status)) {
-                            return;
+                        எனில் (U_FAILURE(status)) {
+                            திரும்பு;
                         }
-                        if (attrBuf.isEmpty() && i >= len) {
-                            break;
+                        எனில் (attrBuf.isEmpty() && i >= len) {
+                            நிறுத்து;
                         }
 
                         /* create AttributeListEntry */
                         attr = attrPool.create();
-                        if (attr == nullptr) {
+                        எனில் (attr == nullptr) {
                             status = U_MEMORY_ALLOCATION_ERROR;
-                            break;
+                            நிறுத்து;
                         }
-                        if (icu::CharString* str =
+                        எனில் (icu::CharString* str =
                                 strPool.create(std::move(attrBuf), status)) {
-                            if (U_FAILURE(status)) { break; }
+                            எனில் (U_FAILURE(status)) { நிறுத்து; }
                             attr->attribute = str->data();
-                        } else {
+                        } இல்லையெனில் {
                             status = U_MEMORY_ALLOCATION_ERROR;
-                            break;
+                            நிறுத்து;
                         }
 
-                        if (!_addAttributeToList(&firstAttr, attr)) {
-                            if (strict) {
+                        எனில் (!_addAttributeToList(&firstAttr, attr)) {
+                            எனில் (strict) {
                                 status = U_ILLEGAL_ARGUMENT_ERROR;
-                                break;
+                                நிறுத்து;
                             }
                         }
                     }
                     /* for a place holder ExtensionListEntry */
-                    bcpKey = LOCALE_ATTRIBUTE_KEY;
-                    bcpValue = nullptr;
+                    bcp_சாவி = LOCALE_ATTRIBUTE_சாவி;
+                    bcp_மதிப்பு = nullptr;
                 }
-            } else if (isBcpUExt) {
-                std::optional<std::string_view> optBcpKey = ulocimp_toBcpKeyWithFallback(key);
-                if (!optBcpKey.has_value()) {
-                    if (strict) {
+            } இல்லையெனில் எனில் (isBcpUExt) {
+                std::optional<std::string_view> opt_Bcp_சாவி = ulocimp_to_Bcp_சாவி_With_Fallback(சாவி);
+                எனில் (!opt_Bcp_சாவி.has_value()) {
+                    எனில் (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
+                        நிறுத்து;
                     }
-                    continue;
+                    தொடர்;
                 }
-                bcpKey = optBcpKey->data();
+                bcp_சாவி = opt_Bcp_சாவி->data();
 
-                std::optional<std::string_view> optBcpValue =
-                    ulocimp_toBcpTypeWithFallback(key, buf.toStringPiece());
-                if (!optBcpValue.has_value()) {
-                    if (strict) {
+                std::optional<std::string_view> opt_Bcp_மதிப்பு =
+                    ulocimp_toBcpTypeWithFallback(சாவி, buf.toStringPiece());
+                எனில் (!opt_Bcp_மதிப்பு.has_value()) {
+                    எனில் (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
+                        நிறுத்து;
                     }
-                    continue;
+                    தொடர்;
                 }
-                if (optBcpValue->data() == buf.data()) {
+                எனில் (opt_Bcp_மதிப்பு->data() == buf.data()) {
                     /*
                     When ulocimp_toBcpTypeWithFallback(key, buf) returns the
                     input value as is, the value is well-formed, but has
@@ -1404,106 +1404,106 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool str
                     */
                     icu::CharString* extBuf = extBufPool.create(buf, tmpStatus);
 
-                    if (extBuf == nullptr) {
+                    எனில் (extBuf == nullptr) {
                         status = U_MEMORY_ALLOCATION_ERROR;
-                        break;
+                        நிறுத்து;
                     }
-                    if (U_FAILURE(tmpStatus)) {
+                    எனில் (U_FAILURE(tmpStatus)) {
                         status = tmpStatus;
-                        break;
+                        நிறுத்து;
                     }
 
                     T_CString_toLowerCase(extBuf->data());
-                    bcpValue = extBuf->data();
-                } else {
-                    bcpValue = optBcpValue->data();
+                    bcp_மதிப்பு = extBuf->data();
+                } இல்லையெனில் {
+                    bcp_மதிப்பு = opt_Bcp_மதிப்பு->data();
                 }
-            } else {
-                if (*key == PRIVATEUSE) {
-                    if (!ultag_isPrivateuseValueSubtags(buf.data(), len)) {
-                        if (strict) {
+            } இல்லையெனில் {
+                எனில் (*சாவி == PRIVATEUSE) {
+                    எனில் (!ultag_is_Privateuse_மதிப்பு_Subtags(buf.data(), len)) {
+                        எனில் (strict) {
                             status = U_ILLEGAL_ARGUMENT_ERROR;
-                            break;
+                            நிறுத்து;
                         }
-                        continue;
+                        தொடர்;
                     }
-                } else {
-                    if (!_isExtensionSingleton(key, keylen) || !ultag_isExtensionSubtags(buf.data(), len)) {
-                        if (strict) {
+                } இல்லையெனில் {
+                    எனில் (!_isExtensionSingleton(சாவி, keylen) || !ultag_isExtensionSubtags(buf.data(), len)) {
+                        எனில் (strict) {
                             status = U_ILLEGAL_ARGUMENT_ERROR;
-                            break;
+                            நிறுத்து;
                         }
-                        continue;
+                        தொடர்;
                     }
                 }
-                bcpKey = key;
+                bcp_சாவி = சாவி;
                 icu::CharString* extBuf =
                     extBufPool.create(buf.data(), len, tmpStatus);
-                if (extBuf == nullptr) {
+                எனில் (extBuf == nullptr) {
                     status = U_MEMORY_ALLOCATION_ERROR;
-                    break;
+                    நிறுத்து;
                 }
-                if (U_FAILURE(tmpStatus)) {
+                எனில் (U_FAILURE(tmpStatus)) {
                     status = tmpStatus;
-                    break;
+                    நிறுத்து;
                 }
-                bcpValue = extBuf->data();
+                bcp_மதிப்பு = extBuf->data();
             }
 
             /* create ExtensionListEntry */
             ext = extPool.create();
-            if (ext == nullptr) {
+            எனில் (ext == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                break;
+                நிறுத்து;
             }
-            ext->key = bcpKey;
-            ext->value = bcpValue;
+            ext->சாவி = bcp_சாவி;
+            ext->value = bcp_மதிப்பு;
 
-            if (!_addExtensionToList(&firstExt, ext, true)) {
-                if (strict) {
+            எனில் (!_addExtensionToList(&firstExt, ext, உண்மை)) {
+                எனில் (strict) {
                     status = U_ILLEGAL_ARGUMENT_ERROR;
-                    break;
+                    நிறுத்து;
                 }
             }
         }
 
         /* Special handling for POSIX variant - add the keywords for POSIX */
-        if (hadPosix) {
+        எனில் (hadPosix) {
             /* create ExtensionListEntry for POSIX */
             ext = extPool.create();
-            if (ext == nullptr) {
+            எனில் (ext == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                திரும்பு;
             }
-            ext->key = POSIX_KEY;
-            ext->value = POSIX_VALUE;
+            ext->சாவி = POSIX_சாவி;
+            ext->value = POSIX_மதிப்பு;
 
-            if (!_addExtensionToList(&firstExt, ext, true)) {
+            எனில் (!_addExtensionToList(&firstExt, ext, உண்மை)) {
                 // Silently ignore errors.
             }
         }
 
-        if (U_SUCCESS(status) && (firstExt != nullptr || firstAttr != nullptr)) {
-            bool startLDMLExtension = false;
-            for (ext = firstExt; ext; ext = ext->next) {
-                if (!startLDMLExtension && uprv_strlen(ext->key) > 1) {
+        எனில் (U_SUCCESS(status) && (firstExt != nullptr || firstAttr != nullptr)) {
+            தருக்க startLDMLExtension = பொய்;
+            க்கு (ext = firstExt; ext; ext = ext->next) {
+                எனில் (!startLDMLExtension && uprv_strlen(ext->சாவி) > 1) {
                     /* first LDML u singlton extension */
                    sink.Append("-u", 2);
-                   startLDMLExtension = true;
+                   startLDMLExtension = உண்மை;
                 }
 
                 /* write out the sorted BCP47 attributes, extensions and private use */
-                if (uprv_strcmp(ext->key, LOCALE_ATTRIBUTE_KEY) == 0) {
+                எனில் (uprv_strcmp(ext->சாவி, LOCALE_ATTRIBUTE_சாவி) == 0) {
                     /* write the value for the attributes */
-                    for (attr = firstAttr; attr; attr = attr->next) {
+                    க்கு (attr = firstAttr; attr; attr = attr->next) {
                         sink.Append("-", 1);
                         sink.Append(
                                 attr->attribute, static_cast<int32_t>(uprv_strlen(attr->attribute)));
                     }
-                } else {
+                } இல்லையெனில் {
                     sink.Append("-", 1);
-                    sink.Append(ext->key, static_cast<int32_t>(uprv_strlen(ext->key)));
-                    if (uprv_strcmp(ext->value, "true") != 0 &&
+                    sink.Append(ext->சாவி, static_cast<int32_t>(uprv_strlen(ext->சாவி)));
+                    எனில் (uprv_strcmp(ext->value, "true") != 0 &&
                         uprv_strcmp(ext->value, "yes") != 0) {
                       sink.Append("-", 1);
                       sink.Append(ext->value, static_cast<int32_t>(uprv_strlen(ext->value)));
@@ -1519,13 +1519,13 @@ _appendKeywordsToLanguageTag(const char* localeID, icu::ByteSink& sink, bool str
  * e.g. "u-ca-gregory-co-trad" -> {calendar = gregorian} {collation = traditional}
  * Note: char* buf is used for storing keywords
  */
-void
-_appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendTo, icu::MemoryPool<ExtensionListEntry>& extPool, icu::MemoryPool<icu::CharString>& kwdBuf, bool& posixVariant, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+வெறுமை
+_appendLDMLExtensionAsKeywords(மாறிலி எழுத்து* ldmlext, ExtensionListEntry** appendTo, icu::MemoryPool<ExtensionListEntry>& extPool, icu::MemoryPool<icu::CharString>& kwdBuf, தருக்க& posixVariant, UErrorCode& status) {
+    எனில் (U_FAILURE(status)) { திரும்பு; }
 
-    const char *pTag;   /* beginning of current subtag */
-    const char *pKwds;  /* beginning of key-type pairs */
-    bool variantExists = posixVariant;
+    மாறிலி எழுத்து *pTag;   /* beginning of current subtag */
+    மாறிலி எழுத்து *pKwds;  /* beginning of key-type pairs */
+    தருக்க variantExists = posixVariant;
 
     ExtensionListEntry *kwdFirst = nullptr;    /* first LDML keyword */
     ExtensionListEntry *kwd, *nextKwd;
@@ -1533,7 +1533,7 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
     int32_t len;
 
     /* Reset the posixVariant value */
-    posixVariant = false;
+    posixVariant = பொய்;
 
     pTag = ldmlext;
     pKwds = nullptr;
@@ -1546,28 +1546,28 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
         icu::MemoryPool<AttributeListEntry> attrPool;
 
         /* Iterate through u extension attributes */
-        while (*pTag) {
+        போது (*pTag) {
             /* locate next separator char */
-            for (len = 0; *(pTag + len) && *(pTag + len) != SEP; len++);
+            க்கு (len = 0; *(pTag + len) && *(pTag + len) != SEP; len++);
 
-            if (ultag_isUnicodeLocaleKey(pTag, len)) {
+            எனில் (ultag_is_Unicode_Locale_சாவி(pTag, len)) {
                 pKwds = pTag;
-                break;
+                நிறுத்து;
             }
 
             /* add this attribute to the list */
             attr = attrPool.create();
-            if (attr == nullptr) {
+            எனில் (attr == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                திரும்பு;
             }
 
-            if (icu::CharString* str = strPool.create(pTag, len, status)) {
-                if (U_FAILURE(status)) { return; }
+            எனில் (icu::CharString* str = strPool.create(pTag, len, status)) {
+                எனில் (U_FAILURE(status)) { திரும்பு; }
                 attr->attribute = str->data();
-            } else {
+            } இல்லையெனில் {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                திரும்பு;
             }
 
             // duplicate attribute is ignored, causes no error.
@@ -1575,84 +1575,84 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
 
             /* next tag */
             pTag += len;
-            if (*pTag) {
+            எனில் (*pTag) {
                 /* next to the separator */
                 pTag++;
             }
         }
 
-        if (attrFirst) {
+        எனில் (attrFirst) {
             /* emit attributes as an LDML keyword, e.g. attribute=attr1-attr2 */
 
             kwd = extPool.create();
-            if (kwd == nullptr) {
+            எனில் (kwd == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                திரும்பு;
             }
 
             icu::CharString* value = kwdBuf.create();
-            if (value == nullptr) {
+            எனில் (value == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                return;
+                திரும்பு;
             }
 
             /* attribute subtags sorted in alphabetical order as type */
             attr = attrFirst;
-            while (attr != nullptr) {
+            போது (attr != nullptr) {
                 nextAttr = attr->next;
-                if (attr != attrFirst) {
+                எனில் (attr != attrFirst) {
                     value->append('-', status);
                 }
                 value->append(attr->attribute, status);
                 attr = nextAttr;
             }
-            if (U_FAILURE(status)) {
-                return;
+            எனில் (U_FAILURE(status)) {
+                திரும்பு;
             }
 
-            kwd->key = LOCALE_ATTRIBUTE_KEY;
+            kwd->சாவி = LOCALE_ATTRIBUTE_சாவி;
             kwd->value = value->data();
 
-            if (!_addExtensionToList(&kwdFirst, kwd, false)) {
+            எனில் (!_addExtensionToList(&kwdFirst, kwd, பொய்)) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
-                return;
+                திரும்பு;
             }
         }
     }
 
-    if (pKwds) {
-        const char *pBcpKey = nullptr;     /* u extension key subtag */
-        const char *pBcpType = nullptr;    /* beginning of u extension type subtag(s) */
-        int32_t bcpKeyLen = 0;
+    எனில் (pKwds) {
+        மாறிலி எழுத்து *p_Bcp_சாவி = nullptr;     /* u extension key subtag */
+        மாறிலி எழுத்து *pBcpType = nullptr;    /* beginning of u extension type subtag(s) */
+        int32_t bcp_சாவி_Len = 0;
         int32_t bcpTypeLen = 0;
-        bool isDone = false;
+        தருக்க isDone = பொய்;
 
         pTag = pKwds;
         /* BCP47 representation of LDML key/type pairs */
-        while (!isDone) {
-            const char *pNextBcpKey = nullptr;
-            int32_t nextBcpKeyLen = 0;
-            bool emitKeyword = false;
+        போது (!isDone) {
+            மாறிலி எழுத்து *p_Next_Bcp_சாவி = nullptr;
+            int32_t next_Bcp_சாவி_Len = 0;
+            தருக்க emitKeyword = பொய்;
 
-            if (*pTag) {
+            எனில் (*pTag) {
                 /* locate next separator char */
-                for (len = 0; *(pTag + len) && *(pTag + len) != SEP; len++);
+                க்கு (len = 0; *(pTag + len) && *(pTag + len) != SEP; len++);
 
-                if (ultag_isUnicodeLocaleKey(pTag, len)) {
-                    if (pBcpKey) {
-                        emitKeyword = true;
-                        pNextBcpKey = pTag;
-                        nextBcpKeyLen = len;
-                    } else {
-                        pBcpKey = pTag;
-                        bcpKeyLen = len;
+                எனில் (ultag_is_Unicode_Locale_சாவி(pTag, len)) {
+                    எனில் (p_Bcp_சாவி) {
+                        emitKeyword = உண்மை;
+                        p_Next_Bcp_சாவி = pTag;
+                        next_Bcp_சாவி_Len = len;
+                    } இல்லையெனில் {
+                        p_Bcp_சாவி = pTag;
+                        bcp_சாவி_Len = len;
                     }
-                } else {
-                    U_ASSERT(pBcpKey != nullptr);
+                } இல்லையெனில் {
+                    U_ASSERT(p_Bcp_சாவி != nullptr);
                     /* within LDML type subtags */
-                    if (pBcpType) {
+                    எனில் (pBcpType) {
                         bcpTypeLen += (len + 1);
-                    } else {
+                    } இல்லையெனில் {
                         pBcpType = pTag;
                         bcpTypeLen = len;
                     }
@@ -1660,109 +1660,109 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
 
                 /* next tag */
                 pTag += len;
-                if (*pTag) {
+                எனில் (*pTag) {
                     /* next to the separator */
                     pTag++;
                 }
-            } else {
+            } இல்லையெனில் {
                 /* processing last one */
-                emitKeyword = true;
-                isDone = true;
+                emitKeyword = உண்மை;
+                isDone = உண்மை;
             }
 
-            if (emitKeyword) {
-                const char *pKey = nullptr;    /* LDML key */
-                const char *pType = nullptr;   /* LDML type */
+            எனில் (emitKeyword) {
+                மாறிலி எழுத்து *p_சாவி = nullptr;    /* LDML key */
+                மாறிலி எழுத்து *pType = nullptr;   /* LDML type */
 
-                U_ASSERT(pBcpKey != nullptr);
+                U_ASSERT(p_Bcp_சாவி != nullptr);
 
                 /* BCP key length is always 2 for now */
-                if (bcpKeyLen != 2) {
+                எனில் (bcp_சாவி_Len != 2) {
                     /* the BCP key is invalid */
                     status = U_ILLEGAL_ARGUMENT_ERROR;
-                    return;
+                    திரும்பு;
                 }
 
                 /* u extension key to LDML key */
-                std::optional<std::string_view> legacyKey = ulocimp_toLegacyKeyWithFallback(
-                    {pBcpKey, static_cast<std::string_view::size_type>(bcpKeyLen)});
-                if (!legacyKey.has_value()) {
+                std::optional<std::string_view> legacy_சாவி_2 = ulocimp_to_Legacy_சாவி_With_Fallback(
+                    {p_Bcp_சாவி, static_cast<std::string_view::size_type>(bcp_சாவி_Len)});
+                எனில் (!legacy_சாவி_2.has_value()) {
                     status = U_ILLEGAL_ARGUMENT_ERROR;
-                    return;
+                    திரும்பு;
                 }
-                if (legacyKey->data() == pBcpKey) {
+                எனில் (legacy_சாவி_2->data() == p_Bcp_சாவி) {
                     /*
                     The key returned by toLegacyKey points to the input buffer.
                     We normalize the result key to lower case.
                     */
-                    icu::CharString* key = kwdBuf.create(pBcpKey, bcpKeyLen, status);
-                    if (key == nullptr) {
+                    icu::CharString* சாவி = kwdBuf.create(p_Bcp_சாவி, bcp_சாவி_Len, status);
+                    எனில் (சாவி == nullptr) {
                         status = U_MEMORY_ALLOCATION_ERROR;
-                        return;
+                        திரும்பு;
                     }
-                    if (U_FAILURE(status)) {
-                        return;
+                    எனில் (U_FAILURE(status)) {
+                        திரும்பு;
                     }
-                    T_CString_toLowerCase(key->data());
-                    pKey = key->data();
-                } else {
-                    pKey = legacyKey->data();
+                    T_CString_toLowerCase(சாவி->data());
+                    p_சாவி = சாவி->data();
+                } இல்லையெனில் {
+                    p_சாவி = legacy_சாவி_2->data();
                 }
 
-                if (pBcpType) {
+                எனில் (pBcpType) {
                     /* BCP type to locale type */
                     std::optional<std::string_view> legacyType = ulocimp_toLegacyTypeWithFallback(
-                        pKey, {pBcpType, static_cast<std::string_view::size_type>(bcpTypeLen)});
-                    if (!legacyType.has_value()) {
+                        p_சாவி, {pBcpType, static_cast<std::string_view::size_type>(bcpTypeLen)});
+                    எனில் (!legacyType.has_value()) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        return;
+                        திரும்பு;
                     }
-                    if (legacyType->data() == pBcpType) {
+                    எனில் (legacyType->data() == pBcpType) {
                         /*
                         The type returned by toLegacyType points to the input buffer.
                         We normalize the result type to lower case.
                         */
                         icu::CharString* type = kwdBuf.create(pBcpType, bcpTypeLen, status);
-                        if (type == nullptr) {
+                        எனில் (type == nullptr) {
                             status = U_MEMORY_ALLOCATION_ERROR;
-                            return;
+                            திரும்பு;
                         }
-                        if (U_FAILURE(status)) {
-                            return;
+                        எனில் (U_FAILURE(status)) {
+                            திரும்பு;
                         }
                         T_CString_toLowerCase(type->data());
                         pType = type->data();
-                    } else {
+                    } இல்லையெனில் {
                         pType = legacyType->data();
                     }
-                } else {
+                } இல்லையெனில் {
                     /* typeless - default type value is "yes" */
                     pType = LOCALE_TYPE_YES;
                 }
 
                 /* Special handling for u-va-posix, since we want to treat this as a variant, 
                    not as a keyword */
-                if (!variantExists && !uprv_strcmp(pKey, POSIX_KEY) && !uprv_strcmp(pType, POSIX_VALUE) ) {
-                    posixVariant = true;
-                } else {
+                எனில் (!variantExists && !uprv_strcmp(p_சாவி, POSIX_சாவி) && !uprv_strcmp(pType, POSIX_மதிப்பு) ) {
+                    posixVariant = உண்மை;
+                } இல்லையெனில் {
                     /* create an ExtensionListEntry for this keyword */
                     kwd = extPool.create();
-                    if (kwd == nullptr) {
+                    எனில் (kwd == nullptr) {
                         status = U_MEMORY_ALLOCATION_ERROR;
-                        return;
+                        திரும்பு;
                     }
 
-                    kwd->key = pKey;
+                    kwd->சாவி = p_சாவி;
                     kwd->value = pType;
 
-                    if (!_addExtensionToList(&kwdFirst, kwd, false)) {
+                    எனில் (!_addExtensionToList(&kwdFirst, kwd, பொய்)) {
                         // duplicate keyword is allowed, Only the first
                         // is honored.
                     }
                 }
 
-                pBcpKey = pNextBcpKey;
-                bcpKeyLen = pNextBcpKey != nullptr ? nextBcpKeyLen : 0;
+                p_Bcp_சாவி = p_Next_Bcp_சாவி;
+                bcp_சாவி_Len = p_Next_Bcp_சாவி != nullptr ? next_Bcp_சாவி_Len : 0;
                 pBcpType = nullptr;
                 bcpTypeLen = 0;
             }
@@ -1770,68 +1770,68 @@ _appendLDMLExtensionAsKeywords(const char* ldmlext, ExtensionListEntry** appendT
     }
 
     kwd = kwdFirst;
-    while (kwd != nullptr) {
+    போது (kwd != nullptr) {
         nextKwd = kwd->next;
-        _addExtensionToList(appendTo, kwd, false);
+        _addExtensionToList(appendTo, kwd, பொய்);
         kwd = nextKwd;
     }
 }
 
-void
+வெறுமை
 _appendKeywords(ULanguageTag* langtag, icu::ByteSink& sink, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    எனில் (U_FAILURE(status)) { திரும்பு; }
 
     int32_t i, n;
     int32_t len;
     ExtensionListEntry *kwdFirst = nullptr;
     ExtensionListEntry *kwd;
-    const char *key, *type;
+    மாறிலி எழுத்து *சாவி, *type;
     icu::MemoryPool<ExtensionListEntry> extPool;
     icu::MemoryPool<icu::CharString> kwdBuf;
-    bool posixVariant = false;
+    தருக்க posixVariant = பொய்;
 
     n = ultag_getExtensionsSize(langtag);
 
     /* resolve locale keywords and reordering keys */
-    for (i = 0; i < n; i++) {
-        key = ultag_getExtensionKey(langtag, i);
-        type = ultag_getExtensionValue(langtag, i);
-        if (*key == LDMLEXT) {
+    க்கு (i = 0; i < n; i++) {
+        சாவி = ultag_get_Extension_சாவி(langtag, i);
+        type = ultag_get_Extension_மதிப்பு(langtag, i);
+        எனில் (*சாவி == LDMLEXT) {
             /* Determine if variants already exists */
-            if (ultag_getVariantsSize(langtag)) {
-                posixVariant = true;
+            எனில் (ultag_getVariantsSize(langtag)) {
+                posixVariant = உண்மை;
             }
 
             _appendLDMLExtensionAsKeywords(type, &kwdFirst, extPool, kwdBuf, posixVariant, status);
-            if (U_FAILURE(status)) {
-                break;
+            எனில் (U_FAILURE(status)) {
+                நிறுத்து;
             }
-        } else {
+        } இல்லையெனில் {
             kwd = extPool.create();
-            if (kwd == nullptr) {
+            எனில் (kwd == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-                break;
+                நிறுத்து;
             }
-            kwd->key = key;
+            kwd->சாவி = சாவி;
             kwd->value = type;
-            if (!_addExtensionToList(&kwdFirst, kwd, false)) {
+            எனில் (!_addExtensionToList(&kwdFirst, kwd, பொய்)) {
                 status = U_ILLEGAL_ARGUMENT_ERROR;
-                break;
+                நிறுத்து;
             }
         }
     }
 
-    if (U_SUCCESS(status)) {
+    எனில் (U_SUCCESS(status)) {
         type = ultag_getPrivateUse(langtag);
-        if (static_cast<int32_t>(uprv_strlen(type)) > 0) {
+        எனில் (static_cast<int32_t>(uprv_strlen(type)) > 0) {
             /* add private use as a keyword */
             kwd = extPool.create();
-            if (kwd == nullptr) {
+            எனில் (kwd == nullptr) {
                 status = U_MEMORY_ALLOCATION_ERROR;
-            } else {
-                kwd->key = PRIVATEUSE_KEY;
+            } இல்லையெனில் {
+                kwd->சாவி = PRIVATEUSE_சாவி;
                 kwd->value = type;
-                if (!_addExtensionToList(&kwdFirst, kwd, false)) {
+                எனில் (!_addExtensionToList(&kwdFirst, kwd, பொய்)) {
                     status = U_ILLEGAL_ARGUMENT_ERROR;
                 }
             }
@@ -1840,26 +1840,26 @@ _appendKeywords(ULanguageTag* langtag, icu::ByteSink& sink, UErrorCode& status) 
 
     /* If a POSIX variant was in the extensions, write it out before writing the keywords. */
 
-    if (U_SUCCESS(status) && posixVariant) {
+    எனில் (U_SUCCESS(status) && posixVariant) {
         len = static_cast<int32_t>(uprv_strlen(_POSIX));
         sink.Append(_POSIX, len);
     }
 
-    if (U_SUCCESS(status) && kwdFirst != nullptr) {
+    எனில் (U_SUCCESS(status) && kwdFirst != nullptr) {
         /* write out the sorted keywords */
-        bool firstValue = true;
+        தருக்க first_மதிப்பு = உண்மை;
         kwd = kwdFirst;
-        do {
-            if (firstValue) {
+        செய் {
+            எனில் (first_மதிப்பு) {
                 sink.Append("@", 1);
-                firstValue = false;
-            } else {
+                first_மதிப்பு = பொய்;
+            } இல்லையெனில் {
                 sink.Append(";", 1);
             }
 
-            /* key */
-            len = static_cast<int32_t>(uprv_strlen(kwd->key));
-            sink.Append(kwd->key, len);
+            /*சாவி*/
+            len = static_cast<int32_t>(uprv_strlen(kwd->சாவி));
+            sink.Append(kwd->சாவி, len);
             sink.Append("=", 1);
 
             /* type */
@@ -1867,70 +1867,70 @@ _appendKeywords(ULanguageTag* langtag, icu::ByteSink& sink, UErrorCode& status) 
             sink.Append(kwd->value, len);
 
             kwd = kwd->next;
-        } while (kwd);
+        } போது (kwd);
     }
 }
 
-void
-_appendPrivateuseToLanguageTag(std::string_view localeID, icu::ByteSink& sink, bool strict, bool /*hadPosix*/, UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+வெறுமை
+_appendPrivateuseToLanguageTag(std::string_view localeID, icu::ByteSink& sink, தருக்க strict, தருக்க /*hadPosix*/, UErrorCode& status) {
+    எனில் (U_FAILURE(status)) { திரும்பு; }
 
     UErrorCode tmpStatus = U_ZERO_ERROR;
     icu::CharString buf = ulocimp_getVariant(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
-        if (strict) {
+    எனில் (U_FAILURE(tmpStatus)) {
+        எனில் (strict) {
             status = U_ILLEGAL_ARGUMENT_ERROR;
         }
-        return;
+        திரும்பு;
     }
 
-    if (!buf.isEmpty()) {
-        char *p, *pPriv;
-        bool bNext = true;
-        bool firstValue = true;
-        bool writeValue;
+    எனில் (!buf.isEmpty()) {
+        எழுத்து *p, *pPriv;
+        தருக்க bNext = உண்மை;
+        தருக்க first_மதிப்பு = உண்மை;
+        தருக்க write_மதிப்பு;
 
         pPriv = nullptr;
         p = buf.data();
-        while (bNext) {
-            writeValue = false;
-            if (*p == SEP || *p == LOCALE_SEP || *p == 0) {
-                if (*p == 0) {
-                    bNext = false;
-                } else {
+        போது (bNext) {
+            write_மதிப்பு = பொய்;
+            எனில் (*p == SEP || *p == LOCALE_SEP || *p == 0) {
+                எனில் (*p == 0) {
+                    bNext = பொய்;
+                } இல்லையெனில் {
                     *p = 0; /* terminate */
                 }
-                if (pPriv != nullptr) {
+                எனில் (pPriv != nullptr) {
                     /* Private use in the canonical format is lowercase in BCP47 */
-                    for (int32_t i = 0; *(pPriv + i) != 0; i++) {
+                    க்கு (int32_t i = 0; *(pPriv + i) != 0; i++) {
                         *(pPriv + i) = uprv_tolower(*(pPriv + i));
                     }
 
                     /* validate */
-                    if (_isPrivateuseValueSubtag(pPriv, -1)) {
-                        if (firstValue) {
-                            if (!_isVariantSubtag(pPriv, -1)) {
-                                writeValue = true;
+                    எனில் (is_Privateuse_மதிப்பு_Subtag(pPriv, -1)) {
+                        எனில் (first_மதிப்பு) {
+                            எனில் (!_isVariantSubtag(pPriv, -1)) {
+                                write_மதிப்பு = உண்மை;
                             }
-                        } else {
-                            writeValue = true;
+                        } இல்லையெனில் {
+                            write_மதிப்பு = உண்மை;
                         }
-                    } else if (strict) {
+                    } இல்லையெனில் எனில் (strict) {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        break;
-                    } else {
-                        break;
+                        நிறுத்து;
+                    } இல்லையெனில் {
+                        நிறுத்து;
                     }
 
-                    if (writeValue) {
+                    எனில் (write_மதிப்பு) {
                         sink.Append("-", 1);
 
-                        if (firstValue) {
-                            sink.Append(PRIVATEUSE_KEY, UPRV_LENGTHOF(PRIVATEUSE_KEY) - 1);
+                        எனில் (first_மதிப்பு) {
+                            sink.Append(PRIVATEUSE_சாவி, UPRV_LENGTHOF(PRIVATEUSE_சாவி) - 1);
                             sink.Append("-", 1);
                             sink.Append(PRIVUSE_VARIANT_PREFIX, UPRV_LENGTHOF(PRIVUSE_VARIANT_PREFIX) - 1);
                             sink.Append("-", 1);
-                            firstValue = false;
+                            first_மதிப்பு = பொய்;
                         }
 
                         int32_t len = static_cast<int32_t>(uprv_strlen(pPriv));
@@ -1939,7 +1939,7 @@ _appendPrivateuseToLanguageTag(std::string_view localeID, icu::ByteSink& sink, b
                 }
                 /* reset private use starting position */
                 pPriv = nullptr;
-            } else if (pPriv == nullptr) {
+            } இல்லையெனில் எனில் (pPriv == nullptr) {
                 pPriv = p;
             }
             p++;
@@ -1971,59 +1971,59 @@ _appendPrivateuseToLanguageTag(std::string_view localeID, icu::ByteSink& sink, b
  * This work-around should be removed once the following versions of Visual Studio are no
  * longer supported: All versions of VS2015/VS2017, and versions of VS2019 below 16.4.
  */
-#if defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
+#எனில் defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
 #pragma optimize( "", off )
 #endif
 
 ULanguageTag*
-ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& status) {
-    if (U_FAILURE(status)) { return nullptr; }
+ultag_parse(மாறிலி எழுத்து* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& status) {
+    எனில் (U_FAILURE(status)) { திரும்பு nullptr; }
 
-    char *tagBuf;
+    எழுத்து *tagBuf;
     int16_t next;
-    char *pSubtag, *pNext, *pLastGoodPosition;
+    எழுத்து *pSubtag, *pNext, *pLastGoodPosition;
     int32_t subtagLen;
     int32_t extlangIdx;
     icu::LocalPointer<ExtensionListEntry> pExtension;
-    char *pExtValueSubtag, *pExtValueSubtagEnd;
+    எழுத்து *p_Ext_மதிப்பு_Subtag, *p_Ext_மதிப்பு_Subtag_End;
     int32_t i;
-    bool privateuseVar = false;
+    தருக்க privateuseVar = பொய்;
     int32_t legacyLen = 0;
 
-    if (parsedLen != nullptr) {
+    எனில் (parsedLen != nullptr) {
         *parsedLen = 0;
     }
 
-    if (tagLen < 0) {
+    எனில் (tagLen < 0) {
         tagLen = static_cast<int32_t>(uprv_strlen(tag));
     }
 
     /* copy the entire string */
-    tagBuf = static_cast<char*>(uprv_malloc(tagLen + 1));
-    if (tagBuf == nullptr) {
+    tagBuf = static_cast<எழுத்து*>(uprv_malloc(tagLen + 1));
+    எனில் (tagBuf == nullptr) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        திரும்பு nullptr;
     }
     
-    if (tagLen > 0) {
+    எனில் (tagLen > 0) {
         uprv_memcpy(tagBuf, tag, tagLen);
     }
     *(tagBuf + tagLen) = 0;
 
     /* create a ULanguageTag */
     icu::LocalULanguageTagPointer t(
-            static_cast<ULanguageTag*>(uprv_malloc(sizeof(ULanguageTag))));
-    if (t.isNull()) {
+            static_cast<ULanguageTag*>(uprv_malloc(அளவு(ULanguageTag))));
+    எனில் (t.isNull()) {
         uprv_free(tagBuf);
         status = U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        திரும்பு nullptr;
     }
     _initializeULanguageTag(t.getAlias());
     t->buf = tagBuf;
 
-    if (tagLen < MINLEN) {
+    எனில் (tagLen < MINLEN) {
         /* the input tag is too short - return empty ULanguageTag */
-        return t.orphan();
+        திரும்பு t.orphan();
     }
 
     size_t parsedLenDelta = 0;
@@ -2031,70 +2031,70 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
     // script and region such as art-DE-lojban or art-Latn-lojban won't be
     // matched.
     /* check if the tag is legacy */
-    for (i = 0; i < UPRV_LENGTHOF(LEGACY); i += 2) {
+    க்கு (i = 0; i < UPRV_LENGTHOF(LEGACY); i += 2) {
         int32_t checkLegacyLen = static_cast<int32_t>(uprv_strlen(LEGACY[i]));
-        if (tagLen < checkLegacyLen) {
-            continue;
+        எனில் (tagLen < checkLegacyLen) {
+            தொடர்;
         }
-        if (tagLen > checkLegacyLen && tagBuf[checkLegacyLen] != '-') {
+        எனில் (tagLen > checkLegacyLen && tagBuf[checkLegacyLen] != '-') {
             // make sure next char is '-'.
-            continue;
+            தொடர்;
         }
-        if (uprv_strnicmp(LEGACY[i], tagBuf, checkLegacyLen) == 0) {
+        எனில் (uprv_strnicmp(LEGACY[i], tagBuf, checkLegacyLen) == 0) {
             int32_t newTagLength;
 
             legacyLen = checkLegacyLen;  /* back up for output parsedLen */
             int32_t replacementLen = static_cast<int32_t>(uprv_strlen(LEGACY[i+1]));
             newTagLength = replacementLen + tagLen - checkLegacyLen;
             int32_t oldTagLength = tagLen;
-            if (tagLen < newTagLength) {
+            எனில் (tagLen < newTagLength) {
                 uprv_free(tagBuf);
                 // Change t->buf after the free and before return to avoid the second double free in
                 // the destructor of t when t is out of scope.
-                t->buf = tagBuf = static_cast<char*>(uprv_malloc(newTagLength + 1));
-                if (tagBuf == nullptr) {
+                t->buf = tagBuf = static_cast<எழுத்து*>(uprv_malloc(newTagLength + 1));
+                எனில் (tagBuf == nullptr) {
                     status = U_MEMORY_ALLOCATION_ERROR;
-                    return nullptr;
+                    திரும்பு nullptr;
                 }
                 tagLen = newTagLength;
             }
             parsedLenDelta = checkLegacyLen - replacementLen;
             uprv_strcpy(t->buf, LEGACY[i + 1]);
-            if (checkLegacyLen != tagLen) {
+            எனில் (checkLegacyLen != tagLen) {
                 uprv_memcpy(t->buf + replacementLen, tag + checkLegacyLen,
                             oldTagLength - checkLegacyLen);
                 // NUL-terminate after memcpy().
                 t->buf[replacementLen + oldTagLength - checkLegacyLen] = 0;
             }
-            break;
+            நிறுத்து;
         }
     }
 
-    if (legacyLen == 0) {
-        for (i = 0; i < UPRV_LENGTHOF(REDUNDANT); i += 2) {
-            const char* redundantTag = REDUNDANT[i];
+    எனில் (legacyLen == 0) {
+        க்கு (i = 0; i < UPRV_LENGTHOF(REDUNDANT); i += 2) {
+            மாறிலி எழுத்து* redundantTag = REDUNDANT[i];
             size_t redundantTagLen = uprv_strlen(redundantTag);
             // The preferred tag for a redundant tag is always shorter than redundant
             // tag. A redundant tag may or may not be followed by other subtags.
             // (i.e. "zh-yue" or "zh-yue-u-co-pinyin").
-            if (uprv_strnicmp(redundantTag, tagBuf, static_cast<uint32_t>(redundantTagLen)) == 0) {
-                const char* redundantTagEnd = tagBuf + redundantTagLen;
-                if (*redundantTagEnd  == '\0' || *redundantTagEnd == SEP) {
-                    const char* preferredTag = REDUNDANT[i + 1];
+            எனில் (uprv_strnicmp(redundantTag, tagBuf, static_cast<uint32_t>(redundantTagLen)) == 0) {
+                மாறிலி எழுத்து* redundantTagEnd = tagBuf + redundantTagLen;
+                எனில் (*redundantTagEnd  == '\0' || *redundantTagEnd == SEP) {
+                    மாறிலி எழுத்து* preferredTag = REDUNDANT[i + 1];
                     size_t preferredTagLen = uprv_strlen(preferredTag);
                     uprv_memcpy(t->buf, preferredTag, preferredTagLen);
-                    if (*redundantTagEnd == SEP) {
+                    எனில் (*redundantTagEnd == SEP) {
                         uprv_memmove(tagBuf + preferredTagLen,
                                      redundantTagEnd,
                                      tagLen - redundantTagLen + 1);
-                    } else {
+                    } இல்லையெனில் {
                         tagBuf[preferredTagLen] = '\0';
                     }
                     // parsedLen should be the length of the input
                     // before redundantTag is replaced by preferredTag.
                     // Save the delta to add it back later.
                     parsedLenDelta = redundantTagLen - preferredTagLen;
-                    break;
+                    நிறுத்து;
                 }
             }
         }
@@ -2112,67 +2112,67 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
     next = LANG | PRIV;
     pNext = pLastGoodPosition = tagBuf;
     extlangIdx = 0;
-    pExtValueSubtag = nullptr;
-    pExtValueSubtagEnd = nullptr;
+    p_Ext_மதிப்பு_Subtag = nullptr;
+    p_Ext_மதிப்பு_Subtag_End = nullptr;
 
-    while (pNext) {
-        char *pSep;
+    போது (pNext) {
+        எழுத்து *pSep;
 
         pSubtag = pNext;
 
         /* locate next separator char */
         pSep = pSubtag;
-        while (*pSep) {
-            if (*pSep == SEP) {
-                break;
+        போது (*pSep) {
+            எனில் (*pSep == SEP) {
+                நிறுத்து;
             }
             pSep++;
         }
-        if (*pSep == 0) {
+        எனில் (*pSep == 0) {
             /* last subtag */
             pNext = nullptr;
-        } else {
+        } இல்லையெனில் {
             pNext = pSep + 1;
         }
         subtagLen = static_cast<int32_t>(pSep - pSubtag);
 
-        if (next & LANG) {
-            if (ultag_isLanguageSubtag(pSubtag, subtagLen)) {
+        எனில் (next & LANG) {
+            எனில் (ultag_isLanguageSubtag(pSubtag, subtagLen)) {
                 *pSep = 0;  /* terminate */
                 // TODO: move deprecated language code handling here.
                 t->language = T_CString_toLowerCase(pSubtag);
 
                 pLastGoodPosition = pSep;
                 next = SCRT | REGN | VART | EXTS | PRIV;
-                if (subtagLen <= 3)
+                எனில் (subtagLen <= 3)
                   next |= EXTL;
-                continue;
+                தொடர்;
             }
         }
-        if (next & EXTL) {
-            if (_isExtlangSubtag(pSubtag, subtagLen)) {
+        எனில் (next & EXTL) {
+            எனில் (_isExtlangSubtag(pSubtag, subtagLen)) {
                 *pSep = 0;
                 t->extlang[extlangIdx++] = T_CString_toLowerCase(pSubtag);
 
                 pLastGoodPosition = pSep;
-                if (extlangIdx < 3) {
+                எனில் (extlangIdx < 3) {
                     next = EXTL | SCRT | REGN | VART | EXTS | PRIV;
-                } else {
+                } இல்லையெனில் {
                     next = SCRT | REGN | VART | EXTS | PRIV;
                 }
-                continue;
+                தொடர்;
             }
         }
-        if (next & SCRT) {
-            if (ultag_isScriptSubtag(pSubtag, subtagLen)) {
-                char *p = pSubtag;
+        எனில் (next & SCRT) {
+            எனில் (ultag_isScriptSubtag(pSubtag, subtagLen)) {
+                எழுத்து *p = pSubtag;
 
                 *pSep = 0;
 
                 /* to title case */
                 *p = uprv_toupper(*p);
                 p++;
-                for (; *p; p++) {
+                க்கு (; *p; p++) {
                     *p = uprv_tolower(*p);
                 }
 
@@ -2180,232 +2180,232 @@ ultag_parse(const char* tag, int32_t tagLen, int32_t* parsedLen, UErrorCode& sta
 
                 pLastGoodPosition = pSep;
                 next = REGN | VART | EXTS | PRIV;
-                continue;
+                தொடர்;
             }
         }
-        if (next & REGN) {
-            if (ultag_isRegionSubtag(pSubtag, subtagLen)) {
+        எனில் (next & REGN) {
+            எனில் (ultag_isRegionSubtag(pSubtag, subtagLen)) {
                 *pSep = 0;
                 // TODO: move deprecated region code handling here.
                 t->region = T_CString_toUpperCase(pSubtag);
 
                 pLastGoodPosition = pSep;
                 next = VART | EXTS | PRIV;
-                continue;
+                தொடர்;
             }
         }
-        if (next & VART) {
-            if (_isVariantSubtag(pSubtag, subtagLen) ||
+        எனில் (next & VART) {
+            எனில் (_isVariantSubtag(pSubtag, subtagLen) ||
                (privateuseVar && _isPrivateuseVariantSubtag(pSubtag, subtagLen))) {
-                icu::LocalPointer<VariantListEntry> var(new VariantListEntry, status);
-                if (U_FAILURE(status)) {
-                    return nullptr;
+                icu::LocalPointer<VariantListEntry> var(புதிய VariantListEntry, status);
+                எனில் (U_FAILURE(status)) {
+                    திரும்பு nullptr;
                 }
                 *pSep = 0;
                 var->variant = T_CString_toUpperCase(pSubtag);
-                if (!_addVariantToList(&(t->variants), std::move(var))) {
+                எனில் (!_addVariantToList(&(t->variants), std::move(var))) {
                     /* duplicated variant entry */
-                    break;
+                    நிறுத்து;
                 }
                 pLastGoodPosition = pSep;
                 next = VART | EXTS | PRIV;
-                continue;
+                தொடர்;
             }
         }
-        if (next & EXTS) {
-            if (_isExtensionSingleton(pSubtag, subtagLen)) {
-                if (pExtension.isValid()) {
-                    if (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
+        எனில் (next & EXTS) {
+            எனில் (_isExtensionSingleton(pSubtag, subtagLen)) {
+                எனில் (pExtension.isValid()) {
+                    எனில் (p_Ext_மதிப்பு_Subtag == nullptr || p_Ext_மதிப்பு_Subtag_End == nullptr) {
                         /* the previous extension is incomplete */
                         delete pExtension.orphan();
-                        break;
+                        நிறுத்து;
                     }
 
                     /* terminate the previous extension value */
-                    *pExtValueSubtagEnd = 0;
-                    pExtension->value = T_CString_toLowerCase(pExtValueSubtag);
+                    *p_Ext_மதிப்பு_Subtag_End = 0;
+                    pExtension->value = T_CString_toLowerCase(p_Ext_மதிப்பு_Subtag);
 
                     /* insert the extension to the list */
-                    if (_addExtensionToList(&(t->extensions), pExtension.getAlias(), false)) {
+                    எனில் (_addExtensionToList(&(t->extensions), pExtension.getAlias(), பொய்)) {
                         pExtension.orphan();
-                        pLastGoodPosition = pExtValueSubtagEnd;
-                    } else {
+                        pLastGoodPosition = p_Ext_மதிப்பு_Subtag_End;
+                    } இல்லையெனில் {
                         /* stop parsing here */
                         delete pExtension.orphan();
-                        break;
+                        நிறுத்து;
                     }
                 }
 
                 /* create a new extension */
-                pExtension.adoptInsteadAndCheckErrorCode(new ExtensionListEntry, status);
-                if (U_FAILURE(status)) {
-                    return nullptr;
+                pExtension.adoptInsteadAndCheckErrorCode(புதிய ExtensionListEntry, status);
+                எனில் (U_FAILURE(status)) {
+                    திரும்பு nullptr;
                 }
                 *pSep = 0;
-                pExtension->key = T_CString_toLowerCase(pSubtag);
+                pExtension->சாவி = T_CString_toLowerCase(pSubtag);
                 pExtension->value = nullptr;   /* will be set later */
 
                 /*
                  * reset the start and the end location of extension value
                  * subtags for this extension
                  */
-                pExtValueSubtag = nullptr;
-                pExtValueSubtagEnd = nullptr;
+                p_Ext_மதிப்பு_Subtag = nullptr;
+                p_Ext_மதிப்பு_Subtag_End = nullptr;
 
                 next = EXTV;
-                continue;
+                தொடர்;
             }
         }
-        if (next & EXTV) {
-            if (_isExtensionSubtag(pSubtag, subtagLen)) {
-                if (pExtValueSubtag == nullptr) {
+        எனில் (next & EXTV) {
+            எனில் (_isExtensionSubtag(pSubtag, subtagLen)) {
+                எனில் (p_Ext_மதிப்பு_Subtag == nullptr) {
                     /* if the start position of this extension's value is not yet,
                         this one is the first value subtag */
-                    pExtValueSubtag = pSubtag;
+                    p_Ext_மதிப்பு_Subtag = pSubtag;
                 }
 
                 /* Mark the end of this subtag */
-                pExtValueSubtagEnd = pSep;
+                p_Ext_மதிப்பு_Subtag_End = pSep;
                 next = EXTS | EXTV | PRIV;
 
-                continue;
+                தொடர்;
             }
         }
-        if (next & PRIV) {
-            if (uprv_tolower(*pSubtag) == PRIVATEUSE && subtagLen == 1) {
-                char *pPrivuseVal;
+        எனில் (next & PRIV) {
+            எனில் (uprv_tolower(*pSubtag) == PRIVATEUSE && subtagLen == 1) {
+                எழுத்து *pPrivuseVal;
 
-                if (pExtension.isValid()) {
+                எனில் (pExtension.isValid()) {
                     /* Process the last extension */
-                    if (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
+                    எனில் (p_Ext_மதிப்பு_Subtag == nullptr || p_Ext_மதிப்பு_Subtag_End == nullptr) {
                         /* the previous extension is incomplete */
                         delete pExtension.orphan();
-                        break;
-                    } else {
+                        நிறுத்து;
+                    } இல்லையெனில் {
                         /* terminate the previous extension value */
-                        *pExtValueSubtagEnd = 0;
-                        pExtension->value = T_CString_toLowerCase(pExtValueSubtag);
+                        *p_Ext_மதிப்பு_Subtag_End = 0;
+                        pExtension->value = T_CString_toLowerCase(p_Ext_மதிப்பு_Subtag);
 
                         /* insert the extension to the list */
-                        if (_addExtensionToList(&(t->extensions), pExtension.getAlias(), false)) {
+                        எனில் (_addExtensionToList(&(t->extensions), pExtension.getAlias(), பொய்)) {
                             pExtension.orphan();
-                            pLastGoodPosition = pExtValueSubtagEnd;
-                        } else {
+                            pLastGoodPosition = p_Ext_மதிப்பு_Subtag_End;
+                        } இல்லையெனில் {
                         /* stop parsing here */
                             delete pExtension.orphan();
-                            break;
+                            நிறுத்து;
                         }
                     }
                 }
 
                 /* The rest of part will be private use value subtags */
-                if (pNext == nullptr) {
+                எனில் (pNext == nullptr) {
                     /* empty private use subtag */
-                    break;
+                    நிறுத்து;
                 }
                 /* back up the private use value start position */
                 pPrivuseVal = pNext;
 
                 /* validate private use value subtags */
-                while (pNext) {
+                போது (pNext) {
                     pSubtag = pNext;
                     pSep = pSubtag;
-                    while (*pSep) {
-                        if (*pSep == SEP) {
-                            break;
+                    போது (*pSep) {
+                        எனில் (*pSep == SEP) {
+                            நிறுத்து;
                         }
                         pSep++;
                     }
-                    if (*pSep == 0) {
+                    எனில் (*pSep == 0) {
                         /* last subtag */
                         pNext = nullptr;
-                    } else {
+                    } இல்லையெனில் {
                         pNext = pSep + 1;
                     }
                     subtagLen = static_cast<int32_t>(pSep - pSubtag);
 
-                    if (uprv_strncmp(pSubtag, PRIVUSE_VARIANT_PREFIX, uprv_strlen(PRIVUSE_VARIANT_PREFIX)) == 0) {
+                    எனில் (uprv_strncmp(pSubtag, PRIVUSE_VARIANT_PREFIX, uprv_strlen(PRIVUSE_VARIANT_PREFIX)) == 0) {
                         *pSep = 0;
                         next = VART;
-                        privateuseVar = true;
-                        break;
-                    } else if (_isPrivateuseValueSubtag(pSubtag, subtagLen)) {
+                        privateuseVar = உண்மை;
+                        நிறுத்து;
+                    } இல்லையெனில் எனில் (is_Privateuse_மதிப்பு_Subtag(pSubtag, subtagLen)) {
                         pLastGoodPosition = pSep;
-                    } else {
-                        break;
+                    } இல்லையெனில் {
+                        நிறுத்து;
                     }
                 }
 
-                if (next == VART) {
-                    continue;
+                எனில் (next == VART) {
+                    தொடர்;
                 }
 
-                if (pLastGoodPosition - pPrivuseVal > 0) {
+                எனில் (pLastGoodPosition - pPrivuseVal > 0) {
                     *pLastGoodPosition = 0;
                     t->privateuse = T_CString_toLowerCase(pPrivuseVal);
                 }
                 /* No more subtags, exiting the parse loop */
-                break;
+                நிறுத்து;
             }
-            break;
+            நிறுத்து;
         }
 
         /* If we fell through here, it means this subtag is illegal - quit parsing */
-        break;
+        நிறுத்து;
     }
 
-    if (pExtension.isValid()) {
+    எனில் (pExtension.isValid()) {
         /* Process the last extension */
-        if (pExtValueSubtag == nullptr || pExtValueSubtagEnd == nullptr) {
+        எனில் (p_Ext_மதிப்பு_Subtag == nullptr || p_Ext_மதிப்பு_Subtag_End == nullptr) {
             /* the previous extension is incomplete */
             delete pExtension.orphan();
-        } else {
+        } இல்லையெனில் {
             /* terminate the previous extension value */
-            *pExtValueSubtagEnd = 0;
-            pExtension->value = T_CString_toLowerCase(pExtValueSubtag);
+            *p_Ext_மதிப்பு_Subtag_End = 0;
+            pExtension->value = T_CString_toLowerCase(p_Ext_மதிப்பு_Subtag);
             /* insert the extension to the list */
-            if (_addExtensionToList(&(t->extensions), pExtension.getAlias(), false)) {
+            எனில் (_addExtensionToList(&(t->extensions), pExtension.getAlias(), பொய்)) {
                 pExtension.orphan();
-                pLastGoodPosition = pExtValueSubtagEnd;
-            } else {
+                pLastGoodPosition = p_Ext_மதிப்பு_Subtag_End;
+            } இல்லையெனில் {
                 delete pExtension.orphan();
             }
         }
     }
 
-    if (parsedLen != nullptr) {
+    எனில் (parsedLen != nullptr) {
         *parsedLen = static_cast<int32_t>(pLastGoodPosition - t->buf + parsedLenDelta);
     }
 
-    return t.orphan();
+    திரும்பு t.orphan();
 }
 
 // Ticket #12705 - Turn optimization back on.
-#if defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
+#எனில் defined(_MSC_VER) && (_MSC_VER >= 1900) && (_MSC_VER < 1924)
 #pragma optimize( "", on )
 #endif
 
-void
+வெறுமை
 ultag_close(ULanguageTag* langtag) {
 
-    if (langtag == nullptr) {
-        return;
+    எனில் (langtag == nullptr) {
+        திரும்பு;
     }
 
     uprv_free(langtag->buf);
 
-    if (langtag->variants) {
+    எனில் (langtag->variants) {
         VariantListEntry *curVar = langtag->variants;
-        while (curVar) {
+        போது (curVar) {
             VariantListEntry *nextVar = curVar->next;
             delete curVar;
             curVar = nextVar;
         }
     }
 
-    if (langtag->extensions) {
+    எனில் (langtag->extensions) {
         ExtensionListEntry *curExt = langtag->extensions;
-        while (curExt) {
+        போது (curExt) {
             ExtensionListEntry *nextExt = curExt->next;
             delete curExt;
             curExt = nextExt;
@@ -2415,139 +2415,139 @@ ultag_close(ULanguageTag* langtag) {
     uprv_free(langtag);
 }
 
-const char*
-ultag_getLanguage(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->language;
+மாறிலி எழுத்து*
+ultag_getLanguage(மாறிலி ULanguageTag* langtag U_LIFETIME_BOUND) {
+    திரும்பு langtag->language;
 }
 
-#if 0
-const char*
-ultag_getJDKLanguage(const ULanguageTag* langtag) {
+#எனில் 0
+மாறிலி எழுத்து*
+ultag_getJDKLanguage(மாறிலி ULanguageTag* langtag) {
     int32_t i;
-    for (i = 0; DEPRECATEDLANGS[i] != nullptr; i += 2) {
-        if (uprv_compareInvCharsAsAscii(DEPRECATEDLANGS[i], langtag->language) == 0) {
-            return DEPRECATEDLANGS[i + 1];
+    க்கு (i = 0; DEPRECATEDLANGS[i] != nullptr; i += 2) {
+        எனில் (uprv_compareInvCharsAsAscii(DEPRECATEDLANGS[i], langtag->language) == 0) {
+            திரும்பு DEPRECATEDLANGS[i + 1];
         }
     }
-    return langtag->language;
+    திரும்பு langtag->language;
 }
 #endif
 
-const char*
-ultag_getExtlang(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
-    if (idx >= 0 && idx < MAXEXTLANG) {
-        return langtag->extlang[idx];
+மாறிலி எழுத்து*
+ultag_getExtlang(மாறிலி ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
+    எனில் (idx >= 0 && idx < MAXEXTLANG) {
+        திரும்பு langtag->extlang[idx];
     }
-    return nullptr;
+    திரும்பு nullptr;
 }
 
 int32_t
-ultag_getExtlangSize(const ULanguageTag* langtag) {
+ultag_getExtlangSize(மாறிலி ULanguageTag* langtag) {
     int32_t size = 0;
     int32_t i;
-    for (i = 0; i < MAXEXTLANG; i++) {
-        if (langtag->extlang[i]) {
+    க்கு (i = 0; i < MAXEXTLANG; i++) {
+        எனில் (langtag->extlang[i]) {
             size++;
         }
     }
-    return size;
+    திரும்பு size;
 }
 
-const char*
-ultag_getScript(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->script;
+மாறிலி எழுத்து*
+ultag_getScript(மாறிலி ULanguageTag* langtag U_LIFETIME_BOUND) {
+    திரும்பு langtag->script;
 }
 
-const char*
-ultag_getRegion(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->region;
+மாறிலி எழுத்து*
+ultag_getRegion(மாறிலி ULanguageTag* langtag U_LIFETIME_BOUND) {
+    திரும்பு langtag->region;
 }
 
-const char*
-ultag_getVariant(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
-    const char *var = nullptr;
+மாறிலி எழுத்து*
+ultag_getVariant(மாறிலி ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
+    மாறிலி எழுத்து *var = nullptr;
     VariantListEntry *cur = langtag->variants;
     int32_t i = 0;
-    while (cur) {
-        if (i == idx) {
+    போது (cur) {
+        எனில் (i == idx) {
             var = cur->variant;
-            break;
+            நிறுத்து;
         }
         cur = cur->next;
         i++;
     }
-    return var;
+    திரும்பு var;
 }
 
 int32_t
-ultag_getVariantsSize(const ULanguageTag* langtag) {
+ultag_getVariantsSize(மாறிலி ULanguageTag* langtag) {
     int32_t size = 0;
     VariantListEntry *cur = langtag->variants;
-    while (true) {
-        if (cur == nullptr) {
-            break;
+    போது (உண்மை) {
+        எனில் (cur == nullptr) {
+            நிறுத்து;
         }
         size++;
         cur = cur->next;
     }
-    return size;
+    திரும்பு size;
 }
 
-const char*
-ultag_getExtensionKey(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
-    const char *key = nullptr;
+மாறிலி எழுத்து*
+ultag_get_Extension_சாவி(மாறிலி ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
+    மாறிலி எழுத்து *சாவி = nullptr;
     ExtensionListEntry *cur = langtag->extensions;
     int32_t i = 0;
-    while (cur) {
-        if (i == idx) {
-            key = cur->key;
-            break;
+    போது (cur) {
+        எனில் (i == idx) {
+            சாவி = cur->சாவி;
+            நிறுத்து;
         }
         cur = cur->next;
         i++;
     }
-    return key;
+    திரும்பு சாவி;
 }
 
-const char*
-ultag_getExtensionValue(const ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
-    const char *val = nullptr;
+மாறிலி எழுத்து*
+ultag_get_Extension_மதிப்பு(மாறிலி ULanguageTag* langtag U_LIFETIME_BOUND, int32_t idx) {
+    மாறிலி எழுத்து *val = nullptr;
     ExtensionListEntry *cur = langtag->extensions;
     int32_t i = 0;
-    while (cur) {
-        if (i == idx) {
+    போது (cur) {
+        எனில் (i == idx) {
             val = cur->value;
-            break;
+            நிறுத்து;
         }
         cur = cur->next;
         i++;
     }
-    return val;
+    திரும்பு val;
 }
 
 int32_t
-ultag_getExtensionsSize(const ULanguageTag* langtag) {
+ultag_getExtensionsSize(மாறிலி ULanguageTag* langtag) {
     int32_t size = 0;
     ExtensionListEntry *cur = langtag->extensions;
-    while (true) {
-        if (cur == nullptr) {
-            break;
+    போது (உண்மை) {
+        எனில் (cur == nullptr) {
+            நிறுத்து;
         }
         size++;
         cur = cur->next;
     }
-    return size;
+    திரும்பு size;
 }
 
-const char*
-ultag_getPrivateUse(const ULanguageTag* langtag U_LIFETIME_BOUND) {
-    return langtag->privateuse;
+மாறிலி எழுத்து*
+ultag_getPrivateUse(மாறிலி ULanguageTag* langtag U_LIFETIME_BOUND) {
+    திரும்பு langtag->privateuse;
 }
 
-#if 0
-const char*
-ultag_getLegacy(const ULanguageTag* langtag) {
-    return langtag->legacy;
+#எனில் 0
+மாறிலி எழுத்து*
+ultag_getLegacy(மாறிலி ULanguageTag* langtag) {
+    திரும்பு langtag->legacy;
 }
 #endif
 
@@ -2561,12 +2561,12 @@ ultag_getLegacy(const ULanguageTag* langtag) {
 * -------------------------------------------------
 */
 U_CAPI int32_t U_EXPORT2
-uloc_toLanguageTag(const char* localeID,
-                   char* langtag,
+uloc_toLanguageTag(மாறிலி எழுத்து* localeID,
+                   எழுத்து* langtag,
                    int32_t langtagCapacity,
                    UBool strict,
                    UErrorCode* status) {
-    return icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
+    திரும்பு icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
         langtag, langtagCapacity,
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_toLanguageTag(localeID, sink, strict, status);
@@ -2575,72 +2575,72 @@ uloc_toLanguageTag(const char* localeID,
 }
 
 U_EXPORT icu::CharString
-ulocimp_toLanguageTag(const char* localeID,
-                      bool strict,
+ulocimp_toLanguageTag(மாறிலி எழுத்து* localeID,
+                      தருக்க strict,
                       UErrorCode& status) {
-    return icu::ByteSinkUtil::viaByteSinkToCharString(
+    திரும்பு icu::ByteSinkUtil::viaByteSinkToCharString(
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_toLanguageTag(localeID, sink, strict, status);
         },
         status);
 }
 
-U_EXPORT void
-ulocimp_toLanguageTag(const char* localeID,
+U_EXPORT வெறுமை
+ulocimp_toLanguageTag(மாறிலி எழுத்து* localeID,
                       icu::ByteSink& sink,
-                      bool strict,
+                      தருக்க strict,
                       UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    எனில் (U_FAILURE(status)) { திரும்பு; }
 
     UErrorCode tmpStatus = U_ZERO_ERROR;
-    bool hadPosix = false;
-    const char* pKeywordStart;
+    தருக்க hadPosix = பொய்;
+    மாறிலி எழுத்து* pKeywordStart;
 
-    if (localeID == nullptr) {
+    எனில் (localeID == nullptr) {
         localeID = uloc_getDefault();
     }
     /* Note: uloc_canonicalize returns "en_US_POSIX" for input locale ID "".  See #6835 */
     icu::CharString canonical = ulocimp_canonicalize(localeID, tmpStatus);
-    if (U_FAILURE(tmpStatus)) {
+    எனில் (U_FAILURE(tmpStatus)) {
         status = tmpStatus;
-        return;
+        திரும்பு;
     }
 
     /* For handling special case - private use only tag */
     pKeywordStart = locale_getKeywordsStart(canonical.toStringPiece());
-    if (pKeywordStart == canonical.data()) {
-        int kwdCnt = 0;
-        bool done = false;
+    எனில் (pKeywordStart == canonical.data()) {
+        முழு kwdCnt = 0;
+        தருக்க done = பொய்;
 
         icu::LocalUEnumerationPointer kwdEnum(uloc_openKeywords(canonical.data(), &tmpStatus));
-        if (U_SUCCESS(tmpStatus)) {
-            kwdCnt = uenum_count(kwdEnum.getAlias(), &tmpStatus);
-            if (kwdCnt == 1) {
-                const char *key;
+        எனில் (U_SUCCESS(tmpStatus)) {
+            kwdCnt = uenum_மொத்தம்(kwdEnum.getAlias(), &tmpStatus);
+            எனில் (kwdCnt == 1) {
+                மாறிலி எழுத்து *சாவி;
                 int32_t len = 0;
 
-                key = uenum_next(kwdEnum.getAlias(), &len, &tmpStatus);
-                if (len == 1 && *key == PRIVATEUSE) {
-                    icu::CharString buf = ulocimp_getKeywordValue(localeID, key, tmpStatus);
-                    if (U_SUCCESS(tmpStatus)) {
-                        if (ultag_isPrivateuseValueSubtags(buf.data(), buf.length())) {
+                சாவி = uenum_next(kwdEnum.getAlias(), &len, &tmpStatus);
+                எனில் (len == 1 && *சாவி == PRIVATEUSE) {
+                    icu::CharString buf = ulocimp_get_Keyword_மதிப்பு(localeID, சாவி, tmpStatus);
+                    எனில் (U_SUCCESS(tmpStatus)) {
+                        எனில் (ultag_is_Privateuse_மதிப்பு_Subtags(buf.data(), buf.length())) {
                             /* return private use only tag */
                             sink.Append("und-x-", 6);
                             sink.Append(buf.data(), buf.length());
-                            done = true;
-                        } else if (strict) {
+                            done = உண்மை;
+                        } இல்லையெனில் எனில் (strict) {
                             status = U_ILLEGAL_ARGUMENT_ERROR;
-                            done = true;
+                            done = உண்மை;
                         }
                         /* if not strict mode, then "und" will be returned */
-                    } else {
+                    } இல்லையெனில் {
                         status = U_ILLEGAL_ARGUMENT_ERROR;
-                        done = true;
+                        done = உண்மை;
                     }
                 }
             }
-            if (done) {
-                return;
+            எனில் (done) {
+                திரும்பு;
             }
         }
     }
@@ -2655,12 +2655,12 @@ ulocimp_toLanguageTag(const char* localeID,
 
 
 U_CAPI int32_t U_EXPORT2
-uloc_forLanguageTag(const char* langtag,
-                    char* localeID,
+uloc_forLanguageTag(மாறிலி எழுத்து* langtag,
+                    எழுத்து* localeID,
                     int32_t localeIDCapacity,
                     int32_t* parsedLength,
                     UErrorCode* status) {
-    return icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
+    திரும்பு icu::ByteSinkUtil::viaByteSinkToTerminatedChars(
         localeID, localeIDCapacity,
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_forLanguageTag(langtag, -1, sink, parsedLength, status);
@@ -2669,55 +2669,55 @@ uloc_forLanguageTag(const char* langtag,
 }
 
 U_EXPORT icu::CharString
-ulocimp_forLanguageTag(const char* langtag,
+ulocimp_forLanguageTag(மாறிலி எழுத்து* langtag,
                        int32_t tagLen,
                        int32_t* parsedLength,
                        UErrorCode& status) {
-    return icu::ByteSinkUtil::viaByteSinkToCharString(
+    திரும்பு icu::ByteSinkUtil::viaByteSinkToCharString(
         [&](icu::ByteSink& sink, UErrorCode& status) {
             ulocimp_forLanguageTag(langtag, tagLen, sink, parsedLength, status);
         },
         status);
 }
 
-U_EXPORT void
-ulocimp_forLanguageTag(const char* langtag,
+U_EXPORT வெறுமை
+ulocimp_forLanguageTag(மாறிலி எழுத்து* langtag,
                        int32_t tagLen,
                        icu::ByteSink& sink,
                        int32_t* parsedLength,
                        UErrorCode& status) {
-    if (U_FAILURE(status)) { return; }
+    எனில் (U_FAILURE(status)) { திரும்பு; }
 
-    bool isEmpty = true;
-    const char *subtag, *p;
+    தருக்க isEmpty = உண்மை;
+    மாறிலி எழுத்து *subtag, *p;
     int32_t len;
     int32_t i, n;
-    bool noRegion = true;
+    தருக்க noRegion = உண்மை;
 
     icu::LocalULanguageTagPointer lt(ultag_parse(langtag, tagLen, parsedLength, status));
-    if (U_FAILURE(status)) {
-        return;
+    எனில் (U_FAILURE(status)) {
+        திரும்பு;
     }
 
     /* language */
     subtag = ultag_getExtlangSize(lt.getAlias()) > 0 ? ultag_getExtlang(lt.getAlias(), 0) : ultag_getLanguage(lt.getAlias());
-    if (uprv_compareInvCharsAsAscii(subtag, LANG_UND) != 0) {
+    எனில் (uprv_compareInvCharsAsAscii(subtag, LANG_UND) != 0) {
         len = static_cast<int32_t>(uprv_strlen(subtag));
-        if (len > 0) {
+        எனில் (len > 0) {
             sink.Append(subtag, len);
-            isEmpty = false;
+            isEmpty = பொய்;
         }
     }
 
     /* script */
     subtag = ultag_getScript(lt.getAlias());
     len = static_cast<int32_t>(uprv_strlen(subtag));
-    if (len > 0) {
+    எனில் (len > 0) {
         sink.Append("_", 1);
-        isEmpty = false;
+        isEmpty = பொய்;
 
         /* write out the script in title case */
-        char c = uprv_toupper(*subtag);
+        எழுத்து c = uprv_toupper(*subtag);
         sink.Append(&c, 1);
         sink.Append(subtag + 1, len - 1);
     }
@@ -2725,37 +2725,37 @@ ulocimp_forLanguageTag(const char* langtag,
     /* region */
     subtag = ultag_getRegion(lt.getAlias());
     len = static_cast<int32_t>(uprv_strlen(subtag));
-    if (len > 0) {
+    எனில் (len > 0) {
         sink.Append("_", 1);
-        isEmpty = false;
+        isEmpty = பொய்;
 
         /* write out the region in upper case */
         p = subtag;
-        while (*p) {
-            char c = uprv_toupper(*p);
+        போது (*p) {
+            எழுத்து c = uprv_toupper(*p);
             sink.Append(&c, 1);
             p++;
         }
-        noRegion = false;
+        noRegion = பொய்;
     }
 
     /* variants */
     _sortVariants(lt.getAlias()->variants);
     n = ultag_getVariantsSize(lt.getAlias());
-    if (n > 0) {
-        if (noRegion) {
+    எனில் (n > 0) {
+        எனில் (noRegion) {
             sink.Append("_", 1);
-            isEmpty = false;
+            isEmpty = பொய்;
         }
 
-        for (i = 0; i < n; i++) {
+        க்கு (i = 0; i < n; i++) {
             subtag = ultag_getVariant(lt.getAlias(), i);
             sink.Append("_", 1);
 
             /* write out the variant in upper case */
             p = subtag;
-            while (*p) {
-                char c = uprv_toupper(*p);
+            போது (*p) {
+                எழுத்து c = uprv_toupper(*p);
                 sink.Append(&c, 1);
                 p++;
             }
@@ -2765,8 +2765,8 @@ ulocimp_forLanguageTag(const char* langtag,
     /* keywords */
     n = ultag_getExtensionsSize(lt.getAlias());
     subtag = ultag_getPrivateUse(lt.getAlias());
-    if (n > 0 || uprv_strlen(subtag) > 0) {
-        if (isEmpty && n > 0) {
+    எனில் (n > 0 || uprv_strlen(subtag) > 0) {
+        எனில் (isEmpty && n > 0) {
             /* need a language */
             sink.Append(LANG_UND, LANG_UND_LEN);
         }

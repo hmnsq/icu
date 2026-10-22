@@ -7,10 +7,10 @@
 #ifndef __CHARSTRMAP_H__
 #define __CHARSTRMAP_H__
 
-#include <utility>
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "uhash.h"
+#அந்தர்பாவ <utility>
+#அந்தர்பாவ "unicode/utypes.h"
+#அந்தர்பாவ "unicode/uobject.h"
+#அந்தர்பாவ "uhash.h"
 
 U_NAMESPACE_BEGIN
 
@@ -18,8 +18,8 @@ U_NAMESPACE_BEGIN
  * Map of const char * keys & values.
  * Stores pointers as is: Does not own/copy/adopt/release strings.
  */
-class CharStringMap final : public UMemory {
-public:
+class CharStringMap final : பொது UMemory {
+பொது:
     /** Constructs an unusable non-map. */
     CharStringMap() : map(nullptr) {}
     CharStringMap(int32_t size, UErrorCode &errorCode) {
@@ -29,7 +29,7 @@ public:
     CharStringMap(CharStringMap &&other) noexcept : map(other.map) {
         other.map = nullptr;
     }
-    CharStringMap(const CharStringMap &other) = delete;
+    CharStringMap(மாறிலி CharStringMap &other) = delete;
     ~CharStringMap() {
         uhash_close(map);
     }
@@ -37,16 +37,16 @@ public:
     CharStringMap &operator=(CharStringMap &&other) noexcept {
         map = other.map;
         other.map = nullptr;
-        return *this;
+        திரும்பு *this;
     }
-    CharStringMap &operator=(const CharStringMap &other) = delete;
+    CharStringMap &operator=(மாறிலி CharStringMap &other) = delete;
 
-    const char *get(const char *key) const { return static_cast<const char *>(uhash_get(map, key)); }
-    void put(const char *key, const char *value, UErrorCode &errorCode) {
-        uhash_put(map, const_cast<char *>(key), const_cast<char *>(value), &errorCode);
+    மாறிலி எழுத்து *get(மாறிலி எழுத்து *சாவி) மாறிலி { திரும்பு static_cast<மாறிலி எழுத்து *>(uhash_get(map, சாவி)); }
+    வெறுமை put(மாறிலி எழுத்து *சாவி, மாறிலி எழுத்து *மதிப்பு_2, UErrorCode &errorCode) {
+        uhash_put(map, const_cast<எழுத்து *>(சாவி), const_cast<எழுத்து *>(மதிப்பு_2), &errorCode);
     }
 
-private:
+தனிப்பட்ட:
     UHashtable *map;
 };
 

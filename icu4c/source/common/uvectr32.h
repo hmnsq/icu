@@ -16,10 +16,10 @@
 #ifndef UVECTOR32_H
 #define UVECTOR32_H
 
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "uhash.h"
-#include "uassert.h"
+#அந்தர்பாவ "unicode/utypes.h"
+#அந்தர்பாவ "unicode/uobject.h"
+#அந்தர்பாவ "uhash.h"
+#அந்தர்பாவ "uassert.h"
 
 U_NAMESPACE_BEGIN
 
@@ -58,9 +58,9 @@ U_NAMESPACE_BEGIN
  *
  * @author Alan Liu
  */
-class U_COMMON_API UVector32 : public UObject {
-private:
-    int32_t   count;
+class U_COMMON_API UVector32 : பொது UObject {
+தனிப்பட்ட:
+    int32_t   மொத்தம்;
 
     int32_t   capacity;
     
@@ -68,67 +68,67 @@ private:
 
     int32_t*  elements;
 
-public:
+பொது:
     UVector32(UErrorCode &status);
 
     UVector32(int32_t initialCapacity, UErrorCode &status);
 
-    virtual ~UVector32();
+    மெய்நிகர் ~UVector32();
 
     /**
      * Assign this object to another (make this a copy of 'other').
      * Use the 'assign' function to assign each element.
      */
-    void assign(const UVector32& other, UErrorCode &ec);
+    வெறுமை assign(மாறிலி UVector32& other, UErrorCode &ec);
 
     /**
      * Compare this vector with another.  They will be considered
      * equal if they are of the same size and all elements are equal,
      * as compared using this object's comparer.
      */
-    bool operator==(const UVector32& other) const;
+    bool operator==(மாறிலி UVector32& other) மாறிலி;
 
     /**
      * Equivalent to !operator==()
      */
-    inline bool operator!=(const UVector32& other) const;
+    உள்வரி bool operator!=(மாறிலி UVector32& other) மாறிலி;
 
     //------------------------------------------------------------
     // java.util.Vector API
     //------------------------------------------------------------
 
-    inline void addElement(int32_t elem, UErrorCode &status);
+    உள்வரி வெறுமை addElement(int32_t elem, UErrorCode &status);
 
-    void setElementAt(int32_t elem, int32_t index);
+    வெறுமை setElementAt(int32_t elem, int32_t index);
 
-    void insertElementAt(int32_t elem, int32_t index, UErrorCode &status);
+    வெறுமை செருகு_Element_At(int32_t elem, int32_t index, UErrorCode &status);
     
-    inline int32_t elementAti(int32_t index) const;
+    உள்வரி int32_t elementAti(int32_t index) மாறிலி;
 
-    UBool equals(const UVector32 &other) const;
+    UBool equals(மாறிலி UVector32 &other) மாறிலி;
 
-    inline int32_t lastElementi() const;
+    உள்வரி int32_t lastElementi() மாறிலி;
 
-    int32_t indexOf(int32_t elem, int32_t startIndex = 0) const;
+    int32_t indexOf(int32_t elem, int32_t startIndex = 0) மாறிலி;
 
-    inline UBool contains(int32_t elem) const;
+    உள்வரி UBool contains(int32_t elem) மாறிலி;
 
-    UBool containsAll(const UVector32& other) const;
+    UBool containsAll(மாறிலி UVector32& other) மாறிலி;
 
-    UBool removeAll(const UVector32& other);
+    UBool removeAll(மாறிலி UVector32& other);
 
-    UBool retainAll(const UVector32& other);
+    UBool retainAll(மாறிலி UVector32& other);
 
-    void removeElementAt(int32_t index);
+    வெறுமை removeElementAt(int32_t index);
 
-    void removeAllElements();
+    வெறுமை removeAllElements();
 
-    inline int32_t size() const;
+    உள்வரி int32_t size() மாறிலி;
 
-    inline UBool isEmpty() const;
+    உள்வரி UBool isEmpty() மாறிலி;
 
     // Inline.  Use this one for speedy size check.
-    inline UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
+    உள்வரி UBool ensureCapacity(int32_t minimumCapacity, UErrorCode &status);
 
     // Out-of-line, handles actual growth.  Called by ensureCapacity() when necessary.
     UBool expandCapacity(int32_t minimumCapacity, UErrorCode &status);
@@ -139,7 +139,7 @@ public:
      * elements for i >= newSize.  If newSize is larger, grow the
      * array, filling in new slows with zero.
      */
-    void setSize(int32_t newSize);
+    வெறுமை setSize(int32_t newSize);
 
     //------------------------------------------------------------
     // New API
@@ -151,19 +151,19 @@ public:
      * @param other vector to be checked for containment
      * @return true if the test condition is met
      */
-    UBool containsNone(const UVector32& other) const;
+    UBool containsNone(மாறிலி UVector32& other) மாறிலி;
 
 
     /**
      * Insert the given integer into this vector at its sorted position.
      * The current elements are assumed to be sorted already.
      */
-    void sortedInsert(int32_t elem, UErrorCode& ec);
+    வெறுமை sorted_செருகு(int32_t elem, UErrorCode& ec);
 
     /**
      * Returns a pointer to the internal array holding the vector.
      */
-    inline int32_t *getBuffer() const;
+    உள்வரி int32_t *getBuffer() மாறிலி;
 
     /**
      * Set the maximum allowed buffer capacity for this vector/stack.
@@ -171,134 +171,134 @@ public:
      * A Limit of zero means unlimited capacity.
      * Units are vector elements (32 bits each), not bytes.
      */
-    void setMaxCapacity(int32_t limit);
+    வெறுமை setMaxCapacity(int32_t limit);
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    நிலையான UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      */
-    virtual UClassID getDynamicClassID() const override;
+    மெய்நிகர் UClassID getDynamicClassID() மாறிலி override;
 
-private:
-    void _init(int32_t initialCapacity, UErrorCode &status);
-
-    // Disallow
-    UVector32(const UVector32&) = delete;
+தனிப்பட்ட:
+    வெறுமை _init(int32_t initialCapacity, UErrorCode &status);
 
     // Disallow
-    UVector32& operator=(const UVector32&) = delete;
+    UVector32(மாறிலி UVector32&) = delete;
+
+    // Disallow
+    UVector32& operator=(மாறிலி UVector32&) = delete;
 
 
     //  API Functions for Stack operations.
     //  In the original UVector, these were in a separate derived class, UStack.
     //  Here in UVector32, they are all together.
-public:
-    inline UBool empty() const;   // TODO:  redundant, same as empty().  Remove it?
+பொது:
+    உள்வரி UBool empty() மாறிலி;   // TODO:  redundant, same as empty().  Remove it?
 
-    inline int32_t peeki() const;
+    உள்வரி int32_t peeki() மாறிலி;
     
-    inline int32_t popi();
+    உள்வரி int32_t popi();
     
-    inline int32_t push(int32_t i, UErrorCode &status);
+    உள்வரி int32_t தள்ளு(int32_t i, UErrorCode &status);
 
-    inline int32_t *reserveBlock(int32_t size, UErrorCode &status);
-    inline int32_t *popFrame(int32_t size);
+    உள்வரி int32_t *reserveBlock(int32_t size, UErrorCode &status);
+    உள்வரி int32_t *எடு_Frame(int32_t size);
 };
 
 
 // UVector32 inlines
 
-inline UBool UVector32::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
-    if ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
-        return true;
-    } else {
-        return expandCapacity(minimumCapacity, status);
+உள்வரி UBool UVector32::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
+    எனில் ((minimumCapacity >= 0) && (capacity >= minimumCapacity)) {
+        திரும்பு true;
+    } இல்லையெனில் {
+        திரும்பு expandCapacity(minimumCapacity, status);
     }
 }
 
-inline int32_t UVector32::elementAti(int32_t index) const {
-    return (index >= 0 && count > 0 && count - index > 0) ? elements[index] : 0;
+உள்வரி int32_t UVector32::elementAti(int32_t index) மாறிலி {
+    திரும்பு (index >= 0 && மொத்தம் > 0 && மொத்தம் - index > 0) ? elements[index] : 0;
 }
 
 
-inline void UVector32::addElement(int32_t elem, UErrorCode &status) {
-    if (ensureCapacity(count + 1, status)) {
-        elements[count] = elem;
-        count++;
+உள்வரி வெறுமை UVector32::addElement(int32_t elem, UErrorCode &status) {
+    எனில் (ensureCapacity(மொத்தம் + 1, status)) {
+        elements[மொத்தம்] = elem;
+        மொத்தம்++;
     }
 }
 
-inline int32_t *UVector32::reserveBlock(int32_t size, UErrorCode &status) {
-    if (ensureCapacity(count+size, status) == false) {
-        return nullptr;
+உள்வரி int32_t *UVector32::reserveBlock(int32_t size, UErrorCode &status) {
+    எனில் (ensureCapacity(மொத்தம்+size, status) == false) {
+        திரும்பு nullptr;
     }
-    int32_t  *rp = elements+count;
-    count += size;
-    return rp;
+    int32_t  *rp = elements+மொத்தம்;
+    மொத்தம் += size;
+    திரும்பு rp;
 }
 
-inline int32_t *UVector32::popFrame(int32_t size) {
-    U_ASSERT(count >= size);
-    count -= size;
-    if (count < 0) {
-        count = 0;
+உள்வரி int32_t *UVector32::எடு_Frame(int32_t size) {
+    U_ASSERT(மொத்தம் >= size);
+    மொத்தம் -= size;
+    எனில் (மொத்தம் < 0) {
+        மொத்தம் = 0;
     }
-    return elements+count-size;
+    திரும்பு elements+மொத்தம்-size;
 }
 
 
 
-inline int32_t UVector32::size() const {
-    return count;
+உள்வரி int32_t UVector32::size() மாறிலி {
+    திரும்பு மொத்தம்;
 }
 
-inline UBool UVector32::isEmpty() const {
-    return count == 0;
+உள்வரி UBool UVector32::isEmpty() மாறிலி {
+    திரும்பு மொத்தம் == 0;
 }
 
-inline UBool UVector32::contains(int32_t obj) const {
-    return indexOf(obj) >= 0;
+உள்வரி UBool UVector32::contains(int32_t obj) மாறிலி {
+    திரும்பு indexOf(obj) >= 0;
 }
 
-inline int32_t UVector32::lastElementi() const {
-    return elementAti(count-1);
+உள்வரி int32_t UVector32::lastElementi() மாறிலி {
+    திரும்பு elementAti(மொத்தம்-1);
 }
 
-inline bool UVector32::operator!=(const UVector32& other) const {
-    return !operator==(other);
+உள்வரி bool UVector32::operator!=(மாறிலி UVector32& other) மாறிலி {
+    திரும்பு !operator==(other);
 }
 
-inline int32_t *UVector32::getBuffer() const {
-    return elements;
+உள்வரி int32_t *UVector32::getBuffer() மாறிலி {
+    திரும்பு elements;
 }
 
 
 // UStack inlines
 
-inline UBool UVector32::empty() const {
-    return isEmpty();
+உள்வரி UBool UVector32::empty() மாறிலி {
+    திரும்பு isEmpty();
 }
 
-inline int32_t UVector32::peeki() const {
-    return lastElementi();
+உள்வரி int32_t UVector32::peeki() மாறிலி {
+    திரும்பு lastElementi();
 }
 
-inline int32_t UVector32::push(int32_t i, UErrorCode &status) {
+உள்வரி int32_t UVector32::தள்ளு(int32_t i, UErrorCode &status) {
     addElement(i, status);
-    return i;
+    திரும்பு i;
 }
 
-inline int32_t UVector32::popi() {
+உள்வரி int32_t UVector32::popi() {
     int32_t result = 0;
-    if (count > 0) {
-        count--;
-        result = elements[count];
+    எனில் (மொத்தம் > 0) {
+        மொத்தம்--;
+        result = elements[மொத்தம்];
     }
-    return result;
+    திரும்பு result;
 }
 
 U_NAMESPACE_END

@@ -16,12 +16,12 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/uobject.h"
-#include "cmemory.h"
+#அந்தர்பாவ "unicode/uobject.h"
+#அந்தர்பாவ "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
-#if U_OVERRIDE_CXX_ALLOCATION
+#எனில் U_OVERRIDE_CXX_ALLOCATION
 
 /*
  * Default implementation of UMemory::new/delete
@@ -58,32 +58,32 @@ U_NAMESPACE_BEGIN
  * and replace with uprv_malloc/uprv_free.
  */
 
-void * U_EXPORT2 UMemory::operator new(size_t size) noexcept {
-    return uprv_malloc(size);
+வெறுமை * U_EXPORT2 UMemory::operator புதிய(size_t size) noexcept {
+    திரும்பு uprv_malloc(size);
 }
 
-void U_EXPORT2 UMemory::operator delete(void *p) noexcept {
-    if(p!=nullptr) {
+வெறுமை U_EXPORT2 UMemory::operator delete(வெறுமை *p) noexcept {
+    எனில்(p!=nullptr) {
         uprv_free(p);
     }
 }
 
-void * U_EXPORT2 UMemory::operator new[](size_t size) noexcept {
-    return uprv_malloc(size);
+வெறுமை * U_EXPORT2 UMemory::operator புதிய[](size_t size) noexcept {
+    திரும்பு uprv_malloc(size);
 }
 
-void U_EXPORT2 UMemory::operator delete[](void *p) noexcept {
-    if(p!=nullptr) {
+வெறுமை U_EXPORT2 UMemory::operator delete[](வெறுமை *p) noexcept {
+    எனில்(p!=nullptr) {
         uprv_free(p);
     }
 }
 
-#if U_HAVE_DEBUG_LOCATION_NEW
-void * U_EXPORT2 UMemory::operator new(size_t size, const char* /*file*/, int /*line*/) noexcept {
-    return UMemory::operator new(size);
+#எனில் U_HAVE_DEBUG_LOCATION_NEW
+வெறுமை * U_EXPORT2 UMemory::operator புதிய(size_t size, மாறிலி எழுத்து* /*file*/, முழு /*வரி*/) noexcept {
+    திரும்பு UMemory::operator புதிய(size);
 }
 
-void U_EXPORT2 UMemory::operator delete(void* p, const char* /*file*/, int /*line*/) noexcept {
+வெறுமை U_EXPORT2 UMemory::operator delete(வெறுமை* p, மாறிலி எழுத்து* /*file*/, முழு /*வரி*/) noexcept {
     UMemory::operator delete(p);
 }
 #endif /* U_HAVE_DEBUG_LOCATION_NEW */
@@ -93,13 +93,13 @@ void U_EXPORT2 UMemory::operator delete(void* p, const char* /*file*/, int /*lin
 
 UObject::~UObject() {}
 
-UClassID UObject::getDynamicClassID() const { return nullptr; }
+UClassID UObject::getDynamicClassID() மாறிலி { திரும்பு nullptr; }
 
 U_NAMESPACE_END
 
 U_NAMESPACE_USE
 
-U_CAPI void U_EXPORT2
-uprv_deleteUObject(void *obj) {
+U_CAPI வெறுமை U_EXPORT2
+uprv_deleteUObject(வெறுமை *obj) {
     delete static_cast<UObject *>(obj);
 }

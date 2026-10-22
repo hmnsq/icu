@@ -11,11 +11,11 @@
 * created by: Markus W. Scherer
 */
 
-#include "resource.h"
+#அந்தர்பாவ "resource.h"
 
 U_NAMESPACE_BEGIN
 
-ResourceValue::~ResourceValue() {}
+Resource_மதிப்பு::~Resource_மதிப்பு() {}
 
 ResourceSink::~ResourceSink() {}
 

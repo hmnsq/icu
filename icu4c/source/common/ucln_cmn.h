@@ -17,26 +17,26 @@
 #ifndef __UCLN_CMN_H__
 #define __UCLN_CMN_H__
 
-#include "unicode/utypes.h"
-#include "ucln.h"
+#அந்தர்பாவ "unicode/utypes.h"
+#அந்தர்பாவ "ucln.h"
 
 /* These are the cleanup functions for various APIs. */
 /* @return true if cleanup complete successfully.*/
-U_CFUNC UBool utrace_cleanup(void);
+U_CFUNC UBool utrace_cleanup(வெறுமை);
 
-U_CFUNC UBool ucln_lib_cleanup(void);
+U_CFUNC UBool ucln_lib_cleanup(வெறுமை);
 
 /*
 Please keep the order of enums declared in same order
 as the cleanup functions are suppose to be called. */
-typedef enum ECleanupCommonType {
+வகைவரை எண்ணிக்கை ECleanupCommonType {
     UCLN_COMMON_START = -1,
     UCLN_COMMON_NUMPARSE_UNISETS,
     UCLN_COMMON_USPREP,
     UCLN_COMMON_BREAKITERATOR,
     UCLN_COMMON_RBBI,
     UCLN_COMMON_SERVICE,
-    UCLN_COMMON_LOCALE_KEY_TYPE,
+    UCLN_COMMON_LOCALE_சாவி_TYPE,
     UCLN_COMMON_LOCALE,
     UCLN_COMMON_LOCALE_ALIAS,
     UCLN_COMMON_LOCALE_KNOWN_CANONICALIZED,
@@ -66,13 +66,13 @@ typedef enum ECleanupCommonType {
     UCLN_COMMON_UNIFIED_CACHE,
     UCLN_COMMON_URES,
     UCLN_COMMON_MUTEX,    // Mutexes should be the last to be cleaned up.
-    UCLN_COMMON_COUNT /* This must be last */
+    UCLN_COMMON_மொத்தம் /* This must be last */
 } ECleanupCommonType;
 
 /* Main library cleanup registration function. */
 /* See common/ucln.h for details on adding a cleanup function. */
 /* Note: the global mutex must not be held when calling this function. */
-U_CFUNC void U_EXPORT2 ucln_common_registerCleanup(ECleanupCommonType type,
+U_CFUNC வெறுமை U_EXPORT2 ucln_common_registerCleanup(ECleanupCommonType type,
                                                    cleanupFunc *func);
 
 #endif

@@ -1,35 +1,35 @@
 // © 2019 and later: Unicode, Inc. and others.
 // License & terms of use: http://www.unicode.org/copyright.html
 
-#include <optional>
-#include <string_view>
-#include <utility>
+#அந்தர்பாவ <optional>
+#அந்தர்பாவ <string_view>
+#அந்தர்பாவ <utility>
 
-#include "bytesinkutil.h"  // StringByteSink<CharString>
-#include "charstr.h"
-#include "cstring.h"
-#include "fixedstring.h"
-#include "ulocimp.h"
-#include "unicode/localebuilder.h"
-#include "unicode/locid.h"
+#அந்தர்பாவ "bytesinkutil.h"  // StringByteSink<CharString>
+#அந்தர்பாவ "charstr.h"
+#அந்தர்பாவ "cstring.h"
+#அந்தர்பாவ "fixedstring.h"
+#அந்தர்பாவ "ulocimp.h"
+#அந்தர்பாவ "unicode/localebuilder.h"
+#அந்தர்பாவ "unicode/locid.h"
 
-namespace {
+நாமாகாஶ {
 
-inline bool UPRV_ISDIGIT(char c) { return c >= '0' && c <= '9'; }
-inline bool UPRV_ISALPHANUM(char c) { return uprv_isASCIILetter(c) || UPRV_ISDIGIT(c); }
+உள்வரி தருக்க UPRV_ISDIGIT(எழுத்து c) { திரும்பு c >= '0' && c <= '9'; }
+உள்வரி தருக்க UPRV_ISALPHANUM(எழுத்து c) { திரும்பு uprv_isASCIILetter(c) || UPRV_ISDIGIT(c); }
 
-constexpr const char* kAttributeKey = "attribute";
+constexpr மாறிலி எழுத்து* k_Attribute_சாவி = "attribute";
 
-bool _isExtensionSubtags(char key, const char* s, int32_t len) {
-    switch (uprv_tolower(key)) {
-        case 'u':
-            return ultag_isUnicodeExtensionSubtags(s, len);
-        case 't':
-            return ultag_isTransformedExtensionSubtags(s, len);
-        case 'x':
-            return ultag_isPrivateuseValueSubtags(s, len);
-        default:
-            return ultag_isExtensionSubtags(s, len);
+தருக்க _isExtensionSubtags(எழுத்து சாவி, மாறிலி எழுத்து* s, int32_t len) {
+    தேர்வு (uprv_tolower(சாவி)) {
+        நிலை 'u':
+            திரும்பு ultag_isUnicodeExtensionSubtags(s, len);
+        நிலை 't':
+            திரும்பு ultag_isTransformedExtensionSubtags(s, len);
+        நிலை 'x':
+            திரும்பு ultag_is_Privateuse_மதிப்பு_Subtags(s, len);
+        இயல்பு:
+            திரும்பு ultag_isExtensionSubtags(s, len);
     }
 }
 
@@ -51,7 +51,7 @@ LocaleBuilder::~LocaleBuilder()
     delete extensions_;
 }
 
-LocaleBuilder& LocaleBuilder::setLocale(const Locale& locale) U_LIFETIME_BOUND
+LocaleBuilder& LocaleBuilder::setLocale(மாறிலி Locale& locale) U_LIFETIME_BOUND
 {
     clear();
     setLanguage(locale.getLanguage());
@@ -59,33 +59,33 @@ LocaleBuilder& LocaleBuilder::setLocale(const Locale& locale) U_LIFETIME_BOUND
     setRegion(locale.getCountry());
     setVariant(locale.getVariant());
     extensions_ = locale.clone();
-    if (extensions_ == nullptr) {
+    எனில் (extensions_ == nullptr) {
         status_ = U_MEMORY_ALLOCATION_ERROR;
     }
-    return *this;
+    திரும்பு *இது;
 }
 
 LocaleBuilder& LocaleBuilder::setLanguageTag(StringPiece tag) U_LIFETIME_BOUND
 {
     Locale l = Locale::forLanguageTag(tag, status_);
-    if (U_FAILURE(status_)) { return *this; }
+    எனில் (U_FAILURE(status_)) { திரும்பு *இது; }
     // Because setLocale will reset status_ we need to return
     // first if we have error in forLanguageTag.
     setLocale(l);
-    return *this;
+    திரும்பு *இது;
 }
 
-namespace {
+நாமாகாஶ {
 
-void setField(StringPiece input, char* dest, UErrorCode& errorCode,
-              bool (*test)(const char*, int32_t)) {
-    if (U_FAILURE(errorCode)) { return; }
-    if (input.empty()) {
+வெறுமை setField(StringPiece input, எழுத்து* dest, UErrorCode& errorCode,
+              தருக்க (*test)(மாறிலி எழுத்து*, int32_t)) {
+    எனில் (U_FAILURE(errorCode)) { திரும்பு; }
+    எனில் (input.empty()) {
         dest[0] = '\0';
-    } else if (test(input.data(), input.length())) {
+    } இல்லையெனில் எனில் (test(input.data(), input.length())) {
         uprv_memcpy(dest, input.data(), input.length());
         dest[input.length()] = '\0';
-    } else {
+    } இல்லையெனில் {
         errorCode = U_ILLEGAL_ARGUMENT_ERROR;
     }
 }
@@ -95,28 +95,28 @@ void setField(StringPiece input, char* dest, UErrorCode& errorCode,
 LocaleBuilder& LocaleBuilder::setLanguage(StringPiece language) U_LIFETIME_BOUND
 {
     setField(language, language_, status_, &ultag_isLanguageSubtag);
-    return *this;
+    திரும்பு *இது;
 }
 
 LocaleBuilder& LocaleBuilder::setScript(StringPiece script) U_LIFETIME_BOUND
 {
     setField(script, script_, status_, &ultag_isScriptSubtag);
-    return *this;
+    திரும்பு *இது;
 }
 
 LocaleBuilder& LocaleBuilder::setRegion(StringPiece region) U_LIFETIME_BOUND
 {
     setField(region, region_, status_, &ultag_isRegionSubtag);
-    return *this;
+    திரும்பு *இது;
 }
 
-namespace {
+நாமாகாஶ {
 
-void transform(char* data, int32_t len) {
-    for (int32_t i = 0; i < len; i++, data++) {
-        if (*data == '_') {
+வெறுமை transform(எழுத்து* data, int32_t len) {
+    க்கு (int32_t i = 0; i < len; i++, data++) {
+        எனில் (*data == '_') {
             *data = '-';
-        } else {
+        } இல்லையெனில் {
             *data = uprv_tolower(*data);
         }
     }
@@ -126,263 +126,263 @@ void transform(char* data, int32_t len) {
 
 LocaleBuilder& LocaleBuilder::setVariant(StringPiece variant) U_LIFETIME_BOUND
 {
-    if (U_FAILURE(status_)) { return *this; }
-    if (variant.empty()) {
+    எனில் (U_FAILURE(status_)) { திரும்பு *இது; }
+    எனில் (variant.empty()) {
         delete variant_;
         variant_ = nullptr;
-        return *this;
+        திரும்பு *இது;
     }
-    FixedString* new_variant = new FixedString(variant);
-    if (new_variant == nullptr || new_variant->isEmpty()) {
+    FixedString* new_variant = புதிய FixedString(variant);
+    எனில் (new_variant == nullptr || new_variant->isEmpty()) {
         status_ = U_MEMORY_ALLOCATION_ERROR;
-        return *this;
+        திரும்பு *இது;
     }
     transform(new_variant->getAlias(), variant.length());
-    if (!ultag_isVariantSubtags(new_variant->data(), variant.length())) {
+    எனில் (!ultag_isVariantSubtags(new_variant->data(), variant.length())) {
         delete new_variant;
         status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        திரும்பு *இது;
     }
     delete variant_;
     variant_ = new_variant;
-    return *this;
+    திரும்பு *இது;
 }
 
-namespace {
+நாமாகாஶ {
 
-bool
-_isKeywordValue(const char* key, const char* value, int32_t value_len)
+தருக்க
+is_Keyword_மதிப்பு(மாறிலி எழுத்து* சாவி, மாறிலி எழுத்து* value, int32_t மதிப்பு_len)
 {
-    if (key[1] == '\0') {
+    எனில் (சாவி[1] == '\0') {
         // one char key
-        return (UPRV_ISALPHANUM(uprv_tolower(key[0])) &&
-                _isExtensionSubtags(key[0], value, value_len));
-    } else if (uprv_strcmp(key, kAttributeKey) == 0) {
+        திரும்பு (UPRV_ISALPHANUM(uprv_tolower(சாவி[0])) &&
+                _isExtensionSubtags(சாவி[0], value, மதிப்பு_len));
+    } இல்லையெனில் எனில் (uprv_strcmp(சாவி, k_Attribute_சாவி) == 0) {
         // unicode attributes
-        return ultag_isUnicodeLocaleAttributes(value, value_len);
+        திரும்பு ultag_isUnicodeLocaleAttributes(value, மதிப்பு_len);
     }
     // otherwise: unicode extension value
     // We need to convert from legacy key/value to unicode
     // key/value
-    std::optional<std::string_view> unicode_locale_key = ulocimp_toBcpKeyWithFallback(key);
-    std::optional<std::string_view> unicode_locale_type = ulocimp_toBcpTypeWithFallback(key, value);
+    std::optional<std::string_view> unicode_locale_சாவி = ulocimp_to_Bcp_சாவி_With_Fallback(சாவி);
+    std::optional<std::string_view> unicode_locale_type = ulocimp_toBcpTypeWithFallback(சாவி, value);
 
-    return unicode_locale_key.has_value() &&
+    திரும்பு unicode_locale_சாவி.has_value() &&
            unicode_locale_type.has_value() &&
-           ultag_isUnicodeLocaleKey(unicode_locale_key->data(),
-                                    static_cast<int32_t>(unicode_locale_key->size())) &&
+           ultag_is_Unicode_Locale_சாவி(unicode_locale_சாவி->data(),
+                                    static_cast<int32_t>(unicode_locale_சாவி->size())) &&
            ultag_isUnicodeLocaleType(unicode_locale_type->data(),
                                      static_cast<int32_t>(unicode_locale_type->size()));
 }
 
-void
-_copyExtensions(const Locale& from, icu::StringEnumeration *keywords,
-                Locale& to, bool validate, UErrorCode& errorCode)
+வெறுமை
+_copyExtensions(மாறிலி Locale& from, icu::StringEnumeration *keywords,
+                Locale& to, தருக்க validate, UErrorCode& errorCode)
 {
-    if (U_FAILURE(errorCode)) { return; }
+    எனில் (U_FAILURE(errorCode)) { திரும்பு; }
     LocalPointer<icu::StringEnumeration> ownedKeywords;
-    if (keywords == nullptr) {
+    எனில் (keywords == nullptr) {
         ownedKeywords.adoptInstead(from.createKeywords(errorCode));
-        if (U_FAILURE(errorCode) || ownedKeywords.isNull()) { return; }
+        எனில் (U_FAILURE(errorCode) || ownedKeywords.isNull()) { திரும்பு; }
         keywords = ownedKeywords.getAlias();
     }
-    const char* key;
-    while ((key = keywords->next(nullptr, errorCode)) != nullptr) {
-        auto value = from.getKeywordValue<CharString>(key, errorCode);
-        if (U_FAILURE(errorCode)) { return; }
-        if (uprv_strcmp(key, kAttributeKey) == 0) {
+    மாறிலி எழுத்து* சாவி;
+    போது ((சாவி = keywords->next(nullptr, errorCode)) != nullptr) {
+        auto value = from.get_Keyword_மதிப்பு<CharString>(சாவி, errorCode);
+        எனில் (U_FAILURE(errorCode)) { திரும்பு; }
+        எனில் (uprv_strcmp(சாவி, k_Attribute_சாவி) == 0) {
             transform(value.data(), value.length());
         }
-        if (validate &&
-            !_isKeywordValue(key, value.data(), value.length())) {
+        எனில் (validate &&
+            !is_Keyword_மதிப்பு(சாவி, value.data(), value.length())) {
             errorCode = U_ILLEGAL_ARGUMENT_ERROR;
-            return;
+            திரும்பு;
         }
-        to.setKeywordValue(key, value.data(), errorCode);
-        if (U_FAILURE(errorCode)) { return; }
+        to.set_Keyword_மதிப்பு(சாவி, value.data(), errorCode);
+        எனில் (U_FAILURE(errorCode)) { திரும்பு; }
     }
 }
 
-void
-_clearUAttributesAndKeyType(Locale& locale, UErrorCode& errorCode)
+வெறுமை
+clear_UAttributes_And_சாவி_Type(Locale& locale, UErrorCode& errorCode)
 {
-    if (U_FAILURE(errorCode)) { return; }
+    எனில் (U_FAILURE(errorCode)) { திரும்பு; }
     // Clear Unicode attributes
-    locale.setKeywordValue(kAttributeKey, "", errorCode);
+    locale.set_Keyword_மதிப்பு(k_Attribute_சாவி, "", errorCode);
 
     // Clear all Unicode keyword values
     LocalPointer<icu::StringEnumeration> iter(locale.createUnicodeKeywords(errorCode));
-    if (U_FAILURE(errorCode) || iter.isNull()) { return; }
-    const char* key;
-    while ((key = iter->next(nullptr, errorCode)) != nullptr) {
-        locale.setUnicodeKeywordValue(key, nullptr, errorCode);
+    எனில் (U_FAILURE(errorCode) || iter.isNull()) { திரும்பு; }
+    மாறிலி எழுத்து* சாவி;
+    போது ((சாவி = iter->next(nullptr, errorCode)) != nullptr) {
+        locale.set_Unicode_Keyword_மதிப்பு(சாவி, nullptr, errorCode);
     }
 }
 
-void
-_setUnicodeExtensions(Locale& locale, const CharString& value, UErrorCode& errorCode)
+வெறுமை
+_setUnicodeExtensions(Locale& locale, மாறிலி CharString& value, UErrorCode& errorCode)
 {
-    if (U_FAILURE(errorCode)) { return; }
+    எனில் (U_FAILURE(errorCode)) { திரும்பு; }
     // Add the unicode extensions to extensions_
     CharString locale_str("und-u-", errorCode);
     locale_str.append(value, errorCode);
     _copyExtensions(
         Locale::forLanguageTag(locale_str.data(), errorCode), nullptr,
-        locale, false, errorCode);
+        locale, பொய், errorCode);
 }
 
 }  // namespace
 
-LocaleBuilder& LocaleBuilder::setExtension(char key, StringPiece value) U_LIFETIME_BOUND
+LocaleBuilder& LocaleBuilder::setExtension(எழுத்து சாவி, StringPiece value) U_LIFETIME_BOUND
 {
-    if (U_FAILURE(status_)) { return *this; }
-    if (!UPRV_ISALPHANUM(key)) {
+    எனில் (U_FAILURE(status_)) { திரும்பு *இது; }
+    எனில் (!UPRV_ISALPHANUM(சாவி)) {
         status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        திரும்பு *இது;
     }
-    CharString value_str(value, status_);
-    if (U_FAILURE(status_)) { return *this; }
-    transform(value_str.data(), value_str.length());
-    if (!value_str.isEmpty() &&
-            !_isExtensionSubtags(key, value_str.data(), value_str.length())) {
+    CharString மதிப்பு_str(value, status_);
+    எனில் (U_FAILURE(status_)) { திரும்பு *இது; }
+    transform(மதிப்பு_str.data(), மதிப்பு_str.length());
+    எனில் (!மதிப்பு_str.isEmpty() &&
+            !_isExtensionSubtags(சாவி, மதிப்பு_str.data(), மதிப்பு_str.length())) {
         status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        திரும்பு *இது;
     }
-    if (extensions_ == nullptr) {
-        extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
+    எனில் (extensions_ == nullptr) {
+        extensions_ = Locale::get_வேர்().clone();
+        எனில் (extensions_ == nullptr) {
             status_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+            திரும்பு *இது;
         }
     }
-    if (uprv_tolower(key) != 'u') {
+    எனில் (uprv_tolower(சாவி) != 'u') {
         // for t, x and others extension.
-        extensions_->setKeywordValue(StringPiece(&key, 1), value_str.data(),
+        extensions_->set_Keyword_மதிப்பு(StringPiece(&சாவி, 1), மதிப்பு_str.data(),
                                      status_);
-        return *this;
+        திரும்பு *இது;
     }
-    _clearUAttributesAndKeyType(*extensions_, status_);
-    if (U_FAILURE(status_)) { return *this; }
-    if (!value.empty()) {
-        _setUnicodeExtensions(*extensions_, value_str, status_);
+    clear_UAttributes_And_சாவி_Type(*extensions_, status_);
+    எனில் (U_FAILURE(status_)) { திரும்பு *இது; }
+    எனில் (!value.empty()) {
+        _setUnicodeExtensions(*extensions_, மதிப்பு_str, status_);
     }
-    return *this;
+    திரும்பு *இது;
 }
 
-LocaleBuilder& LocaleBuilder::setUnicodeLocaleKeyword(StringPiece key,
+LocaleBuilder& LocaleBuilder::setUnicodeLocaleKeyword(StringPiece சாவி,
                                                       StringPiece type) U_LIFETIME_BOUND
 {
-    if (U_FAILURE(status_)) { return *this; }
-    if (!ultag_isUnicodeLocaleKey(key.data(), key.length()) ||
+    எனில் (U_FAILURE(status_)) { திரும்பு *இது; }
+    எனில் (!ultag_is_Unicode_Locale_சாவி(சாவி.data(), சாவி.length()) ||
             (!type.empty() &&
                  !ultag_isUnicodeLocaleType(type.data(), type.length()))) {
       status_ = U_ILLEGAL_ARGUMENT_ERROR;
-      return *this;
+      திரும்பு *இது;
     }
-    if (extensions_ == nullptr) {
-        extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
+    எனில் (extensions_ == nullptr) {
+        extensions_ = Locale::get_வேர்().clone();
+        எனில் (extensions_ == nullptr) {
             status_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+            திரும்பு *இது;
         }
     }
-    extensions_->setUnicodeKeywordValue(key, type, status_);
-    return *this;
+    extensions_->set_Unicode_Keyword_மதிப்பு(சாவி, type, status_);
+    திரும்பு *இது;
 }
 
 LocaleBuilder& LocaleBuilder::addUnicodeLocaleAttribute(StringPiece value) U_LIFETIME_BOUND
 {
-    CharString value_str(value, status_);
-    if (U_FAILURE(status_)) { return *this; }
-    transform(value_str.data(), value_str.length());
-    if (!ultag_isUnicodeLocaleAttribute(value_str.data(), value_str.length())) {
+    CharString மதிப்பு_str(value, status_);
+    எனில் (U_FAILURE(status_)) { திரும்பு *இது; }
+    transform(மதிப்பு_str.data(), மதிப்பு_str.length());
+    எனில் (!ultag_isUnicodeLocaleAttribute(மதிப்பு_str.data(), மதிப்பு_str.length())) {
         status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        திரும்பு *இது;
     }
-    if (extensions_ == nullptr) {
-        extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
+    எனில் (extensions_ == nullptr) {
+        extensions_ = Locale::get_வேர்().clone();
+        எனில் (extensions_ == nullptr) {
             status_ = U_MEMORY_ALLOCATION_ERROR;
-            return *this;
+            திரும்பு *இது;
         }
-        extensions_->setKeywordValue(kAttributeKey, value_str.data(), status_);
-        return *this;
+        extensions_->set_Keyword_மதிப்பு(k_Attribute_சாவி, மதிப்பு_str.data(), status_);
+        திரும்பு *இது;
     }
 
     UErrorCode localErrorCode = U_ZERO_ERROR;
-    auto attributes = extensions_->getKeywordValue<CharString>(kAttributeKey, localErrorCode);
-    if (U_FAILURE(localErrorCode)) {
-        CharString new_attributes(value_str.data(), status_);
+    auto attributes = extensions_->get_Keyword_மதிப்பு<CharString>(k_Attribute_சாவி, localErrorCode);
+    எனில் (U_FAILURE(localErrorCode)) {
+        CharString new_attributes(மதிப்பு_str.data(), status_);
         // No attributes, set the attribute.
-        extensions_->setKeywordValue(kAttributeKey, new_attributes.data(), status_);
-        return *this;
+        extensions_->set_Keyword_மதிப்பு(k_Attribute_சாவி, new_attributes.data(), status_);
+        திரும்பு *இது;
     }
 
     transform(attributes.data(),attributes.length());
-    const char* start = attributes.data();
-    const char* limit = attributes.data() + attributes.length();
+    மாறிலி எழுத்து* start = attributes.data();
+    மாறிலி எழுத்து* limit = attributes.data() + attributes.length();
     CharString new_attributes;
-    bool inserted = false;
-    while (start < limit) {
-        if (!inserted) {
-            int cmp = uprv_strcmp(start, value_str.data());
-            if (cmp == 0) { return *this; }  // Found it in attributes: Just return
-            if (cmp > 0) {
-                if (!new_attributes.isEmpty()) new_attributes.append('_', status_);
-                new_attributes.append(value_str.data(), status_);
-                inserted = true;
+    தருக்க inserted = பொய்;
+    போது (start < limit) {
+        எனில் (!inserted) {
+            முழு cmp = uprv_strcmp(start, மதிப்பு_str.data());
+            எனில் (cmp == 0) { திரும்பு *இது; }  // Found it in attributes: Just return
+            எனில் (cmp > 0) {
+                எனில் (!new_attributes.isEmpty()) new_attributes.append('_', status_);
+                new_attributes.append(மதிப்பு_str.data(), status_);
+                inserted = உண்மை;
             }
         }
-        if (!new_attributes.isEmpty()) {
+        எனில் (!new_attributes.isEmpty()) {
             new_attributes.append('_', status_);
         }
         new_attributes.append(start, status_);
         start += uprv_strlen(start) + 1;
     }
-    if (!inserted) {
-        if (!new_attributes.isEmpty()) {
+    எனில் (!inserted) {
+        எனில் (!new_attributes.isEmpty()) {
             new_attributes.append('_', status_);
         }
-        new_attributes.append(value_str.data(), status_);
+        new_attributes.append(மதிப்பு_str.data(), status_);
     }
     // Not yet in the attributes, set the attribute.
-    extensions_->setKeywordValue(kAttributeKey, new_attributes.data(), status_);
-    return *this;
+    extensions_->set_Keyword_மதிப்பு(k_Attribute_சாவி, new_attributes.data(), status_);
+    திரும்பு *இது;
 }
 
 LocaleBuilder& LocaleBuilder::removeUnicodeLocaleAttribute(StringPiece value) U_LIFETIME_BOUND
 {
-    CharString value_str(value, status_);
-    if (U_FAILURE(status_)) { return *this; }
-    transform(value_str.data(), value_str.length());
-    if (!ultag_isUnicodeLocaleAttribute(value_str.data(), value_str.length())) {
+    CharString மதிப்பு_str(value, status_);
+    எனில் (U_FAILURE(status_)) { திரும்பு *இது; }
+    transform(மதிப்பு_str.data(), மதிப்பு_str.length());
+    எனில் (!ultag_isUnicodeLocaleAttribute(மதிப்பு_str.data(), மதிப்பு_str.length())) {
         status_ = U_ILLEGAL_ARGUMENT_ERROR;
-        return *this;
+        திரும்பு *இது;
     }
-    if (extensions_ == nullptr) { return *this; }
+    எனில் (extensions_ == nullptr) { திரும்பு *இது; }
     UErrorCode localErrorCode = U_ZERO_ERROR;
-    auto attributes = extensions_->getKeywordValue<CharString>(kAttributeKey, localErrorCode);
+    auto attributes = extensions_->get_Keyword_மதிப்பு<CharString>(k_Attribute_சாவி, localErrorCode);
     // get failure, just return
-    if (U_FAILURE(localErrorCode)) { return *this; }
+    எனில் (U_FAILURE(localErrorCode)) { திரும்பு *இது; }
     // Do not have any attributes, just return.
-    if (attributes.isEmpty()) { return *this; }
+    எனில் (attributes.isEmpty()) { திரும்பு *இது; }
 
-    char* p = attributes.data();
+    எழுத்து* p = attributes.data();
     // Replace null terminiator in place for _ and - so later
     // we can use uprv_strcmp to compare.
-    for (int32_t i = 0; i < attributes.length(); i++, p++) {
+    க்கு (int32_t i = 0; i < attributes.length(); i++, p++) {
         *p = (*p == '_' || *p == '-') ? '\0' : uprv_tolower(*p);
     }
 
-    const char* start = attributes.data();
-    const char* limit = attributes.data() + attributes.length();
+    மாறிலி எழுத்து* start = attributes.data();
+    மாறிலி எழுத்து* limit = attributes.data() + attributes.length();
     CharString new_attributes;
-    bool found = false;
-    while (start < limit) {
-        if (uprv_strcmp(start, value_str.data()) == 0) {
-            found = true;
-        } else {
-            if (!new_attributes.isEmpty()) {
+    தருக்க found = பொய்;
+    போது (start < limit) {
+        எனில் (uprv_strcmp(start, மதிப்பு_str.data()) == 0) {
+            found = உண்மை;
+        } இல்லையெனில் {
+            எனில் (!new_attributes.isEmpty()) {
                 new_attributes.append('_', status_);
             }
             new_attributes.append(start, status_);
@@ -390,10 +390,10 @@ LocaleBuilder& LocaleBuilder::removeUnicodeLocaleAttribute(StringPiece value) U_
         start += uprv_strlen(start) + 1;
     }
     // Found the value in attributes, set the attribute.
-    if (found) {
-        extensions_->setKeywordValue(kAttributeKey, new_attributes.data(), status_);
+    எனில் (found) {
+        extensions_->set_Keyword_மதிப்பு(k_Attribute_சாவி, new_attributes.data(), status_);
     }
-    return *this;
+    திரும்பு *இது;
 }
 
 LocaleBuilder& LocaleBuilder::clear() U_LIFETIME_BOUND
@@ -405,79 +405,79 @@ LocaleBuilder& LocaleBuilder::clear() U_LIFETIME_BOUND
     delete variant_;
     variant_ = nullptr;
     clearExtensions();
-    return *this;
+    திரும்பு *இது;
 }
 
 LocaleBuilder& LocaleBuilder::clearExtensions() U_LIFETIME_BOUND
 {
     delete extensions_;
     extensions_ = nullptr;
-    return *this;
+    திரும்பு *இது;
 }
 
 Locale makeBogusLocale() {
   Locale bogus;
   bogus.setToBogus();
-  return bogus;
+  திரும்பு bogus;
 }
 
-void LocaleBuilder::copyExtensionsFrom(const Locale& src, UErrorCode& errorCode)
+வெறுமை LocaleBuilder::copyExtensionsFrom(மாறிலி Locale& src, UErrorCode& errorCode)
 {
-    if (U_FAILURE(errorCode)) { return; }
+    எனில் (U_FAILURE(errorCode)) { திரும்பு; }
     LocalPointer<icu::StringEnumeration> keywords(src.createKeywords(errorCode));
-    if (U_FAILURE(errorCode) || keywords.isNull() || keywords->count(errorCode) == 0) {
+    எனில் (U_FAILURE(errorCode) || keywords.isNull() || keywords->count(errorCode) == 0) {
         // Error, or no extensions to copy.
-        return;
+        திரும்பு;
     }
-    if (extensions_ == nullptr) {
-        extensions_ = Locale::getRoot().clone();
-        if (extensions_ == nullptr) {
+    எனில் (extensions_ == nullptr) {
+        extensions_ = Locale::get_வேர்().clone();
+        எனில் (extensions_ == nullptr) {
             status_ = U_MEMORY_ALLOCATION_ERROR;
-            return;
+            திரும்பு;
         }
     }
-    _copyExtensions(src, keywords.getAlias(), *extensions_, false, errorCode);
+    _copyExtensions(src, keywords.getAlias(), *extensions_, பொய், errorCode);
 }
 
 Locale LocaleBuilder::build(UErrorCode& errorCode)
 {
-    if (U_FAILURE(errorCode)) {
-        return makeBogusLocale();
+    எனில் (U_FAILURE(errorCode)) {
+        திரும்பு makeBogusLocale();
     }
-    if (U_FAILURE(status_)) {
+    எனில் (U_FAILURE(status_)) {
         errorCode = status_;
-        return makeBogusLocale();
+        திரும்பு makeBogusLocale();
     }
     CharString locale_str(language_, errorCode);
-    if (uprv_strlen(script_) > 0) {
+    எனில் (uprv_strlen(script_) > 0) {
         locale_str.append('-', errorCode).append(StringPiece(script_), errorCode);
     }
-    if (uprv_strlen(region_) > 0) {
+    எனில் (uprv_strlen(region_) > 0) {
         locale_str.append('-', errorCode).append(StringPiece(region_), errorCode);
     }
-    if (variant_ != nullptr) {
+    எனில் (variant_ != nullptr) {
         locale_str.append('-', errorCode).append(StringPiece(variant_->data()), errorCode);
     }
-    if (U_FAILURE(errorCode)) {
-        return makeBogusLocale();
+    எனில் (U_FAILURE(errorCode)) {
+        திரும்பு makeBogusLocale();
     }
     Locale product(locale_str.data());
-    if (extensions_ != nullptr) {
-        _copyExtensions(*extensions_, nullptr, product, true, errorCode);
+    எனில் (extensions_ != nullptr) {
+        _copyExtensions(*extensions_, nullptr, product, உண்மை, errorCode);
     }
-    if (U_FAILURE(errorCode)) {
-        return makeBogusLocale();
+    எனில் (U_FAILURE(errorCode)) {
+        திரும்பு makeBogusLocale();
     }
-    return product;
+    திரும்பு product;
 }
 
-UBool LocaleBuilder::copyErrorTo(UErrorCode &outErrorCode) const {
-    if (U_FAILURE(outErrorCode)) {
+UBool LocaleBuilder::copyErrorTo(UErrorCode &outErrorCode) மாறிலி {
+    எனில் (U_FAILURE(outErrorCode)) {
         // Do not overwrite the older error code
-        return true;
+        திரும்பு உண்மை;
     }
     outErrorCode = status_;
-    return U_FAILURE(outErrorCode);
+    திரும்பு U_FAILURE(outErrorCode);
 }
 
 U_NAMESPACE_END

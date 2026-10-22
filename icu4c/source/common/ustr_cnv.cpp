@@ -18,32 +18,32 @@
 *   Character conversion functions moved here from ustring.c
 */
 
-#include "unicode/utypes.h"
+#அந்தர்பாவ "unicode/utypes.h"
 
-#if !UCONFIG_NO_CONVERSION
+#எனில் !UCONFIG_NO_CONVERSION
 
-#include "unicode/ustring.h"
-#include "unicode/ucnv.h"
-#include "cstring.h"
-#include "cmemory.h"
-#include "umutex.h"
-#include "ustr_cnv.h"
-#include "ucnv_bld.h"
+#அந்தர்பாவ "unicode/ustring.h"
+#அந்தர்பாவ "unicode/ucnv.h"
+#அந்தர்பாவ "cstring.h"
+#அந்தர்பாவ "cmemory.h"
+#அந்தர்பாவ "umutex.h"
+#அந்தர்பாவ "ustr_cnv.h"
+#அந்தர்பாவ "ucnv_bld.h"
 
 /* mutexed access to a shared default converter ----------------------------- */
 
-static UConverter *gDefaultConverter = nullptr;
+நிலையான UConverter *gDefaultConverter = nullptr;
 
 U_CAPI UConverter* U_EXPORT2
 u_getDefaultConverter(UErrorCode *status)
 {
     UConverter *converter = nullptr;
     
-    if (gDefaultConverter != nullptr) {
+    எனில் (gDefaultConverter != nullptr) {
         icu::umtx_lock(nullptr);
         
         /* need to check to make sure it wasn't taken out from under us */
-        if (gDefaultConverter != nullptr) {
+        எனில் (gDefaultConverter != nullptr) {
             converter = gDefaultConverter;
             gDefaultConverter = nullptr;
         }
@@ -51,48 +51,48 @@ u_getDefaultConverter(UErrorCode *status)
     }
 
     /* if the cache was empty, create a converter */
-    if(converter == nullptr) {
+    எனில்(converter == nullptr) {
         converter = ucnv_open(nullptr, status);
-        if(U_FAILURE(*status)) {
+        எனில்(U_FAILURE(*status)) {
             ucnv_close(converter);
             converter = nullptr;
         }
     }
 
-    return converter;
+    திரும்பு converter;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI வெறுமை U_EXPORT2
 u_releaseDefaultConverter(UConverter *converter)
 {
-    if(gDefaultConverter == nullptr) {
-        if (converter != nullptr) {
+    எனில்(gDefaultConverter == nullptr) {
+        எனில் (converter != nullptr) {
             ucnv_reset(converter);
         }
         ucnv_enableCleanup();
         icu::umtx_lock(nullptr);
-        if(gDefaultConverter == nullptr) {
+        எனில்(gDefaultConverter == nullptr) {
             gDefaultConverter = converter;
             converter = nullptr;
         }
         icu::umtx_unlock(nullptr);
     }
 
-    if(converter != nullptr) {
+    எனில்(converter != nullptr) {
         ucnv_close(converter);
     }
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI வெறுமை U_EXPORT2
 u_flushDefaultConverter()
 {
     UConverter *converter = nullptr;
     
-    if (gDefaultConverter != nullptr) {
+    எனில் (gDefaultConverter != nullptr) {
         icu::umtx_lock(nullptr);
         
         /* need to check to make sure it wasn't taken out from under us */
-        if (gDefaultConverter != nullptr) {
+        எனில் (gDefaultConverter != nullptr) {
             converter = gDefaultConverter;
             gDefaultConverter = nullptr;
         }
@@ -100,7 +100,7 @@ u_flushDefaultConverter()
     }
 
     /* if the cache was populated, flush it */
-    if(converter != nullptr) {
+    எனில்(converter != nullptr) {
          ucnv_close(converter);
     }
 }
@@ -114,27 +114,27 @@ u_flushDefaultConverter()
 /*
  returns the minimum of (the length of the null-terminated string) and n.
 */
-static int32_t u_astrnlen(const char *s1, int32_t n)
+நிலையான int32_t u_astrnlen(மாறிலி எழுத்து *s1, int32_t n)
 {
     int32_t len = 0;
 
-    if (s1)
+    எனில் (s1)
     {
-        while (n-- && *(s1++))
+        போது (n-- && *(s1++))
         {
             len++;
         }
     }
-    return len;
+    திரும்பு len;
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_uastrncpy(char16_t* ucs1 U_LIFETIME_BOUND, const char* s2, int32_t n)
+u_uastrncpy(char16_t* ucs1 U_LIFETIME_BOUND, மாறிலி எழுத்து* s2, int32_t n)
 {
   char16_t *target = ucs1;
   UErrorCode err = U_ZERO_ERROR;
   UConverter *cnv = u_getDefaultConverter(&err);
-  if(U_SUCCESS(err) && cnv != nullptr) {
+  எனில்(U_SUCCESS(err) && cnv != nullptr) {
     ucnv_reset(cnv);
     ucnv_toUnicode(cnv,
                    &target,
@@ -142,28 +142,28 @@ u_uastrncpy(char16_t* ucs1 U_LIFETIME_BOUND, const char* s2, int32_t n)
                    &s2,
                    s2+u_astrnlen(s2, n),
                    nullptr,
-                   true,
+                   உண்மை,
                    &err);
     ucnv_reset(cnv); /* be good citizens */
     u_releaseDefaultConverter(cnv);
-    if(U_FAILURE(err) && (err != U_BUFFER_OVERFLOW_ERROR) ) {
+    எனில்(U_FAILURE(err) && (err != U_BUFFER_OVERFLOW_ERROR) ) {
       *ucs1 = 0; /* failure */
     }
-    if(target < (ucs1+n)) { /* U_BUFFER_OVERFLOW_ERROR isn't an err, just means no termination will happen. */
+    எனில்(target < (ucs1+n)) { /* U_BUFFER_OVERFLOW_ERROR isn't an err, just means no termination will happen. */
       *target = 0;  /* terminate */
     }
-  } else {
+  } இல்லையெனில் {
     *ucs1 = 0;
   }
-  return ucs1;
+  திரும்பு ucs1;
 }
 
 U_CAPI char16_t* U_EXPORT2
-u_uastrcpy(char16_t* ucs1 U_LIFETIME_BOUND, const char* s2)
+u_uastrcpy(char16_t* ucs1 U_LIFETIME_BOUND, மாறிலி எழுத்து* s2)
 {
   UErrorCode err = U_ZERO_ERROR;
   UConverter *cnv = u_getDefaultConverter(&err);
-  if(U_SUCCESS(err) && cnv != nullptr) {
+  எனில்(U_SUCCESS(err) && cnv != nullptr) {
     ucnv_toUChars(cnv,
                     ucs1,
                     MAX_STRLEN,
@@ -171,39 +171,39 @@ u_uastrcpy(char16_t* ucs1 U_LIFETIME_BOUND, const char* s2)
                     (int32_t)uprv_strlen(s2),
                     &err);
     u_releaseDefaultConverter(cnv);
-    if(U_FAILURE(err)) {
+    எனில்(U_FAILURE(err)) {
       *ucs1 = 0;
     }
-  } else {
+  } இல்லையெனில் {
     *ucs1 = 0;
   }
-  return ucs1;
+  திரும்பு ucs1;
 }
 
 /*
  returns the minimum of (the length of the null-terminated string) and n.
 */
-static int32_t u_ustrnlen(const char16_t *ucs1, int32_t n)
+நிலையான int32_t u_ustrnlen(மாறிலி char16_t *ucs1, int32_t n)
 {
     int32_t len = 0;
 
-    if (ucs1)
+    எனில் (ucs1)
     {
-        while (n-- && *(ucs1++))
+        போது (n-- && *(ucs1++))
         {
             len++;
         }
     }
-    return len;
+    திரும்பு len;
 }
 
-U_CAPI char* U_EXPORT2
-u_austrncpy(char* s1 U_LIFETIME_BOUND, const char16_t* ucs2, int32_t n)
+U_CAPI எழுத்து* U_EXPORT2
+u_austrncpy(எழுத்து* s1 U_LIFETIME_BOUND, மாறிலி char16_t* ucs2, int32_t n)
 {
-  char *target = s1;
+  எழுத்து *target = s1;
   UErrorCode err = U_ZERO_ERROR;
   UConverter *cnv = u_getDefaultConverter(&err);
-  if(U_SUCCESS(err) && cnv != nullptr) {
+  எனில்(U_SUCCESS(err) && cnv != nullptr) {
     ucnv_reset(cnv);
     ucnv_fromUnicode(cnv,
                   &target,
@@ -211,28 +211,28 @@ u_austrncpy(char* s1 U_LIFETIME_BOUND, const char16_t* ucs2, int32_t n)
                   &ucs2,
                   ucs2+u_ustrnlen(ucs2, n),
                   nullptr,
-                  true,
+                  உண்மை,
                   &err);
     ucnv_reset(cnv); /* be good citizens */
     u_releaseDefaultConverter(cnv);
-    if(U_FAILURE(err) && (err != U_BUFFER_OVERFLOW_ERROR) ) {
+    எனில்(U_FAILURE(err) && (err != U_BUFFER_OVERFLOW_ERROR) ) {
       *s1 = 0; /* failure */
     }
-    if(target < (s1+n)) { /* U_BUFFER_OVERFLOW_ERROR isn't an err, just means no termination will happen. */
+    எனில்(target < (s1+n)) { /* U_BUFFER_OVERFLOW_ERROR isn't an err, just means no termination will happen. */
       *target = 0;  /* terminate */
     }
-  } else {
+  } இல்லையெனில் {
     *s1 = 0;
   }
-  return s1;
+  திரும்பு s1;
 }
 
-U_CAPI char* U_EXPORT2
-u_austrcpy(char* s1 U_LIFETIME_BOUND, const char16_t* ucs2)
+U_CAPI எழுத்து* U_EXPORT2
+u_austrcpy(எழுத்து* s1 U_LIFETIME_BOUND, மாறிலி char16_t* ucs2)
 {
   UErrorCode err = U_ZERO_ERROR;
   UConverter *cnv = u_getDefaultConverter(&err);
-  if(U_SUCCESS(err) && cnv != nullptr) {
+  எனில்(U_SUCCESS(err) && cnv != nullptr) {
     int32_t len = ucnv_fromUChars(cnv,
                   s1,
                   MAX_STRLEN,
@@ -241,10 +241,10 @@ u_austrcpy(char* s1 U_LIFETIME_BOUND, const char16_t* ucs2)
                   &err);
     u_releaseDefaultConverter(cnv);
     s1[len] = 0;
-  } else {
+  } இல்லையெனில் {
     *s1 = 0;
   }
-  return s1;
+  திரும்பு s1;
 }
 
 #endif

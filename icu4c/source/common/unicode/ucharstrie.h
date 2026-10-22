@@ -23,13 +23,13 @@
  *                 to integer values.
  */
 
-#include "unicode/utypes.h"
+#அந்தர்பாவ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#எனில் U_SHOW_CPLUSPLUS_API
 
-#include "unicode/unistr.h"
-#include "unicode/uobject.h"
-#include "unicode/ustringtrie.h"
+#அந்தர்பாவ "unicode/unistr.h"
+#அந்தர்பாவ "unicode/uobject.h"
+#அந்தர்பாவ "unicode/ustringtrie.h"
 
 U_NAMESPACE_BEGIN
 
@@ -50,8 +50,8 @@ class UVector32;
  * This class is not intended for public subclassing.
  * @stable ICU 4.8
  */
-class U_COMMON_API UCharsTrie : public UMemory {
-public:
+class U_COMMON_API UCharsTrie : பொது UMemory {
+பொது:
     /**
      * Constructs a UCharsTrie reader instance.
      *
@@ -82,7 +82,7 @@ public:
      * @param other Another UCharsTrie object.
      * @stable ICU 4.8
      */
-    UCharsTrie(const UCharsTrie &other)
+    UCharsTrie(மாறிலி UCharsTrie &other)
             : ownedArray_(nullptr), uchars_(other.uchars_),
               pos_(other.pos_), remainingMatchLength_(other.remainingMatchLength_) {}
 
@@ -94,7 +94,7 @@ public:
     UCharsTrie& reset() U_LIFETIME_BOUND {
         pos_=uchars_;
         remainingMatchLength_=-1;
-        return *this;
+        திரும்பு *this;
     }
 
     /**
@@ -105,8 +105,8 @@ public:
      * @see resetToState64
      * @stable ICU 65
      */
-    uint64_t getState64() const {
-        return (static_cast<uint64_t>(remainingMatchLength_ + 2) << kState64RemainingShift) |
+    uint64_t getState64() மாறிலி {
+        திரும்பு (static_cast<uint64_t>(remainingMatchLength_ + 2) << kState64RemainingShift) |
             static_cast<uint64_t>(pos_ - uchars_);
     }
 
@@ -127,7 +127,7 @@ public:
     UCharsTrie& resetToState64(uint64_t state) U_LIFETIME_BOUND {
         remainingMatchLength_ = static_cast<int32_t>(state >> kState64RemainingShift) - 2;
         pos_ = uchars_ + (state & kState64PosMask);
-        return *this;
+        திரும்பு *this;
     }
 
     /**
@@ -135,18 +135,18 @@ public:
      * and resetting the trie back to this state later.
      * @stable ICU 4.8
      */
-    class State : public UMemory {
-    public:
+    class State : பொது UMemory {
+    பொது:
         /**
          * Constructs an empty State.
          * @stable ICU 4.8
          */
         State() { uchars=nullptr; }
-    private:
+    தனிப்பட்ட:
         friend class UCharsTrie;
 
-        const char16_t *uchars;
-        const char16_t *pos;
+        மாறிலி char16_t *uchars;
+        மாறிலி char16_t *pos;
         int32_t remainingMatchLength;
     };
 
@@ -157,11 +157,11 @@ public:
      * @see resetToState
      * @stable ICU 4.8
      */
-    const UCharsTrie& saveState(State& state) const U_LIFETIME_BOUND {
+    மாறிலி UCharsTrie& saveState(State& state) மாறிலி U_LIFETIME_BOUND {
         state.uchars=uchars_;
         state.pos=pos_;
         state.remainingMatchLength=remainingMatchLength_;
-        return *this;
+        திரும்பு *this;
     }
 
     /**
@@ -174,12 +174,12 @@ public:
      * @see reset
      * @stable ICU 4.8
      */
-    UCharsTrie& resetToState(const State& state) U_LIFETIME_BOUND {
-        if(uchars_==state.uchars && uchars_!=nullptr) {
+    UCharsTrie& resetToState(மாறிலி State& state) U_LIFETIME_BOUND {
+        எனில்(uchars_==state.uchars && uchars_!=nullptr) {
             pos_=state.pos;
             remainingMatchLength_=state.remainingMatchLength;
         }
-        return *this;
+        திரும்பு *this;
     }
 
     /**
@@ -188,7 +188,7 @@ public:
      * @return The match/value Result.
      * @stable ICU 4.8
      */
-    UStringTrieResult current() const;
+    UStringTrieResult current() மாறிலி;
 
     /**
      * Traverses the trie from the initial state for this input char16_t.
@@ -197,9 +197,9 @@ public:
      * @return The match/value Result.
      * @stable ICU 4.8
      */
-    inline UStringTrieResult first(int32_t uchar) {
+    உள்வரி UStringTrieResult first(int32_t uchar) {
         remainingMatchLength_=-1;
-        return nextImpl(uchars_, uchar);
+        திரும்பு nextImpl(uchars_, uchar);
     }
 
     /**
@@ -255,12 +255,12 @@ public:
      * @return The value for the string so far.
      * @stable ICU 4.8
      */
-    inline int32_t getValue() const {
-        const char16_t *pos=pos_;
+    உள்வரி int32_t get_மதிப்பு() மாறிலி {
+        மாறிலி char16_t *pos=pos_;
         int32_t leadUnit=*pos++;
         // U_ASSERT(leadUnit>=kMinValueLead);
-        return leadUnit&kValueIsFinal ?
-            readValue(pos, leadUnit&0x7fff) : readNodeValue(pos, leadUnit);
+        திரும்பு leadUnit&k_மதிப்பு_Is_Final ?
+            read_மதிப்பு(pos, leadUnit&0x7fff) : read_முனை_மதிப்பு(pos, leadUnit);
     }
 
     /**
@@ -272,10 +272,10 @@ public:
      *         map to the same value.
      * @stable ICU 4.8
      */
-    inline UBool hasUniqueValue(int32_t &uniqueValue) const {
-        const char16_t *pos=pos_;
+    உள்வரி UBool has_Unique_மதிப்பு(int32_t &unique_மதிப்பு) மாறிலி {
+        மாறிலி char16_t *pos=pos_;
         // Skip the rest of a pending linear-match node.
-        return pos!=nullptr && findUniqueValue(pos+remainingMatchLength_+1, false, uniqueValue);
+        திரும்பு pos!=nullptr && find_Unique_மதிப்பு(pos+remainingMatchLength_+1, false, unique_மதிப்பு);
     }
 
     /**
@@ -285,14 +285,14 @@ public:
      * @return the number of char16_ts which continue the string from here
      * @stable ICU 4.8
      */
-    int32_t getNextUChars(Appendable &out) const;
+    int32_t getNextUChars(Appendable &out) மாறிலி;
 
     /**
      * Iterator for all of the (string, value) pairs in a UCharsTrie.
      * @stable ICU 4.8
      */
-    class U_COMMON_API Iterator : public UMemory {
-    public:
+    class U_COMMON_API Iterator : பொது UMemory {
+    பொது:
         /**
          * Iterates from the root of a char16_t-serialized UCharsTrie.
          * @param trieUChars The trie char16_ts.
@@ -317,7 +317,7 @@ public:
          *                  function chaining. (See User Guide for details.)
          * @stable ICU 4.8
          */
-        Iterator(const UCharsTrie &trie, int32_t maxStringLength, UErrorCode &errorCode);
+        Iterator(மாறிலி UCharsTrie &trie, int32_t maxStringLength, UErrorCode &errorCode);
 
         /**
          * Destructor.
@@ -336,7 +336,7 @@ public:
          * @return true if there are more elements.
          * @stable ICU 4.8
          */
-        UBool hasNext() const;
+        UBool hasNext() மாறிலி;
 
         /**
          * Finds the next (string, value) pair if there is one.
@@ -358,34 +358,34 @@ public:
          * @return The string for the last successful next().
          * @stable ICU 4.8
          */
-        const UnicodeString& getString() const U_LIFETIME_BOUND { return str_; }
+        மாறிலி UnicodeString& getString() மாறிலி U_LIFETIME_BOUND { திரும்பு str_; }
         /**
          * @return The value for the last successful next().
          * @stable ICU 4.8
          */
-        int32_t getValue() const { return value_; }
+        int32_t get_மதிப்பு() மாறிலி { திரும்பு மதிப்பு; }
 
-    private:
+    தனிப்பட்ட:
         UBool truncateAndStop() {
             pos_=nullptr;
-            value_=-1;  // no real value for str
-            return true;
+            மதிப்பு=-1;  // no real value for str
+            திரும்பு true;
         }
 
-        const char16_t* branchNext(const char16_t* pos U_LIFETIME_BOUND,
+        மாறிலி char16_t* branchNext(மாறிலி char16_t* pos U_LIFETIME_BOUND,
                                    int32_t length,
                                    UErrorCode& errorCode);
 
-        const char16_t *uchars_;
-        const char16_t *pos_;
-        const char16_t *initialPos_;
+        மாறிலி char16_t *uchars_;
+        மாறிலி char16_t *pos_;
+        மாறிலி char16_t *initialPos_;
         int32_t remainingMatchLength_;
         int32_t initialRemainingMatchLength_;
-        UBool skipValue_;  // Skip intermediate value which was already delivered.
+        UBool skip_மதிப்பு_2;  // Skip intermediate value which was already delivered.
 
         UnicodeString str_;
         int32_t maxLength_;
-        int32_t value_;
+        int32_t மதிப்பு;
 
         // The stack stores pairs of integers for backtracking to another
         // outbound edge of a branch node.
@@ -394,10 +394,10 @@ public:
         // and the remaining branch length in bits 31..16.
         // (We could store the remaining branch length minus 1 in bits 30..16 and not use the sign bit,
         // but the code looks more confusing that way.)
-        UVector32 *stack_;
+        UVector32 *அடுக்கு;
     };
 
-private:
+தனிப்பட்ட:
     friend class UCharsTrieBuilder;
 
     /**
@@ -406,120 +406,120 @@ private:
      * this constructor adopts the builder's array.
      * This constructor is only called by the builder.
      */
-    UCharsTrie(char16_t *adoptUChars, const char16_t *trieUChars)
+    UCharsTrie(char16_t *adoptUChars, மாறிலி char16_t *trieUChars)
             : ownedArray_(adoptUChars), uchars_(trieUChars),
               pos_(uchars_), remainingMatchLength_(-1) {}
 
     // No assignment operator.
-    UCharsTrie &operator=(const UCharsTrie &other) = delete;
+    UCharsTrie &operator=(மாறிலி UCharsTrie &other) = delete;
 
-    inline void stop() {
+    உள்வரி வெறுமை stop() {
         pos_=nullptr;
     }
 
     // Reads a compact 32-bit integer.
     // pos is already after the leadUnit, and the lead unit has bit 15 reset.
-    static inline int32_t readValue(const char16_t *pos, int32_t leadUnit) {
-        int32_t value;
-        if(leadUnit<kMinTwoUnitValueLead) {
-            value=leadUnit;
-        } else if(leadUnit<kThreeUnitValueLead) {
-            value=((leadUnit-kMinTwoUnitValueLead)<<16)|*pos;
-        } else {
-            value=(pos[0]<<16)|pos[1];
+    நிலையான உள்வரி int32_t read_மதிப்பு(மாறிலி char16_t *pos, int32_t leadUnit) {
+        int32_t மதிப்பு_2;
+        எனில்(leadUnit<k_Min_Two_Unit_மதிப்பு_Lead) {
+            மதிப்பு_2=leadUnit;
+        } இல்லையெனில் எனில்(leadUnit<k_Three_Unit_மதிப்பு_Lead) {
+            மதிப்பு_2=((leadUnit-k_Min_Two_Unit_மதிப்பு_Lead)<<16)|*pos;
+        } இல்லையெனில் {
+            மதிப்பு_2=(pos[0]<<16)|pos[1];
         }
-        return value;
+        திரும்பு மதிப்பு_2;
     }
-    static inline const char16_t* skipValue(const char16_t* pos U_LIFETIME_BOUND,
+    நிலையான உள்வரி மாறிலி char16_t* skip_மதிப்பு(மாறிலி char16_t* pos U_LIFETIME_BOUND,
                                             int32_t leadUnit) {
-        if(leadUnit>=kMinTwoUnitValueLead) {
-            if(leadUnit<kThreeUnitValueLead) {
+        எனில்(leadUnit>=k_Min_Two_Unit_மதிப்பு_Lead) {
+            எனில்(leadUnit<k_Three_Unit_மதிப்பு_Lead) {
                 ++pos;
-            } else {
+            } இல்லையெனில் {
                 pos+=2;
             }
         }
-        return pos;
+        திரும்பு pos;
     }
-    static inline const char16_t* skipValue(const char16_t* pos U_LIFETIME_BOUND) {
+    நிலையான உள்வரி மாறிலி char16_t* skip_மதிப்பு(மாறிலி char16_t* pos U_LIFETIME_BOUND) {
         int32_t leadUnit=*pos++;
-        return skipValue(pos, leadUnit&0x7fff);
+        திரும்பு skip_மதிப்பு(pos, leadUnit&0x7fff);
     }
 
-    static inline int32_t readNodeValue(const char16_t *pos, int32_t leadUnit) {
+    நிலையான உள்வரி int32_t read_முனை_மதிப்பு(மாறிலி char16_t *pos, int32_t leadUnit) {
         // U_ASSERT(kMinValueLead<=leadUnit && leadUnit<kValueIsFinal);
-        int32_t value;
-        if(leadUnit<kMinTwoUnitNodeValueLead) {
-            value=(leadUnit>>6)-1;
-        } else if(leadUnit<kThreeUnitNodeValueLead) {
-            value=(((leadUnit&0x7fc0)-kMinTwoUnitNodeValueLead)<<10)|*pos;
-        } else {
-            value=(pos[0]<<16)|pos[1];
+        int32_t மதிப்பு_2;
+        எனில்(leadUnit<k_Min_Two_Unit_முனை_மதிப்பு_Lead) {
+            மதிப்பு_2=(leadUnit>>6)-1;
+        } இல்லையெனில் எனில்(leadUnit<k_Three_Unit_முனை_மதிப்பு_Lead) {
+            மதிப்பு_2=(((leadUnit&0x7fc0)-k_Min_Two_Unit_முனை_மதிப்பு_Lead)<<10)|*pos;
+        } இல்லையெனில் {
+            மதிப்பு_2=(pos[0]<<16)|pos[1];
         }
-        return value;
+        திரும்பு மதிப்பு_2;
     }
-    static inline const char16_t* skipNodeValue(const char16_t* pos U_LIFETIME_BOUND,
+    நிலையான உள்வரி மாறிலி char16_t* skip_முனை_மதிப்பு(மாறிலி char16_t* pos U_LIFETIME_BOUND,
                                                 int32_t leadUnit) {
         // U_ASSERT(kMinValueLead<=leadUnit && leadUnit<kValueIsFinal);
-        if(leadUnit>=kMinTwoUnitNodeValueLead) {
-            if(leadUnit<kThreeUnitNodeValueLead) {
+        எனில்(leadUnit>=k_Min_Two_Unit_முனை_மதிப்பு_Lead) {
+            எனில்(leadUnit<k_Three_Unit_முனை_மதிப்பு_Lead) {
                 ++pos;
-            } else {
+            } இல்லையெனில் {
                 pos+=2;
             }
         }
-        return pos;
+        திரும்பு pos;
     }
 
-    static inline const char16_t* jumpByDelta(const char16_t* pos U_LIFETIME_BOUND) {
+    நிலையான உள்வரி மாறிலி char16_t* jumpByDelta(மாறிலி char16_t* pos U_LIFETIME_BOUND) {
         int32_t delta=*pos++;
-        if(delta>=kMinTwoUnitDeltaLead) {
-            if(delta==kThreeUnitDeltaLead) {
+        எனில்(delta>=kMinTwoUnitDeltaLead) {
+            எனில்(delta==kThreeUnitDeltaLead) {
                 delta=(pos[0]<<16)|pos[1];
                 pos+=2;
-            } else {
+            } இல்லையெனில் {
                 delta=((delta-kMinTwoUnitDeltaLead)<<16)|*pos++;
             }
         }
-        return pos+delta;
+        திரும்பு pos+delta;
     }
 
-    static const char16_t* skipDelta(const char16_t* pos U_LIFETIME_BOUND) {
+    நிலையான மாறிலி char16_t* skipDelta(மாறிலி char16_t* pos U_LIFETIME_BOUND) {
         int32_t delta=*pos++;
-        if(delta>=kMinTwoUnitDeltaLead) {
-            if(delta==kThreeUnitDeltaLead) {
+        எனில்(delta>=kMinTwoUnitDeltaLead) {
+            எனில்(delta==kThreeUnitDeltaLead) {
                 pos+=2;
-            } else {
+            } இல்லையெனில் {
                 ++pos;
             }
         }
-        return pos;
+        திரும்பு pos;
     }
 
-    static inline UStringTrieResult valueResult(int32_t node) {
-        return static_cast<UStringTrieResult>(USTRINGTRIE_INTERMEDIATE_VALUE - (node >> 15));
+    நிலையான உள்வரி UStringTrieResult மதிப்பு_Result(int32_t முனை) {
+        திரும்பு static_cast<UStringTrieResult>(USTRINGTRIE_INTERMEDIATE_மதிப்பு - (முனை >> 15));
     }
 
     // Handles a branch node for both next(uchar) and next(string).
-    UStringTrieResult branchNext(const char16_t *pos, int32_t length, int32_t uchar);
+    UStringTrieResult branchNext(மாறிலி char16_t *pos, int32_t length, int32_t uchar);
 
     // Requires remainingLength_<0.
-    UStringTrieResult nextImpl(const char16_t *pos, int32_t uchar);
+    UStringTrieResult nextImpl(மாறிலி char16_t *pos, int32_t uchar);
 
     // Helper functions for hasUniqueValue().
     // Recursively finds a unique value (or whether there is not a unique one)
     // from a branch.
-    static const char16_t* findUniqueValueFromBranch(const char16_t* pos U_LIFETIME_BOUND,
+    நிலையான மாறிலி char16_t* find_Unique_மதிப்பு_From_Branch(மாறிலி char16_t* pos U_LIFETIME_BOUND,
                                                      int32_t length,
-                                                     UBool haveUniqueValue,
-                                                     int32_t& uniqueValue);
+                                                     UBool have_Unique_மதிப்பு,
+                                                     int32_t& unique_மதிப்பு);
     // Recursively finds a unique value (or whether there is not a unique one)
     // starting from a position on a node lead unit.
-    static UBool findUniqueValue(const char16_t *pos, UBool haveUniqueValue, int32_t &uniqueValue);
+    நிலையான UBool find_Unique_மதிப்பு(மாறிலி char16_t *pos, UBool have_Unique_மதிப்பு, int32_t &unique_மதிப்பு);
 
     // Helper functions for getNextUChars().
     // getNextUChars() when pos is on a branch node.
-    static void getNextBranchUChars(const char16_t *pos, int32_t length, Appendable &out);
+    நிலையான வெறுமை getNextBranchUChars(மாறிலி char16_t *pos, int32_t length, Appendable &out);
 
     // UCharsTrie data structure
     //
@@ -564,60 +564,60 @@ private:
 
     // For a branch sub-node with at most this many entries, we drop down
     // to a linear search.
-    static const int32_t kMaxBranchLinearSubNodeLength=5;
+    நிலையான மாறிலி int32_t k_Max_Branch_Linear_Sub_முனை_Length=5;
 
     // 0030..003f: Linear-match node, match 1..16 units and continue reading the next node.
-    static const int32_t kMinLinearMatch=0x30;
-    static const int32_t kMaxLinearMatchLength=0x10;
+    நிலையான மாறிலி int32_t kMinLinearMatch=0x30;
+    நிலையான மாறிலி int32_t kMaxLinearMatchLength=0x10;
 
     // Match-node lead unit bits 14..6 for the optional intermediate value.
     // If these bits are 0, then there is no intermediate value.
     // Otherwise, see the *NodeValue* constants below.
-    static const int32_t kMinValueLead=kMinLinearMatch+kMaxLinearMatchLength;  // 0x0040
-    static const int32_t kNodeTypeMask=kMinValueLead-1;  // 0x003f
+    நிலையான மாறிலி int32_t k_Min_மதிப்பு_Lead=kMinLinearMatch+kMaxLinearMatchLength;  // 0x0040
+    நிலையான மாறிலி int32_t k_முனை_Type_Mask=k_Min_மதிப்பு_Lead-1;  // 0x003f
 
     // A final-value node has bit 15 set.
-    static const int32_t kValueIsFinal=0x8000;
+    நிலையான மாறிலி int32_t k_மதிப்பு_Is_Final=0x8000;
 
     // Compact value: After testing and masking off bit 15, use the following thresholds.
-    static const int32_t kMaxOneUnitValue=0x3fff;
+    நிலையான மாறிலி int32_t k_Max_One_Unit_மதிப்பு=0x3fff;
 
-    static const int32_t kMinTwoUnitValueLead=kMaxOneUnitValue+1;  // 0x4000
-    static const int32_t kThreeUnitValueLead=0x7fff;
+    நிலையான மாறிலி int32_t k_Min_Two_Unit_மதிப்பு_Lead=k_Max_One_Unit_மதிப்பு+1;  // 0x4000
+    நிலையான மாறிலி int32_t k_Three_Unit_மதிப்பு_Lead=0x7fff;
 
-    static const int32_t kMaxTwoUnitValue=((kThreeUnitValueLead-kMinTwoUnitValueLead)<<16)-1;  // 0x3ffeffff
+    நிலையான மாறிலி int32_t k_Max_Two_Unit_மதிப்பு=((k_Three_Unit_மதிப்பு_Lead-k_Min_Two_Unit_மதிப்பு_Lead)<<16)-1;  // 0x3ffeffff
 
     // Compact intermediate-value integer, lead unit shared with a branch or linear-match node.
-    static const int32_t kMaxOneUnitNodeValue=0xff;
-    static const int32_t kMinTwoUnitNodeValueLead=kMinValueLead+((kMaxOneUnitNodeValue+1)<<6);  // 0x4040
-    static const int32_t kThreeUnitNodeValueLead=0x7fc0;
+    நிலையான மாறிலி int32_t k_Max_One_Unit_முனை_மதிப்பு=0xff;
+    நிலையான மாறிலி int32_t k_Min_Two_Unit_முனை_மதிப்பு_Lead=k_Min_மதிப்பு_Lead+((k_Max_One_Unit_முனை_மதிப்பு+1)<<6);  // 0x4040
+    நிலையான மாறிலி int32_t k_Three_Unit_முனை_மதிப்பு_Lead=0x7fc0;
 
-    static const int32_t kMaxTwoUnitNodeValue=
-        ((kThreeUnitNodeValueLead-kMinTwoUnitNodeValueLead)<<10)-1;  // 0xfdffff
+    நிலையான மாறிலி int32_t k_Max_Two_Unit_முனை_மதிப்பு=
+        ((k_Three_Unit_முனை_மதிப்பு_Lead-k_Min_Two_Unit_முனை_மதிப்பு_Lead)<<10)-1;  // 0xfdffff
 
     // Compact delta integers.
-    static const int32_t kMaxOneUnitDelta=0xfbff;
-    static const int32_t kMinTwoUnitDeltaLead=kMaxOneUnitDelta+1;  // 0xfc00
-    static const int32_t kThreeUnitDeltaLead=0xffff;
+    நிலையான மாறிலி int32_t kMaxOneUnitDelta=0xfbff;
+    நிலையான மாறிலி int32_t kMinTwoUnitDeltaLead=kMaxOneUnitDelta+1;  // 0xfc00
+    நிலையான மாறிலி int32_t kThreeUnitDeltaLead=0xffff;
 
-    static const int32_t kMaxTwoUnitDelta=((kThreeUnitDeltaLead-kMinTwoUnitDeltaLead)<<16)-1;  // 0x03feffff
+    நிலையான மாறிலி int32_t kMaxTwoUnitDelta=((kThreeUnitDeltaLead-kMinTwoUnitDeltaLead)<<16)-1;  // 0x03feffff
 
     // For getState64():
     // The remainingMatchLength_ is -1..14=(kMaxLinearMatchLength=0x10)-2
     // so we need at least 5 bits for that.
     // We add 2 to store it as a positive value 1..16=kMaxLinearMatchLength.
-    static constexpr int32_t kState64RemainingShift = 59;
-    static constexpr uint64_t kState64PosMask = (UINT64_C(1) << kState64RemainingShift) - 1;
+    நிலையான constexpr int32_t kState64RemainingShift = 59;
+    நிலையான constexpr uint64_t kState64PosMask = (UINT64_C(1) << kState64RemainingShift) - 1;
 
     char16_t *ownedArray_;
 
     // Fixed value referencing the UCharsTrie words.
-    const char16_t *uchars_;
+    மாறிலி char16_t *uchars_;
 
     // Iterator variables.
 
     // Pointer to next trie unit to read. nullptr if no more matches.
-    const char16_t *pos_;
+    மாறிலி char16_t *pos_;
     // Remaining length of a linear-match node, minus 1. Negative if not in such a node.
     int32_t remainingMatchLength_;
 };

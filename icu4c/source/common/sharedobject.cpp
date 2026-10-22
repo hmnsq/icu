@@ -7,11 +7,11 @@
 ******************************************************************************
 * sharedobject.cpp
 */
-#include "sharedobject.h"
-#include "mutex.h"
-#include "uassert.h"
-#include "umutex.h"
-#include "unifiedcache.h"
+#அந்தர்பாவ "sharedobject.h"
+#அந்தர்பாவ "mutex.h"
+#அந்தர்பாவ "uassert.h"
+#அந்தர்பாவ "umutex.h"
+#அந்தர்பாவ "unifiedcache.h"
 
 U_NAMESPACE_BEGIN
 
@@ -19,9 +19,9 @@ SharedObject::~SharedObject() {}
 
 UnifiedCacheBase::~UnifiedCacheBase() {}
 
-void
-SharedObject::addRef() const {
-    umtx_atomic_inc(&hardRefCount);
+வெறுமை
+SharedObject::addRef() மாறிலி {
+    umtx_atomic_inc(&hard_Ref_மொத்தம்);
 }
 
 // removeRef Decrement the reference count and delete if it is zero.
@@ -32,30 +32,30 @@ SharedObject::addRef() const {
 //           a cache eviction cycle concurrently.
 //           NO ACCESS TO *this PERMITTED AFTER REFERENCE COUNT == 0 for cached objects.
 //           THE OBJECT MAY ALREADY BE GONE.
-void
-SharedObject::removeRef() const {
-    const UnifiedCacheBase *cache = this->cachePtr;
-    int32_t updatedRefCount = umtx_atomic_dec(&hardRefCount);
-    U_ASSERT(updatedRefCount >= 0);
-    if (updatedRefCount == 0) {
-        if (cache) {
+வெறுமை
+SharedObject::removeRef() மாறிலி {
+    மாறிலி UnifiedCacheBase *cache = இது->cachePtr;
+    int32_t updated_Ref_மொத்தம் = umtx_atomic_dec(&hard_Ref_மொத்தம்);
+    U_ASSERT(updated_Ref_மொத்தம் >= 0);
+    எனில் (updated_Ref_மொத்தம் == 0) {
+        எனில் (cache) {
             cache->handleUnreferencedObject();
-        } else {
-            delete this;
+        } இல்லையெனில் {
+            delete இது;
         }
     }
 }
 
 
 int32_t
-SharedObject::getRefCount() const {
-    return umtx_loadAcquire(hardRefCount);
+SharedObject::get_Ref_மொத்தம்() மாறிலி {
+    திரும்பு umtx_loadAcquire(hard_Ref_மொத்தம்);
 }
 
-void
-SharedObject::deleteIfZeroRefCount() const {
-    if (this->cachePtr == nullptr && getRefCount() == 0) {
-        delete this;
+வெறுமை
+SharedObject::delete_If_Zero_Ref_மொத்தம்() மாறிலி {
+    எனில் (இது->cachePtr == nullptr && get_Ref_மொத்தம்() == 0) {
+        delete இது;
     }
 }
 

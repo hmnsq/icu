@@ -17,9 +17,9 @@
 #ifndef ENUMSET_H
 #define ENUMSET_H
 
-#include "unicode/utypes.h"
+#அந்தர்பாவ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#எனில் U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
 
@@ -30,35 +30,35 @@ U_NAMESPACE_BEGIN
  * @internal
  * \cond
  */
-template<typename T, uint32_t minValue, uint32_t limitValue>
+template<typename T, uint32_t min_மதிப்பு, uint32_t limit_மதிப்பு>
 class EnumSet {
-public:
-    inline EnumSet() : fBools(0) {}
-    inline EnumSet(const EnumSet<T,minValue,limitValue>& other) : fBools(other.fBools) {}
-    inline ~EnumSet() {}
+பொது:
+    உள்வரி EnumSet() : fBools(0) {}
+    உள்வரி EnumSet(மாறிலி EnumSet<T,min_மதிப்பு,limit_மதிப்பு>& other) : fBools(other.fBools) {}
+    உள்வரி ~EnumSet() {}
 #ifndef U_HIDE_INTERNAL_API
-    inline void clear() { fBools=0; }
-    inline void add(T toAdd) { set(toAdd, 1); }
-    inline void remove(T toRemove) { set(toRemove, 0); }
-    inline int32_t contains(T toCheck) const { return get(toCheck); }
-    inline void set(T toSet, int32_t v) { fBools=(fBools&(~flag(toSet)))|(v?(flag(toSet)):0); }
-    inline int32_t get(T toCheck) const { return (fBools & flag(toCheck))?1:0; }
-    inline UBool isValidEnum(T toCheck) const {  return (toCheck>=minValue&&toCheck<limitValue); }
-    inline UBool isValidValue(int32_t v) const { return (v==0||v==1); }
-    inline const EnumSet<T, minValue, limitValue>&
-    operator=(const EnumSet<T, minValue, limitValue>& other) U_LIFETIME_BOUND {
+    உள்வரி வெறுமை clear() { fBools=0; }
+    உள்வரி வெறுமை add(T toAdd) { set(toAdd, 1); }
+    உள்வரி வெறுமை remove(T toRemove) { set(toRemove, 0); }
+    உள்வரி int32_t contains(T toCheck) மாறிலி { திரும்பு get(toCheck); }
+    உள்வரி வெறுமை set(T toSet, int32_t v) { fBools=(fBools&(~flag(toSet)))|(v?(flag(toSet)):0); }
+    உள்வரி int32_t get(T toCheck) மாறிலி { திரும்பு (fBools & flag(toCheck))?1:0; }
+    உள்வரி UBool isValidEnum(T toCheck) மாறிலி {  திரும்பு (toCheck>=min_மதிப்பு&&toCheck<limit_மதிப்பு); }
+    உள்வரி UBool is_Valid_மதிப்பு(int32_t v) மாறிலி { திரும்பு (v==0||v==1); }
+    உள்வரி மாறிலி EnumSet<T, min_மதிப்பு, limit_மதிப்பு>&
+    operator=(மாறிலி EnumSet<T, min_மதிப்பு, limit_மதிப்பு>& other) U_LIFETIME_BOUND {
         fBools = other.fBools;
-        return *this;
+        திரும்பு *this;
     }
   
-    inline uint32_t getAll() const {
-        return fBools; 
+    உள்வரி uint32_t getAll() மாறிலி {
+        திரும்பு fBools; 
     }
 #endif /* U_HIDE_INTERNAL_API */
 
-private:
-    inline uint32_t flag(T toCheck) const { return (1<<(toCheck-minValue)); }
-private:
+தனிப்பட்ட:
+    உள்வரி uint32_t flag(T toCheck) மாறிலி { திரும்பு (1<<(toCheck-min_மதிப்பு)); }
+தனிப்பட்ட:
     uint32_t fBools;
 };
 

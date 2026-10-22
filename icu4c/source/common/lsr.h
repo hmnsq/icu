@@ -7,27 +7,27 @@
 #ifndef __LSR_H__
 #define __LSR_H__
 
-#include "unicode/stringpiece.h"
-#include "unicode/utypes.h"
-#include "unicode/uobject.h"
-#include "cstring.h"
+#அந்தர்பாவ "unicode/stringpiece.h"
+#அந்தர்பாவ "unicode/utypes.h"
+#அந்தர்பாவ "unicode/uobject.h"
+#அந்தர்பாவ "cstring.h"
 
 U_NAMESPACE_BEGIN
 
-struct LSR final : public UMemory {
-    static constexpr int32_t REGION_INDEX_LIMIT = 1001 + 26 * 26;
+கட்டமைப்பு LSR final : பொது UMemory {
+    நிலையான constexpr int32_t REGION_INDEX_LIMIT = 1001 + 26 * 26;
 
-    static constexpr int32_t EXPLICIT_LSR = 7;
-    static constexpr int32_t EXPLICIT_LANGUAGE = 4;
-    static constexpr int32_t EXPLICIT_SCRIPT = 2;
-    static constexpr int32_t EXPLICIT_REGION = 1;
-    static constexpr int32_t IMPLICIT_LSR = 0;
-    static constexpr int32_t DONT_CARE_FLAGS = 0;
+    நிலையான constexpr int32_t EXPLICIT_LSR = 7;
+    நிலையான constexpr int32_t EXPLICIT_LANGUAGE = 4;
+    நிலையான constexpr int32_t EXPLICIT_SCRIPT = 2;
+    நிலையான constexpr int32_t EXPLICIT_REGION = 1;
+    நிலையான constexpr int32_t IMPLICIT_LSR = 0;
+    நிலையான constexpr int32_t DONT_CARE_FLAGS = 0;
 
-    const char *language;
-    const char *script;
-    const char *region;
-    char *owned = nullptr;
+    மாறிலி எழுத்து *language;
+    மாறிலி எழுத்து *script;
+    மாறிலி எழுத்து *region;
+    எழுத்து *owned = nullptr;
     /** Index for region, 0 if ill-formed. @see indexForRegion */
     int32_t regionIndex = 0;
     int32_t flags = 0;
@@ -37,47 +37,47 @@ struct LSR final : public UMemory {
     LSR() : language("und"), script(""), region("") {}
 
     /** Constructor which aliases all subtag pointers. */
-    LSR(const char *lang, const char *scr, const char *r, int32_t f) :
+    LSR(மாறிலி எழுத்து *lang, மாறிலி எழுத்து *scr, மாறிலி எழுத்து *r, int32_t f) :
             language(lang),  script(scr), region(r),
             regionIndex(indexForRegion(region)), flags(f) {}
     /**
      * Constructor which prepends the prefix to the language and script,
      * copies those into owned memory, and aliases the region.
      */
-    LSR(char prefix, const char *lang, const char *scr, const char *r, int32_t f,
+    LSR(எழுத்து prefix, மாறிலி எழுத்து *lang, மாறிலி எழுத்து *scr, மாறிலி எழுத்து *r, int32_t f,
         UErrorCode &errorCode);
     LSR(StringPiece lang, StringPiece scr, StringPiece r, int32_t f,
         UErrorCode &errorCode);
     LSR(LSR &&other) noexcept;
-    LSR(const LSR &other) = delete;
-    inline ~LSR() {
+    LSR(மாறிலி LSR &other) = delete;
+    உள்வரி ~LSR() {
         // Pure inline code for almost all instances.
-        if (owned != nullptr) {
+        எனில் (owned != nullptr) {
             deleteOwned();
         }
     }
 
     LSR &operator=(LSR &&other) noexcept;
-    LSR &operator=(const LSR &other) = delete;
+    LSR &operator=(மாறிலி LSR &other) = delete;
 
     /**
      * Returns a positive index (>0) for a well-formed region code.
      * Do not rely on a particular region->index mapping; it may change.
      * Returns 0 for ill-formed strings.
      */
-    static int32_t indexForRegion(const char *region);
+    நிலையான int32_t indexForRegion(மாறிலி எழுத்து *region);
 
-    UBool isEquivalentTo(const LSR &other) const;
-    bool operator==(const LSR &other) const;
+    UBool isEquivalentTo(மாறிலி LSR &other) மாறிலி;
+    bool operator==(மாறிலி LSR &other) மாறிலி;
 
-    inline bool operator!=(const LSR &other) const {
-        return !operator==(other);
+    உள்வரி bool operator!=(மாறிலி LSR &other) மாறிலி {
+        திரும்பு !operator==(other);
     }
 
     LSR &setHashCode();
 
-private:
-    void deleteOwned();
+தனிப்பட்ட:
+    வெறுமை deleteOwned();
 };
 
 U_NAMESPACE_END

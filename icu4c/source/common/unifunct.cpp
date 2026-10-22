@@ -7,7 +7,7 @@
 **********************************************************************
 */
 
-#include "unicode/unifunct.h"
+#அந்தர்பாவ "unicode/unifunct.h"
 
 U_NAMESPACE_BEGIN
 
@@ -15,12 +15,12 @@ UOBJECT_DEFINE_ABSTRACT_RTTI_IMPLEMENTATION(UnicodeFunctor)
 
 UnicodeFunctor::~UnicodeFunctor() {}
 
-UnicodeMatcher* UnicodeFunctor::toMatcher() const U_LIFETIME_BOUND {
-    return nullptr;
+UnicodeMatcher* UnicodeFunctor::toMatcher() மாறிலி U_LIFETIME_BOUND {
+    திரும்பு nullptr;
 }
 
-UnicodeReplacer* UnicodeFunctor::toReplacer() const U_LIFETIME_BOUND {
-    return nullptr;
+UnicodeReplacer* UnicodeFunctor::toReplacer() மாறிலி U_LIFETIME_BOUND {
+    திரும்பு nullptr;
 }
 
 U_NAMESPACE_END

@@ -1,27 +1,27 @@
 // © 2025 and later: Unicode, Inc. and others.
 // License & terms of use: https://www.unicode.org/copyright.html
 
-#include "fixedstring.h"
+#அந்தர்பாவ "fixedstring.h"
 
-#include "unicode/unistr.h"
-#include "unicode/utypes.h"
+#அந்தர்பாவ "unicode/unistr.h"
+#அந்தர்பாவ "unicode/utypes.h"
 
 U_NAMESPACE_BEGIN
 
-U_EXPORT void copyInvariantChars(const UnicodeString& src, FixedString& dst, UErrorCode& status) {
-    if (U_FAILURE(status)) {
-        return;
+U_EXPORT வெறுமை copyInvariantChars(மாறிலி UnicodeString& src, FixedString& dst, UErrorCode& status) {
+    எனில் (U_FAILURE(status)) {
+        திரும்பு;
     }
 
-    if (src.isEmpty()) {
+    எனில் (src.isEmpty()) {
         dst.clear();
-        return;
+        திரும்பு;
     }
 
     int32_t length = src.length();
-    if (!dst.reserve(length + 1)) {
+    எனில் (!dst.reserve(length + 1)) {
         status = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        திரும்பு;
     }
     src.extract(0, length, dst.getAlias(), length + 1, US_INV);
 }

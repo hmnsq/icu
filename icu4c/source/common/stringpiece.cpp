@@ -8,109 +8,109 @@
 // Author: wilsonh@google.com (Wilson Hsieh)
 //
 
-#include "unicode/utypes.h"
-#include "unicode/stringpiece.h"
-#include "cstring.h"
-#include "cmemory.h"
+#அந்தர்பாவ "unicode/utypes.h"
+#அந்தர்பாவ "unicode/stringpiece.h"
+#அந்தர்பாவ "cstring.h"
+#அந்தர்பாவ "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
-StringPiece::StringPiece(const char* str U_LIFETIME_BOUND)
+StringPiece::StringPiece(மாறிலி எழுத்து* str U_LIFETIME_BOUND)
     : ptr_(str), length_((str == nullptr) ? 0 : static_cast<int32_t>(uprv_strlen(str))) { }
 
-StringPiece::StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos) {
-  if (pos < 0) {
+StringPiece::StringPiece(மாறிலி StringPiece& x U_LIFETIME_BOUND, int32_t pos) {
+  எனில் (pos < 0) {
     pos = 0;
-  } else if (pos > x.length_) {
+  } இல்லையெனில் எனில் (pos > x.length_) {
     pos = x.length_;
   }
   ptr_ = x.ptr_ + pos;
   length_ = x.length_ - pos;
 }
 
-StringPiece::StringPiece(const StringPiece& x U_LIFETIME_BOUND, int32_t pos, int32_t len) {
-  if (pos < 0) {
+StringPiece::StringPiece(மாறிலி StringPiece& x U_LIFETIME_BOUND, int32_t pos, int32_t len) {
+  எனில் (pos < 0) {
     pos = 0;
-  } else if (pos > x.length_) {
+  } இல்லையெனில் எனில் (pos > x.length_) {
     pos = x.length_;
   }
-  if (len < 0) {
+  எனில் (len < 0) {
     len = 0;
-  } else if (len > x.length_ - pos) {
+  } இல்லையெனில் எனில் (len > x.length_ - pos) {
     len = x.length_ - pos;
   }
   ptr_ = x.ptr_ + pos;
   length_ = len;
 }
 
-void StringPiece::set(const char* str) {
+வெறுமை StringPiece::set(மாறிலி எழுத்து* str) {
   ptr_ = str;
-  if (str != nullptr)
+  எனில் (str != nullptr)
     length_ = static_cast<int32_t>(uprv_strlen(str));
-  else
+  இல்லையெனில்
     length_ = 0;
 }
 
 int32_t StringPiece::find(StringPiece needle, int32_t offset) {
-  if (length() == 0 && needle.length() == 0) {
-    return 0;
+  எனில் (length() == 0 && needle.length() == 0) {
+    திரும்பு 0;
   }
   // TODO: Improve to be better than O(N^2)?
-  for (int32_t i = offset; i < length(); i++) {
+  க்கு (int32_t i = offset; i < length(); i++) {
     int32_t j = 0;
-    for (; j < needle.length(); i++, j++) {
-      if (data()[i] != needle.data()[j]) {
+    க்கு (; j < needle.length(); i++, j++) {
+      எனில் (data()[i] != needle.data()[j]) {
         i -= j;
-        goto outer_end;
+        செல் outer_end;
       }
     }
-    return i - j;
-    outer_end: void();
+    திரும்பு i - j;
+    outer_end: வெறுமை();
   }
-  return -1;
+  திரும்பு -1;
 }
 
 int32_t StringPiece::compare(StringPiece other) {
   int32_t i = 0;
-  for (; i < length(); i++) {
-    if (i == other.length()) {
+  க்கு (; i < length(); i++) {
+    எனில் (i == other.length()) {
       // this is longer
-      return 1;
+      திரும்பு 1;
     }
-    char a = data()[i];
-    char b = other.data()[i];
-    if (a < b) {
-      return -1;
-    } else if (a > b) {
-      return 1;
+    எழுத்து a = data()[i];
+    எழுத்து b = other.data()[i];
+    எனில் (a < b) {
+      திரும்பு -1;
+    } இல்லையெனில் எனில் (a > b) {
+      திரும்பு 1;
     }
   }
-  if (i < other.length()) {
+  எனில் (i < other.length()) {
     // other is longer
-    return -1;
+    திரும்பு -1;
   }
-  return 0;
+  திரும்பு 0;
 }
 
 U_EXPORT UBool U_EXPORT2
-operator==(const StringPiece& x, const StringPiece& y) {
+operator==(மாறிலி StringPiece& x, மாறிலி StringPiece& y) {
   int32_t len = x.size();
-  if (len != y.size()) {
-    return false;
+  எனில் (len != y.size()) {
+    திரும்பு பொய்;
   }
-  if (len == 0) {
-    return true;
+  எனில் (len == 0) {
+    திரும்பு உண்மை;
   }
-  const char* p = x.data();
-  const char* p2 = y.data();
+  மாறிலி எழுத்து* p = x.data();
+  மாறிலி எழுத்து* p2 = y.data();
   // Test last byte in case strings share large common prefix
   --len;
-  if (p[len] != p2[len]) return false;
+  எனில் (p[len] != p2[len]) திரும்பு பொய்;
   // At this point we can, but don't have to, ignore the last byte.
-  return uprv_memcmp(p, p2, len) == 0;
+  திரும்பு uprv_memcmp(p, p2, len) == 0;
 }
 
 
-const int32_t StringPiece::npos = 0x7fffffff;
+மாறிலி int32_t StringPiece::npos = 0x7fffffff;
 
 U_NAMESPACE_END

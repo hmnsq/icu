@@ -8,18 +8,18 @@
  *
  *******************************************************************************
  */
-#include "unicode/utypes.h"
+#அந்தர்பாவ "unicode/utypes.h"
 
-#if !UCONFIG_NO_SERVICE
+#எனில் !UCONFIG_NO_SERVICE
 
-#include "unicode/resbund.h"
-#include "uresimp.h"
-#include "cmemory.h"
-#include "servloc.h"
-#include "ustrfmt.h"
-#include "uhash.h"
-#include "charstr.h"
-#include "uassert.h"
+#அந்தர்பாவ "unicode/resbund.h"
+#அந்தர்பாவ "uresimp.h"
+#அந்தர்பாவ "cmemory.h"
+#அந்தர்பாவ "servloc.h"
+#அந்தர்பாவ "ustrfmt.h"
+#அந்தர்பாவ "uhash.h"
+#அந்தர்பாவ "charstr.h"
+#அந்தர்பாவ "uassert.h"
 
 #define UNDERSCORE_CHAR ((char16_t)0x005f)
 #define AT_SIGN_CHAR    ((char16_t)64)
@@ -31,22 +31,22 @@ U_NAMESPACE_BEGIN
  ******************************************************************
  */
 
-SimpleLocaleKeyFactory::SimpleLocaleKeyFactory(UObject* objToAdopt,
-                                               const UnicodeString& locale,
+Simple_Locale_சாவி_Factory::Simple_Locale_சாவி_Factory(UObject* objToAdopt,
+                                               மாறிலி UnicodeString& locale,
                                                int32_t kind,
                                                int32_t coverage)
-  : LocaleKeyFactory(coverage)
+  : Locale_சாவி_Factory(coverage)
   , _obj(objToAdopt)
   , _id(locale)
   , _kind(kind)
 {
 }
 
-SimpleLocaleKeyFactory::SimpleLocaleKeyFactory(UObject* objToAdopt,
-                                               const Locale& locale,
+Simple_Locale_சாவி_Factory::Simple_Locale_சாவி_Factory(UObject* objToAdopt,
+                                               மாறிலி Locale& locale,
                                                int32_t kind,
                                                int32_t coverage)
-  : LocaleKeyFactory(coverage)
+  : Locale_சாவி_Factory(coverage)
   , _obj(objToAdopt)
   , _id()
   , _kind(kind)
@@ -54,26 +54,26 @@ SimpleLocaleKeyFactory::SimpleLocaleKeyFactory(UObject* objToAdopt,
     LocaleUtility::initNameFromLocale(locale, _id);
 }
 
-SimpleLocaleKeyFactory::~SimpleLocaleKeyFactory()
+Simple_Locale_சாவி_Factory::~Simple_Locale_சாவி_Factory()
 {
   delete _obj;
   _obj = nullptr;
 }
 
 UObject*
-SimpleLocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* service, UErrorCode& status) const
+Simple_Locale_சாவி_Factory::create(மாறிலி ICUService_சாவி& சாவி, மாறிலி ICUService* service, UErrorCode& status) மாறிலி
 {
-    if (U_SUCCESS(status)) {
-        const LocaleKey& lkey = static_cast<const LocaleKey&>(key);
-        if (_kind == LocaleKey::KIND_ANY || _kind == lkey.kind()) {
-            UnicodeString keyID;
-            lkey.currentID(keyID);
-            if (_id == keyID) {
-                return service->cloneInstance(_obj);
+    எனில் (U_SUCCESS(status)) {
+        மாறிலி Locale_சாவி& lkey = static_cast<மாறிலி Locale_சாவி&>(சாவி);
+        எனில் (_kind == Locale_சாவி::KIND_ANY || _kind == lkey.kind()) {
+            UnicodeString சாவி_ID;
+            lkey.currentID(சாவி_ID);
+            எனில் (_id == சாவி_ID) {
+                திரும்பு service->cloneInstance(_obj);
             }
         }
     }
-    return nullptr;
+    திரும்பு nullptr;
 }
 
 //UBool
@@ -82,38 +82,38 @@ SimpleLocaleKeyFactory::create(const ICUServiceKey& key, const ICUService* servi
 //    return id == _id;
 //}
 
-void
-SimpleLocaleKeyFactory::updateVisibleIDs(Hashtable& result, UErrorCode& status) const
+வெறுமை
+Simple_Locale_சாவி_Factory::updateVisibleIDs(Hashtable& result, UErrorCode& status) மாறிலி
 {
-    if (U_SUCCESS(status)) {
-        if (_coverage & 0x1) {
+    எனில் (U_SUCCESS(status)) {
+        எனில் (_coverage & 0x1) {
             result.remove(_id);
-        } else {
-            result.put(_id, (void*)this, status);
+        } இல்லையெனில் {
+            result.put(_id, (வெறுமை*)இது, status);
         }
     }
 }
 
 #ifdef SERVICE_DEBUG
 UnicodeString&
-SimpleLocaleKeyFactory::debug(UnicodeString& result) const
+Simple_Locale_சாவி_Factory::debug(UnicodeString& result) மாறிலி
 {
-    LocaleKeyFactory::debug(result);
+    Locale_சாவி_Factory::debug(result);
     result.append((UnicodeString)", id: ");
     result.append(_id);
     result.append((UnicodeString)", kind: ");
     result.append(_kind);
-    return result;
+    திரும்பு result;
 }
 
 UnicodeString&
-SimpleLocaleKeyFactory::debugClass(UnicodeString& result) const
+Simple_Locale_சாவி_Factory::debugClass(UnicodeString& result) மாறிலி
 {
-    return result.append((UnicodeString)"SimpleLocaleKeyFactory");
+    திரும்பு result.append((UnicodeString)"SimpleLocaleKeyFactory");
 }
 #endif
 
-UOBJECT_DEFINE_RTTI_IMPLEMENTATION(SimpleLocaleKeyFactory)
+UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Simple_Locale_சாவி_Factory)
 
 U_NAMESPACE_END
 

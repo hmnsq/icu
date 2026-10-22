@@ -10,19 +10,19 @@
 ***************************************************************************
 */
 
-#include "unicode/utypes.h"
+#அந்தர்பாவ "unicode/utypes.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#எனில் !UCONFIG_NO_BREAK_ITERATION
 
-#include "unicode/unistr.h"
-#include "unicode/uniset.h"
-#include "unicode/uchar.h"
-#include "unicode/parsepos.h"
+#அந்தர்பாவ "unicode/unistr.h"
+#அந்தர்பாவ "unicode/uniset.h"
+#அந்தர்பாவ "unicode/uchar.h"
+#அந்தர்பாவ "unicode/parsepos.h"
 
-#include "cstr.h"
-#include "rbbinode.h"
-#include "rbbirb.h"
-#include "umutex.h"
+#அந்தர்பாவ "cstr.h"
+#அந்தர்பாவ "rbbinode.h"
+#அந்தர்பாவ "rbbirb.h"
+#அந்தர்பாவ "umutex.h"
 
 
 //
@@ -30,7 +30,7 @@
 //                                  when the hash table is deleted.
 //
 U_CDECL_BEGIN
-static void U_CALLCONV RBBISymbolTableEntry_deleter(void *p) {
+நிலையான வெறுமை U_CALLCONV RBBISymbolTableEntry_deleter(வெறுமை *p) {
     icu::RBBISymbolTableEntry *px = (icu::RBBISymbolTableEntry *)p;
     delete px;
 }
@@ -40,17 +40,17 @@ U_CDECL_END
 
 U_NAMESPACE_BEGIN
 
-RBBISymbolTable::RBBISymbolTable(RBBIRuleScanner *rs, const UnicodeString &rules, UErrorCode &status)
+RBBISymbolTable::RBBISymbolTable(RBBIRuleScanner *rs, மாறிலி UnicodeString &rules, UErrorCode &status)
     : fRules(rules), fRuleScanner(rs)
 {
     fHashTable       = nullptr;
 
     fHashTable = uhash_open(uhash_hashUnicodeString, uhash_compareUnicodeString, nullptr, &status);
     // uhash_open checks status
-    if (U_FAILURE(status)) {
-        return;
+    எனில் (U_FAILURE(status)) {
+        திரும்பு;
     }
-    uhash_setValueDeleter(fHashTable, RBBISymbolTableEntry_deleter);
+    uhash_set_மதிப்பு_Deleter(fHashTable, RBBISymbolTableEntry_deleter);
 }
 
 
@@ -68,14 +68,14 @@ RBBISymbolTable::~RBBISymbolTable()
 //
 //                                The variable name does NOT include the leading $.
 //
-const UnicodeString  *RBBISymbolTable::lookup(const UnicodeString& s) const
+மாறிலி UnicodeString  *RBBISymbolTable::lookup(மாறிலி UnicodeString& s) மாறிலி
 {
-    const RBBISymbolTableEntry* const el =
-        static_cast<const RBBISymbolTableEntry*>(uhash_get(fHashTable, &s));
-    if (el == nullptr) {
-        return nullptr;
+    மாறிலி RBBISymbolTableEntry* மாறிலி el =
+        static_cast<மாறிலி RBBISymbolTableEntry*>(uhash_get(fHashTable, &s));
+    எனில் (el == nullptr) {
+        திரும்பு nullptr;
     }
-    const RBBINode& exprNode = *el->val->fLeftChild; // Root node of expression for variable
+    மாறிலி RBBINode& கோவை_முனை = *el->val->f_இடது_Child; // Root node of expression for variable
     // Return the original source string for the expression.
     // Note that for set-valued variables used in UnicodeSet expressions, this would be rejected by
     // the UnicodeSet parser if the source itself contains variable references.  For instance, with
@@ -90,27 +90,27 @@ const UnicodeString  *RBBISymbolTable::lookup(const UnicodeString& s) const
     // to lookup() never happens; instead, lookupSet("CaseIgnorable") is called when computing
     // $Cased and returns the non-null value of $CaseIgnorable, and then when computing $NotCased,
     // lookupSet("Cased") returns the value computed for $Cased.
-    return &exprNode.fText;
+    திரும்பு &கோவை_முனை.fText;
 }
 
-const UnicodeSet* RBBISymbolTable::lookupSet(const UnicodeString& s) const {
-    const RBBISymbolTableEntry* const el = static_cast<const RBBISymbolTableEntry*>(uhash_get(fHashTable, &s));
-    if (el == nullptr) {
-        return nullptr;
+மாறிலி UnicodeSet* RBBISymbolTable::lookupSet(மாறிலி UnicodeString& s) மாறிலி {
+    மாறிலி RBBISymbolTableEntry* மாறிலி el = static_cast<மாறிலி RBBISymbolTableEntry*>(uhash_get(fHashTable, &s));
+    எனில் (el == nullptr) {
+        திரும்பு nullptr;
     }
-    const RBBINode& exprNode = *el->val->fLeftChild;
-    if (exprNode.fType == RBBINode::setRef) {
-        return exprNode.fLeftChild->fInputSet;
-    } else {
-        return nullptr;
+    மாறிலி RBBINode& கோவை_முனை = *el->val->f_இடது_Child;
+    எனில் (கோவை_முனை.fType == RBBINode::setRef) {
+        திரும்பு கோவை_முனை.f_இடது_Child->f_உள்ளீடு_Set;
+    } இல்லையெனில் {
+        திரும்பு nullptr;
     }
 }
 
 
 
 //  No longer used, see ICU-23297.
-const UnicodeFunctor* RBBISymbolTable::lookupMatcher(UChar32 /*ch*/) const {
-    return nullptr;
+மாறிலி UnicodeFunctor* RBBISymbolTable::lookupMatcher(UChar32 /*ch*/) மாறிலி {
+    திரும்பு nullptr;
 }
 
 //
@@ -123,25 +123,25 @@ const UnicodeFunctor* RBBISymbolTable::lookupMatcher(UChar32 /*ch*/) const {
 //                                   from the rules based transliterator implementation.
 //                                   I didn't see an obvious way of sharing it.
 //
-UnicodeString   RBBISymbolTable::parseReference(const UnicodeString& text,
-                                                ParsePosition& pos, int32_t limit) const
+UnicodeString   RBBISymbolTable::parseReference(மாறிலி UnicodeString& text,
+                                                ParsePosition& pos, int32_t limit) மாறிலி
 {
     int32_t start = pos.getIndex();
     int32_t i = start;
     UnicodeString result;
-    while (i < limit) {
+    போது (i < limit) {
         char16_t c = text.charAt(i);
-        if ((i==start && !u_isIDStart(c)) || !u_isIDPart(c)) {
-            break;
+        எனில் ((i==start && !u_isIDStart(c)) || !u_isIDPart(c)) {
+            நிறுத்து;
         }
         ++i;
     }
-    if (i == start) { // No valid name chars
-        return result; // Indicate failure with empty string
+    எனில் (i == start) { // No valid name chars
+        திரும்பு result; // Indicate failure with empty string
     }
     pos.setIndex(i);
     text.extractBetween(start, i, result);
-    return result;
+    திரும்பு result;
 }
 
 
@@ -151,16 +151,16 @@ UnicodeString   RBBISymbolTable::parseReference(const UnicodeString& text,
 //                                  corresponding RBBI Node.  If there is no entry
 //                                  in the table for this name, return nullptr.
 //
-RBBINode       *RBBISymbolTable::lookupNode(const UnicodeString &key) const{
+RBBINode       *RBBISymbolTable::lookup_முனை(மாறிலி UnicodeString &சாவி) மாறிலி{
 
-    RBBINode             *retNode = nullptr;
+    RBBINode             *ret_முனை = nullptr;
     RBBISymbolTableEntry *el;
 
-    el = static_cast<RBBISymbolTableEntry*>(uhash_get(fHashTable, &key));
-    if (el != nullptr) {
-        retNode = el->val;
+    el = static_cast<RBBISymbolTableEntry*>(uhash_get(fHashTable, &சாவி));
+    எனில் (el != nullptr) {
+        ret_முனை = el->val;
     }
-    return retNode;
+    திரும்பு ret_முனை;
 }
 
 
@@ -170,38 +170,38 @@ RBBINode       *RBBISymbolTable::lookupNode(const UnicodeString &key) const{
 //                                    this will only occur in the case of duplicate
 //                                    variable assignments.
 //
-void            RBBISymbolTable::addEntry  (const UnicodeString &key, RBBINode *val, UErrorCode &err) {
+வெறுமை            RBBISymbolTable::addEntry  (மாறிலி UnicodeString &சாவி, RBBINode *val, UErrorCode &err) {
     RBBISymbolTableEntry *e;
     /* test for buffer overflows */
-    if (U_FAILURE(err)) {
-        return;
+    எனில் (U_FAILURE(err)) {
+        திரும்பு;
     }
-    e = static_cast<RBBISymbolTableEntry*>(uhash_get(fHashTable, &key));
-    if (e != nullptr) {
+    e = static_cast<RBBISymbolTableEntry*>(uhash_get(fHashTable, &சாவி));
+    எனில் (e != nullptr) {
         err = U_BRK_VARIABLE_REDFINITION;
-        return;
+        திரும்பு;
     }
 
-    e = new RBBISymbolTableEntry;
-    if (e == nullptr) {
+    e = புதிய RBBISymbolTableEntry;
+    எனில் (e == nullptr) {
         err = U_MEMORY_ALLOCATION_ERROR;
-        return;
+        திரும்பு;
     }
-    e->key = key;
+    e->சாவி = சாவி;
     e->val = val;
-    uhash_put( fHashTable, &e->key, e, &err);
+    uhash_put( fHashTable, &e->சாவி, e, &err);
 }
 
 
-RBBISymbolTableEntry::RBBISymbolTableEntry() : UMemory(), key(), val(nullptr) {}
+RBBISymbolTableEntry::RBBISymbolTableEntry() : UMemory(), சாவி(), val(nullptr) {}
 
 RBBISymbolTableEntry::~RBBISymbolTableEntry() {
     // The "val" of a symbol table entry is a variable reference node.
     // The l. child of the val is the rhs expression from the assignment.
     // Unlike other node types, children of variable reference nodes are not
     //    automatically recursively deleted.  We do it manually here.
-    delete val->fLeftChild;
-    val->fLeftChild = nullptr;
+    delete val->f_இடது_Child;
+    val->f_இடது_Child = nullptr;
 
     delete  val;
 
@@ -213,35 +213,35 @@ RBBISymbolTableEntry::~RBBISymbolTableEntry() {
 //  RBBISymbolTable::print    Debugging function, dump out the symbol table contents.
 //
 #ifdef RBBI_DEBUG
-void RBBISymbolTable::rbbiSymtablePrint() const {
+வெறுமை RBBISymbolTable::rbbiSymtablePrint() மாறிலி {
     RBBIDebugPrintf("Variable Definitions Symbol Table\n"
            "Name                  Node         serial  String Val\n"
            "-------------------------------------------------------------------\n");
 
     int32_t pos = UHASH_FIRST;
-    const UHashElement  *e   = nullptr;
-    for (;;) {
+    மாறிலி UHashElement  *e   = nullptr;
+    க்கு (;;) {
         e = uhash_nextElement(fHashTable,  &pos);
-        if (e == nullptr ) {
-            break;
+        எனில் (e == nullptr ) {
+            நிறுத்து;
         }
         RBBISymbolTableEntry  *s   = (RBBISymbolTableEntry *)e->value.pointer;
 
-        RBBIDebugPrintf("%-19s   %8p %7d ", CStr(s->key)(), (void *)s->val, s->val->fSerialNum);
-        RBBIDebugPrintf(" %s\n", CStr(s->val->fLeftChild->fText)());
+        RBBIDebugPrintf("%-19s   %8p %7d ", CStr(s->சாவி)(), (வெறுமை *)s->val, s->val->f_Serial_இலக்கம்);
+        RBBIDebugPrintf(" %s\n", CStr(s->val->f_இடது_Child->fText)());
     }
 
     RBBIDebugPrintf("\nParsed Variable Definitions\n");
     pos = -1;
-    for (;;) {
+    க்கு (;;) {
         e = uhash_nextElement(fHashTable,  &pos);
-        if (e == nullptr ) {
-            break;
+        எனில் (e == nullptr ) {
+            நிறுத்து;
         }
         RBBISymbolTableEntry  *s   = (RBBISymbolTableEntry *)e->value.pointer;
-        RBBIDebugPrintf("%s\n", CStr(s->key)());
-        RBBINode::printTree(s->val, true);
-        RBBINode::printTree(s->val->fLeftChild, false);
+        RBBIDebugPrintf("%s\n", CStr(s->சாவி)());
+        RBBINode::print_மரம்(s->val, உண்மை);
+        RBBINode::print_மரம்(s->val->f_இடது_Child, பொய்);
         RBBIDebugPrintf("\n");
     }
 }

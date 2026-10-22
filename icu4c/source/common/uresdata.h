@@ -18,11 +18,11 @@
 #ifndef __RESDATA_H__
 #define __RESDATA_H__
 
-#include "unicode/utypes.h"
-#include "unicode/udata.h"
-#include "unicode/ures.h"
-#include "putilimp.h"
-#include "udataswp.h"
+#அந்தர்பாவ "unicode/utypes.h"
+#அந்தர்பாவ "unicode/udata.h"
+#அந்தர்பாவ "unicode/ures.h"
+#அந்தர்பாவ "putilimp.h"
+#அந்தர்பாவ "udataswp.h"
 
 /**
  * Numeric constants for internal-only types of resource items.
@@ -30,7 +30,7 @@
  * because they are used together.
  * Internal types are never returned by ures_getType().
  */
-typedef enum {
+வகைவரை எண்ணிக்கை {
     /** Include a negative value so that the compiler uses the same int type as for UResType. */
     URES_INTERNAL_NONE=-1,
 
@@ -60,21 +60,21 @@ typedef enum {
  * 31..28   4-bit type, see enum below
  * 27..0    28-bit four-byte-offset or value according to the type
  */
-typedef uint32_t Resource;
+வகைவரை uint32_t Resource;
 
 #define RES_BOGUS 0xffffffff
 #define RES_MAX_OFFSET 0x0fffffff
 
 #define RES_GET_TYPE(res) ((int32_t)((res)>>28UL))
 #define RES_GET_OFFSET(res) ((res)&0x0fffffff)
-#define RES_GET_POINTER(pRoot, res) ((pRoot)+RES_GET_OFFSET(res))
+#define RES_GET_POINTER(p_வேர், res) ((p_வேர்)+RES_GET_OFFSET(res))
 
 /* get signed and unsigned integer values directly from the Resource handle
  * NOTE: For proper logging, please use the res_getInt() constexpr
  */
-#if U_SIGNED_RIGHT_SHIFT_IS_ARITHMETIC
+#எனில் U_SIGNED_வலது_SHIFT_IS_ARITHMETIC
 #   define RES_GET_INT_NO_TRACE(res) (((int32_t)((res)<<4L))>>4L)
-#else
+#இல்லையெனில்
 #   define RES_GET_INT_NO_TRACE(res) (int32_t)(((res)&0x08000000) ? (res)|0xf0000000 : (res)&0x07ffffff)
 #endif
 
@@ -88,7 +88,7 @@ typedef uint32_t Resource;
 #define URES_MAKE_EMPTY_RESOURCE(type) ((Resource)(type)<<28)
 
 /* indexes[] value names; indexes are generally 32-bit (Resource) indexes */
-enum {
+எண்ணிக்கை {
     /**
      * [0] contains the length of indexes[]
      * which is at most URES_INDEX_TOP of the latest format version
@@ -106,14 +106,14 @@ enum {
      * [1] contains the top of the key strings,
      *     same as the bottom of resources or UTF-16 strings, rounded up
      */
-    URES_INDEX_KEYS_TOP,
+    URES_INDEX_சாவிகள்_உச்சி,
     /** [2] contains the top of all resources */
-    URES_INDEX_RESOURCES_TOP,
+    URES_INDEX_RESOURCES_உச்சி,
     /**
      * [3] contains the top of the bundle,
      *     in case it were ever different from [2]
      */
-    URES_INDEX_BUNDLE_TOP,
+    URES_INDEX_BUNDLE_உச்சி,
     /** [4] max. length of any table */
     URES_INDEX_MAX_TABLE_LENGTH,
     /**
@@ -128,10 +128,10 @@ enum {
      * [6] top of the 16-bit units (UTF-16 string v2 UChars, URES_TABLE16, URES_ARRAY16),
      *     rounded up (new in formatVersion 2.0, ICU 4.4)
      */
-    URES_INDEX_16BIT_TOP,
+    URES_INDEX_16_BIT_உச்சி,
     /** [7] checksum of the pool bundle (new in formatVersion 2.0, ICU 4.4) */
     URES_INDEX_POOL_CHECKSUM,
-    URES_INDEX_TOP
+    URES_INDEX_உச்சி
 };
 
 /*
@@ -383,14 +383,14 @@ enum {
 /*
  * Structure for a single, memory-mapped ResourceBundle.
  */
-typedef struct ResourceData {
+வகைவரை கட்டமைப்பு ResourceData {
     UDataMemory *data;
-    const int32_t *pRoot;
-    const uint16_t *p16BitUnits;
-    const char *poolBundleKeys;
-    Resource rootRes;
-    int32_t localKeyLimit;
-    const uint16_t *poolBundleStrings;
+    மாறிலி int32_t *p_வேர்;
+    மாறிலி uint16_t *p16BitUnits;
+    மாறிலி எழுத்து *pool_Bundle_சாவிகள்;
+    Resource வேர்_Res;
+    int32_t local_சாவி_Limit;
+    மாறிலி uint16_t *poolBundleStrings;
     int32_t poolStringIndexLimit;
     int32_t poolStringIndex16Limit;
     UBool noFallback; /* see URES_ATT_NO_FALLBACK */
@@ -399,29 +399,29 @@ typedef struct ResourceData {
     UBool useNativeStrcmp;
 } ResourceData;
 
-struct UResourceDataEntry;   // forward declared for ResoureDataValue below; actually defined in uresimp.h
+கட்டமைப்பு UResourceDataEntry;   // forward declared for ResoureDataValue below; actually defined in uresimp.h
 
 /*
  * Read a resource bundle from memory.
  */
-U_CAPI void U_EXPORT2
+U_CAPI வெறுமை U_EXPORT2
 res_read(ResourceData *pResData,
-         const UDataInfo *pInfo, const void *inBytes, int32_t length,
+         மாறிலி UDataInfo *pInfo, மாறிலி வெறுமை *inBytes, int32_t length,
          UErrorCode *errorCode);
 
 /*
  * Load a resource bundle file.
  * The ResourceData structure must be allocated externally.
  */
-U_CFUNC void
+U_CFUNC வெறுமை
 res_load(ResourceData *pResData,
-         const char *path, const char *name, UErrorCode *errorCode);
+         மாறிலி எழுத்து *path, மாறிலி எழுத்து *name, UErrorCode *errorCode);
 
 /*
  * Release a resource bundle file.
  * This does not release the ResourceData structure itself.
  */
-U_CFUNC void
+U_CFUNC வெறுமை
 res_unload(ResourceData *pResData);
 
 U_CAPI UResType U_EXPORT2
@@ -436,32 +436,32 @@ res_getPublicType(Resource res);
  * and set its length in *pLength.
  * Returns NULL if not found.
  */
-U_CAPI const UChar * U_EXPORT2
-res_getStringNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength);
+U_CAPI மாறிலி UChar * U_EXPORT2
+res_getStringNoTrace(மாறிலி ResourceData *pResData, Resource res, int32_t *pLength);
 
-U_CAPI const uint8_t * U_EXPORT2
-res_getBinaryNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength);
+U_CAPI மாறிலி uint8_t * U_EXPORT2
+res_get_இருமம்_No_Trace(மாறிலி ResourceData *pResData, Resource res, int32_t *pLength);
 
-U_CAPI const int32_t * U_EXPORT2
-res_getIntVectorNoTrace(const ResourceData *pResData, Resource res, int32_t *pLength);
+U_CAPI மாறிலி int32_t * U_EXPORT2
+res_getIntVectorNoTrace(மாறிலி ResourceData *pResData, Resource res, int32_t *pLength);
 
-U_CAPI const UChar * U_EXPORT2
-res_getAlias(const ResourceData *pResData, Resource res, int32_t *pLength);
+U_CAPI மாறிலி UChar * U_EXPORT2
+res_getAlias(மாறிலி ResourceData *pResData, Resource res, int32_t *pLength);
 
 U_CAPI Resource U_EXPORT2
-res_getResource(const ResourceData *pResData, const char *key);
+res_getResource(மாறிலி ResourceData *pResData, மாறிலி எழுத்து *சாவி);
 
 U_CAPI int32_t U_EXPORT2
-res_countArrayItems(const ResourceData *pResData, Resource res);
+res_மொத்தம்_Array_பொருட்கள்(மாறிலி ResourceData *pResData, Resource res);
 
 U_CAPI Resource U_EXPORT2
-res_getArrayItem(const ResourceData *pResData, Resource array, int32_t indexS);
+res_getArrayItem(மாறிலி ResourceData *pResData, Resource array, int32_t indexS);
 
 U_CAPI Resource U_EXPORT2
-res_getTableItemByIndex(const ResourceData *pResData, Resource table, int32_t indexS, const char ** key);
+res_getTableItemByIndex(மாறிலி ResourceData *pResData, Resource table, int32_t indexS, மாறிலி எழுத்து ** சாவி);
 
 U_CAPI Resource U_EXPORT2
-res_getTableItemByKey(const ResourceData *pResData, Resource table, int32_t *indexS, const char* * key);
+res_get_Table_Item_By_சாவி(மாறிலி ResourceData *pResData, Resource table, int32_t *indexS, மாறிலி எழுத்து* * சாவி);
 
 /**
  * Iterates over the path and stops when a scalar resource is found.
@@ -472,87 +472,87 @@ res_getTableItemByKey(const ResourceData *pResData, Resource table, int32_t *ind
  * @param path input: "CollationElements/Sequence" or "zoneStrings/3/2" etc.;
  *             output: points to the part that has not yet been processed
  */
-U_CFUNC Resource res_findResource(const ResourceData *pResData, Resource r,
-                                  char** path, const char** key);
+U_CFUNC Resource res_findResource(மாறிலி ResourceData *pResData, Resource r,
+                                  எழுத்து** path, மாறிலி எழுத்து** சாவி);
 
 #ifdef __cplusplus
 
-#include "resource.h"
-#include "restrace.h"
+#அந்தர்பாவ "resource.h"
+#அந்தர்பாவ "restrace.h"
 
 U_NAMESPACE_BEGIN
 
-inline const char16_t* res_getString(const ResourceTracer& traceInfo,
-        const ResourceData *pResData, Resource res, int32_t *pLength) {
+உள்வரி மாறிலி char16_t* res_getString(மாறிலி ResourceTracer& traceInfo,
+        மாறிலி ResourceData *pResData, Resource res, int32_t *pLength) {
     traceInfo.trace("string");
-    return res_getStringNoTrace(pResData, res, pLength);
+    திரும்பு res_getStringNoTrace(pResData, res, pLength);
 }
 
-inline const uint8_t* res_getBinary(const ResourceTracer& traceInfo,
-        const ResourceData *pResData, Resource res, int32_t *pLength) {
+உள்வரி மாறிலி uint8_t* res_get_இருமம்(மாறிலி ResourceTracer& traceInfo,
+        மாறிலி ResourceData *pResData, Resource res, int32_t *pLength) {
     traceInfo.trace("binary");
-    return res_getBinaryNoTrace(pResData, res, pLength);
+    திரும்பு res_get_இருமம்_No_Trace(pResData, res, pLength);
 }
 
-inline const int32_t* res_getIntVector(const ResourceTracer& traceInfo,
-        const ResourceData *pResData, Resource res, int32_t *pLength) {
+உள்வரி மாறிலி int32_t* res_getIntVector(மாறிலி ResourceTracer& traceInfo,
+        மாறிலி ResourceData *pResData, Resource res, int32_t *pLength) {
     traceInfo.trace("intvector");
-    return res_getIntVectorNoTrace(pResData, res, pLength);
+    திரும்பு res_getIntVectorNoTrace(pResData, res, pLength);
 }
 
-inline int32_t res_getInt(const ResourceTracer& traceInfo, Resource res) {
+உள்வரி int32_t res_getInt(மாறிலி ResourceTracer& traceInfo, Resource res) {
     traceInfo.trace("int");
-    return RES_GET_INT_NO_TRACE(res);
+    திரும்பு RES_GET_INT_NO_TRACE(res);
 }
 
-inline uint32_t res_getUInt(const ResourceTracer& traceInfo, Resource res) {
+உள்வரி uint32_t res_getUInt(மாறிலி ResourceTracer& traceInfo, Resource res) {
     traceInfo.trace("uint");
-    return RES_GET_UINT_NO_TRACE(res);
+    திரும்பு RES_GET_UINT_NO_TRACE(res);
 }
 
-class ResourceDataValue : public ResourceValue {
-public:
-    ResourceDataValue() :
+class Resource_Data_மதிப்பு : பொது Resource_மதிப்பு {
+பொது:
+    Resource_Data_மதிப்பு() :
         pResData(nullptr),
         validLocaleDataEntry(nullptr),
         res(static_cast<Resource>(URES_NONE)),
         fTraceInfo() {}
-    virtual ~ResourceDataValue();
+    மெய்நிகர் ~Resource_Data_மதிப்பு();
 
-    void setData(const ResourceData &data) {
+    வெறுமை setData(மாறிலி ResourceData &data) {
         pResData = &data;
     }
     
-    void setValidLocaleDataEntry(UResourceDataEntry *entry) {
+    வெறுமை setValidLocaleDataEntry(UResourceDataEntry *entry) {
         validLocaleDataEntry = entry;
     }
 
-    void setResource(Resource r, ResourceTracer&& traceInfo) {
+    வெறுமை setResource(Resource r, ResourceTracer&& traceInfo) {
         res = r;
         fTraceInfo = traceInfo;
     }
 
-    const ResourceData &getData() const { return *pResData; }
-    UResourceDataEntry *getValidLocaleDataEntry() const { return validLocaleDataEntry; }
-    Resource getResource() const { return res; }
-    virtual UResType getType() const override;
-    virtual const char16_t *getString(int32_t &length, UErrorCode &errorCode) const override;
-    virtual const char16_t *getAliasString(int32_t &length, UErrorCode &errorCode) const override;
-    virtual int32_t getInt(UErrorCode &errorCode) const override;
-    virtual uint32_t getUInt(UErrorCode &errorCode) const override;
-    virtual const int32_t *getIntVector(int32_t &length, UErrorCode &errorCode) const override;
-    virtual const uint8_t *getBinary(int32_t &length, UErrorCode &errorCode) const override;
-    virtual ResourceArray getArray(UErrorCode &errorCode) const override;
-    virtual ResourceTable getTable(UErrorCode &errorCode) const override;
-    virtual UBool isNoInheritanceMarker() const override;
-    virtual int32_t getStringArray(UnicodeString *dest, int32_t capacity,
-                                   UErrorCode &errorCode) const override;
-    virtual int32_t getStringArrayOrStringAsArray(UnicodeString *dest, int32_t capacity,
-                                                  UErrorCode &errorCode) const override;
-    virtual UnicodeString getStringOrFirstOfArray(UErrorCode &errorCode) const override;
+    மாறிலி ResourceData &getData() மாறிலி { திரும்பு *pResData; }
+    UResourceDataEntry *getValidLocaleDataEntry() மாறிலி { திரும்பு validLocaleDataEntry; }
+    Resource getResource() மாறிலி { திரும்பு res; }
+    மெய்நிகர் UResType getType() மாறிலி override;
+    மெய்நிகர் மாறிலி char16_t *getString(int32_t &length, UErrorCode &errorCode) மாறிலி override;
+    மெய்நிகர் மாறிலி char16_t *getAliasString(int32_t &length, UErrorCode &errorCode) மாறிலி override;
+    மெய்நிகர் int32_t getInt(UErrorCode &errorCode) மாறிலி override;
+    மெய்நிகர் uint32_t getUInt(UErrorCode &errorCode) மாறிலி override;
+    மெய்நிகர் மாறிலி int32_t *getIntVector(int32_t &length, UErrorCode &errorCode) மாறிலி override;
+    மெய்நிகர் மாறிலி uint8_t *get_இருமம்(int32_t &length, UErrorCode &errorCode) மாறிலி override;
+    மெய்நிகர் ResourceArray getArray(UErrorCode &errorCode) மாறிலி override;
+    மெய்நிகர் ResourceTable getTable(UErrorCode &errorCode) மாறிலி override;
+    மெய்நிகர் UBool isNoInheritanceMarker() மாறிலி override;
+    மெய்நிகர் int32_t getStringArray(UnicodeString *dest, int32_t capacity,
+                                   UErrorCode &errorCode) மாறிலி override;
+    மெய்நிகர் int32_t getStringArrayOrStringAsArray(UnicodeString *dest, int32_t capacity,
+                                                  UErrorCode &errorCode) மாறிலி override;
+    மெய்நிகர் UnicodeString getStringOrFirstOfArray(UErrorCode &errorCode) மாறிலி override;
 
-private:
-    const ResourceData *pResData;
+தனிப்பட்ட:
+    மாறிலி ResourceData *pResData;
     UResourceDataEntry *validLocaleDataEntry;
     Resource res;
     ResourceTracer fTraceInfo;
@@ -567,8 +567,8 @@ U_NAMESPACE_END
  * @internal
  */
 U_CAPI int32_t U_EXPORT2
-ures_swap(const UDataSwapper *ds,
-          const void *inData, int32_t length, void *outData,
+ures_swap(மாறிலி UDataSwapper *ds,
+          மாறிலி வெறுமை *inData, int32_t length, வெறுமை *outData,
           UErrorCode *pErrorCode);
 
 #endif

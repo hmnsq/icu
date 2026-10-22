@@ -10,19 +10,19 @@
 * Since: ICU 2.8
 **********************************************************************
 */
-#include "ruleiter.h"
-#include "unicode/parsepos.h"
-#include "unicode/symtable.h"
-#include "unicode/unistr.h"
-#include "unicode/utf16.h"
-#include "patternprops.h"
+#அந்தர்பாவ "ruleiter.h"
+#அந்தர்பாவ "unicode/parsepos.h"
+#அந்தர்பாவ "unicode/symtable.h"
+#அந்தர்பாவ "unicode/unistr.h"
+#அந்தர்பாவ "unicode/utf16.h"
+#அந்தர்பாவ "patternprops.h"
 
 /* \U87654321 or \ud800\udc00 */
 #define MAX_U_NOTATION_LEN 12
 
 U_NAMESPACE_BEGIN
 
-RuleCharacterIterator::RuleCharacterIterator(const UnicodeString& theText, const SymbolTable* theSym,
+RuleCharacterIterator::RuleCharacterIterator(மாறிலி UnicodeString& theText, மாறிலி குறியீடு_Table* theSym,
                       ParsePosition& thePos) :
     text(theText),
     pos(thePos),
@@ -31,98 +31,98 @@ RuleCharacterIterator::RuleCharacterIterator(const UnicodeString& theText, const
     bufPos(0)
 {}
 
-UBool RuleCharacterIterator::atEnd() const {
-    return buf == nullptr && pos.getIndex() == text.length();
+UBool RuleCharacterIterator::atEnd() மாறிலி {
+    திரும்பு buf == nullptr && pos.getIndex() == text.length();
 }
 
 UChar32 RuleCharacterIterator::next(int32_t options, UBool& isEscaped, UErrorCode& ec) {
-    if (U_FAILURE(ec)) return DONE;
+    எனில் (U_FAILURE(ec)) திரும்பு DONE;
 
     UChar32 c = DONE;
-    isEscaped = false;
+    isEscaped = பொய்;
 
-    for (;;) {
+    க்கு (;;) {
         c = _current();
         _advance(U16_LENGTH(c));
 
-        if (c == SymbolTable::SYMBOL_REF && buf == nullptr &&
+        எனில் (c == குறியீடு_Table::குறியீடு_REF && buf == nullptr &&
             (options & PARSE_VARIABLES) != 0 && sym != nullptr) {
             UnicodeString name = sym->parseReference(text, pos, text.length());
             // If name is empty there was an isolated SYMBOL_REF;
             // return it.  Caller must be prepared for this.
-            if (name.length() == 0) {
-                break;
+            எனில் (name.length() == 0) {
+                நிறுத்து;
             }
             bufPos = 0;
             buf = sym->lookup(name);
-            if (buf == nullptr) {
+            எனில் (buf == nullptr) {
                 ec = U_UNDEFINED_VARIABLE;
-                return DONE;
+                திரும்பு DONE;
             }
             // Handle empty variable value
-            if (buf->length() == 0) {
+            எனில் (buf->length() == 0) {
                 buf = nullptr;
             }
-            continue;
+            தொடர்;
         }
 
-        if ((options & SKIP_WHITESPACE) != 0 && PatternProps::isWhiteSpace(c)) {
-            continue;
+        எனில் ((options & SKIP_WHITESPACE) != 0 && PatternProps::isWhiteSpace(c)) {
+            தொடர்;
         }
 
-        if (c == 0x5C /*'\\'*/ && (options & PARSE_ESCAPES) != 0) {
+        எனில் (c == 0x5C /*'\\'*/ && (options & PARSE_ESCAPES) != 0) {
             UnicodeString tempEscape;
             int32_t offset = 0;
             c = lookahead(tempEscape, MAX_U_NOTATION_LEN).unescapeAt(offset);
             jumpahead(offset);
-            isEscaped = true;
-            if (c < 0) {
+            isEscaped = உண்மை;
+            எனில் (c < 0) {
                 ec = U_MALFORMED_UNICODE_ESCAPE;
-                return DONE;
+                திரும்பு DONE;
             }
         }
 
-        break;
+        நிறுத்து;
     }
 
-    return c;
+    திரும்பு c;
 }
 
-void RuleCharacterIterator::getPos(RuleCharacterIterator::Pos& p) const {
+வெறுமை RuleCharacterIterator::getPos(RuleCharacterIterator::Pos& p) மாறிலி {
     p.buf = buf;
     p.pos = pos.getIndex();
     p.bufPos = bufPos;
 }
 
-void RuleCharacterIterator::setPos(const RuleCharacterIterator::Pos& p) {
+வெறுமை RuleCharacterIterator::setPos(மாறிலி RuleCharacterIterator::Pos& p) {
     buf = p.buf;
     pos.setIndex(p.pos);
     bufPos = p.bufPos;
 }
 
-void RuleCharacterIterator::skipIgnored(int32_t options) {
-    if ((options & SKIP_WHITESPACE) != 0) {
-        for (;;) {
+வெறுமை RuleCharacterIterator::skipIgnored(int32_t options) {
+    எனில் ((options & SKIP_WHITESPACE) != 0) {
+        க்கு (;;) {
             UChar32 a = _current();
-            if (!PatternProps::isWhiteSpace(a)) break;
+            எனில் (!PatternProps::isWhiteSpace(a)) நிறுத்து;
             _advance(U16_LENGTH(a));
         }
     }
 }
 
-UnicodeString& RuleCharacterIterator::lookahead(UnicodeString& result, int32_t maxLookAhead) const {
-    if (maxLookAhead < 0) {
+UnicodeString& RuleCharacterIterator::lookahead(UnicodeString& result, int32_t maxLookAhead) மாறிலி {
+    எனில் (maxLookAhead < 0) {
         maxLookAhead = 0x7FFFFFFF;
     }
-    if (buf != nullptr) {
+    எனில் (buf != nullptr) {
         buf->extract(bufPos, maxLookAhead, result);
-    } else {
+    } இல்லையெனில் {
         text.extract(pos.getIndex(), maxLookAhead, result);
     }
-    return result;
+    திரும்பு result;
 }
 
-void RuleCharacterIterator::jumpahead(int32_t count) {
+வெறுமை RuleCharacterIterator::jumpahead(int32_t count) {
     _advance(count);
 }
 
@@ -134,24 +134,24 @@ UnicodeString& RuleCharacterIterator::toString(UnicodeString& result) const {
 }
 */
 
-UChar32 RuleCharacterIterator::_current() const {
-    if (buf != nullptr) {
-        return buf->char32At(bufPos);
-    } else {
-        int i = pos.getIndex();
-        return (i < text.length()) ? text.char32At(i) : static_cast<UChar32>(DONE);
+UChar32 RuleCharacterIterator::_current() மாறிலி {
+    எனில் (buf != nullptr) {
+        திரும்பு buf->char32At(bufPos);
+    } இல்லையெனில் {
+        முழு i = pos.getIndex();
+        திரும்பு (i < text.length()) ? text.char32At(i) : static_cast<UChar32>(DONE);
     }
 }
 
-void RuleCharacterIterator::_advance(int32_t count) {
-    if (buf != nullptr) {
+வெறுமை RuleCharacterIterator::_advance(int32_t count) {
+    எனில் (buf != nullptr) {
         bufPos += count;
-        if (bufPos == buf->length()) {
+        எனில் (bufPos == buf->length()) {
             buf = nullptr;
         }
-    } else {
+    } இல்லையெனில் {
         pos.setIndex(pos.getIndex() + count);
-        if (pos.getIndex() > text.length()) {
+        எனில் (pos.getIndex() > text.length()) {
             pos.setIndex(text.length());
         }
     }

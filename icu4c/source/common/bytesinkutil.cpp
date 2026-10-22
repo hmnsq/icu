@@ -4,158 +4,158 @@
 // bytesinkutil.cpp
 // created: 2017sep14 Markus W. Scherer
 
-#include "unicode/utypes.h"
-#include "unicode/bytestream.h"
-#include "unicode/edits.h"
-#include "unicode/stringoptions.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "bytesinkutil.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "uassert.h"
+#அந்தர்பாவ "unicode/utypes.h"
+#அந்தர்பாவ "unicode/bytestream.h"
+#அந்தர்பாவ "unicode/edits.h"
+#அந்தர்பாவ "unicode/stringoptions.h"
+#அந்தர்பாவ "unicode/utf8.h"
+#அந்தர்பாவ "unicode/utf16.h"
+#அந்தர்பாவ "bytesinkutil.h"
+#அந்தர்பாவ "charstr.h"
+#அந்தர்பாவ "cmemory.h"
+#அந்தர்பாவ "uassert.h"
 
 U_NAMESPACE_BEGIN
 
 UBool
-ByteSinkUtil::appendChange(int32_t length, const char16_t *s16, int32_t s16Length,
+ByteSinkUtil::appendChange(int32_t length, மாறிலி char16_t *s16, int32_t s16Length,
                            ByteSink &sink, Edits *edits, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return false; }
-    char scratch[200];
+    எனில் (U_FAILURE(errorCode)) { திரும்பு பொய்; }
+    எழுத்து scratch[200];
     int32_t s8Length = 0;
-    for (int32_t i = 0; i < s16Length;) {
+    க்கு (int32_t i = 0; i < s16Length;) {
         int32_t capacity;
         int32_t desiredCapacity = s16Length - i;
-        if (desiredCapacity < (INT32_MAX / 3)) {
+        எனில் (desiredCapacity < (INT32_MAX / 3)) {
             desiredCapacity *= 3;  // max 3 UTF-8 bytes per UTF-16 code unit
-        } else if (desiredCapacity < (INT32_MAX / 2)) {
+        } இல்லையெனில் எனில் (desiredCapacity < (INT32_MAX / 2)) {
             desiredCapacity *= 2;
-        } else {
+        } இல்லையெனில் {
             desiredCapacity = INT32_MAX;
         }
-        char *buffer = sink.GetAppendBuffer(U8_MAX_LENGTH, desiredCapacity,
+        எழுத்து *buffer = sink.GetAppendBuffer(U8_MAX_LENGTH, desiredCapacity,
                                             scratch, UPRV_LENGTHOF(scratch), &capacity);
         capacity -= U8_MAX_LENGTH - 1;
         int32_t j = 0;
-        for (; i < s16Length && j < capacity;) {
+        க்கு (; i < s16Length && j < capacity;) {
             UChar32 c;
             U16_NEXT_UNSAFE(s16, i, c);
             U8_APPEND_UNSAFE(buffer, j, c);
         }
-        if (j > (INT32_MAX - s8Length)) {
+        எனில் (j > (INT32_MAX - s8Length)) {
             errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            return false;
+            திரும்பு பொய்;
         }
         sink.Append(buffer, j);
         s8Length += j;
     }
-    if (edits != nullptr) {
+    எனில் (edits != nullptr) {
         edits->addReplace(length, s8Length);
     }
-    return true;
+    திரும்பு உண்மை;
 }
 
 UBool
-ByteSinkUtil::appendChange(const uint8_t *s, const uint8_t *limit,
-                           const char16_t *s16, int32_t s16Length,
+ByteSinkUtil::appendChange(மாறிலி uint8_t *s, மாறிலி uint8_t *limit,
+                           மாறிலி char16_t *s16, int32_t s16Length,
                            ByteSink &sink, Edits *edits, UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return false; }
-    if ((limit - s) > INT32_MAX) {
+    எனில் (U_FAILURE(errorCode)) { திரும்பு பொய்; }
+    எனில் ((limit - s) > INT32_MAX) {
         errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-        return false;
+        திரும்பு பொய்;
     }
-    return appendChange(static_cast<int32_t>(limit - s), s16, s16Length, sink, edits, errorCode);
+    திரும்பு appendChange(static_cast<int32_t>(limit - s), s16, s16Length, sink, edits, errorCode);
 }
 
-void
+வெறுமை
 ByteSinkUtil::appendCodePoint(int32_t length, UChar32 c, ByteSink &sink, Edits *edits) {
-    char s8[U8_MAX_LENGTH];
+    எழுத்து s8[U8_MAX_LENGTH];
     int32_t s8Length = 0;
     U8_APPEND_UNSAFE(s8, s8Length, c);
-    if (edits != nullptr) {
+    எனில் (edits != nullptr) {
         edits->addReplace(length, s8Length);
     }
     sink.Append(s8, s8Length);
 }
 
-namespace {
+நாமாகாஶ {
 
 // See unicode/utf8.h U8_APPEND_UNSAFE().
-inline uint8_t getTwoByteLead(UChar32 c) { return static_cast<uint8_t>((c >> 6) | 0xc0); }
-inline uint8_t getTwoByteTrail(UChar32 c) { return static_cast<uint8_t>((c & 0x3f) | 0x80); }
+உள்வரி uint8_t getTwoByteLead(UChar32 c) { திரும்பு static_cast<uint8_t>((c >> 6) | 0xc0); }
+உள்வரி uint8_t getTwoByteTrail(UChar32 c) { திரும்பு static_cast<uint8_t>((c & 0x3f) | 0x80); }
 
 }  // namespace
 
-void
+வெறுமை
 ByteSinkUtil::appendTwoBytes(UChar32 c, ByteSink &sink) {
     U_ASSERT(0x80 <= c && c <= 0x7ff);  // 2-byte UTF-8
-    char s8[2] = {static_cast<char>(getTwoByteLead(c)), static_cast<char>(getTwoByteTrail(c))};
+    எழுத்து s8[2] = {static_cast<எழுத்து>(getTwoByteLead(c)), static_cast<எழுத்து>(getTwoByteTrail(c))};
     sink.Append(s8, 2);
 }
 
-void
-ByteSinkUtil::appendNonEmptyUnchanged(const uint8_t *s, int32_t length,
+வெறுமை
+ByteSinkUtil::appendNonEmptyUnchanged(மாறிலி uint8_t *s, int32_t length,
                                       ByteSink &sink, uint32_t options, Edits *edits) {
     U_ASSERT(length > 0);
-    if (edits != nullptr) {
+    எனில் (edits != nullptr) {
         edits->addUnchanged(length);
     }
-    if ((options & U_OMIT_UNCHANGED_TEXT) == 0) {
-        sink.Append(reinterpret_cast<const char *>(s), length);
+    எனில் ((options & U_OMIT_UNCHANGED_TEXT) == 0) {
+        sink.Append(reinterpret_cast<மாறிலி எழுத்து *>(s), length);
     }
 }
 
 UBool
-ByteSinkUtil::appendUnchanged(const uint8_t *s, const uint8_t *limit,
+ByteSinkUtil::appendUnchanged(மாறிலி uint8_t *s, மாறிலி uint8_t *limit,
                               ByteSink &sink, uint32_t options, Edits *edits,
                               UErrorCode &errorCode) {
-    if (U_FAILURE(errorCode)) { return false; }
-    if ((limit - s) > INT32_MAX) {
+    எனில் (U_FAILURE(errorCode)) { திரும்பு பொய்; }
+    எனில் ((limit - s) > INT32_MAX) {
         errorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-        return false;
+        திரும்பு பொய்;
     }
     int32_t length = static_cast<int32_t>(limit - s);
-    if (length > 0) {
+    எனில் (length > 0) {
         appendNonEmptyUnchanged(s, length, sink, options, edits);
     }
-    return true;
+    திரும்பு உண்மை;
 }
 
 CharStringByteSink::CharStringByteSink(CharString* dest) : dest_(*dest) {
 }
 
-CharStringByteSink::~CharStringByteSink() = default;
+CharStringByteSink::~CharStringByteSink() = இயல்பு;
 
-void
-CharStringByteSink::Append(const char* bytes, int32_t n) {
+வெறுமை
+CharStringByteSink::Append(மாறிலி எழுத்து* bytes, int32_t n) {
     UErrorCode status = U_ZERO_ERROR;
     dest_.append(bytes, n, status);
     // Any errors are silently ignored.
 }
 
-char*
+எழுத்து*
 CharStringByteSink::GetAppendBuffer(int32_t min_capacity,
                                     int32_t desired_capacity_hint,
-                                    char* scratch U_LIFETIME_BOUND,
+                                    எழுத்து* scratch U_LIFETIME_BOUND,
                                     int32_t scratch_capacity,
                                     int32_t* result_capacity) U_LIFETIME_BOUND {
-    if (min_capacity < 1 || scratch_capacity < min_capacity) {
+    எனில் (min_capacity < 1 || scratch_capacity < min_capacity) {
         *result_capacity = 0;
-        return nullptr;
+        திரும்பு nullptr;
     }
 
     UErrorCode status = U_ZERO_ERROR;
-    char* result = dest_.getAppendBuffer(
+    எழுத்து* result = dest_.getAppendBuffer(
             min_capacity,
             desired_capacity_hint,
             *result_capacity,
             status);
-    if (U_SUCCESS(status)) {
-        return result;
+    எனில் (U_SUCCESS(status)) {
+        திரும்பு result;
     }
 
     *result_capacity = scratch_capacity;
-    return scratch;
+    திரும்பு scratch;
 }
 
 U_NAMESPACE_END

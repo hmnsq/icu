@@ -16,30 +16,30 @@
 *   created by: Markus W. Scherer
 */
 
-#include <cstddef>
+#அந்தர்பாவ <cstddef>
 
-#include "unicode/utypes.h"
-#include "unicode/ustring.h"
-#include "unicode/unistr.h"
-#include "unicode/chariter.h"
-#include "unicode/utext.h"
-#include "unicode/utf.h"
-#include "unicode/utf8.h"
-#include "unicode/utf16.h"
-#include "ustr_imp.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "uassert.h"
-#include "putilimp.h"
+#அந்தர்பாவ "unicode/utypes.h"
+#அந்தர்பாவ "unicode/ustring.h"
+#அந்தர்பாவ "unicode/unistr.h"
+#அந்தர்பாவ "unicode/chariter.h"
+#அந்தர்பாவ "unicode/utext.h"
+#அந்தர்பாவ "unicode/utf.h"
+#அந்தர்பாவ "unicode/utf8.h"
+#அந்தர்பாவ "unicode/utf16.h"
+#அந்தர்பாவ "ustr_imp.h"
+#அந்தர்பாவ "cmemory.h"
+#அந்தர்பாவ "cstring.h"
+#அந்தர்பாவ "uassert.h"
+#அந்தர்பாவ "putilimp.h"
 
 U_NAMESPACE_USE
 
 #define I32_FLAG(bitIndex) ((int32_t)1<<(bitIndex))
 
 
-static UBool
+நிலையான UBool
 utext_access(UText *ut, int64_t index, UBool forward) {
-    return ut->pFuncs->access(ut, index, forward);
+    திரும்பு ut->pFuncs->access(ut, index, forward);
 }
 
 
@@ -47,91 +47,91 @@ utext_access(UText *ut, int64_t index, UBool forward) {
 U_CAPI UBool U_EXPORT2
 utext_moveIndex32(UText *ut, int32_t delta) {
     UChar32  c;
-    if (delta > 0) {
-        do {
-            if(ut->chunkOffset>=ut->chunkLength && !utext_access(ut, ut->chunkNativeLimit, true)) {
-                return false;
+    எனில் (delta > 0) {
+        செய் {
+            எனில்(ut->chunkOffset>=ut->chunkLength && !utext_access(ut, ut->chunkNativeLimit, உண்மை)) {
+                திரும்பு பொய்;
             }
             c = ut->chunkContents[ut->chunkOffset];
-            if (U16_IS_SURROGATE(c)) {
+            எனில் (U16_IS_SURROGATE(c)) {
                 c = utext_next32(ut);
-                if (c == U_SENTINEL) {
-                    return false;
+                எனில் (c == U_SENTINEL) {
+                    திரும்பு பொய்;
                 }
-            } else {
+            } இல்லையெனில் {
                 ut->chunkOffset++;
             }
-        } while(--delta>0);
+        } போது(--delta>0);
 
-    } else if (delta<0) {
-        do {
-            if(ut->chunkOffset<=0 && !utext_access(ut, ut->chunkNativeStart, false)) {
-                return false;
+    } இல்லையெனில் எனில் (delta<0) {
+        செய் {
+            எனில்(ut->chunkOffset<=0 && !utext_access(ut, ut->chunkNativeStart, பொய்)) {
+                திரும்பு பொய்;
             }
             c = ut->chunkContents[ut->chunkOffset-1];
-            if (U16_IS_SURROGATE(c)) {
+            எனில் (U16_IS_SURROGATE(c)) {
                 c = utext_previous32(ut);
-                if (c == U_SENTINEL) {
-                    return false;
+                எனில் (c == U_SENTINEL) {
+                    திரும்பு பொய்;
                 }
-            } else {
+            } இல்லையெனில் {
                 ut->chunkOffset--;
             }
-        } while(++delta<0);
+        } போது(++delta<0);
     }
 
-    return true;
+    திரும்பு உண்மை;
 }
 
 
 U_CAPI int64_t U_EXPORT2
 utext_nativeLength(UText *ut) {
-    return ut->pFuncs->nativeLength(ut);
+    திரும்பு ut->pFuncs->nativeLength(ut);
 }
 
 
 U_CAPI UBool U_EXPORT2
-utext_isLengthExpensive(const UText *ut) {
+utext_isLengthExpensive(மாறிலி UText *ut) {
     UBool r = (ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_LENGTH_IS_EXPENSIVE)) != 0;
-    return r;
+    திரும்பு r;
 }
 
 
 U_CAPI int64_t U_EXPORT2
-utext_getNativeIndex(const UText *ut) {
-    if(ut->chunkOffset <= ut->nativeIndexingLimit) {
-        return ut->chunkNativeStart+ut->chunkOffset;
-    } else {
-        return ut->pFuncs->mapOffsetToNative(ut);
+utext_getNativeIndex(மாறிலி UText *ut) {
+    எனில்(ut->chunkOffset <= ut->nativeIndexingLimit) {
+        திரும்பு ut->chunkNativeStart+ut->chunkOffset;
+    } இல்லையெனில் {
+        திரும்பு ut->pFuncs->mapOffsetToNative(ut);
     }
 }
 
 
-U_CAPI void U_EXPORT2
+U_CAPI வெறுமை U_EXPORT2
 utext_setNativeIndex(UText *ut, int64_t index) {
-    if(index<ut->chunkNativeStart || index>=ut->chunkNativeLimit) {
+    எனில்(index<ut->chunkNativeStart || index>=ut->chunkNativeLimit) {
         // The desired position is outside of the current chunk.
         // Access the new position.  Assume a forward iteration from here,
         // which will also be optimimum for a single random access.
         // Reverse iterations may suffer slightly.
-        ut->pFuncs->access(ut, index, true);
-    } else if((int32_t)(index - ut->chunkNativeStart) <= ut->nativeIndexingLimit) {
+        ut->pFuncs->access(ut, index, உண்மை);
+    } இல்லையெனில் எனில்((int32_t)(index - ut->chunkNativeStart) <= ut->nativeIndexingLimit) {
         // utf-16 indexing.
         ut->chunkOffset=(int32_t)(index-ut->chunkNativeStart);
-    } else {
+    } இல்லையெனில் {
          ut->chunkOffset=ut->pFuncs->mapNativeIndexToUTF16(ut, index);
     }
     // The convention is that the index must always be on a code point boundary.
     // Adjust the index position if it is in the middle of a surrogate pair.
-    if (ut->chunkOffset<ut->chunkLength) {
+    எனில் (ut->chunkOffset<ut->chunkLength) {
         char16_t c= ut->chunkContents[ut->chunkOffset];
-        if (U16_IS_TRAIL(c)) {
-            if (ut->chunkOffset==0) {
-                ut->pFuncs->access(ut, ut->chunkNativeStart, false);
+        எனில் (U16_IS_TRAIL(c)) {
+            எனில் (ut->chunkOffset==0) {
+                ut->pFuncs->access(ut, ut->chunkNativeStart, பொய்);
             }
-            if (ut->chunkOffset>0) {
+            எனில் (ut->chunkOffset>0) {
                 char16_t lead = ut->chunkContents[ut->chunkOffset-1];
-                if (U16_IS_LEAD(lead)) {
+                எனில் (U16_IS_LEAD(lead)) {
                     ut->chunkOffset--;
                 }
             }
@@ -150,23 +150,23 @@ utext_getPreviousNativeIndex(UText *ut) {
     //
     int32_t i = ut->chunkOffset - 1;
     int64_t result;
-    if (i >= 0) {
+    எனில் (i >= 0) {
         char16_t c = ut->chunkContents[i];
-        if (U16_IS_TRAIL(c) == false) {
-            if (i <= ut->nativeIndexingLimit) {
+        எனில் (U16_IS_TRAIL(c) == பொய்) {
+            எனில் (i <= ut->nativeIndexingLimit) {
                 result = ut->chunkNativeStart + i;
-            } else {
+            } இல்லையெனில் {
                 ut->chunkOffset = i;
                 result = ut->pFuncs->mapOffsetToNative(ut);
                 ut->chunkOffset++;
             }
-            return result;
+            திரும்பு result;
         }
     }
 
     // If at the start of text, simply return 0.
-    if (ut->chunkOffset==0 && ut->chunkNativeStart==0) {
-        return 0;
+    எனில் (ut->chunkOffset==0 && ut->chunkNativeStart==0) {
+        திரும்பு 0;
     }
 
     // Harder, less common cases.  We are at a chunk boundary, or on a surrogate.
@@ -175,7 +175,7 @@ utext_getPreviousNativeIndex(UText *ut) {
     utext_previous32(ut);
     result = UTEXT_GETNATIVEINDEX(ut);
     utext_next32(ut);
-    return result;
+    திரும்பு result;
 }
 
 
@@ -187,18 +187,18 @@ utext_getPreviousNativeIndex(UText *ut) {
 U_CAPI UChar32 U_EXPORT2
 utext_current32(UText *ut) {
     UChar32  c;
-    if (ut->chunkOffset==ut->chunkLength) {
+    எனில் (ut->chunkOffset==ut->chunkLength) {
         // Current position is just off the end of the chunk.
-        if (ut->pFuncs->access(ut, ut->chunkNativeLimit, true) == false) {
+        எனில் (ut->pFuncs->access(ut, ut->chunkNativeLimit, உண்மை) == பொய்) {
             // Off the end of the text.
-            return U_SENTINEL;
+            திரும்பு U_SENTINEL;
         }
     }
 
     c = ut->chunkContents[ut->chunkOffset];
-    if (U16_IS_LEAD(c) == false) {
+    எனில் (U16_IS_LEAD(c) == பொய்) {
         // Normal, non-supplementary case.
-        return c;
+        திரும்பு c;
     }
 
     //
@@ -206,10 +206,10 @@ utext_current32(UText *ut) {
     //
     UChar32   trail = 0;
     UChar32   supplementaryC = c;
-    if ((ut->chunkOffset+1) < ut->chunkLength) {
+    எனில் ((ut->chunkOffset+1) < ut->chunkLength) {
         // The trail surrogate is in the same chunk.
         trail = ut->chunkContents[ut->chunkOffset+1];
-    } else {
+    } இல்லையெனில் {
         //  The trail surrogate is in a different chunk.
         //     Because we must maintain the iteration position, we need to switch forward
         //     into the new chunk, get the trail surrogate, then revert the chunk back to the
@@ -218,25 +218,25 @@ utext_current32(UText *ut) {
         //        leading surrogate.  The attempt to access the trail will fail, but
         //        the original position before the unpaired lead still needs to be restored.
         int64_t  nativePosition = ut->chunkNativeLimit;
-        if (ut->pFuncs->access(ut, nativePosition, true)) {
+        எனில் (ut->pFuncs->access(ut, nativePosition, உண்மை)) {
             trail = ut->chunkContents[ut->chunkOffset];
         }
-        UBool r = ut->pFuncs->access(ut, nativePosition, false);  // reverse iteration flag loads preceding chunk
+        UBool r = ut->pFuncs->access(ut, nativePosition, பொய்);  // reverse iteration flag loads preceding chunk
         U_ASSERT(r);
         // Here we need to restore chunkOffset since the access functions were called with
         // chunkNativeLimit but that is not where we were (we were 1 code unit before the
         // limit). Restoring was originally added in ICU-4669 but did not support access
         // functions that changed the chunk size, the following does.
         ut->chunkOffset = ut->chunkLength - 1;
-        if(!r) {
-            return U_SENTINEL;
+        எனில்(!r) {
+            திரும்பு U_SENTINEL;
         }
     }
 
-    if (U16_IS_TRAIL(trail)) {
+    எனில் (U16_IS_TRAIL(trail)) {
         supplementaryC = U16_GET_SUPPLEMENTARY(c, trail);
     }
-    return supplementaryC;
+    திரும்பு supplementaryC;
 
 }
 
@@ -246,25 +246,25 @@ utext_char32At(UText *ut, int64_t nativeIndex) {
     UChar32 c = U_SENTINEL;
 
     // Fast path the common case.
-    if (nativeIndex>=ut->chunkNativeStart && nativeIndex < ut->chunkNativeStart + ut->nativeIndexingLimit) {
+    எனில் (nativeIndex>=ut->chunkNativeStart && nativeIndex < ut->chunkNativeStart + ut->nativeIndexingLimit) {
         ut->chunkOffset = (int32_t)(nativeIndex - ut->chunkNativeStart);
         c = ut->chunkContents[ut->chunkOffset];
-        if (U16_IS_SURROGATE(c) == false) {
-            return c;
+        எனில் (U16_IS_SURROGATE(c) == பொய்) {
+            திரும்பு c;
         }
     }
 
 
     utext_setNativeIndex(ut, nativeIndex);
-    if (nativeIndex>=ut->chunkNativeStart && ut->chunkOffset<ut->chunkLength) {
+    எனில் (nativeIndex>=ut->chunkNativeStart && ut->chunkOffset<ut->chunkLength) {
         c = ut->chunkContents[ut->chunkOffset];
-        if (U16_IS_SURROGATE(c)) {
+        எனில் (U16_IS_SURROGATE(c)) {
             // For surrogates, let current32() deal with the complications
             //    of supplementaries that may span chunk boundaries.
             c = utext_current32(ut);
         }
     }
-    return c;
+    திரும்பு c;
 }
 
 
@@ -272,39 +272,39 @@ U_CAPI UChar32 U_EXPORT2
 utext_next32(UText *ut) {
     UChar32       c;
 
-    if (ut->chunkOffset >= ut->chunkLength) {
-        if (ut->pFuncs->access(ut, ut->chunkNativeLimit, true) == false) {
-            return U_SENTINEL;
+    எனில் (ut->chunkOffset >= ut->chunkLength) {
+        எனில் (ut->pFuncs->access(ut, ut->chunkNativeLimit, உண்மை) == பொய்) {
+            திரும்பு U_SENTINEL;
         }
     }
 
     c = ut->chunkContents[ut->chunkOffset++];
-    if (U16_IS_LEAD(c) == false) {
+    எனில் (U16_IS_LEAD(c) == பொய்) {
         // Normal case, not supplementary.
         //   (A trail surrogate seen here is just returned as is, as a surrogate value.
         //    It cannot be part of a pair.)
-        return c;
+        திரும்பு c;
     }
 
-    if (ut->chunkOffset >= ut->chunkLength) {
-        if (ut->pFuncs->access(ut, ut->chunkNativeLimit, true) == false) {
+    எனில் (ut->chunkOffset >= ut->chunkLength) {
+        எனில் (ut->pFuncs->access(ut, ut->chunkNativeLimit, உண்மை) == பொய்) {
             // c is an unpaired lead surrogate at the end of the text.
             // return it as it is.
-            return c;
+            திரும்பு c;
         }
     }
     UChar32 trail = ut->chunkContents[ut->chunkOffset];
-    if (U16_IS_TRAIL(trail) == false) {
+    எனில் (U16_IS_TRAIL(trail) == பொய்) {
         // c was an unpaired lead surrogate, not at the end of the text.
         // return it as it is (unpaired).  Iteration position is on the
         // following character, possibly in the next chunk, where the
         //  trail surrogate would have been if it had existed.
-        return c;
+        திரும்பு c;
     }
 
     UChar32 supplementary = U16_GET_SUPPLEMENTARY(c, trail);
     ut->chunkOffset++;   // move iteration position over the trail surrogate.
-    return supplementary;
+    திரும்பு supplementary;
     }
 
 
@@ -312,38 +312,38 @@ U_CAPI UChar32 U_EXPORT2
 utext_previous32(UText *ut) {
     UChar32       c;
 
-    if (ut->chunkOffset <= 0) {
-        if (ut->pFuncs->access(ut, ut->chunkNativeStart, false) == false) {
-            return U_SENTINEL;
+    எனில் (ut->chunkOffset <= 0) {
+        எனில் (ut->pFuncs->access(ut, ut->chunkNativeStart, பொய்) == பொய்) {
+            திரும்பு U_SENTINEL;
         }
     }
     ut->chunkOffset--;
     c = ut->chunkContents[ut->chunkOffset];
-    if (U16_IS_TRAIL(c) == false) {
+    எனில் (U16_IS_TRAIL(c) == பொய்) {
         // Normal case, not supplementary.
         //   (A lead surrogate seen here is just returned as is, as a surrogate value.
         //    It cannot be part of a pair.)
-        return c;
+        திரும்பு c;
     }
 
-    if (ut->chunkOffset <= 0) {
-        if (ut->pFuncs->access(ut, ut->chunkNativeStart, false) == false) {
+    எனில் (ut->chunkOffset <= 0) {
+        எனில் (ut->pFuncs->access(ut, ut->chunkNativeStart, பொய்) == பொய்) {
             // c is an unpaired trail surrogate at the start of the text.
             // return it as it is.
-            return c;
+            திரும்பு c;
         }
     }
 
     UChar32 lead = ut->chunkContents[ut->chunkOffset-1];
-    if (U16_IS_LEAD(lead) == false) {
+    எனில் (U16_IS_LEAD(lead) == பொய்) {
         // c was an unpaired trail surrogate, not at the end of the text.
         // return it as it is (unpaired).  Iteration position is at c
-        return c;
+        திரும்பு c;
     }
 
     UChar32 supplementary = U16_GET_SUPPLEMENTARY(lead, c);
     ut->chunkOffset--;   // move iteration position over the lead surrogate.
-    return supplementary;
+    திரும்பு supplementary;
 }
 
 
@@ -352,28 +352,28 @@ U_CAPI UChar32 U_EXPORT2
 utext_next32From(UText *ut, int64_t index) {
     UChar32       c      = U_SENTINEL;
 
-    if(index<ut->chunkNativeStart || index>=ut->chunkNativeLimit) {
+    எனில்(index<ut->chunkNativeStart || index>=ut->chunkNativeLimit) {
         // Desired position is outside of the current chunk.
-        if(!ut->pFuncs->access(ut, index, true)) {
+        எனில்(!ut->pFuncs->access(ut, index, உண்மை)) {
             // no chunk available here
-            return U_SENTINEL;
+            திரும்பு U_SENTINEL;
         }
-    } else if (index - ut->chunkNativeStart  <= (int64_t)ut->nativeIndexingLimit) {
+    } இல்லையெனில் எனில் (index - ut->chunkNativeStart  <= (int64_t)ut->nativeIndexingLimit) {
         // Desired position is in chunk, with direct 1:1 native to UTF16 indexing
         ut->chunkOffset = (int32_t)(index - ut->chunkNativeStart);
-    } else {
+    } இல்லையெனில் {
         // Desired position is in chunk, with non-UTF16 indexing.
         ut->chunkOffset = ut->pFuncs->mapNativeIndexToUTF16(ut, index);
     }
 
     c = ut->chunkContents[ut->chunkOffset++];
-    if (U16_IS_SURROGATE(c)) {
+    எனில் (U16_IS_SURROGATE(c)) {
         // Surrogates.  Many edge cases.  Use other functions that already
         //              deal with the problems.
         utext_setNativeIndex(ut, index);
         c = utext_next32(ut);
     }
-    return c;
+    திரும்பு c;
 }
 
 
@@ -392,20 +392,20 @@ utext_previous32From(UText *ut, int64_t index) {
     //    BUT, this test can fail with UTF-8 (or any other multibyte encoding), when the
     //    requested index is on something other than the first position of the first char.
     //
-    if(index<=ut->chunkNativeStart || index>ut->chunkNativeLimit) {
+    எனில்(index<=ut->chunkNativeStart || index>ut->chunkNativeLimit) {
         // Requested native index is outside of the current chunk.
-        if(!ut->pFuncs->access(ut, index, false)) {
+        எனில்(!ut->pFuncs->access(ut, index, பொய்)) {
             // no chunk available here
-            return U_SENTINEL;
+            திரும்பு U_SENTINEL;
         }
-    } else if(index - ut->chunkNativeStart <= (int64_t)ut->nativeIndexingLimit) {
+    } இல்லையெனில் எனில்(index - ut->chunkNativeStart <= (int64_t)ut->nativeIndexingLimit) {
         // Direct UTF-16 indexing.
         ut->chunkOffset = (int32_t)(index - ut->chunkNativeStart);
-    } else {
+    } இல்லையெனில் {
         ut->chunkOffset=ut->pFuncs->mapNativeIndexToUTF16(ut, index);
-        if (ut->chunkOffset==0 && !ut->pFuncs->access(ut, index, false)) {
+        எனில் (ut->chunkOffset==0 && !ut->pFuncs->access(ut, index, பொய்)) {
             // no chunk available here
-            return U_SENTINEL;
+            திரும்பு U_SENTINEL;
         }
     }
 
@@ -415,13 +415,13 @@ utext_previous32From(UText *ut, int64_t index) {
     ut->chunkOffset--;
     cPrev = ut->chunkContents[ut->chunkOffset];
 
-    if (U16_IS_SURROGATE(cPrev)) {
+    எனில் (U16_IS_SURROGATE(cPrev)) {
         // Possible supplementary.  Many edge cases.
         // Let other functions do the heavy lifting.
         utext_setNativeIndex(ut, index);
         cPrev = utext_previous32(ut);
     }
-    return cPrev;
+    திரும்பு cPrev;
 }
 
 
@@ -430,46 +430,46 @@ utext_extract(UText *ut,
              int64_t start, int64_t limit,
              char16_t *dest, int32_t destCapacity,
              UErrorCode *status) {
-                 return ut->pFuncs->extract(ut, start, limit, dest, destCapacity, status);
+                 திரும்பு ut->pFuncs->extract(ut, start, limit, dest, destCapacity, status);
              }
 
 
 
 U_CAPI UBool U_EXPORT2
-utext_equals(const UText *a, const UText *b) {
-    if (a==nullptr || b==nullptr ||
+utext_equals(மாறிலி UText *a, மாறிலி UText *b) {
+    எனில் (a==nullptr || b==nullptr ||
         a->magic != UTEXT_MAGIC ||
         b->magic != UTEXT_MAGIC) {
             // Null or invalid arguments don't compare equal to anything.
-            return false;
+            திரும்பு பொய்;
     }
 
-    if (a->pFuncs != b->pFuncs) {
+    எனில் (a->pFuncs != b->pFuncs) {
         // Different types of text providers.
-        return false;
+        திரும்பு பொய்;
     }
 
-    if (a->context != b->context) {
+    எனில் (a->context != b->context) {
         // Different sources (different strings)
-        return false;
+        திரும்பு பொய்;
     }
-    if (utext_getNativeIndex(a) != utext_getNativeIndex(b)) {
+    எனில் (utext_getNativeIndex(a) != utext_getNativeIndex(b)) {
         // Different current position in the string.
-        return false;
+        திரும்பு பொய்;
     }
 
-    return true;
+    திரும்பு உண்மை;
 }
 
 U_CAPI UBool U_EXPORT2
-utext_isWritable(const UText *ut)
+utext_isWritable(மாறிலி UText *ut)
 {
     UBool b = (ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_WRITABLE)) != 0;
-    return b;
+    திரும்பு b;
 }
 
 
-U_CAPI void U_EXPORT2
+U_CAPI வெறுமை U_EXPORT2
 utext_freeze(UText *ut) {
     // Zero out the WRITABLE flag.
     ut->providerProperties &= ~(I32_FLAG(UTEXT_PROVIDER_WRITABLE));
@@ -477,10 +477,10 @@ utext_freeze(UText *ut) {
 
 
 U_CAPI UBool U_EXPORT2
-utext_hasMetaData(const UText *ut)
+utext_hasMetaData(மாறிலி UText *ut)
 {
     UBool b = (ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_HAS_META_DATA)) != 0;
-    return b;
+    திரும்பு b;
 }
 
 
@@ -488,58 +488,58 @@ utext_hasMetaData(const UText *ut)
 U_CAPI int32_t U_EXPORT2
 utext_replace(UText *ut,
              int64_t nativeStart, int64_t nativeLimit,
-             const char16_t *replacementText, int32_t replacementLength,
+             மாறிலி char16_t *replacementText, int32_t replacementLength,
              UErrorCode *status)
 {
-    if (U_FAILURE(*status)) {
-        return 0;
+    எனில் (U_FAILURE(*status)) {
+        திரும்பு 0;
     }
-    if ((ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_WRITABLE)) == 0) {
+    எனில் ((ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_WRITABLE)) == 0) {
         *status = U_NO_WRITE_PERMISSION;
-        return 0;
+        திரும்பு 0;
     }
     int32_t i = ut->pFuncs->replace(ut, nativeStart, nativeLimit, replacementText, replacementLength, status);
-    return i;
+    திரும்பு i;
 }
 
-U_CAPI void U_EXPORT2
+U_CAPI வெறுமை U_EXPORT2
 utext_copy(UText *ut,
           int64_t nativeStart, int64_t nativeLimit,
           int64_t destIndex,
           UBool move,
           UErrorCode *status)
 {
-    if (U_FAILURE(*status)) {
-        return;
+    எனில் (U_FAILURE(*status)) {
+        திரும்பு;
     }
-    if ((ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_WRITABLE)) == 0) {
+    எனில் ((ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_WRITABLE)) == 0) {
         *status = U_NO_WRITE_PERMISSION;
-        return;
+        திரும்பு;
     }
     ut->pFuncs->copy(ut, nativeStart, nativeLimit, destIndex, move, status);
 }
 
 U_CAPI UText* U_EXPORT2
 utext_clone(UText* dest U_LIFETIME_BOUND,
-            const UText* src,
+            மாறிலி UText* src,
             UBool deep,
             UBool readOnly,
             UErrorCode* status) {
-    if (U_FAILURE(*status)) {
-        return dest;
+    எனில் (U_FAILURE(*status)) {
+        திரும்பு dest;
     }
     UText *result = src->pFuncs->clone(dest, src, deep, status);
-    if (U_FAILURE(*status)) {
-        return result;
+    எனில் (U_FAILURE(*status)) {
+        திரும்பு result;
     }
-    if (result == nullptr) {
+    எனில் (result == nullptr) {
         *status = U_MEMORY_ALLOCATION_ERROR;
-        return result;
+        திரும்பு result;
     }
-    if (readOnly) {
+    எனில் (readOnly) {
         utext_freeze(result);
     }
-    return result;
+    திரும்பு result;
 }
 
 
@@ -553,7 +553,7 @@ utext_clone(UText* dest U_LIFETIME_BOUND,
 //
 //  UText.flags bit definitions
 //
-enum {
+எண்ணிக்கை {
     UTEXT_HEAP_ALLOCATED  = 1,      //  1 if ICU has allocated this UText struct on the heap.
                                     //  0 if caller provided storage for the UText.
 
@@ -572,70 +572,70 @@ enum {
 //  Extended form of a UText.  The purpose is to aid in computing the total size required
 //    when a provider asks for a UText to be allocated with extra storage.
 
-struct ExtendedUText {
+கட்டமைப்பு ExtendedUText {
     UText               ut;
     std::max_align_t    extension;
 };
 
-static const UText emptyText = UTEXT_INITIALIZER;
+நிலையான மாறிலி UText emptyText = UTEXT_INITIALIZER;
 
 U_CAPI UText* U_EXPORT2
 utext_setup(UText* ut U_LIFETIME_BOUND, int32_t extraSpace, UErrorCode* status) {
-    if (U_FAILURE(*status)) {
-        return ut;
+    எனில் (U_FAILURE(*status)) {
+        திரும்பு ut;
     }
 
-    if (ut == nullptr) {
+    எனில் (ut == nullptr) {
         // We need to heap-allocate storage for the new UText
-        int32_t spaceRequired = sizeof(UText);
-        if (extraSpace > 0) {
-            spaceRequired = sizeof(ExtendedUText) + extraSpace - sizeof(std::max_align_t);
+        int32_t spaceRequired = அளவு(UText);
+        எனில் (extraSpace > 0) {
+            spaceRequired = அளவு(ExtendedUText) + extraSpace - அளவு(std::max_align_t);
         }
         ut = (UText *)uprv_malloc(spaceRequired);
-        if (ut == nullptr) {
+        எனில் (ut == nullptr) {
             *status = U_MEMORY_ALLOCATION_ERROR;
-            return nullptr;
-        } else {
+            திரும்பு nullptr;
+        } இல்லையெனில் {
             *ut = emptyText;
             ut->flags |= UTEXT_HEAP_ALLOCATED;
-            if (spaceRequired>0) {
+            எனில் (spaceRequired>0) {
                 ut->extraSize = extraSpace;
                 ut->pExtra    = &((ExtendedUText *)ut)->extension;
             }
         }
-    } else {
+    } இல்லையெனில் {
         // We have been supplied with an already existing UText.
         // Verify that it really appears to be a UText.
-        if (ut->magic != UTEXT_MAGIC) {
+        எனில் (ut->magic != UTEXT_MAGIC) {
             *status = U_ILLEGAL_ARGUMENT_ERROR;
-            return ut;
+            திரும்பு ut;
         }
         // If the ut is already open and there's a provider supplied close
         //   function, call it.
-        if ((ut->flags & UTEXT_OPEN) && ut->pFuncs->close != nullptr)  {
+        எனில் ((ut->flags & UTEXT_OPEN) && ut->pFuncs->close != nullptr)  {
             ut->pFuncs->close(ut);
         }
         ut->flags &= ~UTEXT_OPEN;
 
         // If extra space was requested by our caller, check whether
         //   sufficient already exists, and allocate new if needed.
-        if (extraSpace > ut->extraSize) {
+        எனில் (extraSpace > ut->extraSize) {
             // Need more space.  If there is existing separately allocated space,
             //   delete it first, then allocate new space.
-            if (ut->flags & UTEXT_EXTRA_HEAP_ALLOCATED) {
+            எனில் (ut->flags & UTEXT_EXTRA_HEAP_ALLOCATED) {
                 uprv_free(ut->pExtra);
                 ut->extraSize = 0;
             }
             ut->pExtra = uprv_malloc(extraSpace);
-            if (ut->pExtra == nullptr) {
+            எனில் (ut->pExtra == nullptr) {
                 *status = U_MEMORY_ALLOCATION_ERROR;
-            } else {
+            } இல்லையெனில் {
                 ut->extraSize = extraSpace;
                 ut->flags |= UTEXT_EXTRA_HEAP_ALLOCATED;
             }
         }
     }
-    if (U_SUCCESS(*status)) {
+    எனில் (U_SUCCESS(*status)) {
         ut->flags |= UTEXT_OPEN;
 
         // Initialize all remaining fields of the UText.
@@ -658,35 +658,35 @@ utext_setup(UText* ut U_LIFETIME_BOUND, int32_t extraSpace, UErrorCode* status) 
         ut->privB               = 0;
         ut->privC               = 0;
         ut->privP               = nullptr;
-        if (ut->pExtra!=nullptr && ut->extraSize>0)
+        எனில் (ut->pExtra!=nullptr && ut->extraSize>0)
             uprv_memset(ut->pExtra, 0, ut->extraSize);
 
     }
-    return ut;
+    திரும்பு ut;
 }
 
 
 U_CAPI UText* U_EXPORT2
 utext_close(UText* ut U_LIFETIME_BOUND) {
-    if (ut==nullptr ||
+    எனில் (ut==nullptr ||
         ut->magic != UTEXT_MAGIC ||
         (ut->flags & UTEXT_OPEN) == 0)
     {
         // The supplied ut is not an open UText.
         // Do nothing.
-        return ut;
+        திரும்பு ut;
     }
 
     // If the provider gave us a close function, call it now.
     // This will clean up anything allocated specifically by the provider.
-    if (ut->pFuncs->close != nullptr) {
+    எனில் (ut->pFuncs->close != nullptr) {
         ut->pFuncs->close(ut);
     }
     ut->flags &= ~UTEXT_OPEN;
 
     // If we (the framework) allocated the UText or subsidiary storage,
     //   delete it.
-    if (ut->flags & UTEXT_EXTRA_HEAP_ALLOCATED) {
+    எனில் (ut->flags & UTEXT_EXTRA_HEAP_ALLOCATED) {
         uprv_free(ut->pExtra);
         ut->pExtra = nullptr;
         ut->flags &= ~UTEXT_EXTRA_HEAP_ALLOCATED;
@@ -698,7 +698,7 @@ utext_close(UText* ut U_LIFETIME_BOUND) {
     //   utext to crash with null pointer errors.
     ut->pFuncs        = nullptr;
 
-    if (ut->flags & UTEXT_HEAP_ALLOCATED) {
+    எனில் (ut->flags & UTEXT_HEAP_ALLOCATED) {
         // This UText was allocated by UText setup.  We need to free it.
         // Clear magic, so we can detect if the user messes up and immediately
         //  tries to reopen another UText using the deleted storage.
@@ -706,7 +706,7 @@ utext_close(UText* ut U_LIFETIME_BOUND) {
         uprv_free(ut);
         ut = nullptr;
     }
-    return ut;
+    திரும்பு ut;
 }
 
 
@@ -719,7 +719,7 @@ utext_close(UText* ut U_LIFETIME_BOUND) {
 //                   backing text, potentially putting it out of sync with the
 //                   contents in the chunk.
 //
-static void
+நிலையான வெறுமை
 invalidateChunk(UText *ut) {
     ut->chunkLength = 0;
     ut->chunkNativeLimit = 0;
@@ -733,14 +733,14 @@ invalidateChunk(UText *ut) {
 //                 64 bit pinning is done in place.
 //                 32 bit truncated result is returned as a convenience for
 //                        use in providers that don't need 64 bits.
-static int32_t
+நிலையான int32_t
 pinIndex(int64_t &index, int64_t limit) {
-    if (index<0) {
+    எனில் (index<0) {
         index = 0;
-    } else if (index > limit) {
+    } இல்லையெனில் எனில் (index > limit) {
         index = limit;
     }
-    return static_cast<int32_t>(index);
+    திரும்பு static_cast<int32_t>(index);
 }
 
 
@@ -752,17 +752,17 @@ U_CDECL_BEGIN
 //   Adjust a pointer that refers to something within one UText (the source)
 //   to refer to the same relative offset within a another UText (the target)
 //
-static void adjustPointer(UText *dest, const void **destPtr, const UText *src) {
+நிலையான வெறுமை adjustPointer(UText *dest, மாறிலி வெறுமை **destPtr, மாறிலி UText *src) {
     // convert all pointers to (char *) so that byte address arithmetic will work.
-    char  *dptr = (char *)*destPtr;
-    char  *dUText = (char *)dest;
-    char  *sUText = (char *)src;
+    எழுத்து  *dptr = (எழுத்து *)*destPtr;
+    எழுத்து  *dUText = (எழுத்து *)dest;
+    எழுத்து  *sUText = (எழுத்து *)src;
 
-    if (dptr >= (char *)src->pExtra && dptr < ((char*)src->pExtra)+src->extraSize) {
+    எனில் (dptr >= (எழுத்து *)src->pExtra && dptr < ((எழுத்து*)src->pExtra)+src->extraSize) {
         // target ptr was to something within the src UText's pExtra storage.
         //   relocate it into the target UText's pExtra region.
-        *destPtr = ((char *)dest->pExtra) + (dptr - (char *)src->pExtra);
-    } else if (dptr>=sUText && dptr < sUText+src->sizeOfStruct) {
+        *destPtr = ((எழுத்து *)dest->pExtra) + (dptr - (எழுத்து *)src->pExtra);
+    } இல்லையெனில் எனில் (dptr>=sUText && dptr < sUText+src->sizeOfStruct) {
         // target ptr was pointing to somewhere within the source UText itself.
         //   Move it to the same offset within the target UText.
         *destPtr = dUText + (dptr-sUText);
@@ -774,10 +774,10 @@ static void adjustPointer(UText *dest, const void **destPtr, const UText *src) {
 //  Clone.  This is a generic copy-the-utext-by-value clone function that can be
 //          used as-is with some utext types, and as a helper by other clones.
 //
-static UText * U_CALLCONV
-shallowTextClone(UText * dest, const UText * src, UErrorCode * status) {
-    if (U_FAILURE(*status)) {
-        return nullptr;
+நிலையான UText * U_CALLCONV
+shallowTextClone(UText * dest, மாறிலி UText * src, UErrorCode * status) {
+    எனில் (U_FAILURE(*status)) {
+        திரும்பு nullptr;
     }
     int32_t  srcExtraSize = src->extraSize;
 
@@ -785,8 +785,8 @@ shallowTextClone(UText * dest, const UText * src, UErrorCode * status) {
     // Use the generic text_setup to allocate storage if required.
     //
     dest = utext_setup(dest, srcExtraSize, status);
-    if (U_FAILURE(*status)) {
-        return dest;
+    எனில் (U_FAILURE(*status)) {
+        திரும்பு dest;
     }
 
     //
@@ -795,7 +795,7 @@ shallowTextClone(UText * dest, const UText * src, UErrorCode * status) {
     //   were set up by utext_setup.  Save them separately before
     //   copying the whole struct.
     //
-    void *destExtra = dest->pExtra;
+    வெறுமை *destExtra = dest->pExtra;
     int32_t flags   = dest->flags;
 
 
@@ -803,14 +803,14 @@ shallowTextClone(UText * dest, const UText * src, UErrorCode * status) {
     //  Copy the whole UText struct by value.
     //  Any "Extra" storage is copied also.
     //
-    int sizeToCopy = src->sizeOfStruct;
-    if (sizeToCopy > dest->sizeOfStruct) {
+    முழு sizeToCopy = src->sizeOfStruct;
+    எனில் (sizeToCopy > dest->sizeOfStruct) {
         sizeToCopy = dest->sizeOfStruct;
     }
     uprv_memcpy(dest, src, sizeToCopy);
     dest->pExtra = destExtra;
     dest->flags  = flags;
-    if (srcExtraSize > 0) {
+    எனில் (srcExtraSize > 0) {
         uprv_memcpy(dest->pExtra, src->pExtra, srcExtraSize);
     }
 
@@ -822,14 +822,14 @@ shallowTextClone(UText * dest, const UText * src, UErrorCode * status) {
     adjustPointer(dest, &dest->p, src);
     adjustPointer(dest, &dest->q, src);
     adjustPointer(dest, &dest->r, src);
-    adjustPointer(dest, (const void **)&dest->chunkContents, src);
+    adjustPointer(dest, (மாறிலி வெறுமை **)&dest->chunkContents, src);
 
     // The newly shallow-cloned UText does _not_ own the underlying storage for the text.
     // (The source for the clone may or may not have owned the text.)
 
     dest->providerProperties &= ~I32_FLAG(UTEXT_PROVIDER_OWNS_TEXT);
 
-    return dest;
+    திரும்பு dest;
 }
 
 
@@ -860,7 +860,7 @@ U_CDECL_END
 //     The longest illegal byte sequence treated as a single error (and converted to U+FFFD)
 //     is a three-byte sequence (truncated four-byte sequence).
 //
-enum { UTF8_TEXT_CHUNK_SIZE=32 };
+எண்ணிக்கை { UTF8_TEXT_CHUNK_SIZE=32 };
 
 //
 // UTF8Buf  Two of these structs will be set up in the UText's extra allocated space.
@@ -876,7 +876,7 @@ enum { UTF8_TEXT_CHUNK_SIZE=32 };
 //     pair.  Doing this is simpler than checking for the edge case.
 //
 
-struct UTF8Buf {
+கட்டமைப்பு UTF8Buf {
     int32_t   bufNativeStart;                        // Native index of first char in char16_t buf
     int32_t   bufNativeLimit;                        // Native index following last char in buf.
     int32_t   bufStartIdx;                           // First filled position in buf.
@@ -911,25 +911,25 @@ U_CDECL_BEGIN
 //        Get the length of the string.  If we don't already know it,
 //              we'll need to scan for the trailing  nul.
 //
-static int64_t U_CALLCONV
+நிலையான int64_t U_CALLCONV
 utf8TextLength(UText *ut) {
-    if (ut->b < 0) {
+    எனில் (ut->b < 0) {
         // Zero terminated string, and we haven't scanned to the end yet.
         // Scan it now.
-        const char *r = (const char *)ut->context + ut->c;
-        while (*r != 0) {
+        மாறிலி எழுத்து *r = (மாறிலி எழுத்து *)ut->context + ut->c;
+        போது (*r != 0) {
             r++;
         }
-        if ((r - (const char *)ut->context) < 0x7fffffff) {
-            ut->b = (int32_t)(r - (const char *)ut->context);
-        } else {
+        எனில் ((r - (மாறிலி எழுத்து *)ut->context) < 0x7fffffff) {
+            ut->b = (int32_t)(r - (மாறிலி எழுத்து *)ut->context);
+        } இல்லையெனில் {
             // Actual string was bigger (more than 2 gig) than we
             //   can handle.  Clip it to 2 GB.
             ut->b = 0x7fffffff;
         }
         ut->providerProperties &= ~I32_FLAG(UTEXT_PROVIDER_LENGTH_IS_EXPENSIVE);
     }
-    return ut->b;
+    திரும்பு ut->b;
 }
 
 
@@ -937,7 +937,7 @@ utf8TextLength(UText *ut) {
 
 
 
-static UBool U_CALLCONV
+நிலையான UBool U_CALLCONV
 utf8TextAccess(UText *ut, int64_t index, UBool forward) {
     //
     //  Apologies to those who are allergic to goto statements.
@@ -945,32 +945,32 @@ utf8TextAccess(UText *ut, int64_t index, UBool forward) {
     //         call the named block as if it were a function();
     //         return;
     //
-    const uint8_t *s8=(const uint8_t *)ut->context;
+    மாறிலி uint8_t *s8=(மாறிலி uint8_t *)ut->context;
     UTF8Buf *u8b = nullptr;
     int32_t  length = ut->b;         // Length of original utf-8
     int32_t  ix= (int32_t)index;     // Requested index, trimmed to 32 bits.
     int32_t  mapIndex = 0;
-    if (index<0) {
+    எனில் (index<0) {
         ix=0;
-    } else if (index > 0x7fffffff) {
+    } இல்லையெனில் எனில் (index > 0x7fffffff) {
         // Strings with 64 bit lengths not supported by this UTF-8 provider.
         ix = 0x7fffffff;
     }
 
     // Pin requested index to the string length.
-    if (ix>length) {
-        if (length>=0) {
+    எனில் (ix>length) {
+        எனில் (length>=0) {
             ix=length;
-        } else if (ix>=ut->c) {
+        } இல்லையெனில் எனில் (ix>=ut->c) {
             // Zero terminated string, and requested index is beyond
             //   the region that has already been scanned.
             //   Scan up to either the end of the string or to the
             //   requested position, whichever comes first.
-            while (ut->c<ix && s8[ut->c]!=0) {
+            போது (ut->c<ix && s8[ut->c]!=0) {
                 ut->c++;
             }
             //  TODO:  support for null terminated string length > 32 bits.
-            if (s8[ut->c] == 0) {
+            எனில் (s8[ut->c] == 0) {
                 // We just found the actual length of the string.
                 //  Trim the requested index back to that.
                 ix     = ut->c;
@@ -984,21 +984,21 @@ utf8TextAccess(UText *ut, int64_t index, UBool forward) {
     //
     // Dispatch to the appropriate action for a forward iteration request.
     //
-    if (forward) {
-        if (ix==ut->chunkNativeLimit) {
+    எனில் (forward) {
+        எனில் (ix==ut->chunkNativeLimit) {
             // Check for normal sequential iteration cases first.
-            if (ix==length) {
+            எனில் (ix==length) {
                 // Just reached end of string
                 // Don't swap buffers, but do set the
                 //   current buffer position.
                 ut->chunkOffset = ut->chunkLength;
-                return false;
-            } else {
+                திரும்பு பொய்;
+            } இல்லையெனில் {
                 // End of current buffer.
                 //   check whether other buffer already has what we need.
                 UTF8Buf *altB = (UTF8Buf *)ut->q;
-                if (ix>=altB->bufNativeStart && ix<altB->bufNativeLimit) {
-                    goto swapBuffers;
+                எனில் (ix>=altB->bufNativeStart && ix<altB->bufNativeLimit) {
+                    செல் swapBuffers;
                 }
             }
         }
@@ -1009,41 +1009,41 @@ utf8TextAccess(UText *ut, int64_t index, UBool forward) {
         //    move back and forth over a fairly limited range
         {
             u8b = (UTF8Buf *)ut->q;   // the alternate buffer
-            if (ix>=u8b->bufNativeStart && ix<u8b->bufNativeLimit) {
+            எனில் (ix>=u8b->bufNativeStart && ix<u8b->bufNativeLimit) {
                 // Requested index is in the other buffer.
-                goto swapBuffers;
+                செல் swapBuffers;
             }
-            if (ix == length) {
+            எனில் (ix == length) {
                 // Requested index is end-of-string.
                 //   (this is the case of randomly seeking to the end.
                 //    The case of iterating off the end is handled earlier.)
-                if (ix == ut->chunkNativeLimit) {
+                எனில் (ix == ut->chunkNativeLimit) {
                     // Current buffer extends up to the end of the string.
                     //   Leave it as the current buffer.
                     ut->chunkOffset = ut->chunkLength;
-                    return false;
+                    திரும்பு பொய்;
                 }
-                if (ix == u8b->bufNativeLimit) {
+                எனில் (ix == u8b->bufNativeLimit) {
                     // Alternate buffer extends to the end of string.
                     //   Swap it in as the current buffer.
-                    goto swapBuffersAndFail;
+                    செல் swapBuffersAndFail;
                 }
 
                 // Neither existing buffer extends to the end of the string.
-                goto makeStubBuffer;
+                செல் makeStubBuffer;
             }
 
-            if (ix<ut->chunkNativeStart || ix>=ut->chunkNativeLimit) {
+            எனில் (ix<ut->chunkNativeStart || ix>=ut->chunkNativeLimit) {
                 // Requested index is in neither buffer.
-                goto fillForward;
+                செல் fillForward;
             }
 
             // Requested index is in this buffer.
             u8b = (UTF8Buf *)ut->p;   // the current buffer
             mapIndex = ix - u8b->toUCharsMapStart;
-            U_ASSERT(mapIndex < (int32_t)sizeof(UTF8Buf::mapToUChars));
+            U_ASSERT(mapIndex < (int32_t)அளவு(UTF8Buf::mapToUChars));
             ut->chunkOffset = u8b->mapToUChars[mapIndex] - u8b->bufStartIdx;
-            return true;
+            திரும்பு உண்மை;
 
         }
     }
@@ -1053,20 +1053,20 @@ utf8TextAccess(UText *ut, int64_t index, UBool forward) {
     // Dispatch to the appropriate action for a
     //   Backwards Direction iteration request.
     //
-    if (ix==ut->chunkNativeStart) {
+    எனில் (ix==ut->chunkNativeStart) {
         // Check for normal sequential iteration cases first.
-        if (ix==0) {
+        எனில் (ix==0) {
             // Just reached the start of string
             // Don't swap buffers, but do set the
             //   current buffer position.
             ut->chunkOffset = 0;
-            return false;
-        } else {
+            திரும்பு பொய்;
+        } இல்லையெனில் {
             // Start of current buffer.
             //   check whether other buffer already has what we need.
             UTF8Buf *altB = (UTF8Buf *)ut->q;
-            if (ix>altB->bufNativeStart && ix<=altB->bufNativeLimit) {
-                goto swapBuffers;
+            எனில் (ix>altB->bufNativeStart && ix<=altB->bufNativeLimit) {
+                செல் swapBuffers;
             }
         }
     }
@@ -1077,29 +1077,29 @@ utf8TextAccess(UText *ut, int64_t index, UBool forward) {
     //    Second most likely: in neither buffer.
     //    Unlikely, but must work:  in the current buffer.
     u8b = (UTF8Buf *)ut->q;   // the alternate buffer
-    if (ix>u8b->bufNativeStart && ix<=u8b->bufNativeLimit) {
+    எனில் (ix>u8b->bufNativeStart && ix<=u8b->bufNativeLimit) {
         // Requested index is in the other buffer.
-        goto swapBuffers;
+        செல் swapBuffers;
     }
     // Requested index is start-of-string.
     //   (this is the case of randomly seeking to the start.
     //    The case of iterating off the start is handled earlier.)
-    if (ix==0) {
-        if (u8b->bufNativeStart==0) {
+    எனில் (ix==0) {
+        எனில் (u8b->bufNativeStart==0) {
             // Alternate buffer contains the data for the start string.
             // Make it be the current buffer.
-            goto swapBuffersAndFail;
-        } else {
+            செல் swapBuffersAndFail;
+        } இல்லையெனில் {
             // Request for data before the start of string,
             //   neither buffer is usable.
             //   set up a zero-length buffer.
-            goto makeStubBuffer;
+            செல் makeStubBuffer;
         }
     }
 
-    if (ix<=ut->chunkNativeStart || ix>ut->chunkNativeLimit) {
+    எனில் (ix<=ut->chunkNativeStart || ix>ut->chunkNativeLimit) {
         // Requested index is in neither buffer.
-        goto fillReverse;
+        செல் fillReverse;
     }
 
     // Requested index is in this buffer.
@@ -1107,15 +1107,15 @@ utf8TextAccess(UText *ut, int64_t index, UBool forward) {
     u8b = (UTF8Buf *)ut->p;
     mapIndex = ix - u8b->toUCharsMapStart;
     ut->chunkOffset = u8b->mapToUChars[mapIndex] - u8b->bufStartIdx;
-    if (ut->chunkOffset==0) {
+    எனில் (ut->chunkOffset==0) {
         // This occurs when the first character in the text is
         //   a multi-byte UTF-8 char, and the requested index is to
         //   one of the trailing bytes.  Because there is no preceding ,
         //   character, this access fails.  We can't pick up on the
         //   situation sooner because the requested index is not zero.
-        return false;
-    } else {
-        return true;
+        திரும்பு பொய்;
+    } இல்லையெனில் {
+        திரும்பு உண்மை;
     }
 
 
@@ -1141,10 +1141,10 @@ swapBuffers:
         U_ASSERT(ix<=u8b->bufNativeLimit);
         mapIndex = ix - u8b->toUCharsMapStart;
         U_ASSERT(mapIndex>=0);
-        U_ASSERT(mapIndex<(int32_t)sizeof(u8b->mapToUChars));
+        U_ASSERT(mapIndex<(int32_t)அளவு(u8b->mapToUChars));
         ut->chunkOffset = u8b->mapToUChars[mapIndex] - u8b->bufStartIdx;
 
-        return true;
+        திரும்பு உண்மை;
     }
 
 
@@ -1169,13 +1169,13 @@ swapBuffers:
     // Index into the (now current) chunk
     //  For this function  (swapBuffersAndFail), the requested index
     //    will always be at either the start or end of the chunk.
-    if (ix==u8b->bufNativeLimit) {
+    எனில் (ix==u8b->bufNativeLimit) {
         ut->chunkOffset = ut->chunkLength;
-    } else  {
+    } இல்லையெனில்  {
         ut->chunkOffset = 0;
         U_ASSERT(ix == u8b->bufNativeStart);
     }
-    return false;
+    திரும்பு பொய்;
 
 makeStubBuffer:
     //   The user has done a seek/access past the start or end
@@ -1191,7 +1191,7 @@ makeStubBuffer:
     u8b->toUCharsMapStart = ix;
     u8b->mapToNative[0]   = 0;
     u8b->mapToUChars[0]   = 0;
-    goto swapBuffersAndFail;
+    செல் swapBuffersAndFail;
 
 
 
@@ -1208,10 +1208,10 @@ fillForward:
         ut->p = u8b_swap;
 
         int32_t strLen = ut->b;
-        UBool   nulTerminated = false;
-        if (strLen < 0) {
+        UBool   nulTerminated = பொய்;
+        எனில் (strLen < 0) {
             strLen = 0x7fffffff;
-            nulTerminated = true;
+            nulTerminated = உண்மை;
         }
 
         char16_t   *buf = u8b_swap->buf;
@@ -1219,13 +1219,13 @@ fillForward:
         uint8_t *mapToUChars  = u8b_swap->mapToUChars;
         int32_t  destIx       = 0;
         int32_t  srcIx        = ix;
-        UBool    seenNonAscii = false;
+        UBool    seenNonAscii = பொய்;
         UChar32  c = 0;
 
         // Fill the chunk buffer and mapping arrays.
-        while (destIx<UTF8_TEXT_CHUNK_SIZE) {
+        போது (destIx<UTF8_TEXT_CHUNK_SIZE) {
             c = s8[srcIx];
-            if (c>0 && c<0x80) {
+            எனில் (c>0 && c<0x80) {
                 // Special case ASCII range for speed.
                 //   zero is excluded to simplify bounds checking.
                 buf[destIx] = (char16_t)c;
@@ -1233,10 +1233,10 @@ fillForward:
                 mapToUChars[srcIx-ix]  = (uint8_t)destIx;
                 srcIx++;
                 destIx++;
-            } else {
+            } இல்லையெனில் {
                 // General case, handle everything.
-                if (seenNonAscii == false) {
-                    seenNonAscii = true;
+                எனில் (seenNonAscii == பொய்) {
+                    seenNonAscii = உண்மை;
                     u8b_swap->bufNILimit = destIx;
                 }
 
@@ -1244,22 +1244,22 @@ fillForward:
                 int32_t  dIx      = destIx;
                 int32_t  dIxSaved = destIx;
                 U8_NEXT_OR_FFFD(s8, srcIx, strLen, c);
-                if (c==0 && nulTerminated) {
+                எனில் (c==0 && nulTerminated) {
                     srcIx--;
-                    break;
+                    நிறுத்து;
                 }
 
                 U16_APPEND_UNSAFE(buf, destIx, c);
-                do {
+                செய் {
                     mapToNative[dIx++] = (uint8_t)(cIx - ix);
-                } while (dIx < destIx);
+                } போது (dIx < destIx);
 
-                do {
+                செய் {
                     mapToUChars[cIx++ - ix] = (uint8_t)dIxSaved;
-                } while (cIx < srcIx);
+                } போது (cIx < srcIx);
             }
-            if (srcIx>=strLen) {
-                break;
+            எனில் (srcIx>=strLen) {
+                நிறுத்து;
             }
 
         }
@@ -1274,7 +1274,7 @@ fillForward:
         u8b_swap->bufNativeLimit     = srcIx;
         u8b_swap->bufStartIdx        = 0;
         u8b_swap->bufLimitIdx        = destIx;
-        if (seenNonAscii == false) {
+        எனில் (seenNonAscii == பொய்) {
             u8b_swap->bufNILimit     = destIx;
         }
         u8b_swap->toUCharsMapStart   = u8b_swap->bufNativeStart;
@@ -1289,16 +1289,16 @@ fillForward:
 
         // For zero terminated strings, keep track of the maximum point
         //   scanned so far.
-        if (nulTerminated && srcIx>ut->c) {
+        எனில் (nulTerminated && srcIx>ut->c) {
             ut->c = srcIx;
-            if (c==0) {
+            எனில் (c==0) {
                 // We scanned to the end.
                 //   Remember the actual length.
                 ut->b = srcIx;
                 ut->providerProperties &= ~I32_FLAG(UTEXT_PROVIDER_LENGTH_IS_EXPENSIVE);
             }
         }
-        return true;
+        திரும்பு உண்மை;
     }
 
 
@@ -1307,7 +1307,7 @@ fillReverse:
         // Move the incoming index to a code point boundary.
         // Can only do this if the incoming index is somewhere in the interior of the string.
         //   If index is at the end, there is no character there to look at.
-        if (ix != ut->b) {
+        எனில் (ix != ut->b) {
             // Note: this function will only move the index back if it is on a trail byte
             //       and there is a preceding lead byte and the sequence from the lead 
             //       through this trail could be part of a valid UTF-8 sequence
@@ -1325,7 +1325,7 @@ fillReverse:
         char16_t   *buf = u8b_swap->buf;
         uint8_t *mapToNative = u8b_swap->mapToNative;
         uint8_t *mapToUChars = u8b_swap->mapToUChars;
-        int32_t  toUCharsMapStart = ix - sizeof(UTF8Buf::mapToUChars) + 1;
+        int32_t  toUCharsMapStart = ix - அளவு(UTF8Buf::mapToUChars) + 1;
         // Note that toUCharsMapStart can be negative. Happens when the remaining
         // text from current position to the beginning is less than the buffer size.
         // + 1 because mapToUChars must have a slot at the end for the bufNativeLimit entry.
@@ -1346,19 +1346,19 @@ fillReverse:
         // Fill the chunk buffer
         // Work backwards, filling from the end of the buffer towards the front.
         //
-        while (destIx>2 && (srcIx - toUCharsMapStart > 5) && (srcIx > 0)) {
+        போது (destIx>2 && (srcIx - toUCharsMapStart > 5) && (srcIx > 0)) {
             srcIx--;
             destIx--;
 
             // Get last byte of the UTF-8 character
             c = s8[srcIx];
-            if (c<0x80) {
+            எனில் (c<0x80) {
                 // Special case ASCII range for speed.
                 buf[destIx] = (char16_t)c;
                 U_ASSERT(toUCharsMapStart <= srcIx);
                 mapToUChars[srcIx - toUCharsMapStart] = (uint8_t)destIx;
                 mapToNative[destIx] = (uint8_t)(srcIx - toUCharsMapStart);
-            } else {
+            } இல்லையெனில் {
                 // General case, handle everything non-ASCII.
 
                 int32_t  sIx      = srcIx;  // ix of last byte of multi-byte u8 char
@@ -1371,10 +1371,10 @@ fillReverse:
                 // leaves srcIx at first byte of the multi-byte char.
 
                 // Store the character in UTF-16 buffer.
-                if (c<0x10000) {
+                எனில் (c<0x10000) {
                     buf[destIx] = (char16_t)c;
                     mapToNative[destIx] = (uint8_t)(srcIx - toUCharsMapStart);
-                } else {
+                } இல்லையெனில் {
                     buf[destIx]         = U16_TRAIL(c);
                     mapToNative[destIx] = (uint8_t)(srcIx - toUCharsMapStart);
                     buf[--destIx]       = U16_LEAD(c);
@@ -1382,9 +1382,9 @@ fillReverse:
                 }
 
                 // Fill in the map from native indexes to UChars buf index.
-                do {
+                செய் {
                     mapToUChars[sIx-- - toUCharsMapStart] = (uint8_t)destIx;
-                } while (sIx >= srcIx);
+                } போது (sIx >= srcIx);
                 U_ASSERT(toUCharsMapStart <= (srcIx+1));
 
                 // Set native indexing limit to be the current position.
@@ -1407,7 +1407,7 @@ fillReverse:
         ut->chunkNativeStart    = u8b_swap->bufNativeStart;
         ut->chunkNativeLimit    = u8b_swap->bufNativeLimit;
         ut->nativeIndexingLimit = u8b_swap->bufNILimit;
-        return true;
+        திரும்பு உண்மை;
     }
 
 }
@@ -1419,11 +1419,11 @@ fillReverse:
 //     Inserts a Replacement Char rather than failing on invalid UTF-8
 //     Removes unnecessary features.
 //
-static char16_t*
+நிலையான char16_t*
 utext_strFromUTF8(char16_t *dest,
               int32_t destCapacity,
               int32_t *pDestLength,
-              const char* src,
+              மாறிலி எழுத்து* src,
               int32_t srcLength,        // required.  NUL terminated not supported.
               UErrorCode *pErrorCode
               )
@@ -1437,31 +1437,31 @@ utext_strFromUTF8(char16_t *dest,
     uint8_t* pSrc = (uint8_t*) src;
 
 
-    while((index < srcLength)&&(pDest<pDestLimit)){
+    போது((index < srcLength)&&(pDest<pDestLimit)){
         ch = pSrc[index++];
-        if(ch <=0x7f){
+        எனில்(ch <=0x7f){
             *pDest++=(char16_t)ch;
-        }else{
+        }இல்லையெனில்{
             ch=utf8_nextCharSafeBody(pSrc, &index, srcLength, ch, -3);
-            if(U_IS_BMP(ch)){
+            எனில்(U_IS_BMP(ch)){
                 *(pDest++)=(char16_t)ch;
-            }else{
+            }இல்லையெனில்{
                 *(pDest++)=U16_LEAD(ch);
-                if(pDest<pDestLimit){
+                எனில்(pDest<pDestLimit){
                     *(pDest++)=U16_TRAIL(ch);
-                }else{
+                }இல்லையெனில்{
                     reqLength++;
-                    break;
+                    நிறுத்து;
                 }
             }
         }
     }
     /* donot fill the dest buffer just count the UChars needed */
-    while(index < srcLength){
+    போது(index < srcLength){
         ch = pSrc[index++];
-        if(ch <= 0x7f){
+        எனில்(ch <= 0x7f){
             reqLength++;
-        }else{
+        }இல்லையெனில்{
             ch=utf8_nextCharSafeBody(pSrc, &index, srcLength, ch, -3);
             reqLength+=U16_LENGTH(ch);
         }
@@ -1469,58 +1469,58 @@ utext_strFromUTF8(char16_t *dest,
 
     reqLength+=(int32_t)(pDest - dest);
 
-    if(pDestLength){
+    எனில்(pDestLength){
         *pDestLength = reqLength;
     }
 
     /* Terminate the buffer */
     u_terminateUChars(dest,destCapacity,reqLength,pErrorCode);
 
-    return dest;
+    திரும்பு dest;
 }
 
 
 
-static int32_t U_CALLCONV
+நிலையான int32_t U_CALLCONV
 utf8TextExtract(UText *ut,
                 int64_t start, int64_t limit,
                 char16_t *dest, int32_t destCapacity,
                 UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    எனில்(U_FAILURE(*pErrorCode)) {
+        திரும்பு 0;
     }
-    if(destCapacity<0 || (dest==nullptr && destCapacity>0)) {
+    எனில்(destCapacity<0 || (dest==nullptr && destCapacity>0)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        திரும்பு 0;
     }
     int32_t  length  = ut->b;
     int32_t  start32 = pinIndex(start, length);
     int32_t  limit32 = pinIndex(limit, length);
 
-    if(start32>limit32) {
+    எனில்(start32>limit32) {
         *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        திரும்பு 0;
     }
 
 
     // adjust the incoming indexes to land on code point boundaries if needed.
     //    adjust by no more than three, because that is the largest number of trail bytes
     //    in a well formed UTF8 character.
-    const uint8_t *buf = (const uint8_t *)ut->context;
-    int i;
-    if (start32 < ut->chunkNativeLimit) {
-        for (i=0; i<3; i++) {
-            if (U8_IS_SINGLE(buf[start32]) || U8_IS_LEAD(buf[start32]) || start32==0) {
-                break;
+    மாறிலி uint8_t *buf = (மாறிலி uint8_t *)ut->context;
+    முழு i;
+    எனில் (start32 < ut->chunkNativeLimit) {
+        க்கு (i=0; i<3; i++) {
+            எனில் (U8_IS_SINGLE(buf[start32]) || U8_IS_LEAD(buf[start32]) || start32==0) {
+                நிறுத்து;
             }
             start32--;
         }
     }
 
-    if (limit32 < ut->chunkNativeLimit) {
-        for (i=0; i<3; i++) {
-            if (U8_IS_SINGLE(buf[limit32]) || U8_IS_LEAD(buf[limit32]) || limit32==0) {
-                break;
+    எனில் (limit32 < ut->chunkNativeLimit) {
+        க்கு (i=0; i<3; i++) {
+            எனில் (U8_IS_SINGLE(buf[limit32]) || U8_IS_LEAD(buf[limit32]) || limit32==0) {
+                நிறுத்து;
             }
             limit32--;
         }
@@ -1529,45 +1529,45 @@ utf8TextExtract(UText *ut,
     // Do the actual extract.
     int32_t destLength=0;
     utext_strFromUTF8(dest, destCapacity, &destLength,
-                    (const char *)ut->context+start32, limit32-start32,
+                    (மாறிலி எழுத்து *)ut->context+start32, limit32-start32,
                     pErrorCode);
-    utf8TextAccess(ut, limit32, true);
-    return destLength;
+    utf8TextAccess(ut, limit32, உண்மை);
+    திரும்பு destLength;
 }
 
 //
 // utf8TextMapOffsetToNative
 //
 // Map a chunk (UTF-16) offset to a native index.
-static int64_t U_CALLCONV
-utf8TextMapOffsetToNative(const UText *ut) {
+நிலையான int64_t U_CALLCONV
+utf8TextMapOffsetToNative(மாறிலி UText *ut) {
     //
     UTF8Buf *u8b = (UTF8Buf *)ut->p;
     U_ASSERT(ut->chunkOffset>ut->nativeIndexingLimit && ut->chunkOffset<=ut->chunkLength);
     int32_t nativeOffset = u8b->mapToNative[ut->chunkOffset + u8b->bufStartIdx] + u8b->toUCharsMapStart;
     U_ASSERT(nativeOffset >= ut->chunkNativeStart && nativeOffset <= ut->chunkNativeLimit);
-    return nativeOffset;
+    திரும்பு nativeOffset;
 }
 
 //
 // Map a native index to the corresponding chunk offset
 //
-static int32_t U_CALLCONV
-utf8TextMapIndexToUTF16(const UText *ut, int64_t index64) {
+நிலையான int32_t U_CALLCONV
+utf8TextMapIndexToUTF16(மாறிலி UText *ut, int64_t index64) {
     U_ASSERT(index64 <= 0x7fffffff);
     int32_t index = (int32_t)index64;
     UTF8Buf *u8b = (UTF8Buf *)ut->p;
     U_ASSERT(index>=ut->chunkNativeStart+ut->nativeIndexingLimit);
     U_ASSERT(index<=ut->chunkNativeLimit);
     int32_t mapIndex = index - u8b->toUCharsMapStart;
-    U_ASSERT(mapIndex < (int32_t)sizeof(UTF8Buf::mapToUChars));
+    U_ASSERT(mapIndex < (int32_t)அளவு(UTF8Buf::mapToUChars));
     int32_t offset = u8b->mapToUChars[mapIndex] - u8b->bufStartIdx;
     U_ASSERT(offset>=0 && offset<=ut->chunkLength);
-    return offset;
+    திரும்பு offset;
 }
 
-static UText * U_CALLCONV
-utf8TextClone(UText *dest, const UText *src, UBool deep, UErrorCode *status)
+நிலையான UText * U_CALLCONV
+utf8TextClone(UText *dest, மாறிலி UText *src, UBool deep, UErrorCode *status)
 {
     // First do a generic shallow clone.  Does everything needed for the UText struct itself.
     dest = shallowTextClone(dest, src, status);
@@ -1581,28 +1581,28 @@ utf8TextClone(UText *dest, const UText *src, UBool deep, UErrorCode *status)
     //        This function (clone()) is const.
     //        There potentially a thread safety issue lurking here.
     //
-    if (deep && U_SUCCESS(*status)) {
+    எனில் (deep && U_SUCCESS(*status)) {
         int32_t  len = (int32_t)utext_nativeLength((UText *)src);
-        char *copyStr = (char *)uprv_malloc(len+1);
-        if (copyStr == nullptr) {
+        எழுத்து *copyStr = (எழுத்து *)uprv_malloc(len+1);
+        எனில் (copyStr == nullptr) {
             *status = U_MEMORY_ALLOCATION_ERROR;
-        } else {
+        } இல்லையெனில் {
             uprv_memcpy(copyStr, src->context, len+1);
             dest->context = copyStr;
             dest->providerProperties |= I32_FLAG(UTEXT_PROVIDER_OWNS_TEXT);
         }
     }
-    return dest;
+    திரும்பு dest;
 }
 
 
-static void U_CALLCONV
+நிலையான வெறுமை U_CALLCONV
 utf8TextClose(UText *ut) {
     // Most of the work of close is done by the generic UText framework close.
     // All that needs to be done here is to delete the UTF8 string if the UText
     //  owns it.  This occurs if the UText was created by cloning.
-    if (ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_OWNS_TEXT)) {
-        char *s = (char *)ut->context;
+    எனில் (ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_OWNS_TEXT)) {
+        எழுத்து *s = (எழுத்து *)ut->context;
         uprv_free(s);
         ut->context = nullptr;
     }
@@ -1611,9 +1611,9 @@ utf8TextClose(UText *ut) {
 U_CDECL_END
 
 
-static const struct UTextFuncs utf8Funcs =
+நிலையான மாறிலி கட்டமைப்பு UTextFuncs utf8Funcs =
 {
-    sizeof(UTextFuncs),
+    அளவு(UTextFuncs),
     0, 0, 0,             // Reserved alignment padding
     utf8TextClone,
     utf8TextLength,
@@ -1630,41 +1630,41 @@ static const struct UTextFuncs utf8Funcs =
 };
 
 
-static const char gEmptyString[] = {0};
+நிலையான மாறிலி எழுத்து gEmptyString[] = {0};
 
 U_CAPI UText* U_EXPORT2
 utext_openUTF8(UText* ut U_LIFETIME_BOUND,
-               const char* s U_LIFETIME_BOUND,
+               மாறிலி எழுத்து* s U_LIFETIME_BOUND,
                int64_t length,
                UErrorCode* status) {
-    if(U_FAILURE(*status)) {
-        return nullptr;
+    எனில்(U_FAILURE(*status)) {
+        திரும்பு nullptr;
     }
-    if(s==nullptr && length==0) {
+    எனில்(s==nullptr && length==0) {
         s = gEmptyString;
     }
 
-    if(s==nullptr || length<-1 || length>INT32_MAX) {
+    எனில்(s==nullptr || length<-1 || length>INT32_MAX) {
         *status=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        திரும்பு nullptr;
     }
 
-    ut = utext_setup(ut, sizeof(UTF8Buf) * 2, status);
-    if (U_FAILURE(*status)) {
-        return ut;
+    ut = utext_setup(ut, அளவு(UTF8Buf) * 2, status);
+    எனில் (U_FAILURE(*status)) {
+        திரும்பு ut;
     }
 
     ut->pFuncs  = &utf8Funcs;
     ut->context = s;
     ut->b       = (int32_t)length;
     ut->c       = (int32_t)length;
-    if (ut->c < 0) {
+    எனில் (ut->c < 0) {
         ut->c = 0;
         ut->providerProperties |= I32_FLAG(UTEXT_PROVIDER_LENGTH_IS_EXPENSIVE);
     }
     ut->p = ut->pExtra;
-    ut->q = (char *)ut->pExtra + sizeof(UTF8Buf);
-    return ut;
+    ut->q = (எழுத்து *)ut->pExtra + அளவு(UTF8Buf);
+    திரும்பு ut;
 
 }
 
@@ -1689,9 +1689,9 @@ utext_openUTF8(UText* ut U_LIFETIME_BOUND,
 
 // minimum chunk size for this implementation: 3
 // to allow for possible trimming for code point boundaries
-enum { REP_TEXT_CHUNK_SIZE=10 };
+எண்ணிக்கை { REP_TEXT_CHUNK_SIZE=10 };
 
-struct ReplExtra {
+கட்டமைப்பு ReplExtra {
     /*
      * Chunk UChars.
      * +1 to simplify filling with surrogate pair at the end.
@@ -1702,8 +1702,8 @@ struct ReplExtra {
 
 U_CDECL_BEGIN
 
-static UText * U_CALLCONV
-repTextClone(UText *dest, const UText *src, UBool deep, UErrorCode *status) {
+நிலையான UText * U_CALLCONV
+repTextClone(UText *dest, மாறிலி UText *src, UBool deep, UErrorCode *status) {
     // First do a generic shallow clone.  Does everything needed for the UText struct itself.
     dest = shallowTextClone(dest, src, status);
 
@@ -1712,24 +1712,24 @@ repTextClone(UText *dest, const UText *src, UBool deep, UErrorCode *status) {
     //  A non-nullptr pointer in UText.p is the signal to the close() function to delete
     //    it.
     //
-    if (deep && U_SUCCESS(*status)) {
-        const Replaceable *replSrc = (const Replaceable *)src->context;
+    எனில் (deep && U_SUCCESS(*status)) {
+        மாறிலி Replaceable *replSrc = (மாறிலி Replaceable *)src->context;
         dest->context = replSrc->clone();
         dest->providerProperties |= I32_FLAG(UTEXT_PROVIDER_OWNS_TEXT);
 
         // with deep clone, the copy is writable, even when the source is not.
         dest->providerProperties |= I32_FLAG(UTEXT_PROVIDER_WRITABLE);
     }
-    return dest;
+    திரும்பு dest;
 }
 
 
-static void U_CALLCONV
+நிலையான வெறுமை U_CALLCONV
 repTextClose(UText *ut) {
     // Most of the work of close is done by the generic UText framework close.
     // All that needs to be done here is delete the Replaceable if the UText
     //  owns it.  This occurs if the UText was created by cloning.
-    if (ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_OWNS_TEXT)) {
+    எனில் (ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_OWNS_TEXT)) {
         Replaceable *rep = (Replaceable *)ut->context;
         delete rep;
         ut->context = nullptr;
@@ -1737,17 +1737,17 @@ repTextClose(UText *ut) {
 }
 
 
-static int64_t U_CALLCONV
+நிலையான int64_t U_CALLCONV
 repTextLength(UText *ut) {
-    const Replaceable *replSrc = (const Replaceable *)ut->context;
+    மாறிலி Replaceable *replSrc = (மாறிலி Replaceable *)ut->context;
     int32_t  len = replSrc->length();
-    return len;
+    திரும்பு len;
 }
 
 
-static UBool U_CALLCONV
+நிலையான UBool U_CALLCONV
 repTextAccess(UText *ut, int64_t index, UBool forward) {
-    const Replaceable *rep=(const Replaceable *)ut->context;
+    மாறிலி Replaceable *rep=(மாறிலி Replaceable *)ut->context;
     int32_t length=rep->length();   // Full length of the input text (bigger than a chunk)
 
     // clip the requested index to the limits of the text.
@@ -1763,18 +1763,18 @@ repTextAccess(UText *ut, int64_t index, UBool forward) {
      * going in the forward direction.  This will ensure that the buffer has the
      * entire code point at the specified index.
      */
-    if(forward) {
+    எனில்(forward) {
 
-        if (index32>=ut->chunkNativeStart && index32<ut->chunkNativeLimit) {
+        எனில் (index32>=ut->chunkNativeStart && index32<ut->chunkNativeLimit) {
             // Buffer already contains the requested position.
             ut->chunkOffset = (int32_t)(index - ut->chunkNativeStart);
-            return true;
+            திரும்பு உண்மை;
         }
-        if (index32>=length && ut->chunkNativeLimit==length) {
+        எனில் (index32>=length && ut->chunkNativeLimit==length) {
             // Request for end of string, and buffer already extends up to it.
             // Can't get the data, but don't change the buffer.
             ut->chunkOffset = length - (int32_t)ut->chunkNativeStart;
-            return false;
+            திரும்பு பொய்;
         }
 
         ut->chunkNativeLimit = index + REP_TEXT_CHUNK_SIZE - 1;
@@ -1782,26 +1782,26 @@ repTextAccess(UText *ut, int64_t index, UBool forward) {
         //   the requested index.  The -1 gets us one code point before the
         //   requested index also, to handle the case of the index being on
         //   a trail surrogate of a surrogate pair.
-        if(ut->chunkNativeLimit > length) {
+        எனில்(ut->chunkNativeLimit > length) {
             ut->chunkNativeLimit = length;
         }
         // unless buffer ran off end, start is index-1.
         ut->chunkNativeStart = ut->chunkNativeLimit - REP_TEXT_CHUNK_SIZE;
-        if(ut->chunkNativeStart < 0) {
+        எனில்(ut->chunkNativeStart < 0) {
             ut->chunkNativeStart = 0;
         }
-    } else {
+    } இல்லையெனில் {
         // Reverse iteration.  Fill buffer with data preceding the requested index.
-        if (index32>ut->chunkNativeStart && index32<=ut->chunkNativeLimit) {
+        எனில் (index32>ut->chunkNativeStart && index32<=ut->chunkNativeLimit) {
             // Requested position already in buffer.
             ut->chunkOffset = index32 - (int32_t)ut->chunkNativeStart;
-            return true;
+            திரும்பு உண்மை;
         }
-        if (index32==0 && ut->chunkNativeStart==0) {
+        எனில் (index32==0 && ut->chunkNativeStart==0) {
             // Request for start, buffer already begins at start.
             //  No data, but keep the buffer as is.
             ut->chunkOffset = 0;
-            return false;
+            திரும்பு பொய்;
         }
 
         // Figure out the bounds of the chunk to extract for reverse iteration.
@@ -1811,12 +1811,12 @@ repTextAccess(UText *ut, int64_t index, UBool forward) {
         // If this turns out to be a lead surrogate, we can lop it off and still have
         //   the data we wanted.
         ut->chunkNativeStart = index32 + 1 - REP_TEXT_CHUNK_SIZE;
-        if (ut->chunkNativeStart < 0) {
+        எனில் (ut->chunkNativeStart < 0) {
             ut->chunkNativeStart = 0;
         }
 
         ut->chunkNativeLimit = index32 + 1;
-        if (ut->chunkNativeLimit > length) {
+        எனில் (ut->chunkNativeLimit > length) {
             ut->chunkNativeLimit = length;
         }
     }
@@ -1833,18 +1833,18 @@ repTextAccess(UText *ut, int64_t index, UBool forward) {
 
     // Surrogate pairs from the input text must not span chunk boundaries.
     // If end of chunk could be the start of a surrogate, trim it off.
-    if (ut->chunkNativeLimit < length &&
+    எனில் (ut->chunkNativeLimit < length &&
         U16_IS_LEAD(ex->s[ut->chunkLength-1])) {
             ut->chunkLength--;
             ut->chunkNativeLimit--;
-            if (ut->chunkOffset > ut->chunkLength) {
+            எனில் (ut->chunkOffset > ut->chunkLength) {
                 ut->chunkOffset = ut->chunkLength;
             }
         }
 
     // if the first char16_t in the chunk could be the trailing half of a surrogate pair,
     // trim it off.
-    if(ut->chunkNativeStart>0 && U16_IS_TRAIL(ex->s[0])) {
+    எனில்(ut->chunkNativeStart>0 && U16_IS_TRAIL(ex->s[0])) {
         ++(ut->chunkContents);
         ++(ut->chunkNativeStart);
         --(ut->chunkLength);
@@ -1857,85 +1857,85 @@ repTextAccess(UText *ut, int64_t index, UBool forward) {
     // Use fast indexing for get/setNativeIndex()
     ut->nativeIndexingLimit = ut->chunkLength;
 
-    return true;
+    திரும்பு உண்மை;
 }
 
 
 
-static int32_t U_CALLCONV
+நிலையான int32_t U_CALLCONV
 repTextExtract(UText *ut,
                int64_t start, int64_t limit,
                char16_t *dest, int32_t destCapacity,
                UErrorCode *status) {
-    const Replaceable *rep=(const Replaceable *)ut->context;
+    மாறிலி Replaceable *rep=(மாறிலி Replaceable *)ut->context;
     int32_t  length=rep->length();
 
-    if(U_FAILURE(*status)) {
-        return 0;
+    எனில்(U_FAILURE(*status)) {
+        திரும்பு 0;
     }
-    if(destCapacity<0 || (dest==nullptr && destCapacity>0)) {
+    எனில்(destCapacity<0 || (dest==nullptr && destCapacity>0)) {
         *status=U_ILLEGAL_ARGUMENT_ERROR;
     }
-    if(start>limit) {
+    எனில்(start>limit) {
         *status=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        திரும்பு 0;
     }
 
     int32_t  start32 = pinIndex(start, length);
     int32_t  limit32 = pinIndex(limit, length);
 
     // adjust start, limit if they point to trail half of surrogates
-    if (start32<length && U16_IS_TRAIL(rep->charAt(start32)) &&
+    எனில் (start32<length && U16_IS_TRAIL(rep->charAt(start32)) &&
         U_IS_SUPPLEMENTARY(rep->char32At(start32))){
             start32--;
     }
-    if (limit32<length && U16_IS_TRAIL(rep->charAt(limit32)) &&
+    எனில் (limit32<length && U16_IS_TRAIL(rep->charAt(limit32)) &&
         U_IS_SUPPLEMENTARY(rep->char32At(limit32))){
             limit32--;
     }
 
     length=limit32-start32;
-    if(length>destCapacity) {
+    எனில்(length>destCapacity) {
         limit32 = start32 + destCapacity;
     }
     UnicodeString buffer(dest, 0, destCapacity); // writable alias
     rep->extractBetween(start32, limit32, buffer);
-    repTextAccess(ut, limit32, true);
+    repTextAccess(ut, limit32, உண்மை);
 
-    return u_terminateUChars(dest, destCapacity, length, status);
+    திரும்பு u_terminateUChars(dest, destCapacity, length, status);
 }
 
-static int32_t U_CALLCONV
+நிலையான int32_t U_CALLCONV
 repTextReplace(UText *ut,
                int64_t start, int64_t limit,
-               const char16_t *src, int32_t length,
+               மாறிலி char16_t *src, int32_t length,
                UErrorCode *status) {
     Replaceable *rep=(Replaceable *)ut->context;
     int32_t oldLength;
 
-    if(U_FAILURE(*status)) {
-        return 0;
+    எனில்(U_FAILURE(*status)) {
+        திரும்பு 0;
     }
-    if(src==nullptr && length!=0) {
+    எனில்(src==nullptr && length!=0) {
         *status=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        திரும்பு 0;
     }
     oldLength=rep->length(); // will subtract from new length
-    if(start>limit ) {
+    எனில்(start>limit ) {
         *status=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        திரும்பு 0;
     }
 
     int32_t start32 = pinIndex(start, oldLength);
     int32_t limit32 = pinIndex(limit, oldLength);
 
     // Snap start & limit to code point boundaries.
-    if (start32<oldLength && U16_IS_TRAIL(rep->charAt(start32)) &&
+    எனில் (start32<oldLength && U16_IS_TRAIL(rep->charAt(start32)) &&
         start32>0 && U16_IS_LEAD(rep->charAt(start32-1)))
     {
             start32--;
     }
-    if (limit32<oldLength && U16_IS_LEAD(rep->charAt(limit32-1)) &&
+    எனில் (limit32<oldLength && U16_IS_LEAD(rep->charAt(limit32-1)) &&
         U16_IS_TRAIL(rep->charAt(limit32)))
     {
             limit32++;
@@ -1948,7 +1948,7 @@ repTextReplace(UText *ut,
     int32_t lengthDelta = newLength - oldLength;
 
     // Is the UText chunk buffer OK?
-    if (ut->chunkNativeLimit > start32) {
+    எனில் (ut->chunkNativeLimit > start32) {
         // this replace operation may have impacted the current chunk.
         // invalidate it, which will force a reload on the next access.
         invalidateChunk(ut);
@@ -1956,13 +1956,13 @@ repTextReplace(UText *ut,
 
     // set the iteration position to the end of the newly inserted replacement text.
     int32_t newIndexPos = limit32 + lengthDelta;
-    repTextAccess(ut, newIndexPos, true);
+    repTextAccess(ut, newIndexPos, உண்மை);
 
-    return lengthDelta;
+    திரும்பு lengthDelta;
 }
 
 
-static void U_CALLCONV
+நிலையான வெறுமை U_CALLCONV
 repTextCopy(UText *ut,
                 int64_t start, int64_t limit,
                 int64_t destIndex,
@@ -1972,13 +1972,13 @@ repTextCopy(UText *ut,
     Replaceable *rep=(Replaceable *)ut->context;
     int32_t length=rep->length();
 
-    if(U_FAILURE(*status)) {
-        return;
+    எனில்(U_FAILURE(*status)) {
+        திரும்பு;
     }
-    if (start>limit || (start<destIndex && destIndex<limit))
+    எனில் (start>limit || (start<destIndex && destIndex<limit))
     {
         *status=U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+        திரும்பு;
     }
 
     int32_t start32     = pinIndex(start, length);
@@ -1987,16 +1987,16 @@ repTextCopy(UText *ut,
 
     // TODO:  snap input parameters to code point boundaries.
 
-    if(move) {
+    எனில்(move) {
         // move: copy to destIndex, then replace original with nothing
         int32_t segLength=limit32-start32;
         rep->copy(start32, limit32, destIndex32);
-        if(destIndex32<start32) {
+        எனில்(destIndex32<start32) {
             start32+=segLength;
             limit32+=segLength;
         }
         rep->handleReplaceBetween(start32, limit32, UnicodeString());
-    } else {
+    } இல்லையெனில் {
         // copy
         rep->copy(start32, limit32, destIndex32);
     }
@@ -2004,28 +2004,28 @@ repTextCopy(UText *ut,
     // If the change to the text touched the region in the chunk buffer,
     //  invalidate the buffer.
     int32_t firstAffectedIndex = destIndex32;
-    if (move && start32<firstAffectedIndex) {
+    எனில் (move && start32<firstAffectedIndex) {
         firstAffectedIndex = start32;
     }
-    if (firstAffectedIndex < ut->chunkNativeLimit) {
+    எனில் (firstAffectedIndex < ut->chunkNativeLimit) {
         // changes may have affected range covered by the chunk
         invalidateChunk(ut);
     }
 
     // Put iteration position at the newly inserted (moved) block,
     int32_t  nativeIterIndex = destIndex32 + limit32 - start32;
-    if (move && destIndex32>start32) {
+    எனில் (move && destIndex32>start32) {
         // moved a block of text towards the end of the string.
         nativeIterIndex = destIndex32;
     }
 
     // Set position, reload chunk if needed.
-    repTextAccess(ut, nativeIterIndex, true);
+    repTextAccess(ut, nativeIterIndex, உண்மை);
 }
 
-static const struct UTextFuncs repFuncs =
+நிலையான மாறிலி கட்டமைப்பு UTextFuncs repFuncs =
 {
-    sizeof(UTextFuncs),
+    அளவு(UTextFuncs),
     0, 0, 0,           // Reserved alignment padding
     repTextClone,
     repTextLength,
@@ -2046,26 +2046,26 @@ U_CAPI UText* U_EXPORT2
 utext_openReplaceable(UText* ut U_LIFETIME_BOUND,
                       Replaceable* rep U_LIFETIME_BOUND,
                       UErrorCode* status) {
-    if(U_FAILURE(*status)) {
-        return nullptr;
+    எனில்(U_FAILURE(*status)) {
+        திரும்பு nullptr;
     }
-    if(rep==nullptr) {
+    எனில்(rep==nullptr) {
         *status=U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        திரும்பு nullptr;
     }
-    ut = utext_setup(ut, sizeof(ReplExtra), status);
-    if(U_FAILURE(*status)) {
-        return ut;
+    ut = utext_setup(ut, அளவு(ReplExtra), status);
+    எனில்(U_FAILURE(*status)) {
+        திரும்பு ut;
     }
 
     ut->providerProperties = I32_FLAG(UTEXT_PROVIDER_WRITABLE);
-    if(rep->hasMetaData()) {
+    எனில்(rep->hasMetaData()) {
         ut->providerProperties |=I32_FLAG(UTEXT_PROVIDER_HAS_META_DATA);
     }
 
     ut->pFuncs  = &repFuncs;
     ut->context =  rep;
-    return ut;
+    திரும்பு ut;
 }
 
 U_CDECL_END
@@ -2093,8 +2093,8 @@ U_CDECL_END
 U_CDECL_BEGIN
 
 
-static UText * U_CALLCONV
-unistrTextClone(UText *dest, const UText *src, UBool deep, UErrorCode *status) {
+நிலையான UText * U_CALLCONV
+unistrTextClone(UText *dest, மாறிலி UText *src, UBool deep, UErrorCode *status) {
     // First do a generic shallow clone.  Does everything needed for the UText struct itself.
     dest = shallowTextClone(dest, src, status);
 
@@ -2103,24 +2103,24 @@ unistrTextClone(UText *dest, const UText *src, UBool deep, UErrorCode *status) {
     //  A non-nullptr pointer in UText.p is the signal to the close() function to delete
     //    the UText.
     //
-    if (deep && U_SUCCESS(*status)) {
-        const UnicodeString *srcString = (const UnicodeString *)src->context;
-        dest->context = new UnicodeString(*srcString);
-        dest->chunkContents = ((const UnicodeString *)dest->context)->getBuffer();
+    எனில் (deep && U_SUCCESS(*status)) {
+        மாறிலி UnicodeString *srcString = (மாறிலி UnicodeString *)src->context;
+        dest->context = புதிய UnicodeString(*srcString);
+        dest->chunkContents = ((மாறிலி UnicodeString *)dest->context)->getBuffer();
         dest->providerProperties |= I32_FLAG(UTEXT_PROVIDER_OWNS_TEXT);
 
         // with deep clone, the copy is writable, even when the source is not.
         dest->providerProperties |= I32_FLAG(UTEXT_PROVIDER_WRITABLE);
     }
-    return dest;
+    திரும்பு dest;
 }
 
-static void U_CALLCONV
+நிலையான வெறுமை U_CALLCONV
 unistrTextClose(UText *ut) {
     // Most of the work of close is done by the generic UText framework close.
     // All that needs to be done here is delete the UnicodeString if the UText
     //  owns it.  This occurs if the UText was created by cloning.
-    if (ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_OWNS_TEXT)) {
+    எனில் (ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_OWNS_TEXT)) {
         UnicodeString *str = (UnicodeString *)ut->context;
         delete str;
         ut->context = nullptr;
@@ -2128,86 +2128,86 @@ unistrTextClose(UText *ut) {
 }
 
 
-static int64_t U_CALLCONV
+நிலையான int64_t U_CALLCONV
 unistrTextLength(UText *t) {
-    return ((const UnicodeString *)t->context)->length();
+    திரும்பு ((மாறிலி UnicodeString *)t->context)->length();
 }
 
 
-static UBool U_CALLCONV
+நிலையான UBool U_CALLCONV
 unistrTextAccess(UText *ut, int64_t index, UBool  forward) {
     int32_t length  = ut->chunkLength;
     ut->chunkOffset = pinIndex(index, length);
 
     // Check whether request is at the start or end
     UBool retVal = (forward && index<length) || (!forward && index>0);
-    return retVal;
+    திரும்பு retVal;
 }
 
 
 
-static int32_t U_CALLCONV
+நிலையான int32_t U_CALLCONV
 unistrTextExtract(UText *t,
                   int64_t start, int64_t limit,
                   char16_t *dest, int32_t destCapacity,
                   UErrorCode *pErrorCode) {
-    const UnicodeString *us=(const UnicodeString *)t->context;
+    மாறிலி UnicodeString *us=(மாறிலி UnicodeString *)t->context;
     int32_t length=us->length();
 
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    எனில்(U_FAILURE(*pErrorCode)) {
+        திரும்பு 0;
     }
-    if(destCapacity<0 || (dest==nullptr && destCapacity>0)) {
+    எனில்(destCapacity<0 || (dest==nullptr && destCapacity>0)) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
     }
-    if(start<0 || start>limit) {
+    எனில்(start<0 || start>limit) {
         *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        திரும்பு 0;
     }
 
     int32_t start32 = start<length ? us->getChar32Start((int32_t)start) : length;
     int32_t limit32 = limit<length ? us->getChar32Start((int32_t)limit) : length;
 
     length=limit32-start32;
-    if (destCapacity>0 && dest!=nullptr) {
+    எனில் (destCapacity>0 && dest!=nullptr) {
         int32_t trimmedLength = length;
-        if(trimmedLength>destCapacity) {
+        எனில்(trimmedLength>destCapacity) {
             trimmedLength=destCapacity;
         }
         us->extract(start32, trimmedLength, dest);
         t->chunkOffset = start32+trimmedLength;
-    } else {
+    } இல்லையெனில் {
         t->chunkOffset = start32;
     }
     u_terminateUChars(dest, destCapacity, length, pErrorCode);
-    return length;
+    திரும்பு length;
 }
 
-static int32_t U_CALLCONV
+நிலையான int32_t U_CALLCONV
 unistrTextReplace(UText *ut,
                   int64_t start, int64_t limit,
-                  const char16_t *src, int32_t length,
+                  மாறிலி char16_t *src, int32_t length,
                   UErrorCode *pErrorCode) {
     UnicodeString *us=(UnicodeString *)ut->context;
     int32_t oldLength;
 
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    எனில்(U_FAILURE(*pErrorCode)) {
+        திரும்பு 0;
     }
-    if(src==nullptr && length!=0) {
+    எனில்(src==nullptr && length!=0) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
     }
-    if(start>limit) {
+    எனில்(start>limit) {
         *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return 0;
+        திரும்பு 0;
     }
     oldLength=us->length();
     int32_t start32 = pinIndex(start, oldLength);
     int32_t limit32 = pinIndex(limit, oldLength);
-    if (start32 < oldLength) {
+    எனில் (start32 < oldLength) {
         start32 = us->getChar32Start(start32);
     }
-    if (limit32 < oldLength) {
+    எனில் (limit32 < oldLength) {
         limit32 = us->getChar32Start(limit32);
     }
 
@@ -2225,10 +2225,10 @@ unistrTextReplace(UText *ut,
     int32_t lengthDelta = newLength - oldLength;
     ut->chunkOffset = limit32 + lengthDelta;
 
-    return lengthDelta;
+    திரும்பு lengthDelta;
 }
 
-static void U_CALLCONV
+நிலையான வெறுமை U_CALLCONV
 unistrTextCopy(UText *ut,
                int64_t start, int64_t limit,
                int64_t destIndex,
@@ -2237,34 +2237,34 @@ unistrTextCopy(UText *ut,
     UnicodeString *us=(UnicodeString *)ut->context;
     int32_t length=us->length();
 
-    if(U_FAILURE(*pErrorCode)) {
-        return;
+    எனில்(U_FAILURE(*pErrorCode)) {
+        திரும்பு;
     }
     int32_t start32 = pinIndex(start, length);
     int32_t limit32 = pinIndex(limit, length);
     int32_t destIndex32 = pinIndex(destIndex, length);
 
-    if( start32>limit32 || (start32<destIndex32 && destIndex32<limit32)) {
+    எனில்( start32>limit32 || (start32<destIndex32 && destIndex32<limit32)) {
         *pErrorCode=U_INDEX_OUTOFBOUNDS_ERROR;
-        return;
+        திரும்பு;
     }
 
-    if(move) {
+    எனில்(move) {
         // move: copy to destIndex, then remove original
         int32_t segLength=limit32-start32;
         us->copy(start32, limit32, destIndex32);
-        if(destIndex32<start32) {
+        எனில்(destIndex32<start32) {
             start32+=segLength;
         }
         us->remove(start32, segLength);
-    } else {
+    } இல்லையெனில் {
         // copy
         us->copy(start32, limit32, destIndex32);
     }
 
     // update chunk description, set iteration position.
     ut->chunkContents = us->getBuffer();
-    if (move==false) {
+    எனில் (move==பொய்) {
         // copy operation, string length grows
         ut->chunkLength += limit32-start32;
         ut->chunkNativeLimit = ut->chunkLength;
@@ -2273,15 +2273,15 @@ unistrTextCopy(UText *ut,
 
     // Iteration position to end of the newly inserted text.
     ut->chunkOffset = destIndex32+limit32-start32;
-    if (move && destIndex32>start32) {
+    எனில் (move && destIndex32>start32) {
         ut->chunkOffset = destIndex32;
     }
 
 }
 
-static const struct UTextFuncs unistrFuncs =
+நிலையான மாறிலி கட்டமைப்பு UTextFuncs unistrFuncs =
 {
-    sizeof(UTextFuncs),
+    அளவு(UTextFuncs),
     0, 0, 0,             // Reserved alignment padding
     unistrTextClone,
     unistrTextLength,
@@ -2307,30 +2307,30 @@ utext_openUnicodeString(UText* ut U_LIFETIME_BOUND,
                         UnicodeString* s U_LIFETIME_BOUND,
                         UErrorCode* status) {
     ut = utext_openConstUnicodeString(ut, s, status);
-    if (U_SUCCESS(*status)) {
+    எனில் (U_SUCCESS(*status)) {
         ut->providerProperties |= I32_FLAG(UTEXT_PROVIDER_WRITABLE);
     }
-    return ut;
+    திரும்பு ut;
 }
 
 
 
 U_CAPI UText* U_EXPORT2
 utext_openConstUnicodeString(UText* ut U_LIFETIME_BOUND,
-                             const UnicodeString* s U_LIFETIME_BOUND,
+                             மாறிலி UnicodeString* s U_LIFETIME_BOUND,
                              UErrorCode* status) {
-    if (U_SUCCESS(*status) && s->isBogus()) {
+    எனில் (U_SUCCESS(*status) && s->isBogus()) {
         // The UnicodeString is bogus, but we still need to detach the UText
         //   from whatever it was hooked to before, if anything.
         utext_openUChars(ut, nullptr, 0, status);
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return ut;
+        திரும்பு ut;
     }
     ut = utext_setup(ut, 0, status);
     //    note:  use the standard (writable) function table for UnicodeString.
     //           The flag settings disable writing, so having the functions in
     //           the table is harmless.
-    if (U_SUCCESS(*status)) {
+    எனில் (U_SUCCESS(*status)) {
         ut->pFuncs              = &unistrFuncs;
         ut->context             = s;
         ut->providerProperties  = I32_FLAG(UTEXT_PROVIDER_STABLE_CHUNKS);
@@ -2340,7 +2340,7 @@ utext_openConstUnicodeString(UText* ut U_LIFETIME_BOUND,
         ut->chunkNativeLimit    = ut->chunkLength;
         ut->nativeIndexingLimit = ut->chunkLength;
     }
-    return ut;
+    திரும்பு ut;
 }
 
 //------------------------------------------------------------------------------
@@ -2358,8 +2358,8 @@ utext_openConstUnicodeString(UText* ut U_LIFETIME_BOUND,
 U_CDECL_BEGIN
 
 
-static UText * U_CALLCONV
-ucstrTextClone(UText *dest, const UText * src, UBool deep, UErrorCode * status) {
+நிலையான UText * U_CALLCONV
+ucstrTextClone(UText *dest, மாறிலி UText * src, UBool deep, UErrorCode * status) {
     // First do a generic shallow clone.
     dest = shallowTextClone(dest, src, status);
 
@@ -2368,18 +2368,18 @@ ucstrTextClone(UText *dest, const UText * src, UBool deep, UErrorCode * status) 
     //  A non-nullptr pointer in UText.p is the signal to the close() function to delete
     //    it.
     //
-    if (deep && U_SUCCESS(*status)) {
+    எனில் (deep && U_SUCCESS(*status)) {
         U_ASSERT(utext_nativeLength(dest) < INT32_MAX);
         int32_t  len = (int32_t)utext_nativeLength(dest);
 
         // The cloned string IS going to be NUL terminated, whether or not the original was.
-        const char16_t *srcStr = (const char16_t *)src->context;
-        char16_t *copyStr = (char16_t *)uprv_malloc((len+1) * sizeof(char16_t));
-        if (copyStr == nullptr) {
+        மாறிலி char16_t *srcStr = (மாறிலி char16_t *)src->context;
+        char16_t *copyStr = (char16_t *)uprv_malloc((len+1) * அளவு(char16_t));
+        எனில் (copyStr == nullptr) {
             *status = U_MEMORY_ALLOCATION_ERROR;
-        } else {
+        } இல்லையெனில் {
             int64_t i;
-            for (i=0; i<len; i++) {
+            க்கு (i=0; i<len; i++) {
                 copyStr[i] = srcStr[i];
             }
             copyStr[len] = 0;
@@ -2388,16 +2388,16 @@ ucstrTextClone(UText *dest, const UText * src, UBool deep, UErrorCode * status) 
             dest->providerProperties |= I32_FLAG(UTEXT_PROVIDER_OWNS_TEXT);
         }
     }
-    return dest;
+    திரும்பு dest;
 }
 
 
-static void U_CALLCONV
+நிலையான வெறுமை U_CALLCONV
 ucstrTextClose(UText *ut) {
     // Most of the work of close is done by the generic UText framework close.
     // All that needs to be done here is delete the string if the UText
     //  owns it.  This occurs if the UText was created by cloning.
-    if (ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_OWNS_TEXT)) {
+    எனில் (ut->providerProperties & I32_FLAG(UTEXT_PROVIDER_OWNS_TEXT)) {
         char16_t *s = (char16_t *)ut->context;
         uprv_free(s);
         ut->context = nullptr;
@@ -2406,16 +2406,16 @@ ucstrTextClose(UText *ut) {
 
 
 
-static int64_t U_CALLCONV
+நிலையான int64_t U_CALLCONV
 ucstrTextLength(UText *ut) {
-    if (ut->a < 0) {
+    எனில் (ut->a < 0) {
         // null terminated, we don't yet know the length. Scan for it.
         //    Access is not convenient for doing this
         //    because the current iteration position can't be changed.
-        const char16_t  *str = (const char16_t *)ut->context;
-        for (;;) {
-            if (str[ut->chunkNativeLimit] == 0) {
-                break;
+        மாறிலி char16_t  *str = (மாறிலி char16_t *)ut->context;
+        க்கு (;;) {
+            எனில் (str[ut->chunkNativeLimit] == 0) {
+                நிறுத்து;
             }
             ut->chunkNativeLimit++;
         }
@@ -2424,76 +2424,76 @@ ucstrTextLength(UText *ut) {
         ut->nativeIndexingLimit = ut->chunkLength;
         ut->providerProperties &= ~I32_FLAG(UTEXT_PROVIDER_LENGTH_IS_EXPENSIVE);
     }
-    return ut->a;
+    திரும்பு ut->a;
 }
 
 
-static UBool U_CALLCONV
+நிலையான UBool U_CALLCONV
 ucstrTextAccess(UText *ut, int64_t index, UBool  forward) {
-    const char16_t *str   = (const char16_t *)ut->context;
+    மாறிலி char16_t *str   = (மாறிலி char16_t *)ut->context;
 
     // pin the requested index to the bounds of the string,
     //  and set current iteration position.
-    if (index<0) {
+    எனில் (index<0) {
         index = 0;
-    } else if (index < ut->chunkNativeLimit) {
+    } இல்லையெனில் எனில் (index < ut->chunkNativeLimit) {
         // The request data is within the chunk as it is known so far.
         // Put index on a code point boundary.
         U16_SET_CP_START(str, 0, index);
-    } else if (ut->a >= 0) {
+    } இல்லையெனில் எனில் (ut->a >= 0) {
         // We know the length of this string, and the user is requesting something
         // at or beyond the length.  Pin the requested index to the length.
         index = ut->a;
-    } else {
+    } இல்லையெனில் {
         // Null terminated string, length not yet known, and the requested index
         //  is beyond where we have scanned so far.
         //  Scan to 32 UChars beyond the requested index.  The strategy here is
         //  to avoid fully scanning a long string when the caller only wants to
         //  see a few characters at its beginning.
         int32_t scanLimit = (int32_t)index + 32;
-        if ((index + 32)>INT32_MAX || (index + 32)<0 ) {   // note: int64 expression
+        எனில் ((index + 32)>INT32_MAX || (index + 32)<0 ) {   // note: int64 expression
             scanLimit = INT32_MAX;
         }
 
         int32_t chunkLimit = (int32_t)ut->chunkNativeLimit;
-        for (; chunkLimit<scanLimit; chunkLimit++) {
-            if (str[chunkLimit] == 0) {
+        க்கு (; chunkLimit<scanLimit; chunkLimit++) {
+            எனில் (str[chunkLimit] == 0) {
                 // We found the end of the string.  Remember it, pin the requested index to it,
                 //  and bail out of here.
                 ut->a = chunkLimit;
                 ut->chunkLength = chunkLimit;
                 ut->nativeIndexingLimit = chunkLimit;
-                if (index >= chunkLimit) {
+                எனில் (index >= chunkLimit) {
                     index = chunkLimit;
-                } else {
+                } இல்லையெனில் {
                     U16_SET_CP_START(str, 0, index);
                 }
 
                 ut->chunkNativeLimit = chunkLimit;
                 ut->providerProperties &= ~I32_FLAG(UTEXT_PROVIDER_LENGTH_IS_EXPENSIVE);
-                goto breakout;
+                செல் breakout;
             }
         }
         // We scanned through the next batch of UChars without finding the end.
         U16_SET_CP_START(str, 0, index);
-        if (chunkLimit == INT32_MAX) {
+        எனில் (chunkLimit == INT32_MAX) {
             // Scanned to the limit of a 32 bit length.
             // Forceably trim the overlength string back so length fits in int32
             //  TODO:  add support for 64 bit strings.
             ut->a = chunkLimit;
             ut->chunkLength = chunkLimit;
             ut->nativeIndexingLimit = chunkLimit;
-            if (index > chunkLimit) {
+            எனில் (index > chunkLimit) {
                 index = chunkLimit;
             }
             ut->chunkNativeLimit = chunkLimit;
             ut->providerProperties &= ~I32_FLAG(UTEXT_PROVIDER_LENGTH_IS_EXPENSIVE);
-        } else {
+        } இல்லையெனில் {
             // The endpoint of a chunk must not be left in the middle of a surrogate pair.
             // If the current end is on a lead surrogate, back the end up by one.
             // It doesn't matter if the end char happens to be an unpaired surrogate,
             //    and it's simpler not to worry about it.
-            if (U16_IS_LEAD(str[chunkLimit-1])) {
+            எனில் (U16_IS_LEAD(str[chunkLimit-1])) {
                 --chunkLimit;
             }
             // Null-terminated chunk with end still unknown.
@@ -2512,23 +2512,23 @@ breakout:
 
     // Check whether request is at the start or end
     UBool retVal = (forward && index<ut->chunkNativeLimit) || (!forward && index>0);
-    return retVal;
+    திரும்பு retVal;
 }
 
 
 
-static int32_t U_CALLCONV
+நிலையான int32_t U_CALLCONV
 ucstrTextExtract(UText *ut,
                   int64_t start, int64_t limit,
                   char16_t *dest, int32_t destCapacity,
                   UErrorCode *pErrorCode)
 {
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    எனில்(U_FAILURE(*pErrorCode)) {
+        திரும்பு 0;
     }
-    if(destCapacity<0 || (dest==nullptr && destCapacity>0) || start>limit) {
+    எனில்(destCapacity<0 || (dest==nullptr && destCapacity>0) || start>limit) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        திரும்பு 0;
     }
 
     //const char16_t *s=(const char16_t *)ut->context;
@@ -2540,19 +2540,19 @@ ucstrTextExtract(UText *ut,
     // Access the start.  Does two things we need:
     //   Pins 'start' to the length of the string, if it came in out-of-bounds.
     //   Snaps 'start' to the beginning of a code point.
-    ucstrTextAccess(ut, start, true);
-    const char16_t *s=ut->chunkContents;
+    ucstrTextAccess(ut, start, உண்மை);
+    மாறிலி char16_t *s=ut->chunkContents;
     start32 = ut->chunkOffset;
 
     int32_t strLength=(int32_t)ut->a;
-    if (strLength >= 0) {
+    எனில் (strLength >= 0) {
         limit32 = pinIndex(limit, strLength);
-    } else {
+    } இல்லையெனில் {
         limit32 = pinIndex(limit, INT32_MAX);
     }
     di = 0;
-    for (si=start32; si<limit32; si++) {
-        if (strLength<0 && s[si]==0) {
+    க்கு (si=start32; si<limit32; si++) {
+        எனில் (strLength<0 && s[si]==0) {
             // Just hit the end of a null-terminated string.
             ut->a = si;               // set string length for this UText
             ut->chunkNativeLimit    = si;
@@ -2560,19 +2560,19 @@ ucstrTextExtract(UText *ut,
             ut->nativeIndexingLimit = si;
             strLength               = si;
             limit32                 = si;
-            break;
+            நிறுத்து;
         }
         U_ASSERT(di>=0); /* to ensure di never exceeds INT32_MAX, which must not happen logically */
-        if (di<destCapacity) {
+        எனில் (di<destCapacity) {
             // only store if there is space.
             dest[di] = s[si];
-        } else {
-            if (strLength>=0) {
+        } இல்லையெனில் {
+            எனில் (strLength>=0) {
                 // We have filled the destination buffer, and the string length is known.
                 //  Cut the loop short.  There is no need to scan string termination.
                 di = limit32 - start32;
                 si = limit32;
-                break;
+                நிறுத்து;
             }
         }
         di++;
@@ -2580,10 +2580,10 @@ ucstrTextExtract(UText *ut,
 
     // If the limit index points to a lead surrogate of a pair,
     //   add the corresponding trail surrogate to the destination.
-    if (si>0 && U16_IS_LEAD(s[si-1]) &&
+    எனில் (si>0 && U16_IS_LEAD(s[si-1]) &&
             ((si<strLength || strLength<0)  && U16_IS_TRAIL(s[si])))
     {
-        if (di<destCapacity) {
+        எனில் (di<destCapacity) {
             // store only if there is space in the output buffer.
             dest[di++] = s[si];
         }
@@ -2591,21 +2591,21 @@ ucstrTextExtract(UText *ut,
     }
 
     // Put iteration position at the point just following the extracted text
-    if (si <= ut->chunkNativeLimit) {
+    எனில் (si <= ut->chunkNativeLimit) {
         ut->chunkOffset = si;
-    } else {
-        ucstrTextAccess(ut, si, true);
+    } இல்லையெனில் {
+        ucstrTextAccess(ut, si, உண்மை);
     }
 
     // Add a terminating NUL if space in the buffer permits,
     // and set the error status as required.
     u_terminateUChars(dest, destCapacity, di, pErrorCode);
-    return di;
+    திரும்பு di;
 }
 
-static const struct UTextFuncs ucstrFuncs =
+நிலையான மாறிலி கட்டமைப்பு UTextFuncs ucstrFuncs =
 {
-    sizeof(UTextFuncs),
+    அளவு(UTextFuncs),
     0, 0, 0,           // Reserved alignment padding
     ucstrTextClone,
     ucstrTextLength,
@@ -2623,29 +2623,29 @@ static const struct UTextFuncs ucstrFuncs =
 
 U_CDECL_END
 
-static const char16_t gEmptyUString[] = {0};
+நிலையான மாறிலி char16_t gEmptyUString[] = {0};
 
 U_CAPI UText* U_EXPORT2
 utext_openUChars(UText* ut U_LIFETIME_BOUND,
-                 const char16_t* s U_LIFETIME_BOUND,
+                 மாறிலி char16_t* s U_LIFETIME_BOUND,
                  int64_t length,
                  UErrorCode* status) {
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    எனில் (U_FAILURE(*status)) {
+        திரும்பு nullptr;
     }
-    if(s==nullptr && length==0) {
+    எனில்(s==nullptr && length==0) {
         s = gEmptyUString;
     }
-    if (s==nullptr || length < -1 || length>INT32_MAX) {
+    எனில் (s==nullptr || length < -1 || length>INT32_MAX) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return nullptr;
+        திரும்பு nullptr;
     }
     ut = utext_setup(ut, 0, status);
-    if (U_SUCCESS(*status)) {
+    எனில் (U_SUCCESS(*status)) {
         ut->pFuncs               = &ucstrFuncs;
         ut->context              = s;
         ut->providerProperties   = I32_FLAG(UTEXT_PROVIDER_STABLE_CHUNKS);
-        if (length==-1) {
+        எனில் (length==-1) {
             ut->providerProperties |= I32_FLAG(UTEXT_PROVIDER_LENGTH_IS_EXPENSIVE);
         }
         ut->a                    = length;
@@ -2656,7 +2656,7 @@ utext_openUChars(UText* ut U_LIFETIME_BOUND,
         ut->chunkOffset          = 0;
         ut->nativeIndexingLimit  = ut->chunkLength;
     }
-    return ut;
+    திரும்பு ut;
 }
 
 
@@ -2678,7 +2678,7 @@ utext_openUChars(UText* ut U_LIFETIME_BOUND,
 #define CIBufSize 16
 
 U_CDECL_BEGIN
-static void U_CALLCONV
+நிலையான வெறுமை U_CALLCONV
 charIterTextClose(UText *ut) {
     // Most of the work of close is done by the generic UText framework close.
     // All that needs to be done here is delete the CharacterIterator if the UText
@@ -2688,26 +2688,26 @@ charIterTextClose(UText *ut) {
     ut->r = nullptr;
 }
 
-static int64_t U_CALLCONV
+நிலையான int64_t U_CALLCONV
 charIterTextLength(UText *ut) {
-    return (int32_t)ut->a;
+    திரும்பு (int32_t)ut->a;
 }
 
-static UBool U_CALLCONV
+நிலையான UBool U_CALLCONV
 charIterTextAccess(UText *ut, int64_t index, UBool  forward) {
     CharacterIterator *ci   = (CharacterIterator *)ut->context;
 
     int32_t clippedIndex = (int32_t)index;
-    if (clippedIndex<0) {
+    எனில் (clippedIndex<0) {
         clippedIndex=0;
-    } else if (clippedIndex>=ut->a) {
+    } இல்லையெனில் எனில் (clippedIndex>=ut->a) {
         clippedIndex=(int32_t)ut->a;
     }
     int32_t neededIndex = clippedIndex;
-    if (!forward && neededIndex>0) {
+    எனில் (!forward && neededIndex>0) {
         // reverse iteration, want the position just before what was asked for.
         neededIndex--;
-    } else if (forward && neededIndex==ut->a && neededIndex>0) {
+    } இல்லையெனில் எனில் (forward && neededIndex==ut->a && neededIndex>0) {
         // Forward iteration, don't ask for something past the end of the text.
         neededIndex--;
     }
@@ -2716,42 +2716,42 @@ charIterTextAccess(UText *ut, int64_t index, UBool  forward) {
     neededIndex -= neededIndex % CIBufSize;
 
     char16_t *buf = nullptr;
-    UBool  needChunkSetup = true;
-    int    i;
-    if (ut->chunkNativeStart == neededIndex) {
+    UBool  needChunkSetup = உண்மை;
+    முழு    i;
+    எனில் (ut->chunkNativeStart == neededIndex) {
         // The buffer we want is already the current chunk.
-        needChunkSetup = false;
-    } else if (ut->b == neededIndex) {
+        needChunkSetup = பொய்;
+    } இல்லையெனில் எனில் (ut->b == neededIndex) {
         // The first buffer (buffer p) has what we need.
         buf = (char16_t *)ut->p;
-    } else if (ut->c == neededIndex) {
+    } இல்லையெனில் எனில் (ut->c == neededIndex) {
         // The second buffer (buffer q) has what we need.
         buf = (char16_t *)ut->q;
-    } else {
+    } இல்லையெனில் {
         // Neither buffer already has what we need.
         // Load new data from the character iterator.
         // Use the buf that is not the current buffer.
         buf = (char16_t *)ut->p;
-        if (ut->p == ut->chunkContents) {
+        எனில் (ut->p == ut->chunkContents) {
             buf = (char16_t *)ut->q;
         }
         ci->setIndex(neededIndex);
-        for (i=0; i<CIBufSize; i++) {
+        க்கு (i=0; i<CIBufSize; i++) {
             buf[i] = ci->nextPostInc();
-            if (i+neededIndex > ut->a) {
-                break;
+            எனில் (i+neededIndex > ut->a) {
+                நிறுத்து;
             }
         }
     }
 
     // We have a buffer with the data we need.
     // Set it up as the current chunk, if it wasn't already.
-    if (needChunkSetup) {
+    எனில் (needChunkSetup) {
         ut->chunkContents = buf;
         ut->chunkLength   = CIBufSize;
         ut->chunkNativeStart = neededIndex;
         ut->chunkNativeLimit = neededIndex + CIBufSize;
-        if (ut->chunkNativeLimit > ut->a) {
+        எனில் (ut->chunkNativeLimit > ut->a) {
             ut->chunkNativeLimit = ut->a;
             ut->chunkLength  = (int32_t)(ut->chunkNativeLimit)-(int32_t)(ut->chunkNativeStart);
         }
@@ -2760,25 +2760,25 @@ charIterTextAccess(UText *ut, int64_t index, UBool  forward) {
     }
     ut->chunkOffset = clippedIndex - (int32_t)ut->chunkNativeStart;
     UBool success = (forward? ut->chunkOffset<ut->chunkLength : ut->chunkOffset>0);
-    return success;
+    திரும்பு success;
 }
 
-static UText * U_CALLCONV
-charIterTextClone(UText *dest, const UText *src, UBool deep, UErrorCode * status) {
-    if (U_FAILURE(*status)) {
-        return nullptr;
+நிலையான UText * U_CALLCONV
+charIterTextClone(UText *dest, மாறிலி UText *src, UBool deep, UErrorCode * status) {
+    எனில் (U_FAILURE(*status)) {
+        திரும்பு nullptr;
     }
 
-    if (deep) {
+    எனில் (deep) {
         // There is no CharacterIterator API for cloning the underlying text storage.
         *status = U_UNSUPPORTED_ERROR;
-        return nullptr;
-    } else {
+        திரும்பு nullptr;
+    } இல்லையெனில் {
         CharacterIterator *srcCI =(CharacterIterator *)src->context;
         srcCI = srcCI->clone();
         dest = utext_openCharacterIterator(dest, srcCI, status);
-        if (U_FAILURE(*status)) {
-            return dest;
+        எனில் (U_FAILURE(*status)) {
+            திரும்பு dest;
         }
         // cast off const on getNativeIndex.
         //   For CharacterIterator based UTexts, this is safe, the operation is const.
@@ -2786,21 +2786,21 @@ charIterTextClone(UText *dest, const UText *src, UBool deep, UErrorCode * status
         utext_setNativeIndex(dest, ix);
         dest->r = srcCI;    // flags that this UText owns the CharacterIterator
     }
-    return dest;
+    திரும்பு dest;
 }
 
-static int32_t U_CALLCONV
+நிலையான int32_t U_CALLCONV
 charIterTextExtract(UText *ut,
                   int64_t start, int64_t limit,
                   char16_t *dest, int32_t destCapacity,
                   UErrorCode *status)
 {
-    if(U_FAILURE(*status)) {
-        return 0;
+    எனில்(U_FAILURE(*status)) {
+        திரும்பு 0;
     }
-    if(destCapacity<0 || (dest==nullptr && destCapacity>0) || start>limit) {
+    எனில்(destCapacity<0 || (dest==nullptr && destCapacity>0) || start>limit) {
         *status=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        திரும்பு 0;
     }
     int32_t  length  = (int32_t)ut->a;
     int32_t  start32 = pinIndex(start, length);
@@ -2813,29 +2813,29 @@ charIterTextExtract(UText *ut,
     ci->setIndex32(start32);   // Moves ix to lead of surrogate pair, if needed.
     srci = ci->getIndex();
     copyLimit = srci;
-    while (srci<limit32) {
+    போது (srci<limit32) {
         UChar32 c = ci->next32PostInc();
         int32_t  len = U16_LENGTH(c);
         U_ASSERT(desti+len>0); /* to ensure desti+len never exceeds MAX_INT32, which must not happen logically */
-        if (desti+len <= destCapacity) {
+        எனில் (desti+len <= destCapacity) {
             U16_APPEND_UNSAFE(dest, desti, c);
             copyLimit = srci+len;
-        } else {
+        } இல்லையெனில் {
             desti += len;
             *status = U_BUFFER_OVERFLOW_ERROR;
         }
         srci += len;
     }
 
-    charIterTextAccess(ut, copyLimit, true);
+    charIterTextAccess(ut, copyLimit, உண்மை);
 
     u_terminateUChars(dest, destCapacity, desti, status);
-    return desti;
+    திரும்பு desti;
 }
 
-static const struct UTextFuncs charIterFuncs =
+நிலையான மாறிலி கட்டமைப்பு UTextFuncs charIterFuncs =
 {
-    sizeof(UTextFuncs),
+    அளவு(UTextFuncs),
     0, 0, 0,             // Reserved alignment padding
     charIterTextClone,
     charIterTextLength,
@@ -2856,20 +2856,20 @@ U_CAPI UText* U_EXPORT2
 utext_openCharacterIterator(UText* ut U_LIFETIME_BOUND,
                             CharacterIterator* ci U_LIFETIME_BOUND,
                             UErrorCode* status) {
-    if (U_FAILURE(*status)) {
-        return nullptr;
+    எனில் (U_FAILURE(*status)) {
+        திரும்பு nullptr;
     }
 
-    if (ci->startIndex() > 0) {
+    எனில் (ci->startIndex() > 0) {
         // No support for CharacterIterators that do not start indexing from zero.
         *status = U_UNSUPPORTED_ERROR;
-        return nullptr;
+        திரும்பு nullptr;
     }
 
     // Extra space in UText for 2 buffers of CIBufSize UChars each.
-    int32_t  extraSpace = 2 * CIBufSize * sizeof(char16_t);
+    int32_t  extraSpace = 2 * CIBufSize * அளவு(char16_t);
     ut = utext_setup(ut, extraSpace, status);
-    if (U_SUCCESS(*status)) {
+    எனில் (U_SUCCESS(*status)) {
         ut->pFuncs                = &charIterFuncs;
         ut->context              = ci;
         ut->providerProperties   = 0;
@@ -2892,5 +2892,5 @@ utext_openCharacterIterator(UText* ut U_LIFETIME_BOUND,
         ut->chunkLength          = 0;
         ut->nativeIndexingLimit  = ut->chunkOffset;  // enables native indexing
     }
-    return ut;
+    திரும்பு ut;
 }

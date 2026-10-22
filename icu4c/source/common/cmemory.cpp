@@ -20,107 +20,107 @@
 *
 ******************************************************************************
 */
-#include "unicode/uclean.h"
-#include "cmemory.h"
-#include "putilimp.h"
-#include "uassert.h"
-#include <stdlib.h>
+#அந்தர்பாவ "unicode/uclean.h"
+#அந்தர்பாவ "cmemory.h"
+#அந்தர்பாவ "putilimp.h"
+#அந்தர்பாவ "uassert.h"
+#அந்தர்பாவ <stdlib.h>
 
 /* uprv_malloc(0) returns a pointer to this read-only data. */
-static const int32_t zeroMem[] = {0, 0, 0, 0, 0, 0};
+நிலையான மாறிலி int32_t zeroMem[] = {0, 0, 0, 0, 0, 0};
 
 /* Function Pointers for user-supplied heap functions  */
-static const void     *pContext;
-static UMemAllocFn    *pAlloc;
-static UMemReallocFn  *pRealloc;
-static UMemFreeFn     *pFree;
+நிலையான மாறிலி வெறுமை     *pContext;
+நிலையான UMemAllocFn    *pAlloc;
+நிலையான UMemReallocFn  *pRealloc;
+நிலையான UMemFreeFn     *pFree;
 
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-#include <stdio.h>
-static int n=0;
-static long b=0; 
+#எனில் U_DEBUG && defined(UPRV_MALLOC_மொத்தம்)
+#அந்தர்பாவ <stdio.h>
+நிலையான முழு n=0;
+நிலையான long b=0; 
 #endif
 
-U_CAPI void * U_EXPORT2
+U_CAPI வெறுமை * U_EXPORT2
 uprv_malloc(size_t s) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
-#if 1
+#எனில் U_DEBUG && defined(UPRV_MALLOC_மொத்தம்)
+#எனில் 1
   putchar('>');
   fflush(stdout);
-#else
+#இல்லையெனில்
   fprintf(stderr,"MALLOC\t#%d\t%ul bytes\t%ul total\n", ++n,s,(b+=s)); fflush(stderr);
 #endif
 #endif
-    if (s > 0) {
-        if (pAlloc) {
-            return (*pAlloc)(pContext, s);
-        } else {
-            return uprv_default_malloc(s);
+    எனில் (s > 0) {
+        எனில் (pAlloc) {
+            திரும்பு (*pAlloc)(pContext, s);
+        } இல்லையெனில் {
+            திரும்பு uprv_default_malloc(s);
         }
-    } else {
-        return (void *)zeroMem;
+    } இல்லையெனில் {
+        திரும்பு (வெறுமை *)zeroMem;
     }
 }
 
-U_CAPI void * U_EXPORT2
-uprv_realloc(void * buffer, size_t size) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+U_CAPI வெறுமை * U_EXPORT2
+uprv_realloc(வெறுமை * buffer, size_t size) {
+#எனில் U_DEBUG && defined(UPRV_MALLOC_மொத்தம்)
   putchar('~');
   fflush(stdout);
 #endif
-    if (buffer == zeroMem) {
-        return uprv_malloc(size);
-    } else if (size == 0) {
-        if (pFree) {
+    எனில் (buffer == zeroMem) {
+        திரும்பு uprv_malloc(size);
+    } இல்லையெனில் எனில் (size == 0) {
+        எனில் (pFree) {
             (*pFree)(pContext, buffer);
-        } else {
+        } இல்லையெனில் {
             uprv_default_free(buffer);
         }
-        return (void *)zeroMem;
-    } else {
-        if (pRealloc) {
-            return (*pRealloc)(pContext, buffer, size);
-        } else {
-            return uprv_default_realloc(buffer, size);
+        திரும்பு (வெறுமை *)zeroMem;
+    } இல்லையெனில் {
+        எனில் (pRealloc) {
+            திரும்பு (*pRealloc)(pContext, buffer, size);
+        } இல்லையெனில் {
+            திரும்பு uprv_default_realloc(buffer, size);
         }
     }
 }
 
-U_CAPI void U_EXPORT2
-uprv_free(void *buffer) {
-#if U_DEBUG && defined(UPRV_MALLOC_COUNT)
+U_CAPI வெறுமை U_EXPORT2
+uprv_free(வெறுமை *buffer) {
+#எனில் U_DEBUG && defined(UPRV_MALLOC_மொத்தம்)
   putchar('<');
   fflush(stdout);
 #endif
-    if (buffer != zeroMem) {
-        if (pFree) {
+    எனில் (buffer != zeroMem) {
+        எனில் (pFree) {
             (*pFree)(pContext, buffer);
-        } else {
+        } இல்லையெனில் {
             uprv_default_free(buffer);
         }
     }
 }
 
-U_CAPI void * U_EXPORT2
+U_CAPI வெறுமை * U_EXPORT2
 uprv_calloc(size_t num, size_t size) {
-    void *mem = nullptr;
+    வெறுமை *mem = nullptr;
     size *= num;
     mem = uprv_malloc(size);
-    if (mem) {
+    எனில் (mem) {
         uprv_memset(mem, 0, size);
     }
-    return mem;
+    திரும்பு mem;
 }
 
-U_CAPI void U_EXPORT2
-u_setMemoryFunctions(const void *context, UMemAllocFn *a, UMemReallocFn *r, UMemFreeFn *f,  UErrorCode *status)
+U_CAPI வெறுமை U_EXPORT2
+u_setMemoryFunctions(மாறிலி வெறுமை *context, UMemAllocFn *a, UMemReallocFn *r, UMemFreeFn *f,  UErrorCode *status)
 {
-    if (U_FAILURE(*status)) {
-        return;
+    எனில் (U_FAILURE(*status)) {
+        திரும்பு;
     }
-    if (a==nullptr || r==nullptr || f==nullptr) {
+    எனில் (a==nullptr || r==nullptr || f==nullptr) {
         *status = U_ILLEGAL_ARGUMENT_ERROR;
-        return;
+        திரும்பு;
     }
     pContext  = context;
     pAlloc    = a;
@@ -134,5 +134,5 @@ U_CFUNC UBool cmemory_cleanup() {
     pAlloc     = nullptr;
     pRealloc   = nullptr;
     pFree      = nullptr;
-    return true;
+    திரும்பு உண்மை;
 }

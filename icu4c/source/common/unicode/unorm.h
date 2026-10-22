@@ -17,12 +17,12 @@
 #ifndef UNORM_H
 #define UNORM_H
 
-#include "unicode/utypes.h"
+#அந்தர்பாவ "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#எனில் !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/uiter.h"
-#include "unicode/unorm2.h"
+#அந்தர்பாவ "unicode/uiter.h"
+#அந்தர்பாவ "unicode/unorm2.h"
 
 /**
  * \file
@@ -137,7 +137,7 @@
  * Constants for normalization modes.
  * @deprecated ICU 56 Use unorm2.h instead.
  */
-typedef enum {
+வகைவரை எண்ணிக்கை {
   /** No decomposition/composition. @deprecated ICU 56 Use unorm2.h instead. */
   UNORM_NONE = 1,
   /** Canonical decomposition. @deprecated ICU 56 Use unorm2.h instead. */
@@ -154,7 +154,7 @@ typedef enum {
   UNORM_FCD = 6,
 
   /** One more than the highest normalization mode constant. @deprecated ICU 56 Use unorm2.h instead. */
-  UNORM_MODE_COUNT
+  UNORM_MODE_மொத்தம்
 } UNormalizationMode;
 
 #endif  // U_FORCE_HIDE_DEPRECATED_API
@@ -168,7 +168,7 @@ typedef enum {
  * that is currently supported by ICU (see u_getUnicodeVersion).
  * @deprecated ICU 56 Use unorm2.h instead.
  */
-enum {
+எண்ணிக்கை {
     /**
      * Options bit set value to select Unicode 3.2 normalization
      * (except NormalizationCorrections).
@@ -215,7 +215,7 @@ enum {
  * @deprecated ICU 56 Use unorm2.h instead.
  */
 U_DEPRECATED int32_t U_EXPORT2
-unorm_normalize(const UChar *source, int32_t sourceLength,
+unorm_normalize(மாறிலி UChar *source, int32_t sourceLength,
                 UNormalizationMode mode, int32_t options,
                 UChar *result, int32_t resultLength,
                 UErrorCode *status);
@@ -241,7 +241,7 @@ unorm_normalize(const UChar *source, int32_t sourceLength,
  * @deprecated ICU 56 Use unorm2.h instead.
  */
 U_DEPRECATED UNormalizationCheckResult U_EXPORT2
-unorm_quickCheck(const UChar *source, int32_t sourcelength,
+unorm_quickCheck(மாறிலி UChar *source, int32_t sourcelength,
                  UNormalizationMode mode,
                  UErrorCode *status);
 
@@ -262,7 +262,7 @@ unorm_quickCheck(const UChar *source, int32_t sourcelength,
  * @deprecated ICU 56 Use unorm2.h instead.
  */
 U_DEPRECATED UNormalizationCheckResult U_EXPORT2
-unorm_quickCheckWithOptions(const UChar *src, int32_t srcLength,
+unorm_quickCheckWithOptions(மாறிலி UChar *src, int32_t srcLength,
                             UNormalizationMode mode, int32_t options,
                             UErrorCode *pErrorCode);
 
@@ -288,7 +288,7 @@ unorm_quickCheckWithOptions(const UChar *src, int32_t srcLength,
  * @deprecated ICU 56 Use unorm2.h instead.
  */
 U_DEPRECATED UBool U_EXPORT2
-unorm_isNormalized(const UChar *src, int32_t srcLength,
+unorm_isNormalized(மாறிலி UChar *src, int32_t srcLength,
                    UNormalizationMode mode,
                    UErrorCode *pErrorCode);
 
@@ -310,7 +310,7 @@ unorm_isNormalized(const UChar *src, int32_t srcLength,
  * @deprecated ICU 56 Use unorm2.h instead.
  */
 U_DEPRECATED UBool U_EXPORT2
-unorm_isNormalizedWithOptions(const UChar *src, int32_t srcLength,
+unorm_isNormalizedWithOptions(மாறிலி UChar *src, int32_t srcLength,
                               UNormalizationMode mode, int32_t options,
                               UErrorCode *pErrorCode);
 
@@ -465,8 +465,8 @@ unorm_previous(UCharIterator *src,
  * @deprecated ICU 56 Use unorm2.h instead.
  */
 U_DEPRECATED int32_t U_EXPORT2
-unorm_concatenate(const UChar *left, int32_t leftLength,
-                  const UChar *right, int32_t rightLength,
+unorm_concatenate(மாறிலி UChar *இடது, int32_t இடது_Length,
+                  மாறிலி UChar *வலது, int32_t வலது_Length,
                   UChar *dest, int32_t destCapacity,
                   UNormalizationMode mode, int32_t options,
                   UErrorCode *pErrorCode);

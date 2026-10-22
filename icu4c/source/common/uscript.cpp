@@ -15,82 +15,82 @@
 ******************************************************************************
 */
 
-#include "unicode/uchar.h"
-#include "unicode/uscript.h"
-#include "unicode/uloc.h"
-#include "charstr.h"
-#include "cmemory.h"
-#include "cstring.h"
-#include "ulocimp.h"
+#அந்தர்பாவ "unicode/uchar.h"
+#அந்தர்பாவ "unicode/uscript.h"
+#அந்தர்பாவ "unicode/uloc.h"
+#அந்தர்பாவ "charstr.h"
+#அந்தர்பாவ "cmemory.h"
+#அந்தர்பாவ "cstring.h"
+#அந்தர்பாவ "ulocimp.h"
 
-static const UScriptCode JAPANESE[3] = { USCRIPT_KATAKANA, USCRIPT_HIRAGANA, USCRIPT_HAN };
-static const UScriptCode KOREAN[2] = { USCRIPT_HANGUL, USCRIPT_HAN };
-static const UScriptCode HAN_BOPO[2] = { USCRIPT_HAN, USCRIPT_BOPOMOFO };
+நிலையான மாறிலி UScriptCode JAPANESE[3] = { USCRIPT_KATAKANA, USCRIPT_HIRAGANA, USCRIPT_HAN };
+நிலையான மாறிலி UScriptCode KOREAN[2] = { USCRIPT_HANGUL, USCRIPT_HAN };
+நிலையான மாறிலி UScriptCode HAN_BOPO[2] = { USCRIPT_HAN, USCRIPT_BOPOMOFO };
 
-static int32_t
-setCodes(const UScriptCode *src, int32_t length,
+நிலையான int32_t
+setCodes(மாறிலி UScriptCode *src, int32_t length,
          UScriptCode *dest, int32_t capacity, UErrorCode *err) {
     int32_t i;
-    if(U_FAILURE(*err)) { return 0; }
-    if(length > capacity) {
+    எனில்(U_FAILURE(*err)) { திரும்பு 0; }
+    எனில்(length > capacity) {
         *err = U_BUFFER_OVERFLOW_ERROR;
-        return length;
+        திரும்பு length;
     }
-    for(i = 0; i < length; ++i) {
+    க்கு(i = 0; i < length; ++i) {
         dest[i] = src[i];
     }
-    return length;
+    திரும்பு length;
 }
 
-static int32_t
+நிலையான int32_t
 setOneCode(UScriptCode script, UScriptCode *scripts, int32_t capacity, UErrorCode *err) {
-    if(U_FAILURE(*err)) { return 0; }
-    if(1 > capacity) {
+    எனில்(U_FAILURE(*err)) { திரும்பு 0; }
+    எனில்(1 > capacity) {
         *err = U_BUFFER_OVERFLOW_ERROR;
-        return 1;
+        திரும்பு 1;
     }
     scripts[0] = script;
-    return 1;
+    திரும்பு 1;
 }
 
-static int32_t
-getCodesFromLocale(const char *locale,
+நிலையான int32_t
+getCodesFromLocale(மாறிலி எழுத்து *locale,
                    UScriptCode *scripts, int32_t capacity, UErrorCode *err) {
-    if (U_FAILURE(*err)) { return 0; }
+    எனில் (U_FAILURE(*err)) { திரும்பு 0; }
     icu::CharString lang;
     icu::CharString script;
-    if (locale == nullptr) {
+    எனில் (locale == nullptr) {
         locale = uloc_getDefault();
     }
     ulocimp_getSubtags(locale, &lang, &script, nullptr, nullptr, nullptr, *err);
-    if (U_FAILURE(*err)) { return 0; }
+    எனில் (U_FAILURE(*err)) { திரும்பு 0; }
     // Multi-script languages, equivalent to the LocaleScript data
     // that we used to load from locale resource bundles.
-    if (lang == "ja") {
-        return setCodes(JAPANESE, UPRV_LENGTHOF(JAPANESE), scripts, capacity, err);
+    எனில் (lang == "ja") {
+        திரும்பு setCodes(JAPANESE, UPRV_LENGTHOF(JAPANESE), scripts, capacity, err);
     }
-    if (lang == "ko") {
-        return setCodes(KOREAN, UPRV_LENGTHOF(KOREAN), scripts, capacity, err);
+    எனில் (lang == "ko") {
+        திரும்பு setCodes(KOREAN, UPRV_LENGTHOF(KOREAN), scripts, capacity, err);
     }
-    if (lang == "zh" && script == "Hant") {
-        return setCodes(HAN_BOPO, UPRV_LENGTHOF(HAN_BOPO), scripts, capacity, err);
+    எனில் (lang == "zh" && script == "Hant") {
+        திரும்பு setCodes(HAN_BOPO, UPRV_LENGTHOF(HAN_BOPO), scripts, capacity, err);
     }
     // Explicit script code.
-    if (!script.isEmpty()) {
-        UScriptCode scriptCode = static_cast<UScriptCode>(u_getPropertyValueEnum(UCHAR_SCRIPT, script.data()));
-        if(scriptCode != USCRIPT_INVALID_CODE) {
-            if(scriptCode == USCRIPT_SIMPLIFIED_HAN || scriptCode == USCRIPT_TRADITIONAL_HAN) {
+    எனில் (!script.isEmpty()) {
+        UScriptCode scriptCode = static_cast<UScriptCode>(u_get_Property_மதிப்பு_Enum(UCHAR_SCRIPT, script.data()));
+        எனில்(scriptCode != USCRIPT_INVALID_CODE) {
+            எனில்(scriptCode == USCRIPT_SIMPLIFIED_HAN || scriptCode == USCRIPT_TRADITIONAL_HAN) {
                 scriptCode = USCRIPT_HAN;
             }
-            return setOneCode(scriptCode, scripts, capacity, err);
+            திரும்பு setOneCode(scriptCode, scripts, capacity, err);
         }
     }
-    return 0;
+    திரும்பு 0;
 }
 
 /* TODO: this is a bad API and should be deprecated, ticket #11141 */
 U_CAPI int32_t  U_EXPORT2
-uscript_getCode(const char* nameOrAbbrOrLocale,
+uscript_getCode(மாறிலி எழுத்து* nameOrAbbrOrLocale,
                 UScriptCode* fillIn,
                 int32_t capacity,
                 UErrorCode* err){
@@ -98,18 +98,18 @@ uscript_getCode(const char* nameOrAbbrOrLocale,
     UErrorCode internalErrorCode;
     int32_t length;
 
-    if(U_FAILURE(*err)) {
-        return 0;
+    எனில்(U_FAILURE(*err)) {
+        திரும்பு 0;
     }
-    if(nameOrAbbrOrLocale==nullptr ||
+    எனில்(nameOrAbbrOrLocale==nullptr ||
             (fillIn == nullptr ? capacity != 0 : capacity < 0)) {
         *err = U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        திரும்பு 0;
     }
 
-    triedCode = false;
-    const char* lastSepPtr = uprv_strrchr(nameOrAbbrOrLocale, '-');
-    if (lastSepPtr==nullptr) {
+    triedCode = பொய்;
+    மாறிலி எழுத்து* lastSepPtr = uprv_strrchr(nameOrAbbrOrLocale, '-');
+    எனில் (lastSepPtr==nullptr) {
         lastSepPtr = uprv_strrchr(nameOrAbbrOrLocale, '_');
     }
     // Favor interpretation of nameOrAbbrOrLocale as a script alias if either
@@ -119,34 +119,34 @@ uscript_getCode(const char* nameOrAbbrOrLocale,
     //    Old_Hungarian, Old_Italic, etc. ("old" is a valid language code)
     // 3. The last instance of -/_ is at offset 7, and the portion after that is
     //    3 characters. This handles New_Tai_Lue ("new" is a valid language code).
-    if (lastSepPtr==nullptr
+    எனில் (lastSepPtr==nullptr
             || (lastSepPtr-nameOrAbbrOrLocale == 3 && uprv_strlen(nameOrAbbrOrLocale) > 8)
             || (lastSepPtr-nameOrAbbrOrLocale == 7 && uprv_strlen(nameOrAbbrOrLocale) == 11) ) {
         /* try long and abbreviated script names first */
-        UScriptCode code = (UScriptCode) u_getPropertyValueEnum(UCHAR_SCRIPT, nameOrAbbrOrLocale);
-        if(code!=USCRIPT_INVALID_CODE) {
-            return setOneCode(code, fillIn, capacity, err);
+        UScriptCode code = (UScriptCode) u_get_Property_மதிப்பு_Enum(UCHAR_SCRIPT, nameOrAbbrOrLocale);
+        எனில்(code!=USCRIPT_INVALID_CODE) {
+            திரும்பு setOneCode(code, fillIn, capacity, err);
         }
-        triedCode = true;
+        triedCode = உண்மை;
     }
     internalErrorCode = U_ZERO_ERROR;
     length = getCodesFromLocale(nameOrAbbrOrLocale, fillIn, capacity, err);
-    if(U_FAILURE(*err) || length != 0) {
-        return length;
+    எனில்(U_FAILURE(*err) || length != 0) {
+        திரும்பு length;
     }
     icu::CharString likely = ulocimp_addLikelySubtags(nameOrAbbrOrLocale, internalErrorCode);
-    if(U_SUCCESS(internalErrorCode) && internalErrorCode != U_STRING_NOT_TERMINATED_WARNING) {
+    எனில்(U_SUCCESS(internalErrorCode) && internalErrorCode != U_STRING_NOT_TERMINATED_WARNING) {
         length = getCodesFromLocale(likely.data(), fillIn, capacity, err);
-        if(U_FAILURE(*err) || length != 0) {
-            return length;
+        எனில்(U_FAILURE(*err) || length != 0) {
+            திரும்பு length;
         }
     }
-    if(!triedCode) {
+    எனில்(!triedCode) {
         /* still not found .. try long and abbreviated script names again */
-        UScriptCode code = (UScriptCode) u_getPropertyValueEnum(UCHAR_SCRIPT, nameOrAbbrOrLocale);
-        if(code!=USCRIPT_INVALID_CODE) {
-            return setOneCode(code, fillIn, capacity, err);
+        UScriptCode code = (UScriptCode) u_get_Property_மதிப்பு_Enum(UCHAR_SCRIPT, nameOrAbbrOrLocale);
+        எனில்(code!=USCRIPT_INVALID_CODE) {
+            திரும்பு setOneCode(code, fillIn, capacity, err);
         }
     }
-    return 0;
+    திரும்பு 0;
 }

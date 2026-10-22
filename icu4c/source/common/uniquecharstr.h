@@ -7,10 +7,10 @@
 #ifndef __UNIQUECHARSTR_H__
 #define __UNIQUECHARSTR_H__
 
-#include "charstr.h"
-#include "uassert.h"
-#include "uhash.h"
-#include "cmemory.h"
+#அந்தர்பாவ "charstr.h"
+#அந்தர்பாவ "uassert.h"
+#அந்தர்பாவ "uhash.h"
+#அந்தர்பாவ "cmemory.h"
 
 U_NAMESPACE_BEGIN
 
@@ -23,15 +23,15 @@ U_NAMESPACE_BEGIN
  * call orphanCharStrings() to capture the string storage, and let this object go out of scope.
  */
 class UniqueCharStrings {
-public:
+பொது:
     UniqueCharStrings(UErrorCode &errorCode) : strings(nullptr) {
         // Note: We hash on string contents but store stable char16_t * pointers.
         // If the strings are stored in resource bundles which should be built with
         // duplicate elimination, then we should be able to hash on just the pointer values.
         uhash_init(&map, uhash_hashUChars, uhash_compareUChars, uhash_compareLong, &errorCode);
-        if (U_FAILURE(errorCode)) { return; }
+        எனில் (U_FAILURE(errorCode)) { திரும்பு; }
         strings = new CharString();
-        if (strings == nullptr) {
+        எனில் (strings == nullptr) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
         }
     }
@@ -44,7 +44,7 @@ public:
     CharString *orphanCharStrings() {
         CharString *result = strings;
         strings = nullptr;
-        return result;
+        திரும்பு result;
     }
 
     /**
@@ -55,16 +55,16 @@ public:
      * Best used with string data in a stable storage, such as strings returned
      * by resource bundle functions.
      */
-    int32_t add(const char16_t*p, UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return -1; }
-        if (isFrozen) {
+    int32_t add(மாறிலி char16_t*p, UErrorCode &errorCode) {
+        எனில் (U_FAILURE(errorCode)) { திரும்பு -1; }
+        எனில் (isFrozen) {
             errorCode = U_NO_WRITE_PERMISSION;
-            return -1;
+            திரும்பு -1;
         }
         // The string points into the resource bundle.
         int32_t oldIndex = uhash_geti(&map, p);
-        if (oldIndex != 0) {  // found duplicate
-            return oldIndex;
+        எனில் (oldIndex != 0) {  // found duplicate
+            திரும்பு oldIndex;
         }
         // Explicit NUL terminator for the previous string.
         // The strings object is also terminated with one implicit NUL.
@@ -72,46 +72,46 @@ public:
         int32_t newIndex = strings->length();
         strings->appendInvariantChars(p, u_strlen(p), errorCode);
         uhash_puti(&map, const_cast<char16_t *>(p), newIndex, &errorCode);
-        return newIndex;
+        திரும்பு newIndex;
     }
 
     /**
      * Adds a unicode string by value and returns a unique number for it.
      */
-    int32_t addByValue(UnicodeString s, UErrorCode &errorCode) {
-        if (U_FAILURE(errorCode)) { return -1; }
-        if (isFrozen) {
+    int32_t add_By_மதிப்பு(UnicodeString s, UErrorCode &errorCode) {
+        எனில் (U_FAILURE(errorCode)) { திரும்பு -1; }
+        எனில் (isFrozen) {
             errorCode = U_NO_WRITE_PERMISSION;
-            return -1;
+            திரும்பு -1;
         }
         int32_t oldIndex = uhash_geti(&map, s.getTerminatedBuffer());
-        if (oldIndex != 0) {  // found duplicate
-            return oldIndex;
+        எனில் (oldIndex != 0) {  // found duplicate
+            திரும்பு oldIndex;
         }
         // We need to store the string content of the UnicodeString.
-        UnicodeString *key = keyStore.create(s);
-        if (key == nullptr) {
+        UnicodeString *சாவி = சாவி_Store.create(s);
+        எனில் (சாவி == nullptr) {
             errorCode = U_MEMORY_ALLOCATION_ERROR;
-            return -1;
+            திரும்பு -1;
         }
-        return add(key->getTerminatedBuffer(), errorCode);
+        திரும்பு add(சாவி->getTerminatedBuffer(), errorCode);
     }
 
-    void freeze() { isFrozen = true; }
+    வெறுமை freeze() { isFrozen = true; }
 
     /**
      * Returns a string pointer for its unique number, if this object is frozen.
      * Otherwise nullptr.
      */
-    const char *get(int32_t i) const {
+    மாறிலி எழுத்து *get(int32_t i) மாறிலி {
         U_ASSERT(isFrozen);
-        return isFrozen && i > 0 ? strings->data() + i : nullptr;
+        திரும்பு isFrozen && i > 0 ? strings->data() + i : nullptr;
     }
 
-private:
+தனிப்பட்ட:
     UHashtable map;
     CharString *strings;
-    MemoryPool<UnicodeString> keyStore;
+    MemoryPool<UnicodeString> சாவி_Store;
     bool isFrozen = false;
 };
 

@@ -18,11 +18,11 @@
 #ifndef PARSEPOS_H
 #define PARSEPOS_H
 
-#include "unicode/utypes.h"
+#அந்தர்பாவ "unicode/utypes.h"
 
-#if U_SHOW_CPLUSPLUS_API
+#எனில் U_SHOW_CPLUSPLUS_API
 
-#include "unicode/uobject.h"
+#அந்தர்பாவ "unicode/uobject.h"
 
  
 U_NAMESPACE_BEGIN
@@ -49,8 +49,8 @@ U_NAMESPACE_BEGIN
  * @see         java.text.Format
  */
 
-class U_COMMON_API ParsePosition : public UObject {
-public:
+class U_COMMON_API ParsePosition : பொது UObject {
+பொது:
     /**
      * Default constructor, the index starts with 0 as default.
      * @stable ICU 2.0
@@ -77,7 +77,7 @@ public:
      * @param copy the object to be copied from.
      * @stable ICU 2.0
      */
-    ParsePosition(const ParsePosition& copy)
+    ParsePosition(மாறிலி ParsePosition& copy)
         : UObject(copy),
         index(copy.index),
         errorIndex(copy.errorIndex)
@@ -87,27 +87,27 @@ public:
      * Destructor
      * @stable ICU 2.0
      */
-    virtual ~ParsePosition();
+    மெய்நிகர் ~ParsePosition();
 
     /**
      * Assignment operator
      * @stable ICU 2.0
      */
-    inline ParsePosition& operator=(const ParsePosition& copy) U_LIFETIME_BOUND;
+    உள்வரி ParsePosition& operator=(மாறிலி ParsePosition& copy) U_LIFETIME_BOUND;
 
     /**
      * Equality operator.
      * @return true if the two parse positions are equal, false otherwise.
      * @stable ICU 2.0
      */
-    inline bool               operator==(const ParsePosition& that) const;
+    உள்வரி bool               operator==(மாறிலி ParsePosition& that) மாறிலி;
 
     /**
      * Equality operator.
      * @return true if the two parse positions are not equal, false otherwise.
      * @stable ICU 2.0
      */
-    inline bool               operator!=(const ParsePosition& that) const;
+    உள்வரி bool               operator!=(மாறிலி ParsePosition& that) மாறிலி;
 
     /**
      * Clone this object.
@@ -120,7 +120,7 @@ public:
      * @see getDynamicClassID
      * @stable ICU 2.8
      */
-    ParsePosition *clone() const;
+    ParsePosition *clone() மாறிலி;
 
     /**
      * Retrieve the current parse position.  On input to a parse method, this
@@ -129,14 +129,14 @@ public:
      * @return the current index.
      * @stable ICU 2.0
      */
-    inline int32_t getIndex() const;
+    உள்வரி int32_t getIndex() மாறிலி;
 
     /**
      * Set the current parse position.
      * @param index the new index.
      * @stable ICU 2.0
      */
-    inline void setIndex(int32_t index);
+    உள்வரி வெறுமை setIndex(int32_t index);
 
     /**
      * Set the index at which a parse error occurred.  Formatters
@@ -145,30 +145,30 @@ public:
      * set.
      * @stable ICU 2.0
      */
-    inline void setErrorIndex(int32_t ei);
+    உள்வரி வெறுமை setErrorIndex(int32_t ei);
 
     /**
      * Retrieve the index at which an error occurred, or -1 if the
      * error index has not been set.
      * @stable ICU 2.0
      */
-    inline int32_t getErrorIndex() const;
+    உள்வரி int32_t getErrorIndex() மாறிலி;
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      *
      * @stable ICU 2.2
      */
-    static UClassID U_EXPORT2 getStaticClassID();
+    நிலையான UClassID U_EXPORT2 getStaticClassID();
 
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      *
      * @stable ICU 2.2
      */
-    virtual UClassID getDynamicClassID() const override;
+    மெய்நிகர் UClassID getDynamicClassID() மாறிலி override;
 
-private:
+தனிப்பட்ட:
     /**
      * Input: the place you start parsing.
      * <br>Output: position where the parse stopped.
@@ -184,48 +184,48 @@ private:
 
 };
 
-inline ParsePosition&
-ParsePosition::operator=(const ParsePosition& copy) U_LIFETIME_BOUND
+உள்வரி ParsePosition&
+ParsePosition::operator=(மாறிலி ParsePosition& copy) U_LIFETIME_BOUND
 {
   index = copy.index;
   errorIndex = copy.errorIndex;
-  return *this;
+  திரும்பு *this;
 }
 
-inline bool
-ParsePosition::operator==(const ParsePosition& copy) const
+உள்வரி bool
+ParsePosition::operator==(மாறிலி ParsePosition& copy) மாறிலி
 {
-  if(index != copy.index || errorIndex != copy.errorIndex)
-  return false;
-  else
-  return true;
+  எனில்(index != copy.index || errorIndex != copy.errorIndex)
+  திரும்பு false;
+  இல்லையெனில்
+  திரும்பு true;
 }
 
-inline bool
-ParsePosition::operator!=(const ParsePosition& copy) const
+உள்வரி bool
+ParsePosition::operator!=(மாறிலி ParsePosition& copy) மாறிலி
 {
-  return !operator==(copy);
+  திரும்பு !operator==(copy);
 }
 
-inline int32_t
-ParsePosition::getIndex() const
+உள்வரி int32_t
+ParsePosition::getIndex() மாறிலி
 {
-  return index;
+  திரும்பு index;
 }
 
-inline void
+உள்வரி வெறுமை
 ParsePosition::setIndex(int32_t offset)
 {
   this->index = offset;
 }
 
-inline int32_t
-ParsePosition::getErrorIndex() const
+உள்வரி int32_t
+ParsePosition::getErrorIndex() மாறிலி
 {
-  return errorIndex;
+  திரும்பு errorIndex;
 }
 
-inline void
+உள்வரி வெறுமை
 ParsePosition::setErrorIndex(int32_t ei)
 {
   this->errorIndex = ei;

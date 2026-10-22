@@ -9,9 +9,9 @@
 #ifndef RBBINODE_H
 #define RBBINODE_H
 
-#include "unicode/utypes.h"
-#include "unicode/unistr.h"
-#include "unicode/uobject.h"
+#அந்தர்பாவ "unicode/utypes.h"
+#அந்தர்பாவ "unicode/unistr.h"
+#அந்தர்பாவ "unicode/uobject.h"
 
 //
 //  class RBBINode
@@ -25,9 +25,9 @@ U_NAMESPACE_BEGIN
 class    UnicodeSet;
 class    UVector;
 
-class RBBINode : public UMemory {
-    public:
-        enum NodeType {
+class RBBINode : பொது UMemory {
+    பொது:
+        எண்ணிக்கை முனை_Type {
             setRef,
             uset,
             varRef,
@@ -46,7 +46,7 @@ class RBBINode : public UMemory {
             opLParen
         };
 
-        enum OpPrecedence {      
+        எண்ணிக்கை OpPrecedence {      
             precZero,
             precStart,
             precLParen,
@@ -54,21 +54,21 @@ class RBBINode : public UMemory {
             precOpCat
         };
             
-        NodeType      fType;
+        முனை_Type      fType;
         RBBINode      *fParent;
-        RBBINode      *fLeftChild;
-        RBBINode      *fRightChild;
-        UnicodeSet    *fInputSet;           // For uset nodes only.
+        RBBINode      *f_இடது_Child;
+        RBBINode      *f_வலது_Child;
+        UnicodeSet    *f_உள்ளீடு_Set;           // For uset nodes only.
         OpPrecedence  fPrecedence;          // For binary ops only.
         
         UnicodeString fText;                // Text corresponding to this node.
                                             //   May be lazily evaluated when (if) needed
                                             //   for some node types.
-        int           fFirstPos;            // Position in the rule source string of the
+        முழு           fFirstPos;            // Position in the rule source string of the
                                             //   first text associated with the node.
                                             //   If there's a left child, this will be the same
                                             //   as that child's left pos.
-        int           fLastPos;             //  Last position in the rule source string
+        முழு           fLastPos;             //  Last position in the rule source string
                                             //    of any text associated with this node.
                                             //    If there's a right child, this will be the same
                                             //    as that child's last position.
@@ -82,7 +82,7 @@ class RBBINode : public UMemory {
         UBool         fLookAheadEnd;        // For endMark nodes, set true if
                                             //   marking the end of a look-ahead rule.
 
-        UBool         fRuleRoot;            // True if this node is the root of a rule.
+        UBool         f_Rule_வேர்;            // True if this node is the root of a rule.
         UBool         fChainIn;             // True if chaining into this rule is allowed
                                             //     (no '^' present).
 
@@ -91,35 +91,35 @@ class RBBINode : public UMemory {
         UVector       *fFollowPos;
 
 
-        RBBINode(NodeType t, UErrorCode& status);
-        RBBINode(const RBBINode &other, UErrorCode& status);
+        RBBINode(முனை_Type t, UErrorCode& status);
+        RBBINode(மாறிலி RBBINode &other, UErrorCode& status);
         ~RBBINode();
-        static void  NRDeleteNode(RBBINode *node);
+        நிலையான வெறுமை  NRDelete_முனை(RBBINode *முனை);
         
-        RBBINode    *cloneTree(UErrorCode &status, int depth=0);
-        RBBINode    *flattenVariables(UErrorCode &status, int depth=0);
-        void         flattenSets(UErrorCode &status, int depth=0);
-        void         findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &status);
+        RBBINode    *clone_மரம்(UErrorCode &status, முழு depth=0);
+        RBBINode    *flattenVariables(UErrorCode &status, முழு depth=0);
+        வெறுமை         flattenSets(UErrorCode &status, முழு depth=0);
+        வெறுமை         findNodes(UVector *dest, RBBINode::முனை_Type kind, UErrorCode &status);
 
 #ifdef RBBI_DEBUG
-        static void printNodeHeader();
-        static void printNode(const RBBINode *n);
-        static void printTree(const RBBINode *n, UBool withHeading);
+        நிலையான வெறுமை print_முனை_Header();
+        நிலையான வெறுமை print_முனை(மாறிலி RBBINode *n);
+        நிலையான வெறுமை print_மரம்(மாறிலி RBBINode *n, UBool withHeading);
 #endif
 
-    private:
-        RBBINode &operator = (const RBBINode &other); // No defs.
-        bool operator == (const RBBINode &other);     // Private, so these functions won't accidentally be used.
+    தனிப்பட்ட:
+        RBBINode &operator = (மாறிலி RBBINode &other); // No defs.
+        bool operator == (மாறிலி RBBINode &other);     // Private, so these functions won't accidentally be used.
 
 #ifdef RBBI_DEBUG
-    public:
-        int           fSerialNum;           //  Debugging aids.
+    பொது:
+        முழு           f_Serial_இலக்கம்;           //  Debugging aids.
 #endif
 };
 
 #ifdef RBBI_DEBUG
-U_CFUNC void 
-RBBI_DEBUG_printUnicodeString(const UnicodeString &s, int minWidth=0);
+U_CFUNC வெறுமை 
+RBBI_DEBUG_printUnicodeString(மாறிலி UnicodeString &s, முழு minWidth=0);
 #endif
 
 U_NAMESPACE_END

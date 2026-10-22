@@ -14,22 +14,22 @@
 *   created by: Markus W. Scherer
 */
 
-#include "utypeinfo.h"  // for 'typeid' to work
-#include "unicode/utypes.h"
-#include "unicode/stringtriebuilder.h"
-#include "uassert.h"
-#include "uhash.h"
+#அந்தர்பாவ "utypeinfo.h"  // for 'typeid' to work
+#அந்தர்பாவ "unicode/utypes.h"
+#அந்தர்பாவ "unicode/stringtriebuilder.h"
+#அந்தர்பாவ "uassert.h"
+#அந்தர்பாவ "uhash.h"
 
 U_CDECL_BEGIN
 
-static int32_t U_CALLCONV
-hashStringTrieNode(const UHashTok key) {
-    return icu::StringTrieBuilder::hashNode(key.pointer);
+நிலையான int32_t U_CALLCONV
+hash_String_Trie_முனை(மாறிலி UHashTok சாவி) {
+    திரும்பு icu::StringTrieBuilder::hash_முனை(சாவி.pointer);
 }
 
-static UBool U_CALLCONV
-equalStringTrieNodes(const UHashTok key1, const UHashTok key2) {
-    return icu::StringTrieBuilder::equalNodes(key1.pointer, key2.pointer);
+நிலையான UBool U_CALLCONV
+equalStringTrieNodes(மாறிலி UHashTok key1, மாறிலி UHashTok key2) {
+    திரும்பு icu::StringTrieBuilder::equalNodes(key1.pointer, key2.pointer);
 }
 
 U_CDECL_END
@@ -42,39 +42,39 @@ StringTrieBuilder::~StringTrieBuilder() {
     deleteCompactBuilder();
 }
 
-void
+வெறுமை
 StringTrieBuilder::createCompactBuilder(int32_t sizeGuess, UErrorCode &errorCode) {
-    if(U_FAILURE(errorCode)) {
-        return;
+    எனில்(U_FAILURE(errorCode)) {
+        திரும்பு;
     }
-    nodes=uhash_openSize(hashStringTrieNode, equalStringTrieNodes, nullptr,
+    nodes=uhash_openSize(hash_String_Trie_முனை, equalStringTrieNodes, nullptr,
                          sizeGuess, &errorCode);
-    if(U_SUCCESS(errorCode)) {
-        if(nodes==nullptr) {
+    எனில்(U_SUCCESS(errorCode)) {
+        எனில்(nodes==nullptr) {
           errorCode=U_MEMORY_ALLOCATION_ERROR;
-        } else {
-          uhash_setKeyDeleter(nodes, uprv_deleteUObject);
+        } இல்லையெனில் {
+          uhash_set_சாவி_Deleter(nodes, uprv_deleteUObject);
         }
     }
 }
 
-void
+வெறுமை
 StringTrieBuilder::deleteCompactBuilder() {
     uhash_close(nodes);
     nodes=nullptr;
 }
 
-void
+வெறுமை
 StringTrieBuilder::build(UStringTrieBuildOption buildOption, int32_t elementsLength,
                        UErrorCode &errorCode) {
-    if(buildOption==USTRINGTRIE_BUILD_FAST) {
-        writeNode(0, elementsLength, 0);
-    } else /* USTRINGTRIE_BUILD_SMALL */ {
+    எனில்(buildOption==USTRINGTRIE_BUILD_FAST) {
+        write_முனை(0, elementsLength, 0);
+    } இல்லையெனில் /* USTRINGTRIE_BUILD_SMALL */ {
         createCompactBuilder(2*elementsLength, errorCode);
-        Node *root=makeNode(0, elementsLength, 0, errorCode);
-        if(U_SUCCESS(errorCode)) {
-            root->markRightEdgesFirst(-1);
-            root->write(*this);
+        Node *வேர்=make_முனை(0, elementsLength, 0, errorCode);
+        எனில்(U_SUCCESS(errorCode)) {
+            வேர்->mark_வலது_Edges_First(-1);
+            வேர்->லிக(*இது);
         }
         deleteCompactBuilder();
     }
@@ -84,540 +84,540 @@ StringTrieBuilder::build(UStringTrieBuildOption buildOption, int32_t elementsLen
 // and all strings of the [start..limit[ elements must be sorted and
 // have a common prefix of length unitIndex.
 int32_t
-StringTrieBuilder::writeNode(int32_t start, int32_t limit, int32_t unitIndex) {
-    UBool hasValue=false;
+StringTrieBuilder::write_முனை(int32_t start, int32_t limit, int32_t unitIndex) {
+    UBool has_மதிப்பு=பொய்;
     int32_t value=0;
     int32_t type;
-    if(unitIndex==getElementStringLength(start)) {
+    எனில்(unitIndex==getElementStringLength(start)) {
         // An intermediate or final value.
-        value=getElementValue(start++);
-        if(start==limit) {
-            return writeValueAndFinal(value, true);  // final-value node
+        value=get_Element_மதிப்பு(start++);
+        எனில்(start==limit) {
+            திரும்பு write_மதிப்பு_And_Final(value, உண்மை);  // final-value node
         }
-        hasValue=true;
+        has_மதிப்பு=உண்மை;
     }
     // Now all [start..limit[ strings are longer than unitIndex.
     int32_t minUnit=getElementUnit(start, unitIndex);
     int32_t maxUnit=getElementUnit(limit-1, unitIndex);
-    if(minUnit==maxUnit) {
+    எனில்(minUnit==maxUnit) {
         // Linear-match node: All strings have the same character at unitIndex.
         int32_t lastUnitIndex=getLimitOfLinearMatch(start, limit-1, unitIndex);
-        writeNode(start, limit, lastUnitIndex);
+        write_முனை(start, limit, lastUnitIndex);
         // Break the linear-match sequence into chunks of at most kMaxLinearMatchLength.
         int32_t length=lastUnitIndex-unitIndex;
         int32_t maxLinearMatchLength=getMaxLinearMatchLength();
-        while(length>maxLinearMatchLength) {
+        போது(length>maxLinearMatchLength) {
             lastUnitIndex-=maxLinearMatchLength;
             length-=maxLinearMatchLength;
             writeElementUnits(start, lastUnitIndex, maxLinearMatchLength);
-            write(getMinLinearMatch()+maxLinearMatchLength-1);
+            லிக(getMinLinearMatch()+maxLinearMatchLength-1);
         }
         writeElementUnits(start, unitIndex, length);
         type=getMinLinearMatch()+length-1;
-    } else {
+    } இல்லையெனில் {
         // Branch node.
-        int32_t length=countElementUnits(start, limit, unitIndex);
+        int32_t length=மொத்தம்_Element_Units(start, limit, unitIndex);
         // length>=2 because minUnit!=maxUnit.
-        writeBranchSubNode(start, limit, unitIndex, length);
-        if(--length<getMinLinearMatch()) {
+        write_Branch_Sub_முனை(start, limit, unitIndex, length);
+        எனில்(--length<getMinLinearMatch()) {
             type=length;
-        } else {
-            write(length);
+        } இல்லையெனில் {
+            லிக(length);
             type=0;
         }
     }
-    return writeValueAndType(hasValue, value, type);
+    திரும்பு write_மதிப்பு_And_Type(has_மதிப்பு, value, type);
 }
 
 // start<limit && all strings longer than unitIndex &&
 // length different units at unitIndex
 int32_t
-StringTrieBuilder::writeBranchSubNode(int32_t start, int32_t limit, int32_t unitIndex, int32_t length) {
-    char16_t middleUnits[kMaxSplitBranchLevels];
+StringTrieBuilder::write_Branch_Sub_முனை(int32_t start, int32_t limit, int32_t unitIndex, int32_t length) {
+    char16_t நடு_Units[kMaxSplitBranchLevels];
     int32_t lessThan[kMaxSplitBranchLevels];
     int32_t ltLength=0;
-    while(length>getMaxBranchLinearSubNodeLength()) {
+    போது(length>get_Max_Branch_Linear_Sub_முனை_Length()) {
         // Branch on the middle unit.
         // First, find the middle unit.
         int32_t i=skipElementsBySomeUnits(start, unitIndex, length/2);
         // Encode the less-than branch first.
-        middleUnits[ltLength]=getElementUnit(i, unitIndex);  // middle unit
-        lessThan[ltLength]=writeBranchSubNode(start, i, unitIndex, length/2);
+        நடு_Units[ltLength]=getElementUnit(i, unitIndex);  // middle unit
+        lessThan[ltLength]=write_Branch_Sub_முனை(start, i, unitIndex, length/2);
         ++ltLength;
         // Continue for the greater-or-equal branch.
         start=i;
         length=length-length/2;
     }
     // For each unit, find its elements array start and whether it has a final value.
-    int32_t starts[kMaxBranchLinearSubNodeLength];
-    UBool isFinal[kMaxBranchLinearSubNodeLength-1];
-    int32_t unitNumber=0;
-    do {
-        int32_t i=starts[unitNumber]=start;
+    int32_t starts[k_Max_Branch_Linear_Sub_முனை_Length];
+    UBool isFinal[k_Max_Branch_Linear_Sub_முனை_Length-1];
+    int32_t unit_எண்=0;
+    செய் {
+        int32_t i=starts[unit_எண்]=start;
         char16_t unit=getElementUnit(i++, unitIndex);
         i=indexOfElementWithNextUnit(i, unitIndex, unit);
-        isFinal[unitNumber]= start==i-1 && unitIndex+1==getElementStringLength(start);
+        isFinal[unit_எண்]= start==i-1 && unitIndex+1==getElementStringLength(start);
         start=i;
-    } while(++unitNumber<length-1);
+    } போது(++unit_எண்<length-1);
     // unitNumber==length-1, and the maxUnit elements range is [start..limit[
-    starts[unitNumber]=start;
+    starts[unit_எண்]=start;
 
     // Write the sub-nodes in reverse order: The jump lengths are deltas from
     // after their own positions, so if we wrote the minUnit sub-node first,
     // then its jump delta would be larger.
     // Instead we write the minUnit sub-node last, for a shorter delta.
-    int32_t jumpTargets[kMaxBranchLinearSubNodeLength-1];
-    do {
-        --unitNumber;
-        if(!isFinal[unitNumber]) {
-            jumpTargets[unitNumber]=writeNode(starts[unitNumber], starts[unitNumber+1], unitIndex+1);
+    int32_t jumpTargets[k_Max_Branch_Linear_Sub_முனை_Length-1];
+    செய் {
+        --unit_எண்;
+        எனில்(!isFinal[unit_எண்]) {
+            jumpTargets[unit_எண்]=write_முனை(starts[unit_எண்], starts[unit_எண்+1], unitIndex+1);
         }
-    } while(unitNumber>0);
+    } போது(unit_எண்>0);
     // The maxUnit sub-node is written as the very last one because we do
     // not jump for it at all.
-    unitNumber=length-1;
-    writeNode(start, limit, unitIndex+1);
-    int32_t offset=write(getElementUnit(start, unitIndex));
+    unit_எண்=length-1;
+    write_முனை(start, limit, unitIndex+1);
+    int32_t offset=லிக(getElementUnit(start, unitIndex));
     // Write the rest of this node's unit-value pairs.
-    while(--unitNumber>=0) {
-        start=starts[unitNumber];
+    போது(--unit_எண்>=0) {
+        start=starts[unit_எண்];
         int32_t value;
-        if(isFinal[unitNumber]) {
+        எனில்(isFinal[unit_எண்]) {
             // Write the final value for the one string ending with this unit.
-            value=getElementValue(start);
-        } else {
+            value=get_Element_மதிப்பு(start);
+        } இல்லையெனில் {
             // Write the delta to the start position of the sub-node.
-            value=offset-jumpTargets[unitNumber];
+            value=offset-jumpTargets[unit_எண்];
         }
-        writeValueAndFinal(value, isFinal[unitNumber]);
-        offset=write(getElementUnit(start, unitIndex));
+        write_மதிப்பு_And_Final(value, isFinal[unit_எண்]);
+        offset=லிக(getElementUnit(start, unitIndex));
     }
     // Write the split-branch nodes.
-    while(ltLength>0) {
+    போது(ltLength>0) {
         --ltLength;
         writeDeltaTo(lessThan[ltLength]);
-        offset=write(middleUnits[ltLength]);
+        offset=லிக(நடு_Units[ltLength]);
     }
-    return offset;
+    திரும்பு offset;
 }
 
 // Requires start<limit,
 // and all strings of the [start..limit[ elements must be sorted and
 // have a common prefix of length unitIndex.
 StringTrieBuilder::Node*
-StringTrieBuilder::makeNode(int32_t start,
+StringTrieBuilder::make_முனை(int32_t start,
                             int32_t limit,
                             int32_t unitIndex,
                             UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+    எனில்(U_FAILURE(errorCode)) {
+        திரும்பு nullptr;
     }
-    UBool hasValue=false;
+    UBool has_மதிப்பு=பொய்;
     int32_t value=0;
-    if(unitIndex==getElementStringLength(start)) {
+    எனில்(unitIndex==getElementStringLength(start)) {
         // An intermediate or final value.
-        value=getElementValue(start++);
-        if(start==limit) {
-            return registerFinalValue(value, errorCode);
+        value=get_Element_மதிப்பு(start++);
+        எனில்(start==limit) {
+            திரும்பு register_Final_மதிப்பு(value, errorCode);
         }
-        hasValue=true;
+        has_மதிப்பு=உண்மை;
     }
-    Node *node;
+    Node *முனை;
     // Now all [start..limit[ strings are longer than unitIndex.
     int32_t minUnit=getElementUnit(start, unitIndex);
     int32_t maxUnit=getElementUnit(limit-1, unitIndex);
-    if(minUnit==maxUnit) {
+    எனில்(minUnit==maxUnit) {
         // Linear-match node: All strings have the same character at unitIndex.
         int32_t lastUnitIndex=getLimitOfLinearMatch(start, limit-1, unitIndex);
-        Node *nextNode=makeNode(start, limit, lastUnitIndex, errorCode);
+        Node *next_முனை=make_முனை(start, limit, lastUnitIndex, errorCode);
         // Break the linear-match sequence into chunks of at most kMaxLinearMatchLength.
         int32_t length=lastUnitIndex-unitIndex;
         int32_t maxLinearMatchLength=getMaxLinearMatchLength();
-        while(length>maxLinearMatchLength) {
+        போது(length>maxLinearMatchLength) {
             lastUnitIndex-=maxLinearMatchLength;
             length-=maxLinearMatchLength;
-            node=createLinearMatchNode(start, lastUnitIndex, maxLinearMatchLength, nextNode);
-            nextNode=registerNode(node, errorCode);
+            முனை=create_Linear_Match_முனை(start, lastUnitIndex, maxLinearMatchLength, next_முனை);
+            next_முனை=register_முனை(முனை, errorCode);
         }
-        node=createLinearMatchNode(start, unitIndex, length, nextNode);
-    } else {
+        முனை=create_Linear_Match_முனை(start, unitIndex, length, next_முனை);
+    } இல்லையெனில் {
         // Branch node.
-        int32_t length=countElementUnits(start, limit, unitIndex);
+        int32_t length=மொத்தம்_Element_Units(start, limit, unitIndex);
         // length>=2 because minUnit!=maxUnit.
-        Node *subNode=makeBranchSubNode(start, limit, unitIndex, length, errorCode);
-        node=new BranchHeadNode(length, subNode);
+        Node *sub_முனை=make_Branch_Sub_முனை(start, limit, unitIndex, length, errorCode);
+        முனை=புதிய Branch_Head_முனை(length, sub_முனை);
     }
-    if(hasValue && node!=nullptr) {
-        if(matchNodesCanHaveValues()) {
-            ((ValueNode *)node)->setValue(value);
-        } else {
-            node=new IntermediateValueNode(value, registerNode(node, errorCode));
+    எனில்(has_மதிப்பு && முனை!=nullptr) {
+        எனில்(match_Nodes_Can_Have_மதிப்புகள்()) {
+            ((மதிப்பு_முனை *)முனை)->set_மதிப்பு(value);
+        } இல்லையெனில் {
+            முனை=புதிய Intermediate_மதிப்பு_முனை(value, register_முனை(முனை, errorCode));
         }
     }
-    return registerNode(node, errorCode);
+    திரும்பு register_முனை(முனை, errorCode);
 }
 
 // start<limit && all strings longer than unitIndex &&
 // length different units at unitIndex
 StringTrieBuilder::Node*
-StringTrieBuilder::makeBranchSubNode(int32_t start,
+StringTrieBuilder::make_Branch_Sub_முனை(int32_t start,
                                      int32_t limit,
                                      int32_t unitIndex,
                                      int32_t length,
                                      UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+    எனில்(U_FAILURE(errorCode)) {
+        திரும்பு nullptr;
     }
-    char16_t middleUnits[kMaxSplitBranchLevels];
+    char16_t நடு_Units[kMaxSplitBranchLevels];
     Node *lessThan[kMaxSplitBranchLevels];
     int32_t ltLength=0;
-    while(length>getMaxBranchLinearSubNodeLength()) {
+    போது(length>get_Max_Branch_Linear_Sub_முனை_Length()) {
         // Branch on the middle unit.
         // First, find the middle unit.
         int32_t i=skipElementsBySomeUnits(start, unitIndex, length/2);
         // Create the less-than branch.
-        middleUnits[ltLength]=getElementUnit(i, unitIndex);  // middle unit
-        lessThan[ltLength]=makeBranchSubNode(start, i, unitIndex, length/2, errorCode);
+        நடு_Units[ltLength]=getElementUnit(i, unitIndex);  // middle unit
+        lessThan[ltLength]=make_Branch_Sub_முனை(start, i, unitIndex, length/2, errorCode);
         ++ltLength;
         // Continue for the greater-or-equal branch.
         start=i;
         length=length-length/2;
     }
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+    எனில்(U_FAILURE(errorCode)) {
+        திரும்பு nullptr;
     }
-    ListBranchNode *listNode=new ListBranchNode();
-    if(listNode==nullptr) {
+    List_Branch_முனை *list_முனை=புதிய List_Branch_முனை();
+    எனில்(list_முனை==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        திரும்பு nullptr;
     }
     // For each unit, find its elements array start and whether it has a final value.
-    int32_t unitNumber=0;
-    do {
+    int32_t unit_எண்=0;
+    செய் {
         int32_t i=start;
         char16_t unit=getElementUnit(i++, unitIndex);
         i=indexOfElementWithNextUnit(i, unitIndex, unit);
-        if(start==i-1 && unitIndex+1==getElementStringLength(start)) {
-            listNode->add(unit, getElementValue(start));
-        } else {
-            listNode->add(unit, makeNode(start, i, unitIndex+1, errorCode));
+        எனில்(start==i-1 && unitIndex+1==getElementStringLength(start)) {
+            list_முனை->add(unit, get_Element_மதிப்பு(start));
+        } இல்லையெனில் {
+            list_முனை->add(unit, make_முனை(start, i, unitIndex+1, errorCode));
         }
         start=i;
-    } while(++unitNumber<length-1);
+    } போது(++unit_எண்<length-1);
     // unitNumber==length-1, and the maxUnit elements range is [start..limit[
     char16_t unit=getElementUnit(start, unitIndex);
-    if(start==limit-1 && unitIndex+1==getElementStringLength(start)) {
-        listNode->add(unit, getElementValue(start));
-    } else {
-        listNode->add(unit, makeNode(start, limit, unitIndex+1, errorCode));
+    எனில்(start==limit-1 && unitIndex+1==getElementStringLength(start)) {
+        list_முனை->add(unit, get_Element_மதிப்பு(start));
+    } இல்லையெனில் {
+        list_முனை->add(unit, make_முனை(start, limit, unitIndex+1, errorCode));
     }
-    Node *node=registerNode(listNode, errorCode);
+    Node *முனை=register_முனை(list_முனை, errorCode);
     // Create the split-branch nodes.
-    while(ltLength>0) {
+    போது(ltLength>0) {
         --ltLength;
-        node=registerNode(
-            new SplitBranchNode(middleUnits[ltLength], lessThan[ltLength], node), errorCode);
+        முனை=register_முனை(
+            புதிய Split_Branch_முனை(நடு_Units[ltLength], lessThan[ltLength], முனை), errorCode);
     }
-    return node;
+    திரும்பு முனை;
 }
 
 StringTrieBuilder::Node*
-StringTrieBuilder::registerNode(Node* newNode, UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if(U_FAILURE(errorCode)) {
-        delete newNode;
-        return nullptr;
+StringTrieBuilder::register_முனை(Node* new_முனை, UErrorCode& errorCode) U_LIFETIME_BOUND {
+    எனில்(U_FAILURE(errorCode)) {
+        delete new_முனை;
+        திரும்பு nullptr;
     }
-    if(newNode==nullptr) {
+    எனில்(new_முனை==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        திரும்பு nullptr;
     }
-    const UHashElement *old=uhash_find(nodes, newNode);
-    if(old!=nullptr) {
-        delete newNode;
-        return static_cast<Node*>(old->key.pointer);
+    மாறிலி UHashElement *old=uhash_find(nodes, new_முனை);
+    எனில்(old!=nullptr) {
+        delete new_முனை;
+        திரும்பு static_cast<Node*>(old->சாவி.pointer);
     }
     // If uhash_puti() returns a non-zero value from an equivalent, previously
     // registered node, then uhash_find() failed to find that and we will leak newNode.
-#if U_DEBUG
-    int32_t oldValue=  // Only in debug mode to avoid a compiler warning about unused oldValue.
+#எனில் U_DEBUG
+    int32_t old_மதிப்பு=  // Only in debug mode to avoid a compiler warning about unused oldValue.
 #endif
-    uhash_puti(nodes, newNode, 1, &errorCode);
-    U_ASSERT(oldValue==0);
-    if(U_FAILURE(errorCode)) {
-        delete newNode;
-        return nullptr;
+    uhash_puti(nodes, new_முனை, 1, &errorCode);
+    U_ASSERT(old_மதிப்பு==0);
+    எனில்(U_FAILURE(errorCode)) {
+        delete new_முனை;
+        திரும்பு nullptr;
     }
-    return newNode;
+    திரும்பு new_முனை;
 }
 
 StringTrieBuilder::Node*
-StringTrieBuilder::registerFinalValue(int32_t value, UErrorCode& errorCode) U_LIFETIME_BOUND {
-    if(U_FAILURE(errorCode)) {
-        return nullptr;
+StringTrieBuilder::register_Final_மதிப்பு(int32_t value, UErrorCode& errorCode) U_LIFETIME_BOUND {
+    எனில்(U_FAILURE(errorCode)) {
+        திரும்பு nullptr;
     }
-    FinalValueNode key(value);
-    const UHashElement *old=uhash_find(nodes, &key);
-    if(old!=nullptr) {
-        return static_cast<Node*>(old->key.pointer);
+    Final_மதிப்பு_முனை சாவி(value);
+    மாறிலி UHashElement *old=uhash_find(nodes, &சாவி);
+    எனில்(old!=nullptr) {
+        திரும்பு static_cast<Node*>(old->சாவி.pointer);
     }
-    Node *newNode=new FinalValueNode(value);
-    if(newNode==nullptr) {
+    Node *new_முனை=புதிய Final_மதிப்பு_முனை(value);
+    எனில்(new_முனை==nullptr) {
         errorCode=U_MEMORY_ALLOCATION_ERROR;
-        return nullptr;
+        திரும்பு nullptr;
     }
     // If uhash_puti() returns a non-zero value from an equivalent, previously
     // registered node, then uhash_find() failed to find that and we will leak newNode.
-#if U_DEBUG
-    int32_t oldValue=  // Only in debug mode to avoid a compiler warning about unused oldValue.
+#எனில் U_DEBUG
+    int32_t old_மதிப்பு=  // Only in debug mode to avoid a compiler warning about unused oldValue.
 #endif
-    uhash_puti(nodes, newNode, 1, &errorCode);
-    U_ASSERT(oldValue==0);
-    if(U_FAILURE(errorCode)) {
-        delete newNode;
-        return nullptr;
+    uhash_puti(nodes, new_முனை, 1, &errorCode);
+    U_ASSERT(old_மதிப்பு==0);
+    எனில்(U_FAILURE(errorCode)) {
+        delete new_முனை;
+        திரும்பு nullptr;
     }
-    return newNode;
+    திரும்பு new_முனை;
 }
 
 int32_t
-StringTrieBuilder::hashNode(const void *node) {
-    return static_cast<const Node*>(node)->hashCode();
+StringTrieBuilder::hash_முனை(மாறிலி வெறுமை *முனை) {
+    திரும்பு static_cast<மாறிலி Node*>(முனை)->hashCode();
 }
 
 UBool
-StringTrieBuilder::equalNodes(const void *left, const void *right) {
-    return *static_cast<const Node*>(left) == *static_cast<const Node*>(right);
+StringTrieBuilder::equalNodes(மாறிலி வெறுமை *left, மாறிலி வெறுமை *வலது) {
+    திரும்பு *static_cast<மாறிலி Node*>(left) == *static_cast<மாறிலி Node*>(வலது);
 }
 
-bool
-StringTrieBuilder::Node::operator==(const Node &other) const {
-    return this==&other || (typeid(*this)==typeid(other) && hash==other.hash);
-}
-
-int32_t
-StringTrieBuilder::Node::markRightEdgesFirst(int32_t edgeNumber) {
-    if(offset==0) {
-        offset=edgeNumber;
-    }
-    return edgeNumber;
-}
-
-bool
-StringTrieBuilder::FinalValueNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
-    }
-    if(!Node::operator==(other)) {
-        return false;
-    }
-    const FinalValueNode &o=static_cast<const FinalValueNode &>(other);
-    return value==o.value;
-}
-
-void
-StringTrieBuilder::FinalValueNode::write(StringTrieBuilder &builder) {
-    offset=builder.writeValueAndFinal(value, true);
-}
-
-bool
-StringTrieBuilder::ValueNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
-    }
-    if(!Node::operator==(other)) {
-        return false;
-    }
-    const ValueNode &o=static_cast<const ValueNode &>(other);
-    return hasValue==o.hasValue && (!hasValue || value==o.value);
-}
-
-bool
-StringTrieBuilder::IntermediateValueNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
-    }
-    if(!ValueNode::operator==(other)) {
-        return false;
-    }
-    const IntermediateValueNode &o=static_cast<const IntermediateValueNode &>(other);
-    return next==o.next;
+தருக்க
+StringTrieBuilder::Node::operator==(மாறிலி Node &other) மாறிலி {
+    திரும்பு இது==&other || (typeid(*இது)==typeid(other) && hash==other.hash);
 }
 
 int32_t
-StringTrieBuilder::IntermediateValueNode::markRightEdgesFirst(int32_t edgeNumber) {
-    if(offset==0) {
-        offset=edgeNumber=next->markRightEdgesFirst(edgeNumber);
+StringTrieBuilder::Node::mark_வலது_Edges_First(int32_t edge_எண்) {
+    எனில்(offset==0) {
+        offset=edge_எண்;
     }
-    return edgeNumber;
+    திரும்பு edge_எண்;
 }
 
-void
-StringTrieBuilder::IntermediateValueNode::write(StringTrieBuilder &builder) {
-    next->write(builder);
-    offset=builder.writeValueAndFinal(value, false);
+தருக்க
+StringTrieBuilder::Final_மதிப்பு_முனை::operator==(மாறிலி Node &other) மாறிலி {
+    எனில்(இது==&other) {
+        திரும்பு உண்மை;
+    }
+    எனில்(!Node::operator==(other)) {
+        திரும்பு பொய்;
+    }
+    மாறிலி Final_மதிப்பு_முனை &o=static_cast<மாறிலி Final_மதிப்பு_முனை &>(other);
+    திரும்பு value==o.value;
 }
 
-bool
-StringTrieBuilder::LinearMatchNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
+வெறுமை
+StringTrieBuilder::Final_மதிப்பு_முனை::லிக(StringTrieBuilder &builder) {
+    offset=builder.write_மதிப்பு_And_Final(value, உண்மை);
+}
+
+தருக்க
+StringTrieBuilder::மதிப்பு_முனை::operator==(மாறிலி Node &other) மாறிலி {
+    எனில்(இது==&other) {
+        திரும்பு உண்மை;
     }
-    if(!ValueNode::operator==(other)) {
-        return false;
+    எனில்(!Node::operator==(other)) {
+        திரும்பு பொய்;
     }
-    const LinearMatchNode &o=static_cast<const LinearMatchNode &>(other);
-    return length==o.length && next==o.next;
+    மாறிலி மதிப்பு_முனை &o=static_cast<மாறிலி மதிப்பு_முனை &>(other);
+    திரும்பு has_மதிப்பு==o.has_மதிப்பு && (!has_மதிப்பு || value==o.value);
+}
+
+தருக்க
+StringTrieBuilder::Intermediate_மதிப்பு_முனை::operator==(மாறிலி Node &other) மாறிலி {
+    எனில்(இது==&other) {
+        திரும்பு உண்மை;
+    }
+    எனில்(!மதிப்பு_முனை::operator==(other)) {
+        திரும்பு பொய்;
+    }
+    மாறிலி Intermediate_மதிப்பு_முனை &o=static_cast<மாறிலி Intermediate_மதிப்பு_முனை &>(other);
+    திரும்பு next==o.next;
 }
 
 int32_t
-StringTrieBuilder::LinearMatchNode::markRightEdgesFirst(int32_t edgeNumber) {
-    if(offset==0) {
-        offset=edgeNumber=next->markRightEdgesFirst(edgeNumber);
+StringTrieBuilder::Intermediate_மதிப்பு_முனை::mark_வலது_Edges_First(int32_t edge_எண்) {
+    எனில்(offset==0) {
+        offset=edge_எண்=next->mark_வலது_Edges_First(edge_எண்);
     }
-    return edgeNumber;
+    திரும்பு edge_எண்;
 }
 
-bool
-StringTrieBuilder::ListBranchNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
+வெறுமை
+StringTrieBuilder::Intermediate_மதிப்பு_முனை::லிக(StringTrieBuilder &builder) {
+    next->லிக(builder);
+    offset=builder.write_மதிப்பு_And_Final(value, பொய்);
+}
+
+தருக்க
+StringTrieBuilder::Linear_Match_முனை::operator==(மாறிலி Node &other) மாறிலி {
+    எனில்(இது==&other) {
+        திரும்பு உண்மை;
     }
-    if(!Node::operator==(other)) {
-        return false;
+    எனில்(!மதிப்பு_முனை::operator==(other)) {
+        திரும்பு பொய்;
     }
-    const ListBranchNode &o=static_cast<const ListBranchNode &>(other);
-    for(int32_t i=0; i<length; ++i) {
-        if(units[i]!=o.units[i] || values[i]!=o.values[i] || equal[i]!=o.equal[i]) {
-            return false;
+    மாறிலி Linear_Match_முனை &o=static_cast<மாறிலி Linear_Match_முனை &>(other);
+    திரும்பு length==o.length && next==o.next;
+}
+
+int32_t
+StringTrieBuilder::Linear_Match_முனை::mark_வலது_Edges_First(int32_t edge_எண்) {
+    எனில்(offset==0) {
+        offset=edge_எண்=next->mark_வலது_Edges_First(edge_எண்);
+    }
+    திரும்பு edge_எண்;
+}
+
+தருக்க
+StringTrieBuilder::List_Branch_முனை::operator==(மாறிலி Node &other) மாறிலி {
+    எனில்(இது==&other) {
+        திரும்பு உண்மை;
+    }
+    எனில்(!Node::operator==(other)) {
+        திரும்பு பொய்;
+    }
+    மாறிலி List_Branch_முனை &o=static_cast<மாறிலி List_Branch_முனை &>(other);
+    க்கு(int32_t i=0; i<length; ++i) {
+        எனில்(units[i]!=o.units[i] || மதிப்புகள்[i]!=o.மதிப்புகள்[i] || equal[i]!=o.equal[i]) {
+            திரும்பு பொய்;
         }
     }
-    return true;
+    திரும்பு உண்மை;
 }
 
 int32_t
-StringTrieBuilder::ListBranchNode::markRightEdgesFirst(int32_t edgeNumber) {
-    if(offset==0) {
-        firstEdgeNumber=edgeNumber;
+StringTrieBuilder::List_Branch_முனை::mark_வலது_Edges_First(int32_t edge_எண்) {
+    எனில்(offset==0) {
+        first_Edge_எண்=edge_எண்;
         int32_t step=0;
         int32_t i=length;
-        do {
+        செய் {
             Node *edge=equal[--i];
-            if(edge!=nullptr) {
-                edgeNumber=edge->markRightEdgesFirst(edgeNumber-step);
+            எனில்(edge!=nullptr) {
+                edge_எண்=edge->mark_வலது_Edges_First(edge_எண்-step);
             }
             // For all but the rightmost edge, decrement the edge number.
             step=1;
-        } while(i>0);
-        offset=edgeNumber;
+        } போது(i>0);
+        offset=edge_எண்;
     }
-    return edgeNumber;
+    திரும்பு edge_எண்;
 }
 
-void
-StringTrieBuilder::ListBranchNode::write(StringTrieBuilder &builder) {
+வெறுமை
+StringTrieBuilder::List_Branch_முனை::லிக(StringTrieBuilder &builder) {
     // Write the sub-nodes in reverse order: The jump lengths are deltas from
     // after their own positions, so if we wrote the minUnit sub-node first,
     // then its jump delta would be larger.
     // Instead we write the minUnit sub-node last, for a shorter delta.
-    int32_t unitNumber=length-1;
-    Node *rightEdge=equal[unitNumber];
-    int32_t rightEdgeNumber= rightEdge==nullptr ? firstEdgeNumber : rightEdge->getOffset();
-    do {
-        --unitNumber;
-        if(equal[unitNumber]!=nullptr) {
-            equal[unitNumber]->writeUnlessInsideRightEdge(firstEdgeNumber, rightEdgeNumber, builder);
+    int32_t unit_எண்=length-1;
+    Node *வலது_Edge=equal[unit_எண்];
+    int32_t வலது_Edge_எண்= வலது_Edge==nullptr ? first_Edge_எண் : வலது_Edge->getOffset();
+    செய் {
+        --unit_எண்;
+        எனில்(equal[unit_எண்]!=nullptr) {
+            equal[unit_எண்]->write_Unless_Inside_வலது_Edge(first_Edge_எண், வலது_Edge_எண், builder);
         }
-    } while(unitNumber>0);
+    } போது(unit_எண்>0);
     // The maxUnit sub-node is written as the very last one because we do
     // not jump for it at all.
-    unitNumber=length-1;
-    if(rightEdge==nullptr) {
-        builder.writeValueAndFinal(values[unitNumber], true);
-    } else {
-        rightEdge->write(builder);
+    unit_எண்=length-1;
+    எனில்(வலது_Edge==nullptr) {
+        builder.write_மதிப்பு_And_Final(மதிப்புகள்[unit_எண்], உண்மை);
+    } இல்லையெனில் {
+        வலது_Edge->லிக(builder);
     }
-    offset=builder.write(units[unitNumber]);
+    offset=builder.லிக(units[unit_எண்]);
     // Write the rest of this node's unit-value pairs.
-    while(--unitNumber>=0) {
+    போது(--unit_எண்>=0) {
         int32_t value;
         UBool isFinal;
-        if(equal[unitNumber]==nullptr) {
+        எனில்(equal[unit_எண்]==nullptr) {
             // Write the final value for the one string ending with this unit.
-            value=values[unitNumber];
-            isFinal=true;
-        } else {
+            value=மதிப்புகள்[unit_எண்];
+            isFinal=உண்மை;
+        } இல்லையெனில் {
             // Write the delta to the start position of the sub-node.
-            U_ASSERT(equal[unitNumber]->getOffset()>0);
-            value=offset-equal[unitNumber]->getOffset();
-            isFinal=false;
+            U_ASSERT(equal[unit_எண்]->getOffset()>0);
+            value=offset-equal[unit_எண்]->getOffset();
+            isFinal=பொய்;
         }
-        builder.writeValueAndFinal(value, isFinal);
-        offset=builder.write(units[unitNumber]);
+        builder.write_மதிப்பு_And_Final(value, isFinal);
+        offset=builder.லிக(units[unit_எண்]);
     }
 }
 
-bool
-StringTrieBuilder::SplitBranchNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
+தருக்க
+StringTrieBuilder::Split_Branch_முனை::operator==(மாறிலி Node &other) மாறிலி {
+    எனில்(இது==&other) {
+        திரும்பு உண்மை;
     }
-    if(!Node::operator==(other)) {
-        return false;
+    எனில்(!Node::operator==(other)) {
+        திரும்பு பொய்;
     }
-    const SplitBranchNode &o=static_cast<const SplitBranchNode &>(other);
-    return unit==o.unit && lessThan==o.lessThan && greaterOrEqual==o.greaterOrEqual;
+    மாறிலி Split_Branch_முனை &o=static_cast<மாறிலி Split_Branch_முனை &>(other);
+    திரும்பு unit==o.unit && lessThan==o.lessThan && greaterOrEqual==o.greaterOrEqual;
 }
 
 int32_t
-StringTrieBuilder::SplitBranchNode::markRightEdgesFirst(int32_t edgeNumber) {
-    if(offset==0) {
-        firstEdgeNumber=edgeNumber;
-        edgeNumber=greaterOrEqual->markRightEdgesFirst(edgeNumber);
-        offset=edgeNumber=lessThan->markRightEdgesFirst(edgeNumber-1);
+StringTrieBuilder::Split_Branch_முனை::mark_வலது_Edges_First(int32_t edge_எண்) {
+    எனில்(offset==0) {
+        first_Edge_எண்=edge_எண்;
+        edge_எண்=greaterOrEqual->mark_வலது_Edges_First(edge_எண்);
+        offset=edge_எண்=lessThan->mark_வலது_Edges_First(edge_எண்-1);
     }
-    return edgeNumber;
+    திரும்பு edge_எண்;
 }
 
-void
-StringTrieBuilder::SplitBranchNode::write(StringTrieBuilder &builder) {
+வெறுமை
+StringTrieBuilder::Split_Branch_முனை::லிக(StringTrieBuilder &builder) {
     // Encode the less-than branch first.
-    lessThan->writeUnlessInsideRightEdge(firstEdgeNumber, greaterOrEqual->getOffset(), builder);
+    lessThan->write_Unless_Inside_வலது_Edge(first_Edge_எண், greaterOrEqual->getOffset(), builder);
     // Encode the greater-or-equal branch last because we do not jump for it at all.
-    greaterOrEqual->write(builder);
+    greaterOrEqual->லிக(builder);
     // Write this node.
     U_ASSERT(lessThan->getOffset()>0);
     builder.writeDeltaTo(lessThan->getOffset());  // less-than
-    offset=builder.write(unit);
+    offset=builder.லிக(unit);
 }
 
-bool
-StringTrieBuilder::BranchHeadNode::operator==(const Node &other) const {
-    if(this==&other) {
-        return true;
+தருக்க
+StringTrieBuilder::Branch_Head_முனை::operator==(மாறிலி Node &other) மாறிலி {
+    எனில்(இது==&other) {
+        திரும்பு உண்மை;
     }
-    if(!ValueNode::operator==(other)) {
-        return false;
+    எனில்(!மதிப்பு_முனை::operator==(other)) {
+        திரும்பு பொய்;
     }
-    const BranchHeadNode &o=static_cast<const BranchHeadNode &>(other);
-    return length==o.length && next==o.next;
+    மாறிலி Branch_Head_முனை &o=static_cast<மாறிலி Branch_Head_முனை &>(other);
+    திரும்பு length==o.length && next==o.next;
 }
 
 int32_t
-StringTrieBuilder::BranchHeadNode::markRightEdgesFirst(int32_t edgeNumber) {
-    if(offset==0) {
-        offset=edgeNumber=next->markRightEdgesFirst(edgeNumber);
+StringTrieBuilder::Branch_Head_முனை::mark_வலது_Edges_First(int32_t edge_எண்) {
+    எனில்(offset==0) {
+        offset=edge_எண்=next->mark_வலது_Edges_First(edge_எண்);
     }
-    return edgeNumber;
+    திரும்பு edge_எண்;
 }
 
-void
-StringTrieBuilder::BranchHeadNode::write(StringTrieBuilder &builder) {
-    next->write(builder);
-    if(length<=builder.getMinLinearMatch()) {
-        offset=builder.writeValueAndType(hasValue, value, length-1);
-    } else {
-        builder.write(length-1);
-        offset=builder.writeValueAndType(hasValue, value, 0);
+வெறுமை
+StringTrieBuilder::Branch_Head_முனை::லிக(StringTrieBuilder &builder) {
+    next->லிக(builder);
+    எனில்(length<=builder.getMinLinearMatch()) {
+        offset=builder.write_மதிப்பு_And_Type(has_மதிப்பு, value, length-1);
+    } இல்லையெனில் {
+        builder.லிக(length-1);
+        offset=builder.write_மதிப்பு_And_Type(has_மதிப்பு, value, 0);
     }
 }
 

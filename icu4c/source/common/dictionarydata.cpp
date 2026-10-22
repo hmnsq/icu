@@ -11,25 +11,25 @@
 * created by: Markus W. Scherer & Maxime Serrano
 */
 
-#include "dictionarydata.h"
-#include "unicode/ucharstrie.h"
-#include "unicode/bytestrie.h"
-#include "unicode/udata.h"
-#include "cmemory.h"
+#அந்தர்பாவ "dictionarydata.h"
+#அந்தர்பாவ "unicode/ucharstrie.h"
+#அந்தர்பாவ "unicode/bytestrie.h"
+#அந்தர்பாவ "unicode/udata.h"
+#அந்தர்பாவ "cmemory.h"
 
-#if !UCONFIG_NO_BREAK_ITERATION
+#எனில் !UCONFIG_NO_BREAK_ITERATION
 
 U_NAMESPACE_BEGIN
 
-const int32_t  DictionaryData::TRIE_TYPE_BYTES = 0;
-const int32_t  DictionaryData::TRIE_TYPE_UCHARS = 1;
-const int32_t  DictionaryData::TRIE_TYPE_MASK = 7;
-const int32_t  DictionaryData::TRIE_HAS_VALUES = 8;
+மாறிலி int32_t  DictionaryData::TRIE_TYPE_BYTES = 0;
+மாறிலி int32_t  DictionaryData::TRIE_TYPE_UCHARS = 1;
+மாறிலி int32_t  DictionaryData::TRIE_TYPE_MASK = 7;
+மாறிலி int32_t  DictionaryData::TRIE_HAS_மதிப்புகள் = 8;
 
-const int32_t  DictionaryData::TRANSFORM_NONE = 0;
-const int32_t  DictionaryData::TRANSFORM_TYPE_OFFSET = 0x1000000;
-const int32_t  DictionaryData::TRANSFORM_TYPE_MASK = 0x7f000000;
-const int32_t  DictionaryData::TRANSFORM_OFFSET_MASK = 0x1fffff;
+மாறிலி int32_t  DictionaryData::TRANSFORM_NONE = 0;
+மாறிலி int32_t  DictionaryData::TRANSFORM_TYPE_OFFSET = 0x1000000;
+மாறிலி int32_t  DictionaryData::TRANSFORM_TYPE_MASK = 0x7f000000;
+மாறிலி int32_t  DictionaryData::TRANSFORM_OFFSET_MASK = 0x1fffff;
     
 DictionaryMatcher::~DictionaryMatcher() {
 }
@@ -38,119 +38,119 @@ UCharsDictionaryMatcher::~UCharsDictionaryMatcher() {
     udata_close(file);
 }
 
-int32_t UCharsDictionaryMatcher::getType() const {
-    return DictionaryData::TRIE_TYPE_UCHARS;
+int32_t UCharsDictionaryMatcher::getType() மாறிலி {
+    திரும்பு DictionaryData::TRIE_TYPE_UCHARS;
 }
 
 int32_t UCharsDictionaryMatcher::matches(UText *text, int32_t maxLength, int32_t limit,
-                            int32_t *lengths, int32_t *cpLengths, int32_t *values,
-                            int32_t *prefix) const {
+                            int32_t *lengths, int32_t *cpLengths, int32_t *மதிப்புகள்,
+                            int32_t *prefix) மாறிலி {
 
     UCharsTrie uct(characters);
     int32_t startingTextIndex = static_cast<int32_t>(utext_getNativeIndex(text));
-    int32_t wordCount = 0;
+    int32_t word_மொத்தம் = 0;
     int32_t codePointsMatched = 0;
 
-    for (UChar32 c = utext_next32(text); c >= 0; c=utext_next32(text)) {
+    க்கு (UChar32 c = utext_next32(text); c >= 0; c=utext_next32(text)) {
         UStringTrieResult result = (codePointsMatched == 0) ? uct.first(c) : uct.next(c);
         int32_t lengthMatched = static_cast<int32_t>(utext_getNativeIndex(text)) - startingTextIndex;
         codePointsMatched += 1;
-        if (USTRINGTRIE_HAS_VALUE(result)) {
-            if (wordCount < limit) {
-                if (values != nullptr) {
-                    values[wordCount] = uct.getValue();
+        எனில் (USTRINGTRIE_HAS_மதிப்பு(result)) {
+            எனில் (word_மொத்தம் < limit) {
+                எனில் (மதிப்புகள் != nullptr) {
+                    மதிப்புகள்[word_மொத்தம்] = uct.get_மதிப்பு();
                 }
-                if (lengths != nullptr) {
-                    lengths[wordCount] = lengthMatched;
+                எனில் (lengths != nullptr) {
+                    lengths[word_மொத்தம்] = lengthMatched;
                 }
-                if (cpLengths != nullptr) {
-                    cpLengths[wordCount] = codePointsMatched;
+                எனில் (cpLengths != nullptr) {
+                    cpLengths[word_மொத்தம்] = codePointsMatched;
                 }
-                ++wordCount;
+                ++word_மொத்தம்;
             }
-            if (result == USTRINGTRIE_FINAL_VALUE) {
-                break;
+            எனில் (result == USTRINGTRIE_FINAL_மதிப்பு) {
+                நிறுத்து;
             }
         }
-        else if (result == USTRINGTRIE_NO_MATCH) {
-            break;
+        இல்லையெனில் எனில் (result == USTRINGTRIE_NO_MATCH) {
+            நிறுத்து;
         }
-        if (lengthMatched >= maxLength) {
-            break;
+        எனில் (lengthMatched >= maxLength) {
+            நிறுத்து;
         }
     }
 
-    if (prefix != nullptr) {
+    எனில் (prefix != nullptr) {
         *prefix = codePointsMatched;
     }
-    return wordCount;
+    திரும்பு word_மொத்தம்;
 }
 
 BytesDictionaryMatcher::~BytesDictionaryMatcher() {
     udata_close(file);
 }
 
-UChar32 BytesDictionaryMatcher::transform(UChar32 c) const {
-    if ((transformConstant & DictionaryData::TRANSFORM_TYPE_MASK) == DictionaryData::TRANSFORM_TYPE_OFFSET) {
-        if (c == 0x200D) {
-            return 0xFF;
-        } else if (c == 0x200C) {
-            return 0xFE;
+UChar32 BytesDictionaryMatcher::transform(UChar32 c) மாறிலி {
+    எனில் ((transformConstant & DictionaryData::TRANSFORM_TYPE_MASK) == DictionaryData::TRANSFORM_TYPE_OFFSET) {
+        எனில் (c == 0x200D) {
+            திரும்பு 0xFF;
+        } இல்லையெனில் எனில் (c == 0x200C) {
+            திரும்பு 0xFE;
         }
         int32_t delta = c - (transformConstant & DictionaryData::TRANSFORM_OFFSET_MASK);
-        if (delta < 0 || 0xFD < delta) {
-            return U_SENTINEL;
+        எனில் (delta < 0 || 0xFD < delta) {
+            திரும்பு U_SENTINEL;
         }
-        return static_cast<UChar32>(delta);
+        திரும்பு static_cast<UChar32>(delta);
     }
-    return c;
+    திரும்பு c;
 }
 
-int32_t BytesDictionaryMatcher::getType() const {
-    return DictionaryData::TRIE_TYPE_BYTES;
+int32_t BytesDictionaryMatcher::getType() மாறிலி {
+    திரும்பு DictionaryData::TRIE_TYPE_BYTES;
 }
 
 int32_t BytesDictionaryMatcher::matches(UText *text, int32_t maxLength, int32_t limit,
-                            int32_t *lengths, int32_t *cpLengths, int32_t *values,
-                            int32_t *prefix) const {
+                            int32_t *lengths, int32_t *cpLengths, int32_t *மதிப்புகள்,
+                            int32_t *prefix) மாறிலி {
     BytesTrie bt(characters);
     int32_t startingTextIndex = static_cast<int32_t>(utext_getNativeIndex(text));
-    int32_t wordCount = 0;
+    int32_t word_மொத்தம் = 0;
     int32_t codePointsMatched = 0;
 
-    for (UChar32 c = utext_next32(text); c >= 0; c=utext_next32(text)) {
+    க்கு (UChar32 c = utext_next32(text); c >= 0; c=utext_next32(text)) {
         UStringTrieResult result = (codePointsMatched == 0) ? bt.first(transform(c)) : bt.next(transform(c));
         int32_t lengthMatched = static_cast<int32_t>(utext_getNativeIndex(text)) - startingTextIndex;
         codePointsMatched += 1;
-        if (USTRINGTRIE_HAS_VALUE(result)) {
-            if (wordCount < limit) {
-                if (values != nullptr) {
-                    values[wordCount] = bt.getValue();
+        எனில் (USTRINGTRIE_HAS_மதிப்பு(result)) {
+            எனில் (word_மொத்தம் < limit) {
+                எனில் (மதிப்புகள் != nullptr) {
+                    மதிப்புகள்[word_மொத்தம்] = bt.get_மதிப்பு();
                 }
-                if (lengths != nullptr) {
-                    lengths[wordCount] = lengthMatched;
+                எனில் (lengths != nullptr) {
+                    lengths[word_மொத்தம்] = lengthMatched;
                 }
-                if (cpLengths != nullptr) {
-                    cpLengths[wordCount] = codePointsMatched;
+                எனில் (cpLengths != nullptr) {
+                    cpLengths[word_மொத்தம்] = codePointsMatched;
                 }
-                ++wordCount;
+                ++word_மொத்தம்;
             }
-            if (result == USTRINGTRIE_FINAL_VALUE) {
-                break;
+            எனில் (result == USTRINGTRIE_FINAL_மதிப்பு) {
+                நிறுத்து;
             }
         }
-        else if (result == USTRINGTRIE_NO_MATCH) {
-            break;
+        இல்லையெனில் எனில் (result == USTRINGTRIE_NO_MATCH) {
+            நிறுத்து;
         }
-        if (lengthMatched >= maxLength) {
-            break;
+        எனில் (lengthMatched >= maxLength) {
+            நிறுத்து;
         }
     }
 
-    if (prefix != nullptr) {
+    எனில் (prefix != nullptr) {
         *prefix = codePointsMatched;
     }
-    return wordCount;
+    திரும்பு word_மொத்தம்;
 }
 
 
@@ -159,20 +159,20 @@ U_NAMESPACE_END
 U_NAMESPACE_USE
 
 U_CAPI int32_t U_EXPORT2
-udict_swap(const UDataSwapper *ds, const void *inData, int32_t length,
-           void *outData, UErrorCode *pErrorCode) {
-    const UDataInfo *pInfo;
+udict_swap(மாறிலி UDataSwapper *ds, மாறிலி வெறுமை *inData, int32_t length,
+           வெறுமை *outData, UErrorCode *pErrorCode) {
+    மாறிலி UDataInfo *pInfo;
     int32_t headerSize;
-    const uint8_t *inBytes;
+    மாறிலி uint8_t *inBytes;
     uint8_t *outBytes;
-    const int32_t *inIndexes;
-    int32_t indexes[DictionaryData::IX_COUNT];
+    மாறிலி int32_t *inIndexes;
+    int32_t indexes[DictionaryData::IX_மொத்தம்];
     int32_t i, offset, size;
 
     headerSize = udata_swapDataHeader(ds, inData, length, outData, pErrorCode);
-    if (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) return 0;
-    pInfo = (const UDataInfo *)((const char *)inData + 4);
-    if (!(pInfo->dataFormat[0] == 0x44 && 
+    எனில் (pErrorCode == nullptr || U_FAILURE(*pErrorCode)) திரும்பு 0;
+    pInfo = (மாறிலி UDataInfo *)((மாறிலி எழுத்து *)inData + 4);
+    எனில் (!(pInfo->dataFormat[0] == 0x44 && 
           pInfo->dataFormat[1] == 0x69 && 
           pInfo->dataFormat[2] == 0x63 && 
           pInfo->dataFormat[3] == 0x74 && 
@@ -180,53 +180,53 @@ udict_swap(const UDataSwapper *ds, const void *inData, int32_t length,
         udata_printError(ds, "udict_swap(): data format %02x.%02x.%02x.%02x (format version %02x) is not recognized as dictionary data\n",
                          pInfo->dataFormat[0], pInfo->dataFormat[1], pInfo->dataFormat[2], pInfo->dataFormat[3], pInfo->formatVersion[0]);
         *pErrorCode = U_UNSUPPORTED_ERROR;
-        return 0;
+        திரும்பு 0;
     }
 
-    inBytes = (const uint8_t *)inData + headerSize;
+    inBytes = (மாறிலி uint8_t *)inData + headerSize;
     outBytes = (outData == nullptr) ? nullptr : (uint8_t *)outData + headerSize;
 
-    inIndexes = (const int32_t *)inBytes;
-    if (length >= 0) {
+    inIndexes = (மாறிலி int32_t *)inBytes;
+    எனில் (length >= 0) {
         length -= headerSize;
-        if (length < (int32_t)(sizeof(indexes))) {
+        எனில் (length < (int32_t)(அளவு(indexes))) {
             udata_printError(ds, "udict_swap(): too few bytes (%d after header) for dictionary data\n", length);
             *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            திரும்பு 0;
         }
     }
 
-    for (i = 0; i < DictionaryData::IX_COUNT; i++) {
+    க்கு (i = 0; i < DictionaryData::IX_மொத்தம்; i++) {
         indexes[i] = udata_readInt32(ds, inIndexes[i]);
     }
 
     size = indexes[DictionaryData::IX_TOTAL_SIZE];
 
-    if (length >= 0) {
-        if (length < size) {
+    எனில் (length >= 0) {
+        எனில் (length < size) {
             udata_printError(ds, "udict_swap(): too few bytes (%d after header) for all of dictionary data\n", length);
             *pErrorCode = U_INDEX_OUTOFBOUNDS_ERROR;
-            return 0;
+            திரும்பு 0;
         }
 
-        if (inBytes != outBytes) {
+        எனில் (inBytes != outBytes) {
             uprv_memcpy(outBytes, inBytes, size);
         }
 
         offset = 0;
-        ds->swapArray32(ds, inBytes, sizeof(indexes), outBytes, pErrorCode);
-        offset = (int32_t)sizeof(indexes);
+        ds->swapArray32(ds, inBytes, அளவு(indexes), outBytes, pErrorCode);
+        offset = (int32_t)அளவு(indexes);
         int32_t trieType = indexes[DictionaryData::IX_TRIE_TYPE] & DictionaryData::TRIE_TYPE_MASK;
         int32_t nextOffset = indexes[DictionaryData::IX_RESERVED1_OFFSET];
 
-        if (trieType == DictionaryData::TRIE_TYPE_UCHARS) {
+        எனில் (trieType == DictionaryData::TRIE_TYPE_UCHARS) {
             ds->swapArray16(ds, inBytes + offset, nextOffset - offset, outBytes + offset, pErrorCode);
-        } else if (trieType == DictionaryData::TRIE_TYPE_BYTES) {
+        } இல்லையெனில் எனில் (trieType == DictionaryData::TRIE_TYPE_BYTES) {
             // nothing to do
-        } else {
+        } இல்லையெனில் {
             udata_printError(ds, "udict_swap(): unknown trie type!\n");
             *pErrorCode = U_UNSUPPORTED_ERROR;
-            return 0;
+            திரும்பு 0;
         }
 
         // these next two sections are empty in the current format,
@@ -237,6 +237,6 @@ udict_swap(const UDataSwapper *ds, const void *inData, int32_t length,
         nextOffset = indexes[DictionaryData::IX_TOTAL_SIZE];
         offset = nextOffset;
     }
-    return headerSize + size;
+    திரும்பு headerSize + size;
 }
 #endif

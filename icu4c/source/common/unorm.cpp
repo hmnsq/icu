@@ -25,68 +25,68 @@
 * 2009-nov..2010-jan  Markus Scherer  total rewrite, new Normalizer2 API & code
 */
 
-#include "unicode/utypes.h"
+#அந்தர்பாவ "unicode/utypes.h"
 
-#if !UCONFIG_NO_NORMALIZATION
+#எனில் !UCONFIG_NO_NORMALIZATION
 
-#include "unicode/udata.h"
-#include "unicode/ustring.h"
-#include "unicode/uiter.h"
-#include "unicode/unorm.h"
-#include "unicode/unorm2.h"
-#include "normalizer2impl.h"
-#include "unormimp.h"
-#include "uprops.h"
-#include "ustr_imp.h"
+#அந்தர்பாவ "unicode/udata.h"
+#அந்தர்பாவ "unicode/ustring.h"
+#அந்தர்பாவ "unicode/uiter.h"
+#அந்தர்பாவ "unicode/unorm.h"
+#அந்தர்பாவ "unicode/unorm2.h"
+#அந்தர்பாவ "normalizer2impl.h"
+#அந்தர்பாவ "unormimp.h"
+#அந்தர்பாவ "uprops.h"
+#அந்தர்பாவ "ustr_imp.h"
 
 U_NAMESPACE_USE
 
 /* quick check functions ---------------------------------------------------- */
 
 U_CAPI UNormalizationCheckResult U_EXPORT2
-unorm_quickCheck(const char16_t *src,
+unorm_quickCheck(மாறிலி char16_t *src,
                  int32_t srcLength, 
                  UNormalizationMode mode,
                  UErrorCode *pErrorCode) {
-    const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
-    return unorm2_quickCheck((const UNormalizer2 *)n2, src, srcLength, pErrorCode);
+    மாறிலி Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
+    திரும்பு unorm2_quickCheck((மாறிலி UNormalizer2 *)n2, src, srcLength, pErrorCode);
 }
 
 U_CAPI UNormalizationCheckResult U_EXPORT2
-unorm_quickCheckWithOptions(const char16_t *src, int32_t srcLength,
+unorm_quickCheckWithOptions(மாறிலி char16_t *src, int32_t srcLength,
                             UNormalizationMode mode, int32_t options,
                             UErrorCode *pErrorCode) {
-    const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
-    if(options&UNORM_UNICODE_3_2) {
+    மாறிலி Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
+    எனில்(options&UNORM_UNICODE_3_2) {
         FilteredNormalizer2 fn2(*n2, *uniset_getUnicode32Instance(*pErrorCode));
-        return unorm2_quickCheck(
-            reinterpret_cast<const UNormalizer2 *>(static_cast<Normalizer2 *>(&fn2)),
+        திரும்பு unorm2_quickCheck(
+            reinterpret_cast<மாறிலி UNormalizer2 *>(static_cast<Normalizer2 *>(&fn2)),
             src, srcLength, pErrorCode);
-    } else {
-        return unorm2_quickCheck((const UNormalizer2 *)n2, src, srcLength, pErrorCode);
+    } இல்லையெனில் {
+        திரும்பு unorm2_quickCheck((மாறிலி UNormalizer2 *)n2, src, srcLength, pErrorCode);
     }
 }
 
 U_CAPI UBool U_EXPORT2
-unorm_isNormalized(const char16_t *src, int32_t srcLength,
+unorm_isNormalized(மாறிலி char16_t *src, int32_t srcLength,
                    UNormalizationMode mode,
                    UErrorCode *pErrorCode) {
-    const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
-    return unorm2_isNormalized((const UNormalizer2 *)n2, src, srcLength, pErrorCode);
+    மாறிலி Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
+    திரும்பு unorm2_isNormalized((மாறிலி UNormalizer2 *)n2, src, srcLength, pErrorCode);
 }
 
 U_CAPI UBool U_EXPORT2
-unorm_isNormalizedWithOptions(const char16_t *src, int32_t srcLength,
+unorm_isNormalizedWithOptions(மாறிலி char16_t *src, int32_t srcLength,
                               UNormalizationMode mode, int32_t options,
                               UErrorCode *pErrorCode) {
-    const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
-    if(options&UNORM_UNICODE_3_2) {
+    மாறிலி Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
+    எனில்(options&UNORM_UNICODE_3_2) {
         FilteredNormalizer2 fn2(*n2, *uniset_getUnicode32Instance(*pErrorCode));
-        return unorm2_isNormalized(
-            reinterpret_cast<const UNormalizer2 *>(static_cast<Normalizer2 *>(&fn2)),
+        திரும்பு unorm2_isNormalized(
+            reinterpret_cast<மாறிலி UNormalizer2 *>(static_cast<Normalizer2 *>(&fn2)),
             src, srcLength, pErrorCode);
-    } else {
-        return unorm2_isNormalized((const UNormalizer2 *)n2, src, srcLength, pErrorCode);
+    } இல்லையெனில் {
+        திரும்பு unorm2_isNormalized((மாறிலி UNormalizer2 *)n2, src, srcLength, pErrorCode);
     }
 }
 
@@ -94,18 +94,18 @@ unorm_isNormalizedWithOptions(const char16_t *src, int32_t srcLength,
 
 /** Public API for normalizing. */
 U_CAPI int32_t U_EXPORT2
-unorm_normalize(const char16_t *src, int32_t srcLength,
+unorm_normalize(மாறிலி char16_t *src, int32_t srcLength,
                 UNormalizationMode mode, int32_t options,
                 char16_t *dest, int32_t destCapacity,
                 UErrorCode *pErrorCode) {
-    const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
-    if(options&UNORM_UNICODE_3_2) {
+    மாறிலி Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
+    எனில்(options&UNORM_UNICODE_3_2) {
         FilteredNormalizer2 fn2(*n2, *uniset_getUnicode32Instance(*pErrorCode));
-        return unorm2_normalize(
-            reinterpret_cast<const UNormalizer2 *>(static_cast<Normalizer2 *>(&fn2)),
+        திரும்பு unorm2_normalize(
+            reinterpret_cast<மாறிலி UNormalizer2 *>(static_cast<Normalizer2 *>(&fn2)),
             src, srcLength, dest, destCapacity, pErrorCode);
-    } else {
-        return unorm2_normalize((const UNormalizer2 *)n2,
+    } இல்லையெனில் {
+        திரும்பு unorm2_normalize((மாறிலி UNormalizer2 *)n2,
             src, srcLength, dest, destCapacity, pErrorCode);
     }
 }
@@ -113,83 +113,83 @@ unorm_normalize(const char16_t *src, int32_t srcLength,
 
 /* iteration functions ------------------------------------------------------ */
 
-static int32_t
+நிலையான int32_t
 _iterate(UCharIterator *src, UBool forward,
               char16_t *dest, int32_t destCapacity,
-              const Normalizer2 *n2,
+              மாறிலி Normalizer2 *n2,
               UBool doNormalize, UBool *pNeededToNormalize,
               UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    எனில்(U_FAILURE(*pErrorCode)) {
+        திரும்பு 0;
     }
-    if(destCapacity<0 || (dest==nullptr && destCapacity>0) || src==nullptr) {
+    எனில்(destCapacity<0 || (dest==nullptr && destCapacity>0) || src==nullptr) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        திரும்பு 0;
     }
 
-    if(pNeededToNormalize!=nullptr) {
-        *pNeededToNormalize=false;
+    எனில்(pNeededToNormalize!=nullptr) {
+        *pNeededToNormalize=பொய்;
     }
-    if(!(forward ? src->hasNext(src) : src->hasPrevious(src))) {
-        return u_terminateUChars(dest, destCapacity, 0, pErrorCode);
+    எனில்(!(forward ? src->hasNext(src) : src->hasPrevious(src))) {
+        திரும்பு u_terminateUChars(dest, destCapacity, 0, pErrorCode);
     }
 
     UnicodeString buffer;
     UChar32 c;
-    if(forward) {
+    எனில்(forward) {
         /* get one character and ignore its properties */
         buffer.append(uiter_next32(src));
         /* get all following characters until we see a boundary */
-        while((c=uiter_next32(src))>=0) {
-            if(n2->hasBoundaryBefore(c)) {
+        போது((c=uiter_next32(src))>=0) {
+            எனில்(n2->hasBoundaryBefore(c)) {
                 /* back out the latest movement to stop at the boundary */
                 src->move(src, -U16_LENGTH(c), UITER_CURRENT);
-                break;
-            } else {
+                நிறுத்து;
+            } இல்லையெனில் {
                 buffer.append(c);
             }
         }
-    } else {
-        while((c=uiter_previous32(src))>=0) {
+    } இல்லையெனில் {
+        போது((c=uiter_previous32(src))>=0) {
             /* always write this character to the front of the buffer */
             buffer.insert(0, c);
             /* stop if this just-copied character is a boundary */
-            if(n2->hasBoundaryBefore(c)) {
-                break;
+            எனில்(n2->hasBoundaryBefore(c)) {
+                நிறுத்து;
             }
         }
     }
 
     UnicodeString destString(dest, 0, destCapacity);
-    if(buffer.length()>0 && doNormalize) {
+    எனில்(buffer.length()>0 && doNormalize) {
         n2->normalize(buffer, destString, *pErrorCode).extract(dest, destCapacity, *pErrorCode);
-        if(pNeededToNormalize!=nullptr && U_SUCCESS(*pErrorCode)) {
+        எனில்(pNeededToNormalize!=nullptr && U_SUCCESS(*pErrorCode)) {
             *pNeededToNormalize= destString!=buffer;
         }
-        return destString.length();
-    } else {
+        திரும்பு destString.length();
+    } இல்லையெனில் {
         /* just copy the source characters */
-        return buffer.extract(dest, destCapacity, *pErrorCode);
+        திரும்பு buffer.extract(dest, destCapacity, *pErrorCode);
     }
 }
 
-static int32_t
+நிலையான int32_t
 unorm_iterate(UCharIterator *src, UBool forward,
               char16_t *dest, int32_t destCapacity,
               UNormalizationMode mode, int32_t options,
               UBool doNormalize, UBool *pNeededToNormalize,
               UErrorCode *pErrorCode) {
-    const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
-    if(options&UNORM_UNICODE_3_2) {
-        const UnicodeSet *uni32 = uniset_getUnicode32Instance(*pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
-            return 0;
+    மாறிலி Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
+    எனில்(options&UNORM_UNICODE_3_2) {
+        மாறிலி UnicodeSet *uni32 = uniset_getUnicode32Instance(*pErrorCode);
+        எனில்(U_FAILURE(*pErrorCode)) {
+            திரும்பு 0;
         }
         FilteredNormalizer2 fn2(*n2, *uni32);
-        return _iterate(src, forward, dest, destCapacity,
+        திரும்பு _iterate(src, forward, dest, destCapacity,
             &fn2, doNormalize, pNeededToNormalize, pErrorCode);
     }
-    return _iterate(src, forward, dest, destCapacity,
+    திரும்பு _iterate(src, forward, dest, destCapacity,
             n2, doNormalize, pNeededToNormalize, pErrorCode);
 }
 
@@ -199,7 +199,7 @@ unorm_previous(UCharIterator *src,
                UNormalizationMode mode, int32_t options,
                UBool doNormalize, UBool *pNeededToNormalize,
                UErrorCode *pErrorCode) {
-    return unorm_iterate(src, false,
+    திரும்பு unorm_iterate(src, பொய்,
                          dest, destCapacity,
                          mode, options,
                          doNormalize, pNeededToNormalize,
@@ -212,7 +212,7 @@ unorm_next(UCharIterator *src,
            UNormalizationMode mode, int32_t options,
            UBool doNormalize, UBool *pNeededToNormalize,
            UErrorCode *pErrorCode) {
-    return unorm_iterate(src, true,
+    திரும்பு unorm_iterate(src, உண்மை,
                          dest, destCapacity,
                          mode, options,
                          doNormalize, pNeededToNormalize,
@@ -221,59 +221,59 @@ unorm_next(UCharIterator *src,
 
 /* Concatenation of normalized strings -------------------------------------- */
 
-static int32_t
-_concatenate(const char16_t *left, int32_t leftLength,
-                  const char16_t *right, int32_t rightLength,
+நிலையான int32_t
+_concatenate(மாறிலி char16_t *left, int32_t இடது_Length,
+                  மாறிலி char16_t *வலது, int32_t வலது_Length,
                   char16_t *dest, int32_t destCapacity,
-                  const Normalizer2 *n2,
+                  மாறிலி Normalizer2 *n2,
                   UErrorCode *pErrorCode) {
-    if(U_FAILURE(*pErrorCode)) {
-        return 0;
+    எனில்(U_FAILURE(*pErrorCode)) {
+        திரும்பு 0;
     }
-    if(destCapacity<0 || (dest==nullptr && destCapacity>0) ||
-        left==nullptr || leftLength<-1 || right==nullptr || rightLength<-1) {
+    எனில்(destCapacity<0 || (dest==nullptr && destCapacity>0) ||
+        left==nullptr || இடது_Length<-1 || வலது==nullptr || வலது_Length<-1) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        திரும்பு 0;
     }
 
     /* check for overlapping right and destination */
-    if( dest!=nullptr &&
-        ((right>=dest && right<(dest+destCapacity)) ||
-         (rightLength>0 && dest>=right && dest<(right+rightLength)))
+    எனில்( dest!=nullptr &&
+        ((வலது>=dest && வலது<(dest+destCapacity)) ||
+         (வலது_Length>0 && dest>=வலது && dest<(வலது+வலது_Length)))
     ) {
         *pErrorCode=U_ILLEGAL_ARGUMENT_ERROR;
-        return 0;
+        திரும்பு 0;
     }
 
     /* allow left==dest */
     UnicodeString destString;
-    if(left==dest) {
-        destString.setTo(dest, leftLength, destCapacity);
-    } else {
+    எனில்(left==dest) {
+        destString.setTo(dest, இடது_Length, destCapacity);
+    } இல்லையெனில் {
         destString.setTo(dest, 0, destCapacity);
-        destString.append(left, leftLength);
+        destString.append(left, இடது_Length);
     }
-    return n2->append(destString, UnicodeString(rightLength<0, right, rightLength), *pErrorCode).
+    திரும்பு n2->append(destString, UnicodeString(வலது_Length<0, வலது, வலது_Length), *pErrorCode).
            extract(dest, destCapacity, *pErrorCode);
 }
 
 U_CAPI int32_t U_EXPORT2
-unorm_concatenate(const char16_t *left, int32_t leftLength,
-                  const char16_t *right, int32_t rightLength,
+unorm_concatenate(மாறிலி char16_t *left, int32_t இடது_Length,
+                  மாறிலி char16_t *வலது, int32_t வலது_Length,
                   char16_t *dest, int32_t destCapacity,
                   UNormalizationMode mode, int32_t options,
                   UErrorCode *pErrorCode) {
-    const Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
-    if(options&UNORM_UNICODE_3_2) {
-        const UnicodeSet *uni32 = uniset_getUnicode32Instance(*pErrorCode);
-        if(U_FAILURE(*pErrorCode)) {
-            return 0;
+    மாறிலி Normalizer2 *n2=Normalizer2Factory::getInstance(mode, *pErrorCode);
+    எனில்(options&UNORM_UNICODE_3_2) {
+        மாறிலி UnicodeSet *uni32 = uniset_getUnicode32Instance(*pErrorCode);
+        எனில்(U_FAILURE(*pErrorCode)) {
+            திரும்பு 0;
         }
         FilteredNormalizer2 fn2(*n2, *uni32);
-        return _concatenate(left, leftLength, right, rightLength,
+        திரும்பு _concatenate(left, இடது_Length, வலது, வலது_Length,
             dest, destCapacity, &fn2, pErrorCode);
     }
-    return _concatenate(left, leftLength, right, rightLength,
+    திரும்பு _concatenate(left, இடது_Length, வலது, வலது_Length,
         dest, destCapacity, n2, pErrorCode);
 }
 

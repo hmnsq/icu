@@ -18,61 +18,61 @@
 *   Character conversion functions moved here from uresbund.c
 */
 
-#include "unicode/utypes.h"
-#include "unicode/putil.h"
-#include "unicode/ustring.h"
-#include "unicode/ucnv.h"
-#include "unicode/ures.h"
-#include "uinvchar.h"
-#include "ustr_cnv.h"
+#அந்தர்பாவ "unicode/utypes.h"
+#அந்தர்பாவ "unicode/putil.h"
+#அந்தர்பாவ "unicode/ustring.h"
+#அந்தர்பாவ "unicode/ucnv.h"
+#அந்தர்பாவ "unicode/ures.h"
+#அந்தர்பாவ "uinvchar.h"
+#அந்தர்பாவ "ustr_cnv.h"
 
 U_CAPI UResourceBundle * U_EXPORT2
-ures_openU(const char16_t *myPath,
-           const char *localeID, 
+ures_openU(மாறிலி char16_t *myPath,
+           மாறிலி எழுத்து *localeID, 
            UErrorCode *status)
 {
-    char pathBuffer[1024];
+    எழுத்து pathBuffer[1024];
     int32_t length;
-    char *path = pathBuffer;
+    எழுத்து *path = pathBuffer;
 
-    if(status==nullptr || U_FAILURE(*status)) {
-        return nullptr;
+    எனில்(status==nullptr || U_FAILURE(*status)) {
+        திரும்பு nullptr;
     }
-    if(myPath==nullptr) {
+    எனில்(myPath==nullptr) {
         path = nullptr;
     }
-    else {
+    இல்லையெனில் {
         length=u_strlen(myPath);
-        if(length>=(int32_t)sizeof(pathBuffer)) {
+        எனில்(length>=(int32_t)அளவு(pathBuffer)) {
             *status=U_ILLEGAL_ARGUMENT_ERROR;
-            return nullptr;
-        } else if(uprv_isInvariantUString(myPath, length)) {
+            திரும்பு nullptr;
+        } இல்லையெனில் எனில்(uprv_isInvariantUString(myPath, length)) {
             /*
              * the invariant converter is sufficient for package and tree names
              * and is more efficient
              */
             u_UCharsToChars(myPath, path, length+1); /* length+1 to include the NUL */
-        } else {
-#if !UCONFIG_NO_CONVERSION
+        } இல்லையெனில் {
+#எனில் !UCONFIG_NO_CONVERSION
             /* use the default converter to support variant-character paths */
             UConverter *cnv=u_getDefaultConverter(status);
-            length=ucnv_fromUChars(cnv, path, (int32_t)sizeof(pathBuffer), myPath, length, status);
+            length=ucnv_fromUChars(cnv, path, (int32_t)அளவு(pathBuffer), myPath, length, status);
             u_releaseDefaultConverter(cnv);
-            if(U_FAILURE(*status)) {
-                return nullptr;
+            எனில்(U_FAILURE(*status)) {
+                திரும்பு nullptr;
             }
-            if(length>=(int32_t)sizeof(pathBuffer)) {
+            எனில்(length>=(int32_t)அளவு(pathBuffer)) {
                 /* not NUL-terminated - path too long */
                 *status=U_ILLEGAL_ARGUMENT_ERROR;
-                return nullptr;
+                திரும்பு nullptr;
             }
-#else
+#இல்லையெனில்
             /* the default converter is not available */
             *status=U_UNSUPPORTED_ERROR;
-            return nullptr;
+            திரும்பு nullptr;
 #endif
         }
     }
 
-    return ures_open(path, localeID, status);
+    திரும்பு ures_open(path, localeID, status);
 }

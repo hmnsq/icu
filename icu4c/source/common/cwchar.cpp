@@ -16,39 +16,39 @@
 *   created by: Markus W. Scherer
 */
 
-#include "unicode/utypes.h"
+#அந்தர்பாவ "unicode/utypes.h"
 
-#if !U_HAVE_WCSCPY
+#எனில் !U_HAVE_WCSCPY
 
-#include "cwchar.h"
+#அந்தர்பாவ "cwchar.h"
 
-U_CAPI wchar_t *uprv_wcscat(wchar_t *dst, const wchar_t *src) {
+U_CAPI wchar_t *uprv_wcscat(wchar_t *dst, மாறிலி wchar_t *src) {
     wchar_t *start=dst;
-    while(*dst!=0) {
+    போது(*dst!=0) {
         ++dst;
     }
-    while((*dst=*src)!=0) {
+    போது((*dst=*src)!=0) {
         ++dst;
         ++src;
     }
-    return start;
+    திரும்பு start;
 }
 
-U_CAPI wchar_t *uprv_wcscpy(wchar_t *dst, const wchar_t *src) {
+U_CAPI wchar_t *uprv_wcscpy(wchar_t *dst, மாறிலி wchar_t *src) {
     wchar_t *start=dst;
-    while((*dst=*src)!=0) {
+    போது((*dst=*src)!=0) {
         ++dst;
         ++src;
     }
-    return start;
+    திரும்பு start;
 }
 
-U_CAPI size_t uprv_wcslen(const wchar_t *src) {
-    const wchar_t *start=src;
-    while(*src!=0) {
+U_CAPI size_t uprv_wcslen(மாறிலி wchar_t *src) {
+    மாறிலி wchar_t *start=src;
+    போது(*src!=0) {
         ++src;
     }
-    return src-start;
+    திரும்பு src-start;
 }
 
 #endif
